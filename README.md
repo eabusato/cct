@@ -4,6 +4,12 @@
 
 CCT is a compiled, ritual-themed programming language with deterministic sigil generation.
 
+<div align="center">
+  <img src="docs/example_sigil_ars_magna.svg" alt="CCT System Sigil Example - Ars Magna Omniversal" width="600"/>
+  <p><em>System sigil generated from a multi-module CCT program (Ars Magna Omniversal)</em></p>
+  <p><sub>Each program generates a unique, deterministic visual sigil representing its structure, calls, and module dependencies</sub></p>
+</div>
+
 ## Status
 
 **Current status: FASE 12H complete** (structural maturity milestone — canonization, hardening, and final release packaging).

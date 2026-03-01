@@ -1,0 +1,408 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="1200" viewBox="0 0 1200 1200" role="img" aria-label="CCT system sigilo">
+  <defs>
+    <style><![CDATA[
+      .bg { fill: #f7f1e5; }
+      .macro-ring { fill: none; stroke: #1f2937; stroke-width: 2.0; opacity: 0.32; }
+      .macro-import { stroke: #334155; stroke-width: 1.8; stroke-linecap: round; fill: none; opacity: 0.60; }
+      .macro-sem { stroke: #9a3412; stroke-width: 1.3; stroke-dasharray: 5 4; fill: none; opacity: 0.62; }
+      .module-frame { fill: none; stroke: #111827; stroke-width: 2.1; }
+      .module-entry-frame { fill: none; stroke: #0f766e; stroke-width: 3.0; }
+      .module-label { fill: #0f172a; font: 11px monospace; }
+      .module-hash { fill: #334155; font: 9px monospace; opacity: 0.8; }
+      .base { stroke: #1f1a17; stroke-width: 1.6; fill: none; opacity: 0.7; }
+      .primary { stroke: #111827; stroke-width: 2.4; fill: none; stroke-linecap: round; }
+      .call { stroke: #4b5563; stroke-width: 1.5; fill: none; stroke-linecap: round; opacity: 0.82; }
+      .branch { stroke: #6b7280; stroke-width: 1.2; fill: none; opacity: 0.8; }
+      .loop { stroke: #0f766e; stroke-width: 1.3; fill: none; opacity: 0.84; }
+      .bind { stroke: #6b7280; stroke-width: 1.05; fill: none; opacity: 0.84; }
+      .term { stroke: #7f1d1d; stroke-width: 1.45; fill: none; stroke-linecap: round; }
+      .node-main { fill: #f8fafc; stroke: #1f2937; stroke-width: 1.65; }
+      .node-entry { fill: #d1fae5; stroke: #0f766e; stroke-width: 1.95; }
+      .node-aux { fill: #f1f5f9; stroke: #475569; stroke-width: 1.15; }
+      .node-loop { fill: #ecfeff; stroke: #0f766e; stroke-width: 1.2; }
+      .node-term { fill: #fef2f2; stroke: #991b1b; stroke-width: 1.2; }
+      .orn { stroke: #64748b; stroke-width: 0.9; fill: none; opacity: 0.55; }
+      .hash { fill: #111827; font: 9px monospace; letter-spacing: 0.5px; }
+      .label { fill: #0f172a; font: 8px monospace; opacity: 0.68; }
+    ]]></style>
+    <clipPath id="module_clip_000"><circle cx="256" cy="256" r="246"/></clipPath>
+    <clipPath id="module_clip_001"><circle cx="256" cy="256" r="246"/></clipPath>
+    <clipPath id="module_clip_002"><circle cx="256" cy="256" r="246"/></clipPath>
+    <clipPath id="module_clip_003"><circle cx="256" cy="256" r="246"/></clipPath>
+    <clipPath id="module_clip_004"><circle cx="256" cy="256" r="246"/></clipPath>
+    <clipPath id="module_clip_005"><circle cx="256" cy="256" r="246"/></clipPath>
+  </defs>
+  <rect class="bg" width="1200" height="1200"/>
+  <g id="macro_foundation">
+    <circle class="macro-ring" cx="600" cy="600" r="558"/>
+    <circle class="macro-ring" cx="600" cy="600" r="220.00" opacity="0.22"/>
+    <circle class="macro-ring" cx="600" cy="600" r="390.00" opacity="0.20"/>
+  </g>
+  <g id="imports" class="macro-import">
+    <line x1="600.000" y1="600.000" x2="600.000" y2="380.000" />
+    <line x1="600.000" y1="380.000" x2="600.000" y2="210.000" />
+    <line x1="600.000" y1="380.000" x2="990.000" y2="600.000" />
+    <line x1="600.000" y1="380.000" x2="600.000" y2="990.000" />
+    <line x1="600.000" y1="380.000" x2="210.000" y2="600.000" />
+    <line x1="990.000" y1="600.000" x2="600.000" y2="210.000" />
+    <line x1="600.000" y1="990.000" x2="600.000" y2="210.000" />
+  </g>
+  <g id="semantic_cross" class="macro-sem">
+    <line x1="600.000" y1="600.000" x2="600.000" y2="380.000" />
+    <line x1="600.000" y1="600.000" x2="600.000" y2="210.000" />
+    <line x1="600.000" y1="600.000" x2="990.000" y2="600.000" />
+    <line x1="600.000" y1="600.000" x2="600.000" y2="990.000" />
+    <line x1="600.000" y1="600.000" x2="210.000" y2="600.000" />
+  </g>
+  <g id="module_sigils">
+    <g id="module_sigil_000" transform="translate(462.000 462.000) scale(0.53906250)">
+      <g clip-path="url(#module_clip_000)">
+  <g id="foundation">
+    <circle class="base" cx="256" cy="256" r="226"/>
+  </g>
+  <g id="primary_path">
+    <path class="primary" d="M 210.77 383.25 q 18 -22 34 0 q -18 22 -34 0" opacity="0.9"/>
+  </g>
+  <g id="call_links">
+  </g>
+  <g id="branches">
+  </g>
+  <g id="loops">
+  </g>
+  <g id="bindings">
+  </g>
+  <g id="terminals">
+    <path class="term" d="M 226.77 383.25 Q 241.94 358.78 247.10 330.46" stroke-width="1.65" opacity="0.90"/>
+  </g>
+  <g id="nodes">
+    <circle class="node-entry" cx="226.77" cy="383.25" r="7.95"/>
+    <circle class="node-term" cx="247.10" cy="330.46" r="3.60"/>
+  </g>
+  <g id="ornaments">
+    <circle class="orn" cx="455.72" cy="231.79" r="0.90"/>
+    <circle class="orn" cx="267.41" cy="463.80" r="1.90"/>
+    <circle class="orn" cx="52.43" cy="288.22" r="2.90"/>
+    <circle class="orn" cx="244.57" cy="57.90" r="0.90"/>
+  </g>
+      </g>
+    </g>
+    <circle class="module-entry-frame" cx="600.000" cy="600.000" r="138.000"/>
+    <text class="module-label" x="600.000" y="754.000" text-anchor="middle">main.cct</text>
+    <text class="module-hash" x="600.000" y="766.000" text-anchor="middle">9dde421cacf23843</text>
+    <g id="module_sigil_001" transform="translate(496.000 276.000) scale(0.40625000)">
+      <g clip-path="url(#module_clip_001)">
+  <g id="foundation">
+    <circle class="base" cx="256" cy="256" r="226"/>
+    <ellipse class="base" cx="256" cy="256" rx="198" ry="181.78" opacity="0.32"/>
+  </g>
+  <g id="primary_path">
+    <path class="primary" d="M 222.83 408.47 q 18 -22 34 0 q -18 22 -34 0" opacity="0.9"/>
+  </g>
+  <g id="call_links">
+  </g>
+  <g id="branches">
+  </g>
+  <g id="loops">
+    <path class="loop" d="M 238.83 408.47 Q 244.86 427.77 261.53 439.20" stroke-width="1.55" opacity="0.88"/>
+    <path class="loop" d="M 265.21 439.20 C 302.33 417.65 306.67 441.88 289.32 429.77 C 271.97 441.88 276.31 417.65 258.77 440.70"/>
+    <path class="loop" d="M 293.66 435.82 Q 309.92 443.40 320.76 433.55" opacity="0.85"/>
+    <path class="loop" d="M 238.83 408.47 Q 229.79 429.59 233.90 452.19" stroke-width="1.55" opacity="0.88"/>
+  </g>
+  <g id="bindings">
+    <path class="bind" d="M 238.83 408.47 Q 243.87 395.95 241.74 382.63" stroke-width="1.80" opacity="0.85"/>
+    <line class="bind" x1="235.43" y1="402.85" x2="243.38" y2="403.75" opacity="0.75"/>
+    <line class="bind" x1="234.73" y1="400.16" x2="244.67" y2="401.28" opacity="0.75"/>
+    <line class="bind" x1="236.02" y1="397.69" x2="243.97" y2="398.58" opacity="0.75"/>
+    <line class="bind" x1="235.31" y1="394.99" x2="245.25" y2="396.11" opacity="0.75"/>
+    <line class="bind" x1="236.60" y1="392.52" x2="244.55" y2="393.41" opacity="0.75"/>
+    <line class="bind" x1="235.90" y1="389.82" x2="245.83" y2="390.94" opacity="0.75"/>
+    <line class="bind" x1="248.53" y1="383.00" x2="254.52" y2="383.33" opacity="0.58"/>
+    <line class="bind" x1="243.29" y1="389.25" x2="245.36" y2="398.01" opacity="0.58"/>
+    <line class="bind" x1="236.28" y1="386.69" x2="231.46" y2="390.26" opacity="0.58"/>
+    <line class="bind" x1="237.12" y1="377.64" x2="231.01" y2="371.03" opacity="0.58"/>
+    <line class="bind" x1="242.48" y1="375.87" x2="243.14" y2="369.91" opacity="0.58"/>
+  </g>
+  <g id="terminals">
+    <path class="term" d="M 238.83 408.47 Q 250.40 382.25 253.04 353.72" stroke-width="1.65" opacity="0.90"/>
+  </g>
+  <g id="nodes">
+    <circle class="node-main" cx="238.83" cy="408.47" r="10.80"/>
+    <circle class="node-loop" cx="261.53" cy="439.20" r="4.60"/>
+    <circle class="node-loop" cx="233.90" cy="452.19" r="3.60"/>
+    <circle class="node-loop" cx="228.30" cy="454.29" r="1.25" opacity="0.9"/>
+    <circle class="node-loop" cx="233.90" cy="450.09" r="1.25" opacity="0.9"/>
+    <line class="loop" x1="228.30" y1="454.29" x2="233.90" y2="450.09" opacity="0.75"/>
+    <circle class="node-loop" cx="239.50" cy="454.29" r="1.25" opacity="0.9"/>
+    <line class="loop" x1="233.90" y1="450.09" x2="239.50" y2="454.29" opacity="0.75"/>
+    <circle class="node-aux" cx="241.74" cy="382.63" r="4.80"/>
+    <circle class="node-term" cx="253.04" cy="353.72" r="3.60"/>
+  </g>
+  <g id="ornaments">
+    <circle class="orn" cx="454.81" cy="225.78" r="0.90"/>
+    <circle class="orn" cx="447.88" cy="335.85" r="1.90"/>
+    <circle class="orn" cx="406.93" cy="384.53" r="2.90"/>
+    <circle class="orn" cx="327.60" cy="451.75" r="0.90"/>
+    <circle class="orn" cx="201.77" cy="454.11" r="1.90"/>
+    <circle class="orn" cx="159.62" cy="438.95" r="2.90"/>
+    <circle class="orn" cx="91.11" cy="368.73" r="0.90"/>
+    <circle class="orn" cx="48.77" cy="296.89" r="1.90"/>
+    <circle class="orn" cx="55.10" cy="202.67" r="2.90"/>
+    <circle class="orn" cx="157.06" cy="77.82" r="0.90"/>
+    <circle class="orn" cx="187.27" cy="67.61" r="1.90"/>
+    <circle class="orn" cx="319.83" cy="60.34" r="2.90"/>
+    <circle class="orn" cx="344.91" cy="74.70" r="0.90"/>
+    <circle class="orn" cx="445.20" cy="189.41" r="1.90"/>
+  </g>
+      </g>
+    </g>
+    <circle class="module-frame" cx="600.000" cy="380.000" r="104.000"/>
+    <text class="module-label" x="600.000" y="500.000" text-anchor="middle">engine.cct</text>
+    <text class="module-hash" x="600.000" y="512.000" text-anchor="middle">b89bfd6e0fc25938</text>
+    <g id="module_sigil_002" transform="translate(506.000 116.000) scale(0.36718750)">
+      <g clip-path="url(#module_clip_002)">
+  <g id="foundation">
+    <circle class="base" cx="256" cy="256" r="226"/>
+  </g>
+  <g id="primary_path">
+    <path class="primary" d="M 349.38 157.41 Q 331.27 258.71 362.41 356.80" stroke-width="2.60" opacity="0.96"/>
+    <path class="primary" d="M 362.41 356.80 Q 246.46 323.06 126.04 332.25" stroke-width="2.60" opacity="0.96"/>
+    <path class="primary" d="M 126.04 332.25 Q 165.92 245.58 160.53 150.33" stroke-width="2.60" opacity="0.96"/>
+  </g>
+  <g id="call_links">
+    <path class="call" d="M 362.41 356.80 Q 386.88 255.08 349.38 157.41" stroke-width="2.15" opacity="0.74"/>
+  </g>
+  <g id="branches">
+    <path class="branch" d="M 160.53 150.33 Q 150.98 173.32 166.52 192.76" stroke-width="1.70" opacity="0.85"/>
+    <path class="branch" d="M 166.52 192.76 Q 193.03 173.38 197.83 140.89" stroke-width="1.70" opacity="0.85"/>
+    <path class="branch" d="M 197.83 140.89 Q 176.07 133.32 160.53 150.33" stroke-width="1.45" opacity="0.85"/>
+    <path class="branch" d="M 259.43 246.44 Q 310.58 208.17 349.38 157.41" stroke-width="1.45" opacity="0.85"/>
+    <path class="branch" d="M 259.43 246.44 Q 301.65 310.27 362.41 356.80" stroke-width="1.70" opacity="0.85"/>
+    <path class="branch" d="M 259.43 246.44 Q 219.74 188.35 160.53 150.33" stroke-width="1.70" opacity="0.85"/>
+  </g>
+  <g id="loops">
+  </g>
+  <g id="bindings">
+    <path class="bind" d="M 362.41 356.80 Q 355.08 345.63 343.53 338.92" stroke-width="1.60" opacity="0.85"/>
+    <line class="bind" x1="355.88" y1="356.13" x2="361.38" y2="350.32" opacity="0.75"/>
+    <line class="bind" x1="353.31" y1="355.06" x2="360.18" y2="347.81" opacity="0.75"/>
+    <line class="bind" x1="352.11" y1="352.55" x2="357.61" y2="346.74" opacity="0.75"/>
+    <line class="bind" x1="349.53" y1="351.49" x2="356.41" y2="344.23" opacity="0.75"/>
+    <line class="bind" x1="348.33" y1="348.97" x2="353.83" y2="343.17" opacity="0.75"/>
+    <line class="bind" x1="349.04" y1="339.57" x2="355.00" y2="340.27" opacity="0.58"/>
+    <line class="bind" x1="345.33" y1="344.17" x2="348.25" y2="352.68" opacity="0.58"/>
+    <line class="bind" x1="338.75" y1="341.73" x2="333.58" y2="344.77" opacity="0.58"/>
+    <line class="bind" x1="338.67" y1="336.24" x2="330.79" y2="331.90" opacity="0.58"/>
+    <line class="bind" x1="345.45" y1="333.71" x2="347.52" y2="328.08" opacity="0.58"/>
+  </g>
+  <g id="terminals">
+    <path class="term" d="M 349.38 157.41 Q 324.26 171.25 305.07 192.57" stroke-width="1.65" opacity="0.90"/>
+    <path class="term" d="M 126.04 332.25 Q 154.13 326.20 178.39 310.81" stroke-width="1.65" opacity="0.90"/>
+    <path class="term" d="M 160.53 150.33 Q 176.72 175.09 204.01 186.52" stroke-width="1.80" opacity="0.90"/>
+  </g>
+  <g id="nodes">
+    <circle class="node-main" cx="349.38" cy="157.41" r="5.95"/>
+    <circle class="node-term" cx="305.07" cy="192.57" r="3.60"/>
+    <circle class="node-main" cx="362.41" cy="356.80" r="6.55"/>
+    <circle class="node-aux" cx="343.53" cy="338.92" r="3.55"/>
+    <circle class="node-main" cx="126.04" cy="332.25" r="5.95"/>
+    <circle class="node-term" cx="178.39" cy="310.81" r="3.60"/>
+    <circle class="node-main" cx="160.53" cy="150.33" r="6.25"/>
+    <circle class="node-aux" cx="166.52" cy="192.76" r="4.80"/>
+    <circle class="node-aux" cx="197.83" cy="140.89" r="4.20"/>
+    <circle class="node-term" cx="204.01" cy="186.52" r="4.00"/>
+    <circle class="node-aux" cx="259.43" cy="246.44" r="3.32"/>
+  </g>
+  <g id="ornaments">
+    <circle class="orn" cx="466.27" cy="263.65" r="0.90"/>
+    <circle class="orn" cx="355.05" cy="439.74" r="1.90"/>
+    <circle class="orn" cx="157.74" cy="431.01" r="2.90"/>
+    <circle class="orn" cx="58.49" cy="215.57" r="0.90"/>
+    <circle class="orn" cx="154.37" cy="71.77" r="1.90"/>
+    <circle class="orn" cx="361.14" cy="83.58" r="2.90"/>
+  </g>
+      </g>
+    </g>
+    <circle class="module-frame" cx="600.000" cy="210.000" r="94.000"/>
+    <text class="module-label" x="600.000" y="320.000" text-anchor="middle">types_core.cct</text>
+    <text class="module-hash" x="600.000" y="332.000" text-anchor="middle">187e6b4fad5b5a4a</text>
+    <g id="module_sigil_003" transform="translate(896.000 506.000) scale(0.36718750)">
+      <g clip-path="url(#module_clip_003)">
+  <g id="foundation">
+    <circle class="base" cx="256" cy="256" r="226"/>
+  </g>
+  <g id="primary_path">
+    <path class="primary" d="M 395.07 195.88 Q 316.47 275.63 268.37 376.75" stroke-width="2.60" opacity="0.96"/>
+    <path class="primary" d="M 268.37 376.75 Q 218.03 270.15 133.98 187.49" stroke-width="2.60" opacity="0.96"/>
+  </g>
+  <g id="call_links">
+  </g>
+  <g id="branches">
+  </g>
+  <g id="loops">
+  </g>
+  <g id="bindings">
+  </g>
+  <g id="terminals">
+    <path class="term" d="M 395.07 195.88 Q 366.53 198.74 340.49 210.76" stroke-width="1.65" opacity="0.90"/>
+    <path class="term" d="M 268.37 376.75 Q 265.22 348.39 254.70 321.86" stroke-width="1.65" opacity="0.90"/>
+    <path class="term" d="M 133.98 187.49 Q 159.11 200.91 186.72 207.93" stroke-width="1.65" opacity="0.90"/>
+  </g>
+  <g id="nodes">
+    <circle class="node-main" cx="395.07" cy="195.88" r="5.95"/>
+    <circle class="node-term" cx="340.49" cy="210.76" r="3.60"/>
+    <circle class="node-main" cx="268.37" cy="376.75" r="5.95"/>
+    <circle class="node-term" cx="254.70" cy="321.86" r="3.60"/>
+    <circle class="node-main" cx="133.98" cy="187.49" r="5.95"/>
+    <circle class="node-term" cx="186.72" cy="207.93" r="3.60"/>
+  </g>
+  <g id="ornaments">
+    <circle class="orn" cx="460.04" cy="260.64" r="0.90"/>
+    <circle class="orn" cx="264.70" cy="456.45" r="1.90"/>
+    <circle class="orn" cx="47.33" cy="271.91" r="2.90"/>
+    <circle class="orn" cx="236.86" cy="48.15" r="0.90"/>
+  </g>
+      </g>
+    </g>
+    <circle class="module-frame" cx="990.000" cy="600.000" r="94.000"/>
+    <text class="module-label" x="990.000" y="710.000" text-anchor="middle">generics.cct</text>
+    <text class="module-hash" x="990.000" y="722.000" text-anchor="middle">72dc0eef0d31a146</text>
+    <g id="module_sigil_004" transform="translate(506.000 896.000) scale(0.36718750)">
+      <g clip-path="url(#module_clip_004)">
+  <g id="foundation">
+    <circle class="base" cx="256" cy="256" r="226"/>
+  </g>
+  <g id="primary_path">
+    <path class="primary" d="M 343.24 142.97 Q 341.52 246.41 376.07 343.92" stroke-width="2.60" opacity="0.96"/>
+    <path class="primary" d="M 376.07 343.92 Q 255.67 320.41 135.31 344.15" stroke-width="2.60" opacity="0.96"/>
+    <path class="primary" d="M 135.31 344.15 Q 188.45 246.37 194.31 135.24" stroke-width="2.60" opacity="0.96"/>
+  </g>
+  <g id="call_links">
+  </g>
+  <g id="branches">
+    <path class="branch" d="M 248.34 242.02 Q 305.19 201.51 343.24 142.97" stroke-width="1.45" opacity="0.85"/>
+    <path class="branch" d="M 248.34 242.02 Q 308.23 297.95 376.07 343.92" stroke-width="1.70" opacity="0.85"/>
+    <path class="branch" d="M 248.34 242.02 Q 186.80 287.52 135.31 344.15" stroke-width="1.70" opacity="0.85"/>
+  </g>
+  <g id="loops">
+    <path class="loop" d="M 376.07 343.92 Q 368.06 363.03 378.89 380.69" stroke-width="1.55" opacity="0.88"/>
+    <path class="loop" d="M 382.65 380.69 C 415.61 359.42 419.51 381.25 403.90 370.33 C 388.28 381.25 392.18 359.42 376.07 382.19"/>
+    <path class="loop" d="M 135.31 344.15 Q 124.14 361.77 132.45 380.91" stroke-width="1.55" opacity="0.88"/>
+    <path class="loop" d="M 136.21 380.91 C 170.87 377.22 174.77 399.04 159.15 388.13 C 143.54 399.04 147.44 377.22 129.63 382.41"/>
+  </g>
+  <g id="bindings">
+    <path class="bind" d="M 343.24 142.97 Q 328.94 148.36 327.35 163.56" stroke-width="1.28" opacity="0.85"/>
+    <line class="bind" x1="343.23" y1="149.53" x2="336.89" y2="144.65" opacity="0.75"/>
+    <line class="bind" x1="332.30" y1="163.54" x2="338.30" y2="163.53" opacity="0.58"/>
+    <path class="bind" d="M 376.07 343.92 Q 369.39 331.04 355.09 328.56" stroke-width="1.44" opacity="0.85"/>
+    <line class="bind" x1="369.51" y1="344.08" x2="374.24" y2="337.62" opacity="0.75"/>
+    <line class="bind" x1="366.82" y1="343.35" x2="372.73" y2="335.28" opacity="0.75"/>
+    <line class="bind" x1="365.32" y1="341.00" x2="370.04" y2="334.55" opacity="0.75"/>
+    <line class="bind" x1="360.34" y1="328.37" x2="366.34" y2="328.14" opacity="0.58"/>
+    <line class="bind" x1="352.07" y1="332.85" x2="346.89" y2="340.21" opacity="0.58"/>
+    <line class="bind" x1="351.44" y1="324.79" x2="347.27" y2="320.48" opacity="0.58"/>
+    <path class="bind" d="M 135.31 344.15 Q 149.81 341.95 156.31 328.81" stroke-width="1.52" opacity="0.85"/>
+    <line class="bind" x1="137.15" y1="337.85" x2="141.87" y2="344.31" opacity="0.75"/>
+    <line class="bind" x1="138.66" y1="335.51" x2="144.56" y2="343.58" opacity="0.75"/>
+    <line class="bind" x1="141.35" y1="334.78" x2="146.07" y2="341.24" opacity="0.75"/>
+    <line class="bind" x1="142.86" y1="332.44" x2="148.76" y2="340.52" opacity="0.75"/>
+    <line class="bind" x1="161.61" y1="327.80" x2="167.51" y2="326.67" opacity="0.58"/>
+    <line class="bind" x1="156.77" y1="334.19" x2="157.54" y2="343.16" opacity="0.58"/>
+    <line class="bind" x1="151.11" y1="327.36" x2="145.33" y2="325.75" opacity="0.58"/>
+    <line class="bind" x1="157.42" y1="323.53" x2="159.28" y2="314.72" opacity="0.58"/>
+    <path class="bind" d="M 194.31 135.24 Q 192.48 150.78 206.14 158.40" stroke-width="1.28" opacity="0.85"/>
+    <line class="bind" x1="200.24" y1="138.06" x2="193.11" y2="141.70" opacity="0.75"/>
+    <line class="bind" x1="211.04" y1="159.07" x2="216.99" y2="159.89" opacity="0.58"/>
+  </g>
+  <g id="terminals">
+    <path class="term" d="M 135.31 344.15 Q 160.99 329.97 175.82 304.66" stroke-width="1.65" opacity="0.90"/>
+  </g>
+  <g id="nodes">
+    <circle class="node-main" cx="343.24" cy="142.97" r="5.95"/>
+    <circle class="node-aux" cx="327.35" cy="163.56" r="2.95"/>
+    <circle class="node-main" cx="376.07" cy="343.92" r="6.40"/>
+    <circle class="node-loop" cx="378.89" cy="380.69" r="4.70"/>
+    <circle class="node-aux" cx="355.09" cy="328.56" r="3.25"/>
+    <circle class="node-main" cx="135.31" cy="344.15" r="6.70"/>
+    <circle class="node-loop" cx="132.45" cy="380.91" r="4.70"/>
+    <circle class="node-aux" cx="156.31" cy="328.81" r="3.40"/>
+    <circle class="node-term" cx="175.82" cy="304.66" r="3.60"/>
+    <circle class="node-main" cx="194.31" cy="135.24" r="5.95"/>
+    <circle class="node-aux" cx="206.14" cy="158.40" r="2.95"/>
+    <circle class="node-aux" cx="248.34" cy="242.02" r="3.20"/>
+  </g>
+  <g id="ornaments">
+    <circle class="orn" cx="457.35" cy="296.27" r="0.90"/>
+    <circle class="orn" cx="349.30" cy="441.74" r="1.90"/>
+    <circle class="orn" cx="183.22" cy="454.79" r="2.90"/>
+    <circle class="orn" cx="76.87" cy="368.38" r="0.90"/>
+    <circle class="orn" cx="71.59" cy="166.84" r="1.90"/>
+    <circle class="orn" cx="179.76" cy="62.40" r="2.90"/>
+    <circle class="orn" cx="409.52" cy="129.41" r="0.90"/>
+  </g>
+      </g>
+    </g>
+    <circle class="module-frame" cx="600.000" cy="990.000" r="94.000"/>
+    <text class="module-label" x="600.000" y="1100.000" text-anchor="middle">memory_alchemy.cct</text>
+    <text class="module-hash" x="600.000" y="1112.000" text-anchor="middle">3647c957ac3a2a0f</text>
+    <g id="module_sigil_005" transform="translate(116.000 506.000) scale(0.36718750)">
+      <g clip-path="url(#module_clip_005)">
+  <g id="foundation">
+    <circle class="base" cx="256" cy="256" r="226"/>
+  </g>
+  <g id="primary_path">
+    <path class="primary" d="M 357.26 166.82 Q 323.48 269.67 331.56 377.63" stroke-width="2.60" opacity="0.96"/>
+    <path class="primary" d="M 331.56 377.63 Q 233.38 273.15 108.76 202.26" stroke-width="2.60" opacity="0.96"/>
+  </g>
+  <g id="call_links">
+    <path class="call" d="M 331.56 377.63 Q 375.51 276.02 357.26 166.82" stroke-width="2.15" opacity="0.74"/>
+  </g>
+  <g id="branches">
+    <path class="branch" d="M 331.56 377.63 Q 316.11 359.69 292.44 360.14" stroke-width="1.70" opacity="0.85"/>
+    <path class="branch" d="M 108.76 202.26 Q 115.11 224.11 133.88 236.98" stroke-width="1.70" opacity="0.85"/>
+    <path class="branch" d="M 252.21 250.50 Q 310.35 215.70 357.26 166.82" stroke-width="1.45" opacity="0.85"/>
+    <path class="branch" d="M 252.21 250.50 Q 282.49 319.93 331.56 377.63" stroke-width="1.95" opacity="0.85"/>
+    <path class="branch" d="M 252.21 250.50 Q 183.82 216.48 108.76 202.26" stroke-width="1.70" opacity="0.85"/>
+  </g>
+  <g id="loops">
+  </g>
+  <g id="bindings">
+    <path class="bind" d="M 108.76 202.26 Q 120.06 209.22 133.18 211.18" stroke-width="1.36" opacity="0.85"/>
+    <line class="bind" x1="115.01" y1="200.29" x2="112.27" y2="207.80" opacity="0.75"/>
+    <line class="bind" x1="117.80" y1="200.24" x2="114.37" y2="209.63" opacity="0.75"/>
+    <line class="bind" x1="138.28" y1="211.35" x2="144.28" y2="211.55" opacity="0.58"/>
+    <line class="bind" x1="128.13" y1="211.84" x2="119.20" y2="213.02" opacity="0.58"/>
+  </g>
+  <g id="terminals">
+    <path class="term" d="M 331.56 377.63 Q 325.74 349.29 308.80 325.84" stroke-width="1.65" opacity="0.90"/>
+    <path class="term" d="M 108.76 202.26 Q 135.68 211.69 164.11 213.95" stroke-width="1.90" opacity="0.90"/>
+  </g>
+  <g id="nodes">
+    <circle class="node-main" cx="357.26" cy="166.82" r="5.95"/>
+    <circle class="node-main" cx="331.56" cy="377.63" r="6.25"/>
+    <circle class="node-aux" cx="292.44" cy="360.14" r="4.80"/>
+    <circle class="node-term" cx="308.80" cy="325.84" r="3.60"/>
+    <circle class="node-main" cx="108.76" cy="202.26" r="7.00"/>
+    <circle class="node-aux" cx="133.88" cy="236.98" r="4.80"/>
+    <circle class="node-aux" cx="133.18" cy="211.18" r="3.10"/>
+    <circle class="node-term" cx="164.11" cy="213.95" r="4.40"/>
+    <circle class="node-aux" cx="252.21" cy="250.50" r="3.32"/>
+  </g>
+  <g id="ornaments">
+    <circle class="orn" cx="457.22" cy="290.29" r="0.90"/>
+    <circle class="orn" cx="386.85" cy="421.28" r="1.90"/>
+    <circle class="orn" cx="181.12" cy="439.90" r="2.90"/>
+    <circle class="orn" cx="75.61" cy="362.59" r="0.90"/>
+    <circle class="orn" cx="66.00" cy="198.18" r="1.90"/>
+    <circle class="orn" cx="246.24" cy="46.49" r="2.90"/>
+    <circle class="orn" cx="373.53" cy="82.44" r="0.90"/>
+  </g>
+      </g>
+    </g>
+    <circle class="module-frame" cx="210.000" cy="600.000" r="94.000"/>
+    <text class="module-label" x="210.000" y="710.000" text-anchor="middle">failure_rituals.cct</text>
+    <text class="module-hash" x="210.000" y="722.000" text-anchor="middle">dbe243d103c1cc8e</text>
+  </g>
+  <text class="module-label" x="24" y="30" font-size="14">CCT system sigilo (sigil-of-sigils) • 57c8bfaac0b03602</text>
+  <text class="module-hash" x="24" y="50" font-size="10">entry=examples/ars_magna_omniversal/main.cct • modules=6 • imports=7 • calls=13 • type_refs=5</text>
+  <text class="module-hash" x="24" y="66" font-size="10">zoom: sub-sigilos vetoriais inline por módulo</text>
+</svg>

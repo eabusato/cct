@@ -15,9 +15,12 @@ examples/showcase_*
 # Generated C files
 *.cgen.c
 
-# Sigil artifacts
+# Sigil artifacts (generated)
 *.svg
 *.sigil
+
+# Exception: documentation images
+!docs/*.svg
 
 # Build directories
 .cct/
