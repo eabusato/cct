@@ -1,0 +1,42 @@
+INCIPIT grimoire "option"
+
+RITUALE Some GENUS(T)(T value) REDDE SPECULUM NIHIL
+  REDDE OBSECRO option_some(SPECULUM value, MENSURA(T))
+EXPLICIT RITUALE
+
+RITUALE None GENUS(T)() REDDE SPECULUM NIHIL
+  REDDE OBSECRO option_none(MENSURA(T))
+EXPLICIT RITUALE
+
+RITUALE option_is_some GENUS(T)(SPECULUM NIHIL opt) REDDE VERUM
+  REDDE OBSECRO option_is_some(opt)
+EXPLICIT RITUALE
+
+RITUALE option_is_none GENUS(T)(SPECULUM NIHIL opt) REDDE VERUM
+  REDDE OBSECRO option_is_none(opt)
+EXPLICIT RITUALE
+
+RITUALE option_unwrap GENUS(T)(SPECULUM NIHIL opt) REDDE T
+  EVOCA SPECULUM T ptr AD OBSECRO option_unwrap_ptr(opt)
+  REDDE *ptr
+EXPLICIT RITUALE
+
+RITUALE option_unwrap_or GENUS(T)(SPECULUM NIHIL opt, T default_value) REDDE T
+  SI OBSECRO option_is_some(opt)
+    EVOCA SPECULUM T ptr AD OBSECRO option_unwrap_ptr(opt)
+    REDDE *ptr
+  FIN SI
+  REDDE default_value
+EXPLICIT RITUALE
+
+RITUALE option_expect GENUS(T)(SPECULUM NIHIL opt, VERBUM message) REDDE T
+  EVOCA SPECULUM T ptr AD OBSECRO option_expect_ptr(opt, message)
+  REDDE *ptr
+EXPLICIT RITUALE
+
+RITUALE option_free GENUS(T)(SPECULUM NIHIL opt) REDDE NIHIL
+  OBSECRO option_free(opt)
+  REDDE
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

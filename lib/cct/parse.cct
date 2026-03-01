@@ -1,0 +1,24 @@
+INCIPIT grimoire "parse"
+
+ADVOCARE "cct/verbum.cct"
+
+RITUALE parse_int(VERBUM s) REDDE REX
+  REDDE OBSECRO fmt_parse_int(s)
+EXPLICIT RITUALE
+
+RITUALE parse_real(VERBUM s) REDDE UMBRA
+  REDDE OBSECRO fmt_parse_real(s)
+EXPLICIT RITUALE
+
+RITUALE parse_bool(VERBUM s) REDDE VERUM
+  SI CONIURA compare(s, "true") == 0
+    REDDE VERUM
+  FIN SI
+  SI CONIURA compare(s, "false") == 0
+    REDDE FALSUM
+  FIN SI
+  IACE "parse_bool invalid input"
+  REDDE FALSUM
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

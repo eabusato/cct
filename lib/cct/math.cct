@@ -1,0 +1,40 @@
+INCIPIT grimoire "math"
+
+RITUALE abs(REX x) REDDE REX
+  SI x < 0
+    REDDE 0 - x
+  FIN SI
+  REDDE x
+EXPLICIT RITUALE
+
+RITUALE min(REX a, REX b) REDDE REX
+  SI a < b
+    REDDE a
+  FIN SI
+  REDDE b
+EXPLICIT RITUALE
+
+RITUALE max(REX a, REX b) REDDE REX
+  SI a > b
+    REDDE a
+  FIN SI
+  REDDE b
+EXPLICIT RITUALE
+
+RITUALE clamp(REX x, REX lo, REX hi) REDDE REX
+  SI lo > hi
+    IACE "math clamp invalid range (lo > hi)"
+  FIN SI
+
+  SI x < lo
+    REDDE lo
+  FIN SI
+
+  SI x > hi
+    REDDE hi
+  FIN SI
+
+  REDDE x
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

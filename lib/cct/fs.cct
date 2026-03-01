@@ -1,0 +1,25 @@
+INCIPIT grimoire "fs"
+
+RITUALE read_all(VERBUM path) REDDE VERBUM
+  REDDE OBSECRO fs_read_all(path)
+EXPLICIT RITUALE
+
+RITUALE write_all(VERBUM path, VERBUM content) REDDE NIHIL
+  OBSECRO fs_write_all(path, content)
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE append_all(VERBUM path, VERBUM content) REDDE NIHIL
+  OBSECRO fs_append_all(path, content)
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE exists(VERBUM path) REDDE VERUM
+  REDDE OBSECRO fs_exists(path)
+EXPLICIT RITUALE
+
+RITUALE size(VERBUM path) REDDE REX
+  REDDE OBSECRO fs_size(path)
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

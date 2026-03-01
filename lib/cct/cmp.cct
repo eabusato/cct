@@ -1,0 +1,39 @@
+INCIPIT grimoire "cmp"
+
+ADVOCARE "cct/verbum.cct"
+
+RITUALE cmp_int(REX a, REX b) REDDE REX
+  SI a < b
+    REDDE -1
+  FIN SI
+  SI a > b
+    REDDE 1
+  FIN SI
+  REDDE 0
+EXPLICIT RITUALE
+
+RITUALE cmp_real(UMBRA a, UMBRA b) REDDE REX
+  SI a < b
+    REDDE -1
+  FIN SI
+  SI a > b
+    REDDE 1
+  FIN SI
+  REDDE 0
+EXPLICIT RITUALE
+
+RITUALE cmp_bool(VERUM a, VERUM b) REDDE REX
+  SI a == b
+    REDDE 0
+  FIN SI
+  SI a == VERUM
+    REDDE 1
+  FIN SI
+  REDDE -1
+EXPLICIT RITUALE
+
+RITUALE cmp_verbum(VERBUM a, VERBUM b) REDDE REX
+  REDDE CONIURA compare(a, b)
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

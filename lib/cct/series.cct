@@ -1,0 +1,55 @@
+INCIPIT grimoire "series"
+
+RITUALE series_len GENUS(T)(SPECULUM T arr, REX tamanho) REDDE REX
+  REDDE tamanho
+EXPLICIT RITUALE
+
+RITUALE series_fill GENUS(T)(SPECULUM T arr, T valor, REX tamanho) REDDE NIHIL
+  EVOCA REX i AD 0
+  DUM i < tamanho
+    VINCIRE arr[i] AD valor
+    VINCIRE i AD i + 1
+  FIN DUM
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE series_copy GENUS(T)(SPECULUM T dest, SPECULUM T src, REX tamanho) REDDE NIHIL
+  EVOCA REX i AD 0
+  DUM i < tamanho
+    VINCIRE dest[i] AD src[i]
+    VINCIRE i AD i + 1
+  FIN DUM
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE series_reverse GENUS(T)(SPECULUM T arr, REX tamanho) REDDE NIHIL
+  SI tamanho < 2
+    REDDE
+  FIN SI
+
+  EVOCA REX inicio AD 0
+  EVOCA REX fim AD tamanho - 1
+
+  DUM inicio < fim
+    EVOCA T tmp AD arr[inicio]
+    VINCIRE arr[inicio] AD arr[fim]
+    VINCIRE arr[fim] AD tmp
+    VINCIRE inicio AD inicio + 1
+    VINCIRE fim AD fim - 1
+  FIN DUM
+
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE series_contains(SPECULUM REX arr, REX valor, REX tamanho) REDDE VERUM
+  EVOCA REX i AD 0
+  DUM i < tamanho
+    SI arr[i] == valor
+      REDDE VERUM
+    FIN SI
+    VINCIRE i AD i + 1
+  FIN DUM
+  REDDE FALSUM
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

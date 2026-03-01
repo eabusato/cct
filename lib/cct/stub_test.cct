@@ -1,0 +1,7 @@
+INCIPIT grimoire "stub_test"
+
+RITUALE test_value() REDDE REX
+  REDDE 42
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

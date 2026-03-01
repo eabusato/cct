@@ -1,0 +1,47 @@
+INCIPIT grimoire "result"
+
+RITUALE Ok GENUS(T, E)(T value) REDDE SPECULUM NIHIL
+  REDDE OBSECRO result_ok(SPECULUM value, MENSURA(T), MENSURA(E))
+EXPLICIT RITUALE
+
+RITUALE Err GENUS(T, E)(E error) REDDE SPECULUM NIHIL
+  REDDE OBSECRO result_err(SPECULUM error, MENSURA(T), MENSURA(E))
+EXPLICIT RITUALE
+
+RITUALE result_is_ok GENUS(T, E)(SPECULUM NIHIL res) REDDE VERUM
+  REDDE OBSECRO result_is_ok(res)
+EXPLICIT RITUALE
+
+RITUALE result_is_err GENUS(T, E)(SPECULUM NIHIL res) REDDE VERUM
+  REDDE OBSECRO result_is_err(res)
+EXPLICIT RITUALE
+
+RITUALE result_unwrap GENUS(T, E)(SPECULUM NIHIL res) REDDE T
+  EVOCA SPECULUM T ptr AD OBSECRO result_unwrap_ptr(res)
+  REDDE *ptr
+EXPLICIT RITUALE
+
+RITUALE result_unwrap_or GENUS(T, E)(SPECULUM NIHIL res, T default_value) REDDE T
+  SI OBSECRO result_is_ok(res)
+    EVOCA SPECULUM T ptr AD OBSECRO result_unwrap_ptr(res)
+    REDDE *ptr
+  FIN SI
+  REDDE default_value
+EXPLICIT RITUALE
+
+RITUALE result_unwrap_err GENUS(T, E)(SPECULUM NIHIL res) REDDE E
+  EVOCA SPECULUM E ptr AD OBSECRO result_unwrap_err_ptr(res)
+  REDDE *ptr
+EXPLICIT RITUALE
+
+RITUALE result_expect GENUS(T, E)(SPECULUM NIHIL res, VERBUM message) REDDE T
+  EVOCA SPECULUM T ptr AD OBSECRO result_expect_ptr(res, message)
+  REDDE *ptr
+EXPLICIT RITUALE
+
+RITUALE result_free GENUS(T, E)(SPECULUM NIHIL res) REDDE NIHIL
+  OBSECRO result_free(res)
+  REDDE
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

@@ -1,0 +1,63 @@
+INCIPIT grimoire "collection_ops"
+
+ADVOCARE "cct/mem.cct"
+
+RITUALE fluxus_map GENUS(T, R)(SPECULUM NIHIL flux, SPECULUM NIHIL fn) REDDE SPECULUM NIHIL
+  REDDE OBSECRO collection_fluxus_map(flux, MENSURA(T), MENSURA(R), fn)
+EXPLICIT RITUALE
+
+RITUALE fluxus_filter GENUS(T)(SPECULUM NIHIL flux, SPECULUM NIHIL predicate) REDDE SPECULUM NIHIL
+  REDDE OBSECRO collection_fluxus_filter(flux, MENSURA(T), predicate)
+EXPLICIT RITUALE
+
+RITUALE fluxus_fold GENUS(T, Acc)(SPECULUM NIHIL flux, Acc initial, SPECULUM NIHIL fn) REDDE Acc
+  EVOCA SPECULUM NIHIL acc_ptr AD OBSECRO collection_fluxus_fold(flux, MENSURA(T), SPECULUM initial, MENSURA(Acc), fn)
+  EVOCA SPECULUM Acc acc_view
+  VINCIRE acc_view AD acc_ptr
+  EVOCA Acc acc AD *acc_view
+  CONIURA free(acc_ptr)
+  REDDE acc
+EXPLICIT RITUALE
+
+RITUALE fluxus_find GENUS(T)(SPECULUM NIHIL flux, SPECULUM NIHIL predicate) REDDE SPECULUM NIHIL
+  REDDE OBSECRO collection_fluxus_find(flux, MENSURA(T), predicate)
+EXPLICIT RITUALE
+
+RITUALE fluxus_any GENUS(T)(SPECULUM NIHIL flux, SPECULUM NIHIL predicate) REDDE VERUM
+  REDDE OBSECRO collection_fluxus_any(flux, MENSURA(T), predicate)
+EXPLICIT RITUALE
+
+RITUALE fluxus_all GENUS(T)(SPECULUM NIHIL flux, SPECULUM NIHIL predicate) REDDE VERUM
+  REDDE OBSECRO collection_fluxus_all(flux, MENSURA(T), predicate)
+EXPLICIT RITUALE
+
+RITUALE series_map GENUS(T, R)(SPECULUM NIHIL arr, REX len, SPECULUM NIHIL fn) REDDE SPECULUM NIHIL
+  REDDE OBSECRO collection_series_map(arr, len, MENSURA(T), MENSURA(R), fn)
+EXPLICIT RITUALE
+
+RITUALE series_filter GENUS(T)(SPECULUM NIHIL arr, REX len, SPECULUM NIHIL predicate) REDDE SPECULUM NIHIL
+  REDDE OBSECRO collection_series_filter(arr, len, MENSURA(T), predicate)
+EXPLICIT RITUALE
+
+RITUALE series_reduce GENUS(T, Acc)(SPECULUM NIHIL arr, REX len, Acc initial, SPECULUM NIHIL fn) REDDE Acc
+  EVOCA SPECULUM NIHIL acc_ptr AD OBSECRO collection_series_reduce(arr, len, MENSURA(T), SPECULUM initial, MENSURA(Acc), fn)
+  EVOCA SPECULUM Acc acc_view
+  VINCIRE acc_view AD acc_ptr
+  EVOCA Acc acc AD *acc_view
+  CONIURA free(acc_ptr)
+  REDDE acc
+EXPLICIT RITUALE
+
+RITUALE series_find GENUS(T)(SPECULUM NIHIL arr, REX len, SPECULUM NIHIL predicate) REDDE SPECULUM NIHIL
+  REDDE OBSECRO collection_series_find(arr, len, MENSURA(T), predicate)
+EXPLICIT RITUALE
+
+RITUALE series_any GENUS(T)(SPECULUM NIHIL arr, REX len, SPECULUM NIHIL predicate) REDDE VERUM
+  REDDE OBSECRO collection_series_any(arr, len, MENSURA(T), predicate)
+EXPLICIT RITUALE
+
+RITUALE series_all GENUS(T)(SPECULUM NIHIL arr, REX len, SPECULUM NIHIL predicate) REDDE VERUM
+  REDDE OBSECRO collection_series_all(arr, len, MENSURA(T), predicate)
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

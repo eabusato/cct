@@ -1,0 +1,44 @@
+INCIPIT grimoire "fluxus"
+
+RITUALE fluxus_init(REX elem_size) REDDE SPECULUM NIHIL
+  REDDE OBSECRO fluxus_init(elem_size)
+EXPLICIT RITUALE
+
+RITUALE fluxus_free(SPECULUM NIHIL flux) REDDE NIHIL
+  OBSECRO fluxus_free(flux)
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE fluxus_push(SPECULUM NIHIL flux, SPECULUM NIHIL elem) REDDE NIHIL
+  OBSECRO fluxus_push(flux, elem)
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE fluxus_pop(SPECULUM NIHIL flux, SPECULUM NIHIL out) REDDE NIHIL
+  OBSECRO fluxus_pop(flux, out)
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE fluxus_len(SPECULUM NIHIL flux) REDDE REX
+  REDDE OBSECRO fluxus_len(flux)
+EXPLICIT RITUALE
+
+RITUALE fluxus_get(SPECULUM NIHIL flux, REX idx) REDDE SPECULUM NIHIL
+  REDDE OBSECRO fluxus_get(flux, idx)
+EXPLICIT RITUALE
+
+RITUALE fluxus_clear(SPECULUM NIHIL flux) REDDE NIHIL
+  OBSECRO fluxus_clear(flux)
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE fluxus_reserve(SPECULUM NIHIL flux, REX cap) REDDE NIHIL
+  OBSECRO fluxus_reserve(flux, cap)
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE fluxus_capacity(SPECULUM NIHIL flux) REDDE REX
+  REDDE OBSECRO fluxus_capacity(flux)
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

@@ -1,0 +1,73 @@
+INCIPIT grimoire "alg"
+
+RITUALE alg_linear_search(SPECULUM REX arr, REX valor, REX tamanho) REDDE REX
+  EVOCA REX i AD 0
+  DUM i < tamanho
+    SI arr[i] == valor
+      REDDE i
+    FIN SI
+    VINCIRE i AD i + 1
+  FIN DUM
+  REDDE -1
+EXPLICIT RITUALE
+
+RITUALE alg_compare_arrays(SPECULUM REX a, SPECULUM REX b, REX tamanho) REDDE VERUM
+  EVOCA REX i AD 0
+  DUM i < tamanho
+    SI a[i] != b[i]
+      REDDE FALSUM
+    FIN SI
+    VINCIRE i AD i + 1
+  FIN DUM
+  REDDE VERUM
+EXPLICIT RITUALE
+
+RITUALE alg_binary_search(SPECULUM REX arr, REX tamanho, REX alvo) REDDE REX
+  EVOCA REX lo AD 0
+  EVOCA REX hi AD tamanho - 1
+
+  DUM lo <= hi
+    EVOCA REX mid AD lo + ((hi - lo) / 2)
+    SI arr[mid] == alvo
+      REDDE mid
+    FIN SI
+
+    SI arr[mid] < alvo
+      VINCIRE lo AD mid + 1
+    ALITER
+      VINCIRE hi AD mid - 1
+    FIN SI
+  FIN DUM
+
+  REDDE -1
+EXPLICIT RITUALE
+
+RITUALE alg_sort_insertion(SPECULUM REX arr, REX tamanho) REDDE NIHIL
+  EVOCA REX i AD 1
+  DUM i < tamanho
+    EVOCA REX chave AD arr[i]
+    EVOCA REX j AD i - 1
+    EVOCA VERUM inseriu AD FALSUM
+
+    DUM j >= 0
+      SI arr[j] > chave
+        VINCIRE arr[j + 1] AD arr[j]
+        VINCIRE j AD j - 1
+      ALITER
+        VINCIRE inseriu AD VERUM
+        VINCIRE arr[j + 1] AD chave
+        VINCIRE j AD -1
+      FIN SI
+    FIN DUM
+
+    SI inseriu == FALSUM
+      VINCIRE arr[0] AD chave
+    FIN SI
+
+    VINCIRE i AD i + 1
+  FIN DUM
+
+  REDDE
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

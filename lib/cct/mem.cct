@@ -1,0 +1,35 @@
+INCIPIT grimoire "mem"
+
+RITUALE alloc(REX tamanho) REDDE SPECULUM REX
+  REDDE OBSECRO mem_alloc(tamanho)
+EXPLICIT RITUALE
+
+RITUALE free(SPECULUM REX ptr) REDDE NIHIL
+  OBSECRO mem_free(ptr)
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE realloc(SPECULUM REX ptr, REX novo_tamanho) REDDE SPECULUM REX
+  REDDE OBSECRO mem_realloc(ptr, novo_tamanho)
+EXPLICIT RITUALE
+
+RITUALE copy(SPECULUM REX dest, SPECULUM REX src, REX tamanho) REDDE NIHIL
+  OBSECRO mem_copy(dest, src, tamanho)
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE set(SPECULUM REX ptr, REX valor, REX tamanho) REDDE NIHIL
+  OBSECRO mem_set(ptr, valor, tamanho)
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE zero(SPECULUM REX ptr, REX tamanho) REDDE NIHIL
+  OBSECRO mem_zero(ptr, tamanho)
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE mem_compare(SPECULUM REX a, SPECULUM REX b, REX tamanho) REDDE REX
+  REDDE OBSECRO mem_compare(a, b, tamanho)
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

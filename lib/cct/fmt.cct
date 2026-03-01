@@ -1,0 +1,48 @@
+INCIPIT grimoire "fmt"
+
+ADVOCARE "cct/verbum.cct"
+
+RITUALE stringify_int(REX x) REDDE VERBUM
+  REDDE OBSECRO fmt_stringify_int(x)
+EXPLICIT RITUALE
+
+RITUALE stringify_real(UMBRA x) REDDE VERBUM
+  REDDE OBSECRO fmt_stringify_real(x)
+EXPLICIT RITUALE
+
+RITUALE stringify_float(FLAMMA x) REDDE VERBUM
+  REDDE OBSECRO fmt_stringify_float(x)
+EXPLICIT RITUALE
+
+RITUALE stringify_bool(VERUM b) REDDE VERBUM
+  SI b == VERUM
+    REDDE "true"
+  FIN SI
+  REDDE "false"
+EXPLICIT RITUALE
+
+RITUALE fmt_parse_int(VERBUM s) REDDE REX
+  REDDE OBSECRO fmt_parse_int(s)
+EXPLICIT RITUALE
+
+RITUALE fmt_parse_real(VERBUM s) REDDE UMBRA
+  REDDE OBSECRO fmt_parse_real(s)
+EXPLICIT RITUALE
+
+RITUALE fmt_parse_bool(VERBUM s) REDDE VERUM
+  SI CONIURA compare(s, "true") == 0
+    REDDE VERUM
+  FIN SI
+  SI CONIURA compare(s, "false") == 0
+    REDDE FALSUM
+  FIN SI
+  IACE "fmt parse_bool invalid input"
+  REDDE FALSUM
+EXPLICIT RITUALE
+
+RITUALE format_pair(VERBUM label, VERBUM value) REDDE VERBUM
+  EVOCA VERBUM left AD CONIURA concat(label, ": ")
+  REDDE CONIURA concat(left, value)
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

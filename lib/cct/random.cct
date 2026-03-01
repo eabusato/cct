@@ -1,0 +1,16 @@
+INCIPIT grimoire "random"
+
+RITUALE seed(REX s) REDDE NIHIL
+  OBSECRO random_seed(s)
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE random_int(REX lo, REX hi) REDDE REX
+  REDDE OBSECRO random_int(lo, hi)
+EXPLICIT RITUALE
+
+RITUALE random_real() REDDE FLAMMA
+  REDDE OBSECRO random_real()
+EXPLICIT RITUALE
+
+EXPLICIT grimoire
