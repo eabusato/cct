@@ -1,0 +1,24 @@
+INCIPIT grimoire "fluxus_clear_11d3"
+
+ADVOCARE "cct/fluxus.cct"
+
+RITUALE main() REDDE REX
+  EVOCA SPECULUM NIHIL flux
+  EVOCA REX i AD 0
+  EVOCA REX v AD 0
+
+  VINCIRE flux AD CONIURA fluxus_init(MENSURA(REX))
+
+  DUM i < 3
+    VINCIRE v AD i + 10
+    CONIURA fluxus_push(flux, SPECULUM v)
+    VINCIRE i AD i + 1
+  FIN DUM
+
+  CONIURA fluxus_clear(flux)
+  EVOCA REX n AD CONIURA fluxus_len(flux)
+  CONIURA fluxus_free(flux)
+  REDDE n
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

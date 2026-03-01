@@ -1,0 +1,10 @@
+INCIPIT grimoire "codegen_unsupported_repete"
+
+RITUALE main() REDDE NIHIL
+  REPETE i DE 0 AD 3
+    OBSECRO scribe(i, "\n")
+  FIN REPETE
+  REDDE
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

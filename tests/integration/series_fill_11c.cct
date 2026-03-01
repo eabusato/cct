@@ -1,0 +1,18 @@
+INCIPIT grimoire "series_fill_11c"
+
+ADVOCARE "cct/series.cct"
+
+RITUALE main() REDDE REX
+  EVOCA SERIES REX[5] arr
+  CONIURA series_fill GENUS(REX)(SPECULUM arr[0], 42, 5)
+
+  SI arr[0] == 42
+    SI arr[4] == 42
+      REDDE 0
+    FIN SI
+  FIN SI
+
+  REDDE 1
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

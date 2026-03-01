@@ -1,0 +1,12 @@
+INCIPIT grimoire "sigilo_series_alg_11c"
+
+ADVOCARE "cct/series.cct"
+ADVOCARE "cct/alg.cct"
+
+RITUALE main() REDDE REX
+  EVOCA SERIES REX[3] arr
+  CONIURA series_fill GENUS(REX)(SPECULUM arr[0], 7, 3)
+  REDDE CONIURA alg_linear_search(SPECULUM arr[0], 7, 3)
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

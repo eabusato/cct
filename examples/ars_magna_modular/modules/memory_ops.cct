@@ -1,0 +1,32 @@
+INCIPIT grimoire "ars_mod_memory"
+
+ADVOCARE "types.cct"
+
+RITUALE elevar(SPECULUM REX alvo, REX quantum) REDDE NIHIL
+  VINCIRE *alvo AD *alvo + quantum
+EXPLICIT RITUALE
+
+RITUALE preencher_series(SPECULUM REX ptr, REX n, REX inicio) REDDE NIHIL
+  EVOCA REX i AD 0
+  DUM i < n
+    VINCIRE ptr[i] AD inicio + i
+    VINCIRE i AD i + 1
+  FIN DUM
+EXPLICIT RITUALE
+
+RITUALE somar_series(SPECULUM REX ptr, REX n) REDDE REX
+  EVOCA REX i AD 0
+  EVOCA REX soma AD 0
+  DUM i < n
+    VINCIRE soma AD soma + ptr[i]
+    VINCIRE i AD i + 1
+  FIN DUM
+  REDDE soma
+EXPLICIT RITUALE
+
+RITUALE atualizar_daemon(SPECULUM Daemon d, REX extra) REDDE NIHIL
+  VINCIRE (*d).potestas AD (*d).potestas + extra
+  VINCIRE (*d).vis.gradus AD (*d).vis.gradus + 1
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

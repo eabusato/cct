@@ -1,0 +1,23 @@
+INCIPIT grimoire "failure_cleanup_combined_8d"
+
+RITUALE main() REDDE REX
+  EVOCA SPECULUM REX p1
+  EVOCA SPECULUM REX p2
+  EVOCA REX r AD 0
+
+  VINCIRE p1 AD OBSECRO pete(MENSURA(REX))
+
+  TEMPTA
+    VINCIRE p2 AD OBSECRO pete(MENSURA(REX))
+    IACE "cleanup-8d"
+  CAPE FRACTUM erro
+    VINCIRE r AD 88
+  SEMPER
+    OBSECRO libera(p1)
+    DIMITTE p2
+  FIN TEMPTA
+
+  REDDE r
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

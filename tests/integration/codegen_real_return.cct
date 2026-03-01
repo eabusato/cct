@@ -1,0 +1,16 @@
+INCIPIT grimoire "realreturn"
+
+RITUALE soma() REDDE UMBRA
+  REDDE 1.0 + 2.5
+EXPLICIT RITUALE
+
+RITUALE main() REDDE REX
+  EVOCA UMBRA v AD CONIURA soma()
+  SI v == 3.5
+    REDDE 1
+  ALITER
+    REDDE 0
+  FIN SI
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

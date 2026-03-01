@@ -1,0 +1,14 @@
+INCIPIT grimoire "sigbasic"
+
+SIGILLUM Daemon
+  nomen: VERBUM
+  potestas: REX
+FIN SIGILLUM
+
+RITUALE main() REDDE REX
+  EVOCA Daemon d
+  VINCIRE d.potestas AD 66
+  REDDE d.potestas
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

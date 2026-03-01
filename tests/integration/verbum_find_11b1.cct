@@ -1,0 +1,19 @@
+INCIPIT grimoire "verbum_find_11b1"
+
+ADVOCARE "cct/verbum.cct"
+
+RITUALE main() REDDE REX
+  EVOCA VERBUM s AD "hello world"
+  EVOCA REX pos_world AD CONIURA find(s, "world")
+  EVOCA REX pos_xyz AD CONIURA find(s, "xyz")
+
+  SI pos_world == 6
+    SI pos_xyz == -1
+      REDDE 0
+    FIN SI
+  FIN SI
+
+  REDDE 1
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

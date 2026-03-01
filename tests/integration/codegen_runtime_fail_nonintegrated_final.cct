@@ -1,0 +1,10 @@
+INCIPIT grimoire "runtime_fail_nonintegrated_final_8d"
+
+RITUALE main() REDDE NIHIL
+  REPETE i DE 0 AD 3 GRADUS 0
+    OBSECRO scribe(i)
+  FIN REPETE
+  REDDE
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

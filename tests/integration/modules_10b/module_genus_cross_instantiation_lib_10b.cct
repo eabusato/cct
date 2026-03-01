@@ -1,0 +1,7 @@
+INCIPIT grimoire "module_genus_cross_instantiation_lib_10b"
+
+RITUALE identitas GENUS(T)(T valor) REDDE T
+  REDDE valor
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

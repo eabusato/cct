@@ -1,0 +1,9 @@
+INCIPIT grimoire "module_resolve_missing_symbol"
+
+ADVOCARE "modules_9b/module_resolve_call_ok_lib.cct"
+
+RITUALE main() REDDE REX
+  REDDE CONIURA rituale_inexistente()
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

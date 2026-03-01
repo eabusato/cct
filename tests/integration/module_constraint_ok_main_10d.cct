@@ -1,0 +1,15 @@
+INCIPIT grimoire "module_constraint_ok_main_10d"
+
+ADVOCARE "modules_10d/module_constraint_contract_10d.cct"
+ADVOCARE "modules_10d/module_constraint_impl_10d.cct"
+
+RITUALE aplica GENUS(T PACTUM Numerabilis)(SPECULUM T self, REX x) REDDE REX
+  REDDE x
+EXPLICIT RITUALE
+
+RITUALE main() REDDE REX
+  EVOCA Conta c
+  REDDE CONIURA aplica GENUS(Conta)(SPECULUM c, 23)
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

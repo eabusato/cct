@@ -1,0 +1,11 @@
+INCIPIT grimoire "module_visibility_internal_rituale_lib"
+
+ARCANUM RITUALE segredo_local(REX x) REDDE REX
+  REDDE x + 1
+EXPLICIT RITUALE
+
+RITUALE expoe_local() REDDE REX
+  REDDE CONIURA segredo_local(41)
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

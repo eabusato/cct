@@ -1,0 +1,12 @@
+INCIPIT grimoire "sigilo_final_modular_entry"
+
+ADVOCARE "modules_9e/module_final_a.cct"
+ADVOCARE "modules_9e/module_final_b.cct"
+
+RITUALE main() REDDE REX
+  EVOCA AData data
+  VINCIRE data.v AD CONIURA valor_a(7)
+  REDDE CONIURA valor_b(data.v)
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

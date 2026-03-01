@@ -1,0 +1,10 @@
+INCIPIT grimoire "docgen_showcase_calculus_12g"
+
+--! multiply by three
+--! @param v input value
+--! @return transformed value
+RITUALE triplo(REX v) REDDE REX
+  REDDE v * 3
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

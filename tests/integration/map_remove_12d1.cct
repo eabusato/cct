@@ -1,0 +1,31 @@
+INCIPIT grimoire "map_remove_12d1"
+
+ADVOCARE "cct/map.cct"
+
+RITUALE main() REDDE REX
+  EVOCA SPECULUM NIHIL m AD CONIURA map_init GENUS(REX, REX)()
+
+  CONIURA map_insert GENUS(REX, REX)(m, 1, 10)
+  CONIURA map_insert GENUS(REX, REX)(m, 2, 20)
+  CONIURA map_insert GENUS(REX, REX)(m, 3, 30)
+
+  SI NON CONIURA map_remove GENUS(REX, REX)(m, 2)
+    CONIURA map_free GENUS(REX, REX)(m)
+    REDDE 31
+  FIN SI
+
+  SI CONIURA map_contains GENUS(REX, REX)(m, 2)
+    CONIURA map_free GENUS(REX, REX)(m)
+    REDDE 32
+  FIN SI
+
+  SI CONIURA map_len GENUS(REX, REX)(m) != 2
+    CONIURA map_free GENUS(REX, REX)(m)
+    REDDE 33
+  FIN SI
+
+  CONIURA map_free GENUS(REX, REX)(m)
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

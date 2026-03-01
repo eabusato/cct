@@ -1,0 +1,12 @@
+INCIPIT grimoire "speccall"
+
+RITUALE lege_valorem(SPECULUM REX p) REDDE REX
+  REDDE *p
+EXPLICIT RITUALE
+
+RITUALE main() REDDE REX
+  EVOCA REX x AD 13
+  REDDE CONIURA lege_valorem(SPECULUM x)
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

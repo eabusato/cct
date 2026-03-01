@@ -1,0 +1,28 @@
+INCIPIT grimoire "result_basic_12c"
+
+ADVOCARE "cct/result.cct"
+
+RITUALE main() REDDE REX
+  EVOCA SPECULUM NIHIL okv AD CONIURA Ok GENUS(REX, REX)(21)
+  EVOCA SPECULUM NIHIL errv AD CONIURA Err GENUS(REX, REX)(-3)
+
+  SI CONIURA result_is_ok GENUS(REX, REX)(okv)
+    EVOCA REX v AD CONIURA result_unwrap GENUS(REX, REX)(okv)
+    SI v == 21
+      SI CONIURA result_is_err GENUS(REX, REX)(errv)
+        EVOCA REX e AD CONIURA result_unwrap_err GENUS(REX, REX)(errv)
+        CONIURA result_free GENUS(REX, REX)(okv)
+        CONIURA result_free GENUS(REX, REX)(errv)
+        SI e == -3
+          REDDE 0
+        FIN SI
+      FIN SI
+    FIN SI
+  FIN SI
+
+  CONIURA result_free GENUS(REX, REX)(okv)
+  CONIURA result_free GENUS(REX, REX)(errv)
+  REDDE 1
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

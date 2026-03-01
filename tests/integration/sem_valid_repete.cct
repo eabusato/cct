@@ -1,0 +1,10 @@
+INCIPIT grimoire "sem_repete"
+
+RITUALE main() REDDE NIHIL
+  REPETE i DE 0 AD 3 GRADUS 1
+    OBSECRO scribe(i)
+  FIN REPETE
+  REDDE
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

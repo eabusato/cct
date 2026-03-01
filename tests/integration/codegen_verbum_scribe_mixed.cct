@@ -1,0 +1,13 @@
+INCIPIT grimoire "verbumscribe"
+
+RITUALE main() REDDE REX
+  EVOCA VERBUM nome
+  EVOCA REX n AD 7
+  EVOCA UMBRA r AD 2.5
+  EVOCA VERUM ok AD VERUM
+  VINCIRE nome AD "bael"
+  OBSECRO scribe("nome=", nome, " n=", n, " r=", r, " ok=", ok, "\n")
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

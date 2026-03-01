@@ -1,0 +1,14 @@
+INCIPIT grimoire "ifelse"
+
+RITUALE main() REDDE NIHIL
+  EVOCA REX x
+  VINCIRE x AD 1
+  SI x == 1
+    VINCIRE x AD 2
+  ALITER
+    VINCIRE x AD 3
+  FIN SI
+  REDDE
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

@@ -1,0 +1,12 @@
+INCIPIT grimoire "cast_int_to_int_12b"
+
+RITUALE main() REDDE REX
+  EVOCA REX grande AD 300
+  EVOCA DUX pequeno AD cast GENUS(DUX)(grande)
+  SI pequeno == 300
+    REDDE 0
+  FIN SI
+  REDDE 1
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

@@ -1,0 +1,8 @@
+INCIPIT grimoire "syntax_genus_ordo"
+
+ORDO Status GENUS(T)
+  UNUS,
+  DUO
+FIN ORDO
+
+EXPLICIT grimoire

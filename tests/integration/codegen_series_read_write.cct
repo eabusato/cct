@@ -1,0 +1,11 @@
+INCIPIT grimoire "seriesrw"
+
+RITUALE main() REDDE VERUM
+  EVOCA SERIES VERUM[3] flags
+  VINCIRE flags[0] AD VERUM
+  VINCIRE flags[1] AD FALSUM
+  VINCIRE flags[2] AD flags[0]
+  REDDE flags[2]
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

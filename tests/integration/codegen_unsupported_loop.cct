@@ -1,0 +1,11 @@
+INCIPIT grimoire "codegen_unsupported_loop"
+
+RITUALE main() REDDE NIHIL
+  EVOCA REX i AD 0
+  DUM i < 1
+    VINCIRE i AD i + 1
+  FIN DUM
+  REDDE
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

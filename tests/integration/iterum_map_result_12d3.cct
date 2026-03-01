@@ -1,0 +1,29 @@
+INCIPIT grimoire "iterum_map_result_12d3"
+
+ADVOCARE "cct/fluxus.cct"
+ADVOCARE "cct/collection_ops.cct"
+
+RITUALE triplo(REX x) REDDE REX
+  REDDE x * 3
+EXPLICIT RITUALE
+
+RITUALE main() REDDE REX
+  EVOCA SPECULUM NIHIL nums AD CONIURA fluxus_init(MENSURA(REX))
+  EVOCA REX a AD 1
+  EVOCA REX b AD 2
+  CONIURA fluxus_push(nums, SPECULUM a)
+  CONIURA fluxus_push(nums, SPECULUM b)
+
+  EVOCA SPECULUM NIHIL triplos AD CONIURA fluxus_map GENUS(REX, REX)(nums, triplo)
+
+  EVOCA REX soma AD 0
+  ITERUM n IN triplos COM
+    VINCIRE soma AD soma + n
+  FIN ITERUM
+
+  CONIURA fluxus_free(nums)
+  CONIURA fluxus_free(triplos)
+  REDDE soma
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

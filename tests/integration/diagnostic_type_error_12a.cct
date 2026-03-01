@@ -1,0 +1,9 @@
+INCIPIT grimoire "diagnostic_type_error_12a"
+
+RITUALE main() REDDE NIHIL
+  EVOCA REX x
+  VINCIRE x AD "texto"
+  REDDE
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

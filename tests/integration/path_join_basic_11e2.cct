@@ -1,0 +1,14 @@
+INCIPIT grimoire "path_join_basic_11e2"
+
+ADVOCARE "cct/path.cct"
+ADVOCARE "cct/verbum.cct"
+
+RITUALE main() REDDE REX
+  EVOCA VERBUM p AD CONIURA path_join("alpha", "beta")
+  SI CONIURA compare(p, "alpha/beta") == 0
+    REDDE 0
+  FIN SI
+  REDDE 1
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

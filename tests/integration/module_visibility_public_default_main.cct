@@ -1,0 +1,9 @@
+INCIPIT grimoire "module_visibility_public_default_main"
+
+ADVOCARE "modules_9c/module_visibility_public_default_lib.cct"
+
+RITUALE main() REDDE REX
+  REDDE CONIURA publico_soma(20, 22)
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

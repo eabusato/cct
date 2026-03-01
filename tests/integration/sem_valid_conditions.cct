@@ -1,0 +1,19 @@
+INCIPIT grimoire "sem_conditions"
+
+RITUALE main() REDDE NIHIL
+  EVOCA REX x AD 0
+  SI x == 0
+    VINCIRE x AD 1
+  ALITER
+    VINCIRE x AD 2
+  FIN SI
+  DUM x < 3
+    VINCIRE x AD x + 1
+  FIN DUM
+  DONEC
+    VINCIRE x AD x - 1
+  DUM x > 0
+  REDDE
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

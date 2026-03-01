@@ -1,0 +1,9 @@
+INCIPIT grimoire "project_modular_12f_main"
+
+ADVOCARE "../lib/math.cct"
+
+RITUALE main() REDDE REX
+  REDDE CONIURA dobro(21)
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

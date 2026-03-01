@@ -1,0 +1,9 @@
+INCIPIT grimoire "stdlib_resolution_basic_11a"
+
+ADVOCARE "cct/stub_test.cct"
+
+RITUALE main() REDDE REX
+  REDDE CONIURA test_value()
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

@@ -1,0 +1,21 @@
+INCIPIT grimoire "showcase_string_11g"
+
+ADVOCARE "cct/verbum.cct"
+ADVOCARE "cct/fmt.cct"
+ADVOCARE "cct/cmp.cct"
+
+RITUALE main() REDDE REX
+  EVOCA VERBUM bruto AD "  Ave Clavicula  "
+  EVOCA VERBUM limpo AD CONIURA trim(bruto)
+  EVOCA VERBUM nome AD CONIURA substring(limpo, 4, 13)
+  EVOCA VERBUM tam AD CONIURA stringify_int(CONIURA len(nome))
+  EVOCA VERBUM msg AD CONIURA format_pair(nome, tam)
+
+  SI CONIURA cmp_verbum(msg, "Clavicula: 9") == 0
+    REDDE 0
+  FIN SI
+
+  REDDE 1
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

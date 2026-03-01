@@ -1,0 +1,21 @@
+INCIPIT grimoire "fluxus_reserve_capacity_11d3"
+
+ADVOCARE "cct/fluxus.cct"
+
+RITUALE main() REDDE REX
+  EVOCA SPECULUM NIHIL flux
+  EVOCA REX cap AD 0
+
+  VINCIRE flux AD CONIURA fluxus_init(MENSURA(REX))
+  CONIURA fluxus_reserve(flux, 100)
+  VINCIRE cap AD CONIURA fluxus_capacity(flux)
+
+  CONIURA fluxus_free(flux)
+
+  SI cap >= 100
+    REDDE 0
+  FIN SI
+  REDDE 1
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

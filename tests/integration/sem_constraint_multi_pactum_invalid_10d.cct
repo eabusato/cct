@@ -1,0 +1,15 @@
+INCIPIT grimoire "sem_constraint_multi_pactum_invalid_10d"
+
+PACTUM Alpha
+  RITUALE a(REX x) REDDE REX
+FIN PACTUM
+
+PACTUM Beta
+  RITUALE b(REX x) REDDE REX
+FIN PACTUM
+
+RITUALE invalida GENUS(T PACTUM Alpha PACTUM Beta)(T valor) REDDE T
+  REDDE valor
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

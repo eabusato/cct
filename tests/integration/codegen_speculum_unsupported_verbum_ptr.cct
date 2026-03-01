@@ -1,0 +1,8 @@
+INCIPIT grimoire "badspecverbum"
+
+RITUALE main() REDDE NIHIL
+  EVOCA SPECULUM VERBUM p
+  ANUR 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

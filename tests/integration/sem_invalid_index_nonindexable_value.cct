@@ -1,0 +1,8 @@
+INCIPIT grimoire "badindexbase"
+
+RITUALE main() REDDE REX
+  EVOCA REX x AD 1
+  REDDE x[0]
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

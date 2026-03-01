@@ -1,0 +1,17 @@
+-- CCT Test: Operators and Punctuation
+
+-- Arithmetic operators
++ - * / %
+
+-- Comparison operators
+== != < <= > >=
+
+-- Assignment
+=
+
+-- Increment/Decrement
+++
+
+-- Punctuation
+( ) { } [ ]
+, . : ; ?

@@ -1,0 +1,15 @@
+INCIPIT grimoire "module_final_a"
+
+SIGILLUM AData
+  v: REX
+FIN SIGILLUM
+
+RITUALE valor_a(REX base) REDDE REX
+  REDDE base + 3
+EXPLICIT RITUALE
+
+ARCANUM RITUALE segredo_a() REDDE REX
+  REDDE 99
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

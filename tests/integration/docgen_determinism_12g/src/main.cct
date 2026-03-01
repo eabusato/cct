@@ -1,0 +1,10 @@
+INCIPIT grimoire "docgen_determinism_main_12g"
+
+ADVOCARE "../lib/core.cct"
+
+--! deterministic docs entry
+RITUALE main() REDDE REX
+  REDDE CONIURA valor_base()
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

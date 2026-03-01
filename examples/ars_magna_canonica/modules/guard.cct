@@ -1,0 +1,31 @@
+INCIPIT grimoire "ars_canonica_guard"
+
+ADVOCARE "types.cct"
+ADVOCARE "cct/cmp.cct"
+
+RITUALE guard_session(SPECULUM Session sessio) REDDE NIHIL
+  EVOCA VERUM approved AD (*sessio).approved
+  EVOCA REX count AD (*sessio).count
+  EVOCA REX sum AD (*sessio).sum
+  EVOCA VERBUM nome AD (*sessio).nomen
+
+  SI approved == FALSUM
+    IACE "session is not approved"
+  FIN SI
+
+  SI count < 1
+    IACE "session has no samples"
+  FIN SI
+
+  SI sum < 1
+    IACE "session sum invalid"
+  FIN SI
+
+  SI CONIURA cmp_verbum(nome, "") == 0
+    IACE "session nomen is empty"
+  FIN SI
+
+  REDDE
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

@@ -1,0 +1,8 @@
+INCIPIT grimoire "codegen_scribe"
+
+RITUALE main() REDDE NIHIL
+  OBSECRO scribe("Ave FASE 4A!\n")
+  ANUR 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

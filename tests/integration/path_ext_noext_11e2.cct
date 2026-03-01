@@ -1,0 +1,14 @@
+INCIPIT grimoire "path_ext_noext_11e2"
+
+ADVOCARE "cct/path.cct"
+ADVOCARE "cct/verbum.cct"
+
+RITUALE main() REDDE REX
+  EVOCA VERBUM e AD CONIURA path_ext("a/b/c")
+  SI CONIURA compare(e, "") == 0
+    REDDE 0
+  FIN SI
+  REDDE 1
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

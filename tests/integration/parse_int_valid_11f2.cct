@@ -1,0 +1,14 @@
+INCIPIT grimoire "parse_int_valid_11f2"
+
+ADVOCARE "cct/parse.cct"
+
+RITUALE main() REDDE REX
+  SI CONIURA parse_int("42") == 42
+    SI CONIURA parse_int("-7") == -7
+      REDDE 0
+    FIN SI
+  FIN SI
+  REDDE 1
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

@@ -1,0 +1,9 @@
+INCIPIT grimoire "phase12_closure_end_to_end_12h_core"
+
+-- /// Retorna valor base para smoke final.
+-- /// @return Valor base inteiro.
+RITUALE base_value() REDDE REX
+  REDDE 40
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

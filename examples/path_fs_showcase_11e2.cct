@@ -1,0 +1,29 @@
+INCIPIT grimoire "path_fs_showcase_11e2"
+
+ADVOCARE "cct/path.cct"
+ADVOCARE "cct/fs.cct"
+ADVOCARE "cct/io.cct"
+
+RITUALE main() REDDE REX
+  EVOCA VERBUM base AD "tests/fixtures/io_fs"
+  EVOCA VERBUM file AD "showcase_path_11e2.log"
+  EVOCA VERBUM full AD CONIURA path_join(base, file)
+
+  CONIURA write_all(full, "linea-prima\nlinea-secunda\n")
+
+  EVOCA VERBUM content AD CONIURA read_all(full)
+  EVOCA VERBUM name AD CONIURA path_basename(full)
+  EVOCA VERBUM ext AD CONIURA path_ext(full)
+
+  CONIURA println("PATH showcase")
+  CONIURA print("file=")
+  CONIURA println(name)
+  CONIURA print("ext=")
+  CONIURA println(ext)
+  CONIURA print("content=")
+  CONIURA println(content)
+
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

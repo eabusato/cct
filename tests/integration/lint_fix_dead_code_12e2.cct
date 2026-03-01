@@ -1,0 +1,8 @@
+INCIPIT grimoire "lint_fix_dead_code_12e2"
+
+RITUALE main() REDDE REX
+  REDDE 7
+  EVOCA REX apagar AD 99
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

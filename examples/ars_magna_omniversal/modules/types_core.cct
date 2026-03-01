@@ -1,0 +1,49 @@
+INCIPIT grimoire "omni_types"
+
+PACTUM Numerabilis
+  RITUALE valor(REX x) REDDE REX
+FIN PACTUM
+
+ORDO Stance
+  QUIETUS = 0
+  ACTUS = 1
+  IRA = 2
+FIN ORDO
+
+SIGILLUM Rune
+  mark: REX
+FIN SIGILLUM
+
+SIGILLUM Mage PACTUM Numerabilis
+  name: VERBUM
+  power: REX
+  heat: UMBRA
+  rune: Rune
+  stance: Stance
+FIN SIGILLUM
+
+ARCANUM RITUALE calibrar_interno(REX base) REDDE REX
+  REDDE base + 7
+EXPLICIT RITUALE
+
+RITUALE preparar_mage(SPECULUM Mage out, VERBUM name, REX base, UMBRA heat) REDDE NIHIL
+  VINCIRE (*out).name AD name
+  VINCIRE (*out).rune.mark AD 5
+  VINCIRE (*out).power AD CONIURA calibrar_interno(base) + (*out).rune.mark
+  VINCIRE (*out).heat AD heat
+  VINCIRE (*out).stance AD ACTUS
+EXPLICIT RITUALE
+
+RITUALE valor(SPECULUM Mage self, REX x) REDDE REX
+  REDDE x + (*self).rune.mark
+EXPLICIT RITUALE
+
+RITUALE stance_bonus(Stance s) REDDE REX
+  SI s == IRA
+    REDDE 9
+  ALITER
+    REDDE 3
+  FIN SI
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

@@ -1,0 +1,16 @@
+INCIPIT grimoire "failure_coniura_no_throw"
+
+RITUALE dobro(REX x) REDDE REX
+  REDDE x + x
+EXPLICIT RITUALE
+
+RITUALE main() REDDE REX
+  TEMPTA
+    REDDE CONIURA dobro(6)
+  CAPE FRACTUM erro
+    REDDE 99
+  FIN TEMPTA
+  REDDE 88
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

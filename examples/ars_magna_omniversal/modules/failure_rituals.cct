@@ -1,0 +1,29 @@
+INCIPIT grimoire "omni_failure"
+
+RITUALE ruptura(VERBUM msg) REDDE NIHIL
+  IACE msg
+EXPLICIT RITUALE
+
+RITUALE risco_externo(REX power) REDDE REX
+  SI power > 90
+    CONIURA ruptura("externum-ruptura")
+  FIN SI
+  REDDE power + 1
+EXPLICIT RITUALE
+
+RITUALE risco_controlado(REX power) REDDE REX
+  TEMPTA
+    SI power > 70
+      IACE "internum-ruptura"
+    FIN SI
+    REDDE power
+  CAPE FRACTUM erro
+    OBSECRO scribe("[failure.cape] ", erro, "\n")
+    REDDE 11
+  SEMPER
+    OBSECRO scribe("[failure.semper]\n")
+  FIN TEMPTA
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

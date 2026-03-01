@@ -1,0 +1,12 @@
+INCIPIT grimoire "ast_tempta"
+
+RITUALE main() REDDE NIHIL
+  TEMPTA
+    IACE "falha ast"
+  CAPE FRACTUM erro
+    OBSECRO scribe(erro)
+  FIN TEMPTA
+  REDDE
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

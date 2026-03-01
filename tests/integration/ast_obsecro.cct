@@ -1,0 +1,8 @@
+INCIPIT grimoire "io"
+
+RITUALE main() REDDE NIHIL
+  OBSECRO scribe("Ave")
+  ANUR 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

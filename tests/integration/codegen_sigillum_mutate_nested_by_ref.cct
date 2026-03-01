@@ -1,0 +1,22 @@
+INCIPIT grimoire "signestedref"
+
+SIGILLUM Essentia
+  gradus: REX
+FIN SIGILLUM
+
+SIGILLUM Daemon
+  vis: Essentia
+FIN SIGILLUM
+
+RITUALE elevar(SPECULUM Daemon d) REDDE NIHIL
+  VINCIRE (*d).vis.gradus AD (*d).vis.gradus + 3
+EXPLICIT RITUALE
+
+RITUALE main() REDDE REX
+  EVOCA Daemon x
+  VINCIRE x.vis.gradus AD 5
+  CONIURA elevar(SPECULUM x)
+  REDDE x.vis.gradus
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

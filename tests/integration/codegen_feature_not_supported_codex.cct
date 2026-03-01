@@ -1,0 +1,13 @@
+INCIPIT grimoire "codegen_codex_unsupported"
+
+CODEX Internus
+  RITUALE aux() REDDE NIHIL
+    REDDE
+  EXPLICIT RITUALE
+FIN CODEX
+
+RITUALE main() REDDE NIHIL
+  REDDE
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

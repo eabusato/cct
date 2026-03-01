@@ -1,0 +1,23 @@
+INCIPIT grimoire "iterum_nested_12d3"
+
+RITUALE main() REDDE REX
+  EVOCA SERIES REX[2] a
+  EVOCA SERIES REX[2] b
+
+  VINCIRE a[0] AD 1
+  VINCIRE a[1] AD 2
+  VINCIRE b[0] AD 10
+  VINCIRE b[1] AD 20
+
+  EVOCA REX soma AD 0
+
+  ITERUM x IN a COM
+    ITERUM y IN b COM
+      VINCIRE soma AD soma + x + y
+    FIN ITERUM
+  FIN ITERUM
+
+  REDDE soma
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

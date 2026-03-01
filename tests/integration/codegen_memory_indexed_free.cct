@@ -1,0 +1,13 @@
+INCIPIT grimoire "memidxfree"
+
+RITUALE main() REDDE REX
+  EVOCA SPECULUM REX dados
+  EVOCA REX keep
+  VINCIRE dados AD OBSECRO pete(2 * MENSURA(REX))
+  VINCIRE dados[0] AD 9
+  VINCIRE keep AD dados[0]
+  DIMITTE dados
+  REDDE keep
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

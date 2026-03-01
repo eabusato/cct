@@ -1,0 +1,7 @@
+INCIPIT grimoire "codegen_compare_simple"
+
+RITUALE main() REDDE VERUM
+  REDDE 2 < 3
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

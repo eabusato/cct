@@ -1,0 +1,10 @@
+INCIPIT grimoire "fortest"
+
+RITUALE main() REDDE NIHIL
+  REPETE i DE 0 AD 4 GRADUS 1
+    OBSECRO scribe(i, "\n")
+  FIN REPETE
+  REDDE
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

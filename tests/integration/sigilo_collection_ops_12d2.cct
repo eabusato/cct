@@ -1,0 +1,20 @@
+INCIPIT grimoire "sigilo_collection_ops_12d2"
+
+ADVOCARE "cct/fluxus.cct"
+ADVOCARE "cct/collection_ops.cct"
+
+RITUALE dobro(REX x) REDDE REX
+  REDDE x * 2
+EXPLICIT RITUALE
+
+RITUALE main() REDDE NIHIL
+  EVOCA SPECULUM NIHIL nums AD CONIURA fluxus_init(MENSURA(REX))
+  EVOCA REX a AD 4
+  CONIURA fluxus_push(nums, SPECULUM a)
+  EVOCA SPECULUM NIHIL mapped AD CONIURA fluxus_map GENUS(REX, REX)(nums, dobro)
+  CONIURA fluxus_free(mapped)
+  CONIURA fluxus_free(nums)
+  REDDE
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

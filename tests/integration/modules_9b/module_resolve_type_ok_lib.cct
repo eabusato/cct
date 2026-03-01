@@ -1,0 +1,12 @@
+INCIPIT grimoire "module_resolve_type_ok_lib"
+
+SIGILLUM ArcaNona
+  valor: REX
+FIN SIGILLUM
+
+ORDO GradusNonus
+  Primus = 1
+  Secundus = 2
+FIN ORDO
+
+EXPLICIT grimoire

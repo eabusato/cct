@@ -1,0 +1,13 @@
+INCIPIT grimoire "sem_iterum_type_check_12d3"
+
+RITUALE main() REDDE REX
+  EVOCA REX nao_colecao AD 42
+
+  ITERUM n IN nao_colecao COM
+    VINCIRE nao_colecao AD nao_colecao + n
+  FIN ITERUM
+
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

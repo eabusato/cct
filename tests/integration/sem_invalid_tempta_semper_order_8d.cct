@@ -1,0 +1,14 @@
+INCIPIT grimoire "invalid_semper_order_8d"
+
+RITUALE main() REDDE NIHIL
+  TEMPTA
+    IACE "boom"
+  SEMPER
+    OBSECRO scribe("cleanup")
+  CAPE FRACTUM erro
+    OBSECRO scribe(erro)
+  FIN TEMPTA
+  REDDE
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

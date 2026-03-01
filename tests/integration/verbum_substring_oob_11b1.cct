@@ -1,0 +1,11 @@
+INCIPIT grimoire "verbum_substring_oob_11b1"
+
+ADVOCARE "cct/verbum.cct"
+
+RITUALE main() REDDE REX
+  EVOCA VERBUM s AD "hello"
+  EVOCA VERBUM sub AD CONIURA substring(s, 0, 100)
+  REDDE CONIURA len(sub)
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

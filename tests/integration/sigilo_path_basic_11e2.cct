@@ -1,0 +1,17 @@
+INCIPIT grimoire "sigilo_path_basic_11e2"
+
+ADVOCARE "cct/path.cct"
+
+RITUALE main() REDDE REX
+  EVOCA VERBUM a AD CONIURA path_join("a", "b")
+  EVOCA VERBUM b AD CONIURA path_basename(a)
+  EVOCA VERBUM c AD CONIURA path_ext("x/y/z.txt")
+  SI b == "b"
+    SI c == ".txt"
+      REDDE 0
+    FIN SI
+  FIN SI
+  REDDE 1
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

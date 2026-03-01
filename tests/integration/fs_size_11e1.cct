@@ -1,0 +1,17 @@
+INCIPIT grimoire "fs_size_11e1"
+
+ADVOCARE "cct/fs.cct"
+
+RITUALE main() REDDE REX
+  EVOCA VERBUM caminho AD "tests/fixtures/io_fs/size_test.txt"
+  CONIURA write_all(caminho, "12345")
+
+  EVOCA REX tamanho AD CONIURA size(caminho)
+  SI tamanho == 5
+    REDDE 0
+  FIN SI
+
+  REDDE 1
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

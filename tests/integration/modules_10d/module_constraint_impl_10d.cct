@@ -1,0 +1,13 @@
+INCIPIT grimoire "module_constraint_impl_10d"
+
+ADVOCARE "module_constraint_contract_10d.cct"
+
+SIGILLUM Conta PACTUM Numerabilis
+  numero: REX
+FIN SIGILLUM
+
+RITUALE valor(SPECULUM Conta self, REX x) REDDE REX
+  REDDE x
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

@@ -1,0 +1,15 @@
+INCIPIT grimoire "fmt_stringify_real_11b2"
+
+ADVOCARE "cct/fmt.cct"
+
+RITUALE main() REDDE REX
+  EVOCA UMBRA num AD 3.5
+  EVOCA VERBUM texto AD CONIURA stringify_real(num)
+  EVOCA UMBRA back AD CONIURA fmt_parse_real(texto)
+  SI back == 3.5
+    REDDE 0
+  FIN SI
+  REDDE 1
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

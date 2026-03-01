@@ -1,0 +1,9 @@
+INCIPIT grimoire "cast_invalid_12b"
+
+RITUALE main() REDDE REX
+  EVOCA VERBUM texto AD "42"
+  EVOCA REX n AD cast GENUS(REX)(texto)
+  REDDE n
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

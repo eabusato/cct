@@ -1,0 +1,7 @@
+INCIPIT grimoire "sigilo_minimal"
+
+RITUALE main() REDDE REX
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

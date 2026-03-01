@@ -1,0 +1,7 @@
+INCIPIT grimoire "simple"
+
+RITUALE test() REDDE REX
+  REDDE 42
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

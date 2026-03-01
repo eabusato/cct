@@ -1,0 +1,8 @@
+INCIPIT grimoire "invalid_iace_payload_8d"
+
+RITUALE main() REDDE NIHIL
+  IACE 123
+  REDDE
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

@@ -1,0 +1,8 @@
+INCIPIT grimoire "sem_bad_undeclared"
+
+RITUALE main() REDDE NIHIL
+  VINCIRE x AD 42
+  REDDE
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

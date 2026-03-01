@@ -1,0 +1,18 @@
+INCIPIT grimoire "runtime_fail_integrated_final_8d"
+
+RITUALE main() REDDE REX
+  EVOCA SPECULUM REX p
+  EVOCA REX x AD 1
+  TEMPTA
+    VINCIRE x AD *p
+    VINCIRE x AD 99
+  CAPE FRACTUM erro
+    OBSECRO scribe(erro)
+    VINCIRE x AD 57
+  SEMPER
+    VINCIRE x AD x + 1
+  FIN TEMPTA
+  REDDE x
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

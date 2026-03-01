@@ -1,0 +1,3 @@
+-- CCT Test: Lexical Error - Unterminated String
+
+"this string is not terminated

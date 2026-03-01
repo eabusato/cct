@@ -1,0 +1,9 @@
+INCIPIT grimoire "docgen_visibility_main_12g"
+
+ADVOCARE "../lib/vis.cct"
+
+RITUALE main() REDDE REX
+  REDDE CONIURA valor_publico()
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

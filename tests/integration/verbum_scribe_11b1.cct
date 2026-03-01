@@ -1,0 +1,15 @@
+INCIPIT grimoire "verbum_scribe_11b1"
+
+ADVOCARE "cct/verbum.cct"
+
+RITUALE main() REDDE REX
+  EVOCA VERBUM a AD "hello"
+  EVOCA VERBUM b AD " world"
+  EVOCA VERBUM resultado AD CONIURA concat(a, b)
+
+  OBSECRO scribe(resultado, "\n")
+
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

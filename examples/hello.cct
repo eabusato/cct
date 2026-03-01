@@ -1,0 +1,15 @@
+-- CCT — Clavicula Turing
+-- Example Program: Hello World
+--
+-- This is a preview of CCT syntax.
+-- This will work in FASE 4+.
+
+INCIPIT grimoire "salutatio"
+
+RITUALE principium REDDE NIHIL
+  OBSECRO scribe("Ave Mundi!\n")
+  OBSECRO scribe("Clavicula Turing - The ritual begins...\n")
+  ANUR 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

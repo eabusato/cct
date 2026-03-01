@@ -1,0 +1,9 @@
+INCIPIT grimoire "baddimitte"
+
+RITUALE main() REDDE NIHIL
+  EVOCA REX x AD 1
+  DIMITTE x
+  ANUR 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

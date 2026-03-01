@@ -1,0 +1,80 @@
+INCIPIT grimoire "ars_mod_oraculum"
+
+ADVOCARE "types.cct"
+ADVOCARE "memory_ops.cct"
+ADVOCARE "failure.cct"
+
+RITUALE avaliar_oraculum(REX base) REDDE REX
+  EVOCA Daemon d
+  CONIURA preparar_daemon(SPECULUM d, "Astaroth", base, 2.75)
+  CONIURA atualizar_daemon(SPECULUM d, 5)
+
+  EVOCA SPECULUM REX buff
+  VINCIRE buff AD OBSECRO pete(MENSURA(REX) * 4)
+  CONIURA preencher_series(buff, 4, 3)
+  CONIURA elevar(SPECULUM buff[2], 4)
+
+  EVOCA REX soma AD CONIURA somar_series(buff, 4)
+  OBSECRO libera(buff)
+
+  EVOCA SPECULUM REX reserva
+  VINCIRE reserva AD OBSECRO pete(MENSURA(REX))
+  VINCIRE *reserva AD 9
+  VINCIRE soma AD soma + *reserva
+  DIMITTE reserva
+
+  EVOCA SERIES REX[3] runa
+  REPETE i DE 0 AD 2
+    VINCIRE runa[i] AD i + 1
+  FIN REPETE
+
+  EVOCA REX pulso AD 0
+  DONEC
+    VINCIRE pulso AD pulso + 1
+  DUM pulso < 2
+  VINCIRE soma AD soma + runa[0] + pulso
+
+  VINCIRE soma AD soma + CONIURA bonus_estado(Ira)
+  VINCIRE soma AD soma + CONIURA risco_controlado(70)
+
+  TEMPTA
+    VINCIRE soma AD soma + CONIURA risco_externo(d.potestas)
+  CAPE FRACTUM erro
+    OBSECRO scribe("[oraculum.cape] ", erro, "\n")
+    VINCIRE soma AD soma + 11
+  SEMPER
+    VINCIRE soma AD soma + 2
+  FIN TEMPTA
+
+  EVOCA SPECULUM REX nulo
+  TEMPTA
+    VINCIRE soma AD soma + *nulo
+  CAPE FRACTUM e2
+    OBSECRO scribe("[bridge] ", e2, "\n")
+    VINCIRE soma AD soma + 13
+  SEMPER
+    VINCIRE soma AD soma + 1
+  FIN TEMPTA
+
+  EVOCA UMBRA calor AD 2.5
+  EVOCA FLAMMA chama AD 1.5
+  SI calor + chama >= 4.0
+    VINCIRE soma AD soma + 6
+  ALITER
+    VINCIRE soma AD soma + 1
+  FIN SI
+
+  EVOCA VERUM vigilia AD VERUM
+  OBSECRO scribe(
+    "daemon=", d.nomen,
+    " pot=", d.potestas,
+    " fervor=", d.fervor,
+    " gradus=", d.vis.gradus,
+    " vigilia=", vigilia,
+    " soma=", soma, "\n"
+  )
+
+  REDDE soma
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

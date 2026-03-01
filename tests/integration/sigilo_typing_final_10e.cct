@@ -1,0 +1,28 @@
+INCIPIT grimoire "sigilo_typing_final_10e"
+
+PACTUM Numerabilis
+  RITUALE valor(REX x) REDDE REX
+FIN PACTUM
+
+SIGILLUM Caixa PACTUM Numerabilis
+  base: REX
+FIN SIGILLUM
+
+RITUALE valor(SPECULUM Caixa self, REX x) REDDE REX
+  REDDE x
+EXPLICIT RITUALE
+
+RITUALE identitas GENUS(T)(T valor) REDDE T
+  REDDE valor
+EXPLICIT RITUALE
+
+RITUALE aplica GENUS(T PACTUM Numerabilis)(SPECULUM T self, REX x) REDDE REX
+  REDDE CONIURA identitas GENUS(REX)(x)
+EXPLICIT RITUALE
+
+RITUALE main() REDDE REX
+  EVOCA Caixa c
+  REDDE CONIURA aplica GENUS(Caixa)(SPECULUM c, 13)
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

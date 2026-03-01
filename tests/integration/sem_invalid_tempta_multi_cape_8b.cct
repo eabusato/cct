@@ -1,0 +1,14 @@
+INCIPIT grimoire "sem_invalid_tempta_multi_cape_8b"
+
+RITUALE main() REDDE NIHIL
+  TEMPTA
+    IACE "x"
+  CAPE FRACTUM erro
+    OBSECRO scribe(erro)
+  CAPE FRACTUM outro
+    OBSECRO scribe(outro)
+  FIN TEMPTA
+  REDDE
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

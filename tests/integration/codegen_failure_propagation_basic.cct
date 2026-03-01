@@ -1,0 +1,18 @@
+INCIPIT grimoire "failure_propagation_basic"
+
+RITUALE inner() REDDE NIHIL
+  IACE "inner-8b"
+EXPLICIT RITUALE
+
+RITUALE main() REDDE REX
+  EVOCA REX x AD 1
+  TEMPTA
+    CONIURA inner()
+    VINCIRE x AD 99
+  CAPE FRACTUM erro
+    VINCIRE x AD 42
+  FIN TEMPTA
+  REDDE x
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

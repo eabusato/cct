@@ -1,0 +1,21 @@
+INCIPIT grimoire "sigfields"
+
+SIGILLUM Daemon
+  nomen: VERBUM
+  potestas: REX
+  ardor: UMBRA
+FIN SIGILLUM
+
+RITUALE main() REDDE REX
+  EVOCA Daemon d
+  VINCIRE d.nomen AD "Bael"
+  VINCIRE d.potestas AD 66
+  VINCIRE d.ardor AD 3.5
+  SI d.ardor > 3.0
+    REDDE d.potestas
+  ALITER
+    REDDE 0
+  FIN SI
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

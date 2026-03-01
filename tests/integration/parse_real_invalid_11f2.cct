@@ -1,0 +1,13 @@
+INCIPIT grimoire "parse_real_invalid_11f2"
+
+ADVOCARE "cct/parse.cct"
+
+RITUALE main() REDDE REX
+  EVOCA UMBRA r AD CONIURA parse_real("2x")
+  SI r > 0.0
+    REDDE 1
+  FIN SI
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

@@ -1,0 +1,10 @@
+INCIPIT grimoire "module_resolve_duplicate_rituale_entry"
+
+ADVOCARE "modules_9b/module_resolve_duplicate_rituale_a.cct"
+ADVOCARE "modules_9b/module_resolve_duplicate_rituale_b.cct"
+
+RITUALE main() REDDE REX
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

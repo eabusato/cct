@@ -1,0 +1,30 @@
+INCIPIT grimoire "fase12_final_showcase_main"
+
+ADVOCARE "../lib/data.cct"
+ADVOCARE "cct/io.cct"
+ADVOCARE "cct/math.cct"
+
+-- /// Entry point showcasing FASE 12 capabilities.
+-- /// @return Exit code (0 for success).
+RITUALE main() REDDE REX
+  -- Simple calculations
+  EVOCA REX val1 AD 10
+  EVOCA REX val2 AD 20
+  EVOCA REX sum AD val1 + val2
+  EVOCA REX clamped AD CONIURA clamp(sum, 0, 25)
+
+  CONIURA println("FASE 12 Final Showcase")
+  CONIURA print("Clamped sum: ")
+  CONIURA print_int(clamped)
+  CONIURA println("")
+
+  -- Use data module
+  EVOCA REX result AD CONIURA process_data(clamped)
+  CONIURA print("Processed: ")
+  CONIURA print_int(result)
+  CONIURA println("")
+
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

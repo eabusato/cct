@@ -1,0 +1,10 @@
+INCIPIT grimoire "verbumvar"
+
+RITUALE main() REDDE REX
+  EVOCA VERBUM s
+  VINCIRE s AD "salve"
+  OBSECRO scribe(s, "\n")
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

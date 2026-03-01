@@ -1,0 +1,14 @@
+INCIPIT grimoire "fase12_final_showcase_data"
+
+ADVOCARE "cct/math.cct"
+
+-- /// Processes a data value.
+-- /// @param val Input value.
+-- /// @return Processed value.
+RITUALE process_data(REX val) REDDE REX
+  EVOCA REX doubled AD val * 2
+  EVOCA REX result AD CONIURA max(doubled, 10)
+  REDDE result
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

@@ -1,0 +1,10 @@
+INCIPIT grimoire "module_import_duplicate"
+
+ADVOCARE "modules_9a/lib_rituale.cct"
+ADVOCARE "modules_9a/lib_rituale.cct"
+
+RITUALE main() REDDE REX
+  REDDE CONIURA dobro(4)
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

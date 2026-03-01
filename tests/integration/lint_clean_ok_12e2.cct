@@ -1,0 +1,12 @@
+INCIPIT grimoire "lint_clean_ok_12e2"
+
+RITUALE id(REX x) REDDE REX
+  REDDE x
+EXPLICIT RITUALE
+
+RITUALE main() REDDE REX
+  EVOCA REX value AD CONIURA id(7)
+  REDDE value
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

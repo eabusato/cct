@@ -1,0 +1,13 @@
+INCIPIT grimoire "docgen_bad_tags_lib_12g"
+
+--! malformed docs block
+--! @foo unsupported
+RITUALE com_tag_ruim(REX a) REDDE REX
+  REDDE a
+EXPLICIT RITUALE
+
+RITUALE sem_docs(REX a) REDDE REX
+  REDDE a
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

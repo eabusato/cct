@@ -1,0 +1,16 @@
+INCIPIT grimoire "random_real_basic_11f1"
+
+ADVOCARE "cct/random.cct"
+
+RITUALE main() REDDE REX
+  CONIURA seed(7)
+  EVOCA FLAMMA r AD CONIURA random_real()
+  SI r >= 0.0
+    SI r < 1.0
+      REDDE 0
+    FIN SI
+  FIN SI
+  REDDE 1
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

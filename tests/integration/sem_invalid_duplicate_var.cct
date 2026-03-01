@@ -1,0 +1,9 @@
+INCIPIT grimoire "sem_bad_dup_var"
+
+RITUALE main() REDDE NIHIL
+  EVOCA REX x
+  EVOCA REX x
+  REDDE
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

@@ -1,0 +1,13 @@
+INCIPIT grimoire "badfield"
+
+SIGILLUM Daemon
+  potestas: REX
+FIN SIGILLUM
+
+RITUALE main() REDDE REX
+  EVOCA Daemon d
+  VINCIRE d.nomen AD "x"
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

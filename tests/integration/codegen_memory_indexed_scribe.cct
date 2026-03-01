@@ -1,0 +1,14 @@
+INCIPIT grimoire "memidxscribe"
+
+RITUALE main() REDDE NIHIL
+  EVOCA SPECULUM REX dados
+  VINCIRE dados AD OBSECRO pete(3 * MENSURA(REX))
+  VINCIRE dados[0] AD 5
+  VINCIRE dados[1] AD 20
+  VINCIRE dados[2] AD 99
+  OBSECRO scribe(dados[1], "\n")
+  OBSECRO libera(dados)
+  ANUR 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

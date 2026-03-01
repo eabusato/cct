@@ -1,0 +1,9 @@
+INCIPIT grimoire "stdlib_resolution_no_collision_11a"
+
+ADVOCARE "cct_fake/teste.cct"
+
+RITUALE main() REDDE REX
+  REDDE CONIURA user_fake()
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

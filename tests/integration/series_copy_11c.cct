@@ -1,0 +1,25 @@
+INCIPIT grimoire "series_copy_11c"
+
+ADVOCARE "cct/series.cct"
+
+RITUALE main() REDDE REX
+  EVOCA SERIES REX[3] src
+  VINCIRE src[0] AD 1
+  VINCIRE src[1] AD 2
+  VINCIRE src[2] AD 3
+
+  EVOCA SERIES REX[3] dest
+  CONIURA series_copy GENUS(REX)(SPECULUM dest[0], SPECULUM src[0], 3)
+
+  SI dest[0] == 1
+    SI dest[1] == 2
+      SI dest[2] == 3
+        REDDE 0
+      FIN SI
+    FIN SI
+  FIN SI
+
+  REDDE 1
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

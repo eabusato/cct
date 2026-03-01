@@ -1,0 +1,18 @@
+INCIPIT grimoire "ordobasic"
+
+ORDO Gradus
+  Rex = 0
+  Dux = 1
+FIN ORDO
+
+RITUALE main() REDDE REX
+  EVOCA Gradus g
+  VINCIRE g AD Dux
+  SI g == Dux
+    REDDE 1
+  ALITER
+    REDDE 0
+  FIN SI
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

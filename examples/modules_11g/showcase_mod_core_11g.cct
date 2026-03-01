@@ -1,0 +1,10 @@
+INCIPIT grimoire "showcase_mod_core_11g"
+
+ADVOCARE "cct/fmt.cct"
+
+RITUALE mod_core_label(VERBUM nome, REX n) REDDE VERBUM
+  EVOCA VERBUM s AD CONIURA stringify_int(n)
+  REDDE CONIURA format_pair(nome, s)
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

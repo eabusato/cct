@@ -1,0 +1,50 @@
+INCIPIT grimoire "iterators"
+
+ADVOCARE "cct/fluxus.cct"
+ADVOCARE "cct/collection_ops.cct"
+
+RITUALE quadrado(REX x) REDDE REX
+  REDDE x * x
+EXPLICIT RITUALE
+
+RITUALE main() REDDE REX
+  EVOCA SPECULUM NIHIL numeros AD CONIURA fluxus_init(MENSURA(REX))
+
+  EVOCA REX a AD 1
+  EVOCA REX b AD 2
+  EVOCA REX c AD 3
+  EVOCA REX d AD 4
+  EVOCA REX e AD 5
+  CONIURA fluxus_push(numeros, SPECULUM a)
+  CONIURA fluxus_push(numeros, SPECULUM b)
+  CONIURA fluxus_push(numeros, SPECULUM c)
+  CONIURA fluxus_push(numeros, SPECULUM d)
+  CONIURA fluxus_push(numeros, SPECULUM e)
+
+  OBSECRO scribe("Numeros:\n")
+  ITERUM n IN numeros COM
+    OBSECRO scribe("  n=", n, "\n")
+  FIN ITERUM
+
+  EVOCA SPECULUM NIHIL quadrados AD CONIURA fluxus_map GENUS(REX, REX)(numeros, quadrado)
+
+  OBSECRO scribe("Quadrados:\n")
+  ITERUM q IN quadrados COM
+    OBSECRO scribe("  q=", q, "\n")
+  FIN ITERUM
+
+  EVOCA SERIES REX[3] arr
+  VINCIRE arr[0] AD 10
+  VINCIRE arr[1] AD 20
+  VINCIRE arr[2] AD 30
+  OBSECRO scribe("Serie:\n")
+  ITERUM s IN arr COM
+    OBSECRO scribe("  s=", s, "\n")
+  FIN ITERUM
+
+  CONIURA fluxus_free(numeros)
+  CONIURA fluxus_free(quadrados)
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

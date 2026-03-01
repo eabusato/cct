@@ -1,0 +1,7 @@
+INCIPIT grimoire "ast_genus_constraint_basic_10d"
+
+RITUALE aplica GENUS(T PACTUM Numerabilis)(SPECULUM T self, REX x) REDDE REX
+  REDDE x
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

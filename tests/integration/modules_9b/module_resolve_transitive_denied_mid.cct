@@ -1,0 +1,9 @@
+INCIPIT grimoire "module_resolve_transitive_denied_mid"
+
+ADVOCARE "module_resolve_transitive_denied_base.cct"
+
+RITUALE valor_mid() REDDE REX
+  REDDE CONIURA valor_base()
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

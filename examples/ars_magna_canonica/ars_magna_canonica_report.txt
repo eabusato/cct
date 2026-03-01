@@ -1,0 +1,9 @@
+nomen: Astra
+count: 8
+sum: 136
+min: 4
+max: 31
+median: 16
+checksum: 199
+approved: true
+--finis--

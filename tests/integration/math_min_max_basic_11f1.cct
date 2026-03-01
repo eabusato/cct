@@ -1,0 +1,14 @@
+INCIPIT grimoire "math_min_max_basic_11f1"
+
+ADVOCARE "cct/math.cct"
+
+RITUALE main() REDDE REX
+  SI CONIURA min(9, 4) == 4
+    SI CONIURA max(9, 4) == 9
+      REDDE 0
+    FIN SI
+  FIN SI
+  REDDE 1
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

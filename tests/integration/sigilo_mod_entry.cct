@@ -1,0 +1,12 @@
+INCIPIT grimoire "sigilo_mod_entry"
+
+ADVOCARE "modules_9d/sigilo_mod_types.cct"
+ADVOCARE "modules_9d/sigilo_mod_ops.cct"
+
+RITUALE main() REDDE REX
+  EVOCA Datum d
+  VINCIRE d.valor AD 8
+  REDDE CONIURA soma_dupla(d.valor) + CONIURA triplica(2)
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

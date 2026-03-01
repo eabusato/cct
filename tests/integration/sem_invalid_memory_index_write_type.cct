@@ -1,0 +1,11 @@
+INCIPIT grimoire "badindexwrite"
+
+RITUALE main() REDDE NIHIL
+  EVOCA SPECULUM REX dados
+  VINCIRE dados AD OBSECRO pete(2 * MENSURA(REX))
+  VINCIRE dados[0] AD "abc"
+  OBSECRO libera(dados)
+  ANUR 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

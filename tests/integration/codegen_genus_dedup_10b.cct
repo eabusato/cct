@@ -1,0 +1,15 @@
+INCIPIT grimoire "codegen_genus_dedup_10b"
+
+RITUALE identitas GENUS(T)(T valor) REDDE T
+  REDDE valor
+EXPLICIT RITUALE
+
+RITUALE main() REDDE REX
+  EVOCA REX a
+  EVOCA REX b
+  VINCIRE a AD CONIURA identitas GENUS(REX)(9)
+  VINCIRE b AD CONIURA identitas GENUS(REX)(33)
+  REDDE a + b
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

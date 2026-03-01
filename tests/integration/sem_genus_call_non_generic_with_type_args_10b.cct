@@ -1,0 +1,11 @@
+INCIPIT grimoire "sem_genus_call_non_generic_with_type_args_10b"
+
+RITUALE soma(REX a, REX b) REDDE REX
+  REDDE a + b
+EXPLICIT RITUALE
+
+RITUALE main() REDDE REX
+  REDDE CONIURA soma GENUS(REX)(2, 3)
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

@@ -1,0 +1,7 @@
+[project]
+name = "project_12f_basic"
+entry = "src/main.cct"
+
+[build]
+out_dir = "dist"
+default_profile = "debug"

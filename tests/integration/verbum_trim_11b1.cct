@@ -1,0 +1,16 @@
+INCIPIT grimoire "verbum_trim_11b1"
+
+ADVOCARE "cct/verbum.cct"
+
+RITUALE main() REDDE REX
+  EVOCA VERBUM s AD "  hello  "
+  EVOCA VERBUM trimmed AD CONIURA trim(s)
+
+  SI CONIURA len(trimmed) == 5
+    REDDE 0
+  FIN SI
+
+  REDDE 1
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

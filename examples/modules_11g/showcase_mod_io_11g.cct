@@ -1,0 +1,14 @@
+INCIPIT grimoire "showcase_mod_io_11g"
+
+ADVOCARE "cct/io.cct"
+ADVOCARE "cct/fmt.cct"
+
+RITUALE mod_io_emit(VERBUM msg, REX score) REDDE NIHIL
+  EVOCA VERBUM s AD CONIURA stringify_int(score)
+  OBSECRO io_print(msg)
+  OBSECRO io_print(" => ")
+  OBSECRO io_println(s)
+  REDDE
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

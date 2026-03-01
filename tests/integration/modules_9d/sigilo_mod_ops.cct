@@ -1,0 +1,7 @@
+INCIPIT grimoire "sigilo_mod_ops"
+
+RITUALE triplica(REX x) REDDE REX
+  REDDE x + x + x
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

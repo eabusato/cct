@@ -1,0 +1,16 @@
+INCIPIT grimoire "sigilo_failure_propagation_basic"
+
+RITUALE inner() REDDE NIHIL
+  IACE "sigilo-8b"
+EXPLICIT RITUALE
+
+RITUALE main() REDDE NIHIL
+  TEMPTA
+    CONIURA inner()
+  CAPE FRACTUM erro
+    OBSECRO scribe(erro)
+  FIN TEMPTA
+  REDDE
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

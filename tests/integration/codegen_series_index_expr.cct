@@ -1,0 +1,11 @@
+INCIPIT grimoire "seriesidx"
+
+RITUALE main() REDDE REX
+  EVOCA SERIES REX[5] a
+  EVOCA REX i AD 1
+  VINCIRE a[1] AD 4
+  VINCIRE a[i + 1] AD a[1] + 3
+  REDDE a[2]
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

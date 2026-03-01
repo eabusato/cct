@@ -1,0 +1,13 @@
+-- CCT Test: Comments
+-- This file tests comment handling
+
+INCIPIT  -- inline comment
+
+-- Full line comment
+RITUALE  -- another inline comment
+
+-- Multiple comment lines
+-- These should all be ignored
+-- By the lexer
+
+EXPLICIT  -- final comment

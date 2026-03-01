@@ -1,0 +1,29 @@
+INCIPIT grimoire "showcase_io_fs_11g"
+
+ADVOCARE "cct/fs.cct"
+ADVOCARE "cct/path.cct"
+ADVOCARE "cct/cmp.cct"
+
+RITUALE main() REDDE REX
+  EVOCA VERBUM base AD "tests/fixtures/io_fs"
+  EVOCA VERBUM arquivo AD CONIURA path_join(base, "showcase_io_fs_11g.txt")
+
+  CONIURA write_all(arquivo, "line1")
+  CONIURA append_all(arquivo, "|line2")
+
+  EVOCA VERBUM conteudo AD CONIURA read_all(arquivo)
+  EVOCA REX tamanho AD CONIURA size(arquivo)
+  EVOCA VERUM existe AD CONIURA exists(arquivo)
+
+  SI existe == VERUM
+    SI CONIURA cmp_verbum(conteudo, "line1|line2") == 0
+      SI tamanho == 11
+        REDDE 0
+      FIN SI
+    FIN SI
+  FIN SI
+
+  REDDE 1
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

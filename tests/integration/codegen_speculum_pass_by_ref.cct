@@ -1,0 +1,13 @@
+INCIPIT grimoire "specbyref"
+
+RITUALE dobrar(SPECULUM REX valor) REDDE NIHIL
+  VINCIRE *valor AD *valor * 2
+EXPLICIT RITUALE
+
+RITUALE main() REDDE REX
+  EVOCA REX n AD 21
+  CONIURA dobrar(SPECULUM n)
+  REDDE n
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

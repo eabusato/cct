@@ -1,0 +1,11 @@
+INCIPIT grimoire "module_genus_cross_instantiation_main_10b"
+
+ADVOCARE "modules_10b/module_genus_cross_instantiation_lib_10b.cct"
+
+RITUALE main() REDDE REX
+  EVOCA REX x
+  VINCIRE x AD CONIURA identitas GENUS(REX)(23)
+  REDDE x
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

@@ -1,0 +1,8 @@
+INCIPIT grimoire "lint_unused_var_12e2"
+
+RITUALE main() REDDE REX
+  EVOCA REX temp AD 10
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

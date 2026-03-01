@@ -1,0 +1,15 @@
+INCIPIT grimoire "cg_tempta_local_catch"
+
+RITUALE main() REDDE REX
+  EVOCA REX x AD 1
+  TEMPTA
+    IACE "capturada"
+    VINCIRE x AD 99
+  CAPE FRACTUM erro
+    OBSECRO scribe(erro)
+    VINCIRE x AD 7
+  FIN TEMPTA
+  REDDE x
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

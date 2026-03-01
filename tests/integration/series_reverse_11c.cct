@@ -1,0 +1,27 @@
+INCIPIT grimoire "series_reverse_11c"
+
+ADVOCARE "cct/series.cct"
+
+RITUALE main() REDDE REX
+  EVOCA SERIES REX[4] arr
+  VINCIRE arr[0] AD 1
+  VINCIRE arr[1] AD 2
+  VINCIRE arr[2] AD 3
+  VINCIRE arr[3] AD 4
+
+  CONIURA series_reverse GENUS(REX)(SPECULUM arr[0], 4)
+
+  SI arr[0] == 4
+    SI arr[1] == 3
+      SI arr[2] == 2
+        SI arr[3] == 1
+          REDDE 0
+        FIN SI
+      FIN SI
+    FIN SI
+  FIN SI
+
+  REDDE 1
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

@@ -1,0 +1,9 @@
+INCIPIT grimoire "parse_int_invalid_11f2"
+
+ADVOCARE "cct/parse.cct"
+
+RITUALE main() REDDE REX
+  REDDE CONIURA parse_int("abc")
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

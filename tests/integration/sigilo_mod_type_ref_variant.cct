@@ -1,0 +1,10 @@
+INCIPIT grimoire "sigilo_mod_type_ref_variant"
+
+ADVOCARE "modules_9d/sigilo_mod_types.cct"
+ADVOCARE "modules_9d/sigilo_mod_ops.cct"
+
+RITUALE main() REDDE REX
+  REDDE CONIURA soma_dupla(8) + CONIURA triplica(2)
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

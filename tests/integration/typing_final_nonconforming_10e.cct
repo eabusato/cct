@@ -1,0 +1,20 @@
+INCIPIT grimoire "typing_final_nonconforming_10e"
+
+PACTUM Numerabilis
+  RITUALE valor(REX x) REDDE REX
+FIN PACTUM
+
+SIGILLUM SinePactum
+  numero: REX
+FIN SIGILLUM
+
+RITUALE aplica GENUS(T PACTUM Numerabilis)(SPECULUM T self, REX x) REDDE REX
+  REDDE x
+EXPLICIT RITUALE
+
+RITUALE main() REDDE REX
+  EVOCA SinePactum s
+  REDDE CONIURA aplica GENUS(SinePactum)(SPECULUM s, 1)
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

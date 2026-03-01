@@ -1,0 +1,19 @@
+INCIPIT grimoire "showcase_modular_11g_main"
+
+ADVOCARE "modules_11g/showcase_mod_core_11g.cct"
+ADVOCARE "modules_11g/showcase_mod_stats_11g.cct"
+ADVOCARE "modules_11g/showcase_mod_io_11g.cct"
+
+RITUALE main() REDDE REX
+  EVOCA VERBUM label AD CONIURA mod_core_label("Adeptus", 7)
+  EVOCA REX score AD CONIURA mod_stats_score("11", "2.5")
+  CONIURA mod_io_emit(label, score)
+
+  SI score == 13
+    REDDE 0
+  FIN SI
+
+  REDDE 1
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

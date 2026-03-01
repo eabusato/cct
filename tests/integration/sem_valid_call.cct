@@ -1,0 +1,13 @@
+INCIPIT grimoire "sem_call"
+
+RITUALE inc(REX n) REDDE REX
+  REDDE n + 1
+EXPLICIT RITUALE
+
+RITUALE main() REDDE NIHIL
+  EVOCA REX x AD CONIURA inc(41)
+  OBSECRO scribe(x, "\n")
+  REDDE
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

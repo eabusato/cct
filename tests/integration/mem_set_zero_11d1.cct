@@ -1,0 +1,23 @@
+INCIPIT grimoire "mem_set_zero_11d1"
+
+ADVOCARE "cct/mem.cct"
+
+RITUALE main() REDDE REX
+  EVOCA SPECULUM REX ptr
+  VINCIRE ptr AD CONIURA alloc(2 * MENSURA(REX))
+  CONIURA set(ptr, 255, 2 * MENSURA(REX))
+  CONIURA zero(ptr, 2 * MENSURA(REX))
+
+  EVOCA REX a AD ptr[0]
+  EVOCA REX b AD ptr[1]
+  CONIURA free(ptr)
+
+  SI a == 0
+    SI b == 0
+      REDDE 0
+    FIN SI
+  FIN SI
+  REDDE 1
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

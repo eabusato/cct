@@ -1,0 +1,7 @@
+INCIPIT grimoire "sem_bad_return"
+
+RITUALE f() REDDE REX
+  REDDE "texto"
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

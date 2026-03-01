@@ -1,0 +1,15 @@
+INCIPIT grimoire "sigexpr"
+
+SIGILLUM Pair
+  a: REX
+  b: REX
+FIN SIGILLUM
+
+RITUALE main() REDDE REX
+  EVOCA Pair p
+  VINCIRE p.a AD 5
+  VINCIRE p.b AD 9
+  REDDE p.a + p.b * 2
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

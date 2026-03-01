@@ -1,0 +1,36 @@
+INCIPIT grimoire "map_update_12d1"
+
+ADVOCARE "cct/map.cct"
+ADVOCARE "cct/option.cct"
+
+RITUALE main() REDDE REX
+  EVOCA SPECULUM NIHIL m AD CONIURA map_init GENUS(REX, REX)()
+
+  CONIURA map_insert GENUS(REX, REX)(m, 5, 50)
+  CONIURA map_insert GENUS(REX, REX)(m, 5, 100)
+
+  EVOCA SPECULUM NIHIL opt AD CONIURA map_get GENUS(REX, REX)(m, 5)
+  SI NON CONIURA option_is_some GENUS(REX)(opt)
+    CONIURA option_free GENUS(REX)(opt)
+    CONIURA map_free GENUS(REX, REX)(m)
+    REDDE 41
+  FIN SI
+
+  EVOCA REX v AD CONIURA option_unwrap GENUS(REX)(opt)
+  CONIURA option_free GENUS(REX)(opt)
+
+  SI v != 100
+    CONIURA map_free GENUS(REX, REX)(m)
+    REDDE 42
+  FIN SI
+
+  SI CONIURA map_len GENUS(REX, REX)(m) != 1
+    CONIURA map_free GENUS(REX, REX)(m)
+    REDDE 43
+  FIN SI
+
+  CONIURA map_free GENUS(REX, REX)(m)
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

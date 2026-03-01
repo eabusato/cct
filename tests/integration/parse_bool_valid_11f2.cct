@@ -1,0 +1,14 @@
+INCIPIT grimoire "parse_bool_valid_11f2"
+
+ADVOCARE "cct/parse.cct"
+
+RITUALE main() REDDE REX
+  SI CONIURA parse_bool("true") == VERUM
+    SI CONIURA parse_bool("false") == FALSUM
+      REDDE 0
+    FIN SI
+  FIN SI
+  REDDE 1
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

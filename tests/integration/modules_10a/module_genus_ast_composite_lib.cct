@@ -1,0 +1,11 @@
+INCIPIT grimoire "module_genus_ast_composite_lib"
+
+SIGILLUM Arcus GENUS(T)
+  data: T
+FIN SIGILLUM
+
+RITUALE id GENUS(T)(T x) REDDE T
+  REDDE x
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

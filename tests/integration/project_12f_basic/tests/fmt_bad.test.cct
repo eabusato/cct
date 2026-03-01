@@ -1,0 +1,8 @@
+INCIPIT grimoire "project_12f_fmt_bad_test"
+
+RITUALE main() REDDE REX
+EVOCA REX n AD 1
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

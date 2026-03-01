@@ -1,0 +1,26 @@
+INCIPIT grimoire "sigilo_map_set_12d1"
+
+ADVOCARE "cct/map.cct"
+ADVOCARE "cct/set.cct"
+ADVOCARE "cct/option.cct"
+
+RITUALE main() REDDE REX
+  EVOCA SPECULUM NIHIL m AD CONIURA map_init GENUS(REX, REX)()
+  EVOCA SPECULUM NIHIL s AD CONIURA set_init GENUS(REX)()
+
+  CONIURA map_insert GENUS(REX, REX)(m, 7, 70)
+  CONIURA set_insert GENUS(REX)(s, 7)
+
+  EVOCA SPECULUM NIHIL opt AD CONIURA map_get GENUS(REX, REX)(m, 7)
+  EVOCA REX out AD 0
+  SI CONIURA option_is_some GENUS(REX)(opt)
+    VINCIRE out AD CONIURA option_unwrap GENUS(REX)(opt)
+  FIN SI
+  CONIURA option_free GENUS(REX)(opt)
+
+  CONIURA map_free GENUS(REX, REX)(m)
+  CONIURA set_free GENUS(REX)(s)
+  REDDE out
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

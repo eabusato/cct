@@ -1,0 +1,21 @@
+INCIPIT grimoire "alg_binary_search_basic_11f2"
+
+ADVOCARE "cct/alg.cct"
+
+RITUALE main() REDDE REX
+  EVOCA SERIES REX[5] arr
+  VINCIRE arr[0] AD 10
+  VINCIRE arr[1] AD 20
+  VINCIRE arr[2] AD 30
+  VINCIRE arr[3] AD 40
+  VINCIRE arr[4] AD 50
+
+  SI CONIURA alg_binary_search(SPECULUM arr[0], 5, 30) == 2
+    SI CONIURA alg_binary_search(SPECULUM arr[0], 5, 99) == -1
+      REDDE 0
+    FIN SI
+  FIN SI
+  REDDE 1
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

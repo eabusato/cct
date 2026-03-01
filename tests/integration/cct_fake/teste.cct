@@ -1,0 +1,7 @@
+INCIPIT grimoire "teste"
+
+RITUALE user_fake() REDDE REX
+  REDDE 5
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

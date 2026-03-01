@@ -1,0 +1,56 @@
+INCIPIT grimoire "parse_cmp_showcase_11f2"
+
+ADVOCARE "cct/parse.cct"
+ADVOCARE "cct/cmp.cct"
+ADVOCARE "cct/alg.cct"
+ADVOCARE "cct/io.cct"
+
+RITUALE main() REDDE REX
+  EVOCA REX n AD CONIURA parse_int("42")
+  EVOCA UMBRA pi AD CONIURA parse_real("3.14")
+  EVOCA VERUM ok AD CONIURA parse_bool("true")
+
+  EVOCA REX ci AD CONIURA cmp_int(n, 40)
+  EVOCA REX cr AD CONIURA cmp_real(pi, 3.0)
+  EVOCA REX cs AD CONIURA cmp_verbum("daemon", "angelus")
+
+  EVOCA SERIES REX[5] arr
+  VINCIRE arr[0] AD 7
+  VINCIRE arr[1] AD 2
+  VINCIRE arr[2] AD 9
+  VINCIRE arr[3] AD 1
+  VINCIRE arr[4] AD 5
+
+  CONIURA alg_sort_insertion(SPECULUM arr[0], 5)
+  EVOCA REX pos AD CONIURA alg_binary_search(SPECULUM arr[0], 5, 7)
+
+  OBSECRO io_print("n=")
+  OBSECRO io_print_int(n)
+  OBSECRO io_print(" ci=")
+  OBSECRO io_print_int(ci)
+  OBSECRO io_print(" cr=")
+  OBSECRO io_print_int(cr)
+  OBSECRO io_print(" cs=")
+  OBSECRO io_print_int(cs)
+  OBSECRO io_print(" pos=")
+  OBSECRO io_print_int(pos)
+  OBSECRO io_print(" ok=")
+  OBSECRO io_print_int(ok)
+  OBSECRO io_println("")
+
+  SI ok == VERUM
+    SI ci > 0
+      SI cr > 0
+        SI cs > 0
+          SI pos == 3
+            REDDE 0
+          FIN SI
+        FIN SI
+      FIN SI
+    FIN SI
+  FIN SI
+
+  REDDE 1
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

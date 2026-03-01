@@ -1,0 +1,11 @@
+INCIPIT grimoire "badrecsig"
+
+SIGILLUM Node
+  prox: Node
+FIN SIGILLUM
+
+RITUALE main() REDDE REX
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

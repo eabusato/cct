@@ -1,0 +1,13 @@
+INCIPIT grimoire "cg_tempta_no_throw"
+
+RITUALE main() REDDE REX
+  EVOCA REX x AD 3
+  TEMPTA
+    VINCIRE x AD 9
+  CAPE FRACTUM erro
+    VINCIRE x AD 1
+  FIN TEMPTA
+  REDDE x
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

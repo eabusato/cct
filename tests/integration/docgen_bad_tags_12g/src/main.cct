@@ -1,0 +1,9 @@
+INCIPIT grimoire "docgen_bad_tags_main_12g"
+
+ADVOCARE "../lib/bad.cct"
+
+RITUALE main() REDDE REX
+  REDDE CONIURA sem_docs(1)
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

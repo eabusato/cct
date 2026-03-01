@@ -1,0 +1,7 @@
+INCIPIT grimoire "project_12f_basic_util"
+
+RITUALE soma_basica(REX a, REX b) REDDE REX
+  REDDE a + b
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

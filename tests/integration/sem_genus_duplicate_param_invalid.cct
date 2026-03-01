@@ -1,0 +1,7 @@
+INCIPIT grimoire "sem_genus_dup"
+
+RITUALE idem GENUS(T,T)(T x) REDDE T
+  REDDE x
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

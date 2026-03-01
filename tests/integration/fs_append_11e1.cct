@@ -1,0 +1,21 @@
+INCIPIT grimoire "fs_append_11e1"
+
+ADVOCARE "cct/fs.cct"
+ADVOCARE "cct/verbum.cct"
+
+RITUALE main() REDDE REX
+  EVOCA VERBUM caminho AD "tests/fixtures/io_fs/append_test.txt"
+  EVOCA VERBUM esperado AD "Linha 1\nLinha 2\nLinha 3\n"
+
+  CONIURA write_all(caminho, "Linha 1\n")
+  CONIURA append_all(caminho, "Linha 2\n")
+  CONIURA append_all(caminho, "Linha 3\n")
+
+  EVOCA VERBUM lido AD CONIURA read_all(caminho)
+  SI CONIURA compare(lido, esperado) == 0
+    REDDE 0
+  FIN SI
+  REDDE 1
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

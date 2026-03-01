@@ -1,0 +1,10 @@
+INCIPIT grimoire "module_final_entry"
+
+ADVOCARE "modules_9e/module_final_a.cct"
+ADVOCARE "modules_9e/module_final_b.cct"
+
+RITUALE main() REDDE REX
+  REDDE CONIURA valor_a(10) + CONIURA valor_b(5)
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

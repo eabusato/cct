@@ -1,0 +1,16 @@
+INCIPIT grimoire "multi_semper_8c"
+
+RITUALE main() REDDE NIHIL
+  TEMPTA
+    IACE "x"
+  CAPE FRACTUM erro
+    OBSECRO scribe(erro)
+  SEMPER
+    OBSECRO scribe("a")
+  SEMPER
+    OBSECRO scribe("b")
+  FIN TEMPTA
+  REDDE
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

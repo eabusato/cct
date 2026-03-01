@@ -1,0 +1,13 @@
+INCIPIT grimoire "fs_read_error_11e1"
+
+ADVOCARE "cct/fs.cct"
+
+RITUALE main() REDDE REX
+  EVOCA VERBUM conteudo AD CONIURA read_all("tests/fixtures/io_fs/arquivo_inexistente.txt")
+  SI CONIURA size("tests/fixtures/io_fs/arquivo_inexistente.txt") >= 0
+    REDDE CONIURA size("tests/fixtures/io_fs/arquivo_inexistente.txt")
+  FIN SI
+  REDDE CONIURA size(conteudo)
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

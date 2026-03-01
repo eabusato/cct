@@ -1,0 +1,9 @@
+INCIPIT grimoire "module_import_bad_ext"
+
+ADVOCARE "modules_9a/lib_rituale.txt"
+
+RITUALE main() REDDE REX
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

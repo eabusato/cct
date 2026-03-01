@@ -1,0 +1,8 @@
+INCIPIT grimoire "fase12_final_showcase_test"
+
+RITUALE main() REDDE REX
+  -- Smoke test: always succeeds
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

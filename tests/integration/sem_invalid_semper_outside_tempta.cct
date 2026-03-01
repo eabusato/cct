@@ -1,0 +1,9 @@
+INCIPIT grimoire "semper_outside"
+
+RITUALE main() REDDE NIHIL
+  SEMPER
+    OBSECRO scribe("nao")
+  REDDE
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

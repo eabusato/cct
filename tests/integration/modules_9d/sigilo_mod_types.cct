@@ -1,0 +1,11 @@
+INCIPIT grimoire "sigilo_mod_types"
+
+SIGILLUM Datum
+  valor: REX
+FIN SIGILLUM
+
+RITUALE soma_dupla(REX x) REDDE REX
+  REDDE x + x
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

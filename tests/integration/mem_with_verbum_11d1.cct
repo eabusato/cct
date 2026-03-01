@@ -1,0 +1,18 @@
+INCIPIT grimoire "mem_with_verbum_11d1"
+
+ADVOCARE "cct/mem.cct"
+ADVOCARE "cct/verbum.cct"
+
+RITUALE main() REDDE REX
+  EVOCA SPECULUM REX buf
+  VINCIRE buf AD CONIURA alloc(8 * MENSURA(REX))
+  CONIURA zero(buf, 8 * MENSURA(REX))
+
+  EVOCA VERBUM msg AD CONIURA concat("mem", "-ok")
+  EVOCA REX l AD CONIURA len(msg)
+
+  CONIURA free(buf)
+  REDDE l
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

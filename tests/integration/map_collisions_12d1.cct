@@ -1,0 +1,38 @@
+INCIPIT grimoire "map_collisions_12d1"
+
+ADVOCARE "cct/map.cct"
+ADVOCARE "cct/option.cct"
+
+RITUALE main() REDDE REX
+  EVOCA SPECULUM NIHIL m AD CONIURA map_init GENUS(REX, REX)()
+  EVOCA REX i AD 0
+
+  DUM i < 100
+    CONIURA map_insert GENUS(REX, REX)(m, i, i * 10)
+    VINCIRE i AD i + 1
+  FIN DUM
+
+  SI CONIURA map_len GENUS(REX, REX)(m) != 100
+    CONIURA map_free GENUS(REX, REX)(m)
+    REDDE 21
+  FIN SI
+
+  EVOCA SPECULUM NIHIL opt50 AD CONIURA map_get GENUS(REX, REX)(m, 50)
+  SI NON CONIURA option_is_some GENUS(REX)(opt50)
+    CONIURA option_free GENUS(REX)(opt50)
+    CONIURA map_free GENUS(REX, REX)(m)
+    REDDE 22
+  FIN SI
+
+  EVOCA REX v50 AD CONIURA option_unwrap GENUS(REX)(opt50)
+  CONIURA option_free GENUS(REX)(opt50)
+  CONIURA map_free GENUS(REX, REX)(m)
+
+  SI v50 != 500
+    REDDE 23
+  FIN SI
+
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

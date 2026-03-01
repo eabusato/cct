@@ -1,0 +1,19 @@
+INCIPIT grimoire "memidxbool"
+
+RITUALE main() REDDE REX
+  EVOCA SPECULUM VERUM flags
+  VINCIRE flags AD OBSECRO pete(3 * MENSURA(VERUM))
+  VINCIRE flags[0] AD FALSUM
+  VINCIRE flags[1] AD VERUM
+  VINCIRE flags[2] AD FALSUM
+  EVOCA REX out
+  SI flags[1]
+    VINCIRE out AD 1
+  ALITER
+    VINCIRE out AD 0
+  FIN SI
+  DIMITTE flags
+  REDDE out
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

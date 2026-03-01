@@ -1,0 +1,11 @@
+INCIPIT grimoire "module_resolve_transitive_denied_base"
+
+RITUALE valor_base() REDDE REX
+  REDDE 9
+EXPLICIT RITUALE
+
+SIGILLUM CaixaBase
+  n: REX
+FIN SIGILLUM
+
+EXPLICIT grimoire

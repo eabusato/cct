@@ -1,0 +1,9 @@
+INCIPIT grimoire "module_visibility_arcanum_invalid_context"
+
+ARCANUM ADVOCARE "modules_9c/module_visibility_public_default_lib.cct"
+
+RITUALE main() REDDE REX
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

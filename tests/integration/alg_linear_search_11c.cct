@@ -1,0 +1,25 @@
+INCIPIT grimoire "alg_linear_search_11c"
+
+ADVOCARE "cct/alg.cct"
+
+RITUALE main() REDDE REX
+  EVOCA SERIES REX[5] arr
+  VINCIRE arr[0] AD 10
+  VINCIRE arr[1] AD 20
+  VINCIRE arr[2] AD 30
+  VINCIRE arr[3] AD 40
+  VINCIRE arr[4] AD 50
+
+  EVOCA REX pos_30 AD CONIURA alg_linear_search(SPECULUM arr[0], 30, 5)
+  EVOCA REX pos_99 AD CONIURA alg_linear_search(SPECULUM arr[0], 99, 5)
+
+  SI pos_30 == 2
+    SI pos_99 == -1
+      REDDE 0
+    FIN SI
+  FIN SI
+
+  REDDE 1
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

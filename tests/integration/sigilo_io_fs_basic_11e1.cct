@@ -1,0 +1,13 @@
+INCIPIT grimoire "sigilo_io_fs_basic_11e1"
+
+ADVOCARE "cct/io.cct"
+ADVOCARE "cct/fs.cct"
+
+RITUALE main() REDDE REX
+  CONIURA write_all("tests/fixtures/io_fs/sigilo_io_fs.txt", "x")
+  EVOCA REX tam AD CONIURA size("tests/fixtures/io_fs/sigilo_io_fs.txt")
+  CONIURA print_int(tam)
+  REDDE tam
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

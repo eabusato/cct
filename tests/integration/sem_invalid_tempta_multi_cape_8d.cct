@@ -1,0 +1,14 @@
+INCIPIT grimoire "invalid_multi_cape_8d"
+
+RITUALE main() REDDE NIHIL
+  TEMPTA
+    IACE "boom-8d"
+  CAPE FRACTUM e1
+    OBSECRO scribe(e1)
+  CAPE FRACTUM e2
+    OBSECRO scribe(e2)
+  FIN TEMPTA
+  REDDE
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

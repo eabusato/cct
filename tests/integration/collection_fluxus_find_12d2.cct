@@ -1,0 +1,32 @@
+INCIPIT grimoire "collection_fluxus_find_12d2"
+
+ADVOCARE "cct/fluxus.cct"
+ADVOCARE "cct/collection_ops.cct"
+ADVOCARE "cct/option.cct"
+
+RITUALE eh_dez(REX x) REDDE VERUM
+  REDDE x == 10
+EXPLICIT RITUALE
+
+RITUALE main() REDDE REX
+  EVOCA SPECULUM NIHIL nums AD CONIURA fluxus_init(MENSURA(REX))
+  EVOCA REX a AD 5
+  EVOCA REX b AD 10
+  EVOCA REX c AD 15
+  CONIURA fluxus_push(nums, SPECULUM a)
+  CONIURA fluxus_push(nums, SPECULUM b)
+  CONIURA fluxus_push(nums, SPECULUM c)
+
+  EVOCA SPECULUM NIHIL opt AD CONIURA fluxus_find GENUS(REX)(nums, eh_dez)
+  EVOCA REX out AD 0
+  SI CONIURA option_is_some GENUS(REX)(opt)
+    VINCIRE out AD CONIURA option_unwrap GENUS(REX)(opt)
+  FIN SI
+
+  CONIURA option_free GENUS(REX)(opt)
+  CONIURA fluxus_free(nums)
+
+  REDDE out
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

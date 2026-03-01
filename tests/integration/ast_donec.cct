@@ -1,0 +1,12 @@
+INCIPIT grimoire "donec_test"
+
+RITUALE main() REDDE NIHIL
+  EVOCA REX i
+  VINCIRE i AD 0
+  DONEC
+    VINCIRE i AD i + 1
+  DUM i >= 3
+  REDDE
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

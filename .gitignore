@@ -1,0 +1,56 @@
+# Compiled binaries
+*.o
+*.out
+*.exe
+*.so
+*.dylib
+*.a
+cct
+examples/*/main
+examples/ars_magna_showcase
+examples/hello
+examples/iterators
+examples/showcase_*
+
+# Generated C files
+*.cgen.c
+
+# Sigil artifacts
+*.svg
+*.sigil
+
+# Build directories
+.cct/
+dist/
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Linux
+*~
+.directory
+
+# Editor files
+*.swp
+*.swo
+*~
+.vscode/
+.idea/
+*.sublime-*
+
+# Test outputs
+*.test
+*.bench
+test_output/
+*.log
+
+# Temporary files
+tmp/
+temp/
+*.tmp
+
+# Environment
+.env
+.env.local

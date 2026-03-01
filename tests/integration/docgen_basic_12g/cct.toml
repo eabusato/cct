@@ -1,0 +1,3 @@
+[project]
+name = "docgen_basic_12g"
+entry = "src/main.cct"

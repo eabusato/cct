@@ -1,0 +1,98 @@
+INCIPIT grimoire "ars_canonica_compute"
+
+ADVOCARE "types.cct"
+ADVOCARE "cct/parse.cct"
+ADVOCARE "cct/math.cct"
+ADVOCARE "cct/random.cct"
+ADVOCARE "cct/cmp.cct"
+ADVOCARE "cct/verbum.cct"
+ADVOCARE "cct/series.cct"
+ADVOCARE "cct/alg.cct"
+ADVOCARE "cct/fluxus.cct"
+ADVOCARE "cct/mem.cct"
+
+RITUALE compute_session(VERBUM nomen, SPECULUM Session out) REDDE NIHIL
+  EVOCA SERIES REX[8] values
+  EVOCA SERIES REX[8] sorted
+  EVOCA REX i AD 0
+
+  CONIURA seed(1119)
+
+  EVOCA REX n0 AD CONIURA parse_int("12")
+  EVOCA REX n1 AD CONIURA parse_int("7")
+  EVOCA REX n2 AD CONIURA parse_int("31")
+  EVOCA REX n3 AD CONIURA parse_int("5")
+  EVOCA REX n4 AD CONIURA parse_int("19")
+  EVOCA REX n5 AD CONIURA parse_int("22")
+  EVOCA REX n6 AD CONIURA parse_int("9")
+  EVOCA REX n7 AD CONIURA parse_int("27")
+
+  VINCIRE values[0] AD CONIURA clamp(n0 + (CONIURA random_int(0, 4) - 2), 0, 99)
+  VINCIRE values[1] AD CONIURA clamp(n1 + (CONIURA random_int(0, 4) - 2), 0, 99)
+  VINCIRE values[2] AD CONIURA clamp(n2 + (CONIURA random_int(0, 4) - 2), 0, 99)
+  VINCIRE values[3] AD CONIURA clamp(n3 + (CONIURA random_int(0, 4) - 2), 0, 99)
+  VINCIRE values[4] AD CONIURA clamp(n4 + (CONIURA random_int(0, 4) - 2), 0, 99)
+  VINCIRE values[5] AD CONIURA clamp(n5 + (CONIURA random_int(0, 4) - 2), 0, 99)
+  VINCIRE values[6] AD CONIURA clamp(n6 + (CONIURA random_int(0, 4) - 2), 0, 99)
+  VINCIRE values[7] AD CONIURA clamp(n7 + (CONIURA random_int(0, 4) - 2), 0, 99)
+
+  CONIURA series_copy GENUS(REX)(SPECULUM sorted[0], SPECULUM values[0], 8)
+  CONIURA alg_sort_insertion(SPECULUM sorted[0], 8)
+
+  EVOCA REX sum AD 0
+  VINCIRE i AD 0
+  DUM i < 8
+    VINCIRE sum AD sum + values[i]
+    VINCIRE i AD i + 1
+  FIN DUM
+
+  EVOCA REX median AD (sorted[3] + sorted[4]) / 2
+  EVOCA REX min_v AD sorted[0]
+  EVOCA REX max_v AD sorted[7]
+
+  EVOCA SPECULUM NIHIL flux AD CONIURA fluxus_init(MENSURA(REX))
+  CONIURA fluxus_push(flux, SPECULUM min_v)
+  CONIURA fluxus_push(flux, SPECULUM median)
+  CONIURA fluxus_push(flux, SPECULUM max_v)
+
+  EVOCA SPECULUM REX p0 AD CONIURA fluxus_get(flux, 0)
+  EVOCA SPECULUM REX p1 AD CONIURA fluxus_get(flux, 1)
+  EVOCA SPECULUM REX p2 AD CONIURA fluxus_get(flux, 2)
+  EVOCA REX checksum AD sum + *p0 + *p1 + *p2
+  CONIURA fluxus_free(flux)
+
+  EVOCA SPECULUM REX buf_a AD CONIURA alloc(8 * MENSURA(REX))
+  EVOCA SPECULUM REX buf_b AD CONIURA alloc(8 * MENSURA(REX))
+  CONIURA zero(buf_a, 8 * MENSURA(REX))
+  CONIURA zero(buf_b, 8 * MENSURA(REX))
+  CONIURA copy(buf_a, SPECULUM values[0], 8 * MENSURA(REX))
+  CONIURA copy(buf_b, SPECULUM sorted[0], 8 * MENSURA(REX))
+
+  EVOCA REX cmp_mem AD CONIURA mem_compare(buf_a, buf_b, 8 * MENSURA(REX))
+  SI cmp_mem != 0
+    VINCIRE checksum AD checksum + 5
+  FIN SI
+  CONIURA free(buf_a)
+  CONIURA free(buf_b)
+
+  EVOCA REX cmp_nome AD CONIURA cmp_verbum(CONIURA trim(nomen), "Astra")
+  SI cmp_nome == 0
+    VINCIRE checksum AD checksum + 7
+  FIN SI
+
+  VINCIRE (*out).nomen AD CONIURA trim(nomen)
+  VINCIRE (*out).count AD 8
+  VINCIRE (*out).sum AD sum
+  VINCIRE (*out).min_v AD min_v
+  VINCIRE (*out).max_v AD max_v
+  VINCIRE (*out).median AD median
+  VINCIRE (*out).checksum AD checksum
+
+  VINCIRE (*out).approved AD CONIURA parse_bool("true")
+  SI CONIURA abs(max_v - min_v) > 90
+    VINCIRE (*out).approved AD FALSUM
+  FIN SI
+  REDDE
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

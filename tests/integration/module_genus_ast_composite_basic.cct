@@ -1,0 +1,9 @@
+INCIPIT grimoire "module_genus_ast_composite_basic"
+
+ADVOCARE "modules_10a/module_genus_ast_composite_lib.cct"
+
+RITUALE main() REDDE NIHIL
+  REDDE
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

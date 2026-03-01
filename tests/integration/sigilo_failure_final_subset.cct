@@ -1,0 +1,23 @@
+INCIPIT grimoire "sigilo_failure_final_subset_8d"
+
+RITUALE inner() REDDE NIHIL
+  IACE "inner-final-8d"
+EXPLICIT RITUALE
+
+RITUALE main() REDDE REX
+  EVOCA SPECULUM REX p
+  EVOCA REX x AD 0
+  TEMPTA
+    CONIURA inner()
+    VINCIRE x AD *p
+  CAPE FRACTUM erro
+    VINCIRE p AD OBSECRO pete(MENSURA(REX))
+    VINCIRE *p AD 9
+    VINCIRE x AD *p
+  SEMPER
+    DIMITTE p
+  FIN TEMPTA
+  REDDE x
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

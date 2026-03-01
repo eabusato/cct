@@ -1,0 +1,10 @@
+INCIPIT grimoire "ars_magna_modular"
+
+ADVOCARE "modules/oraculum.cct"
+
+RITUALE main() REDDE REX
+  EVOCA REX resultado AD CONIURA avaliar_oraculum(60)
+  ANUR resultado
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

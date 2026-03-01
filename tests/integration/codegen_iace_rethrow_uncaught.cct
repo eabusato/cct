@@ -1,0 +1,13 @@
+INCIPIT grimoire "cg_iace_rethrow"
+
+RITUALE main() REDDE NIHIL
+  TEMPTA
+    IACE "rethrow-8a"
+  CAPE FRACTUM erro
+    OBSECRO scribe(erro)
+    IACE erro
+  FIN TEMPTA
+  REDDE
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

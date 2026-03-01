@@ -1,0 +1,26 @@
+INCIPIT grimoire "sigilo_math_random_basic_11f1"
+
+ADVOCARE "cct/math.cct"
+ADVOCARE "cct/random.cct"
+
+RITUALE main() REDDE REX
+  EVOCA REX a AD CONIURA abs(-2)
+  EVOCA REX b AD CONIURA min(a, 10)
+  CONIURA seed(5)
+  EVOCA REX c AD CONIURA random_int(1, 3)
+  EVOCA FLAMMA d AD CONIURA random_real()
+  SI b >= 0
+    SI c >= 1
+      SI c <= 3
+        SI d >= 0.0
+          SI d < 1.0
+            REDDE 0
+          FIN SI
+        FIN SI
+      FIN SI
+    FIN SI
+  FIN SI
+  REDDE 1
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

@@ -1,0 +1,19 @@
+INCIPIT grimoire "option_basic_12c"
+
+ADVOCARE "cct/option.cct"
+
+RITUALE main() REDDE REX
+  EVOCA SPECULUM NIHIL opt AD CONIURA Some GENUS(REX)(42)
+  SI CONIURA option_is_some GENUS(REX)(opt)
+    EVOCA REX v AD CONIURA option_unwrap GENUS(REX)(opt)
+    CONIURA option_free GENUS(REX)(opt)
+    SI v == 42
+      REDDE 0
+    FIN SI
+    REDDE 1
+  FIN SI
+  CONIURA option_free GENUS(REX)(opt)
+  REDDE 2
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

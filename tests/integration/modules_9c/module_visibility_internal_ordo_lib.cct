@@ -1,0 +1,14 @@
+INCIPIT grimoire "module_visibility_internal_ordo_lib"
+
+ARCANUM ORDO OrdemArcana
+  Um = 1
+  Dois = 2
+FIN ORDO
+
+RITUALE pega_dois() REDDE REX
+  EVOCA OrdemArcana o
+  VINCIRE o AD Dois
+  REDDE o
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

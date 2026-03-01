@@ -1,0 +1,10 @@
+INCIPIT grimoire "module_pactum_cross_ok_main_10c"
+
+ADVOCARE "modules_10c/module_pactum_contract_10c.cct"
+ADVOCARE "modules_10c/module_pactum_impl_10c.cct"
+
+RITUALE main() REDDE NIHIL
+  REDDE
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

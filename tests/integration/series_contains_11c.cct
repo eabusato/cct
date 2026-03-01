@@ -1,0 +1,25 @@
+INCIPIT grimoire "series_contains_11c"
+
+ADVOCARE "cct/series.cct"
+
+RITUALE main() REDDE REX
+  EVOCA SERIES REX[5] arr
+  VINCIRE arr[0] AD 10
+  VINCIRE arr[1] AD 20
+  VINCIRE arr[2] AD 30
+  VINCIRE arr[3] AD 40
+  VINCIRE arr[4] AD 50
+
+  EVOCA VERUM tem_30 AD CONIURA series_contains(SPECULUM arr[0], 30, 5)
+  EVOCA VERUM tem_99 AD CONIURA series_contains(SPECULUM arr[0], 99, 5)
+
+  SI tem_30 == VERUM
+    SI tem_99 == FALSUM
+      REDDE 0
+    FIN SI
+  FIN SI
+
+  REDDE 1
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

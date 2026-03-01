@@ -1,0 +1,9 @@
+INCIPIT grimoire "codegen_scribe_int"
+
+RITUALE main() REDDE NIHIL
+  EVOCA REX x AD 40
+  OBSECRO scribe(x + 2, "\n")
+  ANUR 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

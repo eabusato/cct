@@ -1,0 +1,9 @@
+INCIPIT grimoire "math_clamp_invalid_range_11f1"
+
+ADVOCARE "cct/math.cct"
+
+RITUALE main() REDDE REX
+  REDDE CONIURA clamp(5, 10, 1)
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

@@ -1,0 +1,12 @@
+INCIPIT grimoire "cast_float_to_int_12b"
+
+RITUALE main() REDDE REX
+  EVOCA UMBRA real AD 9.9
+  EVOCA REX inteiro AD cast GENUS(REX)(real)
+  SI inteiro == 9
+    REDDE 0
+  FIN SI
+  REDDE 1
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

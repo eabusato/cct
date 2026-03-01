@@ -1,0 +1,23 @@
+INCIPIT grimoire "sigmult"
+
+SIGILLUM Daemon
+  nomen: VERBUM
+  potestas: REX
+  fervor: UMBRA
+  manifestus: VERUM
+FIN SIGILLUM
+
+RITUALE main() REDDE REX
+  EVOCA Daemon d
+  VINCIRE d.nomen AD "Bael"
+  VINCIRE d.potestas AD 66
+  VINCIRE d.fervor AD 3.5
+  VINCIRE d.manifestus AD VERUM
+  SI d.manifestus
+    REDDE d.potestas
+  ALITER
+    REDDE 0
+  FIN SI
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

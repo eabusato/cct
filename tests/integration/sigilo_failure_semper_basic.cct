@@ -1,0 +1,16 @@
+INCIPIT grimoire "sigilo_failure_semper"
+
+RITUALE main() REDDE NIHIL
+  EVOCA SPECULUM REX p
+  TEMPTA
+    VINCIRE p AD OBSECRO pete(MENSURA(REX))
+    IACE "sigilo-8c"
+  CAPE FRACTUM erro
+    OBSECRO scribe(erro)
+  SEMPER
+    DIMITTE p
+  FIN TEMPTA
+  REDDE
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

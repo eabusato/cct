@@ -1,0 +1,22 @@
+INCIPIT grimoire "ars_canonica_types"
+
+SIGILLUM Session
+  nomen: VERBUM
+  count: REX
+  sum: REX
+  min_v: REX
+  max_v: REX
+  median: REX
+  checksum: REX
+  approved: VERUM
+FIN SIGILLUM
+
+SIGILLUM Artifact
+  full_path: VERBUM
+  dirname: VERBUM
+  basename: VERBUM
+  extension: VERBUM
+  bytes: REX
+FIN SIGILLUM
+
+EXPLICIT grimoire

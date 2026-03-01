@@ -1,0 +1,36 @@
+INCIPIT grimoire "math_random_showcase_11f1"
+
+ADVOCARE "cct/math.cct"
+ADVOCARE "cct/random.cct"
+ADVOCARE "cct/io.cct"
+
+RITUALE main() REDDE REX
+  CONIURA seed(42)
+
+  EVOCA REX base AD -12
+  EVOCA REX n1 AD CONIURA abs(base)
+  EVOCA REX n2 AD CONIURA clamp(27, 0, 20)
+  EVOCA REX n3 AD CONIURA random_int(1, 100)
+  EVOCA FLAMMA r AD CONIURA random_real()
+
+  CONIURA println("MATH + RANDOM showcase")
+  CONIURA print("abs(-12)=")
+  CONIURA print_int(n1)
+  CONIURA println("")
+
+  CONIURA print("clamp(27,0,20)=")
+  CONIURA print_int(n2)
+  CONIURA println("")
+
+  CONIURA print("random_int(1,100)=")
+  CONIURA print_int(n3)
+  CONIURA println("")
+
+  CONIURA print("random_real in [0,1): ")
+  OBSECRO scribe(r)
+  CONIURA println("")
+
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

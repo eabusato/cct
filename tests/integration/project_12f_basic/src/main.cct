@@ -1,0 +1,9 @@
+INCIPIT grimoire "project_12f_basic_main"
+
+ADVOCARE "../lib/util.cct"
+
+RITUALE main() REDDE REX
+  REDDE CONIURA soma_basica(20, 22)
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

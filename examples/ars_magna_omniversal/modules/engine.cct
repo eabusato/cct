@@ -1,0 +1,80 @@
+INCIPIT grimoire "omni_engine"
+
+ADVOCARE "types_core.cct"
+ADVOCARE "generics.cct"
+ADVOCARE "memory_alchemy.cct"
+ADVOCARE "failure_rituals.cct"
+
+RITUALE executar_ars(REX base) REDDE REX
+  EVOCA Mage m
+  CONIURA preparar_mage(SPECULUM m, "Bael", base, 2.25)
+
+  EVOCA Capsa GENUS(REX) caixa
+  VINCIRE caixa.item AD CONIURA identitas GENUS(REX)(m.power)
+  VINCIRE m.power AD CONIURA duplum GENUS(REX, VERBUM)(caixa.item, "sigillum")
+
+  CONIURA aquecer_mage(SPECULUM m, 1.5)
+
+  EVOCA SERIES REX[4] runes
+  REPETE i DE 0 AD 3
+    VINCIRE runes[i] AD i + 1
+  FIN REPETE
+
+  EVOCA REX pulse AD 0
+  DONEC
+    VINCIRE pulse AD pulse + 1
+  DUM pulse < 2
+
+  EVOCA SPECULUM REX buffer
+  VINCIRE buffer AD OBSECRO pete(MENSURA(REX) * 5)
+  CONIURA preencher(buffer, 5, 3)
+  CONIURA elevar(SPECULUM buffer[2], 5)
+  EVOCA REX total AD CONIURA somar(buffer, 5)
+  OBSECRO libera(buffer)
+
+  EVOCA SPECULUM REX extra
+  VINCIRE extra AD OBSECRO pete(MENSURA(REX))
+  VINCIRE *extra AD 8
+  VINCIRE total AD total + *extra
+  DIMITTE extra
+
+  VINCIRE total AD total + runes[0] + pulse
+  VINCIRE total AD total + CONIURA stance_bonus(IRA)
+  VINCIRE total AD total + CONIURA selo_plus GENUS(Mage)(SPECULUM m, base)
+  VINCIRE total AD total + CONIURA valor(SPECULUM m, 10)
+
+  VINCIRE total AD total + CONIURA risco_controlado(m.power)
+
+  TEMPTA
+    VINCIRE total AD total + CONIURA risco_externo(m.power + 40)
+  CAPE FRACTUM err
+    OBSECRO scribe("[engine.cape] ", err, "\n")
+    VINCIRE total AD total + 13
+  SEMPER
+    VINCIRE total AD total + 2
+  FIN TEMPTA
+
+  EVOCA SPECULUM REX nullp
+  TEMPTA
+    VINCIRE total AD total + *nullp
+  CAPE FRACTUM bridge
+    OBSECRO scribe("[engine.bridge] ", bridge, "\n")
+    VINCIRE total AD total + 17
+  SEMPER
+    VINCIRE total AD total + 1
+  FIN TEMPTA
+
+  EVOCA VERUM awake AD VERUM
+  OBSECRO scribe(
+    "mage=", m.name,
+    " power=", m.power,
+    " heat=", m.heat,
+    " rune=", m.rune.mark,
+    " awake=", awake,
+    " total=", total, "\n"
+  )
+
+  REDDE total
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

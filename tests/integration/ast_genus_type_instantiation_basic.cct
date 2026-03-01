@@ -1,0 +1,13 @@
+INCIPIT grimoire "ast_genus_type_instantiation_basic"
+
+SIGILLUM Capsa GENUS(T)
+  valor: T
+FIN SIGILLUM
+
+RITUALE main() REDDE REX
+  EVOCA Capsa GENUS(REX) c
+  VINCIRE c.valor AD 9
+  REDDE c.valor
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

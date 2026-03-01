@@ -1,0 +1,11 @@
+INCIPIT grimoire "codegen_sigillum_unsupported"
+
+SIGILLUM Persona
+  idade: REX
+FIN SIGILLUM
+
+RITUALE main() REDDE NIHIL
+  REDDE
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

@@ -1,0 +1,16 @@
+INCIPIT grimoire "math_abs_basic_11f1"
+
+ADVOCARE "cct/math.cct"
+
+RITUALE main() REDDE REX
+  SI CONIURA abs(-7) == 7
+    SI CONIURA abs(7) == 7
+      SI CONIURA abs(0) == 0
+        REDDE 0
+      FIN SI
+    FIN SI
+  FIN SI
+  REDDE 1
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

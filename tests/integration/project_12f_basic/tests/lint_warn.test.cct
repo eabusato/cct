@@ -1,0 +1,8 @@
+INCIPIT grimoire "project_12f_lint_warn_test"
+
+RITUALE main() REDDE REX
+  EVOCA REX unused AD 7
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

@@ -1,0 +1,16 @@
+INCIPIT grimoire "phase12_closure_end_to_end_12h_main"
+
+ADVOCARE "../lib/core.cct"
+ADVOCARE "cct/math.cct"
+ADVOCARE "cct/random.cct"
+
+-- /// Entry do fluxo final da fase 12.
+-- /// @return Código de saída.
+
+RITUALE main() REDDE REX
+  EVOCA REX base AD CONIURA base_value()
+  EVOCA REX ajustado AD CONIURA clamp(base + 2, 0, 100)
+  REDDE ajustado
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

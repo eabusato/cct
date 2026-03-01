@@ -1,0 +1,8 @@
+INCIPIT grimoire "sem_bad_missing_fn"
+
+RITUALE main() REDDE NIHIL
+  EVOCA REX y AD CONIURA inexistens(1)
+  REDDE
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

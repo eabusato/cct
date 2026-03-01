@@ -1,0 +1,13 @@
+INCIPIT grimoire "docgen_visibility_lib_12g"
+
+--! public value for docs
+RITUALE valor_publico() REDDE REX
+  REDDE 7
+EXPLICIT RITUALE
+
+--! internal symbol not exported by default
+ARCANUM RITUALE segredo_local() REDDE REX
+  REDDE 99
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

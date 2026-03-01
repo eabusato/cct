@@ -1,0 +1,9 @@
+INCIPIT grimoire "diagnostic_missing_import_12a"
+
+RITUALE main() REDDE NIHIL
+  EVOCA VERBUM texto AD "Ave"
+  EVOCA REX n AD CONIURA len(texto)
+  REDDE
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

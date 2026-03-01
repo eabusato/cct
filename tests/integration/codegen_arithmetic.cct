@@ -1,0 +1,7 @@
+INCIPIT grimoire "codegen_arith"
+
+RITUALE main() REDDE REX
+  REDDE (2 + 3) * 4 - 5
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

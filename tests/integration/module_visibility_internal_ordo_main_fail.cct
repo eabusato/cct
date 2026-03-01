@@ -1,0 +1,11 @@
+INCIPIT grimoire "module_visibility_internal_ordo_main_fail"
+
+ADVOCARE "modules_9c/module_visibility_internal_ordo_lib.cct"
+
+RITUALE main() REDDE REX
+  EVOCA OrdemArcana o
+  VINCIRE o AD Dois
+  REDDE o
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

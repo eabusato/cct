@@ -1,0 +1,13 @@
+INCIPIT grimoire "codegen_call_simple"
+
+RITUALE ping(REX x) REDDE NIHIL
+  OBSECRO scribe(x, "\n")
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE main() REDDE NIHIL
+  CONIURA ping(5)
+  ANUR 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

@@ -1,0 +1,17 @@
+INCIPIT grimoire "sigilo_genus_instantiation_basic_10b"
+
+SIGILLUM Capsa GENUS(T)
+  valor: T
+FIN SIGILLUM
+
+RITUALE identitas GENUS(T)(T valor) REDDE T
+  REDDE valor
+EXPLICIT RITUALE
+
+RITUALE main() REDDE REX
+  EVOCA Capsa GENUS(REX) c
+  VINCIRE c.valor AD CONIURA identitas GENUS(REX)(12)
+  REDDE c.valor
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

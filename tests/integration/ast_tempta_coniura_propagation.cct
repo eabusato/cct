@@ -1,0 +1,16 @@
+INCIPIT grimoire "ast_tempta_coniura_propagation"
+
+RITUALE inner() REDDE NIHIL
+  IACE "boom"
+EXPLICIT RITUALE
+
+RITUALE main() REDDE NIHIL
+  TEMPTA
+    CONIURA inner()
+  CAPE FRACTUM erro
+    OBSECRO scribe(erro)
+  FIN TEMPTA
+  REDDE
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

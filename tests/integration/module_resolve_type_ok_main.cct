@@ -1,0 +1,17 @@
+INCIPIT grimoire "module_resolve_type_ok_main"
+
+ADVOCARE "modules_9b/module_resolve_type_ok_lib.cct"
+
+RITUALE main() REDDE REX
+  EVOCA ArcaNona a
+  EVOCA GradusNonus g
+  VINCIRE a.valor AD 10
+  VINCIRE g AD Secundus
+  SI g == Secundus
+    REDDE a.valor + 2
+  ALITER
+    REDDE 0
+  FIN SI
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

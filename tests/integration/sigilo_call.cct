@@ -1,0 +1,13 @@
+INCIPIT grimoire "sigilo_call"
+
+RITUALE soma(REX a, REX b) REDDE REX
+  REDDE a + b
+EXPLICIT RITUALE
+
+RITUALE main() REDDE REX
+  EVOCA REX x AD CONIURA soma(2, 5)
+  OBSECRO scribe(x)
+  REDDE x
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

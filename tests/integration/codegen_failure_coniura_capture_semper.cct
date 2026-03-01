@@ -1,0 +1,20 @@
+INCIPIT grimoire "coniura_capture_semper"
+
+RITUALE inner() REDDE NIHIL
+  IACE "inner-8c"
+EXPLICIT RITUALE
+
+RITUALE main() REDDE REX
+  EVOCA REX x AD 30
+  TEMPTA
+    CONIURA inner()
+    VINCIRE x AD 99
+  CAPE FRACTUM erro
+    VINCIRE x AD 40
+  SEMPER
+    VINCIRE x AD x + 1
+  FIN TEMPTA
+  REDDE x
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

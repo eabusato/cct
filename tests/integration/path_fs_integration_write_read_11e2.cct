@@ -1,0 +1,17 @@
+INCIPIT grimoire "path_fs_integration_write_read_11e2"
+
+ADVOCARE "cct/path.cct"
+ADVOCARE "cct/fs.cct"
+ADVOCARE "cct/verbum.cct"
+
+RITUALE main() REDDE REX
+  EVOCA VERBUM p AD CONIURA path_join("tests/fixtures/io_fs", "path_write_11e2.txt")
+  CONIURA write_all(p, "ave-path")
+  EVOCA VERBUM c AD CONIURA read_all(p)
+  SI CONIURA compare(c, "ave-path") == 0
+    REDDE 0
+  FIN SI
+  REDDE 1
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

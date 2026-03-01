@@ -1,0 +1,10 @@
+INCIPIT grimoire "fmt_parse_int_invalid_11b2"
+
+ADVOCARE "cct/fmt.cct"
+
+RITUALE main() REDDE REX
+  EVOCA REX num AD CONIURA fmt_parse_int("12x")
+  REDDE num
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

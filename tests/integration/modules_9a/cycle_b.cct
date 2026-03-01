@@ -1,0 +1,9 @@
+INCIPIT grimoire "mod_cycle_b"
+
+ADVOCARE "cycle_a.cct"
+
+RITUALE aux_b() REDDE REX
+  REDDE 2
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

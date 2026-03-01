@@ -1,0 +1,8 @@
+INCIPIT grimoire "codegen_local"
+
+RITUALE main() REDDE REX
+  EVOCA REX x AD 42
+  REDDE x
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

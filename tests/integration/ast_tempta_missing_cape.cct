@@ -1,0 +1,10 @@
+INCIPIT grimoire "ast_tempta_bad"
+
+RITUALE main() REDDE NIHIL
+  TEMPTA
+    IACE "sem cape"
+  FIN TEMPTA
+  REDDE
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

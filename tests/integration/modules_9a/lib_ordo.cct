@@ -1,0 +1,8 @@
+INCIPIT grimoire "mod_lib_ordo"
+
+ORDO GradusMod
+  Primus = 1
+  Secundus = 2
+FIN ORDO
+
+EXPLICIT grimoire

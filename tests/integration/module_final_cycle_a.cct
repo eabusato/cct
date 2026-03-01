@@ -1,0 +1,9 @@
+INCIPIT grimoire "module_final_cycle_a"
+
+ADVOCARE "module_final_cycle_b.cct"
+
+RITUALE main() REDDE REX
+  REDDE CONIURA ciclo_b()
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

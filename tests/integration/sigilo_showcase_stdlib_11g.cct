@@ -1,0 +1,57 @@
+INCIPIT grimoire "sigilo_showcase_stdlib_11g"
+
+ADVOCARE "cct/verbum.cct"
+ADVOCARE "cct/fmt.cct"
+ADVOCARE "cct/series.cct"
+ADVOCARE "cct/alg.cct"
+ADVOCARE "cct/fluxus.cct"
+ADVOCARE "cct/mem.cct"
+ADVOCARE "cct/io.cct"
+ADVOCARE "cct/fs.cct"
+ADVOCARE "cct/path.cct"
+ADVOCARE "cct/math.cct"
+ADVOCARE "cct/random.cct"
+ADVOCARE "cct/parse.cct"
+ADVOCARE "cct/cmp.cct"
+
+RITUALE main() REDDE REX
+  EVOCA VERBUM t AD CONIURA trim("  a  ")
+  EVOCA VERBUM n AD CONIURA stringify_int(5)
+  EVOCA SERIES REX[3] arr
+  CONIURA series_fill GENUS(REX)(SPECULUM arr[0], 2, 3)
+  CONIURA alg_sort_insertion(SPECULUM arr[0], 3)
+
+  EVOCA SPECULUM NIHIL flux AD CONIURA fluxus_init(MENSURA(REX))
+  EVOCA REX v AD 9
+  CONIURA fluxus_push(flux, SPECULUM v)
+  CONIURA fluxus_free(flux)
+
+  EVOCA SPECULUM REX ptr AD CONIURA alloc(8)
+  CONIURA zero(ptr, 8)
+  CONIURA free(ptr)
+
+  EVOCA VERBUM p AD CONIURA path_join("tests", "tmp_sigilo_11g.txt")
+  CONIURA write_all(p, "x")
+  EVOCA VERBUM c AD CONIURA read_all(p)
+  OBSECRO io_println(c)
+
+  EVOCA REX i AD CONIURA parse_int("8")
+  EVOCA REX a AD CONIURA abs(0 - i)
+  CONIURA seed(7)
+  EVOCA REX ri AD CONIURA random_int(1, 2)
+  EVOCA REX ci AD CONIURA cmp_int(a, 8)
+
+  SI CONIURA cmp_verbum(t, "a") == 0
+    SI ci == 0
+      SI ri >= 1
+        SI ri <= 2
+          REDDE 0
+        FIN SI
+      FIN SI
+    FIN SI
+  FIN SI
+
+  REDDE 1
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

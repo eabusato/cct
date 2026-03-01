@@ -1,0 +1,7 @@
+INCIPIT grimoire "sem_bad_dup_param"
+
+RITUALE f(REX x, REX x) REDDE REX
+  REDDE x
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

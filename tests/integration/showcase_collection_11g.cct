@@ -1,0 +1,49 @@
+INCIPIT grimoire "showcase_collection_11g"
+
+ADVOCARE "cct/series.cct"
+ADVOCARE "cct/alg.cct"
+ADVOCARE "cct/fluxus.cct"
+
+RITUALE main() REDDE REX
+  EVOCA SERIES REX[6] arr
+  VINCIRE arr[0] AD 9
+  VINCIRE arr[1] AD 2
+  VINCIRE arr[2] AD 7
+  VINCIRE arr[3] AD 1
+  VINCIRE arr[4] AD 5
+  VINCIRE arr[5] AD 3
+
+  CONIURA alg_sort_insertion(SPECULUM arr[0], 6)
+
+  EVOCA REX pos AD CONIURA alg_binary_search(SPECULUM arr[0], 6, 7)
+
+  EVOCA SPECULUM NIHIL flux
+  EVOCA REX a AD arr[1]
+  EVOCA REX b AD arr[4]
+  EVOCA SPECULUM REX p0
+  EVOCA SPECULUM REX p1
+
+  VINCIRE flux AD CONIURA fluxus_init(MENSURA(REX))
+  CONIURA fluxus_push(flux, SPECULUM a)
+  CONIURA fluxus_push(flux, SPECULUM b)
+
+  VINCIRE p0 AD CONIURA fluxus_get(flux, 0)
+  VINCIRE p1 AD CONIURA fluxus_get(flux, 1)
+
+  EVOCA REX soma AD *p0 + *p1
+  CONIURA fluxus_free(flux)
+
+  SI arr[0] == 1
+    SI arr[5] == 9
+      SI pos == 4
+        SI soma == 9
+          REDDE 0
+        FIN SI
+      FIN SI
+    FIN SI
+  FIN SI
+
+  REDDE 1
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

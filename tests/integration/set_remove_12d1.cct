@@ -1,0 +1,31 @@
+INCIPIT grimoire "set_remove_12d1"
+
+ADVOCARE "cct/set.cct"
+
+RITUALE main() REDDE REX
+  EVOCA SPECULUM NIHIL s AD CONIURA set_init GENUS(REX)()
+
+  CONIURA set_insert GENUS(REX)(s, 1)
+  CONIURA set_insert GENUS(REX)(s, 2)
+  CONIURA set_insert GENUS(REX)(s, 3)
+
+  SI NON CONIURA set_remove GENUS(REX)(s, 2)
+    CONIURA set_free GENUS(REX)(s)
+    REDDE 61
+  FIN SI
+
+  SI CONIURA set_contains GENUS(REX)(s, 2)
+    CONIURA set_free GENUS(REX)(s)
+    REDDE 62
+  FIN SI
+
+  SI CONIURA set_len GENUS(REX)(s) != 2
+    CONIURA set_free GENUS(REX)(s)
+    REDDE 63
+  FIN SI
+
+  CONIURA set_free GENUS(REX)(s)
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

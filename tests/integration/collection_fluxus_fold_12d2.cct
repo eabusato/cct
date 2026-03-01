@@ -1,0 +1,26 @@
+INCIPIT grimoire "collection_fluxus_fold_12d2"
+
+ADVOCARE "cct/fluxus.cct"
+ADVOCARE "cct/collection_ops.cct"
+
+RITUALE multiplicar(REX acc, REX x) REDDE REX
+  REDDE acc * x
+EXPLICIT RITUALE
+
+RITUALE main() REDDE REX
+  EVOCA SPECULUM NIHIL nums AD CONIURA fluxus_init(MENSURA(REX))
+  EVOCA REX a AD 2
+  EVOCA REX b AD 3
+  EVOCA REX c AD 4
+  CONIURA fluxus_push(nums, SPECULUM a)
+  CONIURA fluxus_push(nums, SPECULUM b)
+  CONIURA fluxus_push(nums, SPECULUM c)
+
+  EVOCA REX produto AD CONIURA fluxus_fold GENUS(REX, REX)(nums, 1, multiplicar)
+
+  CONIURA fluxus_free(nums)
+
+  REDDE produto
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

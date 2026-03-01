@@ -1,0 +1,12 @@
+INCIPIT grimoire "ast_genus_sigillum"
+
+SIGILLUM Capsa GENUS(T,U)
+  primus: T
+  secundus: U
+FIN SIGILLUM
+
+RITUALE main() REDDE NIHIL
+  REDDE
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

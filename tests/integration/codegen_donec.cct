@@ -1,0 +1,11 @@
+INCIPIT grimoire "codegen_donec"
+
+RITUALE main() REDDE REX
+  EVOCA REX x AD 0
+  DONEC
+    VINCIRE x AD x + 1
+  DUM x < 3
+  REDDE x
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

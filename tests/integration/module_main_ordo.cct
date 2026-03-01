@@ -1,0 +1,15 @@
+INCIPIT grimoire "module_main_ordo"
+
+ADVOCARE "modules_9a/lib_ordo.cct"
+
+RITUALE main() REDDE REX
+  EVOCA GradusMod g
+  VINCIRE g AD Secundus
+  SI g == Secundus
+    REDDE 1
+  ALITER
+    REDDE 0
+  FIN SI
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

@@ -1,0 +1,8 @@
+INCIPIT grimoire "docgen_determinism_core_12g"
+
+--! stable deterministic symbol
+RITUALE valor_base() REDDE REX
+  REDDE 5
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

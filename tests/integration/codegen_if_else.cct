@@ -1,0 +1,13 @@
+INCIPIT grimoire "codegen_if_else"
+
+RITUALE main() REDDE REX
+  EVOCA REX x AD 0
+  SI 2 < 1
+    VINCIRE x AD 1
+  ALITER
+    VINCIRE x AD 2
+  FIN SI
+  REDDE x
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

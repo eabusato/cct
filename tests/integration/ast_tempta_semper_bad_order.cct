@@ -1,0 +1,14 @@
+INCIPIT grimoire "ast_tempta_semper_bad_order"
+
+RITUALE main() REDDE NIHIL
+  TEMPTA
+    IACE "x"
+  SEMPER
+    OBSECRO scribe("cleanup")
+  CAPE FRACTUM erro
+    OBSECRO scribe(erro)
+  FIN TEMPTA
+  REDDE
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

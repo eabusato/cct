@@ -1,0 +1,13 @@
+INCIPIT grimoire "codegen_genus_sigillum_basic_10b"
+
+SIGILLUM Capsa GENUS(T)
+  valor: T
+FIN SIGILLUM
+
+RITUALE main() REDDE REX
+  EVOCA Capsa GENUS(REX) c
+  VINCIRE c.valor AD 7
+  REDDE c.valor + 1
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

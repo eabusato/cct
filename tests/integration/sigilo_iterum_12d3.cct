@@ -1,0 +1,19 @@
+INCIPIT grimoire "sigilo_iterum_12d3"
+
+ADVOCARE "cct/fluxus.cct"
+
+RITUALE main() REDDE REX
+  EVOCA SPECULUM NIHIL nums AD CONIURA fluxus_init(MENSURA(REX))
+  EVOCA REX a AD 7
+  CONIURA fluxus_push(nums, SPECULUM a)
+
+  EVOCA REX soma AD 0
+  ITERUM n IN nums COM
+    VINCIRE soma AD soma + n
+  FIN ITERUM
+
+  CONIURA fluxus_free(nums)
+  REDDE soma
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

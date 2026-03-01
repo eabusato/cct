@@ -1,0 +1,7 @@
+INCIPIT grimoire "diagnostic_syntax_error_12a"
+
+RITUALE main() REDDE REX
+  REDDE 0
+FIN RITUALE
+
+EXPLICIT grimoire

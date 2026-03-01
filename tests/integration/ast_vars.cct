@@ -1,0 +1,9 @@
+INCIPIT grimoire "vars"
+
+RITUALE main() REDDE NIHIL
+  EVOCA REX x
+  VINCIRE x AD 42
+  REDDE
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

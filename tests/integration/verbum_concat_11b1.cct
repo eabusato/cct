@@ -1,0 +1,17 @@
+INCIPIT grimoire "verbum_concat_11b1"
+
+ADVOCARE "cct/verbum.cct"
+
+RITUALE main() REDDE REX
+  EVOCA VERBUM a AD "hello"
+  EVOCA VERBUM b AD " world"
+  EVOCA VERBUM resultado AD CONIURA concat(a, b)
+
+  SI CONIURA len(resultado) == 11
+    REDDE 0
+  FIN SI
+
+  REDDE 1
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

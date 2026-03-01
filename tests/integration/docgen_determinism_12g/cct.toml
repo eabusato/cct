@@ -1,0 +1,3 @@
+[project]
+name = "docgen_determinism_12g"
+entry = "src/main.cct"

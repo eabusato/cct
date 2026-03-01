@@ -1,0 +1,13 @@
+INCIPIT grimoire "codegen_while_counter"
+
+RITUALE main() REDDE REX
+  EVOCA REX i AD 0
+  EVOCA REX s AD 0
+  DUM i < 4
+    VINCIRE s AD s + i
+    VINCIRE i AD i + 1
+  FIN DUM
+  REDDE s
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

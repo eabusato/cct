@@ -1,0 +1,13 @@
+INCIPIT grimoire "codegen_genus_rituale_rex_basic_10b"
+
+RITUALE identitas GENUS(T)(T valor) REDDE T
+  REDDE valor
+EXPLICIT RITUALE
+
+RITUALE main() REDDE REX
+  EVOCA REX a
+  VINCIRE a AD CONIURA identitas GENUS(REX)(21)
+  REDDE a + 21
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

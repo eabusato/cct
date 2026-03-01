@@ -1,0 +1,22 @@
+INCIPIT grimoire "fs_with_verbum_11e1"
+
+ADVOCARE "cct/fs.cct"
+ADVOCARE "cct/verbum.cct"
+
+RITUALE main() REDDE REX
+  EVOCA VERBUM s1 AD "Primeira linha\n"
+  EVOCA VERBUM s2 AD "Segunda linha\n"
+  EVOCA VERBUM conteudo AD CONIURA concat(s1, s2)
+  EVOCA VERBUM caminho AD "tests/fixtures/io_fs/verbum_test.txt"
+
+  CONIURA write_all(caminho, conteudo)
+  EVOCA VERBUM lido AD CONIURA read_all(caminho)
+
+  SI CONIURA compare(lido, conteudo) == 0
+    REDDE 0
+  FIN SI
+
+  REDDE 1
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

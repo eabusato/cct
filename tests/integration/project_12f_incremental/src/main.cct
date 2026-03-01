@@ -1,0 +1,9 @@
+INCIPIT grimoire "project_12f_incremental_main"
+
+ADVOCARE "../lib/mod.cct"
+
+RITUALE main() REDDE REX
+  REDDE CONIURA mod_valor()
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

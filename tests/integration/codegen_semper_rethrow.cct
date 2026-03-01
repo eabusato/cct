@@ -1,0 +1,14 @@
+INCIPIT grimoire "semper_rethrow"
+
+RITUALE main() REDDE NIHIL
+  TEMPTA
+    IACE "inner-8c"
+  CAPE FRACTUM erro
+    IACE erro
+  SEMPER
+    OBSECRO scribe("semper-8c\\n")
+  FIN TEMPTA
+  REDDE
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

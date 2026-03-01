@@ -1,0 +1,14 @@
+INCIPIT grimoire "sem_semper_8a"
+
+RITUALE main() REDDE NIHIL
+  TEMPTA
+    IACE "x"
+  CAPE FRACTUM erro
+    OBSECRO scribe(erro)
+  SEMPER
+    OBSECRO scribe("nunca na 8A")
+  FIN TEMPTA
+  REDDE
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

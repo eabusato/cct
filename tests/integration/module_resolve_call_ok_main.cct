@@ -1,0 +1,9 @@
+INCIPIT grimoire "module_resolve_call_ok_main"
+
+ADVOCARE "modules_9b/module_resolve_call_ok_lib.cct"
+
+RITUALE main() REDDE REX
+  REDDE CONIURA soma42()
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

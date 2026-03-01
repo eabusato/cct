@@ -1,0 +1,13 @@
+INCIPIT grimoire "module_pactum_transitive_denied_main_10c"
+
+ADVOCARE "modules_10c/module_pactum_transitive_mid_10c.cct"
+
+SIGILLUM Conta PACTUM Numerabilis
+  numero: REX
+FIN SIGILLUM
+
+RITUALE main() REDDE NIHIL
+  REDDE
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

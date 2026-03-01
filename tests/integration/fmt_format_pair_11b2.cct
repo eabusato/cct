@@ -1,0 +1,16 @@
+INCIPIT grimoire "fmt_format_pair_11b2"
+
+ADVOCARE "cct/fmt.cct"
+ADVOCARE "cct/verbum.cct"
+
+RITUALE main() REDDE REX
+  EVOCA VERBUM idade_texto AD CONIURA stringify_int(42)
+  EVOCA VERBUM msg AD CONIURA format_pair("idade", idade_texto)
+
+  SI CONIURA compare(msg, "idade: 42") == 0
+    REDDE 0
+  FIN SI
+  REDDE 1
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

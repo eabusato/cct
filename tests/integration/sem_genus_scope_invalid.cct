@@ -1,0 +1,12 @@
+INCIPIT grimoire "sem_genus_scope"
+
+RITUALE idem GENUS(T)(T x) REDDE T
+  REDDE x
+EXPLICIT RITUALE
+
+RITUALE main() REDDE NIHIL
+  EVOCA T fora
+  REDDE
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

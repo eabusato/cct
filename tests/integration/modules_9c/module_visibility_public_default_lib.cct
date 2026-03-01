@@ -1,0 +1,7 @@
+INCIPIT grimoire "module_visibility_public_default_lib"
+
+RITUALE publico_soma(REX x, REX y) REDDE REX
+  REDDE x + y
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

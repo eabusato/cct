@@ -1,0 +1,12 @@
+INCIPIT grimoire "lint_shadowing_12e2"
+
+RITUALE main() REDDE REX
+  EVOCA REX x AD 1
+  SI VERUM
+    EVOCA REX x AD 2
+    REDDE x
+  FIN SI
+  REDDE x
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

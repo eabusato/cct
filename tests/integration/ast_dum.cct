@@ -1,0 +1,12 @@
+INCIPIT grimoire "whiletest"
+
+RITUALE main() REDDE NIHIL
+  EVOCA REX i
+  VINCIRE i AD 0
+  DUM i < 3
+    VINCIRE i AD i + 1
+  FIN DUM
+  REDDE
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

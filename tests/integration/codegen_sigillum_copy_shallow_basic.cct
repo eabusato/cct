@@ -1,0 +1,18 @@
+INCIPIT grimoire "sigcopy"
+
+SIGILLUM Daemon
+  nomen: VERBUM
+  potestas: REX
+FIN SIGILLUM
+
+RITUALE main() REDDE REX
+  EVOCA Daemon a
+  EVOCA Daemon b
+  VINCIRE a.nomen AD "Bael"
+  VINCIRE a.potestas AD 66
+  VINCIRE b AD a
+  VINCIRE a.potestas AD 10
+  REDDE b.potestas
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

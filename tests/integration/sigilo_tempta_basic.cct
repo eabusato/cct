@@ -1,0 +1,12 @@
+INCIPIT grimoire "sigilo_tempta"
+
+RITUALE main() REDDE NIHIL
+  TEMPTA
+    IACE "sigilo"
+  CAPE FRACTUM erro
+    OBSECRO scribe(erro)
+  FIN TEMPTA
+  REDDE
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

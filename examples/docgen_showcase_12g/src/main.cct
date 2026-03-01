@@ -1,0 +1,10 @@
+INCIPIT grimoire "docgen_showcase_main_12g"
+
+ADVOCARE "../lib/calculus.cct"
+
+--! showcase entry
+RITUALE main() REDDE REX
+  REDDE CONIURA triplo(14)
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

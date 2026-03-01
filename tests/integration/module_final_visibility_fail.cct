@@ -1,0 +1,9 @@
+INCIPIT grimoire "module_final_visibility_fail"
+
+ADVOCARE "modules_9e/module_final_a.cct"
+
+RITUALE main() REDDE REX
+  REDDE CONIURA segredo_a()
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

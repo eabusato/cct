@@ -1,0 +1,33 @@
+INCIPIT grimoire "alg_compare_arrays_11c"
+
+ADVOCARE "cct/alg.cct"
+
+RITUALE main() REDDE REX
+  EVOCA SERIES REX[3] a
+  VINCIRE a[0] AD 1
+  VINCIRE a[1] AD 2
+  VINCIRE a[2] AD 3
+
+  EVOCA SERIES REX[3] b
+  VINCIRE b[0] AD 1
+  VINCIRE b[1] AD 2
+  VINCIRE b[2] AD 3
+
+  EVOCA SERIES REX[3] c
+  VINCIRE c[0] AD 1
+  VINCIRE c[1] AD 9
+  VINCIRE c[2] AD 3
+
+  EVOCA VERUM igual_ab AD CONIURA alg_compare_arrays(SPECULUM a[0], SPECULUM b[0], 3)
+  EVOCA VERUM igual_ac AD CONIURA alg_compare_arrays(SPECULUM a[0], SPECULUM c[0], 3)
+
+  SI igual_ab == VERUM
+    SI igual_ac == FALSUM
+      REDDE 0
+    FIN SI
+  FIN SI
+
+  REDDE 1
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

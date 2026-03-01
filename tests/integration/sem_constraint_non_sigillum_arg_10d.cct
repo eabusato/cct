@@ -1,0 +1,15 @@
+INCIPIT grimoire "sem_constraint_non_sigillum_arg_10d"
+
+PACTUM Numerabilis
+  RITUALE valor(REX x) REDDE REX
+FIN PACTUM
+
+RITUALE aplica GENUS(T PACTUM Numerabilis)(T valor) REDDE T
+  REDDE valor
+EXPLICIT RITUALE
+
+RITUALE main() REDDE REX
+  REDDE CONIURA aplica GENUS(REX)(7)
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

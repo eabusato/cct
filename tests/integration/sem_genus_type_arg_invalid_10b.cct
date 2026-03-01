@@ -1,0 +1,13 @@
+INCIPIT grimoire "sem_genus_type_arg_invalid_10b"
+
+RITUALE identitas GENUS(T)(T valor) REDDE T
+  REDDE valor
+EXPLICIT RITUALE
+
+RITUALE main() REDDE REX
+  EVOCA REX x
+  VINCIRE x AD 7
+  REDDE CONIURA identitas GENUS(SPECULUM REX)(SPECULUM x)
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

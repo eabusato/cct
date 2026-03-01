@@ -1,0 +1,21 @@
+INCIPIT grimoire "showcase_mod_stats_11g"
+
+ADVOCARE "cct/parse.cct"
+ADVOCARE "cct/math.cct"
+ADVOCARE "cct/cmp.cct"
+
+RITUALE mod_stats_score(VERBUM base_txt, VERBUM bonus_txt) REDDE REX
+  EVOCA REX base AD CONIURA parse_int(base_txt)
+  EVOCA UMBRA bonus AD CONIURA parse_real(bonus_txt)
+  EVOCA REX total AD CONIURA abs(base)
+
+  SI CONIURA cmp_real(bonus, 2.5) == 0
+    VINCIRE total AD total + 2
+  ALITER
+    VINCIRE total AD total + 1
+  FIN SI
+
+  REDDE total
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

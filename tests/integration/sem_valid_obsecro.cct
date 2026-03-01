@@ -1,0 +1,8 @@
+INCIPIT grimoire "sem_obsecro"
+
+RITUALE main() REDDE NIHIL
+  OBSECRO scribe("Ave", " ", "Mundi")
+  ANUR 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

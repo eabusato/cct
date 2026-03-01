@@ -1,0 +1,13 @@
+INCIPIT grimoire "module_visibility_internal_sigillum_lib"
+
+ARCANUM SIGILLUM SegredoTipo
+  valor: REX
+FIN SIGILLUM
+
+RITUALE fabrica() REDDE REX
+  EVOCA SegredoTipo s
+  VINCIRE s.valor AD 7
+  REDDE s.valor
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

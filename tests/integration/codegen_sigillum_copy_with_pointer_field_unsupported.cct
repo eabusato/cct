@@ -1,0 +1,16 @@
+INCIPIT grimoire "sigcopyptrblocked"
+
+SIGILLUM BufferBox
+  dados: SPECULUM REX
+  n: REX
+FIN SIGILLUM
+
+RITUALE main() REDDE REX
+  EVOCA BufferBox a
+  EVOCA BufferBox b
+  VINCIRE a.n AD 4
+  VINCIRE b AD a
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

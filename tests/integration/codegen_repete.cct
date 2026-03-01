@@ -1,0 +1,11 @@
+INCIPIT grimoire "codegen_repete"
+
+RITUALE main() REDDE REX
+  EVOCA REX s AD 0
+  REPETE i DE 1 AD 4
+    VINCIRE s AD s + i
+  FIN REPETE
+  REDDE s
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

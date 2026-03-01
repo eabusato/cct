@@ -1,0 +1,9 @@
+INCIPIT grimoire "codegen_vincire"
+
+RITUALE main() REDDE REX
+  EVOCA REX x
+  VINCIRE x AD 42
+  REDDE x
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

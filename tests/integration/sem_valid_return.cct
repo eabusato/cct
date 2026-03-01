@@ -1,0 +1,7 @@
+INCIPIT grimoire "sem_return"
+
+RITUALE forty_two() REDDE REX
+  REDDE 42
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

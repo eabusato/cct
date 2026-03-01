@@ -1,0 +1,19 @@
+INCIPIT grimoire "cleanup_libera_semper"
+
+RITUALE main() REDDE REX
+  EVOCA SPECULUM REX p
+  EVOCA REX x AD 0
+  TEMPTA
+    VINCIRE p AD OBSECRO pete(MENSURA(REX))
+    VINCIRE *p AD 42
+    IACE "boom-cleanup"
+  CAPE FRACTUM erro
+    VINCIRE x AD 41
+  SEMPER
+    OBSECRO libera(p)
+    VINCIRE x AD x + 1
+  FIN TEMPTA
+  REDDE x
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

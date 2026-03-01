@@ -1,0 +1,16 @@
+INCIPIT grimoire "cmp_real_basic_11f2"
+
+ADVOCARE "cct/cmp.cct"
+
+RITUALE main() REDDE REX
+  SI CONIURA cmp_real(1.0, 2.0) < 0
+    SI CONIURA cmp_real(2.0, 2.0) == 0
+      SI CONIURA cmp_real(3.0, 2.0) > 0
+        REDDE 0
+      FIN SI
+    FIN SI
+  FIN SI
+  REDDE 1
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

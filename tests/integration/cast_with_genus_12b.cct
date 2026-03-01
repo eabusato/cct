@@ -1,0 +1,16 @@
+INCIPIT grimoire "cast_with_genus_12b"
+
+RITUALE identitas GENUS(T)(T valor) REDDE T
+  REDDE valor
+EXPLICIT RITUALE
+
+RITUALE main() REDDE REX
+  EVOCA REX valor AD CONIURA identitas GENUS(REX)(21)
+  EVOCA DUX trunc AD cast GENUS(DUX)(valor)
+  SI trunc == 21
+    REDDE 0
+  FIN SI
+  REDDE 1
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

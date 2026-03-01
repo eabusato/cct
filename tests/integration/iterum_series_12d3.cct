@@ -1,0 +1,18 @@
+INCIPIT grimoire "iterum_series_12d3"
+
+RITUALE main() REDDE REX
+  EVOCA SERIES REX[4] arr
+  VINCIRE arr[0] AD 10
+  VINCIRE arr[1] AD 20
+  VINCIRE arr[2] AD 30
+  VINCIRE arr[3] AD 40
+
+  EVOCA REX soma AD 0
+  ITERUM item IN arr COM
+    VINCIRE soma AD soma + item
+  FIN ITERUM
+
+  REDDE soma
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

@@ -1,0 +1,20 @@
+INCIPIT grimoire "fmt_stringify_bool_11b2"
+
+ADVOCARE "cct/fmt.cct"
+
+RITUALE main() REDDE REX
+  EVOCA VERBUM texto_true AD CONIURA stringify_bool(VERUM)
+  EVOCA VERBUM texto_false AD CONIURA stringify_bool(FALSUM)
+  EVOCA VERUM back_true AD CONIURA fmt_parse_bool(texto_true)
+  EVOCA VERUM back_false AD CONIURA fmt_parse_bool(texto_false)
+
+  SI back_true == VERUM
+    SI back_false == FALSUM
+      REDDE 0
+    FIN SI
+  FIN SI
+
+  REDDE 1
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

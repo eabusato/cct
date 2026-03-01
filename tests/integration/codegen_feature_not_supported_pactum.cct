@@ -1,0 +1,11 @@
+INCIPIT grimoire "codegen_pactum_unsupported"
+
+PACTUM Spiritus
+  RITUALE invoca() REDDE NIHIL
+FIN PACTUM
+
+RITUALE main() REDDE NIHIL
+  REDDE
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

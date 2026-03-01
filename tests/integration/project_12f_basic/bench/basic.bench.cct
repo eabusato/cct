@@ -1,0 +1,13 @@
+INCIPIT grimoire "project_12f_basic_bench"
+
+RITUALE main() REDDE REX
+  EVOCA REX i AD 0
+  EVOCA REX s AD 0
+  DUM i < 200
+    VINCIRE s AD s + i
+    VINCIRE i AD i + 1
+  FIN DUM
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

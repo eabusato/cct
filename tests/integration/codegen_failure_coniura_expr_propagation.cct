@@ -1,0 +1,17 @@
+INCIPIT grimoire "failure_coniura_expr_propagation"
+
+RITUALE boom() REDDE REX
+  IACE "expr-8b"
+  REDDE 1
+EXPLICIT RITUALE
+
+RITUALE main() REDDE REX
+  TEMPTA
+    REDDE CONIURA boom()
+  CAPE FRACTUM erro
+    REDDE 17
+  FIN TEMPTA
+  REDDE 99
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

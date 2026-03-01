@@ -1,0 +1,30 @@
+INCIPIT grimoire "collection_fluxus_filter_12d2"
+
+ADVOCARE "cct/fluxus.cct"
+ADVOCARE "cct/collection_ops.cct"
+
+RITUALE maior_que_cinco(REX x) REDDE VERUM
+  REDDE x > 5
+EXPLICIT RITUALE
+
+RITUALE main() REDDE REX
+  EVOCA SPECULUM NIHIL nums AD CONIURA fluxus_init(MENSURA(REX))
+  EVOCA REX a AD 3
+  EVOCA REX b AD 7
+  EVOCA REX c AD 4
+  EVOCA REX d AD 9
+  CONIURA fluxus_push(nums, SPECULUM a)
+  CONIURA fluxus_push(nums, SPECULUM b)
+  CONIURA fluxus_push(nums, SPECULUM c)
+  CONIURA fluxus_push(nums, SPECULUM d)
+
+  EVOCA SPECULUM NIHIL filtered AD CONIURA fluxus_filter GENUS(REX)(nums, maior_que_cinco)
+  EVOCA REX len AD CONIURA fluxus_len(filtered)
+
+  CONIURA fluxus_free(nums)
+  CONIURA fluxus_free(filtered)
+
+  REDDE len
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

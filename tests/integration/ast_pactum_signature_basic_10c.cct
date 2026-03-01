@@ -1,0 +1,12 @@
+INCIPIT grimoire "ast_pactum_signature_basic_10c"
+
+PACTUM Transformator
+  RITUALE aplica(REX x) REDDE REX
+  RITUALE nome(VERBUM s) REDDE VERBUM
+FIN PACTUM
+
+RITUALE main() REDDE NIHIL
+  REDDE
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

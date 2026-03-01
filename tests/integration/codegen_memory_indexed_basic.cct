@@ -1,0 +1,16 @@
+INCIPIT grimoire "memidxbasic"
+
+RITUALE main() REDDE REX
+  EVOCA SPECULUM REX dados
+  EVOCA REX v
+  VINCIRE dados AD OBSECRO pete(4 * MENSURA(REX))
+  VINCIRE dados[0] AD 10
+  VINCIRE dados[1] AD 20
+  VINCIRE dados[2] AD 30
+  VINCIRE dados[3] AD 40
+  VINCIRE v AD dados[2]
+  OBSECRO libera(dados)
+  REDDE v
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

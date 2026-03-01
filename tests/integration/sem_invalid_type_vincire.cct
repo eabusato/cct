@@ -1,0 +1,9 @@
+INCIPIT grimoire "sem_bad_vincire_type"
+
+RITUALE main() REDDE NIHIL
+  EVOCA REX x
+  VINCIRE x AD "texto"
+  REDDE
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

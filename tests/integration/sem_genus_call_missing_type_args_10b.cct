@@ -1,0 +1,11 @@
+INCIPIT grimoire "sem_genus_call_missing_type_args_10b"
+
+RITUALE identitas GENUS(T)(T valor) REDDE T
+  REDDE valor
+EXPLICIT RITUALE
+
+RITUALE main() REDDE REX
+  REDDE CONIURA identitas(7)
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

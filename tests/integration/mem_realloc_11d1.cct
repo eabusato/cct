@@ -1,0 +1,16 @@
+INCIPIT grimoire "mem_realloc_11d1"
+
+ADVOCARE "cct/mem.cct"
+
+RITUALE main() REDDE REX
+  EVOCA SPECULUM REX ptr
+  VINCIRE ptr AD CONIURA alloc(2 * MENSURA(REX))
+  VINCIRE ptr[0] AD 9
+  VINCIRE ptr[1] AD 11
+  VINCIRE ptr AD CONIURA realloc(ptr, 4 * MENSURA(REX))
+  EVOCA REX out AD ptr[1]
+  CONIURA free(ptr)
+  REDDE out
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

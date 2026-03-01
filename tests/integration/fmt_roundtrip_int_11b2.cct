@@ -1,0 +1,17 @@
+INCIPIT grimoire "fmt_roundtrip_int_11b2"
+
+ADVOCARE "cct/fmt.cct"
+
+RITUALE main() REDDE REX
+  EVOCA REX original AD 2026
+  EVOCA VERBUM texto AD CONIURA stringify_int(original)
+  EVOCA REX parsed AD CONIURA fmt_parse_int(texto)
+
+  SI parsed == original
+    REDDE 0
+  FIN SI
+
+  REDDE 1
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

@@ -1,0 +1,11 @@
+INCIPIT grimoire "sigilo_variant"
+
+RITUALE main() REDDE REX
+  EVOCA REX x AD 1
+  SI x < 5
+    VINCIRE x AD x + 2
+  FIN SI
+  REDDE x
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

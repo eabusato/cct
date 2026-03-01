@@ -1,0 +1,39 @@
+INCIPIT grimoire "ars_mod_types"
+
+ORDO Status
+  Dormit = 0
+  Viget = 1
+  Ira = 2
+FIN ORDO
+
+SIGILLUM Essentia
+  gradus: REX
+FIN SIGILLUM
+
+SIGILLUM Daemon
+  nomen: VERBUM
+  potestas: REX
+  fervor: UMBRA
+  vis: Essentia
+FIN SIGILLUM
+
+ARCANUM RITUALE calibrar_interno(REX base) REDDE REX
+  REDDE base + 3
+EXPLICIT RITUALE
+
+RITUALE preparar_daemon(SPECULUM Daemon out, VERBUM nome, REX base, UMBRA foco) REDDE NIHIL
+  VINCIRE (*out).nomen AD nome
+  VINCIRE (*out).vis.gradus AD 4
+  VINCIRE (*out).potestas AD CONIURA calibrar_interno(base) + (*out).vis.gradus
+  VINCIRE (*out).fervor AD foco
+EXPLICIT RITUALE
+
+RITUALE bonus_estado(Status estado) REDDE REX
+  SI estado == Ira
+    REDDE 6
+  ALITER
+    REDDE 2
+  FIN SI
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

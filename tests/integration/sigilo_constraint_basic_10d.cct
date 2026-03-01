@@ -1,0 +1,24 @@
+INCIPIT grimoire "sigilo_constraint_basic_10d"
+
+PACTUM Numerabilis
+  RITUALE valor(REX x) REDDE REX
+FIN PACTUM
+
+SIGILLUM Conta PACTUM Numerabilis
+  numero: REX
+FIN SIGILLUM
+
+RITUALE valor(SPECULUM Conta self, REX x) REDDE REX
+  REDDE x
+EXPLICIT RITUALE
+
+RITUALE aplica GENUS(T PACTUM Numerabilis)(SPECULUM T self, REX x) REDDE REX
+  REDDE x
+EXPLICIT RITUALE
+
+RITUALE main() REDDE REX
+  EVOCA Conta c
+  REDDE CONIURA aplica GENUS(Conta)(SPECULUM c, 5)
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

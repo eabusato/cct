@@ -1,0 +1,11 @@
+INCIPIT grimoire "module_visibility_internal_sigillum_main_fail"
+
+ADVOCARE "modules_9c/module_visibility_internal_sigillum_lib.cct"
+
+RITUALE main() REDDE REX
+  EVOCA SegredoTipo s
+  VINCIRE s.valor AD 1
+  REDDE s.valor
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

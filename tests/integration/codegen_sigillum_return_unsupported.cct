@@ -1,0 +1,17 @@
+INCIPIT grimoire "sigreturnunsupported"
+
+SIGILLUM Daemon
+  potestas: REX
+FIN SIGILLUM
+
+RITUALE cria() REDDE Daemon
+  EVOCA Daemon x
+  VINCIRE x.potestas AD 5
+  REDDE x
+EXPLICIT RITUALE
+
+RITUALE main() REDDE REX
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

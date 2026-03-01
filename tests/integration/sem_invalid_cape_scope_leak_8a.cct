@@ -1,0 +1,13 @@
+INCIPIT grimoire "sem_cape_scope"
+
+RITUALE main() REDDE NIHIL
+  TEMPTA
+    IACE "x"
+  CAPE FRACTUM erro
+    OBSECRO scribe(erro)
+  FIN TEMPTA
+  OBSECRO scribe(erro)
+  REDDE
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

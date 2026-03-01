@@ -1,0 +1,11 @@
+INCIPIT grimoire "fmt_scribe_11b2"
+
+ADVOCARE "cct/fmt.cct"
+
+RITUALE main() REDDE REX
+  EVOCA VERBUM txt AD CONIURA format_pair("n", CONIURA stringify_int(7))
+  OBSECRO scribe(txt, "\n")
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

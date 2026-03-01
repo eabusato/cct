@@ -1,0 +1,8 @@
+INCIPIT grimoire "sem_bad_evoca_type"
+
+RITUALE main() REDDE NIHIL
+  EVOCA REX x AD "texto"
+  REDDE
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

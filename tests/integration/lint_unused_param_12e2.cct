@@ -1,0 +1,11 @@
+INCIPIT grimoire "lint_unused_param_12e2"
+
+RITUALE ignora(REX x) REDDE REX
+  REDDE 1
+EXPLICIT RITUALE
+
+RITUALE main() REDDE REX
+  REDDE CONIURA ignora(7)
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

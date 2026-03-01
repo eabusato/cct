@@ -1,0 +1,14 @@
+INCIPIT grimoire "specseries"
+
+RITUALE incrementa(SPECULUM REX v) REDDE NIHIL
+  VINCIRE *v AD *v + 1
+EXPLICIT RITUALE
+
+RITUALE main() REDDE REX
+  EVOCA SERIES REX[2] nums
+  VINCIRE nums[1] AD 10
+  CONIURA incrementa(SPECULUM nums[1])
+  REDDE nums[1]
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

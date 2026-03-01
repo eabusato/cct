@@ -1,0 +1,16 @@
+INCIPIT grimoire "random_int_range_11f1"
+
+ADVOCARE "cct/random.cct"
+
+RITUALE main() REDDE REX
+  CONIURA seed(999)
+  EVOCA REX x AD CONIURA random_int(10, 20)
+  SI x >= 10
+    SI x <= 20
+      REDDE 0
+    FIN SI
+  FIN SI
+  REDDE 1
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

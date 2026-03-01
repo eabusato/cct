@@ -1,0 +1,15 @@
+INCIPIT grimoire "result_unwrap_or_12c"
+
+ADVOCARE "cct/result.cct"
+
+RITUALE main() REDDE REX
+  EVOCA SPECULUM NIHIL res AD CONIURA Err GENUS(REX, REX)(-1)
+  EVOCA REX v AD CONIURA result_unwrap_or GENUS(REX, REX)(res, 9)
+  CONIURA result_free GENUS(REX, REX)(res)
+  SI v == 9
+    REDDE 0
+  FIN SI
+  REDDE 1
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

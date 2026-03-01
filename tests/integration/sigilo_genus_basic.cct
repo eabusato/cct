@@ -1,0 +1,16 @@
+INCIPIT grimoire "sigilo_genus_basic"
+
+SIGILLUM Pair GENUS(T,U)
+  a: T
+  b: U
+FIN SIGILLUM
+
+RITUALE identitas GENUS(T)(T valor) REDDE T
+  REDDE valor
+EXPLICIT RITUALE
+
+RITUALE main() REDDE NIHIL
+  REDDE
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

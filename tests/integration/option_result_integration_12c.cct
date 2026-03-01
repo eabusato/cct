@@ -1,0 +1,29 @@
+INCIPIT grimoire "option_result_integration_12c"
+
+ADVOCARE "cct/option.cct"
+ADVOCARE "cct/result.cct"
+
+RITUALE main() REDDE REX
+  EVOCA SPECULUM NIHIL opt AD CONIURA Some GENUS(REX)(9)
+  EVOCA SPECULUM NIHIL res AD CONIURA Err GENUS(REX, REX)(-9)
+
+  SI CONIURA option_is_some GENUS(REX)(opt)
+    EVOCA REX v AD CONIURA option_unwrap GENUS(REX)(opt)
+    VINCIRE res AD CONIURA Ok GENUS(REX, REX)(v + 1)
+  FIN SI
+
+  CONIURA option_free GENUS(REX)(opt)
+
+  SI CONIURA result_is_ok GENUS(REX, REX)(res)
+    EVOCA REX out AD CONIURA result_unwrap GENUS(REX, REX)(res)
+    CONIURA result_free GENUS(REX, REX)(res)
+    SI out == 10
+      REDDE 0
+    FIN SI
+  FIN SI
+
+  CONIURA result_free GENUS(REX, REX)(res)
+  REDDE 1
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

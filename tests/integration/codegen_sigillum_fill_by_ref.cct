@@ -1,0 +1,19 @@
+INCIPIT grimoire "sigfillref"
+
+SIGILLUM Daemon
+  nomen: VERBUM
+  potestas: REX
+FIN SIGILLUM
+
+RITUALE invocar(SPECULUM Daemon out) REDDE NIHIL
+  VINCIRE (*out).nomen AD "Bael"
+  VINCIRE (*out).potestas AD 66
+EXPLICIT RITUALE
+
+RITUALE main() REDDE REX
+  EVOCA Daemon d
+  CONIURA invocar(SPECULUM d)
+  REDDE d.potestas
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

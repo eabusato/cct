@@ -1,0 +1,12 @@
+INCIPIT grimoire "failure_propagation_uncaught"
+
+RITUALE inner() REDDE NIHIL
+  IACE "uncaught-8b"
+EXPLICIT RITUALE
+
+RITUALE main() REDDE NIHIL
+  CONIURA inner()
+  REDDE
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

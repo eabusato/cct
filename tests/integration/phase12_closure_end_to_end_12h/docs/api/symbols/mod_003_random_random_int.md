@@ -1,0 +1,12 @@
+# random_int
+
+- Kind: `rituale`
+- Module: `/Users/eabusato/dev/cct/lib/cct/random.cct`
+- Visibility: `public`
+
+## Signature
+
+```cct
+RITUALE random_int(REX lo, REX hi) REDDE REX
+```
+

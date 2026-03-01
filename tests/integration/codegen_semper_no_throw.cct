@@ -1,0 +1,15 @@
+INCIPIT grimoire "semper_no_throw"
+
+RITUALE main() REDDE REX
+  EVOCA REX x AD 5
+  TEMPTA
+    VINCIRE x AD x + 1
+  CAPE FRACTUM erro
+    VINCIRE x AD 99
+  SEMPER
+    VINCIRE x AD x + 1
+  FIN TEMPTA
+  REDDE x
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

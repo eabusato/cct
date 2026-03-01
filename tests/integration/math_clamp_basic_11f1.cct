@@ -1,0 +1,16 @@
+INCIPIT grimoire "math_clamp_basic_11f1"
+
+ADVOCARE "cct/math.cct"
+
+RITUALE main() REDDE REX
+  SI CONIURA clamp(-5, 0, 10) == 0
+    SI CONIURA clamp(5, 0, 10) == 5
+      SI CONIURA clamp(20, 0, 10) == 10
+        REDDE 0
+      FIN SI
+    FIN SI
+  FIN SI
+  REDDE 1
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

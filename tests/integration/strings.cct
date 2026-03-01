@@ -1,0 +1,15 @@
+-- CCT Test: Strings
+-- Tests string recognition and escapes
+
+"hello"
+"world"
+"Ave Mundi"
+
+-- With escapes
+"quote: \" inside"
+"backslash: \\ test"
+"newline: \n test"
+"tab: \t test"
+
+-- Empty string
+""

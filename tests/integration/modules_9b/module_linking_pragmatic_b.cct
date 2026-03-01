@@ -1,0 +1,9 @@
+INCIPIT grimoire "module_linking_pragmatic_b"
+
+ADVOCARE "module_linking_pragmatic_common.cct"
+
+RITUALE soma_b() REDDE REX
+  REDDE CONIURA base_nona() + 2
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

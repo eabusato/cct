@@ -1,0 +1,32 @@
+INCIPIT grimoire "fluxus_demo"
+
+ADVOCARE "cct/fluxus.cct"
+
+RITUALE main() REDDE REX
+  EVOCA SPECULUM NIHIL numeros
+  EVOCA REX i AD 0
+  EVOCA REX valor AD 0
+  EVOCA REX soma AD 0
+  EVOCA SPECULUM REX ptr
+
+  VINCIRE numeros AD CONIURA fluxus_init(MENSURA(REX))
+  CONIURA fluxus_reserve(numeros, 16)
+
+  DUM i < 10
+    VINCIRE valor AD (i + 1) * 3
+    CONIURA fluxus_push(numeros, SPECULUM valor)
+    VINCIRE i AD i + 1
+  FIN DUM
+
+  VINCIRE i AD 0
+  DUM i < CONIURA fluxus_len(numeros)
+    VINCIRE ptr AD CONIURA fluxus_get(numeros, i)
+    VINCIRE soma AD soma + *ptr
+    VINCIRE i AD i + 1
+  FIN DUM
+
+  CONIURA fluxus_free(numeros)
+  REDDE soma
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

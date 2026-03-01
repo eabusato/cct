@@ -1,0 +1,11 @@
+INCIPIT grimoire "module_main_sigillum"
+
+ADVOCARE "modules_9a/lib_sigillum.cct"
+
+RITUALE main() REDDE REX
+  EVOCA Artefactum a
+  VINCIRE a.valor AD 5
+  REDDE a.valor
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

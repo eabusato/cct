@@ -1,0 +1,13 @@
+INCIPIT grimoire "sigilo_mem_basic_11d1"
+
+ADVOCARE "cct/mem.cct"
+
+RITUALE main() REDDE REX
+  EVOCA SPECULUM REX p
+  VINCIRE p AD CONIURA alloc(MENSURA(REX))
+  VINCIRE *p AD 1
+  CONIURA free(p)
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

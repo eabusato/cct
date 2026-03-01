@@ -1,0 +1,9 @@
+INCIPIT grimoire "random_int_invalid_range_11f1"
+
+ADVOCARE "cct/random.cct"
+
+RITUALE main() REDDE REX
+  REDDE CONIURA random_int(5, 1)
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

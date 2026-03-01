@@ -1,0 +1,15 @@
+INCIPIT grimoire "fmt_stringify_int_neg_11b2"
+
+ADVOCARE "cct/fmt.cct"
+
+RITUALE main() REDDE REX
+  EVOCA REX num AD -7
+  EVOCA VERBUM texto AD CONIURA stringify_int(num)
+  EVOCA REX back AD CONIURA fmt_parse_int(texto)
+  SI back == num
+    REDDE 0
+  FIN SI
+  REDDE 1
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

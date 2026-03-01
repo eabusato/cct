@@ -1,0 +1,11 @@
+INCIPIT grimoire "io_read_line_11e1"
+
+ADVOCARE "cct/io.cct"
+ADVOCARE "cct/verbum.cct"
+
+RITUALE main() REDDE REX
+  EVOCA VERBUM linha AD CONIURA read_line()
+  REDDE CONIURA len(linha)
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

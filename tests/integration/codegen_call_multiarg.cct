@@ -1,0 +1,11 @@
+INCIPIT grimoire "codegen_call_multiarg"
+
+RITUALE mix(REX a, REX b, REX c) REDDE REX
+  REDDE a + (b * c)
+EXPLICIT RITUALE
+
+RITUALE main() REDDE REX
+  REDDE CONIURA mix(2, 3, 4)
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

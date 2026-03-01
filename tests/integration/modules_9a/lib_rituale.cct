@@ -1,0 +1,7 @@
+INCIPIT grimoire "mod_lib_rituale"
+
+RITUALE dobro(REX x) REDDE REX
+  REDDE x + x
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

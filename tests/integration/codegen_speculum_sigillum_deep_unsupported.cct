@@ -1,0 +1,12 @@
+INCIPIT grimoire "deepspecsig"
+
+SIGILLUM Daemon
+  potestas: REX
+FIN SIGILLUM
+
+RITUALE main() REDDE REX
+  EVOCA SPECULUM SPECULUM Daemon pp
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

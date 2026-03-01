@@ -1,0 +1,14 @@
+INCIPIT grimoire "codegen_genus_rituale_verbum_basic_10b"
+
+RITUALE eco GENUS(T)(T valor) REDDE T
+  REDDE valor
+EXPLICIT RITUALE
+
+RITUALE main() REDDE REX
+  EVOCA VERBUM msg
+  VINCIRE msg AD CONIURA eco GENUS(VERBUM)("ave-10b")
+  OBSECRO scribe(msg)
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

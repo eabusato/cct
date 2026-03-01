@@ -1,0 +1,9 @@
+INCIPIT grimoire "lint_fix_idempotent_12e2"
+
+ADVOCARE "cct/verbum.cct"
+
+RITUALE main() REDDE REX
+  REDDE 5
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

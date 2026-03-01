@@ -1,0 +1,30 @@
+INCIPIT grimoire "fluxus_growth_11d3"
+
+ADVOCARE "cct/fluxus.cct"
+
+RITUALE main() REDDE REX
+  EVOCA SPECULUM NIHIL flux
+  EVOCA REX i AD 0
+  EVOCA REX value AD 0
+  EVOCA SPECULUM REX last_ptr
+
+  VINCIRE flux AD CONIURA fluxus_init(MENSURA(REX))
+
+  DUM i < 50
+    VINCIRE value AD i + 1
+    CONIURA fluxus_push(flux, SPECULUM value)
+    VINCIRE i AD i + 1
+  FIN DUM
+
+  VINCIRE last_ptr AD CONIURA fluxus_get(flux, 49)
+  SI *last_ptr != 50
+    CONIURA fluxus_free(flux)
+    REDDE 1
+  FIN SI
+
+  EVOCA REX n AD CONIURA fluxus_len(flux)
+  CONIURA fluxus_free(flux)
+  REDDE n
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

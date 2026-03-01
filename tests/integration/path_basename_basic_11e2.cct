@@ -1,0 +1,14 @@
+INCIPIT grimoire "path_basename_basic_11e2"
+
+ADVOCARE "cct/path.cct"
+ADVOCARE "cct/verbum.cct"
+
+RITUALE main() REDDE REX
+  EVOCA VERBUM b AD CONIURA path_basename("a/b/c.txt")
+  SI CONIURA compare(b, "c.txt") == 0
+    REDDE 0
+  FIN SI
+  REDDE 1
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

@@ -1,0 +1,46 @@
+INCIPIT grimoire "ars_magna_canonica"
+
+ADVOCARE "modules/types.cct"
+ADVOCARE "modules/compute.cct"
+ADVOCARE "modules/report.cct"
+ADVOCARE "modules/guard.cct"
+ADVOCARE "cct/cmp.cct"
+
+RITUALE main() REDDE REX
+  EVOCA Session sessio
+  EVOCA Artifact artefactum
+
+  TEMPTA
+    CONIURA compute_session("Astra", SPECULUM sessio)
+    CONIURA guard_session(SPECULUM sessio)
+    CONIURA persist_report(SPECULUM sessio, "examples/ars_magna_canonica", SPECULUM artefactum)
+  CAPE FRACTUM err
+    OBSECRO scribe("[ars_magna_canonica.cape] ", err, "\n")
+    REDDE 2
+  SEMPER
+    OBSECRO scribe("[ars_magna_canonica.semper]\n")
+  FIN TEMPTA
+
+  OBSECRO scribe(
+    "[ars_magna_canonica] nomen=", sessio.nomen,
+    " sum=", sessio.sum,
+    " min=", sessio.min_v,
+    " max=", sessio.max_v,
+    " median=", sessio.median,
+    " checksum=", sessio.checksum,
+    " file=", artefactum.basename,
+    " ext=", artefactum.extension,
+    " bytes=", artefactum.bytes,
+    "\n"
+  )
+
+  SI CONIURA cmp_verbum(artefactum.extension, ".txt") == 0
+    SI sessio.approved == VERUM
+      REDDE 0
+    FIN SI
+  FIN SI
+
+  REDDE 1
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

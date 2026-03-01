@@ -1,0 +1,12 @@
+INCIPIT grimoire "docgen_basic_main_12g"
+
+ADVOCARE "../lib/math.cct"
+ADVOCARE "cct/verbum.cct"
+
+--! Program entrypoint for docs.
+--! @example CONIURA soma(20, 22)
+RITUALE main() REDDE REX
+  REDDE CONIURA soma(20, 22)
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

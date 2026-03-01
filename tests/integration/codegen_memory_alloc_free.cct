@@ -1,0 +1,12 @@
+INCIPIT grimoire "memallocfree"
+
+RITUALE main() REDDE REX
+  EVOCA SPECULUM REX p
+  VINCIRE p AD OBSECRO pete(MENSURA(REX))
+  VINCIRE *p AD 42
+  EVOCA REX x AD *p
+  OBSECRO libera(p)
+  REDDE x
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

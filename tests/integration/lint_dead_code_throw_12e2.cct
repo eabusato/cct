@@ -1,0 +1,8 @@
+INCIPIT grimoire "lint_dead_code_throw_12e2"
+
+RITUALE main() REDDE NIHIL
+  IACE "falha"
+  OBSECRO scribe("nao executa\n")
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

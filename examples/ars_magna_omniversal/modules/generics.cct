@@ -1,0 +1,21 @@
+INCIPIT grimoire "omni_generics"
+
+ADVOCARE "types_core.cct"
+
+RITUALE identitas GENUS(T)(T value) REDDE T
+  REDDE value
+EXPLICIT RITUALE
+
+RITUALE duplum GENUS(A, B)(A left, B right) REDDE A
+  REDDE left
+EXPLICIT RITUALE
+
+SIGILLUM Capsa GENUS(T)
+  item: T
+FIN SIGILLUM
+
+RITUALE selo_plus GENUS(T PACTUM Numerabilis)(SPECULUM T self, REX base) REDDE REX
+  REDDE base + 2
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

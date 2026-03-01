@@ -1,0 +1,23 @@
+INCIPIT grimoire "mem_copy_11d1"
+
+ADVOCARE "cct/mem.cct"
+
+RITUALE main() REDDE REX
+  EVOCA SPECULUM REX src
+  EVOCA SPECULUM REX dst
+  VINCIRE src AD CONIURA alloc(3 * MENSURA(REX))
+  VINCIRE dst AD CONIURA alloc(3 * MENSURA(REX))
+
+  VINCIRE src[0] AD 1
+  VINCIRE src[1] AD 3
+  VINCIRE src[2] AD 5
+
+  CONIURA copy(dst, src, 3 * MENSURA(REX))
+
+  EVOCA REX out AD dst[2]
+  CONIURA free(src)
+  CONIURA free(dst)
+  REDDE out
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

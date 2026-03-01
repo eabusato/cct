@@ -1,0 +1,11 @@
+INCIPIT grimoire "sigilo_flow_while"
+
+RITUALE main() REDDE REX
+  EVOCA REX x AD 0
+  DUM x < 2
+    VINCIRE x AD x + 1
+  FIN DUM
+  REDDE x
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

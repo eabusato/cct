@@ -1,0 +1,19 @@
+INCIPIT grimoire "verbum_contains_11b1"
+
+ADVOCARE "cct/verbum.cct"
+
+RITUALE main() REDDE REX
+  EVOCA VERBUM s AD "hello world"
+  EVOCA VERUM tem_world AD CONIURA contains(s, "world")
+  EVOCA VERUM tem_xyz AD CONIURA contains(s, "xyz")
+
+  SI tem_world == VERUM
+    SI tem_xyz == FALSUM
+      REDDE 0
+    FIN SI
+  FIN SI
+
+  REDDE 1
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

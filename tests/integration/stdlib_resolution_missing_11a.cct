@@ -1,0 +1,9 @@
+INCIPIT grimoire "stdlib_resolution_missing_11a"
+
+ADVOCARE "cct/nao_existe.cct"
+
+RITUALE main() REDDE REX
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

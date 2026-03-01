@@ -1,0 +1,11 @@
+INCIPIT grimoire "codegen_call_return"
+
+RITUALE dobro(REX x) REDDE REX
+  REDDE x + x
+EXPLICIT RITUALE
+
+RITUALE main() REDDE REX
+  REDDE CONIURA dobro(21)
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

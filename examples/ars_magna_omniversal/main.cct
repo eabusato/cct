@@ -1,0 +1,9 @@
+INCIPIT grimoire "ars_magna_omniversal"
+
+ADVOCARE "modules/engine.cct"
+
+RITUALE main() REDDE REX
+  REDDE CONIURA executar_ars(64)
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

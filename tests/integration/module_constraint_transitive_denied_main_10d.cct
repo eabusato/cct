@@ -1,0 +1,13 @@
+INCIPIT grimoire "module_constraint_transitive_denied_main_10d"
+
+ADVOCARE "modules_10d/module_constraint_transitive_mid_10d.cct"
+
+RITUALE aplica GENUS(T PACTUM Numerabilis)(T valor) REDDE T
+  REDDE valor
+EXPLICIT RITUALE
+
+RITUALE main() REDDE REX
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

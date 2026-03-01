@@ -1,0 +1,14 @@
+INCIPIT grimoire "fase12_final_showcase_bench"
+
+RITUALE main() REDDE REX
+  -- Simple benchmark loop
+  EVOCA REX sum AD 0
+  EVOCA REX i AD 0
+  DUM i < 1000
+    VINCIRE sum AD sum + i
+    VINCIRE i AD i + 1
+  EXPLICIT DUM
+  REDDE sum
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

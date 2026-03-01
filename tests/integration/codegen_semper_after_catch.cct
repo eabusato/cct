@@ -1,0 +1,16 @@
+INCIPIT grimoire "semper_after_catch"
+
+RITUALE main() REDDE REX
+  EVOCA REX x AD 1
+  TEMPTA
+    IACE "boom-8c"
+    VINCIRE x AD 99
+  CAPE FRACTUM erro
+    VINCIRE x AD 40
+  SEMPER
+    VINCIRE x AD x + 2
+  FIN TEMPTA
+  REDDE x
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

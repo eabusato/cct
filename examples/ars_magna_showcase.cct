@@ -1,0 +1,159 @@
+--
+-- CCT Showcase (FASE 8D)
+-- Uses a broad subset already implemented:
+-- ORDO, SIGILLUM (nested), SERIES, SPECULUM, memory alloc/free, DIMITTE,
+-- SI/ALITER, DUM, DONEC, REPETE, CONIURA, TEMPTA/CAPE/SEMPER, IACE,
+-- propagation across rituales, runtime-fail bridge, mixed scribe, real/bool/string.
+--
+
+INCIPIT grimoire "ars_magna_showcase"
+
+ORDO Status
+  Dormit = 0
+  Viget = 1
+  Ira = 2
+FIN ORDO
+
+SIGILLUM Essentia
+  gradus: REX
+FIN SIGILLUM
+
+SIGILLUM Daemon
+  nomen: VERBUM
+  potestas: REX
+  fervor: UMBRA
+  vis: Essentia
+FIN SIGILLUM
+
+RITUALE elevar(SPECULUM REX alvo, REX quantum) REDDE NIHIL
+  VINCIRE *alvo AD *alvo + quantum
+EXPLICIT RITUALE
+
+RITUALE incrementar_runa(SPECULUM REX r) REDDE NIHIL
+  VINCIRE *r AD *r + 1
+EXPLICIT RITUALE
+
+RITUALE preparar_daemon(SPECULUM Daemon out, VERBUM nome, REX base, UMBRA foco) REDDE NIHIL
+  VINCIRE (*out).nomen AD nome
+  VINCIRE (*out).vis.gradus AD 3
+  VINCIRE (*out).potestas AD base + (*out).vis.gradus
+  VINCIRE (*out).fervor AD foco
+EXPLICIT RITUALE
+
+RITUALE sinal_perigo() REDDE NIHIL
+  IACE "nexus fractum"
+EXPLICIT RITUALE
+
+RITUALE risco(REX potestas) REDDE REX
+  TEMPTA
+    SI potestas > 60
+      CONIURA sinal_perigo()
+    FIN SI
+    REDDE potestas + 1
+  CAPE FRACTUM erro
+    OBSECRO scribe("[risco.cape] ", erro, "\n")
+    IACE erro
+  SEMPER
+    OBSECRO scribe("[risco.semper]\n")
+  FIN TEMPTA
+  REDDE 0
+EXPLICIT RITUALE
+
+RITUALE encerrar_ritual(REX codigo) REDDE NIHIL
+  ANUR codigo
+EXPLICIT RITUALE
+
+RITUALE main() REDDE REX
+  EVOCA Daemon d
+  CONIURA preparar_daemon(SPECULUM d, "Bael", 60, 3.5)
+
+  EVOCA REX energia AD 10
+  CONIURA elevar(SPECULUM energia, 5)
+
+  EVOCA SERIES REX[4] runa
+  REPETE i DE 0 AD 3
+    VINCIRE runa[i] AD i + 1
+  FIN REPETE
+  CONIURA incrementar_runa(SPECULUM runa[2])
+
+  EVOCA REX soma AD 0
+  EVOCA REX j AD 0
+  DUM j < 4
+    VINCIRE soma AD soma + runa[j]
+    VINCIRE j AD j + 1
+  FIN DUM
+  VINCIRE energia AD energia + soma
+
+  EVOCA REX pulso AD 0
+  DONEC
+    VINCIRE pulso AD pulso + 1
+  DUM pulso < 2
+  VINCIRE energia AD energia + pulso
+
+  -- Chamada sem falha (risco <= 60): fluxo normal.
+  VINCIRE energia AD energia + CONIURA risco(20)
+
+  -- Chamada com falha propagada via CONIURA: captura externa.
+  TEMPTA
+    VINCIRE energia AD energia + CONIURA risco(d.potestas)
+  CAPE FRACTUM erro
+    OBSECRO scribe("[main.cape] ", erro, "\n")
+    VINCIRE energia AD energia + 7
+  SEMPER
+    OBSECRO scribe("[main.semp]\n")
+    VINCIRE energia AD energia + 1
+  FIN TEMPTA
+
+  EVOCA SPECULUM REX buff
+  VINCIRE buff AD OBSECRO pete(MENSURA(REX) * 3)
+  VINCIRE buff[0] AD 5
+  VINCIRE buff[1] AD 6
+  VINCIRE buff[2] AD 7
+  VINCIRE energia AD energia + buff[0] + buff[1] + buff[2]
+  OBSECRO libera(buff)
+
+  EVOCA SPECULUM REX reserva
+  VINCIRE reserva AD OBSECRO pete(MENSURA(REX))
+  VINCIRE *reserva AD 9
+  VINCIRE energia AD energia + *reserva
+  DIMITTE reserva
+
+  -- Runtime null bridge (integrated subset): null deref vira FRACTUM capturável.
+  EVOCA SPECULUM REX perigoso
+  TEMPTA
+    VINCIRE energia AD *perigoso
+  CAPE FRACTUM erro
+    OBSECRO scribe("[bridge] ", erro, "\n")
+    VINCIRE energia AD energia + 11
+  SEMPER
+    VINCIRE energia AD energia + 2
+  FIN TEMPTA
+
+  EVOCA Status estado
+  VINCIRE estado AD Ira
+  SI estado == Ira
+    VINCIRE energia AD energia + 4
+  ALITER
+    VINCIRE energia AD energia + 1
+  FIN SI
+
+  EVOCA UMBRA calor AD 2.5
+  EVOCA FLAMMA chama AD 1.5
+  SI calor + chama >= 4.0
+    VINCIRE energia AD energia + 6
+  ALITER
+    VINCIRE energia AD energia + 1
+  FIN SI
+
+  EVOCA VERUM vigilia AD VERUM
+  OBSECRO scribe("daemon=", d.nomen,
+                 " potestas=", d.potestas,
+                 " fervor=", d.fervor,
+                 " gradus=", d.vis.gradus,
+                 " vigilia=", vigilia,
+                 " energia=", energia, "\n")
+
+  REDDE energia
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

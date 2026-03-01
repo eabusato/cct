@@ -1,0 +1,16 @@
+INCIPIT grimoire "realbasic"
+
+RITUALE main() REDDE REX
+  EVOCA UMBRA x AD 1.5
+  EVOCA FLAMMA y
+  VINCIRE y AD 2.25
+  EVOCA UMBRA z
+  VINCIRE z AD x + y
+  SI z > 3.0
+    REDDE 1
+  ALITER
+    REDDE 0
+  FIN SI
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

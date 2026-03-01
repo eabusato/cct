@@ -1,0 +1,29 @@
+INCIPIT grimoire "alg_sort_basic_11f2"
+
+ADVOCARE "cct/alg.cct"
+
+RITUALE main() REDDE REX
+  EVOCA SERIES REX[5] arr
+  VINCIRE arr[0] AD 40
+  VINCIRE arr[1] AD 10
+  VINCIRE arr[2] AD 50
+  VINCIRE arr[3] AD 30
+  VINCIRE arr[4] AD 20
+
+  CONIURA alg_sort_insertion(SPECULUM arr[0], 5)
+
+  SI arr[0] == 10
+    SI arr[1] == 20
+      SI arr[2] == 30
+        SI arr[3] == 40
+          SI arr[4] == 50
+            REDDE 0
+          FIN SI
+        FIN SI
+      FIN SI
+    FIN SI
+  FIN SI
+  REDDE 1
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

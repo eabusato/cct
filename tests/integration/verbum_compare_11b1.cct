@@ -1,0 +1,22 @@
+INCIPIT grimoire "verbum_compare_11b1"
+
+ADVOCARE "cct/verbum.cct"
+
+RITUALE main() REDDE REX
+  EVOCA VERBUM a AD "abc"
+  EVOCA VERBUM b AD "abc"
+  EVOCA VERBUM c AD "xyz"
+
+  EVOCA REX cmp1 AD CONIURA compare(a, b)
+  EVOCA REX cmp2 AD CONIURA compare(a, c)
+
+  SI cmp1 == 0
+    SI cmp2 == -1
+      REDDE 0
+    FIN SI
+  FIN SI
+
+  REDDE 1
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

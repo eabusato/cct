@@ -1,0 +1,18 @@
+INCIPIT grimoire "sigscribe"
+
+SIGILLUM Daemon
+  nomen: VERBUM
+  potestas: REX
+  fervor: UMBRA
+FIN SIGILLUM
+
+RITUALE main() REDDE NIHIL
+  EVOCA Daemon d
+  VINCIRE d.nomen AD "Bael"
+  VINCIRE d.potestas AD 66
+  VINCIRE d.fervor AD 3.5
+  OBSECRO scribe(d.nomen, " ", d.potestas, " ", d.fervor, "\n")
+  ANUR 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

@@ -1,0 +1,14 @@
+INCIPIT grimoire "failure_uncaught_after_semper_8d"
+
+RITUALE main() REDDE NIHIL
+  TEMPTA
+    IACE "uncaught-inner-8d"
+  CAPE FRACTUM erro
+    IACE erro
+  SEMPER
+    OBSECRO scribe("semper-8d")
+  FIN TEMPTA
+  REDDE
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

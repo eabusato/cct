@@ -1,0 +1,13 @@
+INCIPIT grimoire "fmt_parse_int_neg_11b2"
+
+ADVOCARE "cct/fmt.cct"
+
+RITUALE main() REDDE REX
+  EVOCA REX num AD CONIURA fmt_parse_int("-91")
+  SI num == -91
+    REDDE 0
+  FIN SI
+  REDDE 1
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

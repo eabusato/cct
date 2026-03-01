@@ -1,0 +1,62 @@
+INCIPIT grimoire "ars_canonica_report"
+
+ADVOCARE "types.cct"
+ADVOCARE "cct/fmt.cct"
+ADVOCARE "cct/verbum.cct"
+ADVOCARE "cct/path.cct"
+ADVOCARE "cct/fs.cct"
+ADVOCARE "cct/io.cct"
+
+ARCANUM RITUALE build_report(SPECULUM Session sessio) REDDE VERBUM
+  EVOCA VERBUM l0 AD CONIURA format_pair("nomen", (*sessio).nomen)
+  EVOCA VERBUM l1 AD CONIURA format_pair("count", CONIURA stringify_int((*sessio).count))
+  EVOCA VERBUM l2 AD CONIURA format_pair("sum", CONIURA stringify_int((*sessio).sum))
+  EVOCA VERBUM l3 AD CONIURA format_pair("min", CONIURA stringify_int((*sessio).min_v))
+  EVOCA VERBUM l4 AD CONIURA format_pair("max", CONIURA stringify_int((*sessio).max_v))
+  EVOCA VERBUM l5 AD CONIURA format_pair("median", CONIURA stringify_int((*sessio).median))
+  EVOCA VERBUM l6 AD CONIURA format_pair("checksum", CONIURA stringify_int((*sessio).checksum))
+  EVOCA VERBUM l7 AD CONIURA format_pair("approved", CONIURA stringify_bool((*sessio).approved))
+
+  EVOCA VERBUM out AD CONIURA concat(l0, "\n")
+  VINCIRE out AD CONIURA concat(out, l1)
+  VINCIRE out AD CONIURA concat(out, "\n")
+  VINCIRE out AD CONIURA concat(out, l2)
+  VINCIRE out AD CONIURA concat(out, "\n")
+  VINCIRE out AD CONIURA concat(out, l3)
+  VINCIRE out AD CONIURA concat(out, "\n")
+  VINCIRE out AD CONIURA concat(out, l4)
+  VINCIRE out AD CONIURA concat(out, "\n")
+  VINCIRE out AD CONIURA concat(out, l5)
+  VINCIRE out AD CONIURA concat(out, "\n")
+  VINCIRE out AD CONIURA concat(out, l6)
+  VINCIRE out AD CONIURA concat(out, "\n")
+  VINCIRE out AD CONIURA concat(out, l7)
+  VINCIRE out AD CONIURA concat(out, "\n")
+  REDDE out
+EXPLICIT RITUALE
+
+RITUALE persist_report(SPECULUM Session sessio, VERBUM base_dir, SPECULUM Artifact out) REDDE NIHIL
+  EVOCA VERBUM filename AD "ars_magna_canonica_report.txt"
+  EVOCA VERBUM full AD CONIURA path_join(base_dir, filename)
+  EVOCA VERBUM content AD CONIURA build_report(sessio)
+
+  CONIURA write_all(full, content)
+  CONIURA append_all(full, "--finis--\n")
+
+  SI CONIURA exists(full) == FALSUM
+    IACE "persist_report could not persist artifact"
+  FIN SI
+
+  EVOCA VERBUM persisted AD CONIURA read_all(full)
+  CONIURA println("[ars_magna_canonica.report] artifact persisted:")
+  CONIURA println(persisted)
+
+  VINCIRE (*out).full_path AD full
+  VINCIRE (*out).dirname AD CONIURA path_dirname(full)
+  VINCIRE (*out).basename AD CONIURA path_basename(full)
+  VINCIRE (*out).extension AD CONIURA path_ext(full)
+  VINCIRE (*out).bytes AD CONIURA size(full)
+  REDDE
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

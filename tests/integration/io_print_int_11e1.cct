@@ -1,0 +1,11 @@
+INCIPIT grimoire "io_print_int_11e1"
+
+ADVOCARE "cct/io.cct"
+
+RITUALE main() REDDE REX
+  CONIURA print_int(42)
+  CONIURA println("")
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

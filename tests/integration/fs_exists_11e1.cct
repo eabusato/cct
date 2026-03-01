@@ -1,0 +1,18 @@
+INCIPIT grimoire "fs_exists_11e1"
+
+ADVOCARE "cct/fs.cct"
+
+RITUALE main() REDDE REX
+  EVOCA VERUM existe1 AD CONIURA exists("tests/fixtures/io_fs/input_test.txt")
+  EVOCA VERUM existe2 AD CONIURA exists("tests/fixtures/io_fs/nao_existe.txt")
+
+  SI existe1
+    SI NON existe2
+      REDDE 0
+    FIN SI
+  FIN SI
+
+  REDDE 1
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

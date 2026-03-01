@@ -1,0 +1,19 @@
+INCIPIT grimoire "signested"
+
+SIGILLUM Essentia
+  gradus: REX
+FIN SIGILLUM
+
+SIGILLUM Daemon
+  nomen: VERBUM
+  vis: Essentia
+FIN SIGILLUM
+
+RITUALE main() REDDE REX
+  EVOCA Daemon b
+  VINCIRE b.nomen AD "Bael"
+  VINCIRE b.vis.gradus AD 7
+  REDDE b.vis.gradus
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

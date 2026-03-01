@@ -1,0 +1,15 @@
+INCIPIT grimoire "module_typing_final_10e_main"
+
+ADVOCARE "modules_10e/module_typing_contract_10e.cct"
+ADVOCARE "modules_10e/module_typing_impl_10e.cct"
+
+RITUALE aplica GENUS(T PACTUM Numerabilis)(SPECULUM T self, REX x) REDDE REX
+  REDDE x
+EXPLICIT RITUALE
+
+RITUALE main() REDDE REX
+  EVOCA Conta c
+  REDDE CONIURA aplica GENUS(Conta)(SPECULUM c, 77)
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

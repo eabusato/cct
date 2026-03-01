@@ -1,0 +1,16 @@
+INCIPIT grimoire "module_final_b"
+
+ADVOCARE "module_final_a.cct"
+
+ORDO Estado
+  QUIETUS
+  ACTUS
+FIN ORDO
+
+RITUALE valor_b(REX base) REDDE REX
+  EVOCA AData d
+  VINCIRE d.v AD base
+  REDDE d.v + 4
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

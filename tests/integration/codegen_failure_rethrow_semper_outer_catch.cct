@@ -1,0 +1,31 @@
+INCIPIT grimoire "failure_rethrow_semper_outer_8d"
+
+RITUALE deep() REDDE NIHIL
+  IACE "inner-fail-8d"
+EXPLICIT RITUALE
+
+RITUALE mid() REDDE NIHIL
+  TEMPTA
+    CONIURA deep()
+  CAPE FRACTUM erro
+    IACE erro
+  SEMPER
+    OBSECRO scribe("mid-semp")
+  FIN TEMPTA
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE main() REDDE REX
+  EVOCA REX x AD 70
+  TEMPTA
+    CONIURA mid()
+    VINCIRE x AD 0
+  CAPE FRACTUM erro
+    VINCIRE x AD x + 2
+  SEMPER
+    VINCIRE x AD x + 1
+  FIN TEMPTA
+  REDDE x
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

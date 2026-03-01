@@ -1,0 +1,31 @@
+INCIPIT grimoire "omni_memory"
+
+ADVOCARE "types_core.cct"
+
+RITUALE elevar(SPECULUM REX target, REX q) REDDE NIHIL
+  VINCIRE *target AD *target + q
+EXPLICIT RITUALE
+
+RITUALE preencher(SPECULUM REX ptr, REX n, REX start) REDDE NIHIL
+  EVOCA REX i AD 0
+  DUM i < n
+    VINCIRE ptr[i] AD start + i
+    VINCIRE i AD i + 1
+  FIN DUM
+EXPLICIT RITUALE
+
+RITUALE somar(SPECULUM REX ptr, REX n) REDDE REX
+  EVOCA REX i AD 0
+  EVOCA REX total AD 0
+  DUM i < n
+    VINCIRE total AD total + ptr[i]
+    VINCIRE i AD i + 1
+  FIN DUM
+  REDDE total
+EXPLICIT RITUALE
+
+RITUALE aquecer_mage(SPECULUM Mage m, UMBRA delta) REDDE NIHIL
+  VINCIRE (*m).heat AD (*m).heat + delta
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

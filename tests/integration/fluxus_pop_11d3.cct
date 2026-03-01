@@ -1,0 +1,32 @@
+INCIPIT grimoire "fluxus_pop_11d3"
+
+ADVOCARE "cct/fluxus.cct"
+
+RITUALE main() REDDE REX
+  EVOCA SPECULUM NIHIL flux
+  EVOCA REX v0 AD 100
+  EVOCA REX v1 AD 200
+  EVOCA REX out AD 0
+
+  VINCIRE flux AD CONIURA fluxus_init(MENSURA(REX))
+  CONIURA fluxus_push(flux, SPECULUM v0)
+  CONIURA fluxus_push(flux, SPECULUM v1)
+
+  CONIURA fluxus_pop(flux, SPECULUM out)
+  SI out != 200
+    CONIURA fluxus_free(flux)
+    REDDE 1
+  FIN SI
+
+  CONIURA fluxus_pop(flux, SPECULUM out)
+  SI out != 100
+    CONIURA fluxus_free(flux)
+    REDDE 2
+  FIN SI
+
+  EVOCA REX n AD CONIURA fluxus_len(flux)
+  CONIURA fluxus_free(flux)
+  REDDE n
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

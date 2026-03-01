@@ -1,0 +1,8 @@
+INCIPIT grimoire "badderef"
+
+RITUALE main() REDDE REX
+  EVOCA REX x AD 1
+  REDDE *x
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

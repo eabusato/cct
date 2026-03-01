@@ -1,0 +1,19 @@
+INCIPIT grimoire "series_fmt_integration_11c"
+
+ADVOCARE "cct/series.cct"
+ADVOCARE "cct/fmt.cct"
+ADVOCARE "cct/verbum.cct"
+
+RITUALE main() REDDE REX
+  EVOCA SERIES REX[3] arr
+  VINCIRE arr[0] AD 10
+  VINCIRE arr[1] AD 20
+  VINCIRE arr[2] AD 30
+
+  EVOCA VERBUM txt AD CONIURA stringify_int(arr[0])
+  EVOCA VERBUM line AD CONIURA format_pair("first", txt)
+  OBSECRO scribe(line)
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

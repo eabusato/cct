@@ -1,0 +1,9 @@
+INCIPIT grimoire "realscribe"
+
+RITUALE main() REDDE REX
+  EVOCA UMBRA x AD 3.25
+  OBSECRO scribe("x=", x, "\n")
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

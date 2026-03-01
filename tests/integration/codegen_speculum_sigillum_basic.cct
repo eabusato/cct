@@ -1,0 +1,16 @@
+INCIPIT grimoire "specsig"
+
+SIGILLUM Daemon
+  potestas: REX
+FIN SIGILLUM
+
+RITUALE main() REDDE REX
+  EVOCA Daemon d
+  EVOCA SPECULUM Daemon p
+  VINCIRE d.potestas AD 9
+  VINCIRE p AD SPECULUM d
+  VINCIRE (*p).potestas AD (*p).potestas + 1
+  REDDE d.potestas
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

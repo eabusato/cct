@@ -1,0 +1,9 @@
+INCIPIT grimoire "sigilo_module_visibility_basic"
+
+ADVOCARE "modules_9c/module_visibility_internal_rituale_lib.cct"
+
+RITUALE main() REDDE REX
+  REDDE CONIURA expoe_local()
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

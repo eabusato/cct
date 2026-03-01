@@ -1,0 +1,37 @@
+INCIPIT grimoire "sigilo_parse_cmp_basic_11f2"
+
+ADVOCARE "cct/parse.cct"
+ADVOCARE "cct/cmp.cct"
+ADVOCARE "cct/alg.cct"
+
+RITUALE main() REDDE REX
+  EVOCA REX i AD CONIURA parse_int("8")
+  EVOCA UMBRA r AD CONIURA parse_real("2.0")
+  EVOCA VERUM b AD CONIURA parse_bool("true")
+
+  EVOCA REX ci AD CONIURA cmp_int(i, 8)
+  EVOCA REX cr AD CONIURA cmp_real(r, 2.0)
+  EVOCA REX cv AD CONIURA cmp_verbum("a", "b")
+
+  EVOCA SERIES REX[3] arr
+  VINCIRE arr[0] AD 1
+  VINCIRE arr[1] AD 2
+  VINCIRE arr[2] AD 3
+  EVOCA REX pos AD CONIURA alg_binary_search(SPECULUM arr[0], 3, 2)
+
+  SI b == VERUM
+    SI ci == 0
+      SI cr == 0
+        SI cv < 0
+          SI pos == 1
+            REDDE 0
+          FIN SI
+        FIN SI
+      FIN SI
+    FIN SI
+  FIN SI
+
+  REDDE 1
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

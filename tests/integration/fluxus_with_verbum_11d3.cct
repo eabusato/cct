@@ -1,0 +1,28 @@
+INCIPIT grimoire "fluxus_with_verbum_11d3"
+
+ADVOCARE "cct/fluxus.cct"
+ADVOCARE "cct/verbum.cct"
+
+RITUALE main() REDDE REX
+  EVOCA SPECULUM NIHIL flux
+  EVOCA VERBUM s0 AD "prima"
+  EVOCA VERBUM s1 AD "secunda"
+  EVOCA REX l0 AD CONIURA len(s0)
+  EVOCA REX l1 AD CONIURA len(s1)
+  EVOCA SPECULUM REX p0
+  EVOCA SPECULUM REX p1
+
+  VINCIRE flux AD CONIURA fluxus_init(MENSURA(VERBUM))
+  CONIURA fluxus_push(flux, SPECULUM l0)
+  CONIURA fluxus_push(flux, SPECULUM l1)
+
+  VINCIRE p0 AD CONIURA fluxus_get(flux, 0)
+  VINCIRE p1 AD CONIURA fluxus_get(flux, 1)
+
+  EVOCA REX total AD *p0 + *p1
+
+  CONIURA fluxus_free(flux)
+  REDDE total
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

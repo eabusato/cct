@@ -1,0 +1,16 @@
+INCIPIT grimoire "series_generic_real_11c"
+
+ADVOCARE "cct/series.cct"
+
+RITUALE main() REDDE REX
+  EVOCA SERIES UMBRA[3] arr
+  CONIURA series_fill GENUS(UMBRA)(SPECULUM arr[0], 3.5, 3)
+
+  SI arr[1] > 3.0
+    REDDE 0
+  FIN SI
+
+  REDDE 1
+EXPLICIT RITUALE
+
+EXPLICIT grimoire
