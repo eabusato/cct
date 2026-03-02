@@ -56,7 +56,7 @@ static bool pd_manifest_get_value(const char *manifest_path,
     if (!f) return false;
 
     char line[1024];
-    char current_section[128] = "";
+    char current_section[1024] = "";
     bool found = false;
 
     while (fgets(line, sizeof(line), f)) {
@@ -66,8 +66,7 @@ static bool pd_manifest_get_value(const char *manifest_path,
         size_t line_len = strlen(line);
         if (line[0] == '[' && line_len > 2 && line[line_len - 1] == ']') {
             line[line_len - 1] = '\0';
-            strncpy(current_section, line + 1, sizeof(current_section) - 1);
-            current_section[sizeof(current_section) - 1] = '\0';
+            snprintf(current_section, sizeof(current_section), "%s", line + 1);
             continue;
         }
 
