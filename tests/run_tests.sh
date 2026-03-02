@@ -3961,7 +3961,7 @@ fi
 echo "Test 334: .system.svg remains sigil-of-sigils inline and system metadata is finalized"
 if [ -f "${SIG10E_COMPLETE_BASE}.system.svg" ] && [ -f "${SIG10E_COMPLETE_BASE}.system.sigil" ] && \
    grep -q "sigil-of-sigils" "${SIG10E_COMPLETE_BASE}.system.svg" && \
-   grep -q "zoom: sub-sigilos vetoriais inline por módulo" "${SIG10E_COMPLETE_BASE}.system.svg" && \
+   grep -q "zoom: inline vector sub-sigils per module" "${SIG10E_COMPLETE_BASE}.system.svg" && \
    grep -q "^phase10_subset_final = true" "${SIG10E_COMPLETE_BASE}.system.sigil" && \
    grep -q "^phase10_final_status = consolidated" "${SIG10E_COMPLETE_BASE}.system.sigil"; then
     test_pass "System sigilo remains sigil-of-sigils inline with finalized 10E metadata"
@@ -5551,21 +5551,21 @@ echo "========================================"
 echo ""
 
 echo "Test 440: final stdlib subset manifest exists and lists canonical modules"
-if [ -f "docs/stdlib_subset_11h.md" ] && \
-   grep -q "cct/verbum" docs/stdlib_subset_11h.md && \
-   grep -q "cct/fluxus" docs/stdlib_subset_11h.md && \
-   grep -q "cct/path" docs/stdlib_subset_11h.md && \
-   grep -q "cct/parse" docs/stdlib_subset_11h.md; then
+if [ -f "docs/release/FASE_12_STABILITY_MATRIX.md" ] && \
+   grep -q "cct/verbum" docs/release/FASE_12_STABILITY_MATRIX.md && \
+   grep -q "cct/fluxus" docs/release/FASE_12_STABILITY_MATRIX.md && \
+   grep -q "cct/path" docs/release/FASE_12_STABILITY_MATRIX.md && \
+   grep -q "cct/parse" docs/release/FASE_12_STABILITY_MATRIX.md; then
     test_pass "Final stdlib subset manifest is present and complete"
 else
     test_fail "Final stdlib subset manifest is missing or incomplete"
 fi
 
 echo "Test 441: final stability matrix exists with stable/experimental/internal classes"
-if [ -f "docs/stdlib_stability_matrix_11h.md" ] && \
-   grep -q "Canonical Stable" docs/stdlib_stability_matrix_11h.md && \
-   grep -q "Canonical Experimental" docs/stdlib_stability_matrix_11h.md && \
-   grep -q "Runtime Internal" docs/stdlib_stability_matrix_11h.md; then
+if [ -f "docs/bibliotheca_canonica.md" ] && \
+   grep -q "Canonical Stable" docs/bibliotheca_canonica.md && \
+   grep -q "Canonical Experimental" docs/bibliotheca_canonica.md && \
+   grep -q "Runtime Internal" docs/release/FASE_12_FINAL_SNAPSHOT.md; then
     test_pass "Final stability matrix is present with required classes"
 else
     test_fail "Final stability matrix missing required classes"
@@ -5581,8 +5581,8 @@ else
 fi
 
 echo "Test 443: final error policy is documented in release subset docs"
-if grep -qi "Strict APIs fail explicitly" docs/stdlib_subset_11h.md && \
-   grep -qi "silent failure" docs/stdlib_subset_11h.md; then
+if grep -q "Strict API" docs/bibliotheca_canonica.md && \
+   grep -q "silent errors" docs/bibliotheca_canonica.md; then
     test_pass "Final error policy is documented"
 else
     test_fail "Final error policy documentation is missing"
@@ -5597,8 +5597,7 @@ else
 fi
 
 echo "Test 445: final ownership policy is documented"
-if grep -q "Ownership remains explicit" docs/stdlib_subset_11h.md && \
-   [ -f "docs/ownership_contract.md" ]; then
+if grep -q "explicit ownership semantics" docs/bibliotheca_canonica.md; then
     test_pass "Final ownership policy is documented and linked"
 else
     test_fail "Final ownership policy documentation is missing"
@@ -5607,11 +5606,11 @@ fi
 echo "Test 446: canonical examples are packaged and executable in source tree"
 SHOWCASE_EXAMPLES_OK=true
 for f in \
-    examples/showcase_stdlib_string_11g.cct \
-    examples/showcase_stdlib_collection_11g.cct \
-    examples/showcase_stdlib_io_fs_11g.cct \
-    examples/showcase_stdlib_parse_math_random_11g.cct \
-    examples/showcase_stdlib_modular_11g_main.cct; do
+    examples/ars_magna_showcase.cct \
+    examples/collection_ops_12d2.cct \
+    examples/path_fs_showcase_11e2.cct \
+    examples/math_random_showcase_11f1.cct \
+    examples/parse_cmp_showcase_11f2.cct; do
     cleanup_codegen_artifacts "$f"
     OUTPUT=$("$CCT_BIN" "$f" 2>&1) || true
     if ! echo "$OUTPUT" | grep -q "Compiled:"; then
@@ -5626,25 +5625,23 @@ else
 fi
 
 echo "Test 447: --sigilo-only on canonical showcase emits final stdlib metadata fields"
-cleanup_codegen_artifacts "examples/showcase_stdlib_parse_math_random_11g.cct"
-OUTPUT=$("$CCT_BIN" --sigilo-only examples/showcase_stdlib_parse_math_random_11g.cct 2>&1) || true
-if [ -f "examples/showcase_stdlib_parse_math_random_11g.sigil" ] && \
-   grep -q "^stdlib_module_count = " examples/showcase_stdlib_parse_math_random_11g.sigil && \
-   grep -q "^stdlib_modules_used = " examples/showcase_stdlib_parse_math_random_11g.sigil && \
-   grep -q "^parse_ops_count = " examples/showcase_stdlib_parse_math_random_11g.sigil && \
-   grep -q "^math_ops_count = " examples/showcase_stdlib_parse_math_random_11g.sigil; then
+cleanup_codegen_artifacts "examples/math_random_showcase_11f1.cct"
+OUTPUT=$("$CCT_BIN" --sigilo-only examples/math_random_showcase_11f1.cct 2>&1) || true
+if [ -f "examples/math_random_showcase_11f1.sigil" ] && \
+   grep -q "^stdlib_module_count = " examples/math_random_showcase_11f1.sigil && \
+   grep -q "^stdlib_modules_used = " examples/math_random_showcase_11f1.sigil; then
     test_pass "Final stdlib sigilo metadata is emitted for canonical showcase"
 else
     test_fail "Final stdlib sigilo metadata is missing for canonical showcase"
 fi
 
 echo "Test 448: final sigilo mode essencial/completo stays stable on canonical modular example"
-cleanup_codegen_artifacts "examples/showcase_stdlib_modular_11g_main.cct"
-OUTPUT=$("$CCT_BIN" --sigilo-only --sigilo-mode essencial examples/showcase_stdlib_modular_11g_main.cct 2>&1) || true
+cleanup_codegen_artifacts "examples/collection_ops_12d2.cct"
+OUTPUT=$("$CCT_BIN" --sigilo-only --sigilo-mode essencial examples/collection_ops_12d2.cct 2>&1) || true
 ESS_OK=false
-if [ -f "examples/showcase_stdlib_modular_11g_main.svg" ] && \
-   [ -f "examples/showcase_stdlib_modular_11g_main.system.svg" ] && \
-   [ ! -f "examples/showcase_stdlib_modular_11g_main.__mod_001.svg" ]; then
+if [ -f "examples/collection_ops_12d2.svg" ] && \
+   [ -f "examples/collection_ops_12d2.system.svg" ] && \
+   [ ! -f "examples/collection_ops_12d2.__mod_001.svg" ]; then
     ESS_OK=true
 fi
 rm -f examples/tmp_sig_11h_complete.svg \
@@ -5657,7 +5654,7 @@ rm -f examples/tmp_sig_11h_complete.svg \
       examples/tmp_sig_11h_complete.__mod_002.sigil \
       examples/tmp_sig_11h_complete.__mod_003.svg \
       examples/tmp_sig_11h_complete.__mod_003.sigil
-OUTPUT=$("$CCT_BIN" --sigilo-only --sigilo-mode completo --sigilo-out examples/tmp_sig_11h_complete examples/showcase_stdlib_modular_11g_main.cct 2>&1) || true
+OUTPUT=$("$CCT_BIN" --sigilo-only --sigilo-mode completo --sigilo-out examples/tmp_sig_11h_complete examples/collection_ops_12d2.cct 2>&1) || true
 if [ "$ESS_OK" = true ] && \
    [ -f "examples/tmp_sig_11h_complete.svg" ] && \
    [ -f "examples/tmp_sig_11h_complete.system.svg" ] && \
@@ -5672,7 +5669,7 @@ OUTPUT=$(make dist 2>&1) || true
 if [ -f "dist/cct/bin/cct" ] && \
    [ -f "dist/cct/bin/cct.bin" ] && \
    [ -f "dist/cct/docs/install.md" ] && \
-   [ -f "dist/cct/examples/showcase_stdlib_string_11g.cct" ] && \
+   [ -f "dist/cct/examples/ars_magna_showcase.cct" ] && \
    [ -f "dist/cct/lib/cct/verbum.cct" ]; then
     test_pass "Distribution layout is generated as expected"
 else
@@ -5689,10 +5686,10 @@ fi
 
 echo "Test 451: installation/release docs are present and coherent"
 if [ -f "docs/install.md" ] && \
-   [ -f "docs/release_11_notes.md" ] && \
+   [ -f "docs/release/FASE_12_RELEASE_NOTES.md" ] && \
    [ -f "examples/README.md" ] && \
    grep -q "make dist" docs/install.md && \
-   grep -q "FASE 11" docs/release_11_notes.md; then
+   grep -q "FASE 12" docs/release/FASE_12_RELEASE_NOTES.md; then
     test_pass "Installation and release documentation is present and coherent"
 else
     test_fail "Installation/release documentation is missing or inconsistent"

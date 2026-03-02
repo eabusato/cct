@@ -9,6 +9,12 @@ RITUALE main() REDDE REX
   EVOCA REX n AD CONIURA parse_int("42")
   EVOCA UMBRA pi AD CONIURA parse_real("3.14")
   EVOCA VERUM ok AD CONIURA parse_bool("true")
+  EVOCA REX ok_int
+  SI ok == VERUM
+    VINCIRE ok_int AD 1
+  ALITER
+    VINCIRE ok_int AD 0
+  FIN SI
 
   EVOCA REX ci AD CONIURA cmp_int(n, 40)
   EVOCA REX cr AD CONIURA cmp_real(pi, 3.0)
@@ -35,7 +41,7 @@ RITUALE main() REDDE REX
   OBSECRO io_print(" pos=")
   OBSECRO io_print_int(pos)
   OBSECRO io_print(" ok=")
-  OBSECRO io_print_int(ok)
+  OBSECRO io_print_int(ok_int)
   OBSECRO io_println("")
 
   SI ok == VERUM
