@@ -1,3 +1,12 @@
+/*
+ * CCT — Clavicula Turing
+ * Project Runner Implementation
+ *
+ * FASE 12C: Build, test, bench, and clean workflow execution
+ *
+ * Copyright (c) Erick Andrade Busato. Todos os direitos reservados.
+ */
+
 #include "project_runner.h"
 
 #include "project_cache.h"

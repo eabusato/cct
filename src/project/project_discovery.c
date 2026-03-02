@@ -1,3 +1,12 @@
+/*
+ * CCT — Clavicula Turing
+ * Project Discovery Implementation
+ *
+ * FASE 12C: Manifest parsing and project structure discovery
+ *
+ * Copyright (c) Erick Andrade Busato. Todos os direitos reservados.
+ */
+
 #include "project_discovery.h"
 
 #include <ctype.h>

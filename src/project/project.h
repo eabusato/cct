@@ -1,3 +1,12 @@
+/*
+ * CCT — Clavicula Turing
+ * Project Management Header
+ *
+ * FASE 12C: Project-level build, test, and workflow orchestration
+ *
+ * Copyright (c) Erick Andrade Busato. Todos os direitos reservados.
+ */
+
 #ifndef CCT_PROJECT_H
 #define CCT_PROJECT_H
 

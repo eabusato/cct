@@ -1,3 +1,12 @@
+/*
+ * CCT — Clavicula Turing
+ * Project Cache Implementation
+ *
+ * FASE 12C: Build cache and fingerprinting for incremental compilation
+ *
+ * Copyright (c) Erick Andrade Busato. Todos os direitos reservados.
+ */
+
 #include "project_cache.h"
 
 #include "../common/types.h"

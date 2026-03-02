@@ -1,3 +1,12 @@
+/*
+ * CCT — Clavicula Turing
+ * Project Management Implementation
+ *
+ * FASE 12C: Project-level build, test, and workflow orchestration
+ *
+ * Copyright (c) Erick Andrade Busato. Todos os direitos reservados.
+ */
+
 #include "project.h"
 
 #include "project_runner.h"

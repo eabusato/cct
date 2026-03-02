@@ -9,12 +9,25 @@
 # CCT compiler binary (root only)
 /cct
 
-# Example binaries (specific paths)
-/examples/*/main
+# Example binaries (compiled executables, not .cct source files)
 /examples/ars_magna_showcase
 /examples/hello
 /examples/iterators
-/examples/showcase_*
+/examples/option_result
+/examples/collection_ops_12d2
+/examples/fluxus_demo
+/examples/showcase_stdlib_string_11g
+/examples/showcase_stdlib_collection_11g
+/examples/showcase_stdlib_io_fs_11g
+/examples/showcase_stdlib_parse_math_random_11g
+/examples/showcase_stdlib_modular_11g_main
+/examples/showcase_realistic_ops
+/examples/showcase_random_arrays_product
+/examples/lint_showcase_before_12e2
+/examples/lint_showcase_after_12e2
+/examples/path_fs_showcase_11e2
+/examples/math_random_showcase_11f1
+/examples/parse_cmp_showcase_11f2
 
 # Generated C files
 *.cgen.c
@@ -27,8 +40,15 @@
 !docs/*.svg
 
 # Build directories
+build/
 .cct/
 dist/
+
+# Release artifacts
+*.tar.gz
+*.tar.gz.sha256
+*.zip
+*.zip.sha256
 
 # macOS
 .DS_Store

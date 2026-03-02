@@ -1,3 +1,12 @@
+/*
+ * CCT — Clavicula Turing
+ * FLUXUS Runtime Header
+ *
+ * FASE 10A: Dynamic vector runtime implementation
+ *
+ * Copyright (c) Erick Andrade Busato. Todos os direitos reservados.
+ */
+
 #ifndef CCT_FLUXUS_RUNTIME_H
 #define CCT_FLUXUS_RUNTIME_H
 

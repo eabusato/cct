@@ -1,3 +1,12 @@
+/*
+ * CCT — Clavicula Turing
+ * Memory Runtime Implementation
+ *
+ * FASE 10A: Memory allocation runtime implementation
+ *
+ * Copyright (c) Erick Andrade Busato. Todos os direitos reservados.
+ */
+
 #include "mem_runtime.h"
 
 #include <stdio.h>

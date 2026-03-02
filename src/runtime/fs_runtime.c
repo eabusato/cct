@@ -1,3 +1,12 @@
+/*
+ * CCT — Clavicula Turing
+ * Filesystem Runtime Implementation
+ *
+ * FASE 10A: File I/O runtime implementation
+ *
+ * Copyright (c) Erick Andrade Busato. Todos os direitos reservados.
+ */
+
 #include "fs_runtime.h"
 
 #include <stdio.h>

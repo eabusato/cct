@@ -1,3 +1,12 @@
+/*
+ * CCT — Clavicula Turing
+ * Project Discovery Header
+ *
+ * FASE 12C: Manifest parsing and project structure discovery
+ *
+ * Copyright (c) Erick Andrade Busato. Todos os direitos reservados.
+ */
+
 #ifndef CCT_PROJECT_DISCOVERY_H
 #define CCT_PROJECT_DISCOVERY_H
 

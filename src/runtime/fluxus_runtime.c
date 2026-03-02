@@ -1,3 +1,12 @@
+/*
+ * CCT — Clavicula Turing
+ * FLUXUS Runtime Implementation
+ *
+ * FASE 10A: Dynamic vector runtime implementation
+ *
+ * Copyright (c) Erick Andrade Busato. Todos os direitos reservados.
+ */
+
 #include "fluxus_runtime.h"
 
 #include "mem_runtime.h"

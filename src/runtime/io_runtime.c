@@ -1,3 +1,12 @@
+/*
+ * CCT — Clavicula Turing
+ * I/O Runtime Implementation
+ *
+ * FASE 10A: Standard I/O runtime implementation
+ *
+ * Copyright (c) Erick Andrade Busato. Todos os direitos reservados.
+ */
+
 #include "io_runtime.h"
 
 #include <stdio.h>

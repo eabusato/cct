@@ -1,3 +1,12 @@
+/*
+ * CCT — Clavicula Turing
+ * Filesystem Runtime Header
+ *
+ * FASE 10A: File I/O runtime implementation
+ *
+ * Copyright (c) Erick Andrade Busato. Todos os direitos reservados.
+ */
+
 #ifndef CCT_FS_RUNTIME_H
 #define CCT_FS_RUNTIME_H
 

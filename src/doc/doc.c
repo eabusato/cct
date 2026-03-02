@@ -1,3 +1,12 @@
+/*
+ * CCT — Clavicula Turing
+ * Documentation Generator Implementation
+ *
+ * FASE 12G: API documentation generator for modules and symbols
+ *
+ * Copyright (c) Erick Andrade Busato. Todos os direitos reservados.
+ */
+
 #include "doc.h"
 
 #include "../common/errors.h"
