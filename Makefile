@@ -146,38 +146,128 @@ dist: $(TARGET)
 	@mkdir -p $(DIST_DIR)/lib/cct
 	@mkdir -p $(DIST_DIR)/docs
 	@mkdir -p $(DIST_DIR)/examples
+ifeq ($(IS_WINDOWS),1)
+	@cp $(TARGET) $(DIST_DIR)/bin/cct.exe
+	@printf '%s\r\n' '@echo off' \
+		'set "SCRIPT_DIR=%~dp0"' \
+		'if not defined CCT_STDLIB_DIR set "CCT_STDLIB_DIR=%SCRIPT_DIR%..\\lib\\cct"' \
+		'"%SCRIPT_DIR%cct.exe" %*' > $(DIST_DIR)/bin/cct.bat
+else
 	@cp $(TARGET) $(DIST_DIR)/bin/cct.bin
 	@printf '%s\n' '#!/bin/sh' \
 		'SCRIPT_DIR="$$(CDPATH= cd -- "$$(dirname -- "$$0")" && pwd)"' \
 		'export CCT_STDLIB_DIR="$${CCT_STDLIB_DIR:-$$SCRIPT_DIR/../lib/cct}"' \
 		'exec "$$SCRIPT_DIR/cct.bin" "$$@"' > $(DIST_DIR)/bin/cct
 	@chmod +x $(DIST_DIR)/bin/cct
+	@chmod +x $(DIST_DIR)/bin/cct.bin
+endif
 	@cp -R $(STDLIB_DIR)/. $(DIST_DIR)/lib/cct/
 	@cp README.md $(DIST_DIR)/
 	@cp docs/install.md docs/spec.md docs/architecture.md docs/roadmap.md \
-		docs/bibliotheca_canonica.md docs/stdlib_subset_11h.md \
-		docs/stdlib_stability_matrix_11h.md docs/release_11_notes.md \
-		docs/build_system.md docs/project_conventions.md docs/doc_generator.md \
+		docs/bibliotheca_canonica.md docs/build_system.md \
+		docs/project_conventions.md docs/doc_generator.md \
 		$(DIST_DIR)/docs/
-	@cp examples/showcase_stdlib_string_11g.cct \
-		examples/showcase_stdlib_collection_11g.cct \
-		examples/showcase_stdlib_io_fs_11g.cct \
-		examples/showcase_stdlib_parse_math_random_11g.cct \
-		examples/showcase_stdlib_modular_11g_main.cct \
+	@mkdir -p $(DIST_DIR)/docs/release
+	@cp docs/release/*.md $(DIST_DIR)/docs/release/
+	@echo "Copying examples..."
+	@cp examples/README.md \
+		examples/hello.cct \
+		examples/ars_magna_showcase.cct \
+		examples/option_result.cct \
+		examples/collection_ops_12d2.cct \
+		examples/iterators.cct \
+		examples/fluxus_demo.cct \
+		examples/lint_showcase_before_12e2.cct \
+		examples/lint_showcase_after_12e2.cct \
 		$(DIST_DIR)/examples/
-	@mkdir -p $(DIST_DIR)/examples/modules_11g
-	@cp -R examples/modules_11g/. $(DIST_DIR)/examples/modules_11g/
+	@echo "Generating checksums..."
+	@cd $(DIST_DIR) && find . -type f -exec $(SHA256) {} \; | sed 's|\./||' > CHECKSUMS.sha256
 	@echo "Distribution bundle ready: $(DIST_DIR)"
+
+# Version and platform detection
+VERSION ?= 0.12
+UNAME_S := $(shell uname -s 2>/dev/null || echo unknown)
+UNAME_M := $(shell uname -m 2>/dev/null || echo unknown)
+
+# Detect OS type
+IS_WINDOWS := $(if $(findstring MINGW,$(UNAME_S)),1,$(if $(findstring MSYS,$(UNAME_S)),1,$(if $(findstring CYGWIN,$(UNAME_S)),1,0)))
+IS_MACOS := $(if $(filter Darwin,$(UNAME_S)),1,0)
+IS_LINUX := $(if $(filter Linux,$(UNAME_S)),1,0)
+
+# Binary extension and wrapper script type
+ifeq ($(IS_WINDOWS),1)
+  BIN_EXT = .exe
+  WRAPPER_EXT = .bat
+else
+  BIN_EXT =
+  WRAPPER_EXT =
+endif
+
+# Detect SHA256 command and platform name
+ifeq ($(IS_MACOS),1)
+  SHA256 = shasum -a 256
+  ifeq ($(UNAME_M),arm64)
+    PLATFORM = macos-arm64
+  else
+    PLATFORM = macos-x86_64
+  endif
+else ifeq ($(IS_LINUX),1)
+  SHA256 = sha256sum
+  ifeq ($(UNAME_M),x86_64)
+    PLATFORM = linux-x86_64
+  else ifeq ($(UNAME_M),aarch64)
+    PLATFORM = linux-arm64
+  else
+    PLATFORM = linux-$(UNAME_M)
+  endif
+else ifeq ($(IS_WINDOWS),1)
+  SHA256 = sha256sum
+  ifeq ($(UNAME_M),x86_64)
+    PLATFORM = windows-x86_64
+  else ifeq ($(UNAME_M),i686)
+    PLATFORM = windows-x86
+  else
+    PLATFORM = windows-$(UNAME_M)
+  endif
+else
+  # Fallback
+  SHA256 = $(shell command -v shasum >/dev/null 2>&1 && echo "shasum -a 256" || echo "sha256sum")
+  PLATFORM = $(shell echo $(UNAME_S) | tr '[:upper:]' '[:lower:]')-$(UNAME_M)
+endif
+
+RELEASE_NAME = cct-v$(VERSION)-$(PLATFORM)
+RELEASE_TARBALL = $(RELEASE_NAME).tar.gz
+
+# Create release tarball with checksum
+release: dist
+	@echo "Creating release tarball: $(RELEASE_TARBALL)..."
+	@cd dist && tar czf ../$(RELEASE_TARBALL) cct
+	@echo "Generating release checksum..."
+	@$(SHA256) $(RELEASE_TARBALL) > $(RELEASE_TARBALL).sha256
+	@echo "Release ready:"
+	@echo "  $(RELEASE_TARBALL)"
+	@echo "  $(RELEASE_TARBALL).sha256"
+	@echo ""
+	@echo "Checksum:"
+	@cat $(RELEASE_TARBALL).sha256
 
 # Install binary (requires sudo on Linux)
 install: $(TARGET)
 	@echo "Installing $(TARGET) to $(PREFIX)/bin/..."
 	mkdir -p $(PREFIX)/bin
+ifeq ($(IS_WINDOWS),1)
+	cp $(TARGET) $(PREFIX)/bin/cct.exe
+	@printf '%s\r\n' '@echo off' \
+		'if not defined CCT_STDLIB_DIR set "CCT_STDLIB_DIR=$(PREFIX)\\lib\\cct"' \
+		'"$(PREFIX)\\bin\\cct.exe" %*' > $(PREFIX)/bin/cct.bat
+else
 	cp $(TARGET) $(PREFIX)/bin/cct.bin
 	@printf '%s\n' '#!/bin/sh' \
 		'export CCT_STDLIB_DIR="$${CCT_STDLIB_DIR:-$(PREFIX)/lib/cct}"' \
 		'exec "$(PREFIX)/bin/cct.bin" "$$@"' > $(PREFIX)/bin/cct
 	chmod +x $(PREFIX)/bin/cct
+	chmod +x $(PREFIX)/bin/cct.bin
+endif
 	@echo "Installing Bibliotheca Canonica to $(PREFIX)/lib/cct/..."
 	mkdir -p $(PREFIX)/lib/cct
 	cp -R $(STDLIB_DIR)/. $(PREFIX)/lib/cct/
@@ -186,8 +276,13 @@ install: $(TARGET)
 # Uninstall binary
 uninstall:
 	@echo "Uninstalling cct from $(PREFIX)/bin/..."
+ifeq ($(IS_WINDOWS),1)
+	rm -f $(PREFIX)/bin/cct.bat
+	rm -f $(PREFIX)/bin/cct.exe
+else
 	rm -f $(PREFIX)/bin/cct
 	rm -f $(PREFIX)/bin/cct.bin
+endif
 	@echo "Removing $(PREFIX)/lib/cct/..."
 	rm -rf $(PREFIX)/lib/cct
 	@echo "Uninstall complete."
@@ -213,6 +308,7 @@ help:
 	@echo "  doc-strict - Generate API docs with strict warnings"
 	@echo "  test_fluxus_storage - Build and run standalone FLUXUS runtime tests"
 	@echo "  dist      - Build relocatable distribution bundle"
+	@echo "  release   - Create release tarball with checksums (cct-vX.XX-platform.tar.gz)"
 	@echo "  install   - Install binary + stdlib under PREFIX ($(PREFIX))"
 	@echo "  uninstall - Remove binary + stdlib from PREFIX ($(PREFIX))"
 	@echo "  help      - Show this help message"
@@ -284,4 +380,4 @@ phase12-final-audit: $(TARGET)
 	@echo ""
 	@echo "Audit complete."
 
-.PHONY: all clean test test_fluxus_storage dist install uninstall help fmt fmt-check lint project-build project-run project-test project-test-strict project-bench project-clean doc doc-strict release-check phase12-final-audit
+.PHONY: all clean test test_fluxus_storage dist release install uninstall help fmt fmt-check lint project-build project-run project-test project-test-strict project-bench project-clean doc doc-strict release-check phase12-final-audit

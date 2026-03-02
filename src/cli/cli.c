@@ -93,9 +93,9 @@ void cct_cli_show_help(void) {
     printf("          [--no-examples] [--warn-missing-docs] [--strict-docs]\n");
     printf("          [--no-timestamp]\n\n");
 
-    printf("Current status: FASE 10E (subset final consolidado de tipagem avançada)\n");
-    printf("Compile now generates executable + .svg + .sigil (when valid).\n");
-    printf("Executable subset is pragmatic and expanding (with 9C visibility boundaries + 9D/9E dual sigilo modes + AST composed view).\n\n");
+    printf("Current status: FASE 12H (Release v0.12 - Structural maturity milestone)\n");
+    printf("Complete toolchain: compiler, formatter, linter, project manager, and doc generator.\n");
+    printf("Bibliotheca Canonica (stdlib) consolidated with stability guarantees.\n\n");
 
     printf("License: Copyright (c) Erick Andrade Busato. Todos os direitos reservados.\n");
     printf("Project: https://github.com/your-repo/cct\n");
@@ -107,7 +107,7 @@ void cct_cli_show_help(void) {
 void cct_cli_show_version(void) {
     printf("Clavicula Turing (CCT) v%s\n", CCT_VERSION_STRING);
     printf("Target: Linux x86_64\n");
-    printf("Build: FASE 10E - advanced typing subset finalized (GENUS + PACTUM + basic constraints)\n");
+    printf("Build: FASE 12H - Structural maturity milestone (Release v0.12)\n");
     printf("\n");
     printf("\"Nomear é invocar. Invocar é vincular. Vincular é computar.\n");
     printf(" E todo feitiço lança sua sombra — o sigilo que prova que existiu.\"\n");
