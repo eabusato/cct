@@ -109,9 +109,6 @@ void cct_cli_show_version(void) {
     printf("Target: Linux x86_64\n");
     printf("Build: FASE 12H - Structural maturity milestone (Release v0.12)\n");
     printf("\n");
-    printf("\"Nomear é invocar. Invocar é vincular. Vincular é computar.\n");
-    printf(" E todo feitiço lança sua sombra — o sigilo que prova que existiu.\"\n");
-    printf("\n");
     printf("Copyright (c) Erick Andrade Busato. Todos os direitos reservados.\n");
 }
 

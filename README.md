@@ -1,7 +1,5 @@
 # CCT — Clavicula Turing
 
-> "To name is to invoke. To invoke is to bind. To bind is to compute."
-
 CCT is a compiled, ritual-themed programming language with deterministic sigil generation.
 
 <div align="center">

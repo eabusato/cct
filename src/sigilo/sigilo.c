@@ -2479,7 +2479,7 @@ static bool sg_write_system_svg(
             import_edge_count,
             cross_module_call_count,
             cross_module_type_ref_count);
-    fprintf(f, "  <text class=\"module-hash\" x=\"24\" y=\"66\" font-size=\"10\">zoom: sub-sigilos vetoriais inline por módulo</text>\n");
+    fprintf(f, "  <text class=\"module-hash\" x=\"24\" y=\"66\" font-size=\"10\">zoom: inline vector sub-sigils per module</text>\n");
     fprintf(f, "</svg>\n");
     fclose(f);
     free(nodes);

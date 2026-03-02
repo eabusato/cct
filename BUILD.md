@@ -173,7 +173,7 @@ This creates a **Windows** native binary:
 - `cct-v0.12-windows-x86_64.zip`
 - Contains `cct.exe` and `cct.bat`
 
-> **Note:** Uses PowerShell `Compress-Archive` — nenhuma dependência extra necessária.
+> **Note:** Uses PowerShell `Compress-Archive` — no extra dependencies required.
 
 **Usage from the MSYS2 UCRT64 terminal** (recommended — PATH already set):
 ```bash
