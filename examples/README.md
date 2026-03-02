@@ -11,7 +11,8 @@ Simple "Hello World" program demonstrating basic syntax.
 - OBSECRO scribe statement
 
 ```bash
-cct run hello.cct
+cct hello.cct
+./hello
 ```
 
 ## Language Showcase
@@ -26,7 +27,8 @@ cct run hello.cct
 - Function calls (CONIURA)
 
 ```bash
-cct run ars_magna_showcase.cct
+cct ars_magna_showcase.cct
+./ars_magna_showcase
 ```
 
 ### option_result.cct
@@ -36,7 +38,8 @@ cct run ars_magna_showcase.cct
 - Safe error patterns
 
 ```bash
-cct run option_result.cct
+cct option_result.cct
+./option_result
 ```
 
 ## Collections & Iterators
@@ -49,7 +52,8 @@ cct run option_result.cct
 - Memory cleanup with fluxus_free
 
 ```bash
-cct run fluxus_demo.cct
+cct fluxus_demo.cct
+./fluxus_demo
 ```
 
 ### collection_ops_12d2.cct
@@ -60,7 +64,8 @@ cct run fluxus_demo.cct
 - Chaining operations
 
 ```bash
-cct run collection_ops_12d2.cct
+cct collection_ops_12d2.cct
+./collection_ops_12d2
 ```
 
 ### iterators.cct
@@ -70,7 +75,8 @@ cct run collection_ops_12d2.cct
 - Using with map operations
 
 ```bash
-cct run iterators.cct
+cct iterators.cct
+./iterators
 ```
 
 ## Tooling Examples
@@ -94,11 +100,11 @@ cct lint lint_showcase_after_12e2.cct
 ## Quick Start
 
 ```bash
-# Compile and run
-cct run <example.cct>
+# Compile
+cct <example.cct>
 
-# Just compile
-cct compile <example.cct>
+# Run the compiled executable
+./<example>
 
 # Format code
 cct fmt <example.cct>

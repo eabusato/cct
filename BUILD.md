@@ -143,7 +143,8 @@ This creates a **Linux** binary that runs in WSL:
 **Usage:**
 ```bash
 # In WSL
-./cct run examples/hello.cct
+./cct examples/hello.cct
+./examples/hello
 ```
 
 ### Option 2: MSYS2 UCRT64 (Native Windows Binary)
