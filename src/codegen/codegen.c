@@ -2284,6 +2284,99 @@ static bool cg_emit_obsecro_expr(FILE *out, cct_codegen_t *cg, const cct_ast_nod
         return true;
     }
 
+    if (strcmp(name, "math_sqrt") == 0) {
+        if (argc != 1) {
+            cg_report_node(cg, expr, "OBSECRO math_sqrt expects exactly one argument");
+            return false;
+        }
+        fputs("cct_sqrt(", out);
+        cct_codegen_value_kind_t k0 = CCT_CODEGEN_VALUE_UNKNOWN;
+        if (!cg_emit_expr(out, cg, args->nodes[0], &k0)) return false;
+        fputs(")", out);
+        if (out_kind) *out_kind = CCT_CODEGEN_VALUE_REAL;
+        return true;
+    }
+
+    if (strcmp(name, "math_cbrt") == 0) {
+        if (argc != 1) {
+            cg_report_node(cg, expr, "OBSECRO math_cbrt expects exactly one argument");
+            return false;
+        }
+        fputs("cct_cbrt(", out);
+        cct_codegen_value_kind_t k0 = CCT_CODEGEN_VALUE_UNKNOWN;
+        if (!cg_emit_expr(out, cg, args->nodes[0], &k0)) return false;
+        fputs(")", out);
+        if (out_kind) *out_kind = CCT_CODEGEN_VALUE_REAL;
+        return true;
+    }
+
+    if (strcmp(name, "math_pow") == 0) {
+        if (argc != 2) {
+            cg_report_node(cg, expr, "OBSECRO math_pow expects exactly two arguments");
+            return false;
+        }
+        fputs("cct_pow(", out);
+        cct_codegen_value_kind_t k0 = CCT_CODEGEN_VALUE_UNKNOWN;
+        if (!cg_emit_expr(out, cg, args->nodes[0], &k0)) return false;
+        fputs(", ", out);
+        cct_codegen_value_kind_t k1 = CCT_CODEGEN_VALUE_UNKNOWN;
+        if (!cg_emit_expr(out, cg, args->nodes[1], &k1)) return false;
+        fputs(")", out);
+        if (out_kind) *out_kind = CCT_CODEGEN_VALUE_REAL;
+        return true;
+    }
+
+    if (strcmp(name, "math_hypot") == 0) {
+        if (argc != 2) {
+            cg_report_node(cg, expr, "OBSECRO math_hypot expects exactly two arguments");
+            return false;
+        }
+        fputs("cct_hypot(", out);
+        cct_codegen_value_kind_t k0 = CCT_CODEGEN_VALUE_UNKNOWN;
+        if (!cg_emit_expr(out, cg, args->nodes[0], &k0)) return false;
+        fputs(", ", out);
+        cct_codegen_value_kind_t k1 = CCT_CODEGEN_VALUE_UNKNOWN;
+        if (!cg_emit_expr(out, cg, args->nodes[1], &k1)) return false;
+        fputs(")", out);
+        if (out_kind) *out_kind = CCT_CODEGEN_VALUE_REAL;
+        return true;
+    }
+
+    if (strcmp(name, "math_sin") == 0 || strcmp(name, "math_cos") == 0 ||
+        strcmp(name, "math_tan") == 0 || strcmp(name, "math_asin") == 0 ||
+        strcmp(name, "math_acos") == 0 || strcmp(name, "math_atan") == 0 ||
+        strcmp(name, "math_deg_to_rad") == 0 || strcmp(name, "math_rad_to_deg") == 0 ||
+        strcmp(name, "math_exp") == 0 || strcmp(name, "math_log") == 0 ||
+        strcmp(name, "math_log10") == 0 || strcmp(name, "math_log2") == 0) {
+        if (argc != 1) {
+            cg_report_node(cg, expr, "OBSECRO math function expects exactly one argument");
+            return false;
+        }
+        const char* c_name = name + 5;
+        fprintf(out, "cct_%s(", c_name);
+        cct_codegen_value_kind_t k0 = CCT_CODEGEN_VALUE_UNKNOWN;
+        if (!cg_emit_expr(out, cg, args->nodes[0], &k0)) return false;
+        fputs(")", out);
+        if (out_kind) *out_kind = CCT_CODEGEN_VALUE_REAL;
+        return true;
+    }
+
+    if (strcmp(name, "math_atan2") == 0) {
+        if (argc != 2) {
+            cg_report_node(cg, expr, "OBSECRO math_atan2 expects exactly two arguments");
+            return false;
+        }
+        fputs("cct_atan2(", out);
+        cct_codegen_value_kind_t k0 = CCT_CODEGEN_VALUE_UNKNOWN;
+        if (!cg_emit_expr(out, cg, args->nodes[0], &k0)) return false;
+        fputs(", ", out);
+        cct_codegen_value_kind_t k1 = CCT_CODEGEN_VALUE_UNKNOWN;
+        if (!cg_emit_expr(out, cg, args->nodes[1], &k1)) return false;
+        fputs(")", out);
+        if (out_kind) *out_kind = CCT_CODEGEN_VALUE_REAL;
+        return true;
+    }
+
     if (strcmp(name, "collection_fluxus_map") == 0) {
         if (argc != 4) {
             cg_report_node(cg, expr, "OBSECRO collection_fluxus_map expects (flux, item_size, result_size, fn) in FASE 12D.2");

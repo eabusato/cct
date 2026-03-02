@@ -1,0 +1,66 @@
+INCIPIT grimoire "math_expansion_test"
+
+ADVOCARE "cct/math.cct"
+ADVOCARE "cct/io.cct"
+
+RITUALE main() REDDE REX
+  OBSECRO io_print("2^5 = ")
+  EVOCA REX power_result AD CONIURA pow_int(2, 5)
+  OBSECRO io_print_int(power_result)
+  OBSECRO io_println("")
+
+  OBSECRO io_print("gcd(12, 18) = ")
+  EVOCA REX gcd_result AD CONIURA gcd(12, 18)
+  OBSECRO io_print_int(gcd_result)
+  OBSECRO io_println("")
+
+  OBSECRO io_print("lcm(4, 6) = ")
+  EVOCA REX lcm_result AD CONIURA lcm(4, 6)
+  OBSECRO io_print_int(lcm_result)
+  OBSECRO io_println("")
+
+  OBSECRO io_print("factorial(5) = ")
+  EVOCA REX fact_result AD CONIURA factorial(5)
+  OBSECRO io_print_int(fact_result)
+  OBSECRO io_println("")
+
+  OBSECRO io_print("is_prime(7) = ")
+  EVOCA VERUM is_prime_7 AD CONIURA is_prime(7)
+  SI is_prime_7 == VERUM
+    OBSECRO io_println("true")
+  ALITER
+    OBSECRO io_println("false")
+  FIN SI
+
+  OBSECRO io_print("floor(3.7) = ")
+  EVOCA REX floor_result AD CONIURA floor_real(3.7)
+  OBSECRO io_print_int(floor_result)
+  OBSECRO io_println("")
+
+  OBSECRO io_print("ceil(3.2) = ")
+  EVOCA REX ceil_result AD CONIURA ceil_real(3.2)
+  OBSECRO io_print_int(ceil_result)
+  OBSECRO io_println("")
+
+  OBSECRO io_print("round(3.5) = ")
+  EVOCA REX round_result AD CONIURA round_real(3.5)
+  OBSECRO io_print_int(round_result)
+  OBSECRO io_println("")
+
+  OBSECRO io_print("sign(-5) = ")
+  EVOCA REX sign_neg AD CONIURA sign(0 - 5)
+  OBSECRO io_print_int(sign_neg)
+  OBSECRO io_println("")
+
+  OBSECRO io_print("is_even(4) = ")
+  EVOCA VERUM is_even_4 AD CONIURA is_even(4)
+  SI is_even_4 == VERUM
+    OBSECRO io_println("true")
+  ALITER
+    OBSECRO io_println("false")
+  FIN SI
+
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

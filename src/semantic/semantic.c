@@ -1199,6 +1199,23 @@ static const cct_sem_builtin_spec_t* sem_find_builtin(cct_semantic_analyzer_t *s
         specs[92].name = "collection_series_find"; specs[92].min_args = 4; specs[92].variadic = false;
         specs[93].name = "collection_series_any"; specs[93].min_args = 4; specs[93].variadic = false;
         specs[94].name = "collection_series_all"; specs[94].min_args = 4; specs[94].variadic = false;
+        specs[95].name = "math_sqrt"; specs[95].min_args = 1; specs[95].variadic = false;
+        specs[96].name = "math_cbrt"; specs[96].min_args = 1; specs[96].variadic = false;
+        specs[97].name = "math_pow"; specs[97].min_args = 2; specs[97].variadic = false;
+        specs[98].name = "math_hypot"; specs[98].min_args = 2; specs[98].variadic = false;
+        specs[99].name = "math_sin"; specs[99].min_args = 1; specs[99].variadic = false;
+        specs[100].name = "math_cos"; specs[100].min_args = 1; specs[100].variadic = false;
+        specs[101].name = "math_tan"; specs[101].min_args = 1; specs[101].variadic = false;
+        specs[102].name = "math_asin"; specs[102].min_args = 1; specs[102].variadic = false;
+        specs[103].name = "math_acos"; specs[103].min_args = 1; specs[103].variadic = false;
+        specs[104].name = "math_atan"; specs[104].min_args = 1; specs[104].variadic = false;
+        specs[105].name = "math_atan2"; specs[105].min_args = 2; specs[105].variadic = false;
+        specs[106].name = "math_deg_to_rad"; specs[106].min_args = 1; specs[106].variadic = false;
+        specs[107].name = "math_rad_to_deg"; specs[107].min_args = 1; specs[107].variadic = false;
+        specs[108].name = "math_exp"; specs[108].min_args = 1; specs[108].variadic = false;
+        specs[109].name = "math_log"; specs[109].min_args = 1; specs[109].variadic = false;
+        specs[110].name = "math_log10"; specs[110].min_args = 1; specs[110].variadic = false;
+        specs[111].name = "math_log2"; specs[111].min_args = 1; specs[111].variadic = false;
         initialized = true;
     }
 
@@ -1297,6 +1314,23 @@ static const cct_sem_builtin_spec_t* sem_find_builtin(cct_semantic_analyzer_t *s
     specs[92].return_type = sem_make_pointer_type(sem, &sem->type_nihil);
     specs[93].return_type = &sem->type_verum;
     specs[94].return_type = &sem->type_verum;
+    specs[95].return_type = &sem->type_umbra;
+    specs[96].return_type = &sem->type_umbra;
+    specs[97].return_type = &sem->type_umbra;
+    specs[98].return_type = &sem->type_umbra;
+    specs[99].return_type = &sem->type_umbra;
+    specs[100].return_type = &sem->type_umbra;
+    specs[101].return_type = &sem->type_umbra;
+    specs[102].return_type = &sem->type_umbra;
+    specs[103].return_type = &sem->type_umbra;
+    specs[104].return_type = &sem->type_umbra;
+    specs[105].return_type = &sem->type_umbra;
+    specs[106].return_type = &sem->type_umbra;
+    specs[107].return_type = &sem->type_umbra;
+    specs[108].return_type = &sem->type_umbra;
+    specs[109].return_type = &sem->type_umbra;
+    specs[110].return_type = &sem->type_umbra;
+    specs[111].return_type = &sem->type_umbra;
 
     for (size_t i = 0; i < sizeof(specs) / sizeof(specs[0]); i++) {
         if (!specs[i].name) continue;

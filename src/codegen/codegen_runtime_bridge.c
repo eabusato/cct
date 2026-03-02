@@ -50,7 +50,27 @@ bool cct_cg_emit_generated_c_prelude(FILE *out, const cct_codegen_t *cg) {
     fputs("#include <stdint.h>\n\n", out);
     fputs("#include <string.h>\n", out);
     fputs("#include <ctype.h>\n\n", out);
-    fputs("#include <errno.h>\n\n", out);
+    fputs("#include <errno.h>\n", out);
+    fputs("#include <math.h>\n\n", out);
+
+    fputs("/* ===== Math Runtime Helpers (FASE 13A) ===== */\n", out);
+    fputs("static inline double cct_sqrt(double x) { return sqrt(x); }\n", out);
+    fputs("static inline double cct_cbrt(double x) { return cbrt(x); }\n", out);
+    fputs("static inline double cct_pow(double base, double exp) { return pow(base, exp); }\n", out);
+    fputs("static inline double cct_hypot(double x, double y) { return hypot(x, y); }\n", out);
+    fputs("static inline double cct_sin(double x) { return sin(x); }\n", out);
+    fputs("static inline double cct_cos(double x) { return cos(x); }\n", out);
+    fputs("static inline double cct_tan(double x) { return tan(x); }\n", out);
+    fputs("static inline double cct_asin(double x) { return asin(x); }\n", out);
+    fputs("static inline double cct_acos(double x) { return acos(x); }\n", out);
+    fputs("static inline double cct_atan(double x) { return atan(x); }\n", out);
+    fputs("static inline double cct_atan2(double y, double x) { return atan2(y, x); }\n", out);
+    fputs("static inline double cct_deg_to_rad(double deg) { return deg * (3.141592653589793 / 180.0); }\n", out);
+    fputs("static inline double cct_rad_to_deg(double rad) { return rad * (180.0 / 3.141592653589793); }\n", out);
+    fputs("static inline double cct_exp(double x) { return exp(x); }\n", out);
+    fputs("static inline double cct_log(double x) { return log(x); }\n", out);
+    fputs("static inline double cct_log10(double x) { return log10(x); }\n", out);
+    fputs("static inline double cct_log2(double x) { return log2(x); }\n\n", out);
 
     fputs("/* ===== Runtime Helpers ===== */\n", out);
     cct_runtime_codegen_config_t rt_cfg;

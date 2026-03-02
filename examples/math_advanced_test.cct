@@ -1,0 +1,89 @@
+INCIPIT grimoire "math_advanced_test"
+
+ADVOCARE "cct/math.cct"
+ADVOCARE "cct/io.cct"
+
+RITUALE main() REDDE REX
+  OBSECRO io_println("=== CCT Advanced Math Test (FASE 13A) ===")
+
+  EVOCA UMBRA sqrt_result AD CONIURA sqrt_real(16.0)
+  OBSECRO io_print("sqrt(16.0) = ")
+  EVOCA REX sqrt_int AD CONIURA floor_real(sqrt_result)
+  OBSECRO io_print_int(sqrt_int)
+  OBSECRO io_println("")
+
+  EVOCA UMBRA cbrt_result AD CONIURA cbrt_real(27.0)
+  OBSECRO io_print("cbrt(27.0) = ")
+  EVOCA REX cbrt_int AD CONIURA floor_real(cbrt_result)
+  OBSECRO io_print_int(cbrt_int)
+  OBSECRO io_println("")
+
+  EVOCA UMBRA pow_result AD CONIURA pow_real(2.0, 10.0)
+  OBSECRO io_print("pow(2.0, 10.0) = ")
+  EVOCA REX pow_int AD CONIURA floor_real(pow_result)
+  OBSECRO io_print_int(pow_int)
+  OBSECRO io_println("")
+
+  EVOCA UMBRA hypot_result AD CONIURA hypot(3.0, 4.0)
+  OBSECRO io_print("hypot(3.0, 4.0) = ")
+  EVOCA REX hypot_int AD CONIURA floor_real(hypot_result)
+  OBSECRO io_print_int(hypot_int)
+  OBSECRO io_println("")
+
+  EVOCA UMBRA half_pi AD CONIURA pi() / 2.0
+  EVOCA UMBRA sin_result AD CONIURA sin(half_pi)
+  OBSECRO io_print("sin(pi/2) ~= ")
+  EVOCA REX sin_int AD CONIURA round_real(sin_result)
+  OBSECRO io_print_int(sin_int)
+  OBSECRO io_println("")
+
+  EVOCA UMBRA cos_result AD CONIURA cos(0.0)
+  OBSECRO io_print("cos(0.0) = ")
+  EVOCA REX cos_int AD CONIURA round_real(cos_result)
+  OBSECRO io_print_int(cos_int)
+  OBSECRO io_println("")
+
+  EVOCA UMBRA rad_result AD CONIURA deg_to_rad(180.0)
+  OBSECRO io_print("deg_to_rad(180) ~= ")
+  EVOCA REX rad_int AD CONIURA round_real(rad_result)
+  OBSECRO io_print_int(rad_int)
+  OBSECRO io_println("")
+
+  EVOCA UMBRA pi_val AD CONIURA pi()
+  EVOCA UMBRA deg_result AD CONIURA rad_to_deg(pi_val)
+  OBSECRO io_print("rad_to_deg(pi) = ")
+  EVOCA REX deg_int AD CONIURA round_real(deg_result)
+  OBSECRO io_print_int(deg_int)
+  OBSECRO io_println("")
+
+  EVOCA UMBRA exp_result AD CONIURA exp(1.0)
+  OBSECRO io_print("exp(1.0) ~= ")
+  EVOCA REX exp_int AD CONIURA round_real(exp_result)
+  OBSECRO io_print_int(exp_int)
+  OBSECRO io_println("")
+
+  EVOCA UMBRA e_val AD CONIURA e()
+  EVOCA UMBRA ln_result AD CONIURA log_natural(e_val)
+  OBSECRO io_print("log_natural(e) = ")
+  EVOCA REX ln_int AD CONIURA round_real(ln_result)
+  OBSECRO io_print_int(ln_int)
+  OBSECRO io_println("")
+
+  EVOCA UMBRA log10_result AD CONIURA log10(100.0)
+  OBSECRO io_print("log10(100.0) = ")
+  EVOCA REX log10_int AD CONIURA round_real(log10_result)
+  OBSECRO io_print_int(log10_int)
+  OBSECRO io_println("")
+
+  EVOCA UMBRA log2_result AD CONIURA log2(8.0)
+  OBSECRO io_print("log2(8.0) = ")
+  EVOCA REX log2_int AD CONIURA round_real(log2_result)
+  OBSECRO io_print_int(log2_int)
+  OBSECRO io_println("")
+
+  OBSECRO io_println("=== All tests complete! ===")
+
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

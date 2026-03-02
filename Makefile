@@ -44,6 +44,7 @@ SRCS = \
 	$(SRC_DIR)/codegen/codegen_contract.c \
 	$(SRC_DIR)/codegen/codegen_runtime_bridge.c \
 	$(SRC_DIR)/runtime/runtime.c \
+	$(SRC_DIR)/runtime/runtime_math.c \
 	$(SRC_DIR)/module/module.c \
 	$(SRC_DIR)/sigilo/sigilo.c \
 	$(SRC_DIR)/formatter/formatter.c \
@@ -72,6 +73,7 @@ DEPS = \
 	$(SRC_DIR)/codegen/codegen.h \
 	$(SRC_DIR)/codegen/codegen_internal.h \
 	$(SRC_DIR)/runtime/runtime.h \
+	$(SRC_DIR)/runtime/runtime_math.h \
 	$(SRC_DIR)/module/module.h \
 	$(SRC_DIR)/sigilo/sigilo.h \
 	$(SRC_DIR)/formatter/formatter.h \
