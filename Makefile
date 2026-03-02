@@ -162,7 +162,7 @@ else
 	@chmod +x $(DIST_DIR)/bin/cct.bin
 endif
 	@cp -R $(STDLIB_DIR)/. $(DIST_DIR)/lib/cct/
-	@cp README.md $(DIST_DIR)/
+	@cp README.md BUILD.md $(DIST_DIR)/
 	@cp docs/install.md docs/spec.md docs/architecture.md docs/roadmap.md \
 		docs/bibliotheca_canonica.md docs/build_system.md \
 		docs/project_conventions.md docs/doc_generator.md \

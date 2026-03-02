@@ -59,7 +59,7 @@ Requirements:
 - C compiler (`gcc` or `clang`)
 - `make`
 
-Build:
+Quick build (Linux/macOS):
 
 ```bash
 make
@@ -70,6 +70,8 @@ Run full test suite:
 ```bash
 make test
 ```
+
+**Platform-specific instructions:** See [BUILD.md](BUILD.md) for detailed build instructions for Linux, macOS, and Windows (WSL2/MSYS2/MinGW)
 
 ## CLI
 
