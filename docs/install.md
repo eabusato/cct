@@ -6,14 +6,22 @@ This guide defines the supported installation paths for the CCT compiler and Bib
 
 ## Prerequisites
 
-- POSIX shell environment
 - C compiler (`gcc` or `clang`)
-- `make`
+- `make` (Linux/macOS) or `mingw32-make` (Windows MSYS2)
+
+**Windows (MSYS2 UCRT64):**
+```bash
+pacman -S mingw-w64-ucrt-x86_64-gcc make
+```
 
 ## 1. Build
 
 ```bash
+# Linux / macOS
 make
+
+# Windows (MSYS2 UCRT64 terminal)
+mingw32-make
 ```
 
 Expected result: `./cct` binary available in project root.
@@ -86,18 +94,38 @@ Or with custom prefix:
 make uninstall PREFIX="$HOME/.local"
 ```
 
-## 7. Environment Override
+## 7. Environment Variables
 
-If needed, stdlib resolution can be overridden explicitly:
+### `CCT_STDLIB_DIR` — stdlib resolution override
 
 ```bash
+# Linux / macOS
 export CCT_STDLIB_DIR=/path/to/lib/cct
 ./cct --check file.cct
+
+# Windows CMD
+set CCT_STDLIB_DIR=C:\path\to\lib\cct
+cct --check file.cct
 ```
 
 Resolver order:
 1. `CCT_STDLIB_DIR` environment variable (if set)
 2. build-time canonical stdlib path
+
+### `CC` — host C compiler (Windows)
+
+When running `cct` from Windows CMD or PowerShell (outside the MSYS2 terminal),
+the host C compiler must be reachable. Set `CC` to the full path of `gcc.exe`:
+
+```cmd
+set CC=C:\msys64\ucrt64\bin\gcc.exe
+```
+
+This is only required outside the MSYS2 terminal. Inside the MSYS2 UCRT64
+terminal, `gcc` is already in `PATH` and no additional setup is needed.
+
+To avoid setting this every session, add `C:\msys64\ucrt64\bin` to the Windows
+system `PATH` via *System Properties → Environment Variables*.
 
 ## 8. Troubleshooting
 
@@ -108,3 +136,6 @@ Resolver order:
   - ensure positional file ends with `.cct`
 - packaging smoke fails:
   - rebuild with `make` then `make dist`
+- Windows: `'gcc' is not recognized` when running `cct`:
+  - run from the MSYS2 UCRT64 terminal, **or**
+  - set `CC=C:\msys64\ucrt64\bin\gcc.exe` before invoking `cct`

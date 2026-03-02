@@ -110,7 +110,11 @@ static bool pd_resolve_dir(const char *input, char *out, size_t out_size) {
     if (!input || !out || out_size == 0) return false;
 
     char stack_buf[PATH_MAX];
+#ifdef _WIN32
+    if (_fullpath(stack_buf, input, PATH_MAX)) {
+#else
     if (realpath(input, stack_buf)) {
+#endif
         snprintf(out, out_size, "%s", stack_buf);
         return true;
     }

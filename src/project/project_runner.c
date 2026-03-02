@@ -4,15 +4,26 @@
 
 #include <dirent.h>
 #include <errno.h>
-#include <ftw.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <sys/stat.h>
 #include <sys/types.h>
-#include <sys/wait.h>
 #include <time.h>
-#include <unistd.h>
+#ifdef _WIN32
+#  include <direct.h>
+#  include <process.h>
+#else
+#  include <ftw.h>
+#  include <sys/wait.h>
+#  include <unistd.h>
+#endif
+
+#ifdef _WIN32
+#  define pr_mkdir(path, mode) _mkdir(path)
+#else
+#  define pr_mkdir(path, mode) mkdir(path, mode)
+#endif
 
 #ifndef CCT_ARRAY_LEN
 #define CCT_ARRAY_LEN(x) (sizeof(x) / sizeof((x)[0]))
@@ -75,14 +86,14 @@ static bool pr_ensure_dir(const char *path) {
         if (*p == '/') {
             *p = '\0';
             if (tmp[0] != '\0' && !cct_project_path_is_dir(tmp)) {
-                if (mkdir(tmp, 0755) != 0 && errno != EEXIST) return false;
+                if (pr_mkdir(tmp, 0755) != 0 && errno != EEXIST) return false;
             }
             *p = '/';
         }
     }
 
     if (!cct_project_path_is_dir(tmp)) {
-        if (mkdir(tmp, 0755) != 0 && errno != EEXIST) return false;
+        if (pr_mkdir(tmp, 0755) != 0 && errno != EEXIST) return false;
     }
 
     return true;
@@ -113,6 +124,10 @@ static bool pr_copy_file(const char *src, const char *dst) {
 }
 
 static int pr_spawn_argv(char *const argv[]) {
+#ifdef _WIN32
+    intptr_t rc = _spawnv(_P_WAIT, argv[0], (const char *const *)argv);
+    return (rc == -1) ? 1 : (int)rc;
+#else
     pid_t pid = fork();
     if (pid < 0) return 1;
     if (pid == 0) {
@@ -130,6 +145,7 @@ static int pr_spawn_argv(char *const argv[]) {
     }
 
     return 1;
+#endif
 }
 
 static int pr_run_cct_compile(const char *self_path, const char *file) {
@@ -273,12 +289,33 @@ static bool pr_make_cache_path(const cct_project_layout_t *layout,
     return true;
 }
 
+#ifdef _WIN32
+static void pr_remove_tree_recursive(const char *path) {
+    DIR *dp = opendir(path);
+    if (!dp) { remove(path); return; }
+    struct dirent *ent;
+    while ((ent = readdir(dp)) != NULL) {
+        if (strcmp(ent->d_name, ".") == 0 || strcmp(ent->d_name, "..") == 0) continue;
+        char child[CCT_PROJECT_PATH_MAX];
+        snprintf(child, sizeof(child), "%s/%s", path, ent->d_name);
+        struct stat cst;
+        if (stat(child, &cst) == 0 && S_ISDIR(cst.st_mode)) {
+            pr_remove_tree_recursive(child);
+        } else {
+            remove(child);
+        }
+    }
+    closedir(dp);
+    rmdir(path);
+}
+#else
 static int pr_remove_cb(const char *fpath, const struct stat *sb, int typeflag, struct FTW *ftwbuf) {
     (void)sb;
     (void)typeflag;
     (void)ftwbuf;
     return remove(fpath);
 }
+#endif
 
 static void pr_remove_tree_if_exists(const char *path) {
     if (!path || !cct_project_path_exists(path)) return;
@@ -287,7 +324,11 @@ static void pr_remove_tree_if_exists(const char *path) {
         (void)remove(path);
         return;
     }
+#ifdef _WIN32
+    pr_remove_tree_recursive(path);
+#else
     nftw(path, pr_remove_cb, 64, FTW_DEPTH | FTW_PHYS);
+#endif
 }
 
 int cct_project_cmd_build(const char *self_path,

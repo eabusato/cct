@@ -409,7 +409,9 @@ FASE 12F introduces **incremental compilation**:
 
 ### General
 
-- **Windows native support:** Not yet implemented (planned for future phase)
+- **Windows native support:** Implemented via MSYS2 UCRT64 / MinGW-w64.
+  When running from Windows CMD/PowerShell, set `CC=C:\msys64\ucrt64\bin\gcc.exe`.
+  No setup needed inside the MSYS2 UCRT64 terminal.
 - **Cross-compilation:** Not yet supported (planned for future phase)
 
 ### Linter (12E.2)

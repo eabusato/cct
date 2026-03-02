@@ -146,7 +146,7 @@ This creates a **Linux** binary that runs in WSL:
 ./cct run examples/hello.cct
 ```
 
-### Option 2: MSYS2 (Native Windows Binary)
+### Option 2: MSYS2 UCRT64 (Native Windows Binary)
 
 **Best for:** Creating native Windows executables (.exe).
 
@@ -157,26 +157,47 @@ This creates a **Linux** binary that runs in WSL:
 
 2. **Install Build Tools:**
    ```bash
-   # In MSYS2 MINGW64 terminal
-   pacman -S mingw-w64-x86_64-gcc make
+   # In MSYS2 UCRT64 terminal
+   pacman -S mingw-w64-ucrt-x86_64-gcc make
    ```
 
 3. **Build:**
    ```bash
-   # In MSYS2 MINGW64 terminal
+   # In MSYS2 UCRT64 terminal
    cd /c/path/to/cct
-   make release
+   mingw32-make release
    ```
 
 This creates a **Windows** native binary:
-- `cct-v0.12-windows-x86_64.tar.gz`
+- `cct-v0.12-windows-x86_64.zip`
 - Contains `cct.exe` and `cct.bat`
 
-**Usage:**
-```cmd
-REM In Windows CMD or PowerShell
-cct.bat run examples\hello.cct
+> **Note:** Uses PowerShell `Compress-Archive` — nenhuma dependência extra necessária.
+
+**Usage from the MSYS2 UCRT64 terminal** (recommended — PATH already set):
+```bash
+./cct examples/hello.cct
 ```
+
+**Usage from Windows CMD or PowerShell:**
+
+The `cct.exe` binary is statically linked and runs standalone, but to compile
+`.cct` files it needs to invoke the host C compiler (`gcc`). When running from
+CMD/PowerShell you must point the `CC` environment variable to the full path of
+`gcc.exe`:
+
+```cmd
+set CC=C:\msys64\ucrt64\bin\gcc.exe
+cct examples\hello.cct
+```
+
+To make this permanent, add it to your user environment variables via
+*System Properties → Environment Variables*, or add `C:\msys64\ucrt64\bin` to
+your system `PATH`.
+
+> **Note:** The `CC` environment variable is respected by all `cct` compilation
+> commands. If it is not set and `gcc` is not in `PATH`, a hint is printed with
+> the exact command to run.
 
 ### Option 3: MinGW-w64
 
@@ -206,7 +227,7 @@ cct.bat run examples\hello.cct
 | Linux ARM64 | `cct.bin` (ELF) | `cct` (shell) | `cct-v0.12-linux-arm64.tar.gz` |
 | macOS ARM64 | `cct.bin` (Mach-O) | `cct` (shell) | `cct-v0.12-macos-arm64.tar.gz` |
 | macOS x86_64 | `cct.bin` (Mach-O) | `cct` (shell) | `cct-v0.12-macos-x86_64.tar.gz` |
-| Windows x86_64 | `cct.exe` (PE) | `cct.bat` (batch) | `cct-v0.12-windows-x86_64.tar.gz` |
+| Windows x86_64 | `cct.exe` (PE) | `cct.bat` (batch) | `cct-v0.12-windows-x86_64.zip` |
 
 ---
 
@@ -221,7 +242,7 @@ sha256sum -c cct-v0.12-*.tar.gz.sha256
 
 **Windows (PowerShell):**
 ```powershell
-Get-FileHash cct-v0.12-*.tar.gz -Algorithm SHA256
+Get-FileHash cct-v0.12-windows-*.zip -Algorithm SHA256
 # Compare output with .sha256 file content
 ```
 
@@ -237,8 +258,16 @@ Install Xcode Command Line Tools: `xcode-select --install`
 
 ### Windows: "make: command not found"
 - WSL2: Install build-essential in Ubuntu
-- MSYS2: Ensure you're in MINGW64 terminal, not MSYS2 terminal
+- MSYS2: Ensure you're in the **UCRT64** terminal (not the plain MSYS2 terminal)
 - MinGW: Add MinGW bin directory to PATH
+
+### Windows CMD: "'gcc' is not recognized" when running `cct`
+The host C compiler is not in the system PATH. Set the `CC` variable before
+invoking `cct`:
+```cmd
+set CC=C:\msys64\ucrt64\bin\gcc.exe
+```
+Or add `C:\msys64\ucrt64\bin` to the system `PATH` permanently.
 
 ### All Platforms: "Permission denied"
 Make the binary executable: `chmod +x cct` (Unix) or check file permissions (Windows)

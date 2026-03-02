@@ -15,7 +15,13 @@
 #include <string.h>
 #include <sys/stat.h>
 #include <time.h>
-#include <unistd.h>
+#ifdef _WIN32
+#  include <direct.h>
+#  define doc_mkdir(path, mode) _mkdir(path)
+#else
+#  include <unistd.h>
+#  define doc_mkdir(path, mode) mkdir(path, mode)
+#endif
 
 typedef enum {
     DOC_FORMAT_MARKDOWN = 0,
@@ -145,14 +151,14 @@ static bool doc_ensure_dir(const char *path) {
         if (*p == '/') {
             *p = '\0';
             if (tmp[0] != '\0' && !cct_project_path_is_dir(tmp)) {
-                if (mkdir(tmp, 0755) != 0 && errno != EEXIST) return false;
+                if (doc_mkdir(tmp, 0755) != 0 && errno != EEXIST) return false;
             }
             *p = '/';
         }
     }
 
     if (!cct_project_path_is_dir(tmp)) {
-        if (mkdir(tmp, 0755) != 0 && errno != EEXIST) return false;
+        if (doc_mkdir(tmp, 0755) != 0 && errno != EEXIST) return false;
     }
 
     return true;

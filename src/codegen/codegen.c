@@ -3247,9 +3247,13 @@ static void cg_emit_failure_terminal_after_uncaught(FILE *out, cct_codegen_t *cg
 
 static bool cg_probe_expr_kind(cct_codegen_t *cg, const cct_ast_node_t *expr, cct_codegen_value_kind_t *out_kind) {
     if (out_kind) *out_kind = CCT_CODEGEN_VALUE_UNKNOWN;
+#ifdef _WIN32
+    FILE *null_out = fopen("NUL", "wb");
+#else
     FILE *null_out = fopen("/dev/null", "wb");
+#endif
     if (!null_out) {
-        cg_report_node(cg, expr, "internal codegen error: could not open /dev/null for expression type probe");
+        cg_report_node(cg, expr, "internal codegen error: could not open null device for expression type probe");
         return false;
     }
     bool ok = cg_emit_expr(null_out, cg, expr, out_kind);
@@ -5114,22 +5118,61 @@ static bool cg_emit_generated_c(cct_codegen_t *cg, const cct_ast_program_t *prog
  * Host compiler invocation
  * ======================================================================== */
 
+#ifdef _WIN32
+static void cg_win32_prepend_cc_dir_to_path(const char *cc) {
+    /* Extract the directory part of the CC path so that gcc's own DLLs
+     * (libgmp, libisl, libmpc, libgcc_s_seh, libwinpthread, …) can be
+     * found by Windows even when the MSYS2 bin dir is not in the system PATH. */
+    char dir[4096];
+    strncpy(dir, cc, sizeof(dir) - 1);
+    dir[sizeof(dir) - 1] = '\0';
+    char *sep = NULL;
+    for (char *p = dir; *p; p++) {
+        if (*p == '\\' || *p == '/') sep = p;
+    }
+    if (!sep) return; /* cc is just "gcc" with no directory — nothing to add */
+    *sep = '\0';
+
+    const char *old = getenv("PATH");
+    char buf[32768];
+    if (old && old[0]) {
+        snprintf(buf, sizeof(buf), "PATH=%s;%s", dir, old);
+    } else {
+        snprintf(buf, sizeof(buf), "PATH=%s", dir);
+    }
+    _putenv(buf);
+}
+#endif
+
 static bool cg_run_host_compiler(cct_codegen_t *cg) {
     if (!cg->intermediate_c_path || !cg->output_executable_path) {
         cg_reportf(cg, 0, 0, "internal codegen error: missing output paths");
         return false;
     }
 
-    const char *cc = cg->host_cc ? cg->host_cc : "cc";
+    const char *cc_env = getenv("CC");
+    const char *cc = cc_env ? cc_env : (cg->host_cc ? cg->host_cc : "cc");
+#ifdef _WIN32
+    cg_win32_prepend_cc_dir_to_path(cc);
+#endif
     char command[4096];
     snprintf(command, sizeof(command),
+#ifdef _WIN32
+             "%s -std=c11 -O2 -static -o \"%s\" \"%s\"",
+#else
              "%s -std=c11 -O2 -o \"%s\" \"%s\"",
+#endif
              cc, cg->output_executable_path, cg->intermediate_c_path);
 
     int rc = system(command);
     if (rc != 0) {
         cct_error_printf(CCT_ERROR_CODEGEN,
-                         "host compiler failed while building executable (command: %s)", command);
+                         "host compiler failed while building executable (command: %s)"
+#ifdef _WIN32
+                         "\n  hint: set the CC environment variable to the full path of gcc.exe"
+                         "\n  example: set CC=C:\\msys64\\ucrt64\\bin\\gcc.exe"
+#endif
+                         , command);
         cg->had_error = true;
         cg->error_count++;
         return false;
@@ -5146,7 +5189,11 @@ void cct_codegen_init(cct_codegen_t *cg, const char *filename) {
     memset(cg, 0, sizeof(*cg));
     cg->filename = filename;
     cg->backend_kind = CCT_CODEGEN_BACKEND_C_HOST;
+#ifdef _WIN32
+    cg->host_cc = "gcc";
+#else
     cg->host_cc = "cc";
+#endif
     cg->keep_intermediate = true;
 }
 

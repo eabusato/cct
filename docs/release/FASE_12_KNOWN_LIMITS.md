@@ -344,17 +344,26 @@ This document **explicitly lists** what is **not included** in FASE 12. It provi
 
 ### Windows Native Support
 
-**What's missing:**
-- Native Windows builds (MSVC, MinGW)
-- Windows path handling (`\` separators)
-- Windows-specific APIs
+**Status:** Implemented (FASE 12H post-freeze patch)
 
-**Current state:**
-- macOS/Linux only (POSIX assumed)
+Native Windows builds are now supported via **MSYS2 UCRT64 / MinGW-w64**.
 
-**Planned for:** FASE 13
+**Supported:**
+- Native `cct.exe` built with `mingw32-make`
+- Statically linked — no MinGW DLLs required at runtime
+- Host compiler invoked via `CC` environment variable
 
-**Workaround:** Use WSL (Windows Subsystem for Linux) for now
+**Setup (Windows CMD / PowerShell):**
+```cmd
+set CC=C:\msys64\ucrt64\bin\gcc.exe
+cct examples\hello.cct
+```
+
+**Not required inside MSYS2 UCRT64 terminal** — `gcc` is already in `PATH`.
+
+**Remaining Windows limitations:**
+- MSVC toolchain not tested
+- Cross-compilation not supported
 
 ---
 
@@ -553,7 +562,7 @@ FASE 12 does NOT optimize for:
 | **Stdlib**                | Network I/O, regex, JSON/XML, crypto, date/time       |
 | **Tooling**               | LSP, debugger, profiler, code coverage                |
 | **Build System**          | Package manager, remote dependencies, parallel builds |
-| **Platforms**             | Windows native, cross-compilation, WebAssembly        |
+| **Platforms**             | Cross-compilation, WebAssembly (Windows native now supported) |
 | **Performance**           | Parallel compilation, whole-program optimization      |
 
 **Total deferred features:** ~40+

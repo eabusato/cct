@@ -194,6 +194,10 @@ IS_WINDOWS := $(if $(findstring MINGW,$(UNAME_S)),1,$(if $(findstring MSYS,$(UNA
 IS_MACOS := $(if $(filter Darwin,$(UNAME_S)),1,0)
 IS_LINUX := $(if $(filter Linux,$(UNAME_S)),1,0)
 
+ifeq ($(IS_WINDOWS),1)
+  LDFLAGS += -static
+endif
+
 # Binary extension and wrapper script type
 ifeq ($(IS_WINDOWS),1)
   BIN_EXT = .exe
@@ -236,20 +240,29 @@ else
 endif
 
 RELEASE_NAME = cct-v$(VERSION)-$(PLATFORM)
-RELEASE_TARBALL = $(RELEASE_NAME).tar.gz
+ifeq ($(IS_WINDOWS),1)
+  RELEASE_ARCHIVE = $(RELEASE_NAME).zip
+else
+  RELEASE_ARCHIVE = $(RELEASE_NAME).tar.gz
+endif
 
-# Create release tarball with checksum
+# Create release archive with checksum
 release: dist
-	@echo "Creating release tarball: $(RELEASE_TARBALL)..."
-	@cd dist && tar czf ../$(RELEASE_TARBALL) cct
+	@echo "Creating release archive: $(RELEASE_ARCHIVE)..."
+ifeq ($(IS_WINDOWS),1)
+	@win_dest=$$(cygpath -w "$(CURDIR)/$(RELEASE_ARCHIVE)"); \
+	 cd dist && powershell.exe -NoProfile -Command "Compress-Archive -Path cct -DestinationPath '$$win_dest' -Force"
+else
+	@cd dist && tar czf ../$(RELEASE_ARCHIVE) cct
+endif
 	@echo "Generating release checksum..."
-	@$(SHA256) $(RELEASE_TARBALL) > $(RELEASE_TARBALL).sha256
+	@$(SHA256) $(RELEASE_ARCHIVE) > $(RELEASE_ARCHIVE).sha256
 	@echo "Release ready:"
-	@echo "  $(RELEASE_TARBALL)"
-	@echo "  $(RELEASE_TARBALL).sha256"
+	@echo "  $(RELEASE_ARCHIVE)"
+	@echo "  $(RELEASE_ARCHIVE).sha256"
 	@echo ""
 	@echo "Checksum:"
-	@cat $(RELEASE_TARBALL).sha256
+	@cat $(RELEASE_ARCHIVE).sha256
 
 # Install binary (requires sudo on Linux)
 install: $(TARGET)

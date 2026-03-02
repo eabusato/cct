@@ -283,6 +283,13 @@ static char* mod_read_file(const char *filename) {
 static char* mod_realpath_dup(const char *path) {
     if (!path || path[0] == '\0') return NULL;
 
+#ifdef _WIN32
+    char stack_buf[PATH_MAX];
+    if (_fullpath(stack_buf, path, PATH_MAX)) {
+        return mod_strdup(stack_buf);
+    }
+    return NULL;
+#else
     char *resolved = realpath(path, NULL);
     if (resolved) return resolved;
 
@@ -292,6 +299,7 @@ static char* mod_realpath_dup(const char *path) {
     }
 
     return NULL;
+#endif
 }
 
 static char* mod_dirname_dup(const char *path) {
