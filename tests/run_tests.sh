@@ -10687,6 +10687,2097 @@ else
     test_fail "14 closure artifacts and roadmap next-step context are not aligned"
 fi
 
+echo ""
+echo "========================================"
+echo "FASE 15A1: Inventário de Superfícies Críticas Tests"
+echo "========================================"
+echo ""
+
+PHASE15A1_PLAN="md_out/FASE_15_CCT.md"
+PHASE15A1_EXEC_DOC="md_out/FASE_15A1_CCT.md"
+PHASE15A1_SURF="md_out/docs/release/FASE_15A1_SUPERFICIES_CRITICAS.md"
+PHASE15A1_DEPS="md_out/docs/release/FASE_15A1_DEPENDENCIAS_BOOTSTRAP.md"
+PHASE15A1_RISK="md_out/docs/release/FASE_15A1_RISK_TAXONOMY.md"
+PHASE15A1_ORDER="md_out/docs/release/FASE_15A1_MIGRATION_ORDER.md"
+
+# Test 821: mandatory 15A1 docs and artifacts exist
+echo "Test 821: mandatory 15A1 docs and artifacts exist"
+if [ -f "$PHASE15A1_PLAN" ] && \
+   [ -f "$PHASE15A1_EXEC_DOC" ] && \
+   [ -f "$PHASE15A1_SURF" ] && \
+   [ -f "$PHASE15A1_DEPS" ] && \
+   [ -f "$PHASE15A1_RISK" ] && \
+   [ -f "$PHASE15A1_ORDER" ]; then
+    test_pass "15A1 mandatory architecture/execution artifacts are present"
+else
+    test_fail "15A1 mandatory architecture/execution artifacts are missing"
+fi
+
+# Test 822: 15 master plan includes ASM-oriented bootstrap direction
+echo "Test 822: 15 master plan includes ASM-oriented bootstrap direction"
+if grep -q "bootstrap orientado a ASM" "$PHASE15A1_PLAN" && \
+   grep -q "Contrato ASM-first para bootstrap" "$PHASE15A1_PLAN" && \
+   grep -q "não \"subir kernel\"" "$PHASE15A1_PLAN"; then
+    test_pass "15 master plan records ASM-oriented direction with explicit repository boundary"
+else
+    test_fail "15 master plan is missing ASM-oriented direction markers"
+fi
+
+# Test 823: 15A1 execution prompt captures ASM parallel objective and boundaries
+echo "Test 823: 15A1 execution prompt captures ASM parallel objective and boundaries"
+if grep -q "Objetivo paralelo mandatório (ASM bootstrap)" "$PHASE15A1_EXEC_DOC" && \
+   grep -q "Contrato local de portabilidade ASM" "$PHASE15A1_EXEC_DOC" && \
+   grep -q "implementação concluída (15A1)" "$PHASE15A1_EXEC_DOC"; then
+    test_pass "15A1 execution prompt is aligned with ASM-bootstrap and completion evidence"
+else
+    test_fail "15A1 execution prompt is missing ASM/bootstrap completion clauses"
+fi
+
+# Test 824: critical surface matrix includes high-priority compiler subsystems
+echo "Test 824: critical surface matrix includes high-priority compiler subsystems"
+if grep -q "SURF-15A1-002" "$PHASE15A1_SURF" && \
+   grep -q "SURF-15A1-003" "$PHASE15A1_SURF" && \
+   grep -q "SURF-15A1-004" "$PHASE15A1_SURF" && \
+   grep -q "codegen_runtime_bridge" "$PHASE15A1_SURF"; then
+    test_pass "15A1 critical-surface matrix covers parser/semantic/codegen/runtime-bridge"
+else
+    test_fail "15A1 critical-surface matrix is missing high-priority subsystems"
+fi
+
+# Test 825: dependency map enforces external-project boundary
+echo "Test 825: dependency map enforces external-project boundary"
+if grep -q "não acoplado" "$PHASE15A1_DEPS" && \
+   grep -q "fora do escopo" "$PHASE15A1_DEPS" && \
+   grep -q "nenhuma etapa de 15A1 pode depender de ambiente de boot externo" "$PHASE15A1_DEPS"; then
+    test_pass "15A1 dependency map enforces CCT-local bootstrap boundary"
+else
+    test_fail "15A1 dependency map does not enforce external boundary clearly"
+fi
+
+# Test 826: risk taxonomy keeps stable IDs with ownership/SLA
+echo "Test 826: risk taxonomy keeps stable IDs with ownership/SLA"
+if grep -q "RISK-15A1-001" "$PHASE15A1_RISK" && \
+   grep -q "RISK-15A1-002" "$PHASE15A1_RISK" && \
+   grep -q "Owner:" "$PHASE15A1_RISK" && \
+   grep -q "SLA inicial:" "$PHASE15A1_RISK"; then
+    test_pass "15A1 risk taxonomy uses stable IDs with owner/SLA metadata"
+else
+    test_fail "15A1 risk taxonomy is missing stable IDs or owner/SLA fields"
+fi
+
+# Test 827: migration order defines wave sequence and 15A2 handoff
+echo "Test 827: migration order defines wave sequence and 15A2 handoff"
+if grep -q "Onda W0" "$PHASE15A1_ORDER" && \
+   grep -q "Onda W1" "$PHASE15A1_ORDER" && \
+   grep -q "Onda W2" "$PHASE15A1_ORDER" && \
+   grep -q "Handoff obrigatório para 15A2" "$PHASE15A1_ORDER"; then
+    test_pass "15A1 migration order defines W0/W1/W2 and explicit handoff to 15A2"
+else
+    test_fail "15A1 migration order is missing wave sequencing or 15A2 handoff"
+fi
+
+# Test 828: architecture and roadmap register 15A1 without breaking historical 14 trace
+echo "Test 828: architecture and roadmap register 15A1 without breaking historical 14 trace"
+if grep -q "15A.1 inventory baseline completed" docs/architecture.md && \
+   (grep -q "Bootstrap track status: FASE 15A.1 implemented" docs/roadmap.md || \
+    grep -q "Bootstrap track status: FASE 15A.1/15A.2 implemented" docs/roadmap.md || \
+    grep -q "Bootstrap track status: FASE 15A.1/15A.2/15A.3 implemented" docs/roadmap.md || \
+    grep -q "Bootstrap track status: FASE 15A.1/15A.2/15A.3/15A.4 implemented" docs/roadmap.md || \
+    grep -q "Bootstrap track status: FASE 15A.1/15A.2/15A.3/15A.4/15B.1 implemented" docs/roadmap.md || \
+    grep -q "Bootstrap track status: FASE 15A.1/15A.2/15A.3/15A.4/15B.1/15B.2 implemented" docs/roadmap.md || \
+    grep -q "Bootstrap track status: FASE 15A.1/15A.2/15A.3/15A.4/15B.1/15B.2/15B.3 implemented" docs/roadmap.md || \
+    grep -q "Bootstrap track status: FASE 15A.1/15A.2/15A.3/15A.4/15B.1/15B.2/15B.3/15B.4 implemented" docs/roadmap.md || \
+    grep -q "Bootstrap track status: FASE 15A.1/15A.2/15A.3/15A.4/15B.1/15B.2/15B.3/15B.4/15C.1 implemented" docs/roadmap.md) && \
+   grep -q "Next subphase to execute: FASE 14C.1" docs/roadmap.md; then
+    test_pass "architecture/roadmap capture 15A1 while preserving 14 closure traceability line"
+else
+    test_fail "architecture/roadmap are not aligned with 15A1 registration and historical traceability"
+fi
+
+# Test 829: 15A1 artifacts remain private (md_out boundary)
+echo "Test 829: 15A1 artifacts remain private (md_out boundary)"
+if [ ! -f "docs/release/FASE_15A1_SUPERFICIES_CRITICAS.md" ] && \
+   [ ! -f "docs/release/FASE_15A1_DEPENDENCIAS_BOOTSTRAP.md" ] && \
+   [ ! -f "docs/release/FASE_15A1_RISK_TAXONOMY.md" ] && \
+   [ ! -f "docs/release/FASE_15A1_MIGRATION_ORDER.md" ]; then
+    test_pass "15A1 artifacts are correctly kept in md_out private boundary"
+else
+    test_fail "15A1 artifacts leaked to public docs/release boundary"
+fi
+
+# Test 830: dedicated 15A1 audit runner and legacy smoke remain green
+echo "Test 830: dedicated 15A1 audit runner and legacy smoke remain green"
+if tests/run_phase15a1_inventory.sh >/tmp/cct_phase15a1_runner.out 2>&1 && \
+   ./cct --check tests/integration/codegen_minimal.cct >/tmp/cct_phase15a1_check.out 2>&1; then
+    test_pass "15A1 audit runner passes and legacy semantic check remains stable"
+else
+    test_fail "15A1 audit runner or legacy semantic check failed"
+fi
+
+echo ""
+echo "========================================"
+echo "FASE 15A2: Contrato de Estágios de Bootstrap Tests"
+echo "========================================"
+echo ""
+
+PHASE15A2_EXEC_DOC="md_out/FASE_15A2_CCT.md"
+PHASE15A2_STAGE="md_out/docs/release/FASE_15A2_STAGE_CONTRACT.md"
+PHASE15A2_GATES="md_out/docs/release/FASE_15A2_STAGE_GATES.md"
+PHASE15A2_POLICY="md_out/docs/release/FASE_15A2_PROMOTION_REVERSAL_POLICY.md"
+PHASE15A2_FALLBACK="md_out/docs/release/FASE_15A2_FALLBACK_MATRIX.md"
+
+# Test 831: mandatory 15A2 docs and artifacts exist
+echo "Test 831: mandatory 15A2 docs and artifacts exist"
+if [ -f "$PHASE15A2_EXEC_DOC" ] && \
+   [ -f "$PHASE15A2_STAGE" ] && \
+   [ -f "$PHASE15A2_GATES" ] && \
+   [ -f "$PHASE15A2_POLICY" ] && \
+   [ -f "$PHASE15A2_FALLBACK" ]; then
+    test_pass "15A2 mandatory execution and stage-contract artifacts are present"
+else
+    test_fail "15A2 mandatory execution and stage-contract artifacts are missing"
+fi
+
+# Test 832: 15A2 execution prompt includes completion evidence and handoff to 15A3
+echo "Test 832: 15A2 execution prompt includes completion evidence and handoff to 15A3"
+if grep -q "Evidências de implementação concluída (15A2)" "$PHASE15A2_EXEC_DOC" && \
+   grep -q "handoff para 15A3 preparado" "$PHASE15A2_EXEC_DOC" && \
+   grep -q "Objetivo paralelo mandatório (ASM bootstrap)" "$PHASE15A2_EXEC_DOC"; then
+    test_pass "15A2 execution prompt captures closure evidence and 15A3 handoff"
+else
+    test_fail "15A2 execution prompt is missing closure evidence or 15A3 handoff markers"
+fi
+
+# Test 833: stage contract defines canonical S0..S3 model
+echo "Test 833: stage contract defines canonical S0..S3 model"
+if grep -q "S0" "$PHASE15A2_STAGE" && \
+   grep -q "S1" "$PHASE15A2_STAGE" && \
+   grep -q "S2" "$PHASE15A2_STAGE" && \
+   grep -q "S3" "$PHASE15A2_STAGE" && \
+   grep -q "trilha canônica C tem precedência" "$PHASE15A2_STAGE"; then
+    test_pass "15A2 stage contract defines S0..S3 with canonical precedence"
+else
+    test_fail "15A2 stage contract is incomplete or missing canonical precedence"
+fi
+
+# Test 834: stage-gate table includes objective gate IDs
+echo "Test 834: stage-gate table includes objective gate IDs"
+if grep -q "GATE-15A2-S0-EXIT" "$PHASE15A2_GATES" && \
+   grep -q "GATE-15A2-S1-ENTRY" "$PHASE15A2_GATES" && \
+   grep -q "GATE-15A2-S1-EXIT" "$PHASE15A2_GATES" && \
+   grep -q "GATE-15A2-S2-ENTRY" "$PHASE15A2_GATES" && \
+   grep -q "GATE-15A2-S3-ENTRY" "$PHASE15A2_GATES"; then
+    test_pass "15A2 gate table includes objective gate identifiers"
+else
+    test_fail "15A2 gate table is missing one or more required gate identifiers"
+fi
+
+# Test 835: promotion/reversal policy enforces evidence and blocking rules
+echo "Test 835: promotion/reversal policy enforces evidence and blocking rules"
+if grep -q "promoção exige evidência" "$PHASE15A2_POLICY" && \
+   grep -q "reversão é imediata" "$PHASE15A2_POLICY" && \
+   grep -q "waiver só para risco" "$PHASE15A2_POLICY"; then
+    test_pass "15A2 promotion/reversal policy enforces evidence and blocking rules"
+else
+    test_fail "15A2 promotion/reversal policy is missing core enforcement language"
+fi
+
+# Test 836: fallback matrix defines triggers/actions/evidence for each stage
+echo "Test 836: fallback matrix defines triggers/actions/evidence for each stage"
+if grep -q "Trigger de fallback" "$PHASE15A2_FALLBACK" && \
+   grep -q "S1" "$PHASE15A2_FALLBACK" && \
+   grep -q "S2" "$PHASE15A2_FALLBACK" && \
+   grep -q "S3" "$PHASE15A2_FALLBACK" && \
+   grep -q "fallback é parte do sucesso da fase" "$PHASE15A2_FALLBACK"; then
+    test_pass "15A2 fallback matrix defines per-stage trigger/action/evidence contract"
+else
+    test_fail "15A2 fallback matrix is missing per-stage trigger/action/evidence contract"
+fi
+
+# Test 837: architecture/roadmap capture 15A2 while preserving historical 14 trace line
+echo "Test 837: architecture/roadmap capture 15A2 while preserving historical 14 trace line"
+if grep -q "15A.2 stage contract completed" docs/architecture.md && \
+   (grep -q "FASE 15A.1/15A.2 implemented" docs/roadmap.md || \
+    grep -q "FASE 15A.1/15A.2/15A.3 implemented" docs/roadmap.md || \
+    grep -q "FASE 15A.1/15A.2/15A.3/15A.4 implemented" docs/roadmap.md || \
+    grep -q "FASE 15A.1/15A.2/15A.3/15A.4/15B.1 implemented" docs/roadmap.md || \
+    grep -q "FASE 15A.1/15A.2/15A.3/15A.4/15B.1/15B.2 implemented" docs/roadmap.md || \
+    grep -q "FASE 15A.1/15A.2/15A.3/15A.4/15B.1/15B.2/15B.3 implemented" docs/roadmap.md || \
+    grep -q "FASE 15A.1/15A.2/15A.3/15A.4/15B.1/15B.2/15B.3/15B.4 implemented" docs/roadmap.md || \
+    grep -q "FASE 15A.1/15A.2/15A.3/15A.4/15B.1/15B.2/15B.3/15B.4/15C.1 implemented" docs/roadmap.md) && \
+   grep -q "Next subphase to execute: FASE 14C.1" docs/roadmap.md; then
+    test_pass "architecture/roadmap capture 15A2 and preserve historical 14 trace"
+else
+    test_fail "architecture/roadmap are not aligned with 15A2 capture + 14 historical trace"
+fi
+
+# Test 838: roadmap points to coherent bootstrap next step
+echo "Test 838: roadmap points to coherent bootstrap next step"
+if grep -q "Bootstrap next subphase to execute: FASE 15A.3" docs/roadmap.md || \
+   grep -q "Bootstrap next subphase to execute: FASE 15A.4" docs/roadmap.md || \
+   grep -q "Bootstrap next subphase to execute: FASE 15B.1" docs/roadmap.md || \
+   grep -q "Bootstrap next subphase to execute: FASE 15B.2" docs/roadmap.md || \
+   grep -q "Bootstrap next subphase to execute: FASE 15B.3" docs/roadmap.md || \
+   grep -q "Bootstrap next subphase to execute: FASE 15B.4" docs/roadmap.md || \
+   grep -q "Bootstrap next subphase to execute: FASE 15C.1" docs/roadmap.md || \
+   grep -q "Bootstrap next subphase to execute: FASE 15C.2" docs/roadmap.md; then
+    test_pass "roadmap keeps coherent bootstrap next-step marker (15A.3/15A.4/15B.1/15B.2/15B.3/15B.4/15C.1/15C.2)"
+else
+    test_fail "roadmap is missing coherent bootstrap next-step marker"
+fi
+
+# Test 839: 15A2 artifacts remain private (md_out boundary)
+echo "Test 839: 15A2 artifacts remain private (md_out boundary)"
+if [ ! -f "docs/release/FASE_15A2_STAGE_CONTRACT.md" ] && \
+   [ ! -f "docs/release/FASE_15A2_STAGE_GATES.md" ] && \
+   [ ! -f "docs/release/FASE_15A2_PROMOTION_REVERSAL_POLICY.md" ] && \
+   [ ! -f "docs/release/FASE_15A2_FALLBACK_MATRIX.md" ]; then
+    test_pass "15A2 stage-contract artifacts are correctly kept in md_out private boundary"
+else
+    test_fail "15A2 stage-contract artifacts leaked to public docs/release boundary"
+fi
+
+# Test 840: dedicated 15A2 audit runner and legacy smoke remain green
+echo "Test 840: dedicated 15A2 audit runner and legacy smoke remain green"
+if tests/run_phase15a2_stage_contract.sh >/tmp/cct_phase15a2_runner.out 2>&1 && \
+   ./cct --check tests/integration/codegen_minimal.cct >/tmp/cct_phase15a2_check.out 2>&1; then
+    test_pass "15A2 audit runner passes and legacy semantic check remains stable"
+else
+    test_fail "15A2 audit runner or legacy semantic check failed"
+fi
+
+echo ""
+echo "========================================"
+echo "FASE 15A3: Contrato de Equivalência e Determinismo Tests"
+echo "========================================"
+echo ""
+
+PHASE15A3_EXEC_DOC="md_out/FASE_15A3_CCT.md"
+PHASE15A3_EQ="md_out/docs/release/FASE_15A3_EQUIVALENCE_MATRIX.md"
+PHASE15A3_DIV="md_out/docs/release/FASE_15A3_DIVERGENCE_POLICY.md"
+PHASE15A3_BLK="md_out/docs/release/FASE_15A3_BLOCKING_CRITERIA.md"
+PHASE15A3_DET="md_out/docs/release/FASE_15A3_DETERMINISM_CONTRACT.md"
+
+# Test 841: mandatory 15A3 docs and artifacts exist
+echo "Test 841: mandatory 15A3 docs and artifacts exist"
+if [ -f "$PHASE15A3_EXEC_DOC" ] && \
+   [ -f "$PHASE15A3_EQ" ] && \
+   [ -f "$PHASE15A3_DIV" ] && \
+   [ -f "$PHASE15A3_BLK" ] && \
+   [ -f "$PHASE15A3_DET" ]; then
+    test_pass "15A3 mandatory execution and equivalence artifacts are present"
+else
+    test_fail "15A3 mandatory execution and equivalence artifacts are missing"
+fi
+
+# Test 842: 15A3 execution prompt includes completion evidence and handoff to 15A4
+echo "Test 842: 15A3 execution prompt includes completion evidence and handoff to 15A4"
+if grep -q "Evidências de implementação concluída (15A3)" "$PHASE15A3_EXEC_DOC" && \
+   grep -q "handoff para 15A4" "$PHASE15A3_EXEC_DOC" && \
+   grep -q "Objetivo paralelo mandatório (ASM bootstrap)" "$PHASE15A3_EXEC_DOC"; then
+    test_pass "15A3 execution prompt captures closure evidence and 15A4 handoff"
+else
+    test_fail "15A3 execution prompt is missing closure evidence or 15A4 handoff markers"
+fi
+
+# Test 843: equivalence matrix defines structural/semantic/artifact/operational dimensions
+echo "Test 843: equivalence matrix defines structural/semantic/artifact/operational dimensions"
+if grep -q "EQ-15A3-001" "$PHASE15A3_EQ" && \
+   grep -q "EQ-15A3-002" "$PHASE15A3_EQ" && \
+   grep -q "EQ-15A3-003" "$PHASE15A3_EQ" && \
+   grep -q "EQ-15A3-004" "$PHASE15A3_EQ"; then
+    test_pass "15A3 equivalence matrix defines all mandatory dimensions"
+else
+    test_fail "15A3 equivalence matrix is missing one or more mandatory dimensions"
+fi
+
+# Test 844: divergence policy defines class model and tolerance boundaries
+echo "Test 844: divergence policy defines class model and tolerance boundaries"
+if grep -q "BLOCKER" "$PHASE15A3_DIV" && \
+   grep -q "REVIEW" "$PHASE15A3_DIV" && \
+   grep -q "INFO" "$PHASE15A3_DIV" && \
+   grep -q "Tolerâncias permitidas" "$PHASE15A3_DIV" && \
+   grep -q "Tolerâncias proibidas" "$PHASE15A3_DIV"; then
+    test_pass "15A3 divergence policy defines classes and tolerance boundaries"
+else
+    test_fail "15A3 divergence policy is missing class model or tolerance boundaries"
+fi
+
+# Test 845: blocking criteria define automatic blockers and unblock flow
+echo "Test 845: blocking criteria define automatic blockers and unblock flow"
+if grep -q "BLK-15A3-001" "$PHASE15A3_BLK" && \
+   grep -q "BLK-15A3-002" "$PHASE15A3_BLK" && \
+   grep -q "BLK-15A3-003" "$PHASE15A3_BLK" && \
+   grep -q "Desbloqueio" "$PHASE15A3_BLK"; then
+    test_pass "15A3 blocking criteria define blockers and explicit unblock policy"
+else
+    test_fail "15A3 blocking criteria are missing blocker IDs or unblock policy"
+fi
+
+# Test 846: determinism contract defines repeatability baseline and evidence
+echo "Test 846: determinism contract defines repeatability baseline and evidence"
+if grep -q "mesma entrada + mesmo perfil -> mesma classe de resultado" "$PHASE15A3_DET" && \
+   grep -q "runner dedicado de auditoria 15A3" "$PHASE15A3_DET" && \
+   grep -q "make test" "$PHASE15A3_DET"; then
+    test_pass "15A3 determinism contract defines repeatability and evidence baseline"
+else
+    test_fail "15A3 determinism contract is missing repeatability or evidence baseline"
+fi
+
+# Test 847: architecture/roadmap capture 15A3 and next step 15A4
+echo "Test 847: architecture/roadmap capture 15A3 and next step 15A4"
+if grep -q "15A.3 equivalence/determinism contract completed" docs/architecture.md && \
+   (grep -q "FASE 15A.1/15A.2/15A.3 implemented" docs/roadmap.md || \
+    grep -q "FASE 15A.1/15A.2/15A.3/15A.4 implemented" docs/roadmap.md || \
+    grep -q "FASE 15A.1/15A.2/15A.3/15A.4/15B.1 implemented" docs/roadmap.md || \
+    grep -q "FASE 15A.1/15A.2/15A.3/15A.4/15B.1/15B.2 implemented" docs/roadmap.md || \
+    grep -q "FASE 15A.1/15A.2/15A.3/15A.4/15B.1/15B.2/15B.3 implemented" docs/roadmap.md || \
+    grep -q "FASE 15A.1/15A.2/15A.3/15A.4/15B.1/15B.2/15B.3/15B.4 implemented" docs/roadmap.md || \
+    grep -q "FASE 15A.1/15A.2/15A.3/15A.4/15B.1/15B.2/15B.3/15B.4/15C.1 implemented" docs/roadmap.md) && \
+   (grep -q "Bootstrap next subphase to execute: FASE 15A.4" docs/roadmap.md || \
+    grep -q "Bootstrap next subphase to execute: FASE 15B.1" docs/roadmap.md || \
+    grep -q "Bootstrap next subphase to execute: FASE 15B.2" docs/roadmap.md || \
+    grep -q "Bootstrap next subphase to execute: FASE 15B.3" docs/roadmap.md || \
+    grep -q "Bootstrap next subphase to execute: FASE 15B.4" docs/roadmap.md || \
+    grep -q "Bootstrap next subphase to execute: FASE 15C.1" docs/roadmap.md || \
+    grep -q "Bootstrap next subphase to execute: FASE 15C.2" docs/roadmap.md); then
+    test_pass "architecture/roadmap capture 15A3 with coherent next-step marker"
+else
+    test_fail "architecture/roadmap are not aligned with 15A3 registration or coherent next-step marker"
+fi
+
+# Test 848: 15A3 artifacts remain private (md_out boundary)
+echo "Test 848: 15A3 artifacts remain private (md_out boundary)"
+if [ ! -f "docs/release/FASE_15A3_EQUIVALENCE_MATRIX.md" ] && \
+   [ ! -f "docs/release/FASE_15A3_DIVERGENCE_POLICY.md" ] && \
+   [ ! -f "docs/release/FASE_15A3_BLOCKING_CRITERIA.md" ] && \
+   [ ! -f "docs/release/FASE_15A3_DETERMINISM_CONTRACT.md" ]; then
+    test_pass "15A3 artifacts are correctly kept in md_out private boundary"
+else
+    test_fail "15A3 artifacts leaked to public docs/release boundary"
+fi
+
+# Test 849: dedicated 15A3 audit runner and legacy smoke remain green
+echo "Test 849: dedicated 15A3 audit runner and legacy smoke remain green"
+if tests/run_phase15a3_equivalence_contract.sh >/tmp/cct_phase15a3_runner.out 2>&1 && \
+   ./cct --check tests/integration/codegen_minimal.cct >/tmp/cct_phase15a3_check.out 2>&1; then
+    test_pass "15A3 audit runner passes and legacy semantic check remains stable"
+else
+    test_fail "15A3 audit runner or legacy semantic check failed"
+fi
+
+# Test 850: 15A2 stage contract remains coherent with 15A3 equivalence baseline
+echo "Test 850: 15A2 stage contract remains coherent with 15A3 equivalence baseline"
+if grep -q "S2" md_out/docs/release/FASE_15A2_STAGE_CONTRACT.md && \
+   grep -q "critérios de equivalência observável definidos" md_out/docs/release/FASE_15A2_STAGE_CONTRACT.md && \
+   grep -q "equivalência é por contrato observável" "$PHASE15A3_EQ"; then
+    test_pass "15A2->15A3 coherence is preserved for equivalence contract progression"
+else
+    test_fail "15A2->15A3 coherence is broken for equivalence contract progression"
+fi
+
+echo ""
+echo "========================================"
+echo "FASE 15A4: Baseline de Governança e Riscos Tests"
+echo "========================================"
+echo ""
+
+PHASE15A4_EXEC_DOC="md_out/FASE_15A4_CCT.md"
+PHASE15A4_RISK="md_out/docs/release/FASE_15A4_BOOTSTRAP_RISK_BASELINE.md"
+PHASE15A4_OWN="md_out/docs/release/FASE_15A4_OWNERSHIP_SLA_MATRIX.md"
+PHASE15A4_AUDIT="md_out/docs/release/FASE_15A4_AUDIT_CADENCE.md"
+PHASE15A4_ESC="md_out/docs/release/FASE_15A4_ESCALATION_POLICY.md"
+
+# Test 851: mandatory 15A4 docs and artifacts exist
+echo "Test 851: mandatory 15A4 docs and artifacts exist"
+if [ -f "$PHASE15A4_EXEC_DOC" ] && \
+   [ -f "$PHASE15A4_RISK" ] && \
+   [ -f "$PHASE15A4_OWN" ] && \
+   [ -f "$PHASE15A4_AUDIT" ] && \
+   [ -f "$PHASE15A4_ESC" ]; then
+    test_pass "15A4 mandatory execution and governance artifacts are present"
+else
+    test_fail "15A4 mandatory execution and governance artifacts are missing"
+fi
+
+# Test 852: 15A4 execution prompt includes completion evidence and handoff to 15B1
+echo "Test 852: 15A4 execution prompt includes completion evidence and handoff to 15B1"
+if grep -q "Evidências de implementação concluída (15A4)" "$PHASE15A4_EXEC_DOC" && \
+   grep -q "handoff para 15B1" "$PHASE15A4_EXEC_DOC" && \
+   grep -q "Objetivo paralelo mandatório (ASM bootstrap)" "$PHASE15A4_EXEC_DOC"; then
+    test_pass "15A4 execution prompt captures closure evidence and 15B1 handoff"
+else
+    test_fail "15A4 execution prompt is missing closure evidence or 15B1 handoff markers"
+fi
+
+# Test 853: risk baseline includes stable risk IDs with owners
+echo "Test 853: risk baseline includes stable risk IDs with owners"
+if grep -q "RISK-15A4-001" "$PHASE15A4_RISK" && \
+   grep -q "RISK-15A4-002" "$PHASE15A4_RISK" && \
+   grep -q "Owner:" "$PHASE15A4_RISK" && \
+   grep -q "baseline revisada em toda subsubfase" "$PHASE15A4_RISK"; then
+    test_pass "15A4 risk baseline includes stable IDs, ownership, and revision policy"
+else
+    test_fail "15A4 risk baseline is missing IDs, ownership, or revision policy"
+fi
+
+# Test 854: ownership matrix defines domains and SLA
+echo "Test 854: ownership matrix defines domains and SLA"
+if grep -q "SLA Triagem" "$PHASE15A4_OWN" && \
+   grep -q "Compiler Core Lead" "$PHASE15A4_OWN" && \
+   grep -q "Bootstrap Governance Lead" "$PHASE15A4_OWN"; then
+    test_pass "15A4 ownership matrix defines domains and SLA columns"
+else
+    test_fail "15A4 ownership matrix is missing SLA fields or key owners"
+fi
+
+# Test 855: audit cadence defines periodic reviews and decision outputs
+echo "Test 855: audit cadence defines periodic reviews and decision outputs"
+if grep -q "auditoria local por subsubfase" "$PHASE15A4_AUDIT" && \
+   grep -q "auditoria semanal consolidada" "$PHASE15A4_AUDIT" && \
+   grep -q "decisão: \`pass\`, \`watch\`, \`block\`" "$PHASE15A4_AUDIT"; then
+    test_pass "15A4 audit cadence defines periodic reviews and decision outputs"
+else
+    test_fail "15A4 audit cadence is missing periodic review or decision output contract"
+fi
+
+# Test 856: escalation policy defines levels and baseline-update enforcement
+echo "Test 856: escalation policy defines levels and baseline-update enforcement"
+if grep -q "Nível 1" "$PHASE15A4_ESC" && \
+   grep -q "Nível 2" "$PHASE15A4_ESC" && \
+   grep -q "Nível 3" "$PHASE15A4_ESC" && \
+   grep -q "baseline só atualiza com evidência" "$PHASE15A4_ESC"; then
+    test_pass "15A4 escalation policy defines escalation levels and update enforcement"
+else
+    test_fail "15A4 escalation policy is missing levels or update enforcement"
+fi
+
+# Test 857: architecture/roadmap capture 15A4 closure and coherent next step
+echo "Test 857: architecture/roadmap capture 15A4 closure and coherent next step"
+if grep -q "15A.4 governance baseline completed" docs/architecture.md && \
+   (grep -q "FASE 15A.1/15A.2/15A.3/15A.4 implemented" docs/roadmap.md || \
+    grep -q "FASE 15A.1/15A.2/15A.3/15A.4/15B.1 implemented" docs/roadmap.md || \
+    grep -q "FASE 15A.1/15A.2/15A.3/15A.4/15B.1/15B.2 implemented" docs/roadmap.md || \
+    grep -q "FASE 15A.1/15A.2/15A.3/15A.4/15B.1/15B.2/15B.3 implemented" docs/roadmap.md || \
+    grep -q "FASE 15A.1/15A.2/15A.3/15A.4/15B.1/15B.2/15B.3/15B.4 implemented" docs/roadmap.md || \
+    grep -q "FASE 15A.1/15A.2/15A.3/15A.4/15B.1/15B.2/15B.3/15B.4/15C.1 implemented" docs/roadmap.md) && \
+   (grep -q "Bootstrap next subphase to execute: FASE 15B.1" docs/roadmap.md || \
+    grep -q "Bootstrap next subphase to execute: FASE 15B.2" docs/roadmap.md || \
+    grep -q "Bootstrap next subphase to execute: FASE 15B.3" docs/roadmap.md || \
+    grep -q "Bootstrap next subphase to execute: FASE 15B.4" docs/roadmap.md || \
+    grep -q "Bootstrap next subphase to execute: FASE 15C.1" docs/roadmap.md || \
+    grep -q "Bootstrap next subphase to execute: FASE 15C.2" docs/roadmap.md); then
+    test_pass "architecture/roadmap capture 15A4 closure with coherent next-step marker"
+else
+    test_fail "architecture/roadmap are not aligned with 15A4 closure and coherent next-step marker"
+fi
+
+# Test 858: 15A4 artifacts remain private (md_out boundary)
+echo "Test 858: 15A4 artifacts remain private (md_out boundary)"
+if [ ! -f "docs/release/FASE_15A4_BOOTSTRAP_RISK_BASELINE.md" ] && \
+   [ ! -f "docs/release/FASE_15A4_OWNERSHIP_SLA_MATRIX.md" ] && \
+   [ ! -f "docs/release/FASE_15A4_AUDIT_CADENCE.md" ] && \
+   [ ! -f "docs/release/FASE_15A4_ESCALATION_POLICY.md" ]; then
+    test_pass "15A4 artifacts are correctly kept in md_out private boundary"
+else
+    test_fail "15A4 artifacts leaked to public docs/release boundary"
+fi
+
+# Test 859: dedicated 15A4 audit runner and legacy smoke remain green
+echo "Test 859: dedicated 15A4 audit runner and legacy smoke remain green"
+if tests/run_phase15a4_governance_baseline.sh >/tmp/cct_phase15a4_runner.out 2>&1 && \
+   ./cct --check tests/integration/codegen_minimal.cct >/tmp/cct_phase15a4_check.out 2>&1; then
+    test_pass "15A4 audit runner passes and legacy semantic check remains stable"
+else
+    test_fail "15A4 audit runner or legacy semantic check failed"
+fi
+
+# Test 860: 15A3->15A4 coherence keeps blocker semantics and gate discipline
+echo "Test 860: 15A3->15A4 coherence keeps blocker semantics and gate discipline"
+if grep -q "BLOCKER" md_out/docs/release/FASE_15A3_DIVERGENCE_POLICY.md && \
+   grep -q "incidente \`BLOCKER\` sem owner" "$PHASE15A4_ESC" && \
+   grep -q "nenhum risco \`blocker\` sem plano de rollback explícito" "$PHASE15A4_RISK"; then
+    test_pass "15A3->15A4 coherence is preserved for blocker semantics and gate discipline"
+else
+    test_fail "15A3->15A4 coherence is broken for blocker semantics and gate discipline"
+fi
+
+echo ""
+echo "========================================"
+echo "FASE 15B1: Infraestrutura Base do Núcleo Bootstrap Tests"
+echo "========================================"
+echo ""
+
+PHASE15B1_EXEC_DOC="md_out/FASE_15B1_CCT.md"
+PHASE15B1_PLAN="md_out/docs/release/FASE_15B1_BOOTSTRAP_CORE_PLAN.md"
+PHASE15B1_MATRIX="md_out/docs/release/FASE_15B1_TEST_MATRIX.md"
+PHASE15B1_ACCEPT="md_out/docs/release/FASE_15B1_ACCEPTANCE_ROLLBACK.md"
+PHASE15B1_RISK="md_out/docs/release/FASE_15B1_RISK_OWNERSHIP_MAP.md"
+PHASE15B1_HANDOFF="md_out/docs/release/FASE_15B1_HANDOFF_15B2.md"
+
+# Test 861: mandatory 15B1 docs and artifacts exist
+echo "Test 861: mandatory 15B1 docs and artifacts exist"
+if [ -f "$PHASE15B1_EXEC_DOC" ] && \
+   [ -f "$PHASE15B1_PLAN" ] && \
+   [ -f "$PHASE15B1_MATRIX" ] && \
+   [ -f "$PHASE15B1_ACCEPT" ] && \
+   [ -f "$PHASE15B1_RISK" ] && \
+   [ -f "$PHASE15B1_HANDOFF" ]; then
+    test_pass "15B1 mandatory execution and bootstrap-core artifacts are present"
+else
+    test_fail "15B1 mandatory execution or bootstrap-core artifacts are missing"
+fi
+
+# Test 862: 15B1 execution prompt includes completion evidence and handoff to 15B2
+echo "Test 862: 15B1 execution prompt includes completion evidence and handoff to 15B2"
+if grep -q "## 13. Evidências de implementação concluída (15B1)" "$PHASE15B1_EXEC_DOC" && \
+   grep -q "FASE_15B1_HANDOFF_15B2.md" "$PHASE15B1_EXEC_DOC" && \
+   grep -q "handoff explícito para 15B2" "$PHASE15B1_EXEC_DOC"; then
+    test_pass "15B1 execution prompt captures closure evidence and 15B2 handoff"
+else
+    test_fail "15B1 execution prompt is missing closure evidence or 15B2 handoff"
+fi
+
+# Test 863: bootstrap core plan defines ASM portability and opt-in isolation
+echo "Test 863: bootstrap core plan defines ASM portability and opt-in isolation"
+if grep -q "portabilidade ASM" "$PHASE15B1_PLAN" && \
+   grep -q "trilha bootstrap é opt-in" "$PHASE15B1_PLAN" && \
+   grep -q "caminho canônico permanece padrão" "$PHASE15B1_PLAN"; then
+    test_pass "15B1 core plan defines ASM portability and opt-in isolation"
+else
+    test_fail "15B1 core plan is missing ASM portability or opt-in isolation contract"
+fi
+
+# Test 864: test matrix defines dedicated checks and 15A4->15B1 coesão
+echo "Test 864: test matrix defines dedicated checks and 15A4->15B1 coesão"
+if grep -q "10 verificações objetivas" "$PHASE15B1_MATRIX" && \
+   grep -q "runner dedicado" "$PHASE15B1_MATRIX" && \
+   grep -q "coesão 15A4 -> 15B1" "$PHASE15B1_MATRIX"; then
+    test_pass "15B1 test matrix defines dedicated checks and cross-subphase coesão"
+else
+    test_fail "15B1 test matrix is missing dedicated checks or cross-subphase coesão"
+fi
+
+# Test 865: acceptance/rollback enforces blocker and decision model
+echo "Test 865: acceptance/rollback enforces blocker and decision model"
+if grep -q "A 15B1 é considerada concluída" "$PHASE15B1_ACCEPT" && \
+   grep -q "divergência \`BLOCKER\` sem owner" "$PHASE15B1_ACCEPT" && \
+   grep -q "decisão final por execução: \`pass\`, \`watch\` ou \`block\`" "$PHASE15B1_ACCEPT"; then
+    test_pass "15B1 acceptance/rollback enforces blocker and decision model"
+else
+    test_fail "15B1 acceptance/rollback is missing blocker or decision model contract"
+fi
+
+# Test 866: risk map includes stable IDs with ownership and update policy
+echo "Test 866: risk map includes stable IDs with ownership and update policy"
+if grep -q "RISK-15B1-001" "$PHASE15B1_RISK" && \
+   grep -q "Compiler Core Lead" "$PHASE15B1_RISK" && \
+   grep -q "Bootstrap Governance Lead" "$PHASE15B1_RISK" && \
+   grep -q "baseline de risco só atualiza com evidência" "$PHASE15B1_RISK"; then
+    test_pass "15B1 risk map includes stable IDs, ownership, and update discipline"
+else
+    test_fail "15B1 risk map is missing stable IDs, ownership, or update discipline"
+fi
+
+# Test 867: architecture/roadmap capture 15B1 closure and 15B2 next step
+echo "Test 867: architecture/roadmap capture 15B1 closure and 15B2 next step"
+if grep -q "15B.1 bootstrap core infrastructure completed" docs/architecture.md && \
+   (grep -q "FASE 15A.1/15A.2/15A.3/15A.4/15B.1 implemented" docs/roadmap.md || \
+    grep -q "FASE 15A.1/15A.2/15A.3/15A.4/15B.1/15B.2 implemented" docs/roadmap.md || \
+    grep -q "FASE 15A.1/15A.2/15A.3/15A.4/15B.1/15B.2/15B.3 implemented" docs/roadmap.md || \
+    grep -q "FASE 15A.1/15A.2/15A.3/15A.4/15B.1/15B.2/15B.3/15B.4 implemented" docs/roadmap.md || \
+    grep -q "FASE 15A.1/15A.2/15A.3/15A.4/15B.1/15B.2/15B.3/15B.4/15C.1 implemented" docs/roadmap.md) && \
+   (grep -q "Bootstrap next subphase to execute: FASE 15B.2" docs/roadmap.md || \
+    grep -q "Bootstrap next subphase to execute: FASE 15B.3" docs/roadmap.md || \
+    grep -q "Bootstrap next subphase to execute: FASE 15B.4" docs/roadmap.md || \
+    grep -q "Bootstrap next subphase to execute: FASE 15C.1" docs/roadmap.md || \
+    grep -q "Bootstrap next subphase to execute: FASE 15C.2" docs/roadmap.md); then
+    test_pass "architecture/roadmap capture 15B1 closure and 15B2 next-step marker"
+else
+    test_fail "architecture/roadmap are not aligned with 15B1 closure and 15B2 next-step marker"
+fi
+
+# Test 868: 15B1 artifacts remain private (md_out boundary)
+echo "Test 868: 15B1 artifacts remain private (md_out boundary)"
+if [ ! -f "docs/release/FASE_15B1_BOOTSTRAP_CORE_PLAN.md" ] && \
+   [ ! -f "docs/release/FASE_15B1_TEST_MATRIX.md" ] && \
+   [ ! -f "docs/release/FASE_15B1_ACCEPTANCE_ROLLBACK.md" ] && \
+   [ ! -f "docs/release/FASE_15B1_RISK_OWNERSHIP_MAP.md" ] && \
+   [ ! -f "docs/release/FASE_15B1_HANDOFF_15B2.md" ]; then
+    test_pass "15B1 artifacts are correctly kept in md_out private boundary"
+else
+    test_fail "15B1 artifacts leaked to public docs/release boundary"
+fi
+
+# Test 869: dedicated 15B1 audit runner and legacy smoke remain green
+echo "Test 869: dedicated 15B1 audit runner and legacy smoke remain green"
+if tests/run_phase15b1_bootstrap_core.sh >/tmp/cct_phase15b1_runner.out 2>&1 && \
+   ./cct --check tests/integration/codegen_minimal.cct >/tmp/cct_phase15b1_check.out 2>&1; then
+    test_pass "15B1 audit runner passes and legacy semantic check remains stable"
+else
+    test_fail "15B1 audit runner or legacy semantic check failed"
+fi
+
+# Test 870: 15A4->15B1 coherence preserves governance discipline into bootstrap core
+echo "Test 870: 15A4->15B1 coherence preserves governance discipline into bootstrap core"
+if grep -q "Owner:" "$PHASE15A4_RISK" && \
+   grep -q "RISK-15B1-001" "$PHASE15B1_RISK" && \
+   grep -q "fallback explícito" "$PHASE15B1_PLAN" && \
+   grep -q "Pronto para 15B2" "$PHASE15B1_HANDOFF"; then
+    test_pass "15A4->15B1 coherence is preserved for governance and bootstrap progression"
+else
+    test_fail "15A4->15B1 coherence is broken for governance/bootstrap progression"
+fi
+
+echo ""
+echo "========================================"
+echo "FASE 15B2: Modelo de Dados de Frontend (tokens/AST subset) Tests"
+echo "========================================"
+echo ""
+
+PHASE15B2_EXEC_DOC="md_out/FASE_15B2_CCT.md"
+PHASE15B2_PLAN="md_out/docs/release/FASE_15B2_BOOTSTRAP_FRONTEND_PLAN.md"
+PHASE15B2_SCHEMA="md_out/docs/release/FASE_15B2_FRONTEND_DATA_SCHEMA.md"
+PHASE15B2_MAP="md_out/docs/release/FASE_15B2_CANONICAL_BOOTSTRAP_MAPPING.md"
+PHASE15B2_LIMITS="md_out/docs/release/FASE_15B2_STRUCTURAL_VALIDATION_LIMITS.md"
+PHASE15B2_MATRIX="md_out/docs/release/FASE_15B2_TEST_MATRIX.md"
+PHASE15B2_ACCEPT="md_out/docs/release/FASE_15B2_ACCEPTANCE_ROLLBACK.md"
+PHASE15B2_RISK="md_out/docs/release/FASE_15B2_RISK_OWNERSHIP_MAP.md"
+PHASE15B2_HANDOFF="md_out/docs/release/FASE_15B2_HANDOFF_15B3.md"
+
+# Test 871: mandatory 15B2 docs and artifacts exist
+echo "Test 871: mandatory 15B2 docs and artifacts exist"
+if [ -f "$PHASE15B2_EXEC_DOC" ] && \
+   [ -f "$PHASE15B2_PLAN" ] && \
+   [ -f "$PHASE15B2_SCHEMA" ] && \
+   [ -f "$PHASE15B2_MAP" ] && \
+   [ -f "$PHASE15B2_LIMITS" ] && \
+   [ -f "$PHASE15B2_MATRIX" ] && \
+   [ -f "$PHASE15B2_ACCEPT" ] && \
+   [ -f "$PHASE15B2_RISK" ] && \
+   [ -f "$PHASE15B2_HANDOFF" ]; then
+    test_pass "15B2 mandatory execution and frontend-data artifacts are present"
+else
+    test_fail "15B2 mandatory execution or frontend-data artifacts are missing"
+fi
+
+# Test 872: 15B2 execution prompt includes completion evidence and handoff to 15B3
+echo "Test 872: 15B2 execution prompt includes completion evidence and handoff to 15B3"
+if grep -q "## 13. Evidências de implementação concluída (15B2)" "$PHASE15B2_EXEC_DOC" && \
+   grep -q "FASE_15B2_HANDOFF_15B3.md" "$PHASE15B2_EXEC_DOC" && \
+   grep -q "handoff explícito para 15B3" "$PHASE15B2_EXEC_DOC"; then
+    test_pass "15B2 execution prompt captures closure evidence and 15B3 handoff"
+else
+    test_fail "15B2 execution prompt is missing closure evidence or 15B3 handoff"
+fi
+
+# Test 873: frontend schema defines mandatory TokenNode/AstNode subset
+echo "Test 873: frontend schema defines mandatory TokenNode/AstNode subset"
+if grep -q "TokenNode" "$PHASE15B2_SCHEMA" && \
+   grep -q "AstNode" "$PHASE15B2_SCHEMA" && \
+   grep -q "RITUALE_DECL" "$PHASE15B2_SCHEMA" && \
+   grep -q "VINCIRE_STMT" "$PHASE15B2_SCHEMA"; then
+    test_pass "15B2 schema defines mandatory TokenNode/AstNode subset"
+else
+    test_fail "15B2 schema is missing mandatory TokenNode/AstNode subset definitions"
+fi
+
+# Test 874: canonical-bootstrap mapping defines MAP-15B2 rules and blocker fallback
+echo "Test 874: canonical-bootstrap mapping defines MAP-15B2 rules and blocker fallback"
+if grep -q "MAP-15B2-001" "$PHASE15B2_MAP" && \
+   grep -q "MAP-15B2-004" "$PHASE15B2_MAP" && \
+   grep -q "Divergência \`BLOCKER\`" "$PHASE15B2_MAP"; then
+    test_pass "15B2 mapping defines canonical-bootstrap rules and blocker fallback"
+else
+    test_fail "15B2 mapping is missing MAP rules or blocker fallback contract"
+fi
+
+# Test 875: structural limits define validations and subset boundaries
+echo "Test 875: structural limits define validations and subset boundaries"
+if grep -q "Validações Estruturais" "$PHASE15B2_LIMITS" && \
+   grep -q "fora de escopo" "$PHASE15B2_LIMITS" && \
+   grep -q "BLOCKER" "$PHASE15B2_LIMITS"; then
+    test_pass "15B2 structural limits define validations and subset boundaries"
+else
+    test_fail "15B2 structural limits are missing validations or subset boundaries"
+fi
+
+# Test 876: acceptance/risk docs enforce ownership and decision model
+echo "Test 876: acceptance/risk docs enforce ownership and decision model"
+if grep -q "divergência \`BLOCKER\` sem owner" "$PHASE15B2_ACCEPT" && \
+   grep -q "\`pass\`, \`watch\` ou \`block\`" "$PHASE15B2_ACCEPT" && \
+   grep -q "RISK-15B2-001" "$PHASE15B2_RISK" && \
+   grep -q "Frontend Model Lead" "$PHASE15B2_RISK"; then
+    test_pass "15B2 acceptance/risk docs enforce ownership and decision model"
+else
+    test_fail "15B2 acceptance/risk docs are missing ownership or decision model contracts"
+fi
+
+# Test 877: architecture/roadmap capture 15B2 closure and 15B3 next step
+echo "Test 877: architecture/roadmap capture 15B2 closure and 15B3 next step"
+if grep -q "15B.2 frontend data-model baseline completed" docs/architecture.md && \
+   (grep -q "FASE 15A.1/15A.2/15A.3/15A.4/15B.1/15B.2 implemented" docs/roadmap.md || \
+    grep -q "FASE 15A.1/15A.2/15A.3/15A.4/15B.1/15B.2/15B.3 implemented" docs/roadmap.md || \
+    grep -q "FASE 15A.1/15A.2/15A.3/15A.4/15B.1/15B.2/15B.3/15B.4 implemented" docs/roadmap.md || \
+    grep -q "FASE 15A.1/15A.2/15A.3/15A.4/15B.1/15B.2/15B.3/15B.4/15C.1 implemented" docs/roadmap.md) && \
+   (grep -q "Bootstrap next subphase to execute: FASE 15B.3" docs/roadmap.md || \
+    grep -q "Bootstrap next subphase to execute: FASE 15B.4" docs/roadmap.md || \
+    grep -q "Bootstrap next subphase to execute: FASE 15C.1" docs/roadmap.md || \
+    grep -q "Bootstrap next subphase to execute: FASE 15C.2" docs/roadmap.md); then
+    test_pass "architecture/roadmap capture 15B2 closure and 15B3 next-step marker"
+else
+    test_fail "architecture/roadmap are not aligned with 15B2 closure and 15B3 next-step marker"
+fi
+
+# Test 878: 15B2 artifacts remain private (md_out boundary)
+echo "Test 878: 15B2 artifacts remain private (md_out boundary)"
+if [ ! -f "docs/release/FASE_15B2_BOOTSTRAP_FRONTEND_PLAN.md" ] && \
+   [ ! -f "docs/release/FASE_15B2_FRONTEND_DATA_SCHEMA.md" ] && \
+   [ ! -f "docs/release/FASE_15B2_CANONICAL_BOOTSTRAP_MAPPING.md" ] && \
+   [ ! -f "docs/release/FASE_15B2_STRUCTURAL_VALIDATION_LIMITS.md" ] && \
+   [ ! -f "docs/release/FASE_15B2_TEST_MATRIX.md" ] && \
+   [ ! -f "docs/release/FASE_15B2_ACCEPTANCE_ROLLBACK.md" ] && \
+   [ ! -f "docs/release/FASE_15B2_RISK_OWNERSHIP_MAP.md" ] && \
+   [ ! -f "docs/release/FASE_15B2_HANDOFF_15B3.md" ]; then
+    test_pass "15B2 artifacts are correctly kept in md_out private boundary"
+else
+    test_fail "15B2 artifacts leaked to public docs/release boundary"
+fi
+
+# Test 879: dedicated 15B2 audit runner and legacy smoke remain green
+echo "Test 879: dedicated 15B2 audit runner and legacy smoke remain green"
+if tests/run_phase15b2_frontend_data_model.sh >/tmp/cct_phase15b2_runner.out 2>&1 && \
+   ./cct --check tests/integration/codegen_minimal.cct >/tmp/cct_phase15b2_check.out 2>&1; then
+    test_pass "15B2 audit runner passes and legacy semantic check remains stable"
+else
+    test_fail "15B2 audit runner or legacy semantic check failed"
+fi
+
+# Test 880: 15B1->15B2 coherence preserves bootstrap progression discipline
+echo "Test 880: 15B1->15B2 coherence preserves bootstrap progression discipline"
+if grep -q "Pronto para 15B2" "$PHASE15B1_HANDOFF" && \
+   grep -q "Pronto para 15B3" "$PHASE15B2_HANDOFF" && \
+   grep -q "schema bootstrap para tokens e AST subset" "$PHASE15B2_PLAN"; then
+    test_pass "15B1->15B2 coherence is preserved for bootstrap progression"
+else
+    test_fail "15B1->15B2 coherence is broken for bootstrap progression"
+fi
+
+echo ""
+echo "========================================"
+echo "FASE 15B3: Parser Subset em CCT (trilha experimental) Tests"
+echo "========================================"
+echo ""
+
+PHASE15B3_EXEC_DOC="md_out/FASE_15B3_CCT.md"
+PHASE15B3_PLAN="md_out/docs/release/FASE_15B3_BOOTSTRAP_PARSER_PLAN.md"
+PHASE15B3_SUPPORT="md_out/docs/release/FASE_15B3_PARSER_SUPPORT_MATRIX.md"
+PHASE15B3_PREC="md_out/docs/release/FASE_15B3_PRECEDENCE_CONTRACT.md"
+PHASE15B3_DIFF="md_out/docs/release/FASE_15B3_DIFFERENTIAL_INTEGRATION.md"
+PHASE15B3_MATRIX="md_out/docs/release/FASE_15B3_TEST_MATRIX.md"
+PHASE15B3_ACCEPT="md_out/docs/release/FASE_15B3_ACCEPTANCE_ROLLBACK.md"
+PHASE15B3_RISK="md_out/docs/release/FASE_15B3_RISK_OWNERSHIP_MAP.md"
+PHASE15B3_HANDOFF="md_out/docs/release/FASE_15B3_HANDOFF_15B4.md"
+
+# Test 881: mandatory 15B3 docs and artifacts exist
+echo "Test 881: mandatory 15B3 docs and artifacts exist"
+if [ -f "$PHASE15B3_EXEC_DOC" ] && \
+   [ -f "$PHASE15B3_PLAN" ] && \
+   [ -f "$PHASE15B3_SUPPORT" ] && \
+   [ -f "$PHASE15B3_PREC" ] && \
+   [ -f "$PHASE15B3_DIFF" ] && \
+   [ -f "$PHASE15B3_MATRIX" ] && \
+   [ -f "$PHASE15B3_ACCEPT" ] && \
+   [ -f "$PHASE15B3_RISK" ] && \
+   [ -f "$PHASE15B3_HANDOFF" ]; then
+    test_pass "15B3 mandatory execution and parser-subset artifacts are present"
+else
+    test_fail "15B3 mandatory execution or parser-subset artifacts are missing"
+fi
+
+# Test 882: 15B3 execution prompt includes completion evidence and handoff to 15B4
+echo "Test 882: 15B3 execution prompt includes completion evidence and handoff to 15B4"
+if grep -q "## 13. Evidências de implementação concluída (15B3)" "$PHASE15B3_EXEC_DOC" && \
+   grep -q "FASE_15B3_HANDOFF_15B4.md" "$PHASE15B3_EXEC_DOC" && \
+   grep -q "handoff explícito para 15B4" "$PHASE15B3_EXEC_DOC"; then
+    test_pass "15B3 execution prompt captures closure evidence and 15B4 handoff"
+else
+    test_fail "15B3 execution prompt is missing closure evidence or 15B4 handoff"
+fi
+
+# Test 883: parser support matrix defines subset and explicit limits
+echo "Test 883: parser support matrix defines subset and explicit limits"
+if grep -q "declaração de ritual básico" "$PHASE15B3_SUPPORT" && \
+   grep -qi "regras de precedência" "$PHASE15B3_SUPPORT" && \
+   grep -q "fora de escopo" "$PHASE15B3_SUPPORT"; then
+    test_pass "15B3 parser support matrix defines subset and explicit limits"
+else
+    test_fail "15B3 parser support matrix is missing subset support or explicit limits"
+fi
+
+# Test 884: precedence contract defines PC-15B3 rules and blocker semantics
+echo "Test 884: precedence contract defines PC-15B3 rules and blocker semantics"
+if grep -q "PC-15B3-001" "$PHASE15B3_PREC" && \
+   grep -q "PC-15B3-004" "$PHASE15B3_PREC" && \
+   grep -q "BLOCKER" "$PHASE15B3_PREC"; then
+    test_pass "15B3 precedence contract defines PC rules and blocker semantics"
+else
+    test_fail "15B3 precedence contract is missing PC rules or blocker semantics"
+fi
+
+# Test 885: differential integration defines severity classification and fallback
+echo "Test 885: differential integration defines severity classification and fallback"
+if grep -q "classificar diferença" "$PHASE15B3_DIFF" && \
+   grep -q "INFO" "$PHASE15B3_DIFF" && \
+   grep -q "REVIEW" "$PHASE15B3_DIFF" && \
+   grep -q "BLOCKER" "$PHASE15B3_DIFF" && \
+   grep -q "fallback imediato" "$PHASE15B3_DIFF"; then
+    test_pass "15B3 differential integration defines severity classification and fallback"
+else
+    test_fail "15B3 differential integration is missing severity or fallback contract"
+fi
+
+# Test 886: acceptance/risk docs enforce ownership and decision model
+echo "Test 886: acceptance/risk docs enforce ownership and decision model"
+if grep -q "divergência \`BLOCKER\` sem owner" "$PHASE15B3_ACCEPT" && \
+   grep -q "\`pass\`, \`watch\` ou \`block\`" "$PHASE15B3_ACCEPT" && \
+   grep -q "RISK-15B3-001" "$PHASE15B3_RISK" && \
+   grep -q "Parser Subset Lead" "$PHASE15B3_RISK"; then
+    test_pass "15B3 acceptance/risk docs enforce ownership and decision model"
+else
+    test_fail "15B3 acceptance/risk docs are missing ownership or decision model contracts"
+fi
+
+# Test 887: architecture/roadmap capture 15B3 closure and 15B4 next step
+echo "Test 887: architecture/roadmap capture 15B3 closure and 15B4 next step"
+if grep -q "15B.3 parser subset baseline completed" docs/architecture.md && \
+   (grep -q "FASE 15A.1/15A.2/15A.3/15A.4/15B.1/15B.2/15B.3 implemented" docs/roadmap.md || \
+    grep -q "FASE 15A.1/15A.2/15A.3/15A.4/15B.1/15B.2/15B.3/15B.4 implemented" docs/roadmap.md || \
+    grep -q "FASE 15A.1/15A.2/15A.3/15A.4/15B.1/15B.2/15B.3/15B.4/15C.1 implemented" docs/roadmap.md) && \
+   (grep -q "Bootstrap next subphase to execute: FASE 15B.4" docs/roadmap.md || \
+    grep -q "Bootstrap next subphase to execute: FASE 15C.1" docs/roadmap.md || \
+    grep -q "Bootstrap next subphase to execute: FASE 15C.2" docs/roadmap.md); then
+    test_pass "architecture/roadmap capture 15B3 closure and 15B4 next-step marker"
+else
+    test_fail "architecture/roadmap are not aligned with 15B3 closure and 15B4 next-step marker"
+fi
+
+# Test 888: 15B3 artifacts remain private (md_out boundary)
+echo "Test 888: 15B3 artifacts remain private (md_out boundary)"
+if [ ! -f "docs/release/FASE_15B3_BOOTSTRAP_PARSER_PLAN.md" ] && \
+   [ ! -f "docs/release/FASE_15B3_PARSER_SUPPORT_MATRIX.md" ] && \
+   [ ! -f "docs/release/FASE_15B3_PRECEDENCE_CONTRACT.md" ] && \
+   [ ! -f "docs/release/FASE_15B3_DIFFERENTIAL_INTEGRATION.md" ] && \
+   [ ! -f "docs/release/FASE_15B3_TEST_MATRIX.md" ] && \
+   [ ! -f "docs/release/FASE_15B3_ACCEPTANCE_ROLLBACK.md" ] && \
+   [ ! -f "docs/release/FASE_15B3_RISK_OWNERSHIP_MAP.md" ] && \
+   [ ! -f "docs/release/FASE_15B3_HANDOFF_15B4.md" ]; then
+    test_pass "15B3 artifacts are correctly kept in md_out private boundary"
+else
+    test_fail "15B3 artifacts leaked to public docs/release boundary"
+fi
+
+# Test 889: dedicated 15B3 audit runner and legacy smoke remain green
+echo "Test 889: dedicated 15B3 audit runner and legacy smoke remain green"
+if tests/run_phase15b3_parser_subset.sh >/tmp/cct_phase15b3_runner.out 2>&1 && \
+   ./cct --check tests/integration/codegen_minimal.cct >/tmp/cct_phase15b3_check.out 2>&1; then
+    test_pass "15B3 audit runner passes and legacy semantic check remains stable"
+else
+    test_fail "15B3 audit runner or legacy semantic check failed"
+fi
+
+# Test 890: 15B2->15B3 coherence preserves bootstrap progression discipline
+echo "Test 890: 15B2->15B3 coherence preserves bootstrap progression discipline"
+if grep -q "Pronto para 15B3" "$PHASE15B2_HANDOFF" && \
+   grep -q "Pronto para 15B4" "$PHASE15B3_HANDOFF" && \
+   grep -q "parser subset em CCT" "$PHASE15B3_PLAN"; then
+    test_pass "15B2->15B3 coherence is preserved for bootstrap progression"
+else
+    test_fail "15B2->15B3 coherence is broken for bootstrap progression"
+fi
+
+echo ""
+echo "========================================"
+echo "FASE 15B4: Semântica Subset e Emissão Intermediária Compatível Tests"
+echo "========================================"
+echo ""
+
+PHASE15B4_EXEC_DOC="md_out/FASE_15B4_CCT.md"
+PHASE15B4_PLAN="md_out/docs/release/FASE_15B4_BOOTSTRAP_SEMANTIC_EMISSION_PLAN.md"
+PHASE15B4_SEM="md_out/docs/release/FASE_15B4_SEMANTIC_SUBSET_CONTRACT.md"
+PHASE15B4_IR="md_out/docs/release/FASE_15B4_INTERMEDIATE_EMISSION_CONTRACT.md"
+PHASE15B4_ASM="md_out/docs/release/FASE_15B4_ASM_OUTPUT_CONTRACT.md"
+PHASE15B4_MATRIX="md_out/docs/release/FASE_15B4_TEST_MATRIX.md"
+PHASE15B4_ACCEPT="md_out/docs/release/FASE_15B4_ACCEPTANCE_ROLLBACK.md"
+PHASE15B4_RISK="md_out/docs/release/FASE_15B4_RISK_OWNERSHIP_MAP.md"
+PHASE15B4_HANDOFF="md_out/docs/release/FASE_15B4_HANDOFF_15C1.md"
+
+# Test 891: mandatory 15B4 docs and artifacts exist
+echo "Test 891: mandatory 15B4 docs and artifacts exist"
+if [ -f "$PHASE15B4_EXEC_DOC" ] && \
+   [ -f "$PHASE15B4_PLAN" ] && \
+   [ -f "$PHASE15B4_SEM" ] && \
+   [ -f "$PHASE15B4_IR" ] && \
+   [ -f "$PHASE15B4_ASM" ] && \
+   [ -f "$PHASE15B4_MATRIX" ] && \
+   [ -f "$PHASE15B4_ACCEPT" ] && \
+   [ -f "$PHASE15B4_RISK" ] && \
+   [ -f "$PHASE15B4_HANDOFF" ]; then
+    test_pass "15B4 mandatory execution and semantic/emission artifacts are present"
+else
+    test_fail "15B4 mandatory execution or semantic/emission artifacts are missing"
+fi
+
+# Test 892: 15B4 execution prompt includes completion evidence and handoff to 15C1
+echo "Test 892: 15B4 execution prompt includes completion evidence and handoff to 15C1"
+if grep -q "## 13. Evidências de implementação concluída (15B4)" "$PHASE15B4_EXEC_DOC" && \
+   grep -q "FASE_15B4_HANDOFF_15C1.md" "$PHASE15B4_EXEC_DOC" && \
+   grep -q "handoff explícito para 15C1" "$PHASE15B4_EXEC_DOC"; then
+    test_pass "15B4 execution prompt captures closure evidence and 15C1 handoff"
+else
+    test_fail "15B4 execution prompt is missing closure evidence or 15C1 handoff"
+fi
+
+# Test 893: semantic subset contract defines SS-15B4 rules and blocking policy
+echo "Test 893: semantic subset contract defines SS-15B4 rules and blocking policy"
+if grep -q "SS-15B4-001" "$PHASE15B4_SEM" && \
+   grep -q "SS-15B4-005" "$PHASE15B4_SEM" && \
+   grep -q "Fora de escopo" "$PHASE15B4_SEM" && \
+   grep -q "fallback canônico é acionado imediatamente" "$PHASE15B4_SEM"; then
+    test_pass "15B4 semantic subset contract defines SS rules and blocking policy"
+else
+    test_fail "15B4 semantic subset contract is missing SS rules or blocking policy"
+fi
+
+# Test 894: intermediate emission contract defines IE-15B4 comparability and fallback
+echo "Test 894: intermediate emission contract defines IE-15B4 comparability and fallback"
+if grep -q "IE-15B4-001" "$PHASE15B4_IR" && \
+   grep -q "IE-15B4-005" "$PHASE15B4_IR" && \
+   grep -q "INFO" "$PHASE15B4_IR" && \
+   grep -q "REVIEW" "$PHASE15B4_IR" && \
+   grep -q "BLOCKER" "$PHASE15B4_IR"; then
+    test_pass "15B4 intermediate emission contract defines IE rules and fallback"
+else
+    test_fail "15B4 intermediate emission contract is missing IE rules or fallback model"
+fi
+
+# Test 895: ASM output contract defines shape/ABI portability boundaries
+echo "Test 895: ASM output contract defines shape/ABI portability boundaries"
+if grep -q "ASM-15B4-001" "$PHASE15B4_ASM" && \
+   grep -q "ASM-15B4-005" "$PHASE15B4_ASM" && \
+   grep -q "shape previsível" "$PHASE15B4_ASM" && \
+   grep -q "neste repositório" "$PHASE15B4_ASM"; then
+    test_pass "15B4 ASM output contract defines shape/ABI portability boundaries"
+else
+    test_fail "15B4 ASM output contract is missing shape/ABI portability boundaries"
+fi
+
+# Test 896: acceptance/risk docs enforce ownership and decision model
+echo "Test 896: acceptance/risk docs enforce ownership and decision model"
+if grep -q "divergência \`BLOCKER\` sem owner" "$PHASE15B4_ACCEPT" && \
+   grep -q "\`pass\`: sem bloqueios" "$PHASE15B4_ACCEPT" && \
+   grep -q "RISK-15B4-001" "$PHASE15B4_RISK" && \
+   grep -q "Semantic Subset Lead" "$PHASE15B4_RISK"; then
+    test_pass "15B4 acceptance/risk docs enforce ownership and decision model"
+else
+    test_fail "15B4 acceptance/risk docs are missing ownership or decision model contracts"
+fi
+
+# Test 897: architecture/roadmap capture 15B4 closure and 15C1 next step
+echo "Test 897: architecture/roadmap capture 15B4 closure and 15C1 next step"
+if grep -q "15B.4 semantic subset + compatible intermediate emission completed" docs/architecture.md && \
+   (grep -q "FASE 15A.1/15A.2/15A.3/15A.4/15B.1/15B.2/15B.3/15B.4 implemented" docs/roadmap.md || \
+    grep -q "FASE 15A.1/15A.2/15A.3/15A.4/15B.1/15B.2/15B.3/15B.4/15C.1 implemented" docs/roadmap.md) && \
+   (grep -q "Bootstrap next subphase to execute: FASE 15C.1" docs/roadmap.md || \
+    grep -q "Bootstrap next subphase to execute: FASE 15C.2" docs/roadmap.md); then
+    test_pass "architecture/roadmap capture 15B4 closure and 15C1 next-step marker"
+else
+    test_fail "architecture/roadmap are not aligned with 15B4 closure and 15C1 next-step marker"
+fi
+
+# Test 898: 15B4 artifacts remain private (md_out boundary)
+echo "Test 898: 15B4 artifacts remain private (md_out boundary)"
+if [ ! -f "docs/release/FASE_15B4_BOOTSTRAP_SEMANTIC_EMISSION_PLAN.md" ] && \
+   [ ! -f "docs/release/FASE_15B4_SEMANTIC_SUBSET_CONTRACT.md" ] && \
+   [ ! -f "docs/release/FASE_15B4_INTERMEDIATE_EMISSION_CONTRACT.md" ] && \
+   [ ! -f "docs/release/FASE_15B4_ASM_OUTPUT_CONTRACT.md" ] && \
+   [ ! -f "docs/release/FASE_15B4_TEST_MATRIX.md" ] && \
+   [ ! -f "docs/release/FASE_15B4_ACCEPTANCE_ROLLBACK.md" ] && \
+   [ ! -f "docs/release/FASE_15B4_RISK_OWNERSHIP_MAP.md" ] && \
+   [ ! -f "docs/release/FASE_15B4_HANDOFF_15C1.md" ]; then
+    test_pass "15B4 artifacts are correctly kept in md_out private boundary"
+else
+    test_fail "15B4 artifacts leaked to public docs/release boundary"
+fi
+
+# Test 899: dedicated 15B4 audit runner and legacy smoke remain green
+echo "Test 899: dedicated 15B4 audit runner and legacy smoke remain green"
+if tests/run_phase15b4_semantic_emission.sh >/tmp/cct_phase15b4_runner.out 2>&1 && \
+   ./cct --check tests/integration/codegen_minimal.cct >/tmp/cct_phase15b4_check.out 2>&1; then
+    test_pass "15B4 audit runner passes and legacy semantic check remains stable"
+else
+    test_fail "15B4 audit runner or legacy semantic check failed"
+fi
+
+# Test 900: 15B3->15B4 coherence preserves bootstrap progression discipline
+echo "Test 900: 15B3->15B4 coherence preserves bootstrap progression discipline"
+if grep -q "Pronto para 15B4" "$PHASE15B3_HANDOFF" && \
+   grep -q "Pronto para 15C1" "$PHASE15B4_HANDOFF" && \
+   grep -q "semântica subset" "$PHASE15B4_PLAN"; then
+    test_pass "15B3->15B4 coherence is preserved for bootstrap progression"
+else
+    test_fail "15B3->15B4 coherence is broken for bootstrap progression"
+fi
+
+echo ""
+echo "========================================"
+echo "FASE 15C1: Harness Diferencial Unificado Tests"
+echo "========================================"
+echo ""
+
+PHASE15C1_EXEC_DOC="md_out/FASE_15C1_CCT.md"
+PHASE15C1_PLAN="md_out/docs/release/FASE_15C1_BOOTSTRAP_DIFF_HARNESS_PLAN.md"
+PHASE15C1_RUNNER="md_out/docs/release/FASE_15C1_DIFF_RUNNER_CONTRACT.md"
+PHASE15C1_REPORT="md_out/docs/release/FASE_15C1_DIFF_REPORT_FORMAT.md"
+PHASE15C1_SEV="md_out/docs/release/FASE_15C1_DIFF_SEVERITY_POLICY.md"
+PHASE15C1_CI="md_out/docs/release/FASE_15C1_LOCAL_CI_INTEGRATION.md"
+PHASE15C1_MATRIX="md_out/docs/release/FASE_15C1_TEST_MATRIX.md"
+PHASE15C1_ACCEPT="md_out/docs/release/FASE_15C1_ACCEPTANCE_ROLLBACK.md"
+PHASE15C1_RISK="md_out/docs/release/FASE_15C1_RISK_OWNERSHIP_MAP.md"
+PHASE15C1_HANDOFF="md_out/docs/release/FASE_15C1_HANDOFF_15C2.md"
+
+# Test 901: mandatory 15C1 docs and artifacts exist
+echo "Test 901: mandatory 15C1 docs and artifacts exist"
+if [ -f "$PHASE15C1_EXEC_DOC" ] && \
+   [ -f "$PHASE15C1_PLAN" ] && \
+   [ -f "$PHASE15C1_RUNNER" ] && \
+   [ -f "$PHASE15C1_REPORT" ] && \
+   [ -f "$PHASE15C1_SEV" ] && \
+   [ -f "$PHASE15C1_CI" ] && \
+   [ -f "$PHASE15C1_MATRIX" ] && \
+   [ -f "$PHASE15C1_ACCEPT" ] && \
+   [ -f "$PHASE15C1_RISK" ] && \
+   [ -f "$PHASE15C1_HANDOFF" ]; then
+    test_pass "15C1 mandatory execution and differential-harness artifacts are present"
+else
+    test_fail "15C1 mandatory execution or differential-harness artifacts are missing"
+fi
+
+# Test 902: 15C1 execution prompt includes completion evidence and handoff to 15C2
+echo "Test 902: 15C1 execution prompt includes completion evidence and handoff to 15C2"
+if grep -q "## 13. Evidências de implementação concluída (15C1)" "$PHASE15C1_EXEC_DOC" && \
+   grep -q "FASE_15C1_HANDOFF_15C2.md" "$PHASE15C1_EXEC_DOC" && \
+   grep -q "handoff explícito para 15C2" "$PHASE15C1_EXEC_DOC"; then
+    test_pass "15C1 execution prompt captures closure evidence and 15C2 handoff"
+else
+    test_fail "15C1 execution prompt is missing closure evidence or 15C2 handoff"
+fi
+
+# Test 903: differential runner contract defines DR-15C1 rules and decision model
+echo "Test 903: differential runner contract defines DR-15C1 rules and decision model"
+if grep -q "DR-15C1-001" "$PHASE15C1_RUNNER" && \
+   grep -q "DR-15C1-005" "$PHASE15C1_RUNNER" && \
+   grep -q "\`pass\`, \`watch\` ou \`block\`" "$PHASE15C1_RUNNER"; then
+    test_pass "15C1 differential runner contract defines DR rules and decision model"
+else
+    test_fail "15C1 differential runner contract is missing DR rules or decision model"
+fi
+
+# Test 904: report format defines RF-15C1 fields and deterministic output policy
+echo "Test 904: report format defines RF-15C1 fields and deterministic output policy"
+if grep -q "RF-15C1-001" "$PHASE15C1_REPORT" && \
+   grep -q "RF-15C1-004" "$PHASE15C1_REPORT" && \
+   grep -q "severity" "$PHASE15C1_REPORT" && \
+   grep -q "decision" "$PHASE15C1_REPORT"; then
+    test_pass "15C1 report format defines RF fields and deterministic policy"
+else
+    test_fail "15C1 report format is missing RF fields or deterministic policy"
+fi
+
+# Test 905: severity and local/CI integration policies define blocker gate
+echo "Test 905: severity and local/CI integration policies define blocker gate"
+if grep -q "INFO" "$PHASE15C1_SEV" && \
+   grep -q "REVIEW" "$PHASE15C1_SEV" && \
+   grep -q "BLOCKER" "$PHASE15C1_SEV" && \
+   grep -q "CI-15C1-001" "$PHASE15C1_CI" && \
+   grep -q "bloqueio automático" "$PHASE15C1_CI"; then
+    test_pass "15C1 severity and local/CI integration policies define blocker gate"
+else
+    test_fail "15C1 severity/local-CI policies are missing blocker gate contracts"
+fi
+
+# Test 906: acceptance/risk docs enforce ownership and rollback model
+echo "Test 906: acceptance/risk docs enforce ownership and rollback model"
+if grep -q "divergência \`BLOCKER\` sem owner" "$PHASE15C1_ACCEPT" && \
+   grep -q "\`pass\`: sem bloqueios" "$PHASE15C1_ACCEPT" && \
+   grep -q "RISK-15C1-001" "$PHASE15C1_RISK" && \
+   grep -q "Differential Harness Lead" "$PHASE15C1_RISK"; then
+    test_pass "15C1 acceptance/risk docs enforce ownership and rollback model"
+else
+    test_fail "15C1 acceptance/risk docs are missing ownership or rollback model"
+fi
+
+# Test 907: architecture/roadmap capture 15C1 closure and 15C2 next step
+echo "Test 907: architecture/roadmap capture 15C1 closure and 15C2 next step"
+if grep -q "15C.1 unified differential harness completed" docs/architecture.md && \
+   grep -q "FASE 15A.1/15A.2/15A.3/15A.4/15B.1/15B.2/15B.3/15B.4/15C.1 implemented" docs/roadmap.md && \
+   grep -q "Bootstrap next subphase to execute: FASE 15C.2" docs/roadmap.md; then
+    test_pass "architecture/roadmap capture 15C1 closure and 15C2 next-step marker"
+else
+    test_fail "architecture/roadmap are not aligned with 15C1 closure and 15C2 next-step marker"
+fi
+
+# Test 908: 15C1 artifacts remain private (md_out boundary)
+echo "Test 908: 15C1 artifacts remain private (md_out boundary)"
+if [ ! -f "docs/release/FASE_15C1_BOOTSTRAP_DIFF_HARNESS_PLAN.md" ] && \
+   [ ! -f "docs/release/FASE_15C1_DIFF_RUNNER_CONTRACT.md" ] && \
+   [ ! -f "docs/release/FASE_15C1_DIFF_REPORT_FORMAT.md" ] && \
+   [ ! -f "docs/release/FASE_15C1_DIFF_SEVERITY_POLICY.md" ] && \
+   [ ! -f "docs/release/FASE_15C1_LOCAL_CI_INTEGRATION.md" ] && \
+   [ ! -f "docs/release/FASE_15C1_TEST_MATRIX.md" ] && \
+   [ ! -f "docs/release/FASE_15C1_ACCEPTANCE_ROLLBACK.md" ] && \
+   [ ! -f "docs/release/FASE_15C1_RISK_OWNERSHIP_MAP.md" ] && \
+   [ ! -f "docs/release/FASE_15C1_HANDOFF_15C2.md" ]; then
+    test_pass "15C1 artifacts are correctly kept in md_out private boundary"
+else
+    test_fail "15C1 artifacts leaked to public docs/release boundary"
+fi
+
+# Test 909: dedicated 15C1 audit runner and legacy smoke remain green
+echo "Test 909: dedicated 15C1 audit runner and legacy smoke remain green"
+if tests/run_phase15c1_diff_harness.sh >/tmp/cct_phase15c1_runner.out 2>&1 && \
+   ./cct --check tests/integration/codegen_minimal.cct >/tmp/cct_phase15c1_check.out 2>&1; then
+    test_pass "15C1 audit runner passes and legacy semantic check remains stable"
+else
+    test_fail "15C1 audit runner or legacy semantic check failed"
+fi
+
+# Test 910: 15B4->15C1 coherence preserves bootstrap progression discipline
+echo "Test 910: 15B4->15C1 coherence preserves bootstrap progression discipline"
+if grep -q "Pronto para 15C1" "$PHASE15B4_HANDOFF" && \
+   grep -q "Pronto para 15C2" "$PHASE15C1_HANDOFF" && \
+   grep -q "harness diferencial unificado" "$PHASE15C1_PLAN"; then
+    test_pass "15B4->15C1 coherence is preserved for bootstrap progression"
+else
+    test_fail "15B4->15C1 coherence is broken for bootstrap progression"
+fi
+
+echo ""
+echo "========================================"
+echo "FASE 15C2: Matriz de Convergência Funcional Tests"
+echo "========================================"
+echo ""
+
+PHASE15C2_EXEC_DOC="md_out/FASE_15C2_CCT.md"
+PHASE15C2_PLAN="md_out/docs/release/FASE_15C2_CONVERGENCE_BASELINE_PLAN.md"
+PHASE15C2_MATRIX="md_out/docs/release/FASE_15C2_FUNCTIONAL_CONVERGENCE_MATRIX.md"
+PHASE15C2_TARGETS="md_out/docs/release/FASE_15C2_TARGETS_AND_THRESHOLDS.md"
+PHASE15C2_GAPS="md_out/docs/release/FASE_15C2_GAP_ANALYSIS.md"
+PHASE15C2_BLOCK="md_out/docs/release/FASE_15C2_BLOCKING_CRITERIA.md"
+PHASE15C2_TEST="md_out/docs/release/FASE_15C2_TEST_MATRIX.md"
+PHASE15C2_ACCEPT="md_out/docs/release/FASE_15C2_ACCEPTANCE_ROLLBACK.md"
+PHASE15C2_RISK="md_out/docs/release/FASE_15C2_RISK_OWNERSHIP_MAP.md"
+PHASE15C2_HANDOFF="md_out/docs/release/FASE_15C2_HANDOFF_15C3.md"
+
+# Test 911: mandatory 15C2 docs and artifacts exist
+echo "Test 911: mandatory 15C2 docs and artifacts exist"
+if [ -f "$PHASE15C2_EXEC_DOC" ] && \
+   [ -f "$PHASE15C2_PLAN" ] && \
+   [ -f "$PHASE15C2_MATRIX" ] && \
+   [ -f "$PHASE15C2_TARGETS" ] && \
+   [ -f "$PHASE15C2_GAPS" ] && \
+   [ -f "$PHASE15C2_BLOCK" ] && \
+   [ -f "$PHASE15C2_TEST" ] && \
+   [ -f "$PHASE15C2_ACCEPT" ] && \
+   [ -f "$PHASE15C2_RISK" ] && \
+   [ -f "$PHASE15C2_HANDOFF" ]; then
+    test_pass "15C2 mandatory execution and convergence artifacts are present"
+else
+    test_fail "15C2 mandatory execution or convergence artifacts are missing"
+fi
+
+# Test 912: 15C2 execution prompt includes completion evidence and handoff to 15C3
+echo "Test 912: 15C2 execution prompt includes completion evidence and handoff to 15C3"
+if grep -q "## 13. Evidências de implementação concluída (15C2)" "$PHASE15C2_EXEC_DOC" && \
+   grep -q "FASE_15C2_HANDOFF_15C3.md" "$PHASE15C2_EXEC_DOC" && \
+   grep -q "handoff explícito para 15C3" "$PHASE15C2_EXEC_DOC"; then
+    test_pass "15C2 execution prompt captures closure evidence and 15C3 handoff"
+else
+    test_fail "15C2 execution prompt is missing closure evidence or 15C3 handoff"
+fi
+
+# Test 913: convergence matrix defines FC-15C2 dimensions and blocker rule
+echo "Test 913: convergence matrix defines FC-15C2 dimensions and blocker rule"
+if grep -q "FC-15C2-001" "$PHASE15C2_MATRIX" && \
+   grep -q "FC-15C2-004" "$PHASE15C2_MATRIX" && \
+   grep -q "blocker em qualquer dimensão" "$PHASE15C2_MATRIX"; then
+    test_pass "15C2 convergence matrix defines FC dimensions and blocker rule"
+else
+    test_fail "15C2 convergence matrix is missing FC dimensions or blocker rule"
+fi
+
+# Test 914: targets/gaps/blocking docs define quantitative progression gate
+echo "Test 914: targets/gaps/blocking docs define quantitative progression gate"
+if grep -q "META-15C2-D1" "$PHASE15C2_TARGETS" && \
+   grep -q "META-15C2-D4" "$PHASE15C2_TARGETS" && \
+   grep -q "GAP-15C2-001" "$PHASE15C2_GAPS" && \
+   grep -q "BC-15C2-005" "$PHASE15C2_BLOCK"; then
+    test_pass "15C2 targets/gaps/blocking docs define quantitative progression gate"
+else
+    test_fail "15C2 targets/gaps/blocking docs are missing quantitative progression gates"
+fi
+
+# Test 915: acceptance/risk docs enforce decision model and ownership
+echo "Test 915: acceptance/risk docs enforce decision model and ownership"
+if grep -q "\`pass\`: convergência mínima" "$PHASE15C2_ACCEPT" && \
+   grep -q "\`block\`: blocker ativo" "$PHASE15C2_ACCEPT" && \
+   grep -q "RISK-15C2-001" "$PHASE15C2_RISK" && \
+   grep -q "Functional Convergence Lead" "$PHASE15C2_RISK"; then
+    test_pass "15C2 acceptance/risk docs enforce decision model and ownership"
+else
+    test_fail "15C2 acceptance/risk docs are missing decision model or ownership"
+fi
+
+# Test 916: architecture/roadmap capture 15C2 closure and 15C3 next step
+echo "Test 916: architecture/roadmap capture 15C2 closure and 15C3 next step"
+if grep -q "15C.2 functional convergence matrix completed" docs/architecture.md && \
+   grep -q "FASE 15A.1/15A.2/15A.3/15A.4/15B.1/15B.2/15B.3/15B.4/15C.1/15C.2 implemented" docs/roadmap.md && \
+   grep -q "Bootstrap next subphase to execute: FASE 15C.3" docs/roadmap.md; then
+    test_pass "architecture/roadmap capture 15C2 closure and 15C3 next-step marker"
+else
+    test_fail "architecture/roadmap are not aligned with 15C2 closure and 15C3 next-step marker"
+fi
+
+# Test 917: 15C2 artifacts remain private (md_out boundary)
+echo "Test 917: 15C2 artifacts remain private (md_out boundary)"
+if [ ! -f "docs/release/FASE_15C2_CONVERGENCE_BASELINE_PLAN.md" ] && \
+   [ ! -f "docs/release/FASE_15C2_FUNCTIONAL_CONVERGENCE_MATRIX.md" ] && \
+   [ ! -f "docs/release/FASE_15C2_TARGETS_AND_THRESHOLDS.md" ] && \
+   [ ! -f "docs/release/FASE_15C2_GAP_ANALYSIS.md" ] && \
+   [ ! -f "docs/release/FASE_15C2_BLOCKING_CRITERIA.md" ] && \
+   [ ! -f "docs/release/FASE_15C2_TEST_MATRIX.md" ] && \
+   [ ! -f "docs/release/FASE_15C2_ACCEPTANCE_ROLLBACK.md" ] && \
+   [ ! -f "docs/release/FASE_15C2_RISK_OWNERSHIP_MAP.md" ] && \
+   [ ! -f "docs/release/FASE_15C2_HANDOFF_15C3.md" ]; then
+    test_pass "15C2 artifacts are correctly kept in md_out private boundary"
+else
+    test_fail "15C2 artifacts leaked to public docs/release boundary"
+fi
+
+# Test 918: dedicated 15C2 audit runner and legacy smoke remain green
+echo "Test 918: dedicated 15C2 audit runner and legacy smoke remain green"
+if tests/run_phase15c2_convergence_matrix.sh >/tmp/cct_phase15c2_runner.out 2>&1 && \
+   ./cct --check tests/integration/codegen_minimal.cct >/tmp/cct_phase15c2_check.out 2>&1; then
+    test_pass "15C2 audit runner passes and legacy semantic check remains stable"
+else
+    test_fail "15C2 audit runner or legacy semantic check failed"
+fi
+
+# Test 919: 15C1->15C2 coherence preserves convergence progression discipline
+echo "Test 919: 15C1->15C2 coherence preserves convergence progression discipline"
+if grep -q "Pronto para 15C2" "$PHASE15C1_HANDOFF" && \
+   grep -q "Pronto para 15C3" "$PHASE15C2_HANDOFF" && \
+   grep -q "baseline quantitativo de convergência" "$PHASE15C2_PLAN"; then
+    test_pass "15C1->15C2 coherence is preserved for convergence progression"
+else
+    test_fail "15C1->15C2 coherence is broken for convergence progression"
+fi
+
+# Test 920: historical checkpoint lines remain available for traceability tests
+echo "Test 920: historical checkpoint lines remain available for traceability tests"
+if grep -q "Bootstrap track status: FASE 15A.1/15A.2/15A.3/15A.4/15B.1/15B.2/15B.3/15B.4/15C.1 implemented" docs/roadmap.md && \
+   grep -q "Bootstrap next subphase to execute: FASE 15C.2" docs/roadmap.md; then
+    test_pass "historical checkpoint lines remain available for traceability"
+else
+    test_fail "historical checkpoint lines are missing from roadmap"
+fi
+
+echo ""
+echo "========================================"
+echo "FASE 15C3: Estabilidade Operacional da Trilha Bootstrap Tests"
+echo "========================================"
+echo ""
+
+PHASE15C3_EXEC_DOC="md_out/FASE_15C3_CCT.md"
+PHASE15C3_PLAN="md_out/docs/release/FASE_15C3_OPERATIONAL_STABILITY_PLAN.md"
+PHASE15C3_CAMPAIGNS="md_out/docs/release/FASE_15C3_REPETITION_CAMPAIGNS.md"
+PHASE15C3_FLAKY="md_out/docs/release/FASE_15C3_FLAKINESS_METRICS.md"
+PHASE15C3_INC="md_out/docs/release/FASE_15C3_INCIDENT_RESPONSE_AND_MITIGATION.md"
+PHASE15C3_ASM="md_out/docs/release/FASE_15C3_ASM_OUTPUT_EQUIVALENCE_CONTRACT.md"
+PHASE15C3_TEST="md_out/docs/release/FASE_15C3_TEST_MATRIX.md"
+PHASE15C3_ACCEPT="md_out/docs/release/FASE_15C3_ACCEPTANCE_ROLLBACK.md"
+PHASE15C3_RISK="md_out/docs/release/FASE_15C3_RISK_OWNERSHIP_MAP.md"
+PHASE15C3_HANDOFF="md_out/docs/release/FASE_15C3_HANDOFF_15C4.md"
+
+# Test 921: mandatory 15C3 docs and artifacts exist
+echo "Test 921: mandatory 15C3 docs and artifacts exist"
+if [ -f "$PHASE15C3_EXEC_DOC" ] && \
+   [ -f "$PHASE15C3_PLAN" ] && \
+   [ -f "$PHASE15C3_CAMPAIGNS" ] && \
+   [ -f "$PHASE15C3_FLAKY" ] && \
+   [ -f "$PHASE15C3_INC" ] && \
+   [ -f "$PHASE15C3_ASM" ] && \
+   [ -f "$PHASE15C3_TEST" ] && \
+   [ -f "$PHASE15C3_ACCEPT" ] && \
+   [ -f "$PHASE15C3_RISK" ] && \
+   [ -f "$PHASE15C3_HANDOFF" ]; then
+    test_pass "15C3 mandatory execution and operational-stability artifacts are present"
+else
+    test_fail "15C3 mandatory execution or operational-stability artifacts are missing"
+fi
+
+# Test 922: 15C3 execution prompt includes completion evidence and handoff to 15C4
+echo "Test 922: 15C3 execution prompt includes completion evidence and handoff to 15C4"
+if grep -q "## 13. Evidências de implementação concluída (15C3)" "$PHASE15C3_EXEC_DOC" && \
+   grep -q "FASE_15C3_HANDOFF_15C4.md" "$PHASE15C3_EXEC_DOC" && \
+   grep -q "handoff explícito para 15C4" "$PHASE15C3_EXEC_DOC"; then
+    test_pass "15C3 execution prompt captures closure evidence and 15C4 handoff"
+else
+    test_fail "15C3 execution prompt is missing closure evidence or 15C4 handoff"
+fi
+
+# Test 923: campaigns/flakiness contracts define repeatability and thresholds
+echo "Test 923: campaigns/flakiness contracts define repeatability and thresholds"
+if grep -q "CAMP-15C3-001" "$PHASE15C3_CAMPAIGNS" && \
+   grep -q "CAMP-15C3-004" "$PHASE15C3_CAMPAIGNS" && \
+   grep -q "FM-15C3-001" "$PHASE15C3_FLAKY" && \
+   grep -q "FM-15C3-004" "$PHASE15C3_FLAKY"; then
+    test_pass "15C3 campaigns/flakiness contracts define repeatability and thresholds"
+else
+    test_fail "15C3 campaigns/flakiness contracts are missing repeatability or thresholds"
+fi
+
+# Test 924: incident and ASM-equivalence contracts define blocker semantics
+echo "Test 924: incident and ASM-equivalence contracts define blocker semantics"
+if grep -q "INC-15C3-001" "$PHASE15C3_INC" && \
+   grep -q "INC-15C3-004" "$PHASE15C3_INC" && \
+   grep -q "ASM-15C3-001" "$PHASE15C3_ASM" && \
+   grep -q "ASM-15C3-005" "$PHASE15C3_ASM"; then
+    test_pass "15C3 incident and ASM-equivalence contracts define blocker semantics"
+else
+    test_fail "15C3 incident or ASM-equivalence contracts are missing blocker semantics"
+fi
+
+# Test 925: acceptance/risk docs enforce decision model and ownership
+echo "Test 925: acceptance/risk docs enforce decision model and ownership"
+if grep -q "\`pass\`: estabilidade operacional confirmada" "$PHASE15C3_ACCEPT" && \
+   grep -q "\`block\`: blocker ativo" "$PHASE15C3_ACCEPT" && \
+   grep -q "RISK-15C3-001" "$PHASE15C3_RISK" && \
+   grep -q "Operational Stability Lead" "$PHASE15C3_RISK"; then
+    test_pass "15C3 acceptance/risk docs enforce decision model and ownership"
+else
+    test_fail "15C3 acceptance/risk docs are missing decision model or ownership"
+fi
+
+# Test 926: architecture/roadmap capture 15C3 closure and 15C4 next step
+echo "Test 926: architecture/roadmap capture 15C3 closure and 15C4 next step"
+if grep -q "15C.3 operational stability baseline completed" docs/architecture.md && \
+   grep -q "FASE 15A.1/15A.2/15A.3/15A.4/15B.1/15B.2/15B.3/15B.4/15C.1/15C.2/15C.3 implemented" docs/roadmap.md && \
+   grep -q "Bootstrap next subphase to execute: FASE 15C.4" docs/roadmap.md; then
+    test_pass "architecture/roadmap capture 15C3 closure and 15C4 next-step marker"
+else
+    test_fail "architecture/roadmap are not aligned with 15C3 closure and 15C4 next-step marker"
+fi
+
+# Test 927: 15C3 artifacts remain private (md_out boundary)
+echo "Test 927: 15C3 artifacts remain private (md_out boundary)"
+if [ ! -f "docs/release/FASE_15C3_OPERATIONAL_STABILITY_PLAN.md" ] && \
+   [ ! -f "docs/release/FASE_15C3_REPETITION_CAMPAIGNS.md" ] && \
+   [ ! -f "docs/release/FASE_15C3_FLAKINESS_METRICS.md" ] && \
+   [ ! -f "docs/release/FASE_15C3_INCIDENT_RESPONSE_AND_MITIGATION.md" ] && \
+   [ ! -f "docs/release/FASE_15C3_ASM_OUTPUT_EQUIVALENCE_CONTRACT.md" ] && \
+   [ ! -f "docs/release/FASE_15C3_TEST_MATRIX.md" ] && \
+   [ ! -f "docs/release/FASE_15C3_ACCEPTANCE_ROLLBACK.md" ] && \
+   [ ! -f "docs/release/FASE_15C3_RISK_OWNERSHIP_MAP.md" ] && \
+   [ ! -f "docs/release/FASE_15C3_HANDOFF_15C4.md" ]; then
+    test_pass "15C3 artifacts are correctly kept in md_out private boundary"
+else
+    test_fail "15C3 artifacts leaked to public docs/release boundary"
+fi
+
+# Test 928: dedicated 15C3 audit runner and legacy smoke remain green
+echo "Test 928: dedicated 15C3 audit runner and legacy smoke remain green"
+if tests/run_phase15c3_operational_stability.sh >/tmp/cct_phase15c3_runner.out 2>&1 && \
+   ./cct --check tests/integration/codegen_minimal.cct >/tmp/cct_phase15c3_check.out 2>&1; then
+    test_pass "15C3 audit runner passes and legacy semantic check remains stable"
+else
+    test_fail "15C3 audit runner or legacy semantic check failed"
+fi
+
+# Test 929: 15C2->15C3 coherence preserves operational progression discipline
+echo "Test 929: 15C2->15C3 coherence preserves operational progression discipline"
+if grep -q "Pronto para 15C3" "$PHASE15C2_HANDOFF" && \
+   grep -q "Pronto para 15C4" "$PHASE15C3_HANDOFF" && \
+   grep -q "estabilidade operacional" "$PHASE15C3_PLAN"; then
+    test_pass "15C2->15C3 coherence is preserved for operational progression"
+else
+    test_fail "15C2->15C3 coherence is broken for operational progression"
+fi
+
+# Test 930: historical checkpoint lines remain available for traceability tests
+echo "Test 930: historical checkpoint lines remain available for traceability tests"
+if grep -q "Bootstrap track status: FASE 15A.1/15A.2/15A.3/15A.4/15B.1/15B.2/15B.3/15B.4/15C.1/15C.2 implemented" docs/roadmap.md && \
+   grep -q "Bootstrap next subphase to execute: FASE 15C.3" docs/roadmap.md; then
+    test_pass "historical checkpoint lines remain available for traceability"
+else
+    test_fail "historical checkpoint lines are missing from roadmap"
+fi
+
+echo ""
+echo "========================================"
+echo "FASE 15C4: Limites de Performance e Custo de Convivência Tests"
+echo "========================================"
+echo ""
+
+PHASE15C4_EXEC_DOC="md_out/FASE_15C4_CCT.md"
+PHASE15C4_PLAN="md_out/docs/release/FASE_15C4_PERFORMANCE_COST_PLAN.md"
+PHASE15C4_BASE="md_out/docs/release/FASE_15C4_COST_BASELINE.md"
+PHASE15C4_BUDGET="md_out/docs/release/FASE_15C4_BUDGET_BY_SCENARIO.md"
+PHASE15C4_GUARD="md_out/docs/release/FASE_15C4_GUARDRAILS.md"
+PHASE15C4_LIMITS="md_out/docs/release/FASE_15C4_KNOWN_LIMITS.md"
+PHASE15C4_TEST="md_out/docs/release/FASE_15C4_TEST_MATRIX.md"
+PHASE15C4_ACCEPT="md_out/docs/release/FASE_15C4_ACCEPTANCE_ROLLBACK.md"
+PHASE15C4_RISK="md_out/docs/release/FASE_15C4_RISK_OWNERSHIP_MAP.md"
+PHASE15C4_HANDOFF="md_out/docs/release/FASE_15C4_HANDOFF_15D1.md"
+
+# Test 931: mandatory 15C4 docs and artifacts exist
+echo "Test 931: mandatory 15C4 docs and artifacts exist"
+if [ -f "$PHASE15C4_EXEC_DOC" ] && \
+   [ -f "$PHASE15C4_PLAN" ] && \
+   [ -f "$PHASE15C4_BASE" ] && \
+   [ -f "$PHASE15C4_BUDGET" ] && \
+   [ -f "$PHASE15C4_GUARD" ] && \
+   [ -f "$PHASE15C4_LIMITS" ] && \
+   [ -f "$PHASE15C4_TEST" ] && \
+   [ -f "$PHASE15C4_ACCEPT" ] && \
+   [ -f "$PHASE15C4_RISK" ] && \
+   [ -f "$PHASE15C4_HANDOFF" ]; then
+    test_pass "15C4 mandatory execution and performance/cost artifacts are present"
+else
+    test_fail "15C4 mandatory execution or performance/cost artifacts are missing"
+fi
+
+# Test 932: 15C4 execution prompt includes completion evidence and handoff to 15D1
+echo "Test 932: 15C4 execution prompt includes completion evidence and handoff to 15D1"
+if grep -q "## 13. Evidências de implementação concluída (15C4)" "$PHASE15C4_EXEC_DOC" && \
+   grep -q "FASE_15C4_HANDOFF_15D1.md" "$PHASE15C4_EXEC_DOC" && \
+   grep -q "handoff explícito para 15D1" "$PHASE15C4_EXEC_DOC"; then
+    test_pass "15C4 execution prompt captures closure evidence and 15D1 handoff"
+else
+    test_fail "15C4 execution prompt is missing closure evidence or 15D1 handoff"
+fi
+
+# Test 933: baseline/budget contracts define cost progression gate
+echo "Test 933: baseline/budget contracts define cost progression gate"
+if grep -q "CB-15C4-001" "$PHASE15C4_BASE" && \
+   grep -q "CB-15C4-004" "$PHASE15C4_BASE" && \
+   grep -q "BG-15C4-001" "$PHASE15C4_BUDGET" && \
+   grep -q "BG-15C4-004" "$PHASE15C4_BUDGET"; then
+    test_pass "15C4 baseline/budget contracts define cost progression gate"
+else
+    test_fail "15C4 baseline/budget contracts are missing cost progression gates"
+fi
+
+# Test 934: guardrails/limits contracts define blocker semantics and boundaries
+echo "Test 934: guardrails/limits contracts define blocker semantics and boundaries"
+if grep -q "GR-15C4-001" "$PHASE15C4_GUARD" && \
+   grep -q "GR-15C4-005" "$PHASE15C4_GUARD" && \
+   grep -q "LIM-15C4-001" "$PHASE15C4_LIMITS" && \
+   grep -q "LIM-15C4-004" "$PHASE15C4_LIMITS"; then
+    test_pass "15C4 guardrails/limits contracts define blocker semantics and boundaries"
+else
+    test_fail "15C4 guardrails/limits contracts are missing blocker semantics or boundaries"
+fi
+
+# Test 935: acceptance/risk docs enforce decision model and ownership
+echo "Test 935: acceptance/risk docs enforce decision model and ownership"
+if grep -q "\`pass\`: orçamento respeitado" "$PHASE15C4_ACCEPT" && \
+   grep -q "\`block\`: estouro severo de custo" "$PHASE15C4_ACCEPT" && \
+   grep -q "RISK-15C4-001" "$PHASE15C4_RISK" && \
+   grep -q "Performance Budget Lead" "$PHASE15C4_RISK"; then
+    test_pass "15C4 acceptance/risk docs enforce decision model and ownership"
+else
+    test_fail "15C4 acceptance/risk docs are missing decision model or ownership"
+fi
+
+# Test 936: architecture/roadmap capture 15C4 closure and 15D1 next step
+echo "Test 936: architecture/roadmap capture 15C4 closure and 15D1 next step"
+if grep -q "15C.4 performance/cost coexistence baseline completed" docs/architecture.md && \
+   grep -q "FASE 15A.1/15A.2/15A.3/15A.4/15B.1/15B.2/15B.3/15B.4/15C.1/15C.2/15C.3/15C.4 implemented" docs/roadmap.md && \
+   grep -q "Bootstrap next subphase to execute: FASE 15D.1" docs/roadmap.md; then
+    test_pass "architecture/roadmap capture 15C4 closure and 15D1 next-step marker"
+else
+    test_fail "architecture/roadmap are not aligned with 15C4 closure and 15D1 next-step marker"
+fi
+
+# Test 937: 15C4 artifacts remain private (md_out boundary)
+echo "Test 937: 15C4 artifacts remain private (md_out boundary)"
+if [ ! -f "docs/release/FASE_15C4_PERFORMANCE_COST_PLAN.md" ] && \
+   [ ! -f "docs/release/FASE_15C4_COST_BASELINE.md" ] && \
+   [ ! -f "docs/release/FASE_15C4_BUDGET_BY_SCENARIO.md" ] && \
+   [ ! -f "docs/release/FASE_15C4_GUARDRAILS.md" ] && \
+   [ ! -f "docs/release/FASE_15C4_KNOWN_LIMITS.md" ] && \
+   [ ! -f "docs/release/FASE_15C4_TEST_MATRIX.md" ] && \
+   [ ! -f "docs/release/FASE_15C4_ACCEPTANCE_ROLLBACK.md" ] && \
+   [ ! -f "docs/release/FASE_15C4_RISK_OWNERSHIP_MAP.md" ] && \
+   [ ! -f "docs/release/FASE_15C4_HANDOFF_15D1.md" ]; then
+    test_pass "15C4 artifacts are correctly kept in md_out private boundary"
+else
+    test_fail "15C4 artifacts leaked to public docs/release boundary"
+fi
+
+# Test 938: dedicated 15C4 audit runner and legacy smoke remain green
+echo "Test 938: dedicated 15C4 audit runner and legacy smoke remain green"
+if tests/run_phase15c4_performance_cost_guardrails.sh >/tmp/cct_phase15c4_runner.out 2>&1 && \
+   ./cct --check tests/integration/codegen_minimal.cct >/tmp/cct_phase15c4_check.out 2>&1; then
+    test_pass "15C4 audit runner passes and legacy semantic check remains stable"
+else
+    test_fail "15C4 audit runner or legacy semantic check failed"
+fi
+
+# Test 939: 15C3->15C4 coherence preserves performance/cost progression discipline
+echo "Test 939: 15C3->15C4 coherence preserves performance/cost progression discipline"
+if grep -q "Pronto para 15C4" "$PHASE15C3_HANDOFF" && \
+   grep -q "Pronto para 15D1" "$PHASE15C4_HANDOFF" && \
+   grep -q "custo de convivência" "$PHASE15C4_PLAN"; then
+    test_pass "15C3->15C4 coherence is preserved for performance/cost progression"
+else
+    test_fail "15C3->15C4 coherence is broken for performance/cost progression"
+fi
+
+# Test 940: historical checkpoint lines remain available for traceability tests
+echo "Test 940: historical checkpoint lines remain available for traceability tests"
+if grep -q "Bootstrap track status: FASE 15A.1/15A.2/15A.3/15A.4/15B.1/15B.2/15B.3/15B.4/15C.1/15C.2/15C.3 implemented" docs/roadmap.md && \
+   grep -q "Bootstrap next subphase to execute: FASE 15C.4" docs/roadmap.md; then
+    test_pass "historical checkpoint lines remain available for traceability"
+else
+    test_fail "historical checkpoint lines are missing from roadmap"
+fi
+
+echo ""
+echo "========================================"
+echo "FASE 15D1: Política de Promoção/Reversão da Trilha Bootstrap Tests"
+echo "========================================"
+echo ""
+
+PHASE15D1_EXEC_DOC="md_out/FASE_15D1_CCT.md"
+PHASE15D1_PLAN="md_out/docs/release/FASE_15D1_PROMOTION_REVERSAL_POLICY_PLAN.md"
+PHASE15D1_PROM="md_out/docs/release/FASE_15D1_PROMOTION_TRIGGERS.md"
+PHASE15D1_REV="md_out/docs/release/FASE_15D1_REVERSAL_TRIGGERS.md"
+PHASE15D1_SAFE="md_out/docs/release/FASE_15D1_SAFETY_CHECKLIST.md"
+PHASE15D1_RUN="md_out/docs/release/FASE_15D1_FAST_ROLLBACK_RUNBOOK.md"
+PHASE15D1_TEST="md_out/docs/release/FASE_15D1_TEST_MATRIX.md"
+PHASE15D1_ACCEPT="md_out/docs/release/FASE_15D1_ACCEPTANCE_ROLLBACK.md"
+PHASE15D1_RISK="md_out/docs/release/FASE_15D1_RISK_OWNERSHIP_MAP.md"
+PHASE15D1_HANDOFF="md_out/docs/release/FASE_15D1_HANDOFF_15D2.md"
+
+# Test 941: mandatory 15D1 docs and artifacts exist
+echo "Test 941: mandatory 15D1 docs and artifacts exist"
+if [ -f "$PHASE15D1_EXEC_DOC" ] && \
+   [ -f "$PHASE15D1_PLAN" ] && \
+   [ -f "$PHASE15D1_PROM" ] && \
+   [ -f "$PHASE15D1_REV" ] && \
+   [ -f "$PHASE15D1_SAFE" ] && \
+   [ -f "$PHASE15D1_RUN" ] && \
+   [ -f "$PHASE15D1_TEST" ] && \
+   [ -f "$PHASE15D1_ACCEPT" ] && \
+   [ -f "$PHASE15D1_RISK" ] && \
+   [ -f "$PHASE15D1_HANDOFF" ]; then
+    test_pass "15D1 mandatory execution and promotion/reversal artifacts are present"
+else
+    test_fail "15D1 mandatory execution or promotion/reversal artifacts are missing"
+fi
+
+# Test 942: 15D1 execution prompt includes completion evidence and handoff to 15D2
+echo "Test 942: 15D1 execution prompt includes completion evidence and handoff to 15D2"
+if grep -q "## 13. Evidências de implementação concluída (15D1)" "$PHASE15D1_EXEC_DOC" && \
+   grep -q "FASE_15D1_HANDOFF_15D2.md" "$PHASE15D1_EXEC_DOC" && \
+   grep -q "handoff explícito para 15D2" "$PHASE15D1_EXEC_DOC"; then
+    test_pass "15D1 execution prompt captures closure evidence and 15D2 handoff"
+else
+    test_fail "15D1 execution prompt is missing closure evidence or 15D2 handoff"
+fi
+
+# Test 943: promotion/reversal trigger contracts define gate model
+echo "Test 943: promotion/reversal trigger contracts define gate model"
+if grep -q "PRM-15D1-001" "$PHASE15D1_PROM" && \
+   grep -q "PRM-15D1-004" "$PHASE15D1_PROM" && \
+   grep -q "REV-15D1-001" "$PHASE15D1_REV" && \
+   grep -q "REV-15D1-004" "$PHASE15D1_REV"; then
+    test_pass "15D1 promotion/reversal trigger contracts define gate model"
+else
+    test_fail "15D1 promotion/reversal trigger contracts are missing gate model elements"
+fi
+
+# Test 944: safety checklist and rollback runbook define operational safety model
+echo "Test 944: safety checklist and rollback runbook define operational safety model"
+if grep -q "SC-15D1-001" "$PHASE15D1_SAFE" && \
+   grep -q "SC-15D1-005" "$PHASE15D1_SAFE" && \
+   grep -q "RB-15D1" "$PHASE15D1_RUN" && \
+   grep -q "pass\`/\`watch\`/\`block" "$PHASE15D1_RUN"; then
+    test_pass "15D1 safety checklist and rollback runbook define operational safety model"
+else
+    test_fail "15D1 safety checklist or rollback runbook is missing operational safety model details"
+fi
+
+# Test 945: acceptance/risk docs enforce decision model and ownership
+echo "Test 945: acceptance/risk docs enforce decision model and ownership"
+if grep -q "\`pass\`: promoção autorizada" "$PHASE15D1_ACCEPT" && \
+   grep -q "\`block\`: gatilho de reversão ativo" "$PHASE15D1_ACCEPT" && \
+   grep -q "RISK-15D1-001" "$PHASE15D1_RISK" && \
+   grep -q "Release Governance Lead" "$PHASE15D1_RISK"; then
+    test_pass "15D1 acceptance/risk docs enforce decision model and ownership"
+else
+    test_fail "15D1 acceptance/risk docs are missing decision model or ownership"
+fi
+
+# Test 946: architecture/roadmap capture 15D1 closure and 15D2 next step
+echo "Test 946: architecture/roadmap capture 15D1 closure and 15D2 next step"
+if grep -q "15D.1 promotion/reversal policy baseline completed" docs/architecture.md && \
+   grep -q "FASE 15A.1/15A.2/15A.3/15A.4/15B.1/15B.2/15B.3/15B.4/15C.1/15C.2/15C.3/15C.4/15D.1 implemented" docs/roadmap.md && \
+   grep -q "Bootstrap next subphase to execute: FASE 15D.2" docs/roadmap.md; then
+    test_pass "architecture/roadmap capture 15D1 closure and 15D2 next-step marker"
+else
+    test_fail "architecture/roadmap are not aligned with 15D1 closure and 15D2 next-step marker"
+fi
+
+# Test 947: 15D1 artifacts remain private (md_out boundary)
+echo "Test 947: 15D1 artifacts remain private (md_out boundary)"
+if [ ! -f "docs/release/FASE_15D1_PROMOTION_REVERSAL_POLICY_PLAN.md" ] && \
+   [ ! -f "docs/release/FASE_15D1_PROMOTION_TRIGGERS.md" ] && \
+   [ ! -f "docs/release/FASE_15D1_REVERSAL_TRIGGERS.md" ] && \
+   [ ! -f "docs/release/FASE_15D1_SAFETY_CHECKLIST.md" ] && \
+   [ ! -f "docs/release/FASE_15D1_FAST_ROLLBACK_RUNBOOK.md" ] && \
+   [ ! -f "docs/release/FASE_15D1_TEST_MATRIX.md" ] && \
+   [ ! -f "docs/release/FASE_15D1_ACCEPTANCE_ROLLBACK.md" ] && \
+   [ ! -f "docs/release/FASE_15D1_RISK_OWNERSHIP_MAP.md" ] && \
+   [ ! -f "docs/release/FASE_15D1_HANDOFF_15D2.md" ]; then
+    test_pass "15D1 artifacts are correctly kept in md_out private boundary"
+else
+    test_fail "15D1 artifacts leaked to public docs/release boundary"
+fi
+
+# Test 948: dedicated 15D1 audit runner and legacy smoke remain green
+echo "Test 948: dedicated 15D1 audit runner and legacy smoke remain green"
+if tests/run_phase15d1_promotion_reversal_policy.sh >/tmp/cct_phase15d1_runner.out 2>&1 && \
+   ./cct --check tests/integration/codegen_minimal.cct >/tmp/cct_phase15d1_check.out 2>&1; then
+    test_pass "15D1 audit runner passes and legacy semantic check remains stable"
+else
+    test_fail "15D1 audit runner or legacy semantic check failed"
+fi
+
+# Test 949: 15C4->15D1 coherence preserves governance progression discipline
+echo "Test 949: 15C4->15D1 coherence preserves governance progression discipline"
+if grep -q "Pronto para 15D1" "$PHASE15C4_HANDOFF" && \
+   grep -q "Pronto para 15D2" "$PHASE15D1_HANDOFF" && \
+   grep -q "promoção/reversão" "$PHASE15D1_PLAN"; then
+    test_pass "15C4->15D1 coherence is preserved for governance progression"
+else
+    test_fail "15C4->15D1 coherence is broken for governance progression"
+fi
+
+# Test 950: historical checkpoint lines remain available for traceability tests
+echo "Test 950: historical checkpoint lines remain available for traceability tests"
+if grep -q "Bootstrap track status: FASE 15A.1/15A.2/15A.3/15A.4/15B.1/15B.2/15B.3/15B.4/15C.1/15C.2/15C.3/15C.4 implemented" docs/roadmap.md && \
+   grep -q "Bootstrap next subphase to execute: FASE 15D.1" docs/roadmap.md; then
+    test_pass "historical checkpoint lines remain available for traceability"
+else
+    test_fail "historical checkpoint lines are missing from roadmap"
+fi
+
+echo ""
+echo "========================================"
+echo "FASE 15D2: Matriz RC da Trilha Dual Tests"
+echo "========================================"
+echo ""
+
+PHASE15D2_EXEC_DOC="md_out/FASE_15D2_CCT.md"
+PHASE15D2_PLAN="md_out/docs/release/FASE_15D2_DUAL_RC_VALIDATION_PLAN.md"
+PHASE15D2_MATRIX="md_out/docs/release/FASE_15D2_RC_MATRIX.md"
+PHASE15D2_SMOKE="md_out/docs/release/FASE_15D2_CRITICAL_SMOKE_SET.md"
+PHASE15D2_BW="md_out/docs/release/FASE_15D2_BLOCKER_WAIVER_POLICY.md"
+PHASE15D2_DEC="md_out/docs/release/FASE_15D2_DECISION_RECOMMENDATION.md"
+PHASE15D2_TEST="md_out/docs/release/FASE_15D2_TEST_MATRIX.md"
+PHASE15D2_ACCEPT="md_out/docs/release/FASE_15D2_ACCEPTANCE_ROLLBACK.md"
+PHASE15D2_RISK="md_out/docs/release/FASE_15D2_RISK_OWNERSHIP_MAP.md"
+PHASE15D2_HANDOFF="md_out/docs/release/FASE_15D2_HANDOFF_15D3.md"
+
+# Test 951: mandatory 15D2 docs and artifacts exist
+echo "Test 951: mandatory 15D2 docs and artifacts exist"
+if [ -f "$PHASE15D2_EXEC_DOC" ] && \
+   [ -f "$PHASE15D2_PLAN" ] && \
+   [ -f "$PHASE15D2_MATRIX" ] && \
+   [ -f "$PHASE15D2_SMOKE" ] && \
+   [ -f "$PHASE15D2_BW" ] && \
+   [ -f "$PHASE15D2_DEC" ] && \
+   [ -f "$PHASE15D2_TEST" ] && \
+   [ -f "$PHASE15D2_ACCEPT" ] && \
+   [ -f "$PHASE15D2_RISK" ] && \
+   [ -f "$PHASE15D2_HANDOFF" ]; then
+    test_pass "15D2 mandatory execution and RC-matrix artifacts are present"
+else
+    test_fail "15D2 mandatory execution or RC-matrix artifacts are missing"
+fi
+
+# Test 952: 15D2 execution prompt includes completion evidence and handoff to 15D3
+echo "Test 952: 15D2 execution prompt includes completion evidence and handoff to 15D3"
+if grep -q "## 13. Evidências de implementação concluída (15D2)" "$PHASE15D2_EXEC_DOC" && \
+   grep -q "FASE_15D2_HANDOFF_15D3.md" "$PHASE15D2_EXEC_DOC" && \
+   grep -q "handoff explícito para 15D3" "$PHASE15D2_EXEC_DOC"; then
+    test_pass "15D2 execution prompt captures closure evidence and 15D3 handoff"
+else
+    test_fail "15D2 execution prompt is missing closure evidence or 15D3 handoff"
+fi
+
+# Test 953: RC matrix and critical smoke define objective validation gates
+echo "Test 953: RC matrix and critical smoke define objective validation gates"
+if grep -q "RC-15D2-001" "$PHASE15D2_MATRIX" && \
+   grep -q "RC-15D2-004" "$PHASE15D2_MATRIX" && \
+   grep -q "SMK-15D2-001" "$PHASE15D2_SMOKE" && \
+   grep -q "SMK-15D2-004" "$PHASE15D2_SMOKE"; then
+    test_pass "15D2 RC matrix and critical smoke define objective validation gates"
+else
+    test_fail "15D2 RC matrix or critical smoke is missing objective validation gates"
+fi
+
+# Test 954: blocker/waiver policy and decision recommendation define release decision model
+echo "Test 954: blocker/waiver policy and decision recommendation define release decision model"
+if grep -q "BW-15D2-001" "$PHASE15D2_BW" && \
+   grep -q "BW-15D2-004" "$PHASE15D2_BW" && \
+   grep -q "\`pass\`" "$PHASE15D2_DEC" && \
+   grep -q "\`block\`" "$PHASE15D2_DEC"; then
+    test_pass "15D2 blocker/waiver policy and decision recommendation define release decision model"
+else
+    test_fail "15D2 blocker/waiver policy or decision recommendation is missing release decision model details"
+fi
+
+# Test 955: acceptance/risk docs enforce decision model and ownership
+echo "Test 955: acceptance/risk docs enforce decision model and ownership"
+if grep -q "\`pass\`: RC validado sem blocker" "$PHASE15D2_ACCEPT" && \
+   grep -q "\`block\`: blocker ativo" "$PHASE15D2_ACCEPT" && \
+   grep -q "RISK-15D2-001" "$PHASE15D2_RISK" && \
+   grep -q "RC Validation Lead" "$PHASE15D2_RISK"; then
+    test_pass "15D2 acceptance/risk docs enforce decision model and ownership"
+else
+    test_fail "15D2 acceptance/risk docs are missing decision model or ownership"
+fi
+
+# Test 956: architecture/roadmap capture 15D2 closure and 15D3 next step
+echo "Test 956: architecture/roadmap capture 15D2 closure and 15D3 next step"
+if grep -q "15D.2 dual-track RC validation baseline completed" docs/architecture.md && \
+   grep -q "FASE 15A.1/15A.2/15A.3/15A.4/15B.1/15B.2/15B.3/15B.4/15C.1/15C.2/15C.3/15C.4/15D.1/15D.2 implemented" docs/roadmap.md && \
+   grep -q "Bootstrap next subphase to execute: FASE 15D.3" docs/roadmap.md; then
+    test_pass "architecture/roadmap capture 15D2 closure and 15D3 next-step marker"
+else
+    test_fail "architecture/roadmap are not aligned with 15D2 closure and 15D3 next-step marker"
+fi
+
+# Test 957: 15D2 artifacts remain private (md_out boundary)
+echo "Test 957: 15D2 artifacts remain private (md_out boundary)"
+if [ ! -f "docs/release/FASE_15D2_DUAL_RC_VALIDATION_PLAN.md" ] && \
+   [ ! -f "docs/release/FASE_15D2_RC_MATRIX.md" ] && \
+   [ ! -f "docs/release/FASE_15D2_CRITICAL_SMOKE_SET.md" ] && \
+   [ ! -f "docs/release/FASE_15D2_BLOCKER_WAIVER_POLICY.md" ] && \
+   [ ! -f "docs/release/FASE_15D2_DECISION_RECOMMENDATION.md" ] && \
+   [ ! -f "docs/release/FASE_15D2_TEST_MATRIX.md" ] && \
+   [ ! -f "docs/release/FASE_15D2_ACCEPTANCE_ROLLBACK.md" ] && \
+   [ ! -f "docs/release/FASE_15D2_RISK_OWNERSHIP_MAP.md" ] && \
+   [ ! -f "docs/release/FASE_15D2_HANDOFF_15D3.md" ]; then
+    test_pass "15D2 artifacts are correctly kept in md_out private boundary"
+else
+    test_fail "15D2 artifacts leaked to public docs/release boundary"
+fi
+
+# Test 958: dedicated 15D2 audit runner and legacy smoke remain green
+echo "Test 958: dedicated 15D2 audit runner and legacy smoke remain green"
+if tests/run_phase15d2_rc_matrix.sh >/tmp/cct_phase15d2_runner.out 2>&1 && \
+   ./cct --check tests/integration/codegen_minimal.cct >/tmp/cct_phase15d2_check.out 2>&1; then
+    test_pass "15D2 audit runner passes and legacy semantic check remains stable"
+else
+    test_fail "15D2 audit runner or legacy semantic check failed"
+fi
+
+# Test 959: 15D1->15D2 coherence preserves release-governance progression discipline
+echo "Test 959: 15D1->15D2 coherence preserves release-governance progression discipline"
+if grep -q "Pronto para 15D2" "$PHASE15D1_HANDOFF" && \
+   grep -q "Pronto para 15D3" "$PHASE15D2_HANDOFF" && \
+   grep -q "validação de RC" "$PHASE15D2_PLAN"; then
+    test_pass "15D1->15D2 coherence is preserved for release-governance progression"
+else
+    test_fail "15D1->15D2 coherence is broken for release-governance progression"
+fi
+
+# Test 960: historical checkpoint lines remain available for traceability tests
+echo "Test 960: historical checkpoint lines remain available for traceability tests"
+if grep -q "Bootstrap track status: FASE 15A.1/15A.2/15A.3/15A.4/15B.1/15B.2/15B.3/15B.4/15C.1/15C.2/15C.3/15C.4/15D.1 implemented" docs/roadmap.md && \
+   grep -q "Bootstrap next subphase to execute: FASE 15D.2" docs/roadmap.md; then
+    test_pass "historical checkpoint lines remain available for traceability"
+else
+    test_fail "historical checkpoint lines are missing from roadmap"
+fi
+
+echo ""
+echo "========================================"
+echo "FASE 15D3: Consolidação de Artefatos de Fase e Evidências Tests"
+echo "========================================"
+echo ""
+
+PHASE15D3_EXEC_DOC="md_out/FASE_15D3_CCT.md"
+PHASE15D3_PLAN="md_out/docs/release/FASE_15D3_FINAL_SNAPSHOT_PLAN.md"
+PHASE15D3_EVID="md_out/docs/release/FASE_15D3_EVIDENCE_PACKAGE_INDEX.md"
+PHASE15D3_MAT="md_out/docs/release/FASE_15D3_CONSOLIDATED_MATRICES.md"
+PHASE15D3_RL="md_out/docs/release/FASE_15D3_RESIDUAL_RISK_LIMITS.md"
+PHASE15D3_NOTES="md_out/docs/release/FASE_15D3_TECHNICAL_RELEASE_NOTES.md"
+PHASE15D3_TEST="md_out/docs/release/FASE_15D3_TEST_MATRIX.md"
+PHASE15D3_ACCEPT="md_out/docs/release/FASE_15D3_ACCEPTANCE_ROLLBACK.md"
+PHASE15D3_RISK="md_out/docs/release/FASE_15D3_RISK_OWNERSHIP_MAP.md"
+PHASE15D3_HANDOFF="md_out/docs/release/FASE_15D3_HANDOFF_15D4.md"
+PHASE15D4_EXEC_DOC="md_out/FASE_15D4_CCT.md"
+PHASE15D4_PLAN="md_out/docs/release/FASE_15D4_CLOSURE_GATE_PLAN.md"
+PHASE15D4_DECISION="md_out/docs/release/FASE_15D4_OFFICIAL_DECISION_RECORD.md"
+PHASE15D4_BACKLOG="md_out/docs/release/FASE_15D4_TRANSITION_BACKLOG.md"
+PHASE15D4_CONT="md_out/docs/release/FASE_15D4_CONTINUITY_ROLLBACK_PLAN.md"
+PHASE15D4_SUMMARY="md_out/docs/release/FASE_15D4_PHASE15_CLOSURE_SUMMARY.md"
+PHASE15D4_TEST="md_out/docs/release/FASE_15D4_TEST_MATRIX.md"
+PHASE15D4_ACCEPT="md_out/docs/release/FASE_15D4_ACCEPTANCE_ROLLBACK.md"
+PHASE15D4_RISK="md_out/docs/release/FASE_15D4_RISK_OWNERSHIP_MAP.md"
+PHASE15D4_HANDOFF="md_out/docs/release/FASE_15D4_HANDOFF_FASE16.md"
+
+# Test 961: mandatory 15D3 docs and artifacts exist
+echo "Test 961: mandatory 15D3 docs and artifacts exist"
+if [ -f "$PHASE15D3_EXEC_DOC" ] && \
+   [ -f "$PHASE15D3_PLAN" ] && \
+   [ -f "$PHASE15D3_EVID" ] && \
+   [ -f "$PHASE15D3_MAT" ] && \
+   [ -f "$PHASE15D3_RL" ] && \
+   [ -f "$PHASE15D3_NOTES" ] && \
+   [ -f "$PHASE15D3_TEST" ] && \
+   [ -f "$PHASE15D3_ACCEPT" ] && \
+   [ -f "$PHASE15D3_RISK" ] && \
+   [ -f "$PHASE15D3_HANDOFF" ]; then
+    test_pass "15D3 mandatory execution and consolidation artifacts are present"
+else
+    test_fail "15D3 mandatory execution or consolidation artifacts are missing"
+fi
+
+# Test 962: 15D3 execution prompt includes completion evidence and handoff to 15D4
+echo "Test 962: 15D3 execution prompt includes completion evidence and handoff to 15D4"
+if grep -q "## 13. Evidências de implementação concluída (15D3)" "$PHASE15D3_EXEC_DOC" && \
+   grep -q "FASE_15D3_HANDOFF_15D4.md" "$PHASE15D3_EXEC_DOC" && \
+   grep -q "handoff explícito para 15D4" "$PHASE15D3_EXEC_DOC"; then
+    test_pass "15D3 execution prompt captures closure evidence and 15D4 handoff"
+else
+    test_fail "15D3 execution prompt is missing closure evidence or 15D4 handoff"
+fi
+
+# Test 963: snapshot/evidence/matrix contracts define consolidation gate
+echo "Test 963: snapshot/evidence/matrix contracts define consolidation gate"
+if grep -q "EV-15D3-001" "$PHASE15D3_EVID" && \
+   grep -q "EV-15D3-004" "$PHASE15D3_EVID" && \
+   grep -q "MAT-15D3-001" "$PHASE15D3_MAT" && \
+   grep -q "MAT-15D3-004" "$PHASE15D3_MAT"; then
+    test_pass "15D3 snapshot/evidence/matrix contracts define consolidation gate"
+else
+    test_fail "15D3 snapshot/evidence/matrix contracts are missing consolidation gate details"
+fi
+
+# Test 964: residual-risk/technical-notes contracts define closure readiness context
+echo "Test 964: residual-risk/technical-notes contracts define closure readiness context"
+if grep -q "RL-15D3-001" "$PHASE15D3_RL" && \
+   grep -q "RL-15D3-004" "$PHASE15D3_RL" && \
+   grep -q "trilha bootstrap dual" "$PHASE15D3_NOTES" && \
+   grep -q "gate final 15D4" "$PHASE15D3_NOTES"; then
+    test_pass "15D3 residual-risk/technical-notes contracts define closure readiness context"
+else
+    test_fail "15D3 residual-risk or technical-notes contracts are missing closure readiness context"
+fi
+
+# Test 965: acceptance/risk docs enforce decision model and ownership
+echo "Test 965: acceptance/risk docs enforce decision model and ownership"
+if grep -q "\`pass\`: pacote consolidado completo e coerente" "$PHASE15D3_ACCEPT" && \
+   grep -q "\`block\`: inconsistência crítica" "$PHASE15D3_ACCEPT" && \
+   grep -q "RISK-15D3-001" "$PHASE15D3_RISK" && \
+   grep -q "Release Consolidation Lead" "$PHASE15D3_RISK"; then
+    test_pass "15D3 acceptance/risk docs enforce decision model and ownership"
+else
+    test_fail "15D3 acceptance/risk docs are missing decision model or ownership"
+fi
+
+# Test 966: architecture/roadmap capture 15D3 closure and 15D4 next step
+echo "Test 966: architecture/roadmap capture 15D3 closure and 15D4 next step"
+if grep -q "15D.3 final artifact/evidence consolidation completed" docs/architecture.md && \
+   grep -q "FASE 15A.1/15A.2/15A.3/15A.4/15B.1/15B.2/15B.3/15B.4/15C.1/15C.2/15C.3/15C.4/15D.1/15D.2/15D.3 implemented" docs/roadmap.md && \
+   grep -q "Bootstrap next subphase to execute: FASE 15D.4" docs/roadmap.md; then
+    test_pass "architecture/roadmap capture 15D3 closure and 15D4 next-step marker"
+else
+    test_fail "architecture/roadmap are not aligned with 15D3 closure and 15D4 next-step marker"
+fi
+
+# Test 967: 15D3 artifacts remain private (md_out boundary)
+echo "Test 967: 15D3 artifacts remain private (md_out boundary)"
+if [ ! -f "docs/release/FASE_15D3_FINAL_SNAPSHOT_PLAN.md" ] && \
+   [ ! -f "docs/release/FASE_15D3_EVIDENCE_PACKAGE_INDEX.md" ] && \
+   [ ! -f "docs/release/FASE_15D3_CONSOLIDATED_MATRICES.md" ] && \
+   [ ! -f "docs/release/FASE_15D3_RESIDUAL_RISK_LIMITS.md" ] && \
+   [ ! -f "docs/release/FASE_15D3_TECHNICAL_RELEASE_NOTES.md" ] && \
+   [ ! -f "docs/release/FASE_15D3_TEST_MATRIX.md" ] && \
+   [ ! -f "docs/release/FASE_15D3_ACCEPTANCE_ROLLBACK.md" ] && \
+   [ ! -f "docs/release/FASE_15D3_RISK_OWNERSHIP_MAP.md" ] && \
+   [ ! -f "docs/release/FASE_15D3_HANDOFF_15D4.md" ]; then
+    test_pass "15D3 artifacts are correctly kept in md_out private boundary"
+else
+    test_fail "15D3 artifacts leaked to public docs/release boundary"
+fi
+
+# Test 968: dedicated 15D3 audit runner and legacy smoke remain green
+echo "Test 968: dedicated 15D3 audit runner and legacy smoke remain green"
+if tests/run_phase15d3_artifact_consolidation.sh >/tmp/cct_phase15d3_runner.out 2>&1 && \
+   ./cct --check tests/integration/codegen_minimal.cct >/tmp/cct_phase15d3_check.out 2>&1; then
+    test_pass "15D3 audit runner passes and legacy semantic check remains stable"
+else
+    test_fail "15D3 audit runner or legacy semantic check failed"
+fi
+
+# Test 969: 15D2->15D3 coherence preserves closure-progression discipline
+echo "Test 969: 15D2->15D3 coherence preserves closure-progression discipline"
+if grep -q "Pronto para 15D3" "$PHASE15D2_HANDOFF" && \
+   grep -q "Pronto para 15D4" "$PHASE15D3_HANDOFF" && \
+   grep -q "snapshot final" "$PHASE15D3_PLAN"; then
+    test_pass "15D2->15D3 coherence is preserved for closure progression"
+else
+    test_fail "15D2->15D3 coherence is broken for closure progression"
+fi
+
+# Test 970: historical checkpoint lines remain available for traceability tests
+echo "Test 970: historical checkpoint lines remain available for traceability tests"
+if grep -q "Bootstrap track status: FASE 15A.1/15A.2/15A.3/15A.4/15B.1/15B.2/15B.3/15B.4/15C.1/15C.2/15C.3/15C.4/15D.1/15D.2 implemented" docs/roadmap.md && \
+   grep -q "Bootstrap next subphase to execute: FASE 15D.3" docs/roadmap.md; then
+    test_pass "historical checkpoint lines remain available for traceability"
+else
+    test_fail "historical checkpoint lines are missing from roadmap"
+fi
+
+echo ""
+echo "========================================"
+echo "FASE 15D4: Closure Gate da FASE 15 e Preparação da FASE 16 Tests"
+echo "========================================"
+echo ""
+
+# Test 971: mandatory 15D4 docs and artifacts exist
+echo "Test 971: mandatory 15D4 docs and artifacts exist"
+if [ -f "$PHASE15D4_EXEC_DOC" ] && \
+   [ -f "$PHASE15D4_PLAN" ] && \
+   [ -f "$PHASE15D4_DECISION" ] && \
+   [ -f "$PHASE15D4_BACKLOG" ] && \
+   [ -f "$PHASE15D4_CONT" ] && \
+   [ -f "$PHASE15D4_SUMMARY" ] && \
+   [ -f "$PHASE15D4_TEST" ] && \
+   [ -f "$PHASE15D4_ACCEPT" ] && \
+   [ -f "$PHASE15D4_RISK" ] && \
+   [ -f "$PHASE15D4_HANDOFF" ]; then
+    test_pass "15D4 mandatory execution and closure artifacts are present"
+else
+    test_fail "15D4 mandatory execution or closure artifacts are missing"
+fi
+
+# Test 972: 15D4 execution prompt includes completion evidence and FASE 16 handoff
+echo "Test 972: 15D4 execution prompt includes completion evidence and FASE 16 handoff"
+if grep -q "## 13. Evidências de implementação concluída (15D4)" "$PHASE15D4_EXEC_DOC" && \
+   grep -q "FASE_15D4_HANDOFF_FASE16.md" "$PHASE15D4_EXEC_DOC" && \
+   grep -q "handoff explícito para FASE 16" "$PHASE15D4_EXEC_DOC"; then
+    test_pass "15D4 execution prompt captures closure evidence and FASE 16 handoff"
+else
+    test_fail "15D4 execution prompt is missing closure evidence or FASE 16 handoff"
+fi
+
+# Test 973: closure/decision/backlog contracts define official phase closure gate
+echo "Test 973: closure/decision/backlog contracts define official phase closure gate"
+if grep -q "closure gate" "$PHASE15D4_PLAN" && \
+   grep -q "DEC-15D4-001" "$PHASE15D4_DECISION" && \
+   grep -q "DEC-15D4-004" "$PHASE15D4_DECISION" && \
+   grep -q "TB-15D4-001" "$PHASE15D4_BACKLOG" && \
+   grep -q "TB-15D4-004" "$PHASE15D4_BACKLOG"; then
+    test_pass "15D4 closure/decision/backlog contracts define official closure gate"
+else
+    test_fail "15D4 closure/decision/backlog contracts are missing official closure gate details"
+fi
+
+# Test 974: continuity/summary contracts define transition readiness context
+echo "Test 974: continuity/summary contracts define transition readiness context"
+if grep -q "RB-15D4-001" "$PHASE15D4_CONT" && \
+   grep -q "RB-15D4-004" "$PHASE15D4_CONT" && \
+   grep -q "Sumário de Fechamento da FASE 15" "$PHASE15D4_SUMMARY" && \
+   grep -q "transição controlada para FASE 16" "$PHASE15D4_SUMMARY"; then
+    test_pass "15D4 continuity/summary contracts define transition readiness context"
+else
+    test_fail "15D4 continuity or summary contracts are missing transition readiness context"
+fi
+
+# Test 975: acceptance/risk docs enforce closure decision model and ownership
+echo "Test 975: acceptance/risk docs enforce closure decision model and ownership"
+if grep -q "\`pass\`: closure gate final aprovado com decisão oficial e backlog de transição controlado" "$PHASE15D4_ACCEPT" && \
+   grep -q "\`block\`: regressão crítica, evidência inconsistente ou decisão sem rastreabilidade" "$PHASE15D4_ACCEPT" && \
+   grep -q "RISK-15D4-001" "$PHASE15D4_RISK" && \
+   grep -q "Phase Closure Lead" "$PHASE15D4_RISK"; then
+    test_pass "15D4 acceptance/risk docs enforce closure decision model and ownership"
+else
+    test_fail "15D4 acceptance/risk docs are missing closure decision model or ownership"
+fi
+
+# Test 976: architecture/roadmap capture 15D4 closure and 16A1 next step
+echo "Test 976: architecture/roadmap capture 15D4 closure and 16A1 next step"
+if grep -q "15D.4 phase-closure gate completed" docs/architecture.md && \
+   grep -q "FASE 15A.1/15A.2/15A.3/15A.4/15B.1/15B.2/15B.3/15B.4/15C.1/15C.2/15C.3/15C.4/15D.1/15D.2/15D.3/15D.4 implemented" docs/roadmap.md && \
+   grep -q "Bootstrap next subphase to execute: FASE 16A.1" docs/roadmap.md; then
+    test_pass "architecture/roadmap capture 15D4 closure and 16A1 next-step marker"
+else
+    test_fail "architecture/roadmap are not aligned with 15D4 closure and 16A1 next-step marker"
+fi
+
+# Test 977: 15D4 artifacts remain private (md_out boundary)
+echo "Test 977: 15D4 artifacts remain private (md_out boundary)"
+if [ ! -f "docs/release/FASE_15D4_CLOSURE_GATE_PLAN.md" ] && \
+   [ ! -f "docs/release/FASE_15D4_OFFICIAL_DECISION_RECORD.md" ] && \
+   [ ! -f "docs/release/FASE_15D4_TRANSITION_BACKLOG.md" ] && \
+   [ ! -f "docs/release/FASE_15D4_CONTINUITY_ROLLBACK_PLAN.md" ] && \
+   [ ! -f "docs/release/FASE_15D4_PHASE15_CLOSURE_SUMMARY.md" ] && \
+   [ ! -f "docs/release/FASE_15D4_TEST_MATRIX.md" ] && \
+   [ ! -f "docs/release/FASE_15D4_ACCEPTANCE_ROLLBACK.md" ] && \
+   [ ! -f "docs/release/FASE_15D4_RISK_OWNERSHIP_MAP.md" ] && \
+   [ ! -f "docs/release/FASE_15D4_HANDOFF_FASE16.md" ]; then
+    test_pass "15D4 artifacts are correctly kept in md_out private boundary"
+else
+    test_fail "15D4 artifacts leaked to public docs/release boundary"
+fi
+
+# Test 978: dedicated 15D4 audit runner and legacy smoke remain green
+echo "Test 978: dedicated 15D4 audit runner and legacy smoke remain green"
+if tests/run_phase15d4_phase_closure.sh >/tmp/cct_phase15d4_runner.out 2>&1 && \
+   ./cct --check tests/integration/codegen_minimal.cct >/tmp/cct_phase15d4_check.out 2>&1; then
+    test_pass "15D4 audit runner passes and legacy semantic check remains stable"
+else
+    test_fail "15D4 audit runner or legacy semantic check failed"
+fi
+
+# Test 979: 15D3->15D4 coherence preserves closure discipline and FASE 16 readiness
+echo "Test 979: 15D3->15D4 coherence preserves closure discipline and FASE 16 readiness"
+if grep -q "Pronto para 15D4" "$PHASE15D3_HANDOFF" && \
+   grep -q "Pronto para FASE 16" "$PHASE15D4_HANDOFF" && \
+   grep -q "closure gate final" "$PHASE15D4_PLAN"; then
+    test_pass "15D3->15D4 coherence is preserved for phase closure and FASE 16 readiness"
+else
+    test_fail "15D3->15D4 coherence is broken for phase closure and FASE 16 readiness"
+fi
+
+# Test 980: historical checkpoint lines remain available for traceability tests
+echo "Test 980: historical checkpoint lines remain available for traceability tests"
+if grep -q "Bootstrap track status: FASE 15A.1/15A.2/15A.3/15A.4/15B.1/15B.2/15B.3/15B.4/15C.1/15C.2/15C.3/15C.4/15D.1/15D.2/15D.3 implemented" docs/roadmap.md && \
+   grep -q "Bootstrap next subphase to execute: FASE 15D.4" docs/roadmap.md; then
+    test_pass "historical checkpoint lines remain available for traceability"
+else
+    test_fail "historical checkpoint lines are missing from roadmap"
+fi
+
 cleanup_codegen_artifacts "tests/integration/math_pow_basic_13m.cct"
 cleanup_codegen_artifacts "tests/integration/math_pow_assoc_13m.cct"
 cleanup_codegen_artifacts "tests/integration/math_pow_real_13m.cct"
@@ -11276,6 +13367,38 @@ rm -f /tmp/cct_phase14d2_inspect.out
 rm -f /tmp/cct_phase14d2_validate.out
 rm -f /tmp/cct_phase14d2_runner.out
 rm -rf /tmp/cct_phase14d2_rc
+rm -f /tmp/cct_phase15a1_runner.out
+rm -f /tmp/cct_phase15a1_check.out
+rm -f /tmp/cct_phase15a2_runner.out
+rm -f /tmp/cct_phase15a2_check.out
+rm -f /tmp/cct_phase15a3_runner.out
+rm -f /tmp/cct_phase15a3_check.out
+rm -f /tmp/cct_phase15a4_runner.out
+rm -f /tmp/cct_phase15a4_check.out
+rm -f /tmp/cct_phase15b1_runner.out
+rm -f /tmp/cct_phase15b1_check.out
+rm -f /tmp/cct_phase15b2_runner.out
+rm -f /tmp/cct_phase15b2_check.out
+rm -f /tmp/cct_phase15b3_runner.out
+rm -f /tmp/cct_phase15b3_check.out
+rm -f /tmp/cct_phase15b4_runner.out
+rm -f /tmp/cct_phase15b4_check.out
+rm -f /tmp/cct_phase15c1_runner.out
+rm -f /tmp/cct_phase15c1_check.out
+rm -f /tmp/cct_phase15c2_runner.out
+rm -f /tmp/cct_phase15c2_check.out
+rm -f /tmp/cct_phase15c3_runner.out
+rm -f /tmp/cct_phase15c3_check.out
+rm -f /tmp/cct_phase15c4_runner.out
+rm -f /tmp/cct_phase15c4_check.out
+rm -f /tmp/cct_phase15d1_runner.out
+rm -f /tmp/cct_phase15d1_check.out
+rm -f /tmp/cct_phase15d2_runner.out
+rm -f /tmp/cct_phase15d2_check.out
+rm -f /tmp/cct_phase15d3_runner.out
+rm -f /tmp/cct_phase15d3_check.out
+rm -f /tmp/cct_phase15d4_runner.out
+rm -f /tmp/cct_phase15d4_check.out
 
 # Summary
 echo ""

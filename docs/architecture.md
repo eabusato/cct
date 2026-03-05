@@ -349,6 +349,23 @@ Architecture direction:
 Architecture direction:
 - progressive path toward self-hosting
 - preserve incremental migration strategy (no abrupt architecture rewrite)
+- 15A.1 inventory baseline completed: critical surfaces, dependency boundaries, and risk taxonomy are now explicit
+- 15A.2 stage contract completed: S0..S3 stages, objective gates, promotion/reversal policy, and fallback matrix are formalized
+- 15A.3 equivalence/determinism contract completed: equivalence matrix, divergence policy, blocking criteria, and deterministic baseline are formalized
+- 15A.4 governance baseline completed: residual-risk register, ownership/SLA matrix, audit cadence, and escalation/update policy are formalized
+- 15B.1 bootstrap core infrastructure completed: modular bootstrap baseline, acceptance/rollback criteria, risk ownership map, and 15B2 handoff are formalized
+- 15B.2 frontend data-model baseline completed: token/AST subset schema, canonical-bootstrap mapping, structural limits, and 15B3 handoff are formalized
+- 15B.3 parser subset baseline completed: precedence contract, differential integration with fallback, and 15B4 handoff are formalized
+- 15B.4 semantic subset + compatible intermediate emission completed: semantic contract, comparable IR/ASM-output shape contract, and 15C1 handoff are formalized
+- 15C.1 unified differential harness completed: dual-route runner, severity/report contract, CI/local integration, and 15C2 handoff are formalized
+- 15C.2 functional convergence matrix completed: quantitative baseline, per-dimension targets, gap/blocking criteria, and 15C3 handoff are formalized
+- 15C.3 operational stability baseline completed: repetition campaigns, flakiness thresholds, incident mitigation flow, and 15C4 handoff are formalized
+- 15C.4 performance/cost coexistence baseline completed: cost baseline, scenario budgets, guardrails/known-limits register, and 15D1 handoff are formalized
+- 15D.1 promotion/reversal policy baseline completed: promotion/reversal triggers, safety checklist, fast rollback runbook, and 15D2 handoff are formalized
+- 15D.2 dual-track RC validation baseline completed: RC matrix, critical smoke set, blocker/waiver policy, and 15D3 handoff are formalized
+- 15D.3 final artifact/evidence consolidation completed: final snapshot, consolidated matrices, residual-risk limits, and 15D4 handoff are formalized
+- 15D.4 phase-closure gate completed: official closure decision, transition backlog, continuity/rollback strategy, and FASE 16 handoff are formalized
+- ASM-oriented bootstrap is treated as transfer-contract work (artifact/ABI shape), not kernel/boot execution inside this repository
 
 ## Reliability and Testing Model
 

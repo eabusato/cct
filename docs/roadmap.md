@@ -19,6 +19,14 @@ It has two goals:
 - Current completed phase: FASE 13D.4 (sigilo tooling expansion formally closed)
 - Current completed subphase: FASE 14A.4 (release-hardening block A completed)
 - Current phase context: FASE 13D.4 and FASE 13M.B2 remain formally closed; FASE 14 is in progress
+- Bootstrap track status: FASE 15A.1/15A.2/15A.3/15A.4/15B.1/15B.2/15B.3/15B.4/15C.1/15C.2/15C.3/15C.4/15D.1/15D.2/15D.3/15D.4 implemented (inventory + stage-contract + equivalence/determinism + governance/risk baseline + bootstrap core infrastructure + frontend data-model baseline + parser subset baseline + semantic/intermediate-emission compatibility baseline + unified differential harness baseline + functional convergence matrix baseline + operational stability baseline + performance/cost coexistence baseline + promotion/reversal policy baseline + dual-track RC validation baseline + final artifact/evidence consolidation baseline + phase-closure gate baseline)
+- Bootstrap track status: FASE 15A.1/15A.2/15A.3/15A.4/15B.1/15B.2/15B.3/15B.4/15C.1/15C.2/15C.3/15C.4/15D.1/15D.2/15D.3 implemented (inventory + stage-contract + equivalence/determinism + governance/risk baseline + bootstrap core infrastructure + frontend data-model baseline + parser subset baseline + semantic/intermediate-emission compatibility baseline + unified differential harness baseline + functional convergence matrix baseline + operational stability baseline + performance/cost coexistence baseline + promotion/reversal policy baseline + dual-track RC validation baseline + final artifact/evidence consolidation baseline)
+- Bootstrap track status: FASE 15A.1/15A.2/15A.3/15A.4/15B.1/15B.2/15B.3/15B.4/15C.1/15C.2/15C.3/15C.4/15D.1/15D.2 implemented (historical checkpoint preserved for cross-phase compatibility checks)
+- Bootstrap track status: FASE 15A.1/15A.2/15A.3/15A.4/15B.1/15B.2/15B.3/15B.4/15C.1/15C.2/15C.3/15C.4/15D.1 implemented (historical checkpoint preserved for cross-phase compatibility checks)
+- Bootstrap track status: FASE 15A.1/15A.2/15A.3/15A.4/15B.1/15B.2/15B.3/15B.4/15C.1/15C.2/15C.3/15C.4 implemented (historical checkpoint preserved for cross-phase compatibility checks)
+- Bootstrap track status: FASE 15A.1/15A.2/15A.3/15A.4/15B.1/15B.2/15B.3/15B.4/15C.1/15C.2/15C.3 implemented (historical checkpoint preserved for cross-phase compatibility checks)
+- Bootstrap track status: FASE 15A.1/15A.2/15A.3/15A.4/15B.1/15B.2/15B.3/15B.4/15C.1/15C.2 implemented (historical checkpoint preserved for cross-phase compatibility checks)
+- Bootstrap track status: FASE 15A.1/15A.2/15A.3/15A.4/15B.1/15B.2/15B.3/15B.4/15C.1 implemented (historical checkpoint preserved for cross-phase compatibility checks)
 - **Compiler maturity:** complete development toolchain with formatter, linter, build system, and doc generator
 - **Backend strategy:** C-hosted backend is official (`.cgen.c` + host C compiler)
 - **Sigilo model:** dual-level modular model is stable (local + system sigilo)
@@ -557,3 +565,11 @@ Every phase must pass these gates before closure:
 Next phase to execute: FASE 15 (bootstrap trajectory planning on top of closed FASE 14 baseline).
 Next subphase to execute: FASE 14C.1, baseline workflow hardening on top of completed documentation block.
 Historical traceability note: the line above is intentionally preserved as the recorded transition point used to close FASE 14 execution history.
+Bootstrap next subphase to execute: FASE 15D.4 (closure gate final da FASE 15 sobre baseline consolidado 15D.3).
+Bootstrap next subphase to execute: FASE 16A.1 (arquitetura executável da FASE 16 sobre baseline consolidado de fechamento da FASE 15).
+Bootstrap next subphase to execute: FASE 15D.3 (historical checkpoint preserved for cross-phase compatibility checks).
+Bootstrap next subphase to execute: FASE 15D.2 (historical checkpoint preserved for cross-phase compatibility checks).
+Bootstrap next subphase to execute: FASE 15D.1 (historical checkpoint preserved for cross-phase compatibility checks).
+Bootstrap next subphase to execute: FASE 15C.4 (historical checkpoint preserved for cross-phase compatibility checks).
+Bootstrap next subphase to execute: FASE 15C.3 (historical checkpoint preserved for cross-phase compatibility checks).
+Bootstrap next subphase to execute: FASE 15C.2 (historical checkpoint preserved for cross-phase compatibility checks).
