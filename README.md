@@ -1,5 +1,7 @@
 # CCT — Clavicula Turing
 
+> "To name is to invoke. To invoke is to bind. To bind is to compute."
+
 CCT is a compiled, ritual-themed programming language with deterministic sigil generation.
 
 <div align="center">
@@ -10,9 +12,9 @@ CCT is a compiled, ritual-themed programming language with deterministic sigil g
 
 ## Status
 
-**Current status: FASE 12H complete** (structural maturity milestone — canonization, hardening, and final release packaging).
+**Current status: FASE 14A.4 completed** (FASE 13/13M packages remain closed; FASE 14 release-hardening is in progress at subphase B).
 
-Implemented phases: **0 → 12H**.
+Implemented phases: **0 → 13D.4 + 13M.B2 + 14A.1/14A.2/14A.3/14A.4**.
 
 Highlights of the current baseline:
 - Real end-to-end compiler pipeline (`.cct -> parse/semantic -> codegen -> .cgen.c -> host C compiler -> binary`)
@@ -50,6 +52,8 @@ Highlights of the current baseline:
 - Canonical linter command in FASE 12E.2 (`cct lint`, `cct lint --strict`, `cct lint --fix`)
 - Canonical project workflow in FASE 12F (`cct build`, `cct run`, `cct test`, `cct bench`, `cct clean`) with basic incremental cache
 - Canonical documentation generator in FASE 12G (`cct doc`) for module/symbol API pages (markdown/html)
+- Common math operators in FASE 13M: `**` (power), `//` (floor integer division), `%%` (euclidean modulo)
+- FASE 14A hardening: canonical diagnostic taxonomy + canonical exit-code contract + sigilo explain mode + deterministic sigilo diagnostic ordering
 
 ## Build
 
@@ -57,7 +61,7 @@ Requirements:
 - C compiler (`gcc` or `clang`)
 - `make`
 
-Quick build (Linux/macOS):
+Build:
 
 ```bash
 make
@@ -68,8 +72,6 @@ Run full test suite:
 ```bash
 make test
 ```
-
-**Platform-specific instructions:** See [BUILD.md](BUILD.md) for detailed build instructions for Linux, macOS, and Windows (WSL2/MSYS2/MinGW)
 
 ## CLI
 
@@ -91,6 +93,11 @@ Main commands:
 - `./cct run [--project DIR] [-- --args]`: build and run project binary
 - `./cct test [pattern] [--project DIR]`: run `*.test.cct` project tests
 - `./cct bench [pattern] [--project DIR]`: run `*.bench.cct` project benchmarks
+- `./cct build|test|bench ... --sigilo-check [--sigilo-strict] [--sigilo-baseline PATH]`: opt-in sigilo baseline gate in project workflow
+- `./cct build|test|bench ... --sigilo-ci-profile advisory|gated|release`: CI profile contract for progressive sigilo gates
+- `./cct build|test|bench ... --sigilo-override-behavioral-risk`: explicit/audited override for behavioral-risk CI blocks
+- `./cct build|test|bench ... --sigilo-report summary|detailed`: operational report verbosity for sigilo-check (default `summary`)
+- `./cct build|test|bench ... --sigilo-explain`: actionable diagnosis line with probable cause and recommended next step
 - `./cct clean [--project DIR] [--all]`: clean `.cct` artifacts (and `dist` with `--all`)
 - `./cct doc [--project DIR] [--format markdown|html|both]`: generate API docs under `docs/api`
 - `./cct --tokens <file.cct>`: token stream
@@ -98,6 +105,14 @@ Main commands:
 - `./cct --ast-composite <entry.cct>`: composed AST for module closure
 - `./cct --check <file.cct>`: syntax + semantic checks only
 - `./cct --sigilo-only <file.cct>`: generate sigil artifacts without executable
+- `./cct sigilo inspect <artifact.sigil>`: inspect sigilo metadata
+- `./cct sigilo validate <artifact.sigil>`: run formal sigilo validation (tolerant/strict profiles)
+- `./cct sigilo diff <left.sigil> <right.sigil>`: compare two sigilo artifacts
+- `./cct sigilo check <left.sigil> <right.sigil> --strict --summary`: gate drift by severity
+- `./cct sigilo inspect|diff|check ... --consumer-profile legacy-tolerant|current-default|strict-contract`: explicit consumer compatibility profile
+- `./cct sigilo validate ... --consumer-profile legacy-tolerant|current-default|strict-contract`: explicit strict/tolerant validator profile
+- `./cct sigilo baseline check <artifact.sigil> [--baseline PATH]`: compare artifact vs persisted baseline
+- `./cct sigilo baseline update <artifact.sigil> [--baseline PATH] [--force]`: explicit baseline update
 - `./cct --no-color ...`: disable ANSI colors in diagnostics
 
 Sigil options:
@@ -195,6 +210,73 @@ Typical local flow:
 ./cct clean --project . --all
 ./cct doc --project . --format both
 ```
+
+Sigilo-focused local workflows (FASE 13B.1):
+- minimal daily loop and strict pre-merge loop are documented in `docs/sigilo_workflow_local_13b1.md`
+- strict baseline gate uses:
+  - `./cct sigilo baseline check <artifact.sigil> --strict --summary`
+  - exit code `2` for blocking drift (`review-required` or `behavioral-risk`)
+
+Sigilo-focused CI profiles (FASE 13B.3):
+- profiles:
+  - `advisory`: informative; blocks only `behavioral-risk` unless explicit override
+  - `gated`: blocks `review-required` and `behavioral-risk`
+  - `release`: strict profile; requires baseline and blocks `review-required` and `behavioral-risk`
+- commands:
+  - `./cct build --project . --sigilo-check --sigilo-ci-profile advisory`
+  - `./cct test --project . --sigilo-check --sigilo-ci-profile gated`
+  - `./cct build --project . --sigilo-check --sigilo-ci-profile release`
+  - `./cct build --project . --sigilo-check --sigilo-ci-profile advisory --sigilo-override-behavioral-risk`
+- reference contract: `docs/sigilo_ci_contract_13b3.md`
+
+Sigilo operational observability (FASE 13B.4):
+- report signature: `format=cct.sigilo.report.v1`
+- default output is summary-oriented and script-safe
+- detailed output (`--sigilo-report detailed`) adds per-item `domain`, `before`, and `after`
+- explain output (`--sigilo-explain`) adds probable cause + recommended action + troubleshooting doc reference
+- troubleshooting playbook: `docs/sigilo_troubleshooting_13b4.md`
+
+Sigilo consumer compatibility (FASE 13C.3):
+- profiles:
+  - `legacy-tolerant`: maximum compatibility for legacy readers
+  - `current-default`: canonical default profile in FASE 13 tooling
+  - `strict-contract`: blocking contract enforcement (`--strict` alias)
+- migration and fallback guide: `docs/sigilo_consumer_compat_13c3.md`
+
+Sigilo strict/tolerant validation (FASE 13C.4):
+- canonical validator command: `./cct sigilo validate <artifact.sigil> [--strict] [--consumer-profile ...]`
+- tolerant profiles keep compatibility-first behavior with warning classification
+- strict-contract profile blocks contractual violations for release gates
+
+FASE 13 release package (FASE 13D.4):
+- `docs/release/FASE_13_FINAL_SNAPSHOT.md`
+- `docs/release/FASE_13_COMPATIBILITY_MATRIX.md`
+- `docs/release/FASE_13_KNOWN_LIMITS.md`
+- `docs/release/FASE_13_RELEASE_NOTES.md`
+
+FASE 13M addendum package (FASE 13M.B2):
+- `docs/release/FASE_13M_FINAL_SNAPSHOT.md`
+- `docs/release/FASE_13M_RELEASE_NOTES.md`
+
+## Common Math Operators (FASE 13M)
+
+Stable additions:
+- `**`: exponentiation (right-associative)
+- `//`: integer floor division (integer operands only)
+- `%%`: euclidean modulo (integer operands only)
+- `%`: preserved with legacy behavior
+
+Executable example:
+
+```bash
+./cct examples/math_common_ops_13m.cct
+./examples/math_common_ops_13m
+```
+
+Expected output excerpt:
+- `pow 2**5 = 32`
+- `idiv -7//3 = -3`
+- `emod -7%%3 = 2`
 
 ## Bibliotheca Canonica (Standard Library)
 
@@ -399,22 +481,22 @@ Sigil-only (system + local in essential mode):
 - `docs/`: specification, architecture, and roadmap
 - `FASE_*_CCT.md`: phase planning/execution documents
 
-## FASE 12 Release — Structural Maturity Milestone
+## FASE 13 + 13M Release Package
 
-The FASE 12 block represents the **structural maturity milestone** of CCT, transforming it from a language implementation into a complete development toolchain.
+The active public release package is centered on **FASE 13D.4 + FASE 13M.B2**, with FASE 14 currently focused on hardening and contract harmonization.
 
 **Official release documentation:**
-- `docs/release/FASE_12_FINAL_SNAPSHOT.md` — Complete scope and features of FASE 12
-- `docs/release/FASE_12_STABILITY_MATRIX.md` — Official stability classification (stable/experimental/internal)
-- `docs/release/FASE_12_COMPATIBILITY_MATRIX.md` — Platform support and compatibility guarantees
-- `docs/release/FASE_12_RELEASE_NOTES.md` — Highlights, migration guide, and workflow recommendations
-- `docs/release/FASE_12_KNOWN_LIMITS.md` — Explicit boundaries of what is NOT in FASE 12
+- `docs/release/FASE_13_FINAL_SNAPSHOT.md` — Complete scope and closure status of the sigilo tooling package
+- `docs/release/FASE_13_COMPATIBILITY_MATRIX.md` — Compatibility guarantees and migration contract
+- `docs/release/FASE_13_RELEASE_NOTES.md` — Highlights and operational guidance
+- `docs/release/FASE_13_KNOWN_LIMITS.md` — Explicit boundaries of the 13 package
+- `docs/release/FASE_13M_FINAL_SNAPSHOT.md` — Common math operators addendum closure snapshot
+- `docs/release/FASE_13M_RELEASE_NOTES.md` — 13M operator-package highlights and semantics
 
 **Quick reference:**
-- All FASE 0–11 features remain stable and backward-compatible
-- FASE 12 adds: diagnostics, casts, Option/Result, HashMap/Set, iterators, formatter, linter, build system, doc generator
-- Zero breaking changes from previous phases
-- Ready for real-world projects within defined scope
+- FASE 0–13 + 13M public contracts remain stable
+- FASE 14A added hardening contracts: diagnostics taxonomy, exit-code policy, explain mode, deterministic sigilo diagnostic order
+- Zero silent-breaking-change policy remains active
 
 See release documentation for complete details.
 
@@ -448,12 +530,13 @@ CCT documentation is organized by audience and purpose. Choose your reading path
 ### For Advanced Users and Contributors
 1. [Architecture](docs/architecture.md) - Compiler internals
 2. [Roadmap](docs/roadmap.md) - Phase history and future plans
-3. [FASE 12 Release Documentation](docs/release/):
-   - [Final Snapshot](docs/release/FASE_12_FINAL_SNAPSHOT.md) - Complete FASE 12 overview
-   - [Stability Matrix](docs/release/FASE_12_STABILITY_MATRIX.md) - What's stable
-   - [Compatibility Matrix](docs/release/FASE_12_COMPATIBILITY_MATRIX.md) - Platform support
-   - [Release Notes](docs/release/FASE_12_RELEASE_NOTES.md) - Highlights and migration guide
-   - [Known Limits](docs/release/FASE_12_KNOWN_LIMITS.md) - Current boundaries
+3. [FASE 13 + 13M Release Documentation](docs/release/):
+   - [FASE 13 Final Snapshot](docs/release/FASE_13_FINAL_SNAPSHOT.md) - Complete sigilo tooling package overview
+   - [FASE 13 Compatibility Matrix](docs/release/FASE_13_COMPATIBILITY_MATRIX.md) - Compatibility and migration surface
+   - [FASE 13 Release Notes](docs/release/FASE_13_RELEASE_NOTES.md) - Highlights and migration guide
+   - [FASE 13 Known Limits](docs/release/FASE_13_KNOWN_LIMITS.md) - Current boundaries
+   - [FASE 13M Final Snapshot](docs/release/FASE_13M_FINAL_SNAPSHOT.md) - Common math addendum closure
+   - [FASE 13M Release Notes](docs/release/FASE_13M_RELEASE_NOTES.md) - Math addendum highlights
 
 **Estimated time**: 3-4 hours
 
@@ -462,7 +545,7 @@ CCT documentation is organized by audience and purpose. Choose your reading path
 - **architecture.md**: How the compiler works internally
 - **bibliotheca_canonica.md**: Standard library concepts and APIs
 - **roadmap.md**: Where we came from, where we're going
-- **release/**: Official FASE 12 documentation (current release)
+- **release/**: Official FASE 13 + 13M release documentation (current release)
 
 ### All Documentation Files
 Primary docs:
@@ -470,7 +553,7 @@ Primary docs:
 - `docs/architecture.md`
 - `docs/roadmap.md`
 - `docs/bibliotheca_canonica.md`
-- `docs/release/` — FASE 12 official release documentation
+- `docs/release/` — FASE 13 + 13M official release documentation
 
 Tooling and guides:
 - `docs/install.md`
@@ -479,6 +562,7 @@ Tooling and guides:
 - `docs/fluxus_usage.md`
 - `docs/linter.md`
 - `docs/doc_generator.md`
+- `docs/sigilo_operations_14b2.md`
 
 Project and phase dossiers:
 - `PROJETO_CCT.md`

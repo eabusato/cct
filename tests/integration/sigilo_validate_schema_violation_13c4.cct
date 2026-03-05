@@ -1,0 +1,11 @@
+INCIPIT grimoire "sigilo_validate_schema_violation_13c4"
+
+RITUALE main() REDDE REX
+  EVOCA REX value AD 9
+  DUM value > 0
+    VINCIRE value AD value - 1
+  FIN DUM
+  REDDE value
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

@@ -1,0 +1,10 @@
+INCIPIT grimoire "sigilo_report_explain_13b4"
+
+ADVOCARE "../lib/util.cct"
+
+RITUALE main() REDDE REX
+  CONIURA helper()
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

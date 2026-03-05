@@ -1,0 +1,9 @@
+INCIPIT grimoire "phase13d1_multi_main"
+
+ADVOCARE "modules/util.cct"
+
+RITUALE main() REDDE REX
+  REDDE CONIURA util_sum(20, 22)
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

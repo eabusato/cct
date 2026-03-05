@@ -2,6 +2,7 @@
 
 Phase: **13M — Operadores Matemáticos de Alta Utilidade**  
 Closure stage: final 13M release gate
+Closure status: closed at 13M.B2
 
 ## Delivered Features
 
@@ -27,4 +28,4 @@ Closure stage: final 13M release gate
 
 - architecture: `docs/architecture.md`
 - language contract: `docs/spec.md`
-- release docs: `FASE_13M_RELEASE_NOTES.md`, `FASE_13M_KNOWN_LIMITS.md`, `FASE_13M_CLOSURE_GATE.md`
+- release docs: `FASE_13M_RELEASE_NOTES.md`

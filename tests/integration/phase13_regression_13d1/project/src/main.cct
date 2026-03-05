@@ -1,0 +1,9 @@
+INCIPIT grimoire "phase13d1_project_main"
+
+ADVOCARE "../lib/util.cct"
+
+RITUALE main() REDDE REX
+  REDDE CONIURA helper()
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

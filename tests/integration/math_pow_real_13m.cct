@@ -1,0 +1,11 @@
+INCIPIT grimoire "math_pow_real_13m"
+
+RITUALE main() REDDE REX
+  EVOCA UMBRA a AD 9.0 ** 0.5
+  SI a > 2.9
+    REDDE 0
+  FIN SI
+  REDDE 1
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

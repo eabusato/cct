@@ -1,0 +1,17 @@
+INCIPIT grimoire "math_precedence_parentheses_13m"
+
+RITUALE main() REDDE REX
+  EVOCA REX a AD 2 + 3 ** 2 * 4
+  EVOCA REX b AD (2 + 3) ** 2 * 4
+  EVOCA REX c AD 2 + (3 ** 2) * 4
+  SI a == 38
+    SI b == 100
+      SI c == 38
+        REDDE 0
+      FIN SI
+    FIN SI
+  FIN SI
+  REDDE 1
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

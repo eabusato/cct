@@ -1982,6 +1982,46 @@ static bool sg_write_meta(cct_sigilo_t *sg, const cct_sigilo_model_t *m) {
     fprintf(f, "phase10_final_status = consolidated\n");
     fprintf(f, "phase10_typing_contract = genus_explicit_monomorphization+pactum_explicit_conformance+constraint_single_contract_rituale_only\n");
 
+    fprintf(f, "\n[analysis_summary]\n");
+    fprintf(f, "scope = local\n");
+    fprintf(f, "schema_phase = 13C2\n");
+    fprintf(f, "analysis_profile = analytical_v1\n");
+    fprintf(f, "complexity_class = %s\n", complexity_class);
+    fprintf(f, "control_flow_pressure = %u\n", m->total_loops + m->total_conditionals);
+    fprintf(f, "failure_surface = %s\n", (m->count_tempta || m->count_iace || m->count_semper) ? "present" : "none");
+    fprintf(f, "stdlib_surface = %u\n", stdlib_module_count);
+    fprintf(f, "generic_surface = %u\n", m->count_generic_instantiation + m->count_generic_constraint);
+    fprintf(f, "determinism_guarantee = stable\n");
+
+    fprintf(f, "\n[diff_fingerprint_context]\n");
+    fprintf(f, "scope_anchor = local\n");
+    fprintf(f, "hash_anchor = %s\n", sg->semantic_hash_hex);
+    fprintf(f, "fingerprint_basis = structural_metrics+topology+hash_anchor\n");
+    fprintf(f, "serialization_profile = analytical_v1\n");
+    fprintf(f, "volatility = none\n");
+    fprintf(f, "module_anchor_count = %u\n", sg->module_count ? sg->module_count : 1);
+    fprintf(f, "entry_anchor = %s\n", sg->entry_module_path ? sg->entry_module_path : (sg->input_path ? sg->input_path : "unknown"));
+
+    fprintf(f, "\n[module_structural_summary]\n");
+    fprintf(f, "module_count = %u\n", sg->module_count ? sg->module_count : 1);
+    fprintf(f, "module_mode = %s\n", (sg->module_count > 1) ? "composed" : "single");
+    fprintf(f, "import_edge_count = %u\n", sg->import_edge_count);
+    fprintf(f, "cross_module_call_count = %u\n", sg->cross_module_call_count);
+    fprintf(f, "cross_module_type_ref_count = %u\n", sg->cross_module_type_ref_count);
+    fprintf(f, "ritual_count = %u\n", m->ritual_count);
+    fprintf(f, "public_symbol_count = %u\n", sg->public_symbol_count);
+    fprintf(f, "internal_symbol_count = %u\n", sg->internal_symbol_count);
+    fprintf(f, "module_resolution_status = %s\n", sg->module_resolution_ok ? "ok" : "error");
+
+    fprintf(f, "\n[compatibility_hints]\n");
+    fprintf(f, "schema_contract = cct.sigil.v1\n");
+    fprintf(f, "unknown_field_policy = warning_non_fatal\n");
+    fprintf(f, "deprecated_alias = sigilo_style->visual_engine\n");
+    fprintf(f, "consumer_mode_tolerant = ignore_unknown_additive_fields\n");
+    fprintf(f, "consumer_mode_strict = enforce_required_fields_and_hash_by_scope\n");
+    fprintf(f, "diff_policy = analytical_blocks_review_required_except_compatibility_hints\n");
+    fprintf(f, "deterministic_serialization = stable_section_order\n");
+
     fprintf(f, "\n[layout]\n");
     fprintf(f, "primary_axis_deg = %.3f\n", primary_axis_deg);
     fprintf(f, "canvas_center = %.1f,%.1f\n", CCT_SIGILO_CENTER_X, CCT_SIGILO_CENTER_Y);
@@ -2600,6 +2640,45 @@ static bool sg_write_system_meta(
     fprintf(f, "phase10_subset_final = true\n");
     fprintf(f, "phase10_final_status = consolidated\n");
     fprintf(f, "phase10_typing_contract = genus_explicit_monomorphization+pactum_explicit_conformance+constraint_single_contract_rituale_only\n");
+
+    fprintf(f, "\n[analysis_summary]\n");
+    fprintf(f, "scope = system\n");
+    fprintf(f, "schema_phase = 13C2\n");
+    fprintf(f, "analysis_profile = analytical_v1\n");
+    fprintf(f, "system_topology_class = %s\n", sg_system_topology_class(module_count, import_edge_count));
+    fprintf(f, "module_density = %.6f\n", module_density);
+    fprintf(f, "cross_module_flow = %u\n", cross_module_call_count + cross_module_type_ref_count);
+    fprintf(f, "generic_surface = %u\n", generic_inst_total + generic_constraint_total);
+    fprintf(f, "determinism_guarantee = stable\n");
+
+    fprintf(f, "\n[diff_fingerprint_context]\n");
+    fprintf(f, "scope_anchor = system\n");
+    fprintf(f, "hash_anchor = %s\n", sg->semantic_hash_hex);
+    fprintf(f, "fingerprint_basis = module_map+import_edges+system_hash_anchor\n");
+    fprintf(f, "serialization_profile = analytical_v1\n");
+    fprintf(f, "volatility = none\n");
+    fprintf(f, "module_anchor_count = %u\n", module_count);
+    fprintf(f, "entry_anchor = %s\n", entry_path ? entry_path : "unknown");
+
+    fprintf(f, "\n[module_structural_summary]\n");
+    fprintf(f, "module_count = %u\n", module_count);
+    fprintf(f, "import_edges = %u\n", import_edge_count);
+    fprintf(f, "cross_module_calls = %u\n", cross_module_call_count);
+    fprintf(f, "cross_module_type_refs = %u\n", cross_module_type_ref_count);
+    fprintf(f, "module_resolution_status = %s\n", module_resolution_ok ? "ok" : "error");
+    fprintf(f, "exported_symbol_count = %u\n", public_symbol_count);
+    fprintf(f, "internal_symbol_count = %u\n", internal_symbol_count);
+    fprintf(f, "composition_mode = sigil_of_sigils_inline\n");
+
+    fprintf(f, "\n[compatibility_hints]\n");
+    fprintf(f, "schema_contract = cct.sigil.v1\n");
+    fprintf(f, "unknown_field_policy = warning_non_fatal\n");
+    fprintf(f, "deprecated_alias = sigilo_style->visual_engine\n");
+    fprintf(f, "consumer_mode_tolerant = ignore_unknown_additive_fields\n");
+    fprintf(f, "consumer_mode_strict = enforce_required_fields_and_hash_by_scope\n");
+    fprintf(f, "diff_policy = analytical_blocks_review_required_except_compatibility_hints\n");
+    fprintf(f, "deterministic_serialization = stable_section_order\n");
+
     fprintf(f, "\n[modules]\n");
     for (u32 i = 0; i < module_count; i++) {
         fprintf(f, "%u = %s\n", i, (module_paths && module_paths[i]) ? module_paths[i] : "unknown");

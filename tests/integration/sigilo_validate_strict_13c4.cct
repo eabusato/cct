@@ -1,0 +1,17 @@
+INCIPIT grimoire "sigilo_validate_strict_13c4"
+
+RITUALE calc() REDDE REX
+  EVOCA REX x AD 3
+  SI x > 1
+    VINCIRE x AD x + 7
+  ALITER
+    VINCIRE x AD 0
+  FIN SI
+  REDDE x
+EXPLICIT RITUALE
+
+RITUALE main() REDDE REX
+  REDDE CONIURA calc()
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

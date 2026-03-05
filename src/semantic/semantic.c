@@ -2147,6 +2147,7 @@ static cct_sem_type_t* sem_analyze_expr(cct_semantic_analyzer_t *sem, const cct_
                 case TOKEN_MINUS:
                 case TOKEN_STAR:
                 case TOKEN_SLASH:
+                case TOKEN_STAR_STAR:
                     if (!sem_require_concrete_type_for_operation(sem, expr->as.binary_op.left, left) ||
                         !sem_require_concrete_type_for_operation(sem, expr->as.binary_op.right, right)) {
                         return &sem->type_error;
@@ -2159,6 +2160,19 @@ static cct_sem_type_t* sem_analyze_expr(cct_semantic_analyzer_t *sem, const cct_
                     }
                     return sem_arithmetic_result_type(sem, left, right);
 
+                case TOKEN_SLASH_SLASH:
+                    if (!sem_require_concrete_type_for_operation(sem, expr->as.binary_op.left, left) ||
+                        !sem_require_concrete_type_for_operation(sem, expr->as.binary_op.right, right)) {
+                        return &sem->type_error;
+                    }
+                    if (!sem_is_integer_type(left) || !sem_is_integer_type(right)) {
+                        if (!sem_is_error_type(left) && !sem_is_error_type(right)) {
+                            sem_report_node(sem, expr, "operator // requires integer operands");
+                        }
+                        return &sem->type_error;
+                    }
+                    return &sem->type_rex;
+
                 case TOKEN_PERCENT:
                     if (!sem_require_concrete_type_for_operation(sem, expr->as.binary_op.left, left) ||
                         !sem_require_concrete_type_for_operation(sem, expr->as.binary_op.right, right)) {
@@ -2167,6 +2181,19 @@ static cct_sem_type_t* sem_analyze_expr(cct_semantic_analyzer_t *sem, const cct_
                     if (!sem_is_integer_type(left) || !sem_is_integer_type(right)) {
                         if (!sem_is_error_type(left) && !sem_is_error_type(right)) {
                             sem_report_node(sem, expr, "operator % requires integer operands");
+                        }
+                        return &sem->type_error;
+                    }
+                    return &sem->type_rex;
+
+                case TOKEN_PERCENT_PERCENT:
+                    if (!sem_require_concrete_type_for_operation(sem, expr->as.binary_op.left, left) ||
+                        !sem_require_concrete_type_for_operation(sem, expr->as.binary_op.right, right)) {
+                        return &sem->type_error;
+                    }
+                    if (!sem_is_integer_type(left) || !sem_is_integer_type(right)) {
+                        if (!sem_is_error_type(left) && !sem_is_error_type(right)) {
+                            sem_report_node(sem, expr, "operator %% requires integer operands");
                         }
                         return &sem->type_error;
                     }

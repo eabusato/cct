@@ -20,6 +20,7 @@ static bool g_colors_enabled = false;
 static const char *C_RED = "\x1b[31m";
 static const char *C_YELLOW = "\x1b[33m";
 static const char *C_CYAN = "\x1b[36m";
+static const char *C_GREEN = "\x1b[32m";
 static const char *C_BOLD = "\x1b[1m";
 static const char *C_RESET = "\x1b[0m";
 
@@ -54,11 +55,12 @@ bool cct_diagnostic_colors_enabled(void) {
     return g_colors_enabled;
 }
 
-static const char* cct_diag_level_text(cct_diagnostic_level_t level) {
+const char* cct_diagnostic_level_text(cct_diagnostic_level_t level) {
     switch (level) {
         case CCT_DIAG_ERROR: return "error";
         case CCT_DIAG_WARNING: return "warning";
         case CCT_DIAG_NOTE: return "note";
+        case CCT_DIAG_HINT: return "hint";
         default: return "diagnostic";
     }
 }
@@ -68,6 +70,7 @@ static const char* cct_diag_level_color(cct_diagnostic_level_t level) {
         case CCT_DIAG_ERROR: return C_RED;
         case CCT_DIAG_WARNING: return C_YELLOW;
         case CCT_DIAG_NOTE: return C_CYAN;
+        case CCT_DIAG_HINT: return C_GREEN;
         default: return "";
     }
 }
@@ -153,7 +156,7 @@ void cct_diagnostic_emit(const cct_diagnostic_t *diag) {
     if (!diag || !diag->message) return;
 
     bool colors = cct_diagnostic_colors_enabled();
-    const char *level = cct_diag_level_text(diag->level);
+    const char *level = cct_diagnostic_level_text(diag->level);
 
     if (diag->file_path && diag->line) {
         if (colors) {
@@ -199,6 +202,7 @@ void cct_diagnostic_emit(const cct_diagnostic_t *diag) {
 
     if (diag->suggestion && diag->suggestion[0] != '\0') {
         fprintf(stderr, "   = suggestion: %s\n", diag->suggestion);
+        fprintf(stderr, "   = hint: %s\n", diag->suggestion);
     }
 }
 
@@ -236,6 +240,45 @@ void cct_error_with_suggestion(const char *file, u32 line, u32 column, const cha
         .line = line,
         .column = column,
         .suggestion = suggestion,
+        .code_label = NULL,
+    };
+    cct_diagnostic_emit(&diag);
+}
+
+void cct_warning(const char *message) {
+    cct_diagnostic_t diag = {
+        .level = CCT_DIAG_WARNING,
+        .message = message ? message : "warning",
+        .file_path = NULL,
+        .line = 0,
+        .column = 0,
+        .suggestion = NULL,
+        .code_label = NULL,
+    };
+    cct_diagnostic_emit(&diag);
+}
+
+void cct_note(const char *message) {
+    cct_diagnostic_t diag = {
+        .level = CCT_DIAG_NOTE,
+        .message = message ? message : "note",
+        .file_path = NULL,
+        .line = 0,
+        .column = 0,
+        .suggestion = NULL,
+        .code_label = NULL,
+    };
+    cct_diagnostic_emit(&diag);
+}
+
+void cct_hint(const char *message) {
+    cct_diagnostic_t diag = {
+        .level = CCT_DIAG_HINT,
+        .message = message ? message : "hint",
+        .file_path = NULL,
+        .line = 0,
+        .column = 0,
+        .suggestion = NULL,
         .code_label = NULL,
     };
     cct_diagnostic_emit(&diag);

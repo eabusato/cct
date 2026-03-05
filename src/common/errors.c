@@ -23,6 +23,8 @@ const char* cct_error_string(cct_error_code_t code) {
         /* CLI errors */
         case CCT_ERROR_INVALID_ARGUMENT:
             return "Invalid argument";
+        case CCT_ERROR_CONTRACT_VIOLATION:
+            return "Contract violation";
         case CCT_ERROR_UNKNOWN_COMMAND:
             return "Unknown command";
         case CCT_ERROR_MISSING_ARGUMENT:
@@ -63,11 +65,16 @@ const char* cct_error_string(cct_error_code_t code) {
  * Print error message to stderr
  */
 void cct_error_print(cct_error_code_t code, const char *message) {
-    fprintf(stderr, "cct: error: %s", message);
-    if (code != CCT_OK) {
-        fprintf(stderr, " [%s]", cct_error_string(code));
-    }
-    fprintf(stderr, "\n");
+    cct_diagnostic_t diag = {
+        .level = CCT_DIAG_ERROR,
+        .message = message ? message : "unknown error",
+        .file_path = NULL,
+        .line = 0,
+        .column = 0,
+        .suggestion = NULL,
+        .code_label = (code != CCT_OK) ? cct_error_string(code) : NULL,
+    };
+    cct_diagnostic_emit(&diag);
 }
 
 /*
@@ -75,17 +82,11 @@ void cct_error_print(cct_error_code_t code, const char *message) {
  */
 void cct_error_printf(cct_error_code_t code, const char *format, ...) {
     va_list args;
-
-    fprintf(stderr, "cct: error: ");
-
+    char buffer[2048];
     va_start(args, format);
-    vfprintf(stderr, format, args);
+    vsnprintf(buffer, sizeof(buffer), format, args);
     va_end(args);
-
-    if (code != CCT_OK) {
-        fprintf(stderr, " [%s]", cct_error_string(code));
-    }
-    fprintf(stderr, "\n");
+    cct_error_print(code, buffer);
 }
 
 /*

@@ -1,0 +1,15 @@
+INCIPIT grimoire "math_return_expr_13m"
+
+RITUALE calc(REX a, REX b) REDDE REX
+  REDDE a ** b + a // b + a %% b
+EXPLICIT RITUALE
+
+RITUALE main() REDDE REX
+  EVOCA REX v AD CONIURA calc(7, 3)
+  SI v == 346
+    REDDE 0
+  FIN SI
+  REDDE 1
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

@@ -1,0 +1,11 @@
+INCIPIT grimoire "math_pow_2_10_13m"
+
+RITUALE main() REDDE REX
+  EVOCA REX v AD 2 ** 10
+  SI v == 1024
+    REDDE 0
+  FIN SI
+  REDDE 1
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

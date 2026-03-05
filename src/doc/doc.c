@@ -993,7 +993,7 @@ int cct_doc_command(int argc, char **argv) {
     cct_module_bundle_dispose(&bundle);
 
     if (opts.strict_docs && warning_count > 0) {
-        return 2;
+        return (int)CCT_ERROR_CONTRACT_VIOLATION;
     }
     return 0;
 }

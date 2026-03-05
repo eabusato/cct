@@ -1,0 +1,16 @@
+INCIPIT grimoire "sigilo_consumer_current_13c3"
+
+RITUALE fold() REDDE REX
+  EVOCA REX acc AD 1
+  DUM acc < 8
+    VINCIRE acc AD acc * 2
+  FIN DUM
+  REDDE acc
+EXPLICIT RITUALE
+
+RITUALE main() REDDE REX
+  EVOCA REX v AD CONIURA fold()
+  REDDE v
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

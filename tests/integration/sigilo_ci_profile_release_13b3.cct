@@ -1,0 +1,9 @@
+INCIPIT grimoire "sigilo_ci_profile_release_13b3"
+
+ADVOCARE "../lib/util.cct"
+
+RITUALE main() REDDE REX
+  REDDE CONIURA helper()
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

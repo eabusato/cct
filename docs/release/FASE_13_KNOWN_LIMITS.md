@@ -51,4 +51,3 @@ Workaround:
 ## References
 
 - `docs/release/FASE_13_RELEASE_NOTES.md`
-- `docs/release/FASE_13_DETERMINISM_AUDIT.md`

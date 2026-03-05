@@ -1647,6 +1647,10 @@ static bool cg_emit_binary_expr(FILE *out, cct_codegen_t *cg, const cct_ast_node
         case TOKEN_STAR: op_text = "*"; break;
         case TOKEN_SLASH: op_text = "/"; break;
         case TOKEN_PERCENT: op_text = "%"; break;
+        case TOKEN_STAR_STAR:
+        case TOKEN_SLASH_SLASH:
+        case TOKEN_PERCENT_PERCENT:
+            break;
         case TOKEN_EQ_EQ: op_text = "=="; is_comparison = true; break;
         case TOKEN_BANG_EQ: op_text = "!="; is_comparison = true; break;
         case TOKEN_LESS: op_text = "<"; is_comparison = true; break;
@@ -1661,6 +1665,53 @@ static bool cg_emit_binary_expr(FILE *out, cct_codegen_t *cg, const cct_ast_node
 
     cct_codegen_value_kind_t lhs_kind = CCT_CODEGEN_VALUE_UNKNOWN;
     cct_codegen_value_kind_t rhs_kind = CCT_CODEGEN_VALUE_UNKNOWN;
+
+    if (op == TOKEN_STAR_STAR) {
+        fputs("(cct_pow((double)(", out);
+        if (!cg_emit_expr(out, cg, expr->as.binary_op.left, &lhs_kind)) return false;
+        fputs("), (double)(", out);
+        if (!cg_emit_expr(out, cg, expr->as.binary_op.right, &rhs_kind)) return false;
+        fputs(")))", out);
+        if (!cct_cg_value_kind_is_numeric(lhs_kind) || !cct_cg_value_kind_is_numeric(rhs_kind)) {
+            cg_report_node(cg, expr, "operator ** requires numeric operands");
+            return false;
+        }
+
+        if (out_kind) {
+            *out_kind = (lhs_kind == CCT_CODEGEN_VALUE_REAL || rhs_kind == CCT_CODEGEN_VALUE_REAL)
+                ? CCT_CODEGEN_VALUE_REAL
+                : CCT_CODEGEN_VALUE_INT;
+        }
+        return true;
+    }
+
+    if (op == TOKEN_SLASH_SLASH) {
+        fputs("(cct_floor_div_ll((long long)(", out);
+        if (!cg_emit_expr(out, cg, expr->as.binary_op.left, &lhs_kind)) return false;
+        fputs("), (long long)(", out);
+        if (!cg_emit_expr(out, cg, expr->as.binary_op.right, &rhs_kind)) return false;
+        fputs(")))", out);
+        if (lhs_kind != CCT_CODEGEN_VALUE_INT || rhs_kind != CCT_CODEGEN_VALUE_INT) {
+            cg_report_node(cg, expr, "operator // requires integer operands");
+            return false;
+        }
+        if (out_kind) *out_kind = CCT_CODEGEN_VALUE_INT;
+        return true;
+    }
+
+    if (op == TOKEN_PERCENT_PERCENT) {
+        fputs("(cct_euclid_mod_ll((long long)(", out);
+        if (!cg_emit_expr(out, cg, expr->as.binary_op.left, &lhs_kind)) return false;
+        fputs("), (long long)(", out);
+        if (!cg_emit_expr(out, cg, expr->as.binary_op.right, &rhs_kind)) return false;
+        fputs(")))", out);
+        if (lhs_kind != CCT_CODEGEN_VALUE_INT || rhs_kind != CCT_CODEGEN_VALUE_INT) {
+            cg_report_node(cg, expr, "operator %% requires integer operands");
+            return false;
+        }
+        if (out_kind) *out_kind = CCT_CODEGEN_VALUE_INT;
+        return true;
+    }
 
     if (is_comparison) {
         fputs("(", out);

@@ -20,15 +20,34 @@ typedef enum {
     CCT_PROJECT_PROFILE_RELEASE = 1
 } cct_project_profile_t;
 
+typedef enum {
+    CCT_PROJECT_SIGILO_CI_PROFILE_NONE = 0,
+    CCT_PROJECT_SIGILO_CI_PROFILE_ADVISORY,
+    CCT_PROJECT_SIGILO_CI_PROFILE_GATED,
+    CCT_PROJECT_SIGILO_CI_PROFILE_RELEASE
+} cct_project_sigilo_ci_profile_t;
+
+typedef enum {
+    CCT_PROJECT_SIGILO_REPORT_SUMMARY = 0,
+    CCT_PROJECT_SIGILO_REPORT_DETAILED = 1
+} cct_project_sigilo_report_mode_t;
+
 typedef struct {
     const char *project_override;
     const char *entry_override;
     const char *out_override;
+    const char *sigilo_baseline_override;
     const char *pattern;
     cct_project_profile_t profile;
+    cct_project_sigilo_ci_profile_t sigilo_ci_profile;
+    cct_project_sigilo_report_mode_t sigilo_report_mode;
     bool strict_lint;
     bool fmt_check;
     bool run_lint;
+    bool sigilo_check;
+    bool sigilo_strict;
+    bool sigilo_override_behavioral_risk;
+    bool sigilo_explain;
     bool clean_all;
     int iterations;
     int passthrough_argc;

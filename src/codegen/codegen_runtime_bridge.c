@@ -52,6 +52,7 @@ bool cct_cg_emit_generated_c_prelude(FILE *out, const cct_codegen_t *cg) {
     fputs("#include <ctype.h>\n\n", out);
     fputs("#include <errno.h>\n", out);
     fputs("#include <math.h>\n\n", out);
+    fputs("static void cct_rt_fail(const char *msg);\n\n", out);
 
     fputs("/* ===== Math Runtime Helpers (FASE 13A) ===== */\n", out);
     fputs("static inline double cct_sqrt(double x) { return sqrt(x); }\n", out);
@@ -71,6 +72,20 @@ bool cct_cg_emit_generated_c_prelude(FILE *out, const cct_codegen_t *cg) {
     fputs("static inline double cct_log(double x) { return log(x); }\n", out);
     fputs("static inline double cct_log10(double x) { return log10(x); }\n", out);
     fputs("static inline double cct_log2(double x) { return log2(x); }\n\n", out);
+    fputs("static inline long long cct_floor_div_ll(long long a, long long b) {\n", out);
+    fputs("    if (b == 0) { cct_rt_fail(\"integer division by zero\"); return 0LL; }\n", out);
+    fputs("    long long q = a / b;\n", out);
+    fputs("    long long r = a % b;\n", out);
+    fputs("    if (r != 0 && ((r > 0) != (b > 0))) q -= 1;\n", out);
+    fputs("    return q;\n", out);
+    fputs("}\n", out);
+    fputs("static inline long long cct_euclid_mod_ll(long long a, long long b) {\n", out);
+    fputs("    if (b == 0) { cct_rt_fail(\"euclidean modulo by zero\"); return 0LL; }\n", out);
+    fputs("    long long m = a % b;\n", out);
+    fputs("    long long bb = (b < 0) ? -b : b;\n", out);
+    fputs("    if (m < 0) m += bb;\n", out);
+    fputs("    return m;\n", out);
+    fputs("}\n\n", out);
 
     fputs("/* ===== Runtime Helpers ===== */\n", out);
     cct_runtime_codegen_config_t rt_cfg;

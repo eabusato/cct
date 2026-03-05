@@ -118,8 +118,11 @@ typedef enum {
     TOKEN_PLUS,             /* + */
     TOKEN_MINUS,            /* - */
     TOKEN_STAR,             /* * */
+    TOKEN_STAR_STAR,        /* ** */
     TOKEN_SLASH,            /* / */
+    TOKEN_SLASH_SLASH,      /* // */
     TOKEN_PERCENT,          /* % */
+    TOKEN_PERCENT_PERCENT,  /* %% */
 
     /* Operators - Comparison */
     TOKEN_EQ_EQ,            /* == */

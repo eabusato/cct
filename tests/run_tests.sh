@@ -58,6 +58,17 @@ cleanup_codegen_artifacts() {
     rm -f "$exe".__mod_*.svg "$exe".__mod_*.sigil
 }
 
+resolve_doc_path() {
+    local rel="$1"
+    if [ -f "$rel" ]; then
+        echo "$rel"
+    elif [ -f "md_out/$rel" ]; then
+        echo "md_out/$rel"
+    else
+        echo "$rel"
+    fi
+}
+
 # Test 1: Binary exists and is executable
 echo "Test 1: Binary exists and is executable"
 if [ -x "$CCT_BIN" ]; then
@@ -6767,6 +6778,3946 @@ else
     test_fail "fase12 final showcase tests failed"
 fi
 
+echo ""
+echo "========================================"
+echo "FASE 13A.1: Sigil Parse Canonical Reader Tests"
+echo "========================================"
+echo ""
+
+# Test 538: Standalone sigil parse runtime test target builds and runs
+echo "Test 538: standalone sigil parse runtime test target builds and runs"
+OUTPUT=$(make test_sigil_parse 2>&1) || true
+if echo "$OUTPUT" | grep -q "test_sigil_parse: ok"; then
+    test_pass "Standalone sigil parse runtime target builds and runs"
+else
+    test_fail "Standalone sigil parse runtime target failed"
+fi
+
+# Test 539: Sigil parse runtime binary exists after build
+echo "Test 539: sigil parse runtime test binary exists after build"
+if [ -f "tests/runtime/test_sigil_parse" ]; then
+    test_pass "Sigil parse runtime test binary is produced deterministically"
+else
+    test_fail "Sigil parse runtime test binary not found"
+fi
+
+echo ""
+echo "========================================"
+echo "FASE 13A.2: Sigil Structural Diff Engine Tests"
+echo "========================================"
+echo ""
+
+# Test 540: Standalone sigil diff runtime test target builds and runs
+echo "Test 540: standalone sigil diff runtime test target builds and runs"
+OUTPUT=$(make test_sigil_diff 2>&1) || true
+if echo "$OUTPUT" | grep -q "test_sigil_diff: ok"; then
+    test_pass "Standalone sigil diff runtime target builds and runs"
+else
+    test_fail "Standalone sigil diff runtime target failed"
+fi
+
+# Test 541: Sigil diff runtime binary exists after build
+echo "Test 541: sigil diff runtime test binary exists after build"
+if [ -f "tests/runtime/test_sigil_diff" ]; then
+    test_pass "Sigil diff runtime test binary is produced deterministically"
+else
+    test_fail "Sigil diff runtime test binary not found"
+fi
+
+echo ""
+echo "========================================"
+echo "FASE 13A.3: Sigilo CLI inspect/diff/check Tests"
+echo "========================================"
+echo ""
+
+# Test 542: sigilo inspect structured summary works
+echo "Test 542: sigilo inspect structured summary works"
+SIG13A3_A="/tmp/cct_sigilo_cli_13a3_a.sigil"
+SIG13A3_C="/tmp/cct_sigilo_cli_13a3_c.sigil"
+SIG13A3_D="/tmp/cct_sigilo_cli_13a3_d.sigil"
+SIG13A3_E="/tmp/cct_sigilo_cli_13a3_e.sigil"
+cat > "$SIG13A3_A" <<'SIGEOF'
+format = cct.sigil.v1
+sigilo_scope = local
+semantic_hash = abcdef0123456789
+[totals]
+rituale = 1
+SIGEOF
+cat > "$SIG13A3_C" <<'SIGEOF'
+format = cct.sigil.v1
+sigilo_scope = local
+semantic_hash = abcdef0123456789
+[totals]
+rituale = 2
+SIGEOF
+cat > "$SIG13A3_D" <<'SIGEOF'
+format = cct.sigil.v1
+sigilo_scope = local
+semantic_hash = 1111111111111111
+[totals]
+rituale = 1
+SIGEOF
+cat > "$SIG13A3_E" <<'SIGEOF'
+format = cct.sigil.v1
+sigilo_scope = local
+semantic_hash = bad
+SIGEOF
+OUTPUT=$("$CCT_BIN" sigilo inspect "$SIG13A3_A" --format structured --summary 2>&1) || true
+if echo "$OUTPUT" | grep -q "format = cct.sigil.inspect.v1"; then
+    test_pass "sigilo inspect structured summary works"
+else
+    test_fail "sigilo inspect structured summary failed"
+fi
+
+# Test 543: sigilo diff text summary reports highest severity
+echo "Test 543: sigilo diff text summary reports highest severity"
+SIG13A3_B="/tmp/cct_sigilo_cli_13a3_b.sigil"
+cat > "$SIG13A3_B" <<'SIGEOF'
+format = cct.sigil.v1
+sigilo_scope = system
+system_hash = abcdef0123456789
+[totals]
+rituale = 1
+SIGEOF
+OUTPUT=$("$CCT_BIN" sigilo diff "$SIG13A3_A" "$SIG13A3_B" --format text --summary 2>&1) || true
+if echo "$OUTPUT" | grep -q "highest=behavioral-risk"; then
+    test_pass "sigilo diff summary reports expected highest severity"
+else
+    test_fail "sigilo diff summary did not report expected severity"
+fi
+
+# Test 544: sigilo check strict returns exit code 2 for blocking diff
+echo "Test 544: sigilo check strict returns exit code 2 for blocking diff"
+"$CCT_BIN" sigilo check "$SIG13A3_A" "$SIG13A3_B" --strict --summary > /tmp/cct_sigilo_cli_13a3_check.out 2>&1
+EXIT_CODE=$?
+if [ $EXIT_CODE -eq 2 ]; then
+    test_pass "sigilo check strict returns exit code 2 on blocking diff"
+else
+    test_fail "sigilo check strict returned unexpected exit code ($EXIT_CODE)"
+fi
+
+# Test 545: sigilo inspect text details lists entries
+echo "Test 545: sigilo inspect text details lists entries"
+OUTPUT=$("$CCT_BIN" sigilo inspect "$SIG13A3_A" --format text 2>&1) || true
+if echo "$OUTPUT" | grep -q "sigilo.inspect.summary" && echo "$OUTPUT" | grep -q "key=semantic_hash"; then
+    test_pass "sigilo inspect text details include parsed entries"
+else
+    test_fail "sigilo inspect text details missing expected entries"
+fi
+
+# Test 546: sigilo inspect strict rejects invalid hash
+echo "Test 546: sigilo inspect strict rejects invalid hash"
+OUTPUT=$("$CCT_BIN" sigilo inspect "$SIG13A3_E" --strict --summary 2>&1) || true
+if echo "$OUTPUT" | grep -q "missing_required"; then
+    test_pass "sigilo inspect strict rejects invalid hash metadata"
+else
+    test_fail "sigilo inspect strict did not reject invalid hash metadata"
+fi
+
+# Test 547: sigilo diff structured output schema
+echo "Test 547: sigilo diff structured output schema"
+OUTPUT=$("$CCT_BIN" sigilo diff "$SIG13A3_A" "$SIG13A3_B" --format structured 2>&1) || true
+if echo "$OUTPUT" | grep -q "format = cct.sigil.diff.v1" && echo "$OUTPUT" | grep -q "highest_severity = behavioral-risk"; then
+    test_pass "sigilo diff structured output matches schema"
+else
+    test_fail "sigilo diff structured output schema mismatch"
+fi
+
+# Test 548: sigilo check strict returns 0 for identical artifacts
+echo "Test 548: sigilo check strict returns 0 for identical artifacts"
+"$CCT_BIN" sigilo check "$SIG13A3_A" "$SIG13A3_A" --strict --summary > /tmp/cct_sigilo_cli_13a3_check_clean.out 2>&1
+EXIT_CODE=$?
+if [ $EXIT_CODE -eq 0 ]; then
+    test_pass "sigilo check strict returns 0 when there are no differences"
+else
+    test_fail "sigilo check strict returned unexpected code for identical artifacts ($EXIT_CODE)"
+fi
+
+# Test 549: sigilo check strict returns 0 for informational-only diff
+echo "Test 549: sigilo check strict returns 0 for informational-only diff"
+"$CCT_BIN" sigilo check "$SIG13A3_A" "$SIG13A3_C" --strict --summary > /tmp/cct_sigilo_cli_13a3_check_info.out 2>&1
+EXIT_CODE=$?
+if [ $EXIT_CODE -eq 0 ]; then
+    test_pass "sigilo check strict allows informational-only diffs"
+else
+    test_fail "sigilo check strict should allow informational-only diffs (got $EXIT_CODE)"
+fi
+
+# Test 550: sigilo check strict returns 2 for review-required diff
+echo "Test 550: sigilo check strict returns 2 for review-required diff"
+"$CCT_BIN" sigilo check "$SIG13A3_A" "$SIG13A3_D" --strict --summary > /tmp/cct_sigilo_cli_13a3_check_review.out 2>&1
+EXIT_CODE=$?
+if [ $EXIT_CODE -eq 2 ]; then
+    test_pass "sigilo check strict blocks review-required diffs with exit code 2"
+else
+    test_fail "sigilo check strict returned unexpected code for review-required diff ($EXIT_CODE)"
+fi
+
+# Test 551: sigilo diff rejects unknown option
+echo "Test 551: sigilo diff rejects unknown option"
+OUTPUT=$("$CCT_BIN" sigilo diff "$SIG13A3_A" "$SIG13A3_B" --bogus-option 2>&1) || true
+if echo "$OUTPUT" | grep -q "Unknown sigilo option"; then
+    test_pass "sigilo diff rejects unknown options"
+else
+    test_fail "sigilo diff did not reject unknown options"
+fi
+
+# Test 552: sigilo inspect enforces .sigil extension
+echo "Test 552: sigilo inspect enforces .sigil extension"
+OUTPUT=$("$CCT_BIN" sigilo inspect tests/integration/minimal.cct --summary 2>&1) || true
+if echo "$OUTPUT" | grep -q "must have .sigil extension"; then
+    test_pass "sigilo inspect enforces .sigil input extension"
+else
+    test_fail "sigilo inspect did not enforce .sigil extension"
+fi
+
+echo ""
+echo "========================================"
+echo "FASE 13A.4: Sigilo Baseline check/update Tests"
+echo "========================================"
+echo ""
+
+SIG13A4_BASE="/tmp/cct_sigilo_baseline_13a4_local.sigil"
+SIG13A4_META="/tmp/cct_sigilo_baseline_13a4_local.baseline.meta"
+SIG13A4_CORRUPT="/tmp/cct_sigilo_baseline_13a4_corrupt.sigil"
+SIG13A4_CORRUPT_META="/tmp/cct_sigilo_baseline_13a4_corrupt.baseline.meta"
+SIG13A4_SNAPSHOT="/tmp/cct_sigilo_baseline_13a4_snapshot.sigil"
+SIG13A4_PROJ="/tmp/cct_sigilo_baseline_proj_13a4"
+CCT_BIN_ABS="$(pwd)/cct"
+
+rm -f "$SIG13A4_BASE" "$SIG13A4_META" "$SIG13A4_CORRUPT" "$SIG13A4_CORRUPT_META" "$SIG13A4_SNAPSHOT"
+rm -rf "$SIG13A4_PROJ"
+mkdir -p "$SIG13A4_PROJ"
+
+# Test 553: baseline check missing returns informative status and success
+echo "Test 553: sigilo baseline check reports missing baseline without blocking"
+OUTPUT=$("$CCT_BIN" sigilo baseline check "$SIG13A3_A" --baseline "$SIG13A4_BASE" --summary 2>&1) || true
+if echo "$OUTPUT" | grep -q "status=missing" && echo "$OUTPUT" | grep -q "baseline=$SIG13A4_BASE"; then
+    test_pass "sigilo baseline check handles missing baseline in informative mode"
+else
+    test_fail "sigilo baseline check did not report missing baseline as expected"
+fi
+
+# Test 554: baseline update writes baseline and metadata
+echo "Test 554: sigilo baseline update writes baseline and metadata"
+OUTPUT=$("$CCT_BIN" sigilo baseline update "$SIG13A3_A" --baseline "$SIG13A4_BASE" 2>&1) || true
+if [ -f "$SIG13A4_BASE" ] && [ -f "$SIG13A4_META" ] && echo "$OUTPUT" | grep -q "status=written"; then
+    test_pass "sigilo baseline update writes baseline artifacts deterministically"
+else
+    test_fail "sigilo baseline update did not write baseline/meta as expected"
+fi
+
+# Test 555: baseline check after update returns no diff
+echo "Test 555: sigilo baseline check after update returns no diff"
+OUTPUT=$("$CCT_BIN" sigilo baseline check "$SIG13A3_A" --baseline "$SIG13A4_BASE" --summary 2>&1) || true
+if echo "$OUTPUT" | grep -q "status=ok" && echo "$OUTPUT" | grep -q "highest=none"; then
+    test_pass "sigilo baseline check reports stable baseline after update"
+else
+    test_fail "sigilo baseline check did not report stable state after update"
+fi
+
+# Test 556: strict baseline check allows informational-only drift
+echo "Test 556: sigilo baseline check strict allows informational-only drift"
+"$CCT_BIN" sigilo baseline check "$SIG13A3_C" --baseline "$SIG13A4_BASE" --strict --summary > /tmp/cct_sigilo_baseline_13a4_info.out 2>&1
+EXIT_CODE=$?
+if [ $EXIT_CODE -eq 0 ]; then
+    test_pass "sigilo baseline check strict allows informational drift"
+else
+    test_fail "sigilo baseline check strict should allow informational drift (got $EXIT_CODE)"
+fi
+
+# Test 557: strict baseline check blocks review-required drift
+echo "Test 557: sigilo baseline check strict blocks review-required drift"
+"$CCT_BIN" sigilo baseline check "$SIG13A3_D" --baseline "$SIG13A4_BASE" --strict --summary > /tmp/cct_sigilo_baseline_13a4_review.out 2>&1
+EXIT_CODE=$?
+if [ $EXIT_CODE -eq 2 ]; then
+    test_pass "sigilo baseline check strict blocks review-required drift with exit 2"
+else
+    test_fail "sigilo baseline check strict should block review drift with exit 2 (got $EXIT_CODE)"
+fi
+
+# Test 558: strict baseline check blocks behavioral-risk drift
+echo "Test 558: sigilo baseline check strict blocks behavioral-risk drift"
+"$CCT_BIN" sigilo baseline check "$SIG13A3_B" --baseline "$SIG13A4_BASE" --strict --summary > /tmp/cct_sigilo_baseline_13a4_behavior.out 2>&1
+EXIT_CODE=$?
+if [ $EXIT_CODE -eq 2 ]; then
+    test_pass "sigilo baseline check strict blocks behavioral-risk drift with exit 2"
+else
+    test_fail "sigilo baseline check strict should block behavioral drift with exit 2 (got $EXIT_CODE)"
+fi
+
+# Test 559: update does not overwrite baseline without --force
+echo "Test 559: sigilo baseline update requires --force for overwrite"
+OUTPUT=$("$CCT_BIN" sigilo baseline update "$SIG13A3_D" --baseline "$SIG13A4_BASE" 2>&1) || true
+if echo "$OUTPUT" | grep -q "use --force to overwrite"; then
+    test_pass "sigilo baseline update protects against silent overwrite"
+else
+    test_fail "sigilo baseline update did not enforce --force overwrite protection"
+fi
+
+# Test 560: update with --force overwrites baseline
+echo "Test 560: sigilo baseline update --force overwrites baseline"
+OUTPUT=$("$CCT_BIN" sigilo baseline update "$SIG13A3_D" --baseline "$SIG13A4_BASE" --force 2>&1) || true
+if [ -f "$SIG13A4_BASE" ] && grep -q "1111111111111111" "$SIG13A4_BASE" && echo "$OUTPUT" | grep -q "status=written"; then
+    test_pass "sigilo baseline update --force overwrites existing baseline deterministically"
+else
+    test_fail "sigilo baseline update --force did not overwrite baseline as expected"
+fi
+
+# Test 561: corrupt baseline content fails with actionable diagnostic
+echo "Test 561: sigilo baseline check fails for corrupt baseline content"
+cat > "$SIG13A4_CORRUPT" <<'SIGEOF'
+this is not key value sigil metadata
+SIGEOF
+cat > "$SIG13A4_CORRUPT_META" <<'SIGEOF'
+format = cct.sigil.baseline.meta.v1
+baseline_schema = 1
+SIGEOF
+OUTPUT=$("$CCT_BIN" sigilo baseline check "$SIG13A3_A" --baseline "$SIG13A4_CORRUPT" --summary 2>&1) || true
+if echo "$OUTPUT" | grep -q "syntax"; then
+    test_pass "sigilo baseline check reports malformed baseline with parser diagnostic"
+else
+    test_fail "sigilo baseline check did not report malformed baseline content"
+fi
+
+# Test 562: incompatible baseline metadata format fails clearly
+echo "Test 562: sigilo baseline check fails for incompatible metadata format"
+cat > "$SIG13A4_CORRUPT" <<'SIGEOF'
+format = cct.sigil.v1
+sigilo_scope = local
+semantic_hash = abcdef0123456789
+SIGEOF
+cat > "$SIG13A4_CORRUPT_META" <<'SIGEOF'
+format = cct.sigil.baseline.meta.v999
+baseline_schema = 999
+SIGEOF
+OUTPUT=$("$CCT_BIN" sigilo baseline check "$SIG13A3_A" --baseline "$SIG13A4_CORRUPT" --summary 2>&1) || true
+if echo "$OUTPUT" | grep -q "unsupported baseline metadata format"; then
+    test_pass "sigilo baseline check rejects incompatible baseline metadata format"
+else
+    test_fail "sigilo baseline check did not reject incompatible baseline metadata format"
+fi
+
+# Test 563: default baseline path is project-scoped and informative when missing
+echo "Test 563: sigilo baseline default path is project-scoped and informative"
+cp "$SIG13A3_A" "$SIG13A4_PROJ/current.sigil"
+OUTPUT=$(cd "$SIG13A4_PROJ" && "$CCT_BIN_ABS" sigilo baseline check current.sigil --summary 2>&1) || true
+if echo "$OUTPUT" | grep -q "status=missing" && echo "$OUTPUT" | grep -q "docs/sigilo/baseline/local.sigil"; then
+    test_pass "sigilo baseline default path works in isolated project scope"
+else
+    test_fail "sigilo baseline default path behavior is not as expected"
+fi
+
+# Test 564: baseline check does not mutate baseline file
+echo "Test 564: sigilo baseline check is read-only (no baseline mutation)"
+"$CCT_BIN" sigilo baseline update "$SIG13A3_A" --baseline "$SIG13A4_BASE" --force > /tmp/cct_sigilo_baseline_13a4_force_reset.out 2>&1
+cp "$SIG13A4_BASE" "$SIG13A4_SNAPSHOT"
+OUTPUT=$("$CCT_BIN" sigilo baseline check "$SIG13A3_A" --baseline "$SIG13A4_BASE" --summary 2>&1) || true
+if cmp -s "$SIG13A4_BASE" "$SIG13A4_SNAPSHOT"; then
+    test_pass "sigilo baseline check keeps baseline file immutable"
+else
+    test_fail "sigilo baseline check mutated baseline file unexpectedly"
+fi
+
+echo ""
+echo "========================================"
+echo "FASE 13B.1: Canonical Local Sigilo Workflow Tests"
+echo "========================================"
+echo ""
+
+SIG13B1_PROJ="/tmp/cct_sigilo_workflow_13b1"
+SIG13B1_BASE="$SIG13B1_PROJ/docs/sigilo/baseline/local.sigil"
+SIG13B1_DRIFT="/tmp/cct_sigilo_workflow_13b1_drift.sigil"
+SIG13B1_ARTIFACT="$SIG13B1_PROJ/src/workflow.local.sigil"
+rm -rf "$SIG13B1_PROJ"
+mkdir -p "$SIG13B1_PROJ/src" "$SIG13B1_PROJ/tests"
+cp tests/integration/sigilo_workflow_local_smoke_13b1.cct "$SIG13B1_PROJ/src/main.cct"
+cat > "$SIG13B1_PROJ/tests/smoke.test.cct" <<'SIGEOF'
+INCIPIT grimoire "sigilo_workflow_local_test_13b1"
+
+RITUALE main() REDDE REX
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire
+SIGEOF
+cat > "$SIG13B1_ARTIFACT" <<'SIGEOF'
+format = cct.sigil.v1
+sigilo_scope = local
+semantic_hash = abcdef0123456789
+[totals]
+rituale = 1
+SIGEOF
+
+# Test 565: minimal workflow executes end-to-end
+echo "Test 565: local minimal workflow executes end-to-end"
+OK=1
+"$CCT_BIN" fmt "$SIG13B1_PROJ/src/main.cct" > /tmp/cct_sigilo_workflow_13b1_fmt.out 2>&1 || OK=0
+"$CCT_BIN" lint "$SIG13B1_PROJ/src/main.cct" > /tmp/cct_sigilo_workflow_13b1_lint.out 2>&1 || OK=0
+"$CCT_BIN" build --project "$SIG13B1_PROJ" > /tmp/cct_sigilo_workflow_13b1_build.out 2>&1 || OK=0
+"$CCT_BIN" sigilo baseline check "$SIG13B1_ARTIFACT" --summary > /tmp/cct_sigilo_workflow_13b1_check_missing.out 2>&1 || OK=0
+"$CCT_BIN" sigilo baseline update "$SIG13B1_ARTIFACT" --baseline "$SIG13B1_BASE" > /tmp/cct_sigilo_workflow_13b1_update.out 2>&1 || OK=0
+"$CCT_BIN" sigilo baseline check "$SIG13B1_ARTIFACT" --baseline "$SIG13B1_BASE" --summary > /tmp/cct_sigilo_workflow_13b1_check_ok.out 2>&1 || OK=0
+if [ $OK -eq 1 ] && [ -f "$SIG13B1_BASE" ] && \
+   grep -q "status=missing" /tmp/cct_sigilo_workflow_13b1_check_missing.out && \
+   grep -q "status=ok" /tmp/cct_sigilo_workflow_13b1_check_ok.out; then
+    test_pass "minimal local workflow (fmt/lint/build/sigilo baseline) executes end-to-end"
+else
+    test_fail "minimal local workflow did not execute end-to-end as expected"
+fi
+
+# Test 566: strict pre-merge workflow baseline passes when stable
+echo "Test 566: strict local pre-merge workflow passes when baseline is stable"
+OK=1
+"$CCT_BIN" fmt --check "$SIG13B1_PROJ/src/main.cct" > /tmp/cct_sigilo_workflow_13b1_fmt_check.out 2>&1 || OK=0
+"$CCT_BIN" lint --strict "$SIG13B1_PROJ/src/main.cct" > /tmp/cct_sigilo_workflow_13b1_lint_strict.out 2>&1 || OK=0
+"$CCT_BIN" test --project "$SIG13B1_PROJ" > /tmp/cct_sigilo_workflow_13b1_test.out 2>&1 || OK=0
+"$CCT_BIN" sigilo baseline check "$SIG13B1_ARTIFACT" --baseline "$SIG13B1_BASE" --strict --summary > /tmp/cct_sigilo_workflow_13b1_strict_ok.out 2>&1 || OK=0
+if [ $OK -eq 1 ]; then
+    test_pass "strict local workflow passes when there is no blocking drift"
+else
+    test_fail "strict local workflow should pass when baseline is stable"
+fi
+
+# Test 567: strict workflow fails on blocking drift
+echo "Test 567: strict local workflow fails on blocking baseline drift"
+cat > "$SIG13B1_DRIFT" <<'SIGEOF'
+format = cct.sigil.v1
+sigilo_scope = system
+system_hash = abcdef0123456789
+[totals]
+rituale = 1
+SIGEOF
+"$CCT_BIN" sigilo baseline check "$SIG13B1_DRIFT" --baseline "$SIG13B1_BASE" --strict --summary > /tmp/cct_sigilo_workflow_13b1_strict_drift.out 2>&1
+EXIT_CODE=$?
+if [ $EXIT_CODE -eq 2 ]; then
+    test_pass "strict local workflow blocks behavioral-risk drift with exit code 2"
+else
+    test_fail "strict local workflow should fail with exit code 2 on blocking drift (got $EXIT_CODE)"
+fi
+
+# Test 568: blocking drift output includes corrective action
+echo "Test 568: blocking drift output includes corrective action guidance"
+if grep -q "action:" /tmp/cct_sigilo_workflow_13b1_strict_drift.out && \
+   grep -q "sigilo baseline update" /tmp/cct_sigilo_workflow_13b1_strict_drift.out; then
+    test_pass "strict drift failure output includes corrective action"
+else
+    test_fail "strict drift failure output is missing corrective action guidance"
+fi
+
+# Test 569: flow without sigilo-check remains functional
+echo "Test 569: project flow without sigilo-check remains functional"
+OK=1
+"$CCT_BIN" build --project "$SIG13B1_PROJ" > /tmp/cct_sigilo_workflow_13b1_nosig_build.out 2>&1 || OK=0
+"$CCT_BIN" test --project "$SIG13B1_PROJ" > /tmp/cct_sigilo_workflow_13b1_nosig_test.out 2>&1 || OK=0
+if [ $OK -eq 1 ] && find "$SIG13B1_PROJ/dist" -maxdepth 1 -type f -perm -u+x | grep -q .; then
+    test_pass "build/test flows remain functional without explicit sigilo-check stage"
+else
+    test_fail "build/test flow regressed when sigilo-check stage is skipped"
+fi
+
+# Test 570: local workflow documentation was published
+echo "Test 570: local sigilo workflow documentation exists with minimal/strict guidance"
+if [ -f "docs/sigilo_workflow_local_13b1.md" ] && \
+   grep -q "Minimal Daily Workflow" docs/sigilo_workflow_local_13b1.md && \
+   grep -q "Strict Pre-merge Workflow" docs/sigilo_workflow_local_13b1.md && \
+   grep -q "Minimal vs Strict Matrix" docs/sigilo_workflow_local_13b1.md; then
+    test_pass "13B.1 local workflow documentation is present and complete"
+else
+    test_fail "13B.1 local workflow documentation is missing required guidance"
+fi
+
+# Test 571: 13B1 smoke integration source stays compilable
+echo "Test 571: 13B1 smoke integration source compiles and runs"
+OUTPUT=$("$CCT_BIN" tests/integration/sigilo_workflow_local_smoke_13b1.cct 2>&1) || true
+if [ -f "tests/integration/sigilo_workflow_local_smoke_13b1" ]; then
+    test_pass "13B1 smoke integration source compiles in standalone flow"
+else
+    test_fail "13B1 smoke integration source failed to compile"
+fi
+
+echo ""
+echo "========================================"
+echo "FASE 13B.2: Project Sigilo Opt-in Integration Tests"
+echo "========================================"
+echo ""
+
+SIG13B2_PROJ="/tmp/cct_project_sigilo_13b2"
+SIG13B2_BASE_CUSTOM="/tmp/cct_project_sigilo_13b2_custom.sigil"
+SIG13B2_BASE_CUSTOM_META="/tmp/cct_project_sigilo_13b2_custom.baseline.meta"
+SIG13B2_BASE_BLOCK="/tmp/cct_project_sigilo_13b2_block.sigil"
+SIG13B2_BASE_BLOCK_META="/tmp/cct_project_sigilo_13b2_block.baseline.meta"
+
+rm -rf "$SIG13B2_PROJ"
+rm -f "$SIG13B2_BASE_CUSTOM" "$SIG13B2_BASE_CUSTOM_META" "$SIG13B2_BASE_BLOCK" "$SIG13B2_BASE_BLOCK_META"
+mkdir -p "$SIG13B2_PROJ/src" "$SIG13B2_PROJ/tests" "$SIG13B2_PROJ/bench" "$SIG13B2_PROJ/docs/sigilo/baseline"
+mkdir -p "$SIG13B2_PROJ/lib"
+cp tests/integration/project_sigilo_build_optin_13b2.cct "$SIG13B2_PROJ/src/main.cct"
+cp tests/integration/project_sigilo_test_optin_13b2.cct "$SIG13B2_PROJ/tests/smoke.test.cct"
+cp tests/integration/project_sigilo_cache_13b2.cct "$SIG13B2_PROJ/bench/smoke.bench.cct"
+cat > "$SIG13B2_PROJ/lib/util.cct" <<'SIGEOF'
+INCIPIT grimoire "project_sigilo_13b2_util"
+
+RITUALE helper() REDDE REX
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire
+SIGEOF
+
+# Test 572: build without sigilo opt-in keeps canonical behavior
+echo "Test 572: cct build without sigilo opt-in keeps canonical behavior"
+OUTPUT=$("$CCT_BIN" build --project "$SIG13B2_PROJ" 2>&1)
+EXIT_CODE=$?
+if [ $EXIT_CODE -eq 0 ] && ! echo "$OUTPUT" | grep -q "sigilo.baseline.check"; then
+    test_pass "build default flow remains unchanged without --sigilo-check"
+else
+    test_fail "build default flow regressed or unexpectedly executed sigilo-check"
+fi
+
+# Test 573: build --sigilo-check executes baseline check with missing baseline status
+echo "Test 573: cct build --sigilo-check executes baseline check with informative missing status"
+rm -f "$SIG13B2_PROJ/docs/sigilo/baseline/local.sigil" "$SIG13B2_PROJ/docs/sigilo/baseline/local.baseline.meta"
+OUTPUT=$("$CCT_BIN" build --project "$SIG13B2_PROJ" --sigilo-check 2>&1)
+EXIT_CODE=$?
+if [ $EXIT_CODE -eq 0 ] && echo "$OUTPUT" | grep -q "sigilo.baseline.check status=missing" && echo "$OUTPUT" | grep -q "current=$SIG13B2_PROJ/src/main.system.sigil"; then
+    test_pass "build --sigilo-check runs baseline check and handles missing baseline by contract"
+else
+    test_fail "build --sigilo-check did not execute baseline check as expected"
+fi
+
+# Test 574: build --sigilo-check with explicit baseline override returns stable status
+echo "Test 574: cct build --sigilo-check --sigilo-baseline enforces explicit baseline path"
+"$CCT_BIN" sigilo baseline update "$SIG13B2_PROJ/src/main.system.sigil" --baseline "$SIG13B2_BASE_CUSTOM" --force > /tmp/cct_project_sigilo_13b2_baseline_update.out 2>&1
+OUTPUT=$("$CCT_BIN" build --project "$SIG13B2_PROJ" --sigilo-check --sigilo-baseline "$SIG13B2_BASE_CUSTOM" 2>&1)
+EXIT_CODE=$?
+if [ $EXIT_CODE -eq 0 ] && echo "$OUTPUT" | grep -q "sigilo.baseline.check status=ok" && echo "$OUTPUT" | grep -q "baseline=$SIG13B2_BASE_CUSTOM"; then
+    test_pass "build --sigilo-check honors explicit baseline override"
+else
+    test_fail "build --sigilo-check with explicit baseline override did not behave as expected"
+fi
+
+# Test 575: test --sigilo-check --sigilo-strict propagates blocking status coherently
+echo "Test 575: cct test --sigilo-check --sigilo-strict propagates blocking baseline drift"
+cat > "$SIG13B2_BASE_BLOCK" <<'SIGEOF'
+format = cct.sigil.v1
+sigilo_scope = system
+system_hash = abcdef0123456789
+[totals]
+rituale = 1
+SIGEOF
+cat > "$SIG13B2_BASE_BLOCK_META" <<'SIGEOF'
+format = cct.sigil.baseline.meta.v1
+baseline_schema = 1
+sigilo_scope = system
+artifact_format = cct.sigil.v1
+source_artifact = tests/integration/project_sigilo_test_optin_13b2.cct
+SIGEOF
+OUTPUT=$("$CCT_BIN" test --project "$SIG13B2_PROJ" --sigilo-check --sigilo-strict --sigilo-baseline "$SIG13B2_BASE_BLOCK" 2>&1)
+EXIT_CODE=$?
+if [ $EXIT_CODE -eq 2 ] && echo "$OUTPUT" | grep -q "\\[test\\] error: sigilo-check failed"; then
+    test_pass "test --sigilo-check --sigilo-strict propagates blocking drift as exit code 2"
+else
+    test_fail "test --sigilo-check --sigilo-strict did not propagate blocking drift correctly (exit=$EXIT_CODE)"
+fi
+
+# Test 576: cache fallback is safe when sigilo artifact is missing on up-to-date manifest
+echo "Test 576: build --sigilo-check falls back safely when cache is up-to-date but sigilo artifact is missing"
+"$CCT_BIN" sigilo baseline update "$SIG13B2_PROJ/src/main.system.sigil" --baseline "$SIG13B2_PROJ/docs/sigilo/baseline/system.sigil" --force > /tmp/cct_project_sigilo_13b2_default_baseline_update.out 2>&1
+"$CCT_BIN" build --project "$SIG13B2_PROJ" --sigilo-check > /tmp/cct_project_sigilo_13b2_build_warmup.out 2>&1 || true
+rm -f "$SIG13B2_PROJ/src/main.system.sigil"
+OUTPUT=$("$CCT_BIN" build --project "$SIG13B2_PROJ" --sigilo-check 2>&1)
+EXIT_CODE=$?
+if [ $EXIT_CODE -eq 0 ] && echo "$OUTPUT" | grep -q "forcing rebuild" && echo "$OUTPUT" | grep -q "\\[build\\] status: rebuilt"; then
+    test_pass "build --sigilo-check safely rebuilds when cached sigilo artifact is missing"
+else
+    test_fail "build --sigilo-check did not handle missing cached sigilo artifact safely"
+fi
+
+# Test 577: test --sigilo-check treats missing baseline as informative, not blocking
+echo "Test 577: cct test --sigilo-check treats missing baseline as informative"
+rm -f "$SIG13B2_PROJ/docs/sigilo/baseline/system.sigil" "$SIG13B2_PROJ/docs/sigilo/baseline/system.baseline.meta"
+OUTPUT=$("$CCT_BIN" test --project "$SIG13B2_PROJ" --sigilo-check 2>&1)
+EXIT_CODE=$?
+if [ $EXIT_CODE -eq 0 ] && echo "$OUTPUT" | grep -q "sigilo.baseline.check status=missing"; then
+    test_pass "test --sigilo-check handles missing baseline in non-blocking mode"
+else
+    test_fail "test --sigilo-check did not handle missing baseline according to contract"
+fi
+
+# Test 578: bench --sigilo-check executes sigilo-check stage
+echo "Test 578: cct bench --sigilo-check executes sigilo baseline check stage"
+OUTPUT=$("$CCT_BIN" bench --project "$SIG13B2_PROJ" --iterations 1 --sigilo-check 2>&1)
+EXIT_CODE=$?
+if [ $EXIT_CODE -eq 0 ] && echo "$OUTPUT" | grep -q "sigilo.baseline.check status=missing" && echo "$OUTPUT" | grep -q "\\[bench\\] selected: 1"; then
+    test_pass "bench --sigilo-check integrates baseline check without regressing benchmark execution"
+else
+    test_fail "bench --sigilo-check did not execute expected sigilo integration stage"
+fi
+
+# Test 579: post-13B2 default build remains free of implicit sigilo stage
+echo "Test 579: cct build default path remains free of implicit sigilo stage after opt-in usage"
+OUTPUT=$("$CCT_BIN" build --project "$SIG13B2_PROJ" 2>&1)
+EXIT_CODE=$?
+if [ $EXIT_CODE -eq 0 ] && ! echo "$OUTPUT" | grep -q "sigilo.baseline.check"; then
+    test_pass "default build behavior remains unchanged after 13B2 integrations"
+else
+    test_fail "default build behavior changed unexpectedly after 13B2 integrations"
+fi
+
+echo ""
+echo "========================================"
+echo "FASE 13B.3: CI Profile Contract and Progressive Gate Tests"
+echo "========================================"
+echo ""
+
+SIG13B3_PROJ="/tmp/cct_sigilo_ci_13b3"
+SIG13B3_BASE="/tmp/cct_sigilo_ci_13b3_base.sigil"
+SIG13B3_META="/tmp/cct_sigilo_ci_13b3_base.baseline.meta"
+SIG13B3_BEHAV_BASE="/tmp/cct_sigilo_ci_13b3_behavioral.sigil"
+SIG13B3_BEHAV_META="/tmp/cct_sigilo_ci_13b3_behavioral.baseline.meta"
+SIG13B4_SUMMARY_BASE="/tmp/cct_sigilo_report_13b4_summary_base.sigil"
+SIG13B4_SUMMARY_META="/tmp/cct_sigilo_report_13b4_summary_base.baseline.meta"
+SIG13B4_REVIEW_BASE="/tmp/cct_sigilo_report_13b4_review_base.sigil"
+SIG13B4_REVIEW_META="/tmp/cct_sigilo_report_13b4_review_base.baseline.meta"
+SIG13B4_MISSING_BASE="/tmp/cct_sigilo_report_13b4_missing_base.sigil"
+
+rm -rf "$SIG13B3_PROJ"
+rm -f "$SIG13B3_BASE" "$SIG13B3_META" "$SIG13B3_BEHAV_BASE" "$SIG13B3_BEHAV_META"
+rm -f "$SIG13B4_SUMMARY_BASE" "$SIG13B4_SUMMARY_META" "$SIG13B4_REVIEW_BASE" "$SIG13B4_REVIEW_META" "$SIG13B4_MISSING_BASE"
+mkdir -p "$SIG13B3_PROJ/src" "$SIG13B3_PROJ/lib" "$SIG13B3_PROJ/tests" "$SIG13B3_PROJ/bench"
+cp tests/integration/sigilo_report_summary_13b4.cct "$SIG13B3_PROJ/src/main.cct"
+cp tests/integration/sigilo_ci_profile_gated_13b3.cct "$SIG13B3_PROJ/tests/ci_gated.test.cct"
+cp tests/integration/sigilo_report_explain_13b4.cct "$SIG13B3_PROJ/bench/ci_release.bench.cct"
+cat > "$SIG13B3_PROJ/lib/util.cct" <<'SIGEOF'
+INCIPIT grimoire "sigilo_ci_profile_util_13b3"
+
+RITUALE helper() REDDE REX
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire
+SIGEOF
+
+# Ensure project sigilo artifacts are available
+"$CCT_BIN" build --project "$SIG13B3_PROJ" > /tmp/cct_sigilo_ci_13b3_bootstrap.out 2>&1 || true
+"$CCT_BIN" sigilo baseline update "$SIG13B3_PROJ/src/main.system.sigil" --baseline "$SIG13B3_BASE" --force > /tmp/cct_sigilo_ci_13b3_update_base.out 2>&1
+
+# Test 580: advisory profile does not block review-required drift
+echo "Test 580: advisory CI profile does not block review-required drift"
+cp "$SIG13B3_BASE" /tmp/cct_sigilo_ci_13b3_review_base.sigil
+cp "$SIG13B3_META" /tmp/cct_sigilo_ci_13b3_review_base.baseline.meta
+sed -i 's/system_hash = .*/system_hash = 0123456789abcdef/' /tmp/cct_sigilo_ci_13b3_review_base.sigil
+OUTPUT=$("$CCT_BIN" build --project "$SIG13B3_PROJ" --sigilo-check --sigilo-ci-profile advisory --sigilo-baseline /tmp/cct_sigilo_ci_13b3_review_base.sigil 2>&1)
+EXIT_CODE=$?
+if [ $EXIT_CODE -eq 0 ] && echo "$OUTPUT" | grep -q "profile=advisory" && echo "$OUTPUT" | grep -q "highest=review-required"; then
+    test_pass "advisory profile keeps review-required drift non-blocking"
+else
+    test_fail "advisory profile behavior for review-required drift is incorrect (exit=$EXIT_CODE)"
+fi
+
+# Test 581: gated profile blocks review-required drift with stable exit code 2
+echo "Test 581: gated CI profile blocks review-required drift"
+OUTPUT=$("$CCT_BIN" build --project "$SIG13B3_PROJ" --sigilo-check --sigilo-ci-profile gated --sigilo-baseline /tmp/cct_sigilo_ci_13b3_review_base.sigil 2>&1)
+EXIT_CODE=$?
+if [ $EXIT_CODE -eq 2 ] && echo "$OUTPUT" | grep -q "profile=gated" && echo "$OUTPUT" | grep -q "blocked"; then
+    test_pass "gated profile blocks review-required drift with exit code 2"
+else
+    test_fail "gated profile did not block review-required drift as expected (exit=$EXIT_CODE)"
+fi
+
+# Test 582: release profile blocks review-required drift with stable exit code 2
+echo "Test 582: release CI profile blocks review-required drift"
+OUTPUT=$("$CCT_BIN" build --project "$SIG13B3_PROJ" --sigilo-check --sigilo-ci-profile release --sigilo-baseline /tmp/cct_sigilo_ci_13b3_review_base.sigil 2>&1)
+EXIT_CODE=$?
+if [ $EXIT_CODE -eq 2 ] && echo "$OUTPUT" | grep -q "profile=release" && echo "$OUTPUT" | grep -q "blocked"; then
+    test_pass "release profile blocks review-required drift with exit code 2"
+else
+    test_fail "release profile did not block review-required drift as expected (exit=$EXIT_CODE)"
+fi
+
+# Test 583: release profile keeps informational drift non-blocking with explicit warning
+echo "Test 583: release CI profile keeps informational drift non-blocking with warning"
+cp "$SIG13B3_BASE" /tmp/cct_sigilo_ci_13b3_info_base.sigil
+cp "$SIG13B3_META" /tmp/cct_sigilo_ci_13b3_info_base.baseline.meta
+cat >> /tmp/cct_sigilo_ci_13b3_info_base.sigil <<'SIGEOF'
+
+[ci_note]
+marker = informational_only
+SIGEOF
+OUTPUT=$("$CCT_BIN" build --project "$SIG13B3_PROJ" --sigilo-check --sigilo-ci-profile release --sigilo-baseline /tmp/cct_sigilo_ci_13b3_info_base.sigil 2>&1)
+EXIT_CODE=$?
+if [ $EXIT_CODE -eq 0 ] && echo "$OUTPUT" | grep -q "profile=release" && echo "$OUTPUT" | grep -q "highest=informational"; then
+    test_pass "release profile treats informational drift as warning without blocking"
+else
+    test_fail "release profile informational behavior is incorrect (exit=$EXIT_CODE)"
+fi
+
+# Test 584: advisory profile blocks behavioral-risk drift by default
+echo "Test 584: advisory CI profile blocks behavioral-risk drift by default"
+cat > "$SIG13B3_BEHAV_BASE" <<'SIGEOF'
+format = cct.sigil.v1
+sigilo_scope = local
+semantic_hash = abcdef0123456789
+[totals]
+rituale = 1
+SIGEOF
+cat > "$SIG13B3_BEHAV_META" <<'SIGEOF'
+format = cct.sigil.baseline.meta.v1
+baseline_schema = 1
+sigilo_scope = local
+artifact_format = cct.sigil.v1
+source_artifact = /tmp/cct_sigilo_ci_13b3_behavioral.sigil
+SIGEOF
+OUTPUT=$("$CCT_BIN" build --project "$SIG13B3_PROJ" --sigilo-check --sigilo-ci-profile advisory --sigilo-baseline "$SIG13B3_BEHAV_BASE" 2>&1)
+EXIT_CODE=$?
+if [ $EXIT_CODE -eq 2 ] && echo "$OUTPUT" | grep -q "highest=behavioral-risk"; then
+    test_pass "behavioral-risk drift blocks even in advisory profile"
+else
+    test_fail "behavioral-risk default blocking policy is incorrect (exit=$EXIT_CODE)"
+fi
+
+# Test 585: explicit override allows behavioral-risk drift and emits audit warning
+echo "Test 585: behavioral-risk override is explicit and audit-visible"
+OUTPUT=$("$CCT_BIN" build --project "$SIG13B3_PROJ" --sigilo-check --sigilo-ci-profile advisory --sigilo-override-behavioral-risk --sigilo-baseline "$SIG13B3_BEHAV_BASE" 2>&1)
+EXIT_CODE=$?
+if [ $EXIT_CODE -eq 0 ] && echo "$OUTPUT" | grep -q "audit=true"; then
+    test_pass "behavioral-risk override is explicit and audit-visible"
+else
+    test_fail "behavioral-risk override is missing or not audit-visible (exit=$EXIT_CODE)"
+fi
+
+# Test 586: release profile fails when baseline is missing
+echo "Test 586: release CI profile requires baseline presence"
+rm -f /tmp/cct_sigilo_ci_13b3_missing.sigil /tmp/cct_sigilo_ci_13b3_missing.baseline.meta
+OUTPUT=$("$CCT_BIN" build --project "$SIG13B3_PROJ" --sigilo-check --sigilo-ci-profile release --sigilo-baseline /tmp/cct_sigilo_ci_13b3_missing.sigil 2>&1)
+EXIT_CODE=$?
+if [ $EXIT_CODE -eq 2 ] && echo "$OUTPUT" | grep -q "status=missing"; then
+    test_pass "release profile enforces baseline presence"
+else
+    test_fail "release profile did not enforce missing baseline policy (exit=$EXIT_CODE)"
+fi
+
+# Test 587: gated profile passes on stable baseline in project test flow
+echo "Test 587: gated CI profile passes on stable baseline in project test flow"
+SIG13B3_TEST_BASE="/tmp/cct_sigilo_ci_13b3_test_base.sigil"
+SIG13B3_BENCH_BASE="/tmp/cct_sigilo_ci_13b3_bench_base.sigil"
+"$CCT_BIN" test --project "$SIG13B3_PROJ" > /tmp/cct_sigilo_ci_13b3_test_bootstrap.out 2>&1 || true
+"$CCT_BIN" bench --project "$SIG13B3_PROJ" --iterations 1 > /tmp/cct_sigilo_ci_13b3_bench_bootstrap.out 2>&1 || true
+"$CCT_BIN" sigilo baseline update "$SIG13B3_PROJ/tests/ci_gated.test.system.sigil" --baseline "$SIG13B3_TEST_BASE" --force > /tmp/cct_sigilo_ci_13b3_test_base_update.out 2>&1
+"$CCT_BIN" sigilo baseline update "$SIG13B3_PROJ/bench/ci_release.bench.system.sigil" --baseline "$SIG13B3_BENCH_BASE" --force > /tmp/cct_sigilo_ci_13b3_bench_base_update.out 2>&1
+OUTPUT=$("$CCT_BIN" test --project "$SIG13B3_PROJ" --sigilo-check --sigilo-ci-profile gated --sigilo-baseline "$SIG13B3_TEST_BASE" 2>&1)
+EXIT_CODE=$?
+if [ $EXIT_CODE -eq 0 ] && echo "$OUTPUT" | grep -q "profile=gated" && echo "$OUTPUT" | grep -q "highest=none"; then
+    test_pass "gated profile passes when baseline is stable"
+else
+    test_fail "gated profile should pass on stable baseline in test flow (exit=$EXIT_CODE)"
+fi
+
+# Test 588: release profile passes on stable baseline in bench flow
+echo "Test 588: release CI profile passes on stable baseline in bench flow"
+OUTPUT=$("$CCT_BIN" bench --project "$SIG13B3_PROJ" --iterations 1 --sigilo-check --sigilo-ci-profile release --sigilo-baseline "$SIG13B3_BENCH_BASE" 2>&1)
+EXIT_CODE=$?
+if [ $EXIT_CODE -eq 0 ] && echo "$OUTPUT" | grep -q "profile=release" && echo "$OUTPUT" | grep -q "highest=none"; then
+    test_pass "release profile passes on stable baseline in bench flow"
+else
+    test_fail "release profile should pass on stable baseline in bench flow (exit=$EXIT_CODE)"
+fi
+
+# Test 589: advisory profile remains non-blocking on stable baseline in build flow
+echo "Test 589: advisory CI profile remains non-blocking on stable baseline in build flow"
+OUTPUT=$("$CCT_BIN" build --project "$SIG13B3_PROJ" --sigilo-check --sigilo-ci-profile advisory --sigilo-baseline "$SIG13B3_BASE" 2>&1)
+EXIT_CODE=$?
+if [ $EXIT_CODE -eq 0 ] && echo "$OUTPUT" | grep -q "profile=advisory" && echo "$OUTPUT" | grep -q "highest=none"; then
+    test_pass "advisory profile remains non-blocking on stable baseline"
+else
+    test_fail "advisory profile should pass on stable baseline in build flow (exit=$EXIT_CODE)"
+fi
+
+cp "$SIG13B3_BASE" "$SIG13B4_SUMMARY_BASE"
+cp "$SIG13B3_META" "$SIG13B4_SUMMARY_META"
+cp "$SIG13B3_BASE" "$SIG13B4_REVIEW_BASE"
+cp "$SIG13B3_META" "$SIG13B4_REVIEW_META"
+sed -i 's/system_hash = .*/system_hash = fedcba9876543210/' "$SIG13B4_REVIEW_BASE"
+
+# Test 590: default sigilo report summary includes operational minimum fields
+echo "Test 590: sigilo report summary includes operational minimum fields"
+OUTPUT=$("$CCT_BIN" build --project "$SIG13B3_PROJ" --sigilo-check --sigilo-ci-profile advisory --sigilo-baseline "$SIG13B4_SUMMARY_BASE" 2>&1)
+EXIT_CODE=$?
+if [ $EXIT_CODE -eq 0 ] && \
+   echo "$OUTPUT" | grep -q "sigilo.report format=cct.sigilo.report.v1" && \
+   echo "$OUTPUT" | grep -q "command=build" && \
+   echo "$OUTPUT" | grep -q "profile=advisory" && \
+   echo "$OUTPUT" | grep -q "decision=pass" && \
+   echo "$OUTPUT" | grep -q "sigilo.report.summary"; then
+    test_pass "summary report prints format/version, command/profile, decision, and next action hints"
+else
+    test_fail "summary report is missing required operational fields (exit=$EXIT_CODE)"
+fi
+
+# Test 591: detailed mode includes per-diff domain and before/after values
+echo "Test 591: sigilo report detailed mode includes diff domain and before/after"
+OUTPUT=$("$CCT_BIN" build --project "$SIG13B3_PROJ" --sigilo-check --sigilo-ci-profile gated --sigilo-baseline "$SIG13B4_REVIEW_BASE" --sigilo-report detailed 2>&1)
+EXIT_CODE=$?
+if [ $EXIT_CODE -eq 2 ] && \
+   echo "$OUTPUT" | grep -q "mode=detailed" && \
+   echo "$OUTPUT" | grep -q "sigilo.report.item\\[0\\]" && \
+   echo "$OUTPUT" | grep -q "domain=root/system_hash" && \
+   echo "$OUTPUT" | grep -q "before=" && \
+   echo "$OUTPUT" | grep -q "after="; then
+    test_pass "detailed report exposes per-item domain and before/after values"
+else
+    test_fail "detailed report did not expose required per-item diagnostics (exit=$EXIT_CODE)"
+fi
+
+# Test 592: explain mode provides cause/action/docs on blocking drift
+echo "Test 592: sigilo explain mode reports cause/action/docs for blocking drift"
+OUTPUT=$("$CCT_BIN" build --project "$SIG13B3_PROJ" --sigilo-check --sigilo-ci-profile gated --sigilo-baseline "$SIG13B4_REVIEW_BASE" --sigilo-explain 2>&1)
+EXIT_CODE=$?
+if [ $EXIT_CODE -eq 2 ] && \
+   echo "$OUTPUT" | grep -q "sigilo.explain probable_cause=" && \
+   echo "$OUTPUT" | grep -q "recommended_action=" && \
+   echo "$OUTPUT" | grep -q "docs/sigilo_troubleshooting_13b4.md" && \
+   echo "$OUTPUT" | grep -q "blocked=true"; then
+    test_pass "explain mode provides actionable diagnostics for blocked CI drift"
+else
+    test_fail "explain mode output is incomplete for blocked CI drift (exit=$EXIT_CODE)"
+fi
+
+# Test 593: explain mode covers release profile baseline missing scenario
+echo "Test 593: sigilo explain mode covers release profile missing baseline"
+rm -f "$SIG13B4_MISSING_BASE" "${SIG13B4_MISSING_BASE%.sigil}.baseline.meta"
+OUTPUT=$("$CCT_BIN" build --project "$SIG13B3_PROJ" --sigilo-check --sigilo-ci-profile release --sigilo-baseline "$SIG13B4_MISSING_BASE" --sigilo-explain 2>&1)
+EXIT_CODE=$?
+if [ $EXIT_CODE -eq 2 ] && \
+   echo "$OUTPUT" | grep -q "status=missing" && \
+   echo "$OUTPUT" | grep -q "sigilo.explain probable_cause=baseline file is missing" && \
+   echo "$OUTPUT" | grep -q "blocked=true"; then
+    test_pass "explain mode handles missing baseline diagnostics in release profile"
+else
+    test_fail "missing baseline explain diagnostics are incorrect (exit=$EXIT_CODE)"
+fi
+
+# Test 594: output format signature remains stable in standard mode
+echo "Test 594: sigilo report format signature remains stable"
+OUTPUT=$("$CCT_BIN" build --project "$SIG13B3_PROJ" --sigilo-check --sigilo-ci-profile advisory --sigilo-baseline "$SIG13B4_SUMMARY_BASE" 2>&1)
+EXIT_CODE=$?
+if [ $EXIT_CODE -eq 0 ] && echo "$OUTPUT" | grep -q "format=cct.sigilo.report.v1"; then
+    test_pass "sigilo report format signature is stable in standard mode"
+else
+    test_fail "sigilo report format signature changed unexpectedly (exit=$EXIT_CODE)"
+fi
+
+# Test 595: legacy CI output line remains available for compatibility scripts
+echo "Test 595: legacy sigilo.ci output remains available for compatibility"
+OUTPUT=$("$CCT_BIN" build --project "$SIG13B3_PROJ" --sigilo-check --sigilo-ci-profile advisory --sigilo-baseline "$SIG13B4_SUMMARY_BASE" 2>&1)
+EXIT_CODE=$?
+if [ $EXIT_CODE -eq 0 ] && echo "$OUTPUT" | grep -q "sigilo.ci profile=advisory"; then
+    test_pass "legacy sigilo.ci output is preserved for existing scripts"
+else
+    test_fail "legacy sigilo.ci output was regressed (exit=$EXIT_CODE)"
+fi
+
+# Test 596: baseline mode emits summary report and explain hint without CI profile
+echo "Test 596: baseline mode emits report/explain without CI profile"
+OUTPUT=$("$CCT_BIN" build --project "$SIG13B3_PROJ" --sigilo-check --sigilo-baseline "$SIG13B4_SUMMARY_BASE" --sigilo-explain 2>&1)
+EXIT_CODE=$?
+if [ $EXIT_CODE -eq 0 ] && \
+   echo "$OUTPUT" | grep -q "profile=baseline" && \
+   echo "$OUTPUT" | grep -q "sigilo.report format=cct.sigilo.report.v1" && \
+   echo "$OUTPUT" | grep -q "sigilo.explain probable_cause="; then
+    test_pass "baseline mode reports and explains sigilo status in operational format"
+else
+    test_fail "baseline mode observability output is incomplete (exit=$EXIT_CODE)"
+fi
+
+echo ""
+echo "========================================"
+echo "FASE 13C.1: Sigilo Schema Governance and Compatibility Tests"
+echo "========================================"
+echo ""
+
+SIG13C1_BACK="tests/integration/sigilo_schema_backward_13c1"
+SIG13C1_FWD="tests/integration/sigilo_schema_forward_13c1"
+SIG13C1_BASE_SIGIL="/tmp/cct_sigilo_schema_13c1_base.sigil"
+SIG13C1_UNKNOWN="/tmp/cct_sigilo_schema_13c1_unknown.sigil"
+SIG13C1_DEPRECATED="/tmp/cct_sigilo_schema_13c1_deprecated.sigil"
+SIG13C1_INVALID_SCHEMA="/tmp/cct_sigilo_schema_13c1_invalid_schema.sigil"
+
+rm -f "${SIG13C1_BACK}.svg" "${SIG13C1_BACK}.sigil" "${SIG13C1_BACK}"
+rm -f "${SIG13C1_FWD}.svg" "${SIG13C1_FWD}.sigil" "${SIG13C1_FWD}"
+rm -f "$SIG13C1_BASE_SIGIL" "$SIG13C1_UNKNOWN" "$SIG13C1_DEPRECATED" "$SIG13C1_INVALID_SCHEMA"
+
+"$CCT_BIN" tests/integration/sigilo_schema_backward_13c1.cct >/tmp/cct_sigilo_schema_13c1_back_compile.out 2>&1 || true
+"$CCT_BIN" tests/integration/sigilo_schema_forward_13c1.cct >/tmp/cct_sigilo_schema_13c1_fwd_compile.out 2>&1 || true
+cat > "$SIG13C1_BASE_SIGIL" <<'SIGEOF'
+format = cct.sigil.v1
+sigilo_scope = local
+visual_engine = network
+semantic_hash = abcdef0123456789
+
+[totals]
+rituale = 1
+SIGEOF
+
+# Test 597: schema governance document exists and is versioned
+echo "Test 597: schema governance document exists with canonical schema version"
+if [ -f docs/sigilo_schema_13c1.md ] && grep -q "cct.sigil.v1" docs/sigilo_schema_13c1.md; then
+    test_pass "13C1 schema governance document exists and declares canonical schema version"
+else
+    test_fail "13C1 schema governance document missing or without canonical version contract"
+fi
+
+# Test 598: structured inspect reads canonical schema version correctly
+echo "Test 598: sigilo inspect structured reads canonical schema version"
+OUTPUT=$("$CCT_BIN" sigilo inspect "$SIG13C1_BASE_SIGIL" --format structured --summary 2>&1)
+EXIT_CODE=$?
+if [ $EXIT_CODE -eq 0 ] && echo "$OUTPUT" | grep -q "sigil_format = cct.sigil.v1"; then
+    test_pass "structured inspect reads schema version cct.sigil.v1"
+else
+    test_fail "structured inspect did not report expected schema version (exit=$EXIT_CODE)"
+fi
+
+# Test 599: tolerant consumer ignores additive unknown field
+echo "Test 599: tolerant sigilo consumer ignores unknown additive field"
+cp "$SIG13C1_BASE_SIGIL" "$SIG13C1_UNKNOWN"
+echo "future_schema_field = canary" >> "$SIG13C1_UNKNOWN"
+OUTPUT=$("$CCT_BIN" sigilo inspect "$SIG13C1_UNKNOWN" --summary 2>&1)
+EXIT_CODE=$?
+if [ $EXIT_CODE -eq 0 ] && echo "$OUTPUT" | grep -q "sigilo.inspect.summary"; then
+    test_pass "tolerant inspect accepts unknown additive top-level field"
+else
+    test_fail "tolerant inspect should accept unknown additive field (exit=$EXIT_CODE)"
+fi
+
+# Test 600: deprecated field alias is accepted and mapped to visual_engine
+echo "Test 600: deprecated sigilo field alias remains accepted with compatibility mapping"
+cp "$SIG13C1_BASE_SIGIL" "$SIG13C1_DEPRECATED"
+sed -i '/^visual_engine = /d' "$SIG13C1_DEPRECATED"
+sed -i '/^\[totals\]/i sigilo_style = seal' "$SIG13C1_DEPRECATED"
+OUTPUT=$("$CCT_BIN" sigilo inspect "$SIG13C1_DEPRECATED" --format text 2>&1)
+EXIT_CODE=$?
+if [ $EXIT_CODE -eq 0 ] && echo "$OUTPUT" | grep -q "visual_engine=seal"; then
+    test_pass "deprecated field alias remains accepted and compatible"
+else
+    test_fail "deprecated field alias compatibility mapping failed (exit=$EXIT_CODE)"
+fi
+
+# Test 601: strict mode fails on schema incompatibility
+echo "Test 601: strict sigilo inspect fails on incompatible schema format"
+cp "$SIG13C1_BASE_SIGIL" "$SIG13C1_INVALID_SCHEMA"
+sed -i 's/^format = .*/format = cct.sigil.v2/' "$SIG13C1_INVALID_SCHEMA"
+OUTPUT=$("$CCT_BIN" sigilo inspect "$SIG13C1_INVALID_SCHEMA" --strict --summary 2>&1)
+EXIT_CODE=$?
+if [ $EXIT_CODE -ne 0 ] && echo "$OUTPUT" | grep -q "schema_mismatch"; then
+    test_pass "strict inspect rejects incompatible schema contract"
+else
+    test_fail "strict inspect should reject incompatible schema format (exit=$EXIT_CODE)"
+fi
+
+# Test 602: strict mode keeps unknown additive field non-fatal for forward compatibility
+echo "Test 602: strict consumer keeps unknown additive field non-fatal"
+OUTPUT=$("$CCT_BIN" sigilo inspect "$SIG13C1_UNKNOWN" --strict --summary 2>&1)
+EXIT_CODE=$?
+if [ $EXIT_CODE -eq 0 ] && echo "$OUTPUT" | grep -q "sigilo.inspect.summary"; then
+    test_pass "strict inspect keeps additive unknown field as non-fatal warning"
+else
+    test_fail "strict inspect should keep additive unknown field non-fatal (exit=$EXIT_CODE)"
+fi
+
+# Test 603: runtime parser suite validates 13C1 compatibility diagnostics
+echo "Test 603: runtime sigil parser suite validates 13C1 compatibility diagnostics"
+if make test_sigil_parse >/tmp/cct_sigilo_schema_13c1_runtime_parse.out 2>&1; then
+    test_pass "runtime sigil parser suite validates deprecated/unknown/schema compatibility cases"
+else
+    test_fail "runtime sigil parser suite failed for 13C1 compatibility checks"
+fi
+
+echo ""
+echo "========================================"
+echo "FASE 13C.2: Analytical Metadata Blocks Tests"
+echo "========================================"
+echo ""
+
+SIG13C2_A="tests/integration/sigilo_metadata_new_blocks_13c2"
+SIG13C2_B="tests/integration/sigilo_metadata_diff_blocks_13c2"
+SIG13C2_A_SIGIL="${SIG13C2_A}.sigil"
+SIG13C2_B_SIGIL="${SIG13C2_B}.sigil"
+
+rm -f "${SIG13C2_A}.svg" "$SIG13C2_A_SIGIL" "${SIG13C2_A}"
+rm -f "${SIG13C2_B}.svg" "$SIG13C2_B_SIGIL" "${SIG13C2_B}"
+
+"$CCT_BIN" tests/integration/sigilo_metadata_new_blocks_13c2.cct >/tmp/cct_sigilo_13c2_a_compile.out 2>&1 || true
+"$CCT_BIN" tests/integration/sigilo_metadata_diff_blocks_13c2.cct >/tmp/cct_sigilo_13c2_b_compile.out 2>&1 || true
+
+# Test 604: local sigil emits all new analytical metadata sections
+echo "Test 604: local sigil emits new analytical metadata sections"
+if [ -f "$SIG13C2_A_SIGIL" ] && \
+   grep -q "^\[analysis_summary\]" "$SIG13C2_A_SIGIL" && \
+   grep -q "^\[diff_fingerprint_context\]" "$SIG13C2_A_SIGIL" && \
+   grep -q "^\[module_structural_summary\]" "$SIG13C2_A_SIGIL" && \
+   grep -q "^\[compatibility_hints\]" "$SIG13C2_A_SIGIL"; then
+    test_pass "13C2 analytical metadata sections are emitted in local sigil"
+else
+    test_fail "13C2 analytical metadata sections missing in local sigil"
+fi
+
+# Test 605: deterministic serialization order for new analytical blocks
+echo "Test 605: analytical metadata sections keep deterministic order"
+ORDER_A=$(grep -n "^\[analysis_summary\]\|^\[diff_fingerprint_context\]\|^\[module_structural_summary\]\|^\[compatibility_hints\]" "$SIG13C2_A_SIGIL" 2>/dev/null | cut -d: -f2 | tr '\n' '|' || true)
+if [ "$ORDER_A" = "[analysis_summary]|[diff_fingerprint_context]|[module_structural_summary]|[compatibility_hints]|" ]; then
+    test_pass "analytical metadata section serialization order is deterministic"
+else
+    test_fail "analytical metadata section order is not deterministic"
+fi
+
+# Test 606: parser strict mode accepts new analytical blocks
+echo "Test 606: strict parser accepts sigil with new analytical blocks"
+SIG13C2_STRICT="/tmp/cct_sigilo_13c2_strict.sigil"
+cat > "$SIG13C2_STRICT" <<'SIGEOF'
+format = cct.sigil.v1
+sigilo_scope = local
+semantic_hash = abcdef0123456789
+
+[analysis_summary]
+scope = local
+
+[diff_fingerprint_context]
+scope_anchor = local
+
+[module_structural_summary]
+module_count = 1
+
+[compatibility_hints]
+schema_contract = cct.sigil.v1
+SIGEOF
+OUTPUT=$("$CCT_BIN" sigilo inspect "$SIG13C2_STRICT" --strict --summary 2>&1)
+EXIT_CODE=$?
+if [ $EXIT_CODE -eq 0 ] && echo "$OUTPUT" | grep -q "sigilo.inspect.summary"; then
+    test_pass "strict parser accepts 13C2 analytical blocks"
+else
+    test_fail "strict parser should accept 13C2 analytical blocks (exit=$EXIT_CODE)"
+fi
+
+# Test 607: diff classifies analysis_summary drift as review-required
+echo "Test 607: sigilo diff marks analysis_summary drift as review-required"
+SIG13C2_DIFF_A="/tmp/cct_sigilo_13c2_diff_a.sigil"
+SIG13C2_DIFF_B="/tmp/cct_sigilo_13c2_diff_b.sigil"
+cat > "$SIG13C2_DIFF_A" <<'SIGEOF'
+format = cct.sigil.v1
+sigilo_scope = local
+semantic_hash = abcdef0123456789
+
+[analysis_summary]
+control_flow_pressure = 2
+SIGEOF
+cat > "$SIG13C2_DIFF_B" <<'SIGEOF'
+format = cct.sigil.v1
+sigilo_scope = local
+semantic_hash = abcdef0123456789
+
+[analysis_summary]
+control_flow_pressure = 8
+SIGEOF
+OUTPUT=$("$CCT_BIN" sigilo diff "$SIG13C2_DIFF_A" "$SIG13C2_DIFF_B" --format text 2>&1)
+EXIT_CODE=$?
+if [ $EXIT_CODE -eq 0 ] && \
+   echo "$OUTPUT" | grep -q "section=analysis_summary" && \
+   echo "$OUTPUT" | grep -q "severity=review-required"; then
+    test_pass "analysis_summary drift is classified as review-required"
+else
+    test_fail "analysis_summary drift classification is incorrect (exit=$EXIT_CODE)"
+fi
+
+# Test 608: compatibility_hints drift remains informational
+echo "Test 608: compatibility_hints drift remains informational in diff"
+SIG13C2_HINTS_A="/tmp/cct_sigilo_13c2_hints_a.sigil"
+SIG13C2_HINTS_B="/tmp/cct_sigilo_13c2_hints_b.sigil"
+cat > "$SIG13C2_HINTS_A" <<'SIGEOF'
+format = cct.sigil.v1
+sigilo_scope = local
+semantic_hash = abcdef0123456789
+
+[compatibility_hints]
+schema_contract = cct.sigil.v1
+SIGEOF
+cat > "$SIG13C2_HINTS_B" <<'SIGEOF'
+format = cct.sigil.v1
+sigilo_scope = local
+semantic_hash = abcdef0123456789
+
+[compatibility_hints]
+schema_contract = cct.sigil.v1+hint
+SIGEOF
+OUTPUT=$("$CCT_BIN" sigilo diff "$SIG13C2_HINTS_A" "$SIG13C2_HINTS_B" --format text 2>&1)
+EXIT_CODE=$?
+if [ $EXIT_CODE -eq 0 ] && \
+   echo "$OUTPUT" | grep -q "section=compatibility_hints" && \
+   echo "$OUTPUT" | grep -q "severity=informational"; then
+    test_pass "compatibility_hints drift remains informational"
+else
+    test_fail "compatibility_hints drift should be informational (exit=$EXIT_CODE)"
+fi
+
+# Test 609: runtime parser suite includes 13C2 analytical block recognition
+echo "Test 609: runtime sigil parser suite includes 13C2 analytical recognition"
+if make test_sigil_parse >/tmp/cct_sigilo_13c2_runtime_parse.out 2>&1; then
+    test_pass "runtime sigil parser suite validates 13C2 analytical block recognition"
+else
+    test_fail "runtime sigil parser suite failed for 13C2 analytical recognition"
+fi
+
+# Test 610: runtime diff suite includes 13C2 analytical block severity contract
+echo "Test 610: runtime sigil diff suite includes 13C2 severity contract"
+if make test_sigil_diff >/tmp/cct_sigilo_13c2_runtime_diff.out 2>&1; then
+    test_pass "runtime sigil diff suite validates 13C2 analytical block severity"
+else
+    test_fail "runtime sigil diff suite failed for 13C2 severity contract"
+fi
+
+echo ""
+echo "========================================"
+echo "FASE 13C.3: Consumer Compatibility Profiles Tests"
+echo "========================================"
+echo ""
+
+SIG13C3_LEGACY="tests/integration/sigilo_consumer_legacy_13c3"
+SIG13C3_CURRENT="tests/integration/sigilo_consumer_current_13c3"
+SIG13C3_STRICT="tests/integration/sigilo_consumer_strict_13c3"
+
+rm -f "${SIG13C3_LEGACY}.svg" "${SIG13C3_LEGACY}.sigil" "${SIG13C3_LEGACY}"
+rm -f "${SIG13C3_CURRENT}.svg" "${SIG13C3_CURRENT}.sigil" "${SIG13C3_CURRENT}"
+rm -f "${SIG13C3_STRICT}.svg" "${SIG13C3_STRICT}.sigil" "${SIG13C3_STRICT}"
+
+"$CCT_BIN" tests/integration/sigilo_consumer_legacy_13c3.cct >/tmp/cct_sigilo_13c3_legacy_compile.out 2>&1 || true
+"$CCT_BIN" tests/integration/sigilo_consumer_current_13c3.cct >/tmp/cct_sigilo_13c3_current_compile.out 2>&1 || true
+"$CCT_BIN" tests/integration/sigilo_consumer_strict_13c3.cct >/tmp/cct_sigilo_13c3_strict_compile.out 2>&1 || true
+
+# Test 611: consumer compatibility guide is published
+echo "Test 611: consumer compatibility guide exists with profile matrix"
+if [ -f docs/sigilo_consumer_compat_13c3.md ] && \
+   grep -q "legacy-tolerant" docs/sigilo_consumer_compat_13c3.md && \
+   grep -q "current-default" docs/sigilo_consumer_compat_13c3.md && \
+   grep -q "strict-contract" docs/sigilo_consumer_compat_13c3.md; then
+    test_pass "13C3 consumer compatibility guide exists with profile matrix"
+else
+    test_fail "13C3 consumer compatibility guide missing or incomplete"
+fi
+
+# Test 612: legacy-tolerant profile accepts higher schema with warning fallback
+echo "Test 612: legacy-tolerant profile applies higher-schema fallback"
+SIG13C3_V2_LEGACY="/tmp/cct_sigilo_13c3_v2_legacy.sigil"
+cat > "$SIG13C3_V2_LEGACY" <<'SIGEOF'
+format = cct.sigil.v2
+sigilo_scope = local
+semantic_hash = abcdef0123456789
+future_field = additive
+SIGEOF
+OUTPUT=$("$CCT_BIN" sigilo inspect "$SIG13C3_V2_LEGACY" --summary --consumer-profile legacy-tolerant 2>&1)
+EXIT_CODE=$?
+if [ $EXIT_CODE -eq 0 ] && \
+   echo "$OUTPUT" | grep -q "sigilo.inspect.summary" && \
+   echo "$OUTPUT" | grep -q "warnings=" && \
+   ! echo "$OUTPUT" | grep -q "warnings=0"; then
+    test_pass "legacy-tolerant profile accepts higher schema with warning fallback"
+else
+    test_fail "legacy-tolerant fallback contract failed (exit=$EXIT_CODE)"
+fi
+
+# Test 613: current-default profile accepts higher schema with warning fallback
+echo "Test 613: current-default profile applies higher-schema fallback"
+SIG13C3_V2_CURRENT="/tmp/cct_sigilo_13c3_v2_current.sigil"
+cat > "$SIG13C3_V2_CURRENT" <<'SIGEOF'
+format = cct.sigil.v3
+sigilo_scope = local
+semantic_hash = abcdef0123456789
+SIGEOF
+OUTPUT=$("$CCT_BIN" sigilo inspect "$SIG13C3_V2_CURRENT" --summary --consumer-profile current-default 2>&1)
+EXIT_CODE=$?
+if [ $EXIT_CODE -eq 0 ] && \
+   echo "$OUTPUT" | grep -q "sigilo.inspect.summary" && \
+   echo "$OUTPUT" | grep -q "warnings=" && \
+   ! echo "$OUTPUT" | grep -q "warnings=0"; then
+    test_pass "current-default profile accepts higher schema with warning fallback"
+else
+    test_fail "current-default fallback contract failed (exit=$EXIT_CODE)"
+fi
+
+# Test 614: strict-contract profile rejects higher schema
+echo "Test 614: strict-contract profile rejects higher schema"
+OUTPUT=$("$CCT_BIN" sigilo inspect "$SIG13C3_V2_CURRENT" --summary --consumer-profile strict-contract 2>&1)
+EXIT_CODE=$?
+if [ $EXIT_CODE -ne 0 ] && echo "$OUTPUT" | grep -q "schema_mismatch"; then
+    test_pass "strict-contract rejects unsupported higher schema"
+else
+    test_fail "strict-contract should reject unsupported higher schema (exit=$EXIT_CODE)"
+fi
+
+# Test 615: --strict alias remains equivalent to strict-contract
+echo "Test 615: --strict remains strict-contract alias"
+OUTPUT=$("$CCT_BIN" sigilo inspect "$SIG13C3_V2_CURRENT" --summary --strict 2>&1)
+EXIT_CODE=$?
+if [ $EXIT_CODE -ne 0 ] && echo "$OUTPUT" | grep -q "schema_mismatch"; then
+    test_pass "--strict keeps strict-contract behavior for schema mismatch"
+else
+    test_fail "--strict alias mismatch for strict-contract behavior (exit=$EXIT_CODE)"
+fi
+
+# Test 616: invalid consumer profile value is rejected
+echo "Test 616: invalid consumer profile is rejected"
+OUTPUT=$("$CCT_BIN" sigilo inspect "$SIG13C3_V2_CURRENT" --summary --consumer-profile future-mode 2>&1)
+EXIT_CODE=$?
+if [ $EXIT_CODE -ne 0 ] && echo "$OUTPUT" | grep -q "Invalid --consumer-profile value"; then
+    test_pass "invalid consumer profile is rejected clearly"
+else
+    test_fail "invalid consumer profile should be rejected clearly (exit=$EXIT_CODE)"
+fi
+
+# Test 617: 13C3 integration fixtures compile and emit sigil artifacts
+echo "Test 617: 13C3 consumer integration fixtures compile to sigil artifacts"
+if [ -f "${SIG13C3_LEGACY}.sigil" ] && [ -f "${SIG13C3_CURRENT}.sigil" ] && [ -f "${SIG13C3_STRICT}.sigil" ]; then
+    test_pass "13C3 integration fixtures compile and emit sigilo metadata"
+else
+    test_fail "13C3 integration fixtures did not emit expected sigilo artifacts"
+fi
+
+# Test 618: runtime parser suite includes 13C3 profile fallback behavior
+echo "Test 618: runtime sigil parser suite includes 13C3 profile fallback behavior"
+if make test_sigil_parse >/tmp/cct_sigilo_13c3_runtime_parse.out 2>&1; then
+    test_pass "runtime sigil parser suite validates 13C3 compatibility profiles"
+else
+    test_fail "runtime sigil parser suite failed for 13C3 compatibility profiles"
+fi
+
+echo ""
+echo "========================================"
+echo "FASE 13C.4: Strict/Tolerant Validation and Normalization Tests"
+echo "========================================"
+echo ""
+
+SIG13C4_TOL="tests/integration/sigilo_validate_tolerant_13c4"
+SIG13C4_STRICT="tests/integration/sigilo_validate_strict_13c4"
+SIG13C4_SCHEMA="tests/integration/sigilo_validate_schema_violation_13c4"
+
+rm -f "${SIG13C4_TOL}.svg" "${SIG13C4_TOL}.sigil" "${SIG13C4_TOL}"
+rm -f "${SIG13C4_STRICT}.svg" "${SIG13C4_STRICT}.sigil" "${SIG13C4_STRICT}"
+rm -f "${SIG13C4_SCHEMA}.svg" "${SIG13C4_SCHEMA}.sigil" "${SIG13C4_SCHEMA}"
+
+"$CCT_BIN" tests/integration/sigilo_validate_tolerant_13c4.cct >/tmp/cct_sigilo_13c4_tol_compile.out 2>&1 || true
+"$CCT_BIN" tests/integration/sigilo_validate_strict_13c4.cct >/tmp/cct_sigilo_13c4_strict_compile.out 2>&1 || true
+"$CCT_BIN" tests/integration/sigilo_validate_schema_violation_13c4.cct >/tmp/cct_sigilo_13c4_schema_compile.out 2>&1 || true
+
+SIG13C4_VALID="/tmp/cct_sigilo_13c4_valid.sigil"
+SIG13C4_UNKNOWN="/tmp/cct_sigilo_13c4_unknown.sigil"
+SIG13C4_MISSING="/tmp/cct_sigilo_13c4_missing_required.sigil"
+SIG13C4_TYPE="/tmp/cct_sigilo_13c4_type_invalid.sigil"
+SIG13C4_SCHEMA_HIGH="/tmp/cct_sigilo_13c4_schema_high.sigil"
+
+cat > "$SIG13C4_VALID" <<'SIGEOF'
+format = cct.sigil.v1
+sigilo_scope = local
+semantic_hash = abcdef0123456789
+module_count = 1
+module_resolution_status = ok
+
+[analysis_summary]
+scope = local
+
+[module_structural_summary]
+module_count = 1
+module_resolution_status = ok
+SIGEOF
+
+# Test 619: new validate subcommand works in tolerant mode for valid artifact
+echo "Test 619: sigilo validate tolerant passes valid artifact"
+OUTPUT=$("$CCT_BIN" sigilo validate "$SIG13C4_VALID" --summary --consumer-profile current-default 2>&1)
+EXIT_CODE=$?
+if [ $EXIT_CODE -eq 0 ] && echo "$OUTPUT" | grep -q "sigilo.validate.summary" && echo "$OUTPUT" | grep -q "result=pass"; then
+    test_pass "sigilo validate tolerant accepts valid artifact"
+else
+    test_fail "sigilo validate tolerant should accept valid artifact (exit=$EXIT_CODE)"
+fi
+
+# Test 620: strict-contract validation passes valid artifact
+echo "Test 620: sigilo validate strict-contract passes valid artifact"
+OUTPUT=$("$CCT_BIN" sigilo validate "$SIG13C4_VALID" --summary --consumer-profile strict-contract 2>&1)
+EXIT_CODE=$?
+if [ $EXIT_CODE -eq 0 ] && echo "$OUTPUT" | grep -q "result=pass"; then
+    test_pass "sigilo validate strict-contract accepts valid artifact"
+else
+    test_fail "sigilo validate strict-contract should accept valid artifact (exit=$EXIT_CODE)"
+fi
+
+# Test 621: unknown optional field remains non-blocking in tolerant validation
+echo "Test 621: tolerant validation keeps unknown optional field non-blocking"
+cp "$SIG13C4_VALID" "$SIG13C4_UNKNOWN"
+echo "future_optional = x" >> "$SIG13C4_UNKNOWN"
+OUTPUT=$("$CCT_BIN" sigilo validate "$SIG13C4_UNKNOWN" --summary --consumer-profile legacy-tolerant 2>&1)
+EXIT_CODE=$?
+if [ $EXIT_CODE -eq 0 ] && echo "$OUTPUT" | grep -q "warnings=" && ! echo "$OUTPUT" | grep -q "warnings=0"; then
+    test_pass "tolerant validation keeps unknown optional field as warning"
+else
+    test_fail "tolerant validation should keep unknown optional field non-blocking (exit=$EXIT_CODE)"
+fi
+
+# Test 622: strict-contract fails on missing required hash by scope
+echo "Test 622: strict validation fails on missing required field"
+cat > "$SIG13C4_MISSING" <<'SIGEOF'
+format = cct.sigil.v1
+sigilo_scope = local
+SIGEOF
+OUTPUT=$("$CCT_BIN" sigilo validate "$SIG13C4_MISSING" --summary --strict 2>&1)
+EXIT_CODE=$?
+if [ $EXIT_CODE -ne 0 ] && echo "$OUTPUT" | grep -q "errors=" && ! echo "$OUTPUT" | grep -q "errors=0"; then
+    test_pass "strict validation fails on missing required field"
+else
+    test_fail "strict validation should fail on missing required field (exit=$EXIT_CODE)"
+fi
+
+# Test 623: strict-contract fails invalid numeric type with action hint
+echo "Test 623: strict validation fails invalid numeric type with action hint"
+cat > "$SIG13C4_TYPE" <<'SIGEOF'
+format = cct.sigil.v1
+sigilo_scope = local
+semantic_hash = abcdef0123456789
+module_count = many
+SIGEOF
+OUTPUT=$("$CCT_BIN" sigilo validate "$SIG13C4_TYPE" --format structured --strict 2>&1)
+EXIT_CODE=$?
+if [ $EXIT_CODE -ne 0 ] && \
+   echo "$OUTPUT" | grep -q "kind = type" && \
+   echo "$OUTPUT" | grep -q "action:"; then
+    test_pass "strict validation reports invalid numeric type with correction hint"
+else
+    test_fail "strict validation should report typed error with action hint (exit=$EXIT_CODE)"
+fi
+
+# Test 624: sigilo check --strict keeps schema violation blocking contract
+echo "Test 624: sigilo check --strict blocks schema violation inputs"
+cat > "$SIG13C4_SCHEMA_HIGH" <<'SIGEOF'
+format = cct.sigil.v2
+sigilo_scope = local
+semantic_hash = abcdef0123456789
+SIGEOF
+OUTPUT=$("$CCT_BIN" sigilo check "$SIG13C4_VALID" "$SIG13C4_SCHEMA_HIGH" --strict --summary 2>&1)
+EXIT_CODE=$?
+if [ $EXIT_CODE -ne 0 ] && echo "$OUTPUT" | grep -q "schema_mismatch"; then
+    test_pass "sigilo check --strict blocks schema violation during validation"
+else
+    test_fail "sigilo check --strict should block schema violation (exit=$EXIT_CODE)"
+fi
+
+# Test 625: runtime parser suite includes 13C4 strict/tolerant validation rules
+echo "Test 625: runtime sigil parser suite includes 13C4 validation rules"
+if make test_sigil_parse >/tmp/cct_sigilo_13c4_runtime_parse.out 2>&1; then
+    test_pass "runtime sigil parser suite validates 13C4 strict/tolerant rules"
+else
+    test_fail "runtime sigil parser suite failed for 13C4 rules"
+fi
+
+echo ""
+echo "========================================"
+echo "FASE 13D.1: Sigilo Tooling Regression Matrix Tests"
+echo "========================================"
+echo ""
+
+PHASE13D1_FIX="tests/integration/phase13_regression_13d1"
+PHASE13D1_RUNNER="tests/run_phase13_regression.sh"
+PHASE13D1_TMP="/tmp/cct_phase13d1_global"
+PHASE13D1_ART_BASE="$PHASE13D1_TMP/base.sigil"
+PHASE13D1_ART_INFO="$PHASE13D1_TMP/info.sigil"
+PHASE13D1_ART_REVIEW="$PHASE13D1_TMP/review.sigil"
+PHASE13D1_ART_BEHAV="$PHASE13D1_TMP/behavior.sigil"
+PHASE13D1_BASELINE="$PHASE13D1_TMP/baseline.sigil"
+PHASE13D1_PROJ="$PHASE13D1_TMP/project"
+PHASE13D1_CI_BASE="$PHASE13D1_TMP/ci_base.sigil"
+
+rm -rf "$PHASE13D1_TMP"
+mkdir -p "$PHASE13D1_TMP"
+
+# Test 626: canonical fixture inventory exists
+echo "Test 626: phase13d1 canonical fixture inventory exists"
+if [ -f "$PHASE13D1_FIX/single_file/smoke.cct" ] && \
+   [ -f "$PHASE13D1_FIX/multi_module/main.cct" ] && \
+   [ -f "$PHASE13D1_FIX/multi_module/modules/util.cct" ] && \
+   [ -f "$PHASE13D1_FIX/project/src/main.cct" ] && \
+   [ -f "$PHASE13D1_FIX/artifacts/legacy_v1.sigil" ] && \
+   [ -f "$PHASE13D1_FIX/artifacts/expanded_metadata_v1.sigil" ] && \
+   [ -f "$PHASE13D1_FIX/artifacts/invalid_missing_required.sigil" ]; then
+    test_pass "13D1 fixtures cover single-file, multi-module, project, and artifact domains"
+else
+    test_fail "13D1 fixture inventory is incomplete"
+fi
+
+# Test 627: dedicated phase13d1 runner exists and is executable
+echo "Test 627: dedicated phase13d1 runner exists and is executable"
+if [ -x "$PHASE13D1_RUNNER" ]; then
+    test_pass "phase13d1 dedicated regression runner exists and is executable"
+else
+    test_fail "phase13d1 dedicated regression runner missing or not executable"
+fi
+
+# Test 628: dedicated phase13d1 runner executes successfully
+echo "Test 628: dedicated phase13d1 runner executes successfully"
+if "$PHASE13D1_RUNNER" >/tmp/cct_phase13d1_runner.out 2>&1; then
+    test_pass "phase13d1 dedicated regression runner executes all domain checks"
+else
+    test_fail "phase13d1 dedicated regression runner reported failures"
+fi
+
+# Test 629: parser compatibility legacy + strict higher-schema rejection
+echo "Test 629: parser legacy + higher schema compatibility contract"
+OUTPUT=$("$CCT_BIN" sigilo inspect "$PHASE13D1_FIX/artifacts/legacy_v1.sigil" --summary 2>&1)
+EXIT_A=$?
+OUTPUT_STRICT=$("$CCT_BIN" sigilo inspect "$PHASE13D1_FIX/artifacts/higher_schema_v2.sigil" --summary --consumer-profile strict-contract 2>&1)
+EXIT_B=$?
+if [ $EXIT_A -eq 0 ] && echo "$OUTPUT" | grep -q "sigilo.inspect.summary" && [ $EXIT_B -ne 0 ] && echo "$OUTPUT_STRICT" | grep -q "schema_mismatch"; then
+    test_pass "legacy artifact parses and strict profile rejects higher schema"
+else
+    test_fail "parser compatibility contract failed for legacy/higher-schema path"
+fi
+
+# Test 630: diff severity matrix covers none/informational/review/behavioral-risk
+echo "Test 630: diff severity matrix covers all severity levels"
+cat > "$PHASE13D1_ART_BASE" <<'SIGEOF'
+format = cct.sigil.v1
+sigilo_scope = local
+semantic_hash = abcdef0123456789
+[totals]
+rituale = 1
+SIGEOF
+cp "$PHASE13D1_ART_BASE" "$PHASE13D1_ART_INFO"
+cp "$PHASE13D1_ART_BASE" "$PHASE13D1_ART_REVIEW"
+echo "future_optional = additive" >> "$PHASE13D1_ART_INFO"
+sed -i 's/semantic_hash = .*/semantic_hash = 1111111111111111/' "$PHASE13D1_ART_REVIEW"
+cat > "$PHASE13D1_ART_BEHAV" <<'SIGEOF'
+format = cct.sigil.v1
+sigilo_scope = system
+system_hash = abcdef0123456789
+[totals]
+rituale = 1
+SIGEOF
+OUT_NONE=$("$CCT_BIN" sigilo diff "$PHASE13D1_ART_BASE" "$PHASE13D1_ART_BASE" --summary 2>&1)
+OUT_INFO=$("$CCT_BIN" sigilo diff "$PHASE13D1_ART_BASE" "$PHASE13D1_ART_INFO" --summary 2>&1)
+OUT_REVIEW=$("$CCT_BIN" sigilo diff "$PHASE13D1_ART_BASE" "$PHASE13D1_ART_REVIEW" --summary 2>&1)
+OUT_BEHAV=$("$CCT_BIN" sigilo diff "$PHASE13D1_ART_BASE" "$PHASE13D1_ART_BEHAV" --summary 2>&1)
+if echo "$OUT_NONE" | grep -q "highest=none" && \
+   echo "$OUT_INFO" | grep -q "highest=informational" && \
+   echo "$OUT_REVIEW" | grep -q "highest=review-required" && \
+   echo "$OUT_BEHAV" | grep -q "highest=behavioral-risk"; then
+    test_pass "diff severity matrix remains stable across all critical severities"
+else
+    test_fail "diff severity matrix coverage failed for one or more severities"
+fi
+
+# Test 631: baseline update/check with and without drift
+echo "Test 631: baseline update/check covers stable and drifted states"
+OUTPUT=$("$CCT_BIN" sigilo baseline update "$PHASE13D1_ART_BASE" --baseline "$PHASE13D1_BASELINE" --force 2>&1)
+OUT_STABLE=$("$CCT_BIN" sigilo baseline check "$PHASE13D1_ART_BASE" --baseline "$PHASE13D1_BASELINE" --summary 2>&1)
+sed -i 's/semantic_hash = .*/semantic_hash = deadbeefcafebabe/' "$PHASE13D1_BASELINE"
+OUT_DRIFT=$("$CCT_BIN" sigilo baseline check "$PHASE13D1_ART_BASE" --baseline "$PHASE13D1_BASELINE" --strict --summary 2>&1)
+EXIT_DRIFT=$?
+if echo "$OUTPUT" | grep -q "status=written" && \
+   echo "$OUT_STABLE" | grep -q "highest=none" && \
+   [ $EXIT_DRIFT -eq 2 ] && \
+   echo "$OUT_DRIFT" | grep -q "status=drift"; then
+    test_pass "baseline workflow preserves stable path and blocks strict drift"
+else
+    test_fail "baseline workflow regression detected in stable/drift contract"
+fi
+
+# Test 632: CI profile matrix advisory/gated/release behavior
+echo "Test 632: CI profile matrix advisory/gated/release remains stable"
+cp -R "$PHASE13D1_FIX/project" "$PHASE13D1_PROJ"
+"$CCT_BIN" build --project "$PHASE13D1_PROJ" >/tmp/cct_phase13d1_build_boot.out 2>&1 || true
+OUTPUT=$("$CCT_BIN" sigilo baseline update "$PHASE13D1_PROJ/src/main.system.sigil" --baseline "$PHASE13D1_CI_BASE" --force 2>&1)
+sed -i 's/system_hash = .*/system_hash = 0123456789abcdef/' "$PHASE13D1_CI_BASE"
+"$CCT_BIN" build --project "$PHASE13D1_PROJ" --sigilo-check --sigilo-ci-profile advisory --sigilo-baseline "$PHASE13D1_CI_BASE" >/tmp/cct_phase13d1_ci_advisory.out 2>&1
+EXIT_ADV=$?
+"$CCT_BIN" build --project "$PHASE13D1_PROJ" --sigilo-check --sigilo-ci-profile gated --sigilo-baseline "$PHASE13D1_CI_BASE" >/tmp/cct_phase13d1_ci_gated.out 2>&1
+EXIT_GATED=$?
+"$CCT_BIN" build --project "$PHASE13D1_PROJ" --sigilo-check --sigilo-ci-profile release --sigilo-baseline "$PHASE13D1_CI_BASE" >/tmp/cct_phase13d1_ci_release.out 2>&1
+EXIT_REL=$?
+if echo "$OUTPUT" | grep -q "status=written" && [ $EXIT_ADV -eq 0 ] && [ $EXIT_GATED -eq 2 ] && [ $EXIT_REL -eq 2 ]; then
+    test_pass "CI profiles keep advisory non-blocking and gated/release blocking for review drift"
+else
+    test_fail "CI profile contract regressed for advisory/gated/release behavior"
+fi
+
+# Test 633: validator strict/tolerant contract remains stable
+echo "Test 633: validator strict/tolerant contract remains stable"
+OUT_TOL=$("$CCT_BIN" sigilo validate "$PHASE13D1_FIX/artifacts/expanded_metadata_v1.sigil" --summary --consumer-profile legacy-tolerant 2>&1)
+OUT_STRICT=$("$CCT_BIN" sigilo validate "$PHASE13D1_FIX/artifacts/invalid_missing_required.sigil" --summary --strict 2>&1)
+EXIT_STRICT=$?
+if echo "$OUT_TOL" | grep -q "result=pass" && [ $EXIT_STRICT -ne 0 ] && echo "$OUT_STRICT" | grep -q "errors="; then
+    test_pass "validator keeps tolerant pass and strict blocking behavior"
+else
+    test_fail "validator strict/tolerant contract regressed"
+fi
+
+# Test 634: project integration build/test/doc stays functional in regression fixture
+echo "Test 634: project build/test/doc integration stays functional"
+BUILD_OUT=$("$CCT_BIN" build --project "$PHASE13D1_PROJ" 2>&1)
+TEST_OUT=$("$CCT_BIN" test --project "$PHASE13D1_PROJ" 2>&1)
+DOC_OUT=$("$CCT_BIN" doc --project "$PHASE13D1_PROJ" --output-dir "$PHASE13D1_TMP/docs" --format markdown --no-timestamp 2>&1)
+if echo "$BUILD_OUT" | grep -q "\\[build\\] output:" && \
+   echo "$TEST_OUT" | grep -q "\\[test\\] summary:" && \
+   echo "$DOC_OUT" | grep -q "\\[doc\\] modules:"; then
+    test_pass "project integration workflow remains functional for build/test/doc"
+else
+    test_fail "project integration workflow regressed in build/test/doc path"
+fi
+
+# Test 635: legacy command surface remains stable in 13D1 fixture
+echo "Test 635: legacy command surface remains stable in 13D1 fixture"
+LEGACY_COMPILE=$("$CCT_BIN" "$PHASE13D1_FIX/single_file/smoke.cct" 2>&1)
+LEGACY_SIGILO=$("$CCT_BIN" --sigilo-only "$PHASE13D1_FIX/multi_module/main.cct" 2>&1)
+LEGACY_CHECK=$("$CCT_BIN" sigilo check "$PHASE13D1_ART_BASE" "$PHASE13D1_ART_BASE" --strict --summary 2>&1)
+if echo "$LEGACY_COMPILE" | grep -q "Compiled:" && \
+   echo "$LEGACY_SIGILO" | grep -q "Sigil Meta:" && \
+   echo "$LEGACY_CHECK" | grep -q "highest=none"; then
+    test_pass "legacy command surface remains stable after 13D1 regression integration"
+else
+    test_fail "legacy command regression detected in 13D1 fixture paths"
+fi
+
+# Test 636: architecture/snapshot documentation includes 13D1 regression inventory
+echo "Test 636: architecture/snapshot documentation includes 13D1 inventory"
+if grep -q "FASE 13D.1" docs/architecture.md && \
+   [ -f docs/release/FASE_13_FINAL_SNAPSHOT.md ] && \
+   grep -q "tests/run_phase13_regression.sh" docs/release/FASE_13_FINAL_SNAPSHOT.md; then
+    test_pass "13D1 architecture and snapshot inventory documentation is present"
+else
+    test_fail "13D1 architecture/snapshot documentation missing required inventory references"
+fi
+
+echo ""
+echo "========================================"
+echo "FASE 13D.2: Determinism Audit Tests"
+echo "========================================"
+echo ""
+
+PHASE13D2_RUNNER="tests/run_phase13_determinism_audit.sh"
+PHASE13D2_DOC="md_out/docs/release/FASE_13_DETERMINISM_AUDIT.md"
+PHASE13D2_TMP="/tmp/cct_phase13d2_global"
+PHASE13D2_BASE="$PHASE13D2_TMP/base.sigil"
+PHASE13D2_REVIEW="$PHASE13D2_TMP/review.sigil"
+PHASE13D2_BASELINE="$PHASE13D2_TMP/baseline.sigil"
+PHASE13D2_DRIFT="$PHASE13D2_TMP/baseline_drift.sigil"
+
+rm -rf "$PHASE13D2_TMP"
+mkdir -p "$PHASE13D2_TMP"
+
+cat > "$PHASE13D2_BASE" <<'SIGEOF'
+format = cct.sigil.v1
+sigilo_scope = local
+semantic_hash = abcdef0123456789
+module_count = 1
+module_resolution_status = ok
+
+[analysis_summary]
+scope = local
+
+[module_structural_summary]
+module_count = 1
+module_resolution_status = ok
+SIGEOF
+
+cat > "$PHASE13D2_REVIEW" <<'SIGEOF'
+format = cct.sigil.v1
+sigilo_scope = local
+semantic_hash = 1111111111111111
+module_count = 1
+module_resolution_status = ok
+
+[analysis_summary]
+scope = local
+
+[module_structural_summary]
+module_count = 1
+module_resolution_status = ok
+SIGEOF
+
+# Test 637: dedicated 13D2 determinism runner exists and is executable
+echo "Test 637: dedicated 13D2 determinism runner exists and is executable"
+if [ -x "$PHASE13D2_RUNNER" ]; then
+    test_pass "13D2 determinism runner exists and is executable"
+else
+    test_fail "13D2 determinism runner missing or not executable"
+fi
+
+# Test 638: determinism audit document exists and describes repetition + byte comparison
+echo "Test 638: determinism audit document is present and complete"
+if [ -f "$PHASE13D2_DOC" ] && \
+   grep -q "CCT_DETERMINISM_REPEAT" "$PHASE13D2_DOC" && \
+   grep -q "byte-level output comparison" "$PHASE13D2_DOC"; then
+    test_pass "13D2 determinism audit document includes repetition and byte-comparison contract"
+else
+    test_fail "13D2 determinism audit documentation missing required contract details"
+fi
+
+# Test 639: dedicated 13D2 determinism runner executes successfully
+echo "Test 639: dedicated 13D2 determinism runner executes successfully"
+if "$PHASE13D2_RUNNER" >/tmp/cct_phase13d2_runner.out 2>&1; then
+    test_pass "13D2 determinism runner executes all audit scenarios successfully"
+else
+    test_fail "13D2 determinism runner reported failures"
+fi
+
+# Test 640: repeated structured inspect remains byte-equivalent
+echo "Test 640: repeated structured inspect remains byte-equivalent"
+"$CCT_BIN" sigilo inspect "$PHASE13D2_BASE" --format structured --summary >/tmp/cct_phase13d2_inspect_1.out 2>&1
+"$CCT_BIN" sigilo inspect "$PHASE13D2_BASE" --format structured --summary >/tmp/cct_phase13d2_inspect_2.out 2>&1
+if cmp -s /tmp/cct_phase13d2_inspect_1.out /tmp/cct_phase13d2_inspect_2.out; then
+    test_pass "structured inspect output is byte-equivalent across repeated runs"
+else
+    test_fail "structured inspect output is not byte-equivalent across repeated runs"
+fi
+
+# Test 641: repeated structured diff keeps stable severity classification
+echo "Test 641: repeated structured diff keeps stable severity classification"
+DIFF1=$("$CCT_BIN" sigilo diff "$PHASE13D2_BASE" "$PHASE13D2_REVIEW" --format structured --summary 2>&1)
+DIFF2=$("$CCT_BIN" sigilo diff "$PHASE13D2_BASE" "$PHASE13D2_REVIEW" --format structured --summary 2>&1)
+if [ "$DIFF1" = "$DIFF2" ] && echo "$DIFF1" | grep -q "highest_severity = review-required"; then
+    test_pass "structured diff keeps deterministic output and stable review-required severity"
+else
+    test_fail "structured diff output/severity changed across repeated runs"
+fi
+
+# Test 642: repeated baseline check keeps stable deterministic decision
+echo "Test 642: repeated baseline check keeps stable deterministic decision"
+"$CCT_BIN" sigilo baseline update "$PHASE13D2_BASE" --baseline "$PHASE13D2_BASELINE" --force >/tmp/cct_phase13d2_base_update.out 2>&1
+"$CCT_BIN" sigilo baseline check "$PHASE13D2_BASE" --baseline "$PHASE13D2_BASELINE" --format structured --summary >/tmp/cct_phase13d2_basecheck_1.out 2>&1
+"$CCT_BIN" sigilo baseline check "$PHASE13D2_BASE" --baseline "$PHASE13D2_BASELINE" --format structured --summary >/tmp/cct_phase13d2_basecheck_2.out 2>&1
+if cmp -s /tmp/cct_phase13d2_basecheck_1.out /tmp/cct_phase13d2_basecheck_2.out && grep -q "highest_severity = none" /tmp/cct_phase13d2_basecheck_1.out; then
+    test_pass "baseline check decision/output is stable for repeated deterministic runs"
+else
+    test_fail "baseline check decision/output drifted across repeated runs"
+fi
+
+# Test 643: strict baseline drift keeps stable blocking exit and output
+echo "Test 643: strict baseline drift keeps stable blocking decision"
+cp "$PHASE13D2_BASELINE" "$PHASE13D2_DRIFT"
+sed -i 's/semantic_hash = .*/semantic_hash = deadbeefcafebabe/' "$PHASE13D2_DRIFT"
+"$CCT_BIN" sigilo baseline check "$PHASE13D2_BASE" --baseline "$PHASE13D2_DRIFT" --format structured --summary --strict >/tmp/cct_phase13d2_drift_1.out 2>&1
+EXIT1=$?
+"$CCT_BIN" sigilo baseline check "$PHASE13D2_BASE" --baseline "$PHASE13D2_DRIFT" --format structured --summary --strict >/tmp/cct_phase13d2_drift_2.out 2>&1
+EXIT2=$?
+if [ $EXIT1 -eq 2 ] && [ $EXIT2 -eq 2 ] && cmp -s /tmp/cct_phase13d2_drift_1.out /tmp/cct_phase13d2_drift_2.out; then
+    test_pass "strict drift path keeps deterministic blocking exit and output"
+else
+    test_fail "strict drift path produced unstable exit/output across repeated runs"
+fi
+
+# Test 644: repeated structured validate keeps byte-equivalent output
+echo "Test 644: repeated structured validate keeps byte-equivalent output"
+"$CCT_BIN" sigilo validate "$PHASE13D2_BASE" --format structured --summary --consumer-profile current-default >/tmp/cct_phase13d2_validate_1.out 2>&1
+"$CCT_BIN" sigilo validate "$PHASE13D2_BASE" --format structured --summary --consumer-profile current-default >/tmp/cct_phase13d2_validate_2.out 2>&1
+if cmp -s /tmp/cct_phase13d2_validate_1.out /tmp/cct_phase13d2_validate_2.out && grep -q "result = pass" /tmp/cct_phase13d2_validate_1.out; then
+    test_pass "structured validate output remains deterministic and passing"
+else
+    test_fail "structured validate output is not deterministic across repeated runs"
+fi
+
+# Test 645: deterministic output profile is free of volatile fields
+echo "Test 645: deterministic output profile has no volatile fields"
+if rg -n "timestamp|generated_at|time=|pid|nonce|uuid|session|random" \
+      /tmp/cct_phase13d2_inspect_1.out \
+      /tmp/cct_phase13d2_basecheck_1.out \
+      /tmp/cct_phase13d2_validate_1.out >/tmp/cct_phase13d2_volatile.out 2>&1; then
+    test_fail "deterministic output unexpectedly contains volatile fields"
+else
+    test_pass "deterministic output profile is free of volatile fields"
+fi
+
+# Test 646: final snapshot references 13D2 determinism artifacts
+echo "Test 646: final snapshot references 13D2 determinism artifacts"
+if grep -q "13D.2" docs/release/FASE_13_FINAL_SNAPSHOT.md && \
+   grep -q "tests/run_phase13_determinism_audit.sh" docs/release/FASE_13_FINAL_SNAPSHOT.md; then
+    test_pass "final snapshot includes 13D2 determinism runner/report references"
+else
+    test_fail "final snapshot missing 13D2 determinism inventory references"
+fi
+
+echo ""
+echo "========================================"
+echo "FASE 13D.3: Release Documentation Consolidation Tests"
+echo "========================================"
+echo ""
+
+PHASE13D3_SNAPSHOT="docs/release/FASE_13_FINAL_SNAPSHOT.md"
+PHASE13D3_STABILITY="docs/release/FASE_13_STABILITY_MATRIX.md"
+PHASE13D3_COMPAT="docs/release/FASE_13_COMPATIBILITY_MATRIX.md"
+PHASE13D3_LIMITS="docs/release/FASE_13_KNOWN_LIMITS.md"
+PHASE13D3_NOTES="docs/release/FASE_13_RELEASE_NOTES.md"
+PHASE13D3_TMP="/tmp/cct_phase13d3_global"
+PHASE13D3_BASE="$PHASE13D3_TMP/base.sigil"
+PHASE13D3_REVIEW="$PHASE13D3_TMP/review.sigil"
+PHASE13D3_BASELINE="$PHASE13D3_TMP/baseline.sigil"
+
+rm -rf "$PHASE13D3_TMP"
+mkdir -p "$PHASE13D3_TMP"
+cat > "$PHASE13D3_BASE" <<'SIGEOF'
+format = cct.sigil.v1
+sigilo_scope = local
+semantic_hash = abcdef0123456789
+module_count = 1
+module_resolution_status = ok
+
+[analysis_summary]
+scope = local
+
+[module_structural_summary]
+module_count = 1
+module_resolution_status = ok
+SIGEOF
+cat > "$PHASE13D3_REVIEW" <<'SIGEOF'
+format = cct.sigil.v1
+sigilo_scope = local
+semantic_hash = 1111111111111111
+module_count = 1
+module_resolution_status = ok
+
+[analysis_summary]
+scope = local
+
+[module_structural_summary]
+module_count = 1
+module_resolution_status = ok
+SIGEOF
+"$CCT_BIN" sigilo baseline update "$PHASE13D3_BASE" --baseline "$PHASE13D3_BASELINE" --force >/tmp/cct_phase13d3_base_update.out 2>&1
+
+# Test 647: mandatory FASE 13 release documents exist
+echo "Test 647: mandatory FASE 13 release documents exist"
+if [ -f "$PHASE13D3_SNAPSHOT" ] && \
+   [ -f "$PHASE13D3_STABILITY" ] && \
+   [ -f "$PHASE13D3_COMPAT" ] && \
+   [ -f "$PHASE13D3_LIMITS" ] && \
+   [ -f "$PHASE13D3_NOTES" ]; then
+    test_pass "all mandatory FASE 13 release documents are present"
+else
+    test_fail "one or more mandatory FASE 13 release documents are missing"
+fi
+
+# Test 648: smoke of documented sigilo commands from release notes
+echo "Test 648: documented sigilo commands smoke successfully"
+OUT_INSPECT=$("$CCT_BIN" sigilo inspect "$PHASE13D3_BASE" --summary 2>&1)
+OUT_DIFF=$("$CCT_BIN" sigilo diff "$PHASE13D3_BASE" "$PHASE13D3_REVIEW" --summary 2>&1)
+OUT_CHECK=$("$CCT_BIN" sigilo check "$PHASE13D3_BASE" "$PHASE13D3_BASE" --strict --summary 2>&1)
+OUT_BASE_CHECK=$("$CCT_BIN" sigilo baseline check "$PHASE13D3_BASE" --baseline "$PHASE13D3_BASELINE" --summary 2>&1)
+OUT_VALIDATE=$("$CCT_BIN" sigilo validate "$PHASE13D3_BASE" --summary --consumer-profile current-default 2>&1)
+if echo "$OUT_INSPECT" | grep -q "sigilo.inspect.summary" && \
+   echo "$OUT_DIFF" | grep -q "sigil_diff.summary" && \
+   echo "$OUT_CHECK" | grep -q "highest=none" && \
+   echo "$OUT_BASE_CHECK" | grep -q "status=ok" && \
+   echo "$OUT_VALIDATE" | grep -q "sigilo.validate.summary"; then
+    test_pass "documented sigilo command set executes successfully in smoke validation"
+else
+    test_fail "one or more documented sigilo commands failed smoke validation"
+fi
+
+# Test 649: snapshot and stability matrix share consistent component statuses
+echo "Test 649: snapshot and stability matrix keep consistent component statuses"
+if grep -q "SIGILO_CLI: stable" "$PHASE13D3_SNAPSHOT" && grep -q "SIGILO_CLI: stable" "$PHASE13D3_STABILITY" && \
+   grep -q "SIGILO_ANALYTICAL_METADATA: experimental" "$PHASE13D3_SNAPSHOT" && grep -q "SIGILO_ANALYTICAL_METADATA: experimental" "$PHASE13D3_STABILITY" && \
+   grep -q "SIGILO_DETERMINISM_AUDIT: stable" "$PHASE13D3_SNAPSHOT" && grep -q "SIGILO_DETERMINISM_AUDIT: stable" "$PHASE13D3_STABILITY"; then
+    test_pass "snapshot and stability matrix remain consistent for key component statuses"
+else
+    test_fail "snapshot and stability matrix status manifest is inconsistent"
+fi
+
+# Test 650: known limits and release notes maintain aligned limit identifiers
+echo "Test 650: known limits and release notes keep aligned limit identifiers"
+if grep -q "LIMIT-13-001" "$PHASE13D3_LIMITS" && grep -q "LIMIT-13-001" "$PHASE13D3_NOTES" && \
+   grep -q "LIMIT-13-002" "$PHASE13D3_LIMITS" && grep -q "LIMIT-13-002" "$PHASE13D3_NOTES" && \
+   grep -q "LIMIT-13-003" "$PHASE13D3_LIMITS" && grep -q "LIMIT-13-003" "$PHASE13D3_NOTES" && \
+   grep -q "LIMIT-13-004" "$PHASE13D3_LIMITS" && grep -q "LIMIT-13-004" "$PHASE13D3_NOTES"; then
+    test_pass "known limits and release notes are consistent on carried limit identifiers"
+else
+    test_fail "known limits and release notes are not aligned on limit identifiers"
+fi
+
+# Test 651: release document cross-references resolve to existing files
+echo "Test 651: release document cross-references resolve to existing files"
+PHASE13D3_REFS=$(rg --no-filename -o "docs/release/FASE_13_[A-Z_]+\\.md" "$PHASE13D3_SNAPSHOT" "$PHASE13D3_STABILITY" "$PHASE13D3_COMPAT" "$PHASE13D3_LIMITS" "$PHASE13D3_NOTES" | sort -u)
+REF_CHECK_OK=1
+for ref in $PHASE13D3_REFS; do
+    if [ ! -f "$ref" ]; then
+        REF_CHECK_OK=0
+        break
+    fi
+done
+if [ $REF_CHECK_OK -eq 1 ]; then
+    test_pass "release cross-references resolve to existing documents"
+else
+    test_fail "release cross-reference points to missing document"
+fi
+
+# Test 652: canonical docs reference consolidated FASE 13 release package
+echo "Test 652: canonical docs reference consolidated FASE 13 release package"
+if grep -q "FASE_13_RELEASE_NOTES.md" README.md && \
+   grep -q "FASE_13_STABILITY_MATRIX.md" docs/spec.md && \
+   grep -q "FASE 13D.3" docs/architecture.md && \
+   grep -q "closed at 13D.4" docs/roadmap.md; then
+    test_pass "README/spec/architecture/roadmap are harmonized with FASE 13 release consolidation"
+else
+    test_fail "canonical docs are not fully harmonized with FASE 13 release package"
+fi
+
+echo ""
+echo "========================================"
+echo "FASE 13D.4: Final Exit Gate and Phase Closure Tests"
+echo "========================================"
+echo ""
+
+PHASE13D4_CLOSURE="md_out/docs/release/FASE_13_CLOSURE_GATE.md"
+PHASE13D4_RISKS="md_out/docs/release/FASE_13_RESIDUAL_RISKS.md"
+PHASE13D4_SNAPSHOT="docs/release/FASE_13_FINAL_SNAPSHOT.md"
+PHASE13D4_TMP="/tmp/cct_phase13d4_global"
+PHASE13D4_BASE="$PHASE13D4_TMP/base.sigil"
+PHASE13D4_REVIEW="$PHASE13D4_TMP/review.sigil"
+PHASE13D4_BASELINE="$PHASE13D4_TMP/baseline.sigil"
+
+rm -rf "$PHASE13D4_TMP"
+mkdir -p "$PHASE13D4_TMP"
+
+cat > "$PHASE13D4_BASE" <<'SIGEOF'
+format = cct.sigil.v1
+sigilo_scope = local
+semantic_hash = abcdef0123456789
+module_count = 1
+module_resolution_status = ok
+SIGEOF
+
+cat > "$PHASE13D4_REVIEW" <<'SIGEOF'
+format = cct.sigil.v1
+sigilo_scope = local
+semantic_hash = 1111111111111111
+module_count = 1
+module_resolution_status = ok
+SIGEOF
+
+# Test 653: mandatory 13D4 closure documents exist
+echo "Test 653: mandatory 13D4 closure documents exist"
+if [ -f "$PHASE13D4_CLOSURE" ] && [ -f "$PHASE13D4_RISKS" ]; then
+    test_pass "13D4 closure gate and residual risks documents are present"
+else
+    test_fail "13D4 closure gate and/or residual risks documents are missing"
+fi
+
+# Test 654: closure gate records objective pass decision
+echo "Test 654: closure gate records objective pass decision"
+if grep -q "Closure stage: 13D.4" "$PHASE13D4_CLOSURE" && \
+   grep -q "Decision: PASS" "$PHASE13D4_CLOSURE" && \
+   grep -q "Gate date: 2026-03-05" "$PHASE13D4_CLOSURE"; then
+    test_pass "closure gate captures stage, date, and PASS decision"
+else
+    test_fail "closure gate is missing stage/date/pass decision fields"
+fi
+
+# Test 655: residual risks register keeps structured deferred backlog
+echo "Test 655: residual risks register keeps structured deferred backlog"
+if grep -q "RISK-13R-001" "$PHASE13D4_RISKS" && \
+   grep -q "RISK-13R-005" "$PHASE13D4_RISKS" && \
+   grep -q "Target resolution phase:" "$PHASE13D4_RISKS" && \
+   grep -q "FASE 14 hardening" "$PHASE13D4_RISKS"; then
+    test_pass "residual risks register is complete and deferred to 14+"
+else
+    test_fail "residual risks register is incomplete or missing 14+ deferment data"
+fi
+
+# Test 656: final snapshot references closure-gate artifacts and closed stage
+echo "Test 656: final snapshot references closure artifacts and stage 13D4"
+if grep -q "Consolidation stage: 13D.4" "$PHASE13D4_SNAPSHOT" && \
+   grep -q "technical closure reached through: 13D.4" "$PHASE13D4_SNAPSHOT"; then
+    test_pass "final snapshot references closure artifacts and 13D4 status"
+else
+    test_fail "final snapshot missing 13D4 closure artifact references"
+fi
+
+# Test 657: roadmap reflects 13D4 closure and transition to FASE 14
+echo "Test 657: roadmap reflects 13D4 closure and transition to FASE 14"
+if grep -q "Current completed phase:.*FASE 13D.4" docs/roadmap.md && \
+   grep -q "closed at 13D.4" docs/roadmap.md && \
+   grep -q "Next phase to execute:.*FASE 14" docs/roadmap.md; then
+    test_pass "roadmap is aligned with 13D4 closure and FASE 14 transition"
+else
+    test_fail "roadmap is not aligned with 13D4 closure state"
+fi
+
+# Test 658: required phase rerun (full phase-13 regression suite)
+echo "Test 658: rerun complete phase 13 regression suite"
+if tests/run_phase13_regression.sh >/tmp/cct_phase13d4_regression.out 2>&1; then
+    test_pass "phase 13 regression suite rerun passed in 13D4 gate"
+else
+    test_fail "phase 13 regression suite rerun failed in 13D4 gate"
+fi
+
+# Test 659: required determinism audit rerun
+echo "Test 659: rerun phase 13 determinism audit suite"
+if tests/run_phase13_determinism_audit.sh >/tmp/cct_phase13d4_determinism.out 2>&1; then
+    test_pass "phase 13 determinism audit rerun passed in 13D4 gate"
+else
+    test_fail "phase 13 determinism audit rerun failed in 13D4 gate"
+fi
+
+# Test 660: validate documented command set used by closure gate docs
+echo "Test 660: documented sigilo commands validate successfully"
+OUT_INSPECT=$("$CCT_BIN" sigilo inspect "$PHASE13D4_BASE" --summary 2>&1)
+OUT_DIFF=$("$CCT_BIN" sigilo diff "$PHASE13D4_BASE" "$PHASE13D4_REVIEW" --summary 2>&1)
+OUT_CHECK=$("$CCT_BIN" sigilo check "$PHASE13D4_BASE" "$PHASE13D4_BASE" --strict --summary 2>&1)
+"$CCT_BIN" sigilo baseline update "$PHASE13D4_BASE" --baseline "$PHASE13D4_BASELINE" --force >/tmp/cct_phase13d4_base_update.out 2>&1
+OUT_BASE_CHECK=$("$CCT_BIN" sigilo baseline check "$PHASE13D4_BASE" --baseline "$PHASE13D4_BASELINE" --summary 2>&1)
+OUT_VALIDATE=$("$CCT_BIN" sigilo validate "$PHASE13D4_BASE" --summary --consumer-profile current-default 2>&1)
+if echo "$OUT_INSPECT" | grep -q "sigilo.inspect.summary" && \
+   echo "$OUT_DIFF" | grep -q "sigil_diff.summary" && \
+   echo "$OUT_CHECK" | grep -q "highest=none" && \
+   echo "$OUT_BASE_CHECK" | grep -q "status=ok" && \
+   echo "$OUT_VALIDATE" | grep -q "sigilo.validate.summary"; then
+    test_pass "documented command set is valid and executable at closure gate"
+else
+    test_fail "documented command set failed validation at closure gate"
+fi
+
+# Test 661: legacy CLI surface remains non-regressive at closure gate
+echo "Test 661: legacy CLI surface remains non-regressive"
+LEGACY_COMPILE=$("$CCT_BIN" tests/integration/phase13_regression_13d1/single_file/smoke.cct 2>&1)
+LEGACY_SIGILO_ONLY=$("$CCT_BIN" --sigilo-only tests/integration/phase13_regression_13d1/multi_module/main.cct 2>&1)
+LEGACY_HELP=$("$CCT_BIN" --help 2>&1)
+if echo "$LEGACY_COMPILE" | grep -q "Compiled:" && \
+   echo "$LEGACY_SIGILO_ONLY" | grep -q "Sigil Meta:" && \
+   echo "$LEGACY_HELP" | grep -q "Usage:"; then
+    test_pass "legacy CLI compile/sigilo/help flows remain stable in 13D4"
+else
+    test_fail "legacy CLI non-regression failed in closure gate"
+fi
+
+echo ""
+echo "========================================"
+echo "FASE 13M.A1: Scope Freeze and Semantic Contract Tests"
+echo "========================================"
+echo ""
+
+DOC_13M_MASTER=$(resolve_doc_path "FASE_13M_CCT.md")
+DOC_13M_A1=$(resolve_doc_path "FASE_13M_A1_CCT.md")
+DOC_13M_A2=$(resolve_doc_path "FASE_13M_A2_CCT.md")
+DOC_13M_B1=$(resolve_doc_path "FASE_13M_B1_CCT.md")
+DOC_13M_B2=$(resolve_doc_path "FASE_13M_B2_CCT.md")
+DOC_13M_CHECKLIST=$(resolve_doc_path "FASE_13M_CHECKLIST_DOCUMENTOS.md")
+
+# Test 662: mandatory 13M planning/execution docs exist
+echo "Test 662: mandatory 13M planning/execution docs exist"
+if [ -f "$DOC_13M_MASTER" ] && \
+   [ -f "$DOC_13M_A1" ] && \
+   [ -f "$DOC_13M_A2" ] && \
+   [ -f "$DOC_13M_B1" ] && \
+   [ -f "$DOC_13M_B2" ] && \
+   [ -f "$DOC_13M_CHECKLIST" ]; then
+    test_pass "13M core and executable-phase documents are present"
+else
+    test_fail "13M core and executable-phase documents are incomplete"
+fi
+
+# Test 663: 13M master architecture defines consolidated execution order
+echo "Test 663: 13M architecture defines consolidated A1->A2->B1->B2 order"
+if grep -q "13M-A1" "$DOC_13M_MASTER" && \
+   grep -q "13M-A2" "$DOC_13M_MASTER" && \
+   grep -q "13M-B1" "$DOC_13M_MASTER" && \
+   grep -q "13M-B2" "$DOC_13M_MASTER"; then
+    test_pass "13M architecture keeps consolidated execution order"
+else
+    test_fail "13M architecture is missing consolidated execution order entries"
+fi
+
+# Test 664: A1 freezes final semantic decisions (power/idiv/emod and caret deferral)
+echo "Test 664: 13M-A1 freezes semantic decisions and caret policy"
+if grep -q "POLICY_CARET_DEFERRED" "$DOC_13M_A1" && \
+   grep -q "floor division" "$DOC_13M_A1" && \
+   grep -q "módulo euclidiano" "$DOC_13M_A1"; then
+    test_pass "13M-A1 freezes caret deferral and idiv/emod semantic decisions"
+else
+    test_fail "13M-A1 is missing one or more frozen semantic decisions"
+fi
+
+# Test 665: A1 locks scope to **, //, %% and excludes optional-chaining family
+echo "Test 665: 13M-A1 locks scope to high-utility math operators only"
+if grep -q "\`\\*\\*\`" "$DOC_13M_A1" && \
+   grep -q "\`//\`" "$DOC_13M_A1" && \
+   grep -q "\`%%\`" "$DOC_13M_A1" && \
+   grep -q "\`\?\\.\`" "$DOC_13M_A1" && \
+   grep -q "\`!!\`" "$DOC_13M_A1"; then
+    test_pass "13M-A1 scope includes only prioritized operators and excludes optional system"
+else
+    test_fail "13M-A1 scope lock is incomplete for priority/exclusion set"
+fi
+
+# Test 666: execution checklist keeps mandatory stages and current progression coherence
+echo "Test 666: 13M execution checklist keeps coherent stage progression"
+if grep -q "\[x\] \`13M-A1\`" "$DOC_13M_CHECKLIST" && \
+   grep -q "\[x\] \`13M-A2\`" "$DOC_13M_CHECKLIST" && \
+   grep -q "\[x\] \`13M-B1\`" "$DOC_13M_CHECKLIST" && \
+   grep -q "\[x\] \`13M-B2\`" "$DOC_13M_CHECKLIST"; then
+    test_pass "13M checklist execution status reflects A1/A2/B1/B2 completion"
+else
+    test_fail "13M checklist execution status is incoherent for current progression"
+fi
+
+# Test 667: A2 implementation contract remains aligned with A1 frozen operator set
+echo "Test 667: 13M-A2 implementation contract aligns with A1 frozen set"
+if grep -q "\`\*\*\`" "$DOC_13M_A2" && \
+   grep -q "\`//\`" "$DOC_13M_A2" && \
+   grep -q "\`%%\`" "$DOC_13M_A2" && \
+   ! grep -q "implementar.*\`\^\`" "$DOC_13M_A2"; then
+    test_pass "13M-A2 stays aligned with A1 frozen scope"
+else
+    test_fail "13M-A2 contract drift detected against A1 frozen scope"
+fi
+
+# Test 668: B1 requires broad test matrix and full historical regression
+echo "Test 668: 13M-B1 demands broad matrix and full regression"
+if grep -q "Matriz extensa de testes obrigatórios" "$DOC_13M_B1" && \
+   grep -q "no mínimo 25 novos checks efetivos" "$DOC_13M_B1" && \
+   grep -q "make test" "$DOC_13M_B1"; then
+    test_pass "13M-B1 quality contract requires broad coverage and full regression"
+else
+    test_fail "13M-B1 quality contract is missing required breadth/regression clauses"
+fi
+
+# Test 669: B2 closure contract includes docs harmony and final gate evidence
+echo "Test 669: 13M-B2 closure contract includes docs harmonization and gate"
+if grep -q "spec.md" "$DOC_13M_B2" && \
+   grep -q "README.md" "$DOC_13M_B2" && \
+   grep -q "gate final" "$DOC_13M_B2" && \
+   grep -q "make test" "$DOC_13M_B2"; then
+    test_pass "13M-B2 closure contract includes docs harmonization and final gate evidence"
+else
+    test_fail "13M-B2 closure contract is missing documentation/gate requirements"
+fi
+
+# Test 670: 13M consolidation mapping keeps C/D absorbed into B1/B2
+echo "Test 670: 13M consolidation mapping keeps C/D absorbed into B1/B2"
+if grep -q "Conteúdo de \`13M-C\` foi incorporado em \`13M-B1\`" "$DOC_13M_CHECKLIST" && \
+   grep -q "Conteúdo de \`13M-D\` foi incorporado em \`13M-B2\`" "$DOC_13M_CHECKLIST"; then
+    test_pass "13M consolidation mapping is explicit and consistent"
+else
+    test_fail "13M consolidation mapping is missing or inconsistent"
+fi
+
+echo ""
+echo "========================================"
+echo "FASE 13M.A2: Compiler Implementation for ** // %% Tests"
+echo "========================================"
+echo ""
+
+cleanup_codegen_artifacts "tests/integration/math_pow_basic_13m.cct"
+cleanup_codegen_artifacts "tests/integration/math_pow_assoc_13m.cct"
+cleanup_codegen_artifacts "tests/integration/math_pow_real_13m.cct"
+cleanup_codegen_artifacts "tests/integration/math_idiv_floor_13m.cct"
+cleanup_codegen_artifacts "tests/integration/math_emod_euclid_13m.cct"
+cleanup_codegen_artifacts "tests/integration/math_precedence_mix_13m.cct"
+cleanup_codegen_artifacts "tests/integration/math_idiv_zero_13m.cct"
+cleanup_codegen_artifacts "tests/integration/math_emod_zero_13m.cct"
+
+SIG13M_A2_TOK="/tmp/cct_13m_a2_tokens.cct"
+cat > "$SIG13M_A2_TOK" <<'CCTEOF'
+INCIPIT grimoire "tok"
+RITUALE main() REDDE REX
+  EVOCA REX a AD 2 ** 3
+  EVOCA REX b AD 7 // 2
+  EVOCA REX c AD 7 %% 3
+  REDDE a + b + c
+EXPLICIT RITUALE
+EXPLICIT grimoire
+CCTEOF
+
+# Test 671: lexer recognizes STAR_STAR token
+echo "Test 671: lexer recognizes STAR_STAR token"
+OUT_TOK=$("$CCT_BIN" --tokens "$SIG13M_A2_TOK" 2>&1)
+if echo "$OUT_TOK" | grep -q "STAR_STAR"; then
+    test_pass "lexer recognizes ** as STAR_STAR"
+else
+    test_fail "lexer did not recognize ** as STAR_STAR"
+fi
+
+# Test 672: lexer recognizes SLASH_SLASH token
+echo "Test 672: lexer recognizes SLASH_SLASH token"
+if echo "$OUT_TOK" | grep -q "SLASH_SLASH"; then
+    test_pass "lexer recognizes // as SLASH_SLASH"
+else
+    test_fail "lexer did not recognize // as SLASH_SLASH"
+fi
+
+# Test 673: lexer recognizes PERCENT_PERCENT token
+echo "Test 673: lexer recognizes PERCENT_PERCENT token"
+if echo "$OUT_TOK" | grep -q "PERCENT_PERCENT"; then
+    test_pass "lexer recognizes %% as PERCENT_PERCENT"
+else
+    test_fail "lexer did not recognize %% as PERCENT_PERCENT"
+fi
+
+# Test 674: parser/semantic accepts canonical mixed-operator fixture
+echo "Test 674: parser/semantic accepts canonical mixed-operator fixture"
+if "$CCT_BIN" --check tests/integration/math_precedence_mix_13m.cct >/tmp/cct_13m_a2_check_mix.out 2>&1; then
+    test_pass "parser/semantic accepts mixed ** // %% expressions"
+else
+    test_fail "parser/semantic rejected canonical mixed-operator fixture"
+fi
+
+# Test 675: ** basic power codegen executes expected result
+echo "Test 675: ** basic power codegen executes expected result"
+if "$CCT_BIN" tests/integration/math_pow_basic_13m.cct >/tmp/cct_13m_a2_pow_basic_build.out 2>&1 && \
+   [ -x tests/integration/math_pow_basic_13m ]; then
+    tests/integration/math_pow_basic_13m >/tmp/cct_13m_a2_pow_basic_run.out 2>&1
+    RC=$?
+    if [ $RC -eq 0 ]; then
+        test_pass "** basic power compiles and executes"
+    else
+        test_fail "** basic power executable returned unexpected code ($RC)"
+    fi
+else
+    test_fail "** basic power fixture failed to compile"
+fi
+
+# Test 676: ** right-associativity behavior is preserved
+echo "Test 676: ** right-associativity behavior is preserved"
+if "$CCT_BIN" tests/integration/math_pow_assoc_13m.cct >/tmp/cct_13m_a2_pow_assoc_build.out 2>&1 && \
+   [ -x tests/integration/math_pow_assoc_13m ]; then
+    tests/integration/math_pow_assoc_13m >/tmp/cct_13m_a2_pow_assoc_run.out 2>&1
+    RC=$?
+    if [ $RC -eq 192 ]; then
+        test_pass "** chain keeps right-associative semantics (difference 448 -> exit 192)"
+    else
+        test_fail "** associativity fixture returned unexpected code ($RC)"
+    fi
+else
+    test_fail "** associativity fixture failed to compile"
+fi
+
+# Test 677: ** supports numeric real path
+echo "Test 677: ** supports numeric real path"
+if "$CCT_BIN" tests/integration/math_pow_real_13m.cct >/tmp/cct_13m_a2_pow_real_build.out 2>&1 && \
+   [ -x tests/integration/math_pow_real_13m ]; then
+    tests/integration/math_pow_real_13m >/tmp/cct_13m_a2_pow_real_run.out 2>&1
+    RC=$?
+    if [ $RC -eq 0 ]; then
+        test_pass "** real-power path works in executable subset"
+    else
+        test_fail "** real-power fixture returned unexpected code ($RC)"
+    fi
+else
+    test_fail "** real-power fixture failed to compile"
+fi
+
+# Test 678: // floor behavior for signed inputs
+echo "Test 678: // floor behavior for signed inputs"
+if "$CCT_BIN" tests/integration/math_idiv_floor_13m.cct >/tmp/cct_13m_a2_idiv_build.out 2>&1 && \
+   [ -x tests/integration/math_idiv_floor_13m ]; then
+    tests/integration/math_idiv_floor_13m >/tmp/cct_13m_a2_idiv_run.out 2>&1
+    RC=$?
+    if [ $RC -eq 48 ]; then
+        test_pass "// floor-division behavior is correct for signed combinations"
+    else
+        test_fail "// floor-division fixture returned unexpected code ($RC)"
+    fi
+else
+    test_fail "// floor-division fixture failed to compile"
+fi
+
+# Test 679: %% euclidean modulo behavior for signed inputs
+echo "Test 679: %% euclidean modulo behavior for signed inputs"
+if "$CCT_BIN" tests/integration/math_emod_euclid_13m.cct >/tmp/cct_13m_a2_emod_build.out 2>&1 && \
+   [ -x tests/integration/math_emod_euclid_13m ]; then
+    tests/integration/math_emod_euclid_13m >/tmp/cct_13m_a2_emod_run.out 2>&1
+    RC=$?
+    if [ $RC -eq 6 ]; then
+        test_pass "%% euclidean modulo behavior is correct for signed combinations"
+    else
+        test_fail "%% euclidean modulo fixture returned unexpected code ($RC)"
+    fi
+else
+    test_fail "%% euclidean modulo fixture failed to compile"
+fi
+
+# Test 680: mixed precedence keeps stable contract
+echo "Test 680: mixed precedence keeps stable contract"
+if "$CCT_BIN" tests/integration/math_precedence_mix_13m.cct >/tmp/cct_13m_a2_prec_build.out 2>&1 && \
+   [ -x tests/integration/math_precedence_mix_13m ]; then
+    tests/integration/math_precedence_mix_13m >/tmp/cct_13m_a2_prec_run.out 2>&1
+    RC=$?
+    if [ $RC -eq 57 ]; then
+        test_pass "mixed precedence for ** // %% remains stable"
+    else
+        test_fail "mixed precedence fixture returned unexpected code ($RC)"
+    fi
+else
+    test_fail "mixed precedence fixture failed to compile"
+fi
+
+# Test 681: semantic rejects non-numeric operand for **
+echo "Test 681: semantic rejects invalid ** operand type"
+OUT=$("$CCT_BIN" --check tests/integration/math_pow_type_error_13m.cct 2>&1) || true
+if echo "$OUT" | grep -q "arithmetic operators require numeric operands"; then
+    test_pass "semantic rejects non-numeric operand for **"
+else
+    test_fail "semantic did not reject invalid ** operand type"
+fi
+
+# Test 682: semantic rejects non-integer operand for //
+echo "Test 682: semantic rejects invalid // operand type"
+OUT=$("$CCT_BIN" --check tests/integration/math_idiv_type_error_13m.cct 2>&1) || true
+if echo "$OUT" | grep -q "operator // requires integer operands"; then
+    test_pass "semantic rejects non-integer operand for //"
+else
+    test_fail "semantic did not reject invalid // operand type"
+fi
+
+# Test 683: semantic rejects non-integer operand for %%
+echo "Test 683: semantic rejects invalid %% operand type"
+OUT=$("$CCT_BIN" --check tests/integration/math_emod_type_error_13m.cct 2>&1) || true
+if echo "$OUT" | grep -q "operator %% requires integer operands"; then
+    test_pass "semantic rejects non-integer operand for %%"
+else
+    test_fail "semantic did not reject invalid %% operand type"
+fi
+
+# Test 684: // by zero fails at runtime with clear diagnostic
+echo "Test 684: // by zero fails at runtime with clear diagnostic"
+if "$CCT_BIN" tests/integration/math_idiv_zero_13m.cct >/tmp/cct_13m_a2_idiv_zero_build.out 2>&1 && \
+   [ -x tests/integration/math_idiv_zero_13m ]; then
+    tests/integration/math_idiv_zero_13m >/tmp/cct_13m_a2_idiv_zero_run.out 2>&1
+    RC=$?
+    if [ $RC -ne 0 ] && grep -q "integer division by zero" /tmp/cct_13m_a2_idiv_zero_run.out; then
+        test_pass "// by zero fails with explicit runtime diagnostic"
+    else
+        test_fail "// by zero did not fail with expected runtime diagnostic"
+    fi
+else
+    test_fail "// by zero fixture failed to compile"
+fi
+
+# Test 685: %% by zero fails at runtime with clear diagnostic
+echo "Test 685: %% by zero fails at runtime with clear diagnostic"
+if "$CCT_BIN" tests/integration/math_emod_zero_13m.cct >/tmp/cct_13m_a2_emod_zero_build.out 2>&1 && \
+   [ -x tests/integration/math_emod_zero_13m ]; then
+    tests/integration/math_emod_zero_13m >/tmp/cct_13m_a2_emod_zero_run.out 2>&1
+    RC=$?
+    if [ $RC -ne 0 ] && grep -q "euclidean modulo by zero" /tmp/cct_13m_a2_emod_zero_run.out; then
+        test_pass "%% by zero fails with explicit runtime diagnostic"
+    else
+        test_fail "%% by zero did not fail with expected runtime diagnostic"
+    fi
+else
+    test_fail "%% by zero fixture failed to compile"
+fi
+
+# Test 686: // and %% identity relation holds for signed canonical case
+echo "Test 686: // and %% identity relation holds (a = b*q + r)"
+cat > /tmp/cct_13m_a2_identity.cct <<'CCTEOF'
+INCIPIT grimoire "identity_13m"
+RITUALE main() REDDE REX
+  EVOCA REX a AD 0 - 7
+  EVOCA REX b AD 3
+  EVOCA REX q AD a // b
+  EVOCA REX r AD a %% b
+  EVOCA REX check AD b * q + r
+  SI check == a
+    REDDE 0
+  FIN SI
+  REDDE 1
+EXPLICIT RITUALE
+EXPLICIT grimoire
+CCTEOF
+if "$CCT_BIN" /tmp/cct_13m_a2_identity.cct >/tmp/cct_13m_a2_identity_build.out 2>&1 && \
+   [ -x /tmp/cct_13m_a2_identity ]; then
+    /tmp/cct_13m_a2_identity >/tmp/cct_13m_a2_identity_run.out 2>&1
+    RC=$?
+    if [ $RC -eq 0 ]; then
+        test_pass "identity relation holds for // and %% canonical signed case"
+    else
+        test_fail "identity relation failed in canonical signed case ($RC)"
+    fi
+else
+    test_fail "identity relation fixture failed to compile"
+fi
+
+# Test 687: legacy modulus (%) behavior remains available
+echo "Test 687: legacy modulus (%) behavior remains available"
+cat > /tmp/cct_13m_a2_legacy_mod.cct <<'CCTEOF'
+INCIPIT grimoire "legacy_mod_13m"
+RITUALE main() REDDE REX
+  EVOCA REX r AD 7 % 3
+  REDDE r
+EXPLICIT RITUALE
+EXPLICIT grimoire
+CCTEOF
+if "$CCT_BIN" /tmp/cct_13m_a2_legacy_mod.cct >/tmp/cct_13m_a2_legacy_mod_build.out 2>&1 && \
+   [ -x /tmp/cct_13m_a2_legacy_mod ]; then
+    /tmp/cct_13m_a2_legacy_mod >/tmp/cct_13m_a2_legacy_mod_run.out 2>&1
+    RC=$?
+    if [ $RC -eq 1 ]; then
+        test_pass "legacy % behavior remains available and stable"
+    else
+        test_fail "legacy % behavior returned unexpected result ($RC)"
+    fi
+else
+    test_fail "legacy % fixture failed to compile"
+fi
+
+# Test 688: new operators are reflected in token string surface
+echo "Test 688: token string surface includes STAR_STAR/SLASH_SLASH/PERCENT_PERCENT"
+if echo "$OUT_TOK" | grep -q "STAR_STAR" && \
+   echo "$OUT_TOK" | grep -q "SLASH_SLASH" && \
+   echo "$OUT_TOK" | grep -q "PERCENT_PERCENT"; then
+    test_pass "token string surface exposes all 13M.A2 operator tokens"
+else
+    test_fail "token string surface missing one or more 13M.A2 operator tokens"
+fi
+
+# Test 689: documented A2 scope still aligned with implemented operator set
+echo "Test 689: A2 document scope aligns with implemented set"
+if grep -q "\`\*\*\`" "$DOC_13M_A2" && \
+   grep -q "\`//\`" "$DOC_13M_A2" && \
+   grep -q "\`%%\`" "$DOC_13M_A2"; then
+    test_pass "A2 contract remains aligned with implemented operator set"
+else
+    test_fail "A2 contract drifted from implemented operator set"
+fi
+
+# Test 690: A1 freeze still compatible with A2 implementation output
+echo "Test 690: A1 freeze remains compatible with A2 implementation"
+if grep -q "POLICY_CARET_DEFERRED" "$DOC_13M_A1" && \
+   ! echo "$OUT_TOK" | grep -q "CARET"; then
+    test_pass "A1 caret deferral remains compatible with A2 implementation"
+else
+    test_fail "A1 caret deferral is inconsistent with A2 implementation state"
+fi
+
+echo ""
+echo "========================================"
+echo "FASE 13M.B1: Deep Test Matrix and Non-Regression Proof"
+echo "========================================"
+echo ""
+
+cleanup_codegen_artifacts "tests/integration/math_pow_2_10_13m.cct"
+cleanup_codegen_artifacts "tests/integration/math_pow_parenthesized_13m.cct"
+cleanup_codegen_artifacts "tests/integration/math_idiv_signs_13m.cct"
+cleanup_codegen_artifacts "tests/integration/math_emod_signs_13m.cct"
+cleanup_codegen_artifacts "tests/integration/math_precedence_parentheses_13m.cct"
+cleanup_codegen_artifacts "tests/integration/math_variables_combo_13m.cct"
+cleanup_codegen_artifacts "tests/integration/math_return_expr_13m.cct"
+cleanup_codegen_artifacts "tests/integration/math_control_expr_13m.cct"
+
+# Test 691: B1 document defines mandatory 30-scenario matrix
+echo "Test 691: B1 contract defines mandatory 30-scenario matrix"
+if grep -q "Matriz extensa de testes obrigatórios" "$DOC_13M_B1" && \
+   grep -q "30 cenários" "$DOC_13M_B1"; then
+    test_pass "B1 contract keeps mandatory deep matrix definition"
+else
+    test_fail "B1 contract is missing mandatory deep matrix definition"
+fi
+
+# Test 692: B1 quality metric requires at least 25 checks
+echo "Test 692: B1 quality metric requires at least 25 checks"
+if grep -q "no mínimo 25 novos checks efetivos" "$DOC_13M_B1"; then
+    test_pass "B1 quality metric includes >=25 effective new checks"
+else
+    test_fail "B1 quality metric missing >=25 checks requirement"
+fi
+
+# Test 693: 2 ** 10 computes expected result
+echo "Test 693: 2 ** 10 computes expected result"
+if "$CCT_BIN" tests/integration/math_pow_2_10_13m.cct >/tmp/cct_13m_b1_pow_2_10_build.out 2>&1 && \
+   [ -x tests/integration/math_pow_2_10_13m ]; then
+    tests/integration/math_pow_2_10_13m >/tmp/cct_13m_b1_pow_2_10_run.out 2>&1
+    RC=$?
+    if [ $RC -eq 0 ]; then
+        test_pass "2 ** 10 behavior is correct"
+    else
+        test_fail "2 ** 10 returned unexpected result ($RC)"
+    fi
+else
+    test_fail "2 ** 10 fixture failed to compile"
+fi
+
+# Test 694: parenthesized power variants keep expected values
+echo "Test 694: parenthesized power variants keep expected values"
+if "$CCT_BIN" tests/integration/math_pow_parenthesized_13m.cct >/tmp/cct_13m_b1_pow_paren_build.out 2>&1 && \
+   [ -x tests/integration/math_pow_parenthesized_13m ]; then
+    tests/integration/math_pow_parenthesized_13m >/tmp/cct_13m_b1_pow_paren_run.out 2>&1
+    RC=$?
+    if [ $RC -eq 0 ]; then
+        test_pass "parenthesized power variants produce expected values"
+    else
+        test_fail "parenthesized power fixture returned unexpected result ($RC)"
+    fi
+else
+    test_fail "parenthesized power fixture failed to compile"
+fi
+
+# Test 695: real power fixture remains stable under --check
+echo "Test 695: real power fixture passes semantic check"
+if "$CCT_BIN" --check tests/integration/math_pow_real_13m.cct >/tmp/cct_13m_b1_pow_real_check.out 2>&1; then
+    test_pass "real power fixture passes --check path"
+else
+    test_fail "real power fixture failed semantic check"
+fi
+
+# Test 696: // sign matrix returns expected canonical values
+echo "Test 696: // sign matrix returns expected canonical values"
+if "$CCT_BIN" tests/integration/math_idiv_signs_13m.cct >/tmp/cct_13m_b1_idiv_signs_build.out 2>&1 && \
+   [ -x tests/integration/math_idiv_signs_13m ]; then
+    tests/integration/math_idiv_signs_13m >/tmp/cct_13m_b1_idiv_signs_run.out 2>&1
+    RC=$?
+    if [ $RC -eq 0 ]; then
+        test_pass "// sign matrix is correct for all 4 combinations"
+    else
+        test_fail "// sign matrix fixture returned unexpected result ($RC)"
+    fi
+else
+    test_fail "// sign matrix fixture failed to compile"
+fi
+
+# Test 697: %% sign matrix returns expected canonical values
+echo "Test 697: %% sign matrix returns expected canonical values"
+if "$CCT_BIN" tests/integration/math_emod_signs_13m.cct >/tmp/cct_13m_b1_emod_signs_build.out 2>&1 && \
+   [ -x tests/integration/math_emod_signs_13m ]; then
+    tests/integration/math_emod_signs_13m >/tmp/cct_13m_b1_emod_signs_run.out 2>&1
+    RC=$?
+    if [ $RC -eq 0 ]; then
+        test_pass "%% sign matrix is correct for all 4 combinations"
+    else
+        test_fail "%% sign matrix fixture returned unexpected result ($RC)"
+    fi
+else
+    test_fail "%% sign matrix fixture failed to compile"
+fi
+
+# Test 698: precedence with and without parentheses keeps contract
+echo "Test 698: precedence with and without parentheses keeps contract"
+if "$CCT_BIN" tests/integration/math_precedence_parentheses_13m.cct >/tmp/cct_13m_b1_prec_paren_build.out 2>&1 && \
+   [ -x tests/integration/math_precedence_parentheses_13m ]; then
+    tests/integration/math_precedence_parentheses_13m >/tmp/cct_13m_b1_prec_paren_run.out 2>&1
+    RC=$?
+    if [ $RC -eq 0 ]; then
+        test_pass "precedence and parentheses contract is stable"
+    else
+        test_fail "precedence/parentheses fixture returned unexpected result ($RC)"
+    fi
+else
+    test_fail "precedence/parentheses fixture failed to compile"
+fi
+
+# Test 699: mixed precedence fixture remains executable and stable
+echo "Test 699: mixed precedence fixture remains executable and stable"
+if "$CCT_BIN" tests/integration/math_precedence_mix_13m.cct >/tmp/cct_13m_b1_prec_mix_build.out 2>&1 && \
+   [ -x tests/integration/math_precedence_mix_13m ]; then
+    tests/integration/math_precedence_mix_13m >/tmp/cct_13m_b1_prec_mix_run.out 2>&1
+    RC=$?
+    if [ $RC -eq 57 ]; then
+        test_pass "mixed precedence fixture remains stable in B1"
+    else
+        test_fail "mixed precedence fixture regressed in B1 ($RC)"
+    fi
+else
+    test_fail "mixed precedence fixture failed to compile in B1"
+fi
+
+# Test 700: variable-based combinations execute correctly
+echo "Test 700: variable-based combinations execute correctly"
+if "$CCT_BIN" tests/integration/math_variables_combo_13m.cct >/tmp/cct_13m_b1_vars_build.out 2>&1 && \
+   [ -x tests/integration/math_variables_combo_13m ]; then
+    tests/integration/math_variables_combo_13m >/tmp/cct_13m_b1_vars_run.out 2>&1
+    RC=$?
+    if [ $RC -eq 0 ]; then
+        test_pass "variable-based combinations with ** // %% are correct"
+    else
+        test_fail "variable-based combinations returned unexpected result ($RC)"
+    fi
+else
+    test_fail "variable-based combinations fixture failed to compile"
+fi
+
+# Test 701: REDDE expression composition with new operators works
+echo "Test 701: REDDE expression composition with new operators works"
+if "$CCT_BIN" tests/integration/math_return_expr_13m.cct >/tmp/cct_13m_b1_return_build.out 2>&1 && \
+   [ -x tests/integration/math_return_expr_13m ]; then
+    tests/integration/math_return_expr_13m >/tmp/cct_13m_b1_return_run.out 2>&1
+    RC=$?
+    if [ $RC -eq 0 ]; then
+        test_pass "function return expression with ** // %% is correct"
+    else
+        test_fail "function return expression fixture returned unexpected result ($RC)"
+    fi
+else
+    test_fail "function return expression fixture failed to compile"
+fi
+
+# Test 702: control-flow expression with new operators works
+echo "Test 702: control-flow expression with new operators works"
+if "$CCT_BIN" tests/integration/math_control_expr_13m.cct >/tmp/cct_13m_b1_ctrl_build.out 2>&1 && \
+   [ -x tests/integration/math_control_expr_13m ]; then
+    tests/integration/math_control_expr_13m >/tmp/cct_13m_b1_ctrl_run.out 2>&1
+    RC=$?
+    if [ $RC -eq 0 ]; then
+        test_pass "control-flow expression with ** // %% is correct"
+    else
+        test_fail "control-flow expression fixture returned unexpected result ($RC)"
+    fi
+else
+    test_fail "control-flow expression fixture failed to compile"
+fi
+
+# Test 703: power type error keeps minimum diagnostic message
+echo "Test 703: power type error keeps minimum diagnostic message"
+OUT=$("$CCT_BIN" --check tests/integration/math_pow_type_error_13m.cct 2>&1) || true
+if echo "$OUT" | grep -q "arithmetic operators require numeric operands"; then
+    test_pass "power type error keeps expected minimum diagnostic message"
+else
+    test_fail "power type error message regressed"
+fi
+
+# Test 704: integer division type error keeps minimum diagnostic message
+echo "Test 704: integer division type error keeps minimum diagnostic message"
+OUT=$("$CCT_BIN" --check tests/integration/math_idiv_type_error_13m.cct 2>&1) || true
+if echo "$OUT" | grep -q "operator // requires integer operands"; then
+    test_pass "integer division type error keeps expected minimum diagnostic message"
+else
+    test_fail "integer division type error message regressed"
+fi
+
+# Test 705: euclidean modulo type error keeps minimum diagnostic message
+echo "Test 705: euclidean modulo type error keeps minimum diagnostic message"
+OUT=$("$CCT_BIN" --check tests/integration/math_emod_type_error_13m.cct 2>&1) || true
+if echo "$OUT" | grep -q "operator %% requires integer operands"; then
+    test_pass "euclidean modulo type error keeps expected minimum diagnostic message"
+else
+    test_fail "euclidean modulo type error message regressed"
+fi
+
+# Test 706: // by zero runtime diagnostic remains explicit
+echo "Test 706: // by zero runtime diagnostic remains explicit"
+if "$CCT_BIN" tests/integration/math_idiv_zero_13m.cct >/tmp/cct_13m_b1_idiv_zero_build.out 2>&1 && \
+   [ -x tests/integration/math_idiv_zero_13m ]; then
+    tests/integration/math_idiv_zero_13m >/tmp/cct_13m_b1_idiv_zero_run.out 2>&1
+    RC=$?
+    if [ $RC -ne 0 ] && grep -q "integer division by zero" /tmp/cct_13m_b1_idiv_zero_run.out; then
+        test_pass "// by zero runtime diagnostic remains explicit"
+    else
+        test_fail "// by zero runtime behavior regressed"
+    fi
+else
+    test_fail "// by zero fixture failed to compile in B1"
+fi
+
+# Test 707: %% by zero runtime diagnostic remains explicit
+echo "Test 707: %% by zero runtime diagnostic remains explicit"
+if "$CCT_BIN" tests/integration/math_emod_zero_13m.cct >/tmp/cct_13m_b1_emod_zero_build.out 2>&1 && \
+   [ -x tests/integration/math_emod_zero_13m ]; then
+    tests/integration/math_emod_zero_13m >/tmp/cct_13m_b1_emod_zero_run.out 2>&1
+    RC=$?
+    if [ $RC -ne 0 ] && grep -q "euclidean modulo by zero" /tmp/cct_13m_b1_emod_zero_run.out; then
+        test_pass "%% by zero runtime diagnostic remains explicit"
+    else
+        test_fail "%% by zero runtime behavior regressed"
+    fi
+else
+    test_fail "%% by zero fixture failed to compile in B1"
+fi
+
+# Test 708: floor-division identity remains valid in canonical signed case
+echo "Test 708: floor-division identity remains valid in canonical signed case"
+cat > /tmp/cct_13m_b1_identity_pos.cct <<'CCTEOF'
+INCIPIT grimoire "id_b1"
+RITUALE main() REDDE REX
+  EVOCA REX a AD 29
+  EVOCA REX b AD 4
+  EVOCA REX q AD a // b
+  EVOCA REX r AD a %% b
+  SI b * q + r == a
+    REDDE 0
+  FIN SI
+  REDDE 1
+EXPLICIT RITUALE
+EXPLICIT grimoire
+CCTEOF
+if "$CCT_BIN" /tmp/cct_13m_b1_identity_pos.cct >/tmp/cct_13m_b1_identity_pos_build.out 2>&1 && \
+   [ -x /tmp/cct_13m_b1_identity_pos ]; then
+    /tmp/cct_13m_b1_identity_pos >/tmp/cct_13m_b1_identity_pos_run.out 2>&1
+    RC=$?
+    if [ $RC -eq 0 ]; then
+        test_pass "canonical identity a=b*q+r holds for positive divisor case"
+    else
+        test_fail "canonical identity failed for positive divisor case ($RC)"
+    fi
+else
+    test_fail "canonical identity positive fixture failed to compile"
+fi
+
+# Test 709: floor-division identity remains valid with negative dividend
+echo "Test 709: floor-division identity remains valid with negative dividend"
+cat > /tmp/cct_13m_b1_identity_neg.cct <<'CCTEOF'
+INCIPIT grimoire "id_b1_neg"
+RITUALE main() REDDE REX
+  EVOCA REX a AD (0 - 29)
+  EVOCA REX b AD 4
+  EVOCA REX q AD a // b
+  EVOCA REX r AD a %% b
+  SI b * q + r == a
+    REDDE 0
+  FIN SI
+  REDDE 1
+EXPLICIT RITUALE
+EXPLICIT grimoire
+CCTEOF
+if "$CCT_BIN" /tmp/cct_13m_b1_identity_neg.cct >/tmp/cct_13m_b1_identity_neg_build.out 2>&1 && \
+   [ -x /tmp/cct_13m_b1_identity_neg ]; then
+    /tmp/cct_13m_b1_identity_neg >/tmp/cct_13m_b1_identity_neg_run.out 2>&1
+    RC=$?
+    if [ $RC -eq 0 ]; then
+        test_pass "canonical identity a=b*q+r holds for negative dividend case"
+    else
+        test_fail "canonical identity failed for negative dividend case ($RC)"
+    fi
+else
+    test_fail "canonical identity negative fixture failed to compile"
+fi
+
+# Test 710: repeated execution of power binary is stable
+echo "Test 710: repeated execution of power binary is stable"
+if [ -x tests/integration/math_pow_2_10_13m ]; then
+    tests/integration/math_pow_2_10_13m >/tmp/cct_13m_b1_pow_repeat_run1.out 2>&1
+    RC1=$?
+    tests/integration/math_pow_2_10_13m >/tmp/cct_13m_b1_pow_repeat_run2.out 2>&1
+    RC2=$?
+    if [ $RC1 -eq 0 ] && [ $RC2 -eq 0 ]; then
+        test_pass "repeated local run remains stable for power fixture"
+    else
+        test_fail "repeated local run diverged for power fixture ($RC1/$RC2)"
+    fi
+else
+    test_fail "power repeat check missing built binary"
+fi
+
+# Test 711: repeated check output for type error stays message-stable
+echo "Test 711: repeated check output for type error stays message-stable"
+OUT1=$("$CCT_BIN" --check tests/integration/math_idiv_type_error_13m.cct 2>&1) || true
+OUT2=$("$CCT_BIN" --check tests/integration/math_idiv_type_error_13m.cct 2>&1) || true
+if echo "$OUT1" | grep -q "operator // requires integer operands" && \
+   echo "$OUT2" | grep -q "operator // requires integer operands"; then
+    test_pass "repeated diagnostic check remains semantically stable"
+else
+    test_fail "repeated diagnostic check is unstable for // type error"
+fi
+
+# Test 712: legacy arithmetic fixture remains stable after 13M operators
+echo "Test 712: legacy arithmetic fixture remains stable after 13M operators"
+if "$CCT_BIN" tests/integration/codegen_arithmetic.cct >/tmp/cct_13m_b1_legacy_arith_build.out 2>&1 && \
+   [ -x tests/integration/codegen_arithmetic ]; then
+    tests/integration/codegen_arithmetic >/tmp/cct_13m_b1_legacy_arith_run.out 2>&1
+    RC=$?
+    if [ $RC -eq 15 ]; then
+        test_pass "legacy arithmetic behavior remains stable"
+    else
+        test_fail "legacy arithmetic behavior regressed ($RC)"
+    fi
+else
+    test_fail "legacy arithmetic fixture failed to compile in B1"
+fi
+
+# Test 713: legacy modulus fixture remains stable after 13M operators
+echo "Test 713: legacy modulus fixture remains stable after 13M operators"
+cat > /tmp/cct_13m_b1_legacy_mod_repeat.cct <<'CCTEOF'
+INCIPIT grimoire "legacy_mod_repeat_b1"
+RITUALE main() REDDE REX
+  REDDE 23 % 7
+EXPLICIT RITUALE
+EXPLICIT grimoire
+CCTEOF
+if "$CCT_BIN" /tmp/cct_13m_b1_legacy_mod_repeat.cct >/tmp/cct_13m_b1_legacy_mod_repeat_build.out 2>&1 && \
+   [ -x /tmp/cct_13m_b1_legacy_mod_repeat ]; then
+    /tmp/cct_13m_b1_legacy_mod_repeat >/tmp/cct_13m_b1_legacy_mod_repeat_run.out 2>&1
+    RC=$?
+    if [ $RC -eq 2 ]; then
+        test_pass "legacy % remains stable after 13M operators"
+    else
+        test_fail "legacy % behavior regressed after 13M operators ($RC)"
+    fi
+else
+    test_fail "legacy % repeat fixture failed to compile"
+fi
+
+# Test 714: legacy pipeline --check stays stable on known file
+echo "Test 714: legacy pipeline --check stays stable on known file"
+if "$CCT_BIN" --check tests/integration/codegen_minimal.cct >/tmp/cct_13m_b1_legacy_check.out 2>&1; then
+    test_pass "legacy --check pipeline stays stable"
+else
+    test_fail "legacy --check pipeline regressed"
+fi
+
+# Test 715: legacy compile+run without new operators remains stable
+echo "Test 715: legacy compile+run without new operators remains stable"
+if "$CCT_BIN" tests/integration/codegen_minimal.cct >/tmp/cct_13m_b1_legacy_min_build.out 2>&1 && \
+   [ -x tests/integration/codegen_minimal ]; then
+    tests/integration/codegen_minimal >/tmp/cct_13m_b1_legacy_min_run.out 2>&1
+    RC=$?
+    if [ $RC -eq 0 ]; then
+        test_pass "legacy compile+run remains stable without new operators"
+    else
+        test_fail "legacy compile+run returned unexpected result ($RC)"
+    fi
+else
+    test_fail "legacy minimal fixture failed to compile in B1"
+fi
+
+# Test 716: parser handles chained new operators under --ast
+echo "Test 716: parser handles chained new operators under --ast"
+cat > /tmp/cct_13m_b1_ast_chain.cct <<'CCTEOF'
+INCIPIT grimoire "ast_chain_b1"
+RITUALE main() REDDE REX
+  EVOCA REX v AD 2 ** 3 // 2 %% 3
+  REDDE v
+EXPLICIT RITUALE
+EXPLICIT grimoire
+CCTEOF
+if "$CCT_BIN" --ast /tmp/cct_13m_b1_ast_chain.cct >/tmp/cct_13m_b1_ast_chain.out 2>&1; then
+    test_pass "--ast remains stable with chained 13M operators"
+else
+    test_fail "--ast failed on chained 13M operators"
+fi
+
+# Test 717: token output contains exact counts for each 13M operator in synthetic fixture
+echo "Test 717: token output contains expected occurrences for each 13M operator"
+TOK_OUT=$("$CCT_BIN" --tokens "$SIG13M_A2_TOK" 2>&1)
+COUNT_POW=$(echo "$TOK_OUT" | grep -c "STAR_STAR")
+COUNT_IDIV=$(echo "$TOK_OUT" | grep -c "SLASH_SLASH")
+COUNT_EMOD=$(echo "$TOK_OUT" | grep -c "PERCENT_PERCENT")
+if [ "$COUNT_POW" -eq 1 ] && [ "$COUNT_IDIV" -eq 1 ] && [ "$COUNT_EMOD" -eq 1 ]; then
+    test_pass "token stream keeps expected per-operator occurrence counts"
+else
+    test_fail "token stream operator occurrence counts are unexpected ($COUNT_POW/$COUNT_IDIV/$COUNT_EMOD)"
+fi
+
+# Test 718: B1 expected fixture set exists in integration directory
+echo "Test 718: B1 expected fixture set exists in integration directory"
+if [ -f tests/integration/math_pow_2_10_13m.cct ] && \
+   [ -f tests/integration/math_pow_parenthesized_13m.cct ] && \
+   [ -f tests/integration/math_idiv_signs_13m.cct ] && \
+   [ -f tests/integration/math_emod_signs_13m.cct ] && \
+   [ -f tests/integration/math_precedence_parentheses_13m.cct ] && \
+   [ -f tests/integration/math_variables_combo_13m.cct ] && \
+   [ -f tests/integration/math_return_expr_13m.cct ] && \
+   [ -f tests/integration/math_control_expr_13m.cct ]; then
+    test_pass "B1 fixture inventory is complete"
+else
+    test_fail "B1 fixture inventory is incomplete"
+fi
+
+# Test 719: B1 execution status is marked complete in 13M checklist
+echo "Test 719: B1 execution status is marked complete in 13M checklist"
+if grep -q "\[x\] \`13M-B1\`" "$DOC_13M_CHECKLIST" && \
+   grep -q "\[x\] \`13M-B2\`" "$DOC_13M_CHECKLIST"; then
+    test_pass "13M checklist marks B1/B2 completion"
+else
+    test_fail "13M checklist status is inconsistent for B1/B2 closure progression"
+fi
+
+# Test 720: 13M-B1 document explicitly requires full historical non-regression
+echo "Test 720: 13M-B1 document explicitly requires full historical non-regression"
+if grep -q "nenhum teste histórico pode regredir" "$DOC_13M_B1" && \
+   grep -q "executar regressão completa" "$DOC_13M_B1"; then
+    test_pass "13M-B1 keeps explicit non-regression contract"
+else
+    test_fail "13M-B1 is missing explicit non-regression contract language"
+fi
+
+echo ""
+echo "========================================"
+echo "FASE 13M.B2: Documentation, Release Pack, and Exit Gate Tests"
+echo "========================================"
+echo ""
+
+# Test 721: 13M release pack documents exist
+echo "Test 721: 13M release pack documents exist"
+if [ -f docs/release/FASE_13M_FINAL_SNAPSHOT.md ] && \
+   [ -f docs/release/FASE_13M_RELEASE_NOTES.md ]; then
+    test_pass "13M release pack documents are present"
+else
+    test_fail "13M release pack documents are incomplete"
+fi
+
+# Test 722: final snapshot captures closure context in public package
+echo "Test 722: 13M final snapshot captures closure context"
+if grep -q "Closure status:" docs/release/FASE_13M_FINAL_SNAPSHOT.md && \
+   grep -q "13M.B2" docs/release/FASE_13M_FINAL_SNAPSHOT.md; then
+    test_pass "13M final snapshot keeps closure context in public package"
+else
+    test_fail "13M final snapshot is missing closure context"
+fi
+
+# Test 723: release notes include all operators and compatibility note
+echo "Test 723: 13M release notes include operators and compatibility note"
+if grep -q "\`\\*\\*\`" docs/release/FASE_13M_RELEASE_NOTES.md && \
+   grep -q "\`//\`" docs/release/FASE_13M_RELEASE_NOTES.md && \
+   grep -q "\`%%\`" docs/release/FASE_13M_RELEASE_NOTES.md && \
+   grep -q "legacy" docs/release/FASE_13M_RELEASE_NOTES.md; then
+    test_pass "13M release notes include operator scope and compatibility statement"
+else
+    test_fail "13M release notes are missing operator scope or compatibility statement"
+fi
+
+# Test 724: release notes keep deferred/out-of-scope registry language
+echo "Test 724: 13M release notes include deferred/out-of-scope guidance"
+if grep -q "deferred" docs/release/FASE_13M_RELEASE_NOTES.md && \
+   grep -q "out-of-scope" docs/release/FASE_13M_RELEASE_NOTES.md; then
+    test_pass "13M release notes keep deferred/out-of-scope registry"
+else
+    test_fail "13M release notes missing deferred/out-of-scope guidance"
+fi
+
+# Test 725: spec documents 13M operators and precedence section
+echo "Test 725: spec documents 13M operators and precedence section"
+if grep -q "\`\\*\\*\`" docs/spec.md && \
+   grep -q "\`//\`" docs/spec.md && \
+   grep -q "\`%%\`" docs/spec.md && \
+   grep -q "6.6 Precedence and Associativity" docs/spec.md; then
+    test_pass "spec includes 13M operator and precedence contracts"
+else
+    test_fail "spec is missing 13M operator or precedence contracts"
+fi
+
+# Test 726: README exposes practical 13M operator usage section
+echo "Test 726: README exposes practical 13M operator usage section"
+if grep -q "Common Math Operators (FASE 13M)" README.md && \
+   grep -q "math_common_ops_13m.cct" README.md && \
+   grep -q "\`//\`" README.md && \
+   grep -q "\`%%\`" README.md; then
+    test_pass "README exposes practical 13M usage guidance"
+else
+    test_fail "README missing practical 13M usage guidance"
+fi
+
+# Test 727: architecture records 13M addendum implementation
+echo "Test 727: architecture records 13M addendum implementation"
+if grep -q "FASE 13M Common Math Operators Addendum" docs/architecture.md && \
+   grep -q "13M.B2" docs/architecture.md; then
+    test_pass "architecture includes 13M addendum closure record"
+else
+    test_fail "architecture is missing 13M addendum closure record"
+fi
+
+# Test 728: roadmap records 13M addendum closure status
+echo "Test 728: roadmap records 13M addendum closure status"
+if grep -q "FASE 13M — Common Math Operators Addendum" docs/roadmap.md && \
+   grep -q "13M.B2" docs/roadmap.md; then
+    test_pass "roadmap includes 13M addendum closure status"
+else
+    test_fail "roadmap is missing 13M addendum closure status"
+fi
+
+# Test 729: canonical 13M example exists
+echo "Test 729: canonical 13M example exists"
+if [ -f examples/math_common_ops_13m.cct ]; then
+    test_pass "canonical 13M example source exists"
+else
+    test_fail "canonical 13M example source is missing"
+fi
+
+# Test 730: canonical 13M example passes --check
+echo "Test 730: canonical 13M example passes --check"
+if "$CCT_BIN" --check examples/math_common_ops_13m.cct >/tmp/cct_13m_b2_check_example.out 2>&1; then
+    test_pass "canonical 13M example passes semantic check"
+else
+    test_fail "canonical 13M example failed semantic check"
+fi
+
+# Test 731: canonical 13M example compiles and executes
+echo "Test 731: canonical 13M example compiles and executes"
+if "$CCT_BIN" examples/math_common_ops_13m.cct >/tmp/cct_13m_b2_build_example.out 2>&1 && \
+   [ -x examples/math_common_ops_13m ]; then
+    examples/math_common_ops_13m >/tmp/cct_13m_b2_run_example.out 2>&1
+    RC=$?
+    if [ $RC -eq 0 ]; then
+        test_pass "canonical 13M example compiles and executes"
+    else
+        test_fail "canonical 13M example returned unexpected exit code ($RC)"
+    fi
+else
+    test_fail "canonical 13M example failed to compile"
+fi
+
+# Test 732: canonical 13M example output contains expected values
+echo "Test 732: canonical 13M example output contains expected values"
+if grep -q "pow 2\\*\\*5 =32" /tmp/cct_13m_b2_run_example.out && \
+   grep -q "idiv -7//3 =-3" /tmp/cct_13m_b2_run_example.out && \
+   grep -q "emod -7%%3 =2" /tmp/cct_13m_b2_run_example.out; then
+    test_pass "canonical 13M example output matches expected values"
+else
+    test_fail "canonical 13M example output does not match expected values"
+fi
+
+# Test 733: command smoke --tokens on 13M example shows new token family
+echo "Test 733: command smoke --tokens on 13M example shows new token family"
+TOK13M=$("$CCT_BIN" --tokens examples/math_common_ops_13m.cct 2>&1)
+if echo "$TOK13M" | grep -q "STAR_STAR" && \
+   echo "$TOK13M" | grep -q "SLASH_SLASH" && \
+   echo "$TOK13M" | grep -q "PERCENT_PERCENT"; then
+    test_pass "--tokens on 13M example shows expected operator tokens"
+else
+    test_fail "--tokens on 13M example missing one or more operator tokens"
+fi
+
+# Test 734: command smoke --ast on 13M example works
+echo "Test 734: command smoke --ast on 13M example works"
+if "$CCT_BIN" --ast examples/math_common_ops_13m.cct >/tmp/cct_13m_b2_ast_example.out 2>&1; then
+    test_pass "--ast on 13M example works"
+else
+    test_fail "--ast on 13M example failed"
+fi
+
+# Test 735: B2 contract includes required closure sequence
+echo "Test 735: B2 contract includes required closure sequence"
+if grep -q "harmonizar documentação canônica" "$DOC_13M_B2" && \
+   grep -q "publicar release notes e limites" "$DOC_13M_B2" && \
+   grep -q "executar gate final com evidências" "$DOC_13M_B2"; then
+    test_pass "B2 contract keeps required closure sequence"
+else
+    test_fail "B2 contract missing required closure sequence"
+fi
+
+# Test 736: B2 checklist status marks full 13M closure
+echo "Test 736: B2 checklist status marks full 13M closure"
+if grep -q "\[x\] \`13M-A1\`" "$DOC_13M_CHECKLIST" && \
+   grep -q "\[x\] \`13M-A2\`" "$DOC_13M_CHECKLIST" && \
+   grep -q "\[x\] \`13M-B1\`" "$DOC_13M_CHECKLIST" && \
+   grep -q "\[x\] \`13M-B2\`" "$DOC_13M_CHECKLIST"; then
+    test_pass "13M checklist reflects full closure at B2"
+else
+    test_fail "13M checklist does not reflect full closure at B2"
+fi
+
+# Test 737: README and release notes cross-reference 13M release pack files
+echo "Test 737: README and release notes cross-reference 13M release pack files"
+if grep -q "FASE_13M_FINAL_SNAPSHOT.md" README.md && \
+   grep -q "FASE_13M_RELEASE_NOTES.md" README.md; then
+    test_pass "README cross-references 13M release pack files"
+else
+    test_fail "README missing one or more 13M release pack references"
+fi
+
+# Test 738: CLI legacy help remains non-regressive after 13M.B2 docs closure
+echo "Test 738: CLI legacy help remains non-regressive after 13M.B2 docs closure"
+HELP_OUT=$("$CCT_BIN" --help 2>&1)
+if echo "$HELP_OUT" | grep -q "Usage:" && \
+   echo "$HELP_OUT" | grep -q "sigilo"; then
+    test_pass "CLI help remains non-regressive after 13M.B2 closure"
+else
+    test_fail "CLI help regressed after 13M.B2 closure"
+fi
+
+# Test 739: final snapshot references full-suite green evidence
+echo "Test 739: final snapshot references full-suite green evidence"
+if grep -q "make test" docs/release/FASE_13M_FINAL_SNAPSHOT.md && \
+   grep -q "green" docs/release/FASE_13M_FINAL_SNAPSHOT.md; then
+    test_pass "13M final snapshot references full-suite green evidence"
+else
+    test_fail "13M final snapshot missing full-suite green evidence reference"
+fi
+
+# Test 740: final snapshot links to release notes in public package
+echo "Test 740: final snapshot links to release notes in public package"
+if grep -q "FASE_13M_RELEASE_NOTES.md" docs/release/FASE_13M_FINAL_SNAPSHOT.md && \
+   ! grep -q "FASE_13M_CLOSURE_GATE.md" docs/release/FASE_13M_FINAL_SNAPSHOT.md; then
+    test_pass "13M final snapshot keeps public link set without internal closure docs"
+else
+    test_fail "13M final snapshot link set is inconsistent with public package policy"
+fi
+
+echo ""
+echo "========================================"
+echo "FASE 14A1: Canonical Diagnostic Taxonomy Tests"
+echo "========================================"
+echo ""
+
+# Test 741: standalone diagnostic taxonomy runtime tests build and run
+echo "Test 741: standalone diagnostic taxonomy runtime tests build and run"
+OUTPUT=$(make test_diagnostic_taxonomy 2>&1) || true
+if echo "$OUTPUT" | grep -q "test_diagnostic_taxonomy: ok"; then
+    test_pass "Diagnostic taxonomy runtime target builds and runs"
+else
+    test_fail "Diagnostic taxonomy runtime target failed"
+fi
+
+# Test 742: diagnostic taxonomy runtime binary exists
+echo "Test 742: diagnostic taxonomy runtime binary exists after build"
+if [ -f "tests/runtime/test_diagnostic_taxonomy" ]; then
+    test_pass "Diagnostic taxonomy runtime binary is produced deterministically"
+else
+    test_fail "Diagnostic taxonomy runtime binary not found"
+fi
+
+# Test 743: syntax diagnostic preserves suggestion line compatibility
+echo "Test 743: syntax diagnostic preserves suggestion line compatibility"
+OUTPUT=$("$CCT_BIN" --check tests/integration/diagnostic_syntax_error_12a.cct 2>&1) || true
+if echo "$OUTPUT" | grep -q "suggestion:"; then
+    test_pass "Suggestion line compatibility is preserved for legacy diagnostics"
+else
+    test_fail "Suggestion line compatibility regressed"
+fi
+
+# Test 744: syntax diagnostic now also emits hint taxonomy line
+echo "Test 744: syntax diagnostic emits hint taxonomy line"
+OUTPUT=$("$CCT_BIN" --check tests/integration/diagnostic_syntax_error_12a.cct 2>&1) || true
+if echo "$OUTPUT" | grep -q "hint:"; then
+    test_pass "Hint taxonomy line is emitted for actionable diagnostics"
+else
+    test_fail "Hint taxonomy line is missing for actionable diagnostics"
+fi
+
+# Test 745: sigilo validate text diagnostics keep canonical taxonomy prefix
+echo "Test 745: sigilo validate text diagnostics keep canonical taxonomy prefix"
+SIG14A1_INVALID="/tmp/cct_sigilo_14a1_invalid.sigil"
+cat > "$SIG14A1_INVALID" <<'SIGEOF'
+format = cct.sigil.v1
+sigilo_scope = local
+semantic_hash = bad
+SIGEOF
+OUTPUT=$("$CCT_BIN" sigilo validate "$SIG14A1_INVALID" --format text --strict 2>&1) || true
+if echo "$OUTPUT" | grep -q "cct: .*error: sigilo\\[" && \
+   echo "$OUTPUT" | grep -q "\\[sigilo\\]"; then
+    test_pass "Sigilo diagnostics use canonical diagnostic envelope"
+else
+    test_fail "Sigilo diagnostics are not using canonical diagnostic envelope"
+fi
+
+# Test 746: sigilo validate structured output level remains stable
+echo "Test 746: sigilo validate structured output level remains stable"
+OUTPUT=$("$CCT_BIN" sigilo validate "$SIG14A1_INVALID" --format structured --strict 2>&1) || true
+if echo "$OUTPUT" | grep -q "level = error"; then
+    test_pass "Structured sigilo diagnostics preserve stable level contract"
+else
+    test_fail "Structured sigilo diagnostic level contract regressed"
+fi
+
+# Test 747: invalid CLI argument still reports canonical code label
+echo "Test 747: invalid CLI argument still reports canonical code label"
+OUTPUT=$("$CCT_BIN" --sigilo-mode invalido tests/integration/sigilo_minimal.cct 2>&1) || true
+if echo "$OUTPUT" | grep -q "\\[Invalid argument\\]"; then
+    test_pass "CLI invalid-argument diagnostics preserve canonical code label"
+else
+    test_fail "CLI invalid-argument diagnostics lost canonical code label"
+fi
+
+# Test 748: diagnostic level taxonomy helper is publicly available via runtime target
+echo "Test 748: diagnostic level taxonomy helper is covered by runtime tests"
+OUTPUT=$(make test_diagnostic_taxonomy 2>&1) || true
+if echo "$OUTPUT" | grep -q "test_diagnostic_taxonomy: ok"; then
+    test_pass "Diagnostic level taxonomy helper contract is covered in runtime suite"
+else
+    test_fail "Diagnostic level taxonomy helper contract is not covered"
+fi
+
+# Test 749: public spec documents 14A1 diagnostic taxonomy contract
+echo "Test 749: spec documents canonical 14A1 diagnostic taxonomy contract"
+if grep -q "Diagnostic taxonomy contract (FASE 14A.1)" docs/spec.md && \
+   grep -q "error.*warning.*note.*hint" docs/spec.md; then
+    test_pass "Public spec documents canonical 14A1 diagnostic taxonomy"
+else
+    test_fail "Public spec is missing 14A1 diagnostic taxonomy contract"
+fi
+
+echo ""
+echo "========================================"
+echo "FASE 14A2: Canonical Exit Code Contract Tests"
+echo "========================================"
+echo ""
+
+# Test 750: unknown option returns canonical unknown-command exit code
+echo "Test 750: unknown option returns canonical unknown-command exit code"
+"$CCT_BIN" --unknown-option >/tmp/cct_exit_14a2_unknown.out 2>&1
+EXIT_CODE=$?
+if [ $EXIT_CODE -eq 4 ]; then
+    test_pass "unknown option returns canonical exit code 4 (unknown command)"
+else
+    test_fail "unknown option should return exit code 4 (got $EXIT_CODE)"
+fi
+
+# Test 751: missing argument returns canonical missing-argument exit code
+echo "Test 751: missing argument returns canonical missing-argument exit code"
+"$CCT_BIN" --tokens >/tmp/cct_exit_14a2_missing.out 2>&1
+EXIT_CODE=$?
+if [ $EXIT_CODE -eq 3 ]; then
+    test_pass "missing argument returns canonical exit code 3"
+else
+    test_fail "missing argument should return exit code 3 (got $EXIT_CODE)"
+fi
+
+# Test 752: invalid argument returns canonical invalid-argument exit code
+echo "Test 752: invalid argument returns canonical invalid-argument exit code"
+"$CCT_BIN" test.txt >/tmp/cct_exit_14a2_invalid.out 2>&1
+EXIT_CODE=$?
+if [ $EXIT_CODE -eq 1 ]; then
+    test_pass "invalid argument returns canonical exit code 1"
+else
+    test_fail "invalid argument should return exit code 1 (got $EXIT_CODE)"
+fi
+
+# Test 753: formatter check mode returns contract-violation exit code on drift
+echo "Test 753: fmt --check returns canonical contract-violation exit code"
+"$CCT_BIN" fmt --check tests/integration/project_12f_basic/tests/fmt_bad.test.cct >/tmp/cct_exit_14a2_fmt_check.out 2>&1
+EXIT_CODE=$?
+if [ $EXIT_CODE -eq 2 ]; then
+    test_pass "fmt --check returns canonical exit code 2 when format contract is violated"
+else
+    test_fail "fmt --check should return exit code 2 on formatting drift (got $EXIT_CODE)"
+fi
+
+# Test 754: strict sigilo validate returns contract-violation exit code
+echo "Test 754: strict sigilo validate returns canonical contract-violation exit code"
+SIG14A2_INVALID="/tmp/cct_sigilo_14a2_invalid.sigil"
+cat > "$SIG14A2_INVALID" <<'SIGEOF'
+format = cct.sigil.v1
+sigilo_scope = local
+SIGEOF
+"$CCT_BIN" sigilo validate "$SIG14A2_INVALID" --summary --strict >/tmp/cct_exit_14a2_validate.out 2>&1
+EXIT_CODE=$?
+if [ $EXIT_CODE -eq 2 ]; then
+    test_pass "strict sigilo validate returns canonical exit code 2 on contract violation"
+else
+    test_fail "strict sigilo validate should return exit code 2 (got $EXIT_CODE)"
+fi
+
+# Test 755: strict baseline drift still returns contract-violation exit code
+echo "Test 755: strict baseline drift keeps canonical contract-violation exit code"
+SIG14A2_BASE_A="/tmp/cct_sigilo_14a2_base_a.sigil"
+SIG14A2_BASE_B="/tmp/cct_sigilo_14a2_base_b.sigil"
+cat > "$SIG14A2_BASE_A" <<'SIGEOF'
+format = cct.sigil.v1
+sigilo_scope = local
+semantic_hash = abcdef0123456789
+[totals]
+rituale = 1
+SIGEOF
+cat > "$SIG14A2_BASE_B" <<'SIGEOF'
+format = cct.sigil.v1
+sigilo_scope = local
+semantic_hash = 1111111111111111
+[totals]
+rituale = 1
+SIGEOF
+"$CCT_BIN" sigilo baseline update "$SIG14A2_BASE_A" --baseline /tmp/cct_sigilo_14a2_baseline.sigil --force >/tmp/cct_exit_14a2_base_update.out 2>&1
+"$CCT_BIN" sigilo baseline check "$SIG14A2_BASE_B" --baseline /tmp/cct_sigilo_14a2_baseline.sigil --strict --summary >/tmp/cct_exit_14a2_base_check.out 2>&1
+EXIT_CODE=$?
+if [ $EXIT_CODE -eq 2 ]; then
+    test_pass "strict baseline drift keeps canonical exit code 2"
+else
+    test_fail "strict baseline drift should return exit code 2 (got $EXIT_CODE)"
+fi
+
+# Test 756: spec documents canonical 14A2 exit code policy
+echo "Test 756: spec documents canonical 14A2 exit code policy"
+if grep -q "Exit code policy (FASE 14A.2)" docs/spec.md; then
+    test_pass "spec documents canonical 14A2 exit code policy"
+else
+    test_fail "spec is missing canonical 14A2 exit code policy"
+fi
+
+echo ""
+echo "========================================"
+echo "FASE 14A3: Explain Operacional e Troubleshooting Tests"
+echo "========================================"
+echo ""
+
+# Test 757: sigilo help exposes --explain for core sigilo subcommands
+echo "Test 757: sigilo help exposes --explain on core subcommands"
+OUTPUT=$("$CCT_BIN" sigilo 2>&1) || true
+if echo "$OUTPUT" | grep -q "sigilo inspect .*--explain" && \
+   echo "$OUTPUT" | grep -q "sigilo validate .*--explain" && \
+   echo "$OUTPUT" | grep -q "sigilo baseline check .*--explain"; then
+    test_pass "sigilo help documents explain mode across core subcommands"
+else
+    test_fail "sigilo help is missing --explain in one or more core subcommands"
+fi
+
+# Test 758: validate --explain emits actionable explain line on strict failure
+echo "Test 758: validate --explain emits actionable explain line on strict failure"
+SIG14A3_INVALID="/tmp/cct_sigilo_14a3_invalid.sigil"
+cat > "$SIG14A3_INVALID" <<'SIGEOF'
+format = cct.sigil.v1
+sigilo_scope = local
+SIGEOF
+OUTPUT=$("$CCT_BIN" sigilo validate "$SIG14A3_INVALID" --strict --explain --format text 2>&1) || true
+if echo "$OUTPUT" | grep -q "sigilo.explain probable_cause=" && \
+   echo "$OUTPUT" | grep -q "recommended_action=" && \
+   echo "$OUTPUT" | grep -q "docs=docs/sigilo_troubleshooting_13b4.md" && \
+   echo "$OUTPUT" | grep -q "command=validate"; then
+    test_pass "validate --explain emits troubleshooting guidance"
+else
+    test_fail "validate --explain did not emit expected troubleshooting guidance"
+fi
+
+# Test 759: validate default mode keeps output concise (no explain line)
+echo "Test 759: validate default mode keeps output concise (no explain line)"
+OUTPUT=$("$CCT_BIN" sigilo validate "$SIG14A3_INVALID" --strict --format text 2>&1) || true
+if ! echo "$OUTPUT" | grep -q "sigilo.explain probable_cause="; then
+    test_pass "default validate output remains concise without explain noise"
+else
+    test_fail "default validate output unexpectedly emitted explain noise"
+fi
+
+# Test 760: baseline check --explain covers missing baseline troubleshooting
+echo "Test 760: baseline check --explain covers missing baseline troubleshooting"
+SIG14A3_BASE_ART="/tmp/cct_sigilo_14a3_base_artifact.sigil"
+cat > "$SIG14A3_BASE_ART" <<'SIGEOF'
+format = cct.sigil.v1
+sigilo_scope = local
+semantic_hash = abcdef0123456789
+[totals]
+rituale = 1
+SIGEOF
+OUTPUT=$("$CCT_BIN" sigilo baseline check "$SIG14A3_BASE_ART" --baseline /tmp/cct_sigilo_14a3_missing_baseline.sigil --explain --summary 2>&1) || true
+if echo "$OUTPUT" | grep -q "status=missing" && \
+   echo "$OUTPUT" | grep -q "sigilo.explain probable_cause=baseline file is missing" && \
+   echo "$OUTPUT" | grep -q "command=baseline-check"; then
+    test_pass "baseline check --explain reports missing baseline with action"
+else
+    test_fail "baseline check --explain missing baseline troubleshooting is incomplete"
+fi
+
+# Test 761: strict diff/check blocking drift with --explain emits blocked guidance
+echo "Test 761: strict check --explain emits blocked troubleshooting guidance"
+SIG14A3_LEFT="/tmp/cct_sigilo_14a3_left.sigil"
+SIG14A3_RIGHT="/tmp/cct_sigilo_14a3_right.sigil"
+cat > "$SIG14A3_LEFT" <<'SIGEOF'
+format = cct.sigil.v1
+sigilo_scope = local
+semantic_hash = aaaaaaaaaaaaaaaa
+[totals]
+rituale = 1
+SIGEOF
+cat > "$SIG14A3_RIGHT" <<'SIGEOF'
+format = cct.sigil.v1
+sigilo_scope = local
+semantic_hash = bbbbbbbbbbbbbbbb
+[totals]
+rituale = 1
+SIGEOF
+OUTPUT=$("$CCT_BIN" sigilo check "$SIG14A3_LEFT" "$SIG14A3_RIGHT" --strict --explain --summary 2>&1) || true
+if echo "$OUTPUT" | grep -q "sigilo.explain probable_cause=" && \
+   echo "$OUTPUT" | grep -q "blocked=true" && \
+   echo "$OUTPUT" | grep -q "command=check"; then
+    test_pass "strict check --explain emits blocked cause/action guidance"
+else
+    test_fail "strict check --explain did not emit blocked troubleshooting guidance"
+fi
+
+# Test 762: public spec documents 14A3 explain contract
+echo "Test 762: public spec documents 14A3 explain contract"
+if grep -q "Explain and troubleshooting contract (FASE 14A.3)" docs/spec.md && \
+   grep -q "sigilo.explain probable_cause=" docs/spec.md; then
+    test_pass "spec documents 14A3 explain/troubleshooting contract"
+else
+    test_fail "spec is missing 14A3 explain/troubleshooting contract"
+fi
+
+echo ""
+echo "========================================"
+echo "FASE 14A4: Determinismo de Saída e Higiene de Logs Tests"
+echo "========================================"
+echo ""
+
+# Test 763: validate structured diagnostics are deterministic across runs
+echo "Test 763: validate structured diagnostics are deterministic across runs"
+SIG14A4_MULTI_DIAG="/tmp/cct_sigilo_14a4_multi_diag.sigil"
+cat > "$SIG14A4_MULTI_DIAG" <<'SIGEOF'
+format = cct.sigil.v1
+sigilo_scope = local
+sigilo_style = legacy
+[analysis_summary]
+scope = system
+SIGEOF
+OUT_A=$("$CCT_BIN" sigilo validate "$SIG14A4_MULTI_DIAG" --format structured --summary --strict 2>&1) || true
+OUT_B=$("$CCT_BIN" sigilo validate "$SIG14A4_MULTI_DIAG" --format structured --summary --strict 2>&1) || true
+if [ "$OUT_A" = "$OUT_B" ]; then
+    test_pass "validate structured output is deterministic across equivalent runs"
+else
+    test_fail "validate structured output changed across equivalent runs"
+fi
+
+# Test 764: validate text diagnostics are deterministic across runs
+echo "Test 764: validate text diagnostics are deterministic across runs"
+OUT_A=$("$CCT_BIN" sigilo validate "$SIG14A4_MULTI_DIAG" --format text --strict 2>&1) || true
+OUT_B=$("$CCT_BIN" sigilo validate "$SIG14A4_MULTI_DIAG" --format text --strict 2>&1) || true
+if [ "$OUT_A" = "$OUT_B" ]; then
+    test_pass "validate text diagnostics are deterministic across equivalent runs"
+else
+    test_fail "validate text diagnostics changed across equivalent runs"
+fi
+
+# Test 765: deterministic ordering keeps error diagnostics before warnings in structured mode
+echo "Test 765: deterministic ordering keeps errors before warnings in structured diagnostics"
+OUT=$("$CCT_BIN" sigilo validate "$SIG14A4_MULTI_DIAG" --format structured --strict 2>&1) || true
+FIRST_LEVEL=$(echo "$OUT" | awk '
+    /^\[diag\.[0-9]+\]/ { in_diag=1; next }
+    in_diag && /^level = / { print $3; exit }
+')
+if [ "$FIRST_LEVEL" = "error" ]; then
+    test_pass "structured diagnostic ordering is stable with errors first"
+else
+    test_fail "structured diagnostics are not ordered deterministically with errors first"
+fi
+
+# Test 766: inspect structured output stays deterministic across runs
+echo "Test 766: inspect structured output stays deterministic across runs"
+SIG14A4_VALID="/tmp/cct_sigilo_14a4_valid.sigil"
+cat > "$SIG14A4_VALID" <<'SIGEOF'
+format = cct.sigil.v1
+sigilo_scope = local
+semantic_hash = 1234567890abcdef
+[totals]
+rituale = 1
+SIGEOF
+OUT_A=$("$CCT_BIN" sigilo inspect "$SIG14A4_VALID" --format structured --summary 2>&1) || true
+OUT_B=$("$CCT_BIN" sigilo inspect "$SIG14A4_VALID" --format structured --summary 2>&1) || true
+if [ "$OUT_A" = "$OUT_B" ]; then
+    test_pass "inspect structured summary remains deterministic"
+else
+    test_fail "inspect structured summary changed across equivalent runs"
+fi
+
+# Test 767: explain mode remains opt-in after 14A4 (no default log noise)
+echo "Test 767: explain mode remains opt-in after 14A4"
+OUT=$("$CCT_BIN" sigilo baseline check "$SIG14A4_VALID" --baseline /tmp/cct_sigilo_14a4_missing_baseline.sigil --summary 2>&1) || true
+if ! echo "$OUT" | grep -q "sigilo.explain probable_cause="; then
+    test_pass "default baseline check output keeps explain logs opt-in"
+else
+    test_fail "baseline check emitted explain logs without --explain"
+fi
+
+# Test 768: public spec documents deterministic output contract for 14A4
+echo "Test 768: public spec documents deterministic output contract for 14A4"
+if grep -q "Deterministic output/log hygiene contract (FASE 14A.4)" docs/spec.md && \
+   grep -q "deterministic ordering" docs/spec.md; then
+    test_pass "spec documents 14A4 deterministic output/log hygiene contract"
+else
+    test_fail "spec is missing 14A4 deterministic output/log hygiene contract"
+fi
+
+echo ""
+echo "========================================"
+echo "FASE 14B1: Harmonização de Contratos Públicos Tests"
+echo "========================================"
+echo ""
+
+# Test 769: README status reflects 14A completion and 14 in-progress context
+echo "Test 769: README status reflects 14A completion and phase-14 context"
+if grep -q "Current status: FASE 14A.4 completed" README.md && \
+   grep -q "FASE 14 release-hardening is in progress" README.md; then
+    test_pass "README status is aligned with current 14A-complete / 14-in-progress context"
+else
+    test_fail "README status is not aligned with current 14A/14 context"
+fi
+
+# Test 770: spec baseline is aligned with 14A closure
+echo "Test 770: spec baseline is aligned with 14A closure"
+if grep -q "Specification baseline: \\*\\*FASE 14A.4\\*\\*" docs/spec.md; then
+    test_pass "spec baseline is aligned with FASE 14A.4"
+else
+    test_fail "spec baseline is not aligned with FASE 14A.4"
+fi
+
+# Test 771: architecture baseline references 14A.4 implementation state
+echo "Test 771: architecture baseline references 14A.4 implementation state"
+if grep -q "through \\*\\*FASE 13D.4 + FASE 13M.B2 + FASE 14A.4\\*\\*" docs/architecture.md && \
+   grep -q "## Current Architecture (FASE 14A.4)" docs/architecture.md; then
+    test_pass "architecture baseline is aligned with 14A.4"
+else
+    test_fail "architecture baseline is missing 14A.4 alignment"
+fi
+
+# Test 772: roadmap snapshot references current 14A completion context
+echo "Test 772: roadmap snapshot references current 14A completion context"
+if grep -q "Current completed subphase: FASE 14A.4" docs/roadmap.md && \
+   grep -q "FASE 14 is in progress" docs/roadmap.md; then
+    test_pass "roadmap snapshot is aligned with current 14A completion context"
+else
+    test_fail "roadmap snapshot is not aligned with current 14A completion context"
+fi
+
+# Test 773: CLI help/version status avoids stale 13A.4/12H references
+echo "Test 773: CLI help/version status avoids stale 13A.4/12H references"
+HELP_OUT=$("$CCT_BIN" --help 2>&1)
+VER_OUT=$("$CCT_BIN" --version 2>&1)
+if echo "$HELP_OUT" | grep -q "Current status: FASE 14A.4 completed" && \
+   echo "$VER_OUT" | grep -q "Build: FASE 14A" && \
+   ! echo "$HELP_OUT" | grep -q "FASE 13A.4 in progress over 12H baseline"; then
+    test_pass "CLI public status strings are harmonized with current contracts"
+else
+    test_fail "CLI public status strings are stale or inconsistent"
+fi
+
+# Test 774: README release-pack references use 13/13M canonical docs (no 12 references)
+echo "Test 774: README release-pack references use 13/13M canonical docs"
+if grep -q "docs/release/FASE_13_FINAL_SNAPSHOT.md" README.md && \
+   grep -q "docs/release/FASE_13M_FINAL_SNAPSHOT.md" README.md && \
+   ! grep -q "docs/release/FASE_12_FINAL_SNAPSHOT.md" README.md; then
+    test_pass "README release references are harmonized to 13/13M canonical package"
+else
+    test_fail "README release references still contain stale 12-based links"
+fi
+
+echo ""
+echo "========================================"
+echo "FASE 14B2: Guias Operacionais e Exemplos de Referência Tests"
+echo "========================================"
+echo ""
+
+# Test 775: consolidated sigilo operations guide exists
+echo "Test 775: consolidated sigilo operations guide exists"
+if [ -f "docs/sigilo_operations_14b2.md" ]; then
+    test_pass "14B2 consolidated sigilo operations guide exists"
+else
+    test_fail "14B2 consolidated sigilo operations guide is missing"
+fi
+
+# Test 776: operations guide includes core baseline/ci/explain workflows
+echo "Test 776: operations guide includes core baseline/ci/explain workflows"
+if grep -q "sigilo baseline update" docs/sigilo_operations_14b2.md && \
+   grep -q "sigilo baseline check" docs/sigilo_operations_14b2.md && \
+   grep -q -- "--sigilo-ci-profile advisory|gated|release" docs/sigilo_operations_14b2.md && \
+   grep -q -- "--explain" docs/sigilo_operations_14b2.md; then
+    test_pass "operations guide covers baseline, ci-profile, and explain workflows"
+else
+    test_fail "operations guide is missing one or more mandatory workflows"
+fi
+
+# Test 777: documented local validate workflow executes successfully
+echo "Test 777: documented local validate workflow executes successfully"
+SIG14B2_VALID="/tmp/cct_sigilo_14b2_valid.sigil"
+cat > "$SIG14B2_VALID" <<'SIGEOF'
+format = cct.sigil.v1
+sigilo_scope = local
+semantic_hash = 0123456789abcdef
+[totals]
+rituale = 1
+SIGEOF
+OUTPUT=$("$CCT_BIN" sigilo validate "$SIG14B2_VALID" --summary 2>&1) || true
+if echo "$OUTPUT" | grep -q "result=pass"; then
+    test_pass "documented local validate workflow executes successfully"
+else
+    test_fail "documented local validate workflow failed"
+fi
+
+# Test 778: documented strict check + explain workflow executes and emits explain line
+echo "Test 778: documented strict check + explain workflow executes and emits explain line"
+SIG14B2_LEFT="/tmp/cct_sigilo_14b2_left.sigil"
+SIG14B2_RIGHT="/tmp/cct_sigilo_14b2_right.sigil"
+cat > "$SIG14B2_LEFT" <<'SIGEOF'
+format = cct.sigil.v1
+sigilo_scope = local
+semantic_hash = aaaabbbbccccdddd
+[totals]
+rituale = 1
+SIGEOF
+cat > "$SIG14B2_RIGHT" <<'SIGEOF'
+format = cct.sigil.v1
+sigilo_scope = local
+semantic_hash = 1111222233334444
+[totals]
+rituale = 1
+SIGEOF
+OUTPUT=$("$CCT_BIN" sigilo check "$SIG14B2_LEFT" "$SIG14B2_RIGHT" --strict --summary --explain 2>&1) || true
+if echo "$OUTPUT" | grep -q "sigilo.explain probable_cause=" && \
+   echo "$OUTPUT" | grep -q "command=check"; then
+    test_pass "documented strict check + explain workflow executes as documented"
+else
+    test_fail "documented strict check + explain workflow did not match documented behavior"
+fi
+
+# Test 779: README/spec reference the consolidated 14B2 operations guide
+echo "Test 779: README/spec reference the consolidated 14B2 operations guide"
+if grep -q "docs/sigilo_operations_14b2.md" README.md && \
+   grep -q "docs/sigilo_operations_14b2.md" docs/spec.md; then
+    test_pass "README/spec reference the consolidated 14B2 operations guide"
+else
+    test_fail "README/spec are missing references to the 14B2 operations guide"
+fi
+
+# Test 780: roadmap and architecture record 14B2 operational-guide completion
+echo "Test 780: roadmap and architecture record 14B2 operational-guide completion"
+if grep -q "14B.2 implemented" docs/roadmap.md && \
+   grep -q "docs/sigilo_operations_14b2.md" docs/architecture.md; then
+    test_pass "roadmap/architecture record 14B2 operational-guide completion"
+else
+    test_fail "roadmap/architecture are missing 14B2 completion registration"
+fi
+
+echo ""
+echo "========================================"
+echo "FASE 14B3: Política de Publicação md_out vs docs Tests"
+echo "========================================"
+echo ""
+
+# Test 781: publication policy document exists (internal, md_out)
+echo "Test 781: publication policy document exists"
+if [ -f "md_out/docs/release/FASE_14_PUBLICATION_POLICY.md" ]; then
+    test_pass "14B3 publication policy document exists"
+else
+    test_fail "14B3 publication policy document is missing"
+fi
+
+# Test 782: public/private manifests exist (internal, md_out)
+echo "Test 782: public/private manifests exist"
+if [ -f "md_out/docs/release/FASE_14_PUBLIC_DOCS_MANIFEST.md" ] && \
+   [ -f "md_out/docs/release/FASE_14_PRIVATE_DOCS_MANIFEST.md" ]; then
+    test_pass "14B3 public/private manifests exist"
+else
+    test_fail "14B3 public/private manifests are missing"
+fi
+
+# Test 783: policy explicitly enforces md_out private boundary
+echo "Test 783: policy explicitly enforces md_out private boundary"
+if grep -q "md_out" md_out/docs/release/FASE_14_PUBLICATION_POLICY.md && \
+   grep -q "private" md_out/docs/release/FASE_14_PUBLICATION_POLICY.md; then
+    test_pass "policy explicitly enforces md_out private boundary"
+else
+    test_fail "policy does not explicitly enforce md_out private boundary"
+fi
+
+# Test 784: private manifest explicitly classifies md_out and PROJETO/FASE planning docs as private
+echo "Test 784: private manifest classifies planning docs as private"
+if grep -q "md_out/FASE_\\*" md_out/docs/release/FASE_14_PRIVATE_DOCS_MANIFEST.md && \
+   grep -q "md_out/PROJETO_\\*" md_out/docs/release/FASE_14_PRIVATE_DOCS_MANIFEST.md; then
+    test_pass "private manifest classifies md_out planning families as private"
+else
+    test_fail "private manifest is missing md_out planning-family classification"
+fi
+
+# Test 785: public docs manifest includes canonical public contracts and excludes md_out
+echo "Test 785: public docs manifest includes canonical contracts and excludes md_out"
+if grep -q "docs/spec.md" md_out/docs/release/FASE_14_PUBLIC_DOCS_MANIFEST.md && \
+   grep -q "docs/architecture.md" md_out/docs/release/FASE_14_PUBLIC_DOCS_MANIFEST.md && \
+   ! grep -q "md_out/" md_out/docs/release/FASE_14_PUBLIC_DOCS_MANIFEST.md; then
+    test_pass "public manifest includes canonical contracts and excludes md_out entries"
+else
+    test_fail "public manifest missing canonical contracts or leaking md_out entries"
+fi
+
+# Test 786: roadmap tracks 14B3 while publication policy remains private
+echo "Test 786: roadmap tracks 14B3 while publication policy remains private"
+if grep -q "14B.3 implemented" docs/roadmap.md && \
+   [ -f "md_out/docs/release/FASE_14_PUBLICATION_POLICY.md" ]; then
+    test_pass "14B3 tracking is present and publication policy is maintained privately"
+else
+    test_fail "14B3 tracking/private publication policy state is inconsistent"
+fi
+
+echo ""
+echo "========================================"
+echo "FASE 14B4: Pacote de Referência para Release Docs Tests"
+echo "========================================"
+echo ""
+
+# Test 787: release template pack files exist (internal, md_out)
+echo "Test 787: release template pack files exist"
+if [ -f "md_out/docs/release/FASE_14_RELEASE_TEMPLATE_SNAPSHOT.md" ] && \
+   [ -f "md_out/docs/release/FASE_14_RELEASE_TEMPLATE_NOTES.md" ] && \
+   [ -f "md_out/docs/release/FASE_14_RELEASE_TEMPLATE_KNOWN_LIMITS.md" ] && \
+   [ -f "md_out/docs/release/FASE_14_RELEASE_TEMPLATE_RESIDUAL_RISKS.md" ] && \
+   [ -f "md_out/docs/release/FASE_14_RELEASE_TEMPLATE_CLOSURE_GATE.md" ] && \
+   [ -f "md_out/docs/release/FASE_14_RELEASE_TEMPLATE_CHECKLIST.md" ]; then
+    test_pass "14B4 release template pack files exist"
+else
+    test_fail "14B4 release template pack is incomplete"
+fi
+
+# Test 788: snapshot template cross-references all mandatory release artifacts
+echo "Test 788: snapshot template cross-references all mandatory release artifacts"
+if grep -q "FASE_14_RELEASE_TEMPLATE_NOTES.md" md_out/docs/release/FASE_14_RELEASE_TEMPLATE_SNAPSHOT.md && \
+   grep -q "FASE_14_RELEASE_TEMPLATE_KNOWN_LIMITS.md" md_out/docs/release/FASE_14_RELEASE_TEMPLATE_SNAPSHOT.md && \
+   grep -q "FASE_14_RELEASE_TEMPLATE_RESIDUAL_RISKS.md" md_out/docs/release/FASE_14_RELEASE_TEMPLATE_SNAPSHOT.md && \
+   grep -q "FASE_14_RELEASE_TEMPLATE_CLOSURE_GATE.md" md_out/docs/release/FASE_14_RELEASE_TEMPLATE_SNAPSHOT.md; then
+    test_pass "snapshot template includes mandatory cross-references"
+else
+    test_fail "snapshot template is missing mandatory cross-references"
+fi
+
+# Test 789: closure-gate template references all required release artifacts
+echo "Test 789: closure-gate template references all required release artifacts"
+if grep -q "FASE_14_RELEASE_TEMPLATE_SNAPSHOT.md" md_out/docs/release/FASE_14_RELEASE_TEMPLATE_CLOSURE_GATE.md && \
+   grep -q "FASE_14_RELEASE_TEMPLATE_NOTES.md" md_out/docs/release/FASE_14_RELEASE_TEMPLATE_CLOSURE_GATE.md && \
+   grep -q "FASE_14_RELEASE_TEMPLATE_CHECKLIST.md" md_out/docs/release/FASE_14_RELEASE_TEMPLATE_CLOSURE_GATE.md; then
+    test_pass "closure-gate template references all required release artifacts"
+else
+    test_fail "closure-gate template is missing required artifact references"
+fi
+
+# Test 790: limits/risks templates enforce stable ID schemes
+echo "Test 790: limits/risks templates enforce stable ID schemes"
+if grep -q "LIMIT-14-001" md_out/docs/release/FASE_14_RELEASE_TEMPLATE_KNOWN_LIMITS.md && \
+   grep -q "RISK-14R-001" md_out/docs/release/FASE_14_RELEASE_TEMPLATE_RESIDUAL_RISKS.md; then
+    test_pass "limits/risks templates enforce stable ID schemes"
+else
+    test_fail "limits/risks templates are missing stable ID scheme guidance"
+fi
+
+# Test 791: template pack remains private
+echo "Test 791: template pack remains private"
+if ! grep -q "FASE_14_RELEASE_TEMPLATE_" docs/spec.md && \
+   ! grep -q "FASE_14_RELEASE_TEMPLATE_" docs/architecture.md; then
+    test_pass "14B4 template pack is kept out of public contract docs"
+else
+    test_fail "14B4 template-pack references leaked to public contract docs"
+fi
+
+# Test 792: roadmap records 14B4 completion and points next to 14C.1
+echo "Test 792: roadmap records 14B4 completion and points next to 14C.1"
+if grep -q "14B.4 implemented" docs/roadmap.md && \
+   grep -q "Next subphase to execute: FASE 14C.1" docs/roadmap.md; then
+    test_pass "roadmap records 14B4 completion and next 14C.1 step"
+else
+    test_fail "roadmap is missing 14B4 completion or next-step pointer to 14C.1"
+fi
+
+echo ""
+echo "========================================"
+echo "FASE 14C1: Expanded Regression Matrix Tests"
+echo "========================================"
+echo ""
+
+# Test 793: 14C1 script and release matrix document exist
+echo "Test 793: 14C1 script and release matrix document exist"
+if [ -f "tests/run_phase14c1_regression_matrix.sh" ] && \
+   [ -f "md_out/docs/release/FASE_14C1_REGRESSION_MATRIX.md" ]; then
+    test_pass "14C1 script and regression-matrix document exist"
+else
+    test_fail "14C1 script and/or regression-matrix document missing"
+fi
+
+# Test 794: 14C1 regression matrix script executes successfully
+echo "Test 794: 14C1 regression matrix script executes successfully"
+if bash tests/run_phase14c1_regression_matrix.sh >/tmp/cct_phase14c1_runner.out 2>&1; then
+    test_pass "14C1 regression matrix script passed"
+else
+    test_fail "14C1 regression matrix script failed"
+fi
+
+# Test 795: 14C1 script emitted expected proof points in outputs
+echo "Test 795: 14C1 script emitted expected proof points in outputs"
+if grep -q "STAR_STAR" /tmp/cct_phase14c1_math_tokens.out && \
+   grep -q "sigil_diff.summary" /tmp/cct_phase14c1_check.out && \
+   grep -q "sigilo baseline check blocked (strict mode)" /tmp/cct_phase14c1_baseline_check.out; then
+    test_pass "14C1 output artifacts confirm strict drift and 13M token checks"
+else
+    test_fail "14C1 output artifacts are missing expected strict/token proof points"
+fi
+
+# Test 796: architecture/roadmap capture 14C1 implementation
+echo "Test 796: architecture/roadmap capture 14C1 implementation"
+if grep -q "FASE 14C.1" docs/architecture.md && \
+   grep -q "14C.1/14C.2/14C.3/14C.4 implemented" docs/roadmap.md; then
+    test_pass "architecture/roadmap capture 14C1 implementation"
+else
+    test_fail "architecture/roadmap missing 14C1 implementation registration"
+fi
+
+echo ""
+echo "========================================"
+echo "FASE 14C2: Stress/Soak Stability Tests"
+echo "========================================"
+echo ""
+
+# Test 797: 14C2 script and report document exist
+echo "Test 797: 14C2 script and report document exist"
+if [ -f "tests/run_phase14c2_stress_soak.sh" ] && \
+   [ -f "md_out/docs/release/FASE_14C2_STRESS_SOAK_REPORT.md" ]; then
+    test_pass "14C2 script and stress/soak report document exist"
+else
+    test_fail "14C2 script and/or stress/soak report document missing"
+fi
+
+# Test 798: 14C2 stress/soak script executes successfully
+echo "Test 798: 14C2 stress/soak script executes successfully"
+if bash tests/run_phase14c2_stress_soak.sh 6 >/tmp/cct_phase14c2_runner.out 2>&1; then
+    test_pass "14C2 stress/soak script passed"
+else
+    test_fail "14C2 stress/soak script failed"
+fi
+
+# Test 799: 14C2 report captures stable/failure-free outcome
+echo "Test 799: 14C2 report captures stable/failure-free outcome"
+if grep -q "^failures=0$" /tmp/cct_phase14c2_stress/report.txt && \
+   grep -q "^status=stable$" /tmp/cct_phase14c2_stress/report.txt; then
+    test_pass "14C2 report records stable and failure-free run"
+else
+    test_fail "14C2 report does not record expected stable status"
+fi
+
+# Test 800: architecture/roadmap capture 14C2 implementation
+echo "Test 800: architecture/roadmap capture 14C2 implementation"
+if grep -q "FASE 14C.2" docs/architecture.md && \
+   grep -q "14C.1/14C.2/14C.3/14C.4 implemented" docs/roadmap.md; then
+    test_pass "architecture/roadmap capture 14C2 implementation"
+else
+    test_fail "architecture/roadmap missing 14C2 implementation registration"
+fi
+
+echo ""
+echo "========================================"
+echo "FASE 14C3: Performance Budget Gate Tests"
+echo "========================================"
+echo ""
+
+# Test 801: 14C3 script and perf baseline doc exist
+echo "Test 801: 14C3 script and perf baseline doc exist"
+if [ -f "tests/run_phase14c3_perf_budget.sh" ] && \
+   [ -f "md_out/docs/release/FASE_14C3_PERF_BASELINE.md" ]; then
+    test_pass "14C3 script and perf baseline doc exist"
+else
+    test_fail "14C3 script and/or perf baseline doc missing"
+fi
+
+# Test 802: 14C3 performance budget script executes successfully
+echo "Test 802: 14C3 performance budget script executes successfully"
+if bash tests/run_phase14c3_perf_budget.sh 2 >/tmp/cct_phase14c3_runner.out 2>&1; then
+    test_pass "14C3 performance budget script passed"
+else
+    test_fail "14C3 performance budget script failed"
+fi
+
+# Test 803: 14C3 baseline artifact includes metrics and budgets
+echo "Test 803: 14C3 baseline artifact includes metrics and budgets"
+if grep -q "^help_avg_ms=" /tmp/cct_phase14c3_perf/baseline.txt && \
+   grep -q "^check_avg_ms=" /tmp/cct_phase14c3_perf/baseline.txt && \
+   grep -q "^validate_avg_ms=" /tmp/cct_phase14c3_perf/baseline.txt && \
+   grep -q "^budget_help_ms=" /tmp/cct_phase14c3_perf/baseline.txt; then
+    test_pass "14C3 baseline artifact includes expected metric/budget fields"
+else
+    test_fail "14C3 baseline artifact missing expected metric/budget fields"
+fi
+
+# Test 804: architecture/roadmap capture 14C3 implementation
+echo "Test 804: architecture/roadmap capture 14C3 implementation"
+if grep -q "FASE 14C.3" docs/architecture.md && \
+   grep -q "14C.1/14C.2/14C.3/14C.4 implemented" docs/roadmap.md; then
+    test_pass "architecture/roadmap capture 14C3 implementation"
+else
+    test_fail "architecture/roadmap missing 14C3 implementation registration"
+fi
+
+echo ""
+echo "========================================"
+echo "FASE 14C4: Known Limits and Residual Risks Tests"
+echo "========================================"
+echo ""
+
+# Test 805: 14C4 release docs exist
+echo "Test 805: 14C4 release docs exist"
+if [ -f "docs/release/FASE_14_KNOWN_LIMITS.md" ] && \
+   [ -f "md_out/docs/release/FASE_14_RESIDUAL_RISKS.md" ]; then
+    test_pass "14C4 known-limits and residual-risks docs exist"
+else
+    test_fail "14C4 known-limits and/or residual-risks docs missing"
+fi
+
+# Test 806: 14C4 release docs expose stable IDs and mitigation metadata
+echo "Test 806: 14C4 release docs expose stable IDs and mitigation metadata"
+if grep -q "LIMIT-14-001" docs/release/FASE_14_KNOWN_LIMITS.md && \
+   grep -q "LIMIT-14-003" docs/release/FASE_14_KNOWN_LIMITS.md && \
+   grep -q "RISK-14R-001" md_out/docs/release/FASE_14_RESIDUAL_RISKS.md && \
+   grep -q "RISK-14R-003" md_out/docs/release/FASE_14_RESIDUAL_RISKS.md && \
+   grep -q "Mitigation:" md_out/docs/release/FASE_14_RESIDUAL_RISKS.md; then
+    test_pass "14C4 docs provide stable IDs and mitigation metadata"
+else
+    test_fail "14C4 docs missing stable IDs and/or mitigation metadata"
+fi
+
+# Test 807: architecture/roadmap capture 14C4 implementation
+echo "Test 807: architecture/roadmap capture 14C4 implementation"
+if grep -q "FASE 14C.4" docs/architecture.md && \
+   grep -q "14C.1/14C.2/14C.3/14C.4 implemented" docs/roadmap.md; then
+    test_pass "architecture/roadmap capture 14C4 implementation"
+else
+    test_fail "architecture/roadmap missing 14C4 implementation registration"
+fi
+
+echo ""
+echo "========================================"
+echo "FASE 14D1: Reproducible Packaging Gate Tests"
+echo "========================================"
+echo ""
+
+# Test 808: 14D1 script and packaging reproducibility doc exist
+echo "Test 808: 14D1 script and packaging reproducibility doc exist"
+if [ -f "tests/run_phase14d1_packaging_repro.sh" ] && \
+   [ -f "md_out/docs/release/FASE_14D1_PACKAGING_REPRODUCIBILITY.md" ]; then
+    test_pass "14D1 script and packaging reproducibility doc exist"
+else
+    test_fail "14D1 script and/or packaging reproducibility doc missing"
+fi
+
+# Test 809: 14D1 packaging reproducibility script executes successfully
+echo "Test 809: 14D1 packaging reproducibility script executes successfully"
+if bash tests/run_phase14d1_packaging_repro.sh >/tmp/cct_phase14d1_runner.out 2>&1; then
+    test_pass "14D1 packaging reproducibility script passed"
+else
+    test_fail "14D1 packaging reproducibility script failed"
+fi
+
+# Test 810: 14D1 generated dist artifacts contain mandatory files
+echo "Test 810: 14D1 generated dist artifacts contain mandatory files"
+if [ -f "/tmp/cct_phase14d1_packaging/dist_a/CHECKSUMS.sha256" ] && \
+   [ -f "/tmp/cct_phase14d1_packaging/dist_b/CHECKSUMS.sha256" ] && \
+   [ -f "/tmp/cct_phase14d1_packaging/dist_a/docs/spec.md" ]; then
+    test_pass "14D1 generated dist artifacts include mandatory files"
+else
+    test_fail "14D1 generated dist artifacts are missing mandatory files"
+fi
+
+# Test 811: architecture/roadmap capture 14D1 implementation
+echo "Test 811: architecture/roadmap capture 14D1 implementation"
+if grep -q "FASE 14D.1" docs/architecture.md && \
+   grep -q "14D.1/14D.2/14D.3/14D.4 implemented" docs/roadmap.md; then
+    test_pass "architecture/roadmap capture 14D1 implementation"
+else
+    test_fail "architecture/roadmap missing 14D1 implementation registration"
+fi
+
+echo ""
+echo "========================================"
+echo "FASE 14D2: RC Validation Matrix Tests"
+echo "========================================"
+echo ""
+
+# Test 812: 14D2 script and RC validation matrix doc exist
+echo "Test 812: 14D2 script and RC validation matrix doc exist"
+if [ -f "tests/run_phase14d2_rc_validation.sh" ] && \
+   [ -f "md_out/docs/release/FASE_14D2_RC_VALIDATION_MATRIX.md" ]; then
+    test_pass "14D2 script and RC validation matrix doc exist"
+else
+    test_fail "14D2 script and/or RC validation matrix doc missing"
+fi
+
+# Test 813: 14D2 RC validation script executes successfully
+echo "Test 813: 14D2 RC validation script executes successfully"
+if bash tests/run_phase14d2_rc_validation.sh >/tmp/cct_phase14d2_runner.out 2>&1; then
+    test_pass "14D2 RC validation script passed"
+else
+    test_fail "14D2 RC validation script failed"
+fi
+
+# Test 814: 14D2 validation outputs contain expected pass contracts
+echo "Test 814: 14D2 validation outputs contain expected pass contracts"
+if grep -q "Usage:" /tmp/cct_phase14d2_help.out && \
+   grep -q "sigilo.inspect.summary" /tmp/cct_phase14d2_inspect.out && \
+   grep -q "result=pass" /tmp/cct_phase14d2_validate.out; then
+    test_pass "14D2 output artifacts match expected RC contracts"
+else
+    test_fail "14D2 output artifacts missing expected RC contract signals"
+fi
+
+# Test 815: architecture/roadmap capture 14D2 implementation
+echo "Test 815: architecture/roadmap capture 14D2 implementation"
+if grep -q "FASE 14D.2" docs/architecture.md && \
+   grep -q "14D.1/14D.2/14D.3/14D.4 implemented" docs/roadmap.md; then
+    test_pass "architecture/roadmap capture 14D2 implementation"
+else
+    test_fail "architecture/roadmap missing 14D2 implementation registration"
+fi
+
+echo ""
+echo "========================================"
+echo "FASE 14D3: Final Release Artifact Consolidation Tests"
+echo "========================================"
+echo ""
+
+# Test 816: mandatory 14D3 release artifacts exist
+echo "Test 816: mandatory 14D3 release artifacts exist"
+if [ -f "docs/release/FASE_14_FINAL_SNAPSHOT.md" ] && \
+   [ -f "docs/release/FASE_14_RELEASE_NOTES.md" ] && \
+   [ -f "docs/release/FASE_14_STABILITY_MATRIX.md" ] && \
+   [ -f "docs/release/FASE_14_COMPATIBILITY_MATRIX.md" ]; then
+    test_pass "14D3 mandatory release artifacts exist"
+else
+    test_fail "14D3 mandatory release artifacts are incomplete"
+fi
+
+# Test 817: 14D3 artifacts cross-reference canonical closure package
+echo "Test 817: 14D3 artifacts cross-reference canonical closure package"
+if grep -q "Consolidation stage: 14D.4" docs/release/FASE_14_FINAL_SNAPSHOT.md && \
+   grep -q "docs/release/FASE_14_FINAL_SNAPSHOT.md" docs/release/FASE_14_RELEASE_NOTES.md && \
+   grep -q "RC_VALIDATION_MATRIX" docs/release/FASE_14_STABILITY_MATRIX.md && \
+   grep -q "Exit-code semantics are now explicitly canonicalized" docs/release/FASE_14_COMPATIBILITY_MATRIX.md; then
+    test_pass "14D3 artifacts are cross-referenced and semantically coherent"
+else
+    test_fail "14D3 artifacts are missing expected cross-references/coherence markers"
+fi
+
+# Test 818: roadmap registers 14D3 consolidation in phase status
+echo "Test 818: roadmap registers 14D3 consolidation in phase status"
+if grep -q "14D.1/14D.2/14D.3/14D.4 implemented" docs/roadmap.md; then
+    test_pass "roadmap registers 14D3 in consolidated 14D status"
+else
+    test_fail "roadmap is missing 14D3 consolidated status registration"
+fi
+
+echo ""
+echo "========================================"
+echo "FASE 14D4: Closure Gate and Rollback Tests"
+echo "========================================"
+echo ""
+
+# Test 819: closure gate and rollback plan docs exist and carry pass/rollback contracts
+echo "Test 819: closure gate and rollback plan docs exist and carry contracts"
+if [ -f "md_out/docs/release/FASE_14_CLOSURE_GATE.md" ] && \
+   [ -f "md_out/docs/release/FASE_14_ROLLBACK_PLAN.md" ] && \
+   grep -q "Decision: PASS" md_out/docs/release/FASE_14_CLOSURE_GATE.md && \
+   grep -q "Rollback Procedure" md_out/docs/release/FASE_14_ROLLBACK_PLAN.md; then
+    test_pass "14D4 closure/rollback docs exist with pass and rollback contracts"
+else
+    test_fail "14D4 closure/rollback docs missing or incomplete"
+fi
+
+# Test 820: final snapshot/closure and roadmap next-step context are aligned with 14 closure
+echo "Test 820: final snapshot/closure and roadmap next-step context are aligned"
+if grep -q "Implemented subphases: \`14A1..14A4\`, \`14B1..14B4\`, \`14C1..14C4\`, \`14D1..14D4\`." docs/release/FASE_14_FINAL_SNAPSHOT.md && \
+   grep -q "Gate date: 2026-03-05" md_out/docs/release/FASE_14_CLOSURE_GATE.md && \
+   grep -q "Next phase to execute: FASE 15" docs/roadmap.md; then
+    test_pass "14 closure artifacts and roadmap next-step context are aligned"
+else
+    test_fail "14 closure artifacts and roadmap next-step context are not aligned"
+fi
+
+cleanup_codegen_artifacts "tests/integration/math_pow_basic_13m.cct"
+cleanup_codegen_artifacts "tests/integration/math_pow_assoc_13m.cct"
+cleanup_codegen_artifacts "tests/integration/math_pow_real_13m.cct"
+cleanup_codegen_artifacts "tests/integration/math_pow_2_10_13m.cct"
+cleanup_codegen_artifacts "tests/integration/math_pow_parenthesized_13m.cct"
+cleanup_codegen_artifacts "tests/integration/math_idiv_floor_13m.cct"
+cleanup_codegen_artifacts "tests/integration/math_idiv_signs_13m.cct"
+cleanup_codegen_artifacts "tests/integration/math_emod_euclid_13m.cct"
+cleanup_codegen_artifacts "tests/integration/math_emod_signs_13m.cct"
+cleanup_codegen_artifacts "tests/integration/math_precedence_mix_13m.cct"
+cleanup_codegen_artifacts "tests/integration/math_precedence_parentheses_13m.cct"
+cleanup_codegen_artifacts "tests/integration/math_variables_combo_13m.cct"
+cleanup_codegen_artifacts "tests/integration/math_return_expr_13m.cct"
+cleanup_codegen_artifacts "tests/integration/math_control_expr_13m.cct"
+cleanup_codegen_artifacts "examples/math_common_ops_13m.cct"
+cleanup_codegen_artifacts "tests/integration/math_idiv_zero_13m.cct"
+cleanup_codegen_artifacts "tests/integration/math_emod_zero_13m.cct"
+cleanup_codegen_artifacts "tests/integration/math_pow_type_error_13m.cct"
+cleanup_codegen_artifacts "tests/integration/math_idiv_type_error_13m.cct"
+cleanup_codegen_artifacts "tests/integration/math_emod_type_error_13m.cct"
+rm -f /tmp/cct_13m_a2_tokens.cct
+rm -f /tmp/cct_13m_a2_identity.cct /tmp/cct_13m_a2_identity
+rm -f /tmp/cct_13m_a2_legacy_mod.cct /tmp/cct_13m_a2_legacy_mod
+rm -f /tmp/cct_13m_a2_*.out
+rm -f /tmp/cct_13m_b1_identity_pos.cct /tmp/cct_13m_b1_identity_pos
+rm -f /tmp/cct_13m_b1_identity_neg.cct /tmp/cct_13m_b1_identity_neg
+rm -f /tmp/cct_13m_b1_legacy_mod_repeat.cct /tmp/cct_13m_b1_legacy_mod_repeat
+rm -f /tmp/cct_13m_b1_ast_chain.cct
+rm -f /tmp/cct_13m_b1_*.out
+rm -f /tmp/cct_13m_b2_*.out
+
 cleanup_codegen_artifacts "tests/integration/codegen_minimal.cct"
 cleanup_codegen_artifacts "tests/integration/sigilo_minimal.cct"
 cleanup_codegen_artifacts "tests/integration/sigilo_if.cct"
@@ -6776,6 +10727,28 @@ cleanup_codegen_artifacts "tests/integration/sigilo_call.cct"
 cleanup_codegen_artifacts "tests/integration/parser_test.cct"
 cleanup_codegen_artifacts "tests/integration/sigilo_structural_variant_a.cct"
 cleanup_codegen_artifacts "tests/integration/sigilo_structural_variant_b.cct"
+cleanup_codegen_artifacts "tests/integration/sigilo_workflow_local_smoke_13b1.cct"
+cleanup_codegen_artifacts "tests/integration/project_sigilo_build_optin_13b2.cct"
+cleanup_codegen_artifacts "tests/integration/project_sigilo_test_optin_13b2.cct"
+cleanup_codegen_artifacts "tests/integration/project_sigilo_cache_13b2.cct"
+cleanup_codegen_artifacts "tests/integration/sigilo_ci_profile_advisory_13b3.cct"
+cleanup_codegen_artifacts "tests/integration/sigilo_ci_profile_gated_13b3.cct"
+cleanup_codegen_artifacts "tests/integration/sigilo_ci_profile_release_13b3.cct"
+cleanup_codegen_artifacts "tests/integration/sigilo_report_summary_13b4.cct"
+cleanup_codegen_artifacts "tests/integration/sigilo_report_explain_13b4.cct"
+cleanup_codegen_artifacts "tests/integration/sigilo_schema_backward_13c1.cct"
+cleanup_codegen_artifacts "tests/integration/sigilo_schema_forward_13c1.cct"
+cleanup_codegen_artifacts "tests/integration/sigilo_metadata_new_blocks_13c2.cct"
+cleanup_codegen_artifacts "tests/integration/sigilo_metadata_diff_blocks_13c2.cct"
+cleanup_codegen_artifacts "tests/integration/sigilo_consumer_legacy_13c3.cct"
+cleanup_codegen_artifacts "tests/integration/sigilo_consumer_current_13c3.cct"
+cleanup_codegen_artifacts "tests/integration/sigilo_consumer_strict_13c3.cct"
+cleanup_codegen_artifacts "tests/integration/sigilo_validate_tolerant_13c4.cct"
+cleanup_codegen_artifacts "tests/integration/sigilo_validate_strict_13c4.cct"
+cleanup_codegen_artifacts "tests/integration/sigilo_validate_schema_violation_13c4.cct"
+cleanup_codegen_artifacts "tests/integration/phase13_regression_13d1/single_file/smoke.cct"
+cleanup_codegen_artifacts "tests/integration/phase13_regression_13d1/multi_module/main.cct"
+cleanup_codegen_artifacts "tests/integration/phase13_regression_13d1/multi_module/modules/util.cct"
 cleanup_codegen_artifacts "tests/integration/codegen_type_not_supported_real.cct"
 cleanup_codegen_artifacts "tests/integration/codegen_real_basic.cct"
 cleanup_codegen_artifacts "tests/integration/codegen_real_return.cct"
@@ -7173,6 +11146,136 @@ rm -f tests/integration/tmp_sig_11g_complete.__mod_001.svg tests/integration/tmp
 rm -f tests/integration/tmp_sig_11g_complete.__mod_002.svg tests/integration/tmp_sig_11g_complete.__mod_002.sigil
 rm -f tests/integration/tmp_sig_11g_complete.__mod_003.svg tests/integration/tmp_sig_11g_complete.__mod_003.sigil
 rm -f tests/runtime/test_fluxus_storage
+rm -f tests/runtime/test_sigil_parse
+rm -f tests/runtime/test_sigil_diff
+rm -f tests/runtime/test_diagnostic_taxonomy
+rm -f /tmp/cct_exit_14a2_unknown.out
+rm -f /tmp/cct_exit_14a2_missing.out
+rm -f /tmp/cct_exit_14a2_invalid.out
+rm -f /tmp/cct_exit_14a2_fmt_check.out
+rm -f /tmp/cct_exit_14a2_validate.out
+rm -f /tmp/cct_exit_14a2_base_update.out
+rm -f /tmp/cct_exit_14a2_base_check.out
+rm -f /tmp/cct_sigilo_14a2_invalid.sigil
+rm -f /tmp/cct_sigilo_14a2_base_a.sigil
+rm -f /tmp/cct_sigilo_14a2_base_b.sigil
+rm -f /tmp/cct_sigilo_14a2_baseline.sigil
+rm -f /tmp/cct_sigilo_14a2_baseline.baseline.meta
+rm -f /tmp/cct_sigilo_14a1_invalid.sigil
+rm -f /tmp/cct_sigilo_cli_13a3_a.sigil
+rm -f /tmp/cct_sigilo_cli_13a3_b.sigil
+rm -f /tmp/cct_sigilo_cli_13a3_c.sigil
+rm -f /tmp/cct_sigilo_cli_13a3_d.sigil
+rm -f /tmp/cct_sigilo_cli_13a3_e.sigil
+rm -f /tmp/cct_sigilo_cli_13a3_check.out
+rm -f /tmp/cct_sigilo_cli_13a3_check_clean.out
+rm -f /tmp/cct_sigilo_cli_13a3_check_info.out
+rm -f /tmp/cct_sigilo_cli_13a3_check_review.out
+rm -f /tmp/cct_sigilo_baseline_13a4_local.sigil
+rm -f /tmp/cct_sigilo_baseline_13a4_local.baseline.meta
+rm -f /tmp/cct_sigilo_baseline_13a4_corrupt.sigil
+rm -f /tmp/cct_sigilo_baseline_13a4_corrupt.baseline.meta
+rm -f /tmp/cct_sigilo_baseline_13a4_snapshot.sigil
+rm -f /tmp/cct_sigilo_baseline_13a4_info.out
+rm -f /tmp/cct_sigilo_baseline_13a4_review.out
+rm -f /tmp/cct_sigilo_baseline_13a4_behavior.out
+rm -f /tmp/cct_sigilo_baseline_13a4_force_reset.out
+rm -rf /tmp/cct_sigilo_baseline_proj_13a4
+rm -rf /tmp/cct_sigilo_workflow_13b1
+rm -f /tmp/cct_sigilo_workflow_13b1_drift.sigil
+rm -f /tmp/cct_sigilo_workflow_13b1_fmt.out
+rm -f /tmp/cct_sigilo_workflow_13b1_lint.out
+rm -f /tmp/cct_sigilo_workflow_13b1_build.out
+rm -f /tmp/cct_sigilo_workflow_13b1_check_missing.out
+rm -f /tmp/cct_sigilo_workflow_13b1_update.out
+rm -f /tmp/cct_sigilo_workflow_13b1_check_ok.out
+rm -f /tmp/cct_sigilo_workflow_13b1_fmt_check.out
+rm -f /tmp/cct_sigilo_workflow_13b1_lint_strict.out
+rm -f /tmp/cct_sigilo_workflow_13b1_test.out
+rm -f /tmp/cct_sigilo_workflow_13b1_strict_ok.out
+rm -f /tmp/cct_sigilo_workflow_13b1_strict_drift.out
+rm -f /tmp/cct_sigilo_workflow_13b1_nosig_build.out
+rm -f /tmp/cct_sigilo_workflow_13b1_nosig_test.out
+rm -rf /tmp/cct_project_sigilo_13b2
+rm -f /tmp/cct_project_sigilo_13b2_custom.sigil
+rm -f /tmp/cct_project_sigilo_13b2_custom.baseline.meta
+rm -f /tmp/cct_project_sigilo_13b2_block.sigil
+rm -f /tmp/cct_project_sigilo_13b2_block.baseline.meta
+rm -f /tmp/cct_project_sigilo_13b2_baseline_update.out
+rm -f /tmp/cct_project_sigilo_13b2_default_baseline_update.out
+rm -f /tmp/cct_project_sigilo_13b2_build_warmup.out
+rm -rf /tmp/cct_sigilo_ci_13b3
+rm -f /tmp/cct_sigilo_ci_13b3_base.sigil
+rm -f /tmp/cct_sigilo_ci_13b3_base.baseline.meta
+rm -f /tmp/cct_sigilo_ci_13b3_behavioral.sigil
+rm -f /tmp/cct_sigilo_ci_13b3_behavioral.baseline.meta
+rm -f /tmp/cct_sigilo_ci_13b3_review_base.sigil
+rm -f /tmp/cct_sigilo_ci_13b3_review_base.baseline.meta
+rm -f /tmp/cct_sigilo_ci_13b3_info_base.sigil
+rm -f /tmp/cct_sigilo_ci_13b3_info_base.baseline.meta
+rm -f /tmp/cct_sigilo_ci_13b3_missing.sigil
+rm -f /tmp/cct_sigilo_ci_13b3_missing.baseline.meta
+rm -f /tmp/cct_sigilo_ci_13b3_bootstrap.out
+rm -f /tmp/cct_sigilo_ci_13b3_update_base.out
+rm -f /tmp/cct_sigilo_ci_13b3_test_base.sigil
+rm -f /tmp/cct_sigilo_ci_13b3_test_base.baseline.meta
+rm -f /tmp/cct_sigilo_ci_13b3_bench_base.sigil
+rm -f /tmp/cct_sigilo_ci_13b3_bench_base.baseline.meta
+rm -f /tmp/cct_sigilo_ci_13b3_test_bootstrap.out
+rm -f /tmp/cct_sigilo_ci_13b3_bench_bootstrap.out
+rm -f /tmp/cct_sigilo_ci_13b3_test_base_update.out
+rm -f /tmp/cct_sigilo_ci_13b3_bench_base_update.out
+rm -rf /tmp/cct_phase13d1_regression
+rm -rf /tmp/cct_phase13d1_global
+rm -rf /tmp/cct_phase13_determinism_audit
+rm -rf /tmp/cct_phase13d2_global
+rm -f /tmp/cct_phase13d2_runner.out
+rm -f /tmp/cct_phase13d2_inspect_1.out
+rm -f /tmp/cct_phase13d2_inspect_2.out
+rm -f /tmp/cct_phase13d2_base_update.out
+rm -f /tmp/cct_phase13d2_basecheck_1.out
+rm -f /tmp/cct_phase13d2_basecheck_2.out
+rm -f /tmp/cct_phase13d2_drift_1.out
+rm -f /tmp/cct_phase13d2_drift_2.out
+rm -f /tmp/cct_phase13d2_validate_1.out
+rm -f /tmp/cct_phase13d2_validate_2.out
+rm -f /tmp/cct_phase13d2_volatile.out
+rm -rf /tmp/cct_phase13d3_global
+rm -f /tmp/cct_phase13d3_base_update.out
+rm -rf /tmp/cct_phase13d4_global
+rm -f /tmp/cct_phase13d4_regression.out
+rm -f /tmp/cct_phase13d4_determinism.out
+rm -f /tmp/cct_phase13d4_base_update.out
+rm -f /tmp/cct_phase14c1_check.out
+rm -f /tmp/cct_phase14c1_update.out
+rm -f /tmp/cct_phase14c1_baseline_check.out
+rm -f /tmp/cct_phase14c1_math_check.out
+rm -f /tmp/cct_phase14c1_math_tokens.out
+rm -f /tmp/cct_phase14c1_build.out
+rm -f /tmp/cct_phase14c1_doc.out
+rm -f /tmp/cct_phase14c1_runner.out
+rm -rf /tmp/cct_phase14c1_regression
+rm -f /tmp/cct_phase14c2_runner.out
+rm -f /tmp/cct_phase14c2_check_*.out
+rm -f /tmp/cct_phase14c2_sigilo_*.out
+rm -f /tmp/cct_phase14c2_validate_*.out
+rm -rf /tmp/cct_phase14c2_stress
+rm -f /tmp/cct_phase14c3_runner.out
+rm -rf /tmp/cct_phase14c3_perf
+rm -f /tmp/cct_phase14d1_dist_a.out
+rm -f /tmp/cct_phase14d1_dist_b.out
+rm -f /tmp/cct_phase14d1_help.out
+rm -f /tmp/cct_phase14d1_runner.out
+rm -rf /tmp/cct_phase14d1_packaging
+rm -f /tmp/cct_phase14d2_dist.out
+rm -f /tmp/cct_phase14d2_version.out
+rm -f /tmp/cct_phase14d2_help.out
+rm -f /tmp/cct_phase14d2_check.out
+rm -f /tmp/cct_phase14d2_sigilo.out
+rm -f /tmp/cct_phase14d2_inspect.out
+rm -f /tmp/cct_phase14d2_validate.out
+rm -f /tmp/cct_phase14d2_runner.out
+rm -rf /tmp/cct_phase14d2_rc
 
 # Summary
 echo ""

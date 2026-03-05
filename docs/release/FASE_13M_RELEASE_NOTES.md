@@ -31,4 +31,8 @@ Status: closed in the final 13M release gate.
 ## Closure Evidence
 
 - global test suite includes dedicated 13M scope/implementation/quality/release blocks.
-- final gate references are documented in `FASE_13M_CLOSURE_GATE.md`.
+
+## Deferred and Out-of-Scope
+
+- deferred: additional low-frequency operators and extended mathematical notation remain outside this addendum.
+- out-of-scope: new DSL constructs unrelated to common arithmetic workflows.

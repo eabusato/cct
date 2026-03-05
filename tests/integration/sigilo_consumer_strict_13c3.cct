@@ -1,0 +1,16 @@
+INCIPIT grimoire "sigilo_consumer_strict_13c3"
+
+RITUALE produce() REDDE REX
+  EVOCA REX x AD 5
+  SI x > 2
+    REDDE x
+  ALITER
+    REDDE 0
+  FIN SI
+EXPLICIT RITUALE
+
+RITUALE main() REDDE REX
+  REDDE CONIURA produce()
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

@@ -1,0 +1,9 @@
+INCIPIT grimoire "math_emod_type_error_13m"
+
+RITUALE main() REDDE REX
+  EVOCA VERBUM s AD "3"
+  EVOCA REX r AD 7 %% s
+  REDDE r
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

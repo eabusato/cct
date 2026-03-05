@@ -1,0 +1,21 @@
+INCIPIT grimoire "sigilo_metadata_new_blocks_13c2"
+
+RITUALE fold_values() REDDE REX
+  EVOCA REX total AD 0
+  REPETE i DE 0 AD 4
+    VINCIRE total AD total + i
+  FIN REPETE
+  REDDE total
+EXPLICIT RITUALE
+
+RITUALE main() REDDE REX
+  EVOCA REX value AD CONIURA fold_values()
+  SI value > 2
+    OBSECRO scribe("13c2-metadata\n")
+  ALITER
+    OBSECRO scribe("13c2-fallback\n")
+  FIN SI
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

@@ -16,8 +16,9 @@ It has two goals:
 
 ## Current Project Snapshot
 
-- **Current completed phase:** FASE 13D.4 (sigilo tooling expansion formally closed)
-- **Current addendum closure:** FASE 13M.B2 (common math operators package formally closed)
+- Current completed phase: FASE 13D.4 (sigilo tooling expansion formally closed)
+- Current completed subphase: FASE 14A.4 (release-hardening block A completed)
+- Current phase context: FASE 13D.4 and FASE 13M.B2 remain formally closed; FASE 14 is in progress
 - **Compiler maturity:** complete development toolchain with formatter, linter, build system, and doc generator
 - **Backend strategy:** C-hosted backend is official (`.cgen.c` + host C compiler)
 - **Sigilo model:** dual-level modular model is stable (local + system sigilo)
@@ -490,6 +491,15 @@ Out of scope:
 Definition of done:
 - release-quality docs + predictable tooling behavior + stable regression story
 
+Current execution status:
+- 14A.1/14A.2/14A.3/14A.4 implemented and regression-closed
+- 14B.1 implemented (public contract harmonization)
+- 14B.2 implemented (operational guides and reference workflows)
+- 14B.3 implemented (publication boundary policy + public/private manifests)
+- 14B.4 implemented (release-doc template/reference package)
+- 14C.1/14C.2/14C.3/14C.4 implemented (regression audit, stress/soak, performance budget, residual risk register)
+- 14D.1/14D.2/14D.3/14D.4 implemented (packaging reproducibility, RC matrix, final consolidation, closure gate + rollback)
+
 ### FASE 15 — Bootstrap Trajectory
 
 Primary objective:
@@ -544,4 +554,6 @@ Every phase must pass these gates before closure:
 
 ## Immediate Next Step
 
-**Next phase to execute:** FASE 14, release hardening on top of the closed and audited FASE 13 package.
+Next phase to execute: FASE 15 (bootstrap trajectory planning on top of closed FASE 14 baseline).
+Next subphase to execute: FASE 14C.1, baseline workflow hardening on top of completed documentation block.
+Historical traceability note: the line above is intentionally preserved as the recorded transition point used to close FASE 14 execution history.

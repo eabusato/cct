@@ -1,0 +1,11 @@
+INCIPIT grimoire "phase13d1_project_bench"
+
+RITUALE bench_smoke() REDDE REX
+  EVOCA REX i AD 0
+  REPETE i DE 0 AD 2
+    VINCIRE i AD i + 1
+  FIN REPETE
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

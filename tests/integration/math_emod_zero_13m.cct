@@ -1,0 +1,10 @@
+INCIPIT grimoire "math_emod_zero_13m"
+
+RITUALE main() REDDE REX
+  EVOCA REX a AD 10
+  EVOCA REX b AD 0
+  EVOCA REX c AD a %% b
+  REDDE c
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

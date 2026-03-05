@@ -81,3 +81,6 @@ temp/
 # Environment
 .env
 .env.local
+
+#Project Plan Files
+md_out/

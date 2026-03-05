@@ -1,0 +1,8 @@
+INCIPIT grimoire "phase13d1_single_smoke"
+
+RITUALE main() REDDE REX
+  EVOCA REX acc AD 1
+  REDDE acc
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

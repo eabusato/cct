@@ -1,0 +1,27 @@
+INCIPIT grimoire "math_common_ops_13m"
+
+RITUALE main() REDDE REX
+  EVOCA REX a AD 2 ** 5
+  EVOCA REX b AD (0 - 7) // 3
+  EVOCA REX c AD (0 - 7) %% 3
+  EVOCA REX d AD 5 + 2 ** 3 * 2
+
+  OBSECRO scribe("pow 2**5 =", a)
+  OBSECRO scribe("idiv -7//3 =", b)
+  OBSECRO scribe("emod -7%%3 =", c)
+  OBSECRO scribe("mixed 5 + 2**3*2 =", d)
+
+  SI a == 32
+    SI b == (0 - 3)
+      SI c == 2
+        SI d == 21
+          REDDE 0
+        FIN SI
+      FIN SI
+    FIN SI
+  FIN SI
+
+  REDDE 1
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

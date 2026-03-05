@@ -1,0 +1,24 @@
+INCIPIT grimoire "sigilo_metadata_diff_blocks_13c2"
+
+RITUALE fold_values() REDDE REX
+  EVOCA REX total AD 0
+  REPETE i DE 0 AD 6
+    VINCIRE total AD total + i
+  FIN REPETE
+  REDDE total
+EXPLICIT RITUALE
+
+RITUALE main() REDDE REX
+  EVOCA REX value AD CONIURA fold_values()
+  SI value > 4
+    OBSECRO scribe("13c2-metadata-diff\n")
+  ALITER
+    OBSECRO scribe("13c2-metadata-else\n")
+  FIN SI
+  DUM value > 0
+    VINCIRE value AD value - 1
+  FIN DUM
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

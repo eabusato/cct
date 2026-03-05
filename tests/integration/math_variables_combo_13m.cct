@@ -1,0 +1,16 @@
+INCIPIT grimoire "math_variables_combo_13m"
+
+RITUALE main() REDDE REX
+  EVOCA REX x AD 5
+  EVOCA REX y AD 2
+  EVOCA REX z AD 3
+  EVOCA REX p AD x ** y
+  EVOCA REX q AD (x + z) // y
+  EVOCA REX r AD (0 - 7) %% z
+  SI p + q + r == 31
+    REDDE 0
+  FIN SI
+  REDDE 1
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

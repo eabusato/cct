@@ -1,0 +1,11 @@
+INCIPIT grimoire "math_idiv_floor_13m"
+
+RITUALE main() REDDE REX
+  EVOCA REX a AD 7 // 2
+  EVOCA REX b AD (0 - 7) // 2
+  EVOCA REX c AD 7 // (0 - 2)
+  EVOCA REX d AD (0 - 7) // (0 - 2)
+  REDDE a + b + c + d + 50
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

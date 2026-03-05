@@ -11,7 +11,7 @@ It is written to help you:
 
 ## Status
 
-Specification baseline: **FASE 13M.B2** (FASE 13 tooling closure + common math operators addendum).
+Specification baseline: **FASE 14A.4** (FASE 13/13M closures + 14A hardening contracts).
 
 The language is fully usable in its current subset, with explicit boundaries documented below.
 
@@ -90,6 +90,13 @@ Behavior: discover and execute `*.test.cct` under `tests/`.
 
 - `./cct bench [PATTERN] [--project DIR] [--iterations N] [--release]`
 Behavior: discover and execute `*.bench.cct` under `bench/`, reporting average and total runtime.
+
+Exit code policy (FASE 14A.2):
+- `0`: success
+- `1`: invalid argument
+- `2`: contract violation gate (strict checks, strict lint/docs, strict sigilo gates)
+- `3`: missing required argument
+- `4`: unknown command/option
 
 - `./cct clean [--project DIR] [--all]`
 Behavior: clean `.cct` project artifacts; `--all` also removes generated project binaries in `dist/`.
@@ -991,6 +998,7 @@ Project sigilo operational report contract (FASE 13B.4):
 - detailed mode: `--sigilo-report detailed` (includes per-diff domain and before/after when CI profile gate computes diff)
 - explain mode: `--sigilo-explain` (probable cause + recommended action + troubleshooting reference)
 - compatibility note: legacy `sigilo.ci ...` line is preserved for existing script consumers
+- consolidated operations guide: `docs/sigilo_operations_14b2.md`
 
 Sigilo schema governance contract (FASE 13C.1):
 - canonical schema identifier remains `format = cct.sigil.v1` during FASE 13
@@ -1019,13 +1027,31 @@ Sigilo strict/tolerant validator contract (FASE 13C.4):
 - strict-contract profile blocks contractual violations with deterministic non-zero exit status
 - diagnostics are harmonized with objective message + corrective action hint (`action: ...`)
 
+Diagnostic taxonomy contract (FASE 14A.1):
+- canonical diagnostic levels: `error`, `warning`, `note`, `hint`
+- actionable diagnostics preserve legacy `suggestion:` line and additionally emit `hint:` line
+- sigilo text diagnostics are emitted through the canonical diagnostic envelope (`[sigilo]` code label)
+
+Explain and troubleshooting contract (FASE 14A.3):
+- `cct sigilo inspect|validate|diff|check|baseline check` accepts `--explain`
+- explain mode appends `sigilo.explain probable_cause=... recommended_action=... docs=... blocked=... command=...`
+- default mode remains concise and does not emit explain lines unless explicitly requested
+
+Deterministic output/log hygiene contract (FASE 14A.4):
+- sigilo diagnostics are emitted in deterministic order (`level`, `kind`, `line`, `column`, `message`)
+- structured validation output (`[diag.N]`) follows the same deterministic ordering
+- deterministic ordering is guaranteed for equivalent artifact content/profile inputs
+
 FASE 13 release references (13D.3):
 - snapshot: `docs/release/FASE_13_FINAL_SNAPSHOT.md`
 - stability matrix: `docs/release/FASE_13_STABILITY_MATRIX.md`
 - compatibility matrix: `docs/release/FASE_13_COMPATIBILITY_MATRIX.md`
 - known limits: `docs/release/FASE_13_KNOWN_LIMITS.md`
 - release notes: `docs/release/FASE_13_RELEASE_NOTES.md`
-- determinism audit: `docs/release/FASE_13_DETERMINISM_AUDIT.md`
+
+Publication boundary policy reference (FASE 14B.3):
+
+Release documentation template pack (FASE 14B.4):
 
 ## 11. Keyword Catalog
 

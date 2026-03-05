@@ -1,0 +1,7 @@
+INCIPIT grimoire "phase13d1_multi_util"
+
+RITUALE util_sum(REX a, REX b) REDDE REX
+  REDDE a + b
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

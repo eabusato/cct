@@ -1,0 +1,20 @@
+INCIPIT grimoire "math_emod_signs_13m"
+
+RITUALE main() REDDE REX
+  EVOCA REX a AD 7 %% 3
+  EVOCA REX b AD (0 - 7) %% 3
+  EVOCA REX c AD 7 %% (0 - 3)
+  EVOCA REX d AD (0 - 7) %% (0 - 3)
+  SI a == 1
+    SI b == 2
+      SI c == 1
+        SI d == 2
+          REDDE 0
+        FIN SI
+      FIN SI
+    FIN SI
+  FIN SI
+  REDDE 1
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

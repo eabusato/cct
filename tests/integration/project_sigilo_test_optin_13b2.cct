@@ -1,0 +1,9 @@
+INCIPIT grimoire "project_sigilo_test_optin_13b2"
+
+ADVOCARE "../lib/util.cct"
+
+RITUALE main() REDDE REX
+  REDDE CONIURA helper()
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

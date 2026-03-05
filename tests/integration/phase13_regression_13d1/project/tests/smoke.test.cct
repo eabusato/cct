@@ -1,0 +1,7 @@
+INCIPIT grimoire "phase13d1_project_test"
+
+RITUALE test_smoke() REDDE REX
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

@@ -47,12 +47,16 @@ SRCS = \
 	$(SRC_DIR)/runtime/runtime_math.c \
 	$(SRC_DIR)/module/module.c \
 	$(SRC_DIR)/sigilo/sigilo.c \
+	$(SRC_DIR)/sigilo/sigil_parse.c \
+	$(SRC_DIR)/sigilo/sigil_validate.c \
+	$(SRC_DIR)/sigilo/sigil_diff.c \
 	$(SRC_DIR)/formatter/formatter.c \
 	$(SRC_DIR)/lint/lint.c \
 	$(SRC_DIR)/project/project.c \
 	$(SRC_DIR)/project/project_discovery.c \
 	$(SRC_DIR)/project/project_cache.c \
 	$(SRC_DIR)/project/project_runner.c \
+	$(SRC_DIR)/project/sigilo_baseline.c \
 	$(SRC_DIR)/doc/doc.c
 
 # Object files
@@ -76,12 +80,16 @@ DEPS = \
 	$(SRC_DIR)/runtime/runtime_math.h \
 	$(SRC_DIR)/module/module.h \
 	$(SRC_DIR)/sigilo/sigilo.h \
+	$(SRC_DIR)/sigilo/sigil_parse.h \
+	$(SRC_DIR)/sigilo/sigil_validate.h \
+	$(SRC_DIR)/sigilo/sigil_diff.h \
 	$(SRC_DIR)/formatter/formatter.h \
 	$(SRC_DIR)/lint/lint.h \
 	$(SRC_DIR)/project/project.h \
 	$(SRC_DIR)/project/project_discovery.h \
 	$(SRC_DIR)/project/project_cache.h \
 	$(SRC_DIR)/project/project_runner.h \
+	$(SRC_DIR)/project/sigilo_baseline.h \
 	$(SRC_DIR)/doc/doc.h
 
 # Default target
@@ -140,6 +148,34 @@ test_fluxus_storage:
 		src/runtime/mem_runtime.c
 	@echo "Running fluxus storage runtime tests..."
 	@./tests/runtime/test_fluxus_storage
+
+test_sigil_parse:
+	@echo "Building sigil parse runtime tests..."
+	$(CC) $(CFLAGS) -o tests/runtime/test_sigil_parse \
+		tests/runtime/test_sigil_parse.c \
+		src/sigilo/sigil_parse.c \
+		src/sigilo/sigil_validate.c
+	@echo "Running sigil parse runtime tests..."
+	@./tests/runtime/test_sigil_parse
+
+test_sigil_diff:
+	@echo "Building sigil diff runtime tests..."
+	$(CC) $(CFLAGS) -o tests/runtime/test_sigil_diff \
+		tests/runtime/test_sigil_diff.c \
+		src/sigilo/sigil_parse.c \
+		src/sigilo/sigil_validate.c \
+		src/sigilo/sigil_diff.c
+	@echo "Running sigil diff runtime tests..."
+	@./tests/runtime/test_sigil_diff
+
+test_diagnostic_taxonomy:
+	@echo "Building diagnostic taxonomy runtime tests..."
+	$(CC) $(CFLAGS) -o tests/runtime/test_diagnostic_taxonomy \
+		tests/runtime/test_diagnostic_taxonomy.c \
+		src/common/diagnostic.c \
+		src/common/errors.c
+	@echo "Running diagnostic taxonomy runtime tests..."
+	@./tests/runtime/test_diagnostic_taxonomy
 
 # Build relocatable distribution bundle
 dist: $(TARGET)
@@ -322,6 +358,7 @@ help:
 	@echo "  doc       - Generate API docs for current project (docs/api)"
 	@echo "  doc-strict - Generate API docs with strict warnings"
 	@echo "  test_fluxus_storage - Build and run standalone FLUXUS runtime tests"
+	@echo "  test_diagnostic_taxonomy - Build and run diagnostic taxonomy runtime tests"
 	@echo "  dist      - Build relocatable distribution bundle"
 	@echo "  release   - Create release tarball with checksums (cct-vX.XX-platform.tar.gz)"
 	@echo "  install   - Install binary + stdlib under PREFIX ($(PREFIX))"
@@ -395,4 +432,4 @@ phase12-final-audit: $(TARGET)
 	@echo ""
 	@echo "Audit complete."
 
-.PHONY: all clean test test_fluxus_storage dist release install uninstall help fmt fmt-check lint project-build project-run project-test project-test-strict project-bench project-clean doc doc-strict release-check phase12-final-audit
+.PHONY: all clean test test_fluxus_storage test_diagnostic_taxonomy dist release install uninstall help fmt fmt-check lint project-build project-run project-test project-test-strict project-bench project-clean doc doc-strict release-check phase12-final-audit

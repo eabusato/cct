@@ -1,0 +1,9 @@
+INCIPIT grimoire "math_pow_assoc_13m"
+
+RITUALE main() REDDE REX
+  EVOCA REX a AD 2 ** 3 ** 2
+  EVOCA REX b AD (2 ** 3) ** 2
+  REDDE a - b
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

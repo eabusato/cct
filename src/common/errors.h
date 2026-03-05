@@ -24,10 +24,11 @@
 typedef enum {
     CCT_OK = 0,
 
-    /* CLI and usage errors (1-19) */
+    /* CLI and usage/contract errors (1-19) */
     CCT_ERROR_INVALID_ARGUMENT = 1,
-    CCT_ERROR_UNKNOWN_COMMAND = 2,
+    CCT_ERROR_CONTRACT_VIOLATION = 2,
     CCT_ERROR_MISSING_ARGUMENT = 3,
+    CCT_ERROR_UNKNOWN_COMMAND = 4,
 
     /* File I/O errors (20-39) */
     CCT_ERROR_FILE_NOT_FOUND = 20,

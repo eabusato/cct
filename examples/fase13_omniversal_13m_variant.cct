@@ -1,0 +1,94 @@
+--
+-- Variant for FASE 13 sigilo diff/check/baseline workflows.
+-- Keeps the same theme but introduces structural and numeric changes.
+--
+
+INCIPIT grimoire "fase13_omniversal_13m_variant"
+
+SIGILLUM Registro
+  nome: VERBUM
+  poder: REX
+  resto: REX
+  risco: REX
+  bonus: REX
+FIN SIGILLUM
+
+RITUALE energia_orbital(REX base, REX passo, REX ciclo) REDDE REX
+  EVOCA REX pot AD (base + passo) ** 2
+  EVOCA REX quota AD pot // (ciclo + 2)
+  EVOCA REX resto AD pot %% (ciclo + 3)
+  REDDE quota + resto
+EXPLICIT RITUALE
+
+RITUALE auditar_registro(SPECULUM Registro reg, REX pulso) REDDE NIHIL
+  VINCIRE (*reg).poder AD (*reg).poder + pulso * pulso
+  VINCIRE (*reg).resto AD ((*reg).resto + pulso) %% 11
+  VINCIRE (*reg).risco AD (*reg).risco + ((*reg).poder // 5)
+  EVOCA REX risco_local AD (*reg).risco
+  SI risco_local > 70
+    VINCIRE (*reg).bonus AD 9
+  ALITER
+    VINCIRE (*reg).bonus AD 3
+  FIN SI
+EXPLICIT RITUALE
+
+RITUALE avaliar_limite(REX score) REDDE REX
+  TEMPTA
+    SI score > 95
+      IACE "zona rubra"
+    FIN SI
+    REDDE score
+  CAPE FRACTUM err
+    OBSECRO scribe("[limite.cape] ", err, "\n")
+    REDDE 66
+  SEMPER
+    OBSECRO scribe("[limite.semper]\n")
+  FIN TEMPTA
+  REDDE 0
+EXPLICIT RITUALE
+
+RITUALE main() REDDE REX
+  EVOCA SERIES REX[6] sinais
+  REPETE i DE 0 AD 5
+    EVOCA REX cubo AD (i + 2) * (i + 2) * (i + 2)
+    VINCIRE sinais[i] AD cubo // 5 + cubo %% 5
+  FIN REPETE
+
+  EVOCA REX soma AD 0
+  EVOCA REX j AD 0
+  DUM j < 6
+    VINCIRE soma AD soma + sinais[j]
+    VINCIRE j AD j + 1
+  FIN DUM
+
+  EVOCA Registro reg
+  VINCIRE reg.nome AD "Astra-V2"
+  VINCIRE reg.poder AD CONIURA energia_orbital(7, 4, 2)
+  VINCIRE reg.resto AD soma %% 9
+  VINCIRE reg.risco AD soma // 3 + soma %% 7
+  VINCIRE reg.bonus AD 0
+
+  CONIURA auditar_registro(SPECULUM reg, 4)
+
+  EVOCA REX aval AD CONIURA avaliar_limite(reg.risco)
+  EVOCA REX assinatura AD (reg.poder * reg.poder) // 13 + reg.risco %% 10 + reg.bonus
+  EVOCA REX farol AD 2 ** 3 ** 2
+  EVOCA REX ponte AD farol // 128 + farol %% 7
+  EVOCA REX controle AD assinatura + aval + reg.resto + ponte
+
+  OBSECRO scribe("nomen=", reg.nome,
+                 " soma=", soma,
+                 " poder=", reg.poder,
+                 " resto=", reg.resto,
+                 " risco=", reg.risco,
+                 " bonus=", reg.bonus,
+                 " assinatura=", assinatura,
+                 " controle=", controle, "\n")
+
+  SI controle > 0
+    REDDE 0
+  FIN SI
+  REDDE 1
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

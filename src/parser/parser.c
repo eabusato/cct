@@ -665,9 +665,13 @@ static cct_ast_node_t* parse_unary(cct_parser_t *parser) {
 
 static int get_precedence(cct_token_type_t type) {
     switch (type) {
+        case TOKEN_STAR_STAR:
+            return 12;
         case TOKEN_STAR:
         case TOKEN_SLASH:
+        case TOKEN_SLASH_SLASH:
         case TOKEN_PERCENT:
+        case TOKEN_PERCENT_PERCENT:
             return 11;
         case TOKEN_PLUS:
         case TOKEN_MINUS:
@@ -711,7 +715,10 @@ static cct_ast_node_t* parse_precedence(cct_parser_t *parser, int min_prec) {
         cct_token_type_t op = parser->current.type;
         advance(parser);
 
-        cct_ast_node_t *right = parse_precedence(parser, prec + 1);
+        cct_ast_node_t *right = parse_precedence(
+            parser,
+            (op == TOKEN_STAR_STAR) ? prec : (prec + 1)
+        );
         left = cct_ast_create_binary_op(op, left, right, line, col);
     }
 

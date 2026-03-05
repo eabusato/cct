@@ -1,0 +1,9 @@
+INCIPIT grimoire "math_pow_type_error_13m"
+
+RITUALE main() REDDE REX
+  EVOCA VERBUM s AD "abc"
+  EVOCA REX r AD s ** 2
+  REDDE r
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

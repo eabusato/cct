@@ -1,0 +1,20 @@
+INCIPIT grimoire "math_idiv_signs_13m"
+
+RITUALE main() REDDE REX
+  EVOCA REX a AD 7 // 2
+  EVOCA REX b AD (0 - 7) // 2
+  EVOCA REX c AD 7 // (0 - 2)
+  EVOCA REX d AD (0 - 7) // (0 - 2)
+  SI a == 3
+    SI b == (0 - 4)
+      SI c == (0 - 4)
+        SI d == 3
+          REDDE 0
+        FIN SI
+      FIN SI
+    FIN SI
+  FIN SI
+  REDDE 1
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

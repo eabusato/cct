@@ -4,7 +4,7 @@
 
 - Phase: FASE 13
 - Consolidation stage: 13D.4
-- Technical closure reached through: 13D.4 (final gate with regression + determinism + documentation closure)
+- technical closure reached through: 13D.4 (final gate with regression + determinism + documentation closure)
 
 ## Component Status Manifest
 
@@ -34,9 +34,6 @@
 - `docs/release/FASE_13_COMPATIBILITY_MATRIX.md`
 - `docs/release/FASE_13_KNOWN_LIMITS.md`
 - `docs/release/FASE_13_RELEASE_NOTES.md`
-- `docs/release/FASE_13_DETERMINISM_AUDIT.md`
-- `docs/release/FASE_13_CLOSURE_GATE.md`
-- `docs/release/FASE_13_RESIDUAL_RISKS.md`
 
 ## Verification Artifacts
 
@@ -49,4 +46,4 @@
 - deterministic behavior is explicitly audited in 13D.2
 - compatibility governance is additive-first with strict release profile enforcement
 - 13D.4 gate is closed with objective PASS criteria across technical, quality, and documentation gates
-- residual risks are explicitly tracked and deferred to 14+ without critical blockers
+- residual risks and closure governance are tracked in private release governance artifacts

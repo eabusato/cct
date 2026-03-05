@@ -8,9 +8,9 @@ CCT is a compiled language toolchain that transforms `.cct` sources into:
 - executable binaries (via generated C + host C compiler)
 - deterministic sigil artifacts (`.svg` + `.sigil`)
 
-This architecture document is aligned with the implemented project state through **FASE 13D.4 + FASE 13M.B2** and includes the planned architecture direction for future phases.
+This architecture document is aligned with the implemented project state through **FASE 13D.4 + FASE 13M.B2 + FASE 14A.4** and includes the planned architecture direction for future phases.
 
-## Current Architecture (FASE 12G)
+## Current Architecture (FASE 14A.4)
 
 ### End-to-End Pipeline
 
@@ -224,7 +224,6 @@ Status: mature through 9D/9D2/9E and preserved across phase 10 closure.
   - integrated in the global runner (`tests/run_tests.sh`)
 - **FASE 13D.2**: determinism audit runner and release audit evidence:
   - `tests/run_phase13_determinism_audit.sh`
-  - `docs/release/FASE_13_DETERMINISM_AUDIT.md`
 - **FASE 13D.3**: release-document consolidation package:
   - snapshot + stability/compatibility/limits/release-notes documents under `docs/release/`
 - **FASE 13D.4**: final closure gate and residual-risk register for phase exit governance
@@ -234,6 +233,41 @@ Status: mature through 9D/9D2/9E and preserved across phase 10 closure.
 - **FASE 13M.A2**: compiler implementation in lexer/parser/semantic/codegen/runtime bridge
 - **FASE 13M.B1**: deep test matrix and non-regression proof integrated in `tests/run_tests.sh`
 - **FASE 13M.B2**: documentation/release closure with executable examples and phase closure gate
+
+### FASE 14A Release Hardening Block (Implemented Through 14A.4)
+- **FASE 14A.1**: canonical diagnostic taxonomy (`error|warning|note|hint`) with compatibility preservation (`suggestion:` + `hint:`)
+- **FASE 14A.2**: canonical exit-code contract harmonized across CLI and strict gates (`0|1|2|3|4`)
+- **FASE 14A.3**: explain/troubleshooting mode (`--explain`) on sigilo operational commands with actionable guidance
+- **FASE 14A.4**: deterministic sigilo diagnostic ordering and log-noise hygiene for repeatable CI outputs
+
+### FASE 14B Documentation Hardening (In Progress)
+- **FASE 14B.1**: public contract harmonization across `README`, `spec`, architecture, roadmap, and CLI status strings
+- **FASE 14B.2**: consolidated sigilo operations guide for high-value workflows:
+  - `docs/sigilo_operations_14b2.md`
+- **FASE 14B.3**: publication visibility policy (`md_out` private vs curated `docs` public) with manifests:
+- **FASE 14B.4**: release-doc reference pack templates:
+
+### FASE 14C Technical Audit Hardening (Implemented)
+- **FASE 14C.1**: expanded regression matrix with composed risk blocks:
+  - `tests/run_phase14c1_regression_matrix.sh`
+- **FASE 14C.2**: stress/soak operational stability gate:
+  - `tests/run_phase14c2_stress_soak.sh`
+- **FASE 14C.3**: performance baseline/budget gate:
+  - `tests/run_phase14c3_perf_budget.sh`
+- **FASE 14C.4**: residual risk + known limits hardening:
+  - `docs/release/FASE_14_KNOWN_LIMITS.md`
+
+### FASE 14D Release Finalization Block (Implemented)
+- **FASE 14D.1**: reproducible packaging gate:
+  - `tests/run_phase14d1_packaging_repro.sh`
+- **FASE 14D.2**: release candidate validation matrix:
+  - `tests/run_phase14d2_rc_validation.sh`
+- **FASE 14D.3**: final release artifact consolidation:
+  - `docs/release/FASE_14_FINAL_SNAPSHOT.md`
+  - `docs/release/FASE_14_RELEASE_NOTES.md`
+  - `docs/release/FASE_14_STABILITY_MATRIX.md`
+  - `docs/release/FASE_14_COMPATIBILITY_MATRIX.md`
+- **FASE 14D.4**: closure gate and rollback:
 
 ## Current Architectural Contract (Post-11H)
 

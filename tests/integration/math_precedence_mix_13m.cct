@@ -1,0 +1,11 @@
+INCIPIT grimoire "math_precedence_mix_13m"
+
+RITUALE main() REDDE REX
+  EVOCA REX a AD 2 + 3 ** 2 * 4
+  EVOCA REX b AD 20 // 3 + 1
+  EVOCA REX c AD 20 // (3 + 1)
+  EVOCA REX d AD 5 + 7 %% 3 * 2
+  REDDE a + b + c + d
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

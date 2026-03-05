@@ -1,0 +1,11 @@
+INCIPIT grimoire "sigilo_consumer_legacy_13c3"
+
+RITUALE main() REDDE REX
+  EVOCA REX acc AD 0
+  REPETE i DE 0 AD 3
+    VINCIRE acc AD acc + i
+  FIN REPETE
+  REDDE acc
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

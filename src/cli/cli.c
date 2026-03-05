@@ -51,6 +51,7 @@ void cct_cli_show_help(void) {
     printf("  cct bench [pattern] [options]\n");
     printf("  cct clean [options]\n");
     printf("  cct doc [options]\n");
+    printf("  cct sigilo <subcommand> [options]\n");
     printf("  cct fmt [options] <file.cct> [more.cct ...]\n");
     printf("  cct lint [options] <file.cct>\n");
     printf("  cct --help                  Show this help message\n");
@@ -82,19 +83,42 @@ void cct_cli_show_help(void) {
     printf("  cct lint --quiet <file>     Suppress per-issue output\n\n");
     printf("Project commands (FASE 12F):\n");
     printf("  cct build [--release] [--project DIR] [--entry FILE] [--out PATH]\n");
-    printf("            [--lint] [--fmt-check]\n");
-    printf("  cct run [--release] [--project DIR] [--entry FILE] [--out PATH] [-- ARGS...]\n");
+    printf("            [--lint] [--fmt-check] [--sigilo-check] [--sigilo-strict] [--sigilo-baseline PATH]\n");
+    printf("            [--sigilo-ci-profile advisory|gated|release] [--sigilo-override-behavioral-risk]\n");
+    printf("            [--sigilo-report summary|detailed] [--sigilo-explain]\n");
+    printf("  cct run [--release] [--project DIR] [--entry FILE] [--out PATH]\n");
+    printf("          [--sigilo-check] [--sigilo-strict] [--sigilo-baseline PATH]\n");
+    printf("          [--sigilo-ci-profile advisory|gated|release] [--sigilo-override-behavioral-risk] [-- ARGS...]\n");
+    printf("          [--sigilo-report summary|detailed] [--sigilo-explain]\n");
     printf("  cct test [pattern] [--project DIR] [--strict-lint] [--fmt-check]\n");
+    printf("           [--sigilo-check] [--sigilo-strict] [--sigilo-baseline PATH]\n");
+    printf("           [--sigilo-ci-profile advisory|gated|release] [--sigilo-override-behavioral-risk]\n");
+    printf("           [--sigilo-report summary|detailed] [--sigilo-explain]\n");
     printf("  cct bench [pattern] [--project DIR] [--iterations N] [--release]\n");
+    printf("            [--sigilo-check] [--sigilo-strict] [--sigilo-baseline PATH]\n");
+    printf("            [--sigilo-ci-profile advisory|gated|release] [--sigilo-override-behavioral-risk]\n");
+    printf("            [--sigilo-report summary|detailed] [--sigilo-explain]\n");
     printf("  cct clean [--project DIR] [--all]\n\n");
     printf("Documentation command (FASE 12G):\n");
     printf("  cct doc [--project DIR] [--entry FILE] [--output-dir DIR]\n");
     printf("          [--format markdown|html|both] [--include-internal]\n");
     printf("          [--no-examples] [--warn-missing-docs] [--strict-docs]\n");
     printf("          [--no-timestamp]\n\n");
+    printf("Sigilo tooling commands (FASE 13A.4):\n");
+    printf("  cct sigilo inspect <artifact.sigil> [--format text|structured] [--summary] [--strict] [--explain]\n");
+    printf("                     [--consumer-profile legacy-tolerant|current-default|strict-contract]\n");
+    printf("  cct sigilo validate <artifact.sigil> [--format text|structured] [--summary] [--strict] [--explain]\n");
+    printf("                      [--consumer-profile legacy-tolerant|current-default|strict-contract]\n");
+    printf("  cct sigilo diff <left.sigil> <right.sigil> [--format text|structured] [--summary] [--strict] [--explain]\n");
+    printf("                  [--consumer-profile legacy-tolerant|current-default|strict-contract]\n");
+    printf("  cct sigilo check <left.sigil> <right.sigil> [--format text|structured] [--summary] [--strict] [--explain]\n");
+    printf("                   [--consumer-profile legacy-tolerant|current-default|strict-contract]\n");
+    printf("  cct sigilo baseline check <artifact.sigil> [--baseline <path>] [--format text|structured] [--summary] [--strict] [--explain]\n");
+    printf("  cct sigilo baseline update <artifact.sigil> [--baseline <path>] [--force]\n");
+    printf("  strict mode returns exit code 2 for review-required/behavioral-risk diffs\n\n");
 
-    printf("Current status: FASE 12H (Release v0.12 - Structural maturity milestone)\n");
-    printf("Complete toolchain: compiler, formatter, linter, project manager, and doc generator.\n");
+    printf("Current status: FASE 14A.4 completed (release hardening in progress)\n");
+    printf("Complete toolchain: compiler, formatter, linter, project manager, doc generator, and sigilo inspection.\n");
     printf("Bibliotheca Canonica (stdlib) consolidated with stability guarantees.\n\n");
 
     printf("License: Copyright (c) Erick Andrade Busato. Todos os direitos reservados.\n");
@@ -107,7 +131,7 @@ void cct_cli_show_help(void) {
 void cct_cli_show_version(void) {
     printf("Clavicula Turing (CCT) v%s\n", CCT_VERSION_STRING);
     printf("Target: Linux x86_64\n");
-    printf("Build: FASE 12H - Structural maturity milestone (Release v0.12)\n");
+    printf("Build: FASE 14A - Release hardening stream (post-13/13M baseline)\n");
     printf("\n");
     printf("Copyright (c) Erick Andrade Busato. Todos os direitos reservados.\n");
 }

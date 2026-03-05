@@ -311,9 +311,15 @@ cct_token_t cct_lexer_next_token(cct_lexer_t *lexer) {
         case '.': return make_token(lexer, TOKEN_DOT);
         case ':': return make_token(lexer, TOKEN_COLON);
         case ';': return make_token(lexer, TOKEN_SEMICOLON);
-        case '*': return make_token(lexer, TOKEN_STAR);
-        case '/': return make_token(lexer, TOKEN_SLASH);
-        case '%': return make_token(lexer, TOKEN_PERCENT);
+        case '*':
+            if (match(lexer, '*')) return make_token(lexer, TOKEN_STAR_STAR);
+            return make_token(lexer, TOKEN_STAR);
+        case '/':
+            if (match(lexer, '/')) return make_token(lexer, TOKEN_SLASH_SLASH);
+            return make_token(lexer, TOKEN_SLASH);
+        case '%':
+            if (match(lexer, '%')) return make_token(lexer, TOKEN_PERCENT_PERCENT);
+            return make_token(lexer, TOKEN_PERCENT);
         case '?': return make_token(lexer, TOKEN_QUESTION);
 
         /* String literals */
@@ -446,8 +452,11 @@ const char* cct_token_type_string(cct_token_type_t type) {
         case TOKEN_PLUS: return "PLUS";
         case TOKEN_MINUS: return "MINUS";
         case TOKEN_STAR: return "STAR";
+        case TOKEN_STAR_STAR: return "STAR_STAR";
         case TOKEN_SLASH: return "SLASH";
+        case TOKEN_SLASH_SLASH: return "SLASH_SLASH";
         case TOKEN_PERCENT: return "PERCENT";
+        case TOKEN_PERCENT_PERCENT: return "PERCENT_PERCENT";
         case TOKEN_EQ_EQ: return "EQ_EQ";
         case TOKEN_BANG_EQ: return "BANG_EQ";
         case TOKEN_LESS: return "LESS";

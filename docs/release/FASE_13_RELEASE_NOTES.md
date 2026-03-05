@@ -57,4 +57,3 @@ See: `docs/release/FASE_13_KNOWN_LIMITS.md`.
 - `docs/release/FASE_13_FINAL_SNAPSHOT.md`
 - `docs/release/FASE_13_STABILITY_MATRIX.md`
 - `docs/release/FASE_13_COMPATIBILITY_MATRIX.md`
-- `docs/release/FASE_13_DETERMINISM_AUDIT.md`

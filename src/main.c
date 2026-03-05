@@ -30,6 +30,9 @@
 #include "semantic/semantic.h"
 #include "codegen/codegen.h"
 #include "sigilo/sigilo.h"
+#include "sigilo/sigil_parse.h"
+#include "sigilo/sigil_diff.h"
+#include "project/sigilo_baseline.h"
 #include "module/module.h"
 #include "formatter/formatter.h"
 #include "lint/lint.h"
@@ -87,6 +90,750 @@ static bool has_cct_extension(const char *filename) {
     if (!filename) return false;
     size_t len = strlen(filename);
     return len >= 4 && strcmp(filename + len - 4, ".cct") == 0;
+}
+
+static bool has_sigil_extension(const char *filename) {
+    if (!filename) return false;
+    size_t len = strlen(filename);
+    return len >= 6 && strcmp(filename + len - 6, ".sigil") == 0;
+}
+
+static cct_diagnostic_level_t sigilo_diag_to_level(cct_sigil_diag_level_t level) {
+    return level == CCT_SIGIL_DIAG_ERROR ? CCT_DIAG_ERROR : CCT_DIAG_WARNING;
+}
+
+static const cct_sigil_document_t *g_sigilo_sort_doc = NULL;
+
+static int compare_sigil_diag_indices(const void *a, const void *b) {
+    const cct_sigil_document_t *doc = g_sigilo_sort_doc;
+    if (!doc) return 0;
+    size_t ia = *(const size_t*)a;
+    size_t ib = *(const size_t*)b;
+    const cct_sigil_diag_t *da = &doc->diagnostics.items[ia];
+    const cct_sigil_diag_t *db = &doc->diagnostics.items[ib];
+
+    /* Keep errors before warnings, then deterministic positional/text order. */
+    if (da->level != db->level) {
+        return (da->level == CCT_SIGIL_DIAG_ERROR) ? -1 : 1;
+    }
+    if (da->kind != db->kind) {
+        return (int)da->kind - (int)db->kind;
+    }
+    if (da->line != db->line) {
+        return (da->line < db->line) ? -1 : 1;
+    }
+    if (da->column != db->column) {
+        return (da->column < db->column) ? -1 : 1;
+    }
+    const char *ma = da->message ? da->message : "";
+    const char *mb = db->message ? db->message : "";
+    int msg_cmp = strcmp(ma, mb);
+    if (msg_cmp != 0) return msg_cmp;
+    if (ia < ib) return -1;
+    if (ia > ib) return 1;
+    return 0;
+}
+
+static size_t* sigilo_sorted_diag_indices(const cct_sigil_document_t *doc) {
+    if (!doc || doc->diagnostics.count == 0) return NULL;
+    size_t *indices = (size_t*)malloc(sizeof(size_t) * doc->diagnostics.count);
+    if (!indices) return NULL;
+    for (size_t i = 0; i < doc->diagnostics.count; i++) indices[i] = i;
+    g_sigilo_sort_doc = doc;
+    qsort(indices, doc->diagnostics.count, sizeof(size_t), compare_sigil_diag_indices);
+    g_sigilo_sort_doc = NULL;
+    return indices;
+}
+
+static void sigilo_print_explain(const char *command,
+                                 const char *cause,
+                                 const char *action,
+                                 bool blocked) {
+    fprintf(stderr,
+            "sigilo.explain probable_cause=%s recommended_action=%s docs=docs/sigilo_troubleshooting_13b4.md blocked=%s command=%s\n",
+            cause ? cause : "unknown",
+            action ? action : "inspect diagnostic output and correct input",
+            blocked ? "true" : "false",
+            command ? command : "sigilo");
+}
+
+static void print_sigil_diagnostics(const cct_sigil_document_t *doc) {
+    if (!doc) return;
+    size_t *indices = sigilo_sorted_diag_indices(doc);
+    for (size_t i = 0; i < doc->diagnostics.count; i++) {
+        size_t idx = indices ? indices[i] : i;
+        const cct_sigil_diag_t *d = &doc->diagnostics.items[idx];
+        char msg[2048];
+        snprintf(msg,
+                 sizeof(msg),
+                 "sigilo[%s]: %s",
+                 cct_sigil_diag_kind_str(d->kind),
+                 d->message ? d->message : "<no message>");
+
+        cct_diagnostic_t diag = {
+            .level = sigilo_diag_to_level(d->level),
+            .message = msg,
+            .file_path = (d->line > 0) ? (doc->input_path ? doc->input_path : "<sigil>") : NULL,
+            .line = d->line,
+            .column = d->column,
+            .suggestion = NULL,
+            .code_label = "sigilo",
+        };
+        cct_diagnostic_emit(&diag);
+    }
+    free(indices);
+}
+
+static int sigilo_emit_inspect_text(const cct_sigil_document_t *doc, bool summary) {
+    if (!doc) return (int)CCT_ERROR_INTERNAL;
+    size_t warnings = 0;
+    size_t errors = 0;
+    for (size_t i = 0; i < doc->diagnostics.count; i++) {
+        if (doc->diagnostics.items[i].level == CCT_SIGIL_DIAG_ERROR) errors++;
+        else warnings++;
+    }
+    printf("sigilo.inspect.summary scope=%s format=%s entries=%zu warnings=%zu errors=%zu\n",
+           doc->sigilo_scope ? doc->sigilo_scope : "<none>",
+           doc->format ? doc->format : "<none>",
+           doc->entry_count,
+           warnings,
+           errors);
+    if (summary) return 0;
+
+    printf("input_path=%s\n", doc->input_path ? doc->input_path : "<none>");
+    if (doc->semantic_hash) printf("semantic_hash=%s\n", doc->semantic_hash);
+    if (doc->system_hash) printf("system_hash=%s\n", doc->system_hash);
+    if (doc->visual_engine) printf("visual_engine=%s\n", doc->visual_engine);
+    for (size_t i = 0; i < doc->entry_count; i++) {
+        const cct_sigil_kv_t *kv = &doc->entries[i];
+        printf("[%zu] section=%s key=%s value=%s\n",
+               i,
+               kv->section ? kv->section : "",
+               kv->key ? kv->key : "",
+               kv->value ? kv->value : "");
+    }
+    return 0;
+}
+
+static int sigilo_emit_inspect_structured(const cct_sigil_document_t *doc, bool summary) {
+    if (!doc) return (int)CCT_ERROR_INTERNAL;
+    size_t warnings = 0;
+    size_t errors = 0;
+    for (size_t i = 0; i < doc->diagnostics.count; i++) {
+        if (doc->diagnostics.items[i].level == CCT_SIGIL_DIAG_ERROR) errors++;
+        else warnings++;
+    }
+    printf("format = cct.sigil.inspect.v1\n");
+    printf("input_path = %s\n", doc->input_path ? doc->input_path : "");
+    printf("sigilo_scope = %s\n", doc->sigilo_scope ? doc->sigilo_scope : "");
+    printf("sigil_format = %s\n", doc->format ? doc->format : "");
+    printf("entries = %zu\n", doc->entry_count);
+    printf("warnings = %zu\n", warnings);
+    printf("errors = %zu\n", errors);
+    if (doc->semantic_hash) printf("semantic_hash = %s\n", doc->semantic_hash);
+    if (doc->system_hash) printf("system_hash = %s\n", doc->system_hash);
+    if (summary) return 0;
+
+    for (size_t i = 0; i < doc->entry_count; i++) {
+        const cct_sigil_kv_t *kv = &doc->entries[i];
+        printf("\n[entry.%zu]\n", i);
+        printf("section = %s\n", kv->section ? kv->section : "");
+        printf("key = %s\n", kv->key ? kv->key : "");
+        printf("value = %s\n", kv->value ? kv->value : "");
+    }
+    return 0;
+}
+
+static const char* sigilo_parse_mode_name(cct_sigil_parse_mode_t mode) {
+    switch (mode) {
+        case CCT_SIGIL_PARSE_MODE_LEGACY_TOLERANT: return "legacy-tolerant";
+        case CCT_SIGIL_PARSE_MODE_CURRENT_DEFAULT: return "current-default";
+        case CCT_SIGIL_PARSE_MODE_STRICT:
+        case CCT_SIGIL_PARSE_MODE_STRICT_CONTRACT: return "strict-contract";
+        case CCT_SIGIL_PARSE_MODE_TOLERANT:
+        default: return "tolerant";
+    }
+}
+
+static int sigilo_emit_validate_text(
+    const cct_sigil_document_t *doc,
+    cct_sigil_parse_mode_t mode,
+    bool summary
+) {
+    if (!doc) return (int)CCT_ERROR_INTERNAL;
+    size_t warnings = 0;
+    size_t errors = 0;
+    for (size_t i = 0; i < doc->diagnostics.count; i++) {
+        if (doc->diagnostics.items[i].level == CCT_SIGIL_DIAG_ERROR) errors++;
+        else warnings++;
+    }
+    printf("sigilo.validate.summary profile=%s scope=%s format=%s entries=%zu warnings=%zu errors=%zu result=%s\n",
+           sigilo_parse_mode_name(mode),
+           doc->sigilo_scope ? doc->sigilo_scope : "<none>",
+           doc->format ? doc->format : "<none>",
+           doc->entry_count,
+           warnings,
+           errors,
+           errors == 0 ? "pass" : "fail");
+    if (summary) return 0;
+    print_sigil_diagnostics(doc);
+    return 0;
+}
+
+static int sigilo_emit_validate_structured(
+    const cct_sigil_document_t *doc,
+    cct_sigil_parse_mode_t mode,
+    bool summary
+) {
+    if (!doc) return (int)CCT_ERROR_INTERNAL;
+    size_t warnings = 0;
+    size_t errors = 0;
+    for (size_t i = 0; i < doc->diagnostics.count; i++) {
+        if (doc->diagnostics.items[i].level == CCT_SIGIL_DIAG_ERROR) errors++;
+        else warnings++;
+    }
+    printf("format = cct.sigil.validate.v1\n");
+    printf("profile = %s\n", sigilo_parse_mode_name(mode));
+    printf("input_path = %s\n", doc->input_path ? doc->input_path : "");
+    printf("sigilo_scope = %s\n", doc->sigilo_scope ? doc->sigilo_scope : "");
+    printf("sigil_format = %s\n", doc->format ? doc->format : "");
+    printf("entries = %zu\n", doc->entry_count);
+    printf("warnings = %zu\n", warnings);
+    printf("errors = %zu\n", errors);
+    printf("result = %s\n", errors == 0 ? "pass" : "fail");
+    if (summary) return 0;
+    size_t *indices = sigilo_sorted_diag_indices(doc);
+    for (size_t i = 0; i < doc->diagnostics.count; i++) {
+        size_t idx = indices ? indices[i] : i;
+        const cct_sigil_diag_t *d = &doc->diagnostics.items[idx];
+        printf("\n[diag.%zu]\n", i);
+        printf("level = %s\n", d->level == CCT_SIGIL_DIAG_ERROR ? "error" : "warning");
+        printf("kind = %s\n", cct_sigil_diag_kind_str(d->kind));
+        printf("line = %u\n", d->line);
+        printf("column = %u\n", d->column);
+        printf("message = %s\n", d->message ? d->message : "");
+    }
+    free(indices);
+    return 0;
+}
+
+static int cmd_sigilo_baseline_tools(int argc, char **argv) {
+    if (argc < 5) {
+        fprintf(stderr, "Usage:\n");
+        fprintf(stderr, "  cct sigilo baseline check <artifact.sigil> [--baseline <path>] [--format text|structured] [--summary] [--strict] [--explain]\n");
+        fprintf(stderr, "  cct sigilo baseline update <artifact.sigil> [--baseline <path>] [--force]\n");
+        return (int)CCT_ERROR_MISSING_ARGUMENT;
+    }
+
+    const char *sub = argv[3];
+    bool is_check = strcmp(sub, "check") == 0;
+    bool is_update = strcmp(sub, "update") == 0;
+    if (!is_check && !is_update) {
+        cct_error_printf(CCT_ERROR_UNKNOWN_COMMAND, "Unknown sigilo baseline subcommand: %s", sub);
+        return (int)CCT_ERROR_UNKNOWN_COMMAND;
+    }
+
+    const char *artifact = argv[4];
+    if (!has_sigil_extension(artifact)) {
+        cct_error_printf(CCT_ERROR_INVALID_ARGUMENT, "Input artifact must have .sigil extension: %s", artifact);
+        return (int)CCT_ERROR_INVALID_ARGUMENT;
+    }
+
+    const char *baseline_override = NULL;
+    bool strict = false;
+    bool summary = true;
+    bool structured = false;
+    bool force = false;
+    bool explain = false;
+
+    for (int i = 5; i < argc; i++) {
+        const char *arg = argv[i];
+        if (strcmp(arg, "--baseline") == 0) {
+            if (i + 1 >= argc) {
+                cct_error_printf(CCT_ERROR_MISSING_ARGUMENT, "--baseline requires a path");
+                return (int)CCT_ERROR_MISSING_ARGUMENT;
+            }
+            baseline_override = argv[++i];
+            continue;
+        }
+        if (strcmp(arg, "--summary") == 0) {
+            summary = true;
+            continue;
+        }
+        if (strcmp(arg, "--strict") == 0) {
+            if (!is_check) {
+                cct_error_printf(CCT_ERROR_INVALID_ARGUMENT, "--strict is only valid for sigilo baseline check");
+                return (int)CCT_ERROR_INVALID_ARGUMENT;
+            }
+            strict = true;
+            continue;
+        }
+        if (strcmp(arg, "--explain") == 0) {
+            if (!is_check) {
+                cct_error_printf(CCT_ERROR_INVALID_ARGUMENT, "--explain is only valid for sigilo baseline check");
+                return (int)CCT_ERROR_INVALID_ARGUMENT;
+            }
+            explain = true;
+            continue;
+        }
+        if (strcmp(arg, "--force") == 0) {
+            if (!is_update) {
+                cct_error_printf(CCT_ERROR_INVALID_ARGUMENT, "--force is only valid for sigilo baseline update");
+                return (int)CCT_ERROR_INVALID_ARGUMENT;
+            }
+            force = true;
+            continue;
+        }
+        if (strcmp(arg, "--format") == 0) {
+            if (!is_check) {
+                cct_error_printf(CCT_ERROR_INVALID_ARGUMENT, "--format is only valid for sigilo baseline check");
+                return (int)CCT_ERROR_INVALID_ARGUMENT;
+            }
+            if (i + 1 >= argc) {
+                cct_error_printf(CCT_ERROR_MISSING_ARGUMENT, "--format requires text|structured");
+                return (int)CCT_ERROR_MISSING_ARGUMENT;
+            }
+            const char *fmt = argv[++i];
+            if (strcmp(fmt, "text") == 0) {
+                structured = false;
+            } else if (strcmp(fmt, "structured") == 0) {
+                structured = true;
+            } else {
+                cct_error_printf(CCT_ERROR_INVALID_ARGUMENT, "Invalid --format value: %s", fmt);
+                return (int)CCT_ERROR_INVALID_ARGUMENT;
+            }
+            continue;
+        }
+        cct_error_printf(CCT_ERROR_UNKNOWN_COMMAND, "Unknown sigilo baseline option: %s", arg);
+        return (int)CCT_ERROR_UNKNOWN_COMMAND;
+    }
+
+    cct_sigil_parse_mode_t parse_mode = strict ? CCT_SIGIL_PARSE_MODE_STRICT : CCT_SIGIL_PARSE_MODE_TOLERANT;
+    cct_sigil_document_t artifact_doc;
+    if (!cct_sigil_parse_file(artifact, parse_mode, &artifact_doc)) {
+        print_sigil_diagnostics(&artifact_doc);
+        if (explain) {
+            sigilo_print_explain("baseline-check",
+                                 "artifact could not be parsed under the selected profile",
+                                 "run `cct sigilo validate <artifact> --strict --format structured` and fix listed diagnostics",
+                                 true);
+        }
+        cct_sigil_document_dispose(&artifact_doc);
+        return (int)CCT_ERROR_INVALID_ARGUMENT;
+    }
+    if (cct_sigil_document_has_errors(&artifact_doc)) {
+        print_sigil_diagnostics(&artifact_doc);
+        if (explain) {
+            sigilo_print_explain("baseline-check",
+                                 "artifact violates sigilo schema contract",
+                                 "fix required fields/type consistency then rerun baseline check",
+                                 true);
+        }
+        cct_sigil_document_dispose(&artifact_doc);
+        return (int)CCT_ERROR_INVALID_ARGUMENT;
+    }
+
+    char *baseline_path = NULL;
+    char *baseline_error = NULL;
+    if (!cct_sigilo_baseline_resolve_path(&artifact_doc, baseline_override, &baseline_path, &baseline_error)) {
+        cct_error_printf(CCT_ERROR_INTERNAL,
+                         "%s",
+                         baseline_error ? baseline_error : "could not resolve baseline path");
+        free(baseline_error);
+        cct_sigil_document_dispose(&artifact_doc);
+        return (int)CCT_ERROR_INTERNAL;
+    }
+
+    if (is_update) {
+        char *meta_path = NULL;
+        if (!cct_sigilo_baseline_write(artifact, &artifact_doc, baseline_path, force, &meta_path, &baseline_error)) {
+            cct_error_printf(CCT_ERROR_INVALID_ARGUMENT,
+                             "%s",
+                             baseline_error ? baseline_error : "could not update sigilo baseline");
+            free(baseline_error);
+            free(meta_path);
+            free(baseline_path);
+            cct_sigil_document_dispose(&artifact_doc);
+            return (int)CCT_ERROR_INVALID_ARGUMENT;
+        }
+
+        printf("sigilo.baseline.update status=written baseline=%s meta=%s scope=%s\n",
+               baseline_path,
+               meta_path ? meta_path : "<none>",
+               artifact_doc.sigilo_scope ? artifact_doc.sigilo_scope : "<none>");
+
+        free(meta_path);
+        free(baseline_path);
+        cct_sigil_document_dispose(&artifact_doc);
+        return 0;
+    }
+
+    if (!cct_sigilo_baseline_file_exists(baseline_path)) {
+        if (structured) {
+            printf("format = cct.sigil.baseline.check.v1\n");
+            printf("status = missing\n");
+            printf("baseline_path = %s\n", baseline_path);
+            printf("current_path = %s\n", artifact);
+            printf("strict = %s\n", strict ? "true" : "false");
+        } else {
+            printf("sigilo.baseline.check status=missing baseline=%s current=%s\n",
+                   baseline_path,
+                   artifact);
+        }
+        if (explain) {
+            sigilo_print_explain("baseline-check",
+                                 "baseline file is missing",
+                                 "create baseline via `cct sigilo baseline update <artifact> --baseline <path>`",
+                                 strict);
+        }
+        free(baseline_path);
+        cct_sigil_document_dispose(&artifact_doc);
+        return 0;
+    }
+
+    char *meta_path = NULL;
+    bool meta_exists = false;
+    if (!cct_sigilo_baseline_compute_meta_path(baseline_path, &meta_path, &baseline_error)) {
+        cct_error_printf(CCT_ERROR_INTERNAL,
+                         "%s",
+                         baseline_error ? baseline_error : "could not resolve baseline metadata path");
+        free(baseline_error);
+        free(meta_path);
+        free(baseline_path);
+        cct_sigil_document_dispose(&artifact_doc);
+        return (int)CCT_ERROR_INTERNAL;
+    }
+    if (!cct_sigilo_baseline_validate_meta(meta_path, &meta_exists, &baseline_error)) {
+        cct_error_printf(CCT_ERROR_INVALID_ARGUMENT,
+                         "%s",
+                         baseline_error ? baseline_error : "invalid baseline metadata");
+        free(baseline_error);
+        free(meta_path);
+        free(baseline_path);
+        cct_sigil_document_dispose(&artifact_doc);
+        return (int)CCT_ERROR_INVALID_ARGUMENT;
+    }
+
+    cct_sigil_document_t baseline_doc;
+    if (!cct_sigil_parse_file(baseline_path, parse_mode, &baseline_doc)) {
+        print_sigil_diagnostics(&baseline_doc);
+        if (explain) {
+            sigilo_print_explain("baseline-check",
+                                 "baseline could not be parsed under the selected profile",
+                                 "repair/regenerate baseline then rerun check",
+                                 true);
+        }
+        free(meta_path);
+        free(baseline_path);
+        cct_sigil_document_dispose(&artifact_doc);
+        cct_sigil_document_dispose(&baseline_doc);
+        return (int)CCT_ERROR_INVALID_ARGUMENT;
+    }
+    if (cct_sigil_document_has_errors(&baseline_doc)) {
+        print_sigil_diagnostics(&baseline_doc);
+        if (explain) {
+            sigilo_print_explain("baseline-check",
+                                 "baseline violates sigilo schema contract",
+                                 "update baseline from a valid artifact after review approval",
+                                 true);
+        }
+        free(meta_path);
+        free(baseline_path);
+        cct_sigil_document_dispose(&artifact_doc);
+        cct_sigil_document_dispose(&baseline_doc);
+        return (int)CCT_ERROR_INVALID_ARGUMENT;
+    }
+
+    cct_sigil_diff_result_t diff;
+    if (!cct_sigil_diff_documents(&baseline_doc, &artifact_doc, &diff)) {
+        free(meta_path);
+        free(baseline_path);
+        cct_sigil_document_dispose(&artifact_doc);
+        cct_sigil_document_dispose(&baseline_doc);
+        return (int)CCT_ERROR_INTERNAL;
+    }
+
+    const char *status = (diff.count == 0) ? "ok" : "drift";
+    if (structured) {
+        printf("format = cct.sigil.baseline.check.v1\n");
+        printf("status = %s\n", status);
+        printf("baseline_path = %s\n", baseline_path);
+        printf("current_path = %s\n", artifact);
+        printf("meta_path = %s\n", meta_path ? meta_path : "");
+        printf("meta_exists = %s\n", meta_exists ? "true" : "false");
+        printf("strict = %s\n", strict ? "true" : "false");
+        printf("\n");
+        if (!cct_sigil_diff_render_structured(stdout, &diff)) {
+            cct_sigil_diff_result_dispose(&diff);
+            free(meta_path);
+            free(baseline_path);
+            cct_sigil_document_dispose(&artifact_doc);
+            cct_sigil_document_dispose(&baseline_doc);
+            return (int)CCT_ERROR_INTERNAL;
+        }
+    } else {
+        printf("sigilo.baseline.check status=%s baseline=%s current=%s meta=%s\n",
+               status,
+               baseline_path,
+               artifact,
+               meta_exists ? "present" : "missing");
+        if (!cct_sigil_diff_render_text(stdout, &diff, summary)) {
+            cct_sigil_diff_result_dispose(&diff);
+            free(meta_path);
+            free(baseline_path);
+            cct_sigil_document_dispose(&artifact_doc);
+            cct_sigil_document_dispose(&baseline_doc);
+            return (int)CCT_ERROR_INTERNAL;
+        }
+    }
+
+    int rc = 0;
+    if (strict && diff.highest_severity >= CCT_SIGIL_DIFF_SEVERITY_REVIEW_REQUIRED) {
+        rc = (int)CCT_ERROR_CONTRACT_VIOLATION;
+        if (!structured) {
+            fprintf(stderr,
+                    "cct: sigilo baseline check blocked (strict mode). action: review drift and update baseline explicitly with 'cct sigilo baseline update %s --baseline %s --force' when approved.\n",
+                    artifact,
+                    baseline_path);
+        } else {
+            fprintf(stderr,
+                    "cct: sigilo baseline check blocked (strict mode). action: update baseline only after review approval.\n");
+        }
+        if (explain) {
+            sigilo_print_explain("baseline-check",
+                                 diff.highest_severity == CCT_SIGIL_DIFF_SEVERITY_BEHAVIORAL_RISK
+                                     ? "critical metadata drift (format/scope contract) was detected"
+                                     : "review-required metadata drift (hash/topology contract) was detected",
+                                 "review diff and update baseline explicitly with `cct sigilo baseline update <artifact> --baseline <path> --force` only when approved",
+                                 true);
+        }
+    } else if (explain && diff.count > 0) {
+        sigilo_print_explain("baseline-check",
+                             "informational metadata drift was detected",
+                             "record accepted drift and refresh baseline when appropriate",
+                             false);
+    }
+
+    cct_sigil_diff_result_dispose(&diff);
+    free(meta_path);
+    free(baseline_path);
+    cct_sigil_document_dispose(&artifact_doc);
+    cct_sigil_document_dispose(&baseline_doc);
+    return rc;
+}
+
+static int cmd_sigilo_tools(int argc, char **argv) {
+    if (argc < 4) {
+        fprintf(stderr, "Usage:\n");
+        fprintf(stderr, "  cct sigilo inspect <artifact.sigil> [--format text|structured] [--summary] [--strict] [--consumer-profile legacy-tolerant|current-default|strict-contract] [--explain]\n");
+        fprintf(stderr, "  cct sigilo validate <artifact.sigil> [--format text|structured] [--summary] [--strict] [--consumer-profile legacy-tolerant|current-default|strict-contract] [--explain]\n");
+        fprintf(stderr, "  cct sigilo diff <left.sigil> <right.sigil> [--format text|structured] [--summary] [--strict] [--consumer-profile legacy-tolerant|current-default|strict-contract] [--explain]\n");
+        fprintf(stderr, "  cct sigilo check <left.sigil> <right.sigil> [--format text|structured] [--summary] [--strict] [--consumer-profile legacy-tolerant|current-default|strict-contract] [--explain]\n");
+        fprintf(stderr, "  cct sigilo baseline check <artifact.sigil> [--baseline <path>] [--format text|structured] [--summary] [--strict] [--explain]\n");
+        fprintf(stderr, "  cct sigilo baseline update <artifact.sigil> [--baseline <path>] [--force]\n");
+        return (int)CCT_ERROR_MISSING_ARGUMENT;
+    }
+
+    const char *sub = argv[2];
+    if (strcmp(sub, "baseline") == 0) {
+        return cmd_sigilo_baseline_tools(argc, argv);
+    }
+    bool is_inspect = strcmp(sub, "inspect") == 0;
+    bool is_validate = strcmp(sub, "validate") == 0;
+    bool is_diff = strcmp(sub, "diff") == 0;
+    bool is_check = strcmp(sub, "check") == 0;
+    if (!is_inspect && !is_validate && !is_diff && !is_check) {
+        cct_error_printf(CCT_ERROR_UNKNOWN_COMMAND, "Unknown sigilo subcommand: %s", sub);
+        return (int)CCT_ERROR_UNKNOWN_COMMAND;
+    }
+
+    bool structured = false;
+    bool summary = is_check;
+    bool strict = false;
+    bool explain = false;
+    cct_sigil_parse_mode_t parse_mode = CCT_SIGIL_PARSE_MODE_CURRENT_DEFAULT;
+
+    const char *left = NULL;
+    const char *right = NULL;
+    int i = 3;
+    if (is_inspect || is_validate) {
+        left = argv[i++];
+        if (!has_sigil_extension(left)) {
+            cct_error_printf(CCT_ERROR_INVALID_ARGUMENT, "Input artifact must have .sigil extension: %s", left);
+            return (int)CCT_ERROR_INVALID_ARGUMENT;
+        }
+    } else {
+        if (argc < 5) {
+            cct_error_printf(CCT_ERROR_MISSING_ARGUMENT, "sigilo %s requires two .sigil paths", sub);
+            return (int)CCT_ERROR_MISSING_ARGUMENT;
+        }
+        left = argv[i++];
+        right = argv[i++];
+        if (!has_sigil_extension(left) || !has_sigil_extension(right)) {
+            cct_error_printf(CCT_ERROR_INVALID_ARGUMENT, "sigilo %s expects .sigil inputs", sub);
+            return (int)CCT_ERROR_INVALID_ARGUMENT;
+        }
+    }
+
+    for (; i < argc; i++) {
+        const char *arg = argv[i];
+        if (strcmp(arg, "--summary") == 0) {
+            summary = true;
+            continue;
+        }
+        if (strcmp(arg, "--strict") == 0) {
+            strict = true;
+            continue;
+        }
+        if (strcmp(arg, "--explain") == 0) {
+            explain = true;
+            continue;
+        }
+        if (strcmp(arg, "--consumer-profile") == 0) {
+            if (i + 1 >= argc) {
+                cct_error_printf(CCT_ERROR_MISSING_ARGUMENT, "--consumer-profile requires legacy-tolerant|current-default|strict-contract");
+                return (int)CCT_ERROR_MISSING_ARGUMENT;
+            }
+            const char *profile = argv[++i];
+            if (strcmp(profile, "legacy-tolerant") == 0) {
+                parse_mode = CCT_SIGIL_PARSE_MODE_LEGACY_TOLERANT;
+            } else if (strcmp(profile, "current-default") == 0) {
+                parse_mode = CCT_SIGIL_PARSE_MODE_CURRENT_DEFAULT;
+            } else if (strcmp(profile, "strict-contract") == 0) {
+                parse_mode = CCT_SIGIL_PARSE_MODE_STRICT_CONTRACT;
+            } else {
+                cct_error_printf(CCT_ERROR_INVALID_ARGUMENT, "Invalid --consumer-profile value: %s", profile);
+                return (int)CCT_ERROR_INVALID_ARGUMENT;
+            }
+            continue;
+        }
+        if (strcmp(arg, "--format") == 0) {
+            if (i + 1 >= argc) {
+                cct_error_printf(CCT_ERROR_MISSING_ARGUMENT, "--format requires text|structured");
+                return (int)CCT_ERROR_MISSING_ARGUMENT;
+            }
+            const char *fmt = argv[++i];
+            if (strcmp(fmt, "text") == 0) {
+                structured = false;
+            } else if (strcmp(fmt, "structured") == 0) {
+                structured = true;
+            } else {
+                cct_error_printf(CCT_ERROR_INVALID_ARGUMENT, "Invalid --format value: %s", fmt);
+                return (int)CCT_ERROR_INVALID_ARGUMENT;
+            }
+            continue;
+        }
+        cct_error_printf(CCT_ERROR_UNKNOWN_COMMAND, "Unknown sigilo option: %s", arg);
+        return (int)CCT_ERROR_UNKNOWN_COMMAND;
+    }
+
+    if (strict) parse_mode = CCT_SIGIL_PARSE_MODE_STRICT_CONTRACT;
+    cct_sigil_document_t left_doc;
+    bool left_parsed = cct_sigil_parse_file(left, parse_mode, &left_doc);
+    bool left_has_errors = cct_sigil_document_has_errors(&left_doc);
+
+    if (is_validate) {
+        size_t errors = 0;
+        for (size_t d = 0; d < left_doc.diagnostics.count; d++) {
+            if (left_doc.diagnostics.items[d].level == CCT_SIGIL_DIAG_ERROR) errors++;
+        }
+        int rc = structured
+            ? sigilo_emit_validate_structured(&left_doc, parse_mode, summary)
+            : sigilo_emit_validate_text(&left_doc, parse_mode, summary);
+        if (errors > 0 || !left_parsed || left_has_errors) rc = (int)CCT_ERROR_CONTRACT_VIOLATION;
+        if (explain && rc != 0) {
+            sigilo_print_explain("validate",
+                                 "artifact violates schema/consistency contract",
+                                 "fix the reported diagnostics and rerun `cct sigilo validate <artifact> --strict`",
+                                 true);
+        }
+        cct_sigil_document_dispose(&left_doc);
+        return rc;
+    }
+    if (!left_parsed || left_has_errors) {
+        print_sigil_diagnostics(&left_doc);
+        if (explain) {
+            sigilo_print_explain("inspect",
+                                 "artifact could not be parsed cleanly",
+                                 "run validation in strict mode and correct diagnostics first",
+                                 true);
+        }
+        cct_sigil_document_dispose(&left_doc);
+        return (int)CCT_ERROR_INVALID_ARGUMENT;
+    }
+
+    if (is_inspect) {
+        int rc = structured
+            ? sigilo_emit_inspect_structured(&left_doc, summary)
+            : sigilo_emit_inspect_text(&left_doc, summary);
+        cct_sigil_document_dispose(&left_doc);
+        return rc;
+    }
+    cct_sigil_document_t right_doc;
+    if (!cct_sigil_parse_file(right, parse_mode, &right_doc)) {
+        print_sigil_diagnostics(&right_doc);
+        if (explain) {
+            sigilo_print_explain(is_check ? "check" : "diff",
+                                 "right artifact could not be parsed",
+                                 "validate both artifacts before diff/check",
+                                 true);
+        }
+        cct_sigil_document_dispose(&left_doc);
+        cct_sigil_document_dispose(&right_doc);
+        return (int)CCT_ERROR_INVALID_ARGUMENT;
+    }
+    if (cct_sigil_document_has_errors(&right_doc)) {
+        print_sigil_diagnostics(&right_doc);
+        if (explain) {
+            sigilo_print_explain(is_check ? "check" : "diff",
+                                 "right artifact has schema errors",
+                                 "fix right artifact diagnostics then rerun diff/check",
+                                 true);
+        }
+        cct_sigil_document_dispose(&left_doc);
+        cct_sigil_document_dispose(&right_doc);
+        return (int)CCT_ERROR_INVALID_ARGUMENT;
+    }
+
+    cct_sigil_diff_result_t diff;
+    if (!cct_sigil_diff_documents(&left_doc, &right_doc, &diff)) {
+        cct_sigil_document_dispose(&left_doc);
+        cct_sigil_document_dispose(&right_doc);
+        return (int)CCT_ERROR_INTERNAL;
+    }
+
+    bool rendered = structured
+        ? cct_sigil_diff_render_structured(stdout, &diff)
+        : cct_sigil_diff_render_text(stdout, &diff, summary);
+    if (!rendered) {
+        cct_sigil_diff_result_dispose(&diff);
+        cct_sigil_document_dispose(&left_doc);
+        cct_sigil_document_dispose(&right_doc);
+        return (int)CCT_ERROR_INTERNAL;
+    }
+
+    int rc = 0;
+    if (strict && diff.highest_severity >= CCT_SIGIL_DIFF_SEVERITY_REVIEW_REQUIRED) {
+        rc = (int)CCT_ERROR_CONTRACT_VIOLATION;
+        if (explain) {
+            sigilo_print_explain(is_check ? "check" : "diff",
+                                 diff.highest_severity == CCT_SIGIL_DIFF_SEVERITY_BEHAVIORAL_RISK
+                                     ? "critical metadata drift (format/scope contract) was detected"
+                                     : "review-required metadata drift (hash/topology contract) was detected",
+                                 "review diff output and update approved baseline/artifact accordingly",
+                                 true);
+        }
+    } else if (explain && diff.count > 0) {
+        sigilo_print_explain(is_check ? "check" : "diff",
+                             "informational metadata drift was detected",
+                             "record drift context and accept/update artifacts if intended",
+                             false);
+    }
+
+    cct_sigil_diff_result_dispose(&diff);
+    cct_sigil_document_dispose(&left_doc);
+    cct_sigil_document_dispose(&right_doc);
+    return rc;
 }
 
 static int cmd_format(int argc, char **argv) {
@@ -173,7 +920,7 @@ static int cmd_format(int argc, char **argv) {
     }
 
     if (check_only && check_failed) {
-        return 2;
+        return (int)CCT_ERROR_CONTRACT_VIOLATION;
     }
     return (int)CCT_OK;
 }
@@ -765,6 +1512,9 @@ int main(int argc, char **argv) {
     cct_cli_args_t args;
     cct_error_code_t result;
 
+    if (argc >= 2 && strcmp(argv[1], "sigilo") == 0) {
+        return cmd_sigilo_tools(argc, argv);
+    }
     if (argc >= 2 && cct_project_is_command(argv[1])) {
         return cct_project_dispatch(argc, argv, argv[0]);
     }

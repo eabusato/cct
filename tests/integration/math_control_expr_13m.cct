@@ -1,0 +1,11 @@
+INCIPIT grimoire "math_control_expr_13m"
+
+RITUALE main() REDDE REX
+  EVOCA REX score AD (2 ** 5) // 3
+  SI score > 9
+    REDDE 0
+  FIN SI
+  REDDE 1
+EXPLICIT RITUALE
+
+EXPLICIT grimoire
