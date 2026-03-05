@@ -16,10 +16,12 @@ It has two goals:
 
 ## Current Project Snapshot
 
-- **Current completed phase:** FASE 12H (structural maturity milestone)
+- **Current completed phase:** FASE 13D.4 (sigilo tooling expansion formally closed)
+- **Current addendum closure:** FASE 13M.B2 (common math operators package formally closed)
 - **Compiler maturity:** complete development toolchain with formatter, linter, build system, and doc generator
 - **Backend strategy:** C-hosted backend is official (`.cgen.c` + host C compiler)
 - **Sigilo model:** dual-level modular model is stable (local + system sigilo)
+- **Sigilo operations (FASE 13 closed at 13D.4):** inspection/diff/check/baseline/validate flows, CI profiles (`advisory/gated/release`), regression matrix, determinism audit, and final closure governance are integrated
 - **Typing model:** advanced typing subset stabilized (`GENUS`, `PACTUM`, basic constraints)
 
 ## Completed Phases (0 → 10E)
@@ -436,6 +438,8 @@ Primary objective:
 
 Planned scope:
 - tooling around sigilo inspection/comparison and development workflows
+- project baseline workflow for sigilo (`baseline check`/`baseline update`)
+- canonical local workflow profiles (minimal vs strict pre-merge) for gradual team adoption
 - metadata enrichment for analysis use-cases
 - optional visualization refinements with backward-compatible semantics
 
@@ -444,6 +448,30 @@ Out of scope:
 
 Definition of done:
 - tooling value added without compromising determinism or regression stability
+
+Current closure status:
+- delivered through 13D.4 (technical + quality + documentation closure gate passed)
+- release artifacts published under `docs/release/FASE_13_*`
+
+### FASE 13M — Common Math Operators Addendum
+
+Primary objective:
+- deliver high-utility mathematical operators without widening language scope into low-demand symbols
+
+Delivered scope:
+- `**` exponentiation with right associativity
+- `//` floor integer division semantics
+- `%%` euclidean modulo semantics coherent with `//`
+- `%` legacy behavior preserved
+
+Quality closure:
+- deep matrix coverage integrated in the global test runner
+- historical regressions preserved green
+- documentation/spec/example/release addendum harmonized
+
+Current closure status:
+- delivered through 13M.B2 (implementation + quality + docs/release gate passed)
+- release artifacts published under `docs/release/FASE_13M_*`
 
 ### FASE 14 — Release Hardening (v0.x)
 
@@ -516,4 +544,4 @@ Every phase must pass these gates before closure:
 
 ## Immediate Next Step
 
-**Next phase to execute:** FASE 12, backend/runtime evolution on top of the frozen FASE 11 baseline.
+**Next phase to execute:** FASE 14, release hardening on top of the closed and audited FASE 13 package.

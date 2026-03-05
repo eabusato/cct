@@ -212,6 +212,16 @@ FASE 12 **preserves full compatibility** with all prior phases:
    - Compilation speed, memory usage, binary size are not guaranteed
    - Incremental compilation heuristics may change
 
+### Cross-Phase Note (FASE 13C.1)
+
+FASE 13 introduces formal schema governance for sigilo metadata while preserving FASE 12 compatibility guarantees:
+
+- canonical schema stays `cct.sigil.v1` during FASE 13;
+- schema evolution is additive by default;
+- deprecated fields require coexistence period and explicit migration plan.
+
+Reference: `docs/sigilo_schema_13c1.md`.
+
 ---
 
 ## Incremental Build Compatibility

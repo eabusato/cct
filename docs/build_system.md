@@ -30,7 +30,8 @@ Default entry is `src/main.cct`, unless overridden with `--entry`.
 ## Build
 
 ```bash
-cct build [--release] [--project DIR] [--entry FILE.cct] [--out PATH]
+cct build [--release] [--project DIR] [--entry FILE.cct] [--out PATH] \
+          [--sigilo-check] [--sigilo-strict] [--sigilo-baseline PATH]
 ```
 
 Optional quality gates:
@@ -38,12 +39,20 @@ Optional quality gates:
 - `--lint`
 - `--fmt-check`
 
+Optional sigilo baseline gate:
+
+- `--sigilo-check`: runs `cct sigilo baseline check` for the built artifact sigilo
+- `--sigilo-strict`: enables strict baseline check behavior (exit `2` on blocking drift)
+- `--sigilo-baseline PATH`: baseline path override (relative paths are resolved from project root)
+- default baseline path without override is `docs/sigilo/baseline/local.sigil` or `system.sigil` based on artifact scope
+
 Incremental cache is stored in `.cct/cache/manifest.txt`.
 
 ## Run
 
 ```bash
-cct run [--release] [--project DIR] [--entry FILE.cct] [-- --args]
+cct run [--release] [--project DIR] [--entry FILE.cct] \
+        [--sigilo-check] [--sigilo-strict] [--sigilo-baseline PATH] [-- --args]
 ```
 
 Builds first, then executes resulting binary, returning the program exit code.
@@ -51,7 +60,8 @@ Builds first, then executes resulting binary, returning the program exit code.
 ## Test
 
 ```bash
-cct test [PATTERN] [--project DIR] [--strict-lint] [--fmt-check]
+cct test [PATTERN] [--project DIR] [--strict-lint] [--fmt-check] \
+         [--sigilo-check] [--sigilo-strict] [--sigilo-baseline PATH]
 ```
 
 Discovers `*.test.cct` recursively under `tests/`.
@@ -59,7 +69,8 @@ Discovers `*.test.cct` recursively under `tests/`.
 ## Bench
 
 ```bash
-cct bench [PATTERN] [--project DIR] [--iterations N] [--release]
+cct bench [PATTERN] [--project DIR] [--iterations N] [--release] \
+          [--sigilo-check] [--sigilo-strict] [--sigilo-baseline PATH]
 ```
 
 Discovers `*.bench.cct` recursively under `bench/` and reports average/total runtime.
@@ -78,4 +89,5 @@ cct clean [--project DIR] [--all]
 - `0` success
 - `1` command/build/run/test failure
 - `2` quality gate failure (`--strict-lint`, `--fmt-check`)
+- `2` also for strict sigilo baseline gate blocking drift
 - `3` internal tooling error (reserved)

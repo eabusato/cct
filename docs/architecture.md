@@ -8,7 +8,7 @@ CCT is a compiled language toolchain that transforms `.cct` sources into:
 - executable binaries (via generated C + host C compiler)
 - deterministic sigil artifacts (`.svg` + `.sigil`)
 
-This architecture document is aligned with the project state through **FASE 12G** and includes the planned architecture direction for future phases.
+This architecture document is aligned with the implemented project state through **FASE 13D.4 + FASE 13M.B2** and includes the planned architecture direction for future phases.
 
 ## Current Architecture (FASE 12G)
 
@@ -210,6 +210,31 @@ Status: mature through 9D/9D2/9E and preserved across phase 10 closure.
 - **FASE 12E.1**: standalone formatter command (`cct fmt`) with in-place, check, and diff modes
 - **FASE 12E.2**: canonical linter command (`cct lint`) with stable rule IDs, strict mode, and safe-fix subset
 
+### FASE 13 Sigilo Tooling Expansion (Implemented Through 13D.4)
+- **FASE 13A.1**: canonical `.sigil` parser/reader runtime suite (`test_sigil_parse`)
+- **FASE 13A.2**: structural diff engine runtime suite (`test_sigil_diff`)
+- **FASE 13A.3**: `sigilo inspect|diff|check` operational CLI contract
+- **FASE 13A.4**: baseline check/update contract for local and CI workflows
+- **FASE 13B.1/13B.2**: local + project workflow opt-in integration (`build|test|bench --sigilo-check`)
+- **FASE 13B.3/13B.4**: CI profile gates (`advisory|gated|release`) and operator-facing report/explain outputs
+- **FASE 13C.1–13C.4**: schema governance, compatibility profiles, and strict/tolerant validator contract (`sigilo validate`)
+- **FASE 13D.1**: dedicated regression matrix runner:
+  - `tests/run_phase13_regression.sh`
+  - canonical fixture tree `tests/integration/phase13_regression_13d1/`
+  - integrated in the global runner (`tests/run_tests.sh`)
+- **FASE 13D.2**: determinism audit runner and release audit evidence:
+  - `tests/run_phase13_determinism_audit.sh`
+  - `docs/release/FASE_13_DETERMINISM_AUDIT.md`
+- **FASE 13D.3**: release-document consolidation package:
+  - snapshot + stability/compatibility/limits/release-notes documents under `docs/release/`
+- **FASE 13D.4**: final closure gate and residual-risk register for phase exit governance
+
+### FASE 13M Common Math Operators Addendum (Implemented Through 13M.B2)
+- **FASE 13M.A1**: scope freeze and semantic contract (`**`, `//`, `%%`; `^` deferred)
+- **FASE 13M.A2**: compiler implementation in lexer/parser/semantic/codegen/runtime bridge
+- **FASE 13M.B1**: deep test matrix and non-regression proof integrated in `tests/run_tests.sh`
+- **FASE 13M.B2**: documentation/release closure with executable examples and phase closure gate
+
 ## Current Architectural Contract (Post-11H)
 
 ### Stable and Official
@@ -275,6 +300,9 @@ Architecture direction:
 ### FASE 13 — Sigilo and Tooling Expansion
 Architecture direction:
 - richer tooling around sigilo analysis and workflows
+- persisted, versioned baseline contract for sigilo drift checks
+- explicit schema governance for `.sigil` evolution (13C.1), including additive-only policy in FASE 13
+- canonical local workflow profiles (minimal/strict) to operationalize sigilo checks without coupling to CI gates
 - optional visual/metadata enhancements while preserving deterministic model
 - no regression of local/system sigilo contracts
 

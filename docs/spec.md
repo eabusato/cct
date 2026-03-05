@@ -11,7 +11,7 @@ It is written to help you:
 
 ## Status
 
-Specification baseline: **FASE 12F (12E.2 baseline + canonical project workflow: build/run/test/bench/clean)**.
+Specification baseline: **FASE 13M.B2** (FASE 13 tooling closure + common math operators addendum).
 
 The language is fully usable in its current subset, with explicit boundaries documented below.
 
@@ -42,6 +42,24 @@ Behavior: syntax + semantic validation only.
 
 - `./cct --sigilo-only <file.cct>`
 Behavior: emit sigilo artifacts without executable generation.
+
+- `./cct sigilo inspect <artifact.sigil>`
+Behavior: inspect parsed sigilo metadata in text or structured formats.
+
+- `./cct sigilo validate <artifact.sigil> [--strict] [--consumer-profile legacy-tolerant|current-default|strict-contract]`
+Behavior: run canonical strict/tolerant validation engine and emit normalized violation report.
+
+- `./cct sigilo diff <left.sigil> <right.sigil>`
+Behavior: structural/semantic diff with severity classification.
+
+- `./cct sigilo check <left.sigil> <right.sigil> [--strict]`
+Behavior: same as diff with CI-friendly exit code policy (`2` for strict blocking severities).
+
+- `./cct sigilo baseline check <artifact.sigil> [--baseline PATH] [--strict]`
+Behavior: compare current artifact against persisted project baseline without mutating files.
+
+- `./cct sigilo baseline update <artifact.sigil> [--baseline PATH] [--force]`
+Behavior: explicitly write/update baseline artifacts and metadata (never implicit).
 
 - `./cct fmt <file1.cct> [file2.cct ...]`
 Behavior: format one or more CCT files in place.
@@ -463,7 +481,7 @@ CONIURA nome GENUS(T1, T2)(...)
 ### 6.5 Binary Operators
 
 Arithmetic and comparison are stable in executable subset:
-- `+`, `-`, `*`, `/`, `%`
+- `+`, `-`, `*`, `/`, `%`, `**`, `//`, `%%`
 - `==`, `!=`, `<`, `<=`, `>`, `>=`
 
 Logical/bitwise/shift forms are recognized and semantically validated in many paths:
@@ -474,6 +492,27 @@ Logical/bitwise/shift forms are recognized and semantically validated in many pa
 Executable support note:
 - arithmetic/comparison are the primary stable codegen path
 - some logical/bitwise/shift combinations are outside current executable codegen subset
+
+13M arithmetic addendum:
+- `**` is exponentiation and is right-associative (`2 ** 3 ** 2` = `2 ** (3 ** 2)`).
+- `//` is floor integer division (requires integer operands).
+- `%%` is Euclidean modulo (requires integer operands), coherent with `//`.
+- `%` remains available with historical behavior for compatibility.
+
+### 6.6 Precedence and Associativity (Stable Executable Core)
+
+From higher to lower priority in arithmetic/comparison core:
+
+1. unary: `+x`, `-x`, `NON x`, `*p`, `SPECULUM x`
+2. power: `**` (right-associative)
+3. multiplicative: `*`, `/`, `%`, `//`, `%%`
+4. additive: `+`, `-`
+5. comparison/equality: `==`, `!=`, `<`, `<=`, `>`, `>=`
+
+Examples:
+- `2 + 3 ** 2 * 4` => `2 + ((3 ** 2) * 4)`
+- `20 // 3 + 1` => `(20 // 3) + 1`
+- `20 // (3 + 1)` => `20 // 4`
 
 ## 7. `OBSECRO` Builtins
 
@@ -939,6 +978,54 @@ Emission modes for multi-module workflows:
 System sigilo model:
 - vector inline sigil-of-sigils composition
 - deterministic metadata and hash behavior by structure
+
+Baseline contract (FASE 13A.4):
+- default baseline location: `docs/sigilo/baseline/local.sigil` or `docs/sigilo/baseline/system.sigil`
+- baseline metadata sidecar: `<baseline>.baseline.meta`
+- `check` is read-only (no implicit updates)
+- `update` is explicit, and overwrite requires `--force`
+
+Project sigilo operational report contract (FASE 13B.4):
+- output signature: `format=cct.sigilo.report.v1`
+- default mode: summary (`--sigilo-report summary`)
+- detailed mode: `--sigilo-report detailed` (includes per-diff domain and before/after when CI profile gate computes diff)
+- explain mode: `--sigilo-explain` (probable cause + recommended action + troubleshooting reference)
+- compatibility note: legacy `sigilo.ci ...` line is preserved for existing script consumers
+
+Sigilo schema governance contract (FASE 13C.1):
+- canonical schema identifier remains `format = cct.sigil.v1` during FASE 13
+- evolution is additive by default (no incompatible format break in this phase)
+- unknown additive top-level fields are warning-only in tolerant/strict parser modes
+- deprecated field support is explicit (`sigilo_style` accepted with warning; replacement: `visual_engine`)
+- normative schema policy and compatibility matrix: `docs/sigilo_schema_13c1.md`
+
+Sigilo analytical metadata expansion (FASE 13C.2):
+- additive analytical sections: `analysis_summary`, `diff_fingerprint_context`, `module_structural_summary`, `compatibility_hints`
+- deterministic serialization order for analytical blocks in local/system `.sigil`
+- no volatile timestamp fields in deterministic profile
+- diff classification treats analytical blocks as review-required, except `compatibility_hints` (informational)
+
+Sigilo consumer compatibility contract (FASE 13C.3):
+- consumer profiles: `legacy-tolerant`, `current-default`, `strict-contract`
+- CLI selection: `--consumer-profile legacy-tolerant|current-default|strict-contract` (`--strict` maps to `strict-contract`)
+- higher same-family schema (`cct.sigil.v2+`) uses warning + v1-compatible fallback in non-strict profiles
+- strict-contract keeps schema mismatch as blocking error
+- migration/fallback matrix is documented in `docs/sigilo_consumer_compat_13c3.md`
+
+Sigilo strict/tolerant validator contract (FASE 13C.4):
+- canonical validator entrypoint: `cct sigilo validate <artifact.sigil>`
+- validation domains: required fields, type/cardinality checks, and cross-section consistency
+- tolerant profiles classify recoverable issues as warnings and keep processing when safe
+- strict-contract profile blocks contractual violations with deterministic non-zero exit status
+- diagnostics are harmonized with objective message + corrective action hint (`action: ...`)
+
+FASE 13 release references (13D.3):
+- snapshot: `docs/release/FASE_13_FINAL_SNAPSHOT.md`
+- stability matrix: `docs/release/FASE_13_STABILITY_MATRIX.md`
+- compatibility matrix: `docs/release/FASE_13_COMPATIBILITY_MATRIX.md`
+- known limits: `docs/release/FASE_13_KNOWN_LIMITS.md`
+- release notes: `docs/release/FASE_13_RELEASE_NOTES.md`
+- determinism audit: `docs/release/FASE_13_DETERMINISM_AUDIT.md`
 
 ## 11. Keyword Catalog
 
