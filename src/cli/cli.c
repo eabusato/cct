@@ -81,6 +81,8 @@ void cct_cli_show_help(void) {
     printf("  --profile <profile>         Compilation profile: host (default) | freestanding\n");
     printf("                              freestanding: bare-metal x86-32 target (LBOS) (FASE 16)\n");
     printf("  --freestanding              Alias for --profile freestanding\n");
+    printf("  --entry <rituale>           Freestanding entry ritual symbol (FASE 16B.4)\n");
+    printf("  --emit-asm                  Emit freestanding assembly (.cgen.s) (FASE 16C.1)\n");
     printf("  --sigilo-only <file.cct>    Generate sigilo artifacts only (FASE 5+)\n");
     printf("  --sigilo-style <style>      Sigilo style: network|seal|scriptum (FASE 6A)\n");
     printf("  --sigilo-mode <mode>        Multi-module sigilo emission: essencial|completo\n");
@@ -160,11 +162,13 @@ cct_error_code_t cct_cli_parse(int argc, char **argv, cct_cli_args_t *args) {
     args->command = CCT_CMD_NONE;
     args->input_file = NULL;
     args->output_file = NULL;
+    args->entry_rituale = NULL;
     args->sigilo_style = "network";
     args->sigilo_out_base = NULL;
     args->sigilo_mode = CCT_SIGILO_MODE_ESSENTIAL;
     args->sigilo_emit_svg = true;
     args->sigilo_emit_meta = true;
+    args->emit_asm = false;
     args->no_color = false;
     args->verbose = false;
     args->debug = false;
@@ -200,6 +204,18 @@ cct_error_code_t cct_cli_parse(int argc, char **argv, cct_cli_args_t *args) {
                         argv[i]);
                 return CCT_ERROR_INVALID_ARGUMENT;
             }
+            continue;
+        }
+        if (strcmp(argv[i], "--entry") == 0) {
+            if (i + 1 >= argc || argv[i + 1][0] == '-') {
+                fprintf(stderr, "cct: --entry requer um nome de rituale\n");
+                return CCT_ERROR_MISSING_ARGUMENT;
+            }
+            args->entry_rituale = argv[++i];
+            continue;
+        }
+        if (strcmp(argv[i], "--emit-asm") == 0) {
+            args->emit_asm = true;
             continue;
         }
         normalized_argv[normalized_argc++] = argv[i];

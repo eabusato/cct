@@ -52,6 +52,7 @@ typedef struct {
  */
 bool cct_module_bundle_build(
     const char *entry_input_path,
+    cct_profile_t profile,
     cct_module_bundle_t *out_bundle,
     cct_error_code_t *out_error
 );

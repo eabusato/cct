@@ -1,0 +1,63 @@
+# CCT API Documentation
+
+- Modules: 4
+- Symbols: 48
+- Warnings: 0
+
+## Modules
+
+- [mod_000_main](modules/mod_000_main.md)
+- [mod_001_core](modules/mod_001_core.md)
+- [mod_002_math](modules/mod_002_math.md)
+- [mod_003_random](modules/mod_003_random.md)
+
+## Symbols
+
+- [main](symbols/mod_000_main_main.md) (rituale)
+- [base_value](symbols/mod_001_core_base_value.md) (rituale)
+- [pi](symbols/mod_002_math_pi.md) (rituale)
+- [e](symbols/mod_002_math_e.md) (rituale)
+- [tau](symbols/mod_002_math_tau.md) (rituale)
+- [phi](symbols/mod_002_math_phi.md) (rituale)
+- [sqrt2](symbols/mod_002_math_sqrt2.md) (rituale)
+- [abs](symbols/mod_002_math_abs.md) (rituale)
+- [min](symbols/mod_002_math_min.md) (rituale)
+- [max](symbols/mod_002_math_max.md) (rituale)
+- [clamp](symbols/mod_002_math_clamp.md) (rituale)
+- [sign](symbols/mod_002_math_sign.md) (rituale)
+- [is_even](symbols/mod_002_math_is_even.md) (rituale)
+- [is_odd](symbols/mod_002_math_is_odd.md) (rituale)
+- [abs_real](symbols/mod_002_math_abs_real.md) (rituale)
+- [sign_real](symbols/mod_002_math_sign_real.md) (rituale)
+- [min_real](symbols/mod_002_math_min_real.md) (rituale)
+- [max_real](symbols/mod_002_math_max_real.md) (rituale)
+- [clamp_real](symbols/mod_002_math_clamp_real.md) (rituale)
+- [floor_real](symbols/mod_002_math_floor_real.md) (rituale)
+- [ceil_real](symbols/mod_002_math_ceil_real.md) (rituale)
+- [round_real](symbols/mod_002_math_round_real.md) (rituale)
+- [trunc_real](symbols/mod_002_math_trunc_real.md) (rituale)
+- [pow_int](symbols/mod_002_math_pow_int.md) (rituale)
+- [gcd](symbols/mod_002_math_gcd.md) (rituale)
+- [lcm](symbols/mod_002_math_lcm.md) (rituale)
+- [factorial](symbols/mod_002_math_factorial.md) (rituale)
+- [is_prime](symbols/mod_002_math_is_prime.md) (rituale)
+- [sqrt_real](symbols/mod_002_math_sqrt_real.md) (rituale)
+- [cbrt_real](symbols/mod_002_math_cbrt_real.md) (rituale)
+- [pow_real](symbols/mod_002_math_pow_real.md) (rituale)
+- [hypot](symbols/mod_002_math_hypot.md) (rituale)
+- [sin](symbols/mod_002_math_sin.md) (rituale)
+- [cos](symbols/mod_002_math_cos.md) (rituale)
+- [tan](symbols/mod_002_math_tan.md) (rituale)
+- [asin](symbols/mod_002_math_asin.md) (rituale)
+- [acos](symbols/mod_002_math_acos.md) (rituale)
+- [atan](symbols/mod_002_math_atan.md) (rituale)
+- [atan2](symbols/mod_002_math_atan2.md) (rituale)
+- [deg_to_rad](symbols/mod_002_math_deg_to_rad.md) (rituale)
+- [rad_to_deg](symbols/mod_002_math_rad_to_deg.md) (rituale)
+- [exp](symbols/mod_002_math_exp.md) (rituale)
+- [log_natural](symbols/mod_002_math_log_natural.md) (rituale)
+- [log10](symbols/mod_002_math_log10.md) (rituale)
+- [log2](symbols/mod_002_math_log2.md) (rituale)
+- [seed](symbols/mod_003_random_seed.md) (rituale)
+- [random_int](symbols/mod_003_random_random_int.md) (rituale)
+- [random_real](symbols/mod_003_random_random_real.md) (rituale)

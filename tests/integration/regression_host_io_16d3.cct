@@ -1,0 +1,11 @@
+INCIPIT grimoire "regression_host_io_16d3"
+
+ADVOCARE "cct/io.cct"
+
+RITUALE main() REDDE REX
+  CONIURA print("host io 16d3")
+  CONIURA println("")
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

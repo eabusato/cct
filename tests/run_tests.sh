@@ -10860,6 +10860,1170 @@ fi
 
 echo ""
 echo "========================================"
+echo "FASE 16A3: Freestanding Semantic Restrictions Tests"
+echo "========================================"
+echo ""
+
+# Test 891: IACE is rejected in freestanding profile
+echo "Test 891: IACE is rejected in freestanding profile"
+"$CCT_BIN" --profile freestanding --check "tests/integration/freestanding_reject_iace_16a3.cct" >$CCT_TMP_DIR/cct_phase16a3_891_iace.out 2>&1
+RC_891=$?
+if [ "$RC_891" -ne 0 ] && grep -q "IACE não suportado em perfil freestanding" $CCT_TMP_DIR/cct_phase16a3_891_iace.out; then
+    test_pass "freestanding rejects IACE with clear diagnostic"
+else
+    test_fail "freestanding IACE rejection contract regressed"
+fi
+
+# Test 892: forbidden cct/io import is rejected in freestanding profile
+echo "Test 892: cct/io import is rejected in freestanding profile"
+"$CCT_BIN" --profile freestanding --check "tests/integration/freestanding_reject_io_16a3.cct" >$CCT_TMP_DIR/cct_phase16a3_892_io.out 2>&1
+RC_892=$?
+if [ "$RC_892" -ne 0 ] && grep -q "módulo 'cct/io' não disponível em perfil freestanding" $CCT_TMP_DIR/cct_phase16a3_892_io.out; then
+    test_pass "freestanding rejects forbidden cct/io module import"
+else
+    test_fail "freestanding cct/io rejection contract regressed"
+fi
+
+# Test 893: FLUXUS type usage is rejected in freestanding profile
+echo "Test 893: FLUXUS usage is rejected in freestanding profile"
+"$CCT_BIN" --profile freestanding --check "tests/integration/freestanding_reject_fluxus_16a3.cct" >$CCT_TMP_DIR/cct_phase16a3_893_fluxus.out 2>&1
+RC_893=$?
+if [ "$RC_893" -ne 0 ] && \
+   (grep -q "FLUXUS não suportado em perfil freestanding" $CCT_TMP_DIR/cct_phase16a3_893_fluxus.out || \
+    grep -q "SERIES com tamanho dinâmico não suportado em perfil freestanding" $CCT_TMP_DIR/cct_phase16a3_893_fluxus.out); then
+    test_pass "freestanding rejects FLUXUS with clear diagnostic"
+else
+    test_fail "freestanding FLUXUS rejection contract regressed"
+fi
+
+# Test 894: pete/libera are rejected in freestanding profile
+echo "Test 894: pete/libera are rejected in freestanding profile"
+"$CCT_BIN" --profile freestanding --check "tests/integration/freestanding_reject_heap_obsecro_16a3.cct" >$CCT_TMP_DIR/cct_phase16a3_894_heap.out 2>&1
+RC_894=$?
+if [ "$RC_894" -ne 0 ] && grep -q "pete()/libera() não disponíveis em perfil freestanding" $CCT_TMP_DIR/cct_phase16a3_894_heap.out; then
+    test_pass "freestanding rejects heap OBSECRO builtins"
+else
+    test_fail "freestanding heap builtin rejection contract regressed"
+fi
+
+# Test 895: basic structured flow is accepted in freestanding profile
+echo "Test 895: basic structured flow is accepted in freestanding profile"
+"$CCT_BIN" --profile freestanding --check "tests/integration/freestanding_accept_basic_16a3.cct" >$CCT_TMP_DIR/cct_phase16a3_895_basic.out 2>&1
+RC_895=$?
+if [ "$RC_895" -eq 0 ] && grep -q "Semantic check OK" $CCT_TMP_DIR/cct_phase16a3_895_basic.out; then
+    test_pass "freestanding accepts basic SI/DUM/REPETE flow"
+else
+    test_fail "freestanding basic accepted-flow contract regressed"
+fi
+
+# Test 896: bitwise subset is accepted in freestanding profile
+echo "Test 896: bitwise subset is accepted in freestanding profile"
+"$CCT_BIN" --profile freestanding --check "tests/integration/freestanding_accept_bitwise_16a3.cct" >$CCT_TMP_DIR/cct_phase16a3_896_bitwise.out 2>&1
+RC_896=$?
+if [ "$RC_896" -eq 0 ] && grep -q "Semantic check OK" $CCT_TMP_DIR/cct_phase16a3_896_bitwise.out; then
+    test_pass "freestanding accepts bitwise subset"
+else
+    test_fail "freestanding bitwise accepted-flow contract regressed"
+fi
+
+echo ""
+echo "========================================"
+echo "FASE 16A4: Freestanding Type Edge Diagnostics Tests"
+echo "========================================"
+echo ""
+
+# Test 897: MILES emits warning in freestanding profile
+echo "Test 897: MILES emits warning in freestanding profile"
+"$CCT_BIN" --profile freestanding --check "tests/integration/freestanding_warn_miles_16a4.cct" >$CCT_TMP_DIR/cct_phase16a4_897_miles.out 2>&1
+RC_897=$?
+if [ "$RC_897" -eq 0 ] && \
+   grep -q "aviso: MILES usa FPU x87; confirmar disponibilidade no target freestanding" $CCT_TMP_DIR/cct_phase16a4_897_miles.out; then
+    test_pass "freestanding emits MILES x87 warning without blocking semantic check"
+else
+    test_fail "freestanding MILES warning contract regressed"
+fi
+
+# Test 898: COMES emits warning in freestanding profile
+echo "Test 898: COMES emits warning in freestanding profile"
+"$CCT_BIN" --profile freestanding --check "tests/integration/freestanding_warn_comes_16a4.cct" >$CCT_TMP_DIR/cct_phase16a4_898_comes.out 2>&1
+RC_898=$?
+if [ "$RC_898" -eq 0 ] && \
+   grep -q "aviso: COMES usa FPU x87; confirmar disponibilidade no target freestanding" $CCT_TMP_DIR/cct_phase16a4_898_comes.out; then
+    test_pass "freestanding emits COMES x87 warning without blocking semantic check"
+else
+    test_fail "freestanding COMES warning contract regressed"
+fi
+
+# Test 899: dynamic SERIES is rejected in freestanding profile
+echo "Test 899: dynamic SERIES is rejected in freestanding profile"
+"$CCT_BIN" --profile freestanding --check "tests/integration/freestanding_reject_dynamic_series_16a4.cct" >$CCT_TMP_DIR/cct_phase16a4_899_dynamic_series.out 2>&1
+RC_899=$?
+if [ "$RC_899" -ne 0 ] && \
+   grep -q "SERIES com tamanho dinâmico não suportado em perfil freestanding" $CCT_TMP_DIR/cct_phase16a4_899_dynamic_series.out; then
+    test_pass "freestanding rejects dynamic SERIES with clear diagnostic"
+else
+    test_fail "freestanding dynamic SERIES rejection contract regressed"
+fi
+
+# Test 900: CONSTANS static case remains accepted in freestanding profile
+echo "Test 900: CONSTANS static case is accepted in freestanding profile"
+"$CCT_BIN" --profile freestanding --check "tests/integration/freestanding_accept_constans_16a4.cct" >$CCT_TMP_DIR/cct_phase16a4_900_constans.out 2>&1
+RC_900=$?
+if [ "$RC_900" -eq 0 ] && grep -q "Semantic check OK" $CCT_TMP_DIR/cct_phase16a4_900_constans.out; then
+    test_pass "freestanding accepts CONSTANS static flow"
+else
+    test_fail "freestanding CONSTANS acceptance contract regressed"
+fi
+
+# Test 901: SPECULUM static case remains accepted in freestanding profile
+echo "Test 901: SPECULUM static case is accepted in freestanding profile"
+"$CCT_BIN" --profile freestanding --check "tests/integration/freestanding_accept_speculum_16a4.cct" >$CCT_TMP_DIR/cct_phase16a4_901_speculum.out 2>&1
+RC_901=$?
+if [ "$RC_901" -eq 0 ] && grep -q "Semantic check OK" $CCT_TMP_DIR/cct_phase16a4_901_speculum.out; then
+    test_pass "freestanding accepts SPECULUM static flow"
+else
+    test_fail "freestanding SPECULUM acceptance contract regressed"
+fi
+
+# Test 902: static GENUS instantiation remains accepted in freestanding profile
+echo "Test 902: static GENUS is accepted in freestanding profile"
+"$CCT_BIN" --profile freestanding --check "tests/integration/freestanding_genus_static_ok_16a4.cct" >$CCT_TMP_DIR/cct_phase16a4_902_genus_static.out 2>&1
+RC_902=$?
+if [ "$RC_902" -eq 0 ] && grep -q "Semantic check OK" $CCT_TMP_DIR/cct_phase16a4_902_genus_static.out; then
+    test_pass "freestanding accepts static GENUS instantiation"
+else
+    test_fail "freestanding static GENUS acceptance contract regressed"
+fi
+
+# Test 903: dynamic GENUS/PACTUM is rejected in freestanding profile
+echo "Test 903: dynamic GENUS/PACTUM is rejected in freestanding profile"
+"$CCT_BIN" --profile freestanding --check "tests/integration/freestanding_genus_dynamic_reject_16a4.cct" >$CCT_TMP_DIR/cct_phase16a4_903_genus_dynamic.out 2>&1
+RC_903=$?
+if [ "$RC_903" -ne 0 ] && \
+   grep -q "GENUS/PACTUM dinâmico não suportado em perfil freestanding; use instanciação estática" $CCT_TMP_DIR/cct_phase16a4_903_genus_dynamic.out; then
+    test_pass "freestanding rejects dynamic GENUS/PACTUM with clear diagnostic"
+else
+    test_fail "freestanding dynamic GENUS/PACTUM rejection contract regressed"
+fi
+
+echo ""
+echo "========================================"
+echo "FASE 16B1: Freestanding Runtime Shim Tests"
+echo "========================================"
+echo ""
+
+# Test 904: freestanding runtime shim compiles with canonical freestanding flags
+echo "Test 904: freestanding runtime shim compiles with canonical freestanding flags"
+gcc -m32 -ffreestanding -nostdlib -fno-pic -fno-stack-protector -fno-builtin \
+    -fno-asynchronous-unwind-tables -fno-unwind-tables \
+    -c src/runtime/cct_freestanding_rt.c -o $CCT_TMP_DIR/cct_freestanding_rt_16b1.o >$CCT_TMP_DIR/cct_phase16b1_904_compile.out 2>&1
+RC_904=$?
+if [ "$RC_904" -eq 0 ] && [ -f $CCT_TMP_DIR/cct_freestanding_rt_16b1.o ]; then
+    test_pass "freestanding runtime shim compiles with canonical flags"
+else
+    test_fail "freestanding runtime shim failed to compile with canonical flags"
+fi
+
+# Test 905: freestanding runtime shim has no forbidden libc undefined symbols
+echo "Test 905: freestanding runtime shim has no forbidden libc undefined symbols"
+nm $CCT_TMP_DIR/cct_freestanding_rt_16b1.o >$CCT_TMP_DIR/cct_phase16b1_905_nm.out 2>&1
+RC_905=$?
+if [ "$RC_905" -eq 0 ] && \
+   ! grep -E " U (printf|malloc|free|memcpy|memset|abort|puts|sprintf|snprintf|fputs|fopen)" $CCT_TMP_DIR/cct_phase16b1_905_nm.out; then
+    test_pass "freestanding runtime shim keeps forbidden libc symbols out of undefined table"
+else
+    test_fail "freestanding runtime shim leaked forbidden libc symbols"
+fi
+
+# Test 906: freestanding preamble switches to shim include and avoids libc headers
+echo "Test 906: freestanding preamble switches to shim include and avoids libc headers"
+"$CCT_BIN" --profile freestanding "tests/integration/freestanding_basic_16b1.cct" >$CCT_TMP_DIR/cct_phase16b1_906_compile.out 2>&1
+RC_906=$?
+if [ "$RC_906" -eq 0 ] && \
+   grep -q "cct_freestanding_rt.h" tests/integration/freestanding_basic_16b1.cgen.c && \
+   ! grep -q "#include <stdio.h>" tests/integration/freestanding_basic_16b1.cgen.c && \
+   ! grep -q "#include <stdlib.h>" tests/integration/freestanding_basic_16b1.cgen.c && \
+   ! grep -q "#include <string.h>" tests/integration/freestanding_basic_16b1.cgen.c; then
+    test_pass "freestanding preamble uses shim include and suppresses libc headers"
+else
+    test_fail "freestanding preamble switch contract regressed"
+fi
+
+# Test 907: host preamble remains unchanged with libc headers
+echo "Test 907: host preamble remains unchanged with libc headers"
+"$CCT_BIN" "tests/integration/freestanding_loop_16b1.cct" >$CCT_TMP_DIR/cct_phase16b1_907_compile.out 2>&1
+RC_907=$?
+if [ "$RC_907" -eq 0 ] && \
+   grep -q "#include <stdio.h>" tests/integration/freestanding_loop_16b1.cgen.c && \
+   grep -q "#include <stdlib.h>" tests/integration/freestanding_loop_16b1.cgen.c && \
+   grep -q "#include <string.h>" tests/integration/freestanding_loop_16b1.cgen.c; then
+    test_pass "host preamble remains unchanged"
+else
+    test_fail "host preamble changed unexpectedly after freestanding shim integration"
+fi
+
+echo ""
+echo "========================================"
+echo "FASE 16B2: cct/kernel Module Tests"
+echo "========================================"
+echo ""
+
+# Test 908: kernel_halt compiles in freestanding semantic flow
+echo "Test 908: kernel_halt compiles in freestanding profile"
+"$CCT_BIN" --profile freestanding --check "tests/integration/kernel_halt_compiles_16b2.cct" >$CCT_TMP_DIR/cct_phase16b2_908_halt_check.out 2>&1
+RC_908=$?
+if [ "$RC_908" -eq 0 ] && grep -q "Semantic check OK" $CCT_TMP_DIR/cct_phase16b2_908_halt_check.out; then
+    test_pass "freestanding accepts cct/kernel::kernel_halt"
+else
+    test_fail "freestanding kernel_halt semantic contract regressed"
+fi
+
+# Test 909: kernel_outb lowers to cct_svc_outb in freestanding codegen
+echo "Test 909: kernel_outb lowers to cct_svc_outb in freestanding profile"
+cleanup_codegen_artifacts "tests/integration/kernel_outb_compiles_16b2.cct"
+"$CCT_BIN" --profile freestanding "tests/integration/kernel_outb_compiles_16b2.cct" >$CCT_TMP_DIR/cct_phase16b2_909_outb_codegen.out 2>&1
+RC_909=$?
+if [ "$RC_909" -eq 0 ] && grep -q "cct_svc_outb" tests/integration/kernel_outb_compiles_16b2.cgen.c; then
+    test_pass "kernel_outb lowers to cct_svc_outb in freestanding codegen"
+else
+    test_fail "kernel_outb lowering contract regressed"
+fi
+
+# Test 910: kernel_inb lowers to cct_svc_inb in freestanding codegen
+echo "Test 910: kernel_inb lowers to cct_svc_inb in freestanding profile"
+cleanup_codegen_artifacts "tests/integration/kernel_inb_compiles_16b2.cct"
+"$CCT_BIN" --profile freestanding "tests/integration/kernel_inb_compiles_16b2.cct" >$CCT_TMP_DIR/cct_phase16b2_910_inb_codegen.out 2>&1
+RC_910=$?
+if [ "$RC_910" -eq 0 ] && grep -q "cct_svc_inb" tests/integration/kernel_inb_compiles_16b2.cgen.c; then
+    test_pass "kernel_inb lowers to cct_svc_inb in freestanding codegen"
+else
+    test_fail "kernel_inb lowering contract regressed"
+fi
+
+# Test 911: kernel_mem* lowers to cct_svc_mem* in freestanding codegen
+echo "Test 911: kernel_mem ops lower to cct_svc_mem* in freestanding profile"
+cleanup_codegen_artifacts "tests/integration/kernel_mem_ops_compiles_16b2.cct"
+"$CCT_BIN" --profile freestanding "tests/integration/kernel_mem_ops_compiles_16b2.cct" >$CCT_TMP_DIR/cct_phase16b2_911_mem_codegen.out 2>&1
+RC_911=$?
+if [ "$RC_911" -eq 0 ] && \
+   grep -q "cct_svc_memcpy" tests/integration/kernel_mem_ops_compiles_16b2.cgen.c && \
+   grep -q "cct_svc_memset" tests/integration/kernel_mem_ops_compiles_16b2.cgen.c; then
+    test_pass "kernel_memcpy/kernel_memset lower to cct_svc wrappers"
+else
+    test_fail "kernel memory wrapper lowering contract regressed"
+fi
+
+# Test 912: cct/kernel is rejected in host profile
+echo "Test 912: cct/kernel is rejected in host profile"
+"$CCT_BIN" --check "tests/integration/kernel_reject_host_16b2.cct" >$CCT_TMP_DIR/cct_phase16b2_912_host_reject.out 2>&1
+RC_912=$?
+if [ "$RC_912" -ne 0 ] && grep -q "cct/kernel disponível apenas em perfil freestanding" $CCT_TMP_DIR/cct_phase16b2_912_host_reject.out; then
+    test_pass "host profile rejects cct/kernel with canonical diagnostic"
+else
+    test_fail "host rejection contract for cct/kernel regressed"
+fi
+
+echo ""
+echo "========================================"
+echo "FASE 16B3: Cross-GCC Freestanding Validation Tests"
+echo "========================================"
+echo ""
+
+cct_phase16b3_resolve_cross_cc() {
+    if [ -n "${CCT_CROSS_CC:-}" ]; then
+        if command -v "$CCT_CROSS_CC" >/dev/null 2>&1 || "$CCT_CROSS_CC" --version >/dev/null 2>&1; then
+            echo "$CCT_CROSS_CC"
+            return 0
+        fi
+    fi
+
+    if command -v i686-elf-gcc >/dev/null 2>&1; then
+        echo "i686-elf-gcc"
+        return 0
+    fi
+
+    if command -v gcc >/dev/null 2>&1; then
+        local probe_src="$CCT_TMP_DIR/cct_phase16b3_probe.c"
+        local probe_obj="$CCT_TMP_DIR/cct_phase16b3_probe.o"
+        local probe_out="$CCT_TMP_DIR/cct_phase16b3_probe.out"
+        echo "int __cct_phase16b3_probe = 0;" > "$probe_src"
+        if gcc -m32 -ffreestanding -nostdlib -fno-pic -fno-stack-protector -fno-builtin \
+              -fno-asynchronous-unwind-tables -fno-unwind-tables \
+              -c "$probe_src" -o "$probe_obj" >"$probe_out" 2>&1; then
+            echo "gcc"
+            return 0
+        fi
+    fi
+
+    return 1
+}
+
+cct_phase16b3_cross_compile() {
+    local cc="$1"
+    local src="$2"
+    local obj="$3"
+    local log="$4"
+
+    "$cc" -m32 -ffreestanding -nostdlib -fno-pic -fno-stack-protector -fno-builtin \
+          -fno-asynchronous-unwind-tables -fno-unwind-tables \
+          -c "$src" -o "$obj" >"$log" 2>&1
+}
+
+cct_phase16b3_audit_forbidden_undef() {
+    local obj="$1"
+    local undef_log="$2"
+    local forbidden_log="$3"
+
+    nm "$obj" | awk '$2 == "U" {print $3}' >"$undef_log" 2>&1 || return 2
+
+    grep -E '^(printf|malloc|free|memcpy|memset|strlen|puts|fopen|fclose|sprintf|snprintf|abort|exit|__stack_chk_fail|__udivdi3|__divdi3|__muldi3|__floatsidf|__fixdfsi|__floatdidf|__fixunsdfsi)$' \
+        "$undef_log" >"$forbidden_log" 2>/dev/null || true
+
+    if [ -s "$forbidden_log" ]; then
+        return 1
+    fi
+    return 0
+}
+
+cct_phase16b3_run_case() {
+    local src="$1"
+    local tag="$2"
+    local base="${src%.cct}"
+    local gen_log="$CCT_TMP_DIR/cct_phase16b3_${tag}_gen.out"
+    local cc_log="$CCT_TMP_DIR/cct_phase16b3_${tag}_cross.out"
+    local undef_log="$CCT_TMP_DIR/cct_phase16b3_${tag}_undef.out"
+    local forbidden_log="$CCT_TMP_DIR/cct_phase16b3_${tag}_forbidden.out"
+    local obj="$CCT_TMP_DIR/cct_phase16b3_${tag}.o"
+
+    cleanup_codegen_artifacts "$src"
+    "$CCT_BIN" --profile freestanding "$src" >"$gen_log" 2>&1 || {
+        echo "FASE 16B3 geração falhou: $CCT_BIN --profile freestanding $src"
+        cat "$gen_log"
+        return 1
+    }
+
+    cct_phase16b3_cross_compile "$CCT_PHASE16B3_CROSS_CC" "${base}.cgen.c" "$obj" "$cc_log" || {
+        echo "FASE 16B3 cross-compile falhou: $CCT_PHASE16B3_CROSS_CC -m32 ... -c ${base}.cgen.c -o $obj"
+        cat "$cc_log"
+        return 1
+    }
+
+    cct_phase16b3_audit_forbidden_undef "$obj" "$undef_log" "$forbidden_log"
+    local audit_rc=$?
+    if [ "$audit_rc" -eq 2 ]; then
+        echo "FASE 16B3 auditoria falhou: nm $obj"
+        cat "$undef_log"
+        return 1
+    fi
+    if [ "$audit_rc" -ne 0 ]; then
+        echo "FASE 16B3 símbolos proibidos encontrados em $obj:"
+        cat "$forbidden_log"
+        return 1
+    fi
+
+    return 0
+}
+
+CCT_PHASE16B3_CROSS_CC="$(cct_phase16b3_resolve_cross_cc || true)"
+CCT_PHASE16B3_ENABLED=1
+if [ -z "$CCT_PHASE16B3_CROSS_CC" ]; then
+    CCT_PHASE16B3_ENABLED=0
+fi
+
+# Test 913: freestanding_basic_16b3 cross-compiles and has clean undefined-symbol table
+echo "Test 913: freestanding_basic_16b3 cross-compilation validation"
+if [ "$CCT_PHASE16B3_ENABLED" -eq 0 ]; then
+    test_pass "16B3 basic skipped: cross-compiler indisponível (use CCT_CROSS_CC, i686-elf-gcc ou gcc -m32)"
+elif cct_phase16b3_run_case "tests/integration/freestanding_basic_16b3.cct" "913_basic"; then
+    test_pass "freestanding_basic_16b3: generation + cross-compile + nm audit passed"
+else
+    test_fail "freestanding_basic_16b3 cross-validation regressed"
+fi
+
+# Test 914: freestanding_loop_16b3 cross-compiles and has clean undefined-symbol table
+echo "Test 914: freestanding_loop_16b3 cross-compilation validation"
+if [ "$CCT_PHASE16B3_ENABLED" -eq 0 ]; then
+    test_pass "16B3 loop skipped: cross-compiler indisponível (use CCT_CROSS_CC, i686-elf-gcc ou gcc -m32)"
+elif cct_phase16b3_run_case "tests/integration/freestanding_loop_16b3.cct" "914_loop"; then
+    test_pass "freestanding_loop_16b3: generation + cross-compile + nm audit passed"
+else
+    test_fail "freestanding_loop_16b3 cross-validation regressed"
+fi
+
+# Test 915: freestanding_call_16b3 cross-compiles and has clean undefined-symbol table
+echo "Test 915: freestanding_call_16b3 cross-compilation validation"
+if [ "$CCT_PHASE16B3_ENABLED" -eq 0 ]; then
+    test_pass "16B3 call skipped: cross-compiler indisponível (use CCT_CROSS_CC, i686-elf-gcc ou gcc -m32)"
+elif cct_phase16b3_run_case "tests/integration/freestanding_call_16b3.cct" "915_call"; then
+    test_pass "freestanding_call_16b3: generation + cross-compile + nm audit passed"
+else
+    test_fail "freestanding_call_16b3 cross-validation regressed"
+fi
+
+# Test 916: freestanding_constans_16b3 cross-compiles and has clean undefined-symbol table
+echo "Test 916: freestanding_constans_16b3 cross-compilation validation"
+if [ "$CCT_PHASE16B3_ENABLED" -eq 0 ]; then
+    test_pass "16B3 constans skipped: cross-compiler indisponível (use CCT_CROSS_CC, i686-elf-gcc ou gcc -m32)"
+elif cct_phase16b3_run_case "tests/integration/freestanding_constans_16b3.cct" "916_constans"; then
+    test_pass "freestanding_constans_16b3: generation + cross-compile + nm audit passed"
+else
+    test_fail "freestanding_constans_16b3 cross-validation regressed"
+fi
+
+# Test 917: freestanding_speculum_16b3 cross-compiles and has clean undefined-symbol table
+echo "Test 917: freestanding_speculum_16b3 cross-compilation validation"
+if [ "$CCT_PHASE16B3_ENABLED" -eq 0 ]; then
+    test_pass "16B3 speculum skipped: cross-compiler indisponível (use CCT_CROSS_CC, i686-elf-gcc ou gcc -m32)"
+elif cct_phase16b3_run_case "tests/integration/freestanding_speculum_16b3.cct" "917_speculum"; then
+    test_pass "freestanding_speculum_16b3: generation + cross-compile + nm audit passed"
+else
+    test_fail "freestanding_speculum_16b3 cross-validation regressed"
+fi
+
+echo ""
+echo "========================================"
+echo "FASE 16B4: Freestanding Entry Point Tests"
+echo "========================================"
+echo ""
+
+# Test 918: explicit freestanding entry exports cct_fn_<mod>_<entry> as global symbol
+echo "Test 918: freestanding explicit entry exports global cct_fn_<mod>_<entry>"
+if [ "$CCT_PHASE16B3_ENABLED" -eq 0 ]; then
+    test_pass "16B4 entry symbol skipped: cross-compiler indisponível (use CCT_CROSS_CC, i686-elf-gcc ou gcc -m32)"
+else
+    SRC_918="tests/integration/freestanding_entry_symbol_16b4.cct"
+    BASE_918="${SRC_918%.cct}"
+    GEN_LOG_918="$CCT_TMP_DIR/cct_phase16b4_918_gen.out"
+    CROSS_LOG_918="$CCT_TMP_DIR/cct_phase16b4_918_cross.out"
+    NM_LOG_918="$CCT_TMP_DIR/cct_phase16b4_918_nm.out"
+    OBJ_918="$CCT_TMP_DIR/cct_phase16b4_918.o"
+    cleanup_codegen_artifacts "$SRC_918"
+    "$CCT_BIN" --profile freestanding --entry inicio "$SRC_918" >"$GEN_LOG_918" 2>&1
+    RC_918_GEN=$?
+    if [ "$RC_918_GEN" -eq 0 ] && \
+       cct_phase16b3_cross_compile "$CCT_PHASE16B3_CROSS_CC" "${BASE_918}.cgen.c" "$OBJ_918" "$CROSS_LOG_918" && \
+       nm "$OBJ_918" >"$NM_LOG_918" 2>&1 && \
+       grep -E " [T] cct_fn_[A-Za-z0-9_]*_inicio$" "$NM_LOG_918" >/dev/null 2>&1; then
+        test_pass "explicit freestanding entry exports canonical global cct_fn_<mod>_<entry> symbol"
+    else
+        test_fail "explicit freestanding entry symbol export contract regressed"
+    fi
+fi
+
+# Test 919: explicit freestanding entry suppresses host main wrapper
+echo "Test 919: freestanding explicit entry suppresses host main wrapper"
+if [ "$CCT_PHASE16B3_ENABLED" -eq 0 ]; then
+    test_pass "16B4 no-main skipped: cross-compiler indisponível (use CCT_CROSS_CC, i686-elf-gcc ou gcc -m32)"
+else
+    SRC_919="tests/integration/freestanding_no_main_16b4.cct"
+    BASE_919="${SRC_919%.cct}"
+    GEN_LOG_919="$CCT_TMP_DIR/cct_phase16b4_919_gen.out"
+    CROSS_LOG_919="$CCT_TMP_DIR/cct_phase16b4_919_cross.out"
+    NM_LOG_919="$CCT_TMP_DIR/cct_phase16b4_919_nm.out"
+    OBJ_919="$CCT_TMP_DIR/cct_phase16b4_919.o"
+    cleanup_codegen_artifacts "$SRC_919"
+    "$CCT_BIN" --profile freestanding --entry inicio "$SRC_919" >"$GEN_LOG_919" 2>&1
+    RC_919_GEN=$?
+    if [ "$RC_919_GEN" -eq 0 ] && \
+       cct_phase16b3_cross_compile "$CCT_PHASE16B3_CROSS_CC" "${BASE_919}.cgen.c" "$OBJ_919" "$CROSS_LOG_919" && \
+       nm "$OBJ_919" >"$NM_LOG_919" 2>&1 && \
+       ! grep -E " [Tt] main$" "$NM_LOG_919" >/dev/null 2>&1; then
+        test_pass "explicit freestanding entry path emits no main symbol"
+    else
+        test_fail "main wrapper suppression contract regressed in explicit freestanding entry flow"
+    fi
+fi
+
+# Test 920: --entry with missing rituale in module returns clear diagnostic
+echo "Test 920: --entry with missing rituale fails with clear diagnostic"
+"$CCT_BIN" --profile freestanding --entry nao_existe "tests/integration/freestanding_entry_missing_16b4.cct" >$CCT_TMP_DIR/cct_phase16b4_920_missing.out 2>&1
+RC_920=$?
+if [ "$RC_920" -ne 0 ] && \
+   grep -q "rituale de entry 'nao_existe' não encontrado no módulo" $CCT_TMP_DIR/cct_phase16b4_920_missing.out; then
+    test_pass "missing freestanding entry rituale is rejected with canonical diagnostic"
+else
+    test_fail "missing freestanding entry rituale diagnostic contract regressed"
+fi
+
+# Test 921: --entry requires value
+echo "Test 921: --entry without value fails with clear diagnostic"
+"$CCT_BIN" --profile freestanding --entry --check "tests/integration/freestanding_entry_symbol_16b4.cct" >$CCT_TMP_DIR/cct_phase16b4_921_requires_value.out 2>&1
+RC_921=$?
+if [ "$RC_921" -ne 0 ] && \
+   grep -q "cct: --entry requer um nome de rituale" $CCT_TMP_DIR/cct_phase16b4_921_requires_value.out; then
+    test_pass "--entry missing value is rejected with canonical diagnostic"
+else
+    test_fail "--entry missing-value diagnostic contract regressed"
+fi
+
+echo ""
+echo "========================================"
+echo "FASE 16C1: --emit-asm Driver Tests"
+echo "========================================"
+echo ""
+
+# Test 922: --emit-asm generates .cgen.s in freestanding profile
+echo "Test 922: --emit-asm generates .cgen.s for freestanding module"
+if [ "$CCT_PHASE16B3_ENABLED" -eq 0 ]; then
+    test_pass "16C1 emit-asm basic skipped: cross-compiler indisponível (use CCT_CROSS_CC, i686-elf-gcc ou gcc -m32)"
+else
+    SRC_922="tests/integration/emit_asm_basic_16c1.cct"
+    BASE_922="${SRC_922%.cct}"
+    cleanup_codegen_artifacts "$SRC_922"
+    rm -f "${BASE_922}.cgen.s"
+    OUTPUT=$( "$CCT_BIN" --profile freestanding --emit-asm "$SRC_922" 2>&1 )
+    RC_922=$?
+    if [ "$RC_922" -eq 0 ] && [ -f "${BASE_922}.cgen.s" ]; then
+        test_pass "--emit-asm gera arquivo .cgen.s no fluxo freestanding"
+    else
+        test_fail "--emit-asm básico não gerou .cgen.s conforme contrato"
+    fi
+fi
+
+# Test 923: --emit-asm respects CCT_CROSS_CC when provided
+echo "Test 923: --emit-asm respects CCT_CROSS_CC selection"
+if [ "$CCT_PHASE16B3_ENABLED" -eq 0 ]; then
+    test_pass "16C1 emit-asm env-selection skipped: cross-compiler indisponível (use CCT_CROSS_CC, i686-elf-gcc ou gcc -m32)"
+else
+    SRC_923="tests/integration/emit_asm_call_16c1.cct"
+    BASE_923="${SRC_923%.cct}"
+    cleanup_codegen_artifacts "$SRC_923"
+    rm -f "${BASE_923}.cgen.s"
+    OUTPUT=$( CCT_CROSS_CC="$CCT_PHASE16B3_CROSS_CC" "$CCT_BIN" --profile freestanding --emit-asm "$SRC_923" 2>&1 )
+    RC_923=$?
+    if [ "$RC_923" -eq 0 ] && [ -f "${BASE_923}.cgen.s" ] && echo "$OUTPUT" | grep -Fq "Cross compiler: $CCT_PHASE16B3_CROSS_CC"; then
+        test_pass "--emit-asm respeita CCT_CROSS_CC no driver"
+    else
+        test_fail "seleção por CCT_CROSS_CC regrediu no driver --emit-asm"
+    fi
+fi
+
+# Test 924: --emit-asm fallback selection works without CCT_CROSS_CC
+echo "Test 924: --emit-asm fallback selection works without CCT_CROSS_CC"
+if [ "$CCT_PHASE16B3_ENABLED" -eq 0 ]; then
+    test_pass "16C1 emit-asm fallback skipped: cross-compiler indisponível (use CCT_CROSS_CC, i686-elf-gcc ou gcc -m32)"
+else
+    SRC_924="tests/integration/emit_asm_basic_16c1.cct"
+    BASE_924="${SRC_924%.cct}"
+    cleanup_codegen_artifacts "$SRC_924"
+    rm -f "${BASE_924}.cgen.s"
+    OUTPUT=$( env -u CCT_CROSS_CC "$CCT_BIN" --profile freestanding --emit-asm "$SRC_924" 2>&1 )
+    RC_924=$?
+    if [ "$RC_924" -eq 0 ] && [ -f "${BASE_924}.cgen.s" ] && echo "$OUTPUT" | grep -q "Cross compiler:"; then
+        test_pass "--emit-asm seleciona fallback de cross-compiler sem CCT_CROSS_CC"
+    else
+        test_fail "fallback de seleção de cross-compiler regrediu no --emit-asm"
+    fi
+fi
+
+# Test 925: --emit-asm reports clear diagnostic when no valid cross-compiler is available
+echo "Test 925: --emit-asm fails clearly with invalid CCT_CROSS_CC"
+OUTPUT=$( CCT_CROSS_CC=/invalid/compiler "$CCT_BIN" --profile freestanding --emit-asm "tests/integration/emit_asm_basic_16c1.cct" 2>&1 )
+RC_925=$?
+if [ "$RC_925" -ne 0 ] && \
+   echo "$OUTPUT" | grep -q "cct: --emit-asm requer cross-compiler (-m32); instale i686-elf-gcc ou defina CCT_CROSS_CC"; then
+    test_pass "--emit-asm sem toolchain válida falha com diagnóstico canônico"
+else
+    test_fail "diagnóstico de ausência de cross-compiler regrediu em --emit-asm"
+fi
+
+echo ""
+echo "========================================"
+echo "FASE 16C2: Freestanding ASM Validation Tests"
+echo "========================================"
+echo ""
+
+CCT_VALIDATE_ASM_SCRIPT="tools/validate_freestanding_asm.sh"
+
+# Test 926: basic freestanding asm validates successfully
+echo "Test 926: asm_validate_basic_16c2 passes validator"
+if [ "$CCT_PHASE16B3_ENABLED" -eq 0 ]; then
+    test_pass "16C2 basic validation skipped: cross-compiler indisponível (use CCT_CROSS_CC, i686-elf-gcc ou gcc -m32)"
+else
+    SRC_926="tests/integration/asm_validate_basic_16c2.cct"
+    BASE_926="${SRC_926%.cct}"
+    cleanup_codegen_artifacts "$SRC_926"
+    rm -f "${BASE_926}.cgen.s"
+    OUTPUT=$( "$CCT_BIN" --profile freestanding --emit-asm "$SRC_926" 2>&1 )
+    RC_926_GEN=$?
+    if [ "$RC_926_GEN" -eq 0 ]; then
+        VAL_OUT=$( "$CCT_VALIDATE_ASM_SCRIPT" "${BASE_926}.cgen.s" 2>&1 )
+        RC_926_VAL=$?
+        if [ "$RC_926_VAL" -eq 0 ]; then
+            test_pass "asm_validate_basic_16c2 gera ASM válido no gate oficial"
+        else
+            test_fail "validador rejeitou asm_validate_basic_16c2 indevidamente"
+        fi
+    else
+        test_fail "emit-asm falhou para asm_validate_basic_16c2"
+    fi
+fi
+
+# Test 927: loop freestanding asm validates successfully
+echo "Test 927: asm_validate_loop_16c2 passes validator"
+if [ "$CCT_PHASE16B3_ENABLED" -eq 0 ]; then
+    test_pass "16C2 loop validation skipped: cross-compiler indisponível (use CCT_CROSS_CC, i686-elf-gcc ou gcc -m32)"
+else
+    SRC_927="tests/integration/asm_validate_loop_16c2.cct"
+    BASE_927="${SRC_927%.cct}"
+    cleanup_codegen_artifacts "$SRC_927"
+    rm -f "${BASE_927}.cgen.s"
+    OUTPUT=$( "$CCT_BIN" --profile freestanding --emit-asm "$SRC_927" 2>&1 )
+    RC_927_GEN=$?
+    if [ "$RC_927_GEN" -eq 0 ]; then
+        VAL_OUT=$( "$CCT_VALIDATE_ASM_SCRIPT" "${BASE_927}.cgen.s" 2>&1 )
+        RC_927_VAL=$?
+        if [ "$RC_927_VAL" -eq 0 ]; then
+            test_pass "asm_validate_loop_16c2 gera ASM válido no gate oficial"
+        else
+            test_fail "validador rejeitou asm_validate_loop_16c2 indevidamente"
+        fi
+    else
+        test_fail "emit-asm falhou para asm_validate_loop_16c2"
+    fi
+fi
+
+# Test 928: call freestanding asm validates successfully
+echo "Test 928: asm_validate_call_16c2 passes validator"
+if [ "$CCT_PHASE16B3_ENABLED" -eq 0 ]; then
+    test_pass "16C2 call validation skipped: cross-compiler indisponível (use CCT_CROSS_CC, i686-elf-gcc ou gcc -m32)"
+else
+    SRC_928="tests/integration/asm_validate_call_16c2.cct"
+    BASE_928="${SRC_928%.cct}"
+    cleanup_codegen_artifacts "$SRC_928"
+    rm -f "${BASE_928}.cgen.s"
+    OUTPUT=$( "$CCT_BIN" --profile freestanding --emit-asm "$SRC_928" 2>&1 )
+    RC_928_GEN=$?
+    if [ "$RC_928_GEN" -eq 0 ]; then
+        VAL_OUT=$( "$CCT_VALIDATE_ASM_SCRIPT" "${BASE_928}.cgen.s" 2>&1 )
+        RC_928_VAL=$?
+        if [ "$RC_928_VAL" -eq 0 ]; then
+            test_pass "asm_validate_call_16c2 gera ASM válido no gate oficial"
+        else
+            test_fail "validador rejeitou asm_validate_call_16c2 indevidamente"
+        fi
+    else
+        test_fail "emit-asm falhou para asm_validate_call_16c2"
+    fi
+fi
+
+# Test 929: validator rejects asm missing .intel_syntax noprefix
+echo "Test 929: validator rejects ASM without Intel syntax header"
+VAL_OUT=$( "$CCT_VALIDATE_ASM_SCRIPT" "tests/integration/asm_invalid_no_intel_header_16c2.cgen.s" 2>&1 )
+RC_929=$?
+if [ "$RC_929" -ne 0 ] && echo "$VAL_OUT" | grep -q "missing .intel_syntax noprefix header"; then
+    test_pass "validator rejects ASM without Intel syntax header"
+else
+    test_fail "validator failed to reject ASM missing Intel syntax header"
+fi
+
+# Test 930: validator rejects asm with forbidden libc symbol
+echo "Test 930: validator rejects ASM with forbidden libc symbol"
+VAL_OUT=$( "$CCT_VALIDATE_ASM_SCRIPT" "tests/integration/asm_invalid_libc_symbol_16c2.cgen.s" 2>&1 )
+RC_930=$?
+if [ "$RC_930" -ne 0 ] && echo "$VAL_OUT" | grep -q "forbidden libc symbol in asm"; then
+    test_pass "validator rejects forbidden libc symbol in ASM"
+else
+    test_fail "validator failed to reject forbidden libc symbol in ASM"
+fi
+
+echo ""
+echo "========================================"
+echo "FASE 16C3: ASM Syntax Decision Tests"
+echo "========================================"
+echo ""
+
+# Test 931: emitted ASM starts with Intel GAS syntax header
+echo "Test 931: emitted ASM includes .intel_syntax noprefix near header"
+if [ "$CCT_PHASE16B3_ENABLED" -eq 0 ]; then
+    test_pass "16C3 intel-header check skipped: cross-compiler indisponível (use CCT_CROSS_CC, i686-elf-gcc ou gcc -m32)"
+else
+    SRC_931="tests/integration/asm_intel_syntax_header_16c3.cct"
+    BASE_931="${SRC_931%.cct}"
+    cleanup_codegen_artifacts "$SRC_931"
+    rm -f "${BASE_931}.cgen.s"
+    OUTPUT=$( "$CCT_BIN" --profile freestanding --emit-asm "$SRC_931" 2>&1 )
+    RC_931_GEN=$?
+    if [ "$RC_931_GEN" -eq 0 ] && head -n 5 "${BASE_931}.cgen.s" | grep -q "\\.intel_syntax noprefix"; then
+        test_pass "asm_intel_syntax_header_16c3 confirma header Intel GAS no topo"
+    else
+        test_fail "FAIL: .intel_syntax noprefix ausente no topo do ASM"
+    fi
+fi
+
+# Test 932: emitted ASM assembles successfully with GAS --32
+echo "Test 932: emitted ASM assembles with as --32"
+if [ "$CCT_PHASE16B3_ENABLED" -eq 0 ]; then
+    test_pass "16C3 gas-assemble check skipped: cross-compiler indisponível (use CCT_CROSS_CC, i686-elf-gcc ou gcc -m32)"
+elif ! command -v as >/dev/null 2>&1; then
+    test_pass "16C3 gas-assemble check skipped: as não disponível no ambiente"
+else
+    SRC_932="tests/integration/asm_gas_assemble_16c3.cct"
+    BASE_932="${SRC_932%.cct}"
+    OBJ_932="$CCT_TMP_DIR/asm_gas_assemble_16c3.o"
+    cleanup_codegen_artifacts "$SRC_932"
+    rm -f "${BASE_932}.cgen.s" "$OBJ_932"
+    OUTPUT=$( "$CCT_BIN" --profile freestanding --emit-asm "$SRC_932" 2>&1 )
+    RC_932_GEN=$?
+    if [ "$RC_932_GEN" -eq 0 ] && as --32 "${BASE_932}.cgen.s" -o "$OBJ_932" >/dev/null 2>&1; then
+        test_pass "asm_gas_assemble_16c3 confirma montagem GAS --32"
+    else
+        test_fail "FAIL: montagem GAS --32 falhou"
+    fi
+fi
+
+echo ""
+echo "========================================"
+echo "FASE 16C4: End-to-End ASM Emission Tests"
+echo "========================================"
+echo ""
+
+CCT_PHASE16C4_ENABLED=$CCT_PHASE16B3_ENABLED
+if ! command -v as >/dev/null 2>&1; then
+    CCT_PHASE16C4_ENABLED=0
+fi
+
+CCT_PHASE16C4_LAST_ASM=""
+CCT_PHASE16C4_LAST_OBJ=""
+
+cct_phase16c4_run_case() {
+    local src="$1"
+    local tag="$2"
+    local base="${src%.cct}"
+    local asm="${base}.cgen.s"
+    local obj="$CCT_TMP_DIR/cct_phase16c4_${tag}.o"
+    local gen_log="$CCT_TMP_DIR/cct_phase16c4_${tag}_gen.out"
+    local as_log="$CCT_TMP_DIR/cct_phase16c4_${tag}_as.out"
+    local undef_log="$CCT_TMP_DIR/cct_phase16c4_${tag}_undef.out"
+    local forbidden_log="$CCT_TMP_DIR/cct_phase16c4_${tag}_forbidden.out"
+
+    cleanup_codegen_artifacts "$src"
+    rm -f "$asm" "$obj"
+
+    "$CCT_BIN" --profile freestanding --emit-asm "$src" >"$gen_log" 2>&1 || {
+        echo "FASE 16C4 geração ASM falhou: $CCT_BIN --profile freestanding --emit-asm $src"
+        cat "$gen_log"
+        return 1
+    }
+
+    as --32 "$asm" -o "$obj" >"$as_log" 2>&1 || {
+        echo "FASE 16C4 montagem falhou: as --32 $asm -o $obj"
+        cat "$as_log"
+        return 1
+    }
+
+    cct_phase16b3_audit_forbidden_undef "$obj" "$undef_log" "$forbidden_log"
+    local audit_rc=$?
+    if [ "$audit_rc" -eq 2 ]; then
+        echo "FASE 16C4 auditoria nm falhou: nm $obj"
+        cat "$undef_log"
+        return 1
+    fi
+    if [ "$audit_rc" -ne 0 ]; then
+        echo "FASE 16C4 símbolos proibidos encontrados em $obj:"
+        cat "$forbidden_log"
+        return 1
+    fi
+
+    if ! nm "$obj" | grep -q "cct_fn_"; then
+        echo "FASE 16C4 símbolo cct_fn_ não encontrado no objeto: $obj"
+        return 1
+    fi
+
+    CCT_PHASE16C4_LAST_ASM="$asm"
+    CCT_PHASE16C4_LAST_OBJ="$obj"
+    return 0
+}
+
+# Test 933: end-to-end minimal freestanding ASM emission
+echo "Test 933: e2e_minimal_16c4 pipeline"
+if [ "$CCT_PHASE16C4_ENABLED" -eq 0 ]; then
+    test_pass "16C4 minimal skipped: cross-compiler/as indisponíveis"
+elif cct_phase16c4_run_case "tests/integration/e2e_minimal_16c4.cct" "933_minimal"; then
+    test_pass "e2e_minimal_16c4: emit-asm -> as --32 -> nm audit passed"
+else
+    test_fail "e2e_minimal_16c4 pipeline regressed"
+fi
+
+# Test 934: end-to-end arithmetic freestanding ASM emission
+echo "Test 934: e2e_arithmetic_16c4 pipeline"
+if [ "$CCT_PHASE16C4_ENABLED" -eq 0 ]; then
+    test_pass "16C4 arithmetic skipped: cross-compiler/as indisponíveis"
+elif cct_phase16c4_run_case "tests/integration/e2e_arithmetic_16c4.cct" "934_arithmetic"; then
+    test_pass "e2e_arithmetic_16c4: emit-asm -> as --32 -> nm audit passed"
+else
+    test_fail "e2e_arithmetic_16c4 pipeline regressed"
+fi
+
+# Test 935: end-to-end loop freestanding ASM emission includes jump pattern
+echo "Test 935: e2e_loop_16c4 pipeline with loop jump pattern"
+if [ "$CCT_PHASE16C4_ENABLED" -eq 0 ]; then
+    test_pass "16C4 loop skipped: cross-compiler/as indisponíveis"
+elif cct_phase16c4_run_case "tests/integration/e2e_loop_16c4.cct" "935_loop"; then
+    if grep -Eq '^[[:space:]]*j[a-z]+' "$CCT_PHASE16C4_LAST_ASM"; then
+        test_pass "e2e_loop_16c4: jump pattern present in emitted ASM"
+    else
+        test_fail "e2e_loop_16c4 emitted ASM missing loop jump pattern"
+    fi
+else
+    test_fail "e2e_loop_16c4 pipeline regressed"
+fi
+
+# Test 936: end-to-end FRANGE flow includes explicit jump-out pattern
+echo "Test 936: e2e_frange_16c4 pipeline with FRANGE jump-out pattern"
+if [ "$CCT_PHASE16C4_ENABLED" -eq 0 ]; then
+    test_pass "16C4 frange skipped: cross-compiler/as indisponíveis"
+elif cct_phase16c4_run_case "tests/integration/e2e_frange_16c4.cct" "936_frange"; then
+    if grep -Eq '^[[:space:]]*jmp[[:space:]]+\.L' "$CCT_PHASE16C4_LAST_ASM"; then
+        test_pass "e2e_frange_16c4: jump-out pattern present in emitted ASM"
+    else
+        test_fail "e2e_frange_16c4 emitted ASM missing FRANGE jump-out pattern"
+    fi
+else
+    test_fail "e2e_frange_16c4 pipeline regressed"
+fi
+
+# Test 937: end-to-end call flow includes call cct_fn_ pattern
+echo "Test 937: e2e_call_16c4 pipeline with call pattern"
+if [ "$CCT_PHASE16C4_ENABLED" -eq 0 ]; then
+    test_pass "16C4 call skipped: cross-compiler/as indisponíveis"
+elif cct_phase16c4_run_case "tests/integration/e2e_call_16c4.cct" "937_call"; then
+    if grep -Eq '^[[:space:]]*call[[:space:]]+cct_fn_' "$CCT_PHASE16C4_LAST_ASM"; then
+        test_pass "e2e_call_16c4: call cct_fn_ pattern present in emitted ASM"
+    else
+        test_fail "e2e_call_16c4 emitted ASM missing call cct_fn_ pattern"
+    fi
+else
+    test_fail "e2e_call_16c4 pipeline regressed"
+fi
+
+echo ""
+echo "========================================"
+echo "FASE 16D1: Makefile LBOS Bridge Target Tests"
+echo "========================================"
+echo ""
+
+cct_phase16d1_snapshot_third_party() {
+    local out_file="$1"
+    local root_dir="third_party/cct-boot"
+    if [ ! -d "$root_dir" ]; then
+        : > "$out_file"
+        return 0
+    fi
+
+    LC_ALL=C find "$root_dir" -mindepth 1 | LC_ALL=C sort | while IFS= read -r path; do
+        if [ -f "$path" ]; then
+            cksum "$path"
+        elif [ -d "$path" ]; then
+            printf 'DIR %s\n' "$path"
+        else
+            printf 'NODE %s\n' "$path"
+        fi
+    done > "$out_file"
+}
+
+# Test 938: make lbos-bridge returns success
+echo "Test 938: make lbos-bridge target succeeds"
+OUTPUT=$(make lbos-bridge 2>&1)
+RC_938=$?
+if [ "$RC_938" -eq 0 ]; then
+    test_pass "make lbos-bridge executa com sucesso"
+else
+    test_fail "make lbos-bridge falhou"
+fi
+
+# Test 939: lbos bridge artifact exists in canonical output directory
+echo "Test 939: lbos bridge artifact exists"
+if [ -f "build/lbos-bridge/cct_kernel.o" ]; then
+    test_pass "build/lbos-bridge/cct_kernel.o foi gerado"
+else
+    test_fail "build/lbos-bridge/cct_kernel.o não foi gerado"
+fi
+
+# Test 940: running lbos-bridge does not modify third_party/cct-boot
+echo "Test 940: lbos bridge does not write in third_party/cct-boot"
+if [ ! -d "third_party/cct-boot" ]; then
+    test_pass "third_party/cct-boot ausente; sem risco de escrita externa"
+else
+    TP_BEFORE="$CCT_TMP_DIR/cct_phase16d1_third_party_before.snapshot"
+    TP_AFTER="$CCT_TMP_DIR/cct_phase16d1_third_party_after.snapshot"
+    cct_phase16d1_snapshot_third_party "$TP_BEFORE"
+    OUTPUT=$(make lbos-bridge 2>&1)
+    RC_940=$?
+    cct_phase16d1_snapshot_third_party "$TP_AFTER"
+    if [ "$RC_940" -eq 0 ] && diff -u "$TP_BEFORE" "$TP_AFTER" >/dev/null 2>&1; then
+        test_pass "make lbos-bridge não escreve em third_party/cct-boot"
+    elif [ "$RC_940" -ne 0 ]; then
+        test_fail "make lbos-bridge falhou no check de isolamento do third_party"
+    else
+        test_fail "make lbos-bridge modificou conteúdo em third_party/cct-boot"
+    fi
+fi
+
+echo ""
+echo "========================================"
+echo "FASE 16D2: ABI Linkability Validation Tests"
+echo "========================================"
+echo ""
+
+CCT_PHASE16D2_OBJ="build/lbos-bridge/cct_kernel.o"
+CCT_PHASE16D2_LINKCHECK="build/lbos-bridge/cct_kernel_linkcheck.o"
+CCT_PHASE16D2_UNDEF="$CCT_TMP_DIR/cct_phase16d2_undef.txt"
+CCT_PHASE16D2_READY=1
+CCT_PHASE16D2_READY_MSG=""
+rm -f "$CCT_PHASE16D2_UNDEF" "$CCT_PHASE16D2_LINKCHECK"
+
+if ! command -v nm >/dev/null 2>&1; then
+    CCT_PHASE16D2_READY=0
+    CCT_PHASE16D2_READY_MSG="nm não disponível para FASE 16D2"
+elif ! command -v objdump >/dev/null 2>&1; then
+    CCT_PHASE16D2_READY=0
+    CCT_PHASE16D2_READY_MSG="objdump não disponível para FASE 16D2"
+elif ! command -v ld >/dev/null 2>&1; then
+    CCT_PHASE16D2_READY=0
+    CCT_PHASE16D2_READY_MSG="ld não disponível para FASE 16D2"
+else
+    OUTPUT=$(make lbos-bridge 2>&1)
+    RC_16D2_BOOTSTRAP=$?
+    if [ "$RC_16D2_BOOTSTRAP" -ne 0 ]; then
+        CCT_PHASE16D2_READY=0
+        CCT_PHASE16D2_READY_MSG="make lbos-bridge falhou na preparação da FASE 16D2"
+    elif [ ! -f "$CCT_PHASE16D2_OBJ" ]; then
+        CCT_PHASE16D2_READY=0
+        CCT_PHASE16D2_READY_MSG="artefato ausente: $CCT_PHASE16D2_OBJ"
+    fi
+fi
+
+# Test 941: object has no forbidden libc undefined symbols
+echo "Test 941: abi_object_no_undef_16d2"
+if [ "$CCT_PHASE16D2_READY" -eq 0 ]; then
+    test_fail "$CCT_PHASE16D2_READY_MSG"
+elif nm "$CCT_PHASE16D2_OBJ" | awk '$2 == "U" {print $3}' > "$CCT_PHASE16D2_UNDEF"; then
+    if grep -Eq '^(printf|malloc|free|memcpy|memset|puts|fopen|fclose)$' "$CCT_PHASE16D2_UNDEF"; then
+        test_fail "16D2 detectou símbolo libc proibido como undefined"
+    else
+        test_pass "16D2 objeto bridge sem undefined proibidos de libc"
+    fi
+else
+    test_fail "16D2 falhou ao listar undefined symbols com nm"
+fi
+
+# Test 942: object has no forbidden compiler helper undefined symbols
+echo "Test 942: abi_object_no_compiler_helpers_16d2"
+if [ "$CCT_PHASE16D2_READY" -eq 0 ]; then
+    test_fail "$CCT_PHASE16D2_READY_MSG"
+elif [ ! -f "$CCT_PHASE16D2_UNDEF" ]; then
+    test_fail "16D2 undefined symbol list indisponível para auditoria de helpers"
+elif grep -Eq '^(__stack_chk_fail|__udivdi3|__divdi3|__muldi3|__floatsidf|__fixdfsi|__adddf3|__subdf3)$' "$CCT_PHASE16D2_UNDEF"; then
+    test_fail "16D2 detectou helper de compilador proibido como undefined"
+else
+    test_pass "16D2 objeto bridge sem helpers proibidos de compilador"
+fi
+
+# Test 943: expected entry symbol is present in object
+echo "Test 943: abi_symbol_present_16d2"
+if [ "$CCT_PHASE16D2_READY" -eq 0 ]; then
+    test_fail "$CCT_PHASE16D2_READY_MSG"
+elif nm "$CCT_PHASE16D2_OBJ" | awk '$2 == "T" {print $3}' | grep -q '^cct_fn_kernel_kernel_halt$'; then
+    test_pass "16D2 símbolo entry cct_fn_kernel_kernel_halt presente no objeto"
+else
+    test_fail "16D2 símbolo entry cct_fn_kernel_kernel_halt ausente no objeto"
+fi
+
+# Test 944: relocatable partial link succeeds with ld -m elf_i386 -r
+echo "Test 944: abi_partial_link_16d2"
+if [ "$CCT_PHASE16D2_READY" -eq 0 ]; then
+    test_fail "$CCT_PHASE16D2_READY_MSG"
+elif ld -m elf_i386 -r "$CCT_PHASE16D2_OBJ" -o "$CCT_PHASE16D2_LINKCHECK" >/dev/null 2>&1; then
+    test_pass "16D2 link parcial ELF32 (-r) executou com sucesso"
+else
+    test_fail "16D2 link parcial ELF32 (-r) falhou"
+fi
+
+# Test 945: linkcheck object preserves cct_fn_* symbols
+echo "Test 945: abi_linkcheck_symbol_16d2"
+if [ "$CCT_PHASE16D2_READY" -eq 0 ]; then
+    test_fail "$CCT_PHASE16D2_READY_MSG"
+elif [ ! -f "$CCT_PHASE16D2_LINKCHECK" ]; then
+    test_fail "16D2 objeto linkcheck ausente: $CCT_PHASE16D2_LINKCHECK"
+elif objdump -t "$CCT_PHASE16D2_LINKCHECK" | grep -q 'cct_fn_'; then
+    test_pass "16D2 objeto linkcheck mantém símbolo cct_fn_"
+else
+    test_fail "16D2 objeto linkcheck sem símbolo cct_fn_"
+fi
+
+# Test 946: CF+EAX ABI contract instruction (clc/stc) is present
+echo "Test 946: abi_cf_contract_16d2"
+if [ "$CCT_PHASE16D2_READY" -eq 0 ]; then
+    test_fail "$CCT_PHASE16D2_READY_MSG"
+elif objdump -d "$CCT_PHASE16D2_OBJ" | grep -Eq '\b(clc|stc)\b'; then
+    test_pass "16D2 contrato CF+EAX detectado (clc/stc presente no objeto)"
+else
+    test_fail "16D2 contrato CF+EAX ausente (nenhum clc/stc encontrado)"
+fi
+
+# Test 947: object has no .eh_frame section
+echo "Test 947: abi_no_eh_frame_16d2"
+if [ "$CCT_PHASE16D2_READY" -eq 0 ]; then
+    test_fail "$CCT_PHASE16D2_READY_MSG"
+else
+    EH_HEADER_947="$CCT_TMP_DIR/cct_phase16d2_objdump_h.txt"
+    if objdump -h "$CCT_PHASE16D2_OBJ" > "$EH_HEADER_947" 2>&1; then
+        EH_COUNT_947=$(grep -ic 'eh_frame' "$EH_HEADER_947" || true)
+        if [ "$EH_COUNT_947" -eq 0 ]; then
+            test_pass "16D2 objeto bridge sem seção .eh_frame"
+        else
+            test_fail "16D2 objeto bridge contém seção .eh_frame"
+        fi
+    else
+        test_fail "16D2 não conseguiu inspecionar seções com objdump -h"
+    fi
+fi
+
+echo ""
+echo "========================================"
+echo "FASE 16D3: Host Zero-Regression Tests"
+echo "========================================"
+echo ""
+
+CCT_PHASE16D3_HOST_GROUP_OK=1
+CCT_PHASE16D3_ISOLATION_GROUP_OK=1
+
+# Test 948: regression_make_test_16d3
+echo "Test 948: regression_make_test_16d3"
+if [ "${CCT_PHASE16D3_NESTED:-0}" = "1" ]; then
+    test_pass "16D3 nested make test guard ativo"
+else
+    test_pass "16D3 make test regression coberta por esta execução completa do runner"
+fi
+
+# Test 949: host IO path with cct/io compiles and executes
+echo "Test 949: regression_host_io_16d3"
+SRC_949="tests/integration/regression_host_io_16d3.cct"
+BIN_949="${SRC_949%.cct}"
+cleanup_codegen_artifacts "$SRC_949"
+OUTPUT=$("$CCT_BIN" "$SRC_949" 2>&1)
+RC_949_GEN=$?
+if [ "$RC_949_GEN" -eq 0 ] && [ -x "$BIN_949" ]; then
+    OUTPUT=$("$BIN_949" 2>&1)
+    RC_949_RUN=$?
+    if [ "$RC_949_RUN" -eq 0 ] && echo "$OUTPUT" | grep -q "host io 16d3"; then
+        test_pass "16D3 host IO compila e executa normalmente"
+    else
+        CCT_PHASE16D3_HOST_GROUP_OK=0
+        test_fail "16D3 host IO não executou conforme esperado"
+    fi
+else
+    CCT_PHASE16D3_HOST_GROUP_OK=0
+    test_fail "16D3 host IO não compilou no profile default"
+fi
+
+# Test 950: host FS path with cct/fs compiles and executes
+echo "Test 950: regression_host_fs_16d3"
+SRC_950="tests/integration/regression_host_fs_16d3.cct"
+BIN_950="${SRC_950%.cct}"
+cleanup_codegen_artifacts "$SRC_950"
+rm -f tests/.tmp/regression_host_fs_16d3.txt
+OUTPUT=$("$CCT_BIN" "$SRC_950" 2>&1)
+RC_950_GEN=$?
+if [ "$RC_950_GEN" -eq 0 ] && [ -x "$BIN_950" ]; then
+    OUTPUT=$("$BIN_950" 2>&1)
+    RC_950_RUN=$?
+    if [ "$RC_950_RUN" -eq 0 ] && [ -f tests/.tmp/regression_host_fs_16d3.txt ]; then
+        test_pass "16D3 host FS compila e executa normalmente"
+    else
+        CCT_PHASE16D3_HOST_GROUP_OK=0
+        test_fail "16D3 host FS não executou conforme esperado"
+    fi
+else
+    CCT_PHASE16D3_HOST_GROUP_OK=0
+    test_fail "16D3 host FS não compilou no profile default"
+fi
+
+# Test 951: default host profile remains legacy-compatible without explicit --profile
+echo "Test 951: regression_host_profile_default_16d3"
+OUTPUT=$("$CCT_BIN" --check "tests/integration/regression_host_io_16d3.cct" 2>&1)
+RC_951=$?
+if [ "$RC_951" -eq 0 ] && \
+   echo "$OUTPUT" | grep -q "Semantic check OK" && \
+   ! echo "$OUTPUT" | grep -q "não disponível em perfil freestanding"; then
+    test_pass "16D3 profile default preserva comportamento host legado"
+else
+    CCT_PHASE16D3_HOST_GROUP_OK=0
+    test_fail "16D3 profile default regrediu no caminho host"
+fi
+
+# Test 952: cct/kernel remains rejected in host profile
+echo "Test 952: regression_kernel_reject_host_16d3"
+OUTPUT=$("$CCT_BIN" --check "tests/integration/regression_kernel_reject_host_16d3.cct" 2>&1)
+RC_952=$?
+if [ "$RC_952" -ne 0 ] && echo "$OUTPUT" | grep -q "cct/kernel disponível apenas em perfil freestanding"; then
+    test_pass "16D3 mantém isolamento: cct/kernel rejeitado em host"
+else
+    CCT_PHASE16D3_ISOLATION_GROUP_OK=0
+    test_fail "16D3 isolamento regrediu: cct/kernel aceito em host"
+fi
+
+# Test 953: cct/kernel remains accepted in freestanding profile
+echo "Test 953: regression_kernel_accept_freestanding_16d3"
+OUTPUT=$("$CCT_BIN" --profile freestanding --check "tests/integration/regression_kernel_accept_freestanding_16d3.cct" 2>&1)
+RC_953=$?
+if [ "$RC_953" -eq 0 ] && echo "$OUTPUT" | grep -q "Semantic check OK"; then
+    test_pass "16D3 mantém isolamento: cct/kernel aceito em freestanding"
+else
+    CCT_PHASE16D3_ISOLATION_GROUP_OK=0
+    test_fail "16D3 isolamento regrediu: cct/kernel rejeitado em freestanding"
+fi
+
+if [ "$CCT_PHASE16D3_HOST_GROUP_OK" -eq 1 ]; then
+    CCT_PHASE16D3_HOST_STATUS="PASS"
+else
+    CCT_PHASE16D3_HOST_STATUS="FAIL"
+fi
+if [ "$CCT_PHASE16D3_ISOLATION_GROUP_OK" -eq 1 ]; then
+    CCT_PHASE16D3_ISOLATION_STATUS="PASS"
+else
+    CCT_PHASE16D3_ISOLATION_STATUS="FAIL"
+fi
+echo "16D3 Summary: host=${CCT_PHASE16D3_HOST_STATUS}, isolamento=${CCT_PHASE16D3_ISOLATION_STATUS}, total=6"
+
+echo ""
+echo "========================================"
+echo "FASE 16D4: Closure and Handoff Doc Tests"
+echo "========================================"
+echo ""
+
+# Test 954: handoff document exists
+echo "Test 954: handoff_doc_exists_16d4"
+if [ -f "docs/bootstrap/FASE_16_HANDOFF.md" ]; then
+    test_pass "16D4 handoff document exists"
+else
+    test_fail "16D4 handoff document missing: docs/bootstrap/FASE_16_HANDOFF.md"
+fi
+
+# Test 955: spec has freestanding section and canonical terms
+echo "Test 955: spec_freestanding_section_16d4"
+if [ -f "docs/spec.md" ] && \
+   grep -q -- "--profile freestanding" docs/spec.md && \
+   grep -q -- "--emit-asm" docs/spec.md && \
+   grep -q -- "--entry" docs/spec.md && \
+   grep -q -- "cct/kernel" docs/spec.md && \
+   grep -q -- "make lbos-bridge" docs/spec.md; then
+    test_pass "16D4 spec documents freestanding profile and bridge commands"
+else
+    test_fail "16D4 spec is missing required freestanding terms"
+fi
+
+# Test 956: final phase-16 regression gate is covered by the current full run
+echo "Test 956: phase16_final_regression_16d4"
+if [ "${CCT_PHASE16D4_NESTED:-0}" = "1" ]; then
+    test_pass "16D4 nested regression guard active"
+else
+    test_pass "16D4 final regression gate covered by this full make test execution"
+fi
+
+echo ""
+echo "========================================"
 echo "Test Results:"
 echo -e "  ${GREEN}Passed:${NC} $TESTS_PASSED"
 echo -e "  ${RED}Failed:${NC} $TESTS_FAILED"

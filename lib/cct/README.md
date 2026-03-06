@@ -58,3 +58,6 @@ Status in FASE 12D.2:
 - `collection_ops.cct` canonical collection combinators implemented (`map/filter/fold/find/any/all`)
 
 The module families listed above are delivered and maintained in the stable baseline through FASE 15D.4.
+
+Status in FASE 16B.2:
+- `kernel/` module family introduced with canonical `cct/kernel` surface for freestanding-only targets

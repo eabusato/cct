@@ -11,7 +11,7 @@ It is written to help you:
 
 ## Status
 
-Specification baseline: **FASE 15D.4** (FASE 13/13M closures, FASE 14 hardening contracts, and the full FASE 15 closure set).
+Specification baseline: **FASE 16D.4** (FASE 13/13M closures, FASE 14 hardening contracts, full FASE 15 closure set, and FASE 16 freestanding bridge closure).
 
 The language is fully usable in its current subset, with explicit boundaries documented below.
 
@@ -27,6 +27,12 @@ Behavior: print compiler version and build status.
 
 - `./cct <file.cct>`
 Behavior: parse, run semantic checks, generate sigils, generate `.cgen.c`, invoke host C compiler, produce executable.
+
+- `./cct --profile host|freestanding <file.cct>`
+Behavior: select explicit compilation profile (`host` by default, `freestanding` for no-libc target flow).
+
+- `./cct --profile freestanding --emit-asm [--entry <rituale>] <file.cct>`
+Behavior: generate freestanding `.cgen.s` using Intel GAS syntax for x86 32-bit flow.
 
 - `./cct --tokens <file.cct>`
 Behavior: print token stream.
@@ -117,6 +123,41 @@ Behavior: generate deterministic API docs for module closure (`docs/api` by defa
 
 - input must be a `.cct` file
 - one positional input file per invocation
+
+### 1.4 Freestanding Profile (FASE 16)
+
+The `freestanding` profile enables the CCT-to-LBOS bridge flow and keeps target code independent from host libc/runtime assumptions.
+
+Canonical flags:
+- `--profile freestanding`
+- `--emit-asm`
+- `--entry <rituale>` (freestanding only)
+
+Profile contract:
+- `host` remains default and preserves legacy behavior from phases 0-15.
+- `freestanding` enforces semantic/codegen restrictions required by ABI V0.
+- `--emit-asm` operates in freestanding mode and emits `.cgen.s`.
+- `--entry` is valid only in freestanding and chooses exported `cct_fn_<mod>_<entry>`.
+
+Freestanding module policy:
+- `cct/kernel` is supported only in freestanding.
+- `cct/io`, `cct/fs`, and dynamic runtime-heavy modules remain blocked in freestanding.
+- `cct/kernel` must be rejected in host profile.
+
+Supported freestanding surface (summary):
+- scalar arithmetic and control flow subset used by the bridge;
+- bitwise operators and static data forms validated in FASE 16;
+- kernel service lowering via `cct/kernel` wrappers.
+
+Restricted/prohibited freestanding surface (summary):
+- host I/O/filesystem modules (`cct/io`, `cct/fs`);
+- heap/dynamic structures outside validated subset;
+- dynamic `GENUS/PACTUM` paths;
+- unsupported soft-float target paths (`COMES`/`MILES` keep warning-only diagnostics where applicable).
+
+Bridge command reference:
+- `make lbos-bridge`
+Behavior: runs the canonical bridge pipeline and publishes `build/lbos-bridge/cct_kernel.o` for LBOS-side consumption.
 
 ## 2. Source File Structure
 

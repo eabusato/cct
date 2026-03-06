@@ -1,0 +1,12 @@
+INCIPIT grimoire "freestanding_accept_bitwise_16a3"
+
+RITUALE main() REDDE REX
+  EVOCA REX a AD 60
+  EVOCA REX b AD 13
+  EVOCA REX r1 AD a ET_BIT b
+  EVOCA REX r2 AD a VEL_BIT b
+  EVOCA REX r3 AD a XOR b
+  REDDE r1 + r2 + r3
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

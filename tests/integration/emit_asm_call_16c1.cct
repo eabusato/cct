@@ -1,0 +1,11 @@
+INCIPIT grimoire "emit_asm_call_16c1"
+
+RITUALE soma1(REX x) REDDE REX
+  REDDE x + 1
+EXPLICIT RITUALE
+
+RITUALE main() REDDE REX
+  REDDE CONIURA soma1(4)
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

@@ -1,0 +1,10 @@
+INCIPIT grimoire "freestanding_reject_heap_obsecro_16a3"
+
+RITUALE main() REDDE REX
+  EVOCA SPECULUM REX p
+  VINCIRE p AD OBSECRO pete(MENSURA(REX))
+  OBSECRO libera(p)
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

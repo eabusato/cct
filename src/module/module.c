@@ -65,6 +65,7 @@ typedef struct {
     cct_module_unit_t *modules;
     size_t module_count;
     size_t module_capacity;
+    cct_profile_t profile;
 
     const char **active_stack;
     size_t active_count;
@@ -227,6 +228,72 @@ static bool mod_is_stdlib_import(const char *raw_import) {
     return raw_import && strncmp(raw_import, "cct/", 4) == 0;
 }
 
+static bool mod_is_cct_kernel_import(const char *raw_import) {
+    if (!raw_import) return false;
+    size_t len = strlen(raw_import);
+    if (len >= 4 && strcmp(raw_import + len - 4, ".cct") == 0) {
+        len -= 4;
+    }
+    if (len == 0 || len >= 128) return false;
+
+    char canonical[128];
+    memcpy(canonical, raw_import, len);
+    canonical[len] = '\0';
+
+    return strcmp(canonical, "cct/kernel") == 0 ||
+           strcmp(canonical, "cct/kernel/kernel") == 0;
+}
+
+static bool mod_is_freestanding_forbidden_import(const char *raw_import, char *out_name, size_t out_name_size) {
+    if (!raw_import) return false;
+    size_t len = strlen(raw_import);
+    if (len >= 4 && strcmp(raw_import + len - 4, ".cct") == 0) {
+        len -= 4;
+    }
+    if (len == 0 || len >= 128) return false;
+
+    char canonical[128];
+    memcpy(canonical, raw_import, len);
+    canonical[len] = '\0';
+
+    static const char *forbidden[] = {
+        "cct/io",
+        "cct/fs",
+        "cct/fluxus",
+        "cct/map",
+        "cct/set",
+        "cct/random",
+    };
+
+    for (size_t i = 0; i < sizeof(forbidden) / sizeof(forbidden[0]); i++) {
+        if (strcmp(canonical, forbidden[i]) == 0) {
+            if (out_name && out_name_size > 0) {
+                snprintf(out_name, out_name_size, "%s", forbidden[i]);
+            }
+            return true;
+        }
+    }
+    return false;
+}
+
+static const char* mod_path_leaf(const char *path) {
+    if (!path || path[0] == '\0') return "";
+    const char *slash = strrchr(path, '/');
+    return slash ? (slash + 1) : path;
+}
+
+static char* mod_append_suffix(const char *base, const char *suffix) {
+    if (!base || !suffix) return NULL;
+    size_t base_len = strlen(base);
+    size_t suffix_len = strlen(suffix);
+    char *out = (char*)malloc(base_len + suffix_len + 1);
+    if (!out) return NULL;
+    memcpy(out, base, base_len);
+    memcpy(out + base_len, suffix, suffix_len);
+    out[base_len + suffix_len] = '\0';
+    return out;
+}
+
 static const char* mod_stdlib_root(void) {
     const char *env_root = getenv("CCT_STDLIB_DIR");
     if (env_root && env_root[0] != '\0') {
@@ -334,6 +401,14 @@ static char* mod_join_paths(const char *left, const char *right) {
     memcpy(out + pos, right, right_len);
     out[pos + right_len] = '\0';
     return out;
+}
+
+static char* mod_try_join_and_realpath(const char *left, const char *right) {
+    char *candidate = mod_join_paths(left, right);
+    if (!candidate) return NULL;
+    char *resolved = mod_realpath_dup(candidate);
+    free(candidate);
+    return resolved;
 }
 
 static bool mod_ctx_reserve_modules(cct_module_ctx_t *ctx, size_t needed) {
@@ -553,13 +628,37 @@ static char* mod_resolve_import_target(const char *importer_canonical_path,
     if (!raw_import || raw_import[0] == '\0') return NULL;
     if (out_origin) *out_origin = CCT_MODULE_ORIGIN_USER;
 
-    char *candidate = NULL;
     if (mod_is_stdlib_import(raw_import)) {
         const char *stdlib_rel = raw_import + 4;
         if (!stdlib_rel[0]) return NULL;
-        candidate = mod_join_paths(mod_stdlib_root(), stdlib_rel);
         if (out_origin) *out_origin = CCT_MODULE_ORIGIN_STDLIB;
-    } else if (raw_import[0] == '/') {
+
+        if (mod_has_cct_extension(raw_import)) {
+            return mod_try_join_and_realpath(mod_stdlib_root(), stdlib_rel);
+        }
+
+        char *flat_rel = mod_append_suffix(stdlib_rel, ".cct");
+        char *resolved = NULL;
+        if (flat_rel) {
+            resolved = mod_try_join_and_realpath(mod_stdlib_root(), flat_rel);
+            free(flat_rel);
+        }
+        if (resolved) return resolved;
+
+        const char *leaf = mod_path_leaf(stdlib_rel);
+        size_t nested_len = strlen(stdlib_rel) + 1 + strlen(leaf) + 4 + 1; /* / + .cct + NUL */
+        char *nested_rel = (char*)malloc(nested_len);
+        if (!nested_rel) return NULL;
+        snprintf(nested_rel, nested_len, "%s/%s.cct", stdlib_rel, leaf);
+        resolved = mod_try_join_and_realpath(mod_stdlib_root(), nested_rel);
+        free(nested_rel);
+        if (resolved) return resolved;
+
+        return mod_try_join_and_realpath(mod_stdlib_root(), stdlib_rel);
+    }
+
+    char *candidate = NULL;
+    if (raw_import[0] == '/') {
         candidate = mod_strdup(raw_import);
     } else {
         char *base_dir = mod_dirname_dup(importer_canonical_path);
@@ -569,7 +668,6 @@ static char* mod_resolve_import_target(const char *importer_canonical_path,
     }
 
     if (!candidate) return NULL;
-
     char *resolved = mod_realpath_dup(candidate);
     free(candidate);
     return resolved;
@@ -671,13 +769,33 @@ static ssize_t mod_load_recursive(cct_module_ctx_t *ctx,
                 return -1;
             }
 
-            if (!mod_has_cct_extension(raw_import)) {
+            if (!mod_has_cct_extension(raw_import) && !mod_is_stdlib_import(raw_import)) {
                 mod_report(ctx, CCT_ERROR_SYNTAX,
                            module_path, decl->line, decl->column,
                            "ADVOCARE path must end with .cct in subset 9A (got '%s')",
                            raw_import);
                 mod_ctx_pop_active(ctx);
                 return -1;
+            }
+
+            if (ctx->profile != CCT_PROFILE_FREESTANDING && mod_is_cct_kernel_import(raw_import)) {
+                mod_report(ctx, CCT_ERROR_SEMANTIC,
+                           module_path, decl->line, decl->column,
+                           "cct/kernel disponível apenas em perfil freestanding");
+                mod_ctx_pop_active(ctx);
+                return -1;
+            }
+
+            if (ctx->profile == CCT_PROFILE_FREESTANDING) {
+                char forbidden_module[64];
+                if (mod_is_freestanding_forbidden_import(raw_import, forbidden_module, sizeof(forbidden_module))) {
+                    mod_report(ctx, CCT_ERROR_SEMANTIC,
+                               module_path, decl->line, decl->column,
+                               "módulo '%s' não disponível em perfil freestanding",
+                               forbidden_module);
+                    mod_ctx_pop_active(ctx);
+                    return -1;
+                }
             }
 
             cct_module_origin_t import_origin = CCT_MODULE_ORIGIN_USER;
@@ -1713,6 +1831,7 @@ static bool mod_validate_inter_module_resolution(cct_module_ctx_t *ctx) {
 }
 
 bool cct_module_bundle_build(const char *entry_input_path,
+                             cct_profile_t profile,
                              cct_module_bundle_t *out_bundle,
                              cct_error_code_t *out_error) {
     if (out_error) *out_error = CCT_OK;
@@ -1726,6 +1845,7 @@ bool cct_module_bundle_build(const char *entry_input_path,
     cct_module_ctx_t ctx;
     memset(&ctx, 0, sizeof(ctx));
     ctx.error_code = CCT_OK;
+    ctx.profile = profile;
 
     ssize_t entry_idx = mod_load_recursive(&ctx, entry_input_path, NULL, NULL, CCT_MODULE_ORIGIN_USER);
     if (entry_idx < 0 || ctx.module_count == 0) {

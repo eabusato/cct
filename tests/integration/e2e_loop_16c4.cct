@@ -1,0 +1,13 @@
+INCIPIT grimoire "e2e_loop_16c4"
+
+RITUALE main() REDDE REX
+  EVOCA REX i AD 0
+  EVOCA REX acc AD 0
+  DUM i < 5
+    VINCIRE acc AD acc + i
+    VINCIRE i AD i + 1
+  FIN DUM
+  REDDE acc
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

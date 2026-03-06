@@ -1,0 +1,11 @@
+INCIPIT grimoire "freestanding_loop_16b1"
+
+RITUALE main() REDDE REX
+  EVOCA REX soma AD 0
+  REPETE i DE 0 AD 5
+    VINCIRE soma AD soma + i
+  FIN REPETE
+  REDDE soma
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

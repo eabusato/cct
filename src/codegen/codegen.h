@@ -42,6 +42,7 @@ typedef struct {
     const char *host_cc;            /* defaults to "cc" */
     bool keep_intermediate;         /* preserve generated .c file */
     cct_profile_t profile;          /* FASE 16A.2: compilation profile */
+    const char *entry_rituale_name; /* FASE 16B.4: explicit freestanding entry ritual */
 
     /* Internal state (opaque to callers) */
     cct_codegen_string_t *strings;

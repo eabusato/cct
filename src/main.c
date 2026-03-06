@@ -98,6 +98,135 @@ static bool has_sigil_extension(const char *filename) {
     return len >= 6 && strcmp(filename + len - 6, ".sigil") == 0;
 }
 
+static char* replace_path_suffix(const char *path, const char *old_suffix, const char *new_suffix) {
+    if (!path || !old_suffix || !new_suffix) return NULL;
+    size_t path_len = strlen(path);
+    size_t old_len = strlen(old_suffix);
+    size_t new_len = strlen(new_suffix);
+    if (path_len < old_len) return NULL;
+    if (strcmp(path + (path_len - old_len), old_suffix) != 0) return NULL;
+
+    size_t out_len = path_len - old_len + new_len;
+    char *out = (char*)malloc(out_len + 1);
+    if (!out) return NULL;
+    memcpy(out, path, path_len - old_len);
+    memcpy(out + (path_len - old_len), new_suffix, new_len);
+    out[out_len] = '\0';
+    return out;
+}
+
+static int cct_system_exit_code(int rc) {
+    if (rc < 0) return rc;
+    if (rc > 255) return (rc >> 8) & 0xff;
+    return rc;
+}
+
+static bool cct_cross_compiler_supports_m32(const char *cc) {
+    if (!cc || cc[0] == '\0') return false;
+    char cmd[4096];
+    snprintf(cmd, sizeof(cmd),
+             "printf 'int __cct_probe = 0;\\n' | \"%s\" "
+             "-m32 -ffreestanding -nostdlib -fno-pic -fno-stack-protector -fno-builtin "
+             "-fno-asynchronous-unwind-tables -fno-unwind-tables "
+             "-x c -c -o /dev/null - >/dev/null 2>&1",
+             cc);
+    return system(cmd) == 0;
+}
+
+static bool cct_resolve_cross_compiler(char *out, size_t out_cap) {
+    if (!out || out_cap == 0) return false;
+
+    const char *env_cc = getenv("CCT_CROSS_CC");
+    if (env_cc && env_cc[0] != '\0') {
+        if (!cct_cross_compiler_supports_m32(env_cc)) {
+            return false;
+        }
+        snprintf(out, out_cap, "%s", env_cc);
+        return true;
+    }
+
+    if (cct_cross_compiler_supports_m32("i686-elf-gcc")) {
+        snprintf(out, out_cap, "%s", "i686-elf-gcc");
+        return true;
+    }
+
+    if (cct_cross_compiler_supports_m32("gcc")) {
+        snprintf(out, out_cap, "%s", "gcc");
+        return true;
+    }
+
+    return false;
+}
+
+static void cct_runtime_include_dir(char *out, size_t out_cap) {
+    if (!out || out_cap == 0) return;
+    const char *header = CCT_FREESTANDING_RT_HEADER;
+    if (!header || header[0] == '\0') {
+        snprintf(out, out_cap, "%s", ".");
+        return;
+    }
+
+    const char *slash = strrchr(header, '/');
+#ifdef _WIN32
+    const char *backslash = strrchr(header, '\\');
+    if (!slash || (backslash && backslash > slash)) slash = backslash;
+#endif
+    if (!slash) {
+        snprintf(out, out_cap, "%s", ".");
+        return;
+    }
+
+    size_t dir_len = (size_t)(slash - header);
+    if (dir_len >= out_cap) dir_len = out_cap - 1;
+    memcpy(out, header, dir_len);
+    out[dir_len] = '\0';
+}
+
+static cct_error_code_t cct_emit_asm_from_cgen(const char *input_file) {
+    char cross_cc[512];
+    if (!cct_resolve_cross_compiler(cross_cc, sizeof(cross_cc))) {
+        fprintf(stderr,
+                "cct: --emit-asm requer cross-compiler (-m32); instale i686-elf-gcc ou defina CCT_CROSS_CC\n");
+        return CCT_ERROR_CODEGEN;
+    }
+
+    char *cgen_c_path = replace_path_suffix(input_file, ".cct", ".cgen.c");
+    char *cgen_s_path = replace_path_suffix(input_file, ".cct", ".cgen.s");
+    if (!cgen_c_path || !cgen_s_path) {
+        free(cgen_c_path);
+        free(cgen_s_path);
+        cct_error_printf(CCT_ERROR_INTERNAL, "falha ao derivar caminhos .cgen.c/.cgen.s");
+        return CCT_ERROR_INTERNAL;
+    }
+
+    char runtime_dir[1024];
+    cct_runtime_include_dir(runtime_dir, sizeof(runtime_dir));
+
+    char command[8192];
+    snprintf(command, sizeof(command),
+             "\"%s\" -m32 -S -masm=intel "
+             "-ffreestanding -nostdlib -fno-pic "
+             "-fno-stack-protector -fno-builtin "
+             "-fno-asynchronous-unwind-tables -fno-unwind-tables "
+             "-I \"%s\" \"%s\" -o \"%s\"",
+             cross_cc, runtime_dir, cgen_c_path, cgen_s_path);
+
+    int rc = system(command);
+    if (rc != 0) {
+        fprintf(stderr, "cct: cross-compiler falhou (exit %d)\n", cct_system_exit_code(rc));
+        free(cgen_c_path);
+        free(cgen_s_path);
+        return CCT_ERROR_CODEGEN;
+    }
+
+    printf("ASM emitted: %s\n", cgen_s_path);
+    printf("Cross compiler: %s\n", cross_cc);
+
+    free(cgen_c_path);
+    free(cgen_s_path);
+    return CCT_OK;
+}
+
 static cct_diagnostic_level_t sigilo_diag_to_level(cct_sigil_diag_level_t level) {
     return level == CCT_SIGIL_DIAG_ERROR ? CCT_DIAG_ERROR : CCT_DIAG_WARNING;
 }
@@ -981,7 +1110,7 @@ static int cmd_lint(int argc, char **argv) {
 
     cct_module_bundle_t bundle;
     cct_error_code_t bundle_status = CCT_OK;
-    if (!cct_module_bundle_build(file, &bundle, &bundle_status)) {
+    if (!cct_module_bundle_build(file, CCT_PROFILE_HOST, &bundle, &bundle_status)) {
         return 1;
     }
 
@@ -1160,7 +1289,7 @@ static cct_error_code_t cmd_show_ast(const char *filename) {
 static cct_error_code_t cmd_show_ast_composite(const char *filename) {
     cct_module_bundle_t bundle;
     cct_error_code_t bundle_status = CCT_OK;
-    if (!cct_module_bundle_build(filename, &bundle, &bundle_status)) {
+    if (!cct_module_bundle_build(filename, CCT_PROFILE_HOST, &bundle, &bundle_status)) {
         return bundle_status;
     }
 
@@ -1183,7 +1312,7 @@ static cct_error_code_t cmd_show_ast_composite(const char *filename) {
 static cct_error_code_t cmd_check_semantic(const char *filename, cct_profile_t profile) {
     cct_module_bundle_t bundle;
     cct_error_code_t bundle_status = CCT_OK;
-    if (!cct_module_bundle_build(filename, &bundle, &bundle_status)) {
+    if (!cct_module_bundle_build(filename, profile, &bundle, &bundle_status)) {
         return bundle_status;
     }
 
@@ -1438,7 +1567,7 @@ static cct_error_code_t cmd_sigilo_only(const cct_cli_args_t *args) {
     const char *filename = args->input_file;
     cct_module_bundle_t bundle;
     cct_error_code_t bundle_status = CCT_OK;
-    if (!cct_module_bundle_build(filename, &bundle, &bundle_status)) {
+    if (!cct_module_bundle_build(filename, args->profile, &bundle, &bundle_status)) {
         return bundle_status;
     }
 
@@ -1467,14 +1596,25 @@ static cct_error_code_t cmd_sigilo_only(const cct_cli_args_t *args) {
  */
 static cct_error_code_t cmd_compile_file(const cct_cli_args_t *args) {
     const char *filename = args->input_file;
+    cct_profile_t compile_profile = args->profile;
+    if (args->emit_asm && compile_profile != CCT_PROFILE_FREESTANDING) {
+        fprintf(stderr, "cct: aviso: --emit-asm força perfil freestanding\n");
+        compile_profile = CCT_PROFILE_FREESTANDING;
+    }
+
+    if (args->entry_rituale && compile_profile != CCT_PROFILE_FREESTANDING) {
+        fprintf(stderr, "cct: --entry é suportado apenas em perfil freestanding\n");
+        return CCT_ERROR_INVALID_ARGUMENT;
+    }
+
     cct_module_bundle_t bundle;
     cct_error_code_t bundle_status = CCT_OK;
-    if (!cct_module_bundle_build(filename, &bundle, &bundle_status)) {
+    if (!cct_module_bundle_build(filename, compile_profile, &bundle, &bundle_status)) {
         return bundle_status;
     }
 
     cct_semantic_analyzer_t sem;
-    cct_semantic_init(&sem, filename, args->profile);
+    cct_semantic_init(&sem, filename, compile_profile);
     bool sem_ok = cct_semantic_analyze_program(&sem, bundle.program);
 
     if (!sem_ok || cct_semantic_had_error(&sem)) {
@@ -1487,19 +1627,24 @@ static cct_error_code_t cmd_compile_file(const cct_cli_args_t *args) {
 
     cct_codegen_t cg;
     cct_codegen_init(&cg, filename);
-    cg.profile = args->profile;
+    cg.profile = compile_profile;
+    cg.entry_rituale_name = args->entry_rituale;
     bool cg_ok = false;
     bool cg_had_error = false;
+    cct_error_code_t asm_status = CCT_OK;
     if (sigilo_status == CCT_OK) {
         cg_ok = cct_codegen_compile_program(&cg, bundle.program, filename, NULL);
         cg_had_error = cct_codegen_had_error(&cg);
+        if (cg_ok && !cg_had_error && args->emit_asm) {
+            asm_status = cct_emit_asm_from_cgen(filename);
+        }
     }
     cct_codegen_dispose(&cg);
 
     cct_semantic_dispose(&sem);
     cct_module_bundle_dispose(&bundle);
 
-    if (sigilo_status != CCT_OK || !cg_ok || cg_had_error) {
+    if (sigilo_status != CCT_OK || !cg_ok || cg_had_error || asm_status != CCT_OK) {
         return CCT_ERROR_CODEGEN;
     }
 

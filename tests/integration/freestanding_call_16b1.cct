@@ -1,0 +1,11 @@
+INCIPIT grimoire "freestanding_call_16b1"
+
+RITUALE duplica(REX v) REDDE REX
+  REDDE v + v
+EXPLICIT RITUALE
+
+RITUALE main() REDDE REX
+  REDDE CONIURA duplica(9)
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

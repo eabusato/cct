@@ -1,0 +1,10 @@
+INCIPIT grimoire "freestanding_reject_io_16a3"
+
+ADVOCARE "cct/io.cct"
+
+RITUALE main() REDDE REX
+  CONIURA print("salve")
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

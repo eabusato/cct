@@ -1,0 +1,8 @@
+INCIPIT grimoire "freestanding_reject_fluxus_16a3"
+
+RITUALE main() REDDE REX
+  EVOCA FLUXUS REX dados
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

@@ -1,0 +1,27 @@
+INCIPIT grimoire "kernel"
+
+RITUALE kernel_halt() REDDE NIHIL
+  OBSECRO kernel_halt()
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE kernel_outb(REX porta, REX valor) REDDE NIHIL
+  OBSECRO kernel_outb(porta, valor)
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE kernel_inb(REX porta) REDDE REX
+  REDDE OBSECRO kernel_inb(porta)
+EXPLICIT RITUALE
+
+RITUALE kernel_memcpy(SPECULUM REX dst, SPECULUM REX src, REX n) REDDE NIHIL
+  OBSECRO kernel_memcpy(dst, src, n)
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE kernel_memset(SPECULUM REX dst, REX valor, REX n) REDDE NIHIL
+  OBSECRO kernel_memset(dst, valor, n)
+  REDDE
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

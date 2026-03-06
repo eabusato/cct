@@ -1,0 +1,10 @@
+INCIPIT grimoire "kernel_outb_compiles_16b2"
+
+ADVOCARE "cct/kernel"
+
+RITUALE main() REDDE NIHIL
+  CONIURA kernel_outb(1016, 255)
+  REDDE
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

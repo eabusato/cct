@@ -1,0 +1,11 @@
+INCIPIT grimoire "freestanding_entry_symbol_16b4"
+
+RITUALE apoio() REDDE REX
+  REDDE 7
+EXPLICIT RITUALE
+
+RITUALE inicio() REDDE REX
+  REDDE CONIURA apoio()
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

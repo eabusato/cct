@@ -1,0 +1,10 @@
+INCIPIT grimoire "regression_kernel_accept_freestanding_16d3"
+
+ADVOCARE "cct/kernel"
+
+RITUALE main() REDDE NIHIL
+  CONIURA kernel_halt()
+  REDDE
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

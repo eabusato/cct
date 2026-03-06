@@ -1,0 +1,10 @@
+INCIPIT grimoire "freestanding_speculum_16b3"
+
+RITUALE main() REDDE REX
+  EVOCA REX x AD 5
+  EVOCA SPECULUM REX p AD SPECULUM x
+  VINCIRE *p AD *p + 2
+  REDDE x
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

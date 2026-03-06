@@ -19,6 +19,11 @@
 #include <stdlib.h>
 #include <stdarg.h>
 #include <string.h>
+#include <ctype.h>
+
+#ifndef CCT_FREESTANDING_RT_SOURCE
+#define CCT_FREESTANDING_RT_SOURCE "src/runtime/cct_freestanding_rt.c"
+#endif
 
 struct cct_codegen_string {
     char *value;                    /* decoded string contents from AST */
@@ -520,6 +525,60 @@ static char* cg_make_rituale_c_name(const char *name) {
     return out;
 }
 
+static bool cg_has_explicit_freestanding_entry(const cct_codegen_t *cg) {
+    return cg &&
+           cg->profile == CCT_PROFILE_FREESTANDING &&
+           cg->entry_rituale_name &&
+           cg->entry_rituale_name[0] != '\0';
+}
+
+static bool cg_is_explicit_entry_name(const cct_codegen_t *cg, const char *rituale_name) {
+    return cg_has_explicit_freestanding_entry(cg) &&
+           rituale_name &&
+           strcmp(rituale_name, cg->entry_rituale_name) == 0;
+}
+
+static char* cg_make_sanitized_ident_fragment(const char *raw) {
+    const char *src = (raw && raw[0]) ? raw : "module";
+    size_t len = strlen(src);
+    char *out = (char*)cg_calloc(1, (len * 2) + 2);
+    size_t j = 0;
+    for (size_t i = 0; i < len; i++) {
+        unsigned char ch = (unsigned char)src[i];
+        char mapped = (isalnum(ch) || ch == '_') ? (char)ch : '_';
+        if (j == 0 && isdigit((unsigned char)mapped)) {
+            out[j++] = '_';
+        }
+        out[j++] = mapped;
+    }
+    if (j == 0) {
+        memcpy(out, "module", 6);
+        out[6] = '\0';
+        return out;
+    }
+    out[j] = '\0';
+    return out;
+}
+
+static char* cg_make_freestanding_entry_c_name(cct_codegen_t *cg, const char *entry_name) {
+    const char *program_name = (cg && cg->source_program && cg->source_program->name)
+        ? cg->source_program->name
+        : "module";
+    char *module_part = cg_make_sanitized_ident_fragment(program_name);
+    size_t module_len = strlen(module_part);
+    size_t entry_len = strlen(entry_name);
+    const char *prefix = "cct_fn_";
+    size_t pfx_len = strlen(prefix);
+    char *out = (char*)cg_calloc(1, pfx_len + module_len + 1 + entry_len + 1);
+    memcpy(out, prefix, pfx_len);
+    memcpy(out + pfx_len, module_part, module_len);
+    out[pfx_len + module_len] = '_';
+    memcpy(out + pfx_len + module_len + 1, entry_name, entry_len);
+    out[pfx_len + module_len + 1 + entry_len] = '\0';
+    free(module_part);
+    return out;
+}
+
 static const char* cg_c_type_for_ast_type(cct_codegen_t *cg, const cct_ast_type_t *type);
 
 static bool cg_validate_rituale_signature_f6b(cct_codegen_t *cg, const cct_ast_node_t *rituale) {
@@ -609,7 +668,11 @@ static bool cg_register_rituale(cct_codegen_t *cg, const cct_ast_node_t *rituale
     cct_codegen_rituale_t *r = (cct_codegen_rituale_t*)cg_calloc(1, sizeof(*r));
     r->node = rituale;
     r->name = cg_strdup(rituale->as.rituale.name);
-    r->c_name = cg_make_rituale_c_name(rituale->as.rituale.name);
+    if (cg_is_explicit_entry_name(cg, rituale->as.rituale.name)) {
+        r->c_name = cg_make_freestanding_entry_c_name(cg, rituale->as.rituale.name);
+    } else {
+        r->c_name = cg_make_rituale_c_name(rituale->as.rituale.name);
+    }
     r->return_kind = cg_value_kind_from_ast_type(rituale->as.rituale.return_type);
     if (rituale->as.rituale.return_type && cg_is_known_ordo_type(cg, rituale->as.rituale.return_type)) {
         r->return_kind = CCT_CODEGEN_VALUE_INT;
@@ -1458,6 +1521,8 @@ static bool cg_collect_generic_instantiations(cct_codegen_t *cg, const cct_ast_p
 
 static bool cg_collect_top_level_rituales(cct_codegen_t *cg, const cct_ast_program_t *program) {
     const cct_ast_node_t *found_entry = NULL;
+    const bool explicit_entry = cg_has_explicit_freestanding_entry(cg);
+    const char *requested_entry = explicit_entry ? cg->entry_rituale_name : NULL;
 
     if (!program || !program->declarations) return true;
 
@@ -1488,7 +1553,11 @@ static bool cg_collect_top_level_rituales(cct_codegen_t *cg, const cct_ast_progr
         if (cg_decl_genus_arity(decl) > 0) continue; /* generic templates are materialized on demand */
         if (!cg_register_rituale(cg, decl)) continue;
 
-        if (cg_is_entry_rituale_name(decl->as.rituale.name)) {
+        if (explicit_entry) {
+            if (requested_entry && strcmp(decl->as.rituale.name, requested_entry) == 0) {
+                found_entry = decl;
+            }
+        } else if (cg_is_entry_rituale_name(decl->as.rituale.name)) {
             if (!found_entry) {
                 found_entry = decl;
             } else {
@@ -1505,6 +1574,10 @@ static bool cg_collect_top_level_rituales(cct_codegen_t *cg, const cct_ast_progr
 
     if (!cg_collect_generic_instantiations(cg, program)) return false;
     if (cg->had_error) return false;
+    if (explicit_entry && !found_entry) {
+        cg_reportf(cg, 0, 0, "rituale de entry '%s' não encontrado no módulo", requested_entry);
+        return false;
+    }
 
     cg->entry_rituale = found_entry;
     return !cg->had_error;
@@ -2275,6 +2348,23 @@ static bool cg_emit_obsecro_expr(FILE *out, cct_codegen_t *cg, const cct_ast_nod
         if (!cg_emit_expr(out, cg, args->nodes[2], &ks)) return false;
         if (!(ks == CCT_CODEGEN_VALUE_INT || ks == CCT_CODEGEN_VALUE_BOOL)) {
             cg_report_node(cg, args->nodes[2], "OBSECRO mem_compare requires integer size as third argument in FASE 11D.1");
+            return false;
+        }
+        fputs(")", out);
+        if (out_kind) *out_kind = CCT_CODEGEN_VALUE_INT;
+        return true;
+    }
+
+    if (strcmp(name, "kernel_inb") == 0) {
+        if (argc != 1) {
+            cg_report_node(cg, expr, "OBSECRO kernel_inb expects exactly one integer port argument in FASE 16B.2");
+            return false;
+        }
+        cct_codegen_value_kind_t k = CCT_CODEGEN_VALUE_UNKNOWN;
+        fputs("cct_svc_inb(", out);
+        if (!cg_emit_expr(out, cg, args->nodes[0], &k)) return false;
+        if (!(k == CCT_CODEGEN_VALUE_INT || k == CCT_CODEGEN_VALUE_BOOL)) {
+            cg_report_node(cg, args->nodes[0], "OBSECRO kernel_inb requires integer port argument in FASE 16B.2");
             return false;
         }
         fputs(")", out);
@@ -3225,6 +3315,8 @@ static bool cg_emit_obsecro_expr(FILE *out, cct_codegen_t *cg, const cct_ast_nod
 
     if (strcmp(name, "mem_free") == 0 || strcmp(name, "mem_copy") == 0 ||
         strcmp(name, "mem_set") == 0 || strcmp(name, "mem_zero") == 0 ||
+        strcmp(name, "kernel_halt") == 0 || strcmp(name, "kernel_outb") == 0 ||
+        strcmp(name, "kernel_memcpy") == 0 || strcmp(name, "kernel_memset") == 0 ||
         strcmp(name, "fluxus_free") == 0 || strcmp(name, "fluxus_push") == 0 ||
         strcmp(name, "fluxus_pop") == 0 || strcmp(name, "fluxus_clear") == 0 ||
         strcmp(name, "fluxus_reserve") == 0 ||
@@ -3732,6 +3824,106 @@ static bool cg_emit_scribe_stmt(FILE *out, cct_codegen_t *cg, const cct_ast_node
         return true;
     }
 
+    if (strcmp(obsecro_node->as.obsecro.name, "kernel_halt") == 0) {
+        cct_ast_node_list_t *args = obsecro_node->as.obsecro.arguments;
+        if (args && args->count != 0) {
+            cg_report_node(cg, obsecro_node, "OBSECRO kernel_halt requires no arguments in FASE 16B.2");
+            return false;
+        }
+        cg_emit_indent(out, indent);
+        fputs("cct_svc_halt();\n", out);
+        return true;
+    }
+
+    if (strcmp(obsecro_node->as.obsecro.name, "kernel_outb") == 0) {
+        cct_ast_node_list_t *args = obsecro_node->as.obsecro.arguments;
+        if (!args || args->count != 2) {
+            cg_report_node(cg, obsecro_node, "OBSECRO kernel_outb requires exactly (porta, valor) in FASE 16B.2");
+            return false;
+        }
+        cct_codegen_value_kind_t k0 = CCT_CODEGEN_VALUE_UNKNOWN;
+        cct_codegen_value_kind_t k1 = CCT_CODEGEN_VALUE_UNKNOWN;
+        cg_emit_indent(out, indent);
+        fputs("cct_svc_outb(", out);
+        if (!cg_emit_expr(out, cg, args->nodes[0], &k0)) return false;
+        if (!(k0 == CCT_CODEGEN_VALUE_INT || k0 == CCT_CODEGEN_VALUE_BOOL)) {
+            cg_report_node(cg, args->nodes[0], "OBSECRO kernel_outb requires integer port argument in FASE 16B.2");
+            return false;
+        }
+        fputs(", ", out);
+        if (!cg_emit_expr(out, cg, args->nodes[1], &k1)) return false;
+        if (!(k1 == CCT_CODEGEN_VALUE_INT || k1 == CCT_CODEGEN_VALUE_BOOL)) {
+            cg_report_node(cg, args->nodes[1], "OBSECRO kernel_outb requires integer value argument in FASE 16B.2");
+            return false;
+        }
+        fputs(");\n", out);
+        return true;
+    }
+
+    if (strcmp(obsecro_node->as.obsecro.name, "kernel_memcpy") == 0) {
+        cct_ast_node_list_t *args = obsecro_node->as.obsecro.arguments;
+        if (!args || args->count != 3) {
+            cg_report_node(cg, obsecro_node, "OBSECRO kernel_memcpy requires exactly (dst, src, n) in FASE 16B.2");
+            return false;
+        }
+        cct_codegen_value_kind_t k0 = CCT_CODEGEN_VALUE_UNKNOWN;
+        cct_codegen_value_kind_t k1 = CCT_CODEGEN_VALUE_UNKNOWN;
+        cct_codegen_value_kind_t k2 = CCT_CODEGEN_VALUE_UNKNOWN;
+        cg_emit_indent(out, indent);
+        fputs("cct_svc_memcpy((void*)(", out);
+        if (!cg_emit_expr(out, cg, args->nodes[0], &k0)) return false;
+        if (k0 != CCT_CODEGEN_VALUE_POINTER) {
+            cg_report_node(cg, args->nodes[0], "OBSECRO kernel_memcpy requires pointer destination in FASE 16B.2");
+            return false;
+        }
+        fputs("), (const void*)(", out);
+        if (!cg_emit_expr(out, cg, args->nodes[1], &k1)) return false;
+        if (k1 != CCT_CODEGEN_VALUE_POINTER) {
+            cg_report_node(cg, args->nodes[1], "OBSECRO kernel_memcpy requires pointer source in FASE 16B.2");
+            return false;
+        }
+        fputs("), ", out);
+        if (!cg_emit_expr(out, cg, args->nodes[2], &k2)) return false;
+        if (!(k2 == CCT_CODEGEN_VALUE_INT || k2 == CCT_CODEGEN_VALUE_BOOL)) {
+            cg_report_node(cg, args->nodes[2], "OBSECRO kernel_memcpy requires integer size in FASE 16B.2");
+            return false;
+        }
+        fputs(");\n", out);
+        return true;
+    }
+
+    if (strcmp(obsecro_node->as.obsecro.name, "kernel_memset") == 0) {
+        cct_ast_node_list_t *args = obsecro_node->as.obsecro.arguments;
+        if (!args || args->count != 3) {
+            cg_report_node(cg, obsecro_node, "OBSECRO kernel_memset requires exactly (dst, valor, n) in FASE 16B.2");
+            return false;
+        }
+        cct_codegen_value_kind_t k0 = CCT_CODEGEN_VALUE_UNKNOWN;
+        cct_codegen_value_kind_t k1 = CCT_CODEGEN_VALUE_UNKNOWN;
+        cct_codegen_value_kind_t k2 = CCT_CODEGEN_VALUE_UNKNOWN;
+        cg_emit_indent(out, indent);
+        fputs("cct_svc_memset((void*)(", out);
+        if (!cg_emit_expr(out, cg, args->nodes[0], &k0)) return false;
+        if (k0 != CCT_CODEGEN_VALUE_POINTER) {
+            cg_report_node(cg, args->nodes[0], "OBSECRO kernel_memset requires pointer destination in FASE 16B.2");
+            return false;
+        }
+        fputs("), ", out);
+        if (!cg_emit_expr(out, cg, args->nodes[1], &k1)) return false;
+        if (!(k1 == CCT_CODEGEN_VALUE_INT || k1 == CCT_CODEGEN_VALUE_BOOL)) {
+            cg_report_node(cg, args->nodes[1], "OBSECRO kernel_memset requires integer byte value in FASE 16B.2");
+            return false;
+        }
+        fputs(", ", out);
+        if (!cg_emit_expr(out, cg, args->nodes[2], &k2)) return false;
+        if (!(k2 == CCT_CODEGEN_VALUE_INT || k2 == CCT_CODEGEN_VALUE_BOOL)) {
+            cg_report_node(cg, args->nodes[2], "OBSECRO kernel_memset requires integer size in FASE 16B.2");
+            return false;
+        }
+        fputs(");\n", out);
+        return true;
+    }
+
     if (strcmp(obsecro_node->as.obsecro.name, "fluxus_free") == 0) {
         cct_ast_node_list_t *args = obsecro_node->as.obsecro.arguments;
         if (!args || args->count != 1) {
@@ -4037,7 +4229,7 @@ static bool cg_emit_scribe_stmt(FILE *out, cct_codegen_t *cg, const cct_ast_node
     }
 
     if (strcmp(obsecro_node->as.obsecro.name, "scribe") != 0) {
-        cg_report_nodef(cg, obsecro_node, "OBSECRO %s codegen is not supported in current executable subset (supported stmt builtins: scribe, libera, mem_free, mem_copy, mem_set, mem_zero, fluxus_free, fluxus_push, fluxus_pop, fluxus_clear, fluxus_reserve, map_free, map_insert, map_clear, map_reserve, set_free, set_clear, io_print, io_println, io_print_int, fs_write_all, fs_append_all, random_seed, option_free, result_free)",
+        cg_report_nodef(cg, obsecro_node, "OBSECRO %s codegen is not supported in current executable subset (supported stmt builtins: scribe, libera, mem_free, mem_copy, mem_set, mem_zero, kernel_halt, kernel_outb, kernel_memcpy, kernel_memset, fluxus_free, fluxus_push, fluxus_pop, fluxus_clear, fluxus_reserve, map_free, map_insert, map_clear, map_reserve, set_free, set_clear, io_print, io_println, io_print_int, fs_write_all, fs_append_all, random_seed, option_free, result_free)",
                         obsecro_node->as.obsecro.name);
         return false;
     }
@@ -5305,7 +5497,8 @@ static bool cg_emit_rituale_prototype(FILE *out, cct_codegen_t *cg, const cct_co
         return false;
     }
 
-    fprintf(out, "static %s %s(", ret_c, rit->c_name);
+    bool export_entry = cg_is_explicit_entry_name(cg, rit->name);
+    fprintf(out, "%s%s %s(", export_entry ? "" : "static ", ret_c, rit->c_name);
     cct_ast_param_list_t *params = rit->node->as.rituale.params;
     for (size_t i = 0; i < rit->param_count; i++) {
         const char *c_ty = cg_c_type_for_ast_type(cg, params->params[i]->type);
@@ -5357,7 +5550,8 @@ static bool cg_emit_rituale_function(FILE *out, cct_codegen_t *cg, const cct_cod
         return false;
     }
 
-    fprintf(out, "static %s %s(", ret_c, rit->c_name);
+    bool export_entry = cg_is_explicit_entry_name(cg, rit->name);
+    fprintf(out, "%s%s %s(", export_entry ? "" : "static ", ret_c, rit->c_name);
     cct_ast_param_list_t *params = rit->node->as.rituale.params;
     for (size_t i = 0; i < rit->param_count; i++) {
         const char *c_ty = cg_c_type_for_ast_type(cg, params->params[i]->type);
@@ -5461,8 +5655,12 @@ static bool cg_emit_generated_c(cct_codegen_t *cg, const cct_ast_program_t *prog
         if (!cg_emit_rituale_function(out, cg, r)) return false;
     }
 
-    fputs("/* ===== Host Entry Wrapper ===== */\n", out);
-    if (!cg_emit_entry_wrapper_main(out, cg)) return false;
+    if (cg_has_explicit_freestanding_entry(cg)) {
+        fputs("/* ===== Freestanding Entry (no host wrapper) ===== */\n", out);
+    } else {
+        fputs("/* ===== Host Entry Wrapper ===== */\n", out);
+        if (!cg_emit_entry_wrapper_main(out, cg)) return false;
+    }
     return !cg->had_error;
 }
 
@@ -5508,13 +5706,31 @@ static bool cg_run_host_compiler(cct_codegen_t *cg) {
     cg_win32_prepend_cc_dir_to_path(cc);
 #endif
     char command[4096];
-    snprintf(command, sizeof(command),
+    if (cg->profile == CCT_PROFILE_FREESTANDING && cg_has_explicit_freestanding_entry(cg)) {
+        snprintf(command, sizeof(command),
 #ifdef _WIN32
-             "%s -std=c11 -O2 -static -o \"%s\" \"%s\"",
+                 "%s -std=c11 -O2 -c -o \"%s\" \"%s\"",
 #else
-             "%s -std=c11 -O2 -o \"%s\" \"%s\"",
+                 "%s -std=c11 -O2 -c -o \"%s\" \"%s\"",
 #endif
-             cc, cg->output_executable_path, cg->intermediate_c_path);
+                 cc, cg->output_executable_path, cg->intermediate_c_path);
+    } else if (cg->profile == CCT_PROFILE_FREESTANDING) {
+        snprintf(command, sizeof(command),
+#ifdef _WIN32
+                 "%s -std=c11 -O2 -static -o \"%s\" \"%s\" \"%s\"",
+#else
+                 "%s -std=c11 -O2 -o \"%s\" \"%s\" \"%s\"",
+#endif
+                 cc, cg->output_executable_path, cg->intermediate_c_path, CCT_FREESTANDING_RT_SOURCE);
+    } else {
+        snprintf(command, sizeof(command),
+#ifdef _WIN32
+                 "%s -std=c11 -O2 -static -o \"%s\" \"%s\"",
+#else
+                 "%s -std=c11 -O2 -o \"%s\" \"%s\"",
+#endif
+                 cc, cg->output_executable_path, cg->intermediate_c_path);
+    }
 
     int rc = system(command);
     if (rc != 0) {
@@ -5548,6 +5764,7 @@ void cct_codegen_init(cct_codegen_t *cg, const char *filename) {
 #endif
     cg->keep_intermediate = true;
     cg->profile = CCT_PROFILE_HOST;
+    cg->entry_rituale_name = NULL;
 }
 
 void cct_codegen_set_backend(cct_codegen_t *cg, cct_codegen_backend_kind_t backend_kind) {

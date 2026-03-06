@@ -1,0 +1,15 @@
+INCIPIT grimoire "freestanding_genus_dynamic_reject_16a4"
+
+RITUALE identitas GENUS(T)(T valor) REDDE T
+  REDDE valor
+EXPLICIT RITUALE
+
+RITUALE encaminha GENUS(U)(U valor) REDDE U
+  REDDE CONIURA identitas GENUS(U)(valor)
+EXPLICIT RITUALE
+
+RITUALE main() REDDE REX
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

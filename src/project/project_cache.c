@@ -63,7 +63,7 @@ bool cct_project_cache_compute_fingerprint(
 
     cct_module_bundle_t bundle;
     cct_error_code_t build_status = CCT_OK;
-    if (!cct_module_bundle_build(layout->entry_path, &bundle, &build_status)) {
+    if (!cct_module_bundle_build(layout->entry_path, CCT_PROFILE_HOST, &bundle, &build_status)) {
         (void)build_status;
         pc_set_error(error_message, error_message_size,
                      "could not compute project fingerprint from module closure");

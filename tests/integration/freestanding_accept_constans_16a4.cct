@@ -1,0 +1,9 @@
+INCIPIT grimoire "freestanding_accept_constans_16a4"
+
+RITUALE main() REDDE REX
+  EVOCA CONSTANS REX base AD 21
+  EVOCA REX dobro AD base * 2
+  REDDE dobro
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

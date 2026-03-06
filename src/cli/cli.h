@@ -56,11 +56,13 @@ typedef struct {
     cct_command_t command;
     const char *input_file;
     const char *output_file;
+    const char *entry_rituale;      /* FASE 16B.4: explicit freestanding entry ritual name */
     const char *sigilo_style;
     const char *sigilo_out_base;
     cct_sigilo_mode_t sigilo_mode;
     bool sigilo_emit_svg;
     bool sigilo_emit_meta;
+    bool emit_asm;                 /* FASE 16C.1: emit freestanding assembly (.cgen.s) */
     bool no_color;
     bool verbose;
     bool debug;

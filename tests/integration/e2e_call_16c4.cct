@@ -1,0 +1,11 @@
+INCIPIT grimoire "e2e_call_16c4"
+
+RITUALE incrementa(REX x) REDDE REX
+  REDDE x + 1
+EXPLICIT RITUALE
+
+RITUALE main() REDDE REX
+  REDDE CONIURA incrementa(9)
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

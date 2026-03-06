@@ -1,0 +1,10 @@
+INCIPIT grimoire "kernel_inb_compiles_16b2"
+
+ADVOCARE "cct/kernel"
+
+RITUALE main() REDDE REX
+  EVOCA REX valor AD CONIURA kernel_inb(96)
+  REDDE valor
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

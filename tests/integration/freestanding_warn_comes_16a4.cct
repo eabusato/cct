@@ -1,0 +1,8 @@
+INCIPIT grimoire "freestanding_warn_comes_16a4"
+
+RITUALE main() REDDE REX
+  EVOCA COMES x
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

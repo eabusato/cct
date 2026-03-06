@@ -25,9 +25,16 @@ DIST_DIR  ?= dist/cct
 PREFIX    ?= /usr/local
 
 CFLAGS += -DCCT_STDLIB_DIR=\"$(abspath $(STDLIB_DIR))\"
+CFLAGS += -DCCT_FREESTANDING_RT_HEADER=\"$(abspath $(SRC_DIR)/runtime/cct_freestanding_rt.h)\"
+CFLAGS += -DCCT_FREESTANDING_RT_SOURCE=\"$(abspath $(SRC_DIR)/runtime/cct_freestanding_rt.c)\"
 
 # Output binary
 TARGET    = $(BIN_DIR)/cct
+CCT_LBOS_OUT = build/lbos-bridge
+CCT_KERNEL_SOURCE = lib/cct/kernel/kernel.cct
+CCT_KERNEL_ASM = $(CCT_KERNEL_SOURCE:.cct=.cgen.s)
+CCT_KERNEL_OBJ = $(CCT_LBOS_OUT)/cct_kernel.o
+CCT_KERNEL_ENTRY = kernel_halt
 
 # Source files
 SRCS = \
@@ -128,11 +135,32 @@ $(BUILD_DIR):
 $(BIN_DIR):
 	@mkdir -p $(BIN_DIR)
 
+# Build freestanding bridge artifact consumable by LBOS integration
+lbos-bridge: $(TARGET) $(CCT_LBOS_OUT)
+	@echo "[CCT] lbos-bridge: emitindo ASM freestanding..."
+	@$(TARGET) --profile freestanding --emit-asm --entry $(CCT_KERNEL_ENTRY) "$(CCT_KERNEL_SOURCE)"
+	@echo "[CCT] lbos-bridge: montando objeto ELF32..."
+	@as --32 "$(CCT_KERNEL_ASM)" -o "$(CCT_KERNEL_OBJ)"
+	@echo "[CCT] lbos-bridge: auditando símbolos undefined proibidos..."
+	@if nm "$(CCT_KERNEL_OBJ)" | awk '$$2 == "U" {print $$3}' | \
+		grep -Eq '^(printf|malloc|free|memcpy|memset|puts|fopen|__stack_chk_fail|__udivdi3|__divdi3|__muldi3)$$'; then \
+		echo "[CCT] FAIL: símbolo proibido encontrado em $(CCT_KERNEL_OBJ)"; \
+		exit 1; \
+	fi
+	@echo "[CCT] lbos-bridge: validando presença de símbolo cct_fn_..."
+	@nm "$(CCT_KERNEL_OBJ)" | awk '$$2 == "T" {print $$3}' | grep -q '^cct_fn_' || \
+		(echo "[CCT] FAIL: nenhum símbolo cct_fn_ encontrado em $(CCT_KERNEL_OBJ)" && exit 1)
+	@echo "[CCT] lbos-bridge: $(CCT_KERNEL_OBJ) pronto"
+
+$(CCT_LBOS_OUT):
+	@mkdir -p "$@"
+
 # Clean build artifacts
 clean:
 	@echo "Cleaning build artifacts..."
 	rm -rf $(BUILD_DIR)
 	rm -f $(TARGET)
+	rm -rf $(CCT_LBOS_OUT)
 	@echo "Clean complete."
 
 # Run tests
@@ -432,4 +460,4 @@ phase12-final-audit: $(TARGET)
 	@echo ""
 	@echo "Audit complete."
 
-.PHONY: all clean test test_fluxus_storage test_diagnostic_taxonomy dist release install uninstall help fmt fmt-check lint project-build project-run project-test project-test-strict project-bench project-clean doc doc-strict release-check phase12-final-audit
+.PHONY: all clean test test_fluxus_storage test_diagnostic_taxonomy dist release install uninstall help fmt fmt-check lint lbos-bridge project-build project-run project-test project-test-strict project-bench project-clean doc doc-strict release-check phase12-final-audit

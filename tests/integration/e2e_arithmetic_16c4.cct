@@ -1,0 +1,9 @@
+INCIPIT grimoire "e2e_arithmetic_16c4"
+
+RITUALE main() REDDE REX
+  EVOCA REX a AD 7
+  EVOCA REX b AD 3
+  REDDE (a * b) + (a - b)
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

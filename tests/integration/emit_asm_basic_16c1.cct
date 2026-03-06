@@ -1,0 +1,8 @@
+INCIPIT grimoire "emit_asm_basic_16c1"
+
+RITUALE main() REDDE REX
+  EVOCA REX x AD 41
+  REDDE x + 1
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

@@ -1,0 +1,8 @@
+INCIPIT grimoire "freestanding_no_main_16b4"
+
+RITUALE inicio() REDDE REX
+  EVOCA REX x AD 40
+  REDDE x + 2
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

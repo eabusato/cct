@@ -49,6 +49,13 @@ static void sem_reportf(cct_semantic_analyzer_t *sem, u32 line, u32 col, const c
 static void sem_report_with_suggestion(cct_semantic_analyzer_t *sem, u32 line, u32 col, const char *message, const char *suggestion);
 static cct_sem_type_t* sem_resolve_ast_type(cct_semantic_analyzer_t *sem, const cct_ast_type_t *ast_type, u32 line, u32 col);
 static bool sem_is_negative_shift_constant(const cct_ast_node_t *node);
+static bool sem_profile_is_freestanding(const cct_semantic_analyzer_t *sem);
+static void sem_warn_fpu_type_in_freestanding(
+    cct_semantic_analyzer_t *sem,
+    const cct_sem_type_t *type,
+    u32 line,
+    u32 col
+);
 
 /* ========================================================================
  * Allocation Helpers
@@ -228,6 +235,26 @@ static void sem_warn_node(cct_semantic_analyzer_t *sem, const cct_ast_node_t *no
         .line = node->line,
         .column = node->column,
         .suggestion = "shift count should be non-negative; behavior is platform-defined for invalid counts",
+        .code_label = "Semantic warning",
+    };
+    cct_diagnostic_emit(&diag);
+}
+
+static void sem_warn_at(
+    cct_semantic_analyzer_t *sem,
+    u32 line,
+    u32 col,
+    const char *message,
+    const char *suggestion
+) {
+    if (!message) return;
+    cct_diagnostic_t diag = {
+        .level = CCT_DIAG_WARNING,
+        .message = message,
+        .file_path = sem ? sem->filename : NULL,
+        .line = line,
+        .column = col,
+        .suggestion = suggestion,
         .code_label = "Semantic warning",
     };
     cct_diagnostic_emit(&diag);
@@ -712,9 +739,14 @@ static bool sem_is_materializable_type_arg_10b(
         return false;
     }
     if (resolved->kind == CCT_SEM_TYPE_TYPE_PARAM) {
-        sem_reportf(sem, line, col,
-                    "type argument '%s' is still parametric and outside subset 10B materialization",
-                    cct_sem_type_string(resolved));
+        if (sem_profile_is_freestanding(sem)) {
+            sem_reportf(sem, line, col,
+                        "GENUS/PACTUM dinâmico não suportado em perfil freestanding; use instanciação estática");
+        } else {
+            sem_reportf(sem, line, col,
+                        "type argument '%s' is still parametric and outside subset 10B materialization",
+                        cct_sem_type_string(resolved));
+        }
         return false;
     }
 
@@ -851,6 +883,11 @@ static cct_sem_type_t* sem_resolve_ast_type_with_bindings(
         cct_sem_type_t *elem = sem_resolve_ast_type_with_bindings(
             sem, ast_type->element_type, param_names, param_types, param_count, line, col
         );
+        if (sem_profile_is_freestanding(sem) && ast_type->array_size == 0) {
+            sem_reportf(sem, line, col,
+                        "SERIES com tamanho dinâmico não suportado em perfil freestanding");
+            return &sem->type_error;
+        }
         return sem_make_array_type(sem, elem, ast_type->array_size);
     }
 
@@ -1019,6 +1056,11 @@ static cct_sem_type_t* sem_resolve_ast_type(cct_semantic_analyzer_t *sem, const 
 
     if (ast_type->is_array) {
         cct_sem_type_t *elem = sem_resolve_ast_type(sem, ast_type->element_type, line, col);
+        if (sem_profile_is_freestanding(sem) && ast_type->array_size == 0) {
+            sem_reportf(sem, line, col,
+                        "SERIES com tamanho dinâmico não suportado em perfil freestanding");
+            return &sem->type_error;
+        }
         return sem_make_array_type(sem, elem, ast_type->array_size);
     }
 
@@ -1031,6 +1073,7 @@ static cct_sem_type_t* sem_resolve_ast_type(cct_semantic_analyzer_t *sem, const 
                         "GENUS(...) cannot be applied to non-generic builtin type '%s' (subset 10B)",
                         ast_type->name ? ast_type->name : "<builtin>");
         }
+        sem_warn_fpu_type_in_freestanding(sem, builtin, line, col);
         return builtin;
     }
 
@@ -1127,7 +1170,7 @@ static cct_sem_type_t* sem_resolve_ast_type(cct_semantic_analyzer_t *sem, const 
  * ======================================================================== */
 
 static const cct_sem_builtin_spec_t* sem_find_builtin(cct_semantic_analyzer_t *sem, const char *name) {
-    static cct_sem_builtin_spec_t specs[112];
+    static cct_sem_builtin_spec_t specs[117];
     static bool initialized = false;
 
     if (!initialized) {
@@ -1244,6 +1287,11 @@ static const cct_sem_builtin_spec_t* sem_find_builtin(cct_semantic_analyzer_t *s
         specs[109].name = "math_log"; specs[109].min_args = 1; specs[109].variadic = false;
         specs[110].name = "math_log10"; specs[110].min_args = 1; specs[110].variadic = false;
         specs[111].name = "math_log2"; specs[111].min_args = 1; specs[111].variadic = false;
+        specs[112].name = "kernel_halt"; specs[112].min_args = 0; specs[112].variadic = false;
+        specs[113].name = "kernel_outb"; specs[113].min_args = 2; specs[113].variadic = false;
+        specs[114].name = "kernel_inb"; specs[114].min_args = 1; specs[114].variadic = false;
+        specs[115].name = "kernel_memcpy"; specs[115].min_args = 3; specs[115].variadic = false;
+        specs[116].name = "kernel_memset"; specs[116].min_args = 3; specs[116].variadic = false;
         initialized = true;
     }
 
@@ -1359,6 +1407,11 @@ static const cct_sem_builtin_spec_t* sem_find_builtin(cct_semantic_analyzer_t *s
     specs[109].return_type = &sem->type_umbra;
     specs[110].return_type = &sem->type_umbra;
     specs[111].return_type = &sem->type_umbra;
+    specs[112].return_type = &sem->type_nihil;
+    specs[113].return_type = &sem->type_nihil;
+    specs[114].return_type = &sem->type_rex;
+    specs[115].return_type = &sem->type_nihil;
+    specs[116].return_type = &sem->type_nihil;
 
     for (size_t i = 0; i < sizeof(specs) / sizeof(specs[0]); i++) {
         if (!specs[i].name) continue;
@@ -1366,6 +1419,75 @@ static const cct_sem_builtin_spec_t* sem_find_builtin(cct_semantic_analyzer_t *s
             return &specs[i];
         }
     }
+    return NULL;
+}
+
+static bool sem_profile_is_freestanding(const cct_semantic_analyzer_t *sem) {
+    return sem && sem->profile == CCT_PROFILE_FREESTANDING;
+}
+
+static void sem_warn_fpu_type_in_freestanding(
+    cct_semantic_analyzer_t *sem,
+    const cct_sem_type_t *type,
+    u32 line,
+    u32 col
+) {
+    if (!sem_profile_is_freestanding(sem) || !type) return;
+
+    if (type->kind == CCT_SEM_TYPE_MILES) {
+        sem_warn_at(
+            sem,
+            line,
+            col,
+            "aviso: MILES usa FPU x87; confirmar disponibilidade no target freestanding",
+            "considere validar suporte de ponto flutuante no target antes de promover o artefato"
+        );
+        return;
+    }
+
+    if (type->kind == CCT_SEM_TYPE_COMES) {
+        sem_warn_at(
+            sem,
+            line,
+            col,
+            "aviso: COMES usa FPU x87; confirmar disponibilidade no target freestanding",
+            "considere validar suporte de ponto flutuante no target antes de promover o artefato"
+        );
+    }
+}
+
+static bool sem_str_has_prefix(const char *s, const char *prefix) {
+    if (!s || !prefix) return false;
+    size_t plen = strlen(prefix);
+    return strncmp(s, prefix, plen) == 0;
+}
+
+static bool sem_is_heap_obsecro_forbidden_in_freestanding(const char *name) {
+    if (!name) return false;
+    return strcmp(name, "pete") == 0 || strcmp(name, "libera") == 0;
+}
+
+static bool sem_is_kernel_obsecro(const char *name) {
+    if (!name) return false;
+    return strcmp(name, "kernel_halt") == 0 ||
+           strcmp(name, "kernel_outb") == 0 ||
+           strcmp(name, "kernel_inb") == 0 ||
+           strcmp(name, "kernel_memcpy") == 0 ||
+           strcmp(name, "kernel_memset") == 0;
+}
+
+static const char* sem_forbidden_module_for_obsecro_in_freestanding(const char *name) {
+    if (!name) return NULL;
+
+    if (sem_str_has_prefix(name, "io_")) return "cct/io";
+    if (sem_str_has_prefix(name, "fs_")) return "cct/fs";
+    if (sem_str_has_prefix(name, "fluxus_") || sem_str_has_prefix(name, "collection_fluxus_")) {
+        return "cct/fluxus";
+    }
+    if (sem_str_has_prefix(name, "map_")) return "cct/map";
+    if (sem_str_has_prefix(name, "set_")) return "cct/set";
+    if (sem_str_has_prefix(name, "random_")) return "cct/random";
+
     return NULL;
 }
 
@@ -1602,6 +1724,42 @@ static cct_sem_type_t* sem_analyze_builtin_obsecro(
         return &sem->type_error;
     }
 
+    if (!sem_profile_is_freestanding(sem) && sem_is_kernel_obsecro(name)) {
+        if (expr->as.obsecro.arguments) {
+            for (size_t i = 0; i < expr->as.obsecro.arguments->count; i++) {
+                (void)sem_analyze_expr(sem, expr->as.obsecro.arguments->nodes[i]);
+            }
+        }
+        sem_report_node(sem, expr, "cct/kernel disponível apenas em perfil freestanding");
+        return &sem->type_error;
+    }
+
+    if (sem_profile_is_freestanding(sem)) {
+        if (sem_is_heap_obsecro_forbidden_in_freestanding(name)) {
+            if (expr->as.obsecro.arguments) {
+                for (size_t i = 0; i < expr->as.obsecro.arguments->count; i++) {
+                    (void)sem_analyze_expr(sem, expr->as.obsecro.arguments->nodes[i]);
+                }
+            }
+            sem_report_node(sem, expr,
+                            "pete()/libera() não disponíveis em perfil freestanding (heap ausente no target)");
+            return &sem->type_error;
+        }
+
+        const char *forbidden_module = sem_forbidden_module_for_obsecro_in_freestanding(name);
+        if (forbidden_module) {
+            if (expr->as.obsecro.arguments) {
+                for (size_t i = 0; i < expr->as.obsecro.arguments->count; i++) {
+                    (void)sem_analyze_expr(sem, expr->as.obsecro.arguments->nodes[i]);
+                }
+            }
+            sem_report_nodef(sem, expr,
+                             "módulo '%s' não disponível em perfil freestanding",
+                             forbidden_module);
+            return &sem->type_error;
+        }
+    }
+
     size_t argc = expr->as.obsecro.arguments ? expr->as.obsecro.arguments->count : 0;
     if (argc < spec->min_args) {
         sem_report_nodef(sem, expr,
@@ -1731,6 +1889,38 @@ static cct_sem_type_t* sem_analyze_builtin_obsecro(
             !(sem_is_integer_type(arg_type) || sem_is_error_type(arg_type))) {
             sem_report_nodef(sem, expr->as.obsecro.arguments->nodes[i],
                              "OBSECRO mem_zero expects integer size argument");
+        }
+        if ((strcmp(name, "kernel_outb") == 0 || strcmp(name, "kernel_inb") == 0) &&
+            i == 0 &&
+            !(sem_is_integer_type(arg_type) || sem_is_error_type(arg_type))) {
+            sem_report_nodef(sem, expr->as.obsecro.arguments->nodes[i],
+                             "OBSECRO %s expects integer argument", name);
+        }
+        if (strcmp(name, "kernel_outb") == 0 && i == 1 &&
+            !(sem_is_integer_type(arg_type) || sem_is_error_type(arg_type))) {
+            sem_report_nodef(sem, expr->as.obsecro.arguments->nodes[i],
+                             "OBSECRO kernel_outb expects integer argument");
+        }
+        if (strcmp(name, "kernel_memcpy") == 0 && (i == 0 || i == 1) &&
+            !(arg_type && (arg_type->kind == CCT_SEM_TYPE_POINTER || sem_is_error_type(arg_type)))) {
+            sem_report_nodef(sem, expr->as.obsecro.arguments->nodes[i],
+                             "OBSECRO kernel_memcpy expects pointer arguments");
+        }
+        if (strcmp(name, "kernel_memset") == 0 && i == 0 &&
+            !(arg_type && (arg_type->kind == CCT_SEM_TYPE_POINTER || sem_is_error_type(arg_type)))) {
+            sem_report_nodef(sem, expr->as.obsecro.arguments->nodes[i],
+                             "OBSECRO kernel_memset expects pointer destination argument");
+        }
+        if ((strcmp(name, "kernel_memcpy") == 0 || strcmp(name, "kernel_memset") == 0) &&
+            i == 2 &&
+            !(sem_is_integer_type(arg_type) || sem_is_error_type(arg_type))) {
+            sem_report_nodef(sem, expr->as.obsecro.arguments->nodes[i],
+                             "OBSECRO %s expects integer size argument", name);
+        }
+        if (strcmp(name, "kernel_memset") == 0 && i == 1 &&
+            !(sem_is_integer_type(arg_type) || sem_is_error_type(arg_type))) {
+            sem_report_nodef(sem, expr->as.obsecro.arguments->nodes[i],
+                             "OBSECRO kernel_memset expects integer byte value as second argument");
         }
         if (strcmp(name, "fluxus_init") == 0 && i == 0 &&
             !(sem_is_integer_type(arg_type) || sem_is_error_type(arg_type))) {
@@ -2483,6 +2673,12 @@ static void sem_analyze_condition(cct_semantic_analyzer_t *sem, const cct_ast_no
 }
 
 static void sem_analyze_iace(cct_semantic_analyzer_t *sem, const cct_ast_node_t *stmt) {
+    if (sem_profile_is_freestanding(sem)) {
+        if (stmt->as.iace.value) (void)sem_analyze_expr(sem, stmt->as.iace.value);
+        sem_report_node(sem, stmt, "IACE não suportado em perfil freestanding");
+        return;
+    }
+
     if (!stmt->as.iace.value) {
         sem_report_node(sem, stmt,
                         "IACE requires VERBUM or FRACTUM payload in subset 8A (subset final da FASE 8 preserves this restriction)");
@@ -2500,6 +2696,19 @@ static void sem_analyze_iace(cct_semantic_analyzer_t *sem, const cct_ast_node_t 
 }
 
 static void sem_analyze_tempta(cct_semantic_analyzer_t *sem, const cct_ast_node_t *stmt) {
+    if (sem_profile_is_freestanding(sem)) {
+        sem_report_node(sem, stmt, "TEMPTA não suportado em perfil freestanding");
+        if (stmt->as.tempta.cape_block || stmt->as.tempta.cape_name || stmt->as.tempta.cape_type) {
+            sem_report_node(sem, stmt, "CAPE não suportado em perfil freestanding");
+        }
+        if (stmt->as.tempta.semper_block) {
+            sem_report_node(sem, stmt->as.tempta.semper_block, "SEMPER não suportado em perfil freestanding");
+        }
+        if (stmt->as.tempta.try_block) sem_analyze_stmt(sem, stmt->as.tempta.try_block);
+        if (stmt->as.tempta.cape_block) sem_analyze_stmt(sem, stmt->as.tempta.cape_block);
+        return;
+    }
+
     if (!stmt->as.tempta.try_block) {
         sem_report_node(sem, stmt, "TEMPTA requires protected block");
         return;
@@ -2635,6 +2844,10 @@ static void sem_analyze_stmt(cct_semantic_analyzer_t *sem, const cct_ast_node_t 
                 item_t = collection_t->element;
             } else if (collection_t && collection_t->kind == CCT_SEM_TYPE_POINTER &&
                        collection_t->element && collection_t->element->kind == CCT_SEM_TYPE_NIHIL) {
+                if (sem_profile_is_freestanding(sem)) {
+                    sem_report_node(sem, stmt->as.iterum.collection,
+                                    "FLUXUS não suportado em perfil freestanding (heap indisponível)");
+                }
                 /* FASE 12D.3 subset: treat FLUXUS opaque pointer iteration item as REX by default. */
                 item_t = &sem->type_rex;
             } else if (!sem_is_error_type(collection_t)) {

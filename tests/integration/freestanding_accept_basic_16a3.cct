@@ -1,0 +1,21 @@
+INCIPIT grimoire "freestanding_accept_basic_16a3"
+
+RITUALE main() REDDE REX
+  EVOCA REX soma AD 0
+
+  REPETE i DE 0 AD 4
+    SI i < 2
+      VINCIRE soma AD soma + 1
+    ALITER
+      VINCIRE soma AD soma + i
+    FIN SI
+  FIN REPETE
+
+  DUM soma < 10
+    VINCIRE soma AD soma + 1
+  FIN DUM
+
+  REDDE soma
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

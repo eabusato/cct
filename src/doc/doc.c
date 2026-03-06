@@ -861,7 +861,7 @@ int cct_doc_command(int argc, char **argv) {
 
     cct_module_bundle_t bundle;
     cct_error_code_t bundle_status = CCT_OK;
-    if (!cct_module_bundle_build(layout.entry_path, &bundle, &bundle_status)) {
+    if (!cct_module_bundle_build(layout.entry_path, CCT_PROFILE_HOST, &bundle, &bundle_status)) {
         return 1;
     }
 

@@ -1,0 +1,12 @@
+INCIPIT grimoire "freestanding_accept_speculum_16a4"
+
+RITUALE main() REDDE REX
+  EVOCA REX valor AD 9
+  EVOCA SPECULUM REX p AD SPECULUM valor
+  SI *p == 9
+    REDDE 0
+  FIN SI
+  REDDE 1
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

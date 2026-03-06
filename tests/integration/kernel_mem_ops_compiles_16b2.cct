@@ -1,0 +1,15 @@
+INCIPIT grimoire "kernel_mem_ops_compiles_16b2"
+
+ADVOCARE "cct/kernel"
+
+RITUALE main() REDDE NIHIL
+  EVOCA REX a AD 1
+  EVOCA REX b AD 2
+  EVOCA SPECULUM REX pa AD SPECULUM a
+  EVOCA SPECULUM REX pb AD SPECULUM b
+  CONIURA kernel_memset(pa, 0, 1)
+  CONIURA kernel_memcpy(pa, pb, 1)
+  REDDE
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

@@ -14,6 +14,10 @@
 
 #include <stdio.h>
 
+#ifndef CCT_FREESTANDING_RT_HEADER
+#define CCT_FREESTANDING_RT_HEADER "src/runtime/cct_freestanding_rt.h"
+#endif
+
 static void cct_cg_emit_escaped_c_string(FILE *out, const char *s) {
     fputc('"', out);
     if (s) {
@@ -43,6 +47,136 @@ bool cct_cg_emit_generated_c_prelude(FILE *out, const cct_codegen_t *cg) {
     fputs("/* source = ", out);
     cct_cg_emit_escaped_c_string(out, cg->input_path ? cg->input_path : cg->filename);
     fputs(" */\n\n", out);
+
+    if (cg->profile == CCT_PROFILE_FREESTANDING) {
+        fputs("/* ===== Includes (freestanding) ===== */\n", out);
+        fputs("#include <stdint.h>\n", out);
+        fputs("#include <stddef.h>\n", out);
+        fprintf(out, "#include \"%s\"\n\n", CCT_FREESTANDING_RT_HEADER);
+
+        fputs("/* ===== Freestanding Runtime Adapters (FASE 16B.1) ===== */\n", out);
+        fputs("static inline void cct_rt_fail(const char *msg) {\n", out);
+        fputs("    (void)msg;\n", out);
+        fputs("    cct_fs_panic();\n", out);
+        fputs("}\n\n", out);
+
+        fputs("static inline int cct_rt_fractum_is_active(void) {\n", out);
+        fputs("    return 0;\n", out);
+        fputs("}\n\n", out);
+        fputs("static inline const char *cct_rt_fractum_peek(void) {\n", out);
+        fputs("    return \"\";\n", out);
+        fputs("}\n\n", out);
+        fputs("static inline void cct_rt_fractum_clear(void) {\n", out);
+        fputs("}\n\n", out);
+        fputs("static inline void cct_rt_fractum_throw_str(const char *msg) {\n", out);
+        fputs("    (void)msg;\n", out);
+        fputs("    cct_fs_panic();\n", out);
+        fputs("}\n\n", out);
+        fputs("static inline void cct_rt_fractum_uncaught_abort(void) {\n", out);
+        fputs("    cct_fs_panic();\n", out);
+        fputs("}\n\n", out);
+
+        fputs("static inline void *cct_rt_alloc_bytes(size_t n) {\n", out);
+        fputs("    (void)n;\n", out);
+        fputs("    cct_fs_panic();\n", out);
+        fputs("}\n\n", out);
+
+        fputs("static inline void cct_rt_free_ptr(void *p) {\n", out);
+        fputs("    (void)p;\n", out);
+        fputs("    cct_fs_panic();\n", out);
+        fputs("}\n\n", out);
+
+        fputs("static inline void *cct_rt_check_not_null(void *p, const char *ctx) {\n", out);
+        fputs("    if (!p) {\n", out);
+        fputs("        (void)ctx;\n", out);
+        fputs("        cct_fs_panic();\n", out);
+        fputs("    }\n", out);
+        fputs("    return p;\n", out);
+        fputs("}\n\n", out);
+
+        fputs("static inline void *cct_rt_check_not_null_fractum(void *p, const char *ctx) {\n", out);
+        fputs("    return cct_rt_check_not_null(p, ctx);\n", out);
+        fputs("}\n\n", out);
+
+        fputs("static inline void cct_rt_mem_copy(void *dst, const void *src, long long n) {\n", out);
+        fputs("    if (n < 0) cct_fs_panic();\n", out);
+        fputs("    cct_fs_memcpy(dst, src, (size_t)n);\n", out);
+        fputs("}\n\n", out);
+
+        fputs("static inline void cct_rt_mem_set(void *dst, long long val, long long n) {\n", out);
+        fputs("    if (n < 0) cct_fs_panic();\n", out);
+        fputs("    cct_fs_memset(dst, (int)(val & 0xFF), (size_t)n);\n", out);
+        fputs("}\n\n", out);
+
+        fputs("static inline void cct_rt_mem_zero(void *dst, long long n) {\n", out);
+        fputs("    cct_rt_mem_set(dst, 0LL, n);\n", out);
+        fputs("}\n\n", out);
+
+        fputs("static inline void *cct_rt_mem_alloc(long long n) {\n", out);
+        fputs("    (void)n;\n", out);
+        fputs("    cct_fs_panic();\n", out);
+        fputs("}\n\n", out);
+
+        fputs("static inline void cct_rt_mem_free(void *p) {\n", out);
+        fputs("    (void)p;\n", out);
+        fputs("    cct_fs_panic();\n", out);
+        fputs("}\n\n", out);
+
+        fputs("static inline void *cct_rt_mem_realloc(void *p, long long n) {\n", out);
+        fputs("    (void)p;\n", out);
+        fputs("    (void)n;\n", out);
+        fputs("    cct_fs_panic();\n", out);
+        fputs("}\n\n", out);
+
+        fputs("static inline long long cct_rt_mem_compare(const void *a, const void *b, long long n) {\n", out);
+        fputs("    if (n < 0) cct_fs_panic();\n", out);
+        fputs("    const unsigned char *pa = (const unsigned char*)a;\n", out);
+        fputs("    const unsigned char *pb = (const unsigned char*)b;\n", out);
+        fputs("    for (long long i = 0; i < n; i++) {\n", out);
+        fputs("        if (pa[i] < pb[i]) return -1LL;\n", out);
+        fputs("        if (pa[i] > pb[i]) return 1LL;\n", out);
+        fputs("    }\n", out);
+        fputs("    return 0LL;\n", out);
+        fputs("}\n\n", out);
+
+        fputs("static inline void cct_rt_scribe_str(const char *s) {\n", out);
+        fputs("    (void)s;\n", out);
+        fputs("    cct_fs_panic();\n", out);
+        fputs("}\n\n", out);
+        fputs("static inline void cct_rt_scribe_int(long long v) {\n", out);
+        fputs("    (void)v;\n", out);
+        fputs("    cct_fs_panic();\n", out);
+        fputs("}\n\n", out);
+        fputs("static inline void cct_rt_scribe_bool(long long v) {\n", out);
+        fputs("    (void)v;\n", out);
+        fputs("    cct_fs_panic();\n", out);
+        fputs("}\n\n", out);
+        fputs("static inline void cct_rt_scribe_real(double v) {\n", out);
+        fputs("    (void)v;\n", out);
+        fputs("    cct_fs_panic();\n", out);
+        fputs("}\n\n", out);
+
+        fputs("/* ===== Math Runtime Helpers (freestanding subset) ===== */\n", out);
+        fputs("static inline double cct_pow(double base, double exp) {\n", out);
+        fputs("    return (double)cct_fs_pow_i32((cct_rex_t)base, (cct_rex_t)exp);\n", out);
+        fputs("}\n", out);
+        fputs("static inline long long cct_floor_div_ll(long long a, long long b) {\n", out);
+        fputs("    if (b == 0) { cct_fs_panic(); return 0LL; }\n", out);
+        fputs("    long long q = a / b;\n", out);
+        fputs("    long long r = a % b;\n", out);
+        fputs("    if (r != 0 && ((r > 0) != (b > 0))) q -= 1;\n", out);
+        fputs("    return q;\n", out);
+        fputs("}\n", out);
+        fputs("static inline long long cct_euclid_mod_ll(long long a, long long b) {\n", out);
+        fputs("    if (b == 0) { cct_fs_panic(); return 0LL; }\n", out);
+        fputs("    long long m = a % b;\n", out);
+        fputs("    long long bb = (b < 0) ? -b : b;\n", out);
+        fputs("    if (m < 0) m += bb;\n", out);
+        fputs("    return m;\n", out);
+        fputs("}\n\n", out);
+
+        return true;
+    }
 
     fputs("/* ===== Includes ===== */\n", out);
     fputs("#include <stdio.h>\n", out);

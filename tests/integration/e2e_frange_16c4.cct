@@ -1,0 +1,16 @@
+INCIPIT grimoire "e2e_frange_16c4"
+
+RITUALE main() REDDE REX
+  EVOCA REX i AD 0
+  EVOCA REX acc AD 0
+  DUM i < 10
+    SI i == 4
+      FRANGE
+    FIN SI
+    VINCIRE acc AD acc + i
+    VINCIRE i AD i + 1
+  FIN DUM
+  REDDE acc
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

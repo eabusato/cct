@@ -1,0 +1,11 @@
+INCIPIT grimoire "asm_gas_assemble_16c3"
+
+RITUALE dobra(REX x) REDDE REX
+  REDDE x + x
+EXPLICIT RITUALE
+
+RITUALE main() REDDE REX
+  REDDE CONIURA dobra(8)
+EXPLICIT RITUALE
+
+EXPLICIT grimoire
