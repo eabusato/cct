@@ -2,7 +2,7 @@
 
 - Path: `/home/eabusato/dev/cct/tests/integration/docgen_bad_tags_12g/src/main.cct`
 - Origin: user module
-- Generated: 2026-03-06 12:46:35
+- Generated: 2026-03-06 15:41:41
 
 ## Symbols
 

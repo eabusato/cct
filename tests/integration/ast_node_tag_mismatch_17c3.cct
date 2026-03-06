@@ -1,0 +1,15 @@
+INCIPIT grimoire "ast_node_tag_mismatch_17c3"
+
+ADVOCARE "cct/ast_node.cct"
+ADVOCARE "cct/variant.cct"
+
+RITUALE main() REDDE REX
+  EVOCA AstLiteralInt lit
+  VINCIRE lit.valor AD 7
+  EVOCA Variant n AD CONIURA ast_make_literal_int(SPECULUM lit)
+  EVOCA SPECULUM AstBinary ignored AD CONIURA ast_as_binary(n)
+  VINCIRE ignored AD ignored
+  REDDE 1
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

@@ -1,0 +1,17 @@
+INCIPIT grimoire "bytes_zero_len_17d3"
+
+ADVOCARE "cct/bytes.cct"
+
+RITUALE main() REDDE REX
+  EVOCA SPECULUM NIHIL b AD CONIURA bytes_new(0)
+  EVOCA REX n AD CONIURA bytes_len(b)
+  CONIURA bytes_free(b)
+
+  SI n == 0
+    REDDE 0
+  FIN SI
+
+  REDDE 1
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

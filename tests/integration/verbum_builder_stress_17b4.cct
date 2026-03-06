@@ -1,0 +1,41 @@
+INCIPIT grimoire "verbum_builder_stress_17b4"
+
+ADVOCARE "cct/verbum_builder.cct"
+ADVOCARE "cct/verbum.cct"
+
+RITUALE main() REDDE REX
+  EVOCA SPECULUM NIHIL b AD CONIURA builder_init()
+  CONIURA builder_append(b, "BEGIN:")
+
+  REPETE i DE 0 AD 1999
+    SI i == 1000
+      CONIURA builder_append(b, "|")
+    FIN SI
+    CONIURA builder_append(b, "x")
+  FIN REPETE
+
+  CONIURA builder_append(b, ":END")
+  EVOCA VERBUM out AD CONIURA builder_to_verbum(b)
+
+  SI CONIURA len(out) == 2011
+    EVOCA VERBUM pref AD CONIURA substring(out, 0, 6)
+    SI CONIURA compare(pref, "BEGIN:") == 0
+      EVOCA VERBUM sep AD CONIURA substring(out, 1006, 1007)
+      SI CONIURA compare(sep, "|") == 0
+        EVOCA VERBUM suf AD CONIURA substring(out, 2007, 2011)
+        SI CONIURA compare(suf, ":END") == 0
+          CONIURA builder_clear(b)
+          SI CONIURA builder_len(b) == 0
+            CONIURA builder_free(b)
+            REDDE 0
+          FIN SI
+        FIN SI
+      FIN SI
+    FIN SI
+  FIN SI
+
+  CONIURA builder_free(b)
+  REDDE 1
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

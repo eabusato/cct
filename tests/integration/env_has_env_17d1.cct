@@ -1,0 +1,18 @@
+INCIPIT grimoire "env_has_env_17d1"
+
+ADVOCARE "cct/env.cct"
+
+RITUALE main() REDDE REX
+  EVOCA VERUM has_present AD CONIURA has_env("CCT_TEST_ENV_17D1")
+  EVOCA VERUM has_missing AD CONIURA has_env("__CCT_TEST_ENV_17D1_MISSING__")
+
+  SI has_present == VERUM
+    SI has_missing == FALSUM
+      REDDE 0
+    FIN SI
+  FIN SI
+
+  REDDE 1
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

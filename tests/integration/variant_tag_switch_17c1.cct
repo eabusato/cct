@@ -1,0 +1,19 @@
+INCIPIT grimoire "variant_tag_switch_17c1"
+
+ADVOCARE "cct/variant.cct"
+
+RITUALE main() REDDE REX
+  EVOCA SPECULUM NIHIL none
+  EVOCA Variant a AD CONIURA variant_make(1, none)
+  EVOCA Variant b AD CONIURA variant_make(2, none)
+
+  SI CONIURA variant_tag(a) == 1
+    SI CONIURA variant_tag(b) == 2
+      REDDE 0
+    FIN SI
+  FIN SI
+
+  REDDE 1
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

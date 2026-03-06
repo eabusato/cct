@@ -1,9 +1,9 @@
 # CCT API Documentation
 
 - Modules: 3
-- Symbols: 9
+- Symbols: 11
 - Warnings: 0
-- Generated: 2026-03-06 12:46:35
+- Generated: 2026-03-06 15:41:41
 
 ## Modules
 
@@ -21,4 +21,6 @@
 - [substring](symbols/mod_002_verbum_substring.md) (rituale)
 - [trim](symbols/mod_002_verbum_trim.md) (rituale)
 - [find](symbols/mod_002_verbum_find.md) (rituale)
+- [char_at](symbols/mod_002_verbum_char_at.md) (rituale)
+- [from_char](symbols/mod_002_verbum_from_char.md) (rituale)
 - [contains](symbols/mod_002_verbum_contains.md) (rituale)

@@ -11,7 +11,7 @@ It is written to help you:
 
 ## Status
 
-Specification baseline: **FASE 16D.4** (FASE 13/13M closures, FASE 14 hardening contracts, full FASE 15 closure set, and FASE 16 freestanding bridge closure).
+Specification baseline: **FASE 17D.4** (FASE 13/13M closures, FASE 14 hardening contracts, full FASE 15 closure set, FASE 16 freestanding bridge closure, and FASE 17 standard-library expansion).
 
 The language is fully usable in its current subset, with explicit boundaries documented below.
 
@@ -158,6 +158,32 @@ Restricted/prohibited freestanding surface (summary):
 Bridge command reference:
 - `make lbos-bridge`
 Behavior: runs the canonical bridge pipeline and publishes `build/lbos-bridge/cct_kernel.o` for LBOS-side consumption.
+
+### 1.5 FASE 17 Library Expansion
+
+FASE 17 expands the canonical standard library to unlock bootstrap-oriented compiler/tooling workflows in CCT.
+
+17A - Lexer and CLI foundation:
+- `cct/verbum`: `char_at`, `from_char`
+- `cct/char`: ASCII classification helpers
+- `cct/args`: process argument access
+- `cct/verbum_scan`: cursor-based text scanning
+
+17B - Efficient textual construction:
+- `cct/verbum_builder`: mutable text builder API
+- `cct/code_writer`: deterministic writer with indentation/newline control
+- `cct/fmt` integration paths for formatted append/write flows
+
+17C - Variant and host-side AST toolkit:
+- `cct/variant`
+- `cct/variant_helpers`
+- `cct/ast_node`
+- ORDO payload language support remains design-proposal status via `docs/bootstrap/CCT_ORDO_PAYLOAD_PROPOSAL_V0.md`
+
+17D - Host utility libraries:
+- `cct/env`: environment variable and cwd access
+- `cct/time`: monotonic timing and sleep primitives
+- `cct/bytes`: mutable byte buffer primitives with bounds/range contracts
 
 ## 2. Source File Structure
 

@@ -179,13 +179,24 @@ bool cct_cg_emit_generated_c_prelude(FILE *out, const cct_codegen_t *cg) {
     }
 
     fputs("/* ===== Includes ===== */\n", out);
+    fputs("#ifndef _POSIX_C_SOURCE\n", out);
+    fputs("#define _POSIX_C_SOURCE 200809L\n", out);
+    fputs("#endif\n", out);
     fputs("#include <stdio.h>\n", out);
     fputs("#include <stdlib.h>\n", out);
     fputs("#include <stdint.h>\n\n", out);
     fputs("#include <string.h>\n", out);
     fputs("#include <ctype.h>\n\n", out);
     fputs("#include <errno.h>\n", out);
-    fputs("#include <math.h>\n\n", out);
+    fputs("#include <math.h>\n", out);
+    fputs("#include <time.h>\n\n", out);
+    fputs("#ifdef _WIN32\n", out);
+    fputs("#include <direct.h>\n", out);
+    fputs("#define cct_rt_getcwd _getcwd\n", out);
+    fputs("#else\n", out);
+    fputs("#include <unistd.h>\n", out);
+    fputs("#define cct_rt_getcwd getcwd\n", out);
+    fputs("#endif\n\n", out);
     fputs("static void cct_rt_fail(const char *msg);\n\n", out);
 
     fputs("/* ===== Math Runtime Helpers (FASE 13A) ===== */\n", out);

@@ -1,0 +1,60 @@
+INCIPIT grimoire "phase17b_regression_17b4"
+
+ADVOCARE "cct/verbum_builder.cct"
+ADVOCARE "cct/code_writer.cct"
+ADVOCARE "cct/verbum.cct"
+ADVOCARE "cct/fmt.cct"
+
+RITUALE main() REDDE REX
+  EVOCA SPECULUM NIHIL b AD CONIURA builder_init()
+  CONIURA builder_append(b, "n=")
+  CONIURA builder_append_int(b, 42)
+  CONIURA builder_append(b, ",ok=")
+  CONIURA builder_append_bool(b, VERUM)
+  CONIURA builder_append(b, ",r=")
+  CONIURA builder_append_real(b, 2.5)
+
+  EVOCA VERBUM line AD CONIURA builder_to_verbum(b)
+  SI CONIURA find(line, "n=42") != -1
+    SI CONIURA find(line, "ok=true") != -1
+      EVOCA REX idx_r AD CONIURA find(line, ",r=")
+      SI idx_r != -1
+        EVOCA REX start AD idx_r + 3
+        EVOCA VERBUM real_txt AD CONIURA substring(line, start, CONIURA len(line))
+        EVOCA UMBRA r AD CONIURA fmt_parse_real(real_txt)
+        SI r == 2.5
+          EVOCA SPECULUM NIHIL w AD CONIURA writer_init()
+          CONIURA writer_writeln(w, "BEGIN")
+          CONIURA writer_indent(w)
+          CONIURA writer_write(w, "payload=")
+          CONIURA writer_writeln(w, line)
+          CONIURA writer_write(w, "done=")
+          CONIURA writer_write_bool(w, VERUM)
+          CONIURA writer_writeln(w, "")
+          CONIURA writer_dedent(w)
+          CONIURA writer_writeln(w, "END")
+
+          EVOCA VERBUM out AD CONIURA writer_to_verbum(w)
+          SI CONIURA find(out, "BEGIN\n") != -1
+            SI CONIURA find(out, "  payload=n=42") != -1
+              SI CONIURA find(out, "  done=true\n") != -1
+                SI CONIURA find(out, "END\n") != -1
+                  CONIURA writer_free(w)
+                  CONIURA builder_free(b)
+                  REDDE 0
+                FIN SI
+              FIN SI
+            FIN SI
+          FIN SI
+
+          CONIURA writer_free(w)
+        FIN SI
+      FIN SI
+    FIN SI
+  FIN SI
+
+  CONIURA builder_free(b)
+  REDDE 1
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

@@ -1,0 +1,16 @@
+INCIPIT grimoire "time_monotonic_17d2"
+
+ADVOCARE "cct/time.cct"
+
+RITUALE main() REDDE REX
+  EVOCA REX t1 AD CONIURA now_ns()
+  EVOCA REX t2 AD CONIURA now_ns()
+
+  SI t2 >= t1
+    REDDE 0
+  FIN SI
+
+  REDDE 1
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

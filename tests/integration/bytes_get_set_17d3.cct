@@ -1,0 +1,27 @@
+INCIPIT grimoire "bytes_get_set_17d3"
+
+ADVOCARE "cct/bytes.cct"
+
+RITUALE main() REDDE REX
+  EVOCA SPECULUM NIHIL b AD CONIURA bytes_new(4)
+
+  OBSECRO bytes_set(b, 0, 65)
+  OBSECRO bytes_set(b, 1, 66)
+  OBSECRO bytes_set(b, 2, 67)
+  OBSECRO bytes_set(b, 3, 68)
+
+  EVOCA MILES a AD CONIURA bytes_get(b, 0)
+  EVOCA MILES d AD CONIURA bytes_get(b, 3)
+
+  CONIURA bytes_free(b)
+
+  SI a == 65
+    SI d == 68
+      REDDE 0
+    FIN SI
+  FIN SI
+
+  REDDE 1
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

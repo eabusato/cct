@@ -1,0 +1,22 @@
+INCIPIT grimoire "verbum_builder_basic_17b1"
+
+ADVOCARE "cct/verbum_builder.cct"
+ADVOCARE "cct/verbum.cct"
+
+RITUALE main() REDDE REX
+  EVOCA SPECULUM NIHIL b AD CONIURA builder_init()
+  CONIURA builder_append(b, "alpha")
+  CONIURA builder_append(b, "_")
+  CONIURA builder_append(b, "beta")
+
+  EVOCA VERBUM out AD CONIURA builder_to_verbum(b)
+  SI CONIURA compare(out, "alpha_beta") == 0
+    CONIURA builder_free(b)
+    REDDE 0
+  FIN SI
+
+  CONIURA builder_free(b)
+  REDDE 1
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

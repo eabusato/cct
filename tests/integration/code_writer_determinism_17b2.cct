@@ -1,0 +1,19 @@
+INCIPIT grimoire "code_writer_determinism_17b2"
+
+ADVOCARE "cct/code_writer.cct"
+
+RITUALE main() REDDE REX
+  EVOCA SPECULUM NIHIL w AD CONIURA writer_init()
+  CONIURA writer_writeln(w, "RITUALE main() REDDE REX")
+  CONIURA writer_indent(w)
+  CONIURA writer_writeln(w, "REDDE 0")
+  CONIURA writer_dedent(w)
+  CONIURA writer_writeln(w, "EXPLICIT RITUALE")
+
+  EVOCA VERBUM out AD CONIURA writer_to_verbum(w)
+  OBSECRO scribe(out)
+  CONIURA writer_free(w)
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

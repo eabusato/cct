@@ -1,0 +1,15 @@
+INCIPIT grimoire "char"
+
+RITUALE is_digit(MILES c) REDDE VERUM
+  REDDE OBSECRO char_is_digit(c)
+EXPLICIT RITUALE
+
+RITUALE is_alpha(MILES c) REDDE VERUM
+  REDDE OBSECRO char_is_alpha(c)
+EXPLICIT RITUALE
+
+RITUALE is_whitespace(MILES c) REDDE VERUM
+  REDDE OBSECRO char_is_whitespace(c)
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

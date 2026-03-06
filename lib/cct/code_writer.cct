@@ -1,0 +1,53 @@
+INCIPIT grimoire "code_writer"
+
+ADVOCARE "cct/fmt.cct"
+
+RITUALE writer_init() REDDE SPECULUM NIHIL
+  REDDE OBSECRO writer_init()
+EXPLICIT RITUALE
+
+RITUALE writer_indent(SPECULUM NIHIL w) REDDE NIHIL
+  OBSECRO writer_indent(w)
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE writer_dedent(SPECULUM NIHIL w) REDDE NIHIL
+  OBSECRO writer_dedent(w)
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE writer_write(SPECULUM NIHIL w, VERBUM s) REDDE NIHIL
+  OBSECRO writer_write(w, s)
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE writer_writeln(SPECULUM NIHIL w, VERBUM s) REDDE NIHIL
+  OBSECRO writer_writeln(w, s)
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE writer_write_int(SPECULUM NIHIL w, REX v) REDDE NIHIL
+  CONIURA writer_write(w, CONIURA stringify_int(v))
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE writer_writeln_int(SPECULUM NIHIL w, REX v) REDDE NIHIL
+  CONIURA writer_writeln(w, CONIURA stringify_int(v))
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE writer_write_bool(SPECULUM NIHIL w, VERUM v) REDDE NIHIL
+  CONIURA writer_write(w, CONIURA stringify_bool(v))
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE writer_to_verbum(SPECULUM NIHIL w) REDDE VERBUM
+  REDDE OBSECRO writer_to_verbum(w)
+EXPLICIT RITUALE
+
+RITUALE writer_free(SPECULUM NIHIL w) REDDE NIHIL
+  OBSECRO writer_free(w)
+  REDDE
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

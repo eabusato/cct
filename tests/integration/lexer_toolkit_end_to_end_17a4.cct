@@ -1,0 +1,32 @@
+INCIPIT grimoire "lexer_toolkit_end_to_end_17a4"
+
+ADVOCARE "cct/args.cct"
+ADVOCARE "cct/fs.cct"
+ADVOCARE "cct/char.cct"
+ADVOCARE "cct/verbum_scan.cct"
+
+RITUALE main() REDDE REX
+  SI CONIURA argc() < 2
+    REDDE 2
+  FIN SI
+
+  EVOCA VERBUM path AD CONIURA arg(1)
+  EVOCA VERBUM content AD CONIURA read_all(path)
+  EVOCA SPECULUM NIHIL c AD CONIURA cursor_init(content)
+
+  SI CONIURA cursor_eof(c) == VERUM
+    CONIURA cursor_free(c)
+    REDDE 3
+  FIN SI
+
+  EVOCA MILES first AD CONIURA cursor_peek(c)
+  SI CONIURA is_alpha(first) == VERUM
+    CONIURA cursor_free(c)
+    REDDE 0
+  FIN SI
+
+  CONIURA cursor_free(c)
+  REDDE 1
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

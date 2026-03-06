@@ -1,0 +1,21 @@
+INCIPIT grimoire "verbum_from_char_17a1"
+
+ADVOCARE "cct/verbum.cct"
+
+RITUALE main() REDDE REX
+  EVOCA VERBUM src AD "A0"
+  EVOCA MILES ca AD CONIURA char_at(src, 0)
+  EVOCA MILES c0 AD CONIURA char_at(src, 1)
+  EVOCA VERBUM a AD CONIURA from_char(ca)
+  EVOCA VERBUM zero AD CONIURA from_char(c0)
+
+  SI CONIURA compare(a, "A") == 0
+    SI CONIURA compare(zero, "0") == 0
+      REDDE 0
+    FIN SI
+  FIN SI
+
+  REDDE 1
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

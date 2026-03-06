@@ -1,0 +1,12 @@
+INCIPIT grimoire "args_argc_basic_17a2"
+
+ADVOCARE "cct/args.cct"
+
+RITUALE main() REDDE REX
+  SI CONIURA argc() >= 1
+    REDDE 0
+  FIN SI
+  REDDE 1
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

@@ -492,6 +492,39 @@ static bool cg_is_known_ordo_type(cct_codegen_t *cg, const cct_ast_type_t *type)
            cg_find_ordo(cg, type->name) != NULL;
 }
 
+static bool cg_is_variant_sigillum_type(cct_codegen_t *cg, const cct_ast_type_t *type) {
+    if (!type || !type->name || type->is_array || type->is_pointer) return false;
+    const cct_codegen_sigillum_t *sig = NULL;
+    if (type->generic_args && type->generic_args->count > 0) {
+        const char *special = cg_materialize_generic_sigillum_name(cg, type, NULL);
+        if (special) sig = cg_find_sigillum(cg, special);
+    } else {
+        sig = cg_find_sigillum(cg, type->name);
+    }
+    if (!sig || !sig->node || sig->node->type != AST_SIGILLUM || !sig->node->as.sigillum.fields) return false;
+
+    bool has_tag = false;
+    bool has_payload = false;
+    cct_ast_field_list_t *fields = sig->node->as.sigillum.fields;
+    for (size_t i = 0; i < fields->count; i++) {
+        cct_ast_field_t *f = fields->fields[i];
+        if (!f || !f->name || !f->type) continue;
+        if (strcmp(f->name, "tag") == 0 && !f->type->is_pointer && !f->type->is_array && f->type->name &&
+            (strcmp(f->type->name, "REX") == 0 || strcmp(f->type->name, "DUX") == 0 ||
+             strcmp(f->type->name, "COMES") == 0 || strcmp(f->type->name, "MILES") == 0)) {
+            has_tag = true;
+            continue;
+        }
+        if (strcmp(f->name, "payload") == 0 && f->type->is_pointer && f->type->element_type &&
+            !f->type->element_type->is_pointer && !f->type->element_type->is_array &&
+            f->type->element_type->name && strcmp(f->type->element_type->name, "NIHIL") == 0) {
+            has_payload = true;
+            continue;
+        }
+    }
+    return has_tag && has_payload;
+}
+
 static const char* cg_c_scalar_type_for_name(const char *name) {
     if (!name) return NULL;
     if (strcmp(name, "REX") == 0 ||
@@ -604,14 +637,18 @@ static bool cg_validate_rituale_signature_f6b(cct_codegen_t *cg, const cct_ast_n
     if (rituale->as.rituale.return_type && rituale->as.rituale.return_type->name &&
         ret_kind == CCT_CODEGEN_VALUE_STRUCT) {
         if (cg_is_known_sigillum_type(cg, rituale->as.rituale.return_type)) {
-            cg_report_nodef(cg, rituale, "rituale '%s' SIGILLUM return type is not supported in FASE 6B codegen",
-                            rituale->as.rituale.name);
-            return false;
+            if (!cg_is_variant_sigillum_type(cg, rituale->as.rituale.return_type)) {
+                cg_report_nodef(cg, rituale, "rituale '%s' SIGILLUM return type is not supported in FASE 6B codegen",
+                                rituale->as.rituale.name);
+                return false;
+            }
         }
         if (!cg_is_known_ordo_type(cg, rituale->as.rituale.return_type)) {
-            cg_report_nodef(cg, rituale, "rituale '%s' return type '%s' is not supported in FASE 6B codegen",
-                            rituale->as.rituale.name, rituale->as.rituale.return_type->name);
-            return false;
+            if (!cg_is_variant_sigillum_type(cg, rituale->as.rituale.return_type)) {
+                cg_report_nodef(cg, rituale, "rituale '%s' return type '%s' is not supported in FASE 6B codegen",
+                                rituale->as.rituale.name, rituale->as.rituale.return_type->name);
+                return false;
+            }
         }
     }
 
@@ -635,7 +672,7 @@ static bool cg_validate_rituale_signature_f6b(cct_codegen_t *cg, const cct_ast_n
                 pk == CCT_CODEGEN_LOCAL_ORDO;
 
             if (pk == CCT_CODEGEN_LOCAL_STRUCT && param && param->type) {
-                ok_param = false; /* by-value SIGILLUM params remain restricted in 7B */
+                ok_param = cg_is_variant_sigillum_type(cg, param->type);
             }
             if (pk == CCT_CODEGEN_LOCAL_STRUCT && param && param->type && cg_is_known_ordo_type(cg, param->type)) {
                 ok_param = true;
@@ -2192,6 +2229,318 @@ static bool cg_emit_obsecro_expr(FILE *out, cct_codegen_t *cg, const cct_ast_nod
         return true;
     }
 
+    if (strcmp(name, "verbum_char_at") == 0) {
+        if (argc != 2) {
+            cg_report_node(cg, expr, "OBSECRO verbum_char_at expects exactly two arguments in FASE 17A.1");
+            return false;
+        }
+        cct_codegen_value_kind_t ks = CCT_CODEGEN_VALUE_UNKNOWN;
+        cct_codegen_value_kind_t ki = CCT_CODEGEN_VALUE_UNKNOWN;
+        fputs("cct_rt_verbum_char_at(", out);
+        if (!cg_emit_expr(out, cg, args->nodes[0], &ks)) return false;
+        fputs(", ", out);
+        if (!cg_emit_expr(out, cg, args->nodes[1], &ki)) return false;
+        if (ks != CCT_CODEGEN_VALUE_STRING) {
+            cg_report_node(cg, args->nodes[0], "OBSECRO verbum_char_at requires VERBUM first argument");
+            return false;
+        }
+        if (!(ki == CCT_CODEGEN_VALUE_INT || ki == CCT_CODEGEN_VALUE_BOOL)) {
+            cg_report_node(cg, args->nodes[1], "OBSECRO verbum_char_at requires integer index");
+            return false;
+        }
+        fputs(")", out);
+        if (out_kind) *out_kind = CCT_CODEGEN_VALUE_INT;
+        return true;
+    }
+
+    if (strcmp(name, "verbum_from_char") == 0) {
+        if (argc != 1) {
+            cg_report_node(cg, expr, "OBSECRO verbum_from_char expects exactly one integer argument in FASE 17A.1");
+            return false;
+        }
+        cct_codegen_value_kind_t k = CCT_CODEGEN_VALUE_UNKNOWN;
+        fputs("cct_rt_verbum_from_char(", out);
+        if (!cg_emit_expr(out, cg, args->nodes[0], &k)) return false;
+        if (!(k == CCT_CODEGEN_VALUE_INT || k == CCT_CODEGEN_VALUE_BOOL)) {
+            cg_report_node(cg, args->nodes[0], "OBSECRO verbum_from_char requires integer byte argument");
+            return false;
+        }
+        fputs(")", out);
+        if (out_kind) *out_kind = CCT_CODEGEN_VALUE_STRING;
+        return true;
+    }
+
+    if (strcmp(name, "char_is_digit") == 0 ||
+        strcmp(name, "char_is_alpha") == 0 ||
+        strcmp(name, "char_is_whitespace") == 0) {
+        if (argc != 1) {
+            cg_report_nodef(cg, expr, "OBSECRO %s expects exactly one integer argument in FASE 17A.1", name);
+            return false;
+        }
+        cct_codegen_value_kind_t k = CCT_CODEGEN_VALUE_UNKNOWN;
+        fprintf(out, "cct_rt_%s(", name);
+        if (!cg_emit_expr(out, cg, args->nodes[0], &k)) return false;
+        if (!(k == CCT_CODEGEN_VALUE_INT || k == CCT_CODEGEN_VALUE_BOOL)) {
+            cg_report_nodef(cg, args->nodes[0], "OBSECRO %s requires integer byte argument", name);
+            return false;
+        }
+        fputs(")", out);
+        if (out_kind) *out_kind = CCT_CODEGEN_VALUE_BOOL;
+        return true;
+    }
+
+    if (strcmp(name, "args_argc") == 0) {
+        if (argc != 0) {
+            cg_report_node(cg, expr, "OBSECRO args_argc expects exactly zero arguments in FASE 17A.2");
+            return false;
+        }
+        fputs("cct_rt_args_argc()", out);
+        if (out_kind) *out_kind = CCT_CODEGEN_VALUE_INT;
+        return true;
+    }
+
+    if (strcmp(name, "args_arg") == 0) {
+        if (argc != 1) {
+            cg_report_node(cg, expr, "OBSECRO args_arg expects exactly one integer argument in FASE 17A.2");
+            return false;
+        }
+        cct_codegen_value_kind_t k = CCT_CODEGEN_VALUE_UNKNOWN;
+        fputs("cct_rt_args_arg(", out);
+        if (!cg_emit_expr(out, cg, args->nodes[0], &k)) return false;
+        if (!(k == CCT_CODEGEN_VALUE_INT || k == CCT_CODEGEN_VALUE_BOOL)) {
+            cg_report_node(cg, args->nodes[0], "OBSECRO args_arg requires integer index");
+            return false;
+        }
+        fputs(")", out);
+        if (out_kind) *out_kind = CCT_CODEGEN_VALUE_STRING;
+        return true;
+    }
+
+    if (strcmp(name, "env_get") == 0) {
+        if (argc != 1) {
+            cg_report_node(cg, expr, "OBSECRO env_get expects exactly one VERBUM argument in FASE 17D.1");
+            return false;
+        }
+        cct_codegen_value_kind_t k = CCT_CODEGEN_VALUE_UNKNOWN;
+        fputs("cct_rt_env_get(", out);
+        if (!cg_emit_expr(out, cg, args->nodes[0], &k)) return false;
+        if (k != CCT_CODEGEN_VALUE_STRING) {
+            cg_report_node(cg, args->nodes[0], "OBSECRO env_get requires VERBUM argument");
+            return false;
+        }
+        fputs(")", out);
+        if (out_kind) *out_kind = CCT_CODEGEN_VALUE_STRING;
+        return true;
+    }
+
+    if (strcmp(name, "env_has") == 0) {
+        if (argc != 1) {
+            cg_report_node(cg, expr, "OBSECRO env_has expects exactly one VERBUM argument in FASE 17D.1");
+            return false;
+        }
+        cct_codegen_value_kind_t k = CCT_CODEGEN_VALUE_UNKNOWN;
+        fputs("cct_rt_env_has(", out);
+        if (!cg_emit_expr(out, cg, args->nodes[0], &k)) return false;
+        if (k != CCT_CODEGEN_VALUE_STRING) {
+            cg_report_node(cg, args->nodes[0], "OBSECRO env_has requires VERBUM argument");
+            return false;
+        }
+        fputs(")", out);
+        if (out_kind) *out_kind = CCT_CODEGEN_VALUE_BOOL;
+        return true;
+    }
+
+    if (strcmp(name, "env_cwd") == 0) {
+        if (argc != 0) {
+            cg_report_node(cg, expr, "OBSECRO env_cwd expects exactly zero arguments in FASE 17D.1");
+            return false;
+        }
+        fputs("cct_rt_env_cwd()", out);
+        if (out_kind) *out_kind = CCT_CODEGEN_VALUE_STRING;
+        return true;
+    }
+
+    if (strcmp(name, "time_now_ms") == 0) {
+        if (argc != 0) {
+            cg_report_node(cg, expr, "OBSECRO time_now_ms expects exactly zero arguments in FASE 17D.2");
+            return false;
+        }
+        fputs("cct_rt_time_now_ms()", out);
+        if (out_kind) *out_kind = CCT_CODEGEN_VALUE_INT;
+        return true;
+    }
+
+    if (strcmp(name, "time_now_ns") == 0) {
+        if (argc != 0) {
+            cg_report_node(cg, expr, "OBSECRO time_now_ns expects exactly zero arguments in FASE 17D.2");
+            return false;
+        }
+        fputs("cct_rt_time_now_ns()", out);
+        if (out_kind) *out_kind = CCT_CODEGEN_VALUE_INT;
+        return true;
+    }
+
+    if (strcmp(name, "bytes_new") == 0) {
+        if (argc != 1) {
+            cg_report_node(cg, expr, "OBSECRO bytes_new expects exactly one integer size argument in FASE 17D.3");
+            return false;
+        }
+        cct_codegen_value_kind_t ks = CCT_CODEGEN_VALUE_UNKNOWN;
+        fputs("((void*)cct_rt_bytes_new(", out);
+        if (!cg_emit_expr(out, cg, args->nodes[0], &ks)) return false;
+        if (!(ks == CCT_CODEGEN_VALUE_INT || ks == CCT_CODEGEN_VALUE_BOOL)) {
+            cg_report_node(cg, args->nodes[0], "OBSECRO bytes_new requires integer size argument");
+            return false;
+        }
+        fputs("))", out);
+        if (out_kind) *out_kind = CCT_CODEGEN_VALUE_POINTER;
+        return true;
+    }
+
+    if (strcmp(name, "bytes_len") == 0) {
+        if (argc != 1) {
+            cg_report_node(cg, expr, "OBSECRO bytes_len expects exactly one bytes pointer argument in FASE 17D.3");
+            return false;
+        }
+        cct_codegen_value_kind_t kb = CCT_CODEGEN_VALUE_UNKNOWN;
+        fputs("cct_rt_bytes_len((void*)(", out);
+        if (!cg_emit_expr(out, cg, args->nodes[0], &kb)) return false;
+        if (kb != CCT_CODEGEN_VALUE_POINTER) {
+            cg_report_node(cg, args->nodes[0], "OBSECRO bytes_len requires bytes pointer argument");
+            return false;
+        }
+        fputs("))", out);
+        if (out_kind) *out_kind = CCT_CODEGEN_VALUE_INT;
+        return true;
+    }
+
+    if (strcmp(name, "bytes_get") == 0) {
+        if (argc != 2) {
+            cg_report_node(cg, expr, "OBSECRO bytes_get expects exactly (bytes, index) in FASE 17D.3");
+            return false;
+        }
+        cct_codegen_value_kind_t kb = CCT_CODEGEN_VALUE_UNKNOWN;
+        cct_codegen_value_kind_t ki = CCT_CODEGEN_VALUE_UNKNOWN;
+        fputs("cct_rt_bytes_get((void*)(", out);
+        if (!cg_emit_expr(out, cg, args->nodes[0], &kb)) return false;
+        if (kb != CCT_CODEGEN_VALUE_POINTER) {
+            cg_report_node(cg, args->nodes[0], "OBSECRO bytes_get requires bytes pointer argument");
+            return false;
+        }
+        fputs("), ", out);
+        if (!cg_emit_expr(out, cg, args->nodes[1], &ki)) return false;
+        if (!(ki == CCT_CODEGEN_VALUE_INT || ki == CCT_CODEGEN_VALUE_BOOL)) {
+            cg_report_node(cg, args->nodes[1], "OBSECRO bytes_get requires integer index argument");
+            return false;
+        }
+        fputs(")", out);
+        if (out_kind) *out_kind = CCT_CODEGEN_VALUE_INT;
+        return true;
+    }
+
+    if (strcmp(name, "scan_init") == 0) {
+        if (argc != 1) {
+            cg_report_node(cg, expr, "OBSECRO scan_init expects exactly one VERBUM argument in FASE 17A.3");
+            return false;
+        }
+        cct_codegen_value_kind_t k = CCT_CODEGEN_VALUE_UNKNOWN;
+        fputs("((void*)cct_rt_scan_init(", out);
+        if (!cg_emit_expr(out, cg, args->nodes[0], &k)) return false;
+        if (k != CCT_CODEGEN_VALUE_STRING) {
+            cg_report_node(cg, args->nodes[0], "OBSECRO scan_init requires VERBUM source argument");
+            return false;
+        }
+        fputs("))", out);
+        if (out_kind) *out_kind = CCT_CODEGEN_VALUE_POINTER;
+        return true;
+    }
+
+    if (strcmp(name, "scan_pos") == 0 ||
+        strcmp(name, "scan_eof") == 0 ||
+        strcmp(name, "scan_peek") == 0 ||
+        strcmp(name, "scan_next") == 0) {
+        if (argc != 1) {
+            cg_report_nodef(cg, expr, "OBSECRO %s expects exactly one cursor pointer argument in FASE 17A.3", name);
+            return false;
+        }
+        cct_codegen_value_kind_t k = CCT_CODEGEN_VALUE_UNKNOWN;
+        fprintf(out, "cct_rt_%s((void*)(", name);
+        if (!cg_emit_expr(out, cg, args->nodes[0], &k)) return false;
+        if (k != CCT_CODEGEN_VALUE_POINTER) {
+            cg_report_nodef(cg, args->nodes[0], "OBSECRO %s requires cursor pointer argument", name);
+            return false;
+        }
+        fputs("))", out);
+        if (out_kind) {
+            if (strcmp(name, "scan_eof") == 0) {
+                *out_kind = CCT_CODEGEN_VALUE_BOOL;
+            } else {
+                *out_kind = CCT_CODEGEN_VALUE_INT;
+            }
+        }
+        return true;
+    }
+
+    if (strcmp(name, "builder_init") == 0) {
+        if (argc != 0) {
+            cg_report_node(cg, expr, "OBSECRO builder_init expects exactly zero arguments in FASE 17B.1");
+            return false;
+        }
+        fputs("((void*)cct_rt_builder_init())", out);
+        if (out_kind) *out_kind = CCT_CODEGEN_VALUE_POINTER;
+        return true;
+    }
+
+    if (strcmp(name, "builder_len") == 0 || strcmp(name, "builder_to_verbum") == 0) {
+        if (argc != 1) {
+            cg_report_nodef(cg, expr, "OBSECRO %s expects exactly one builder pointer argument in FASE 17B.1", name);
+            return false;
+        }
+        cct_codegen_value_kind_t k = CCT_CODEGEN_VALUE_UNKNOWN;
+        fprintf(out, "cct_rt_%s((void*)(", name);
+        if (!cg_emit_expr(out, cg, args->nodes[0], &k)) return false;
+        if (k != CCT_CODEGEN_VALUE_POINTER) {
+            cg_report_nodef(cg, args->nodes[0], "OBSECRO %s requires builder pointer argument", name);
+            return false;
+        }
+        fputs("))", out);
+        if (out_kind) {
+            if (strcmp(name, "builder_len") == 0) {
+                *out_kind = CCT_CODEGEN_VALUE_INT;
+            } else {
+                *out_kind = CCT_CODEGEN_VALUE_STRING;
+            }
+        }
+        return true;
+    }
+
+    if (strcmp(name, "writer_init") == 0) {
+        if (argc != 0) {
+            cg_report_node(cg, expr, "OBSECRO writer_init expects exactly zero arguments in FASE 17B.2");
+            return false;
+        }
+        fputs("((void*)cct_rt_writer_init())", out);
+        if (out_kind) *out_kind = CCT_CODEGEN_VALUE_POINTER;
+        return true;
+    }
+
+    if (strcmp(name, "writer_to_verbum") == 0) {
+        if (argc != 1) {
+            cg_report_node(cg, expr, "OBSECRO writer_to_verbum expects exactly one writer pointer argument in FASE 17B.2");
+            return false;
+        }
+        cct_codegen_value_kind_t k = CCT_CODEGEN_VALUE_UNKNOWN;
+        fputs("cct_rt_writer_to_verbum((void*)(", out);
+        if (!cg_emit_expr(out, cg, args->nodes[0], &k)) return false;
+        if (k != CCT_CODEGEN_VALUE_POINTER) {
+            cg_report_node(cg, args->nodes[0], "OBSECRO writer_to_verbum requires writer pointer argument");
+            return false;
+        }
+        fputs("))", out);
+        if (out_kind) *out_kind = CCT_CODEGEN_VALUE_STRING;
+        return true;
+    }
+
     if (strcmp(name, "fmt_stringify_int") == 0) {
         if (argc != 1) {
             cg_report_node(cg, expr, "OBSECRO fmt_stringify_int expects exactly one integer argument in FASE 11B.2");
@@ -3680,6 +4029,12 @@ static bool cg_emit_coniura_expr_to_temp_with_failcheck(
     if (!cg_probe_expr_kind(cg, expr, &kind)) return false;
 
     const char *c_ty = cg_c_type_for_return_kind(kind);
+    if (!c_ty && kind == CCT_CODEGEN_VALUE_STRUCT) {
+        cct_codegen_rituale_t *rit = cg_find_rituale(cg, expr->as.coniura.name);
+        if (rit && rit->node && rit->node->as.rituale.return_type) {
+            c_ty = cg_c_type_for_ast_type(cg, rit->node->as.rituale.return_type);
+        }
+    }
     if (!c_ty) {
         cg_report_node(cg, expr,
                        "CONIURA expression result kind is outside subset 8B propagation handling (subset final da FASE 8 keeps this limitation)");
@@ -4208,6 +4563,74 @@ static bool cg_emit_scribe_stmt(FILE *out, cct_codegen_t *cg, const cct_ast_node
         return true;
     }
 
+    if (strcmp(obsecro_node->as.obsecro.name, "time_sleep_ms") == 0) {
+        cct_ast_node_list_t *args = obsecro_node->as.obsecro.arguments;
+        if (!args || args->count != 1) {
+            cg_report_node(cg, obsecro_node, "OBSECRO time_sleep_ms requires exactly one integer argument in FASE 17D.2");
+            return false;
+        }
+        cct_codegen_value_kind_t kind = CCT_CODEGEN_VALUE_UNKNOWN;
+        cg_emit_indent(out, indent);
+        fputs("cct_rt_time_sleep_ms(", out);
+        if (!cg_emit_expr(out, cg, args->nodes[0], &kind)) return false;
+        if (!(kind == CCT_CODEGEN_VALUE_INT || kind == CCT_CODEGEN_VALUE_BOOL)) {
+            cg_report_node(cg, args->nodes[0], "OBSECRO time_sleep_ms requires integer ms argument");
+            return false;
+        }
+        fputs(");\n", out);
+        return true;
+    }
+
+    if (strcmp(obsecro_node->as.obsecro.name, "bytes_set") == 0) {
+        cct_ast_node_list_t *args = obsecro_node->as.obsecro.arguments;
+        if (!args || args->count != 3) {
+            cg_report_node(cg, obsecro_node, "OBSECRO bytes_set requires exactly (bytes, index, value) in FASE 17D.3");
+            return false;
+        }
+        cct_codegen_value_kind_t kb = CCT_CODEGEN_VALUE_UNKNOWN;
+        cct_codegen_value_kind_t ki = CCT_CODEGEN_VALUE_UNKNOWN;
+        cct_codegen_value_kind_t kv = CCT_CODEGEN_VALUE_UNKNOWN;
+        cg_emit_indent(out, indent);
+        fputs("cct_rt_bytes_set((void*)(", out);
+        if (!cg_emit_expr(out, cg, args->nodes[0], &kb)) return false;
+        if (kb != CCT_CODEGEN_VALUE_POINTER) {
+            cg_report_node(cg, args->nodes[0], "OBSECRO bytes_set requires bytes pointer argument");
+            return false;
+        }
+        fputs("), ", out);
+        if (!cg_emit_expr(out, cg, args->nodes[1], &ki)) return false;
+        if (!(ki == CCT_CODEGEN_VALUE_INT || ki == CCT_CODEGEN_VALUE_BOOL)) {
+            cg_report_node(cg, args->nodes[1], "OBSECRO bytes_set requires integer index argument");
+            return false;
+        }
+        fputs(", ", out);
+        if (!cg_emit_expr(out, cg, args->nodes[2], &kv)) return false;
+        if (!(kv == CCT_CODEGEN_VALUE_INT || kv == CCT_CODEGEN_VALUE_BOOL)) {
+            cg_report_node(cg, args->nodes[2], "OBSECRO bytes_set requires integer byte value");
+            return false;
+        }
+        fputs(");\n", out);
+        return true;
+    }
+
+    if (strcmp(obsecro_node->as.obsecro.name, "bytes_free") == 0) {
+        cct_ast_node_list_t *args = obsecro_node->as.obsecro.arguments;
+        if (!args || args->count != 1) {
+            cg_report_node(cg, obsecro_node, "OBSECRO bytes_free requires exactly one bytes pointer argument in FASE 17D.3");
+            return false;
+        }
+        cct_codegen_value_kind_t kb = CCT_CODEGEN_VALUE_UNKNOWN;
+        cg_emit_indent(out, indent);
+        fputs("cct_rt_bytes_free((void*)(", out);
+        if (!cg_emit_expr(out, cg, args->nodes[0], &kb)) return false;
+        if (kb != CCT_CODEGEN_VALUE_POINTER) {
+            cg_report_node(cg, args->nodes[0], "OBSECRO bytes_free requires bytes pointer argument");
+            return false;
+        }
+        fputs("));\n", out);
+        return true;
+    }
+
     if (strcmp(obsecro_node->as.obsecro.name, "option_free") == 0 ||
         strcmp(obsecro_node->as.obsecro.name, "result_free") == 0) {
         const char *name = obsecro_node->as.obsecro.name;
@@ -4228,8 +4651,144 @@ static bool cg_emit_scribe_stmt(FILE *out, cct_codegen_t *cg, const cct_ast_node
         return true;
     }
 
+    if (strcmp(obsecro_node->as.obsecro.name, "scan_free") == 0) {
+        cct_ast_node_list_t *args = obsecro_node->as.obsecro.arguments;
+        if (!args || args->count != 1) {
+            cg_report_node(cg, obsecro_node, "OBSECRO scan_free requires exactly one cursor pointer argument in FASE 17A.3");
+            return false;
+        }
+        cct_codegen_value_kind_t kind = CCT_CODEGEN_VALUE_UNKNOWN;
+        cg_emit_indent(out, indent);
+        fputs("cct_rt_scan_free((void*)(", out);
+        if (!cg_emit_expr(out, cg, args->nodes[0], &kind)) return false;
+        if (kind != CCT_CODEGEN_VALUE_POINTER) {
+            cg_report_node(cg, args->nodes[0], "OBSECRO scan_free requires cursor pointer argument");
+            return false;
+        }
+        fputs("));\n", out);
+        return true;
+    }
+
+    if (strcmp(obsecro_node->as.obsecro.name, "builder_append") == 0) {
+        cct_ast_node_list_t *args = obsecro_node->as.obsecro.arguments;
+        if (!args || args->count != 2) {
+            cg_report_node(cg, obsecro_node, "OBSECRO builder_append requires exactly (builder, text) in FASE 17B.1");
+            return false;
+        }
+        cct_codegen_value_kind_t kb = CCT_CODEGEN_VALUE_UNKNOWN;
+        cct_codegen_value_kind_t ks = CCT_CODEGEN_VALUE_UNKNOWN;
+        cg_emit_indent(out, indent);
+        fputs("cct_rt_builder_append((void*)(", out);
+        if (!cg_emit_expr(out, cg, args->nodes[0], &kb)) return false;
+        if (kb != CCT_CODEGEN_VALUE_POINTER) {
+            cg_report_node(cg, args->nodes[0], "OBSECRO builder_append requires builder pointer argument");
+            return false;
+        }
+        fputs("), ", out);
+        if (!cg_emit_expr(out, cg, args->nodes[1], &ks)) return false;
+        if (ks != CCT_CODEGEN_VALUE_STRING) {
+            cg_report_node(cg, args->nodes[1], "OBSECRO builder_append requires VERBUM argument");
+            return false;
+        }
+        fputs(");\n", out);
+        return true;
+    }
+
+    if (strcmp(obsecro_node->as.obsecro.name, "builder_append_char") == 0) {
+        cct_ast_node_list_t *args = obsecro_node->as.obsecro.arguments;
+        if (!args || args->count != 2) {
+            cg_report_node(cg, obsecro_node, "OBSECRO builder_append_char requires exactly (builder, byte) in FASE 17B.1");
+            return false;
+        }
+        cct_codegen_value_kind_t kb = CCT_CODEGEN_VALUE_UNKNOWN;
+        cct_codegen_value_kind_t kc = CCT_CODEGEN_VALUE_UNKNOWN;
+        cg_emit_indent(out, indent);
+        fputs("cct_rt_builder_append_char((void*)(", out);
+        if (!cg_emit_expr(out, cg, args->nodes[0], &kb)) return false;
+        if (kb != CCT_CODEGEN_VALUE_POINTER) {
+            cg_report_node(cg, args->nodes[0], "OBSECRO builder_append_char requires builder pointer argument");
+            return false;
+        }
+        fputs("), ", out);
+        if (!cg_emit_expr(out, cg, args->nodes[1], &kc)) return false;
+        if (!(kc == CCT_CODEGEN_VALUE_INT || kc == CCT_CODEGEN_VALUE_BOOL)) {
+            cg_report_node(cg, args->nodes[1], "OBSECRO builder_append_char requires integer byte argument");
+            return false;
+        }
+        fputs(");\n", out);
+        return true;
+    }
+
+    if (strcmp(obsecro_node->as.obsecro.name, "builder_clear") == 0 ||
+        strcmp(obsecro_node->as.obsecro.name, "builder_free") == 0) {
+        const char *name = obsecro_node->as.obsecro.name;
+        cct_ast_node_list_t *args = obsecro_node->as.obsecro.arguments;
+        if (!args || args->count != 1) {
+            cg_report_nodef(cg, obsecro_node, "OBSECRO %s requires exactly one builder pointer argument in FASE 17B.1", name);
+            return false;
+        }
+        cct_codegen_value_kind_t kb = CCT_CODEGEN_VALUE_UNKNOWN;
+        cg_emit_indent(out, indent);
+        fprintf(out, "cct_rt_%s((void*)(", name);
+        if (!cg_emit_expr(out, cg, args->nodes[0], &kb)) return false;
+        if (kb != CCT_CODEGEN_VALUE_POINTER) {
+            cg_report_nodef(cg, args->nodes[0], "OBSECRO %s requires builder pointer argument", name);
+            return false;
+        }
+        fputs("));\n", out);
+        return true;
+    }
+
+    if (strcmp(obsecro_node->as.obsecro.name, "writer_indent") == 0 ||
+        strcmp(obsecro_node->as.obsecro.name, "writer_dedent") == 0 ||
+        strcmp(obsecro_node->as.obsecro.name, "writer_free") == 0) {
+        const char *name = obsecro_node->as.obsecro.name;
+        cct_ast_node_list_t *args = obsecro_node->as.obsecro.arguments;
+        if (!args || args->count != 1) {
+            cg_report_nodef(cg, obsecro_node, "OBSECRO %s requires exactly one writer pointer argument in FASE 17B.2", name);
+            return false;
+        }
+        cct_codegen_value_kind_t kw = CCT_CODEGEN_VALUE_UNKNOWN;
+        cg_emit_indent(out, indent);
+        fprintf(out, "cct_rt_%s((void*)(", name);
+        if (!cg_emit_expr(out, cg, args->nodes[0], &kw)) return false;
+        if (kw != CCT_CODEGEN_VALUE_POINTER) {
+            cg_report_nodef(cg, args->nodes[0], "OBSECRO %s requires writer pointer argument", name);
+            return false;
+        }
+        fputs("));\n", out);
+        return true;
+    }
+
+    if (strcmp(obsecro_node->as.obsecro.name, "writer_write") == 0 ||
+        strcmp(obsecro_node->as.obsecro.name, "writer_writeln") == 0) {
+        const char *name = obsecro_node->as.obsecro.name;
+        cct_ast_node_list_t *args = obsecro_node->as.obsecro.arguments;
+        if (!args || args->count != 2) {
+            cg_report_nodef(cg, obsecro_node, "OBSECRO %s requires exactly (writer, text) in FASE 17B.2", name);
+            return false;
+        }
+        cct_codegen_value_kind_t kw = CCT_CODEGEN_VALUE_UNKNOWN;
+        cct_codegen_value_kind_t ks = CCT_CODEGEN_VALUE_UNKNOWN;
+        cg_emit_indent(out, indent);
+        fprintf(out, "cct_rt_%s((void*)(", name);
+        if (!cg_emit_expr(out, cg, args->nodes[0], &kw)) return false;
+        if (kw != CCT_CODEGEN_VALUE_POINTER) {
+            cg_report_nodef(cg, args->nodes[0], "OBSECRO %s requires writer pointer argument", name);
+            return false;
+        }
+        fputs("), ", out);
+        if (!cg_emit_expr(out, cg, args->nodes[1], &ks)) return false;
+        if (ks != CCT_CODEGEN_VALUE_STRING) {
+            cg_report_nodef(cg, args->nodes[1], "OBSECRO %s requires VERBUM text argument", name);
+            return false;
+        }
+        fputs(");\n", out);
+        return true;
+    }
+
     if (strcmp(obsecro_node->as.obsecro.name, "scribe") != 0) {
-        cg_report_nodef(cg, obsecro_node, "OBSECRO %s codegen is not supported in current executable subset (supported stmt builtins: scribe, libera, mem_free, mem_copy, mem_set, mem_zero, kernel_halt, kernel_outb, kernel_memcpy, kernel_memset, fluxus_free, fluxus_push, fluxus_pop, fluxus_clear, fluxus_reserve, map_free, map_insert, map_clear, map_reserve, set_free, set_clear, io_print, io_println, io_print_int, fs_write_all, fs_append_all, random_seed, option_free, result_free)",
+        cg_report_nodef(cg, obsecro_node, "OBSECRO %s codegen is not supported in current executable subset (supported stmt builtins: scribe, libera, mem_free, mem_copy, mem_set, mem_zero, kernel_halt, kernel_outb, kernel_memcpy, kernel_memset, fluxus_free, fluxus_push, fluxus_pop, fluxus_clear, fluxus_reserve, map_free, map_insert, map_clear, map_reserve, set_free, set_clear, io_print, io_println, io_print_int, fs_write_all, fs_append_all, random_seed, time_sleep_ms, bytes_set, bytes_free, option_free, result_free, scan_free, builder_append, builder_append_char, builder_clear, builder_free, writer_indent, writer_dedent, writer_write, writer_writeln, writer_free)",
                         obsecro_node->as.obsecro.name);
         return false;
     }
@@ -4619,6 +5178,13 @@ static void cg_emit_failure_terminal_after_uncaught(FILE *out, cct_codegen_t *cg
     if (cg->current_function_returns_nihil) {
         fputs("return 0;\n", out);
     } else {
+        if (cg_is_variant_sigillum_type(cg, cg->current_function_return_type)) {
+            const char *ret_c = cg_c_type_for_ast_type(cg, cg->current_function_return_type);
+            if (ret_c) {
+                fprintf(out, "return (%s){0};\n", ret_c);
+                return;
+            }
+        }
         fputs("return 0;\n", out);
     }
 }
@@ -4777,8 +5343,20 @@ static bool cg_emit_stmt(FILE *out, cct_codegen_t *cg, const cct_ast_node_t *stm
                     return false;
                 }
                 if (stmt->as.evoca.initializer) {
-                    cg_report_node(cg, stmt, "SIGILLUM inline initializer is not supported in FASE 6B codegen");
-                    return false;
+                    if (!cg_is_variant_sigillum_type(cg, stmt->as.evoca.var_type)) {
+                        cg_report_node(cg, stmt, "SIGILLUM inline initializer is not supported in FASE 6B codegen");
+                        return false;
+                    }
+                    fprintf(out, "%s%s %s = ", const_prefix, c_ty, stmt->as.evoca.name);
+                    cct_codegen_value_kind_t k = CCT_CODEGEN_VALUE_UNKNOWN;
+                    if (!cg_emit_expr(out, cg, stmt->as.evoca.initializer, &k)) return false;
+                    if (k != CCT_CODEGEN_VALUE_STRUCT) {
+                        cg_report_node(cg, stmt, "Variant initializer requires SIGILLUM expression in FASE 17C");
+                        return false;
+                    }
+                    fputs(";\n", out);
+                    if (!cg_emit_fail_propagation_check(out, cg, indent)) return false;
+                    return true;
                 }
                 fprintf(out, "%s%s %s = {0};\n", const_prefix, c_ty, stmt->as.evoca.name);
                 if (!cg_emit_fail_propagation_check(out, cg, indent)) return false;
@@ -4840,7 +5418,11 @@ static bool cg_emit_stmt(FILE *out, cct_codegen_t *cg, const cct_ast_node_t *stm
                 if (!cg_emit_coniura_expr_to_temp_with_failcheck(out, cg, stmt->as.redde.value, indent, tmp_name, sizeof(tmp_name), &kind)) {
                     return false;
                 }
-                if (kind == CCT_CODEGEN_VALUE_UNKNOWN || kind == CCT_CODEGEN_VALUE_ARRAY || kind == CCT_CODEGEN_VALUE_STRUCT) {
+                bool allow_variant_struct =
+                    (kind == CCT_CODEGEN_VALUE_STRUCT) &&
+                    cg_is_variant_sigillum_type(cg, cg->current_function_return_type);
+                if (kind == CCT_CODEGEN_VALUE_UNKNOWN || kind == CCT_CODEGEN_VALUE_ARRAY ||
+                    (kind == CCT_CODEGEN_VALUE_STRUCT && !allow_variant_struct)) {
                     cg_report_node(cg, stmt, "subset 8B return codegen does not support returning this CONIURA expression kind");
                     return false;
                 }
@@ -4853,7 +5435,11 @@ static bool cg_emit_stmt(FILE *out, cct_codegen_t *cg, const cct_ast_node_t *stm
             cct_codegen_value_kind_t kind = CCT_CODEGEN_VALUE_UNKNOWN;
             fputs("return (", out);
             if (!cg_emit_expr(out, cg, stmt->as.redde.value, &kind)) return false;
-            if (kind == CCT_CODEGEN_VALUE_UNKNOWN || kind == CCT_CODEGEN_VALUE_ARRAY || kind == CCT_CODEGEN_VALUE_STRUCT) {
+            bool allow_variant_struct =
+                (kind == CCT_CODEGEN_VALUE_STRUCT) &&
+                cg_is_variant_sigillum_type(cg, cg->current_function_return_type);
+            if (kind == CCT_CODEGEN_VALUE_UNKNOWN || kind == CCT_CODEGEN_VALUE_ARRAY ||
+                (kind == CCT_CODEGEN_VALUE_STRUCT && !allow_variant_struct)) {
                 cg_report_node(cg, stmt, "FASE 6B return codegen does not support returning this expression kind");
                 return false;
             }
@@ -5575,25 +6161,45 @@ static bool cg_emit_rituale_function(FILE *out, cct_codegen_t *cg, const cct_cod
 
     cg_reset_locals(cg);
     cg_push_scope(cg); /* function scope */
+    const cct_ast_type_t *prev_return_type = cg->current_function_return_type;
+    bool prev_returns_nihil = cg->current_function_returns_nihil;
+    cg->current_function_return_type = rit->node->as.rituale.return_type;
     cg->current_function_returns_nihil = rit->returns_nihil;
     if (!cg_register_rituale_params_as_locals(cg, rit)) {
         cg_pop_scope(cg);
+        cg->current_function_return_type = prev_return_type;
+        cg->current_function_returns_nihil = prev_returns_nihil;
         return false;
     }
 
     if (!cg_emit_block_statements(out, cg, rit->node->as.rituale.body, 1)) {
         cg_pop_scope(cg);
+        cg->current_function_return_type = prev_return_type;
+        cg->current_function_returns_nihil = prev_returns_nihil;
         return false;
     }
     cg_pop_scope(cg);
+    cg->current_function_return_type = prev_return_type;
+    cg->current_function_returns_nihil = prev_returns_nihil;
 
-    fputs("    return 0;\n", out);
+    if (rit->return_kind == CCT_CODEGEN_VALUE_STRUCT &&
+        cg_is_variant_sigillum_type(cg, rit->node->as.rituale.return_type)) {
+        fprintf(out, "    return (%s){0};\n", ret_c);
+    } else {
+        fputs("    return 0;\n", out);
+    }
     fputs("}\n\n", out);
     return true;
 }
 
 static bool cg_emit_entry_wrapper_main(FILE *out, cct_codegen_t *cg) {
-    fputs("int main(void) {\n", out);
+    fputs("int main(int argc, char **argv) {\n", out);
+    if (cg->profile == CCT_PROFILE_FREESTANDING) {
+        fputs("    (void)argc;\n", out);
+        fputs("    (void)argv;\n", out);
+    } else {
+        fputs("    cct_rt_args_init(argc, argv);\n", out);
+    }
 
     if (!cg->entry_rituale) {
         fputs("    return 0;\n", out);

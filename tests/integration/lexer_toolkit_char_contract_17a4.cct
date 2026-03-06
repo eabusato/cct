@@ -1,0 +1,31 @@
+INCIPIT grimoire "lexer_toolkit_char_contract_17a4"
+
+ADVOCARE "cct/verbum.cct"
+ADVOCARE "cct/char.cct"
+
+RITUALE main() REDDE REX
+  EVOCA VERBUM src AD "A9 \n"
+  EVOCA MILES c0 AD CONIURA char_at(src, 0)
+  EVOCA MILES c1 AD CONIURA char_at(src, 1)
+  EVOCA MILES c2 AD CONIURA char_at(src, 2)
+  EVOCA MILES c3 AD CONIURA char_at(src, 3)
+  EVOCA VERBUM s0 AD CONIURA from_char(c0)
+
+  SI CONIURA compare(s0, "A") == 0
+    SI CONIURA is_alpha(c0) == VERUM
+      SI CONIURA is_digit(c1) == VERUM
+        SI CONIURA is_whitespace(c2) == VERUM
+          SI CONIURA is_whitespace(c3) == VERUM
+            SI CONIURA is_alpha(c1) == FALSUM
+              REDDE 0
+            FIN SI
+          FIN SI
+        FIN SI
+      FIN SI
+    FIN SI
+  FIN SI
+
+  REDDE 1
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

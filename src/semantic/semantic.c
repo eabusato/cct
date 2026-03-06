@@ -375,8 +375,45 @@ static const char* sem_stdlib_import_hint(const char *name) {
         strcmp(name, "substring") == 0 ||
         strcmp(name, "trim") == 0 ||
         strcmp(name, "find") == 0 ||
+        strcmp(name, "char_at") == 0 ||
+        strcmp(name, "from_char") == 0 ||
         strcmp(name, "contains") == 0) {
         return "add ADVOCARE \"cct/verbum.cct\" in the module header";
+    }
+    if (strcmp(name, "is_digit") == 0 ||
+        strcmp(name, "is_alpha") == 0 ||
+        strcmp(name, "is_whitespace") == 0) {
+        return "add ADVOCARE \"cct/char.cct\" in the module header";
+    }
+    if (strcmp(name, "argc") == 0 ||
+        strcmp(name, "arg") == 0) {
+        return "add ADVOCARE \"cct/args.cct\" in the module header";
+    }
+    if (strcmp(name, "cursor_init") == 0 ||
+        strcmp(name, "cursor_pos") == 0 ||
+        strcmp(name, "cursor_eof") == 0 ||
+        strcmp(name, "cursor_peek") == 0 ||
+        strcmp(name, "cursor_next") == 0 ||
+        strcmp(name, "cursor_free") == 0) {
+        return "add ADVOCARE \"cct/verbum_scan.cct\" in the module header";
+    }
+    if (strcmp(name, "builder_init") == 0 ||
+        strcmp(name, "builder_append") == 0 ||
+        strcmp(name, "builder_append_char") == 0 ||
+        strcmp(name, "builder_len") == 0 ||
+        strcmp(name, "builder_to_verbum") == 0 ||
+        strcmp(name, "builder_clear") == 0 ||
+        strcmp(name, "builder_free") == 0) {
+        return "add ADVOCARE \"cct/verbum_builder.cct\" in the module header";
+    }
+    if (strcmp(name, "writer_init") == 0 ||
+        strcmp(name, "writer_indent") == 0 ||
+        strcmp(name, "writer_dedent") == 0 ||
+        strcmp(name, "writer_write") == 0 ||
+        strcmp(name, "writer_writeln") == 0 ||
+        strcmp(name, "writer_to_verbum") == 0 ||
+        strcmp(name, "writer_free") == 0) {
+        return "add ADVOCARE \"cct/code_writer.cct\" in the module header";
     }
     if (strcmp(name, "print") == 0 ||
         strcmp(name, "println") == 0 ||
@@ -1170,7 +1207,7 @@ static cct_sem_type_t* sem_resolve_ast_type(cct_semantic_analyzer_t *sem, const 
  * ======================================================================== */
 
 static const cct_sem_builtin_spec_t* sem_find_builtin(cct_semantic_analyzer_t *sem, const char *name) {
-    static cct_sem_builtin_spec_t specs[117];
+    static cct_sem_builtin_spec_t specs[155];
     static bool initialized = false;
 
     if (!initialized) {
@@ -1292,6 +1329,44 @@ static const cct_sem_builtin_spec_t* sem_find_builtin(cct_semantic_analyzer_t *s
         specs[114].name = "kernel_inb"; specs[114].min_args = 1; specs[114].variadic = false;
         specs[115].name = "kernel_memcpy"; specs[115].min_args = 3; specs[115].variadic = false;
         specs[116].name = "kernel_memset"; specs[116].min_args = 3; specs[116].variadic = false;
+        specs[117].name = "verbum_char_at"; specs[117].min_args = 2; specs[117].variadic = false;
+        specs[118].name = "verbum_from_char"; specs[118].min_args = 1; specs[118].variadic = false;
+        specs[119].name = "char_is_digit"; specs[119].min_args = 1; specs[119].variadic = false;
+        specs[120].name = "char_is_alpha"; specs[120].min_args = 1; specs[120].variadic = false;
+        specs[121].name = "char_is_whitespace"; specs[121].min_args = 1; specs[121].variadic = false;
+        specs[122].name = "args_argc"; specs[122].min_args = 0; specs[122].variadic = false;
+        specs[123].name = "args_arg"; specs[123].min_args = 1; specs[123].variadic = false;
+        specs[124].name = "scan_init"; specs[124].min_args = 1; specs[124].variadic = false;
+        specs[125].name = "scan_pos"; specs[125].min_args = 1; specs[125].variadic = false;
+        specs[126].name = "scan_eof"; specs[126].min_args = 1; specs[126].variadic = false;
+        specs[127].name = "scan_peek"; specs[127].min_args = 1; specs[127].variadic = false;
+        specs[128].name = "scan_next"; specs[128].min_args = 1; specs[128].variadic = false;
+        specs[129].name = "scan_free"; specs[129].min_args = 1; specs[129].variadic = false;
+        specs[130].name = "builder_init"; specs[130].min_args = 0; specs[130].variadic = false;
+        specs[131].name = "builder_append"; specs[131].min_args = 2; specs[131].variadic = false;
+        specs[132].name = "builder_append_char"; specs[132].min_args = 2; specs[132].variadic = false;
+        specs[133].name = "builder_len"; specs[133].min_args = 1; specs[133].variadic = false;
+        specs[134].name = "builder_to_verbum"; specs[134].min_args = 1; specs[134].variadic = false;
+        specs[135].name = "builder_clear"; specs[135].min_args = 1; specs[135].variadic = false;
+        specs[136].name = "builder_free"; specs[136].min_args = 1; specs[136].variadic = false;
+        specs[137].name = "writer_init"; specs[137].min_args = 0; specs[137].variadic = false;
+        specs[138].name = "writer_indent"; specs[138].min_args = 1; specs[138].variadic = false;
+        specs[139].name = "writer_dedent"; specs[139].min_args = 1; specs[139].variadic = false;
+        specs[140].name = "writer_write"; specs[140].min_args = 2; specs[140].variadic = false;
+        specs[141].name = "writer_writeln"; specs[141].min_args = 2; specs[141].variadic = false;
+        specs[142].name = "writer_to_verbum"; specs[142].min_args = 1; specs[142].variadic = false;
+        specs[143].name = "writer_free"; specs[143].min_args = 1; specs[143].variadic = false;
+        specs[144].name = "env_get"; specs[144].min_args = 1; specs[144].variadic = false;
+        specs[145].name = "env_has"; specs[145].min_args = 1; specs[145].variadic = false;
+        specs[146].name = "env_cwd"; specs[146].min_args = 0; specs[146].variadic = false;
+        specs[147].name = "time_now_ms"; specs[147].min_args = 0; specs[147].variadic = false;
+        specs[148].name = "time_now_ns"; specs[148].min_args = 0; specs[148].variadic = false;
+        specs[149].name = "time_sleep_ms"; specs[149].min_args = 1; specs[149].variadic = false;
+        specs[150].name = "bytes_new"; specs[150].min_args = 1; specs[150].variadic = false;
+        specs[151].name = "bytes_len"; specs[151].min_args = 1; specs[151].variadic = false;
+        specs[152].name = "bytes_get"; specs[152].min_args = 2; specs[152].variadic = false;
+        specs[153].name = "bytes_set"; specs[153].min_args = 3; specs[153].variadic = false;
+        specs[154].name = "bytes_free"; specs[154].min_args = 1; specs[154].variadic = false;
         initialized = true;
     }
 
@@ -1412,6 +1487,44 @@ static const cct_sem_builtin_spec_t* sem_find_builtin(cct_semantic_analyzer_t *s
     specs[114].return_type = &sem->type_rex;
     specs[115].return_type = &sem->type_nihil;
     specs[116].return_type = &sem->type_nihil;
+    specs[117].return_type = &sem->type_miles;
+    specs[118].return_type = &sem->type_verbum;
+    specs[119].return_type = &sem->type_verum;
+    specs[120].return_type = &sem->type_verum;
+    specs[121].return_type = &sem->type_verum;
+    specs[122].return_type = &sem->type_rex;
+    specs[123].return_type = &sem->type_verbum;
+    specs[124].return_type = sem_make_pointer_type(sem, &sem->type_nihil);
+    specs[125].return_type = &sem->type_rex;
+    specs[126].return_type = &sem->type_verum;
+    specs[127].return_type = &sem->type_miles;
+    specs[128].return_type = &sem->type_miles;
+    specs[129].return_type = &sem->type_nihil;
+    specs[130].return_type = sem_make_pointer_type(sem, &sem->type_nihil);
+    specs[131].return_type = &sem->type_nihil;
+    specs[132].return_type = &sem->type_nihil;
+    specs[133].return_type = &sem->type_rex;
+    specs[134].return_type = &sem->type_verbum;
+    specs[135].return_type = &sem->type_nihil;
+    specs[136].return_type = &sem->type_nihil;
+    specs[137].return_type = sem_make_pointer_type(sem, &sem->type_nihil);
+    specs[138].return_type = &sem->type_nihil;
+    specs[139].return_type = &sem->type_nihil;
+    specs[140].return_type = &sem->type_nihil;
+    specs[141].return_type = &sem->type_nihil;
+    specs[142].return_type = &sem->type_verbum;
+    specs[143].return_type = &sem->type_nihil;
+    specs[144].return_type = &sem->type_verbum;
+    specs[145].return_type = &sem->type_verum;
+    specs[146].return_type = &sem->type_verbum;
+    specs[147].return_type = &sem->type_rex;
+    specs[148].return_type = &sem->type_rex;
+    specs[149].return_type = &sem->type_nihil;
+    specs[150].return_type = sem_make_pointer_type(sem, &sem->type_nihil);
+    specs[151].return_type = &sem->type_rex;
+    specs[152].return_type = &sem->type_miles;
+    specs[153].return_type = &sem->type_nihil;
+    specs[154].return_type = &sem->type_nihil;
 
     for (size_t i = 0; i < sizeof(specs) / sizeof(specs[0]); i++) {
         if (!specs[i].name) continue;
@@ -1487,6 +1600,13 @@ static const char* sem_forbidden_module_for_obsecro_in_freestanding(const char *
     if (sem_str_has_prefix(name, "map_")) return "cct/map";
     if (sem_str_has_prefix(name, "set_")) return "cct/set";
     if (sem_str_has_prefix(name, "random_")) return "cct/random";
+    if (sem_str_has_prefix(name, "args_")) return "cct/args";
+    if (sem_str_has_prefix(name, "scan_")) return "cct/verbum_scan";
+    if (sem_str_has_prefix(name, "builder_")) return "cct/verbum_builder";
+    if (sem_str_has_prefix(name, "writer_")) return "cct/code_writer";
+    if (sem_str_has_prefix(name, "env_")) return "cct/env";
+    if (sem_str_has_prefix(name, "time_")) return "cct/time";
+    if (sem_str_has_prefix(name, "bytes_")) return "cct/bytes";
 
     return NULL;
 }
@@ -1833,6 +1953,126 @@ static cct_sem_type_t* sem_analyze_builtin_obsecro(
                 sem_report_nodef(sem, expr->as.obsecro.arguments->nodes[i],
                                  "OBSECRO verbum_substring expects integer indices");
             }
+        }
+        if (strcmp(name, "verbum_char_at") == 0) {
+            if (i == 0 && !(arg_type && (arg_type->kind == CCT_SEM_TYPE_VERBUM || sem_is_error_type(arg_type)))) {
+                sem_report_nodef(sem, expr->as.obsecro.arguments->nodes[i],
+                                 "OBSECRO verbum_char_at expects first argument as VERBUM");
+            }
+            if (i == 1 && !(sem_is_integer_type(arg_type) || sem_is_error_type(arg_type))) {
+                sem_report_nodef(sem, expr->as.obsecro.arguments->nodes[i],
+                                 "OBSECRO verbum_char_at expects integer index");
+            }
+        }
+        if (strcmp(name, "verbum_from_char") == 0 && i == 0 &&
+            !(sem_is_integer_type(arg_type) || sem_is_error_type(arg_type))) {
+            sem_report_nodef(sem, expr->as.obsecro.arguments->nodes[i],
+                             "OBSECRO verbum_from_char expects integer byte argument");
+        }
+        if ((strcmp(name, "char_is_digit") == 0 ||
+             strcmp(name, "char_is_alpha") == 0 ||
+             strcmp(name, "char_is_whitespace") == 0) &&
+            i == 0 &&
+            !(sem_is_integer_type(arg_type) || sem_is_error_type(arg_type))) {
+            sem_report_nodef(sem, expr->as.obsecro.arguments->nodes[i],
+                             "OBSECRO %s expects integer byte argument", name);
+        }
+        if (strcmp(name, "args_arg") == 0 && i == 0 &&
+            !(sem_is_integer_type(arg_type) || sem_is_error_type(arg_type))) {
+            sem_report_nodef(sem, expr->as.obsecro.arguments->nodes[i],
+                             "OBSECRO args_arg expects integer index");
+        }
+        if (strcmp(name, "scan_init") == 0 && i == 0 &&
+            !(arg_type && (arg_type->kind == CCT_SEM_TYPE_VERBUM || sem_is_error_type(arg_type)))) {
+            sem_report_nodef(sem, expr->as.obsecro.arguments->nodes[i],
+                             "OBSECRO scan_init expects VERBUM source argument");
+        }
+        if ((strcmp(name, "scan_pos") == 0 ||
+             strcmp(name, "scan_eof") == 0 ||
+             strcmp(name, "scan_peek") == 0 ||
+             strcmp(name, "scan_next") == 0 ||
+             strcmp(name, "scan_free") == 0) &&
+            i == 0 &&
+            !(arg_type && (arg_type->kind == CCT_SEM_TYPE_POINTER || sem_is_error_type(arg_type)))) {
+            sem_report_nodef(sem, expr->as.obsecro.arguments->nodes[i],
+                             "OBSECRO %s expects cursor pointer argument", name);
+        }
+        if ((strcmp(name, "builder_append") == 0 ||
+             strcmp(name, "builder_append_char") == 0 ||
+             strcmp(name, "builder_len") == 0 ||
+             strcmp(name, "builder_to_verbum") == 0 ||
+             strcmp(name, "builder_clear") == 0 ||
+             strcmp(name, "builder_free") == 0) &&
+            i == 0 &&
+            !(arg_type && (arg_type->kind == CCT_SEM_TYPE_POINTER || sem_is_error_type(arg_type)))) {
+            sem_report_nodef(sem, expr->as.obsecro.arguments->nodes[i],
+                             "OBSECRO %s expects builder pointer argument", name);
+        }
+        if (strcmp(name, "builder_append") == 0 && i == 1 &&
+            !(arg_type && (arg_type->kind == CCT_SEM_TYPE_VERBUM || sem_is_error_type(arg_type)))) {
+            sem_report_nodef(sem, expr->as.obsecro.arguments->nodes[i],
+                             "OBSECRO builder_append expects VERBUM argument");
+        }
+        if (strcmp(name, "builder_append_char") == 0 && i == 1 &&
+            !(sem_is_integer_type(arg_type) || sem_is_error_type(arg_type))) {
+            sem_report_nodef(sem, expr->as.obsecro.arguments->nodes[i],
+                             "OBSECRO builder_append_char expects integer byte argument");
+        }
+        if ((strcmp(name, "writer_indent") == 0 ||
+             strcmp(name, "writer_dedent") == 0 ||
+             strcmp(name, "writer_write") == 0 ||
+             strcmp(name, "writer_writeln") == 0 ||
+             strcmp(name, "writer_to_verbum") == 0 ||
+             strcmp(name, "writer_free") == 0) &&
+            i == 0 &&
+            !(arg_type && (arg_type->kind == CCT_SEM_TYPE_POINTER || sem_is_error_type(arg_type)))) {
+            sem_report_nodef(sem, expr->as.obsecro.arguments->nodes[i],
+                             "OBSECRO %s expects writer pointer argument", name);
+        }
+        if ((strcmp(name, "writer_write") == 0 || strcmp(name, "writer_writeln") == 0) &&
+            i == 1 &&
+            !(arg_type && (arg_type->kind == CCT_SEM_TYPE_VERBUM || sem_is_error_type(arg_type)))) {
+            sem_report_nodef(sem, expr->as.obsecro.arguments->nodes[i],
+                             "OBSECRO %s expects VERBUM text argument", name);
+        }
+        if ((strcmp(name, "env_get") == 0 || strcmp(name, "env_has") == 0) &&
+            i == 0 &&
+            !(arg_type && (arg_type->kind == CCT_SEM_TYPE_VERBUM || sem_is_error_type(arg_type)))) {
+            sem_report_nodef(sem, expr->as.obsecro.arguments->nodes[i],
+                             "OBSECRO %s expects VERBUM argument", name);
+        }
+        if (strcmp(name, "time_sleep_ms") == 0 &&
+            i == 0 &&
+            !(sem_is_integer_type(arg_type) || sem_is_error_type(arg_type))) {
+            sem_report_nodef(sem, expr->as.obsecro.arguments->nodes[i],
+                             "OBSECRO time_sleep_ms expects integer ms argument");
+        }
+        if (strcmp(name, "bytes_new") == 0 &&
+            i == 0 &&
+            !(sem_is_integer_type(arg_type) || sem_is_error_type(arg_type))) {
+            sem_report_nodef(sem, expr->as.obsecro.arguments->nodes[i],
+                             "OBSECRO bytes_new expects integer size argument");
+        }
+        if ((strcmp(name, "bytes_len") == 0 ||
+             strcmp(name, "bytes_get") == 0 ||
+             strcmp(name, "bytes_set") == 0 ||
+             strcmp(name, "bytes_free") == 0) &&
+            i == 0 &&
+            !(arg_type && (arg_type->kind == CCT_SEM_TYPE_POINTER || sem_is_error_type(arg_type)))) {
+            sem_report_nodef(sem, expr->as.obsecro.arguments->nodes[i],
+                             "OBSECRO %s expects bytes pointer argument", name);
+        }
+        if ((strcmp(name, "bytes_get") == 0 || strcmp(name, "bytes_set") == 0) &&
+            i == 1 &&
+            !(sem_is_integer_type(arg_type) || sem_is_error_type(arg_type))) {
+            sem_report_nodef(sem, expr->as.obsecro.arguments->nodes[i],
+                             "OBSECRO %s expects integer index argument", name);
+        }
+        if (strcmp(name, "bytes_set") == 0 &&
+            i == 2 &&
+            !(sem_is_integer_type(arg_type) || sem_is_error_type(arg_type))) {
+            sem_report_nodef(sem, expr->as.obsecro.arguments->nodes[i],
+                             "OBSECRO bytes_set expects integer byte value");
         }
         if (strcmp(name, "fmt_stringify_int") == 0 && i == 0 &&
             !(sem_is_integer_type(arg_type) || sem_is_error_type(arg_type))) {

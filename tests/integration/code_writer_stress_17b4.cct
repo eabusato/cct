@@ -1,0 +1,37 @@
+INCIPIT grimoire "code_writer_stress_17b4"
+
+ADVOCARE "cct/code_writer.cct"
+ADVOCARE "cct/verbum.cct"
+
+RITUALE main() REDDE REX
+  EVOCA SPECULUM NIHIL w AD CONIURA writer_init()
+  CONIURA writer_writeln(w, "BEGIN")
+
+  REPETE i DE 0 AD 299
+    CONIURA writer_indent(w)
+    CONIURA writer_write(w, "line=")
+    CONIURA writer_writeln_int(w, i)
+    CONIURA writer_dedent(w)
+  FIN REPETE
+
+  CONIURA writer_writeln(w, "END")
+  EVOCA VERBUM out AD CONIURA writer_to_verbum(w)
+
+  SI CONIURA len(out) == 3200
+    EVOCA VERBUM pref AD CONIURA substring(out, 0, 15)
+    SI CONIURA compare(pref, "BEGIN\n  line=0\n") == 0
+      EVOCA VERBUM suf AD CONIURA substring(out, 3185, 3200)
+      SI CONIURA compare(suf, "  line=299\nEND\n") == 0
+        SI CONIURA find(out, "\n  line=150\n") != -1
+          CONIURA writer_free(w)
+          REDDE 0
+        FIN SI
+      FIN SI
+    FIN SI
+  FIN SI
+
+  CONIURA writer_free(w)
+  REDDE 1
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

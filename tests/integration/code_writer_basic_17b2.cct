@@ -1,0 +1,23 @@
+INCIPIT grimoire "code_writer_basic_17b2"
+
+ADVOCARE "cct/code_writer.cct"
+ADVOCARE "cct/verbum.cct"
+
+RITUALE main() REDDE REX
+  EVOCA SPECULUM NIHIL w AD CONIURA writer_init()
+  CONIURA writer_writeln(w, "alpha")
+  CONIURA writer_write(w, "beta")
+  CONIURA writer_write(w, "_")
+  CONIURA writer_writeln(w, "gamma")
+
+  EVOCA VERBUM out AD CONIURA writer_to_verbum(w)
+  SI CONIURA compare(out, "alpha\nbeta_gamma\n") == 0
+    CONIURA writer_free(w)
+    REDDE 0
+  FIN SI
+
+  CONIURA writer_free(w)
+  REDDE 1
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

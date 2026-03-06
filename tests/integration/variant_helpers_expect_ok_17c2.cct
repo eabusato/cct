@@ -1,0 +1,13 @@
+INCIPIT grimoire "variant_helpers_expect_ok_17c2"
+
+ADVOCARE "cct/variant_helpers.cct"
+ADVOCARE "cct/variant.cct"
+
+RITUALE main() REDDE REX
+  EVOCA SPECULUM NIHIL none
+  EVOCA Variant v AD CONIURA variant_make(5, none)
+  CONIURA variant_expect_tag(v, 5, "variant tag mismatch")
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

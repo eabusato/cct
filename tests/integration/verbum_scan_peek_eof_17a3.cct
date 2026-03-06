@@ -1,0 +1,11 @@
+INCIPIT grimoire "verbum_scan_peek_eof_17a3"
+
+ADVOCARE "cct/verbum_scan.cct"
+
+RITUALE main() REDDE REX
+  EVOCA SPECULUM NIHIL c AD CONIURA cursor_init("")
+  EVOCA MILES x AD CONIURA cursor_peek(c)
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

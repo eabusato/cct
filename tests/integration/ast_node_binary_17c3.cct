@@ -1,0 +1,25 @@
+INCIPIT grimoire "ast_node_binary_17c3"
+
+ADVOCARE "cct/ast_node.cct"
+ADVOCARE "cct/variant.cct"
+ADVOCARE "cct/verbum.cct"
+
+RITUALE main() REDDE REX
+  EVOCA SPECULUM NIHIL none
+  EVOCA AstBinary bin
+  VINCIRE bin.lhs AD none
+  VINCIRE bin.op AD "+"
+  VINCIRE bin.rhs AD none
+
+  EVOCA Variant n AD CONIURA ast_make_binary(SPECULUM bin)
+  SI CONIURA ast_is_binary(n) == VERUM
+    EVOCA SPECULUM AstBinary p AD CONIURA ast_as_binary(n)
+    SI CONIURA compare((*p).op, "+") == 0
+      REDDE 0
+    FIN SI
+  FIN SI
+
+  REDDE 1
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

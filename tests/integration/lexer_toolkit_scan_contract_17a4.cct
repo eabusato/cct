@@ -1,0 +1,33 @@
+INCIPIT grimoire "lexer_toolkit_scan_contract_17a4"
+
+ADVOCARE "cct/verbum.cct"
+ADVOCARE "cct/verbum_scan.cct"
+
+RITUALE main() REDDE REX
+  EVOCA VERBUM src AD "ab"
+  EVOCA SPECULUM NIHIL c AD CONIURA cursor_init(src)
+  EVOCA MILES a0 AD CONIURA char_at(src, 0)
+  EVOCA MILES a1 AD CONIURA char_at(src, 1)
+
+  SI CONIURA cursor_pos(c) == 0
+    SI CONIURA cursor_peek(c) == a0
+      SI CONIURA cursor_next(c) == a0
+        SI CONIURA cursor_pos(c) == 1
+          SI CONIURA cursor_eof(c) == FALSUM
+            SI CONIURA cursor_next(c) == a1
+              SI CONIURA cursor_eof(c) == VERUM
+                CONIURA cursor_free(c)
+                REDDE 0
+              FIN SI
+            FIN SI
+          FIN SI
+        FIN SI
+      FIN SI
+    FIN SI
+  FIN SI
+
+  CONIURA cursor_free(c)
+  REDDE 1
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

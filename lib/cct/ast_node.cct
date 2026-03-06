@@ -1,0 +1,62 @@
+INCIPIT grimoire "ast_node"
+
+ADVOCARE "cct/variant.cct"
+ADVOCARE "cct/variant_helpers.cct"
+
+ORDO AstTag
+  AST_IDENT,
+  AST_LITERAL_INT,
+  AST_BINARY
+FIN ORDO
+
+SIGILLUM AstIdent
+  nome: VERBUM
+FIN SIGILLUM
+
+SIGILLUM AstLiteralInt
+  valor: REX
+FIN SIGILLUM
+
+SIGILLUM AstBinary
+  lhs: SPECULUM NIHIL
+  op: VERBUM
+  rhs: SPECULUM NIHIL
+FIN SIGILLUM
+
+RITUALE ast_make_ident(SPECULUM AstIdent p) REDDE Variant
+  REDDE CONIURA variant_make(0, p)
+EXPLICIT RITUALE
+
+RITUALE ast_make_literal_int(SPECULUM AstLiteralInt p) REDDE Variant
+  REDDE CONIURA variant_make(1, p)
+EXPLICIT RITUALE
+
+RITUALE ast_make_binary(SPECULUM AstBinary p) REDDE Variant
+  REDDE CONIURA variant_make(2, p)
+EXPLICIT RITUALE
+
+RITUALE ast_is_ident(Variant n) REDDE VERUM
+  REDDE CONIURA variant_is_tag(n, 0)
+EXPLICIT RITUALE
+
+RITUALE ast_is_literal_int(Variant n) REDDE VERUM
+  REDDE CONIURA variant_is_tag(n, 1)
+EXPLICIT RITUALE
+
+RITUALE ast_is_binary(Variant n) REDDE VERUM
+  REDDE CONIURA variant_is_tag(n, 2)
+EXPLICIT RITUALE
+
+RITUALE ast_as_ident(Variant n) REDDE SPECULUM AstIdent
+  REDDE CONIURA variant_payload_expect(n, 0, "ast tag mismatch: ident expected")
+EXPLICIT RITUALE
+
+RITUALE ast_as_literal_int(Variant n) REDDE SPECULUM AstLiteralInt
+  REDDE CONIURA variant_payload_expect(n, 1, "ast tag mismatch: literal int expected")
+EXPLICIT RITUALE
+
+RITUALE ast_as_binary(Variant n) REDDE SPECULUM AstBinary
+  REDDE CONIURA variant_payload_expect(n, 2, "ast tag mismatch: binary expected")
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

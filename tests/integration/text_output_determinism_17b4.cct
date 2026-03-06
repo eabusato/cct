@@ -1,0 +1,38 @@
+INCIPIT grimoire "text_output_determinism_17b4"
+
+ADVOCARE "cct/verbum_builder.cct"
+ADVOCARE "cct/code_writer.cct"
+
+RITUALE main() REDDE REX
+  EVOCA SPECULUM NIHIL b AD CONIURA builder_init()
+  CONIURA builder_append(b, "ids=")
+
+  REPETE i DE 0 AD 20
+    SI i > 0
+      CONIURA builder_append(b, ",")
+    FIN SI
+    CONIURA builder_append_int(b, i)
+  FIN REPETE
+
+  EVOCA VERBUM payload AD CONIURA builder_to_verbum(b)
+
+  EVOCA SPECULUM NIHIL w AD CONIURA writer_init()
+  CONIURA writer_writeln(w, "HEADER")
+  CONIURA writer_indent(w)
+  CONIURA writer_write(w, "payload=")
+  CONIURA writer_writeln(w, payload)
+  CONIURA writer_write(w, "flag=")
+  CONIURA writer_write_bool(w, VERUM)
+  CONIURA writer_writeln(w, "")
+  CONIURA writer_dedent(w)
+  CONIURA writer_writeln(w, "FOOTER")
+
+  EVOCA VERBUM out AD CONIURA writer_to_verbum(w)
+  OBSECRO scribe(out)
+
+  CONIURA writer_free(w)
+  CONIURA builder_free(b)
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

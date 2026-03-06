@@ -1,0 +1,33 @@
+INCIPIT grimoire "variant_helpers"
+
+ADVOCARE "cct/variant.cct"
+
+RITUALE variant_is_tag(Variant v, REX tag) REDDE VERUM
+  SI CONIURA variant_tag(v) == tag
+    REDDE VERUM
+  FIN SI
+  REDDE FALSUM
+EXPLICIT RITUALE
+
+RITUALE variant_expect_tag(Variant v, REX tag, VERBUM message) REDDE NIHIL
+  SI CONIURA variant_is_tag(v, tag) == VERUM
+    REDDE
+  FIN SI
+  IACE message
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE variant_payload_if(Variant v, REX tag) REDDE SPECULUM NIHIL
+  SI CONIURA variant_is_tag(v, tag) == VERUM
+    REDDE CONIURA variant_payload(v)
+  FIN SI
+  EVOCA SPECULUM NIHIL none
+  REDDE none
+EXPLICIT RITUALE
+
+RITUALE variant_payload_expect(Variant v, REX tag, VERBUM message) REDDE SPECULUM NIHIL
+  CONIURA variant_expect_tag(v, tag, message)
+  REDDE CONIURA variant_payload(v)
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

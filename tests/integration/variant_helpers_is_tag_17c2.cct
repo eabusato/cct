@@ -1,0 +1,19 @@
+INCIPIT grimoire "variant_helpers_is_tag_17c2"
+
+ADVOCARE "cct/variant_helpers.cct"
+ADVOCARE "cct/variant.cct"
+
+RITUALE main() REDDE REX
+  EVOCA SPECULUM NIHIL none
+  EVOCA Variant v AD CONIURA variant_make(3, none)
+
+  SI CONIURA variant_is_tag(v, 3) == VERUM
+    SI CONIURA variant_is_tag(v, 4) == FALSUM
+      REDDE 0
+    FIN SI
+  FIN SI
+
+  REDDE 1
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

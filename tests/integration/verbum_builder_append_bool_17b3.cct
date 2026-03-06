@@ -1,0 +1,23 @@
+INCIPIT grimoire "verbum_builder_append_bool_17b3"
+
+ADVOCARE "cct/verbum_builder.cct"
+ADVOCARE "cct/verbum.cct"
+
+RITUALE main() REDDE REX
+  EVOCA SPECULUM NIHIL b AD CONIURA builder_init()
+  CONIURA builder_append(b, "yes=")
+  CONIURA builder_append_bool(b, VERUM)
+  CONIURA builder_append(b, ",no=")
+  CONIURA builder_append_bool(b, FALSUM)
+
+  EVOCA VERBUM out AD CONIURA builder_to_verbum(b)
+  SI CONIURA compare(out, "yes=true,no=false") == 0
+    CONIURA builder_free(b)
+    REDDE 0
+  FIN SI
+
+  CONIURA builder_free(b)
+  REDDE 1
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

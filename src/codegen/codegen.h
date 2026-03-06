@@ -56,6 +56,7 @@ typedef struct {
     u32 loop_depth;
     const cct_ast_node_t *entry_rituale;
     bool current_function_returns_nihil;
+    const cct_ast_type_t *current_function_return_type;
     cct_codegen_fail_handler_t *fail_handlers;
     const cct_ast_program_t *source_program; /* Program being materialized/emitted */
     cct_codegen_genus_inst_t *genus_instances; /* Materialized generic instances (FASE 10B) */

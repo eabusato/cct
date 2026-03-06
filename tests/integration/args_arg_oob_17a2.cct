@@ -1,0 +1,10 @@
+INCIPIT grimoire "args_arg_oob_17a2"
+
+ADVOCARE "cct/args.cct"
+
+RITUALE main() REDDE REX
+  EVOCA VERBUM x AD CONIURA arg(CONIURA argc())
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

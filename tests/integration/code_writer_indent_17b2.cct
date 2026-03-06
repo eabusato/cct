@@ -1,0 +1,28 @@
+INCIPIT grimoire "code_writer_indent_17b2"
+
+ADVOCARE "cct/code_writer.cct"
+ADVOCARE "cct/verbum.cct"
+
+RITUALE main() REDDE REX
+  EVOCA SPECULUM NIHIL w AD CONIURA writer_init()
+  CONIURA writer_writeln(w, "A")
+  CONIURA writer_indent(w)
+  CONIURA writer_writeln(w, "B")
+  CONIURA writer_indent(w)
+  CONIURA writer_writeln(w, "C")
+  CONIURA writer_dedent(w)
+  CONIURA writer_writeln(w, "D")
+  CONIURA writer_dedent(w)
+  CONIURA writer_writeln(w, "E")
+
+  EVOCA VERBUM out AD CONIURA writer_to_verbum(w)
+  SI CONIURA compare(out, "A\n  B\n    C\n  D\nE\n") == 0
+    CONIURA writer_free(w)
+    REDDE 0
+  FIN SI
+
+  CONIURA writer_free(w)
+  REDDE 1
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

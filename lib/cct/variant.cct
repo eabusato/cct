@@ -1,0 +1,23 @@
+INCIPIT grimoire "variant"
+
+SIGILLUM Variant
+  tag: REX
+  payload: SPECULUM NIHIL
+FIN SIGILLUM
+
+RITUALE variant_make(REX tag, SPECULUM NIHIL payload) REDDE Variant
+  EVOCA Variant v
+  VINCIRE v.tag AD tag
+  VINCIRE v.payload AD payload
+  REDDE v
+EXPLICIT RITUALE
+
+RITUALE variant_tag(Variant v) REDDE REX
+  REDDE v.tag
+EXPLICIT RITUALE
+
+RITUALE variant_payload(Variant v) REDDE SPECULUM NIHIL
+  REDDE v.payload
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

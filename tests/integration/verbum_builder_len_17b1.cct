@@ -1,0 +1,24 @@
+INCIPIT grimoire "verbum_builder_len_17b1"
+
+ADVOCARE "cct/verbum_builder.cct"
+
+RITUALE main() REDDE REX
+  EVOCA SPECULUM NIHIL b AD CONIURA builder_init()
+  CONIURA builder_append(b, "ab")
+
+  SI CONIURA builder_len(b) == 2
+    CONIURA builder_append(b, "cd")
+    SI CONIURA builder_len(b) == 4
+      CONIURA builder_clear(b)
+      SI CONIURA builder_len(b) == 0
+        CONIURA builder_free(b)
+        REDDE 0
+      FIN SI
+    FIN SI
+  FIN SI
+
+  CONIURA builder_free(b)
+  REDDE 1
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

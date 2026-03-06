@@ -1,0 +1,16 @@
+INCIPIT grimoire "time"
+
+RITUALE now_ms() REDDE REX
+  REDDE OBSECRO time_now_ms()
+EXPLICIT RITUALE
+
+RITUALE now_ns() REDDE REX
+  REDDE OBSECRO time_now_ns()
+EXPLICIT RITUALE
+
+RITUALE sleep_ms(REX ms) REDDE NIHIL
+  OBSECRO time_sleep_ms(ms)
+  REDDE
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

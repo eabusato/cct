@@ -1,0 +1,23 @@
+INCIPIT grimoire "code_writer_append_int_17b3"
+
+ADVOCARE "cct/code_writer.cct"
+ADVOCARE "cct/verbum.cct"
+
+RITUALE main() REDDE REX
+  EVOCA SPECULUM NIHIL w AD CONIURA writer_init()
+  CONIURA writer_write(w, "id=")
+  CONIURA writer_writeln_int(w, 42)
+  CONIURA writer_write(w, "neg=")
+  CONIURA writer_writeln_int(w, -9)
+
+  EVOCA VERBUM out AD CONIURA writer_to_verbum(w)
+  SI CONIURA compare(out, "id=42\nneg=-9\n") == 0
+    CONIURA writer_free(w)
+    REDDE 0
+  FIN SI
+
+  CONIURA writer_free(w)
+  REDDE 1
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

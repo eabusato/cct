@@ -1,0 +1,24 @@
+INCIPIT grimoire "variant_helpers_payload_if_17c2"
+
+ADVOCARE "cct/variant_helpers.cct"
+ADVOCARE "cct/variant.cct"
+
+RITUALE main() REDDE REX
+  EVOCA REX x AD 42
+  EVOCA SPECULUM REX px AD SPECULUM x
+  EVOCA Variant v AD CONIURA variant_make(9, px)
+
+  EVOCA SPECULUM REX p_ok AD CONIURA variant_payload_if(v, 9)
+  EVOCA SPECULUM NIHIL p_bad AD CONIURA variant_payload_if(v, 8)
+  EVOCA Variant w AD CONIURA variant_make(8, p_bad)
+
+  SI *p_ok == 42
+    SI CONIURA variant_tag(w) == 8
+      REDDE 0
+    FIN SI
+  FIN SI
+
+  REDDE 1
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

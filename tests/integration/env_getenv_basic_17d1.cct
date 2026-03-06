@@ -1,0 +1,17 @@
+INCIPIT grimoire "env_getenv_basic_17d1"
+
+ADVOCARE "cct/env.cct"
+ADVOCARE "cct/verbum.cct"
+
+RITUALE main() REDDE REX
+  EVOCA VERBUM got AD CONIURA getenv("CCT_TEST_ENV_17D1")
+  SI CONIURA compare(got, "alpha") == 0
+    EVOCA VERBUM miss AD CONIURA getenv("__CCT_TEST_ENV_17D1_MISSING__")
+    SI CONIURA compare(miss, "") == 0
+      REDDE 0
+    FIN SI
+  FIN SI
+  REDDE 1
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

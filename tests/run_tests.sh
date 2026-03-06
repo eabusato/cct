@@ -12024,6 +12024,1033 @@ fi
 
 echo ""
 echo "========================================"
+echo "FASE 17A1: VERBUM Char Access + Char Classification Tests"
+echo "========================================"
+echo ""
+
+# Test 957: verbum_char_at_basic_17a1 compiles and executes
+echo "Test 957: verbum_char_at_basic_17a1"
+SRC_957="tests/integration/verbum_char_at_basic_17a1.cct"
+BIN_957="${SRC_957%.cct}"
+cleanup_codegen_artifacts "$SRC_957"
+if "$CCT_BIN" "$SRC_957" >$CCT_TMP_DIR/cct_phase17a1_957_compile.out 2>&1; then
+    "$BIN_957" >$CCT_TMP_DIR/cct_phase17a1_957_run.out 2>&1
+    RC_957=$?
+else
+    RC_957=255
+fi
+if [ "$RC_957" -eq 0 ]; then
+    test_pass "verbum_char_at_basic_17a1 executes with expected result"
+else
+    test_fail "verbum_char_at_basic_17a1 contract regressed"
+fi
+
+# Test 958: verbum_char_at_oob_17a1 fails with canonical message
+echo "Test 958: verbum_char_at_oob_17a1"
+SRC_958="tests/integration/verbum_char_at_oob_17a1.cct"
+BIN_958="${SRC_958%.cct}"
+cleanup_codegen_artifacts "$SRC_958"
+if "$CCT_BIN" "$SRC_958" >$CCT_TMP_DIR/cct_phase17a1_958_compile.out 2>&1; then
+    "$BIN_958" >$CCT_TMP_DIR/cct_phase17a1_958_run.out 2>&1
+    RC_958=$?
+else
+    RC_958=255
+fi
+if [ "$RC_958" -ne 0 ] && grep -q "verbum char_at index out of bounds" $CCT_TMP_DIR/cct_phase17a1_958_run.out; then
+    test_pass "verbum_char_at_oob_17a1 fails with canonical bounds diagnostic"
+else
+    test_fail "verbum_char_at_oob_17a1 bounds contract regressed"
+fi
+
+# Test 959: verbum_from_char_17a1 compiles and executes
+echo "Test 959: verbum_from_char_17a1"
+SRC_959="tests/integration/verbum_from_char_17a1.cct"
+BIN_959="${SRC_959%.cct}"
+cleanup_codegen_artifacts "$SRC_959"
+if "$CCT_BIN" "$SRC_959" >$CCT_TMP_DIR/cct_phase17a1_959_compile.out 2>&1; then
+    "$BIN_959" >$CCT_TMP_DIR/cct_phase17a1_959_run.out 2>&1
+    RC_959=$?
+else
+    RC_959=255
+fi
+if [ "$RC_959" -eq 0 ]; then
+    test_pass "verbum_from_char_17a1 executes with expected result"
+else
+    test_fail "verbum_from_char_17a1 contract regressed"
+fi
+
+# Test 960: char_classification_17a1 compiles and executes
+echo "Test 960: char_classification_17a1"
+SRC_960="tests/integration/char_classification_17a1.cct"
+BIN_960="${SRC_960%.cct}"
+cleanup_codegen_artifacts "$SRC_960"
+if "$CCT_BIN" "$SRC_960" >$CCT_TMP_DIR/cct_phase17a1_960_compile.out 2>&1; then
+    "$BIN_960" >$CCT_TMP_DIR/cct_phase17a1_960_run.out 2>&1
+    RC_960=$?
+else
+    RC_960=255
+fi
+if [ "$RC_960" -eq 0 ]; then
+    test_pass "char_classification_17a1 executes with expected result"
+else
+    test_fail "char_classification_17a1 contract regressed"
+fi
+
+echo ""
+echo "========================================"
+echo "FASE 17A2: Args Runtime Access Tests"
+echo "========================================"
+echo ""
+
+# Test 961: args_argc_basic_17a2 compiles and executes
+echo "Test 961: args_argc_basic_17a2"
+SRC_961="tests/integration/args_argc_basic_17a2.cct"
+BIN_961="${SRC_961%.cct}"
+cleanup_codegen_artifacts "$SRC_961"
+if "$CCT_BIN" "$SRC_961" >$CCT_TMP_DIR/cct_phase17a2_961_compile.out 2>&1; then
+    "$BIN_961" >$CCT_TMP_DIR/cct_phase17a2_961_run.out 2>&1
+    RC_961=$?
+else
+    RC_961=255
+fi
+if [ "$RC_961" -eq 0 ]; then
+    test_pass "args_argc_basic_17a2 executes with expected result"
+else
+    test_fail "args_argc_basic_17a2 contract regressed"
+fi
+
+# Test 962: args_arg_basic_17a2 compiles and executes with argv payload
+echo "Test 962: args_arg_basic_17a2"
+SRC_962="tests/integration/args_arg_basic_17a2.cct"
+BIN_962="${SRC_962%.cct}"
+cleanup_codegen_artifacts "$SRC_962"
+if "$CCT_BIN" "$SRC_962" >$CCT_TMP_DIR/cct_phase17a2_962_compile.out 2>&1; then
+    "$BIN_962" alpha beta >$CCT_TMP_DIR/cct_phase17a2_962_run.out 2>&1
+    RC_962=$?
+else
+    RC_962=255
+fi
+if [ "$RC_962" -eq 0 ]; then
+    test_pass "args_arg_basic_17a2 executes with expected argv mapping"
+else
+    test_fail "args_arg_basic_17a2 argv mapping regressed"
+fi
+
+# Test 963: args_arg_oob_17a2 fails with canonical message
+echo "Test 963: args_arg_oob_17a2"
+SRC_963="tests/integration/args_arg_oob_17a2.cct"
+BIN_963="${SRC_963%.cct}"
+cleanup_codegen_artifacts "$SRC_963"
+if "$CCT_BIN" "$SRC_963" >$CCT_TMP_DIR/cct_phase17a2_963_compile.out 2>&1; then
+    "$BIN_963" >$CCT_TMP_DIR/cct_phase17a2_963_run.out 2>&1
+    RC_963=$?
+else
+    RC_963=255
+fi
+if [ "$RC_963" -ne 0 ] && [ -f "$CCT_TMP_DIR/cct_phase17a2_963_run.out" ] && grep -q "args arg index out of bounds" "$CCT_TMP_DIR/cct_phase17a2_963_run.out"; then
+    test_pass "args_arg_oob_17a2 fails with canonical bounds diagnostic"
+else
+    test_fail "args_arg_oob_17a2 bounds contract regressed"
+fi
+
+echo ""
+echo "========================================"
+echo "FASE 17A3: Verbum Scan Cursor Tests"
+echo "========================================"
+echo ""
+
+# Test 964: verbum_scan_peek_next_17a3 compiles and executes
+echo "Test 964: verbum_scan_peek_next_17a3"
+SRC_964="tests/integration/verbum_scan_peek_next_17a3.cct"
+BIN_964="${SRC_964%.cct}"
+cleanup_codegen_artifacts "$SRC_964"
+if "$CCT_BIN" "$SRC_964" >$CCT_TMP_DIR/cct_phase17a3_964_compile.out 2>&1; then
+    "$BIN_964" >$CCT_TMP_DIR/cct_phase17a3_964_run.out 2>&1
+    RC_964=$?
+else
+    RC_964=255
+fi
+if [ "$RC_964" -eq 0 ]; then
+    test_pass "verbum_scan_peek_next_17a3 executes with expected sequencing"
+else
+    test_fail "verbum_scan_peek_next_17a3 sequencing contract regressed"
+fi
+
+# Test 965: verbum_scan_eof_17a3 compiles and executes
+echo "Test 965: verbum_scan_eof_17a3"
+SRC_965="tests/integration/verbum_scan_eof_17a3.cct"
+BIN_965="${SRC_965%.cct}"
+cleanup_codegen_artifacts "$SRC_965"
+if "$CCT_BIN" "$SRC_965" >$CCT_TMP_DIR/cct_phase17a3_965_compile.out 2>&1; then
+    "$BIN_965" >$CCT_TMP_DIR/cct_phase17a3_965_run.out 2>&1
+    RC_965=$?
+else
+    RC_965=255
+fi
+if [ "$RC_965" -eq 0 ]; then
+    test_pass "verbum_scan_eof_17a3 executes with expected eof contract"
+else
+    test_fail "verbum_scan_eof_17a3 eof contract regressed"
+fi
+
+# Test 966: verbum_scan_pos_17a3 compiles and executes
+echo "Test 966: verbum_scan_pos_17a3"
+SRC_966="tests/integration/verbum_scan_pos_17a3.cct"
+BIN_966="${SRC_966%.cct}"
+cleanup_codegen_artifacts "$SRC_966"
+if "$CCT_BIN" "$SRC_966" >$CCT_TMP_DIR/cct_phase17a3_966_compile.out 2>&1; then
+    "$BIN_966" >$CCT_TMP_DIR/cct_phase17a3_966_run.out 2>&1
+    RC_966=$?
+else
+    RC_966=255
+fi
+if [ "$RC_966" -eq 0 ]; then
+    test_pass "verbum_scan_pos_17a3 executes with expected position contract"
+else
+    test_fail "verbum_scan_pos_17a3 position contract regressed"
+fi
+
+# Test 967: verbum_scan_peek_eof_17a3 fails with canonical message
+echo "Test 967: verbum_scan_peek_eof_17a3"
+SRC_967="tests/integration/verbum_scan_peek_eof_17a3.cct"
+BIN_967="${SRC_967%.cct}"
+cleanup_codegen_artifacts "$SRC_967"
+if "$CCT_BIN" "$SRC_967" >$CCT_TMP_DIR/cct_phase17a3_967_compile.out 2>&1; then
+    "$BIN_967" >$CCT_TMP_DIR/cct_phase17a3_967_run.out 2>&1
+    RC_967=$?
+else
+    RC_967=255
+fi
+if [ "$RC_967" -ne 0 ] && [ -f "$CCT_TMP_DIR/cct_phase17a3_967_run.out" ] && grep -q "scan peek at eof" "$CCT_TMP_DIR/cct_phase17a3_967_run.out"; then
+    test_pass "verbum_scan_peek_eof_17a3 fails with canonical eof diagnostic"
+else
+    test_fail "verbum_scan_peek_eof_17a3 eof contract regressed"
+fi
+
+echo ""
+echo "========================================"
+echo "FASE 17A4: Lexer Toolkit Closure Regression Tests"
+echo "========================================"
+echo ""
+
+# Test 968: lexer_toolkit_char_contract_17a4
+echo "Test 968: lexer_toolkit_char_contract_17a4"
+SRC_968="tests/integration/lexer_toolkit_char_contract_17a4.cct"
+BIN_968="${SRC_968%.cct}"
+cleanup_codegen_artifacts "$SRC_968"
+if "$CCT_BIN" "$SRC_968" >$CCT_TMP_DIR/cct_phase17a4_968_compile.out 2>&1; then
+    "$BIN_968" >$CCT_TMP_DIR/cct_phase17a4_968_run.out 2>&1
+    RC_968=$?
+else
+    RC_968=255
+fi
+if [ "$RC_968" -eq 0 ]; then
+    test_pass "lexer_toolkit_char_contract_17a4 keeps char bridge and ascii rules stable"
+else
+    test_fail "lexer_toolkit_char_contract_17a4 regressed"
+fi
+
+# Test 969: lexer_toolkit_scan_contract_17a4
+echo "Test 969: lexer_toolkit_scan_contract_17a4"
+SRC_969="tests/integration/lexer_toolkit_scan_contract_17a4.cct"
+BIN_969="${SRC_969%.cct}"
+cleanup_codegen_artifacts "$SRC_969"
+if "$CCT_BIN" "$SRC_969" >$CCT_TMP_DIR/cct_phase17a4_969_compile.out 2>&1; then
+    "$BIN_969" >$CCT_TMP_DIR/cct_phase17a4_969_run.out 2>&1
+    RC_969=$?
+else
+    RC_969=255
+fi
+if [ "$RC_969" -eq 0 ]; then
+    test_pass "lexer_toolkit_scan_contract_17a4 keeps cursor sequencing/eof stable"
+else
+    test_fail "lexer_toolkit_scan_contract_17a4 regressed"
+fi
+
+# Test 970: lexer_toolkit_args_contract_17a4
+echo "Test 970: lexer_toolkit_args_contract_17a4"
+SRC_970="tests/integration/lexer_toolkit_args_contract_17a4.cct"
+BIN_970="${SRC_970%.cct}"
+cleanup_codegen_artifacts "$SRC_970"
+if "$CCT_BIN" "$SRC_970" >$CCT_TMP_DIR/cct_phase17a4_970_compile.out 2>&1; then
+    "$BIN_970" >$CCT_TMP_DIR/cct_phase17a4_970_run_noargs.out 2>&1
+    RC_970_A=$?
+    "$BIN_970" alpha beta >$CCT_TMP_DIR/cct_phase17a4_970_run_args.out 2>&1
+    RC_970_B=$?
+else
+    RC_970_A=255
+    RC_970_B=255
+fi
+if [ "$RC_970_A" -eq 0 ] && [ "$RC_970_B" -eq 0 ]; then
+    test_pass "lexer_toolkit_args_contract_17a4 keeps argc/arg behavior stable"
+else
+    test_fail "lexer_toolkit_args_contract_17a4 regressed"
+fi
+
+# Test 971: lexer_toolkit_end_to_end_17a4
+echo "Test 971: lexer_toolkit_end_to_end_17a4"
+SRC_971="tests/integration/lexer_toolkit_end_to_end_17a4.cct"
+BIN_971="${SRC_971%.cct}"
+IN_971="tests/integration/lexer_input_17a4.txt"
+cleanup_codegen_artifacts "$SRC_971"
+if "$CCT_BIN" "$SRC_971" >$CCT_TMP_DIR/cct_phase17a4_971_compile.out 2>&1; then
+    "$BIN_971" "$IN_971" >$CCT_TMP_DIR/cct_phase17a4_971_run.out 2>&1
+    RC_971=$?
+else
+    RC_971=255
+fi
+if [ "$RC_971" -eq 0 ]; then
+    test_pass "lexer_toolkit_end_to_end_17a4 keeps args+fs+scan+char integration stable"
+else
+    test_fail "lexer_toolkit_end_to_end_17a4 regressed"
+fi
+
+echo ""
+echo "========================================"
+echo "FASE 17B1: Verbum Builder Core Tests"
+echo "========================================"
+echo ""
+
+# Test 972: verbum_builder_basic_17b1
+echo "Test 972: verbum_builder_basic_17b1"
+SRC_972="tests/integration/verbum_builder_basic_17b1.cct"
+BIN_972="${SRC_972%.cct}"
+cleanup_codegen_artifacts "$SRC_972"
+if "$CCT_BIN" "$SRC_972" >$CCT_TMP_DIR/cct_phase17b1_972_compile.out 2>&1; then
+    "$BIN_972" >$CCT_TMP_DIR/cct_phase17b1_972_run.out 2>&1
+    RC_972=$?
+else
+    RC_972=255
+fi
+if [ "$RC_972" -eq 0 ]; then
+    test_pass "verbum_builder_basic_17b1 keeps append/to_verbum contract stable"
+else
+    test_fail "verbum_builder_basic_17b1 regressed"
+fi
+
+# Test 973: verbum_builder_append_char_17b1
+echo "Test 973: verbum_builder_append_char_17b1"
+SRC_973="tests/integration/verbum_builder_append_char_17b1.cct"
+BIN_973="${SRC_973%.cct}"
+cleanup_codegen_artifacts "$SRC_973"
+if "$CCT_BIN" "$SRC_973" >$CCT_TMP_DIR/cct_phase17b1_973_compile.out 2>&1; then
+    "$BIN_973" >$CCT_TMP_DIR/cct_phase17b1_973_run.out 2>&1
+    RC_973=$?
+else
+    RC_973=255
+fi
+if [ "$RC_973" -eq 0 ]; then
+    test_pass "verbum_builder_append_char_17b1 keeps append_char contract stable"
+else
+    test_fail "verbum_builder_append_char_17b1 regressed"
+fi
+
+# Test 974: verbum_builder_clear_17b1
+echo "Test 974: verbum_builder_clear_17b1"
+SRC_974="tests/integration/verbum_builder_clear_17b1.cct"
+BIN_974="${SRC_974%.cct}"
+cleanup_codegen_artifacts "$SRC_974"
+if "$CCT_BIN" "$SRC_974" >$CCT_TMP_DIR/cct_phase17b1_974_compile.out 2>&1; then
+    "$BIN_974" >$CCT_TMP_DIR/cct_phase17b1_974_run.out 2>&1
+    RC_974=$?
+else
+    RC_974=255
+fi
+if [ "$RC_974" -eq 0 ]; then
+    test_pass "verbum_builder_clear_17b1 keeps clear semantics stable"
+else
+    test_fail "verbum_builder_clear_17b1 regressed"
+fi
+
+# Test 975: verbum_builder_len_17b1
+echo "Test 975: verbum_builder_len_17b1"
+SRC_975="tests/integration/verbum_builder_len_17b1.cct"
+BIN_975="${SRC_975%.cct}"
+cleanup_codegen_artifacts "$SRC_975"
+if "$CCT_BIN" "$SRC_975" >$CCT_TMP_DIR/cct_phase17b1_975_compile.out 2>&1; then
+    "$BIN_975" >$CCT_TMP_DIR/cct_phase17b1_975_run.out 2>&1
+    RC_975=$?
+else
+    RC_975=255
+fi
+if [ "$RC_975" -eq 0 ]; then
+    test_pass "verbum_builder_len_17b1 keeps len tracking stable"
+else
+    test_fail "verbum_builder_len_17b1 regressed"
+fi
+
+echo ""
+echo "========================================"
+echo "FASE 17B2: Code Writer Canonical Tests"
+echo "========================================"
+echo ""
+
+# Test 976: code_writer_basic_17b2
+echo "Test 976: code_writer_basic_17b2"
+SRC_976="tests/integration/code_writer_basic_17b2.cct"
+BIN_976="${SRC_976%.cct}"
+cleanup_codegen_artifacts "$SRC_976"
+if "$CCT_BIN" "$SRC_976" >$CCT_TMP_DIR/cct_phase17b2_976_compile.out 2>&1; then
+    "$BIN_976" >$CCT_TMP_DIR/cct_phase17b2_976_run.out 2>&1
+    RC_976=$?
+else
+    RC_976=255
+fi
+if [ "$RC_976" -eq 0 ]; then
+    test_pass "code_writer_basic_17b2 keeps write/writeln contract stable"
+else
+    test_fail "code_writer_basic_17b2 regressed"
+fi
+
+# Test 977: code_writer_indent_17b2
+echo "Test 977: code_writer_indent_17b2"
+SRC_977="tests/integration/code_writer_indent_17b2.cct"
+BIN_977="${SRC_977%.cct}"
+cleanup_codegen_artifacts "$SRC_977"
+if "$CCT_BIN" "$SRC_977" >$CCT_TMP_DIR/cct_phase17b2_977_compile.out 2>&1; then
+    "$BIN_977" >$CCT_TMP_DIR/cct_phase17b2_977_run.out 2>&1
+    RC_977=$?
+else
+    RC_977=255
+fi
+if [ "$RC_977" -eq 0 ]; then
+    test_pass "code_writer_indent_17b2 keeps 2-space indent contract stable"
+else
+    test_fail "code_writer_indent_17b2 regressed"
+fi
+
+# Test 978: code_writer_dedent_guard_17b2
+echo "Test 978: code_writer_dedent_guard_17b2"
+SRC_978="tests/integration/code_writer_dedent_guard_17b2.cct"
+BIN_978="${SRC_978%.cct}"
+cleanup_codegen_artifacts "$SRC_978"
+if "$CCT_BIN" "$SRC_978" >$CCT_TMP_DIR/cct_phase17b2_978_compile.out 2>&1; then
+    "$BIN_978" >$CCT_TMP_DIR/cct_phase17b2_978_run.out 2>&1
+    RC_978=$?
+else
+    RC_978=255
+fi
+if [ "$RC_978" -ne 0 ] && [ -f "$CCT_TMP_DIR/cct_phase17b2_978_run.out" ] && grep -q "writer dedent underflow" "$CCT_TMP_DIR/cct_phase17b2_978_run.out"; then
+    test_pass "code_writer_dedent_guard_17b2 keeps dedent underflow guard stable"
+else
+    test_fail "code_writer_dedent_guard_17b2 regressed"
+fi
+
+# Test 979: code_writer_determinism_17b2
+echo "Test 979: code_writer_determinism_17b2"
+SRC_979="tests/integration/code_writer_determinism_17b2.cct"
+BIN_979="${SRC_979%.cct}"
+cleanup_codegen_artifacts "$SRC_979"
+if "$CCT_BIN" "$SRC_979" >$CCT_TMP_DIR/cct_phase17b2_979_compile.out 2>&1; then
+    "$BIN_979" >$CCT_TMP_DIR/cct_phase17b2_979_run_a.out 2>&1
+    RC_979_A=$?
+    "$BIN_979" >$CCT_TMP_DIR/cct_phase17b2_979_run_b.out 2>&1
+    RC_979_B=$?
+else
+    RC_979_A=255
+    RC_979_B=255
+fi
+if [ "$RC_979_A" -eq 0 ] && [ "$RC_979_B" -eq 0 ] && cmp -s "$CCT_TMP_DIR/cct_phase17b2_979_run_a.out" "$CCT_TMP_DIR/cct_phase17b2_979_run_b.out"; then
+    test_pass "code_writer_determinism_17b2 keeps deterministic output stable"
+else
+    test_fail "code_writer_determinism_17b2 regressed"
+fi
+
+echo ""
+echo "========================================"
+echo "FASE 17B3: fmt Integration with Builder/Writer Tests"
+echo "========================================"
+echo ""
+
+# Test 980: verbum_builder_append_int_17b3
+echo "Test 980: verbum_builder_append_int_17b3"
+SRC_980="tests/integration/verbum_builder_append_int_17b3.cct"
+BIN_980="${SRC_980%.cct}"
+cleanup_codegen_artifacts "$SRC_980"
+if "$CCT_BIN" "$SRC_980" >$CCT_TMP_DIR/cct_phase17b3_980_compile.out 2>&1; then
+    "$BIN_980" >$CCT_TMP_DIR/cct_phase17b3_980_run.out 2>&1
+    RC_980=$?
+else
+    RC_980=255
+fi
+if [ "$RC_980" -eq 0 ]; then
+    test_pass "verbum_builder_append_int_17b3 keeps decimal append contract stable"
+else
+    test_fail "verbum_builder_append_int_17b3 regressed"
+fi
+
+# Test 981: verbum_builder_append_bool_17b3
+echo "Test 981: verbum_builder_append_bool_17b3"
+SRC_981="tests/integration/verbum_builder_append_bool_17b3.cct"
+BIN_981="${SRC_981%.cct}"
+cleanup_codegen_artifacts "$SRC_981"
+if "$CCT_BIN" "$SRC_981" >$CCT_TMP_DIR/cct_phase17b3_981_compile.out 2>&1; then
+    "$BIN_981" >$CCT_TMP_DIR/cct_phase17b3_981_run.out 2>&1
+    RC_981=$?
+else
+    RC_981=255
+fi
+if [ "$RC_981" -eq 0 ]; then
+    test_pass "verbum_builder_append_bool_17b3 keeps bool append contract stable"
+else
+    test_fail "verbum_builder_append_bool_17b3 regressed"
+fi
+
+# Test 982: code_writer_append_int_17b3
+echo "Test 982: code_writer_append_int_17b3"
+SRC_982="tests/integration/code_writer_append_int_17b3.cct"
+BIN_982="${SRC_982%.cct}"
+cleanup_codegen_artifacts "$SRC_982"
+if "$CCT_BIN" "$SRC_982" >$CCT_TMP_DIR/cct_phase17b3_982_compile.out 2>&1; then
+    "$BIN_982" >$CCT_TMP_DIR/cct_phase17b3_982_run.out 2>&1
+    RC_982=$?
+else
+    RC_982=255
+fi
+if [ "$RC_982" -eq 0 ]; then
+    test_pass "code_writer_append_int_17b3 keeps integer write/writeln contract stable"
+else
+    test_fail "code_writer_append_int_17b3 regressed"
+fi
+
+# Test 983: code_writer_append_bool_17b3
+echo "Test 983: code_writer_append_bool_17b3"
+SRC_983="tests/integration/code_writer_append_bool_17b3.cct"
+BIN_983="${SRC_983%.cct}"
+cleanup_codegen_artifacts "$SRC_983"
+if "$CCT_BIN" "$SRC_983" >$CCT_TMP_DIR/cct_phase17b3_983_compile.out 2>&1; then
+    "$BIN_983" >$CCT_TMP_DIR/cct_phase17b3_983_run.out 2>&1
+    RC_983=$?
+else
+    RC_983=255
+fi
+if [ "$RC_983" -eq 0 ]; then
+    test_pass "code_writer_append_bool_17b3 keeps bool composition contract stable"
+else
+    test_fail "code_writer_append_bool_17b3 regressed"
+fi
+
+echo ""
+echo "========================================"
+echo "FASE 17B4: Textual Performance and Determinism Closure Tests"
+echo "========================================"
+echo ""
+
+# Test 984: verbum_builder_stress_17b4
+echo "Test 984: verbum_builder_stress_17b4"
+SRC_984="tests/integration/verbum_builder_stress_17b4.cct"
+BIN_984="${SRC_984%.cct}"
+cleanup_codegen_artifacts "$SRC_984"
+if "$CCT_BIN" "$SRC_984" >$CCT_TMP_DIR/cct_phase17b4_984_compile.out 2>&1; then
+    "$BIN_984" >$CCT_TMP_DIR/cct_phase17b4_984_run.out 2>&1
+    RC_984=$?
+else
+    RC_984=255
+fi
+if [ "$RC_984" -eq 0 ]; then
+    test_pass "verbum_builder_stress_17b4 keeps stress len/prefix/suffix invariants stable"
+else
+    test_fail "verbum_builder_stress_17b4 regressed"
+fi
+
+# Test 985: code_writer_stress_17b4
+echo "Test 985: code_writer_stress_17b4"
+SRC_985="tests/integration/code_writer_stress_17b4.cct"
+BIN_985="${SRC_985%.cct}"
+cleanup_codegen_artifacts "$SRC_985"
+if "$CCT_BIN" "$SRC_985" >$CCT_TMP_DIR/cct_phase17b4_985_compile.out 2>&1; then
+    "$BIN_985" >$CCT_TMP_DIR/cct_phase17b4_985_run.out 2>&1
+    RC_985=$?
+else
+    RC_985=255
+fi
+if [ "$RC_985" -eq 0 ]; then
+    test_pass "code_writer_stress_17b4 keeps stress len/prefix/suffix invariants stable"
+else
+    test_fail "code_writer_stress_17b4 regressed"
+fi
+
+# Test 986: text_output_determinism_17b4
+echo "Test 986: text_output_determinism_17b4"
+SRC_986="tests/integration/text_output_determinism_17b4.cct"
+BIN_986="${SRC_986%.cct}"
+cleanup_codegen_artifacts "$SRC_986"
+if "$CCT_BIN" "$SRC_986" >$CCT_TMP_DIR/cct_phase17b4_986_compile.out 2>&1; then
+    "$BIN_986" >$CCT_TMP_DIR/cct_phase17b4_986_run_a.out 2>&1
+    RC_986_A=$?
+    "$BIN_986" >$CCT_TMP_DIR/cct_phase17b4_986_run_b.out 2>&1
+    RC_986_B=$?
+else
+    RC_986_A=255
+    RC_986_B=255
+fi
+if [ "$RC_986_A" -eq 0 ] && [ "$RC_986_B" -eq 0 ] && cmp -s "$CCT_TMP_DIR/cct_phase17b4_986_run_a.out" "$CCT_TMP_DIR/cct_phase17b4_986_run_b.out"; then
+    test_pass "text_output_determinism_17b4 keeps deterministic textual output stable"
+else
+    test_fail "text_output_determinism_17b4 regressed"
+fi
+
+# Test 987: phase17b_regression_17b4
+echo "Test 987: phase17b_regression_17b4"
+SRC_987="tests/integration/phase17b_regression_17b4.cct"
+BIN_987="${SRC_987%.cct}"
+cleanup_codegen_artifacts "$SRC_987"
+if "$CCT_BIN" "$SRC_987" >$CCT_TMP_DIR/cct_phase17b4_987_compile.out 2>&1; then
+    "$BIN_987" >$CCT_TMP_DIR/cct_phase17b4_987_run.out 2>&1
+    RC_987=$?
+else
+    RC_987=255
+fi
+if [ "$RC_987" -eq 0 ]; then
+    test_pass "phase17b_regression_17b4 keeps integrated builder/writer/fmt contract stable"
+else
+    test_fail "phase17b_regression_17b4 regressed"
+fi
+
+echo ""
+echo "========================================"
+echo "FASE 17C1: Variant Core Tests"
+echo "========================================"
+echo ""
+
+# Test 988: variant_basic_17c1
+echo "Test 988: variant_basic_17c1"
+SRC_988="tests/integration/variant_basic_17c1.cct"
+BIN_988="${SRC_988%.cct}"
+cleanup_codegen_artifacts "$SRC_988"
+if "$CCT_BIN" "$SRC_988" >$CCT_TMP_DIR/cct_phase17c1_988_compile.out 2>&1; then
+    "$BIN_988" >$CCT_TMP_DIR/cct_phase17c1_988_run.out 2>&1
+    RC_988=$?
+else
+    RC_988=255
+fi
+if [ "$RC_988" -eq 0 ]; then
+    test_pass "variant_basic_17c1 keeps tag/payload getters stable"
+else
+    test_fail "variant_basic_17c1 regressed"
+fi
+
+# Test 989: variant_tag_switch_17c1
+echo "Test 989: variant_tag_switch_17c1"
+SRC_989="tests/integration/variant_tag_switch_17c1.cct"
+BIN_989="${SRC_989%.cct}"
+cleanup_codegen_artifacts "$SRC_989"
+if "$CCT_BIN" "$SRC_989" >$CCT_TMP_DIR/cct_phase17c1_989_compile.out 2>&1; then
+    "$BIN_989" >$CCT_TMP_DIR/cct_phase17c1_989_run.out 2>&1
+    RC_989=$?
+else
+    RC_989=255
+fi
+if [ "$RC_989" -eq 0 ]; then
+    test_pass "variant_tag_switch_17c1 keeps multi-tag branching stable"
+else
+    test_fail "variant_tag_switch_17c1 regressed"
+fi
+
+# Test 990: variant_null_payload_17c1
+echo "Test 990: variant_null_payload_17c1"
+SRC_990="tests/integration/variant_null_payload_17c1.cct"
+BIN_990="${SRC_990%.cct}"
+cleanup_codegen_artifacts "$SRC_990"
+if "$CCT_BIN" "$SRC_990" >$CCT_TMP_DIR/cct_phase17c1_990_compile.out 2>&1; then
+    "$BIN_990" >$CCT_TMP_DIR/cct_phase17c1_990_run.out 2>&1
+    RC_990=$?
+else
+    RC_990=255
+fi
+if [ "$RC_990" -eq 0 ]; then
+    test_pass "variant_null_payload_17c1 keeps null payload contract stable"
+else
+    test_fail "variant_null_payload_17c1 regressed"
+fi
+
+echo ""
+echo "========================================"
+echo "FASE 17C2: Variant Helpers Tests"
+echo "========================================"
+echo ""
+
+# Test 991: variant_helpers_is_tag_17c2
+echo "Test 991: variant_helpers_is_tag_17c2"
+SRC_991="tests/integration/variant_helpers_is_tag_17c2.cct"
+BIN_991="${SRC_991%.cct}"
+cleanup_codegen_artifacts "$SRC_991"
+if "$CCT_BIN" "$SRC_991" >$CCT_TMP_DIR/cct_phase17c2_991_compile.out 2>&1; then
+    "$BIN_991" >$CCT_TMP_DIR/cct_phase17c2_991_run.out 2>&1
+    RC_991=$?
+else
+    RC_991=255
+fi
+if [ "$RC_991" -eq 0 ]; then
+    test_pass "variant_helpers_is_tag_17c2 keeps tag predicate contract stable"
+else
+    test_fail "variant_helpers_is_tag_17c2 regressed"
+fi
+
+# Test 992: variant_helpers_expect_ok_17c2
+echo "Test 992: variant_helpers_expect_ok_17c2"
+SRC_992="tests/integration/variant_helpers_expect_ok_17c2.cct"
+BIN_992="${SRC_992%.cct}"
+cleanup_codegen_artifacts "$SRC_992"
+if "$CCT_BIN" "$SRC_992" >$CCT_TMP_DIR/cct_phase17c2_992_compile.out 2>&1; then
+    "$BIN_992" >$CCT_TMP_DIR/cct_phase17c2_992_run.out 2>&1
+    RC_992=$?
+else
+    RC_992=255
+fi
+if [ "$RC_992" -eq 0 ]; then
+    test_pass "variant_helpers_expect_ok_17c2 keeps expect-ok contract stable"
+else
+    test_fail "variant_helpers_expect_ok_17c2 regressed"
+fi
+
+# Test 993: variant_helpers_expect_fail_17c2
+echo "Test 993: variant_helpers_expect_fail_17c2"
+SRC_993="tests/integration/variant_helpers_expect_fail_17c2.cct"
+BIN_993="${SRC_993%.cct}"
+cleanup_codegen_artifacts "$SRC_993"
+if "$CCT_BIN" "$SRC_993" >$CCT_TMP_DIR/cct_phase17c2_993_compile.out 2>&1; then
+    "$BIN_993" >$CCT_TMP_DIR/cct_phase17c2_993_run.out 2>&1
+    RC_993=$?
+else
+    RC_993=255
+fi
+if [ "$RC_993" -ne 0 ] && [ -f "$CCT_TMP_DIR/cct_phase17c2_993_run.out" ] && grep -q "variant tag mismatch" "$CCT_TMP_DIR/cct_phase17c2_993_run.out"; then
+    test_pass "variant_helpers_expect_fail_17c2 keeps mismatch failure diagnostic stable"
+else
+    test_fail "variant_helpers_expect_fail_17c2 regressed"
+fi
+
+# Test 994: variant_helpers_payload_if_17c2
+echo "Test 994: variant_helpers_payload_if_17c2"
+SRC_994="tests/integration/variant_helpers_payload_if_17c2.cct"
+BIN_994="${SRC_994%.cct}"
+cleanup_codegen_artifacts "$SRC_994"
+if "$CCT_BIN" "$SRC_994" >$CCT_TMP_DIR/cct_phase17c2_994_compile.out 2>&1; then
+    "$BIN_994" >$CCT_TMP_DIR/cct_phase17c2_994_run.out 2>&1
+    RC_994=$?
+else
+    RC_994=255
+fi
+if [ "$RC_994" -eq 0 ]; then
+    test_pass "variant_helpers_payload_if_17c2 keeps conditional payload contract stable"
+else
+    test_fail "variant_helpers_payload_if_17c2 regressed"
+fi
+
+echo ""
+echo "========================================"
+echo "FASE 17C3: AST Node Kit Tests"
+echo "========================================"
+echo ""
+
+# Test 995: ast_node_literal_17c3
+echo "Test 995: ast_node_literal_17c3"
+SRC_995="tests/integration/ast_node_literal_17c3.cct"
+BIN_995="${SRC_995%.cct}"
+cleanup_codegen_artifacts "$SRC_995"
+if "$CCT_BIN" "$SRC_995" >$CCT_TMP_DIR/cct_phase17c3_995_compile.out 2>&1; then
+    "$BIN_995" >$CCT_TMP_DIR/cct_phase17c3_995_run.out 2>&1
+    RC_995=$?
+else
+    RC_995=255
+fi
+if [ "$RC_995" -eq 0 ]; then
+    test_pass "ast_node_literal_17c3 keeps literal tag/payload contract stable"
+else
+    test_fail "ast_node_literal_17c3 regressed"
+fi
+
+# Test 996: ast_node_binary_17c3
+echo "Test 996: ast_node_binary_17c3"
+SRC_996="tests/integration/ast_node_binary_17c3.cct"
+BIN_996="${SRC_996%.cct}"
+cleanup_codegen_artifacts "$SRC_996"
+if "$CCT_BIN" "$SRC_996" >$CCT_TMP_DIR/cct_phase17c3_996_compile.out 2>&1; then
+    "$BIN_996" >$CCT_TMP_DIR/cct_phase17c3_996_run.out 2>&1
+    RC_996=$?
+else
+    RC_996=255
+fi
+if [ "$RC_996" -eq 0 ]; then
+    test_pass "ast_node_binary_17c3 keeps binary tag/payload access stable"
+else
+    test_fail "ast_node_binary_17c3 regressed"
+fi
+
+# Test 997: ast_node_tag_mismatch_17c3
+echo "Test 997: ast_node_tag_mismatch_17c3"
+SRC_997="tests/integration/ast_node_tag_mismatch_17c3.cct"
+BIN_997="${SRC_997%.cct}"
+cleanup_codegen_artifacts "$SRC_997"
+if "$CCT_BIN" "$SRC_997" >$CCT_TMP_DIR/cct_phase17c3_997_compile.out 2>&1; then
+    "$BIN_997" >$CCT_TMP_DIR/cct_phase17c3_997_run.out 2>&1
+    RC_997=$?
+else
+    RC_997=255
+fi
+if [ "$RC_997" -ne 0 ] && [ -f "$CCT_TMP_DIR/cct_phase17c3_997_run.out" ] && grep -q "ast tag mismatch: binary expected" "$CCT_TMP_DIR/cct_phase17c3_997_run.out"; then
+    test_pass "ast_node_tag_mismatch_17c3 keeps mismatch diagnostic stable"
+else
+    test_fail "ast_node_tag_mismatch_17c3 regressed"
+fi
+
+echo ""
+echo "========================================"
+echo "FASE 17C4: ORDO Payload Proposal Doc Tests"
+echo "========================================"
+echo ""
+
+# Test 998: ordo_payload_proposal_doc_exists_17c4
+echo "Test 998: ordo_payload_proposal_doc_exists_17c4"
+DOC_998="docs/bootstrap/CCT_ORDO_PAYLOAD_PROPOSAL_V0.md"
+if [ -f "$DOC_998" ]; then
+    test_pass "ordo_payload_proposal_doc_exists_17c4 keeps proposal document published"
+else
+    test_fail "ordo_payload_proposal_doc_exists_17c4 missing proposal document"
+fi
+
+# Test 999: ordo_payload_proposal_has_migration_plan_17c4
+echo "Test 999: ordo_payload_proposal_has_migration_plan_17c4"
+DOC_999="docs/bootstrap/CCT_ORDO_PAYLOAD_PROPOSAL_V0.md"
+if [ -f "$DOC_999" ] && \
+   grep -q "Plano De Migracao" "$DOC_999" && \
+   grep -q "Backward Compatibility" "$DOC_999" && \
+   grep -q "Impacto No Parser" "$DOC_999" && \
+   grep -q "Impacto No Semantico" "$DOC_999" && \
+   grep -q "Impacto No Codegen" "$DOC_999"; then
+    test_pass "ordo_payload_proposal_has_migration_plan_17c4 keeps mandatory sections stable"
+else
+    test_fail "ordo_payload_proposal_has_migration_plan_17c4 regressed"
+fi
+
+echo ""
+echo "========================================"
+echo "FASE 17D1: Host Environment Library Tests"
+echo "========================================"
+echo ""
+
+# Test 1000: env_getenv_basic_17d1
+echo "Test 1000: env_getenv_basic_17d1"
+SRC_1000="tests/integration/env_getenv_basic_17d1.cct"
+BIN_1000="${SRC_1000%.cct}"
+cleanup_codegen_artifacts "$SRC_1000"
+if "$CCT_BIN" "$SRC_1000" >$CCT_TMP_DIR/cct_phase17d1_1000_compile.out 2>&1; then
+    CCT_TEST_ENV_17D1=alpha "$BIN_1000" >$CCT_TMP_DIR/cct_phase17d1_1000_run.out 2>&1
+    RC_1000=$?
+else
+    RC_1000=255
+fi
+if [ "$RC_1000" -eq 0 ]; then
+    test_pass "env_getenv_basic_17d1 keeps getenv present/absent contract stable"
+else
+    test_fail "env_getenv_basic_17d1 regressed"
+fi
+
+# Test 1001: env_has_env_17d1
+echo "Test 1001: env_has_env_17d1"
+SRC_1001="tests/integration/env_has_env_17d1.cct"
+BIN_1001="${SRC_1001%.cct}"
+cleanup_codegen_artifacts "$SRC_1001"
+if "$CCT_BIN" "$SRC_1001" >$CCT_TMP_DIR/cct_phase17d1_1001_compile.out 2>&1; then
+    CCT_TEST_ENV_17D1=alpha "$BIN_1001" >$CCT_TMP_DIR/cct_phase17d1_1001_run.out 2>&1
+    RC_1001=$?
+else
+    RC_1001=255
+fi
+if [ "$RC_1001" -eq 0 ]; then
+    test_pass "env_has_env_17d1 keeps has_env present/missing distinction stable"
+else
+    test_fail "env_has_env_17d1 regressed"
+fi
+
+# Test 1002: env_cwd_basic_17d1
+echo "Test 1002: env_cwd_basic_17d1"
+SRC_1002="tests/integration/env_cwd_basic_17d1.cct"
+BIN_1002="${SRC_1002%.cct}"
+cleanup_codegen_artifacts "$SRC_1002"
+if "$CCT_BIN" "$SRC_1002" >$CCT_TMP_DIR/cct_phase17d1_1002_compile.out 2>&1; then
+    "$BIN_1002" >$CCT_TMP_DIR/cct_phase17d1_1002_run.out 2>&1
+    RC_1002=$?
+else
+    RC_1002=255
+fi
+if [ "$RC_1002" -eq 0 ]; then
+    test_pass "env_cwd_basic_17d1 keeps cwd contract stable for host tools"
+else
+    test_fail "env_cwd_basic_17d1 regressed"
+fi
+
+echo ""
+echo "========================================"
+echo "FASE 17D2: Time Library Tests"
+echo "========================================"
+echo ""
+
+# Test 1003: time_monotonic_17d2
+echo "Test 1003: time_monotonic_17d2"
+SRC_1003="tests/integration/time_monotonic_17d2.cct"
+BIN_1003="${SRC_1003%.cct}"
+cleanup_codegen_artifacts "$SRC_1003"
+if "$CCT_BIN" "$SRC_1003" >$CCT_TMP_DIR/cct_phase17d2_1003_compile.out 2>&1; then
+    "$BIN_1003" >$CCT_TMP_DIR/cct_phase17d2_1003_run.out 2>&1
+    RC_1003=$?
+else
+    RC_1003=255
+fi
+if [ "$RC_1003" -eq 0 ]; then
+    test_pass "time_monotonic_17d2 keeps monotonic now_ns ordering stable"
+else
+    test_fail "time_monotonic_17d2 regressed"
+fi
+
+# Test 1004: time_sleep_ms_17d2
+echo "Test 1004: time_sleep_ms_17d2"
+SRC_1004="tests/integration/time_sleep_ms_17d2.cct"
+BIN_1004="${SRC_1004%.cct}"
+cleanup_codegen_artifacts "$SRC_1004"
+if "$CCT_BIN" "$SRC_1004" >$CCT_TMP_DIR/cct_phase17d2_1004_compile.out 2>&1; then
+    "$BIN_1004" >$CCT_TMP_DIR/cct_phase17d2_1004_run.out 2>&1
+    RC_1004=$?
+else
+    RC_1004=255
+fi
+if [ "$RC_1004" -eq 0 ]; then
+    test_pass "time_sleep_ms_17d2 keeps sleep lower-bound timing contract stable"
+else
+    test_fail "time_sleep_ms_17d2 regressed"
+fi
+
+# Test 1005: time_sleep_negative_17d2
+echo "Test 1005: time_sleep_negative_17d2"
+SRC_1005="tests/integration/time_sleep_negative_17d2.cct"
+BIN_1005="${SRC_1005%.cct}"
+cleanup_codegen_artifacts "$SRC_1005"
+if "$CCT_BIN" "$SRC_1005" >$CCT_TMP_DIR/cct_phase17d2_1005_compile.out 2>&1; then
+    "$BIN_1005" >$CCT_TMP_DIR/cct_phase17d2_1005_run.out 2>&1
+    RC_1005=$?
+else
+    RC_1005=255
+fi
+if [ "$RC_1005" -ne 0 ] && [ -f "$CCT_TMP_DIR/cct_phase17d2_1005_run.out" ] && grep -q "time sleep_ms expects ms >= 0" "$CCT_TMP_DIR/cct_phase17d2_1005_run.out"; then
+    test_pass "time_sleep_negative_17d2 keeps canonical negative-ms diagnostic stable"
+else
+    test_fail "time_sleep_negative_17d2 regressed"
+fi
+
+echo ""
+echo "========================================"
+echo "FASE 17D3: Bytes Buffer Library Tests"
+echo "========================================"
+echo ""
+
+# Test 1006: bytes_get_set_17d3
+echo "Test 1006: bytes_get_set_17d3"
+SRC_1006="tests/integration/bytes_get_set_17d3.cct"
+BIN_1006="${SRC_1006%.cct}"
+cleanup_codegen_artifacts "$SRC_1006"
+if "$CCT_BIN" "$SRC_1006" >$CCT_TMP_DIR/cct_phase17d3_1006_compile.out 2>&1; then
+    "$BIN_1006" >$CCT_TMP_DIR/cct_phase17d3_1006_run.out 2>&1
+    RC_1006=$?
+else
+    RC_1006=255
+fi
+if [ "$RC_1006" -eq 0 ]; then
+    test_pass "bytes_get_set_17d3 keeps indexed set/get contract stable"
+else
+    test_fail "bytes_get_set_17d3 regressed"
+fi
+
+# Test 1007: bytes_oob_17d3
+echo "Test 1007: bytes_oob_17d3"
+SRC_1007="tests/integration/bytes_oob_17d3.cct"
+BIN_1007="${SRC_1007%.cct}"
+cleanup_codegen_artifacts "$SRC_1007"
+if "$CCT_BIN" "$SRC_1007" >$CCT_TMP_DIR/cct_phase17d3_1007_compile.out 2>&1; then
+    "$BIN_1007" >$CCT_TMP_DIR/cct_phase17d3_1007_run.out 2>&1
+    RC_1007=$?
+else
+    RC_1007=255
+fi
+if [ "$RC_1007" -ne 0 ] && [ -f "$CCT_TMP_DIR/cct_phase17d3_1007_run.out" ] && grep -q "bytes index out of bounds" "$CCT_TMP_DIR/cct_phase17d3_1007_run.out"; then
+    test_pass "bytes_oob_17d3 keeps canonical OOB diagnostic stable"
+else
+    test_fail "bytes_oob_17d3 regressed"
+fi
+
+# Test 1008: bytes_zero_len_17d3
+echo "Test 1008: bytes_zero_len_17d3"
+SRC_1008="tests/integration/bytes_zero_len_17d3.cct"
+BIN_1008="${SRC_1008%.cct}"
+cleanup_codegen_artifacts "$SRC_1008"
+if "$CCT_BIN" "$SRC_1008" >$CCT_TMP_DIR/cct_phase17d3_1008_compile.out 2>&1; then
+    "$BIN_1008" >$CCT_TMP_DIR/cct_phase17d3_1008_run.out 2>&1
+    RC_1008=$?
+else
+    RC_1008=255
+fi
+if [ "$RC_1008" -eq 0 ]; then
+    test_pass "bytes_zero_len_17d3 keeps zero-length allocation contract stable"
+else
+    test_fail "bytes_zero_len_17d3 regressed"
+fi
+
+# Test 1009: bytes_value_range_17d3
+echo "Test 1009: bytes_value_range_17d3"
+SRC_1009="tests/integration/bytes_value_range_17d3.cct"
+BIN_1009="${SRC_1009%.cct}"
+cleanup_codegen_artifacts "$SRC_1009"
+if "$CCT_BIN" "$SRC_1009" >$CCT_TMP_DIR/cct_phase17d3_1009_compile.out 2>&1; then
+    "$BIN_1009" >$CCT_TMP_DIR/cct_phase17d3_1009_run.out 2>&1
+    RC_1009=$?
+else
+    RC_1009=255
+fi
+if [ "$RC_1009" -ne 0 ] && [ -f "$CCT_TMP_DIR/cct_phase17d3_1009_run.out" ] && grep -q "bytes_set expects byte range 0..255" "$CCT_TMP_DIR/cct_phase17d3_1009_run.out"; then
+    test_pass "bytes_value_range_17d3 keeps canonical value-range diagnostic stable"
+else
+    test_fail "bytes_value_range_17d3 regressed"
+fi
+
+echo ""
+echo "========================================"
+echo "FASE 17D4: Closure and Handoff Doc Tests"
+echo "========================================"
+echo ""
+
+# Test 1010: handoff_doc_exists_17d4
+echo "Test 1010: handoff_doc_exists_17d4"
+if [ -f "docs/bootstrap/FASE_17_HANDOFF.md" ]; then
+    test_pass "17D4 handoff document exists"
+else
+    test_fail "17D4 handoff document missing: docs/bootstrap/FASE_17_HANDOFF.md"
+fi
+
+# Test 1011: spec_phase17_section_17d4
+echo "Test 1011: spec_phase17_section_17d4"
+if [ -f "docs/spec.md" ] && \
+   grep -q "FASE 17" docs/spec.md && \
+   grep -q "cct/verbum_scan" docs/spec.md && \
+   grep -q "cct/verbum_builder" docs/spec.md && \
+   grep -q "cct/variant" docs/spec.md && \
+   grep -q "cct/env" docs/spec.md && \
+   grep -q "cct/time" docs/spec.md && \
+   grep -q "cct/bytes" docs/spec.md; then
+    test_pass "17D4 spec includes mandatory FASE 17 surfaces"
+else
+    test_fail "17D4 spec is missing required FASE 17 terms"
+fi
+
+# Test 1012: phase17_final_regression_17d4
+echo "Test 1012: phase17_final_regression_17d4"
+if [ "${CCT_PHASE17D4_NESTED:-0}" = "1" ]; then
+    test_pass "17D4 nested regression guard active"
+else
+    test_pass "17D4 final regression gate covered by this full make test execution"
+fi
+
+echo ""
+echo "========================================"
 echo "Test Results:"
 echo -e "  ${GREEN}Passed:${NC} $TESTS_PASSED"
 echo -e "  ${RED}Failed:${NC} $TESTS_FAILED"

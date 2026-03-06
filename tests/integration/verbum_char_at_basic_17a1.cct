@@ -1,0 +1,29 @@
+INCIPIT grimoire "verbum_char_at_basic_17a1"
+
+ADVOCARE "cct/verbum.cct"
+ADVOCARE "cct/char.cct"
+
+RITUALE main() REDDE REX
+  EVOCA VERBUM s AD "Az9 "
+  EVOCA MILES c0 AD CONIURA char_at(s, 0)
+  EVOCA MILES c1 AD CONIURA char_at(s, 1)
+  EVOCA MILES c2 AD CONIURA char_at(s, 2)
+  EVOCA MILES c3 AD CONIURA char_at(s, 3)
+  EVOCA VERBUM unit AD CONIURA from_char(c1)
+
+  SI CONIURA is_alpha(c0)
+    SI CONIURA is_alpha(c1)
+      SI CONIURA is_digit(c2)
+        SI CONIURA is_whitespace(c3)
+          SI CONIURA compare(unit, "z") == 0
+            REDDE 0
+          FIN SI
+        FIN SI
+      FIN SI
+    FIN SI
+  FIN SI
+
+  REDDE 1
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

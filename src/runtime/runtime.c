@@ -62,6 +62,43 @@ bool cct_runtime_emit_c_helpers(FILE *out, const cct_runtime_codegen_config_t *c
         fputs("    cct_rt_fractum_clear();\n", out);
         fputs("    exit(1);\n", out);
         fputs("}\n\n", out);
+
+        fputs("static int cct_rt_argc = 0;\n", out);
+        fputs("static char **cct_rt_argv = NULL;\n\n", out);
+
+        fputs("static void cct_rt_args_init(int argc, char **argv) {\n", out);
+        fputs("    cct_rt_argc = argc;\n", out);
+        fputs("    cct_rt_argv = argv;\n", out);
+        fputs("}\n\n", out);
+
+        fputs("static long long cct_rt_args_argc(void) {\n", out);
+        fputs("    return (long long)cct_rt_argc;\n", out);
+        fputs("}\n\n", out);
+
+        fputs("static char *cct_rt_args_arg(long long i) {\n", out);
+        fputs("    if (i < 0 || i >= (long long)cct_rt_argc) cct_rt_fail(\"args arg index out of bounds\");\n", out);
+        fputs("    return (cct_rt_argv && cct_rt_argv[i]) ? cct_rt_argv[i] : \"\";\n", out);
+        fputs("}\n\n", out);
+
+        fputs("static long long cct_rt_time_now_ns(void) {\n", out);
+        fputs("    struct timespec ts;\n", out);
+        fputs("    if (clock_gettime(CLOCK_MONOTONIC, &ts) != 0) cct_rt_fail(\"time now_ns failed\");\n", out);
+        fputs("    return (long long)ts.tv_sec * 1000000000LL + (long long)ts.tv_nsec;\n", out);
+        fputs("}\n\n", out);
+
+        fputs("static long long cct_rt_time_now_ms(void) {\n", out);
+        fputs("    return cct_rt_time_now_ns() / 1000000LL;\n", out);
+        fputs("}\n\n", out);
+
+        fputs("static void cct_rt_time_sleep_ms(long long ms) {\n", out);
+        fputs("    if (ms < 0) cct_rt_fail(\"time sleep_ms expects ms >= 0\");\n", out);
+        fputs("    struct timespec req;\n", out);
+        fputs("    req.tv_sec = (time_t)(ms / 1000LL);\n", out);
+        fputs("    req.tv_nsec = (long)((ms % 1000LL) * 1000000LL);\n", out);
+        fputs("    while (nanosleep(&req, &req) != 0) {\n", out);
+        fputs("        if (errno != EINTR) cct_rt_fail(\"time sleep_ms failed\");\n", out);
+        fputs("    }\n", out);
+        fputs("}\n\n", out);
     }
 
     if (cfg->emit_scribe_helpers) {
@@ -137,6 +174,55 @@ bool cct_runtime_emit_c_helpers(FILE *out, const cct_runtime_codegen_config_t *c
         fputs("    if (cmp < 0) return -1LL;\n", out);
         fputs("    if (cmp > 0) return 1LL;\n", out);
         fputs("    return 0LL;\n", out);
+        fputs("}\n\n", out);
+
+        fputs("typedef struct {\n", out);
+        fputs("    unsigned char *data;\n", out);
+        fputs("    long long len;\n", out);
+        fputs("} cct_rt_bytes_t;\n\n", out);
+
+        fputs("static cct_rt_bytes_t *cct_rt_bytes_require(void *ptr, const char *ctx) {\n", out);
+        fputs("    cct_rt_bytes_t *b = (cct_rt_bytes_t*)ptr;\n", out);
+        fputs("    if (!b) cct_rt_fail((ctx && *ctx) ? ctx : \"bytes null buffer\");\n", out);
+        fputs("    return b;\n", out);
+        fputs("}\n\n", out);
+
+        fputs("static void *cct_rt_bytes_new(long long size) {\n", out);
+        fputs("    if (size < 0) cct_rt_fail(\"bytes_new expects size >= 0\");\n", out);
+        fputs("    cct_rt_bytes_t *b = (cct_rt_bytes_t*)cct_rt_alloc_or_fail(sizeof(cct_rt_bytes_t));\n", out);
+        fputs("    b->len = size;\n", out);
+        fputs("    if (size == 0) {\n", out);
+        fputs("        b->data = NULL;\n", out);
+        fputs("        return b;\n", out);
+        fputs("    }\n", out);
+        fputs("    b->data = (unsigned char*)cct_rt_alloc_or_fail((size_t)size);\n", out);
+        fputs("    memset(b->data, 0, (size_t)size);\n", out);
+        fputs("    return b;\n", out);
+        fputs("}\n\n", out);
+
+        fputs("static long long cct_rt_bytes_len(void *ptr) {\n", out);
+        fputs("    cct_rt_bytes_t *b = cct_rt_bytes_require(ptr, \"bytes_len received null buffer\");\n", out);
+        fputs("    return b->len;\n", out);
+        fputs("}\n\n", out);
+
+        fputs("static long long cct_rt_bytes_get(void *ptr, long long i) {\n", out);
+        fputs("    cct_rt_bytes_t *b = cct_rt_bytes_require(ptr, \"bytes_get received null buffer\");\n", out);
+        fputs("    if (i < 0 || i >= b->len) cct_rt_fail(\"bytes index out of bounds\");\n", out);
+        fputs("    return (long long)b->data[(size_t)i];\n", out);
+        fputs("}\n\n", out);
+
+        fputs("static void cct_rt_bytes_set(void *ptr, long long i, long long v) {\n", out);
+        fputs("    cct_rt_bytes_t *b = cct_rt_bytes_require(ptr, \"bytes_set received null buffer\");\n", out);
+        fputs("    if (i < 0 || i >= b->len) cct_rt_fail(\"bytes index out of bounds\");\n", out);
+        fputs("    if (v < 0 || v > 255) cct_rt_fail(\"bytes_set expects byte range 0..255\");\n", out);
+        fputs("    b->data[(size_t)i] = (unsigned char)v;\n", out);
+        fputs("}\n\n", out);
+
+        fputs("static void cct_rt_bytes_free(void *ptr) {\n", out);
+        fputs("    cct_rt_bytes_t *b = (cct_rt_bytes_t*)ptr;\n", out);
+        fputs("    if (!b) return;\n", out);
+        fputs("    if (b->data) cct_rt_free_ptr(b->data);\n", out);
+        fputs("    cct_rt_free_ptr(b);\n", out);
         fputs("}\n\n", out);
 
         if (cfg->emit_fluxus_helpers) {
@@ -895,6 +981,264 @@ bool cct_runtime_emit_c_helpers(FILE *out, const cct_runtime_codegen_config_t *c
         fputs("    const char *p = strstr(hay, needle);\n", out);
         fputs("    if (!p) return -1LL;\n", out);
         fputs("    return (long long)(p - hay);\n", out);
+        fputs("}\n\n", out);
+
+        fputs("static long long cct_rt_verbum_char_at(const char *s, long long i) {\n", out);
+        fputs("    const char *src = s ? s : \"\";\n", out);
+        fputs("    size_t n = strlen(src);\n", out);
+        fputs("    if (i < 0 || (size_t)i >= n) cct_rt_fail(\"verbum char_at index out of bounds\");\n", out);
+        fputs("    return (long long)(unsigned char)src[(size_t)i];\n", out);
+        fputs("}\n\n", out);
+
+        fputs("static char *cct_rt_verbum_from_char(long long c) {\n", out);
+        fputs("    if (c < 0 || c > 255) cct_rt_fail(\"verbum from_char expects byte range 0..255\");\n", out);
+        fputs("    char *out_s = (char*)malloc(2);\n", out);
+        fputs("    if (!out_s) cct_rt_fail(\"verbum from_char allocation failed\");\n", out);
+        fputs("    out_s[0] = (char)(unsigned char)c;\n", out);
+        fputs("    out_s[1] = '\\0';\n", out);
+        fputs("    return out_s;\n", out);
+        fputs("}\n\n", out);
+
+        fputs("static long long cct_rt_char_is_digit(long long c) {\n", out);
+        fputs("    return (c >= 48LL && c <= 57LL) ? 1LL : 0LL;\n", out);
+        fputs("}\n\n", out);
+
+        fputs("static long long cct_rt_char_is_alpha(long long c) {\n", out);
+        fputs("    if (c >= 65LL && c <= 90LL) return 1LL;\n", out);
+        fputs("    if (c >= 97LL && c <= 122LL) return 1LL;\n", out);
+        fputs("    return 0LL;\n", out);
+        fputs("}\n\n", out);
+
+        fputs("static long long cct_rt_char_is_whitespace(long long c) {\n", out);
+        fputs("    return (c == 32LL || c == 9LL || c == 10LL || c == 13LL) ? 1LL : 0LL;\n", out);
+        fputs("}\n\n", out);
+
+        fputs("static char *cct_rt_env_get(const char *name) {\n", out);
+        fputs("    const char *k = name ? name : \"\";\n", out);
+        fputs("    const char *v = getenv(k);\n", out);
+        fputs("    return (char*)(v ? v : \"\");\n", out);
+        fputs("}\n\n", out);
+
+        fputs("static long long cct_rt_env_has(const char *name) {\n", out);
+        fputs("    const char *k = name ? name : \"\";\n", out);
+        fputs("    return getenv(k) ? 1LL : 0LL;\n", out);
+        fputs("}\n\n", out);
+
+        fputs("static char *cct_rt_env_cwd(void) {\n", out);
+        fputs("    char buf[4096];\n", out);
+        fputs("    if (!cct_rt_getcwd(buf, sizeof(buf))) cct_rt_fail(\"env cwd failed\");\n", out);
+        fputs("    size_t n = strlen(buf);\n", out);
+        fputs("    char *out_s = (char*)malloc(n + 1);\n", out);
+        fputs("    if (!out_s) cct_rt_fail(\"env cwd allocation failed\");\n", out);
+        fputs("    memcpy(out_s, buf, n + 1);\n", out);
+        fputs("    return out_s;\n", out);
+        fputs("}\n\n", out);
+
+        fputs("typedef struct {\n", out);
+        fputs("    const char *src;\n", out);
+        fputs("    long long len;\n", out);
+        fputs("    long long pos;\n", out);
+        fputs("} cct_rt_scan_t;\n\n", out);
+
+        fputs("static void *cct_rt_scan_init(const char *s) {\n", out);
+        fputs("    cct_rt_scan_t *c = (cct_rt_scan_t*)malloc(sizeof(cct_rt_scan_t));\n", out);
+        fputs("    if (!c) cct_rt_fail(\"scan init allocation failed\");\n", out);
+        fputs("    c->src = s ? s : \"\";\n", out);
+        fputs("    c->len = (long long)strlen(c->src);\n", out);
+        fputs("    c->pos = 0;\n", out);
+        fputs("    return c;\n", out);
+        fputs("}\n\n", out);
+
+        fputs("static long long cct_rt_scan_pos(void *p) {\n", out);
+        fputs("    cct_rt_scan_t *c = (cct_rt_scan_t*)p;\n", out);
+        fputs("    if (!c) cct_rt_fail(\"scan pos null cursor\");\n", out);
+        fputs("    return c->pos;\n", out);
+        fputs("}\n\n", out);
+
+        fputs("static long long cct_rt_scan_eof(void *p) {\n", out);
+        fputs("    cct_rt_scan_t *c = (cct_rt_scan_t*)p;\n", out);
+        fputs("    if (!c) cct_rt_fail(\"scan eof null cursor\");\n", out);
+        fputs("    return (c->pos >= c->len) ? 1LL : 0LL;\n", out);
+        fputs("}\n\n", out);
+
+        fputs("static long long cct_rt_scan_peek(void *p) {\n", out);
+        fputs("    cct_rt_scan_t *c = (cct_rt_scan_t*)p;\n", out);
+        fputs("    if (!c) cct_rt_fail(\"scan peek null cursor\");\n", out);
+        fputs("    if (c->pos >= c->len) cct_rt_fail(\"scan peek at eof\");\n", out);
+        fputs("    return (long long)(unsigned char)c->src[c->pos];\n", out);
+        fputs("}\n\n", out);
+
+        fputs("static long long cct_rt_scan_next(void *p) {\n", out);
+        fputs("    cct_rt_scan_t *c = (cct_rt_scan_t*)p;\n", out);
+        fputs("    if (!c) cct_rt_fail(\"scan next null cursor\");\n", out);
+        fputs("    if (c->pos >= c->len) cct_rt_fail(\"scan next at eof\");\n", out);
+        fputs("    long long out_ch = (long long)(unsigned char)c->src[c->pos];\n", out);
+        fputs("    c->pos += 1;\n", out);
+        fputs("    return out_ch;\n", out);
+        fputs("}\n\n", out);
+
+        fputs("static void cct_rt_scan_free(void *p) {\n", out);
+        fputs("    if (!p) return;\n", out);
+        fputs("    free(p);\n", out);
+        fputs("}\n\n", out);
+
+        fputs("typedef struct {\n", out);
+        fputs("    char *data;\n", out);
+        fputs("    long long len;\n", out);
+        fputs("    long long cap;\n", out);
+        fputs("} cct_rt_builder_t;\n\n", out);
+
+        fputs("static cct_rt_builder_t *cct_rt_builder_require_nonnull(void *p, const char *ctx) {\n", out);
+        fputs("    cct_rt_builder_t *b = (cct_rt_builder_t*)p;\n", out);
+        fputs("    if (!b) cct_rt_fail(ctx ? ctx : \"builder null pointer\");\n", out);
+        fputs("    return b;\n", out);
+        fputs("}\n\n", out);
+
+        fputs("static void cct_rt_builder_reserve(cct_rt_builder_t *b, long long extra) {\n", out);
+        fputs("    if (!b) cct_rt_fail(\"builder reserve null pointer\");\n", out);
+        fputs("    if (extra < 0) cct_rt_fail(\"builder reserve negative extra\");\n", out);
+        fputs("    if (b->cap <= 0) cct_rt_fail(\"builder reserve invalid capacity\");\n", out);
+        fputs("    long long need = b->len + extra + 1;\n", out);
+        fputs("    if (need <= b->cap) return;\n", out);
+        fputs("    long long new_cap = b->cap;\n", out);
+        fputs("    while (new_cap < need) {\n", out);
+        fputs("        if (new_cap > (9223372036854775807LL / 2)) {\n", out);
+        fputs("            new_cap = need;\n", out);
+        fputs("            break;\n", out);
+        fputs("        }\n", out);
+        fputs("        new_cap *= 2;\n", out);
+        fputs("    }\n", out);
+        fputs("    char *new_data = (char*)realloc(b->data, (size_t)new_cap);\n", out);
+        fputs("    if (!new_data) cct_rt_fail(\"builder reserve allocation failed\");\n", out);
+        fputs("    b->data = new_data;\n", out);
+        fputs("    b->cap = new_cap;\n", out);
+        fputs("}\n\n", out);
+
+        fputs("static void *cct_rt_builder_init(void) {\n", out);
+        fputs("    cct_rt_builder_t *b = (cct_rt_builder_t*)malloc(sizeof(cct_rt_builder_t));\n", out);
+        fputs("    if (!b) cct_rt_fail(\"builder init allocation failed\");\n", out);
+        fputs("    b->cap = 32;\n", out);
+        fputs("    b->len = 0;\n", out);
+        fputs("    b->data = (char*)malloc((size_t)b->cap);\n", out);
+        fputs("    if (!b->data) cct_rt_fail(\"builder init buffer allocation failed\");\n", out);
+        fputs("    b->data[0] = '\\0';\n", out);
+        fputs("    return b;\n", out);
+        fputs("}\n\n", out);
+
+        fputs("static void cct_rt_builder_append(void *p, const char *s) {\n", out);
+        fputs("    cct_rt_builder_t *b = cct_rt_builder_require_nonnull(p, \"builder append null pointer\");\n", out);
+        fputs("    const char *src = s ? s : \"\";\n", out);
+        fputs("    long long slen = (long long)strlen(src);\n", out);
+        fputs("    cct_rt_builder_reserve(b, slen);\n", out);
+        fputs("    memcpy(b->data + b->len, src, (size_t)slen + 1);\n", out);
+        fputs("    b->len += slen;\n", out);
+        fputs("}\n\n", out);
+
+        fputs("static void cct_rt_builder_append_char(void *p, long long c) {\n", out);
+        fputs("    cct_rt_builder_t *b = cct_rt_builder_require_nonnull(p, \"builder append_char null pointer\");\n", out);
+        fputs("    if (c < 0 || c > 255) cct_rt_fail(\"builder append_char expects byte range 0..255\");\n", out);
+        fputs("    cct_rt_builder_reserve(b, 1);\n", out);
+        fputs("    b->data[b->len] = (char)(unsigned char)c;\n", out);
+        fputs("    b->len += 1;\n", out);
+        fputs("    b->data[b->len] = '\\0';\n", out);
+        fputs("}\n\n", out);
+
+        fputs("static long long cct_rt_builder_len(void *p) {\n", out);
+        fputs("    cct_rt_builder_t *b = cct_rt_builder_require_nonnull(p, \"builder len null pointer\");\n", out);
+        fputs("    return b->len;\n", out);
+        fputs("}\n\n", out);
+
+        fputs("static char *cct_rt_builder_to_verbum(void *p) {\n", out);
+        fputs("    cct_rt_builder_t *b = cct_rt_builder_require_nonnull(p, \"builder to_verbum null pointer\");\n", out);
+        fputs("    char *out_s = (char*)malloc((size_t)b->len + 1);\n", out);
+        fputs("    if (!out_s) cct_rt_fail(\"builder to_verbum allocation failed\");\n", out);
+        fputs("    memcpy(out_s, b->data, (size_t)b->len + 1);\n", out);
+        fputs("    return out_s;\n", out);
+        fputs("}\n\n", out);
+
+        fputs("static void cct_rt_builder_clear(void *p) {\n", out);
+        fputs("    cct_rt_builder_t *b = cct_rt_builder_require_nonnull(p, \"builder clear null pointer\");\n", out);
+        fputs("    b->len = 0;\n", out);
+        fputs("    b->data[0] = '\\0';\n", out);
+        fputs("}\n\n", out);
+
+        fputs("static void cct_rt_builder_free(void *p) {\n", out);
+        fputs("    cct_rt_builder_t *b = (cct_rt_builder_t*)p;\n", out);
+        fputs("    if (!b) return;\n", out);
+        fputs("    free(b->data);\n", out);
+        fputs("    free(b);\n", out);
+        fputs("}\n\n", out);
+
+        fputs("typedef struct {\n", out);
+        fputs("    cct_rt_builder_t *buf;\n", out);
+        fputs("    long long indent;\n", out);
+        fputs("    int at_line_start;\n", out);
+        fputs("} cct_rt_writer_t;\n\n", out);
+
+        fputs("static cct_rt_writer_t *cct_rt_writer_require_nonnull(void *p, const char *ctx) {\n", out);
+        fputs("    cct_rt_writer_t *w = (cct_rt_writer_t*)p;\n", out);
+        fputs("    if (!w) cct_rt_fail(ctx ? ctx : \"writer null pointer\");\n", out);
+        fputs("    return w;\n", out);
+        fputs("}\n\n", out);
+
+        fputs("static void cct_rt_writer_apply_indent(cct_rt_writer_t *w) {\n", out);
+        fputs("    if (!w || !w->at_line_start) return;\n", out);
+        fputs("    long long spaces = w->indent * 2;\n", out);
+        fputs("    for (long long i = 0; i < spaces; i++) {\n", out);
+        fputs("        cct_rt_builder_append_char((void*)w->buf, 32LL);\n", out);
+        fputs("    }\n", out);
+        fputs("    w->at_line_start = 0;\n", out);
+        fputs("}\n\n", out);
+
+        fputs("static void *cct_rt_writer_init(void) {\n", out);
+        fputs("    cct_rt_writer_t *w = (cct_rt_writer_t*)malloc(sizeof(cct_rt_writer_t));\n", out);
+        fputs("    if (!w) cct_rt_fail(\"writer init allocation failed\");\n", out);
+        fputs("    w->buf = (cct_rt_builder_t*)cct_rt_builder_init();\n", out);
+        fputs("    w->indent = 0;\n", out);
+        fputs("    w->at_line_start = 1;\n", out);
+        fputs("    return w;\n", out);
+        fputs("}\n\n", out);
+
+        fputs("static void cct_rt_writer_indent(void *p) {\n", out);
+        fputs("    cct_rt_writer_t *w = cct_rt_writer_require_nonnull(p, \"writer indent null pointer\");\n", out);
+        fputs("    w->indent += 1;\n", out);
+        fputs("}\n\n", out);
+
+        fputs("static void cct_rt_writer_dedent(void *p) {\n", out);
+        fputs("    cct_rt_writer_t *w = cct_rt_writer_require_nonnull(p, \"writer dedent null pointer\");\n", out);
+        fputs("    if (w->indent <= 0) cct_rt_fail(\"writer dedent underflow\");\n", out);
+        fputs("    w->indent -= 1;\n", out);
+        fputs("}\n\n", out);
+
+        fputs("static void cct_rt_writer_write(void *p, const char *s) {\n", out);
+        fputs("    cct_rt_writer_t *w = cct_rt_writer_require_nonnull(p, \"writer write null pointer\");\n", out);
+        fputs("    const char *src = s ? s : \"\";\n", out);
+        fputs("    size_t n = strlen(src);\n", out);
+        fputs("    if (n == 0) return;\n", out);
+        fputs("    cct_rt_writer_apply_indent(w);\n", out);
+        fputs("    cct_rt_builder_append((void*)w->buf, src);\n", out);
+        fputs("    w->at_line_start = (src[n - 1] == '\\n') ? 1 : 0;\n", out);
+        fputs("}\n\n", out);
+
+        fputs("static void cct_rt_writer_writeln(void *p, const char *s) {\n", out);
+        fputs("    cct_rt_writer_t *w = cct_rt_writer_require_nonnull(p, \"writer writeln null pointer\");\n", out);
+        fputs("    const char *src = s ? s : \"\";\n", out);
+        fputs("    cct_rt_writer_apply_indent(w);\n", out);
+        fputs("    cct_rt_builder_append((void*)w->buf, src);\n", out);
+        fputs("    cct_rt_builder_append_char((void*)w->buf, 10LL);\n", out);
+        fputs("    w->at_line_start = 1;\n", out);
+        fputs("}\n\n", out);
+
+        fputs("static char *cct_rt_writer_to_verbum(void *p) {\n", out);
+        fputs("    cct_rt_writer_t *w = cct_rt_writer_require_nonnull(p, \"writer to_verbum null pointer\");\n", out);
+        fputs("    return cct_rt_builder_to_verbum((void*)w->buf);\n", out);
+        fputs("}\n\n", out);
+
+        fputs("static void cct_rt_writer_free(void *p) {\n", out);
+        fputs("    cct_rt_writer_t *w = (cct_rt_writer_t*)p;\n", out);
+        fputs("    if (!w) return;\n", out);
+        fputs("    cct_rt_builder_free((void*)w->buf);\n", out);
+        fputs("    free(w);\n", out);
         fputs("}\n\n", out);
     }
 

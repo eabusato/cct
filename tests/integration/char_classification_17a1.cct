@@ -1,0 +1,34 @@
+INCIPIT grimoire "char_classification_17a1"
+
+ADVOCARE "cct/verbum.cct"
+ADVOCARE "cct/char.cct"
+
+RITUALE main() REDDE REX
+  EVOCA VERBUM src AD "9AZ_ \n"
+  EVOCA MILES d9 AD CONIURA char_at(src, 0)
+  EVOCA MILES aA AD CONIURA char_at(src, 1)
+  EVOCA MILES aZ AD CONIURA char_at(src, 2)
+  EVOCA MILES us AD CONIURA char_at(src, 3)
+  EVOCA MILES sp AD CONIURA char_at(src, 4)
+  EVOCA MILES nl AD CONIURA char_at(src, 5)
+
+  SI CONIURA is_digit(d9) == VERUM
+    SI CONIURA is_digit(aA) == FALSUM
+      SI CONIURA is_alpha(aZ) == VERUM
+        SI CONIURA is_alpha(us) == FALSUM
+          SI CONIURA is_whitespace(sp) == VERUM
+            SI CONIURA is_whitespace(nl) == VERUM
+              SI CONIURA is_whitespace(aA) == FALSUM
+                REDDE 0
+              FIN SI
+            FIN SI
+          FIN SI
+        FIN SI
+      FIN SI
+    FIN SI
+  FIN SI
+
+  REDDE 1
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

@@ -1,0 +1,11 @@
+INCIPIT grimoire "args"
+
+RITUALE argc() REDDE REX
+  REDDE OBSECRO args_argc()
+EXPLICIT RITUALE
+
+RITUALE arg(REX i) REDDE VERBUM
+  REDDE OBSECRO args_arg(i)
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

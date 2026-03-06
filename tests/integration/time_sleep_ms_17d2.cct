@@ -1,0 +1,18 @@
+INCIPIT grimoire "time_sleep_ms_17d2"
+
+ADVOCARE "cct/time.cct"
+
+RITUALE main() REDDE REX
+  EVOCA REX t1 AD CONIURA now_ms()
+  CONIURA sleep_ms(20)
+  EVOCA REX t2 AD CONIURA now_ms()
+  EVOCA REX dt AD t2 - t1
+
+  SI dt >= 10
+    REDDE 0
+  FIN SI
+
+  REDDE 1
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

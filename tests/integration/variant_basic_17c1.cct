@@ -1,0 +1,20 @@
+INCIPIT grimoire "variant_basic_17c1"
+
+ADVOCARE "cct/variant.cct"
+
+RITUALE main() REDDE REX
+  EVOCA REX x AD 99
+  EVOCA SPECULUM REX p AD SPECULUM x
+  EVOCA Variant v AD CONIURA variant_make(1, p)
+
+  SI CONIURA variant_tag(v) == 1
+    EVOCA SPECULUM REX p2 AD CONIURA variant_payload(v)
+    SI *p2 == 99
+      REDDE 0
+    FIN SI
+  FIN SI
+
+  REDDE 1
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

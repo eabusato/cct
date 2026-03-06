@@ -1,0 +1,52 @@
+INCIPIT grimoire "verbum_builder"
+
+ADVOCARE "cct/fmt.cct"
+
+RITUALE builder_init() REDDE SPECULUM NIHIL
+  REDDE OBSECRO builder_init()
+EXPLICIT RITUALE
+
+RITUALE builder_append(SPECULUM NIHIL b, VERBUM s) REDDE NIHIL
+  OBSECRO builder_append(b, s)
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE builder_append_char(SPECULUM NIHIL b, MILES c) REDDE NIHIL
+  OBSECRO builder_append_char(b, c)
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE builder_append_int(SPECULUM NIHIL b, REX v) REDDE NIHIL
+  CONIURA builder_append(b, CONIURA stringify_int(v))
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE builder_append_bool(SPECULUM NIHIL b, VERUM v) REDDE NIHIL
+  CONIURA builder_append(b, CONIURA stringify_bool(v))
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE builder_append_real(SPECULUM NIHIL b, UMBRA v) REDDE NIHIL
+  CONIURA builder_append(b, CONIURA stringify_real(v))
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE builder_len(SPECULUM NIHIL b) REDDE REX
+  REDDE OBSECRO builder_len(b)
+EXPLICIT RITUALE
+
+RITUALE builder_to_verbum(SPECULUM NIHIL b) REDDE VERBUM
+  REDDE OBSECRO builder_to_verbum(b)
+EXPLICIT RITUALE
+
+RITUALE builder_clear(SPECULUM NIHIL b) REDDE NIHIL
+  OBSECRO builder_clear(b)
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE builder_free(SPECULUM NIHIL b) REDDE NIHIL
+  OBSECRO builder_free(b)
+  REDDE
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

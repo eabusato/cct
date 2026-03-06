@@ -1,0 +1,10 @@
+INCIPIT grimoire "time_sleep_negative_17d2"
+
+ADVOCARE "cct/time.cct"
+
+RITUALE main() REDDE REX
+  CONIURA sleep_ms(-1)
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

@@ -1,0 +1,16 @@
+INCIPIT grimoire "env_cwd_basic_17d1"
+
+ADVOCARE "cct/env.cct"
+ADVOCARE "cct/verbum.cct"
+
+RITUALE main() REDDE REX
+  EVOCA VERBUM p AD CONIURA cwd()
+  SI CONIURA len(p) > 0
+    SI CONIURA find(p, "cct") >= 0
+      REDDE 0
+    FIN SI
+  FIN SI
+  REDDE 1
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

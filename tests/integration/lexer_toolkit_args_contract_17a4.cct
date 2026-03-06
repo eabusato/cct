@@ -1,0 +1,24 @@
+INCIPIT grimoire "lexer_toolkit_args_contract_17a4"
+
+ADVOCARE "cct/args.cct"
+ADVOCARE "cct/verbum.cct"
+
+RITUALE main() REDDE REX
+  SI CONIURA argc() == 1
+    REDDE 0
+  FIN SI
+
+  SI CONIURA argc() == 3
+    EVOCA VERBUM a AD CONIURA arg(1)
+    EVOCA VERBUM b AD CONIURA arg(2)
+    SI CONIURA compare(a, "alpha") == 0
+      SI CONIURA compare(b, "beta") == 0
+        REDDE 0
+      FIN SI
+    FIN SI
+  FIN SI
+
+  REDDE 1
+EXPLICIT RITUALE
+
+EXPLICIT grimoire
