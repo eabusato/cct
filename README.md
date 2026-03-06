@@ -16,6 +16,8 @@ CCT is a compiled, ritual-themed programming language with deterministic sigil g
 
 Implemented phases: **0 → 13D.4 + 13M.B2 + 14A.1/14A.2/14A.3/14A.4 + 15A.1/15A.2/15A.3/15A.4/15B.1/15B.2/15B.3/15B.4/15C.1/15C.2/15C.3/15C.4/15D.1/15D.2/15D.3/15D.4**.
 
+**Phase-reference convention:** phase labels found in file/module headers, local markers, or help text may refer to the phase in which that specific component was introduced or stabilized. They are historical markers and do not necessarily represent the current global project status shown above.
+
 Highlights of the current baseline:
 - Real end-to-end compiler pipeline (`.cct -> parse/semantic -> codegen -> .cgen.c -> host C compiler -> binary`)
 - Deterministic sigil generation (`.svg` + `.sigil`) integrated into normal compile and `--sigilo-only`
