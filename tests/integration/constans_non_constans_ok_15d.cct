@@ -1,0 +1,9 @@
+INCIPIT grimoire "non_constans_ok"
+
+RITUALE main() REDDE REX
+  EVOCA REX x AD 5
+  VINCIRE x AD 10
+  REDDE x
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

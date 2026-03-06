@@ -1,0 +1,10 @@
+INCIPIT grimoire "xor_toggle"
+
+RITUALE main() REDDE REX
+  EVOCA REX x AD 7
+  VINCIRE x AD x XOR 2
+  VINCIRE x AD x XOR 2
+  REDDE x
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

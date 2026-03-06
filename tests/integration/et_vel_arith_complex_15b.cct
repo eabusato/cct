@@ -1,0 +1,11 @@
+INCIPIT grimoire "arith_logic"
+
+RITUALE main() REDDE REX
+  EVOCA REX x AD 7
+  SI x % 2 == 1 ET x > 5 VEL x == 0
+    REDDE 1
+  FIN SI
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

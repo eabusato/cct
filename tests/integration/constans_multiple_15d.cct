@@ -1,0 +1,10 @@
+INCIPIT grimoire "constans_multi"
+
+RITUALE main() REDDE REX
+  EVOCA CONSTANS REX a AD 10
+  EVOCA CONSTANS REX b AD 20
+  EVOCA REX soma AD a + b
+  REDDE soma
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

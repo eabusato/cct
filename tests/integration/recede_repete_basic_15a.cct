@@ -1,0 +1,14 @@
+INCIPIT grimoire "recede_repete"
+
+RITUALE main() REDDE REX
+  EVOCA REX soma AD 0
+  REPETE i DE 1 AD 7
+    SI i == 3
+      RECEDE
+    FIN SI
+    VINCIRE soma AD soma + i
+  FIN REPETE
+  REDDE soma
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

@@ -1,7 +1,7 @@
 # soma_basica
 
 - Kind: `rituale`
-- Module: `/home/eabusato/dev/cct/tests/integration/project_12f_basic/lib/util.cct`
+- Module: `/home/eabusato/dev/cct_bleh/tests/integration/project_12f_basic/lib/util.cct`
 - Visibility: `public`
 
 ## Signature

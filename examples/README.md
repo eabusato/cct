@@ -1,6 +1,10 @@
-# CCT Examples (FASE 12H)
+# CCT Examples (Baseline: FASE 15D.4)
 
 Example programs showcasing Clavicula Turing language features and standard library usage.
+
+Status note:
+- This examples catalog remains valid on the current baseline (`FASE 15D.4 completed`).
+- Some filenames keep historical phase tags to preserve traceability.
 
 ## Basic Examples
 
@@ -32,7 +36,7 @@ cct ars_magna_showcase.cct
 ```
 
 ### option_result.cct
-**Option and Result types** (FASE 12D):
+**Option and Result types** (introduced in FASE 12D, still supported):
 - Option\<T\> for nullable values (Some/None)
 - Result\<T, E\> for error handling (Ok/Err)
 - Safe error patterns
@@ -128,4 +132,5 @@ cct lint <example.cct>
 - Language spec: `docs/spec.md`
 - Standard library: `docs/bibliotheca_canonica.md`
 - Architecture: `docs/architecture.md`
-- Release notes: `docs/release/FASE_12_RELEASE_NOTES.md`
+- Current phase status and next-step planning: `docs/roadmap.md`
+- Historical release packages: `docs/release/`

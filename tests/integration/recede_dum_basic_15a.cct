@@ -1,0 +1,16 @@
+INCIPIT grimoire "recede_dum"
+
+RITUALE main() REDDE REX
+  EVOCA REX soma AD 0
+  EVOCA REX i AD 0
+  DUM i < 6
+    VINCIRE i AD i + 1
+    SI i == 3
+      RECEDE
+    FIN SI
+    VINCIRE soma AD soma + i
+  FIN DUM
+  REDDE soma
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

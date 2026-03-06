@@ -1,0 +1,9 @@
+INCIPIT grimoire "frange_outside"
+
+RITUALE main() REDDE REX
+  EVOCA REX x AD 0
+  FRANGE
+  REDDE x
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

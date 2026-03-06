@@ -1,0 +1,19 @@
+INCIPIT grimoire "frange_recede_dum_paths"
+
+RITUALE main() REDDE REX
+  EVOCA REX i AD 0
+  EVOCA REX soma AD 0
+  DUM i < 10
+    VINCIRE i AD i + 1
+    SI i == 2
+      RECEDE
+    FIN SI
+    SI i == 5
+      FRANGE
+    FIN SI
+    VINCIRE soma AD soma + i
+  FIN DUM
+  REDDE soma
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

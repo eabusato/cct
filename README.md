@@ -12,9 +12,9 @@ CCT is a compiled, ritual-themed programming language with deterministic sigil g
 
 ## Status
 
-**Current status: FASE 14A.4 completed** (FASE 13/13M packages remain closed; FASE 14 release-hardening is in progress at subphase B).
+**Current status: FASE 15D.4 completed** (FASE 15 closure gate completed; baseline is ready for FASE 16 work).
 
-Implemented phases: **0 → 13D.4 + 13M.B2 + 14A.1/14A.2/14A.3/14A.4**.
+Implemented phases: **0 → 13D.4 + 13M.B2 + 14A.1/14A.2/14A.3/14A.4 + 15A.1/15A.2/15A.3/15A.4/15B.1/15B.2/15B.3/15B.4/15C.1/15C.2/15C.3/15C.4/15D.1/15D.2/15D.3/15D.4**.
 
 Highlights of the current baseline:
 - Real end-to-end compiler pipeline (`.cct -> parse/semantic -> codegen -> .cgen.c -> host C compiler -> binary`)
@@ -54,6 +54,7 @@ Highlights of the current baseline:
 - Canonical documentation generator in FASE 12G (`cct doc`) for module/symbol API pages (markdown/html)
 - Common math operators in FASE 13M: `**` (power), `//` (floor integer division), `%%` (euclidean modulo)
 - FASE 14A hardening: canonical diagnostic taxonomy + canonical exit-code contract + sigilo explain mode + deterministic sigilo diagnostic ordering
+- FASE 15 closure set: `FRANGE`/`RECEDE` loop-control stability, logical `ET`/`VEL` with precedence/parentheses, stable bitwise/shift operators, and `CONSTANS` semantic+codegen enforcement (locals, parameters, and const-pointer binding)
 
 ## Build
 
@@ -212,7 +213,7 @@ Typical local flow:
 ```
 
 Sigilo-focused local workflows (FASE 13B.1):
-- minimal daily loop and strict pre-merge loop are documented in `docs/sigilo_workflow_local_13b1.md`
+- minimal daily loop and strict pre-merge loop are consolidated in `docs/sigilo_operations_14b2.md`
 - strict baseline gate uses:
   - `./cct sigilo baseline check <artifact.sigil> --strict --summary`
   - exit code `2` for blocking drift (`review-required` or `behavioral-risk`)
@@ -227,7 +228,7 @@ Sigilo-focused CI profiles (FASE 13B.3):
   - `./cct test --project . --sigilo-check --sigilo-ci-profile gated`
   - `./cct build --project . --sigilo-check --sigilo-ci-profile release`
   - `./cct build --project . --sigilo-check --sigilo-ci-profile advisory --sigilo-override-behavioral-risk`
-- reference contract: `docs/sigilo_ci_contract_13b3.md`
+- operational contract reference: `docs/sigilo_operations_14b2.md`
 
 Sigilo operational observability (FASE 13B.4):
 - report signature: `format=cct.sigilo.report.v1`
@@ -241,7 +242,7 @@ Sigilo consumer compatibility (FASE 13C.3):
   - `legacy-tolerant`: maximum compatibility for legacy readers
   - `current-default`: canonical default profile in FASE 13 tooling
   - `strict-contract`: blocking contract enforcement (`--strict` alias)
-- migration and fallback guide: `docs/sigilo_consumer_compat_13c3.md`
+- migration and fallback behavior is covered in current operational guidance and validator profile docs
 
 Sigilo strict/tolerant validation (FASE 13C.4):
 - canonical validator command: `./cct sigilo validate <artifact.sigil> [--strict] [--consumer-profile ...]`
@@ -249,14 +250,10 @@ Sigilo strict/tolerant validation (FASE 13C.4):
 - strict-contract profile blocks contractual violations for release gates
 
 FASE 13 release package (FASE 13D.4):
-- `docs/release/FASE_13_FINAL_SNAPSHOT.md`
-- `docs/release/FASE_13_COMPATIBILITY_MATRIX.md`
-- `docs/release/FASE_13_KNOWN_LIMITS.md`
 - `docs/release/FASE_13_RELEASE_NOTES.md`
 
 FASE 13M addendum package (FASE 13M.B2):
-- `docs/release/FASE_13M_FINAL_SNAPSHOT.md`
-- `docs/release/FASE_13M_RELEASE_NOTES.md`
+- details were consolidated into historical internal release records
 
 ## Common Math Operators (FASE 13M)
 
@@ -353,7 +350,7 @@ Current delivery in FASE 11H:
 - final stdlib subset manifest freeze (`docs/stdlib_subset_11h.md`)
 - final stability matrix (stable/experimental/runtime-internal) (`docs/stdlib_stability_matrix_11h.md`)
 - packaging/install closure (`make dist`, `make install`, `make uninstall`)
-- public technical release notes (`docs/release_11_notes.md`)
+- public technical release notes (`docs/release/FASE_11_RELEASE_NOTES.md`)
 
 Current delivery in FASE 12D.1:
 - canonical stdlib modules `cct/option` and `cct/result`
@@ -443,7 +440,7 @@ References:
 - `docs/install.md`
 - `docs/stdlib_subset_11h.md`
 - `docs/stdlib_stability_matrix_11h.md`
-- `docs/release_11_notes.md`
+- `docs/release/FASE_11_RELEASE_NOTES.md`
 
 ## Quick Examples
 
@@ -481,24 +478,27 @@ Sigil-only (system + local in essential mode):
 - `docs/`: specification, architecture, and roadmap
 - `FASE_*_CCT.md`: phase planning/execution documents
 
-## FASE 13 + 13M Release Package
+## Release Documentation Packages
 
-The active public release package is centered on **FASE 13D.4 + FASE 13M.B2**, with FASE 14 currently focused on hardening and contract harmonization.
+The current project baseline is **FASE 15D.4 completed**. Historical release packages remain available for traceability and migration references.
 
-**Official release documentation:**
-- `docs/release/FASE_13_FINAL_SNAPSHOT.md` — Complete scope and closure status of the sigilo tooling package
-- `docs/release/FASE_13_COMPATIBILITY_MATRIX.md` — Compatibility guarantees and migration contract
+**Current-phase release documentation:**
+- `docs/release/FASE_15_RELEASE_NOTES.md` — FASE 15 completion summary and compatibility notes
+
+**Historical package documentation:**
+- `docs/release/FASE_11_RELEASE_NOTES.md` — Early stdlib/platform release notes
+- `docs/release/FASE_12_RELEASE_NOTES.md` — FASE 12 delivery notes
 - `docs/release/FASE_13_RELEASE_NOTES.md` — Highlights and operational guidance
-- `docs/release/FASE_13_KNOWN_LIMITS.md` — Explicit boundaries of the 13 package
-- `docs/release/FASE_13M_FINAL_SNAPSHOT.md` — Common math operators addendum closure snapshot
-- `docs/release/FASE_13M_RELEASE_NOTES.md` — 13M operator-package highlights and semantics
+- `docs/release/FASE_14_RELEASE_NOTES.md` — Hardening-stream release notes
+- detailed matrices/snapshots from older phases were archived from the public `docs/release` surface
 
 **Quick reference:**
-- FASE 0–13 + 13M public contracts remain stable
-- FASE 14A added hardening contracts: diagnostics taxonomy, exit-code policy, explain mode, deterministic sigilo diagnostic order
+- FASE 0–14 public contracts remain stable
+- FASE 15 closure set is complete (`FRANGE`, `RECEDE`, logical operators, bitwise operators, and `CONSTANS`)
+- Bootstrap-oriented architecture work starts in FASE 16
 - Zero silent-breaking-change policy remains active
 
-See release documentation for complete details.
+See `docs/roadmap.md` and `docs/spec.md` for current-phase status and language-surface details.
 
 ## Documentation
 
@@ -530,13 +530,12 @@ CCT documentation is organized by audience and purpose. Choose your reading path
 ### For Advanced Users and Contributors
 1. [Architecture](docs/architecture.md) - Compiler internals
 2. [Roadmap](docs/roadmap.md) - Phase history and future plans
-3. [FASE 13 + 13M Release Documentation](docs/release/):
-   - [FASE 13 Final Snapshot](docs/release/FASE_13_FINAL_SNAPSHOT.md) - Complete sigilo tooling package overview
-   - [FASE 13 Compatibility Matrix](docs/release/FASE_13_COMPATIBILITY_MATRIX.md) - Compatibility and migration surface
+3. [Release Documentation (Historical Packages)](docs/release/):
+   - [FASE 15 Release Notes](docs/release/FASE_15_RELEASE_NOTES.md) - FASE 15 closure summary and compatibility notes
+   - [FASE 14 Release Notes](docs/release/FASE_14_RELEASE_NOTES.md) - Hardening-stream highlights
    - [FASE 13 Release Notes](docs/release/FASE_13_RELEASE_NOTES.md) - Highlights and migration guide
-   - [FASE 13 Known Limits](docs/release/FASE_13_KNOWN_LIMITS.md) - Current boundaries
-   - [FASE 13M Final Snapshot](docs/release/FASE_13M_FINAL_SNAPSHOT.md) - Common math addendum closure
-   - [FASE 13M Release Notes](docs/release/FASE_13M_RELEASE_NOTES.md) - Math addendum highlights
+   - [FASE 12 Release Notes](docs/release/FASE_12_RELEASE_NOTES.md) - FASE 12 delivery summary
+   - [FASE 11 Release Notes](docs/release/FASE_11_RELEASE_NOTES.md) - Early stdlib/platform notes
 
 **Estimated time**: 3-4 hours
 
@@ -545,7 +544,7 @@ CCT documentation is organized by audience and purpose. Choose your reading path
 - **architecture.md**: How the compiler works internally
 - **bibliotheca_canonica.md**: Standard library concepts and APIs
 - **roadmap.md**: Where we came from, where we're going
-- **release/**: Official FASE 13 + 13M release documentation (current release)
+- **release/**: phase release notes and public-facing closure summaries
 
 ### All Documentation Files
 Primary docs:
@@ -553,7 +552,8 @@ Primary docs:
 - `docs/architecture.md`
 - `docs/roadmap.md`
 - `docs/bibliotheca_canonica.md`
-- `docs/release/` — FASE 13 + 13M official release documentation
+- `docs/release/FASE_15_RELEASE_NOTES.md` — current phase release notes
+- `docs/release/` — phase release-note index (11..15)
 
 Tooling and guides:
 - `docs/install.md`
@@ -567,7 +567,7 @@ Tooling and guides:
 Project and phase dossiers:
 - `PROJETO_CCT.md`
 - `PROJETO_CCT_V2.md`
-- `FASE_0_CCT.md` ... `FASE_12H_CCT.md`
+- `md_out/FASE_*_CCT.md` (phase execution plans and records, including the full FASE 15 track)
 
 ## License
 

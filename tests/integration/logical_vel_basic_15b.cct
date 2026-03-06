@@ -1,0 +1,11 @@
+INCIPIT grimoire "vel_basic"
+
+RITUALE main() REDDE REX
+  EVOCA REX x AD 15
+  SI x < 0 VEL x > 10
+    REDDE 1
+  FIN SI
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

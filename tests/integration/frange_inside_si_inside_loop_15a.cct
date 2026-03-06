@@ -1,0 +1,14 @@
+INCIPIT grimoire "frange_si_in_loop"
+
+RITUALE main() REDDE REX
+  EVOCA REX i AD 0
+  DUM i < 10
+    SI i == 3
+      FRANGE
+    FIN SI
+    VINCIRE i AD i + 1
+  FIN DUM
+  REDDE i
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

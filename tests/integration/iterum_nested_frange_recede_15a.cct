@@ -1,0 +1,32 @@
+INCIPIT grimoire "iterum_nested_frange_recede"
+
+RITUALE main() REDDE REX
+  EVOCA SERIES REX[3] a
+  VINCIRE a[0] AD 1
+  VINCIRE a[1] AD 2
+  VINCIRE a[2] AD 3
+
+  EVOCA SERIES REX[4] b
+  VINCIRE b[0] AD 4
+  VINCIRE b[1] AD 5
+  VINCIRE b[2] AD 6
+  VINCIRE b[3] AD 7
+
+  EVOCA REX total AD 0
+
+  ITERUM x IN a COM
+    SI x == 2
+      RECEDE
+    FIN SI
+    ITERUM y IN b COM
+      SI y == 6
+        FRANGE
+      FIN SI
+      VINCIRE total AD total + x + y
+    FIN ITERUM
+  FIN ITERUM
+
+  REDDE total
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

@@ -1,0 +1,9 @@
+INCIPIT grimoire "constans_runtime"
+
+RITUALE main() REDDE REX
+  EVOCA CONSTANS REX max AD 255
+  EVOCA REX x AD max DEXTER 4
+  REDDE x
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

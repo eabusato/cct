@@ -5,11 +5,36 @@
 #include "../../src/sigilo/sigil_parse.h"
 #include "../../src/sigilo/sigil_diff.h"
 
+#include <errno.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <sys/stat.h>
+
+static int ensure_parent_dir(const char *path) {
+    if (!path) return 0;
+    const char *slash = strrchr(path, '/');
+    if (!slash) return 1;
+
+    char dir[1024];
+    size_t len = (size_t)(slash - path);
+    if (len == 0 || len >= sizeof(dir)) return 0;
+
+    memcpy(dir, path, len);
+    dir[len] = '\0';
+
+    for (char *p = dir + 1; *p; p++) {
+        if (*p != '/') continue;
+        *p = '\0';
+        if (mkdir(dir, 0777) != 0 && errno != EEXIST) return 0;
+        *p = '/';
+    }
+
+    return mkdir(dir, 0777) == 0 || errno == EEXIST;
+}
 
 static int write_text_file(const char *path, const char *content) {
+    if (!ensure_parent_dir(path)) return 0;
     FILE *f = fopen(path, "wb");
     if (!f) return 0;
     size_t n = strlen(content);
@@ -56,8 +81,8 @@ static int parse_tolerant(const char *path, const char *content, cct_sigil_docum
 }
 
 static int test_diff_none(void) {
-    const char *path_a = "/tmp/cct_sigil_diff_none_a.sigil";
-    const char *path_b = "/tmp/cct_sigil_diff_none_b.sigil";
+    const char *path_a = "tests/.tmp/cct_sigil_diff_none_a.sigil";
+    const char *path_b = "tests/.tmp/cct_sigil_diff_none_b.sigil";
     const char *content =
         "format = cct.sigil.v1\n"
         "sigilo_scope = local\n"
@@ -84,8 +109,8 @@ static int test_diff_none(void) {
 }
 
 static int test_diff_order_invariant(void) {
-    const char *path_a = "/tmp/cct_sigil_diff_order_a.sigil";
-    const char *path_b = "/tmp/cct_sigil_diff_order_b.sigil";
+    const char *path_a = "tests/.tmp/cct_sigil_diff_order_a.sigil";
+    const char *path_b = "tests/.tmp/cct_sigil_diff_order_b.sigil";
     const char *content_a =
         "format = cct.sigil.v1\n"
         "sigilo_scope = local\n"
@@ -120,8 +145,8 @@ static int test_diff_order_invariant(void) {
 }
 
 static int test_diff_informational_totals_change(void) {
-    const char *path_a = "/tmp/cct_sigil_diff_info_a.sigil";
-    const char *path_b = "/tmp/cct_sigil_diff_info_b.sigil";
+    const char *path_a = "tests/.tmp/cct_sigil_diff_info_a.sigil";
+    const char *path_b = "tests/.tmp/cct_sigil_diff_info_b.sigil";
     const char *content_a =
         "format = cct.sigil.v1\n"
         "sigilo_scope = local\n"
@@ -156,8 +181,8 @@ static int test_diff_informational_totals_change(void) {
 }
 
 static int test_diff_review_required_hash_change(void) {
-    const char *path_a = "/tmp/cct_sigil_diff_review_a.sigil";
-    const char *path_b = "/tmp/cct_sigil_diff_review_b.sigil";
+    const char *path_a = "tests/.tmp/cct_sigil_diff_review_a.sigil";
+    const char *path_b = "tests/.tmp/cct_sigil_diff_review_b.sigil";
     const char *content_a =
         "format = cct.sigil.v1\n"
         "sigilo_scope = local\n"
@@ -188,8 +213,8 @@ static int test_diff_review_required_hash_change(void) {
 }
 
 static int test_diff_behavioral_risk_and_renderers(void) {
-    const char *path_a = "/tmp/cct_sigil_diff_risk_a.sigil";
-    const char *path_b = "/tmp/cct_sigil_diff_risk_b.sigil";
+    const char *path_a = "tests/.tmp/cct_sigil_diff_risk_a.sigil";
+    const char *path_b = "tests/.tmp/cct_sigil_diff_risk_b.sigil";
     const char *content_a =
         "format = cct.sigil.v1\n"
         "sigilo_scope = local\n"
@@ -212,23 +237,23 @@ static int test_diff_behavioral_risk_and_renderers(void) {
     ok = ok && diff.count > 0;
     ok = ok && diff.highest_severity == CCT_SIGIL_DIFF_SEVERITY_BEHAVIORAL_RISK;
 
-    FILE *f_struct = fopen("/tmp/cct_sigil_diff_structured.out", "wb");
+    FILE *f_struct = fopen("tests/.tmp/cct_sigil_diff_structured.out", "wb");
     if (!f_struct) ok = 0;
     if (f_struct) {
         ok = ok && cct_sigil_diff_render_structured(f_struct, &diff);
         fclose(f_struct);
     }
 
-    FILE *f_text = fopen("/tmp/cct_sigil_diff_text.out", "wb");
+    FILE *f_text = fopen("tests/.tmp/cct_sigil_diff_text.out", "wb");
     if (!f_text) ok = 0;
     if (f_text) {
         ok = ok && cct_sigil_diff_render_text(f_text, &diff, false);
         fclose(f_text);
     }
 
-    ok = ok && file_contains("/tmp/cct_sigil_diff_structured.out", "highest_severity = behavioral-risk");
-    ok = ok && file_contains("/tmp/cct_sigil_diff_text.out", "kind=changed");
-    ok = ok && file_contains("/tmp/cct_sigil_diff_text.out", "key=sigilo_scope");
+    ok = ok && file_contains("tests/.tmp/cct_sigil_diff_structured.out", "highest_severity = behavioral-risk");
+    ok = ok && file_contains("tests/.tmp/cct_sigil_diff_text.out", "kind=changed");
+    ok = ok && file_contains("tests/.tmp/cct_sigil_diff_text.out", "key=sigilo_scope");
 
     cct_sigil_diff_result_dispose(&diff);
     cct_sigil_document_dispose(&a);
@@ -237,8 +262,8 @@ static int test_diff_behavioral_risk_and_renderers(void) {
 }
 
 static int test_diff_13c2_analytical_blocks_severity(void) {
-    const char *path_a = "/tmp/cct_sigil_diff_13c2_a.sigil";
-    const char *path_b = "/tmp/cct_sigil_diff_13c2_b.sigil";
+    const char *path_a = "tests/.tmp/cct_sigil_diff_13c2_a.sigil";
+    const char *path_b = "tests/.tmp/cct_sigil_diff_13c2_b.sigil";
     const char *content_a =
         "format = cct.sigil.v1\n"
         "sigilo_scope = local\n"

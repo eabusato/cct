@@ -1,6 +1,6 @@
 # Module mod_002_math
 
-- Path: `/home/eabusato/dev/cct/lib/cct/math.cct`
+- Path: `/home/eabusato/dev/cct_bleh/lib/cct/math.cct`
 - Origin: stdlib (cct/...)
 
 ## Symbols

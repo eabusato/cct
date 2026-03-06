@@ -1,0 +1,12 @@
+INCIPIT grimoire "constans_loop"
+
+RITUALE main() REDDE REX
+  EVOCA CONSTANS REX limite AD 5
+  EVOCA REX i AD 0
+  DUM i < limite
+    VINCIRE i AD i + 1
+  FIN DUM
+  REDDE i
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

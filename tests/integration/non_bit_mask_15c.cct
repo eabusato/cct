@@ -1,0 +1,10 @@
+INCIPIT grimoire "non_bit_mask"
+
+RITUALE main() REDDE REX
+  EVOCA REX mascara AD NON_BIT 7
+  EVOCA REX x AD 255
+  EVOCA REX r AD x ET_BIT mascara
+  REDDE r
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

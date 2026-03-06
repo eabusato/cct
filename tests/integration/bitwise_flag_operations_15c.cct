@@ -1,0 +1,13 @@
+INCIPIT grimoire "flags"
+
+RITUALE main() REDDE REX
+  EVOCA REX flags AD 0
+  VINCIRE flags AD flags VEL_BIT 1
+  VINCIRE flags AD flags VEL_BIT 4
+  SI flags ET_BIT 4
+    REDDE 1
+  FIN SI
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

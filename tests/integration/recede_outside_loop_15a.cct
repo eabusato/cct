@@ -1,0 +1,8 @@
+INCIPIT grimoire "recede_error"
+
+RITUALE main() REDDE REX
+  RECEDE
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

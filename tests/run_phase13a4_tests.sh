@@ -5,12 +5,16 @@
 
 set -euo pipefail
 
+ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+source "$ROOT_DIR/tests/test_tmpdir.sh"
+cct_setup_tmpdir "$ROOT_DIR"
+
 echo "FASE 13A.4 — Sigilo Baseline Tests"
 echo "========================================"
 
-SIG_A="/tmp/cct_sigilo_cli_13a4_a.sigil"
-SIG_B="/tmp/cct_sigilo_cli_13a4_b.sigil"
-BASE="/tmp/cct_sigilo_cli_13a4_baseline.sigil"
+SIG_A="$CCT_TMP_DIR/cct_sigilo_cli_13a4_a.sigil"
+SIG_B="$CCT_TMP_DIR/cct_sigilo_cli_13a4_b.sigil"
+BASE="$CCT_TMP_DIR/cct_sigilo_cli_13a4_baseline.sigil"
 
 cat > "$SIG_A" <<'SIGEOF'
 format = cct.sigil.v1
@@ -28,26 +32,26 @@ semantic_hash = 1111111111111111
 rituale = 1
 SIGEOF
 
-./cct sigilo baseline check "$SIG_A" --baseline "$BASE" --summary >/tmp/cct_sigilo_cli_13a4_missing.out
-if ! grep -q "status=missing" /tmp/cct_sigilo_cli_13a4_missing.out; then
+./cct sigilo baseline check "$SIG_A" --baseline "$BASE" --summary >$CCT_TMP_DIR/cct_sigilo_cli_13a4_missing.out
+if ! grep -q "status=missing" $CCT_TMP_DIR/cct_sigilo_cli_13a4_missing.out; then
   echo "expected missing baseline status"
   exit 1
 fi
 
-./cct sigilo baseline update "$SIG_A" --baseline "$BASE" >/tmp/cct_sigilo_cli_13a4_update.out
-if ! grep -q "status=written" /tmp/cct_sigilo_cli_13a4_update.out; then
+./cct sigilo baseline update "$SIG_A" --baseline "$BASE" >$CCT_TMP_DIR/cct_sigilo_cli_13a4_update.out
+if ! grep -q "status=written" $CCT_TMP_DIR/cct_sigilo_cli_13a4_update.out; then
   echo "expected baseline update status=written"
   exit 1
 fi
 
-./cct sigilo baseline check "$SIG_A" --baseline "$BASE" --summary >/tmp/cct_sigilo_cli_13a4_ok.out
-if ! grep -q "status=ok" /tmp/cct_sigilo_cli_13a4_ok.out; then
+./cct sigilo baseline check "$SIG_A" --baseline "$BASE" --summary >$CCT_TMP_DIR/cct_sigilo_cli_13a4_ok.out
+if ! grep -q "status=ok" $CCT_TMP_DIR/cct_sigilo_cli_13a4_ok.out; then
   echo "expected baseline check status=ok"
   exit 1
 fi
 
 set +e
-./cct sigilo baseline check "$SIG_B" --baseline "$BASE" --strict --summary >/tmp/cct_sigilo_cli_13a4_strict.out
+./cct sigilo baseline check "$SIG_B" --baseline "$BASE" --strict --summary >$CCT_TMP_DIR/cct_sigilo_cli_13a4_strict.out
 RC=$?
 set -e
 if [ "$RC" -ne 2 ]; then

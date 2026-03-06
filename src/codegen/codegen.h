@@ -51,6 +51,7 @@ typedef struct {
     cct_codegen_ordo_t *ordines;
     cct_codegen_local_t *locals;
     u32 scope_depth;
+    u32 loop_depth;
     const cct_ast_node_t *entry_rituale;
     bool current_function_returns_nihil;
     cct_codegen_fail_handler_t *fail_handlers;

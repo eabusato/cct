@@ -1,7 +1,7 @@
 # lcm
 
 - Kind: `rituale`
-- Module: `/home/eabusato/dev/cct/lib/cct/math.cct`
+- Module: `/home/eabusato/dev/cct_bleh/lib/cct/math.cct`
 - Visibility: `public`
 
 ## Signature

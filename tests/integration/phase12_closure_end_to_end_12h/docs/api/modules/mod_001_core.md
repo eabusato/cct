@@ -1,6 +1,6 @@
 # Module mod_001_core
 
-- Path: `/home/eabusato/dev/cct/tests/integration/phase12_closure_end_to_end_12h/lib/core.cct`
+- Path: `/home/eabusato/dev/cct_bleh/tests/integration/phase12_closure_end_to_end_12h/lib/core.cct`
 - Origin: user module
 
 ## Symbols

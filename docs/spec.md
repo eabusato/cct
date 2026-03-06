@@ -11,7 +11,7 @@ It is written to help you:
 
 ## Status
 
-Specification baseline: **FASE 14A.4** (FASE 13/13M closures + 14A hardening contracts).
+Specification baseline: **FASE 15D.4** (FASE 13/13M closures, FASE 14 hardening contracts, and the full FASE 15 closure set).
 
 The language is fully usable in its current subset, with explicit boundaries documented below.
 
@@ -264,7 +264,28 @@ Status:
 
 - `MENSURA(Type)` returns size as integer
 
-### 4.4 Generic Types and Params (`GENUS`)
+### 4.4 Type Modifiers: `CONSTANS`
+
+Syntax:
+
+```cct
+EVOCA CONSTANS T nome AD expr
+```
+
+Semantic contract:
+- a `CONSTANS` binding cannot be reassigned through `VINCIRE`
+- applies to local variables and `RITUALE` parameters
+- reassignment attempts are semantic errors with source location
+
+Code generation contract:
+- `CONSTANS` bindings are emitted with `const` in generated C
+- this provides defense-in-depth with host C compiler diagnostics
+
+`CONSTANS SPECULUM T` contract:
+- the pointer binding is constant (cannot be rebound to another address)
+- the pointed value can still be mutated through dereference when allowed by type/rules
+
+### 4.5 Generic Types and Params (`GENUS`)
 
 Type parameter declaration:
 
@@ -443,8 +464,8 @@ Subset constraints:
 ### 5.11 `FRANGE`, `RECEDE`, `TRANSITUS`
 
 Status:
-- parsed and represented in AST
-- currently outside the stable executable subset in codegen
+- `FRANGE` and `RECEDE`: Stable; valid only inside `DUM`, `DONEC`, `REPETE`, `ITERUM`
+- `TRANSITUS`: parsed and represented in AST; currently outside the stable executable subset in codegen
 
 ## 6. Expression Reference
 
@@ -481,7 +502,7 @@ CONIURA nome GENUS(T1, T2)(...)
 
 - `+x`, `-x`
 - `NON x`
-- `NON_BIT x` (semantic support; executable support restricted)
+- `NON_BIT x`
 - `*p`
 - `SPECULUM x` (address-of)
 
@@ -491,14 +512,14 @@ Arithmetic and comparison are stable in executable subset:
 - `+`, `-`, `*`, `/`, `%`, `**`, `//`, `%%`
 - `==`, `!=`, `<`, `<=`, `>`, `>=`
 
-Logical/bitwise/shift forms are recognized and semantically validated in many paths:
-- `ET`, `VEL`
+Logical/bitwise/shift forms:
+- `ET`, `VEL` (stable in executable subset)
 - `ET_BIT`, `VEL_BIT`, `XOR`
 - `SINISTER`, `DEXTER`
 
 Executable support note:
-- arithmetic/comparison are the primary stable codegen path
-- some logical/bitwise/shift combinations are outside current executable codegen subset
+- arithmetic/comparison, logical `ET`/`VEL`, and bitwise/shift forms are stable codegen paths
+- bitwise/shift operators require integer operands
 
 13M arithmetic addendum:
 - `**` is exponentiation and is right-associative (`2 ** 3 ** 2` = `2 ** (3 ** 2)`).
@@ -1005,7 +1026,7 @@ Sigilo schema governance contract (FASE 13C.1):
 - evolution is additive by default (no incompatible format break in this phase)
 - unknown additive top-level fields are warning-only in tolerant/strict parser modes
 - deprecated field support is explicit (`sigilo_style` accepted with warning; replacement: `visual_engine`)
-- normative schema policy and compatibility matrix: `docs/sigilo_schema_13c1.md`
+- normative schema governance remains enforced by the current validator/parser contract (historical 13C1 governance notes are archived privately)
 
 Sigilo analytical metadata expansion (FASE 13C.2):
 - additive analytical sections: `analysis_summary`, `diff_fingerprint_context`, `module_structural_summary`, `compatibility_hints`
@@ -1018,7 +1039,7 @@ Sigilo consumer compatibility contract (FASE 13C.3):
 - CLI selection: `--consumer-profile legacy-tolerant|current-default|strict-contract` (`--strict` maps to `strict-contract`)
 - higher same-family schema (`cct.sigil.v2+`) uses warning + v1-compatible fallback in non-strict profiles
 - strict-contract keeps schema mismatch as blocking error
-- migration/fallback matrix is documented in `docs/sigilo_consumer_compat_13c3.md`
+- migration/fallback behavior is covered by current operational guidance and `--consumer-profile` validation contracts
 
 Sigilo strict/tolerant validator contract (FASE 13C.4):
 - canonical validator entrypoint: `cct sigilo validate <artifact.sigil>`
@@ -1043,11 +1064,8 @@ Deterministic output/log hygiene contract (FASE 14A.4):
 - deterministic ordering is guaranteed for equivalent artifact content/profile inputs
 
 FASE 13 release references (13D.3):
-- snapshot: `docs/release/FASE_13_FINAL_SNAPSHOT.md`
-- stability matrix: `docs/release/FASE_13_STABILITY_MATRIX.md`
-- compatibility matrix: `docs/release/FASE_13_COMPATIBILITY_MATRIX.md`
-- known limits: `docs/release/FASE_13_KNOWN_LIMITS.md`
 - release notes: `docs/release/FASE_13_RELEASE_NOTES.md`
+- detailed 13D closure matrices/snapshots are preserved in archived/internal release governance records
 
 Publication boundary policy reference (FASE 14B.3):
 
@@ -1076,7 +1094,7 @@ Legend:
 | `GENUS` | generic params and explicit type args | Stable | explicit use only |
 | `CODEX` | namespace-like block | Partial | parsed/semantic; not primary executable path |
 | `CIRCULUS` | reserved scope keyword | Reserved | tokenized only |
-| `CONSTANS` | type modifier | Partial | parsed as modifier; no full semantic enforcement |
+| `CONSTANS` | type modifier | Stable | reassignment blocked in semantic analysis; emitted as `const` in generated C (locals + rituale parameters) |
 | `VOLATILE` | type modifier | Partial | parsed as modifier; no full semantic enforcement |
 | `FLUXUS` | dynamic-array modifier keyword | Partial | tokenized/parsed in type syntax with restrictions |
 
@@ -1095,8 +1113,8 @@ Legend:
 | `GRADUS` | step | Stable | optional in `REPETE` |
 | `PRO` | foreach-like keyword | Reserved | tokenized; not active grammar |
 | `IN` | iterator membership keyword | Stable | used in `ITERUM` headers |
-| `FRANGE` | break | Partial | parsed; currently outside stable codegen path |
-| `RECEDE` | continue | Partial | parsed; currently outside stable codegen path |
+| `FRANGE` | break | Stable | valid only inside `DUM`, `DONEC`, `REPETE`, `ITERUM` |
+| `RECEDE` | continue | Stable | valid only inside `DUM`, `DONEC`, `REPETE`, `ITERUM` |
 | `TRANSITUS` | goto | Partial | parsed; currently outside stable codegen path |
 
 ### 11.3 Execution and Memory Keywords
@@ -1143,15 +1161,15 @@ Legend:
 
 | Keyword | Meaning | Status | Notes |
 |---|---|---|---|
-| `ET` | logical and | Partial | semantic support; executable restrictions apply |
-| `VEL` | logical or | Partial | semantic support; executable restrictions apply |
+| `ET` | logical and | Stable | short-circuit in conditionals and value expressions |
+| `VEL` | logical or | Stable | short-circuit in conditionals and value expressions |
 | `NON` | logical not | Stable | unary |
-| `ET_BIT` | bitwise and | Partial | semantic support; executable restrictions apply |
-| `VEL_BIT` | bitwise or | Partial | semantic support; executable restrictions apply |
-| `XOR` | bitwise xor | Partial | semantic support; executable restrictions apply |
-| `NON_BIT` | bitwise not | Partial | semantic support; executable restrictions apply |
-| `SINISTER` | shift left | Partial | semantic support; executable restrictions apply |
-| `DEXTER` | shift right | Partial | semantic support; executable restrictions apply |
+| `ET_BIT` | bitwise and | Stable | integer operands required |
+| `VEL_BIT` | bitwise or | Stable | integer operands required |
+| `XOR` | bitwise xor | Stable | integer operands required |
+| `NON_BIT` | bitwise not | Stable | integer operand required |
+| `SINISTER` | shift left | Stable | integer operands required |
+| `DEXTER` | shift right | Stable | integer operands required |
 
 ## 12. Basic Programming Examples
 

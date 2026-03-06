@@ -1,0 +1,9 @@
+INCIPIT grimoire "shift_negative_literal_warning"
+
+RITUALE main() REDDE REX
+  EVOCA REX x AD 8
+  EVOCA REX r AD x DEXTER -1
+  REDDE r
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

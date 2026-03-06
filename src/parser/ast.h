@@ -104,6 +104,7 @@ struct cct_ast_type {
 typedef struct {
     char *name;
     cct_ast_type_t *type;
+    bool is_constans;
     u32 line;
     u32 column;
 } cct_ast_param_t;
@@ -262,6 +263,7 @@ struct cct_ast_node {
             cct_ast_type_t *var_type;
             char *name;
             cct_ast_node_t *initializer;  /* Optional */
+            bool is_constans;
         } evoca;
 
         /* Vincire (assignment) */
@@ -461,7 +463,7 @@ cct_ast_type_t* cct_ast_create_pointer_type(cct_ast_type_t *base);
 cct_ast_type_t* cct_ast_create_array_type(cct_ast_type_t *base, u32 size);
 
 /* Create parameter */
-cct_ast_param_t* cct_ast_create_param(const char *name, cct_ast_type_t *type, u32 line, u32 col);
+cct_ast_param_t* cct_ast_create_param(const char *name, cct_ast_type_t *type, bool is_constans, u32 line, u32 col);
 
 /* Create field */
 cct_ast_field_t* cct_ast_create_field(const char *name, cct_ast_type_t *type, u32 line, u32 col);
@@ -485,7 +487,7 @@ cct_ast_node_t* cct_ast_create_ordo(const char *name, cct_ast_enum_item_list_t *
 cct_ast_node_t* cct_ast_create_pactum(const char *name, cct_ast_node_list_t *sigs, u32 line, u32 col);
 
 cct_ast_node_t* cct_ast_create_block(cct_ast_node_list_t *stmts, u32 line, u32 col);
-cct_ast_node_t* cct_ast_create_evoca(cct_ast_type_t *type, const char *name, cct_ast_node_t *init, u32 line, u32 col);
+cct_ast_node_t* cct_ast_create_evoca(cct_ast_type_t *type, const char *name, cct_ast_node_t *init, bool is_constans, u32 line, u32 col);
 cct_ast_node_t* cct_ast_create_vincire(cct_ast_node_t *target, cct_ast_node_t *value, u32 line, u32 col);
 cct_ast_node_t* cct_ast_create_redde(cct_ast_node_t *value, u32 line, u32 col);
 cct_ast_node_t* cct_ast_create_si(cct_ast_node_t *cond, cct_ast_node_t *then_br, cct_ast_node_t *else_br, u32 line, u32 col);

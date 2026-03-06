@@ -1,0 +1,28 @@
+INCIPIT grimoire "cross_nested_mix_loops"
+
+RITUALE main() REDDE REX
+  EVOCA SERIES REX[3] arr
+  VINCIRE arr[0] AD 1
+  VINCIRE arr[1] AD 2
+  VINCIRE arr[2] AD 3
+
+  EVOCA REX outer AD 0
+  EVOCA REX total AD 0
+
+  DUM outer < 3
+    VINCIRE outer AD outer + 1
+    ITERUM v IN arr COM
+      SI (outer == 2 ET v == 2) VEL (outer == 3 ET v == 1)
+        RECEDE
+      FIN SI
+      SI outer == 3 ET v == 3
+        FRANGE
+      FIN SI
+      VINCIRE total AD total + outer + v
+    FIN ITERUM
+  FIN DUM
+
+  REDDE total
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

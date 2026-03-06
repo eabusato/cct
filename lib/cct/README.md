@@ -2,6 +2,10 @@
 
 This directory is the canonical root for CCT standard-library modules (`cct/...`).
 
+Current baseline:
+- Project status is `FASE 15D.4 completed`.
+- The phase-by-phase list below is preserved as historical rollout traceability for the stdlib surface.
+
 Status in FASE 11A:
 - namespace and resolver contract established
 - physical distribution path established
@@ -53,4 +57,4 @@ Status in FASE 12D.1:
 Status in FASE 12D.2:
 - `collection_ops.cct` canonical collection combinators implemented (`map/filter/fold/find/any/all`)
 
-Planned module families continue from FASE 11G to FASE 11H.
+The module families listed above are delivered and maintained in the stable baseline through FASE 15D.4.

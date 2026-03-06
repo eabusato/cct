@@ -1041,6 +1041,7 @@ static cct_ast_param_list_t* cg_clone_param_list_with_bindings(
         cct_ast_param_t *np = cct_ast_create_param(
             p ? p->name : "",
             cg_clone_type_with_bindings(cg, p ? p->type : NULL, params, args),
+            p ? p->is_constans : false,
             p ? p->line : 0,
             p ? p->column : 0
         );
@@ -1067,6 +1068,7 @@ static cct_ast_node_t* cg_clone_node_with_bindings(
                 cg_clone_type_with_bindings(cg, src->as.evoca.var_type, params, args),
                 src->as.evoca.name,
                 cg_clone_node_with_bindings(cg, src->as.evoca.initializer, params, args),
+                src->as.evoca.is_constans,
                 src->line, src->column
             );
         case AST_VINCIRE:
@@ -1640,6 +1642,13 @@ static bool cg_emit_binary_expr(FILE *out, cct_codegen_t *cg, const cct_ast_node
     cct_token_type_t op = expr->as.binary_op.operator;
     const char *op_text = NULL;
     bool is_comparison = false;
+    bool is_logical_and = false;
+    bool is_logical_or = false;
+    bool is_bitwise_and = false;
+    bool is_bitwise_or = false;
+    bool is_bitwise_xor = false;
+    bool is_shift_left = false;
+    bool is_shift_right = false;
 
     switch (op) {
         case TOKEN_PLUS: op_text = "+"; break;
@@ -1657,6 +1666,27 @@ static bool cg_emit_binary_expr(FILE *out, cct_codegen_t *cg, const cct_ast_node
         case TOKEN_LESS_EQ: op_text = "<="; is_comparison = true; break;
         case TOKEN_GREATER: op_text = ">"; is_comparison = true; break;
         case TOKEN_GREATER_EQ: op_text = ">="; is_comparison = true; break;
+        case TOKEN_ET:
+            is_logical_and = true;
+            break;
+        case TOKEN_VEL:
+            is_logical_or = true;
+            break;
+        case TOKEN_ET_BIT:
+            is_bitwise_and = true;
+            break;
+        case TOKEN_VEL_BIT:
+            is_bitwise_or = true;
+            break;
+        case TOKEN_XOR:
+            is_bitwise_xor = true;
+            break;
+        case TOKEN_SINISTER:
+            is_shift_left = true;
+            break;
+        case TOKEN_DEXTER:
+            is_shift_right = true;
+            break;
         default:
             cg_report_nodef(cg, expr, "operator %s not supported in FASE 4C codegen",
                             cct_token_type_string(op));
@@ -1665,6 +1695,110 @@ static bool cg_emit_binary_expr(FILE *out, cct_codegen_t *cg, const cct_ast_node
 
     cct_codegen_value_kind_t lhs_kind = CCT_CODEGEN_VALUE_UNKNOWN;
     cct_codegen_value_kind_t rhs_kind = CCT_CODEGEN_VALUE_UNKNOWN;
+
+    if (is_logical_and) {
+        fputc('(', out);
+        if (!cg_emit_expr(out, cg, expr->as.binary_op.left, &lhs_kind)) return false;
+        fputs(" && ", out);
+        if (!cg_emit_expr(out, cg, expr->as.binary_op.right, &rhs_kind)) return false;
+        fputc(')', out);
+
+        bool lhs_ok = (lhs_kind == CCT_CODEGEN_VALUE_BOOL || lhs_kind == CCT_CODEGEN_VALUE_INT);
+        bool rhs_ok = (rhs_kind == CCT_CODEGEN_VALUE_BOOL || rhs_kind == CCT_CODEGEN_VALUE_INT);
+        if (!lhs_ok || !rhs_ok) {
+            cg_report_node(cg, expr, "operator ET requires boolean or integer operands");
+            return false;
+        }
+        if (out_kind) *out_kind = CCT_CODEGEN_VALUE_BOOL;
+        return true;
+    }
+
+    if (is_logical_or) {
+        fputc('(', out);
+        if (!cg_emit_expr(out, cg, expr->as.binary_op.left, &lhs_kind)) return false;
+        fputs(" || ", out);
+        if (!cg_emit_expr(out, cg, expr->as.binary_op.right, &rhs_kind)) return false;
+        fputc(')', out);
+
+        bool lhs_ok = (lhs_kind == CCT_CODEGEN_VALUE_BOOL || lhs_kind == CCT_CODEGEN_VALUE_INT);
+        bool rhs_ok = (rhs_kind == CCT_CODEGEN_VALUE_BOOL || rhs_kind == CCT_CODEGEN_VALUE_INT);
+        if (!lhs_ok || !rhs_ok) {
+            cg_report_node(cg, expr, "operator VEL requires boolean or integer operands");
+            return false;
+        }
+        if (out_kind) *out_kind = CCT_CODEGEN_VALUE_BOOL;
+        return true;
+    }
+
+    if (is_bitwise_and) {
+        fputc('(', out);
+        if (!cg_emit_expr(out, cg, expr->as.binary_op.left, &lhs_kind)) return false;
+        fputs(" & ", out);
+        if (!cg_emit_expr(out, cg, expr->as.binary_op.right, &rhs_kind)) return false;
+        fputc(')', out);
+        if (lhs_kind != CCT_CODEGEN_VALUE_INT || rhs_kind != CCT_CODEGEN_VALUE_INT) {
+            cg_report_node(cg, expr, "operator ET_BIT requires integer operands");
+            return false;
+        }
+        if (out_kind) *out_kind = CCT_CODEGEN_VALUE_INT;
+        return true;
+    }
+
+    if (is_bitwise_or) {
+        fputc('(', out);
+        if (!cg_emit_expr(out, cg, expr->as.binary_op.left, &lhs_kind)) return false;
+        fputs(" | ", out);
+        if (!cg_emit_expr(out, cg, expr->as.binary_op.right, &rhs_kind)) return false;
+        fputc(')', out);
+        if (lhs_kind != CCT_CODEGEN_VALUE_INT || rhs_kind != CCT_CODEGEN_VALUE_INT) {
+            cg_report_node(cg, expr, "operator VEL_BIT requires integer operands");
+            return false;
+        }
+        if (out_kind) *out_kind = CCT_CODEGEN_VALUE_INT;
+        return true;
+    }
+
+    if (is_bitwise_xor) {
+        fputc('(', out);
+        if (!cg_emit_expr(out, cg, expr->as.binary_op.left, &lhs_kind)) return false;
+        fputs(" ^ ", out);
+        if (!cg_emit_expr(out, cg, expr->as.binary_op.right, &rhs_kind)) return false;
+        fputc(')', out);
+        if (lhs_kind != CCT_CODEGEN_VALUE_INT || rhs_kind != CCT_CODEGEN_VALUE_INT) {
+            cg_report_node(cg, expr, "operator XOR requires integer operands");
+            return false;
+        }
+        if (out_kind) *out_kind = CCT_CODEGEN_VALUE_INT;
+        return true;
+    }
+
+    if (is_shift_left) {
+        fputc('(', out);
+        if (!cg_emit_expr(out, cg, expr->as.binary_op.left, &lhs_kind)) return false;
+        fputs(" << ", out);
+        if (!cg_emit_expr(out, cg, expr->as.binary_op.right, &rhs_kind)) return false;
+        fputc(')', out);
+        if (lhs_kind != CCT_CODEGEN_VALUE_INT || rhs_kind != CCT_CODEGEN_VALUE_INT) {
+            cg_report_node(cg, expr, "operator SINISTER requires integer operands");
+            return false;
+        }
+        if (out_kind) *out_kind = CCT_CODEGEN_VALUE_INT;
+        return true;
+    }
+
+    if (is_shift_right) {
+        fputc('(', out);
+        if (!cg_emit_expr(out, cg, expr->as.binary_op.left, &lhs_kind)) return false;
+        fputs(" >> ", out);
+        if (!cg_emit_expr(out, cg, expr->as.binary_op.right, &rhs_kind)) return false;
+        fputc(')', out);
+        if (lhs_kind != CCT_CODEGEN_VALUE_INT || rhs_kind != CCT_CODEGEN_VALUE_INT) {
+            cg_report_node(cg, expr, "operator DEXTER requires integer operands");
+            return false;
+        }
+        if (out_kind) *out_kind = CCT_CODEGEN_VALUE_INT;
+        return true;
+    }
 
     if (op == TOKEN_STAR_STAR) {
         fputs("(cct_pow((double)(", out);
@@ -1766,6 +1900,8 @@ static bool cg_emit_unary_expr(FILE *out, cct_codegen_t *cg, const cct_ast_node_
         case TOKEN_PLUS: op_text = "+"; break;
         case TOKEN_MINUS: op_text = "-"; break;
         case TOKEN_NON: op_text = "!"; break;
+        case TOKEN_NON_BIT:
+            break;
         case TOKEN_STAR:
         case TOKEN_SPECULUM:
             break;
@@ -1825,6 +1961,19 @@ static bool cg_emit_unary_expr(FILE *out, cct_codegen_t *cg, const cct_ast_node_
         cg_emit_c_escaped_string(out, "runtime-fail (bridged): null pointer dereference");
         fputs(")))", out);
         if (out_kind) *out_kind = cg_value_kind_from_ast_type_codegen(cg, pointee);
+        return true;
+    }
+
+    if (op == TOKEN_NON_BIT) {
+        cct_codegen_value_kind_t operand_kind = CCT_CODEGEN_VALUE_UNKNOWN;
+        fputs("(~(", out);
+        if (!cg_emit_expr(out, cg, expr->as.unary_op.operand, &operand_kind)) return false;
+        fputs("))", out);
+        if (operand_kind != CCT_CODEGEN_VALUE_INT) {
+            cg_report_node(cg, expr, "operator NON_BIT requires integer operand");
+            return false;
+        }
+        if (out_kind) *out_kind = CCT_CODEGEN_VALUE_INT;
         return true;
     }
 
@@ -4019,10 +4168,17 @@ static bool cg_emit_compound_block(FILE *out, cct_codegen_t *cg, const cct_ast_n
 
 static bool cg_emit_donec_stmt(FILE *out, cct_codegen_t *cg, const cct_ast_node_t *stmt, int indent) {
     cct_codegen_value_kind_t cond_kind = CCT_CODEGEN_VALUE_UNKNOWN;
+    bool in_loop = false;
 
     cg_emit_indent(out, indent);
     fputs("do\n", out);
-    if (!cg_emit_compound_block(out, cg, stmt->as.donec.body, indent)) return false;
+    cg->loop_depth++;
+    in_loop = true;
+    if (!cg_emit_compound_block(out, cg, stmt->as.donec.body, indent)) {
+        if (in_loop && cg->loop_depth > 0) cg->loop_depth--;
+        return false;
+    }
+    if (in_loop && cg->loop_depth > 0) cg->loop_depth--;
 
     cg_emit_indent(out, indent);
     fputs("while (", out);
@@ -4044,6 +4200,7 @@ static bool cg_emit_repete_stmt(FILE *out, cct_codegen_t *cg, const cct_ast_node
     char *start_name = cg_strdup_printf("__cct_repete_start_%u", id);
     char *end_name = cg_strdup_printf("__cct_repete_end_%u", id);
     char *step_name = cg_strdup_printf("__cct_repete_step_%u", id);
+    bool in_loop = false;
 
     cg_emit_indent(out, indent);
     fputs("{\n", out);
@@ -4097,7 +4254,10 @@ static bool cg_emit_repete_stmt(FILE *out, cct_codegen_t *cg, const cct_ast_node
             stmt->as.repete.iterator, end_name,
             stmt->as.repete.iterator, end_name,
             stmt->as.repete.iterator, step_name);
+    cg->loop_depth++;
+    in_loop = true;
     if (!cg_emit_compound_block(out, cg, stmt->as.repete.body, indent + 1)) goto fail;
+    if (in_loop && cg->loop_depth > 0) cg->loop_depth--;
 
     cg_pop_scope(cg);
     cg_emit_indent(out, indent);
@@ -4109,6 +4269,7 @@ static bool cg_emit_repete_stmt(FILE *out, cct_codegen_t *cg, const cct_ast_node
     return true;
 
 fail:
+    if (in_loop && cg->loop_depth > 0) cg->loop_depth--;
     cg_pop_scope(cg);
     free(start_name);
     free(end_name);
@@ -4141,6 +4302,7 @@ static bool cg_emit_iterum_stmt(FILE *out, cct_codegen_t *cg, const cct_ast_node
     char *len_name = cg_strdup_printf("__cct_iterum_len_%u", id);
     char *flux_name = cg_strdup_printf("__cct_iterum_flux_%u", id);
     char *ptr_name = cg_strdup_printf("__cct_iterum_ptr_%u", id);
+    bool in_loop = false;
 
     cg_emit_indent(out, indent);
     fputs("{\n", out);
@@ -4196,6 +4358,9 @@ static bool cg_emit_iterum_stmt(FILE *out, cct_codegen_t *cg, const cct_ast_node
         goto fail;
     }
 
+    cg->loop_depth++;
+    in_loop = true;
+
     if (array_ast_type && array_ast_type->element_type) {
         cct_codegen_value_kind_t collection_kind = CCT_CODEGEN_VALUE_UNKNOWN;
         cg_emit_indent(out, indent + 1);
@@ -4236,6 +4401,7 @@ static bool cg_emit_iterum_stmt(FILE *out, cct_codegen_t *cg, const cct_ast_node
         fputs("}\n", out);
     }
 
+    if (in_loop && cg->loop_depth > 0) cg->loop_depth--;
     cg_pop_scope(cg);
     cg_emit_indent(out, indent);
     fputs("}\n", out);
@@ -4247,6 +4413,7 @@ static bool cg_emit_iterum_stmt(FILE *out, cct_codegen_t *cg, const cct_ast_node
     return true;
 
 fail:
+    if (in_loop && cg->loop_depth > 0) cg->loop_depth--;
     cg_pop_scope(cg);
     free(idx_name);
     free(len_name);
@@ -4273,6 +4440,8 @@ static bool cg_emit_stmt(FILE *out, cct_codegen_t *cg, const cct_ast_node_t *stm
 
         case AST_EVOCA: {
             cct_codegen_local_kind_t kind = cg_local_kind_from_ast_type(stmt->as.evoca.var_type);
+            const bool is_constans = stmt->as.evoca.is_constans;
+            const char *const_prefix = is_constans ? "const " : "";
             if (kind == CCT_CODEGEN_LOCAL_UNSUPPORTED) {
                 if (stmt->as.evoca.var_type && stmt->as.evoca.var_type->is_pointer) {
                     cg_report_node(cg, stmt, "SPECULUM pointee type is outside FASE 7A executable subset");
@@ -4310,13 +4479,13 @@ static bool cg_emit_stmt(FILE *out, cct_codegen_t *cg, const cct_ast_node_t *stm
                     cg_report_node(cg, stmt, "SERIES inline initializer is not supported in FASE 6B codegen");
                     return false;
                 }
-                fprintf(out, "%s %s[%u] = {0};\n", elem_c, stmt->as.evoca.name, t->array_size);
+                fprintf(out, "%s%s %s[%u] = {0};\n", const_prefix, elem_c, stmt->as.evoca.name, t->array_size);
                 if (!cg_emit_fail_propagation_check(out, cg, indent)) return false;
                 return true;
             }
 
             if (kind == CCT_CODEGEN_LOCAL_INT || kind == CCT_CODEGEN_LOCAL_ORDO) {
-                fprintf(out, "long long %s = ", stmt->as.evoca.name);
+                fprintf(out, "%slong long %s = ", const_prefix, stmt->as.evoca.name);
                 if (stmt->as.evoca.initializer) {
                     cct_codegen_value_kind_t k = CCT_CODEGEN_VALUE_UNKNOWN;
                     if (!cg_emit_expr(out, cg, stmt->as.evoca.initializer, &k)) return false;
@@ -4333,7 +4502,7 @@ static bool cg_emit_stmt(FILE *out, cct_codegen_t *cg, const cct_ast_node_t *stm
             }
 
             if (kind == CCT_CODEGEN_LOCAL_BOOL) {
-                fprintf(out, "long long %s = ", stmt->as.evoca.name);
+                fprintf(out, "%slong long %s = ", const_prefix, stmt->as.evoca.name);
                 if (stmt->as.evoca.initializer) {
                     cct_codegen_value_kind_t k = CCT_CODEGEN_VALUE_UNKNOWN;
                     if (!cg_emit_expr(out, cg, stmt->as.evoca.initializer, &k)) return false;
@@ -4350,7 +4519,8 @@ static bool cg_emit_stmt(FILE *out, cct_codegen_t *cg, const cct_ast_node_t *stm
             }
 
             if (kind == CCT_CODEGEN_LOCAL_STRING) {
-                fprintf(out, "const char *%s = ", stmt->as.evoca.name);
+                fprintf(out, "%s", is_constans ? "const char *const " : "const char *");
+                fprintf(out, "%s = ", stmt->as.evoca.name);
                 if (stmt->as.evoca.initializer) {
                     cct_codegen_value_kind_t k = CCT_CODEGEN_VALUE_UNKNOWN;
                     if (!cg_emit_expr(out, cg, stmt->as.evoca.initializer, &k)) return false;
@@ -4372,7 +4542,7 @@ static bool cg_emit_stmt(FILE *out, cct_codegen_t *cg, const cct_ast_node_t *stm
                     cg_report_node(cg, stmt, "SPECULUM pointee type is outside FASE 7A executable subset");
                     return false;
                 }
-                fprintf(out, "%s %s = ", c_ty, stmt->as.evoca.name);
+                fprintf(out, "%s %s%s = ", c_ty, is_constans ? "const " : "", stmt->as.evoca.name);
                 if (stmt->as.evoca.initializer) {
                     cct_codegen_value_kind_t k = CCT_CODEGEN_VALUE_UNKNOWN;
                     if (!cg_emit_expr(out, cg, stmt->as.evoca.initializer, &k)) return false;
@@ -4389,7 +4559,10 @@ static bool cg_emit_stmt(FILE *out, cct_codegen_t *cg, const cct_ast_node_t *stm
             }
 
             if (kind == CCT_CODEGEN_LOCAL_UMBRA || kind == CCT_CODEGEN_LOCAL_FLAMMA) {
-                fprintf(out, "%s %s = ", (kind == CCT_CODEGEN_LOCAL_UMBRA) ? "double" : "float", stmt->as.evoca.name);
+                fprintf(out, "%s%s %s = ",
+                        const_prefix,
+                        (kind == CCT_CODEGEN_LOCAL_UMBRA) ? "double" : "float",
+                        stmt->as.evoca.name);
                 if (stmt->as.evoca.initializer) {
                     cct_codegen_value_kind_t k = CCT_CODEGEN_VALUE_UNKNOWN;
                     if (!cg_emit_expr(out, cg, stmt->as.evoca.initializer, &k)) return false;
@@ -4415,7 +4588,7 @@ static bool cg_emit_stmt(FILE *out, cct_codegen_t *cg, const cct_ast_node_t *stm
                     cg_report_node(cg, stmt, "SIGILLUM inline initializer is not supported in FASE 6B codegen");
                     return false;
                 }
-                fprintf(out, "%s %s = {0};\n", c_ty, stmt->as.evoca.name);
+                fprintf(out, "%s%s %s = {0};\n", const_prefix, c_ty, stmt->as.evoca.name);
                 if (!cg_emit_fail_propagation_check(out, cg, indent)) return false;
                 return true;
             }
@@ -4765,7 +4938,10 @@ tempta_fail:
                 return false;
             }
             fputs(")\n", out);
-            return cg_emit_compound_block(out, cg, stmt->as.dum.body, indent);
+            cg->loop_depth++;
+            bool ok = cg_emit_compound_block(out, cg, stmt->as.dum.body, indent);
+            if (cg->loop_depth > 0) cg->loop_depth--;
+            return ok;
         }
 
         case AST_DONEC:
@@ -4778,7 +4954,23 @@ tempta_fail:
             return cg_emit_iterum_stmt(out, cg, stmt, indent);
 
         case AST_FRANGE:
+            if (cg->loop_depth == 0) {
+                cg_report_node(cg, stmt, "FRANGE outside loop context");
+                return false;
+            }
+            cg_emit_indent(out, indent);
+            fputs("break;\n", out);
+            return true;
+
         case AST_RECEDE:
+            if (cg->loop_depth == 0) {
+                cg_report_node(cg, stmt, "RECEDE outside loop context");
+                return false;
+            }
+            cg_emit_indent(out, indent);
+            fputs("continue;\n", out);
+            return true;
+
         case AST_TRANSITUS:
             cg_report_nodef(cg, stmt, "%s codegen is not supported in FASE 4C",
                             cct_ast_node_type_string(stmt->type));
@@ -5123,7 +5315,15 @@ static bool cg_emit_rituale_prototype(FILE *out, cct_codegen_t *cg, const cct_co
             return false;
         }
         if (i > 0) fputs(", ", out);
-        fprintf(out, "%s %s", c_ty, params->params[i]->name);
+        if (params->params[i]->is_constans) {
+            if (strchr(c_ty, '*')) {
+                fprintf(out, "%s const %s", c_ty, params->params[i]->name);
+            } else {
+                fprintf(out, "const %s %s", c_ty, params->params[i]->name);
+            }
+        } else {
+            fprintf(out, "%s %s", c_ty, params->params[i]->name);
+        }
     }
     fputs(");\n", out);
     return true;
@@ -5167,7 +5367,15 @@ static bool cg_emit_rituale_function(FILE *out, cct_codegen_t *cg, const cct_cod
             return false;
         }
         if (i > 0) fputs(", ", out);
-        fprintf(out, "%s %s", c_ty, params->params[i]->name);
+        if (params->params[i]->is_constans) {
+            if (strchr(c_ty, '*')) {
+                fprintf(out, "%s const %s", c_ty, params->params[i]->name);
+            } else {
+                fprintf(out, "const %s %s", c_ty, params->params[i]->name);
+            }
+        } else {
+            fprintf(out, "%s %s", c_ty, params->params[i]->name);
+        }
     }
     fputs(") {\n", out);
 

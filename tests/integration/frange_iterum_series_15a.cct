@@ -1,0 +1,20 @@
+INCIPIT grimoire "frange_iterum_series"
+
+RITUALE main() REDDE REX
+  EVOCA SERIES REX[5] arr
+  VINCIRE arr[0] AD 10
+  VINCIRE arr[1] AD 20
+  VINCIRE arr[2] AD 30
+  VINCIRE arr[3] AD 40
+  VINCIRE arr[4] AD 50
+  EVOCA REX encontrado AD 0
+  ITERUM v IN arr COM
+    SI v == 30
+      VINCIRE encontrado AD v
+      FRANGE
+    FIN SI
+  FIN ITERUM
+  REDDE encontrado
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

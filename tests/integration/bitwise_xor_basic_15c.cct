@@ -1,0 +1,10 @@
+INCIPIT grimoire "bitwise_xor"
+
+RITUALE main() REDDE REX
+  EVOCA REX a AD 12
+  EVOCA REX b AD 10
+  EVOCA REX r AD a XOR b
+  REDDE r
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

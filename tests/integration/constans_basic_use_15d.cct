@@ -1,0 +1,9 @@
+INCIPIT grimoire "constans_use"
+
+RITUALE main() REDDE REX
+  EVOCA CONSTANS REX x AD 42
+  EVOCA REX y AD x + 1
+  REDDE y
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

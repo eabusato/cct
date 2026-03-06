@@ -1,0 +1,13 @@
+INCIPIT grimoire "paren_override"
+
+RITUALE main() REDDE REX
+  EVOCA REX a AD 0
+  EVOCA REX b AD 1
+  EVOCA REX c AD 1
+  SI a ET (b VEL c)
+    REDDE 1
+  FIN SI
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

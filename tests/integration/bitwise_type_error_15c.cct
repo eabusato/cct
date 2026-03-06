@@ -1,0 +1,10 @@
+INCIPIT grimoire "bitwise_type_error"
+
+RITUALE main() REDDE REX
+  EVOCA UMBRA a AD 3.14
+  EVOCA REX b AD 2
+  EVOCA REX r AD a ET_BIT b
+  REDDE r
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

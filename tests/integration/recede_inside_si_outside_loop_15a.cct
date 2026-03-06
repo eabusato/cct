@@ -1,0 +1,10 @@
+INCIPIT grimoire "recede_si_no_loop"
+
+RITUALE main() REDDE REX
+  SI 1 == 1
+    RECEDE
+  FIN SI
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

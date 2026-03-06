@@ -22,6 +22,6 @@
 
 ## References
 
-- `docs/release/FASE_14_FINAL_SNAPSHOT.md`
-- `docs/release/FASE_14_KNOWN_LIMITS.md`
+- `docs/release/FASE_14_RELEASE_NOTES.md`
+- `docs/release/FASE_15_RELEASE_NOTES.md`
 - Internal governance artifacts are tracked in private release documentation.

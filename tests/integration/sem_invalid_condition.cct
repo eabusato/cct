@@ -1,7 +1,7 @@
 INCIPIT grimoire "sem_bad_condition"
 
 RITUALE main() REDDE NIHIL
-  SI 42
+  SI "non_boolean_condition"
     REDDE
   FIN SI
 EXPLICIT RITUALE

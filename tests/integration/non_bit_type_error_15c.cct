@@ -1,0 +1,9 @@
+INCIPIT grimoire "non_bit_type_error"
+
+RITUALE main() REDDE REX
+  EVOCA UMBRA x AD 1.5
+  EVOCA REX r AD NON_BIT x
+  REDDE r
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

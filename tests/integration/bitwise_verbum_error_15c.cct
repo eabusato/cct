@@ -1,0 +1,9 @@
+INCIPIT grimoire "bitwise_verbum_error"
+
+RITUALE main() REDDE REX
+  EVOCA VERBUM s AD "hello"
+  EVOCA REX r AD s ET_BIT 1
+  REDDE r
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

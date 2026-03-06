@@ -1,0 +1,10 @@
+INCIPIT grimoire "shift_combined"
+
+RITUALE main() REDDE REX
+  EVOCA REX mask AD 1 SINISTER 3
+  EVOCA REX x AD 10
+  EVOCA REX r AD x VEL_BIT mask
+  REDDE r
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

@@ -1,0 +1,16 @@
+INCIPIT grimoire "cross_short_circuit_vel_anur"
+
+RITUALE explode() REDDE REX
+  ANUR 78
+  REDDE 0
+EXPLICIT RITUALE
+
+RITUALE main() REDDE REX
+  EVOCA VERUM ok AD 1 VEL CONIURA explode()
+  SI ok
+    REDDE 1
+  FIN SI
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

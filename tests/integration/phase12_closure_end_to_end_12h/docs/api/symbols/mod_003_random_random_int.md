@@ -1,7 +1,7 @@
 # random_int
 
 - Kind: `rituale`
-- Module: `/home/eabusato/dev/cct/lib/cct/random.cct`
+- Module: `/home/eabusato/dev/cct_bleh/lib/cct/random.cct`
 - Visibility: `public`
 
 ## Signature

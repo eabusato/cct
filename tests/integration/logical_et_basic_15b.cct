@@ -1,0 +1,11 @@
+INCIPIT grimoire "et_basic"
+
+RITUALE main() REDDE REX
+  EVOCA REX x AD 5
+  SI x > 0 ET x < 10
+    REDDE 1
+  FIN SI
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

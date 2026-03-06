@@ -1,0 +1,9 @@
+INCIPIT grimoire "constans_error"
+
+RITUALE main() REDDE REX
+  EVOCA CONSTANS REX x AD 10
+  VINCIRE x AD 20
+  REDDE x
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

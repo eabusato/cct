@@ -6,9 +6,11 @@
 set -u -o pipefail
 
 ROOT_DIR="$(cd "$(dirname "$0")/.." && pwd)"
+source "$ROOT_DIR/tests/test_tmpdir.sh"
+cct_setup_tmpdir "$ROOT_DIR"
 CCT_BIN="$ROOT_DIR/cct"
 FIX_ROOT="$ROOT_DIR/tests/integration/phase13_regression_13d1"
-TMP_DIR="/tmp/cct_phase13d1_regression"
+TMP_DIR="$CCT_TMP_DIR/cct_phase13d1_regression"
 
 TESTS_TOTAL=0
 TESTS_FAILED=0
@@ -31,7 +33,7 @@ run_cmd() {
     local name="$1"
     shift
     TESTS_TOTAL=$((TESTS_TOTAL + 1))
-    if "$@" >/tmp/cct_phase13d1_last.out 2>&1; then
+    if "$@" >$CCT_TMP_DIR/cct_phase13d1_last.out 2>&1; then
         pass "$name"
     else
         fail "$name" "exit=$?"
@@ -43,7 +45,7 @@ run_expect_exit() {
     local expected="$2"
     shift 2
     TESTS_TOTAL=$((TESTS_TOTAL + 1))
-    "$@" >/tmp/cct_phase13d1_last.out 2>&1
+    "$@" >$CCT_TMP_DIR/cct_phase13d1_last.out 2>&1
     local code=$?
     if [ "$code" -eq "$expected" ]; then
         pass "$name"

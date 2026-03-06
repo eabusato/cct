@@ -1,0 +1,14 @@
+INCIPIT grimoire "cross_repete_et_recede"
+
+RITUALE main() REDDE REX
+  EVOCA REX soma AD 0
+  REPETE i DE 0 AD 8
+    SI i > 1 ET i < 5
+      RECEDE
+    FIN SI
+    VINCIRE soma AD soma + i
+  FIN REPETE
+  REDDE soma
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

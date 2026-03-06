@@ -4,11 +4,36 @@
 
 #include "../../src/sigilo/sigil_parse.h"
 
+#include <errno.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <sys/stat.h>
+
+static int ensure_parent_dir(const char *path) {
+    if (!path) return 0;
+    const char *slash = strrchr(path, '/');
+    if (!slash) return 1;
+
+    char dir[1024];
+    size_t len = (size_t)(slash - path);
+    if (len == 0 || len >= sizeof(dir)) return 0;
+
+    memcpy(dir, path, len);
+    dir[len] = '\0';
+
+    for (char *p = dir + 1; *p; p++) {
+        if (*p != '/') continue;
+        *p = '\0';
+        if (mkdir(dir, 0777) != 0 && errno != EEXIST) return 0;
+        *p = '/';
+    }
+
+    return mkdir(dir, 0777) == 0 || errno == EEXIST;
+}
 
 static int write_text_file(const char *path, const char *content) {
+    if (!ensure_parent_dir(path)) return 0;
     FILE *f = fopen(path, "wb");
     if (!f) return 0;
     size_t n = strlen(content);
@@ -37,7 +62,7 @@ static int has_diag_message_fragment(const cct_sigil_document_t *doc, const char
 }
 
 static int test_valid_local(void) {
-    const char *path = "/tmp/cct_sigil_parse_valid_local.sigil";
+    const char *path = "tests/.tmp/cct_sigil_parse_valid_local.sigil";
     const char *content =
         "format = cct.sigil.v1\n"
         "sigilo_scope = local\n"
@@ -60,7 +85,7 @@ static int test_valid_local(void) {
 }
 
 static int test_unknown_tolerant(void) {
-    const char *path = "/tmp/cct_sigil_parse_unknown_tolerant.sigil";
+    const char *path = "tests/.tmp/cct_sigil_parse_unknown_tolerant.sigil";
     const char *content =
         "format = cct.sigil.v1\n"
         "sigilo_scope = local\n"
@@ -79,7 +104,7 @@ static int test_unknown_tolerant(void) {
 }
 
 static int test_duplicate_tolerant_warns_and_keeps_last_value(void) {
-    const char *path = "/tmp/cct_sigil_parse_duplicate_tolerant.sigil";
+    const char *path = "tests/.tmp/cct_sigil_parse_duplicate_tolerant.sigil";
     const char *content =
         "format = cct.sigil.v1\n"
         "sigilo_scope = local\n"
@@ -99,7 +124,7 @@ static int test_duplicate_tolerant_warns_and_keeps_last_value(void) {
 }
 
 static int test_duplicate_strict_fails(void) {
-    const char *path = "/tmp/cct_sigil_parse_duplicate_strict.sigil";
+    const char *path = "tests/.tmp/cct_sigil_parse_duplicate_strict.sigil";
     const char *content =
         "format = cct.sigil.v1\n"
         "sigilo_scope = local\n"
@@ -116,7 +141,7 @@ static int test_duplicate_strict_fails(void) {
 }
 
 static int test_invalid_scope_type_fails(void) {
-    const char *path = "/tmp/cct_sigil_parse_invalid_scope.sigil";
+    const char *path = "tests/.tmp/cct_sigil_parse_invalid_scope.sigil";
     const char *content =
         "format = cct.sigil.v1\n"
         "sigilo_scope = universal\n"
@@ -131,7 +156,7 @@ static int test_invalid_scope_type_fails(void) {
 }
 
 static int test_system_hash_tolerant_warns(void) {
-    const char *path = "/tmp/cct_sigil_parse_system_hash_warn.sigil";
+    const char *path = "tests/.tmp/cct_sigil_parse_system_hash_warn.sigil";
     const char *content =
         "format = cct.sigil.v1\n"
         "sigilo_scope = system\n"
@@ -149,7 +174,7 @@ static int test_system_hash_tolerant_warns(void) {
 }
 
 static int test_schema_mismatch_fails(void) {
-    const char *path = "/tmp/cct_sigil_parse_schema_mismatch.sigil";
+    const char *path = "tests/.tmp/cct_sigil_parse_schema_mismatch.sigil";
     const char *content =
         "format = cct.sigil.v2\n"
         "sigilo_scope = local\n"
@@ -164,7 +189,7 @@ static int test_schema_mismatch_fails(void) {
 }
 
 static int test_deprecated_field_warns_and_is_accepted(void) {
-    const char *path = "/tmp/cct_sigil_parse_deprecated_field.sigil";
+    const char *path = "tests/.tmp/cct_sigil_parse_deprecated_field.sigil";
     const char *content =
         "format = cct.sigil.v1\n"
         "sigilo_scope = local\n"
@@ -184,7 +209,7 @@ static int test_deprecated_field_warns_and_is_accepted(void) {
 }
 
 static int test_unknown_top_level_in_strict_is_warning_only(void) {
-    const char *path = "/tmp/cct_sigil_parse_unknown_strict_warning.sigil";
+    const char *path = "tests/.tmp/cct_sigil_parse_unknown_strict_warning.sigil";
     const char *content =
         "format = cct.sigil.v1\n"
         "sigilo_scope = local\n"
@@ -203,7 +228,7 @@ static int test_unknown_top_level_in_strict_is_warning_only(void) {
 }
 
 static int test_syntax_error_missing_equals_fails(void) {
-    const char *path = "/tmp/cct_sigil_parse_syntax_error.sigil";
+    const char *path = "tests/.tmp/cct_sigil_parse_syntax_error.sigil";
     const char *content =
         "format = cct.sigil.v1\n"
         "sigilo_scope = local\n"
@@ -218,7 +243,7 @@ static int test_syntax_error_missing_equals_fails(void) {
 }
 
 static int test_missing_required_strict(void) {
-    const char *path = "/tmp/cct_sigil_parse_missing_required_strict.sigil";
+    const char *path = "tests/.tmp/cct_sigil_parse_missing_required_strict.sigil";
     const char *content =
         "format = cct.sigil.v1\n"
         "sigilo_scope = local\n";
@@ -233,7 +258,7 @@ static int test_missing_required_strict(void) {
 }
 
 static int test_13c2_analytical_sections_are_recognized(void) {
-    const char *path = "/tmp/cct_sigil_parse_13c2_sections.sigil";
+    const char *path = "tests/.tmp/cct_sigil_parse_13c2_sections.sigil";
     const char *content =
         "format = cct.sigil.v1\n"
         "sigilo_scope = local\n"
@@ -266,7 +291,7 @@ static int test_13c2_analytical_sections_are_recognized(void) {
 }
 
 static int test_13c3_current_profile_fallbacks_higher_schema(void) {
-    const char *path = "/tmp/cct_sigil_parse_13c3_current_fallback.sigil";
+    const char *path = "tests/.tmp/cct_sigil_parse_13c3_current_fallback.sigil";
     const char *content =
         "format = cct.sigil.v2\n"
         "sigilo_scope = local\n"
@@ -284,7 +309,7 @@ static int test_13c3_current_profile_fallbacks_higher_schema(void) {
 }
 
 static int test_13c3_legacy_profile_fallbacks_higher_schema(void) {
-    const char *path = "/tmp/cct_sigil_parse_13c3_legacy_fallback.sigil";
+    const char *path = "tests/.tmp/cct_sigil_parse_13c3_legacy_fallback.sigil";
     const char *content =
         "format = cct.sigil.v3\n"
         "sigilo_scope = local\n"
@@ -304,7 +329,7 @@ static int test_13c3_legacy_profile_fallbacks_higher_schema(void) {
 }
 
 static int test_13c3_strict_contract_rejects_higher_schema(void) {
-    const char *path = "/tmp/cct_sigil_parse_13c3_strict_contract.sigil";
+    const char *path = "tests/.tmp/cct_sigil_parse_13c3_strict_contract.sigil";
     const char *content =
         "format = cct.sigil.v2\n"
         "sigilo_scope = local\n"
@@ -319,7 +344,7 @@ static int test_13c3_strict_contract_rejects_higher_schema(void) {
 }
 
 static int test_13c4_invalid_numeric_type_strict_fails(void) {
-    const char *path = "/tmp/cct_sigil_parse_13c4_invalid_numeric.sigil";
+    const char *path = "tests/.tmp/cct_sigil_parse_13c4_invalid_numeric.sigil";
     const char *content =
         "format = cct.sigil.v1\n"
         "sigilo_scope = local\n"
@@ -336,7 +361,7 @@ static int test_13c4_invalid_numeric_type_strict_fails(void) {
 }
 
 static int test_13c4_consistency_strict_fails(void) {
-    const char *path = "/tmp/cct_sigil_parse_13c4_consistency_strict.sigil";
+    const char *path = "tests/.tmp/cct_sigil_parse_13c4_consistency_strict.sigil";
     const char *content =
         "format = cct.sigil.v1\n"
         "sigilo_scope = local\n"
@@ -355,7 +380,7 @@ static int test_13c4_consistency_strict_fails(void) {
 }
 
 static int test_13c4_consistency_tolerant_warns(void) {
-    const char *path = "/tmp/cct_sigil_parse_13c4_consistency_tolerant.sigil";
+    const char *path = "tests/.tmp/cct_sigil_parse_13c4_consistency_tolerant.sigil";
     const char *content =
         "format = cct.sigil.v1\n"
         "sigilo_scope = local\n"

@@ -1,0 +1,12 @@
+INCIPIT grimoire "non_bit"
+
+RITUALE main() REDDE REX
+  EVOCA REX x AD 0
+  EVOCA REX r AD NON_BIT x
+  SI r != 0
+    REDDE 1
+  FIN SI
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

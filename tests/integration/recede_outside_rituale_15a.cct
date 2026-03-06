@@ -1,0 +1,8 @@
+INCIPIT grimoire "recede_outside"
+
+RITUALE main() REDDE REX
+  RECEDE
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

@@ -9,6 +9,7 @@
 
 #include "semantic.h"
 #include "../common/fuzzy.h"
+#include "../common/diagnostic.h"
 
 #include <stdarg.h>
 #include <stdio.h>
@@ -47,6 +48,7 @@ typedef struct {
 static void sem_reportf(cct_semantic_analyzer_t *sem, u32 line, u32 col, const char *fmt, ...);
 static void sem_report_with_suggestion(cct_semantic_analyzer_t *sem, u32 line, u32 col, const char *message, const char *suggestion);
 static cct_sem_type_t* sem_resolve_ast_type(cct_semantic_analyzer_t *sem, const cct_ast_type_t *ast_type, u32 line, u32 col);
+static bool sem_is_negative_shift_constant(const cct_ast_node_t *node);
 
 /* ========================================================================
  * Allocation Helpers
@@ -215,6 +217,32 @@ static void sem_report_nodef(cct_semantic_analyzer_t *sem, const cct_ast_node_t 
     va_end(args);
 
     sem_report_node(sem, node, buffer);
+}
+
+static void sem_warn_node(cct_semantic_analyzer_t *sem, const cct_ast_node_t *node, const char *message) {
+    if (!node || !message) return;
+    cct_diagnostic_t diag = {
+        .level = CCT_DIAG_WARNING,
+        .message = message,
+        .file_path = sem ? sem->filename : NULL,
+        .line = node->line,
+        .column = node->column,
+        .suggestion = "shift count should be non-negative; behavior is platform-defined for invalid counts",
+        .code_label = "Semantic warning",
+    };
+    cct_diagnostic_emit(&diag);
+}
+
+static bool sem_is_negative_shift_constant(const cct_ast_node_t *node) {
+    if (!node) return false;
+    if (node->type == AST_LITERAL_INT) {
+        return node->as.literal_int.int_value < 0;
+    }
+    if (node->type == AST_UNARY_OP && node->as.unary_op.operator == TOKEN_MINUS) {
+        const cct_ast_node_t *operand = node->as.unary_op.operand;
+        return operand && operand->type == AST_LITERAL_INT && operand->as.literal_int.int_value > 0;
+    }
+    return false;
 }
 
 /* ========================================================================
@@ -2101,8 +2129,8 @@ static cct_sem_type_t* sem_analyze_expr(cct_semantic_analyzer_t *sem, const cct_
                     if (!sem_require_concrete_type_for_operation(sem, expr, operand)) {
                         return &sem->type_error;
                     }
-                    if (!sem_is_bool_type(operand) && !sem_is_error_type(operand)) {
-                        sem_report_node(sem, expr, "NON requires boolean operand");
+                    if (!(sem_is_bool_type(operand) || sem_is_integer_type(operand)) && !sem_is_error_type(operand)) {
+                        sem_report_node(sem, expr, "NON requires boolean or integer operand");
                         return &sem->type_error;
                     }
                     return &sem->type_verum;
@@ -2228,14 +2256,27 @@ static cct_sem_type_t* sem_analyze_expr(cct_semantic_analyzer_t *sem, const cct_
                     return &sem->type_verum;
 
                 case TOKEN_ET:
+                    if (!sem_require_concrete_type_for_operation(sem, expr->as.binary_op.left, left) ||
+                        !sem_require_concrete_type_for_operation(sem, expr->as.binary_op.right, right)) {
+                        return &sem->type_error;
+                    }
+                    if (!(sem_is_bool_type(left) || sem_is_integer_type(left)) ||
+                        !(sem_is_bool_type(right) || sem_is_integer_type(right))) {
+                        if (!sem_is_error_type(left) && !sem_is_error_type(right)) {
+                            sem_report_node(sem, expr, "operator ET requires boolean or integer operands");
+                        }
+                    }
+                    return &sem->type_verum;
+
                 case TOKEN_VEL:
                     if (!sem_require_concrete_type_for_operation(sem, expr->as.binary_op.left, left) ||
                         !sem_require_concrete_type_for_operation(sem, expr->as.binary_op.right, right)) {
                         return &sem->type_error;
                     }
-                    if (!sem_is_bool_type(left) || !sem_is_bool_type(right)) {
+                    if (!(sem_is_bool_type(left) || sem_is_integer_type(left)) ||
+                        !(sem_is_bool_type(right) || sem_is_integer_type(right))) {
                         if (!sem_is_error_type(left) && !sem_is_error_type(right)) {
-                            sem_report_node(sem, expr, "logical operators require boolean operands");
+                            sem_report_node(sem, expr, "operator VEL requires boolean or integer operands");
                         }
                     }
                     return &sem->type_verum;
@@ -2243,6 +2284,17 @@ static cct_sem_type_t* sem_analyze_expr(cct_semantic_analyzer_t *sem, const cct_
                 case TOKEN_ET_BIT:
                 case TOKEN_VEL_BIT:
                 case TOKEN_XOR:
+                    if (!sem_require_concrete_type_for_operation(sem, expr->as.binary_op.left, left) ||
+                        !sem_require_concrete_type_for_operation(sem, expr->as.binary_op.right, right)) {
+                        return &sem->type_error;
+                    }
+                    if (!sem_is_integer_type(left) || !sem_is_integer_type(right)) {
+                        if (!sem_is_error_type(left) && !sem_is_error_type(right)) {
+                            sem_report_node(sem, expr, "bitwise operators require integer operands");
+                        }
+                    }
+                    return &sem->type_rex;
+
                 case TOKEN_SINISTER:
                 case TOKEN_DEXTER:
                     if (!sem_require_concrete_type_for_operation(sem, expr->as.binary_op.left, left) ||
@@ -2251,8 +2303,13 @@ static cct_sem_type_t* sem_analyze_expr(cct_semantic_analyzer_t *sem, const cct_
                     }
                     if (!sem_is_integer_type(left) || !sem_is_integer_type(right)) {
                         if (!sem_is_error_type(left) && !sem_is_error_type(right)) {
-                            sem_report_node(sem, expr, "bitwise/shift operators require integer operands");
+                            sem_report_node(sem, expr, "shift operators require integer operands");
                         }
+                        return &sem->type_error;
+                    }
+                    if (sem_is_negative_shift_constant(expr->as.binary_op.right)) {
+                        sem_warn_node(sem, expr->as.binary_op.right,
+                                      "shift count is a negative constant; behavior is platform-defined");
                     }
                     return &sem->type_rex;
 
@@ -2306,12 +2363,36 @@ static void sem_analyze_evoca(cct_semantic_analyzer_t *sem, const cct_ast_node_t
                                               stmt->as.evoca.name, stmt->line, stmt->column);
     if (sym) {
         sym->type = decl_type;
+        sym->is_constans = stmt->as.evoca.is_constans;
     }
 }
 
 static void sem_analyze_vincire(cct_semantic_analyzer_t *sem, const cct_ast_node_t *stmt) {
     cct_sem_type_t *target_type = sem_analyze_lvalue(sem, stmt->as.vincire.target);
     cct_sem_type_t *value_type = sem_analyze_expr(sem, stmt->as.vincire.value);
+
+    if (stmt->as.vincire.target && stmt->as.vincire.target->type == AST_IDENTIFIER) {
+        const char *name = stmt->as.vincire.target->as.identifier.name;
+        cct_sem_symbol_t *target_sym = sem_lookup(sem, name);
+        if (target_sym &&
+            (target_sym->kind == CCT_SEM_SYMBOL_VARIABLE || target_sym->kind == CCT_SEM_SYMBOL_PARAMETER) &&
+            target_sym->is_constans) {
+            if (target_sym->kind == CCT_SEM_SYMBOL_PARAMETER) {
+                sem_reportf(sem,
+                            stmt->as.vincire.target->line,
+                            stmt->as.vincire.target->column,
+                            "cannot reassign CONSTANS parameter '%s'",
+                            name);
+            } else {
+                sem_reportf(sem,
+                            stmt->as.vincire.target->line,
+                            stmt->as.vincire.target->column,
+                            "cannot reassign CONSTANS variable '%s'",
+                            name);
+            }
+            return;
+        }
+    }
 
     if (!sem_types_compatible_assign(sem, target_type, value_type)) {
         sem_report_nodef(sem, stmt,
@@ -2396,8 +2477,8 @@ static void sem_analyze_dimitte(cct_semantic_analyzer_t *sem, const cct_ast_node
 
 static void sem_analyze_condition(cct_semantic_analyzer_t *sem, const cct_ast_node_t *expr) {
     cct_sem_type_t *type = sem_analyze_expr(sem, expr);
-    if (!sem_is_bool_type(type) && !sem_is_error_type(type)) {
-        sem_report_node(sem, expr, "condition expression must be VERUM (boolean)");
+    if (!(sem_is_bool_type(type) || sem_is_integer_type(type)) && !sem_is_error_type(type)) {
+        sem_report_node(sem, expr, "condition expression must be VERUM (boolean) or integer");
     }
 }
 
@@ -2508,11 +2589,15 @@ static void sem_analyze_stmt(cct_semantic_analyzer_t *sem, const cct_ast_node_t 
 
         case AST_DUM:
             sem_analyze_condition(sem, stmt->as.dum.condition);
+            sem->loop_depth++;
             sem_analyze_stmt(sem, stmt->as.dum.body);
+            if (sem->loop_depth > 0) sem->loop_depth--;
             return;
 
         case AST_DONEC:
+            sem->loop_depth++;
             sem_analyze_stmt(sem, stmt->as.donec.body);
+            if (sem->loop_depth > 0) sem->loop_depth--;
             if (stmt->as.donec.condition) sem_analyze_condition(sem, stmt->as.donec.condition);
             return;
 
@@ -2535,7 +2620,9 @@ static void sem_analyze_stmt(cct_semantic_analyzer_t *sem, const cct_ast_node_t 
             cct_sem_symbol_t *iter = sem_define_symbol(sem, CCT_SEM_SYMBOL_VARIABLE,
                                                        stmt->as.repete.iterator, stmt->line, stmt->column);
             if (iter) iter->type = &sem->type_rex;
+            sem->loop_depth++;
             sem_analyze_stmt(sem, stmt->as.repete.body);
+            if (sem->loop_depth > 0) sem->loop_depth--;
             sem_pop_scope(sem);
             return;
         }
@@ -2568,13 +2655,25 @@ static void sem_analyze_stmt(cct_semantic_analyzer_t *sem, const cct_ast_node_t 
                 stmt->column
             );
             if (iter) iter->type = item_t;
+            sem->loop_depth++;
             sem_analyze_stmt(sem, stmt->as.iterum.body);
+            if (sem->loop_depth > 0) sem->loop_depth--;
             sem_pop_scope(sem);
             return;
         }
 
         case AST_FRANGE:
+            if (sem->loop_depth == 0) {
+                sem_report_node(sem, stmt, "FRANGE outside loop context");
+            }
+            return;
+
         case AST_RECEDE:
+            if (sem->loop_depth == 0) {
+                sem_report_node(sem, stmt, "RECEDE outside loop context");
+            }
+            return;
+
         case AST_TRANSITUS:
             return;
 
@@ -3023,7 +3122,10 @@ static void sem_analyze_rituale_body(cct_semantic_analyzer_t *sem, const cct_ast
             cct_sem_type_t *ptype = sem_resolve_ast_type(sem, param->type, param->line, param->column);
             cct_sem_symbol_t *psym = sem_define_symbol(sem, CCT_SEM_SYMBOL_PARAMETER,
                                                        param->name, param->line, param->column);
-            if (psym) psym->type = ptype;
+            if (psym) {
+                psym->type = ptype;
+                psym->is_constans = param->is_constans;
+            }
         }
     }
 

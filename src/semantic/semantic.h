@@ -75,6 +75,7 @@ struct cct_sem_symbol {
     cct_sem_type_t *return_type;
     cct_sem_type_t **param_types;
     size_t param_count;
+    bool is_constans;
     size_t type_param_count;
     char **type_param_names;          /* GENUS parameter names for rituale symbols */
     char **type_param_constraint_pactum_names; /* Optional FASE 10D constraints per GENUS parameter */
@@ -104,6 +105,7 @@ typedef struct {
     cct_sem_scope_t *global_scope;
     cct_sem_scope_t *current_scope;
     cct_sem_symbol_t *current_rituale;
+    u32 loop_depth;
 
     /* Builtin semantic types (interned for pointer equality) */
     cct_sem_type_t type_error;

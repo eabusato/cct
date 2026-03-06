@@ -1,0 +1,12 @@
+INCIPIT grimoire "constans_mixed"
+
+RITUALE calcular(REX base) REDDE REX
+  EVOCA CONSTANS REX fator AD 3
+  REDDE base * fator
+EXPLICIT RITUALE
+
+RITUALE main() REDDE REX
+  REDDE CONIURA calcular(7)
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

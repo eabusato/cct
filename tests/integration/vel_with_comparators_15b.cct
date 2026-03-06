@@ -1,0 +1,11 @@
+INCIPIT grimoire "vel_comparators"
+
+RITUALE main() REDDE REX
+  EVOCA REX x AD 15
+  SI x == 15 VEL x == 20
+    REDDE x
+  FIN SI
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

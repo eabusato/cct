@@ -1,0 +1,11 @@
+INCIPIT grimoire "vel_short_circuit"
+
+RITUALE main() REDDE REX
+  EVOCA REX x AD 1
+  SI x == 1 VEL x == 2
+    REDDE x
+  FIN SI
+  REDDE 99
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

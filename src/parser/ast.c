@@ -188,11 +188,12 @@ cct_ast_type_t* cct_ast_create_array_type(cct_ast_type_t *base, u32 size) {
 }
 
 /* Create parameter, field, enum item */
-cct_ast_param_t* cct_ast_create_param(const char *name, cct_ast_type_t *type, u32 line, u32 col) {
+cct_ast_param_t* cct_ast_create_param(const char *name, cct_ast_type_t *type, bool is_constans, u32 line, u32 col) {
     cct_ast_param_t *param = calloc(1, sizeof(cct_ast_param_t));
     if (!param) exit(CCT_ERROR_OUT_OF_MEMORY);
     param->name = safe_strdup(name);
     param->type = type;
+    param->is_constans = is_constans;
     param->line = line;
     param->column = col;
     return param;
@@ -292,11 +293,12 @@ cct_ast_node_t* cct_ast_create_block(cct_ast_node_list_t *stmts, u32 line, u32 c
     return node;
 }
 
-cct_ast_node_t* cct_ast_create_evoca(cct_ast_type_t *type, const char *name, cct_ast_node_t *init, u32 line, u32 col) {
+cct_ast_node_t* cct_ast_create_evoca(cct_ast_type_t *type, const char *name, cct_ast_node_t *init, bool is_constans, u32 line, u32 col) {
     cct_ast_node_t *node = alloc_node(AST_EVOCA, line, col);
     node->as.evoca.var_type = type;
     node->as.evoca.name = safe_strdup(name);
     node->as.evoca.initializer = init;
+    node->as.evoca.is_constans = is_constans;
     return node;
 }
 
@@ -891,7 +893,11 @@ static void print_param_list(cct_ast_param_list_t *list, u32 depth) {
     printf("Parameters: (%zu)\n", list->count);
     for (u32 i = 0; i < list->count; i++) {
         print_indent(depth + 1);
-        printf("- %s: ", list->params[i]->name);
+        if (list->params[i]->is_constans) {
+            printf("- %s: CONSTANS ", list->params[i]->name);
+        } else {
+            printf("- %s: ", list->params[i]->name);
+        }
         print_type_inline(list->params[i]->type);
         printf("\n");
     }
@@ -1029,6 +1035,10 @@ static void print_node(cct_ast_node_t *node, u32 depth) {
         case AST_EVOCA:
             print_indent(depth + 1);
             printf("Name: %s\n", node->as.evoca.name);
+            if (node->as.evoca.is_constans) {
+                print_indent(depth + 1);
+                printf("Qualifier: CONSTANS\n");
+            }
             print_type(node->as.evoca.var_type, depth + 1);
             if (node->as.evoca.initializer) {
                 print_indent(depth + 1);

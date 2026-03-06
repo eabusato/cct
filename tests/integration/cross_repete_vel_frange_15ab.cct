@@ -1,0 +1,14 @@
+INCIPIT grimoire "cross_repete_vel_frange"
+
+RITUALE main() REDDE REX
+  EVOCA REX ultimo AD 0
+  REPETE i DE 0 AD 10
+    SI i < 0 VEL i == 6
+      FRANGE
+    FIN SI
+    VINCIRE ultimo AD i
+  FIN REPETE
+  REDDE ultimo
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

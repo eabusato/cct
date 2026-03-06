@@ -433,7 +433,8 @@ FASE 12F introduces **incremental compilation**:
 
 ## Stability Classification Summary
 
-See `docs/release/FASE_12_STABILITY_MATRIX.md` for full details.
+The classification below is the preserved public summary for FASE 12.
+Detailed matrix/snapshot artifacts are maintained in archived internal release records.
 
 | Component               | Status        |
 |-------------------------|---------------|
@@ -493,10 +494,8 @@ FASE 12 was delivered as a coordinated effort across eight sub-phases, each buil
 
 ## Resources
 
-- **Final Snapshot:** `docs/release/FASE_12_FINAL_SNAPSHOT.md`
-- **Stability Matrix:** `docs/release/FASE_12_STABILITY_MATRIX.md`
-- **Compatibility Matrix:** `docs/release/FASE_12_COMPATIBILITY_MATRIX.md`
-- **Known Limits:** `docs/release/FASE_12_KNOWN_LIMITS.md`
+- **FASE 12 Release Notes:** `docs/release/FASE_12_RELEASE_NOTES.md`
+- **Release Notes Index:** `docs/release/`
 - **Main README:** `README.md`
 - **Spec:** `docs/spec.md`
 - **Architecture:** `docs/architecture.md`

@@ -6,9 +6,11 @@
 set -u -o pipefail
 
 ROOT_DIR="$(cd "$(dirname "$0")/.." && pwd)"
+source "$ROOT_DIR/tests/test_tmpdir.sh"
+cct_setup_tmpdir "$ROOT_DIR"
 CCT_BIN="$ROOT_DIR/cct"
 FIX_ROOT="$ROOT_DIR/tests/integration/phase13_regression_13d1"
-TMP_DIR="/tmp/cct_phase13_determinism_audit"
+TMP_DIR="$CCT_TMP_DIR/cct_phase13_determinism_audit"
 REPORT_FILE="$TMP_DIR/audit_report.txt"
 REPEAT_COUNT="${CCT_DETERMINISM_REPEAT:-5}"
 
@@ -171,7 +173,7 @@ module_count = 1
 module_resolution_status = ok
 SIGEOF
 
-"$CCT_BIN" sigilo baseline update "$BASE_SIG" --baseline "$BASELINE_SIG" --force >/tmp/cct_phase13d2_baseline_update.out 2>&1
+"$CCT_BIN" sigilo baseline update "$BASE_SIG" --baseline "$BASELINE_SIG" --force >$CCT_TMP_DIR/cct_phase13d2_baseline_update.out 2>&1
 cp "$BASELINE_SIG" "$BASELINE_DRIFT_SIG"
 sed -i 's/semantic_hash = .*/semantic_hash = deadbeefcafebabe/' "$BASELINE_DRIFT_SIG"
 
@@ -204,7 +206,7 @@ run_repeated_success_bytes \
     "$CCT_BIN" sigilo validate "$INFO_SIG" --format structured --summary --consumer-profile legacy-tolerant
 
 TESTS_TOTAL=$((TESTS_TOTAL + 1))
-if rg -n "timestamp|generated_at|time=|pid|nonce|uuid|session|random" "$TMP_DIR"/*.out >/tmp/cct_phase13d2_volatile_scan.out 2>&1; then
+if rg -n "timestamp|generated_at|time=|pid|nonce|uuid|session|random" "$TMP_DIR"/*.out >$CCT_TMP_DIR/cct_phase13d2_volatile_scan.out 2>&1; then
     fail "no_volatile_fields_in_outputs" "volatile token pattern detected"
 else
     pass "no_volatile_fields_in_outputs"

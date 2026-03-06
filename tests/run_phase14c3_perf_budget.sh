@@ -2,8 +2,10 @@
 set -euo pipefail
 
 ROOT_DIR="$(CDPATH= cd -- "$(dirname -- "$0")/.." && pwd)"
+source "$ROOT_DIR/tests/test_tmpdir.sh"
+cct_setup_tmpdir "$ROOT_DIR"
 CCT_BIN="$ROOT_DIR/cct"
-TMP_DIR="/tmp/cct_phase14c3_perf"
+TMP_DIR="$CCT_TMP_DIR/cct_phase14c3_perf"
 ROUNDS="${1:-3}"
 
 rm -rf "$TMP_DIR"
@@ -63,4 +65,3 @@ if [ "$HELP_MS" -gt "$BUDGET_HELP_MS" ] || [ "$CHECK_MS" -gt "$BUDGET_CHECK_MS" 
 fi
 
 echo "phase14c3: budget ok (help=$HELP_MS, check=$CHECK_MS, validate=$VALIDATE_MS)"
-

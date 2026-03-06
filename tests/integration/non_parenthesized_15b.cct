@@ -1,0 +1,11 @@
+INCIPIT grimoire "non_paren"
+
+RITUALE main() REDDE REX
+  EVOCA REX x AD 3
+  SI NON (x == 3)
+    REDDE 1
+  FIN SI
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

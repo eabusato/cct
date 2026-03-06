@@ -1,0 +1,14 @@
+INCIPIT grimoire "frange_donec"
+
+RITUALE main() REDDE REX
+  EVOCA REX i AD 0
+  DONEC
+    VINCIRE i AD i + 1
+    SI i == 4
+      FRANGE
+    FIN SI
+  DUM i < 100
+  REDDE i
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

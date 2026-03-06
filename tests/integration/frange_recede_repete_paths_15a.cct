@@ -1,0 +1,17 @@
+INCIPIT grimoire "frange_recede_repete_paths"
+
+RITUALE main() REDDE REX
+  EVOCA REX soma AD 0
+  REPETE i DE 1 AD 8
+    SI i == 2
+      RECEDE
+    FIN SI
+    SI i == 6
+      FRANGE
+    FIN SI
+    VINCIRE soma AD soma + i
+  FIN REPETE
+  REDDE soma
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

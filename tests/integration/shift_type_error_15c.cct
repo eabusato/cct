@@ -1,0 +1,9 @@
+INCIPIT grimoire "shift_type_error"
+
+RITUALE main() REDDE REX
+  EVOCA UMBRA x AD 2.0
+  EVOCA REX r AD x SINISTER 1
+  REDDE r
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

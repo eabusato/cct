@@ -1,0 +1,9 @@
+INCIPIT grimoire "shift_right"
+
+RITUALE main() REDDE REX
+  EVOCA REX x AD 16
+  EVOCA REX r AD x DEXTER 2
+  REDDE r
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

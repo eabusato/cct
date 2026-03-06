@@ -1,0 +1,16 @@
+INCIPIT grimoire "cross_donec_et_recede"
+
+RITUALE main() REDDE REX
+  EVOCA REX i AD 0
+  EVOCA REX cont AD 0
+  DONEC
+    VINCIRE i AD i + 1
+    SI i == 2
+      RECEDE
+    FIN SI
+    VINCIRE cont AD cont + 1
+  DUM i >= 0 ET i < 5
+  REDDE cont
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

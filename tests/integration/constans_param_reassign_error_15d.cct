@@ -1,0 +1,12 @@
+INCIPIT grimoire "constans_param_error"
+
+RITUALE errado(CONSTANS REX x) REDDE REX
+  VINCIRE x AD x + 1
+  REDDE x
+EXPLICIT RITUALE
+
+RITUALE main() REDDE REX
+  REDDE CONIURA errado(10)
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

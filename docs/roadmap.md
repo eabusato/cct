@@ -16,17 +16,10 @@ It has two goals:
 
 ## Current Project Snapshot
 
-- Current completed phase: FASE 13D.4 (sigilo tooling expansion formally closed)
-- Current completed subphase: FASE 14A.4 (release-hardening block A completed)
-- Current phase context: FASE 13D.4 and FASE 13M.B2 remain formally closed; FASE 14 is in progress
-- Bootstrap track status: FASE 15A.1/15A.2/15A.3/15A.4/15B.1/15B.2/15B.3/15B.4/15C.1/15C.2/15C.3/15C.4/15D.1/15D.2/15D.3/15D.4 implemented (inventory + stage-contract + equivalence/determinism + governance/risk baseline + bootstrap core infrastructure + frontend data-model baseline + parser subset baseline + semantic/intermediate-emission compatibility baseline + unified differential harness baseline + functional convergence matrix baseline + operational stability baseline + performance/cost coexistence baseline + promotion/reversal policy baseline + dual-track RC validation baseline + final artifact/evidence consolidation baseline + phase-closure gate baseline)
-- Bootstrap track status: FASE 15A.1/15A.2/15A.3/15A.4/15B.1/15B.2/15B.3/15B.4/15C.1/15C.2/15C.3/15C.4/15D.1/15D.2/15D.3 implemented (inventory + stage-contract + equivalence/determinism + governance/risk baseline + bootstrap core infrastructure + frontend data-model baseline + parser subset baseline + semantic/intermediate-emission compatibility baseline + unified differential harness baseline + functional convergence matrix baseline + operational stability baseline + performance/cost coexistence baseline + promotion/reversal policy baseline + dual-track RC validation baseline + final artifact/evidence consolidation baseline)
-- Bootstrap track status: FASE 15A.1/15A.2/15A.3/15A.4/15B.1/15B.2/15B.3/15B.4/15C.1/15C.2/15C.3/15C.4/15D.1/15D.2 implemented (historical checkpoint preserved for cross-phase compatibility checks)
-- Bootstrap track status: FASE 15A.1/15A.2/15A.3/15A.4/15B.1/15B.2/15B.3/15B.4/15C.1/15C.2/15C.3/15C.4/15D.1 implemented (historical checkpoint preserved for cross-phase compatibility checks)
-- Bootstrap track status: FASE 15A.1/15A.2/15A.3/15A.4/15B.1/15B.2/15B.3/15B.4/15C.1/15C.2/15C.3/15C.4 implemented (historical checkpoint preserved for cross-phase compatibility checks)
-- Bootstrap track status: FASE 15A.1/15A.2/15A.3/15A.4/15B.1/15B.2/15B.3/15B.4/15C.1/15C.2/15C.3 implemented (historical checkpoint preserved for cross-phase compatibility checks)
-- Bootstrap track status: FASE 15A.1/15A.2/15A.3/15A.4/15B.1/15B.2/15B.3/15B.4/15C.1/15C.2 implemented (historical checkpoint preserved for cross-phase compatibility checks)
-- Bootstrap track status: FASE 15A.1/15A.2/15A.3/15A.4/15B.1/15B.2/15B.3/15B.4/15C.1 implemented (historical checkpoint preserved for cross-phase compatibility checks)
+- Current completed phase: FASE 15D.4 (phase-15 closure gate completed)
+- Current completed subphase: FASE 15D.4 (edge-case closure + final phase-15 governance baseline)
+- Current phase context: FASE 15 is formally closed; FASE 16 planning and execution can proceed
+- Phase-15 delivery status: 15A.1/15A.2/15A.3/15A.4/15B.1/15B.2/15B.3/15B.4/15C.1/15C.2/15C.3/15C.4/15D.1/15D.2/15D.3/15D.4 implemented and closed (loop-control finalization, logical and bitwise operator completion, `CONSTANS` semantic/codegen stabilization, and closure governance).
 - **Compiler maturity:** complete development toolchain with formatter, linter, build system, and doc generator
 - **Backend strategy:** C-hosted backend is official (`.cgen.c` + host C compiler)
 - **Sigilo model:** dual-level modular model is stable (local + system sigilo)
@@ -381,7 +374,7 @@ Objectives completed:
 - final stability matrix published (`docs/stdlib_stability_matrix_11h.md`)
 - final naming boundary freeze documented (including `cct/fmt` parse façade)
 - packaging/install contract finalized (`make dist`, `make install`, `make uninstall`)
-- install and release notes documentation delivered (`docs/install.md`, `docs/release_11_notes.md`)
+- install and release notes documentation delivered (`docs/install.md`, `docs/release/FASE_11_RELEASE_NOTES.md`)
 
 Architecture impact:
 - FASE 11 is formally closed as a publishable language + canonical stdlib kit baseline
@@ -508,21 +501,44 @@ Current execution status:
 - 14C.1/14C.2/14C.3/14C.4 implemented (regression audit, stress/soak, performance budget, residual risk register)
 - 14D.1/14D.2/14D.3/14D.4 implemented (packaging reproducibility, RC matrix, final consolidation, closure gate + rollback)
 
-### FASE 15 — Bootstrap Trajectory
+### FASE 15 — Language and Semantic Consolidation (Completed)
 
 Primary objective:
-- establish the practical path toward self-hosting
+- complete high-priority language/runtime-facing surface gaps with stable semantics and full regression closure
 
-Planned scope:
-- staged bootstrap plan with explicit checkpoints
-- compiler-core migration strategy to CCT where feasible
-- compatibility and fallback strategy during transition
-
-Out of scope:
-- all-at-once rewrite
+Delivered scope:
+- 15A: loop-control completion (`FRANGE`, `RECEDE`) across all supported loop constructs, including outside-loop diagnostics
+- 15B: logical operators (`ET`, `VEL`, `NON`) with short-circuit behavior, precedence guarantees, and deep-parentheses support
+- 15C: bitwise/shift family (`ET_BIT`, `VEL_BIT`, `XOR`, `NON_BIT`, `SINISTER`, `DEXTER`) with integer-only enforcement
+- 15D: `CONSTANS` finalization (locals, rituale parameters, const codegen, pointer-binding behavior via `CONSTANS SPECULUM`)
 
 Definition of done:
-- validated, test-backed bootstrap milestones with clear rollback strategy
+- feature-complete 15A..15D behavior with green full-suite regression and closure documentation updated
+
+Current execution status:
+- 15A.1/15A.2/15A.3/15A.4 implemented and stable
+- 15B.1/15B.2/15B.3/15B.4 implemented and stable
+- 15C.1/15C.2/15C.3/15C.4 implemented and stable
+- 15D.1/15D.2/15D.3/15D.4 implemented and phase-closed
+
+### FASE 16 — Bootstrap and ASM Bridge Trajectory
+
+Primary objective:
+- start the bootstrap-oriented execution track, bridging CCT host compilation to freestanding/ASM delivery contracts
+
+Planned scope:
+- ABI and freestanding profile contracts
+- opt-in ASM emission path for LBOS-oriented integration
+- compatibility/fallback governance between host-C and ASM-oriented routes
+
+Out of scope:
+- full self-hosting completion inside FASE 16
+
+Definition of done:
+- validated, test-backed bootstrap milestones with explicit acceptance/rollback gates
+
+Reference architecture dossier:
+- `md_out/FASE_16_CCT.md`
 
 ## Version Milestone Targets
 
@@ -562,14 +578,6 @@ Every phase must pass these gates before closure:
 
 ## Immediate Next Step
 
-Next phase to execute: FASE 15 (bootstrap trajectory planning on top of closed FASE 14 baseline).
-Next subphase to execute: FASE 14C.1, baseline workflow hardening on top of completed documentation block.
-Historical traceability note: the line above is intentionally preserved as the recorded transition point used to close FASE 14 execution history.
-Bootstrap next subphase to execute: FASE 15D.4 (closure gate final da FASE 15 sobre baseline consolidado 15D.3).
-Bootstrap next subphase to execute: FASE 16A.1 (arquitetura executável da FASE 16 sobre baseline consolidado de fechamento da FASE 15).
-Bootstrap next subphase to execute: FASE 15D.3 (historical checkpoint preserved for cross-phase compatibility checks).
-Bootstrap next subphase to execute: FASE 15D.2 (historical checkpoint preserved for cross-phase compatibility checks).
-Bootstrap next subphase to execute: FASE 15D.1 (historical checkpoint preserved for cross-phase compatibility checks).
-Bootstrap next subphase to execute: FASE 15C.4 (historical checkpoint preserved for cross-phase compatibility checks).
-Bootstrap next subphase to execute: FASE 15C.3 (historical checkpoint preserved for cross-phase compatibility checks).
-Bootstrap next subphase to execute: FASE 15C.2 (historical checkpoint preserved for cross-phase compatibility checks).
+Next phase to execute: FASE 16 (bootstrap trajectory continuation on top of the closed FASE 15 baseline).
+Next subphase to execute: FASE 16A.1 (executable architecture baseline over the consolidated FASE 15 closure).
+Historical traceability note: earlier transition checkpoints (14 -> 15 and intermediate 15 subphase markers) are preserved in phase records and release artifacts.

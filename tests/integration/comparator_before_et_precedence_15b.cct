@@ -1,0 +1,12 @@
+INCIPIT grimoire "cmp_et_prec"
+
+RITUALE main() REDDE REX
+  EVOCA REX a AD 2
+  EVOCA REX b AD 3
+  SI a < b ET b < 5
+    REDDE 1
+  FIN SI
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

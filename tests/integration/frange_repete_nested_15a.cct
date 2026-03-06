@@ -1,0 +1,16 @@
+INCIPIT grimoire "frange_nested_repete"
+
+RITUALE main() REDDE REX
+  EVOCA REX total AD 0
+  REPETE i DE 0 AD 3
+    REPETE j DE 0 AD 10
+      SI j == 2
+        FRANGE
+      FIN SI
+      VINCIRE total AD total + 1
+    FIN REPETE
+  FIN REPETE
+  REDDE total
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

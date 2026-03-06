@@ -8,9 +8,9 @@ CCT is a compiled language toolchain that transforms `.cct` sources into:
 - executable binaries (via generated C + host C compiler)
 - deterministic sigil artifacts (`.svg` + `.sigil`)
 
-This architecture document is aligned with the implemented project state through **FASE 13D.4 + FASE 13M.B2 + FASE 14A.4** and includes the planned architecture direction for future phases.
+This architecture document is aligned with the implemented project state through **FASE 15D.4** (including FASE 13D.4, FASE 13M.B2, and the full FASE 14/15 closure set) and includes the planned architecture direction for future phases.
 
-## Current Architecture (FASE 14A.4)
+## Current Architecture (FASE 15D.4)
 
 ### End-to-End Pipeline
 
@@ -255,7 +255,8 @@ Status: mature through 9D/9D2/9E and preserved across phase 10 closure.
 - **FASE 14C.3**: performance baseline/budget gate:
   - `tests/run_phase14c3_perf_budget.sh`
 - **FASE 14C.4**: residual risk + known limits hardening:
-  - `docs/release/FASE_14_KNOWN_LIMITS.md`
+  - public summary in `docs/release/FASE_14_RELEASE_NOTES.md`
+  - detailed governance artifacts in internal release records
 
 ### FASE 14D Release Finalization Block (Implemented)
 - **FASE 14D.1**: reproducible packaging gate:
@@ -263,10 +264,8 @@ Status: mature through 9D/9D2/9E and preserved across phase 10 closure.
 - **FASE 14D.2**: release candidate validation matrix:
   - `tests/run_phase14d2_rc_validation.sh`
 - **FASE 14D.3**: final release artifact consolidation:
-  - `docs/release/FASE_14_FINAL_SNAPSHOT.md`
   - `docs/release/FASE_14_RELEASE_NOTES.md`
-  - `docs/release/FASE_14_STABILITY_MATRIX.md`
-  - `docs/release/FASE_14_COMPATIBILITY_MATRIX.md`
+  - consolidated internal release artifacts under private governance records
 - **FASE 14D.4**: closure gate and rollback:
 
 ## Current Architectural Contract (Post-11H)
@@ -317,7 +316,7 @@ Status: mature through 9D/9D2/9E and preserved across phase 10 closure.
 - Advanced constraint solver and dynamic contract dispatch
 - Full ownership/lifetime system
 
-## Future Architecture (Planned Phases)
+## Phase Architecture Trajectory (Completed and Planned)
 
 ### FASE 11 — Standard Library and Ecosystem Base
 Architecture direction:
@@ -345,27 +344,25 @@ Architecture direction:
 - release engineering, diagnostics polish, compatibility audits
 - documentation and operational consistency across compiler and tooling
 
-### FASE 15 — Bootstrap Trajectory
+### FASE 15 — Language and Semantic Surface Consolidation (Completed)
 Architecture direction:
-- progressive path toward self-hosting
-- preserve incremental migration strategy (no abrupt architecture rewrite)
-- 15A.1 inventory baseline completed: critical surfaces, dependency boundaries, and risk taxonomy are now explicit
-- 15A.2 stage contract completed: S0..S3 stages, objective gates, promotion/reversal policy, and fallback matrix are formalized
-- 15A.3 equivalence/determinism contract completed: equivalence matrix, divergence policy, blocking criteria, and deterministic baseline are formalized
-- 15A.4 governance baseline completed: residual-risk register, ownership/SLA matrix, audit cadence, and escalation/update policy are formalized
-- 15B.1 bootstrap core infrastructure completed: modular bootstrap baseline, acceptance/rollback criteria, risk ownership map, and 15B2 handoff are formalized
-- 15B.2 frontend data-model baseline completed: token/AST subset schema, canonical-bootstrap mapping, structural limits, and 15B3 handoff are formalized
-- 15B.3 parser subset baseline completed: precedence contract, differential integration with fallback, and 15B4 handoff are formalized
-- 15B.4 semantic subset + compatible intermediate emission completed: semantic contract, comparable IR/ASM-output shape contract, and 15C1 handoff are formalized
-- 15C.1 unified differential harness completed: dual-route runner, severity/report contract, CI/local integration, and 15C2 handoff are formalized
-- 15C.2 functional convergence matrix completed: quantitative baseline, per-dimension targets, gap/blocking criteria, and 15C3 handoff are formalized
-- 15C.3 operational stability baseline completed: repetition campaigns, flakiness thresholds, incident mitigation flow, and 15C4 handoff are formalized
-- 15C.4 performance/cost coexistence baseline completed: cost baseline, scenario budgets, guardrails/known-limits register, and 15D1 handoff are formalized
-- 15D.1 promotion/reversal policy baseline completed: promotion/reversal triggers, safety checklist, fast rollback runbook, and 15D2 handoff are formalized
-- 15D.2 dual-track RC validation baseline completed: RC matrix, critical smoke set, blocker/waiver policy, and 15D3 handoff are formalized
-- 15D.3 final artifact/evidence consolidation completed: final snapshot, consolidated matrices, residual-risk limits, and 15D4 handoff are formalized
-- 15D.4 phase-closure gate completed: official closure decision, transition backlog, continuity/rollback strategy, and FASE 16 handoff are formalized
-- ASM-oriented bootstrap is treated as transfer-contract work (artifact/ABI shape), not kernel/boot execution inside this repository
+- close the loop-control and operator gap in the executable subset with full regression coverage
+- preserve deterministic and compatibility-first behavior while expanding semantics
+
+Implemented closure set:
+- 15A.1/15A.2/15A.3/15A.4: `FRANGE` and `RECEDE` stabilized across `DUM`, `DONEC`, `REPETE`, and `ITERUM`, including outside-loop diagnostics and REPETE increment safety
+- 15B.1/15B.2/15B.3/15B.4: logical `ET`/`VEL` finalized with short-circuit guarantees, precedence (`NON > ET > VEL`), parentheses stress support, and comparator integration
+- 15C.1/15C.2/15C.3/15C.4: bitwise and shift family finalized (`ET_BIT`, `VEL_BIT`, `XOR`, `NON_BIT`, `SINISTER`, `DEXTER`) with integer-only enforcement and closure integration checks
+- 15D.1/15D.2/15D.3/15D.4: `CONSTANS` finalized for locals and rituale parameters, `const` codegen guarantees, pointer-binding (`CONSTANS SPECULUM`) behavior, edge-case closure tests, and phase-closure governance
+
+### FASE 16 — Bootstrap and ASM Bridge Trajectory (Planned/Started)
+Architecture direction:
+- start the bootstrap-oriented track only from FASE 16 onward
+- keep CCT host-executed while introducing freestanding/ASM delivery contracts for LBOS integration
+- enforce ABI/profile compatibility gates before broader bootstrap expansion
+
+Reference architecture dossier:
+- `md_out/FASE_16_CCT.md`
 
 ## Reliability and Testing Model
 

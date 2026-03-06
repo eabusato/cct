@@ -1,0 +1,14 @@
+INCIPIT grimoire "recede_increment"
+
+RITUALE main() REDDE REX
+  EVOCA REX count AD 0
+  REPETE i DE 0 AD 5
+    SI i == 2
+      RECEDE
+    FIN SI
+    VINCIRE count AD count + 1
+  FIN REPETE
+  REDDE count
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

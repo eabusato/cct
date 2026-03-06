@@ -1,0 +1,20 @@
+INCIPIT grimoire "frange_nested"
+
+RITUALE main() REDDE REX
+  EVOCA REX total AD 0
+  EVOCA REX i AD 0
+  DUM i < 3
+    EVOCA REX j AD 0
+    DUM j < 10
+      SI j == 2
+        FRANGE
+      FIN SI
+      VINCIRE j AD j + 1
+      VINCIRE total AD total + 1
+    FIN DUM
+    VINCIRE i AD i + 1
+  FIN DUM
+  REDDE total
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

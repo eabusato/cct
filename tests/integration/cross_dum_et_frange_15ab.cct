@@ -1,0 +1,16 @@
+INCIPIT grimoire "cross_dum_et_frange"
+
+RITUALE main() REDDE REX
+  EVOCA REX i AD 0
+  EVOCA REX soma AD 0
+  DUM i >= 0 ET i < 10
+    VINCIRE i AD i + 1
+    SI i == 4
+      FRANGE
+    FIN SI
+    VINCIRE soma AD soma + i
+  FIN DUM
+  REDDE soma
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

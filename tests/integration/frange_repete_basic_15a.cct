@@ -1,0 +1,14 @@
+INCIPIT grimoire "frange_repete"
+
+RITUALE main() REDDE REX
+  EVOCA REX resultado AD 0
+  REPETE i DE 0 AD 10
+    SI i == 5
+      FRANGE
+    FIN SI
+    VINCIRE resultado AD i
+  FIN REPETE
+  REDDE resultado
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

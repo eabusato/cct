@@ -266,11 +266,6 @@ static bool is_statement_terminator(cct_token_type_t type) {
 }
 
 static cct_ast_node_t* parse_condition_expr(cct_parser_t *parser) {
-    if (match(parser, TOKEN_LPAREN)) {
-        cct_ast_node_t *expr = parse_expression(parser);
-        expect(parser, TOKEN_RPAREN, "Expected ')' after condition");
-        return expr;
-    }
     return parse_expression(parser);
 }
 
@@ -820,6 +815,20 @@ static cct_ast_node_t* parse_evoca(cct_parser_t *parser) {
     u32 col = parser->current.column;
     expect(parser, TOKEN_EVOCA, "Expected EVOCA");
 
+    bool is_constans = false;
+    bool parsed_modifier = true;
+    while (parsed_modifier) {
+        parsed_modifier = false;
+        if (match(parser, TOKEN_CONSTANS)) {
+            is_constans = true;
+            parsed_modifier = true;
+            continue;
+        }
+        if (match(parser, TOKEN_VOLATILE)) {
+            parsed_modifier = true;
+        }
+    }
+
     cct_ast_type_t *type = parse_type(parser);
 
     if (!check(parser, TOKEN_IDENTIFIER)) {
@@ -838,7 +847,7 @@ static cct_ast_node_t* parse_evoca(cct_parser_t *parser) {
 
     consume_optional_semicolon(parser);
 
-    cct_ast_node_t *node = cct_ast_create_evoca(type, name, init, line, col);
+    cct_ast_node_t *node = cct_ast_create_evoca(type, name, init, is_constans, line, col);
     free(name);
     return node;
 }
@@ -1207,6 +1216,20 @@ static cct_ast_param_t* parse_parameter(cct_parser_t *parser) {
     u32 line = parser->current.line;
     u32 col = parser->current.column;
 
+    bool is_constans = false;
+    bool parsed_modifier = true;
+    while (parsed_modifier) {
+        parsed_modifier = false;
+        if (match(parser, TOKEN_CONSTANS)) {
+            is_constans = true;
+            parsed_modifier = true;
+            continue;
+        }
+        if (match(parser, TOKEN_VOLATILE)) {
+            parsed_modifier = true;
+        }
+    }
+
     cct_ast_type_t *type = parse_type(parser);
 
     if (!check(parser, TOKEN_IDENTIFIER)) {
@@ -1218,7 +1241,7 @@ static cct_ast_param_t* parse_parameter(cct_parser_t *parser) {
     if (!name) exit(CCT_ERROR_OUT_OF_MEMORY);
     advance(parser);
 
-    cct_ast_param_t *param = cct_ast_create_param(name, type, line, col);
+    cct_ast_param_t *param = cct_ast_create_param(name, type, is_constans, line, col);
     free(name);
     return param;
 }

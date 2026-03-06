@@ -1,0 +1,12 @@
+INCIPIT grimoire "constans_expr"
+
+RITUALE main() REDDE REX
+  EVOCA CONSTANS REX limite AD 100
+  EVOCA REX x AD 50
+  SI x < limite
+    REDDE 1
+  FIN SI
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

@@ -451,7 +451,7 @@ Final stability matrix reference:
 - `docs/stdlib_stability_matrix_11h.md`
 
 Release notes:
-- `docs/release_11_notes.md`
+- `docs/release/FASE_11_RELEASE_NOTES.md`
 
 Installation/packaging guide:
 - `docs/install.md`

@@ -1,0 +1,21 @@
+INCIPIT grimoire "cross_iterum_et_frange"
+
+RITUALE main() REDDE REX
+  EVOCA SERIES REX[5] arr
+  VINCIRE arr[0] AD 2
+  VINCIRE arr[1] AD 4
+  VINCIRE arr[2] AD 6
+  VINCIRE arr[3] AD 8
+  VINCIRE arr[4] AD 10
+
+  EVOCA REX soma AD 0
+  ITERUM v IN arr COM
+    SI v > 3 ET v < 8
+      FRANGE
+    FIN SI
+    VINCIRE soma AD soma + v
+  FIN ITERUM
+  REDDE soma
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

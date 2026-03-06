@@ -1,0 +1,11 @@
+INCIPIT grimoire "cross_semantic_et_string"
+
+RITUALE main() REDDE REX
+  EVOCA VERUM bad AD "abc" ET 1
+  SI bad
+    REDDE 1
+  FIN SI
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

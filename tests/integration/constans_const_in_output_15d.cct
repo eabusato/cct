@@ -1,0 +1,8 @@
+INCIPIT grimoire "constans_output"
+
+RITUALE main() REDDE REX
+  EVOCA CONSTANS REX marker AD 7
+  REDDE marker
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

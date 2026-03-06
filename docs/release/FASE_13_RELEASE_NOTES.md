@@ -48,12 +48,10 @@ FASE 13 expands sigilo from a static artifact into an operational tooling surfac
 - LIMIT-13-003
 - LIMIT-13-004
 
-See: `docs/release/FASE_13_KNOWN_LIMITS.md`.
+Detailed known-limits tracking for this historical package is maintained in archived internal release governance records.
 
 ## Verification Artifacts
 
 - `tests/run_phase13_regression.sh`
 - `tests/run_phase13_determinism_audit.sh`
-- `docs/release/FASE_13_FINAL_SNAPSHOT.md`
-- `docs/release/FASE_13_STABILITY_MATRIX.md`
-- `docs/release/FASE_13_COMPATIBILITY_MATRIX.md`
+- `docs/release/FASE_13_RELEASE_NOTES.md`

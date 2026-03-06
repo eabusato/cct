@@ -1,0 +1,12 @@
+INCIPIT grimoire "constans_loop_scope"
+
+RITUALE main() REDDE REX
+  EVOCA REX soma AD 0
+  REPETE i DE 0 AD 2
+    EVOCA CONSTANS REX delta AD 10
+    VINCIRE soma AD soma + delta
+  FIN REPETE
+  REDDE soma
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

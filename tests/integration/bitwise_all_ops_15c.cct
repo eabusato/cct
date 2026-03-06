@@ -1,0 +1,16 @@
+INCIPIT grimoire "bitwise_all"
+
+RITUALE main() REDDE REX
+  EVOCA REX a AD 60
+  EVOCA REX b AD 13
+  EVOCA REX r1 AD a ET_BIT b
+  EVOCA REX r2 AD a VEL_BIT b
+  EVOCA REX r3 AD a XOR b
+  EVOCA REX r4 AD a SINISTER 2
+  EVOCA REX r5 AD a DEXTER 2
+  EVOCA REX r6 AD NON_BIT b
+  EVOCA REX soma AD r1 + r2 + r3 + r4 + r5
+  REDDE soma
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

@@ -1,0 +1,16 @@
+INCIPIT grimoire "recede_donec"
+
+RITUALE main() REDDE REX
+  EVOCA REX contador AD 0
+  EVOCA REX i AD 0
+  DONEC
+    VINCIRE i AD i + 1
+    SI i == 2
+      RECEDE
+    FIN SI
+    VINCIRE contador AD contador + 1
+  DUM i < 5
+  REDDE contador
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

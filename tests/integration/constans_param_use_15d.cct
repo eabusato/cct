@@ -1,0 +1,11 @@
+INCIPIT grimoire "constans_param"
+
+RITUALE dobrar(CONSTANS REX x) REDDE REX
+  REDDE x * 2
+EXPLICIT RITUALE
+
+RITUALE main() REDDE REX
+  REDDE CONIURA dobrar(21)
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

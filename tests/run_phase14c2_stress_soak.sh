@@ -2,8 +2,10 @@
 set -euo pipefail
 
 ROOT_DIR="$(CDPATH= cd -- "$(dirname -- "$0")/.." && pwd)"
+source "$ROOT_DIR/tests/test_tmpdir.sh"
+cct_setup_tmpdir "$ROOT_DIR"
 CCT_BIN="$ROOT_DIR/cct"
-TMP_DIR="/tmp/cct_phase14c2_stress"
+TMP_DIR="$CCT_TMP_DIR/cct_phase14c2_stress"
 ROUNDS="${1:-8}"
 
 rm -rf "$TMP_DIR"
@@ -25,9 +27,9 @@ rituale = 1
 SIGEOF
 
 for i in $(seq 1 "$ROUNDS"); do
-  "$CCT_BIN" --check "$ROOT_DIR/tests/integration/codegen_minimal.cct" >/tmp/cct_phase14c2_check_"$i".out 2>&1 || FAILURES=$((FAILURES + 1))
-  "$CCT_BIN" --sigilo-only "$ROOT_DIR/tests/integration/sigilo_minimal.cct" >/tmp/cct_phase14c2_sigilo_"$i".out 2>&1 || FAILURES=$((FAILURES + 1))
-  "$CCT_BIN" sigilo validate "$TMP_DIR/valid.sigil" --summary >/tmp/cct_phase14c2_validate_"$i".out 2>&1 || FAILURES=$((FAILURES + 1))
+  "$CCT_BIN" --check "$ROOT_DIR/tests/integration/codegen_minimal.cct" >$CCT_TMP_DIR/cct_phase14c2_check_"$i".out 2>&1 || FAILURES=$((FAILURES + 1))
+  "$CCT_BIN" --sigilo-only "$ROOT_DIR/tests/integration/sigilo_minimal.cct" >$CCT_TMP_DIR/cct_phase14c2_sigilo_"$i".out 2>&1 || FAILURES=$((FAILURES + 1))
+  "$CCT_BIN" sigilo validate "$TMP_DIR/valid.sigil" --summary >$CCT_TMP_DIR/cct_phase14c2_validate_"$i".out 2>&1 || FAILURES=$((FAILURES + 1))
 done
 
 cat > "$TMP_DIR/report.txt" <<EOF

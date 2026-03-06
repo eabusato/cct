@@ -1,0 +1,11 @@
+INCIPIT grimoire "et_value"
+
+RITUALE main() REDDE REX
+  EVOCA VERUM r AD 1 ET 1
+  SI r
+    REDDE 1
+  FIN SI
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

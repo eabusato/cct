@@ -1,0 +1,16 @@
+INCIPIT grimoire "frange_iterum_after"
+
+RITUALE main() REDDE REX
+  EVOCA SERIES REX[3] arr
+  VINCIRE arr[0] AD 7
+  VINCIRE arr[1] AD 8
+  VINCIRE arr[2] AD 9
+  EVOCA REX depois AD 0
+  ITERUM v IN arr COM
+    FRANGE
+  FIN ITERUM
+  VINCIRE depois AD 42
+  REDDE depois
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

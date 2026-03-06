@@ -1,0 +1,11 @@
+INCIPIT grimoire "et_comparators"
+
+RITUALE main() REDDE REX
+  EVOCA REX x AD 5
+  SI x + 1 > 3 ET x * 2 < 15
+    REDDE 1
+  FIN SI
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire
