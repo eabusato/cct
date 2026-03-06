@@ -986,7 +986,7 @@ static int cmd_lint(int argc, char **argv) {
     }
 
     cct_semantic_analyzer_t sem;
-    cct_semantic_init(&sem, file);
+    cct_semantic_init(&sem, file, CCT_PROFILE_HOST);
     bool sem_ok = cct_semantic_analyze_program(&sem, bundle.program);
     bool sem_error = !sem_ok || cct_semantic_had_error(&sem);
     cct_semantic_dispose(&sem);
@@ -1180,7 +1180,7 @@ static cct_error_code_t cmd_show_ast_composite(const char *filename) {
  *
  * Parses the input file and runs semantic analysis.
  */
-static cct_error_code_t cmd_check_semantic(const char *filename) {
+static cct_error_code_t cmd_check_semantic(const char *filename, cct_profile_t profile) {
     cct_module_bundle_t bundle;
     cct_error_code_t bundle_status = CCT_OK;
     if (!cct_module_bundle_build(filename, &bundle, &bundle_status)) {
@@ -1188,7 +1188,7 @@ static cct_error_code_t cmd_check_semantic(const char *filename) {
     }
 
     cct_semantic_analyzer_t sem;
-    cct_semantic_init(&sem, filename);
+    cct_semantic_init(&sem, filename, profile);
 
     bool ok = cct_semantic_analyze_program(&sem, bundle.program);
     if (ok) {
@@ -1443,7 +1443,7 @@ static cct_error_code_t cmd_sigilo_only(const cct_cli_args_t *args) {
     }
 
     cct_semantic_analyzer_t sem;
-    cct_semantic_init(&sem, filename);
+    cct_semantic_init(&sem, filename, args->profile);
     bool sem_ok = cct_semantic_analyze_program(&sem, bundle.program);
     if (!sem_ok || cct_semantic_had_error(&sem)) {
         cct_semantic_dispose(&sem);
@@ -1474,7 +1474,7 @@ static cct_error_code_t cmd_compile_file(const cct_cli_args_t *args) {
     }
 
     cct_semantic_analyzer_t sem;
-    cct_semantic_init(&sem, filename);
+    cct_semantic_init(&sem, filename, args->profile);
     bool sem_ok = cct_semantic_analyze_program(&sem, bundle.program);
 
     if (!sem_ok || cct_semantic_had_error(&sem)) {
@@ -1487,6 +1487,7 @@ static cct_error_code_t cmd_compile_file(const cct_cli_args_t *args) {
 
     cct_codegen_t cg;
     cct_codegen_init(&cg, filename);
+    cg.profile = args->profile;
     bool cg_ok = false;
     bool cg_had_error = false;
     if (sigilo_status == CCT_OK) {
@@ -1568,7 +1569,7 @@ int main(int argc, char **argv) {
 
         case CCT_CMD_CHECK_ONLY:
             /* FASE 3: Semantic analysis */
-            return (int)cmd_check_semantic(args.input_file);
+            return (int)cmd_check_semantic(args.input_file, args.profile);
 
         case CCT_CMD_SIGILO_ONLY:
             return (int)cmd_sigilo_only(&args);

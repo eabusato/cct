@@ -41,6 +41,7 @@ typedef struct {
     cct_codegen_backend_kind_t backend_kind; /* backend selection (future-proofing) */
     const char *host_cc;            /* defaults to "cc" */
     bool keep_intermediate;         /* preserve generated .c file */
+    cct_profile_t profile;          /* FASE 16A.2: compilation profile */
 
     /* Internal state (opaque to callers) */
     cct_codegen_string_t *strings;

@@ -10777,6 +10777,89 @@ fi
 
 echo ""
 echo "========================================"
+echo "FASE 16A2: Freestanding Profile Flag Tests"
+echo "========================================"
+echo ""
+
+# Test 883: --profile freestanding is accepted in compile flow
+echo "Test 883: freestanding profile flag is accepted"
+cleanup_codegen_artifacts "tests/integration/freestanding_flag_16a2.cct"
+if "$CCT_BIN" --profile freestanding "tests/integration/freestanding_flag_16a2.cct" >$CCT_TMP_DIR/cct_phase16a2_883_compile.out 2>&1; then
+    test_pass "freestanding profile compiles successfully"
+else
+    test_fail "freestanding profile flag was not accepted"
+fi
+
+# Test 884: --freestanding alias is accepted in compile flow
+echo "Test 884: freestanding alias flag is accepted"
+cleanup_codegen_artifacts "tests/integration/freestanding_flag_16a2.cct"
+if "$CCT_BIN" --freestanding "tests/integration/freestanding_flag_16a2.cct" >$CCT_TMP_DIR/cct_phase16a2_884_compile.out 2>&1; then
+    test_pass "freestanding alias compiles successfully"
+else
+    test_fail "freestanding alias flag was not accepted"
+fi
+
+# Test 885: --profile host explicit value keeps default behavior
+echo "Test 885: host profile explicit value is accepted"
+cleanup_codegen_artifacts "tests/integration/freestanding_flag_16a2.cct"
+if "$CCT_BIN" --profile host "tests/integration/freestanding_flag_16a2.cct" >$CCT_TMP_DIR/cct_phase16a2_885_compile.out 2>&1; then
+    test_pass "host profile compiles successfully"
+else
+    test_fail "host profile explicit value was not accepted"
+fi
+
+# Test 886: unknown profile is rejected with clear message and exit 1
+echo "Test 886: unknown profile is rejected clearly"
+"$CCT_BIN" --profile xyz "tests/integration/freestanding_flag_16a2.cct" >$CCT_TMP_DIR/cct_phase16a2_886_unknown.out 2>&1
+RC_886=$?
+if [ "$RC_886" -eq 1 ] && grep -q "desconhecido" $CCT_TMP_DIR/cct_phase16a2_886_unknown.out; then
+    test_pass "unknown profile is rejected with clear diagnostic"
+else
+    test_fail "unknown profile contract regressed"
+fi
+
+# Test 887: --profile without value is rejected with exit 3
+echo "Test 887: --profile without value is rejected"
+"$CCT_BIN" --profile >$CCT_TMP_DIR/cct_phase16a2_887_missing.out 2>&1
+RC_887=$?
+if [ "$RC_887" -eq 3 ] && grep -q "requer um valor" $CCT_TMP_DIR/cct_phase16a2_887_missing.out; then
+    test_pass "--profile missing value is rejected with clear diagnostic"
+else
+    test_fail "--profile missing value contract regressed"
+fi
+
+# Test 888: --profile freestanding works with --check
+echo "Test 888: freestanding profile works with --check"
+"$CCT_BIN" --profile freestanding --check "tests/integration/freestanding_flag_16a2.cct" >$CCT_TMP_DIR/cct_phase16a2_888_check.out 2>&1
+RC_888=$?
+if [ "$RC_888" -eq 0 ] && grep -q "Semantic check OK" $CCT_TMP_DIR/cct_phase16a2_888_check.out; then
+    test_pass "freestanding profile integrates with --check"
+else
+    test_fail "freestanding profile + --check integration regressed"
+fi
+
+# Test 889: --profile freestanding works with --ast
+echo "Test 889: freestanding profile works with --ast"
+"$CCT_BIN" --profile freestanding --ast "tests/integration/freestanding_flag_16a2.cct" >$CCT_TMP_DIR/cct_phase16a2_889_ast.out 2>&1
+RC_889=$?
+if [ "$RC_889" -eq 0 ] && grep -q "PROGRAM:" $CCT_TMP_DIR/cct_phase16a2_889_ast.out; then
+    test_pass "freestanding profile integrates with --ast"
+else
+    test_fail "freestanding profile + --ast integration regressed"
+fi
+
+# Test 890: --profile freestanding works with --tokens
+echo "Test 890: freestanding profile works with --tokens"
+"$CCT_BIN" --profile freestanding --tokens "tests/integration/freestanding_flag_16a2.cct" >$CCT_TMP_DIR/cct_phase16a2_890_tokens.out 2>&1
+RC_890=$?
+if [ "$RC_890" -eq 0 ] && grep -q "INCIPIT" $CCT_TMP_DIR/cct_phase16a2_890_tokens.out; then
+    test_pass "freestanding profile integrates with --tokens"
+else
+    test_fail "freestanding profile + --tokens integration regressed"
+fi
+
+echo ""
+echo "========================================"
 echo "Test Results:"
 echo -e "  ${GREEN}Passed:${NC} $TESTS_PASSED"
 echo -e "  ${RED}Failed:${NC} $TESTS_FAILED"

@@ -46,4 +46,13 @@ typedef double   f64;
  */
 /* Already defined by stdbool.h: bool, true, false */
 
+/*
+ * Compilation profile (FASE 16A.2)
+ * Determines the target environment for the compiled output.
+ */
+typedef enum {
+    CCT_PROFILE_HOST = 0,           /* Default: C-hosted x86_64, libc available */
+    CCT_PROFILE_FREESTANDING,       /* Bare-metal x86-32, no libc, no OS (LBOS target) */
+} cct_profile_t;
+
 #endif /* CCT_COMMON_TYPES_H */

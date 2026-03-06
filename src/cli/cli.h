@@ -64,6 +64,7 @@ typedef struct {
     bool no_color;
     bool verbose;
     bool debug;
+    cct_profile_t profile;          /* FASE 16A.2: compilation profile */
 } cct_cli_args_t;
 
 /*

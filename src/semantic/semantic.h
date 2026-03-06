@@ -106,6 +106,7 @@ typedef struct {
     cct_sem_scope_t *current_scope;
     cct_sem_symbol_t *current_rituale;
     u32 loop_depth;
+    cct_profile_t profile;          /* FASE 16A.2: compilation profile */
 
     /* Builtin semantic types (interned for pointer equality) */
     cct_sem_type_t type_error;
@@ -134,7 +135,7 @@ typedef struct {
     cct_sem_generic_instance_t *generic_instances;
 } cct_semantic_analyzer_t;
 
-void cct_semantic_init(cct_semantic_analyzer_t *sem, const char *filename);
+void cct_semantic_init(cct_semantic_analyzer_t *sem, const char *filename, cct_profile_t profile);
 bool cct_semantic_analyze_program(cct_semantic_analyzer_t *sem, const cct_ast_program_t *program);
 bool cct_semantic_had_error(const cct_semantic_analyzer_t *sem);
 u32 cct_semantic_error_count(const cct_semantic_analyzer_t *sem);

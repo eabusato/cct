@@ -36,6 +36,19 @@ static bool cli_parse_sigilo_mode(const char *mode, cct_sigilo_mode_t *out_mode)
     return false;
 }
 
+static bool cli_parse_profile(const char *profile_str, cct_profile_t *out_profile) {
+    if (!profile_str || !out_profile) return false;
+    if (strcmp(profile_str, "host") == 0) {
+        *out_profile = CCT_PROFILE_HOST;
+        return true;
+    }
+    if (strcmp(profile_str, "freestanding") == 0) {
+        *out_profile = CCT_PROFILE_FREESTANDING;
+        return true;
+    }
+    return false;
+}
+
 /*
  * Display help message
  */
@@ -65,6 +78,9 @@ void cct_cli_show_help(void) {
     printf("  --ast-composite <file.cct>  Display composed AST for module closure (FASE 9E)\n");
     printf("  --check <file.cct>          Syntax + semantic check (FASE 3)\n");
     printf("  --no-color                  Disable colored diagnostics (FASE 12A)\n");
+    printf("  --profile <profile>         Compilation profile: host (default) | freestanding\n");
+    printf("                              freestanding: bare-metal x86-32 target (LBOS) (FASE 16)\n");
+    printf("  --freestanding              Alias for --profile freestanding\n");
     printf("  --sigilo-only <file.cct>    Generate sigilo artifacts only (FASE 5+)\n");
     printf("  --sigilo-style <style>      Sigilo style: network|seal|scriptum (FASE 6A)\n");
     printf("  --sigilo-mode <mode>        Multi-module sigilo emission: essencial|completo\n");
@@ -152,6 +168,7 @@ cct_error_code_t cct_cli_parse(int argc, char **argv, cct_cli_args_t *args) {
     args->no_color = false;
     args->verbose = false;
     args->debug = false;
+    args->profile = CCT_PROFILE_HOST;   /* FASE 16A.2: default profile */
 
     /* No arguments provided */
     if (argc < 2) {
@@ -166,6 +183,23 @@ cct_error_code_t cct_cli_parse(int argc, char **argv, cct_cli_args_t *args) {
     for (int i = 1; i < argc; i++) {
         if (strcmp(argv[i], "--no-color") == 0) {
             args->no_color = true;
+            continue;
+        }
+        if (strcmp(argv[i], "--freestanding") == 0) {
+            args->profile = CCT_PROFILE_FREESTANDING;
+            continue;
+        }
+        if (strcmp(argv[i], "--profile") == 0) {
+            if (i + 1 >= argc) {
+                fprintf(stderr, "cct: --profile requer um valor (host|freestanding)\n");
+                return CCT_ERROR_MISSING_ARGUMENT;
+            }
+            i++;
+            if (!cli_parse_profile(argv[i], &args->profile)) {
+                fprintf(stderr, "cct: --profile '%s' desconhecido; valores válidos: host, freestanding\n",
+                        argv[i]);
+                return CCT_ERROR_INVALID_ARGUMENT;
+            }
             continue;
         }
         normalized_argv[normalized_argc++] = argv[i];

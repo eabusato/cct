@@ -5547,6 +5547,7 @@ void cct_codegen_init(cct_codegen_t *cg, const char *filename) {
     cg->host_cc = "cc";
 #endif
     cg->keep_intermediate = true;
+    cg->profile = CCT_PROFILE_HOST;
 }
 
 void cct_codegen_set_backend(cct_codegen_t *cg, cct_codegen_backend_kind_t backend_kind) {

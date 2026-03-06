@@ -3159,9 +3159,10 @@ static void sem_analyze_global_bodies_in_node(cct_semantic_analyzer_t *sem, cons
  * Public API
  * ======================================================================== */
 
-void cct_semantic_init(cct_semantic_analyzer_t *sem, const char *filename) {
+void cct_semantic_init(cct_semantic_analyzer_t *sem, const char *filename, cct_profile_t profile) {
     memset(sem, 0, sizeof(*sem));
     sem->filename = filename;
+    sem->profile = profile;
     sem_init_builtin_types(sem);
 
     sem_push_scope(sem, CCT_SEM_SCOPE_GLOBAL);
