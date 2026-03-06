@@ -1,9 +1,9 @@
 # main
 
 - Kind: `rituale`
-- Module: `/home/eabusato/dev/cct_bleh/tests/integration/docgen_visibility_12g/src/main.cct`
+- Module: `/home/eabusato/dev/cct/tests/integration/docgen_visibility_12g/src/main.cct`
 - Visibility: `public`
-- Generated: 2026-03-06 02:03:33
+- Generated: 2026-03-06 10:02:47
 
 ## Signature
 

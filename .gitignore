@@ -8,7 +8,7 @@
 
 # CCT compiler binary (root only)
 /cct
-third_pary/
+third_party/
 
 # Example binaries (compiled executables, not .cct source files)
 /examples/ars_magna_showcase

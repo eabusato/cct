@@ -1,6 +1,6 @@
 # Module mod_001_util
 
-- Path: `/home/eabusato/dev/cct_bleh/tests/integration/project_12f_basic/lib/util.cct`
+- Path: `/home/eabusato/dev/cct/tests/integration/project_12f_basic/lib/util.cct`
 - Origin: user module
 
 ## Symbols
