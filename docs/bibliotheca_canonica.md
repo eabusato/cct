@@ -115,7 +115,7 @@ Delivered after foundation:
 - sigilo tooling, release hardening, and closure governance (`13`, `13M`, `14`)
 - semantic/operator/freestanding bridge consolidation (`15`, `16`)
 - canonical-library expansion for host tooling and low-level modules (`17`, `18`)
-- language-surface expansion (`19A` through `19D`) integrating `QUANDO`, `MOLDE`, payload `ORDO`, and `ITERUM` over map/set.
+- language-surface expansion (`19A` through `19D`) integrating `CUM`, `FORMA`, payload `ORDO`, and `ITERUM` over map/set.
 
 Current phase closure references:
 - `docs/release/FASE_19_RELEASE_NOTES.md`
@@ -547,7 +547,7 @@ Sigilo integration:
 
 `lib/cct/ordo_samples.cct` nao e um modulo de runtime obrigatorio de producao.
 Ele existe como referencia idiomatica para ORDO com payload e para o uso conjunto
-de `QUANDO` e `MOLDE`.
+de `CUM` e `FORMA`.
 
 Padroes canonicos de referencia:
 - `Resultado` (retorno com erro): `Ok(REX valor)` / `Err(VERBUM msg)`
@@ -601,7 +601,7 @@ Low-level utility modules (18D):
 - foco em hashing deterministico, operacoes de bits e aleatoriedade utilitaria nao-criptografica.
 
 ADT/pattern integration reference (19C/19D):
-- `cct/ordo_samples` como baseline idiomatico de payload `ORDO` com `QUANDO` e `MOLDE`.
+- `cct/ordo_samples` como baseline idiomatico de payload `ORDO` com `CUM` e `FORMA`.
 - contratos genericos ponteiro-backed (`cct/option`, `cct/result`) permanecem validos para interoperabilidade.
 
 ## 32. Inventario Completo de Funcoes (FASE 19D.4)

@@ -1,0 +1,26 @@
+INCIPIT grimoire "quando_alias_latim_19d3"
+
+ADVOCARE "cct/verbum.cct"
+
+RITUALE main() REDDE REX
+  EVOCA VERBUM metodo AD "POST"
+  EVOCA VERBUM msg AD FORMA "met={metodo}"
+  EVOCA REX out AD 0
+
+  CUM metodo
+    CASUS "GET":
+      VINCIRE out AD 1
+    CASUS "POST":
+      SI CONIURA compare(msg, "met=POST") == 0
+        VINCIRE out AD 2
+      ALITER
+        VINCIRE out AD 7
+      FIN SI
+    ALIOQUIN:
+      VINCIRE out AD 9
+  FIN CUM
+
+  REDDE out
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

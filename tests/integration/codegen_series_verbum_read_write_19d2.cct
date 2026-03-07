@@ -1,0 +1,25 @@
+INCIPIT grimoire "series_verbum_rw_19d2"
+
+ADVOCARE "cct/verbum.cct"
+
+RITUALE main() REDDE REX
+  EVOCA SERIES VERBUM[3] arr
+  VINCIRE arr[0] AD "al"
+  VINCIRE arr[1] AD CONIURA concat(arr[0], "pha")
+  VINCIRE arr[2] AD arr[1]
+
+  EVOCA REX ok AD 0
+  SI CONIURA compare(arr[0], "al") == 0
+    VINCIRE ok AD ok + 1
+  FIN SI
+  SI CONIURA compare(arr[1], "alpha") == 0
+    VINCIRE ok AD ok + 1
+  FIN SI
+  SI CONIURA compare(arr[2], "alpha") == 0
+    VINCIRE ok AD ok + 1
+  FIN SI
+
+  REDDE ok
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

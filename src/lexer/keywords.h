@@ -34,17 +34,20 @@ static const cct_keyword_entry_t cct_keywords[] = {
     {"AD", TOKEN_AD},
     {"ADVOCARE", TOKEN_ADVOCARE},
     {"ALITER", TOKEN_ALITER},
+    {"ALIOQUIN", TOKEN_SENAO},
     {"ANUR", TOKEN_ANUR},
     {"ARCANUM", TOKEN_ARCANUM},
 
     /* C */
     {"CAPE", TOKEN_CAPE},
     {"CASO", TOKEN_CASO},
+    {"CASUS", TOKEN_CASO},
     {"CIRCULUS", TOKEN_CIRCULUS},
     {"CODEX", TOKEN_CODEX},
     {"COMES", TOKEN_COMES},
     {"CONIURA", TOKEN_CONIURA},
     {"CONSTANS", TOKEN_CONSTANS},
+    {"CUM", TOKEN_QUANDO},
 
     /* D */
     {"DE", TOKEN_DE},
@@ -65,6 +68,7 @@ static const cct_keyword_entry_t cct_keywords[] = {
     {"FIN", TOKEN_FIN},
     {"FLAMMA", TOKEN_FLAMMA},
     {"FLUXUS", TOKEN_FLUXUS},
+    {"FORMA", TOKEN_MOLDE},
     {"FRACTUM", TOKEN_FRACTUM},
     {"FRANGE", TOKEN_FRANGE},
 

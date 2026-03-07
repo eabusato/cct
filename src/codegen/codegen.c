@@ -527,6 +527,7 @@ static cct_codegen_local_kind_t cg_local_kind_from_ast_type(const cct_ast_type_t
     if (type->is_array) {
         if (is_int) return CCT_CODEGEN_LOCAL_ARRAY_INT;
         if (is_bool) return CCT_CODEGEN_LOCAL_ARRAY_BOOL;
+        if (is_string) return CCT_CODEGEN_LOCAL_ARRAY_STRING;
         if (is_umbra) return CCT_CODEGEN_LOCAL_ARRAY_UMBRA;
         if (is_flamma) return CCT_CODEGEN_LOCAL_ARRAY_FLAMMA;
         return CCT_CODEGEN_LOCAL_UNSUPPORTED;
@@ -556,6 +557,7 @@ static cct_codegen_value_kind_t cg_value_kind_from_local_kind(cct_codegen_local_
         case CCT_CODEGEN_LOCAL_POINTER: return CCT_CODEGEN_VALUE_POINTER;
         case CCT_CODEGEN_LOCAL_ARRAY_INT:
         case CCT_CODEGEN_LOCAL_ARRAY_BOOL:
+        case CCT_CODEGEN_LOCAL_ARRAY_STRING:
         case CCT_CODEGEN_LOCAL_ARRAY_UMBRA:
         case CCT_CODEGEN_LOCAL_ARRAY_FLAMMA: return CCT_CODEGEN_VALUE_ARRAY;
         case CCT_CODEGEN_LOCAL_STRUCT: return CCT_CODEGEN_VALUE_STRUCT;
@@ -6960,6 +6962,7 @@ static bool cg_iterum_binding_kind_from_ast_type(
         }
         if (kind == CCT_CODEGEN_LOCAL_ARRAY_INT ||
             kind == CCT_CODEGEN_LOCAL_ARRAY_BOOL ||
+            kind == CCT_CODEGEN_LOCAL_ARRAY_STRING ||
             kind == CCT_CODEGEN_LOCAL_ARRAY_UMBRA ||
             kind == CCT_CODEGEN_LOCAL_ARRAY_FLAMMA) {
             kind = CCT_CODEGEN_LOCAL_UNSUPPORTED;
@@ -7388,6 +7391,7 @@ static bool cg_emit_stmt(FILE *out, cct_codegen_t *cg, const cct_ast_node_t *stm
 
             cg_emit_indent(out, indent);
             if (kind == CCT_CODEGEN_LOCAL_ARRAY_INT || kind == CCT_CODEGEN_LOCAL_ARRAY_BOOL ||
+                kind == CCT_CODEGEN_LOCAL_ARRAY_STRING ||
                 kind == CCT_CODEGEN_LOCAL_ARRAY_UMBRA || kind == CCT_CODEGEN_LOCAL_ARRAY_FLAMMA) {
                 const cct_ast_type_t *t = stmt->as.evoca.var_type;
                 if (!t || !t->is_array || !t->element_type || t->array_size == 0) {

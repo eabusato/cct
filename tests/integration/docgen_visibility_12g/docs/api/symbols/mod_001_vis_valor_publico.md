@@ -3,7 +3,7 @@
 - Kind: `rituale`
 - Module: `/home/eabusato/dev/cct/tests/integration/docgen_visibility_12g/lib/vis.cct`
 - Visibility: `public`
-- Generated: 2026-03-07 19:33:45
+- Generated: 2026-03-07 20:41:28
 
 ## Signature
 

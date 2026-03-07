@@ -178,7 +178,7 @@ FASE 17 expands the canonical standard library to unlock bootstrap-oriented comp
 - `cct/variant`
 - `cct/variant_helpers`
 - `cct/ast_node`
-- ORDO payload language support is stable in FASE 19 (`QUANDO` destructuring + payload constructors)
+- ORDO payload language support is stable in FASE 19 (`CUM` destructuring + payload constructors)
 
 17D - Host utility libraries:
 - `cct/env`: environment variable and cwd access
@@ -214,16 +214,16 @@ FASE 18 expands and consolidates Bibliotheca Canonica with production-ready host
 FASE 19 closes a major expressiveness gap in core language syntax and semantics.
 
 19A - selection/pattern statement:
-- `QUANDO`/`CASO`/`SENAO` for integer, `VERBUM`, and `ORDO` dispatch.
-- ORDO exhaustiveness enforcement when `SENAO` is absent.
+- `CUM`/`CASUS`/`ALIOQUIN` for integer, `VERBUM`, and `ORDO` dispatch.
+- ORDO exhaustiveness enforcement when `ALIOQUIN` is absent.
 
 19B - interpolated string expression:
-- `MOLDE "..."` with `{expr}` interpolation and formatting specifiers.
+- `FORMA "..."` with `{expr}` interpolation and formatting specifiers.
 - host-only contract in current subset.
 
 19C - payload-capable sum types:
 - `ORDO` supports payload variants with compile-time constructor validation.
-- payload destructuring through `QUANDO ... CASO Variante(bindings): ...`.
+- payload destructuring through `CUM ... CASUS Variante(bindings): ...`.
 
 19D - collection iteration expansion:
 - `ITERUM key, value IN map COM ... FIN ITERUM`
@@ -347,19 +347,19 @@ field        := type IDENT
 
 Semantics:
 - payload-capable ORDO is a tagged-sum type lowered to a C tagged union form.
-- payload fields are variant-local and are only available after matching a variant in `QUANDO`.
+- payload fields are variant-local and are only available after matching a variant in `CUM`.
 - constructors are resolved by target-context type and validated by variant arity and field types.
 
 Payload contract (current stable subset):
 - allowed payload field types: `REX`, `DUX`, `COMES`, `MILES`, `UMBRA`, `FLAMMA`, `VERUM`, `VERBUM`
 - mixed variants (with and without payload) are supported
 - constructor arity/type is validated at compile time
-- payload destructuring is supported only via `QUANDO ... CASO Variant(bindings): ...`
+- payload destructuring is supported only via `CUM ... CASUS Variant(bindings): ...`
 
 Current restrictions:
 - recursive ORDO payloads are not part of the stable subset
 - `GENUS` over payload ORDO declarations is not part of the stable subset
-- shared-body OR-cases with payload bindings (`CASO A:` followed by `CASO B:`) are not supported
+- shared-body OR-cases with payload bindings (`CASUS A:` followed by `CASUS B:`) are not supported
 
 Example:
 
@@ -608,7 +608,7 @@ Map form (requires 2 bindings):
 
 ```cct
 ITERUM chave, valor IN mapa COM
-  OBSECRO scribe(MOLDE "{chave} -> {valor}\n")
+  OBSECRO scribe(FORMA "{chave} -> {valor}\n")
 FIN ITERUM
 ```
 
@@ -616,7 +616,7 @@ Set form (requires 1 binding):
 
 ```cct
 ITERUM item IN conjunto COM
-  OBSECRO scribe(MOLDE "{item}\n")
+  OBSECRO scribe(FORMA "{item}\n")
 FIN ITERUM
 ```
 
@@ -677,7 +677,7 @@ Subset constraints:
 - exactly one `CAPE` in current official subset
 - `SEMPER` must come after `CAPE`
 
-### 5.12 `QUANDO` (pattern-style selection)
+### 5.12 `CUM` (pattern-style selection)
 
 Status:
 - Stable (FASE 19A/C payload integration)
@@ -685,51 +685,51 @@ Status:
 Normative grammar:
 
 ```text
-quando_stmt   := QUANDO expr caso+ (SENAO ':' stmt_list)? FIN QUANDO
-caso          := CASO literal ':' stmt_list
-               | CASO variant_name '(' binding_list ')' ':' stmt_list
+quando_stmt   := CUM expr caso+ (ALIOQUIN ':' stmt_list)? FIN CUM
+caso          := CASUS literal ':' stmt_list
+               | CASUS variant_name '(' binding_list ')' ':' stmt_list
 binding_list  := IDENT (',' IDENT)*
 ```
 
 Semantics:
-- `QUANDO` evaluates `expr` once and executes the first matching `CASO`.
-- when no `CASO` matches:
-  - if `SENAO` exists, `SENAO` executes;
-  - if `SENAO` is absent and scrutinee type is `ORDO`, exhaustiveness diagnostics apply.
-- OR-cases are represented by multiple consecutive `CASO` labels sharing one body.
-- for `ORDO` with payload, bindings are local to the matched `CASO` block.
+- `CUM` evaluates `expr` once and executes the first matching `CASUS`.
+- when no `CASUS` matches:
+  - if `ALIOQUIN` exists, `ALIOQUIN` executes;
+  - if `ALIOQUIN` is absent and scrutinee type is `ORDO`, exhaustiveness diagnostics apply.
+- OR-cases are represented by multiple consecutive `CASUS` labels sharing one body.
+- for `ORDO` with payload, bindings are local to the matched `CASUS` block.
 
 Exhaustiveness rules:
-- `QUANDO` over `ORDO` (with or without payload): exhaustive coverage is required unless `SENAO` is present.
-- `QUANDO` over integer or `VERBUM`: missing `SENAO` is accepted with warning-oriented diagnostics.
+- `CUM` over `ORDO` (with or without payload): exhaustive coverage is required unless `ALIOQUIN` is present.
+- `CUM` over integer or `VERBUM`: missing `ALIOQUIN` is accepted with warning-oriented diagnostics.
 
 Restrictions:
-- `QUANDO` is a statement, not an expression.
+- `CUM` is a statement, not an expression.
 - OR-cases with payload bindings in a shared body are not supported.
 - nested payload destructuring patterns are not supported in the stable subset.
-- `FRANGE` inside `QUANDO` nested in a loop exits the enclosing loop, not the `QUANDO`.
+- `FRANGE` inside `CUM` nested in a loop exits the enclosing loop, not the `CUM`.
 
 Examples:
 
 ```cct
-QUANDO x
-  CASO 1:
-  CASO 2:
+CUM x
+  CASUS 1:
+  CASUS 2:
     OBSECRO scribe("pequeno\n")
-  CASO 3:
+  CASUS 3:
     OBSECRO scribe("medio\n")
-  SENAO:
+  ALIOQUIN:
     OBSECRO scribe("grande\n")
-FIN QUANDO
+FIN CUM
 ```
 
 ```cct
-QUANDO resultado
-  CASO Ok(v):
-    OBSECRO scribe(MOLDE "valor: {v}\n")
-  CASO Err(msg):
-    OBSECRO scribe(MOLDE "erro: {msg}\n")
-FIN QUANDO
+CUM resultado
+  CASUS Ok(v):
+    OBSECRO scribe(FORMA "valor: {v}\n")
+  CASUS Err(msg):
+    OBSECRO scribe(FORMA "erro: {msg}\n")
+FIN CUM
 ```
 
 ### 5.13 `FRANGE`, `RECEDE`, `TRANSITUS`
@@ -813,7 +813,7 @@ Examples:
 - `20 // 3 + 1` => `(20 // 3) + 1`
 - `20 // (3 + 1)` => `20 // 4`
 
-### 6.8 `MOLDE` (string interpolation)
+### 6.8 `FORMA` (string interpolation)
 
 Status:
 - Stable (FASE 19B)
@@ -822,7 +822,7 @@ Status:
 Normative grammar:
 
 ```text
-molde_expr      := MOLDE string_literal
+molde_expr      := FORMA string_literal
 interpolation   := '{' expr (':' format_spec)? '}'
 format_spec     := [width] ['.' precision] ['d'|'f'|'s'|'<'|'>'|'^']
 width           := DIGIT+
@@ -832,7 +832,7 @@ precision       := DIGIT+
 Canonical form:
 
 ```cct
-MOLDE "texto {expr} mais {expr:spec}"
+FORMA "texto {expr} mais {expr:spec}"
 ```
 
 Supported interpolation payload types:
@@ -849,7 +849,7 @@ Formatting notes:
 
 Constraints:
 - `OBSECRO` calls are not allowed inside `{...}` interpolation expressions
-- `MOLDE` returns a `VERBUM` value
+- `FORMA` returns a `VERBUM` value
 - as direct argument to output builtins, runtime ownership is automatically handled by generated code
 
 Examples:
@@ -859,10 +859,10 @@ EVOCA VERBUM nome AD "Maria"
 EVOCA REX pontos AD 95
 EVOCA UMBRA media AD 8.75
 
-OBSECRO scribe(MOLDE "Aluno: {nome}, Pontos: {pontos}\n")
-OBSECRO scribe(MOLDE "Media: {media:.2f}\n")
+OBSECRO scribe(FORMA "Aluno: {nome}, Pontos: {pontos}\n")
+OBSECRO scribe(FORMA "Media: {media:.2f}\n")
 
-EVOCA VERBUM relatorio AD MOLDE "Aluno: {nome} ({pontos:3d} pts)\n"
+EVOCA VERBUM relatorio AD FORMA "Aluno: {nome} ({pontos:3d} pts)\n"
 OBSECRO scribe(relatorio)
 ```
 
@@ -1474,9 +1474,9 @@ Legend:
 |---|---|---|---|
 | `SI` | if | Stable | supports `ALITER` |
 | `ALITER` | else | Stable | optional |
-| `QUANDO` | pattern/switch selection | Stable | statement-only selection over literals and ORDO variants |
-| `CASO` | case arm in `QUANDO` | Stable | supports OR-case literals and ORDO payload bindings |
-| `SENAO` | default arm in `QUANDO` | Stable | optional fallback branch |
+| `CUM` | pattern/switch selection | Stable | statement-only selection over literals and ORDO variants |
+| `CASUS` | case arm in `CUM` | Stable | supports OR-case literals and ORDO payload bindings |
+| `ALIOQUIN` | default arm in `CUM` | Stable | optional fallback branch |
 | `DUM` | while / do-while trailer | Stable | used by both `DUM` and `DONEC ... DUM` |
 | `DONEC` | do-while block start | Stable | post-condition form |
 | `REPETE` | for-range loop | Stable | `DE`, `AD`, optional `GRADUS` |
@@ -1524,7 +1524,7 @@ Legend:
 | `UMBRA` | double | Stable | |
 | `FLAMMA` | float | Stable | |
 | `VERBUM` | string | Stable | |
-| `MOLDE` | interpolated string expression | Stable | host-only in current subset |
+| `FORMA` | interpolated string expression | Stable | host-only in current subset |
 | `VERUM` | boolean true / bool family | Stable | literal and type family |
 | `FALSUM` | boolean false | Stable | literal |
 | `NIHIL` | null/void family | Stable | |

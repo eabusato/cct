@@ -10,8 +10,8 @@
 
 A FASE 19 adiciona quatro melhorias centrais para escrita de codigo de aplicacao:
 
-- **QUANDO**: selecao por padrao para inteiros, VERBUM e ORDO.
-- **MOLDE**: interpolacao de strings com especificadores de formato.
+- **CUM**: selecao por padrao para inteiros, VERBUM e ORDO.
+- **FORMA**: interpolacao de strings com especificadores de formato.
 - **ORDO com payload**: tipos soma (ADT) com campos tipados.
 - **ITERUM expandido**: iteracao nativa sobre `map` e `set`.
 
@@ -19,13 +19,13 @@ Nao ha bugs conhecidos em aberto para os recursos entregues nesta fase.
 
 ---
 
-## 1) QUANDO — Selecao por Padrao
+## 1) CUM — Selecao por Padrao
 
 ### O que voce ganha
 
 - Codigo de decisao mais legivel do que cadeias longas de `SI`/`ALITER`.
 - Exaustividade obrigatoria para ORDO (sem branch silencioso perdido).
-- Integracao direta com ORDO payload em `CASO Variante(bindings)`.
+- Integracao direta com ORDO payload em `CASUS Variante(bindings)`.
 
 ### Tipos suportados
 
@@ -45,21 +45,21 @@ RITUALE main() REDDE NIHIL
   EVOCA REX codigo AD 404
   EVOCA Estado est AD Ativo
 
-  QUANDO codigo
-    CASO 200:
+  CUM codigo
+    CASUS 200:
       OBSECRO scribe("ok\n")
-    CASO 404:
+    CASUS 404:
       OBSECRO scribe("nao encontrado\n")
-    SENAO:
+    ALIOQUIN:
       OBSECRO scribe("outro\n")
-  FIN QUANDO
+  FIN CUM
 
-  QUANDO est
-    CASO Ativo:
+  CUM est
+    CASUS Ativo:
       OBSECRO scribe("ativo\n")
-    CASO Inativo:
+    CASUS Inativo:
       OBSECRO scribe("inativo\n")
-  FIN QUANDO
+  FIN CUM
 
   REDDE
 EXPLICIT RITUALE
@@ -67,13 +67,13 @@ EXPLICIT RITUALE
 
 ### Regras importantes
 
-- Em ORDO, sem `SENAO`, cobertura incompleta e erro de compilacao.
-- Em inteiro/VERBUM, sem `SENAO`, a compilacao e aceita com warning.
-- `FRANGE` dentro de `QUANDO` em loop encerra o loop externo.
+- Em ORDO, sem `ALIOQUIN`, cobertura incompleta e erro de compilacao.
+- Em inteiro/VERBUM, sem `ALIOQUIN`, a compilacao e aceita com warning.
+- `FRANGE` dentro de `CUM` em loop encerra o loop externo.
 
 ---
 
-## 2) MOLDE — Interpolacao de Strings
+## 2) FORMA — Interpolacao de Strings
 
 ### O que voce ganha
 
@@ -84,7 +84,7 @@ EXPLICIT RITUALE
 ### Disponibilidade
 
 - **Host-only** nesta fase.
-- Em freestanding, `MOLDE` gera erro de compilacao.
+- Em freestanding, `FORMA` gera erro de compilacao.
 
 ### Especificadores comuns
 
@@ -104,11 +104,11 @@ RITUALE main() REDDE NIHIL
   EVOCA REX idade AD 30
   EVOCA UMBRA altura AD 1.75
 
-  OBSECRO scribe(MOLDE "Nome: {nome}, Idade: {idade}\n")
-  OBSECRO scribe(MOLDE "Altura: {altura:.2f}m\n")
-  OBSECRO scribe(MOLDE "Nome alinhado: {nome:>10}\n")
+  OBSECRO scribe(FORMA "Nome: {nome}, Idade: {idade}\n")
+  OBSECRO scribe(FORMA "Altura: {altura:.2f}m\n")
+  OBSECRO scribe(FORMA "Nome alinhado: {nome:>10}\n")
 
-  EVOCA VERBUM msg AD MOLDE "Maioridade: {idade >= 18}"
+  EVOCA VERBUM msg AD FORMA "Maioridade: {idade >= 18}"
   OBSECRO scribe(msg, "\n")
 
   REDDE
@@ -123,7 +123,7 @@ EXPLICIT RITUALE
 
 - Modelagem de resultado/opcao de forma nativa e tipada.
 - Construtores validados em tempo de compilacao.
-- Desestruturacao direta com `QUANDO`.
+- Desestruturacao direta com `CUM`.
 
 ### Tipos de payload suportados
 
@@ -147,12 +147,12 @@ EXPLICIT RITUALE
 RITUALE main() REDDE NIHIL
   EVOCA Resultado r AD CONIURA dividir(10, 2)
 
-  QUANDO r
-    CASO Ok(v):
-      OBSECRO scribe(MOLDE "resultado: {v}\n")
-    CASO Err(m):
-      OBSECRO scribe(MOLDE "erro: {m}\n")
-  FIN QUANDO
+  CUM r
+    CASUS Ok(v):
+      OBSECRO scribe(FORMA "resultado: {v}\n")
+    CASUS Err(m):
+      OBSECRO scribe(FORMA "erro: {m}\n")
+  FIN CUM
 
   REDDE
 EXPLICIT RITUALE
@@ -192,11 +192,11 @@ RITUALE main() REDDE REX
   CONIURA set_insert GENUS(REX)(conjunto, 9)
 
   ITERUM chave, valor IN mapa COM
-    OBSECRO scribe(MOLDE "{chave} -> {valor}\n")
+    OBSECRO scribe(FORMA "{chave} -> {valor}\n")
   FIN ITERUM
 
   ITERUM elem IN conjunto COM
-    OBSECRO scribe(MOLDE "set: {elem}\n")
+    OBSECRO scribe(FORMA "set: {elem}\n")
   FIN ITERUM
 
   CONIURA map_free GENUS(REX, REX)(mapa)
@@ -219,9 +219,9 @@ EXPLICIT RITUALE
 
 - ORDO recursivo.
 - OR-cases com binding de payload compartilhando corpo.
-- Desestruturacao aninhada em `CASO`.
-- Guards em `CASO`.
-- `MOLDE` em freestanding.
+- Desestruturacao aninhada em `CASUS`.
+- Guards em `CASUS`.
+- `FORMA` em freestanding.
 - Iteracao `ITERUM` para tipos customizados iteraveis.
 
 ---
@@ -229,5 +229,5 @@ EXPLICIT RITUALE
 ## 7) Notas de Migracao
 
 - Sem quebra de compatibilidade para codigo existente.
-- `QUANDO`, `CASO`, `SENAO`, `MOLDE` passaram a ser palavras reservadas.
+- `CUM`, `CASUS`, `ALIOQUIN`, `FORMA` passaram a ser palavras reservadas.
 - Se usados antes como identificadores, devem ser renomeados.

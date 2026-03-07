@@ -1,0 +1,260 @@
+-- ==================================================================
+-- explorador_dir_18_19.cct
+-- Explora varios diretorios do projeto e classifica arquivos.
+-- Usa join() do fluxus + count_occurrences para analise.
+--
+-- Demonstra (FASE 18+19):
+--   * ORDO payload: RelDiretorio(REX total, REX cct_files) para sumario
+--   * QUANDO sobre ORDO payload com destruturacao e logica de nivel
+--   * QUANDO sobre VERBUM para classificar nivel de alerta
+--   * fs: list_dir, is_dir, size para inspecao do projeto
+--   * path: path_basename, path_join para manipulacao de caminhos
+--   * verbum: join, count_occurrences, contains, len
+--   * map GENUS(REX,REX) para contagem de tipos por diretorio
+--   * ITERUM sobre map para exibir sumario agregado
+--   * MOLDE com especificadores e interpolacao de strings
+-- ==================================================================
+
+INCIPIT grimoire "explorador_dir_18_19"
+
+ADVOCARE "cct/fs.cct"
+ADVOCARE "cct/path.cct"
+ADVOCARE "cct/verbum.cct"
+ADVOCARE "cct/map.cct"
+ADVOCARE "cct/fmt.cct"
+ADVOCARE "cct/fluxus.cct"
+
+-- Sumario de um diretorio escaneado
+ORDO RelDiretorio
+  Vazio,
+  Scanado(REX total, REX cct_count, REX c_count)
+FIN ORDO
+
+-- Avaliacao de saude de um diretorio (baseada em contagens)
+RITUALE avaliar_diretorio(REX total, REX cct_count) REDDE VERBUM
+  SI total == 0
+    REDDE "vazio  "
+  FIN SI
+  EVOCA REX pct AD (cct_count * 100) / total
+  SI pct >= 60
+    REDDE "rico   "
+  FIN SI
+  SI pct >= 30
+    REDDE "misto  "
+  FIN SI
+  REDDE "escasso"
+EXPLICIT RITUALE
+
+-- Escaneia um diretorio e retorna RelDiretorio
+RITUALE escanear(VERBUM dir) REDDE RelDiretorio
+  SI CONIURA is_dir(dir) == VERUM
+    EVOCA SPECULUM NIHIL itens AD CONIURA list_dir(dir)
+    EVOCA REX n AD CONIURA fluxus_len(itens)
+    EVOCA VERBUM joined AD CONIURA join(itens, "|")
+    EVOCA REX n_cct AD CONIURA count_occurrences(joined, ".cct")
+    EVOCA REX n_c   AD CONIURA count_occurrences(joined, ".c")
+    CONIURA fluxus_free(itens)
+    REDDE Scanado(n, n_cct, n_c)
+  FIN SI
+  REDDE Vazio
+EXPLICIT RITUALE
+
+-- Exibe uma linha do relatorio para um diretorio
+RITUALE exibir_dir(VERBUM dir, RelDiretorio rel) REDDE NIHIL
+  EVOCA VERBUM base AD CONIURA path_basename(dir)
+  QUANDO rel
+    CASO Vazio:
+      OBSECRO scribe(MOLDE "  {base:<20}: (nao encontrado ou vazio)\n")
+    CASO Scanado(total, n_cct, n_c):
+      EVOCA VERBUM avl AD CONIURA avaliar_diretorio(total, n_cct)
+      OBSECRO scribe(MOLDE "  {base:<20}: {total:3d} itens  .cct={n_cct:2d}  .c={n_c:2d}  [{avl}]\n")
+  FIN QUANDO
+EXPLICIT RITUALE
+
+RITUALE main() REDDE NIHIL
+
+  -- Diretorios do projeto a escanear
+  EVOCA VERBUM d0 AD "lib/cct"
+  EVOCA VERBUM d1 AD "src/codegen"
+  EVOCA VERBUM d2 AD "src/parser"
+  EVOCA VERBUM d3 AD "src/semantic"
+  EVOCA VERBUM d4 AD "src/runtime"
+  EVOCA VERBUM d5 AD "tests/integration"
+  EVOCA VERBUM d6 AD "docs"
+  EVOCA VERBUM d7 AD "examples"
+
+  OBSECRO scribe("\n")
+  OBSECRO scribe("================================================\n")
+  OBSECRO scribe("  Mapa do Projeto CCT — Inventario de Fontes   \n")
+  OBSECRO scribe("================================================\n\n")
+
+  -- Escanear cada diretorio
+  EVOCA RelDiretorio r0 AD CONIURA escanear(d0)
+  EVOCA RelDiretorio r1 AD CONIURA escanear(d1)
+  EVOCA RelDiretorio r2 AD CONIURA escanear(d2)
+  EVOCA RelDiretorio r3 AD CONIURA escanear(d3)
+  EVOCA RelDiretorio r4 AD CONIURA escanear(d4)
+  EVOCA RelDiretorio r5 AD CONIURA escanear(d5)
+  EVOCA RelDiretorio r6 AD CONIURA escanear(d6)
+  EVOCA RelDiretorio r7 AD CONIURA escanear(d7)
+
+  OBSECRO scribe("  Diretorio             | Itens | .cct | .c | Nivel\n")
+  OBSECRO scribe("  ---------------------+-------+------+----+-------\n")
+
+  CONIURA exibir_dir(d0, r0)
+  CONIURA exibir_dir(d1, r1)
+  CONIURA exibir_dir(d2, r2)
+  CONIURA exibir_dir(d3, r3)
+  CONIURA exibir_dir(d4, r4)
+  CONIURA exibir_dir(d5, r5)
+  CONIURA exibir_dir(d6, r6)
+  CONIURA exibir_dir(d7, r7)
+
+  OBSECRO scribe("  ---------------------+-------+------+----+-------\n\n")
+
+  -- Agregar totais usando QUANDO sobre cada RelDiretorio
+  EVOCA REX total_itens AD 0
+  EVOCA REX total_cct   AD 0
+  EVOCA REX total_c     AD 0
+  EVOCA REX dirs_ativos AD 0
+
+  QUANDO r0
+    CASO Scanado(t0, cct0, c0):
+      VINCIRE total_itens AD total_itens + t0
+      VINCIRE total_cct   AD total_cct   + cct0
+      VINCIRE total_c     AD total_c     + c0
+      VINCIRE dirs_ativos AD dirs_ativos + 1
+    SENAO:
+      VINCIRE dirs_ativos AD dirs_ativos
+  FIN QUANDO
+  QUANDO r1
+    CASO Scanado(t1, cct1, c1):
+      VINCIRE total_itens AD total_itens + t1
+      VINCIRE total_cct   AD total_cct   + cct1
+      VINCIRE total_c     AD total_c     + c1
+      VINCIRE dirs_ativos AD dirs_ativos + 1
+    SENAO:
+      VINCIRE dirs_ativos AD dirs_ativos
+  FIN QUANDO
+  QUANDO r2
+    CASO Scanado(t2, cct2, c2):
+      VINCIRE total_itens AD total_itens + t2
+      VINCIRE total_cct   AD total_cct   + cct2
+      VINCIRE total_c     AD total_c     + c2
+      VINCIRE dirs_ativos AD dirs_ativos + 1
+    SENAO:
+      VINCIRE dirs_ativos AD dirs_ativos
+  FIN QUANDO
+  QUANDO r3
+    CASO Scanado(t3, cct3, c3):
+      VINCIRE total_itens AD total_itens + t3
+      VINCIRE total_cct   AD total_cct   + cct3
+      VINCIRE total_c     AD total_c     + c3
+      VINCIRE dirs_ativos AD dirs_ativos + 1
+    SENAO:
+      VINCIRE dirs_ativos AD dirs_ativos
+  FIN QUANDO
+  QUANDO r4
+    CASO Scanado(t4, cct4, c4):
+      VINCIRE total_itens AD total_itens + t4
+      VINCIRE total_cct   AD total_cct   + cct4
+      VINCIRE total_c     AD total_c     + c4
+      VINCIRE dirs_ativos AD dirs_ativos + 1
+    SENAO:
+      VINCIRE dirs_ativos AD dirs_ativos
+  FIN QUANDO
+  QUANDO r5
+    CASO Scanado(t5, cct5, c5):
+      VINCIRE total_itens AD total_itens + t5
+      VINCIRE total_cct   AD total_cct   + cct5
+      VINCIRE total_c     AD total_c     + c5
+      VINCIRE dirs_ativos AD dirs_ativos + 1
+    SENAO:
+      VINCIRE dirs_ativos AD dirs_ativos
+  FIN QUANDO
+  QUANDO r6
+    CASO Scanado(t6, cct6, c6):
+      VINCIRE total_itens AD total_itens + t6
+      VINCIRE total_cct   AD total_cct   + cct6
+      VINCIRE total_c     AD total_c     + c6
+      VINCIRE dirs_ativos AD dirs_ativos + 1
+    SENAO:
+      VINCIRE dirs_ativos AD dirs_ativos
+  FIN QUANDO
+  QUANDO r7
+    CASO Scanado(t7, cct7, c7):
+      VINCIRE total_itens AD total_itens + t7
+      VINCIRE total_cct   AD total_cct   + cct7
+      VINCIRE total_c     AD total_c     + c7
+      VINCIRE dirs_ativos AD dirs_ativos + 1
+    SENAO:
+      VINCIRE dirs_ativos AD dirs_ativos
+  FIN QUANDO
+
+  -- Mapa de distribuicao: 0=cct, 1=c/h, 2=outros
+  EVOCA SPECULUM NIHIL dist AD CONIURA map_init GENUS(REX, REX)()
+  CONIURA map_insert GENUS(REX, REX)(dist, 0, total_cct)
+  CONIURA map_insert GENUS(REX, REX)(dist, 1, total_c)
+  CONIURA map_insert GENUS(REX, REX)(dist, 2, total_itens - total_cct - total_c)
+
+  OBSECRO scribe("  Totais agregados:\n")
+  OBSECRO scribe(MOLDE "    Diretorios ativos : {dirs_ativos}\n")
+  OBSECRO scribe(MOLDE "    Itens totais      : {total_itens}\n")
+  OBSECRO scribe(MOLDE "    Fontes .cct       : {total_cct}\n")
+  OBSECRO scribe(MOLDE "    Fontes .c/.h      : {total_c}\n")
+  EVOCA REX outros AD total_itens - total_cct - total_c
+  OBSECRO scribe(MOLDE "    Outros            : {outros}\n")
+  OBSECRO scribe("\n")
+
+  -- Histograma via ITERUM (escalonado: cada # = 25 arquivos)
+  EVOCA MILES sym_c AD OBSECRO verbum_char_at("#", 0)
+  EVOCA REX escala AD 25
+
+  OBSECRO scribe("  Distribuicao de tipos (cada # = 25 arquivos):\n")
+  ITERUM tipo, qtd IN dist COM
+    EVOCA VERBUM tnome AD ""
+    QUANDO tipo
+      CASO 0:
+        VINCIRE tnome AD ".cct "
+      CASO 1:
+        VINCIRE tnome AD ".c/h "
+      SENAO:
+        VINCIRE tnome AD "outro"
+    FIN QUANDO
+    EVOCA REX nbars AD qtd / escala
+    SI nbars > 40
+      VINCIRE nbars AD 40
+    FIN SI
+    EVOCA VERBUM barra AD CONIURA repeat_char(sym_c, nbars)
+    OBSECRO scribe(MOLDE "    {tnome}: {barra} ({qtd})\n")
+  FIN ITERUM
+  OBSECRO scribe("\n")
+
+  -- Verificar se projeto tem exemplos e testes
+  QUANDO r7
+    CASO Vazio:
+      OBSECRO scribe("  AVISO: diretorio examples/ nao encontrado!\n")
+    CASO Scanado(tot, cct, cc):
+      SI tot == 0
+        OBSECRO scribe("  AVISO: examples/ esta vazio!\n")
+      FIN SI
+      SI tot > 0
+        OBSECRO scribe(MOLDE "  Projeto tem {tot} exemplo(s) em examples/\n")
+      FIN SI
+  FIN QUANDO
+
+  QUANDO r5
+    CASO Vazio:
+      OBSECRO scribe("  AVISO: suite de testes nao encontrada!\n")
+    CASO Scanado(tot, cct, cc):
+      OBSECRO scribe(MOLDE "  Suite de testes: {tot} fixtures ({cct} .cct)\n")
+  FIN QUANDO
+
+  OBSECRO scribe("\n")
+
+  CONIURA map_free GENUS(REX, REX)(dist)
+  REDDE
+
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

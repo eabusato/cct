@@ -1,0 +1,19 @@
+INCIPIT grimoire "iterum_series_verbum_19d2"
+
+ADVOCARE "cct/verbum.cct"
+
+RITUALE main() REDDE REX
+  EVOCA SERIES VERBUM[3] arr
+  VINCIRE arr[0] AD "a"
+  VINCIRE arr[1] AD "bc"
+  VINCIRE arr[2] AD "def"
+
+  EVOCA REX total AD 0
+  ITERUM item IN arr COM
+    VINCIRE total AD total + CONIURA len(item)
+  FIN ITERUM
+
+  REDDE total
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

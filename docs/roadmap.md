@@ -19,13 +19,13 @@ It has two goals:
 - Current completed phase: FASE 19D.4 (phase-19 closure gate completed)
 - Current completed subphase: FASE 19D.4 (handoff + closure governance baseline)
 - Current phase context: FASE 19 is formally closed; FASE 20 planning/execution can proceed
-- Phase-19 delivery status: 19A1..19D4 implemented and closed (`QUANDO`, `MOLDE`, payload `ORDO`, `ITERUM` map/set, docs/release/handoff)
+- Phase-19 delivery status: 19A1..19D4 implemented and closed (`CUM`, `FORMA`, payload `ORDO`, `ITERUM` map/set, docs/release/handoff)
 - Current regression gate: `make test` green with `Passed: 1069 / Failed: 0`
 - **Compiler maturity:** complete development toolchain with formatter, linter, build system, and doc generator
 - **Backend strategy:** C-hosted backend is official (`.cgen.c` + host C compiler)
 - **Sigilo model:** dual-level modular model is stable (local + system sigilo)
 - **Sigilo operations (FASE 13 closed at 13D.4):** inspection/diff/check/baseline/validate flows, CI profiles (`advisory/gated/release`), regression matrix, determinism audit, and final closure governance are integrated
-- **Typing model:** advanced typing subset stabilized (`GENUS`, `PACTUM`, constraints) plus payload `ORDO` and `QUANDO` exhaustiveness
+- **Typing model:** advanced typing subset stabilized (`GENUS`, `PACTUM`, constraints) plus payload `ORDO` and `CUM` exhaustiveness
 
 ## Completed Phases (0 → 19D4)
 
@@ -461,8 +461,8 @@ Quality gate achieved:
 ### FASE 19 — Language Surface Expansion Closure ✅
 
 Objectives completed:
-- `QUANDO`/`CASO`/`SENAO` over integer, `VERBUM`, and payload `ORDO`
-- `MOLDE` interpolation with formatting specs (host profile)
+- `CUM`/`CASUS`/`ALIOQUIN` over integer, `VERBUM`, and payload `ORDO`
+- `FORMA` interpolation with formatting specs (host profile)
 - payload-capable `ORDO` declaration/construction/destructuring
 - `ITERUM` expansion to `map`/`set` with arity validation and insertion-order contract
 - documentation/release/handoff closure (`19D2`, `19D3`, `19D4`)
@@ -481,11 +481,11 @@ Quality gate achieved:
 ### FASE 20 — ADT and Pattern-Matching Maturation
 
 Primary objective:
-- complete the next expressiveness layer on top of FASE 19 (`QUANDO` + payload `ORDO` baseline).
+- complete the next expressiveness layer on top of FASE 19 (`CUM` + payload `ORDO` baseline).
 
 Planned scope:
 - generic `result/option` evolution (`GENUS`) aligned with payload `ORDO`.
-- `QUANDO` guards (`CASO x SE condicao`) and richer case composition.
+- `CUM` guards (`CASUS x SE condicao`) and richer case composition.
 - OR-cases with payload bindings and stronger pattern ergonomics.
 - improved generic inference in high-frequency call sites.
 

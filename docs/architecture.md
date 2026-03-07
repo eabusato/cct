@@ -113,7 +113,7 @@ Main files:
 - `ast.h`
 - `ast.c`
 
-Status: supports current syntax through 19D.4, including `QUANDO`, `MOLDE`, payload `ORDO`, and expanded `ITERUM` arity forms in supported contexts.
+Status: supports current syntax through 19D.4, including `CUM`, `FORMA`, payload `ORDO`, and expanded `ITERUM` arity forms in supported contexts.
 
 ### `src/semantic/`
 Purpose: symbol registration, scope checks, type checks, contract/constraint validation.
@@ -376,15 +376,15 @@ Architecture direction:
 
 ### FASE 19 — Language Surface Expansion (Implemented Through 19D.4)
 Architecture direction:
-- add first-class selection/pattern ergonomics (`QUANDO`) while preserving deterministic codegen contracts
-- add interpolated string construction (`MOLDE`) through runtime-backed builders in host profile
+- add first-class selection/pattern ergonomics (`CUM`) while preserving deterministic codegen contracts
+- add interpolated string construction (`FORMA`) through runtime-backed builders in host profile
 - add payload-capable ORDO representation with union-tagged lowering and scoped destructuring bindings
 - unify collection iteration ergonomics by extending `ITERUM` to `map`/`set` with insertion-order semantics
 - close documentation/release/handoff artifacts for the full phase (`19D2`, `19D3`, `19D4`)
 
 Codegen/runtime notes:
-- `QUANDO` lowers to integer/string dispatch chains and ORDO-tag switch forms with payload extraction locals.
-- `MOLDE` lowers to runtime helper sequences (`molde_begin/append/end`) and keeps ownership behavior explicit.
+- `CUM` lowers to integer/string dispatch chains and ORDO-tag switch forms with payload extraction locals.
+- `FORMA` lowers to runtime helper sequences (`molde_begin/append/end`) and keeps ownership behavior explicit.
 - payload `ORDO` lowers to tagged C structs with variant-specific payload unions.
 - `ITERUM` now emits dedicated runtime iterator helpers for `map` and `set` (`cct_rt_map_iter_*`, `cct_rt_set_iter_*`), preserving insertion order.
 

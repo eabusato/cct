@@ -1,0 +1,159 @@
+-- ==================================================================
+-- analisador_log_18_19.cct
+-- Analisa linhas de log, classifica por severidade e gera relatorio.
+--
+-- Demonstra (FASE 18+19):
+--   * ORDO payload: EntradaLog(REX nivel, VERBUM msg)
+--   * QUANDO sobre VERBUM com OR-cases ("WARN"/"WARNING", "ERROR"/"ERRO")
+--   * QUANDO sobre ORDO payload com destruturacao de campos
+--   * SERIES VERBUM para armazenar linhas de log
+--   * map GENUS(REX,REX) para contagem por nivel de severidade
+--   * ITERUM sobre map gerando histograma ASCII com repeat_char
+--   * MOLDE com especificador de largura {:3d}
+--   * verbum: trim, find, substring, len
+-- ==================================================================
+
+INCIPIT grimoire "analisador_log_18_19"
+
+ADVOCARE "cct/verbum.cct"
+ADVOCARE "cct/map.cct"
+ADVOCARE "cct/fmt.cct"
+
+-- ADT para resultado do parse de uma linha de log
+-- nivel: 0=Debug 1=Info 2=Warn 3=Error 4=Fatal
+ORDO EntradaLog
+  Entrada(REX nivel, VERBUM msg),
+  Invalida(VERBUM linha)
+FIN ORDO
+
+-- Mapeia texto de nivel para codigo inteiro (OR-cases em acao)
+RITUALE parse_nivel(VERBUM tag) REDDE REX
+  QUANDO tag
+    CASO "DEBUG":
+      REDDE 0
+    CASO "INFO":
+      REDDE 1
+    CASO "WARN":
+    CASO "WARNING":
+      REDDE 2
+    CASO "ERROR":
+    CASO "ERRO":
+      REDDE 3
+    CASO "FATAL":
+      REDDE 4
+    SENAO:
+      REDDE 1
+  FIN QUANDO
+EXPLICIT RITUALE
+
+-- Decodifica nivel para nome exibivel (5 chars, padded)
+RITUALE nivel_nome(REX n) REDDE VERBUM
+  QUANDO n
+    CASO 0:
+      REDDE "DEBUG"
+    CASO 1:
+      REDDE "INFO "
+    CASO 2:
+      REDDE "WARN "
+    CASO 3:
+      REDDE "ERROR"
+    CASO 4:
+      REDDE "FATAL"
+    SENAO:
+      REDDE "?????"
+  FIN QUANDO
+EXPLICIT RITUALE
+
+-- Parseia "NIVEL: mensagem" -> EntradaLog
+RITUALE parse_linha(VERBUM linha) REDDE EntradaLog
+  EVOCA VERBUM tl AD CONIURA trim(linha)
+  SI CONIURA len(tl) == 0
+    REDDE Invalida(linha)
+  FIN SI
+  EVOCA REX sep AD CONIURA find(tl, ": ")
+  SI sep == -1
+    REDDE Invalida(linha)
+  FIN SI
+  EVOCA VERBUM tag AD CONIURA substring(tl, 0, sep)
+  EVOCA VERBUM msg AD CONIURA substring(tl, sep + 2, CONIURA len(tl))
+  REDDE Entrada(CONIURA parse_nivel(tag), msg)
+EXPLICIT RITUALE
+
+RITUALE main() REDDE NIHIL
+
+  -- 12 linhas de log (SERIES VERBUM em acao)
+  EVOCA SERIES VERBUM[12] linhas
+  VINCIRE linhas[0]  AD "INFO: servidor iniciado na porta 8080"
+  VINCIRE linhas[1]  AD "DEBUG: conexao aceita de 192.168.1.5"
+  VINCIRE linhas[2]  AD "INFO: GET /api/dados retornou 200 em 12ms"
+  VINCIRE linhas[3]  AD "WARN: uso de memoria acima de 80%"
+  VINCIRE linhas[4]  AD "DEBUG: heartbeat enviado ao orchestrador"
+  VINCIRE linhas[5]  AD "ERROR: falha ao abrir arquivo de configuracao"
+  VINCIRE linhas[6]  AD "INFO: POST /api/evento processado em 47ms"
+  VINCIRE linhas[7]  AD "FATAL: banco nao respondeu apos 5 tentativas"
+  VINCIRE linhas[8]  AD "WARNING: certificado TLS expira em 7 dias"
+  VINCIRE linhas[9]  AD "ERRO: timeout na conexao com cache externo"
+  VINCIRE linhas[10] AD "  linha sem separador valido"
+  VINCIRE linhas[11] AD "INFO: desligamento solicitado, encerrando servicos"
+
+  -- Mapa de contagem: nivel (0..4) -> quantidade
+  EVOCA SPECULUM NIHIL cnt AD CONIURA map_init GENUS(REX, REX)()
+  REPETE k DE 0 AD 4
+    CONIURA map_insert GENUS(REX, REX)(cnt, k, 0)
+  FIN REPETE
+
+  EVOCA REX total    AD 0
+  EVOCA REX criticos AD 0
+  EVOCA REX invalidas AD 0
+
+  -- Processar cada linha com QUANDO sobre ORDO payload
+  REPETE i DE 0 AD 11
+    EVOCA EntradaLog e AD CONIURA parse_linha(linhas[i])
+    QUANDO e
+      CASO Entrada(nivel, msg):
+        EVOCA REX ant AD CONIURA map_get_or_default GENUS(REX, REX)(cnt, nivel, 0)
+        CONIURA map_update_or_insert GENUS(REX, REX)(cnt, nivel, ant + 1)
+        VINCIRE total AD total + 1
+        SI nivel >= 3
+          VINCIRE criticos AD criticos + 1
+        FIN SI
+      CASO Invalida(ln):
+        OBSECRO scribe(MOLDE "  [ignorada] '{ln}'\n")
+        VINCIRE invalidas AD invalidas + 1
+    FIN QUANDO
+  FIN REPETE
+
+  -- Caracter do histograma
+  EVOCA MILES bar_sym AD OBSECRO verbum_char_at("#", 0)
+
+  -- Relatorio
+  OBSECRO scribe("\n")
+  OBSECRO scribe("+---------------------------------+\n")
+  OBSECRO scribe("|  Relatorio de Analise de Log    |\n")
+  OBSECRO scribe("+---------------------------------+\n")
+  OBSECRO scribe(MOLDE "  Entradas processadas : {total}\n")
+  OBSECRO scribe(MOLDE "  Linhas invalidas     : {invalidas}\n")
+  OBSECRO scribe(MOLDE "  Eventos criticos     : {criticos}\n")
+  OBSECRO scribe("\n")
+  OBSECRO scribe("  Nivel  | Qtd | Histograma\n")
+  OBSECRO scribe("  -------+-----+----------------------------\n")
+
+  -- ITERUM sobre map: exibe contagem + histograma por nivel
+  ITERUM chave, qtd IN cnt COM
+    EVOCA VERBUM nome  AD CONIURA nivel_nome(chave)
+    EVOCA VERBUM barra AD CONIURA repeat_char(bar_sym, qtd * 4)
+    OBSECRO scribe(MOLDE "  {nome}  | {qtd:3d} | {barra}\n")
+  FIN ITERUM
+
+  OBSECRO scribe("  -------+-----+----------------------------\n")
+
+  SI criticos > 0
+    OBSECRO scribe(MOLDE "\n  ATENCAO: {criticos} evento(s) critico(s) detectado(s)!\n")
+  FIN SI
+
+  CONIURA map_free GENUS(REX, REX)(cnt)
+  REDDE
+
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

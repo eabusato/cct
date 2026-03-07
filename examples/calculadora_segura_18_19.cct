@@ -1,0 +1,229 @@
+-- ==================================================================
+-- calculadora_segura_18_19.cct
+-- Calculadora com tratamento de erros via ORDO payload.
+-- Todas as operacoes retornam Ok(valor) ou Err(causa).
+--
+-- Demonstra (FASE 18+19):
+--   * ORDO payload: Resultado(REX valor) / Err(VERBUM causa)
+--   * QUANDO sobre ORDO payload com destruturacao
+--   * QUANDO sobre VERBUM com OR-cases (operadores)
+--   * map GENUS(REX,REX) para contagem de resultados
+--   * ITERUM sobre map no sumario final
+--   * MOLDE com especificadores {:d} e strings
+--   * verbum: concat, len, contains
+--   * fmt: stringify_int, repeat_char para visualizacao
+-- ==================================================================
+
+INCIPIT grimoire "calculadora_segura_18_19"
+
+ADVOCARE "cct/verbum.cct"
+ADVOCARE "cct/map.cct"
+ADVOCARE "cct/fmt.cct"
+
+-- ADT de resultado: Ok com valor ou Err com mensagem de causa
+ORDO Resultado
+  Ok(REX valor),
+  Err(VERBUM causa)
+FIN ORDO
+
+-- Calcula a op b, retornando Ok ou Err conforme o caso
+RITUALE calcular(REX a, VERBUM op, REX b) REDDE Resultado
+  QUANDO op
+    CASO "+":
+      REDDE Ok(a + b)
+    CASO "-":
+      REDDE Ok(a - b)
+    CASO "*":
+      REDDE Ok(a * b)
+    CASO "/":
+    CASO "div":
+      SI b == 0
+        REDDE Err("divisao por zero")
+      FIN SI
+      REDDE Ok(a / b)
+    CASO "%":
+    CASO "mod":
+      SI b == 0
+        REDDE Err("modulo por zero")
+      FIN SI
+      REDDE Ok(a % b)
+    CASO "^":
+      SI b < 0
+        REDDE Err("expoente negativo")
+      FIN SI
+      SI b == 0
+        REDDE Ok(1)
+      FIN SI
+      EVOCA REX acc AD a
+      REPETE k DE 1 AD b - 1
+        VINCIRE acc AD acc * a
+      FIN REPETE
+      REDDE Ok(acc)
+    CASO "max":
+      SI a >= b
+        REDDE Ok(a)
+      FIN SI
+      REDDE Ok(b)
+    CASO "min":
+      SI a <= b
+        REDDE Ok(a)
+      FIN SI
+      REDDE Ok(b)
+    CASO "gcd":
+      -- MDC por Euclides iterativo
+      EVOCA REX xa AD a
+      EVOCA REX xb AD b
+      SI xa < 0
+        VINCIRE xa AD 0 - xa
+      FIN SI
+      SI xb < 0
+        VINCIRE xb AD 0 - xb
+      FIN SI
+      DUM xb != 0
+        EVOCA REX t AD xb
+        VINCIRE xb AD xa % xb
+        VINCIRE xa AD t
+      FIN DUM
+      REDDE Ok(xa)
+    SENAO:
+      REDDE Err("operador desconhecido")
+  FIN QUANDO
+EXPLICIT RITUALE
+
+-- Exibe o resultado de uma expressao: "a op b = valor" ou "ERRO: causa"
+RITUALE exibir(REX a, VERBUM op, REX b, Resultado r) REDDE NIHIL
+  EVOCA VERBUM sa AD CONIURA stringify_int(a)
+  EVOCA VERBUM sb AD CONIURA stringify_int(b)
+  QUANDO r
+    CASO Ok(v):
+      EVOCA VERBUM sv AD CONIURA stringify_int(v)
+      OBSECRO scribe(MOLDE "  {sa} {op} {sb} = {sv}\n")
+    CASO Err(msg):
+      OBSECRO scribe(MOLDE "  {sa} {op} {sb} => ERRO: {msg}\n")
+  FIN QUANDO
+EXPLICIT RITUALE
+
+-- Retorna 0 se Err, 1 se Ok
+RITUALE is_ok(Resultado r) REDDE REX
+  QUANDO r
+    CASO Ok(v):
+      REDDE 1
+    CASO Err(msg):
+      REDDE 0
+  FIN QUANDO
+EXPLICIT RITUALE
+
+RITUALE main() REDDE NIHIL
+
+  -- Mapa de contagem: 0=erros, 1=sucessos
+  EVOCA SPECULUM NIHIL cnt AD CONIURA map_init GENUS(REX, REX)()
+  CONIURA map_insert GENUS(REX, REX)(cnt, 0, 0)
+  CONIURA map_insert GENUS(REX, REX)(cnt, 1, 0)
+
+  OBSECRO scribe("\n")
+  OBSECRO scribe("============================================\n")
+  OBSECRO scribe("  Calculadora Segura — Resultados (FASE19) \n")
+  OBSECRO scribe("============================================\n\n")
+
+  OBSECRO scribe("  Operacoes basicas:\n")
+
+  -- Macro para processar e contar cada operacao
+  EVOCA Resultado r0 AD CONIURA calcular(10, "+", 5)
+  CONIURA exibir(10, "+", 5, r0)
+  EVOCA REX ok0 AD CONIURA is_ok(r0)
+  CONIURA map_update_or_insert GENUS(REX, REX)(cnt, ok0, CONIURA map_get_or_default GENUS(REX, REX)(cnt, ok0, 0) + 1)
+
+  EVOCA Resultado r1 AD CONIURA calcular(10, "-", 3)
+  CONIURA exibir(10, "-", 3, r1)
+  EVOCA REX ok1 AD CONIURA is_ok(r1)
+  CONIURA map_update_or_insert GENUS(REX, REX)(cnt, ok1, CONIURA map_get_or_default GENUS(REX, REX)(cnt, ok1, 0) + 1)
+
+  EVOCA Resultado r2 AD CONIURA calcular(7, "*", 6)
+  CONIURA exibir(7, "*", 6, r2)
+  EVOCA REX ok2 AD CONIURA is_ok(r2)
+  CONIURA map_update_or_insert GENUS(REX, REX)(cnt, ok2, CONIURA map_get_or_default GENUS(REX, REX)(cnt, ok2, 0) + 1)
+
+  EVOCA Resultado r3 AD CONIURA calcular(100, "/", 4)
+  CONIURA exibir(100, "/", 4, r3)
+  EVOCA REX ok3 AD CONIURA is_ok(r3)
+  CONIURA map_update_or_insert GENUS(REX, REX)(cnt, ok3, CONIURA map_get_or_default GENUS(REX, REX)(cnt, ok3, 0) + 1)
+
+  EVOCA Resultado r4 AD CONIURA calcular(17, "%", 5)
+  CONIURA exibir(17, "%", 5, r4)
+  EVOCA REX ok4 AD CONIURA is_ok(r4)
+  CONIURA map_update_or_insert GENUS(REX, REX)(cnt, ok4, CONIURA map_get_or_default GENUS(REX, REX)(cnt, ok4, 0) + 1)
+
+  OBSECRO scribe("\n  Casos de erro:\n")
+
+  EVOCA Resultado r5 AD CONIURA calcular(42, "/", 0)
+  CONIURA exibir(42, "/", 0, r5)
+  EVOCA REX ok5 AD CONIURA is_ok(r5)
+  CONIURA map_update_or_insert GENUS(REX, REX)(cnt, ok5, CONIURA map_get_or_default GENUS(REX, REX)(cnt, ok5, 0) + 1)
+
+  EVOCA Resultado r6 AD CONIURA calcular(10, "%", 0)
+  CONIURA exibir(10, "%", 0, r6)
+  EVOCA REX ok6 AD CONIURA is_ok(r6)
+  CONIURA map_update_or_insert GENUS(REX, REX)(cnt, ok6, CONIURA map_get_or_default GENUS(REX, REX)(cnt, ok6, 0) + 1)
+
+  EVOCA Resultado r7 AD CONIURA calcular(2, "^", -3)
+  CONIURA exibir(2, "^", -3, r7)
+  EVOCA REX ok7 AD CONIURA is_ok(r7)
+  CONIURA map_update_or_insert GENUS(REX, REX)(cnt, ok7, CONIURA map_get_or_default GENUS(REX, REX)(cnt, ok7, 0) + 1)
+
+  EVOCA Resultado r8 AD CONIURA calcular(5, "??", 3)
+  CONIURA exibir(5, "??", 3, r8)
+  EVOCA REX ok8 AD CONIURA is_ok(r8)
+  CONIURA map_update_or_insert GENUS(REX, REX)(cnt, ok8, CONIURA map_get_or_default GENUS(REX, REX)(cnt, ok8, 0) + 1)
+
+  OBSECRO scribe("\n  Operacoes avancadas:\n")
+
+  EVOCA Resultado r9  AD CONIURA calcular(2, "^", 10)
+  CONIURA exibir(2, "^", 10, r9)
+  EVOCA REX ok9 AD CONIURA is_ok(r9)
+  CONIURA map_update_or_insert GENUS(REX, REX)(cnt, ok9, CONIURA map_get_or_default GENUS(REX, REX)(cnt, ok9, 0) + 1)
+
+  EVOCA Resultado r10 AD CONIURA calcular(48, "gcd", 18)
+  CONIURA exibir(48, "gcd", 18, r10)
+  EVOCA REX ok10 AD CONIURA is_ok(r10)
+  CONIURA map_update_or_insert GENUS(REX, REX)(cnt, ok10, CONIURA map_get_or_default GENUS(REX, REX)(cnt, ok10, 0) + 1)
+
+  EVOCA Resultado r11 AD CONIURA calcular(255, "max", 128)
+  CONIURA exibir(255, "max", 128, r11)
+  EVOCA REX ok11 AD CONIURA is_ok(r11)
+  CONIURA map_update_or_insert GENUS(REX, REX)(cnt, ok11, CONIURA map_get_or_default GENUS(REX, REX)(cnt, ok11, 0) + 1)
+
+  EVOCA Resultado r12 AD CONIURA calcular(255, "min", 128)
+  CONIURA exibir(255, "min", 128, r12)
+  EVOCA REX ok12 AD CONIURA is_ok(r12)
+  CONIURA map_update_or_insert GENUS(REX, REX)(cnt, ok12, CONIURA map_get_or_default GENUS(REX, REX)(cnt, ok12, 0) + 1)
+
+  -- Sumario via ITERUM sobre mapa
+  EVOCA REX total_ops AD CONIURA map_get_or_default GENUS(REX, REX)(cnt, 0, 0)
+  VINCIRE total_ops AD total_ops + CONIURA map_get_or_default GENUS(REX, REX)(cnt, 1, 0)
+  EVOCA REX n_ok  AD CONIURA map_get_or_default GENUS(REX, REX)(cnt, 1, 0)
+  EVOCA REX n_err AD CONIURA map_get_or_default GENUS(REX, REX)(cnt, 0, 0)
+
+  EVOCA MILES sym_ok  AD OBSECRO verbum_char_at("*", 0)
+  EVOCA MILES sym_err AD OBSECRO verbum_char_at("!", 0)
+  EVOCA VERBUM barra_ok  AD CONIURA repeat_char(sym_ok,  n_ok)
+  EVOCA VERBUM barra_err AD CONIURA repeat_char(sym_err, n_err)
+
+  OBSECRO scribe("\n--------------------------------------------\n")
+  OBSECRO scribe(MOLDE "  Total de operacoes : {total_ops}\n")
+  OBSECRO scribe(MOLDE "  Sucessos (Ok)       : {n_ok}  {barra_ok}\n")
+  OBSECRO scribe(MOLDE "  Erros    (Err)      : {n_err}  {barra_err}\n")
+
+  -- Taxa de sucesso
+  SI total_ops > 0
+    EVOCA REX taxa AD (n_ok * 100) / total_ops
+    OBSECRO scribe(MOLDE "  Taxa de sucesso     : {taxa}%\n")
+  FIN SI
+
+  OBSECRO scribe("--------------------------------------------\n\n")
+
+  CONIURA map_free GENUS(REX, REX)(cnt)
+  REDDE
+
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

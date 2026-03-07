@@ -15644,6 +15644,69 @@ fi
 
 echo ""
 echo "========================================"
+echo "FASE 19D2: SERIES VERBUM no codegen"
+echo "========================================"
+echo ""
+
+# Test 1153: codegen_series_verbum_read_write_19d2
+echo "Test 1153: codegen_series_verbum_read_write_19d2"
+SRC_1153="tests/integration/codegen_series_verbum_read_write_19d2.cct"
+BIN_1153="${SRC_1153%.cct}"
+cleanup_codegen_artifacts "$SRC_1153"
+if "$CCT_BIN" "$SRC_1153" >$CCT_TMP_DIR/cct_phase19d2_1153_compile.out 2>&1; then
+    "$BIN_1153" >$CCT_TMP_DIR/cct_phase19d2_1153_run.out 2>&1
+    RC_1153=$?
+else
+    RC_1153=255
+fi
+if [ "$RC_1153" -eq 3 ]; then
+    test_pass "codegen_series_verbum_read_write_19d2 valida SERIES VERBUM com indexacao e atribuicao por CONIURA"
+else
+    test_fail "codegen_series_verbum_read_write_19d2 regressao em SERIES VERBUM no codegen"
+fi
+
+# Test 1154: iterum_series_verbum_19d2
+echo "Test 1154: iterum_series_verbum_19d2"
+SRC_1154="tests/integration/iterum_series_verbum_19d2.cct"
+BIN_1154="${SRC_1154%.cct}"
+cleanup_codegen_artifacts "$SRC_1154"
+if "$CCT_BIN" "$SRC_1154" >$CCT_TMP_DIR/cct_phase19d2_1154_compile.out 2>&1; then
+    "$BIN_1154" >$CCT_TMP_DIR/cct_phase19d2_1154_run.out 2>&1
+    RC_1154=$?
+else
+    RC_1154=255
+fi
+if [ "$RC_1154" -eq 6 ]; then
+    test_pass "iterum_series_verbum_19d2 valida ITERUM sobre SERIES VERBUM"
+else
+    test_fail "iterum_series_verbum_19d2 regressao em ITERUM sobre SERIES VERBUM"
+fi
+
+echo ""
+echo "========================================"
+echo "FASE 19D3: Aliases latinos para QUANDO/MOLDE"
+echo "========================================"
+echo ""
+
+# Test 1155: quando_alias_latim_19d3
+echo "Test 1155: quando_alias_latim_19d3"
+SRC_1155="tests/integration/quando_alias_latim_19d3.cct"
+BIN_1155="${SRC_1155%.cct}"
+cleanup_codegen_artifacts "$SRC_1155"
+if "$CCT_BIN" "$SRC_1155" >$CCT_TMP_DIR/cct_phase19d3_1155_compile.out 2>&1; then
+    "$BIN_1155" >$CCT_TMP_DIR/cct_phase19d3_1155_run.out 2>&1
+    RC_1155=$?
+else
+    RC_1155=255
+fi
+if [ "$RC_1155" -eq 2 ]; then
+    test_pass "quando_alias_latim_19d3 valida CUM/CASUS/ALIOQUIN/FORMA como aliases latinos"
+else
+    test_fail "quando_alias_latim_19d3 regressao em aliases latinos de QUANDO/MOLDE"
+fi
+
+echo ""
+echo "========================================"
 echo "Test Results:"
 echo -e "  ${GREEN}Passed:${NC} $TESTS_PASSED"
 echo -e "  ${RED}Failed:${NC} $TESTS_FAILED"
