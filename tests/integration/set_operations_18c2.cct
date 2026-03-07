@@ -1,0 +1,170 @@
+INCIPIT grimoire "set_operations_18c2"
+
+ADVOCARE "cct/set.cct"
+
+RITUALE main() REDDE REX
+  EVOCA SPECULUM NIHIL a AD CONIURA set_init GENUS(REX)()
+  EVOCA SPECULUM NIHIL b AD CONIURA set_init GENUS(REX)()
+
+  CONIURA set_insert GENUS(REX)(a, 1)
+  CONIURA set_insert GENUS(REX)(a, 2)
+  CONIURA set_insert GENUS(REX)(a, 3)
+
+  CONIURA set_insert GENUS(REX)(b, 3)
+  CONIURA set_insert GENUS(REX)(b, 4)
+
+  EVOCA SPECULUM NIHIL u AD CONIURA set_union GENUS(REX)(a, b)
+  EVOCA SPECULUM NIHIL i AD CONIURA set_intersection GENUS(REX)(a, b)
+  EVOCA SPECULUM NIHIL d AD CONIURA set_difference GENUS(REX)(a, b)
+  EVOCA SPECULUM NIHIL x AD CONIURA set_symmetric_difference GENUS(REX)(a, b)
+
+  SI CONIURA set_len GENUS(REX)(u) != 4
+    CONIURA set_free GENUS(REX)(x)
+    CONIURA set_free GENUS(REX)(d)
+    CONIURA set_free GENUS(REX)(i)
+    CONIURA set_free GENUS(REX)(u)
+    CONIURA set_free GENUS(REX)(b)
+    CONIURA set_free GENUS(REX)(a)
+    REDDE 1
+  FIN SI
+
+  SI NON CONIURA set_contains GENUS(REX)(u, 1)
+    CONIURA set_free GENUS(REX)(x)
+    CONIURA set_free GENUS(REX)(d)
+    CONIURA set_free GENUS(REX)(i)
+    CONIURA set_free GENUS(REX)(u)
+    CONIURA set_free GENUS(REX)(b)
+    CONIURA set_free GENUS(REX)(a)
+    REDDE 2
+  FIN SI
+  SI NON CONIURA set_contains GENUS(REX)(u, 2)
+    CONIURA set_free GENUS(REX)(x)
+    CONIURA set_free GENUS(REX)(d)
+    CONIURA set_free GENUS(REX)(i)
+    CONIURA set_free GENUS(REX)(u)
+    CONIURA set_free GENUS(REX)(b)
+    CONIURA set_free GENUS(REX)(a)
+    REDDE 3
+  FIN SI
+  SI NON CONIURA set_contains GENUS(REX)(u, 3)
+    CONIURA set_free GENUS(REX)(x)
+    CONIURA set_free GENUS(REX)(d)
+    CONIURA set_free GENUS(REX)(i)
+    CONIURA set_free GENUS(REX)(u)
+    CONIURA set_free GENUS(REX)(b)
+    CONIURA set_free GENUS(REX)(a)
+    REDDE 4
+  FIN SI
+  SI NON CONIURA set_contains GENUS(REX)(u, 4)
+    CONIURA set_free GENUS(REX)(x)
+    CONIURA set_free GENUS(REX)(d)
+    CONIURA set_free GENUS(REX)(i)
+    CONIURA set_free GENUS(REX)(u)
+    CONIURA set_free GENUS(REX)(b)
+    CONIURA set_free GENUS(REX)(a)
+    REDDE 5
+  FIN SI
+
+  SI CONIURA set_len GENUS(REX)(i) != 1
+    CONIURA set_free GENUS(REX)(x)
+    CONIURA set_free GENUS(REX)(d)
+    CONIURA set_free GENUS(REX)(i)
+    CONIURA set_free GENUS(REX)(u)
+    CONIURA set_free GENUS(REX)(b)
+    CONIURA set_free GENUS(REX)(a)
+    REDDE 6
+  FIN SI
+  SI NON CONIURA set_contains GENUS(REX)(i, 3)
+    CONIURA set_free GENUS(REX)(x)
+    CONIURA set_free GENUS(REX)(d)
+    CONIURA set_free GENUS(REX)(i)
+    CONIURA set_free GENUS(REX)(u)
+    CONIURA set_free GENUS(REX)(b)
+    CONIURA set_free GENUS(REX)(a)
+    REDDE 7
+  FIN SI
+
+  SI CONIURA set_len GENUS(REX)(d) != 2
+    CONIURA set_free GENUS(REX)(x)
+    CONIURA set_free GENUS(REX)(d)
+    CONIURA set_free GENUS(REX)(i)
+    CONIURA set_free GENUS(REX)(u)
+    CONIURA set_free GENUS(REX)(b)
+    CONIURA set_free GENUS(REX)(a)
+    REDDE 8
+  FIN SI
+  SI NON CONIURA set_contains GENUS(REX)(d, 1)
+    CONIURA set_free GENUS(REX)(x)
+    CONIURA set_free GENUS(REX)(d)
+    CONIURA set_free GENUS(REX)(i)
+    CONIURA set_free GENUS(REX)(u)
+    CONIURA set_free GENUS(REX)(b)
+    CONIURA set_free GENUS(REX)(a)
+    REDDE 9
+  FIN SI
+  SI NON CONIURA set_contains GENUS(REX)(d, 2)
+    CONIURA set_free GENUS(REX)(x)
+    CONIURA set_free GENUS(REX)(d)
+    CONIURA set_free GENUS(REX)(i)
+    CONIURA set_free GENUS(REX)(u)
+    CONIURA set_free GENUS(REX)(b)
+    CONIURA set_free GENUS(REX)(a)
+    REDDE 10
+  FIN SI
+
+  SI CONIURA set_len GENUS(REX)(x) != 3
+    CONIURA set_free GENUS(REX)(x)
+    CONIURA set_free GENUS(REX)(d)
+    CONIURA set_free GENUS(REX)(i)
+    CONIURA set_free GENUS(REX)(u)
+    CONIURA set_free GENUS(REX)(b)
+    CONIURA set_free GENUS(REX)(a)
+    REDDE 11
+  FIN SI
+  SI NON CONIURA set_contains GENUS(REX)(x, 1)
+    CONIURA set_free GENUS(REX)(x)
+    CONIURA set_free GENUS(REX)(d)
+    CONIURA set_free GENUS(REX)(i)
+    CONIURA set_free GENUS(REX)(u)
+    CONIURA set_free GENUS(REX)(b)
+    CONIURA set_free GENUS(REX)(a)
+    REDDE 12
+  FIN SI
+  SI NON CONIURA set_contains GENUS(REX)(x, 2)
+    CONIURA set_free GENUS(REX)(x)
+    CONIURA set_free GENUS(REX)(d)
+    CONIURA set_free GENUS(REX)(i)
+    CONIURA set_free GENUS(REX)(u)
+    CONIURA set_free GENUS(REX)(b)
+    CONIURA set_free GENUS(REX)(a)
+    REDDE 13
+  FIN SI
+  SI NON CONIURA set_contains GENUS(REX)(x, 4)
+    CONIURA set_free GENUS(REX)(x)
+    CONIURA set_free GENUS(REX)(d)
+    CONIURA set_free GENUS(REX)(i)
+    CONIURA set_free GENUS(REX)(u)
+    CONIURA set_free GENUS(REX)(b)
+    CONIURA set_free GENUS(REX)(a)
+    REDDE 14
+  FIN SI
+  SI CONIURA set_contains GENUS(REX)(x, 3)
+    CONIURA set_free GENUS(REX)(x)
+    CONIURA set_free GENUS(REX)(d)
+    CONIURA set_free GENUS(REX)(i)
+    CONIURA set_free GENUS(REX)(u)
+    CONIURA set_free GENUS(REX)(b)
+    CONIURA set_free GENUS(REX)(a)
+    REDDE 15
+  FIN SI
+
+  CONIURA set_free GENUS(REX)(x)
+  CONIURA set_free GENUS(REX)(d)
+  CONIURA set_free GENUS(REX)(i)
+  CONIURA set_free GENUS(REX)(u)
+  CONIURA set_free GENUS(REX)(b)
+  CONIURA set_free GENUS(REX)(a)
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

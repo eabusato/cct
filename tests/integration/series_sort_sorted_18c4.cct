@@ -1,0 +1,71 @@
+INCIPIT grimoire "series_sort_sorted_18c4"
+
+ADVOCARE "cct/series.cct"
+
+RITUALE main() REDDE REX
+  EVOCA SERIES REX[8] a
+  VINCIRE a[0] AD 4
+  VINCIRE a[1] AD 1
+  VINCIRE a[2] AD 3
+  VINCIRE a[3] AD 1
+  VINCIRE a[4] AD 2
+  VINCIRE a[5] AD 5
+  VINCIRE a[6] AD 2
+  VINCIRE a[7] AD 2
+
+  SI CONIURA series_is_sorted(SPECULUM a[0], 8)
+    REDDE 1
+  FIN SI
+
+  CONIURA series_sort(SPECULUM a[0], 8)
+
+  SI NON CONIURA series_is_sorted(SPECULUM a[0], 8)
+    REDDE 2
+  FIN SI
+
+  SI a[0] != 1
+    REDDE 3
+  FIN SI
+
+  SI a[1] != 1
+    REDDE 4
+  FIN SI
+
+  SI a[2] != 2
+    REDDE 5
+  FIN SI
+
+  SI a[5] != 3
+    REDDE 6
+  FIN SI
+
+  SI a[7] != 5
+    REDDE 7
+  FIN SI
+
+  SI CONIURA series_count_val(SPECULUM a[0], 8, 2) != 3
+    REDDE 8
+  FIN SI
+
+  SI CONIURA series_count_val(SPECULUM a[0], 8, 9) != 0
+    REDDE 9
+  FIN SI
+
+  EVOCA SERIES REX[1] unico
+  VINCIRE unico[0] AD 11
+
+  SI NON CONIURA series_is_sorted(SPECULUM unico[0], 1)
+    REDDE 10
+  FIN SI
+
+  CONIURA series_sort(SPECULUM unico[0], 1)
+  SI unico[0] != 11
+    REDDE 11
+  FIN SI
+
+  CONIURA series_sort(SPECULUM unico[0], 0)
+
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

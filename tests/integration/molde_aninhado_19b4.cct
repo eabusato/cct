@@ -1,0 +1,9 @@
+INCIPIT grimoire "molde_aninhado_19b4"
+RITUALE main() REDDE NIHIL
+  EVOCA REX x AD 5
+  EVOCA REX y AD 10
+  EVOCA VERBUM inner AD MOLDE "{x} + {y}"
+  OBSECRO scribe(MOLDE "resultado: {inner}\n")
+  REDDE
+EXPLICIT RITUALE
+EXPLICIT grimoire

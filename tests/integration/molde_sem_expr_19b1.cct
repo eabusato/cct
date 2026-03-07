@@ -1,0 +1,6 @@
+INCIPIT grimoire "molde_sem_expr_19b1"
+RITUALE main() REDDE NIHIL
+  OBSECRO scribe(MOLDE "texto sem interpolacao\n")
+  REDDE
+EXPLICIT RITUALE
+EXPLICIT grimoire

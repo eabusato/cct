@@ -1,0 +1,8 @@
+INCIPIT grimoire "molde_umbra_verum_19b1"
+RITUALE main() REDDE NIHIL
+  EVOCA UMBRA u AD 3.5
+  EVOCA VERUM ok AD VERUM
+  OBSECRO scribe(MOLDE "u={u} ok={ok}\n")
+  REDDE
+EXPLICIT RITUALE
+EXPLICIT grimoire

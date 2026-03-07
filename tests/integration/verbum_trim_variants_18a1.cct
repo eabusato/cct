@@ -1,0 +1,23 @@
+INCIPIT grimoire "verbum_trim_variants_18a1"
+
+ADVOCARE "cct/verbum.cct"
+
+RITUALE main() REDDE REX
+  EVOCA VERBUM s AD "   cct  "
+  EVOCA VERBUM l AD CONIURA trim_left(s)
+  EVOCA VERBUM r AD CONIURA trim_right(s)
+  EVOCA MILES under AD CONIURA char_at("_", 0)
+  EVOCA VERBUM c AD CONIURA trim_char("__abc__", under)
+
+  SI CONIURA compare(l, "cct  ") == 0
+    SI CONIURA compare(r, "   cct") == 0
+      SI CONIURA compare(c, "abc") == 0
+        REDDE 0
+      FIN SI
+    FIN SI
+  FIN SI
+
+  REDDE 1
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

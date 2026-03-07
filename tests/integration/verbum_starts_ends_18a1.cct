@@ -1,0 +1,33 @@
+INCIPIT grimoire "verbum_starts_ends_18a1"
+
+ADVOCARE "cct/verbum.cct"
+
+RITUALE main() REDDE REX
+  EVOCA VERBUM s AD "cct_bootstrap"
+
+  SI CONIURA starts_with(s, "cct")
+    SI NON CONIURA starts_with(s, "boot")
+      SI CONIURA ends_with(s, "strap")
+        SI NON CONIURA ends_with(s, "cct")
+          EVOCA VERBUM a AD CONIURA strip_prefix(s, "cct_")
+          EVOCA VERBUM b AD CONIURA strip_suffix(s, "strap")
+          EVOCA VERBUM c AD CONIURA strip_prefix(s, "zzz")
+          EVOCA VERBUM d AD CONIURA strip_suffix(s, "zzz")
+          SI CONIURA compare(a, "bootstrap") == 0
+            SI CONIURA compare(b, "cct_boot") == 0
+              SI CONIURA compare(c, s) == 0
+                SI CONIURA compare(d, s) == 0
+                  REDDE 0
+                FIN SI
+              FIN SI
+            FIN SI
+          FIN SI
+        FIN SI
+      FIN SI
+    FIN SI
+  FIN SI
+
+  REDDE 1
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

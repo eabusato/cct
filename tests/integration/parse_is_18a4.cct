@@ -1,0 +1,14 @@
+INCIPIT grimoire "parse_is_18a4"
+
+ADVOCARE "cct/parse.cct"
+
+RITUALE main() REDDE REX
+  SI CONIURA is_int("42") ET NON CONIURA is_int("4.2") ET NON CONIURA is_int(" 42")
+    SI CONIURA is_real("4.2") ET CONIURA is_real("1e3") ET NON CONIURA is_real("x") ET NON CONIURA is_real(" 1.0")
+      REDDE 0
+    FIN SI
+  FIN SI
+  REDDE 1
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

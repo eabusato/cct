@@ -1,0 +1,18 @@
+INCIPIT grimoire "quando_verbum_vazio_19a2"
+
+RITUALE main() REDDE NIHIL
+  EVOCA VERBUM m AD ""
+
+  QUANDO m
+    CASO "":
+      OBSECRO scribe("vazio\n")
+    CASO "abc":
+      OBSECRO scribe("texto\n")
+    SENAO:
+      OBSECRO scribe("outro\n")
+  FIN QUANDO
+
+  REDDE
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

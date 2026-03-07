@@ -1,0 +1,61 @@
+INCIPIT grimoire "set_subset_equals_18c2"
+
+ADVOCARE "cct/set.cct"
+
+RITUALE main() REDDE REX
+  EVOCA SPECULUM NIHIL a AD CONIURA set_init GENUS(REX)()
+  EVOCA SPECULUM NIHIL b AD CONIURA set_init GENUS(REX)()
+  EVOCA SPECULUM NIHIL c AD CONIURA set_init GENUS(REX)()
+
+  CONIURA set_insert GENUS(REX)(a, 1)
+  CONIURA set_insert GENUS(REX)(a, 2)
+
+  CONIURA set_insert GENUS(REX)(b, 1)
+  CONIURA set_insert GENUS(REX)(b, 2)
+  CONIURA set_insert GENUS(REX)(b, 3)
+
+  CONIURA set_insert GENUS(REX)(c, 1)
+  CONIURA set_insert GENUS(REX)(c, 2)
+
+  SI NON CONIURA set_is_subset GENUS(REX)(a, b)
+    CONIURA set_free GENUS(REX)(c)
+    CONIURA set_free GENUS(REX)(b)
+    CONIURA set_free GENUS(REX)(a)
+    REDDE 1
+  FIN SI
+
+  SI NON CONIURA set_is_superset GENUS(REX)(b, a)
+    CONIURA set_free GENUS(REX)(c)
+    CONIURA set_free GENUS(REX)(b)
+    CONIURA set_free GENUS(REX)(a)
+    REDDE 2
+  FIN SI
+
+  SI CONIURA set_is_subset GENUS(REX)(b, a)
+    CONIURA set_free GENUS(REX)(c)
+    CONIURA set_free GENUS(REX)(b)
+    CONIURA set_free GENUS(REX)(a)
+    REDDE 3
+  FIN SI
+
+  SI NON CONIURA set_equals GENUS(REX)(a, c)
+    CONIURA set_free GENUS(REX)(c)
+    CONIURA set_free GENUS(REX)(b)
+    CONIURA set_free GENUS(REX)(a)
+    REDDE 4
+  FIN SI
+
+  SI CONIURA set_equals GENUS(REX)(a, b)
+    CONIURA set_free GENUS(REX)(c)
+    CONIURA set_free GENUS(REX)(b)
+    CONIURA set_free GENUS(REX)(a)
+    REDDE 5
+  FIN SI
+
+  CONIURA set_free GENUS(REX)(c)
+  CONIURA set_free GENUS(REX)(b)
+  CONIURA set_free GENUS(REX)(a)
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

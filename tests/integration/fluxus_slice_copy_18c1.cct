@@ -1,0 +1,49 @@
+INCIPIT grimoire "fluxus_slice_copy_18c1"
+
+ADVOCARE "cct/fluxus.cct"
+
+RITUALE main() REDDE REX
+  EVOCA SPECULUM NIHIL f AD CONIURA fluxus_init(MENSURA(REX))
+  EVOCA REX a AD 5
+  EVOCA REX b AD 6
+  EVOCA REX c AD 7
+  EVOCA REX d AD 8
+
+  CONIURA fluxus_push(f, SPECULUM a)
+  CONIURA fluxus_push(f, SPECULUM b)
+  CONIURA fluxus_push(f, SPECULUM c)
+  CONIURA fluxus_push(f, SPECULUM d)
+
+  EVOCA SPECULUM NIHIL sl AD CONIURA fluxus_slice GENUS(REX)(f, 1, 3)
+  EVOCA SPECULUM NIHIL cp AD CONIURA fluxus_copy GENUS(REX)(f)
+  EVOCA SPECULUM NIHIL cat AD CONIURA fluxus_concat GENUS(REX)(sl, cp)
+
+  SI CONIURA fluxus_len(sl) == 2
+    SI CONIURA fluxus_len(cp) == 4
+      SI CONIURA fluxus_len(cat) == 6
+        EVOCA SPECULUM REX p0 AD CONIURA fluxus_get(cat, 0)
+        EVOCA SPECULUM REX p1 AD CONIURA fluxus_get(cat, 1)
+        EVOCA SPECULUM REX p5 AD CONIURA fluxus_get(cat, 5)
+        SI *p0 == 6
+          SI *p1 == 7
+            SI *p5 == 8
+              CONIURA fluxus_free(cat)
+              CONIURA fluxus_free(cp)
+              CONIURA fluxus_free(sl)
+              CONIURA fluxus_free(f)
+              REDDE 0
+            FIN SI
+          FIN SI
+        FIN SI
+      FIN SI
+    FIN SI
+  FIN SI
+
+  CONIURA fluxus_free(cat)
+  CONIURA fluxus_free(cp)
+  CONIURA fluxus_free(sl)
+  CONIURA fluxus_free(f)
+  REDDE 1
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

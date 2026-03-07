@@ -1,0 +1,18 @@
+INCIPIT grimoire "quando_caso_dup_19a1"
+
+RITUALE main() REDDE NIHIL
+  EVOCA REX x AD 1
+
+  QUANDO x
+    CASO 1:
+      OBSECRO scribe("um\n")
+    CASO 1:
+      OBSECRO scribe("duplicado\n")
+    SENAO:
+      OBSECRO scribe("outro\n")
+  FIN QUANDO
+
+  REDDE
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

@@ -1,0 +1,18 @@
+INCIPIT grimoire "quando_em_rituale_19a4"
+
+RITUALE classificar(REX n) REDDE REX
+  QUANDO n
+    CASO 0:
+      REDDE 10
+    CASO 1:
+      REDDE 11
+    SENAO:
+      REDDE 12
+  FIN QUANDO
+EXPLICIT RITUALE
+
+RITUALE main() REDDE REX
+  REDDE CONIURA classificar(1)
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

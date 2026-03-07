@@ -1,0 +1,9 @@
+INCIPIT grimoire "molde_multilinha_19b4"
+RITUALE main() REDDE NIHIL
+  EVOCA VERBUM nome AD "Alice"
+  EVOCA REX pontos AD 95
+  EVOCA VERBUM msg AD MOLDE "Relatorio:\n  Aluno: {nome}\n  Pontos: {pontos}\n  Aprovado: {pontos >= 60}\n"
+  OBSECRO scribe(msg)
+  REDDE
+EXPLICIT RITUALE
+EXPLICIT grimoire

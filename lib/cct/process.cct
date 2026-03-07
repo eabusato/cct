@@ -1,0 +1,30 @@
+INCIPIT grimoire "process"
+
+ADVOCARE "cct/verbum.cct"
+
+RITUALE run(VERBUM cmd) REDDE REX
+  REDDE OBSECRO process_run(cmd)
+EXPLICIT RITUALE
+
+RITUALE run_capture(VERBUM cmd) REDDE VERBUM
+  REDDE OBSECRO process_run_capture(cmd)
+EXPLICIT RITUALE
+
+RITUALE run_capture_err(VERBUM cmd) REDDE VERBUM
+  EVOCA VERBUM wrapped AD CONIURA concat(CONIURA concat("{ ", cmd), " ; } 2>&1 >/dev/null")
+  REDDE CONIURA run_capture(wrapped)
+EXPLICIT RITUALE
+
+RITUALE run_with_input(VERBUM cmd, VERBUM input) REDDE VERBUM
+  REDDE OBSECRO process_run_with_input(cmd, input)
+EXPLICIT RITUALE
+
+RITUALE run_env(VERBUM cmd, SPECULUM NIHIL env_pairs) REDDE REX
+  REDDE OBSECRO process_run_env(cmd, env_pairs)
+EXPLICIT RITUALE
+
+RITUALE run_timeout(VERBUM cmd, REX timeout_ms) REDDE REX
+  REDDE OBSECRO process_run_timeout(cmd, timeout_ms)
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

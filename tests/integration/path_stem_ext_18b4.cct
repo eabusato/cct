@@ -1,0 +1,30 @@
+INCIPIT grimoire "path_stem_ext_18b4"
+
+ADVOCARE "cct/path.cct"
+ADVOCARE "cct/verbum.cct"
+
+RITUALE main() REDDE REX
+  SI CONIURA compare(CONIURA stem("/a/b/foo.tar.gz"), "foo.tar") != 0
+    REDDE 1
+  FIN SI
+
+  SI CONIURA compare(CONIURA without_ext("foo.tar.gz"), "foo.tar") != 0
+    REDDE 2
+  FIN SI
+
+  SI CONIURA compare(CONIURA with_ext("foo.c", "h"), "foo.h") != 0
+    REDDE 3
+  FIN SI
+
+  SI CONIURA compare(CONIURA with_ext("foo.c", ".hpp"), "foo.hpp") != 0
+    REDDE 4
+  FIN SI
+
+  SI CONIURA compare(CONIURA with_ext(".env", "bak"), ".env.bak") != 0
+    REDDE 5
+  FIN SI
+
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

@@ -1,0 +1,18 @@
+INCIPIT grimoire "iterum_map_vazio_19d1"
+
+ADVOCARE "cct/map.cct"
+
+RITUALE main() REDDE REX
+  EVOCA SPECULUM NIHIL m AD CONIURA map_init GENUS(REX, REX)()
+  EVOCA REX n AD 0
+
+  ITERUM k, v IN m COM
+    VINCIRE n AD n + 1
+    VINCIRE n AD n + k + v
+  FIN ITERUM
+
+  CONIURA map_free GENUS(REX, REX)(m)
+  REDDE n
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

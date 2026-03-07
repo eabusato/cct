@@ -1,0 +1,29 @@
+INCIPIT grimoire "quando_ordo_aninhado_19c3"
+
+ORDO Resultado
+  Ok(REX valor),
+  Err(VERBUM msg)
+FIN ORDO
+
+RITUALE main() REDDE REX
+  EVOCA Resultado r AD Ok(3)
+
+  QUANDO r
+    CASO Ok(v):
+      QUANDO v
+        CASO 1:
+          REDDE 11
+        CASO 3:
+          REDDE 33
+        SENAO:
+          REDDE 44
+      FIN QUANDO
+    CASO Err(msg):
+      OBSECRO scribe(MOLDE "erro={msg}\n")
+      REDDE 99
+  FIN QUANDO
+
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

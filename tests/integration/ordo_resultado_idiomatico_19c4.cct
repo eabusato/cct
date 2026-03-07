@@ -1,0 +1,33 @@
+INCIPIT grimoire "ordo_resultado_idiomatico_19c4"
+
+ADVOCARE "cct/ordo_samples.cct"
+
+RITUALE dividir(REX a, REX b) REDDE Resultado
+  SI b == 0
+    REDDE Err("divisao por zero")
+  FIN SI
+  REDDE Ok(a // b)
+EXPLICIT RITUALE
+
+RITUALE main() REDDE NIHIL
+  EVOCA Resultado r1 AD CONIURA dividir(10, 2)
+  EVOCA Resultado r2 AD CONIURA dividir(10, 0)
+
+  QUANDO r1
+    CASO Ok(v):
+      OBSECRO scribe(MOLDE "10/2 = {v}\n")
+    CASO Err(m):
+      OBSECRO scribe(MOLDE "erro: {m}\n")
+  FIN QUANDO
+
+  QUANDO r2
+    CASO Ok(v):
+      OBSECRO scribe(MOLDE "10/0 = {v}\n")
+    CASO Err(m):
+      OBSECRO scribe(MOLDE "erro: {m}\n")
+  FIN QUANDO
+
+  REDDE
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

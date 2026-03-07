@@ -11,7 +11,7 @@ It is written to help you:
 
 ## Status
 
-Specification baseline: **FASE 17D.4** (FASE 13/13M closures, FASE 14 hardening contracts, full FASE 15 closure set, FASE 16 freestanding bridge closure, and FASE 17 standard-library expansion).
+Specification baseline: **FASE 19D.4** (FASE 13/13M closures, FASE 14 hardening contracts, full FASE 15 closure set, FASE 16 freestanding bridge closure, FASE 17 bootstrap-library expansion, FASE 18 canonical-library expansion, and FASE 19 language-surface expansion/closure).
 
 The language is fully usable in its current subset, with explicit boundaries documented below.
 
@@ -178,12 +178,57 @@ FASE 17 expands the canonical standard library to unlock bootstrap-oriented comp
 - `cct/variant`
 - `cct/variant_helpers`
 - `cct/ast_node`
-- ORDO payload language support remains design-proposal status via `docs/bootstrap/CCT_ORDO_PAYLOAD_PROPOSAL_V0.md`
+- ORDO payload language support is stable in FASE 19 (`QUANDO` destructuring + payload constructors)
 
 17D - Host utility libraries:
 - `cct/env`: environment variable and cwd access
 - `cct/time`: monotonic timing and sleep primitives
 - `cct/bytes`: mutable byte buffer primitives with bounds/range contracts
+
+### 1.6 FASE 18 Canonical Library Expansion
+
+FASE 18 expands and consolidates Bibliotheca Canonica with production-ready host utilities, richer text/parsing APIs, collection helpers, and low-level modules for process/hash/bit flows.
+
+18A - text/format/parse expansion:
+- `cct/verbum`: starts/ends, strip, replace, case conversion, trim variants, padding, slicing, split/join, lines/words.
+- `cct/fmt`: radix formatting, precision controls, templating (`format_1..4`), table helpers.
+- `cct/parse`: safe parsers (`try_*`) and CSV/radix helpers.
+
+18B - host I/O and filesystem/path expansion:
+- `cct/fs`: mutation, inspection, directory listing, temp resources, metadata helpers.
+- `cct/io`: stderr variants, flush, stdin aggregate read, tty detection.
+- `cct/path`: normalize/resolve/relative, stem/ext transforms, split utilities.
+
+18C - collection and algorithm expansion:
+- `cct/fluxus`, `cct/set`, `cct/map`: richer mutation/iteration/composition helpers.
+- `cct/alg`, `cct/series`: sorting, min/max, reductions, rotate/reverse and counting.
+
+18D - new low-level/capability modules:
+- `cct/process` (new): host command execution and capture/timeout variants.
+- `cct/hash` (new): djb2/fnv1a/crc32/murmur3 + combine.
+- `cct/bit` (new): bit access/manipulation, popcount/zeros, rotate/swap/power-of-2 helpers.
+- `cct/random`: bool/range/string/bytes/shuffle helpers.
+
+### 1.7 FASE 19 Language Surface Expansion
+
+FASE 19 closes a major expressiveness gap in core language syntax and semantics.
+
+19A - selection/pattern statement:
+- `QUANDO`/`CASO`/`SENAO` for integer, `VERBUM`, and `ORDO` dispatch.
+- ORDO exhaustiveness enforcement when `SENAO` is absent.
+
+19B - interpolated string expression:
+- `MOLDE "..."` with `{expr}` interpolation and formatting specifiers.
+- host-only contract in current subset.
+
+19C - payload-capable sum types:
+- `ORDO` supports payload variants with compile-time constructor validation.
+- payload destructuring through `QUANDO ... CASO Variante(bindings): ...`.
+
+19D - collection iteration expansion:
+- `ITERUM key, value IN map COM ... FIN ITERUM`
+- `ITERUM item IN set COM ... FIN ITERUM`
+- insertion-order iteration contract for map/set.
 
 ## 2. Source File Structure
 
@@ -266,15 +311,70 @@ SIGILLUM Name PACTUM ContractName
 FIN SIGILLUM
 ```
 
-### 3.5 `ORDO` (enum-like type)
+### 3.5 `ORDO` (enum-like type with optional payload)
 
-Syntax:
+Status:
+- Stable (FASE 19C payload model)
+
+Syntax (simple variants):
 
 ```cct
 ORDO Status
   QUIETUS,
   ACTUS = 10
 FIN ORDO
+```
+
+Syntax (payload variants):
+
+```cct
+ORDO Resultado
+  Ok(REX valor),
+  Err(VERBUM msg)
+FIN ORDO
+```
+
+Normative grammar (payload extension):
+
+```text
+ordo_decl    := ORDO IDENT variant_list FIN ORDO
+variant_list := variant (',' variant)*
+variant      := IDENT
+              | IDENT '(' field_list ')'
+field_list   := field (',' field)*
+field        := type IDENT
+```
+
+Semantics:
+- payload-capable ORDO is a tagged-sum type lowered to a C tagged union form.
+- payload fields are variant-local and are only available after matching a variant in `QUANDO`.
+- constructors are resolved by target-context type and validated by variant arity and field types.
+
+Payload contract (current stable subset):
+- allowed payload field types: `REX`, `DUX`, `COMES`, `MILES`, `UMBRA`, `FLAMMA`, `VERUM`, `VERBUM`
+- mixed variants (with and without payload) are supported
+- constructor arity/type is validated at compile time
+- payload destructuring is supported only via `QUANDO ... CASO Variant(bindings): ...`
+
+Current restrictions:
+- recursive ORDO payloads are not part of the stable subset
+- `GENUS` over payload ORDO declarations is not part of the stable subset
+- shared-body OR-cases with payload bindings (`CASO A:` followed by `CASO B:`) are not supported
+
+Example:
+
+```cct
+ORDO Resultado
+  Ok(REX valor),
+  Err(VERBUM msg)
+FIN ORDO
+
+RITUALE dividir(REX a, REX b) REDDE Resultado
+  SI b == 0
+    REDDE Err("divisao por zero")
+  FIN SI
+  REDDE Ok(a // b)
+EXPLICIT RITUALE
 ```
 
 ### 3.6 `PACTUM` (contract/interface)
@@ -468,6 +568,8 @@ FIN REPETE
 
 ### 5.9 `ITERUM` (collection iterator)
 
+#### 5.9.1 Core Form
+
 Syntax:
 
 ```cct
@@ -476,15 +578,62 @@ ITERUM item IN collection COM
 FIN ITERUM
 ```
 
-Supported collections in the current subset:
+Rules:
+- `COM` is part of the canonical surface syntax.
+- iterator variable scope is local to the `ITERUM` body.
+- lazy iterator protocols are outside the current stable subset.
+
+#### 5.9.2 `ITERUM` over `FLUXUS` and `SERIES`
+
+Status:
+- Stable
+
+Collection coverage:
 - `FLUXUS` values
 - `SERIES T[N]` static arrays
 - collection-operation results that materialize as `FLUXUS`/`SERIES`
 
-Notes:
-- `COM` is part of the canonical surface syntax.
-- iterator variable scope is local to the `ITERUM` body.
-- this subset does not include lazy iterators or HashMap/Set iterators.
+Iteration semantics:
+- exactly one binding symbol is required.
+- traversal order is index order.
+
+#### 5.9.3 `ITERUM` over `map` and `set` (FASE 19D)
+
+Status:
+- Stable (FASE 19D)
+
+`ITERUM` supports canonical `map` and `set` values from Bibliotheca Canonica.
+
+Map form (requires 2 bindings):
+
+```cct
+ITERUM chave, valor IN mapa COM
+  OBSECRO scribe(MOLDE "{chave} -> {valor}\n")
+FIN ITERUM
+```
+
+Set form (requires 1 binding):
+
+```cct
+ITERUM item IN conjunto COM
+  OBSECRO scribe(MOLDE "{item}\n")
+FIN ITERUM
+```
+
+Arity and ordering rules:
+- `map`: exactly 2 bindings (`key`, `value`)
+- `set`: exactly 1 binding
+- map/set iteration order is insertion order
+- arity mismatch is a compile-time error
+
+Iterable collections summary:
+
+| Collection | Arity | Ordering semantics |
+|---|---:|---|
+| `FLUXUS` | 1 | index order |
+| `SERIES` | 1 | index order |
+| `map` | 2 | insertion order (`key`, `value`) |
+| `set` | 1 | insertion order |
 
 ### 5.10 `DIMITTE` (explicit release)
 
@@ -528,7 +677,62 @@ Subset constraints:
 - exactly one `CAPE` in current official subset
 - `SEMPER` must come after `CAPE`
 
-### 5.11 `FRANGE`, `RECEDE`, `TRANSITUS`
+### 5.12 `QUANDO` (pattern-style selection)
+
+Status:
+- Stable (FASE 19A/C payload integration)
+
+Normative grammar:
+
+```text
+quando_stmt   := QUANDO expr caso+ (SENAO ':' stmt_list)? FIN QUANDO
+caso          := CASO literal ':' stmt_list
+               | CASO variant_name '(' binding_list ')' ':' stmt_list
+binding_list  := IDENT (',' IDENT)*
+```
+
+Semantics:
+- `QUANDO` evaluates `expr` once and executes the first matching `CASO`.
+- when no `CASO` matches:
+  - if `SENAO` exists, `SENAO` executes;
+  - if `SENAO` is absent and scrutinee type is `ORDO`, exhaustiveness diagnostics apply.
+- OR-cases are represented by multiple consecutive `CASO` labels sharing one body.
+- for `ORDO` with payload, bindings are local to the matched `CASO` block.
+
+Exhaustiveness rules:
+- `QUANDO` over `ORDO` (with or without payload): exhaustive coverage is required unless `SENAO` is present.
+- `QUANDO` over integer or `VERBUM`: missing `SENAO` is accepted with warning-oriented diagnostics.
+
+Restrictions:
+- `QUANDO` is a statement, not an expression.
+- OR-cases with payload bindings in a shared body are not supported.
+- nested payload destructuring patterns are not supported in the stable subset.
+- `FRANGE` inside `QUANDO` nested in a loop exits the enclosing loop, not the `QUANDO`.
+
+Examples:
+
+```cct
+QUANDO x
+  CASO 1:
+  CASO 2:
+    OBSECRO scribe("pequeno\n")
+  CASO 3:
+    OBSECRO scribe("medio\n")
+  SENAO:
+    OBSECRO scribe("grande\n")
+FIN QUANDO
+```
+
+```cct
+QUANDO resultado
+  CASO Ok(v):
+    OBSECRO scribe(MOLDE "valor: {v}\n")
+  CASO Err(msg):
+    OBSECRO scribe(MOLDE "erro: {msg}\n")
+FIN QUANDO
+```
+
+### 5.13 `FRANGE`, `RECEDE`, `TRANSITUS`
 
 Status:
 - `FRANGE` and `RECEDE`: Stable; valid only inside `DUM`, `DONEC`, `REPETE`, `ITERUM`
@@ -609,6 +813,59 @@ Examples:
 - `20 // 3 + 1` => `(20 // 3) + 1`
 - `20 // (3 + 1)` => `20 // 4`
 
+### 6.8 `MOLDE` (string interpolation)
+
+Status:
+- Stable (FASE 19B)
+- Host-only (rejected in freestanding profile)
+
+Normative grammar:
+
+```text
+molde_expr      := MOLDE string_literal
+interpolation   := '{' expr (':' format_spec)? '}'
+format_spec     := [width] ['.' precision] ['d'|'f'|'s'|'<'|'>'|'^']
+width           := DIGIT+
+precision       := DIGIT+
+```
+
+Canonical form:
+
+```cct
+MOLDE "texto {expr} mais {expr:spec}"
+```
+
+Supported interpolation payload types:
+- `REX`, `DUX`, `COMES`, `MILES`
+- `UMBRA`, `FLAMMA`
+- `VERUM`
+- `VERBUM`
+
+Formatting notes:
+- default `{expr}` formatting is type-aware
+- optional `:spec` supports numeric and alignment forms in the current subset
+- escaped braces use `{{` and `}}`
+- representative specs: `5d`, `.2f`, `<10`, `>10`, `^10`
+
+Constraints:
+- `OBSECRO` calls are not allowed inside `{...}` interpolation expressions
+- `MOLDE` returns a `VERBUM` value
+- as direct argument to output builtins, runtime ownership is automatically handled by generated code
+
+Examples:
+
+```cct
+EVOCA VERBUM nome AD "Maria"
+EVOCA REX pontos AD 95
+EVOCA UMBRA media AD 8.75
+
+OBSECRO scribe(MOLDE "Aluno: {nome}, Pontos: {pontos}\n")
+OBSECRO scribe(MOLDE "Media: {media:.2f}\n")
+
+EVOCA VERBUM relatorio AD MOLDE "Aluno: {nome} ({pontos:3d} pts)\n"
+OBSECRO scribe(relatorio)
+```
+
 ## 7. `OBSECRO` Builtins
 
 ### 7.1 Stable in current executable subset
@@ -656,6 +913,46 @@ FASE 11A policy:
 - `cct/...` is reserved for Bibliotheca Canonica
 - canonical modules resolve from compiler-distributed stdlib path
 - user-local modules do not override canonical `cct/...` targets
+
+### 8.2.1 Bibliotheca Canonica 18 (Delta from 17D.4)
+
+The table below lists FASE 18 additions by module (`+N` = functions added in the phase).
+
+| Module | +N | Added API surface (FASE 18) |
+|---|---:|---|
+| `cct/verbum` | +28 | `starts_with`, `ends_with`, `strip_prefix`, `strip_suffix`, `replace`, `replace_all`, `to_upper`, `to_lower`, `trim_left`, `trim_right`, `trim_char`, `repeat`, `pad_left`, `pad_right`, `center`, `last_find`, `find_from`, `count_occurrences`, `reverse`, `is_empty`, `equals_ignore_case`, `slice`, `is_ascii`, `split`, `split_char`, `join`, `lines`, `words` |
+| `cct/fmt` | +16 | `stringify_int_hex`, `stringify_int_hex_upper`, `stringify_int_oct`, `stringify_int_bin`, `stringify_uint`, `stringify_int_padded`, `stringify_real_prec`, `stringify_real_sci`, `stringify_real_fixed`, `stringify_char`, `format_1`, `format_2`, `format_3`, `format_4`, `repeat_char`, `table_row` |
+| `cct/parse` | +12 | `try_int`, `try_real`, `try_bool`, `parse_int_hex`, `try_int_hex`, `parse_int_radix`, `try_int_radix`, `is_int`, `is_real`, `parse_lines`, `parse_csv_line`, `parse_csv_line_sep` |
+| `cct/fs` | +21 | `mkdir`, `mkdir_all`, `delete_file`, `delete_dir`, `rename`, `copy`, `move`, `is_file`, `is_dir`, `is_symlink`, `is_readable`, `is_writable`, `modified_time`, `chmod`, `list_dir`, `read_lines`, `create_temp_file`, `create_temp_dir`, `truncate`, `symlink`, `same_file` |
+| `cct/io` | +14 | `print_bool`, `print_char`, `print_hex`, `eprint`, `eprintln`, `eprint_int`, `eprint_real`, `eprint_bool`, `flush`, `flush_err`, `read_char`, `read_all_stdin`, `read_line_prompt`, `is_tty` |
+| `cct/path` | +12 | `stem`, `normalize`, `is_absolute`, `is_relative`, `resolve`, `relative_to`, `with_ext`, `without_ext`, `parent`, `home_dir`, `temp_dir`, `split_path` |
+| `cct/fluxus` | +13 | `fluxus_peek`, `fluxus_set`, `fluxus_remove`, `fluxus_insert`, `fluxus_contains`, `fluxus_is_empty`, `fluxus_concat`, `fluxus_slice`, `fluxus_copy`, `fluxus_reverse`, `fluxus_sort_int`, `fluxus_sort_verbum`, `fluxus_to_ptr` |
+| `cct/set` | +11 | `set_union`, `set_intersection`, `set_difference`, `set_symmetric_difference`, `set_is_subset`, `set_is_superset`, `set_equals`, `set_copy`, `set_to_fluxus`, `set_reserve`, `set_capacity` |
+| `cct/map` | +6 | `map_get_or_default`, `map_update_or_insert`, `map_copy`, `map_keys`, `map_values`, `map_merge` |
+| `cct/alg` | +19 | `alg_sum`, `alg_sum_real`, `alg_min`, `alg_max`, `alg_min_real`, `alg_max_real`, `alg_reverse_range`, `alg_reverse`, `alg_fill`, `alg_fill_real`, `alg_rotate`, `alg_quicksort`, `alg_mergesort`, `alg_sort_verbum`, `alg_is_sorted`, `alg_count`, `alg_deduplicate_sorted`, `alg_dot_product`, `alg_dot_product_real` |
+| `cct/series` | +7 | `series_sum`, `series_sum_real`, `series_min`, `series_max`, `series_is_sorted`, `series_sort`, `series_count_val` |
+| `cct/random` | +8 | `random_real_unit`, `random_bool`, `random_real_range`, `random_verbum`, `random_verbum_from`, `random_choice_int`, `shuffle_int`, `random_bytes` |
+| `cct/process` | +6 (new) | `run`, `run_capture`, `run_capture_err`, `run_with_input`, `run_env`, `run_timeout` |
+| `cct/hash` | +6 (new) | `djb2`, `fnv1a`, `fnv1a_bytes`, `crc32`, `murmur3`, `combine` |
+| `cct/bit` | +14 (new) | `bit_get`, `bit_set`, `bit_clear`, `bit_toggle`, `popcount`, `leading_zeros`, `trailing_zeros`, `rotate_left`, `rotate_right`, `next_power_of_2`, `is_power_of_2`, `byte_swap`, `parity`, `bit_extract` |
+
+Notes:
+- `cct/parse` safe functions (`try_*`) return Option-style opaque pointers to avoid hard-fail paths in host tooling flows.
+- Values above are phase deltas, not total historical module size.
+
+### 8.2.2 New Modules Introduced in FASE 18
+
+- `cct/process`:
+  - wraps host process execution with explicit contracts for capture/input/env/timeout.
+  - restricted to host profile; not available in freestanding.
+
+- `cct/hash`:
+  - provides deterministic hashes for strings/bytes and composition (`combine`) for structural fingerprints.
+  - `combine` follows the canonical mix strategy used by the phase architecture.
+
+- `cct/bit`:
+  - offers canonical bit-level helpers for AST/IR/tooling workflows that need compact flags and bitfield manipulation.
+  - index-sensitive operations enforce `0..63` bounds with canonical diagnostics.
 
 ### 8.3 Visibility
 
@@ -1171,10 +1468,13 @@ Legend:
 |---|---|---|---|
 | `SI` | if | Stable | supports `ALITER` |
 | `ALITER` | else | Stable | optional |
+| `QUANDO` | pattern/switch selection | Stable | statement-only selection over literals and ORDO variants |
+| `CASO` | case arm in `QUANDO` | Stable | supports OR-case literals and ORDO payload bindings |
+| `SENAO` | default arm in `QUANDO` | Stable | optional fallback branch |
 | `DUM` | while / do-while trailer | Stable | used by both `DUM` and `DONEC ... DUM` |
 | `DONEC` | do-while block start | Stable | post-condition form |
 | `REPETE` | for-range loop | Stable | `DE`, `AD`, optional `GRADUS` |
-| `ITERUM` | collection iteration loop | Stable | `ITERUM item IN collection COM ... FIN ITERUM` |
+| `ITERUM` | collection iteration loop | Stable | arity depends on collection (`map`: 2 bindings; others: 1) |
 | `DE` | from | Stable | `REPETE` header |
 | `AD` | to/assign delimiter | Stable | in `REPETE` and `VINCIRE`/`EVOCA` initializer syntax |
 | `GRADUS` | step | Stable | optional in `REPETE` |
@@ -1218,6 +1518,7 @@ Legend:
 | `UMBRA` | double | Stable | |
 | `FLAMMA` | float | Stable | |
 | `VERBUM` | string | Stable | |
+| `MOLDE` | interpolated string expression | Stable | host-only in current subset |
 | `VERUM` | boolean true / bool family | Stable | literal and type family |
 | `FALSUM` | boolean false | Stable | literal |
 | `NIHIL` | null/void family | Stable | |

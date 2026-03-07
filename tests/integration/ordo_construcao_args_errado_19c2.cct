@@ -1,0 +1,13 @@
+INCIPIT grimoire "ordo_construcao_args_errado_19c2"
+
+ORDO Resultado
+  Ok(REX valor),
+  Err(VERBUM msg)
+FIN ORDO
+
+RITUALE main() REDDE REX
+  EVOCA Resultado r AD Ok(42, "extra")
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

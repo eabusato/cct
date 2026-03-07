@@ -1,0 +1,8 @@
+INCIPIT grimoire "molde_rex_verbum_19b1"
+RITUALE main() REDDE NIHIL
+  EVOCA REX n AD 42
+  EVOCA VERBUM s AD "mundo"
+  OBSECRO scribe(MOLDE "n={n} s={s}\n")
+  REDDE
+EXPLICIT RITUALE
+EXPLICIT grimoire

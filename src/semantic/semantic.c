@@ -12,6 +12,7 @@
 #include "../common/diagnostic.h"
 
 #include <stdarg.h>
+#include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -427,6 +428,48 @@ static const char* sem_stdlib_import_hint(const char *name) {
         strcmp(name, "ext") == 0) {
         return "add ADVOCARE \"cct/path.cct\" in the module header";
     }
+    if (strcmp(name, "run") == 0 ||
+        strcmp(name, "run_capture") == 0 ||
+        strcmp(name, "run_capture_err") == 0 ||
+        strcmp(name, "run_with_input") == 0 ||
+        strcmp(name, "run_env") == 0 ||
+        strcmp(name, "run_timeout") == 0) {
+        return "add ADVOCARE \"cct/process.cct\" in the module header";
+    }
+    if (strcmp(name, "djb2") == 0 ||
+        strcmp(name, "fnv1a") == 0 ||
+        strcmp(name, "fnv1a_bytes") == 0 ||
+        strcmp(name, "crc32") == 0 ||
+        strcmp(name, "murmur3") == 0 ||
+        strcmp(name, "combine") == 0) {
+        return "add ADVOCARE \"cct/hash.cct\" in the module header";
+    }
+    if (strcmp(name, "popcount") == 0 ||
+        strcmp(name, "leading_zeros") == 0 ||
+        strcmp(name, "trailing_zeros") == 0 ||
+        strcmp(name, "rotate_left") == 0 ||
+        strcmp(name, "rotate_right") == 0 ||
+        strcmp(name, "next_power_of_2") == 0 ||
+        strcmp(name, "is_power_of_2") == 0 ||
+        strcmp(name, "byte_swap") == 0 ||
+        strcmp(name, "bit_get") == 0 ||
+        strcmp(name, "bit_set") == 0 ||
+        strcmp(name, "bit_clear") == 0 ||
+        strcmp(name, "bit_toggle") == 0 ||
+        strcmp(name, "parity") == 0 ||
+        strcmp(name, "bit_extract") == 0) {
+        return "add ADVOCARE \"cct/bit.cct\" in the module header";
+    }
+    if (strcmp(name, "random_real_unit") == 0 ||
+        strcmp(name, "random_bool") == 0 ||
+        strcmp(name, "random_real_range") == 0 ||
+        strcmp(name, "random_verbum") == 0 ||
+        strcmp(name, "random_verbum_from") == 0 ||
+        strcmp(name, "random_choice_int") == 0 ||
+        strcmp(name, "shuffle_int") == 0 ||
+        strcmp(name, "random_bytes") == 0) {
+        return "add ADVOCARE \"cct/random.cct\" in the module header";
+    }
     if (strcmp(name, "Some") == 0 ||
         strcmp(name, "None") == 0 ||
         strcmp(name, "option_is_some") == 0 ||
@@ -453,12 +496,18 @@ static const char* sem_stdlib_import_hint(const char *name) {
         strcmp(name, "map_insert") == 0 ||
         strcmp(name, "map_remove") == 0 ||
         strcmp(name, "map_get") == 0 ||
+        strcmp(name, "map_get_or_default") == 0 ||
+        strcmp(name, "map_update_or_insert") == 0 ||
         strcmp(name, "map_contains") == 0 ||
         strcmp(name, "map_len") == 0 ||
         strcmp(name, "map_is_empty") == 0 ||
         strcmp(name, "map_capacity") == 0 ||
         strcmp(name, "map_clear") == 0 ||
-        strcmp(name, "map_reserve") == 0) {
+        strcmp(name, "map_reserve") == 0 ||
+        strcmp(name, "map_copy") == 0 ||
+        strcmp(name, "map_keys") == 0 ||
+        strcmp(name, "map_values") == 0 ||
+        strcmp(name, "map_merge") == 0) {
         return "add ADVOCARE \"cct/map.cct\" in the module header";
     }
     if (strcmp(name, "set_init") == 0 ||
@@ -468,7 +517,18 @@ static const char* sem_stdlib_import_hint(const char *name) {
         strcmp(name, "set_contains") == 0 ||
         strcmp(name, "set_len") == 0 ||
         strcmp(name, "set_is_empty") == 0 ||
-        strcmp(name, "set_clear") == 0) {
+        strcmp(name, "set_clear") == 0 ||
+        strcmp(name, "set_union") == 0 ||
+        strcmp(name, "set_intersection") == 0 ||
+        strcmp(name, "set_difference") == 0 ||
+        strcmp(name, "set_symmetric_difference") == 0 ||
+        strcmp(name, "set_is_subset") == 0 ||
+        strcmp(name, "set_is_superset") == 0 ||
+        strcmp(name, "set_equals") == 0 ||
+        strcmp(name, "set_copy") == 0 ||
+        strcmp(name, "set_to_fluxus") == 0 ||
+        strcmp(name, "set_reserve") == 0 ||
+        strcmp(name, "set_capacity") == 0) {
         return "add ADVOCARE \"cct/set.cct\" in the module header";
     }
     if (strcmp(name, "fluxus_map") == 0 ||
@@ -688,6 +748,151 @@ static bool sem_is_numeric_type(const cct_sem_type_t *type) {
 
 static bool sem_is_bool_type(const cct_sem_type_t *type) {
     return type && type->kind == CCT_SEM_TYPE_VERUM;
+}
+
+static bool sem_quando_types_compatible(const cct_sem_type_t *expr_type, const cct_sem_type_t *lit_type) {
+    if (!expr_type || !lit_type) return false;
+    if (sem_is_error_type(expr_type) || sem_is_error_type(lit_type)) return true;
+    if (expr_type->kind == CCT_SEM_TYPE_VERBUM) return lit_type->kind == CCT_SEM_TYPE_VERBUM;
+    if (sem_is_bool_type(expr_type)) return sem_is_bool_type(lit_type);
+    if (sem_is_integer_type(expr_type)) return sem_is_integer_type(lit_type);
+    return false;
+}
+
+static bool sem_is_molde_compatible_type(const cct_sem_type_t *type) {
+    if (!type) return false;
+    switch (type->kind) {
+        case CCT_SEM_TYPE_REX:
+        case CCT_SEM_TYPE_DUX:
+        case CCT_SEM_TYPE_COMES:
+        case CCT_SEM_TYPE_MILES:
+        case CCT_SEM_TYPE_UMBRA:
+        case CCT_SEM_TYPE_FLAMMA:
+        case CCT_SEM_TYPE_VERBUM:
+        case CCT_SEM_TYPE_VERUM:
+            return true;
+        default:
+            return false;
+    }
+}
+
+static bool sem_is_ordo_payload_supported_type(const cct_sem_type_t *type) {
+    if (!type) return false;
+    switch (type->kind) {
+        case CCT_SEM_TYPE_REX:
+        case CCT_SEM_TYPE_DUX:
+        case CCT_SEM_TYPE_COMES:
+        case CCT_SEM_TYPE_MILES:
+        case CCT_SEM_TYPE_UMBRA:
+        case CCT_SEM_TYPE_FLAMMA:
+        case CCT_SEM_TYPE_VERBUM:
+        case CCT_SEM_TYPE_VERUM:
+            return true;
+        default:
+            return false;
+    }
+}
+
+static bool sem_is_c_reserved_keyword(const char *name) {
+    static const char *kwords[] = {
+        "auto", "break", "case", "char", "const", "continue", "default",
+        "do", "double", "else", "enum", "extern", "float", "for", "goto",
+        "if", "inline", "int", "long", "register", "restrict", "return",
+        "short", "signed", "sizeof", "static", "struct", "switch",
+        "typedef", "union", "unsigned", "void", "volatile", "while",
+        "_Bool", "_Complex", "_Imaginary"
+    };
+    if (!name || !name[0]) return false;
+    for (size_t i = 0; i < sizeof(kwords) / sizeof(kwords[0]); i++) {
+        if (strcmp(name, kwords[i]) == 0) return true;
+    }
+    return false;
+}
+
+typedef enum {
+    CCT_SEM_MOLDE_FMT_INVALID = 0,
+    CCT_SEM_MOLDE_FMT_INT,
+    CCT_SEM_MOLDE_FMT_REAL,
+    CCT_SEM_MOLDE_FMT_STR,
+    CCT_SEM_MOLDE_FMT_ALIGN,
+} cct_sem_molde_fmt_kind_t;
+
+static cct_sem_molde_fmt_kind_t sem_classify_molde_fmt_spec(const char *spec) {
+    if (!spec || !spec[0]) return CCT_SEM_MOLDE_FMT_INVALID;
+
+    size_t len = strlen(spec);
+    if (len >= 1 && (spec[0] == '<' || spec[0] == '>')) {
+        if (len == 1) return CCT_SEM_MOLDE_FMT_INVALID;
+        for (size_t i = 1; i < len; i++) {
+            if (!isdigit((unsigned char)spec[i])) return CCT_SEM_MOLDE_FMT_INVALID;
+        }
+        return CCT_SEM_MOLDE_FMT_ALIGN;
+    }
+
+    size_t i = 0;
+    while (i < len && isdigit((unsigned char)spec[i])) i++;
+
+    bool saw_precision = false;
+    if (i < len && spec[i] == '.') {
+        saw_precision = true;
+        i++;
+        size_t prec_start = i;
+        while (i < len && isdigit((unsigned char)spec[i])) i++;
+        if (i == prec_start) return CCT_SEM_MOLDE_FMT_INVALID;
+    }
+
+    if (i + 1 != len) return CCT_SEM_MOLDE_FMT_INVALID;
+
+    switch (spec[i]) {
+        case 'd':
+        case 'u':
+        case 'x':
+        case 'X':
+            return saw_precision ? CCT_SEM_MOLDE_FMT_INVALID : CCT_SEM_MOLDE_FMT_INT;
+        case 'f':
+        case 'e':
+        case 'g':
+            return CCT_SEM_MOLDE_FMT_REAL;
+        case 's':
+            return saw_precision ? CCT_SEM_MOLDE_FMT_INVALID : CCT_SEM_MOLDE_FMT_STR;
+        default:
+            return CCT_SEM_MOLDE_FMT_INVALID;
+    }
+}
+
+static void sem_validate_molde_fmt_spec(
+    cct_semantic_analyzer_t *sem,
+    const cct_ast_node_t *at,
+    const cct_sem_type_t *type,
+    const char *spec
+) {
+    if (!spec || !spec[0] || !at) return;
+
+    cct_sem_molde_fmt_kind_t fmt_kind = sem_classify_molde_fmt_spec(spec);
+    if (fmt_kind == CCT_SEM_MOLDE_FMT_INVALID) {
+        sem_report_nodef(sem, at, "MOLDE: especificador de formato invalido: '%s'", spec);
+        return;
+    }
+
+    bool is_int = sem_is_integer_type(type);
+    bool is_real = sem_is_real_type(type);
+    bool is_str = (type && type->kind == CCT_SEM_TYPE_VERBUM);
+
+    if (fmt_kind == CCT_SEM_MOLDE_FMT_INT && !is_int) {
+        sem_report_nodef(sem, at, "MOLDE: especificador '%s' requer tipo inteiro", spec);
+        return;
+    }
+    if (fmt_kind == CCT_SEM_MOLDE_FMT_REAL && !is_real) {
+        sem_report_nodef(sem, at, "MOLDE: especificador '%s' requer tipo real", spec);
+        return;
+    }
+    if (fmt_kind == CCT_SEM_MOLDE_FMT_STR && !is_str) {
+        sem_report_node(sem, at, "MOLDE: especificador 's' requer tipo VERBUM");
+        return;
+    }
+    if (fmt_kind == CCT_SEM_MOLDE_FMT_ALIGN && !is_str) {
+        sem_report_node(sem, at, "MOLDE: alinhamento requer tipo VERBUM");
+    }
 }
 
 static bool sem_is_type_param_type(const cct_sem_type_t *type) {
@@ -1207,7 +1412,7 @@ static cct_sem_type_t* sem_resolve_ast_type(cct_semantic_analyzer_t *sem, const 
  * ======================================================================== */
 
 static const cct_sem_builtin_spec_t* sem_find_builtin(cct_semantic_analyzer_t *sem, const char *name) {
-    static cct_sem_builtin_spec_t specs[155];
+    static cct_sem_builtin_spec_t specs[283];
     static bool initialized = false;
 
     if (!initialized) {
@@ -1367,6 +1572,134 @@ static const cct_sem_builtin_spec_t* sem_find_builtin(cct_semantic_analyzer_t *s
         specs[152].name = "bytes_get"; specs[152].min_args = 2; specs[152].variadic = false;
         specs[153].name = "bytes_set"; specs[153].min_args = 3; specs[153].variadic = false;
         specs[154].name = "bytes_free"; specs[154].min_args = 1; specs[154].variadic = false;
+        specs[155].name = "verbum_starts_with"; specs[155].min_args = 2; specs[155].variadic = false;
+        specs[156].name = "verbum_ends_with"; specs[156].min_args = 2; specs[156].variadic = false;
+        specs[157].name = "verbum_strip_prefix"; specs[157].min_args = 2; specs[157].variadic = false;
+        specs[158].name = "verbum_strip_suffix"; specs[158].min_args = 2; specs[158].variadic = false;
+        specs[159].name = "verbum_replace"; specs[159].min_args = 3; specs[159].variadic = false;
+        specs[160].name = "verbum_replace_all"; specs[160].min_args = 3; specs[160].variadic = false;
+        specs[161].name = "verbum_to_upper"; specs[161].min_args = 1; specs[161].variadic = false;
+        specs[162].name = "verbum_to_lower"; specs[162].min_args = 1; specs[162].variadic = false;
+        specs[163].name = "verbum_trim_left"; specs[163].min_args = 1; specs[163].variadic = false;
+        specs[164].name = "verbum_trim_right"; specs[164].min_args = 1; specs[164].variadic = false;
+        specs[165].name = "verbum_trim_char"; specs[165].min_args = 2; specs[165].variadic = false;
+        specs[166].name = "verbum_repeat"; specs[166].min_args = 2; specs[166].variadic = false;
+        specs[167].name = "verbum_pad_left"; specs[167].min_args = 3; specs[167].variadic = false;
+        specs[168].name = "verbum_pad_right"; specs[168].min_args = 3; specs[168].variadic = false;
+        specs[169].name = "verbum_center"; specs[169].min_args = 3; specs[169].variadic = false;
+        specs[170].name = "verbum_last_find"; specs[170].min_args = 2; specs[170].variadic = false;
+        specs[171].name = "verbum_find_from"; specs[171].min_args = 3; specs[171].variadic = false;
+        specs[172].name = "verbum_count_occurrences"; specs[172].min_args = 2; specs[172].variadic = false;
+        specs[173].name = "verbum_reverse"; specs[173].min_args = 1; specs[173].variadic = false;
+        specs[174].name = "verbum_equals_ignore_case"; specs[174].min_args = 2; specs[174].variadic = false;
+        specs[175].name = "verbum_slice"; specs[175].min_args = 3; specs[175].variadic = false;
+        specs[176].name = "verbum_is_ascii"; specs[176].min_args = 1; specs[176].variadic = false;
+        specs[177].name = "fluxus_peek"; specs[177].min_args = 1; specs[177].variadic = false;
+        specs[178].name = "fluxus_set"; specs[178].min_args = 3; specs[178].variadic = false;
+        specs[179].name = "fluxus_remove"; specs[179].min_args = 2; specs[179].variadic = false;
+        specs[180].name = "fluxus_insert"; specs[180].min_args = 3; specs[180].variadic = false;
+        specs[181].name = "fluxus_contains"; specs[181].min_args = 2; specs[181].variadic = false;
+        specs[182].name = "fluxus_reverse"; specs[182].min_args = 1; specs[182].variadic = false;
+        specs[183].name = "fluxus_sort_int"; specs[183].min_args = 1; specs[183].variadic = false;
+        specs[184].name = "fluxus_sort_verbum"; specs[184].min_args = 1; specs[184].variadic = false;
+        specs[185].name = "fluxus_to_ptr"; specs[185].min_args = 1; specs[185].variadic = false;
+        specs[186].name = "verbum_split"; specs[186].min_args = 2; specs[186].variadic = false;
+        specs[187].name = "verbum_split_char"; specs[187].min_args = 2; specs[187].variadic = false;
+        specs[188].name = "verbum_join"; specs[188].min_args = 2; specs[188].variadic = false;
+        specs[189].name = "verbum_lines"; specs[189].min_args = 1; specs[189].variadic = false;
+        specs[190].name = "verbum_words"; specs[190].min_args = 1; specs[190].variadic = false;
+        specs[191].name = "fmt_stringify_int_hex"; specs[191].min_args = 1; specs[191].variadic = false;
+        specs[192].name = "fmt_stringify_int_hex_upper"; specs[192].min_args = 1; specs[192].variadic = false;
+        specs[193].name = "fmt_stringify_int_oct"; specs[193].min_args = 1; specs[193].variadic = false;
+        specs[194].name = "fmt_stringify_int_bin"; specs[194].min_args = 1; specs[194].variadic = false;
+        specs[195].name = "fmt_stringify_uint"; specs[195].min_args = 1; specs[195].variadic = false;
+        specs[196].name = "fmt_stringify_int_padded"; specs[196].min_args = 3; specs[196].variadic = false;
+        specs[197].name = "fmt_stringify_real_prec"; specs[197].min_args = 2; specs[197].variadic = false;
+        specs[198].name = "fmt_stringify_real_sci"; specs[198].min_args = 1; specs[198].variadic = false;
+        specs[199].name = "fmt_stringify_real_fixed"; specs[199].min_args = 2; specs[199].variadic = false;
+        specs[200].name = "fmt_format_1"; specs[200].min_args = 2; specs[200].variadic = false;
+        specs[201].name = "fmt_format_2"; specs[201].min_args = 3; specs[201].variadic = false;
+        specs[202].name = "fmt_format_3"; specs[202].min_args = 4; specs[202].variadic = false;
+        specs[203].name = "fmt_format_4"; specs[203].min_args = 5; specs[203].variadic = false;
+        specs[204].name = "fmt_repeat_char"; specs[204].min_args = 2; specs[204].variadic = false;
+        specs[205].name = "fmt_table_row"; specs[205].min_args = 3; specs[205].variadic = false;
+        specs[206].name = "parse_try_int"; specs[206].min_args = 1; specs[206].variadic = false;
+        specs[207].name = "parse_try_real"; specs[207].min_args = 1; specs[207].variadic = false;
+        specs[208].name = "parse_try_bool"; specs[208].min_args = 1; specs[208].variadic = false;
+        specs[209].name = "parse_int_hex"; specs[209].min_args = 1; specs[209].variadic = false;
+        specs[210].name = "parse_try_int_hex"; specs[210].min_args = 1; specs[210].variadic = false;
+        specs[211].name = "parse_int_radix"; specs[211].min_args = 2; specs[211].variadic = false;
+        specs[212].name = "parse_try_int_radix"; specs[212].min_args = 2; specs[212].variadic = false;
+        specs[213].name = "parse_is_int"; specs[213].min_args = 1; specs[213].variadic = false;
+        specs[214].name = "parse_is_real"; specs[214].min_args = 1; specs[214].variadic = false;
+        specs[215].name = "parse_csv_line"; specs[215].min_args = 2; specs[215].variadic = false;
+        specs[216].name = "fs_mkdir"; specs[216].min_args = 1; specs[216].variadic = false;
+        specs[217].name = "fs_mkdir_all"; specs[217].min_args = 1; specs[217].variadic = false;
+        specs[218].name = "fs_delete_file"; specs[218].min_args = 1; specs[218].variadic = false;
+        specs[219].name = "fs_delete_dir"; specs[219].min_args = 1; specs[219].variadic = false;
+        specs[220].name = "fs_rename"; specs[220].min_args = 2; specs[220].variadic = false;
+        specs[221].name = "fs_copy"; specs[221].min_args = 2; specs[221].variadic = false;
+        specs[222].name = "fs_move"; specs[222].min_args = 2; specs[222].variadic = false;
+        specs[223].name = "fs_is_file"; specs[223].min_args = 1; specs[223].variadic = false;
+        specs[224].name = "fs_is_dir"; specs[224].min_args = 1; specs[224].variadic = false;
+        specs[225].name = "fs_is_symlink"; specs[225].min_args = 1; specs[225].variadic = false;
+        specs[226].name = "fs_is_readable"; specs[226].min_args = 1; specs[226].variadic = false;
+        specs[227].name = "fs_is_writable"; specs[227].min_args = 1; specs[227].variadic = false;
+        specs[228].name = "fs_modified_time"; specs[228].min_args = 1; specs[228].variadic = false;
+        specs[229].name = "fs_chmod"; specs[229].min_args = 2; specs[229].variadic = false;
+        specs[230].name = "fs_list_dir"; specs[230].min_args = 1; specs[230].variadic = false;
+        specs[231].name = "fs_create_temp_file"; specs[231].min_args = 0; specs[231].variadic = false;
+        specs[232].name = "fs_create_temp_dir"; specs[232].min_args = 0; specs[232].variadic = false;
+        specs[233].name = "fs_truncate"; specs[233].min_args = 2; specs[233].variadic = false;
+        specs[234].name = "fs_symlink"; specs[234].min_args = 2; specs[234].variadic = false;
+        specs[235].name = "fs_same_file"; specs[235].min_args = 2; specs[235].variadic = false;
+        specs[236].name = "io_print_real"; specs[236].min_args = 1; specs[236].variadic = false;
+        specs[237].name = "io_print_char"; specs[237].min_args = 1; specs[237].variadic = false;
+        specs[238].name = "io_eprint"; specs[238].min_args = 1; specs[238].variadic = false;
+        specs[239].name = "io_eprintln"; specs[239].min_args = 1; specs[239].variadic = false;
+        specs[240].name = "io_eprint_int"; specs[240].min_args = 1; specs[240].variadic = false;
+        specs[241].name = "io_eprint_real"; specs[241].min_args = 1; specs[241].variadic = false;
+        specs[242].name = "io_flush"; specs[242].min_args = 0; specs[242].variadic = false;
+        specs[243].name = "io_flush_err"; specs[243].min_args = 0; specs[243].variadic = false;
+        specs[244].name = "io_read_char"; specs[244].min_args = 0; specs[244].variadic = false;
+        specs[245].name = "io_is_tty"; specs[245].min_args = 0; specs[245].variadic = false;
+        specs[246].name = "path_stem"; specs[246].min_args = 1; specs[246].variadic = false;
+        specs[247].name = "path_normalize"; specs[247].min_args = 1; specs[247].variadic = false;
+        specs[248].name = "path_is_absolute"; specs[248].min_args = 1; specs[248].variadic = false;
+        specs[249].name = "path_resolve"; specs[249].min_args = 1; specs[249].variadic = false;
+        specs[250].name = "path_relative_to"; specs[250].min_args = 2; specs[250].variadic = false;
+        specs[251].name = "path_with_ext"; specs[251].min_args = 2; specs[251].variadic = false;
+        specs[252].name = "path_without_ext"; specs[252].min_args = 1; specs[252].variadic = false;
+        specs[253].name = "path_home_dir"; specs[253].min_args = 0; specs[253].variadic = false;
+        specs[254].name = "path_temp_dir"; specs[254].min_args = 0; specs[254].variadic = false;
+        specs[255].name = "path_split"; specs[255].min_args = 1; specs[255].variadic = false;
+        specs[256].name = "set_union"; specs[256].min_args = 3; specs[256].variadic = false;
+        specs[257].name = "set_intersection"; specs[257].min_args = 3; specs[257].variadic = false;
+        specs[258].name = "set_difference"; specs[258].min_args = 3; specs[258].variadic = false;
+        specs[259].name = "set_symmetric_difference"; specs[259].min_args = 3; specs[259].variadic = false;
+        specs[260].name = "set_is_subset"; specs[260].min_args = 3; specs[260].variadic = false;
+        specs[261].name = "set_equals"; specs[261].min_args = 3; specs[261].variadic = false;
+        specs[262].name = "set_copy"; specs[262].min_args = 2; specs[262].variadic = false;
+        specs[263].name = "set_to_fluxus"; specs[263].min_args = 2; specs[263].variadic = false;
+        specs[264].name = "set_reserve"; specs[264].min_args = 2; specs[264].variadic = false;
+        specs[265].name = "set_capacity"; specs[265].min_args = 1; specs[265].variadic = false;
+        specs[266].name = "map_copy"; specs[266].min_args = 1; specs[266].variadic = false;
+        specs[267].name = "map_keys"; specs[267].min_args = 2; specs[267].variadic = false;
+        specs[268].name = "map_values"; specs[268].min_args = 2; specs[268].variadic = false;
+        specs[269].name = "map_merge"; specs[269].min_args = 2; specs[269].variadic = false;
+        specs[270].name = "alg_sort_verbum"; specs[270].min_args = 2; specs[270].variadic = false;
+        specs[271].name = "process_run"; specs[271].min_args = 1; specs[271].variadic = false;
+        specs[272].name = "process_run_capture"; specs[272].min_args = 1; specs[272].variadic = false;
+        specs[273].name = "process_run_with_input"; specs[273].min_args = 2; specs[273].variadic = false;
+        specs[274].name = "process_run_env"; specs[274].min_args = 2; specs[274].variadic = false;
+        specs[275].name = "process_run_timeout"; specs[275].min_args = 2; specs[275].variadic = false;
+        specs[276].name = "hash_fnv1a_bytes"; specs[276].min_args = 2; specs[276].variadic = false;
+        specs[277].name = "hash_crc32"; specs[277].min_args = 1; specs[277].variadic = false;
+        specs[278].name = "hash_murmur3"; specs[278].min_args = 2; specs[278].variadic = false;
+        specs[279].name = "random_verbum"; specs[279].min_args = 1; specs[279].variadic = false;
+        specs[280].name = "random_verbum_from"; specs[280].min_args = 2; specs[280].variadic = false;
+        specs[281].name = "random_shuffle_int"; specs[281].min_args = 2; specs[281].variadic = false;
+        specs[282].name = "random_bytes"; specs[282].min_args = 1; specs[282].variadic = false;
         initialized = true;
     }
 
@@ -1525,6 +1858,134 @@ static const cct_sem_builtin_spec_t* sem_find_builtin(cct_semantic_analyzer_t *s
     specs[152].return_type = &sem->type_miles;
     specs[153].return_type = &sem->type_nihil;
     specs[154].return_type = &sem->type_nihil;
+    specs[155].return_type = &sem->type_verum;
+    specs[156].return_type = &sem->type_verum;
+    specs[157].return_type = &sem->type_verbum;
+    specs[158].return_type = &sem->type_verbum;
+    specs[159].return_type = &sem->type_verbum;
+    specs[160].return_type = &sem->type_verbum;
+    specs[161].return_type = &sem->type_verbum;
+    specs[162].return_type = &sem->type_verbum;
+    specs[163].return_type = &sem->type_verbum;
+    specs[164].return_type = &sem->type_verbum;
+    specs[165].return_type = &sem->type_verbum;
+    specs[166].return_type = &sem->type_verbum;
+    specs[167].return_type = &sem->type_verbum;
+    specs[168].return_type = &sem->type_verbum;
+    specs[169].return_type = &sem->type_verbum;
+    specs[170].return_type = &sem->type_rex;
+    specs[171].return_type = &sem->type_rex;
+    specs[172].return_type = &sem->type_rex;
+    specs[173].return_type = &sem->type_verbum;
+    specs[174].return_type = &sem->type_verum;
+    specs[175].return_type = &sem->type_verbum;
+    specs[176].return_type = &sem->type_verum;
+    specs[177].return_type = sem_make_pointer_type(sem, &sem->type_nihil);
+    specs[178].return_type = &sem->type_nihil;
+    specs[179].return_type = &sem->type_nihil;
+    specs[180].return_type = &sem->type_nihil;
+    specs[181].return_type = &sem->type_verum;
+    specs[182].return_type = &sem->type_nihil;
+    specs[183].return_type = &sem->type_nihil;
+    specs[184].return_type = &sem->type_nihil;
+    specs[185].return_type = sem_make_pointer_type(sem, &sem->type_nihil);
+    specs[186].return_type = sem_make_pointer_type(sem, &sem->type_nihil);
+    specs[187].return_type = sem_make_pointer_type(sem, &sem->type_nihil);
+    specs[188].return_type = &sem->type_verbum;
+    specs[189].return_type = sem_make_pointer_type(sem, &sem->type_nihil);
+    specs[190].return_type = sem_make_pointer_type(sem, &sem->type_nihil);
+    specs[191].return_type = &sem->type_verbum;
+    specs[192].return_type = &sem->type_verbum;
+    specs[193].return_type = &sem->type_verbum;
+    specs[194].return_type = &sem->type_verbum;
+    specs[195].return_type = &sem->type_verbum;
+    specs[196].return_type = &sem->type_verbum;
+    specs[197].return_type = &sem->type_verbum;
+    specs[198].return_type = &sem->type_verbum;
+    specs[199].return_type = &sem->type_verbum;
+    specs[200].return_type = &sem->type_verbum;
+    specs[201].return_type = &sem->type_verbum;
+    specs[202].return_type = &sem->type_verbum;
+    specs[203].return_type = &sem->type_verbum;
+    specs[204].return_type = &sem->type_verbum;
+    specs[205].return_type = &sem->type_verbum;
+    specs[206].return_type = sem_make_pointer_type(sem, &sem->type_nihil);
+    specs[207].return_type = sem_make_pointer_type(sem, &sem->type_nihil);
+    specs[208].return_type = sem_make_pointer_type(sem, &sem->type_nihil);
+    specs[209].return_type = &sem->type_rex;
+    specs[210].return_type = sem_make_pointer_type(sem, &sem->type_nihil);
+    specs[211].return_type = &sem->type_rex;
+    specs[212].return_type = sem_make_pointer_type(sem, &sem->type_nihil);
+    specs[213].return_type = &sem->type_verum;
+    specs[214].return_type = &sem->type_verum;
+    specs[215].return_type = sem_make_pointer_type(sem, &sem->type_nihil);
+    specs[216].return_type = &sem->type_nihil;
+    specs[217].return_type = &sem->type_nihil;
+    specs[218].return_type = &sem->type_nihil;
+    specs[219].return_type = &sem->type_nihil;
+    specs[220].return_type = &sem->type_nihil;
+    specs[221].return_type = &sem->type_nihil;
+    specs[222].return_type = &sem->type_nihil;
+    specs[223].return_type = &sem->type_verum;
+    specs[224].return_type = &sem->type_verum;
+    specs[225].return_type = &sem->type_verum;
+    specs[226].return_type = &sem->type_verum;
+    specs[227].return_type = &sem->type_verum;
+    specs[228].return_type = &sem->type_rex;
+    specs[229].return_type = &sem->type_nihil;
+    specs[230].return_type = sem_make_pointer_type(sem, &sem->type_nihil);
+    specs[231].return_type = &sem->type_verbum;
+    specs[232].return_type = &sem->type_verbum;
+    specs[233].return_type = &sem->type_nihil;
+    specs[234].return_type = &sem->type_nihil;
+    specs[235].return_type = &sem->type_verum;
+    specs[236].return_type = &sem->type_nihil;
+    specs[237].return_type = &sem->type_nihil;
+    specs[238].return_type = &sem->type_nihil;
+    specs[239].return_type = &sem->type_nihil;
+    specs[240].return_type = &sem->type_nihil;
+    specs[241].return_type = &sem->type_nihil;
+    specs[242].return_type = &sem->type_nihil;
+    specs[243].return_type = &sem->type_nihil;
+    specs[244].return_type = &sem->type_miles;
+    specs[245].return_type = &sem->type_verum;
+    specs[246].return_type = &sem->type_verbum;
+    specs[247].return_type = &sem->type_verbum;
+    specs[248].return_type = &sem->type_verum;
+    specs[249].return_type = &sem->type_verbum;
+    specs[250].return_type = &sem->type_verbum;
+    specs[251].return_type = &sem->type_verbum;
+    specs[252].return_type = &sem->type_verbum;
+    specs[253].return_type = &sem->type_verbum;
+    specs[254].return_type = &sem->type_verbum;
+    specs[255].return_type = sem_make_pointer_type(sem, &sem->type_nihil);
+    specs[256].return_type = sem_make_pointer_type(sem, &sem->type_nihil);
+    specs[257].return_type = sem_make_pointer_type(sem, &sem->type_nihil);
+    specs[258].return_type = sem_make_pointer_type(sem, &sem->type_nihil);
+    specs[259].return_type = sem_make_pointer_type(sem, &sem->type_nihil);
+    specs[260].return_type = &sem->type_verum;
+    specs[261].return_type = &sem->type_verum;
+    specs[262].return_type = sem_make_pointer_type(sem, &sem->type_nihil);
+    specs[263].return_type = sem_make_pointer_type(sem, &sem->type_nihil);
+    specs[264].return_type = &sem->type_nihil;
+    specs[265].return_type = &sem->type_rex;
+    specs[266].return_type = sem_make_pointer_type(sem, &sem->type_nihil);
+    specs[267].return_type = sem_make_pointer_type(sem, &sem->type_nihil);
+    specs[268].return_type = sem_make_pointer_type(sem, &sem->type_nihil);
+    specs[269].return_type = &sem->type_nihil;
+    specs[270].return_type = &sem->type_nihil;
+    specs[271].return_type = &sem->type_rex;
+    specs[272].return_type = &sem->type_verbum;
+    specs[273].return_type = &sem->type_verbum;
+    specs[274].return_type = &sem->type_rex;
+    specs[275].return_type = &sem->type_rex;
+    specs[276].return_type = &sem->type_rex;
+    specs[277].return_type = &sem->type_rex;
+    specs[278].return_type = &sem->type_rex;
+    specs[279].return_type = &sem->type_verbum;
+    specs[280].return_type = &sem->type_verbum;
+    specs[281].return_type = &sem->type_nihil;
+    specs[282].return_type = sem_make_pointer_type(sem, &sem->type_nihil);
 
     for (size_t i = 0; i < sizeof(specs) / sizeof(specs[0]); i++) {
         if (!specs[i].name) continue;
@@ -1607,6 +2068,8 @@ static const char* sem_forbidden_module_for_obsecro_in_freestanding(const char *
     if (sem_str_has_prefix(name, "env_")) return "cct/env";
     if (sem_str_has_prefix(name, "time_")) return "cct/time";
     if (sem_str_has_prefix(name, "bytes_")) return "cct/bytes";
+    if (sem_str_has_prefix(name, "process_")) return "cct/process";
+    if (sem_str_has_prefix(name, "hash_")) return "cct/hash";
 
     return NULL;
 }
@@ -1616,8 +2079,147 @@ static const char* sem_forbidden_module_for_obsecro_in_freestanding(const char *
  * ======================================================================== */
 
 static cct_sem_type_t* sem_analyze_expr(cct_semantic_analyzer_t *sem, const cct_ast_node_t *expr);
+static cct_sem_type_t* sem_analyze_expr_with_expected(cct_semantic_analyzer_t *sem, const cct_ast_node_t *expr, cct_sem_type_t *expected);
 static void sem_analyze_stmt(cct_semantic_analyzer_t *sem, const cct_ast_node_t *stmt);
 static void sem_analyze_block(cct_semantic_analyzer_t *sem, const cct_ast_node_t *block, bool create_scope);
+static cct_sem_type_t* sem_analyze_molde_expr(cct_semantic_analyzer_t *sem, const cct_ast_node_t *expr);
+static const cct_ast_node_t* sem_resolve_ordo_decl_from_type(cct_semantic_analyzer_t *sem, const cct_sem_type_t *type);
+static cct_ast_ordo_variant_t* sem_find_ordo_variant(const cct_ast_node_t *ordo_decl, const char *variant_name, size_t *index_out);
+static bool sem_identifier_is_any_ordo_variant(cct_semantic_analyzer_t *sem, const char *name);
+
+static void sem_set_symbol_iter_collection_info(
+    cct_sem_symbol_t *sym,
+    cct_sem_iter_collection_kind_t kind,
+    cct_sem_type_t *key_type,
+    cct_sem_type_t *value_type
+) {
+    if (!sym) return;
+    sym->iter_collection_kind = kind;
+    sym->iter_key_type = key_type;
+    sym->iter_value_type = value_type;
+}
+
+static bool sem_extract_iter_collection_from_coniura(
+    cct_semantic_analyzer_t *sem,
+    const cct_ast_node_t *expr,
+    cct_sem_iter_collection_kind_t *kind_out,
+    cct_sem_type_t **key_type_out,
+    cct_sem_type_t **value_type_out
+) {
+    if (!expr || expr->type != AST_CONIURA || !expr->as.coniura.name) return false;
+
+    const char *name = expr->as.coniura.name;
+    const cct_ast_type_list_t *type_args = expr->as.coniura.type_args;
+    if (strcmp(name, "map_init") == 0 || strcmp(name, "map_copy") == 0) {
+        if (kind_out) *kind_out = CCT_SEM_ITER_COLLECTION_MAP;
+        if (key_type_out) {
+            *key_type_out = (type_args && type_args->count >= 1)
+                ? sem_resolve_ast_type(sem, type_args->types[0], expr->line, expr->column)
+                : NULL;
+        }
+        if (value_type_out) {
+            *value_type_out = (type_args && type_args->count >= 2)
+                ? sem_resolve_ast_type(sem, type_args->types[1], expr->line, expr->column)
+                : NULL;
+        }
+        return true;
+    }
+
+    if (strcmp(name, "set_init") == 0 || strcmp(name, "set_copy") == 0) {
+        if (kind_out) *kind_out = CCT_SEM_ITER_COLLECTION_SET;
+        if (key_type_out) {
+            *key_type_out = (type_args && type_args->count >= 1)
+                ? sem_resolve_ast_type(sem, type_args->types[0], expr->line, expr->column)
+                : NULL;
+        }
+        if (value_type_out) {
+            *value_type_out = (type_args && type_args->count >= 1)
+                ? sem_resolve_ast_type(sem, type_args->types[0], expr->line, expr->column)
+                : NULL;
+        }
+        return true;
+    }
+
+    if (strcmp(name, "fluxus_init") == 0 ||
+        strcmp(name, "fluxus_copy") == 0 ||
+        strcmp(name, "fluxus_concat") == 0 ||
+        strcmp(name, "fluxus_slice") == 0 ||
+        strcmp(name, "fluxus_map") == 0 ||
+        strcmp(name, "fluxus_filter") == 0) {
+        if (kind_out) *kind_out = CCT_SEM_ITER_COLLECTION_FLUXUS;
+        if (key_type_out) *key_type_out = NULL;
+        if (value_type_out) *value_type_out = NULL;
+        return true;
+    }
+
+    return false;
+}
+
+static bool sem_extract_iter_collection_from_obsecro(
+    const cct_ast_node_t *expr,
+    cct_sem_iter_collection_kind_t *kind_out
+) {
+    if (!expr || expr->type != AST_OBSECRO || !expr->as.obsecro.name) return false;
+    const char *name = expr->as.obsecro.name;
+    if (strcmp(name, "map_init") == 0 || strcmp(name, "map_copy") == 0) {
+        if (kind_out) *kind_out = CCT_SEM_ITER_COLLECTION_MAP;
+        return true;
+    }
+    if (strcmp(name, "set_init") == 0 || strcmp(name, "set_copy") == 0) {
+        if (kind_out) *kind_out = CCT_SEM_ITER_COLLECTION_SET;
+        return true;
+    }
+    if (strcmp(name, "fluxus_init") == 0) {
+        if (kind_out) *kind_out = CCT_SEM_ITER_COLLECTION_FLUXUS;
+        return true;
+    }
+    return false;
+}
+
+static void sem_infer_iter_collection_from_expr(
+    cct_semantic_analyzer_t *sem,
+    const cct_ast_node_t *expr,
+    cct_sem_iter_collection_kind_t *kind_out,
+    cct_sem_type_t **key_type_out,
+    cct_sem_type_t **value_type_out
+) {
+    cct_sem_iter_collection_kind_t kind = CCT_SEM_ITER_COLLECTION_NONE;
+    cct_sem_type_t *key_type = NULL;
+    cct_sem_type_t *value_type = NULL;
+
+    if (!expr) {
+        if (kind_out) *kind_out = kind;
+        if (key_type_out) *key_type_out = key_type;
+        if (value_type_out) *value_type_out = value_type;
+        return;
+    }
+
+    if (expr->type == AST_IDENTIFIER && expr->as.identifier.name) {
+        cct_sem_symbol_t *sym = sem_lookup(sem, expr->as.identifier.name);
+        if (sym) {
+            kind = sym->iter_collection_kind;
+            key_type = sym->iter_key_type;
+            value_type = sym->iter_value_type;
+            if (kind == CCT_SEM_ITER_COLLECTION_NONE &&
+                sym->type &&
+                sym->type->kind == CCT_SEM_TYPE_POINTER &&
+                sym->type->element &&
+                sym->type->element->kind == CCT_SEM_TYPE_NIHIL) {
+                kind = CCT_SEM_ITER_COLLECTION_FLUXUS;
+            }
+        }
+    }
+
+    if (kind == CCT_SEM_ITER_COLLECTION_NONE) {
+        if (!sem_extract_iter_collection_from_coniura(sem, expr, &kind, &key_type, &value_type)) {
+            (void)sem_extract_iter_collection_from_obsecro(expr, &kind);
+        }
+    }
+
+    if (kind_out) *kind_out = kind;
+    if (key_type_out) *key_type_out = key_type;
+    if (value_type_out) *value_type_out = value_type;
+}
 
 static bool sem_is_addressable_lvalue_node(const cct_ast_node_t *node) {
     if (!node) return false;
@@ -1814,7 +2416,7 @@ static cct_sem_type_t* sem_analyze_call_like_function(
             }
         }
         if (!arg_type) {
-            arg_type = sem_analyze_expr(sem, args->nodes[i]);
+            arg_type = sem_analyze_expr_with_expected(sem, args->nodes[i], expected_type);
         }
         if (i < n && !sem_types_compatible_assign(sem, expected_type, arg_type)) {
             sem_report_nodef(sem, args->nodes[i],
@@ -1969,6 +2571,119 @@ static cct_sem_type_t* sem_analyze_builtin_obsecro(
             sem_report_nodef(sem, expr->as.obsecro.arguments->nodes[i],
                              "OBSECRO verbum_from_char expects integer byte argument");
         }
+        if ((strcmp(name, "verbum_to_upper") == 0 ||
+             strcmp(name, "verbum_to_lower") == 0 ||
+             strcmp(name, "verbum_trim_left") == 0 ||
+             strcmp(name, "verbum_trim_right") == 0 ||
+             strcmp(name, "verbum_reverse") == 0 ||
+             strcmp(name, "verbum_is_ascii") == 0) &&
+            i == 0 &&
+            !(arg_type && (arg_type->kind == CCT_SEM_TYPE_VERBUM || sem_is_error_type(arg_type)))) {
+            sem_report_nodef(sem, expr->as.obsecro.arguments->nodes[i],
+                             "OBSECRO %s expects VERBUM argument", name);
+        }
+        if ((strcmp(name, "verbum_starts_with") == 0 ||
+             strcmp(name, "verbum_ends_with") == 0 ||
+             strcmp(name, "verbum_strip_prefix") == 0 ||
+             strcmp(name, "verbum_strip_suffix") == 0 ||
+             strcmp(name, "verbum_last_find") == 0 ||
+             strcmp(name, "verbum_count_occurrences") == 0 ||
+             strcmp(name, "verbum_equals_ignore_case") == 0) &&
+            !(arg_type && (arg_type->kind == CCT_SEM_TYPE_VERBUM || sem_is_error_type(arg_type)))) {
+            sem_report_nodef(sem, expr->as.obsecro.arguments->nodes[i],
+                             "OBSECRO %s expects VERBUM arguments", name);
+        }
+        if ((strcmp(name, "verbum_replace") == 0 ||
+             strcmp(name, "verbum_replace_all") == 0) &&
+            !(arg_type && (arg_type->kind == CCT_SEM_TYPE_VERBUM || sem_is_error_type(arg_type)))) {
+            sem_report_nodef(sem, expr->as.obsecro.arguments->nodes[i],
+                             "OBSECRO %s expects VERBUM arguments", name);
+        }
+        if (strcmp(name, "verbum_trim_char") == 0) {
+            if (i == 0 && !(arg_type && (arg_type->kind == CCT_SEM_TYPE_VERBUM || sem_is_error_type(arg_type)))) {
+                sem_report_nodef(sem, expr->as.obsecro.arguments->nodes[i],
+                                 "OBSECRO verbum_trim_char expects first argument as VERBUM");
+            }
+            if (i == 1 && !(sem_is_integer_type(arg_type) || sem_is_error_type(arg_type))) {
+                sem_report_nodef(sem, expr->as.obsecro.arguments->nodes[i],
+                                 "OBSECRO verbum_trim_char expects integer fill byte");
+            }
+        }
+        if (strcmp(name, "verbum_repeat") == 0) {
+            if (i == 0 && !(arg_type && (arg_type->kind == CCT_SEM_TYPE_VERBUM || sem_is_error_type(arg_type)))) {
+                sem_report_nodef(sem, expr->as.obsecro.arguments->nodes[i],
+                                 "OBSECRO verbum_repeat expects first argument as VERBUM");
+            }
+            if (i == 1 && !(sem_is_integer_type(arg_type) || sem_is_error_type(arg_type))) {
+                sem_report_nodef(sem, expr->as.obsecro.arguments->nodes[i],
+                                 "OBSECRO verbum_repeat expects integer repeat count");
+            }
+        }
+        if (strcmp(name, "verbum_pad_left") == 0 ||
+            strcmp(name, "verbum_pad_right") == 0 ||
+            strcmp(name, "verbum_center") == 0) {
+            if (i == 0 && !(arg_type && (arg_type->kind == CCT_SEM_TYPE_VERBUM || sem_is_error_type(arg_type)))) {
+                sem_report_nodef(sem, expr->as.obsecro.arguments->nodes[i],
+                                 "OBSECRO %s expects first argument as VERBUM", name);
+            }
+            if ((i == 1 || i == 2) && !(sem_is_integer_type(arg_type) || sem_is_error_type(arg_type))) {
+                sem_report_nodef(sem, expr->as.obsecro.arguments->nodes[i],
+                                 "OBSECRO %s expects integer width/fill arguments", name);
+            }
+        }
+        if (strcmp(name, "verbum_find_from") == 0) {
+            if ((i == 0 || i == 1) &&
+                !(arg_type && (arg_type->kind == CCT_SEM_TYPE_VERBUM || sem_is_error_type(arg_type)))) {
+                sem_report_nodef(sem, expr->as.obsecro.arguments->nodes[i],
+                                 "OBSECRO verbum_find_from expects first two arguments as VERBUM");
+            }
+            if (i == 2 && !(sem_is_integer_type(arg_type) || sem_is_error_type(arg_type))) {
+                sem_report_nodef(sem, expr->as.obsecro.arguments->nodes[i],
+                                 "OBSECRO verbum_find_from expects integer offset");
+            }
+        }
+        if (strcmp(name, "verbum_slice") == 0) {
+            if (i == 0 && !(arg_type && (arg_type->kind == CCT_SEM_TYPE_VERBUM || sem_is_error_type(arg_type)))) {
+                sem_report_nodef(sem, expr->as.obsecro.arguments->nodes[i],
+                                 "OBSECRO verbum_slice expects first argument as VERBUM");
+            }
+            if ((i == 1 || i == 2) && !(sem_is_integer_type(arg_type) || sem_is_error_type(arg_type))) {
+                sem_report_nodef(sem, expr->as.obsecro.arguments->nodes[i],
+                                 "OBSECRO verbum_slice expects integer start/length arguments");
+            }
+        }
+        if (strcmp(name, "verbum_split") == 0) {
+            if (!(arg_type && (arg_type->kind == CCT_SEM_TYPE_VERBUM || sem_is_error_type(arg_type)))) {
+                sem_report_nodef(sem, expr->as.obsecro.arguments->nodes[i],
+                                 "OBSECRO verbum_split expects VERBUM arguments");
+            }
+        }
+        if (strcmp(name, "verbum_split_char") == 0) {
+            if (i == 0 && !(arg_type && (arg_type->kind == CCT_SEM_TYPE_VERBUM || sem_is_error_type(arg_type)))) {
+                sem_report_nodef(sem, expr->as.obsecro.arguments->nodes[i],
+                                 "OBSECRO verbum_split_char expects first argument as VERBUM");
+            }
+            if (i == 1 && !(sem_is_integer_type(arg_type) || sem_is_error_type(arg_type))) {
+                sem_report_nodef(sem, expr->as.obsecro.arguments->nodes[i],
+                                 "OBSECRO verbum_split_char expects integer separator byte");
+            }
+        }
+        if (strcmp(name, "verbum_join") == 0) {
+            if (i == 0 && !(arg_type && (arg_type->kind == CCT_SEM_TYPE_POINTER || sem_is_error_type(arg_type)))) {
+                sem_report_nodef(sem, expr->as.obsecro.arguments->nodes[i],
+                                 "OBSECRO verbum_join expects fluxus pointer as first argument");
+            }
+            if (i == 1 && !(arg_type && (arg_type->kind == CCT_SEM_TYPE_VERBUM || sem_is_error_type(arg_type)))) {
+                sem_report_nodef(sem, expr->as.obsecro.arguments->nodes[i],
+                                 "OBSECRO verbum_join expects VERBUM separator as second argument");
+            }
+        }
+        if ((strcmp(name, "verbum_lines") == 0 || strcmp(name, "verbum_words") == 0) &&
+            i == 0 &&
+            !(arg_type && (arg_type->kind == CCT_SEM_TYPE_VERBUM || sem_is_error_type(arg_type)))) {
+            sem_report_nodef(sem, expr->as.obsecro.arguments->nodes[i],
+                             "OBSECRO %s expects VERBUM argument", name);
+        }
         if ((strcmp(name, "char_is_digit") == 0 ||
              strcmp(name, "char_is_alpha") == 0 ||
              strcmp(name, "char_is_whitespace") == 0) &&
@@ -2079,6 +2794,16 @@ static cct_sem_type_t* sem_analyze_builtin_obsecro(
             sem_report_nodef(sem, expr->as.obsecro.arguments->nodes[i],
                              "OBSECRO fmt_stringify_int expects integer argument");
         }
+        if ((strcmp(name, "fmt_stringify_int_hex") == 0 ||
+             strcmp(name, "fmt_stringify_int_hex_upper") == 0 ||
+             strcmp(name, "fmt_stringify_int_oct") == 0 ||
+             strcmp(name, "fmt_stringify_int_bin") == 0 ||
+             strcmp(name, "fmt_stringify_uint") == 0) &&
+            i == 0 &&
+            !(sem_is_integer_type(arg_type) || sem_is_error_type(arg_type))) {
+            sem_report_nodef(sem, expr->as.obsecro.arguments->nodes[i],
+                             "OBSECRO %s expects integer argument", name);
+        }
         if (strcmp(name, "fmt_stringify_real") == 0 && i == 0 &&
             !(arg_type && (arg_type->kind == CCT_SEM_TYPE_UMBRA || sem_is_error_type(arg_type)))) {
             sem_report_nodef(sem, expr->as.obsecro.arguments->nodes[i],
@@ -2093,6 +2818,94 @@ static cct_sem_type_t* sem_analyze_builtin_obsecro(
             i == 0 && !(arg_type && (arg_type->kind == CCT_SEM_TYPE_VERBUM || sem_is_error_type(arg_type)))) {
             sem_report_nodef(sem, expr->as.obsecro.arguments->nodes[i],
                              "OBSECRO %s expects VERBUM argument", name);
+        }
+        if ((strcmp(name, "parse_try_int") == 0 ||
+             strcmp(name, "parse_try_real") == 0 ||
+             strcmp(name, "parse_try_bool") == 0 ||
+             strcmp(name, "parse_int_hex") == 0 ||
+             strcmp(name, "parse_try_int_hex") == 0 ||
+             strcmp(name, "parse_is_int") == 0 ||
+             strcmp(name, "parse_is_real") == 0) &&
+            i == 0 &&
+            !(arg_type && (arg_type->kind == CCT_SEM_TYPE_VERBUM || sem_is_error_type(arg_type)))) {
+            sem_report_nodef(sem, expr->as.obsecro.arguments->nodes[i],
+                             "OBSECRO %s expects VERBUM argument", name);
+        }
+        if ((strcmp(name, "parse_int_radix") == 0 ||
+             strcmp(name, "parse_try_int_radix") == 0)) {
+            if (i == 0 &&
+                !(arg_type && (arg_type->kind == CCT_SEM_TYPE_VERBUM || sem_is_error_type(arg_type)))) {
+                sem_report_nodef(sem, expr->as.obsecro.arguments->nodes[i],
+                                 "OBSECRO %s expects VERBUM as first argument", name);
+            }
+            if (i == 1 &&
+                !(sem_is_integer_type(arg_type) || sem_is_error_type(arg_type))) {
+                sem_report_nodef(sem, expr->as.obsecro.arguments->nodes[i],
+                                 "OBSECRO %s expects integer radix as second argument", name);
+            }
+        }
+        if (strcmp(name, "parse_csv_line") == 0) {
+            if (i == 0 &&
+                !(arg_type && (arg_type->kind == CCT_SEM_TYPE_VERBUM || sem_is_error_type(arg_type)))) {
+                sem_report_nodef(sem, expr->as.obsecro.arguments->nodes[i],
+                                 "OBSECRO parse_csv_line expects VERBUM as first argument");
+            }
+            if (i == 1 &&
+                !(sem_is_integer_type(arg_type) || sem_is_error_type(arg_type))) {
+                sem_report_nodef(sem, expr->as.obsecro.arguments->nodes[i],
+                                 "OBSECRO parse_csv_line expects integer separator byte as second argument");
+            }
+        }
+        if (strcmp(name, "fmt_stringify_int_padded") == 0) {
+            if ((i == 0 || i == 1 || i == 2) &&
+                !(sem_is_integer_type(arg_type) || sem_is_error_type(arg_type))) {
+                sem_report_nodef(sem, expr->as.obsecro.arguments->nodes[i],
+                                 "OBSECRO fmt_stringify_int_padded expects integer arguments");
+            }
+        }
+        if (strcmp(name, "fmt_stringify_real_prec") == 0 ||
+            strcmp(name, "fmt_stringify_real_fixed") == 0) {
+            if (i == 0 && !(arg_type && (arg_type->kind == CCT_SEM_TYPE_UMBRA || sem_is_error_type(arg_type)))) {
+                sem_report_nodef(sem, expr->as.obsecro.arguments->nodes[i],
+                                 "OBSECRO %s expects UMBRA first argument", name);
+            }
+            if (i == 1 && !(sem_is_integer_type(arg_type) || sem_is_error_type(arg_type))) {
+                sem_report_nodef(sem, expr->as.obsecro.arguments->nodes[i],
+                                 "OBSECRO %s expects integer precision argument", name);
+            }
+        }
+        if (strcmp(name, "fmt_stringify_real_sci") == 0 &&
+            i == 0 &&
+            !(arg_type && (arg_type->kind == CCT_SEM_TYPE_UMBRA || sem_is_error_type(arg_type)))) {
+            sem_report_nodef(sem, expr->as.obsecro.arguments->nodes[i],
+                             "OBSECRO fmt_stringify_real_sci expects UMBRA argument");
+        }
+        if ((strcmp(name, "fmt_format_1") == 0 ||
+             strcmp(name, "fmt_format_2") == 0 ||
+             strcmp(name, "fmt_format_3") == 0 ||
+             strcmp(name, "fmt_format_4") == 0) &&
+            !(arg_type && (arg_type->kind == CCT_SEM_TYPE_VERBUM || sem_is_error_type(arg_type)))) {
+            sem_report_nodef(sem, expr->as.obsecro.arguments->nodes[i],
+                             "OBSECRO %s expects VERBUM arguments", name);
+        }
+        if (strcmp(name, "fmt_repeat_char") == 0) {
+            if ((i == 0 || i == 1) &&
+                !(sem_is_integer_type(arg_type) || sem_is_error_type(arg_type))) {
+                sem_report_nodef(sem, expr->as.obsecro.arguments->nodes[i],
+                                 "OBSECRO fmt_repeat_char expects integer arguments");
+            }
+        }
+        if (strcmp(name, "fmt_table_row") == 0) {
+            if ((i == 0 || i == 1) &&
+                !(arg_type && (arg_type->kind == CCT_SEM_TYPE_POINTER || sem_is_error_type(arg_type)))) {
+                sem_report_nodef(sem, expr->as.obsecro.arguments->nodes[i],
+                                 "OBSECRO fmt_table_row expects pointer arguments for parts/widths");
+            }
+            if (i == 2 &&
+                !(sem_is_integer_type(arg_type) || sem_is_error_type(arg_type))) {
+                sem_report_nodef(sem, expr->as.obsecro.arguments->nodes[i],
+                                 "OBSECRO fmt_table_row expects integer ncols argument");
+            }
         }
         if (strcmp(name, "mem_alloc") == 0 && i == 0 &&
             !(sem_is_integer_type(arg_type) || sem_is_error_type(arg_type))) {
@@ -2170,7 +2983,12 @@ static cct_sem_type_t* sem_analyze_builtin_obsecro(
         if ((strcmp(name, "fluxus_free") == 0 || strcmp(name, "fluxus_push") == 0 ||
              strcmp(name, "fluxus_pop") == 0 || strcmp(name, "fluxus_len") == 0 ||
              strcmp(name, "fluxus_get") == 0 || strcmp(name, "fluxus_clear") == 0 ||
-             strcmp(name, "fluxus_reserve") == 0 || strcmp(name, "fluxus_capacity") == 0) &&
+             strcmp(name, "fluxus_reserve") == 0 || strcmp(name, "fluxus_capacity") == 0 ||
+             strcmp(name, "fluxus_peek") == 0 || strcmp(name, "fluxus_set") == 0 ||
+             strcmp(name, "fluxus_remove") == 0 || strcmp(name, "fluxus_insert") == 0 ||
+             strcmp(name, "fluxus_contains") == 0 || strcmp(name, "fluxus_reverse") == 0 ||
+             strcmp(name, "fluxus_sort_int") == 0 || strcmp(name, "fluxus_sort_verbum") == 0 ||
+             strcmp(name, "fluxus_to_ptr") == 0) &&
             i == 0 &&
             !(arg_type && (arg_type->kind == CCT_SEM_TYPE_POINTER || sem_is_error_type(arg_type)))) {
             sem_report_nodef(sem, expr->as.obsecro.arguments->nodes[i],
@@ -2182,36 +3000,117 @@ static cct_sem_type_t* sem_analyze_builtin_obsecro(
             sem_report_nodef(sem, expr->as.obsecro.arguments->nodes[i],
                              "OBSECRO %s expects pointer as second argument", name);
         }
-        if ((strcmp(name, "fluxus_get") == 0 || strcmp(name, "fluxus_reserve") == 0) &&
+        if ((strcmp(name, "fluxus_get") == 0 || strcmp(name, "fluxus_reserve") == 0 ||
+             strcmp(name, "fluxus_remove") == 0 || strcmp(name, "fluxus_set") == 0 ||
+             strcmp(name, "fluxus_insert") == 0) &&
             i == 1 &&
             !(sem_is_integer_type(arg_type) || sem_is_error_type(arg_type))) {
             sem_report_nodef(sem, expr->as.obsecro.arguments->nodes[i],
                              "OBSECRO %s expects integer as second argument", name);
         }
+        if ((strcmp(name, "fluxus_contains") == 0) &&
+            i == 1 &&
+            !(arg_type && (arg_type->kind == CCT_SEM_TYPE_POINTER || sem_is_error_type(arg_type)))) {
+            sem_report_nodef(sem, expr->as.obsecro.arguments->nodes[i],
+                             "OBSECRO fluxus_contains expects pointer as second argument");
+        }
+        if ((strcmp(name, "fluxus_set") == 0 || strcmp(name, "fluxus_insert") == 0) &&
+            i == 2 &&
+            !(arg_type && (arg_type->kind == CCT_SEM_TYPE_POINTER || sem_is_error_type(arg_type)))) {
+            sem_report_nodef(sem, expr->as.obsecro.arguments->nodes[i],
+                             "OBSECRO %s expects pointer as third argument", name);
+        }
         if ((strcmp(name, "io_print") == 0 || strcmp(name, "io_println") == 0 ||
+             strcmp(name, "io_eprint") == 0 || strcmp(name, "io_eprintln") == 0 ||
              strcmp(name, "fs_read_all") == 0 || strcmp(name, "fs_exists") == 0 ||
-             strcmp(name, "fs_size") == 0 || strcmp(name, "path_basename") == 0 ||
-             strcmp(name, "path_dirname") == 0 || strcmp(name, "path_ext") == 0 ||
-             strcmp(name, "path_join") == 0) &&
+             strcmp(name, "fs_size") == 0 || strcmp(name, "fs_mkdir") == 0 ||
+             strcmp(name, "fs_mkdir_all") == 0 || strcmp(name, "fs_delete_file") == 0 ||
+             strcmp(name, "fs_delete_dir") == 0 || strcmp(name, "fs_is_file") == 0 ||
+             strcmp(name, "fs_is_dir") == 0 || strcmp(name, "fs_is_symlink") == 0 ||
+             strcmp(name, "fs_is_readable") == 0 || strcmp(name, "fs_is_writable") == 0 ||
+             strcmp(name, "fs_modified_time") == 0 || strcmp(name, "fs_list_dir") == 0 ||
+             strcmp(name, "path_basename") == 0 || strcmp(name, "path_dirname") == 0 ||
+             strcmp(name, "path_ext") == 0 || strcmp(name, "path_join") == 0 ||
+             strcmp(name, "path_stem") == 0 || strcmp(name, "path_normalize") == 0 ||
+             strcmp(name, "path_is_absolute") == 0 || strcmp(name, "path_resolve") == 0 ||
+             strcmp(name, "path_relative_to") == 0 || strcmp(name, "path_with_ext") == 0 ||
+             strcmp(name, "path_without_ext") == 0 || strcmp(name, "path_split") == 0 ||
+             strcmp(name, "process_run") == 0 || strcmp(name, "process_run_capture") == 0 ||
+             strcmp(name, "process_run_with_input") == 0 || strcmp(name, "process_run_env") == 0 ||
+             strcmp(name, "process_run_timeout") == 0 ||
+             strcmp(name, "hash_crc32") == 0 || strcmp(name, "hash_murmur3") == 0) &&
             i == 0 &&
             !(arg_type && (arg_type->kind == CCT_SEM_TYPE_VERBUM || sem_is_error_type(arg_type)))) {
             sem_report_nodef(sem, expr->as.obsecro.arguments->nodes[i],
                              "OBSECRO %s expects VERBUM argument", name);
         }
-        if (strcmp(name, "io_print_int") == 0 && i == 0 &&
+        if ((strcmp(name, "io_print_int") == 0 || strcmp(name, "io_eprint_int") == 0 ||
+             strcmp(name, "io_print_char") == 0) &&
+            i == 0 &&
             !(sem_is_integer_type(arg_type) || sem_is_error_type(arg_type))) {
             sem_report_nodef(sem, expr->as.obsecro.arguments->nodes[i],
-                             "OBSECRO io_print_int expects integer argument");
+                             "OBSECRO %s expects integer argument", name);
         }
-        if ((strcmp(name, "fs_write_all") == 0 || strcmp(name, "fs_append_all") == 0) &&
+        if ((strcmp(name, "io_print_real") == 0 || strcmp(name, "io_eprint_real") == 0) &&
+            i == 0 &&
+            !(sem_is_numeric_type(arg_type) || sem_is_error_type(arg_type))) {
+            sem_report_nodef(sem, expr->as.obsecro.arguments->nodes[i],
+                             "OBSECRO %s expects numeric argument", name);
+        }
+        if ((strcmp(name, "fs_write_all") == 0 || strcmp(name, "fs_append_all") == 0 ||
+             strcmp(name, "fs_rename") == 0 || strcmp(name, "fs_copy") == 0 ||
+             strcmp(name, "fs_move") == 0 || strcmp(name, "fs_symlink") == 0 ||
+             strcmp(name, "fs_same_file") == 0) &&
             !(arg_type && (arg_type->kind == CCT_SEM_TYPE_VERBUM || sem_is_error_type(arg_type)))) {
             sem_report_nodef(sem, expr->as.obsecro.arguments->nodes[i],
                              "OBSECRO %s expects VERBUM arguments", name);
         }
-        if (strcmp(name, "path_join") == 0 && i == 1 &&
+        if ((strcmp(name, "fs_chmod") == 0 || strcmp(name, "fs_truncate") == 0) &&
+            i == 0 &&
             !(arg_type && (arg_type->kind == CCT_SEM_TYPE_VERBUM || sem_is_error_type(arg_type)))) {
             sem_report_nodef(sem, expr->as.obsecro.arguments->nodes[i],
-                             "OBSECRO path_join expects VERBUM arguments");
+                             "OBSECRO %s expects VERBUM path argument", name);
+        }
+        if ((strcmp(name, "fs_chmod") == 0 || strcmp(name, "fs_truncate") == 0) &&
+            i == 1 &&
+            !(sem_is_integer_type(arg_type) || sem_is_error_type(arg_type))) {
+            sem_report_nodef(sem, expr->as.obsecro.arguments->nodes[i],
+                             "OBSECRO %s expects integer second argument", name);
+        }
+        if ((strcmp(name, "path_join") == 0 ||
+             strcmp(name, "path_relative_to") == 0 ||
+             strcmp(name, "path_with_ext") == 0 ||
+             strcmp(name, "process_run_with_input") == 0 ||
+             strcmp(name, "random_verbum_from") == 0) &&
+            i == 1 &&
+            !(arg_type && (arg_type->kind == CCT_SEM_TYPE_VERBUM || sem_is_error_type(arg_type)))) {
+            sem_report_nodef(sem, expr->as.obsecro.arguments->nodes[i],
+                             "OBSECRO %s expects VERBUM arguments", name);
+        }
+        if (strcmp(name, "process_run_env") == 0 && i == 1 &&
+            !(arg_type && (arg_type->kind == CCT_SEM_TYPE_POINTER || sem_is_error_type(arg_type)))) {
+            sem_report_nodef(sem, expr->as.obsecro.arguments->nodes[i],
+                             "OBSECRO process_run_env expects pointer env_pairs argument");
+        }
+        if (strcmp(name, "process_run_timeout") == 0 && i == 1 &&
+            !(sem_is_integer_type(arg_type) || sem_is_error_type(arg_type))) {
+            sem_report_nodef(sem, expr->as.obsecro.arguments->nodes[i],
+                             "OBSECRO process_run_timeout expects integer timeout_ms argument");
+        }
+        if (strcmp(name, "hash_fnv1a_bytes") == 0 && i == 0 &&
+            !(arg_type && (arg_type->kind == CCT_SEM_TYPE_POINTER || sem_is_error_type(arg_type)))) {
+            sem_report_nodef(sem, expr->as.obsecro.arguments->nodes[i],
+                             "OBSECRO hash_fnv1a_bytes expects pointer data argument");
+        }
+        if (strcmp(name, "random_shuffle_int") == 0 && i == 0 &&
+            !(arg_type && (arg_type->kind == CCT_SEM_TYPE_POINTER || sem_is_error_type(arg_type)))) {
+            sem_report_nodef(sem, expr->as.obsecro.arguments->nodes[i],
+                             "OBSECRO random_shuffle_int expects pointer array argument");
+        }
+        if ((strcmp(name, "hash_fnv1a_bytes") == 0 || strcmp(name, "hash_murmur3") == 0) && i == 1 &&
+            !(sem_is_integer_type(arg_type) || sem_is_error_type(arg_type))) {
+            sem_report_nodef(sem, expr->as.obsecro.arguments->nodes[i],
+                             "OBSECRO %s expects integer second argument", name);
         }
         if (strcmp(name, "random_seed") == 0 && i == 0 &&
             !(sem_is_integer_type(arg_type) || sem_is_error_type(arg_type))) {
@@ -2222,6 +3121,21 @@ static cct_sem_type_t* sem_analyze_builtin_obsecro(
             !(sem_is_integer_type(arg_type) || sem_is_error_type(arg_type))) {
             sem_report_nodef(sem, expr->as.obsecro.arguments->nodes[i],
                              "OBSECRO random_int expects integer lo/hi arguments");
+        }
+        if ((strcmp(name, "random_verbum") == 0 || strcmp(name, "random_bytes") == 0) && i == 0 &&
+            !(sem_is_integer_type(arg_type) || sem_is_error_type(arg_type))) {
+            sem_report_nodef(sem, expr->as.obsecro.arguments->nodes[i],
+                             "OBSECRO %s expects integer argument", name);
+        }
+        if (strcmp(name, "random_verbum_from") == 0 && i == 0 &&
+            !(sem_is_integer_type(arg_type) || sem_is_error_type(arg_type))) {
+            sem_report_nodef(sem, expr->as.obsecro.arguments->nodes[i],
+                             "OBSECRO random_verbum_from expects integer length argument");
+        }
+        if (strcmp(name, "random_shuffle_int") == 0 && i == 1 &&
+            !(sem_is_integer_type(arg_type) || sem_is_error_type(arg_type))) {
+            sem_report_nodef(sem, expr->as.obsecro.arguments->nodes[i],
+                             "OBSECRO random_shuffle_int expects integer length argument");
         }
         if (strcmp(name, "option_some") == 0) {
             if (i == 0 &&
@@ -2279,9 +3193,12 @@ static cct_sem_type_t* sem_analyze_builtin_obsecro(
         }
         if ((strcmp(name, "map_free") == 0 || strcmp(name, "map_len") == 0 ||
              strcmp(name, "map_is_empty") == 0 || strcmp(name, "map_capacity") == 0 ||
-             strcmp(name, "map_clear") == 0 || strcmp(name, "set_free") == 0 ||
-             strcmp(name, "set_len") == 0 || strcmp(name, "set_is_empty") == 0 ||
-             strcmp(name, "set_clear") == 0) &&
+             strcmp(name, "map_clear") == 0 || strcmp(name, "map_copy") == 0 ||
+             strcmp(name, "map_keys") == 0 || strcmp(name, "map_values") == 0 ||
+             strcmp(name, "set_free") == 0 || strcmp(name, "set_len") == 0 ||
+             strcmp(name, "set_is_empty") == 0 || strcmp(name, "set_clear") == 0 ||
+             strcmp(name, "set_copy") == 0 || strcmp(name, "set_to_fluxus") == 0 ||
+             strcmp(name, "set_capacity") == 0) &&
             i == 0 &&
             !(arg_type && (arg_type->kind == CCT_SEM_TYPE_POINTER || sem_is_error_type(arg_type)))) {
             sem_report_nodef(sem, expr->as.obsecro.arguments->nodes[i],
@@ -2289,8 +3206,13 @@ static cct_sem_type_t* sem_analyze_builtin_obsecro(
         }
         if ((strcmp(name, "map_insert") == 0 || strcmp(name, "map_remove") == 0 ||
              strcmp(name, "map_get_ptr") == 0 || strcmp(name, "map_contains") == 0 ||
-             strcmp(name, "map_reserve") == 0 || strcmp(name, "set_insert") == 0 ||
-             strcmp(name, "set_remove") == 0 || strcmp(name, "set_contains") == 0) &&
+             strcmp(name, "map_reserve") == 0 || strcmp(name, "map_merge") == 0 ||
+             strcmp(name, "alg_sort_verbum") == 0 ||
+             strcmp(name, "set_insert") == 0 || strcmp(name, "set_remove") == 0 ||
+             strcmp(name, "set_contains") == 0 || strcmp(name, "set_reserve") == 0 ||
+             strcmp(name, "set_union") == 0 || strcmp(name, "set_intersection") == 0 ||
+             strcmp(name, "set_difference") == 0 || strcmp(name, "set_symmetric_difference") == 0 ||
+             strcmp(name, "set_is_subset") == 0 || strcmp(name, "set_equals") == 0) &&
             i == 0 &&
             !(arg_type && (arg_type->kind == CCT_SEM_TYPE_POINTER || sem_is_error_type(arg_type)))) {
             sem_report_nodef(sem, expr->as.obsecro.arguments->nodes[i],
@@ -2298,8 +3220,11 @@ static cct_sem_type_t* sem_analyze_builtin_obsecro(
         }
         if ((strcmp(name, "map_insert") == 0 || strcmp(name, "map_remove") == 0 ||
              strcmp(name, "map_get_ptr") == 0 || strcmp(name, "map_contains") == 0 ||
-             strcmp(name, "set_insert") == 0 || strcmp(name, "set_remove") == 0 ||
-             strcmp(name, "set_contains") == 0) &&
+             strcmp(name, "map_merge") == 0 || strcmp(name, "set_insert") == 0 ||
+             strcmp(name, "set_remove") == 0 || strcmp(name, "set_contains") == 0 ||
+             strcmp(name, "set_union") == 0 || strcmp(name, "set_intersection") == 0 ||
+             strcmp(name, "set_difference") == 0 || strcmp(name, "set_symmetric_difference") == 0 ||
+             strcmp(name, "set_is_subset") == 0 || strcmp(name, "set_equals") == 0) &&
             i == 1 &&
             !(arg_type && (arg_type->kind == CCT_SEM_TYPE_POINTER || sem_is_error_type(arg_type)))) {
             sem_report_nodef(sem, expr->as.obsecro.arguments->nodes[i],
@@ -2315,10 +3240,35 @@ static cct_sem_type_t* sem_analyze_builtin_obsecro(
             sem_report_nodef(sem, expr->as.obsecro.arguments->nodes[i],
                              "OBSECRO map_reserve expects integer size argument");
         }
+        if ((strcmp(name, "map_keys") == 0 || strcmp(name, "map_values") == 0) && i == 1 &&
+            !(sem_is_integer_type(arg_type) || sem_is_error_type(arg_type))) {
+            sem_report_nodef(sem, expr->as.obsecro.arguments->nodes[i],
+                             "OBSECRO %s expects integer element-size argument", name);
+        }
+        if (strcmp(name, "alg_sort_verbum") == 0 && i == 1 &&
+            !(sem_is_integer_type(arg_type) || sem_is_error_type(arg_type))) {
+            sem_report_nodef(sem, expr->as.obsecro.arguments->nodes[i],
+                             "OBSECRO alg_sort_verbum expects integer length argument");
+        }
         if (strcmp(name, "set_init") == 0 && i == 0 &&
             !(sem_is_integer_type(arg_type) || sem_is_error_type(arg_type))) {
             sem_report_nodef(sem, expr->as.obsecro.arguments->nodes[i],
                              "OBSECRO %s expects integer size argument", name);
+        }
+        if ((strcmp(name, "set_copy") == 0 || strcmp(name, "set_to_fluxus") == 0 ||
+             strcmp(name, "set_reserve") == 0) &&
+            i == 1 &&
+            !(sem_is_integer_type(arg_type) || sem_is_error_type(arg_type))) {
+            sem_report_nodef(sem, expr->as.obsecro.arguments->nodes[i],
+                             "OBSECRO %s expects integer size argument", name);
+        }
+        if ((strcmp(name, "set_union") == 0 || strcmp(name, "set_intersection") == 0 ||
+             strcmp(name, "set_difference") == 0 || strcmp(name, "set_symmetric_difference") == 0 ||
+             strcmp(name, "set_is_subset") == 0 || strcmp(name, "set_equals") == 0) &&
+            i == 2 &&
+            !(sem_is_integer_type(arg_type) || sem_is_error_type(arg_type))) {
+            sem_report_nodef(sem, expr->as.obsecro.arguments->nodes[i],
+                             "OBSECRO %s expects integer item-size argument", name);
         }
         if ((strcmp(name, "collection_fluxus_map") == 0 ||
              strcmp(name, "collection_fluxus_filter") == 0 ||
@@ -2414,7 +3364,51 @@ static cct_sem_type_t* sem_analyze_builtin_obsecro(
     return spec->return_type ? spec->return_type : &sem->type_error;
 }
 
-static cct_sem_type_t* sem_analyze_expr(cct_semantic_analyzer_t *sem, const cct_ast_node_t *expr) {
+static cct_sem_type_t* sem_analyze_molde_expr(cct_semantic_analyzer_t *sem, const cct_ast_node_t *expr) {
+    if (!expr || expr->type != AST_MOLDE) return &sem->type_error;
+
+    if (sem_profile_is_freestanding(sem)) {
+        sem_report_node(sem, expr, "MOLDE nao disponivel no perfil freestanding");
+    }
+
+    if (expr->as.molde.parts) {
+        for (size_t i = 0; i < expr->as.molde.part_count; i++) {
+            cct_ast_molde_part_t *part = &expr->as.molde.parts[i];
+            if (!part || part->kind != CCT_AST_MOLDE_PART_EXPR) continue;
+            if (part->expr && part->expr->type == AST_OBSECRO) {
+                sem_report_node(
+                    sem,
+                    part->expr,
+                    "MOLDE: OBSECRO nao pode ser usado como expressao em interpolacao"
+                );
+                continue;
+            }
+
+            cct_sem_type_t *part_type = sem_analyze_expr(sem, part->expr);
+            if (sem_is_error_type(part_type)) continue;
+
+            if (!sem_is_molde_compatible_type(part_type)) {
+                sem_report_nodef(
+                    sem,
+                    part->expr,
+                    "MOLDE: expressao em {} nao suporta interpolacao de tipo %s",
+                    cct_sem_type_string(part_type)
+                );
+                continue;
+            }
+
+            sem_validate_molde_fmt_spec(sem, part->expr, part_type, part->fmt_spec);
+        }
+    }
+
+    return &sem->type_verbum;
+}
+
+static cct_sem_type_t* sem_analyze_expr_with_expected(
+    cct_semantic_analyzer_t *sem,
+    const cct_ast_node_t *expr,
+    cct_sem_type_t *expected
+) {
     if (!expr) return &sem->type_nihil;
 
     switch (expr->type) {
@@ -2424,13 +3418,41 @@ static cct_sem_type_t* sem_analyze_expr(cct_semantic_analyzer_t *sem, const cct_
             return &sem->type_umbra;
         case AST_LITERAL_STRING:
             return &sem->type_verbum;
+        case AST_MOLDE:
+            return sem_analyze_molde_expr(sem, expr);
         case AST_LITERAL_BOOL:
             return &sem->type_verum;
         case AST_LITERAL_NIHIL:
             return &sem->type_nihil;
 
-        case AST_IDENTIFIER:
-            return sem_analyze_identifier_expr(sem, expr);
+        case AST_IDENTIFIER: {
+            cct_sem_type_t *id_type = sem_analyze_identifier_expr(sem, expr);
+            const cct_ast_node_t *expected_ordo = sem_resolve_ordo_decl_from_type(sem, expected);
+            if (expected_ordo && expected_ordo->as.ordo.has_payload && expr->as.identifier.name) {
+                cct_ast_ordo_variant_t *variant = sem_find_ordo_variant(expected_ordo, expr->as.identifier.name, NULL);
+                if (variant) {
+                    if (variant->field_count != 0) {
+                        sem_report_nodef(
+                            sem,
+                            expr,
+                            "ORDO payload: construtor %s() chamado com 0 args, esperava %zu",
+                            variant->name,
+                            variant->field_count
+                        );
+                        return &sem->type_error;
+                    }
+                    cct_ast_node_t *mutable_expr = (cct_ast_node_t*)expr;
+                    mutable_expr->as.identifier.is_ordo_construct = true;
+                    free(mutable_expr->as.identifier.ordo_name);
+                    free(mutable_expr->as.identifier.variant_name);
+                    mutable_expr->as.identifier.ordo_name = sem_strdup(expected_ordo->as.ordo.name);
+                    mutable_expr->as.identifier.variant_name = sem_strdup(variant->name);
+                    mutable_expr->as.identifier.ordo_tag_value = variant->tag_value;
+                    return expected;
+                }
+            }
+            return id_type;
+        }
 
         case AST_MENSURA:
             (void)sem_resolve_ast_type(sem, expr->as.mensura.type, expr->line, expr->column);
@@ -2458,10 +3480,109 @@ static cct_sem_type_t* sem_analyze_expr(cct_semantic_analyzer_t *sem, const cct_
                 }
                 return &sem->type_error;
             }
+
+            const char *callee_name = expr->as.call.callee->as.identifier.name;
+            const cct_ast_node_t *expected_ordo = sem_resolve_ordo_decl_from_type(sem, expected);
+            if (expected_ordo && expected_ordo->as.ordo.has_payload && callee_name) {
+                cct_ast_ordo_variant_t *variant = sem_find_ordo_variant(expected_ordo, callee_name, NULL);
+                if (variant) {
+                    size_t argc = expr->as.call.arguments ? expr->as.call.arguments->count : 0;
+
+                    if (variant->field_count == 0) {
+                        sem_report_nodef(
+                            sem,
+                            expr,
+                            "ORDO payload: variante sem payload deve ser usada sem parenteses: %s",
+                            variant->name
+                        );
+                        return &sem->type_error;
+                    }
+
+                    if (argc != variant->field_count) {
+                        sem_report_nodef(
+                            sem,
+                            expr,
+                            "ORDO payload: construtor %s() chamado com %zu args, esperava %zu",
+                            variant->name,
+                            argc,
+                            variant->field_count
+                        );
+                        for (size_t i = 0; i < argc; i++) {
+                            (void)sem_analyze_expr(sem, expr->as.call.arguments->nodes[i]);
+                        }
+                        return &sem->type_error;
+                    }
+
+                    for (size_t i = 0; i < argc; i++) {
+                        cct_ast_ordo_field_t *field = variant->fields[i];
+                        cct_sem_type_t *field_type = field
+                            ? sem_resolve_ast_type(sem, field->type, field->line, field->column)
+                            : &sem->type_error;
+                        cct_sem_type_t *arg_type = sem_analyze_expr_with_expected(
+                            sem,
+                            expr->as.call.arguments->nodes[i],
+                            field_type
+                        );
+                        if (!sem_types_compatible_assign(sem, field_type, arg_type)) {
+                            sem_report_nodef(
+                                sem,
+                                expr->as.call.arguments->nodes[i],
+                                "ORDO payload: construtor %s() arg %zu tipo %s incompativel com campo %s:%s",
+                                variant->name,
+                                i + 1,
+                                cct_sem_type_string(arg_type),
+                                field && field->name ? field->name : "<campo>",
+                                cct_sem_type_string(field_type)
+                            );
+                        }
+                    }
+
+                    cct_ast_node_t *mutable_expr = (cct_ast_node_t*)expr;
+                    mutable_expr->as.call.is_ordo_construct = true;
+                    free(mutable_expr->as.call.ordo_name);
+                    free(mutable_expr->as.call.variant_name);
+                    mutable_expr->as.call.ordo_name = sem_strdup(expected_ordo->as.ordo.name);
+                    mutable_expr->as.call.variant_name = sem_strdup(variant->name);
+                    mutable_expr->as.call.ordo_tag_value = variant->tag_value;
+                    return expected;
+                }
+
+                if (sem_identifier_is_any_ordo_variant(sem, callee_name)) {
+                    sem_report_nodef(
+                        sem,
+                        expr,
+                        "ORDO payload: construtor '%s' nao existe no tipo '%s'",
+                        callee_name,
+                        expected_ordo->as.ordo.name ? expected_ordo->as.ordo.name : "<ORDO>"
+                    );
+                    if (expr->as.call.arguments) {
+                        for (size_t i = 0; i < expr->as.call.arguments->count; i++) {
+                            (void)sem_analyze_expr(sem, expr->as.call.arguments->nodes[i]);
+                        }
+                    }
+                    return &sem->type_error;
+                }
+            }
+
+            if (callee_name && sem_identifier_is_any_ordo_variant(sem, callee_name) && !expected_ordo) {
+                sem_report_nodef(
+                    sem,
+                    expr,
+                    "ORDO payload: construtor '%s' sem contexto de tipo ORDO",
+                    callee_name
+                );
+                if (expr->as.call.arguments) {
+                    for (size_t i = 0; i < expr->as.call.arguments->count; i++) {
+                        (void)sem_analyze_expr(sem, expr->as.call.arguments->nodes[i]);
+                    }
+                }
+                return &sem->type_error;
+            }
+
             return sem_analyze_call_like_function(
                 sem,
                 expr,
-                expr->as.call.callee->as.identifier.name,
+                callee_name,
                 NULL,
                 expr->as.call.arguments
             );
@@ -2756,6 +3877,10 @@ static cct_sem_type_t* sem_analyze_expr(cct_semantic_analyzer_t *sem, const cct_
     }
 }
 
+static cct_sem_type_t* sem_analyze_expr(cct_semantic_analyzer_t *sem, const cct_ast_node_t *expr) {
+    return sem_analyze_expr_with_expected(sem, expr, NULL);
+}
+
 /* ========================================================================
  * Statement / Block Analysis
  * ======================================================================== */
@@ -2779,7 +3904,7 @@ static void sem_analyze_evoca(cct_semantic_analyzer_t *sem, const cct_ast_node_t
     cct_sem_type_t *decl_type = sem_resolve_ast_type(sem, stmt->as.evoca.var_type, stmt->line, stmt->column);
 
     if (stmt->as.evoca.initializer) {
-        cct_sem_type_t *init_type = sem_analyze_expr(sem, stmt->as.evoca.initializer);
+        cct_sem_type_t *init_type = sem_analyze_expr_with_expected(sem, stmt->as.evoca.initializer, decl_type);
         if (!sem_types_compatible_assign(sem, decl_type, init_type)) {
             sem_report_nodef(sem, stmt,
                              "initializer type mismatch for '%s' (%s <- %s)",
@@ -2794,12 +3919,28 @@ static void sem_analyze_evoca(cct_semantic_analyzer_t *sem, const cct_ast_node_t
     if (sym) {
         sym->type = decl_type;
         sym->is_constans = stmt->as.evoca.is_constans;
+        sem_set_symbol_iter_collection_info(sym, CCT_SEM_ITER_COLLECTION_NONE, NULL, NULL);
+        if (stmt->as.evoca.initializer) {
+            cct_sem_iter_collection_kind_t coll_kind = CCT_SEM_ITER_COLLECTION_NONE;
+            cct_sem_type_t *key_type = NULL;
+            cct_sem_type_t *value_type = NULL;
+            sem_infer_iter_collection_from_expr(
+                sem,
+                stmt->as.evoca.initializer,
+                &coll_kind,
+                &key_type,
+                &value_type
+            );
+            if (coll_kind != CCT_SEM_ITER_COLLECTION_NONE) {
+                sem_set_symbol_iter_collection_info(sym, coll_kind, key_type, value_type);
+            }
+        }
     }
 }
 
 static void sem_analyze_vincire(cct_semantic_analyzer_t *sem, const cct_ast_node_t *stmt) {
     cct_sem_type_t *target_type = sem_analyze_lvalue(sem, stmt->as.vincire.target);
-    cct_sem_type_t *value_type = sem_analyze_expr(sem, stmt->as.vincire.value);
+    cct_sem_type_t *value_type = sem_analyze_expr_with_expected(sem, stmt->as.vincire.value, target_type);
 
     if (stmt->as.vincire.target && stmt->as.vincire.target->type == AST_IDENTIFIER) {
         const char *name = stmt->as.vincire.target->as.identifier.name;
@@ -2830,6 +3971,20 @@ static void sem_analyze_vincire(cct_semantic_analyzer_t *sem, const cct_ast_node
                          cct_sem_type_string(target_type),
                          cct_sem_type_string(value_type));
         return;
+    }
+
+    if (stmt->as.vincire.target && stmt->as.vincire.target->type == AST_IDENTIFIER) {
+        const char *target_name = stmt->as.vincire.target->as.identifier.name;
+        cct_sem_symbol_t *target_sym = sem_lookup(sem, target_name);
+        if (target_sym && (target_sym->kind == CCT_SEM_SYMBOL_VARIABLE || target_sym->kind == CCT_SEM_SYMBOL_PARAMETER)) {
+            cct_sem_iter_collection_kind_t coll_kind = CCT_SEM_ITER_COLLECTION_NONE;
+            cct_sem_type_t *key_type = NULL;
+            cct_sem_type_t *value_type_hint = NULL;
+            sem_infer_iter_collection_from_expr(sem, stmt->as.vincire.value, &coll_kind, &key_type, &value_type_hint);
+            if (coll_kind != CCT_SEM_ITER_COLLECTION_NONE) {
+                sem_set_symbol_iter_collection_info(target_sym, coll_kind, key_type, value_type_hint);
+            }
+        }
     }
 
     /* FASE 7D final policy: shallow SIGILLUM copy assignment is part of the subset
@@ -2867,7 +4022,7 @@ static void sem_analyze_redde(cct_semantic_analyzer_t *sem, const cct_ast_node_t
         return;
     }
 
-    cct_sem_type_t *actual = sem_analyze_expr(sem, stmt->as.redde.value);
+    cct_sem_type_t *actual = sem_analyze_expr_with_expected(sem, stmt->as.redde.value, expected);
     if (!sem_types_compatible_assign(sem, expected, actual)) {
         sem_report_nodef(sem, stmt,
                          "return type mismatch (%s <- %s)",
@@ -2985,6 +4140,308 @@ static void sem_analyze_tempta(cct_semantic_analyzer_t *sem, const cct_ast_node_
     }
 }
 
+static bool sem_quando_eval_int_literal(const cct_ast_node_t *literal, long long *value_out) {
+    if (!literal || !value_out) return false;
+
+    switch (literal->type) {
+        case AST_LITERAL_INT:
+            *value_out = (long long)literal->as.literal_int.int_value;
+            return true;
+        case AST_LITERAL_BOOL:
+            *value_out = literal->as.literal_bool.bool_value ? 1LL : 0LL;
+            return true;
+        case AST_UNARY_OP:
+            if (!literal->as.unary_op.operand || literal->as.unary_op.operand->type != AST_LITERAL_INT) {
+                return false;
+            }
+            if (literal->as.unary_op.operator == TOKEN_MINUS) {
+                *value_out = -(long long)literal->as.unary_op.operand->as.literal_int.int_value;
+                return true;
+            }
+            if (literal->as.unary_op.operator == TOKEN_PLUS) {
+                *value_out = (long long)literal->as.unary_op.operand->as.literal_int.int_value;
+                return true;
+            }
+            return false;
+        default:
+            return false;
+    }
+}
+
+static void sem_analyze_quando(cct_semantic_analyzer_t *sem, const cct_ast_node_t *stmt) {
+    cct_sem_type_t *expr_type = sem_analyze_expr(sem, stmt->as.quando.expression);
+    bool expr_is_string = expr_type && expr_type->kind == CCT_SEM_TYPE_VERBUM;
+    bool expr_is_ordo = false;
+    const cct_ast_node_t *ordo_decl = NULL;
+    if (expr_type && expr_type->kind == CCT_SEM_TYPE_NAMED && expr_type->name) {
+        cct_sem_symbol_t *type_sym = sem_find_type_symbol(sem, expr_type->name);
+        if (type_sym && type_sym->type_decl && type_sym->type_decl->type == AST_ORDO) {
+            expr_is_ordo = true;
+            ordo_decl = type_sym->type_decl;
+        }
+    }
+    bool expr_supported = sem_is_integer_type(expr_type) || sem_is_bool_type(expr_type) ||
+                          expr_is_string || expr_is_ordo || sem_is_error_type(expr_type);
+    if (!expr_supported) {
+        sem_report_node(sem, stmt->as.quando.expression, "QUANDO: expressao deve ser de tipo inteiro, VERUM, VERBUM ou ORDO");
+    }
+
+    if (stmt->as.quando.case_count == 0) {
+        sem_warn_at(
+            sem,
+            stmt->line,
+            stmt->column,
+            "QUANDO sem CASO: bloco nao cobre nenhum valor explicitamente",
+            NULL
+        );
+    }
+
+    long long *seen_values = NULL;
+    size_t seen_count = 0;
+    size_t seen_capacity = 0;
+    const char **seen_strings = NULL;
+    size_t seen_strings_count = 0;
+    size_t seen_strings_capacity = 0;
+
+    size_t ordo_variant_count = 0;
+    bool *covered_ordo = NULL;
+    if (expr_is_ordo && ordo_decl) {
+        if (ordo_decl->as.ordo.variants && ordo_decl->as.ordo.variants->count > 0) {
+            ordo_variant_count = ordo_decl->as.ordo.variants->count;
+        } else if (ordo_decl->as.ordo.items) {
+            ordo_variant_count = ordo_decl->as.ordo.items->count;
+        }
+        if (ordo_variant_count > 0) {
+            covered_ordo = (bool*)calloc(ordo_variant_count, sizeof(bool));
+            if (!covered_ordo) {
+                fprintf(stderr, "cct: fatal: out of memory\n");
+                exit(CCT_ERROR_OUT_OF_MEMORY);
+            }
+        }
+    }
+
+    for (size_t i = 0; i < stmt->as.quando.case_count; i++) {
+        cct_ast_case_node_t *case_node = &stmt->as.quando.cases[i];
+        bool case_body_checked = false;
+
+        for (size_t j = 0; j < case_node->literal_count; j++) {
+            const cct_ast_node_t *literal = case_node->literals[j];
+
+            if (expr_is_ordo) {
+                if (!literal || literal->type != AST_IDENTIFIER) {
+                    sem_report_node(sem, literal, "QUANDO ORDO: CASO deve ser nome de variante");
+                    continue;
+                }
+
+                const char *variant = literal->as.identifier.name ? literal->as.identifier.name : "";
+                size_t variant_index = 0;
+                cct_ast_ordo_variant_t *resolved_variant = sem_find_ordo_variant(ordo_decl, variant, &variant_index);
+                bool found_in_items = false;
+                if (!resolved_variant && ordo_decl && ordo_decl->as.ordo.items) {
+                    for (size_t v = 0; v < ordo_decl->as.ordo.items->count; v++) {
+                        cct_ast_enum_item_t *item = ordo_decl->as.ordo.items->items[v];
+                        if (item && item->name && strcmp(item->name, variant) == 0) {
+                            variant_index = v;
+                            found_in_items = true;
+                            break;
+                        }
+                    }
+                }
+
+                if (!resolved_variant && !found_in_items) {
+                    sem_report_nodef(sem, literal, "QUANDO ORDO: variante '%s' nao existe no tipo", variant);
+                    continue;
+                }
+
+                if (covered_ordo && variant_index < ordo_variant_count && covered_ordo[variant_index]) {
+                    sem_report_nodef(sem, literal, "QUANDO: CASO duplicado (variante '%s')", variant);
+                    continue;
+                }
+
+                if (covered_ordo && variant_index < ordo_variant_count) covered_ordo[variant_index] = true;
+                if (j == 0 && case_node->literal_count == 1) {
+                    case_node->resolved_ordo_variant = resolved_variant;
+                }
+                continue;
+            }
+
+            cct_sem_type_t *lit_type = sem_analyze_expr(sem, literal);
+
+            if (!sem_quando_types_compatible(expr_type, lit_type)) {
+                if (!sem_is_error_type(expr_type) && !sem_is_error_type(lit_type)) {
+                    sem_report_node(sem, literal, "QUANDO: CASO tipo incompativel com expressao");
+                }
+                continue;
+            }
+
+            if (expr_is_string) {
+                if (literal->type != AST_LITERAL_STRING) {
+                    sem_report_node(sem, literal, "QUANDO: CASO sobre VERBUM requer literal de string");
+                    continue;
+                }
+                const char *literal_text = literal->as.literal_string.string_value ? literal->as.literal_string.string_value : "";
+                bool duplicate = false;
+                for (size_t k = 0; k < seen_strings_count; k++) {
+                    if (strcmp(seen_strings[k], literal_text) == 0) {
+                        duplicate = true;
+                        break;
+                    }
+                }
+                if (duplicate) {
+                    sem_report_node(sem, literal, "QUANDO: CASO duplicado");
+                    continue;
+                }
+                if (seen_strings_count >= seen_strings_capacity) {
+                    size_t next_cap = (seen_strings_capacity == 0) ? 8 : (seen_strings_capacity * 2);
+                    const char **next = (const char**)realloc(seen_strings, next_cap * sizeof(const char*));
+                    if (!next) {
+                        fprintf(stderr, "cct: fatal: out of memory\n");
+                        exit(CCT_ERROR_OUT_OF_MEMORY);
+                    }
+                    seen_strings = next;
+                    seen_strings_capacity = next_cap;
+                }
+                seen_strings[seen_strings_count++] = literal_text;
+                continue;
+            }
+
+            long long literal_value = 0;
+            if (!sem_quando_eval_int_literal(literal, &literal_value)) {
+                sem_report_node(sem, literal, "QUANDO: CASO requer literal inteiro ou booleano");
+                continue;
+            }
+
+            bool duplicate = false;
+            for (size_t k = 0; k < seen_count; k++) {
+                if (seen_values[k] == literal_value) {
+                    duplicate = true;
+                    break;
+                }
+            }
+            if (duplicate) {
+                sem_report_node(sem, literal, "QUANDO: CASO duplicado");
+                continue;
+            }
+
+            if (seen_count >= seen_capacity) {
+                size_t next_cap = (seen_capacity == 0) ? 8 : (seen_capacity * 2);
+                long long *next = (long long*)realloc(seen_values, next_cap * sizeof(long long));
+                if (!next) {
+                    fprintf(stderr, "cct: fatal: out of memory\n");
+                    exit(CCT_ERROR_OUT_OF_MEMORY);
+                }
+                seen_values = next;
+                seen_capacity = next_cap;
+            }
+            seen_values[seen_count++] = literal_value;
+        }
+
+        if (expr_is_ordo && case_node->literal_count == 1) {
+            const cct_ast_node_t *first = case_node->literals[0];
+            const char *variant_name = (first && first->type == AST_IDENTIFIER && first->as.identifier.name)
+                ? first->as.identifier.name
+                : "<variante>";
+            cct_ast_ordo_variant_t *resolved_variant = case_node->resolved_ordo_variant
+                ? case_node->resolved_ordo_variant
+                : sem_find_ordo_variant(ordo_decl, variant_name, NULL);
+
+            if (!resolved_variant) {
+                /* variant-exists error already reported above */
+            } else if (resolved_variant->field_count == 0 && case_node->binding_count > 0) {
+                sem_report_nodef(
+                    sem,
+                    first,
+                    "QUANDO ORDO: variante '%s' nao tem payload; remova os bindings",
+                    variant_name
+                );
+            } else if (case_node->binding_count != resolved_variant->field_count) {
+                sem_report_nodef(
+                    sem,
+                    first,
+                    "QUANDO ORDO: CASO %s com %zu bindings, variante tem %zu campos",
+                    variant_name,
+                    case_node->binding_count,
+                    resolved_variant->field_count
+                );
+            } else if (case_node->binding_count > 0) {
+                sem_push_scope(sem, CCT_SEM_SCOPE_BLOCK);
+                for (size_t b = 0; b < case_node->binding_count; b++) {
+                    cct_ast_ordo_field_t *field = resolved_variant->fields[b];
+                    cct_sem_type_t *field_type = field
+                        ? sem_resolve_ast_type(sem, field->type, field->line, field->column)
+                        : &sem->type_error;
+                    const char *binding_name = case_node->binding_names[b];
+                    cct_sem_symbol_t *sym = sem_define_symbol(
+                        sem,
+                        CCT_SEM_SYMBOL_VARIABLE,
+                        binding_name,
+                        first ? first->line : stmt->line,
+                        first ? first->column : stmt->column
+                    );
+                    if (sym) sym->type = field_type;
+                }
+                if (case_node->body) sem_analyze_stmt(sem, case_node->body);
+                sem_pop_scope(sem);
+                case_body_checked = true;
+            }
+        } else if (expr_is_ordo && case_node->binding_count > 0) {
+            const cct_ast_node_t *first = (case_node->literal_count > 0) ? case_node->literals[0] : stmt;
+            if (case_node->literal_count != 1) {
+                sem_report_node(sem, first ? first : stmt, "QUANDO ORDO: OR-cases com payload nao sao suportados nesta fase");
+            }
+        } else if (!expr_is_ordo && case_node->binding_count > 0) {
+            sem_report_node(sem, stmt, "QUANDO: bindings em CASO so sao validos para ORDO");
+        }
+
+        if (case_node->body && !case_body_checked) {
+            sem_analyze_stmt(sem, case_node->body);
+        }
+    }
+
+    free(seen_values);
+    free(seen_strings);
+
+    if (expr_is_ordo && !stmt->as.quando.else_body && ordo_decl) {
+        char missing[512];
+        missing[0] = '\0';
+
+        for (size_t i = 0; i < ordo_variant_count; i++) {
+            if (covered_ordo && covered_ordo[i]) continue;
+            const char *missing_name = NULL;
+            if (ordo_decl->as.ordo.variants && i < ordo_decl->as.ordo.variants->count) {
+                cct_ast_ordo_variant_t *variant = ordo_decl->as.ordo.variants->variants[i];
+                if (variant && variant->name) missing_name = variant->name;
+            } else if (ordo_decl->as.ordo.items && i < ordo_decl->as.ordo.items->count) {
+                cct_ast_enum_item_t *item = ordo_decl->as.ordo.items->items[i];
+                if (item && item->name) missing_name = item->name;
+            }
+            if (!missing_name) continue;
+
+            if (missing[0] != '\0') {
+                strncat(missing, " ", sizeof(missing) - strlen(missing) - 1);
+            }
+            strncat(missing, missing_name, sizeof(missing) - strlen(missing) - 1);
+        }
+
+        if (missing[0] != '\0') {
+            sem_report_nodef(sem, stmt, "QUANDO ORDO: variantes nao-exaustivas - falta %s", missing);
+        }
+    }
+    free(covered_ordo);
+
+    if (stmt->as.quando.else_body) {
+        sem_analyze_stmt(sem, stmt->as.quando.else_body);
+    } else if (expr_supported && !expr_is_ordo) {
+        sem_warn_at(
+            sem,
+            stmt->line,
+            stmt->column,
+            "QUANDO sem SENAO: comportamento indefinido para valores nao cobertos",
+            NULL
+        );
+    }
+}
+
 static void sem_analyze_stmt(cct_semantic_analyzer_t *sem, const cct_ast_node_t *stmt) {
     if (!stmt) return;
 
@@ -3036,6 +4493,10 @@ static void sem_analyze_stmt(cct_semantic_analyzer_t *sem, const cct_ast_node_t 
             if (stmt->as.si.else_branch) sem_analyze_stmt(sem, stmt->as.si.else_branch);
             return;
 
+        case AST_QUANDO:
+            sem_analyze_quando(sem, stmt);
+            return;
+
         case AST_DUM:
             sem_analyze_condition(sem, stmt->as.dum.condition);
             sem->loop_depth++;
@@ -3079,35 +4540,89 @@ static void sem_analyze_stmt(cct_semantic_analyzer_t *sem, const cct_ast_node_t 
         case AST_ITERUM: {
             cct_sem_type_t *collection_t = sem_analyze_expr(sem, stmt->as.iterum.collection);
             cct_sem_type_t *item_t = &sem->type_error;
+            cct_sem_type_t *value_t = &sem->type_error;
+
+            cct_sem_iter_collection_kind_t inferred_kind = CCT_SEM_ITER_COLLECTION_NONE;
+            cct_sem_type_t *inferred_key_t = NULL;
+            cct_sem_type_t *inferred_value_t = NULL;
+            sem_infer_iter_collection_from_expr(
+                sem,
+                stmt->as.iterum.collection,
+                &inferred_kind,
+                &inferred_key_t,
+                &inferred_value_t
+            );
+
+            bool is_map_iter = false;
+            bool is_set_iter = false;
+            bool is_series_iter = false;
+            bool is_fluxus_iter = false;
 
             if (collection_t && collection_t->kind == CCT_SEM_TYPE_ARRAY && collection_t->element) {
+                is_series_iter = true;
                 item_t = collection_t->element;
+            } else if (inferred_kind == CCT_SEM_ITER_COLLECTION_MAP) {
+                is_map_iter = true;
+                item_t = inferred_key_t ? inferred_key_t : &sem->type_rex;
+                value_t = inferred_value_t ? inferred_value_t : &sem->type_rex;
+            } else if (inferred_kind == CCT_SEM_ITER_COLLECTION_SET) {
+                is_set_iter = true;
+                item_t = inferred_key_t ? inferred_key_t : &sem->type_rex;
             } else if (collection_t && collection_t->kind == CCT_SEM_TYPE_POINTER &&
                        collection_t->element && collection_t->element->kind == CCT_SEM_TYPE_NIHIL) {
+                is_fluxus_iter = true;
                 if (sem_profile_is_freestanding(sem)) {
                     sem_report_node(sem, stmt->as.iterum.collection,
                                     "FLUXUS não suportado em perfil freestanding (heap indisponível)");
                 }
-                /* FASE 12D.3 subset: treat FLUXUS opaque pointer iteration item as REX by default. */
+                /* FASE 12D.3 baseline: opaque FLUXUS iteration item defaults to REX. */
                 item_t = &sem->type_rex;
             } else if (!sem_is_error_type(collection_t)) {
                 sem_report_nodef(
                     sem,
                     stmt->as.iterum.collection,
-                    "ITERUM requires FLUXUS or SERIES, found: %s",
+                    "ITERUM requires FLUXUS or SERIES (and now map/set), found: %s",
                     cct_sem_type_string(collection_t)
                 );
             }
 
+            if (is_map_iter) {
+                if (!stmt->as.iterum.value_name || !stmt->as.iterum.value_name[0]) {
+                    sem_report_node(sem, stmt, "ITERUM sobre map requer 2 variaveis (chave, valor)");
+                    return;
+                }
+            } else if (stmt->as.iterum.value_name && stmt->as.iterum.value_name[0]) {
+                if (is_set_iter) {
+                    sem_report_node(sem, stmt, "ITERUM sobre set requer 1 variavel (elemento)");
+                } else if (is_fluxus_iter || is_series_iter) {
+                    sem_report_node(sem, stmt, "ITERUM sobre FLUXUS/SERIES requer 1 variavel");
+                } else {
+                    sem_report_node(sem, stmt, "ITERUM com 2 variaveis so e suportado para map");
+                }
+                return;
+            }
+
             sem_push_scope(sem, CCT_SEM_SCOPE_LOOP);
-            cct_sem_symbol_t *iter = sem_define_symbol(
+            cct_sem_symbol_t *iter_item = sem_define_symbol(
                 sem,
                 CCT_SEM_SYMBOL_VARIABLE,
                 stmt->as.iterum.item_name ? stmt->as.iterum.item_name : "_",
                 stmt->line,
                 stmt->column
             );
-            if (iter) iter->type = item_t;
+            if (iter_item) iter_item->type = item_t;
+
+            if (is_map_iter) {
+                cct_sem_symbol_t *iter_value = sem_define_symbol(
+                    sem,
+                    CCT_SEM_SYMBOL_VARIABLE,
+                    stmt->as.iterum.value_name,
+                    stmt->line,
+                    stmt->column
+                );
+                if (iter_value) iter_value->type = value_t;
+            }
+
             sem->loop_depth++;
             sem_analyze_stmt(sem, stmt->as.iterum.body);
             if (sem->loop_depth > 0) sem->loop_depth--;
@@ -3211,6 +4726,53 @@ static bool sem_signature_types_equal(
         if (!sem_type_equal(a->types[i], b->types[i])) return false;
     }
     return true;
+}
+
+static const cct_ast_node_t* sem_resolve_ordo_decl_from_type(
+    cct_semantic_analyzer_t *sem,
+    const cct_sem_type_t *type
+) {
+    if (!sem || !type || type->kind != CCT_SEM_TYPE_NAMED || !type->name) return NULL;
+    cct_sem_symbol_t *type_sym = sem_find_type_symbol(sem, type->name);
+    if (!type_sym || !type_sym->type_decl || type_sym->type_decl->type != AST_ORDO) return NULL;
+    return type_sym->type_decl;
+}
+
+static cct_ast_ordo_variant_t* sem_find_ordo_variant(
+    const cct_ast_node_t *ordo_decl,
+    const char *variant_name,
+    size_t *index_out
+) {
+    if (!ordo_decl || ordo_decl->type != AST_ORDO || !variant_name) return NULL;
+    if (!ordo_decl->as.ordo.variants) return NULL;
+    for (size_t i = 0; i < ordo_decl->as.ordo.variants->count; i++) {
+        cct_ast_ordo_variant_t *variant = ordo_decl->as.ordo.variants->variants[i];
+        if (!variant || !variant->name) continue;
+        if (strcmp(variant->name, variant_name) == 0) {
+            if (index_out) *index_out = i;
+            return variant;
+        }
+    }
+    return NULL;
+}
+
+static bool sem_ordo_decl_has_payload_fields(const cct_ast_node_t *ordo_decl) {
+    if (!ordo_decl || ordo_decl->type != AST_ORDO || !ordo_decl->as.ordo.variants) return false;
+    for (size_t i = 0; i < ordo_decl->as.ordo.variants->count; i++) {
+        cct_ast_ordo_variant_t *variant = ordo_decl->as.ordo.variants->variants[i];
+        if (variant && variant->field_count > 0) return true;
+    }
+    return false;
+}
+
+static bool sem_identifier_is_any_ordo_variant(cct_semantic_analyzer_t *sem, const char *name) {
+    if (!sem || !name || !sem->global_scope) return false;
+    for (cct_sem_symbol_t *sym = sem->global_scope->symbols; sym; sym = sym->next) {
+        if (!sym->type_decl || sym->type_decl->type != AST_ORDO) continue;
+        if (!sem_ordo_decl_has_payload_fields(sym->type_decl)) continue;
+        if (sem_find_ordo_variant(sym->type_decl, name, NULL)) return true;
+    }
+    return false;
 }
 
 static void sem_validate_pactum_signature_duplicates(
@@ -3420,14 +4982,65 @@ static void sem_register_named_types_in_node(cct_semantic_analyzer_t *sem, const
                     sem_active_type_params_pop_to(sem, tp_mark);
                 }
 
-                if (node->type == AST_ORDO && node->as.ordo.items) {
-                    for (size_t i = 0; i < node->as.ordo.items->count; i++) {
-                        cct_ast_enum_item_t *item = node->as.ordo.items->items[i];
-                        if (!item) continue;
-                        cct_sem_symbol_t *es = sem_define_symbol(sem, CCT_SEM_SYMBOL_VARIABLE,
-                                                                 item->name, item->line, item->column);
-                        if (es) es->type = sym->type;
+                if (node->type == AST_ORDO) {
+                    cct_ast_node_t *mutable = (cct_ast_node_t*)node;
+                    bool has_payload = false;
+
+                    if (node->as.ordo.variants && node->as.ordo.variants->count > 0) {
+                        for (size_t i = 0; i < node->as.ordo.variants->count; i++) {
+                            cct_ast_ordo_variant_t *variant = node->as.ordo.variants->variants[i];
+                            if (!variant) continue;
+
+                            variant->tag_value = (i64)i;
+
+                            if (variant->name && variant->name[0] &&
+                                (variant->name[0] < 'A' || variant->name[0] > 'Z')) {
+                                char warn[256];
+                                snprintf(warn, sizeof(warn),
+                                         "ORDO: variante '%s' deve comecar com letra maiuscula",
+                                         variant->name);
+                                sem_warn_at(sem, variant->line, variant->column, warn, NULL);
+                            }
+
+                            cct_sem_symbol_t *es = sem_define_symbol(sem, CCT_SEM_SYMBOL_VARIABLE,
+                                                                     variant->name, variant->line, variant->column);
+                            if (es) es->type = sym->type;
+
+                            for (size_t f = 0; f < variant->field_count; f++) {
+                                cct_ast_ordo_field_t *field = variant->fields[f];
+                                if (!field) continue;
+                                cct_sem_type_t *ft = sem_resolve_ast_type(sem, field->type, field->line, field->column);
+                                if (!sem_is_error_type(ft) && !sem_is_ordo_payload_supported_type(ft)) {
+                                    sem_reportf(
+                                        sem,
+                                        field->line,
+                                        field->column,
+                                        "ORDO payload: tipo %s nao suportado em payload nesta versao",
+                                        cct_sem_type_string(ft)
+                                    );
+                                }
+                                if (sem_is_c_reserved_keyword(field->name)) {
+                                    char warn[256];
+                                    snprintf(warn, sizeof(warn),
+                                             "ORDO payload: campo '%s' coincide com keyword C reservada",
+                                             field->name ? field->name : "<campo>");
+                                    sem_warn_at(sem, field->line, field->column, warn, NULL);
+                                }
+                            }
+
+                            if (variant->field_count > 0) has_payload = true;
+                        }
+                    } else if (node->as.ordo.items) {
+                        for (size_t i = 0; i < node->as.ordo.items->count; i++) {
+                            cct_ast_enum_item_t *item = node->as.ordo.items->items[i];
+                            if (!item) continue;
+                            cct_sem_symbol_t *es = sem_define_symbol(sem, CCT_SEM_SYMBOL_VARIABLE,
+                                                                     item->name, item->line, item->column);
+                            if (es) es->type = sym->type;
+                        }
                     }
+
+                    mutable->as.ordo.has_payload = has_payload;
                 }
             }
             return;

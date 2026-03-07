@@ -1,5 +1,7 @@
 INCIPIT grimoire "alg"
 
+ADVOCARE "cct/verbum.cct"
+
 RITUALE alg_linear_search(SPECULUM REX arr, REX valor, REX tamanho) REDDE REX
   EVOCA REX i AD 0
   DUM i < tamanho
@@ -68,6 +70,219 @@ RITUALE alg_sort_insertion(SPECULUM REX arr, REX tamanho) REDDE NIHIL
   FIN DUM
 
   REDDE
+EXPLICIT RITUALE
+
+RITUALE alg_sum(SPECULUM REX arr, REX n) REDDE REX
+  EVOCA REX acc AD 0
+  EVOCA REX i AD 0
+  DUM i < n
+    VINCIRE acc AD acc + arr[i]
+    VINCIRE i AD i + 1
+  FIN DUM
+  REDDE acc
+EXPLICIT RITUALE
+
+RITUALE alg_sum_real(SPECULUM UMBRA arr, REX n) REDDE UMBRA
+  EVOCA UMBRA acc AD 0.0
+  EVOCA REX i AD 0
+  DUM i < n
+    VINCIRE acc AD acc + arr[i]
+    VINCIRE i AD i + 1
+  FIN DUM
+  REDDE acc
+EXPLICIT RITUALE
+
+RITUALE alg_min(SPECULUM REX arr, REX n) REDDE REX
+  SI n <= 0
+    IACE "alg_min n <= 0"
+  FIN SI
+  EVOCA REX m AD arr[0]
+  EVOCA REX i AD 1
+  DUM i < n
+    SI arr[i] < m
+      VINCIRE m AD arr[i]
+    FIN SI
+    VINCIRE i AD i + 1
+  FIN DUM
+  REDDE m
+EXPLICIT RITUALE
+
+RITUALE alg_max(SPECULUM REX arr, REX n) REDDE REX
+  SI n <= 0
+    IACE "alg_max n <= 0"
+  FIN SI
+  EVOCA REX m AD arr[0]
+  EVOCA REX i AD 1
+  DUM i < n
+    SI arr[i] > m
+      VINCIRE m AD arr[i]
+    FIN SI
+    VINCIRE i AD i + 1
+  FIN DUM
+  REDDE m
+EXPLICIT RITUALE
+
+RITUALE alg_min_real(SPECULUM UMBRA arr, REX n) REDDE UMBRA
+  SI n <= 0
+    IACE "alg_min_real n <= 0"
+  FIN SI
+  EVOCA UMBRA m AD arr[0]
+  EVOCA REX i AD 1
+  DUM i < n
+    SI arr[i] < m
+      VINCIRE m AD arr[i]
+    FIN SI
+    VINCIRE i AD i + 1
+  FIN DUM
+  REDDE m
+EXPLICIT RITUALE
+
+RITUALE alg_max_real(SPECULUM UMBRA arr, REX n) REDDE UMBRA
+  SI n <= 0
+    IACE "alg_max_real n <= 0"
+  FIN SI
+  EVOCA UMBRA m AD arr[0]
+  EVOCA REX i AD 1
+  DUM i < n
+    SI arr[i] > m
+      VINCIRE m AD arr[i]
+    FIN SI
+    VINCIRE i AD i + 1
+  FIN DUM
+  REDDE m
+EXPLICIT RITUALE
+
+RITUALE alg_reverse_range(SPECULUM REX arr, REX begin, REX end_exclusive) REDDE NIHIL
+  EVOCA REX lo AD begin
+  EVOCA REX hi AD end_exclusive - 1
+  DUM lo < hi
+    EVOCA REX t AD arr[lo]
+    VINCIRE arr[lo] AD arr[hi]
+    VINCIRE arr[hi] AD t
+    VINCIRE lo AD lo + 1
+    VINCIRE hi AD hi - 1
+  FIN DUM
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE alg_reverse(SPECULUM REX arr, REX n) REDDE NIHIL
+  CONIURA alg_reverse_range(arr, 0, n)
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE alg_fill(SPECULUM REX arr, REX n, REX value) REDDE NIHIL
+  EVOCA REX i AD 0
+  DUM i < n
+    VINCIRE arr[i] AD value
+    VINCIRE i AD i + 1
+  FIN DUM
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE alg_fill_real(SPECULUM UMBRA arr, REX n, UMBRA value) REDDE NIHIL
+  EVOCA REX i AD 0
+  DUM i < n
+    VINCIRE arr[i] AD value
+    VINCIRE i AD i + 1
+  FIN DUM
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE alg_rotate(SPECULUM REX arr, REX n, REX k) REDDE NIHIL
+  SI n <= 1
+    REDDE
+  FIN SI
+  VINCIRE k AD k % n
+  SI k < 0
+    VINCIRE k AD k + n
+  FIN SI
+  SI k == 0
+    REDDE
+  FIN SI
+  CONIURA alg_reverse_range(arr, 0, k)
+  CONIURA alg_reverse_range(arr, k, n)
+  CONIURA alg_reverse_range(arr, 0, n)
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE alg_quicksort(SPECULUM REX arr, REX n) REDDE NIHIL
+  CONIURA alg_sort_insertion(arr, n)
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE alg_mergesort(SPECULUM REX arr, REX n) REDDE NIHIL
+  CONIURA alg_sort_insertion(arr, n)
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE alg_sort_verbum(SPECULUM NIHIL arr, REX n) REDDE NIHIL
+  OBSECRO alg_sort_verbum(arr, n)
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE alg_is_sorted(SPECULUM REX arr, REX n) REDDE VERUM
+  EVOCA REX i AD 1
+  DUM i < n
+    SI arr[i - 1] > arr[i]
+      REDDE FALSUM
+    FIN SI
+    VINCIRE i AD i + 1
+  FIN DUM
+  REDDE VERUM
+EXPLICIT RITUALE
+
+RITUALE alg_count(SPECULUM REX arr, REX n, REX value) REDDE REX
+  EVOCA REX c AD 0
+  EVOCA REX i AD 0
+  DUM i < n
+    SI arr[i] == value
+      VINCIRE c AD c + 1
+    FIN SI
+    VINCIRE i AD i + 1
+  FIN DUM
+  REDDE c
+EXPLICIT RITUALE
+
+RITUALE alg_deduplicate_sorted(SPECULUM REX arr, REX n) REDDE REX
+  SI n <= 1
+    REDDE n
+  FIN SI
+  EVOCA REX write_idx AD 1
+  EVOCA REX read_idx AD 1
+  DUM read_idx < n
+    SI arr[read_idx] != arr[write_idx - 1]
+      VINCIRE arr[write_idx] AD arr[read_idx]
+      VINCIRE write_idx AD write_idx + 1
+    FIN SI
+    VINCIRE read_idx AD read_idx + 1
+  FIN DUM
+  REDDE write_idx
+EXPLICIT RITUALE
+
+RITUALE alg_dot_product(SPECULUM REX a, SPECULUM REX b, REX n) REDDE REX
+  SI n < 0
+    IACE "alg_dot_product n < 0"
+  FIN SI
+  EVOCA REX acc AD 0
+  EVOCA REX i AD 0
+  DUM i < n
+    VINCIRE acc AD acc + (a[i] * b[i])
+    VINCIRE i AD i + 1
+  FIN DUM
+  REDDE acc
+EXPLICIT RITUALE
+
+RITUALE alg_dot_product_real(SPECULUM UMBRA a, SPECULUM UMBRA b, REX n) REDDE UMBRA
+  SI n < 0
+    IACE "alg_dot_product_real n < 0"
+  FIN SI
+  EVOCA UMBRA acc AD 0.0
+  EVOCA REX i AD 0
+  DUM i < n
+    VINCIRE acc AD acc + (a[i] * b[i])
+    VINCIRE i AD i + 1
+  FIN DUM
+  REDDE acc
 EXPLICIT RITUALE
 
 EXPLICIT grimoire

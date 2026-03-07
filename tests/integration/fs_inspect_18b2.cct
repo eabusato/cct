@@ -1,0 +1,55 @@
+INCIPIT grimoire "fs_inspect_18b2"
+
+ADVOCARE "cct/fs.cct"
+
+RITUALE main() REDDE REX
+  EVOCA VERBUM raiz AD "tests/.tmp/fs_18b2_inspect"
+  EVOCA VERBUM arq AD "tests/.tmp/fs_18b2_inspect/a.txt"
+  EVOCA VERBUM dir AD "tests/.tmp/fs_18b2_inspect/sub"
+  EVOCA VERBUM lnk AD "tests/.tmp/fs_18b2_inspect/a.link"
+
+  CONIURA mkdir_all(raiz)
+  CONIURA write_all(arq, "ok")
+  CONIURA mkdir(dir)
+  CONIURA symlink("a.txt", lnk)
+
+  SI NON CONIURA is_file(arq)
+    REDDE 1
+  FIN SI
+  SI NON CONIURA is_dir(dir)
+    REDDE 2
+  FIN SI
+  SI NON CONIURA is_symlink(lnk)
+    REDDE 3
+  FIN SI
+  SI NON CONIURA is_file(lnk)
+    REDDE 4
+  FIN SI
+  SI CONIURA is_dir(arq)
+    REDDE 5
+  FIN SI
+  SI NON CONIURA is_readable(arq)
+    REDDE 6
+  FIN SI
+  SI NON CONIURA is_writable(arq)
+    REDDE 7
+  FIN SI
+  SI NON CONIURA same_file(arq, lnk)
+    REDDE 8
+  FIN SI
+  SI CONIURA same_file(arq, dir)
+    REDDE 9
+  FIN SI
+  SI CONIURA same_file(arq, "tests/.tmp/fs_18b2_inspect/missing.txt")
+    REDDE 10
+  FIN SI
+
+  CONIURA delete_file(lnk)
+  CONIURA delete_file(arq)
+  CONIURA delete_dir(dir)
+  CONIURA delete_dir(raiz)
+
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

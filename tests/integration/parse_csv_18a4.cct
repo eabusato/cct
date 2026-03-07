@@ -1,0 +1,37 @@
+INCIPIT grimoire "parse_csv_18a4"
+
+ADVOCARE "cct/parse.cct"
+ADVOCARE "cct/verbum.cct"
+ADVOCARE "cct/fluxus.cct"
+
+RITUALE main() REDDE REX
+  EVOCA MILES semi AD CONIURA char_at(";", 0)
+  EVOCA SPECULUM NIHIL a AD CONIURA parse_csv_line("a,\"b,c\",d")
+  EVOCA SPECULUM NIHIL b AD CONIURA parse_csv_line_sep("k;\"l;m\";n", semi)
+  EVOCA SPECULUM NIHIL c AD CONIURA parse_csv_line("")
+
+  EVOCA VERBUM aj AD CONIURA join(a, "|")
+  EVOCA VERBUM bj AD CONIURA join(b, "|")
+  EVOCA VERBUM cj AD CONIURA join(c, "|")
+
+  EVOCA VERUM ok AD VERUM
+
+  SI CONIURA fluxus_len(a) != 3 VEL CONIURA fluxus_len(b) != 3 VEL CONIURA fluxus_len(c) != 1
+    VINCIRE ok AD FALSUM
+  FIN SI
+
+  SI CONIURA compare(aj, "a|b,c|d") != 0 VEL CONIURA compare(bj, "k|l;m|n") != 0 VEL CONIURA compare(cj, "") != 0
+    VINCIRE ok AD FALSUM
+  FIN SI
+
+  CONIURA fluxus_free(a)
+  CONIURA fluxus_free(b)
+  CONIURA fluxus_free(c)
+
+  SI ok
+    REDDE 0
+  FIN SI
+  REDDE 1
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

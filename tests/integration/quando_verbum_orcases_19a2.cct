@@ -1,0 +1,19 @@
+INCIPIT grimoire "quando_verbum_orcases_19a2"
+
+RITUALE main() REDDE NIHIL
+  EVOCA VERBUM metodo AD "HEAD"
+
+  QUANDO metodo
+    CASO "GET":
+    CASO "HEAD":
+      OBSECRO scribe("leitura\n")
+    CASO "POST":
+      OBSECRO scribe("escrita\n")
+    SENAO:
+      OBSECRO scribe("outro\n")
+  FIN QUANDO
+
+  REDDE
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

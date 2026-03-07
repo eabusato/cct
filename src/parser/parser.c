@@ -8,6 +8,7 @@
 
 #include "parser.h"
 #include "../common/diagnostic.h"
+#include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -98,6 +99,9 @@ static bool is_sync_point(cct_token_type_t type) {
         case TOKEN_EVOCA:
         case TOKEN_VINCIRE:
         case TOKEN_SI:
+        case TOKEN_QUANDO:
+        case TOKEN_CASO:
+        case TOKEN_SENAO:
         case TOKEN_DUM:
         case TOKEN_DONEC:
         case TOKEN_REPETE:
@@ -115,6 +119,7 @@ static bool is_sync_point(cct_token_type_t type) {
         case TOKEN_CAPE:
         case TOKEN_SEMPER:
         case TOKEN_GENUS:
+        case TOKEN_MOLDE:
             return true;
         default:
             return false;
@@ -179,6 +184,41 @@ static char* dup_string_contents(const char *lexeme) {
     return copy;
 }
 
+static char* parse_molde_unescape_snippet(const char *raw) {
+    if (!raw) {
+        char *empty = strdup("");
+        if (!empty) exit(CCT_ERROR_OUT_OF_MEMORY);
+        return empty;
+    }
+
+    size_t len = strlen(raw);
+    char *decoded = (char*)malloc(len + 1);
+    if (!decoded) exit(CCT_ERROR_OUT_OF_MEMORY);
+
+    size_t j = 0;
+    for (size_t i = 0; i < len; i++) {
+        char ch = raw[i];
+        if (ch == '\\' && (i + 1) < len) {
+            char n = raw[++i];
+            switch (n) {
+                case 'n': decoded[j++] = '\n'; break;
+                case 't': decoded[j++] = '\t'; break;
+                case 'r': decoded[j++] = '\r'; break;
+                case '\\': decoded[j++] = '\\'; break;
+                case '"': decoded[j++] = '"'; break;
+                default:
+                    decoded[j++] = n;
+                    break;
+            }
+        } else {
+            decoded[j++] = ch;
+        }
+    }
+
+    decoded[j] = '\0';
+    return decoded;
+}
+
 /* ========================================================================
  * Forward Declarations
  * ======================================================================== */
@@ -186,6 +226,7 @@ static char* dup_string_contents(const char *lexeme) {
 static cct_ast_node_t* parse_declaration(cct_parser_t *parser);
 static cct_ast_node_t* parse_statement(cct_parser_t *parser);
 static cct_ast_node_t* parse_expression(cct_parser_t *parser);
+static cct_ast_node_t* parse_quando(cct_parser_t *parser);
 static cct_ast_type_t* parse_type(cct_parser_t *parser);
 static cct_ast_type_param_list_t* parse_optional_type_params(
     cct_parser_t *parser,
@@ -193,6 +234,7 @@ static cct_ast_type_param_list_t* parse_optional_type_params(
     bool allow_pactum_constraint
 );
 static cct_ast_type_list_t* parse_optional_generic_type_args(cct_parser_t *parser, const char *context);
+static void* parser_realloc_or_exit(void *ptr, size_t size);
 
 /* ========================================================================
  * Token/Grammar Helpers
@@ -245,6 +287,7 @@ static bool is_expression_start_token(cct_token_type_t type) {
         case TOKEN_CONIURA:
         case TOKEN_OBSECRO:
         case TOKEN_MENSURA:
+        case TOKEN_MOLDE:
             return true;
         default:
             return false;
@@ -256,6 +299,8 @@ static bool is_statement_terminator(cct_token_type_t type) {
         case TOKEN_FIN:
         case TOKEN_EXPLICIT:
         case TOKEN_ALITER:
+        case TOKEN_CASO:
+        case TOKEN_SENAO:
         case TOKEN_CAPE:
         case TOKEN_SEMPER:
         case TOKEN_EOF:
@@ -487,9 +532,320 @@ static cct_ast_node_list_t* parse_argument_list(cct_parser_t *parser) {
     return args;
 }
 
+static void parse_molde_parts_free(cct_ast_molde_part_t *parts, size_t part_count) {
+    if (!parts) return;
+    for (size_t i = 0; i < part_count; i++) {
+        free(parts[i].literal_text);
+        free(parts[i].fmt_spec);
+        cct_ast_free_node(parts[i].expr);
+    }
+    free(parts);
+}
+
+static void parse_molde_literal_append_char(char **literal, size_t *len, size_t *cap, char ch) {
+    if (!literal || !len || !cap) return;
+    if (*len + 1 >= *cap) {
+        size_t next_cap = (*cap == 0) ? 32 : (*cap * 2);
+        while (*len + 1 >= next_cap) next_cap *= 2;
+        *literal = (char*)parser_realloc_or_exit(*literal, next_cap);
+        *cap = next_cap;
+    }
+    (*literal)[(*len)++] = ch;
+    (*literal)[*len] = '\0';
+}
+
+static void parse_molde_parts_append(
+    cct_ast_molde_part_t **parts,
+    size_t *part_count,
+    size_t *part_capacity,
+    cct_ast_molde_part_kind_t kind,
+    const char *literal_text,
+    cct_ast_node_t *expr,
+    const char *fmt_spec
+) {
+    if (!parts || !part_count || !part_capacity) return;
+    if (*part_count >= *part_capacity) {
+        size_t next_cap = (*part_capacity == 0) ? 8 : (*part_capacity * 2);
+        *parts = (cct_ast_molde_part_t*)parser_realloc_or_exit(*parts, next_cap * sizeof(**parts));
+        *part_capacity = next_cap;
+    }
+
+    cct_ast_molde_part_t *part = &(*parts)[(*part_count)++];
+    part->kind = kind;
+    part->literal_text = literal_text ? strdup(literal_text) : NULL;
+    part->expr = expr;
+    part->fmt_spec = fmt_spec ? strdup(fmt_spec) : NULL;
+
+    if ((literal_text && !part->literal_text) || (fmt_spec && !part->fmt_spec)) {
+        fprintf(stderr, "cct: fatal: out of memory\n");
+        exit(CCT_ERROR_OUT_OF_MEMORY);
+    }
+}
+
+static void parse_molde_report_error(cct_parser_t *parser, u32 line, u32 col, const char *message) {
+    cct_token_t at = {
+        .type = TOKEN_INVALID,
+        .lexeme = NULL,
+        .line = line,
+        .column = col,
+    };
+    error_at(parser, &at, message);
+}
+
+static cct_ast_node_t* parse_molde_expr_snippet(cct_parser_t *parser, const char *snippet, u32 line, u32 col) {
+    cct_lexer_t inner_lexer;
+    cct_parser_t inner_parser;
+    cct_ast_node_t *expr = NULL;
+
+    cct_lexer_init(&inner_lexer, snippet ? snippet : "", parser->filename);
+    cct_parser_init(&inner_parser, &inner_lexer, parser->filename);
+
+    expr = parse_expression(&inner_parser);
+    if (!expr && !cct_parser_had_error(&inner_parser)) {
+        parse_molde_report_error(parser, line, col, "MOLDE: expressao invalida em {}");
+    }
+    if (expr && !check(&inner_parser, TOKEN_EOF)) {
+        cct_ast_free_node(expr);
+        expr = NULL;
+        parse_molde_report_error(parser, line, col, "MOLDE: expressao invalida em {}");
+    }
+    if (cct_parser_had_error(&inner_parser)) {
+        parser->had_error = true;
+        parser->panic_mode = true;
+        if (expr) {
+            cct_ast_free_node(expr);
+            expr = NULL;
+        }
+    }
+
+    cct_parser_dispose(&inner_parser);
+    return expr;
+}
+
+static cct_ast_node_t* parse_molde_string(cct_parser_t *parser, const char *raw, u32 line, u32 col) {
+    cct_ast_molde_part_t *parts = NULL;
+    size_t part_count = 0;
+    size_t part_capacity = 0;
+    char *literal = NULL;
+    size_t literal_len = 0;
+    size_t literal_cap = 0;
+
+    if (!raw) raw = "";
+    size_t raw_len = strlen(raw);
+
+    for (size_t i = 0; i < raw_len; ) {
+        if (raw[i] == '{' && (i + 1) < raw_len && raw[i + 1] == '{') {
+            parse_molde_literal_append_char(&literal, &literal_len, &literal_cap, '{');
+            i += 2;
+            continue;
+        }
+        if (raw[i] == '}' && (i + 1) < raw_len && raw[i + 1] == '}') {
+            parse_molde_literal_append_char(&literal, &literal_len, &literal_cap, '}');
+            i += 2;
+            continue;
+        }
+        if (raw[i] != '{') {
+            parse_molde_literal_append_char(&literal, &literal_len, &literal_cap, raw[i]);
+            i++;
+            continue;
+        }
+
+        if (literal_len > 0) {
+            parse_molde_parts_append(
+                &parts, &part_count, &part_capacity,
+                CCT_AST_MOLDE_PART_LITERAL, literal, NULL, NULL
+            );
+            literal_len = 0;
+            if (literal) literal[0] = '\0';
+        }
+
+        size_t expr_start = i + 1;
+        size_t j = expr_start;
+        size_t colon_at = SIZE_MAX;
+        bool in_string = false;
+        bool escaped = false;
+        bool escaped_quote_string = false;
+        i32 brace_depth = 0;
+
+        while (j < raw_len) {
+            char ch = raw[j];
+            if (in_string) {
+                if (escaped_quote_string) {
+                    if (ch == '\\' && (j + 1) < raw_len && raw[j + 1] == '"') {
+                        in_string = false;
+                        escaped_quote_string = false;
+                        j += 2;
+                        continue;
+                    }
+                    j++;
+                    continue;
+                }
+                if (escaped) {
+                    escaped = false;
+                } else if (ch == '\\') {
+                    escaped = true;
+                } else if (ch == '"') {
+                    in_string = false;
+                }
+                j++;
+                continue;
+            }
+
+            if (ch == '\\' && (j + 1) < raw_len && raw[j + 1] == '"') {
+                in_string = true;
+                escaped_quote_string = true;
+                j += 2;
+                continue;
+            }
+            if (ch == '"') {
+                in_string = true;
+                escaped_quote_string = false;
+                j++;
+                continue;
+            }
+            if (ch == '{') {
+                brace_depth++;
+                j++;
+                continue;
+            }
+            if (ch == ':' && brace_depth == 0 && colon_at == SIZE_MAX) {
+                colon_at = j;
+                j++;
+                continue;
+            }
+            if (ch == '}') {
+                if (brace_depth == 0) break;
+                brace_depth--;
+                j++;
+                continue;
+            }
+            j++;
+        }
+
+        if (j >= raw_len || raw[j] != '}') {
+            parse_molde_report_error(
+                parser,
+                line,
+                col + (u32)i,
+                "MOLDE: '{' sem '}' correspondente"
+            );
+            parse_molde_parts_free(parts, part_count);
+            free(literal);
+            return NULL;
+        }
+
+        size_t expr_end = (colon_at == SIZE_MAX) ? j : colon_at;
+        size_t expr_len = expr_end - expr_start;
+        char *expr_src = (char*)malloc(expr_len + 1);
+        if (!expr_src) exit(CCT_ERROR_OUT_OF_MEMORY);
+        if (expr_len > 0) memcpy(expr_src, raw + expr_start, expr_len);
+        expr_src[expr_len] = '\0';
+
+        size_t expr_trim_start = 0;
+        while (expr_trim_start < expr_len && isspace((unsigned char)expr_src[expr_trim_start])) {
+            expr_trim_start++;
+        }
+        size_t expr_trim_end = expr_len;
+        while (expr_trim_end > expr_trim_start && isspace((unsigned char)expr_src[expr_trim_end - 1])) {
+            expr_trim_end--;
+        }
+
+        if (expr_trim_end == expr_trim_start) {
+            parse_molde_report_error(
+                parser,
+                line,
+                col + (u32)i,
+                "MOLDE: expressao vazia em {}"
+            );
+            free(expr_src);
+            parse_molde_parts_free(parts, part_count);
+            free(literal);
+            return NULL;
+        }
+
+        char *fmt_spec = NULL;
+        if (colon_at != SIZE_MAX) {
+            size_t spec_start = colon_at + 1;
+            size_t spec_len = j - spec_start;
+            fmt_spec = (char*)malloc(spec_len + 1);
+            if (!fmt_spec) exit(CCT_ERROR_OUT_OF_MEMORY);
+            if (spec_len > 0) memcpy(fmt_spec, raw + spec_start, spec_len);
+            fmt_spec[spec_len] = '\0';
+
+            size_t spec_trim_start = 0;
+            while (spec_trim_start < spec_len && isspace((unsigned char)fmt_spec[spec_trim_start])) {
+                spec_trim_start++;
+            }
+            size_t spec_trim_end = spec_len;
+            while (spec_trim_end > spec_trim_start && isspace((unsigned char)fmt_spec[spec_trim_end - 1])) {
+                spec_trim_end--;
+            }
+            if (spec_trim_end == spec_trim_start) {
+                parse_molde_report_error(
+                    parser,
+                    line,
+                    col + (u32)colon_at,
+                    "MOLDE: especificador de formato vazio apos ':'"
+                );
+                free(fmt_spec);
+                free(expr_src);
+                parse_molde_parts_free(parts, part_count);
+                free(literal);
+                return NULL;
+            }
+
+            size_t compact_len = spec_trim_end - spec_trim_start;
+            if (spec_trim_start > 0 && compact_len > 0) {
+                memmove(fmt_spec, fmt_spec + spec_trim_start, compact_len);
+            }
+            fmt_spec[compact_len] = '\0';
+        }
+
+        expr_src[expr_trim_end] = '\0';
+        char *expr_decoded = parse_molde_unescape_snippet(expr_src + expr_trim_start);
+        cct_ast_node_t *expr = parse_molde_expr_snippet(
+            parser,
+            expr_decoded,
+            line,
+            col + (u32)expr_start
+        );
+        free(expr_decoded);
+        free(expr_src);
+        if (!expr) {
+            free(fmt_spec);
+            parse_molde_parts_free(parts, part_count);
+            free(literal);
+            return NULL;
+        }
+
+        parse_molde_parts_append(
+            &parts, &part_count, &part_capacity,
+            CCT_AST_MOLDE_PART_EXPR, NULL, expr, fmt_spec
+        );
+        free(fmt_spec);
+
+        i = j + 1;
+    }
+
+    if (literal_len > 0 || part_count == 0) {
+        parse_molde_parts_append(
+            &parts, &part_count, &part_capacity,
+            CCT_AST_MOLDE_PART_LITERAL, literal ? literal : "", NULL, NULL
+        );
+    }
+
+    free(literal);
+    return cct_ast_create_molde(parts, part_count, line, col);
+}
+
 static cct_ast_node_t* parse_primary(cct_parser_t *parser) {
     u32 line = parser->current.line;
     u32 col = parser->current.column;
+
+    if (check(parser, TOKEN_QUANDO)) {
+        error_at_current(parser, "QUANDO nao pode ser usado como expressao");
+        return NULL;
+    }
 
     if (match(parser, TOKEN_INTEGER)) {
         i64 value = strtoll(parser->previous.lexeme, NULL, 10);
@@ -505,6 +861,18 @@ static cct_ast_node_t* parse_primary(cct_parser_t *parser) {
         char *str = dup_string_contents(parser->previous.lexeme);
         cct_ast_node_t *node = cct_ast_create_literal_string(str, line, col);
         free(str);
+        return node;
+    }
+
+    if (match(parser, TOKEN_MOLDE)) {
+        if (!check(parser, TOKEN_STRING)) {
+            error_at_current(parser, "Expected string literal after MOLDE");
+            return NULL;
+        }
+        char *raw = dup_string_contents(parser->current.lexeme);
+        advance(parser);
+        cct_ast_node_t *node = parse_molde_string(parser, raw, line, col);
+        free(raw);
         return node;
     }
 
@@ -779,6 +1147,120 @@ static cct_ast_node_t* parse_ritual_block_until_token(cct_parser_t *parser, cct_
     return cct_ast_create_block(stmts, line, col);
 }
 
+static cct_ast_node_t* parse_ritual_block_until_quando_boundary(cct_parser_t *parser) {
+    u32 line = parser->current.line;
+    u32 col = parser->current.column;
+    cct_ast_node_list_t *stmts = cct_ast_create_node_list();
+
+    while (!check(parser, TOKEN_EOF)) {
+        if (check(parser, TOKEN_CASO) || check(parser, TOKEN_SENAO) || check(parser, TOKEN_FIN)) break;
+        cct_ast_node_t *stmt = parse_statement(parser);
+        if (stmt) cct_ast_node_list_append(stmts, stmt);
+        if (parser->panic_mode) synchronize(parser);
+    }
+
+    return cct_ast_create_block(stmts, line, col);
+}
+
+static void* parser_realloc_or_exit(void *ptr, size_t size) {
+    void *next = realloc(ptr, size);
+    if (!next) {
+        fprintf(stderr, "cct: fatal: out of memory\n");
+        exit(CCT_ERROR_OUT_OF_MEMORY);
+    }
+    return next;
+}
+
+static void parse_quando_append_literal(cct_ast_node_t ***literals, size_t *count, size_t *capacity, cct_ast_node_t *literal) {
+    if (!literal) return;
+    if (*count >= *capacity) {
+        size_t next_cap = (*capacity == 0) ? 4 : (*capacity * 2);
+        *literals = (cct_ast_node_t**)parser_realloc_or_exit(*literals, next_cap * sizeof(cct_ast_node_t*));
+        *capacity = next_cap;
+    }
+    (*literals)[(*count)++] = literal;
+}
+
+static void parse_quando_append_binding(char ***bindings, size_t *count, size_t *capacity, char *binding_name) {
+    if (!binding_name) return;
+    if (*count >= *capacity) {
+        size_t next_cap = (*capacity == 0) ? 4 : (*capacity * 2);
+        *bindings = (char**)parser_realloc_or_exit(*bindings, next_cap * sizeof(char*));
+        *capacity = next_cap;
+    }
+    (*bindings)[(*count)++] = binding_name;
+}
+
+static void parse_quando_append_case(cct_ast_case_node_t **cases, size_t *count, size_t *capacity,
+                                     cct_ast_node_t **literals, size_t literal_count,
+                                     char **binding_names, size_t binding_count,
+                                     cct_ast_node_t *body) {
+    if (*count >= *capacity) {
+        size_t next_cap = (*capacity == 0) ? 4 : (*capacity * 2);
+        *cases = (cct_ast_case_node_t*)parser_realloc_or_exit(*cases, next_cap * sizeof(cct_ast_case_node_t));
+        *capacity = next_cap;
+    }
+    (*cases)[*count].literals = literals;
+    (*cases)[*count].literal_count = literal_count;
+    (*cases)[*count].binding_names = binding_names;
+    (*cases)[*count].binding_count = binding_count;
+    (*cases)[*count].resolved_ordo_variant = NULL;
+    (*cases)[*count].body = body;
+    (*count)++;
+}
+
+static cct_ast_node_t* parse_quando_literal(cct_parser_t *parser) {
+    u32 line = parser->current.line;
+    u32 col = parser->current.column;
+
+    if (match(parser, TOKEN_MINUS)) {
+        if (!check(parser, TOKEN_INTEGER)) {
+            error_at_current(parser, "Expected integer literal after '-' in CASO");
+            return NULL;
+        }
+        i64 value = strtoll(parser->current.lexeme, NULL, 10);
+        advance(parser);
+        return cct_ast_create_literal_int(-value, line, col);
+    }
+
+    if (match(parser, TOKEN_PLUS)) {
+        if (!check(parser, TOKEN_INTEGER)) {
+            error_at_current(parser, "Expected integer literal after '+' in CASO");
+            return NULL;
+        }
+        i64 value = strtoll(parser->current.lexeme, NULL, 10);
+        advance(parser);
+        return cct_ast_create_literal_int(value, line, col);
+    }
+
+    if (match(parser, TOKEN_INTEGER)) {
+        i64 value = strtoll(parser->previous.lexeme, NULL, 10);
+        return cct_ast_create_literal_int(value, line, col);
+    }
+
+    if (match(parser, TOKEN_STRING)) {
+        char *str = dup_string_contents(parser->previous.lexeme);
+        cct_ast_node_t *node = cct_ast_create_literal_string(str, line, col);
+        free(str);
+        return node;
+    }
+
+    if (match(parser, TOKEN_IDENTIFIER)) {
+        return cct_ast_create_identifier(parser->previous.lexeme, line, col);
+    }
+
+    if (match(parser, TOKEN_VERUM)) {
+        return cct_ast_create_literal_bool(true, line, col);
+    }
+
+    if (match(parser, TOKEN_FALSUM)) {
+        return cct_ast_create_literal_bool(false, line, col);
+    }
+
+    error_at_current(parser, "Expected CASO literal (integer/string/identifier/VERUM/FALSUM)");
+    return NULL;
+}
+
 static cct_ast_node_t* parse_ritual_block_until_failure_clause(cct_parser_t *parser) {
     u32 line = parser->current.line;
     u32 col = parser->current.column;
@@ -1013,6 +1495,108 @@ static cct_ast_node_t* parse_tempta(cct_parser_t *parser) {
     return node;
 }
 
+static cct_ast_node_t* parse_quando(cct_parser_t *parser) {
+    u32 line = parser->current.line;
+    u32 col = parser->current.column;
+    expect(parser, TOKEN_QUANDO, "Expected QUANDO");
+
+    cct_ast_node_t *expr = parse_expression(parser);
+
+    cct_ast_case_node_t *cases = NULL;
+    size_t case_count = 0;
+    size_t case_capacity = 0;
+
+    cct_ast_node_t **pending_literals = NULL;
+    size_t pending_count = 0;
+    size_t pending_capacity = 0;
+
+    while (match(parser, TOKEN_CASO)) {
+        cct_ast_node_t *literal = parse_quando_literal(parser);
+        char **binding_names = NULL;
+        size_t binding_count = 0;
+        size_t binding_capacity = 0;
+
+        if (literal && literal->type == AST_IDENTIFIER && match(parser, TOKEN_LPAREN)) {
+            if (!check(parser, TOKEN_RPAREN)) {
+                do {
+                    if (!check(parser, TOKEN_IDENTIFIER)) {
+                        error_at_current(parser, "Expected binding name in CASO payload destructuring");
+                        break;
+                    }
+                    char *binding = strdup(parser->current.lexeme);
+                    if (!binding) exit(CCT_ERROR_OUT_OF_MEMORY);
+                    advance(parser);
+                    parse_quando_append_binding(&binding_names, &binding_count, &binding_capacity, binding);
+                } while (match(parser, TOKEN_COMMA));
+            }
+            expect(parser, TOKEN_RPAREN, "Expected ')' after CASO payload bindings");
+        }
+
+        expect(parser, TOKEN_COLON, "Expected ':' after CASO literal");
+        bool has_body = !(check(parser, TOKEN_CASO) ||
+                          check(parser, TOKEN_SENAO) ||
+                          check(parser, TOKEN_FIN) ||
+                          check(parser, TOKEN_EOF));
+
+        if (binding_count > 0) {
+            if (pending_count > 0) {
+                error_at_current(parser, "QUANDO ORDO: OR-cases com payload nao sao suportados nesta fase");
+                cct_ast_node_t *empty_body = cct_ast_create_block(cct_ast_create_node_list(), line, col);
+                parse_quando_append_case(&cases, &case_count, &case_capacity,
+                                         pending_literals, pending_count, NULL, 0, empty_body);
+                pending_literals = NULL;
+                pending_count = 0;
+                pending_capacity = 0;
+            }
+
+            cct_ast_node_t **case_literals = NULL;
+            size_t case_literal_count = 0;
+            size_t case_literal_capacity = 0;
+            parse_quando_append_literal(&case_literals, &case_literal_count, &case_literal_capacity, literal);
+            cct_ast_node_t *body = has_body
+                ? parse_ritual_block_until_quando_boundary(parser)
+                : cct_ast_create_block(cct_ast_create_node_list(), line, col);
+            parse_quando_append_case(&cases, &case_count, &case_capacity,
+                                     case_literals, case_literal_count,
+                                     binding_names, binding_count, body);
+            continue;
+        }
+
+        parse_quando_append_literal(&pending_literals, &pending_count, &pending_capacity, literal);
+
+        if (has_body && pending_count > 0) {
+            cct_ast_node_t *body = parse_ritual_block_until_quando_boundary(parser);
+            parse_quando_append_case(&cases, &case_count, &case_capacity,
+                                     pending_literals, pending_count, NULL, 0, body);
+            pending_literals = NULL;
+            pending_count = 0;
+            pending_capacity = 0;
+        } else if (has_body) {
+            /* Keep parser progress deterministic even after a malformed CASO literal. */
+            cct_ast_node_t *skipped_body = parse_ritual_block_until_quando_boundary(parser);
+            cct_ast_free_node(skipped_body);
+        }
+    }
+
+    if (pending_count > 0) {
+        cct_ast_node_t *empty_body = cct_ast_create_block(cct_ast_create_node_list(), line, col);
+        parse_quando_append_case(&cases, &case_count, &case_capacity,
+                                 pending_literals, pending_count, NULL, 0, empty_body);
+        pending_literals = NULL;
+        pending_count = 0;
+        pending_capacity = 0;
+    }
+
+    cct_ast_node_t *else_body = NULL;
+    if (match(parser, TOKEN_SENAO)) {
+        expect(parser, TOKEN_COLON, "Expected ':' after SENAO");
+        else_body = parse_ritual_block_until_fin(parser, TOKEN_QUANDO, false);
+    }
+
+    consume_fin_clause(parser, TOKEN_QUANDO, "Expected QUANDO after FIN");
+    return cct_ast_create_quando(expr, cases, case_count, else_body, line, col);
+}
+
 static cct_ast_node_t* parse_si(cct_parser_t *parser) {
     u32 line = parser->current.line;
     u32 col = parser->current.column;
@@ -1108,14 +1692,26 @@ static cct_ast_node_t* parse_iterum(cct_parser_t *parser) {
     expect(parser, TOKEN_ITERUM, "Expected ITERUM");
 
     if (!check(parser, TOKEN_IDENTIFIER)) {
-        error_at_current(parser, "Expected iterator item name after ITERUM");
+        error_at_current(parser, "Expected first ITERUM binding name after ITERUM");
         return NULL;
     }
     char *item_name = strdup(parser->current.lexeme);
     if (!item_name) exit(CCT_ERROR_OUT_OF_MEMORY);
     advance(parser);
 
-    expect(parser, TOKEN_IN, "Expected IN after ITERUM item name");
+    char *value_name = NULL;
+    if (match(parser, TOKEN_COMMA)) {
+        if (!check(parser, TOKEN_IDENTIFIER)) {
+            error_at_current(parser, "Expected second ITERUM binding name after ','");
+            free(item_name);
+            return NULL;
+        }
+        value_name = strdup(parser->current.lexeme);
+        if (!value_name) exit(CCT_ERROR_OUT_OF_MEMORY);
+        advance(parser);
+    }
+
+    expect(parser, TOKEN_IN, "Expected IN after ITERUM binding name(s)");
     cct_ast_node_t *collection = parse_expression(parser);
     if (check(parser, TOKEN_IDENTIFIER) && parser->current.lexeme &&
         strcmp(parser->current.lexeme, "COM") == 0) {
@@ -1125,8 +1721,9 @@ static cct_ast_node_t* parse_iterum(cct_parser_t *parser) {
     cct_ast_node_t *body = parse_ritual_block_until_fin(parser, TOKEN_ITERUM, false);
     consume_fin_clause(parser, TOKEN_ITERUM, "Expected ITERUM after FIN");
 
-    cct_ast_node_t *node = cct_ast_create_iterum(item_name, collection, body, line, col);
+    cct_ast_node_t *node = cct_ast_create_iterum(item_name, value_name, collection, body, line, col);
     free(item_name);
+    free(value_name);
     return node;
 }
 
@@ -1158,8 +1755,17 @@ static cct_ast_node_t* parse_statement(cct_parser_t *parser) {
         error_at_current(parser, "GENUS in subset 10A only supports RITUALE and SIGILLUM declarations");
         return NULL;
     }
+    if (check(parser, TOKEN_CASO)) {
+        error_at_current(parser, "CASO can only appear inside QUANDO");
+        return NULL;
+    }
+    if (check(parser, TOKEN_SENAO)) {
+        error_at_current(parser, "SENAO can only appear inside QUANDO");
+        return NULL;
+    }
 
     if (check(parser, TOKEN_SI)) return parse_si(parser);
+    if (check(parser, TOKEN_QUANDO)) return parse_quando(parser);
     if (check(parser, TOKEN_DUM)) return parse_dum(parser);
     if (check(parser, TOKEN_DONEC)) return parse_donec(parser);
     if (check(parser, TOKEN_REPETE)) return parse_repete(parser);
@@ -1418,12 +2024,35 @@ static cct_ast_node_t* parse_sigillum(cct_parser_t *parser) {
     return node;
 }
 
-static cct_ast_enum_item_t* parse_enum_item(cct_parser_t *parser) {
+static cct_ast_ordo_field_t* parse_ordo_field(cct_parser_t *parser) {
+    u32 line = parser->current.line;
+    u32 col = parser->current.column;
+
+    cct_ast_type_t *type = parse_type(parser);
+    if (!type) return NULL;
+
+    if (!check(parser, TOKEN_IDENTIFIER)) {
+        error_at_current(parser, "Expected ORDO payload field name");
+        cct_ast_free_type(type);
+        return NULL;
+    }
+
+    char *name = strdup(parser->current.lexeme);
+    if (!name) exit(CCT_ERROR_OUT_OF_MEMORY);
+    advance(parser);
+
+    cct_ast_ordo_field_t *field = cct_ast_create_ordo_field(name, type, line, col);
+    free(name);
+    return field;
+}
+
+static cct_ast_ordo_variant_t* parse_ordo_variant(cct_parser_t *parser, cct_ast_enum_item_list_t *compat_items,
+                                                  bool *has_payload_out) {
     u32 line = parser->current.line;
     u32 col = parser->current.column;
 
     if (!check(parser, TOKEN_IDENTIFIER)) {
-        error_at_current(parser, "Expected enum item name");
+        error_at_current(parser, "Expected ORDO variant name");
         return NULL;
     }
 
@@ -1433,7 +2062,24 @@ static cct_ast_enum_item_t* parse_enum_item(cct_parser_t *parser) {
 
     bool has_value = false;
     i64 value = 0;
+
+    cct_ast_ordo_variant_t *variant = cct_ast_create_ordo_variant(name, false, 0, line, col);
+
+    if (match(parser, TOKEN_LPAREN)) {
+        if (has_payload_out) *has_payload_out = true;
+        if (!check(parser, TOKEN_RPAREN)) {
+            do {
+                cct_ast_ordo_field_t *field = parse_ordo_field(parser);
+                if (field) cct_ast_ordo_variant_add_field(variant, field);
+            } while (match(parser, TOKEN_COMMA));
+        }
+        expect(parser, TOKEN_RPAREN, "Expected ')' after ORDO payload fields");
+    }
+
     if (match(parser, TOKEN_EQ)) {
+        if (variant->field_count > 0) {
+            error_at(parser, &parser->previous, "ORDO payload variants cannot declare explicit numeric tag with '='");
+        }
         has_value = true;
         if (!check(parser, TOKEN_INTEGER)) {
             error_at_current(parser, "Expected integer enum value");
@@ -1443,9 +2089,16 @@ static cct_ast_enum_item_t* parse_enum_item(cct_parser_t *parser) {
         }
     }
 
-    cct_ast_enum_item_t *item = cct_ast_create_enum_item(name, value, has_value, line, col);
+    variant->has_value = has_value;
+    variant->value = value;
+
+    if (compat_items) {
+        cct_ast_enum_item_t *item = cct_ast_create_enum_item(name, value, has_value, line, col);
+        cct_ast_enum_item_list_append(compat_items, item);
+    }
+
     free(name);
-    return item;
+    return variant;
 }
 
 static cct_ast_node_t* parse_ordo(cct_parser_t *parser) {
@@ -1469,9 +2122,11 @@ static cct_ast_node_t* parse_ordo(cct_parser_t *parser) {
     }
 
     cct_ast_enum_item_list_t *items = cct_ast_create_enum_item_list();
+    cct_ast_ordo_variant_list_t *variants = cct_ast_create_ordo_variant_list();
+    bool has_payload = false;
     while (!check(parser, TOKEN_EOF) && !check(parser, TOKEN_FIN)) {
-        cct_ast_enum_item_t *item = parse_enum_item(parser);
-        if (item) cct_ast_enum_item_list_append(items, item);
+        cct_ast_ordo_variant_t *variant = parse_ordo_variant(parser, items, &has_payload);
+        if (variant) cct_ast_ordo_variant_list_append(variants, variant);
         (void)match(parser, TOKEN_COMMA);
         consume_optional_semicolon(parser);
         if (parser->panic_mode) synchronize(parser);
@@ -1479,7 +2134,7 @@ static cct_ast_node_t* parse_ordo(cct_parser_t *parser) {
 
     consume_fin_clause(parser, TOKEN_ORDO, "Expected ORDO after FIN");
 
-    cct_ast_node_t *node = cct_ast_create_ordo(name, items, line, col);
+    cct_ast_node_t *node = cct_ast_create_ordo_with_variants(name, variants, items, has_payload, line, col);
     free(name);
     return node;
 }

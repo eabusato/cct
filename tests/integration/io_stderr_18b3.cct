@@ -1,0 +1,16 @@
+INCIPIT grimoire "io_stderr_18b3"
+
+ADVOCARE "cct/io.cct"
+
+RITUALE main() REDDE REX
+  CONIURA eprint("E")
+  CONIURA eprintln("1")
+  CONIURA eprint_int(7)
+  CONIURA eprint("\n")
+  CONIURA eprint_real(1.5)
+  CONIURA eprint("\n")
+  CONIURA eprint_bool(FALSUM)
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

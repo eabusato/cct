@@ -1,0 +1,30 @@
+INCIPIT grimoire "path_dirs_18b4"
+
+ADVOCARE "cct/path.cct"
+ADVOCARE "cct/verbum.cct"
+
+RITUALE main() REDDE REX
+  SI CONIURA compare(CONIURA home_dir(), "tests/.tmp/path_18b4_home") != 0
+    REDDE 1
+  FIN SI
+
+  SI CONIURA compare(CONIURA temp_dir(), "tests/.tmp/path_18b4_tmp") != 0
+    REDDE 2
+  FIN SI
+
+  SI CONIURA compare(CONIURA parent("/a/b"), "/a") != 0
+    REDDE 3
+  FIN SI
+
+  SI CONIURA compare(CONIURA parent("a"), ".") != 0
+    REDDE 4
+  FIN SI
+
+  SI CONIURA compare(CONIURA parent("a/b"), "a") != 0
+    REDDE 5
+  FIN SI
+
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

@@ -1,0 +1,43 @@
+INCIPIT grimoire "alg_fill_count_18c3"
+
+ADVOCARE "cct/alg.cct"
+
+RITUALE main() REDDE REX
+  EVOCA SERIES REX[6] a
+  CONIURA alg_fill(SPECULUM a[0], 6, 7)
+
+  SI CONIURA alg_count(SPECULUM a[0], 6, 7) != 6
+    REDDE 1
+  FIN SI
+
+  VINCIRE a[0] AD 1
+  VINCIRE a[1] AD 1
+  VINCIRE a[2] AD 2
+  VINCIRE a[3] AD 2
+  VINCIRE a[4] AD 2
+  VINCIRE a[5] AD 3
+
+  EVOCA REX m AD CONIURA alg_deduplicate_sorted(SPECULUM a[0], 6)
+  SI m != 3
+    REDDE 2
+  FIN SI
+  SI a[0] != 1
+    REDDE 3
+  FIN SI
+  SI a[1] != 2
+    REDDE 4
+  FIN SI
+  SI a[2] != 3
+    REDDE 5
+  FIN SI
+
+  EVOCA SERIES UMBRA[3] r
+  CONIURA alg_fill_real(SPECULUM r[0], 3, 1.25)
+  SI CONIURA alg_sum_real(SPECULUM r[0], 3) != 3.75
+    REDDE 6
+  FIN SI
+
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

@@ -1,0 +1,16 @@
+INCIPIT grimoire "iterum_map_aridade_errada_19d1"
+
+ADVOCARE "cct/map.cct"
+
+RITUALE main() REDDE REX
+  EVOCA SPECULUM NIHIL m AD CONIURA map_init GENUS(REX, REX)()
+
+  ITERUM k IN m COM
+    VINCIRE k AD k + 1
+  FIN ITERUM
+
+  CONIURA map_free GENUS(REX, REX)(m)
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

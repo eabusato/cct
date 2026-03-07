@@ -39,6 +39,7 @@ static const cct_keyword_entry_t cct_keywords[] = {
 
     /* C */
     {"CAPE", TOKEN_CAPE},
+    {"CASO", TOKEN_CASO},
     {"CIRCULUS", TOKEN_CIRCULUS},
     {"CODEX", TOKEN_CODEX},
     {"COMES", TOKEN_COMES},
@@ -80,6 +81,7 @@ static const cct_keyword_entry_t cct_keywords[] = {
     /* M */
     {"MENSURA", TOKEN_MENSURA},
     {"MILES", TOKEN_MILES},
+    {"MOLDE", TOKEN_MOLDE},
 
     /* N */
     {"NIHIL", TOKEN_NIHIL},
@@ -93,6 +95,7 @@ static const cct_keyword_entry_t cct_keywords[] = {
     /* P */
     {"PACTUM", TOKEN_PACTUM},
     {"PRO", TOKEN_PRO},
+    {"QUANDO", TOKEN_QUANDO},
 
     /* R */
     {"RECEDE", TOKEN_RECEDE},
@@ -104,6 +107,7 @@ static const cct_keyword_entry_t cct_keywords[] = {
     /* S */
     {"SEMPER", TOKEN_SEMPER},
     {"SERIES", TOKEN_SERIES},
+    {"SENAO", TOKEN_SENAO},
     {"SI", TOKEN_SI},
     {"SIGILLUM", TOKEN_SIGILLUM},
     {"SINISTER", TOKEN_SINISTER},

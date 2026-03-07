@@ -1,0 +1,30 @@
+INCIPIT grimoire "fs_delete_18b1"
+
+ADVOCARE "cct/fs.cct"
+
+RITUALE main() REDDE REX
+  EVOCA VERBUM raiz AD "tests/.tmp/fs_18b1_delete_root"
+  EVOCA VERBUM arq AD "tests/.tmp/fs_18b1_delete_root/a.txt"
+  EVOCA VERBUM vazio AD "tests/.tmp/fs_18b1_delete_root/empty"
+
+  CONIURA mkdir(raiz)
+  CONIURA write_all(arq, "x")
+  CONIURA mkdir(vazio)
+
+  CONIURA delete_file(arq)
+  SI CONIURA exists(arq)
+    REDDE 1
+  FIN SI
+
+  CONIURA delete_dir(vazio)
+  CONIURA mkdir(vazio)
+  CONIURA delete_dir(vazio)
+
+  CONIURA delete_dir(raiz)
+  CONIURA mkdir(raiz)
+  CONIURA delete_dir(raiz)
+
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

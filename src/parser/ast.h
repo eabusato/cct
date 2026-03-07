@@ -25,6 +25,11 @@ typedef struct cct_ast_program cct_ast_program_t;
 typedef struct cct_ast_type cct_ast_type_t;
 typedef struct cct_ast_type_param cct_ast_type_param_t;
 typedef struct cct_ast_type_list cct_ast_type_list_t;
+typedef struct cct_ast_case_node cct_ast_case_node_t;
+typedef struct cct_ast_molde_part cct_ast_molde_part_t;
+typedef struct cct_ast_ordo_field cct_ast_ordo_field_t;
+typedef struct cct_ast_ordo_variant cct_ast_ordo_variant_t;
+typedef struct cct_ast_ordo_variant_list cct_ast_ordo_variant_list_t;
 
 /*
  * AST Node Types
@@ -49,6 +54,7 @@ typedef enum {
     AST_VINCIRE,             /* Assignment */
     AST_REDDE,               /* Return */
     AST_SI,                  /* If statement */
+    AST_QUANDO,              /* Switch-like statement */
     AST_DUM,                 /* While loop */
     AST_DONEC,               /* Do-while loop */
     AST_REPETE,              /* For loop */
@@ -68,6 +74,7 @@ typedef enum {
     AST_LITERAL_STRING,
     AST_LITERAL_BOOL,
     AST_LITERAL_NIHIL,
+    AST_MOLDE,               /* interpolated string literal */
     AST_IDENTIFIER,
     AST_BINARY_OP,
     AST_UNARY_OP,
@@ -131,6 +138,31 @@ typedef struct {
 } cct_ast_enum_item_t;
 
 /*
+ * ORDO payload field node
+ */
+struct cct_ast_ordo_field {
+    char *name;
+    cct_ast_type_t *type;
+    u32 line;
+    u32 column;
+};
+
+/*
+ * ORDO variant node (optionally with payload fields)
+ */
+struct cct_ast_ordo_variant {
+    char *name;
+    cct_ast_ordo_field_t **fields;
+    size_t field_count;
+    size_t field_capacity;
+    bool has_value;
+    i64 value;
+    i64 tag_value;
+    u32 line;
+    u32 column;
+};
+
+/*
  * Type parameter node (for GENUS)
  */
 struct cct_ast_type_param {
@@ -177,6 +209,15 @@ typedef struct {
 } cct_ast_enum_item_list_t;
 
 /*
+ * ORDO variant list
+ */
+struct cct_ast_ordo_variant_list {
+    cct_ast_ordo_variant_t **variants;
+    size_t count;
+    size_t capacity;
+};
+
+/*
  * Type parameter list
  */
 typedef struct {
@@ -192,6 +233,30 @@ struct cct_ast_type_list {
     cct_ast_type_t **types;
     size_t count;
     size_t capacity;
+};
+
+/*
+ * QUANDO case node
+ */
+struct cct_ast_case_node {
+    cct_ast_node_t **literals;
+    size_t literal_count;
+    char **binding_names;            /* optional CASO payload bindings (ORDO) */
+    size_t binding_count;
+    cct_ast_ordo_variant_t *resolved_ordo_variant; /* semantic-resolved variant (non-owning) */
+    cct_ast_node_t *body;    /* AST_BLOCK */
+};
+
+typedef enum {
+    CCT_AST_MOLDE_PART_LITERAL = 0,
+    CCT_AST_MOLDE_PART_EXPR,
+} cct_ast_molde_part_kind_t;
+
+struct cct_ast_molde_part {
+    cct_ast_molde_part_kind_t kind;
+    char *literal_text;      /* for CCT_AST_MOLDE_PART_LITERAL */
+    cct_ast_node_t *expr;    /* for CCT_AST_MOLDE_PART_EXPR */
+    char *fmt_spec;          /* optional for CCT_AST_MOLDE_PART_EXPR ({expr:spec}) */
 };
 
 /*
@@ -244,7 +309,9 @@ struct cct_ast_node {
         /* Ordo (enum) */
         struct {
             char *name;
+            cct_ast_ordo_variant_list_t *variants;
             cct_ast_enum_item_list_t *items;
+            bool has_payload;
         } ordo;
 
         /* Pactum (interface) */
@@ -284,6 +351,14 @@ struct cct_ast_node {
             cct_ast_node_t *else_branch;  /* Optional */
         } si;
 
+        /* Quando (switch) */
+        struct {
+            cct_ast_node_t *expression;
+            cct_ast_case_node_t *cases;
+            size_t case_count;
+            cct_ast_node_t *else_body; /* Optional */
+        } quando;
+
         /* Dum (while) */
         struct {
             cct_ast_node_t *condition;
@@ -308,6 +383,7 @@ struct cct_ast_node {
         /* Iterum (collection iterator) */
         struct {
             char *item_name;
+            char *value_name; /* Optional second binding (map key/value) */
             cct_ast_node_t *collection;
             cct_ast_node_t *body;
         } iterum;
@@ -363,9 +439,19 @@ struct cct_ast_node {
             bool bool_value;
         } literal_bool;
 
+        /* MOLDE (interpolated string) */
+        struct {
+            cct_ast_molde_part_t *parts;
+            size_t part_count;
+        } molde;
+
         /* Identifier */
         struct {
             char *name;
+            bool is_ordo_construct;   /* semantic: identifier used as ORDO constructor (no payload) */
+            char *ordo_name;          /* semantic: target ORDO name */
+            char *variant_name;       /* semantic: target variant */
+            i64 ordo_tag_value;       /* semantic: resolved tag value */
         } identifier;
 
         /* Binary operation */
@@ -385,6 +471,10 @@ struct cct_ast_node {
         struct {
             cct_ast_node_t *callee;
             cct_ast_node_list_t *arguments;
+            bool is_ordo_construct;   /* semantic: call is ORDO variant constructor */
+            char *ordo_name;          /* semantic: target ORDO name */
+            char *variant_name;       /* semantic: target variant */
+            i64 ordo_tag_value;       /* semantic: resolved tag value */
         } call;
 
         /* Coniura (explicit ritual call) */
@@ -450,6 +540,9 @@ void cct_ast_field_list_append(cct_ast_field_list_t *list, cct_ast_field_t *fiel
 /* Create enum item list */
 cct_ast_enum_item_list_t* cct_ast_create_enum_item_list(void);
 void cct_ast_enum_item_list_append(cct_ast_enum_item_list_t *list, cct_ast_enum_item_t *item);
+cct_ast_ordo_variant_list_t* cct_ast_create_ordo_variant_list(void);
+void cct_ast_ordo_variant_list_append(cct_ast_ordo_variant_list_t *list, cct_ast_ordo_variant_t *variant);
+void cct_ast_ordo_variant_add_field(cct_ast_ordo_variant_t *variant, cct_ast_ordo_field_t *field);
 /* Create type parameter list */
 cct_ast_type_param_list_t* cct_ast_create_type_param_list(void);
 void cct_ast_type_param_list_append(cct_ast_type_param_list_t *list, cct_ast_type_param_t *param);
@@ -470,6 +563,8 @@ cct_ast_field_t* cct_ast_create_field(const char *name, cct_ast_type_t *type, u3
 
 /* Create enum item */
 cct_ast_enum_item_t* cct_ast_create_enum_item(const char *name, i64 value, bool has_value, u32 line, u32 col);
+cct_ast_ordo_field_t* cct_ast_create_ordo_field(const char *name, cct_ast_type_t *type, u32 line, u32 col);
+cct_ast_ordo_variant_t* cct_ast_create_ordo_variant(const char *name, bool has_value, i64 value, u32 line, u32 col);
 /* Create type parameter */
 cct_ast_type_param_t* cct_ast_create_type_param(const char *name, const char *constraint_pactum_name, u32 line, u32 col);
 
@@ -484,6 +579,9 @@ cct_ast_node_t* cct_ast_create_sigillum(const char *name, cct_ast_type_param_lis
                                         cct_ast_field_list_t *fields, cct_ast_node_list_t *methods,
                                         u32 line, u32 col);
 cct_ast_node_t* cct_ast_create_ordo(const char *name, cct_ast_enum_item_list_t *items, u32 line, u32 col);
+cct_ast_node_t* cct_ast_create_ordo_with_variants(const char *name, cct_ast_ordo_variant_list_t *variants,
+                                                  cct_ast_enum_item_list_t *items, bool has_payload,
+                                                  u32 line, u32 col);
 cct_ast_node_t* cct_ast_create_pactum(const char *name, cct_ast_node_list_t *sigs, u32 line, u32 col);
 
 cct_ast_node_t* cct_ast_create_block(cct_ast_node_list_t *stmts, u32 line, u32 col);
@@ -491,11 +589,14 @@ cct_ast_node_t* cct_ast_create_evoca(cct_ast_type_t *type, const char *name, cct
 cct_ast_node_t* cct_ast_create_vincire(cct_ast_node_t *target, cct_ast_node_t *value, u32 line, u32 col);
 cct_ast_node_t* cct_ast_create_redde(cct_ast_node_t *value, u32 line, u32 col);
 cct_ast_node_t* cct_ast_create_si(cct_ast_node_t *cond, cct_ast_node_t *then_br, cct_ast_node_t *else_br, u32 line, u32 col);
+cct_ast_node_t* cct_ast_create_quando(cct_ast_node_t *expr, cct_ast_case_node_t *cases, size_t case_count,
+                                      cct_ast_node_t *else_body, u32 line, u32 col);
 cct_ast_node_t* cct_ast_create_dum(cct_ast_node_t *cond, cct_ast_node_t *body, u32 line, u32 col);
 cct_ast_node_t* cct_ast_create_donec(cct_ast_node_t *body, cct_ast_node_t *cond, u32 line, u32 col);
 cct_ast_node_t* cct_ast_create_repete(const char *iter, cct_ast_node_t *start, cct_ast_node_t *end,
                                       cct_ast_node_t *step, cct_ast_node_t *body, u32 line, u32 col);
-cct_ast_node_t* cct_ast_create_iterum(const char *item_name, cct_ast_node_t *collection,
+cct_ast_node_t* cct_ast_create_iterum(const char *item_name, const char *value_name,
+                                      cct_ast_node_t *collection,
                                       cct_ast_node_t *body, u32 line, u32 col);
 cct_ast_node_t* cct_ast_create_tempta(cct_ast_node_t *try_block, cct_ast_type_t *cape_type,
                                       const char *cape_name, cct_ast_node_t *cape_block,
@@ -513,6 +614,7 @@ cct_ast_node_t* cct_ast_create_literal_real(f64 value, u32 line, u32 col);
 cct_ast_node_t* cct_ast_create_literal_string(const char *value, u32 line, u32 col);
 cct_ast_node_t* cct_ast_create_literal_bool(bool value, u32 line, u32 col);
 cct_ast_node_t* cct_ast_create_literal_nihil(u32 line, u32 col);
+cct_ast_node_t* cct_ast_create_molde(cct_ast_molde_part_t *parts, size_t part_count, u32 line, u32 col);
 cct_ast_node_t* cct_ast_create_identifier(const char *name, u32 line, u32 col);
 
 cct_ast_node_t* cct_ast_create_binary_op(cct_token_type_t op, cct_ast_node_t *left, cct_ast_node_t *right, u32 line, u32 col);
@@ -536,6 +638,7 @@ void cct_ast_free_node_list(cct_ast_node_list_t *list);
 void cct_ast_free_param_list(cct_ast_param_list_t *list);
 void cct_ast_free_field_list(cct_ast_field_list_t *list);
 void cct_ast_free_enum_item_list(cct_ast_enum_item_list_t *list);
+void cct_ast_free_ordo_variant_list(cct_ast_ordo_variant_list_t *list);
 void cct_ast_free_type_param_list(cct_ast_type_param_list_t *list);
 void cct_ast_free_type_list(cct_ast_type_list_t *list);
 

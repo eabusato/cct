@@ -1,0 +1,24 @@
+INCIPIT grimoire "quando_ordo_multiplos_campos_19c3"
+
+ORDO Forma
+  Circulo(UMBRA raio),
+  Retangulo(UMBRA larg, UMBRA alt),
+  Ponto
+FIN ORDO
+
+RITUALE main() REDDE REX
+  EVOCA Forma f AD Retangulo(3.5, 2.0)
+
+  QUANDO f
+    CASO Circulo(r):
+      OBSECRO scribe(MOLDE "circ={r:.1f}\n")
+    CASO Retangulo(larg, alt):
+      OBSECRO scribe(MOLDE "ret={larg:.1f}x{alt:.1f}\n")
+    CASO Ponto:
+      OBSECRO scribe("ponto\n")
+  FIN QUANDO
+
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

@@ -1,0 +1,44 @@
+INCIPIT grimoire "quando_ordo_sem_payload_mix_19c3"
+
+ORDO Evento
+  Init,
+  Dado(REX valor),
+  Fim
+FIN ORDO
+
+RITUALE main() REDDE REX
+  EVOCA Evento e1 AD Init
+  EVOCA Evento e2 AD Dado(9)
+  EVOCA Evento e3 AD Fim
+
+  QUANDO e1
+    CASO Init:
+      OBSECRO scribe("init\n")
+    CASO Dado(v):
+      OBSECRO scribe(MOLDE "dado={v}\n")
+    CASO Fim:
+      OBSECRO scribe("fim\n")
+  FIN QUANDO
+
+  QUANDO e2
+    CASO Init:
+      OBSECRO scribe("init\n")
+    CASO Dado(v):
+      OBSECRO scribe(MOLDE "dado={v}\n")
+    CASO Fim:
+      OBSECRO scribe("fim\n")
+  FIN QUANDO
+
+  QUANDO e3
+    CASO Init:
+      OBSECRO scribe("init\n")
+    CASO Dado(v):
+      OBSECRO scribe(MOLDE "dado={v}\n")
+    CASO Fim:
+      OBSECRO scribe("fim\n")
+  FIN QUANDO
+
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

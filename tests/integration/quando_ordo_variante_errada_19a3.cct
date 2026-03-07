@@ -1,0 +1,23 @@
+INCIPIT grimoire "quando_ordo_variante_errada_19a3"
+
+ORDO Cor
+  Vermelho = 0
+  Verde = 1
+  Azul = 2
+FIN ORDO
+
+RITUALE main() REDDE REX
+  EVOCA Cor c
+  VINCIRE c AD Verde
+
+  QUANDO c
+    CASO Amarelo:
+      REDDE 5
+    SENAO:
+      REDDE 9
+  FIN QUANDO
+
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

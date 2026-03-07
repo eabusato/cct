@@ -1,0 +1,7 @@
+INCIPIT grimoire "molde_fmt_real_19b2"
+RITUALE main() REDDE NIHIL
+  EVOCA UMBRA v AD 3.5
+  OBSECRO scribe(MOLDE "f={v:.2f} e={v:e} g={v:g}\n")
+  REDDE
+EXPLICIT RITUALE
+EXPLICIT grimoire

@@ -1,0 +1,7 @@
+INCIPIT grimoire "molde_fmt_tipo_errado_19b2"
+RITUALE main() REDDE NIHIL
+  EVOCA REX n AD 10
+  OBSECRO scribe(MOLDE "bad={n:f}\n")
+  REDDE
+EXPLICIT RITUALE
+EXPLICIT grimoire

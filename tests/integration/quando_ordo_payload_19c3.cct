@@ -1,0 +1,29 @@
+INCIPIT grimoire "quando_ordo_payload_19c3"
+
+ORDO Resultado
+  Ok(REX valor),
+  Err(VERBUM msg)
+FIN ORDO
+
+RITUALE main() REDDE REX
+  EVOCA Resultado a AD Ok(7)
+  EVOCA Resultado b AD Err("falha")
+
+  QUANDO a
+    CASO Ok(v):
+      OBSECRO scribe(MOLDE "ok={v}\n")
+    CASO Err(msg):
+      OBSECRO scribe(MOLDE "err={msg}\n")
+  FIN QUANDO
+
+  QUANDO b
+    CASO Ok(v):
+      OBSECRO scribe(MOLDE "ok={v}\n")
+    CASO Err(msg):
+      OBSECRO scribe(MOLDE "err={msg}\n")
+  FIN QUANDO
+
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

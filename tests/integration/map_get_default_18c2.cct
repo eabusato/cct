@@ -1,0 +1,71 @@
+INCIPIT grimoire "map_get_default_18c2"
+
+ADVOCARE "cct/map.cct"
+ADVOCARE "cct/option.cct"
+
+RITUALE main() REDDE REX
+  EVOCA SPECULUM NIHIL m AD CONIURA map_init GENUS(REX, REX)()
+  CONIURA map_insert GENUS(REX, REX)(m, 42, 100)
+
+  EVOCA REX a AD CONIURA map_get_or_default GENUS(REX, REX)(m, 42, 7)
+  EVOCA REX b AD CONIURA map_get_or_default GENUS(REX, REX)(m, 77, 7)
+  SI a != 100
+    CONIURA map_free GENUS(REX, REX)(m)
+    REDDE 1
+  FIN SI
+  SI b != 7
+    CONIURA map_free GENUS(REX, REX)(m)
+    REDDE 2
+  FIN SI
+
+  SI CONIURA map_len GENUS(REX, REX)(m) != 1
+    CONIURA map_free GENUS(REX, REX)(m)
+    REDDE 3
+  FIN SI
+
+  EVOCA VERUM existed0 AD CONIURA map_update_or_insert GENUS(REX, REX)(m, 42, 111)
+  EVOCA VERUM existed1 AD CONIURA map_update_or_insert GENUS(REX, REX)(m, 50, 5)
+  SI NON existed0
+    CONIURA map_free GENUS(REX, REX)(m)
+    REDDE 4
+  FIN SI
+  SI existed1
+    CONIURA map_free GENUS(REX, REX)(m)
+    REDDE 5
+  FIN SI
+
+  EVOCA SPECULUM NIHIL o0 AD CONIURA map_get GENUS(REX, REX)(m, 42)
+  EVOCA SPECULUM NIHIL o1 AD CONIURA map_get GENUS(REX, REX)(m, 50)
+
+  SI NON CONIURA option_is_some GENUS(REX)(o0)
+    CONIURA option_free GENUS(REX)(o0)
+    CONIURA option_free GENUS(REX)(o1)
+    CONIURA map_free GENUS(REX, REX)(m)
+    REDDE 6
+  FIN SI
+  SI NON CONIURA option_is_some GENUS(REX)(o1)
+    CONIURA option_free GENUS(REX)(o0)
+    CONIURA option_free GENUS(REX)(o1)
+    CONIURA map_free GENUS(REX, REX)(m)
+    REDDE 7
+  FIN SI
+
+  EVOCA REX v0 AD CONIURA option_unwrap GENUS(REX)(o0)
+  EVOCA REX v1 AD CONIURA option_unwrap GENUS(REX)(o1)
+  CONIURA option_free GENUS(REX)(o0)
+  CONIURA option_free GENUS(REX)(o1)
+
+  SI v0 != 111
+    CONIURA map_free GENUS(REX, REX)(m)
+    REDDE 8
+  FIN SI
+  SI v1 != 5
+    CONIURA map_free GENUS(REX, REX)(m)
+    REDDE 9
+  FIN SI
+
+  CONIURA map_free GENUS(REX, REX)(m)
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

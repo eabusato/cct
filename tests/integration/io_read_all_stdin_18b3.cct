@@ -1,0 +1,11 @@
+INCIPIT grimoire "io_read_all_stdin_18b3"
+
+ADVOCARE "cct/io.cct"
+ADVOCARE "cct/verbum.cct"
+
+RITUALE main() REDDE REX
+  EVOCA VERBUM conteudo AD CONIURA read_all_stdin()
+  REDDE CONIURA len(conteudo)
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

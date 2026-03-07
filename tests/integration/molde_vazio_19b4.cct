@@ -1,0 +1,8 @@
+INCIPIT grimoire "molde_vazio_19b4"
+ADVOCARE "cct/verbum.cct"
+RITUALE main() REDDE NIHIL
+  EVOCA VERBUM v AD MOLDE ""
+  OBSECRO scribe(MOLDE "len={CONIURA len(v)}\n")
+  REDDE
+EXPLICIT RITUALE
+EXPLICIT grimoire

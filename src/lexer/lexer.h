@@ -59,6 +59,9 @@ typedef enum {
     /* Keywords - Control Flow */
     TOKEN_SI,               /* if */
     TOKEN_ALITER,           /* else */
+    TOKEN_QUANDO,           /* switch */
+    TOKEN_CASO,             /* case */
+    TOKEN_SENAO,            /* default */
     TOKEN_DUM,              /* while */
     TOKEN_DONEC,            /* do while */
     TOKEN_REPETE,           /* for */
@@ -109,6 +112,7 @@ typedef enum {
     TOKEN_OBSECRO,          /* syscall/builtin */
     TOKEN_ANUR,             /* exit */
     TOKEN_MENSURA,          /* sizeof */
+    TOKEN_MOLDE,            /* interpolated string */
     TOKEN_DE,               /* from */
     TOKEN_AD,               /* to/at */
     TOKEN_IN,               /* in */

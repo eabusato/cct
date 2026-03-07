@@ -1,0 +1,33 @@
+INCIPIT grimoire "bit_basic_18d3"
+
+ADVOCARE "cct/bit.cct"
+
+RITUALE main() REDDE REX
+  SI CONIURA popcount(0) != 0
+    REDDE 1
+  FIN SI
+
+  SI CONIURA popcount(15) != 4
+    REDDE 2
+  FIN SI
+
+  SI CONIURA leading_zeros(0) != 64
+    REDDE 3
+  FIN SI
+
+  SI CONIURA leading_zeros(1) != 63
+    REDDE 4
+  FIN SI
+
+  SI CONIURA trailing_zeros(0) != 64
+    REDDE 5
+  FIN SI
+
+  SI CONIURA trailing_zeros(8) != 3
+    REDDE 6
+  FIN SI
+
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

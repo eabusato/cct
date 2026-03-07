@@ -54,6 +54,8 @@ typedef struct {
     cct_codegen_local_t *locals;
     u32 scope_depth;
     u32 loop_depth;
+    u32 quando_switch_depth;          /* nesting depth of QUANDO ORDO payload switch blocks */
+    u32 loop_break_ids[32];           /* break label IDs per loop nesting level */
     const cct_ast_node_t *entry_rituale;
     bool current_function_returns_nihil;
     const cct_ast_type_t *current_function_return_type;

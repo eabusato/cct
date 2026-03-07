@@ -14,6 +14,101 @@ RITUALE append_all(VERBUM path, VERBUM content) REDDE NIHIL
   REDDE
 EXPLICIT RITUALE
 
+RITUALE mkdir(VERBUM path) REDDE NIHIL
+  OBSECRO fs_mkdir(path)
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE mkdir_all(VERBUM path) REDDE NIHIL
+  OBSECRO fs_mkdir_all(path)
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE delete_file(VERBUM path) REDDE NIHIL
+  OBSECRO fs_delete_file(path)
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE delete_dir(VERBUM path) REDDE NIHIL
+  OBSECRO fs_delete_dir(path)
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE rename(VERBUM de, VERBUM para) REDDE NIHIL
+  OBSECRO fs_rename(de, para)
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE copy(VERBUM de, VERBUM para) REDDE NIHIL
+  OBSECRO fs_copy(de, para)
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE move(VERBUM de, VERBUM para) REDDE NIHIL
+  OBSECRO fs_move(de, para)
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE is_file(VERBUM path) REDDE VERUM
+  REDDE OBSECRO fs_is_file(path)
+EXPLICIT RITUALE
+
+RITUALE is_dir(VERBUM path) REDDE VERUM
+  REDDE OBSECRO fs_is_dir(path)
+EXPLICIT RITUALE
+
+RITUALE is_symlink(VERBUM path) REDDE VERUM
+  REDDE OBSECRO fs_is_symlink(path)
+EXPLICIT RITUALE
+
+RITUALE is_readable(VERBUM path) REDDE VERUM
+  REDDE OBSECRO fs_is_readable(path)
+EXPLICIT RITUALE
+
+RITUALE is_writable(VERBUM path) REDDE VERUM
+  REDDE OBSECRO fs_is_writable(path)
+EXPLICIT RITUALE
+
+RITUALE modified_time(VERBUM path) REDDE REX
+  REDDE OBSECRO fs_modified_time(path)
+EXPLICIT RITUALE
+
+RITUALE chmod(VERBUM path, REX mode) REDDE NIHIL
+  OBSECRO fs_chmod(path, mode)
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE list_dir(VERBUM path) REDDE SPECULUM NIHIL
+  REDDE OBSECRO fs_list_dir(path)
+EXPLICIT RITUALE
+
+RITUALE read_lines(VERBUM path) REDDE SPECULUM NIHIL
+  EVOCA VERBUM conteudo AD CONIURA read_all(path)
+  REDDE OBSECRO verbum_lines(conteudo)
+EXPLICIT RITUALE
+
+RITUALE create_temp_file() REDDE VERBUM
+  REDDE OBSECRO fs_create_temp_file()
+EXPLICIT RITUALE
+
+RITUALE create_temp_dir() REDDE VERBUM
+  REDDE OBSECRO fs_create_temp_dir()
+EXPLICIT RITUALE
+
+RITUALE truncate(VERBUM path, REX size) REDDE NIHIL
+  OBSECRO fs_truncate(path, size)
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE symlink(VERBUM alvo, VERBUM link) REDDE NIHIL
+  OBSECRO fs_symlink(alvo, link)
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE same_file(VERBUM a, VERBUM b) REDDE VERUM
+  REDDE OBSECRO fs_same_file(a, b)
+EXPLICIT RITUALE
+
 RITUALE exists(VERBUM path) REDDE VERUM
   REDDE OBSECRO fs_exists(path)
 EXPLICIT RITUALE

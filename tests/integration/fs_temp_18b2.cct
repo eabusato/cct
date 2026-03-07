@@ -1,0 +1,30 @@
+INCIPIT grimoire "fs_temp_18b2"
+
+ADVOCARE "cct/fs.cct"
+
+RITUALE main() REDDE REX
+  EVOCA VERBUM tf AD CONIURA create_temp_file()
+  EVOCA VERBUM td AD CONIURA create_temp_dir()
+
+  SI NON CONIURA is_file(tf)
+    REDDE 1
+  FIN SI
+  SI NON CONIURA is_dir(td)
+    REDDE 2
+  FIN SI
+  SI NON CONIURA is_readable(tf)
+    REDDE 3
+  FIN SI
+  SI NON CONIURA is_writable(tf)
+    REDDE 4
+  FIN SI
+  SI CONIURA same_file(tf, td)
+    REDDE 5
+  FIN SI
+
+  CONIURA delete_file(tf)
+  CONIURA delete_dir(td)
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

@@ -8,9 +8,9 @@ CCT is a compiled language toolchain that transforms `.cct` sources into:
 - executable binaries (via generated C + host C compiler)
 - deterministic sigil artifacts (`.svg` + `.sigil`)
 
-This architecture document is aligned with the implemented project state through **FASE 15D.4** (including FASE 13D.4, FASE 13M.B2, and the full FASE 14/15 closure set) and includes the planned architecture direction for future phases.
+This architecture document is aligned with the implemented project state through **FASE 19D.4** (including FASE 13D.4, FASE 13M.B2, the full FASE 14/15 closure set, FASE 16 bridge closure, FASE 17/18 library expansion, and FASE 19 language-surface closure) and includes the planned architecture direction for next phases.
 
-## Current Architecture (FASE 15D.4)
+## Current Architecture (FASE 19D.4)
 
 ### End-to-End Pipeline
 
@@ -113,7 +113,7 @@ Main files:
 - `ast.h`
 - `ast.c`
 
-Status: supports current syntax through 10E, including modules, failure-control constructs, generics, contracts, and constraints in supported contexts.
+Status: supports current syntax through 19D.4, including `QUANDO`, `MOLDE`, payload `ORDO`, and expanded `ITERUM` arity forms in supported contexts.
 
 ### `src/semantic/`
 Purpose: symbol registration, scope checks, type checks, contract/constraint validation.
@@ -122,7 +122,7 @@ Main files:
 - `semantic.h`
 - `semantic.c`
 
-Status: consolidated through 10E for the defined subset.
+Status: consolidated through 19D.4 for the defined subset, including ORDO exhaustiveness diagnostics and ITERUM arity validation by collection kind.
 
 ### `src/codegen/`
 Purpose: executable code generation and generic materialization.
@@ -268,7 +268,7 @@ Status: mature through 9D/9D2/9E and preserved across phase 10 closure.
   - consolidated internal release artifacts under private governance records
 - **FASE 14D.4**: closure gate and rollback:
 
-## Current Architectural Contract (Post-11H)
+## Current Architectural Contract (Post-19D4)
 
 ### Stable and Official
 - C-hosted backend is official.
@@ -355,14 +355,38 @@ Implemented closure set:
 - 15C.1/15C.2/15C.3/15C.4: bitwise and shift family finalized (`ET_BIT`, `VEL_BIT`, `XOR`, `NON_BIT`, `SINISTER`, `DEXTER`) with integer-only enforcement and closure integration checks
 - 15D.1/15D.2/15D.3/15D.4: `CONSTANS` finalized for locals and rituale parameters, `const` codegen guarantees, pointer-binding (`CONSTANS SPECULUM`) behavior, edge-case closure tests, and phase-closure governance
 
-### FASE 16 — Bootstrap and ASM Bridge Trajectory (Planned/Started)
+### FASE 16 — Bootstrap and ASM Bridge Trajectory (Implemented Through 16D.4)
 Architecture direction:
-- start the bootstrap-oriented track only from FASE 16 onward
+- start the bootstrap-oriented track while preserving host defaults
 - keep CCT host-executed while introducing freestanding/ASM delivery contracts for LBOS integration
 - enforce ABI/profile compatibility gates before broader bootstrap expansion
 
 Reference architecture dossier:
 - `md_out/FASE_16_CCT.md`
+
+### FASE 17 — Canonical Library Expansion (Implemented Through 17D.4)
+Architecture direction:
+- unlock bootstrap/tooling workflows with practical text, cursor, args, variant, AST, and utility modules.
+- preserve deterministic module/tooling behavior while expanding canonical host APIs.
+
+### FASE 18 — Canonical Library Expansion (Implemented Through 18D.4)
+Architecture direction:
+- deliver broad host utility surface (`fs`, `io`, `path`, `process`) and deeper canonical algorithms/collections.
+- extend deterministic utility baseline (`hash`, `bit`, `random` expansions) without destabilizing compiler contracts.
+
+### FASE 19 — Language Surface Expansion (Implemented Through 19D.4)
+Architecture direction:
+- add first-class selection/pattern ergonomics (`QUANDO`) while preserving deterministic codegen contracts
+- add interpolated string construction (`MOLDE`) through runtime-backed builders in host profile
+- add payload-capable ORDO representation with union-tagged lowering and scoped destructuring bindings
+- unify collection iteration ergonomics by extending `ITERUM` to `map`/`set` with insertion-order semantics
+- close documentation/release/handoff artifacts for the full phase (`19D2`, `19D3`, `19D4`)
+
+Codegen/runtime notes:
+- `QUANDO` lowers to integer/string dispatch chains and ORDO-tag switch forms with payload extraction locals.
+- `MOLDE` lowers to runtime helper sequences (`molde_begin/append/end`) and keeps ownership behavior explicit.
+- payload `ORDO` lowers to tagged C structs with variant-specific payload unions.
+- `ITERUM` now emits dedicated runtime iterator helpers for `map` and `set` (`cct_rt_map_iter_*`, `cct_rt_set_iter_*`), preserving insertion order.
 
 ## Reliability and Testing Model
 
@@ -372,6 +396,7 @@ Architecture quality is enforced by a phase-accumulated regression suite (`tests
 - boundary diagnostics and subset-policy enforcement
 
 The architecture is considered stable only when full historical regression remains green.
+Latest closure evidence (FASE 19D.4): `Passed: 1069`, `Failed: 0`.
 
 ## Document Ownership
 

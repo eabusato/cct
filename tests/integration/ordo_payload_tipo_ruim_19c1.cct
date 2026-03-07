@@ -1,0 +1,12 @@
+INCIPIT grimoire "ordo_payload_tipo_ruim_19c1"
+
+ORDO ResultadoRuim
+  Bom(REX valor),
+  Ruim(SPECULUM NIHIL ptr)
+FIN ORDO
+
+RITUALE main() REDDE REX
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

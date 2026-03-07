@@ -1,0 +1,47 @@
+INCIPIT grimoire "fluxus_remove_insert_18c1"
+
+ADVOCARE "cct/fluxus.cct"
+
+RITUALE main() REDDE REX
+  EVOCA SPECULUM NIHIL f AD CONIURA fluxus_init(MENSURA(REX))
+  EVOCA REX v1 AD 1
+  EVOCA REX v2 AD 2
+  EVOCA REX v3 AD 3
+  EVOCA REX v4 AD 4
+  EVOCA REX v9 AD 9
+  EVOCA REX v7 AD 7
+
+  CONIURA fluxus_push(f, SPECULUM v1)
+  CONIURA fluxus_push(f, SPECULUM v2)
+  CONIURA fluxus_push(f, SPECULUM v3)
+  CONIURA fluxus_push(f, SPECULUM v4)
+
+  CONIURA fluxus_remove(f, 1)
+  CONIURA fluxus_insert(f, 1, SPECULUM v9)
+  CONIURA fluxus_insert(f, CONIURA fluxus_len(f), SPECULUM v7)
+
+  SI CONIURA fluxus_len(f) == 5
+    EVOCA SPECULUM REX p0 AD CONIURA fluxus_get(f, 0)
+    EVOCA SPECULUM REX p1 AD CONIURA fluxus_get(f, 1)
+    EVOCA SPECULUM REX p2 AD CONIURA fluxus_get(f, 2)
+    EVOCA SPECULUM REX p3 AD CONIURA fluxus_get(f, 3)
+    EVOCA SPECULUM REX p4 AD CONIURA fluxus_get(f, 4)
+    SI *p0 == 1
+      SI *p1 == 9
+        SI *p2 == 3
+          SI *p3 == 4
+            SI *p4 == 7
+              CONIURA fluxus_free(f)
+              REDDE 0
+            FIN SI
+          FIN SI
+        FIN SI
+      FIN SI
+    FIN SI
+  FIN SI
+
+  CONIURA fluxus_free(f)
+  REDDE 1
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

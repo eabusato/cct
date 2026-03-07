@@ -1,0 +1,37 @@
+INCIPIT grimoire "random_shuffle_18d3"
+
+ADVOCARE "cct/random.cct"
+ADVOCARE "cct/alg.cct"
+
+RITUALE main() REDDE REX
+  EVOCA SERIES REX[10] arr
+  EVOCA REX i AD 0
+  DUM i < 10
+    VINCIRE arr[i] AD i + 1
+    VINCIRE i AD i + 1
+  FIN DUM
+
+  CONIURA seed(2026)
+  CONIURA shuffle_int(SPECULUM arr[0], 10)
+
+  CONIURA alg_quicksort(SPECULUM arr[0], 10)
+
+  VINCIRE i AD 0
+  DUM i < 10
+    SI arr[i] != i + 1
+      REDDE 1
+    FIN SI
+    VINCIRE i AD i + 1
+  FIN DUM
+
+  EVOCA SERIES REX[1] solo
+  VINCIRE solo[0] AD 7
+  CONIURA shuffle_int(SPECULUM solo[0], 1)
+  SI solo[0] != 7
+    REDDE 2
+  FIN SI
+
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

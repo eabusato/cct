@@ -1,0 +1,7 @@
+INCIPIT grimoire "molde_tipo_invalido_19b1"
+RITUALE main() REDDE NIHIL
+  EVOCA SPECULUM NIHIL p
+  OBSECRO scribe(MOLDE "ptr={p}\n")
+  REDDE
+EXPLICIT RITUALE
+EXPLICIT grimoire

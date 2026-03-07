@@ -1,0 +1,31 @@
+INCIPIT grimoire "verbum_search_18a1"
+
+ADVOCARE "cct/verbum.cct"
+
+RITUALE main() REDDE REX
+  EVOCA VERBUM s AD "abcabcabc"
+  EVOCA REX last AD CONIURA last_find(s, "abc")
+  EVOCA REX f0 AD CONIURA find_from(s, "abc", 3)
+  EVOCA REX f1 AD CONIURA find_from(s, "abc", 4)
+  EVOCA REX f2 AD CONIURA find_from(s, "", 5)
+  EVOCA REX miss AD CONIURA find_from(s, "zzz", 0)
+  EVOCA REX count AD CONIURA count_occurrences(s, "abc")
+
+  SI last == 6
+    SI f0 == 3
+      SI f1 == 6
+        SI f2 == 5
+          SI miss == -1
+            SI count == 3
+              REDDE 0
+            FIN SI
+          FIN SI
+        FIN SI
+      FIN SI
+    FIN SI
+  FIN SI
+
+  REDDE 1
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

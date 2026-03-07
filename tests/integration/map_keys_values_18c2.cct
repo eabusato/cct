@@ -1,0 +1,129 @@
+INCIPIT grimoire "map_keys_values_18c2"
+
+ADVOCARE "cct/map.cct"
+ADVOCARE "cct/fluxus.cct"
+
+RITUALE check_pair(SPECULUM REX k, SPECULUM REX v, SPECULUM REX s1, SPECULUM REX s2, SPECULUM REX s3) REDDE REX
+  SI *k == 1
+    SI *v != 10
+      REDDE 1
+    FIN SI
+    SI *s1 == 1
+      REDDE 2
+    FIN SI
+    VINCIRE *s1 AD 1
+  FIN SI
+
+  SI *k == 2
+    SI *v != 20
+      REDDE 3
+    FIN SI
+    SI *s2 == 1
+      REDDE 4
+    FIN SI
+    VINCIRE *s2 AD 1
+  FIN SI
+
+  SI *k == 3
+    SI *v != 30
+      REDDE 5
+    FIN SI
+    SI *s3 == 1
+      REDDE 6
+    FIN SI
+    VINCIRE *s3 AD 1
+  FIN SI
+
+  SI *k != 1
+    SI *k != 2
+      SI *k != 3
+        REDDE 7
+      FIN SI
+    FIN SI
+  FIN SI
+
+  REDDE 0
+EXPLICIT RITUALE
+
+RITUALE main() REDDE REX
+  EVOCA SPECULUM NIHIL m AD CONIURA map_init GENUS(REX, REX)()
+  CONIURA map_insert GENUS(REX, REX)(m, 1, 10)
+  CONIURA map_insert GENUS(REX, REX)(m, 2, 20)
+  CONIURA map_insert GENUS(REX, REX)(m, 3, 30)
+
+  EVOCA SPECULUM NIHIL ks AD CONIURA map_keys GENUS(REX, REX)(m)
+  EVOCA SPECULUM NIHIL vs AD CONIURA map_values GENUS(REX, REX)(m)
+
+  SI CONIURA fluxus_len(ks) != 3
+    CONIURA fluxus_free(ks)
+    CONIURA fluxus_free(vs)
+    CONIURA map_free GENUS(REX, REX)(m)
+    REDDE 11
+  FIN SI
+  SI CONIURA fluxus_len(vs) != 3
+    CONIURA fluxus_free(ks)
+    CONIURA fluxus_free(vs)
+    CONIURA map_free GENUS(REX, REX)(m)
+    REDDE 12
+  FIN SI
+
+  EVOCA REX seen1 AD 0
+  EVOCA REX seen2 AD 0
+  EVOCA REX seen3 AD 0
+
+  EVOCA SPECULUM REX k0 AD CONIURA fluxus_get(ks, 0)
+  EVOCA SPECULUM REX v0 AD CONIURA fluxus_get(vs, 0)
+  EVOCA REX c0 AD CONIURA check_pair(k0, v0, SPECULUM seen1, SPECULUM seen2, SPECULUM seen3)
+  SI c0 != 0
+    CONIURA fluxus_free(ks)
+    CONIURA fluxus_free(vs)
+    CONIURA map_free GENUS(REX, REX)(m)
+    REDDE 20 + c0
+  FIN SI
+
+  EVOCA SPECULUM REX k1 AD CONIURA fluxus_get(ks, 1)
+  EVOCA SPECULUM REX v1 AD CONIURA fluxus_get(vs, 1)
+  EVOCA REX c1 AD CONIURA check_pair(k1, v1, SPECULUM seen1, SPECULUM seen2, SPECULUM seen3)
+  SI c1 != 0
+    CONIURA fluxus_free(ks)
+    CONIURA fluxus_free(vs)
+    CONIURA map_free GENUS(REX, REX)(m)
+    REDDE 30 + c1
+  FIN SI
+
+  EVOCA SPECULUM REX k2 AD CONIURA fluxus_get(ks, 2)
+  EVOCA SPECULUM REX v2 AD CONIURA fluxus_get(vs, 2)
+  EVOCA REX c2 AD CONIURA check_pair(k2, v2, SPECULUM seen1, SPECULUM seen2, SPECULUM seen3)
+  SI c2 != 0
+    CONIURA fluxus_free(ks)
+    CONIURA fluxus_free(vs)
+    CONIURA map_free GENUS(REX, REX)(m)
+    REDDE 40 + c2
+  FIN SI
+
+  SI seen1 != 1
+    CONIURA fluxus_free(ks)
+    CONIURA fluxus_free(vs)
+    CONIURA map_free GENUS(REX, REX)(m)
+    REDDE 51
+  FIN SI
+  SI seen2 != 1
+    CONIURA fluxus_free(ks)
+    CONIURA fluxus_free(vs)
+    CONIURA map_free GENUS(REX, REX)(m)
+    REDDE 52
+  FIN SI
+  SI seen3 != 1
+    CONIURA fluxus_free(ks)
+    CONIURA fluxus_free(vs)
+    CONIURA map_free GENUS(REX, REX)(m)
+    REDDE 53
+  FIN SI
+
+  CONIURA fluxus_free(ks)
+  CONIURA fluxus_free(vs)
+  CONIURA map_free GENUS(REX, REX)(m)
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

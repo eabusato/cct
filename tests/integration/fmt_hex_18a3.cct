@@ -1,0 +1,19 @@
+INCIPIT grimoire "fmt_hex_18a3"
+
+ADVOCARE "cct/fmt.cct"
+ADVOCARE "cct/verbum.cct"
+
+RITUALE main() REDDE REX
+  EVOCA VERBUM h AD CONIURA stringify_int_hex(255)
+  EVOCA VERBUM hu AD CONIURA stringify_int_hex_upper(255)
+  EVOCA VERBUM o AD CONIURA stringify_int_oct(255)
+  EVOCA VERBUM b AD CONIURA stringify_int_bin(255)
+
+  SI CONIURA compare(h, "0xff") == 0 ET CONIURA compare(hu, "0xFF") == 0 ET CONIURA compare(o, "0o377") == 0 ET CONIURA compare(b, "0b11111111") == 0
+    REDDE 0
+  FIN SI
+
+  REDDE 1
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

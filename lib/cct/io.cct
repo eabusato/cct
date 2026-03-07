@@ -15,8 +15,99 @@ RITUALE print_int(REX n) REDDE NIHIL
   REDDE
 EXPLICIT RITUALE
 
+RITUALE print_real(UMBRA x) REDDE NIHIL
+  OBSECRO io_print_real(x)
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE print_bool(VERUM b) REDDE NIHIL
+  SI b == VERUM
+    CONIURA print("true")
+  ALITER
+    CONIURA print("false")
+  FIN SI
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE print_char(MILES c) REDDE NIHIL
+  OBSECRO io_print_char(c)
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE print_hex(REX n) REDDE NIHIL
+  CONIURA print(OBSECRO fmt_stringify_int_hex(n))
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE eprint(VERBUM s) REDDE NIHIL
+  OBSECRO io_eprint(s)
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE eprintln(VERBUM s) REDDE NIHIL
+  OBSECRO io_eprintln(s)
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE eprint_int(REX n) REDDE NIHIL
+  OBSECRO io_eprint_int(n)
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE eprint_real(UMBRA x) REDDE NIHIL
+  OBSECRO io_eprint_real(x)
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE eprint_bool(VERUM b) REDDE NIHIL
+  SI b == VERUM
+    CONIURA eprint("true")
+  ALITER
+    CONIURA eprint("false")
+  FIN SI
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE flush() REDDE NIHIL
+  OBSECRO io_flush()
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE flush_err() REDDE NIHIL
+  OBSECRO io_flush_err()
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE read_char() REDDE MILES
+  REDDE OBSECRO io_read_char()
+EXPLICIT RITUALE
+
 RITUALE read_line() REDDE VERBUM
   REDDE OBSECRO io_read_line()
+EXPLICIT RITUALE
+
+RITUALE read_all_stdin() REDDE VERBUM
+  EVOCA SPECULUM NIHIL b AD OBSECRO builder_init()
+  DUM VERUM
+    EVOCA MILES c AD CONIURA read_char()
+    SI c == -1
+      EVOCA VERBUM out AD OBSECRO builder_to_verbum(b)
+      OBSECRO builder_free(b)
+      REDDE out
+    FIN SI
+    OBSECRO builder_append_char(b, c)
+  FIN DUM
+  REDDE ""
+EXPLICIT RITUALE
+
+RITUALE read_line_prompt(VERBUM prompt) REDDE VERBUM
+  CONIURA print(prompt)
+  CONIURA flush()
+  REDDE CONIURA read_line()
+EXPLICIT RITUALE
+
+RITUALE is_tty() REDDE VERUM
+  REDDE OBSECRO io_is_tty()
 EXPLICIT RITUALE
 
 EXPLICIT grimoire

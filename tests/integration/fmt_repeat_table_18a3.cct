@@ -1,0 +1,31 @@
+INCIPIT grimoire "fmt_repeat_table_18a3"
+
+ADVOCARE "cct/fmt.cct"
+ADVOCARE "cct/verbum.cct"
+ADVOCARE "cct/fluxus.cct"
+
+RITUALE main() REDDE REX
+  EVOCA MILES star AD OBSECRO verbum_char_at("*", 0)
+  EVOCA VERBUM rep AD CONIURA repeat_char(star, 3)
+
+  EVOCA SPECULUM NIHIL parts AD CONIURA fluxus_init(MENSURA(VERBUM))
+  EVOCA VERBUM p0 AD "ab"
+  EVOCA VERBUM p1 AD "xyzq"
+  CONIURA fluxus_push(parts, SPECULUM p0)
+  CONIURA fluxus_push(parts, SPECULUM p1)
+
+  EVOCA SERIES REX[2] widths
+  VINCIRE widths[0] AD 4
+  VINCIRE widths[1] AD 3
+
+  EVOCA VERBUM row AD CONIURA table_row(parts, SPECULUM widths[0], 2)
+  CONIURA fluxus_free(parts)
+
+  SI CONIURA compare(rep, "***") == 0 ET CONIURA compare(row, "ab   | xyz") == 0
+    REDDE 0
+  FIN SI
+
+  REDDE 1
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

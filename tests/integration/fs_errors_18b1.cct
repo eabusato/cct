@@ -1,0 +1,46 @@
+INCIPIT grimoire "fs_errors_18b1"
+
+ADVOCARE "cct/fs.cct"
+ADVOCARE "cct/args.cct"
+ADVOCARE "cct/verbum.cct"
+
+RITUALE main() REDDE REX
+  SI CONIURA argc() < 2
+    REDDE 1
+  FIN SI
+
+  EVOCA VERBUM modo AD CONIURA arg(1)
+
+  SI CONIURA compare(modo, "mkdir_exists") == 0
+    CONIURA mkdir("tests/.tmp/fs_18b1_err_exists")
+    CONIURA mkdir("tests/.tmp/fs_18b1_err_exists")
+    REDDE 0
+  FIN SI
+
+  SI CONIURA compare(modo, "mkdir_parent") == 0
+    CONIURA mkdir("tests/.tmp/fs_18b1_missing_parent/a")
+    REDDE 0
+  FIN SI
+
+  SI CONIURA compare(modo, "delete_file_missing") == 0
+    CONIURA delete_file("tests/.tmp/fs_18b1_missing.txt")
+    REDDE 0
+  FIN SI
+
+  SI CONIURA compare(modo, "delete_file_dir") == 0
+    CONIURA mkdir("tests/.tmp/fs_18b1_err_dir_as_file")
+    CONIURA delete_file("tests/.tmp/fs_18b1_err_dir_as_file")
+    REDDE 0
+  FIN SI
+
+  SI CONIURA compare(modo, "delete_dir_nonempty") == 0
+    CONIURA mkdir("tests/.tmp/fs_18b1_err_nonempty")
+    CONIURA write_all("tests/.tmp/fs_18b1_err_nonempty/a.txt", "x")
+    CONIURA delete_dir("tests/.tmp/fs_18b1_err_nonempty")
+    REDDE 0
+  FIN SI
+
+  REDDE 1
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

@@ -393,6 +393,9 @@ const char* cct_token_type_string(cct_token_type_t type) {
         /* Keywords - Control Flow */
         case TOKEN_SI: return "SI";
         case TOKEN_ALITER: return "ALITER";
+        case TOKEN_QUANDO: return "QUANDO";
+        case TOKEN_CASO: return "CASO";
+        case TOKEN_SENAO: return "SENAO";
         case TOKEN_DUM: return "DUM";
         case TOKEN_DONEC: return "DONEC";
         case TOKEN_REPETE: return "REPETE";
@@ -443,6 +446,7 @@ const char* cct_token_type_string(cct_token_type_t type) {
         case TOKEN_OBSECRO: return "OBSECRO";
         case TOKEN_ANUR: return "ANUR";
         case TOKEN_MENSURA: return "MENSURA";
+        case TOKEN_MOLDE: return "MOLDE";
         case TOKEN_DE: return "DE";
         case TOKEN_AD: return "AD";
         case TOKEN_IN: return "IN";

@@ -1,0 +1,9 @@
+INCIPIT grimoire "molde_coniura_19b3"
+ADVOCARE "cct/verbum.cct"
+RITUALE main() REDDE NIHIL
+  EVOCA VERBUM s AD "hello world"
+  OBSECRO scribe(MOLDE "len={CONIURA len(s)}\n")
+  OBSECRO scribe(MOLDE "upper={CONIURA to_upper(s)}\n")
+  REDDE
+EXPLICIT RITUALE
+EXPLICIT grimoire

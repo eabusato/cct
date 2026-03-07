@@ -1,0 +1,15 @@
+INCIPIT grimoire "fluxus_sort_int_type_18c1"
+
+ADVOCARE "cct/fluxus.cct"
+
+RITUALE main() REDDE REX
+  EVOCA SPECULUM NIHIL f AD CONIURA fluxus_init(MENSURA(FLAMMA))
+  EVOCA FLAMMA a AD cast GENUS(FLAMMA)(1)
+  EVOCA FLAMMA b AD cast GENUS(FLAMMA)(2)
+  CONIURA fluxus_push(f, SPECULUM a)
+  CONIURA fluxus_push(f, SPECULUM b)
+  CONIURA fluxus_sort_int(f)
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

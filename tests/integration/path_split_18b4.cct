@@ -1,0 +1,64 @@
+INCIPIT grimoire "path_split_18b4"
+
+ADVOCARE "cct/path.cct"
+ADVOCARE "cct/verbum.cct"
+ADVOCARE "cct/fluxus.cct"
+
+RITUALE main() REDDE REX
+  EVOCA SPECULUM NIHIL p AD CONIURA split_path("/a/b/c")
+  EVOCA SPECULUM NIHIL q AD CONIURA split_path("a//b/./c")
+  EVOCA SPECULUM NIHIL r AD CONIURA split_path("/")
+
+  EVOCA VERBUM pj AD CONIURA join(p, "|")
+  EVOCA VERBUM qj AD CONIURA join(q, "|")
+  EVOCA VERBUM rj AD CONIURA join(r, "|")
+
+  SI CONIURA fluxus_len(p) != 4
+    CONIURA fluxus_free(p)
+    CONIURA fluxus_free(q)
+    CONIURA fluxus_free(r)
+    REDDE 1
+  FIN SI
+
+  SI CONIURA compare(pj, "/|a|b|c") != 0
+    CONIURA fluxus_free(p)
+    CONIURA fluxus_free(q)
+    CONIURA fluxus_free(r)
+    REDDE 2
+  FIN SI
+
+  SI CONIURA fluxus_len(q) != 3
+    CONIURA fluxus_free(p)
+    CONIURA fluxus_free(q)
+    CONIURA fluxus_free(r)
+    REDDE 3
+  FIN SI
+
+  SI CONIURA compare(qj, "a|b|c") != 0
+    CONIURA fluxus_free(p)
+    CONIURA fluxus_free(q)
+    CONIURA fluxus_free(r)
+    REDDE 4
+  FIN SI
+
+  SI CONIURA fluxus_len(r) != 1
+    CONIURA fluxus_free(p)
+    CONIURA fluxus_free(q)
+    CONIURA fluxus_free(r)
+    REDDE 5
+  FIN SI
+
+  SI CONIURA compare(rj, "/") != 0
+    CONIURA fluxus_free(p)
+    CONIURA fluxus_free(q)
+    CONIURA fluxus_free(r)
+    REDDE 6
+  FIN SI
+
+  CONIURA fluxus_free(p)
+  CONIURA fluxus_free(q)
+  CONIURA fluxus_free(r)
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

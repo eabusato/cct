@@ -754,6 +754,9 @@ static void sg_walk_stmt(cct_sigilo_model_t *m, const cct_ast_node_t *stmt, u32 
             m->total_loops++;
             m->rituals[ritual_idx].iterum_count++;
             sg_fnv_str(m, stmt->as.iterum.item_name);
+            if (stmt->as.iterum.value_name) {
+                sg_fnv_str(m, stmt->as.iterum.value_name);
+            }
             sg_walk_expr(m, stmt->as.iterum.collection, ritual_idx, depth + 1);
             sg_walk_stmt(m, stmt->as.iterum.body, ritual_idx, depth + 1);
             return;

@@ -1,0 +1,26 @@
+INCIPIT grimoire "random_bool_range_18d3"
+
+ADVOCARE "cct/random.cct"
+
+RITUALE main() REDDE REX
+  CONIURA seed(4242)
+
+  EVOCA REX i AD 0
+  DUM i < 200
+    EVOCA VERUM b AD CONIURA random_bool()
+    SI NON (b == VERUM VEL b == FALSUM)
+      REDDE 1
+    FIN SI
+
+    EVOCA UMBRA r AD CONIURA random_real_range(5.25, 9.75)
+    SI r < 5.25 VEL r >= 9.75
+      REDDE 2
+    FIN SI
+
+    VINCIRE i AD i + 1
+  FIN DUM
+
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

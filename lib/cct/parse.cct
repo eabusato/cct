@@ -1,6 +1,7 @@
 INCIPIT grimoire "parse"
 
 ADVOCARE "cct/verbum.cct"
+ADVOCARE "cct/option.cct"
 
 RITUALE parse_int(VERBUM s) REDDE REX
   REDDE OBSECRO fmt_parse_int(s)
@@ -19,6 +20,54 @@ RITUALE parse_bool(VERBUM s) REDDE VERUM
   FIN SI
   IACE "parse_bool invalid input"
   REDDE FALSUM
+EXPLICIT RITUALE
+
+RITUALE try_int(VERBUM s) REDDE SPECULUM NIHIL
+  REDDE OBSECRO parse_try_int(s)
+EXPLICIT RITUALE
+
+RITUALE try_real(VERBUM s) REDDE SPECULUM NIHIL
+  REDDE OBSECRO parse_try_real(s)
+EXPLICIT RITUALE
+
+RITUALE try_bool(VERBUM s) REDDE SPECULUM NIHIL
+  REDDE OBSECRO parse_try_bool(s)
+EXPLICIT RITUALE
+
+RITUALE parse_int_hex(VERBUM s) REDDE REX
+  REDDE OBSECRO parse_int_hex(s)
+EXPLICIT RITUALE
+
+RITUALE try_int_hex(VERBUM s) REDDE SPECULUM NIHIL
+  REDDE OBSECRO parse_try_int_hex(s)
+EXPLICIT RITUALE
+
+RITUALE parse_int_radix(VERBUM s, REX radix) REDDE REX
+  REDDE OBSECRO parse_int_radix(s, radix)
+EXPLICIT RITUALE
+
+RITUALE try_int_radix(VERBUM s, REX radix) REDDE SPECULUM NIHIL
+  REDDE OBSECRO parse_try_int_radix(s, radix)
+EXPLICIT RITUALE
+
+RITUALE is_int(VERBUM s) REDDE VERUM
+  REDDE OBSECRO parse_is_int(s)
+EXPLICIT RITUALE
+
+RITUALE is_real(VERBUM s) REDDE VERUM
+  REDDE OBSECRO parse_is_real(s)
+EXPLICIT RITUALE
+
+RITUALE parse_lines(VERBUM s) REDDE SPECULUM NIHIL
+  REDDE OBSECRO verbum_lines(s)
+EXPLICIT RITUALE
+
+RITUALE parse_csv_line(VERBUM s) REDDE SPECULUM NIHIL
+  REDDE OBSECRO parse_csv_line(s, 44)
+EXPLICIT RITUALE
+
+RITUALE parse_csv_line_sep(VERBUM s, MILES sep) REDDE SPECULUM NIHIL
+  REDDE OBSECRO parse_csv_line(s, sep)
 EXPLICIT RITUALE
 
 EXPLICIT grimoire

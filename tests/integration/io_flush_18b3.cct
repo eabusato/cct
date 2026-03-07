@@ -1,0 +1,13 @@
+INCIPIT grimoire "io_flush_18b3"
+
+ADVOCARE "cct/io.cct"
+
+RITUALE main() REDDE REX
+  CONIURA print("ok")
+  CONIURA flush()
+  CONIURA eprint("err")
+  CONIURA flush_err()
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

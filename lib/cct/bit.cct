@@ -1,0 +1,146 @@
+INCIPIT grimoire "bit"
+
+RITUALE bit_get(REX n, REX pos) REDDE VERUM
+  SI pos < 0 VEL pos >= 64
+    IACE "bit_get posicao fora do intervalo 0..63"
+  FIN SI
+  REDDE (n ET_BIT (1 SINISTER pos)) != 0
+EXPLICIT RITUALE
+
+RITUALE bit_set(REX n, REX pos) REDDE REX
+  SI pos < 0 VEL pos >= 64
+    IACE "bit_set posicao fora do intervalo 0..63"
+  FIN SI
+  REDDE n VEL_BIT (1 SINISTER pos)
+EXPLICIT RITUALE
+
+RITUALE bit_clear(REX n, REX pos) REDDE REX
+  SI pos < 0 VEL pos >= 64
+    IACE "bit_clear posicao fora do intervalo 0..63"
+  FIN SI
+  REDDE n ET_BIT NON_BIT (1 SINISTER pos)
+EXPLICIT RITUALE
+
+RITUALE bit_toggle(REX n, REX pos) REDDE REX
+  SI pos < 0 VEL pos >= 64
+    IACE "bit_toggle posicao fora do intervalo 0..63"
+  FIN SI
+  REDDE n XOR (1 SINISTER pos)
+EXPLICIT RITUALE
+
+RITUALE popcount(REX n) REDDE REX
+  EVOCA REX c AD 0
+  EVOCA REX u AD n
+  DUM u != 0
+    VINCIRE c AD c + (u ET_BIT 1)
+    VINCIRE u AD u DEXTER 1
+  FIN DUM
+  REDDE c
+EXPLICIT RITUALE
+
+RITUALE leading_zeros(REX n) REDDE REX
+  SI n == 0
+    REDDE 64
+  FIN SI
+  EVOCA REX z AD 0
+  EVOCA REX i AD 63
+  DUM i >= 0 ET ((n DEXTER i) ET_BIT 1) == 0
+    VINCIRE z AD z + 1
+    VINCIRE i AD i - 1
+  FIN DUM
+  REDDE z
+EXPLICIT RITUALE
+
+RITUALE trailing_zeros(REX n) REDDE REX
+  SI n == 0
+    REDDE 64
+  FIN SI
+  EVOCA REX z AD 0
+  EVOCA REX u AD n
+  DUM (u ET_BIT 1) == 0
+    VINCIRE z AD z + 1
+    VINCIRE u AD u DEXTER 1
+  FIN DUM
+  REDDE z
+EXPLICIT RITUALE
+
+RITUALE rotate_left(REX n, REX k) REDDE REX
+  VINCIRE k AD k % 64
+  SI k < 0
+    VINCIRE k AD k + 64
+  FIN SI
+  SI k == 0
+    REDDE n
+  FIN SI
+
+  EVOCA REX out AD 0
+  EVOCA REX i AD 0
+  DUM i < 64
+    EVOCA REX src AD i - k
+    SI src < 0
+      VINCIRE src AD src + 64
+    FIN SI
+    SI CONIURA bit_get(n, src)
+      VINCIRE out AD CONIURA bit_set(out, i)
+    FIN SI
+    VINCIRE i AD i + 1
+  FIN DUM
+  REDDE out
+EXPLICIT RITUALE
+
+RITUALE rotate_right(REX n, REX k) REDDE REX
+  REDDE CONIURA rotate_left(n, 64 - (k % 64))
+EXPLICIT RITUALE
+
+RITUALE next_power_of_2(REX n) REDDE REX
+  SI n <= 1
+    REDDE 1
+  FIN SI
+  EVOCA REX v AD n - 1
+  EVOCA REX shift AD 1
+  DUM shift < 64
+    VINCIRE v AD v VEL_BIT (v DEXTER shift)
+    VINCIRE shift AD shift * 2
+  FIN DUM
+  REDDE v + 1
+EXPLICIT RITUALE
+
+RITUALE is_power_of_2(REX n) REDDE VERUM
+  SI n <= 0
+    REDDE FALSUM
+  FIN SI
+  REDDE (n ET_BIT (n - 1)) == 0
+EXPLICIT RITUALE
+
+RITUALE byte_swap(REX n) REDDE REX
+  EVOCA REX out AD 0
+  EVOCA REX i AD 0
+  DUM i < 8
+    EVOCA REX b AD (n DEXTER (i * 8)) ET_BIT 255
+    VINCIRE out AD out VEL_BIT (b SINISTER ((7 - i) * 8))
+    VINCIRE i AD i + 1
+  FIN DUM
+  REDDE out
+EXPLICIT RITUALE
+
+RITUALE parity(REX n) REDDE VERUM
+  REDDE CONIURA popcount(n) % 2 == 1
+EXPLICIT RITUALE
+
+RITUALE bit_extract(REX n, REX start, REX len) REDDE REX
+  SI start < 0 VEL len <= 0 VEL (start + len) > 64
+    IACE "bit_extract intervalo invalido"
+  FIN SI
+
+  EVOCA REX out AD 0
+  EVOCA REX i AD 0
+  DUM i < len
+    SI CONIURA bit_get(n, start + i)
+      VINCIRE out AD CONIURA bit_set(out, i)
+    FIN SI
+    VINCIRE i AD i + 1
+  FIN DUM
+  REDDE out
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

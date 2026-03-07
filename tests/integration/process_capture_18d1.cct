@@ -1,0 +1,20 @@
+INCIPIT grimoire "process_capture_18d1"
+
+ADVOCARE "cct/process.cct"
+ADVOCARE "cct/verbum.cct"
+
+RITUALE main() REDDE REX
+  EVOCA VERBUM out AD CONIURA run_capture("printf 'hello\\n'")
+  SI CONIURA compare(out, "hello\n") != 0
+    REDDE 1
+  FIN SI
+
+  EVOCA VERBUM err AD CONIURA run_capture_err("echo out ; echo err 1>&2")
+  SI CONIURA compare(err, "err\n") != 0
+    REDDE 2
+  FIN SI
+
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

@@ -3,8 +3,8 @@ visual_engine = sigillum_v2_1
 visual_style = network
 compiler_version = 0.12.0
 program_name = sigilo_minimal
-semantic_hash = 8b3cd1560ba97378
-layout_seed = 8b3cd1560ba97378:network
+semantic_hash = 808054f66677ac29
+layout_seed = 808054f66677ac29:network
 module_mode = single
 module_count = 1
 import_edge_count = 0
@@ -184,7 +184,7 @@ determinism_guarantee = stable
 
 [diff_fingerprint_context]
 scope_anchor = local
-hash_anchor = 8b3cd1560ba97378
+hash_anchor = 808054f66677ac29
 fingerprint_basis = structural_metrics+topology+hash_anchor
 serialization_profile = analytical_v1
 volatility = none
@@ -212,7 +212,7 @@ diff_policy = analytical_blocks_review_required_except_compatibility_hints
 deterministic_serialization = stable_section_order
 
 [layout]
-primary_axis_deg = 97.761
+primary_axis_deg = 102.062
 canvas_center = 256.0,256.0
 containment_radius = 226.0
 style_influence = stroke/curvature/distribution/ornamentation

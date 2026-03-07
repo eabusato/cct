@@ -1,0 +1,23 @@
+INCIPIT grimoire "verbum_case_18a1"
+
+ADVOCARE "cct/verbum.cct"
+
+RITUALE main() REDDE REX
+  EVOCA VERBUM s AD "AbC-19"
+  EVOCA VERBUM up AD CONIURA to_upper(s)
+  EVOCA VERBUM low AD CONIURA to_lower(s)
+
+  SI CONIURA compare(up, "ABC-19") == 0
+    SI CONIURA compare(low, "abc-19") == 0
+      SI CONIURA equals_ignore_case("Alpha", "aLPHa")
+        SI NON CONIURA equals_ignore_case("Alpha", "Beta")
+          REDDE 0
+        FIN SI
+      FIN SI
+    FIN SI
+  FIN SI
+
+  REDDE 1
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

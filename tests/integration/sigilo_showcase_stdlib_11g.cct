@@ -5,7 +5,6 @@ ADVOCARE "cct/fmt.cct"
 ADVOCARE "cct/series.cct"
 ADVOCARE "cct/alg.cct"
 ADVOCARE "cct/fluxus.cct"
-ADVOCARE "cct/mem.cct"
 ADVOCARE "cct/io.cct"
 ADVOCARE "cct/fs.cct"
 ADVOCARE "cct/path.cct"
@@ -25,10 +24,6 @@ RITUALE main() REDDE REX
   EVOCA REX v AD 9
   CONIURA fluxus_push(flux, SPECULUM v)
   CONIURA fluxus_free(flux)
-
-  EVOCA SPECULUM REX ptr AD CONIURA alloc(8)
-  CONIURA zero(ptr, 8)
-  CONIURA free(ptr)
 
   EVOCA VERBUM p AD CONIURA path_join("tests", "tmp_sigilo_11g.txt")
   CONIURA write_all(p, "x")

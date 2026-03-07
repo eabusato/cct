@@ -1,0 +1,27 @@
+INCIPIT grimoire "verbum_misc_18a1"
+
+ADVOCARE "cct/verbum.cct"
+
+RITUALE main() REDDE REX
+  EVOCA VERBUM rev AD CONIURA reverse("abc!")
+  EVOCA VERBUM sl AD CONIURA slice("abcdef", 2, 3)
+  EVOCA VERBUM non_ascii AD "á"
+
+  SI CONIURA compare(rev, "!cba") == 0
+    SI CONIURA compare(sl, "cde") == 0
+      SI CONIURA is_ascii("hello")
+        SI NON CONIURA is_ascii(non_ascii)
+          SI CONIURA is_empty("")
+            SI NON CONIURA is_empty("x")
+              REDDE 0
+            FIN SI
+          FIN SI
+        FIN SI
+      FIN SI
+    FIN SI
+  FIN SI
+
+  REDDE 1
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

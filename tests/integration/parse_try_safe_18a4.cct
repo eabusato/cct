@@ -1,0 +1,57 @@
+INCIPIT grimoire "parse_try_safe_18a4"
+
+ADVOCARE "cct/parse.cct"
+ADVOCARE "cct/option.cct"
+
+RITUALE main() REDDE REX
+  EVOCA SPECULUM NIHIL oi_ok AD CONIURA try_int("123")
+  EVOCA SPECULUM NIHIL oi_bad AD CONIURA try_int(" 123")
+  EVOCA SPECULUM NIHIL or_ok AD CONIURA try_real("2.5")
+  EVOCA SPECULUM NIHIL or_bad AD CONIURA try_real("2.5 ")
+  EVOCA SPECULUM NIHIL ob_ok AD CONIURA try_bool("true")
+  EVOCA SPECULUM NIHIL ob_bad AD CONIURA try_bool("TRUE")
+
+  EVOCA VERUM ok AD VERUM
+
+  SI NON CONIURA option_is_some GENUS(REX)(oi_ok)
+    VINCIRE ok AD FALSUM
+  FIN SI
+  SI NON CONIURA option_is_none GENUS(REX)(oi_bad)
+    VINCIRE ok AD FALSUM
+  FIN SI
+  SI NON CONIURA option_is_some GENUS(UMBRA)(or_ok)
+    VINCIRE ok AD FALSUM
+  FIN SI
+  SI NON CONIURA option_is_none GENUS(UMBRA)(or_bad)
+    VINCIRE ok AD FALSUM
+  FIN SI
+  SI NON CONIURA option_is_some GENUS(VERUM)(ob_ok)
+    VINCIRE ok AD FALSUM
+  FIN SI
+  SI NON CONIURA option_is_none GENUS(VERUM)(ob_bad)
+    VINCIRE ok AD FALSUM
+  FIN SI
+
+  SI ok
+    EVOCA REX vi AD CONIURA option_unwrap GENUS(REX)(oi_ok)
+    EVOCA UMBRA vr AD CONIURA option_unwrap GENUS(UMBRA)(or_ok)
+    EVOCA VERUM vb AD CONIURA option_unwrap GENUS(VERUM)(ob_ok)
+    SI vi != 123 VEL vr < 2.49 VEL vr > 2.51 VEL vb != VERUM
+      VINCIRE ok AD FALSUM
+    FIN SI
+  FIN SI
+
+  CONIURA option_free GENUS(REX)(oi_ok)
+  CONIURA option_free GENUS(REX)(oi_bad)
+  CONIURA option_free GENUS(UMBRA)(or_ok)
+  CONIURA option_free GENUS(UMBRA)(or_bad)
+  CONIURA option_free GENUS(VERUM)(ob_ok)
+  CONIURA option_free GENUS(VERUM)(ob_bad)
+
+  SI ok
+    REDDE 0
+  FIN SI
+  REDDE 1
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

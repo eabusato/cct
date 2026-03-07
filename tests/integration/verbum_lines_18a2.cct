@@ -1,0 +1,28 @@
+INCIPIT grimoire "verbum_lines_18a2"
+
+ADVOCARE "cct/verbum.cct"
+ADVOCARE "cct/fluxus.cct"
+
+RITUALE main() REDDE REX
+  EVOCA VERBUM crs AD OBSECRO verbum_from_char(13)
+  EVOCA VERBUM src AD CONIURA concat("a", crs)
+  VINCIRE src AD CONIURA concat(src, "\nb\n")
+  EVOCA SPECULUM NIHIL l AD CONIURA lines(src)
+  EVOCA SPECULUM NIHIL e AD CONIURA lines("")
+  EVOCA VERBUM lj AD CONIURA join(l, "|")
+  EVOCA VERBUM ej AD CONIURA join(e, "|")
+
+  SI CONIURA fluxus_len(l) == 3 ET CONIURA fluxus_len(e) == 1
+    SI CONIURA compare(lj, "a|b|") == 0 ET CONIURA compare(ej, "") == 0
+      CONIURA fluxus_free(l)
+      CONIURA fluxus_free(e)
+      REDDE 0
+    FIN SI
+  FIN SI
+
+  CONIURA fluxus_free(l)
+  CONIURA fluxus_free(e)
+  REDDE 1
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

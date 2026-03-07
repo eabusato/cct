@@ -1,0 +1,34 @@
+INCIPIT grimoire "ordo_em_fluxus_19c4"
+
+ADVOCARE "cct/fluxus.cct"
+ADVOCARE "cct/ordo_samples.cct"
+
+RITUALE main() REDDE NIHIL
+  EVOCA SPECULUM NIHIL resultados AD CONIURA fluxus_init(MENSURA(Resultado))
+  EVOCA Resultado a AD Ok(1)
+  EVOCA Resultado b AD Err("falhou")
+  EVOCA Resultado c AD Ok(3)
+
+  CONIURA fluxus_push(resultados, SPECULUM a)
+  CONIURA fluxus_push(resultados, SPECULUM b)
+  CONIURA fluxus_push(resultados, SPECULUM c)
+
+  EVOCA REX i AD 0
+  EVOCA REX n AD CONIURA fluxus_len(resultados)
+  DUM i < n
+    EVOCA SPECULUM Resultado p AD CONIURA fluxus_get(resultados, i)
+    EVOCA Resultado r AD *p
+    QUANDO r
+      CASO Ok(v):
+        OBSECRO scribe(MOLDE "ok={v}\n")
+      CASO Err(m):
+        OBSECRO scribe(MOLDE "err={m}\n")
+    FIN QUANDO
+    VINCIRE i AD i + 1
+  FIN DUM
+
+  CONIURA fluxus_free(resultados)
+  REDDE
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

@@ -1,0 +1,7 @@
+INCIPIT grimoire "molde_fmt_alinhamento_19b2"
+RITUALE main() REDDE NIHIL
+  EVOCA VERBUM s AD "ave"
+  OBSECRO scribe(MOLDE "L|{s:<6}| R|{s:>6}|\n")
+  REDDE
+EXPLICIT RITUALE
+EXPLICIT grimoire

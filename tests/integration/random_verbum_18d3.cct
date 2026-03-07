@@ -1,0 +1,50 @@
+INCIPIT grimoire "random_verbum_18d3"
+
+ADVOCARE "cct/random.cct"
+ADVOCARE "cct/verbum.cct"
+ADVOCARE "cct/hash.cct"
+
+RITUALE main() REDDE REX
+  CONIURA seed(7)
+
+  EVOCA VERBUM alpha AD "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
+  EVOCA VERBUM s AD CONIURA random_verbum(64)
+
+  SI CONIURA len(s) != 64
+    REDDE 1
+  FIN SI
+
+  EVOCA REX i AD 0
+  DUM i < 64
+    EVOCA VERBUM ch AD CONIURA from_char(CONIURA char_at(s, i))
+    SI CONIURA find(alpha, ch) < 0
+      REDDE 2
+    FIN SI
+    VINCIRE i AD i + 1
+  FIN DUM
+
+  EVOCA VERBUM t AD CONIURA random_verbum_from(48, "abc")
+  SI CONIURA len(t) != 48
+    REDDE 3
+  FIN SI
+
+  VINCIRE i AD 0
+  DUM i < 48
+    EVOCA VERBUM ch2 AD CONIURA from_char(CONIURA char_at(t, i))
+    SI CONIURA find("abc", ch2) < 0
+      REDDE 4
+    FIN SI
+    VINCIRE i AD i + 1
+  FIN DUM
+
+  EVOCA SPECULUM NIHIL raw AD CONIURA random_bytes(16)
+  EVOCA REX h1 AD CONIURA fnv1a_bytes(raw, 16)
+  EVOCA REX h2 AD CONIURA fnv1a_bytes(raw, 16)
+  SI h1 != h2
+    REDDE 5
+  FIN SI
+
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

@@ -1,0 +1,39 @@
+INCIPIT grimoire "hash_determinism_18d2"
+
+ADVOCARE "cct/hash.cct"
+
+RITUALE main() REDDE REX
+  EVOCA VERBUM s AD "deterministic"
+
+  EVOCA REX d1 AD CONIURA djb2(s)
+  EVOCA REX d2 AD CONIURA djb2(s)
+  SI d1 != d2
+    REDDE 1
+  FIN SI
+
+  EVOCA REX f1 AD CONIURA fnv1a(s)
+  EVOCA REX f2 AD CONIURA fnv1a(s)
+  SI f1 != f2
+    REDDE 2
+  FIN SI
+
+  EVOCA REX c1 AD CONIURA crc32(s)
+  EVOCA REX c2 AD CONIURA crc32(s)
+  SI c1 != c2
+    REDDE 3
+  FIN SI
+
+  EVOCA REX m1 AD CONIURA murmur3(s, 123)
+  EVOCA REX m2 AD CONIURA murmur3(s, 123)
+  EVOCA REX m3 AD CONIURA murmur3(s, 124)
+  SI m1 != m2
+    REDDE 4
+  FIN SI
+  SI m1 == m3
+    REDDE 5
+  FIN SI
+
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

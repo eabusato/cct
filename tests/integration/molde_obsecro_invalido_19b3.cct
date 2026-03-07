@@ -1,0 +1,7 @@
+INCIPIT grimoire "molde_obsecro_invalido_19b3"
+RITUALE main() REDDE NIHIL
+  EVOCA VERBUM s AD "abc"
+  OBSECRO scribe(MOLDE "x={OBSECRO scribe(s)}\n")
+  REDDE
+EXPLICIT RITUALE
+EXPLICIT grimoire

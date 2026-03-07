@@ -3,7 +3,7 @@
 This is a multi-module showcase designed to exercise a broad set of currently supported CCT features.
 
 Status note:
-- Valid on the current project baseline (`FASE 15D.4 completed`).
+- Valid on the current project baseline (`FASE 19D.4 completed`).
 
 ## Features Used
 

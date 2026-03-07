@@ -1,0 +1,25 @@
+INCIPIT grimoire "verbum_replace_18a1"
+
+ADVOCARE "cct/verbum.cct"
+
+RITUALE main() REDDE REX
+  EVOCA VERBUM s AD "aa-bb-aa"
+  EVOCA VERBUM r1 AD CONIURA replace(s, "aa", "X")
+  EVOCA VERBUM r2 AD CONIURA replace_all(s, "aa", "X")
+  EVOCA VERBUM r3 AD CONIURA replace(s, "", "X")
+  EVOCA VERBUM r4 AD CONIURA replace_all(s, "", "X")
+
+  SI CONIURA compare(r1, "X-bb-aa") == 0
+    SI CONIURA compare(r2, "X-bb-X") == 0
+      SI CONIURA compare(r3, s) == 0
+        SI CONIURA compare(r4, s) == 0
+          REDDE 0
+        FIN SI
+      FIN SI
+    FIN SI
+  FIN SI
+
+  REDDE 1
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

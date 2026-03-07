@@ -1,0 +1,13 @@
+INCIPIT grimoire "ordo_payload_sem_payload_19c1"
+
+ORDO Evento
+  Init,
+  Dado(REX id, VERBUM nome),
+  Fim
+FIN ORDO
+
+RITUALE main() REDDE REX
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

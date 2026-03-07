@@ -1,5 +1,7 @@
 INCIPIT grimoire "series"
 
+ADVOCARE "cct/alg.cct"
+
 RITUALE series_len GENUS(T)(SPECULUM T arr, REX tamanho) REDDE REX
   REDDE tamanho
 EXPLICIT RITUALE
@@ -50,6 +52,60 @@ RITUALE series_contains(SPECULUM REX arr, REX valor, REX tamanho) REDDE VERUM
     VINCIRE i AD i + 1
   FIN DUM
   REDDE FALSUM
+EXPLICIT RITUALE
+
+RITUALE series_sum(SPECULUM REX arr, REX n) REDDE REX
+  REDDE CONIURA alg_sum(arr, n)
+EXPLICIT RITUALE
+
+RITUALE series_sum_real(SPECULUM UMBRA arr, REX n) REDDE UMBRA
+  REDDE CONIURA alg_sum_real(arr, n)
+EXPLICIT RITUALE
+
+RITUALE series_min(SPECULUM REX arr, REX n) REDDE REX
+  SI n <= 0
+    IACE "series_min n <= 0"
+  FIN SI
+  EVOCA REX m AD arr[0]
+  EVOCA REX i AD 1
+  DUM i < n
+    SI arr[i] < m
+      VINCIRE m AD arr[i]
+    FIN SI
+    VINCIRE i AD i + 1
+  FIN DUM
+  REDDE m
+EXPLICIT RITUALE
+
+RITUALE series_max(SPECULUM REX arr, REX n) REDDE REX
+  SI n <= 0
+    IACE "series_max n <= 0"
+  FIN SI
+  EVOCA REX m AD arr[0]
+  EVOCA REX i AD 1
+  DUM i < n
+    SI arr[i] > m
+      VINCIRE m AD arr[i]
+    FIN SI
+    VINCIRE i AD i + 1
+  FIN DUM
+  REDDE m
+EXPLICIT RITUALE
+
+RITUALE series_is_sorted(SPECULUM REX arr, REX n) REDDE VERUM
+  SI n <= 1
+    REDDE VERUM
+  FIN SI
+  REDDE CONIURA alg_is_sorted(arr, n)
+EXPLICIT RITUALE
+
+RITUALE series_sort(SPECULUM REX arr, REX n) REDDE NIHIL
+  CONIURA alg_quicksort(arr, n)
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE series_count_val(SPECULUM REX arr, REX n, REX val) REDDE REX
+  REDDE CONIURA alg_count(arr, n, val)
 EXPLICIT RITUALE
 
 EXPLICIT grimoire

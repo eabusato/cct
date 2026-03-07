@@ -12,9 +12,9 @@ CCT is a compiled, ritual-themed programming language with deterministic sigil g
 
 ## Status
 
-**Current status: FASE 15D.4 completed** (FASE 15 closure gate completed; baseline is ready for FASE 16 work).
+**Current status: FASE 19D.4 completed** (FASE 19 closure gate completed; baseline is ready for FASE 20 work).
 
-Implemented phases: **0 → 13D.4 + 13M.B2 + 14A.1/14A.2/14A.3/14A.4 + 15A.1/15A.2/15A.3/15A.4/15B.1/15B.2/15B.3/15B.4/15C.1/15C.2/15C.3/15C.4/15D.1/15D.2/15D.3/15D.4**.
+Implemented phases: **0 → 19D.4** (including full closures for FASE 16, 17, 18, and 19).
 
 Highlights of the current baseline:
 - Real end-to-end compiler pipeline (`.cct -> parse/semantic -> codegen -> .cgen.c -> host C compiler -> binary`)
@@ -47,7 +47,7 @@ Highlights of the current baseline:
 - Functional error ergonomics via Option/Result in FASE 12C
 - Hash-backed canonical collections via `cct/map` and `cct/set` in FASE 12D.1
 - Functional collection combinators via `cct/collection_ops` in FASE 12D.2 (`fluxus_map`, `fluxus_filter`, `fluxus_fold`, `fluxus_find`, `fluxus_any`, `fluxus_all`, `series_map`, `series_filter`, `series_reduce`, `series_find`, `series_any`, `series_all`)
-- Baseline collection iterator syntax in FASE 12D.3 (`ITERUM item IN collection COM ... FIN ITERUM`) for `FLUXUS`, `SERIES`, and collection-op results
+- Baseline collection iterator syntax from FASE 12D.3, expanded in FASE 19D.1 to `map`/`set` (`ITERUM key, value IN map` and `ITERUM item IN set`)
 - Standalone formatter command in FASE 12E.1 (`cct fmt`, `cct fmt --check`, `cct fmt --diff`)
 - Canonical linter command in FASE 12E.2 (`cct lint`, `cct lint --strict`, `cct lint --fix`)
 - Canonical project workflow in FASE 12F (`cct build`, `cct run`, `cct test`, `cct bench`, `cct clean`) with basic incremental cache
@@ -55,6 +55,9 @@ Highlights of the current baseline:
 - Common math operators in FASE 13M: `**` (power), `//` (floor integer division), `%%` (euclidean modulo)
 - FASE 14A hardening: canonical diagnostic taxonomy + canonical exit-code contract + sigilo explain mode + deterministic sigilo diagnostic ordering
 - FASE 15 closure set: `FRANGE`/`RECEDE` loop-control stability, logical `ET`/`VEL` with precedence/parentheses, stable bitwise/shift operators, and `CONSTANS` semantic+codegen enforcement (locals, parameters, and const-pointer binding)
+- FASE 16 closure set: freestanding profile (`--profile freestanding`), bridge-safe `cct/kernel`, ASM emission path (`--emit-asm`), and bridge packaging gates
+- FASE 17/18 canonical-library expansion: text/parsing/IO/FS/path utilities, algorithms/collections growth, plus `process`, `hash`, and `bit` modules
+- FASE 19 language-surface expansion: `QUANDO`/`CASO`/`SENAO`, `MOLDE`, payload `ORDO`, and `ITERUM` over `map`/`set` with insertion-order semantics
 
 ## Build
 
@@ -127,10 +130,12 @@ Sigil options:
 
 ### Core Language and Execution
 - Lexer, parser, AST, semantic analysis, and executable code generation
-- Structured flow control: `SI/ALITER`, `DUM`, `DONEC`, `REPETE`, `ITERUM`
+- Structured flow control: `SI/ALITER`, `QUANDO/CASO/SENAO`, `DUM`, `DONEC`, `REPETE`, `ITERUM`
 - Calls and returns: `CONIURA`, `REDDE`, `ANUR`
 - Scalars, booleans, strings, and real-number subset (`UMBRA`, `FLAMMA`)
-- Basic arrays (`SERIES`) and practical enum subset (`ORDO`)
+- String interpolation expression: `MOLDE`
+- Basic arrays (`SERIES`) and payload-capable `ORDO` subset (with `QUANDO` destructuring)
+- Collection iteration over `FLUXUS`, `SERIES`, `map`, and `set` (with arity validation)
 
 ### Memory and Structural Subset (FASE 7 block)
 - `SPECULUM` pointers (supported subset)
@@ -352,7 +357,7 @@ Current delivery in FASE 11H:
 - packaging/install closure (`make dist`, `make install`, `make uninstall`)
 - public technical release notes (`docs/release/FASE_11_RELEASE_NOTES.md`)
 
-Current delivery in FASE 12D.1:
+Current delivery in FASE 12C + 12D.1:
 - canonical stdlib modules `cct/option` and `cct/result`
 - Option baseline (`Some`, `None`, `option_is_some`, `option_unwrap`, `option_unwrap_or`, `option_expect`, `option_free`)
 - Result baseline (`Ok`, `Err`, `result_is_ok`, `result_unwrap`, `result_unwrap_or`, `result_unwrap_err`, `result_expect`, `result_free`)
@@ -373,6 +378,12 @@ Current delivery in FASE 12D.3:
 - semantic/type checks for iterator collections (FLUXUS and SERIES subset)
 - codegen lowering to deterministic C loops
 - sigilo metadata counter for iterator usage (`iterum_count`)
+
+Current delivery in FASE 19:
+- `QUANDO` statement with `CASO`/`SENAO` over integer, `VERBUM`, and `ORDO`
+- `MOLDE` string interpolation with formatting specifiers (host profile)
+- payload `ORDO` declaration/construction/destructuring via `QUANDO`
+- `ITERUM` expansion to `map`/`set` with insertion-order iteration semantics
 
 Current delivery in FASE 12E.1:
 - standalone formatter command integrated in CLI (`cct fmt`)
@@ -480,22 +491,26 @@ Sigil-only (system + local in essential mode):
 
 ## Release Documentation Packages
 
-The current project baseline is **FASE 15D.4 completed**. Historical release packages remain available for traceability and migration references.
+The current project baseline is **FASE 19D.4 completed**. Historical release packages remain available for traceability and migration references.
 
 **Current-phase release documentation:**
-- `docs/release/FASE_15_RELEASE_NOTES.md` — FASE 15 completion summary and compatibility notes
+- `docs/release/FASE_19_RELEASE_NOTES.md` — FASE 19 completion summary (`QUANDO`, `MOLDE`, payload `ORDO`, `ITERUM map/set`)
 
 **Historical package documentation:**
+- `docs/release/FASE_18_RELEASE_NOTES.md` — FASE 18 canonical-library expansion summary
+- `docs/release/FASE_17_RELEASE_NOTES.md` — FASE 17 canonical-library expansion summary
+- `docs/release/FASE_16_RELEASE_NOTES.md` — FASE 16 freestanding/bridge summary
 - `docs/release/FASE_11_RELEASE_NOTES.md` — Early stdlib/platform release notes
 - `docs/release/FASE_12_RELEASE_NOTES.md` — FASE 12 delivery notes
 - `docs/release/FASE_13_RELEASE_NOTES.md` — Highlights and operational guidance
 - `docs/release/FASE_14_RELEASE_NOTES.md` — Hardening-stream release notes
+- `docs/release/FASE_15_RELEASE_NOTES.md` — FASE 15 semantic/operator closure notes
 - detailed matrices/snapshots from older phases were archived from the public `docs/release` surface
 
 **Quick reference:**
-- FASE 0–14 public contracts remain stable
-- FASE 15 closure set is complete (`FRANGE`, `RECEDE`, logical operators, bitwise operators, and `CONSTANS`)
-- Bootstrap-oriented architecture work starts in FASE 16
+- FASE 0–19 public contracts remain stable
+- FASE 19 closure set is complete (`QUANDO`, `MOLDE`, payload `ORDO`, `ITERUM map/set`)
+- Next planned phase is FASE 20
 - Zero silent-breaking-change policy remains active
 
 See `docs/roadmap.md` and `docs/spec.md` for current-phase status and language-surface details.
@@ -530,8 +545,12 @@ CCT documentation is organized by audience and purpose. Choose your reading path
 ### For Advanced Users and Contributors
 1. [Architecture](docs/architecture.md) - Compiler internals
 2. [Roadmap](docs/roadmap.md) - Phase history and future plans
-3. [Release Documentation (Historical Packages)](docs/release/):
-   - [FASE 15 Release Notes](docs/release/FASE_15_RELEASE_NOTES.md) - FASE 15 closure summary and compatibility notes
+3. [Release Documentation](docs/release/):
+   - [FASE 19 Release Notes](docs/release/FASE_19_RELEASE_NOTES.md) - FASE 19 language-surface closure summary
+   - [FASE 18 Release Notes](docs/release/FASE_18_RELEASE_NOTES.md) - Canonical-library expansion closure summary
+   - [FASE 17 Release Notes](docs/release/FASE_17_RELEASE_NOTES.md) - Canonical-library expansion highlights
+   - [FASE 16 Release Notes](docs/release/FASE_16_RELEASE_NOTES.md) - Freestanding/bridge trajectory summary
+   - [FASE 15 Release Notes](docs/release/FASE_15_RELEASE_NOTES.md) - Semantic/operator closure summary
    - [FASE 14 Release Notes](docs/release/FASE_14_RELEASE_NOTES.md) - Hardening-stream highlights
    - [FASE 13 Release Notes](docs/release/FASE_13_RELEASE_NOTES.md) - Highlights and migration guide
    - [FASE 12 Release Notes](docs/release/FASE_12_RELEASE_NOTES.md) - FASE 12 delivery summary
@@ -552,8 +571,8 @@ Primary docs:
 - `docs/architecture.md`
 - `docs/roadmap.md`
 - `docs/bibliotheca_canonica.md`
-- `docs/release/FASE_15_RELEASE_NOTES.md` — current phase release notes
-- `docs/release/` — phase release-note index (11..15)
+- `docs/release/FASE_19_RELEASE_NOTES.md` — current phase release notes
+- `docs/release/` — phase release-note index (11..19 where published)
 
 Tooling and guides:
 - `docs/install.md`
@@ -567,7 +586,7 @@ Tooling and guides:
 Project and phase dossiers:
 - `PROJETO_CCT.md`
 - `PROJETO_CCT_V2.md`
-- `md_out/FASE_*_CCT.md` (phase execution plans and records, including the full FASE 15 track)
+- `md_out/FASE_*_CCT.md` (phase execution plans and records, including the full FASE 19 track)
 
 ## License
 

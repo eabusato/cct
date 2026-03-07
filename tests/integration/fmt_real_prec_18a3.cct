@@ -1,0 +1,20 @@
+INCIPIT grimoire "fmt_real_prec_18a3"
+
+ADVOCARE "cct/fmt.cct"
+ADVOCARE "cct/verbum.cct"
+
+RITUALE main() REDDE REX
+  EVOCA VERBUM p AD CONIURA stringify_real_prec(3.14159, 2)
+  EVOCA VERBUM f AD CONIURA stringify_real_fixed(3.5, 3)
+  EVOCA VERBUM s AD CONIURA stringify_real_sci(3.5)
+
+  SI CONIURA compare(p, "3.14") == 0 ET CONIURA compare(f, "3.500") == 0
+    SI CONIURA find(s, "e") != -1
+      REDDE 0
+    FIN SI
+  FIN SI
+
+  REDDE 1
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

@@ -1,0 +1,16 @@
+INCIPIT grimoire "quando_verum_19a1"
+
+RITUALE main() REDDE NIHIL
+  EVOCA VERUM ativo AD VERUM
+
+  QUANDO ativo
+    CASO VERUM:
+      OBSECRO scribe("ativo\n")
+    CASO FALSUM:
+      OBSECRO scribe("inativo\n")
+  FIN QUANDO
+
+  REDDE
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

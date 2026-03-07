@@ -1,0 +1,22 @@
+INCIPIT grimoire "quando_ordo_exaustivo_payload_19c3"
+
+ORDO Resposta
+  Aceito(REX codigo),
+  Negado(VERBUM motivo)
+FIN ORDO
+
+RITUALE main() REDDE REX
+  EVOCA Resposta r AD Aceito(2)
+
+  QUANDO r
+    CASO Aceito(c):
+      REDDE c
+    CASO Negado(m):
+      OBSECRO scribe(MOLDE "negado={m}\n")
+      REDDE 99
+  FIN QUANDO
+
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

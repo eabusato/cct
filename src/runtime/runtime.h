@@ -25,6 +25,8 @@ typedef struct {
     bool emit_fs_helpers;
     bool emit_path_helpers;
     bool emit_random_helpers;
+    bool emit_process_helpers;
+    bool emit_hash_helpers;
     bool emit_verbum_helpers;
     bool emit_fmt_helpers;
 } cct_runtime_codegen_config_t;

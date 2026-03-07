@@ -125,6 +125,36 @@ void cct_ast_enum_item_list_append(cct_ast_enum_item_list_t *list, cct_ast_enum_
     list->items[list->count++] = item;
 }
 
+cct_ast_ordo_variant_list_t* cct_ast_create_ordo_variant_list(void) {
+    cct_ast_ordo_variant_list_t *list = calloc(1, sizeof(cct_ast_ordo_variant_list_t));
+    if (!list) exit(CCT_ERROR_OUT_OF_MEMORY);
+    list->capacity = 8;
+    list->variants = calloc(list->capacity, sizeof(cct_ast_ordo_variant_t*));
+    if (!list->variants) exit(CCT_ERROR_OUT_OF_MEMORY);
+    return list;
+}
+
+void cct_ast_ordo_variant_list_append(cct_ast_ordo_variant_list_t *list, cct_ast_ordo_variant_t *variant) {
+    if (!list) return;
+    if (list->count >= list->capacity) {
+        list->capacity *= 2;
+        list->variants = realloc(list->variants, list->capacity * sizeof(cct_ast_ordo_variant_t*));
+        if (!list->variants) exit(CCT_ERROR_OUT_OF_MEMORY);
+    }
+    list->variants[list->count++] = variant;
+}
+
+void cct_ast_ordo_variant_add_field(cct_ast_ordo_variant_t *variant, cct_ast_ordo_field_t *field) {
+    if (!variant || !field) return;
+    if (variant->field_count >= variant->field_capacity) {
+        size_t next_capacity = (variant->field_capacity == 0) ? 4 : (variant->field_capacity * 2);
+        variant->fields = realloc(variant->fields, next_capacity * sizeof(cct_ast_ordo_field_t*));
+        if (!variant->fields) exit(CCT_ERROR_OUT_OF_MEMORY);
+        variant->field_capacity = next_capacity;
+    }
+    variant->fields[variant->field_count++] = field;
+}
+
 cct_ast_type_param_list_t* cct_ast_create_type_param_list(void) {
     cct_ast_type_param_list_t *list = calloc(1, sizeof(cct_ast_type_param_list_t));
     if (!list) exit(CCT_ERROR_OUT_OF_MEMORY);
@@ -220,6 +250,27 @@ cct_ast_enum_item_t* cct_ast_create_enum_item(const char *name, i64 value, bool 
     return item;
 }
 
+cct_ast_ordo_field_t* cct_ast_create_ordo_field(const char *name, cct_ast_type_t *type, u32 line, u32 col) {
+    cct_ast_ordo_field_t *field = calloc(1, sizeof(cct_ast_ordo_field_t));
+    if (!field) exit(CCT_ERROR_OUT_OF_MEMORY);
+    field->name = safe_strdup(name);
+    field->type = type;
+    field->line = line;
+    field->column = col;
+    return field;
+}
+
+cct_ast_ordo_variant_t* cct_ast_create_ordo_variant(const char *name, bool has_value, i64 value, u32 line, u32 col) {
+    cct_ast_ordo_variant_t *variant = calloc(1, sizeof(cct_ast_ordo_variant_t));
+    if (!variant) exit(CCT_ERROR_OUT_OF_MEMORY);
+    variant->name = safe_strdup(name);
+    variant->has_value = has_value;
+    variant->value = value;
+    variant->line = line;
+    variant->column = col;
+    return variant;
+}
+
 cct_ast_type_param_t* cct_ast_create_type_param(const char *name, const char *constraint_pactum_name, u32 line, u32 col) {
     cct_ast_type_param_t *param = calloc(1, sizeof(cct_ast_type_param_t));
     if (!param) exit(CCT_ERROR_OUT_OF_MEMORY);
@@ -275,7 +326,20 @@ cct_ast_node_t* cct_ast_create_sigillum(const char *name, cct_ast_type_param_lis
 cct_ast_node_t* cct_ast_create_ordo(const char *name, cct_ast_enum_item_list_t *items, u32 line, u32 col) {
     cct_ast_node_t *node = alloc_node(AST_ORDO, line, col);
     node->as.ordo.name = safe_strdup(name);
+    node->as.ordo.variants = NULL;
     node->as.ordo.items = items;
+    node->as.ordo.has_payload = false;
+    return node;
+}
+
+cct_ast_node_t* cct_ast_create_ordo_with_variants(const char *name, cct_ast_ordo_variant_list_t *variants,
+                                                  cct_ast_enum_item_list_t *items, bool has_payload,
+                                                  u32 line, u32 col) {
+    cct_ast_node_t *node = alloc_node(AST_ORDO, line, col);
+    node->as.ordo.name = safe_strdup(name);
+    node->as.ordo.variants = variants;
+    node->as.ordo.items = items;
+    node->as.ordo.has_payload = has_payload;
     return node;
 }
 
@@ -323,6 +387,16 @@ cct_ast_node_t* cct_ast_create_si(cct_ast_node_t *cond, cct_ast_node_t *then_br,
     return node;
 }
 
+cct_ast_node_t* cct_ast_create_quando(cct_ast_node_t *expr, cct_ast_case_node_t *cases, size_t case_count,
+                                      cct_ast_node_t *else_body, u32 line, u32 col) {
+    cct_ast_node_t *node = alloc_node(AST_QUANDO, line, col);
+    node->as.quando.expression = expr;
+    node->as.quando.cases = cases;
+    node->as.quando.case_count = case_count;
+    node->as.quando.else_body = else_body;
+    return node;
+}
+
 cct_ast_node_t* cct_ast_create_dum(cct_ast_node_t *cond, cct_ast_node_t *body, u32 line, u32 col) {
     cct_ast_node_t *node = alloc_node(AST_DUM, line, col);
     node->as.dum.condition = cond;
@@ -348,10 +422,12 @@ cct_ast_node_t* cct_ast_create_repete(const char *iter, cct_ast_node_t *start, c
     return node;
 }
 
-cct_ast_node_t* cct_ast_create_iterum(const char *item_name, cct_ast_node_t *collection,
+cct_ast_node_t* cct_ast_create_iterum(const char *item_name, const char *value_name,
+                                      cct_ast_node_t *collection,
                                       cct_ast_node_t *body, u32 line, u32 col) {
     cct_ast_node_t *node = alloc_node(AST_ITERUM, line, col);
     node->as.iterum.item_name = safe_strdup(item_name);
+    node->as.iterum.value_name = safe_strdup(value_name);
     node->as.iterum.collection = collection;
     node->as.iterum.body = body;
     return node;
@@ -434,6 +510,13 @@ cct_ast_node_t* cct_ast_create_literal_bool(bool value, u32 line, u32 col) {
 
 cct_ast_node_t* cct_ast_create_literal_nihil(u32 line, u32 col) {
     return alloc_node(AST_LITERAL_NIHIL, line, col);
+}
+
+cct_ast_node_t* cct_ast_create_molde(cct_ast_molde_part_t *parts, size_t part_count, u32 line, u32 col) {
+    cct_ast_node_t *node = alloc_node(AST_MOLDE, line, col);
+    node->as.molde.parts = parts;
+    node->as.molde.part_count = part_count;
+    return node;
 }
 
 cct_ast_node_t* cct_ast_create_identifier(const char *name, u32 line, u32 col) {
@@ -560,6 +643,28 @@ void cct_ast_free_enum_item_list(cct_ast_enum_item_list_t *list) {
     free(list);
 }
 
+void cct_ast_free_ordo_variant_list(cct_ast_ordo_variant_list_t *list) {
+    if (!list) return;
+    for (u32 i = 0; i < list->count; i++) {
+        cct_ast_ordo_variant_t *variant = list->variants[i];
+        if (!variant) continue;
+        free(variant->name);
+        if (variant->fields) {
+            for (u32 j = 0; j < variant->field_count; j++) {
+                cct_ast_ordo_field_t *field = variant->fields[j];
+                if (!field) continue;
+                free(field->name);
+                cct_ast_free_type(field->type);
+                free(field);
+            }
+        }
+        free(variant->fields);
+        free(variant);
+    }
+    free(list->variants);
+    free(list);
+}
+
 void cct_ast_free_type_param_list(cct_ast_type_param_list_t *list) {
     if (!list) return;
     for (u32 i = 0; i < list->count; i++) {
@@ -621,6 +726,7 @@ void cct_ast_free_node(cct_ast_node_t *node) {
 
         case AST_ORDO:
             free(node->as.ordo.name);
+            cct_ast_free_ordo_variant_list(node->as.ordo.variants);
             cct_ast_free_enum_item_list(node->as.ordo.items);
             break;
 
@@ -654,6 +760,30 @@ void cct_ast_free_node(cct_ast_node_t *node) {
             cct_ast_free_node(node->as.si.else_branch);
             break;
 
+        case AST_QUANDO:
+            cct_ast_free_node(node->as.quando.expression);
+            if (node->as.quando.cases) {
+                for (size_t i = 0; i < node->as.quando.case_count; i++) {
+                    cct_ast_case_node_t *case_node = &node->as.quando.cases[i];
+                    if (case_node->literals) {
+                        for (size_t j = 0; j < case_node->literal_count; j++) {
+                            cct_ast_free_node(case_node->literals[j]);
+                        }
+                        free(case_node->literals);
+                    }
+                    if (case_node->binding_names) {
+                        for (size_t j = 0; j < case_node->binding_count; j++) {
+                            free(case_node->binding_names[j]);
+                        }
+                        free(case_node->binding_names);
+                    }
+                    cct_ast_free_node(case_node->body);
+                }
+                free(node->as.quando.cases);
+            }
+            cct_ast_free_node(node->as.quando.else_body);
+            break;
+
         case AST_DUM:
             cct_ast_free_node(node->as.dum.condition);
             cct_ast_free_node(node->as.dum.body);
@@ -674,6 +804,7 @@ void cct_ast_free_node(cct_ast_node_t *node) {
 
         case AST_ITERUM:
             free(node->as.iterum.item_name);
+            free(node->as.iterum.value_name);
             cct_ast_free_node(node->as.iterum.collection);
             cct_ast_free_node(node->as.iterum.body);
             break;
@@ -718,12 +849,26 @@ void cct_ast_free_node(cct_ast_node_t *node) {
             // No additional fields to free
             break;
 
+        case AST_MOLDE:
+            if (node->as.molde.parts) {
+                for (size_t i = 0; i < node->as.molde.part_count; i++) {
+                    cct_ast_molde_part_t *part = &node->as.molde.parts[i];
+                    free(part->literal_text);
+                    free(part->fmt_spec);
+                    cct_ast_free_node(part->expr);
+                }
+                free(node->as.molde.parts);
+            }
+            break;
+
         case AST_LITERAL_STRING:
             free(node->as.literal_string.string_value);
             break;
 
         case AST_IDENTIFIER:
             free(node->as.identifier.name);
+            free(node->as.identifier.ordo_name);
+            free(node->as.identifier.variant_name);
             break;
 
         case AST_BINARY_OP:
@@ -738,6 +883,8 @@ void cct_ast_free_node(cct_ast_node_t *node) {
         case AST_CALL:
             cct_ast_free_node(node->as.call.callee);
             cct_ast_free_node_list(node->as.call.arguments);
+            free(node->as.call.ordo_name);
+            free(node->as.call.variant_name);
             break;
 
         case AST_CONIURA:
@@ -828,6 +975,7 @@ static const char* get_node_type_name(cct_ast_node_type_t type) {
         case AST_VINCIRE: return "VINCIRE";
         case AST_REDDE: return "REDDE";
         case AST_SI: return "SI";
+        case AST_QUANDO: return "QUANDO";
         case AST_DUM: return "DUM";
         case AST_DONEC: return "DONEC";
         case AST_REPETE: return "REPETE";
@@ -845,6 +993,7 @@ static const char* get_node_type_name(cct_ast_node_type_t type) {
         case AST_LITERAL_STRING: return "LITERAL_STRING";
         case AST_LITERAL_BOOL: return "LITERAL_BOOL";
         case AST_LITERAL_NIHIL: return "LITERAL_NIHIL";
+        case AST_MOLDE: return "MOLDE";
         case AST_IDENTIFIER: return "IDENTIFIER";
         case AST_BINARY_OP: return "BINARY_OP";
         case AST_UNARY_OP: return "UNARY_OP";
@@ -931,6 +1080,35 @@ static void print_enum_item_list(cct_ast_enum_item_list_t *list, u32 depth) {
     }
 }
 
+static void print_ordo_variant_list(cct_ast_ordo_variant_list_t *list, u32 depth) {
+    if (!list) return;
+    print_indent(depth);
+    printf("Variants: (%zu)\n", list->count);
+    for (u32 i = 0; i < list->count; i++) {
+        cct_ast_ordo_variant_t *variant = list->variants[i];
+        if (!variant) continue;
+        print_indent(depth + 1);
+        printf("- %s (tag=%lld", variant->name ? variant->name : "<anon>",
+               (long long)variant->tag_value);
+        if (variant->has_value) {
+            printf(", value=%lld", (long long)variant->value);
+        }
+        printf(")\n");
+        if (variant->field_count > 0) {
+            print_indent(depth + 2);
+            printf("Payload fields: (%zu)\n", variant->field_count);
+            for (u32 j = 0; j < variant->field_count; j++) {
+                cct_ast_ordo_field_t *field = variant->fields[j];
+                if (!field) continue;
+                print_indent(depth + 3);
+                printf("- %s: ", field->name ? field->name : "<field>");
+                print_type_inline(field->type);
+                printf("\n");
+            }
+        }
+    }
+}
+
 static void print_type_param_list(cct_ast_type_param_list_t *list, u32 depth) {
     if (!list || list->count == 0) return;
     print_indent(depth);
@@ -1014,7 +1192,11 @@ static void print_node(cct_ast_node_t *node, u32 depth) {
                 print_indent(depth + 1);
                 printf("Visibility: ARCANUM (internal)\n");
             }
-            print_enum_item_list(node->as.ordo.items, depth + 1);
+            if (node->as.ordo.variants) {
+                print_ordo_variant_list(node->as.ordo.variants, depth + 1);
+            } else {
+                print_enum_item_list(node->as.ordo.items, depth + 1);
+            }
             break;
 
         case AST_PACTUM:
@@ -1078,6 +1260,38 @@ static void print_node(cct_ast_node_t *node, u32 depth) {
             }
             break;
 
+        case AST_QUANDO:
+            print_indent(depth + 1);
+            printf("Expression:\n");
+            print_node(node->as.quando.expression, depth + 2);
+            print_indent(depth + 1);
+            printf("Cases: (%zu)\n", node->as.quando.case_count);
+            for (size_t i = 0; i < node->as.quando.case_count; i++) {
+                cct_ast_case_node_t *case_node = &node->as.quando.cases[i];
+                print_indent(depth + 2);
+                printf("Case %zu literals: (%zu)\n", i + 1, case_node->literal_count);
+                for (size_t j = 0; j < case_node->literal_count; j++) {
+                    print_node(case_node->literals[j], depth + 3);
+                }
+                if (case_node->binding_count > 0 && case_node->binding_names) {
+                    print_indent(depth + 2);
+                    printf("Bindings: (%zu)\n", case_node->binding_count);
+                    for (size_t j = 0; j < case_node->binding_count; j++) {
+                        print_indent(depth + 3);
+                        printf("- %s\n", case_node->binding_names[j] ? case_node->binding_names[j] : "<anon>");
+                    }
+                }
+                print_indent(depth + 2);
+                printf("Body:\n");
+                print_node(case_node->body, depth + 3);
+            }
+            if (node->as.quando.else_body) {
+                print_indent(depth + 1);
+                printf("Else:\n");
+                print_node(node->as.quando.else_body, depth + 2);
+            }
+            break;
+
         case AST_DUM:
             print_indent(depth + 1);
             printf("Condition:\n");
@@ -1118,6 +1332,10 @@ static void print_node(cct_ast_node_t *node, u32 depth) {
         case AST_ITERUM:
             print_indent(depth + 1);
             printf("Item: %s\n", node->as.iterum.item_name ? node->as.iterum.item_name : "(null)");
+            if (node->as.iterum.value_name) {
+                print_indent(depth + 1);
+                printf("Value: %s\n", node->as.iterum.value_name);
+            }
             print_indent(depth + 1);
             printf("Collection:\n");
             print_node(node->as.iterum.collection, depth + 2);
@@ -1201,6 +1419,25 @@ static void print_node(cct_ast_node_t *node, u32 depth) {
 
         case AST_LITERAL_NIHIL:
             // No additional fields
+            break;
+
+        case AST_MOLDE:
+            print_indent(depth + 1);
+            printf("Parts: (%zu)\n", node->as.molde.part_count);
+            for (size_t i = 0; i < node->as.molde.part_count; i++) {
+                cct_ast_molde_part_t *part = &node->as.molde.parts[i];
+                print_indent(depth + 2);
+                if (part->kind == CCT_AST_MOLDE_PART_LITERAL) {
+                    printf("Literal: \"%s\"\n", part->literal_text ? part->literal_text : "");
+                } else {
+                    if (part->fmt_spec) {
+                        printf("Expr (fmt: %s):\n", part->fmt_spec);
+                    } else {
+                        printf("Expr:\n");
+                    }
+                    print_node(part->expr, depth + 3);
+                }
+            }
             break;
 
         case AST_IDENTIFIER:

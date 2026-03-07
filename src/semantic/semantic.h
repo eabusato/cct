@@ -38,6 +38,13 @@ typedef enum {
 } cct_sem_symbol_kind_t;
 
 typedef enum {
+    CCT_SEM_ITER_COLLECTION_NONE = 0,
+    CCT_SEM_ITER_COLLECTION_FLUXUS,
+    CCT_SEM_ITER_COLLECTION_MAP,
+    CCT_SEM_ITER_COLLECTION_SET,
+} cct_sem_iter_collection_kind_t;
+
+typedef enum {
     CCT_SEM_TYPE_ERROR = 0,
     CCT_SEM_TYPE_NIHIL,
     CCT_SEM_TYPE_VERUM,
@@ -80,6 +87,10 @@ struct cct_sem_symbol {
     char **type_param_names;          /* GENUS parameter names for rituale symbols */
     char **type_param_constraint_pactum_names; /* Optional FASE 10D constraints per GENUS parameter */
     const cct_ast_node_t *rituale_decl; /* Back-reference for generic rituale diagnostics */
+
+    cct_sem_iter_collection_kind_t iter_collection_kind;
+    cct_sem_type_t *iter_key_type;
+    cct_sem_type_t *iter_value_type;
 
     cct_sem_symbol_t *next;
 };

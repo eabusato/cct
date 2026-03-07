@@ -1,0 +1,18 @@
+INCIPIT grimoire "io_print_variants_18b3"
+
+ADVOCARE "cct/io.cct"
+ADVOCARE "cct/verbum.cct"
+
+RITUALE main() REDDE REX
+  EVOCA MILES z AD CONIURA char_at("Z", 0)
+  CONIURA print_real(2.5)
+  CONIURA print("|")
+  CONIURA print_bool(VERUM)
+  CONIURA print("|")
+  CONIURA print_char(z)
+  CONIURA print("|")
+  CONIURA print_hex(255)
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

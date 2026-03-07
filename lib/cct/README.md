@@ -3,7 +3,7 @@
 This directory is the canonical root for CCT standard-library modules (`cct/...`).
 
 Current baseline:
-- Project status is `FASE 15D.4 completed`.
+- Project status is `FASE 19D.4 completed`.
 - The phase-by-phase list below is preserved as historical rollout traceability for the stdlib surface.
 
 Status in FASE 11A:
@@ -57,7 +57,15 @@ Status in FASE 12D.1:
 Status in FASE 12D.2:
 - `collection_ops.cct` canonical collection combinators implemented (`map/filter/fold/find/any/all`)
 
-The module families listed above are delivered and maintained in the stable baseline through FASE 15D.4.
+Status in FASE 18:
+- stdlib expansion delivered for `verbum`, `fmt`, `parse`, `fs`, `io`, `path`, `fluxus`, `set`, `map`, `alg`, `series`, `random`
+- new canonical modules delivered: `process.cct`, `hash.cct`, `bit.cct`
+
+Status in FASE 19:
+- `ordo_samples.cct` added as idiomatic reference module for payload `ORDO` patterns (`Resultado`, `Opcao`)
+- `map`/`set` usage now includes stable `ITERUM` insertion-order iteration contracts
+
+The module families listed above are delivered and maintained in the stable baseline through FASE 19D.4.
 
 Status in FASE 16B.2:
 - `kernel/` module family introduced with canonical `cct/kernel` surface for freestanding-only targets

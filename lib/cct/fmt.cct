@@ -45,4 +45,68 @@ RITUALE format_pair(VERBUM label, VERBUM value) REDDE VERBUM
   REDDE CONIURA concat(left, value)
 EXPLICIT RITUALE
 
+RITUALE stringify_int_hex(REX n) REDDE VERBUM
+  REDDE OBSECRO fmt_stringify_int_hex(n)
+EXPLICIT RITUALE
+
+RITUALE stringify_int_hex_upper(REX n) REDDE VERBUM
+  REDDE OBSECRO fmt_stringify_int_hex_upper(n)
+EXPLICIT RITUALE
+
+RITUALE stringify_int_oct(REX n) REDDE VERBUM
+  REDDE OBSECRO fmt_stringify_int_oct(n)
+EXPLICIT RITUALE
+
+RITUALE stringify_int_bin(REX n) REDDE VERBUM
+  REDDE OBSECRO fmt_stringify_int_bin(n)
+EXPLICIT RITUALE
+
+RITUALE stringify_uint(DUX n) REDDE VERBUM
+  REDDE OBSECRO fmt_stringify_uint(n)
+EXPLICIT RITUALE
+
+RITUALE stringify_int_padded(REX n, REX width, MILES fill) REDDE VERBUM
+  REDDE OBSECRO fmt_stringify_int_padded(n, width, fill)
+EXPLICIT RITUALE
+
+RITUALE stringify_real_prec(UMBRA x, REX prec) REDDE VERBUM
+  REDDE OBSECRO fmt_stringify_real_prec(x, prec)
+EXPLICIT RITUALE
+
+RITUALE stringify_real_sci(UMBRA x) REDDE VERBUM
+  REDDE OBSECRO fmt_stringify_real_sci(x)
+EXPLICIT RITUALE
+
+RITUALE stringify_real_fixed(UMBRA x, REX prec) REDDE VERBUM
+  REDDE OBSECRO fmt_stringify_real_fixed(x, prec)
+EXPLICIT RITUALE
+
+RITUALE stringify_char(MILES c) REDDE VERBUM
+  REDDE CONIURA from_char(c)
+EXPLICIT RITUALE
+
+RITUALE format_1(VERBUM tmpl, VERBUM a) REDDE VERBUM
+  REDDE OBSECRO fmt_format_1(tmpl, a)
+EXPLICIT RITUALE
+
+RITUALE format_2(VERBUM tmpl, VERBUM a, VERBUM b) REDDE VERBUM
+  REDDE OBSECRO fmt_format_2(tmpl, a, b)
+EXPLICIT RITUALE
+
+RITUALE format_3(VERBUM tmpl, VERBUM a, VERBUM b, VERBUM c) REDDE VERBUM
+  REDDE OBSECRO fmt_format_3(tmpl, a, b, c)
+EXPLICIT RITUALE
+
+RITUALE format_4(VERBUM tmpl, VERBUM a, VERBUM b, VERBUM c, VERBUM d) REDDE VERBUM
+  REDDE OBSECRO fmt_format_4(tmpl, a, b, c, d)
+EXPLICIT RITUALE
+
+RITUALE repeat_char(MILES c, REX n) REDDE VERBUM
+  REDDE OBSECRO fmt_repeat_char(c, n)
+EXPLICIT RITUALE
+
+RITUALE table_row(SPECULUM NIHIL parts, SPECULUM REX widths, REX ncols) REDDE VERBUM
+  REDDE OBSECRO fmt_table_row(parts, widths, ncols)
+EXPLICIT RITUALE
+
 EXPLICIT grimoire

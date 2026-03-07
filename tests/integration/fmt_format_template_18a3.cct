@@ -1,0 +1,21 @@
+INCIPIT grimoire "fmt_format_template_18a3"
+
+ADVOCARE "cct/fmt.cct"
+ADVOCARE "cct/verbum.cct"
+
+RITUALE main() REDDE REX
+  EVOCA VERBUM a AD CONIURA format_1("ola {}", "mundo")
+  EVOCA VERBUM b AD CONIURA format_2("{} + {} = 3", "1", "2")
+  EVOCA VERBUM c AD CONIURA format_3("{}{}{}", "a", "b", "c")
+  EVOCA VERBUM d AD CONIURA format_4("{}:{}:{}:{}", "a", "b", "c", "d")
+  EVOCA VERBUM e AD CONIURA format_1("{} {}", "x")
+  EVOCA VERBUM f AD CONIURA format_2("{}", "x", "y")
+
+  SI CONIURA compare(a, "ola mundo") == 0 ET CONIURA compare(b, "1 + 2 = 3") == 0 ET CONIURA compare(c, "abc") == 0 ET CONIURA compare(d, "a:b:c:d") == 0 ET CONIURA compare(e, "x {}") == 0 ET CONIURA compare(f, "x") == 0
+    REDDE 0
+  FIN SI
+
+  REDDE 1
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

@@ -1,0 +1,36 @@
+INCIPIT grimoire "fs_rename_copy_18b1"
+
+ADVOCARE "cct/fs.cct"
+ADVOCARE "cct/verbum.cct"
+
+RITUALE main() REDDE REX
+  EVOCA VERBUM raiz AD "tests/.tmp/fs_18b1_ops"
+  EVOCA VERBUM src AD "tests/.tmp/fs_18b1_ops/src.txt"
+  EVOCA VERBUM cp AD "tests/.tmp/fs_18b1_ops/copy.txt"
+  EVOCA VERBUM ren AD "tests/.tmp/fs_18b1_ops/renamed.txt"
+  EVOCA VERBUM mov AD "tests/.tmp/fs_18b1_ops/moved.txt"
+
+  CONIURA mkdir_all(raiz)
+  CONIURA write_all(src, "abc")
+
+  CONIURA copy(src, cp)
+  CONIURA rename(cp, ren)
+  CONIURA move(src, mov)
+
+  SI CONIURA exists(src)
+    REDDE 1
+  FIN SI
+  SI CONIURA exists(cp)
+    REDDE 1
+  FIN SI
+
+  EVOCA VERBUM a AD CONIURA read_all(ren)
+  EVOCA VERBUM b AD CONIURA read_all(mov)
+
+  SI CONIURA compare(a, "abc") == 0 ET CONIURA compare(b, "abc") == 0
+    REDDE 0
+  FIN SI
+  REDDE 1
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

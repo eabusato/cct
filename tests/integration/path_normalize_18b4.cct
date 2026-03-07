@@ -1,0 +1,26 @@
+INCIPIT grimoire "path_normalize_18b4"
+
+ADVOCARE "cct/path.cct"
+ADVOCARE "cct/verbum.cct"
+
+RITUALE main() REDDE REX
+  SI CONIURA compare(CONIURA normalize("/a/b/../c"), "/a/c") != 0
+    REDDE 1
+  FIN SI
+
+  SI CONIURA compare(CONIURA normalize("a/./b//c"), "a/b/c") != 0
+    REDDE 2
+  FIN SI
+
+  SI CONIURA compare(CONIURA normalize("/../../a"), "/a") != 0
+    REDDE 3
+  FIN SI
+
+  SI CONIURA compare(CONIURA normalize(""), ".") != 0
+    REDDE 4
+  FIN SI
+
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

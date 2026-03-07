@@ -1,0 +1,24 @@
+INCIPIT grimoire "quando_aninhado_19a4"
+
+RITUALE main() REDDE REX
+  EVOCA REX a AD 1
+  EVOCA REX b AD 20
+
+  QUANDO a
+    CASO 1:
+      QUANDO b
+        CASO 10:
+          OBSECRO scribe("1-10\n")
+        CASO 20:
+          OBSECRO scribe("1-20\n")
+        SENAO:
+          OBSECRO scribe("1-outro\n")
+      FIN QUANDO
+    SENAO:
+      OBSECRO scribe("outro\n")
+  FIN QUANDO
+
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

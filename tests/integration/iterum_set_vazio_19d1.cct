@@ -1,0 +1,17 @@
+INCIPIT grimoire "iterum_set_vazio_19d1"
+
+ADVOCARE "cct/set.cct"
+
+RITUALE main() REDDE REX
+  EVOCA SPECULUM NIHIL s AD CONIURA set_init GENUS(REX)()
+  EVOCA REX n AD 0
+
+  ITERUM e IN s COM
+    VINCIRE n AD n + e + 1
+  FIN ITERUM
+
+  CONIURA set_free GENUS(REX)(s)
+  REDDE n
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

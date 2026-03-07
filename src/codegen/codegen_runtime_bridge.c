@@ -182,6 +182,9 @@ bool cct_cg_emit_generated_c_prelude(FILE *out, const cct_codegen_t *cg) {
     fputs("#ifndef _POSIX_C_SOURCE\n", out);
     fputs("#define _POSIX_C_SOURCE 200809L\n", out);
     fputs("#endif\n", out);
+    fputs("#ifndef _XOPEN_SOURCE\n", out);
+    fputs("#define _XOPEN_SOURCE 700\n", out);
+    fputs("#endif\n", out);
     fputs("#include <stdio.h>\n", out);
     fputs("#include <stdlib.h>\n", out);
     fputs("#include <stdint.h>\n\n", out);
@@ -192,10 +195,23 @@ bool cct_cg_emit_generated_c_prelude(FILE *out, const cct_codegen_t *cg) {
     fputs("#include <time.h>\n\n", out);
     fputs("#ifdef _WIN32\n", out);
     fputs("#include <direct.h>\n", out);
+    fputs("#include <io.h>\n", out);
+    fputs("#include <sys/stat.h>\n", out);
     fputs("#define cct_rt_getcwd _getcwd\n", out);
+    fputs("#define cct_rt_mkdir(path) _mkdir(path)\n", out);
+    fputs("#define cct_rt_fileno _fileno\n", out);
+    fputs("#define cct_rt_isatty _isatty\n", out);
     fputs("#else\n", out);
     fputs("#include <unistd.h>\n", out);
+    fputs("#include <dirent.h>\n", out);
+    fputs("#include <pwd.h>\n", out);
+    fputs("#include <signal.h>\n", out);
+    fputs("#include <sys/wait.h>\n", out);
+    fputs("#include <sys/stat.h>\n", out);
     fputs("#define cct_rt_getcwd getcwd\n", out);
+    fputs("#define cct_rt_mkdir(path) mkdir((path), 0777)\n", out);
+    fputs("#define cct_rt_fileno fileno\n", out);
+    fputs("#define cct_rt_isatty isatty\n", out);
     fputs("#endif\n\n", out);
     fputs("static void cct_rt_fail(const char *msg);\n\n", out);
 

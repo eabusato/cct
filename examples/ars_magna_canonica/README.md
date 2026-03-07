@@ -3,7 +3,7 @@
 Complex modular showcase built on top of `ars_magna_modular`, focused on canonical stdlib usage.
 
 Status note:
-- Valid on the current project baseline (`FASE 15D.4 completed`).
+- Valid on the current project baseline (`FASE 19D.4 completed`).
 
 ## What it showcases
 

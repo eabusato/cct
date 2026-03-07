@@ -1,0 +1,55 @@
+INCIPIT grimoire "series_min_max_18c4"
+
+ADVOCARE "cct/series.cct"
+ADVOCARE "cct/args.cct"
+ADVOCARE "cct/verbum.cct"
+
+RITUALE main() REDDE REX
+  SI CONIURA argc() > 1
+    EVOCA VERBUM modo AD CONIURA arg(1)
+    EVOCA SERIES REX[1] vazio
+
+    SI CONIURA compare(modo, "min_empty") == 0
+      CONIURA series_min(SPECULUM vazio[0], 0)
+      REDDE 91
+    FIN SI
+
+    SI CONIURA compare(modo, "max_empty") == 0
+      CONIURA series_max(SPECULUM vazio[0], 0)
+      REDDE 92
+    FIN SI
+
+    REDDE 93
+  FIN SI
+
+  EVOCA SERIES REX[6] a
+  VINCIRE a[0] AD 7
+  VINCIRE a[1] AD -3
+  VINCIRE a[2] AD 9
+  VINCIRE a[3] AD 2
+  VINCIRE a[4] AD 9
+  VINCIRE a[5] AD -1
+
+  SI CONIURA series_min(SPECULUM a[0], 6) != -3
+    REDDE 1
+  FIN SI
+
+  SI CONIURA series_max(SPECULUM a[0], 6) != 9
+    REDDE 2
+  FIN SI
+
+  EVOCA SERIES REX[1] unico
+  VINCIRE unico[0] AD 42
+
+  SI CONIURA series_min(SPECULUM unico[0], 1) != 42
+    REDDE 3
+  FIN SI
+
+  SI CONIURA series_max(SPECULUM unico[0], 1) != 42
+    REDDE 4
+  FIN SI
+
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

@@ -374,6 +374,17 @@ static bool lint_walk_node(cct_lint_context_t *ctx, const cct_ast_node_t *node) 
                    lint_walk_node(ctx, node->as.si.then_branch) &&
                    lint_walk_node(ctx, node->as.si.else_branch);
 
+        case AST_QUANDO:
+            if (!lint_walk_node(ctx, node->as.quando.expression)) return false;
+            for (size_t i = 0; i < node->as.quando.case_count; i++) {
+                cct_ast_case_node_t *case_node = &node->as.quando.cases[i];
+                for (size_t j = 0; j < case_node->literal_count; j++) {
+                    if (!lint_walk_node(ctx, case_node->literals[j])) return false;
+                }
+                if (!lint_walk_node(ctx, case_node->body)) return false;
+            }
+            return lint_walk_node(ctx, node->as.quando.else_body);
+
         case AST_DUM:
             return lint_walk_node(ctx, node->as.dum.condition) && lint_walk_node(ctx, node->as.dum.body);
 
@@ -395,6 +406,11 @@ static bool lint_walk_node(cct_lint_context_t *ctx, const cct_ast_node_t *node) 
             if (!lint_walk_node(ctx, node->as.iterum.collection)) return false;
             if (!lint_scope_push(ctx)) return false;
             if (!lint_declare_binding(ctx, node->as.iterum.item_name, CCT_LINT_BINDING_VARIABLE, node->line, node->column)) return false;
+            if (node->as.iterum.value_name &&
+                !lint_declare_binding(ctx, node->as.iterum.value_name, CCT_LINT_BINDING_VARIABLE, node->line, node->column)) {
+                lint_scope_pop(ctx);
+                return false;
+            }
             bool ok = lint_walk_node(ctx, node->as.iterum.body);
             lint_scope_pop(ctx);
             return ok;
@@ -422,6 +438,17 @@ static bool lint_walk_node(cct_lint_context_t *ctx, const cct_ast_node_t *node) 
 
         case AST_EXPR_STMT:
             return lint_walk_node(ctx, node->as.expr_stmt.expression);
+
+        case AST_MOLDE:
+            if (node->as.molde.parts) {
+                for (size_t i = 0; i < node->as.molde.part_count; i++) {
+                    cct_ast_molde_part_t *part = &node->as.molde.parts[i];
+                    if (part && part->kind == CCT_AST_MOLDE_PART_EXPR) {
+                        if (!lint_walk_node(ctx, part->expr)) return false;
+                    }
+                }
+            }
+            return true;
 
         case AST_IDENTIFIER:
             lint_mark_identifier_use(ctx, node->as.identifier.name);

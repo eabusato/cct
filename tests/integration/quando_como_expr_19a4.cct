@@ -1,0 +1,13 @@
+INCIPIT grimoire "quando_como_expr_19a4"
+
+RITUALE main() REDDE REX
+  EVOCA REX x AD QUANDO 1
+    CASO 1:
+      REDDE 10
+    SENAO:
+      REDDE 0
+  FIN QUANDO
+  REDDE x
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

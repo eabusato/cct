@@ -1,0 +1,14 @@
+INCIPIT grimoire "fluxus_set_oob_18c1"
+
+ADVOCARE "cct/fluxus.cct"
+
+RITUALE main() REDDE REX
+  EVOCA SPECULUM NIHIL f AD CONIURA fluxus_init(MENSURA(REX))
+  EVOCA REX a AD 1
+  EVOCA REX b AD 2
+  CONIURA fluxus_push(f, SPECULUM a)
+  CONIURA fluxus_set(f, 5, SPECULUM b)
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

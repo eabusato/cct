@@ -1,0 +1,29 @@
+INCIPIT grimoire "process_run_18d1"
+
+ADVOCARE "cct/process.cct"
+ADVOCARE "cct/fluxus.cct"
+
+RITUALE main() REDDE REX
+  SI CONIURA run("echo ok >/dev/null") != 0
+    REDDE 1
+  FIN SI
+
+  SI CONIURA run("exit 42") != 42
+    REDDE 2
+  FIN SI
+
+  EVOCA SPECULUM NIHIL envs AD CONIURA fluxus_init(MENSURA(VERBUM))
+  EVOCA VERBUM pair AD "CCT_PHASE18D1=ok"
+  CONIURA fluxus_push(envs, SPECULUM pair)
+
+  SI CONIURA run_env("test \"$CCT_PHASE18D1\" = \"ok\"", envs) != 0
+    CONIURA fluxus_free(envs)
+    REDDE 3
+  FIN SI
+
+  CONIURA fluxus_free(envs)
+
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

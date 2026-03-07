@@ -25,7 +25,7 @@
     <circle class="base" cx="256" cy="256" r="226"/>
   </g>
   <g id="primary_path">
-    <path class="primary" d="M 222.42 384.95 q 18 -22 34 0 q -18 22 -34 0" opacity="0.9"/>
+    <path class="primary" d="M 214.07 377.32 q 18 -22 34 0 q -18 22 -34 0" opacity="0.9"/>
   </g>
   <g id="call_links">
   </g>
@@ -36,20 +36,20 @@
   <g id="bindings">
   </g>
   <g id="terminals">
-    <path class="term" d="M 238.42 384.95 Q 243.52 356.64 238.06 328.39" stroke-width="1.65" opacity="0.90"/>
+    <path class="term" d="M 230.07 377.32 Q 245.06 352.70 249.60 324.23" stroke-width="1.65" opacity="0.90"/>
   </g>
   <g id="nodes">
-    <circle class="node-entry" cx="238.42" cy="384.95" r="7.95"/>
-    <circle class="node-term" cx="238.06" cy="328.39" r="3.60"/>
+    <circle class="node-entry" cx="230.07" cy="377.32" r="7.95"/>
+    <circle class="node-term" cx="249.60" cy="324.23" r="3.60"/>
   </g>
   <g id="ornaments">
-    <circle class="orn" cx="455.32" cy="262.56" r="0.90"/>
-    <circle class="orn" cx="236.32" cy="460.13" r="1.90"/>
-    <circle class="orn" cx="48.98" cy="262.91" r="2.90"/>
-    <circle class="orn" cx="246.04" cy="50.41" r="0.90"/>
+    <circle class="orn" cx="460.33" cy="246.35" r="0.90"/>
+    <circle class="orn" cx="245.94" cy="456.99" r="1.90"/>
+    <circle class="orn" cx="56.21" cy="298.08" r="2.90"/>
+    <circle class="orn" cx="271.78" cy="53.47" r="0.90"/>
   </g>
   <g id="signature">
-    <text class="hash" x="256" y="496" text-anchor="middle">8b3cd1560ba97378</text>
+    <text class="hash" x="256" y="496" text-anchor="middle">808054f66677ac29</text>
     <text class="label" x="256" y="18" text-anchor="middle">network • sigillum v2.1 • 1 rituale(s) • 1 stmt • depth 2</text>
   </g>
 </svg>

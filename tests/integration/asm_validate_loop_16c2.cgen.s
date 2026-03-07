@@ -64,6 +64,8 @@ cct_fn_main:
 	cmp	edx, DWORD PTR [ebp-8]
 	sbb	eax, DWORD PTR [ebp-4]
 	jge	.L10
+	nop
+.L11:
 	mov	eax, DWORD PTR [ebp-16]
 	mov	edx, DWORD PTR [ebp-12]
 .L6:
@@ -82,13 +84,13 @@ main:
 	mov	DWORD PTR [esp+12], edx
 	call	cct_rt_fractum_is_active
 	test	eax, eax
-	je	.L12
+	je	.L13
 	call	cct_rt_fractum_uncaught_abort
 	mov	eax, 1
-	jmp	.L13
-.L12:
-	mov	eax, DWORD PTR [esp+8]
+	jmp	.L14
 .L13:
+	mov	eax, DWORD PTR [esp+8]
+.L14:
 	leave
 	ret
 	.size	main, .-main

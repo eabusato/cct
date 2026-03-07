@@ -13,4 +13,43 @@ RITUALE random_real() REDDE FLAMMA
   REDDE OBSECRO random_real()
 EXPLICIT RITUALE
 
+RITUALE random_real_unit() REDDE FLAMMA
+  REDDE CONIURA random_real()
+EXPLICIT RITUALE
+
+RITUALE random_bool() REDDE VERUM
+  REDDE CONIURA random_int(0, 1) == 1
+EXPLICIT RITUALE
+
+RITUALE random_real_range(UMBRA lo, UMBRA hi) REDDE UMBRA
+  SI lo >= hi
+    IACE "random_real_range lo deve ser menor que hi"
+  FIN SI
+  REDDE lo + (hi - lo) * CONIURA random_real_unit()
+EXPLICIT RITUALE
+
+RITUALE random_verbum(REX comprimento) REDDE VERBUM
+  REDDE OBSECRO random_verbum(comprimento)
+EXPLICIT RITUALE
+
+RITUALE random_verbum_from(REX comprimento, VERBUM alphabet) REDDE VERBUM
+  REDDE OBSECRO random_verbum_from(comprimento, alphabet)
+EXPLICIT RITUALE
+
+RITUALE random_choice_int(SPECULUM REX arr, REX n) REDDE REX
+  SI n <= 0
+    IACE "random_choice_int array vazio"
+  FIN SI
+  REDDE arr[CONIURA random_int(0, n - 1)]
+EXPLICIT RITUALE
+
+RITUALE shuffle_int(SPECULUM REX arr, REX n) REDDE NIHIL
+  OBSECRO random_shuffle_int(arr, n)
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE random_bytes(REX n) REDDE SPECULUM NIHIL
+  REDDE OBSECRO random_bytes(n)
+EXPLICIT RITUALE
+
 EXPLICIT grimoire

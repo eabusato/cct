@@ -1,0 +1,37 @@
+INCIPIT grimoire "series_sum_18c4"
+
+ADVOCARE "cct/series.cct"
+
+RITUALE main() REDDE REX
+  EVOCA SERIES REX[5] ints
+  VINCIRE ints[0] AD 1
+  VINCIRE ints[1] AD 2
+  VINCIRE ints[2] AD 3
+  VINCIRE ints[3] AD 4
+  VINCIRE ints[4] AD 5
+
+  EVOCA SERIES UMBRA[3] reals
+  VINCIRE reals[0] AD 1.5
+  VINCIRE reals[1] AD 2.0
+  VINCIRE reals[2] AD -0.5
+
+  SI CONIURA series_sum(SPECULUM ints[0], 5) != 15
+    REDDE 1
+  FIN SI
+
+  SI CONIURA series_sum(SPECULUM ints[0], 0) != 0
+    REDDE 2
+  FIN SI
+
+  SI CONIURA series_sum_real(SPECULUM reals[0], 3) != 3.0
+    REDDE 3
+  FIN SI
+
+  SI CONIURA series_sum_real(SPECULUM reals[0], 0) != 0.0
+    REDDE 4
+  FIN SI
+
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

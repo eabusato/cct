@@ -1,0 +1,65 @@
+INCIPIT grimoire "set_to_fluxus_18c2"
+
+ADVOCARE "cct/set.cct"
+ADVOCARE "cct/fluxus.cct"
+
+RITUALE main() REDDE REX
+  EVOCA SPECULUM NIHIL s AD CONIURA set_init GENUS(REX)()
+  CONIURA set_insert GENUS(REX)(s, 5)
+  CONIURA set_insert GENUS(REX)(s, 7)
+  CONIURA set_insert GENUS(REX)(s, 9)
+
+  EVOCA SPECULUM NIHIL cp AD CONIURA set_copy GENUS(REX)(s)
+  SI NON CONIURA set_equals GENUS(REX)(s, cp)
+    CONIURA set_free GENUS(REX)(cp)
+    CONIURA set_free GENUS(REX)(s)
+    REDDE 1
+  FIN SI
+
+  EVOCA REX cap0 AD CONIURA set_capacity GENUS(REX)(s)
+  CONIURA set_reserve GENUS(REX)(s, 32)
+  EVOCA REX cap1 AD CONIURA set_capacity GENUS(REX)(s)
+  SI cap1 < cap0
+    CONIURA set_free GENUS(REX)(cp)
+    CONIURA set_free GENUS(REX)(s)
+    REDDE 2
+  FIN SI
+
+  EVOCA SPECULUM NIHIL f AD CONIURA set_to_fluxus GENUS(REX)(s)
+  SI CONIURA fluxus_len(f) != CONIURA set_len GENUS(REX)(s)
+    CONIURA fluxus_free(f)
+    CONIURA set_free GENUS(REX)(cp)
+    CONIURA set_free GENUS(REX)(s)
+    REDDE 3
+  FIN SI
+
+  EVOCA SPECULUM REX p0 AD CONIURA fluxus_get(f, 0)
+  EVOCA SPECULUM REX p1 AD CONIURA fluxus_get(f, 1)
+  EVOCA SPECULUM REX p2 AD CONIURA fluxus_get(f, 2)
+
+  SI NON CONIURA set_contains GENUS(REX)(s, *p0)
+    CONIURA fluxus_free(f)
+    CONIURA set_free GENUS(REX)(cp)
+    CONIURA set_free GENUS(REX)(s)
+    REDDE 4
+  FIN SI
+  SI NON CONIURA set_contains GENUS(REX)(s, *p1)
+    CONIURA fluxus_free(f)
+    CONIURA set_free GENUS(REX)(cp)
+    CONIURA set_free GENUS(REX)(s)
+    REDDE 5
+  FIN SI
+  SI NON CONIURA set_contains GENUS(REX)(s, *p2)
+    CONIURA fluxus_free(f)
+    CONIURA set_free GENUS(REX)(cp)
+    CONIURA set_free GENUS(REX)(s)
+    REDDE 6
+  FIN SI
+
+  CONIURA fluxus_free(f)
+  CONIURA set_free GENUS(REX)(cp)
+  CONIURA set_free GENUS(REX)(s)
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

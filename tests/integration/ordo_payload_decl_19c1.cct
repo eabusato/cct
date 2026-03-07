@@ -1,0 +1,18 @@
+INCIPIT grimoire "ordo_payload_decl_19c1"
+
+ORDO Resultado
+  Ok(REX valor),
+  Err(VERBUM msg)
+FIN ORDO
+
+ORDO Forma
+  Circulo(UMBRA raio),
+  Retangulo(UMBRA largura, UMBRA altura),
+  Ponto
+FIN ORDO
+
+RITUALE main() REDDE REX
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

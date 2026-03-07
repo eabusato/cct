@@ -16,17 +16,18 @@ It has two goals:
 
 ## Current Project Snapshot
 
-- Current completed phase: FASE 15D.4 (phase-15 closure gate completed)
-- Current completed subphase: FASE 15D.4 (edge-case closure + final phase-15 governance baseline)
-- Current phase context: FASE 15 is formally closed; FASE 16 planning and execution can proceed
-- Phase-15 delivery status: 15A.1/15A.2/15A.3/15A.4/15B.1/15B.2/15B.3/15B.4/15C.1/15C.2/15C.3/15C.4/15D.1/15D.2/15D.3/15D.4 implemented and closed (loop-control finalization, logical and bitwise operator completion, `CONSTANS` semantic/codegen stabilization, and closure governance).
+- Current completed phase: FASE 19D.4 (phase-19 closure gate completed)
+- Current completed subphase: FASE 19D.4 (handoff + closure governance baseline)
+- Current phase context: FASE 19 is formally closed; FASE 20 planning/execution can proceed
+- Phase-19 delivery status: 19A1..19D4 implemented and closed (`QUANDO`, `MOLDE`, payload `ORDO`, `ITERUM` map/set, docs/release/handoff)
+- Current regression gate: `make test` green with `Passed: 1069 / Failed: 0`
 - **Compiler maturity:** complete development toolchain with formatter, linter, build system, and doc generator
 - **Backend strategy:** C-hosted backend is official (`.cgen.c` + host C compiler)
 - **Sigilo model:** dual-level modular model is stable (local + system sigilo)
 - **Sigilo operations (FASE 13 closed at 13D.4):** inspection/diff/check/baseline/validate flows, CI profiles (`advisory/gated/release`), regression matrix, determinism audit, and final closure governance are integrated
-- **Typing model:** advanced typing subset stabilized (`GENUS`, `PACTUM`, basic constraints)
+- **Typing model:** advanced typing subset stabilized (`GENUS`, `PACTUM`, constraints) plus payload `ORDO` and `QUANDO` exhaustiveness
 
-## Completed Phases (0 → 10E)
+## Completed Phases (0 → 19D4)
 
 ### FASE 0 — Foundation ✅
 
@@ -383,162 +384,149 @@ Quality gate achieved:
 - dedicated 11H release-readiness tests green
 - full historical regression remains green
 
+### FASE 12 — Runtime/Tooling Expansion Closure ✅
+
+Objectives completed:
+- structured diagnostics and cast baseline (`12A`, `12B`)
+- Option/Result, Map/Set, and collection combinators (`12C`, `12D.1`, `12D.2`)
+- `ITERUM` baseline syntax and semantics (`12D.3`)
+- formatter/linter/project workflow/doc generator (`12E`, `12F`, `12G`)
+- closure and governance gate (`12H`)
+
+Quality gate achieved:
+- full suite green at phase closure
+- legacy behavior preserved while tooling surface expanded
+
+### FASE 13 + 13M — Sigilo Tooling + Math Addendum Closure ✅
+
+Objectives completed:
+- sigilo inspect/diff/check/baseline/validate ecosystem (`13A`..`13D`)
+- determinism audit and release governance closure (`13D.2`..`13D.4`)
+- common math operator addendum (`13M`: `**`, `//`, `%%`) with full matrix validation
+
+Quality gate achieved:
+- deterministic contracts preserved
+- complete regression closure and release artifacts published
+
+### FASE 14 — Release Hardening Closure ✅
+
+Objectives completed:
+- diagnostics/exit-code/explain-mode harmonization (`14A`)
+- docs/publication/release process hardening (`14B`, `14D`)
+- regression matrix, stress/soak, performance budget, residual risk register (`14C`)
+
+Quality gate achieved:
+- release engineering gates stabilized without breaking legacy workflows
+
+### FASE 15 — Semantic Surface Consolidation Closure ✅
+
+Objectives completed:
+- loop-control finalization (`FRANGE`, `RECEDE`) across supported loops
+- logical and bitwise/shift operator closure
+- `CONSTANS` semantic and codegen stabilization
+
+Quality gate achieved:
+- full closure gate passed with no regressions
+
+### FASE 16 — Freestanding/ASM Bridge Closure ✅
+
+Objectives completed:
+- `--profile freestanding`, `--emit-asm`, and entrypoint contract stabilization
+- freestanding runtime shim and `cct/kernel` bridge surface
+- ABI/linkability and host zero-regression closure
+
+Quality gate achieved:
+- bridge path validated while preserving host baseline behavior
+
+### FASE 17 — Canonical Library Expansion Closure ✅
+
+Objectives completed:
+- lexer/tooling-oriented canonical modules (`verbum_scan`, `args`, `char`)
+- text-construction utilities (`verbum_builder`, `code_writer`)
+- host utility modules (`env`, `time`, `bytes`) and closure artifacts
+
+Quality gate achieved:
+- full historical regression green at 17D.4 closure
+
+### FASE 18 — Canonical Library Expansion Closure ✅
+
+Objectives completed:
+- large stdlib expansion in text/format/parse, fs/io/path, collections/algorithms
+- new modules: `process`, `hash`, `bit`
+- closure docs and governance finalized in 18D.4
+
+Quality gate achieved:
+- full suite green and canonical library baseline consolidated
+
+### FASE 19 — Language Surface Expansion Closure ✅
+
+Objectives completed:
+- `QUANDO`/`CASO`/`SENAO` over integer, `VERBUM`, and payload `ORDO`
+- `MOLDE` interpolation with formatting specs (host profile)
+- payload-capable `ORDO` declaration/construction/destructuring
+- `ITERUM` expansion to `map`/`set` with arity validation and insertion-order contract
+- documentation/release/handoff closure (`19D2`, `19D3`, `19D4`)
+
+Quality gate achieved:
+- final closure gate: `Passed: 1069 / Failed: 0`
+
 ## Phase Status Matrix
 
-- **Completed:** FASE 0 to FASE 11H
-- **Next active phase:** FASE 12
-- **Long-term targets:** FASE 12 to FASE 15
+- **Completed:** FASE 0 to FASE 19D.4
+- **Next active phase:** FASE 20
+- **Long-term targets:** FASE 20 to FASE 22
 
-## Forward Roadmap (Planned)
+## Forward Roadmap (Next Phases)
 
-### FASE 11 — Standard Library and Ecosystem Base ✅ (closed at 11H)
+### FASE 20 — ADT and Pattern-Matching Maturation
 
 Primary objective:
-- provide a practical standard-library baseline on top of the stabilized language core
+- complete the next expressiveness layer on top of FASE 19 (`QUANDO` + payload `ORDO` baseline).
 
 Planned scope:
-- foundational library modules (text, collections baseline, utility/math baseline, runtime-safe helpers)
-- packaging/import conventions for reusable module sets
-- stable developer workflows for composing larger CCT applications
+- generic `result/option` evolution (`GENUS`) aligned with payload `ORDO`.
+- `QUANDO` guards (`CASO x SE condicao`) and richer case composition.
+- OR-cases with payload bindings and stronger pattern ergonomics.
+- improved generic inference in high-frequency call sites.
 
 Out of scope:
-- major compiler redesign
-- advanced package manager ecosystem features (if not explicitly scoped)
+- full ownership/lifetime model redesign.
+- large backend strategy rewrites.
 
 Definition of done:
-- a documented and test-covered stdlib baseline used by real multi-module examples
-- no regressions in core language/toolchain behavior
+- new pattern/ADT capabilities integrated without regressions.
+- language/spec/docs/release artifacts kept synchronized.
 
-### FASE 12 — Backend and Runtime Evolution
-
-Primary objective:
-- improve code quality and runtime performance without breaking language contracts
-
-Delivered through 12G:
-- 12A: structured diagnostics and actionable suggestions
-- 12B: numeric cast baseline (`cast GENUS(T)(value)`)
-- 12C: canonical Option/Result ergonomics
-- 12D.1: hash-backed Map/Set baseline
-- 12D.2: collection combinators (`fluxus_*`, `series_*`)
-- 12D.3: baseline iterator syntax (`ITERUM`)
-- 12E.1: formatter command (`cct fmt`)
-- 12E.2: linter command (`cct lint`)
-- 12F: canonical project workflow (`cct build|run|test|bench|clean`) with basic incremental cache
-- 12G: canonical API doc generator (`cct doc`) with markdown/html output and strict warning mode
-
-Out of scope:
-- destabilizing rewrite of public compiler behavior
-
-Definition of done:
-- measurable quality/performance improvements with unchanged semantic behavior
-- deterministic outputs preserved where required
-
-### FASE 13 — Sigilo Tooling Expansion
+### FASE 21 — Generic Data Model and Collection Ergonomics
 
 Primary objective:
-- expand sigilo workflows and tooling while preserving deterministic core behavior
+- broaden user-defined generic modeling and collection usability over the stabilized FASE 20 baseline.
 
 Planned scope:
-- tooling around sigilo inspection/comparison and development workflows
-- project baseline workflow for sigilo (`baseline check`/`baseline update`)
-- canonical local workflow profiles (minimal vs strict pre-merge) for gradual team adoption
-- metadata enrichment for analysis use-cases
-- optional visualization refinements with backward-compatible semantics
+- deeper generic ORDO support and richer collection typing patterns.
+- iteration ergonomics over user-defined abstractions where technically viable.
+- diagnostics improvements for generic/pattern-heavy code.
 
 Out of scope:
-- breaking local/system sigilo architecture or deterministic guarantees
+- destabilizing compatibility breaks in existing generic contracts.
 
 Definition of done:
-- tooling value added without compromising determinism or regression stability
+- broader generic expressiveness with deterministic behavior and full-suite green.
 
-Current closure status:
-- delivered through 13D.4 (technical + quality + documentation closure gate passed)
-- release artifacts published under `docs/release/FASE_13_*`
-
-### FASE 13M — Common Math Operators Addendum
+### FASE 22 — Bootstrap/Self-Hosting Preparation
 
 Primary objective:
-- deliver high-utility mathematical operators without widening language scope into low-demand symbols
-
-Delivered scope:
-- `**` exponentiation with right associativity
-- `//` floor integer division semantics
-- `%%` euclidean modulo semantics coherent with `//`
-- `%` legacy behavior preserved
-
-Quality closure:
-- deep matrix coverage integrated in the global test runner
-- historical regressions preserved green
-- documentation/spec/example/release addendum harmonized
-
-Current closure status:
-- delivered through 13M.B2 (implementation + quality + docs/release gate passed)
-- release artifacts published under `docs/release/FASE_13M_*`
-
-### FASE 14 — Release Hardening (v0.x)
-
-Primary objective:
-- prepare a robust technical release baseline
+- advance practical bootstrap readiness while preserving the stable host-first compiler flow.
 
 Planned scope:
-- diagnostics and UX polish
-- documentation finalization and consistency pass
-- reliability/performance hardening under realistic workloads
-- release process/checklist formalization
+- bridge/tooling steps that reduce dependence on manual host scaffolding.
+- progressive closure of bootstrap gaps documented in handoff artifacts.
 
 Out of scope:
-- large new language feature blocks unless explicitly approved
+- forcing self-hosting completion in a single phase.
 
 Definition of done:
-- release-quality docs + predictable tooling behavior + stable regression story
-
-Current execution status:
-- 14A.1/14A.2/14A.3/14A.4 implemented and regression-closed
-- 14B.1 implemented (public contract harmonization)
-- 14B.2 implemented (operational guides and reference workflows)
-- 14B.3 implemented (publication boundary policy + public/private manifests)
-- 14B.4 implemented (release-doc template/reference package)
-- 14C.1/14C.2/14C.3/14C.4 implemented (regression audit, stress/soak, performance budget, residual risk register)
-- 14D.1/14D.2/14D.3/14D.4 implemented (packaging reproducibility, RC matrix, final consolidation, closure gate + rollback)
-
-### FASE 15 — Language and Semantic Consolidation (Completed)
-
-Primary objective:
-- complete high-priority language/runtime-facing surface gaps with stable semantics and full regression closure
-
-Delivered scope:
-- 15A: loop-control completion (`FRANGE`, `RECEDE`) across all supported loop constructs, including outside-loop diagnostics
-- 15B: logical operators (`ET`, `VEL`, `NON`) with short-circuit behavior, precedence guarantees, and deep-parentheses support
-- 15C: bitwise/shift family (`ET_BIT`, `VEL_BIT`, `XOR`, `NON_BIT`, `SINISTER`, `DEXTER`) with integer-only enforcement
-- 15D: `CONSTANS` finalization (locals, rituale parameters, const codegen, pointer-binding behavior via `CONSTANS SPECULUM`)
-
-Definition of done:
-- feature-complete 15A..15D behavior with green full-suite regression and closure documentation updated
-
-Current execution status:
-- 15A.1/15A.2/15A.3/15A.4 implemented and stable
-- 15B.1/15B.2/15B.3/15B.4 implemented and stable
-- 15C.1/15C.2/15C.3/15C.4 implemented and stable
-- 15D.1/15D.2/15D.3/15D.4 implemented and phase-closed
-
-### FASE 16 — Bootstrap and ASM Bridge Trajectory
-
-Primary objective:
-- start the bootstrap-oriented execution track, bridging CCT host compilation to freestanding/ASM delivery contracts
-
-Planned scope:
-- ABI and freestanding profile contracts
-- opt-in ASM emission path for LBOS-oriented integration
-- compatibility/fallback governance between host-C and ASM-oriented routes
-
-Out of scope:
-- full self-hosting completion inside FASE 16
-
-Definition of done:
-- validated, test-backed bootstrap milestones with explicit acceptance/rollback gates
-
-Reference architecture dossier:
-- `md_out/FASE_16_CCT.md`
+- concrete, test-backed bootstrap milestones with clear rollback/compatibility policy.
 
 ## Version Milestone Targets
 
@@ -578,6 +566,6 @@ Every phase must pass these gates before closure:
 
 ## Immediate Next Step
 
-Next phase to execute: FASE 16 (bootstrap trajectory continuation on top of the closed FASE 15 baseline).
-Next subphase to execute: FASE 16A.1 (executable architecture baseline over the consolidated FASE 15 closure).
-Historical traceability note: earlier transition checkpoints (14 -> 15 and intermediate 15 subphase markers) are preserved in phase records and release artifacts.
+Next phase to execute: FASE 20.
+Next subphase to execute: FASE 20A.1 (generic ADT/pattern-matching maturation kickoff, per FASE 19 handoff backlog).
+Historical traceability note: all closure artifacts through FASE 19 are preserved under `docs/release/` and `docs/bootstrap/`.

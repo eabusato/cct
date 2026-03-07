@@ -1,0 +1,27 @@
+INCIPIT grimoire "fs_modified_time_18b2"
+
+ADVOCARE "cct/fs.cct"
+ADVOCARE "cct/verbum.cct"
+
+RITUALE main() REDDE REX
+  EVOCA VERBUM arq AD "tests/.tmp/fs_18b2_mtime.txt"
+  CONIURA write_all(arq, "abcdef")
+
+  EVOCA REX mt AD CONIURA modified_time(arq)
+  SI mt <= 0
+    REDDE 1
+  FIN SI
+
+  CONIURA chmod(arq, 420)
+  CONIURA truncate(arq, 3)
+
+  EVOCA VERBUM txt AD CONIURA read_all(arq)
+  CONIURA delete_file(arq)
+
+  SI CONIURA compare(txt, "abc") == 0
+    REDDE 0
+  FIN SI
+  REDDE 2
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

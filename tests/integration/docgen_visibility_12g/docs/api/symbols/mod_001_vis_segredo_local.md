@@ -3,7 +3,7 @@
 - Kind: `rituale`
 - Module: `/home/eabusato/dev/cct/tests/integration/docgen_visibility_12g/lib/vis.cct`
 - Visibility: `ARCANUM`
-- Generated: 2026-03-06 15:41:41
+- Generated: 2026-03-07 19:33:45
 
 ## Signature
 

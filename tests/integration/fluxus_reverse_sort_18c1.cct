@@ -1,0 +1,66 @@
+INCIPIT grimoire "fluxus_reverse_sort_18c1"
+
+ADVOCARE "cct/fluxus.cct"
+ADVOCARE "cct/verbum.cct"
+
+RITUALE main() REDDE REX
+  EVOCA SPECULUM NIHIL fi AD CONIURA fluxus_init(MENSURA(REX))
+  EVOCA REX i0 AD 3
+  EVOCA REX i1 AD 1
+  EVOCA REX i2 AD 2
+
+  CONIURA fluxus_push(fi, SPECULUM i0)
+  CONIURA fluxus_push(fi, SPECULUM i1)
+  CONIURA fluxus_push(fi, SPECULUM i2)
+  CONIURA fluxus_reverse(fi)
+
+  EVOCA SPECULUM REX r0 AD CONIURA fluxus_get(fi, 0)
+  EVOCA SPECULUM REX r1 AD CONIURA fluxus_get(fi, 1)
+  EVOCA SPECULUM REX r2 AD CONIURA fluxus_get(fi, 2)
+
+  SI *r0 == 2
+    SI *r1 == 1
+      SI *r2 == 3
+        CONIURA fluxus_sort_int(fi)
+        EVOCA SPECULUM REX s0 AD CONIURA fluxus_get(fi, 0)
+        EVOCA SPECULUM REX s1 AD CONIURA fluxus_get(fi, 1)
+        EVOCA SPECULUM REX s2 AD CONIURA fluxus_get(fi, 2)
+        SI *s0 == 1
+          SI *s1 == 2
+            SI *s2 == 3
+              EVOCA SPECULUM NIHIL fv AD CONIURA fluxus_init(MENSURA(VERBUM))
+              EVOCA VERBUM v0 AD "beta"
+              EVOCA VERBUM v1 AD "alpha"
+              EVOCA VERBUM v2 AD "delta"
+              CONIURA fluxus_push(fv, SPECULUM v0)
+              CONIURA fluxus_push(fv, SPECULUM v1)
+              CONIURA fluxus_push(fv, SPECULUM v2)
+              CONIURA fluxus_sort_verbum(fv)
+              EVOCA VERBUM o0 AD ""
+              EVOCA VERBUM o1 AD ""
+              EVOCA VERBUM o2 AD ""
+              CONIURA fluxus_pop(fv, SPECULUM o2)
+              CONIURA fluxus_pop(fv, SPECULUM o1)
+              CONIURA fluxus_pop(fv, SPECULUM o0)
+              SI CONIURA compare(o0, "alpha") == 0
+                SI CONIURA compare(o1, "beta") == 0
+                  SI CONIURA compare(o2, "delta") == 0
+                    CONIURA fluxus_free(fv)
+                    CONIURA fluxus_free(fi)
+                    REDDE 0
+                  FIN SI
+                FIN SI
+              FIN SI
+              CONIURA fluxus_free(fv)
+            FIN SI
+          FIN SI
+        FIN SI
+      FIN SI
+    FIN SI
+  FIN SI
+
+  CONIURA fluxus_free(fi)
+  REDDE 1
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

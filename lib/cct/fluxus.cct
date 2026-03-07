@@ -41,4 +41,96 @@ RITUALE fluxus_capacity(SPECULUM NIHIL flux) REDDE REX
   REDDE OBSECRO fluxus_capacity(flux)
 EXPLICIT RITUALE
 
+RITUALE fluxus_peek(SPECULUM NIHIL flux) REDDE SPECULUM NIHIL
+  REDDE OBSECRO fluxus_peek(flux)
+EXPLICIT RITUALE
+
+RITUALE fluxus_set(SPECULUM NIHIL flux, REX idx, SPECULUM NIHIL elem) REDDE NIHIL
+  OBSECRO fluxus_set(flux, idx, elem)
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE fluxus_remove(SPECULUM NIHIL flux, REX idx) REDDE NIHIL
+  OBSECRO fluxus_remove(flux, idx)
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE fluxus_insert(SPECULUM NIHIL flux, REX idx, SPECULUM NIHIL elem) REDDE NIHIL
+  OBSECRO fluxus_insert(flux, idx, elem)
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE fluxus_contains(SPECULUM NIHIL flux, SPECULUM NIHIL elem) REDDE VERUM
+  REDDE OBSECRO fluxus_contains(flux, elem)
+EXPLICIT RITUALE
+
+RITUALE fluxus_is_empty(SPECULUM NIHIL flux) REDDE VERUM
+  REDDE CONIURA fluxus_len(flux) == 0
+EXPLICIT RITUALE
+
+RITUALE fluxus_concat GENUS(T)(SPECULUM NIHIL a, SPECULUM NIHIL b) REDDE SPECULUM NIHIL
+  EVOCA SPECULUM NIHIL out AD CONIURA fluxus_init(MENSURA(T))
+  EVOCA REX i AD 0
+  EVOCA REX an AD CONIURA fluxus_len(a)
+  DUM i < an
+    EVOCA SPECULUM T p AD CONIURA fluxus_get(a, i)
+    CONIURA fluxus_push(out, p)
+    VINCIRE i AD i + 1
+  FIN DUM
+  VINCIRE i AD 0
+  EVOCA REX bn AD CONIURA fluxus_len(b)
+  DUM i < bn
+    EVOCA SPECULUM T p AD CONIURA fluxus_get(b, i)
+    CONIURA fluxus_push(out, p)
+    VINCIRE i AD i + 1
+  FIN DUM
+  REDDE out
+EXPLICIT RITUALE
+
+RITUALE fluxus_slice GENUS(T)(SPECULUM NIHIL flux, REX inicio, REX fim) REDDE SPECULUM NIHIL
+  EVOCA REX n AD CONIURA fluxus_len(flux)
+  SI inicio < 0 VEL fim < inicio VEL fim > n
+    IACE "fluxus slice intervalo invalido"
+  FIN SI
+  EVOCA SPECULUM NIHIL out AD CONIURA fluxus_init(MENSURA(T))
+  EVOCA REX i AD inicio
+  DUM i < fim
+    EVOCA SPECULUM T p AD CONIURA fluxus_get(flux, i)
+    CONIURA fluxus_push(out, p)
+    VINCIRE i AD i + 1
+  FIN DUM
+  REDDE out
+EXPLICIT RITUALE
+
+RITUALE fluxus_copy GENUS(T)(SPECULUM NIHIL flux) REDDE SPECULUM NIHIL
+  EVOCA SPECULUM NIHIL out AD CONIURA fluxus_init(MENSURA(T))
+  EVOCA REX i AD 0
+  EVOCA REX n AD CONIURA fluxus_len(flux)
+  DUM i < n
+    EVOCA SPECULUM T p AD CONIURA fluxus_get(flux, i)
+    CONIURA fluxus_push(out, p)
+    VINCIRE i AD i + 1
+  FIN DUM
+  REDDE out
+EXPLICIT RITUALE
+
+RITUALE fluxus_reverse(SPECULUM NIHIL flux) REDDE NIHIL
+  OBSECRO fluxus_reverse(flux)
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE fluxus_sort_int(SPECULUM NIHIL flux) REDDE NIHIL
+  OBSECRO fluxus_sort_int(flux)
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE fluxus_sort_verbum(SPECULUM NIHIL flux) REDDE NIHIL
+  OBSECRO fluxus_sort_verbum(flux)
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE fluxus_to_ptr(SPECULUM NIHIL flux) REDDE SPECULUM NIHIL
+  REDDE OBSECRO fluxus_to_ptr(flux)
+EXPLICIT RITUALE
+
 EXPLICIT grimoire

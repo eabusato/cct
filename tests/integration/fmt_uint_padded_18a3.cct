@@ -1,0 +1,19 @@
+INCIPIT grimoire "fmt_uint_padded_18a3"
+
+ADVOCARE "cct/fmt.cct"
+ADVOCARE "cct/verbum.cct"
+
+RITUALE main() REDDE REX
+  EVOCA VERBUM u AD CONIURA stringify_uint(cast GENUS(DUX)(42))
+  EVOCA MILES z AD OBSECRO verbum_char_at("0", 0)
+  EVOCA VERBUM p AD CONIURA stringify_int_padded(42, 5, z)
+  EVOCA VERBUM c AD CONIURA stringify_char(z)
+
+  SI CONIURA compare(u, "42") == 0 ET CONIURA compare(p, "00042") == 0 ET CONIURA compare(c, "0") == 0
+    REDDE 0
+  FIN SI
+
+  REDDE 1
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

@@ -1,0 +1,29 @@
+INCIPIT grimoire "bit_rotate_swap_18d3"
+
+ADVOCARE "cct/bit.cct"
+
+RITUALE main() REDDE REX
+  SI CONIURA rotate_left(1, 1) != 2
+    REDDE 1
+  FIN SI
+
+  SI CONIURA rotate_right(2, 1) != 1
+    REDDE 2
+  FIN SI
+
+  SI CONIURA rotate_left(9, 2) != 36
+    REDDE 3
+  FIN SI
+
+  SI CONIURA rotate_right(36, 2) != 9
+    REDDE 4
+  FIN SI
+
+  SI CONIURA byte_swap(72623859790382856) != 578437695752307201
+    REDDE 5
+  FIN SI
+
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

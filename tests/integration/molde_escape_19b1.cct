@@ -1,0 +1,6 @@
+INCIPIT grimoire "molde_escape_19b1"
+RITUALE main() REDDE NIHIL
+  OBSECRO scribe(MOLDE "chave: {{valor}} fim={{x}}\n")
+  REDDE
+EXPLICIT RITUALE
+EXPLICIT grimoire

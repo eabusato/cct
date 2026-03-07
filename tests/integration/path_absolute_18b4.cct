@@ -1,0 +1,54 @@
+INCIPIT grimoire "path_absolute_18b4"
+
+ADVOCARE "cct/path.cct"
+ADVOCARE "cct/fs.cct"
+ADVOCARE "cct/verbum.cct"
+
+RITUALE main() REDDE REX
+  CONIURA mkdir_all("tests/.tmp/path_18b4_abs")
+  CONIURA write_all("tests/.tmp/path_18b4_abs/existing.txt", "ok")
+
+  SI NON CONIURA is_absolute("/alpha")
+    REDDE 1
+  FIN SI
+
+  SI NON CONIURA is_relative("alpha/beta")
+    REDDE 2
+  FIN SI
+
+  SI CONIURA is_relative("/alpha")
+    REDDE 3
+  FIN SI
+
+  EVOCA VERBUM r1 AD CONIURA resolve("tests/.tmp/path_18b4_abs/existing.txt")
+  EVOCA VERBUM r2 AD CONIURA resolve("tests/.tmp/path_18b4_abs/missing/../target.txt")
+
+  SI NON CONIURA is_absolute(r1)
+    REDDE 4
+  FIN SI
+
+  SI NON CONIURA is_absolute(r2)
+    REDDE 5
+  FIN SI
+
+  SI NON CONIURA ends_with(r2, "tests/.tmp/path_18b4_abs/target.txt")
+    REDDE 6
+  FIN SI
+
+  EVOCA VERBUM abs_base AD CONIURA resolve("tests/.tmp/path_18b4_abs")
+  EVOCA VERBUM rel1 AD CONIURA relative_to(r1, abs_base)
+  SI CONIURA compare(rel1, "existing.txt") != 0
+    REDDE 7
+  FIN SI
+
+  EVOCA VERBUM rel2 AD CONIURA relative_to("a/b/c", "a/d")
+  SI CONIURA compare(rel2, "../b/c") != 0
+    REDDE 8
+  FIN SI
+
+  CONIURA delete_file("tests/.tmp/path_18b4_abs/existing.txt")
+  CONIURA delete_dir("tests/.tmp/path_18b4_abs")
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

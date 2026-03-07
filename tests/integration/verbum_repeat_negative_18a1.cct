@@ -1,0 +1,10 @@
+INCIPIT grimoire "verbum_repeat_negative_18a1"
+
+ADVOCARE "cct/verbum.cct"
+
+RITUALE main() REDDE REX
+  EVOCA VERBUM s AD CONIURA repeat("a", -1)
+  REDDE CONIURA len(s)
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

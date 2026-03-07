@@ -1,0 +1,24 @@
+INCIPIT grimoire "fs_mkdir_18b1"
+
+ADVOCARE "cct/fs.cct"
+ADVOCARE "cct/verbum.cct"
+
+RITUALE main() REDDE REX
+  EVOCA VERBUM raiz AD "tests/.tmp/fs_18b1_mkdir_root"
+  EVOCA VERBUM fundo AD "tests/.tmp/fs_18b1_mkdir_root/a/b"
+  EVOCA VERBUM alvo AD "tests/.tmp/fs_18b1_mkdir_root/a/b/ok.txt"
+
+  CONIURA mkdir(raiz)
+  CONIURA mkdir_all(fundo)
+  CONIURA mkdir_all(fundo)
+
+  CONIURA write_all(alvo, "ok")
+  EVOCA VERBUM lido AD CONIURA read_all(alvo)
+
+  SI CONIURA compare(lido, "ok") == 0
+    REDDE 0
+  FIN SI
+  REDDE 1
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

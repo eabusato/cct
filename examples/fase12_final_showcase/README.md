@@ -4,7 +4,7 @@ This example demonstrates the complete capabilities of FASE 12:
 
 Status note:
 - This is a historical showcase introduced in FASE 12.
-- It remains compatible with the current project baseline (`FASE 15D.4 completed`).
+- It remains compatible with the current project baseline (`FASE 19D.4 completed`).
 
 ## Features Showcased
 

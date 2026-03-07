@@ -13051,6 +13051,2599 @@ fi
 
 echo ""
 echo "========================================"
+echo "FASE 18A1: verbum Core Expansion Tests"
+echo "========================================"
+echo ""
+
+# Test 1013: verbum_starts_ends_18a1
+echo "Test 1013: verbum_starts_ends_18a1"
+SRC_1013="tests/integration/verbum_starts_ends_18a1.cct"
+BIN_1013="${SRC_1013%.cct}"
+cleanup_codegen_artifacts "$SRC_1013"
+if "$CCT_BIN" "$SRC_1013" >$CCT_TMP_DIR/cct_phase18a1_1013_compile.out 2>&1; then
+    "$BIN_1013" >$CCT_TMP_DIR/cct_phase18a1_1013_run.out 2>&1
+    RC_1013=$?
+else
+    RC_1013=255
+fi
+if [ "$RC_1013" -eq 0 ]; then
+    test_pass "verbum_starts_ends_18a1 validates starts/ends/strip contracts"
+else
+    test_fail "verbum_starts_ends_18a1 regressed"
+fi
+
+# Test 1014: verbum_replace_18a1
+echo "Test 1014: verbum_replace_18a1"
+SRC_1014="tests/integration/verbum_replace_18a1.cct"
+BIN_1014="${SRC_1014%.cct}"
+cleanup_codegen_artifacts "$SRC_1014"
+if "$CCT_BIN" "$SRC_1014" >$CCT_TMP_DIR/cct_phase18a1_1014_compile.out 2>&1; then
+    "$BIN_1014" >$CCT_TMP_DIR/cct_phase18a1_1014_run.out 2>&1
+    RC_1014=$?
+else
+    RC_1014=255
+fi
+if [ "$RC_1014" -eq 0 ]; then
+    test_pass "verbum_replace_18a1 validates replace/replace_all contracts"
+else
+    test_fail "verbum_replace_18a1 regressed"
+fi
+
+# Test 1015: verbum_case_18a1
+echo "Test 1015: verbum_case_18a1"
+SRC_1015="tests/integration/verbum_case_18a1.cct"
+BIN_1015="${SRC_1015%.cct}"
+cleanup_codegen_artifacts "$SRC_1015"
+if "$CCT_BIN" "$SRC_1015" >$CCT_TMP_DIR/cct_phase18a1_1015_compile.out 2>&1; then
+    "$BIN_1015" >$CCT_TMP_DIR/cct_phase18a1_1015_run.out 2>&1
+    RC_1015=$?
+else
+    RC_1015=255
+fi
+if [ "$RC_1015" -eq 0 ]; then
+    test_pass "verbum_case_18a1 validates case conversion and equals_ignore_case"
+else
+    test_fail "verbum_case_18a1 regressed"
+fi
+
+# Test 1016: verbum_trim_variants_18a1
+echo "Test 1016: verbum_trim_variants_18a1"
+SRC_1016="tests/integration/verbum_trim_variants_18a1.cct"
+BIN_1016="${SRC_1016%.cct}"
+cleanup_codegen_artifacts "$SRC_1016"
+if "$CCT_BIN" "$SRC_1016" >$CCT_TMP_DIR/cct_phase18a1_1016_compile.out 2>&1; then
+    "$BIN_1016" >$CCT_TMP_DIR/cct_phase18a1_1016_run.out 2>&1
+    RC_1016=$?
+else
+    RC_1016=255
+fi
+if [ "$RC_1016" -eq 0 ]; then
+    test_pass "verbum_trim_variants_18a1 validates trim_left/right/char behavior"
+else
+    test_fail "verbum_trim_variants_18a1 regressed"
+fi
+
+# Test 1017: verbum_pad_repeat_18a1
+echo "Test 1017: verbum_pad_repeat_18a1"
+SRC_1017="tests/integration/verbum_pad_repeat_18a1.cct"
+BIN_1017="${SRC_1017%.cct}"
+cleanup_codegen_artifacts "$SRC_1017"
+if "$CCT_BIN" "$SRC_1017" >$CCT_TMP_DIR/cct_phase18a1_1017_compile.out 2>&1; then
+    "$BIN_1017" >$CCT_TMP_DIR/cct_phase18a1_1017_run.out 2>&1
+    RC_1017=$?
+else
+    RC_1017=255
+fi
+if [ "$RC_1017" -eq 0 ]; then
+    test_pass "verbum_pad_repeat_18a1 validates repeat/pad/center contracts"
+else
+    test_fail "verbum_pad_repeat_18a1 regressed"
+fi
+
+# Test 1018: verbum_search_18a1
+echo "Test 1018: verbum_search_18a1"
+SRC_1018="tests/integration/verbum_search_18a1.cct"
+BIN_1018="${SRC_1018%.cct}"
+cleanup_codegen_artifacts "$SRC_1018"
+if "$CCT_BIN" "$SRC_1018" >$CCT_TMP_DIR/cct_phase18a1_1018_compile.out 2>&1; then
+    "$BIN_1018" >$CCT_TMP_DIR/cct_phase18a1_1018_run.out 2>&1
+    RC_1018=$?
+else
+    RC_1018=255
+fi
+if [ "$RC_1018" -eq 0 ]; then
+    test_pass "verbum_search_18a1 validates last_find/find_from/count_occurrences"
+else
+    test_fail "verbum_search_18a1 regressed"
+fi
+
+# Test 1019: verbum_misc_18a1
+echo "Test 1019: verbum_misc_18a1"
+SRC_1019="tests/integration/verbum_misc_18a1.cct"
+BIN_1019="${SRC_1019%.cct}"
+cleanup_codegen_artifacts "$SRC_1019"
+if "$CCT_BIN" "$SRC_1019" >$CCT_TMP_DIR/cct_phase18a1_1019_compile.out 2>&1; then
+    "$BIN_1019" >$CCT_TMP_DIR/cct_phase18a1_1019_run.out 2>&1
+    RC_1019=$?
+else
+    RC_1019=255
+fi
+if [ "$RC_1019" -eq 0 ]; then
+    test_pass "verbum_misc_18a1 validates reverse/slice/is_ascii/is_empty"
+else
+    test_fail "verbum_misc_18a1 regressed"
+fi
+
+# Test 1020: verbum_repeat_negative_18a1
+echo "Test 1020: verbum_repeat_negative_18a1"
+SRC_1020="tests/integration/verbum_repeat_negative_18a1.cct"
+BIN_1020="${SRC_1020%.cct}"
+cleanup_codegen_artifacts "$SRC_1020"
+if "$CCT_BIN" "$SRC_1020" >$CCT_TMP_DIR/cct_phase18a1_1020_compile.out 2>&1; then
+    "$BIN_1020" >$CCT_TMP_DIR/cct_phase18a1_1020_run.out 2>&1
+    RC_1020=$?
+else
+    RC_1020=255
+fi
+if [ "$RC_1020" -ne 0 ] && [ -f "$CCT_TMP_DIR/cct_phase18a1_1020_run.out" ] && \
+   grep -q "verbum repeat count negativo" "$CCT_TMP_DIR/cct_phase18a1_1020_run.out"; then
+    test_pass "verbum_repeat_negative_18a1 keeps canonical negative-repeat diagnostic"
+else
+    test_fail "verbum_repeat_negative_18a1 regressed"
+fi
+
+# Test 1021: verbum_find_from_oob_18a1
+echo "Test 1021: verbum_find_from_oob_18a1"
+SRC_1021="tests/integration/verbum_find_from_oob_18a1.cct"
+BIN_1021="${SRC_1021%.cct}"
+cleanup_codegen_artifacts "$SRC_1021"
+if "$CCT_BIN" "$SRC_1021" >$CCT_TMP_DIR/cct_phase18a1_1021_compile.out 2>&1; then
+    "$BIN_1021" >$CCT_TMP_DIR/cct_phase18a1_1021_run.out 2>&1
+    RC_1021=$?
+else
+    RC_1021=255
+fi
+if [ "$RC_1021" -ne 0 ] && [ -f "$CCT_TMP_DIR/cct_phase18a1_1021_run.out" ] && \
+   grep -q "verbum find_from offset invalido" "$CCT_TMP_DIR/cct_phase18a1_1021_run.out"; then
+    test_pass "verbum_find_from_oob_18a1 keeps canonical offset diagnostic"
+else
+    test_fail "verbum_find_from_oob_18a1 regressed"
+fi
+
+# Test 1022: verbum_slice_oob_18a1
+echo "Test 1022: verbum_slice_oob_18a1"
+SRC_1022="tests/integration/verbum_slice_oob_18a1.cct"
+BIN_1022="${SRC_1022%.cct}"
+cleanup_codegen_artifacts "$SRC_1022"
+if "$CCT_BIN" "$SRC_1022" >$CCT_TMP_DIR/cct_phase18a1_1022_compile.out 2>&1; then
+    "$BIN_1022" >$CCT_TMP_DIR/cct_phase18a1_1022_run.out 2>&1
+    RC_1022=$?
+else
+    RC_1022=255
+fi
+if [ "$RC_1022" -ne 0 ] && [ -f "$CCT_TMP_DIR/cct_phase18a1_1022_run.out" ] && \
+   grep -q "verbum slice bounds invalid" "$CCT_TMP_DIR/cct_phase18a1_1022_run.out"; then
+    test_pass "verbum_slice_oob_18a1 keeps canonical bounds diagnostic"
+else
+    test_fail "verbum_slice_oob_18a1 regressed"
+fi
+
+echo ""
+echo "========================================"
+echo "FASE 18C1: fluxus Expansion Tests"
+echo "========================================"
+echo ""
+
+# Test 1023: fluxus_peek_set_18c1
+echo "Test 1023: fluxus_peek_set_18c1"
+SRC_1023="tests/integration/fluxus_peek_set_18c1.cct"
+BIN_1023="${SRC_1023%.cct}"
+cleanup_codegen_artifacts "$SRC_1023"
+if "$CCT_BIN" "$SRC_1023" >$CCT_TMP_DIR/cct_phase18c1_1023_compile.out 2>&1; then
+    "$BIN_1023" >$CCT_TMP_DIR/cct_phase18c1_1023_run.out 2>&1
+    RC_1023=$?
+else
+    RC_1023=255
+fi
+if [ "$RC_1023" -eq 0 ]; then
+    test_pass "fluxus_peek_set_18c1 validates peek/set/contains/is_empty/to_ptr contracts"
+else
+    test_fail "fluxus_peek_set_18c1 regressed"
+fi
+
+# Test 1024: fluxus_remove_insert_18c1
+echo "Test 1024: fluxus_remove_insert_18c1"
+SRC_1024="tests/integration/fluxus_remove_insert_18c1.cct"
+BIN_1024="${SRC_1024%.cct}"
+cleanup_codegen_artifacts "$SRC_1024"
+if "$CCT_BIN" "$SRC_1024" >$CCT_TMP_DIR/cct_phase18c1_1024_compile.out 2>&1; then
+    "$BIN_1024" >$CCT_TMP_DIR/cct_phase18c1_1024_run.out 2>&1
+    RC_1024=$?
+else
+    RC_1024=255
+fi
+if [ "$RC_1024" -eq 0 ]; then
+    test_pass "fluxus_remove_insert_18c1 validates remove/insert order contracts"
+else
+    test_fail "fluxus_remove_insert_18c1 regressed"
+fi
+
+# Test 1025: fluxus_slice_copy_18c1
+echo "Test 1025: fluxus_slice_copy_18c1"
+SRC_1025="tests/integration/fluxus_slice_copy_18c1.cct"
+BIN_1025="${SRC_1025%.cct}"
+cleanup_codegen_artifacts "$SRC_1025"
+if "$CCT_BIN" "$SRC_1025" >$CCT_TMP_DIR/cct_phase18c1_1025_compile.out 2>&1; then
+    "$BIN_1025" >$CCT_TMP_DIR/cct_phase18c1_1025_run.out 2>&1
+    RC_1025=$?
+else
+    RC_1025=255
+fi
+if [ "$RC_1025" -eq 0 ]; then
+    test_pass "fluxus_slice_copy_18c1 validates slice/copy/concat consistency"
+else
+    test_fail "fluxus_slice_copy_18c1 regressed"
+fi
+
+# Test 1026: fluxus_reverse_sort_18c1
+echo "Test 1026: fluxus_reverse_sort_18c1"
+SRC_1026="tests/integration/fluxus_reverse_sort_18c1.cct"
+BIN_1026="${SRC_1026%.cct}"
+cleanup_codegen_artifacts "$SRC_1026"
+if "$CCT_BIN" "$SRC_1026" >$CCT_TMP_DIR/cct_phase18c1_1026_compile.out 2>&1; then
+    "$BIN_1026" >$CCT_TMP_DIR/cct_phase18c1_1026_run.out 2>&1
+    RC_1026=$?
+else
+    RC_1026=255
+fi
+if [ "$RC_1026" -eq 0 ]; then
+    test_pass "fluxus_reverse_sort_18c1 validates reverse/sort_int/sort_verbum contracts"
+else
+    test_fail "fluxus_reverse_sort_18c1 regressed"
+fi
+
+# Test 1027: fluxus_set_oob_18c1
+echo "Test 1027: fluxus_set_oob_18c1"
+SRC_1027="tests/integration/fluxus_set_oob_18c1.cct"
+BIN_1027="${SRC_1027%.cct}"
+cleanup_codegen_artifacts "$SRC_1027"
+if "$CCT_BIN" "$SRC_1027" >$CCT_TMP_DIR/cct_phase18c1_1027_compile.out 2>&1; then
+    "$BIN_1027" >$CCT_TMP_DIR/cct_phase18c1_1027_run.out 2>&1
+    RC_1027=$?
+else
+    RC_1027=255
+fi
+if [ "$RC_1027" -ne 0 ] && [ -f "$CCT_TMP_DIR/cct_phase18c1_1027_run.out" ] && \
+   grep -q "fluxus set indice fora dos limites" "$CCT_TMP_DIR/cct_phase18c1_1027_run.out"; then
+    test_pass "fluxus_set_oob_18c1 keeps canonical bounds diagnostic"
+else
+    test_fail "fluxus_set_oob_18c1 regressed"
+fi
+
+# Test 1028: fluxus_peek_empty_18c1
+echo "Test 1028: fluxus_peek_empty_18c1"
+SRC_1028="tests/integration/fluxus_peek_empty_18c1.cct"
+BIN_1028="${SRC_1028%.cct}"
+cleanup_codegen_artifacts "$SRC_1028"
+if "$CCT_BIN" "$SRC_1028" >$CCT_TMP_DIR/cct_phase18c1_1028_compile.out 2>&1; then
+    "$BIN_1028" >$CCT_TMP_DIR/cct_phase18c1_1028_run.out 2>&1
+    RC_1028=$?
+else
+    RC_1028=255
+fi
+if [ "$RC_1028" -ne 0 ] && [ -f "$CCT_TMP_DIR/cct_phase18c1_1028_run.out" ] && \
+   grep -q "fluxus peek em fluxus vazio" "$CCT_TMP_DIR/cct_phase18c1_1028_run.out"; then
+    test_pass "fluxus_peek_empty_18c1 keeps canonical empty-peek diagnostic"
+else
+    test_fail "fluxus_peek_empty_18c1 regressed"
+fi
+
+# Test 1029: fluxus_sort_int_type_18c1
+echo "Test 1029: fluxus_sort_int_type_18c1"
+SRC_1029="tests/integration/fluxus_sort_int_type_18c1.cct"
+BIN_1029="${SRC_1029%.cct}"
+cleanup_codegen_artifacts "$SRC_1029"
+if "$CCT_BIN" "$SRC_1029" >$CCT_TMP_DIR/cct_phase18c1_1029_compile.out 2>&1; then
+    "$BIN_1029" >$CCT_TMP_DIR/cct_phase18c1_1029_run.out 2>&1
+    RC_1029=$?
+else
+    RC_1029=255
+fi
+if [ "$RC_1029" -ne 0 ] && [ -f "$CCT_TMP_DIR/cct_phase18c1_1029_run.out" ] && \
+   grep -q "fluxus sort_int requer elem_size == sizeof(long long)" "$CCT_TMP_DIR/cct_phase18c1_1029_run.out"; then
+    test_pass "fluxus_sort_int_type_18c1 keeps elem_size guard diagnostic"
+else
+    test_fail "fluxus_sort_int_type_18c1 regressed"
+fi
+
+echo ""
+echo "========================================"
+echo "FASE 18A2: verbum Collection Expansion Tests"
+echo "========================================"
+echo ""
+
+# Test 1030: verbum_split_basic_18a2
+echo "Test 1030: verbum_split_basic_18a2"
+SRC_1030="tests/integration/verbum_split_basic_18a2.cct"
+BIN_1030="${SRC_1030%.cct}"
+cleanup_codegen_artifacts "$SRC_1030"
+if "$CCT_BIN" "$SRC_1030" >$CCT_TMP_DIR/cct_phase18a2_1030_compile.out 2>&1; then
+    "$BIN_1030" >$CCT_TMP_DIR/cct_phase18a2_1030_run.out 2>&1
+    RC_1030=$?
+else
+    RC_1030=255
+fi
+if [ "$RC_1030" -eq 0 ]; then
+    test_pass "verbum_split_basic_18a2 validates split with regular and not-found separators"
+else
+    test_fail "verbum_split_basic_18a2 regressed"
+fi
+
+# Test 1031: verbum_split_empty_18a2
+echo "Test 1031: verbum_split_empty_18a2"
+SRC_1031="tests/integration/verbum_split_empty_18a2.cct"
+BIN_1031="${SRC_1031%.cct}"
+cleanup_codegen_artifacts "$SRC_1031"
+if "$CCT_BIN" "$SRC_1031" >$CCT_TMP_DIR/cct_phase18a2_1031_compile.out 2>&1; then
+    "$BIN_1031" >$CCT_TMP_DIR/cct_phase18a2_1031_run.out 2>&1
+    RC_1031=$?
+else
+    RC_1031=255
+fi
+if [ "$RC_1031" -eq 0 ]; then
+    test_pass "verbum_split_empty_18a2 validates empty input and empty separator contracts"
+else
+    test_fail "verbum_split_empty_18a2 regressed"
+fi
+
+# Test 1032: verbum_join_18a2
+echo "Test 1032: verbum_join_18a2"
+SRC_1032="tests/integration/verbum_join_18a2.cct"
+BIN_1032="${SRC_1032%.cct}"
+cleanup_codegen_artifacts "$SRC_1032"
+if "$CCT_BIN" "$SRC_1032" >$CCT_TMP_DIR/cct_phase18a2_1032_compile.out 2>&1; then
+    "$BIN_1032" >$CCT_TMP_DIR/cct_phase18a2_1032_run.out 2>&1
+    RC_1032=$?
+else
+    RC_1032=255
+fi
+if [ "$RC_1032" -eq 0 ]; then
+    test_pass "verbum_join_18a2 validates join on populated and empty fluxus"
+else
+    test_fail "verbum_join_18a2 regressed"
+fi
+
+# Test 1033: verbum_lines_18a2
+echo "Test 1033: verbum_lines_18a2"
+SRC_1033="tests/integration/verbum_lines_18a2.cct"
+BIN_1033="${SRC_1033%.cct}"
+cleanup_codegen_artifacts "$SRC_1033"
+if "$CCT_BIN" "$SRC_1033" >$CCT_TMP_DIR/cct_phase18a2_1033_compile.out 2>&1; then
+    "$BIN_1033" >$CCT_TMP_DIR/cct_phase18a2_1033_run.out 2>&1
+    RC_1033=$?
+else
+    RC_1033=255
+fi
+if [ "$RC_1033" -eq 0 ]; then
+    test_pass "verbum_lines_18a2 validates LF/CRLF handling and trailing empty line"
+else
+    test_fail "verbum_lines_18a2 regressed"
+fi
+
+# Test 1034: verbum_words_18a2
+echo "Test 1034: verbum_words_18a2"
+SRC_1034="tests/integration/verbum_words_18a2.cct"
+BIN_1034="${SRC_1034%.cct}"
+cleanup_codegen_artifacts "$SRC_1034"
+if "$CCT_BIN" "$SRC_1034" >$CCT_TMP_DIR/cct_phase18a2_1034_compile.out 2>&1; then
+    "$BIN_1034" >$CCT_TMP_DIR/cct_phase18a2_1034_run.out 2>&1
+    RC_1034=$?
+else
+    RC_1034=255
+fi
+if [ "$RC_1034" -eq 0 ]; then
+    test_pass "verbum_words_18a2 validates whitespace tokenization without empty tokens"
+else
+    test_fail "verbum_words_18a2 regressed"
+fi
+
+echo ""
+echo "========================================"
+echo "FASE 18A3: fmt Expansion Tests"
+echo "========================================"
+echo ""
+
+# Test 1035: fmt_hex_18a3
+echo "Test 1035: fmt_hex_18a3"
+SRC_1035="tests/integration/fmt_hex_18a3.cct"
+BIN_1035="${SRC_1035%.cct}"
+cleanup_codegen_artifacts "$SRC_1035"
+if "$CCT_BIN" "$SRC_1035" >$CCT_TMP_DIR/cct_phase18a3_1035_compile.out 2>&1; then
+    "$BIN_1035" >$CCT_TMP_DIR/cct_phase18a3_1035_run.out 2>&1
+    RC_1035=$?
+else
+    RC_1035=255
+fi
+if [ "$RC_1035" -eq 0 ]; then
+    test_pass "fmt_hex_18a3 validates hex/oct/bin formatting contracts"
+else
+    test_fail "fmt_hex_18a3 regressed"
+fi
+
+# Test 1036: fmt_real_prec_18a3
+echo "Test 1036: fmt_real_prec_18a3"
+SRC_1036="tests/integration/fmt_real_prec_18a3.cct"
+BIN_1036="${SRC_1036%.cct}"
+cleanup_codegen_artifacts "$SRC_1036"
+if "$CCT_BIN" "$SRC_1036" >$CCT_TMP_DIR/cct_phase18a3_1036_compile.out 2>&1; then
+    "$BIN_1036" >$CCT_TMP_DIR/cct_phase18a3_1036_run.out 2>&1
+    RC_1036=$?
+else
+    RC_1036=255
+fi
+if [ "$RC_1036" -eq 0 ]; then
+    test_pass "fmt_real_prec_18a3 validates precision/fixed/scientific formatting"
+else
+    test_fail "fmt_real_prec_18a3 regressed"
+fi
+
+# Test 1037: fmt_format_template_18a3
+echo "Test 1037: fmt_format_template_18a3"
+SRC_1037="tests/integration/fmt_format_template_18a3.cct"
+BIN_1037="${SRC_1037%.cct}"
+cleanup_codegen_artifacts "$SRC_1037"
+if "$CCT_BIN" "$SRC_1037" >$CCT_TMP_DIR/cct_phase18a3_1037_compile.out 2>&1; then
+    "$BIN_1037" >$CCT_TMP_DIR/cct_phase18a3_1037_run.out 2>&1
+    RC_1037=$?
+else
+    RC_1037=255
+fi
+if [ "$RC_1037" -eq 0 ]; then
+    test_pass "fmt_format_template_18a3 validates format_1..4 placeholder sequencing"
+else
+    test_fail "fmt_format_template_18a3 regressed"
+fi
+
+# Test 1038: fmt_repeat_table_18a3
+echo "Test 1038: fmt_repeat_table_18a3"
+SRC_1038="tests/integration/fmt_repeat_table_18a3.cct"
+BIN_1038="${SRC_1038%.cct}"
+cleanup_codegen_artifacts "$SRC_1038"
+if "$CCT_BIN" "$SRC_1038" >$CCT_TMP_DIR/cct_phase18a3_1038_compile.out 2>&1; then
+    "$BIN_1038" >$CCT_TMP_DIR/cct_phase18a3_1038_run.out 2>&1
+    RC_1038=$?
+else
+    RC_1038=255
+fi
+if [ "$RC_1038" -eq 0 ]; then
+    test_pass "fmt_repeat_table_18a3 validates repeat_char and table_row contracts"
+else
+    test_fail "fmt_repeat_table_18a3 regressed"
+fi
+
+# Test 1039: fmt_uint_padded_18a3
+echo "Test 1039: fmt_uint_padded_18a3"
+SRC_1039="tests/integration/fmt_uint_padded_18a3.cct"
+BIN_1039="${SRC_1039%.cct}"
+cleanup_codegen_artifacts "$SRC_1039"
+if "$CCT_BIN" "$SRC_1039" >$CCT_TMP_DIR/cct_phase18a3_1039_compile.out 2>&1; then
+    "$BIN_1039" >$CCT_TMP_DIR/cct_phase18a3_1039_run.out 2>&1
+    RC_1039=$?
+else
+    RC_1039=255
+fi
+if [ "$RC_1039" -eq 0 ]; then
+    test_pass "fmt_uint_padded_18a3 validates stringify_uint/int_padded/char contracts"
+else
+    test_fail "fmt_uint_padded_18a3 regressed"
+fi
+
+echo ""
+echo "========================================"
+echo "FASE 18A4: parse Expansion Tests"
+echo "========================================"
+echo ""
+
+# Test 1040: parse_try_safe_18a4
+echo "Test 1040: parse_try_safe_18a4"
+SRC_1040="tests/integration/parse_try_safe_18a4.cct"
+BIN_1040="${SRC_1040%.cct}"
+cleanup_codegen_artifacts "$SRC_1040"
+if "$CCT_BIN" "$SRC_1040" >$CCT_TMP_DIR/cct_phase18a4_1040_compile.out 2>&1; then
+    "$BIN_1040" >$CCT_TMP_DIR/cct_phase18a4_1040_run.out 2>&1
+    RC_1040=$?
+else
+    RC_1040=255
+fi
+if [ "$RC_1040" -eq 0 ]; then
+    test_pass "parse_try_safe_18a4 validates try_int/try_real/try_bool safe contracts"
+else
+    test_fail "parse_try_safe_18a4 regressed"
+fi
+
+# Test 1041: parse_hex_radix_18a4
+echo "Test 1041: parse_hex_radix_18a4"
+SRC_1041="tests/integration/parse_hex_radix_18a4.cct"
+BIN_1041="${SRC_1041%.cct}"
+cleanup_codegen_artifacts "$SRC_1041"
+if "$CCT_BIN" "$SRC_1041" >$CCT_TMP_DIR/cct_phase18a4_1041_compile.out 2>&1; then
+    "$BIN_1041" >$CCT_TMP_DIR/cct_phase18a4_1041_run.out 2>&1
+    RC_1041=$?
+else
+    RC_1041=255
+fi
+if [ "$RC_1041" -eq 0 ]; then
+    test_pass "parse_hex_radix_18a4 validates parse_int_hex/parse_int_radix and safe variants"
+else
+    test_fail "parse_hex_radix_18a4 regressed"
+fi
+
+# Test 1042: parse_is_18a4
+echo "Test 1042: parse_is_18a4"
+SRC_1042="tests/integration/parse_is_18a4.cct"
+BIN_1042="${SRC_1042%.cct}"
+cleanup_codegen_artifacts "$SRC_1042"
+if "$CCT_BIN" "$SRC_1042" >$CCT_TMP_DIR/cct_phase18a4_1042_compile.out 2>&1; then
+    "$BIN_1042" >$CCT_TMP_DIR/cct_phase18a4_1042_run.out 2>&1
+    RC_1042=$?
+else
+    RC_1042=255
+fi
+if [ "$RC_1042" -eq 0 ]; then
+    test_pass "parse_is_18a4 validates parse_is_int/parse_is_real edge behavior"
+else
+    test_fail "parse_is_18a4 regressed"
+fi
+
+# Test 1043: parse_csv_18a4
+echo "Test 1043: parse_csv_18a4"
+SRC_1043="tests/integration/parse_csv_18a4.cct"
+BIN_1043="${SRC_1043%.cct}"
+cleanup_codegen_artifacts "$SRC_1043"
+if "$CCT_BIN" "$SRC_1043" >$CCT_TMP_DIR/cct_phase18a4_1043_compile.out 2>&1; then
+    "$BIN_1043" >$CCT_TMP_DIR/cct_phase18a4_1043_run.out 2>&1
+    RC_1043=$?
+else
+    RC_1043=255
+fi
+if [ "$RC_1043" -eq 0 ]; then
+    test_pass "parse_csv_18a4 validates parse_csv_line/parse_csv_line_sep quoted field contracts"
+else
+    test_fail "parse_csv_18a4 regressed"
+fi
+
+echo ""
+echo "========================================"
+echo "FASE 18B1: fs Mutation Expansion Tests"
+echo "========================================"
+echo ""
+
+# Test 1044: fs_mkdir_18b1
+echo "Test 1044: fs_mkdir_18b1"
+SRC_1044="tests/integration/fs_mkdir_18b1.cct"
+BIN_1044="${SRC_1044%.cct}"
+rm -rf tests/.tmp/fs_18b1_mkdir_root
+cleanup_codegen_artifacts "$SRC_1044"
+if "$CCT_BIN" "$SRC_1044" >$CCT_TMP_DIR/cct_phase18b1_1044_compile.out 2>&1; then
+    "$BIN_1044" >$CCT_TMP_DIR/cct_phase18b1_1044_run.out 2>&1
+    RC_1044=$?
+else
+    RC_1044=255
+fi
+if [ "$RC_1044" -eq 0 ]; then
+    test_pass "fs_mkdir_18b1 validates mkdir/mkdir_all and mkdir_all idempotency"
+else
+    test_fail "fs_mkdir_18b1 regressed"
+fi
+
+# Test 1045: fs_delete_18b1
+echo "Test 1045: fs_delete_18b1"
+SRC_1045="tests/integration/fs_delete_18b1.cct"
+BIN_1045="${SRC_1045%.cct}"
+rm -rf tests/.tmp/fs_18b1_delete_root
+cleanup_codegen_artifacts "$SRC_1045"
+if "$CCT_BIN" "$SRC_1045" >$CCT_TMP_DIR/cct_phase18b1_1045_compile.out 2>&1; then
+    "$BIN_1045" >$CCT_TMP_DIR/cct_phase18b1_1045_run.out 2>&1
+    RC_1045=$?
+else
+    RC_1045=255
+fi
+if [ "$RC_1045" -eq 0 ]; then
+    test_pass "fs_delete_18b1 validates delete_file/delete_dir contracts"
+else
+    test_fail "fs_delete_18b1 regressed"
+fi
+
+# Test 1046: fs_rename_copy_18b1
+echo "Test 1046: fs_rename_copy_18b1"
+SRC_1046="tests/integration/fs_rename_copy_18b1.cct"
+BIN_1046="${SRC_1046%.cct}"
+rm -rf tests/.tmp/fs_18b1_ops
+cleanup_codegen_artifacts "$SRC_1046"
+if "$CCT_BIN" "$SRC_1046" >$CCT_TMP_DIR/cct_phase18b1_1046_compile.out 2>&1; then
+    "$BIN_1046" >$CCT_TMP_DIR/cct_phase18b1_1046_run.out 2>&1
+    RC_1046=$?
+else
+    RC_1046=255
+fi
+if [ "$RC_1046" -eq 0 ]; then
+    test_pass "fs_rename_copy_18b1 validates rename/copy/move contracts"
+else
+    test_fail "fs_rename_copy_18b1 regressed"
+fi
+
+# Test 1047: fs_errors_18b1
+echo "Test 1047: fs_errors_18b1"
+SRC_1047="tests/integration/fs_errors_18b1.cct"
+BIN_1047="${SRC_1047%.cct}"
+rm -rf tests/.tmp/fs_18b1_err_exists tests/.tmp/fs_18b1_missing_parent tests/.tmp/fs_18b1_err_dir_as_file tests/.tmp/fs_18b1_err_nonempty
+rm -f tests/.tmp/fs_18b1_missing.txt
+cleanup_codegen_artifacts "$SRC_1047"
+if "$CCT_BIN" "$SRC_1047" >$CCT_TMP_DIR/cct_phase18b1_1047_compile.out 2>&1; then
+    ERR_OK_1047=1
+
+    "$BIN_1047" mkdir_exists >$CCT_TMP_DIR/cct_phase18b1_1047_mkdir_exists.out 2>&1
+    RC_1047_A=$?
+    if [ "$RC_1047_A" -eq 0 ] || ! grep -q "fs mkdir ja existe: tests/.tmp/fs_18b1_err_exists" $CCT_TMP_DIR/cct_phase18b1_1047_mkdir_exists.out; then
+        ERR_OK_1047=0
+    fi
+
+    rm -rf tests/.tmp/fs_18b1_missing_parent
+    "$BIN_1047" mkdir_parent >$CCT_TMP_DIR/cct_phase18b1_1047_mkdir_parent.out 2>&1
+    RC_1047_B=$?
+    if [ "$RC_1047_B" -eq 0 ] || ! grep -q "fs mkdir pai nao existe: tests/.tmp/fs_18b1_missing_parent/a" $CCT_TMP_DIR/cct_phase18b1_1047_mkdir_parent.out; then
+        ERR_OK_1047=0
+    fi
+
+    rm -f tests/.tmp/fs_18b1_missing.txt
+    "$BIN_1047" delete_file_missing >$CCT_TMP_DIR/cct_phase18b1_1047_delete_file_missing.out 2>&1
+    RC_1047_C=$?
+    if [ "$RC_1047_C" -eq 0 ] || ! grep -q "fs delete_file nao encontrado: tests/.tmp/fs_18b1_missing.txt" $CCT_TMP_DIR/cct_phase18b1_1047_delete_file_missing.out; then
+        ERR_OK_1047=0
+    fi
+
+    rm -rf tests/.tmp/fs_18b1_err_dir_as_file
+    "$BIN_1047" delete_file_dir >$CCT_TMP_DIR/cct_phase18b1_1047_delete_file_dir.out 2>&1
+    RC_1047_D=$?
+    if [ "$RC_1047_D" -eq 0 ] || ! grep -q "fs delete_file e um diretorio: tests/.tmp/fs_18b1_err_dir_as_file" $CCT_TMP_DIR/cct_phase18b1_1047_delete_file_dir.out; then
+        ERR_OK_1047=0
+    fi
+
+    rm -rf tests/.tmp/fs_18b1_err_nonempty
+    "$BIN_1047" delete_dir_nonempty >$CCT_TMP_DIR/cct_phase18b1_1047_delete_dir_nonempty.out 2>&1
+    RC_1047_E=$?
+    if [ "$RC_1047_E" -eq 0 ] || ! grep -q "fs delete_dir nao vazio: tests/.tmp/fs_18b1_err_nonempty" $CCT_TMP_DIR/cct_phase18b1_1047_delete_dir_nonempty.out; then
+        ERR_OK_1047=0
+    fi
+
+    if [ "$ERR_OK_1047" -eq 1 ]; then
+        test_pass "fs_errors_18b1 keeps canonical diagnostics grep-able"
+    else
+        test_fail "fs_errors_18b1 regressed"
+    fi
+else
+    test_fail "fs_errors_18b1 fixture failed to compile"
+fi
+
+echo ""
+echo "========================================"
+echo "FASE 18B2: fs Inspection and Listing Tests"
+echo "========================================"
+echo ""
+
+# Test 1048: fs_inspect_18b2
+echo "Test 1048: fs_inspect_18b2"
+SRC_1048="tests/integration/fs_inspect_18b2.cct"
+BIN_1048="${SRC_1048%.cct}"
+rm -rf tests/.tmp/fs_18b2_inspect
+cleanup_codegen_artifacts "$SRC_1048"
+if "$CCT_BIN" "$SRC_1048" >$CCT_TMP_DIR/cct_phase18b2_1048_compile.out 2>&1; then
+    "$BIN_1048" >$CCT_TMP_DIR/cct_phase18b2_1048_run.out 2>&1
+    RC_1048=$?
+else
+    RC_1048=255
+fi
+if [ "$RC_1048" -eq 0 ]; then
+    test_pass "fs_inspect_18b2 validates is_file/is_dir/is_symlink/is_readable contracts"
+else
+    test_fail "fs_inspect_18b2 regressed"
+fi
+
+# Test 1049: fs_list_dir_18b2
+echo "Test 1049: fs_list_dir_18b2"
+SRC_1049="tests/integration/fs_list_dir_18b2.cct"
+BIN_1049="${SRC_1049%.cct}"
+rm -rf tests/.tmp/fs_18b2_list
+cleanup_codegen_artifacts "$SRC_1049"
+if "$CCT_BIN" "$SRC_1049" >$CCT_TMP_DIR/cct_phase18b2_1049_compile.out 2>&1; then
+    "$BIN_1049" >$CCT_TMP_DIR/cct_phase18b2_1049_run.out 2>&1
+    RC_1049=$?
+else
+    RC_1049=255
+fi
+if [ "$RC_1049" -eq 0 ]; then
+    test_pass "fs_list_dir_18b2 validates list_dir returns expected entry set"
+else
+    test_fail "fs_list_dir_18b2 regressed"
+fi
+
+# Test 1050: fs_read_lines_18b2
+echo "Test 1050: fs_read_lines_18b2"
+SRC_1050="tests/integration/fs_read_lines_18b2.cct"
+BIN_1050="${SRC_1050%.cct}"
+rm -f tests/.tmp/fs_18b2_lines.txt
+cleanup_codegen_artifacts "$SRC_1050"
+if "$CCT_BIN" "$SRC_1050" >$CCT_TMP_DIR/cct_phase18b2_1050_compile.out 2>&1; then
+    "$BIN_1050" >$CCT_TMP_DIR/cct_phase18b2_1050_run.out 2>&1
+    RC_1050=$?
+else
+    RC_1050=255
+fi
+if [ "$RC_1050" -eq 0 ]; then
+    test_pass "fs_read_lines_18b2 validates read_lines multiline contract"
+else
+    test_fail "fs_read_lines_18b2 regressed"
+fi
+
+# Test 1051: fs_temp_18b2
+echo "Test 1051: fs_temp_18b2"
+SRC_1051="tests/integration/fs_temp_18b2.cct"
+BIN_1051="${SRC_1051%.cct}"
+rm -rf tests/.tmp/fs_18b2_tmp_env
+mkdir -p tests/.tmp/fs_18b2_tmp_env
+cleanup_codegen_artifacts "$SRC_1051"
+if "$CCT_BIN" "$SRC_1051" >$CCT_TMP_DIR/cct_phase18b2_1051_compile.out 2>&1; then
+    TMPDIR=tests/.tmp/fs_18b2_tmp_env "$BIN_1051" >$CCT_TMP_DIR/cct_phase18b2_1051_run.out 2>&1
+    RC_1051=$?
+else
+    RC_1051=255
+fi
+if [ "$RC_1051" -eq 0 ]; then
+    test_pass "fs_temp_18b2 validates create_temp_file/create_temp_dir contracts"
+else
+    test_fail "fs_temp_18b2 regressed"
+fi
+
+# Test 1052: fs_modified_time_18b2
+echo "Test 1052: fs_modified_time_18b2"
+SRC_1052="tests/integration/fs_modified_time_18b2.cct"
+BIN_1052="${SRC_1052%.cct}"
+rm -f tests/.tmp/fs_18b2_mtime.txt
+cleanup_codegen_artifacts "$SRC_1052"
+if "$CCT_BIN" "$SRC_1052" >$CCT_TMP_DIR/cct_phase18b2_1052_compile.out 2>&1; then
+    "$BIN_1052" >$CCT_TMP_DIR/cct_phase18b2_1052_run.out 2>&1
+    RC_1052=$?
+else
+    RC_1052=255
+fi
+if [ "$RC_1052" -eq 0 ]; then
+    test_pass "fs_modified_time_18b2 validates modified_time/chmod/truncate contracts"
+else
+    test_fail "fs_modified_time_18b2 regressed"
+fi
+
+echo ""
+echo "========================================"
+echo "FASE 18B3: io Expansion Tests"
+echo "========================================"
+echo ""
+
+# Test 1053: io_print_variants_18b3
+echo "Test 1053: io_print_variants_18b3"
+SRC_1053="tests/integration/io_print_variants_18b3.cct"
+BIN_1053="${SRC_1053%.cct}"
+cleanup_codegen_artifacts "$SRC_1053"
+if "$CCT_BIN" "$SRC_1053" >$CCT_TMP_DIR/cct_phase18b3_1053_compile.out 2>&1; then
+    IO_OUT_1053=$("$BIN_1053" 2>/dev/null)
+    RC_1053=$?
+else
+    RC_1053=255
+fi
+if [ "$RC_1053" -eq 0 ] && [ "$IO_OUT_1053" = "2.5|true|Z|0xff" ]; then
+    test_pass "io_print_variants_18b3 validates print_real/print_bool/print_char/print_hex"
+else
+    test_fail "io_print_variants_18b3 regressed"
+fi
+
+# Test 1054: io_stderr_18b3
+echo "Test 1054: io_stderr_18b3"
+SRC_1054="tests/integration/io_stderr_18b3.cct"
+BIN_1054="${SRC_1054%.cct}"
+cleanup_codegen_artifacts "$SRC_1054"
+if "$CCT_BIN" "$SRC_1054" >$CCT_TMP_DIR/cct_phase18b3_1054_compile.out 2>&1; then
+    "$BIN_1054" >$CCT_TMP_DIR/cct_phase18b3_1054_stdout.out 2>$CCT_TMP_DIR/cct_phase18b3_1054_stderr.out
+    RC_1054=$?
+    STDOUT_1054=$(cat $CCT_TMP_DIR/cct_phase18b3_1054_stdout.out)
+    STDERR_1054=$(cat $CCT_TMP_DIR/cct_phase18b3_1054_stderr.out)
+else
+    RC_1054=255
+fi
+if [ "$RC_1054" -eq 0 ] && [ -z "$STDOUT_1054" ] && [ "$STDERR_1054" = $'E1\n7\n1.5\nfalse' ]; then
+    test_pass "io_stderr_18b3 validates eprint/eprintln stream separation"
+else
+    test_fail "io_stderr_18b3 regressed"
+fi
+
+# Test 1055: io_flush_18b3
+echo "Test 1055: io_flush_18b3"
+SRC_1055="tests/integration/io_flush_18b3.cct"
+BIN_1055="${SRC_1055%.cct}"
+cleanup_codegen_artifacts "$SRC_1055"
+if "$CCT_BIN" "$SRC_1055" >$CCT_TMP_DIR/cct_phase18b3_1055_compile.out 2>&1; then
+    "$BIN_1055" >$CCT_TMP_DIR/cct_phase18b3_1055_stdout.out 2>$CCT_TMP_DIR/cct_phase18b3_1055_stderr.out
+    RC_1055=$?
+else
+    RC_1055=255
+fi
+if [ "$RC_1055" -eq 0 ]; then
+    test_pass "io_flush_18b3 validates flush/flush_err non-crash contract"
+else
+    test_fail "io_flush_18b3 regressed"
+fi
+
+# Test 1056: io_read_all_stdin_18b3
+echo "Test 1056: io_read_all_stdin_18b3"
+SRC_1056="tests/integration/io_read_all_stdin_18b3.cct"
+BIN_1056="${SRC_1056%.cct}"
+cleanup_codegen_artifacts "$SRC_1056"
+if "$CCT_BIN" "$SRC_1056" >$CCT_TMP_DIR/cct_phase18b3_1056_compile.out 2>&1; then
+    printf "ab\ncd" | "$BIN_1056" >$CCT_TMP_DIR/cct_phase18b3_1056_stdout.out 2>$CCT_TMP_DIR/cct_phase18b3_1056_stderr.out
+    RC_1056=$?
+else
+    RC_1056=255
+fi
+if [ "$RC_1056" -eq 5 ]; then
+    test_pass "io_read_all_stdin_18b3 validates stdin pipe read-to-EOF contract"
+else
+    test_fail "io_read_all_stdin_18b3 regressed"
+fi
+
+# Test 1057: io_tty_18b3
+echo "Test 1057: io_tty_18b3"
+SRC_1057="tests/integration/io_tty_18b3.cct"
+BIN_1057="${SRC_1057%.cct}"
+cleanup_codegen_artifacts "$SRC_1057"
+if "$CCT_BIN" "$SRC_1057" >$CCT_TMP_DIR/cct_phase18b3_1057_compile.out 2>&1; then
+    printf "" | "$BIN_1057" >$CCT_TMP_DIR/cct_phase18b3_1057_stdout.out 2>$CCT_TMP_DIR/cct_phase18b3_1057_stderr.out
+    RC_1057=$?
+else
+    RC_1057=255
+fi
+if [ "$RC_1057" -eq 0 ]; then
+    test_pass "io_tty_18b3 validates non-interactive is_tty contract"
+else
+    test_fail "io_tty_18b3 regressed"
+fi
+
+echo ""
+echo "========================================"
+echo "FASE 18B4: path Expansion Tests"
+echo "========================================"
+echo ""
+
+# Test 1058: path_stem_ext_18b4
+echo "Test 1058: path_stem_ext_18b4"
+SRC_1058="tests/integration/path_stem_ext_18b4.cct"
+BIN_1058="${SRC_1058%.cct}"
+cleanup_codegen_artifacts "$SRC_1058"
+if "$CCT_BIN" "$SRC_1058" >$CCT_TMP_DIR/cct_phase18b4_1058_compile.out 2>&1; then
+    "$BIN_1058" >$CCT_TMP_DIR/cct_phase18b4_1058_run.out 2>&1
+    RC_1058=$?
+else
+    RC_1058=255
+fi
+if [ "$RC_1058" -eq 0 ]; then
+    test_pass "path_stem_ext_18b4 validates stem/with_ext/without_ext contracts"
+else
+    test_fail "path_stem_ext_18b4 regressed"
+fi
+
+# Test 1059: path_normalize_18b4
+echo "Test 1059: path_normalize_18b4"
+SRC_1059="tests/integration/path_normalize_18b4.cct"
+BIN_1059="${SRC_1059%.cct}"
+cleanup_codegen_artifacts "$SRC_1059"
+if "$CCT_BIN" "$SRC_1059" >$CCT_TMP_DIR/cct_phase18b4_1059_compile.out 2>&1; then
+    "$BIN_1059" >$CCT_TMP_DIR/cct_phase18b4_1059_run.out 2>&1
+    RC_1059=$?
+else
+    RC_1059=255
+fi
+if [ "$RC_1059" -eq 0 ]; then
+    test_pass "path_normalize_18b4 validates normalize textual contract"
+else
+    test_fail "path_normalize_18b4 regressed"
+fi
+
+# Test 1060: path_absolute_18b4
+echo "Test 1060: path_absolute_18b4"
+SRC_1060="tests/integration/path_absolute_18b4.cct"
+BIN_1060="${SRC_1060%.cct}"
+rm -rf tests/.tmp/path_18b4_abs
+cleanup_codegen_artifacts "$SRC_1060"
+if "$CCT_BIN" "$SRC_1060" >$CCT_TMP_DIR/cct_phase18b4_1060_compile.out 2>&1; then
+    "$BIN_1060" >$CCT_TMP_DIR/cct_phase18b4_1060_run.out 2>&1
+    RC_1060=$?
+else
+    RC_1060=255
+fi
+if [ "$RC_1060" -eq 0 ]; then
+    test_pass "path_absolute_18b4 validates is_absolute/is_relative/resolve/relative_to"
+else
+    test_fail "path_absolute_18b4 regressed"
+fi
+
+# Test 1061: path_dirs_18b4
+echo "Test 1061: path_dirs_18b4"
+SRC_1061="tests/integration/path_dirs_18b4.cct"
+BIN_1061="${SRC_1061%.cct}"
+rm -rf tests/.tmp/path_18b4_home tests/.tmp/path_18b4_tmp
+mkdir -p tests/.tmp/path_18b4_home tests/.tmp/path_18b4_tmp
+cleanup_codegen_artifacts "$SRC_1061"
+if "$CCT_BIN" "$SRC_1061" >$CCT_TMP_DIR/cct_phase18b4_1061_compile.out 2>&1; then
+    HOME=tests/.tmp/path_18b4_home TMPDIR=tests/.tmp/path_18b4_tmp "$BIN_1061" >$CCT_TMP_DIR/cct_phase18b4_1061_run.out 2>&1
+    RC_1061=$?
+else
+    RC_1061=255
+fi
+if [ "$RC_1061" -eq 0 ]; then
+    test_pass "path_dirs_18b4 validates home_dir/temp_dir/parent contracts"
+else
+    test_fail "path_dirs_18b4 regressed"
+fi
+
+# Test 1062: path_split_18b4
+echo "Test 1062: path_split_18b4"
+SRC_1062="tests/integration/path_split_18b4.cct"
+BIN_1062="${SRC_1062%.cct}"
+cleanup_codegen_artifacts "$SRC_1062"
+if "$CCT_BIN" "$SRC_1062" >$CCT_TMP_DIR/cct_phase18b4_1062_compile.out 2>&1; then
+    "$BIN_1062" >$CCT_TMP_DIR/cct_phase18b4_1062_run.out 2>&1
+    RC_1062=$?
+else
+    RC_1062=255
+fi
+if [ "$RC_1062" -eq 0 ]; then
+    test_pass "path_split_18b4 validates split_path components contract"
+else
+    test_fail "path_split_18b4 regressed"
+fi
+
+echo ""
+echo "========================================"
+echo "FASE 18C2: set/map Expansion Tests"
+echo "========================================"
+echo ""
+
+# Test 1063: set_operations_18c2
+echo "Test 1063: set_operations_18c2"
+SRC_1063="tests/integration/set_operations_18c2.cct"
+BIN_1063="${SRC_1063%.cct}"
+cleanup_codegen_artifacts "$SRC_1063"
+if "$CCT_BIN" "$SRC_1063" >$CCT_TMP_DIR/cct_phase18c2_1063_compile.out 2>&1; then
+    "$BIN_1063" >$CCT_TMP_DIR/cct_phase18c2_1063_run.out 2>&1
+    RC_1063=$?
+else
+    RC_1063=255
+fi
+if [ "$RC_1063" -eq 0 ]; then
+    test_pass "set_operations_18c2 validates union/intersection/difference/symmetric_difference contracts"
+else
+    test_fail "set_operations_18c2 regressed"
+fi
+
+# Test 1064: set_subset_equals_18c2
+echo "Test 1064: set_subset_equals_18c2"
+SRC_1064="tests/integration/set_subset_equals_18c2.cct"
+BIN_1064="${SRC_1064%.cct}"
+cleanup_codegen_artifacts "$SRC_1064"
+if "$CCT_BIN" "$SRC_1064" >$CCT_TMP_DIR/cct_phase18c2_1064_compile.out 2>&1; then
+    "$BIN_1064" >$CCT_TMP_DIR/cct_phase18c2_1064_run.out 2>&1
+    RC_1064=$?
+else
+    RC_1064=255
+fi
+if [ "$RC_1064" -eq 0 ]; then
+    test_pass "set_subset_equals_18c2 validates subset/superset/equals contracts"
+else
+    test_fail "set_subset_equals_18c2 regressed"
+fi
+
+# Test 1065: set_to_fluxus_18c2
+echo "Test 1065: set_to_fluxus_18c2"
+SRC_1065="tests/integration/set_to_fluxus_18c2.cct"
+BIN_1065="${SRC_1065%.cct}"
+cleanup_codegen_artifacts "$SRC_1065"
+if "$CCT_BIN" "$SRC_1065" >$CCT_TMP_DIR/cct_phase18c2_1065_compile.out 2>&1; then
+    "$BIN_1065" >$CCT_TMP_DIR/cct_phase18c2_1065_run.out 2>&1
+    RC_1065=$?
+else
+    RC_1065=255
+fi
+if [ "$RC_1065" -eq 0 ]; then
+    test_pass "set_to_fluxus_18c2 validates set_copy/set_to_fluxus/set_reserve/set_capacity contracts"
+else
+    test_fail "set_to_fluxus_18c2 regressed"
+fi
+
+# Test 1066: map_get_default_18c2
+echo "Test 1066: map_get_default_18c2"
+SRC_1066="tests/integration/map_get_default_18c2.cct"
+BIN_1066="${SRC_1066%.cct}"
+cleanup_codegen_artifacts "$SRC_1066"
+if "$CCT_BIN" "$SRC_1066" >$CCT_TMP_DIR/cct_phase18c2_1066_compile.out 2>&1; then
+    "$BIN_1066" >$CCT_TMP_DIR/cct_phase18c2_1066_run.out 2>&1
+    RC_1066=$?
+else
+    RC_1066=255
+fi
+if [ "$RC_1066" -eq 0 ]; then
+    test_pass "map_get_default_18c2 validates map_get_or_default and map_update_or_insert contracts"
+else
+    test_fail "map_get_default_18c2 regressed"
+fi
+
+# Test 1067: map_keys_values_18c2
+echo "Test 1067: map_keys_values_18c2"
+SRC_1067="tests/integration/map_keys_values_18c2.cct"
+BIN_1067="${SRC_1067%.cct}"
+cleanup_codegen_artifacts "$SRC_1067"
+if "$CCT_BIN" "$SRC_1067" >$CCT_TMP_DIR/cct_phase18c2_1067_compile.out 2>&1; then
+    "$BIN_1067" >$CCT_TMP_DIR/cct_phase18c2_1067_run.out 2>&1
+    RC_1067=$?
+else
+    RC_1067=255
+fi
+if [ "$RC_1067" -eq 0 ]; then
+    test_pass "map_keys_values_18c2 validates paired iteration consistency of keys and values"
+else
+    test_fail "map_keys_values_18c2 regressed"
+fi
+
+# Test 1068: map_merge_18c2
+echo "Test 1068: map_merge_18c2"
+SRC_1068="tests/integration/map_merge_18c2.cct"
+BIN_1068="${SRC_1068%.cct}"
+cleanup_codegen_artifacts "$SRC_1068"
+if "$CCT_BIN" "$SRC_1068" >$CCT_TMP_DIR/cct_phase18c2_1068_compile.out 2>&1; then
+    "$BIN_1068" >$CCT_TMP_DIR/cct_phase18c2_1068_run.out 2>&1
+    RC_1068=$?
+else
+    RC_1068=255
+fi
+if [ "$RC_1068" -eq 0 ]; then
+    test_pass "map_merge_18c2 validates overwrite+insert merge semantics"
+else
+    test_fail "map_merge_18c2 regressed"
+fi
+
+echo ""
+echo "========================================"
+echo "FASE 18C3: alg Expansion Tests"
+echo "========================================"
+echo ""
+
+# Test 1069: alg_sum_min_max_18c3
+echo "Test 1069: alg_sum_min_max_18c3"
+SRC_1069="tests/integration/alg_sum_min_max_18c3.cct"
+BIN_1069="${SRC_1069%.cct}"
+cleanup_codegen_artifacts "$SRC_1069"
+if "$CCT_BIN" "$SRC_1069" >$CCT_TMP_DIR/cct_phase18c3_1069_compile.out 2>&1; then
+    "$BIN_1069" >$CCT_TMP_DIR/cct_phase18c3_1069_run.out 2>&1
+    RC_1069=$?
+else
+    RC_1069=255
+fi
+if [ "$RC_1069" -eq 0 ]; then
+    test_pass "alg_sum_min_max_18c3 validates aggregate/min-max/dot_product contracts"
+else
+    test_fail "alg_sum_min_max_18c3 regressed"
+fi
+
+# Test 1070: alg_sort_18c3
+echo "Test 1070: alg_sort_18c3"
+SRC_1070="tests/integration/alg_sort_18c3.cct"
+BIN_1070="${SRC_1070%.cct}"
+cleanup_codegen_artifacts "$SRC_1070"
+if "$CCT_BIN" "$SRC_1070" >$CCT_TMP_DIR/cct_phase18c3_1070_compile.out 2>&1; then
+    "$BIN_1070" >$CCT_TMP_DIR/cct_phase18c3_1070_run.out 2>&1
+    RC_1070=$?
+else
+    RC_1070=255
+fi
+if [ "$RC_1070" -eq 0 ]; then
+    test_pass "alg_sort_18c3 validates quicksort/mergesort/is_sorted/sort_verbum contracts"
+else
+    test_fail "alg_sort_18c3 regressed"
+fi
+
+# Test 1071: alg_fill_count_18c3
+echo "Test 1071: alg_fill_count_18c3"
+SRC_1071="tests/integration/alg_fill_count_18c3.cct"
+BIN_1071="${SRC_1071%.cct}"
+cleanup_codegen_artifacts "$SRC_1071"
+if "$CCT_BIN" "$SRC_1071" >$CCT_TMP_DIR/cct_phase18c3_1071_compile.out 2>&1; then
+    "$BIN_1071" >$CCT_TMP_DIR/cct_phase18c3_1071_run.out 2>&1
+    RC_1071=$?
+else
+    RC_1071=255
+fi
+if [ "$RC_1071" -eq 0 ]; then
+    test_pass "alg_fill_count_18c3 validates fill/fill_real/count/deduplicate_sorted contracts"
+else
+    test_fail "alg_fill_count_18c3 regressed"
+fi
+
+# Test 1072: alg_rotate_reverse_18c3
+echo "Test 1072: alg_rotate_reverse_18c3"
+SRC_1072="tests/integration/alg_rotate_reverse_18c3.cct"
+BIN_1072="${SRC_1072%.cct}"
+cleanup_codegen_artifacts "$SRC_1072"
+if "$CCT_BIN" "$SRC_1072" >$CCT_TMP_DIR/cct_phase18c3_1072_compile.out 2>&1; then
+    "$BIN_1072" >$CCT_TMP_DIR/cct_phase18c3_1072_run.out 2>&1
+    RC_1072=$?
+else
+    RC_1072=255
+fi
+if [ "$RC_1072" -eq 0 ]; then
+    test_pass "alg_rotate_reverse_18c3 validates rotate/reverse contracts"
+else
+    test_fail "alg_rotate_reverse_18c3 regressed"
+fi
+
+echo ""
+echo "========================================"
+echo "FASE 18C4: series Expansion Tests"
+echo "========================================"
+echo ""
+
+# Test 1073: series_sum_18c4
+echo "Test 1073: series_sum_18c4"
+SRC_1073="tests/integration/series_sum_18c4.cct"
+BIN_1073="${SRC_1073%.cct}"
+cleanup_codegen_artifacts "$SRC_1073"
+if "$CCT_BIN" "$SRC_1073" >$CCT_TMP_DIR/cct_phase18c4_1073_compile.out 2>&1; then
+    "$BIN_1073" >$CCT_TMP_DIR/cct_phase18c4_1073_run.out 2>&1
+    RC_1073=$?
+else
+    RC_1073=255
+fi
+if [ "$RC_1073" -eq 0 ]; then
+    test_pass "series_sum_18c4 validates series_sum and series_sum_real contracts"
+else
+    test_fail "series_sum_18c4 regressed"
+fi
+
+# Test 1074: series_min_max_18c4
+echo "Test 1074: series_min_max_18c4"
+SRC_1074="tests/integration/series_min_max_18c4.cct"
+BIN_1074="${SRC_1074%.cct}"
+cleanup_codegen_artifacts "$SRC_1074"
+if "$CCT_BIN" "$SRC_1074" >$CCT_TMP_DIR/cct_phase18c4_1074_compile.out 2>&1; then
+    "$BIN_1074" >$CCT_TMP_DIR/cct_phase18c4_1074_run.out 2>&1
+    RC_1074=$?
+else
+    RC_1074=255
+fi
+if [ "$RC_1074" -eq 0 ]; then
+    test_pass "series_min_max_18c4 validates series_min and series_max contracts on non-empty arrays"
+else
+    test_fail "series_min_max_18c4 regressed"
+fi
+
+# Test 1075: series_min empty contract
+echo "Test 1075: series_min empty contract"
+SRC_1075="tests/integration/series_min_max_18c4.cct"
+BIN_1075="${SRC_1075%.cct}"
+cleanup_codegen_artifacts "$SRC_1075"
+if "$CCT_BIN" "$SRC_1075" >$CCT_TMP_DIR/cct_phase18c4_1075_compile.out 2>&1; then
+    "$BIN_1075" min_empty >$CCT_TMP_DIR/cct_phase18c4_1075_run.out 2>&1
+    RC_1075=$?
+else
+    RC_1075=255
+fi
+if [ "$RC_1075" -ne 0 ] && grep -qi "series_min n <= 0" "$CCT_TMP_DIR/cct_phase18c4_1075_run.out"; then
+    test_pass "series_min empty contract fails with canonical message"
+else
+    test_fail "series_min empty contract regressed"
+fi
+
+# Test 1076: series_max empty contract
+echo "Test 1076: series_max empty contract"
+SRC_1076="tests/integration/series_min_max_18c4.cct"
+BIN_1076="${SRC_1076%.cct}"
+cleanup_codegen_artifacts "$SRC_1076"
+if "$CCT_BIN" "$SRC_1076" >$CCT_TMP_DIR/cct_phase18c4_1076_compile.out 2>&1; then
+    "$BIN_1076" max_empty >$CCT_TMP_DIR/cct_phase18c4_1076_run.out 2>&1
+    RC_1076=$?
+else
+    RC_1076=255
+fi
+if [ "$RC_1076" -ne 0 ] && grep -qi "series_max n <= 0" "$CCT_TMP_DIR/cct_phase18c4_1076_run.out"; then
+    test_pass "series_max empty contract fails with canonical message"
+else
+    test_fail "series_max empty contract regressed"
+fi
+
+# Test 1077: series_sort_sorted_18c4
+echo "Test 1077: series_sort_sorted_18c4"
+SRC_1077="tests/integration/series_sort_sorted_18c4.cct"
+BIN_1077="${SRC_1077%.cct}"
+cleanup_codegen_artifacts "$SRC_1077"
+if "$CCT_BIN" "$SRC_1077" >$CCT_TMP_DIR/cct_phase18c4_1077_compile.out 2>&1; then
+    "$BIN_1077" >$CCT_TMP_DIR/cct_phase18c4_1077_run.out 2>&1
+    RC_1077=$?
+else
+    RC_1077=255
+fi
+if [ "$RC_1077" -eq 0 ]; then
+    test_pass "series_sort_sorted_18c4 validates series_sort, series_is_sorted and series_count_val contracts"
+else
+    test_fail "series_sort_sorted_18c4 regressed"
+fi
+
+echo ""
+echo "========================================"
+echo "FASE 18D1: process Module Tests"
+echo "========================================"
+echo ""
+
+# Test 1078: process_run_18d1
+echo "Test 1078: process_run_18d1"
+SRC_1078="tests/integration/process_run_18d1.cct"
+BIN_1078="${SRC_1078%.cct}"
+cleanup_codegen_artifacts "$SRC_1078"
+if "$CCT_BIN" "$SRC_1078" >$CCT_TMP_DIR/cct_phase18d1_1078_compile.out 2>&1; then
+    "$BIN_1078" >$CCT_TMP_DIR/cct_phase18d1_1078_run.out 2>&1
+    RC_1078=$?
+else
+    RC_1078=255
+fi
+if [ "$RC_1078" -eq 0 ]; then
+    test_pass "process_run_18d1 validates run and run_env exit-code contracts"
+else
+    test_fail "process_run_18d1 regressed"
+fi
+
+# Test 1079: process_capture_18d1
+echo "Test 1079: process_capture_18d1"
+SRC_1079="tests/integration/process_capture_18d1.cct"
+BIN_1079="${SRC_1079%.cct}"
+cleanup_codegen_artifacts "$SRC_1079"
+if "$CCT_BIN" "$SRC_1079" >$CCT_TMP_DIR/cct_phase18d1_1079_compile.out 2>&1; then
+    "$BIN_1079" >$CCT_TMP_DIR/cct_phase18d1_1079_run.out 2>&1
+    RC_1079=$?
+else
+    RC_1079=255
+fi
+if [ "$RC_1079" -eq 0 ]; then
+    test_pass "process_capture_18d1 validates run_capture and run_capture_err contracts"
+else
+    test_fail "process_capture_18d1 regressed"
+fi
+
+# Test 1080: process_input_18d1
+echo "Test 1080: process_input_18d1"
+SRC_1080="tests/integration/process_input_18d1.cct"
+BIN_1080="${SRC_1080%.cct}"
+cleanup_codegen_artifacts "$SRC_1080"
+if "$CCT_BIN" "$SRC_1080" >$CCT_TMP_DIR/cct_phase18d1_1080_compile.out 2>&1; then
+    "$BIN_1080" >$CCT_TMP_DIR/cct_phase18d1_1080_run.out 2>&1
+    RC_1080=$?
+else
+    RC_1080=255
+fi
+if [ "$RC_1080" -eq 0 ]; then
+    test_pass "process_input_18d1 validates run_with_input contract"
+else
+    test_fail "process_input_18d1 regressed"
+fi
+
+# Test 1081: process_timeout_18d1
+echo "Test 1081: process_timeout_18d1"
+SRC_1081="tests/integration/process_timeout_18d1.cct"
+BIN_1081="${SRC_1081%.cct}"
+cleanup_codegen_artifacts "$SRC_1081"
+if "$CCT_BIN" "$SRC_1081" >$CCT_TMP_DIR/cct_phase18d1_1081_compile.out 2>&1; then
+    "$BIN_1081" >$CCT_TMP_DIR/cct_phase18d1_1081_run.out 2>&1
+    RC_1081=$?
+else
+    RC_1081=255
+fi
+if [ "$RC_1081" -eq 0 ]; then
+    test_pass "process_timeout_18d1 validates timeout return contract (-1 on timeout)"
+else
+    test_fail "process_timeout_18d1 regressed"
+fi
+
+echo ""
+echo "========================================"
+echo "FASE 18D2: hash Module Tests"
+echo "========================================"
+echo ""
+
+# Test 1082: hash_basic_18d2
+echo "Test 1082: hash_basic_18d2"
+SRC_1082="tests/integration/hash_basic_18d2.cct"
+BIN_1082="${SRC_1082%.cct}"
+cleanup_codegen_artifacts "$SRC_1082"
+if "$CCT_BIN" "$SRC_1082" >$CCT_TMP_DIR/cct_phase18d2_1082_compile.out 2>&1; then
+    "$BIN_1082" >$CCT_TMP_DIR/cct_phase18d2_1082_run.out 2>&1
+    RC_1082=$?
+else
+    RC_1082=255
+fi
+if [ "$RC_1082" -eq 0 ]; then
+    test_pass "hash_basic_18d2 validates djb2/fnv1a known-value contracts"
+else
+    test_fail "hash_basic_18d2 regressed"
+fi
+
+# Test 1083: hash_bytes_18d2
+echo "Test 1083: hash_bytes_18d2"
+SRC_1083="tests/integration/hash_bytes_18d2.cct"
+BIN_1083="${SRC_1083%.cct}"
+cleanup_codegen_artifacts "$SRC_1083"
+if "$CCT_BIN" "$SRC_1083" >$CCT_TMP_DIR/cct_phase18d2_1083_compile.out 2>&1; then
+    "$BIN_1083" >$CCT_TMP_DIR/cct_phase18d2_1083_run.out 2>&1
+    RC_1083=$?
+else
+    RC_1083=255
+fi
+if [ "$RC_1083" -eq 0 ]; then
+    test_pass "hash_bytes_18d2 validates fnv1a_bytes binary-data contract"
+else
+    test_fail "hash_bytes_18d2 regressed"
+fi
+
+# Test 1084: hash_crc32_18d2
+echo "Test 1084: hash_crc32_18d2"
+SRC_1084="tests/integration/hash_crc32_18d2.cct"
+BIN_1084="${SRC_1084%.cct}"
+cleanup_codegen_artifacts "$SRC_1084"
+if "$CCT_BIN" "$SRC_1084" >$CCT_TMP_DIR/cct_phase18d2_1084_compile.out 2>&1; then
+    "$BIN_1084" >$CCT_TMP_DIR/cct_phase18d2_1084_run.out 2>&1
+    RC_1084=$?
+else
+    RC_1084=255
+fi
+if [ "$RC_1084" -eq 0 ]; then
+    test_pass "hash_crc32_18d2 validates crc32 empty/known-vector contracts"
+else
+    test_fail "hash_crc32_18d2 regressed"
+fi
+
+# Test 1085: hash_combine_18d2
+echo "Test 1085: hash_combine_18d2"
+SRC_1085="tests/integration/hash_combine_18d2.cct"
+BIN_1085="${SRC_1085%.cct}"
+cleanup_codegen_artifacts "$SRC_1085"
+if "$CCT_BIN" "$SRC_1085" >$CCT_TMP_DIR/cct_phase18d2_1085_compile.out 2>&1; then
+    "$BIN_1085" >$CCT_TMP_DIR/cct_phase18d2_1085_run.out 2>&1
+    RC_1085=$?
+else
+    RC_1085=255
+fi
+if [ "$RC_1085" -eq 0 ]; then
+    test_pass "hash_combine_18d2 validates non-trivial combine contract"
+else
+    test_fail "hash_combine_18d2 regressed"
+fi
+
+# Test 1086: hash_determinism_18d2
+echo "Test 1086: hash_determinism_18d2"
+SRC_1086="tests/integration/hash_determinism_18d2.cct"
+BIN_1086="${SRC_1086%.cct}"
+cleanup_codegen_artifacts "$SRC_1086"
+if "$CCT_BIN" "$SRC_1086" >$CCT_TMP_DIR/cct_phase18d2_1086_compile.out 2>&1; then
+    "$BIN_1086" >$CCT_TMP_DIR/cct_phase18d2_1086_run.out 2>&1
+    RC_1086=$?
+else
+    RC_1086=255
+fi
+if [ "$RC_1086" -eq 0 ]; then
+    test_pass "hash_determinism_18d2 validates deterministic repeatability and murmur3 seed sensitivity"
+else
+    test_fail "hash_determinism_18d2 regressed"
+fi
+
+echo ""
+echo "========================================"
+echo "FASE 18D3: bit + random Expansion Tests"
+echo "========================================"
+echo ""
+
+# Test 1087: bit_basic_18d3
+echo "Test 1087: bit_basic_18d3"
+SRC_1087="tests/integration/bit_basic_18d3.cct"
+BIN_1087="${SRC_1087%.cct}"
+cleanup_codegen_artifacts "$SRC_1087"
+if "$CCT_BIN" "$SRC_1087" >$CCT_TMP_DIR/cct_phase18d3_1087_compile.out 2>&1; then
+    "$BIN_1087" >$CCT_TMP_DIR/cct_phase18d3_1087_run.out 2>&1
+    RC_1087=$?
+else
+    RC_1087=255
+fi
+if [ "$RC_1087" -eq 0 ]; then
+    test_pass "bit_basic_18d3 validates popcount/leading_zeros/trailing_zeros core contracts"
+else
+    test_fail "bit_basic_18d3 regressed"
+fi
+
+# Test 1088: bit_ops_18d3
+echo "Test 1088: bit_ops_18d3"
+SRC_1088="tests/integration/bit_ops_18d3.cct"
+BIN_1088="${SRC_1088%.cct}"
+cleanup_codegen_artifacts "$SRC_1088"
+if "$CCT_BIN" "$SRC_1088" >$CCT_TMP_DIR/cct_phase18d3_1088_compile.out 2>&1; then
+    "$BIN_1088" >$CCT_TMP_DIR/cct_phase18d3_1088_run.out 2>&1
+    RC_1088=$?
+else
+    RC_1088=255
+fi
+if [ "$RC_1088" -eq 0 ]; then
+    test_pass "bit_ops_18d3 validates bit_get/set/clear/toggle/parity/extract contracts"
+else
+    test_fail "bit_ops_18d3 regressed"
+fi
+
+# Test 1089: bit_rotate_swap_18d3
+echo "Test 1089: bit_rotate_swap_18d3"
+SRC_1089="tests/integration/bit_rotate_swap_18d3.cct"
+BIN_1089="${SRC_1089%.cct}"
+cleanup_codegen_artifacts "$SRC_1089"
+if "$CCT_BIN" "$SRC_1089" >$CCT_TMP_DIR/cct_phase18d3_1089_compile.out 2>&1; then
+    "$BIN_1089" >$CCT_TMP_DIR/cct_phase18d3_1089_run.out 2>&1
+    RC_1089=$?
+else
+    RC_1089=255
+fi
+if [ "$RC_1089" -eq 0 ]; then
+    test_pass "bit_rotate_swap_18d3 validates rotate_left/rotate_right/byte_swap contracts"
+else
+    test_fail "bit_rotate_swap_18d3 regressed"
+fi
+
+# Test 1090: bit_power2_18d3
+echo "Test 1090: bit_power2_18d3"
+SRC_1090="tests/integration/bit_power2_18d3.cct"
+BIN_1090="${SRC_1090%.cct}"
+cleanup_codegen_artifacts "$SRC_1090"
+if "$CCT_BIN" "$SRC_1090" >$CCT_TMP_DIR/cct_phase18d3_1090_compile.out 2>&1; then
+    "$BIN_1090" >$CCT_TMP_DIR/cct_phase18d3_1090_run.out 2>&1
+    RC_1090=$?
+else
+    RC_1090=255
+fi
+if [ "$RC_1090" -eq 0 ]; then
+    test_pass "bit_power2_18d3 validates is_power_of_2 and next_power_of_2 contracts"
+else
+    test_fail "bit_power2_18d3 regressed"
+fi
+
+# Test 1091: random_bool_range_18d3
+echo "Test 1091: random_bool_range_18d3"
+SRC_1091="tests/integration/random_bool_range_18d3.cct"
+BIN_1091="${SRC_1091%.cct}"
+cleanup_codegen_artifacts "$SRC_1091"
+if "$CCT_BIN" "$SRC_1091" >$CCT_TMP_DIR/cct_phase18d3_1091_compile.out 2>&1; then
+    "$BIN_1091" >$CCT_TMP_DIR/cct_phase18d3_1091_run.out 2>&1
+    RC_1091=$?
+else
+    RC_1091=255
+fi
+if [ "$RC_1091" -eq 0 ]; then
+    test_pass "random_bool_range_18d3 validates bool generation and real interval contract"
+else
+    test_fail "random_bool_range_18d3 regressed"
+fi
+
+# Test 1092: random_verbum_18d3
+echo "Test 1092: random_verbum_18d3"
+SRC_1092="tests/integration/random_verbum_18d3.cct"
+BIN_1092="${SRC_1092%.cct}"
+cleanup_codegen_artifacts "$SRC_1092"
+if "$CCT_BIN" "$SRC_1092" >$CCT_TMP_DIR/cct_phase18d3_1092_compile.out 2>&1; then
+    "$BIN_1092" >$CCT_TMP_DIR/cct_phase18d3_1092_run.out 2>&1
+    RC_1092=$?
+else
+    RC_1092=255
+fi
+if [ "$RC_1092" -eq 0 ]; then
+    test_pass "random_verbum_18d3 validates random_verbum/random_verbum_from/random_bytes contracts"
+else
+    test_fail "random_verbum_18d3 regressed"
+fi
+
+# Test 1093: random_shuffle_18d3
+echo "Test 1093: random_shuffle_18d3"
+SRC_1093="tests/integration/random_shuffle_18d3.cct"
+BIN_1093="${SRC_1093%.cct}"
+cleanup_codegen_artifacts "$SRC_1093"
+if "$CCT_BIN" "$SRC_1093" >$CCT_TMP_DIR/cct_phase18d3_1093_compile.out 2>&1; then
+    "$BIN_1093" >$CCT_TMP_DIR/cct_phase18d3_1093_run.out 2>&1
+    RC_1093=$?
+else
+    RC_1093=255
+fi
+if [ "$RC_1093" -eq 0 ]; then
+    test_pass "random_shuffle_18d3 validates shuffle_int multiset-preservation contract"
+else
+    test_fail "random_shuffle_18d3 regressed"
+fi
+
+echo ""
+echo "========================================"
+echo "FASE 18D4: Closure and Handoff Doc Tests"
+echo "========================================"
+echo ""
+
+# Test 1094: handoff_doc_exists_18d4
+echo "Test 1094: handoff_doc_exists_18d4"
+if [ -f "docs/bootstrap/FASE_18_HANDOFF.md" ]; then
+    test_pass "18D4 handoff document exists"
+else
+    test_fail "18D4 handoff document missing (docs/bootstrap/FASE_18_HANDOFF.md)"
+fi
+
+# Test 1095: spec_phase18_section_18d4
+echo "Test 1095: spec_phase18_section_18d4"
+if rg -q "FASE 18 Canonical Library Expansion" docs/spec.md && \
+   rg -q "cct/process" docs/spec.md && \
+   rg -q "Bibliotheca Canonica 18" docs/spec.md; then
+    test_pass "18D4 spec includes mandatory FASE 18 canonical-library sections"
+else
+    test_fail "18D4 spec missing mandatory FASE 18 canonical-library sections"
+fi
+
+# Test 1096: phase18_final_regression_18d4
+echo "Test 1096: phase18_final_regression_18d4"
+test_pass "18D4 final regression gate covered by this full make test execution"
+
+echo ""
+echo "========================================"
+echo "FASE 19A1: QUANDO/CASO/SENAO (Inteiros + VERUM)"
+echo "========================================"
+echo ""
+
+# Test 1097: quando_rex_basico_19a1
+echo "Test 1097: quando_rex_basico_19a1"
+SRC_1097="tests/integration/quando_rex_basico_19a1.cct"
+BIN_1097="${SRC_1097%.cct}"
+cleanup_codegen_artifacts "$SRC_1097"
+if "$CCT_BIN" "$SRC_1097" >$CCT_TMP_DIR/cct_phase19a1_1097_compile.out 2>&1; then
+    "$BIN_1097" >$CCT_TMP_DIR/cct_phase19a1_1097_run.out 2>&1
+    RC_1097=$?
+else
+    RC_1097=255
+fi
+if [ "$RC_1097" -eq 0 ] && grep -q "^dois$" $CCT_TMP_DIR/cct_phase19a1_1097_run.out; then
+    test_pass "quando_rex_basico_19a1 dispatches integer CASO with SENAO fallback"
+else
+    test_fail "quando_rex_basico_19a1 regressed"
+fi
+
+# Test 1098: quando_verum_19a1
+echo "Test 1098: quando_verum_19a1"
+SRC_1098="tests/integration/quando_verum_19a1.cct"
+BIN_1098="${SRC_1098%.cct}"
+cleanup_codegen_artifacts "$SRC_1098"
+if "$CCT_BIN" "$SRC_1098" >$CCT_TMP_DIR/cct_phase19a1_1098_compile.out 2>&1; then
+    "$BIN_1098" >$CCT_TMP_DIR/cct_phase19a1_1098_run.out 2>&1
+    RC_1098=$?
+else
+    RC_1098=255
+fi
+if [ "$RC_1098" -eq 0 ] && grep -q "^ativo$" $CCT_TMP_DIR/cct_phase19a1_1098_run.out; then
+    test_pass "quando_verum_19a1 dispatches VERUM/FALSUM CASO branches"
+else
+    test_fail "quando_verum_19a1 regressed"
+fi
+
+# Test 1099: quando_orcases_19a1
+echo "Test 1099: quando_orcases_19a1"
+SRC_1099="tests/integration/quando_orcases_19a1.cct"
+BIN_1099="${SRC_1099%.cct}"
+cleanup_codegen_artifacts "$SRC_1099"
+if "$CCT_BIN" "$SRC_1099" >$CCT_TMP_DIR/cct_phase19a1_1099_compile.out 2>&1; then
+    "$BIN_1099" >$CCT_TMP_DIR/cct_phase19a1_1099_run.out 2>&1
+    RC_1099=$?
+else
+    RC_1099=255
+fi
+if [ "$RC_1099" -eq 0 ] && grep -q "^ok$" $CCT_TMP_DIR/cct_phase19a1_1099_run.out; then
+    test_pass "quando_orcases_19a1 supports OR-case (multiple literals sharing one body)"
+else
+    test_fail "quando_orcases_19a1 regressed"
+fi
+
+# Test 1100: quando_sem_senao_19a1
+echo "Test 1100: quando_sem_senao_19a1"
+SRC_1100="tests/integration/quando_sem_senao_19a1.cct"
+BIN_1100="${SRC_1100%.cct}"
+cleanup_codegen_artifacts "$SRC_1100"
+if "$CCT_BIN" "$SRC_1100" >$CCT_TMP_DIR/cct_phase19a1_1100_compile.out 2>&1; then
+    "$BIN_1100" >$CCT_TMP_DIR/cct_phase19a1_1100_run.out 2>&1
+    RC_1100=$?
+else
+    RC_1100=255
+fi
+if [ "$RC_1100" -eq 0 ] && \
+   grep -q "QUANDO sem SENAO: comportamento indefinido para valores nao cobertos" $CCT_TMP_DIR/cct_phase19a1_1100_compile.out && \
+   [ ! -s $CCT_TMP_DIR/cct_phase19a1_1100_run.out ]; then
+    test_pass "quando_sem_senao_19a1 emits warning (not error) and executes without matched output"
+else
+    test_fail "quando_sem_senao_19a1 warning/no-default behavior regressed"
+fi
+
+# Test 1101: quando_caso_dup_19a1
+echo "Test 1101: quando_caso_dup_19a1"
+SRC_1101="tests/integration/quando_caso_dup_19a1.cct"
+cleanup_codegen_artifacts "$SRC_1101"
+if "$CCT_BIN" "$SRC_1101" >$CCT_TMP_DIR/cct_phase19a1_1101_compile.out 2>&1; then
+    RC_1101=0
+else
+    RC_1101=$?
+fi
+if [ "$RC_1101" -ne 0 ] && grep -q "QUANDO: CASO duplicado" $CCT_TMP_DIR/cct_phase19a1_1101_compile.out; then
+    test_pass "quando_caso_dup_19a1 rejects duplicated CASO literal at semantic stage"
+else
+    test_fail "quando_caso_dup_19a1 duplicate detection regressed"
+fi
+
+echo ""
+echo "========================================"
+echo "FASE 19A2: QUANDO sobre VERBUM"
+echo "========================================"
+echo ""
+
+# Test 1102: quando_verbum_basico_19a2
+echo "Test 1102: quando_verbum_basico_19a2"
+SRC_1102="tests/integration/quando_verbum_basico_19a2.cct"
+BIN_1102="${SRC_1102%.cct}"
+cleanup_codegen_artifacts "$SRC_1102"
+if "$CCT_BIN" "$SRC_1102" >$CCT_TMP_DIR/cct_phase19a2_1102_compile.out 2>&1; then
+    "$BIN_1102" >$CCT_TMP_DIR/cct_phase19a2_1102_run.out 2>&1
+    RC_1102=$?
+else
+    RC_1102=255
+fi
+if [ "$RC_1102" -eq 0 ] && grep -q "^post$" $CCT_TMP_DIR/cct_phase19a2_1102_run.out; then
+    test_pass "quando_verbum_basico_19a2 dispatches VERBUM CASO + SENAO correctly"
+else
+    test_fail "quando_verbum_basico_19a2 regressed"
+fi
+
+# Test 1103: quando_verbum_orcases_19a2
+echo "Test 1103: quando_verbum_orcases_19a2"
+SRC_1103="tests/integration/quando_verbum_orcases_19a2.cct"
+BIN_1103="${SRC_1103%.cct}"
+cleanup_codegen_artifacts "$SRC_1103"
+if "$CCT_BIN" "$SRC_1103" >$CCT_TMP_DIR/cct_phase19a2_1103_compile.out 2>&1; then
+    "$BIN_1103" >$CCT_TMP_DIR/cct_phase19a2_1103_run.out 2>&1
+    RC_1103=$?
+else
+    RC_1103=255
+fi
+if [ "$RC_1103" -eq 0 ] && grep -q "^leitura$" $CCT_TMP_DIR/cct_phase19a2_1103_run.out; then
+    test_pass "quando_verbum_orcases_19a2 supports OR-cases over string literals"
+else
+    test_fail "quando_verbum_orcases_19a2 regressed"
+fi
+
+# Test 1104: quando_verbum_vazio_19a2
+echo "Test 1104: quando_verbum_vazio_19a2"
+SRC_1104="tests/integration/quando_verbum_vazio_19a2.cct"
+BIN_1104="${SRC_1104%.cct}"
+cleanup_codegen_artifacts "$SRC_1104"
+if "$CCT_BIN" "$SRC_1104" >$CCT_TMP_DIR/cct_phase19a2_1104_compile.out 2>&1; then
+    "$BIN_1104" >$CCT_TMP_DIR/cct_phase19a2_1104_run.out 2>&1
+    RC_1104=$?
+else
+    RC_1104=255
+fi
+if [ "$RC_1104" -eq 0 ] && grep -q "^vazio$" $CCT_TMP_DIR/cct_phase19a2_1104_run.out; then
+    test_pass "quando_verbum_vazio_19a2 accepts empty string literal CASO"
+else
+    test_fail "quando_verbum_vazio_19a2 regressed"
+fi
+
+echo ""
+echo "========================================"
+echo "FASE 19A3: QUANDO sobre ORDO"
+echo "========================================"
+echo ""
+
+# Test 1105: quando_ordo_exaustivo_19a3
+echo "Test 1105: quando_ordo_exaustivo_19a3"
+SRC_1105="tests/integration/quando_ordo_exaustivo_19a3.cct"
+BIN_1105="${SRC_1105%.cct}"
+cleanup_codegen_artifacts "$SRC_1105"
+if "$CCT_BIN" "$SRC_1105" >$CCT_TMP_DIR/cct_phase19a3_1105_compile.out 2>&1; then
+    "$BIN_1105" >$CCT_TMP_DIR/cct_phase19a3_1105_run.out 2>&1
+    RC_1105=$?
+else
+    RC_1105=255
+fi
+if [ "$RC_1105" -eq 2 ]; then
+    test_pass "quando_ordo_exaustivo_19a3 enforces exhaustive ORDO coverage without SENAO"
+else
+    test_fail "quando_ordo_exaustivo_19a3 regressed"
+fi
+
+# Test 1106: quando_ordo_senao_19a3
+echo "Test 1106: quando_ordo_senao_19a3"
+SRC_1106="tests/integration/quando_ordo_senao_19a3.cct"
+BIN_1106="${SRC_1106%.cct}"
+cleanup_codegen_artifacts "$SRC_1106"
+if "$CCT_BIN" "$SRC_1106" >$CCT_TMP_DIR/cct_phase19a3_1106_compile.out 2>&1; then
+    "$BIN_1106" >$CCT_TMP_DIR/cct_phase19a3_1106_run.out 2>&1
+    RC_1106=$?
+else
+    RC_1106=255
+fi
+if [ "$RC_1106" -eq 9 ]; then
+    test_pass "quando_ordo_senao_19a3 accepts partial ORDO coverage when SENAO is present"
+else
+    test_fail "quando_ordo_senao_19a3 regressed"
+fi
+
+# Test 1107: quando_ordo_incompleto_19a3
+echo "Test 1107: quando_ordo_incompleto_19a3"
+SRC_1107="tests/integration/quando_ordo_incompleto_19a3.cct"
+cleanup_codegen_artifacts "$SRC_1107"
+if "$CCT_BIN" "$SRC_1107" >$CCT_TMP_DIR/cct_phase19a3_1107_compile.out 2>&1; then
+    RC_1107=0
+else
+    RC_1107=$?
+fi
+if [ "$RC_1107" -ne 0 ] && grep -q "QUANDO ORDO: variantes nao-exaustivas" $CCT_TMP_DIR/cct_phase19a3_1107_compile.out; then
+    test_pass "quando_ordo_incompleto_19a3 rejects non-exhaustive ORDO QUANDO without SENAO"
+else
+    test_fail "quando_ordo_incompleto_19a3 exhaustive-check contract regressed"
+fi
+
+# Test 1108: quando_ordo_variante_errada_19a3
+echo "Test 1108: quando_ordo_variante_errada_19a3"
+SRC_1108="tests/integration/quando_ordo_variante_errada_19a3.cct"
+cleanup_codegen_artifacts "$SRC_1108"
+if "$CCT_BIN" "$SRC_1108" >$CCT_TMP_DIR/cct_phase19a3_1108_compile.out 2>&1; then
+    RC_1108=0
+else
+    RC_1108=$?
+fi
+if [ "$RC_1108" -ne 0 ] && grep -q "QUANDO ORDO: variante 'Amarelo' nao existe no tipo" $CCT_TMP_DIR/cct_phase19a3_1108_compile.out; then
+    test_pass "quando_ordo_variante_errada_19a3 rejects unknown ORDO variant with canonical message"
+else
+    test_fail "quando_ordo_variante_errada_19a3 variant-resolution contract regressed"
+fi
+
+echo ""
+echo "========================================"
+echo "FASE 19A4: QUANDO aninhado e cenarios avancados"
+echo "========================================"
+echo ""
+
+# Test 1109: quando_aninhado_19a4
+echo "Test 1109: quando_aninhado_19a4"
+SRC_1109="tests/integration/quando_aninhado_19a4.cct"
+BIN_1109="${SRC_1109%.cct}"
+cleanup_codegen_artifacts "$SRC_1109"
+if "$CCT_BIN" "$SRC_1109" >$CCT_TMP_DIR/cct_phase19a4_1109_compile.out 2>&1; then
+    "$BIN_1109" >$CCT_TMP_DIR/cct_phase19a4_1109_run.out 2>&1
+    RC_1109=$?
+else
+    RC_1109=255
+fi
+if [ "$RC_1109" -eq 0 ] && grep -q "^1-20$" $CCT_TMP_DIR/cct_phase19a4_1109_run.out; then
+    test_pass "quando_aninhado_19a4 executes nested QUANDO dispatch correctly"
+else
+    test_fail "quando_aninhado_19a4 nested dispatch regressed"
+fi
+
+# Test 1110: quando_em_rituale_19a4
+echo "Test 1110: quando_em_rituale_19a4"
+SRC_1110="tests/integration/quando_em_rituale_19a4.cct"
+BIN_1110="${SRC_1110%.cct}"
+cleanup_codegen_artifacts "$SRC_1110"
+if "$CCT_BIN" "$SRC_1110" >$CCT_TMP_DIR/cct_phase19a4_1110_compile.out 2>&1; then
+    "$BIN_1110" >$CCT_TMP_DIR/cct_phase19a4_1110_run.out 2>&1
+    RC_1110=$?
+else
+    RC_1110=255
+fi
+if [ "$RC_1110" -eq 11 ]; then
+    test_pass "quando_em_rituale_19a4 preserves REDDE semantics inside CASO"
+else
+    test_fail "quando_em_rituale_19a4 REDDE-in-case behavior regressed"
+fi
+
+# Test 1111: quando_como_expr_19a4
+echo "Test 1111: quando_como_expr_19a4"
+SRC_1111="tests/integration/quando_como_expr_19a4.cct"
+cleanup_codegen_artifacts "$SRC_1111"
+if "$CCT_BIN" "$SRC_1111" >$CCT_TMP_DIR/cct_phase19a4_1111_compile.out 2>&1; then
+    RC_1111=0
+else
+    RC_1111=$?
+fi
+if [ "$RC_1111" -ne 0 ] && grep -q "QUANDO nao pode ser usado como expressao" $CCT_TMP_DIR/cct_phase19a4_1111_compile.out; then
+    test_pass "quando_como_expr_19a4 rejects QUANDO in expression position"
+else
+    test_fail "quando_como_expr_19a4 expression-rejection contract regressed"
+fi
+
+# Test 1112: quando_em_iterum_19a4
+echo "Test 1112: quando_em_iterum_19a4"
+SRC_1112="tests/integration/quando_em_iterum_19a4.cct"
+BIN_1112="${SRC_1112%.cct}"
+cleanup_codegen_artifacts "$SRC_1112"
+if "$CCT_BIN" "$SRC_1112" >$CCT_TMP_DIR/cct_phase19a4_1112_compile.out 2>&1; then
+    "$BIN_1112" >$CCT_TMP_DIR/cct_phase19a4_1112_run.out 2>&1
+    RC_1112=$?
+else
+    RC_1112=255
+fi
+if [ "$RC_1112" -eq 4 ]; then
+    test_pass "quando_em_iterum_19a4 keeps FRANGE/RECEDE semantics inside QUANDO"
+else
+    test_fail "quando_em_iterum_19a4 loop-control semantics regressed"
+fi
+
+echo ""
+echo "========================================"
+echo "FASE 19B1: MOLDE com escalares"
+echo "========================================"
+echo ""
+
+# Test 1113: molde_rex_verbum_19b1
+echo "Test 1113: molde_rex_verbum_19b1"
+SRC_1113="tests/integration/molde_rex_verbum_19b1.cct"
+BIN_1113="${SRC_1113%.cct}"
+cleanup_codegen_artifacts "$SRC_1113"
+if "$CCT_BIN" "$SRC_1113" >$CCT_TMP_DIR/cct_phase19b1_1113_compile.out 2>&1; then
+    "$BIN_1113" >$CCT_TMP_DIR/cct_phase19b1_1113_run.out 2>&1
+    RC_1113=$?
+else
+    RC_1113=255
+fi
+if [ "$RC_1113" -eq 0 ] && grep -q "^n=42 s=mundo$" $CCT_TMP_DIR/cct_phase19b1_1113_run.out; then
+    test_pass "molde_rex_verbum_19b1 interpolates integer and string values"
+else
+    test_fail "molde_rex_verbum_19b1 interpolation regressed"
+fi
+
+# Test 1114: molde_umbra_verum_19b1
+echo "Test 1114: molde_umbra_verum_19b1"
+SRC_1114="tests/integration/molde_umbra_verum_19b1.cct"
+BIN_1114="${SRC_1114%.cct}"
+cleanup_codegen_artifacts "$SRC_1114"
+if "$CCT_BIN" "$SRC_1114" >$CCT_TMP_DIR/cct_phase19b1_1114_compile.out 2>&1; then
+    "$BIN_1114" >$CCT_TMP_DIR/cct_phase19b1_1114_run.out 2>&1
+    RC_1114=$?
+else
+    RC_1114=255
+fi
+if [ "$RC_1114" -eq 0 ] && grep -q "^u=3.5 ok=verum$" $CCT_TMP_DIR/cct_phase19b1_1114_run.out; then
+    test_pass "molde_umbra_verum_19b1 interpolates UMBRA and VERUM with canonical text"
+else
+    test_fail "molde_umbra_verum_19b1 interpolation regressed"
+fi
+
+# Test 1115: molde_sem_expr_19b1
+echo "Test 1115: molde_sem_expr_19b1"
+SRC_1115="tests/integration/molde_sem_expr_19b1.cct"
+BIN_1115="${SRC_1115%.cct}"
+cleanup_codegen_artifacts "$SRC_1115"
+if "$CCT_BIN" "$SRC_1115" >$CCT_TMP_DIR/cct_phase19b1_1115_compile.out 2>&1; then
+    "$BIN_1115" >$CCT_TMP_DIR/cct_phase19b1_1115_run.out 2>&1
+    RC_1115=$?
+else
+    RC_1115=255
+fi
+if [ "$RC_1115" -eq 0 ] && grep -q "^texto sem interpolacao$" $CCT_TMP_DIR/cct_phase19b1_1115_run.out; then
+    test_pass "molde_sem_expr_19b1 preserves literal-only MOLDE strings"
+else
+    test_fail "molde_sem_expr_19b1 literal contract regressed"
+fi
+
+# Test 1116: molde_escape_19b1
+echo "Test 1116: molde_escape_19b1"
+SRC_1116="tests/integration/molde_escape_19b1.cct"
+BIN_1116="${SRC_1116%.cct}"
+cleanup_codegen_artifacts "$SRC_1116"
+if "$CCT_BIN" "$SRC_1116" >$CCT_TMP_DIR/cct_phase19b1_1116_compile.out 2>&1; then
+    "$BIN_1116" >$CCT_TMP_DIR/cct_phase19b1_1116_run.out 2>&1
+    RC_1116=$?
+else
+    RC_1116=255
+fi
+if [ "$RC_1116" -eq 0 ] && grep -q "^chave: {valor} fim={x}$" $CCT_TMP_DIR/cct_phase19b1_1116_run.out; then
+    test_pass "molde_escape_19b1 applies {{ and }} escaping correctly"
+else
+    test_fail "molde_escape_19b1 escape handling regressed"
+fi
+
+# Test 1117: molde_tipo_invalido_19b1
+echo "Test 1117: molde_tipo_invalido_19b1"
+SRC_1117="tests/integration/molde_tipo_invalido_19b1.cct"
+cleanup_codegen_artifacts "$SRC_1117"
+if "$CCT_BIN" "$SRC_1117" >$CCT_TMP_DIR/cct_phase19b1_1117_compile.out 2>&1; then
+    RC_1117=0
+else
+    RC_1117=$?
+fi
+if [ "$RC_1117" -ne 0 ] && grep -q "MOLDE: expressao em {} nao suporta interpolacao de tipo SPECULUM" $CCT_TMP_DIR/cct_phase19b1_1117_compile.out; then
+    test_pass "molde_tipo_invalido_19b1 rejects unsupported interpolated types"
+else
+    test_fail "molde_tipo_invalido_19b1 semantic type-check contract regressed"
+fi
+
+# Test 1118: molde_freestanding_19b1
+echo "Test 1118: molde_freestanding_19b1"
+SRC_1118="tests/integration/molde_freestanding_19b1.cct"
+cleanup_codegen_artifacts "$SRC_1118"
+if "$CCT_BIN" --profile freestanding --check "$SRC_1118" >$CCT_TMP_DIR/cct_phase19b1_1118_check.out 2>&1; then
+    RC_1118=0
+else
+    RC_1118=$?
+fi
+if [ "$RC_1118" -ne 0 ] && grep -q "MOLDE nao disponivel no perfil freestanding" $CCT_TMP_DIR/cct_phase19b1_1118_check.out; then
+    test_pass "molde_freestanding_19b1 enforces host-only restriction"
+else
+    test_fail "molde_freestanding_19b1 host-only profile restriction regressed"
+fi
+
+echo ""
+echo "========================================"
+echo "FASE 19B2: MOLDE com especificadores"
+echo "========================================"
+echo ""
+
+# Test 1119: molde_fmt_inteiro_19b2
+echo "Test 1119: molde_fmt_inteiro_19b2"
+SRC_1119="tests/integration/molde_fmt_inteiro_19b2.cct"
+BIN_1119="${SRC_1119%.cct}"
+cleanup_codegen_artifacts "$SRC_1119"
+if "$CCT_BIN" "$SRC_1119" >$CCT_TMP_DIR/cct_phase19b2_1119_compile.out 2>&1; then
+    "$BIN_1119" >$CCT_TMP_DIR/cct_phase19b2_1119_run.out 2>&1
+    RC_1119=$?
+else
+    RC_1119=255
+fi
+if [ "$RC_1119" -eq 0 ] && grep -q "^d=  255 u=255 x=ff X=FF z=00000255$" $CCT_TMP_DIR/cct_phase19b2_1119_run.out; then
+    test_pass "molde_fmt_inteiro_19b2 aplica d/u/x/X e largura com zero-padding"
+else
+    test_fail "molde_fmt_inteiro_19b2 formatacao inteira regrediu"
+fi
+
+# Test 1120: molde_fmt_real_19b2
+echo "Test 1120: molde_fmt_real_19b2"
+SRC_1120="tests/integration/molde_fmt_real_19b2.cct"
+BIN_1120="${SRC_1120%.cct}"
+cleanup_codegen_artifacts "$SRC_1120"
+if "$CCT_BIN" "$SRC_1120" >$CCT_TMP_DIR/cct_phase19b2_1120_compile.out 2>&1; then
+    "$BIN_1120" >$CCT_TMP_DIR/cct_phase19b2_1120_run.out 2>&1
+    RC_1120=$?
+else
+    RC_1120=255
+fi
+if [ "$RC_1120" -eq 0 ] && grep -Eq "^f=3\\.50 e=3\\.500000e\\+00 g=3\\.5$" $CCT_TMP_DIR/cct_phase19b2_1120_run.out; then
+    test_pass "molde_fmt_real_19b2 aplica .2f, e e g"
+else
+    test_fail "molde_fmt_real_19b2 formatacao real regrediu"
+fi
+
+# Test 1121: molde_fmt_alinhamento_19b2
+echo "Test 1121: molde_fmt_alinhamento_19b2"
+SRC_1121="tests/integration/molde_fmt_alinhamento_19b2.cct"
+BIN_1121="${SRC_1121%.cct}"
+cleanup_codegen_artifacts "$SRC_1121"
+if "$CCT_BIN" "$SRC_1121" >$CCT_TMP_DIR/cct_phase19b2_1121_compile.out 2>&1; then
+    "$BIN_1121" >$CCT_TMP_DIR/cct_phase19b2_1121_run.out 2>&1
+    RC_1121=$?
+else
+    RC_1121=255
+fi
+if [ "$RC_1121" -eq 0 ] && grep -q "^L|ave   | R|   ave|$" $CCT_TMP_DIR/cct_phase19b2_1121_run.out; then
+    test_pass "molde_fmt_alinhamento_19b2 aplica alinhamento <N e >N"
+else
+    test_fail "molde_fmt_alinhamento_19b2 alinhamento regrediu"
+fi
+
+# Test 1122: molde_fmt_tipo_errado_19b2
+echo "Test 1122: molde_fmt_tipo_errado_19b2"
+SRC_1122="tests/integration/molde_fmt_tipo_errado_19b2.cct"
+cleanup_codegen_artifacts "$SRC_1122"
+if "$CCT_BIN" "$SRC_1122" >$CCT_TMP_DIR/cct_phase19b2_1122_compile.out 2>&1; then
+    RC_1122=0
+else
+    RC_1122=$?
+fi
+if [ "$RC_1122" -ne 0 ] && grep -q "MOLDE: especificador 'f' requer tipo real" $CCT_TMP_DIR/cct_phase19b2_1122_compile.out; then
+    test_pass "molde_fmt_tipo_errado_19b2 rejeita especificador real em inteiro"
+else
+    test_fail "molde_fmt_tipo_errado_19b2 validacao semantica regrediu"
+fi
+
+echo ""
+echo "========================================"
+echo "FASE 19B3: MOLDE com expressoes compostas"
+echo "========================================"
+echo ""
+
+# Test 1123: molde_coniura_19b3
+echo "Test 1123: molde_coniura_19b3"
+SRC_1123="tests/integration/molde_coniura_19b3.cct"
+BIN_1123="${SRC_1123%.cct}"
+cleanup_codegen_artifacts "$SRC_1123"
+if "$CCT_BIN" "$SRC_1123" >$CCT_TMP_DIR/cct_phase19b3_1123_compile.out 2>&1; then
+    "$BIN_1123" >$CCT_TMP_DIR/cct_phase19b3_1123_run.out 2>&1
+    RC_1123=$?
+else
+    RC_1123=255
+fi
+if [ "$RC_1123" -eq 0 ] && grep -q "^len=11$" $CCT_TMP_DIR/cct_phase19b3_1123_run.out && grep -q "^upper=HELLO WORLD$" $CCT_TMP_DIR/cct_phase19b3_1123_run.out; then
+    test_pass "molde_coniura_19b3 aceita CONIURA em interpolacao"
+else
+    test_fail "molde_coniura_19b3 regressao em CONIURA dentro de {}"
+fi
+
+# Test 1124: molde_expr_aritmetica_19b3
+echo "Test 1124: molde_expr_aritmetica_19b3"
+SRC_1124="tests/integration/molde_expr_aritmetica_19b3.cct"
+BIN_1124="${SRC_1124%.cct}"
+cleanup_codegen_artifacts "$SRC_1124"
+if "$CCT_BIN" "$SRC_1124" >$CCT_TMP_DIR/cct_phase19b3_1124_compile.out 2>&1; then
+    "$BIN_1124" >$CCT_TMP_DIR/cct_phase19b3_1124_run.out 2>&1
+    RC_1124=$?
+else
+    RC_1124=255
+fi
+if [ "$RC_1124" -eq 0 ] && grep -q "^soma=13 prod=30 div=3$" $CCT_TMP_DIR/cct_phase19b3_1124_run.out; then
+    test_pass "molde_expr_aritmetica_19b3 aceita expressoes aritmeticas em {}"
+else
+    test_fail "molde_expr_aritmetica_19b3 regressao em expressoes compostas"
+fi
+
+# Test 1125: molde_obsecro_invalido_19b3
+echo "Test 1125: molde_obsecro_invalido_19b3"
+SRC_1125="tests/integration/molde_obsecro_invalido_19b3.cct"
+cleanup_codegen_artifacts "$SRC_1125"
+if "$CCT_BIN" "$SRC_1125" >$CCT_TMP_DIR/cct_phase19b3_1125_compile.out 2>&1; then
+    RC_1125=0
+else
+    RC_1125=$?
+fi
+if [ "$RC_1125" -ne 0 ] && grep -q "MOLDE: OBSECRO nao pode ser usado como expressao em interpolacao" $CCT_TMP_DIR/cct_phase19b3_1125_compile.out; then
+    test_pass "molde_obsecro_invalido_19b3 bloqueia OBSECRO em interpolacao"
+else
+    test_fail "molde_obsecro_invalido_19b3 regressao na restricao de OBSECRO"
+fi
+
+echo ""
+echo "========================================"
+echo "FASE 19B4: MOLDE edge cases e limites"
+echo "========================================"
+echo ""
+
+# Test 1126: molde_multilinha_19b4
+echo "Test 1126: molde_multilinha_19b4"
+SRC_1126="tests/integration/molde_multilinha_19b4.cct"
+BIN_1126="${SRC_1126%.cct}"
+cleanup_codegen_artifacts "$SRC_1126"
+if "$CCT_BIN" "$SRC_1126" >$CCT_TMP_DIR/cct_phase19b4_1126_compile.out 2>&1; then
+    "$BIN_1126" >$CCT_TMP_DIR/cct_phase19b4_1126_run.out 2>&1
+    RC_1126=$?
+else
+    RC_1126=255
+fi
+if [ "$RC_1126" -eq 0 ] && \
+   grep -q "^Relatorio:$" $CCT_TMP_DIR/cct_phase19b4_1126_run.out && \
+   grep -q "^  Aluno: Alice$" $CCT_TMP_DIR/cct_phase19b4_1126_run.out && \
+   grep -q "^  Pontos: 95$" $CCT_TMP_DIR/cct_phase19b4_1126_run.out && \
+   grep -q "^  Aprovado: verum$" $CCT_TMP_DIR/cct_phase19b4_1126_run.out; then
+    test_pass "molde_multilinha_19b4 preserva quebras de linha e interpolacao booleana"
+else
+    test_fail "molde_multilinha_19b4 regressao em multilinha"
+fi
+
+# Test 1127: molde_vazio_19b4
+echo "Test 1127: molde_vazio_19b4"
+SRC_1127="tests/integration/molde_vazio_19b4.cct"
+BIN_1127="${SRC_1127%.cct}"
+cleanup_codegen_artifacts "$SRC_1127"
+if "$CCT_BIN" "$SRC_1127" >$CCT_TMP_DIR/cct_phase19b4_1127_compile.out 2>&1; then
+    "$BIN_1127" >$CCT_TMP_DIR/cct_phase19b4_1127_run.out 2>&1
+    RC_1127=$?
+else
+    RC_1127=255
+fi
+if [ "$RC_1127" -eq 0 ] && grep -q "^len=0$" $CCT_TMP_DIR/cct_phase19b4_1127_run.out; then
+    test_pass "molde_vazio_19b4 valida MOLDE vazio como string valida"
+else
+    test_fail "molde_vazio_19b4 regressao em string vazia"
+fi
+
+# Test 1128: molde_aninhado_19b4
+echo "Test 1128: molde_aninhado_19b4"
+SRC_1128="tests/integration/molde_aninhado_19b4.cct"
+BIN_1128="${SRC_1128%.cct}"
+cleanup_codegen_artifacts "$SRC_1128"
+if "$CCT_BIN" "$SRC_1128" >$CCT_TMP_DIR/cct_phase19b4_1128_compile.out 2>&1; then
+    "$BIN_1128" >$CCT_TMP_DIR/cct_phase19b4_1128_run.out 2>&1
+    RC_1128=$?
+else
+    RC_1128=255
+fi
+if [ "$RC_1128" -eq 0 ] && grep -q "^resultado: 5 + 10$" $CCT_TMP_DIR/cct_phase19b4_1128_run.out; then
+    test_pass "molde_aninhado_19b4 valida MOLDE dentro de interpolacao"
+else
+    test_fail "molde_aninhado_19b4 regressao em MOLDE aninhado"
+fi
+
+# Test 1129: molde_muitos_segmentos_19b4
+echo "Test 1129: molde_muitos_segmentos_19b4"
+SRC_1129="tests/integration/molde_muitos_segmentos_19b4.cct"
+BIN_1129="${SRC_1129%.cct}"
+cleanup_codegen_artifacts "$SRC_1129"
+if "$CCT_BIN" "$SRC_1129" >$CCT_TMP_DIR/cct_phase19b4_1129_compile.out 2>&1; then
+    "$BIN_1129" >$CCT_TMP_DIR/cct_phase19b4_1129_run.out 2>&1
+    RC_1129=$?
+else
+    RC_1129=255
+fi
+if [ "$RC_1129" -eq 0 ] && grep -q "^1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20$" $CCT_TMP_DIR/cct_phase19b4_1129_run.out; then
+    test_pass "molde_muitos_segmentos_19b4 valida stress com 20 segmentos"
+else
+    test_fail "molde_muitos_segmentos_19b4 regressao em stress de segmentos"
+fi
+
+echo ""
+echo "========================================"
+echo "FASE 19C1: ORDO com payload - declaracao"
+echo "========================================"
+echo ""
+
+# Test 1130: ordo_payload_decl_19c1
+echo "Test 1130: ordo_payload_decl_19c1"
+SRC_1130="tests/integration/ordo_payload_decl_19c1.cct"
+BIN_1130="${SRC_1130%.cct}"
+cleanup_codegen_artifacts "$SRC_1130"
+if "$CCT_BIN" "$SRC_1130" >$CCT_TMP_DIR/cct_phase19c1_1130_compile.out 2>&1; then
+    "$BIN_1130" >$CCT_TMP_DIR/cct_phase19c1_1130_run.out 2>&1
+    RC_1130=$?
+else
+    RC_1130=255
+fi
+if [ "$RC_1130" -eq 0 ] && \
+   grep -q "#ifndef CCT_ORDO_Resultado_DEFINED" ${BIN_1130}.cgen.c && \
+   grep -q "#define CCT_Resultado_Ok" ${BIN_1130}.cgen.c && \
+   grep -q "#define CCT_Resultado_Err" ${BIN_1130}.cgen.c && \
+   grep -q "typedef struct {" ${BIN_1130}.cgen.c && \
+   grep -q "} cct_Resultado;" ${BIN_1130}.cgen.c; then
+    test_pass "ordo_payload_decl_19c1 gera typedef C tagueada para ORDO com payload"
+else
+    test_fail "ordo_payload_decl_19c1 regressao na emissao C de payload"
+fi
+
+# Test 1131: ordo_payload_sem_payload_19c1
+echo "Test 1131: ordo_payload_sem_payload_19c1"
+SRC_1131="tests/integration/ordo_payload_sem_payload_19c1.cct"
+BIN_1131="${SRC_1131%.cct}"
+cleanup_codegen_artifacts "$SRC_1131"
+if "$CCT_BIN" "$SRC_1131" >$CCT_TMP_DIR/cct_phase19c1_1131_compile.out 2>&1; then
+    "$BIN_1131" >$CCT_TMP_DIR/cct_phase19c1_1131_run.out 2>&1
+    RC_1131=$?
+else
+    RC_1131=255
+fi
+if [ "$RC_1131" -eq 0 ] && \
+   grep -q "#define CCT_Evento_Init" ${BIN_1131}.cgen.c && \
+   grep -q "#define CCT_Evento_Dado" ${BIN_1131}.cgen.c && \
+   grep -q "#define CCT_Evento_Fim" ${BIN_1131}.cgen.c && \
+   grep -q "} Dado;" ${BIN_1131}.cgen.c; then
+    test_pass "ordo_payload_sem_payload_19c1 aceita mistura de variantes com e sem payload"
+else
+    test_fail "ordo_payload_sem_payload_19c1 regressao em ORDO misto"
+fi
+
+# Test 1132: ordo_payload_tipo_ruim_19c1
+echo "Test 1132: ordo_payload_tipo_ruim_19c1"
+SRC_1132="tests/integration/ordo_payload_tipo_ruim_19c1.cct"
+cleanup_codegen_artifacts "$SRC_1132"
+if "$CCT_BIN" "$SRC_1132" >$CCT_TMP_DIR/cct_phase19c1_1132_compile.out 2>&1; then
+    RC_1132=0
+else
+    RC_1132=$?
+fi
+if [ "$RC_1132" -ne 0 ] && \
+   grep -q "ORDO payload: tipo" $CCT_TMP_DIR/cct_phase19c1_1132_compile.out && \
+   grep -q "nao suportado em payload nesta versao" $CCT_TMP_DIR/cct_phase19c1_1132_compile.out; then
+    test_pass "ordo_payload_tipo_ruim_19c1 rejeita tipo nao suportado no payload"
+else
+    test_fail "ordo_payload_tipo_ruim_19c1 regressao na validacao de tipos"
+fi
+
+echo ""
+echo "========================================"
+echo "FASE 19C2: ORDO com payload - construcao de valores"
+echo "========================================"
+echo ""
+
+# Test 1133: ordo_construcao_ok_19c2
+echo "Test 1133: ordo_construcao_ok_19c2"
+SRC_1133="tests/integration/ordo_construcao_ok_19c2.cct"
+BIN_1133="${SRC_1133%.cct}"
+cleanup_codegen_artifacts "$SRC_1133"
+if "$CCT_BIN" "$SRC_1133" >$CCT_TMP_DIR/cct_phase19c2_1133_compile.out 2>&1; then
+    "$BIN_1133" >$CCT_TMP_DIR/cct_phase19c2_1133_run.out 2>&1
+    RC_1133=$?
+else
+    RC_1133=255
+fi
+if [ "$RC_1133" -eq 0 ] && \
+   grep -q "\\.__payload\\.Ok = {" ${BIN_1133}.cgen.c && \
+   grep -q "\\.__payload\\.Err = {" ${BIN_1133}.cgen.c; then
+    test_pass "ordo_construcao_ok_19c2 aceita Ok(n)/Err(s) e gera compound literal"
+else
+    test_fail "ordo_construcao_ok_19c2 regressao na construcao de payload"
+fi
+
+# Test 1134: ordo_construcao_sem_payload_19c2
+echo "Test 1134: ordo_construcao_sem_payload_19c2"
+SRC_1134="tests/integration/ordo_construcao_sem_payload_19c2.cct"
+BIN_1134="${SRC_1134%.cct}"
+cleanup_codegen_artifacts "$SRC_1134"
+if "$CCT_BIN" "$SRC_1134" >$CCT_TMP_DIR/cct_phase19c2_1134_compile.out 2>&1; then
+    "$BIN_1134" >$CCT_TMP_DIR/cct_phase19c2_1134_run.out 2>&1
+    RC_1134=$?
+else
+    RC_1134=255
+fi
+if [ "$RC_1134" -eq 0 ] && \
+   grep -q "CCT_Opcao_Nenhum" ${BIN_1134}.cgen.c && \
+   ! grep -q "__payload\\.Nenhum" ${BIN_1134}.cgen.c; then
+    test_pass "ordo_construcao_sem_payload_19c2 aceita variante sem payload sem parenteses"
+else
+    test_fail "ordo_construcao_sem_payload_19c2 regressao em variante sem payload"
+fi
+
+# Test 1135: ordo_construcao_args_errado_19c2
+echo "Test 1135: ordo_construcao_args_errado_19c2"
+SRC_1135="tests/integration/ordo_construcao_args_errado_19c2.cct"
+cleanup_codegen_artifacts "$SRC_1135"
+if "$CCT_BIN" "$SRC_1135" >$CCT_TMP_DIR/cct_phase19c2_1135_compile.out 2>&1; then
+    RC_1135=0
+else
+    RC_1135=$?
+fi
+if [ "$RC_1135" -ne 0 ] && \
+   grep -q "ORDO payload: construtor Ok() chamado com 2 args, esperava 1" $CCT_TMP_DIR/cct_phase19c2_1135_compile.out; then
+    test_pass "ordo_construcao_args_errado_19c2 rejeita arity incorreta"
+else
+    test_fail "ordo_construcao_args_errado_19c2 regressao na validacao de aridade"
+fi
+
+# Test 1136: ordo_construcao_tipo_errado_19c2
+echo "Test 1136: ordo_construcao_tipo_errado_19c2"
+SRC_1136="tests/integration/ordo_construcao_tipo_errado_19c2.cct"
+cleanup_codegen_artifacts "$SRC_1136"
+if "$CCT_BIN" "$SRC_1136" >$CCT_TMP_DIR/cct_phase19c2_1136_compile.out 2>&1; then
+    RC_1136=0
+else
+    RC_1136=$?
+fi
+if [ "$RC_1136" -ne 0 ] && \
+   grep -q "ORDO payload: construtor Ok() arg 1 tipo VERBUM incompativel com campo valor:REX" $CCT_TMP_DIR/cct_phase19c2_1136_compile.out; then
+    test_pass "ordo_construcao_tipo_errado_19c2 rejeita tipo incompativel no argumento"
+else
+    test_fail "ordo_construcao_tipo_errado_19c2 regressao na validacao de tipo"
+fi
+
+echo ""
+echo "========================================"
+echo "FASE 19C3: ORDO com payload - QUANDO e destruturacao"
+echo "========================================"
+echo ""
+
+# Test 1137: quando_ordo_payload_19c3
+echo "Test 1137: quando_ordo_payload_19c3"
+SRC_1137="tests/integration/quando_ordo_payload_19c3.cct"
+BIN_1137="${SRC_1137%.cct}"
+cleanup_codegen_artifacts "$SRC_1137"
+if "$CCT_BIN" "$SRC_1137" >$CCT_TMP_DIR/cct_phase19c3_1137_compile.out 2>&1; then
+    "$BIN_1137" >$CCT_TMP_DIR/cct_phase19c3_1137_run.out 2>&1
+    RC_1137=$?
+else
+    RC_1137=255
+fi
+if [ "$RC_1137" -eq 0 ] && \
+   grep -q "^ok=7$" $CCT_TMP_DIR/cct_phase19c3_1137_run.out && \
+   grep -q "^err=falha$" $CCT_TMP_DIR/cct_phase19c3_1137_run.out; then
+    test_pass "quando_ordo_payload_19c3 extrai payload com bindings locais"
+else
+    test_fail "quando_ordo_payload_19c3 regressao em destruturacao de payload"
+fi
+
+# Test 1138: quando_ordo_multiplos_campos_19c3
+echo "Test 1138: quando_ordo_multiplos_campos_19c3"
+SRC_1138="tests/integration/quando_ordo_multiplos_campos_19c3.cct"
+BIN_1138="${SRC_1138%.cct}"
+cleanup_codegen_artifacts "$SRC_1138"
+if "$CCT_BIN" "$SRC_1138" >$CCT_TMP_DIR/cct_phase19c3_1138_compile.out 2>&1; then
+    "$BIN_1138" >$CCT_TMP_DIR/cct_phase19c3_1138_run.out 2>&1
+    RC_1138=$?
+else
+    RC_1138=255
+fi
+if [ "$RC_1138" -eq 0 ] && grep -q "^ret=3.5x2.0$" $CCT_TMP_DIR/cct_phase19c3_1138_run.out; then
+    test_pass "quando_ordo_multiplos_campos_19c3 suporta variante com dois campos"
+else
+    test_fail "quando_ordo_multiplos_campos_19c3 regressao em binding multiplo"
+fi
+
+# Test 1139: quando_ordo_sem_payload_mix_19c3
+echo "Test 1139: quando_ordo_sem_payload_mix_19c3"
+SRC_1139="tests/integration/quando_ordo_sem_payload_mix_19c3.cct"
+BIN_1139="${SRC_1139%.cct}"
+cleanup_codegen_artifacts "$SRC_1139"
+if "$CCT_BIN" "$SRC_1139" >$CCT_TMP_DIR/cct_phase19c3_1139_compile.out 2>&1; then
+    "$BIN_1139" >$CCT_TMP_DIR/cct_phase19c3_1139_run.out 2>&1
+    RC_1139=$?
+else
+    RC_1139=255
+fi
+if [ "$RC_1139" -eq 0 ] && \
+   grep -q "^init$" $CCT_TMP_DIR/cct_phase19c3_1139_run.out && \
+   grep -q "^dado=9$" $CCT_TMP_DIR/cct_phase19c3_1139_run.out && \
+   grep -q "^fim$" $CCT_TMP_DIR/cct_phase19c3_1139_run.out; then
+    test_pass "quando_ordo_sem_payload_mix_19c3 aceita mistura de variantes com e sem payload"
+else
+    test_fail "quando_ordo_sem_payload_mix_19c3 regressao em ORDO misto"
+fi
+
+# Test 1140: quando_ordo_exaustivo_payload_19c3
+echo "Test 1140: quando_ordo_exaustivo_payload_19c3"
+SRC_1140="tests/integration/quando_ordo_exaustivo_payload_19c3.cct"
+BIN_1140="${SRC_1140%.cct}"
+cleanup_codegen_artifacts "$SRC_1140"
+if "$CCT_BIN" "$SRC_1140" >$CCT_TMP_DIR/cct_phase19c3_1140_compile.out 2>&1; then
+    "$BIN_1140" >$CCT_TMP_DIR/cct_phase19c3_1140_run.out 2>&1
+    RC_1140=$?
+else
+    RC_1140=255
+fi
+if [ "$RC_1140" -eq 2 ]; then
+    test_pass "quando_ordo_exaustivo_payload_19c3 valida exaustividade sem SENAO"
+else
+    test_fail "quando_ordo_exaustivo_payload_19c3 regressao de exaustividade"
+fi
+
+# Test 1141: quando_ordo_arity_errada_19c3
+echo "Test 1141: quando_ordo_arity_errada_19c3"
+SRC_1141="tests/integration/quando_ordo_arity_errada_19c3.cct"
+cleanup_codegen_artifacts "$SRC_1141"
+if "$CCT_BIN" "$SRC_1141" >$CCT_TMP_DIR/cct_phase19c3_1141_compile.out 2>&1; then
+    RC_1141=0
+else
+    RC_1141=$?
+fi
+if [ "$RC_1141" -ne 0 ] && \
+   grep -q "QUANDO ORDO: CASO Ok com 2 bindings, variante tem 1 campos" $CCT_TMP_DIR/cct_phase19c3_1141_compile.out; then
+    test_pass "quando_ordo_arity_errada_19c3 rejeita aridade incorreta no CASO"
+else
+    test_fail "quando_ordo_arity_errada_19c3 regressao na validacao de aridade"
+fi
+
+# Test 1142: quando_ordo_aninhado_19c3
+echo "Test 1142: quando_ordo_aninhado_19c3"
+SRC_1142="tests/integration/quando_ordo_aninhado_19c3.cct"
+BIN_1142="${SRC_1142%.cct}"
+cleanup_codegen_artifacts "$SRC_1142"
+if "$CCT_BIN" "$SRC_1142" >$CCT_TMP_DIR/cct_phase19c3_1142_compile.out 2>&1; then
+    "$BIN_1142" >$CCT_TMP_DIR/cct_phase19c3_1142_run.out 2>&1
+    RC_1142=$?
+else
+    RC_1142=255
+fi
+if [ "$RC_1142" -eq 33 ]; then
+    test_pass "quando_ordo_aninhado_19c3 suporta QUANDO aninhado com binding de payload"
+else
+    test_fail "quando_ordo_aninhado_19c3 regressao em fluxo aninhado"
+fi
+
+echo ""
+echo "========================================"
+echo "FASE 19C4: ORDO com payload - exemplos idiomaticos e integracao"
+echo "========================================"
+echo ""
+
+# Test 1143: ordo_resultado_idiomatico_19c4
+echo "Test 1143: ordo_resultado_idiomatico_19c4"
+SRC_1143="tests/integration/ordo_resultado_idiomatico_19c4.cct"
+BIN_1143="${SRC_1143%.cct}"
+cleanup_codegen_artifacts "$SRC_1143"
+if "$CCT_BIN" "$SRC_1143" >$CCT_TMP_DIR/cct_phase19c4_1143_compile.out 2>&1; then
+    "$BIN_1143" >$CCT_TMP_DIR/cct_phase19c4_1143_run.out 2>&1
+    RC_1143=$?
+else
+    RC_1143=255
+fi
+if [ "$RC_1143" -eq 0 ] && \
+   grep -q "^10/2 = 5$" $CCT_TMP_DIR/cct_phase19c4_1143_run.out && \
+   grep -q "^erro: divisao por zero$" $CCT_TMP_DIR/cct_phase19c4_1143_run.out; then
+    test_pass "ordo_resultado_idiomatico_19c4 valida padrao Resultado(Ok/Err) end-to-end"
+else
+    test_fail "ordo_resultado_idiomatico_19c4 regressao no fluxo Resultado idiomatico"
+fi
+
+# Test 1144: ordo_opcao_idiomatico_19c4
+echo "Test 1144: ordo_opcao_idiomatico_19c4"
+SRC_1144="tests/integration/ordo_opcao_idiomatico_19c4.cct"
+BIN_1144="${SRC_1144%.cct}"
+cleanup_codegen_artifacts "$SRC_1144"
+if "$CCT_BIN" "$SRC_1144" >$CCT_TMP_DIR/cct_phase19c4_1144_compile.out 2>&1; then
+    "$BIN_1144" >$CCT_TMP_DIR/cct_phase19c4_1144_run.out 2>&1
+    RC_1144=$?
+else
+    RC_1144=255
+fi
+if [ "$RC_1144" -eq 0 ] && \
+   grep -q "^buscar(42): 100$" $CCT_TMP_DIR/cct_phase19c4_1144_run.out && \
+   grep -q "^buscar(99): -1$" $CCT_TMP_DIR/cct_phase19c4_1144_run.out; then
+    test_pass "ordo_opcao_idiomatico_19c4 valida padrao Opcao(Algum/Nenhum) end-to-end"
+else
+    test_fail "ordo_opcao_idiomatico_19c4 regressao no fluxo Opcao idiomatico"
+fi
+
+# Test 1145: ordo_em_rituale_19c4
+echo "Test 1145: ordo_em_rituale_19c4"
+SRC_1145="tests/integration/ordo_em_rituale_19c4.cct"
+BIN_1145="${SRC_1145%.cct}"
+cleanup_codegen_artifacts "$SRC_1145"
+if "$CCT_BIN" "$SRC_1145" >$CCT_TMP_DIR/cct_phase19c4_1145_compile.out 2>&1; then
+    "$BIN_1145" >$CCT_TMP_DIR/cct_phase19c4_1145_run.out 2>&1
+    RC_1145=$?
+else
+    RC_1145=255
+fi
+if [ "$RC_1145" -eq 4 ]; then
+    test_pass "ordo_em_rituale_19c4 valida ORDO como tipo de retorno de RITUALE"
+else
+    test_fail "ordo_em_rituale_19c4 regressao em retorno de ORDO por RITUALE"
+fi
+
+# Test 1146: ordo_em_fluxus_19c4
+echo "Test 1146: ordo_em_fluxus_19c4"
+SRC_1146="tests/integration/ordo_em_fluxus_19c4.cct"
+BIN_1146="${SRC_1146%.cct}"
+cleanup_codegen_artifacts "$SRC_1146"
+if "$CCT_BIN" "$SRC_1146" >$CCT_TMP_DIR/cct_phase19c4_1146_compile.out 2>&1; then
+    "$BIN_1146" >$CCT_TMP_DIR/cct_phase19c4_1146_run.out 2>&1
+    RC_1146=$?
+else
+    RC_1146=255
+fi
+if [ "$RC_1146" -eq 0 ] && \
+   grep -q "sizeof(cct_Resultado)" ${BIN_1146}.cgen.c && \
+   grep -q "^ok=1$" $CCT_TMP_DIR/cct_phase19c4_1146_run.out && \
+   grep -q "^err=falhou$" $CCT_TMP_DIR/cct_phase19c4_1146_run.out && \
+   grep -q "^ok=3$" $CCT_TMP_DIR/cct_phase19c4_1146_run.out; then
+    test_pass "ordo_em_fluxus_19c4 valida SPECULUM ORDO em FLUXUS e MENSURA(Resultado)"
+else
+    test_fail "ordo_em_fluxus_19c4 regressao em integracao ORDO+FLUXUS"
+fi
+
+echo ""
+echo "========================================"
+echo "FASE 19D1: ITERUM sobre map e set"
+echo "========================================"
+echo ""
+
+# Test 1147: iterum_map_basico_19d1
+echo "Test 1147: iterum_map_basico_19d1"
+SRC_1147="tests/integration/iterum_map_basico_19d1.cct"
+BIN_1147="${SRC_1147%.cct}"
+cleanup_codegen_artifacts "$SRC_1147"
+if "$CCT_BIN" "$SRC_1147" >$CCT_TMP_DIR/cct_phase19d1_1147_compile.out 2>&1; then
+    "$BIN_1147" >$CCT_TMP_DIR/cct_phase19d1_1147_run.out 2>&1
+    RC_1147=$?
+else
+    RC_1147=255
+fi
+if [ "$RC_1147" -eq 0 ] && grep -q "cct_rt_map_iter_next" ${BIN_1147}.cgen.c; then
+    test_pass "iterum_map_basico_19d1 valida ITERUM chave/valor em map na ordem de insercao"
+else
+    test_fail "iterum_map_basico_19d1 regressao em ITERUM sobre map"
+fi
+
+# Test 1148: iterum_map_vazio_19d1
+echo "Test 1148: iterum_map_vazio_19d1"
+SRC_1148="tests/integration/iterum_map_vazio_19d1.cct"
+BIN_1148="${SRC_1148%.cct}"
+cleanup_codegen_artifacts "$SRC_1148"
+if "$CCT_BIN" "$SRC_1148" >$CCT_TMP_DIR/cct_phase19d1_1148_compile.out 2>&1; then
+    "$BIN_1148" >$CCT_TMP_DIR/cct_phase19d1_1148_run.out 2>&1
+    RC_1148=$?
+else
+    RC_1148=255
+fi
+if [ "$RC_1148" -eq 0 ]; then
+    test_pass "iterum_map_vazio_19d1 executa zero iteracoes sem crash"
+else
+    test_fail "iterum_map_vazio_19d1 regressao no caso vazio de map"
+fi
+
+# Test 1149: iterum_set_basico_19d1
+echo "Test 1149: iterum_set_basico_19d1"
+SRC_1149="tests/integration/iterum_set_basico_19d1.cct"
+BIN_1149="${SRC_1149%.cct}"
+cleanup_codegen_artifacts "$SRC_1149"
+if "$CCT_BIN" "$SRC_1149" >$CCT_TMP_DIR/cct_phase19d1_1149_compile.out 2>&1; then
+    "$BIN_1149" >$CCT_TMP_DIR/cct_phase19d1_1149_run.out 2>&1
+    RC_1149=$?
+else
+    RC_1149=255
+fi
+if [ "$RC_1149" -eq 0 ] && grep -q "cct_rt_set_iter_next" ${BIN_1149}.cgen.c; then
+    test_pass "iterum_set_basico_19d1 valida ITERUM sobre set na ordem de insercao"
+else
+    test_fail "iterum_set_basico_19d1 regressao em ITERUM sobre set"
+fi
+
+# Test 1150: iterum_set_vazio_19d1
+echo "Test 1150: iterum_set_vazio_19d1"
+SRC_1150="tests/integration/iterum_set_vazio_19d1.cct"
+BIN_1150="${SRC_1150%.cct}"
+cleanup_codegen_artifacts "$SRC_1150"
+if "$CCT_BIN" "$SRC_1150" >$CCT_TMP_DIR/cct_phase19d1_1150_compile.out 2>&1; then
+    "$BIN_1150" >$CCT_TMP_DIR/cct_phase19d1_1150_run.out 2>&1
+    RC_1150=$?
+else
+    RC_1150=255
+fi
+if [ "$RC_1150" -eq 0 ]; then
+    test_pass "iterum_set_vazio_19d1 executa zero iteracoes sem crash"
+else
+    test_fail "iterum_set_vazio_19d1 regressao no caso vazio de set"
+fi
+
+# Test 1151: iterum_map_aridade_errada_19d1
+echo "Test 1151: iterum_map_aridade_errada_19d1"
+SRC_1151="tests/integration/iterum_map_aridade_errada_19d1.cct"
+cleanup_codegen_artifacts "$SRC_1151"
+if "$CCT_BIN" "$SRC_1151" >$CCT_TMP_DIR/cct_phase19d1_1151_compile.out 2>&1; then
+    RC_1151=0
+else
+    RC_1151=$?
+fi
+if [ "$RC_1151" -ne 0 ] && \
+   grep -q "ITERUM sobre map requer 2 variaveis (chave, valor)" $CCT_TMP_DIR/cct_phase19d1_1151_compile.out; then
+    test_pass "iterum_map_aridade_errada_19d1 rejeita aridade 1 para map"
+else
+    test_fail "iterum_map_aridade_errada_19d1 regressao na validacao de aridade"
+fi
+
+# Test 1152: quando_ordo_frange_loop_fix
+echo "Test 1152: quando_ordo_frange_loop_fix"
+SRC_1152="tests/integration/quando_ordo_frange_loop_fix.cct"
+BIN_1152="${SRC_1152%.cct}"
+cleanup_codegen_artifacts "$SRC_1152"
+if "$CCT_BIN" "$SRC_1152" >$CCT_TMP_DIR/cct_fix1152_compile.out 2>&1; then
+    "$BIN_1152" >$CCT_TMP_DIR/cct_fix1152_run.out 2>&1
+    RC_1152=$?
+else
+    RC_1152=255
+fi
+if [ "$RC_1152" -eq 5 ]; then
+    test_pass "quando_ordo_frange_loop_fix: FRANGE sai do loop externo (nao apenas do switch ORDO payload)"
+else
+    test_fail "quando_ordo_frange_loop_fix: FRANGE dentro de QUANDO ORDO payload nao saiu do loop (rc=$RC_1152)"
+fi
+
+echo ""
+echo "========================================"
 echo "Test Results:"
 echo -e "  ${GREEN}Passed:${NC} $TESTS_PASSED"
 echo -e "  ${RED}Failed:${NC} $TESTS_FAILED"

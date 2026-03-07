@@ -1,0 +1,10 @@
+INCIPIT grimoire "verbum_slice_oob_18a1"
+
+ADVOCARE "cct/verbum.cct"
+
+RITUALE main() REDDE REX
+  EVOCA VERBUM s AD CONIURA slice("abcd", 3, 3)
+  REDDE CONIURA len(s)
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

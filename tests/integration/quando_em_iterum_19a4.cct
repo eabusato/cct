@@ -1,0 +1,26 @@
+INCIPIT grimoire "quando_em_iterum_19a4"
+
+RITUALE main() REDDE REX
+  EVOCA SERIES REX[5] arr
+  VINCIRE arr[0] AD 1
+  VINCIRE arr[1] AD 2
+  VINCIRE arr[2] AD 3
+  VINCIRE arr[3] AD 4
+  VINCIRE arr[4] AD 5
+
+  EVOCA REX soma AD 0
+  ITERUM v IN arr COM
+    QUANDO v
+      CASO 2:
+        RECEDE
+      CASO 4:
+        FRANGE
+      SENAO:
+        VINCIRE soma AD soma + v
+    FIN QUANDO
+  FIN ITERUM
+
+  REDDE soma
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

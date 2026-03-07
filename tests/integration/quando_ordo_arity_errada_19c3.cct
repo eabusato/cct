@@ -1,0 +1,21 @@
+INCIPIT grimoire "quando_ordo_arity_errada_19c3"
+
+ORDO Resultado
+  Ok(REX valor),
+  Err(VERBUM msg)
+FIN ORDO
+
+RITUALE main() REDDE REX
+  EVOCA Resultado r AD Ok(1)
+
+  QUANDO r
+    CASO Ok(a, b):
+      REDDE 0
+    CASO Err(msg):
+      REDDE 1
+  FIN QUANDO
+
+  REDDE 2
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

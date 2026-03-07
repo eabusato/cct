@@ -1,0 +1,8 @@
+INCIPIT grimoire "molde_expr_aritmetica_19b3"
+RITUALE main() REDDE NIHIL
+  EVOCA REX a AD 10
+  EVOCA REX b AD 3
+  OBSECRO scribe(MOLDE "soma={a + b} prod={a * b} div={a // b}\n")
+  REDDE
+EXPLICIT RITUALE
+EXPLICIT grimoire

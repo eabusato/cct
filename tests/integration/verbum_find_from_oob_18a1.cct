@@ -1,0 +1,10 @@
+INCIPIT grimoire "verbum_find_from_oob_18a1"
+
+ADVOCARE "cct/verbum.cct"
+
+RITUALE main() REDDE REX
+  EVOCA REX idx AD CONIURA find_from("abc", "a", 4)
+  REDDE idx
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

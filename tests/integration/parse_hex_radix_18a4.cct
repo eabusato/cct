@@ -1,0 +1,38 @@
+INCIPIT grimoire "parse_hex_radix_18a4"
+
+ADVOCARE "cct/parse.cct"
+ADVOCARE "cct/option.cct"
+
+RITUALE main() REDDE REX
+  EVOCA REX hx1 AD CONIURA parse_int_hex("0x1a")
+  EVOCA REX hx2 AD CONIURA parse_int_hex("1A")
+  EVOCA REX rb2 AD CONIURA parse_int_radix("1011", 2)
+  EVOCA REX rb16 AD CONIURA parse_int_radix("-1f", 16)
+
+  EVOCA SPECULUM NIHIL th_bad AD CONIURA try_int_hex("0x")
+  EVOCA SPECULUM NIHIL tr_bad_radix AD CONIURA try_int_radix("101", 1)
+
+  EVOCA VERUM ok AD VERUM
+
+  SI hx1 != 26 VEL hx2 != 26 VEL rb2 != 11 VEL rb16 != -31
+    VINCIRE ok AD FALSUM
+  FIN SI
+
+  SI NON CONIURA option_is_none GENUS(REX)(th_bad)
+    VINCIRE ok AD FALSUM
+  FIN SI
+
+  SI NON CONIURA option_is_none GENUS(REX)(tr_bad_radix)
+    VINCIRE ok AD FALSUM
+  FIN SI
+
+  CONIURA option_free GENUS(REX)(th_bad)
+  CONIURA option_free GENUS(REX)(tr_bad_radix)
+
+  SI ok
+    REDDE 0
+  FIN SI
+  REDDE 1
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

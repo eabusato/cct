@@ -1,0 +1,41 @@
+INCIPIT grimoire "fluxus_peek_set_18c1"
+
+ADVOCARE "cct/fluxus.cct"
+
+RITUALE main() REDDE REX
+  EVOCA SPECULUM NIHIL f AD CONIURA fluxus_init(MENSURA(REX))
+  EVOCA REX a AD 10
+  EVOCA REX b AD 20
+  EVOCA REX c AD 30
+
+  CONIURA fluxus_push(f, SPECULUM a)
+  CONIURA fluxus_push(f, SPECULUM b)
+  CONIURA fluxus_push(f, SPECULUM c)
+
+  EVOCA SPECULUM REX p AD CONIURA fluxus_peek(f)
+  SI *p == 30
+    EVOCA REX novo AD 99
+    CONIURA fluxus_set(f, 1, SPECULUM novo)
+    EVOCA SPECULUM REX mid AD CONIURA fluxus_get(f, 1)
+    EVOCA REX probe_ok AD 99
+    EVOCA REX probe_bad AD 20
+    SI *mid == 99
+      SI CONIURA fluxus_contains(f, SPECULUM probe_ok)
+        SI NON CONIURA fluxus_contains(f, SPECULUM probe_bad)
+          EVOCA SPECULUM REX raw AD CONIURA fluxus_to_ptr(f)
+          SI *raw == 10
+            SI NON CONIURA fluxus_is_empty(f)
+              CONIURA fluxus_free(f)
+              REDDE 0
+            FIN SI
+          FIN SI
+        FIN SI
+      FIN SI
+    FIN SI
+  FIN SI
+
+  CONIURA fluxus_free(f)
+  REDDE 1
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

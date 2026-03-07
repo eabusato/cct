@@ -1,0 +1,76 @@
+INCIPIT grimoire "ordo_samples"
+
+-- Resultado: padrao idiomatico de retorno com erro.
+ORDO Resultado
+  Ok(REX valor),
+  Err(VERBUM msg)
+FIN ORDO
+
+RITUALE resultado_ok(REX v) REDDE Resultado
+  REDDE Ok(v)
+EXPLICIT RITUALE
+
+RITUALE resultado_err(VERBUM m) REDDE Resultado
+  REDDE Err(m)
+EXPLICIT RITUALE
+
+RITUALE resultado_e_ok(Resultado r) REDDE VERUM
+  QUANDO r
+    CASO Ok(v):
+      REDDE VERUM
+    CASO Err(m):
+      REDDE FALSUM
+  FIN QUANDO
+EXPLICIT RITUALE
+
+RITUALE resultado_valor(Resultado r) REDDE REX
+  QUANDO r
+    CASO Ok(v):
+      REDDE v
+    CASO Err(m):
+      IACE MOLDE "resultado_valor chamado em Err: {m}"
+  FIN QUANDO
+EXPLICIT RITUALE
+
+-- Opcao: presenca ou ausencia de valor.
+ORDO Opcao
+  Algum(REX valor),
+  Nenhum
+FIN ORDO
+
+RITUALE opcao_algum(REX v) REDDE Opcao
+  REDDE Algum(v)
+EXPLICIT RITUALE
+
+RITUALE opcao_nenhum() REDDE Opcao
+  REDDE Nenhum
+EXPLICIT RITUALE
+
+RITUALE opcao_ou_padrao(Opcao o, REX padrao) REDDE REX
+  QUANDO o
+    CASO Algum(v):
+      REDDE v
+    CASO Nenhum:
+      REDDE padrao
+  FIN QUANDO
+EXPLICIT RITUALE
+
+-- Token: exemplo simples de ORDO para pipeline de parser.
+ORDO Token
+  Int(REX valor),
+  Ident(VERBUM nome),
+  Fim
+FIN ORDO
+
+RITUALE token_descrever(Token t) REDDE VERBUM
+  QUANDO t
+    CASO Int(v):
+      REDDE MOLDE "Int({v})"
+    CASO Ident(nome):
+      REDDE MOLDE "Ident({nome})"
+    CASO Fim:
+      REDDE "Fim"
+  FIN QUANDO
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

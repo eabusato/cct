@@ -1,0 +1,38 @@
+INCIPIT grimoire "ordo_em_rituale_19c4"
+
+ADVOCARE "cct/ordo_samples.cct"
+
+RITUALE dividir(REX a, REX b) REDDE Resultado
+  SI b == 0
+    REDDE Err("divisao por zero")
+  FIN SI
+  REDDE Ok(a // b)
+EXPLICIT RITUALE
+
+RITUALE propagar(Resultado r) REDDE Resultado
+  QUANDO r
+    CASO Ok(v):
+      REDDE Ok(v + 1)
+    CASO Err(m):
+      REDDE Err(MOLDE "prop:{m}")
+  FIN QUANDO
+EXPLICIT RITUALE
+
+RITUALE valor_ou(Resultado r, REX padrao) REDDE REX
+  QUANDO r
+    CASO Ok(v):
+      REDDE v
+    CASO Err(m):
+      REDDE padrao
+  FIN QUANDO
+EXPLICIT RITUALE
+
+RITUALE main() REDDE REX
+  EVOCA Resultado r1 AD CONIURA propagar(CONIURA dividir(8, 2))
+  EVOCA Resultado r2 AD CONIURA propagar(CONIURA dividir(8, 0))
+  EVOCA REX a AD CONIURA valor_ou(r1, -1)
+  EVOCA REX b AD CONIURA valor_ou(r2, -1)
+  REDDE a + b
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

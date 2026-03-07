@@ -1,0 +1,20 @@
+INCIPIT grimoire "quando_verbum_basico_19a2"
+
+RITUALE main() REDDE NIHIL
+  EVOCA VERBUM m AD "POST"
+
+  QUANDO m
+    CASO "GET":
+      OBSECRO scribe("get\n")
+    CASO "POST":
+      OBSECRO scribe("post\n")
+    CASO "PUT":
+      OBSECRO scribe("put\n")
+    SENAO:
+      OBSECRO scribe("outro\n")
+  FIN QUANDO
+
+  REDDE
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

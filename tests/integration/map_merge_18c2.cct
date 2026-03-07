@@ -1,0 +1,88 @@
+INCIPIT grimoire "map_merge_18c2"
+
+ADVOCARE "cct/map.cct"
+ADVOCARE "cct/option.cct"
+
+RITUALE main() REDDE REX
+  EVOCA SPECULUM NIHIL d AD CONIURA map_init GENUS(REX, REX)()
+  EVOCA SPECULUM NIHIL s AD CONIURA map_init GENUS(REX, REX)()
+
+  CONIURA map_insert GENUS(REX, REX)(d, 1, 10)
+  CONIURA map_insert GENUS(REX, REX)(d, 2, 20)
+
+  CONIURA map_insert GENUS(REX, REX)(s, 2, 200)
+  CONIURA map_insert GENUS(REX, REX)(s, 3, 300)
+
+  CONIURA map_merge GENUS(REX, REX)(d, s)
+
+  SI CONIURA map_len GENUS(REX, REX)(d) != 3
+    CONIURA map_free GENUS(REX, REX)(s)
+    CONIURA map_free GENUS(REX, REX)(d)
+    REDDE 1
+  FIN SI
+
+  EVOCA SPECULUM NIHIL o1 AD CONIURA map_get GENUS(REX, REX)(d, 1)
+  EVOCA SPECULUM NIHIL o2 AD CONIURA map_get GENUS(REX, REX)(d, 2)
+  EVOCA SPECULUM NIHIL o3 AD CONIURA map_get GENUS(REX, REX)(d, 3)
+
+  SI NON CONIURA option_is_some GENUS(REX)(o1)
+    CONIURA option_free GENUS(REX)(o1)
+    CONIURA option_free GENUS(REX)(o2)
+    CONIURA option_free GENUS(REX)(o3)
+    CONIURA map_free GENUS(REX, REX)(s)
+    CONIURA map_free GENUS(REX, REX)(d)
+    REDDE 2
+  FIN SI
+  SI NON CONIURA option_is_some GENUS(REX)(o2)
+    CONIURA option_free GENUS(REX)(o1)
+    CONIURA option_free GENUS(REX)(o2)
+    CONIURA option_free GENUS(REX)(o3)
+    CONIURA map_free GENUS(REX, REX)(s)
+    CONIURA map_free GENUS(REX, REX)(d)
+    REDDE 3
+  FIN SI
+  SI NON CONIURA option_is_some GENUS(REX)(o3)
+    CONIURA option_free GENUS(REX)(o1)
+    CONIURA option_free GENUS(REX)(o2)
+    CONIURA option_free GENUS(REX)(o3)
+    CONIURA map_free GENUS(REX, REX)(s)
+    CONIURA map_free GENUS(REX, REX)(d)
+    REDDE 4
+  FIN SI
+
+  EVOCA REX v1 AD CONIURA option_unwrap GENUS(REX)(o1)
+  EVOCA REX v2 AD CONIURA option_unwrap GENUS(REX)(o2)
+  EVOCA REX v3 AD CONIURA option_unwrap GENUS(REX)(o3)
+
+  CONIURA option_free GENUS(REX)(o1)
+  CONIURA option_free GENUS(REX)(o2)
+  CONIURA option_free GENUS(REX)(o3)
+
+  SI v1 != 10
+    CONIURA map_free GENUS(REX, REX)(s)
+    CONIURA map_free GENUS(REX, REX)(d)
+    REDDE 5
+  FIN SI
+  SI v2 != 200
+    CONIURA map_free GENUS(REX, REX)(s)
+    CONIURA map_free GENUS(REX, REX)(d)
+    REDDE 6
+  FIN SI
+  SI v3 != 300
+    CONIURA map_free GENUS(REX, REX)(s)
+    CONIURA map_free GENUS(REX, REX)(d)
+    REDDE 7
+  FIN SI
+
+  SI CONIURA map_len GENUS(REX, REX)(s) != 2
+    CONIURA map_free GENUS(REX, REX)(s)
+    CONIURA map_free GENUS(REX, REX)(d)
+    REDDE 8
+  FIN SI
+
+  CONIURA map_free GENUS(REX, REX)(s)
+  CONIURA map_free GENUS(REX, REX)(d)
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

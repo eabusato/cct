@@ -39,4 +39,189 @@ RITUALE contains(VERBUM s, VERBUM sub) REDDE VERUM
   REDDE FALSUM
 EXPLICIT RITUALE
 
+RITUALE starts_with(VERBUM s, VERBUM prefix) REDDE VERUM
+  REDDE OBSECRO verbum_starts_with(s, prefix)
+EXPLICIT RITUALE
+
+RITUALE ends_with(VERBUM s, VERBUM suffix) REDDE VERUM
+  REDDE OBSECRO verbum_ends_with(s, suffix)
+EXPLICIT RITUALE
+
+RITUALE strip_prefix(VERBUM s, VERBUM prefix) REDDE VERBUM
+  SI NON CONIURA starts_with(s, prefix)
+    REDDE s
+  FIN SI
+  EVOCA REX plen AD CONIURA len(prefix)
+  EVOCA REX slen AD CONIURA len(s)
+  REDDE CONIURA substring(s, plen, slen)
+EXPLICIT RITUALE
+
+RITUALE strip_suffix(VERBUM s, VERBUM suffix) REDDE VERBUM
+  SI NON CONIURA ends_with(s, suffix)
+    REDDE s
+  FIN SI
+  EVOCA REX slen AD CONIURA len(s)
+  EVOCA REX suflen AD CONIURA len(suffix)
+  REDDE CONIURA substring(s, 0, slen - suflen)
+EXPLICIT RITUALE
+
+RITUALE replace(VERBUM s, VERBUM de, VERBUM para) REDDE VERBUM
+  REDDE OBSECRO verbum_replace(s, de, para)
+EXPLICIT RITUALE
+
+RITUALE replace_all(VERBUM s, VERBUM de, VERBUM para) REDDE VERBUM
+  REDDE OBSECRO verbum_replace_all(s, de, para)
+EXPLICIT RITUALE
+
+RITUALE to_upper(VERBUM s) REDDE VERBUM
+  REDDE OBSECRO verbum_to_upper(s)
+EXPLICIT RITUALE
+
+RITUALE to_lower(VERBUM s) REDDE VERBUM
+  REDDE OBSECRO verbum_to_lower(s)
+EXPLICIT RITUALE
+
+RITUALE trim_left(VERBUM s) REDDE VERBUM
+  REDDE OBSECRO verbum_trim_left(s)
+EXPLICIT RITUALE
+
+RITUALE trim_right(VERBUM s) REDDE VERBUM
+  REDDE OBSECRO verbum_trim_right(s)
+EXPLICIT RITUALE
+
+RITUALE trim_char(VERBUM s, MILES c) REDDE VERBUM
+  EVOCA REX n AD CONIURA len(s)
+  EVOCA REX ini AD 0
+  EVOCA REX fim AD n
+  DUM ini < n ET CONIURA char_at(s, ini) == c
+    VINCIRE ini AD ini + 1
+  FIN DUM
+  DUM fim > ini ET CONIURA char_at(s, fim - 1) == c
+    VINCIRE fim AD fim - 1
+  FIN DUM
+  REDDE CONIURA substring(s, ini, fim)
+EXPLICIT RITUALE
+
+RITUALE repeat(VERBUM s, REX n) REDDE VERBUM
+  SI n < 0
+    IACE "verbum repeat count negativo"
+  FIN SI
+  SI n == 0
+    REDDE ""
+  FIN SI
+  EVOCA VERBUM out AD ""
+  EVOCA REX i AD 0
+  DUM i < n
+    VINCIRE out AD CONIURA concat(out, s)
+    VINCIRE i AD i + 1
+  FIN DUM
+  REDDE out
+EXPLICIT RITUALE
+
+RITUALE pad_left(VERBUM s, REX width, MILES fill) REDDE VERBUM
+  EVOCA REX slen AD CONIURA len(s)
+  SI slen >= width
+    REDDE s
+  FIN SI
+  EVOCA VERBUM pref AD CONIURA repeat(CONIURA from_char(fill), width - slen)
+  REDDE CONIURA concat(pref, s)
+EXPLICIT RITUALE
+
+RITUALE pad_right(VERBUM s, REX width, MILES fill) REDDE VERBUM
+  EVOCA REX slen AD CONIURA len(s)
+  SI slen >= width
+    REDDE s
+  FIN SI
+  EVOCA VERBUM suf AD CONIURA repeat(CONIURA from_char(fill), width - slen)
+  REDDE CONIURA concat(s, suf)
+EXPLICIT RITUALE
+
+RITUALE center(VERBUM s, REX width, MILES fill) REDDE VERBUM
+  EVOCA REX slen AD CONIURA len(s)
+  SI slen >= width
+    REDDE s
+  FIN SI
+  EVOCA REX total AD width - slen
+  EVOCA REX left AD total / 2
+  EVOCA REX right AD total - left
+  EVOCA VERBUM lp AD CONIURA repeat(CONIURA from_char(fill), left)
+  EVOCA VERBUM rp AD CONIURA repeat(CONIURA from_char(fill), right)
+  REDDE CONIURA concat(CONIURA concat(lp, s), rp)
+EXPLICIT RITUALE
+
+RITUALE last_find(VERBUM s, VERBUM sub) REDDE REX
+  REDDE OBSECRO verbum_last_find(s, sub)
+EXPLICIT RITUALE
+
+RITUALE find_from(VERBUM s, VERBUM sub, REX offset) REDDE REX
+  EVOCA REX slen AD CONIURA len(s)
+  SI offset < 0 VEL offset > slen
+    IACE "verbum find_from offset invalido"
+  FIN SI
+  EVOCA REX sublen AD CONIURA len(sub)
+  SI sublen == 0
+    REDDE offset
+  FIN SI
+  EVOCA REX i AD offset
+  DUM i + sublen <= slen
+    SI CONIURA compare(CONIURA substring(s, i, i + sublen), sub) == 0
+      REDDE i
+    FIN SI
+    VINCIRE i AD i + 1
+  FIN DUM
+  REDDE -1
+EXPLICIT RITUALE
+
+RITUALE count_occurrences(VERBUM s, VERBUM sub) REDDE REX
+  REDDE OBSECRO verbum_count_occurrences(s, sub)
+EXPLICIT RITUALE
+
+RITUALE reverse(VERBUM s) REDDE VERBUM
+  REDDE OBSECRO verbum_reverse(s)
+EXPLICIT RITUALE
+
+RITUALE is_empty(VERBUM s) REDDE VERUM
+  REDDE CONIURA len(s) == 0
+EXPLICIT RITUALE
+
+RITUALE equals_ignore_case(VERBUM a, VERBUM b) REDDE VERUM
+  REDDE CONIURA compare(CONIURA to_lower(a), CONIURA to_lower(b)) == 0
+EXPLICIT RITUALE
+
+RITUALE slice(VERBUM s, REX inicio, REX comprimento) REDDE VERBUM
+  REDDE OBSECRO verbum_slice(s, inicio, comprimento)
+EXPLICIT RITUALE
+
+RITUALE is_ascii(VERBUM s) REDDE VERUM
+  EVOCA REX i AD 0
+  EVOCA REX n AD CONIURA len(s)
+  DUM i < n
+    SI CONIURA char_at(s, i) > 127
+      REDDE FALSUM
+    FIN SI
+    VINCIRE i AD i + 1
+  FIN DUM
+  REDDE VERUM
+EXPLICIT RITUALE
+
+RITUALE split(VERBUM s, VERBUM sep) REDDE SPECULUM NIHIL
+  REDDE OBSECRO verbum_split(s, sep)
+EXPLICIT RITUALE
+
+RITUALE split_char(VERBUM s, MILES c) REDDE SPECULUM NIHIL
+  REDDE OBSECRO verbum_split_char(s, c)
+EXPLICIT RITUALE
+
+RITUALE join(SPECULUM NIHIL parts, VERBUM sep) REDDE VERBUM
+  REDDE OBSECRO verbum_join(parts, sep)
+EXPLICIT RITUALE
+
+RITUALE lines(VERBUM s) REDDE SPECULUM NIHIL
+  REDDE OBSECRO verbum_lines(s)
+EXPLICIT RITUALE
+
+RITUALE words(VERBUM s) REDDE SPECULUM NIHIL
+  REDDE OBSECRO verbum_words(s)
+EXPLICIT RITUALE
+
 EXPLICIT grimoire

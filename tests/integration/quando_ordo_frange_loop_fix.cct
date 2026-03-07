@@ -1,0 +1,32 @@
+INCIPIT grimoire "quando_ordo_frange_loop_fix"
+
+ORDO Tipo
+  Aceito(REX n),
+  Parar
+FIN ORDO
+
+RITUALE classificar(REX x) REDDE Tipo
+  SI x <= 2
+    REDDE Aceito(x)
+  FIN SI
+  REDDE Parar
+EXPLICIT RITUALE
+
+RITUALE main() REDDE REX
+  EVOCA REX total AD 0
+  EVOCA REX i AD 1
+  DUM i <= 5
+    EVOCA Tipo t AD CONIURA classificar(i)
+    QUANDO t
+      CASO Aceito(v):
+        VINCIRE total AD total + v
+      CASO Parar:
+        FRANGE
+    FIN QUANDO
+    VINCIRE total AD total + 1
+    VINCIRE i AD i + 1
+  FIN DUM
+  REDDE total
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

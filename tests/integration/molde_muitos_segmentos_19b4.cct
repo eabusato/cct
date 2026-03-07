@@ -1,0 +1,26 @@
+INCIPIT grimoire "molde_muitos_segmentos_19b4"
+RITUALE main() REDDE NIHIL
+  EVOCA REX a AD 1
+  EVOCA REX b AD 2
+  EVOCA REX c AD 3
+  EVOCA REX d AD 4
+  EVOCA REX e AD 5
+  EVOCA REX f AD 6
+  EVOCA REX g AD 7
+  EVOCA REX h AD 8
+  EVOCA REX i AD 9
+  EVOCA REX j AD 10
+  EVOCA REX k AD 11
+  EVOCA REX l AD 12
+  EVOCA REX m AD 13
+  EVOCA REX n AD 14
+  EVOCA REX o AD 15
+  EVOCA REX p AD 16
+  EVOCA REX q AD 17
+  EVOCA REX r AD 18
+  EVOCA REX s AD 19
+  EVOCA REX t AD 20
+  OBSECRO scribe(MOLDE "{a},{b},{c},{d},{e},{f},{g},{h},{i},{j},{k},{l},{m},{n},{o},{p},{q},{r},{s},{t}\n")
+  REDDE
+EXPLICIT RITUALE
+EXPLICIT grimoire

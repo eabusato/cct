@@ -1,0 +1,29 @@
+INCIPIT grimoire "verbum_pad_repeat_18a1"
+
+ADVOCARE "cct/verbum.cct"
+
+RITUALE main() REDDE REX
+  EVOCA VERBUM rep AD CONIURA repeat("ab", 3)
+  EVOCA MILES star AD CONIURA char_at("*", 0)
+  EVOCA MILES dash AD CONIURA char_at("-", 0)
+  EVOCA VERBUM l AD CONIURA pad_left("ab", 5, star)
+  EVOCA VERBUM r AD CONIURA pad_right("ab", 5, star)
+  EVOCA VERBUM c AD CONIURA center("ab", 5, dash)
+  EVOCA VERBUM p AD CONIURA pad_left("abcdef", 3, star)
+
+  SI CONIURA compare(rep, "ababab") == 0
+    SI CONIURA compare(l, "***ab") == 0
+      SI CONIURA compare(r, "ab***") == 0
+        SI CONIURA compare(c, "-ab--") == 0
+          SI CONIURA compare(p, "abcdef") == 0
+            REDDE 0
+          FIN SI
+        FIN SI
+      FIN SI
+    FIN SI
+  FIN SI
+
+  REDDE 1
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

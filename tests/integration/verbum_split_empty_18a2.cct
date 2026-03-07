@@ -1,0 +1,29 @@
+INCIPIT grimoire "verbum_split_empty_18a2"
+
+ADVOCARE "cct/verbum.cct"
+ADVOCARE "cct/fluxus.cct"
+
+RITUALE main() REDDE REX
+  EVOCA SPECULUM NIHIL x AD CONIURA split("", ",")
+  EVOCA SPECULUM NIHIL y AD CONIURA split("abc", "")
+  EVOCA SPECULUM NIHIL z AD CONIURA split("", "")
+  EVOCA VERBUM xj AD CONIURA join(x, "|")
+  EVOCA VERBUM yj AD CONIURA join(y, "|")
+  EVOCA VERBUM zj AD CONIURA join(z, "|")
+
+  SI CONIURA fluxus_len(x) == 1 ET CONIURA fluxus_len(y) == 3 ET CONIURA fluxus_len(z) == 1
+    SI CONIURA compare(xj, "") == 0 ET CONIURA compare(yj, "a|b|c") == 0 ET CONIURA compare(zj, "") == 0
+      CONIURA fluxus_free(x)
+      CONIURA fluxus_free(y)
+      CONIURA fluxus_free(z)
+      REDDE 0
+    FIN SI
+  FIN SI
+
+  CONIURA fluxus_free(x)
+  CONIURA fluxus_free(y)
+  CONIURA fluxus_free(z)
+  REDDE 1
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

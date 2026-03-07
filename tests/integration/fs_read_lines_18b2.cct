@@ -1,0 +1,27 @@
+INCIPIT grimoire "fs_read_lines_18b2"
+
+ADVOCARE "cct/fs.cct"
+ADVOCARE "cct/fluxus.cct"
+ADVOCARE "cct/verbum.cct"
+
+RITUALE main() REDDE REX
+  EVOCA VERBUM arq AD "tests/.tmp/fs_18b2_lines.txt"
+  EVOCA VERBUM cr AD OBSECRO verbum_from_char(13)
+  EVOCA VERBUM src AD CONIURA concat("a\nb", cr)
+  VINCIRE src AD CONIURA concat(src, "\nc\n")
+  CONIURA write_all(arq, src)
+
+  EVOCA SPECULUM NIHIL linhas AD CONIURA read_lines(arq)
+  EVOCA REX n AD CONIURA fluxus_len(linhas)
+  EVOCA VERBUM joined AD CONIURA join(linhas, ",")
+
+  CONIURA fluxus_free(linhas)
+  CONIURA delete_file(arq)
+
+  SI n == 4 ET CONIURA compare(joined, "a,b,c,") == 0
+    REDDE 0
+  FIN SI
+  REDDE 1
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

@@ -92,7 +92,7 @@ Avoid synonym sprawl and decorative ambiguity.
 | Runtime helper | Generated C support internals | emitted helper symbols in `.cgen.c` |
 | Bibliotheca Canonica | Importable standard modules | `ADVOCARE "cct/..."` |
 
-## 11. Current Status (Post-11H)
+## 11. Current Status (Post-19D4)
 
 Delivered in 11A:
 - canonical reserved namespace contract (`cct/...`)
@@ -111,9 +111,15 @@ Delivered after foundation:
 - parse/cmp utility closure + moderate alg expansion (`11F.2`)
 - canonical showcase/public face consolidation (`11G`)
 - final subset/stability freeze and packaging closure (`11H`)
+- language/runtime/tooling expansion phases (`12A` through `12H`)
+- sigilo tooling, release hardening, and closure governance (`13`, `13M`, `14`)
+- semantic/operator/freestanding bridge consolidation (`15`, `16`)
+- canonical-library expansion for host tooling and low-level modules (`17`, `18`)
+- language-surface expansion (`19A` through `19D`) integrating `QUANDO`, `MOLDE`, payload `ORDO`, and `ITERUM` over map/set.
 
-Planned in next subphases:
-- FASE 11 is closed; next evolution starts in FASE 12.
+Current phase closure references:
+- `docs/release/FASE_19_RELEASE_NOTES.md`
+- `docs/bootstrap/FASE_19_HANDOFF.md`
 
 ## 12. `cct/verbum` (FASE 11B.1)
 
@@ -499,6 +505,7 @@ Behavior notes:
 - map instances are opaque pointer-backed runtime objects
 - `map_get` returns Option payload pointers (`Some` / `None` contract)
 - duplicate key insertion updates value in place and preserves key cardinality
+- `ITERUM key, value IN map` iterates entries in insertion order (FASE 19D)
 
 ### `cct/set`
 
@@ -511,6 +518,7 @@ Behavior notes:
 - set instances are opaque pointer-backed runtime objects
 - duplicate insertion is ignored (`set_insert` returns `FALSUM` for existing items)
 - callers own container lifetime and must release with `set_free`
+- `ITERUM item IN set` iterates items in insertion order (FASE 19D)
 
 Sigilo integration:
 - metadata tracks `map_ops_count` and `set_ops_count`
@@ -534,3 +542,37 @@ Behavior notes:
 Sigilo integration:
 - metadata tracks `collection_ops_count`
 - metadata tracks `collection_ops_module_used`
+
+## 31. Modulo de Referencia: `ordo_samples` (FASE 19C/19D)
+
+`lib/cct/ordo_samples.cct` nao e um modulo de runtime obrigatorio de producao.
+Ele existe como referencia idiomatica para ORDO com payload e para o uso conjunto
+de `QUANDO` e `MOLDE`.
+
+Padroes canonicos de referencia:
+- `Resultado` (retorno com erro): `Ok(REX valor)` / `Err(VERBUM msg)`
+- `Opcao` (valor presente/ausente): `Algum(REX valor)` / `Nenhum`
+
+Exemplo de padrao `Resultado`:
+
+```cct
+ORDO Resultado
+  Ok(REX valor),
+  Err(VERBUM msg)
+FIN ORDO
+```
+
+Exemplo de padrao `Opcao`:
+
+```cct
+ORDO Opcao
+  Algum(REX valor),
+  Nenhum
+FIN ORDO
+```
+
+Diretrizes:
+- use essas definicoes como baseline para tipos de dominio.
+- para APIs ponteiro-backed, `cct/option` e `cct/result` continuam disponiveis.
+- a expansao de `ITERUM` na FASE 19D complementa esses padroes com iteracao em
+  ordem de insercao para `map` e `set`.

@@ -1,0 +1,21 @@
+INCIPIT grimoire "ordo_opcao_idiomatico_19c4"
+
+ADVOCARE "cct/ordo_samples.cct"
+
+RITUALE buscar(REX chave) REDDE Opcao
+  SI chave == 42
+    REDDE Algum(100)
+  FIN SI
+  REDDE Nenhum
+EXPLICIT RITUALE
+
+RITUALE main() REDDE NIHIL
+  EVOCA Opcao o1 AD CONIURA buscar(42)
+  EVOCA Opcao o2 AD CONIURA buscar(99)
+
+  OBSECRO scribe(MOLDE "buscar(42): {CONIURA opcao_ou_padrao(o1, -1)}\n")
+  OBSECRO scribe(MOLDE "buscar(99): {CONIURA opcao_ou_padrao(o2, -1)}\n")
+  REDDE
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

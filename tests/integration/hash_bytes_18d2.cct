@@ -1,0 +1,28 @@
+INCIPIT grimoire "hash_bytes_18d2"
+
+ADVOCARE "cct/hash.cct"
+ADVOCARE "cct/verbum.cct"
+
+RITUALE main() REDDE REX
+  EVOCA SERIES MILES[4] data
+  VINCIRE data[0] AD CONIURA char_at("A", 0)
+  VINCIRE data[1] AD CONIURA char_at("B", 0)
+  VINCIRE data[2] AD CONIURA char_at("C", 0)
+  VINCIRE data[3] AD CONIURA char_at("D", 0)
+
+  EVOCA REX h1 AD CONIURA fnv1a_bytes(SPECULUM data[0], 4)
+  EVOCA REX h2 AD CONIURA fnv1a_bytes(SPECULUM data[0], 4)
+  EVOCA REX h3 AD CONIURA fnv1a_bytes(SPECULUM data[0], 3)
+
+  SI h1 != h2
+    REDDE 1
+  FIN SI
+
+  SI h1 == h3
+    REDDE 2
+  FIN SI
+
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

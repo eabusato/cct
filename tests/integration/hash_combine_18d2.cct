@@ -1,0 +1,31 @@
+INCIPIT grimoire "hash_combine_18d2"
+
+ADVOCARE "cct/hash.cct"
+
+RITUALE main() REDDE REX
+  EVOCA REX h1 AD CONIURA djb2("alpha")
+  EVOCA REX h2 AD CONIURA djb2("beta")
+  EVOCA REX m1 AD CONIURA combine(h1, h2)
+  EVOCA REX m2 AD CONIURA combine(h1, h2)
+  EVOCA REX m3 AD CONIURA combine(h2, h1)
+
+  SI m1 == h1
+    REDDE 1
+  FIN SI
+
+  SI m1 == h2
+    REDDE 2
+  FIN SI
+
+  SI m1 != m2
+    REDDE 3
+  FIN SI
+
+  SI m1 == m3
+    REDDE 4
+  FIN SI
+
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

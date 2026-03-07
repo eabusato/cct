@@ -1,0 +1,40 @@
+INCIPIT grimoire "fs_list_dir_18b2"
+
+ADVOCARE "cct/fs.cct"
+ADVOCARE "cct/fluxus.cct"
+ADVOCARE "cct/verbum.cct"
+
+RITUALE main() REDDE REX
+  EVOCA VERBUM raiz AD "tests/.tmp/fs_18b2_list"
+  EVOCA VERBUM a AD "tests/.tmp/fs_18b2_list/a.txt"
+  EVOCA VERBUM b AD "tests/.tmp/fs_18b2_list/b.txt"
+  EVOCA VERBUM sub AD "tests/.tmp/fs_18b2_list/sub"
+
+  CONIURA mkdir_all(raiz)
+  CONIURA write_all(a, "1")
+  CONIURA write_all(b, "2")
+  CONIURA mkdir(sub)
+
+  EVOCA SPECULUM NIHIL itens AD CONIURA list_dir(raiz)
+  EVOCA REX n AD CONIURA fluxus_len(itens)
+  EVOCA VERBUM joined AD CONIURA join(itens, "|")
+
+  SI n != 3
+    CONIURA fluxus_free(itens)
+    REDDE 1
+  FIN SI
+
+  SI CONIURA contains(joined, "a.txt") == VERUM ET CONIURA contains(joined, "b.txt") == VERUM ET CONIURA contains(joined, "sub") == VERUM
+    CONIURA fluxus_free(itens)
+    CONIURA delete_file(a)
+    CONIURA delete_file(b)
+    CONIURA delete_dir(sub)
+    CONIURA delete_dir(raiz)
+    REDDE 0
+  FIN SI
+
+  CONIURA fluxus_free(itens)
+  REDDE 2
+EXPLICIT RITUALE
+
+EXPLICIT grimoire
