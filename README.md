@@ -61,6 +61,24 @@ Highlights of the current baseline:
 - FASE 17/18 canonical-library expansion: text/parsing/IO/FS/path utilities, algorithms/collections growth, plus `process`, `hash`, and `bit` modules
 - FASE 19 language-surface expansion: `QUANDO`/`CASO`/`SENAO`, `MOLDE`, payload `ORDO`, and `ITERUM` over `map`/`set` with insertion-order semantics
 
+## Recent Phase Closures (16-19)
+
+### FASE 16 (Freestanding/ASM Bridge)
+- `--profile freestanding`, `--emit-asm`, and entrypoint contract stabilization
+- `cct/kernel` module family for freestanding-only targets
+- host behavior preserved while bridge/ABI/linkability gates were added
+
+### FASE 17 + 18 (Canonical Library Expansion)
+- 17: tooling-oriented modules (`char`, `args`, `verbum_scan`, `verbum_builder`, `code_writer`, `env`, `time`, `bytes`)
+- 18: broad stdlib growth (`verbum`, `fmt`, `parse`, `fs`, `io`, `path`, `fluxus`, `set`, `map`, `alg`, `series`, `random`)
+- 18: new modules `process`, `hash`, and `bit`
+
+### FASE 19 (Language Surface Expansion)
+- `QUANDO` with `CASO`/`SENAO` for integer, `VERBUM`, and `ORDO`
+- `MOLDE` interpolation with format specifiers
+- payload-capable `ORDO` and `QUANDO` destructuring
+- `ITERUM` expanded to `map` and `set`
+
 ## Build
 
 Requirements:
@@ -195,7 +213,7 @@ For modular system sigils:
 
 In `--sigilo-mode completo`, imported module sigils are also emitted as deterministic module-indexed artifacts.
 
-## Project Workflow (FASE 12F)
+## Project Workflow (Introduced in FASE 12F, Still Current)
 
 Canonical project layout:
 
@@ -381,12 +399,6 @@ Current delivery in FASE 12D.3:
 - codegen lowering to deterministic C loops
 - sigilo metadata counter for iterator usage (`iterum_count`)
 
-Current delivery in FASE 19:
-- `QUANDO` statement with `CASO`/`SENAO` over integer, `VERBUM`, and `ORDO`
-- `MOLDE` string interpolation with formatting specifiers (host profile)
-- payload `ORDO` declaration/construction/destructuring via `QUANDO`
-- `ITERUM` expansion to `map`/`set` with insertion-order iteration semantics
-
 Current delivery in FASE 12E.1:
 - standalone formatter command integrated in CLI (`cct fmt`)
 - check/diff formatter modes for CI/editor integration
@@ -399,6 +411,21 @@ Current delivery in FASE 12E.2:
 - strict lint mode (`--strict`) and safe auto-fix mode (`--fix`)
 - dedicated lint documentation (`docs/linter.md`) and integration tests
 
+Current delivery in FASE 16:
+- freestanding bridge profile and kernel-facing stdlib surface (`cct/kernel`)
+- profile-aware behavior separation for host vs freestanding flows
+
+Current delivery in FASE 17:
+- bootstrap/tooling-oriented stdlib modules (`char`, `args`, `verbum_scan`, `verbum_builder`, `code_writer`, `env`, `time`, `bytes`)
+
+Current delivery in FASE 18:
+- major canonical-library expansion across text/format/parse, io/fs/path, collections/algorithms
+- new modules: `cct/process`, `cct/hash`, `cct/bit`
+
+Current delivery in FASE 19:
+- language-facing integration with stdlib usage via `QUANDO`, `MOLDE`, payload `ORDO`, and `ITERUM` over `map`/`set`
+- reference module `lib/cct/ordo_samples.cct` documenting idiomatic `Resultado`/`Opcao` payload patterns
+
 Example import:
 
 ```cct
@@ -407,7 +434,7 @@ ADVOCARE "cct/stub_test.cct"
 
 Reference: `docs/bibliotheca_canonica.md`.
 
-## Canonical Showcases (FASE 11G)
+## Canonical Showcases (Introduced in FASE 11G)
 
 Run canonical showcase programs:
 
@@ -427,7 +454,7 @@ Inspect modular composition and sigilo:
 ./cct --sigilo-only --sigilo-mode completo examples/showcase_stdlib_modular_11g_main.cct
 ```
 
-## Packaging and Install (FASE 11H)
+## Packaging and Install (Introduced in FASE 11H)
 
 Build a relocatable distribution bundle:
 
