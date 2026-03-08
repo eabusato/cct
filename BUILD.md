@@ -45,9 +45,9 @@ make release
 ```
 
 This will create:
-- `cct-v0.12-linux-x86_64.tar.gz` (on x86_64)
-- `cct-v0.12-linux-arm64.tar.gz` (on ARM64/aarch64)
-- `cct-v0.12-linux-*.tar.gz.sha256` (checksum file)
+- `cct-v0.19-linux-x86_64.tar.gz` (on x86_64)
+- `cct-v0.19-linux-arm64.tar.gz` (on ARM64/aarch64)
+- `cct-v0.19-linux-*.tar.gz.sha256` (checksum file)
 
 ### Install
 
@@ -94,9 +94,9 @@ make release
 ```
 
 This will create:
-- `cct-v0.12-macos-arm64.tar.gz` (on Apple Silicon)
-- `cct-v0.12-macos-x86_64.tar.gz` (on Intel Mac)
-- `cct-v0.12-macos-*.tar.gz.sha256` (checksum file)
+- `cct-v0.19-macos-arm64.tar.gz` (on Apple Silicon)
+- `cct-v0.19-macos-x86_64.tar.gz` (on Intel Mac)
+- `cct-v0.19-macos-*.tar.gz.sha256` (checksum file)
 
 ### Install
 
@@ -138,7 +138,7 @@ CCT can be built on Windows using WSL2 (recommended) or MSYS2/MinGW.
    ```
 
 This creates a **Linux** binary that runs in WSL:
-- `cct-v0.12-linux-x86_64.tar.gz`
+- `cct-v0.19-linux-x86_64.tar.gz`
 
 **Usage:**
 ```bash
@@ -170,7 +170,7 @@ This creates a **Linux** binary that runs in WSL:
    ```
 
 This creates a **Windows** native binary:
-- `cct-v0.12-windows-x86_64.zip`
+- `cct-v0.19-windows-x86_64.zip`
 - Contains `cct.exe` and `cct.bat`
 
 > **Note:** Uses PowerShell `Compress-Archive` — no extra dependencies required.
@@ -224,11 +224,11 @@ your system `PATH`.
 
 | Platform | Binary | Wrapper | Package Name |
 |----------|--------|---------|--------------|
-| Linux x86_64 | `cct.bin` (ELF) | `cct` (shell) | `cct-v0.12-linux-x86_64.tar.gz` |
-| Linux ARM64 | `cct.bin` (ELF) | `cct` (shell) | `cct-v0.12-linux-arm64.tar.gz` |
-| macOS ARM64 | `cct.bin` (Mach-O) | `cct` (shell) | `cct-v0.12-macos-arm64.tar.gz` |
-| macOS x86_64 | `cct.bin` (Mach-O) | `cct` (shell) | `cct-v0.12-macos-x86_64.tar.gz` |
-| Windows x86_64 | `cct.exe` (PE) | `cct.bat` (batch) | `cct-v0.12-windows-x86_64.zip` |
+| Linux x86_64 | `cct.bin` (ELF) | `cct` (shell) | `cct-v0.19-linux-x86_64.tar.gz` |
+| Linux ARM64 | `cct.bin` (ELF) | `cct` (shell) | `cct-v0.19-linux-arm64.tar.gz` |
+| macOS ARM64 | `cct.bin` (Mach-O) | `cct` (shell) | `cct-v0.19-macos-arm64.tar.gz` |
+| macOS x86_64 | `cct.bin` (Mach-O) | `cct` (shell) | `cct-v0.19-macos-x86_64.tar.gz` |
+| Windows x86_64 | `cct.exe` (PE) | `cct.bat` (batch) | `cct-v0.19-windows-x86_64.zip` |
 
 ---
 
@@ -238,12 +238,12 @@ After downloading a release, verify its integrity:
 
 **Linux/macOS:**
 ```bash
-sha256sum -c cct-v0.12-*.tar.gz.sha256
+sha256sum -c cct-v0.19-*.tar.gz.sha256
 ```
 
 **Windows (PowerShell):**
 ```powershell
-Get-FileHash cct-v0.12-windows-*.zip -Algorithm SHA256
+Get-FileHash cct-v0.19-windows-*.zip -Algorithm SHA256
 # Compare output with .sha256 file content
 ```
 
@@ -303,9 +303,9 @@ make lint
 Cross-compilation is not currently supported. Build on the target platform or use appropriate toolchains.
 
 For creating multi-platform releases, build on each platform separately:
-1. Build on Linux → `cct-v0.12-linux-x86_64.tar.gz`
-2. Build on macOS → `cct-v0.12-macos-arm64.tar.gz`
-3. Build on Windows (MSYS2) → `cct-v0.12-windows-x86_64.tar.gz`
+1. Build on Linux → `cct-v0.19-linux-x86_64.tar.gz`
+2. Build on macOS → `cct-v0.19-macos-arm64.tar.gz`
+3. Build on Windows (MSYS2) → `cct-v0.19-windows-x86_64.tar.gz`
 
 ---
 

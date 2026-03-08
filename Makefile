@@ -252,7 +252,7 @@ endif
 	@echo "Distribution bundle ready: $(DIST_DIR)"
 
 # Version and platform detection
-VERSION ?= 0.12
+VERSION ?= 0.19
 UNAME_S := $(shell uname -s 2>/dev/null || echo unknown)
 UNAME_M := $(shell uname -m 2>/dev/null || echo unknown)
 
