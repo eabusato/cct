@@ -483,6 +483,13 @@ EVOCA <Type> name
 EVOCA <Type> name AD <expr>
 ```
 
+Semantics:
+- `EVOCA` introduces a new local binding in the current scope.
+- the declared type is explicit; CCT does not infer the variable type from the initializer in the stable subset.
+- the `AD <expr>` form initializes the binding at declaration time.
+- the form without `AD` declares the symbol without an explicit initializer; later use must still satisfy semantic/type rules before codegen.
+- `EVOCA` creates a binding; it does not mutate an existing one. Reassignment after declaration uses `VINCIRE`.
+
 ### 5.2 `VINCIRE` (assignment)
 
 Syntax:
@@ -497,6 +504,13 @@ Targets supported in the current subset:
 - index access
 - pointer dereference
 
+Semantics:
+- `VINCIRE` updates an already-existing assignable target.
+- the right-hand expression must be assignment-compatible with the target type.
+- `VINCIRE` is the mutation form for locals, fields, indexed elements, and dereferenced pointers in the stable subset.
+- bindings declared as `CONSTANS` cannot be reassigned through `VINCIRE`.
+- use `EVOCA` when creating a new variable; use `VINCIRE` when changing the value of one that already exists.
+
 ### 5.3 `REDDE` (return)
 
 Syntax:
@@ -506,6 +520,13 @@ REDDE
 REDDE <expr>
 ```
 
+Semantics:
+- `REDDE` terminates the current `RITUALE` immediately and transfers control back to the caller.
+- `REDDE <expr>` is required when the ritual returns a non-`NIHIL` type.
+- bare `REDDE` is valid only for rituals whose effective return type is `NIHIL`.
+- the returned expression must match the ritual return type under normal assignment-compatibility rules.
+- unlike `ANUR`, `REDDE` exits only the current ritual, not the whole process.
+
 ### 5.4 `ANUR` (process exit)
 
 Syntax:
@@ -513,6 +534,12 @@ Syntax:
 ```cct
 ANUR <int-expr>
 ```
+
+Semantics:
+- `ANUR` terminates the whole program with the provided integer exit code.
+- control does not return to the current ritual after `ANUR`.
+- the argument must be an integer expression in the stable subset.
+- use `REDDE` to leave a ritual normally; use `ANUR` only when the intended effect is process termination.
 
 ### 5.5 `SI / ALITER` (if/else)
 
@@ -528,6 +555,13 @@ FIN SI
 
 `ALITER` is optional.
 
+Semantics:
+- `SI` evaluates its condition and executes the first branch whose condition path is satisfied.
+- the condition must be `VERUM` or an integer-compatible value in the current subset.
+- `ALITER` is the fallback branch of `SI`; it runs only when the `SI` condition is false.
+- `ALITER` belongs only to `SI`; it is not used inside `CUM`.
+- `ALITER SI` is accepted as chained syntax and behaves as a nested `SI` inside the `else` branch.
+
 ### 5.6 `DUM` (while)
 
 Syntax:
@@ -538,6 +572,12 @@ DUM <condition>
 FIN DUM
 ```
 
+Semantics:
+- `DUM` is a pre-condition loop.
+- the condition is checked before each iteration.
+- if the condition is false at the first check, the body does not execute.
+- the condition must be `VERUM` or integer-compatible in the stable subset.
+
 ### 5.7 `DONEC` (do-while)
 
 Syntax:
@@ -547,6 +587,12 @@ DONEC
   ...
 DUM <condition>
 ```
+
+Semantics:
+- `DONEC` is a post-condition loop.
+- the body executes once before the trailing `DUM <condition>` check.
+- after each iteration, the trailing condition decides whether another iteration runs.
+- because the test is at the end, a `DONEC` body executes at least once.
 
 ### 5.8 `REPETE` (for-range)
 
@@ -566,6 +612,17 @@ REPETE i DE <start> AD <end> GRADUS <step>
 FIN REPETE
 ```
 
+Semantics:
+- `REPETE` is the canonical integer range loop.
+- the iterator symbol is introduced as a loop-local binding whose scope is the loop body.
+- `start`, `end`, and optional `step` are evaluated before loop traversal begins.
+- when `GRADUS` is omitted, the default step is `1`.
+- the loop is inclusive on the end bound:
+  - with positive step, it continues while `i <= end`;
+  - with negative step, it continues while `i >= end`.
+- `GRADUS 0` is invalid and fails at runtime in the stable executable subset.
+- `start`, `end`, and `step` must be integer-compatible.
+
 ### 5.9 `ITERUM` (collection iterator)
 
 #### 5.9.1 Core Form
@@ -582,6 +639,7 @@ Rules:
 - `COM` is part of the canonical surface syntax.
 - iterator variable scope is local to the `ITERUM` body.
 - lazy iterator protocols are outside the current stable subset.
+- `ITERUM` is the canonical collection traversal form; unlike `REPETE`, it iterates over elements supplied by a collection value rather than an integer range.
 
 #### 5.9.2 `ITERUM` over `FLUXUS` and `SERIES`
 
@@ -596,6 +654,7 @@ Collection coverage:
 Iteration semantics:
 - exactly one binding symbol is required.
 - traversal order is index order.
+- the binding receives each element value in sequence.
 
 #### 5.9.3 `ITERUM` over `map` and `set` (FASE 19D)
 
@@ -625,6 +684,8 @@ Arity and ordering rules:
 - `set`: exactly 1 binding
 - map/set iteration order is insertion order
 - arity mismatch is a compile-time error
+- in `map`, the first binding is always the key and the second is the value.
+- in `set`, the single binding is the stored item.
 
 Iterable collections summary:
 
@@ -642,6 +703,12 @@ Syntax:
 ```cct
 DIMITTE pointer_symbol
 ```
+
+Semantics:
+- `DIMITTE` ends the manual ownership of a pointer symbol and emits the explicit release path for that binding.
+- in the stable subset, the target must be an identifier bound to a pointer-typed local or parameter.
+- `DIMITTE` does not accept arbitrary expressions, field accesses, index expressions, or dereferenced targets.
+- this is the statement form for explicit pointer release; it is not a general destructor mechanism for all value types.
 
 ### 5.11 Failure Control: `TEMPTA`, `CAPE`, `SEMPER`, `IACE`
 
@@ -676,6 +743,15 @@ FIN TEMPTA
 Subset constraints:
 - exactly one `CAPE` in current official subset
 - `SEMPER` must come after `CAPE`
+- failure control is not supported in the freestanding profile
+
+Operational semantics:
+- `IACE` raises a failure path immediately. In the stable subset, its payload must be `VERBUM` or `FRACTUM`.
+- `TEMPTA` defines a protected block.
+- `CAPE FRACTUM erro` handles a failure raised inside the protected block and binds the caught payload to `erro` only inside the `CAPE` block.
+- `SEMPER` is the finalization block of `TEMPTA`; it executes after the protected/catch path completes, regardless of success or handled failure.
+- if no failure occurs, the `CAPE` block is skipped.
+- if a failure is rethrown inside `CAPE`, propagation continues after local finalization rules run.
 
 ### 5.12 `CUM` (pattern-style selection)
 
@@ -698,6 +774,10 @@ Semantics:
   - if `ALIOQUIN` is absent and scrutinee type is `ORDO`, exhaustiveness diagnostics apply.
 - OR-cases are represented by multiple consecutive `CASUS` labels sharing one body.
 - for `ORDO` with payload, bindings are local to the matched `CASUS` block.
+- each `CASUS` is a match arm of `CUM`; its body is the statement block after `:`.
+- `ALIOQUIN` is the fallback arm of `CUM`: it runs only when no preceding `CASUS` matches.
+- `ALIOQUIN` is not an alias of `ALITER`: `ALITER` belongs to `SI`, while `ALIOQUIN` belongs to `CUM`.
+- in payload matches, `CASUS Variante(a, b)` binds payload fields by position and exposes `a`, `b`, ... only inside that case body.
 
 Exhaustiveness rules:
 - `CUM` over `ORDO` (with or without payload): exhaustive coverage is required unless `ALIOQUIN` is present.
@@ -708,6 +788,7 @@ Restrictions:
 - OR-cases with payload bindings in a shared body are not supported.
 - nested payload destructuring patterns are not supported in the stable subset.
 - `FRANGE` inside `CUM` nested in a loop exits the enclosing loop, not the `CUM`.
+- `ALIOQUIN`, when present, must be the final arm before `FIN CUM`.
 
 Examples:
 
@@ -737,6 +818,12 @@ FIN CUM
 Status:
 - `FRANGE` and `RECEDE`: Stable; valid only inside `DUM`, `DONEC`, `REPETE`, `ITERUM`
 - `TRANSITUS`: parsed and represented in AST; currently outside the stable executable subset in codegen
+
+Semantics:
+- `FRANGE` exits the nearest enclosing loop immediately.
+- `RECEDE` skips the remainder of the current iteration and continues with the next iteration of the nearest enclosing loop.
+- neither `FRANGE` nor `RECEDE` targets `CUM`; if they appear inside a `CUM` nested in a loop, they still target the loop.
+- `TRANSITUS` is reserved for label-style control transfer, but remains outside the stable executable subset.
 
 ## 6. Expression Reference
 
@@ -1472,15 +1559,15 @@ Legend:
 
 | Keyword | Meaning | Status | Notes |
 |---|---|---|---|
-| `SI` | if | Stable | supports `ALITER` |
-| `ALITER` | else | Stable | optional |
-| `CUM` | pattern/switch selection | Stable | statement-only selection over literals and ORDO variants |
-| `CASUS` | case arm in `CUM` | Stable | supports OR-case literals and ORDO payload bindings |
-| `ALIOQUIN` | default arm in `CUM` | Stable | optional fallback branch |
-| `DUM` | while / do-while trailer | Stable | used by both `DUM` and `DONEC ... DUM` |
-| `DONEC` | do-while block start | Stable | post-condition form |
-| `REPETE` | for-range loop | Stable | `DE`, `AD`, optional `GRADUS` |
-| `ITERUM` | collection iteration loop | Stable | arity depends on collection (`map`: 2 bindings; others: 1) |
+| `SI` | if | Stable | conditional branch; condition must be boolean/integer-compatible and may have optional `ALITER` |
+| `ALITER` | else | Stable | fallback branch of `SI`; also accepts chained `ALITER SI` |
+| `CUM` | pattern/switch selection | Stable | statement-only multi-arm selection over literals and `ORDO` variants |
+| `CASUS` | case arm in `CUM` | Stable | each `CASUS` declares one arm; payload bindings are only valid for `ORDO` variants |
+| `ALIOQUIN` | default arm in `CUM` | Stable | final fallback arm of `CUM`, executed only when no `CASUS` matches |
+| `DUM` | while / do-while trailer | Stable | pre-condition loop form and trailing condition marker of `DONEC` |
+| `DONEC` | do-while block start | Stable | post-condition loop; body runs before trailing `DUM` check |
+| `REPETE` | for-range loop | Stable | inclusive integer range loop with `DE`, `AD`, and optional `GRADUS` |
+| `ITERUM` | collection iteration loop | Stable | iterates collection elements; arity depends on collection (`map`: 2 bindings; others: 1) |
 | `DE` | from | Stable | `REPETE` header |
 | `AD` | to/assign delimiter | Stable | in `REPETE` and `VINCIRE`/`EVOCA` initializer syntax |
 | `GRADUS` | step | Stable | optional in `REPETE` |
@@ -1494,23 +1581,23 @@ Legend:
 
 | Keyword | Meaning | Status | Notes |
 |---|---|---|---|
-| `EVOCA` | variable declaration | Stable | optional initializer with `AD` |
-| `VINCIRE` | assignment | Stable | `VINCIRE target AD expr` |
-| `REDDE` | return | Stable | expression optional depending on ritual type |
-| `ANUR` | process exit | Stable | integer expression expected |
+| `EVOCA` | variable declaration | Stable | introduces a new typed binding, with optional initializer via `AD` |
+| `VINCIRE` | assignment | Stable | mutates an existing assignable target: `VINCIRE target AD expr` |
+| `REDDE` | return | Stable | exits the current ritual; expression required unless return type is `NIHIL` |
+| `ANUR` | process exit | Stable | terminates the whole program with an integer exit code |
 | `CONIURA` | explicit ritual call | Stable | preferred executable call form |
 | `OBSECRO` | builtin call namespace | Partial | stable for `scribe`, `pete`, `libera` subset |
-| `DIMITTE` | pointer release statement | Stable | explicit discard path |
+| `DIMITTE` | pointer release statement | Stable | explicit manual release of a pointer symbol in the ownership subset |
 | `MENSURA` | size-of by type | Stable | returns integer size |
 
 ### 11.4 Failure-Control Keywords
 
 | Keyword | Meaning | Status | Notes |
 |---|---|---|---|
-| `TEMPTA` | try | Stable | current failure subset |
-| `CAPE` | catch | Stable | one handler in final phase-8 subset |
-| `SEMPER` | finally | Stable | must follow `CAPE` |
-| `IACE` | throw | Stable | payload subset restrictions apply |
+| `TEMPTA` | try | Stable | starts a protected region for failure control |
+| `CAPE` | catch | Stable | single handler block; current subset requires `CAPE FRACTUM ident` |
+| `SEMPER` | finally | Stable | finalization block of `TEMPTA`; must follow `CAPE` |
+| `IACE` | throw | Stable | raises failure path; stable subset accepts `VERBUM` or `FRACTUM` payloads |
 | `FRACTUM` | failure payload type | Stable | failure-control subset type |
 
 ### 11.5 Type and Literal Keywords
