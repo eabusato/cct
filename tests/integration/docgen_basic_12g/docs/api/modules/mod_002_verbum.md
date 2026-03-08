@@ -1,8 +1,8 @@
 # Module mod_002_verbum
 
-- Path: `/home/eabusato/dev/cct/lib/cct/verbum.cct`
+- Path: `/Users/eabusato/dev/cct/lib/cct/verbum.cct`
 - Origin: stdlib (cct/...)
-- Generated: 2026-03-07 20:41:28
+- Generated: 2026-03-07 21:47:09
 
 ## Symbols
 

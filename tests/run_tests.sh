@@ -7320,7 +7320,7 @@ SIGEOF
 echo "Test 580: advisory CI profile does not block review-required drift"
 cp "$SIG13B3_BASE" $CCT_TMP_DIR/cct_sigilo_ci_13b3_review_base.sigil
 cp "$SIG13B3_META" $CCT_TMP_DIR/cct_sigilo_ci_13b3_review_base.baseline.meta
-sed -i 's/system_hash = .*/system_hash = 0123456789abcdef/' $CCT_TMP_DIR/cct_sigilo_ci_13b3_review_base.sigil
+perl -0pi -e 's/system_hash = .*/system_hash = 0123456789abcdef/' "$CCT_TMP_DIR/cct_sigilo_ci_13b3_review_base.sigil"
 OUTPUT=$("$CCT_BIN" build --project "$SIG13B3_PROJ" --sigilo-check --sigilo-ci-profile advisory --sigilo-baseline $CCT_TMP_DIR/cct_sigilo_ci_13b3_review_base.sigil 2>&1)
 EXIT_CODE=$?
 if [ $EXIT_CODE -eq 0 ] && echo "$OUTPUT" | grep -q "profile=advisory" && echo "$OUTPUT" | grep -q "highest=review-required"; then
@@ -7451,7 +7451,7 @@ cp "$SIG13B3_BASE" "$SIG13B4_SUMMARY_BASE"
 cp "$SIG13B3_META" "$SIG13B4_SUMMARY_META"
 cp "$SIG13B3_BASE" "$SIG13B4_REVIEW_BASE"
 cp "$SIG13B3_META" "$SIG13B4_REVIEW_META"
-sed -i 's/system_hash = .*/system_hash = fedcba9876543210/' "$SIG13B4_REVIEW_BASE"
+perl -0pi -e 's/system_hash = .*/system_hash = fedcba9876543210/' "$SIG13B4_REVIEW_BASE"
 
 # Test 590: default sigilo report summary includes operational minimum fields
 echo "Test 590: sigilo report summary includes operational minimum fields"
@@ -7588,8 +7588,8 @@ fi
 # Test 600: deprecated field alias is accepted and mapped to visual_engine
 echo "Test 600: deprecated sigilo field alias remains accepted with compatibility mapping"
 cp "$SIG13C1_BASE_SIGIL" "$SIG13C1_DEPRECATED"
-sed -i '/^visual_engine = /d' "$SIG13C1_DEPRECATED"
-sed -i '/^\[totals\]/i sigilo_style = seal' "$SIG13C1_DEPRECATED"
+perl -0pi -e 's/^visual_engine = .*\n//m' "$SIG13C1_DEPRECATED"
+perl -0pi -e 's/^\[totals\]/sigilo_style = seal\n[totals]/m' "$SIG13C1_DEPRECATED"
 OUTPUT=$("$CCT_BIN" sigilo inspect "$SIG13C1_DEPRECATED" --format text 2>&1)
 EXIT_CODE=$?
 if [ $EXIT_CODE -eq 0 ] && echo "$OUTPUT" | grep -q "visual_engine=seal"; then
@@ -7601,7 +7601,7 @@ fi
 # Test 601: strict mode fails on schema incompatibility
 echo "Test 601: strict sigilo inspect fails on incompatible schema format"
 cp "$SIG13C1_BASE_SIGIL" "$SIG13C1_INVALID_SCHEMA"
-sed -i 's/^format = .*/format = cct.sigil.v2/' "$SIG13C1_INVALID_SCHEMA"
+perl -0pi -e 's/^format = .*/format = cct.sigil.v2/m' "$SIG13C1_INVALID_SCHEMA"
 OUTPUT=$("$CCT_BIN" sigilo inspect "$SIG13C1_INVALID_SCHEMA" --strict --summary 2>&1)
 EXIT_CODE=$?
 if [ $EXIT_CODE -ne 0 ] && echo "$OUTPUT" | grep -q "schema_mismatch"; then
@@ -8075,7 +8075,7 @@ SIGEOF
 cp "$PHASE13D1_ART_BASE" "$PHASE13D1_ART_INFO"
 cp "$PHASE13D1_ART_BASE" "$PHASE13D1_ART_REVIEW"
 echo "future_optional = additive" >> "$PHASE13D1_ART_INFO"
-sed -i 's/semantic_hash = .*/semantic_hash = 1111111111111111/' "$PHASE13D1_ART_REVIEW"
+perl -0pi -e 's/semantic_hash = .*/semantic_hash = 1111111111111111/' "$PHASE13D1_ART_REVIEW"
 cat > "$PHASE13D1_ART_BEHAV" <<'SIGEOF'
 format = cct.sigil.v1
 sigilo_scope = system
@@ -8100,7 +8100,7 @@ fi
 echo "Test 631: baseline update/check covers stable and drifted states"
 OUTPUT=$("$CCT_BIN" sigilo baseline update "$PHASE13D1_ART_BASE" --baseline "$PHASE13D1_BASELINE" --force 2>&1)
 OUT_STABLE=$("$CCT_BIN" sigilo baseline check "$PHASE13D1_ART_BASE" --baseline "$PHASE13D1_BASELINE" --summary 2>&1)
-sed -i 's/semantic_hash = .*/semantic_hash = deadbeefcafebabe/' "$PHASE13D1_BASELINE"
+perl -0pi -e 's/semantic_hash = .*/semantic_hash = deadbeefcafebabe/' "$PHASE13D1_BASELINE"
 OUT_DRIFT=$("$CCT_BIN" sigilo baseline check "$PHASE13D1_ART_BASE" --baseline "$PHASE13D1_BASELINE" --strict --summary 2>&1)
 EXIT_DRIFT=$?
 if echo "$OUTPUT" | grep -q "status=written" && \
@@ -8117,7 +8117,7 @@ echo "Test 632: CI profile matrix advisory/gated/release remains stable"
 cp -R "$PHASE13D1_FIX/project" "$PHASE13D1_PROJ"
 "$CCT_BIN" build --project "$PHASE13D1_PROJ" >$CCT_TMP_DIR/cct_phase13d1_build_boot.out 2>&1 || true
 OUTPUT=$("$CCT_BIN" sigilo baseline update "$PHASE13D1_PROJ/src/main.system.sigil" --baseline "$PHASE13D1_CI_BASE" --force 2>&1)
-sed -i 's/system_hash = .*/system_hash = 0123456789abcdef/' "$PHASE13D1_CI_BASE"
+perl -0pi -e 's/system_hash = .*/system_hash = 0123456789abcdef/' "$PHASE13D1_CI_BASE"
 "$CCT_BIN" build --project "$PHASE13D1_PROJ" --sigilo-check --sigilo-ci-profile advisory --sigilo-baseline "$PHASE13D1_CI_BASE" >$CCT_TMP_DIR/cct_phase13d1_ci_advisory.out 2>&1
 EXIT_ADV=$?
 "$CCT_BIN" build --project "$PHASE13D1_PROJ" --sigilo-check --sigilo-ci-profile gated --sigilo-baseline "$PHASE13D1_CI_BASE" >$CCT_TMP_DIR/cct_phase13d1_ci_gated.out 2>&1
@@ -8269,7 +8269,7 @@ fi
 # Test 643: strict baseline drift keeps stable blocking exit and output
 echo "Test 643: strict baseline drift keeps stable blocking decision"
 cp "$PHASE13D2_BASELINE" "$PHASE13D2_DRIFT"
-sed -i 's/semantic_hash = .*/semantic_hash = deadbeefcafebabe/' "$PHASE13D2_DRIFT"
+perl -0pi -e 's/semantic_hash = .*/semantic_hash = deadbeefcafebabe/' "$PHASE13D2_DRIFT"
 "$CCT_BIN" sigilo baseline check "$PHASE13D2_BASE" --baseline "$PHASE13D2_DRIFT" --format structured --summary --strict >$CCT_TMP_DIR/cct_phase13d2_drift_1.out 2>&1
 EXIT1=$?
 "$CCT_BIN" sigilo baseline check "$PHASE13D2_BASE" --baseline "$PHASE13D2_DRIFT" --format structured --summary --strict >$CCT_TMP_DIR/cct_phase13d2_drift_2.out 2>&1
@@ -11129,33 +11129,10 @@ echo "FASE 16B3: Cross-GCC Freestanding Validation Tests"
 echo "========================================"
 echo ""
 
+CCT_PHASE16_TOOLCHAIN_SCRIPT="tools/freestanding_toolchain.sh"
+
 cct_phase16b3_resolve_cross_cc() {
-    if [ -n "${CCT_CROSS_CC:-}" ]; then
-        if command -v "$CCT_CROSS_CC" >/dev/null 2>&1 || "$CCT_CROSS_CC" --version >/dev/null 2>&1; then
-            echo "$CCT_CROSS_CC"
-            return 0
-        fi
-    fi
-
-    if command -v i686-elf-gcc >/dev/null 2>&1; then
-        echo "i686-elf-gcc"
-        return 0
-    fi
-
-    if command -v gcc >/dev/null 2>&1; then
-        local probe_src="$CCT_TMP_DIR/cct_phase16b3_probe.c"
-        local probe_obj="$CCT_TMP_DIR/cct_phase16b3_probe.o"
-        local probe_out="$CCT_TMP_DIR/cct_phase16b3_probe.out"
-        echo "int __cct_phase16b3_probe = 0;" > "$probe_src"
-        if gcc -m32 -ffreestanding -nostdlib -fno-pic -fno-stack-protector -fno-builtin \
-              -fno-asynchronous-unwind-tables -fno-unwind-tables \
-              -c "$probe_src" -o "$probe_obj" >"$probe_out" 2>&1; then
-            echo "gcc"
-            return 0
-        fi
-    fi
-
-    return 1
+    "$CCT_PHASE16_TOOLCHAIN_SCRIPT" show-cc
 }
 
 cct_phase16b3_cross_compile() {
@@ -11164,9 +11141,23 @@ cct_phase16b3_cross_compile() {
     local obj="$3"
     local log="$4"
 
-    "$cc" -m32 -ffreestanding -nostdlib -fno-pic -fno-stack-protector -fno-builtin \
-          -fno-asynchronous-unwind-tables -fno-unwind-tables \
-          -c "$src" -o "$obj" >"$log" 2>&1
+    CCT_CROSS_CC="$cc" "$CCT_PHASE16_TOOLCHAIN_SCRIPT" compile-c "$src" "$obj" >"$log" 2>&1
+}
+
+cct_phase16_assemble() {
+    local cc="$1"
+    local asm="$2"
+    local obj="$3"
+    local log="$4"
+
+    CCT_CROSS_CC="$cc" "$CCT_PHASE16_TOOLCHAIN_SCRIPT" assemble "$asm" "$obj" >"$log" 2>&1
+}
+
+cct_phase16_ld_partial_link() {
+    local obj="$1"
+    local out="$2"
+
+    ld -m elf_i386 -r "$obj" -o "$out"
 }
 
 cct_phase16b3_audit_forbidden_undef() {
@@ -11226,7 +11217,7 @@ cct_phase16b3_run_case() {
 
 CCT_PHASE16B3_CROSS_CC="$(cct_phase16b3_resolve_cross_cc || true)"
 CCT_PHASE16B3_ENABLED=1
-if [ -z "$CCT_PHASE16B3_CROSS_CC" ]; then
+if [ ! -x "$CCT_PHASE16_TOOLCHAIN_SCRIPT" ] || [ -z "$CCT_PHASE16B3_CROSS_CC" ]; then
     CCT_PHASE16B3_ENABLED=0
 fi
 
@@ -11421,7 +11412,7 @@ echo "Test 925: --emit-asm fails clearly with invalid CCT_CROSS_CC"
 OUTPUT=$( CCT_CROSS_CC=/invalid/compiler "$CCT_BIN" --profile freestanding --emit-asm "tests/integration/emit_asm_basic_16c1.cct" 2>&1 )
 RC_925=$?
 if [ "$RC_925" -ne 0 ] && \
-   echo "$OUTPUT" | grep -q "cct: --emit-asm requer cross-compiler (-m32); instale i686-elf-gcc ou defina CCT_CROSS_CC"; then
+   echo "$OUTPUT" | grep -Eq "cct: --emit-asm requer cross-compiler \\(-m32\\) ou clang -target i386-unknown-none-elf; instale i686-elf-gcc/clang ou defina CCT_CROSS_CC"; then
     test_pass "--emit-asm sem toolchain válida falha com diagnóstico canônico"
 else
     test_fail "diagnóstico de ausência de cross-compiler regrediu em --emit-asm"
@@ -11555,20 +11546,20 @@ fi
 echo "Test 932: emitted ASM assembles with as --32"
 if [ "$CCT_PHASE16B3_ENABLED" -eq 0 ]; then
     test_pass "16C3 gas-assemble check skipped: cross-compiler indisponível (use CCT_CROSS_CC, i686-elf-gcc ou gcc -m32)"
-elif ! command -v as >/dev/null 2>&1; then
-    test_pass "16C3 gas-assemble check skipped: as não disponível no ambiente"
 else
     SRC_932="tests/integration/asm_gas_assemble_16c3.cct"
     BASE_932="${SRC_932%.cct}"
     OBJ_932="$CCT_TMP_DIR/asm_gas_assemble_16c3.o"
+    AS_LOG_932="$CCT_TMP_DIR/asm_gas_assemble_16c3.as.out"
     cleanup_codegen_artifacts "$SRC_932"
-    rm -f "${BASE_932}.cgen.s" "$OBJ_932"
+    rm -f "${BASE_932}.cgen.s" "$OBJ_932" "$AS_LOG_932"
     OUTPUT=$( "$CCT_BIN" --profile freestanding --emit-asm "$SRC_932" 2>&1 )
     RC_932_GEN=$?
-    if [ "$RC_932_GEN" -eq 0 ] && as --32 "${BASE_932}.cgen.s" -o "$OBJ_932" >/dev/null 2>&1; then
-        test_pass "asm_gas_assemble_16c3 confirma montagem GAS --32"
+    if [ "$RC_932_GEN" -eq 0 ] && \
+       cct_phase16_assemble "$CCT_PHASE16B3_CROSS_CC" "${BASE_932}.cgen.s" "$OBJ_932" "$AS_LOG_932"; then
+        test_pass "asm_gas_assemble_16c3 confirma montagem freestanding i386"
     else
-        test_fail "FAIL: montagem GAS --32 falhou"
+        test_fail "FAIL: montagem freestanding i386 falhou"
     fi
 fi
 
@@ -11579,9 +11570,6 @@ echo "========================================"
 echo ""
 
 CCT_PHASE16C4_ENABLED=$CCT_PHASE16B3_ENABLED
-if ! command -v as >/dev/null 2>&1; then
-    CCT_PHASE16C4_ENABLED=0
-fi
 
 CCT_PHASE16C4_LAST_ASM=""
 CCT_PHASE16C4_LAST_OBJ=""
@@ -11606,8 +11594,8 @@ cct_phase16c4_run_case() {
         return 1
     }
 
-    as --32 "$asm" -o "$obj" >"$as_log" 2>&1 || {
-        echo "FASE 16C4 montagem falhou: as --32 $asm -o $obj"
+    cct_phase16_assemble "$CCT_PHASE16B3_CROSS_CC" "$asm" "$obj" "$as_log" || {
+        echo "FASE 16C4 montagem falhou: $CCT_PHASE16_TOOLCHAIN_SCRIPT assemble $asm -o $obj"
         cat "$as_log"
         return 1
     }
@@ -11640,7 +11628,7 @@ echo "Test 933: e2e_minimal_16c4 pipeline"
 if [ "$CCT_PHASE16C4_ENABLED" -eq 0 ]; then
     test_pass "16C4 minimal skipped: cross-compiler/as indisponíveis"
 elif cct_phase16c4_run_case "tests/integration/e2e_minimal_16c4.cct" "933_minimal"; then
-    test_pass "e2e_minimal_16c4: emit-asm -> as --32 -> nm audit passed"
+    test_pass "e2e_minimal_16c4: emit-asm -> assemble -> nm audit passed"
 else
     test_fail "e2e_minimal_16c4 pipeline regressed"
 fi
@@ -11650,7 +11638,7 @@ echo "Test 934: e2e_arithmetic_16c4 pipeline"
 if [ "$CCT_PHASE16C4_ENABLED" -eq 0 ]; then
     test_pass "16C4 arithmetic skipped: cross-compiler/as indisponíveis"
 elif cct_phase16c4_run_case "tests/integration/e2e_arithmetic_16c4.cct" "934_arithmetic"; then
-    test_pass "e2e_arithmetic_16c4: emit-asm -> as --32 -> nm audit passed"
+    test_pass "e2e_arithmetic_16c4: emit-asm -> assemble -> nm audit passed"
 else
     test_fail "e2e_arithmetic_16c4 pipeline regressed"
 fi
@@ -11771,6 +11759,8 @@ CCT_PHASE16D2_LINKCHECK="build/lbos-bridge/cct_kernel_linkcheck.o"
 CCT_PHASE16D2_UNDEF="$CCT_TMP_DIR/cct_phase16d2_undef.txt"
 CCT_PHASE16D2_READY=1
 CCT_PHASE16D2_READY_MSG=""
+CCT_PHASE16D2_PARTIAL_LINK_READY=1
+CCT_PHASE16D2_PARTIAL_LINK_MSG=""
 rm -f "$CCT_PHASE16D2_UNDEF" "$CCT_PHASE16D2_LINKCHECK"
 
 if ! command -v nm >/dev/null 2>&1; then
@@ -11779,9 +11769,6 @@ if ! command -v nm >/dev/null 2>&1; then
 elif ! command -v objdump >/dev/null 2>&1; then
     CCT_PHASE16D2_READY=0
     CCT_PHASE16D2_READY_MSG="objdump não disponível para FASE 16D2"
-elif ! command -v ld >/dev/null 2>&1; then
-    CCT_PHASE16D2_READY=0
-    CCT_PHASE16D2_READY_MSG="ld não disponível para FASE 16D2"
 else
     OUTPUT=$(make lbos-bridge 2>&1)
     RC_16D2_BOOTSTRAP=$?
@@ -11791,6 +11778,12 @@ else
     elif [ ! -f "$CCT_PHASE16D2_OBJ" ]; then
         CCT_PHASE16D2_READY=0
         CCT_PHASE16D2_READY_MSG="artefato ausente: $CCT_PHASE16D2_OBJ"
+    elif ! command -v ld >/dev/null 2>&1; then
+        CCT_PHASE16D2_PARTIAL_LINK_READY=0
+        CCT_PHASE16D2_PARTIAL_LINK_MSG="ld não disponível para link parcial ELF32"
+    elif ! cct_phase16_ld_partial_link "$CCT_PHASE16D2_OBJ" "$CCT_PHASE16D2_LINKCHECK" >/dev/null 2>&1; then
+        CCT_PHASE16D2_PARTIAL_LINK_READY=0
+        CCT_PHASE16D2_PARTIAL_LINK_MSG="link parcial ELF32 indisponível no ambiente"
     fi
 fi
 
@@ -11834,7 +11827,9 @@ fi
 echo "Test 944: abi_partial_link_16d2"
 if [ "$CCT_PHASE16D2_READY" -eq 0 ]; then
     test_fail "$CCT_PHASE16D2_READY_MSG"
-elif ld -m elf_i386 -r "$CCT_PHASE16D2_OBJ" -o "$CCT_PHASE16D2_LINKCHECK" >/dev/null 2>&1; then
+elif [ "$CCT_PHASE16D2_PARTIAL_LINK_READY" -eq 0 ]; then
+    test_pass "16D2 partial-link skipped: $CCT_PHASE16D2_PARTIAL_LINK_MSG"
+elif cct_phase16_ld_partial_link "$CCT_PHASE16D2_OBJ" "$CCT_PHASE16D2_LINKCHECK" >/dev/null 2>&1; then
     test_pass "16D2 link parcial ELF32 (-r) executou com sucesso"
 else
     test_fail "16D2 link parcial ELF32 (-r) falhou"
@@ -11844,6 +11839,8 @@ fi
 echo "Test 945: abi_linkcheck_symbol_16d2"
 if [ "$CCT_PHASE16D2_READY" -eq 0 ]; then
     test_fail "$CCT_PHASE16D2_READY_MSG"
+elif [ "$CCT_PHASE16D2_PARTIAL_LINK_READY" -eq 0 ]; then
+    test_pass "16D2 linkcheck skipped: $CCT_PHASE16D2_PARTIAL_LINK_MSG"
 elif [ ! -f "$CCT_PHASE16D2_LINKCHECK" ]; then
     test_fail "16D2 objeto linkcheck ausente: $CCT_PHASE16D2_LINKCHECK"
 elif objdump -t "$CCT_PHASE16D2_LINKCHECK" | grep -q 'cct_fn_'; then

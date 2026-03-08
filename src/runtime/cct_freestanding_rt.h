@@ -25,40 +25,61 @@ __attribute__((noreturn)) void cct_fs_panic(void);
 cct_rex_t cct_fs_pow_i32(cct_rex_t base, cct_rex_t exp);
 
 static inline __attribute__((noreturn)) void cct_fs_halt(void) {
+#if defined(__i386__) || defined(__x86_64__)
     __asm__ volatile("cli\n\thlt" : : : "memory");
+#else
+    __builtin_trap();
+#endif
     __builtin_unreachable();
 }
 
 static inline __attribute__((noreturn)) void cct_svc_halt(void) {
+#if defined(__i386__) || defined(__x86_64__)
     __asm__ volatile("cli\n\thlt" : : : "memory");
+#else
+    __builtin_trap();
+#endif
     __builtin_unreachable();
 }
 
 static inline void cct_svc_outb(long long porta, long long dado) {
     uint16_t p = (uint16_t)(porta & 0xFFFFLL);
     uint8_t d = (uint8_t)(dado & 0xFFLL);
+#if defined(__i386__) || defined(__x86_64__)
     __asm__ volatile("out{b %0, %1 | %1, %0}" : : "a"(d), "Nd"(p) : "memory");
     __asm__ volatile("clc" : : : "cc");
+#else
+    (void)p;
+    (void)d;
+#endif
 }
 
 static inline long long cct_svc_inb(long long porta) {
     uint8_t r = 0;
     uint16_t p = (uint16_t)(porta & 0xFFFFLL);
+#if defined(__i386__) || defined(__x86_64__)
     __asm__ volatile("in{b %1, %0 | %0, %1}" : "=a"(r) : "Nd"(p) : "memory");
     __asm__ volatile("clc" : : : "cc");
+#else
+    (void)p;
+#endif
     return (long long)r;
 }
 
 static inline void cct_svc_memcpy(void *dst, const void *src, long long n) {
     if (!dst || !src || n < 0) cct_svc_halt();
     cct_fs_memcpy(dst, src, (size_t)n);
+#if defined(__i386__) || defined(__x86_64__)
     __asm__ volatile("clc" : : : "cc");
+#endif
 }
 
 static inline void cct_svc_memset(void *dst, long long val, long long n) {
     if (!dst || n < 0) cct_svc_halt();
     cct_fs_memset(dst, (int)(val & 0xFFLL), (size_t)n);
+#if defined(__i386__) || defined(__x86_64__)
     __asm__ volatile("clc" : : : "cc");
+#endif
 }
 
 #endif /* CCT_FREESTANDING_RT_H */

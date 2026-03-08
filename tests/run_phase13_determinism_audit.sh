@@ -175,7 +175,7 @@ SIGEOF
 
 "$CCT_BIN" sigilo baseline update "$BASE_SIG" --baseline "$BASELINE_SIG" --force >$CCT_TMP_DIR/cct_phase13d2_baseline_update.out 2>&1
 cp "$BASELINE_SIG" "$BASELINE_DRIFT_SIG"
-sed -i 's/semantic_hash = .*/semantic_hash = deadbeefcafebabe/' "$BASELINE_DRIFT_SIG"
+perl -0pi -e 's/semantic_hash = .*/semantic_hash = deadbeefcafebabe/' "$BASELINE_DRIFT_SIG"
 
 echo "FASE 13D.2 — Determinism Audit"
 echo "========================================"

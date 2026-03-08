@@ -1,64 +1,97 @@
-	.file	"emit_asm_basic_16c1.cgen.c"
-	.intel_syntax noprefix
 	.text
-	.type	cct_rt_fractum_is_active, @function
-cct_rt_fractum_is_active:
+	.intel_syntax noprefix
+	.file	"emit_asm_basic_16c1.cgen.c"
+	.p2align	4, 0x90                         # -- Begin function cct_fn_main
+	.type	cct_fn_main,@function
+cct_fn_main:                            # @cct_fn_main
+# %bb.0:
 	push	ebp
 	mov	ebp, esp
-	mov	eax, 0
+	and	esp, -8
+	sub	esp, 16
+	mov	dword ptr [esp + 4], 0
+	mov	dword ptr [esp], 41
+	call	cct_rt_fractum_is_active
+	cmp	eax, 0
+	je	.LBB0_2
+# %bb.1:
+	mov	dword ptr [esp + 12], 0
+	mov	dword ptr [esp + 8], 0
+	jmp	.LBB0_3
+.LBB0_2:
+	mov	ecx, dword ptr [esp]
+	mov	eax, dword ptr [esp + 4]
+	add	ecx, 1
+	adc	eax, 0
+	mov	dword ptr [esp + 8], ecx
+	mov	dword ptr [esp + 12], eax
+.LBB0_3:
+	mov	eax, dword ptr [esp + 8]
+	mov	edx, dword ptr [esp + 12]
+	mov	esp, ebp
 	pop	ebp
 	ret
-	.size	cct_rt_fractum_is_active, .-cct_rt_fractum_is_active
-	.type	cct_rt_fractum_uncaught_abort, @function
-cct_rt_fractum_uncaught_abort:
+.Lfunc_end0:
+	.size	cct_fn_main, .Lfunc_end0-cct_fn_main
+                                        # -- End function
+	.p2align	4, 0x90                         # -- Begin function cct_rt_fractum_is_active
+	.type	cct_rt_fractum_is_active,@function
+cct_rt_fractum_is_active:               # @cct_rt_fractum_is_active
+# %bb.0:
 	push	ebp
 	mov	ebp, esp
-	sub	esp, 8
-	call	cct_fs_panic
-	.size	cct_rt_fractum_uncaught_abort, .-cct_rt_fractum_uncaught_abort
-	.type	cct_fn_main, @function
-cct_fn_main:
-	push	ebp
-	mov	ebp, esp
-	sub	esp, 16
-	mov	DWORD PTR [ebp-8], 41
-	mov	DWORD PTR [ebp-4], 0
-	call	cct_rt_fractum_is_active
-	test	eax, eax
-	je	.L5
-	mov	eax, 0
-	mov	edx, 0
-	jmp	.L6
-.L5:
-	mov	eax, DWORD PTR [ebp-8]
-	mov	edx, DWORD PTR [ebp-4]
-	add	eax, 1
-	adc	edx, 0
-.L6:
-	leave
+	xor	eax, eax
+	pop	ebp
 	ret
-	.size	cct_fn_main, .-cct_fn_main
-	.globl	main
-	.type	main, @function
-main:
+.Lfunc_end1:
+	.size	cct_rt_fractum_is_active, .Lfunc_end1-cct_rt_fractum_is_active
+                                        # -- End function
+	.globl	main                            # -- Begin function main
+	.p2align	4, 0x90
+	.type	main,@function
+main:                                   # @main
+# %bb.0:
 	push	ebp
 	mov	ebp, esp
-	and	esp, -16
+	and	esp, -8
 	sub	esp, 16
+	mov	eax, dword ptr [ebp + 12]
+	mov	eax, dword ptr [ebp + 8]
 	call	cct_fn_main
-	mov	DWORD PTR [esp+8], eax
-	mov	DWORD PTR [esp+12], edx
+	mov	dword ptr [esp + 4], edx
+	mov	dword ptr [esp], eax
 	call	cct_rt_fractum_is_active
-	test	eax, eax
-	je	.L8
+	cmp	eax, 0
+	je	.LBB2_2
+# %bb.1:
 	call	cct_rt_fractum_uncaught_abort
-	mov	eax, 1
-	jmp	.L9
-.L8:
-	mov	eax, DWORD PTR [esp+8]
-.L9:
-	leave
+	mov	dword ptr [esp + 12], 1
+	jmp	.LBB2_3
+.LBB2_2:
+	mov	eax, dword ptr [esp]
+	mov	dword ptr [esp + 12], eax
+.LBB2_3:
+	mov	eax, dword ptr [esp + 12]
+	mov	esp, ebp
+	pop	ebp
 	ret
-	.size	main, .-main
-	.ident	"GCC: (GNU) 15.2.1 20260209"
-	.section	.note.GNU-stack,"",@progbits
+.Lfunc_end2:
+	.size	main, .Lfunc_end2-main
+                                        # -- End function
+	.p2align	4, 0x90                         # -- Begin function cct_rt_fractum_uncaught_abort
+	.type	cct_rt_fractum_uncaught_abort,@function
+cct_rt_fractum_uncaught_abort:          # @cct_rt_fractum_uncaught_abort
+# %bb.0:
+	push	ebp
+	mov	ebp, esp
+	call	cct_fs_panic
+.Lfunc_end3:
+	.size	cct_rt_fractum_uncaught_abort, .Lfunc_end3-cct_rt_fractum_uncaught_abort
+                                        # -- End function
+	.ident	"Apple clang version 17.0.0 (clang-1700.6.4.2)"
+	.section	".note.GNU-stack","",@progbits
+	.addrsig
+	.addrsig_sym cct_fn_main
+	.addrsig_sym cct_rt_fractum_is_active
+	.addrsig_sym cct_rt_fractum_uncaught_abort
+	.addrsig_sym cct_fs_panic

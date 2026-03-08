@@ -1,9 +1,9 @@
 # valor_publico
 
 - Kind: `rituale`
-- Module: `/home/eabusato/dev/cct/tests/integration/docgen_visibility_12g/lib/vis.cct`
+- Module: `/Users/eabusato/dev/cct/tests/integration/docgen_visibility_12g/lib/vis.cct`
 - Visibility: `public`
-- Generated: 2026-03-07 20:41:28
+- Generated: 2026-03-07 21:47:09
 
 ## Signature
 

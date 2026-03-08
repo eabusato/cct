@@ -1,7 +1,7 @@
 # random_real_unit
 
 - Kind: `rituale`
-- Module: `/home/eabusato/dev/cct/lib/cct/random.cct`
+- Module: `/Users/eabusato/dev/cct/lib/cct/random.cct`
 - Visibility: `public`
 
 ## Signature

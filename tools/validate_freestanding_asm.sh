@@ -22,14 +22,16 @@ if [ ! -f "$ASM_FILE" ]; then
     fail "input file not found: $ASM_FILE"
 fi
 
-if ! command -v as >/dev/null 2>&1; then
-    fail "required tool not found: as"
-fi
 if ! command -v nm >/dev/null 2>&1; then
     fail "required tool not found: nm"
 fi
 if ! command -v objdump >/dev/null 2>&1; then
     fail "required tool not found: objdump"
+fi
+
+TOOLCHAIN_SCRIPT="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/freestanding_toolchain.sh"
+if [ ! -x "$TOOLCHAIN_SCRIPT" ]; then
+    fail "freestanding toolchain helper not found: $TOOLCHAIN_SCRIPT"
 fi
 
 if ! grep -Eq '^[[:space:]]*\.intel_syntax[[:space:]]+noprefix' "$ASM_FILE"; then
@@ -74,7 +76,7 @@ cleanup() {
 }
 trap cleanup EXIT
 
-if ! as --32 "$ASM_FILE" -o "$OBJ_FILE" >/dev/null 2>&1; then
+if ! "$TOOLCHAIN_SCRIPT" assemble "$ASM_FILE" "$OBJ_FILE" >/dev/null 2>&1; then
     fail "assembler failed for input ASM"
 fi
 
@@ -94,8 +96,8 @@ DISASM="$(objdump -d "$OBJ_FILE")"
 HAS_RET=0
 HAS_LEAVE_OR_POP_EBP=0
 
-echo "$DISASM" | grep -Eq '[[:space:]]ret[[:space:]]*$' && HAS_RET=1
-echo "$DISASM" | grep -Eq '[[:space:]]leave[[:space:]]*$|[[:space:]]pop[[:space:]]+%ebp[[:space:]]*$' && HAS_LEAVE_OR_POP_EBP=1
+echo "$DISASM" | grep -Eq '[[:space:]]ret(l)?[[:space:]]*$' && HAS_RET=1
+echo "$DISASM" | grep -Eq '[[:space:]]leave(l)?[[:space:]]*$|[[:space:]]pop(l)?[[:space:]]+%ebp[[:space:]]*$|[[:space:]]mov(l)?[[:space:]]+%ebp,[[:space:]]+%esp[[:space:]]*$' && HAS_LEAVE_OR_POP_EBP=1
 
 if [ "$HAS_RET" -ne 1 ] || [ "$HAS_LEAVE_OR_POP_EBP" -ne 1 ]; then
     fail "missing plausible function epilogue pattern (leave/ret or pop ebp/ret)"

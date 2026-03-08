@@ -35,6 +35,7 @@ CCT_KERNEL_SOURCE = lib/cct/kernel/kernel.cct
 CCT_KERNEL_ASM = $(CCT_KERNEL_SOURCE:.cct=.cgen.s)
 CCT_KERNEL_OBJ = $(CCT_LBOS_OUT)/cct_kernel.o
 CCT_KERNEL_ENTRY = kernel_halt
+CCT_FREESTANDING_TOOLCHAIN = tools/freestanding_toolchain.sh
 
 # Source files
 SRCS = \
@@ -139,8 +140,8 @@ $(BIN_DIR):
 lbos-bridge: $(TARGET) $(CCT_LBOS_OUT)
 	@echo "[CCT] lbos-bridge: emitindo ASM freestanding..."
 	@$(TARGET) --profile freestanding --emit-asm --entry $(CCT_KERNEL_ENTRY) "$(CCT_KERNEL_SOURCE)"
-	@echo "[CCT] lbos-bridge: montando objeto ELF32..."
-	@as --32 "$(CCT_KERNEL_ASM)" -o "$(CCT_KERNEL_OBJ)"
+	@echo "[CCT] lbos-bridge: montando objeto freestanding..."
+	@$(CCT_FREESTANDING_TOOLCHAIN) assemble "$(CCT_KERNEL_ASM)" "$(CCT_KERNEL_OBJ)"
 	@echo "[CCT] lbos-bridge: auditando símbolos undefined proibidos..."
 	@if nm "$(CCT_KERNEL_OBJ)" | awk '$$2 == "U" {print $$3}' | \
 		grep -Eq '^(printf|malloc|free|memcpy|memset|puts|fopen|__stack_chk_fail|__udivdi3|__divdi3|__muldi3)$$'; then \

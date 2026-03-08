@@ -121,41 +121,101 @@ static int cct_system_exit_code(int rc) {
     return rc;
 }
 
-static bool cct_cross_compiler_supports_m32(const char *cc) {
+typedef enum {
+    CCT_CROSS_COMPILER_NONE = 0,
+    CCT_CROSS_COMPILER_GNU_M32,
+    CCT_CROSS_COMPILER_CLANG_I386_ELF
+} cct_cross_compiler_mode_t;
+
+typedef struct {
+    char cc[512];
+    cct_cross_compiler_mode_t mode;
+} cct_cross_compiler_t;
+
+static bool cct_cross_compiler_supports_gnu_m32(const char *cc) {
     if (!cc || cc[0] == '\0') return false;
     char cmd[4096];
     snprintf(cmd, sizeof(cmd),
              "printf 'int __cct_probe = 0;\\n' | \"%s\" "
-             "-m32 -ffreestanding -nostdlib -fno-pic -fno-stack-protector -fno-builtin "
+             "-m32 -ffreestanding -nostdlib -fno-pic -fno-stack-protector -fno-builtin -fwrapv "
              "-fno-asynchronous-unwind-tables -fno-unwind-tables "
-             "-x c -c -o /dev/null - >/dev/null 2>&1",
-             cc);
+             "-x c -c -o /dev/null - >/dev/null 2>&1 && "
+             "printf '' | \"%s\" -m32 -dM -E -x c - 2>/dev/null | grep -q '__i386__'",
+             cc, cc);
     return system(cmd) == 0;
 }
 
-static bool cct_resolve_cross_compiler(char *out, size_t out_cap) {
-    if (!out || out_cap == 0) return false;
+static bool cct_cross_compiler_supports_clang_i386_target(const char *cc) {
+    if (!cc || cc[0] == '\0') return false;
+    char cmd[4096];
+    snprintf(cmd, sizeof(cmd),
+             "printf 'int __cct_probe = 0;\\n' | \"%s\" "
+             "-target i386-unknown-none-elf "
+             "-ffreestanding -nostdlib -fno-pic -fno-stack-protector -fno-builtin -fwrapv "
+             "-fno-asynchronous-unwind-tables -fno-unwind-tables "
+             "-x c -c -o /dev/null - >/dev/null 2>&1 && "
+             "printf '' | \"%s\" -target i386-unknown-none-elf -dM -E -x c - 2>/dev/null | grep -q '__i386__'",
+             cc, cc);
+    return system(cmd) == 0;
+}
+
+static bool cct_resolve_cross_compiler(cct_cross_compiler_t *out) {
+    if (!out) return false;
+    out->cc[0] = '\0';
+    out->mode = CCT_CROSS_COMPILER_NONE;
 
     const char *env_cc = getenv("CCT_CROSS_CC");
     if (env_cc && env_cc[0] != '\0') {
-        if (!cct_cross_compiler_supports_m32(env_cc)) {
-            return false;
+        if (cct_cross_compiler_supports_gnu_m32(env_cc)) {
+            snprintf(out->cc, sizeof(out->cc), "%s", env_cc);
+            out->mode = CCT_CROSS_COMPILER_GNU_M32;
+            return true;
         }
-        snprintf(out, out_cap, "%s", env_cc);
+        if (cct_cross_compiler_supports_clang_i386_target(env_cc)) {
+            snprintf(out->cc, sizeof(out->cc), "%s", env_cc);
+            out->mode = CCT_CROSS_COMPILER_CLANG_I386_ELF;
+            return true;
+        }
+        return false;
+    }
+
+    if (cct_cross_compiler_supports_gnu_m32("i686-elf-gcc")) {
+        snprintf(out->cc, sizeof(out->cc), "%s", "i686-elf-gcc");
+        out->mode = CCT_CROSS_COMPILER_GNU_M32;
         return true;
     }
 
-    if (cct_cross_compiler_supports_m32("i686-elf-gcc")) {
-        snprintf(out, out_cap, "%s", "i686-elf-gcc");
+    if (cct_cross_compiler_supports_clang_i386_target("clang")) {
+        snprintf(out->cc, sizeof(out->cc), "%s", "clang");
+        out->mode = CCT_CROSS_COMPILER_CLANG_I386_ELF;
         return true;
     }
 
-    if (cct_cross_compiler_supports_m32("gcc")) {
-        snprintf(out, out_cap, "%s", "gcc");
+    if (cct_cross_compiler_supports_gnu_m32("gcc")) {
+        snprintf(out->cc, sizeof(out->cc), "%s", "gcc");
+        out->mode = CCT_CROSS_COMPILER_GNU_M32;
+        return true;
+    }
+
+    if (cct_cross_compiler_supports_clang_i386_target("gcc")) {
+        snprintf(out->cc, sizeof(out->cc), "%s", "gcc");
+        out->mode = CCT_CROSS_COMPILER_CLANG_I386_ELF;
         return true;
     }
 
     return false;
+}
+
+static const char *cct_cross_compiler_cflags(cct_cross_compiler_mode_t mode) {
+    switch (mode) {
+        case CCT_CROSS_COMPILER_GNU_M32:
+            return "-m32";
+        case CCT_CROSS_COMPILER_CLANG_I386_ELF:
+            return "-target i386-unknown-none-elf";
+        case CCT_CROSS_COMPILER_NONE:
+        default:
+            return "";
+    }
 }
 
 static void cct_runtime_include_dir(char *out, size_t out_cap) {
@@ -183,10 +243,10 @@ static void cct_runtime_include_dir(char *out, size_t out_cap) {
 }
 
 static cct_error_code_t cct_emit_asm_from_cgen(const char *input_file) {
-    char cross_cc[512];
-    if (!cct_resolve_cross_compiler(cross_cc, sizeof(cross_cc))) {
+    cct_cross_compiler_t compiler;
+    if (!cct_resolve_cross_compiler(&compiler)) {
         fprintf(stderr,
-                "cct: --emit-asm requer cross-compiler (-m32); instale i686-elf-gcc ou defina CCT_CROSS_CC\n");
+                "cct: --emit-asm requer cross-compiler (-m32) ou clang -target i386-unknown-none-elf; instale i686-elf-gcc/clang ou defina CCT_CROSS_CC\n");
         return CCT_ERROR_CODEGEN;
     }
 
@@ -204,12 +264,13 @@ static cct_error_code_t cct_emit_asm_from_cgen(const char *input_file) {
 
     char command[8192];
     snprintf(command, sizeof(command),
-             "\"%s\" -m32 -S -masm=intel "
-             "-ffreestanding -nostdlib -fno-pic "
+             "\"%s\" %s -S -masm=intel "
+             "-ffreestanding -nostdlib -fno-pic -fwrapv "
              "-fno-stack-protector -fno-builtin "
              "-fno-asynchronous-unwind-tables -fno-unwind-tables "
              "-I \"%s\" \"%s\" -o \"%s\"",
-             cross_cc, runtime_dir, cgen_c_path, cgen_s_path);
+             compiler.cc, cct_cross_compiler_cflags(compiler.mode),
+             runtime_dir, cgen_c_path, cgen_s_path);
 
     int rc = system(command);
     if (rc != 0) {
@@ -220,7 +281,7 @@ static cct_error_code_t cct_emit_asm_from_cgen(const char *input_file) {
     }
 
     printf("ASM emitted: %s\n", cgen_s_path);
-    printf("Cross compiler: %s\n", cross_cc);
+    printf("Cross compiler: %s\n", compiler.cc);
 
     free(cgen_c_path);
     free(cgen_s_path);

@@ -113,7 +113,7 @@ SIGEOF
 cp "$DIFF_BASE" "$DIFF_INFO"
 echo "future_optional = additive" >> "$DIFF_INFO"
 cp "$DIFF_BASE" "$DIFF_REVIEW"
-sed -i 's/semantic_hash = .*/semantic_hash = 1111111111111111/' "$DIFF_REVIEW"
+perl -0pi -e 's/semantic_hash = .*/semantic_hash = 1111111111111111/' "$DIFF_REVIEW"
 cat > "$DIFF_BEHAV" <<'SIGEOF'
 format = cct.sigil.v1
 sigilo_scope = system
@@ -150,7 +150,7 @@ run_expect_contains \
     "highest=none" \
     "$CCT_BIN" sigilo baseline check "$DIFF_BASE" --baseline "$BASELINE" --summary
 
-sed -i 's/semantic_hash = .*/semantic_hash = deadbeefcafebabe/' "$BASELINE"
+perl -0pi -e 's/semantic_hash = .*/semantic_hash = deadbeefcafebabe/' "$BASELINE"
 run_expect_exit \
     "baseline strict blocks drift" \
     2 \
@@ -163,7 +163,7 @@ run_cmd "project build bootstrap" "$CCT_BIN" build --project "$PROJ"
 SYS_SIGIL="$PROJ/src/main.system.sigil"
 CI_BASE="$TMP_DIR/project_ci_base.sigil"
 run_cmd "ci baseline update" "$CCT_BIN" sigilo baseline update "$SYS_SIGIL" --baseline "$CI_BASE" --force
-sed -i 's/system_hash = .*/system_hash = 0123456789abcdef/' "$CI_BASE"
+perl -0pi -e 's/system_hash = .*/system_hash = 0123456789abcdef/' "$CI_BASE"
 
 run_expect_exit \
     "advisory keeps review-required drift non-blocking" \

@@ -2994,7 +2994,7 @@ bool cct_runtime_emit_c_helpers(FILE *out, const cct_runtime_codegen_config_t *c
         fputs("    cct_rt_fluxus_t *out_f = cct_rt_fluxus_create((long long)sizeof(char*));\n", out);
         fputs("    struct dirent *ent = NULL;\n", out);
         fputs("    while ((ent = readdir(dir)) != NULL) {\n", out);
-        fputs("        const char *name = ent->d_name ? ent->d_name : \"\";\n", out);
+        fputs("        const char *name = ent->d_name;\n", out);
         fputs("        if (strcmp(name, \".\") == 0 || strcmp(name, \"..\") == 0) continue;\n", out);
         fputs("        size_t n = strlen(name);\n", out);
         fputs("        char *copy = (char*)malloc(n + 1);\n", out);

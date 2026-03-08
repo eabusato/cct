@@ -160,6 +160,14 @@ bool cct_cg_emit_generated_c_prelude(FILE *out, const cct_codegen_t *cg) {
         fputs("static inline double cct_pow(double base, double exp) {\n", out);
         fputs("    return (double)cct_fs_pow_i32((cct_rex_t)base, (cct_rex_t)exp);\n", out);
         fputs("}\n", out);
+        fputs("static inline long long cct_rt_shl_ll(long long lhs, long long rhs) {\n", out);
+        fputs("    if (rhs < 0 || rhs >= 64) return 0LL;\n", out);
+        fputs("    return (long long)(((uint64_t)lhs) << (unsigned int)rhs);\n", out);
+        fputs("}\n", out);
+        fputs("static inline long long cct_rt_shr_ll(long long lhs, long long rhs) {\n", out);
+        fputs("    if (rhs < 0 || rhs >= 64) return 0LL;\n", out);
+        fputs("    return (long long)(((uint64_t)lhs) >> (unsigned int)rhs);\n", out);
+        fputs("}\n", out);
         fputs("static inline long long cct_floor_div_ll(long long a, long long b) {\n", out);
         fputs("    if (b == 0) { cct_fs_panic(); return 0LL; }\n", out);
         fputs("    long long q = a / b;\n", out);
@@ -179,6 +187,9 @@ bool cct_cg_emit_generated_c_prelude(FILE *out, const cct_codegen_t *cg) {
     }
 
     fputs("/* ===== Includes ===== */\n", out);
+    fputs("#ifndef _DARWIN_C_SOURCE\n", out);
+    fputs("#define _DARWIN_C_SOURCE 1\n", out);
+    fputs("#endif\n", out);
     fputs("#ifndef _POSIX_C_SOURCE\n", out);
     fputs("#define _POSIX_C_SOURCE 200809L\n", out);
     fputs("#endif\n", out);
@@ -233,6 +244,14 @@ bool cct_cg_emit_generated_c_prelude(FILE *out, const cct_codegen_t *cg) {
     fputs("static inline double cct_log(double x) { return log(x); }\n", out);
     fputs("static inline double cct_log10(double x) { return log10(x); }\n", out);
     fputs("static inline double cct_log2(double x) { return log2(x); }\n\n", out);
+    fputs("static inline long long cct_rt_shl_ll(long long lhs, long long rhs) {\n", out);
+    fputs("    if (rhs < 0 || rhs >= 64) return 0LL;\n", out);
+    fputs("    return (long long)(((uint64_t)lhs) << (unsigned int)rhs);\n", out);
+    fputs("}\n", out);
+    fputs("static inline long long cct_rt_shr_ll(long long lhs, long long rhs) {\n", out);
+    fputs("    if (rhs < 0 || rhs >= 64) return 0LL;\n", out);
+    fputs("    return (long long)(((uint64_t)lhs) >> (unsigned int)rhs);\n", out);
+    fputs("}\n\n", out);
     fputs("static inline long long cct_floor_div_ll(long long a, long long b) {\n", out);
     fputs("    if (b == 0) { cct_rt_fail(\"integer division by zero\"); return 0LL; }\n", out);
     fputs("    long long q = a / b;\n", out);

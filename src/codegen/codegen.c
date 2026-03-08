@@ -1929,6 +1929,32 @@ static const cct_ast_type_t* cg_expr_ast_type(cct_codegen_t *cg, const cct_ast_n
 static const char* cg_c_type_for_ast_type(cct_codegen_t *cg, const cct_ast_type_t *type);
 static const char* cg_c_type_for_return_kind(cct_codegen_value_kind_t kind);
 
+static bool cg_emit_logical_chain(FILE *out,
+                                  cct_codegen_t *cg,
+                                  const cct_ast_node_t *expr,
+                                  cct_token_type_t op,
+                                  cct_codegen_value_kind_t *out_kind) {
+    if (!out || !cg || !expr) return false;
+
+    if (expr->type == AST_BINARY_OP && expr->as.binary_op.operator == op) {
+        if (!cg_emit_logical_chain(out, cg, expr->as.binary_op.left, op, NULL)) return false;
+        fputs(op == TOKEN_ET ? " && " : " || ", out);
+        if (!cg_emit_logical_chain(out, cg, expr->as.binary_op.right, op, NULL)) return false;
+        if (out_kind) *out_kind = CCT_CODEGEN_VALUE_BOOL;
+        return true;
+    }
+
+    cct_codegen_value_kind_t term_kind = CCT_CODEGEN_VALUE_UNKNOWN;
+    if (!cg_emit_expr(out, cg, expr, &term_kind)) return false;
+    if (!(term_kind == CCT_CODEGEN_VALUE_BOOL || term_kind == CCT_CODEGEN_VALUE_INT)) {
+        cg_report_nodef(cg, expr, "operator %s requires boolean or integer operands",
+                        op == TOKEN_ET ? "ET" : "VEL");
+        return false;
+    }
+    if (out_kind) *out_kind = CCT_CODEGEN_VALUE_BOOL;
+    return true;
+}
+
 static cct_codegen_value_kind_t cg_value_kind_from_ast_type_codegen(cct_codegen_t *cg, const cct_ast_type_t *type) {
     if (!type) return CCT_CODEGEN_VALUE_UNKNOWN;
     if (type->is_pointer) return CCT_CODEGEN_VALUE_POINTER;
@@ -2107,34 +2133,16 @@ static bool cg_emit_binary_expr(FILE *out, cct_codegen_t *cg, const cct_ast_node
 
     if (is_logical_and) {
         fputc('(', out);
-        if (!cg_emit_expr(out, cg, expr->as.binary_op.left, &lhs_kind)) return false;
-        fputs(" && ", out);
-        if (!cg_emit_expr(out, cg, expr->as.binary_op.right, &rhs_kind)) return false;
+        if (!cg_emit_logical_chain(out, cg, expr, TOKEN_ET, &lhs_kind)) return false;
         fputc(')', out);
-
-        bool lhs_ok = (lhs_kind == CCT_CODEGEN_VALUE_BOOL || lhs_kind == CCT_CODEGEN_VALUE_INT);
-        bool rhs_ok = (rhs_kind == CCT_CODEGEN_VALUE_BOOL || rhs_kind == CCT_CODEGEN_VALUE_INT);
-        if (!lhs_ok || !rhs_ok) {
-            cg_report_node(cg, expr, "operator ET requires boolean or integer operands");
-            return false;
-        }
         if (out_kind) *out_kind = CCT_CODEGEN_VALUE_BOOL;
         return true;
     }
 
     if (is_logical_or) {
         fputc('(', out);
-        if (!cg_emit_expr(out, cg, expr->as.binary_op.left, &lhs_kind)) return false;
-        fputs(" || ", out);
-        if (!cg_emit_expr(out, cg, expr->as.binary_op.right, &rhs_kind)) return false;
+        if (!cg_emit_logical_chain(out, cg, expr, TOKEN_VEL, &lhs_kind)) return false;
         fputc(')', out);
-
-        bool lhs_ok = (lhs_kind == CCT_CODEGEN_VALUE_BOOL || lhs_kind == CCT_CODEGEN_VALUE_INT);
-        bool rhs_ok = (rhs_kind == CCT_CODEGEN_VALUE_BOOL || rhs_kind == CCT_CODEGEN_VALUE_INT);
-        if (!lhs_ok || !rhs_ok) {
-            cg_report_node(cg, expr, "operator VEL requires boolean or integer operands");
-            return false;
-        }
         if (out_kind) *out_kind = CCT_CODEGEN_VALUE_BOOL;
         return true;
     }
@@ -2182,11 +2190,11 @@ static bool cg_emit_binary_expr(FILE *out, cct_codegen_t *cg, const cct_ast_node
     }
 
     if (is_shift_left) {
-        fputc('(', out);
+        fputs("cct_rt_shl_ll((long long)(", out);
         if (!cg_emit_expr(out, cg, expr->as.binary_op.left, &lhs_kind)) return false;
-        fputs(" << ", out);
+        fputs("), (long long)(", out);
         if (!cg_emit_expr(out, cg, expr->as.binary_op.right, &rhs_kind)) return false;
-        fputc(')', out);
+        fputs("))", out);
         if (lhs_kind != CCT_CODEGEN_VALUE_INT || rhs_kind != CCT_CODEGEN_VALUE_INT) {
             cg_report_node(cg, expr, "operator SINISTER requires integer operands");
             return false;
@@ -2196,11 +2204,11 @@ static bool cg_emit_binary_expr(FILE *out, cct_codegen_t *cg, const cct_ast_node
     }
 
     if (is_shift_right) {
-        fputc('(', out);
+        fputs("cct_rt_shr_ll((long long)(", out);
         if (!cg_emit_expr(out, cg, expr->as.binary_op.left, &lhs_kind)) return false;
-        fputs(" >> ", out);
+        fputs("), (long long)(", out);
         if (!cg_emit_expr(out, cg, expr->as.binary_op.right, &rhs_kind)) return false;
-        fputc(')', out);
+        fputs("))", out);
         if (lhs_kind != CCT_CODEGEN_VALUE_INT || rhs_kind != CCT_CODEGEN_VALUE_INT) {
             cg_report_node(cg, expr, "operator DEXTER requires integer operands");
             return false;
@@ -8111,7 +8119,6 @@ tempta_fail:
                 for (size_t j = 0; j < case_node->literal_count; j++) {
                     cct_codegen_value_kind_t literal_kind = CCT_CODEGEN_VALUE_UNKNOWN;
                     if (j > 0) fputs(" || ", out);
-                    fputs("(", out);
                     fputs(value_name, out);
                     fputs(" == (long long)(", out);
                     if (!cg_emit_expr(out, cg, case_node->literals[j], &literal_kind)) return false;
@@ -8119,7 +8126,7 @@ tempta_fail:
                         cg_report_node(cg, case_node->literals[j], "QUANDO CASO literal must be integer/boolean in codegen");
                         return false;
                     }
-                    fputs("))", out);
+                    fputs(")", out);
                 }
                 fputs(")\n", out);
                 if (!cg_emit_compound_block(out, cg, case_node->body, indent + 1)) return false;
@@ -8613,7 +8620,13 @@ static bool cg_emit_rituale_prototype(FILE *out, cct_codegen_t *cg, const cct_co
     }
 
     bool export_entry = cg_is_explicit_entry_name(cg, rit->name);
-    fprintf(out, "%s%s %s(", export_entry ? "" : "static ", ret_c, rit->c_name);
+    const char *storage_prefix = "";
+    if (!export_entry) {
+        storage_prefix = (cg->profile == CCT_PROFILE_FREESTANDING)
+            ? "__attribute__((used)) static "
+            : "static ";
+    }
+    fprintf(out, "%s%s %s(", storage_prefix, ret_c, rit->c_name);
     cct_ast_param_list_t *params = rit->node->as.rituale.params;
     for (size_t i = 0; i < rit->param_count; i++) {
         const char *c_ty = cg_c_type_for_ast_type(cg, params->params[i]->type);
@@ -8669,7 +8682,13 @@ static bool cg_emit_rituale_function(FILE *out, cct_codegen_t *cg, const cct_cod
     }
 
     bool export_entry = cg_is_explicit_entry_name(cg, rit->name);
-    fprintf(out, "%s%s %s(", export_entry ? "" : "static ", ret_c, rit->c_name);
+    const char *storage_prefix = "";
+    if (!export_entry) {
+        storage_prefix = (cg->profile == CCT_PROFILE_FREESTANDING)
+            ? "__attribute__((used)) static "
+            : "static ";
+    }
+    fprintf(out, "%s%s %s(", storage_prefix, ret_c, rit->c_name);
     cct_ast_param_list_t *params = rit->node->as.rituale.params;
     for (size_t i = 0; i < rit->param_count; i++) {
         const char *c_ty = cg_c_type_for_ast_type(cg, params->params[i]->type);
@@ -8850,7 +8869,7 @@ static bool cg_run_host_compiler(cct_codegen_t *cg) {
 #ifdef _WIN32
                  "%s -std=c11 -O2 -c -o \"%s\" \"%s\"",
 #else
-                 "%s -std=c11 -O2 -c -o \"%s\" \"%s\"",
+                 "%s -std=c11 -O2 -fwrapv -c -o \"%s\" \"%s\"",
 #endif
                  cc, cg->output_executable_path, cg->intermediate_c_path);
     } else if (cg->profile == CCT_PROFILE_FREESTANDING) {
@@ -8858,7 +8877,7 @@ static bool cg_run_host_compiler(cct_codegen_t *cg) {
 #ifdef _WIN32
                  "%s -std=c11 -O2 -static -o \"%s\" \"%s\" \"%s\"",
 #else
-                 "%s -std=c11 -O2 -o \"%s\" \"%s\" \"%s\"",
+                 "%s -std=c11 -O2 -fwrapv -o \"%s\" \"%s\" \"%s\"",
 #endif
                  cc, cg->output_executable_path, cg->intermediate_c_path, CCT_FREESTANDING_RT_SOURCE);
     } else {
@@ -8866,7 +8885,7 @@ static bool cg_run_host_compiler(cct_codegen_t *cg) {
 #ifdef _WIN32
                  "%s -std=c11 -O2 -static -o \"%s\" \"%s\"",
 #else
-                 "%s -std=c11 -O2 -o \"%s\" \"%s\"",
+                 "%s -std=c11 -O2 -fwrapv -o \"%s\" \"%s\"",
 #endif
                  cc, cg->output_executable_path, cg->intermediate_c_path);
     }
