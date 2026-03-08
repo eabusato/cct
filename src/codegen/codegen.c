@@ -8852,6 +8852,33 @@ static void cg_win32_prepend_cc_dir_to_path(const char *cc) {
 }
 #endif
 
+static void cg_host_link_flags(char *buffer, size_t buffer_size) {
+    const char *extra_ldflags = getenv("CCT_HOST_LDFLAGS");
+#ifdef _WIN32
+    const char *default_ldflags = "";
+#else
+    /*
+     * Generated host executables embed runtime helpers that call libm
+     * functions directly (pow/cbrt/sqrt/log/trig/etc). Link it explicitly on
+     * Unix so Linux and macOS behave consistently instead of relying on
+     * toolchain-specific defaults.
+     */
+    const char *default_ldflags = "-lm";
+#endif
+
+    if (!buffer || buffer_size == 0) return;
+
+    if (default_ldflags[0] && extra_ldflags && extra_ldflags[0]) {
+        snprintf(buffer, buffer_size, " %s %s", default_ldflags, extra_ldflags);
+    } else if (default_ldflags[0]) {
+        snprintf(buffer, buffer_size, " %s", default_ldflags);
+    } else if (extra_ldflags && extra_ldflags[0]) {
+        snprintf(buffer, buffer_size, " %s", extra_ldflags);
+    } else {
+        buffer[0] = '\0';
+    }
+}
+
 static bool cg_run_host_compiler(cct_codegen_t *cg) {
     if (!cg->intermediate_c_path || !cg->output_executable_path) {
         cg_reportf(cg, 0, 0, "internal codegen error: missing output paths");
@@ -8864,6 +8891,8 @@ static bool cg_run_host_compiler(cct_codegen_t *cg) {
     cg_win32_prepend_cc_dir_to_path(cc);
 #endif
     char command[4096];
+    char host_link_flags[1024];
+    cg_host_link_flags(host_link_flags, sizeof(host_link_flags));
     if (cg->profile == CCT_PROFILE_FREESTANDING && cg_has_explicit_freestanding_entry(cg)) {
         snprintf(command, sizeof(command),
 #ifdef _WIN32
@@ -8875,19 +8904,20 @@ static bool cg_run_host_compiler(cct_codegen_t *cg) {
     } else if (cg->profile == CCT_PROFILE_FREESTANDING) {
         snprintf(command, sizeof(command),
 #ifdef _WIN32
-                 "%s -std=c11 -O2 -static -o \"%s\" \"%s\" \"%s\"",
+                 "%s -std=c11 -O2 -static -o \"%s\" \"%s\" \"%s\"%s",
 #else
-                 "%s -std=c11 -O2 -fwrapv -o \"%s\" \"%s\" \"%s\"",
+                 "%s -std=c11 -O2 -fwrapv -o \"%s\" \"%s\" \"%s\"%s",
 #endif
-                 cc, cg->output_executable_path, cg->intermediate_c_path, CCT_FREESTANDING_RT_SOURCE);
+                 cc, cg->output_executable_path, cg->intermediate_c_path, CCT_FREESTANDING_RT_SOURCE,
+                 host_link_flags);
     } else {
         snprintf(command, sizeof(command),
 #ifdef _WIN32
-                 "%s -std=c11 -O2 -static -o \"%s\" \"%s\"",
+                 "%s -std=c11 -O2 -static -o \"%s\" \"%s\"%s",
 #else
-                 "%s -std=c11 -O2 -fwrapv -o \"%s\" \"%s\"",
+                 "%s -std=c11 -O2 -fwrapv -o \"%s\" \"%s\"%s",
 #endif
-                 cc, cg->output_executable_path, cg->intermediate_c_path);
+                 cc, cg->output_executable_path, cg->intermediate_c_path, host_link_flags);
     }
 
     int rc = system(command);

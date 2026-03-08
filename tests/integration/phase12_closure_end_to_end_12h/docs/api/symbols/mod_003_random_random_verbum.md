@@ -1,7 +1,7 @@
 # random_verbum
 
 - Kind: `rituale`
-- Module: `/Users/eabusato/dev/cct/lib/cct/random.cct`
+- Module: `/home/eabusato/dev/cct/lib/cct/random.cct`
 - Visibility: `public`
 
 ## Signature

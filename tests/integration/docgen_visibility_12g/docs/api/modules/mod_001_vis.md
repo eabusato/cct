@@ -1,8 +1,8 @@
 # Module mod_001_vis
 
-- Path: `/Users/eabusato/dev/cct/tests/integration/docgen_visibility_12g/lib/vis.cct`
+- Path: `/home/eabusato/dev/cct/tests/integration/docgen_visibility_12g/lib/vis.cct`
 - Origin: user module
-- Generated: 2026-03-07 21:47:09
+- Generated: 2026-03-07 23:04:44
 
 ## Symbols
 

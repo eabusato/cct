@@ -1,8 +1,8 @@
 # Module mod_000_main
 
-- Path: `/Users/eabusato/dev/cct/tests/integration/docgen_basic_12g/src/main.cct`
+- Path: `/home/eabusato/dev/cct/tests/integration/docgen_basic_12g/src/main.cct`
 - Origin: user module
-- Generated: 2026-03-07 21:47:09
+- Generated: 2026-03-07 23:04:44
 
 ## Symbols
 

@@ -15704,6 +15704,29 @@ fi
 
 echo ""
 echo "========================================"
+echo "FASE 19D4: Regressao de link host para libm"
+echo "========================================"
+echo ""
+
+# Test 1156: regression_host_math_libm_19d4
+echo "Test 1156: regression_host_math_libm_19d4"
+SRC_1156="tests/integration/regression_host_math_libm_19d4.cct"
+BIN_1156="${SRC_1156%.cct}"
+cleanup_codegen_artifacts "$SRC_1156"
+if "$CCT_BIN" "$SRC_1156" >$CCT_TMP_DIR/cct_phase19d4_1156_compile.out 2>&1; then
+    "$BIN_1156" >$CCT_TMP_DIR/cct_phase19d4_1156_run.out 2>&1
+    RC_1156=$?
+else
+    RC_1156=255
+fi
+if [ "$RC_1156" -eq 0 ]; then
+    test_pass "regression_host_math_libm_19d4 valida link host com sqrt/cbrt/pow/hypot em toolchains Unix"
+else
+    test_fail "regression_host_math_libm_19d4 regressao no link host para libm"
+fi
+
+echo ""
+echo "========================================"
 echo "Test Results:"
 echo -e "  ${GREEN}Passed:${NC} $TESTS_PASSED"
 echo -e "  ${RED}Failed:${NC} $TESTS_FAILED"

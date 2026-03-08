@@ -1,7 +1,7 @@
 # cos
 
 - Kind: `rituale`
-- Module: `/Users/eabusato/dev/cct/lib/cct/math.cct`
+- Module: `/home/eabusato/dev/cct/lib/cct/math.cct`
 - Visibility: `public`
 
 ## Signature

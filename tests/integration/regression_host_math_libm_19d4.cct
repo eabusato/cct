@@ -1,0 +1,21 @@
+INCIPIT grimoire "regression_host_math_libm_19d4"
+
+ADVOCARE "cct/math.cct"
+
+RITUALE main() REDDE REX
+  EVOCA UMBRA a AD CONIURA sqrt_real(9.0)
+  EVOCA UMBRA b AD CONIURA cbrt_real(27.0)
+  EVOCA UMBRA c AD CONIURA pow_real(2.0, 5.0)
+  EVOCA UMBRA d AD CONIURA hypot(3.0, 4.0)
+
+  SI a > 2.99 ET a < 3.01 ET
+     b > 2.99 ET b < 3.01 ET
+     c > 31.99 ET c < 32.01 ET
+     d > 4.99 ET d < 5.01
+    REDDE 0
+  FIN SI
+
+  REDDE 1
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

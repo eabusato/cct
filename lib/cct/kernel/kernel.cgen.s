@@ -1,7 +1,7 @@
-	.text
 	.intel_syntax noprefix
 	.file	"kernel.cgen.c"
-	.p2align	4, 0x90                         # -- Begin function cct_fn_kernel_memset
+	.text
+	.p2align	4                               # -- Begin function cct_fn_kernel_memset
 	.type	cct_fn_kernel_memset,@function
 cct_fn_kernel_memset:                   # @cct_fn_kernel_memset
 # %bb.0:
@@ -44,7 +44,7 @@ cct_fn_kernel_memset:                   # @cct_fn_kernel_memset
 .Lfunc_end0:
 	.size	cct_fn_kernel_memset, .Lfunc_end0-cct_fn_kernel_memset
                                         # -- End function
-	.p2align	4, 0x90                         # -- Begin function cct_svc_memset
+	.p2align	4                               # -- Begin function cct_svc_memset
 	.type	cct_svc_memset,@function
 cct_svc_memset:                         # @cct_svc_memset
 # %bb.0:
@@ -93,7 +93,7 @@ cct_svc_memset:                         # @cct_svc_memset
 .Lfunc_end1:
 	.size	cct_svc_memset, .Lfunc_end1-cct_svc_memset
                                         # -- End function
-	.p2align	4, 0x90                         # -- Begin function cct_fn_kernel_memcpy
+	.p2align	4                               # -- Begin function cct_fn_kernel_memcpy
 	.type	cct_fn_kernel_memcpy,@function
 cct_fn_kernel_memcpy:                   # @cct_fn_kernel_memcpy
 # %bb.0:
@@ -129,7 +129,7 @@ cct_fn_kernel_memcpy:                   # @cct_fn_kernel_memcpy
 .Lfunc_end2:
 	.size	cct_fn_kernel_memcpy, .Lfunc_end2-cct_fn_kernel_memcpy
                                         # -- End function
-	.p2align	4, 0x90                         # -- Begin function cct_svc_memcpy
+	.p2align	4                               # -- Begin function cct_svc_memcpy
 	.type	cct_svc_memcpy,@function
 cct_svc_memcpy:                         # @cct_svc_memcpy
 # %bb.0:
@@ -174,7 +174,7 @@ cct_svc_memcpy:                         # @cct_svc_memcpy
 .Lfunc_end3:
 	.size	cct_svc_memcpy, .Lfunc_end3-cct_svc_memcpy
                                         # -- End function
-	.p2align	4, 0x90                         # -- Begin function cct_fn_kernel_inb
+	.p2align	4                               # -- Begin function cct_fn_kernel_inb
 	.type	cct_fn_kernel_inb,@function
 cct_fn_kernel_inb:                      # @cct_fn_kernel_inb
 # %bb.0:
@@ -198,7 +198,7 @@ cct_fn_kernel_inb:                      # @cct_fn_kernel_inb
 .Lfunc_end4:
 	.size	cct_fn_kernel_inb, .Lfunc_end4-cct_fn_kernel_inb
                                         # -- End function
-	.p2align	4, 0x90                         # -- Begin function cct_svc_inb
+	.p2align	4                               # -- Begin function cct_svc_inb
 	.type	cct_svc_inb,@function
 cct_svc_inb:                            # @cct_svc_inb
 # %bb.0:
@@ -233,7 +233,7 @@ cct_svc_inb:                            # @cct_svc_inb
 .Lfunc_end5:
 	.size	cct_svc_inb, .Lfunc_end5-cct_svc_inb
                                         # -- End function
-	.p2align	4, 0x90                         # -- Begin function cct_fn_kernel_outb
+	.p2align	4                               # -- Begin function cct_fn_kernel_outb
 	.type	cct_fn_kernel_outb,@function
 cct_fn_kernel_outb:                     # @cct_fn_kernel_outb
 # %bb.0:
@@ -271,7 +271,7 @@ cct_fn_kernel_outb:                     # @cct_fn_kernel_outb
 .Lfunc_end6:
 	.size	cct_fn_kernel_outb, .Lfunc_end6-cct_fn_kernel_outb
                                         # -- End function
-	.p2align	4, 0x90                         # -- Begin function cct_svc_outb
+	.p2align	4                               # -- Begin function cct_svc_outb
 	.type	cct_svc_outb,@function
 cct_svc_outb:                           # @cct_svc_outb
 # %bb.0:
@@ -312,7 +312,7 @@ cct_svc_outb:                           # @cct_svc_outb
 	.size	cct_svc_outb, .Lfunc_end7-cct_svc_outb
                                         # -- End function
 	.globl	cct_fn_kernel_kernel_halt       # -- Begin function cct_fn_kernel_kernel_halt
-	.p2align	4, 0x90
+	.p2align	4
 	.type	cct_fn_kernel_kernel_halt,@function
 cct_fn_kernel_kernel_halt:              # @cct_fn_kernel_kernel_halt
 # %bb.0:
@@ -322,7 +322,7 @@ cct_fn_kernel_kernel_halt:              # @cct_fn_kernel_kernel_halt
 .Lfunc_end8:
 	.size	cct_fn_kernel_kernel_halt, .Lfunc_end8-cct_fn_kernel_kernel_halt
                                         # -- End function
-	.p2align	4, 0x90                         # -- Begin function cct_svc_halt
+	.p2align	4                               # -- Begin function cct_svc_halt
 	.type	cct_svc_halt,@function
 cct_svc_halt:                           # @cct_svc_halt
 # %bb.0:
@@ -337,7 +337,7 @@ cct_svc_halt:                           # @cct_svc_halt
 .Lfunc_end9:
 	.size	cct_svc_halt, .Lfunc_end9-cct_svc_halt
                                         # -- End function
-	.ident	"Apple clang version 17.0.0 (clang-1700.6.4.2)"
+	.ident	"clang version 21.1.8"
 	.section	".note.GNU-stack","",@progbits
 	.addrsig
 	.addrsig_sym cct_fn_kernel_memset

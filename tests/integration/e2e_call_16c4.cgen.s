@@ -1,7 +1,7 @@
-	.text
 	.intel_syntax noprefix
 	.file	"e2e_call_16c4.cgen.c"
-	.p2align	4, 0x90                         # -- Begin function cct_fn_main
+	.text
+	.p2align	4                               # -- Begin function cct_fn_main
 	.type	cct_fn_main,@function
 cct_fn_main:                            # @cct_fn_main
 # %bb.0:
@@ -34,7 +34,7 @@ cct_fn_main:                            # @cct_fn_main
 .Lfunc_end0:
 	.size	cct_fn_main, .Lfunc_end0-cct_fn_main
                                         # -- End function
-	.p2align	4, 0x90                         # -- Begin function cct_fn_incrementa
+	.p2align	4                               # -- Begin function cct_fn_incrementa
 	.type	cct_fn_incrementa,@function
 cct_fn_incrementa:                      # @cct_fn_incrementa
 # %bb.0:
@@ -56,7 +56,7 @@ cct_fn_incrementa:                      # @cct_fn_incrementa
 .Lfunc_end1:
 	.size	cct_fn_incrementa, .Lfunc_end1-cct_fn_incrementa
                                         # -- End function
-	.p2align	4, 0x90                         # -- Begin function cct_rt_fractum_is_active
+	.p2align	4                               # -- Begin function cct_rt_fractum_is_active
 	.type	cct_rt_fractum_is_active,@function
 cct_rt_fractum_is_active:               # @cct_rt_fractum_is_active
 # %bb.0:
@@ -69,7 +69,7 @@ cct_rt_fractum_is_active:               # @cct_rt_fractum_is_active
 	.size	cct_rt_fractum_is_active, .Lfunc_end2-cct_rt_fractum_is_active
                                         # -- End function
 	.globl	main                            # -- Begin function main
-	.p2align	4, 0x90
+	.p2align	4
 	.type	main,@function
 main:                                   # @main
 # %bb.0:
@@ -100,7 +100,7 @@ main:                                   # @main
 .Lfunc_end3:
 	.size	main, .Lfunc_end3-main
                                         # -- End function
-	.p2align	4, 0x90                         # -- Begin function cct_rt_fractum_uncaught_abort
+	.p2align	4                               # -- Begin function cct_rt_fractum_uncaught_abort
 	.type	cct_rt_fractum_uncaught_abort,@function
 cct_rt_fractum_uncaught_abort:          # @cct_rt_fractum_uncaught_abort
 # %bb.0:
@@ -110,7 +110,7 @@ cct_rt_fractum_uncaught_abort:          # @cct_rt_fractum_uncaught_abort
 .Lfunc_end4:
 	.size	cct_rt_fractum_uncaught_abort, .Lfunc_end4-cct_rt_fractum_uncaught_abort
                                         # -- End function
-	.ident	"Apple clang version 17.0.0 (clang-1700.6.4.2)"
+	.ident	"clang version 21.1.8"
 	.section	".note.GNU-stack","",@progbits
 	.addrsig
 	.addrsig_sym cct_fn_main
