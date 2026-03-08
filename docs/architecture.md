@@ -8,9 +8,9 @@ CCT is a compiled language toolchain that transforms `.cct` sources into:
 - executable binaries (via generated C + host C compiler)
 - deterministic sigil artifacts (`.svg` + `.sigil`)
 
-This architecture document is aligned with the implemented project state through **FASE 19D.4** (including FASE 13D.4, FASE 13M.B2, the full FASE 14/15 closure set, FASE 16 bridge closure, FASE 17/18 library expansion, and FASE 19 language-surface closure) and includes the planned architecture direction for next phases.
+This architecture document is aligned with the implemented project state through **FASE 19D.4 plus FASE 14T closure** (including FASE 13D.4, FASE 13M.B2, the full FASE 14/15 closure set, FASE 16 bridge closure, FASE 17/18 library expansion, FASE 19 language-surface closure, and the interstitial sigilo-SVG instrumentation pass) and includes the planned architecture direction for next phases.
 
-## Current Architecture (FASE 19D.4)
+## Current Architecture (FASE 19D.4 + 14T)
 
 ### End-to-End Pipeline
 
@@ -157,7 +157,7 @@ Main files:
 - `sigilo.h`
 - `sigilo.c`
 
-Status: mature through 9D/9D2/9E and preserved across phase 10 closure.
+Status: mature through 9D/9D2/9E and extended in FASE 14T with source-context extraction, tooltip normalization, conditional SVG wrapper/title emission, deterministic local node/call-edge `data-*`, and root-level semantic toggles.
 
 ## Phase Evolution (Completed)
 
@@ -256,6 +256,14 @@ Status: mature through 9D/9D2/9E and preserved across phase 10 closure.
   - `tests/run_phase14c3_perf_budget.sh`
 - **FASE 14C.4**: residual risk + known limits hardening:
   - public summary in `docs/release/FASE_14_RELEASE_NOTES.md`
+
+### FASE 14T Sigilo SVG Instrumentation (Implemented)
+- source-context extraction normalizes LF/CRLF input and indexes semantic elements by original source location
+- tooltip builder prepares deterministic, XML-safe, clipped hover text for ritual nodes, structural nodes, local edges, and system nodes/edges
+- local SVG emission gained conditional wrappers for hoverable elements plus additive deterministic `data-*` on local nodes and call edges
+- local/system roots gained lightweight semantic metadata (`role`, `aria-label`, `desc`) when instrumentation is enabled
+- CLI controls `--sigilo-no-titles` and `--sigilo-no-data` allow explicit generation of partially instrumented or plain pre-14T SVGs without changing the underlying layout engine
+- practical effect: the rendered SVG itself became an inspection surface, where circles and lines can be hovered directly to reveal semantic context
   - detailed governance artifacts in internal release records
 
 ### FASE 14D Release Finalization Block (Implemented)
@@ -396,7 +404,7 @@ Architecture quality is enforced by a phase-accumulated regression suite (`tests
 - boundary diagnostics and subset-policy enforcement
 
 The architecture is considered stable only when full historical regression remains green.
-Latest closure evidence (FASE 19D.4): `Passed: 1069`, `Failed: 0`.
+Latest closure evidence (FASE 14T final gate): `Passed: 1120`, `Failed: 0`.
 
 ## Document Ownership
 

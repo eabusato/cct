@@ -45,6 +45,8 @@ typedef struct {
     /* FASE 6A sigilo generation controls */
     bool emit_svg;
     bool emit_meta;
+    bool emit_titles;
+    bool emit_data_attrs;
     const char *style_name; /* "network" (default), "seal", "scriptum" */
 } cct_sigilo_t;
 

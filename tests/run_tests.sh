@@ -16,6 +16,10 @@ ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 cd "$ROOT_DIR" || exit 1
 source "$ROOT_DIR/tests/test_tmpdir.sh"
 cct_setup_tmpdir "$ROOT_DIR"
+TEST_RUN_LOG="$CCT_TMP_DIR/run_tests.latest.log"
+: >"$TEST_RUN_LOG"
+exec 3>&1 4>&2
+exec >>"$TEST_RUN_LOG" 2>&1
 
 # Colors for output
 RED='\033[0;31m'
@@ -47,12 +51,11 @@ echo ""
 
 # Test helper functions
 test_pass() {
-    echo -e "${GREEN}✓${NC} $1"
     ((TESTS_PASSED++))
 }
 
 test_fail() {
-    echo -e "${RED}✗${NC} $1"
+    echo -e "${RED}✗${NC} $1" >&3
     ((TESTS_FAILED++))
 }
 
@@ -15727,15 +15730,1021 @@ fi
 
 echo ""
 echo "========================================"
+echo "FASE 14TA1: Buffer de fonte e indexacao"
+echo "========================================"
+echo ""
+
+# Test 1157: internal sigilo source buffer helper validates line indexing and non-fatal missing source
+echo "Test 1157: internal sigilo source buffer helper"
+SIG14TA1_HELPER_SRC="tests/integration/test_sigilo_source_context_14ta1.c"
+SIG14TA1_HELPER_BIN="tests/integration/test_sigilo_source_context_14ta1"
+rm -f "$SIG14TA1_HELPER_BIN"
+rm -f tests/integration/sigilo_source_context_missing_source_14ta1.svg
+rm -f tests/integration/sigilo_source_context_missing_source_14ta1.sigil
+SIG14TA1_SRC_DEPS=$(find src -name '*.c' ! -path 'src/main.c' ! -path 'src/sigilo/sigilo.c' | sort)
+if gcc -Wall -Wextra -Werror -std=c11 -O2 -g \
+    -D_POSIX_C_SOURCE=200809L \
+    -D_XOPEN_SOURCE=700 \
+    -DCCT_STDLIB_DIR="\"$ROOT_DIR/lib/cct\"" \
+    -DCCT_FREESTANDING_RT_HEADER="\"$ROOT_DIR/src/runtime/cct_freestanding_rt.h\"" \
+    -DCCT_FREESTANDING_RT_SOURCE="\"$ROOT_DIR/src/runtime/cct_freestanding_rt.c\"" \
+    -o "$SIG14TA1_HELPER_BIN" \
+    "$SIG14TA1_HELPER_SRC" \
+    $SIG14TA1_SRC_DEPS \
+    -lm >$CCT_TMP_DIR/cct_phase14ta1_1157_build.out 2>&1; then
+    "$SIG14TA1_HELPER_BIN" >$CCT_TMP_DIR/cct_phase14ta1_1157_run.out 2>&1
+    RC_1157=$?
+else
+    RC_1157=255
+fi
+if [ "$RC_1157" -eq 0 ]; then
+    test_pass "helper interno valida load/indexacao/span/CRLF e missing source nao-fatal"
+else
+    test_fail "helper interno de source buffer 14TA1 falhou"
+fi
+
+# Test 1158: sigilo-only remains functional with source buffer enabled
+echo "Test 1158: sigilo-only baseline permanece funcional com source buffer"
+SIG14TA1_LF_OUT="tests/integration/sigilo_source_context_lf_14ta1"
+rm -f "${SIG14TA1_LF_OUT}.svg" "${SIG14TA1_LF_OUT}.sigil"
+if "$CCT_BIN" --sigilo-only --sigilo-out "$SIG14TA1_LF_OUT" \
+    tests/integration/sigilo_source_context_basic_14ta1.cct \
+    >$CCT_TMP_DIR/cct_phase14ta1_1158_sigilo.out 2>&1; then
+    RC_1158=0
+else
+    RC_1158=$?
+fi
+if [ "$RC_1158" -eq 0 ] && \
+   [ -f "${SIG14TA1_LF_OUT}.svg" ] && \
+   [ -f "${SIG14TA1_LF_OUT}.sigil" ]; then
+    test_pass "sigilo baseline generation permanece funcional com source buffer ativo"
+else
+    test_fail "sigilo source buffer regrediu geracao baseline"
+fi
+
+# Test 1159: CRLF fixture normalizes to byte-identical sigilo artifacts
+echo "Test 1159: CRLF source normalizes to stable sigilo artifacts"
+SIG14TA1_CRLF_OUT="tests/integration/sigilo_source_context_crlf_out_14ta1"
+rm -f "${SIG14TA1_CRLF_OUT}.svg" "${SIG14TA1_CRLF_OUT}.sigil"
+if "$CCT_BIN" --sigilo-only --sigilo-out "$SIG14TA1_CRLF_OUT" \
+    tests/integration/sigilo_source_context_crlf_14ta1.cct \
+    >$CCT_TMP_DIR/cct_phase14ta1_1159_sigilo.out 2>&1; then
+    RC_1159=0
+else
+    RC_1159=$?
+fi
+if [ "$RC_1159" -eq 0 ] && \
+   [ -f "${SIG14TA1_CRLF_OUT}.svg" ] && \
+   [ -f "${SIG14TA1_CRLF_OUT}.sigil" ] && \
+   cmp -s "${SIG14TA1_LF_OUT}.svg" "${SIG14TA1_CRLF_OUT}.svg" && \
+   cmp -s \
+      <(grep '^semantic_hash = ' "${SIG14TA1_LF_OUT}.sigil") \
+      <(grep '^semantic_hash = ' "${SIG14TA1_CRLF_OUT}.sigil"); then
+    test_pass "CRLF normalizado preserva SVG e hash semantico estaveis"
+else
+    test_fail "CRLF em 14TA1 gerou diferenca inesperada no sigilo"
+fi
+rm -f "$SIG14TA1_HELPER_BIN" \
+    "${SIG14TA1_LF_OUT}.svg" "${SIG14TA1_LF_OUT}.sigil" \
+    "${SIG14TA1_CRLF_OUT}.svg" "${SIG14TA1_CRLF_OUT}.sigil" \
+    tests/integration/sigilo_source_context_missing_source_14ta1.svg \
+    tests/integration/sigilo_source_context_missing_source_14ta1.sigil
+
+echo ""
+echo "========================================"
+echo "FASE 14TA2: Contexto textual interno"
+echo "========================================"
+echo ""
+
+# Test 1160: internal sigilo context helper validates ritual/node/edge payloads
+echo "Test 1160: internal sigilo context helper"
+SIG14TA2_HELPER_SRC="tests/integration/test_sigilo_context_14ta2.c"
+SIG14TA2_HELPER_BIN="tests/integration/test_sigilo_context_14ta2"
+rm -f "$SIG14TA2_HELPER_BIN"
+SIG14TA2_SRC_DEPS=$(find src -name '*.c' ! -path 'src/main.c' ! -path 'src/sigilo/sigilo.c' | sort)
+if gcc -Wall -Wextra -Werror -std=c11 -O2 -g \
+    -D_POSIX_C_SOURCE=200809L \
+    -D_XOPEN_SOURCE=700 \
+    -DCCT_STDLIB_DIR="\"$ROOT_DIR/lib/cct\"" \
+    -DCCT_FREESTANDING_RT_HEADER="\"$ROOT_DIR/src/runtime/cct_freestanding_rt.h\"" \
+    -DCCT_FREESTANDING_RT_SOURCE="\"$ROOT_DIR/src/runtime/cct_freestanding_rt.c\"" \
+    -o "$SIG14TA2_HELPER_BIN" \
+    "$SIG14TA2_HELPER_SRC" \
+    $SIG14TA2_SRC_DEPS \
+    -lm >$CCT_TMP_DIR/cct_phase14ta2_1160_build.out 2>&1; then
+    "$SIG14TA2_HELPER_BIN" >$CCT_TMP_DIR/cct_phase14ta2_1160_run.out 2>&1
+    RC_1160=$?
+else
+    RC_1160=255
+fi
+if [ "$RC_1160" -eq 0 ]; then
+    test_pass "helper interno valida contexto de rituale, loop, edge e fallback sem source"
+else
+    test_fail "helper interno de contexto 14TA2 falhou"
+fi
+
+# Test 1161: sigilo artifacts still generate after internal context enrichment
+echo "Test 1161: sigilo artifact generation survives context enrichment"
+SIG14TA2_OUT="tests/integration/sigilo_context_call_edge_out_14ta2"
+rm -f "${SIG14TA2_OUT}.svg" "${SIG14TA2_OUT}.sigil"
+if "$CCT_BIN" --sigilo-only --sigilo-out "$SIG14TA2_OUT" \
+    tests/integration/sigilo_context_call_edge_14ta2.cct \
+    >$CCT_TMP_DIR/cct_phase14ta2_1161_sigilo.out 2>&1; then
+    RC_1161=0
+else
+    RC_1161=$?
+fi
+if [ "$RC_1161" -eq 0 ] && \
+   [ -f "${SIG14TA2_OUT}.svg" ] && \
+   [ -f "${SIG14TA2_OUT}.sigil" ]; then
+    test_pass "sigilo continua gerando artefatos apos enriquecimento de contexto"
+else
+    test_fail "contexto semantico interno de 14TA2 regrediu geracao de sigilo"
+fi
+
+# Test 1162: loop fixture remains stable in sigilo-only path
+echo "Test 1162: loop sigilo fixture remains functional"
+SIG14TA2_LOOP_OUT="tests/integration/sigilo_context_loop_out_14ta2"
+rm -f "${SIG14TA2_LOOP_OUT}.svg" "${SIG14TA2_LOOP_OUT}.sigil"
+if "$CCT_BIN" --sigilo-only --sigilo-out "$SIG14TA2_LOOP_OUT" \
+    tests/integration/sigilo_context_loop_14ta2.cct \
+    >$CCT_TMP_DIR/cct_phase14ta2_1162_sigilo.out 2>&1; then
+    RC_1162=0
+else
+    RC_1162=$?
+fi
+if [ "$RC_1162" -eq 0 ] && \
+   [ -f "${SIG14TA2_LOOP_OUT}.svg" ] && \
+   [ -f "${SIG14TA2_LOOP_OUT}.sigil" ]; then
+    test_pass "fixture de loop continua funcional no sigilo-only"
+else
+    test_fail "fixture de loop 14TA2 falhou no sigilo-only"
+fi
+rm -f "$SIG14TA2_HELPER_BIN" \
+    "${SIG14TA2_OUT}.svg" "${SIG14TA2_OUT}.sigil" \
+    "${SIG14TA2_LOOP_OUT}.svg" "${SIG14TA2_LOOP_OUT}.sigil"
+
+echo ""
+echo "========================================"
+echo "FASE 14TA3: Tooltip text seguro"
+echo "========================================"
+echo ""
+
+# Test 1163: internal tooltip helper validates normalization, clipping and escaping
+echo "Test 1163: internal tooltip helper"
+SIG14TA3_HELPER_SRC="tests/integration/test_sigilo_tooltip_14ta3.c"
+SIG14TA3_HELPER_BIN="tests/integration/test_sigilo_tooltip_14ta3"
+rm -f "$SIG14TA3_HELPER_BIN"
+SIG14TA3_SRC_DEPS=$(find src -name '*.c' ! -path 'src/main.c' ! -path 'src/sigilo/sigilo.c' | sort)
+if gcc -Wall -Wextra -Werror -std=c11 -O2 -g \
+    -D_POSIX_C_SOURCE=200809L \
+    -D_XOPEN_SOURCE=700 \
+    -DCCT_STDLIB_DIR="\"$ROOT_DIR/lib/cct\"" \
+    -DCCT_FREESTANDING_RT_HEADER="\"$ROOT_DIR/src/runtime/cct_freestanding_rt.h\"" \
+    -DCCT_FREESTANDING_RT_SOURCE="\"$ROOT_DIR/src/runtime/cct_freestanding_rt.c\"" \
+    -o "$SIG14TA3_HELPER_BIN" \
+    "$SIG14TA3_HELPER_SRC" \
+    $SIG14TA3_SRC_DEPS \
+    -lm >$CCT_TMP_DIR/cct_phase14ta3_1163_build.out 2>&1; then
+    "$SIG14TA3_HELPER_BIN" >$CCT_TMP_DIR/cct_phase14ta3_1163_run.out 2>&1
+    RC_1163=$?
+else
+    RC_1163=255
+fi
+if [ "$RC_1163" -eq 0 ]; then
+    test_pass "helper interno valida normalize/clip/escape e tooltip_text preparado"
+else
+    test_fail "helper interno de tooltip 14TA3 falhou"
+fi
+
+# Test 1164: sigilo generation still works after tooltip preparation layer
+echo "Test 1164: sigilo generation remains functional after tooltip preparation"
+SIG14TA3_ESCAPE_OUT="tests/integration/sigilo_tooltip_escape_out_14ta3"
+rm -f "${SIG14TA3_ESCAPE_OUT}.svg" "${SIG14TA3_ESCAPE_OUT}.sigil"
+if "$CCT_BIN" --sigilo-only --sigilo-out "$SIG14TA3_ESCAPE_OUT" \
+    tests/integration/sigilo_tooltip_escape_14ta3.cct \
+    >$CCT_TMP_DIR/cct_phase14ta3_1164_sigilo.out 2>&1; then
+    RC_1164=0
+else
+    RC_1164=$?
+fi
+if [ "$RC_1164" -eq 0 ] && \
+   [ -f "${SIG14TA3_ESCAPE_OUT}.svg" ] && \
+   [ -f "${SIG14TA3_ESCAPE_OUT}.sigil" ]; then
+    test_pass "sigilo continua gerando artefatos apos camada de tooltip"
+else
+    test_fail "camada de tooltip 14TA3 regrediu geracao de sigilo"
+fi
+
+# Test 1165: tabs fixture remains compilable in sigilo-only path
+echo "Test 1165: tabs fixture remains functional in sigilo-only path"
+SIG14TA3_TABS_OUT="tests/integration/sigilo_tooltip_tabs_out_14ta3"
+rm -f "${SIG14TA3_TABS_OUT}.svg" "${SIG14TA3_TABS_OUT}.sigil"
+if "$CCT_BIN" --sigilo-only --sigilo-out "$SIG14TA3_TABS_OUT" \
+    tests/integration/sigilo_tooltip_tabs_14ta3.cct \
+    >$CCT_TMP_DIR/cct_phase14ta3_1165_sigilo.out 2>&1; then
+    RC_1165=0
+else
+    RC_1165=$?
+fi
+if [ "$RC_1165" -eq 0 ] && \
+   [ -f "${SIG14TA3_TABS_OUT}.svg" ] && \
+   [ -f "${SIG14TA3_TABS_OUT}.sigil" ]; then
+    test_pass "fixture com tabs continua funcional no sigilo-only"
+else
+    test_fail "fixture com tabs 14TA3 falhou no sigilo-only"
+fi
+rm -f "$SIG14TA3_HELPER_BIN" \
+    "${SIG14TA3_ESCAPE_OUT}.svg" "${SIG14TA3_ESCAPE_OUT}.sigil" \
+    "${SIG14TA3_TABS_OUT}.svg" "${SIG14TA3_TABS_OUT}.sigil"
+
+echo ""
+echo "========================================"
+echo "FASE 14TB1: Titles em nos de rituale"
+echo "========================================"
+echo ""
+
+# Test 1166: ritual nodes emit title tooltips with canonical fields
+echo "Test 1166: ritual nodes emit canonical title tooltips"
+SIG14TB1_BASIC_OUT="tests/integration/sigilo_title_rituale_basic_out_14tb1"
+rm -f "${SIG14TB1_BASIC_OUT}.svg" "${SIG14TB1_BASIC_OUT}.sigil"
+if "$CCT_BIN" --sigilo-only --sigilo-out "$SIG14TB1_BASIC_OUT" \
+    tests/integration/sigilo_title_rituale_basic_14tb1.cct \
+    >$CCT_TMP_DIR/cct_phase14tb1_1166_sigilo.out 2>&1; then
+    RC_1166=0
+else
+    RC_1166=$?
+fi
+if [ "$RC_1166" -eq 0 ] && \
+   grep -q "<title>RITUALE main" "${SIG14TB1_BASIC_OUT}.svg" && \
+   grep -q "stmt: " "${SIG14TB1_BASIC_OUT}.svg" && \
+   grep -q "depth: " "${SIG14TB1_BASIC_OUT}.svg" && \
+   grep -q "calls: " "${SIG14TB1_BASIC_OUT}.svg" && \
+   grep -q "source:" "${SIG14TB1_BASIC_OUT}.svg"; then
+    test_pass "ritual nodes expoem title com nome, metricas e source"
+else
+    test_fail "tooltip de ritual node 14TB1 ausente ou incompleto no SVG"
+fi
+
+# Test 1167: recursive ritual emits title without breaking SVG
+echo "Test 1167: recursive ritual emits stable title tooltip"
+SIG14TB1_RECURSIVE_OUT="tests/integration/sigilo_title_rituale_recursive_out_14tb1"
+rm -f "${SIG14TB1_RECURSIVE_OUT}.svg" "${SIG14TB1_RECURSIVE_OUT}.sigil"
+if "$CCT_BIN" --sigilo-only --sigilo-out "$SIG14TB1_RECURSIVE_OUT" \
+    tests/integration/sigilo_title_rituale_recursive_14tb1.cct \
+    >$CCT_TMP_DIR/cct_phase14tb1_1167_sigilo.out 2>&1; then
+    RC_1167=0
+else
+    RC_1167=$?
+fi
+if [ "$RC_1167" -eq 0 ] && \
+   grep -q "<title>RITUALE factorial" "${SIG14TB1_RECURSIVE_OUT}.svg" && \
+   grep -q "calls: 1" "${SIG14TB1_RECURSIVE_OUT}.svg"; then
+    test_pass "rituale recursivo mantém title estável com contagem de calls"
+else
+    test_fail "rituale recursivo 14TB1 falhou na emissão de title"
+fi
+
+# Test 1168: ritual title instrumentation preserves SVG generation
+echo "Test 1168: ritual title instrumentation preserves SVG generation"
+if [ "$RC_1166" -eq 0 ] && [ "$RC_1167" -eq 0 ]; then
+    test_pass "instrumentacao de title em rituales preserva geracao de artefatos"
+else
+    test_fail "instrumentacao de title em rituales regrediu geracao de artefatos"
+fi
+rm -f "${SIG14TB1_BASIC_OUT}.svg" "${SIG14TB1_BASIC_OUT}.sigil" \
+    "${SIG14TB1_RECURSIVE_OUT}.svg" "${SIG14TB1_RECURSIVE_OUT}.sigil"
+
+echo ""
+echo "========================================"
+echo "FASE 14TB2: Titles em nos estruturais"
+echo "========================================"
+echo ""
+
+# Test 1169: loop node emits tooltip with stmt DUM
+echo "Test 1169: loop node emits tooltip with stmt DUM"
+SIG14TB2_LOOP_OUT="tests/integration/sigilo_title_loop_out_14tb2"
+rm -f "${SIG14TB2_LOOP_OUT}.svg" "${SIG14TB2_LOOP_OUT}.sigil"
+if "$CCT_BIN" --sigilo-only --sigilo-out "$SIG14TB2_LOOP_OUT" \
+    tests/integration/sigilo_title_loop_14tb2.cct \
+    >$CCT_TMP_DIR/cct_phase14tb2_1169_sigilo.out 2>&1; then
+    RC_1169=0
+else
+    RC_1169=$?
+fi
+if [ "$RC_1169" -eq 0 ] && \
+   grep -q "stmt: DUM" "${SIG14TB2_LOOP_OUT}.svg" && \
+   grep -q "rituale: loop_hover" "${SIG14TB2_LOOP_OUT}.svg" && \
+   grep -q "source:" "${SIG14TB2_LOOP_OUT}.svg"; then
+    test_pass "node DUM expoe tooltip estrutural com rituale e source"
+else
+    test_fail "tooltip estrutural de loop 14TB2 ausente ou incompleto"
+fi
+
+# Test 1170: branch node emits tooltip with stmt SI
+echo "Test 1170: branch node emits tooltip with stmt SI"
+SIG14TB2_BRANCH_OUT="tests/integration/sigilo_title_branch_out_14tb2"
+rm -f "${SIG14TB2_BRANCH_OUT}.svg" "${SIG14TB2_BRANCH_OUT}.sigil"
+if "$CCT_BIN" --sigilo-only --sigilo-out "$SIG14TB2_BRANCH_OUT" \
+    tests/integration/sigilo_title_branch_14tb2.cct \
+    >$CCT_TMP_DIR/cct_phase14tb2_1170_sigilo.out 2>&1; then
+    RC_1170=0
+else
+    RC_1170=$?
+fi
+if [ "$RC_1170" -eq 0 ] && \
+   grep -q "stmt: SI" "${SIG14TB2_BRANCH_OUT}.svg" && \
+   grep -q "rituale: branch_hover" "${SIG14TB2_BRANCH_OUT}.svg"; then
+    test_pass "node de branch expoe tooltip com stmt SI"
+else
+    test_fail "tooltip estrutural de branch 14TB2 ausente ou incorreto"
+fi
+
+# Test 1171: terminal nodes emit REDDE/ANUR tooltip
+echo "Test 1171: terminal nodes emit REDDE/ANUR tooltip"
+SIG14TB2_TERM_OUT="tests/integration/sigilo_title_terminal_out_14tb2"
+rm -f "${SIG14TB2_TERM_OUT}.svg" "${SIG14TB2_TERM_OUT}.sigil"
+if "$CCT_BIN" --sigilo-only --sigilo-out "$SIG14TB2_TERM_OUT" \
+    tests/integration/sigilo_title_terminal_14tb2.cct \
+    >$CCT_TMP_DIR/cct_phase14tb2_1171_sigilo.out 2>&1; then
+    RC_1171=0
+else
+    RC_1171=$?
+fi
+if [ "$RC_1171" -eq 0 ] && \
+   grep -q "stmt: REDDE" "${SIG14TB2_TERM_OUT}.svg" && \
+   grep -q "stmt: ANUR" "${SIG14TB2_TERM_OUT}.svg"; then
+    test_pass "nodes terminais expoem tooltip com REDDE e ANUR"
+else
+    test_fail "tooltip terminal 14TB2 ausente ou incompleto"
+fi
+
+# Test 1172: binding nodes emit EVOCA/VINCIRE tooltip
+echo "Test 1172: binding nodes emit EVOCA/VINCIRE tooltip"
+SIG14TB2_BIND_OUT="tests/integration/sigilo_title_bind_out_14tb2"
+rm -f "${SIG14TB2_BIND_OUT}.svg" "${SIG14TB2_BIND_OUT}.sigil"
+if "$CCT_BIN" --sigilo-only --sigilo-out "$SIG14TB2_BIND_OUT" \
+    tests/integration/sigilo_title_bind_14tb2.cct \
+    >$CCT_TMP_DIR/cct_phase14tb2_1172_sigilo.out 2>&1; then
+    RC_1172=0
+else
+    RC_1172=$?
+fi
+if [ "$RC_1172" -eq 0 ] && \
+   grep -q "stmt: EVOCA" "${SIG14TB2_BIND_OUT}.svg" && \
+   grep -q "rituale: bind_hover" "${SIG14TB2_BIND_OUT}.svg"; then
+    test_pass "node de binding expoe tooltip com stmt EVOCA/VINCIRE"
+else
+    test_fail "tooltip de binding 14TB2 ausente ou incorreto"
+fi
+
+# Test 1173: structural title instrumentation preserves SVG generation
+echo "Test 1173: structural title instrumentation preserves SVG generation"
+if [ "$RC_1169" -eq 0 ] && [ "$RC_1170" -eq 0 ] && [ "$RC_1171" -eq 0 ] && [ "$RC_1172" -eq 0 ]; then
+    test_pass "instrumentacao de title em nos estruturais preserva geracao de artefatos"
+else
+    test_fail "instrumentacao de title em nos estruturais regrediu a geracao"
+fi
+rm -f "${SIG14TB2_LOOP_OUT}.svg" "${SIG14TB2_LOOP_OUT}.sigil" \
+    "${SIG14TB2_BRANCH_OUT}.svg" "${SIG14TB2_BRANCH_OUT}.sigil" \
+    "${SIG14TB2_TERM_OUT}.svg" "${SIG14TB2_TERM_OUT}.sigil" \
+    "${SIG14TB2_BIND_OUT}.svg" "${SIG14TB2_BIND_OUT}.sigil"
+
+echo ""
+echo "========================================"
+echo "FASE 14TB3: Titles em arestas locais"
+echo "========================================"
+echo ""
+
+# Test 1174: primary and call edges emit title payloads
+echo "Test 1174: primary and call edges emit title payloads"
+SIG14TB3_PRIMARY_OUT="tests/integration/sigilo_title_edge_primary_call_out_14tb3"
+rm -f "${SIG14TB3_PRIMARY_OUT}.svg" "${SIG14TB3_PRIMARY_OUT}.sigil"
+if "$CCT_BIN" --sigilo-only --sigilo-out "$SIG14TB3_PRIMARY_OUT" \
+    tests/integration/sigilo_title_edge_primary_call_14tb3.cct \
+    >$CCT_TMP_DIR/cct_phase14tb3_1174_sigilo.out 2>&1; then
+    RC_1174=0
+else
+    RC_1174=$?
+fi
+if [ "$RC_1174" -eq 0 ] && \
+   grep -q "edge: primary" "${SIG14TB3_PRIMARY_OUT}.svg" && \
+   grep -q "edge: call" "${SIG14TB3_PRIMARY_OUT}.svg" && \
+   grep -q "main -&gt; helper" "${SIG14TB3_PRIMARY_OUT}.svg" && \
+   grep -q "calls: 1" "${SIG14TB3_PRIMARY_OUT}.svg"; then
+    test_pass "arestas primary e call expoem title com origem, destino e peso"
+else
+    test_fail "tooltip de arestas primary/call 14TB3 ausente ou incompleto"
+fi
+
+# Test 1175: branch loop bind and term edges emit titles
+echo "Test 1175: branch loop bind and term edges emit titles"
+SIG14TB3_STRUCT_OUT="tests/integration/sigilo_title_edge_branch_loop_bind_term_out_14tb3"
+rm -f "${SIG14TB3_STRUCT_OUT}.svg" "${SIG14TB3_STRUCT_OUT}.sigil"
+if "$CCT_BIN" --sigilo-only --sigilo-out "$SIG14TB3_STRUCT_OUT" \
+    tests/integration/sigilo_title_edge_branch_loop_bind_term_14tb3.cct \
+    >$CCT_TMP_DIR/cct_phase14tb3_1175_sigilo.out 2>&1; then
+    RC_1175=0
+else
+    RC_1175=$?
+fi
+if [ "$RC_1175" -eq 0 ] && \
+   grep -q "edge: branch" "${SIG14TB3_STRUCT_OUT}.svg" && \
+   grep -q "edge: loop" "${SIG14TB3_STRUCT_OUT}.svg" && \
+   grep -q "edge: bind" "${SIG14TB3_STRUCT_OUT}.svg" && \
+   grep -q "edge: term" "${SIG14TB3_STRUCT_OUT}.svg"; then
+    test_pass "arestas branch loop bind e term expoem title"
+else
+    test_fail "tooltip de arestas estruturais 14TB3 ausente ou incompleto"
+fi
+
+# Test 1176: recursive self-loop call edge emits stable title
+echo "Test 1176: recursive self-loop call edge emits stable title"
+SIG14TB3_RECURSIVE_OUT="tests/integration/sigilo_title_edge_recursive_out_14tb3"
+rm -f "${SIG14TB3_RECURSIVE_OUT}.svg" "${SIG14TB3_RECURSIVE_OUT}.sigil"
+if "$CCT_BIN" --sigilo-only --sigilo-out "$SIG14TB3_RECURSIVE_OUT" \
+    tests/integration/sigilo_title_edge_recursive_14tb3.cct \
+    >$CCT_TMP_DIR/cct_phase14tb3_1176_sigilo.out 2>&1; then
+    RC_1176=0
+else
+    RC_1176=$?
+fi
+if [ "$RC_1176" -eq 0 ] && \
+   grep -q "edge: call" "${SIG14TB3_RECURSIVE_OUT}.svg" && \
+   grep -q "factorial -&gt; factorial" "${SIG14TB3_RECURSIVE_OUT}.svg" && \
+   grep -q "calls: 1" "${SIG14TB3_RECURSIVE_OUT}.svg"; then
+    test_pass "self-loop recursivo expoe title de call agregado"
+else
+    test_fail "tooltip de self-loop recursivo 14TB3 ausente ou incorreto"
+fi
+
+# Test 1177: edge title instrumentation preserves SVG generation
+echo "Test 1177: edge title instrumentation preserves SVG generation"
+if [ "$RC_1174" -eq 0 ] && [ "$RC_1175" -eq 0 ] && [ "$RC_1176" -eq 0 ]; then
+    test_pass "instrumentacao de title em arestas preserva geracao de artefatos"
+else
+    test_fail "instrumentacao de title em arestas regrediu a geracao"
+fi
+rm -f "${SIG14TB3_PRIMARY_OUT}.svg" "${SIG14TB3_PRIMARY_OUT}.sigil" \
+    "${SIG14TB3_STRUCT_OUT}.svg" "${SIG14TB3_STRUCT_OUT}.sigil" \
+    "${SIG14TB3_RECURSIVE_OUT}.svg" "${SIG14TB3_RECURSIVE_OUT}.sigil"
+
+echo ""
+echo "========================================"
+echo "FASE 14TB4: Titles no system sigilo"
+echo "========================================"
+echo ""
+
+# Test 1178: basic system sigilo emits module title with summary counts
+echo "Test 1178: system sigilo basic fixture emits module title"
+SIG14TB4_BASIC_SRC="tests/integration/sigilo_system_title_basic_14tb4.cct"
+SIG14TB4_BASIC_OUT="tests/integration/sigilo_system_title_basic_out_14tb4"
+cleanup_codegen_artifacts "$SIG14TB4_BASIC_SRC"
+cleanup_codegen_artifacts "tests/integration/modules_9a/lib_rituale.cct"
+rm -f "${SIG14TB4_BASIC_OUT}.svg" "${SIG14TB4_BASIC_OUT}.sigil" \
+      "${SIG14TB4_BASIC_OUT}.system.svg" "${SIG14TB4_BASIC_OUT}.system.sigil"
+RC_1178=1
+if "$CCT_BIN" --sigilo-only --sigilo-out "$SIG14TB4_BASIC_OUT" \
+    "$SIG14TB4_BASIC_SRC" \
+    >"$CCT_TMP_DIR/cct_phase14tb4_1178.out" 2>&1; then
+    RC_1178=0
+else
+    RC_1178=$?
+fi
+if [ "$RC_1178" -eq 0 ] && \
+   [ -f "${SIG14TB4_BASIC_OUT}.system.svg" ] && \
+   [ -f "${SIG14TB4_BASIC_OUT}.system.sigil" ] && \
+   grep -q "<g class=\"system-node-wrap\">" "${SIG14TB4_BASIC_OUT}.system.svg" && \
+   grep -q "<title>module" "${SIG14TB4_BASIC_OUT}.system.svg" && \
+   grep -q "tests/integration/sigilo_system_title_basic_14tb4.cct" "${SIG14TB4_BASIC_OUT}.system.svg" && \
+   grep -q "rituals: 1" "${SIG14TB4_BASIC_OUT}.system.svg" && \
+   grep -q "imports: 1" "${SIG14TB4_BASIC_OUT}.system.svg"; then
+    test_pass "tooltip de modulo 14TB4 emitido no system sigilo básico"
+else
+    test_fail "tooltip de modulo 14TB4 ausente ou incompleto no system sigilo básico"
+fi
+
+# Test 1179: imported module title is present with zero-import summary
+echo "Test 1179: imported module title reports zero imports"
+if [ -f "${SIG14TB4_BASIC_OUT}.system.svg" ] && \
+   grep -q "tests/integration/modules_9a/lib_rituale.cct" "${SIG14TB4_BASIC_OUT}.system.svg" && \
+   grep -q "imports: 0" "${SIG14TB4_BASIC_OUT}.system.svg"; then
+    test_pass "tooltip de modulo importado 14TB4 mostra imports zero"
+else
+    test_fail "tooltip de modulo importado 14TB4 ausente ou incorreto"
+fi
+
+# Test 1180: modular system sigilo emits edge titles for import and semantic cross links
+echo "Test 1180: modular system sigilo emits edge titles"
+SIG14TB4_MODULAR_SRC="tests/integration/sigilo_system_title_modular_14tb4_main.cct"
+SIG14TB4_MODULAR_OUT="tests/integration/sigilo_system_title_modular_out_14tb4"
+cleanup_codegen_artifacts "$SIG14TB4_MODULAR_SRC"
+cleanup_codegen_artifacts "tests/integration/modules_9d/sigilo_mod_types.cct"
+cleanup_codegen_artifacts "tests/integration/modules_9d/sigilo_mod_ops.cct"
+rm -f "${SIG14TB4_MODULAR_OUT}.svg" "${SIG14TB4_MODULAR_OUT}.sigil" \
+      "${SIG14TB4_MODULAR_OUT}.system.svg" "${SIG14TB4_MODULAR_OUT}.system.sigil"
+RC_1180=1
+if "$CCT_BIN" --sigilo-only --sigilo-out "$SIG14TB4_MODULAR_OUT" \
+    "$SIG14TB4_MODULAR_SRC" \
+    >"$CCT_TMP_DIR/cct_phase14tb4_1180.out" 2>&1; then
+    RC_1180=0
+else
+    RC_1180=$?
+fi
+if [ "$RC_1180" -eq 0 ] && \
+   [ -f "${SIG14TB4_MODULAR_OUT}.system.svg" ] && \
+   grep -q "<g class=\"system-edge-wrap\">" "${SIG14TB4_MODULAR_OUT}.system.svg" && \
+   grep -q "<title>edge" "${SIG14TB4_MODULAR_OUT}.system.svg" && \
+   grep -q "sigilo_system_title_modular_14tb4_main.cct -&gt; sigilo_mod_types.cct" "${SIG14TB4_MODULAR_OUT}.system.svg" && \
+   grep -q "links: 1" "${SIG14TB4_MODULAR_OUT}.system.svg" && \
+   grep -q "calls: 2" "${SIG14TB4_MODULAR_OUT}.system.svg"; then
+    test_pass "tooltip de arestas 14TB4 emitido para imports e semantic cross"
+else
+    test_fail "tooltip de arestas 14TB4 ausente ou incompleto no system sigilo modular"
+fi
+
+# Test 1181: modular system sigilo keeps inline sub-sigils while adding titles
+echo "Test 1181: modular system sigilo preserves inline sub-sigils"
+if [ -f "${SIG14TB4_MODULAR_OUT}.system.svg" ] && \
+   grep -q "id=\"module_sigil_000\"" "${SIG14TB4_MODULAR_OUT}.system.svg" && \
+   grep -q "id=\"module_sigil_001\"" "${SIG14TB4_MODULAR_OUT}.system.svg" && \
+   grep -q "id=\"module_sigil_002\"" "${SIG14TB4_MODULAR_OUT}.system.svg" && \
+   grep -q "tests/integration/modules_9d/sigilo_mod_ops.cct" "${SIG14TB4_MODULAR_OUT}.system.svg" && \
+   grep -q "imports: 2" "${SIG14TB4_MODULAR_OUT}.system.svg"; then
+    test_pass "14TB4 preserva system sigilo inline enquanto adiciona titles"
+else
+    test_fail "14TB4 regrediu composição inline do system sigilo"
+fi
+
+rm -f "${SIG14TB4_BASIC_OUT}.svg" "${SIG14TB4_BASIC_OUT}.sigil" \
+    "${SIG14TB4_BASIC_OUT}.system.svg" "${SIG14TB4_BASIC_OUT}.system.sigil" \
+    "${SIG14TB4_MODULAR_OUT}.svg" "${SIG14TB4_MODULAR_OUT}.sigil" \
+    "${SIG14TB4_MODULAR_OUT}.system.svg" "${SIG14TB4_MODULAR_OUT}.system.sigil"
+
+echo ""
+echo "========================================"
+echo "FASE 14TC1: data-* em nós locais"
+echo "========================================"
+echo ""
+
+# Test 1182: ritual node emits canonical ordered data attributes
+echo "Test 1182: ritual node emits canonical ordered data attributes"
+SIG14TC1_RITUAL_SRC="tests/integration/sigilo_data_node_rituale_14tc1.cct"
+SIG14TC1_RITUAL_OUT="tests/integration/sigilo_data_node_rituale_out_14tc1"
+cleanup_codegen_artifacts "$SIG14TC1_RITUAL_SRC"
+rm -f "${SIG14TC1_RITUAL_OUT}.svg" "${SIG14TC1_RITUAL_OUT}.sigil"
+RC_1182=1
+if "$CCT_BIN" --sigilo-only --sigilo-out "$SIG14TC1_RITUAL_OUT" \
+    "$SIG14TC1_RITUAL_SRC" \
+    >"$CCT_TMP_DIR/cct_phase14tc1_1182.out" 2>&1; then
+    RC_1182=0
+else
+    RC_1182=$?
+fi
+if [ "$RC_1182" -eq 0 ] && \
+   [ -f "${SIG14TC1_RITUAL_OUT}.svg" ] && \
+   grep -Eq 'class="node-entry" cx="[^"]+" cy="[^"]+" r="[^"]+" data-kind="rituale" data-ritual="main" data-line="7" data-col="1" data-depth="3" data-stmt="RITUALE" data-loops="0" data-calls="1" data-entry="true"' "${SIG14TC1_RITUAL_OUT}.svg"; then
+    test_pass "14TC1 emite data-* canônico no nó rituale de entrada"
+else
+    test_fail "14TC1 não emitiu data-* canônico no nó rituale"
+fi
+
+# Test 1183: structural loop node emits semantic data attributes
+echo "Test 1183: structural loop node emits semantic data attributes"
+SIG14TC1_LOOP_SRC="tests/integration/sigilo_data_node_loop_14tc1.cct"
+SIG14TC1_LOOP_OUT="tests/integration/sigilo_data_node_loop_out_14tc1"
+cleanup_codegen_artifacts "$SIG14TC1_LOOP_SRC"
+rm -f "${SIG14TC1_LOOP_OUT}.svg" "${SIG14TC1_LOOP_OUT}.sigil"
+RC_1183=1
+if "$CCT_BIN" --sigilo-only --sigilo-out "$SIG14TC1_LOOP_OUT" \
+    "$SIG14TC1_LOOP_SRC" \
+    >"$CCT_TMP_DIR/cct_phase14tc1_1183.out" 2>&1; then
+    RC_1183=0
+else
+    RC_1183=$?
+fi
+if [ "$RC_1183" -eq 0 ] && \
+   [ -f "${SIG14TC1_LOOP_OUT}.svg" ] && \
+   grep -Eq 'class="node-loop" cx="[^"]+" cy="[^"]+" r="[^"]+" data-kind="loop" data-ritual="loop_data" data-line="5" data-col="3" data-depth="5" data-stmt="DUM"' "${SIG14TC1_LOOP_OUT}.svg"; then
+    test_pass "14TC1 emite data-* semântico no nó estrutural de loop"
+else
+    test_fail "14TC1 não emitiu data-* esperado no nó de loop"
+fi
+
+# Test 1184: data-entry remains exclusive to entry ritual node
+echo "Test 1184: data-entry remains exclusive to entry ritual node"
+if [ -f "${SIG14TC1_RITUAL_OUT}.svg" ] && \
+   grep -q 'data-entry="true"' "${SIG14TC1_RITUAL_OUT}.svg" && \
+   ! grep -Eq 'class="node-(term|aux|loop)".*data-entry="true"' "${SIG14TC1_RITUAL_OUT}.svg"; then
+    test_pass "14TC1 restringe data-entry ao rituale de entrada"
+else
+    test_fail "14TC1 vazou data-entry para nós não rituale"
+fi
+
+# Test 1185: node data attribute emission remains deterministic
+echo "Test 1185: node data attribute emission remains deterministic"
+cp "${SIG14TC1_LOOP_OUT}.svg" "${SIG14TC1_LOOP_OUT}.ref.svg" 2>/dev/null || true
+if "$CCT_BIN" --sigilo-only --sigilo-out "$SIG14TC1_LOOP_OUT" \
+    "$SIG14TC1_LOOP_SRC" \
+    >"$CCT_TMP_DIR/cct_phase14tc1_1185.out" 2>&1 && \
+   [ -f "${SIG14TC1_LOOP_OUT}.ref.svg" ] && \
+   cmp -s "${SIG14TC1_LOOP_OUT}.ref.svg" "${SIG14TC1_LOOP_OUT}.svg"; then
+    test_pass "14TC1 preserva determinismo textual dos data-*"
+else
+    test_fail "14TC1 regrediu determinismo textual dos data-*"
+fi
+
+rm -f "${SIG14TC1_RITUAL_OUT}.svg" "${SIG14TC1_RITUAL_OUT}.sigil" \
+    "${SIG14TC1_LOOP_OUT}.svg" "${SIG14TC1_LOOP_OUT}.sigil" \
+    "${SIG14TC1_LOOP_OUT}.ref.svg"
+
+echo ""
+echo "========================================"
+echo "FASE 14TC2: data-* em arestas"
+echo "========================================"
+echo ""
+
+# Test 1186: call edge emits canonical ordered data attributes
+echo "Test 1186: call edge emits canonical ordered data attributes"
+SIG14TC2_BASIC_SRC="tests/integration/sigilo_data_edge_basic_14tc2.cct"
+SIG14TC2_BASIC_OUT="tests/integration/sigilo_data_edge_basic_out_14tc2"
+cleanup_codegen_artifacts "$SIG14TC2_BASIC_SRC"
+rm -f "${SIG14TC2_BASIC_OUT}.svg" "${SIG14TC2_BASIC_OUT}.sigil"
+RC_1186=1
+if "$CCT_BIN" --sigilo-only --sigilo-out "$SIG14TC2_BASIC_OUT" \
+    "$SIG14TC2_BASIC_SRC" \
+    >"$CCT_TMP_DIR/cct_phase14tc2_1186.out" 2>&1; then
+    RC_1186=0
+else
+    RC_1186=$?
+fi
+if [ "$RC_1186" -eq 0 ] && \
+   [ -f "${SIG14TC2_BASIC_OUT}.svg" ] && \
+   grep -Eq 'class="call" d="[^"]+" stroke-width="[^"]+" opacity="[^"]+" data-kind="call" data-from="main" data-to="helper" data-weight="1" data-self-loop="false"' "${SIG14TC2_BASIC_OUT}.svg"; then
+    test_pass "14TC2 emite data-* canônico na aresta de call"
+else
+    test_fail "14TC2 não emitiu data-* canônico na aresta de call"
+fi
+
+# Test 1187: recursive call self-loop emits canonical self-loop metadata
+echo "Test 1187: recursive call self-loop emits canonical metadata"
+SIG14TC2_RECURSIVE_SRC="tests/integration/sigilo_data_edge_recursive_14tc2.cct"
+SIG14TC2_RECURSIVE_OUT="tests/integration/sigilo_data_edge_recursive_out_14tc2"
+cleanup_codegen_artifacts "$SIG14TC2_RECURSIVE_SRC"
+rm -f "${SIG14TC2_RECURSIVE_OUT}.svg" "${SIG14TC2_RECURSIVE_OUT}.sigil"
+RC_1187=1
+if "$CCT_BIN" --sigilo-only --sigilo-out "$SIG14TC2_RECURSIVE_OUT" \
+    "$SIG14TC2_RECURSIVE_SRC" \
+    >"$CCT_TMP_DIR/cct_phase14tc2_1187.out" 2>&1; then
+    RC_1187=0
+else
+    RC_1187=$?
+fi
+if [ "$RC_1187" -eq 0 ] && \
+   [ -f "${SIG14TC2_RECURSIVE_OUT}.svg" ] && \
+   grep -Eq 'class="call" d="[^"]+" data-kind="call" data-from="factorial" data-to="factorial" data-weight="1" data-self-loop="true"' "${SIG14TC2_RECURSIVE_OUT}.svg"; then
+    test_pass "14TC2 emite data-self-loop canônico na recursão"
+else
+    test_fail "14TC2 não emitiu metadado canônico no self-loop recursivo"
+fi
+
+# Test 1188: edge metadata remains scoped to call edges
+echo "Test 1188: edge metadata remains scoped to call edges"
+if [ -f "${SIG14TC2_BASIC_OUT}.svg" ] && \
+   grep -q 'data-kind="call"' "${SIG14TC2_BASIC_OUT}.svg" && \
+   ! grep -Eq 'class="(primary|branch|loop|bind|term)".*data-kind=' "${SIG14TC2_BASIC_OUT}.svg"; then
+    test_pass "14TC2 mantém data-* restrito às arestas de call"
+else
+    test_fail "14TC2 vazou data-* para arestas fora do escopo"
+fi
+
+# Test 1189: call edge metadata emission remains deterministic
+echo "Test 1189: call edge metadata emission remains deterministic"
+cp "${SIG14TC2_BASIC_OUT}.svg" "${SIG14TC2_BASIC_OUT}.ref.svg" 2>/dev/null || true
+if "$CCT_BIN" --sigilo-only --sigilo-out "$SIG14TC2_BASIC_OUT" \
+    "$SIG14TC2_BASIC_SRC" \
+    >"$CCT_TMP_DIR/cct_phase14tc2_1189.out" 2>&1 && \
+   [ -f "${SIG14TC2_BASIC_OUT}.ref.svg" ] && \
+   cmp -s "${SIG14TC2_BASIC_OUT}.ref.svg" "${SIG14TC2_BASIC_OUT}.svg"; then
+    test_pass "14TC2 preserva determinismo textual nas arestas de call"
+else
+    test_fail "14TC2 regrediu determinismo textual nas arestas de call"
+fi
+
+rm -f "${SIG14TC2_BASIC_OUT}.svg" "${SIG14TC2_BASIC_OUT}.sigil" \
+    "${SIG14TC2_BASIC_OUT}.ref.svg" \
+    "${SIG14TC2_RECURSIVE_OUT}.svg" "${SIG14TC2_RECURSIVE_OUT}.sigil"
+
+echo ""
+echo "========================================"
+echo "FASE 14TC3: semântica SVG e acessibilidade leve"
+echo "========================================"
+echo ""
+
+# Test 1190: local sigilo root exposes canonical role, aria-label and desc
+echo "Test 1190: local sigilo root exposes canonical semantics"
+SIG14TC3_LOCAL_SRC="tests/integration/sigilo_svg_semantics_local_14tc3.cct"
+SIG14TC3_LOCAL_OUT="tests/integration/sigilo_svg_semantics_local_out_14tc3"
+cleanup_codegen_artifacts "$SIG14TC3_LOCAL_SRC"
+rm -f "${SIG14TC3_LOCAL_OUT}.svg" "${SIG14TC3_LOCAL_OUT}.sigil"
+RC_1190=1
+if "$CCT_BIN" --sigilo-only --sigilo-out "$SIG14TC3_LOCAL_OUT" \
+    "$SIG14TC3_LOCAL_SRC" \
+    >"$CCT_TMP_DIR/cct_phase14tc3_1190.out" 2>&1; then
+    RC_1190=0
+else
+    RC_1190=$?
+fi
+if [ "$RC_1190" -eq 0 ] && \
+   [ -f "${SIG14TC3_LOCAL_OUT}.svg" ] && \
+   grep -q '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512" role="img" aria-label="CCT local sigilo">' "${SIG14TC3_LOCAL_OUT}.svg" && \
+   [ "$(grep -c '<desc>Deterministic semantic sigil for a single CCT module\.</desc>' "${SIG14TC3_LOCAL_OUT}.svg")" -eq 1 ]; then
+    test_pass "14TC3 consolida semântica root do sigilo local"
+else
+    test_fail "14TC3 não consolidou semântica root do sigilo local"
+fi
+
+# Test 1191: system sigilo root exposes canonical role, aria-label and desc
+echo "Test 1191: system sigilo root exposes canonical semantics"
+SIG14TC3_SYSTEM_SRC="tests/integration/sigilo_svg_semantics_system_14tc3_main.cct"
+SIG14TC3_SYSTEM_OUT="tests/integration/sigilo_svg_semantics_system_out_14tc3"
+cleanup_codegen_artifacts "$SIG14TC3_SYSTEM_SRC"
+cleanup_codegen_artifacts "tests/integration/modules_9a/lib_rituale.cct"
+rm -f "${SIG14TC3_SYSTEM_OUT}.svg" "${SIG14TC3_SYSTEM_OUT}.sigil" \
+      "${SIG14TC3_SYSTEM_OUT}.system.svg" "${SIG14TC3_SYSTEM_OUT}.system.sigil"
+RC_1191=1
+if "$CCT_BIN" --sigilo-only --sigilo-out "$SIG14TC3_SYSTEM_OUT" \
+    "$SIG14TC3_SYSTEM_SRC" \
+    >"$CCT_TMP_DIR/cct_phase14tc3_1191.out" 2>&1; then
+    RC_1191=0
+else
+    RC_1191=$?
+fi
+if [ "$RC_1191" -eq 0 ] && \
+   [ -f "${SIG14TC3_SYSTEM_OUT}.system.svg" ] && \
+   grep -q '<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="1200" viewBox="0 0 1200 1200" role="img" aria-label="CCT system sigilo">' "${SIG14TC3_SYSTEM_OUT}.system.svg" && \
+   [ "$(grep -c '<desc>Deterministic sigil-of-sigils for a CCT module closure\.</desc>' "${SIG14TC3_SYSTEM_OUT}.system.svg")" -eq 1 ]; then
+    test_pass "14TC3 consolida semântica root do system sigilo"
+else
+    test_fail "14TC3 não consolidou semântica root do system sigilo"
+fi
+
+# Test 1192: local per-element titles remain intact after root semantics update
+echo "Test 1192: local per-element titles remain intact"
+if [ -f "${SIG14TC3_LOCAL_OUT}.svg" ] && \
+   grep -q '<title>RITUALE main' "${SIG14TC3_LOCAL_OUT}.svg" && \
+   grep -q '<title>edge: call' "${SIG14TC3_LOCAL_OUT}.svg"; then
+    test_pass "14TC3 preserva titles por elemento no sigilo local"
+else
+    test_fail "14TC3 regrediu titles por elemento no sigilo local"
+fi
+
+# Test 1193: system per-element titles remain intact after root semantics update
+echo "Test 1193: system per-element titles remain intact"
+if [ -f "${SIG14TC3_SYSTEM_OUT}.system.svg" ] && \
+   grep -q '<g class="system-node-wrap">' "${SIG14TC3_SYSTEM_OUT}.system.svg" && \
+   grep -q '<title>module' "${SIG14TC3_SYSTEM_OUT}.system.svg" && \
+   grep -q '<title>edge' "${SIG14TC3_SYSTEM_OUT}.system.svg"; then
+    test_pass "14TC3 preserva titles por elemento no system sigilo"
+else
+    test_fail "14TC3 regrediu titles por elemento no system sigilo"
+fi
+
+rm -f "${SIG14TC3_LOCAL_OUT}.svg" "${SIG14TC3_LOCAL_OUT}.sigil" \
+    "${SIG14TC3_SYSTEM_OUT}.svg" "${SIG14TC3_SYSTEM_OUT}.sigil" \
+    "${SIG14TC3_SYSTEM_OUT}.system.svg" "${SIG14TC3_SYSTEM_OUT}.system.sigil"
+
+echo ""
+echo "========================================"
+echo "FASE 14TD1: polish de hover e classes de interação"
+echo "========================================"
+echo ""
+
+# Test 1194: local sigilo embeds hover CSS for instrumented wrappers
+echo "Test 1194: local sigilo embeds hover CSS"
+SIG14TD1_LOCAL_SRC="tests/integration/sigilo_hover_css_local_14td1.cct"
+SIG14TD1_LOCAL_OUT="tests/integration/sigilo_hover_css_local_out_14td1"
+cleanup_codegen_artifacts "$SIG14TD1_LOCAL_SRC"
+rm -f "${SIG14TD1_LOCAL_OUT}.svg" "${SIG14TD1_LOCAL_OUT}.sigil"
+RC_1194=1
+if "$CCT_BIN" --sigilo-only --sigilo-out "$SIG14TD1_LOCAL_OUT" \
+    "$SIG14TD1_LOCAL_SRC" \
+    >"$CCT_TMP_DIR/cct_phase14td1_1194.out" 2>&1; then
+    RC_1194=0
+else
+    RC_1194=$?
+fi
+if [ "$RC_1194" -eq 0 ] && \
+   [ -f "${SIG14TD1_LOCAL_OUT}.svg" ] && \
+   grep -q '.node-wrap, .edge-wrap { cursor: help; }' "${SIG14TD1_LOCAL_OUT}.svg" && \
+   grep -q '.node-wrap:hover > circle { opacity: 0.96; }' "${SIG14TD1_LOCAL_OUT}.svg" && \
+   grep -q '.edge-wrap:hover > path, .edge-wrap:hover > line { opacity: 1.0; }' "${SIG14TD1_LOCAL_OUT}.svg"; then
+    test_pass "14TD1 injeta CSS hover leve no sigilo local"
+else
+    test_fail "14TD1 não injetou CSS hover esperado no sigilo local"
+fi
+
+# Test 1195: system sigilo embeds hover CSS for local/system wrappers
+echo "Test 1195: system sigilo embeds hover CSS"
+SIG14TD1_SYSTEM_SRC="tests/integration/sigilo_hover_css_system_14td1_main.cct"
+SIG14TD1_SYSTEM_OUT="tests/integration/sigilo_hover_css_system_out_14td1"
+cleanup_codegen_artifacts "$SIG14TD1_SYSTEM_SRC"
+cleanup_codegen_artifacts "tests/integration/modules_9a/lib_rituale.cct"
+rm -f "${SIG14TD1_SYSTEM_OUT}.svg" "${SIG14TD1_SYSTEM_OUT}.sigil" \
+      "${SIG14TD1_SYSTEM_OUT}.system.svg" "${SIG14TD1_SYSTEM_OUT}.system.sigil"
+RC_1195=1
+if "$CCT_BIN" --sigilo-only --sigilo-out "$SIG14TD1_SYSTEM_OUT" \
+    "$SIG14TD1_SYSTEM_SRC" \
+    >"$CCT_TMP_DIR/cct_phase14td1_1195.out" 2>&1; then
+    RC_1195=0
+else
+    RC_1195=$?
+fi
+if [ "$RC_1195" -eq 0 ] && \
+   [ -f "${SIG14TD1_SYSTEM_OUT}.system.svg" ] && \
+   grep -q '.node-wrap, .edge-wrap, .system-node-wrap, .system-edge-wrap { cursor: help; }' "${SIG14TD1_SYSTEM_OUT}.system.svg" && \
+   grep -q '.node-wrap:hover > circle, .system-node-wrap:hover > circle { opacity: 0.96; }' "${SIG14TD1_SYSTEM_OUT}.system.svg" && \
+   grep -q '.edge-wrap:hover > path, .edge-wrap:hover > line, .system-edge-wrap:hover > line { opacity: 1.0; }' "${SIG14TD1_SYSTEM_OUT}.system.svg"; then
+    test_pass "14TD1 injeta CSS hover leve no system sigilo"
+else
+    test_fail "14TD1 não injetou CSS hover esperado no system sigilo"
+fi
+
+# Test 1196: hover wrappers remain present in local sigilo
+echo "Test 1196: local wrappers remain present"
+if [ -f "${SIG14TD1_LOCAL_OUT}.svg" ] && \
+   grep -q '<g class="node-wrap">' "${SIG14TD1_LOCAL_OUT}.svg" && \
+   grep -q '<g class="edge-wrap">' "${SIG14TD1_LOCAL_OUT}.svg" && \
+   grep -q '<title>RITUALE main' "${SIG14TD1_LOCAL_OUT}.svg" && \
+   grep -q '<title>edge: call' "${SIG14TD1_LOCAL_OUT}.svg"; then
+    test_pass "14TD1 preserva wrappers hoverables e titles no sigilo local"
+else
+    test_fail "14TD1 regrediu wrappers/title no sigilo local"
+fi
+
+# Test 1197: hover wrappers remain present in system sigilo
+echo "Test 1197: system wrappers remain present"
+if [ -f "${SIG14TD1_SYSTEM_OUT}.system.svg" ] && \
+   grep -q '<g class="system-node-wrap">' "${SIG14TD1_SYSTEM_OUT}.system.svg" && \
+   grep -q '<g class="system-edge-wrap">' "${SIG14TD1_SYSTEM_OUT}.system.svg" && \
+   grep -q '<title>module' "${SIG14TD1_SYSTEM_OUT}.system.svg" && \
+   grep -q '<title>edge' "${SIG14TD1_SYSTEM_OUT}.system.svg"; then
+    test_pass "14TD1 preserva wrappers hoverables e titles no system sigilo"
+else
+    test_fail "14TD1 regrediu wrappers/title no system sigilo"
+fi
+
+rm -f "${SIG14TD1_LOCAL_OUT}.svg" "${SIG14TD1_LOCAL_OUT}.sigil" \
+    "${SIG14TD1_SYSTEM_OUT}.svg" "${SIG14TD1_SYSTEM_OUT}.sigil" \
+    "${SIG14TD1_SYSTEM_OUT}.system.svg" "${SIG14TD1_SYSTEM_OUT}.system.sigil"
+
+echo ""
+echo "========================================"
+echo "FASE 14TD2: toggles de instrumentação do SVG"
+echo "========================================"
+echo ""
+
+# Test 1198: help exposes title/data instrumentation toggles
+echo "Test 1198: help exposes sigilo instrumentation toggles"
+if "$CCT_BIN" --help >"$CCT_TMP_DIR/cct_phase14td2_1198_help.out" 2>&1 && \
+   grep -q -- '--sigilo-no-titles' "$CCT_TMP_DIR/cct_phase14td2_1198_help.out" && \
+   grep -q -- '--sigilo-no-data' "$CCT_TMP_DIR/cct_phase14td2_1198_help.out"; then
+    test_pass "14TD2 publica toggles de instrumentação no help"
+else
+    test_fail "14TD2 não expôs toggles de instrumentação no help"
+fi
+
+# Test 1199: --sigilo-no-titles removes titles/wrappers but preserves data attrs
+echo "Test 1199: --sigilo-no-titles preserves data attrs"
+SIG14TD2_LOCAL_SRC="tests/integration/sigilo_hover_css_local_14td1.cct"
+SIG14TD2_LOCAL_NO_TITLES_OUT="tests/integration/sigilo_toggle_no_titles_out_14td2"
+cleanup_codegen_artifacts "$SIG14TD2_LOCAL_SRC"
+rm -f "${SIG14TD2_LOCAL_NO_TITLES_OUT}.svg" "${SIG14TD2_LOCAL_NO_TITLES_OUT}.sigil"
+RC_1199=1
+if "$CCT_BIN" --sigilo-only --sigilo-no-titles --sigilo-out "$SIG14TD2_LOCAL_NO_TITLES_OUT" \
+    "$SIG14TD2_LOCAL_SRC" \
+    >"$CCT_TMP_DIR/cct_phase14td2_1199.out" 2>&1; then
+    RC_1199=0
+else
+    RC_1199=$?
+fi
+if [ "$RC_1199" -eq 0 ] && \
+   [ -f "${SIG14TD2_LOCAL_NO_TITLES_OUT}.svg" ] && \
+   ! grep -q '<title>' "${SIG14TD2_LOCAL_NO_TITLES_OUT}.svg" && \
+   ! grep -q 'class="node-wrap"' "${SIG14TD2_LOCAL_NO_TITLES_OUT}.svg" && \
+   ! grep -q 'class="edge-wrap"' "${SIG14TD2_LOCAL_NO_TITLES_OUT}.svg" && \
+   ! grep -q 'cursor: help' "${SIG14TD2_LOCAL_NO_TITLES_OUT}.svg" && \
+   grep -q 'data-kind="rituale"' "${SIG14TD2_LOCAL_NO_TITLES_OUT}.svg" && \
+   grep -q 'data-kind="call"' "${SIG14TD2_LOCAL_NO_TITLES_OUT}.svg" && \
+   grep -q '<desc>Deterministic semantic sigil for a single CCT module\.</desc>' "${SIG14TD2_LOCAL_NO_TITLES_OUT}.svg" && \
+   grep -q 'role="img" aria-label="CCT local sigilo"' "${SIG14TD2_LOCAL_NO_TITLES_OUT}.svg"; then
+    test_pass "14TD2 desliga titles mantendo data-* e semântica root"
+else
+    test_fail "14TD2 falhou ao desligar apenas titles no sigilo local"
+fi
+
+# Test 1200: --sigilo-no-data removes desc/data attrs but preserves titles
+echo "Test 1200: --sigilo-no-data preserves titles"
+SIG14TD2_LOCAL_NO_DATA_OUT="tests/integration/sigilo_toggle_no_data_out_14td2"
+cleanup_codegen_artifacts "$SIG14TD2_LOCAL_SRC"
+rm -f "${SIG14TD2_LOCAL_NO_DATA_OUT}.svg" "${SIG14TD2_LOCAL_NO_DATA_OUT}.sigil"
+RC_1200=1
+if "$CCT_BIN" --sigilo-only --sigilo-no-data --sigilo-out "$SIG14TD2_LOCAL_NO_DATA_OUT" \
+    "$SIG14TD2_LOCAL_SRC" \
+    >"$CCT_TMP_DIR/cct_phase14td2_1200.out" 2>&1; then
+    RC_1200=0
+else
+    RC_1200=$?
+fi
+if [ "$RC_1200" -eq 0 ] && \
+   [ -f "${SIG14TD2_LOCAL_NO_DATA_OUT}.svg" ] && \
+   grep -q '<title>RITUALE main' "${SIG14TD2_LOCAL_NO_DATA_OUT}.svg" && \
+   grep -q '<title>edge: call' "${SIG14TD2_LOCAL_NO_DATA_OUT}.svg" && \
+   grep -q 'class="node-wrap"' "${SIG14TD2_LOCAL_NO_DATA_OUT}.svg" && \
+   grep -q 'class="edge-wrap"' "${SIG14TD2_LOCAL_NO_DATA_OUT}.svg" && \
+   grep -q 'cursor: help' "${SIG14TD2_LOCAL_NO_DATA_OUT}.svg" && \
+   ! grep -q 'data-kind=' "${SIG14TD2_LOCAL_NO_DATA_OUT}.svg" && \
+   ! grep -q '<desc>' "${SIG14TD2_LOCAL_NO_DATA_OUT}.svg" && \
+   grep -q 'role="img" aria-label="CCT local sigilo"' "${SIG14TD2_LOCAL_NO_DATA_OUT}.svg"; then
+    test_pass "14TD2 desliga data-* mantendo titles e hover"
+else
+    test_fail "14TD2 falhou ao desligar apenas data-* no sigilo local"
+fi
+
+# Test 1201: disabling titles and data restores plain local SVG contract
+echo "Test 1201: local plain mode preserves pre-14T structure"
+SIG14TD2_LOCAL_PLAIN_OUT="tests/integration/sigilo_toggle_plain_local_out_14td2"
+cleanup_codegen_artifacts "$SIG14TD2_LOCAL_SRC"
+rm -f "${SIG14TD2_LOCAL_PLAIN_OUT}.svg" "${SIG14TD2_LOCAL_PLAIN_OUT}.sigil"
+RC_1201=1
+if "$CCT_BIN" --sigilo-only --sigilo-no-titles --sigilo-no-data --sigilo-out "$SIG14TD2_LOCAL_PLAIN_OUT" \
+    "$SIG14TD2_LOCAL_SRC" \
+    >"$CCT_TMP_DIR/cct_phase14td2_1201.out" 2>&1; then
+    RC_1201=0
+else
+    RC_1201=$?
+fi
+if [ "$RC_1201" -eq 0 ] && \
+   [ -f "${SIG14TD2_LOCAL_PLAIN_OUT}.svg" ] && \
+   grep -q '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">' "${SIG14TD2_LOCAL_PLAIN_OUT}.svg" && \
+   ! grep -q 'role="img"' "${SIG14TD2_LOCAL_PLAIN_OUT}.svg" && \
+   ! grep -q '<desc>' "${SIG14TD2_LOCAL_PLAIN_OUT}.svg" && \
+   ! grep -q '<title>' "${SIG14TD2_LOCAL_PLAIN_OUT}.svg" && \
+   ! grep -q 'class="node-wrap"' "${SIG14TD2_LOCAL_PLAIN_OUT}.svg" && \
+   ! grep -q 'class="edge-wrap"' "${SIG14TD2_LOCAL_PLAIN_OUT}.svg" && \
+   ! grep -q 'data-kind=' "${SIG14TD2_LOCAL_PLAIN_OUT}.svg"; then
+    test_pass "14TD2 modo plain local preserva baseline estrutural pré-14T"
+else
+    test_fail "14TD2 não preservou baseline estrutural local ao desligar tudo"
+fi
+
+# Test 1202: disabling titles and data restores plain system SVG contract
+echo "Test 1202: system plain mode preserves pre-14T structure"
+SIG14TD2_SYSTEM_SRC="tests/integration/sigilo_hover_css_system_14td1_main.cct"
+SIG14TD2_SYSTEM_PLAIN_OUT="tests/integration/sigilo_toggle_plain_system_out_14td2"
+cleanup_codegen_artifacts "$SIG14TD2_SYSTEM_SRC"
+cleanup_codegen_artifacts "tests/integration/modules_9a/lib_rituale.cct"
+rm -f "${SIG14TD2_SYSTEM_PLAIN_OUT}.svg" "${SIG14TD2_SYSTEM_PLAIN_OUT}.sigil" \
+      "${SIG14TD2_SYSTEM_PLAIN_OUT}.system.svg" "${SIG14TD2_SYSTEM_PLAIN_OUT}.system.sigil"
+RC_1202=1
+if "$CCT_BIN" --sigilo-only --sigilo-no-titles --sigilo-no-data --sigilo-out "$SIG14TD2_SYSTEM_PLAIN_OUT" \
+    "$SIG14TD2_SYSTEM_SRC" \
+    >"$CCT_TMP_DIR/cct_phase14td2_1202.out" 2>&1; then
+    RC_1202=0
+else
+    RC_1202=$?
+fi
+if [ "$RC_1202" -eq 0 ] && \
+   [ -f "${SIG14TD2_SYSTEM_PLAIN_OUT}.system.svg" ] && \
+   grep -q '<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="1200" viewBox="0 0 1200 1200">' "${SIG14TD2_SYSTEM_PLAIN_OUT}.system.svg" && \
+   ! grep -q 'role="img"' "${SIG14TD2_SYSTEM_PLAIN_OUT}.system.svg" && \
+   ! grep -q '<desc>' "${SIG14TD2_SYSTEM_PLAIN_OUT}.system.svg" && \
+   ! grep -q '<title>' "${SIG14TD2_SYSTEM_PLAIN_OUT}.system.svg" && \
+   ! grep -q 'system-node-wrap' "${SIG14TD2_SYSTEM_PLAIN_OUT}.system.svg" && \
+   ! grep -q 'system-edge-wrap' "${SIG14TD2_SYSTEM_PLAIN_OUT}.system.svg" && \
+   ! grep -q 'cursor: help' "${SIG14TD2_SYSTEM_PLAIN_OUT}.system.svg"; then
+    test_pass "14TD2 modo plain system preserva baseline estrutural pré-14T"
+else
+    test_fail "14TD2 não preservou baseline estrutural system ao desligar tudo"
+fi
+
+rm -f "${SIG14TD2_LOCAL_NO_TITLES_OUT}.svg" "${SIG14TD2_LOCAL_NO_TITLES_OUT}.sigil" \
+    "${SIG14TD2_LOCAL_NO_DATA_OUT}.svg" "${SIG14TD2_LOCAL_NO_DATA_OUT}.sigil" \
+    "${SIG14TD2_LOCAL_PLAIN_OUT}.svg" "${SIG14TD2_LOCAL_PLAIN_OUT}.sigil" \
+    "${SIG14TD2_SYSTEM_PLAIN_OUT}.svg" "${SIG14TD2_SYSTEM_PLAIN_OUT}.sigil" \
+    "${SIG14TD2_SYSTEM_PLAIN_OUT}.system.svg" "${SIG14TD2_SYSTEM_PLAIN_OUT}.system.sigil"
+
+echo ""
+echo "========================================"
 echo "Test Results:"
-echo -e "  ${GREEN}Passed:${NC} $TESTS_PASSED"
-echo -e "  ${RED}Failed:${NC} $TESTS_FAILED"
+echo -e "  ${GREEN}Passed:${NC} $TESTS_PASSED" >&3
+echo -e "  ${RED}Failed:${NC} $TESTS_FAILED" >&3
 echo "========================================"
 
 if [ $TESTS_FAILED -eq 0 ]; then
-    echo -e "${GREEN}All tests passed!${NC}"
+    echo -e "${GREEN}All tests passed!${NC}" >&3
     exit 0
 else
-    echo -e "${RED}Some tests failed.${NC}"
+    echo -e "${RED}Some tests failed.${NC}" >&3
     exit 1
 fi

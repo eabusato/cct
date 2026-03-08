@@ -62,6 +62,8 @@ typedef struct {
     cct_sigilo_mode_t sigilo_mode;
     bool sigilo_emit_svg;
     bool sigilo_emit_meta;
+    bool sigilo_emit_titles;
+    bool sigilo_emit_data_attrs;
     bool emit_asm;                 /* FASE 16C.1: emit freestanding assembly (.cgen.s) */
     bool no_color;
     bool verbose;

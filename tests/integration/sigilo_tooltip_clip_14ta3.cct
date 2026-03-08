@@ -1,0 +1,8 @@
+INCIPIT grimoire "sigilo_tooltip_clip_14ta3"
+
+RITUALE tooltip_clip() REDDE REX
+  EVOCA VERBUM muito_longo AD "abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyz"
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

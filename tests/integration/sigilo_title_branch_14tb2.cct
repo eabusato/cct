@@ -1,0 +1,11 @@
+INCIPIT grimoire "sigilo_title_branch_14tb2"
+
+RITUALE branch_hover(REX x) REDDE REX
+  SI x < 2
+    REDDE 1
+  ALITER
+    REDDE 0
+  FIN SI
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

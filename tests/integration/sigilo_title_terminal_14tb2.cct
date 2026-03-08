@@ -1,0 +1,10 @@
+INCIPIT grimoire "sigilo_title_terminal_14tb2"
+
+RITUALE terminal_hover(REX x) REDDE REX
+  SI x < 0
+    ANUR 1
+  FIN SI
+  REDDE x
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

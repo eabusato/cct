@@ -1,0 +1,15 @@
+INCIPIT grimoire "sigilo_title_edge_branch_loop_bind_term_14tb3"
+
+RITUALE edge_kinds(REX x) REDDE REX
+  EVOCA REX i AD 0
+  DUM i < 3
+    SI x < 2
+      VINCIRE i AD i + 1
+    ALITER
+      ANUR 1
+    FIN SI
+  FIN DUM
+  REDDE i
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

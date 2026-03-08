@@ -89,7 +89,9 @@ void cct_cli_show_help(void) {
     printf("                              (aliases kept: essential|complete) (FASE 9E)\n");
     printf("  --sigilo-out <basepath>     Output base for sigilo artifacts (FASE 6A)\n");
     printf("  --sigilo-no-meta            Skip .sigil metadata emission (FASE 6A)\n");
-    printf("  --sigilo-no-svg             Skip .svg emission (FASE 6A)\n\n");
+    printf("  --sigilo-no-svg             Skip .svg emission (FASE 6A)\n");
+    printf("  --sigilo-no-titles          Disable SVG <title> instrumentation (FASE 14T)\n");
+    printf("  --sigilo-no-data            Disable SVG data-* / desc instrumentation (FASE 14T)\n\n");
     printf("Formatter command:\n");
     printf("  cct fmt <file.cct> [...]    Format file(s) in place (FASE 12E.1)\n");
     printf("  cct fmt --check <file...>   Check formatting only (exit 2 on mismatch)\n");
@@ -168,6 +170,8 @@ cct_error_code_t cct_cli_parse(int argc, char **argv, cct_cli_args_t *args) {
     args->sigilo_mode = CCT_SIGILO_MODE_ESSENTIAL;
     args->sigilo_emit_svg = true;
     args->sigilo_emit_meta = true;
+    args->sigilo_emit_titles = true;
+    args->sigilo_emit_data_attrs = true;
     args->emit_asm = false;
     args->no_color = false;
     args->verbose = false;
@@ -384,6 +388,14 @@ cct_error_code_t cct_cli_parse(int argc, char **argv, cct_cli_args_t *args) {
         }
         if (strcmp(cur, "--sigilo-no-svg") == 0) {
             args->sigilo_emit_svg = false;
+            continue;
+        }
+        if (strcmp(cur, "--sigilo-no-titles") == 0) {
+            args->sigilo_emit_titles = false;
+            continue;
+        }
+        if (strcmp(cur, "--sigilo-no-data") == 0) {
+            args->sigilo_emit_data_attrs = false;
             continue;
         }
 

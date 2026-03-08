@@ -1,0 +1,9 @@
+INCIPIT grimoire "sigilo_hover_css_system_14td1_main"
+
+ADVOCARE "modules_9a/lib_rituale.cct"
+
+RITUALE main() REDDE REX
+  REDDE CONIURA dobro(11)
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

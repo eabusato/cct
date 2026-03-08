@@ -1,0 +1,11 @@
+INCIPIT grimoire "sigilo_data_edge_recursive_14tc2"
+
+RITUALE factorial(REX n) REDDE REX
+  SI n < 2
+    REDDE 1
+  ALITER
+    REDDE n * CONIURA factorial(n - 1)
+  FIN SI
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

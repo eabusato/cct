@@ -1,0 +1,11 @@
+INCIPIT grimoire "sigilo_data_edge_basic_14tc2"
+
+RITUALE helper(REX x) REDDE REX
+  REDDE x + x
+EXPLICIT RITUALE
+
+RITUALE main() REDDE REX
+  REDDE CONIURA helper(10)
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

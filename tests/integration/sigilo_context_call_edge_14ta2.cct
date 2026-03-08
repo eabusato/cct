@@ -1,0 +1,20 @@
+INCIPIT grimoire "sigilo_context_call_edge_14ta2"
+
+RITUALE helper(REX x) REDDE REX
+  REDDE x + 1
+EXPLICIT RITUALE
+
+RITUALE factorial(REX n) REDDE REX
+  SI n <= 1
+    REDDE 1
+  FIN SI
+  REDDE n * CONIURA factorial(n - 1)
+EXPLICIT RITUALE
+
+RITUALE main() REDDE REX
+  EVOCA REX a AD CONIURA helper(1)
+  EVOCA REX b AD CONIURA helper(a)
+  REDDE CONIURA factorial(b)
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

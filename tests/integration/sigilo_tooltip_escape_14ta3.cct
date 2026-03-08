@@ -1,0 +1,11 @@
+INCIPIT grimoire "sigilo_tooltip_escape_14ta3"
+
+RITUALE tooltip_escape() REDDE REX
+  EVOCA VERBUM s AD "<a&b>"
+  SI 1 < 2
+    REDDE 1
+  FIN SI
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

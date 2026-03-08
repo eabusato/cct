@@ -1,0 +1,9 @@
+INCIPIT grimoire "sigilo_title_bind_14tb2"
+
+RITUALE bind_hover() REDDE REX
+  EVOCA REX x AD 1
+  VINCIRE x AD x + 2
+  REDDE x
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

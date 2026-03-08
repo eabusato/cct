@@ -25,8 +25,32 @@
 #define CCT_SIGILO_MAX_RITUAIS 128
 #define CCT_SIGILO_MAX_EDGES 512
 
+#if defined(__GNUC__) || defined(__clang__)
+#define SG_MAYBE_UNUSED __attribute__((unused))
+#else
+#define SG_MAYBE_UNUSED
+#endif
+
+typedef struct {
+    u32 line;
+    u32 col;
+    const char *kind_label;
+} sg_stmt_anchor_t;
+
 typedef struct {
     char *name;
+    char *signature_excerpt;
+    char *header_excerpt;
+    u32 decl_line;
+    u32 decl_col;
+    sg_stmt_anchor_t decision_anchor;
+    sg_stmt_anchor_t aliter_anchor;
+    sg_stmt_anchor_t dum_anchor;
+    sg_stmt_anchor_t donec_anchor;
+    sg_stmt_anchor_t repete_anchor;
+    sg_stmt_anchor_t binding_anchor;
+    sg_stmt_anchor_t return_anchor;
+    sg_stmt_anchor_t anur_anchor;
     bool is_entry;
     u32 total_statements;
     u32 direct_statements;
@@ -52,8 +76,18 @@ typedef struct {
 } cct_sigilo_call_edge_t;
 
 typedef struct {
+    char *path;
+    char *text;
+    size_t length;
+    u32 *line_offsets;
+    u32 line_count;
+    bool available;
+} sg_source_buffer_t;
+
+typedef struct {
     const cct_ast_program_t *program;
     const char *program_name;
+    sg_source_buffer_t source;
     cct_sigilo_ritual_metric_t *rituals;
     u32 ritual_count;
     i32 entry_idx;
@@ -155,6 +189,9 @@ typedef enum {
     SG_STYLE_SCRIPTUM
 } sg_visual_style_t;
 
+static bool g_sg_render_emit_titles = true;
+static bool g_sg_render_emit_data_attrs = true;
+
 /* ============================== helpers ============================== */
 
 static void* sg_calloc(size_t n, size_t s) {
@@ -183,6 +220,398 @@ static char* sg_strdup_printf(const char *fmt, ...) {
     vsnprintf(buf, sizeof(buf), fmt, args);
     va_end(args);
     return sg_strdup(buf);
+}
+
+static char* sg_trimmed_copy(const char *s, size_t len) {
+    size_t start = 0;
+    size_t end = len;
+    char *out;
+
+    if (!s) return NULL;
+    while (start < len && (s[start] == ' ' || s[start] == '\t')) start++;
+    while (end > start && (s[end - 1] == ' ' || s[end - 1] == '\t')) end--;
+
+    out = (char*)sg_calloc(1, (end - start) + 1);
+    if (end > start) memcpy(out, s + start, end - start);
+    out[end - start] = '\0';
+    return out;
+}
+
+static bool sg_load_file(const char *path, char **out_buf, size_t *out_len) {
+    FILE *f;
+    long n;
+    char *buf;
+    size_t read_n;
+
+    if (!path || !out_buf || !out_len) return false;
+
+    f = fopen(path, "rb");
+    if (!f) return false;
+    if (fseek(f, 0, SEEK_END) != 0) {
+        fclose(f);
+        return false;
+    }
+    n = ftell(f);
+    if (n < 0) {
+        fclose(f);
+        return false;
+    }
+    rewind(f);
+
+    buf = (char*)sg_calloc(1, (size_t)n + 1);
+    read_n = fread(buf, 1, (size_t)n, f);
+    fclose(f);
+    if (read_n != (size_t)n) {
+        free(buf);
+        return false;
+    }
+
+    *out_buf = buf;
+    *out_len = (size_t)n;
+    return true;
+}
+
+static char* sg_normalize_eol(const char *raw, size_t raw_len, size_t *norm_len_out) {
+    char *out;
+    size_t i = 0;
+    size_t j = 0;
+
+    if (!raw && raw_len != 0) return NULL;
+
+    out = (char*)sg_calloc(1, raw_len + 1);
+    while (i < raw_len) {
+        if (raw[i] == '\r') {
+            out[j++] = '\n';
+            if (i + 1 < raw_len && raw[i + 1] == '\n') i++;
+        } else {
+            out[j++] = raw[i];
+        }
+        i++;
+    }
+    out[j] = '\0';
+    if (norm_len_out) *norm_len_out = j;
+    return out;
+}
+
+static void sg_source_dispose(sg_source_buffer_t *src) {
+    if (!src) return;
+    free(src->path);
+    free(src->text);
+    free(src->line_offsets);
+    memset(src, 0, sizeof(*src));
+}
+
+static bool sg_source_load(sg_source_buffer_t *src, const char *path) {
+    char *raw = NULL;
+    char *normalized = NULL;
+    size_t raw_len = 0;
+    size_t normalized_len = 0;
+    u32 line_count = 0;
+    u32 line_index = 1;
+
+    if (!src) return false;
+
+    sg_source_dispose(src);
+    if (!path || path[0] == '\0') return false;
+
+    src->path = sg_strdup(path);
+    if (!sg_load_file(path, &raw, &raw_len)) return false;
+
+    normalized = sg_normalize_eol(raw, raw_len, &normalized_len);
+    free(raw);
+    if (!normalized) return false;
+
+    if (normalized_len > 0) {
+        line_count = 1;
+        for (size_t i = 0; i < normalized_len; i++) {
+            if (normalized[i] == '\n' && i + 1 < normalized_len) line_count++;
+        }
+    }
+
+    src->text = normalized;
+    src->length = normalized_len;
+    src->available = true;
+    src->line_count = line_count;
+
+    if (line_count > 0) {
+        src->line_offsets = (u32*)sg_calloc(line_count, sizeof(*src->line_offsets));
+        src->line_offsets[0] = 0;
+        for (size_t i = 0; i < normalized_len && line_index < line_count; i++) {
+            if (normalized[i] == '\n' && i + 1 < normalized_len) {
+                src->line_offsets[line_index++] = (u32)(i + 1);
+            }
+        }
+    }
+
+    return true;
+}
+
+static const char* SG_MAYBE_UNUSED sg_source_get_line(
+    const sg_source_buffer_t *src,
+    u32 line,
+    size_t *len_out
+) {
+    size_t start;
+    size_t end;
+
+    if (len_out) *len_out = 0;
+    if (!src || !src->available || !src->text || line == 0 || line > src->line_count) return NULL;
+
+    start = (size_t)src->line_offsets[line - 1];
+    end = (line < src->line_count) ? (size_t)src->line_offsets[line] : src->length;
+    if (end > start && src->text[end - 1] == '\n') end--;
+    if (len_out) *len_out = end - start;
+    return src->text + start;
+}
+
+static char* SG_MAYBE_UNUSED sg_source_extract_span(
+    const sg_source_buffer_t *src,
+    u32 line_start,
+    u32 line_end
+) {
+    size_t start;
+    size_t end;
+    size_t len;
+    char *out;
+
+    if (!src || !src->available || !src->text) return NULL;
+    if (line_start == 0 || line_end == 0 || line_start > line_end) return NULL;
+    if (line_end > src->line_count) return NULL;
+
+    start = (size_t)src->line_offsets[line_start - 1];
+    end = (line_end < src->line_count) ? (size_t)src->line_offsets[line_end] : src->length;
+    if (end > start && src->text[end - 1] == '\n') end--;
+
+    len = end - start;
+    out = (char*)sg_calloc(1, len + 1);
+    memcpy(out, src->text + start, len);
+    out[len] = '\0';
+    return out;
+}
+
+static char* sg_source_line_excerpt(const sg_source_buffer_t *src, u32 line) {
+    const char *raw;
+    size_t raw_len = 0;
+
+    raw = sg_source_get_line(src, line, &raw_len);
+    if (!raw) return NULL;
+    return sg_trimmed_copy(raw, raw_len);
+}
+
+static const char* sg_stmt_kind_label(const cct_ast_node_t *stmt) {
+    if (!stmt) return "stmt";
+    switch (stmt->type) {
+        case AST_SI: return "SI";
+        case AST_DUM: return "DUM";
+        case AST_DONEC: return "DONEC";
+        case AST_REPETE: return "REPETE";
+        case AST_ITERUM: return "ITERUM";
+        case AST_EVOCA: return "EVOCA";
+        case AST_VINCIRE: return "VINCIRE";
+        case AST_REDDE: return "REDDE";
+        case AST_ANUR: return "ANUR";
+        case AST_QUANDO: return "CUM";
+        case AST_OBSECRO: return "OBSECRO";
+        case AST_EXPR_STMT:
+            if (stmt->as.expr_stmt.expression && stmt->as.expr_stmt.expression->type == AST_OBSECRO) {
+                return "OBSECRO";
+            }
+            return "stmt";
+        default:
+            return "stmt";
+    }
+}
+
+static void sg_stmt_anchor_capture(sg_stmt_anchor_t *anchor, const cct_ast_node_t *stmt) {
+    if (!anchor || !stmt || anchor->line != 0) return;
+    anchor->line = stmt->line;
+    anchor->col = stmt->column;
+    anchor->kind_label = sg_stmt_kind_label(stmt);
+}
+
+static char* sg_build_ritual_signature_fallback(const cct_ast_node_t *decl) {
+    if (!decl || decl->type != AST_RITUALE) return sg_strdup("RITUALE");
+    return sg_strdup_printf("RITUALE %s", decl->as.rituale.name ? decl->as.rituale.name : "rituale");
+}
+
+#define SG_TOOLTIP_MAX_LINES 8
+#define SG_TOOLTIP_MAX_CHARS 240
+#define SG_TOOLTIP_MAX_LINE_CHARS 96
+
+static char* sg_line_clip(const char *line, size_t len, u32 max_chars) {
+    if (!line) return sg_strdup("");
+    if ((size_t)max_chars == 0) return sg_strdup("");
+    if (len <= (size_t)max_chars) {
+        char *out = (char*)sg_calloc(1, len + 1);
+        memcpy(out, line, len);
+        out[len] = '\0';
+        return out;
+    }
+    if (max_chars <= 3) {
+        char *out = (char*)sg_calloc(1, (size_t)max_chars + 1);
+        memset(out, '.', (size_t)max_chars);
+        out[max_chars] = '\0';
+        return out;
+    }
+    char *out = (char*)sg_calloc(1, (size_t)max_chars + 1);
+    memcpy(out, line, (size_t)max_chars - 3);
+    memcpy(out + (size_t)max_chars - 3, "...", 3);
+    out[max_chars] = '\0';
+    return out;
+}
+
+static char* sg_normalize_tooltip_text(const char *raw) {
+    size_t len;
+    char *normalized;
+    size_t i = 0;
+    size_t j = 0;
+    u32 blank_run = 0;
+    bool line_has_content = false;
+
+    if (!raw) return NULL;
+    len = strlen(raw);
+    normalized = (char*)sg_calloc(1, len * 2 + 1);
+
+    while (i < len) {
+        char c = raw[i++];
+        if (c == '\t') {
+            normalized[j++] = ' ';
+            normalized[j++] = ' ';
+            line_has_content = true;
+            continue;
+        }
+        if (c == '\r') continue;
+        if (c == '\n') {
+            while (j > 0 && normalized[j - 1] == ' ') j--;
+            if (!line_has_content) {
+                blank_run++;
+                if (blank_run > 1) continue;
+            } else {
+                blank_run = 0;
+            }
+            normalized[j++] = '\n';
+            line_has_content = false;
+            continue;
+        }
+        normalized[j++] = c;
+        if (c != ' ') line_has_content = true;
+    }
+    while (j > 0 && (normalized[j - 1] == ' ' || normalized[j - 1] == '\n')) j--;
+    normalized[j] = '\0';
+    return normalized;
+}
+
+static char* sg_clip_tooltip_text(const char *raw, u32 max_lines, u32 max_chars) {
+    const char *cursor;
+    size_t raw_len;
+    size_t out_cap;
+    char *out;
+    size_t out_len = 0;
+    u32 line_no = 0;
+    bool truncated_lines = false;
+
+    if (!raw) return NULL;
+    if (max_lines == 0 || max_chars == 0) return sg_strdup("");
+
+    raw_len = strlen(raw);
+    out_cap = raw_len + 32;
+    out = (char*)sg_calloc(1, out_cap);
+    cursor = raw;
+
+    while (*cursor) {
+        const char *line = cursor;
+        const char *nl = strchr(cursor, '\n');
+        size_t line_len = nl ? (size_t)(nl - line) : strlen(line);
+        char *clipped_line;
+
+        if (line_no + 1 > max_lines) {
+            truncated_lines = true;
+            break;
+        }
+
+        clipped_line = sg_line_clip(line, line_len, SG_TOOLTIP_MAX_LINE_CHARS);
+        size_t clipped_len = strlen(clipped_line);
+        if (out_len + clipped_len + 2 >= out_cap) {
+            out_cap = out_len + clipped_len + 32;
+            out = (char*)realloc(out, out_cap);
+            if (!out) {
+                fprintf(stderr, "cct: fatal: out of memory\n");
+                exit(CCT_ERROR_OUT_OF_MEMORY);
+            }
+        }
+        memcpy(out + out_len, clipped_line, clipped_len);
+        out_len += clipped_len;
+        free(clipped_line);
+        line_no++;
+
+        if (!nl) break;
+        cursor = nl + 1;
+        if (*cursor && line_no < max_lines) out[out_len++] = '\n';
+    }
+
+    if (truncated_lines) {
+        while (out_len > 0 && out[out_len - 1] != '\n') out_len--;
+        if (out_len > 0 && out[out_len - 1] == '\n') out_len--;
+        if (out_len > 0) out[out_len++] = '\n';
+        memcpy(out + out_len, "...", 3);
+        out_len += 3;
+    }
+
+    out[out_len] = '\0';
+    if (out_len > max_chars) {
+        if (max_chars <= 3) {
+            memset(out, '.', max_chars);
+            out[max_chars] = '\0';
+        } else {
+            out[max_chars - 3] = '.';
+            out[max_chars - 2] = '.';
+            out[max_chars - 1] = '.';
+            out[max_chars] = '\0';
+        }
+    }
+
+    return out;
+}
+
+static char* sg_escape_xml_text(const char *raw) {
+    size_t out_cap;
+    size_t out_len = 0;
+    char *out;
+
+    if (!raw) return NULL;
+    out_cap = strlen(raw) * 6 + 1;
+    out = (char*)sg_calloc(1, out_cap);
+    for (const char *p = raw; *p; p++) {
+        const char *repl = NULL;
+        size_t repl_len = 0;
+        if (*p == '&') repl = "&amp;";
+        else if (*p == '<') repl = "&lt;";
+        else if (*p == '>') repl = "&gt;";
+
+        if (repl) {
+            repl_len = strlen(repl);
+            memcpy(out + out_len, repl, repl_len);
+            out_len += repl_len;
+        } else {
+            out[out_len++] = *p;
+        }
+    }
+    out[out_len] = '\0';
+    return out;
+}
+
+static char* sg_prepare_tooltip_text(const char *raw) {
+    char *normalized;
+    char *clipped;
+    char *escaped;
+
+    if (!raw) return NULL;
+    normalized = sg_normalize_tooltip_text(raw);
+    clipped = sg_clip_tooltip_text(normalized, SG_TOOLTIP_MAX_LINES, SG_TOOLTIP_MAX_CHARS);
+    escaped = sg_escape_xml_text(clipped);
+    free(normalized);
+    free(clipped);
+    return escaped;
 }
 
 static sg_visual_style_t sg_style_from_name(const char *name) {
@@ -670,6 +1099,7 @@ static void sg_walk_stmt(cct_sigilo_model_t *m, const cct_ast_node_t *stmt, u32 
         case AST_EVOCA:
             m->count_evoca++;
             m->rituals[ritual_idx].evoca_count++;
+            sg_stmt_anchor_capture(&m->rituals[ritual_idx].binding_anchor, stmt);
             sg_fnv_str(m, stmt->as.evoca.name);
             sg_tally_type(m, stmt->as.evoca.var_type);
             sg_walk_expr(m, stmt->as.evoca.initializer, ritual_idx, depth + 1);
@@ -677,6 +1107,7 @@ static void sg_walk_stmt(cct_sigilo_model_t *m, const cct_ast_node_t *stmt, u32 
         case AST_VINCIRE:
             m->count_vincire++;
             m->rituals[ritual_idx].vincire_count++;
+            sg_stmt_anchor_capture(&m->rituals[ritual_idx].binding_anchor, stmt);
             sg_walk_expr(m, stmt->as.vincire.target, ritual_idx, depth + 1);
             sg_walk_expr(m, stmt->as.vincire.value, ritual_idx, depth + 1);
             return;
@@ -684,12 +1115,14 @@ static void sg_walk_stmt(cct_sigilo_model_t *m, const cct_ast_node_t *stmt, u32 
             m->count_redde++;
             m->total_returns++;
             m->rituals[ritual_idx].redde_count++;
+            sg_stmt_anchor_capture(&m->rituals[ritual_idx].return_anchor, stmt);
             sg_walk_expr(m, stmt->as.redde.value, ritual_idx, depth + 1);
             return;
         case AST_ANUR:
             m->count_anur++;
             m->total_anur++;
             m->rituals[ritual_idx].anur_count++;
+            sg_stmt_anchor_capture(&m->rituals[ritual_idx].anur_anchor, stmt);
             sg_walk_expr(m, stmt->as.anur.value, ritual_idx, depth + 1);
             return;
         case AST_DIMITTE:
@@ -697,6 +1130,9 @@ static void sg_walk_stmt(cct_sigilo_model_t *m, const cct_ast_node_t *stmt, u32 
             sg_walk_expr(m, stmt->as.dimitte.target, ritual_idx, depth + 1);
             return;
         case AST_EXPR_STMT:
+            if (stmt->as.expr_stmt.expression && stmt->as.expr_stmt.expression->type == AST_OBSECRO) {
+                sg_stmt_anchor_capture(&m->rituals[ritual_idx].binding_anchor, stmt);
+            }
             sg_walk_expr(m, stmt->as.expr_stmt.expression, ritual_idx, depth + 1);
             return;
         case AST_TEMPTA:
@@ -717,11 +1153,17 @@ static void sg_walk_stmt(cct_sigilo_model_t *m, const cct_ast_node_t *stmt, u32 
             m->count_si++;
             m->total_conditionals++;
             m->rituals[ritual_idx].si_count++;
+            sg_stmt_anchor_capture(&m->rituals[ritual_idx].decision_anchor, stmt);
             sg_walk_expr(m, stmt->as.si.condition, ritual_idx, depth + 1);
             sg_walk_stmt(m, stmt->as.si.then_branch, ritual_idx, depth + 1);
             if (stmt->as.si.else_branch) {
                 m->count_aliter++;
                 m->rituals[ritual_idx].aliter_count++;
+                if (m->rituals[ritual_idx].aliter_anchor.line == 0) {
+                    m->rituals[ritual_idx].aliter_anchor.line = stmt->as.si.else_branch->line;
+                    m->rituals[ritual_idx].aliter_anchor.col = stmt->as.si.else_branch->column;
+                    m->rituals[ritual_idx].aliter_anchor.kind_label = "ALITER";
+                }
                 sg_walk_stmt(m, stmt->as.si.else_branch, ritual_idx, depth + 1);
             }
             return;
@@ -729,6 +1171,7 @@ static void sg_walk_stmt(cct_sigilo_model_t *m, const cct_ast_node_t *stmt, u32 
             m->count_dum++;
             m->total_loops++;
             m->rituals[ritual_idx].dum_count++;
+            sg_stmt_anchor_capture(&m->rituals[ritual_idx].dum_anchor, stmt);
             sg_walk_expr(m, stmt->as.dum.condition, ritual_idx, depth + 1);
             sg_walk_stmt(m, stmt->as.dum.body, ritual_idx, depth + 1);
             return;
@@ -736,6 +1179,7 @@ static void sg_walk_stmt(cct_sigilo_model_t *m, const cct_ast_node_t *stmt, u32 
             m->count_donec++;
             m->total_loops++;
             m->rituals[ritual_idx].donec_count++;
+            sg_stmt_anchor_capture(&m->rituals[ritual_idx].donec_anchor, stmt);
             sg_walk_stmt(m, stmt->as.donec.body, ritual_idx, depth + 1);
             sg_walk_expr(m, stmt->as.donec.condition, ritual_idx, depth + 1);
             return;
@@ -743,6 +1187,7 @@ static void sg_walk_stmt(cct_sigilo_model_t *m, const cct_ast_node_t *stmt, u32 
             m->count_repete++;
             m->total_loops++;
             m->rituals[ritual_idx].repete_count++;
+            sg_stmt_anchor_capture(&m->rituals[ritual_idx].repete_anchor, stmt);
             sg_fnv_str(m, stmt->as.repete.iterator);
             sg_walk_expr(m, stmt->as.repete.start, ritual_idx, depth + 1);
             sg_walk_expr(m, stmt->as.repete.end, ritual_idx, depth + 1);
@@ -769,7 +1214,12 @@ static void sg_walk_stmt(cct_sigilo_model_t *m, const cct_ast_node_t *stmt, u32 
     }
 }
 
-static bool sg_extract_model(cct_sigilo_t *sg, const cct_ast_program_t *program, cct_sigilo_model_t *m) {
+static bool sg_extract_model(
+    cct_sigilo_t *sg,
+    const cct_ast_program_t *program,
+    const char *source_path,
+    cct_sigilo_model_t *m
+) {
     memset(m, 0, sizeof(*m));
     m->pactum_conformance_ok = true;
     m->pactum_constraint_resolution_ok = true;
@@ -784,6 +1234,8 @@ static bool sg_extract_model(cct_sigilo_t *sg, const cct_ast_program_t *program,
         sg_reportf(sg, 0, 0, "invalid AST program for sigilo generation");
         return false;
     }
+
+    (void)sg_source_load(&m->source, source_path);
 
     for (size_t i = 0; i < program->declarations->count; i++) {
         const cct_ast_node_t *decl = program->declarations->nodes[i];
@@ -872,6 +1324,14 @@ static bool sg_extract_model(cct_sigilo_t *sg, const cct_ast_program_t *program,
         }
 
         m->rituals[r].name = sg_strdup(decl->as.rituale.name ? decl->as.rituale.name : "rituale");
+        m->rituals[r].decl_line = decl->line;
+        m->rituals[r].decl_col = decl->column;
+        m->rituals[r].header_excerpt = sg_source_line_excerpt(&m->source, decl->line);
+        if (m->rituals[r].header_excerpt) {
+            m->rituals[r].signature_excerpt = sg_strdup(m->rituals[r].header_excerpt);
+        } else {
+            m->rituals[r].signature_excerpt = sg_build_ritual_signature_fallback(decl);
+        }
         m->rituals[r].is_entry = (decl->as.rituale.name &&
                                 (strcmp(decl->as.rituale.name, "principium") == 0 || strcmp(decl->as.rituale.name, "main") == 0));
         if (m->rituals[r].is_entry) {
@@ -922,8 +1382,13 @@ static bool sg_extract_model(cct_sigilo_t *sg, const cct_ast_program_t *program,
 
 static void sg_free_model(cct_sigilo_model_t *m) {
     if (!m) return;
+    sg_source_dispose(&m->source);
     if (m->rituals) {
-        for (u32 i = 0; i < m->ritual_count; i++) free(m->rituals[i].name);
+        for (u32 i = 0; i < m->ritual_count; i++) {
+            free(m->rituals[i].name);
+            free(m->rituals[i].signature_excerpt);
+            free(m->rituals[i].header_excerpt);
+        }
     }
     if (m->generic_inst_keys) {
         for (size_t i = 0; i < m->generic_inst_key_count; i++) {
@@ -967,6 +1432,11 @@ typedef struct {
     u32 ritual_idx;
     u32 kind;
     u32 strength;
+    u32 line;
+    u32 col;
+    char *summary_label;
+    char *source_excerpt;
+    char *tooltip_text;
     bool is_entry;
 } cct_sigilo_node_t;
 
@@ -975,6 +1445,9 @@ typedef struct {
     u32 to_idx;
     u32 kind;
     u32 weight;
+    char *summary_label;
+    char *source_excerpt;
+    char *tooltip_text;
     bool self_loop;
 } cct_sigilo_link_t;
 
@@ -1001,6 +1474,235 @@ typedef struct {
     u32 *primary_order;
     u32 primary_count;
 } cct_sigilo_geom_t;
+
+static char* sg_build_ritual_summary_label(const cct_sigilo_ritual_metric_t *r) {
+    u32 loop_count;
+
+    if (!r) return sg_strdup("rituale");
+    loop_count = r->dum_count + r->donec_count + r->repete_count + r->iterum_count;
+    return sg_strdup_printf(
+        "rituale: %s\nsignature: %s\nstatements: %u\ncalls: %u\nloops: %u",
+        r->name ? r->name : "rituale",
+        r->signature_excerpt ? r->signature_excerpt : (r->name ? r->name : "rituale"),
+        r->total_statements,
+        r->coniura_count,
+        loop_count
+    );
+}
+
+static u32 sg_ritual_loop_count(const cct_sigilo_ritual_metric_t *r) {
+    if (!r) return 0;
+    return r->dum_count + r->donec_count + r->repete_count + r->iterum_count;
+}
+
+static char* sg_build_ritual_node_tooltip(const cct_sigilo_ritual_metric_t *r) {
+    char *raw;
+    char *prepared;
+
+    if (!r) return sg_prepare_tooltip_text("RITUALE");
+    raw = sg_strdup_printf(
+        "RITUALE %s\nstmt: %u\ndepth: %u\nloops: %u\ncalls: %u\nsource:\n%s",
+        r->name ? r->name : "rituale",
+        r->total_statements,
+        r->max_nesting,
+        sg_ritual_loop_count(r),
+        r->coniura_count,
+        r->header_excerpt ? r->header_excerpt : (r->signature_excerpt ? r->signature_excerpt : "RITUALE")
+    );
+    prepared = sg_prepare_tooltip_text(raw);
+    free(raw);
+    return prepared;
+}
+
+static char* sg_build_structural_node_tooltip(
+    const cct_sigilo_ritual_metric_t *r,
+    const sg_stmt_anchor_t *anchor,
+    const char *fallback_kind,
+    const char *source_excerpt
+) {
+    const char *kind = fallback_kind ? fallback_kind : "stmt";
+    char *raw;
+    char *prepared;
+
+    if (anchor && anchor->kind_label) kind = anchor->kind_label;
+    raw = sg_strdup_printf(
+        "stmt: %s\nrituale: %s\ndepth: %u\nline: %u\n\nsource:\n%s",
+        kind,
+        (r && r->name) ? r->name : "<rituale>",
+        r ? r->max_nesting : 0,
+        anchor ? anchor->line : 0,
+        source_excerpt ? source_excerpt : "<indisponivel>"
+    );
+    prepared = sg_prepare_tooltip_text(raw);
+    free(raw);
+    return prepared;
+}
+
+static char* sg_build_stmt_summary_label(
+    const cct_sigilo_ritual_metric_t *r,
+    const sg_stmt_anchor_t *anchor,
+    const char *fallback_kind
+) {
+    const char *kind = fallback_kind ? fallback_kind : "stmt";
+
+    if (anchor && anchor->kind_label) kind = anchor->kind_label;
+    if (!r) return sg_strdup_printf("stmt: %s", kind);
+    if (anchor && anchor->line > 0) {
+        return sg_strdup_printf(
+            "stmt: %s\nrituale: %s\nline: %u\ncol: %u",
+            kind,
+            r->name ? r->name : "rituale",
+            anchor->line,
+            anchor->col
+        );
+    }
+    return sg_strdup_printf(
+        "stmt: %s\nrituale: %s",
+        kind,
+        r->name ? r->name : "rituale"
+    );
+}
+
+static const char* sg_link_kind_label(u32 kind) {
+    switch (kind) {
+        case SGL_PRIMARY: return "primary";
+        case SGL_CONIURA: return "call";
+        case SGL_BRANCH: return "branch";
+        case SGL_BINDING: return "bind";
+        case SGL_RETURN: return "return";
+        case SGL_LOOP: return "loop";
+        case SGL_TERMINAL: return "term";
+        default: return "edge";
+    }
+}
+
+static char* sg_build_link_summary_label(const cct_sigilo_model_t *m, const cct_sigilo_link_t *link, const cct_sigilo_geom_t *g) {
+    const char *kind;
+    const char *from_name = "node";
+    const char *to_name = "node";
+
+    if (!link || !g) return sg_strdup("edge");
+    kind = sg_link_kind_label(link->kind);
+    if (link->from_idx < g->node_count) {
+        u32 ritual_idx = g->nodes[link->from_idx].ritual_idx;
+        if (ritual_idx < m->ritual_count && m->rituals[ritual_idx].name) from_name = m->rituals[ritual_idx].name;
+    }
+    if (link->to_idx < g->node_count) {
+        u32 ritual_idx = g->nodes[link->to_idx].ritual_idx;
+        if (ritual_idx < m->ritual_count && m->rituals[ritual_idx].name) to_name = m->rituals[ritual_idx].name;
+    }
+
+    if (link->kind == SGL_CONIURA) {
+        return sg_strdup_printf(
+            "edge: %s\n%s -> %s\ncalls: %u",
+            kind,
+            from_name,
+            to_name,
+            link->weight
+        );
+    }
+
+    return sg_strdup_printf(
+        "edge: %s\n%s -> %s\nweight: %u",
+        kind,
+        from_name,
+        to_name,
+        link->weight
+    );
+}
+
+static const sg_stmt_anchor_t* sg_node_anchor_for_kind(
+    const cct_sigilo_ritual_metric_t *r,
+    u32 node_kind,
+    const char **fallback_kind
+) {
+    if (fallback_kind) *fallback_kind = "stmt";
+    if (!r) return NULL;
+    switch (node_kind) {
+        case SGN_DECISION:
+            if (fallback_kind) *fallback_kind = "SI";
+            return &r->decision_anchor;
+        case SGN_ALITER:
+            if (fallback_kind) *fallback_kind = "ALITER";
+            return &r->aliter_anchor;
+        case SGN_DUM:
+            if (fallback_kind) *fallback_kind = "DUM";
+            return &r->dum_anchor;
+        case SGN_DONEC:
+            if (fallback_kind) *fallback_kind = "DONEC";
+            return &r->donec_anchor;
+        case SGN_REPETE:
+            if (fallback_kind) *fallback_kind = "REPETE";
+            return &r->repete_anchor;
+        case SGN_BINDING:
+            if (fallback_kind) *fallback_kind = "EVOCA";
+            return &r->binding_anchor;
+        case SGN_RETURN:
+            if (fallback_kind) *fallback_kind = "REDDE";
+            return &r->return_anchor;
+        case SGN_ANUR:
+            if (fallback_kind) *fallback_kind = "ANUR";
+            return &r->anur_anchor;
+        default:
+            return NULL;
+    }
+}
+
+static void sg_populate_node_contexts(const cct_sigilo_model_t *m, cct_sigilo_geom_t *g) {
+    if (!m || !g) return;
+    for (u32 i = 0; i < g->node_count; i++) {
+        cct_sigilo_node_t *node = &g->nodes[i];
+        const cct_sigilo_ritual_metric_t *r = (node->ritual_idx < m->ritual_count) ? &m->rituals[node->ritual_idx] : NULL;
+        const char *fallback_kind = "stmt";
+        const sg_stmt_anchor_t *anchor = sg_node_anchor_for_kind(r, node->kind, &fallback_kind);
+
+        if (node->kind == SGN_RITUAL) {
+            node->line = r ? r->decl_line : 0;
+            node->col = r ? r->decl_col : 0;
+            node->summary_label = sg_build_ritual_summary_label(r);
+            if (r && r->header_excerpt) node->source_excerpt = sg_strdup(r->header_excerpt);
+            else if (r && r->signature_excerpt) node->source_excerpt = sg_strdup(r->signature_excerpt);
+            else node->source_excerpt = sg_strdup(node->summary_label);
+            node->tooltip_text = sg_build_ritual_node_tooltip(r);
+            continue;
+        }
+
+        if (anchor) {
+            node->line = anchor->line;
+            node->col = anchor->col;
+            node->summary_label = sg_build_stmt_summary_label(r, anchor, fallback_kind);
+            node->source_excerpt = sg_source_line_excerpt(&m->source, anchor->line);
+        } else {
+            node->summary_label = sg_build_stmt_summary_label(r, NULL, fallback_kind);
+        }
+        if (!node->source_excerpt) node->source_excerpt = sg_strdup(node->summary_label);
+        node->tooltip_text = sg_build_structural_node_tooltip(r, anchor, fallback_kind, node->source_excerpt);
+    }
+}
+
+static void sg_populate_link_contexts(const cct_sigilo_model_t *m, cct_sigilo_geom_t *g) {
+    if (!m || !g) return;
+    for (u32 i = 0; i < g->link_count; i++) {
+        cct_sigilo_link_t *link = &g->links[i];
+        const char *from_name = "node";
+        const char *to_name = "node";
+
+        if (link->from_idx < g->node_count) {
+            u32 ritual_idx = g->nodes[link->from_idx].ritual_idx;
+            if (ritual_idx < m->ritual_count && m->rituals[ritual_idx].name) from_name = m->rituals[ritual_idx].name;
+        }
+        if (link->to_idx < g->node_count) {
+            u32 ritual_idx = g->nodes[link->to_idx].ritual_idx;
+            if (ritual_idx < m->ritual_count && m->rituals[ritual_idx].name) to_name = m->rituals[ritual_idx].name;
+        }
+
+        link->summary_label = sg_build_link_summary_label(m, link, g);
+        link->source_excerpt = sg_strdup_printf("%s -> %s", from_name, to_name);
+        char *raw_tooltip = sg_strdup_printf("%s\n\npath:\n%s", link->summary_label, link->source_excerpt);
+        link->tooltip_text = sg_prepare_tooltip_text(raw_tooltip);
+        free(raw_tooltip);
+    }
+}
 
 static double sg_clamp(double v, double lo, double hi) {
     if (v < lo) return lo;
@@ -1064,6 +1766,20 @@ static void sg_geom_init(cct_sigilo_geom_t *g, u32 ritual_count) {
 
 static void sg_geom_dispose(cct_sigilo_geom_t *g) {
     if (!g) return;
+    if (g->nodes) {
+        for (u32 i = 0; i < g->node_count; i++) {
+            free(g->nodes[i].summary_label);
+            free(g->nodes[i].source_excerpt);
+            free(g->nodes[i].tooltip_text);
+        }
+    }
+    if (g->links) {
+        for (u32 i = 0; i < g->link_count; i++) {
+            free(g->links[i].summary_label);
+            free(g->links[i].source_excerpt);
+            free(g->links[i].tooltip_text);
+        }
+    }
     free(g->nodes);
     free(g->links);
     free(g->ritual_nodes);
@@ -1141,6 +1857,11 @@ static void sg_geom_add_aux_node(
     n.ritual_idx = ritual_idx;
     n.kind = kind;
     n.strength = strength;
+    n.line = 0;
+    n.col = 0;
+    n.summary_label = NULL;
+    n.source_excerpt = NULL;
+    n.tooltip_text = NULL;
     n.is_entry = is_entry;
     *slot = (i32)sg_geom_add_node(g, &n);
 }
@@ -1156,9 +1877,16 @@ static void sg_build_geom(const cct_sigilo_model_t *m, cct_sigilo_geom_t *g) {
         n.ritual_idx = 0;
         n.kind = SGN_RITUAL;
         n.strength = 1;
+        n.line = 0;
+        n.col = 0;
+        n.summary_label = NULL;
+        n.source_excerpt = NULL;
+        n.tooltip_text = NULL;
         n.is_entry = true;
         sg_geom_add_node(g, &n);
         g->primary_order[g->primary_count++] = 0;
+        sg_populate_node_contexts(m, g);
+        sg_populate_link_contexts(m, g);
         return;
     }
 
@@ -1185,6 +1913,11 @@ static void sg_build_geom(const cct_sigilo_model_t *m, cct_sigilo_geom_t *g) {
         ritual_node.ritual_idx = i;
         ritual_node.kind = SGN_RITUAL;
         ritual_node.strength = 1 + r->total_statements;
+        ritual_node.line = 0;
+        ritual_node.col = 0;
+        ritual_node.summary_label = NULL;
+        ritual_node.source_excerpt = NULL;
+        ritual_node.tooltip_text = NULL;
         ritual_node.is_entry = r->is_entry;
         g->ritual_nodes[i] = (i32)sg_geom_add_node(g, &ritual_node);
 
@@ -1287,6 +2020,11 @@ static void sg_build_geom(const cct_sigilo_model_t *m, cct_sigilo_geom_t *g) {
         hub.ritual_idx = (m->entry_idx >= 0) ? (u32)m->entry_idx : 0;
         hub.kind = SGN_BINDING;
         hub.strength = 1 + m->total_calls + m->total_conditionals + m->total_loops;
+        hub.line = 0;
+        hub.col = 0;
+        hub.summary_label = NULL;
+        hub.source_excerpt = NULL;
+        hub.tooltip_text = NULL;
         hub.is_entry = false;
         g->hub_node = (i32)sg_geom_add_node(g, &hub);
 
@@ -1317,6 +2055,9 @@ static void sg_build_geom(const cct_sigilo_model_t *m, cct_sigilo_geom_t *g) {
             e->from_idx == e->to_idx
         );
     }
+
+    sg_populate_node_contexts(m, g);
+    sg_populate_link_contexts(m, g);
 }
 
 static void sg_svg_header(FILE *f, sg_visual_style_t style) {
@@ -1326,6 +2067,7 @@ static void sg_svg_header(FILE *f, sg_visual_style_t style) {
     const char *call = "#5b2a22";
     const char *loop = "#2d5f5a";
     const char *orn = "#355d58";
+    const char *hover_css = "";
     double base_w = 1.6;
     double primary_w = 2.8;
     if (style == SG_STYLE_SEAL) {
@@ -1347,9 +2089,22 @@ static void sg_svg_header(FILE *f, sg_visual_style_t style) {
         base_w = 1.35;
         primary_w = 2.45;
     }
+    fprintf(f, "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n");
+    if (g_sg_render_emit_titles || g_sg_render_emit_data_attrs) {
+        fprintf(f, "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 512 512\" width=\"512\" height=\"512\" role=\"img\" aria-label=\"CCT local sigilo\">\n");
+    } else {
+        fprintf(f, "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 512 512\" width=\"512\" height=\"512\">\n");
+    }
+    if (g_sg_render_emit_data_attrs) {
+        fprintf(f, "  <desc>Deterministic semantic sigil for a single CCT module.</desc>\n");
+    }
+    if (g_sg_render_emit_titles) {
+        hover_css =
+            "      .node-wrap, .edge-wrap { cursor: help; }\n"
+            "      .node-wrap:hover > circle { opacity: 0.96; }\n"
+            "      .edge-wrap:hover > path, .edge-wrap:hover > line { opacity: 1.0; }\n";
+    }
     fprintf(f,
-            "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
-            "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 512 512\" width=\"512\" height=\"512\">\n"
             "  <defs>\n"
             "    <style><![CDATA[\n"
             "      .bg { fill: %s; }\n"
@@ -1368,10 +2123,11 @@ static void sg_svg_header(FILE *f, sg_visual_style_t style) {
             "      .orn { stroke: %s; stroke-width: 1.0; fill: none; opacity: 0.55; }\n"
             "      .hash { fill: #1f1a17; font: 10px monospace; letter-spacing: 0.8px; }\n"
             "      .label { fill: #1f1a17; font: 8px monospace; opacity: 0.7; }\n"
+            "%s"
             "    ]]></style>\n"
             "  </defs>\n"
             "  <rect class=\"bg\" x=\"0\" y=\"0\" width=\"512\" height=\"512\"/>\n",
-            bg, base, base_w, primary, primary_w, call, loop, loop, orn);
+            bg, base, base_w, primary, primary_w, call, loop, loop, orn, hover_css);
 }
 
 static void sg_svg_layer_foundation(FILE *f, const cct_sigilo_model_t *m, sg_visual_style_t style) {
@@ -1405,7 +2161,8 @@ static void sg_svg_emit_curved_link(
     const char *klass,
     double bend,
     double width,
-    double opacity
+    double opacity,
+    const char *extra_attrs
 ) {
     double mx = (a->x + b->x) * 0.5;
     double my = (a->y + b->y) * 0.5;
@@ -1428,8 +2185,8 @@ static void sg_svg_emit_curved_link(
     double cx = mx + nx * bend + nx * jitter;
     double cy = my + ny * bend + ny * jitter;
     fprintf(f,
-            "    <path class=\"%s\" d=\"M %.2f %.2f Q %.2f %.2f %.2f %.2f\" stroke-width=\"%.2f\" opacity=\"%.2f\"/>\n",
-            klass, a->x, a->y, cx, cy, b->x, b->y, width, opacity);
+            "    <path class=\"%s\" d=\"M %.2f %.2f Q %.2f %.2f %.2f %.2f\" stroke-width=\"%.2f\" opacity=\"%.2f\"%s/>\n",
+            klass, a->x, a->y, cx, cy, b->x, b->y, width, opacity, extra_attrs ? extra_attrs : "");
 }
 
 static void sg_svg_emit_self_loop(
@@ -1439,7 +2196,8 @@ static void sg_svg_emit_self_loop(
     const cct_sigilo_node_t *n,
     const char *klass,
     double scale,
-    bool with_tail
+    bool with_tail,
+    const char *extra_attrs
 ) {
     double a = (sg_hash_unit(m, 1200 + n->ritual_idx * 3 + n->kind) - 0.5) * 1.2;
     if (style == SG_STYLE_SEAL) scale *= 0.92;
@@ -1449,7 +2207,7 @@ static void sg_svg_emit_self_loop(
     double cx1 = n->x + cos(a) * (rx + n->r + 4.0);
     double cy1 = n->y + sin(a) * (ry + n->r + 4.0);
     fprintf(f,
-            "    <path class=\"%s\" d=\"M %.2f %.2f C %.2f %.2f %.2f %.2f %.2f %.2f C %.2f %.2f %.2f %.2f %.2f %.2f\"/>\n",
+            "    <path class=\"%s\" d=\"M %.2f %.2f C %.2f %.2f %.2f %.2f %.2f %.2f C %.2f %.2f %.2f %.2f %.2f %.2f\"%s/>\n",
             klass,
             n->x + n->r * 0.8, n->y,
             cx1 + rx * 0.6, cy1 - ry * 0.8,
@@ -1457,7 +2215,8 @@ static void sg_svg_emit_self_loop(
             cx1, cy1,
             cx1 - rx * 0.8, cy1 + ry * 0.8,
             cx1 - rx * 0.6, cy1 - ry * 0.8,
-            n->x - n->r * 0.6, n->y + 1.5);
+            n->x - n->r * 0.6, n->y + 1.5,
+            extra_attrs ? extra_attrs : "");
     if (with_tail) {
         fprintf(f,
                 "    <path class=\"%s\" d=\"M %.2f %.2f Q %.2f %.2f %.2f %.2f\" opacity=\"0.85\"/>\n",
@@ -1468,8 +2227,166 @@ static void sg_svg_emit_self_loop(
     }
 }
 
+static void sg_svg_emit_title(FILE *f, const char *text, int indent) {
+    if (!f || !text || text[0] == '\0') return;
+    for (int i = 0; i < indent; i++) fputc(' ', f);
+    fprintf(f, "<title>%s</title>\n", text);
+}
+
+static char* sg_escape_xml_attr(const char *raw) {
+    size_t out_cap;
+    size_t out_len = 0;
+    char *out;
+
+    if (!raw) return NULL;
+    out_cap = strlen(raw) * 6 + 1;
+    out = (char*)sg_calloc(1, out_cap);
+    for (const char *p = raw; *p; p++) {
+        const char *repl = NULL;
+        size_t repl_len = 0;
+        if (*p == '&') repl = "&amp;";
+        else if (*p == '<') repl = "&lt;";
+        else if (*p == '>') repl = "&gt;";
+        else if (*p == '"') repl = "&quot;";
+        else if (*p == '\'') repl = "&apos;";
+
+        if (repl) {
+            repl_len = strlen(repl);
+            memcpy(out + out_len, repl, repl_len);
+            out_len += repl_len;
+        } else {
+            out[out_len++] = *p;
+        }
+    }
+    out[out_len] = '\0';
+    return out;
+}
+
+static void sg_svg_emit_attr_str(FILE *f, const char *name, const char *value) {
+    char *escaped;
+    if (!f || !name || !value || !value[0]) return;
+    escaped = sg_escape_xml_attr(value);
+    fprintf(f, " %s=\"%s\"", name, escaped ? escaped : "");
+    free(escaped);
+}
+
+static void sg_svg_emit_attr_u32(FILE *f, const char *name, u32 value, bool emit_zero) {
+    if (!f || !name) return;
+    if (!emit_zero && value == 0) return;
+    fprintf(f, " %s=\"%u\"", name, value);
+}
+
+static const char* sg_svg_node_data_kind(const cct_sigilo_node_t *n) {
+    if (!n) return NULL;
+    switch (n->kind) {
+        case SGN_RITUAL: return "rituale";
+        case SGN_DECISION:
+        case SGN_ALITER: return "branch";
+        case SGN_DUM:
+        case SGN_DONEC:
+        case SGN_REPETE: return "loop";
+        case SGN_BINDING: return "bind";
+        case SGN_RETURN:
+        case SGN_ANUR: return "term";
+        default: return "node";
+    }
+}
+
+static const char* sg_svg_node_stmt_label(const cct_sigilo_model_t *m, const cct_sigilo_node_t *n) {
+    const cct_sigilo_ritual_metric_t *r;
+    const char *fallback_kind = "stmt";
+    const sg_stmt_anchor_t *anchor;
+
+    if (!n) return NULL;
+    if (n->kind == SGN_RITUAL) return "RITUALE";
+    if (!m || n->ritual_idx >= m->ritual_count) return fallback_kind;
+
+    r = &m->rituals[n->ritual_idx];
+    anchor = sg_node_anchor_for_kind(r, n->kind, &fallback_kind);
+    if (anchor && anchor->kind_label && anchor->kind_label[0]) return anchor->kind_label;
+    return fallback_kind;
+}
+
+static const char* sg_svg_edge_data_kind(const cct_sigilo_link_t *lk) {
+    if (!lk) return NULL;
+    switch (lk->kind) {
+        case SGL_PRIMARY: return "primary";
+        case SGL_CONIURA: return "call";
+        case SGL_BRANCH: return "branch";
+        case SGL_BINDING: return "bind";
+        case SGL_RETURN: return "return";
+        case SGL_LOOP: return "loop";
+        case SGL_TERMINAL: return "term";
+        default: return "edge";
+    }
+}
+
+static const char* sg_svg_edge_endpoint_name(const cct_sigilo_model_t *m, const cct_sigilo_node_t *n) {
+    if (!n) return "node";
+    if (m && n->ritual_idx < m->ritual_count) {
+        const cct_sigilo_ritual_metric_t *r = &m->rituals[n->ritual_idx];
+        if (r->name && r->name[0]) return r->name;
+    }
+    return "node";
+}
+
+static char* sg_build_edge_data_attrs(
+    const cct_sigilo_model_t *m,
+    const cct_sigilo_link_t *lk,
+    const cct_sigilo_node_t *a,
+    const cct_sigilo_node_t *b
+) {
+    const char *kind;
+    const char *from_name = sg_svg_edge_endpoint_name(m, a);
+    const char *to_name = sg_svg_edge_endpoint_name(m, b);
+    if (!g_sg_render_emit_data_attrs) return NULL;
+    kind = sg_svg_edge_data_kind(lk);
+    char *kind_esc = sg_escape_xml_attr(kind);
+    char *from_esc = sg_escape_xml_attr(from_name);
+    char *to_esc = sg_escape_xml_attr(to_name);
+    char *attrs = sg_strdup_printf(
+        " data-kind=\"%s\" data-from=\"%s\" data-to=\"%s\" data-weight=\"%u\" data-self-loop=\"%s\"",
+        kind_esc ? kind_esc : "",
+        from_esc ? from_esc : "",
+        to_esc ? to_esc : "",
+        lk ? lk->weight : 0,
+        (lk && lk->self_loop) ? "true" : "false");
+    free(kind_esc);
+    free(from_esc);
+    free(to_esc);
+    return attrs;
+}
+
+static void sg_svg_emit_node_data_attrs(FILE *f, const cct_sigilo_model_t *m, const cct_sigilo_node_t *n) {
+    const cct_sigilo_ritual_metric_t *r = NULL;
+    const char *data_kind;
+    const char *stmt_label;
+    u32 depth = 0;
+
+    if (!g_sg_render_emit_data_attrs) return;
+    if (!f || !n) return;
+    if (m && n->ritual_idx < m->ritual_count) {
+        r = &m->rituals[n->ritual_idx];
+        depth = r->max_nesting;
+    }
+
+    data_kind = sg_svg_node_data_kind(n);
+    stmt_label = sg_svg_node_stmt_label(m, n);
+
+    sg_svg_emit_attr_str(f, "data-kind", data_kind);
+    if (r && r->name) sg_svg_emit_attr_str(f, "data-ritual", r->name);
+    sg_svg_emit_attr_u32(f, "data-line", n->line, false);
+    sg_svg_emit_attr_u32(f, "data-col", n->col, false);
+    sg_svg_emit_attr_u32(f, "data-depth", depth, false);
+    sg_svg_emit_attr_str(f, "data-stmt", stmt_label);
+    if (n->kind == SGN_RITUAL && r) {
+        sg_svg_emit_attr_u32(f, "data-loops", sg_ritual_loop_count(r), true);
+        sg_svg_emit_attr_u32(f, "data-calls", r->coniura_count, true);
+    }
+    if (n->kind == SGN_RITUAL && n->is_entry) sg_svg_emit_attr_str(f, "data-entry", "true");
+}
+
 static void sg_svg_layer_nodes(FILE *f, const cct_sigilo_model_t *m, const cct_sigilo_geom_t *g, sg_visual_style_t style) {
-    (void)m;
     fprintf(f, "  <g id=\"nodes\">\n");
     for (u32 i = 0; i < g->node_count; i++) {
         const cct_sigilo_node_t *n = &g->nodes[i];
@@ -1478,9 +2395,21 @@ static void sg_svg_layer_nodes(FILE *f, const cct_sigilo_model_t *m, const cct_s
         else if (n->kind == SGN_DUM || n->kind == SGN_DONEC || n->kind == SGN_REPETE) klass = "node-loop";
         else if (n->kind == SGN_RETURN || n->kind == SGN_ANUR) klass = "node-term";
         double nr = n->r;
+        bool wrapped = g_sg_render_emit_titles && n->tooltip_text && n->tooltip_text[0] != '\0';
         if (style == SG_STYLE_SEAL && n->kind == SGN_RITUAL) nr += 0.5;
         if (style == SG_STYLE_SCRIPTUM && n->kind != SGN_RITUAL) nr *= 0.92;
-        fprintf(f, "    <circle class=\"%s\" cx=\"%.2f\" cy=\"%.2f\" r=\"%.2f\"/>\n", klass, n->x, n->y, nr);
+        if (wrapped) {
+            fprintf(f, "    <g class=\"node-wrap\">\n");
+            fprintf(f, "      <circle class=\"%s\" cx=\"%.2f\" cy=\"%.2f\" r=\"%.2f\"", klass, n->x, n->y, nr);
+            sg_svg_emit_node_data_attrs(f, m, n);
+            fprintf(f, "/>\n");
+            sg_svg_emit_title(f, n->tooltip_text, 6);
+            fprintf(f, "    </g>\n");
+        } else {
+            fprintf(f, "    <circle class=\"%s\" cx=\"%.2f\" cy=\"%.2f\" r=\"%.2f\"", klass, n->x, n->y, nr);
+            sg_svg_emit_node_data_attrs(f, m, n);
+            fprintf(f, "/>\n");
+        }
 
         if (n->kind == SGN_REPETE) {
             /* REPETE: serial pulse chain clearly legible */
@@ -1503,28 +2432,21 @@ static void sg_svg_layer_nodes(FILE *f, const cct_sigilo_model_t *m, const cct_s
 
 static void sg_svg_layer_primary_path(FILE *f, const cct_sigilo_model_t *m, const cct_sigilo_geom_t *g, sg_visual_style_t style) {
     fprintf(f, "  <g id=\"primary_path\">\n");
-    if (g->primary_count == 0) {
-        fprintf(f, "  </g>\n");
-        return;
-    }
-
-    if (g->primary_count == 1) {
-        const cct_sigilo_node_t *n = &g->nodes[g->primary_order[0]];
-        if (style == SG_STYLE_SCRIPTUM) {
-            fprintf(f, "    <path class=\"primary\" d=\"M %.2f %.2f q 20 -26 38 -4 q -8 18 -28 20\" opacity=\"0.92\"/>\n", n->x - 18.0, n->y + 2.0);
-        } else {
-            fprintf(f, "    <path class=\"primary\" d=\"M %.2f %.2f q 18 -22 34 0 q -18 22 -34 0\" opacity=\"0.9\"/>\n", n->x - 16.0, n->y);
-        }
-        fprintf(f, "  </g>\n");
-        return;
-    }
-
-    for (u32 i = 1; i < g->primary_count; i++) {
-        const cct_sigilo_node_t *a = &g->nodes[g->primary_order[i - 1]];
-        const cct_sigilo_node_t *b = &g->nodes[g->primary_order[i]];
+    for (u32 i = 0; i < g->link_count; i++) {
+        const cct_sigilo_link_t *lk = &g->links[i];
+        if (lk->kind != SGL_PRIMARY || lk->from_idx >= g->node_count || lk->to_idx >= g->node_count) continue;
+        const cct_sigilo_node_t *a = &g->nodes[lk->from_idx];
+        const cct_sigilo_node_t *b = &g->nodes[lk->to_idx];
         double complexity_bend = 14.0 + (double)((m->ritual_count > 6 ? 6 : m->ritual_count) * 2);
         if (m->ritual_count == 1) complexity_bend += 8.0;
-        sg_svg_emit_curved_link(f, m, style, a, b, "primary", complexity_bend, 2.6 + (a->is_entry ? 0.6 : 0.0), 0.96);
+        if (g_sg_render_emit_titles) {
+            fprintf(f, "    <g class=\"edge-wrap\">\n");
+            sg_svg_emit_curved_link(f, m, style, a, b, "primary", complexity_bend, 2.6 + (a->is_entry ? 0.6 : 0.0), 0.96, NULL);
+            sg_svg_emit_title(f, lk->tooltip_text, 6);
+            fprintf(f, "    </g>\n");
+        } else {
+            sg_svg_emit_curved_link(f, m, style, a, b, "primary", complexity_bend, 2.6 + (a->is_entry ? 0.6 : 0.0), 0.96, NULL);
+        }
     }
     fprintf(f, "  </g>\n");
 }
@@ -1537,15 +2459,23 @@ static void sg_svg_layer_call_links(FILE *f, const cct_sigilo_model_t *m, const 
         if (lk->from_idx >= g->node_count || lk->to_idx >= g->node_count) continue;
         const cct_sigilo_node_t *a = &g->nodes[lk->from_idx];
         const cct_sigilo_node_t *b = &g->nodes[lk->to_idx];
+        char *edge_attrs = sg_build_edge_data_attrs(m, lk, a, b);
+        if (g_sg_render_emit_titles) fprintf(f, "    <g class=\"edge-wrap\">\n");
         if (lk->self_loop) {
-            sg_svg_emit_self_loop(f, m, style, a, "call", 1.15 + sg_clamp((double)lk->weight * 0.1, 0.0, 0.35), false);
-            continue;
+            sg_svg_emit_self_loop(f, m, style, a, "call", 1.15 + sg_clamp((double)lk->weight * 0.1, 0.0, 0.35), false, edge_attrs);
+        } else {
+            sg_svg_emit_curved_link(
+                f, m, style, a, b, "call",
+                26.0 + sg_clamp((double)lk->weight * 5.0, 0.0, 22.0),
+                1.8 + sg_clamp((double)lk->weight * 0.35, 0.0, 1.2),
+                0.68 + sg_clamp((double)lk->weight * 0.06, 0.0, 0.22),
+                edge_attrs);
         }
-        sg_svg_emit_curved_link(
-            f, m, style, a, b, "call",
-            26.0 + sg_clamp((double)lk->weight * 5.0, 0.0, 22.0),
-            1.8 + sg_clamp((double)lk->weight * 0.35, 0.0, 1.2),
-            0.68 + sg_clamp((double)lk->weight * 0.06, 0.0, 0.22));
+        if (g_sg_render_emit_titles) {
+            sg_svg_emit_title(f, lk->tooltip_text, 6);
+            fprintf(f, "    </g>\n");
+        }
+        free(edge_attrs);
     }
     fprintf(f, "  </g>\n");
 }
@@ -1557,7 +2487,14 @@ static void sg_svg_layer_branches(FILE *f, const cct_sigilo_model_t *m, const cc
         if (lk->kind != SGL_BRANCH || lk->from_idx >= g->node_count || lk->to_idx >= g->node_count) continue;
         const cct_sigilo_node_t *a = &g->nodes[lk->from_idx];
         const cct_sigilo_node_t *b = &g->nodes[lk->to_idx];
-        sg_svg_emit_curved_link(f, m, style, a, b, "branch", 10.0, 1.2 + sg_clamp((double)lk->weight * 0.25, 0.0, 0.9), 0.85);
+        if (g_sg_render_emit_titles) {
+            fprintf(f, "    <g class=\"edge-wrap\">\n");
+            sg_svg_emit_curved_link(f, m, style, a, b, "branch", 10.0, 1.2 + sg_clamp((double)lk->weight * 0.25, 0.0, 0.9), 0.85, NULL);
+            sg_svg_emit_title(f, lk->tooltip_text, 6);
+            fprintf(f, "    </g>\n");
+        } else {
+            sg_svg_emit_curved_link(f, m, style, a, b, "branch", 10.0, 1.2 + sg_clamp((double)lk->weight * 0.25, 0.0, 0.9), 0.85, NULL);
+        }
     }
     fprintf(f, "  </g>\n");
 }
@@ -1569,11 +2506,16 @@ static void sg_svg_layer_loops(FILE *f, const cct_sigilo_model_t *m, const cct_s
         if (lk->kind != SGL_LOOP || lk->from_idx >= g->node_count || lk->to_idx >= g->node_count) continue;
         const cct_sigilo_node_t *a = &g->nodes[lk->from_idx];
         const cct_sigilo_node_t *b = &g->nodes[lk->to_idx];
+        if (g_sg_render_emit_titles) fprintf(f, "    <g class=\"edge-wrap\">\n");
         if (lk->self_loop) {
             bool tail = (b->kind == SGN_DONEC);
-            sg_svg_emit_self_loop(f, m, style, b, "loop", (b->kind == SGN_DUM) ? 1.0 : 1.12, tail);
+            sg_svg_emit_self_loop(f, m, style, b, "loop", (b->kind == SGN_DUM) ? 1.0 : 1.12, tail, NULL);
         } else {
-            sg_svg_emit_curved_link(f, m, style, a, b, "loop", 8.0, 1.25 + sg_clamp((double)lk->weight * 0.15, 0.0, 0.55), 0.88);
+            sg_svg_emit_curved_link(f, m, style, a, b, "loop", 8.0, 1.25 + sg_clamp((double)lk->weight * 0.15, 0.0, 0.55), 0.88, NULL);
+        }
+        if (g_sg_render_emit_titles) {
+            sg_svg_emit_title(f, lk->tooltip_text, 6);
+            fprintf(f, "    </g>\n");
         }
     }
     fprintf(f, "  </g>\n");
@@ -1586,7 +2528,8 @@ static void sg_svg_layer_bindings(FILE *f, const cct_sigilo_model_t *m, const cc
         if (lk->kind != SGL_BINDING || lk->from_idx >= g->node_count || lk->to_idx >= g->node_count) continue;
         const cct_sigilo_node_t *a = &g->nodes[lk->from_idx];
         const cct_sigilo_node_t *b = &g->nodes[lk->to_idx];
-        sg_svg_emit_curved_link(f, m, style, a, b, "bind", 5.0, 1.2 + sg_clamp((double)lk->weight * 0.08, 0.0, 0.6), 0.85);
+        if (g_sg_render_emit_titles) fprintf(f, "    <g class=\"edge-wrap\">\n");
+        sg_svg_emit_curved_link(f, m, style, a, b, "bind", 5.0, 1.2 + sg_clamp((double)lk->weight * 0.08, 0.0, 0.6), 0.85, NULL);
 
         /* VINCIRE / binding bars */
         u32 bars = lk->weight > 6 ? 6 : lk->weight;
@@ -1618,6 +2561,10 @@ static void sg_svg_layer_bindings(FILE *f, const cct_sigilo_model_t *m, const cc
             double y2 = bn->y + sin(ang) * (bn->r + 8.0 + (double)(r % 2) * 3.0);
             fprintf(f, "    <line class=\"bind\" x1=\"%.2f\" y1=\"%.2f\" x2=\"%.2f\" y2=\"%.2f\" opacity=\"0.58\"/>\n", x1, y1, x2, y2);
         }
+        if (g_sg_render_emit_titles) {
+            sg_svg_emit_title(f, lk->tooltip_text, 6);
+            fprintf(f, "    </g>\n");
+        }
     }
     fprintf(f, "  </g>\n");
 }
@@ -1629,7 +2576,8 @@ static void sg_svg_layer_terminals(FILE *f, const cct_sigilo_model_t *m, const c
         if ((lk->kind != SGL_RETURN && lk->kind != SGL_TERMINAL) || lk->from_idx >= g->node_count || lk->to_idx >= g->node_count) continue;
         const cct_sigilo_node_t *a = &g->nodes[lk->from_idx];
         const cct_sigilo_node_t *b = &g->nodes[lk->to_idx];
-        sg_svg_emit_curved_link(f, m, style, a, b, "term", 6.0, 1.35 + sg_clamp((double)lk->weight * 0.15, 0.0, 0.55), 0.9);
+        if (g_sg_render_emit_titles) fprintf(f, "    <g class=\"edge-wrap\">\n");
+        sg_svg_emit_curved_link(f, m, style, a, b, "term", 6.0, 1.35 + sg_clamp((double)lk->weight * 0.15, 0.0, 0.55), 0.9, NULL);
         if (b->kind == SGN_ANUR) {
             double dx = b->x - a->x;
             double dy = b->y - a->y;
@@ -1642,6 +2590,10 @@ static void sg_svg_layer_terminals(FILE *f, const cct_sigilo_model_t *m, const c
             fprintf(f, "    <line class=\"term\" x1=\"%.2f\" y1=\"%.2f\" x2=\"%.2f\" y2=\"%.2f\" opacity=\"0.8\"/>\n",
                     tipx - nx * 2.4 + dx * 3.0, tipy - ny * 2.4 + dy * 3.0,
                     tipx + nx * 2.4 + dx * 3.0, tipy + ny * 2.4 + dy * 3.0);
+        }
+        if (g_sg_render_emit_titles) {
+            sg_svg_emit_title(f, lk->tooltip_text, 6);
+            fprintf(f, "    </g>\n");
         }
     }
     fprintf(f, "  </g>\n");
@@ -1687,6 +2639,8 @@ static bool sg_write_svg(cct_sigilo_t *sg, const cct_sigilo_model_t *m) {
 
     sg_visual_style_t style = sg_style_from_name(sg->style_name);
     cct_sigilo_geom_t geom;
+    g_sg_render_emit_titles = sg ? sg->emit_titles : true;
+    g_sg_render_emit_data_attrs = sg ? sg->emit_data_attrs : true;
     sg_build_geom(m, &geom);
 
     sg_svg_header(f, style);
@@ -1715,6 +2669,8 @@ static void sg_svg_emit_core_layers(
 ) {
     sg_visual_style_t style = sg_style_from_name(sg->style_name);
     cct_sigilo_geom_t geom;
+    g_sg_render_emit_titles = sg ? sg->emit_titles : true;
+    g_sg_render_emit_data_attrs = sg ? sg->emit_data_attrs : true;
     sg_build_geom(m, &geom);
 
     sg_svg_layer_foundation(f, m, style);
@@ -2104,6 +3060,8 @@ void cct_sigilo_init(cct_sigilo_t *sg, const char *filename) {
     sg->filename = filename;
     sg->emit_svg = true;
     sg->emit_meta = true;
+    sg->emit_titles = true;
+    sg->emit_data_attrs = true;
     sg->style_name = "network";
     sg->module_count = 1;
     sg->import_edge_count = 0;
@@ -2194,7 +3152,7 @@ bool cct_sigilo_generate_artifacts(
     free(base);
 
     cct_sigilo_model_t model;
-    if (!sg_extract_model(sg, program, &model)) {
+    if (!sg_extract_model(sg, program, input_path, &model)) {
         return false;
     }
     sg->semantic_hash = model.hash;
@@ -2220,6 +3178,9 @@ typedef struct {
     double r;
     const char *path;
     u32 depth;
+    u32 ritual_count;
+    u32 import_count;
+    char *tooltip_text;
 } cct_sigilo_system_node_t;
 
 static const char* sg_system_topology_class(u32 module_count, u32 import_edge_count) {
@@ -2284,6 +3245,71 @@ static const char* sg_system_module_label(const char *path) {
     if (!path || !path[0]) return "module";
     const char *slash = strrchr(path, '/');
     return slash ? (slash + 1) : path;
+}
+
+static u32 sg_system_module_import_count(
+    u32 module_idx,
+    const u32 *import_from_indices,
+    const u32 *import_to_indices,
+    u32 import_edge_count
+) {
+    u32 count = 0;
+    for (u32 i = 0; i < import_edge_count; i++) {
+        u32 from = import_from_indices ? import_from_indices[i] : 0;
+        u32 to = import_to_indices ? import_to_indices[i] : 0;
+        if (from == module_idx && to != module_idx) count++;
+    }
+    return count;
+}
+
+static char* sg_build_system_module_tooltip(const cct_sigilo_system_node_t *n) {
+    if (!n) return NULL;
+    return sg_prepare_tooltip_text(sg_strdup_printf(
+        "module\n%s\nrituals: %u\nimports: %u",
+        (n->path && n->path[0]) ? n->path : "<module>",
+        n->ritual_count,
+        n->import_count));
+}
+
+static char* sg_build_system_import_edge_tooltip(const char *from_path, const char *to_path) {
+    return sg_prepare_tooltip_text(sg_strdup_printf(
+        "edge\n%s -> %s\nlinks: 1",
+        sg_system_module_label(from_path),
+        sg_system_module_label(to_path)));
+}
+
+static char* sg_build_system_semantic_edge_tooltip(
+    const char *from_path,
+    const char *to_path,
+    u32 cross_module_call_count,
+    u32 cross_module_type_ref_count
+) {
+    if (cross_module_call_count > 0 && cross_module_type_ref_count > 0) {
+        return sg_prepare_tooltip_text(sg_strdup_printf(
+            "edge\n%s -> %s\ncalls: %u\ntype_refs: %u",
+            sg_system_module_label(from_path),
+            sg_system_module_label(to_path),
+            cross_module_call_count,
+            cross_module_type_ref_count));
+    }
+    if (cross_module_call_count > 0) {
+        return sg_prepare_tooltip_text(sg_strdup_printf(
+            "edge\n%s -> %s\ncalls: %u",
+            sg_system_module_label(from_path),
+            sg_system_module_label(to_path),
+            cross_module_call_count));
+    }
+    if (cross_module_type_ref_count > 0) {
+        return sg_prepare_tooltip_text(sg_strdup_printf(
+            "edge\n%s -> %s\ntype_refs: %u",
+            sg_system_module_label(from_path),
+            sg_system_module_label(to_path),
+            cross_module_type_ref_count));
+    }
+    return sg_prepare_tooltip_text(sg_strdup_printf(
+        "edge\n%s -> %s\nlinks: 0",
+        sg_system_module_label(from_path),
+        sg_system_module_label(to_path)));
 }
 
 static void sg_system_compute_depths(
@@ -2425,9 +3451,19 @@ static bool sg_write_system_svg(
     sg_system_layout_nodes(nodes, module_count, depths, max_depth);
     for (u32 i = 0; i < module_count; i++) {
         nodes[i].path = (module_paths && module_paths[i]) ? module_paths[i] : "";
+        nodes[i].ritual_count = module_models ? module_models[i].ritual_count : 0;
+        nodes[i].import_count = sg_system_module_import_count(i, import_from_indices, import_to_indices, import_edge_count);
+        nodes[i].tooltip_text = sg_build_system_module_tooltip(&nodes[i]);
     }
 
-    fprintf(f, "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"1200\" height=\"1200\" viewBox=\"0 0 1200 1200\" role=\"img\" aria-label=\"CCT system sigilo\">\n");
+    if ((sg && sg->emit_titles) || (sg && sg->emit_data_attrs)) {
+        fprintf(f, "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"1200\" height=\"1200\" viewBox=\"0 0 1200 1200\" role=\"img\" aria-label=\"CCT system sigilo\">\n");
+    } else {
+        fprintf(f, "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"1200\" height=\"1200\" viewBox=\"0 0 1200 1200\">\n");
+    }
+    if (sg && sg->emit_data_attrs) {
+        fprintf(f, "  <desc>Deterministic sigil-of-sigils for a CCT module closure.</desc>\n");
+    }
     fprintf(f, "  <defs>\n");
     fprintf(f, "    <style><![CDATA[\n");
     fprintf(f, "      .bg { fill: #f7f1e5; }\n");
@@ -2453,6 +3489,11 @@ static bool sg_write_system_svg(
     fprintf(f, "      .orn { stroke: #64748b; stroke-width: 0.9; fill: none; opacity: 0.55; }\n");
     fprintf(f, "      .hash { fill: #111827; font: 9px monospace; letter-spacing: 0.5px; }\n");
     fprintf(f, "      .label { fill: #0f172a; font: 8px monospace; opacity: 0.68; }\n");
+    if (sg && sg->emit_titles) {
+        fprintf(f, "      .node-wrap, .edge-wrap, .system-node-wrap, .system-edge-wrap { cursor: help; }\n");
+        fprintf(f, "      .node-wrap:hover > circle, .system-node-wrap:hover > circle { opacity: 0.96; }\n");
+        fprintf(f, "      .edge-wrap:hover > path, .edge-wrap:hover > line, .system-edge-wrap:hover > line { opacity: 1.0; }\n");
+    }
     fprintf(f, "    ]]></style>\n");
     for (u32 i = 0; i < module_count; i++) {
         fprintf(f, "    <clipPath id=\"module_clip_%03u\"><circle cx=\"256\" cy=\"256\" r=\"246\"/></clipPath>\n", i);
@@ -2472,9 +3513,17 @@ static bool sg_write_system_svg(
     for (u32 i = 0; i < import_edge_count; i++) {
         u32 from = import_from_indices ? import_from_indices[i] : 0;
         u32 to = import_to_indices ? import_to_indices[i] : 0;
+        char *tooltip = NULL;
         if (from >= module_count || to >= module_count) continue;
+        tooltip = sg_build_system_import_edge_tooltip(nodes[from].path, nodes[to].path);
+        if (sg && sg->emit_titles) fprintf(f, "    <g class=\"system-edge-wrap\">\n");
         fprintf(f, "    <line x1=\"%.3f\" y1=\"%.3f\" x2=\"%.3f\" y2=\"%.3f\" />\n",
                 nodes[from].x, nodes[from].y, nodes[to].x, nodes[to].y);
+        if (sg && sg->emit_titles) {
+            sg_svg_emit_title(f, tooltip, 6);
+            fprintf(f, "    </g>\n");
+        }
+        free(tooltip);
     }
     fprintf(f, "  </g>\n");
 
@@ -2483,8 +3532,19 @@ static bool sg_write_system_svg(
         u32 cross_draw_count = module_count - 1;
         for (u32 i = 1; i <= cross_draw_count; i++) {
             u32 idx = (i % module_count);
+            char *tooltip = sg_build_system_semantic_edge_tooltip(
+                nodes[0].path,
+                nodes[idx].path,
+                cross_module_call_count,
+                cross_module_type_ref_count);
+            if (sg && sg->emit_titles) fprintf(f, "    <g class=\"system-edge-wrap\">\n");
             fprintf(f, "    <line x1=\"%.3f\" y1=\"%.3f\" x2=\"%.3f\" y2=\"%.3f\" />\n",
                     nodes[0].x, nodes[0].y, nodes[idx].x, nodes[idx].y);
+            if (sg && sg->emit_titles) {
+                sg_svg_emit_title(f, tooltip, 6);
+                fprintf(f, "    </g>\n");
+            }
+            free(tooltip);
         }
     }
     fprintf(f, "  </g>\n");
@@ -2501,9 +3561,11 @@ static bool sg_write_system_svg(
         }
         fprintf(f, "      </g>\n");
         fprintf(f, "    </g>\n");
+        if (sg && sg->emit_titles) fprintf(f, "    <g class=\"system-node-wrap\">\n");
         fprintf(f, "    <circle class=\"%s\" cx=\"%.3f\" cy=\"%.3f\" r=\"%.3f\"/>\n",
                 (i == 0) ? "module-entry-frame" : "module-frame",
                 nodes[i].x, nodes[i].y, nodes[i].r);
+        if (sg && sg->emit_titles) sg_svg_emit_title(f, nodes[i].tooltip_text, 6);
         fprintf(f, "    <text class=\"module-label\" x=\"%.3f\" y=\"%.3f\" text-anchor=\"middle\">%s</text>\n",
                 nodes[i].x, nodes[i].y + nodes[i].r + 16.0, sg_system_module_label(nodes[i].path));
         if (module_models) {
@@ -2512,6 +3574,7 @@ static bool sg_write_system_svg(
             fprintf(f, "    <text class=\"module-hash\" x=\"%.3f\" y=\"%.3f\" text-anchor=\"middle\">%s</text>\n",
                     nodes[i].x, nodes[i].y + nodes[i].r + 28.0, local_hex);
         }
+        if (sg && sg->emit_titles) fprintf(f, "    </g>\n");
     }
     fprintf(f, "  </g>\n");
 
@@ -2525,6 +3588,9 @@ static bool sg_write_system_svg(
     fprintf(f, "  <text class=\"module-hash\" x=\"24\" y=\"66\" font-size=\"10\">zoom: inline vector sub-sigils per module</text>\n");
     fprintf(f, "</svg>\n");
     fclose(f);
+    for (u32 i = 0; i < module_count; i++) {
+        free(nodes[i].tooltip_text);
+    }
     free(nodes);
     free(depths);
     return true;
@@ -2767,7 +3833,8 @@ bool cct_sigilo_generate_system_artifacts(
             sg_reportf(sg, 0, 0, "missing module AST for system sigilo composition");
             return false;
         }
-        if (!sg_extract_model(sg, module_programs[i], &module_models[i])) {
+        const char *module_source_path = (module_paths && module_paths[i]) ? module_paths[i] : entry_input_path;
+        if (!sg_extract_model(sg, module_programs[i], module_source_path, &module_models[i])) {
             for (u32 j = 0; j <= i; j++) {
                 sg_free_model(&module_models[j]);
             }

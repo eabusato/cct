@@ -1,0 +1,11 @@
+INCIPIT grimoire "sigilo_context_loop_14ta2"
+
+RITUALE loop_contexto() REDDE REX
+  EVOCA REX i AD 0
+  DUM i < 3
+    VINCIRE i AD i + 1
+  FIN DUM
+  REDDE i
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

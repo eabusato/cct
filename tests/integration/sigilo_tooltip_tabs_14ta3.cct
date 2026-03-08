@@ -1,0 +1,8 @@
+INCIPIT grimoire "sigilo_tooltip_tabs_14ta3"
+
+RITUALE tooltip_tabs() REDDE REX
+	EVOCA	REX	x AD 1    
+	REDDE x
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

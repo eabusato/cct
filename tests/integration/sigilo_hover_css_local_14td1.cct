@@ -1,0 +1,11 @@
+INCIPIT grimoire "sigilo_hover_css_local_14td1"
+
+RITUALE helper(REX x) REDDE REX
+  REDDE x + x
+EXPLICIT RITUALE
+
+RITUALE main() REDDE REX
+  REDDE CONIURA helper(9)
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

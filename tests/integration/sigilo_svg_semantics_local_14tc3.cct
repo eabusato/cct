@@ -1,0 +1,11 @@
+INCIPIT grimoire "sigilo_svg_semantics_local_14tc3"
+
+RITUALE helper(REX x) REDDE REX
+  REDDE x + x
+EXPLICIT RITUALE
+
+RITUALE main() REDDE REX
+  REDDE CONIURA helper(5)
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

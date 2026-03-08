@@ -1,0 +1,13 @@
+INCIPIT grimoire "sigilo_source_context_multiline_14ta1"
+
+RITUALE main() REDDE REX
+  EVOCA REX x AD 1
+  SI x < 2
+    VINCIRE x AD x + 8
+  ALITER
+    VINCIRE x AD x + 3
+  FIN SI
+  REDDE x
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

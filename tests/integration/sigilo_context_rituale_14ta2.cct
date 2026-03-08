@@ -1,0 +1,7 @@
+INCIPIT grimoire "sigilo_context_rituale_14ta2"
+
+RITUALE normalizar_numero(VERBUM txt) REDDE VERBUM
+  REDDE txt
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

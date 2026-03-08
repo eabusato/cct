@@ -1,0 +1,11 @@
+INCIPIT grimoire "sigilo_data_node_rituale_14tc1"
+
+RITUALE helper(REX x) REDDE REX
+  REDDE x + x
+EXPLICIT RITUALE
+
+RITUALE main() REDDE REX
+  REDDE CONIURA helper(21)
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

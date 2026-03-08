@@ -16,11 +16,12 @@ It has two goals:
 
 ## Current Project Snapshot
 
-- Current completed phase: FASE 19D.4 (phase-19 closure gate completed)
-- Current completed subphase: FASE 19D.4 (handoff + closure governance baseline)
-- Current phase context: FASE 19 is formally closed; FASE 20 planning/execution can proceed
+- Current completed phase: FASE 14T (interstitial sigilo-SVG instrumentation closure over the 19D.4 baseline)
+- Current completed subphase: FASE 14TD3 (final gate + handoff + release closure)
+- Current phase context: FASE 19 remains formally closed, FASE 14T is now formally closed, and the baseline is ready to move into FASE 20
 - Phase-19 delivery status: 19A1..19D4 implemented and closed (`CUM`, `FORMA`, payload `ORDO`, `ITERUM` map/set, docs/release/handoff)
-- Current regression gate: `make test` green with `Passed: 1069 / Failed: 0`
+- FASE 14T delivery status: 14TA1..14TD3 implemented and closed (`<title>`, additive `data-*`, root semantics, toggleable instrumentation, docs/release/handoff)
+- Current regression gate: `make test` green with `Passed: 1120 / Failed: 0`
 - **Compiler maturity:** complete development toolchain with formatter, linter, build system, and doc generator
 - **Backend strategy:** C-hosted backend is official (`.cgen.c` + host C compiler)
 - **Sigilo model:** dual-level modular model is stable (local + system sigilo)
@@ -472,30 +473,64 @@ Quality gate achieved:
 
 ## Phase Status Matrix
 
-- **Completed:** FASE 0 to FASE 19D.4
+- **Completed:** FASE 0 to FASE 19D.4, plus FASE 14T
 - **Next active phase:** FASE 20
 - **Long-term targets:** FASE 20 to FASE 22
 
 ## Forward Roadmap (Next Phases)
 
-### FASE 20 — ADT and Pattern-Matching Maturation
+### FASE 14T — Sigilo SVG Instrumentation Interstitial (Completed)
 
 Primary objective:
-- complete the next expressiveness layer on top of FASE 19 (`CUM` + payload `ORDO` baseline).
+- upgrade sigilo SVG artifacts from deterministic visual outputs into deterministic, hover-readable semantic reading instruments.
 
-Planned scope:
-- generic `result/option` evolution (`GENUS`) aligned with payload `ORDO`.
-- `CUM` guards (`CASUS x SE condicao`) and richer case composition.
-- OR-cases with payload bindings and stronger pattern ergonomics.
-- improved generic inference in high-frequency call sites.
+Delivered scope:
+- `14TA`: source-context extraction/normalization and tooltip text pipeline.
+- `14TB`: SVG `<title>` emission for ritual nodes, structural nodes, local edges, and system-sigilo module/system edges.
+- `14TC`: deterministic additive `data-*` on local nodes/call edges plus lightweight root semantics.
+- `14TD`: hover polish, instrumentation toggles, documentation, release notes, handoff, and closure gate.
+
+Architectural policy:
+- no JavaScript dependency;
+- keep SVG pure, exportable, and diff-friendly;
+- preserve deterministic output contracts;
+- keep `.sigil` schema stability unless additive metadata becomes strictly necessary.
 
 Out of scope:
-- full ownership/lifetime model redesign.
-- large backend strategy rewrites.
+- full web viewer, animated navigation, search UI, or a large visual redesign of sigilo layout.
+
+Closure evidence:
+- major SVG elements now expose useful hover titles and stable metadata attributes without breaking current sigilo workflows.
+- local and system sigilo components can now be hovered directly in the SVG to inspect meaning without a separate viewer.
+- instrumentation can be disabled via `--sigilo-no-titles` and `--sigilo-no-data`, including full plain-mode fallback.
+- dedicated FASE 14T regression coverage: 46 tests.
+- final closure gate: `Passed: 1120 / Failed: 0`.
+
+### FASE 20 — Application Library Stack Expansion
+
+Primary objective:
+- turn the post-19 language baseline into a practical application platform through canonical JSON, networking, HTTP, configuration, and local database modules.
+
+Planned scope:
+- `20A`: `cct/json` with JSON value model, strict parser, stringify/pretty-print, and navigation helpers.
+- `20B`: `cct/socket` / `cct/net` with host-only TCP/UDP runtime bridge plus high-level wrappers in CCT.
+- `20C`: `cct/http` client/server baseline over `cct/net`, covering HTTP/1.1 text workflows and JSON integration.
+- `20D`: `cct/config` for canonical application configuration parsing/loading/writing.
+- `20E`: `cct/db_sqlite` for local persistence via a thin runtime bridge and ergonomic CCT wrappers.
+- `20F`: documentation, examples, release closure, and hardening of the new stack.
+
+Architectural policy:
+- implement parsing, modeling, protocol logic, wrappers, and high-level ergonomics in CCT wherever possible;
+- keep C runtime additions thin and limited to OS/binding boundaries such as sockets, timeouts, and SQLite APIs.
+
+Out of scope:
+- TLS/HTTPS, HTTP/2+, WebSocket, remote DB drivers, ORM layers, and a broad new wave of core-language syntax work.
+- large ownership/lifetime redesigns.
 
 Definition of done:
-- new pattern/ADT capabilities integrated without regressions.
-- language/spec/docs/release artifacts kept synchronized.
+- new modules are integrated, documented, and covered by integration tests with the full suite green.
+- host-vs-freestanding boundaries are explicitly documented.
+- release/handoff artifacts are synchronized with the delivered module set.
 
 ### FASE 21 — Generic Data Model and Collection Ergonomics
 
@@ -567,5 +602,5 @@ Every phase must pass these gates before closure:
 ## Immediate Next Step
 
 Next phase to execute: FASE 20.
-Next subphase to execute: FASE 20A.1 (generic ADT/pattern-matching maturation kickoff, per FASE 19 handoff backlog).
+Next subphase to execute: FASE 20A.
 Historical traceability note: all closure artifacts through FASE 19 are preserved under `docs/release/` and `docs/bootstrap/`.

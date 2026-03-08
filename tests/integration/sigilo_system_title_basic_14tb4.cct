@@ -1,0 +1,9 @@
+INCIPIT grimoire "sigilo_system_title_basic_14tb4"
+
+ADVOCARE "modules_9a/lib_rituale.cct"
+
+RITUALE main() REDDE REX
+  REDDE CONIURA dobro(10)
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

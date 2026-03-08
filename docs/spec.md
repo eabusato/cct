@@ -11,7 +11,7 @@ It is written to help you:
 
 ## Status
 
-Specification baseline: **FASE 19D.4** (FASE 13/13M closures, FASE 14 hardening contracts, full FASE 15 closure set, FASE 16 freestanding bridge closure, FASE 17 bootstrap-library expansion, FASE 18 canonical-library expansion, and FASE 19 language-surface expansion/closure).
+Specification baseline: **FASE 19D.4 + FASE 14T** (FASE 13/13M closures, FASE 14 hardening contracts, the FASE 14T sigilo-SVG instrumentation closure, full FASE 15 closure set, FASE 16 freestanding bridge closure, FASE 17 bootstrap-library expansion, FASE 18 canonical-library expansion, and FASE 19 language-surface expansion/closure).
 
 The language is fully usable in its current subset, with explicit boundaries documented below.
 
@@ -118,6 +118,8 @@ Behavior: generate deterministic API docs for module closure (`docs/api` by defa
 - `--sigilo-out <basepath>`
 - `--sigilo-no-meta`
 - `--sigilo-no-svg`
+- `--sigilo-no-titles`
+- `--sigilo-no-data`
 
 ### 1.3 Input Constraints
 
@@ -1463,6 +1465,18 @@ Emission modes for multi-module workflows:
 System sigilo model:
 - vector inline sigil-of-sigils composition
 - deterministic metadata and hash behavior by structure
+
+SVG instrumentation contract (FASE 14T):
+- sigilo SVG is intended to be readable by hover in any viewer/browser that honors native SVG `<title>`
+- default local/system SVG output may include native `<title>` on semantic nodes and edges already present in the drawing
+- local ritual/structural nodes may include deterministic additive `data-*` describing kind, ritual, source position, depth, and statement kind
+- local call edges may include deterministic additive `data-*` describing source ritual, destination ritual, weight, and self-loop status
+- system sigilo keeps the same visual composition model and adds `<title>` on module nodes and system edges; no JavaScript is required
+- root SVG semantics are lightweight and additive (`role`, `aria-label`, `desc`) when instrumentation is enabled
+- `--sigilo-no-titles` disables `<title>` plus wrapper-only hover affordances without changing geometry
+- `--sigilo-no-data` disables additive `data-*` plus root `<desc>` without disabling `<title>`
+- `--sigilo-no-titles --sigilo-no-data` restores the plain pre-14T SVG contract for both local and system sigilo outputs
+- instrumentation is deterministic and additive; `.sigil` schema/governance remains unchanged in FASE 14T
 
 Baseline contract (FASE 13A.4):
 - default baseline location: `docs/sigilo/baseline/local.sigil` or `docs/sigilo/baseline/system.sigil`

@@ -1,4 +1,5 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1200" height="1200" viewBox="0 0 1200 1200" role="img" aria-label="CCT system sigilo">
+  <desc>Deterministic sigil-of-sigils for a CCT module closure.</desc>
   <defs>
     <style><![CDATA[
       .bg { fill: #f7f1e5; }
@@ -24,6 +25,9 @@
       .orn { stroke: #64748b; stroke-width: 0.9; fill: none; opacity: 0.55; }
       .hash { fill: #111827; font: 9px monospace; letter-spacing: 0.5px; }
       .label { fill: #0f172a; font: 8px monospace; opacity: 0.68; }
+      .node-wrap, .edge-wrap, .system-node-wrap, .system-edge-wrap { cursor: help; }
+      .node-wrap:hover > circle, .system-node-wrap:hover > circle { opacity: 0.96; }
+      .edge-wrap:hover > path, .edge-wrap:hover > line, .system-edge-wrap:hover > line { opacity: 1.0; }
     ]]></style>
     <clipPath id="module_clip_000"><circle cx="256" cy="256" r="246"/></clipPath>
     <clipPath id="module_clip_001"><circle cx="256" cy="256" r="246"/></clipPath>
@@ -39,20 +43,85 @@
     <circle class="macro-ring" cx="600" cy="600" r="390.00" opacity="0.20"/>
   </g>
   <g id="imports" class="macro-import">
+    <g class="system-edge-wrap">
     <line x1="600.000" y1="600.000" x2="600.000" y2="380.000" />
+      <title>edge
+main.cct -&gt; engine.cct
+links: 1</title>
+    </g>
+    <g class="system-edge-wrap">
     <line x1="600.000" y1="380.000" x2="600.000" y2="210.000" />
+      <title>edge
+engine.cct -&gt; types_core.cct
+links: 1</title>
+    </g>
+    <g class="system-edge-wrap">
     <line x1="600.000" y1="380.000" x2="990.000" y2="600.000" />
+      <title>edge
+engine.cct -&gt; generics.cct
+links: 1</title>
+    </g>
+    <g class="system-edge-wrap">
     <line x1="600.000" y1="380.000" x2="600.000" y2="990.000" />
+      <title>edge
+engine.cct -&gt; memory_alchemy.cct
+links: 1</title>
+    </g>
+    <g class="system-edge-wrap">
     <line x1="600.000" y1="380.000" x2="210.000" y2="600.000" />
+      <title>edge
+engine.cct -&gt; failure_rituals.cct
+links: 1</title>
+    </g>
+    <g class="system-edge-wrap">
     <line x1="990.000" y1="600.000" x2="600.000" y2="210.000" />
+      <title>edge
+generics.cct -&gt; types_core.cct
+links: 1</title>
+    </g>
+    <g class="system-edge-wrap">
     <line x1="600.000" y1="990.000" x2="600.000" y2="210.000" />
+      <title>edge
+memory_alchemy.cct -&gt; types_core.cct
+links: 1</title>
+    </g>
   </g>
   <g id="semantic_cross" class="macro-sem">
+    <g class="system-edge-wrap">
     <line x1="600.000" y1="600.000" x2="600.000" y2="380.000" />
+      <title>edge
+main.cct -&gt; engine.cct
+calls: 13
+type_refs: 5</title>
+    </g>
+    <g class="system-edge-wrap">
     <line x1="600.000" y1="600.000" x2="600.000" y2="210.000" />
+      <title>edge
+main.cct -&gt; types_core.cct
+calls: 13
+type_refs: 5</title>
+    </g>
+    <g class="system-edge-wrap">
     <line x1="600.000" y1="600.000" x2="990.000" y2="600.000" />
+      <title>edge
+main.cct -&gt; generics.cct
+calls: 13
+type_refs: 5</title>
+    </g>
+    <g class="system-edge-wrap">
     <line x1="600.000" y1="600.000" x2="600.000" y2="990.000" />
+      <title>edge
+main.cct -&gt; memory_alchemy.cct
+calls: 13
+type_refs: 5</title>
+    </g>
+    <g class="system-edge-wrap">
     <line x1="600.000" y1="600.000" x2="210.000" y2="600.000" />
+      <title>edge
+main.cct -&gt; failure_rituals.cct
+calls: 13
+type_refs: 5</title>
+    </g>
   </g>
   <g id="module_sigils">
     <g id="module_sigil_000" transform="translate(462.000 462.000) scale(0.53906250)">
@@ -61,7 +130,6 @@
     <circle class="base" cx="256" cy="256" r="226"/>
   </g>
   <g id="primary_path">
-    <path class="primary" d="M 210.77 383.25 q 18 -22 34 0 q -18 22 -34 0" opacity="0.9"/>
   </g>
   <g id="call_links">
   </g>
@@ -72,167 +140,523 @@
   <g id="bindings">
   </g>
   <g id="terminals">
-    <path class="term" d="M 226.77 383.25 Q 241.94 358.78 247.10 330.46" stroke-width="1.65" opacity="0.90"/>
+    <g class="edge-wrap">
+    <path class="term" d="M 239.16 383.33 Q 248.61 354.94 238.57 326.76" stroke-width="1.65" opacity="0.90"/>
+      <title>edge: return
+main -&gt; main
+weight: 2
+
+path:
+main -&gt; main</title>
+    </g>
   </g>
   <g id="nodes">
-    <circle class="node-entry" cx="226.77" cy="383.25" r="7.95"/>
-    <circle class="node-term" cx="247.10" cy="330.46" r="3.60"/>
+    <g class="node-wrap">
+      <circle class="node-entry" cx="239.16" cy="383.33" r="7.95" data-kind="rituale" data-ritual="main" data-line="5" data-col="1" data-depth="3" data-stmt="RITUALE" data-loops="0" data-calls="1" data-entry="true"/>
+      <title>RITUALE main
+stmt: 1
+depth: 3
+loops: 0
+calls: 1
+source:
+RITUALE main() REDDE REX</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="238.57" cy="326.76" r="3.60" data-kind="term" data-ritual="main" data-line="6" data-col="3" data-depth="3" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: main
+depth: 3
+line: 6
+
+source:
+REDDE CONIURA executar_ars(64)</title>
+    </g>
   </g>
   <g id="ornaments">
-    <circle class="orn" cx="455.72" cy="231.79" r="0.90"/>
-    <circle class="orn" cx="267.41" cy="463.80" r="1.90"/>
-    <circle class="orn" cx="52.43" cy="288.22" r="2.90"/>
-    <circle class="orn" cx="244.57" cy="57.90" r="0.90"/>
+    <circle class="orn" cx="461.98" cy="274.45" r="0.90"/>
+    <circle class="orn" cx="226.43" cy="459.12" r="1.90"/>
+    <circle class="orn" cx="56.80" cy="242.04" r="2.90"/>
+    <circle class="orn" cx="238.13" cy="49.36" r="0.90"/>
   </g>
       </g>
     </g>
+    <g class="system-node-wrap">
     <circle class="module-entry-frame" cx="600.000" cy="600.000" r="138.000"/>
+      <title>module
+/Users/eabusato/dev/cct/examples/ars_magna_omniversal/main.cct
+rituals: 1
+imports: 1</title>
     <text class="module-label" x="600.000" y="754.000" text-anchor="middle">main.cct</text>
-    <text class="module-hash" x="600.000" y="766.000" text-anchor="middle">9dde421cacf23843</text>
+    <text class="module-hash" x="600.000" y="766.000" text-anchor="middle">4623b6b1bcec4fb8</text>
+    </g>
     <g id="module_sigil_001" transform="translate(496.000 276.000) scale(0.40625000)">
       <g clip-path="url(#module_clip_001)">
   <g id="foundation">
     <circle class="base" cx="256" cy="256" r="226"/>
-    <ellipse class="base" cx="256" cy="256" rx="198" ry="181.78" opacity="0.32"/>
+    <ellipse class="base" cx="256" cy="256" rx="198" ry="186.40" opacity="0.32"/>
   </g>
   <g id="primary_path">
-    <path class="primary" d="M 222.83 408.47 q 18 -22 34 0 q -18 22 -34 0" opacity="0.9"/>
   </g>
   <g id="call_links">
   </g>
   <g id="branches">
   </g>
   <g id="loops">
-    <path class="loop" d="M 238.83 408.47 Q 244.86 427.77 261.53 439.20" stroke-width="1.55" opacity="0.88"/>
-    <path class="loop" d="M 265.21 439.20 C 302.33 417.65 306.67 441.88 289.32 429.77 C 271.97 441.88 276.31 417.65 258.77 440.70"/>
-    <path class="loop" d="M 293.66 435.82 Q 309.92 443.40 320.76 433.55" opacity="0.85"/>
-    <path class="loop" d="M 238.83 408.47 Q 229.79 429.59 233.90 452.19" stroke-width="1.55" opacity="0.88"/>
+    <g class="edge-wrap">
+    <path class="loop" d="M 243.64 414.63 Q 250.76 433.37 267.39 444.57" stroke-width="1.55" opacity="0.88"/>
+      <title>edge: loop
+executar_ars -&gt; executar_ars
+weight: 2
+
+path:
+executar_ars -&gt; executar_ars</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="loop" d="M 271.07 444.57 C 309.74 426.59 314.08 450.82 296.73 438.71 C 279.39 450.82 283.72 426.59 264.63 446.07"/>
+    <path class="loop" d="M 301.07 444.77 Q 317.33 452.34 328.17 442.49" opacity="0.85"/>
+      <title>edge: loop
+executar_ars -&gt; executar_ars
+weight: 2
+
+path:
+executar_ars -&gt; executar_ars</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="loop" d="M 243.64 414.63 Q 235.89 436.09 240.22 458.50" stroke-width="1.55" opacity="0.88"/>
+      <title>edge: loop
+executar_ars -&gt; executar_ars
+weight: 2
+
+path:
+executar_ars -&gt; executar_ars</title>
+    </g>
   </g>
   <g id="bindings">
-    <path class="bind" d="M 238.83 408.47 Q 243.87 395.95 241.74 382.63" stroke-width="1.80" opacity="0.85"/>
-    <line class="bind" x1="235.43" y1="402.85" x2="243.38" y2="403.75" opacity="0.75"/>
-    <line class="bind" x1="234.73" y1="400.16" x2="244.67" y2="401.28" opacity="0.75"/>
-    <line class="bind" x1="236.02" y1="397.69" x2="243.97" y2="398.58" opacity="0.75"/>
-    <line class="bind" x1="235.31" y1="394.99" x2="245.25" y2="396.11" opacity="0.75"/>
-    <line class="bind" x1="236.60" y1="392.52" x2="244.55" y2="393.41" opacity="0.75"/>
-    <line class="bind" x1="235.90" y1="389.82" x2="245.83" y2="390.94" opacity="0.75"/>
-    <line class="bind" x1="248.53" y1="383.00" x2="254.52" y2="383.33" opacity="0.58"/>
-    <line class="bind" x1="243.29" y1="389.25" x2="245.36" y2="398.01" opacity="0.58"/>
-    <line class="bind" x1="236.28" y1="386.69" x2="231.46" y2="390.26" opacity="0.58"/>
-    <line class="bind" x1="237.12" y1="377.64" x2="231.01" y2="371.03" opacity="0.58"/>
-    <line class="bind" x1="242.48" y1="375.87" x2="243.14" y2="369.91" opacity="0.58"/>
+    <g class="edge-wrap">
+    <path class="bind" d="M 243.64 414.63 Q 247.70 401.91 245.66 388.71" stroke-width="1.80" opacity="0.85"/>
+    <line class="bind" x1="240.06" y1="409.14" x2="248.03" y2="409.76" opacity="0.75"/>
+    <line class="bind" x1="239.26" y1="406.47" x2="249.23" y2="407.24" opacity="0.75"/>
+    <line class="bind" x1="240.46" y1="403.95" x2="248.44" y2="404.57" opacity="0.75"/>
+    <line class="bind" x1="239.66" y1="401.28" x2="249.63" y2="402.06" opacity="0.75"/>
+    <line class="bind" x1="240.86" y1="398.77" x2="248.84" y2="399.39" opacity="0.75"/>
+    <line class="bind" x1="240.07" y1="396.10" x2="250.04" y2="396.87" opacity="0.75"/>
+    <line class="bind" x1="252.37" y1="387.60" x2="258.29" y2="386.61" opacity="0.58"/>
+    <line class="bind" x1="249.05" y1="394.60" x2="253.53" y2="402.41" opacity="0.58"/>
+    <line class="bind" x1="239.83" y1="392.21" x2="234.69" y2="395.30" opacity="0.58"/>
+    <line class="bind" x1="241.19" y1="383.58" x2="235.28" y2="376.80" opacity="0.58"/>
+    <line class="bind" x1="246.18" y1="381.93" x2="246.63" y2="375.95" opacity="0.58"/>
+      <title>edge: bind
+executar_ars -&gt; executar_ars
+weight: 34
+
+path:
+executar_ars -&gt; executar_ars</title>
+    </g>
   </g>
   <g id="terminals">
-    <path class="term" d="M 238.83 408.47 Q 250.40 382.25 253.04 353.72" stroke-width="1.65" opacity="0.90"/>
+    <g class="edge-wrap">
+    <path class="term" d="M 243.64 414.63 Q 253.77 387.91 255.97 359.42" stroke-width="1.65" opacity="0.90"/>
+      <title>edge: return
+executar_ars -&gt; executar_ars
+weight: 2
+
+path:
+executar_ars -&gt; executar_ars</title>
+    </g>
   </g>
   <g id="nodes">
-    <circle class="node-main" cx="238.83" cy="408.47" r="10.80"/>
-    <circle class="node-loop" cx="261.53" cy="439.20" r="4.60"/>
-    <circle class="node-loop" cx="233.90" cy="452.19" r="3.60"/>
-    <circle class="node-loop" cx="228.30" cy="454.29" r="1.25" opacity="0.9"/>
-    <circle class="node-loop" cx="233.90" cy="450.09" r="1.25" opacity="0.9"/>
-    <line class="loop" x1="228.30" y1="454.29" x2="233.90" y2="450.09" opacity="0.75"/>
-    <circle class="node-loop" cx="239.50" cy="454.29" r="1.25" opacity="0.9"/>
-    <line class="loop" x1="233.90" y1="450.09" x2="239.50" y2="454.29" opacity="0.75"/>
-    <circle class="node-aux" cx="241.74" cy="382.63" r="4.80"/>
-    <circle class="node-term" cx="253.04" cy="353.72" r="3.60"/>
+    <g class="node-wrap">
+      <circle class="node-main" cx="243.64" cy="414.63" r="10.80" data-kind="rituale" data-ritual="executar_ars" data-line="8" data-col="1" data-depth="8" data-stmt="RITUALE" data-loops="2" data-calls="12"/>
+      <title>RITUALE executar_ars
+stmt: 42
+depth: 8
+loops: 2
+calls: 12
+source:
+RITUALE executar_ars(REX base) REDDE REX</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-loop" cx="267.39" cy="444.57" r="4.60" data-kind="loop" data-ritual="executar_ars" data-line="24" data-col="3" data-depth="8" data-stmt="DONEC"/>
+      <title>stmt: DONEC
+rituale: executar_ars
+depth: 8
+line: 24
+
+source:
+DONEC</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-loop" cx="240.22" cy="458.50" r="3.60" data-kind="loop" data-ritual="executar_ars" data-line="19" data-col="3" data-depth="8" data-stmt="REPETE"/>
+      <title>stmt: REPETE
+rituale: executar_ars
+depth: 8
+line: 19
+
+source:
+REPETE i DE 0 AD 3</title>
+    </g>
+    <circle class="node-loop" cx="234.62" cy="460.60" r="1.25" opacity="0.9"/>
+    <circle class="node-loop" cx="240.22" cy="456.40" r="1.25" opacity="0.9"/>
+    <line class="loop" x1="234.62" y1="460.60" x2="240.22" y2="456.40" opacity="0.75"/>
+    <circle class="node-loop" cx="245.82" cy="460.60" r="1.25" opacity="0.9"/>
+    <line class="loop" x1="240.22" y1="456.40" x2="245.82" y2="460.60" opacity="0.75"/>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="245.66" cy="388.71" r="4.80" data-kind="bind" data-ritual="executar_ars" data-line="9" data-col="3" data-depth="8" data-stmt="EVOCA"/>
+      <title>stmt: EVOCA
+rituale: executar_ars
+depth: 8
+line: 9
+
+source:
+EVOCA Mage m</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="255.97" cy="359.42" r="3.60" data-kind="term" data-ritual="executar_ars" data-line="77" data-col="3" data-depth="8" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: executar_ars
+depth: 8
+line: 77
+
+source:
+REDDE total</title>
+    </g>
   </g>
   <g id="ornaments">
-    <circle class="orn" cx="454.81" cy="225.78" r="0.90"/>
-    <circle class="orn" cx="447.88" cy="335.85" r="1.90"/>
-    <circle class="orn" cx="406.93" cy="384.53" r="2.90"/>
-    <circle class="orn" cx="327.60" cy="451.75" r="0.90"/>
-    <circle class="orn" cx="201.77" cy="454.11" r="1.90"/>
-    <circle class="orn" cx="159.62" cy="438.95" r="2.90"/>
-    <circle class="orn" cx="91.11" cy="368.73" r="0.90"/>
-    <circle class="orn" cx="48.77" cy="296.89" r="1.90"/>
-    <circle class="orn" cx="55.10" cy="202.67" r="2.90"/>
-    <circle class="orn" cx="157.06" cy="77.82" r="0.90"/>
-    <circle class="orn" cx="187.27" cy="67.61" r="1.90"/>
-    <circle class="orn" cx="319.83" cy="60.34" r="2.90"/>
-    <circle class="orn" cx="344.91" cy="74.70" r="0.90"/>
-    <circle class="orn" cx="445.20" cy="189.41" r="1.90"/>
+    <circle class="orn" cx="455.21" cy="259.61" r="0.90"/>
+    <circle class="orn" cx="446.62" cy="343.74" r="1.90"/>
+    <circle class="orn" cx="356.31" cy="441.54" r="2.90"/>
+    <circle class="orn" cx="297.13" cy="459.56" r="0.90"/>
+    <circle class="orn" cx="195.09" cy="448.93" r="1.90"/>
+    <circle class="orn" cx="130.32" cy="416.99" r="2.90"/>
+    <circle class="orn" cx="53.74" cy="312.69" r="0.90"/>
+    <circle class="orn" cx="56.20" cy="293.92" r="1.90"/>
+    <circle class="orn" cx="65.48" cy="185.50" r="2.90"/>
+    <circle class="orn" cx="94.38" cy="124.12" r="0.90"/>
+    <circle class="orn" cx="172.14" cy="62.79" r="1.90"/>
+    <circle class="orn" cx="333.38" cy="62.22" r="2.90"/>
+    <circle class="orn" cx="412.08" cy="122.56" r="0.90"/>
+    <circle class="orn" cx="449.65" cy="182.47" r="1.90"/>
   </g>
       </g>
     </g>
+    <g class="system-node-wrap">
     <circle class="module-frame" cx="600.000" cy="380.000" r="104.000"/>
+      <title>module
+/Users/eabusato/dev/cct/examples/ars_magna_omniversal/modules/engine.cct
+rituals: 1
+imports: 4</title>
     <text class="module-label" x="600.000" y="500.000" text-anchor="middle">engine.cct</text>
-    <text class="module-hash" x="600.000" y="512.000" text-anchor="middle">b89bfd6e0fc25938</text>
+    <text class="module-hash" x="600.000" y="512.000" text-anchor="middle">6c5ff100d6111b7f</text>
+    </g>
     <g id="module_sigil_002" transform="translate(506.000 116.000) scale(0.36718750)">
       <g clip-path="url(#module_clip_002)">
   <g id="foundation">
     <circle class="base" cx="256" cy="256" r="226"/>
   </g>
   <g id="primary_path">
-    <path class="primary" d="M 349.38 157.41 Q 331.27 258.71 362.41 356.80" stroke-width="2.60" opacity="0.96"/>
-    <path class="primary" d="M 362.41 356.80 Q 246.46 323.06 126.04 332.25" stroke-width="2.60" opacity="0.96"/>
-    <path class="primary" d="M 126.04 332.25 Q 165.92 245.58 160.53 150.33" stroke-width="2.60" opacity="0.96"/>
+    <g class="edge-wrap">
+    <path class="primary" d="M 353.08 152.94 Q 339.40 256.02 373.83 354.13" stroke-width="2.60" opacity="0.96"/>
+      <title>edge: primary
+calibrar_interno -&gt; preparar_mage
+weight: 1
+
+path:
+calibrar_interno -&gt; preparar_mage</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="primary" d="M 373.83 354.13 Q 252.40 314.97 124.92 320.24" stroke-width="2.60" opacity="0.96"/>
+      <title>edge: primary
+preparar_mage -&gt; valor
+weight: 1
+
+path:
+preparar_mage -&gt; valor</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="primary" d="M 124.92 320.24 Q 167.55 241.43 164.27 151.89" stroke-width="2.60" opacity="0.96"/>
+      <title>edge: primary
+valor -&gt; stance_bonus
+weight: 1
+
+path:
+valor -&gt; stance_bonus</title>
+    </g>
   </g>
   <g id="call_links">
-    <path class="call" d="M 362.41 356.80 Q 386.88 255.08 349.38 157.41" stroke-width="2.15" opacity="0.74"/>
+    <g class="edge-wrap">
+    <path class="call" d="M 373.83 354.13 Q 394.49 250.34 353.08 152.94" stroke-width="2.15" opacity="0.74" data-kind="call" data-from="preparar_mage" data-to="calibrar_interno" data-weight="1" data-self-loop="false"/>
+      <title>edge: call
+preparar_mage -&gt; calibrar_interno
+calls: 1
+
+path:
+preparar_mage -&gt; calibrar_interno</title>
+    </g>
   </g>
   <g id="branches">
-    <path class="branch" d="M 160.53 150.33 Q 150.98 173.32 166.52 192.76" stroke-width="1.70" opacity="0.85"/>
-    <path class="branch" d="M 166.52 192.76 Q 193.03 173.38 197.83 140.89" stroke-width="1.70" opacity="0.85"/>
-    <path class="branch" d="M 197.83 140.89 Q 176.07 133.32 160.53 150.33" stroke-width="1.45" opacity="0.85"/>
-    <path class="branch" d="M 259.43 246.44 Q 310.58 208.17 349.38 157.41" stroke-width="1.45" opacity="0.85"/>
-    <path class="branch" d="M 259.43 246.44 Q 301.65 310.27 362.41 356.80" stroke-width="1.70" opacity="0.85"/>
-    <path class="branch" d="M 259.43 246.44 Q 219.74 188.35 160.53 150.33" stroke-width="1.70" opacity="0.85"/>
+    <g class="edge-wrap">
+    <path class="branch" d="M 164.27 151.89 Q 182.25 167.90 205.75 162.66" stroke-width="1.70" opacity="0.85"/>
+      <title>edge: branch
+stance_bonus -&gt; stance_bonus
+weight: 2
+
+path:
+stance_bonus -&gt; stance_bonus</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="branch" d="M 205.75 162.66 Q 173.63 165.28 150.66 187.87" stroke-width="1.70" opacity="0.85"/>
+      <title>edge: branch
+stance_bonus -&gt; stance_bonus
+weight: 2
+
+path:
+stance_bonus -&gt; stance_bonus</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="branch" d="M 150.66 187.87 Q 167.74 173.77 164.27 151.89" stroke-width="1.45" opacity="0.85"/>
+      <title>edge: branch
+stance_bonus -&gt; stance_bonus
+weight: 1
+
+path:
+stance_bonus -&gt; stance_bonus</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="branch" d="M 258.85 263.53 Q 312.04 213.41 353.08 152.94" stroke-width="1.45" opacity="0.85"/>
+      <title>edge: branch
+calibrar_interno -&gt; calibrar_interno
+weight: 1
+
+path:
+calibrar_interno -&gt; calibrar_interno</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="branch" d="M 258.85 263.53 Q 308.80 318.40 373.83 354.13" stroke-width="1.70" opacity="0.85"/>
+      <title>edge: branch
+calibrar_interno -&gt; preparar_mage
+weight: 2
+
+path:
+calibrar_interno -&gt; preparar_mage</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="branch" d="M 258.85 263.53 Q 221.59 199.21 164.27 151.89" stroke-width="1.70" opacity="0.85"/>
+      <title>edge: branch
+calibrar_interno -&gt; stance_bonus
+weight: 2
+
+path:
+calibrar_interno -&gt; stance_bonus</title>
+    </g>
   </g>
   <g id="loops">
   </g>
   <g id="bindings">
-    <path class="bind" d="M 362.41 356.80 Q 355.08 345.63 343.53 338.92" stroke-width="1.60" opacity="0.85"/>
-    <line class="bind" x1="355.88" y1="356.13" x2="361.38" y2="350.32" opacity="0.75"/>
-    <line class="bind" x1="353.31" y1="355.06" x2="360.18" y2="347.81" opacity="0.75"/>
-    <line class="bind" x1="352.11" y1="352.55" x2="357.61" y2="346.74" opacity="0.75"/>
-    <line class="bind" x1="349.53" y1="351.49" x2="356.41" y2="344.23" opacity="0.75"/>
-    <line class="bind" x1="348.33" y1="348.97" x2="353.83" y2="343.17" opacity="0.75"/>
-    <line class="bind" x1="349.04" y1="339.57" x2="355.00" y2="340.27" opacity="0.58"/>
-    <line class="bind" x1="345.33" y1="344.17" x2="348.25" y2="352.68" opacity="0.58"/>
-    <line class="bind" x1="338.75" y1="341.73" x2="333.58" y2="344.77" opacity="0.58"/>
-    <line class="bind" x1="338.67" y1="336.24" x2="330.79" y2="331.90" opacity="0.58"/>
-    <line class="bind" x1="345.45" y1="333.71" x2="347.52" y2="328.08" opacity="0.58"/>
+    <g class="edge-wrap">
+    <path class="bind" d="M 373.83 354.13 Q 368.76 339.90 353.85 337.49" stroke-width="1.60" opacity="0.85"/>
+    <line class="bind" x1="367.27" y1="353.87" x2="372.39" y2="347.73" opacity="0.75"/>
+    <line class="bind" x1="364.64" y1="352.98" x2="371.04" y2="345.30" opacity="0.75"/>
+    <line class="bind" x1="363.28" y1="350.55" x2="368.40" y2="344.40" opacity="0.75"/>
+    <line class="bind" x1="360.64" y1="349.65" x2="367.04" y2="341.97" opacity="0.75"/>
+    <line class="bind" x1="359.28" y1="347.22" x2="364.40" y2="341.07" opacity="0.75"/>
+    <line class="bind" x1="359.36" y1="336.86" x2="365.33" y2="336.18" opacity="0.58"/>
+    <line class="bind" x1="356.41" y1="342.41" x2="360.56" y2="350.40" opacity="0.58"/>
+    <line class="bind" x1="349.58" y1="341.04" x2="344.96" y2="344.87" opacity="0.58"/>
+    <line class="bind" x1="348.97" y1="334.85" x2="341.05" y2="330.57" opacity="0.58"/>
+    <line class="bind" x1="355.74" y1="332.27" x2="357.79" y2="326.63" opacity="0.58"/>
+      <title>edge: bind
+preparar_mage -&gt; preparar_mage
+weight: 5
+
+path:
+preparar_mage -&gt; preparar_mage</title>
+    </g>
   </g>
   <g id="terminals">
-    <path class="term" d="M 349.38 157.41 Q 324.26 171.25 305.07 192.57" stroke-width="1.65" opacity="0.90"/>
-    <path class="term" d="M 126.04 332.25 Q 154.13 326.20 178.39 310.81" stroke-width="1.65" opacity="0.90"/>
-    <path class="term" d="M 160.53 150.33 Q 176.72 175.09 204.01 186.52" stroke-width="1.80" opacity="0.90"/>
+    <g class="edge-wrap">
+    <path class="term" d="M 353.08 152.94 Q 328.49 167.47 308.86 188.22" stroke-width="1.65" opacity="0.90"/>
+      <title>edge: return
+calibrar_interno -&gt; calibrar_interno
+weight: 2
+
+path:
+calibrar_interno -&gt; calibrar_interno</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="term" d="M 124.92 320.24 Q 154.73 320.49 178.72 302.78" stroke-width="1.65" opacity="0.90"/>
+      <title>edge: return
+valor -&gt; valor
+weight: 2
+
+path:
+valor -&gt; valor</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="term" d="M 164.27 151.89 Q 173.94 179.37 195.29 199.20" stroke-width="1.80" opacity="0.90"/>
+      <title>edge: return
+stance_bonus -&gt; stance_bonus
+weight: 3
+
+path:
+stance_bonus -&gt; stance_bonus</title>
+    </g>
   </g>
   <g id="nodes">
-    <circle class="node-main" cx="349.38" cy="157.41" r="5.95"/>
-    <circle class="node-term" cx="305.07" cy="192.57" r="3.60"/>
-    <circle class="node-main" cx="362.41" cy="356.80" r="6.55"/>
-    <circle class="node-aux" cx="343.53" cy="338.92" r="3.55"/>
-    <circle class="node-main" cx="126.04" cy="332.25" r="5.95"/>
-    <circle class="node-term" cx="178.39" cy="310.81" r="3.60"/>
-    <circle class="node-main" cx="160.53" cy="150.33" r="6.25"/>
-    <circle class="node-aux" cx="166.52" cy="192.76" r="4.80"/>
-    <circle class="node-aux" cx="197.83" cy="140.89" r="4.20"/>
-    <circle class="node-term" cx="204.01" cy="186.52" r="4.00"/>
-    <circle class="node-aux" cx="259.43" cy="246.44" r="3.32"/>
+    <g class="node-wrap">
+      <circle class="node-main" cx="353.08" cy="152.94" r="5.95" data-kind="rituale" data-ritual="calibrar_interno" data-line="25" data-col="1" data-depth="3" data-stmt="RITUALE" data-loops="0" data-calls="0"/>
+      <title>RITUALE calibrar_interno
+stmt: 1
+depth: 3
+loops: 0
+calls: 0
+source:
+ARCANUM RITUALE calibrar_interno(REX base) REDDE REX</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="308.86" cy="188.22" r="3.60" data-kind="term" data-ritual="calibrar_interno" data-line="26" data-col="3" data-depth="3" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: calibrar_interno
+depth: 3
+line: 26
+
+source:
+REDDE base + 7</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-main" cx="373.83" cy="354.13" r="6.55" data-kind="rituale" data-ritual="preparar_mage" data-line="29" data-col="1" data-depth="6" data-stmt="RITUALE" data-loops="0" data-calls="1"/>
+      <title>RITUALE preparar_mage
+stmt: 5
+depth: 6
+loops: 0
+calls: 1
+source:
+RITUALE preparar_mage(SPECULUM Mage out, VERBUM name, REX base, UMBRA heat) REDDE NIHIL</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="353.85" cy="337.49" r="3.55" data-kind="bind" data-ritual="preparar_mage" data-line="30" data-col="3" data-depth="6" data-stmt="VINCIRE"/>
+      <title>stmt: VINCIRE
+rituale: preparar_mage
+depth: 6
+line: 30
+
+source:
+VINCIRE (*out).name AD name</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-main" cx="124.92" cy="320.24" r="5.95" data-kind="rituale" data-ritual="valor" data-line="37" data-col="1" data-depth="6" data-stmt="RITUALE" data-loops="0" data-calls="0"/>
+      <title>RITUALE valor
+stmt: 1
+depth: 6
+loops: 0
+calls: 0
+source:
+RITUALE valor(SPECULUM Mage self, REX x) REDDE REX</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="178.72" cy="302.78" r="3.60" data-kind="term" data-ritual="valor" data-line="38" data-col="3" data-depth="6" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: valor
+depth: 6
+line: 38
+
+source:
+REDDE x + (*self).rune.mark</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-main" cx="164.27" cy="151.89" r="6.25" data-kind="rituale" data-ritual="stance_bonus" data-line="41" data-col="1" data-depth="4" data-stmt="RITUALE" data-loops="0" data-calls="0"/>
+      <title>RITUALE stance_bonus
+stmt: 3
+depth: 4
+loops: 0
+calls: 0
+source:
+RITUALE stance_bonus(Stance s) REDDE REX</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="205.75" cy="162.66" r="4.80" data-kind="branch" data-ritual="stance_bonus" data-line="42" data-col="3" data-depth="4" data-stmt="SI"/>
+      <title>stmt: SI
+rituale: stance_bonus
+depth: 4
+line: 42
+
+source:
+SI s == IRA</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="150.66" cy="187.87" r="4.20" data-kind="branch" data-ritual="stance_bonus" data-line="45" data-col="5" data-depth="4" data-stmt="ALITER"/>
+      <title>stmt: ALITER
+rituale: stance_bonus
+depth: 4
+line: 45
+
+source:
+REDDE 3</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="195.29" cy="199.20" r="4.00" data-kind="term" data-ritual="stance_bonus" data-line="43" data-col="5" data-depth="4" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: stance_bonus
+depth: 4
+line: 43
+
+source:
+REDDE 9</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="258.85" cy="263.53" r="3.32" data-kind="bind" data-ritual="calibrar_interno" data-depth="3" data-stmt="EVOCA"/>
+      <title>stmt: EVOCA
+rituale: calibrar_interno
+depth: 3
+line: 0
+
+source:
+stmt: EVOCA
+rituale: calibrar_interno</title>
+    </g>
   </g>
   <g id="ornaments">
-    <circle class="orn" cx="466.27" cy="263.65" r="0.90"/>
-    <circle class="orn" cx="355.05" cy="439.74" r="1.90"/>
-    <circle class="orn" cx="157.74" cy="431.01" r="2.90"/>
-    <circle class="orn" cx="58.49" cy="215.57" r="0.90"/>
-    <circle class="orn" cx="154.37" cy="71.77" r="1.90"/>
-    <circle class="orn" cx="361.14" cy="83.58" r="2.90"/>
+    <circle class="orn" cx="461.11" cy="272.87" r="0.90"/>
+    <circle class="orn" cx="337.33" cy="444.24" r="1.90"/>
+    <circle class="orn" cx="130.63" cy="422.86" r="2.90"/>
+    <circle class="orn" cx="49.39" cy="258.27" r="0.90"/>
+    <circle class="orn" cx="185.03" cy="60.21" r="1.90"/>
+    <circle class="orn" cx="320.62" cy="64.37" r="2.90"/>
   </g>
       </g>
     </g>
+    <g class="system-node-wrap">
     <circle class="module-frame" cx="600.000" cy="210.000" r="94.000"/>
+      <title>module
+/Users/eabusato/dev/cct/examples/ars_magna_omniversal/modules/types_core.cct
+rituals: 4
+imports: 0</title>
     <text class="module-label" x="600.000" y="320.000" text-anchor="middle">types_core.cct</text>
-    <text class="module-hash" x="600.000" y="332.000" text-anchor="middle">187e6b4fad5b5a4a</text>
+    <text class="module-hash" x="600.000" y="332.000" text-anchor="middle">88b9ef27e5e262c5</text>
+    </g>
     <g id="module_sigil_003" transform="translate(896.000 506.000) scale(0.36718750)">
       <g clip-path="url(#module_clip_003)">
   <g id="foundation">
     <circle class="base" cx="256" cy="256" r="226"/>
   </g>
   <g id="primary_path">
-    <path class="primary" d="M 395.07 195.88 Q 316.47 275.63 268.37 376.75" stroke-width="2.60" opacity="0.96"/>
-    <path class="primary" d="M 268.37 376.75 Q 218.03 270.15 133.98 187.49" stroke-width="2.60" opacity="0.96"/>
+    <g class="edge-wrap">
+    <path class="primary" d="M 387.12 202.28 Q 304.29 276.40 250.62 373.73" stroke-width="2.60" opacity="0.96"/>
+      <title>edge: primary
+identitas -&gt; duplum
+weight: 1
+
+path:
+identitas -&gt; duplum</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="primary" d="M 250.62 373.73 Q 210.40 271.34 141.59 185.53" stroke-width="2.60" opacity="0.96"/>
+      <title>edge: primary
+duplum -&gt; selo_plus
+weight: 1
+
+path:
+duplum -&gt; selo_plus</title>
+    </g>
   </g>
   <g id="call_links">
   </g>
@@ -243,166 +667,660 @@
   <g id="bindings">
   </g>
   <g id="terminals">
-    <path class="term" d="M 395.07 195.88 Q 366.53 198.74 340.49 210.76" stroke-width="1.65" opacity="0.90"/>
-    <path class="term" d="M 268.37 376.75 Q 265.22 348.39 254.70 321.86" stroke-width="1.65" opacity="0.90"/>
-    <path class="term" d="M 133.98 187.49 Q 159.11 200.91 186.72 207.93" stroke-width="1.65" opacity="0.90"/>
+    <g class="edge-wrap">
+    <path class="term" d="M 387.12 202.28 Q 358.86 205.90 332.27 216.11" stroke-width="1.65" opacity="0.90"/>
+      <title>edge: return
+identitas -&gt; identitas
+weight: 2
+
+path:
+identitas -&gt; identitas</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="term" d="M 250.62 373.73 Q 251.14 345.26 245.18 317.42" stroke-width="1.65" opacity="0.90"/>
+      <title>edge: return
+duplum -&gt; duplum
+weight: 2
+
+path:
+duplum -&gt; duplum</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="term" d="M 141.59 185.53 Q 165.72 200.96 193.46 208.09" stroke-width="1.65" opacity="0.90"/>
+      <title>edge: return
+selo_plus -&gt; selo_plus
+weight: 2
+
+path:
+selo_plus -&gt; selo_plus</title>
+    </g>
   </g>
   <g id="nodes">
-    <circle class="node-main" cx="395.07" cy="195.88" r="5.95"/>
-    <circle class="node-term" cx="340.49" cy="210.76" r="3.60"/>
-    <circle class="node-main" cx="268.37" cy="376.75" r="5.95"/>
-    <circle class="node-term" cx="254.70" cy="321.86" r="3.60"/>
-    <circle class="node-main" cx="133.98" cy="187.49" r="5.95"/>
-    <circle class="node-term" cx="186.72" cy="207.93" r="3.60"/>
+    <g class="node-wrap">
+      <circle class="node-main" cx="387.12" cy="202.28" r="5.95" data-kind="rituale" data-ritual="identitas" data-line="5" data-col="1" data-depth="2" data-stmt="RITUALE" data-loops="0" data-calls="0"/>
+      <title>RITUALE identitas
+stmt: 1
+depth: 2
+loops: 0
+calls: 0
+source:
+RITUALE identitas GENUS(T)(T value) REDDE T</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="332.27" cy="216.11" r="3.60" data-kind="term" data-ritual="identitas" data-line="6" data-col="3" data-depth="2" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: identitas
+depth: 2
+line: 6
+
+source:
+REDDE value</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-main" cx="250.62" cy="373.73" r="5.95" data-kind="rituale" data-ritual="duplum" data-line="9" data-col="1" data-depth="2" data-stmt="RITUALE" data-loops="0" data-calls="0"/>
+      <title>RITUALE duplum
+stmt: 1
+depth: 2
+loops: 0
+calls: 0
+source:
+RITUALE duplum GENUS(A, B)(A left, B right) REDDE A</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="245.18" cy="317.42" r="3.60" data-kind="term" data-ritual="duplum" data-line="10" data-col="3" data-depth="2" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: duplum
+depth: 2
+line: 10
+
+source:
+REDDE left</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-main" cx="141.59" cy="185.53" r="5.95" data-kind="rituale" data-ritual="selo_plus" data-line="17" data-col="1" data-depth="3" data-stmt="RITUALE" data-loops="0" data-calls="0"/>
+      <title>RITUALE selo_plus
+stmt: 1
+depth: 3
+loops: 0
+calls: 0
+source:
+RITUALE selo_plus GENUS(T PACTUM Numerabilis)(SPECULUM T self, REX base) REDDE REX</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="193.46" cy="208.09" r="3.60" data-kind="term" data-ritual="selo_plus" data-line="18" data-col="3" data-depth="3" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: selo_plus
+depth: 3
+line: 18
+
+source:
+REDDE base + 2</title>
+    </g>
   </g>
   <g id="ornaments">
-    <circle class="orn" cx="460.04" cy="260.64" r="0.90"/>
-    <circle class="orn" cx="264.70" cy="456.45" r="1.90"/>
-    <circle class="orn" cx="47.33" cy="271.91" r="2.90"/>
-    <circle class="orn" cx="236.86" cy="48.15" r="0.90"/>
+    <circle class="orn" cx="462.18" cy="236.67" r="0.90"/>
+    <circle class="orn" cx="252.00" cy="456.09" r="1.90"/>
+    <circle class="orn" cx="61.74" cy="298.24" r="2.90"/>
+    <circle class="orn" cx="217.29" cy="55.46" r="0.90"/>
   </g>
       </g>
     </g>
+    <g class="system-node-wrap">
     <circle class="module-frame" cx="990.000" cy="600.000" r="94.000"/>
+      <title>module
+/Users/eabusato/dev/cct/examples/ars_magna_omniversal/modules/generics.cct
+rituals: 3
+imports: 1</title>
     <text class="module-label" x="990.000" y="710.000" text-anchor="middle">generics.cct</text>
-    <text class="module-hash" x="990.000" y="722.000" text-anchor="middle">72dc0eef0d31a146</text>
+    <text class="module-hash" x="990.000" y="722.000" text-anchor="middle">cdc7a7fce50e2a9f</text>
+    </g>
     <g id="module_sigil_004" transform="translate(506.000 896.000) scale(0.36718750)">
       <g clip-path="url(#module_clip_004)">
   <g id="foundation">
     <circle class="base" cx="256" cy="256" r="226"/>
   </g>
   <g id="primary_path">
-    <path class="primary" d="M 343.24 142.97 Q 341.52 246.41 376.07 343.92" stroke-width="2.60" opacity="0.96"/>
-    <path class="primary" d="M 376.07 343.92 Q 255.67 320.41 135.31 344.15" stroke-width="2.60" opacity="0.96"/>
-    <path class="primary" d="M 135.31 344.15 Q 188.45 246.37 194.31 135.24" stroke-width="2.60" opacity="0.96"/>
+    <g class="edge-wrap">
+    <path class="primary" d="M 351.22 145.60 Q 344.68 240.04 387.42 324.51" stroke-width="2.60" opacity="0.96"/>
+      <title>edge: primary
+elevar -&gt; preencher
+weight: 1
+
+path:
+elevar -&gt; preencher</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="primary" d="M 387.42 324.51 Q 249.96 300.63 112.07 321.89" stroke-width="2.60" opacity="0.96"/>
+      <title>edge: primary
+preencher -&gt; somar
+weight: 1
+
+path:
+preencher -&gt; somar</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="primary" d="M 112.07 321.89 Q 168.71 239.37 177.46 139.66" stroke-width="2.60" opacity="0.96"/>
+      <title>edge: primary
+somar -&gt; aquecer_mage
+weight: 1
+
+path:
+somar -&gt; aquecer_mage</title>
+    </g>
   </g>
   <g id="call_links">
   </g>
   <g id="branches">
-    <path class="branch" d="M 248.34 242.02 Q 305.19 201.51 343.24 142.97" stroke-width="1.45" opacity="0.85"/>
-    <path class="branch" d="M 248.34 242.02 Q 308.23 297.95 376.07 343.92" stroke-width="1.70" opacity="0.85"/>
-    <path class="branch" d="M 248.34 242.02 Q 186.80 287.52 135.31 344.15" stroke-width="1.70" opacity="0.85"/>
+    <g class="edge-wrap">
+    <path class="branch" d="M 248.28 253.59 Q 304.75 204.36 351.22 145.60" stroke-width="1.45" opacity="0.85"/>
+      <title>edge: branch
+elevar -&gt; elevar
+weight: 1
+
+path:
+elevar -&gt; elevar</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="branch" d="M 248.28 253.59 Q 311.88 300.76 387.42 324.51" stroke-width="1.70" opacity="0.85"/>
+      <title>edge: branch
+elevar -&gt; preencher
+weight: 2
+
+path:
+elevar -&gt; preencher</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="branch" d="M 248.28 253.59 Q 176.43 280.27 112.07 321.89" stroke-width="1.70" opacity="0.85"/>
+      <title>edge: branch
+elevar -&gt; somar
+weight: 2
+
+path:
+elevar -&gt; somar</title>
+    </g>
   </g>
   <g id="loops">
-    <path class="loop" d="M 376.07 343.92 Q 368.06 363.03 378.89 380.69" stroke-width="1.55" opacity="0.88"/>
-    <path class="loop" d="M 382.65 380.69 C 415.61 359.42 419.51 381.25 403.90 370.33 C 388.28 381.25 392.18 359.42 376.07 382.19"/>
-    <path class="loop" d="M 135.31 344.15 Q 124.14 361.77 132.45 380.91" stroke-width="1.55" opacity="0.88"/>
-    <path class="loop" d="M 136.21 380.91 C 170.87 377.22 174.77 399.04 159.15 388.13 C 143.54 399.04 147.44 377.22 129.63 382.41"/>
+    <g class="edge-wrap">
+    <path class="loop" d="M 387.42 324.51 Q 408.95 328.63 421.65 310.77" stroke-width="1.55" opacity="0.88"/>
+      <title>edge: loop
+preencher -&gt; preencher
+weight: 2
+
+path:
+preencher -&gt; preencher</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="loop" d="M 425.41 310.77 C 459.21 308.82 463.11 330.64 447.50 319.73 C 431.88 330.64 435.78 308.82 418.83 312.27"/>
+      <title>edge: loop
+preencher -&gt; preencher
+weight: 2
+
+path:
+preencher -&gt; preencher</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="loop" d="M 112.07 321.89 Q 98.18 308.00 78.59 306.42" stroke-width="1.55" opacity="0.88"/>
+      <title>edge: loop
+somar -&gt; somar
+weight: 2
+
+path:
+somar -&gt; somar</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="loop" d="M 82.35 306.42 C 117.15 288.62 121.05 310.44 105.44 299.53 C 89.82 310.44 93.73 288.62 75.77 307.92"/>
+      <title>edge: loop
+somar -&gt; somar
+weight: 2
+
+path:
+somar -&gt; somar</title>
+    </g>
   </g>
   <g id="bindings">
-    <path class="bind" d="M 343.24 142.97 Q 328.94 148.36 327.35 163.56" stroke-width="1.28" opacity="0.85"/>
-    <line class="bind" x1="343.23" y1="149.53" x2="336.89" y2="144.65" opacity="0.75"/>
-    <line class="bind" x1="332.30" y1="163.54" x2="338.30" y2="163.53" opacity="0.58"/>
-    <path class="bind" d="M 376.07 343.92 Q 369.39 331.04 355.09 328.56" stroke-width="1.44" opacity="0.85"/>
-    <line class="bind" x1="369.51" y1="344.08" x2="374.24" y2="337.62" opacity="0.75"/>
-    <line class="bind" x1="366.82" y1="343.35" x2="372.73" y2="335.28" opacity="0.75"/>
-    <line class="bind" x1="365.32" y1="341.00" x2="370.04" y2="334.55" opacity="0.75"/>
-    <line class="bind" x1="360.34" y1="328.37" x2="366.34" y2="328.14" opacity="0.58"/>
-    <line class="bind" x1="352.07" y1="332.85" x2="346.89" y2="340.21" opacity="0.58"/>
-    <line class="bind" x1="351.44" y1="324.79" x2="347.27" y2="320.48" opacity="0.58"/>
-    <path class="bind" d="M 135.31 344.15 Q 149.81 341.95 156.31 328.81" stroke-width="1.52" opacity="0.85"/>
-    <line class="bind" x1="137.15" y1="337.85" x2="141.87" y2="344.31" opacity="0.75"/>
-    <line class="bind" x1="138.66" y1="335.51" x2="144.56" y2="343.58" opacity="0.75"/>
-    <line class="bind" x1="141.35" y1="334.78" x2="146.07" y2="341.24" opacity="0.75"/>
-    <line class="bind" x1="142.86" y1="332.44" x2="148.76" y2="340.52" opacity="0.75"/>
-    <line class="bind" x1="161.61" y1="327.80" x2="167.51" y2="326.67" opacity="0.58"/>
-    <line class="bind" x1="156.77" y1="334.19" x2="157.54" y2="343.16" opacity="0.58"/>
-    <line class="bind" x1="151.11" y1="327.36" x2="145.33" y2="325.75" opacity="0.58"/>
-    <line class="bind" x1="157.42" y1="323.53" x2="159.28" y2="314.72" opacity="0.58"/>
-    <path class="bind" d="M 194.31 135.24 Q 192.48 150.78 206.14 158.40" stroke-width="1.28" opacity="0.85"/>
-    <line class="bind" x1="200.24" y1="138.06" x2="193.11" y2="141.70" opacity="0.75"/>
-    <line class="bind" x1="211.04" y1="159.07" x2="216.99" y2="159.89" opacity="0.58"/>
+    <g class="edge-wrap">
+    <path class="bind" d="M 351.22 145.60 Q 341.28 154.20 334.24 165.29" stroke-width="1.28" opacity="0.85"/>
+    <line class="bind" x1="350.85" y1="152.15" x2="344.79" y2="146.93" opacity="0.75"/>
+    <line class="bind" x1="339.19" y1="165.16" x2="345.18" y2="165.01" opacity="0.58"/>
+      <title>edge: bind
+elevar -&gt; elevar
+weight: 1
+
+path:
+elevar -&gt; elevar</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="bind" d="M 387.42 324.51 Q 379.98 310.65 364.37 312.49" stroke-width="1.44" opacity="0.85"/>
+    <line class="bind" x1="380.96" y1="325.65" x2="384.66" y2="318.56" opacity="0.75"/>
+    <line class="bind" x1="378.19" y1="325.33" x2="382.82" y2="316.47" opacity="0.75"/>
+    <line class="bind" x1="376.35" y1="323.25" x2="380.05" y2="316.15" opacity="0.75"/>
+    <line class="bind" x1="369.57" y1="313.17" x2="375.52" y2="313.95" opacity="0.58"/>
+    <line class="bind" x1="362.70" y1="317.47" x2="359.84" y2="326.00" opacity="0.58"/>
+    <line class="bind" x1="360.53" y1="308.90" x2="356.15" y2="304.80" opacity="0.58"/>
+      <title>edge: bind
+preencher -&gt; preencher
+weight: 3
+
+path:
+preencher -&gt; preencher</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="bind" d="M 112.07 321.89 Q 125.46 319.91 135.71 311.07" stroke-width="1.52" opacity="0.85"/>
+    <line class="bind" x1="115.13" y1="316.09" x2="118.46" y2="323.36" opacity="0.75"/>
+    <line class="bind" x1="117.08" y1="314.10" x2="121.24" y2="323.19" opacity="0.75"/>
+    <line class="bind" x1="119.86" y1="313.92" x2="123.19" y2="321.20" opacity="0.75"/>
+    <line class="bind" x1="121.81" y1="311.93" x2="125.97" y2="321.02" opacity="0.75"/>
+    <line class="bind" x1="140.95" y1="309.76" x2="146.77" y2="308.31" opacity="0.58"/>
+    <line class="bind" x1="136.62" y1="316.39" x2="138.14" y2="325.26" opacity="0.58"/>
+    <line class="bind" x1="130.35" y1="311.76" x2="124.40" y2="312.52" opacity="0.58"/>
+    <line class="bind" x1="134.18" y1="305.89" x2="131.62" y2="297.26" opacity="0.58"/>
+      <title>edge: bind
+somar -&gt; somar
+weight: 4
+
+path:
+somar -&gt; somar</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="bind" d="M 177.46 139.66 Q 183.75 151.09 192.00 161.20" stroke-width="1.28" opacity="0.85"/>
+    <line class="bind" x1="183.68" y1="141.73" x2="177.05" y2="146.20" opacity="0.75"/>
+    <line class="bind" x1="196.95" y1="161.24" x2="202.95" y2="161.29" opacity="0.58"/>
+      <title>edge: bind
+aquecer_mage -&gt; aquecer_mage
+weight: 1
+
+path:
+aquecer_mage -&gt; aquecer_mage</title>
+    </g>
   </g>
   <g id="terminals">
-    <path class="term" d="M 135.31 344.15 Q 160.99 329.97 175.82 304.66" stroke-width="1.65" opacity="0.90"/>
+    <g class="edge-wrap">
+    <path class="term" d="M 112.07 321.89 Q 140.55 318.45 166.32 305.85" stroke-width="1.65" opacity="0.90"/>
+      <title>edge: return
+somar -&gt; somar
+weight: 2
+
+path:
+somar -&gt; somar</title>
+    </g>
   </g>
   <g id="nodes">
-    <circle class="node-main" cx="343.24" cy="142.97" r="5.95"/>
-    <circle class="node-aux" cx="327.35" cy="163.56" r="2.95"/>
-    <circle class="node-main" cx="376.07" cy="343.92" r="6.40"/>
-    <circle class="node-loop" cx="378.89" cy="380.69" r="4.70"/>
-    <circle class="node-aux" cx="355.09" cy="328.56" r="3.25"/>
-    <circle class="node-main" cx="135.31" cy="344.15" r="6.70"/>
-    <circle class="node-loop" cx="132.45" cy="380.91" r="4.70"/>
-    <circle class="node-aux" cx="156.31" cy="328.81" r="3.40"/>
-    <circle class="node-term" cx="175.82" cy="304.66" r="3.60"/>
-    <circle class="node-main" cx="194.31" cy="135.24" r="5.95"/>
-    <circle class="node-aux" cx="206.14" cy="158.40" r="2.95"/>
-    <circle class="node-aux" cx="248.34" cy="242.02" r="3.20"/>
+    <g class="node-wrap">
+      <circle class="node-main" cx="351.22" cy="145.60" r="5.95" data-kind="rituale" data-ritual="elevar" data-line="5" data-col="1" data-depth="4" data-stmt="RITUALE" data-loops="0" data-calls="0"/>
+      <title>RITUALE elevar
+stmt: 1
+depth: 4
+loops: 0
+calls: 0
+source:
+RITUALE elevar(SPECULUM REX target, REX q) REDDE NIHIL</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="334.24" cy="165.29" r="2.95" data-kind="bind" data-ritual="elevar" data-line="6" data-col="3" data-depth="4" data-stmt="VINCIRE"/>
+      <title>stmt: VINCIRE
+rituale: elevar
+depth: 4
+line: 6
+
+source:
+VINCIRE *target AD *target + q</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-main" cx="387.42" cy="324.51" r="6.40" data-kind="rituale" data-ritual="preencher" data-line="9" data-col="1" data-depth="5" data-stmt="RITUALE" data-loops="1" data-calls="0"/>
+      <title>RITUALE preencher
+stmt: 4
+depth: 5
+loops: 1
+calls: 0
+source:
+RITUALE preencher(SPECULUM REX ptr, REX n, REX start) REDDE NIHIL</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-loop" cx="421.65" cy="310.77" r="4.70" data-kind="loop" data-ritual="preencher" data-line="11" data-col="3" data-depth="5" data-stmt="DUM"/>
+      <title>stmt: DUM
+rituale: preencher
+depth: 5
+line: 11
+
+source:
+DUM i &lt; n</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="364.37" cy="312.49" r="3.25" data-kind="bind" data-ritual="preencher" data-line="10" data-col="3" data-depth="5" data-stmt="EVOCA"/>
+      <title>stmt: EVOCA
+rituale: preencher
+depth: 5
+line: 10
+
+source:
+EVOCA REX i AD 0</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-main" cx="112.07" cy="321.89" r="6.70" data-kind="rituale" data-ritual="somar" data-line="17" data-col="1" data-depth="6" data-stmt="RITUALE" data-loops="1" data-calls="0"/>
+      <title>RITUALE somar
+stmt: 6
+depth: 6
+loops: 1
+calls: 0
+source:
+RITUALE somar(SPECULUM REX ptr, REX n) REDDE REX</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-loop" cx="78.59" cy="306.42" r="4.70" data-kind="loop" data-ritual="somar" data-line="20" data-col="3" data-depth="6" data-stmt="DUM"/>
+      <title>stmt: DUM
+rituale: somar
+depth: 6
+line: 20
+
+source:
+DUM i &lt; n</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="135.71" cy="311.07" r="3.40" data-kind="bind" data-ritual="somar" data-line="18" data-col="3" data-depth="6" data-stmt="EVOCA"/>
+      <title>stmt: EVOCA
+rituale: somar
+depth: 6
+line: 18
+
+source:
+EVOCA REX i AD 0</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="166.32" cy="305.85" r="3.60" data-kind="term" data-ritual="somar" data-line="24" data-col="3" data-depth="6" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: somar
+depth: 6
+line: 24
+
+source:
+REDDE total</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-main" cx="177.46" cy="139.66" r="5.95" data-kind="rituale" data-ritual="aquecer_mage" data-line="27" data-col="1" data-depth="5" data-stmt="RITUALE" data-loops="0" data-calls="0"/>
+      <title>RITUALE aquecer_mage
+stmt: 1
+depth: 5
+loops: 0
+calls: 0
+source:
+RITUALE aquecer_mage(SPECULUM Mage m, UMBRA delta) REDDE NIHIL</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="192.00" cy="161.20" r="2.95" data-kind="bind" data-ritual="aquecer_mage" data-line="28" data-col="3" data-depth="5" data-stmt="VINCIRE"/>
+      <title>stmt: VINCIRE
+rituale: aquecer_mage
+depth: 5
+line: 28
+
+source:
+VINCIRE (*m).heat AD (*m).heat + delta</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="248.28" cy="253.59" r="3.20" data-kind="bind" data-ritual="elevar" data-line="6" data-col="3" data-depth="4" data-stmt="VINCIRE"/>
+      <title>stmt: VINCIRE
+rituale: elevar
+depth: 4
+line: 6
+
+source:
+VINCIRE *target AD *target + q</title>
+    </g>
   </g>
   <g id="ornaments">
-    <circle class="orn" cx="457.35" cy="296.27" r="0.90"/>
-    <circle class="orn" cx="349.30" cy="441.74" r="1.90"/>
-    <circle class="orn" cx="183.22" cy="454.79" r="2.90"/>
-    <circle class="orn" cx="76.87" cy="368.38" r="0.90"/>
-    <circle class="orn" cx="71.59" cy="166.84" r="1.90"/>
-    <circle class="orn" cx="179.76" cy="62.40" r="2.90"/>
-    <circle class="orn" cx="409.52" cy="129.41" r="0.90"/>
+    <circle class="orn" cx="460.02" cy="231.68" r="0.90"/>
+    <circle class="orn" cx="406.36" cy="401.86" r="1.90"/>
+    <circle class="orn" cx="186.30" cy="455.03" r="2.90"/>
+    <circle class="orn" cx="77.03" cy="366.62" r="0.90"/>
+    <circle class="orn" cx="62.96" cy="168.90" r="1.90"/>
+    <circle class="orn" cx="186.15" cy="60.86" r="2.90"/>
+    <circle class="orn" cx="370.99" cy="83.33" r="0.90"/>
   </g>
       </g>
     </g>
+    <g class="system-node-wrap">
     <circle class="module-frame" cx="600.000" cy="990.000" r="94.000"/>
+      <title>module
+/Users/eabusato/dev/cct/examples/ars_magna_omniversal/modules/memory_alchemy.cct
+rituals: 4
+imports: 1</title>
     <text class="module-label" x="600.000" y="1100.000" text-anchor="middle">memory_alchemy.cct</text>
-    <text class="module-hash" x="600.000" y="1112.000" text-anchor="middle">3647c957ac3a2a0f</text>
+    <text class="module-hash" x="600.000" y="1112.000" text-anchor="middle">183b1d6cf27bfb06</text>
+    </g>
     <g id="module_sigil_005" transform="translate(116.000 506.000) scale(0.36718750)">
       <g clip-path="url(#module_clip_005)">
   <g id="foundation">
     <circle class="base" cx="256" cy="256" r="226"/>
   </g>
   <g id="primary_path">
-    <path class="primary" d="M 357.26 166.82 Q 323.48 269.67 331.56 377.63" stroke-width="2.60" opacity="0.96"/>
-    <path class="primary" d="M 331.56 377.63 Q 233.38 273.15 108.76 202.26" stroke-width="2.60" opacity="0.96"/>
+    <g class="edge-wrap">
+    <path class="primary" d="M 357.54 163.87 Q 321.68 264.96 332.11 371.73" stroke-width="2.60" opacity="0.96"/>
+      <title>edge: primary
+ruptura -&gt; risco_externo
+weight: 1
+
+path:
+ruptura -&gt; risco_externo</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="primary" d="M 332.11 371.73 Q 229.59 274.17 100.58 215.99" stroke-width="2.60" opacity="0.96"/>
+      <title>edge: primary
+risco_externo -&gt; risco_controlado
+weight: 1
+
+path:
+risco_externo -&gt; risco_controlado</title>
+    </g>
   </g>
   <g id="call_links">
-    <path class="call" d="M 331.56 377.63 Q 375.51 276.02 357.26 166.82" stroke-width="2.15" opacity="0.74"/>
+    <g class="edge-wrap">
+    <path class="call" d="M 332.11 371.73 Q 378.25 271.89 357.54 163.87" stroke-width="2.15" opacity="0.74" data-kind="call" data-from="risco_externo" data-to="ruptura" data-weight="1" data-self-loop="false"/>
+      <title>edge: call
+risco_externo -&gt; ruptura
+calls: 1
+
+path:
+risco_externo -&gt; ruptura</title>
+    </g>
   </g>
   <g id="branches">
-    <path class="branch" d="M 331.56 377.63 Q 316.11 359.69 292.44 360.14" stroke-width="1.70" opacity="0.85"/>
-    <path class="branch" d="M 108.76 202.26 Q 115.11 224.11 133.88 236.98" stroke-width="1.70" opacity="0.85"/>
-    <path class="branch" d="M 252.21 250.50 Q 310.35 215.70 357.26 166.82" stroke-width="1.45" opacity="0.85"/>
-    <path class="branch" d="M 252.21 250.50 Q 282.49 319.93 331.56 377.63" stroke-width="1.95" opacity="0.85"/>
-    <path class="branch" d="M 252.21 250.50 Q 183.82 216.48 108.76 202.26" stroke-width="1.70" opacity="0.85"/>
+    <g class="edge-wrap">
+    <path class="branch" d="M 332.11 371.73 Q 316.97 352.35 292.55 355.25" stroke-width="1.70" opacity="0.85"/>
+      <title>edge: branch
+risco_externo -&gt; risco_externo
+weight: 2
+
+path:
+risco_externo -&gt; risco_externo</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="branch" d="M 100.58 215.99 Q 107.34 238.62 128.98 248.09" stroke-width="1.70" opacity="0.85"/>
+      <title>edge: branch
+risco_controlado -&gt; risco_controlado
+weight: 2
+
+path:
+risco_controlado -&gt; risco_controlado</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="branch" d="M 269.22 260.65 Q 320.65 218.89 357.54 163.87" stroke-width="1.45" opacity="0.85"/>
+      <title>edge: branch
+ruptura -&gt; ruptura
+weight: 1
+
+path:
+ruptura -&gt; ruptura</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="branch" d="M 269.22 260.65 Q 289.07 322.75 332.11 371.73" stroke-width="1.95" opacity="0.85"/>
+      <title>edge: branch
+ruptura -&gt; risco_externo
+weight: 3
+
+path:
+ruptura -&gt; risco_externo</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="branch" d="M 269.22 260.65 Q 187.76 227.54 100.58 215.99" stroke-width="1.70" opacity="0.85"/>
+      <title>edge: branch
+ruptura -&gt; risco_controlado
+weight: 2
+
+path:
+ruptura -&gt; risco_controlado</title>
+    </g>
   </g>
   <g id="loops">
   </g>
   <g id="bindings">
-    <path class="bind" d="M 108.76 202.26 Q 120.06 209.22 133.18 211.18" stroke-width="1.36" opacity="0.85"/>
-    <line class="bind" x1="115.01" y1="200.29" x2="112.27" y2="207.80" opacity="0.75"/>
-    <line class="bind" x1="117.80" y1="200.24" x2="114.37" y2="209.63" opacity="0.75"/>
-    <line class="bind" x1="138.28" y1="211.35" x2="144.28" y2="211.55" opacity="0.58"/>
-    <line class="bind" x1="128.13" y1="211.84" x2="119.20" y2="213.02" opacity="0.58"/>
+    <g class="edge-wrap">
+    <path class="bind" d="M 100.58 215.99 Q 111.94 224.01 125.76 222.48" stroke-width="1.36" opacity="0.85"/>
+    <line class="bind" x1="106.61" y1="213.42" x2="104.62" y2="221.16" opacity="0.75"/>
+    <line class="bind" x1="109.38" y1="213.10" x2="106.89" y2="222.78" opacity="0.75"/>
+    <line class="bind" x1="130.86" y1="222.53" x2="136.86" y2="222.60" opacity="0.58"/>
+    <line class="bind" x1="120.74" y1="221.58" x2="111.88" y2="220.01" opacity="0.58"/>
+      <title>edge: bind
+risco_controlado -&gt; risco_controlado
+weight: 2
+
+path:
+risco_controlado -&gt; risco_controlado</title>
+    </g>
   </g>
   <g id="terminals">
-    <path class="term" d="M 331.56 377.63 Q 325.74 349.29 308.80 325.84" stroke-width="1.65" opacity="0.90"/>
-    <path class="term" d="M 108.76 202.26 Q 135.68 211.69 164.11 213.95" stroke-width="1.90" opacity="0.90"/>
+    <g class="edge-wrap">
+    <path class="term" d="M 332.11 371.73 Q 327.36 342.70 308.02 320.54" stroke-width="1.65" opacity="0.90"/>
+      <title>edge: return
+risco_externo -&gt; risco_externo
+weight: 2
+
+path:
+risco_externo -&gt; risco_externo</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="term" d="M 100.58 215.99 Q 128.04 224.99 156.81 222.21" stroke-width="1.90" opacity="0.90"/>
+      <title>edge: return
+risco_controlado -&gt; risco_controlado
+weight: 4
+
+path:
+risco_controlado -&gt; risco_controlado</title>
+    </g>
   </g>
   <g id="nodes">
-    <circle class="node-main" cx="357.26" cy="166.82" r="5.95"/>
-    <circle class="node-main" cx="331.56" cy="377.63" r="6.25"/>
-    <circle class="node-aux" cx="292.44" cy="360.14" r="4.80"/>
-    <circle class="node-term" cx="308.80" cy="325.84" r="3.60"/>
-    <circle class="node-main" cx="108.76" cy="202.26" r="7.00"/>
-    <circle class="node-aux" cx="133.88" cy="236.98" r="4.80"/>
-    <circle class="node-aux" cx="133.18" cy="211.18" r="3.10"/>
-    <circle class="node-term" cx="164.11" cy="213.95" r="4.40"/>
-    <circle class="node-aux" cx="252.21" cy="250.50" r="3.32"/>
+    <g class="node-wrap">
+      <circle class="node-main" cx="357.54" cy="163.87" r="5.95" data-kind="rituale" data-ritual="ruptura" data-line="3" data-col="1" data-depth="2" data-stmt="RITUALE" data-loops="0" data-calls="0"/>
+      <title>RITUALE ruptura
+stmt: 1
+depth: 2
+loops: 0
+calls: 0
+source:
+RITUALE ruptura(VERBUM msg) REDDE NIHIL</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-main" cx="332.11" cy="371.73" r="6.25" data-kind="rituale" data-ritual="risco_externo" data-line="7" data-col="1" data-depth="5" data-stmt="RITUALE" data-loops="0" data-calls="1"/>
+      <title>RITUALE risco_externo
+stmt: 3
+depth: 5
+loops: 0
+calls: 1
+source:
+RITUALE risco_externo(REX power) REDDE REX</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="292.55" cy="355.25" r="4.80" data-kind="branch" data-ritual="risco_externo" data-line="8" data-col="3" data-depth="5" data-stmt="SI"/>
+      <title>stmt: SI
+rituale: risco_externo
+depth: 5
+line: 8
+
+source:
+SI power &gt; 90</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="308.02" cy="320.54" r="3.60" data-kind="term" data-ritual="risco_externo" data-line="11" data-col="3" data-depth="5" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: risco_externo
+depth: 5
+line: 11
+
+source:
+REDDE power + 1</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-main" cx="100.58" cy="215.99" r="7.00" data-kind="rituale" data-ritual="risco_controlado" data-line="14" data-col="1" data-depth="6" data-stmt="RITUALE" data-loops="0" data-calls="0"/>
+      <title>RITUALE risco_controlado
+stmt: 8
+depth: 6
+loops: 0
+calls: 0
+source:
+RITUALE risco_controlado(REX power) REDDE REX</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="128.98" cy="248.09" r="4.80" data-kind="branch" data-ritual="risco_controlado" data-line="16" data-col="5" data-depth="6" data-stmt="SI"/>
+      <title>stmt: SI
+rituale: risco_controlado
+depth: 6
+line: 16
+
+source:
+SI power &gt; 70</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="125.76" cy="222.48" r="3.10" data-kind="bind" data-ritual="risco_controlado" data-line="21" data-col="5" data-depth="6" data-stmt="OBSECRO"/>
+      <title>stmt: OBSECRO
+rituale: risco_controlado
+depth: 6
+line: 21
+
+source:
+OBSECRO scribe("[failure.cape] ", erro, "\n")</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="156.81" cy="222.21" r="4.40" data-kind="term" data-ritual="risco_controlado" data-line="19" data-col="5" data-depth="6" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: risco_controlado
+depth: 6
+line: 19
+
+source:
+REDDE power</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="269.22" cy="260.65" r="3.32" data-kind="bind" data-ritual="ruptura" data-depth="2" data-stmt="EVOCA"/>
+      <title>stmt: EVOCA
+rituale: ruptura
+depth: 2
+line: 0
+
+source:
+stmt: EVOCA
+rituale: ruptura</title>
+    </g>
   </g>
   <g id="ornaments">
-    <circle class="orn" cx="457.22" cy="290.29" r="0.90"/>
-    <circle class="orn" cx="386.85" cy="421.28" r="1.90"/>
-    <circle class="orn" cx="181.12" cy="439.90" r="2.90"/>
-    <circle class="orn" cx="75.61" cy="362.59" r="0.90"/>
-    <circle class="orn" cx="66.00" cy="198.18" r="1.90"/>
-    <circle class="orn" cx="246.24" cy="46.49" r="2.90"/>
-    <circle class="orn" cx="373.53" cy="82.44" r="0.90"/>
+    <circle class="orn" cx="454.57" cy="276.93" r="0.90"/>
+    <circle class="orn" cx="373.51" cy="417.99" r="1.90"/>
+    <circle class="orn" cx="237.60" cy="464.09" r="2.90"/>
+    <circle class="orn" cx="68.35" cy="345.18" r="0.90"/>
+    <circle class="orn" cx="61.89" cy="179.63" r="1.90"/>
+    <circle class="orn" cx="197.15" cy="58.02" r="2.90"/>
+    <circle class="orn" cx="381.08" cy="98.88" r="0.90"/>
   </g>
       </g>
     </g>
+    <g class="system-node-wrap">
     <circle class="module-frame" cx="210.000" cy="600.000" r="94.000"/>
+      <title>module
+/Users/eabusato/dev/cct/examples/ars_magna_omniversal/modules/failure_rituals.cct
+rituals: 3
+imports: 0</title>
     <text class="module-label" x="210.000" y="710.000" text-anchor="middle">failure_rituals.cct</text>
-    <text class="module-hash" x="210.000" y="722.000" text-anchor="middle">dbe243d103c1cc8e</text>
+    <text class="module-hash" x="210.000" y="722.000" text-anchor="middle">2ce71d9fd3e6981c</text>
+    </g>
   </g>
-  <text class="module-label" x="24" y="30" font-size="14">CCT system sigilo (sigil-of-sigils) • 57c8bfaac0b03602</text>
+  <text class="module-label" x="24" y="30" font-size="14">CCT system sigilo (sigil-of-sigils) • 667a395ec8640a21</text>
   <text class="module-hash" x="24" y="50" font-size="10">entry=examples/ars_magna_omniversal/main.cct • modules=6 • imports=7 • calls=13 • type_refs=5</text>
-  <text class="module-hash" x="24" y="66" font-size="10">zoom: sub-sigilos vetoriais inline por módulo</text>
+  <text class="module-hash" x="24" y="66" font-size="10">zoom: inline vector sub-sigils per module</text>
 </svg>

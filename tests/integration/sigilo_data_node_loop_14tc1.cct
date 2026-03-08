@@ -1,0 +1,11 @@
+INCIPIT grimoire "sigilo_data_node_loop_14tc1"
+
+RITUALE loop_data(REX n) REDDE REX
+  EVOCA REX i AD 0
+  DUM i < n
+    VINCIRE i AD i + 1
+  FIN DUM
+  REDDE i
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

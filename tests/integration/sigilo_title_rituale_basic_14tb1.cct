@@ -1,0 +1,12 @@
+INCIPIT grimoire "sigilo_title_rituale_basic_14tb1"
+
+RITUALE helper(REX x) REDDE REX
+  REDDE x + 1
+EXPLICIT RITUALE
+
+RITUALE main() REDDE REX
+  EVOCA REX a AD CONIURA helper(1)
+  REDDE a
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

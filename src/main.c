@@ -1407,6 +1407,8 @@ static cct_error_code_t configure_sigilo(cct_sigilo_t *sg, const cct_cli_args_t 
     }
     sg->emit_svg = args->sigilo_emit_svg;
     sg->emit_meta = args->sigilo_emit_meta;
+    sg->emit_titles = args->sigilo_emit_titles;
+    sg->emit_data_attrs = args->sigilo_emit_data_attrs;
     if (!sg->emit_svg && !sg->emit_meta) {
         cct_error_printf(CCT_ERROR_INVALID_ARGUMENT,
                         "Invalid sigilo configuration: both SVG and metadata outputs are disabled");

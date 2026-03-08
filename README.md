@@ -8,19 +8,21 @@ CCT is a compiled, ritual-themed programming language with deterministic sigil g
   <img src="docs/example_sigil_ars_magna.svg" alt="CCT System Sigil Example - Ars Magna Omniversal" width="600"/>
   <p><em>System sigil generated from a multi-module CCT program (Ars Magna Omniversal)</em></p>
   <p><sub>Each program generates a unique, deterministic visual sigil representing its structure, calls, and module dependencies</sub></p>
+  <p><sub>Open the SVG in a browser and hover the circles and lines: sigilo components now reveal ritual names, statement kinds, call edges, and source context through native SVG tooltips.</sub></p>
 </div>
 
 ## Status
 
-**Current status: FASE 19D.4 completed** (FASE 19 closure gate completed; baseline is ready for FASE 20 work).
+**Current status: FASE 19D.4 + FASE 14T completed** (FASE 19 closure preserved; the interstitial sigilo-SVG instrumentation phase is now closed and the baseline is ready for FASE 20 work).
 
-Implemented phases: **0 → 19D.4** (including full closures for FASE 16, 17, 18, and 19).
+Implemented phases: **0 → 19D.4**, plus the interstitial **FASE 14T** closure (including full closures for FASE 16, 17, 18, and 19).
 
 **Phase-reference convention:** phase labels found in file/module headers, local markers, or help text may refer to the phase in which that specific component was introduced or stabilized. They are historical markers and do not necessarily represent the current global project status shown above.
 
 Highlights of the current baseline:
 - Real end-to-end compiler pipeline (`.cct -> parse/semantic -> codegen -> .cgen.c -> host C compiler -> binary`)
 - Deterministic sigil generation (`.svg` + `.sigil`) integrated into normal compile and `--sigilo-only`
+- Sigils are no longer static pictures only: local and system SVG components can be hovered directly in the browser
 - Multi-module support with `ADVOCARE`, cycle detection, direct-import visibility rules, and internal visibility via `ARCANUM`
 - Modular sigils with two official emission modes (`essencial` / `completo`, aliases `essential` / `complete`)
 - Advanced typing subset consolidated: `GENUS`, `PACTUM`, and basic constraints `GENUS(T PACTUM C)`
@@ -56,6 +58,7 @@ Highlights of the current baseline:
 - Canonical documentation generator in FASE 12G (`cct doc`) for module/symbol API pages (markdown/html)
 - Common math operators in FASE 13M: `**` (power), `//` (floor integer division), `%%` (euclidean modulo)
 - FASE 14A hardening: canonical diagnostic taxonomy + canonical exit-code contract + sigilo explain mode + deterministic sigilo diagnostic ordering
+- FASE 14T sigilo instrumentation: native SVG `<title>` hover on semantic elements, deterministic additive `data-*` on local nodes/call edges, lightweight root semantics, and explicit enable/disable toggles
 - FASE 15 closure set: `FRANGE`/`RECEDE` loop-control stability, logical `ET`/`VEL` with precedence/parentheses, stable bitwise/shift operators, and `CONSTANS` semantic+codegen enforcement (locals, parameters, and const-pointer binding)
 - FASE 16 closure set: freestanding profile (`--profile freestanding`), bridge-safe `cct/kernel`, ASM emission path (`--emit-asm`), and bridge packaging gates
 - FASE 17/18 canonical-library expansion: text/parsing/IO/FS/path utilities, algorithms/collections growth, plus `process`, `hash`, and `bit` modules
@@ -145,6 +148,8 @@ Sigil options:
 - `--sigilo-out <basepath>`
 - `--sigilo-no-meta`
 - `--sigilo-no-svg`
+- `--sigilo-no-titles`
+- `--sigilo-no-data`
 
 ## What Is Implemented
 
@@ -203,6 +208,8 @@ Out of scope in this subset:
 
 ## Sigil Artifacts
 
+Sigilo is now both a deterministic visual artifact and a native hover-readable map of the program.
+
 For a valid input program, CCT emits:
 - `<base>.svg`
 - `<base>.sigil`
@@ -212,6 +219,26 @@ For modular system sigils:
 - `<entry>.system.sigil`
 
 In `--sigilo-mode completo`, imported module sigils are also emitted as deterministic module-indexed artifacts.
+
+FASE 14T keeps sigilo output as pure SVG, exportable, and diff-friendly while adding native semantic hover:
+- local and system SVGs emit `<title>` on semantic elements already present in the drawing
+- local semantic nodes and call edges emit deterministic additive `data-*`
+- SVG roots can expose lightweight semantics via `role`, `aria-label`, and `desc`
+- no JavaScript is required
+
+In practice:
+- hover a ritual node to see the ritual name, structural metrics, and normalized source excerpt
+- hover a structural node to see the statement kind (`SI`, `DUM`, `REDDE`, `EVOCA`, etc.)
+- hover an edge to see the relationship it represents (`primary`, `call`, `branch`, `loop`, `bind`, `term`)
+- open a `.system.svg` and hover module circles and cross-module lines the same way
+
+The instrumentation is selectable at generation time:
+- default: titles + additive metadata enabled
+- `--sigilo-no-titles`: suppress `<title>` and hover wrappers, preserving geometry and additive `data-*`
+- `--sigilo-no-data`: suppress additive `data-*` and root `<desc>`, preserving `<title>`
+- `--sigilo-no-titles --sigilo-no-data`: restore the pre-14T plain SVG contract
+
+Typical tooltip payloads include the ritual name, statement kind, depth/call metrics, and normalized source excerpt, for example `RITUALE main`, `stmt: RITUALE`, and `source: ...`.
 
 ## Project Workflow (Introduced in FASE 12F, Still Current)
 
@@ -520,9 +547,10 @@ Sigil-only (system + local in essential mode):
 
 ## Release Documentation Packages
 
-The current project baseline is **FASE 19D.4 completed**. Historical release packages remain available for traceability and migration references.
+The current project baseline is **FASE 19D.4 + FASE 14T completed**. Historical release packages remain available for traceability and migration references.
 
 **Current-phase release documentation:**
+- `docs/release/FASE_14T_RELEASE_NOTES.md` — FASE 14T sigilo SVG instrumentation summary (`<title>`, `data-*`, root semantics, toggles)
 - `docs/release/FASE_19_RELEASE_NOTES.md` — FASE 19 completion summary (`CUM`, `FORMA`, payload `ORDO`, `ITERUM map/set`)
 
 **Historical package documentation:**
@@ -538,7 +566,8 @@ The current project baseline is **FASE 19D.4 completed**. Historical release pac
 
 **Quick reference:**
 - FASE 0–19 public contracts remain stable
-- FASE 19 closure set is complete (`CUM`, `FORMA`, payload `ORDO`, `ITERUM map/set`)
+- FASE 19 closure set remains complete (`CUM`, `FORMA`, payload `ORDO`, `ITERUM map/set`)
+- FASE 14T is closed with SVG hover/metadata instrumentation that can be disabled explicitly
 - Next planned phase is FASE 20
 - Zero silent-breaking-change policy remains active
 
