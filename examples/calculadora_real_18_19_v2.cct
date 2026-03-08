@@ -1,0 +1,352 @@
+-- calculadora_real_18_19_v2.cct
+-- REPL minima: uma expressao por linha, no formato "a op b".
+-- Operadores: +  -  *  /  **  max  min
+
+INCIPIT grimoire "calculadora_real_18_19_v2"
+
+ADVOCARE "cct/io.cct"
+ADVOCARE "cct/parse.cct"
+ADVOCARE "cct/option.cct"
+ADVOCARE "cct/verbum.cct"
+ADVOCARE "cct/fluxus.cct"
+ADVOCARE "cct/fmt.cct"
+ADVOCARE "cct/math.cct"
+
+ORDO Resultado
+  Ok(UMBRA valor),
+  Err(VERBUM erro)
+FIN ORDO
+
+RITUALE normalizar_numero(VERBUM txt) REDDE VERBUM
+  EVOCA VERBUM atual AD CONIURA trim(txt)
+
+  DUM CONIURA len(atual) >= 2 ET CONIURA char_at(atual, 0) == 40 ET CONIURA char_at(atual, CONIURA len(atual) - 1) == 41
+    EVOCA REX nivel AD 0
+    EVOCA VERUM externo AD VERUM
+    EVOCA REX i AD 0
+    EVOCA REX n AD CONIURA len(atual)
+
+    DUM i < n
+      EVOCA MILES c AD CONIURA char_at(atual, i)
+      SI c == 40
+        VINCIRE nivel AD nivel + 1
+      FIN SI
+      SI c == 41
+        VINCIRE nivel AD nivel - 1
+        SI nivel == 0 ET i < n - 1
+          VINCIRE externo AD FALSUM
+          FRANGE
+        FIN SI
+        SI nivel < 0
+          VINCIRE externo AD FALSUM
+          FRANGE
+        FIN SI
+      FIN SI
+      VINCIRE i AD i + 1
+    FIN DUM
+
+    SI NON externo VEL nivel != 0
+      FRANGE
+    FIN SI
+
+    VINCIRE atual AD CONIURA trim(CONIURA substring(atual, 1, n - 1))
+  FIN DUM
+
+  REDDE atual
+EXPLICIT RITUALE
+
+RITUALE parse_numero(VERBUM txt) REDDE Resultado
+  EVOCA VERBUM limpo AD CONIURA normalizar_numero(txt)
+  TEMPTA
+    EVOCA UMBRA valor AD CONIURA parse_real(limpo)
+    REDDE Ok(valor)
+  CAPE FRACTUM erro
+    REDDE Err("erro numero")
+  FIN TEMPTA
+EXPLICIT RITUALE
+
+RITUALE achar_operador_duplo(VERBUM s, MILES a, MILES b) REDDE REX
+  EVOCA REX i AD 0
+  EVOCA REX n AD CONIURA len(s)
+  EVOCA REX nivel AD 0
+
+  DUM i + 1 < n
+    EVOCA MILES c AD CONIURA char_at(s, i)
+    SI c == 40
+      VINCIRE nivel AD nivel + 1
+    FIN SI
+    SI c == 41
+      VINCIRE nivel AD nivel - 1
+    FIN SI
+    SI nivel == 0 ET c == a ET CONIURA char_at(s, i + 1) == b
+      REDDE i
+    FIN SI
+    VINCIRE i AD i + 1
+  FIN DUM
+
+  REDDE -1
+EXPLICIT RITUALE
+
+RITUALE achar_operador_simples(VERBUM s, MILES alvo) REDDE REX
+  EVOCA REX i AD 0
+  EVOCA REX n AD CONIURA len(s)
+  EVOCA REX nivel AD 0
+
+  DUM i < n
+    EVOCA MILES c AD CONIURA char_at(s, i)
+    SI c == 40
+      VINCIRE nivel AD nivel + 1
+    FIN SI
+    SI c == 41
+      VINCIRE nivel AD nivel - 1
+    FIN SI
+
+    SI nivel == 0 ET c == alvo
+      SI alvo == 43 VEL alvo == 45
+        SI i > 0
+          REDDE i
+        FIN SI
+      ALITER
+        SI alvo == 42
+          SI (i == 0 VEL CONIURA char_at(s, i - 1) != 42) ET (i + 1 >= n VEL CONIURA char_at(s, i + 1) != 42)
+            REDDE i
+          FIN SI
+        ALITER
+          REDDE i
+        FIN SI
+      FIN SI
+    FIN SI
+    VINCIRE i AD i + 1
+  FIN DUM
+
+  REDDE -1
+EXPLICIT RITUALE
+
+RITUALE calcular(UMBRA a, VERBUM op, UMBRA b) REDDE Resultado
+  QUANDO CONIURA trim(op)
+    CASO "+":
+      REDDE Ok(a + b)
+    CASO "-":
+      REDDE Ok(a - b)
+    CASO "*":
+      REDDE Ok(a * b)
+    CASO "/":
+      SI b == 0.0
+        REDDE Err("erro divisao_por_zero")
+      FIN SI
+      REDDE Ok(a / b)
+    CASO "**":
+      REDDE Ok(a ** b)
+    CASO "max":
+      SI a >= b
+        REDDE Ok(a)
+      FIN SI
+      REDDE Ok(b)
+    CASO "min":
+      SI a <= b
+        REDDE Ok(a)
+      FIN SI
+      REDDE Ok(b)
+    SENAO:
+      REDDE Err("erro operador")
+  FIN QUANDO
+EXPLICIT RITUALE
+
+RITUALE calcular_unario(VERBUM op, UMBRA x) REDDE Resultado
+  QUANDO CONIURA trim(op)
+    CASO "sqrt":
+      SI x < 0.0
+        REDDE Err("erro raiz_negativa")
+      FIN SI
+      REDDE Ok(CONIURA sqrt_real(x))
+    CASO "cbrt":
+      REDDE Ok(CONIURA cbrt_real(x))
+    SENAO:
+      REDDE Err("erro operador")
+  FIN QUANDO
+EXPLICIT RITUALE
+
+RITUALE imprimir(Resultado r) REDDE NIHIL
+  QUANDO r
+    CASO Ok(v):
+      CONIURA println(CONIURA stringify_real(v))
+    CASO Err(msg):
+      CONIURA println(msg)
+  FIN QUANDO
+EXPLICIT RITUALE
+
+RITUALE main() REDDE NIHIL
+  CONIURA println("calculadora real v2")
+  CONIURA println("uso:")
+  CONIURA println("  a op b")
+  CONIURA println("  sqrt x")
+  CONIURA println("  cbrt x")
+  CONIURA println("operadores binarios: +  -  *  /  **  max  min")
+  CONIURA println("exemplos:")
+  CONIURA println("  2 ** (-3)")
+  CONIURA println("  2**(-3)")
+  CONIURA println("  9 / 2")
+  CONIURA println("  9/2")
+  CONIURA println("  sqrt 9")
+  CONIURA println("  sqrt(9)")
+  CONIURA println("linha vazia encerra")
+
+  DUM VERUM
+    EVOCA VERBUM linha AD CONIURA trim(CONIURA read_line_prompt("> "))
+    SI CONIURA len(linha) == 0
+      FRANGE
+    FIN SI
+
+    EVOCA SPECULUM NIHIL partes AD CONIURA words(linha)
+    EVOCA REX n AD CONIURA fluxus_len(partes)
+
+    SI n == 1
+      EVOCA MILES sym_mais AD CONIURA char_at("+", 0)
+      EVOCA MILES sym_menos AD CONIURA char_at("-", 0)
+      EVOCA MILES sym_vezes AD CONIURA char_at("*", 0)
+      EVOCA MILES sym_div AD CONIURA char_at("/", 0)
+
+      SI CONIURA starts_with(linha, "sqrt(") ET CONIURA ends_with(linha, ")")
+        EVOCA VERBUM sx AD CONIURA substring(linha, 5, CONIURA len(linha) - 1)
+        EVOCA Resultado rx AD CONIURA parse_numero(sx)
+        QUANDO rx
+          CASO Err(msg):
+            CONIURA println(msg)
+          CASO Ok(x):
+            EVOCA Resultado rr AD CONIURA calcular_unario("sqrt", x)
+            CONIURA imprimir(rr)
+        FIN QUANDO
+        CONIURA fluxus_free(partes)
+        RECEDE
+      FIN SI
+
+      SI CONIURA starts_with(linha, "cbrt(") ET CONIURA ends_with(linha, ")")
+        EVOCA VERBUM sx AD CONIURA substring(linha, 5, CONIURA len(linha) - 1)
+        EVOCA Resultado rx AD CONIURA parse_numero(sx)
+        QUANDO rx
+          CASO Err(msg):
+            CONIURA println(msg)
+          CASO Ok(x):
+            EVOCA Resultado rr AD CONIURA calcular_unario("cbrt", x)
+            CONIURA imprimir(rr)
+        FIN QUANDO
+        CONIURA fluxus_free(partes)
+        RECEDE
+      FIN SI
+
+      EVOCA REX ppow AD CONIURA achar_operador_duplo(linha, sym_vezes, sym_vezes)
+      EVOCA REX pmais AD CONIURA achar_operador_simples(linha, sym_mais)
+      EVOCA REX pmenos AD CONIURA achar_operador_simples(linha, sym_menos)
+      EVOCA REX pvezes AD CONIURA achar_operador_simples(linha, sym_vezes)
+      EVOCA REX pdiv AD CONIURA achar_operador_simples(linha, sym_div)
+      EVOCA REX pbin AD -1
+      EVOCA VERBUM opbin AD ""
+
+      SI ppow != -1
+        VINCIRE pbin AD ppow
+        VINCIRE opbin AD "**"
+      ALITER
+        SI pmais != -1
+          VINCIRE pbin AD pmais
+          VINCIRE opbin AD "+"
+        ALITER
+          SI pmenos != -1
+            VINCIRE pbin AD pmenos
+            VINCIRE opbin AD "-"
+          ALITER
+            SI pvezes != -1
+              VINCIRE pbin AD pvezes
+              VINCIRE opbin AD "*"
+            ALITER
+              SI pdiv != -1
+                VINCIRE pbin AD pdiv
+                VINCIRE opbin AD "/"
+              FIN SI
+            FIN SI
+          FIN SI
+        FIN SI
+      FIN SI
+
+      SI pbin != -1
+        EVOCA REX opn AD CONIURA len(opbin)
+        EVOCA VERBUM sa AD CONIURA substring(linha, 0, pbin)
+        EVOCA VERBUM sb AD CONIURA substring(linha, pbin + opn, CONIURA len(linha))
+
+        EVOCA Resultado ra AD CONIURA parse_numero(sa)
+        QUANDO ra
+          CASO Err(msg):
+            CONIURA println(msg)
+            CONIURA fluxus_free(partes)
+            RECEDE
+          CASO Ok(a):
+            EVOCA Resultado rb AD CONIURA parse_numero(sb)
+            QUANDO rb
+              CASO Err(msg2):
+                CONIURA println(msg2)
+                CONIURA fluxus_free(partes)
+                RECEDE
+              CASO Ok(b):
+                EVOCA Resultado rr AD CONIURA calcular(a, opbin, b)
+                CONIURA imprimir(rr)
+            FIN QUANDO
+        FIN QUANDO
+
+        CONIURA fluxus_free(partes)
+        RECEDE
+      FIN SI
+    FIN SI
+
+    SI n != 2 ET n != 3
+      CONIURA println("erro formato")
+      CONIURA fluxus_free(partes)
+      RECEDE
+    FIN SI
+
+    EVOCA VERBUM normalizada AD CONIURA join(partes, " ")
+    SI n == 2
+      EVOCA REX p AD CONIURA find(normalizada, " ")
+      EVOCA VERBUM op AD CONIURA substring(normalizada, 0, p)
+      EVOCA VERBUM sx AD CONIURA substring(normalizada, p + 1, CONIURA len(normalizada))
+
+      EVOCA Resultado rx AD CONIURA parse_numero(sx)
+      QUANDO rx
+        CASO Err(msg):
+          CONIURA println(msg)
+          CONIURA fluxus_free(partes)
+          RECEDE
+        CASO Ok(x):
+          EVOCA Resultado rr AD CONIURA calcular_unario(op, x)
+          CONIURA imprimir(rr)
+      FIN QUANDO
+    ALITER
+      EVOCA REX p1 AD CONIURA find(normalizada, " ")
+      EVOCA REX p2 AD CONIURA last_find(normalizada, " ")
+      EVOCA VERBUM sa AD CONIURA substring(normalizada, 0, p1)
+      EVOCA VERBUM op AD CONIURA substring(normalizada, p1 + 1, p2)
+      EVOCA VERBUM sb AD CONIURA substring(normalizada, p2 + 1, CONIURA len(normalizada))
+
+      EVOCA Resultado ra AD CONIURA parse_numero(sa)
+      QUANDO ra
+        CASO Err(msg):
+          CONIURA println(msg)
+          CONIURA fluxus_free(partes)
+          RECEDE
+        CASO Ok(a):
+          EVOCA Resultado rb AD CONIURA parse_numero(sb)
+          QUANDO rb
+            CASO Err(msg2):
+              CONIURA println(msg2)
+              CONIURA fluxus_free(partes)
+              RECEDE
+            CASO Ok(b):
+              EVOCA Resultado rr AD CONIURA calcular(a, op, b)
+              CONIURA imprimir(rr)
+          FIN QUANDO
+      FIN QUANDO
+    FIN SI
+
+    CONIURA fluxus_free(partes)
+  FIN DUM
+EXPLICIT RITUALE
+
+EXPLICIT grimoire
