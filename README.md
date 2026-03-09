@@ -62,7 +62,7 @@ Highlights of the current baseline:
 - FASE 15 closure set: `FRANGE`/`RECEDE` loop-control stability, logical `ET`/`VEL` with precedence/parentheses, stable bitwise/shift operators, and `CONSTANS` semantic+codegen enforcement (locals, parameters, and const-pointer binding)
 - FASE 16 closure set: freestanding profile (`--profile freestanding`), bridge-safe `cct/kernel`, ASM emission path (`--emit-asm`), and bridge packaging gates
 - FASE 17/18 canonical-library expansion: text/parsing/IO/FS/path utilities, algorithms/collections growth, plus `process`, `hash`, and `bit` modules
-- FASE 19 language-surface expansion: `CUM`/`CASUS`/`ALIOQUIN`, `FORMA`, payload `ORDO`, and `ITERUM` over `map`/`set` with insertion-order semantics
+- FASE 19 language-surface expansion: `ELIGE`/`CASUS`/`ALIOQUIN` (with legacy `CUM` compatibility), `FORMA`, payload `ORDO`, and `ITERUM` over `map`/`set` with insertion-order semantics
 
 ## Recent Phase Closures (16-19)
 
@@ -77,9 +77,9 @@ Highlights of the current baseline:
 - 18: new modules `process`, `hash`, and `bit`
 
 ### FASE 19 (Language Surface Expansion)
-- `CUM` with `CASUS`/`ALIOQUIN` for integer, `VERBUM`, and `ORDO`
+- `ELIGE` with `CASUS`/`ALIOQUIN` for integer, `VERBUM`, and `ORDO` (`CUM` remains accepted as a legacy alias)
 - `FORMA` interpolation with format specifiers
-- payload-capable `ORDO` and `CUM` destructuring
+- payload-capable `ORDO` and `ELIGE` destructuring
 - `ITERUM` expanded to `map` and `set`
 
 ## Build
@@ -155,11 +155,11 @@ Sigil options:
 
 ### Core Language and Execution
 - Lexer, parser, AST, semantic analysis, and executable code generation
-- Structured flow control: `SI/ALITER`, `CUM/CASUS/ALIOQUIN`, `DUM`, `DONEC`, `REPETE`, `ITERUM`
+- Structured flow control: `SI/ALITER`, `ELIGE/CASUS/ALIOQUIN`, `DUM`, `DONEC`, `REPETE`, `ITERUM`
 - Calls and returns: `CONIURA`, `REDDE`, `ANUR`
 - Scalars, booleans, strings, and real-number subset (`UMBRA`, `FLAMMA`)
 - String interpolation expression: `FORMA`
-- Basic arrays (`SERIES`) and payload-capable `ORDO` subset (with `CUM` destructuring)
+- Basic arrays (`SERIES`) and payload-capable `ORDO` subset (with `ELIGE` destructuring)
 - Collection iteration over `FLUXUS`, `SERIES`, `map`, and `set` (with arity validation)
 
 ### Memory and Structural Subset (FASE 7 block)
@@ -450,7 +450,7 @@ Current delivery in FASE 18:
 - new modules: `cct/process`, `cct/hash`, `cct/bit`
 
 Current delivery in FASE 19:
-- language-facing integration with stdlib usage via `CUM`, `FORMA`, payload `ORDO`, and `ITERUM` over `map`/`set`
+- language-facing integration with stdlib usage via `ELIGE`, `FORMA`, payload `ORDO`, and `ITERUM` over `map`/`set`
 - reference module `lib/cct/ordo_samples.cct` documenting idiomatic `Resultado`/`Opcao` payload patterns
 
 Example import:
@@ -551,7 +551,7 @@ The current project baseline is **FASE 19D.4 + FASE 14T completed**. Historical 
 
 **Current-phase release documentation:**
 - `docs/release/FASE_14T_RELEASE_NOTES.md` — FASE 14T sigilo SVG instrumentation summary (`<title>`, `data-*`, root semantics, toggles)
-- `docs/release/FASE_19_RELEASE_NOTES.md` — FASE 19 completion summary (`CUM`, `FORMA`, payload `ORDO`, `ITERUM map/set`)
+- `docs/release/FASE_19_RELEASE_NOTES.md` — FASE 19 completion summary (`ELIGE`, `FORMA`, payload `ORDO`, `ITERUM map/set`)
 
 **Historical package documentation:**
 - `docs/release/FASE_18_RELEASE_NOTES.md` — FASE 18 canonical-library expansion summary
@@ -566,7 +566,7 @@ The current project baseline is **FASE 19D.4 + FASE 14T completed**. Historical 
 
 **Quick reference:**
 - FASE 0–19 public contracts remain stable
-- FASE 19 closure set remains complete (`CUM`, `FORMA`, payload `ORDO`, `ITERUM map/set`)
+- FASE 19 closure set remains complete (`ELIGE`, `FORMA`, payload `ORDO`, `ITERUM map/set`)
 - FASE 14T is closed with SVG hover/metadata instrumentation that can be disabled explicitly
 - Next planned phase is FASE 20
 - Zero silent-breaking-change policy remains active

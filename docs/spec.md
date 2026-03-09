@@ -180,7 +180,7 @@ FASE 17 expands the canonical standard library to unlock bootstrap-oriented comp
 - `cct/variant`
 - `cct/variant_helpers`
 - `cct/ast_node`
-- ORDO payload language support is stable in FASE 19 (`CUM` destructuring + payload constructors)
+- ORDO payload language support is stable in FASE 19 (`ELIGE` destructuring + payload constructors; legacy `CUM` remains accepted)
 
 17D - Host utility libraries:
 - `cct/env`: environment variable and cwd access
@@ -216,7 +216,7 @@ FASE 18 expands and consolidates Bibliotheca Canonica with production-ready host
 FASE 19 closes a major expressiveness gap in core language syntax and semantics.
 
 19A - selection/pattern statement:
-- `CUM`/`CASUS`/`ALIOQUIN` for integer, `VERBUM`, and `ORDO` dispatch.
+- `ELIGE`/`CASUS`/`ALIOQUIN` for integer, `VERBUM`, and `ORDO` dispatch (`CUM` retained as a legacy alias).
 - ORDO exhaustiveness enforcement when `ALIOQUIN` is absent.
 
 19B - interpolated string expression:
@@ -225,7 +225,7 @@ FASE 19 closes a major expressiveness gap in core language syntax and semantics.
 
 19C - payload-capable sum types:
 - `ORDO` supports payload variants with compile-time constructor validation.
-- payload destructuring through `CUM ... CASUS Variante(bindings): ...`.
+- payload destructuring through `ELIGE ... CASUS Variante(bindings): ...`.
 
 19D - collection iteration expansion:
 - `ITERUM key, value IN map COM ... FIN ITERUM`
@@ -349,14 +349,14 @@ field        := type IDENT
 
 Semantics:
 - payload-capable ORDO is a tagged-sum type lowered to a C tagged union form.
-- payload fields are variant-local and are only available after matching a variant in `CUM`.
+- payload fields are variant-local and are only available after matching a variant in `ELIGE`.
 - constructors are resolved by target-context type and validated by variant arity and field types.
 
 Payload contract (current stable subset):
 - allowed payload field types: `REX`, `DUX`, `COMES`, `MILES`, `UMBRA`, `FLAMMA`, `VERUM`, `VERBUM`
 - mixed variants (with and without payload) are supported
 - constructor arity/type is validated at compile time
-- payload destructuring is supported only via `CUM ... CASUS Variant(bindings): ...`
+- payload destructuring is supported only via `ELIGE ... CASUS Variant(bindings): ...`
 
 Current restrictions:
 - recursive ORDO payloads are not part of the stable subset
@@ -561,7 +561,7 @@ Semantics:
 - `SI` evaluates its condition and executes the first branch whose condition path is satisfied.
 - the condition must be `VERUM` or an integer-compatible value in the current subset.
 - `ALITER` is the fallback branch of `SI`; it runs only when the `SI` condition is false.
-- `ALITER` belongs only to `SI`; it is not used inside `CUM`.
+- `ALITER` belongs only to `SI`; it is not used inside `ELIGE`.
 - `ALITER SI` is accepted as chained syntax and behaves as a nested `SI` inside the `else` branch.
 
 ### 5.6 `DUM` (while)
@@ -755,7 +755,7 @@ Operational semantics:
 - if no failure occurs, the `CAPE` block is skipped.
 - if a failure is rethrown inside `CAPE`, propagation continues after local finalization rules run.
 
-### 5.12 `CUM` (pattern-style selection)
+### 5.12 `ELIGE` (pattern-style selection)
 
 Status:
 - Stable (FASE 19A/C payload integration)
@@ -763,39 +763,40 @@ Status:
 Normative grammar:
 
 ```text
-quando_stmt   := CUM expr caso+ (ALIOQUIN ':' stmt_list)? FIN CUM
+quando_stmt   := ELIGE expr caso+ (ALIOQUIN ':' stmt_list)? FIN ELIGE
 caso          := CASUS literal ':' stmt_list
                | CASUS variant_name '(' binding_list ')' ':' stmt_list
 binding_list  := IDENT (',' IDENT)*
 ```
 
 Semantics:
-- `CUM` evaluates `expr` once and executes the first matching `CASUS`.
+- `ELIGE` evaluates `expr` once and executes the first matching `CASUS`.
 - when no `CASUS` matches:
   - if `ALIOQUIN` exists, `ALIOQUIN` executes;
   - if `ALIOQUIN` is absent and scrutinee type is `ORDO`, exhaustiveness diagnostics apply.
 - OR-cases are represented by multiple consecutive `CASUS` labels sharing one body.
 - for `ORDO` with payload, bindings are local to the matched `CASUS` block.
-- each `CASUS` is a match arm of `CUM`; its body is the statement block after `:`.
-- `ALIOQUIN` is the fallback arm of `CUM`: it runs only when no preceding `CASUS` matches.
-- `ALIOQUIN` is not an alias of `ALITER`: `ALITER` belongs to `SI`, while `ALIOQUIN` belongs to `CUM`.
+- each `CASUS` is a match arm of `ELIGE`; its body is the statement block after `:`.
+- `ALIOQUIN` is the fallback arm of `ELIGE`: it runs only when no preceding `CASUS` matches.
+- `ALIOQUIN` is not an alias of `ALITER`: `ALITER` belongs to `SI`, while `ALIOQUIN` belongs to `ELIGE`.
 - in payload matches, `CASUS Variante(a, b)` binds payload fields by position and exposes `a`, `b`, ... only inside that case body.
+- `CUM` remains accepted as a legacy alias of `ELIGE` for source compatibility.
 
 Exhaustiveness rules:
-- `CUM` over `ORDO` (with or without payload): exhaustive coverage is required unless `ALIOQUIN` is present.
-- `CUM` over integer or `VERBUM`: missing `ALIOQUIN` is accepted with warning-oriented diagnostics.
+- `ELIGE` over `ORDO` (with or without payload): exhaustive coverage is required unless `ALIOQUIN` is present.
+- `ELIGE` over integer or `VERBUM`: missing `ALIOQUIN` is accepted with warning-oriented diagnostics.
 
 Restrictions:
-- `CUM` is a statement, not an expression.
+- `ELIGE` is a statement, not an expression.
 - OR-cases with payload bindings in a shared body are not supported.
 - nested payload destructuring patterns are not supported in the stable subset.
-- `FRANGE` inside `CUM` nested in a loop exits the enclosing loop, not the `CUM`.
-- `ALIOQUIN`, when present, must be the final arm before `FIN CUM`.
+- `FRANGE` inside `ELIGE` nested in a loop exits the enclosing loop, not the `ELIGE`.
+- `ALIOQUIN`, when present, must be the final arm before `FIN ELIGE`.
 
 Examples:
 
 ```cct
-CUM x
+ELIGE x
   CASUS 1:
   CASUS 2:
     OBSECRO scribe("pequeno\n")
@@ -803,16 +804,16 @@ CUM x
     OBSECRO scribe("medio\n")
   ALIOQUIN:
     OBSECRO scribe("grande\n")
-FIN CUM
+FIN ELIGE
 ```
 
 ```cct
-CUM resultado
+ELIGE resultado
   CASUS Ok(v):
     OBSECRO scribe(FORMA "valor: {v}\n")
   CASUS Err(msg):
     OBSECRO scribe(FORMA "error: {msg}\n")
-FIN CUM
+FIN ELIGE
 ```
 
 ### 5.13 `FRANGE`, `RECEDE`, `TRANSITUS`
@@ -824,7 +825,7 @@ Status:
 Semantics:
 - `FRANGE` exits the nearest enclosing loop immediately.
 - `RECEDE` skips the remainder of the current iteration and continues with the next iteration of the nearest enclosing loop.
-- neither `FRANGE` nor `RECEDE` targets `CUM`; if they appear inside a `CUM` nested in a loop, they still target the loop.
+- neither `FRANGE` nor `RECEDE` targets `ELIGE`; if they appear inside an `ELIGE` nested in a loop, they still target the loop.
 - `TRANSITUS` is reserved for label-style control transfer, but remains outside the stable executable subset.
 
 ## 6. Expression Reference
@@ -1575,9 +1576,9 @@ Legend:
 |---|---|---|---|
 | `SI` | if | Stable | conditional branch; condition must be boolean/integer-compatible and may have optional `ALITER` |
 | `ALITER` | else | Stable | fallback branch of `SI`; also accepts chained `ALITER SI` |
-| `CUM` | pattern/switch selection | Stable | statement-only multi-arm selection over literals and `ORDO` variants |
-| `CASUS` | case arm in `CUM` | Stable | each `CASUS` declares one arm; payload bindings are only valid for `ORDO` variants |
-| `ALIOQUIN` | default arm in `CUM` | Stable | final fallback arm of `CUM`, executed only when no `CASUS` matches |
+| `ELIGE` | pattern/switch selection | Stable | statement-only multi-arm selection over literals and `ORDO` variants; `CUM` remains accepted as a legacy alias |
+| `CASUS` | case arm in `ELIGE` | Stable | each `CASUS` declares one arm; payload bindings are only valid for `ORDO` variants |
+| `ALIOQUIN` | default arm in `ELIGE` | Stable | final fallback arm of `ELIGE`, executed only when no `CASUS` matches |
 | `DUM` | while / do-while trailer | Stable | pre-condition loop form and trailing condition marker of `DONEC` |
 | `DONEC` | do-while block start | Stable | post-condition loop; body runs before trailing `DUM` check |
 | `REPETE` | for-range loop | Stable | inclusive integer range loop with `DE`, `AD`, and optional `GRADUS` |

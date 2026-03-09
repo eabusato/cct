@@ -12,7 +12,7 @@ FASE 19 closed successfully and delivered four major ergonomics/safety gains:
 
 | Construct | Subphases | Status |
 |---|---|---|
-| CUM | 19A1-19A4 | PASS |
+| ELIGE (`CUM` legacy alias) | 19A1-19A4 | PASS |
 | FORMA | 19B1-19B4 | PASS |
 | ORDO with payload | 19C1-19C4 | PASS |
 | ITERUM map/set | 19D1 | PASS |
@@ -24,16 +24,16 @@ FASE 19 closed successfully and delivered four major ergonomics/safety gains:
 
 | Feature | Before (18D4) | After (19D4) |
 |---|---|---|
-| CUM over integers | No | Yes |
-| CUM over VERBUM | No | Yes |
-| CUM over simple ORDO | No | Yes |
-| CUM over payload ORDO | No | Yes |
-| Exhaustiveness for CUM over ORDO | No | Yes (compile error without ALIOQUIN) |
+| ELIGE over integers | No | Yes |
+| ELIGE over VERBUM | No | Yes |
+| ELIGE over simple ORDO | No | Yes |
+| ELIGE over payload ORDO | No | Yes |
+| Exhaustiveness for ELIGE over ORDO | No | Yes (compile error without ALIOQUIN) |
 | Basic FORMA | No | Yes |
 | FORMA with specifiers | No | Yes |
 | FORMA with inline expressions | No | Yes |
 | ORDO with payload (declaration/construction) | No | Yes |
-| ORDO payload + binding in CUM | No | Yes |
+| ORDO payload + binding in ELIGE | No | Yes |
 | ITERUM over map | No | Yes (2 bindings) |
 | ITERUM over set | No | Yes (1 binding) |
 | map/set iteration order | Undefined | Insertion order |
@@ -64,9 +64,9 @@ FASE 19 closed successfully and delivered four major ergonomics/safety gains:
 
 ## Architectural Decisions
 
-1. `CUM` lowers by type: `switch` for integers/ORDO and `strcmp` chains for `VERBUM`, keeping generated C idiomatic and predictable.
-2. Exhaustiveness for `CUM` over ORDO is an error, not a warning, to block unhandled runtime states.
-3. `FRANGE` inside `CUM` within loops lowers to the loop break label (`goto`) to avoid incorrect `break` semantics inside `switch`.
+1. `ELIGE` lowers by type: `switch` for integers/ORDO and `strcmp` chains for `VERBUM`, keeping generated C idiomatic and predictable.
+2. Exhaustiveness for `ELIGE` over ORDO is an error, not a warning, to block unhandled runtime states.
+3. `FRANGE` inside `ELIGE` within loops lowers to the loop break label (`goto`) to avoid incorrect `break` semantics inside `switch`.
 4. `FORMA` uses a dynamic runtime builder to avoid truncation and support unknown final size.
 5. `FORMA` remains host-only in this phase due to its dynamic allocation dependency.
 6. Payload ORDO lowers to tagged C structs with variant-specific payload unions.
@@ -78,7 +78,7 @@ FASE 19 closed successfully and delivered four major ergonomics/safety gains:
 
 ## Compiler State After FASE 19
 
-- Language surface: `CUM`/`CASUS`/`ALIOQUIN`, `FORMA`, payload `ORDO`, and `ITERUM` over map/set are stable.
+- Language surface: `ELIGE`/`CASUS`/`ALIOQUIN` (`CUM` kept as a legacy alias), `FORMA`, payload `ORDO`, and `ITERUM` over map/set are stable.
 - Normative documentation updated: `docs/spec.md`, `docs/bibliotheca_canonica.md`, `docs/architecture.md`.
 - Release notes published: `docs/release/FASE_19_RELEASE_NOTES.md`.
 - Full global suite green at phase closure.
@@ -92,7 +92,7 @@ FASE 19 closed successfully and delivered four major ergonomics/safety gains:
 | Item | Rationale |
 |---|---|
 | Generic `cct/result` and `cct/option` (`GENUS`) | Direct impact on safe and ergonomic APIs |
-| Guards in `CASUS` (`CASUS x SE cond`) | Reduces nested `CUM` and improves readability |
+| Guards in `CASUS` (`CASUS x SE cond`) | Reduces nested `ELIGE` and improves readability |
 | OR-cases with payload binding | Covers flows like `Ok(v)` / `Algum(v)` in the same body |
 | More expressive generic ORDO | Enables richer domain ADTs with less boilerplate |
 
@@ -109,7 +109,7 @@ FASE 19 closed successfully and delivered four major ergonomics/safety gains:
 
 | Item | Rationale |
 |---|---|
-| `CUM` as an expression | Syntax convenience |
+| `ELIGE` as an expression | Syntax convenience |
 | More FORMA specifiers | Additional formatting coverage |
 | Explicit wildcard in `CASUS` | Extra fallback alias |
 

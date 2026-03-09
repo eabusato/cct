@@ -1,0 +1,77 @@
+INCIPIT grimoire "teste_oracular_do_tremelique"
+
+ORDO EstadoMistico
+  Normal,
+  Wiggle,
+  Haunted,
+  Monday
+FIN ORDO
+
+ORDO Veredito
+  Nice,
+  Nope,
+  Bonkers
+FIN ORDO
+
+RITUALE julgar(REX nivel, EstadoMistico estado) REDDE Veredito
+  ELIGE estado
+    CASUS Normal:
+      SI nivel >= 7
+        REDDE Nice
+      ALITER
+        REDDE Nope
+      FIN SI
+
+    CASUS Wiggle:
+      SI nivel >= 3
+        REDDE Nice
+      ALITER
+        REDDE Bonkers
+      FIN SI
+
+    CASUS Haunted:
+      SI nivel >= 9
+        REDDE Nice
+      ALITER
+        REDDE Bonkers
+      FIN SI
+
+    CASUS Monday:
+      REDDE Bonkers
+  FIN ELIGE
+EXPLICIT RITUALE
+
+RITUALE emitir(Veredito v) REDDE NIHIL
+  ELIGE v
+    CASUS Nice:
+      OBSECRO scribe("the magic goblin says: ok you are silly but fine\n")
+    CASUS Nope:
+      OBSECRO scribe("nope. too much weird noodle energy\n")
+    CASUS Bonkers:
+      OBSECRO scribe("put this gremlin in the moon hospital right now\n")
+  FIN ELIGE
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE main() REDDE NIHIL
+  EVOCA EstadoMistico e1 AD Wiggle
+  EVOCA EstadoMistico e2 AD Monday
+  EVOCA EstadoMistico e3 AD Normal
+
+  EVOCA Veredito v1 AD CONIURA julgar(5, e1)
+  EVOCA Veredito v2 AD CONIURA julgar(99, e2)
+  EVOCA Veredito v3 AD CONIURA julgar(4, e3)
+
+  OBSECRO scribe("round 1:\n")
+  CONIURA emitir(v1)
+
+  OBSECRO scribe("round 2:\n")
+  CONIURA emitir(v2)
+
+  OBSECRO scribe("round 3:\n")
+  CONIURA emitir(v3)
+
+  REDDE
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

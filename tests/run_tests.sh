@@ -12814,11 +12814,11 @@ fi
 echo "Test 999: ordo_payload_proposal_has_migration_plan_17c4"
 DOC_999="docs/bootstrap/CCT_ORDO_PAYLOAD_PROPOSAL_V0.md"
 if [ -f "$DOC_999" ] && \
-   grep -q "Plano De Migracao" "$DOC_999" && \
+   grep -q "Migration Plan" "$DOC_999" && \
    grep -q "Backward Compatibility" "$DOC_999" && \
-   grep -q "Impacto No Parser" "$DOC_999" && \
-   grep -q "Impacto No Semantico" "$DOC_999" && \
-   grep -q "Impacto No Codegen" "$DOC_999"; then
+   grep -q "Parser Impact" "$DOC_999" && \
+   grep -q "Semantic Impact" "$DOC_999" && \
+   grep -q "Codegen Impact" "$DOC_999"; then
     test_pass "ordo_payload_proposal_has_migration_plan_17c4 keeps mandatory sections stable"
 else
     test_fail "ordo_payload_proposal_has_migration_plan_17c4 regressed"
@@ -15699,10 +15699,10 @@ if "$CCT_BIN" "$SRC_1155" >$CCT_TMP_DIR/cct_phase19d3_1155_compile.out 2>&1; the
 else
     RC_1155=255
 fi
-if [ "$RC_1155" -eq 2 ]; then
-    test_pass "quando_alias_latim_19d3 valida CUM/CASUS/ALIOQUIN/FORMA como aliases latinos"
+if [ "$RC_1155" -eq 7 ]; then
+    test_pass "quando_alias_latim_19d3 valida ELIGE como alias principal e preserva CUM por compatibilidade"
 else
-    test_fail "quando_alias_latim_19d3 regressao em aliases latinos de QUANDO/MOLDE"
+    test_fail "quando_alias_latim_19d3 regressao em ELIGE/CUM como aliases de QUANDO"
 fi
 
 echo ""

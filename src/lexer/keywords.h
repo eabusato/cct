@@ -58,6 +58,7 @@ static const cct_keyword_entry_t cct_keywords[] = {
     {"DUX", TOKEN_DUX},
 
     /* E */
+    {"ELIGE", TOKEN_QUANDO},
     {"ET", TOKEN_ET},
     {"ET_BIT", TOKEN_ET_BIT},
     {"EVOCA", TOKEN_EVOCA},

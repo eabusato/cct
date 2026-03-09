@@ -6,8 +6,9 @@ RITUALE main() REDDE REX
   EVOCA VERBUM metodo AD "POST"
   EVOCA VERBUM msg AD FORMA "met={metodo}"
   EVOCA REX out AD 0
+  EVOCA REX legacy AD 0
 
-  CUM metodo
+  ELIGE metodo
     CASUS "GET":
       VINCIRE out AD 1
     CASUS "POST":
@@ -18,9 +19,16 @@ RITUALE main() REDDE REX
       FIN SI
     ALIOQUIN:
       VINCIRE out AD 9
+  FIN ELIGE
+
+  CUM metodo
+    CASUS "POST":
+      VINCIRE legacy AD 5
+    ALIOQUIN:
+      VINCIRE legacy AD 7
   FIN CUM
 
-  REDDE out
+  REDDE out + legacy
 EXPLICIT RITUALE
 
 EXPLICIT grimoire

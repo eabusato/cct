@@ -115,7 +115,7 @@ Delivered after foundation:
 - sigilo tooling, release hardening, and closure governance (`13`, `13M`, `14`)
 - semantic/operator/freestanding bridge consolidation (`15`, `16`)
 - canonical-library expansion for host tooling and low-level modules (`17`, `18`)
-- language-surface expansion (`19A` through `19D`) integrating `CUM`, `FORMA`, payload `ORDO`, and `ITERUM` over map/set.
+- language-surface expansion (`19A` through `19D`) integrating `ELIGE` (`CUM` legacy alias), `FORMA`, payload `ORDO`, and `ITERUM` over map/set.
 
 Current phase closure references:
 - `docs/release/FASE_19_RELEASE_NOTES.md`
@@ -547,7 +547,7 @@ Sigilo integration:
 
 `lib/cct/ordo_samples.cct` is not a required production runtime module.
 It exists as an idiomatic reference for payload-bearing ORDO and for combined use
-of `CUM` and `FORMA`.
+of `ELIGE` and `FORMA`.
 
 Canonical reference patterns:
 - `Resultado` (return with error): `Ok(REX value)` / `Err(VERBUM msg)`
@@ -601,7 +601,7 @@ Low-level utility modules (18D):
 - focus on deterministic hashing, bit operations, and non-cryptographic utility randomness.
 
 ADT/pattern integration reference (19C/19D):
-- `cct/ordo_samples` as the idiomatic baseline for payload `ORDO` with `CUM` and `FORMA`.
+- `cct/ordo_samples` as the idiomatic baseline for payload `ORDO` with `ELIGE` and `FORMA`.
 - generic pointer-backed contracts (`cct/option`, `cct/result`) remain valid for interoperability.
 
 ## 32. Complete Function Inventory (FASE 19D.4)

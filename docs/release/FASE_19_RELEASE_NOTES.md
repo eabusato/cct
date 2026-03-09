@@ -10,7 +10,7 @@
 
 FASE 19 adds four major improvements for application-level coding:
 
-- **CUM**: pattern-style selection for integers, `VERBUM`, and `ORDO`.
+- **ELIGE**: pattern-style selection for integers, `VERBUM`, and `ORDO` (`CUM` remains accepted as a legacy alias).
 - **FORMA**: string interpolation with format specifiers.
 - **ORDO with payload**: sum types (ADTs) with typed fields.
 - **Expanded ITERUM**: native iteration over `map` and `set`.
@@ -19,7 +19,7 @@ No known blocking bugs remained open for the delivered feature set at phase clos
 
 ---
 
-## 1) CUM — Pattern-Style Selection
+## 1) ELIGE — Pattern-Style Selection
 
 ### What You Gain
 
@@ -45,21 +45,21 @@ RITUALE main() REDDE NIHIL
   EVOCA REX code AD 404
   EVOCA State state AD Active
 
-  CUM code
+  ELIGE code
     CASUS 200:
       OBSECRO scribe("ok\n")
     CASUS 404:
       OBSECRO scribe("not found\n")
     ALIOQUIN:
       OBSECRO scribe("other\n")
-  FIN CUM
+  FIN ELIGE
 
-  CUM state
+  ELIGE state
     CASUS Active:
       OBSECRO scribe("active\n")
     CASUS Inactive:
       OBSECRO scribe("inactive\n")
-  FIN CUM
+  FIN ELIGE
 
   REDDE
 EXPLICIT RITUALE
@@ -69,7 +69,7 @@ EXPLICIT RITUALE
 
 - For `ORDO`, omitting `ALIOQUIN` requires full coverage or compilation fails.
 - For integer/`VERBUM`, omitting `ALIOQUIN` is accepted with a warning.
-- `FRANGE` inside `CUM` within a loop exits the outer loop.
+- `FRANGE` inside `ELIGE` within a loop exits the outer loop.
 
 ---
 
@@ -123,7 +123,7 @@ EXPLICIT RITUALE
 
 - Native typed modeling of result/option-like structures.
 - Constructor validation at compile time.
-- Direct destructuring through `CUM`.
+- Direct destructuring through `ELIGE`.
 
 ### Supported Payload Types
 
@@ -147,12 +147,12 @@ EXPLICIT RITUALE
 RITUALE main() REDDE NIHIL
   EVOCA Resultado r AD CONIURA dividir(10, 2)
 
-  CUM r
+  ELIGE r
     CASUS Ok(v):
       OBSECRO scribe(FORMA "resultado: {v}\n")
     CASUS Err(m):
       OBSECRO scribe(FORMA "error: {m}\n")
-  FIN CUM
+  FIN ELIGE
 
   REDDE
 EXPLICIT RITUALE

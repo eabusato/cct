@@ -19,14 +19,14 @@ It has two goals:
 - Current completed phase: FASE 14T (interstitial sigilo-SVG instrumentation closure over the 19D.4 baseline)
 - Current completed subphase: FASE 14TD3 (final gate + handoff + release closure)
 - Current phase context: FASE 19 remains formally closed, FASE 14T is now formally closed, and the baseline is ready to move into FASE 20
-- Phase-19 delivery status: 19A1..19D4 implemented and closed (`CUM`, `FORMA`, payload `ORDO`, `ITERUM` map/set, docs/release/handoff)
+- Phase-19 delivery status: 19A1..19D4 implemented and closed (`ELIGE`, legacy `CUM` compatibility, `FORMA`, payload `ORDO`, `ITERUM` map/set, docs/release/handoff)
 - FASE 14T delivery status: 14TA1..14TD3 implemented and closed (`<title>`, additive `data-*`, root semantics, toggleable instrumentation, docs/release/handoff)
 - Current regression gate: `make test` green with `Passed: 1120 / Failed: 0`
 - **Compiler maturity:** complete development toolchain with formatter, linter, build system, and doc generator
 - **Backend strategy:** C-hosted backend is official (`.cgen.c` + host C compiler)
 - **Sigilo model:** dual-level modular model is stable (local + system sigilo)
 - **Sigilo operations (FASE 13 closed at 13D.4):** inspection/diff/check/baseline/validate flows, CI profiles (`advisory/gated/release`), regression matrix, determinism audit, and final closure governance are integrated
-- **Typing model:** advanced typing subset stabilized (`GENUS`, `PACTUM`, constraints) plus payload `ORDO` and `CUM` exhaustiveness
+- **Typing model:** advanced typing subset stabilized (`GENUS`, `PACTUM`, constraints) plus payload `ORDO` and `ELIGE` exhaustiveness
 
 ## Completed Phases (0 → 19D4)
 
@@ -462,7 +462,7 @@ Quality gate achieved:
 ### FASE 19 — Language Surface Expansion Closure ✅
 
 Objectives completed:
-- `CUM`/`CASUS`/`ALIOQUIN` over integer, `VERBUM`, and payload `ORDO`
+- `ELIGE`/`CASUS`/`ALIOQUIN` over integer, `VERBUM`, and payload `ORDO` (`CUM` preserved as a compatibility alias)
 - `FORMA` interpolation with formatting specs (host profile)
 - payload-capable `ORDO` declaration/construction/destructuring
 - `ITERUM` expansion to `map`/`set` with arity validation and insertion-order contract

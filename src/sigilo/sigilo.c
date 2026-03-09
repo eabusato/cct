@@ -410,7 +410,7 @@ static const char* sg_stmt_kind_label(const cct_ast_node_t *stmt) {
         case AST_VINCIRE: return "VINCIRE";
         case AST_REDDE: return "REDDE";
         case AST_ANUR: return "ANUR";
-        case AST_QUANDO: return "CUM";
+        case AST_QUANDO: return "ELIGE";
         case AST_OBSECRO: return "OBSECRO";
         case AST_EXPR_STMT:
             if (stmt->as.expr_stmt.expression && stmt->as.expr_stmt.expression->type == AST_OBSECRO) {
