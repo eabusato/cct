@@ -1,110 +1,111 @@
-# FASE_16_HANDOFF
+# CCT — Handoff FASE 16
 
-## Status Final
-FASE 16 concluída.
+## Final Status
 
-Estado final técnico:
-- perfil `--profile freestanding` ativo e validado;
-- emissão `--emit-asm` validada com Intel GAS (`.intel_syntax noprefix` + `as --32`);
-- entry explícita `--entry` validada no fluxo freestanding;
-- target `make lbos-bridge` operacional com artefato em `build/lbos-bridge/cct_kernel.o`;
-- regressão host preservada (`make test` verde).
+FASE 16 completed.
 
-## Entregas por Subfase
+Final technical state:
+- `--profile freestanding` active and validated;
+- `--emit-asm` validated with Intel GAS (`.intel_syntax noprefix` + `as --32`);
+- explicit `--entry` validated in the freestanding flow;
+- `make lbos-bridge` operational with artifact at `build/lbos-bridge/cct_kernel.o`;
+- host regression preserved (`make test` green).
+
+## Deliveries by Subphase
 
 ### 16A1
-- Contratos bootstrap iniciais entregues: ABI V0 e naming (`CCT_ABI_V0_LBOS.md`, `CCT_SYMBOL_NAMING_V0.md`).
+- Initial bootstrap contracts delivered: ABI V0 and naming (`CCT_ABI_V0_LBOS.md`, `CCT_SYMBOL_NAMING_V0.md`).
 
 ### 16A2
-- Introdução de profile explícito (`host`/`freestanding`) na CLI.
+- Explicit profile selection (`host`/`freestanding`) introduced in the CLI.
 
 ### 16A3
-- Restrições semânticas de freestanding aplicadas (bloqueio de módulos/fluxos não suportados).
+- Freestanding semantic restrictions applied (unsupported modules/flows blocked).
 
 ### 16A4
-- Diagnósticos de borda de tipos freestanding e matriz de lowering consolidada (`CCT_LOWERING_MATRIX_V0.md`).
+- Freestanding type-edge diagnostics and the lowering matrix consolidated (`CCT_LOWERING_MATRIX_V0.md`).
 
 ### 16B1
-- Runtime shim freestanding (`src/runtime/cct_freestanding_rt.h/.c`) sem dependências proibidas de libc.
+- Freestanding runtime shim (`src/runtime/cct_freestanding_rt.h/.c`) with no forbidden libc dependencies.
 
 ### 16B2
-- Módulo `lib/cct/kernel/` entregue com rituales de bridge.
+- `lib/cct/kernel/` delivered with bridge rituals.
 
 ### 16B3
-- Validação cruzada freestanding (`-m32`) com auditoria de símbolos undefined.
+- Freestanding cross-validation (`-m32`) with undefined-symbol auditing.
 
 ### 16B4
-- `--entry` freestanding concluído e contrato de símbolo `cct_fn_<mod>_<entry>` validado.
+- Freestanding `--entry` completed and `cct_fn_<mod>_<entry>` symbol contract validated.
 
 ### 16C1
-- Driver `--emit-asm` com seleção de cross-compiler e flags canônicas freestanding.
+- `--emit-asm` driver with cross-compiler selection and canonical freestanding flags.
 
 ### 16C2
-- Validador oficial de ASM freestanding (`tools/validate_freestanding_asm.sh`).
+- Official freestanding ASM validator (`tools/validate_freestanding_asm.sh`).
 
 ### 16C3
-- Decisão de sintaxe ASM fixada: Intel GAS (`docs/bootstrap/CCT_ASM_SYNTAX_DECISION.md`).
+- ASM syntax decision fixed: Intel GAS (`docs/bootstrap/CCT_ASM_SYNTAX_DECISION.md`).
 
 ### 16C4
-- Pipeline E2E (`emit-asm -> as --32 -> nm`) fechado com testes dedicados.
+- E2E pipeline (`emit-asm -> as --32 -> nm`) closed with dedicated tests.
 
 ### 16D1
-- Target `make lbos-bridge` no Makefile com saída em `build/lbos-bridge/`.
+- `make lbos-bridge` target added in the Makefile with output in `build/lbos-bridge/`.
 
 ### 16D2
-- Evidência de linkabilidade no lado CCT (`docs/bootstrap/EVIDENCIA_LINK_16D2.md`) com `nm`, `objdump`, `ld -m elf_i386 -r`.
+- Linkability evidence on the CCT side (`docs/bootstrap/EVIDENCIA_LINK_16D2.md`) using `nm`, `objdump`, and `ld -m elf_i386 -r`.
 
 ### 16D3
-- Gate de regressão zero host e isolamento host/freestanding validado.
+- Zero host-regression and host/freestanding isolation validated.
 
 ### 16D4
-- Encerramento documental e handoff formal para FASE 17.
+- Documentation closure and formal handoff to FASE 17.
 
-## Evidências Técnicas
+## Technical Evidence
 - `docs/bootstrap/CCT_ABI_V0_LBOS.md`
 - `docs/bootstrap/CCT_SYMBOL_NAMING_V0.md`
 - `docs/bootstrap/CCT_LOWERING_MATRIX_V0.md`
 - `docs/bootstrap/CCT_ASM_SYNTAX_DECISION.md`
 - `docs/bootstrap/EVIDENCIA_LINK_16D2.md`
-- `make test` final verde com blocos 16A-16D completos.
+- final `make test` green with full 16A-16D blocks.
 
-## Restrição Estrutural da Fase 16
-`third_party/cct-boot` permaneceu somente-leitura durante toda a fase 16.
+## Structural Restriction of FASE 16
+`third_party/cct-boot` remained read-only throughout FASE 16.
 
-- Nenhuma escrita/modificação foi realizada em `third_party/cct-boot`.
-- Toda saída de bridge foi mantida no repositório CCT (`build/lbos-bridge/`).
-- A integração de link final no LBOS ocorre quando o próprio LBOS consumir esses artefatos.
+- No write/modification was performed in `third_party/cct-boot`.
+- All bridge output remained in the CCT repository (`build/lbos-bridge/`).
+- Final link integration in LBOS happens only when LBOS consumes those artifacts.
 
-## Fora do Escopo da FASE 16
+## Confirmed Out-of-Scope Items
 
-| Item excluído | Justificativa / Fase futura |
+| Excluded item | Justification / Future phase |
 |---|---|
-| Conversor GAS -> NASM | Fora da fase 16; decisão de sintaxe fixada em Intel GAS (16C.3) |
-| Suporte a `COMES`/`MILES` em freestanding sem FPU x87 | Warning emitido (16A.4); suporte real requer soft-float — fase futura |
-| `GENUS/PACTUM` dinâmico em freestanding | Bloqueado (16A.4); monomorfização dinâmica requer infraestrutura fase 17+ |
-| Linker script para LBOS | LBOS é somente-leitura; a integração de link ocorre no lado LBOS (F9.LBOS) |
-| Debug symbols / DWARF para freestanding | Proibido pelo contrato ABI V0; não previsto na fase 16 |
-| `cct/io`, `cct/fs` em freestanding | Bloqueados semanticamente (16A.3); implementação requer camada de syscall LBOS |
-| Expansão da API `cct/kernel` além dos 5 rituales | Escopo fixado na 16B.2; expansão é FASE 17+ |
-| Self-hosting do compilador CCT | Objetivo da FASE 17 |
-| Modificações em `third_party/cct-boot` | Somente-leitura; integração acontece de fora |
+| GAS -> NASM converter | Out of scope for FASE 16; syntax decision fixed to Intel GAS (16C.3) |
+| `COMES`/`MILES` support in freestanding without x87 FPU | Warning only (16A.4); real support requires soft-float in a future phase |
+| Dynamic `GENUS/PACTUM` in freestanding | Blocked (16A.4); dynamic monomorphization needs later infrastructure |
+| Linker script for LBOS | LBOS is read-only; link integration occurs on the LBOS side (F9.LBOS) |
+| Debug symbols / DWARF for freestanding | Forbidden by the ABI V0 contract; not planned in FASE 16 |
+| `cct/io`, `cct/fs` in freestanding | Semantically blocked (16A.3); requires LBOS syscall layer |
+| `cct/kernel` API expansion beyond the initial 5 rituals | Scope fixed in 16B.2; expansion belongs to FASE 17+ |
+| CCT compiler self-hosting | FASE 17 objective |
+| Modifications in `third_party/cct-boot` | Read-only by contract; integration happens externally |
 
-## Checklist de Entrada para FASE 17
-- [x] Perfil freestanding estável e testado.
-- [x] Pipeline `--emit-asm` funcional com validação automática.
-- [x] Bridge Makefile operacional (`make lbos-bridge`).
-- [x] Evidência de linkabilidade documentada.
-- [x] Regressão host zero comprovada.
+## Entry Checklist for FASE 17
+- [x] Stable and tested freestanding profile.
+- [x] Functional `--emit-asm` pipeline with automatic validation.
+- [x] Operational bridge Makefile target (`make lbos-bridge`).
+- [x] Linkability evidence documented.
+- [x] Zero host regression proven.
 
-## Riscos Remanescentes e Recomendações
+## Residual Risks and Recommendations
 
-Riscos remanescentes:
-- dependência de toolchain host com suporte robusto a `-m32`/ELF32;
-- escopo de `cct/kernel` ainda mínimo para integrações mais amplas;
-- ausência de soft-float e recursos dinâmicos avançados no perfil freestanding.
+Residual risks:
+- dependency on a host toolchain with robust `-m32`/ELF32 support;
+- still-minimal `cct/kernel` surface for broader integrations;
+- no soft-float or advanced dynamic features in freestanding.
 
-Recomendações para FASE 17:
-1. Evoluir auto-bootstrap em componentes de baixo risco (subconjuntos isolados).
-2. Expandir `cct/kernel` com contratos incrementais e testes de ABI por feature.
-3. Planejar trilha de soft-float/matriz numérica para freestanding.
-4. Preservar gate de regressão host/freestanding em toda expansão.
+Recommendations for FASE 17:
+1. Evolve auto-bootstrap in low-risk isolated components.
+2. Expand `cct/kernel` with incremental contracts and ABI tests per feature.
+3. Plan the soft-float/numeric matrix track for freestanding.
+4. Preserve the host/freestanding regression gate across all expansion work.

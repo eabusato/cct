@@ -373,7 +373,7 @@ FIN ORDO
 
 RITUALE dividir(REX a, REX b) REDDE Resultado
   SI b == 0
-    REDDE Err("divisao por zero")
+    REDDE Err("division by zero")
   FIN SI
   REDDE Ok(a // b)
 EXPLICIT RITUALE
@@ -725,7 +725,7 @@ Try/catch:
 ```cct
 TEMPTA
   ...
-CAPE FRACTUM erro
+CAPE FRACTUM errorr
   ...
 FIN TEMPTA
 ```
@@ -735,7 +735,7 @@ Try/catch/finally:
 ```cct
 TEMPTA
   ...
-CAPE FRACTUM erro
+CAPE FRACTUM errorr
   ...
 SEMPER
   ...
@@ -750,7 +750,7 @@ Subset constraints:
 Operational semantics:
 - `IACE` raises a failure path immediately. In the stable subset, its payload must be `VERBUM` or `FRACTUM`.
 - `TEMPTA` defines a protected block.
-- `CAPE FRACTUM erro` handles a failure raised inside the protected block and binds the caught payload to `erro` only inside the `CAPE` block.
+- `CAPE FRACTUM errorr` handles a failure raised inside the protected block and binds the caught payload to `errorr` only inside the `CAPE` block.
 - `SEMPER` is the finalization block of `TEMPTA`; it executes after the protected/catch path completes, regardless of success or handled failure.
 - if no failure occurs, the `CAPE` block is skipped.
 - if a failure is rethrown inside `CAPE`, propagation continues after local finalization rules run.
@@ -811,7 +811,7 @@ CUM resultado
   CASUS Ok(v):
     OBSECRO scribe(FORMA "valor: {v}\n")
   CASUS Err(msg):
-    OBSECRO scribe(FORMA "erro: {msg}\n")
+    OBSECRO scribe(FORMA "error: {msg}\n")
 FIN CUM
 ```
 
@@ -1098,16 +1098,16 @@ ADVOCARE "cct/series.cct"
 ```
 
 Available operations in the 11C subset:
-- `series_len GENUS(T)(SPECULUM T arr, REX tamanho) -> REX`
-- `series_fill GENUS(T)(SPECULUM T arr, T valor, REX tamanho) -> NIHIL`
-- `series_copy GENUS(T)(SPECULUM T dest, SPECULUM T src, REX tamanho) -> NIHIL`
-- `series_reverse GENUS(T)(SPECULUM T arr, REX tamanho) -> NIHIL`
-- `series_contains(SPECULUM REX arr, REX valor, REX tamanho) -> VERUM`
+- `series_len GENUS(T)(SPECULUM T arr, REX size) -> REX`
+- `series_fill GENUS(T)(SPECULUM T arr, T valor, REX size) -> NIHIL`
+- `series_copy GENUS(T)(SPECULUM T dest, SPECULUM T src, REX size) -> NIHIL`
+- `series_reverse GENUS(T)(SPECULUM T arr, REX size) -> NIHIL`
+- `series_contains(SPECULUM REX arr, REX valor, REX size) -> VERUM`
 
 Subset behavior:
 - `series_fill`, `series_copy`, and `series_reverse` are generic mutation helpers
 - `series_contains` is integer-focused in this subset (`REX`)
-- caller provides explicit `tamanho` and is responsible for shape correctness
+- caller provides explicit `size` and is responsible for shape correctness
 
 ### 8.7 Canonical Baseline Algorithms Module (`cct/alg`)
 
@@ -1118,10 +1118,10 @@ ADVOCARE "cct/alg.cct"
 ```
 
 Available operations in the 11F.2 subset:
-- `alg_linear_search(SPECULUM REX arr, REX valor, REX tamanho) -> REX`
-- `alg_compare_arrays(SPECULUM REX a, SPECULUM REX b, REX tamanho) -> VERUM`
-- `alg_binary_search(SPECULUM REX arr, REX tamanho, REX alvo) -> REX`
-- `alg_sort_insertion(SPECULUM REX arr, REX tamanho) -> NIHIL`
+- `alg_linear_search(SPECULUM REX arr, REX valor, REX size) -> REX`
+- `alg_compare_arrays(SPECULUM REX a, SPECULUM REX b, REX size) -> VERUM`
+- `alg_binary_search(SPECULUM REX arr, REX size, REX alvo) -> REX`
+- `alg_sort_insertion(SPECULUM REX arr, REX size) -> NIHIL`
 
 Subset behavior:
 - algorithms are intentionally small and deterministic
@@ -1509,7 +1509,7 @@ Sigilo consumer compatibility contract (FASE 13C.3):
 - consumer profiles: `legacy-tolerant`, `current-default`, `strict-contract`
 - CLI selection: `--consumer-profile legacy-tolerant|current-default|strict-contract` (`--strict` maps to `strict-contract`)
 - higher same-family schema (`cct.sigil.v2+`) uses warning + v1-compatible fallback in non-strict profiles
-- strict-contract keeps schema mismatch as blocking error
+- strict-contract keeps schema mismatch as a blocking error
 - migration/fallback behavior is covered by current operational guidance and `--consumer-profile` validation contracts
 
 Sigilo strict/tolerant validator contract (FASE 13C.4):
@@ -1756,22 +1756,22 @@ Strict contract:
 - warnings are non-fatal by default
 - with `--strict-docs`, warnings return exit code `2`
 
-## 16. Bibliotheca Canonica — Inventario Completo De Funcoes (FASE 19D.4)
+## 16. Bibliotheca Canonica - Complete Function Inventory (FASE 19D.4)
 
-- Esta secao e normativa para cobertura de superficie de API canonica da biblioteca distribuida com o compilador.
-- Toda funcao declarada em `lib/cct/*.cct` e `lib/cct/kernel/*.cct` deve aparecer neste inventario.
-- O inventario abaixo e gerado a partir das declaracoes `RITUALE` e serve como indice de referencia rapida por modulo.
+- This section is normative for canonical API surface coverage of the library distributed with the compiler.
+- Every function declared in `lib/cct/*.cct` and `lib/cct/kernel/*.cct` must appear in this inventory.
+- The inventory below is generated from `RITUALE` declarations and serves as a quick-reference index by module.
 
 <!-- BEGIN AUTO API INVENTORY 19D4 -->
 <!-- AUTO-GENERATED from lib/cct/*.cct and lib/cct/kernel/*.cct -->
-**Cobertura**: inventario completo de funcoes canonicas em `lib/cct` (FASE 19D.4).
+**Coverage**: complete inventory of canonical functions in `lib/cct` (FASE 19D.4).
 
 ### `cct/alg`
 
-- `alg_linear_search(SPECULUM REX arr, REX valor, REX tamanho) -> REX`
-- `alg_compare_arrays(SPECULUM REX a, SPECULUM REX b, REX tamanho) -> VERUM`
-- `alg_binary_search(SPECULUM REX arr, REX tamanho, REX alvo) -> REX`
-- `alg_sort_insertion(SPECULUM REX arr, REX tamanho) -> NIHIL`
+- `alg_linear_search(SPECULUM REX arr, REX valor, REX size) -> REX`
+- `alg_compare_arrays(SPECULUM REX a, SPECULUM REX b, REX size) -> VERUM`
+- `alg_binary_search(SPECULUM REX arr, REX size, REX alvo) -> REX`
+- `alg_sort_insertion(SPECULUM REX arr, REX size) -> NIHIL`
 - `alg_sum(SPECULUM REX arr, REX n) -> REX`
 - `alg_sum_real(SPECULUM UMBRA arr, REX n) -> UMBRA`
 - `alg_min(SPECULUM REX arr, REX n) -> REX`
@@ -1792,14 +1792,14 @@ Strict contract:
 - `alg_dot_product(SPECULUM REX a, SPECULUM REX b, REX n) -> REX`
 - `alg_dot_product_real(SPECULUM UMBRA a, SPECULUM UMBRA b, REX n) -> UMBRA`
 
-Total modulo: **23**
+Module total: **23**
 
 ### `cct/args`
 
 - `argc() -> REX`
 - `arg(REX i) -> VERBUM`
 
-Total modulo: **2**
+Module total: **2**
 
 ### `cct/ast_node`
 
@@ -1813,7 +1813,7 @@ Total modulo: **2**
 - `ast_as_literal_int(Variant n) -> SPECULUM AstLiteralInt`
 - `ast_as_binary(Variant n) -> SPECULUM AstBinary`
 
-Total modulo: **9**
+Module total: **9**
 
 ### `cct/bit`
 
@@ -1832,7 +1832,7 @@ Total modulo: **9**
 - `parity(REX n) -> VERUM`
 - `bit_extract(REX n, REX start, REX len) -> REX`
 
-Total modulo: **14**
+Module total: **14**
 
 ### `cct/bytes`
 
@@ -1842,7 +1842,7 @@ Total modulo: **14**
 - `bytes_set(SPECULUM NIHIL b, REX i, MILES v) -> NIHIL`
 - `bytes_free(SPECULUM NIHIL b) -> NIHIL`
 
-Total modulo: **5**
+Module total: **5**
 
 ### `cct/char`
 
@@ -1850,7 +1850,7 @@ Total modulo: **5**
 - `is_alpha(MILES c) -> VERUM`
 - `is_whitespace(MILES c) -> VERUM`
 
-Total modulo: **3**
+Module total: **3**
 
 ### `cct/cmp`
 
@@ -1859,7 +1859,7 @@ Total modulo: **3**
 - `cmp_bool(VERUM a, VERUM b) -> REX`
 - `cmp_verbum(VERBUM a, VERBUM b) -> REX`
 
-Total modulo: **4**
+Module total: **4**
 
 ### `cct/code_writer`
 
@@ -1874,7 +1874,7 @@ Total modulo: **4**
 - `writer_to_verbum(SPECULUM NIHIL w) -> VERBUM`
 - `writer_free(SPECULUM NIHIL w) -> NIHIL`
 
-Total modulo: **10**
+Module total: **10**
 
 ### `cct/collection_ops`
 
@@ -1891,7 +1891,7 @@ Total modulo: **10**
 - `series_any GENUS(T) -> VERUM`
 - `series_all GENUS(T) -> VERUM`
 
-Total modulo: **12**
+Module total: **12**
 
 ### `cct/env`
 
@@ -1899,7 +1899,7 @@ Total modulo: **12**
 - `has_env(VERBUM name) -> VERUM`
 - `cwd() -> VERBUM`
 
-Total modulo: **3**
+Module total: **3**
 
 ### `cct/fluxus`
 
@@ -1926,7 +1926,7 @@ Total modulo: **3**
 - `fluxus_sort_verbum(SPECULUM NIHIL flux) -> NIHIL`
 - `fluxus_to_ptr(SPECULUM NIHIL flux) -> SPECULUM NIHIL`
 
-Total modulo: **22**
+Module total: **22**
 
 ### `cct/fmt`
 
@@ -1955,7 +1955,7 @@ Total modulo: **22**
 - `repeat_char(MILES c, REX n) -> VERBUM`
 - `table_row(SPECULUM NIHIL parts, SPECULUM REX widths, REX ncols) -> VERBUM`
 
-Total modulo: **24**
+Module total: **24**
 
 ### `cct/fs`
 
@@ -1986,7 +1986,7 @@ Total modulo: **24**
 - `exists(VERBUM path) -> VERUM`
 - `size(VERBUM path) -> REX`
 
-Total modulo: **26**
+Module total: **26**
 
 ### `cct/hash`
 
@@ -1997,7 +1997,7 @@ Total modulo: **26**
 - `murmur3(VERBUM s, REX seed) -> REX`
 - `combine(REX h1, REX h2) -> REX`
 
-Total modulo: **6**
+Module total: **6**
 
 ### `cct/io`
 
@@ -2021,7 +2021,7 @@ Total modulo: **6**
 - `read_line_prompt(VERBUM prompt) -> VERBUM`
 - `is_tty() -> VERUM`
 
-Total modulo: **19**
+Module total: **19**
 
 ### `cct/map`
 
@@ -2043,7 +2043,7 @@ Total modulo: **19**
 - `map_values GENUS(K, V) -> SPECULUM NIHIL`
 - `map_merge GENUS(K, V) -> NIHIL`
 
-Total modulo: **17**
+Module total: **17**
 
 ### `cct/math`
 
@@ -2091,19 +2091,19 @@ Total modulo: **17**
 - `log10(UMBRA x) -> UMBRA`
 - `log2(UMBRA x) -> UMBRA`
 
-Total modulo: **43**
+Module total: **43**
 
 ### `cct/mem`
 
-- `alloc(REX tamanho) -> SPECULUM REX`
+- `alloc(REX size) -> SPECULUM REX`
 - `free(SPECULUM REX ptr) -> NIHIL`
-- `realloc(SPECULUM REX ptr, REX novo_tamanho) -> SPECULUM REX`
-- `copy(SPECULUM REX dest, SPECULUM REX src, REX tamanho) -> NIHIL`
-- `set(SPECULUM REX ptr, REX valor, REX tamanho) -> NIHIL`
-- `zero(SPECULUM REX ptr, REX tamanho) -> NIHIL`
-- `mem_compare(SPECULUM REX a, SPECULUM REX b, REX tamanho) -> REX`
+- `realloc(SPECULUM REX ptr, REX new_size) -> SPECULUM REX`
+- `copy(SPECULUM REX dest, SPECULUM REX src, REX size) -> NIHIL`
+- `set(SPECULUM REX ptr, REX valor, REX size) -> NIHIL`
+- `zero(SPECULUM REX ptr, REX size) -> NIHIL`
+- `mem_compare(SPECULUM REX a, SPECULUM REX b, REX size) -> REX`
 
-Total modulo: **7**
+Module total: **7**
 
 ### `cct/option`
 
@@ -2116,7 +2116,7 @@ Total modulo: **7**
 - `option_expect GENUS(T) -> T`
 - `option_free GENUS(T) -> NIHIL`
 
-Total modulo: **8**
+Module total: **8**
 
 ### `cct/ordo_samples`
 
@@ -2129,7 +2129,7 @@ Total modulo: **8**
 - `opcao_ou_padrao(Opcao o, REX padrao) -> REX`
 - `token_descrever(Token t) -> VERBUM`
 
-Total modulo: **8**
+Module total: **8**
 
 ### `cct/parse`
 
@@ -2149,7 +2149,7 @@ Total modulo: **8**
 - `parse_csv_line(VERBUM s) -> SPECULUM NIHIL`
 - `parse_csv_line_sep(VERBUM s, MILES sep) -> SPECULUM NIHIL`
 
-Total modulo: **15**
+Module total: **15**
 
 ### `cct/path`
 
@@ -2170,7 +2170,7 @@ Total modulo: **15**
 - `temp_dir() -> VERBUM`
 - `split_path(VERBUM p) -> SPECULUM NIHIL`
 
-Total modulo: **16**
+Module total: **16**
 
 ### `cct/process`
 
@@ -2181,7 +2181,7 @@ Total modulo: **16**
 - `run_env(VERBUM cmd, SPECULUM NIHIL env_pairs) -> REX`
 - `run_timeout(VERBUM cmd, REX timeout_ms) -> REX`
 
-Total modulo: **6**
+Module total: **6**
 
 ### `cct/random`
 
@@ -2197,7 +2197,7 @@ Total modulo: **6**
 - `shuffle_int(SPECULUM REX arr, REX n) -> NIHIL`
 - `random_bytes(REX n) -> SPECULUM NIHIL`
 
-Total modulo: **11**
+Module total: **11**
 
 ### `cct/result`
 
@@ -2211,7 +2211,7 @@ Total modulo: **11**
 - `result_expect GENUS(T, E) -> T`
 - `result_free GENUS(T, E) -> NIHIL`
 
-Total modulo: **9**
+Module total: **9**
 
 ### `cct/series`
 
@@ -2219,7 +2219,7 @@ Total modulo: **9**
 - `series_fill GENUS(T) -> NIHIL`
 - `series_copy GENUS(T) -> NIHIL`
 - `series_reverse GENUS(T) -> NIHIL`
-- `series_contains(SPECULUM REX arr, REX valor, REX tamanho) -> VERUM`
+- `series_contains(SPECULUM REX arr, REX valor, REX size) -> VERUM`
 - `series_sum(SPECULUM REX arr, REX n) -> REX`
 - `series_sum_real(SPECULUM UMBRA arr, REX n) -> UMBRA`
 - `series_min(SPECULUM REX arr, REX n) -> REX`
@@ -2228,7 +2228,7 @@ Total modulo: **9**
 - `series_sort(SPECULUM REX arr, REX n) -> NIHIL`
 - `series_count_val(SPECULUM REX arr, REX n, REX val) -> REX`
 
-Total modulo: **12**
+Module total: **12**
 
 ### `cct/set`
 
@@ -2252,13 +2252,13 @@ Total modulo: **12**
 - `set_reserve GENUS(T) -> NIHIL`
 - `set_capacity GENUS(T) -> REX`
 
-Total modulo: **19**
+Module total: **19**
 
 ### `cct/stub_test`
 
 - `test_value() -> REX`
 
-Total modulo: **1**
+Module total: **1**
 
 ### `cct/time`
 
@@ -2266,7 +2266,7 @@ Total modulo: **1**
 - `now_ns() -> REX`
 - `sleep_ms(REX ms) -> NIHIL`
 
-Total modulo: **3**
+Module total: **3**
 
 ### `cct/variant`
 
@@ -2274,7 +2274,7 @@ Total modulo: **3**
 - `variant_tag(Variant v) -> REX`
 - `variant_payload(Variant v) -> SPECULUM NIHIL`
 
-Total modulo: **3**
+Module total: **3**
 
 ### `cct/variant_helpers`
 
@@ -2283,7 +2283,7 @@ Total modulo: **3**
 - `variant_payload_if(Variant v, REX tag) -> SPECULUM NIHIL`
 - `variant_payload_expect(Variant v, REX tag, VERBUM message) -> SPECULUM NIHIL`
 
-Total modulo: **4**
+Module total: **4**
 
 ### `cct/verbum`
 
@@ -2325,7 +2325,7 @@ Total modulo: **4**
 - `lines(VERBUM s) -> SPECULUM NIHIL`
 - `words(VERBUM s) -> SPECULUM NIHIL`
 
-Total modulo: **37**
+Module total: **37**
 
 ### `cct/verbum_builder`
 
@@ -2340,7 +2340,7 @@ Total modulo: **37**
 - `builder_clear(SPECULUM NIHIL b) -> NIHIL`
 - `builder_free(SPECULUM NIHIL b) -> NIHIL`
 
-Total modulo: **10**
+Module total: **10**
 
 ### `cct/verbum_scan`
 
@@ -2351,17 +2351,17 @@ Total modulo: **10**
 - `cursor_next(SPECULUM NIHIL c) -> MILES`
 - `cursor_free(SPECULUM NIHIL c) -> NIHIL`
 
-Total modulo: **6**
+Module total: **6**
 
 ### `cct/kernel`
 
 - `kernel_halt() -> NIHIL`
-- `kernel_outb(REX porta, REX valor) -> NIHIL`
-- `kernel_inb(REX porta) -> REX`
+- `kernel_outb(REX port, REX valor) -> NIHIL`
+- `kernel_inb(REX port) -> REX`
 - `kernel_memcpy(SPECULUM REX dst, SPECULUM REX src, REX n) -> NIHIL`
 - `kernel_memset(SPECULUM REX dst, REX valor, REX n) -> NIHIL`
 
-Total modulo: **5**
+Module total: **5**
 
 **Total geral de funcoes inventariadas**: **422**
 <!-- END AUTO API INVENTORY 19D4 -->

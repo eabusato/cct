@@ -1,70 +1,71 @@
 # ROADMAP_BIBLIOTHECA_POS16
 
-## Objetivo
-Definir a expansão da Bibliotheca Canonica após o fechamento da FASE 16, com foco em
-habilitar a escrita do compilador CCT em CCT (host-first), sem regressão de compatibilidade.
+## Objective
 
-Este roadmap prioriza bloqueadores reais do pipeline de compilador:
-1. leitura de caractere em `VERBUM`;
-2. acesso a argumentos de linha de comando;
-3. construção eficiente de texto (codegen);
-4. representação robusta de nós discriminados (AST).
+Define the expansion of Bibliotheca Canonica after the closure of FASE 16, with the explicit goal of enabling host-first CCT compiler work written in CCT itself, without compatibility regressions.
 
-## Princípios
-- Entrega incremental por subfase, com `make test` verde em cada gate.
-- Host-first (backend C atual), sem quebrar trilha freestanding da FASE 16.
-- Evitar scope creep: primeiro viabilizar lexer/CLI/codegen; depois ampliar ecossistema.
-- APIs novas com contrato explícito de ownership e erro.
+This roadmap prioritizes the real blockers in the compiler pipeline:
+1. character access over `VERBUM`;
+2. command-line argument access;
+3. efficient text construction for code generation;
+4. robust tagged-node representation for AST work.
+
+## Principles
+
+- Incremental delivery by subphase, with `make test` green at every gate.
+- Host-first strategy over the current C backend, without breaking the freestanding track established in FASE 16.
+- Avoid scope creep: unlock lexer/CLI/codegen first, then expand the ecosystem.
+- New APIs must have explicit ownership and error contracts.
 
 ---
 
-## FASE 17A — Bloqueadores Críticos de Lexing e CLI
+## FASE 17A — Critical Lexer and CLI Blockers
 
-### 17A.1 — Ponte `VERBUM <-> MILES` (bloqueador crítico #1)
+### 17A.1 — `VERBUM <-> MILES` bridge
 
-#### Entregas
-- Extensão de `cct/verbum` com APIs mínimas:
+#### Deliveries
+- Extend `cct/verbum` with minimum APIs:
   - `char_at(VERBUM s, REX i) -> MILES`
   - `from_char(MILES c) -> VERBUM`
-- Nova camada de classificação de caractere (preferencialmente em `cct/char.cct`):
+- Add a character-classification layer, preferably in `cct/char.cct`:
   - `is_digit(MILES c) -> VERUM`
   - `is_alpha(MILES c) -> VERUM`
   - `is_whitespace(MILES c) -> VERUM`
 
-#### Contrato
-- `char_at`: política estrita para índice inválido (erro previsível e testável).
-- `from_char`: string de tamanho 1, ownership documentado.
-- Classificação limitada a ASCII no primeiro corte (Unicode fora de escopo inicial).
+#### Contract
+- `char_at` uses a strict invalid-index policy with predictable, testable failure behavior.
+- `from_char` returns a single-character string with documented ownership.
+- Character classification is ASCII-only in the first cut; full Unicode remains out of scope.
 
-#### Critério de aceite
-- É possível escrever um lexer funcional em CCT que itera caractere por caractere.
-- Testes de borda: índice negativo, índice >= len, bytes limite, whitespace clássico (`' '`, `\t`, `\n`, `\r`).
+#### Acceptance Criteria
+- A functional lexer can be written in CCT by iterating character-by-character.
+- Edge cases are covered: negative index, index >= len, boundary bytes, classic whitespace (`' '`, `\t`, `\n`, `\r`).
 
-### 17A.2 — `argv`/CLI (bloqueador crítico #2)
+### 17A.2 — `argv` / CLI access
 
-#### Entregas
-- Novo módulo `cct/args.cct` (ou `cct/cli.cct`) com API mínima:
+#### Deliveries
+- New module `cct/args.cct` (or `cct/cli.cct`) with minimum API:
   - `argc() -> REX`
   - `arg(REX i) -> VERBUM`
-  - `has(VERBUM flag) -> VERUM` (opcional nesta subfase)
-- Bridge runtime host para expor `argc/argv` ao programa CCT.
+  - `has(VERBUM flag) -> VERUM` (optional in this subphase)
+- Host runtime bridge exposing `argc/argv` to the generated CCT program.
 
-#### Contrato
-- `arg(i)` com política estrita para índice inválido.
-- Compatível com execução atual (`./cct <programa.cct>` e projetos).
+#### Contract
+- `arg(i)` uses a strict invalid-index policy.
+- Compatible with the current execution flow (`./cct <program.cct>` and project commands).
 
-#### Critério de aceite
-- Programa CCT consegue ler caminho de entrada de `argv` e validar falta de argumentos.
-- Cobertura com fixtures host de sucesso/erro.
+#### Acceptance Criteria
+- A CCT program can read its input path from `argv` and validate missing arguments.
+- Success and failure fixtures exist for host execution.
 
 ---
 
-## FASE 17B — Eficiência de Construção de Texto (gap significativo)
+## FASE 17B — Efficient Text Construction
 
-### 17B.1 — `StringBuilder` canônico
+### 17B.1 — Canonical `StringBuilder`
 
-#### Entregas
-- Novo módulo `cct/verbum_builder.cct` com API base:
+#### Deliveries
+- New module `cct/verbum_builder.cct` with baseline API:
   - `builder_init() -> SPECULUM NIHIL`
   - `builder_append(SPECULUM NIHIL b, VERBUM s) -> NIHIL`
   - `builder_append_char(SPECULUM NIHIL b, MILES c) -> NIHIL`
@@ -73,93 +74,97 @@ Este roadmap prioriza bloqueadores reais do pipeline de compilador:
   - `builder_clear(SPECULUM NIHIL b) -> NIHIL`
   - `builder_free(SPECULUM NIHIL b) -> NIHIL`
 
-#### Contrato
-- Crescimento amortizado (evitar `O(n^2)` de concat incremental).
-- Ownership explícito de builder e string final.
+#### Contract
+- Amortized growth to avoid `O(n^2)` behavior during incremental concatenation.
+- Explicit ownership of both the builder and the final string snapshot.
 
-#### Critério de aceite
-- Cenário de codegen textual com milhares de append sem degradação quadrática.
-- Testes de estabilidade + integração com `cct/fmt` e `cct/verbum`.
+#### Acceptance Criteria
+- Textual codegen workloads with thousands of appends do not degrade quadratically.
+- Stability tests and integration with `cct/fmt` and `cct/verbum` are in place.
 
 ---
 
-## FASE 17C — Modelagem de Nó Discriminado (gap significativo)
+## FASE 17C — Tagged-Node Modeling
 
-### 17C.1 — Caminho pragmático de biblioteca (curto prazo)
+### 17C.1 — Pragmatic library path (short term)
 
-#### Entregas
-- Novo módulo `cct/variant.cct` (nome provisório) para tag + payload opaco:
+#### Deliveries
+- New module `cct/variant.cct` for opaque tag + payload handling:
   - `variant_make(REX tag, SPECULUM NIHIL payload) -> SIGILLUM Variant`
   - `variant_tag(SIGILLUM Variant v) -> REX`
   - `variant_payload(SIGILLUM Variant v) -> SPECULUM NIHIL`
-- Convenção de tags via `ORDO` nos consumidores.
+- Tag conventions driven by `ORDO` in consuming code.
 
-#### Limitação
-- Ainda não substitui tipo soma nativo; é ponte pragmática para AST inicial.
+#### Limitation
+- This does not replace a native sum type yet; it is a pragmatic bridge for early AST work.
 
-### 17C.2 — Trilha de linguagem (médio prazo)
+### 17C.2 — Language path (medium term)
 
-#### Entregas
-- Proposta formal de extensão de linguagem para ORDO com payload (sum type).
-- Documento de design + impacto semântico/codegen + plano de migração do `variant`.
+#### Deliveries
+- Formal language-extension proposal for payload-capable `ORDO`.
+- Design document covering semantic impact, codegen impact, and migration path from `variant`.
 
-#### Critério de aceite
-- Decisão arquitetural registrada (aprovado/rejeitado) com testes de prova de conceito se aprovado.
-
----
-
-## FASE 17D — Biblioteca Base para Compiladores (expansão adicional)
-
-Após desbloquear lexer/CLI/codegen textual, expandir com módulos de produtividade:
-
-### 17D.1 — `cct/verbum_scan` (cursor/tokenização)
-- `cursor_init`, `cursor_peek`, `cursor_next`, `cursor_eof`, `cursor_pos`.
-- Facilita lexer sem repetir boilerplate em projetos.
-
-### 17D.2 — `cct/bytes` (buffer binário)
-- leitura/escrita de bytes, slice, copy, fill.
-- útil para futuro backend binário e ferramentas.
-
-### 17D.3 — `cct/env` (ambiente host)
-- `getenv`, `setenv` (se suportado), `cwd`, `exists` de variáveis.
-- foco em toolchain/automação local.
-
-### 17D.4 — `cct/time` (medição simples)
-- relógio monotônico e wall-clock básico para benchmark/ferramentas.
+#### Acceptance Criteria
+- Architectural decision recorded (approved or rejected), with proof-of-concept tests if approved.
 
 ---
 
-## Ordem Recomendada de Execução
-1. **17A.1** (`char_at` + classificação) — sem isso, não existe lexer em CCT.
-2. **17A.2** (`argv`) — sem isso, não existe compilador CLI utilizável.
-3. **17B.1** (`StringBuilder`) — remove gargalo crítico de codegen textual.
-4. **17C.1** (`variant` pragmático) — viabiliza AST grande com disciplina.
-5. **17D.x** (bibliotecas adicionais) — ganho de produtividade/ecossistema.
-6. **17C.2** (tipo soma nativo) — decisão de linguagem com maturidade.
+## FASE 17D — Base Library for Compiler Work
+
+After lexer/CLI/textual-codegen are unlocked, expand with productivity modules:
+
+### 17D.1 — `cct/verbum_scan`
+- `cursor_init`, `cursor_peek`, `cursor_next`, `cursor_eof`, `cursor_pos`
+- Reduces repeated lexer boilerplate in compiler/tooling projects.
+
+### 17D.2 — `cct/bytes`
+- Byte read/write, slice, copy, fill.
+- Useful for future binary backend and tooling paths.
+
+### 17D.3 — `cct/env`
+- `getenv`, `setenv` (if supported), `cwd`, environment-variable checks.
+- Focus on local toolchain/automation flows.
+
+### 17D.4 — `cct/time`
+- Monotonic clock and simple wall-clock access for benchmarks and tooling.
 
 ---
 
-## Métricas de Sucesso
-- `make test` sempre verde por subfase.
-- Existe lexer CCT funcional escrito em CCT até o fim de 17A.
-- Existe CLI mínima de compilador em CCT até o fim de 17A.2.
-- Codegen textual em CCT sem degradação quadrática até o fim de 17B.1.
-- Pacote de bibliotecas utilitárias host-first com documentação e testes determinísticos até 17D.
+## Recommended Execution Order
+
+1. **17A.1** (`char_at` + classification) — without this, there is no lexer in CCT.
+2. **17A.2** (`argv`) — without this, there is no usable compiler CLI in CCT.
+3. **17B.1** (`StringBuilder`) — removes the critical textual-codegen bottleneck.
+4. **17C.1** (pragmatic `variant`) — enables larger AST work with discipline.
+5. **17D.x** (additional libraries) — ecosystem and productivity gains.
+6. **17C.2** (native sum type) — language decision once the stack is mature enough.
 
 ---
 
-## Fora de Escopo Imediato
-- Unicode completo/grapheme cluster em classificação de caracteres.
-- Conversor GAS -> NASM.
-- Reescrever todo o compilador em uma única fase (big-bang self-host).
-- Alterar `third_party/cct-boot` (permanece somente-leitura).
+## Success Metrics
+
+- `make test` stays green in every subphase.
+- A functional CCT lexer written in CCT exists by the end of 17A.
+- A minimal compiler CLI in CCT exists by the end of 17A.2.
+- Textual codegen in CCT avoids quadratic degradation by the end of 17B.1.
+- A deterministic, documented, host-first library set exists by 17D.
 
 ---
 
-## Próxima Ação Objetiva
-Iniciar **17A.1** com design e implementação de:
+## Immediate Out of Scope
+
+- Full Unicode / grapheme-cluster character classification.
+- GAS -> NASM conversion.
+- Rewriting the entire compiler in a single big-bang self-hosting phase.
+- Any modification under `third_party/cct-boot` (remains read-only).
+
+---
+
+## Next Objective Action
+
+Start **17A.1** with the design and implementation of:
 - `verbum.char_at`
 - `verbum.from_char`
 - `cct/char` (`is_digit`, `is_alpha`, `is_whitespace`)
 
-com testes de integração dedicados no padrão do runner atual.
+with dedicated integration tests following the current runner style.

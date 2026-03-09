@@ -1,103 +1,103 @@
 # CCT — Release Notes: FASE 14T
 
-**Data**: Marco 2026  
-**Versao do compilador**: FASE 19D.4 + 14T  
-**Testes**: 1120 passou / 0 falhou (suite completa)
+**Date**: March 2026  
+**Compiler version**: FASE 19D.4 + 14T  
+**Tests**: 1120 passed / 0 failed (full suite)
 
 ---
 
-## Resumo
+## Summary
 
-A FASE 14T transforma o sigilo SVG em um artefato de leitura semantica sem quebrar o contrato visual existente:
+FASE 14T turns sigilo SVG into a semantic reading artifact without breaking the existing visual contract:
 
-- `<title>` nativo em elementos semanticos ja emitidos pelo SVG;
-- `data-*` deterministico e aditivo em nos locais e arestas de `call`;
-- semantica leve no root (`role`, `aria-label`, `desc`) quando a instrumentacao esta ativa;
-- toggles explicitos para gerar SVG instrumentado ou SVG plain pre-14T;
-- nenhum JavaScript obrigatorio.
+- native `<title>` on semantic elements already emitted by the SVG;
+- deterministic additive `data-*` on local nodes and `call` edges;
+- lightweight root semantics (`role`, `aria-label`, `desc`) when instrumentation is enabled;
+- explicit toggles to generate instrumented SVG or plain pre-14T SVG;
+- no required JavaScript.
 
-Na pratica, os componentes do sigilo agora aceitam hover diretamente no SVG: circulos, linhas e arestas revelam contexto semantico sem viewer separado.
+In practice, sigilo components now support direct hover in the SVG itself: circles, lines, and edges reveal semantic context without a separate viewer.
 
-O fechamento da fase manteve o pipeline deterministico e encerrou com regressao global verde.
-
----
-
-## 1) Hover Semantico Nativo
-
-O SVG agora pode ser lido diretamente pelo navegador ou por ferramentas que respeitam `<title>`.
-
-Cobertura entregue:
-- nos de `RITUALE`
-- nos estruturais (`branch`, `loop`, `bind`, `term`)
-- arestas locais (`primary`, `call`, `branch`, `loop`, `bind`, `term`)
-- nos e arestas do system sigilo
-
-Os payloads de hover sao derivados de contexto real do programa: nome do rituale, tipo do statement, profundidade, contagens relevantes e trecho normalizado de fonte.
+The phase closed with deterministic output preserved and a full green regression gate.
 
 ---
 
-## 2) Metadados Aditivos
+## 1) Native Semantic Hover
 
-O SVG local ganhou `data-*` deterministicos, sem alterar o contrato `.sigil`:
+The SVG can now be read directly in a browser or any tool that respects native SVG `<title>`.
 
-- nos locais: `data-kind`, `data-ritual`, `data-line`, `data-col`, `data-depth`, `data-stmt`, e campos relacionados
-- arestas de `call`: `data-kind`, `data-from`, `data-to`, `data-weight`, `data-self-loop`
+Delivered coverage:
+- `RITUALE` nodes
+- structural nodes (`branch`, `loop`, `bind`, `term`)
+- local edges (`primary`, `call`, `branch`, `loop`, `bind`, `term`)
+- system sigilo nodes and edges
 
-Escopo deliberadamente fechado nesta fase:
-- sem proliferação de metadados em todos os elementos do system sigilo
-- sem schema novo em `.sigil`
+Hover payloads are derived from real program context: ritual name, statement kind, nesting depth, relevant counts, and normalized source excerpt.
 
 ---
 
-## 3) Toggling de Instrumentacao
+## 2) Additive Metadata
 
-Novas opcoes de CLI:
+Local SVG gained deterministic `data-*` without changing the `.sigil` contract:
+
+- local nodes: `data-kind`, `data-ritual`, `data-line`, `data-col`, `data-depth`, `data-stmt`, and related fields
+- `call` edges: `data-kind`, `data-from`, `data-to`, `data-weight`, `data-self-loop`
+
+Scope intentionally remained closed in this phase:
+- no metadata proliferation across every system-sigilo element
+- no new `.sigil` schema
+
+---
+
+## 3) Instrumentation Toggling
+
+New CLI options:
 
 ```bash
-./cct --sigilo-only --sigilo-no-titles arquivo.cct
-./cct --sigilo-only --sigilo-no-data arquivo.cct
-./cct --sigilo-only --sigilo-no-titles --sigilo-no-data arquivo.cct
+./cct --sigilo-only --sigilo-no-titles file.cct
+./cct --sigilo-only --sigilo-no-data file.cct
+./cct --sigilo-only --sigilo-no-titles --sigilo-no-data file.cct
 ```
 
-Contrato:
-- `--sigilo-no-titles`: remove `<title>` e wrappers de hover
-- `--sigilo-no-data`: remove `data-*` aditivos e `<desc>`
-- ambos juntos: restauram o SVG plain pre-14T
+Contract:
+- `--sigilo-no-titles`: removes `<title>` and hover wrappers
+- `--sigilo-no-data`: removes additive `data-*` and root `<desc>`
+- both together: restore plain pre-14T SVG
 
-Isso permite escolher entre:
-- leitura humana enriquecida
-- consumo incremental por tooling
-- preservacao de baseline estrutural minimalista
+This gives three practical modes:
+- enriched human reading
+- incremental tooling consumption
+- minimal structural baseline preservation
 
 ---
 
-## 4) Qualidade e Nao-Regressao
+## 4) Quality and Non-Regression
 
-Entregas de qualidade desta fase:
-- normalizacao LF/CRLF no source-context
-- escape/clipping deterministico de tooltip
-- regressao local e system exercitada no runner principal
-- cleanup dos artefatos desses testes no proprio `tests/run_tests.sh`
-- runner enxuto mostrando apenas falhas e o sumario final
+Quality work delivered in this phase:
+- LF/CRLF normalization in source-context extraction
+- deterministic tooltip escaping and clipping
+- local and system regression coverage in the main runner
+- cleanup of generated phase artifacts inside `tests/run_tests.sh`
+- lean runner output showing failures only plus the final summary
 
-Gate final:
+Final gate:
 - `make test`
-- resultado: **1120 passed / 0 failed**
+- result: **1120 passed / 0 failed**
 
 ---
 
-## 5) Fora de Escopo
+## 5) Out of Scope
 
-Ficaram fora da FASE 14T:
-- viewer web dedicado
-- navegacao interativa com JS
-- busca, filtros, zoom semantico ou animacao
-- novo schema `.sigil`
-- redesign visual amplo do motor de layout
+Explicitly out of scope for FASE 14T:
+- dedicated web viewer
+- JavaScript-driven interactive navigation
+- search, filters, semantic zoom, or animation
+- new `.sigil` schema
+- large visual redesign of the layout engine
 
 ---
 
-## 6) Proxima Fase
+## 6) Next Phase
 
-Com a FASE 14T encerrada, o proximo passo oficial volta para:
+With FASE 14T closed, the official next step returns to:
 - **FASE 20 — Application Library Stack Expansion**

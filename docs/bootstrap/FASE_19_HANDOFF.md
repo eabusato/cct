@@ -1,48 +1,48 @@
 # CCT — Handoff FASE 19
 
 **Status**: PASS  
-**Data**: 2026-03-07  
-**Testes**: 1069 passou / 0 falhou
+**Date**: 2026-03-07  
+**Tests**: 1069 passed / 0 failed
 
 ---
 
-## Resumo executivo
+## Executive Summary
 
-A FASE 19 fechou com sucesso e adicionou quatro ganhos de ergonomia/seguranca:
+FASE 19 closed successfully and delivered four major ergonomics/safety gains:
 
-| Construto | Subfases | Status |
+| Construct | Subphases | Status |
 |---|---|---|
 | CUM | 19A1-19A4 | PASS |
 | FORMA | 19B1-19B4 | PASS |
-| ORDO com payload | 19C1-19C4 | PASS |
+| ORDO with payload | 19C1-19C4 | PASS |
 | ITERUM map/set | 19D1 | PASS |
-| Documentacao e release | 19D2-19D3 | PASS |
+| Documentation and release | 19D2-19D3 | PASS |
 
 ---
 
-## Tabela de features (antes/depois)
+## Feature Table (Before/After)
 
-| Feature | Antes (18D4) | Depois (19D4) |
+| Feature | Before (18D4) | After (19D4) |
 |---|---|---|
-| CUM sobre inteiros | Nao | Sim |
-| CUM sobre VERBUM | Nao | Sim |
-| CUM sobre ORDO simples | Nao | Sim |
-| CUM sobre ORDO com payload | Nao | Sim |
-| Exaustividade de CUM sobre ORDO | Nao | Sim (erro de compilacao sem ALIOQUIN) |
-| FORMA basico | Nao | Sim |
-| FORMA com especificadores | Nao | Sim |
-| FORMA com expressoes inline | Nao | Sim |
-| ORDO com payload (declaracao/construcao) | Nao | Sim |
-| ORDO payload + binding em CUM | Nao | Sim |
-| ITERUM sobre map | Nao | Sim (2 bindings) |
-| ITERUM sobre set | Nao | Sim (1 binding) |
-| Ordem de iteracao map/set | Nao definida | Insercao |
+| CUM over integers | No | Yes |
+| CUM over VERBUM | No | Yes |
+| CUM over simple ORDO | No | Yes |
+| CUM over payload ORDO | No | Yes |
+| Exhaustiveness for CUM over ORDO | No | Yes (compile error without ALIOQUIN) |
+| Basic FORMA | No | Yes |
+| FORMA with specifiers | No | Yes |
+| FORMA with inline expressions | No | Yes |
+| ORDO with payload (declaration/construction) | No | Yes |
+| ORDO payload + binding in CUM | No | Yes |
+| ITERUM over map | No | Yes (2 bindings) |
+| ITERUM over set | No | Yes (1 binding) |
+| map/set iteration order | Undefined | Insertion order |
 
 ---
 
-## Contagem de testes por subfase
+## Test Count by Subphase
 
-| Subfase | Fixtures | Status |
+| Subphase | Fixtures | Status |
 |---|---:|---|
 | 19A1 | 5 | PASS |
 | 19A2 | 3 | PASS |
@@ -58,74 +58,74 @@ A FASE 19 fechou com sucesso e adicionou quatro ganhos de ergonomia/seguranca:
 | 19C4 | 4 | PASS |
 | 19D1 | 5 | PASS |
 | **Total FASE 19** | **55** | **PASS** |
-| **Acumulado global** | **1069** | **PASS** |
+| **Global cumulative** | **1069** | **PASS** |
 
 ---
 
-## Decisoes arquiteturais
+## Architectural Decisions
 
-1. `CUM` usa lowering por tipo: `switch` para inteiros/ORDO e cadeia `strcmp` para `VERBUM`, mantendo C gerado idiomatico e previsivel.
-2. Exaustividade de `CUM` sobre ORDO e erro (nao warning) para bloquear estados nao tratados em runtime.
-3. `FRANGE` dentro de `CUM` em loop usa salto para rotulo de break do loop (`goto`), evitando semantica incorreta de `break` no `switch`.
-4. `FORMA` foi implementado com builder dinamico de runtime para evitar truncamento e suportar tamanho final desconhecido.
-5. `FORMA` permanece host-only nesta fase por dependencia de alocacao dinamica.
-6. ORDO com payload foi reduzido para tagged union em C, com construcao por compound literal.
-7. Bindings de payload em `CASUS Variante(x, y)` tem escopo local ao bloco do caso.
-8. `ITERUM` foi expandido para `map`/`set` com contratos de aridade validados no semantico.
-9. Runtime de `map`/`set` preserva ordem de insercao para iteracao deterministica.
-
----
-
-## Estado do compilador pos-FASE 19
-
-- Linguagem: CUM/CASUS/ALIOQUIN, FORMA, ORDO payload e ITERUM map/set estaveis.
-- Documentacao normativa atualizada: `docs/spec.md`, `docs/bibliotheca_canonica.md`, `docs/architecture.md`.
-- Release notes publicados: `docs/release/FASE_19_RELEASE_NOTES.md`.
-- Suite global completa verde no fechamento da fase.
+1. `CUM` lowers by type: `switch` for integers/ORDO and `strcmp` chains for `VERBUM`, keeping generated C idiomatic and predictable.
+2. Exhaustiveness for `CUM` over ORDO is an error, not a warning, to block unhandled runtime states.
+3. `FRANGE` inside `CUM` within loops lowers to the loop break label (`goto`) to avoid incorrect `break` semantics inside `switch`.
+4. `FORMA` uses a dynamic runtime builder to avoid truncation and support unknown final size.
+5. `FORMA` remains host-only in this phase due to its dynamic allocation dependency.
+6. Payload ORDO lowers to tagged C structs with variant-specific payload unions.
+7. Payload bindings in `CASUS Variant(x, y)` are scoped locally to the case body.
+8. `ITERUM` was expanded to `map`/`set` with arity contracts enforced in semantic analysis.
+9. `map`/`set` runtime preserves insertion order for deterministic iteration.
 
 ---
 
-## Backlog FASE 20 (priorizado)
+## Compiler State After FASE 19
 
-### Prioridade alta
+- Language surface: `CUM`/`CASUS`/`ALIOQUIN`, `FORMA`, payload `ORDO`, and `ITERUM` over map/set are stable.
+- Normative documentation updated: `docs/spec.md`, `docs/bibliotheca_canonica.md`, `docs/architecture.md`.
+- Release notes published: `docs/release/FASE_19_RELEASE_NOTES.md`.
+- Full global suite green at phase closure.
 
-| Item | Racional |
+---
+
+## FASE 20 Backlog (Prioritized)
+
+### High Priority
+
+| Item | Rationale |
 |---|---|
-| `cct/result` e `cct/option` genericos (`GENUS`) | Impacto direto em APIs seguras e ergonomicas |
-| Guards em `CASUS` (`CASUS x SE cond`) | Reduz `CUM` aninhado e melhora legibilidade |
-| OR-cases com binding de payload | Cobertura de fluxos `Ok(v)` / `Algum(v)` no mesmo corpo |
-| ORDO generico mais expressivo | Libera ADTs de dominio com menos boilerplate |
+| Generic `cct/result` and `cct/option` (`GENUS`) | Direct impact on safe and ergonomic APIs |
+| Guards in `CASUS` (`CASUS x SE cond`) | Reduces nested `CUM` and improves readability |
+| OR-cases with payload binding | Covers flows like `Ok(v)` / `Algum(v)` in the same body |
+| More expressive generic ORDO | Enables richer domain ADTs with less boilerplate |
 
-### Prioridade media
+### Medium Priority
 
-| Item | Racional |
+| Item | Rationale |
 |---|---|
-| Desestruturacao aninhada em `CASUS` | Amplia modelagem de ADTs compostos |
-| ORDO recursivo | Estruturas como listas/arvores nativas |
-| ITERUM para tipos customizados | Ergonomia para colecoes de dominio |
-| Inferencia parcial de `GENUS` | Reduz anotacao explicita repetitiva |
+| Nested destructuring in `CASUS` | Broader modeling for composed ADTs |
+| Recursive ORDO | Native list/tree-like structures |
+| ITERUM for custom abstractions | Better ergonomics for domain collections |
+| Partial GENUS inference | Reduces repeated explicit annotations |
 
-### Prioridade baixa
+### Low Priority
 
-| Item | Racional |
+| Item | Rationale |
 |---|---|
-| `CUM` como expressao | Conveniencia sintatica |
-| Novos especificadores de `FORMA` | Cobertura extra de formato |
-| Wildcard explicito em `CASUS` | Alias adicional para fallback |
+| `CUM` as an expression | Syntax convenience |
+| More FORMA specifiers | Additional formatting coverage |
+| Explicit wildcard in `CASUS` | Extra fallback alias |
 
 ---
 
-## Evidencias de qualidade
+## Quality Evidence
 
-- Gate final executado: `make test`.
-- Resultado registrado: `Passed: 1069`, `Failed: 0`.
-- Snippets de docs/release da FASE 19 compilados em `tests/.tmp`.
-- Nenhum `TODO` pendente em `src/` identificado no fechamento.
+- Final gate executed: `make test`.
+- Recorded result: `Passed: 1069`, `Failed: 0`.
+- FASE 19 docs/release snippets compiled into `tests/.tmp`.
+- No pending `TODO` in `src/` was identified at closure.
 
 ---
 
-## Notas para a proxima sessao
+## Notes for the Next Session
 
-1. Iniciar a FASE 20 pelo documento mestre (`md_out/FASE_20_CCT.md`).
-2. Atacar primeiro itens de alta prioridade (GENUS em result/option e guards em CASUS).
-3. Manter gate obrigatorio: `make test` verde ao final de cada subfase.
+1. Start FASE 20 from the master document (`md_out/FASE_20_CCT.md`).
+2. Attack high-priority items first (GENUS in result/option and guards in CASUS).
+3. Preserve the mandatory gate: `make test` green at the end of each subphase.

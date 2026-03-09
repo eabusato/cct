@@ -1,114 +1,114 @@
 # CCT — Release Notes: FASE 19
 
-**Data**: Marco 2026  
-**Versao do compilador**: FASE 19D (pos-18D4)  
-**Testes**: 1069 passou / 0 falhou (suite completa)
+**Date**: March 2026  
+**Compiler version**: FASE 19D (post-18D4)  
+**Tests**: 1069 passed / 0 failed (full suite)
 
 ---
 
-## Resumo
+## Summary
 
-A FASE 19 adiciona quatro melhorias centrais para escrita de codigo de aplicacao:
+FASE 19 adds four major improvements for application-level coding:
 
-- **CUM**: selecao por padrao para inteiros, VERBUM e ORDO.
-- **FORMA**: interpolacao de strings com especificadores de formato.
-- **ORDO com payload**: tipos soma (ADT) com campos tipados.
-- **ITERUM expandido**: iteracao nativa sobre `map` e `set`.
+- **CUM**: pattern-style selection for integers, `VERBUM`, and `ORDO`.
+- **FORMA**: string interpolation with format specifiers.
+- **ORDO with payload**: sum types (ADTs) with typed fields.
+- **Expanded ITERUM**: native iteration over `map` and `set`.
 
-Nao ha bugs conhecidos em aberto para os recursos entregues nesta fase.
+No known blocking bugs remained open for the delivered feature set at phase closure.
 
 ---
 
-## 1) CUM — Selecao por Padrao
+## 1) CUM — Pattern-Style Selection
 
-### O que voce ganha
+### What You Gain
 
-- Codigo de decisao mais legivel do que cadeias longas de `SI`/`ALITER`.
-- Exaustividade obrigatoria para ORDO (sem branch silencioso perdido).
-- Integracao direta com ORDO payload em `CASUS Variante(bindings)`.
+- Decision code that is clearer than long `SI`/`ALITER` chains.
+- Mandatory exhaustiveness for `ORDO` (no silently missed branch).
+- Direct integration with `ORDO` payload via `CASUS Variant(bindings)`.
 
-### Tipos suportados
+### Supported Types
 
-- Inteiros (`REX`, `DUX`, `COMES`, `MILES`)
+- Integers (`REX`, `DUX`, `COMES`, `MILES`)
 - `VERBUM`
-- `ORDO` (com e sem payload)
+- `ORDO` (with and without payload)
 
-### Exemplo
+### Example
 
 ```cct
-ORDO Estado
-  Ativo,
-  Inativo
+ORDO State
+  Active,
+  Inactive
 FIN ORDO
 
 RITUALE main() REDDE NIHIL
-  EVOCA REX codigo AD 404
-  EVOCA Estado est AD Ativo
+  EVOCA REX code AD 404
+  EVOCA State state AD Active
 
-  CUM codigo
+  CUM code
     CASUS 200:
       OBSECRO scribe("ok\n")
     CASUS 404:
-      OBSECRO scribe("nao encontrado\n")
+      OBSECRO scribe("not found\n")
     ALIOQUIN:
-      OBSECRO scribe("outro\n")
+      OBSECRO scribe("other\n")
   FIN CUM
 
-  CUM est
-    CASUS Ativo:
-      OBSECRO scribe("ativo\n")
-    CASUS Inativo:
-      OBSECRO scribe("inativo\n")
+  CUM state
+    CASUS Active:
+      OBSECRO scribe("active\n")
+    CASUS Inactive:
+      OBSECRO scribe("inactive\n")
   FIN CUM
 
   REDDE
 EXPLICIT RITUALE
 ```
 
-### Regras importantes
+### Important Rules
 
-- Em ORDO, sem `ALIOQUIN`, cobertura incompleta e erro de compilacao.
-- Em inteiro/VERBUM, sem `ALIOQUIN`, a compilacao e aceita com warning.
-- `FRANGE` dentro de `CUM` em loop encerra o loop externo.
+- For `ORDO`, omitting `ALIOQUIN` requires full coverage or compilation fails.
+- For integer/`VERBUM`, omitting `ALIOQUIN` is accepted with a warning.
+- `FRANGE` inside `CUM` within a loop exits the outer loop.
 
 ---
 
-## 2) FORMA — Interpolacao de Strings
+## 2) FORMA — String Interpolation
 
-### O que voce ganha
+### What You Gain
 
-- Criacao de mensagens e textos formatados sem concatenacao manual extensa.
-- Formatos numericos e alinhamento no proprio literal.
-- Integracao natural com `OBSECRO scribe(...)`.
+- Message/text construction without large manual concatenation chains.
+- Numeric formatting and alignment directly in the literal.
+- Natural integration with `OBSECRO scribe(...)`.
 
-### Disponibilidade
+### Availability
 
-- **Host-only** nesta fase.
-- Em freestanding, `FORMA` gera erro de compilacao.
+- **Host-only** in this phase.
+- In freestanding, `FORMA` is a compile-time error.
 
-### Especificadores comuns
+### Common Specifiers
 
-| Spec | Efeito |
+| Spec | Effect |
 |---|---|
-| `5d` | inteiro com largura minima 5 |
-| `.2f` | real com 2 casas decimais |
-| `>10` | alinhamento a direita |
-| `<10` | alinhamento a esquerda |
-| `^10` | alinhamento central |
+| `5d` | integer with minimum width 5 |
+| `.2f` | real with 2 decimal places |
+| `>10` | right alignment |
+| `<10` | left alignment |
+| `^10` | centered alignment |
 
-### Exemplo
+### Example
 
 ```cct
 RITUALE main() REDDE NIHIL
-  EVOCA VERBUM nome AD "Carlos"
-  EVOCA REX idade AD 30
-  EVOCA UMBRA altura AD 1.75
+  EVOCA VERBUM name AD "Carlos"
+  EVOCA REX age AD 30
+  EVOCA UMBRA height AD 1.75
 
-  OBSECRO scribe(FORMA "Nome: {nome}, Idade: {idade}\n")
-  OBSECRO scribe(FORMA "Altura: {altura:.2f}m\n")
-  OBSECRO scribe(FORMA "Nome alinhado: {nome:>10}\n")
+  OBSECRO scribe(FORMA "Name: {name}, Age: {age}\n")
+  OBSECRO scribe(FORMA "Height: {height:.2f}m\n")
+  OBSECRO scribe(FORMA "Aligned name: {name:>10}\n")
 
-  EVOCA VERBUM msg AD FORMA "Maioridade: {idade >= 18}"
+  EVOCA VERBUM msg AD FORMA "Adult status: {age >= 18}"
   OBSECRO scribe(msg, "\n")
 
   REDDE
@@ -117,19 +117,19 @@ EXPLICIT RITUALE
 
 ---
 
-## 3) ORDO com Payload — ADTs Tipados
+## 3) ORDO with Payload — Typed ADTs
 
-### O que voce ganha
+### What You Gain
 
-- Modelagem de resultado/opcao de forma nativa e tipada.
-- Construtores validados em tempo de compilacao.
-- Desestruturacao direta com `CUM`.
+- Native typed modeling of result/option-like structures.
+- Constructor validation at compile time.
+- Direct destructuring through `CUM`.
 
-### Tipos de payload suportados
+### Supported Payload Types
 
 `REX`, `DUX`, `COMES`, `MILES`, `UMBRA`, `FLAMMA`, `VERUM`, `VERBUM`.
 
-### Exemplo (padrao Resultado)
+### Example (Result-like Pattern)
 
 ```cct
 ORDO Resultado
@@ -139,7 +139,7 @@ FIN ORDO
 
 RITUALE dividir(REX a, REX b) REDDE Resultado
   SI b == 0
-    REDDE Err("divisao por zero")
+    REDDE Err("division by zero")
   FIN SI
   REDDE Ok(a // b)
 EXPLICIT RITUALE
@@ -151,32 +151,32 @@ RITUALE main() REDDE NIHIL
     CASUS Ok(v):
       OBSECRO scribe(FORMA "resultado: {v}\n")
     CASUS Err(m):
-      OBSECRO scribe(FORMA "erro: {m}\n")
+      OBSECRO scribe(FORMA "error: {m}\n")
   FIN CUM
 
   REDDE
 EXPLICIT RITUALE
 ```
 
-### Referencia idiomatica
+### Idiomatic Reference
 
-- `lib/cct/ordo_samples.cct` inclui `Resultado` e `Opcao` como baseline.
+- `lib/cct/ordo_samples.cct` includes `Resultado` and `Opcao` as baseline patterns.
 
 ---
 
-## 4) ITERUM Expandido — `map` e `set`
+## 4) Expanded ITERUM — `map` and `set`
 
-### O que voce ganha
+### What You Gain
 
-- Iteracao direta sobre colecoes canonicamente usadas em codigo de aplicacao.
-- Ordem de iteracao por insercao para `map` e `set`.
+- Direct iteration over collections commonly used in application code.
+- Insertion-order iteration for both `map` and `set`.
 
-### Regras de aridade
+### Arity Rules
 
-- `map`: 2 bindings (`chave`, `valor`)
+- `map`: 2 bindings (`key`, `value`)
 - `set`: 1 binding (`item`)
 
-### Exemplo
+### Example
 
 ```cct
 ADVOCARE "cct/map.cct"
@@ -207,27 +207,14 @@ EXPLICIT RITUALE
 
 ---
 
-## 5) Qualidade e Regressao
+## 5) Quality and Regression
 
-- Regressao completa executada: `make test`.
-- Resultado final: **1069 passed / 0 failed**.
-- Sem regressao nas fases 1 a 18.
-
----
-
-## 6) Fora de Escopo (planejado para FASE 20)
-
-- ORDO recursivo.
-- OR-cases com binding de payload compartilhando corpo.
-- Desestruturacao aninhada em `CASUS`.
-- Guards em `CASUS`.
-- `FORMA` em freestanding.
-- Iteracao `ITERUM` para tipos customizados iteraveis.
+- Full regression executed: `make test`.
+- Final result: **1069 passed / 0 failed**.
+- No regressions across phases 1 through 18.
 
 ---
 
-## 7) Notas de Migracao
+## 6) Out of Scope (Planned for FASE 20)
 
-- Sem quebra de compatibilidade para codigo existente.
-- `CUM`, `CASUS`, `ALIOQUIN`, `FORMA` passaram a ser palavras reservadas.
-- Se usados antes como identificadores, devem ser renomeados.
+- Recursive `ORDO`.

@@ -1,17 +1,17 @@
 # CCT ORDO Payload Proposal V0
 
-## Motivacao
+## Motivation
 
-O modelo atual baseado em `cct/variant` resolveu o bloqueio pratico de modelagem de tipo soma,
-mas ainda exige disciplina manual:
-- uso recorrente de `tag` numerica;
-- payload opaco com casts/convencoes no consumidor;
-- menor seguranca de tipo para acessores e construtores.
+The current `cct/variant`-based model solved the practical blocking issue for sum-type modeling,
+but it still requires manual discipline:
+- repeated use of numeric `tag` values;
+- opaque payload with consumer-side casts/conventions;
+- weaker type safety for constructors and accessors.
 
-Objetivo desta proposta:
-evoluir a linguagem para `ORDO` com payload nativo, preservando compatibilidade e rollout incremental.
+Objective of this proposal:
+evolve the language toward native payload-capable `ORDO`, while preserving compatibility and enabling incremental rollout.
 
-## Sintaxe Candidata
+## Candidate Syntax
 
 ```cct
 ORDO Expr
@@ -21,7 +21,7 @@ ORDO Expr
 FIN ORDO
 ```
 
-Uso candidato:
+Candidate usage:
 
 ```cct
 EVOCA Expr a AD IDENT("x")
@@ -29,84 +29,84 @@ EVOCA Expr b AD LITERAL(42)
 EVOCA Expr c AD BINARY(SPECULUM NIHIL a, "+", SPECULUM NIHIL b)
 ```
 
-## Semantica Proposta
+## Proposed Semantics
 
-- Cada item de `ORDO` pode ter zero ou mais campos de payload.
-- Construtores passam a ser nativos do item (`IDENT("x")`, `LITERAL(42)` etc.).
-- Leitura de valor deve checar variante ativa.
-- Itens sem payload continuam representando apenas tag.
-- Itens com payload exigem aridade e tipos exatos.
+- Each `ORDO` item may have zero or more payload fields.
+- Constructors become native to the item (`IDENT("x")`, `LITERAL(42)`, etc.).
+- Value reads must check the active variant.
+- Items without payload continue to represent tag-only variants.
+- Items with payload require exact arity and types.
 
-## Impacto No Parser
+## Parser Impact
 
-- Estender gramatica de `ORDO` para aceitar lista de campos opcionais por item.
-- Criar nos AST especificos para:
-  - item de ORDO sem payload;
-  - item de ORDO com payload tipado.
-- Validar delimitadores e aridade sintatica ja no parser para reduzir erro tardio.
+- Extend `ORDO` grammar to accept an optional field list per item.
+- Create specific AST nodes for:
+  - payload-free `ORDO` item;
+  - typed-payload `ORDO` item.
+- Validate delimiters and syntactic arity in the parser to reduce late errors.
 
-## Impacto No Semantico
+## Semantic Impact
 
-- Resolver tipos dos campos por item e verificar referencias.
-- Validar chamadas de construtor nativo:
-  - item existe;
-  - aridade correta;
-  - tipos compativeis.
-- Emitir diagnosticos canonicos para mismatch de item/payload.
+- Resolve per-item field types and verify references.
+- Validate native constructor calls:
+  - item exists;
+  - correct arity;
+  - compatible types.
+- Emit canonical diagnostics for item/payload mismatch.
 
-## Impacto No Codegen
+## Codegen Impact
 
-Lowering proposto:
-- `struct` com campo `tag`;
-- armazenamento de payload por `union` ou por bloco estruturado equivalente;
-- helpers gerados para construcao e leitura segura por item.
+Proposed lowering:
+- `struct` with a `tag` field;
+- payload storage through `union` or an equivalent structured block;
+- generated helpers for safe per-item construction and access.
 
-Requisitos de codegen:
-- manter layout deterministico;
-- manter compatibilidade com backend C atual;
-- preservar mensagens de erro previsiveis para acesso invalido.
+Codegen requirements:
+- preserve deterministic layout;
+- preserve compatibility with the current C backend;
+- preserve predictable error messages for invalid access.
 
 ## Backward Compatibility
 
-- `ORDO` sem payload permanece valido sem mudanca de codigo.
-- Codigo existente com `cct/variant` continua funcionando durante coexistencia.
-- Nenhuma quebra imediata em APIs antigas.
+- Payload-free `ORDO` remains valid with no source change.
+- Existing `cct/variant` code continues to work during coexistence.
+- No immediate breaking changes to older APIs.
 
-## Plano De Migracao
+## Migration Plan
 
-### Fase 1: coexistencia
-- introduzir sintaxe nova de `ORDO` com payload;
-- manter `cct/variant` como caminho suportado.
+### Phase 1: coexistence
+- introduce new payload `ORDO` syntax;
+- keep `cct/variant` as a supported path.
 
-### Fase 2: wrappers
-- disponibilizar wrappers de compatibilidade `variant <-> ORDO payload`;
-- facilitar migracao de consumidores gradualmente.
+### Phase 2: wrappers
+- provide compatibility wrappers `variant <-> payload ORDO`;
+- support gradual consumer migration.
 
-### Fase 3: deprecacao progressiva
-- marcar APIs manuais de tag/payload como legadas;
-- remover apenas apos janela de migracao documentada.
+### Phase 3: progressive deprecation
+- mark manual tag/payload APIs as legacy;
+- remove only after a documented migration window.
 
-## Riscos E Mitigacoes
+## Risks and Mitigations
 
-1. Complexidade no parser.
-- Mitigacao: fasear mudanca por nos AST claros e erros pontuais.
+1. Parser complexity.
+- Mitigation: phase the change through clear AST nodes and targeted errors.
 
-2. Regressao na qualidade de diagnosticos.
-- Mitigacao: manter codigos de erro e envelopes canonicos.
+2. Diagnostic-quality regression.
+- Mitigation: preserve canonical error codes and envelopes.
 
-3. Crescimento de binario por suporte de payload.
-- Mitigacao: strategy de lowering compacta e testes de impacto.
+3. Binary growth due to payload support.
+- Mitigation: compact lowering strategy and impact tests.
 
 ## Tradeoffs
 
-| Aspecto | Vantagem | Custo |
+| Aspect | Benefit | Cost |
 |---|---|---|
-| Ergonomia | Menos boilerplate manual | Parser/semantico mais complexos |
-| Seguranca de tipo | Menos cast opaco em payload | Mais regras de validacao |
-| Evolucao | Caminho nativo para AST/IR | Implementacao backend adicional |
-| Compatibilidade | Coexistencia com `cct/variant` | Janela de migracao mais longa |
+| Ergonomics | Less manual boilerplate | More parser/semantic complexity |
+| Type safety | Less opaque payload casting | More validation rules |
+| Evolution | Native path for AST/IR | Additional backend implementation |
+| Compatibility | Coexistence with `cct/variant` | Longer migration window |
 
-## Exemplo Completo (Declaracao E Uso)
+## Full Example (Declaration and Use)
 
 ```cct
 INCIPIT grimoire "expr_demo"
@@ -127,7 +127,7 @@ EXPLICIT RITUALE
 EXPLICIT grimoire
 ```
 
-## Conclusao
+## Conclusion
 
-Esta proposta define direcao tecnica objetiva para sair do modelo manual de `Variant`
-e chegar a um `ORDO` com payload nativo, com rollout incremental e sem breaking change abrupto.
+This proposal defines a concrete technical direction to move from the manual `Variant` model
+to native payload-capable `ORDO`, with incremental rollout and no abrupt breaking change.

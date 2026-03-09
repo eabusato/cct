@@ -1275,7 +1275,7 @@ depth: 6
 line: 21
 
 source:
-OBSECRO scribe("[failure.cape] ", erro, "\n")</title>
+OBSECRO scribe("[failure.cape] ", error, "\n")</title>
     </g>
     <g class="node-wrap">
       <circle class="node-term" cx="156.81" cy="222.21" r="4.40" data-kind="term" data-ritual="risco_controlado" data-line="19" data-col="5" data-depth="6" data-stmt="REDDE"/>

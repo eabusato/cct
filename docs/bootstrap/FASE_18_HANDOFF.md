@@ -1,37 +1,37 @@
-# FASE 18 HANDOFF
+# CCT — Handoff FASE 18
 
-## 1. Status Final Da Fase
+## 1. Final Phase Status
 
 - Status: PASS
-- Data: 2026-03-06
-- Escopo fechado: 18A1 ate 18D4
-- Gate final: `make test` verde (1014 passed / 0 failed)
+- Date: 2026-03-06
+- Closed scope: 18A1 through 18D4
+- Final gate: `make test` green (1014 passed / 0 failed)
 
-## 2. Entregas Por Subfase
+## 2. Deliveries by Subphase
 
-- 18A1: expansao core de `cct/verbum` (busca, replace, case, trim/pad/repeat, slice/reverse).
-- 18A2: operacoes de colecao de texto em `cct/verbum` (`split`, `split_char`, `join`, `lines`, `words`).
-- 18A3: expansao de `cct/fmt` (radix, precisao, templates `format_1..4`, `table_row`).
-- 18A4: expansao de `cct/parse` com `try_*`, radix e CSV.
-- 18B1: mutacoes de `cct/fs` (`mkdir/delete/rename/copy/move`).
-- 18B2: inspecao/listagem/temp em `cct/fs`.
-- 18B3: expansao de `cct/io` para stderr/flush/stdin/tty.
-- 18B4: expansao de `cct/path` para normalize/resolve/relative/split/ext.
-- 18C1: expansao de `cct/fluxus` (peek/set/remove/insert/slice/copy/sort/to_ptr).
-- 18C2: expansao de `cct/set` e `cct/map` (operacoes de conjunto e merge/keys/values).
-- 18C3: expansao de `cct/alg` (min/max/soma/sort/rotate/fill/dot-product).
-- 18C4: expansao de `cct/series` (sum/min/max/sort/is_sorted/count).
-- 18D1: novo modulo `cct/process` + bridge runtime host para exec/capture/input/env/timeout.
-- 18D2: novo modulo `cct/hash` + runtime para fnv1a bytes, crc32, murmur3.
-- 18D3: novo modulo `cct/bit` + expansao de `cct/random` (bool/range/verbum/shuffle/bytes).
-- 18D4: consolidacao documental da fase em `docs/spec.md` e este handoff.
+- 18A1: core `cct/verbum` expansion (search, replace, case, trim/pad/repeat, slice/reverse).
+- 18A2: text-collection operations in `cct/verbum` (`split`, `split_char`, `join`, `lines`, `words`).
+- 18A3: `cct/fmt` expansion (radix, precision, `format_1..4` templates, `table_row`).
+- 18A4: `cct/parse` expansion with `try_*`, radix, and CSV.
+- 18B1: `cct/fs` mutations (`mkdir/delete/rename/copy/move`).
+- 18B2: `cct/fs` inspection/listing/temp helpers.
+- 18B3: `cct/io` expansion for stderr/flush/stdin/tty.
+- 18B4: `cct/path` expansion for normalize/resolve/relative/split/ext.
+- 18C1: `cct/fluxus` expansion (peek/set/remove/insert/slice/copy/sort/to_ptr).
+- 18C2: `cct/set` and `cct/map` expansion (set algebra plus merge/keys/values).
+- 18C3: `cct/alg` expansion (min/max/sum/sort/rotate/fill/dot-product).
+- 18C4: `cct/series` expansion (sum/min/max/sort/is_sorted/count).
+- 18D1: new `cct/process` module plus host runtime bridge for exec/capture/input/env/timeout.
+- 18D2: new `cct/hash` module plus runtime for fnv1a bytes, crc32, murmur3.
+- 18D3: new `cct/bit` module plus `cct/random` expansion (bool/range/verbum/shuffle/bytes).
+- 18D4: phase documentation consolidation in `docs/spec.md` and this handoff.
 
-## 3. Inventario De Modulos (Antes/Depois)
+## 3. Module Inventory (Before/After)
 
-`Antes` abaixo segue o baseline de planejamento da FASE 18 (`md_out/FASE_18_CCT.md`).
-`Depois` e a contagem observada no repositorio ao final da fase (numero de `RITUALE` por modulo).
+`Before` follows the FASE 18 planning baseline (`md_out/FASE_18_CCT.md`).
+`After` is the observed repository count at the end of the phase (number of `RITUALE` per module).
 
-| Modulo | Antes | Depois | Delta |
+| Module | Before | After | Delta |
 |---|---:|---:|---:|
 | `cct/verbum` | 9 | 37 | +28 |
 | `cct/fmt` | 8 | 24 | +16 |
@@ -50,41 +50,41 @@
 | `cct/bit` | 0 | 14 | +14 |
 | **Total** | **73** | **267** | **+194** |
 
-## 4. Decisoes Arquiteturais Relevantes
+## 4. Relevant Architectural Decisions
 
-- `cct/bit` foi implementado prioritariamente em CCT (sem depender de uma familia extensa de builtins host), mantendo validacao canonica de faixa `0..63` para APIs de indice.
-- `cct/random` manteve wrappers CCT e recebeu helpers host dedicados para `random_verbum`, `random_verbum_from`, `random_shuffle_int` e `random_bytes`.
-- `cct/process` foi fechado como modulo host-only com contratos claros de retorno para `run`, `capture`, `input`, `env` e `timeout`.
-- `cct/hash::combine` segue a estrategia de mistura canonica baseada em constante FNV para composicao deterministica.
-- `cct/parse` consolidou caminho seguro (`try_*`) via retorno Option-like opaco, reduzindo hard-fail em fluxos de tooling.
+- `cct/bit` was implemented primarily in CCT instead of depending on a large family of host builtins, while keeping canonical `0..63` range validation for index APIs.
+- `cct/random` kept CCT wrappers and received dedicated host helpers for `random_verbum`, `random_verbum_from`, `random_shuffle_int`, and `random_bytes`.
+- `cct/process` closed as a host-only module with explicit return contracts for `run`, `capture`, `input`, `env`, and `timeout`.
+- `cct/hash::combine` follows a canonical FNV-based mixing strategy for deterministic composition.
+- `cct/parse` consolidated the safe `try_*` path through an opaque Option-like return, reducing hard-fail behavior in tooling flows.
 
-## 5. Itens Fora De Escopo (Mantidos)
+## 5. Confirmed Out-of-Scope Items
 
-- RNG criptografico (fase atual usa PRNG host `rand()` para utilitarios nao-criptograficos).
-- Suporte `cct/process` em freestanding.
-- Tipo soma nativo (`ORDO` com payload tipado no core da linguagem) alem da proposta documental da fase 17.
-- Buffer/string builder de performance com estrategia de capacidade customizada alem do escopo definido para 18.
+- Cryptographic RNG (the phase uses host `rand()` PRNG for non-cryptographic helpers).
+- `cct/process` support in freestanding.
+- Native core-language sum type support (`ORDO` with typed payload) beyond the documentary proposal from FASE 17.
+- High-performance builder/string-buffer work with custom capacity strategy beyond the defined 18 scope.
 
-## 6. Evidencias De Teste
+## 6. Test Evidence
 
-- Blocos de teste FASE 18A: 1013-1043.
-- Blocos de teste FASE 18B: 1044-1062.
-- Blocos de teste FASE 18C: 1063-1077.
-- Blocos de teste FASE 18D: 1078-1096.
-- Resultado de regressao global final: `Passed: 1014`, `Failed: 0`.
+- FASE 18A test blocks: 1013-1043.
+- FASE 18B test blocks: 1044-1062.
+- FASE 18C test blocks: 1063-1077.
+- FASE 18D test blocks: 1078-1096.
+- Final global regression result: `Passed: 1014`, `Failed: 0`.
 
-## 7. Preparacao Para FASE 19
+## 7. Preparation for FASE 19
 
-Backlog recomendado de entrada:
+Recommended entry backlog:
 
-1. Consolidar bibliotecas para o toolchain self-hosted (lexer/parser/AST toolkits sobre APIs de 17+18).
-2. Revisar contratos host-vs-freestanding dos modulos novos (`process/hash/random`) para evitar leaks de perfil.
-3. Definir evolucao de performance para construcao textual (builder dedicado para codegen pesado).
-4. Planejar proposta executavel para tipo soma/variant nativo de linguagem com migracao do toolkit host atual.
+1. Consolidate libraries for the self-hosted toolchain (lexer/parser/AST toolkits over 17+18 APIs).
+2. Review host-vs-freestanding contracts of the new modules (`process/hash/random`) to avoid profile leakage.
+3. Define the performance evolution plan for heavy text construction (dedicated builder for codegen-heavy workloads).
+4. Plan an executable proposal for native language sum/variant support with migration from the current host toolkit.
 
-Checklist de entrada:
+Entry checklist:
 
-- [x] `make test` verde na regressao completa.
-- [x] `docs/spec.md` atualizado com Bibliotheca Canonica 18.
-- [x] Handoff da fase publicado.
-- [ ] Congelar baseline inicial da FASE 19 apos prompts/subfases.
+- [x] `make test` green on full regression.
+- [x] `docs/spec.md` updated with Bibliotheca Canonica 18.
+- [x] Phase handoff published.
+- [ ] Freeze the initial FASE 19 baseline after prompts/subphases.

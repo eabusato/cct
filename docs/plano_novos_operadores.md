@@ -1,62 +1,62 @@
-# Plano de Implementação: Novos Operadores para CCT
+# Implementation Plan: New Operators for CCT
 
-## Contexto
+## Context
 
-Este plano implementa operadores adicionais para a linguagem CCT, divididos em três níveis de complexidade: TRIVIAIS, FÁCEIS e MÉDIOS. A implementação segue o padrão arquitetural existente no compilador CCT, que possui 4 fases principais:
+This plan adds extra operators to the CCT language, grouped into three complexity tiers: TRIVIAL, EASY, and MEDIUM. The implementation follows the existing CCT compiler architecture, which has four main phases:
 
-1. **Lexer** (`src/lexer/`) - Tokenização
-2. **Parser** (`src/parser/`) - Análise sintática e construção da AST
-3. **Semantic** (`src/semantic/`) - Análise semântica e verificação de tipos
-4. **Codegen** (`src/codegen/`) - Geração de código C
+1. **Lexer** (`src/lexer/`) - tokenization
+2. **Parser** (`src/parser/`) - syntactic analysis and AST construction
+3. **Semantic** (`src/semantic/`) - semantic analysis and type checking
+4. **Codegen** (`src/codegen/`) - C code emission
 
 ---
 
-## FASE 1: OPERADORES TRIVIAIS (⭐☆☆☆☆)
+## PHASE 1: TRIVIAL OPERATORS (⭐☆☆☆☆)
 
-### Operador 1: `^` (Potenciação - estilo R)
+### Operator 1: `^` (Exponentiation - R style)
 
-#### 1.1 Lexer - Adicionar Token
-**Arquivo:** `src/lexer/lexer.h`
+#### 1.1 Lexer - Add Token
+**File:** `src/lexer/lexer.h`
 
-**Localização:** Após linha 122 (depois de `TOKEN_PERCENT`)
+**Location:** After line 122 (after `TOKEN_PERCENT`)
 
-**Ação:** Adicionar novo token ao enum:
+**Action:** Add a new token to the enum:
 ```c
 TOKEN_CARET,            /* ^ */
 ```
 
-**Arquivo:** `src/lexer/lexer.c`
+**File:** `src/lexer/lexer.c`
 
-**Localização:** Linha 317 (no switch do scanner)
+**Location:** Line 317 (scanner switch)
 
-**Ação:** Adicionar case para tokenizar `^`:
+**Action:** Add a case to tokenize `^`:
 ```c
 case '^': return make_token(lexer, TOKEN_CARET);
 ```
 
-**Localização:** Linha ~357+ (função `cct_token_type_string`)
+**Location:** Around line 357+ (function `cct_token_type_string`)
 
-**Ação:** Adicionar string representation:
+**Action:** Add string representation:
 ```c
 case TOKEN_CARET: return "CARET";
 ```
 
-#### 1.2 Parser - Definir Precedência
-**Arquivo:** `src/parser/parser.c`
+#### 1.2 Parser - Define Precedence
+**File:** `src/parser/parser.c`
 
-**Localização:** Função `get_precedence()` linha 666-699
+**Location:** Function `get_precedence()` around lines 666-699
 
-**Ação:** Adicionar precedência MAIOR que multiplicação (precedência 12):
+**Action:** Add precedence HIGHER than multiplication (precedence 12):
 ```c
 case TOKEN_CARET:
     return 12;  /* Power has higher precedence than *, /, % */
 ```
 
-**Nota Crítica:** Potenciação é **RIGHT-ASSOCIATIVE** (2^3^2 = 2^(3^2) = 512).
+**Critical note:** Exponentiation is **RIGHT-ASSOCIATIVE** (`2^3^2 = 2^(3^2) = 512`).
 
-**Localização:** Função `parse_precedence()` linha 714
+**Location:** Function `parse_precedence()` line 714
 
-**Ação:** Modificar para suportar associatividade à direita:
+**Action:** Modify to support right associativity:
 ```c
 /* Before (line 714): */
 cct_ast_node_t *right = parse_precedence(parser, prec + 1);
@@ -67,11 +67,11 @@ cct_ast_node_t *right = parse_precedence(parser,
 ```
 
 #### 1.3 Semantic - Type Checking
-**Arquivo:** `src/semantic/semantic.c`
+**File:** `src/semantic/semantic.c`
 
-**Localização:** Função de análise de binary_op, após linha 2170 (dentro do switch de operadores)
+**Location:** Binary-op analysis, after line 2170 (inside the operator switch)
 
-**Ação:** Adicionar case para `^`:
+**Action:** Add a case for `^`:
 ```c
 case TOKEN_CARET:  /* Power operator ^ */
     /* Both operands must be numeric */
@@ -83,12 +83,12 @@ case TOKEN_CARET:  /* Power operator ^ */
     return sem_arithmetic_result_type(sem, left, right);
 ```
 
-#### 1.4 Codegen - Emissão de Código C
-**Arquivo:** `src/codegen/codegen.c`
+#### 1.4 Codegen - Emit C Code
+**File:** `src/codegen/codegen.c`
 
-**Localização:** Função `cg_emit_binary_expr()` linha ~1644 (dentro do switch)
+**Location:** Function `cg_emit_binary_expr()` around line 1644 (inside the switch)
 
-**Ação:** Adicionar case para gerar chamada a `pow()`:
+**Action:** Add a case that emits a `pow()` call:
 ```c
 case TOKEN_CARET: {
     /* Emit parenthesized pow() call */
@@ -118,46 +118,46 @@ case TOKEN_CARET: {
 }
 ```
 
-**Observação:** O `pow()` já está disponível via `<math.h>` incluído em `codegen_runtime_bridge.c` linha 53.
+**Note:** `pow()` is already available through `<math.h>` included in `codegen_runtime_bridge.c` line 53.
 
 ---
 
-### Operador 2: `//` (Divisão Inteira - estilo Python)
+### Operator 2: `//` (Integer Division - Python style)
 
-#### 2.1 Lexer - Adicionar Token
-**Arquivo:** `src/lexer/lexer.h`
+#### 2.1 Lexer - Add Token
+**File:** `src/lexer/lexer.h`
 
-**Localização:** Após `TOKEN_CARET`
+**Location:** After `TOKEN_CARET`
 
-**Ação:**
+**Action:**
 ```c
 TOKEN_SLASH_SLASH,      /* // */
 ```
 
-**Arquivo:** `src/lexer/lexer.c`
+**File:** `src/lexer/lexer.c`
 
-**Localização:** Linha 315 (case '/' existente)
+**Location:** Line 315 (existing `/` case)
 
-**Ação:** Modificar para detectar `//`:
+**Action:** Modify to detect `//`:
 ```c
 case '/':
     if (match(lexer, '/')) return make_token(lexer, TOKEN_SLASH_SLASH);
     return make_token(lexer, TOKEN_SLASH);
 ```
 
-**Localização:** Função `cct_token_type_string`
+**Location:** Function `cct_token_type_string`
 
-**Ação:**
+**Action:**
 ```c
 case TOKEN_SLASH_SLASH: return "SLASH_SLASH";
 ```
 
-#### 2.2 Parser - Definir Precedência
-**Arquivo:** `src/parser/parser.c`
+#### 2.2 Parser - Define Precedence
+**File:** `src/parser/parser.c`
 
-**Localização:** `get_precedence()` linha 668-673
+**Location:** `get_precedence()` around lines 668-673
 
-**Ação:** Adicionar mesma precedência que `*`, `/`, `%`:
+**Action:** Add the same precedence as `*`, `/`, `%`:
 ```c
 case TOKEN_STAR:
 case TOKEN_SLASH:
@@ -167,11 +167,11 @@ case TOKEN_PERCENT:
 ```
 
 #### 2.3 Semantic - Type Checking
-**Arquivo:** `src/semantic/semantic.c`
+**File:** `src/semantic/semantic.c`
 
-**Localização:** Após case `TOKEN_SLASH` (~linha 2153)
+**Location:** After case `TOKEN_SLASH` (around line 2153)
 
-**Ação:**
+**Action:**
 ```c
 case TOKEN_SLASH_SLASH:  /* Integer division // */
     /* Both operands must be numeric */
@@ -183,12 +183,12 @@ case TOKEN_SLASH_SLASH:  /* Integer division // */
     return &sem->type_rex;
 ```
 
-#### 2.4 Codegen - Emissão de Código C
-**Arquivo:** `src/codegen/codegen.c`
+#### 2.4 Codegen - Emit C Code
+**File:** `src/codegen/codegen.c`
 
-**Localização:** Função `cg_emit_binary_expr()`
+**Location:** Function `cg_emit_binary_expr()`
 
-**Ação:** Adicionar case que gera divisão com cast:
+**Action:** Add a case that emits division with cast:
 ```c
 case TOKEN_SLASH_SLASH: {
     /* Emit floor division: (long long)(lhs / rhs) */
@@ -213,23 +213,23 @@ case TOKEN_SLASH_SLASH: {
 
 ---
 
-### Operador 3: `%%` (Módulo Positivo - estilo R)
+### Operator 3: `%%` (Positive Modulo - R style)
 
-**Observação:** Em R, `%%` garante que o resultado tem o sinal do divisor (módulo euclidiano).
+**Note:** In R, `%%` guarantees that the result has the sign of the divisor (Euclidean modulo).
 
-#### 3.1 Lexer - Adicionar Token
-**Arquivo:** `src/lexer/lexer.h`
+#### 3.1 Lexer - Add Token
+**File:** `src/lexer/lexer.h`
 
-**Ação:**
+**Action:**
 ```c
 TOKEN_PERCENT_PERCENT,  /* %% */
 ```
 
-**Arquivo:** `src/lexer/lexer.c`
+**File:** `src/lexer/lexer.c`
 
-**Localização:** Linha 316 (case '%')
+**Location:** Line 316 (`%` case)
 
-**Ação:**
+**Action:**
 ```c
 case '%':
     if (match(lexer, '%')) return make_token(lexer, TOKEN_PERCENT_PERCENT);
@@ -241,10 +241,10 @@ case '%':
 case TOKEN_PERCENT_PERCENT: return "PERCENT_PERCENT";
 ```
 
-#### 3.2 Parser - Precedência
-**Arquivo:** `src/parser/parser.c`
+#### 3.2 Parser - Precedence
+**File:** `src/parser/parser.c`
 
-**Ação:** Mesma precedência que `%`:
+**Action:** Same precedence as `%`:
 ```c
 case TOKEN_STAR:
 case TOKEN_SLASH:
@@ -255,9 +255,9 @@ case TOKEN_PERCENT_PERCENT:  /* Add here */
 ```
 
 #### 3.3 Semantic - Type Checking
-**Arquivo:** `src/semantic/semantic.c`
+**File:** `src/semantic/semantic.c`
 
-**Ação:**
+**Action:**
 ```c
 case TOKEN_PERCENT_PERCENT:  /* Positive modulo %% */
     if (!sem_is_integer_type(left) || !sem_is_integer_type(right)) {
@@ -267,10 +267,10 @@ case TOKEN_PERCENT_PERCENT:  /* Positive modulo %% */
     return &sem->type_rex;
 ```
 
-#### 3.4 Codegen - Módulo Euclidiano
-**Arquivo:** `src/codegen/codegen.c`
+#### 3.4 Codegen - Euclidean Modulo
+**File:** `src/codegen/codegen.c`
 
-**Ação:** Gerar fórmula: `((a % b) + b) % b`
+**Action:** Emit formula `((a % b) + b) % b`
 ```c
 case TOKEN_PERCENT_PERCENT: {
     /* Euclidean modulo: ((a % b) + b) % b */
@@ -299,16 +299,16 @@ case TOKEN_PERCENT_PERCENT: {
 
 ---
 
-### Operador 4-8: Bitwise Operators (Adicionar Codegen)
+### Operators 4-8: Bitwise Operators (Add Codegen)
 
-**Nota:** Estes operadores JÁ EXISTEM como keywords (`ET_BIT`, `VEL_BIT`, `XOR`, `SINISTER`, `DEXTER`), já são tokenizados, já têm type-checking semântico (linha 2232-2236 em `semantic.c`). **Falta apenas codegen.**
+**Note:** These operators already exist as keywords (`ET_BIT`, `VEL_BIT`, `XOR`, `SINISTER`, `DEXTER`), are already tokenized, and already have semantic type checking. Only code generation is missing.
 
-#### 4.1 Codegen - Adicionar Suporte
-**Arquivo:** `src/codegen/codegen.c`
+#### 4.1 Codegen - Add Support
+**File:** `src/codegen/codegen.c`
 
-**Localização:** Função `cg_emit_binary_expr()` após linha 1659
+**Location:** Function `cg_emit_binary_expr()` after line 1659
 
-**Ação:** Adicionar cases para bitwise operators:
+**Action:** Add cases for bitwise operators:
 ```c
 case TOKEN_ET_BIT:      op_text = "&"; break;
 case TOKEN_VEL_BIT:     op_text = "|"; break;
@@ -317,9 +317,9 @@ case TOKEN_SINISTER:    op_text = "<<"; break;
 case TOKEN_DEXTER:      op_text = ">>"; break;
 ```
 
-**Localização:** Validação de operandos (linha ~1690)
+**Location:** Operand validation around line 1690
 
-**Ação:** Adicionar validação para bitwise:
+**Action:** Add bitwise validation:
 ```c
 /* After modulo check, add: */
 if ((op == TOKEN_ET_BIT || op == TOKEN_VEL_BIT || op == TOKEN_XOR ||
@@ -332,25 +332,25 @@ if ((op == TOKEN_ET_BIT || op == TOKEN_VEL_BIT || op == TOKEN_XOR ||
 
 ---
 
-## FASE 2: OPERADORES FÁCEIS (⭐⭐☆☆☆)
+## PHASE 2: EASY OPERATORS (⭐⭐☆☆☆)
 
-### Operador 9: `**` (Potenciação - estilo Python)
+### Operator 9: `**` (Exponentiation - Python style)
 
-**Implementação:** Idêntica a `^`, apenas token diferente.
+**Implementation:** Identical to `^`, only the token changes.
 
 #### 9.1 Lexer
-**Arquivo:** `src/lexer/lexer.h`
+**File:** `src/lexer/lexer.h`
 
-**Ação:**
+**Action:**
 ```c
 TOKEN_STAR_STAR,        /* ** */
 ```
 
-**Arquivo:** `src/lexer/lexer.c`
+**File:** `src/lexer/lexer.c`
 
-**Localização:** Linha 314 (case '*')
+**Location:** Line 314 (`*` case)
 
-**Ação:**
+**Action:**
 ```c
 case '*':
     if (match(lexer, '*')) return make_token(lexer, TOKEN_STAR_STAR);
@@ -362,26 +362,26 @@ case '*':
 case TOKEN_STAR_STAR: return "STAR_STAR";
 ```
 
-#### 9.2 Parser - Precedência
-**Arquivo:** `src/parser/parser.c`
+#### 9.2 Parser - Precedence
+**File:** `src/parser/parser.c`
 
-**Ação:** Mesma precedência e associatividade que `^`:
+**Action:** Same precedence and associativity as `^`:
 ```c
 case TOKEN_CARET:
 case TOKEN_STAR_STAR:  /* Add here */
     return 12;
 ```
 
-**Ação:** Modificar linha 714 para incluir `TOKEN_STAR_STAR`:
+**Action:** Modify line 714 to include `TOKEN_STAR_STAR`:
 ```c
 cct_ast_node_t *right = parse_precedence(parser,
     (op == TOKEN_CARET || op == TOKEN_STAR_STAR) ? prec : prec + 1);
 ```
 
 #### 9.3 Semantic
-**Arquivo:** `src/semantic/semantic.c`
+**File:** `src/semantic/semantic.c`
 
-**Ação:**
+**Action:**
 ```c
 case TOKEN_CARET:
 case TOKEN_STAR_STAR:  /* Add here */
@@ -393,9 +393,9 @@ case TOKEN_STAR_STAR:  /* Add here */
 ```
 
 #### 9.4 Codegen
-**Arquivo:** `src/codegen/codegen.c`
+**File:** `src/codegen/codegen.c`
 
-**Ação:** Adicionar `TOKEN_STAR_STAR` ao case existente de `TOKEN_CARET`:
+**Action:** Add `TOKEN_STAR_STAR` to the existing `TOKEN_CARET` case:
 ```c
 case TOKEN_CARET:
 case TOKEN_STAR_STAR:  /* Same implementation as ^ */
@@ -405,23 +405,23 @@ case TOKEN_STAR_STAR:  /* Same implementation as ^ */
 
 ---
 
-### Operador 10: `..` (Range - Inclusivo)
+### Operator 10: `..` (Range - Inclusive)
 
-**Semântica:** `a..b` cria um range de `a` até `b` (inclusivo). Por enquanto, apenas para uso em iteradores.
+**Semantics:** `a..b` creates a range from `a` to `b` (inclusive). For now, only for iterator use.
 
 #### 10.1 Lexer
-**Arquivo:** `src/lexer/lexer.h`
+**File:** `src/lexer/lexer.h`
 
-**Ação:**
+**Action:**
 ```c
 TOKEN_DOT_DOT,          /* .. */
 ```
 
-**Arquivo:** `src/lexer/lexer.c`
+**File:** `src/lexer/lexer.c`
 
-**Localização:** Linha 310 (case '.')
+**Location:** Line 310 (`.` case)
 
-**Ação:**
+**Action:**
 ```c
 case '.':
     if (match(lexer, '.')) return make_token(lexer, TOKEN_DOT_DOT);
@@ -433,60 +433,60 @@ case '.':
 case TOKEN_DOT_DOT: return "DOT_DOT";
 ```
 
-#### 10.2 Parser - Precedência
-**Arquivo:** `src/parser/parser.c`
+#### 10.2 Parser - Precedence
+**File:** `src/parser/parser.c`
 
-**Ação:** Baixa precedência (menor que comparação):
+**Action:** Low precedence (below comparison):
 ```c
 case TOKEN_DOT_DOT:
     return 6;  /* Between relational and equality */
 ```
 
 #### 10.3 Semantic
-**Arquivo:** `src/semantic/semantic.c`
+**File:** `src/semantic/semantic.c`
 
-**Ação:**
+**Action:**
 ```c
 case TOKEN_DOT_DOT:  /* Range operator a..b */
     if (!sem_is_integer_type(left) || !sem_is_integer_type(right)) {
         sem_report_node(sem, expr, "range operator .. requires integer bounds");
         return &sem->type_error;
     }
-    /* For now, treat as special iterator type - to be expanded in future */
+    /* For now, treat as a special iterator type - expand in the future */
     /* Return a synthetic "range" type or error for now */
     sem_report_node(sem, expr, "range operator .. not yet fully implemented");
     return &sem->type_error;
 ```
 
-**Nota:** Range completo requer implementação de tipo especial. Por ora, deixar como placeholder.
+**Note:** Full range support requires a dedicated type. For now, leave it as a placeholder.
 
 #### 10.4 Codegen
-**Skip** - Não implementar codegen até que semântica completa esteja pronta.
+**Skip** - Do not implement code generation until the full semantic model is ready.
 
 ---
 
-### Operador 11: `?:` (Ternário)
+### Operator 11: `?:` (Ternary)
 
-**Sintaxe:** `condição ? valor_true : valor_false`
+**Syntax:** `condition ? true_value : false_value`
 
-**Desafio:** Não é um operador binário, é **ternário**. Requer mudanças mais profundas.
+**Challenge:** This is not a binary operator, it is **ternary**. It requires deeper parser and AST changes.
 
 #### 11.1 Lexer
-**Arquivo:** `src/lexer/lexer.h`
+**File:** `src/lexer/lexer.h`
 
-**Nota:** `TOKEN_QUESTION` já existe (linha 133). Precisamos de `TOKEN_COLON` (já existe na linha 109).
+**Note:** `TOKEN_QUESTION` already exists. `TOKEN_COLON` also already exists.
 
-**Nenhuma mudança necessária no lexer.**
+**No lexer changes required.**
 
-#### 11.2 Parser - Nova Função
-**Arquivo:** `src/parser/parser.c`
+#### 11.2 Parser - New Function
+**File:** `src/parser/parser.c`
 
-**Localização:** Criar nova função `parse_ternary()` entre `parse_precedence()` e `parse_unary()`
+**Location:** Create a new function `parse_ternary()` between `parse_precedence()` and `parse_unary()`
 
-**Ação:** Adicionar parsing de ternário:
+**Action:** Add ternary parsing:
 ```c
 static cct_ast_node_t* parse_ternary(cct_parser_t *parser) {
-    /* Parse the condition (use binary expression with precedence) */
+    /* Parse the condition (use binary expression precedence) */
     cct_ast_node_t *condition = parse_precedence(parser, 2);  /* Above || */
     if (!condition) return NULL;
 
@@ -522,26 +522,26 @@ static cct_ast_node_t* parse_ternary(cct_parser_t *parser) {
 }
 ```
 
-**Localização:** Modificar `parse_expression()` linha 721:
+**Location:** Modify `parse_expression()` line 721:
 ```c
 static cct_ast_node_t* parse_expression(cct_parser_t *parser) {
     return parse_ternary(parser);  /* Changed from parse_precedence(parser, 1) */
 }
 ```
 
-#### 11.3 AST - Novo Node Type
-**Arquivo:** `src/parser/ast.h`
+#### 11.3 AST - New Node Type
+**File:** `src/parser/ast.h`
 
-**Localização:** Adicionar ao enum `cct_ast_node_type_t` (após `AST_BINARY_OP`)
+**Location:** Add to enum `cct_ast_node_type_t` (after `AST_BINARY_OP`)
 
-**Ação:**
+**Action:**
 ```c
 AST_TERNARY_OP,
 ```
 
-**Localização:** Adicionar estrutura ao union (após `binary_op`)
+**Location:** Add structure to the union (after `binary_op`)
 
-**Ação:**
+**Action:**
 ```c
 struct {
     cct_ast_node_t *condition;
@@ -550,7 +550,7 @@ struct {
 } ternary_op;
 ```
 
-**Localização:** Adicionar função de criação no header:
+**Location:** Add constructor declaration in the header:
 ```c
 cct_ast_node_t* cct_ast_create_ternary_op(cct_ast_node_t *condition,
                                           cct_ast_node_t *true_branch,
@@ -558,9 +558,9 @@ cct_ast_node_t* cct_ast_create_ternary_op(cct_ast_node_t *condition,
                                           u32 line, u32 col);
 ```
 
-**Arquivo:** `src/parser/ast.c`
+**File:** `src/parser/ast.c`
 
-**Ação:** Implementar função de criação:
+**Action:** Implement the constructor:
 ```c
 cct_ast_node_t* cct_ast_create_ternary_op(cct_ast_node_t *condition,
                                           cct_ast_node_t *true_branch,
@@ -576,9 +576,9 @@ cct_ast_node_t* cct_ast_create_ternary_op(cct_ast_node_t *condition,
 ```
 
 #### 11.4 Semantic
-**Arquivo:** `src/semantic/semantic.c`
+**File:** `src/semantic/semantic.c`
 
-**Localização:** Na função `sem_analyze_expr()`, adicionar case:
+**Location:** In `sem_analyze_expr()`, add a case:
 ```c
 case AST_TERNARY_OP: {
     cct_sem_type_t *cond = sem_analyze_expr(sem, expr->as.ternary_op.condition);
@@ -606,9 +606,9 @@ case AST_TERNARY_OP: {
 ```
 
 #### 11.5 Codegen
-**Arquivo:** `src/codegen/codegen.c`
+**File:** `src/codegen/codegen.c`
 
-**Localização:** Adicionar case em `cg_emit_expr()`:
+**Location:** Add a case in `cg_emit_expr()`:
 ```c
 case AST_TERNARY_OP: {
     fputs("(", out);
@@ -637,50 +637,50 @@ case AST_TERNARY_OP: {
 
 ---
 
-## FASE 3: OPERADORES MÉDIOS (⭐⭐⭐☆☆)
+## PHASE 3: MEDIUM OPERATORS (⭐⭐⭐☆☆)
 
-### Operador 12: `?.` (Optional Chaining)
+### Operator 12: `?.` (Optional Chaining)
 
-**Semântica:** `obj?.field` retorna o campo se `obj` não é null, senão retorna null/none.
+**Semantics:** `obj?.field` returns the field if `obj` is not null; otherwise it returns null/none.
 
-**Complexidade:** Requer sistema de tipos opcional (Option/Maybe type).
+**Complexity:** Requires an optional-type system (`Option`/`Maybe`).
 
-**Status:** **RECOMENDAÇÃO - NÃO IMPLEMENTAR AINDA**
+**Status:** **RECOMMENDATION - DO NOT IMPLEMENT YET**
 
-**Justificativa:** CCT já tem tipos `Option<T>` (FASE 12C) via `option_some`, `option_none`, `option_unwrap_ptr`. Optional chaining requer integração profunda com esse sistema.
+**Reasoning:** CCT already has `Option<T>` patterns (FASE 12C) through `option_some`, `option_none`, and `option_unwrap_ptr`. Optional chaining requires deep integration with that system.
 
-**Implementação futura:** Seria um operador postfix especial que:
-1. Checa se o lado esquerdo é `Some` ou `None`
-2. Propaga `None` se o lado esquerdo for `None`
-3. Acessa o campo se for `Some`
+**Future implementation:** This would be a special postfix operator that:
+1. Checks whether the left side is `Some` or `None`
+2. Propagates `None` if the left side is `None`
+3. Accesses the field if the value is `Some`
 
-**Estimativa:** 2-3 dias de trabalho, requer redesign de type system.
-
----
-
-### Operador 13: `!!` (Unwrap/Assert)
-
-**Semântica:** `opt!!` desempacota um `Option<T>` ou falha se for `None`.
-
-**Status:** **RECOMENDAÇÃO - NÃO IMPLEMENTAR AINDA**
-
-**Justificativa:** Requer mesmo sistema de tipos optional que `?.`.
-
-**Implementação futura:** Operador postfix que:
-1. Checa tipo opcional
-2. Gera `option_unwrap_ptr()` ou `option_expect_ptr()` em codegen
-3. Falha em runtime se for `None`
-
-**Estimativa:** 1-2 dias, depois de `?.` estar pronto.
+**Estimate:** 2-3 days of work; requires a type-system redesign.
 
 ---
 
-## RESUMO DE IMPLEMENTAÇÃO
+### Operator 13: `!!` (Unwrap/Assert)
 
-### Operadores a Implementar (Recomendados)
+**Semantics:** `opt!!` unwraps an `Option<T>` or fails if it is `None`.
 
-| Operador | Complexidade | Arquivos | Linhas Est. | Tempo Est. |
-|----------|--------------|----------|-------------|------------|
+**Status:** **RECOMMENDATION - DO NOT IMPLEMENT YET**
+
+**Reasoning:** It requires the same optional-type system support as `?.`.
+
+**Future implementation:** Postfix operator that:
+1. Checks for an optional type
+2. Emits `option_unwrap_ptr()` or `option_expect_ptr()` in codegen
+3. Fails at runtime when the value is `None`
+
+**Estimate:** 1-2 days, after `?.` is ready.
+
+---
+
+## IMPLEMENTATION SUMMARY
+
+### Operators to Implement (Recommended)
+
+| Operator | Complexity | Files | Est. Lines | Est. Time |
+|----------|------------|-------|------------|-----------|
 | `^` | ⭐☆☆☆☆ | 4 | ~80 | 2h |
 | `//` | ⭐☆☆☆☆ | 4 | ~60 | 1.5h |
 | `%%` | ⭐☆☆☆☆ | 4 | ~70 | 2h |
@@ -689,61 +689,61 @@ case AST_TERNARY_OP: {
 | `?:` | ⭐⭐☆☆☆ | 5 | ~150 | 4h |
 | **TOTAL** | - | - | **~410** | **11h** |
 
-### Operadores a NÃO Implementar (Por Ora)
+### Operators to NOT Implement Yet
 
-| Operador | Motivo |
+| Operator | Reason |
 |----------|--------|
-| `..` | Requer tipo Range completo |
-| `?.` | Requer integração profunda com Option<T> |
-| `!!` | Requer integração profunda com Option<T> |
+| `..` | Requires a full Range type |
+| `?.` | Requires deep integration with `Option<T>` |
+| `!!` | Requires deep integration with `Option<T>` |
 
 ---
 
-## ARQUIVOS MODIFICADOS
+## MODIFIED FILES
 
-### Arquivos Principais
-1. `src/lexer/lexer.h` - Adicionar 7 tokens
-2. `src/lexer/lexer.c` - Adicionar tokenização para 7 operadores
-3. `src/parser/parser.c` - Adicionar precedências + função `parse_ternary()`
-4. `src/parser/ast.h` - Adicionar `AST_TERNARY_OP` e estrutura
-5. `src/parser/ast.c` - Adicionar função `cct_ast_create_ternary_op()`
-6. `src/semantic/semantic.c` - Adicionar type-checking para 7 operadores
-7. `src/codegen/codegen.c` - Adicionar code generation para 7 operadores
+### Main Files
+1. `src/lexer/lexer.h` - add 7 tokens
+2. `src/lexer/lexer.c` - add tokenization for 7 operators
+3. `src/parser/parser.c` - add precedences + function `parse_ternary()`
+4. `src/parser/ast.h` - add `AST_TERNARY_OP` and structure
+5. `src/parser/ast.c` - add function `cct_ast_create_ternary_op()`
+6. `src/semantic/semantic.c` - add type checking for 7 operators
+7. `src/codegen/codegen.c` - add code generation for 7 operators
 
-### Total de Mudanças
-- **7 arquivos modificados**
-- **~410 linhas adicionadas**
-- **0 arquivos novos**
-- **0 breaking changes** (100% retrocompatível)
+### Change Totals
+- **7 modified files**
+- **~410 lines added**
+- **0 new files**
+- **0 breaking changes** (100% backward compatible)
 
 ---
 
-## ORDEM DE IMPLEMENTAÇÃO RECOMENDADA
+## RECOMMENDED IMPLEMENTATION ORDER
 
-### Fase 1 - Operadores Simples (6h)
-1. `^` - Potenciação (2h)
-2. `**` - Potenciação Python-style (1h)
-3. `//` - Divisão inteira (1.5h)
-4. `%%` - Módulo positivo (2h)
+### Phase 1 - Simple Operators (6h)
+1. `^` - exponentiation (2h)
+2. `**` - Python-style exponentiation (1h)
+3. `//` - integer division (1.5h)
+4. `%%` - positive modulo (2h)
 5. Bitwise codegen (30min)
 
-### Fase 2 - Operador Ternário (4h)
-6. `?:` - Ternário (4h)
+### Phase 2 - Ternary Operator (4h)
+6. `?:` - ternary (4h)
 
-### Fase 3 - Testes e Validação (2h)
-7. Criar testes para cada operador
-8. Validar precedência e associatividade
-9. Testar casos edge (divisão por zero, overflow, etc)
+### Phase 3 - Tests and Validation (2h)
+7. Create tests for each operator
+8. Validate precedence and associativity
+9. Test edge cases (division by zero, overflow, etc.)
 
-**Tempo Total:** ~12 horas
+**Total time:** ~12 hours
 
 ---
 
-## VALIDAÇÃO E TESTES
+## VALIDATION AND TESTING
 
-### Testes Mínimos por Operador
+### Minimum Tests per Operator
 
-#### Teste `^` (Potenciação)
+#### `^` Test (Exponentiation)
 ```cct
 INCIPIT grimoire "test_power"
 ADVOCARE "cct/io.cct"
@@ -763,121 +763,119 @@ EXPLICIT RITUALE
 EXPLICIT grimoire
 ```
 
-#### Teste `//` (Divisão Inteira)
+#### `//` Test (Integer Division)
 ```cct
 EVOCA REX r1 AD 7 // 2      COMMENTARIUS 3
 EVOCA REX r2 AD 0 - 7 // 2  COMMENTARIUS -4 (floor)
 ```
 
-#### Teste `%%` (Módulo Positivo)
+#### `%%` Test (Positive Modulo)
 ```cct
 EVOCA REX r1 AD 7 %% 3      COMMENTARIUS 1
-EVOCA REX r2 AD 0 - 7 %% 3  COMMENTARIUS 2 (sempre positivo)
+EVOCA REX r2 AD 0 - 7 %% 3  COMMENTARIUS 2 (always positive)
 ```
 
-#### Teste `?:` (Ternário)
+#### `?:` Test (Ternary)
 ```cct
 EVOCA REX x AD 10
 EVOCA REX max AD x > 5 ? x : 5  COMMENTARIUS 10
 EVOCA REX y AD x > 20 ? 100 : 50  COMMENTARIUS 50
 ```
 
-### Teste de Precedência Completo
+### Full Precedence Test
 ```cct
 EVOCA REX result AD 2 + 3 ^ 2 * 4
 COMMENTARIUS 2 + (3^2) * 4 = 2 + 9*4 = 2 + 36 = 38
 ```
 
-### Comando de Teste
+### Test Command
 ```bash
 ./cct examples/test_new_operators.cct
 ./examples/test_new_operators
 ```
 
-**Resultado esperado:** Todos os valores calculados corretamente sem erros.
+**Expected result:** All values are computed correctly without errors.
 
 ---
 
-## PROBLEMAS CONHECIDOS E MITIGAÇÕES
+## KNOWN ISSUES AND MITIGATIONS
 
-### Problema 1: `^` vs XOR Bitwise
-- **CCT atual:** `^` é keyword para XOR (`TOKEN_XOR`)
-- **Solução:** Operador `^` tem precedência em scanner antes de keywords
-- **Validação:** XOR permanece via keyword `XOR`, não afeta código existente
+### Issue 1: `^` vs Bitwise XOR
+- **Current CCT:** `^` is currently a keyword-backed XOR surface (`TOKEN_XOR`)
+- **Solution:** Operator `^` gets scanner precedence before keyword resolution
+- **Validation:** XOR remains available via keyword `XOR`, so existing code is unaffected
 
-### Problema 2: Associatividade à Direita
-- **Modificação:** Linha 714 de `parser.c` muda comportamento
-- **Risco:** Pode afetar outros operadores se não condicionado corretamente
-- **Mitigação:** Usar `if (op == TOKEN_CARET || op == TOKEN_STAR_STAR)`
+### Issue 2: Right Associativity
+- **Change:** Line 714 of `parser.c` changes behavior
+- **Risk:** It may affect other operators if not gated correctly
+- **Mitigation:** Use `if (op == TOKEN_CARET || op == TOKEN_STAR_STAR)`
 
-### Problema 3: Overflow em Potência
-- **`pow()` em C pode gerar Infinity ou NaN**
-- **Mitigação:** Documentar comportamento, não adicionar validação runtime
-- **Futuro:** Considerar wrapper que valida overflow
+### Issue 3: Overflow in Power
+- **`pow()` in C can produce Infinity or NaN**
+- **Mitigation:** Document behavior; do not add runtime validation
+- **Future:** Consider a wrapper that validates overflow
 
-### Problema 4: Divisão por Zero
-- **`//` e `%%` podem dividir por zero**
-- **Comportamento C:** Undefined behavior
-- **Mitigação:** Documentar, não adicionar check runtime (overhead)
-- **Futuro:** Considerar flag `--safe-math` para runtime checks
+### Issue 4: Division by Zero
+- **`//` and `%%` can divide by zero**
+- **C behavior:** Undefined behavior
+- **Mitigation:** Document it; do not add runtime checks yet (overhead)
+- **Future:** Consider a `--safe-math` flag for runtime checks
 
 ---
 
-## DOCUMENTAÇÃO NECESSÁRIA
+## REQUIRED DOCUMENTATION UPDATES
 
-### Atualizar Arquivos de Documentação
+1. **`docs/spec.md`** - add the operators to the formal specification
+2. **`docs/bibliotheca_canonica.md`** - if applicable
+3. **`README.md`** - add examples showing the new operators
+4. **`examples/`** - add `examples/new_operators_showcase.cct`
 
-1. **`docs/spec.md`** - Adicionar operadores à especificação formal
-2. **`docs/bibliotheca_canonica.md`** - Se aplicável
-3. **`README.md`** - Adicionar exemplo de uso dos novos operadores
-4. **`examples/`** - Criar `examples/new_operators_showcase.cct`
-
-### Exemplo de Documentação (spec.md)
+### Documentation Example (`spec.md`)
 
 ```markdown
-## Operadores Aritméticos
+## Arithmetic Operators
 
-| Operador | Nome | Associatividade | Precedência | Tipos |
-|----------|------|-----------------|-------------|-------|
-| `^`, `**` | Potenciação | Direita | 12 | numeric → numeric |
-| `*`, `/`, `//`, `%`, `%%` | Multiplicação | Esquerda | 11 | numeric → numeric |
-| `+`, `-` | Adição | Esquerda | 10 | numeric → numeric |
+| Operator | Name | Associativity | Precedence | Types |
+|----------|------|---------------|------------|-------|
+| `^`, `**` | Exponentiation | Right | 12 | numeric -> numeric |
+| `*`, `/`, `//`, `%`, `%%` | Multiplication | Left | 11 | numeric -> numeric |
+| `+`, `-` | Addition | Left | 10 | numeric -> numeric |
 
-### Potenciação (`^`, `**`)
-- Associatividade à direita: `2^3^2` = `2^(3^2)` = 512
-- Retorna UMBRA se qualquer operando for UMBRA
-- Retorna REX se ambos forem REX
+### Exponentiation (`^`, `**`)
+- Right-associative: `2^3^2` = `2^(3^2)` = 512
+- Returns `UMBRA` if either operand is `UMBRA`
+- Returns `REX` if both operands are `REX`
 
-### Divisão Inteira (`//`)
-- Sempre retorna REX (floor division)
-- Exemplo: `7 // 2` = 3, `-7 // 2` = -4
+### Integer Division (`//`)
+- Always returns `REX` (floor division)
+- Example: `7 // 2` = 3, `-7 // 2` = -4
 
-### Módulo Positivo (`%%`)
-- Módulo euclidiano (sinal do divisor)
-- Exemplo: `-7 %% 3` = 2
+### Positive Modulo (`%%`)
+- Euclidean modulo (sign of the divisor)
+- Example: `-7 %% 3` = 2
 ```
 
 ---
 
-## NOTAS FINAIS
+## FINAL NOTES
 
-### Decisões de Design
+### Design Decisions
 
-1. **`^` vs `**`**: Implementar ambos para compatibilidade com R e Python
-2. **Bitwise**: Manter keywords existentes (`ET_BIT`, etc) + adicionar codegen
-3. **Ternário**: Implementar como CCT pode usar muito em validações
-4. **Optional chaining**: Postergar para FASE 14 (requer type system upgrade)
+1. **`^` vs `**`**: implement both for R and Python compatibility
+2. **Bitwise**: keep existing keywords (`ET_BIT`, etc.) and add codegen
+3. **Ternary**: implement because it is useful in compact validation logic
+4. **Optional chaining**: postpone to FASE 14 (requires a type-system upgrade)
 
-### Extensibilidade Futura
+### Future Extensibility
 
-Esta implementação prepara o terreno para:
-- Operador `..=` (range inclusivo)
-- Operador `...` (range exclusivo)
-- Operador `?.` (optional chaining) na FASE 14
-- Sobrecarga de operadores (FASE futura)
+This implementation prepares the ground for:
+- operator `..=` (inclusive range)
+- operator `...` (exclusive range)
+- operator `?.` (optional chaining) in FASE 14
+- operator overloading (future phase)
 
-### Compatibilidade
+### Compatibility
 
-- **100% retrocompatível** - código CCT existente continua funcionando
+- **100% backward compatible** - existing CCT code keeps working
 - **Zero breaking changes**
-- **Novos operadores são opt-in** - usar apenas se necessário
+- **New operators are opt-in** - use them only when needed

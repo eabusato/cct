@@ -1,86 +1,86 @@
-# EVIDENCIA_LINK_16D2
+# FASE 16D2 — Linkability Evidence
 
-## Contexto
-- Data/hora (UTC): 2026-03-06 15:38:05 UTC
+## Context
+- Timestamp (UTC): 2026-03-06 15:38:05 UTC
 - Workspace: `/home/eabusato/dev/cct`
-- Artefato auditado: `build/lbos-bridge/cct_kernel.o`
-- Objeto de linkcheck: `build/lbos-bridge/cct_kernel_linkcheck.o`
+- Audited artifact: `build/lbos-bridge/cct_kernel.o`
+- Linkcheck object: `build/lbos-bridge/cct_kernel_linkcheck.o`
 - Toolchain:
   - `gcc (GCC) 15.2.1 20260209`
   - `GNU ld (GNU Binutils) 2.46`
   - `GNU objdump (GNU Binutils) 2.46`
   - `GNU nm (GNU Binutils) 2.46`
 
-## 1) Geração do artefato de bridge
-Comando:
+## 1) Bridge Artifact Generation
+Command:
 ```bash
 make lbos-bridge
 ```
-Saída relevante:
+Relevant output:
 ```text
-[CCT] lbos-bridge: emitindo ASM freestanding...
+[CCT] lbos-bridge: emitting freestanding ASM...
 ASM emitted: lib/cct/kernel/kernel.cgen.s
 Cross compiler: gcc
-[CCT] lbos-bridge: montando objeto ELF32...
-[CCT] lbos-bridge: auditando símbolos undefined proibidos...
-[CCT] lbos-bridge: validando presença de símbolo cct_fn_...
-[CCT] lbos-bridge: build/lbos-bridge/cct_kernel.o pronto
+[CCT] lbos-bridge: assembling ELF32 object...
+[CCT] lbos-bridge: auditing forbidden undefined symbols...
+[CCT] lbos-bridge: validating presence of cct_fn_ symbol...
+[CCT] lbos-bridge: build/lbos-bridge/cct_kernel.o ready
 ```
 Status: PASS
 
-## 2) Auditoria de undefined symbols gerais
-Comando:
+## 2) General Undefined-Symbol Audit
+Command:
 ```bash
 nm build/lbos-bridge/cct_kernel.o | awk '$2 == "U" {print $3}'
 ```
-Saída:
+Output:
 ```text
-(vazio)
+(empty)
 ```
-Status: PASS (sem undefined symbols)
+Status: PASS (no undefined symbols)
 
-## 3) Auditoria de símbolos proibidos (libc + helpers)
-Comando:
+## 3) Forbidden-Symbol Audit (libc + helpers)
+Command:
 ```bash
 nm build/lbos-bridge/cct_kernel.o | awk '$2 == "U" {print $3}' | \
   grep -E '^(printf|malloc|free|memcpy|memset|puts|fopen|fclose|__stack_chk_fail|__udivdi3|__divdi3|__muldi3|__floatsidf|__fixdfsi)$'
 ```
-Saída:
+Output:
 ```text
-(vazio)
+(empty)
 ```
-Exit code do `grep`: `1` (nenhuma ocorrência)
+`grep` exit code: `1` (no match)
 Status: PASS
 
-## 4) Confirmação do símbolo entry
-Comando:
+## 4) Entry-Symbol Confirmation
+Command:
 ```bash
 nm build/lbos-bridge/cct_kernel.o | awk '$2 == "T" {print $3}' | \
   grep 'cct_fn_kernel_kernel_halt'
 ```
-Saída:
+Output:
 ```text
 cct_fn_kernel_kernel_halt
 ```
 Status: PASS
 
-## 5) Link parcial ELF32 (relocatable)
-Comando:
+## 5) ELF32 Partial Link (Relocatable)
+Command:
 ```bash
 ld -m elf_i386 -r build/lbos-bridge/cct_kernel.o -o build/lbos-bridge/cct_kernel_linkcheck.o
 ```
-Saída:
+Output:
 ```text
 (exit 0)
 ```
 Status: PASS
 
-## 6) Símbolos `cct_fn_` no objeto linkcheck
-Comando:
+## 6) `cct_fn_` Symbols in the Linkcheck Object
+Command:
 ```bash
 objdump -t build/lbos-bridge/cct_kernel_linkcheck.o | grep cct_fn
 ```
-Saída:
+Output:
 ```text
 000000fe l     F .text  00000044 cct_fn_kernel_memset
 00000142 l     F .text  00000032 cct_fn_kernel_memcpy
@@ -90,12 +90,12 @@ Saída:
 ```
 Status: PASS
 
-## 7) Gate CF+EAX (`clc`/`stc`)
-Comando:
+## 7) CF+EAX Gate (`clc`/`stc`)
+Command:
 ```bash
 objdump -d build/lbos-bridge/cct_kernel.o | grep -E '\\b(clc|stc)\\b'
 ```
-Saída:
+Output:
 ```text
 39: f8                    clc
 64: f8                    clc
@@ -104,22 +104,22 @@ fa: f8                    clc
 ```
 Status: PASS
 
-## 8) Gate `.eh_frame`
-Comando:
+## 8) `.eh_frame` Gate
+Command:
 ```bash
 objdump -h build/lbos-bridge/cct_kernel.o | grep -i eh_frame
 ```
-Saída:
+Output:
 ```text
-(vazio)
+(empty)
 ```
-Exit code do `grep`: `1` (seção ausente)
+`grep` exit code: `1` (section absent)
 Status: PASS
 
-## Conclusão 16D.2
-Validação de linkabilidade concluída com sucesso no lado CCT, sem tocar `third_party/cct-boot`:
-- sem undefined proibidos de libc/helpers;
-- símbolo de entry esperado presente;
-- link parcial ELF32 (`ld -m elf_i386 -r`) bem-sucedido;
-- contrato CF+EAX presente (`clc` detectado);
-- `.eh_frame` ausente no objeto.
+## 16D.2 Conclusion
+Linkability validation completed successfully on the CCT side without touching `third_party/cct-boot`:
+- no forbidden undefined libc/helper symbols;
+- expected entry symbol present;
+- ELF32 partial link (`ld -m elf_i386 -r`) successful;
+- CF+EAX contract present (`clc` detected);
+- `.eh_frame` absent in the object.

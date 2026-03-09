@@ -1,222 +1,191 @@
-# CCT Symbol Naming V0 — Contrato de Nomenclatura de Símbolos
+# CCT Symbol Naming V0
 
-- Versão: V0
-- Status: Ativo (FASE 16A.1)
-- Dependência: CCT_ABI_V0_LBOS.md V0; LBOS F7.CCT Bridge ABI V0.
-- Próxima revisão: V1 (quando FASE 17 iniciar auto-bootstrap).
+- Version: V0
+- Status: Active (FASE 16A.1)
+- Dependency: `CCT_ABI_V0_LBOS.md` V0 and the LBOS F7.CCT Bridge ABI V0
+- Next revision: V1 (when FASE 17 begins auto-bootstrap)
 
-## 1. Propósito
+## 1. Purpose
 
-Este documento define o **padrão determinístico de nomenclatura de símbolos** para todo código
-CCT compilado com `--profile freestanding`. O objetivo é garantir:
+This document defines the deterministic symbol-naming contract for all CCT code compiled with `--profile freestanding`.
 
-1. **Não-colisão com namespaces do LBOS**: os símbolos CCT não conflitam com `k0_*`, `k1_*`,
-   `svc_*`, `cct_rt_*` (host-only), nem com qualquer namespace interno do LBOS.
-2. **Determinismo**: dado o mesmo módulo e rituale, o nome do símbolo é sempre o mesmo.
-3. **Rastreabilidade**: o nome do símbolo permite identificar sua origem (módulo + nome original).
-4. **Compatibilidade com linker ELF32**: os nomes são válidos como identificadores C e símbolos ELF.
+Goals:
+1. avoid collision with LBOS namespaces;
+2. preserve determinism for the same module/ritual pair;
+3. keep symbol origin traceable;
+4. remain compatible with C identifiers and ELF32 symbol rules.
 
-## 2. Namespaces Reservados pelo LBOS (Não Usar)
+## 2. LBOS-Reserved Prefixes
 
-| Prefixo      | Dono          | Exemplos                     |
-|--------------|---------------|------------------------------|
-| `k0_`        | LBOS kernel0  | `k0_init`, `k0_page_alloc`   |
-| `k1_`        | LBOS kernel1  | `k1_sched`, `k1_ipc`         |
-| `svc_`       | LBOS services | `svc_video`, `svc_serial`    |
-| `cct_rt_`    | CCT runtime host-only | `cct_rt_fluxus_init` |
+CCT must never emit freestanding symbols with these prefixes:
 
-O CCT **nunca** emite símbolos com estes prefixos em perfil freestanding.
+| Prefix | Owner | Examples |
+|---|---|---|
+| `k0_` | LBOS kernel0 | `k0_init`, `k0_page_alloc` |
+| `k1_` | LBOS kernel1 | `k1_sched`, `k1_ipc` |
+| `svc_` | LBOS services | `svc_video`, `svc_serial` |
+| `cct_rt_` | host-only CCT runtime | `cct_rt_fluxus_init` |
 
-## 3. Padrões de Nomenclatura CCT
+## 3. Canonical Naming Patterns
 
-### 3.1 Funções (RITUALE)
+### 3.1 Functions (`RITUALE`)
 
-Padrão: `cct_fn_<mod>_<rituale>`
-
-| Elemento    | Regra                                                        |
-|-------------|--------------------------------------------------------------|
-| `cct_fn_`   | Prefixo fixo; identifica função CCT freestanding             |
-| `<mod>`     | Nome do módulo CCT, normalizado (veja seção 4)               |
-| `<rituale>` | Nome da função CCT, normalizado (veja seção 4)               |
-
-Exemplos:
-
-| Declaração CCT                               | Símbolo gerado                     |
-|----------------------------------------------|------------------------------------|
-| `RITUALE kernel_halt()` em módulo `kernel`   | `cct_fn_kernel_kernel_halt`        |
-| `RITUALE soma(REX a, REX b)` em `math_utils` | `cct_fn_math_utils_soma`          |
-| `RITUALE main()` em módulo `hello`           | `cct_fn_hello_main`                |
-| `RITUALE init_stage()` em módulo `boot_cct`  | `cct_fn_boot_cct_init_stage`       |
-
-### 3.2 Módulos (identificador de módulo compilado)
-
-Padrão: `cct_mod_<hash8>_<name>`
-
-| Elemento    | Regra                                                           |
-|-------------|-----------------------------------------------------------------|
-| `cct_mod_`  | Prefixo fixo; identifica descriptor de módulo CCT              |
-| `<hash8>`   | Primeiros 8 caracteres hex (minúsculo) do SHA-256 do caminho canônico |
-| `<name>`    | Nome normalizado do módulo (veja seção 4)                       |
-
-**Definição de caminho canônico** (determinismo entre hosts):
-- Caminho **relativo à raiz do repositório CCT**, separador sempre `/` (Unix), sem `./` inicial.
-- Exemplo: `lib/cct/kernel/kernel.cct` — nunca caminho absoluto, nunca `.\` Windows.
-- O compilador resolve o caminho canônico antes de calcular o hash; dois hosts com o mesmo
-  repositório sempre geram o mesmo `<hash8>` para o mesmo módulo.
-
-```
-sha256("lib/cct/kernel/kernel.cct") → "a3f9d21b..."
-hash8 = "a3f9d21b"
+Pattern:
+```text
+cct_fn_<mod>_<rituale>
 ```
 
-Este símbolo é emitido como variável de metadata de módulo no `.o` (somente-leitura, opcional).
+Examples:
+- `RITUALE kernel_halt()` in module `kernel` -> `cct_fn_kernel_kernel_halt`
+- `RITUALE soma(REX a, REX b)` in `math_utils` -> `cct_fn_math_utils_soma`
+- `RITUALE main()` in `hello` -> `cct_fn_hello_main`
 
-Exemplo:
-- Módulo `lib/cct/kernel/kernel.cct` → `cct_mod_a3f9d21b_kernel`
+### 3.2 Compiled modules
 
-### 3.3 Shims de Serviço
-
-Padrão: `cct_svc_<name>`
-
-Shims de serviço são funções de glue que o CCT emite para operações de baixo nível sem nome
-de módulo específico (ex: operações de I/O de hardware).
-
-| Elemento    | Regra                                         |
-|-------------|-----------------------------------------------|
-| `cct_svc_`  | Prefixo fixo; identifica shim de serviço CCT  |
-| `<name>`    | Nome descritivo da operação                   |
-
-Exemplos:
-- `cct_svc_outb` — wrapper de `outb` para I/O de porta
-- `cct_svc_inb` — wrapper de `inb`
-- `cct_svc_halt` — wrapper de `hlt`
-
-### 3.4 Variáveis Globais
-
-Padrão: `cct_g_<mod>_<nome>`
-
-| Elemento   | Regra                                                   |
-|------------|---------------------------------------------------------|
-| `cct_g_`   | Prefixo fixo; identifica variável global CCT freestanding|
-| `<mod>`    | Nome normalizado do módulo de origem                    |
-| `<nome>`   | Nome normalizado da variável                            |
-
-Exemplos:
-- `cct_g_kernel_estado_atual` para variável global `estado_atual` no módulo `kernel`
-- `cct_g_boot_cct_contador` para `contador` em `boot_cct`
-
-### 3.5 Literais de String (rodata)
-
-Padrão: `cct_str_<mod>_<idx>`
-
-Strings literais `VERBUM` em perfil freestanding são emitidas em `.rodata`.
-
-| Elemento   | Regra                                              |
-|------------|----------------------------------------------------|
-| `cct_str_` | Prefixo fixo; identifica literal string CCT        |
-| `<mod>`    | Nome normalizado do módulo de origem               |
-| `<idx>`    | Índice sequencial de string dentro do módulo (0-based) |
-
-Exemplo: `cct_str_kernel_0`, `cct_str_kernel_1`, etc.
-
-### 3.6 Constantes (`CONSTANS`) em rodata
-
-Padrão: `cct_const_<mod>_<nome>`
-
-Constantes com escopo global (declaradas no topo de módulo) são emitidas em `.rodata`.
-
-Exemplo: `CONSTANS REX VERSAO AD 1` em módulo `boot_cct` → `cct_const_boot_cct_VERSAO`
-
-## 4. Regras de Normalização de Nomes
-
-A normalização converte nomes CCT (que podem ter caracteres não-ASCII ou separadores especiais)
-para identificadores C válidos.
-
-### 4.1 Algoritmo de Normalização
-
-```
-input:  string arbitrária (nome de módulo ou rituale)
-output: identificador C válido com apenas [a-z0-9_], nunca começando com dígito
-
-1. Converter para minúsculas.
-2. Substituir qualquer sequência de caracteres fora de [a-z0-9] por underscore único.
-3. Remover underscores iniciais e finais.
-4. Se o primeiro caractere for dígito [0-9]: prefixar com "n_"
-   (ex: "123abc" → "n_123abc"; garante identificador C válido).
-5. Se string vazia após normalização: usar "anon".
+Pattern:
+```text
+cct_mod_<hash8>_<name>
 ```
 
-### 4.2 Exemplos de Normalização
+Where:
+- `hash8` is the first 8 lowercase hex chars of the SHA-256 of the canonical module path;
+- `name` is the normalized module name.
 
-| Nome original      | Normalizado       | Observação                          |
-|--------------------|-------------------|-------------------------------------|
-| `kernel`           | `kernel`          | —                                   |
-| `math_utils`       | `math_utils`      | —                                   |
-| `boot-cct`         | `boot_cct`        | hífen → underscore                  |
-| `MyModule`         | `mymodule`        | caixa alta → minúscula              |
-| `cct/kernel`       | `cct_kernel`      | `/` → underscore                    |
-| `meu módulo`       | `meu_m_dulo`      | espaço e não-ASCII → underscore     |
-| `123abc`           | `n_123abc`        | dígito inicial → prefixo `n_`       |
-| `99`               | `n_99`            | idem; sem letras restantes          |
+Canonical-path rules:
+- path is relative to the root of the CCT repository;
+- separator is always `/`;
+- no absolute path;
+- no leading `./`.
 
-### 4.3 Colisões de Normalização
-
-Se dois nomes CCT diferentes normalizarem para o mesmo identificador, o compilador deve:
-1. Emitir um aviso de naming collision.
-2. Desambiguar pelo hash do caminho canônico: `cct_fn_<mod>_<rituale>__<hash4>`.
-
-## 5. Entry Points Especiais
-
-### 5.1 Entry Point Definido pelo Usuário (`--entry`)
-
-Quando o usuário especifica `--entry <nome_rituale>`:
-- O RITUALE `<nome_rituale>` é emitido com seu símbolo canônico `cct_fn_<mod>_<nome_rituale>`
-  marcado como `.globl` no assembly gerado.
-- Nenhum wrapper `int main(void)` é gerado em perfil freestanding.
-- O LBOS faz `CALL cct_fn_<mod>_<nome_rituale>` diretamente após o handoff.
-
-Exemplo:
+Example:
+```text
+sha256("lib/cct/kernel/kernel.cct") -> a3f9d21b...
+cct_mod_a3f9d21b_kernel
 ```
+
+This symbol may be emitted as optional read-only module metadata in the generated object.
+
+### 3.3 Service shims
+
+Pattern:
+```text
+cct_svc_<name>
+```
+
+These are low-level glue functions with no specific module identity, for example:
+- `cct_svc_outb`
+- `cct_svc_inb`
+- `cct_svc_halt`
+
+### 3.4 Global variables
+
+Pattern:
+```text
+cct_g_<mod>_<name>
+```
+
+Examples:
+- `cct_g_kernel_estado_atual`
+- `cct_g_boot_cct_contador`
+
+### 3.5 String literals
+
+Pattern:
+```text
+cct_str_<mod>_<idx>
+```
+
+Examples:
+- `cct_str_kernel_0`
+- `cct_str_kernel_1`
+
+### 3.6 Global constants
+
+Pattern:
+```text
+cct_const_<mod>_<name>
+```
+
+Example:
+- `CONSTANS REX VERSAO AD 1` in module `boot_cct` -> `cct_const_boot_cct_VERSAO`
+
+## 4. Normalization Rules
+
+Input: arbitrary module or ritual name.  
+Output: valid C identifier using only `[a-z0-9_]`, never starting with a digit.
+
+Algorithm:
+1. convert to lowercase;
+2. replace any sequence outside `[a-z0-9]` with a single underscore;
+3. remove leading/trailing underscores;
+4. if the first character is a digit, prefix with `n_`;
+5. if the result is empty, use `anon`.
+
+Examples:
+
+| Original | Normalized |
+|---|---|
+| `kernel` | `kernel` |
+| `math_utils` | `math_utils` |
+| `boot-cct` | `boot_cct` |
+| `MyModule` | `mymodule` |
+| `cct/kernel` | `cct_kernel` |
+| `my module` | `my_module` |
+| `123abc` | `n_123abc` |
+| `99` | `n_99` |
+
+Collision rule:
+- if two different CCT names normalize to the same identifier, the compiler must warn and disambiguate with a short canonical-path hash suffix:
+```text
+cct_fn_<mod>_<rituale>__<hash4>
+```
+
+## 5. Entry-Point Rules
+
+### 5.1 Explicit freestanding entry (`--entry`)
+
+When the user specifies `--entry <rituale>`:
+- that ritual is emitted with its canonical symbol `cct_fn_<mod>_<rituale>`;
+- it is marked `.globl` in the generated assembly;
+- no `int main(void)` wrapper is generated in freestanding mode.
+
+Example:
+```bash
 cct compile --profile freestanding --entry kernel_halt lib/cct/kernel/kernel.cct
 ```
-Gera símbolo global: `cct_fn_kernel_kernel_halt`
 
-### 5.2 Sem Entry Point (biblioteca pura)
-
-Se nenhum `--entry` é especificado em perfil freestanding:
-- Todos os RITUALEs públicos (sem `ARCANUM`) são emitidos como `.globl`.
-- RITUALEs com `ARCANUM` são emitidos sem `.globl` (visibilidade local ao objeto).
-
-## 6. Verificação de Não-Colisão
-
-O script `tools/validate_freestanding_asm.sh` (criado em 16C.2) verifica automaticamente que
-nenhum símbolo CCT emitido usa prefixo reservado do LBOS.
-
-Verificação manual:
-```bash
-# awk '{print $3}' extrai a coluna do nome do símbolo (formato nm: <addr> <type> <name>)
-nm output.o | awk '$2 == "T" {print $3}' | grep -E '^(k0_|k1_|svc_|cct_rt_)'
-# Deve retornar vazio
+Expected global symbol:
+```text
+cct_fn_kernel_kernel_halt
 ```
 
-## 7. Compatibilidade com Linker ELF32
+### 5.2 No explicit entry (pure library mode)
 
-Todos os símbolos gerados segundo este contrato são:
-- Strings ASCII puras ([a-z0-9_], no máximo 255 caracteres).
-- Válidos como nomes de símbolo ELF conforme System V ABI i386.
-- Únicos dentro do escopo de um único módulo compilado.
+When no `--entry` is specified in freestanding mode:
+- all public rituals (without `ARCANUM`) are emitted as `.globl`;
+- `ARCANUM` rituals remain object-local.
 
-## 8. Verificação de Coerência com F7.CCT do LBOS
+## 6. Non-Collision Validation
 
-Este documento foi criado com base em:
-- `FASE_16_CCT.md`, seção 4.3 (Naming de Símbolos)
-- `third_party/cct-boot/PROMPT_IMPLEMENTACAO_F7CCT_BRIDGE_ABI_V0.md`
+`tools/validate_freestanding_asm.sh` must reject emitted symbols that use LBOS-reserved prefixes.
 
-Pontos de verificação:
-- [ ] Prefixo `cct_fn_` não conflita com namespaces do LBOS.
-- [ ] Prefixo `cct_mod_` não conflita com namespaces do LBOS.
-- [ ] Prefixo `cct_svc_` não conflita com `svc_` do LBOS — `svc_` ≠ `cct_svc_`; distinção
-      confirmada: `cct_svc_` tem prefixo mais longo e não é substring de `svc_`.
-- [ ] Entry point do LBOS espera símbolo `cct_fn_<mod>_<rituale>` — confirmar.
+Manual check:
+```bash
+nm output.o | awk '$2 == "T" {print $3}' | grep -E '^(k0_|k1_|svc_|cct_rt_)'
+```
+Expected result: empty output.
 
-Divergências conhecidas: nenhuma na V0.
+## 7. ELF32 Compatibility
+
+All symbols generated under this contract are:
+- ASCII-only names using `[a-z0-9_]`;
+- valid ELF symbol names for the System V i386 ABI;
+- unique within the scope of one compiled module.
+
+## 8. Coherence Checks Against LBOS F7.CCT
+
+Verification points:
+- [x] `cct_fn_` does not collide with LBOS namespaces.
+- [x] `cct_mod_` does not collide with LBOS namespaces.
+- [x] `cct_svc_` does not collide with raw `svc_`.
+- [ ] Confirm that the LBOS entry expectation remains `cct_fn_<mod>_<rituale>`.

@@ -1,55 +1,55 @@
-# FASE 17 HANDOFF
+# CCT — Handoff FASE 17
 
-## 1. Status Final Da Fase
+## 1. Final Phase Status
 
 - Status: PASS
-- Data: 2026-03-06
-- Gate final: `make test` verde na branch base (927 passed / 0 failed)
-- Escopo fechado: 17A1 ate 17D4
+- Date: 2026-03-06
+- Final gate: `make test` green on the base branch (927 passed / 0 failed)
+- Closed scope: 17A1 through 17D4
 
-## 2. Entregas Por Subfase
+## 2. Deliveries by Subphase
 
-- 17A1: ponte `VERBUM <-> MILES` (`char_at`, `from_char`) e `cct/char`.
-- 17A2: `cct/args` (`argc`, `arg`) com contrato de bounds.
-- 17A3: `cct/verbum_scan` com cursor (`init`, `pos`, `eof`, `peek`, `next`, `free`).
-- 17A4: consolidacao de toolkit de lexer e regressao integrada.
+- 17A1: `VERBUM <-> MILES` bridge (`char_at`, `from_char`) plus `cct/char`.
+- 17A2: `cct/args` (`argc`, `arg`) with bounds contract.
+- 17A3: `cct/verbum_scan` cursor API (`init`, `pos`, `eof`, `peek`, `next`, `free`).
+- 17A4: lexer-toolkit consolidation and integrated regression.
 - 17B1: `cct/verbum_builder` (append, append_char, len, clear, free).
-- 17B2: `cct/code_writer` com identacao deterministica.
-- 17B3: integracao builder/writer com `cct/fmt` para int/bool/real.
-- 17B4: fechamento de determinismo/carga textual e contrato de regressao.
-- 17C1: `cct/variant` (tag + payload opaco) funcional no host.
-- 17C2: `cct/variant_helpers` para predicado/tag/expect/payload_if.
-- 17C3: `cct/ast_node` para nos AST host-side.
-- 17C4: proposta documental ORDO com payload (`CCT_ORDO_PAYLOAD_PROPOSAL_V0.md`).
+- 17B2: `cct/code_writer` with deterministic indentation.
+- 17B3: builder/writer integration with `cct/fmt` for int/bool/real.
+- 17B4: text-load determinism closure and regression contract.
+- 17C1: host-functional `cct/variant` (tag + opaque payload).
+- 17C2: `cct/variant_helpers` for predicate/tag/expect/payload_if.
+- 17C3: `cct/ast_node` for host-side AST nodes.
+- 17C4: documentary proposal for payload ORDO (`CCT_ORDO_PAYLOAD_PROPOSAL_V0.md`).
 - 17D1: `cct/env` (`getenv`, `has_env`, `cwd`).
 - 17D2: `cct/time` (`now_ms`, `now_ns`, `sleep_ms`).
 - 17D3: `cct/bytes` (`bytes_new`, `bytes_len`, `bytes_get`, `bytes_set`, `bytes_free`).
-- 17D4: consolidacao de `docs/spec.md`, handoff e gate documental final.
+- 17D4: `docs/spec.md` consolidation, handoff, and final documentation gate.
 
-## 3. Evidencias Tecnicas
+## 3. Technical Evidence
 
-- Blocos de teste FASE 17A: 957-971.
-- Blocos de teste FASE 17B: 972-987.
-- Blocos de teste FASE 17C: 988-999.
-- Blocos de teste FASE 17D: 1000-1012.
-- Resultado final da regressao completa: 927 passed / 0 failed.
+- FASE 17A test blocks: 957-971.
+- FASE 17B test blocks: 972-987.
+- FASE 17C test blocks: 988-999.
+- FASE 17D test blocks: 1000-1012.
+- Final full-regression result: 927 passed / 0 failed.
 
-## 4. Riscos Residuais E Pendencias
+## 4. Residual Risks and Pending Items
 
-- ORDO com payload continua como proposta de linguagem (nao implementado no parser/semantico/codegen).
-- Modulos host-only de 17D dependem do perfil host e devem continuar bloqueados em freestanding.
-- Pendencia de roadmap: decidir migracao de `variant` pragmatico para suporte nativo de soma/tag em fase futura.
+- Payload ORDO remains a language proposal only (not implemented in parser/semantic/codegen).
+- 17D host-only modules still depend on host profile and must remain blocked in freestanding.
+- Roadmap pending item: decide the migration path from pragmatic `variant` to native sum/tag support in a future phase.
 
-## 5. Fora De Escopo Confirmado
+## 5. Confirmed Out-of-Scope Items
 
-- Self-hosting completo do compilador em uma unica fase.
-- Implementacao da sintaxe nativa ORDO com payload.
-- Novos backends alem do fluxo C-hosted atual.
+- Full compiler self-hosting in a single phase.
+- Native payload ORDO syntax implementation.
+- New backends beyond the current C-hosted flow.
 
-## 6. Checklist De Entrada Para FASE 18
+## 6. Entry Checklist for FASE 18
 
-- [x] `make test` 0 failed na branch base.
-- [x] docs de contrato 17A/17B/17C atualizados.
-- [x] decisoes abertas de ORDO payload registradas.
-- [ ] Definir backlog executavel da FASE 18 com criterios de aceite por subfase.
-- [ ] Congelar baseline inicial da FASE 18 apos criacao dos prompts de implementacao.
+- [x] `make test` with 0 failed on the base branch.
+- [x] 17A/17B/17C contract docs updated.
+- [x] open payload-ORDO decisions recorded.
+- [ ] Define executable FASE 18 backlog with acceptance criteria per subphase.
+- [ ] Freeze the initial FASE 18 baseline after prompt creation.

@@ -1,57 +1,57 @@
 # CCT Text Building Contract V0
 
-Este documento formaliza os contratos observaveis da trilha textual da FASE 17B:
+This document formalizes the observable contracts of the textual track introduced in FASE 17B:
 - `cct/verbum_builder.cct`
 - `cct/code_writer.cct`
 
-## 1) Invariantes do Builder
+## 1) Builder Invariants
 
 ### `builder_len`
-- `builder_len(b)` retorna o tamanho atual acumulado em bytes.
-- Apos cada `builder_append`/`builder_append_char`, o tamanho deve refletir exatamente o crescimento aplicado.
+- `builder_len(b)` returns the current accumulated size in bytes.
+- After each `builder_append`/`builder_append_char`, the length must reflect the exact applied growth.
 
 ### `builder_clear`
-- `builder_clear(b)` zera o conteudo logico.
-- Apos `builder_clear(b)`, `builder_len(b) == 0`.
-- Novos appends apos `clear` devem funcionar normalmente.
+- `builder_clear(b)` resets the logical contents.
+- After `builder_clear(b)`, `builder_len(b) == 0`.
+- New appends after `clear` must work normally.
 
 ### `builder_to_verbum` (snapshot)
-- `builder_to_verbum(b)` retorna snapshot textual do estado atual.
-- O snapshot nao pode corromper o estado interno do builder.
-- Chamadas repetidas sem mutacao intermediaria devem produzir texto equivalente.
+- `builder_to_verbum(b)` returns a textual snapshot of the current state.
+- The snapshot must not corrupt the builder's internal state.
+- Repeated calls without intermediate mutation must produce equivalent text.
 
-## 2) Invariantes do Writer
+## 2) Writer Invariants
 
 ### `writer_indent` / `writer_dedent`
-- Cada `writer_indent` aumenta 1 nivel de indentacao logica.
-- Cada `writer_dedent` reduz 1 nivel.
-- `writer_dedent` abaixo de zero e erro de contrato (underflow guard).
+- Each `writer_indent` increases the logical indentation level by 1.
+- Each `writer_dedent` decreases it by 1.
+- `writer_dedent` below zero is a contract error (underflow guard).
 
 ### `writer_write` / `writer_writeln`
-- `writer_write` escreve sem quebra automatica de linha.
-- `writer_writeln` escreve conteudo e finaliza com `\n`.
-- Em inicio de linha, o writer aplica indentacao canonica de 2 espacos por nivel.
+- `writer_write` writes without automatic newline termination.
+- `writer_writeln` writes content and terminates with `\n`.
+- At the beginning of a line, the writer applies canonical indentation of 2 spaces per level.
 
 ### `writer_to_verbum`
-- Retorna snapshot textual final do buffer interno do writer.
-- O resultado deve ser deterministico para a mesma sequencia de chamadas.
+- Returns the final textual snapshot of the writer's internal buffer.
+- The result must be deterministic for the same sequence of calls.
 
-## 3) Ownership e ciclo de vida
+## 3) Ownership and Lifecycle
 
-- `builder_init` / `writer_init` alocam recursos internos.
-- `builder_free` / `writer_free` sao obrigatorios para liberar recursos.
-- O `VERBUM` retornado por `*_to_verbum` segue ownership da runtime de strings; nao exige `free` manual separado no nivel CCT.
+- `builder_init` / `writer_init` allocate internal resources.
+- `builder_free` / `writer_free` are mandatory to release resources.
+- The `VERBUM` returned by `*_to_verbum` follows runtime string ownership; no separate manual `free` is required at the CCT level.
 
-## 4) Definicao de determinismo textual
+## 4) Definition of Textual Determinism
 
-Determinismo significa:
-- mesma entrada (fonte + argumentos) e mesma sequencia de operacoes;
-- mesmo output textual byte-a-byte.
+Determinism means:
+- same input (source + arguments) and same sequence of operations;
+- same output text byte-for-byte.
 
-Os gates desta fase validam determinismo com execucoes repetidas e comparacao por `cmp -s`.
+Phase gates validate determinism through repeated execution and `cmp -s` comparison.
 
-## 5) Limites conhecidos (nao objetivos desta fase)
+## 5) Known Limits (Not Objectives of This Phase)
 
-- Nao ha garantia de benchmark absoluto de throughput entre maquinas.
-- Nao ha SLA de latencia por append.
-- O contrato desta fase cobre integridade, estabilidade e repetibilidade funcional.
+- No absolute throughput benchmark guarantee across machines.
+- No latency SLA per append.
+- This phase contract covers integrity, stability, and functional repeatability.
