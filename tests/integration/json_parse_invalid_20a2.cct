@@ -1,0 +1,47 @@
+INCIPIT grimoire "json_parse_invalid_20a2"
+
+ADVOCARE "cct/json.cct"
+ADVOCARE "cct/result.cct"
+ADVOCARE "cct/verbum.cct"
+
+RITUALE expect_err(VERBUM src, VERBUM esperado) REDDE VERUM
+  EVOCA SPECULUM NIHIL res AD CONIURA json_try_parse(src)
+  SI NON CONIURA result_is_err GENUS(Json, JsonError)(res)
+    CONIURA result_free GENUS(Json, JsonError)(res)
+    REDDE FALSUM
+  FIN SI
+
+  EVOCA JsonError err AD CONIURA result_unwrap_err GENUS(Json, JsonError)(res)
+  CONIURA result_free GENUS(Json, JsonError)(res)
+
+  QUANDO err
+    CASO JsonErrorMsg(msg):
+      REDDE CONIURA compare(msg, esperado) == 0
+  FIN QUANDO
+
+  REDDE FALSUM
+EXPLICIT RITUALE
+
+RITUALE main() REDDE REX
+  SI NON CONIURA expect_err("", "json: unexpected eof")
+    REDDE 1
+  FIN SI
+  SI NON CONIURA expect_err("true false", "json: invalid literal")
+    REDDE 2
+  FIN SI
+  SI NON CONIURA expect_err("01", "json: invalid number")
+    REDDE 3
+  FIN SI
+  SI NON CONIURA expect_err("\"\\u12\"", "json: invalid escape")
+    REDDE 4
+  FIN SI
+  SI NON CONIURA expect_err("{\"a\" 1}", "json: expected ':' after object key")
+    REDDE 5
+  FIN SI
+  SI NON CONIURA expect_err("[1;]", "json: expected ',' or closing delimiter")
+    REDDE 6
+  FIN SI
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

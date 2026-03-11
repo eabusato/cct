@@ -85,3 +85,18 @@ temp/
 
 #Project Plan Files
 md_out/
+/third_party/cct-boot/._.DS_Store
+/third_party/cct-boot/.idea/._editor.xml
+/third_party/cct-boot/._PROMPT_IMPLEMENTACAO_F0C_BUILD_REPORT_V0.md
+/third_party/cct-boot/._PROMPT_IMPLEMENTACAO_F2D_STAGE2_PLACEHOLDER_EXECUTAVEL.md
+/third_party/cct-boot/._PROMPT_IMPLEMENTACAO_F4A_MAZE_FORMAT.md
+/third_party/cct-boot/._PROMPT_IMPLEMENTACAO_F6B_AUTH2_INTERFACE.md
+/third_party/cct-boot/._PROMPT_IMPLEMENTACAO_F6C_DECRYPT_ENGINE_V1.md
+/third_party/cct-boot/._PROMPT_IMPLEMENTACAO_F6D_INTEGRIDADE_HANDOFF.md
+/third_party/cct-boot/._PROMPT_IMPLEMENTACAO_FASE_01_BOOT_CHAIN.md
+/third_party/cct-boot/._PROMPT_IMPLEMENTACAO_FASE_04_MAZE_MVP.md
+/third_party/cct-boot/._PROMPT_IMPLEMENTACAO_FASE_07_KERNEL_BASE_CONSOLIDADO.md
+/third_party/cct-boot/docs/._README.md
+/third_party/cct-boot/format/._README.md
+/third_party/cct-boot/tools/._README.md
+/third_party/cct-boot/

@@ -1,0 +1,33 @@
+INCIPIT grimoire "json_expect_helpers_20a5"
+
+ADVOCARE "cct/fluxus.cct"
+ADVOCARE "cct/json.cct"
+ADVOCARE "cct/verbum.cct"
+
+RITUALE main() REDDE REX
+  EVOCA Json jnum AD CONIURA json_num(2.5)
+  EVOCA Json jstr AD CONIURA json_str("ave")
+  EVOCA Json jbool AD CONIURA json_bool(FALSUM)
+  EVOCA Json jarr AD CONIURA json_arr()
+  EVOCA Json jobj AD CONIURA json_obj()
+
+  SI CONIURA json_expect_num(jnum) < 2.49 VEL CONIURA json_expect_num(jnum) > 2.51
+    REDDE 1
+  FIN SI
+  SI CONIURA compare(CONIURA json_expect_str(jstr), "ave") != 0
+    REDDE 2
+  FIN SI
+  SI CONIURA json_expect_bool(jbool) != FALSUM
+    REDDE 3
+  FIN SI
+  SI CONIURA fluxus_len(CONIURA json_expect_arr(jarr)) != 0
+    REDDE 4
+  FIN SI
+  SI CONIURA fluxus_len(CONIURA json_expect_obj(jobj)) != 0
+    REDDE 5
+  FIN SI
+
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

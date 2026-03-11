@@ -1,0 +1,81 @@
+INCIPIT grimoire "json_mutation_20a4"
+
+ADVOCARE "cct/json.cct"
+ADVOCARE "cct/verbum.cct"
+
+RITUALE main() REDDE REX
+  EVOCA Json arr AD CONIURA json_parse("[1]")
+  CONIURA json_push(arr, CONIURA json_num(2))
+  CONIURA json_set_index(arr, 0, CONIURA json_str("a"))
+
+  SI CONIURA json_len(arr) != 2
+    REDDE 1
+  FIN SI
+
+  EVOCA Json arr0 AD CONIURA json_get_index(arr, 0)
+  QUANDO arr0
+    CASO JsonStr(v):
+      SI CONIURA compare(v, "a") != 0
+        REDDE 2
+      FIN SI
+    CASO JsonNull:
+      REDDE 2
+    CASO JsonBool(v):
+      REDDE 2
+    CASO JsonNum(v):
+      REDDE 2
+    CASO JsonArr(h):
+      REDDE 2
+    CASO JsonObj(h):
+      REDDE 2
+  FIN QUANDO
+
+  EVOCA Json obj AD CONIURA json_obj()
+  CONIURA json_set_key(obj, "x", CONIURA json_num(1))
+  CONIURA json_set_key(obj, "x", CONIURA json_bool(VERUM))
+  CONIURA json_set_key(obj, "y", CONIURA json_str("ok"))
+
+  SI CONIURA json_len(obj) != 2
+    REDDE 3
+  FIN SI
+
+  EVOCA Json objx AD CONIURA json_get_key(obj, "x")
+  QUANDO objx
+    CASO JsonBool(v):
+      SI v != VERUM
+        REDDE 4
+      FIN SI
+    CASO JsonNull:
+      REDDE 4
+    CASO JsonNum(v):
+      REDDE 4
+    CASO JsonStr(v):
+      REDDE 4
+    CASO JsonArr(h):
+      REDDE 4
+    CASO JsonObj(h):
+      REDDE 4
+  FIN QUANDO
+
+  EVOCA Json objy AD CONIURA json_get_key(obj, "y")
+  QUANDO objy
+    CASO JsonStr(v):
+      SI CONIURA compare(v, "ok") != 0
+        REDDE 5
+      FIN SI
+    CASO JsonNull:
+      REDDE 5
+    CASO JsonBool(v):
+      REDDE 5
+    CASO JsonNum(v):
+      REDDE 5
+    CASO JsonArr(h):
+      REDDE 5
+    CASO JsonObj(h):
+      REDDE 5
+  FIN QUANDO
+
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

@@ -1,0 +1,74 @@
+INCIPIT grimoire "json_parse_arrays_20a2"
+
+ADVOCARE "cct/json.cct"
+ADVOCARE "cct/verbum.cct"
+
+RITUALE main() REDDE REX
+  EVOCA Json vazio AD CONIURA json_parse("[]")
+  SI CONIURA json_arr_len(vazio) != 0
+    REDDE 1
+  FIN SI
+
+  EVOCA Json arr AD CONIURA json_parse("[1, true, \"x\"]")
+  SI CONIURA json_arr_len(arr) != 3
+    REDDE 2
+  FIN SI
+
+  EVOCA Json item0 AD CONIURA json_arr_get(arr, 0)
+  QUANDO item0
+    CASO JsonNum(v):
+      SI v < 0.9 VEL v > 1.1
+        REDDE 3
+      FIN SI
+    CASO JsonNull:
+      REDDE 3
+    CASO JsonBool(v):
+      REDDE 3
+    CASO JsonStr(v):
+      REDDE 3
+    CASO JsonArr(h):
+      REDDE 3
+    CASO JsonObj(h):
+      REDDE 3
+  FIN QUANDO
+
+  EVOCA Json item1 AD CONIURA json_arr_get(arr, 1)
+  QUANDO item1
+    CASO JsonBool(v):
+      SI v != VERUM
+        REDDE 4
+      FIN SI
+    CASO JsonNull:
+      REDDE 4
+    CASO JsonNum(v):
+      REDDE 4
+    CASO JsonStr(v):
+      REDDE 4
+    CASO JsonArr(h):
+      REDDE 4
+    CASO JsonObj(h):
+      REDDE 4
+  FIN QUANDO
+
+  EVOCA Json item2 AD CONIURA json_arr_get(arr, 2)
+  QUANDO item2
+    CASO JsonStr(v):
+      SI CONIURA compare(v, "x") != 0
+        REDDE 5
+      FIN SI
+    CASO JsonNull:
+      REDDE 5
+    CASO JsonBool(v):
+      REDDE 5
+    CASO JsonNum(v):
+      REDDE 5
+    CASO JsonArr(h):
+      REDDE 5
+    CASO JsonObj(h):
+      REDDE 5
+  FIN QUANDO
+
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

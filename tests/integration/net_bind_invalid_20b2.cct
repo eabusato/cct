@@ -1,0 +1,33 @@
+INCIPIT grimoire "net_bind_invalid_20b2"
+
+ADVOCARE "cct/net.cct"
+ADVOCARE "cct/verbum.cct"
+
+RITUALE main() REDDE REX
+  TEMPTA
+    EVOCA SPECULUM NIHIL first AD CONIURA tcp_listen("", 22313)
+    TEMPTA
+      EVOCA SPECULUM NIHIL second AD CONIURA tcp_listen("", 22313)
+      CONIURA net_close(second)
+      CONIURA net_close(first)
+      REDDE 2
+    CAPE FRACTUM inner
+      EVOCA VERBUM msg2 AD OBSECRO fractum_to_verbum(inner)
+      CONIURA net_close(first)
+      SI CONIURA compare(msg2, "sock_bind falhou") == 0
+        REDDE 0
+      FIN SI
+      REDDE 3
+    FIN TEMPTA
+    REDDE 4
+  CAPE FRACTUM outer
+    EVOCA VERBUM msg AD OBSECRO fractum_to_verbum(outer)
+    SI CONIURA compare(msg, "sock_bind falhou") == 0 VEL CONIURA compare(msg, "socket tcp create falhou") == 0
+      REDDE 0
+    FIN SI
+    REDDE 5
+  FIN TEMPTA
+  REDDE 6
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

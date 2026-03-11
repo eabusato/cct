@@ -1,0 +1,32 @@
+INCIPIT grimoire "json_access_array_20a4"
+
+ADVOCARE "cct/json.cct"
+
+RITUALE main() REDDE REX
+  EVOCA Json arr AD CONIURA json_parse("[1,2,3]")
+  SI CONIURA json_len(arr) != 3
+    REDDE 1
+  FIN SI
+
+  EVOCA Json item AD CONIURA json_get_index(arr, 1)
+  QUANDO item
+    CASO JsonNum(v):
+      SI v < 1.9 VEL v > 2.1
+        REDDE 2
+      FIN SI
+    CASO JsonNull:
+      REDDE 2
+    CASO JsonBool(v):
+      REDDE 2
+    CASO JsonStr(v):
+      REDDE 2
+    CASO JsonArr(h):
+      REDDE 2
+    CASO JsonObj(h):
+      REDDE 2
+  FIN QUANDO
+
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

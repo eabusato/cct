@@ -3074,6 +3074,176 @@ static bool cg_emit_obsecro_expr(FILE *out, cct_codegen_t *cg, const cct_ast_nod
         return true;
     }
 
+    if (strcmp(name, "fractum_to_verbum") == 0) {
+        if (argc != 1) {
+            cg_report_node(cg, expr, "OBSECRO fractum_to_verbum expects exactly one FRACTUM argument in FASE 20A.2");
+            return false;
+        }
+        cct_codegen_value_kind_t k = CCT_CODEGEN_VALUE_UNKNOWN;
+        fputs("(", out);
+        if (!cg_emit_expr(out, cg, args->nodes[0], &k)) return false;
+        if (k != CCT_CODEGEN_VALUE_STRING) {
+            cg_report_node(cg, args->nodes[0], "OBSECRO fractum_to_verbum requires FRACTUM argument in FASE 20A.2");
+            return false;
+        }
+        fputs(")", out);
+        if (out_kind) *out_kind = CCT_CODEGEN_VALUE_STRING;
+        return true;
+    }
+
+    if (strcmp(name, "json_handle_ptr") == 0) {
+        if (argc != 1) {
+            cg_report_node(cg, expr, "OBSECRO json_handle_ptr expects exactly one integer handle argument in FASE 20A.5");
+            return false;
+        }
+        cct_codegen_value_kind_t k = CCT_CODEGEN_VALUE_UNKNOWN;
+        fputs("((void*)(intptr_t)(long long)(", out);
+        if (!cg_emit_expr(out, cg, args->nodes[0], &k)) return false;
+        if (!(k == CCT_CODEGEN_VALUE_INT || k == CCT_CODEGEN_VALUE_BOOL)) {
+            cg_report_node(cg, args->nodes[0], "OBSECRO json_handle_ptr requires integer handle argument in FASE 20A.5");
+            return false;
+        }
+        fputs("))", out);
+        if (out_kind) *out_kind = CCT_CODEGEN_VALUE_POINTER;
+        return true;
+    }
+
+    if (strcmp(name, "socket_tcp") == 0 || strcmp(name, "socket_udp") == 0) {
+        if (argc != 0) {
+            cg_report_nodef(cg, expr, "OBSECRO %s expects exactly zero arguments in FASE 20B.1", name);
+            return false;
+        }
+        fprintf(out, "((void*)cct_rt_%s())", name);
+        if (out_kind) *out_kind = CCT_CODEGEN_VALUE_POINTER;
+        return true;
+    }
+
+    if (strcmp(name, "sock_accept") == 0) {
+        if (argc != 1) {
+            cg_report_node(cg, expr, "OBSECRO sock_accept expects exactly one socket pointer argument in FASE 20B.1");
+            return false;
+        }
+        cct_codegen_value_kind_t k = CCT_CODEGEN_VALUE_UNKNOWN;
+        fputs("((void*)cct_rt_sock_accept((void*)(", out);
+        if (!cg_emit_expr(out, cg, args->nodes[0], &k)) return false;
+        if (k != CCT_CODEGEN_VALUE_POINTER) {
+            cg_report_node(cg, args->nodes[0], "OBSECRO sock_accept requires socket pointer argument in FASE 20B.1");
+            return false;
+        }
+        fputs(")))", out);
+        if (out_kind) *out_kind = CCT_CODEGEN_VALUE_POINTER;
+        return true;
+    }
+
+    if (strcmp(name, "sock_send") == 0) {
+        if (argc != 2) {
+            cg_report_node(cg, expr, "OBSECRO sock_send expects exactly (sock, data) in FASE 20B.1");
+            return false;
+        }
+        cct_codegen_value_kind_t k0 = CCT_CODEGEN_VALUE_UNKNOWN;
+        cct_codegen_value_kind_t k1 = CCT_CODEGEN_VALUE_UNKNOWN;
+        fputs("cct_rt_sock_send((void*)(", out);
+        if (!cg_emit_expr(out, cg, args->nodes[0], &k0)) return false;
+        if (k0 != CCT_CODEGEN_VALUE_POINTER) {
+            cg_report_node(cg, args->nodes[0], "OBSECRO sock_send requires socket pointer argument in FASE 20B.1");
+            return false;
+        }
+        fputs("), ", out);
+        if (!cg_emit_expr(out, cg, args->nodes[1], &k1)) return false;
+        if (k1 != CCT_CODEGEN_VALUE_STRING) {
+            cg_report_node(cg, args->nodes[1], "OBSECRO sock_send requires VERBUM payload in FASE 20B.1");
+            return false;
+        }
+        fputs(")", out);
+        if (out_kind) *out_kind = CCT_CODEGEN_VALUE_INT;
+        return true;
+    }
+
+    if (strcmp(name, "sock_recv") == 0) {
+        if (argc != 2) {
+            cg_report_node(cg, expr, "OBSECRO sock_recv expects exactly (sock, max_bytes) in FASE 20B.1");
+            return false;
+        }
+        cct_codegen_value_kind_t k0 = CCT_CODEGEN_VALUE_UNKNOWN;
+        cct_codegen_value_kind_t k1 = CCT_CODEGEN_VALUE_UNKNOWN;
+        fputs("cct_rt_sock_recv((void*)(", out);
+        if (!cg_emit_expr(out, cg, args->nodes[0], &k0)) return false;
+        if (k0 != CCT_CODEGEN_VALUE_POINTER) {
+            cg_report_node(cg, args->nodes[0], "OBSECRO sock_recv requires socket pointer argument in FASE 20B.1");
+            return false;
+        }
+        fputs("), (long long)(", out);
+        if (!cg_emit_expr(out, cg, args->nodes[1], &k1)) return false;
+        if (!(k1 == CCT_CODEGEN_VALUE_INT || k1 == CCT_CODEGEN_VALUE_BOOL)) {
+            cg_report_node(cg, args->nodes[1], "OBSECRO sock_recv requires integer max_bytes in FASE 20B.1");
+            return false;
+        }
+        fputs("))", out);
+        if (out_kind) *out_kind = CCT_CODEGEN_VALUE_STRING;
+        return true;
+    }
+
+    if (strcmp(name, "json_arr_handle_new") == 0 ||
+        strcmp(name, "json_obj_handle_new") == 0) {
+        if (argc != 1) {
+            cg_report_nodef(cg, expr, "OBSECRO %s expects exactly one integer size argument in FASE 20A.2", name);
+            return false;
+        }
+        cct_codegen_value_kind_t k = CCT_CODEGEN_VALUE_UNKNOWN;
+        fprintf(out, "cct_rt_%s((long long)(", name);
+        if (!cg_emit_expr(out, cg, args->nodes[0], &k)) return false;
+        if (!(k == CCT_CODEGEN_VALUE_INT || k == CCT_CODEGEN_VALUE_BOOL)) {
+            cg_report_nodef(cg, args->nodes[0], "OBSECRO %s requires integer element size argument in FASE 20A.2", name);
+            return false;
+        }
+        fputs("))", out);
+        if (out_kind) *out_kind = CCT_CODEGEN_VALUE_INT;
+        return true;
+    }
+
+    if (strcmp(name, "json_arr_handle_len") == 0 ||
+        strcmp(name, "json_obj_handle_len") == 0) {
+        if (argc != 1) {
+            cg_report_nodef(cg, expr, "OBSECRO %s expects exactly one integer handle argument in FASE 20A.2", name);
+            return false;
+        }
+        cct_codegen_value_kind_t k = CCT_CODEGEN_VALUE_UNKNOWN;
+        fprintf(out, "cct_rt_%s((long long)(", name);
+        if (!cg_emit_expr(out, cg, args->nodes[0], &k)) return false;
+        if (!(k == CCT_CODEGEN_VALUE_INT || k == CCT_CODEGEN_VALUE_BOOL)) {
+            cg_report_nodef(cg, args->nodes[0], "OBSECRO %s requires integer handle argument in FASE 20A.2", name);
+            return false;
+        }
+        fputs("))", out);
+        if (out_kind) *out_kind = CCT_CODEGEN_VALUE_INT;
+        return true;
+    }
+
+    if (strcmp(name, "json_arr_handle_get") == 0 ||
+        strcmp(name, "json_obj_handle_get") == 0) {
+        if (argc != 2) {
+            cg_report_nodef(cg, expr, "OBSECRO %s expects exactly (handle, idx) in FASE 20A.2", name);
+            return false;
+        }
+        cct_codegen_value_kind_t k0 = CCT_CODEGEN_VALUE_UNKNOWN;
+        cct_codegen_value_kind_t k1 = CCT_CODEGEN_VALUE_UNKNOWN;
+        fprintf(out, "((void*)cct_rt_%s((long long)(", name);
+        if (!cg_emit_expr(out, cg, args->nodes[0], &k0)) return false;
+        if (!(k0 == CCT_CODEGEN_VALUE_INT || k0 == CCT_CODEGEN_VALUE_BOOL)) {
+            cg_report_nodef(cg, args->nodes[0], "OBSECRO %s requires integer handle argument in FASE 20A.2", name);
+            return false;
+        }
+        fputs("), (long long)(", out);
+        if (!cg_emit_expr(out, cg, args->nodes[1], &k1)) return false;
+        if (!(k1 == CCT_CODEGEN_VALUE_INT || k1 == CCT_CODEGEN_VALUE_BOOL)) {
+            cg_report_nodef(cg, args->nodes[1], "OBSECRO %s requires integer index argument in FASE 20A.2", name);
+            return false;
+        }
+        fputs(")))", out);
+        if (out_kind) *out_kind = CCT_CODEGEN_VALUE_POINTER;
+        return true;
+    }
+
     if (strcmp(name, "builder_init") == 0) {
         if (argc != 0) {
             cg_report_node(cg, expr, "OBSECRO builder_init expects exactly zero arguments in FASE 17B.1");
@@ -5090,6 +5260,10 @@ static bool cg_emit_obsecro_expr(FILE *out, cct_codegen_t *cg, const cct_ast_nod
         strcmp(name, "fluxus_remove") == 0 || strcmp(name, "fluxus_insert") == 0 ||
         strcmp(name, "fluxus_reverse") == 0 || strcmp(name, "fluxus_sort_int") == 0 ||
         strcmp(name, "fluxus_sort_verbum") == 0 || strcmp(name, "alg_sort_verbum") == 0 ||
+        strcmp(name, "json_arr_handle_push") == 0 || strcmp(name, "json_obj_handle_push") == 0 ||
+        strcmp(name, "sock_connect") == 0 || strcmp(name, "sock_bind") == 0 ||
+        strcmp(name, "sock_listen") == 0 || strcmp(name, "sock_close") == 0 ||
+        strcmp(name, "sock_set_timeout_ms") == 0 ||
         strcmp(name, "map_free") == 0 || strcmp(name, "map_insert") == 0 ||
         strcmp(name, "map_clear") == 0 || strcmp(name, "map_reserve") == 0 ||
         strcmp(name, "map_merge") == 0 ||
@@ -5928,6 +6102,112 @@ static bool cg_emit_scribe_stmt(FILE *out, cct_codegen_t *cg, const cct_ast_node
         return true;
     }
 
+    if (strcmp(obsecro_node->as.obsecro.name, "json_arr_handle_push") == 0 ||
+        strcmp(obsecro_node->as.obsecro.name, "json_obj_handle_push") == 0) {
+        const char *name = obsecro_node->as.obsecro.name;
+        cct_ast_node_list_t *args = obsecro_node->as.obsecro.arguments;
+        if (!args || args->count != 2) {
+            cg_report_nodef(cg, obsecro_node, "OBSECRO %s requires exactly (handle, ptr) in FASE 20A.2", name);
+            return false;
+        }
+        cct_codegen_value_kind_t k0 = CCT_CODEGEN_VALUE_UNKNOWN;
+        cct_codegen_value_kind_t k1 = CCT_CODEGEN_VALUE_UNKNOWN;
+        cg_emit_indent(out, indent);
+        fprintf(out, "cct_rt_%s((long long)(", name);
+        if (!cg_emit_expr(out, cg, args->nodes[0], &k0)) return false;
+        if (!(k0 == CCT_CODEGEN_VALUE_INT || k0 == CCT_CODEGEN_VALUE_BOOL)) {
+            cg_report_nodef(cg, args->nodes[0], "OBSECRO %s requires integer handle argument in FASE 20A.2", name);
+            return false;
+        }
+        fputs("), (const void*)(", out);
+        if (!cg_emit_expr(out, cg, args->nodes[1], &k1)) return false;
+        if (k1 != CCT_CODEGEN_VALUE_POINTER) {
+            cg_report_nodef(cg, args->nodes[1], "OBSECRO %s requires pointer payload argument in FASE 20A.2", name);
+            return false;
+        }
+        fputs("));\n", out);
+        return true;
+    }
+
+    if (strcmp(obsecro_node->as.obsecro.name, "sock_connect") == 0 ||
+        strcmp(obsecro_node->as.obsecro.name, "sock_bind") == 0) {
+        const char *name = obsecro_node->as.obsecro.name;
+        cct_ast_node_list_t *args = obsecro_node->as.obsecro.arguments;
+        if (!args || args->count != 3) {
+            cg_report_nodef(cg, obsecro_node, "OBSECRO %s requires exactly (sock, host, port) in FASE 20B.1", name);
+            return false;
+        }
+        cct_codegen_value_kind_t k0 = CCT_CODEGEN_VALUE_UNKNOWN;
+        cct_codegen_value_kind_t k1 = CCT_CODEGEN_VALUE_UNKNOWN;
+        cct_codegen_value_kind_t k2 = CCT_CODEGEN_VALUE_UNKNOWN;
+        cg_emit_indent(out, indent);
+        fprintf(out, "cct_rt_%s((void*)(", name);
+        if (!cg_emit_expr(out, cg, args->nodes[0], &k0)) return false;
+        if (k0 != CCT_CODEGEN_VALUE_POINTER) {
+            cg_report_nodef(cg, args->nodes[0], "OBSECRO %s requires socket pointer argument in FASE 20B.1", name);
+            return false;
+        }
+        fputs("), ", out);
+        if (!cg_emit_expr(out, cg, args->nodes[1], &k1)) return false;
+        if (k1 != CCT_CODEGEN_VALUE_STRING) {
+            cg_report_nodef(cg, args->nodes[1], "OBSECRO %s requires VERBUM host argument in FASE 20B.1", name);
+            return false;
+        }
+        fputs(", (long long)(", out);
+        if (!cg_emit_expr(out, cg, args->nodes[2], &k2)) return false;
+        if (!(k2 == CCT_CODEGEN_VALUE_INT || k2 == CCT_CODEGEN_VALUE_BOOL)) {
+            cg_report_nodef(cg, args->nodes[2], "OBSECRO %s requires integer port argument in FASE 20B.1", name);
+            return false;
+        }
+        fputs("));\n", out);
+        return true;
+    }
+
+    if (strcmp(obsecro_node->as.obsecro.name, "sock_listen") == 0 ||
+        strcmp(obsecro_node->as.obsecro.name, "sock_set_timeout_ms") == 0) {
+        const char *name = obsecro_node->as.obsecro.name;
+        cct_ast_node_list_t *args = obsecro_node->as.obsecro.arguments;
+        if (!args || args->count != 2) {
+            cg_report_nodef(cg, obsecro_node, "OBSECRO %s requires exactly (sock, value) in FASE 20B.1", name);
+            return false;
+        }
+        cct_codegen_value_kind_t k0 = CCT_CODEGEN_VALUE_UNKNOWN;
+        cct_codegen_value_kind_t k1 = CCT_CODEGEN_VALUE_UNKNOWN;
+        cg_emit_indent(out, indent);
+        fprintf(out, "cct_rt_%s((void*)(", name);
+        if (!cg_emit_expr(out, cg, args->nodes[0], &k0)) return false;
+        if (k0 != CCT_CODEGEN_VALUE_POINTER) {
+            cg_report_nodef(cg, args->nodes[0], "OBSECRO %s requires socket pointer argument in FASE 20B.1", name);
+            return false;
+        }
+        fputs("), (long long)(", out);
+        if (!cg_emit_expr(out, cg, args->nodes[1], &k1)) return false;
+        if (!(k1 == CCT_CODEGEN_VALUE_INT || k1 == CCT_CODEGEN_VALUE_BOOL)) {
+            cg_report_nodef(cg, args->nodes[1], "OBSECRO %s requires integer argument in FASE 20B.1", name);
+            return false;
+        }
+        fputs("));\n", out);
+        return true;
+    }
+
+    if (strcmp(obsecro_node->as.obsecro.name, "sock_close") == 0) {
+        cct_ast_node_list_t *args = obsecro_node->as.obsecro.arguments;
+        if (!args || args->count != 1) {
+            cg_report_node(cg, obsecro_node, "OBSECRO sock_close requires exactly one socket pointer argument in FASE 20B.1");
+            return false;
+        }
+        cct_codegen_value_kind_t k = CCT_CODEGEN_VALUE_UNKNOWN;
+        cg_emit_indent(out, indent);
+        fputs("cct_rt_sock_close((void*)(", out);
+        if (!cg_emit_expr(out, cg, args->nodes[0], &k)) return false;
+        if (k != CCT_CODEGEN_VALUE_POINTER) {
+            cg_report_node(cg, args->nodes[0], "OBSECRO sock_close requires socket pointer argument in FASE 20B.1");
+            return false;
+        }
+        fputs("));\n", out);
+        return true;
+    }
+
     if (strcmp(obsecro_node->as.obsecro.name, "fluxus_clear") == 0) {
         cct_ast_node_list_t *args = obsecro_node->as.obsecro.arguments;
         if (!args || args->count != 1) {
@@ -6688,7 +6968,7 @@ static bool cg_emit_scribe_stmt(FILE *out, cct_codegen_t *cg, const cct_ast_node
     }
 
     if (strcmp(obsecro_node->as.obsecro.name, "scribe") != 0) {
-        cg_report_nodef(cg, obsecro_node, "OBSECRO %s codegen is not supported in current executable subset (supported stmt builtins: scribe, libera, mem_free, mem_copy, mem_set, mem_zero, kernel_halt, kernel_outb, kernel_memcpy, kernel_memset, fluxus_free, fluxus_push, fluxus_pop, fluxus_clear, fluxus_reserve, fluxus_set, fluxus_remove, fluxus_insert, fluxus_reverse, fluxus_sort_int, fluxus_sort_verbum, alg_sort_verbum, map_free, map_insert, map_clear, map_reserve, map_merge, set_free, set_clear, set_reserve, io_print, io_println, io_print_int, io_print_real, io_print_char, io_eprint, io_eprintln, io_eprint_int, io_eprint_real, io_flush, io_flush_err, fs_write_all, fs_append_all, fs_mkdir, fs_mkdir_all, fs_delete_file, fs_delete_dir, fs_rename, fs_copy, fs_move, fs_chmod, fs_truncate, fs_symlink, random_seed, time_sleep_ms, bytes_set, bytes_free, option_free, result_free, scan_free, builder_append, builder_append_char, builder_clear, builder_free, writer_indent, writer_dedent, writer_write, writer_writeln, writer_free)",
+        cg_report_nodef(cg, obsecro_node, "OBSECRO %s codegen is not supported in current executable subset (supported stmt builtins: scribe, libera, mem_free, mem_copy, mem_set, mem_zero, kernel_halt, kernel_outb, kernel_memcpy, kernel_memset, fluxus_free, fluxus_push, fluxus_pop, fluxus_clear, fluxus_reserve, fluxus_set, fluxus_remove, fluxus_insert, fluxus_reverse, fluxus_sort_int, fluxus_sort_verbum, alg_sort_verbum, json_arr_handle_push, json_obj_handle_push, sock_connect, sock_bind, sock_listen, sock_close, sock_set_timeout_ms, map_free, map_insert, map_clear, map_reserve, map_merge, set_free, set_clear, set_reserve, io_print, io_println, io_print_int, io_print_real, io_print_char, io_eprint, io_eprintln, io_eprint_int, io_eprint_real, io_flush, io_flush_err, fs_write_all, fs_append_all, fs_mkdir, fs_mkdir_all, fs_delete_file, fs_delete_dir, fs_rename, fs_copy, fs_move, fs_chmod, fs_truncate, fs_symlink, random_seed, time_sleep_ms, bytes_set, bytes_free, option_free, result_free, scan_free, builder_append, builder_append_char, builder_clear, builder_free, writer_indent, writer_dedent, writer_write, writer_writeln, writer_free)",
                         obsecro_node->as.obsecro.name);
         return false;
     }

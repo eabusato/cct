@@ -16736,6 +16736,523 @@ rm -f "${SIG14TD2_LOCAL_NO_TITLES_OUT}.svg" "${SIG14TD2_LOCAL_NO_TITLES_OUT}.sig
 
 echo ""
 echo "========================================"
+echo "FASE 20A1: Modelo de dados JSON canonico"
+echo "========================================"
+echo ""
+
+# Test 1203: json_model_basic_20a1
+echo "Test 1203: json_model_basic_20a1"
+SRC_1203="tests/integration/json_model_basic_20a1.cct"
+BIN_1203="${SRC_1203%.cct}"
+cleanup_codegen_artifacts "$SRC_1203"
+if "$CCT_BIN" "$SRC_1203" >"$CCT_TMP_DIR/cct_phase20a1_1203_compile.out" 2>&1; then
+    "$BIN_1203" >"$CCT_TMP_DIR/cct_phase20a1_1203_run.out" 2>&1
+    RC_1203=$?
+else
+    RC_1203=255
+fi
+if [ "$RC_1203" -eq 0 ]; then
+    test_pass "json_model_basic_20a1 valida ORDO Json com pares auxiliares e handles canonicos para arr/obj"
+else
+    test_fail "json_model_basic_20a1 regrediu o modelo canonico Json"
+fi
+
+# Test 1204: json_constructors_20a1
+echo "Test 1204: json_constructors_20a1"
+SRC_1204="tests/integration/json_constructors_20a1.cct"
+BIN_1204="${SRC_1204%.cct}"
+cleanup_codegen_artifacts "$SRC_1204"
+if "$CCT_BIN" "$SRC_1204" >"$CCT_TMP_DIR/cct_phase20a1_1204_compile.out" 2>&1; then
+    "$BIN_1204" >"$CCT_TMP_DIR/cct_phase20a1_1204_run.out" 2>&1
+    RC_1204=$?
+else
+    RC_1204=255
+fi
+if [ "$RC_1204" -eq 0 ]; then
+    test_pass "json_constructors_20a1 valida construtores e predicados json_is_*"
+else
+    test_fail "json_constructors_20a1 regrediu construtores/predicados de Json"
+fi
+
+# Test 1205: json_kind_dispatch_20a1
+echo "Test 1205: json_kind_dispatch_20a1"
+SRC_1205="tests/integration/json_kind_dispatch_20a1.cct"
+BIN_1205="${SRC_1205%.cct}"
+cleanup_codegen_artifacts "$SRC_1205"
+if "$CCT_BIN" "$SRC_1205" >"$CCT_TMP_DIR/cct_phase20a1_1205_compile.out" 2>&1; then
+    "$BIN_1205" >"$CCT_TMP_DIR/cct_phase20a1_1205_run.out" 2>&1
+    RC_1205=$?
+else
+    RC_1205=255
+fi
+if [ "$RC_1205" -eq 0 ] && \
+   grep -q "^null$" "$CCT_TMP_DIR/cct_phase20a1_1205_run.out" && \
+   grep -q "^bool$" "$CCT_TMP_DIR/cct_phase20a1_1205_run.out" && \
+   grep -q "^num$" "$CCT_TMP_DIR/cct_phase20a1_1205_run.out" && \
+   grep -q "^str$" "$CCT_TMP_DIR/cct_phase20a1_1205_run.out" && \
+   grep -q "^arr$" "$CCT_TMP_DIR/cct_phase20a1_1205_run.out" && \
+   grep -q "^obj$" "$CCT_TMP_DIR/cct_phase20a1_1205_run.out"; then
+    test_pass "json_kind_dispatch_20a1 valida mapeamento estavel de json_kind"
+else
+    test_fail "json_kind_dispatch_20a1 regrediu dispatch por kind de Json"
+fi
+
+# Test 1206: json_parse_literals_20a2
+echo "Test 1206: json_parse_literals_20a2"
+SRC_1206="tests/integration/json_parse_literals_20a2.cct"
+BIN_1206="${SRC_1206%.cct}"
+cleanup_codegen_artifacts "$SRC_1206"
+if "$CCT_BIN" "$SRC_1206" >"$CCT_TMP_DIR/cct_phase20a2_1206_compile.out" 2>&1; then
+    "$BIN_1206" >"$CCT_TMP_DIR/cct_phase20a2_1206_run.out" 2>&1
+    RC_1206=$?
+else
+    RC_1206=255
+fi
+if [ "$RC_1206" -eq 0 ]; then
+    test_pass "json_parse_literals_20a2 valida null/bool/num/string em parser JSON estrito"
+else
+    test_fail "json_parse_literals_20a2 regrediu parser de literais JSON"
+fi
+
+# Test 1207: json_parse_arrays_20a2
+echo "Test 1207: json_parse_arrays_20a2"
+SRC_1207="tests/integration/json_parse_arrays_20a2.cct"
+BIN_1207="${SRC_1207%.cct}"
+cleanup_codegen_artifacts "$SRC_1207"
+if "$CCT_BIN" "$SRC_1207" >"$CCT_TMP_DIR/cct_phase20a2_1207_compile.out" 2>&1; then
+    "$BIN_1207" >"$CCT_TMP_DIR/cct_phase20a2_1207_run.out" 2>&1
+    RC_1207=$?
+else
+    RC_1207=255
+fi
+if [ "$RC_1207" -eq 0 ]; then
+    test_pass "json_parse_arrays_20a2 valida arrays JSON e acesso indexado"
+else
+    test_fail "json_parse_arrays_20a2 regrediu parser de arrays JSON"
+fi
+
+# Test 1208: json_parse_objects_20a2
+echo "Test 1208: json_parse_objects_20a2"
+SRC_1208="tests/integration/json_parse_objects_20a2.cct"
+BIN_1208="${SRC_1208%.cct}"
+cleanup_codegen_artifacts "$SRC_1208"
+if "$CCT_BIN" "$SRC_1208" >"$CCT_TMP_DIR/cct_phase20a2_1208_compile.out" 2>&1; then
+    "$BIN_1208" >"$CCT_TMP_DIR/cct_phase20a2_1208_run.out" 2>&1
+    RC_1208=$?
+else
+    RC_1208=255
+fi
+if [ "$RC_1208" -eq 0 ]; then
+    test_pass "json_parse_objects_20a2 valida objetos JSON ordenados e aninhados"
+else
+    test_fail "json_parse_objects_20a2 regrediu parser de objetos JSON"
+fi
+
+# Test 1209: json_parse_invalid_20a2
+echo "Test 1209: json_parse_invalid_20a2"
+SRC_1209="tests/integration/json_parse_invalid_20a2.cct"
+BIN_1209="${SRC_1209%.cct}"
+cleanup_codegen_artifacts "$SRC_1209"
+if "$CCT_BIN" "$SRC_1209" >"$CCT_TMP_DIR/cct_phase20a2_1209_compile.out" 2>&1; then
+    "$BIN_1209" >"$CCT_TMP_DIR/cct_phase20a2_1209_run.out" 2>&1
+    RC_1209=$?
+else
+    RC_1209=255
+fi
+if [ "$RC_1209" -eq 0 ]; then
+    test_pass "json_parse_invalid_20a2 valida erros canonicos do parser JSON"
+else
+    test_fail "json_parse_invalid_20a2 regrediu erros canonicos do parser JSON"
+fi
+
+# Test 1210: json_parse_file_20a2
+echo "Test 1210: json_parse_file_20a2"
+SRC_1210="tests/integration/json_parse_file_20a2.cct"
+BIN_1210="${SRC_1210%.cct}"
+cleanup_codegen_artifacts "$SRC_1210"
+if "$CCT_BIN" "$SRC_1210" >"$CCT_TMP_DIR/cct_phase20a2_1210_compile.out" 2>&1; then
+    "$BIN_1210" >"$CCT_TMP_DIR/cct_phase20a2_1210_run.out" 2>&1
+    RC_1210=$?
+else
+    RC_1210=255
+fi
+if [ "$RC_1210" -eq 0 ]; then
+    test_pass "json_parse_file_20a2 valida parse de arquivo e canal try_parse_file"
+else
+    test_fail "json_parse_file_20a2 regrediu parse JSON em arquivo"
+fi
+
+# Test 1211: json_stringify_basic_20a3
+echo "Test 1211: json_stringify_basic_20a3"
+SRC_1211="tests/integration/json_stringify_basic_20a3.cct"
+BIN_1211="${SRC_1211%.cct}"
+cleanup_codegen_artifacts "$SRC_1211"
+if "$CCT_BIN" "$SRC_1211" >"$CCT_TMP_DIR/cct_phase20a3_1211_compile.out" 2>&1; then
+    "$BIN_1211" >"$CCT_TMP_DIR/cct_phase20a3_1211_run.out" 2>&1
+    RC_1211=$?
+else
+    RC_1211=255
+fi
+if [ "$RC_1211" -eq 0 ]; then
+    test_pass "json_stringify_basic_20a3 valida serializacao compacta deterministica"
+else
+    test_fail "json_stringify_basic_20a3 regrediu serializacao compacta JSON"
+fi
+
+# Test 1212: json_pretty_20a3
+echo "Test 1212: json_pretty_20a3"
+SRC_1212="tests/integration/json_pretty_20a3.cct"
+BIN_1212="${SRC_1212%.cct}"
+cleanup_codegen_artifacts "$SRC_1212"
+if "$CCT_BIN" "$SRC_1212" >"$CCT_TMP_DIR/cct_phase20a3_1212_compile.out" 2>&1; then
+    "$BIN_1212" >"$CCT_TMP_DIR/cct_phase20a3_1212_run.out" 2>&1
+    RC_1212=$?
+else
+    RC_1212=255
+fi
+if [ "$RC_1212" -eq 0 ]; then
+    test_pass "json_pretty_20a3 valida pretty printer com indent configuravel"
+else
+    test_fail "json_pretty_20a3 regrediu pretty printer JSON"
+fi
+
+# Test 1213: json_roundtrip_20a3
+echo "Test 1213: json_roundtrip_20a3"
+SRC_1213="tests/integration/json_roundtrip_20a3.cct"
+BIN_1213="${SRC_1213%.cct}"
+cleanup_codegen_artifacts "$SRC_1213"
+if "$CCT_BIN" "$SRC_1213" >"$CCT_TMP_DIR/cct_phase20a3_1213_compile.out" 2>&1; then
+    "$BIN_1213" >"$CCT_TMP_DIR/cct_phase20a3_1213_run.out" 2>&1
+    RC_1213=$?
+else
+    RC_1213=255
+fi
+if [ "$RC_1213" -eq 0 ]; then
+    test_pass "json_roundtrip_20a3 valida round-trip pragmatico stringify+parse"
+else
+    test_fail "json_roundtrip_20a3 regrediu round-trip JSON"
+fi
+
+# Test 1214: json_write_file_20a3
+echo "Test 1214: json_write_file_20a3"
+SRC_1214="tests/integration/json_write_file_20a3.cct"
+BIN_1214="${SRC_1214%.cct}"
+cleanup_codegen_artifacts "$SRC_1214"
+if "$CCT_BIN" "$SRC_1214" >"$CCT_TMP_DIR/cct_phase20a3_1214_compile.out" 2>&1; then
+    "$BIN_1214" >"$CCT_TMP_DIR/cct_phase20a3_1214_run.out" 2>&1
+    RC_1214=$?
+else
+    RC_1214=255
+fi
+if [ "$RC_1214" -eq 0 ]; then
+    test_pass "json_write_file_20a3 valida escrita JSON compacta em arquivo"
+else
+    test_fail "json_write_file_20a3 regrediu escrita JSON em arquivo"
+fi
+
+# Test 1215: json_access_array_20a4
+echo "Test 1215: json_access_array_20a4"
+SRC_1215="tests/integration/json_access_array_20a4.cct"
+BIN_1215="${SRC_1215%.cct}"
+cleanup_codegen_artifacts "$SRC_1215"
+if "$CCT_BIN" "$SRC_1215" >"$CCT_TMP_DIR/cct_phase20a4_1215_compile.out" 2>&1; then
+    "$BIN_1215" >"$CCT_TMP_DIR/cct_phase20a4_1215_run.out" 2>&1
+    RC_1215=$?
+else
+    RC_1215=255
+fi
+if [ "$RC_1215" -eq 0 ]; then
+    test_pass "json_access_array_20a4 valida json_len/json_get_index em arrays"
+else
+    test_fail "json_access_array_20a4 regrediu acesso indexado em arrays JSON"
+fi
+
+# Test 1216: json_access_object_20a4
+echo "Test 1216: json_access_object_20a4"
+SRC_1216="tests/integration/json_access_object_20a4.cct"
+BIN_1216="${SRC_1216%.cct}"
+cleanup_codegen_artifacts "$SRC_1216"
+if "$CCT_BIN" "$SRC_1216" >"$CCT_TMP_DIR/cct_phase20a4_1216_compile.out" 2>&1; then
+    "$BIN_1216" >"$CCT_TMP_DIR/cct_phase20a4_1216_run.out" 2>&1
+    RC_1216=$?
+else
+    RC_1216=255
+fi
+if [ "$RC_1216" -eq 0 ]; then
+    test_pass "json_access_object_20a4 valida json_get_key/json_has_key"
+else
+    test_fail "json_access_object_20a4 regrediu acesso por chave em objetos JSON"
+fi
+
+# Test 1217: json_mutation_20a4
+echo "Test 1217: json_mutation_20a4"
+SRC_1217="tests/integration/json_mutation_20a4.cct"
+BIN_1217="${SRC_1217%.cct}"
+cleanup_codegen_artifacts "$SRC_1217"
+if "$CCT_BIN" "$SRC_1217" >"$CCT_TMP_DIR/cct_phase20a4_1217_compile.out" 2>&1; then
+    "$BIN_1217" >"$CCT_TMP_DIR/cct_phase20a4_1217_run.out" 2>&1
+    RC_1217=$?
+else
+    RC_1217=255
+fi
+if [ "$RC_1217" -eq 0 ]; then
+    test_pass "json_mutation_20a4 valida set/push em arrays e set_key em objetos"
+else
+    test_fail "json_mutation_20a4 regrediu mutacao de estruturas JSON"
+fi
+
+# Test 1218: json_keys_values_20a4
+echo "Test 1218: json_keys_values_20a4"
+SRC_1218="tests/integration/json_keys_values_20a4.cct"
+BIN_1218="${SRC_1218%.cct}"
+cleanup_codegen_artifacts "$SRC_1218"
+if "$CCT_BIN" "$SRC_1218" >"$CCT_TMP_DIR/cct_phase20a4_1218_compile.out" 2>&1; then
+    "$BIN_1218" >"$CCT_TMP_DIR/cct_phase20a4_1218_run.out" 2>&1
+    RC_1218=$?
+else
+    RC_1218=255
+fi
+if [ "$RC_1218" -eq 0 ]; then
+    test_pass "json_keys_values_20a4 valida exportacao ordenada de chaves e valores"
+else
+    test_fail "json_keys_values_20a4 regrediu exportacao de chaves/valores JSON"
+fi
+
+# Test 1219: json_cum_dispatch_20a5
+echo "Test 1219: json_cum_dispatch_20a5"
+SRC_1219="tests/integration/json_cum_dispatch_20a5.cct"
+BIN_1219="${SRC_1219%.cct}"
+cleanup_codegen_artifacts "$SRC_1219"
+if "$CCT_BIN" "$SRC_1219" >"$CCT_TMP_DIR/cct_phase20a5_1219_compile.out" 2>&1; then
+    "$BIN_1219" >"$CCT_TMP_DIR/cct_phase20a5_1219_run.out" 2>&1
+    RC_1219=$?
+else
+    RC_1219=255
+fi
+if [ "$RC_1219" -eq 0 ]; then
+    test_pass "json_cum_dispatch_20a5 valida dispatch idiomatico via CUM sobre Json"
+else
+    test_fail "json_cum_dispatch_20a5 regrediu showcase idiomatico de Json"
+fi
+
+# Test 1220: json_expect_helpers_20a5
+echo "Test 1220: json_expect_helpers_20a5"
+SRC_1220="tests/integration/json_expect_helpers_20a5.cct"
+BIN_1220="${SRC_1220%.cct}"
+cleanup_codegen_artifacts "$SRC_1220"
+if "$CCT_BIN" "$SRC_1220" >"$CCT_TMP_DIR/cct_phase20a5_1220_compile.out" 2>&1; then
+    "$BIN_1220" >"$CCT_TMP_DIR/cct_phase20a5_1220_run.out" 2>&1
+    RC_1220=$?
+else
+    RC_1220=255
+fi
+if [ "$RC_1220" -eq 0 ]; then
+    test_pass "json_expect_helpers_20a5 valida helpers expect_* para Json"
+else
+    test_fail "json_expect_helpers_20a5 regrediu helpers expect_* de Json"
+fi
+
+echo ""
+echo "========================================"
+echo "FASE 20B1: Runtime host para sockets"
+echo "========================================"
+echo ""
+
+# Test 1221: socket_tcp_loopback_20b1
+echo "Test 1221: socket_tcp_loopback_20b1"
+HELPER_1221="tests/integration/socket_tcp_loopback_20b1_server.cct"
+SRC_1221="tests/integration/socket_tcp_loopback_20b1.cct"
+BIN_1221="${SRC_1221%.cct}"
+cleanup_codegen_artifacts "$HELPER_1221"
+cleanup_codegen_artifacts "$SRC_1221"
+rm -f tests/.tmp/socket_tcp_loopback_20b1.ready \
+      tests/.tmp/socket_tcp_loopback_20b1.done \
+      tests/.tmp/socket_tcp_loopback_20b1.server.log
+if "$CCT_BIN" "$HELPER_1221" >"$CCT_TMP_DIR/cct_phase20b1_1221_helper_compile.out" 2>&1 && \
+   "$CCT_BIN" "$SRC_1221" >"$CCT_TMP_DIR/cct_phase20b1_1221_compile.out" 2>&1; then
+    "$BIN_1221" >"$CCT_TMP_DIR/cct_phase20b1_1221_run.out" 2>&1
+    RC_1221=$?
+else
+    RC_1221=255
+fi
+if [ "$RC_1221" -eq 0 ]; then
+    test_pass "socket_tcp_loopback_20b1 valida socket TCP host-only com bind/listen/accept/connect/send/recv"
+else
+    test_fail "socket_tcp_loopback_20b1 regrediu bridge TCP host-only"
+fi
+rm -f tests/.tmp/socket_tcp_loopback_20b1.ready \
+      tests/.tmp/socket_tcp_loopback_20b1.done \
+      tests/.tmp/socket_tcp_loopback_20b1.server.log
+
+# Test 1222: socket_timeout_20b1
+echo "Test 1222: socket_timeout_20b1"
+HELPER_1222="tests/integration/socket_timeout_20b1_server.cct"
+SRC_1222="tests/integration/socket_timeout_20b1.cct"
+BIN_1222="${SRC_1222%.cct}"
+cleanup_codegen_artifacts "$HELPER_1222"
+cleanup_codegen_artifacts "$SRC_1222"
+rm -f tests/.tmp/socket_timeout_20b1.ready \
+      tests/.tmp/socket_timeout_20b1.done \
+      tests/.tmp/socket_timeout_20b1.server.log
+if "$CCT_BIN" "$HELPER_1222" >"$CCT_TMP_DIR/cct_phase20b1_1222_helper_compile.out" 2>&1 && \
+   "$CCT_BIN" "$SRC_1222" >"$CCT_TMP_DIR/cct_phase20b1_1222_compile.out" 2>&1; then
+    "$BIN_1222" >"$CCT_TMP_DIR/cct_phase20b1_1222_run.out" 2>&1
+    RC_1222=$?
+else
+    RC_1222=255
+fi
+if [ "$RC_1222" -eq 0 ]; then
+    test_pass "socket_timeout_20b1 valida timeout de leitura controlado sem travar a suite"
+else
+    test_fail "socket_timeout_20b1 regrediu timeouts de socket"
+fi
+rm -f tests/.tmp/socket_timeout_20b1.ready \
+      tests/.tmp/socket_timeout_20b1.done \
+      tests/.tmp/socket_timeout_20b1.server.log
+
+# Test 1223: socket_close_idempotent_20b1
+echo "Test 1223: socket_close_idempotent_20b1"
+SRC_1223="tests/integration/socket_close_idempotent_20b1.cct"
+BIN_1223="${SRC_1223%.cct}"
+cleanup_codegen_artifacts "$SRC_1223"
+if "$CCT_BIN" "$SRC_1223" >"$CCT_TMP_DIR/cct_phase20b1_1223_compile.out" 2>&1; then
+    "$BIN_1223" >"$CCT_TMP_DIR/cct_phase20b1_1223_run.out" 2>&1
+    RC_1223=$?
+else
+    RC_1223=255
+fi
+if [ "$RC_1223" -eq 0 ]; then
+    test_pass "socket_close_idempotent_20b1 valida fechamento repetido de sockets TCP/UDP"
+else
+    test_fail "socket_close_idempotent_20b1 regrediu close idempotente"
+fi
+
+echo ""
+echo "========================================"
+echo "FASE 20B2: API canonica TCP/UDP de alto nivel"
+echo "========================================"
+echo ""
+
+# Test 1224: net_tcp_client_server_20b2
+echo "Test 1224: net_tcp_client_server_20b2"
+HELPER_1224="tests/integration/net_tcp_client_server_20b2_server.cct"
+SRC_1224="tests/integration/net_tcp_client_server_20b2.cct"
+BIN_1224="${SRC_1224%.cct}"
+cleanup_codegen_artifacts "$HELPER_1224"
+cleanup_codegen_artifacts "$SRC_1224"
+rm -f tests/.tmp/net_tcp_client_server_20b2.ready \
+      tests/.tmp/net_tcp_client_server_20b2.done \
+      tests/.tmp/net_tcp_client_server_20b2.server.log
+if "$CCT_BIN" "$HELPER_1224" >"$CCT_TMP_DIR/cct_phase20b2_1224_helper_compile.out" 2>&1 && \
+   "$CCT_BIN" "$SRC_1224" >"$CCT_TMP_DIR/cct_phase20b2_1224_compile.out" 2>&1; then
+    "$BIN_1224" >"$CCT_TMP_DIR/cct_phase20b2_1224_run.out" 2>&1
+    RC_1224=$?
+else
+    RC_1224=255
+fi
+if [ "$RC_1224" -eq 0 ]; then
+    test_pass "net_tcp_client_server_20b2 valida wrappers tcp_connect/tcp_listen/tcp_accept/net_close"
+else
+    test_fail "net_tcp_client_server_20b2 regrediu API TCP de alto nivel"
+fi
+rm -f tests/.tmp/net_tcp_client_server_20b2.ready \
+      tests/.tmp/net_tcp_client_server_20b2.done \
+      tests/.tmp/net_tcp_client_server_20b2.server.log
+
+# Test 1225: net_udp_loopback_20b2
+echo "Test 1225: net_udp_loopback_20b2"
+SRC_1225="tests/integration/net_udp_loopback_20b2.cct"
+BIN_1225="${SRC_1225%.cct}"
+cleanup_codegen_artifacts "$SRC_1225"
+if "$CCT_BIN" "$SRC_1225" >"$CCT_TMP_DIR/cct_phase20b2_1225_compile.out" 2>&1; then
+    "$BIN_1225" >"$CCT_TMP_DIR/cct_phase20b2_1225_run.out" 2>&1
+    RC_1225=$?
+else
+    RC_1225=255
+fi
+if [ "$RC_1225" -eq 0 ]; then
+    test_pass "net_udp_loopback_20b2 valida wrappers udp_bind/udp_send_to/udp_recv_from"
+else
+    test_fail "net_udp_loopback_20b2 regrediu API UDP de alto nivel"
+fi
+
+# Test 1226: net_bind_invalid_20b2
+echo "Test 1226: net_bind_invalid_20b2"
+SRC_1226="tests/integration/net_bind_invalid_20b2.cct"
+BIN_1226="${SRC_1226%.cct}"
+cleanup_codegen_artifacts "$SRC_1226"
+if "$CCT_BIN" "$SRC_1226" >"$CCT_TMP_DIR/cct_phase20b2_1226_compile.out" 2>&1; then
+    "$BIN_1226" >"$CCT_TMP_DIR/cct_phase20b2_1226_run.out" 2>&1
+    RC_1226=$?
+else
+    RC_1226=255
+fi
+if [ "$RC_1226" -eq 0 ]; then
+    test_pass "net_bind_invalid_20b2 valida erro controlado em bind duplicado"
+else
+    test_fail "net_bind_invalid_20b2 regrediu tratamento de bind invalido"
+fi
+
+echo ""
+echo "========================================"
+echo "FASE 20B3: Leitura por linhas, framing e helpers textuais"
+echo "========================================"
+echo ""
+
+# Test 1227: net_line_protocol_20b3
+echo "Test 1227: net_line_protocol_20b3"
+HELPER_1227="tests/integration/net_line_protocol_20b3_server.cct"
+SRC_1227="tests/integration/net_line_protocol_20b3.cct"
+BIN_1227="${SRC_1227%.cct}"
+cleanup_codegen_artifacts "$HELPER_1227"
+cleanup_codegen_artifacts "$SRC_1227"
+rm -f tests/.tmp/net_line_protocol_20b3.ready \
+      tests/.tmp/net_line_protocol_20b3.done \
+      tests/.tmp/net_line_protocol_20b3.server.log
+if "$CCT_BIN" "$HELPER_1227" >"$CCT_TMP_DIR/cct_phase20b3_1227_helper_compile.out" 2>&1 && \
+   "$CCT_BIN" "$SRC_1227" >"$CCT_TMP_DIR/cct_phase20b3_1227_compile.out" 2>&1; then
+    "$BIN_1227" >"$CCT_TMP_DIR/cct_phase20b3_1227_run.out" 2>&1
+    RC_1227=$?
+else
+    RC_1227=255
+fi
+if [ "$RC_1227" -eq 0 ]; then
+    test_pass "net_line_protocol_20b3 valida net_read_line/net_write_line em fluxo TCP"
+else
+    test_fail "net_line_protocol_20b3 regrediu helpers de protocolo textual"
+fi
+rm -f tests/.tmp/net_line_protocol_20b3.ready \
+      tests/.tmp/net_line_protocol_20b3.done \
+      tests/.tmp/net_line_protocol_20b3.server.log
+
+# Test 1228: net_read_exact_20b3
+echo "Test 1228: net_read_exact_20b3"
+HELPER_1228="tests/integration/net_read_exact_20b3_server.cct"
+SRC_1228="tests/integration/net_read_exact_20b3.cct"
+BIN_1228="${SRC_1228%.cct}"
+cleanup_codegen_artifacts "$HELPER_1228"
+cleanup_codegen_artifacts "$SRC_1228"
+rm -f tests/.tmp/net_read_exact_20b3.ready \
+      tests/.tmp/net_read_exact_20b3.done \
+      tests/.tmp/net_read_exact_20b3.server.log
+if "$CCT_BIN" "$HELPER_1228" >"$CCT_TMP_DIR/cct_phase20b3_1228_helper_compile.out" 2>&1 && \
+   "$CCT_BIN" "$SRC_1228" >"$CCT_TMP_DIR/cct_phase20b3_1228_compile.out" 2>&1; then
+    "$BIN_1228" >"$CCT_TMP_DIR/cct_phase20b3_1228_run.out" 2>&1
+    RC_1228=$?
+else
+    RC_1228=255
+fi
+if [ "$RC_1228" -eq 0 ]; then
+    test_pass "net_read_exact_20b3 valida net_read_exact/net_read_until sobre framing textual"
+else
+    test_fail "net_read_exact_20b3 regrediu leitura exata e por delimitador"
+fi
+rm -f tests/.tmp/net_read_exact_20b3.ready \
+      tests/.tmp/net_read_exact_20b3.done \
+      tests/.tmp/net_read_exact_20b3.server.log
+
+echo ""
+echo "========================================"
 echo "Test Results:"
 echo -e "  ${GREEN}Passed:${NC} $TESTS_PASSED" >&3
 echo -e "  ${RED}Failed:${NC} $TESTS_FAILED" >&3

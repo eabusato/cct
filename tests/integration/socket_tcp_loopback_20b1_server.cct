@@ -1,0 +1,45 @@
+INCIPIT grimoire "socket_tcp_loopback_20b1_server"
+
+ADVOCARE "cct/fs.cct"
+ADVOCARE "cct/socket.cct"
+ADVOCARE "cct/verbum.cct"
+
+RITUALE main() REDDE REX
+  EVOCA VERBUM ready AD "tests/.tmp/socket_tcp_loopback_20b1.ready"
+  EVOCA VERBUM done AD "tests/.tmp/socket_tcp_loopback_20b1.done"
+  TEMPTA
+    EVOCA SPECULUM NIHIL listener AD CONIURA socket_tcp()
+
+    CONIURA sock_bind(listener, "", 22301)
+    CONIURA sock_listen(listener, 4)
+    CONIURA write_all(ready, "ready")
+
+    EVOCA SPECULUM NIHIL client AD CONIURA sock_accept(listener)
+    CONIURA sock_set_timeout_ms(client, 1000)
+
+    EVOCA VERBUM payload AD CONIURA sock_recv(client, 64)
+    SI CONIURA compare(payload, "salve") != 0
+      REDDE 10
+    FIN SI
+
+    SI CONIURA sock_send(client, "respondeu") != 9
+      REDDE 11
+    FIN SI
+
+    CONIURA sock_close(client)
+    CONIURA sock_close(listener)
+    CONIURA write_all(done, "ok")
+    REDDE 0
+  CAPE FRACTUM erro
+    EVOCA VERBUM msg AD OBSECRO fractum_to_verbum(erro)
+    SI CONIURA compare(msg, "sock_bind falhou") == 0 VEL CONIURA compare(msg, "socket tcp create falhou") == 0
+      CONIURA write_all(ready, "skip")
+      CONIURA write_all(done, "skip")
+      REDDE 0
+    FIN SI
+    REDDE 90
+  FIN TEMPTA
+  REDDE 91
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

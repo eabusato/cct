@@ -1167,6 +1167,10 @@ static bool sem_types_compatible_assign(cct_semantic_analyzer_t *sem, cct_sem_ty
         return false;
     }
 
+    if (target->kind == CCT_SEM_TYPE_MILES && sem_is_integer_type(value)) {
+        return true;
+    }
+
     if (sem_is_real_type(target) && sem_is_integer_type(value)) {
         return true; /* simple numeric promotion */
     }
@@ -1412,7 +1416,7 @@ static cct_sem_type_t* sem_resolve_ast_type(cct_semantic_analyzer_t *sem, const 
  * ======================================================================== */
 
 static const cct_sem_builtin_spec_t* sem_find_builtin(cct_semantic_analyzer_t *sem, const char *name) {
-    static cct_sem_builtin_spec_t specs[283];
+    static cct_sem_builtin_spec_t specs[303];
     static bool initialized = false;
 
     if (!initialized) {
@@ -1700,6 +1704,26 @@ static const cct_sem_builtin_spec_t* sem_find_builtin(cct_semantic_analyzer_t *s
         specs[280].name = "random_verbum_from"; specs[280].min_args = 2; specs[280].variadic = false;
         specs[281].name = "random_shuffle_int"; specs[281].min_args = 2; specs[281].variadic = false;
         specs[282].name = "random_bytes"; specs[282].min_args = 1; specs[282].variadic = false;
+        specs[283].name = "json_arr_handle_new"; specs[283].min_args = 1; specs[283].variadic = false;
+        specs[284].name = "json_arr_handle_push"; specs[284].min_args = 2; specs[284].variadic = false;
+        specs[285].name = "json_arr_handle_len"; specs[285].min_args = 1; specs[285].variadic = false;
+        specs[286].name = "json_arr_handle_get"; specs[286].min_args = 2; specs[286].variadic = false;
+        specs[287].name = "json_obj_handle_new"; specs[287].min_args = 1; specs[287].variadic = false;
+        specs[288].name = "json_obj_handle_push"; specs[288].min_args = 2; specs[288].variadic = false;
+        specs[289].name = "json_obj_handle_len"; specs[289].min_args = 1; specs[289].variadic = false;
+        specs[290].name = "json_obj_handle_get"; specs[290].min_args = 2; specs[290].variadic = false;
+        specs[291].name = "fractum_to_verbum"; specs[291].min_args = 1; specs[291].variadic = false;
+        specs[292].name = "json_handle_ptr"; specs[292].min_args = 1; specs[292].variadic = false;
+        specs[293].name = "socket_tcp"; specs[293].min_args = 0; specs[293].variadic = false;
+        specs[294].name = "socket_udp"; specs[294].min_args = 0; specs[294].variadic = false;
+        specs[295].name = "sock_connect"; specs[295].min_args = 3; specs[295].variadic = false;
+        specs[296].name = "sock_bind"; specs[296].min_args = 3; specs[296].variadic = false;
+        specs[297].name = "sock_listen"; specs[297].min_args = 2; specs[297].variadic = false;
+        specs[298].name = "sock_accept"; specs[298].min_args = 1; specs[298].variadic = false;
+        specs[299].name = "sock_send"; specs[299].min_args = 2; specs[299].variadic = false;
+        specs[300].name = "sock_recv"; specs[300].min_args = 2; specs[300].variadic = false;
+        specs[301].name = "sock_close"; specs[301].min_args = 1; specs[301].variadic = false;
+        specs[302].name = "sock_set_timeout_ms"; specs[302].min_args = 2; specs[302].variadic = false;
         initialized = true;
     }
 
@@ -1986,6 +2010,26 @@ static const cct_sem_builtin_spec_t* sem_find_builtin(cct_semantic_analyzer_t *s
     specs[280].return_type = &sem->type_verbum;
     specs[281].return_type = &sem->type_nihil;
     specs[282].return_type = sem_make_pointer_type(sem, &sem->type_nihil);
+    specs[283].return_type = &sem->type_rex;
+    specs[284].return_type = &sem->type_nihil;
+    specs[285].return_type = &sem->type_rex;
+    specs[286].return_type = sem_make_pointer_type(sem, &sem->type_nihil);
+    specs[287].return_type = &sem->type_rex;
+    specs[288].return_type = &sem->type_nihil;
+    specs[289].return_type = &sem->type_rex;
+    specs[290].return_type = sem_make_pointer_type(sem, &sem->type_nihil);
+    specs[291].return_type = &sem->type_verbum;
+    specs[292].return_type = sem_make_pointer_type(sem, &sem->type_nihil);
+    specs[293].return_type = sem_make_pointer_type(sem, &sem->type_nihil);
+    specs[294].return_type = sem_make_pointer_type(sem, &sem->type_nihil);
+    specs[295].return_type = &sem->type_nihil;
+    specs[296].return_type = &sem->type_nihil;
+    specs[297].return_type = &sem->type_nihil;
+    specs[298].return_type = sem_make_pointer_type(sem, &sem->type_nihil);
+    specs[299].return_type = &sem->type_rex;
+    specs[300].return_type = &sem->type_verbum;
+    specs[301].return_type = &sem->type_nihil;
+    specs[302].return_type = &sem->type_nihil;
 
     for (size_t i = 0; i < sizeof(specs) / sizeof(specs[0]); i++) {
         if (!specs[i].name) continue;
@@ -2070,6 +2114,8 @@ static const char* sem_forbidden_module_for_obsecro_in_freestanding(const char *
     if (sem_str_has_prefix(name, "bytes_")) return "cct/bytes";
     if (sem_str_has_prefix(name, "process_")) return "cct/process";
     if (sem_str_has_prefix(name, "hash_")) return "cct/hash";
+    if (sem_str_has_prefix(name, "json_")) return "cct/json";
+    if (sem_str_has_prefix(name, "sock_") || sem_str_has_prefix(name, "socket_")) return "cct/socket";
 
     return NULL;
 }
@@ -2831,6 +2877,12 @@ static cct_sem_type_t* sem_analyze_builtin_obsecro(
             sem_report_nodef(sem, expr->as.obsecro.arguments->nodes[i],
                              "OBSECRO %s expects VERBUM argument", name);
         }
+        if (strcmp(name, "fractum_to_verbum") == 0 &&
+            i == 0 &&
+            !(arg_type && (arg_type->kind == CCT_SEM_TYPE_FRACTUM || sem_is_error_type(arg_type)))) {
+            sem_report_nodef(sem, expr->as.obsecro.arguments->nodes[i],
+                             "OBSECRO fractum_to_verbum expects FRACTUM argument");
+        }
         if ((strcmp(name, "parse_int_radix") == 0 ||
              strcmp(name, "parse_try_int_radix") == 0)) {
             if (i == 0 &&
@@ -2974,6 +3026,85 @@ static cct_sem_type_t* sem_analyze_builtin_obsecro(
             !(sem_is_integer_type(arg_type) || sem_is_error_type(arg_type))) {
             sem_report_nodef(sem, expr->as.obsecro.arguments->nodes[i],
                              "OBSECRO kernel_memset expects integer byte value as second argument");
+        }
+        if ((strcmp(name, "json_arr_handle_new") == 0 ||
+             strcmp(name, "json_obj_handle_new") == 0) &&
+            i == 0 &&
+            !(sem_is_integer_type(arg_type) || sem_is_error_type(arg_type))) {
+            sem_report_nodef(sem, expr->as.obsecro.arguments->nodes[i],
+                             "OBSECRO %s expects integer element size argument", name);
+        }
+        if ((strcmp(name, "json_arr_handle_push") == 0 ||
+             strcmp(name, "json_obj_handle_push") == 0) &&
+            i == 0 &&
+            !(sem_is_integer_type(arg_type) || sem_is_error_type(arg_type))) {
+            sem_report_nodef(sem, expr->as.obsecro.arguments->nodes[i],
+                             "OBSECRO %s expects integer handle as first argument", name);
+        }
+        if ((strcmp(name, "json_arr_handle_push") == 0 ||
+             strcmp(name, "json_obj_handle_push") == 0) &&
+            i == 1 &&
+            !(arg_type && (arg_type->kind == CCT_SEM_TYPE_POINTER || sem_is_error_type(arg_type)))) {
+            sem_report_nodef(sem, expr->as.obsecro.arguments->nodes[i],
+                             "OBSECRO %s expects pointer payload as second argument", name);
+        }
+        if ((strcmp(name, "json_arr_handle_len") == 0 ||
+             strcmp(name, "json_obj_handle_len") == 0) &&
+            i == 0 &&
+            !(sem_is_integer_type(arg_type) || sem_is_error_type(arg_type))) {
+            sem_report_nodef(sem, expr->as.obsecro.arguments->nodes[i],
+                             "OBSECRO %s expects integer handle argument", name);
+        }
+        if ((strcmp(name, "json_arr_handle_get") == 0 ||
+             strcmp(name, "json_obj_handle_get") == 0)) {
+            if (i == 0 &&
+                !(sem_is_integer_type(arg_type) || sem_is_error_type(arg_type))) {
+                sem_report_nodef(sem, expr->as.obsecro.arguments->nodes[i],
+                                 "OBSECRO %s expects integer handle as first argument", name);
+            }
+            if (i == 1 &&
+                !(sem_is_integer_type(arg_type) || sem_is_error_type(arg_type))) {
+                sem_report_nodef(sem, expr->as.obsecro.arguments->nodes[i],
+                                 "OBSECRO %s expects integer index as second argument", name);
+            }
+        }
+        if (strcmp(name, "json_handle_ptr") == 0 &&
+            i == 0 &&
+            !(sem_is_integer_type(arg_type) || sem_is_error_type(arg_type))) {
+            sem_report_nodef(sem, expr->as.obsecro.arguments->nodes[i],
+                             "OBSECRO json_handle_ptr expects integer handle argument");
+        }
+        if ((strcmp(name, "sock_connect") == 0 ||
+             strcmp(name, "sock_bind") == 0 ||
+             strcmp(name, "sock_listen") == 0 ||
+             strcmp(name, "sock_accept") == 0 ||
+             strcmp(name, "sock_send") == 0 ||
+             strcmp(name, "sock_recv") == 0 ||
+             strcmp(name, "sock_close") == 0 ||
+             strcmp(name, "sock_set_timeout_ms") == 0) &&
+            i == 0 &&
+            !(arg_type && (arg_type->kind == CCT_SEM_TYPE_POINTER || sem_is_error_type(arg_type)))) {
+            sem_report_nodef(sem, expr->as.obsecro.arguments->nodes[i],
+                             "OBSECRO %s expects socket pointer as first argument", name);
+        }
+        if ((strcmp(name, "sock_connect") == 0 || strcmp(name, "sock_bind") == 0) &&
+            i == 1 &&
+            !(arg_type && (arg_type->kind == CCT_SEM_TYPE_VERBUM || sem_is_error_type(arg_type)))) {
+            sem_report_nodef(sem, expr->as.obsecro.arguments->nodes[i],
+                             "OBSECRO %s expects VERBUM host as second argument", name);
+        }
+        if ((strcmp(name, "sock_connect") == 0 || strcmp(name, "sock_bind") == 0 ||
+             strcmp(name, "sock_listen") == 0 || strcmp(name, "sock_recv") == 0 ||
+             strcmp(name, "sock_set_timeout_ms") == 0) &&
+            ((strcmp(name, "sock_connect") == 0 || strcmp(name, "sock_bind") == 0) ? i == 2 : i == 1) &&
+            !(sem_is_integer_type(arg_type) || sem_is_error_type(arg_type))) {
+            sem_report_nodef(sem, expr->as.obsecro.arguments->nodes[i],
+                             "OBSECRO %s expects integer argument", name);
+        }
+        if (strcmp(name, "sock_send") == 0 && i == 1 &&
+            !(arg_type && (arg_type->kind == CCT_SEM_TYPE_VERBUM || sem_is_error_type(arg_type)))) {
+            sem_report_nodef(sem, expr->as.obsecro.arguments->nodes[i],
+                             "OBSECRO sock_send expects VERBUM payload as second argument");
         }
         if (strcmp(name, "fluxus_init") == 0 && i == 0 &&
             !(sem_is_integer_type(arg_type) || sem_is_error_type(arg_type))) {

@@ -1,0 +1,36 @@
+INCIPIT grimoire "net_read_exact_20b3_server"
+
+ADVOCARE "cct/fs.cct"
+ADVOCARE "cct/net.cct"
+ADVOCARE "cct/socket.cct"
+ADVOCARE "cct/verbum.cct"
+
+RITUALE main() REDDE REX
+  EVOCA VERBUM ready AD "tests/.tmp/net_read_exact_20b3.ready"
+  EVOCA VERBUM done AD "tests/.tmp/net_read_exact_20b3.done"
+  TEMPTA
+    EVOCA SPECULUM NIHIL listener AD CONIURA tcp_listen("", 22315)
+    CONIURA write_all(ready, "ready")
+
+    EVOCA SPECULUM NIHIL client AD CONIURA tcp_accept(listener)
+    SI CONIURA sock_send(client, "abc|defghijk") != 11
+      REDDE 10
+    FIN SI
+
+    CONIURA net_close(client)
+    CONIURA net_close(listener)
+    CONIURA write_all(done, "ok")
+    REDDE 0
+  CAPE FRACTUM erro
+    EVOCA VERBUM msg AD OBSECRO fractum_to_verbum(erro)
+    SI CONIURA compare(msg, "sock_bind falhou") == 0 VEL CONIURA compare(msg, "socket tcp create falhou") == 0
+      CONIURA write_all(ready, "skip")
+      CONIURA write_all(done, "skip")
+      REDDE 0
+    FIN SI
+    REDDE 90
+  FIN TEMPTA
+  REDDE 91
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

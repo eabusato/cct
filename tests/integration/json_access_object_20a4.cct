@@ -1,0 +1,52 @@
+INCIPIT grimoire "json_access_object_20a4"
+
+ADVOCARE "cct/json.cct"
+ADVOCARE "cct/verbum.cct"
+
+RITUALE main() REDDE REX
+  EVOCA Json obj AD CONIURA json_parse("{\"a\":1,\"b\":\"x\"}")
+  SI NON CONIURA json_has_key(obj, "a")
+    REDDE 1
+  FIN SI
+  SI CONIURA json_has_key(obj, "c")
+    REDDE 2
+  FIN SI
+
+  EVOCA Json vb AD CONIURA json_get_key(obj, "b")
+  QUANDO vb
+    CASO JsonStr(v):
+      SI CONIURA compare(v, "x") != 0
+        REDDE 3
+      FIN SI
+    CASO JsonNull:
+      REDDE 3
+    CASO JsonBool(v):
+      REDDE 3
+    CASO JsonNum(v):
+      REDDE 3
+    CASO JsonArr(h):
+      REDDE 3
+    CASO JsonObj(h):
+      REDDE 3
+  FIN QUANDO
+
+  EVOCA Json missing AD CONIURA json_get_key(obj, "missing")
+  QUANDO missing
+    CASO JsonNull:
+      OBSECRO scribe("")
+    CASO JsonBool(v):
+      REDDE 4
+    CASO JsonNum(v):
+      REDDE 4
+    CASO JsonStr(v):
+      REDDE 4
+    CASO JsonArr(h):
+      REDDE 4
+    CASO JsonObj(h):
+      REDDE 4
+  FIN QUANDO
+
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

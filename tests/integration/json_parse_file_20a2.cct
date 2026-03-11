@@ -1,0 +1,72 @@
+INCIPIT grimoire "json_parse_file_20a2"
+
+ADVOCARE "cct/json.cct"
+ADVOCARE "cct/result.cct"
+ADVOCARE "cct/verbum.cct"
+
+RITUALE main() REDDE REX
+  EVOCA VERBUM path AD "tests/integration/json_parse_file_20a2.json"
+  EVOCA Json obj AD CONIURA json_parse_file(path)
+
+  SI CONIURA json_obj_len(obj) != 3
+    REDDE 1
+  FIN SI
+
+  SI CONIURA compare(CONIURA json_obj_key_at(obj, 0), "nome") != 0
+    REDDE 2
+  FIN SI
+
+  EVOCA Json nome AD CONIURA json_obj_value_at(obj, 0)
+  QUANDO nome
+    CASO JsonStr(v):
+      SI CONIURA compare(v, "cct") != 0
+        REDDE 3
+      FIN SI
+    CASO JsonNull:
+      REDDE 3
+    CASO JsonBool(v):
+      REDDE 3
+    CASO JsonNum(v):
+      REDDE 3
+    CASO JsonArr(h):
+      REDDE 3
+    CASO JsonObj(h):
+      REDDE 3
+  FIN QUANDO
+
+  EVOCA SPECULUM NIHIL res AD CONIURA json_try_parse_file(path)
+  SI NON CONIURA result_is_ok GENUS(Json, JsonError)(res)
+    CONIURA result_free GENUS(Json, JsonError)(res)
+    REDDE 4
+  FIN SI
+
+  EVOCA Json from_try AD CONIURA result_unwrap GENUS(Json, JsonError)(res)
+  CONIURA result_free GENUS(Json, JsonError)(res)
+
+  EVOCA Json nums AD CONIURA json_obj_value_at(from_try, 2)
+  SI CONIURA json_arr_len(nums) != 3
+    REDDE 5
+  FIN SI
+
+  EVOCA Json num2 AD CONIURA json_arr_get(nums, 2)
+  QUANDO num2
+    CASO JsonNum(v):
+      SI v < 2.9 VEL v > 3.1
+        REDDE 6
+      FIN SI
+    CASO JsonNull:
+      REDDE 6
+    CASO JsonBool(v):
+      REDDE 6
+    CASO JsonStr(v):
+      REDDE 6
+    CASO JsonArr(h):
+      REDDE 6
+    CASO JsonObj(h):
+      REDDE 6
+  FIN QUANDO
+
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

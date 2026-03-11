@@ -1,0 +1,139 @@
+INCIPIT grimoire "json_model_basic_20a1"
+
+ADVOCARE "cct/json.cct"
+ADVOCARE "cct/verbum.cct"
+
+RITUALE main() REDDE REX
+  EVOCA Json jnull AD CONIURA json_null()
+  EVOCA Json jbool AD CONIURA json_bool(VERUM)
+  EVOCA Json jnum AD CONIURA json_num(2.5)
+  EVOCA Json jstr AD CONIURA json_str("ave")
+  EVOCA Json jarr AD CONIURA json_arr()
+  EVOCA Json jobj AD CONIURA json_obj()
+
+  QUANDO jnull
+    CASO JsonNull:
+      OBSECRO scribe("")
+    CASO JsonBool(valor):
+      REDDE 1
+    CASO JsonNum(valor):
+      REDDE 1
+    CASO JsonStr(valor):
+      REDDE 1
+    CASO JsonArr(handle):
+      REDDE 1
+    CASO JsonObj(handle):
+      REDDE 1
+  FIN QUANDO
+
+  QUANDO jbool
+    CASO JsonBool(valor):
+      SI valor != VERUM
+        REDDE 2
+      FIN SI
+    CASO JsonNull:
+      REDDE 2
+    CASO JsonNum(valor):
+      REDDE 2
+    CASO JsonStr(valor):
+      REDDE 2
+    CASO JsonArr(handle):
+      REDDE 2
+    CASO JsonObj(handle):
+      REDDE 2
+  FIN QUANDO
+
+  QUANDO jnum
+    CASO JsonNum(valor):
+      SI valor != 2.5
+        REDDE 3
+      FIN SI
+    CASO JsonNull:
+      REDDE 3
+    CASO JsonBool(valor):
+      REDDE 3
+    CASO JsonStr(valor):
+      REDDE 3
+    CASO JsonArr(handle):
+      REDDE 3
+    CASO JsonObj(handle):
+      REDDE 3
+  FIN QUANDO
+
+  QUANDO jstr
+    CASO JsonStr(valor):
+      SI CONIURA compare(valor, "ave") != 0
+        REDDE 4
+      FIN SI
+    CASO JsonNull:
+      REDDE 4
+    CASO JsonBool(valor):
+      REDDE 4
+    CASO JsonNum(valor):
+      REDDE 4
+    CASO JsonArr(handle):
+      REDDE 4
+    CASO JsonObj(handle):
+      REDDE 4
+  FIN QUANDO
+
+  QUANDO jarr
+    CASO JsonArr(handle):
+      SI handle < 0
+        REDDE 5
+      FIN SI
+    CASO JsonNull:
+      REDDE 5
+    CASO JsonBool(valor):
+      REDDE 5
+    CASO JsonNum(valor):
+      REDDE 5
+    CASO JsonStr(valor):
+      REDDE 5
+    CASO JsonObj(handle):
+      REDDE 5
+  FIN QUANDO
+
+  QUANDO jobj
+    CASO JsonObj(handle):
+      SI handle < 0
+        REDDE 6
+      FIN SI
+      EVOCA JsonPair par
+      VINCIRE par.chave AD "clave"
+      VINCIRE par.valor AD CONIURA json_bool(FALSUM)
+      SI CONIURA compare(par.chave, "clave") != 0
+        REDDE 6
+      FIN SI
+      QUANDO par.valor
+        CASO JsonBool(valor):
+          SI valor != FALSUM
+            REDDE 6
+          FIN SI
+        CASO JsonNull:
+          REDDE 6
+        CASO JsonNum(valor):
+          REDDE 6
+        CASO JsonStr(valor):
+          REDDE 6
+        CASO JsonArr(arr):
+          REDDE 6
+        CASO JsonObj(outros):
+          REDDE 6
+      FIN QUANDO
+    CASO JsonNull:
+      REDDE 6
+    CASO JsonBool(valor):
+      REDDE 6
+    CASO JsonNum(valor):
+      REDDE 6
+    CASO JsonStr(valor):
+      REDDE 6
+    CASO JsonArr(arr):
+      REDDE 6
+  FIN QUANDO
+
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

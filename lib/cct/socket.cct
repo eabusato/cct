@@ -1,0 +1,48 @@
+INCIPIT grimoire "socket"
+
+RITUALE socket_tcp() REDDE SPECULUM NIHIL
+  REDDE OBSECRO socket_tcp()
+EXPLICIT RITUALE
+
+RITUALE socket_udp() REDDE SPECULUM NIHIL
+  REDDE OBSECRO socket_udp()
+EXPLICIT RITUALE
+
+RITUALE sock_connect(SPECULUM NIHIL s, VERBUM host, REX port) REDDE NIHIL
+  OBSECRO sock_connect(s, host, port)
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE sock_bind(SPECULUM NIHIL s, VERBUM host, REX port) REDDE NIHIL
+  OBSECRO sock_bind(s, host, port)
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE sock_listen(SPECULUM NIHIL s, REX backlog) REDDE NIHIL
+  OBSECRO sock_listen(s, backlog)
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE sock_accept(SPECULUM NIHIL s) REDDE SPECULUM NIHIL
+  REDDE OBSECRO sock_accept(s)
+EXPLICIT RITUALE
+
+RITUALE sock_send(SPECULUM NIHIL s, VERBUM data) REDDE REX
+  REDDE OBSECRO sock_send(s, data)
+EXPLICIT RITUALE
+
+RITUALE sock_recv(SPECULUM NIHIL s, REX max_bytes) REDDE VERBUM
+  REDDE OBSECRO sock_recv(s, max_bytes)
+EXPLICIT RITUALE
+
+RITUALE sock_close(SPECULUM NIHIL s) REDDE NIHIL
+  OBSECRO sock_close(s)
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE sock_set_timeout_ms(SPECULUM NIHIL s, REX ms) REDDE NIHIL
+  OBSECRO sock_set_timeout_ms(s, ms)
+  REDDE
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

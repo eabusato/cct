@@ -217,6 +217,13 @@ bool cct_cg_emit_generated_c_prelude(FILE *out, const cct_codegen_t *cg) {
     fputs("#include <dirent.h>\n", out);
     fputs("#include <pwd.h>\n", out);
     fputs("#include <signal.h>\n", out);
+    fputs("#include <sys/types.h>\n", out);
+    fputs("#include <sys/socket.h>\n", out);
+    fputs("#include <sys/un.h>\n", out);
+    fputs("#include <sys/time.h>\n", out);
+    fputs("#include <netdb.h>\n", out);
+    fputs("#include <arpa/inet.h>\n", out);
+    fputs("#include <netinet/in.h>\n", out);
     fputs("#include <sys/wait.h>\n", out);
     fputs("#include <sys/stat.h>\n", out);
     fputs("#define cct_rt_getcwd getcwd\n", out);

@@ -1,0 +1,53 @@
+INCIPIT grimoire "json_constructors_20a1"
+
+ADVOCARE "cct/json.cct"
+
+RITUALE main() REDDE REX
+  EVOCA Json jnull AD CONIURA json_null()
+  EVOCA Json jbool AD CONIURA json_bool(FALSUM)
+  EVOCA Json jnum AD CONIURA json_num(9.25)
+  EVOCA Json jstr AD CONIURA json_str("json")
+  EVOCA Json jarr AD CONIURA json_arr()
+  EVOCA Json jobj AD CONIURA json_obj()
+
+  SI CONIURA json_is_null(jnull) != VERUM
+    REDDE 1
+  FIN SI
+  SI CONIURA json_is_bool(jnull) != FALSUM
+    REDDE 2
+  FIN SI
+  SI CONIURA json_is_bool(jbool) != VERUM
+    REDDE 3
+  FIN SI
+  SI CONIURA json_is_num(jbool) != FALSUM
+    REDDE 4
+  FIN SI
+  SI CONIURA json_is_num(jnum) != VERUM
+    REDDE 5
+  FIN SI
+  SI CONIURA json_is_str(jnum) != FALSUM
+    REDDE 6
+  FIN SI
+  SI CONIURA json_is_str(jstr) != VERUM
+    REDDE 7
+  FIN SI
+  SI CONIURA json_is_arr(jstr) != FALSUM
+    REDDE 8
+  FIN SI
+  SI CONIURA json_is_arr(jarr) != VERUM
+    REDDE 9
+  FIN SI
+  SI CONIURA json_is_obj(jarr) != FALSUM
+    REDDE 10
+  FIN SI
+  SI CONIURA json_is_obj(jobj) != VERUM
+    REDDE 11
+  FIN SI
+  SI CONIURA json_is_null(jobj) != FALSUM
+    REDDE 12
+  FIN SI
+
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

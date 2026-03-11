@@ -1,0 +1,30 @@
+INCIPIT grimoire "json_write_file_20a3"
+
+ADVOCARE "cct/fs.cct"
+ADVOCARE "cct/json.cct"
+ADVOCARE "cct/verbum.cct"
+
+RITUALE main() REDDE REX
+  EVOCA Json root AD CONIURA json_obj()
+  EVOCA VERBUM path AD "tests/.tmp/json_write_file_20a3.json"
+
+  CONIURA json_obj_push(root, "fase", CONIURA json_num(20))
+  CONIURA json_obj_push(root, "ok", CONIURA json_bool(VERUM))
+
+  CONIURA json_write_file(root, path)
+
+  EVOCA VERBUM txt AD CONIURA read_all(path)
+  SI CONIURA compare(txt, "{\"fase\":20,\"ok\":true}") != 0
+    REDDE 1
+  FIN SI
+
+  EVOCA Json back AD CONIURA json_parse_file(path)
+  EVOCA VERBUM again AD CONIURA json_stringify(back)
+  SI CONIURA compare(again, txt) != 0
+    REDDE 2
+  FIN SI
+
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

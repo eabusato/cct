@@ -1,0 +1,22 @@
+INCIPIT grimoire "json_roundtrip_20a3"
+
+ADVOCARE "cct/json.cct"
+ADVOCARE "cct/verbum.cct"
+
+RITUALE main() REDDE REX
+  EVOCA Json a AD CONIURA json_parse("{\"b\":[1,true,\"x\"],\"c\":null}")
+  EVOCA VERBUM sa AD CONIURA json_stringify(a)
+  SI CONIURA compare(sa, "{\"b\":[1,true,\"x\"],\"c\":null}") != 0
+    REDDE 1
+  FIN SI
+
+  EVOCA Json b AD CONIURA json_parse(sa)
+  EVOCA VERBUM sb AD CONIURA json_stringify(b)
+  SI CONIURA compare(sa, sb) != 0
+    REDDE 2
+  FIN SI
+
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

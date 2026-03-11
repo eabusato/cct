@@ -1,0 +1,17 @@
+INCIPIT grimoire "socket_close_idempotent_20b1"
+
+ADVOCARE "cct/socket.cct"
+
+RITUALE main() REDDE REX
+  EVOCA SPECULUM NIHIL tcp AD CONIURA socket_tcp()
+  EVOCA SPECULUM NIHIL udp AD CONIURA socket_udp()
+
+  CONIURA sock_close(tcp)
+  CONIURA sock_close(tcp)
+  CONIURA sock_close(udp)
+  CONIURA sock_close(udp)
+
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

@@ -1,0 +1,106 @@
+INCIPIT grimoire "net"
+
+ADVOCARE "cct/option.cct"
+ADVOCARE "cct/socket.cct"
+ADVOCARE "cct/verbum.cct"
+
+ORDO NetDatagram
+  Datagram(VERBUM host, REX port, VERBUM data)
+FIN ORDO
+
+RITUALE tcp_connect(VERBUM host, REX port) REDDE SPECULUM NIHIL
+  EVOCA SPECULUM NIHIL s AD CONIURA socket_tcp()
+  CONIURA sock_connect(s, host, port)
+  REDDE s
+EXPLICIT RITUALE
+
+RITUALE tcp_listen(VERBUM host, REX port) REDDE SPECULUM NIHIL
+  EVOCA SPECULUM NIHIL s AD CONIURA socket_tcp()
+  CONIURA sock_bind(s, host, port)
+  CONIURA sock_listen(s, 16)
+  REDDE s
+EXPLICIT RITUALE
+
+RITUALE tcp_accept(SPECULUM NIHIL listener) REDDE SPECULUM NIHIL
+  REDDE CONIURA sock_accept(listener)
+EXPLICIT RITUALE
+
+RITUALE udp_bind(VERBUM host, REX port) REDDE SPECULUM NIHIL
+  EVOCA SPECULUM NIHIL s AD CONIURA socket_udp()
+  CONIURA sock_bind(s, host, port)
+  REDDE s
+EXPLICIT RITUALE
+
+RITUALE udp_send_to(SPECULUM NIHIL sock, VERBUM host, REX port, VERBUM data) REDDE NIHIL
+  CONIURA sock_connect(sock, host, port)
+  SI CONIURA sock_send(sock, data) != CONIURA len(data)
+    IACE "udp_send_to envio incompleto"
+  FIN SI
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE udp_recv_from(SPECULUM NIHIL sock) REDDE SPECULUM NIHIL
+  EVOCA VERBUM payload AD CONIURA sock_recv(sock, 65535)
+  SI CONIURA len(payload) == 0
+    REDDE CONIURA None GENUS(NetDatagram)()
+  FIN SI
+  EVOCA NetDatagram pkt AD Datagram("", 0, payload)
+  REDDE CONIURA Some GENUS(NetDatagram)(pkt)
+EXPLICIT RITUALE
+
+RITUALE net_read_until(SPECULUM NIHIL sock, VERBUM delim) REDDE VERBUM
+  SI CONIURA len(delim) == 0
+    IACE "net_read_until delimitador vazio"
+  FIN SI
+  EVOCA VERBUM out AD ""
+  DUM VERUM
+    EVOCA VERBUM chunk AD CONIURA sock_recv(sock, 1)
+    SI CONIURA len(chunk) == 0
+      REDDE out
+    FIN SI
+    VINCIRE out AD CONIURA concat(out, chunk)
+    SI CONIURA ends_with(out, delim)
+      REDDE out
+    FIN SI
+  FIN DUM
+  REDDE out
+EXPLICIT RITUALE
+
+RITUALE net_read_line(SPECULUM NIHIL sock) REDDE VERBUM
+  EVOCA VERBUM raw AD CONIURA net_read_until(sock, "\n")
+  SI CONIURA ends_with(raw, "\n")
+    REDDE CONIURA strip_suffix(raw, "\n")
+  FIN SI
+  REDDE raw
+EXPLICIT RITUALE
+
+RITUALE net_write_line(SPECULUM NIHIL sock, VERBUM s) REDDE NIHIL
+  EVOCA VERBUM payload AD CONIURA concat(s, "\n")
+  SI CONIURA sock_send(sock, payload) != CONIURA len(payload)
+    IACE "net_write_line envio incompleto"
+  FIN SI
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE net_read_exact(SPECULUM NIHIL sock, REX n) REDDE VERBUM
+  SI n < 0
+    IACE "net_read_exact tamanho negativo"
+  FIN SI
+  EVOCA VERBUM out AD ""
+  DUM CONIURA len(out) < n
+    EVOCA REX falta AD n - CONIURA len(out)
+    EVOCA VERBUM chunk AD CONIURA sock_recv(sock, falta)
+    SI CONIURA len(chunk) == 0
+      IACE "net_read_exact truncado"
+    FIN SI
+    VINCIRE out AD CONIURA concat(out, chunk)
+  FIN DUM
+  REDDE out
+EXPLICIT RITUALE
+
+RITUALE net_close(SPECULUM NIHIL sock) REDDE NIHIL
+  CONIURA sock_close(sock)
+  REDDE
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

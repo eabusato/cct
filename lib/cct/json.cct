@@ -1,0 +1,989 @@
+INCIPIT grimoire "json"
+
+ADVOCARE "cct/fs.cct"
+ADVOCARE "cct/fmt.cct"
+ADVOCARE "cct/fluxus.cct"
+ADVOCARE "cct/option.cct"
+ADVOCARE "cct/parse.cct"
+ADVOCARE "cct/result.cct"
+ADVOCARE "cct/verbum.cct"
+ADVOCARE "cct/verbum_builder.cct"
+ADVOCARE "cct/verbum_scan.cct"
+
+ORDO Json
+  JsonNull,
+  JsonBool(VERUM valor),
+  JsonNum(UMBRA valor),
+  JsonStr(VERBUM valor),
+  JsonArr(REX handle),
+  JsonObj(REX handle)
+FIN ORDO
+
+SIGILLUM JsonPair
+  chave: VERBUM
+  valor: Json
+FIN SIGILLUM
+
+ORDO JsonError
+  JsonErrorMsg(VERBUM mensagem)
+FIN ORDO
+
+RITUALE json_null() REDDE Json
+  REDDE JsonNull
+EXPLICIT RITUALE
+
+RITUALE json_bool(VERUM v) REDDE Json
+  REDDE JsonBool(v)
+EXPLICIT RITUALE
+
+RITUALE json_num(UMBRA v) REDDE Json
+  REDDE JsonNum(v)
+EXPLICIT RITUALE
+
+RITUALE json_str(VERBUM v) REDDE Json
+  REDDE JsonStr(v)
+EXPLICIT RITUALE
+
+RITUALE json_arr() REDDE Json
+  REDDE JsonArr(OBSECRO json_arr_handle_new(MENSURA(Json)))
+EXPLICIT RITUALE
+
+RITUALE json_obj() REDDE Json
+  REDDE JsonObj(OBSECRO json_obj_handle_new(MENSURA(JsonPair)))
+EXPLICIT RITUALE
+
+RITUALE json_kind(Json j) REDDE REX
+  QUANDO j
+    CASO JsonNull:
+      REDDE 0
+    CASO JsonBool(valor):
+      REDDE 1
+    CASO JsonNum(valor):
+      REDDE 2
+    CASO JsonStr(valor):
+      REDDE 3
+    CASO JsonArr(handle):
+      REDDE 4
+    CASO JsonObj(handle):
+      REDDE 5
+  FIN QUANDO
+EXPLICIT RITUALE
+
+RITUALE json_is_null(Json j) REDDE VERUM
+  REDDE CONIURA json_kind(j) == 0
+EXPLICIT RITUALE
+
+RITUALE json_is_bool(Json j) REDDE VERUM
+  REDDE CONIURA json_kind(j) == 1
+EXPLICIT RITUALE
+
+RITUALE json_is_num(Json j) REDDE VERUM
+  REDDE CONIURA json_kind(j) == 2
+EXPLICIT RITUALE
+
+RITUALE json_is_str(Json j) REDDE VERUM
+  REDDE CONIURA json_kind(j) == 3
+EXPLICIT RITUALE
+
+RITUALE json_is_arr(Json j) REDDE VERUM
+  REDDE CONIURA json_kind(j) == 4
+EXPLICIT RITUALE
+
+RITUALE json_is_obj(Json j) REDDE VERUM
+  REDDE CONIURA json_kind(j) == 5
+EXPLICIT RITUALE
+
+RITUALE json_arr_push(Json j, Json valor) REDDE NIHIL
+  QUANDO j
+    CASO JsonArr(handle):
+      OBSECRO json_arr_handle_push(handle, SPECULUM valor)
+      REDDE
+    CASO JsonNull:
+      IACE "json: expected array"
+    CASO JsonBool(v):
+      IACE "json: expected array"
+    CASO JsonNum(v):
+      IACE "json: expected array"
+    CASO JsonStr(v):
+      IACE "json: expected array"
+    CASO JsonObj(handle):
+      IACE "json: expected array"
+  FIN QUANDO
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE json_arr_len(Json j) REDDE REX
+  QUANDO j
+    CASO JsonArr(handle):
+      REDDE OBSECRO json_arr_handle_len(handle)
+    CASO JsonNull:
+      IACE "json: expected array"
+    CASO JsonBool(v):
+      IACE "json: expected array"
+    CASO JsonNum(v):
+      IACE "json: expected array"
+    CASO JsonStr(v):
+      IACE "json: expected array"
+    CASO JsonObj(handle):
+      IACE "json: expected array"
+  FIN QUANDO
+  REDDE 0
+EXPLICIT RITUALE
+
+RITUALE json_arr_get(Json j, REX idx) REDDE Json
+  QUANDO j
+    CASO JsonArr(handle):
+      EVOCA SPECULUM Json ptr AD OBSECRO json_arr_handle_get(handle, idx)
+      REDDE *ptr
+    CASO JsonNull:
+      IACE "json: expected array"
+    CASO JsonBool(v):
+      IACE "json: expected array"
+    CASO JsonNum(v):
+      IACE "json: expected array"
+    CASO JsonStr(v):
+      IACE "json: expected array"
+    CASO JsonObj(handle):
+      IACE "json: expected array"
+  FIN QUANDO
+  REDDE JsonNull
+EXPLICIT RITUALE
+
+RITUALE json_obj_push(Json j, VERBUM chave, Json valor) REDDE NIHIL
+  QUANDO j
+    CASO JsonObj(handle):
+      EVOCA JsonPair par
+      VINCIRE par.chave AD chave
+      VINCIRE par.valor AD valor
+      OBSECRO json_obj_handle_push(handle, SPECULUM par)
+      REDDE
+    CASO JsonNull:
+      IACE "json: expected object"
+    CASO JsonBool(v):
+      IACE "json: expected object"
+    CASO JsonNum(v):
+      IACE "json: expected object"
+    CASO JsonStr(v):
+      IACE "json: expected object"
+    CASO JsonArr(handle):
+      IACE "json: expected object"
+  FIN QUANDO
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE json_obj_len(Json j) REDDE REX
+  QUANDO j
+    CASO JsonObj(handle):
+      REDDE OBSECRO json_obj_handle_len(handle)
+    CASO JsonNull:
+      IACE "json: expected object"
+    CASO JsonBool(v):
+      IACE "json: expected object"
+    CASO JsonNum(v):
+      IACE "json: expected object"
+    CASO JsonStr(v):
+      IACE "json: expected object"
+    CASO JsonArr(handle):
+      IACE "json: expected object"
+  FIN QUANDO
+  REDDE 0
+EXPLICIT RITUALE
+
+RITUALE json_obj_key_at(Json j, REX idx) REDDE VERBUM
+  QUANDO j
+    CASO JsonObj(handle):
+      EVOCA SPECULUM JsonPair ptr AD OBSECRO json_obj_handle_get(handle, idx)
+      REDDE (*ptr).chave
+    CASO JsonNull:
+      IACE "json: expected object"
+    CASO JsonBool(v):
+      IACE "json: expected object"
+    CASO JsonNum(v):
+      IACE "json: expected object"
+    CASO JsonStr(v):
+      IACE "json: expected object"
+    CASO JsonArr(handle):
+      IACE "json: expected object"
+  FIN QUANDO
+  REDDE ""
+EXPLICIT RITUALE
+
+RITUALE json_obj_value_at(Json j, REX idx) REDDE Json
+  QUANDO j
+    CASO JsonObj(handle):
+      EVOCA SPECULUM JsonPair ptr AD OBSECRO json_obj_handle_get(handle, idx)
+      REDDE (*ptr).valor
+    CASO JsonNull:
+      IACE "json: expected object"
+    CASO JsonBool(v):
+      IACE "json: expected object"
+    CASO JsonNum(v):
+      IACE "json: expected object"
+    CASO JsonStr(v):
+      IACE "json: expected object"
+    CASO JsonArr(handle):
+      IACE "json: expected object"
+  FIN QUANDO
+  REDDE JsonNull
+EXPLICIT RITUALE
+
+RITUALE json_is_digit(MILES c) REDDE VERUM
+  REDDE c >= 48 ET c <= 57
+EXPLICIT RITUALE
+
+RITUALE json_is_ws(MILES c) REDDE VERUM
+  REDDE c == 32 VEL c == 9 VEL c == 10 VEL c == 13
+EXPLICIT RITUALE
+
+RITUALE json_skip_ws(SPECULUM NIHIL c) REDDE NIHIL
+  DUM NON CONIURA cursor_eof(c) ET CONIURA json_is_ws(CONIURA cursor_peek(c))
+    CONIURA cursor_next(c)
+  FIN DUM
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE json_consume_literal(SPECULUM NIHIL c, VERBUM literal) REDDE NIHIL
+  EVOCA REX i AD 0
+  EVOCA REX n AD CONIURA len(literal)
+  DUM i < n
+    SI CONIURA cursor_eof(c)
+      IACE "json: unexpected eof"
+    FIN SI
+    SI CONIURA cursor_next(c) != CONIURA char_at(literal, i)
+      IACE "json: invalid literal"
+    FIN SI
+    VINCIRE i AD i + 1
+  FIN DUM
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE json_parse_string(SPECULUM NIHIL c) REDDE VERBUM
+  SI CONIURA cursor_eof(c)
+    IACE "json: unexpected eof"
+  FIN SI
+  SI CONIURA cursor_next(c) != 34
+    IACE "json: invalid literal"
+  FIN SI
+
+  EVOCA SPECULUM NIHIL b AD CONIURA builder_init()
+  DUM VERUM
+    SI CONIURA cursor_eof(c)
+      IACE "json: unexpected eof"
+    FIN SI
+
+    EVOCA MILES ch AD CONIURA cursor_next(c)
+    SI ch == 34
+      EVOCA VERBUM out AD CONIURA builder_to_verbum(b)
+      CONIURA builder_free(b)
+      REDDE out
+    FIN SI
+
+    SI ch == 92
+      SI CONIURA cursor_eof(c)
+        IACE "json: unexpected eof"
+      FIN SI
+      EVOCA MILES esc AD CONIURA cursor_next(c)
+      QUANDO esc
+        CASO 34:
+          EVOCA MILES c34 AD 34
+          CONIURA builder_append_char(b, c34)
+        CASO 47:
+          EVOCA MILES c47 AD 47
+          CONIURA builder_append_char(b, c47)
+        CASO 92:
+          EVOCA MILES c92 AD 92
+          CONIURA builder_append_char(b, c92)
+        CASO 98:
+          EVOCA MILES c08 AD 8
+          CONIURA builder_append_char(b, c08)
+        CASO 102:
+          EVOCA MILES c12 AD 12
+          CONIURA builder_append_char(b, c12)
+        CASO 110:
+          EVOCA MILES c10 AD 10
+          CONIURA builder_append_char(b, c10)
+        CASO 114:
+          EVOCA MILES c13 AD 13
+          CONIURA builder_append_char(b, c13)
+        CASO 116:
+          EVOCA MILES c09 AD 9
+          CONIURA builder_append_char(b, c09)
+        SENAO:
+          IACE "json: invalid escape"
+      FIN QUANDO
+    FIN SI
+
+    SI ch != 92
+      SI ch < 32
+        IACE "json: invalid escape"
+      FIN SI
+      CONIURA builder_append_char(b, ch)
+    FIN SI
+  FIN DUM
+
+  REDDE ""
+EXPLICIT RITUALE
+
+RITUALE json_parse_number(VERBUM s, SPECULUM NIHIL c) REDDE Json
+  EVOCA REX inicio AD CONIURA cursor_pos(c)
+
+  SI CONIURA cursor_peek(c) == 45
+    CONIURA cursor_next(c)
+    SI CONIURA cursor_eof(c)
+      IACE "json: unexpected eof"
+    FIN SI
+  FIN SI
+
+  EVOCA REX inteiro_inicio AD CONIURA cursor_pos(c)
+  SI CONIURA cursor_peek(c) == 48
+    CONIURA cursor_next(c)
+    SI NON CONIURA cursor_eof(c) ET CONIURA json_is_digit(CONIURA cursor_peek(c))
+      IACE "json: invalid number"
+    FIN SI
+  FIN SI
+
+  SI inteiro_inicio == CONIURA cursor_pos(c)
+    SI CONIURA json_is_digit(CONIURA cursor_peek(c))
+      DUM NON CONIURA cursor_eof(c) ET CONIURA json_is_digit(CONIURA cursor_peek(c))
+        CONIURA cursor_next(c)
+      FIN DUM
+    FIN SI
+    SI inteiro_inicio == CONIURA cursor_pos(c)
+      IACE "json: invalid number"
+    FIN SI
+  FIN SI
+
+  SI NON CONIURA cursor_eof(c) ET CONIURA cursor_peek(c) == 46
+    CONIURA cursor_next(c)
+    SI CONIURA cursor_eof(c)
+      IACE "json: unexpected eof"
+    FIN SI
+    SI NON CONIURA json_is_digit(CONIURA cursor_peek(c))
+      IACE "json: invalid number"
+    FIN SI
+    DUM NON CONIURA cursor_eof(c) ET CONIURA json_is_digit(CONIURA cursor_peek(c))
+      CONIURA cursor_next(c)
+    FIN DUM
+  FIN SI
+
+  SI NON CONIURA cursor_eof(c) ET (CONIURA cursor_peek(c) == 101 VEL CONIURA cursor_peek(c) == 69)
+    CONIURA cursor_next(c)
+    SI NON CONIURA cursor_eof(c) ET (CONIURA cursor_peek(c) == 43 VEL CONIURA cursor_peek(c) == 45)
+      CONIURA cursor_next(c)
+    FIN SI
+    SI CONIURA cursor_eof(c)
+      IACE "json: unexpected eof"
+    FIN SI
+    SI NON CONIURA json_is_digit(CONIURA cursor_peek(c))
+      IACE "json: invalid number"
+    FIN SI
+    DUM NON CONIURA cursor_eof(c) ET CONIURA json_is_digit(CONIURA cursor_peek(c))
+      CONIURA cursor_next(c)
+    FIN DUM
+  FIN SI
+
+  EVOCA VERBUM literal AD CONIURA substring(s, inicio, CONIURA cursor_pos(c))
+  EVOCA SPECULUM NIHIL opt AD CONIURA try_real(literal)
+  SI CONIURA option_is_none GENUS(UMBRA)(opt)
+    CONIURA option_free GENUS(UMBRA)(opt)
+    IACE "json: invalid number"
+  FIN SI
+  EVOCA UMBRA valor AD CONIURA option_unwrap GENUS(UMBRA)(opt)
+  CONIURA option_free GENUS(UMBRA)(opt)
+  REDDE CONIURA json_num(valor)
+EXPLICIT RITUALE
+
+RITUALE json_parse_value(VERBUM s, SPECULUM NIHIL c) REDDE Json
+  CONIURA json_skip_ws(c)
+  SI CONIURA cursor_eof(c)
+    IACE "json: unexpected eof"
+  FIN SI
+
+  EVOCA MILES ch AD CONIURA cursor_peek(c)
+  SI ch == 110
+    CONIURA json_consume_literal(c, "null")
+    REDDE CONIURA json_null()
+  FIN SI
+  SI ch == 116
+    CONIURA json_consume_literal(c, "true")
+    REDDE CONIURA json_bool(VERUM)
+  FIN SI
+  SI ch == 102
+    CONIURA json_consume_literal(c, "false")
+    REDDE CONIURA json_bool(FALSUM)
+  FIN SI
+  SI ch == 34
+    REDDE CONIURA json_str(CONIURA json_parse_string(c))
+  FIN SI
+  SI ch == 91
+    CONIURA cursor_next(c)
+    EVOCA Json out AD CONIURA json_arr()
+    CONIURA json_skip_ws(c)
+    SI CONIURA cursor_eof(c)
+      IACE "json: unexpected eof"
+    FIN SI
+    SI CONIURA cursor_peek(c) == 93
+      CONIURA cursor_next(c)
+      REDDE out
+    FIN SI
+    DUM VERUM
+      EVOCA Json item AD CONIURA json_parse_value(s, c)
+      CONIURA json_arr_push(out, item)
+      CONIURA json_skip_ws(c)
+      SI CONIURA cursor_eof(c)
+        IACE "json: expected ',' or closing delimiter"
+      FIN SI
+      EVOCA MILES delim_arr AD CONIURA cursor_peek(c)
+      QUANDO delim_arr
+        CASO 44:
+          CONIURA cursor_next(c)
+          CONIURA json_skip_ws(c)
+          SI CONIURA cursor_eof(c)
+            IACE "json: unexpected eof"
+          FIN SI
+        CASO 93:
+          CONIURA cursor_next(c)
+          REDDE out
+        SENAO:
+          IACE "json: expected ',' or closing delimiter"
+      FIN QUANDO
+    FIN DUM
+  FIN SI
+  SI ch == 123
+    CONIURA cursor_next(c)
+    EVOCA Json out AD CONIURA json_obj()
+    CONIURA json_skip_ws(c)
+    SI CONIURA cursor_eof(c)
+      IACE "json: unexpected eof"
+    FIN SI
+    SI CONIURA cursor_peek(c) == 125
+      CONIURA cursor_next(c)
+      REDDE out
+    FIN SI
+    DUM VERUM
+      SI CONIURA cursor_peek(c) != 34
+        IACE "json: invalid literal"
+      FIN SI
+      EVOCA VERBUM chave AD CONIURA json_parse_string(c)
+      CONIURA json_skip_ws(c)
+      SI CONIURA cursor_eof(c)
+        IACE "json: expected ':' after object key"
+      FIN SI
+      SI CONIURA cursor_peek(c) != 58
+        IACE "json: expected ':' after object key"
+      FIN SI
+      CONIURA cursor_next(c)
+      EVOCA Json valor AD CONIURA json_parse_value(s, c)
+      CONIURA json_obj_push(out, chave, valor)
+      CONIURA json_skip_ws(c)
+      SI CONIURA cursor_eof(c)
+        IACE "json: expected ',' or closing delimiter"
+      FIN SI
+      EVOCA MILES delim_obj AD CONIURA cursor_peek(c)
+      QUANDO delim_obj
+        CASO 44:
+          CONIURA cursor_next(c)
+          CONIURA json_skip_ws(c)
+          SI CONIURA cursor_eof(c)
+            IACE "json: unexpected eof"
+          FIN SI
+        CASO 125:
+          CONIURA cursor_next(c)
+          REDDE out
+        SENAO:
+          IACE "json: expected ',' or closing delimiter"
+      FIN QUANDO
+    FIN DUM
+  FIN SI
+  SI ch == 45 VEL CONIURA json_is_digit(ch)
+    REDDE CONIURA json_parse_number(s, c)
+  FIN SI
+  IACE "json: invalid literal"
+  REDDE JsonNull
+EXPLICIT RITUALE
+
+RITUALE json_append_escaped(SPECULUM NIHIL b, VERBUM s) REDDE NIHIL
+  EVOCA REX i AD 0
+  EVOCA REX n AD CONIURA len(s)
+  DUM i < n
+    EVOCA MILES ch AD CONIURA char_at(s, i)
+    SI ch == CONIURA char_at("\"", 0)
+      CONIURA builder_append(b, "\\\"")
+    FIN SI
+    SI ch == CONIURA char_at("\\", 0)
+      CONIURA builder_append(b, "\\\\")
+    FIN SI
+    SI ch == 8
+      CONIURA builder_append(b, "\\b")
+    FIN SI
+    SI ch == 12
+      CONIURA builder_append(b, "\\f")
+    FIN SI
+    SI ch == 10
+      CONIURA builder_append(b, "\\n")
+    FIN SI
+    SI ch == 13
+      CONIURA builder_append(b, "\\r")
+    FIN SI
+    SI ch == 9
+      CONIURA builder_append(b, "\\t")
+    FIN SI
+    SI ch != CONIURA char_at("\"", 0) ET ch != CONIURA char_at("\\", 0) ET ch != 8 ET ch != 12 ET ch != 10 ET ch != 13 ET ch != 9
+      CONIURA builder_append_char(b, ch)
+    FIN SI
+    VINCIRE i AD i + 1
+  FIN DUM
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE json_write_compact_to(SPECULUM NIHIL b, Json j) REDDE NIHIL
+  QUANDO j
+    CASO JsonNull:
+      CONIURA builder_append(b, "null")
+    CASO JsonBool(v):
+      CONIURA builder_append(b, CONIURA stringify_bool(v))
+    CASO JsonNum(v):
+      CONIURA builder_append(b, CONIURA stringify_real(v))
+    CASO JsonStr(v):
+      CONIURA builder_append(b, "\"")
+      CONIURA json_append_escaped(b, v)
+      CONIURA builder_append(b, "\"")
+    CASO JsonArr(h):
+      CONIURA builder_append(b, "[")
+      EVOCA REX i AD 0
+      EVOCA REX n AD CONIURA json_arr_len(j)
+      DUM i < n
+        SI i > 0
+          CONIURA builder_append(b, ",")
+        FIN SI
+        CONIURA json_write_compact_to(b, CONIURA json_arr_get(j, i))
+        VINCIRE i AD i + 1
+      FIN DUM
+      CONIURA builder_append(b, "]")
+    CASO JsonObj(h):
+      CONIURA builder_append(b, "{")
+      EVOCA REX i AD 0
+      EVOCA REX n AD CONIURA json_obj_len(j)
+      DUM i < n
+        SI i > 0
+          CONIURA builder_append(b, ",")
+        FIN SI
+        CONIURA builder_append(b, "\"")
+        CONIURA json_append_escaped(b, CONIURA json_obj_key_at(j, i))
+        CONIURA builder_append(b, "\":")
+        CONIURA json_write_compact_to(b, CONIURA json_obj_value_at(j, i))
+        VINCIRE i AD i + 1
+      FIN DUM
+      CONIURA builder_append(b, "}")
+  FIN QUANDO
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE json_indent_prefix(REX depth, REX n) REDDE VERBUM
+  REDDE CONIURA repeat(" ", depth * n)
+EXPLICIT RITUALE
+
+RITUALE json_write_pretty_to(SPECULUM NIHIL b, Json j, REX depth, REX indent) REDDE NIHIL
+  QUANDO j
+    CASO JsonNull:
+      CONIURA builder_append(b, "null")
+    CASO JsonBool(v):
+      CONIURA builder_append(b, CONIURA stringify_bool(v))
+    CASO JsonNum(v):
+      CONIURA builder_append(b, CONIURA stringify_real(v))
+    CASO JsonStr(v):
+      CONIURA builder_append(b, "\"")
+      CONIURA json_append_escaped(b, v)
+      CONIURA builder_append(b, "\"")
+    CASO JsonArr(h):
+      EVOCA REX n AD CONIURA json_arr_len(j)
+      SI n == 0
+        CONIURA builder_append(b, "[]")
+        REDDE
+      FIN SI
+      CONIURA builder_append(b, "[\n")
+      EVOCA REX i AD 0
+      DUM i < n
+        CONIURA builder_append(b, CONIURA json_indent_prefix(depth + 1, indent))
+        CONIURA json_write_pretty_to(b, CONIURA json_arr_get(j, i), depth + 1, indent)
+        SI i + 1 < n
+          CONIURA builder_append(b, ",")
+        FIN SI
+        CONIURA builder_append(b, "\n")
+        VINCIRE i AD i + 1
+      FIN DUM
+      CONIURA builder_append(b, CONIURA json_indent_prefix(depth, indent))
+      CONIURA builder_append(b, "]")
+    CASO JsonObj(h):
+      EVOCA REX n AD CONIURA json_obj_len(j)
+      SI n == 0
+        CONIURA builder_append(b, "{}")
+        REDDE
+      FIN SI
+      CONIURA builder_append(b, "{\n")
+      EVOCA REX i AD 0
+      DUM i < n
+        CONIURA builder_append(b, CONIURA json_indent_prefix(depth + 1, indent))
+        CONIURA builder_append(b, "\"")
+        CONIURA json_append_escaped(b, CONIURA json_obj_key_at(j, i))
+        CONIURA builder_append(b, "\": ")
+        CONIURA json_write_pretty_to(b, CONIURA json_obj_value_at(j, i), depth + 1, indent)
+        SI i + 1 < n
+          CONIURA builder_append(b, ",")
+        FIN SI
+        CONIURA builder_append(b, "\n")
+        VINCIRE i AD i + 1
+      FIN DUM
+      CONIURA builder_append(b, CONIURA json_indent_prefix(depth, indent))
+      CONIURA builder_append(b, "}")
+  FIN QUANDO
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE json_stringify(Json j) REDDE VERBUM
+  EVOCA SPECULUM NIHIL b AD CONIURA builder_init()
+  CONIURA json_write_compact_to(b, j)
+  EVOCA VERBUM out AD CONIURA builder_to_verbum(b)
+  CONIURA builder_free(b)
+  REDDE out
+EXPLICIT RITUALE
+
+RITUALE json_stringify_pretty_indent(Json j, REX n) REDDE VERBUM
+  EVOCA SPECULUM NIHIL b AD CONIURA builder_init()
+  CONIURA json_write_pretty_to(b, j, 0, n)
+  EVOCA VERBUM out AD CONIURA builder_to_verbum(b)
+  CONIURA builder_free(b)
+  REDDE out
+EXPLICIT RITUALE
+
+RITUALE json_stringify_pretty(Json j) REDDE VERBUM
+  REDDE CONIURA json_stringify_pretty_indent(j, 2)
+EXPLICIT RITUALE
+
+RITUALE json_write_file(Json j, VERBUM path) REDDE NIHIL
+  CONIURA write_all(path, CONIURA json_stringify(j))
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE json_len(Json j) REDDE REX
+  QUANDO j
+    CASO JsonArr(h):
+      REDDE CONIURA json_arr_len(j)
+    CASO JsonObj(h):
+      REDDE CONIURA json_obj_len(j)
+    CASO JsonNull:
+      IACE "json: len expects array or object"
+    CASO JsonBool(v):
+      IACE "json: len expects array or object"
+    CASO JsonNum(v):
+      IACE "json: len expects array or object"
+    CASO JsonStr(v):
+      IACE "json: len expects array or object"
+  FIN QUANDO
+  REDDE 0
+EXPLICIT RITUALE
+
+RITUALE json_get_index(Json j, REX i) REDDE Json
+  REDDE CONIURA json_arr_get(j, i)
+EXPLICIT RITUALE
+
+RITUALE json_set_index(Json j, REX i, Json v) REDDE NIHIL
+  QUANDO j
+    CASO JsonArr(h):
+      EVOCA SPECULUM Json ptr AD OBSECRO json_arr_handle_get(h, i)
+      VINCIRE *ptr AD v
+      REDDE
+    CASO JsonNull:
+      IACE "json: expected array"
+    CASO JsonBool(x):
+      IACE "json: expected array"
+    CASO JsonNum(x):
+      IACE "json: expected array"
+    CASO JsonStr(x):
+      IACE "json: expected array"
+    CASO JsonObj(h):
+      IACE "json: expected array"
+  FIN QUANDO
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE json_push(Json j, Json v) REDDE NIHIL
+  CONIURA json_arr_push(j, v)
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE json_get_key(Json j, VERBUM chave) REDDE Json
+  QUANDO j
+    CASO JsonObj(h):
+      EVOCA REX i AD 0
+      EVOCA REX n AD CONIURA json_obj_len(j)
+      DUM i < n
+        SI CONIURA compare(CONIURA json_obj_key_at(j, i), chave) == 0
+          REDDE CONIURA json_obj_value_at(j, i)
+        FIN SI
+        VINCIRE i AD i + 1
+      FIN DUM
+      REDDE JsonNull
+    CASO JsonNull:
+      IACE "json: expected object"
+    CASO JsonBool(v):
+      IACE "json: expected object"
+    CASO JsonNum(v):
+      IACE "json: expected object"
+    CASO JsonStr(v):
+      IACE "json: expected object"
+    CASO JsonArr(h):
+      IACE "json: expected object"
+  FIN QUANDO
+  REDDE JsonNull
+EXPLICIT RITUALE
+
+RITUALE json_has_key(Json j, VERBUM chave) REDDE VERUM
+  QUANDO j
+    CASO JsonObj(h):
+      EVOCA REX i AD 0
+      EVOCA REX n AD CONIURA json_obj_len(j)
+      DUM i < n
+        SI CONIURA compare(CONIURA json_obj_key_at(j, i), chave) == 0
+          REDDE VERUM
+        FIN SI
+        VINCIRE i AD i + 1
+      FIN DUM
+      REDDE FALSUM
+    CASO JsonNull:
+      IACE "json: expected object"
+    CASO JsonBool(v):
+      IACE "json: expected object"
+    CASO JsonNum(v):
+      IACE "json: expected object"
+    CASO JsonStr(v):
+      IACE "json: expected object"
+    CASO JsonArr(h):
+      IACE "json: expected object"
+  FIN QUANDO
+  REDDE FALSUM
+EXPLICIT RITUALE
+
+RITUALE json_set_key(Json j, VERBUM chave, Json v) REDDE NIHIL
+  QUANDO j
+    CASO JsonObj(h):
+      EVOCA REX i AD 0
+      EVOCA REX n AD CONIURA json_obj_len(j)
+      DUM i < n
+        EVOCA SPECULUM JsonPair ptr AD OBSECRO json_obj_handle_get(h, i)
+        SI CONIURA compare((*ptr).chave, chave) == 0
+          VINCIRE (*ptr).valor AD v
+          REDDE
+        FIN SI
+        VINCIRE i AD i + 1
+      FIN DUM
+      CONIURA json_obj_push(j, chave, v)
+      REDDE
+    CASO JsonNull:
+      IACE "json: expected object"
+    CASO JsonBool(x):
+      IACE "json: expected object"
+    CASO JsonNum(x):
+      IACE "json: expected object"
+    CASO JsonStr(x):
+      IACE "json: expected object"
+    CASO JsonArr(h):
+      IACE "json: expected object"
+  FIN QUANDO
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE json_keys(Json j) REDDE SPECULUM NIHIL
+  QUANDO j
+    CASO JsonObj(h):
+      EVOCA SPECULUM NIHIL out AD CONIURA fluxus_init(MENSURA(VERBUM))
+      EVOCA REX i AD 0
+      EVOCA REX n AD CONIURA json_obj_len(j)
+      DUM i < n
+        EVOCA VERBUM chave AD CONIURA json_obj_key_at(j, i)
+        CONIURA fluxus_push(out, SPECULUM chave)
+        VINCIRE i AD i + 1
+      FIN DUM
+      REDDE out
+    CASO JsonNull:
+      IACE "json: expected object"
+    CASO JsonBool(v):
+      IACE "json: expected object"
+    CASO JsonNum(v):
+      IACE "json: expected object"
+    CASO JsonStr(v):
+      IACE "json: expected object"
+    CASO JsonArr(h):
+      IACE "json: expected object"
+  FIN QUANDO
+  EVOCA SPECULUM NIHIL none
+  REDDE none
+EXPLICIT RITUALE
+
+RITUALE json_values(Json j) REDDE SPECULUM NIHIL
+  QUANDO j
+    CASO JsonObj(h):
+      EVOCA SPECULUM NIHIL out AD CONIURA fluxus_init(MENSURA(Json))
+      EVOCA REX i AD 0
+      EVOCA REX n AD CONIURA json_obj_len(j)
+      DUM i < n
+        EVOCA Json valor AD CONIURA json_obj_value_at(j, i)
+        CONIURA fluxus_push(out, SPECULUM valor)
+        VINCIRE i AD i + 1
+      FIN DUM
+      REDDE out
+    CASO JsonNull:
+      IACE "json: expected object"
+    CASO JsonBool(v):
+      IACE "json: expected object"
+    CASO JsonNum(v):
+      IACE "json: expected object"
+    CASO JsonStr(v):
+      IACE "json: expected object"
+    CASO JsonArr(h):
+      IACE "json: expected object"
+  FIN QUANDO
+  EVOCA SPECULUM NIHIL none
+  REDDE none
+EXPLICIT RITUALE
+
+RITUALE json_expect_num(Json j) REDDE UMBRA
+  QUANDO j
+    CASO JsonNum(v):
+      REDDE v
+    CASO JsonNull:
+      IACE "json: expected number"
+    CASO JsonBool(v):
+      IACE "json: expected number"
+    CASO JsonStr(v):
+      IACE "json: expected number"
+    CASO JsonArr(h):
+      IACE "json: expected number"
+    CASO JsonObj(h):
+      IACE "json: expected number"
+  FIN QUANDO
+  REDDE 0.0
+EXPLICIT RITUALE
+
+RITUALE json_expect_str(Json j) REDDE VERBUM
+  QUANDO j
+    CASO JsonStr(v):
+      REDDE v
+    CASO JsonNull:
+      IACE "json: expected string"
+    CASO JsonBool(v):
+      IACE "json: expected string"
+    CASO JsonNum(v):
+      IACE "json: expected string"
+    CASO JsonArr(h):
+      IACE "json: expected string"
+    CASO JsonObj(h):
+      IACE "json: expected string"
+  FIN QUANDO
+  REDDE ""
+EXPLICIT RITUALE
+
+RITUALE json_expect_bool(Json j) REDDE VERUM
+  QUANDO j
+    CASO JsonBool(v):
+      REDDE v
+    CASO JsonNull:
+      IACE "json: expected bool"
+    CASO JsonNum(v):
+      IACE "json: expected bool"
+    CASO JsonStr(v):
+      IACE "json: expected bool"
+    CASO JsonArr(h):
+      IACE "json: expected bool"
+    CASO JsonObj(h):
+      IACE "json: expected bool"
+  FIN QUANDO
+  REDDE FALSUM
+EXPLICIT RITUALE
+
+RITUALE json_expect_arr(Json j) REDDE SPECULUM NIHIL
+  QUANDO j
+    CASO JsonArr(h):
+      REDDE OBSECRO json_handle_ptr(h)
+    CASO JsonNull:
+      IACE "json: expected array"
+    CASO JsonBool(v):
+      IACE "json: expected array"
+    CASO JsonNum(v):
+      IACE "json: expected array"
+    CASO JsonStr(v):
+      IACE "json: expected array"
+    CASO JsonObj(h):
+      IACE "json: expected array"
+  FIN QUANDO
+  EVOCA SPECULUM NIHIL none
+  REDDE none
+EXPLICIT RITUALE
+
+RITUALE json_expect_obj(Json j) REDDE SPECULUM NIHIL
+  QUANDO j
+    CASO JsonObj(h):
+      REDDE OBSECRO json_handle_ptr(h)
+    CASO JsonNull:
+      IACE "json: expected object"
+    CASO JsonBool(v):
+      IACE "json: expected object"
+    CASO JsonNum(v):
+      IACE "json: expected object"
+    CASO JsonStr(v):
+      IACE "json: expected object"
+    CASO JsonArr(h):
+      IACE "json: expected object"
+  FIN QUANDO
+  EVOCA SPECULUM NIHIL none
+  REDDE none
+EXPLICIT RITUALE
+
+RITUALE json_parse(VERBUM s) REDDE Json
+  EVOCA SPECULUM NIHIL c AD CONIURA cursor_init(s)
+  TEMPTA
+    CONIURA json_skip_ws(c)
+    EVOCA Json out AD CONIURA json_parse_value(s, c)
+    CONIURA json_skip_ws(c)
+    SI NON CONIURA cursor_eof(c)
+      IACE "json: invalid literal"
+    FIN SI
+    CONIURA cursor_free(c)
+    REDDE out
+  CAPE FRACTUM erro
+    CONIURA cursor_free(c)
+    IACE erro
+  FIN TEMPTA
+  REDDE JsonNull
+EXPLICIT RITUALE
+
+RITUALE json_try_parse(VERBUM s) REDDE SPECULUM NIHIL
+  TEMPTA
+    EVOCA Json out AD CONIURA json_parse(s)
+    REDDE CONIURA Ok GENUS(Json, JsonError)(out)
+  CAPE FRACTUM erro
+    EVOCA JsonError e AD JsonErrorMsg(OBSECRO fractum_to_verbum(erro))
+    REDDE CONIURA Err GENUS(Json, JsonError)(e)
+  FIN TEMPTA
+  EVOCA JsonError fallback AD JsonErrorMsg("json: invalid literal")
+  REDDE CONIURA Err GENUS(Json, JsonError)(fallback)
+EXPLICIT RITUALE
+
+RITUALE json_parse_file(VERBUM path) REDDE Json
+  EVOCA VERBUM s AD CONIURA read_all(path)
+  REDDE CONIURA json_parse(s)
+EXPLICIT RITUALE
+
+RITUALE json_try_parse_file(VERBUM path) REDDE SPECULUM NIHIL
+  TEMPTA
+    EVOCA Json out AD CONIURA json_parse_file(path)
+    REDDE CONIURA Ok GENUS(Json, JsonError)(out)
+  CAPE FRACTUM erro
+    EVOCA JsonError e AD JsonErrorMsg(OBSECRO fractum_to_verbum(erro))
+    REDDE CONIURA Err GENUS(Json, JsonError)(e)
+  FIN TEMPTA
+  EVOCA JsonError fallback AD JsonErrorMsg("json: invalid literal")
+  REDDE CONIURA Err GENUS(Json, JsonError)(fallback)
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

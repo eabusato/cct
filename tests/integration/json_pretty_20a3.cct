@@ -1,0 +1,26 @@
+INCIPIT grimoire "json_pretty_20a3"
+
+ADVOCARE "cct/json.cct"
+ADVOCARE "cct/verbum.cct"
+
+RITUALE main() REDDE REX
+  EVOCA Json root AD CONIURA json_obj()
+  EVOCA Json nums AD CONIURA json_arr()
+
+  CONIURA json_arr_push(nums, CONIURA json_num(1))
+  CONIURA json_arr_push(nums, CONIURA json_num(2))
+
+  CONIURA json_obj_push(root, "nome", CONIURA json_str("cct"))
+  CONIURA json_obj_push(root, "nums", nums)
+
+  EVOCA VERBUM pretty AD CONIURA json_stringify_pretty_indent(root, 2)
+  EVOCA VERBUM esperado AD "{\n  \"nome\": \"cct\",\n  \"nums\": [\n    1,\n    2\n  ]\n}"
+
+  SI CONIURA compare(pretty, esperado) != 0
+    REDDE 1
+  FIN SI
+
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

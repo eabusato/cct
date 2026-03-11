@@ -1,0 +1,113 @@
+INCIPIT grimoire "json_parse_literals_20a2"
+
+ADVOCARE "cct/json.cct"
+ADVOCARE "cct/verbum.cct"
+
+RITUALE main() REDDE REX
+  EVOCA Json jnull AD CONIURA json_parse(" null ")
+  QUANDO jnull
+    CASO JsonNull:
+      OBSECRO scribe("")
+    CASO JsonBool(v):
+      REDDE 1
+    CASO JsonNum(v):
+      REDDE 1
+    CASO JsonStr(v):
+      REDDE 1
+    CASO JsonArr(h):
+      REDDE 1
+    CASO JsonObj(h):
+      REDDE 1
+  FIN QUANDO
+
+  EVOCA Json jtrue AD CONIURA json_parse("true")
+  QUANDO jtrue
+    CASO JsonBool(v):
+      SI v != VERUM
+        REDDE 2
+      FIN SI
+    CASO JsonNull:
+      REDDE 2
+    CASO JsonNum(v):
+      REDDE 2
+    CASO JsonStr(v):
+      REDDE 2
+    CASO JsonArr(h):
+      REDDE 2
+    CASO JsonObj(h):
+      REDDE 2
+  FIN QUANDO
+
+  EVOCA Json jfalse AD CONIURA json_parse("false")
+  QUANDO jfalse
+    CASO JsonBool(v):
+      SI v != FALSUM
+        REDDE 3
+      FIN SI
+    CASO JsonNull:
+      REDDE 3
+    CASO JsonNum(v):
+      REDDE 3
+    CASO JsonStr(v):
+      REDDE 3
+    CASO JsonArr(h):
+      REDDE 3
+    CASO JsonObj(h):
+      REDDE 3
+  FIN QUANDO
+
+  EVOCA Json jnum AD CONIURA json_parse("-12.5e2")
+  QUANDO jnum
+    CASO JsonNum(v):
+      SI v < -1250.1 VEL v > -1249.9
+        REDDE 4
+      FIN SI
+    CASO JsonNull:
+      REDDE 4
+    CASO JsonBool(v):
+      REDDE 4
+    CASO JsonStr(v):
+      REDDE 4
+    CASO JsonArr(h):
+      REDDE 4
+    CASO JsonObj(h):
+      REDDE 4
+  FIN QUANDO
+
+  EVOCA Json jstr AD CONIURA json_parse("\"q\\\"x\\/y\"")
+  QUANDO jstr
+    CASO JsonStr(v):
+      SI CONIURA len(v) != 5
+        REDDE 5
+      FIN SI
+      SI CONIURA char_at(v, 0) != CONIURA char_at("q", 0)
+        REDDE 5
+      FIN SI
+      SI CONIURA char_at(v, 1) != CONIURA char_at("\"", 0)
+        REDDE 5
+      FIN SI
+      SI CONIURA char_at(v, 2) != CONIURA char_at("x", 0)
+        REDDE 5
+      FIN SI
+      SI CONIURA char_at(v, 3) != CONIURA char_at("/", 0)
+        REDDE 5
+      FIN SI
+      SI CONIURA char_at(v, 4) != CONIURA char_at("y", 0)
+        REDDE 5
+      FIN SI
+    CASO JsonNull:
+      REDDE 5
+    CASO JsonBool(v):
+      REDDE 5
+    CASO JsonNum(v):
+      REDDE 5
+    CASO JsonArr(h):
+      REDDE 5
+    CASO JsonObj(h):
+      REDDE 5
+  FIN QUANDO
+
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

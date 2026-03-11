@@ -1,0 +1,51 @@
+INCIPIT grimoire "net_udp_loopback_20b2"
+
+ADVOCARE "cct/net.cct"
+ADVOCARE "cct/option.cct"
+ADVOCARE "cct/socket.cct"
+ADVOCARE "cct/verbum.cct"
+
+RITUALE main() REDDE REX
+  TEMPTA
+    EVOCA SPECULUM NIHIL receiver AD CONIURA udp_bind("", 22312)
+    EVOCA SPECULUM NIHIL sender AD CONIURA socket_udp()
+
+    CONIURA udp_send_to(sender, "127.0.0.1", 22312, "salve-udp")
+    EVOCA SPECULUM NIHIL packet_opt AD CONIURA udp_recv_from(receiver)
+
+    SI NON CONIURA option_is_some GENUS(NetDatagram)(packet_opt)
+      CONIURA option_free GENUS(NetDatagram)(packet_opt)
+      CONIURA net_close(sender)
+      CONIURA net_close(receiver)
+      REDDE 2
+    FIN SI
+
+    EVOCA NetDatagram packet AD CONIURA option_unwrap GENUS(NetDatagram)(packet_opt)
+    CONIURA option_free GENUS(NetDatagram)(packet_opt)
+
+    EVOCA VERBUM got AD ""
+    QUANDO packet
+      CASO Datagram(host, port, data):
+        VINCIRE got AD data
+    FIN QUANDO
+
+    SI CONIURA compare(got, "salve-udp") != 0
+      CONIURA net_close(sender)
+      CONIURA net_close(receiver)
+      REDDE 3
+    FIN SI
+
+    CONIURA net_close(sender)
+    CONIURA net_close(receiver)
+    REDDE 0
+  CAPE FRACTUM erro
+    EVOCA VERBUM msg AD OBSECRO fractum_to_verbum(erro)
+    SI CONIURA compare(msg, "sock_bind falhou") == 0 VEL CONIURA compare(msg, "socket udp create falhou") == 0 VEL CONIURA compare(msg, "sock_connect falhou") == 0
+      REDDE 0
+    FIN SI
+    REDDE 90
+  FIN TEMPTA
+  REDDE 91
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

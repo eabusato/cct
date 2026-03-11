@@ -1,0 +1,65 @@
+INCIPIT grimoire "json_keys_values_20a4"
+
+ADVOCARE "cct/fluxus.cct"
+ADVOCARE "cct/json.cct"
+ADVOCARE "cct/verbum.cct"
+
+RITUALE main() REDDE REX
+  EVOCA Json obj AD CONIURA json_parse("{\"a\":1,\"b\":true}")
+  EVOCA SPECULUM NIHIL ks AD CONIURA json_keys(obj)
+  EVOCA SPECULUM NIHIL vs AD CONIURA json_values(obj)
+
+  SI CONIURA fluxus_len(ks) != 2
+    REDDE 1
+  FIN SI
+  SI CONIURA fluxus_len(vs) != 2
+    REDDE 2
+  FIN SI
+
+  EVOCA VERBUM kj AD CONIURA join(ks, "|")
+  SI CONIURA compare(kj, "a|b") != 0
+    REDDE 3
+  FIN SI
+
+  EVOCA SPECULUM Json v0 AD CONIURA fluxus_get(vs, 0)
+  QUANDO *v0
+    CASO JsonNum(v):
+      SI v < 0.9 VEL v > 1.1
+        REDDE 4
+      FIN SI
+    CASO JsonNull:
+      REDDE 4
+    CASO JsonBool(v):
+      REDDE 4
+    CASO JsonStr(v):
+      REDDE 4
+    CASO JsonArr(h):
+      REDDE 4
+    CASO JsonObj(h):
+      REDDE 4
+  FIN QUANDO
+
+  EVOCA SPECULUM Json v1 AD CONIURA fluxus_get(vs, 1)
+  QUANDO *v1
+    CASO JsonBool(v):
+      SI v != VERUM
+        REDDE 5
+      FIN SI
+    CASO JsonNull:
+      REDDE 5
+    CASO JsonNum(v):
+      REDDE 5
+    CASO JsonStr(v):
+      REDDE 5
+    CASO JsonArr(h):
+      REDDE 5
+    CASO JsonObj(h):
+      REDDE 5
+  FIN QUANDO
+
+  CONIURA fluxus_free(ks)
+  CONIURA fluxus_free(vs)
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

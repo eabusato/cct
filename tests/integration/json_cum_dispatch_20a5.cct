@@ -1,0 +1,43 @@
+INCIPIT grimoire "json_cum_dispatch_20a5"
+
+ADVOCARE "cct/json.cct"
+
+RITUALE score(Json j) REDDE REX
+  EVOCA REX kind AD CONIURA json_kind(j)
+  EVOCA REX out AD 0
+
+  CUM kind
+    CASUS 0:
+      VINCIRE out AD 10
+    CASUS 1:
+      VINCIRE out AD 20
+    CASUS 2:
+      VINCIRE out AD 30
+    CASUS 3:
+      VINCIRE out AD 40
+    CASUS 4:
+      VINCIRE out AD 50
+    ALIOQUIN:
+      VINCIRE out AD 60
+  FIN CUM
+
+  REDDE out
+EXPLICIT RITUALE
+
+RITUALE main() REDDE REX
+  EVOCA REX total AD 0
+  VINCIRE total AD total + CONIURA score(CONIURA json_null())
+  VINCIRE total AD total + CONIURA score(CONIURA json_bool(VERUM))
+  VINCIRE total AD total + CONIURA score(CONIURA json_num(1))
+  VINCIRE total AD total + CONIURA score(CONIURA json_str("x"))
+  VINCIRE total AD total + CONIURA score(CONIURA json_arr())
+  VINCIRE total AD total + CONIURA score(CONIURA json_obj())
+
+  SI total != 210
+    REDDE 1
+  FIN SI
+
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

@@ -1,0 +1,100 @@
+INCIPIT grimoire "json_parse_objects_20a2"
+
+ADVOCARE "cct/json.cct"
+ADVOCARE "cct/verbum.cct"
+
+RITUALE main() REDDE REX
+  EVOCA Json obj AD CONIURA json_parse("{\"a\":1,\"b\":[false,null],\"c\":\"ok\"}")
+  SI CONIURA json_obj_len(obj) != 3
+    REDDE 1
+  FIN SI
+
+  SI CONIURA compare(CONIURA json_obj_key_at(obj, 0), "a") != 0
+    REDDE 2
+  FIN SI
+  SI CONIURA compare(CONIURA json_obj_key_at(obj, 1), "b") != 0
+    REDDE 3
+  FIN SI
+  SI CONIURA compare(CONIURA json_obj_key_at(obj, 2), "c") != 0
+    REDDE 4
+  FIN SI
+
+  EVOCA Json val0 AD CONIURA json_obj_value_at(obj, 0)
+  QUANDO val0
+    CASO JsonNum(v):
+      SI v < 0.9 VEL v > 1.1
+        REDDE 5
+      FIN SI
+    CASO JsonNull:
+      REDDE 5
+    CASO JsonBool(v):
+      REDDE 5
+    CASO JsonStr(v):
+      REDDE 5
+    CASO JsonArr(h):
+      REDDE 5
+    CASO JsonObj(h):
+      REDDE 5
+  FIN QUANDO
+
+  EVOCA Json inner AD CONIURA json_obj_value_at(obj, 1)
+  SI CONIURA json_arr_len(inner) != 2
+    REDDE 6
+  FIN SI
+
+  EVOCA Json inner0 AD CONIURA json_arr_get(inner, 0)
+  QUANDO inner0
+    CASO JsonBool(v):
+      SI v != FALSUM
+        REDDE 7
+      FIN SI
+    CASO JsonNull:
+      REDDE 7
+    CASO JsonNum(v):
+      REDDE 7
+    CASO JsonStr(v):
+      REDDE 7
+    CASO JsonArr(h):
+      REDDE 7
+    CASO JsonObj(h):
+      REDDE 7
+  FIN QUANDO
+
+  EVOCA Json inner1 AD CONIURA json_arr_get(inner, 1)
+  QUANDO inner1
+    CASO JsonNull:
+      OBSECRO scribe("")
+    CASO JsonBool(v):
+      REDDE 8
+    CASO JsonNum(v):
+      REDDE 8
+    CASO JsonStr(v):
+      REDDE 8
+    CASO JsonArr(h):
+      REDDE 8
+    CASO JsonObj(h):
+      REDDE 8
+  FIN QUANDO
+
+  EVOCA Json val2 AD CONIURA json_obj_value_at(obj, 2)
+  QUANDO val2
+    CASO JsonStr(v):
+      SI CONIURA compare(v, "ok") != 0
+        REDDE 9
+      FIN SI
+    CASO JsonNull:
+      REDDE 9
+    CASO JsonBool(v):
+      REDDE 9
+    CASO JsonNum(v):
+      REDDE 9
+    CASO JsonArr(h):
+      REDDE 9
+    CASO JsonObj(h):
+      REDDE 9
+  FIN QUANDO
+
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

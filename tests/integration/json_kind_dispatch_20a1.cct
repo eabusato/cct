@@ -1,0 +1,39 @@
+INCIPIT grimoire "json_kind_dispatch_20a1"
+
+ADVOCARE "cct/json.cct"
+ADVOCARE "cct/io.cct"
+
+RITUALE descrever(Json j) REDDE VERBUM
+  EVOCA REX kind AD CONIURA json_kind(j)
+  SI kind == 0
+    REDDE "null"
+  FIN SI
+  SI kind == 1
+    REDDE "bool"
+  FIN SI
+  SI kind == 2
+    REDDE "num"
+  FIN SI
+  SI kind == 3
+    REDDE "str"
+  FIN SI
+  SI kind == 4
+    REDDE "arr"
+  FIN SI
+  SI kind == 5
+    REDDE "obj"
+  FIN SI
+  REDDE "invalid"
+EXPLICIT RITUALE
+
+RITUALE main() REDDE REX
+  OBSECRO scribe(CONIURA descrever(CONIURA json_null()), "\n")
+  OBSECRO scribe(CONIURA descrever(CONIURA json_bool(VERUM)), "\n")
+  OBSECRO scribe(CONIURA descrever(CONIURA json_num(1.0)), "\n")
+  OBSECRO scribe(CONIURA descrever(CONIURA json_str("x")), "\n")
+  OBSECRO scribe(CONIURA descrever(CONIURA json_arr()), "\n")
+  OBSECRO scribe(CONIURA descrever(CONIURA json_obj()), "\n")
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire
