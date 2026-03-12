@@ -1,0 +1,58 @@
+INCIPIT grimoire "db_prepare_reuse_20e3"
+
+ADVOCARE "cct/db_sqlite.cct"
+ADVOCARE "cct/verbum.cct"
+
+RITUALE bind_and_step(SPECULUM NIHIL stmt, REX id, VERBUM nome) REDDE VERUM
+  CONIURA stmt_bind_int(stmt, 1, id)
+  CONIURA stmt_bind_text(stmt, 2, nome)
+  REDDE CONIURA stmt_step(stmt)
+EXPLICIT RITUALE
+
+RITUALE main() REDDE REX
+  EVOCA SPECULUM NIHIL db AD CONIURA db_open(":memory:")
+  CONIURA db_exec(db, "CREATE TABLE items(id INTEGER, nome TEXT);")
+
+  EVOCA SPECULUM NIHIL stmt AD CONIURA db_prepare(db, "INSERT INTO items(id, nome) VALUES(?1, ?2);")
+  SI NON CONIURA bind_and_step(stmt, 10, "primeiro")
+    REDDE 1
+  FIN SI
+  CONIURA stmt_reset(stmt)
+  SI NON CONIURA bind_and_step(stmt, 20, "segundo")
+    REDDE 2
+  FIN SI
+  CONIURA stmt_reset(stmt)
+  SI NON CONIURA bind_and_step(stmt, 30, "terceiro")
+    REDDE 3
+  FIN SI
+  CONIURA stmt_finalize(stmt)
+
+  EVOCA SPECULUM NIHIL rows AD CONIURA db_query(db, "SELECT id, nome FROM items ORDER BY id;")
+  SI NON CONIURA rows_next(rows)
+    REDDE 4
+  FIN SI
+  SI CONIURA rows_get_int(rows, 0) != 10 VEL CONIURA compare(CONIURA rows_get_text(rows, 1), "primeiro") != 0
+    REDDE 5
+  FIN SI
+  SI NON CONIURA rows_next(rows)
+    REDDE 6
+  FIN SI
+  SI CONIURA rows_get_int(rows, 0) != 20 VEL CONIURA compare(CONIURA rows_get_text(rows, 1), "segundo") != 0
+    REDDE 7
+  FIN SI
+  SI NON CONIURA rows_next(rows)
+    REDDE 8
+  FIN SI
+  SI CONIURA rows_get_int(rows, 0) != 30 VEL CONIURA compare(CONIURA rows_get_text(rows, 1), "terceiro") != 0
+    REDDE 9
+  FIN SI
+  SI CONIURA rows_next(rows)
+    REDDE 10
+  FIN SI
+
+  CONIURA rows_close(rows)
+  CONIURA db_close(db)
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

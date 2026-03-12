@@ -1,0 +1,43 @@
+INCIPIT grimoire "http_simple_server_20f2"
+
+ADVOCARE "cct/fs.cct"
+ADVOCARE "cct/http.cct"
+ADVOCARE "cct/io.cct"
+ADVOCARE "cct/json.cct"
+ADVOCARE "cct/verbum.cct"
+
+RITUALE main() REDDE REX
+  EVOCA VERBUM ready AD "examples/.tmp/http_simple_server_20f2.ready"
+  EVOCA VERBUM done AD "examples/.tmp/http_simple_server_20f2.done"
+  CONIURA mkdir_all("examples/.tmp")
+  TEMPTA
+    EVOCA SPECULUM NIHIL srv AD CONIURA http_server_listen("127.0.0.1", 8091)
+    CONIURA write_all(ready, "ready")
+    CONIURA println("listening on http://127.0.0.1:8091/json")
+
+    EVOCA HttpRequest req AD CONIURA http_server_accept(srv)
+    EVOCA Json payload AD CONIURA json_obj()
+    CONIURA json_obj_push(payload, "service", CONIURA json_str("cct"))
+    CONIURA json_obj_push(payload, "ok", CONIURA json_bool(VERUM))
+    CONIURA json_obj_push(payload, "path", CONIURA json_str(CONIURA http_request_path(req)))
+
+    EVOCA HttpResponse resp AD CONIURA http_response_new(200, CONIURA json_stringify(payload))
+    CONIURA http_headers_set_or_push(CONIURA http_response_headers_handle(resp), "Content-Type", "application/json")
+    CONIURA http_server_reply(srv, resp)
+    CONIURA write_all(done, "ok")
+    CONIURA println("served one request")
+    REDDE 0
+  CAPE FRACTUM erro
+    EVOCA VERBUM msg AD OBSECRO fractum_to_verbum(erro)
+    SI CONIURA compare(msg, "sock_bind falhou") == 0 VEL CONIURA compare(msg, "socket tcp create falhou") == 0 VEL CONIURA compare(msg, "sock_listen falhou") == 0
+      CONIURA write_all(ready, "skip")
+      CONIURA write_all(done, "skip")
+      CONIURA println("http server indisponivel neste host")
+      REDDE 0
+    FIN SI
+    IACE erro
+  FIN TEMPTA
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

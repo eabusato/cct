@@ -204,6 +204,9 @@ bool cct_cg_emit_generated_c_prelude(FILE *out, const cct_codegen_t *cg) {
     fputs("#include <errno.h>\n", out);
     fputs("#include <math.h>\n", out);
     fputs("#include <time.h>\n\n", out);
+    if (cg->uses_sqlite) {
+        fputs("#include <sqlite3.h>\n\n", out);
+    }
     fputs("#ifdef _WIN32\n", out);
     fputs("#include <direct.h>\n", out);
     fputs("#include <io.h>\n", out);
@@ -277,6 +280,7 @@ bool cct_cg_emit_generated_c_prelude(FILE *out, const cct_codegen_t *cg) {
     fputs("/* ===== Runtime Helpers ===== */\n", out);
     cct_runtime_codegen_config_t rt_cfg;
     cct_runtime_codegen_config_defaults(&rt_cfg);
+    rt_cfg.emit_db_helpers = cg->uses_sqlite;
     if (!cct_runtime_emit_c_helpers(out, &rt_cfg)) return false;
     return true;
 }

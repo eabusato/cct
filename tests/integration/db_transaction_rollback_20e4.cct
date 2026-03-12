@@ -1,0 +1,21 @@
+INCIPIT grimoire "db_transaction_rollback_20e4"
+
+ADVOCARE "cct/db_sqlite.cct"
+
+RITUALE main() REDDE REX
+  EVOCA SPECULUM NIHIL db AD CONIURA db_open(":memory:")
+  CONIURA db_exec(db, "CREATE TABLE items(id INTEGER, nome TEXT);")
+
+  CONIURA db_begin(db)
+  CONIURA db_exec(db, "INSERT INTO items(id, nome) VALUES(1, 'transient');")
+  CONIURA db_rollback(db)
+
+  SI CONIURA db_scalar_int(db, "SELECT COUNT(*) FROM items;") != 0
+    REDDE 1
+  FIN SI
+
+  CONIURA db_close(db)
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

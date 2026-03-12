@@ -1,0 +1,32 @@
+INCIPIT grimoire "config_get_typed_20d2"
+
+ADVOCARE "cct/config.cct"
+ADVOCARE "cct/verbum.cct"
+
+RITUALE main() REDDE REX
+  EVOCA VERBUM src AD "[app]"
+  VINCIRE src AD CONIURA concat(src, "\n")
+  VINCIRE src AD CONIURA concat(src, "workers=4")
+  VINCIRE src AD CONIURA concat(src, "\n")
+  VINCIRE src AD CONIURA concat(src, "debug=true")
+  VINCIRE src AD CONIURA concat(src, "\n")
+  VINCIRE src AD CONIURA concat(src, "threshold=0.75")
+
+  EVOCA SPECULUM NIHIL cfg AD CONIURA config_parse_ini(src)
+  SI CONIURA config_get_int(cfg, "app", "workers") != 4
+    REDDE 1
+  FIN SI
+  SI NON CONIURA config_get_bool(cfg, "app", "debug")
+    REDDE 2
+  FIN SI
+  SI CONIURA config_get_real(cfg, "app", "threshold") != 0.75
+    REDDE 3
+  FIN SI
+  SI NON CONIURA config_has(cfg, "app", "workers")
+    REDDE 4
+  FIN SI
+
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

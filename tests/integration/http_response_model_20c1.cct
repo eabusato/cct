@@ -1,0 +1,40 @@
+INCIPIT grimoire "http_response_model_20c1"
+
+ADVOCARE "cct/http.cct"
+ADVOCARE "cct/verbum.cct"
+
+RITUALE main() REDDE REX
+  EVOCA HttpResponse res AD CONIURA http_response_new(200, "corpo")
+
+  QUANDO res
+    CASO Response(status, headers_handle, body):
+      SI status != 200
+        REDDE 1
+      FIN SI
+      SI CONIURA compare(body, "corpo") != 0
+        REDDE 2
+      FIN SI
+      SI CONIURA http_headers_len(headers_handle) != 0
+        REDDE 3
+      FIN SI
+
+      EVOCA HttpHeader ct
+      CONIURA http_header_set(SPECULUM ct, "Content-Type", "text/plain")
+      CONIURA http_headers_push(headers_handle, SPECULUM ct)
+      SI CONIURA http_headers_len(headers_handle) != 1
+        REDDE 4
+      FIN SI
+
+      EVOCA SPECULUM HttpHeader got AD CONIURA http_headers_get_ptr(headers_handle, 0)
+      SI CONIURA compare((*got).nome, "Content-Type") != 0
+        REDDE 5
+      FIN SI
+      SI CONIURA compare((*got).valor, "text/plain") != 0
+        REDDE 6
+      FIN SI
+  FIN QUANDO
+
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

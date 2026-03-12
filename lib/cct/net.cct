@@ -1,12 +1,42 @@
 INCIPIT grimoire "net"
 
 ADVOCARE "cct/option.cct"
+ADVOCARE "cct/parse.cct"
 ADVOCARE "cct/socket.cct"
 ADVOCARE "cct/verbum.cct"
+
+ORDO NetAddr
+  Addr(VERBUM host, REX port)
+FIN ORDO
 
 ORDO NetDatagram
   Datagram(VERBUM host, REX port, VERBUM data)
 FIN ORDO
+
+RITUALE net_parse_addr(VERBUM s) REDDE SPECULUM NIHIL
+  EVOCA REX sep AD CONIURA find(s, ":")
+  SI sep == -1
+    REDDE CONIURA None GENUS(NetAddr)()
+  FIN SI
+  EVOCA REX total AD CONIURA len(s)
+  EVOCA VERBUM host AD CONIURA substring(s, 0, sep)
+  EVOCA VERBUM port_text AD CONIURA substring(s, sep + 1, total)
+  SI CONIURA len(host) == 0 VEL CONIURA len(port_text) == 0
+    REDDE CONIURA None GENUS(NetAddr)()
+  FIN SI
+  EVOCA SPECULUM NIHIL port_opt AD CONIURA try_int(port_text)
+  SI NON CONIURA option_is_some GENUS(REX)(port_opt)
+    CONIURA option_free GENUS(REX)(port_opt)
+    REDDE CONIURA None GENUS(NetAddr)()
+  FIN SI
+  EVOCA REX port AD CONIURA option_unwrap GENUS(REX)(port_opt)
+  CONIURA option_free GENUS(REX)(port_opt)
+  SI port < 0 VEL port > 65535
+    REDDE CONIURA None GENUS(NetAddr)()
+  FIN SI
+  EVOCA NetAddr addr AD Addr(host, port)
+  REDDE CONIURA Some GENUS(NetAddr)(addr)
+EXPLICIT RITUALE
 
 RITUALE tcp_connect(VERBUM host, REX port) REDDE SPECULUM NIHIL
   EVOCA SPECULUM NIHIL s AD CONIURA socket_tcp()

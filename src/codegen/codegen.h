@@ -41,6 +41,7 @@ typedef struct {
     cct_codegen_backend_kind_t backend_kind; /* backend selection (future-proofing) */
     const char *host_cc;            /* defaults to "cc" */
     bool keep_intermediate;         /* preserve generated .c file */
+    bool uses_sqlite;               /* link sqlite bridge only when generated code needs it */
     cct_profile_t profile;          /* FASE 16A.2: compilation profile */
     const char *entry_rituale_name; /* FASE 16B.4: explicit freestanding entry ritual */
 

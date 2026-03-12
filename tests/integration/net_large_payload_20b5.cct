@@ -1,0 +1,67 @@
+INCIPIT grimoire "net_large_payload_20b5"
+
+ADVOCARE "cct/fs.cct"
+ADVOCARE "cct/net.cct"
+ADVOCARE "cct/process.cct"
+ADVOCARE "cct/time.cct"
+ADVOCARE "cct/verbum.cct"
+
+RITUALE cleanup_file(VERBUM path) REDDE NIHIL
+  SI CONIURA exists(path)
+    CONIURA delete_file(path)
+  FIN SI
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE wait_for_file(VERBUM path, REX timeout_ms) REDDE VERUM
+  EVOCA REX elapsed AD 0
+  DUM elapsed < timeout_ms
+    SI CONIURA exists(path)
+      REDDE VERUM
+    FIN SI
+    CONIURA sleep_ms(20)
+    VINCIRE elapsed AD elapsed + 20
+  FIN DUM
+  REDDE CONIURA exists(path)
+EXPLICIT RITUALE
+
+RITUALE main() REDDE REX
+  EVOCA VERBUM ready AD "tests/.tmp/net_large_payload_20b5.ready"
+  EVOCA VERBUM done AD "tests/.tmp/net_large_payload_20b5.done"
+  EVOCA VERBUM log AD "tests/.tmp/net_large_payload_20b5.server.log"
+
+  CONIURA cleanup_file(ready)
+  CONIURA cleanup_file(done)
+  CONIURA cleanup_file(log)
+
+  SI CONIURA run("tests/integration/net_large_payload_20b5_server >tests/.tmp/net_large_payload_20b5.server.log 2>&1 &") != 0
+    REDDE 1
+  FIN SI
+
+  SI NON CONIURA wait_for_file(ready, 2000)
+    REDDE 2
+  FIN SI
+
+  SI CONIURA compare(CONIURA read_all(ready), "skip") == 0
+    REDDE 0
+  FIN SI
+
+  EVOCA SPECULUM NIHIL client AD CONIURA tcp_connect("127.0.0.1", 22317)
+  EVOCA VERBUM expected AD CONIURA repeat("abcd", 4096)
+  EVOCA VERBUM got AD CONIURA net_read_exact(client, CONIURA len(expected))
+  SI CONIURA compare(got, expected) != 0
+    REDDE 3
+  FIN SI
+
+  CONIURA net_close(client)
+
+  SI NON CONIURA wait_for_file(done, 2000)
+    REDDE 4
+  FIN SI
+  SI CONIURA compare(CONIURA read_all(done), "ok") != 0
+    REDDE 5
+  FIN SI
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

@@ -1,0 +1,48 @@
+INCIPIT grimoire "http_model_basic_20c1"
+
+ADVOCARE "cct/http.cct"
+ADVOCARE "cct/verbum.cct"
+
+RITUALE main() REDDE REX
+  EVOCA HttpMethod m AD CONIURA http_method_get()
+  SI CONIURA compare(CONIURA http_method_name(m), "GET") != 0
+    REDDE 1
+  FIN SI
+
+  EVOCA HttpRequest req AD CONIURA http_request_new("GET", "/salve")
+
+  QUANDO req
+    CASO Request(method, path, headers_handle, body):
+      SI CONIURA compare(method, "GET") != 0
+        REDDE 2
+      FIN SI
+      SI CONIURA compare(path, "/salve") != 0
+        REDDE 3
+      FIN SI
+      SI CONIURA compare(body, "") != 0
+        REDDE 4
+      FIN SI
+      SI CONIURA http_headers_len(headers_handle) != 0
+        REDDE 5
+      FIN SI
+
+      EVOCA HttpHeader host
+      CONIURA http_header_set(SPECULUM host, "Host", "example.test")
+      CONIURA http_headers_push(headers_handle, SPECULUM host)
+      SI CONIURA http_headers_len(headers_handle) != 1
+        REDDE 6
+      FIN SI
+
+      EVOCA SPECULUM HttpHeader got AD CONIURA http_headers_get_ptr(headers_handle, 0)
+      SI CONIURA compare((*got).nome, "Host") != 0
+        REDDE 7
+      FIN SI
+      SI CONIURA compare((*got).valor, "example.test") != 0
+        REDDE 8
+      FIN SI
+  FIN QUANDO
+
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

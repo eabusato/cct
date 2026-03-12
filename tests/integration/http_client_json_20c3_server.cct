@@ -1,0 +1,54 @@
+INCIPIT grimoire "http_client_json_20c3_server"
+
+ADVOCARE "cct/fs.cct"
+ADVOCARE "cct/http.cct"
+ADVOCARE "cct/net.cct"
+ADVOCARE "cct/socket.cct"
+ADVOCARE "cct/verbum.cct"
+
+RITUALE main() REDDE REX
+  EVOCA VERBUM ready AD "tests/.tmp/http_client_json_20c3.ready"
+  EVOCA VERBUM done AD "tests/.tmp/http_client_json_20c3.done"
+  TEMPTA
+    EVOCA SPECULUM NIHIL listener AD CONIURA tcp_listen("", 22333)
+    CONIURA write_all(ready, "ready")
+
+    EVOCA SPECULUM NIHIL client AD CONIURA tcp_accept(listener)
+    CONIURA sock_set_timeout_ms(client, 1000)
+
+    EVOCA VERBUM raw_req AD CONIURA http_read_request_raw(client)
+    EVOCA HttpRequest req AD CONIURA http_parse_request(raw_req)
+    SI CONIURA compare(CONIURA http_request_method(req), "GET") != 0
+      REDDE 10
+    FIN SI
+    SI CONIURA compare(CONIURA http_request_path(req), "/data.json") != 0
+      REDDE 11
+    FIN SI
+
+    EVOCA HttpResponse res AD CONIURA http_response_new(200, "{\"ok\":true,\"valor\":42,\"nome\":\"cct\"}")
+    EVOCA REX headers AD CONIURA http_response_headers_handle(res)
+    CONIURA http_headers_set_or_push(headers, "Content-Type", "application/json")
+    CONIURA http_headers_set_or_push(headers, "Content-Length", "35")
+
+    EVOCA VERBUM raw_res AD CONIURA http_stringify_response(res)
+    SI CONIURA sock_send(client, raw_res) != CONIURA len(raw_res)
+      REDDE 12
+    FIN SI
+
+    CONIURA net_close(client)
+    CONIURA net_close(listener)
+    CONIURA write_all(done, "ok")
+    REDDE 0
+  CAPE FRACTUM erro
+    EVOCA VERBUM msg AD OBSECRO fractum_to_verbum(erro)
+    SI CONIURA compare(msg, "sock_bind falhou") == 0 VEL CONIURA compare(msg, "socket tcp create falhou") == 0
+      CONIURA write_all(ready, "skip")
+      CONIURA write_all(done, "skip")
+      REDDE 0
+    FIN SI
+    REDDE 90
+  FIN TEMPTA
+  REDDE 91
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

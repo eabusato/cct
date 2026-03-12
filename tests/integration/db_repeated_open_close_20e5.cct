@@ -1,0 +1,31 @@
+INCIPIT grimoire "db_repeated_open_close_20e5"
+
+ADVOCARE "cct/db_sqlite.cct"
+ADVOCARE "cct/verbum.cct"
+
+RITUALE cycle(REX n) REDDE VERUM
+  EVOCA SPECULUM NIHIL db AD CONIURA db_open(":memory:")
+  CONIURA db_exec(db, "CREATE TABLE items(id INTEGER, nome TEXT);")
+  CONIURA db_exec(db, "INSERT INTO items(id, nome) VALUES(1, 'ok');")
+  SI CONIURA db_scalar_int(db, "SELECT COUNT(*) FROM items;") != 1
+    REDDE FALSUM
+  FIN SI
+  SI CONIURA compare(CONIURA db_scalar_text(db, "SELECT nome FROM items LIMIT 1;"), "ok") != 0
+    REDDE FALSUM
+  FIN SI
+  CONIURA db_close(db)
+  REDDE n >= 0
+EXPLICIT RITUALE
+
+RITUALE main() REDDE REX
+  EVOCA REX i AD 0
+  DUM i < 25
+    SI NON CONIURA cycle(i)
+      REDDE 1
+    FIN SI
+    VINCIRE i AD i + 1
+  FIN DUM
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

@@ -1,0 +1,28 @@
+INCIPIT grimoire "config_set_write_20d3"
+
+ADVOCARE "cct/config.cct"
+ADVOCARE "cct/verbum.cct"
+
+RITUALE main() REDDE REX
+  EVOCA VERBUM path AD "tests/.tmp/config_set_write_20d3.ini"
+  EVOCA SPECULUM NIHIL cfg AD CONIURA config_new()
+  CONIURA config_set(cfg, "", "app", "cct")
+  CONIURA config_set(cfg, "server", "host", "127.0.0.1")
+  CONIURA config_set(cfg, "server", "port", "8081")
+  CONIURA config_write_ini(cfg, path)
+
+  EVOCA SPECULUM NIHIL loaded AD CONIURA config_load_ini(path)
+  SI CONIURA compare(CONIURA config_get(loaded, "", "app"), "cct") != 0
+    REDDE 1
+  FIN SI
+  SI CONIURA compare(CONIURA config_get(loaded, "server", "host"), "127.0.0.1") != 0
+    REDDE 2
+  FIN SI
+  SI CONIURA config_get_int(loaded, "server", "port") != 8081
+    REDDE 3
+  FIN SI
+
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

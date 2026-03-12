@@ -1,0 +1,23 @@
+INCIPIT grimoire "db_scalar_helpers_20e4"
+
+ADVOCARE "cct/db_sqlite.cct"
+ADVOCARE "cct/verbum.cct"
+
+RITUALE main() REDDE REX
+  EVOCA SPECULUM NIHIL db AD CONIURA db_open(":memory:")
+  CONIURA db_exec(db, "CREATE TABLE metrics(valor INTEGER, nome TEXT);")
+  CONIURA db_exec(db, "INSERT INTO metrics(valor, nome) VALUES(7, 'sete');")
+  CONIURA db_exec(db, "INSERT INTO metrics(valor, nome) VALUES(9, 'nove');")
+
+  SI CONIURA db_scalar_int(db, "SELECT SUM(valor) FROM metrics;") != 16
+    REDDE 1
+  FIN SI
+  SI CONIURA compare(CONIURA db_scalar_text(db, "SELECT nome FROM metrics ORDER BY valor DESC LIMIT 1;"), "nove") != 0
+    REDDE 2
+  FIN SI
+
+  CONIURA db_close(db)
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

@@ -25,6 +25,7 @@ void cct_runtime_codegen_config_defaults(cct_runtime_codegen_config_t *cfg) {
     cfg->emit_hash_helpers = true;
     cfg->emit_verbum_helpers = true;
     cfg->emit_fmt_helpers = true;
+    cfg->emit_db_helpers = false;
 }
 
 bool cct_runtime_emit_c_helpers(FILE *out, const cct_runtime_codegen_config_t *cfg) {
@@ -3848,6 +3849,94 @@ bool cct_runtime_emit_c_helpers(FILE *out, const cct_runtime_codegen_config_t *c
     fputs("    return buf;\n", out);
     fputs("}\n\n", out);
 
+    fputs("static char cct_rt_socket_last_error[256] = \"\";\n\n", out);
+
+    fputs("static char *cct_rt_socket_dup_cstr(const char *s) {\n", out);
+    fputs("    const char *src = s ? s : \"\";\n", out);
+    fputs("    size_t n = strlen(src);\n", out);
+    fputs("    char *buf = (char*)cct_rt_alloc_or_fail(n + 1U);\n", out);
+    fputs("    memcpy(buf, src, n + 1U);\n", out);
+    fputs("    return buf;\n", out);
+    fputs("}\n\n", out);
+
+    fputs("static void cct_rt_socket_set_last_error(const char *msg) {\n", out);
+    fputs("    const char *src = msg ? msg : \"\";\n", out);
+    fputs("    size_t n = strlen(src);\n", out);
+    fputs("    if (n >= sizeof(cct_rt_socket_last_error)) n = sizeof(cct_rt_socket_last_error) - 1U;\n", out);
+    fputs("    memcpy(cct_rt_socket_last_error, src, n);\n", out);
+    fputs("    cct_rt_socket_last_error[n] = '\\0';\n", out);
+    fputs("}\n\n", out);
+
+    fputs("static void cct_rt_socket_clear_last_error(void) {\n", out);
+    fputs("    cct_rt_socket_last_error[0] = '\\0';\n", out);
+    fputs("}\n\n", out);
+
+    fputs("static char *cct_rt_sock_last_error(void) {\n", out);
+    fputs("    return cct_rt_socket_dup_cstr(cct_rt_socket_last_error);\n", out);
+    fputs("}\n\n", out);
+
+    fputs("static char *cct_rt_socket_addr_string_from_sockaddr(const struct sockaddr *sa, socklen_t len) {\n", out);
+    fputs("    if (!sa || len == 0) return cct_rt_socket_dup_cstr(\"\");\n", out);
+    fputs("    if (sa->sa_family == AF_INET && len >= (socklen_t)sizeof(struct sockaddr_in)) {\n", out);
+    fputs("        const struct sockaddr_in *in = (const struct sockaddr_in*)sa;\n", out);
+    fputs("        char host[INET_ADDRSTRLEN];\n", out);
+    fputs("        if (!inet_ntop(AF_INET, &in->sin_addr, host, sizeof(host))) return cct_rt_socket_dup_cstr(\"inet:?\");\n", out);
+    fputs("        char out_buf[64];\n", out);
+    fputs("        snprintf(out_buf, sizeof(out_buf), \"%s:%u\", host, (unsigned)ntohs(in->sin_port));\n", out);
+    fputs("        return cct_rt_socket_dup_cstr(out_buf);\n", out);
+    fputs("    }\n", out);
+    fputs("    if (sa->sa_family == AF_UNIX && len >= (socklen_t)sizeof(struct sockaddr_un)) {\n", out);
+    fputs("        const struct sockaddr_un *un = (const struct sockaddr_un*)sa;\n", out);
+    fputs("        if (un->sun_path[0]) {\n", out);
+    fputs("            char out_buf[160];\n", out);
+    fputs("            snprintf(out_buf, sizeof(out_buf), \"unix:%s\", un->sun_path);\n", out);
+    fputs("            return cct_rt_socket_dup_cstr(out_buf);\n", out);
+    fputs("        }\n", out);
+    fputs("        return cct_rt_socket_dup_cstr(\"unix\");\n", out);
+    fputs("    }\n", out);
+    fputs("    return cct_rt_socket_dup_cstr(\"unknown\");\n", out);
+    fputs("}\n\n", out);
+
+    fputs("static char *cct_rt_sock_peer_addr(void *sock_ptr) {\n", out);
+    fputs("#ifdef _WIN32\n", out);
+    fputs("    (void)sock_ptr;\n", out);
+    fputs("    cct_rt_fail(\"sock_peer_addr unsupported on _WIN32\");\n", out);
+    fputs("    return \"\";\n", out);
+    fputs("#else\n", out);
+    fputs("    cct_rt_socket_t *sock = cct_rt_socket_require(sock_ptr, \"sock_peer_addr recebeu socket nulo\");\n", out);
+    fputs("    cct_rt_socket_check_open(sock, \"sock_peer_addr recebeu socket fechado\");\n", out);
+    fputs("    struct sockaddr_storage ss;\n", out);
+    fputs("    socklen_t slen = (socklen_t)sizeof(ss);\n", out);
+    fputs("    memset(&ss, 0, sizeof(ss));\n", out);
+    fputs("    if (getpeername(sock->fd, (struct sockaddr*)&ss, &slen) != 0) {\n", out);
+    fputs("        cct_rt_socket_set_last_error(\"sock_peer_addr falhou\");\n", out);
+    fputs("        return cct_rt_socket_empty_string();\n", out);
+    fputs("    }\n", out);
+    fputs("    cct_rt_socket_clear_last_error();\n", out);
+    fputs("    return cct_rt_socket_addr_string_from_sockaddr((const struct sockaddr*)&ss, slen);\n", out);
+    fputs("#endif\n", out);
+    fputs("}\n\n", out);
+
+    fputs("static char *cct_rt_sock_local_addr(void *sock_ptr) {\n", out);
+    fputs("#ifdef _WIN32\n", out);
+    fputs("    (void)sock_ptr;\n", out);
+    fputs("    cct_rt_fail(\"sock_local_addr unsupported on _WIN32\");\n", out);
+    fputs("    return \"\";\n", out);
+    fputs("#else\n", out);
+    fputs("    cct_rt_socket_t *sock = cct_rt_socket_require(sock_ptr, \"sock_local_addr recebeu socket nulo\");\n", out);
+    fputs("    cct_rt_socket_check_open(sock, \"sock_local_addr recebeu socket fechado\");\n", out);
+    fputs("    struct sockaddr_storage ss;\n", out);
+    fputs("    socklen_t slen = (socklen_t)sizeof(ss);\n", out);
+    fputs("    memset(&ss, 0, sizeof(ss));\n", out);
+    fputs("    if (getsockname(sock->fd, (struct sockaddr*)&ss, &slen) != 0) {\n", out);
+    fputs("        cct_rt_socket_set_last_error(\"sock_local_addr falhou\");\n", out);
+    fputs("        return cct_rt_socket_empty_string();\n", out);
+    fputs("    }\n", out);
+    fputs("    cct_rt_socket_clear_last_error();\n", out);
+    fputs("    return cct_rt_socket_addr_string_from_sockaddr((const struct sockaddr*)&ss, slen);\n", out);
+    fputs("#endif\n", out);
+    fputs("}\n\n", out);
+
     fputs("static void cct_rt_socket_enable_reuseaddr(int fd) {\n", out);
     fputs("    int yes = 1;\n", out);
     fputs("    (void)setsockopt(fd, SOL_SOCKET, SO_REUSEADDR, &yes, (socklen_t)sizeof(yes));\n", out);
@@ -3875,9 +3964,11 @@ bool cct_runtime_emit_c_helpers(FILE *out, const cct_runtime_codegen_config_t *c
     fputs("#else\n", out);
     fputs("    int fd = socket(AF_INET, SOCK_STREAM, 0);\n", out);
     fputs("    if (fd < 0) {\n", out);
+    fputs("        cct_rt_socket_set_last_error(\"socket tcp create falhou\");\n", out);
     fputs("        cct_rt_fractum_throw_str(\"socket tcp create falhou\");\n", out);
     fputs("        return (void*)&cct_rt_null_sentinel;\n", out);
     fputs("    }\n", out);
+    fputs("    cct_rt_socket_clear_last_error();\n", out);
     fputs("    return (void*)cct_rt_socket_alloc(fd, SOCK_STREAM, AF_INET);\n", out);
     fputs("#endif\n", out);
     fputs("}\n\n", out);
@@ -3889,9 +3980,11 @@ bool cct_runtime_emit_c_helpers(FILE *out, const cct_runtime_codegen_config_t *c
     fputs("#else\n", out);
     fputs("    int fd = socket(AF_INET, SOCK_DGRAM, 0);\n", out);
     fputs("    if (fd < 0) {\n", out);
+    fputs("        cct_rt_socket_set_last_error(\"socket udp create falhou\");\n", out);
     fputs("        cct_rt_fractum_throw_str(\"socket udp create falhou\");\n", out);
     fputs("        return (void*)&cct_rt_null_sentinel;\n", out);
     fputs("    }\n", out);
+    fputs("    cct_rt_socket_clear_last_error();\n", out);
     fputs("    return (void*)cct_rt_socket_alloc(fd, SOCK_DGRAM, AF_INET);\n", out);
     fputs("#endif\n", out);
     fputs("}\n\n", out);
@@ -3914,13 +4007,20 @@ bool cct_runtime_emit_c_helpers(FILE *out, const cct_runtime_codegen_config_t *c
     fputs("    if (inet_pton(AF_INET, node, &addr.sin_addr) != 1) cct_rt_fail(\"sock_connect host invalido\");\n", out);
     fputs("    if (connect(sock->fd, (const struct sockaddr*)&addr, (socklen_t)sizeof(addr)) == 0) {\n", out);
     fputs("        sock->domain = AF_INET;\n", out);
+    fputs("        cct_rt_socket_clear_last_error();\n", out);
     fputs("        return;\n", out);
     fputs("    }\n", out);
-    fputs("    if (!cct_rt_socket_is_local_host(host)) cct_rt_fail(\"sock_connect falhou\");\n", out);
+    fputs("    if (!cct_rt_socket_is_local_host(host)) {\n", out);
+    fputs("        cct_rt_socket_set_last_error(\"sock_connect falhou\");\n", out);
+    fputs("        cct_rt_fail(\"sock_connect falhou\");\n", out);
+    fputs("    }\n", out);
     fputs("    char unix_path[108];\n", out);
     fputs("    cct_rt_socket_make_unix_path(port, unix_path);\n", out);
     fputs("    int ufd = socket(AF_UNIX, sock->kind, 0);\n", out);
-    fputs("    if (ufd < 0) cct_rt_fail(\"sock_connect falhou\");\n", out);
+    fputs("    if (ufd < 0) {\n", out);
+    fputs("        cct_rt_socket_set_last_error(\"sock_connect falhou\");\n", out);
+    fputs("        cct_rt_fail(\"sock_connect falhou\");\n", out);
+    fputs("    }\n", out);
     fputs("    struct sockaddr_un uaddr;\n", out);
     fputs("    memset(&uaddr, 0, sizeof(uaddr));\n", out);
     fputs("    uaddr.sun_family = AF_UNIX;\n", out);
@@ -3928,6 +4028,7 @@ bool cct_runtime_emit_c_helpers(FILE *out, const cct_runtime_codegen_config_t *c
     fputs("    uaddr.sun_path[sizeof(uaddr.sun_path) - 1] = '\\0';\n", out);
     fputs("    if (connect(ufd, (const struct sockaddr*)&uaddr, (socklen_t)sizeof(uaddr)) != 0) {\n", out);
     fputs("        close(ufd);\n", out);
+    fputs("        cct_rt_socket_set_last_error(\"sock_connect falhou\");\n", out);
     fputs("        cct_rt_fail(\"sock_connect falhou\");\n", out);
     fputs("    }\n", out);
     fputs("    (void)close(sock->fd);\n", out);
@@ -3935,6 +4036,7 @@ bool cct_runtime_emit_c_helpers(FILE *out, const cct_runtime_codegen_config_t *c
     fputs("    sock->domain = AF_UNIX;\n", out);
     fputs("    sock->owns_unix_path = 0;\n", out);
     fputs("    sock->unix_path[0] = '\\0';\n", out);
+    fputs("    cct_rt_socket_clear_last_error();\n", out);
     fputs("#endif\n", out);
     fputs("}\n\n", out);
 
@@ -3959,9 +4061,11 @@ bool cct_runtime_emit_c_helpers(FILE *out, const cct_runtime_codegen_config_t *c
     fputs("        sock->domain = AF_INET;\n", out);
     fputs("        sock->owns_unix_path = 0;\n", out);
     fputs("        sock->unix_path[0] = '\\0';\n", out);
+    fputs("        cct_rt_socket_clear_last_error();\n", out);
     fputs("        return;\n", out);
     fputs("    }\n", out);
     fputs("    if (!cct_rt_socket_is_local_host(host)) {\n", out);
+    fputs("        cct_rt_socket_set_last_error(\"sock_bind falhou\");\n", out);
     fputs("        cct_rt_fractum_throw_str(\"sock_bind falhou\");\n", out);
     fputs("        return;\n", out);
     fputs("    }\n", out);
@@ -3969,6 +4073,7 @@ bool cct_runtime_emit_c_helpers(FILE *out, const cct_runtime_codegen_config_t *c
     fputs("    cct_rt_socket_make_unix_path(port, unix_path);\n", out);
     fputs("    int ufd = socket(AF_UNIX, sock->kind, 0);\n", out);
     fputs("    if (ufd < 0) {\n", out);
+    fputs("        cct_rt_socket_set_last_error(\"sock_bind falhou\");\n", out);
     fputs("        cct_rt_fractum_throw_str(\"sock_bind falhou\");\n", out);
     fputs("        return;\n", out);
     fputs("    }\n", out);
@@ -3980,6 +4085,7 @@ bool cct_runtime_emit_c_helpers(FILE *out, const cct_runtime_codegen_config_t *c
     fputs("    unlink(unix_path);\n", out);
     fputs("    if (bind(ufd, (const struct sockaddr*)&uaddr, (socklen_t)sizeof(uaddr)) != 0) {\n", out);
     fputs("        close(ufd);\n", out);
+    fputs("        cct_rt_socket_set_last_error(\"sock_bind falhou\");\n", out);
     fputs("        cct_rt_fractum_throw_str(\"sock_bind falhou\");\n", out);
     fputs("        return;\n", out);
     fputs("    }\n", out);
@@ -3989,6 +4095,7 @@ bool cct_runtime_emit_c_helpers(FILE *out, const cct_runtime_codegen_config_t *c
     fputs("    sock->owns_unix_path = 1;\n", out);
     fputs("    strncpy(sock->unix_path, unix_path, sizeof(sock->unix_path) - 1);\n", out);
     fputs("    sock->unix_path[sizeof(sock->unix_path) - 1] = '\\0';\n", out);
+    fputs("    cct_rt_socket_clear_last_error();\n", out);
     fputs("#endif\n", out);
     fputs("}\n\n", out);
 
@@ -4001,7 +4108,11 @@ bool cct_runtime_emit_c_helpers(FILE *out, const cct_runtime_codegen_config_t *c
     fputs("    cct_rt_socket_t *sock = cct_rt_socket_require(sock_ptr, \"sock_listen recebeu socket nulo\");\n", out);
     fputs("    cct_rt_socket_check_open(sock, \"sock_listen recebeu socket fechado\");\n", out);
     fputs("    if (backlog < 0) cct_rt_fail(\"sock_listen backlog invalido\");\n", out);
-    fputs("    if (listen(sock->fd, (int)backlog) != 0) cct_rt_fail(\"sock_listen falhou\");\n", out);
+    fputs("    if (listen(sock->fd, (int)backlog) != 0) {\n", out);
+    fputs("        cct_rt_socket_set_last_error(\"sock_listen falhou\");\n", out);
+    fputs("        cct_rt_fail(\"sock_listen falhou\");\n", out);
+    fputs("    }\n", out);
+    fputs("    cct_rt_socket_clear_last_error();\n", out);
     fputs("#endif\n", out);
     fputs("}\n\n", out);
 
@@ -4015,8 +4126,12 @@ bool cct_runtime_emit_c_helpers(FILE *out, const cct_runtime_codegen_config_t *c
     fputs("    cct_rt_socket_check_open(sock, \"sock_accept recebeu socket fechado\");\n", out);
     fputs("    for (;;) {\n", out);
     fputs("        int fd = accept(sock->fd, NULL, NULL);\n", out);
-    fputs("        if (fd >= 0) return (void*)cct_rt_socket_alloc(fd, sock->kind, sock->domain);\n", out);
+    fputs("        if (fd >= 0) {\n", out);
+    fputs("            cct_rt_socket_clear_last_error();\n", out);
+    fputs("            return (void*)cct_rt_socket_alloc(fd, sock->kind, sock->domain);\n", out);
+    fputs("        }\n", out);
     fputs("        if (errno == EINTR) continue;\n", out);
+    fputs("        cct_rt_socket_set_last_error(\"sock_accept falhou\");\n", out);
     fputs("        cct_rt_fail(\"sock_accept falhou\");\n", out);
     fputs("    }\n", out);
     fputs("#endif\n", out);
@@ -4041,8 +4156,10 @@ bool cct_runtime_emit_c_helpers(FILE *out, const cct_runtime_codegen_config_t *c
     fputs("            continue;\n", out);
     fputs("        }\n", out);
     fputs("        if (rc < 0 && errno == EINTR) continue;\n", out);
+    fputs("        cct_rt_socket_set_last_error(\"sock_send falhou\");\n", out);
     fputs("        cct_rt_fail(\"sock_send falhou\");\n", out);
     fputs("    }\n", out);
+    fputs("    cct_rt_socket_clear_last_error();\n", out);
     fputs("    return (long long)sent;\n", out);
     fputs("#endif\n", out);
     fputs("}\n\n", out);
@@ -4063,18 +4180,22 @@ bool cct_runtime_emit_c_helpers(FILE *out, const cct_runtime_codegen_config_t *c
     fputs("        ssize_t rc = recv(sock->fd, buf, (size_t)max_bytes, 0);\n", out);
     fputs("        if (rc > 0) {\n", out);
     fputs("            buf[rc] = '\\0';\n", out);
+    fputs("            cct_rt_socket_clear_last_error();\n", out);
     fputs("            return buf;\n", out);
     fputs("        }\n", out);
     fputs("        if (rc == 0) {\n", out);
     fputs("            buf[0] = '\\0';\n", out);
+    fputs("            cct_rt_socket_clear_last_error();\n", out);
     fputs("            return buf;\n", out);
     fputs("        }\n", out);
     fputs("        if (errno == EINTR) continue;\n", out);
     fputs("        if (errno == EAGAIN || errno == EWOULDBLOCK) {\n", out);
     fputs("            cct_rt_free_ptr(buf);\n", out);
+    fputs("            cct_rt_socket_clear_last_error();\n", out);
     fputs("            return cct_rt_socket_empty_string();\n", out);
     fputs("        }\n", out);
     fputs("        cct_rt_free_ptr(buf);\n", out);
+    fputs("        cct_rt_socket_set_last_error(\"sock_recv falhou\");\n", out);
     fputs("        cct_rt_fail(\"sock_recv falhou\");\n", out);
     fputs("    }\n", out);
     fputs("#endif\n", out);
@@ -4115,10 +4236,309 @@ bool cct_runtime_emit_c_helpers(FILE *out, const cct_runtime_codegen_config_t *c
     fputs("    struct timeval tv;\n", out);
     fputs("    tv.tv_sec = (time_t)(timeout_ms / 1000LL);\n", out);
     fputs("    tv.tv_usec = (suseconds_t)((timeout_ms % 1000LL) * 1000LL);\n", out);
-    fputs("    if (setsockopt(sock->fd, SOL_SOCKET, SO_RCVTIMEO, &tv, (socklen_t)sizeof(tv)) != 0) cct_rt_fail(\"sock_set_timeout_ms recv falhou\");\n", out);
-    fputs("    if (setsockopt(sock->fd, SOL_SOCKET, SO_SNDTIMEO, &tv, (socklen_t)sizeof(tv)) != 0) cct_rt_fail(\"sock_set_timeout_ms send falhou\");\n", out);
+    fputs("    if (setsockopt(sock->fd, SOL_SOCKET, SO_RCVTIMEO, &tv, (socklen_t)sizeof(tv)) != 0) {\n", out);
+    fputs("        cct_rt_socket_set_last_error(\"sock_set_timeout_ms recv falhou\");\n", out);
+    fputs("        cct_rt_fail(\"sock_set_timeout_ms recv falhou\");\n", out);
+    fputs("    }\n", out);
+    fputs("    if (setsockopt(sock->fd, SOL_SOCKET, SO_SNDTIMEO, &tv, (socklen_t)sizeof(tv)) != 0) {\n", out);
+    fputs("        cct_rt_socket_set_last_error(\"sock_set_timeout_ms send falhou\");\n", out);
+    fputs("        cct_rt_fail(\"sock_set_timeout_ms send falhou\");\n", out);
+    fputs("    }\n", out);
+    fputs("    cct_rt_socket_clear_last_error();\n", out);
     fputs("#endif\n", out);
     fputs("}\n\n", out);
+
+    if (cfg->emit_db_helpers) {
+        fputs("typedef struct {\n", out);
+        fputs("    sqlite3 *db;\n", out);
+        fputs("    char last_error[256];\n", out);
+        fputs("} cct_rt_db_t;\n\n", out);
+
+        fputs("typedef struct {\n", out);
+        fputs("    cct_rt_db_t *owner;\n", out);
+        fputs("    sqlite3_stmt *stmt;\n", out);
+        fputs("    int has_row;\n", out);
+        fputs("} cct_rt_rows_t;\n\n", out);
+
+        fputs("typedef struct {\n", out);
+        fputs("    cct_rt_db_t *owner;\n", out);
+        fputs("    sqlite3_stmt *stmt;\n", out);
+        fputs("} cct_rt_stmt_t;\n\n", out);
+
+        fputs("static char *cct_rt_db_dup_cstr(const char *s) {\n", out);
+        fputs("    const char *src = s ? s : \"\";\n", out);
+        fputs("    size_t n = strlen(src);\n", out);
+        fputs("    char *buf = (char*)cct_rt_alloc_or_fail(n + 1U);\n", out);
+        fputs("    memcpy(buf, src, n + 1U);\n", out);
+        fputs("    return buf;\n", out);
+        fputs("}\n\n", out);
+
+        fputs("static cct_rt_db_t *cct_rt_db_require(void *db_ptr, const char *ctx) {\n", out);
+        fputs("    cct_rt_db_t *db = (cct_rt_db_t*)db_ptr;\n", out);
+        fputs("    if (!db) cct_rt_fail((ctx && *ctx) ? ctx : \"db nulo\");\n", out);
+        fputs("    return db;\n", out);
+        fputs("}\n\n", out);
+
+        fputs("static cct_rt_rows_t *cct_rt_rows_require(void *rows_ptr, const char *ctx) {\n", out);
+        fputs("    cct_rt_rows_t *rows = (cct_rt_rows_t*)rows_ptr;\n", out);
+        fputs("    if (!rows) cct_rt_fail((ctx && *ctx) ? ctx : \"rows nulo\");\n", out);
+        fputs("    return rows;\n", out);
+        fputs("}\n\n", out);
+
+        fputs("static cct_rt_stmt_t *cct_rt_stmt_require(void *stmt_ptr, const char *ctx) {\n", out);
+        fputs("    cct_rt_stmt_t *stmt = (cct_rt_stmt_t*)stmt_ptr;\n", out);
+        fputs("    if (!stmt) cct_rt_fail((ctx && *ctx) ? ctx : \"stmt nulo\");\n", out);
+        fputs("    return stmt;\n", out);
+        fputs("}\n\n", out);
+
+        fputs("static void cct_rt_db_set_last_error(cct_rt_db_t *db, const char *msg) {\n", out);
+        fputs("    const char *src = msg ? msg : \"\";\n", out);
+        fputs("    size_t n = strlen(src);\n", out);
+        fputs("    if (n >= sizeof(db->last_error)) n = sizeof(db->last_error) - 1U;\n", out);
+        fputs("    memcpy(db->last_error, src, n);\n", out);
+        fputs("    db->last_error[n] = '\\0';\n", out);
+        fputs("}\n\n", out);
+
+        fputs("static void cct_rt_db_clear_last_error(cct_rt_db_t *db) {\n", out);
+        fputs("    db->last_error[0] = '\\0';\n", out);
+        fputs("}\n\n", out);
+
+        fputs("static void *cct_rt_db_open(const char *path) {\n", out);
+        fputs("    cct_rt_db_t *wrap = (cct_rt_db_t*)cct_rt_alloc_or_fail(sizeof(cct_rt_db_t));\n", out);
+        fputs("    wrap->db = NULL;\n", out);
+        fputs("    wrap->last_error[0] = '\\0';\n", out);
+        fputs("    if (sqlite3_open((path && *path) ? path : \":memory:\", &wrap->db) != SQLITE_OK) {\n", out);
+        fputs("        cct_rt_db_set_last_error(wrap, wrap->db ? sqlite3_errmsg(wrap->db) : \"db_open falhou\");\n", out);
+        fputs("    }\n", out);
+        fputs("    return (void*)wrap;\n", out);
+        fputs("}\n\n", out);
+
+        fputs("static void cct_rt_db_close(void *db_ptr) {\n", out);
+        fputs("    cct_rt_db_t *db = (cct_rt_db_t*)db_ptr;\n", out);
+        fputs("    if (!db) return;\n", out);
+        fputs("    if (db->db) {\n", out);
+        fputs("        (void)sqlite3_close(db->db);\n", out);
+        fputs("        db->db = NULL;\n", out);
+        fputs("    }\n", out);
+        fputs("}\n\n", out);
+
+        fputs("static void cct_rt_db_exec(void *db_ptr, const char *sql) {\n", out);
+        fputs("    cct_rt_db_t *db = cct_rt_db_require(db_ptr, \"db_exec recebeu db nulo\");\n", out);
+        fputs("    if (!db->db) {\n", out);
+        fputs("        cct_rt_db_set_last_error(db, \"db nao aberto\");\n", out);
+        fputs("        return;\n", out);
+        fputs("    }\n", out);
+        fputs("    char *err = NULL;\n", out);
+        fputs("    if (sqlite3_exec(db->db, (sql && *sql) ? sql : \"\", NULL, NULL, &err) != SQLITE_OK) {\n", out);
+        fputs("        cct_rt_db_set_last_error(db, err ? err : sqlite3_errmsg(db->db));\n", out);
+        fputs("        if (err) sqlite3_free(err);\n", out);
+        fputs("        return;\n", out);
+        fputs("    }\n", out);
+        fputs("    if (err) sqlite3_free(err);\n", out);
+        fputs("    cct_rt_db_clear_last_error(db);\n", out);
+        fputs("}\n\n", out);
+
+        fputs("static char *cct_rt_db_last_error(void *db_ptr) {\n", out);
+        fputs("    cct_rt_db_t *db = cct_rt_db_require(db_ptr, \"db_last_error recebeu db nulo\");\n", out);
+        fputs("    return cct_rt_db_dup_cstr(db->last_error);\n", out);
+        fputs("}\n\n", out);
+
+        fputs("static void *cct_rt_db_query(void *db_ptr, const char *sql) {\n", out);
+        fputs("    cct_rt_db_t *db = cct_rt_db_require(db_ptr, \"db_query recebeu db nulo\");\n", out);
+        fputs("    cct_rt_rows_t *rows = (cct_rt_rows_t*)cct_rt_alloc_or_fail(sizeof(cct_rt_rows_t));\n", out);
+        fputs("    rows->owner = db;\n", out);
+        fputs("    rows->stmt = NULL;\n", out);
+        fputs("    rows->has_row = 0;\n", out);
+        fputs("    if (!db->db) {\n", out);
+        fputs("        cct_rt_db_set_last_error(db, \"db nao aberto\");\n", out);
+        fputs("        return (void*)rows;\n", out);
+        fputs("    }\n", out);
+        fputs("    if (sqlite3_prepare_v2(db->db, (sql && *sql) ? sql : \"\", -1, &rows->stmt, NULL) != SQLITE_OK) {\n", out);
+        fputs("        cct_rt_db_set_last_error(db, sqlite3_errmsg(db->db));\n", out);
+        fputs("        if (rows->stmt) {\n", out);
+        fputs("            (void)sqlite3_finalize(rows->stmt);\n", out);
+        fputs("            rows->stmt = NULL;\n", out);
+        fputs("        }\n", out);
+        fputs("        return (void*)rows;\n", out);
+        fputs("    }\n", out);
+        fputs("    cct_rt_db_clear_last_error(db);\n", out);
+        fputs("    return (void*)rows;\n", out);
+        fputs("}\n\n", out);
+
+        fputs("static long long cct_rt_rows_next(void *rows_ptr) {\n", out);
+        fputs("    cct_rt_rows_t *rows = cct_rt_rows_require(rows_ptr, \"rows_next recebeu rows nulo\");\n", out);
+        fputs("    rows->has_row = 0;\n", out);
+        fputs("    if (!rows->stmt) return 0LL;\n", out);
+        fputs("    int rc = sqlite3_step(rows->stmt);\n", out);
+        fputs("    if (rc == SQLITE_ROW) {\n", out);
+        fputs("        rows->has_row = 1;\n", out);
+        fputs("        if (rows->owner) cct_rt_db_clear_last_error(rows->owner);\n", out);
+        fputs("        return 1LL;\n", out);
+        fputs("    }\n", out);
+        fputs("    if (rc == SQLITE_DONE) {\n", out);
+        fputs("        if (rows->owner) cct_rt_db_clear_last_error(rows->owner);\n", out);
+        fputs("        return 0LL;\n", out);
+        fputs("    }\n", out);
+        fputs("    if (rows->owner) cct_rt_db_set_last_error(rows->owner, sqlite3_errmsg(rows->owner->db));\n", out);
+        fputs("    return 0LL;\n", out);
+        fputs("}\n\n", out);
+
+        fputs("static int cct_rt_rows_has_col(cct_rt_rows_t *rows, long long col) {\n", out);
+        fputs("    if (!rows || !rows->stmt || !rows->has_row) return 0;\n", out);
+        fputs("    if (col < 0) return 0;\n", out);
+        fputs("    return col < (long long)sqlite3_column_count(rows->stmt);\n", out);
+        fputs("}\n\n", out);
+
+        fputs("static char *cct_rt_rows_get_text(void *rows_ptr, long long col) {\n", out);
+        fputs("    cct_rt_rows_t *rows = cct_rt_rows_require(rows_ptr, \"rows_get_text recebeu rows nulo\");\n", out);
+        fputs("    if (!cct_rt_rows_has_col(rows, col)) return cct_rt_db_dup_cstr(\"\");\n", out);
+        fputs("    const unsigned char *text = sqlite3_column_text(rows->stmt, (int)col);\n", out);
+        fputs("    return cct_rt_db_dup_cstr(text ? (const char*)text : \"\");\n", out);
+        fputs("}\n\n", out);
+
+        fputs("static long long cct_rt_rows_get_int(void *rows_ptr, long long col) {\n", out);
+        fputs("    cct_rt_rows_t *rows = cct_rt_rows_require(rows_ptr, \"rows_get_int recebeu rows nulo\");\n", out);
+        fputs("    if (!cct_rt_rows_has_col(rows, col)) return 0LL;\n", out);
+        fputs("    return (long long)sqlite3_column_int64(rows->stmt, (int)col);\n", out);
+        fputs("}\n\n", out);
+
+        fputs("static double cct_rt_rows_get_real(void *rows_ptr, long long col) {\n", out);
+        fputs("    cct_rt_rows_t *rows = cct_rt_rows_require(rows_ptr, \"rows_get_real recebeu rows nulo\");\n", out);
+        fputs("    if (!cct_rt_rows_has_col(rows, col)) return 0.0;\n", out);
+        fputs("    return sqlite3_column_double(rows->stmt, (int)col);\n", out);
+        fputs("}\n\n", out);
+
+        fputs("static void cct_rt_rows_close(void *rows_ptr) {\n", out);
+        fputs("    cct_rt_rows_t *rows = (cct_rt_rows_t*)rows_ptr;\n", out);
+        fputs("    if (!rows) return;\n", out);
+        fputs("    if (rows->stmt) {\n", out);
+        fputs("        (void)sqlite3_finalize(rows->stmt);\n", out);
+        fputs("        rows->stmt = NULL;\n", out);
+        fputs("    }\n", out);
+        fputs("    cct_rt_free_ptr(rows);\n", out);
+        fputs("}\n\n", out);
+
+        fputs("static void *cct_rt_db_prepare(void *db_ptr, const char *sql) {\n", out);
+        fputs("    cct_rt_db_t *db = cct_rt_db_require(db_ptr, \"db_prepare recebeu db nulo\");\n", out);
+        fputs("    cct_rt_stmt_t *stmt = (cct_rt_stmt_t*)cct_rt_alloc_or_fail(sizeof(cct_rt_stmt_t));\n", out);
+        fputs("    stmt->owner = db;\n", out);
+        fputs("    stmt->stmt = NULL;\n", out);
+        fputs("    if (!db->db) {\n", out);
+        fputs("        cct_rt_db_set_last_error(db, \"db nao aberto\");\n", out);
+        fputs("        return (void*)stmt;\n", out);
+        fputs("    }\n", out);
+        fputs("    if (sqlite3_prepare_v2(db->db, (sql && *sql) ? sql : \"\", -1, &stmt->stmt, NULL) != SQLITE_OK) {\n", out);
+        fputs("        cct_rt_db_set_last_error(db, sqlite3_errmsg(db->db));\n", out);
+        fputs("        if (stmt->stmt) {\n", out);
+        fputs("            (void)sqlite3_finalize(stmt->stmt);\n", out);
+        fputs("            stmt->stmt = NULL;\n", out);
+        fputs("        }\n", out);
+        fputs("        return (void*)stmt;\n", out);
+        fputs("    }\n", out);
+        fputs("    cct_rt_db_clear_last_error(db);\n", out);
+        fputs("    return (void*)stmt;\n", out);
+        fputs("}\n\n", out);
+
+        fputs("static void cct_rt_stmt_bind_text(void *stmt_ptr, long long idx, const char *value) {\n", out);
+        fputs("    cct_rt_stmt_t *stmt = cct_rt_stmt_require(stmt_ptr, \"stmt_bind_text recebeu stmt nulo\");\n", out);
+        fputs("    if (!stmt->stmt) {\n", out);
+        fputs("        if (stmt->owner) cct_rt_db_set_last_error(stmt->owner, \"stmt nao preparado\");\n", out);
+        fputs("        return;\n", out);
+        fputs("    }\n", out);
+        fputs("    if (sqlite3_bind_text(stmt->stmt, (int)idx, value ? value : \"\", -1, SQLITE_TRANSIENT) != SQLITE_OK) {\n", out);
+        fputs("        if (stmt->owner) cct_rt_db_set_last_error(stmt->owner, sqlite3_errmsg(stmt->owner->db));\n", out);
+        fputs("        return;\n", out);
+        fputs("    }\n", out);
+        fputs("    if (stmt->owner) cct_rt_db_clear_last_error(stmt->owner);\n", out);
+        fputs("}\n\n", out);
+
+        fputs("static void cct_rt_stmt_bind_int(void *stmt_ptr, long long idx, long long value) {\n", out);
+        fputs("    cct_rt_stmt_t *stmt = cct_rt_stmt_require(stmt_ptr, \"stmt_bind_int recebeu stmt nulo\");\n", out);
+        fputs("    if (!stmt->stmt) {\n", out);
+        fputs("        if (stmt->owner) cct_rt_db_set_last_error(stmt->owner, \"stmt nao preparado\");\n", out);
+        fputs("        return;\n", out);
+        fputs("    }\n", out);
+        fputs("    if (sqlite3_bind_int64(stmt->stmt, (int)idx, (sqlite3_int64)value) != SQLITE_OK) {\n", out);
+        fputs("        if (stmt->owner) cct_rt_db_set_last_error(stmt->owner, sqlite3_errmsg(stmt->owner->db));\n", out);
+        fputs("        return;\n", out);
+        fputs("    }\n", out);
+        fputs("    if (stmt->owner) cct_rt_db_clear_last_error(stmt->owner);\n", out);
+        fputs("}\n\n", out);
+
+        fputs("static void cct_rt_stmt_bind_real(void *stmt_ptr, long long idx, double value) {\n", out);
+        fputs("    cct_rt_stmt_t *stmt = cct_rt_stmt_require(stmt_ptr, \"stmt_bind_real recebeu stmt nulo\");\n", out);
+        fputs("    if (!stmt->stmt) {\n", out);
+        fputs("        if (stmt->owner) cct_rt_db_set_last_error(stmt->owner, \"stmt nao preparado\");\n", out);
+        fputs("        return;\n", out);
+        fputs("    }\n", out);
+        fputs("    if (sqlite3_bind_double(stmt->stmt, (int)idx, value) != SQLITE_OK) {\n", out);
+        fputs("        if (stmt->owner) cct_rt_db_set_last_error(stmt->owner, sqlite3_errmsg(stmt->owner->db));\n", out);
+        fputs("        return;\n", out);
+        fputs("    }\n", out);
+        fputs("    if (stmt->owner) cct_rt_db_clear_last_error(stmt->owner);\n", out);
+        fputs("}\n\n", out);
+
+        fputs("static long long cct_rt_stmt_step(void *stmt_ptr) {\n", out);
+        fputs("    cct_rt_stmt_t *stmt = cct_rt_stmt_require(stmt_ptr, \"stmt_step recebeu stmt nulo\");\n", out);
+        fputs("    if (!stmt->stmt) {\n", out);
+        fputs("        if (stmt->owner) cct_rt_db_set_last_error(stmt->owner, \"stmt nao preparado\");\n", out);
+        fputs("        return 0LL;\n", out);
+        fputs("    }\n", out);
+        fputs("    int rc = sqlite3_step(stmt->stmt);\n", out);
+        fputs("    if (rc == SQLITE_ROW || rc == SQLITE_DONE) {\n", out);
+        fputs("        if (stmt->owner) cct_rt_db_clear_last_error(stmt->owner);\n", out);
+        fputs("        return 1LL;\n", out);
+        fputs("    }\n", out);
+        fputs("    if (stmt->owner) cct_rt_db_set_last_error(stmt->owner, sqlite3_errmsg(stmt->owner->db));\n", out);
+        fputs("    return 0LL;\n", out);
+        fputs("}\n\n", out);
+
+        fputs("static void cct_rt_stmt_reset(void *stmt_ptr) {\n", out);
+        fputs("    cct_rt_stmt_t *stmt = cct_rt_stmt_require(stmt_ptr, \"stmt_reset recebeu stmt nulo\");\n", out);
+        fputs("    if (!stmt->stmt) return;\n", out);
+        fputs("    (void)sqlite3_reset(stmt->stmt);\n", out);
+        fputs("    (void)sqlite3_clear_bindings(stmt->stmt);\n", out);
+        fputs("    if (stmt->owner) cct_rt_db_clear_last_error(stmt->owner);\n", out);
+        fputs("}\n\n", out);
+
+        fputs("static void cct_rt_stmt_finalize(void *stmt_ptr) {\n", out);
+        fputs("    cct_rt_stmt_t *stmt = (cct_rt_stmt_t*)stmt_ptr;\n", out);
+        fputs("    if (!stmt) return;\n", out);
+        fputs("    if (stmt->stmt) {\n", out);
+        fputs("        (void)sqlite3_finalize(stmt->stmt);\n", out);
+        fputs("        stmt->stmt = NULL;\n", out);
+        fputs("    }\n", out);
+        fputs("    cct_rt_free_ptr(stmt);\n", out);
+        fputs("}\n\n", out);
+
+        fputs("static void cct_rt_db_begin(void *db_ptr) {\n", out);
+        fputs("    cct_rt_db_exec(db_ptr, \"BEGIN TRANSACTION;\");\n", out);
+        fputs("}\n\n", out);
+
+        fputs("static void cct_rt_db_commit(void *db_ptr) {\n", out);
+        fputs("    cct_rt_db_exec(db_ptr, \"COMMIT;\");\n", out);
+        fputs("}\n\n", out);
+
+        fputs("static void cct_rt_db_rollback(void *db_ptr) {\n", out);
+        fputs("    cct_rt_db_exec(db_ptr, \"ROLLBACK;\");\n", out);
+        fputs("}\n\n", out);
+
+        fputs("static long long cct_rt_db_scalar_int(void *db_ptr, const char *sql) {\n", out);
+        fputs("    cct_rt_rows_t *rows = (cct_rt_rows_t*)cct_rt_db_query(db_ptr, sql);\n", out);
+        fputs("    long long value = 0LL;\n", out);
+        fputs("    if (rows && cct_rt_rows_next(rows)) value = cct_rt_rows_get_int(rows, 0);\n", out);
+        fputs("    cct_rt_rows_close(rows);\n", out);
+        fputs("    return value;\n", out);
+        fputs("}\n\n", out);
+
+        fputs("static char *cct_rt_db_scalar_text(void *db_ptr, const char *sql) {\n", out);
+        fputs("    cct_rt_rows_t *rows = (cct_rt_rows_t*)cct_rt_db_query(db_ptr, sql);\n", out);
+        fputs("    char *value = cct_rt_db_dup_cstr(\"\");\n", out);
+        fputs("    if (rows && cct_rt_rows_next(rows)) value = cct_rt_rows_get_text(rows, 0);\n", out);
+        fputs("    cct_rt_rows_close(rows);\n", out);
+        fputs("    return value;\n", out);
+        fputs("}\n\n", out);
+    }
 
     fputs("/* ===== End CCT Runtime Helpers ===== */\n\n", out);
     return true;

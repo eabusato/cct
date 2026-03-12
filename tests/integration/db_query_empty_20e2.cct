@@ -1,0 +1,24 @@
+INCIPIT grimoire "db_query_empty_20e2"
+
+ADVOCARE "cct/db_sqlite.cct"
+ADVOCARE "cct/verbum.cct"
+
+RITUALE main() REDDE REX
+  EVOCA SPECULUM NIHIL db AD CONIURA db_open(":memory:")
+  CONIURA db_exec(db, "CREATE TABLE items(id INTEGER, nome TEXT);")
+
+  EVOCA SPECULUM NIHIL rows AD CONIURA db_query(db, "SELECT id, nome FROM items ORDER BY id;")
+  SI CONIURA rows_next(rows)
+    REDDE 1
+  FIN SI
+
+  SI CONIURA len(CONIURA db_last_error(db)) != 0
+    REDDE 2
+  FIN SI
+
+  CONIURA rows_close(rows)
+  CONIURA db_close(db)
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

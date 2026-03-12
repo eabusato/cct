@@ -1,0 +1,40 @@
+INCIPIT grimoire "db_finalize_after_error_20e5"
+
+ADVOCARE "cct/db_sqlite.cct"
+ADVOCARE "cct/verbum.cct"
+
+RITUALE main() REDDE REX
+  EVOCA SPECULUM NIHIL db AD CONIURA db_open(":memory:")
+  CONIURA db_exec(db, "CREATE TABLE items(id INTEGER PRIMARY KEY, nome TEXT);")
+
+  EVOCA SPECULUM NIHIL stmt AD CONIURA db_prepare(db, "INSERT INTO items(id, nome) VALUES(?1, ?2);")
+  CONIURA stmt_bind_int(stmt, 1, 1)
+  CONIURA stmt_bind_text(stmt, 2, "alpha")
+  SI NON CONIURA stmt_step(stmt)
+    REDDE 1
+  FIN SI
+
+  CONIURA stmt_reset(stmt)
+  CONIURA stmt_bind_int(stmt, 1, 1)
+  CONIURA stmt_bind_text(stmt, 2, "duplicado")
+  SI CONIURA stmt_step(stmt)
+    REDDE 2
+  FIN SI
+  SI CONIURA len(CONIURA db_last_error(db)) == 0
+    REDDE 3
+  FIN SI
+
+  CONIURA stmt_finalize(stmt)
+
+  SI CONIURA db_scalar_int(db, "SELECT COUNT(*) FROM items;") != 1
+    REDDE 4
+  FIN SI
+  SI CONIURA compare(CONIURA db_scalar_text(db, "SELECT nome FROM items WHERE id = 1;"), "alpha") != 0
+    REDDE 5
+  FIN SI
+
+  CONIURA db_close(db)
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

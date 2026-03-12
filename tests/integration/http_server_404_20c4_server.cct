@@ -1,0 +1,38 @@
+INCIPIT grimoire "http_server_404_20c4_server"
+
+ADVOCARE "cct/fs.cct"
+ADVOCARE "cct/http.cct"
+ADVOCARE "cct/verbum.cct"
+
+RITUALE main() REDDE REX
+  EVOCA VERBUM ready AD "tests/.tmp/http_server_404_20c4.ready"
+  EVOCA VERBUM done AD "tests/.tmp/http_server_404_20c4.done"
+  TEMPTA
+    EVOCA SPECULUM NIHIL srv AD CONIURA http_server_listen("", 22336)
+    CONIURA write_all(ready, "ready")
+
+    EVOCA HttpRequest req AD CONIURA http_server_accept(srv)
+    EVOCA HttpResponse res AD CONIURA http_response_new(404, "nao-encontrado")
+    SI CONIURA compare(CONIURA http_request_path(req), "/found") == 0
+      VINCIRE res AD CONIURA http_response_new(200, "found")
+      CONIURA http_headers_set_or_push(CONIURA http_response_headers_handle(res), "X-Route", "found")
+    ALITER
+      CONIURA http_headers_set_or_push(CONIURA http_response_headers_handle(res), "X-Route", "missing")
+    FIN SI
+
+    CONIURA http_server_reply(srv, res)
+    CONIURA write_all(done, "ok")
+    REDDE 0
+  CAPE FRACTUM erro
+    EVOCA VERBUM msg AD OBSECRO fractum_to_verbum(erro)
+    SI CONIURA compare(msg, "sock_bind falhou") == 0 VEL CONIURA compare(msg, "socket tcp create falhou") == 0
+      CONIURA write_all(ready, "skip")
+      CONIURA write_all(done, "skip")
+      REDDE 0
+    FIN SI
+    REDDE 90
+  FIN TEMPTA
+  REDDE 91
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

@@ -13,9 +13,9 @@ CCT is a compiled, ritual-themed programming language with deterministic sigil g
 
 ## Status
 
-**Current status: FASE 19D.4 + FASE 14T completed** (FASE 19 closure preserved; the interstitial sigilo-SVG instrumentation phase is now closed and the baseline is ready for FASE 20 work).
+**Current status: FASE 20F completed** (the application-library stack is now closed across JSON, sockets/networking, HTTP, configuration, SQLite, examples, and release handoff artifacts).
 
-Implemented phases: **0 → 19D.4**, plus the interstitial **FASE 14T** closure (including full closures for FASE 16, 17, 18, and 19).
+Implemented phases: **0 → 20F**, plus the interstitial **FASE 14T** closure.
 
 **Phase-reference convention:** phase labels found in file/module headers, local markers, or help text may refer to the phase in which that specific component was introduced or stabilized. They are historical markers and do not necessarily represent the current global project status shown above.
 
@@ -63,6 +63,7 @@ Highlights of the current baseline:
 - FASE 16 closure set: freestanding profile (`--profile freestanding`), bridge-safe `cct/kernel`, ASM emission path (`--emit-asm`), and bridge packaging gates
 - FASE 17/18 canonical-library expansion: text/parsing/IO/FS/path utilities, algorithms/collections growth, plus `process`, `hash`, and `bit` modules
 - FASE 19 language-surface expansion: `ELIGE`/`CASUS`/`ALIOQUIN` (with legacy `CUM` compatibility), `FORMA`, payload `ORDO`, and `ITERUM` over `map`/`set` with insertion-order semantics
+- FASE 20 application-library expansion: `cct/json`, `cct/socket`, `cct/net`, `cct/http`, `cct/config`, and `cct/db_sqlite`
 
 ## Recent Phase Closures (16-19)
 
@@ -81,6 +82,13 @@ Highlights of the current baseline:
 - `FORMA` interpolation with format specifiers
 - payload-capable `ORDO` and `ELIGE` destructuring
 - `ITERUM` expanded to `map` and `set`
+
+### FASE 20 (Application Library Stack)
+- `cct/json` for canonical JSON values, parser, stringify/pretty-print, navigation, and mutation helpers
+- `cct/socket` / `cct/net` for host-only TCP/UDP runtime bridging and ergonomic text/network helpers
+- `cct/http` for HTTP/1.1 request/response modeling, parsing, client flows, and single-request server handling
+- `cct/config` for INI configuration parsing, typed access, writing, env overlays, and JSON bridging
+- `cct/db_sqlite` for host-only SQLite open/query/prepare/transaction/scalar workflows
 
 ## Build
 
@@ -453,6 +461,15 @@ Current delivery in FASE 19:
 - language-facing integration with stdlib usage via `ELIGE`, `FORMA`, payload `ORDO`, and `ITERUM` over `map`/`set`
 - reference module `lib/cct/ordo_samples.cct` documenting idiomatic `Resultado`/`Opcao` payload patterns
 
+Current delivery in FASE 20:
+- `cct/json`: canonical JSON model, strict parse, stringify/pretty-print, key/index access, mutation, and typed expect helpers
+- `cct/socket` / `cct/net`: thin host socket bridge plus TCP/UDP wrappers, line-oriented text I/O, and address helpers
+- `cct/http`: request/response model, parser/stringifier, client GET/POST/JSON flows, and single-request server primitives
+- `cct/config`: INI parse/load/write, typed getters, section listing, env overlay, and JSON conversion helpers
+- `cct/db_sqlite`: host-only persistence with query cursors, prepared statements, transactions, and scalar helpers
+- generated host builds link `-lsqlite3` only when the SQLite surface is used
+- fallback policy: if the host toolchain lacks `sqlite3`, the host compile step fails clearly instead of silently disabling the module
+
 Example import:
 
 ```cct
@@ -547,9 +564,10 @@ Sigil-only (system + local in essential mode):
 
 ## Release Documentation Packages
 
-The current project baseline is **FASE 19D.4 + FASE 14T completed**. Historical release packages remain available for traceability and migration references.
+The current project baseline is **FASE 20F completed**. Historical release packages remain available for traceability and migration references.
 
 **Current-phase release documentation:**
+- `docs/release/FASE_20_RELEASE_NOTES.md` — FASE 20 application-stack closure summary (`json`, `socket/net`, `http`, `config`, `db_sqlite`, examples, hardening)
 - `docs/release/FASE_14T_RELEASE_NOTES.md` — FASE 14T sigilo SVG instrumentation summary (`<title>`, `data-*`, root semantics, toggles)
 - `docs/release/FASE_19_RELEASE_NOTES.md` — FASE 19 completion summary (`ELIGE`, `FORMA`, payload `ORDO`, `ITERUM map/set`)
 
@@ -565,10 +583,11 @@ The current project baseline is **FASE 19D.4 + FASE 14T completed**. Historical 
 - detailed matrices/snapshots from older phases were archived from the public `docs/release` surface
 
 **Quick reference:**
-- FASE 0–19 public contracts remain stable
+- FASE 0–20 public contracts remain stable
 - FASE 19 closure set remains complete (`ELIGE`, `FORMA`, payload `ORDO`, `ITERUM map/set`)
 - FASE 14T is closed with SVG hover/metadata instrumentation that can be disabled explicitly
-- Next planned phase is FASE 20
+- FASE 20 closes the application-library stack with canonical JSON/network/HTTP/config/SQLite modules
+- Next planned phase is FASE 21
 - Zero silent-breaking-change policy remains active
 
 See `docs/roadmap.md` and `docs/spec.md` for current-phase status and language-surface details.
@@ -582,6 +601,7 @@ CCT documentation is organized by audience and purpose. Choose your reading path
 2. [Installation Guide](docs/install.md) - Setup and verification
 3. [Spec - Sections 1-3, 12](docs/spec.md) - Basic syntax and examples
 4. [Project Conventions](docs/project_conventions.md) - Code organization
+5. [Examples Catalog](examples/README.md) - Runnable examples including the FASE 20 app stack
 
 **Estimated time**: 1 hour
 
@@ -591,6 +611,7 @@ CCT documentation is organized by audience and purpose. Choose your reading path
 3. [FLUXUS Usage](docs/fluxus_usage.md) - Dynamic vectors in depth
 4. [Build System](docs/build_system.md) - Project workflow
 5. Explore `examples/showcase_stdlib_*.cct` for real-world patterns
+6. Explore `examples/*_20f2.cct` for JSON/network/HTTP/config/SQLite flows
 
 **Estimated time**: 4-6 hours
 
@@ -604,6 +625,7 @@ CCT documentation is organized by audience and purpose. Choose your reading path
 1. [Architecture](docs/architecture.md) - Compiler internals
 2. [Roadmap](docs/roadmap.md) - Phase history and future plans
 3. [Release Documentation](docs/release/):
+   - [FASE 20 Release Notes](docs/release/FASE_20_RELEASE_NOTES.md) - Application-library stack closure summary
    - [FASE 19 Release Notes](docs/release/FASE_19_RELEASE_NOTES.md) - FASE 19 language-surface closure summary
    - [FASE 18 Release Notes](docs/release/FASE_18_RELEASE_NOTES.md) - Canonical-library expansion closure summary
    - [FASE 17 Release Notes](docs/release/FASE_17_RELEASE_NOTES.md) - Canonical-library expansion highlights

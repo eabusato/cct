@@ -396,6 +396,22 @@ Codegen/runtime notes:
 - payload `ORDO` lowers to tagged C structs with variant-specific payload unions.
 - `ITERUM` now emits dedicated runtime iterator helpers for `map` and `set` (`cct_rt_map_iter_*`, `cct_rt_set_iter_*`), preserving insertion order.
 
+### FASE 20 — Application Library Stack (Implemented Through 20F)
+Architecture direction:
+- turn the stabilized host subset into a practical application platform while keeping the language core unchanged
+- keep protocol/model/config logic in CCT wherever possible
+- keep runtime C additions thin and limited to host boundary surfaces such as sockets and SQLite
+
+Library/runtime notes:
+- `cct/json`, `cct/http`, `cct/config`, and most of `cct/net` are implemented as canonical CCT modules over existing runtime services.
+- `cct/socket` and `cct/db_sqlite` extend the generated-host runtime with narrow OS/library bindings only.
+- generated C now links `-lsqlite3` on demand when SQLite builtins are actually used by the source program.
+- host-only boundaries remain explicit: sockets, HTTP, config over host FS/env, and SQLite are not part of the freestanding profile.
+
+Operational closure:
+- documentation, examples, release notes, and handoff artifacts are part of the phase definition of done.
+- examples now cover HTTP JSON client/server, config + SQLite integration, and UDP loopback/demo flows.
+
 ## Reliability and Testing Model
 
 Architecture quality is enforced by a phase-accumulated regression suite (`tests/run_tests.sh`) covering:
@@ -404,7 +420,7 @@ Architecture quality is enforced by a phase-accumulated regression suite (`tests
 - boundary diagnostics and subset-policy enforcement
 
 The architecture is considered stable only when full historical regression remains green.
-Latest closure evidence (FASE 14T final gate): `Passed: 1120`, `Failed: 0`.
+Latest closure evidence (FASE 20F final gate): `Passed: 1181`, `Failed: 0`.
 
 ## Document Ownership
 

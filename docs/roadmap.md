@@ -16,12 +16,13 @@ It has two goals:
 
 ## Current Project Snapshot
 
-- Current completed phase: FASE 14T (interstitial sigilo-SVG instrumentation closure over the 19D.4 baseline)
-- Current completed subphase: FASE 14TD3 (final gate + handoff + release closure)
-- Current phase context: FASE 19 remains formally closed, FASE 14T is now formally closed, and the baseline is ready to move into FASE 20
+- Current completed phase: FASE 20
+- Current completed subphase: FASE 20F3
+- Current phase context: FASE 20 is now formally closed with docs/examples/release artifacts synchronized
 - Phase-19 delivery status: 19A1..19D4 implemented and closed (`ELIGE`, legacy `CUM` compatibility, `FORMA`, payload `ORDO`, `ITERUM` map/set, docs/release/handoff)
 - FASE 14T delivery status: 14TA1..14TD3 implemented and closed (`<title>`, additive `data-*`, root semantics, toggleable instrumentation, docs/release/handoff)
-- Current regression gate: `make test` green with `Passed: 1120 / Failed: 0`
+- FASE 20 delivery status: 20A1..20F3 implemented and closed (`json`, `socket/net`, `http`, `config`, `db_sqlite`, examples, release/handoff)
+- Current regression gate: `make test` green with `Passed: 1181 / Failed: 0`
 - **Compiler maturity:** complete development toolchain with formatter, linter, build system, and doc generator
 - **Backend strategy:** C-hosted backend is official (`.cgen.c` + host C compiler)
 - **Sigilo model:** dual-level modular model is stable (local + system sigilo)
@@ -506,12 +507,12 @@ Closure evidence:
 - dedicated FASE 14T regression coverage: 46 tests.
 - final closure gate: `Passed: 1120 / Failed: 0`.
 
-### FASE 20 — Application Library Stack Expansion
+### FASE 20 — Application Library Stack Expansion ✅
 
-Primary objective:
-- turn the post-19 language baseline into a practical application platform through canonical JSON, networking, HTTP, configuration, and local database modules.
+Primary objective completed:
+- turned the post-19 language baseline into a practical application platform through canonical JSON, networking, HTTP, configuration, and local database modules.
 
-Planned scope:
+Delivered scope:
 - `20A`: `cct/json` with JSON value model, strict parser, stringify/pretty-print, and navigation helpers.
 - `20B`: `cct/socket` / `cct/net` with host-only TCP/UDP runtime bridge plus high-level wrappers in CCT.
 - `20C`: `cct/http` client/server baseline over `cct/net`, covering HTTP/1.1 text workflows and JSON integration.
@@ -527,10 +528,11 @@ Out of scope:
 - TLS/HTTPS, HTTP/2+, WebSocket, remote DB drivers, ORM layers, and a broad new wave of core-language syntax work.
 - large ownership/lifetime redesigns.
 
-Definition of done:
-- new modules are integrated, documented, and covered by integration tests with the full suite green.
-- host-vs-freestanding boundaries are explicitly documented.
-- release/handoff artifacts are synchronized with the delivered module set.
+Closure evidence:
+- 61 new integration tests across 20A-20E.
+- canonical examples published for HTTP JSON client/server, config + SQLite, and UDP loopback.
+- release/handoff artifacts published for FASE 20.
+- final closure gate: `Passed: 1181 / Failed: 0`.
 
 ### FASE 21 — Generic Data Model and Collection Ergonomics
 
@@ -601,6 +603,6 @@ Every phase must pass these gates before closure:
 
 ## Immediate Next Step
 
-Next phase to execute: FASE 20.
-Next subphase to execute: FASE 20A.
-Historical traceability note: all closure artifacts through FASE 19 are preserved under `docs/release/` and `docs/bootstrap/`.
+Next phase to execute: FASE 21.
+Next subphase to execute: FASE 21A (planning doc pending).
+Historical traceability note: all closure artifacts through FASE 20 are preserved under `docs/release/` and `docs/bootstrap/`.

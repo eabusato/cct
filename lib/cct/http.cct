@@ -1,0 +1,715 @@
+INCIPIT grimoire "http"
+
+ADVOCARE "cct/json.cct"
+ADVOCARE "cct/fluxus.cct"
+ADVOCARE "cct/fmt.cct"
+ADVOCARE "cct/net.cct"
+ADVOCARE "cct/option.cct"
+ADVOCARE "cct/parse.cct"
+ADVOCARE "cct/socket.cct"
+ADVOCARE "cct/verbum.cct"
+
+ORDO HttpMethod
+  MethodGet,
+  MethodPost,
+  MethodPut,
+  MethodDelete,
+  MethodPatch,
+  MethodHead,
+  MethodOther(VERBUM nome)
+FIN ORDO
+
+SIGILLUM HttpHeader
+  nome: VERBUM
+  valor: VERBUM
+FIN SIGILLUM
+
+ORDO HttpRequest
+  Request(VERBUM method, VERBUM path, REX headers_handle, VERBUM body)
+FIN ORDO
+
+ORDO HttpResponse
+  Response(REX status, REX headers_handle, VERBUM body)
+FIN ORDO
+
+ORDO HttpError
+  HttpErrorMsg(VERBUM mensagem)
+FIN ORDO
+
+ORDO HttpUrl
+  Url(VERBUM host, REX port, VERBUM path)
+FIN ORDO
+
+SIGILLUM HttpServerState
+  listener: SPECULUM NIHIL
+  current_client: SPECULUM NIHIL
+  has_client: VERUM
+FIN SIGILLUM
+
+RITUALE http_alloc(REX bytes) REDDE SPECULUM NIHIL
+  REDDE OBSECRO mem_alloc(bytes)
+EXPLICIT RITUALE
+
+RITUALE http_headers_new() REDDE REX
+  REDDE OBSECRO json_arr_handle_new(MENSURA(HttpHeader))
+EXPLICIT RITUALE
+
+RITUALE http_header_set(SPECULUM HttpHeader out, VERBUM nome, VERBUM valor) REDDE NIHIL
+  VINCIRE (*out).nome AD nome
+  VINCIRE (*out).valor AD valor
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE http_headers_push(REX headers_handle, SPECULUM NIHIL h_ptr) REDDE NIHIL
+  OBSECRO json_arr_handle_push(headers_handle, h_ptr)
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE http_headers_len(REX headers_handle) REDDE REX
+  REDDE OBSECRO json_arr_handle_len(headers_handle)
+EXPLICIT RITUALE
+
+RITUALE http_headers_get_ptr(REX headers_handle, REX idx) REDDE SPECULUM NIHIL
+  REDDE OBSECRO json_arr_handle_get(headers_handle, idx)
+EXPLICIT RITUALE
+
+RITUALE http_headers_find_index(REX headers_handle, VERBUM nome) REDDE REX
+  EVOCA VERBUM target AD CONIURA to_lower(nome)
+  EVOCA REX i AD 0
+  EVOCA REX n AD CONIURA http_headers_len(headers_handle)
+  DUM i < n
+    EVOCA SPECULUM HttpHeader h AD CONIURA http_headers_get_ptr(headers_handle, i)
+    SI CONIURA compare(CONIURA to_lower((*h).nome), target) == 0
+      REDDE i
+    FIN SI
+    VINCIRE i AD i + 1
+  FIN DUM
+  REDDE -1
+EXPLICIT RITUALE
+
+RITUALE http_headers_has(REX headers_handle, VERBUM nome) REDDE VERUM
+  REDDE CONIURA http_headers_find_index(headers_handle, nome) != -1
+EXPLICIT RITUALE
+
+RITUALE http_headers_get_or(REX headers_handle, VERBUM nome, VERBUM padrao) REDDE VERBUM
+  EVOCA REX idx AD CONIURA http_headers_find_index(headers_handle, nome)
+  SI idx == -1
+    REDDE padrao
+  FIN SI
+  EVOCA SPECULUM HttpHeader h AD CONIURA http_headers_get_ptr(headers_handle, idx)
+  REDDE (*h).valor
+EXPLICIT RITUALE
+
+RITUALE http_headers_set_or_push(REX headers_handle, VERBUM nome, VERBUM valor) REDDE NIHIL
+  EVOCA REX idx AD CONIURA http_headers_find_index(headers_handle, nome)
+  SI idx != -1
+    EVOCA SPECULUM HttpHeader h AD CONIURA http_headers_get_ptr(headers_handle, idx)
+    VINCIRE (*h).valor AD valor
+    REDDE
+  FIN SI
+  EVOCA HttpHeader novo
+  CONIURA http_header_set(SPECULUM novo, nome, valor)
+  CONIURA http_headers_push(headers_handle, SPECULUM novo)
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE http_method_get() REDDE HttpMethod
+  REDDE MethodGet
+EXPLICIT RITUALE
+
+RITUALE http_method_name(HttpMethod m) REDDE VERBUM
+  QUANDO m
+    CASO MethodGet:
+      REDDE "GET"
+    CASO MethodPost:
+      REDDE "POST"
+    CASO MethodPut:
+      REDDE "PUT"
+    CASO MethodDelete:
+      REDDE "DELETE"
+    CASO MethodPatch:
+      REDDE "PATCH"
+    CASO MethodHead:
+      REDDE "HEAD"
+    CASO MethodOther(nome):
+      REDDE nome
+  FIN QUANDO
+  REDDE ""
+EXPLICIT RITUALE
+
+RITUALE http_status_text(REX status) REDDE VERBUM
+  SI status == 200
+    REDDE "OK"
+  FIN SI
+  SI status == 201
+    REDDE "Created"
+  FIN SI
+  SI status == 204
+    REDDE "No Content"
+  FIN SI
+  SI status == 400
+    REDDE "Bad Request"
+  FIN SI
+  SI status == 404
+    REDDE "Not Found"
+  FIN SI
+  SI status == 500
+    REDDE "Internal Server Error"
+  FIN SI
+  REDDE "OK"
+EXPLICIT RITUALE
+
+RITUALE http_request_new(VERBUM method, VERBUM path) REDDE HttpRequest
+  EVOCA REX headers AD CONIURA http_headers_new()
+  REDDE Request(method, path, headers, "")
+EXPLICIT RITUALE
+
+RITUALE http_request_with_body(VERBUM method, VERBUM path, VERBUM body) REDDE HttpRequest
+  EVOCA REX headers AD CONIURA http_headers_new()
+  REDDE Request(method, path, headers, body)
+EXPLICIT RITUALE
+
+RITUALE http_response_new(REX status, VERBUM body) REDDE HttpResponse
+  EVOCA REX headers AD CONIURA http_headers_new()
+  REDDE Response(status, headers, body)
+EXPLICIT RITUALE
+
+RITUALE http_response_with_headers(REX status, REX headers, VERBUM body) REDDE HttpResponse
+  REDDE Response(status, headers, body)
+EXPLICIT RITUALE
+
+RITUALE http_request_headers_handle(HttpRequest req) REDDE REX
+  QUANDO req
+    CASO Request(method, path, headers_handle, body):
+      REDDE headers_handle
+  FIN QUANDO
+  REDDE 0
+EXPLICIT RITUALE
+
+RITUALE http_request_method(HttpRequest req) REDDE VERBUM
+  QUANDO req
+    CASO Request(method, path, headers_handle, body):
+      REDDE method
+  FIN QUANDO
+  REDDE ""
+EXPLICIT RITUALE
+
+RITUALE http_request_path(HttpRequest req) REDDE VERBUM
+  QUANDO req
+    CASO Request(method, path, headers_handle, body):
+      REDDE path
+  FIN QUANDO
+  REDDE ""
+EXPLICIT RITUALE
+
+RITUALE http_request_body(HttpRequest req) REDDE VERBUM
+  QUANDO req
+    CASO Request(method, path, headers_handle, body):
+      REDDE body
+  FIN QUANDO
+  REDDE ""
+EXPLICIT RITUALE
+
+RITUALE http_response_headers_handle(HttpResponse res) REDDE REX
+  QUANDO res
+    CASO Response(status, headers_handle, body):
+      REDDE headers_handle
+  FIN QUANDO
+  REDDE 0
+EXPLICIT RITUALE
+
+RITUALE http_response_status(HttpResponse res) REDDE REX
+  QUANDO res
+    CASO Response(status, headers_handle, body):
+      REDDE status
+  FIN QUANDO
+  REDDE 0
+EXPLICIT RITUALE
+
+RITUALE http_response_body(HttpResponse res) REDDE VERBUM
+  QUANDO res
+    CASO Response(status, headers_handle, body):
+      REDDE body
+  FIN QUANDO
+  REDDE ""
+EXPLICIT RITUALE
+
+RITUALE http_response_header(HttpResponse res, VERBUM nome, VERBUM padrao) REDDE VERBUM
+  REDDE CONIURA http_headers_get_or(CONIURA http_response_headers_handle(res), nome, padrao)
+EXPLICIT RITUALE
+
+RITUALE http_request_header(HttpRequest req, VERBUM nome, VERBUM padrao) REDDE VERBUM
+  REDDE CONIURA http_headers_get_or(CONIURA http_request_headers_handle(req), nome, padrao)
+EXPLICIT RITUALE
+
+RITUALE http_crlf() REDDE VERBUM
+  REDDE CONIURA concat(CONIURA from_char(13), "\n")
+EXPLICIT RITUALE
+
+RITUALE http_trim_cr(VERBUM s) REDDE VERBUM
+  EVOCA VERBUM cr AD CONIURA from_char(13)
+  SI CONIURA ends_with(s, cr)
+    REDDE CONIURA strip_suffix(s, cr)
+  FIN SI
+  REDDE s
+EXPLICIT RITUALE
+
+RITUALE http_split_head_body(VERBUM raw) REDDE HttpRequest
+  EVOCA VERBUM dbl_crlf AD CONIURA concat(CONIURA http_crlf(), CONIURA http_crlf())
+  EVOCA REX idx AD CONIURA find(raw, dbl_crlf)
+  SI idx != -1
+    REDDE Request(CONIURA substring(raw, 0, idx), "", 0, CONIURA substring(raw, idx + CONIURA len(dbl_crlf), CONIURA len(raw)))
+  FIN SI
+  EVOCA VERBUM dbl_lf AD "\n\n"
+  VINCIRE idx AD CONIURA find(raw, dbl_lf)
+  SI idx != -1
+    REDDE Request(CONIURA substring(raw, 0, idx), "", 0, CONIURA substring(raw, idx + 2, CONIURA len(raw)))
+  FIN SI
+  REDDE Request(raw, "", 0, "")
+EXPLICIT RITUALE
+
+RITUALE http_parse_header_into(SPECULUM HttpHeader out, VERBUM line) REDDE NIHIL
+  EVOCA REX sep AD CONIURA find(line, ":")
+  SI sep == -1
+    IACE "http: header invalido"
+  FIN SI
+  VINCIRE (*out).nome AD CONIURA trim(CONIURA substring(line, 0, sep))
+  VINCIRE (*out).valor AD CONIURA trim(CONIURA substring(line, sep + 1, CONIURA len(line)))
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE http_split_first_line(VERBUM s) REDDE HttpRequest
+  EVOCA VERBUM crlf AD CONIURA http_crlf()
+  EVOCA REX idx AD CONIURA find(s, crlf)
+  SI idx != -1
+    REDDE Request(CONIURA substring(s, 0, idx), CONIURA substring(s, idx + CONIURA len(crlf), CONIURA len(s)), 0, "")
+  FIN SI
+  VINCIRE idx AD CONIURA find(s, "\n")
+  SI idx != -1
+    REDDE Request(CONIURA substring(s, 0, idx), CONIURA substring(s, idx + 1, CONIURA len(s)), 0, "")
+  FIN SI
+  REDDE Request(s, "", 0, "")
+EXPLICIT RITUALE
+
+RITUALE http_parse_request_line(VERBUM line) REDDE HttpRequest
+  EVOCA REX sp1 AD CONIURA find(line, " ")
+  SI sp1 == -1
+    IACE "http: request line invalida"
+  FIN SI
+  EVOCA VERBUM tail AD CONIURA substring(line, sp1 + 1, CONIURA len(line))
+  EVOCA REX sp2 AD CONIURA find(tail, " ")
+  SI sp2 == -1
+    IACE "http: request line invalida"
+  FIN SI
+  EVOCA VERBUM method AD CONIURA substring(line, 0, sp1)
+  EVOCA VERBUM path AD CONIURA substring(tail, 0, sp2)
+  EVOCA VERBUM version AD CONIURA substring(tail, sp2 + 1, CONIURA len(tail))
+  SI NON CONIURA starts_with(version, "HTTP/")
+    IACE "http: request line invalida"
+  FIN SI
+  REDDE Request(method, path, 0, "")
+EXPLICIT RITUALE
+
+RITUALE http_parse_status_line(VERBUM line) REDDE HttpResponse
+  SI NON CONIURA starts_with(line, "HTTP/")
+    IACE "http: status line invalida"
+  FIN SI
+  EVOCA REX sp1 AD CONIURA find(line, " ")
+  SI sp1 == -1
+    IACE "http: status line invalida"
+  FIN SI
+  EVOCA VERBUM tail AD CONIURA substring(line, sp1 + 1, CONIURA len(line))
+  EVOCA REX sp2 AD CONIURA find(tail, " ")
+  EVOCA VERBUM code_text AD tail
+  SI sp2 != -1
+    VINCIRE code_text AD CONIURA substring(tail, 0, sp2)
+  FIN SI
+  REDDE Response(CONIURA fmt_parse_int(code_text), 0, "")
+EXPLICIT RITUALE
+
+RITUALE http_parse_request(VERBUM raw) REDDE HttpRequest
+  EVOCA HttpRequest parts AD CONIURA http_split_head_body(raw)
+  EVOCA VERBUM head AD ""
+  EVOCA VERBUM body AD ""
+  QUANDO parts
+    CASO Request(a, ign_path, ign_handle, b):
+      VINCIRE head AD a
+      VINCIRE body AD b
+  FIN QUANDO
+
+  SI CONIURA len(head) == 0
+    IACE "http: request vazia"
+  FIN SI
+
+  EVOCA HttpRequest split0 AD CONIURA http_split_first_line(head)
+  EVOCA VERBUM line0 AD ""
+  EVOCA VERBUM rest AD ""
+  QUANDO split0
+    CASO Request(a, b, ign_handle, ign_body):
+      VINCIRE line0 AD a
+      VINCIRE rest AD b
+  FIN QUANDO
+
+  EVOCA HttpRequest req0 AD CONIURA http_parse_request_line(line0)
+  EVOCA VERBUM method AD ""
+  EVOCA VERBUM path AD ""
+  QUANDO req0
+    CASO Request(a, b, ign_handle, ign_body):
+      VINCIRE method AD a
+      VINCIRE path AD b
+  FIN QUANDO
+
+  EVOCA HttpRequest req AD CONIURA http_request_with_body(method, path, body)
+  EVOCA REX headers_handle AD CONIURA http_request_headers_handle(req)
+  EVOCA VERBUM cursor AD rest
+
+  DUM CONIURA len(cursor) != 0
+    EVOCA HttpRequest chunk AD CONIURA http_split_first_line(cursor)
+    EVOCA VERBUM line AD ""
+    QUANDO chunk
+      CASO Request(a, b, ign_handle, ign_body):
+        VINCIRE line AD CONIURA trim(CONIURA http_trim_cr(a))
+        VINCIRE cursor AD b
+    FIN QUANDO
+    SI CONIURA len(line) != 0
+      EVOCA HttpHeader h
+      CONIURA http_parse_header_into(SPECULUM h, line)
+      CONIURA http_headers_push(headers_handle, SPECULUM h)
+    FIN SI
+  FIN DUM
+  REDDE req
+EXPLICIT RITUALE
+
+RITUALE http_parse_response(VERBUM raw) REDDE HttpResponse
+  EVOCA HttpRequest parts AD CONIURA http_split_head_body(raw)
+  EVOCA VERBUM head AD ""
+  EVOCA VERBUM body AD ""
+  QUANDO parts
+    CASO Request(a, ign_path, ign_handle, b):
+      VINCIRE head AD a
+      VINCIRE body AD b
+  FIN QUANDO
+
+  SI CONIURA len(head) == 0
+    IACE "http: response vazia"
+  FIN SI
+
+  EVOCA HttpRequest split0 AD CONIURA http_split_first_line(head)
+  EVOCA VERBUM line0 AD ""
+  EVOCA VERBUM rest AD ""
+  QUANDO split0
+    CASO Request(a, b, ign_handle, ign_body):
+      VINCIRE line0 AD a
+      VINCIRE rest AD b
+  FIN QUANDO
+
+  EVOCA HttpResponse res0 AD CONIURA http_parse_status_line(line0)
+  EVOCA HttpResponse res AD CONIURA http_response_new(CONIURA http_response_status(res0), body)
+  EVOCA REX headers_handle AD CONIURA http_response_headers_handle(res)
+  EVOCA VERBUM cursor AD rest
+
+  DUM CONIURA len(cursor) != 0
+    EVOCA HttpRequest chunk AD CONIURA http_split_first_line(cursor)
+    EVOCA VERBUM line AD ""
+    QUANDO chunk
+      CASO Request(a, b, ign_handle, ign_body):
+        VINCIRE line AD CONIURA trim(CONIURA http_trim_cr(a))
+        VINCIRE cursor AD b
+    FIN QUANDO
+    SI CONIURA len(line) != 0
+      EVOCA HttpHeader h
+      CONIURA http_parse_header_into(SPECULUM h, line)
+      CONIURA http_headers_push(headers_handle, SPECULUM h)
+    FIN SI
+  FIN DUM
+  REDDE res
+EXPLICIT RITUALE
+
+RITUALE http_stringify_request(HttpRequest req) REDDE VERBUM
+  EVOCA VERBUM crlf AD CONIURA http_crlf()
+  EVOCA VERBUM out AD CONIURA concat(CONIURA concat(CONIURA http_request_method(req), " "), CONIURA concat(CONIURA http_request_path(req), " HTTP/1.1"))
+  EVOCA REX headers_handle AD CONIURA http_request_headers_handle(req)
+  EVOCA REX i AD 0
+  EVOCA REX n AD CONIURA http_headers_len(headers_handle)
+
+  DUM i < n
+    EVOCA SPECULUM HttpHeader h AD CONIURA http_headers_get_ptr(headers_handle, i)
+    VINCIRE out AD CONIURA concat(out, crlf)
+    VINCIRE out AD CONIURA concat(out, (*h).nome)
+    VINCIRE out AD CONIURA concat(out, ": ")
+    VINCIRE out AD CONIURA concat(out, (*h).valor)
+    VINCIRE i AD i + 1
+  FIN DUM
+
+  VINCIRE out AD CONIURA concat(out, crlf)
+  VINCIRE out AD CONIURA concat(out, crlf)
+  VINCIRE out AD CONIURA concat(out, CONIURA http_request_body(req))
+  REDDE out
+EXPLICIT RITUALE
+
+RITUALE http_stringify_response(HttpResponse res) REDDE VERBUM
+  EVOCA VERBUM crlf AD CONIURA http_crlf()
+  EVOCA REX status AD CONIURA http_response_status(res)
+  EVOCA VERBUM out AD "HTTP/1.1 "
+  VINCIRE out AD CONIURA concat(out, CONIURA stringify_int(status))
+  VINCIRE out AD CONIURA concat(out, " ")
+  VINCIRE out AD CONIURA concat(out, CONIURA http_status_text(status))
+
+  EVOCA REX headers_handle AD CONIURA http_response_headers_handle(res)
+  EVOCA REX i AD 0
+  EVOCA REX n AD CONIURA http_headers_len(headers_handle)
+
+  DUM i < n
+    EVOCA SPECULUM HttpHeader h AD CONIURA http_headers_get_ptr(headers_handle, i)
+    VINCIRE out AD CONIURA concat(out, crlf)
+    VINCIRE out AD CONIURA concat(out, (*h).nome)
+    VINCIRE out AD CONIURA concat(out, ": ")
+    VINCIRE out AD CONIURA concat(out, (*h).valor)
+    VINCIRE i AD i + 1
+  FIN DUM
+
+  VINCIRE out AD CONIURA concat(out, crlf)
+  VINCIRE out AD CONIURA concat(out, crlf)
+  VINCIRE out AD CONIURA concat(out, CONIURA http_response_body(res))
+  REDDE out
+EXPLICIT RITUALE
+
+RITUALE http_parse_url(VERBUM url) REDDE HttpUrl
+  EVOCA VERBUM rest AD url
+  SI CONIURA starts_with(rest, "http://")
+    VINCIRE rest AD CONIURA substring(rest, 7, CONIURA len(rest))
+  FIN SI
+
+  EVOCA REX slash AD CONIURA find(rest, "/")
+  EVOCA VERBUM authority AD rest
+  EVOCA VERBUM path AD "/"
+  SI slash != -1
+    VINCIRE authority AD CONIURA substring(rest, 0, slash)
+    VINCIRE path AD CONIURA substring(rest, slash, CONIURA len(rest))
+  FIN SI
+
+  SI CONIURA len(authority) == 0
+    IACE "http: url sem host"
+  FIN SI
+
+  EVOCA VERBUM host AD authority
+  EVOCA REX port AD 80
+  EVOCA REX colon AD CONIURA find(authority, ":")
+  SI colon != -1
+    VINCIRE host AD CONIURA substring(authority, 0, colon)
+    EVOCA VERBUM port_text AD CONIURA substring(authority, colon + 1, CONIURA len(authority))
+    EVOCA SPECULUM NIHIL port_opt AD CONIURA try_int(port_text)
+    SI NON CONIURA option_is_some GENUS(REX)(port_opt)
+      CONIURA option_free GENUS(REX)(port_opt)
+      IACE "http: url com porta invalida"
+    FIN SI
+    VINCIRE port AD CONIURA option_unwrap GENUS(REX)(port_opt)
+    CONIURA option_free GENUS(REX)(port_opt)
+  FIN SI
+
+  SI CONIURA len(host) == 0
+    IACE "http: url sem host"
+  FIN SI
+
+  SI CONIURA len(path) == 0
+    VINCIRE path AD "/"
+  FIN SI
+
+  REDDE Url(host, port, path)
+EXPLICIT RITUALE
+
+RITUALE http_read_headers(SPECULUM NIHIL sock) REDDE VERBUM
+  EVOCA VERBUM out AD ""
+  EVOCA VERBUM crlf2 AD CONIURA concat(CONIURA http_crlf(), CONIURA http_crlf())
+  DUM VERUM
+    EVOCA VERBUM chunk AD CONIURA sock_recv(sock, 1)
+    SI CONIURA len(chunk) == 0
+      IACE "http: eof antes do fim dos headers"
+    FIN SI
+    VINCIRE out AD CONIURA concat(out, chunk)
+    SI CONIURA ends_with(out, crlf2) VEL CONIURA ends_with(out, "\n\n")
+      REDDE out
+    FIN SI
+  FIN DUM
+  REDDE out
+EXPLICIT RITUALE
+
+RITUALE http_content_length_from_headers(REX headers_handle) REDDE REX
+  EVOCA VERBUM raw AD CONIURA http_headers_get_or(headers_handle, "Content-Length", "")
+  SI CONIURA len(raw) == 0
+    REDDE -1
+  FIN SI
+  EVOCA SPECULUM NIHIL n_opt AD CONIURA try_int(raw)
+  SI NON CONIURA option_is_some GENUS(REX)(n_opt)
+    CONIURA option_free GENUS(REX)(n_opt)
+    IACE "http: content-length invalido"
+  FIN SI
+  EVOCA REX n AD CONIURA option_unwrap GENUS(REX)(n_opt)
+  CONIURA option_free GENUS(REX)(n_opt)
+  SI n < 0
+    IACE "http: content-length invalido"
+  FIN SI
+  REDDE n
+EXPLICIT RITUALE
+
+RITUALE http_read_remaining(SPECULUM NIHIL sock) REDDE VERBUM
+  EVOCA VERBUM out AD ""
+  DUM VERUM
+    EVOCA VERBUM chunk AD CONIURA sock_recv(sock, 4096)
+    SI CONIURA len(chunk) == 0
+      REDDE out
+    FIN SI
+    VINCIRE out AD CONIURA concat(out, chunk)
+  FIN DUM
+  REDDE out
+EXPLICIT RITUALE
+
+RITUALE http_read_request_raw(SPECULUM NIHIL sock) REDDE VERBUM
+  EVOCA VERBUM head AD CONIURA http_read_headers(sock)
+  EVOCA HttpRequest req0 AD CONIURA http_parse_request(head)
+  EVOCA REX content_length AD CONIURA http_content_length_from_headers(CONIURA http_request_headers_handle(req0))
+  SI content_length <= 0
+    REDDE head
+  FIN SI
+  REDDE CONIURA concat(head, CONIURA net_read_exact(sock, content_length))
+EXPLICIT RITUALE
+
+RITUALE http_read_response_raw(SPECULUM NIHIL sock) REDDE VERBUM
+  EVOCA VERBUM head AD CONIURA http_read_headers(sock)
+  EVOCA HttpResponse res0 AD CONIURA http_parse_response(head)
+  EVOCA REX content_length AD CONIURA http_content_length_from_headers(CONIURA http_response_headers_handle(res0))
+  SI content_length >= 0
+    REDDE CONIURA concat(head, CONIURA net_read_exact(sock, content_length))
+  FIN SI
+  REDDE CONIURA concat(head, CONIURA http_read_remaining(sock))
+EXPLICIT RITUALE
+
+RITUALE http_request_prepare(HttpRequest req, VERBUM host, REX port, VERBUM path) REDDE HttpRequest
+  EVOCA REX headers_handle AD CONIURA http_request_headers_handle(req)
+  EVOCA VERBUM host_header AD host
+  SI port != 80
+    VINCIRE host_header AD CONIURA concat(host_header, ":")
+    VINCIRE host_header AD CONIURA concat(host_header, CONIURA stringify_int(port))
+  FIN SI
+  CONIURA http_headers_set_or_push(headers_handle, "Host", host_header)
+  CONIURA http_headers_set_or_push(headers_handle, "Connection", "close")
+
+  EVOCA VERBUM body AD CONIURA http_request_body(req)
+  SI CONIURA len(body) > 0
+    CONIURA http_headers_set_or_push(headers_handle, "Content-Length", CONIURA stringify_int(CONIURA len(body)))
+  FIN SI
+
+  REDDE Request(CONIURA http_request_method(req), path, headers_handle, body)
+EXPLICIT RITUALE
+
+RITUALE http_response_prepare(HttpResponse res) REDDE HttpResponse
+  EVOCA REX headers_handle AD CONIURA http_response_headers_handle(res)
+  EVOCA VERBUM body AD CONIURA http_response_body(res)
+  CONIURA http_headers_set_or_push(headers_handle, "Connection", "close")
+  CONIURA http_headers_set_or_push(headers_handle, "Content-Length", CONIURA stringify_int(CONIURA len(body)))
+  REDDE Response(CONIURA http_response_status(res), headers_handle, body)
+EXPLICIT RITUALE
+
+RITUALE http_request(HttpRequest req) REDDE HttpResponse
+  EVOCA VERBUM target AD CONIURA http_request_path(req)
+  EVOCA HttpUrl url
+  EVOCA VERBUM host AD ""
+  EVOCA REX port AD 80
+  EVOCA VERBUM path AD "/"
+
+  SI CONIURA starts_with(target, "http://")
+    VINCIRE url AD CONIURA http_parse_url(target)
+  ALITER
+    EVOCA VERBUM host_header AD CONIURA http_request_header(req, "Host", "")
+    SI CONIURA len(host_header) == 0
+      IACE "http: request sem host"
+    FIN SI
+    EVOCA VERBUM tmp_url AD CONIURA concat("http://", host_header)
+    SI NON CONIURA starts_with(target, "/")
+      VINCIRE tmp_url AD CONIURA concat(tmp_url, "/")
+    FIN SI
+    VINCIRE tmp_url AD CONIURA concat(tmp_url, target)
+    VINCIRE url AD CONIURA http_parse_url(tmp_url)
+  FIN SI
+
+  QUANDO url
+    CASO Url(u_host, u_port, u_path):
+      VINCIRE host AD u_host
+      VINCIRE port AD u_port
+      VINCIRE path AD u_path
+  FIN QUANDO
+
+  EVOCA HttpRequest outbound AD CONIURA http_request_prepare(req, host, port, path)
+  EVOCA SPECULUM NIHIL sock AD CONIURA tcp_connect(host, port)
+  CONIURA sock_set_timeout_ms(sock, 2000)
+
+  EVOCA VERBUM raw_req AD CONIURA http_stringify_request(outbound)
+  SI CONIURA sock_send(sock, raw_req) != CONIURA len(raw_req)
+    CONIURA net_close(sock)
+    IACE "http: envio incompleto"
+  FIN SI
+
+  EVOCA VERBUM raw_res AD CONIURA http_read_response_raw(sock)
+  CONIURA net_close(sock)
+  REDDE CONIURA http_parse_response(raw_res)
+EXPLICIT RITUALE
+
+RITUALE http_get(VERBUM url) REDDE HttpResponse
+  EVOCA HttpRequest req AD CONIURA http_request_new("GET", url)
+  REDDE CONIURA http_request(req)
+EXPLICIT RITUALE
+
+RITUALE http_post(VERBUM url, VERBUM body) REDDE HttpResponse
+  EVOCA HttpRequest req AD CONIURA http_request_with_body("POST", url, body)
+  CONIURA http_headers_set_or_push(CONIURA http_request_headers_handle(req), "Content-Type", "text/plain")
+  REDDE CONIURA http_request(req)
+EXPLICIT RITUALE
+
+RITUALE http_get_json(VERBUM url) REDDE Json
+  EVOCA HttpResponse res AD CONIURA http_get(url)
+  REDDE CONIURA json_parse(CONIURA http_response_body(res))
+EXPLICIT RITUALE
+
+RITUALE http_server_listen(VERBUM host, REX port) REDDE SPECULUM NIHIL
+  EVOCA SPECULUM HttpServerState srv
+  VINCIRE srv AD CONIURA http_alloc(MENSURA(HttpServerState))
+  VINCIRE (*srv).listener AD CONIURA tcp_listen(host, port)
+  VINCIRE (*srv).current_client AD (*srv).listener
+  VINCIRE (*srv).has_client AD FALSUM
+  REDDE srv
+EXPLICIT RITUALE
+
+RITUALE http_server_accept(SPECULUM NIHIL srv_ptr) REDDE HttpRequest
+  EVOCA SPECULUM HttpServerState srv AD srv_ptr
+  SI (*srv).has_client
+    CONIURA net_close((*srv).current_client)
+    VINCIRE (*srv).has_client AD FALSUM
+  FIN SI
+  VINCIRE (*srv).current_client AD CONIURA tcp_accept((*srv).listener)
+  CONIURA sock_set_timeout_ms((*srv).current_client, 2000)
+  VINCIRE (*srv).has_client AD VERUM
+  REDDE CONIURA http_parse_request(CONIURA http_read_request_raw((*srv).current_client))
+EXPLICIT RITUALE
+
+RITUALE http_server_reply(SPECULUM NIHIL srv_ptr, HttpResponse resp) REDDE NIHIL
+  EVOCA SPECULUM HttpServerState srv AD srv_ptr
+  SI NON (*srv).has_client
+    IACE "http: server sem cliente ativo"
+  FIN SI
+  EVOCA HttpResponse out AD CONIURA http_response_prepare(resp)
+  EVOCA VERBUM raw AD CONIURA http_stringify_response(out)
+  SI CONIURA sock_send((*srv).current_client, raw) != CONIURA len(raw)
+    CONIURA net_close((*srv).current_client)
+    VINCIRE (*srv).has_client AD FALSUM
+    IACE "http: envio de resposta incompleto"
+  FIN SI
+  CONIURA net_close((*srv).current_client)
+  VINCIRE (*srv).has_client AD FALSUM
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE http_serve_once(VERBUM host, REX port, SPECULUM NIHIL handler) REDDE NIHIL
+  IACE "http_serve_once ainda nao suporta callback direto nesta fase"
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

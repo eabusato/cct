@@ -1,0 +1,33 @@
+INCIPIT grimoire "config_sqlite_app_20f2"
+
+ADVOCARE "cct/config.cct"
+ADVOCARE "cct/db_sqlite.cct"
+ADVOCARE "cct/fs.cct"
+ADVOCARE "cct/io.cct"
+ADVOCARE "cct/fmt.cct"
+ADVOCARE "cct/verbum.cct"
+
+RITUALE main() REDDE REX
+  CONIURA mkdir_all("examples/.tmp")
+
+  EVOCA VERBUM ini AD "[app]\nname = demo\n[db]\npath = examples/.tmp/config_sqlite_app_20f2.sqlite\n"
+  EVOCA SPECULUM NIHIL cfg AD CONIURA config_parse_ini(ini)
+  EVOCA VERBUM db_path AD CONIURA config_get(cfg, "db", "path")
+  EVOCA VERBUM app_name AD CONIURA config_get(cfg, "app", "name")
+
+  EVOCA SPECULUM NIHIL db AD CONIURA db_open(db_path)
+  CONIURA db_exec(db, "CREATE TABLE IF NOT EXISTS events(id INTEGER PRIMARY KEY, nome TEXT);")
+  CONIURA db_begin(db)
+  CONIURA db_exec(db, "INSERT INTO events(nome) VALUES('boot');")
+  CONIURA db_commit(db)
+
+  CONIURA println(CONIURA concat("app=", app_name))
+  CONIURA println(CONIURA concat("db=", db_path))
+  CONIURA println(CONIURA concat("rows=", CONIURA stringify_int(CONIURA db_scalar_int(db, "SELECT COUNT(*) FROM events;"))))
+  CONIURA println(CONIURA concat("last=", CONIURA db_scalar_text(db, "SELECT nome FROM events ORDER BY id DESC LIMIT 1;")))
+
+  CONIURA db_close(db)
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

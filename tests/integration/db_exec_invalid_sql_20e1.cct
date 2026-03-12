@@ -1,0 +1,17 @@
+INCIPIT grimoire "db_exec_invalid_sql_20e1"
+
+ADVOCARE "cct/db_sqlite.cct"
+ADVOCARE "cct/verbum.cct"
+
+RITUALE main() REDDE REX
+  EVOCA SPECULUM NIHIL db AD CONIURA db_open("tests/.tmp/db_exec_invalid_sql_20e1.sqlite")
+  CONIURA db_exec(db, "CREAT TABLE broken(")
+  EVOCA VERBUM err AD CONIURA db_last_error(db)
+  SI CONIURA len(err) == 0
+    REDDE 1
+  FIN SI
+  CONIURA db_close(db)
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

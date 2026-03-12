@@ -1,0 +1,44 @@
+INCIPIT grimoire "http_stringify_20c2"
+
+ADVOCARE "cct/http.cct"
+ADVOCARE "cct/verbum.cct"
+
+RITUALE main() REDDE REX
+  EVOCA HttpRequest req AD CONIURA http_request_with_body("POST", "/echo", "abc")
+  EVOCA REX req_headers AD CONIURA http_request_headers_handle(req)
+  EVOCA HttpHeader req_host
+  CONIURA http_header_set(SPECULUM req_host, "Host", "example.test")
+  CONIURA http_headers_push(req_headers, SPECULUM req_host)
+
+  EVOCA VERBUM req_raw AD CONIURA http_stringify_request(req)
+  SI NON CONIURA contains(req_raw, "POST /echo HTTP/1.1")
+    REDDE 1
+  FIN SI
+  SI NON CONIURA contains(req_raw, "Host: example.test")
+    REDDE 2
+  FIN SI
+  SI NON CONIURA ends_with(req_raw, "abc")
+    REDDE 3
+  FIN SI
+
+  EVOCA HttpResponse res AD CONIURA http_response_new(201, "feito")
+  EVOCA REX res_headers AD CONIURA http_response_headers_handle(res)
+  EVOCA HttpHeader res_ct
+  CONIURA http_header_set(SPECULUM res_ct, "Content-Type", "text/plain")
+  CONIURA http_headers_push(res_headers, SPECULUM res_ct)
+
+  EVOCA VERBUM res_raw AD CONIURA http_stringify_response(res)
+  SI NON CONIURA contains(res_raw, "HTTP/1.1 201 Created")
+    REDDE 4
+  FIN SI
+  SI NON CONIURA contains(res_raw, "Content-Type: text/plain")
+    REDDE 5
+  FIN SI
+  SI NON CONIURA ends_with(res_raw, "feito")
+    REDDE 6
+  FIN SI
+
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

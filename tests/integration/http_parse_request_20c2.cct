@@ -1,0 +1,47 @@
+INCIPIT grimoire "http_parse_request_20c2"
+
+ADVOCARE "cct/http.cct"
+ADVOCARE "cct/verbum.cct"
+
+RITUALE main() REDDE REX
+  EVOCA VERBUM crlf AD CONIURA http_crlf()
+  EVOCA VERBUM raw AD "POST /submit HTTP/1.1"
+  VINCIRE raw AD CONIURA concat(raw, crlf)
+  VINCIRE raw AD CONIURA concat(raw, "Host: example.test")
+  VINCIRE raw AD CONIURA concat(raw, crlf)
+  VINCIRE raw AD CONIURA concat(raw, "Content-Type: text/plain")
+  VINCIRE raw AD CONIURA concat(raw, crlf)
+  VINCIRE raw AD CONIURA concat(raw, crlf)
+  VINCIRE raw AD CONIURA concat(raw, "corpo")
+
+  EVOCA HttpRequest req AD CONIURA http_parse_request(raw)
+  SI CONIURA compare(CONIURA http_request_method(req), "POST") != 0
+    REDDE 1
+  FIN SI
+  SI CONIURA compare(CONIURA http_request_path(req), "/submit") != 0
+    REDDE 2
+  FIN SI
+  SI CONIURA compare(CONIURA http_request_body(req), "corpo") != 0
+    REDDE 3
+  FIN SI
+
+  EVOCA REX headers_handle AD CONIURA http_request_headers_handle(req)
+  SI CONIURA http_headers_len(headers_handle) != 2
+    REDDE 4
+  FIN SI
+
+  EVOCA SPECULUM HttpHeader h0 AD CONIURA http_headers_get_ptr(headers_handle, 0)
+  EVOCA SPECULUM HttpHeader h1 AD CONIURA http_headers_get_ptr(headers_handle, 1)
+
+  SI CONIURA compare((*h0).nome, "Host") != 0 VEL CONIURA compare((*h0).valor, "example.test") != 0
+    REDDE 5
+  FIN SI
+
+  SI CONIURA compare((*h1).nome, "Content-Type") != 0 VEL CONIURA compare((*h1).valor, "text/plain") != 0
+    REDDE 6
+  FIN SI
+
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

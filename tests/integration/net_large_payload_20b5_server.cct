@@ -1,0 +1,37 @@
+INCIPIT grimoire "net_large_payload_20b5_server"
+
+ADVOCARE "cct/fs.cct"
+ADVOCARE "cct/net.cct"
+ADVOCARE "cct/socket.cct"
+ADVOCARE "cct/verbum.cct"
+
+RITUALE main() REDDE REX
+  EVOCA VERBUM ready AD "tests/.tmp/net_large_payload_20b5.ready"
+  EVOCA VERBUM done AD "tests/.tmp/net_large_payload_20b5.done"
+  TEMPTA
+    EVOCA SPECULUM NIHIL listener AD CONIURA tcp_listen("", 22317)
+    CONIURA write_all(ready, "ready")
+
+    EVOCA SPECULUM NIHIL client AD CONIURA tcp_accept(listener)
+    EVOCA VERBUM payload AD CONIURA repeat("abcd", 4096)
+    SI CONIURA sock_send(client, payload) != CONIURA len(payload)
+      REDDE 10
+    FIN SI
+
+    CONIURA net_close(client)
+    CONIURA net_close(listener)
+    CONIURA write_all(done, "ok")
+    REDDE 0
+  CAPE FRACTUM erro
+    EVOCA VERBUM msg AD OBSECRO fractum_to_verbum(erro)
+    SI CONIURA compare(msg, "sock_bind falhou") == 0 VEL CONIURA compare(msg, "socket tcp create falhou") == 0
+      CONIURA write_all(ready, "skip")
+      CONIURA write_all(done, "skip")
+      REDDE 0
+    FIN SI
+    REDDE 90
+  FIN TEMPTA
+  REDDE 91
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

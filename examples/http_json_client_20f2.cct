@@ -1,0 +1,54 @@
+INCIPIT grimoire "http_json_client_20f2"
+
+ADVOCARE "cct/fs.cct"
+ADVOCARE "cct/http.cct"
+ADVOCARE "cct/io.cct"
+ADVOCARE "cct/json.cct"
+ADVOCARE "cct/fmt.cct"
+ADVOCARE "cct/time.cct"
+ADVOCARE "cct/verbum.cct"
+
+RITUALE wait_for_file(VERBUM path, REX timeout_ms) REDDE VERUM
+  EVOCA REX elapsed AD 0
+  DUM elapsed < timeout_ms
+    SI CONIURA exists(path)
+      REDDE VERUM
+    FIN SI
+    CONIURA sleep_ms(20)
+    VINCIRE elapsed AD elapsed + 20
+  FIN DUM
+  REDDE CONIURA exists(path)
+EXPLICIT RITUALE
+
+RITUALE main() REDDE REX
+  EVOCA VERBUM ready AD "examples/.tmp/http_simple_server_20f2.ready"
+  SI NON CONIURA wait_for_file(ready, 2000)
+    CONIURA println("http client requer o servidor local ativo em 127.0.0.1:8091")
+    REDDE 0
+  FIN SI
+  SI CONIURA compare(CONIURA read_all(ready), "skip") == 0
+    CONIURA println("http server indisponivel neste host")
+    REDDE 0
+  FIN SI
+  TEMPTA
+    EVOCA Json payload AD CONIURA http_get_json("http://127.0.0.1:8091/json")
+    EVOCA VERBUM service AD CONIURA json_expect_str(CONIURA json_get_key(payload, "service"))
+    EVOCA VERUM ok AD CONIURA json_expect_bool(CONIURA json_get_key(payload, "ok"))
+    EVOCA VERBUM path AD CONIURA json_expect_str(CONIURA json_get_key(payload, "path"))
+
+    CONIURA println(CONIURA concat("service=", service))
+    CONIURA println(CONIURA concat("ok=", CONIURA stringify_bool(ok)))
+    CONIURA println(CONIURA concat("path=", path))
+    REDDE 0
+  CAPE FRACTUM erro
+    EVOCA VERBUM msg AD OBSECRO fractum_to_verbum(erro)
+    SI CONIURA compare(msg, "sock_connect falhou") == 0 VEL CONIURA compare(msg, "socket tcp create falhou") == 0
+      CONIURA println("http client requer o servidor local ativo em 127.0.0.1:8091")
+      REDDE 0
+    FIN SI
+    IACE erro
+  FIN TEMPTA
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

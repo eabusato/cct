@@ -1,0 +1,410 @@
+INCIPIT grimoire "config"
+
+ADVOCARE "cct/env.cct"
+ADVOCARE "cct/fs.cct"
+ADVOCARE "cct/fmt.cct"
+ADVOCARE "cct/json.cct"
+ADVOCARE "cct/option.cct"
+ADVOCARE "cct/parse.cct"
+ADVOCARE "cct/verbum.cct"
+
+SIGILLUM ConfigValueEntry
+  secao: VERBUM
+  chave: VERBUM
+  valor: VERBUM
+FIN SIGILLUM
+
+SIGILLUM ConfigSectionName
+  nome: VERBUM
+FIN SIGILLUM
+
+SIGILLUM ConfigState
+  values_handle: REX
+  sections_handle: REX
+FIN SIGILLUM
+
+ORDO ConfigChunk
+  Chunk(VERBUM line, VERBUM rest)
+FIN ORDO
+
+RITUALE config_alloc(REX bytes) REDDE SPECULUM NIHIL
+  REDDE OBSECRO mem_alloc(bytes)
+EXPLICIT RITUALE
+
+RITUALE config_values_new() REDDE REX
+  REDDE OBSECRO json_arr_handle_new(MENSURA(ConfigValueEntry))
+EXPLICIT RITUALE
+
+RITUALE config_sections_new_handle() REDDE REX
+  REDDE OBSECRO json_arr_handle_new(MENSURA(ConfigSectionName))
+EXPLICIT RITUALE
+
+RITUALE config_values_len(REX handle) REDDE REX
+  REDDE OBSECRO json_arr_handle_len(handle)
+EXPLICIT RITUALE
+
+RITUALE config_values_get_ptr(REX handle, REX idx) REDDE SPECULUM NIHIL
+  REDDE OBSECRO json_arr_handle_get(handle, idx)
+EXPLICIT RITUALE
+
+RITUALE config_values_push(REX handle, SPECULUM NIHIL ptr) REDDE NIHIL
+  OBSECRO json_arr_handle_push(handle, ptr)
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE config_sections_len(SPECULUM NIHIL secs_ptr) REDDE REX
+  EVOCA SPECULUM ConfigState secs AD secs_ptr
+  REDDE OBSECRO json_arr_handle_len((*secs).sections_handle)
+EXPLICIT RITUALE
+
+RITUALE config_sections_count(REX handle) REDDE REX
+  REDDE OBSECRO json_arr_handle_len(handle)
+EXPLICIT RITUALE
+
+RITUALE config_section_get_ptr(REX handle, REX idx) REDDE SPECULUM NIHIL
+  REDDE OBSECRO json_arr_handle_get(handle, idx)
+EXPLICIT RITUALE
+
+RITUALE config_section_name_at(SPECULUM NIHIL secs_ptr, REX idx) REDDE VERBUM
+  EVOCA SPECULUM ConfigState secs AD secs_ptr
+  EVOCA SPECULUM ConfigSectionName ptr AD CONIURA config_section_get_ptr((*secs).sections_handle, idx)
+  REDDE (*ptr).nome
+EXPLICIT RITUALE
+
+RITUALE config_trim_cr(VERBUM s) REDDE VERBUM
+  EVOCA VERBUM cr AD CONIURA from_char(13)
+  SI CONIURA ends_with(s, cr)
+    REDDE CONIURA strip_suffix(s, cr)
+  FIN SI
+  REDDE s
+EXPLICIT RITUALE
+
+RITUALE config_split_first_line(VERBUM s) REDDE ConfigChunk
+  EVOCA REX idx AD CONIURA find(s, "\n")
+  SI idx == -1
+    REDDE Chunk(s, "")
+  FIN SI
+  REDDE Chunk(CONIURA substring(s, 0, idx), CONIURA substring(s, idx + 1, CONIURA len(s)))
+EXPLICIT RITUALE
+
+RITUALE config_ref(SPECULUM NIHIL cfg_ptr) REDDE SPECULUM ConfigState
+  REDDE cfg_ptr
+EXPLICIT RITUALE
+
+RITUALE config_track_section(SPECULUM NIHIL cfg_ptr, VERBUM secao) REDDE NIHIL
+  EVOCA SPECULUM ConfigState cfg AD CONIURA config_ref(cfg_ptr)
+  EVOCA REX i AD 0
+  EVOCA REX n AD CONIURA config_sections_count((*cfg).sections_handle)
+  DUM i < n
+    EVOCA SPECULUM ConfigSectionName ptr AD CONIURA config_section_get_ptr((*cfg).sections_handle, i)
+    SI CONIURA compare((*ptr).nome, secao) == 0
+      REDDE
+    FIN SI
+    VINCIRE i AD i + 1
+  FIN DUM
+  EVOCA ConfigSectionName novo
+  VINCIRE novo.nome AD secao
+  CONIURA config_values_push((*cfg).sections_handle, SPECULUM novo)
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE config_find_value_index(SPECULUM NIHIL cfg_ptr, VERBUM secao, VERBUM chave) REDDE REX
+  EVOCA SPECULUM ConfigState cfg AD CONIURA config_ref(cfg_ptr)
+  EVOCA REX i AD 0
+  EVOCA REX n AD CONIURA config_values_len((*cfg).values_handle)
+  DUM i < n
+    EVOCA SPECULUM ConfigValueEntry ptr AD CONIURA config_values_get_ptr((*cfg).values_handle, i)
+    SI CONIURA compare((*ptr).secao, secao) == 0 ET CONIURA compare((*ptr).chave, chave) == 0
+      REDDE i
+    FIN SI
+    VINCIRE i AD i + 1
+  FIN DUM
+  REDDE -1
+EXPLICIT RITUALE
+
+RITUALE config_set(SPECULUM NIHIL cfg_ptr, VERBUM secao, VERBUM chave, VERBUM valor) REDDE NIHIL
+  EVOCA SPECULUM ConfigState cfg AD CONIURA config_ref(cfg_ptr)
+  EVOCA REX idx AD CONIURA config_find_value_index(cfg_ptr, secao, chave)
+  SI idx != -1
+    EVOCA SPECULUM ConfigValueEntry ptr AD CONIURA config_values_get_ptr((*cfg).values_handle, idx)
+    VINCIRE (*ptr).valor AD valor
+    CONIURA config_track_section(cfg_ptr, secao)
+    REDDE
+  FIN SI
+
+  EVOCA ConfigValueEntry novo
+  VINCIRE novo.secao AD secao
+  VINCIRE novo.chave AD chave
+  VINCIRE novo.valor AD valor
+  CONIURA config_values_push((*cfg).values_handle, SPECULUM novo)
+  CONIURA config_track_section(cfg_ptr, secao)
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE config_remove(SPECULUM NIHIL cfg_ptr, VERBUM secao, VERBUM chave) REDDE VERUM
+  EVOCA SPECULUM ConfigState cfg AD CONIURA config_ref(cfg_ptr)
+  EVOCA REX idx AD CONIURA config_find_value_index(cfg_ptr, secao, chave)
+  SI idx == -1
+    REDDE FALSUM
+  FIN SI
+  EVOCA SPECULUM ConfigValueEntry ptr AD CONIURA config_values_get_ptr((*cfg).values_handle, idx)
+  VINCIRE (*ptr).secao AD ""
+  VINCIRE (*ptr).chave AD ""
+  VINCIRE (*ptr).valor AD ""
+  REDDE VERUM
+EXPLICIT RITUALE
+
+RITUALE config_new() REDDE SPECULUM NIHIL
+  EVOCA SPECULUM ConfigState cfg
+  VINCIRE cfg AD CONIURA config_alloc(MENSURA(ConfigState))
+  VINCIRE (*cfg).values_handle AD CONIURA config_values_new()
+  VINCIRE (*cfg).sections_handle AD CONIURA config_sections_new_handle()
+  REDDE cfg
+EXPLICIT RITUALE
+
+RITUALE config_parse_ini(VERBUM src) REDDE SPECULUM NIHIL
+  EVOCA SPECULUM NIHIL cfg AD CONIURA config_new()
+  EVOCA VERBUM cursor AD src
+  EVOCA VERBUM secao AD ""
+
+  DUM CONIURA len(cursor) != 0
+    EVOCA ConfigChunk chunk AD CONIURA config_split_first_line(cursor)
+    EVOCA VERBUM line AD ""
+    QUANDO chunk
+      CASO Chunk(a, b):
+        VINCIRE line AD CONIURA trim(CONIURA config_trim_cr(a))
+        VINCIRE cursor AD b
+    FIN QUANDO
+
+    SI CONIURA len(line) != 0 ET NON CONIURA starts_with(line, "#") ET NON CONIURA starts_with(line, ";")
+      SI CONIURA starts_with(line, "[")
+        SI NON CONIURA ends_with(line, "]")
+          IACE "config: secao ini invalida"
+        FIN SI
+        VINCIRE secao AD CONIURA trim(CONIURA substring(line, 1, CONIURA len(line) - 1))
+        CONIURA config_track_section(cfg, secao)
+      ALITER
+        EVOCA REX eq AD CONIURA find(line, "=")
+        SI eq == -1
+          IACE "config: linha ini invalida"
+        FIN SI
+        EVOCA VERBUM chave AD CONIURA trim(CONIURA substring(line, 0, eq))
+        EVOCA VERBUM valor AD CONIURA trim(CONIURA substring(line, eq + 1, CONIURA len(line)))
+        SI CONIURA len(chave) == 0
+          IACE "config: chave ini vazia"
+        FIN SI
+        CONIURA config_set(cfg, secao, chave, valor)
+      FIN SI
+    FIN SI
+  FIN DUM
+
+  REDDE cfg
+EXPLICIT RITUALE
+
+RITUALE config_load_ini(VERBUM path) REDDE SPECULUM NIHIL
+  REDDE CONIURA config_parse_ini(CONIURA read_all(path))
+EXPLICIT RITUALE
+
+RITUALE config_sections(SPECULUM NIHIL cfg_ptr) REDDE SPECULUM NIHIL
+  REDDE cfg_ptr
+EXPLICIT RITUALE
+
+RITUALE config_has(SPECULUM NIHIL cfg_ptr, VERBUM secao, VERBUM chave) REDDE VERUM
+  REDDE CONIURA config_find_value_index(cfg_ptr, secao, chave) != -1
+EXPLICIT RITUALE
+
+RITUALE config_get_or(SPECULUM NIHIL cfg_ptr, VERBUM secao, VERBUM chave, VERBUM padrao) REDDE VERBUM
+  EVOCA SPECULUM ConfigState cfg AD CONIURA config_ref(cfg_ptr)
+  EVOCA REX idx AD CONIURA config_find_value_index(cfg_ptr, secao, chave)
+  SI idx == -1
+    REDDE padrao
+  FIN SI
+  EVOCA SPECULUM ConfigValueEntry ptr AD CONIURA config_values_get_ptr((*cfg).values_handle, idx)
+  REDDE (*ptr).valor
+EXPLICIT RITUALE
+
+RITUALE config_get(SPECULUM NIHIL cfg_ptr, VERBUM secao, VERBUM chave) REDDE VERBUM
+  SI NON CONIURA config_has(cfg_ptr, secao, chave)
+    IACE "config: chave ausente"
+  FIN SI
+  REDDE CONIURA config_get_or(cfg_ptr, secao, chave, "")
+EXPLICIT RITUALE
+
+RITUALE config_get_int(SPECULUM NIHIL cfg_ptr, VERBUM secao, VERBUM chave) REDDE REX
+  EVOCA VERBUM raw AD CONIURA config_get(cfg_ptr, secao, chave)
+  EVOCA SPECULUM NIHIL opt AD CONIURA try_int(raw)
+  SI NON CONIURA option_is_some GENUS(REX)(opt)
+    CONIURA option_free GENUS(REX)(opt)
+    IACE "config: inteiro invalido"
+  FIN SI
+  EVOCA REX out AD CONIURA option_unwrap GENUS(REX)(opt)
+  CONIURA option_free GENUS(REX)(opt)
+  REDDE out
+EXPLICIT RITUALE
+
+RITUALE config_get_bool(SPECULUM NIHIL cfg_ptr, VERBUM secao, VERBUM chave) REDDE VERUM
+  EVOCA VERBUM raw AD CONIURA config_get(cfg_ptr, secao, chave)
+  EVOCA SPECULUM NIHIL opt AD CONIURA try_bool(raw)
+  SI NON CONIURA option_is_some GENUS(VERUM)(opt)
+    CONIURA option_free GENUS(VERUM)(opt)
+    IACE "config: bool invalido"
+  FIN SI
+  EVOCA VERUM out AD CONIURA option_unwrap GENUS(VERUM)(opt)
+  CONIURA option_free GENUS(VERUM)(opt)
+  REDDE out
+EXPLICIT RITUALE
+
+RITUALE config_get_real(SPECULUM NIHIL cfg_ptr, VERBUM secao, VERBUM chave) REDDE UMBRA
+  EVOCA VERBUM raw AD CONIURA config_get(cfg_ptr, secao, chave)
+  EVOCA SPECULUM NIHIL opt AD CONIURA try_real(raw)
+  SI NON CONIURA option_is_some GENUS(UMBRA)(opt)
+    CONIURA option_free GENUS(UMBRA)(opt)
+    IACE "config: real invalido"
+  FIN SI
+  EVOCA UMBRA out AD CONIURA option_unwrap GENUS(UMBRA)(opt)
+  CONIURA option_free GENUS(UMBRA)(opt)
+  REDDE out
+EXPLICIT RITUALE
+
+RITUALE config_stringify_ini(SPECULUM NIHIL cfg_ptr) REDDE VERBUM
+  EVOCA SPECULUM ConfigState cfg AD CONIURA config_ref(cfg_ptr)
+  EVOCA VERBUM out AD ""
+  EVOCA VERUM wrote_any AD FALSUM
+  EVOCA REX sec_i AD 0
+  EVOCA REX sec_n AD CONIURA config_sections_count((*cfg).sections_handle)
+
+  DUM sec_i < sec_n
+    EVOCA SPECULUM ConfigSectionName sec_ptr AD CONIURA config_section_get_ptr((*cfg).sections_handle, sec_i)
+    EVOCA VERBUM secao AD (*sec_ptr).nome
+    EVOCA REX value_i AD 0
+    EVOCA REX value_n AD CONIURA config_values_len((*cfg).values_handle)
+    EVOCA VERUM has_entries AD FALSUM
+
+    DUM value_i < value_n
+      EVOCA SPECULUM ConfigValueEntry val_ptr AD CONIURA config_values_get_ptr((*cfg).values_handle, value_i)
+      SI CONIURA len((*val_ptr).chave) != 0 ET CONIURA compare((*val_ptr).secao, secao) == 0
+        VINCIRE has_entries AD VERUM
+      FIN SI
+      VINCIRE value_i AD value_i + 1
+    FIN DUM
+
+    SI has_entries
+      SI wrote_any
+        VINCIRE out AD CONIURA concat(out, "\n")
+      FIN SI
+      SI CONIURA len(secao) != 0
+        VINCIRE out AD CONIURA concat(out, "[")
+        VINCIRE out AD CONIURA concat(out, secao)
+        VINCIRE out AD CONIURA concat(out, "]\n")
+      FIN SI
+
+      VINCIRE value_i AD 0
+      DUM value_i < value_n
+        EVOCA SPECULUM ConfigValueEntry val_ptr AD CONIURA config_values_get_ptr((*cfg).values_handle, value_i)
+        SI CONIURA len((*val_ptr).chave) != 0 ET CONIURA compare((*val_ptr).secao, secao) == 0
+          VINCIRE out AD CONIURA concat(out, (*val_ptr).chave)
+          VINCIRE out AD CONIURA concat(out, "=")
+          VINCIRE out AD CONIURA concat(out, (*val_ptr).valor)
+          VINCIRE out AD CONIURA concat(out, "\n")
+        FIN SI
+        VINCIRE value_i AD value_i + 1
+      FIN DUM
+      VINCIRE wrote_any AD VERUM
+    FIN SI
+
+    VINCIRE sec_i AD sec_i + 1
+  FIN DUM
+
+  SI CONIURA ends_with(out, "\n")
+    VINCIRE out AD CONIURA strip_suffix(out, "\n")
+  FIN SI
+  REDDE out
+EXPLICIT RITUALE
+
+RITUALE config_write_ini(SPECULUM NIHIL cfg_ptr, VERBUM path) REDDE NIHIL
+  CONIURA write_all(path, CONIURA config_stringify_ini(cfg_ptr))
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE config_env_name(VERBUM prefixo, VERBUM secao, VERBUM chave) REDDE VERBUM
+  EVOCA VERBUM out AD CONIURA to_upper(prefixo)
+  SI CONIURA len(secao) != 0
+    VINCIRE out AD CONIURA concat(out, "_")
+    VINCIRE out AD CONIURA concat(out, CONIURA to_upper(secao))
+  FIN SI
+  VINCIRE out AD CONIURA concat(out, "_")
+  VINCIRE out AD CONIURA concat(out, CONIURA to_upper(chave))
+  REDDE out
+EXPLICIT RITUALE
+
+RITUALE config_apply_env_prefix(SPECULUM NIHIL cfg_ptr, VERBUM prefixo) REDDE NIHIL
+  EVOCA SPECULUM ConfigState cfg AD CONIURA config_ref(cfg_ptr)
+  EVOCA REX i AD 0
+  EVOCA REX n AD CONIURA config_values_len((*cfg).values_handle)
+  DUM i < n
+    EVOCA SPECULUM ConfigValueEntry ptr AD CONIURA config_values_get_ptr((*cfg).values_handle, i)
+    SI CONIURA len((*ptr).chave) != 0
+      EVOCA VERBUM env_name AD CONIURA config_env_name(prefixo, (*ptr).secao, (*ptr).chave)
+      SI CONIURA has_env(env_name)
+        VINCIRE (*ptr).valor AD CONIURA getenv(env_name)
+      FIN SI
+    FIN SI
+    VINCIRE i AD i + 1
+  FIN DUM
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE config_json_value_to_verbum(Json j) REDDE VERBUM
+  SI CONIURA json_is_str(j)
+    REDDE CONIURA json_expect_str(j)
+  FIN SI
+  SI CONIURA json_is_bool(j)
+    SI CONIURA json_expect_bool(j)
+      REDDE "true"
+    FIN SI
+    REDDE "false"
+  FIN SI
+  REDDE CONIURA json_stringify(j)
+EXPLICIT RITUALE
+
+RITUALE config_section_to_json(SPECULUM NIHIL cfg_ptr, VERBUM secao) REDDE Json
+  EVOCA SPECULUM ConfigState cfg AD CONIURA config_ref(cfg_ptr)
+  EVOCA Json out AD CONIURA json_obj()
+  EVOCA REX i AD 0
+  EVOCA REX n AD CONIURA config_values_len((*cfg).values_handle)
+  DUM i < n
+    EVOCA SPECULUM ConfigValueEntry ptr AD CONIURA config_values_get_ptr((*cfg).values_handle, i)
+    SI CONIURA len((*ptr).chave) != 0 ET CONIURA compare((*ptr).secao, secao) == 0
+      CONIURA json_set_key(out, (*ptr).chave, CONIURA json_str((*ptr).valor))
+    FIN SI
+    VINCIRE i AD i + 1
+  FIN DUM
+  REDDE out
+EXPLICIT RITUALE
+
+RITUALE config_from_json(Json j) REDDE SPECULUM NIHIL
+  SI NON CONIURA json_is_obj(j)
+    IACE "config: json raiz deve ser objeto"
+  FIN SI
+  EVOCA SPECULUM NIHIL cfg AD CONIURA config_new()
+  EVOCA REX i AD 0
+  EVOCA REX n AD CONIURA json_obj_len(j)
+  DUM i < n
+    EVOCA VERBUM chave AD CONIURA json_obj_key_at(j, i)
+    EVOCA Json valor AD CONIURA json_obj_value_at(j, i)
+    SI CONIURA json_is_obj(valor)
+      EVOCA REX sub_i AD 0
+      EVOCA REX sub_n AD CONIURA json_obj_len(valor)
+      DUM sub_i < sub_n
+        CONIURA config_set(cfg, chave, CONIURA json_obj_key_at(valor, sub_i), CONIURA config_json_value_to_verbum(CONIURA json_obj_value_at(valor, sub_i)))
+        VINCIRE sub_i AD sub_i + 1
+      FIN DUM
+    ALITER
+      CONIURA config_set(cfg, "", chave, CONIURA config_json_value_to_verbum(valor))
+    FIN SI
+    VINCIRE i AD i + 1
+  FIN DUM
+  REDDE cfg
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

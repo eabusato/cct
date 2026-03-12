@@ -1,0 +1,28 @@
+INCIPIT grimoire "db_open_exec_20e1"
+
+ADVOCARE "cct/db_sqlite.cct"
+ADVOCARE "cct/fs.cct"
+ADVOCARE "cct/verbum.cct"
+
+RITUALE main() REDDE REX
+  EVOCA VERBUM path AD "tests/.tmp/db_open_exec_20e1.sqlite"
+  EVOCA SPECULUM NIHIL db AD CONIURA db_open(path)
+  CONIURA db_exec(db, "CREATE TABLE IF NOT EXISTS items(id INTEGER PRIMARY KEY, nome TEXT);")
+  SI CONIURA len(CONIURA db_last_error(db)) != 0
+    REDDE 1
+  FIN SI
+  CONIURA db_exec(db, "INSERT INTO items(nome) VALUES('cct');")
+  SI CONIURA len(CONIURA db_last_error(db)) != 0
+    REDDE 2
+  FIN SI
+  CONIURA db_close(db)
+  SI NON CONIURA exists(path)
+    REDDE 3
+  FIN SI
+  SI CONIURA size(path) <= 0
+    REDDE 4
+  FIN SI
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

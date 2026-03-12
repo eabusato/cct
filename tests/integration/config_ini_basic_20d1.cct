@@ -1,0 +1,35 @@
+INCIPIT grimoire "config_ini_basic_20d1"
+
+ADVOCARE "cct/config.cct"
+ADVOCARE "cct/fs.cct"
+ADVOCARE "cct/verbum.cct"
+
+RITUALE main() REDDE REX
+  EVOCA VERBUM path AD "tests/.tmp/config_ini_basic_20d1.ini"
+  EVOCA VERBUM src AD "# comment"
+  VINCIRE src AD CONIURA concat(src, "\n")
+  VINCIRE src AD CONIURA concat(src, "app = cct")
+  VINCIRE src AD CONIURA concat(src, "\n")
+  VINCIRE src AD CONIURA concat(src, "[server]")
+  VINCIRE src AD CONIURA concat(src, "\n")
+  VINCIRE src AD CONIURA concat(src, "host = 127.0.0.1")
+  VINCIRE src AD CONIURA concat(src, "\n")
+  VINCIRE src AD CONIURA concat(src, "port = 8080")
+
+  CONIURA write_all(path, src)
+
+  EVOCA SPECULUM NIHIL cfg AD CONIURA config_load_ini(path)
+  SI CONIURA compare(CONIURA config_get(cfg, "", "app"), "cct") != 0
+    REDDE 1
+  FIN SI
+  SI CONIURA compare(CONIURA config_get(cfg, "server", "host"), "127.0.0.1") != 0
+    REDDE 2
+  FIN SI
+  SI CONIURA config_get_int(cfg, "server", "port") != 8080
+    REDDE 3
+  FIN SI
+
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

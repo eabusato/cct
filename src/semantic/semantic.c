@@ -1416,7 +1416,7 @@ static cct_sem_type_t* sem_resolve_ast_type(cct_semantic_analyzer_t *sem, const 
  * ======================================================================== */
 
 static const cct_sem_builtin_spec_t* sem_find_builtin(cct_semantic_analyzer_t *sem, const char *name) {
-    static cct_sem_builtin_spec_t specs[303];
+    static cct_sem_builtin_spec_t specs[328];
     static bool initialized = false;
 
     if (!initialized) {
@@ -1724,6 +1724,31 @@ static const cct_sem_builtin_spec_t* sem_find_builtin(cct_semantic_analyzer_t *s
         specs[300].name = "sock_recv"; specs[300].min_args = 2; specs[300].variadic = false;
         specs[301].name = "sock_close"; specs[301].min_args = 1; specs[301].variadic = false;
         specs[302].name = "sock_set_timeout_ms"; specs[302].min_args = 2; specs[302].variadic = false;
+        specs[303].name = "sock_peer_addr"; specs[303].min_args = 1; specs[303].variadic = false;
+        specs[304].name = "sock_local_addr"; specs[304].min_args = 1; specs[304].variadic = false;
+        specs[305].name = "sock_last_error"; specs[305].min_args = 0; specs[305].variadic = false;
+        specs[306].name = "db_open"; specs[306].min_args = 1; specs[306].variadic = false;
+        specs[307].name = "db_close"; specs[307].min_args = 1; specs[307].variadic = false;
+        specs[308].name = "db_exec"; specs[308].min_args = 2; specs[308].variadic = false;
+        specs[309].name = "db_last_error"; specs[309].min_args = 1; specs[309].variadic = false;
+        specs[310].name = "db_query"; specs[310].min_args = 2; specs[310].variadic = false;
+        specs[311].name = "rows_next"; specs[311].min_args = 1; specs[311].variadic = false;
+        specs[312].name = "rows_get_text"; specs[312].min_args = 2; specs[312].variadic = false;
+        specs[313].name = "rows_get_int"; specs[313].min_args = 2; specs[313].variadic = false;
+        specs[314].name = "rows_get_real"; specs[314].min_args = 2; specs[314].variadic = false;
+        specs[315].name = "rows_close"; specs[315].min_args = 1; specs[315].variadic = false;
+        specs[316].name = "db_prepare"; specs[316].min_args = 2; specs[316].variadic = false;
+        specs[317].name = "stmt_bind_text"; specs[317].min_args = 3; specs[317].variadic = false;
+        specs[318].name = "stmt_bind_int"; specs[318].min_args = 3; specs[318].variadic = false;
+        specs[319].name = "stmt_bind_real"; specs[319].min_args = 3; specs[319].variadic = false;
+        specs[320].name = "stmt_step"; specs[320].min_args = 1; specs[320].variadic = false;
+        specs[321].name = "stmt_reset"; specs[321].min_args = 1; specs[321].variadic = false;
+        specs[322].name = "stmt_finalize"; specs[322].min_args = 1; specs[322].variadic = false;
+        specs[323].name = "db_begin"; specs[323].min_args = 1; specs[323].variadic = false;
+        specs[324].name = "db_commit"; specs[324].min_args = 1; specs[324].variadic = false;
+        specs[325].name = "db_rollback"; specs[325].min_args = 1; specs[325].variadic = false;
+        specs[326].name = "db_scalar_int"; specs[326].min_args = 2; specs[326].variadic = false;
+        specs[327].name = "db_scalar_text"; specs[327].min_args = 2; specs[327].variadic = false;
         initialized = true;
     }
 
@@ -2030,6 +2055,31 @@ static const cct_sem_builtin_spec_t* sem_find_builtin(cct_semantic_analyzer_t *s
     specs[300].return_type = &sem->type_verbum;
     specs[301].return_type = &sem->type_nihil;
     specs[302].return_type = &sem->type_nihil;
+    specs[303].return_type = &sem->type_verbum;
+    specs[304].return_type = &sem->type_verbum;
+    specs[305].return_type = &sem->type_verbum;
+    specs[306].return_type = sem_make_pointer_type(sem, &sem->type_nihil);
+    specs[307].return_type = &sem->type_nihil;
+    specs[308].return_type = &sem->type_nihil;
+    specs[309].return_type = &sem->type_verbum;
+    specs[310].return_type = sem_make_pointer_type(sem, &sem->type_nihil);
+    specs[311].return_type = &sem->type_verum;
+    specs[312].return_type = &sem->type_verbum;
+    specs[313].return_type = &sem->type_rex;
+    specs[314].return_type = &sem->type_umbra;
+    specs[315].return_type = &sem->type_nihil;
+    specs[316].return_type = sem_make_pointer_type(sem, &sem->type_nihil);
+    specs[317].return_type = &sem->type_nihil;
+    specs[318].return_type = &sem->type_nihil;
+    specs[319].return_type = &sem->type_nihil;
+    specs[320].return_type = &sem->type_verum;
+    specs[321].return_type = &sem->type_nihil;
+    specs[322].return_type = &sem->type_nihil;
+    specs[323].return_type = &sem->type_nihil;
+    specs[324].return_type = &sem->type_nihil;
+    specs[325].return_type = &sem->type_nihil;
+    specs[326].return_type = &sem->type_rex;
+    specs[327].return_type = &sem->type_verbum;
 
     for (size_t i = 0; i < sizeof(specs) / sizeof(specs[0]); i++) {
         if (!specs[i].name) continue;
@@ -3081,11 +3131,96 @@ static cct_sem_type_t* sem_analyze_builtin_obsecro(
              strcmp(name, "sock_send") == 0 ||
              strcmp(name, "sock_recv") == 0 ||
              strcmp(name, "sock_close") == 0 ||
-             strcmp(name, "sock_set_timeout_ms") == 0) &&
+             strcmp(name, "sock_set_timeout_ms") == 0 ||
+             strcmp(name, "sock_peer_addr") == 0 ||
+             strcmp(name, "sock_local_addr") == 0 ||
+             strcmp(name, "db_close") == 0 ||
+             strcmp(name, "db_exec") == 0 ||
+             strcmp(name, "db_last_error") == 0 ||
+             strcmp(name, "db_query") == 0 ||
+             strcmp(name, "db_prepare") == 0 ||
+             strcmp(name, "rows_next") == 0 ||
+             strcmp(name, "rows_get_text") == 0 ||
+             strcmp(name, "rows_get_int") == 0 ||
+             strcmp(name, "rows_get_real") == 0 ||
+             strcmp(name, "rows_close") == 0 ||
+             strcmp(name, "stmt_bind_text") == 0 ||
+             strcmp(name, "stmt_bind_int") == 0 ||
+             strcmp(name, "stmt_bind_real") == 0 ||
+             strcmp(name, "stmt_step") == 0 ||
+             strcmp(name, "stmt_reset") == 0 ||
+             strcmp(name, "stmt_finalize") == 0 ||
+             strcmp(name, "db_begin") == 0 ||
+             strcmp(name, "db_commit") == 0 ||
+             strcmp(name, "db_rollback") == 0 ||
+             strcmp(name, "db_scalar_int") == 0 ||
+             strcmp(name, "db_scalar_text") == 0) &&
             i == 0 &&
             !(arg_type && (arg_type->kind == CCT_SEM_TYPE_POINTER || sem_is_error_type(arg_type)))) {
             sem_report_nodef(sem, expr->as.obsecro.arguments->nodes[i],
-                             "OBSECRO %s expects socket pointer as first argument", name);
+                             (strcmp(name, "db_close") == 0 || strcmp(name, "db_exec") == 0 ||
+                              strcmp(name, "db_last_error") == 0 || strcmp(name, "db_query") == 0 ||
+                              strcmp(name, "db_prepare") == 0 || strcmp(name, "db_begin") == 0 ||
+                              strcmp(name, "db_commit") == 0 || strcmp(name, "db_rollback") == 0 ||
+                              strcmp(name, "db_scalar_int") == 0 || strcmp(name, "db_scalar_text") == 0)
+                                 ? "OBSECRO %s expects db pointer as first argument"
+                                 : ((strcmp(name, "rows_next") == 0 || strcmp(name, "rows_get_text") == 0 ||
+                                     strcmp(name, "rows_get_int") == 0 || strcmp(name, "rows_get_real") == 0 ||
+                                     strcmp(name, "rows_close") == 0)
+                                        ? "OBSECRO %s expects rows pointer as first argument"
+                                        : ((strcmp(name, "stmt_bind_text") == 0 || strcmp(name, "stmt_bind_int") == 0 ||
+                                            strcmp(name, "stmt_bind_real") == 0 || strcmp(name, "stmt_step") == 0 ||
+                                            strcmp(name, "stmt_reset") == 0 || strcmp(name, "stmt_finalize") == 0)
+                                               ? "OBSECRO %s expects stmt pointer as first argument"
+                                               : "OBSECRO %s expects socket pointer as first argument")),
+                             name);
+        }
+        if ((strcmp(name, "db_open") == 0) &&
+            i == 0 &&
+            !(arg_type && (arg_type->kind == CCT_SEM_TYPE_VERBUM || sem_is_error_type(arg_type)))) {
+            sem_report_nodef(sem, expr->as.obsecro.arguments->nodes[i],
+                             "OBSECRO db_open expects VERBUM path argument");
+        }
+        if ((strcmp(name, "db_exec") == 0 || strcmp(name, "db_query") == 0 || strcmp(name, "db_prepare") == 0 ||
+             strcmp(name, "db_scalar_int") == 0 || strcmp(name, "db_scalar_text") == 0) &&
+            i == 1 &&
+            !(arg_type && (arg_type->kind == CCT_SEM_TYPE_VERBUM || sem_is_error_type(arg_type)))) {
+            sem_report_nodef(sem, expr->as.obsecro.arguments->nodes[i],
+                             "OBSECRO %s expects VERBUM sql as second argument", name);
+        }
+        if ((strcmp(name, "rows_get_text") == 0 ||
+             strcmp(name, "rows_get_int") == 0 ||
+             strcmp(name, "rows_get_real") == 0) &&
+            i == 1 &&
+            !(sem_is_integer_type(arg_type) || sem_is_error_type(arg_type))) {
+            sem_report_nodef(sem, expr->as.obsecro.arguments->nodes[i],
+                             "OBSECRO %s expects integer column as second argument", name);
+        }
+        if ((strcmp(name, "stmt_bind_text") == 0 ||
+             strcmp(name, "stmt_bind_int") == 0 ||
+             strcmp(name, "stmt_bind_real") == 0) &&
+            i == 1 &&
+            !(sem_is_integer_type(arg_type) || sem_is_error_type(arg_type))) {
+            sem_report_nodef(sem, expr->as.obsecro.arguments->nodes[i],
+                             "OBSECRO %s expects integer idx as second argument", name);
+        }
+        if (strcmp(name, "stmt_bind_text") == 0 &&
+            i == 2 &&
+            !(arg_type && (arg_type->kind == CCT_SEM_TYPE_VERBUM || sem_is_error_type(arg_type)))) {
+            sem_report_nodef(sem, expr->as.obsecro.arguments->nodes[i],
+                             "OBSECRO stmt_bind_text expects VERBUM value as third argument");
+        }
+        if (strcmp(name, "stmt_bind_int") == 0 &&
+            i == 2 &&
+            !(sem_is_integer_type(arg_type) || sem_is_error_type(arg_type))) {
+            sem_report_nodef(sem, expr->as.obsecro.arguments->nodes[i],
+                             "OBSECRO stmt_bind_int expects integer value as third argument");
+        }
+        if (strcmp(name, "stmt_bind_real") == 0 &&
+            i == 2 &&
+            !(arg_type && (arg_type->kind == CCT_SEM_TYPE_UMBRA || sem_is_error_type(arg_type)))) {
+            sem_report_nodef(sem, expr->as.obsecro.arguments->nodes[i],
+                             "OBSECRO stmt_bind_real expects UMBRA value as third argument");
         }
         if ((strcmp(name, "sock_connect") == 0 || strcmp(name, "sock_bind") == 0) &&
             i == 1 &&

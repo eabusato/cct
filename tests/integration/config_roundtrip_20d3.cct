@@ -1,0 +1,34 @@
+INCIPIT grimoire "config_roundtrip_20d3"
+
+ADVOCARE "cct/config.cct"
+ADVOCARE "cct/verbum.cct"
+
+RITUALE main() REDDE REX
+  EVOCA VERBUM src AD "[db]"
+  VINCIRE src AD CONIURA concat(src, "\n")
+  VINCIRE src AD CONIURA concat(src, "host=localhost")
+  VINCIRE src AD CONIURA concat(src, "\n")
+  VINCIRE src AD CONIURA concat(src, "port=5432")
+
+  EVOCA SPECULUM NIHIL cfg AD CONIURA config_parse_ini(src)
+  SI NON CONIURA config_remove(cfg, "db", "port")
+    REDDE 1
+  FIN SI
+  CONIURA config_set(cfg, "db", "user", "alice")
+
+  EVOCA VERBUM ini AD CONIURA config_stringify_ini(cfg)
+  EVOCA SPECULUM NIHIL again AD CONIURA config_parse_ini(ini)
+  SI CONIURA compare(CONIURA config_get(again, "db", "host"), "localhost") != 0
+    REDDE 2
+  FIN SI
+  SI CONIURA config_has(again, "db", "port")
+    REDDE 3
+  FIN SI
+  SI CONIURA compare(CONIURA config_get(again, "db", "user"), "alice") != 0
+    REDDE 4
+  FIN SI
+
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

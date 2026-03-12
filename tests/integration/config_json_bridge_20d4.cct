@@ -1,0 +1,37 @@
+INCIPIT grimoire "config_json_bridge_20d4"
+
+ADVOCARE "cct/config.cct"
+ADVOCARE "cct/json.cct"
+ADVOCARE "cct/verbum.cct"
+
+RITUALE main() REDDE REX
+  EVOCA Json root AD CONIURA json_obj()
+  EVOCA Json db AD CONIURA json_obj()
+  CONIURA json_set_key(db, "host", CONIURA json_str("localhost"))
+  CONIURA json_set_key(db, "port", CONIURA json_num(5432.0))
+  CONIURA json_set_key(root, "db", db)
+  CONIURA json_set_key(root, "debug", CONIURA json_bool(VERUM))
+
+  EVOCA SPECULUM NIHIL cfg AD CONIURA config_from_json(root)
+  SI CONIURA compare(CONIURA config_get(cfg, "db", "host"), "localhost") != 0
+    REDDE 1
+  FIN SI
+  SI CONIURA config_get_int(cfg, "db", "port") != 5432
+    REDDE 2
+  FIN SI
+  SI NON CONIURA config_get_bool(cfg, "", "debug")
+    REDDE 3
+  FIN SI
+
+  EVOCA Json db_json AD CONIURA config_section_to_json(cfg, "db")
+  SI CONIURA compare(CONIURA json_expect_str(CONIURA json_get_key(db_json, "host")), "localhost") != 0
+    REDDE 4
+  FIN SI
+  SI CONIURA compare(CONIURA json_expect_str(CONIURA json_get_key(db_json, "port")), "5432") != 0
+    REDDE 5
+  FIN SI
+
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

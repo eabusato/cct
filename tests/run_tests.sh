@@ -17253,6 +17253,760 @@ rm -f tests/.tmp/net_read_exact_20b3.ready \
 
 echo ""
 echo "========================================"
+echo "FASE 20B4: Enderecos, erros e introspecao"
+echo "========================================"
+echo ""
+
+# Test 1229: net_addr_parse_20b4
+echo "Test 1229: net_addr_parse_20b4"
+SRC_1229="tests/integration/net_addr_parse_20b4.cct"
+BIN_1229="${SRC_1229%.cct}"
+cleanup_codegen_artifacts "$SRC_1229"
+if "$CCT_BIN" "$SRC_1229" >"$CCT_TMP_DIR/cct_phase20b4_1229_compile.out" 2>&1; then
+    "$BIN_1229" >"$CCT_TMP_DIR/cct_phase20b4_1229_run.out" 2>&1
+    RC_1229=$?
+else
+    RC_1229=255
+fi
+if [ "$RC_1229" -eq 0 ]; then
+    test_pass "net_addr_parse_20b4 valida parse canonico host:port e casos invalidos"
+else
+    test_fail "net_addr_parse_20b4 regrediu parse de enderecos"
+fi
+
+# Test 1230: net_peer_local_addr_20b4
+echo "Test 1230: net_peer_local_addr_20b4"
+HELPER_1230="tests/integration/net_peer_local_addr_20b4_server.cct"
+SRC_1230="tests/integration/net_peer_local_addr_20b4.cct"
+BIN_1230="${SRC_1230%.cct}"
+cleanup_codegen_artifacts "$HELPER_1230"
+cleanup_codegen_artifacts "$SRC_1230"
+rm -f tests/.tmp/net_peer_local_addr_20b4.ready \
+      tests/.tmp/net_peer_local_addr_20b4.done \
+      tests/.tmp/net_peer_local_addr_20b4.server.log
+if "$CCT_BIN" "$HELPER_1230" >"$CCT_TMP_DIR/cct_phase20b4_1230_helper_compile.out" 2>&1 && \
+   "$CCT_BIN" "$SRC_1230" >"$CCT_TMP_DIR/cct_phase20b4_1230_compile.out" 2>&1; then
+    "$BIN_1230" >"$CCT_TMP_DIR/cct_phase20b4_1230_run.out" 2>&1
+    RC_1230=$?
+else
+    RC_1230=255
+fi
+if [ "$RC_1230" -eq 0 ]; then
+    test_pass "net_peer_local_addr_20b4 valida introspecao peer/local e sock_last_error"
+else
+    test_fail "net_peer_local_addr_20b4 regrediu introspecao de sockets"
+fi
+rm -f tests/.tmp/net_peer_local_addr_20b4.ready \
+      tests/.tmp/net_peer_local_addr_20b4.done \
+      tests/.tmp/net_peer_local_addr_20b4.server.log
+
+echo ""
+echo "========================================"
+echo "FASE 20B5: Hardening de rede"
+echo "========================================"
+echo ""
+
+# Test 1231: net_large_payload_20b5
+echo "Test 1231: net_large_payload_20b5"
+HELPER_1231="tests/integration/net_large_payload_20b5_server.cct"
+SRC_1231="tests/integration/net_large_payload_20b5.cct"
+BIN_1231="${SRC_1231%.cct}"
+cleanup_codegen_artifacts "$HELPER_1231"
+cleanup_codegen_artifacts "$SRC_1231"
+rm -f tests/.tmp/net_large_payload_20b5.ready \
+      tests/.tmp/net_large_payload_20b5.done \
+      tests/.tmp/net_large_payload_20b5.server.log
+if "$CCT_BIN" "$HELPER_1231" >"$CCT_TMP_DIR/cct_phase20b5_1231_helper_compile.out" 2>&1 && \
+   "$CCT_BIN" "$SRC_1231" >"$CCT_TMP_DIR/cct_phase20b5_1231_compile.out" 2>&1; then
+    "$BIN_1231" >"$CCT_TMP_DIR/cct_phase20b5_1231_run.out" 2>&1
+    RC_1231=$?
+else
+    RC_1231=255
+fi
+if [ "$RC_1231" -eq 0 ]; then
+    test_pass "net_large_payload_20b5 valida payload grande com send+read_exact"
+else
+    test_fail "net_large_payload_20b5 regrediu fluxo de payload grande"
+fi
+rm -f tests/.tmp/net_large_payload_20b5.ready \
+      tests/.tmp/net_large_payload_20b5.done \
+      tests/.tmp/net_large_payload_20b5.server.log
+
+# Test 1232: net_repeated_connect_close_20b5
+echo "Test 1232: net_repeated_connect_close_20b5"
+HELPER_1232="tests/integration/net_repeated_connect_close_20b5_server.cct"
+SRC_1232="tests/integration/net_repeated_connect_close_20b5.cct"
+BIN_1232="${SRC_1232%.cct}"
+cleanup_codegen_artifacts "$HELPER_1232"
+cleanup_codegen_artifacts "$SRC_1232"
+rm -f tests/.tmp/net_repeated_connect_close_20b5.ready \
+      tests/.tmp/net_repeated_connect_close_20b5.done \
+      tests/.tmp/net_repeated_connect_close_20b5.server.log
+if "$CCT_BIN" "$HELPER_1232" >"$CCT_TMP_DIR/cct_phase20b5_1232_helper_compile.out" 2>&1 && \
+   "$CCT_BIN" "$SRC_1232" >"$CCT_TMP_DIR/cct_phase20b5_1232_compile.out" 2>&1; then
+    "$BIN_1232" >"$CCT_TMP_DIR/cct_phase20b5_1232_run.out" 2>&1
+    RC_1232=$?
+else
+    RC_1232=255
+fi
+if [ "$RC_1232" -eq 0 ]; then
+    test_pass "net_repeated_connect_close_20b5 valida conectividade repetida sem vazamento funcional"
+else
+    test_fail "net_repeated_connect_close_20b5 regrediu conectividade repetida"
+fi
+rm -f tests/.tmp/net_repeated_connect_close_20b5.ready \
+      tests/.tmp/net_repeated_connect_close_20b5.done \
+      tests/.tmp/net_repeated_connect_close_20b5.server.log
+
+# Test 1233: net_timeout_recovery_20b5
+echo "Test 1233: net_timeout_recovery_20b5"
+HELPER_1233="tests/integration/net_timeout_recovery_20b5_server.cct"
+SRC_1233="tests/integration/net_timeout_recovery_20b5.cct"
+BIN_1233="${SRC_1233%.cct}"
+cleanup_codegen_artifacts "$HELPER_1233"
+cleanup_codegen_artifacts "$SRC_1233"
+rm -f tests/.tmp/net_timeout_recovery_20b5.ready \
+      tests/.tmp/net_timeout_recovery_20b5.done \
+      tests/.tmp/net_timeout_recovery_20b5.server.log
+if "$CCT_BIN" "$HELPER_1233" >"$CCT_TMP_DIR/cct_phase20b5_1233_helper_compile.out" 2>&1 && \
+   "$CCT_BIN" "$SRC_1233" >"$CCT_TMP_DIR/cct_phase20b5_1233_compile.out" 2>&1; then
+    "$BIN_1233" >"$CCT_TMP_DIR/cct_phase20b5_1233_run.out" 2>&1
+    RC_1233=$?
+else
+    RC_1233=255
+fi
+if [ "$RC_1233" -eq 0 ]; then
+    test_pass "net_timeout_recovery_20b5 valida timeout seguido de recuperacao do fluxo"
+else
+    test_fail "net_timeout_recovery_20b5 regrediu recuperacao apos timeout"
+fi
+rm -f tests/.tmp/net_timeout_recovery_20b5.ready \
+      tests/.tmp/net_timeout_recovery_20b5.done \
+      tests/.tmp/net_timeout_recovery_20b5.server.log
+
+echo ""
+echo "========================================"
+echo "FASE 20C1: Modelos HTTP canonicos"
+echo "========================================"
+echo ""
+
+# Test 1234: http_model_basic_20c1
+echo "Test 1234: http_model_basic_20c1"
+SRC_1234="tests/integration/http_model_basic_20c1.cct"
+BIN_1234="${SRC_1234%.cct}"
+cleanup_codegen_artifacts "$SRC_1234"
+if "$CCT_BIN" "$SRC_1234" >"$CCT_TMP_DIR/cct_phase20c1_1234_compile.out" 2>&1; then
+    "$BIN_1234" >"$CCT_TMP_DIR/cct_phase20c1_1234_run.out" 2>&1
+    RC_1234=$?
+else
+    RC_1234=255
+fi
+if [ "$RC_1234" -eq 0 ]; then
+    test_pass "http_model_basic_20c1 valida HttpMethod/HttpRequest/HttpHeader canônicos"
+else
+    test_fail "http_model_basic_20c1 regrediu modelos básicos HTTP"
+fi
+
+# Test 1235: http_response_model_20c1
+echo "Test 1235: http_response_model_20c1"
+SRC_1235="tests/integration/http_response_model_20c1.cct"
+BIN_1235="${SRC_1235%.cct}"
+cleanup_codegen_artifacts "$SRC_1235"
+if "$CCT_BIN" "$SRC_1235" >"$CCT_TMP_DIR/cct_phase20c1_1235_compile.out" 2>&1; then
+    "$BIN_1235" >"$CCT_TMP_DIR/cct_phase20c1_1235_run.out" 2>&1
+    RC_1235=$?
+else
+    RC_1235=255
+fi
+if [ "$RC_1235" -eq 0 ]; then
+    test_pass "http_response_model_20c1 valida HttpResponse e headers mutáveis canônicos"
+else
+    test_fail "http_response_model_20c1 regrediu modelo de resposta HTTP"
+fi
+
+echo ""
+echo "========================================"
+echo "FASE 20C2: Parse e serializacao de request/response"
+echo "========================================"
+echo ""
+
+# Test 1236: http_parse_request_20c2
+echo "Test 1236: http_parse_request_20c2"
+SRC_1236="tests/integration/http_parse_request_20c2.cct"
+BIN_1236="${SRC_1236%.cct}"
+cleanup_codegen_artifacts "$SRC_1236"
+if "$CCT_BIN" "$SRC_1236" >"$CCT_TMP_DIR/cct_phase20c2_1236_compile.out" 2>&1; then
+    "$BIN_1236" >"$CCT_TMP_DIR/cct_phase20c2_1236_run.out" 2>&1
+    RC_1236=$?
+else
+    RC_1236=255
+fi
+if [ "$RC_1236" -eq 0 ]; then
+    test_pass "http_parse_request_20c2 valida request line, headers e body"
+else
+    test_fail "http_parse_request_20c2 regrediu parse de request HTTP"
+fi
+
+# Test 1237: http_parse_response_20c2
+echo "Test 1237: http_parse_response_20c2"
+SRC_1237="tests/integration/http_parse_response_20c2.cct"
+BIN_1237="${SRC_1237%.cct}"
+cleanup_codegen_artifacts "$SRC_1237"
+if "$CCT_BIN" "$SRC_1237" >"$CCT_TMP_DIR/cct_phase20c2_1237_compile.out" 2>&1; then
+    "$BIN_1237" >"$CCT_TMP_DIR/cct_phase20c2_1237_run.out" 2>&1
+    RC_1237=$?
+else
+    RC_1237=255
+fi
+if [ "$RC_1237" -eq 0 ]; then
+    test_pass "http_parse_response_20c2 valida status line, headers e body"
+else
+    test_fail "http_parse_response_20c2 regrediu parse de response HTTP"
+fi
+
+# Test 1238: http_stringify_20c2
+echo "Test 1238: http_stringify_20c2"
+SRC_1238="tests/integration/http_stringify_20c2.cct"
+BIN_1238="${SRC_1238%.cct}"
+cleanup_codegen_artifacts "$SRC_1238"
+if "$CCT_BIN" "$SRC_1238" >"$CCT_TMP_DIR/cct_phase20c2_1238_compile.out" 2>&1; then
+    "$BIN_1238" >"$CCT_TMP_DIR/cct_phase20c2_1238_run.out" 2>&1
+    RC_1238=$?
+else
+    RC_1238=255
+fi
+if [ "$RC_1238" -eq 0 ]; then
+    test_pass "http_stringify_20c2 valida serializacao deterministica de request/response"
+else
+    test_fail "http_stringify_20c2 regrediu serializacao HTTP"
+fi
+
+echo ""
+echo "========================================"
+echo "FASE 20C3: Cliente HTTP minimo"
+echo "========================================"
+echo ""
+
+# Test 1239: http_client_get_local_20c3
+echo "Test 1239: http_client_get_local_20c3"
+HELPER_1239="tests/integration/http_client_get_local_20c3_server.cct"
+SRC_1239="tests/integration/http_client_get_local_20c3.cct"
+BIN_1239="${SRC_1239%.cct}"
+cleanup_codegen_artifacts "$HELPER_1239"
+cleanup_codegen_artifacts "$SRC_1239"
+rm -f tests/.tmp/http_client_get_local_20c3.ready \
+      tests/.tmp/http_client_get_local_20c3.done \
+      tests/.tmp/http_client_get_local_20c3.server.log
+if "$CCT_BIN" "$HELPER_1239" >"$CCT_TMP_DIR/cct_phase20c3_1239_helper_compile.out" 2>&1 && \
+   "$CCT_BIN" "$SRC_1239" >"$CCT_TMP_DIR/cct_phase20c3_1239_compile.out" 2>&1; then
+    "$BIN_1239" >"$CCT_TMP_DIR/cct_phase20c3_1239_run.out" 2>&1
+    RC_1239=$?
+else
+    RC_1239=255
+fi
+if [ "$RC_1239" -eq 0 ]; then
+    test_pass "http_client_get_local_20c3 valida GET local, headers e parse da resposta"
+else
+    test_fail "http_client_get_local_20c3 regrediu cliente HTTP GET minimo"
+fi
+rm -f tests/.tmp/http_client_get_local_20c3.ready \
+      tests/.tmp/http_client_get_local_20c3.done \
+      tests/.tmp/http_client_get_local_20c3.server.log
+
+# Test 1240: http_client_post_local_20c3
+echo "Test 1240: http_client_post_local_20c3"
+HELPER_1240="tests/integration/http_client_post_local_20c3_server.cct"
+SRC_1240="tests/integration/http_client_post_local_20c3.cct"
+BIN_1240="${SRC_1240%.cct}"
+cleanup_codegen_artifacts "$HELPER_1240"
+cleanup_codegen_artifacts "$SRC_1240"
+rm -f tests/.tmp/http_client_post_local_20c3.ready \
+      tests/.tmp/http_client_post_local_20c3.done \
+      tests/.tmp/http_client_post_local_20c3.server.log
+if "$CCT_BIN" "$HELPER_1240" >"$CCT_TMP_DIR/cct_phase20c3_1240_helper_compile.out" 2>&1 && \
+   "$CCT_BIN" "$SRC_1240" >"$CCT_TMP_DIR/cct_phase20c3_1240_compile.out" 2>&1; then
+    "$BIN_1240" >"$CCT_TMP_DIR/cct_phase20c3_1240_run.out" 2>&1
+    RC_1240=$?
+else
+    RC_1240=255
+fi
+if [ "$RC_1240" -eq 0 ]; then
+    test_pass "http_client_post_local_20c3 valida POST textual e headers customizados"
+else
+    test_fail "http_client_post_local_20c3 regrediu cliente HTTP POST minimo"
+fi
+rm -f tests/.tmp/http_client_post_local_20c3.ready \
+      tests/.tmp/http_client_post_local_20c3.done \
+      tests/.tmp/http_client_post_local_20c3.server.log
+
+# Test 1241: http_client_json_20c3
+echo "Test 1241: http_client_json_20c3"
+HELPER_1241="tests/integration/http_client_json_20c3_server.cct"
+SRC_1241="tests/integration/http_client_json_20c3.cct"
+BIN_1241="${SRC_1241%.cct}"
+cleanup_codegen_artifacts "$HELPER_1241"
+cleanup_codegen_artifacts "$SRC_1241"
+rm -f tests/.tmp/http_client_json_20c3.ready \
+      tests/.tmp/http_client_json_20c3.done \
+      tests/.tmp/http_client_json_20c3.server.log
+if "$CCT_BIN" "$HELPER_1241" >"$CCT_TMP_DIR/cct_phase20c3_1241_helper_compile.out" 2>&1 && \
+   "$CCT_BIN" "$SRC_1241" >"$CCT_TMP_DIR/cct_phase20c3_1241_compile.out" 2>&1; then
+    "$BIN_1241" >"$CCT_TMP_DIR/cct_phase20c3_1241_run.out" 2>&1
+    RC_1241=$?
+else
+    RC_1241=255
+fi
+if [ "$RC_1241" -eq 0 ]; then
+    test_pass "http_client_json_20c3 valida GET JSON com parse integrado"
+else
+    test_fail "http_client_json_20c3 regrediu bridge HTTP -> JSON"
+fi
+
+echo ""
+echo "========================================"
+echo "FASE 20C4: Servidor HTTP minimo"
+echo "========================================"
+echo ""
+
+# Test 1242: http_server_basic_20c4
+echo "Test 1242: http_server_basic_20c4"
+HELPER_1242="tests/integration/http_server_basic_20c4_server.cct"
+SRC_1242="tests/integration/http_server_basic_20c4.cct"
+BIN_1242="${SRC_1242%.cct}"
+cleanup_codegen_artifacts "$HELPER_1242"
+cleanup_codegen_artifacts "$SRC_1242"
+if "$CCT_BIN" "$HELPER_1242" >"$CCT_TMP_DIR/cct_phase20c4_1242_helper_compile.out" 2>&1 && \
+   "$CCT_BIN" "$SRC_1242" >"$CCT_TMP_DIR/cct_phase20c4_1242_compile.out" 2>&1; then
+    "$BIN_1242" >"$CCT_TMP_DIR/cct_phase20c4_1242_run.out" 2>&1
+    RC_1242=$?
+else
+    RC_1242=255
+fi
+if [ "$RC_1242" -eq 0 ]; then
+    test_pass "http_server_basic_20c4 valida listener local, accept e reply serial"
+else
+    test_fail "http_server_basic_20c4 regrediu servidor HTTP minimo"
+fi
+
+# Test 1243: http_server_headers_20c4
+echo "Test 1243: http_server_headers_20c4"
+HELPER_1243="tests/integration/http_server_headers_20c4_server.cct"
+SRC_1243="tests/integration/http_server_headers_20c4.cct"
+BIN_1243="${SRC_1243%.cct}"
+cleanup_codegen_artifacts "$HELPER_1243"
+cleanup_codegen_artifacts "$SRC_1243"
+if "$CCT_BIN" "$HELPER_1243" >"$CCT_TMP_DIR/cct_phase20c4_1243_helper_compile.out" 2>&1 && \
+   "$CCT_BIN" "$SRC_1243" >"$CCT_TMP_DIR/cct_phase20c4_1243_compile.out" 2>&1; then
+    "$BIN_1243" >"$CCT_TMP_DIR/cct_phase20c4_1243_run.out" 2>&1
+    RC_1243=$?
+else
+    RC_1243=255
+fi
+if [ "$RC_1243" -eq 0 ]; then
+    test_pass "http_server_headers_20c4 valida parse de request e resposta com headers"
+else
+    test_fail "http_server_headers_20c4 regrediu headers no servidor HTTP"
+fi
+
+# Test 1244: http_server_404_20c4
+echo "Test 1244: http_server_404_20c4"
+HELPER_1244="tests/integration/http_server_404_20c4_server.cct"
+SRC_1244="tests/integration/http_server_404_20c4.cct"
+BIN_1244="${SRC_1244%.cct}"
+cleanup_codegen_artifacts "$HELPER_1244"
+cleanup_codegen_artifacts "$SRC_1244"
+if "$CCT_BIN" "$HELPER_1244" >"$CCT_TMP_DIR/cct_phase20c4_1244_helper_compile.out" 2>&1 && \
+   "$CCT_BIN" "$SRC_1244" >"$CCT_TMP_DIR/cct_phase20c4_1244_compile.out" 2>&1; then
+    "$BIN_1244" >"$CCT_TMP_DIR/cct_phase20c4_1244_run.out" 2>&1
+    RC_1244=$?
+else
+    RC_1244=255
+fi
+if [ "$RC_1244" -eq 0 ]; then
+    test_pass "http_server_404_20c4 valida branch 404 e resposta textual controlada"
+else
+    test_fail "http_server_404_20c4 regrediu branch 404 do servidor HTTP"
+fi
+
+echo ""
+echo "========================================"
+echo "FASE 20D1: Config INI canonico"
+echo "========================================"
+echo ""
+
+# Test 1245: config_ini_basic_20d1
+echo "Test 1245: config_ini_basic_20d1"
+SRC_1245="tests/integration/config_ini_basic_20d1.cct"
+BIN_1245="${SRC_1245%.cct}"
+cleanup_codegen_artifacts "$SRC_1245"
+if "$CCT_BIN" "$SRC_1245" >"$CCT_TMP_DIR/cct_phase20d1_1245_compile.out" 2>&1; then
+    "$BIN_1245" >"$CCT_TMP_DIR/cct_phase20d1_1245_run.out" 2>&1
+    RC_1245=$?
+else
+    RC_1245=255
+fi
+if [ "$RC_1245" -eq 0 ]; then
+    test_pass "config_ini_basic_20d1 valida parse/load ini com secao global e secao nomeada"
+else
+    test_fail "config_ini_basic_20d1 regrediu parser ini basico"
+fi
+
+# Test 1246: config_ini_sections_20d1
+echo "Test 1246: config_ini_sections_20d1"
+SRC_1246="tests/integration/config_ini_sections_20d1.cct"
+BIN_1246="${SRC_1246%.cct}"
+cleanup_codegen_artifacts "$SRC_1246"
+if "$CCT_BIN" "$SRC_1246" >"$CCT_TMP_DIR/cct_phase20d1_1246_compile.out" 2>&1; then
+    "$BIN_1246" >"$CCT_TMP_DIR/cct_phase20d1_1246_run.out" 2>&1
+    RC_1246=$?
+else
+    RC_1246=255
+fi
+if [ "$RC_1246" -eq 0 ]; then
+    test_pass "config_ini_sections_20d1 valida secoes distintas e ordem estavel"
+else
+    test_fail "config_ini_sections_20d1 regrediu catalogo de secoes ini"
+fi
+
+echo ""
+echo "========================================"
+echo "FASE 20D2: Acesso tipado e defaults"
+echo "========================================"
+echo ""
+
+# Test 1247: config_get_typed_20d2
+echo "Test 1247: config_get_typed_20d2"
+SRC_1247="tests/integration/config_get_typed_20d2.cct"
+BIN_1247="${SRC_1247%.cct}"
+cleanup_codegen_artifacts "$SRC_1247"
+if "$CCT_BIN" "$SRC_1247" >"$CCT_TMP_DIR/cct_phase20d2_1247_compile.out" 2>&1; then
+    "$BIN_1247" >"$CCT_TMP_DIR/cct_phase20d2_1247_run.out" 2>&1
+    RC_1247=$?
+else
+    RC_1247=255
+fi
+if [ "$RC_1247" -eq 0 ]; then
+    test_pass "config_get_typed_20d2 valida getters tipados e presenca de chave"
+else
+    test_fail "config_get_typed_20d2 regrediu acesso tipado de configuracao"
+fi
+
+# Test 1248: config_defaults_20d2
+echo "Test 1248: config_defaults_20d2"
+SRC_1248="tests/integration/config_defaults_20d2.cct"
+BIN_1248="${SRC_1248%.cct}"
+cleanup_codegen_artifacts "$SRC_1248"
+if "$CCT_BIN" "$SRC_1248" >"$CCT_TMP_DIR/cct_phase20d2_1248_compile.out" 2>&1; then
+    "$BIN_1248" >"$CCT_TMP_DIR/cct_phase20d2_1248_run.out" 2>&1
+    RC_1248=$?
+else
+    RC_1248=255
+fi
+if [ "$RC_1248" -eq 0 ]; then
+    test_pass "config_defaults_20d2 valida defaults e fallback por chave ausente"
+else
+    test_fail "config_defaults_20d2 regrediu defaults de configuracao"
+fi
+
+echo ""
+echo "========================================"
+echo "FASE 20D3: Mutacao e escrita"
+echo "========================================"
+echo ""
+
+# Test 1249: config_set_write_20d3
+echo "Test 1249: config_set_write_20d3"
+SRC_1249="tests/integration/config_set_write_20d3.cct"
+BIN_1249="${SRC_1249%.cct}"
+cleanup_codegen_artifacts "$SRC_1249"
+if "$CCT_BIN" "$SRC_1249" >"$CCT_TMP_DIR/cct_phase20d3_1249_compile.out" 2>&1; then
+    "$BIN_1249" >"$CCT_TMP_DIR/cct_phase20d3_1249_run.out" 2>&1
+    RC_1249=$?
+else
+    RC_1249=255
+fi
+if [ "$RC_1249" -eq 0 ]; then
+    test_pass "config_set_write_20d3 valida mutacao e escrita INI"
+else
+    test_fail "config_set_write_20d3 regrediu escrita de configuracao"
+fi
+
+# Test 1250: config_roundtrip_20d3
+echo "Test 1250: config_roundtrip_20d3"
+SRC_1250="tests/integration/config_roundtrip_20d3.cct"
+BIN_1250="${SRC_1250%.cct}"
+cleanup_codegen_artifacts "$SRC_1250"
+if "$CCT_BIN" "$SRC_1250" >"$CCT_TMP_DIR/cct_phase20d3_1250_compile.out" 2>&1; then
+    "$BIN_1250" >"$CCT_TMP_DIR/cct_phase20d3_1250_run.out" 2>&1
+    RC_1250=$?
+else
+    RC_1250=255
+fi
+if [ "$RC_1250" -eq 0 ]; then
+    test_pass "config_roundtrip_20d3 valida remove, stringify e novo parse"
+else
+    test_fail "config_roundtrip_20d3 regrediu roundtrip INI"
+fi
+
+echo ""
+echo "========================================"
+echo "FASE 20D4: Ambiente e JSON"
+echo "========================================"
+echo ""
+
+# Test 1251: config_env_overlay_20d4
+echo "Test 1251: config_env_overlay_20d4"
+SRC_1251="tests/integration/config_env_overlay_20d4.cct"
+BIN_1251="${SRC_1251%.cct}"
+cleanup_codegen_artifacts "$SRC_1251"
+if "$CCT_BIN" "$SRC_1251" >"$CCT_TMP_DIR/cct_phase20d4_1251_compile.out" 2>&1; then
+    CCT_DEBUG=true CCT_DB_HOST=remote.db "$BIN_1251" >"$CCT_TMP_DIR/cct_phase20d4_1251_run.out" 2>&1
+    RC_1251=$?
+else
+    RC_1251=255
+fi
+if [ "$RC_1251" -eq 0 ]; then
+    test_pass "config_env_overlay_20d4 valida overlay de ambiente por prefixo"
+else
+    test_fail "config_env_overlay_20d4 regrediu overlay de ambiente"
+fi
+
+# Test 1252: config_json_bridge_20d4
+echo "Test 1252: config_json_bridge_20d4"
+SRC_1252="tests/integration/config_json_bridge_20d4.cct"
+BIN_1252="${SRC_1252%.cct}"
+cleanup_codegen_artifacts "$SRC_1252"
+if "$CCT_BIN" "$SRC_1252" >"$CCT_TMP_DIR/cct_phase20d4_1252_compile.out" 2>&1; then
+    "$BIN_1252" >"$CCT_TMP_DIR/cct_phase20d4_1252_run.out" 2>&1
+    RC_1252=$?
+else
+    RC_1252=255
+fi
+if [ "$RC_1252" -eq 0 ]; then
+    test_pass "config_json_bridge_20d4 valida ponte JSON <-> config"
+else
+    test_fail "config_json_bridge_20d4 regrediu bridge JSON de configuracao"
+fi
+
+echo ""
+echo "========================================"
+echo "FASE 20E1: Bridge minima SQLite"
+echo "========================================"
+echo ""
+
+# Test 1253: db_open_exec_20e1
+echo "Test 1253: db_open_exec_20e1"
+SRC_1253="tests/integration/db_open_exec_20e1.cct"
+BIN_1253="${SRC_1253%.cct}"
+cleanup_codegen_artifacts "$SRC_1253"
+if "$CCT_BIN" "$SRC_1253" >"$CCT_TMP_DIR/cct_phase20e1_1253_compile.out" 2>&1; then
+    "$BIN_1253" >"$CCT_TMP_DIR/cct_phase20e1_1253_run.out" 2>&1
+    RC_1253=$?
+else
+    RC_1253=255
+fi
+if [ "$RC_1253" -eq 0 ]; then
+    test_pass "db_open_exec_20e1 valida abrir banco, executar SQL e persistir arquivo local"
+else
+    test_fail "db_open_exec_20e1 regrediu bridge SQLite minima"
+fi
+
+# Test 1254: db_exec_invalid_sql_20e1
+echo "Test 1254: db_exec_invalid_sql_20e1"
+SRC_1254="tests/integration/db_exec_invalid_sql_20e1.cct"
+BIN_1254="${SRC_1254%.cct}"
+cleanup_codegen_artifacts "$SRC_1254"
+if "$CCT_BIN" "$SRC_1254" >"$CCT_TMP_DIR/cct_phase20e1_1254_compile.out" 2>&1; then
+    "$BIN_1254" >"$CCT_TMP_DIR/cct_phase20e1_1254_run.out" 2>&1
+    RC_1254=$?
+else
+    RC_1254=255
+fi
+if [ "$RC_1254" -eq 0 ]; then
+    test_pass "db_exec_invalid_sql_20e1 valida erro textual sem abortar execucao"
+else
+    test_fail "db_exec_invalid_sql_20e1 regrediu diagnostico de SQL invalido"
+fi
+
+echo ""
+echo "========================================"
+echo "FASE 20E2: Query e rows"
+echo "========================================"
+echo ""
+
+# Test 1255: db_query_rows_20e2
+echo "Test 1255: db_query_rows_20e2"
+SRC_1255="tests/integration/db_query_rows_20e2.cct"
+BIN_1255="${SRC_1255%.cct}"
+cleanup_codegen_artifacts "$SRC_1255"
+if "$CCT_BIN" "$SRC_1255" >"$CCT_TMP_DIR/cct_phase20e2_1255_compile.out" 2>&1; then
+    "$BIN_1255" >"$CCT_TMP_DIR/cct_phase20e2_1255_run.out" 2>&1
+    RC_1255=$?
+else
+    RC_1255=255
+fi
+if [ "$RC_1255" -eq 0 ]; then
+    test_pass "db_query_rows_20e2 valida iteracao de rows e leitura por coluna"
+else
+    test_fail "db_query_rows_20e2 regrediu query simples SQLite"
+fi
+
+# Test 1256: db_query_empty_20e2
+echo "Test 1256: db_query_empty_20e2"
+SRC_1256="tests/integration/db_query_empty_20e2.cct"
+BIN_1256="${SRC_1256%.cct}"
+cleanup_codegen_artifacts "$SRC_1256"
+if "$CCT_BIN" "$SRC_1256" >"$CCT_TMP_DIR/cct_phase20e2_1256_compile.out" 2>&1; then
+    "$BIN_1256" >"$CCT_TMP_DIR/cct_phase20e2_1256_run.out" 2>&1
+    RC_1256=$?
+else
+    RC_1256=255
+fi
+if [ "$RC_1256" -eq 0 ]; then
+    test_pass "db_query_empty_20e2 valida cursor vazio sem erro residual"
+else
+    test_fail "db_query_empty_20e2 regrediu rows vazias SQLite"
+fi
+
+echo ""
+echo "========================================"
+echo "FASE 20E3: Prepared statements e bind"
+echo "========================================"
+echo ""
+
+# Test 1257: db_prepare_bind_insert_20e3
+echo "Test 1257: db_prepare_bind_insert_20e3"
+SRC_1257="tests/integration/db_prepare_bind_insert_20e3.cct"
+BIN_1257="${SRC_1257%.cct}"
+cleanup_codegen_artifacts "$SRC_1257"
+if "$CCT_BIN" "$SRC_1257" >"$CCT_TMP_DIR/cct_phase20e3_1257_compile.out" 2>&1; then
+    "$BIN_1257" >"$CCT_TMP_DIR/cct_phase20e3_1257_run.out" 2>&1
+    RC_1257=$?
+else
+    RC_1257=255
+fi
+if [ "$RC_1257" -eq 0 ]; then
+    test_pass "db_prepare_bind_insert_20e3 valida bind tipado e insert preparado"
+else
+    test_fail "db_prepare_bind_insert_20e3 regrediu prepared insert SQLite"
+fi
+
+# Test 1258: db_prepare_reuse_20e3
+echo "Test 1258: db_prepare_reuse_20e3"
+SRC_1258="tests/integration/db_prepare_reuse_20e3.cct"
+BIN_1258="${SRC_1258%.cct}"
+cleanup_codegen_artifacts "$SRC_1258"
+if "$CCT_BIN" "$SRC_1258" >"$CCT_TMP_DIR/cct_phase20e3_1258_compile.out" 2>&1; then
+    "$BIN_1258" >"$CCT_TMP_DIR/cct_phase20e3_1258_run.out" 2>&1
+    RC_1258=$?
+else
+    RC_1258=255
+fi
+if [ "$RC_1258" -eq 0 ]; then
+    test_pass "db_prepare_reuse_20e3 valida reset e reuso de statement"
+else
+    test_fail "db_prepare_reuse_20e3 regrediu reuso de prepared statement"
+fi
+
+echo ""
+echo "========================================"
+echo "FASE 20E4: Transacoes e conveniencias"
+echo "========================================"
+echo ""
+
+# Test 1259: db_transaction_commit_20e4
+echo "Test 1259: db_transaction_commit_20e4"
+SRC_1259="tests/integration/db_transaction_commit_20e4.cct"
+BIN_1259="${SRC_1259%.cct}"
+cleanup_codegen_artifacts "$SRC_1259"
+if "$CCT_BIN" "$SRC_1259" >"$CCT_TMP_DIR/cct_phase20e4_1259_compile.out" 2>&1; then
+    "$BIN_1259" >"$CCT_TMP_DIR/cct_phase20e4_1259_run.out" 2>&1
+    RC_1259=$?
+else
+    RC_1259=255
+fi
+if [ "$RC_1259" -eq 0 ]; then
+    test_pass "db_transaction_commit_20e4 valida begin/commit com persistencia observavel"
+else
+    test_fail "db_transaction_commit_20e4 regrediu commit de transacao SQLite"
+fi
+
+# Test 1260: db_transaction_rollback_20e4
+echo "Test 1260: db_transaction_rollback_20e4"
+SRC_1260="tests/integration/db_transaction_rollback_20e4.cct"
+BIN_1260="${SRC_1260%.cct}"
+cleanup_codegen_artifacts "$SRC_1260"
+if "$CCT_BIN" "$SRC_1260" >"$CCT_TMP_DIR/cct_phase20e4_1260_compile.out" 2>&1; then
+    "$BIN_1260" >"$CCT_TMP_DIR/cct_phase20e4_1260_run.out" 2>&1
+    RC_1260=$?
+else
+    RC_1260=255
+fi
+if [ "$RC_1260" -eq 0 ]; then
+    test_pass "db_transaction_rollback_20e4 valida rollback sem residuos"
+else
+    test_fail "db_transaction_rollback_20e4 regrediu rollback de transacao SQLite"
+fi
+
+# Test 1261: db_scalar_helpers_20e4
+echo "Test 1261: db_scalar_helpers_20e4"
+SRC_1261="tests/integration/db_scalar_helpers_20e4.cct"
+BIN_1261="${SRC_1261%.cct}"
+cleanup_codegen_artifacts "$SRC_1261"
+if "$CCT_BIN" "$SRC_1261" >"$CCT_TMP_DIR/cct_phase20e4_1261_compile.out" 2>&1; then
+    "$BIN_1261" >"$CCT_TMP_DIR/cct_phase20e4_1261_run.out" 2>&1
+    RC_1261=$?
+else
+    RC_1261=255
+fi
+if [ "$RC_1261" -eq 0 ]; then
+    test_pass "db_scalar_helpers_20e4 valida helpers escalares inteiro/texto"
+else
+    test_fail "db_scalar_helpers_20e4 regrediu helpers escalares SQLite"
+fi
+
+echo ""
+echo "========================================"
+echo "FASE 20E5: Hardening e contrato de build"
+echo "========================================"
+echo ""
+
+# Test 1262: db_repeated_open_close_20e5
+echo "Test 1262: db_repeated_open_close_20e5"
+SRC_1262="tests/integration/db_repeated_open_close_20e5.cct"
+BIN_1262="${SRC_1262%.cct}"
+cleanup_codegen_artifacts "$SRC_1262"
+if "$CCT_BIN" "$SRC_1262" >"$CCT_TMP_DIR/cct_phase20e5_1262_compile.out" 2>&1; then
+    "$BIN_1262" >"$CCT_TMP_DIR/cct_phase20e5_1262_run.out" 2>&1
+    RC_1262=$?
+else
+    RC_1262=255
+fi
+if [ "$RC_1262" -eq 0 ]; then
+    test_pass "db_repeated_open_close_20e5 valida ciclos repetidos de abertura/fecho"
+else
+    test_fail "db_repeated_open_close_20e5 regrediu higiene basica de lifecycle SQLite"
+fi
+
+# Test 1263: db_finalize_after_error_20e5
+echo "Test 1263: db_finalize_after_error_20e5"
+SRC_1263="tests/integration/db_finalize_after_error_20e5.cct"
+BIN_1263="${SRC_1263%.cct}"
+cleanup_codegen_artifacts "$SRC_1263"
+if "$CCT_BIN" "$SRC_1263" >"$CCT_TMP_DIR/cct_phase20e5_1263_compile.out" 2>&1; then
+    "$BIN_1263" >"$CCT_TMP_DIR/cct_phase20e5_1263_run.out" 2>&1
+    RC_1263=$?
+else
+    RC_1263=255
+fi
+if [ "$RC_1263" -eq 0 ]; then
+    test_pass "db_finalize_after_error_20e5 valida finalize seguro apos erro de statement"
+else
+    test_fail "db_finalize_after_error_20e5 regrediu finalize apos erro SQLite"
+fi
+
+echo ""
+echo "========================================"
 echo "Test Results:"
 echo -e "  ${GREEN}Passed:${NC} $TESTS_PASSED" >&3
 echo -e "  ${RED}Failed:${NC} $TESTS_FAILED" >&3

@@ -1,0 +1,41 @@
+INCIPIT grimoire "config_ini_sections_20d1"
+
+ADVOCARE "cct/config.cct"
+ADVOCARE "cct/verbum.cct"
+
+RITUALE main() REDDE REX
+  EVOCA VERBUM src AD "[server]"
+  VINCIRE src AD CONIURA concat(src, "\n")
+  VINCIRE src AD CONIURA concat(src, "host=127.0.0.1")
+  VINCIRE src AD CONIURA concat(src, "\n")
+  VINCIRE src AD CONIURA concat(src, "[db]")
+  VINCIRE src AD CONIURA concat(src, "\n")
+  VINCIRE src AD CONIURA concat(src, "path=data.db")
+  VINCIRE src AD CONIURA concat(src, "\n")
+  VINCIRE src AD CONIURA concat(src, "[server]")
+  VINCIRE src AD CONIURA concat(src, "\n")
+  VINCIRE src AD CONIURA concat(src, "port=9090")
+
+  EVOCA SPECULUM NIHIL cfg AD CONIURA config_parse_ini(src)
+  EVOCA SPECULUM NIHIL secs AD CONIURA config_sections(cfg)
+  SI CONIURA config_sections_len(secs) != 2
+    REDDE 1
+  FIN SI
+
+  SI CONIURA compare(CONIURA config_section_name_at(secs, 0), "server") != 0
+    REDDE 2
+  FIN SI
+  SI CONIURA compare(CONIURA config_section_name_at(secs, 1), "db") != 0
+    REDDE 3
+  FIN SI
+  SI CONIURA compare(CONIURA config_get(cfg, "db", "path"), "data.db") != 0
+    REDDE 4
+  FIN SI
+  SI CONIURA config_get_int(cfg, "server", "port") != 9090
+    REDDE 5
+  FIN SI
+
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

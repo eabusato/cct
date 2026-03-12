@@ -29,6 +29,7 @@ typedef struct {
     bool emit_hash_helpers;
     bool emit_verbum_helpers;
     bool emit_fmt_helpers;
+    bool emit_db_helpers;
 } cct_runtime_codegen_config_t;
 
 void cct_runtime_codegen_config_defaults(cct_runtime_codegen_config_t *cfg);

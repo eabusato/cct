@@ -116,10 +116,58 @@ Delivered after foundation:
 - semantic/operator/freestanding bridge consolidation (`15`, `16`)
 - canonical-library expansion for host tooling and low-level modules (`17`, `18`)
 - language-surface expansion (`19A` through `19D`) integrating `ELIGE` (`CUM` legacy alias), `FORMA`, payload `ORDO`, and `ITERUM` over map/set.
+- application-library expansion (`20A` through `20F`) integrating JSON, sockets/networking, HTTP, config, and SQLite.
 
 Current phase closure references:
+- `docs/release/FASE_20_RELEASE_NOTES.md`
+- `docs/bootstrap/FASE_20_HANDOFF.md`
 - `docs/release/FASE_19_RELEASE_NOTES.md`
 - `docs/bootstrap/FASE_19_HANDOFF.md`
+
+## 11A. `cct/db_sqlite` (FASE 20E)
+
+`cct/db_sqlite` is the canonical host-only persistence module for local SQLite workflows.
+
+Import:
+
+```cct
+ADVOCARE "cct/db_sqlite.cct"
+```
+
+Public API in the current delivery:
+- `db_open(VERBUM path) -> SPECULUM NIHIL`
+- `db_close(SPECULUM NIHIL db) -> NIHIL`
+- `db_exec(SPECULUM NIHIL db, VERBUM sql) -> NIHIL`
+- `db_last_error(SPECULUM NIHIL db) -> VERBUM`
+- `db_query(SPECULUM NIHIL db, VERBUM sql) -> SPECULUM NIHIL`
+- `rows_next(SPECULUM NIHIL rows) -> VERUM`
+- `rows_get_text(SPECULUM NIHIL rows, REX col) -> VERBUM`
+- `rows_get_int(SPECULUM NIHIL rows, REX col) -> REX`
+- `rows_get_real(SPECULUM NIHIL rows, REX col) -> UMBRA`
+- `rows_close(SPECULUM NIHIL rows) -> NIHIL`
+- `db_prepare(SPECULUM NIHIL db, VERBUM sql) -> SPECULUM NIHIL`
+- `stmt_bind_text(SPECULUM NIHIL stmt, REX idx, VERBUM v) -> NIHIL`
+- `stmt_bind_int(SPECULUM NIHIL stmt, REX idx, REX v) -> NIHIL`
+- `stmt_bind_real(SPECULUM NIHIL stmt, REX idx, UMBRA v) -> NIHIL`
+- `stmt_step(SPECULUM NIHIL stmt) -> VERUM`
+- `stmt_reset(SPECULUM NIHIL stmt) -> NIHIL`
+- `stmt_finalize(SPECULUM NIHIL stmt) -> NIHIL`
+- `db_begin(SPECULUM NIHIL db) -> NIHIL`
+- `db_commit(SPECULUM NIHIL db) -> NIHIL`
+- `db_rollback(SPECULUM NIHIL db) -> NIHIL`
+- `db_scalar_int(SPECULUM NIHIL db, VERBUM sql) -> REX`
+- `db_scalar_text(SPECULUM NIHIL db, VERBUM sql) -> VERBUM`
+
+Dependency and fallback policy:
+- available only in the host profile
+- generated host programs add `-lsqlite3` only when the SQLite surface is used
+- if the host toolchain does not provide SQLite, the host compile/link step must fail clearly
+
+Ownership policy:
+- `db_open` allocates the DB handle; callers close it with `db_close`
+- `db_query` allocates a rows handle; callers release it with `rows_close`
+- `db_prepare` allocates a statement handle; callers release it with `stmt_finalize`
+- textual getters return copied `VERBUM` values in the current host-backed subset
 
 ## 12. `cct/verbum` (FASE 11B.1)
 
@@ -604,7 +652,12 @@ ADT/pattern integration reference (19C/19D):
 - `cct/ordo_samples` as the idiomatic baseline for payload `ORDO` with `ELIGE` and `FORMA`.
 - generic pointer-backed contracts (`cct/option`, `cct/result`) remain valid for interoperability.
 
-## 32. Complete Function Inventory (FASE 19D.4)
+Application-stack modules (20A-20E):
+- `cct/json`, `cct/socket`, `cct/net`, `cct/http`, `cct/config`, `cct/db_sqlite`.
+- focus on practical host-side application workflows with explicit ownership and failure contracts.
+- protocol/model/config logic stays in CCT where possible; runtime C additions remain narrow at host boundaries.
+
+## 32. Complete Function Inventory (FASE 20F)
 
 - This section consolidates the complete Bibliotheca Canonica surface delivered through FASE 19D.4.
 - The goal is full traceability: no canonical module function is left undocumented.
@@ -612,7 +665,7 @@ ADT/pattern integration reference (19C/19D):
 
 <!-- BEGIN AUTO API INVENTORY 19D4 -->
 <!-- AUTO-GENERATED from lib/cct/*.cct and lib/cct/kernel/*.cct -->
-**Coverage**: complete inventory of canonical functions in `lib/cct` (FASE 19D.4).
+**Coverage**: complete inventory of canonical functions in `lib/cct` (FASE 20F).
 
 ### `cct/alg`
 
@@ -741,6 +794,72 @@ Module total: **10**
 
 Module total: **12**
 
+### `cct/config`
+
+- `config_alloc(REX bytes) -> SPECULUM NIHIL`
+- `config_values_new() -> REX`
+- `config_sections_new_handle() -> REX`
+- `config_values_len(REX handle) -> REX`
+- `config_values_get_ptr(REX handle, REX idx) -> SPECULUM NIHIL`
+- `config_values_push(REX handle, SPECULUM NIHIL ptr) -> NIHIL`
+- `config_sections_len(SPECULUM NIHIL secs_ptr) -> REX`
+- `config_sections_count(REX handle) -> REX`
+- `config_section_get_ptr(REX handle, REX idx) -> SPECULUM NIHIL`
+- `config_section_name_at(SPECULUM NIHIL secs_ptr, REX idx) -> VERBUM`
+- `config_trim_cr(VERBUM s) -> VERBUM`
+- `config_split_first_line(VERBUM s) -> ConfigChunk`
+- `config_ref(SPECULUM NIHIL cfg_ptr) -> SPECULUM ConfigState`
+- `config_track_section(SPECULUM NIHIL cfg_ptr, VERBUM secao) -> NIHIL`
+- `config_find_value_index(SPECULUM NIHIL cfg_ptr, VERBUM secao, VERBUM chave) -> REX`
+- `config_set(SPECULUM NIHIL cfg_ptr, VERBUM secao, VERBUM chave, VERBUM valor) -> NIHIL`
+- `config_remove(SPECULUM NIHIL cfg_ptr, VERBUM secao, VERBUM chave) -> VERUM`
+- `config_new() -> SPECULUM NIHIL`
+- `config_parse_ini(VERBUM src) -> SPECULUM NIHIL`
+- `config_load_ini(VERBUM path) -> SPECULUM NIHIL`
+- `config_sections(SPECULUM NIHIL cfg_ptr) -> SPECULUM NIHIL`
+- `config_has(SPECULUM NIHIL cfg_ptr, VERBUM secao, VERBUM chave) -> VERUM`
+- `config_get_or(SPECULUM NIHIL cfg_ptr, VERBUM secao, VERBUM chave, VERBUM padrao) -> VERBUM`
+- `config_get(SPECULUM NIHIL cfg_ptr, VERBUM secao, VERBUM chave) -> VERBUM`
+- `config_get_int(SPECULUM NIHIL cfg_ptr, VERBUM secao, VERBUM chave) -> REX`
+- `config_get_bool(SPECULUM NIHIL cfg_ptr, VERBUM secao, VERBUM chave) -> VERUM`
+- `config_get_real(SPECULUM NIHIL cfg_ptr, VERBUM secao, VERBUM chave) -> UMBRA`
+- `config_stringify_ini(SPECULUM NIHIL cfg_ptr) -> VERBUM`
+- `config_write_ini(SPECULUM NIHIL cfg_ptr, VERBUM path) -> NIHIL`
+- `config_env_name(VERBUM prefixo, VERBUM secao, VERBUM chave) -> VERBUM`
+- `config_apply_env_prefix(SPECULUM NIHIL cfg_ptr, VERBUM prefixo) -> NIHIL`
+- `config_json_value_to_verbum(Json j) -> VERBUM`
+- `config_section_to_json(SPECULUM NIHIL cfg_ptr, VERBUM secao) -> Json`
+- `config_from_json(Json j) -> SPECULUM NIHIL`
+
+Module total: **34**
+
+### `cct/db_sqlite`
+
+- `db_open(VERBUM path) -> SPECULUM NIHIL`
+- `db_close(SPECULUM NIHIL db) -> NIHIL`
+- `db_exec(SPECULUM NIHIL db, VERBUM sql) -> NIHIL`
+- `db_last_error(SPECULUM NIHIL db) -> VERBUM`
+- `db_query(SPECULUM NIHIL db, VERBUM sql) -> SPECULUM NIHIL`
+- `rows_next(SPECULUM NIHIL rows) -> VERUM`
+- `rows_get_text(SPECULUM NIHIL rows, REX col) -> VERBUM`
+- `rows_get_int(SPECULUM NIHIL rows, REX col) -> REX`
+- `rows_get_real(SPECULUM NIHIL rows, REX col) -> UMBRA`
+- `rows_close(SPECULUM NIHIL rows) -> NIHIL`
+- `db_prepare(SPECULUM NIHIL db, VERBUM sql) -> SPECULUM NIHIL`
+- `stmt_bind_text(SPECULUM NIHIL stmt, REX idx, VERBUM v) -> NIHIL`
+- `stmt_bind_int(SPECULUM NIHIL stmt, REX idx, REX v) -> NIHIL`
+- `stmt_bind_real(SPECULUM NIHIL stmt, REX idx, UMBRA v) -> NIHIL`
+- `stmt_step(SPECULUM NIHIL stmt) -> VERUM`
+- `stmt_reset(SPECULUM NIHIL stmt) -> NIHIL`
+- `stmt_finalize(SPECULUM NIHIL stmt) -> NIHIL`
+- `db_begin(SPECULUM NIHIL db) -> NIHIL`
+- `db_commit(SPECULUM NIHIL db) -> NIHIL`
+- `db_rollback(SPECULUM NIHIL db) -> NIHIL`
+- `db_scalar_int(SPECULUM NIHIL db, VERBUM sql) -> REX`
+- `db_scalar_text(SPECULUM NIHIL db, VERBUM sql) -> VERBUM`
+
+Module total: **22**
+
 ### `cct/env`
 
 - `getenv(VERBUM name) -> VERBUM`
@@ -847,6 +966,64 @@ Module total: **26**
 
 Module total: **6**
 
+### `cct/http`
+
+- `http_alloc(REX bytes) -> SPECULUM NIHIL`
+- `http_headers_new() -> REX`
+- `http_header_set(SPECULUM HttpHeader out, VERBUM nome, VERBUM valor) -> NIHIL`
+- `http_headers_push(REX headers_handle, SPECULUM NIHIL h_ptr) -> NIHIL`
+- `http_headers_len(REX headers_handle) -> REX`
+- `http_headers_get_ptr(REX headers_handle, REX idx) -> SPECULUM NIHIL`
+- `http_headers_find_index(REX headers_handle, VERBUM nome) -> REX`
+- `http_headers_has(REX headers_handle, VERBUM nome) -> VERUM`
+- `http_headers_get_or(REX headers_handle, VERBUM nome, VERBUM padrao) -> VERBUM`
+- `http_headers_set_or_push(REX headers_handle, VERBUM nome, VERBUM valor) -> NIHIL`
+- `http_method_get() -> HttpMethod`
+- `http_method_name(HttpMethod m) -> VERBUM`
+- `http_status_text(REX status) -> VERBUM`
+- `http_request_new(VERBUM method, VERBUM path) -> HttpRequest`
+- `http_request_with_body(VERBUM method, VERBUM path, VERBUM body) -> HttpRequest`
+- `http_response_new(REX status, VERBUM body) -> HttpResponse`
+- `http_response_with_headers(REX status, REX headers, VERBUM body) -> HttpResponse`
+- `http_request_headers_handle(HttpRequest req) -> REX`
+- `http_request_method(HttpRequest req) -> VERBUM`
+- `http_request_path(HttpRequest req) -> VERBUM`
+- `http_request_body(HttpRequest req) -> VERBUM`
+- `http_response_headers_handle(HttpResponse res) -> REX`
+- `http_response_status(HttpResponse res) -> REX`
+- `http_response_body(HttpResponse res) -> VERBUM`
+- `http_response_header(HttpResponse res, VERBUM nome, VERBUM padrao) -> VERBUM`
+- `http_request_header(HttpRequest req, VERBUM nome, VERBUM padrao) -> VERBUM`
+- `http_crlf() -> VERBUM`
+- `http_trim_cr(VERBUM s) -> VERBUM`
+- `http_split_head_body(VERBUM raw) -> HttpRequest`
+- `http_parse_header_into(SPECULUM HttpHeader out, VERBUM line) -> NIHIL`
+- `http_split_first_line(VERBUM s) -> HttpRequest`
+- `http_parse_request_line(VERBUM line) -> HttpRequest`
+- `http_parse_status_line(VERBUM line) -> HttpResponse`
+- `http_parse_request(VERBUM raw) -> HttpRequest`
+- `http_parse_response(VERBUM raw) -> HttpResponse`
+- `http_stringify_request(HttpRequest req) -> VERBUM`
+- `http_stringify_response(HttpResponse res) -> VERBUM`
+- `http_parse_url(VERBUM url) -> HttpUrl`
+- `http_read_headers(SPECULUM NIHIL sock) -> VERBUM`
+- `http_content_length_from_headers(REX headers_handle) -> REX`
+- `http_read_remaining(SPECULUM NIHIL sock) -> VERBUM`
+- `http_read_request_raw(SPECULUM NIHIL sock) -> VERBUM`
+- `http_read_response_raw(SPECULUM NIHIL sock) -> VERBUM`
+- `http_request_prepare(HttpRequest req, VERBUM host, REX port, VERBUM path) -> HttpRequest`
+- `http_response_prepare(HttpResponse res) -> HttpResponse`
+- `http_request(HttpRequest req) -> HttpResponse`
+- `http_get(VERBUM url) -> HttpResponse`
+- `http_post(VERBUM url, VERBUM body) -> HttpResponse`
+- `http_get_json(VERBUM url) -> Json`
+- `http_server_listen(VERBUM host, REX port) -> SPECULUM NIHIL`
+- `http_server_accept(SPECULUM NIHIL srv_ptr) -> HttpRequest`
+- `http_server_reply(SPECULUM NIHIL srv_ptr, HttpResponse resp) -> NIHIL`
+- `http_serve_once(VERBUM host, REX port, SPECULUM NIHIL handler) -> NIHIL`
+
+Module total: **53**
+
 ### `cct/io`
 
 - `print(VERBUM s) -> NIHIL`
@@ -870,6 +1047,64 @@ Module total: **6**
 - `is_tty() -> VERUM`
 
 Module total: **19**
+
+### `cct/json`
+
+- `json_null() -> Json`
+- `json_bool(VERUM v) -> Json`
+- `json_num(UMBRA v) -> Json`
+- `json_str(VERBUM v) -> Json`
+- `json_arr() -> Json`
+- `json_obj() -> Json`
+- `json_kind(Json j) -> REX`
+- `json_is_null(Json j) -> VERUM`
+- `json_is_bool(Json j) -> VERUM`
+- `json_is_num(Json j) -> VERUM`
+- `json_is_str(Json j) -> VERUM`
+- `json_is_arr(Json j) -> VERUM`
+- `json_is_obj(Json j) -> VERUM`
+- `json_arr_push(Json j, Json valor) -> NIHIL`
+- `json_arr_len(Json j) -> REX`
+- `json_arr_get(Json j, REX idx) -> Json`
+- `json_obj_push(Json j, VERBUM chave, Json valor) -> NIHIL`
+- `json_obj_len(Json j) -> REX`
+- `json_obj_key_at(Json j, REX idx) -> VERBUM`
+- `json_obj_value_at(Json j, REX idx) -> Json`
+- `json_is_digit(MILES c) -> VERUM`
+- `json_is_ws(MILES c) -> VERUM`
+- `json_skip_ws(SPECULUM NIHIL c) -> NIHIL`
+- `json_consume_literal(SPECULUM NIHIL c, VERBUM literal) -> NIHIL`
+- `json_parse_string(SPECULUM NIHIL c) -> VERBUM`
+- `json_parse_number(VERBUM s, SPECULUM NIHIL c) -> Json`
+- `json_parse_value(VERBUM s, SPECULUM NIHIL c) -> Json`
+- `json_append_escaped(SPECULUM NIHIL b, VERBUM s) -> NIHIL`
+- `json_write_compact_to(SPECULUM NIHIL b, Json j) -> NIHIL`
+- `json_indent_prefix(REX depth, REX n) -> VERBUM`
+- `json_write_pretty_to(SPECULUM NIHIL b, Json j, REX depth, REX indent) -> NIHIL`
+- `json_stringify(Json j) -> VERBUM`
+- `json_stringify_pretty_indent(Json j, REX n) -> VERBUM`
+- `json_stringify_pretty(Json j) -> VERBUM`
+- `json_write_file(Json j, VERBUM path) -> NIHIL`
+- `json_len(Json j) -> REX`
+- `json_get_index(Json j, REX i) -> Json`
+- `json_set_index(Json j, REX i, Json v) -> NIHIL`
+- `json_push(Json j, Json v) -> NIHIL`
+- `json_get_key(Json j, VERBUM chave) -> Json`
+- `json_has_key(Json j, VERBUM chave) -> VERUM`
+- `json_set_key(Json j, VERBUM chave, Json v) -> NIHIL`
+- `json_keys(Json j) -> SPECULUM NIHIL`
+- `json_values(Json j) -> SPECULUM NIHIL`
+- `json_expect_num(Json j) -> UMBRA`
+- `json_expect_str(Json j) -> VERBUM`
+- `json_expect_bool(Json j) -> VERUM`
+- `json_expect_arr(Json j) -> SPECULUM NIHIL`
+- `json_expect_obj(Json j) -> SPECULUM NIHIL`
+- `json_parse(VERBUM s) -> Json`
+- `json_try_parse(VERBUM s) -> SPECULUM NIHIL`
+- `json_parse_file(VERBUM path) -> Json`
+- `json_try_parse_file(VERBUM path) -> SPECULUM NIHIL`
+
+Module total: **53**
 
 ### `cct/map`
 
@@ -940,6 +1175,23 @@ Module total: **17**
 - `log2(UMBRA x) -> UMBRA`
 
 Module total: **43**
+
+### `cct/net`
+
+- `net_parse_addr(VERBUM s) -> SPECULUM NIHIL`
+- `tcp_connect(VERBUM host, REX port) -> SPECULUM NIHIL`
+- `tcp_listen(VERBUM host, REX port) -> SPECULUM NIHIL`
+- `tcp_accept(SPECULUM NIHIL listener) -> SPECULUM NIHIL`
+- `udp_bind(VERBUM host, REX port) -> SPECULUM NIHIL`
+- `udp_send_to(SPECULUM NIHIL sock, VERBUM host, REX port, VERBUM data) -> NIHIL`
+- `udp_recv_from(SPECULUM NIHIL sock) -> SPECULUM NIHIL`
+- `net_read_until(SPECULUM NIHIL sock, VERBUM delim) -> VERBUM`
+- `net_read_line(SPECULUM NIHIL sock) -> VERBUM`
+- `net_write_line(SPECULUM NIHIL sock, VERBUM s) -> NIHIL`
+- `net_read_exact(SPECULUM NIHIL sock, REX n) -> VERBUM`
+- `net_close(SPECULUM NIHIL sock) -> NIHIL`
+
+Module total: **12**
 
 ### `cct/mem`
 
@@ -1078,6 +1330,24 @@ Module total: **9**
 
 Module total: **12**
 
+### `cct/socket`
+
+- `socket_tcp() -> SPECULUM NIHIL`
+- `socket_udp() -> SPECULUM NIHIL`
+- `sock_connect(SPECULUM NIHIL s, VERBUM host, REX port) -> NIHIL`
+- `sock_bind(SPECULUM NIHIL s, VERBUM host, REX port) -> NIHIL`
+- `sock_listen(SPECULUM NIHIL s, REX backlog) -> NIHIL`
+- `sock_accept(SPECULUM NIHIL s) -> SPECULUM NIHIL`
+- `sock_send(SPECULUM NIHIL s, VERBUM data) -> REX`
+- `sock_recv(SPECULUM NIHIL s, REX max_bytes) -> VERBUM`
+- `sock_close(SPECULUM NIHIL s) -> NIHIL`
+- `sock_set_timeout_ms(SPECULUM NIHIL s, REX ms) -> NIHIL`
+- `sock_peer_addr(SPECULUM NIHIL s) -> VERBUM`
+- `sock_local_addr(SPECULUM NIHIL s) -> VERBUM`
+- `sock_last_error() -> VERBUM`
+
+Module total: **13**
+
 ### `cct/set`
 
 - `set_init GENUS(T) -> SPECULUM NIHIL`
@@ -1211,5 +1481,5 @@ Module total: **6**
 
 Module total: **5**
 
-**Total geral de funcoes inventariadas**: **422**
-<!-- END AUTO API INVENTORY 19D4 -->
+**Total geral de funcoes inventariadas**: **609**
+<!-- END AUTO API INVENTORY 20F -->

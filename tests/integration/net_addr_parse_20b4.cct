@@ -1,0 +1,69 @@
+INCIPIT grimoire "net_addr_parse_20b4"
+
+ADVOCARE "cct/net.cct"
+ADVOCARE "cct/option.cct"
+ADVOCARE "cct/socket.cct"
+ADVOCARE "cct/verbum.cct"
+
+RITUALE expect_addr(VERBUM src, VERBUM host_exp, REX port_exp) REDDE VERUM
+  EVOCA SPECULUM NIHIL addr_opt AD CONIURA net_parse_addr(src)
+  SI NON CONIURA option_is_some GENUS(NetAddr)(addr_opt)
+    CONIURA option_free GENUS(NetAddr)(addr_opt)
+    REDDE FALSUM
+  FIN SI
+
+  EVOCA NetAddr addr AD CONIURA option_unwrap GENUS(NetAddr)(addr_opt)
+  CONIURA option_free GENUS(NetAddr)(addr_opt)
+
+  QUANDO addr
+    CASO Addr(host, port):
+      SI CONIURA compare(host, host_exp) != 0
+        REDDE FALSUM
+      FIN SI
+      SI port != port_exp
+        REDDE FALSUM
+      FIN SI
+      REDDE VERUM
+  FIN QUANDO
+  REDDE FALSUM
+EXPLICIT RITUALE
+
+RITUALE expect_invalid(VERBUM src) REDDE VERUM
+  EVOCA SPECULUM NIHIL addr_opt AD CONIURA net_parse_addr(src)
+  EVOCA VERUM none AD CONIURA option_is_none GENUS(NetAddr)(addr_opt)
+  CONIURA option_free GENUS(NetAddr)(addr_opt)
+  REDDE none
+EXPLICIT RITUALE
+
+RITUALE main() REDDE REX
+  SI NON CONIURA expect_addr("127.0.0.1:8080", "127.0.0.1", 8080)
+    REDDE 1
+  FIN SI
+  SI NON CONIURA expect_addr("localhost:80", "localhost", 80)
+    REDDE 2
+  FIN SI
+  SI NON CONIURA expect_invalid("")
+    REDDE 3
+  FIN SI
+  SI NON CONIURA expect_invalid("sem_porta")
+    REDDE 4
+  FIN SI
+  SI NON CONIURA expect_invalid(":8080")
+    REDDE 5
+  FIN SI
+  SI NON CONIURA expect_invalid("host:")
+    REDDE 6
+  FIN SI
+  SI NON CONIURA expect_invalid("host:abc")
+    REDDE 7
+  FIN SI
+  SI NON CONIURA expect_invalid("host:70000")
+    REDDE 8
+  FIN SI
+  SI CONIURA compare(CONIURA sock_last_error(), "") != 0
+    REDDE 9
+  FIN SI
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

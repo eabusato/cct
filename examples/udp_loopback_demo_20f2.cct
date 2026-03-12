@@ -1,0 +1,73 @@
+INCIPIT grimoire "udp_loopback_demo_20f2"
+
+ADVOCARE "cct/io.cct"
+ADVOCARE "cct/net.cct"
+ADVOCARE "cct/option.cct"
+ADVOCARE "cct/socket.cct"
+ADVOCARE "cct/verbum.cct"
+
+RITUALE bind_demo_port(REX port) REDDE SPECULUM NIHIL
+  TEMPTA
+    REDDE CONIURA udp_bind("127.0.0.1", port)
+  CAPE FRACTUM erro
+    EVOCA VERBUM msg AD OBSECRO fractum_to_verbum(erro)
+    SI CONIURA compare(msg, "sock_bind falhou") == 0 ET port < 22325
+      REDDE CONIURA bind_demo_port(port + 1)
+    FIN SI
+    IACE erro
+  FIN TEMPTA
+  IACE "porta UDP indisponivel"
+EXPLICIT RITUALE
+
+RITUALE main() REDDE REX
+  TEMPTA
+    EVOCA SPECULUM NIHIL receiver AD CONIURA bind_demo_port(22321)
+    EVOCA VERBUM local_addr AD CONIURA sock_local_addr(receiver)
+    EVOCA SPECULUM NIHIL addr_opt AD CONIURA net_parse_addr(local_addr)
+    SI NON CONIURA option_is_some GENUS(NetAddr)(addr_opt)
+      CONIURA option_free GENUS(NetAddr)(addr_opt)
+      CONIURA net_close(receiver)
+      IACE "nao foi possivel resolver a porta UDP local"
+    FIN SI
+    EVOCA NetAddr addr AD CONIURA option_unwrap GENUS(NetAddr)(addr_opt)
+    CONIURA option_free GENUS(NetAddr)(addr_opt)
+    EVOCA REX port AD 0
+    QUANDO addr
+      CASO Addr(host, found_port):
+        VINCIRE port AD found_port
+    FIN QUANDO
+    EVOCA SPECULUM NIHIL sender AD CONIURA socket_udp()
+    CONIURA sock_set_timeout_ms(receiver, 1000)
+
+    CONIURA udp_send_to(sender, "127.0.0.1", port, "salve-udp-demo")
+    EVOCA SPECULUM NIHIL pkt_opt AD CONIURA udp_recv_from(receiver)
+    SI NON CONIURA option_is_some GENUS(NetDatagram)(pkt_opt)
+      CONIURA option_free GENUS(NetDatagram)(pkt_opt)
+      CONIURA net_close(sender)
+      CONIURA net_close(receiver)
+      REDDE 1
+    FIN SI
+
+    EVOCA NetDatagram pkt AD CONIURA option_unwrap GENUS(NetDatagram)(pkt_opt)
+    CONIURA option_free GENUS(NetDatagram)(pkt_opt)
+
+    QUANDO pkt
+      CASO Datagram(host, pkt_port, data):
+        CONIURA println(data)
+    FIN QUANDO
+
+    CONIURA net_close(sender)
+    CONIURA net_close(receiver)
+    REDDE 0
+  CAPE FRACTUM erro
+    EVOCA VERBUM msg AD OBSECRO fractum_to_verbum(erro)
+    SI CONIURA compare(msg, "sock_bind falhou") == 0 VEL CONIURA compare(msg, "socket udp create falhou") == 0 VEL CONIURA compare(msg, "sock_connect falhou") == 0
+      CONIURA println("udp loopback indisponivel neste host")
+      REDDE 0
+    FIN SI
+    IACE erro
+  FIN TEMPTA
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

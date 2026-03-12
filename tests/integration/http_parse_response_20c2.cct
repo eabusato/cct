@@ -1,0 +1,44 @@
+INCIPIT grimoire "http_parse_response_20c2"
+
+ADVOCARE "cct/http.cct"
+ADVOCARE "cct/verbum.cct"
+
+RITUALE main() REDDE REX
+  EVOCA VERBUM crlf AD CONIURA http_crlf()
+  EVOCA VERBUM raw AD "HTTP/1.1 404 Not Found"
+  VINCIRE raw AD CONIURA concat(raw, crlf)
+  VINCIRE raw AD CONIURA concat(raw, "Content-Type: text/plain")
+  VINCIRE raw AD CONIURA concat(raw, crlf)
+  VINCIRE raw AD CONIURA concat(raw, "X-Test: abc")
+  VINCIRE raw AD CONIURA concat(raw, crlf)
+  VINCIRE raw AD CONIURA concat(raw, crlf)
+  VINCIRE raw AD CONIURA concat(raw, "nao encontrado")
+
+  EVOCA HttpResponse res AD CONIURA http_parse_response(raw)
+  SI CONIURA http_response_status(res) != 404
+    REDDE 1
+  FIN SI
+  SI CONIURA compare(CONIURA http_response_body(res), "nao encontrado") != 0
+    REDDE 2
+  FIN SI
+
+  EVOCA REX headers_handle AD CONIURA http_response_headers_handle(res)
+  SI CONIURA http_headers_len(headers_handle) != 2
+    REDDE 3
+  FIN SI
+
+  EVOCA SPECULUM HttpHeader h0 AD CONIURA http_headers_get_ptr(headers_handle, 0)
+  EVOCA SPECULUM HttpHeader h1 AD CONIURA http_headers_get_ptr(headers_handle, 1)
+
+  SI CONIURA compare((*h0).nome, "Content-Type") != 0 VEL CONIURA compare((*h0).valor, "text/plain") != 0
+    REDDE 4
+  FIN SI
+
+  SI CONIURA compare((*h1).nome, "X-Test") != 0 VEL CONIURA compare((*h1).valor, "abc") != 0
+    REDDE 5
+  FIN SI
+
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

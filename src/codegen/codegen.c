@@ -3108,6 +3108,291 @@ static bool cg_emit_obsecro_expr(FILE *out, cct_codegen_t *cg, const cct_ast_nod
         return true;
     }
 
+    if (strcmp(name, "db_open") == 0) {
+        if (argc != 1) {
+            cg_report_node(cg, expr, "OBSECRO db_open expects exactly one VERBUM path argument in FASE 20E.1");
+            return false;
+        }
+        cct_codegen_value_kind_t k = CCT_CODEGEN_VALUE_UNKNOWN;
+        cg->uses_sqlite = true;
+        fputs("((void*)cct_rt_db_open(", out);
+        if (!cg_emit_expr(out, cg, args->nodes[0], &k)) return false;
+        if (k != CCT_CODEGEN_VALUE_STRING) {
+            cg_report_node(cg, args->nodes[0], "OBSECRO db_open requires VERBUM path argument in FASE 20E.1");
+            return false;
+        }
+        fputs("))", out);
+        if (out_kind) *out_kind = CCT_CODEGEN_VALUE_POINTER;
+        return true;
+    }
+
+    if (strcmp(name, "db_close") == 0) {
+        if (argc != 1) {
+            cg_report_node(cg, expr, "OBSECRO db_close expects exactly one db pointer argument in FASE 20E.1");
+            return false;
+        }
+        cct_codegen_value_kind_t k = CCT_CODEGEN_VALUE_UNKNOWN;
+        cg->uses_sqlite = true;
+        fputs("cct_rt_db_close((void*)(", out);
+        if (!cg_emit_expr(out, cg, args->nodes[0], &k)) return false;
+        if (k != CCT_CODEGEN_VALUE_POINTER) {
+            cg_report_node(cg, args->nodes[0], "OBSECRO db_close requires db pointer argument in FASE 20E.1");
+            return false;
+        }
+        fputs("))", out);
+        if (out_kind) *out_kind = CCT_CODEGEN_VALUE_NIHIL;
+        return true;
+    }
+
+    if (strcmp(name, "db_exec") == 0) {
+        if (argc != 2) {
+            cg_report_node(cg, expr, "OBSECRO db_exec expects exactly (db, sql) in FASE 20E.1");
+            return false;
+        }
+        cct_codegen_value_kind_t k0 = CCT_CODEGEN_VALUE_UNKNOWN;
+        cct_codegen_value_kind_t k1 = CCT_CODEGEN_VALUE_UNKNOWN;
+        cg->uses_sqlite = true;
+        fputs("cct_rt_db_exec((void*)(", out);
+        if (!cg_emit_expr(out, cg, args->nodes[0], &k0)) return false;
+        if (k0 != CCT_CODEGEN_VALUE_POINTER) {
+            cg_report_node(cg, args->nodes[0], "OBSECRO db_exec requires db pointer as first argument in FASE 20E.1");
+            return false;
+        }
+        fputs("), ", out);
+        if (!cg_emit_expr(out, cg, args->nodes[1], &k1)) return false;
+        if (k1 != CCT_CODEGEN_VALUE_STRING) {
+            cg_report_node(cg, args->nodes[1], "OBSECRO db_exec requires VERBUM sql as second argument in FASE 20E.1");
+            return false;
+        }
+        fputs(")", out);
+        if (out_kind) *out_kind = CCT_CODEGEN_VALUE_NIHIL;
+        return true;
+    }
+
+    if (strcmp(name, "db_last_error") == 0) {
+        if (argc != 1) {
+            cg_report_node(cg, expr, "OBSECRO db_last_error expects exactly one db pointer argument in FASE 20E.1");
+            return false;
+        }
+        cct_codegen_value_kind_t k = CCT_CODEGEN_VALUE_UNKNOWN;
+        cg->uses_sqlite = true;
+        fputs("cct_rt_db_last_error((void*)(", out);
+        if (!cg_emit_expr(out, cg, args->nodes[0], &k)) return false;
+        if (k != CCT_CODEGEN_VALUE_POINTER) {
+            cg_report_node(cg, args->nodes[0], "OBSECRO db_last_error requires db pointer argument in FASE 20E.1");
+            return false;
+        }
+        fputs("))", out);
+        if (out_kind) *out_kind = CCT_CODEGEN_VALUE_STRING;
+        return true;
+    }
+
+    if (strcmp(name, "db_query") == 0) {
+        if (argc != 2) {
+            cg_report_node(cg, expr, "OBSECRO db_query expects exactly (db, sql) in FASE 20E.2");
+            return false;
+        }
+        cct_codegen_value_kind_t k0 = CCT_CODEGEN_VALUE_UNKNOWN;
+        cct_codegen_value_kind_t k1 = CCT_CODEGEN_VALUE_UNKNOWN;
+        cg->uses_sqlite = true;
+        fputs("((void*)cct_rt_db_query((void*)(", out);
+        if (!cg_emit_expr(out, cg, args->nodes[0], &k0)) return false;
+        if (k0 != CCT_CODEGEN_VALUE_POINTER) {
+            cg_report_node(cg, args->nodes[0], "OBSECRO db_query requires db pointer as first argument in FASE 20E.2");
+            return false;
+        }
+        fputs("), ", out);
+        if (!cg_emit_expr(out, cg, args->nodes[1], &k1)) return false;
+        if (k1 != CCT_CODEGEN_VALUE_STRING) {
+            cg_report_node(cg, args->nodes[1], "OBSECRO db_query requires VERBUM sql as second argument in FASE 20E.2");
+            return false;
+        }
+        fputs("))", out);
+        if (out_kind) *out_kind = CCT_CODEGEN_VALUE_POINTER;
+        return true;
+    }
+
+    if (strcmp(name, "rows_next") == 0) {
+        if (argc != 1) {
+            cg_report_node(cg, expr, "OBSECRO rows_next expects exactly one rows pointer argument in FASE 20E.2");
+            return false;
+        }
+        cct_codegen_value_kind_t k = CCT_CODEGEN_VALUE_UNKNOWN;
+        cg->uses_sqlite = true;
+        fputs("(cct_rt_rows_next((void*)(", out);
+        if (!cg_emit_expr(out, cg, args->nodes[0], &k)) return false;
+        if (k != CCT_CODEGEN_VALUE_POINTER) {
+            cg_report_node(cg, args->nodes[0], "OBSECRO rows_next requires rows pointer argument in FASE 20E.2");
+            return false;
+        }
+        fputs(")))", out);
+        if (out_kind) *out_kind = CCT_CODEGEN_VALUE_BOOL;
+        return true;
+    }
+
+    if (strcmp(name, "rows_get_text") == 0) {
+        if (argc != 2) {
+            cg_report_node(cg, expr, "OBSECRO rows_get_text expects exactly (rows, col) in FASE 20E.2");
+            return false;
+        }
+        cct_codegen_value_kind_t k0 = CCT_CODEGEN_VALUE_UNKNOWN;
+        cct_codegen_value_kind_t k1 = CCT_CODEGEN_VALUE_UNKNOWN;
+        cg->uses_sqlite = true;
+        fputs("cct_rt_rows_get_text((void*)(", out);
+        if (!cg_emit_expr(out, cg, args->nodes[0], &k0)) return false;
+        if (k0 != CCT_CODEGEN_VALUE_POINTER) {
+            cg_report_node(cg, args->nodes[0], "OBSECRO rows_get_text requires rows pointer as first argument in FASE 20E.2");
+            return false;
+        }
+        fputs("), (long long)(", out);
+        if (!cg_emit_expr(out, cg, args->nodes[1], &k1)) return false;
+        if (!(k1 == CCT_CODEGEN_VALUE_INT || k1 == CCT_CODEGEN_VALUE_BOOL)) {
+            cg_report_node(cg, args->nodes[1], "OBSECRO rows_get_text requires integer col as second argument in FASE 20E.2");
+            return false;
+        }
+        fputs("))", out);
+        if (out_kind) *out_kind = CCT_CODEGEN_VALUE_STRING;
+        return true;
+    }
+
+    if (strcmp(name, "rows_get_int") == 0) {
+        if (argc != 2) {
+            cg_report_node(cg, expr, "OBSECRO rows_get_int expects exactly (rows, col) in FASE 20E.2");
+            return false;
+        }
+        cct_codegen_value_kind_t k0 = CCT_CODEGEN_VALUE_UNKNOWN;
+        cct_codegen_value_kind_t k1 = CCT_CODEGEN_VALUE_UNKNOWN;
+        cg->uses_sqlite = true;
+        fputs("(cct_rt_rows_get_int((void*)(", out);
+        if (!cg_emit_expr(out, cg, args->nodes[0], &k0)) return false;
+        if (k0 != CCT_CODEGEN_VALUE_POINTER) {
+            cg_report_node(cg, args->nodes[0], "OBSECRO rows_get_int requires rows pointer as first argument in FASE 20E.2");
+            return false;
+        }
+        fputs("), (long long)(", out);
+        if (!cg_emit_expr(out, cg, args->nodes[1], &k1)) return false;
+        if (!(k1 == CCT_CODEGEN_VALUE_INT || k1 == CCT_CODEGEN_VALUE_BOOL)) {
+            cg_report_node(cg, args->nodes[1], "OBSECRO rows_get_int requires integer col as second argument in FASE 20E.2");
+            return false;
+        }
+        fputs(")))", out);
+        if (out_kind) *out_kind = CCT_CODEGEN_VALUE_INT;
+        return true;
+    }
+
+    if (strcmp(name, "rows_get_real") == 0) {
+        if (argc != 2) {
+            cg_report_node(cg, expr, "OBSECRO rows_get_real expects exactly (rows, col) in FASE 20E.2");
+            return false;
+        }
+        cct_codegen_value_kind_t k0 = CCT_CODEGEN_VALUE_UNKNOWN;
+        cct_codegen_value_kind_t k1 = CCT_CODEGEN_VALUE_UNKNOWN;
+        cg->uses_sqlite = true;
+        fputs("(cct_rt_rows_get_real((void*)(", out);
+        if (!cg_emit_expr(out, cg, args->nodes[0], &k0)) return false;
+        if (k0 != CCT_CODEGEN_VALUE_POINTER) {
+            cg_report_node(cg, args->nodes[0], "OBSECRO rows_get_real requires rows pointer as first argument in FASE 20E.2");
+            return false;
+        }
+        fputs("), (long long)(", out);
+        if (!cg_emit_expr(out, cg, args->nodes[1], &k1)) return false;
+        if (!(k1 == CCT_CODEGEN_VALUE_INT || k1 == CCT_CODEGEN_VALUE_BOOL)) {
+            cg_report_node(cg, args->nodes[1], "OBSECRO rows_get_real requires integer col as second argument in FASE 20E.2");
+            return false;
+        }
+        fputs(")))", out);
+        if (out_kind) *out_kind = CCT_CODEGEN_VALUE_REAL;
+        return true;
+    }
+
+    if (strcmp(name, "rows_close") == 0) {
+        if (argc != 1) {
+            cg_report_node(cg, expr, "OBSECRO rows_close expects exactly one rows pointer argument in FASE 20E.2");
+            return false;
+        }
+        cct_codegen_value_kind_t k = CCT_CODEGEN_VALUE_UNKNOWN;
+        cg->uses_sqlite = true;
+        fputs("cct_rt_rows_close((void*)(", out);
+        if (!cg_emit_expr(out, cg, args->nodes[0], &k)) return false;
+        if (k != CCT_CODEGEN_VALUE_POINTER) {
+            cg_report_node(cg, args->nodes[0], "OBSECRO rows_close requires rows pointer argument in FASE 20E.2");
+            return false;
+        }
+        fputs("))", out);
+        if (out_kind) *out_kind = CCT_CODEGEN_VALUE_NIHIL;
+        return true;
+    }
+
+    if (strcmp(name, "db_prepare") == 0) {
+        if (argc != 2) {
+            cg_report_node(cg, expr, "OBSECRO db_prepare expects exactly (db, sql) in FASE 20E.3");
+            return false;
+        }
+        cct_codegen_value_kind_t k0 = CCT_CODEGEN_VALUE_UNKNOWN;
+        cct_codegen_value_kind_t k1 = CCT_CODEGEN_VALUE_UNKNOWN;
+        cg->uses_sqlite = true;
+        fputs("((void*)cct_rt_db_prepare((void*)(", out);
+        if (!cg_emit_expr(out, cg, args->nodes[0], &k0)) return false;
+        if (k0 != CCT_CODEGEN_VALUE_POINTER) {
+            cg_report_node(cg, args->nodes[0], "OBSECRO db_prepare requires db pointer as first argument in FASE 20E.3");
+            return false;
+        }
+        fputs("), ", out);
+        if (!cg_emit_expr(out, cg, args->nodes[1], &k1)) return false;
+        if (k1 != CCT_CODEGEN_VALUE_STRING) {
+            cg_report_node(cg, args->nodes[1], "OBSECRO db_prepare requires VERBUM sql as second argument in FASE 20E.3");
+            return false;
+        }
+        fputs("))", out);
+        if (out_kind) *out_kind = CCT_CODEGEN_VALUE_POINTER;
+        return true;
+    }
+
+    if (strcmp(name, "stmt_step") == 0) {
+        if (argc != 1) {
+            cg_report_node(cg, expr, "OBSECRO stmt_step expects exactly one stmt pointer argument in FASE 20E.3");
+            return false;
+        }
+        cct_codegen_value_kind_t k = CCT_CODEGEN_VALUE_UNKNOWN;
+        cg->uses_sqlite = true;
+        fputs("(cct_rt_stmt_step((void*)(", out);
+        if (!cg_emit_expr(out, cg, args->nodes[0], &k)) return false;
+        if (k != CCT_CODEGEN_VALUE_POINTER) {
+            cg_report_node(cg, args->nodes[0], "OBSECRO stmt_step requires stmt pointer argument in FASE 20E.3");
+            return false;
+        }
+        fputs(")))", out);
+        if (out_kind) *out_kind = CCT_CODEGEN_VALUE_BOOL;
+        return true;
+    }
+
+    if (strcmp(name, "db_scalar_int") == 0 || strcmp(name, "db_scalar_text") == 0) {
+        const char *rt_name = strcmp(name, "db_scalar_int") == 0 ? "cct_rt_db_scalar_int" : "cct_rt_db_scalar_text";
+        cct_codegen_value_kind_t ret_kind = strcmp(name, "db_scalar_int") == 0 ? CCT_CODEGEN_VALUE_INT : CCT_CODEGEN_VALUE_STRING;
+        if (argc != 2) {
+            cg_report_nodef(cg, expr, "OBSECRO %s expects exactly (db, sql) in FASE 20E.4", name);
+            return false;
+        }
+        cct_codegen_value_kind_t k0 = CCT_CODEGEN_VALUE_UNKNOWN;
+        cct_codegen_value_kind_t k1 = CCT_CODEGEN_VALUE_UNKNOWN;
+        cg->uses_sqlite = true;
+        fprintf(out, "%s((void*)(", rt_name);
+        if (!cg_emit_expr(out, cg, args->nodes[0], &k0)) return false;
+        if (k0 != CCT_CODEGEN_VALUE_POINTER) {
+            cg_report_nodef(cg, args->nodes[0], "OBSECRO %s requires db pointer as first argument in FASE 20E.4", name);
+            return false;
+        }
+        fputs("), ", out);
+        if (!cg_emit_expr(out, cg, args->nodes[1], &k1)) return false;
+        if (k1 != CCT_CODEGEN_VALUE_STRING) {
+            cg_report_nodef(cg, args->nodes[1], "OBSECRO %s requires VERBUM sql as second argument in FASE 20E.4", name);
+            return false;
+        }
+        fputs(")", out);
+        if (out_kind) *out_kind = ret_kind;
+        return true;
+    }
+
     if (strcmp(name, "socket_tcp") == 0 || strcmp(name, "socket_udp") == 0) {
         if (argc != 0) {
             cg_report_nodef(cg, expr, "OBSECRO %s expects exactly zero arguments in FASE 20B.1", name);
@@ -3179,6 +3464,33 @@ static bool cg_emit_obsecro_expr(FILE *out, cct_codegen_t *cg, const cct_ast_nod
             return false;
         }
         fputs("))", out);
+        if (out_kind) *out_kind = CCT_CODEGEN_VALUE_STRING;
+        return true;
+    }
+
+    if (strcmp(name, "sock_peer_addr") == 0 || strcmp(name, "sock_local_addr") == 0) {
+        if (argc != 1) {
+            cg_report_nodef(cg, expr, "OBSECRO %s expects exactly one socket pointer argument in FASE 20B.4", name);
+            return false;
+        }
+        cct_codegen_value_kind_t k = CCT_CODEGEN_VALUE_UNKNOWN;
+        fprintf(out, "cct_rt_%s((void*)(", name);
+        if (!cg_emit_expr(out, cg, args->nodes[0], &k)) return false;
+        if (k != CCT_CODEGEN_VALUE_POINTER) {
+            cg_report_nodef(cg, args->nodes[0], "OBSECRO %s requires socket pointer argument in FASE 20B.4", name);
+            return false;
+        }
+        fputs("))", out);
+        if (out_kind) *out_kind = CCT_CODEGEN_VALUE_STRING;
+        return true;
+    }
+
+    if (strcmp(name, "sock_last_error") == 0) {
+        if (argc != 0) {
+            cg_report_node(cg, expr, "OBSECRO sock_last_error expects zero arguments in FASE 20B.4");
+            return false;
+        }
+        fputs("cct_rt_sock_last_error()", out);
         if (out_kind) *out_kind = CCT_CODEGEN_VALUE_STRING;
         return true;
     }
@@ -6208,6 +6520,161 @@ static bool cg_emit_scribe_stmt(FILE *out, cct_codegen_t *cg, const cct_ast_node
         return true;
     }
 
+    if (strcmp(obsecro_node->as.obsecro.name, "db_close") == 0) {
+        cct_ast_node_list_t *args = obsecro_node->as.obsecro.arguments;
+        if (!args || args->count != 1) {
+            cg_report_node(cg, obsecro_node, "OBSECRO db_close requires exactly one db pointer argument in FASE 20E.1");
+            return false;
+        }
+        cct_codegen_value_kind_t k = CCT_CODEGEN_VALUE_UNKNOWN;
+        cg->uses_sqlite = true;
+        cg_emit_indent(out, indent);
+        fputs("cct_rt_db_close((void*)(", out);
+        if (!cg_emit_expr(out, cg, args->nodes[0], &k)) return false;
+        if (k != CCT_CODEGEN_VALUE_POINTER) {
+            cg_report_node(cg, args->nodes[0], "OBSECRO db_close requires db pointer argument in FASE 20E.1");
+            return false;
+        }
+        fputs("));\n", out);
+        return true;
+    }
+
+    if (strcmp(obsecro_node->as.obsecro.name, "db_exec") == 0) {
+        cct_ast_node_list_t *args = obsecro_node->as.obsecro.arguments;
+        if (!args || args->count != 2) {
+            cg_report_node(cg, obsecro_node, "OBSECRO db_exec requires exactly (db, sql) in FASE 20E.1");
+            return false;
+        }
+        cct_codegen_value_kind_t k0 = CCT_CODEGEN_VALUE_UNKNOWN;
+        cct_codegen_value_kind_t k1 = CCT_CODEGEN_VALUE_UNKNOWN;
+        cg->uses_sqlite = true;
+        cg_emit_indent(out, indent);
+        fputs("cct_rt_db_exec((void*)(", out);
+        if (!cg_emit_expr(out, cg, args->nodes[0], &k0)) return false;
+        if (k0 != CCT_CODEGEN_VALUE_POINTER) {
+            cg_report_node(cg, args->nodes[0], "OBSECRO db_exec requires db pointer as first argument in FASE 20E.1");
+            return false;
+        }
+        fputs("), ", out);
+        if (!cg_emit_expr(out, cg, args->nodes[1], &k1)) return false;
+        if (k1 != CCT_CODEGEN_VALUE_STRING) {
+            cg_report_node(cg, args->nodes[1], "OBSECRO db_exec requires VERBUM sql as second argument in FASE 20E.1");
+            return false;
+        }
+        fputs(");\n", out);
+        return true;
+    }
+
+    if (strcmp(obsecro_node->as.obsecro.name, "rows_close") == 0) {
+        cct_ast_node_list_t *args = obsecro_node->as.obsecro.arguments;
+        if (!args || args->count != 1) {
+            cg_report_node(cg, obsecro_node, "OBSECRO rows_close requires exactly one rows pointer argument in FASE 20E.2");
+            return false;
+        }
+        cct_codegen_value_kind_t k = CCT_CODEGEN_VALUE_UNKNOWN;
+        cg->uses_sqlite = true;
+        cg_emit_indent(out, indent);
+        fputs("cct_rt_rows_close((void*)(", out);
+        if (!cg_emit_expr(out, cg, args->nodes[0], &k)) return false;
+        if (k != CCT_CODEGEN_VALUE_POINTER) {
+            cg_report_node(cg, args->nodes[0], "OBSECRO rows_close requires rows pointer argument in FASE 20E.2");
+            return false;
+        }
+        fputs("));\n", out);
+        return true;
+    }
+
+    if (strcmp(obsecro_node->as.obsecro.name, "stmt_bind_text") == 0 ||
+        strcmp(obsecro_node->as.obsecro.name, "stmt_bind_int") == 0 ||
+        strcmp(obsecro_node->as.obsecro.name, "stmt_bind_real") == 0) {
+        const char *name = obsecro_node->as.obsecro.name;
+        cct_ast_node_list_t *args = obsecro_node->as.obsecro.arguments;
+        if (!args || args->count != 3) {
+            cg_report_nodef(cg, obsecro_node, "OBSECRO %s requires exactly (stmt, idx, value) in FASE 20E.3", name);
+            return false;
+        }
+        cct_codegen_value_kind_t k0 = CCT_CODEGEN_VALUE_UNKNOWN;
+        cct_codegen_value_kind_t k1 = CCT_CODEGEN_VALUE_UNKNOWN;
+        cct_codegen_value_kind_t k2 = CCT_CODEGEN_VALUE_UNKNOWN;
+        cg->uses_sqlite = true;
+        cg_emit_indent(out, indent);
+        fprintf(out, "cct_rt_%s((void*)(", name);
+        if (!cg_emit_expr(out, cg, args->nodes[0], &k0)) return false;
+        if (k0 != CCT_CODEGEN_VALUE_POINTER) {
+            cg_report_nodef(cg, args->nodes[0], "OBSECRO %s requires stmt pointer as first argument in FASE 20E.3", name);
+            return false;
+        }
+        fputs("), (long long)(", out);
+        if (!cg_emit_expr(out, cg, args->nodes[1], &k1)) return false;
+        if (!(k1 == CCT_CODEGEN_VALUE_INT || k1 == CCT_CODEGEN_VALUE_BOOL)) {
+            cg_report_nodef(cg, args->nodes[1], "OBSECRO %s requires integer idx as second argument in FASE 20E.3", name);
+            return false;
+        }
+        fputs("), ", out);
+        if (!cg_emit_expr(out, cg, args->nodes[2], &k2)) return false;
+        if (strcmp(name, "stmt_bind_text") == 0) {
+            if (k2 != CCT_CODEGEN_VALUE_STRING) {
+                cg_report_node(cg, args->nodes[2], "OBSECRO stmt_bind_text requires VERBUM value as third argument in FASE 20E.3");
+                return false;
+            }
+        } else if (strcmp(name, "stmt_bind_int") == 0) {
+            if (!(k2 == CCT_CODEGEN_VALUE_INT || k2 == CCT_CODEGEN_VALUE_BOOL)) {
+                cg_report_node(cg, args->nodes[2], "OBSECRO stmt_bind_int requires integer value as third argument in FASE 20E.3");
+                return false;
+            }
+        } else {
+            if (k2 != CCT_CODEGEN_VALUE_REAL) {
+                cg_report_node(cg, args->nodes[2], "OBSECRO stmt_bind_real requires UMBRA value as third argument in FASE 20E.3");
+                return false;
+            }
+        }
+        fputs(");\n", out);
+        return true;
+    }
+
+    if (strcmp(obsecro_node->as.obsecro.name, "stmt_reset") == 0 ||
+        strcmp(obsecro_node->as.obsecro.name, "stmt_finalize") == 0) {
+        const char *name = obsecro_node->as.obsecro.name;
+        cct_ast_node_list_t *args = obsecro_node->as.obsecro.arguments;
+        if (!args || args->count != 1) {
+            cg_report_nodef(cg, obsecro_node, "OBSECRO %s requires exactly one stmt pointer argument in FASE 20E.3", name);
+            return false;
+        }
+        cct_codegen_value_kind_t k = CCT_CODEGEN_VALUE_UNKNOWN;
+        cg->uses_sqlite = true;
+        cg_emit_indent(out, indent);
+        fprintf(out, "cct_rt_%s((void*)(", name);
+        if (!cg_emit_expr(out, cg, args->nodes[0], &k)) return false;
+        if (k != CCT_CODEGEN_VALUE_POINTER) {
+            cg_report_nodef(cg, args->nodes[0], "OBSECRO %s requires stmt pointer argument in FASE 20E.3", name);
+            return false;
+        }
+        fputs("));\n", out);
+        return true;
+    }
+
+    if (strcmp(obsecro_node->as.obsecro.name, "db_begin") == 0 ||
+        strcmp(obsecro_node->as.obsecro.name, "db_commit") == 0 ||
+        strcmp(obsecro_node->as.obsecro.name, "db_rollback") == 0) {
+        const char *name = obsecro_node->as.obsecro.name;
+        cct_ast_node_list_t *args = obsecro_node->as.obsecro.arguments;
+        if (!args || args->count != 1) {
+            cg_report_nodef(cg, obsecro_node, "OBSECRO %s requires exactly one db pointer argument in FASE 20E.4", name);
+            return false;
+        }
+        cct_codegen_value_kind_t k = CCT_CODEGEN_VALUE_UNKNOWN;
+        cg->uses_sqlite = true;
+        cg_emit_indent(out, indent);
+        fprintf(out, "cct_rt_%s((void*)(", name);
+        if (!cg_emit_expr(out, cg, args->nodes[0], &k)) return false;
+        if (k != CCT_CODEGEN_VALUE_POINTER) {
+            cg_report_nodef(cg, args->nodes[0], "OBSECRO %s requires db pointer argument in FASE 20E.4", name);
+            return false;
+        }
+        fputs("));\n", out);
+        return true;
+    }
+
     if (strcmp(obsecro_node->as.obsecro.name, "fluxus_clear") == 0) {
         cct_ast_node_list_t *args = obsecro_node->as.obsecro.arguments;
         if (!args || args->count != 1) {
@@ -6968,7 +7435,7 @@ static bool cg_emit_scribe_stmt(FILE *out, cct_codegen_t *cg, const cct_ast_node
     }
 
     if (strcmp(obsecro_node->as.obsecro.name, "scribe") != 0) {
-        cg_report_nodef(cg, obsecro_node, "OBSECRO %s codegen is not supported in current executable subset (supported stmt builtins: scribe, libera, mem_free, mem_copy, mem_set, mem_zero, kernel_halt, kernel_outb, kernel_memcpy, kernel_memset, fluxus_free, fluxus_push, fluxus_pop, fluxus_clear, fluxus_reserve, fluxus_set, fluxus_remove, fluxus_insert, fluxus_reverse, fluxus_sort_int, fluxus_sort_verbum, alg_sort_verbum, json_arr_handle_push, json_obj_handle_push, sock_connect, sock_bind, sock_listen, sock_close, sock_set_timeout_ms, map_free, map_insert, map_clear, map_reserve, map_merge, set_free, set_clear, set_reserve, io_print, io_println, io_print_int, io_print_real, io_print_char, io_eprint, io_eprintln, io_eprint_int, io_eprint_real, io_flush, io_flush_err, fs_write_all, fs_append_all, fs_mkdir, fs_mkdir_all, fs_delete_file, fs_delete_dir, fs_rename, fs_copy, fs_move, fs_chmod, fs_truncate, fs_symlink, random_seed, time_sleep_ms, bytes_set, bytes_free, option_free, result_free, scan_free, builder_append, builder_append_char, builder_clear, builder_free, writer_indent, writer_dedent, writer_write, writer_writeln, writer_free)",
+        cg_report_nodef(cg, obsecro_node, "OBSECRO %s codegen is not supported in current executable subset (supported stmt builtins: scribe, libera, mem_free, mem_copy, mem_set, mem_zero, kernel_halt, kernel_outb, kernel_memcpy, kernel_memset, fluxus_free, fluxus_push, fluxus_pop, fluxus_clear, fluxus_reserve, fluxus_set, fluxus_remove, fluxus_insert, fluxus_reverse, fluxus_sort_int, fluxus_sort_verbum, alg_sort_verbum, json_arr_handle_push, json_obj_handle_push, sock_connect, sock_bind, sock_listen, sock_close, sock_set_timeout_ms, db_exec, db_close, rows_close, stmt_bind_text, stmt_bind_int, stmt_bind_real, stmt_reset, stmt_finalize, db_begin, db_commit, db_rollback, map_free, map_insert, map_clear, map_reserve, map_merge, set_free, set_clear, set_reserve, io_print, io_println, io_print_int, io_print_real, io_print_char, io_eprint, io_eprintln, io_eprint_int, io_eprint_real, io_flush, io_flush_err, fs_write_all, fs_append_all, fs_mkdir, fs_mkdir_all, fs_delete_file, fs_delete_dir, fs_rename, fs_copy, fs_move, fs_chmod, fs_truncate, fs_symlink, random_seed, time_sleep_ms, bytes_set, bytes_free, option_free, result_free, scan_free, builder_append, builder_append_char, builder_clear, builder_free, writer_indent, writer_dedent, writer_write, writer_writeln, writer_free)",
                         obsecro_node->as.obsecro.name);
         return false;
     }
@@ -8579,6 +9046,31 @@ static bool cg_precollect_strings_from_expr(cct_codegen_t *cg, const cct_ast_nod
             }
             return true;
         case AST_OBSECRO:
+            if (expr->as.obsecro.name &&
+                (strcmp(expr->as.obsecro.name, "db_open") == 0 ||
+                 strcmp(expr->as.obsecro.name, "db_close") == 0 ||
+                 strcmp(expr->as.obsecro.name, "db_exec") == 0 ||
+                 strcmp(expr->as.obsecro.name, "db_last_error") == 0 ||
+                 strcmp(expr->as.obsecro.name, "db_query") == 0 ||
+                 strcmp(expr->as.obsecro.name, "db_prepare") == 0 ||
+                 strcmp(expr->as.obsecro.name, "rows_next") == 0 ||
+                 strcmp(expr->as.obsecro.name, "rows_get_text") == 0 ||
+                 strcmp(expr->as.obsecro.name, "rows_get_int") == 0 ||
+                 strcmp(expr->as.obsecro.name, "rows_get_real") == 0 ||
+                 strcmp(expr->as.obsecro.name, "rows_close") == 0 ||
+                 strcmp(expr->as.obsecro.name, "stmt_bind_text") == 0 ||
+                 strcmp(expr->as.obsecro.name, "stmt_bind_int") == 0 ||
+                 strcmp(expr->as.obsecro.name, "stmt_bind_real") == 0 ||
+                 strcmp(expr->as.obsecro.name, "stmt_step") == 0 ||
+                 strcmp(expr->as.obsecro.name, "stmt_reset") == 0 ||
+                 strcmp(expr->as.obsecro.name, "stmt_finalize") == 0 ||
+                 strcmp(expr->as.obsecro.name, "db_begin") == 0 ||
+                 strcmp(expr->as.obsecro.name, "db_commit") == 0 ||
+                 strcmp(expr->as.obsecro.name, "db_rollback") == 0 ||
+                 strcmp(expr->as.obsecro.name, "db_scalar_int") == 0 ||
+                 strcmp(expr->as.obsecro.name, "db_scalar_text") == 0)) {
+                cg->uses_sqlite = true;
+            }
             if (expr->as.obsecro.arguments) {
                 for (size_t i = 0; i < expr->as.obsecro.arguments->count; i++) {
                     if (!cg_precollect_strings_from_expr(cg, expr->as.obsecro.arguments->nodes[i])) return false;
@@ -9132,7 +9624,7 @@ static void cg_win32_prepend_cc_dir_to_path(const char *cc) {
 }
 #endif
 
-static void cg_host_link_flags(char *buffer, size_t buffer_size) {
+static void cg_host_link_flags(const cct_codegen_t *cg, char *buffer, size_t buffer_size) {
     const char *extra_ldflags = getenv("CCT_HOST_LDFLAGS");
 #ifdef _WIN32
     const char *default_ldflags = "";
@@ -9145,18 +9637,14 @@ static void cg_host_link_flags(char *buffer, size_t buffer_size) {
      */
     const char *default_ldflags = "-lm";
 #endif
+    const char *sqlite_ldflags = (cg && cg->uses_sqlite) ? "-lsqlite3" : "";
 
     if (!buffer || buffer_size == 0) return;
 
-    if (default_ldflags[0] && extra_ldflags && extra_ldflags[0]) {
-        snprintf(buffer, buffer_size, " %s %s", default_ldflags, extra_ldflags);
-    } else if (default_ldflags[0]) {
-        snprintf(buffer, buffer_size, " %s", default_ldflags);
-    } else if (extra_ldflags && extra_ldflags[0]) {
-        snprintf(buffer, buffer_size, " %s", extra_ldflags);
-    } else {
-        buffer[0] = '\0';
-    }
+    buffer[0] = '\0';
+    if (default_ldflags[0]) snprintf(buffer + strlen(buffer), buffer_size - strlen(buffer), " %s", default_ldflags);
+    if (sqlite_ldflags[0]) snprintf(buffer + strlen(buffer), buffer_size - strlen(buffer), " %s", sqlite_ldflags);
+    if (extra_ldflags && extra_ldflags[0]) snprintf(buffer + strlen(buffer), buffer_size - strlen(buffer), " %s", extra_ldflags);
 }
 
 static bool cg_run_host_compiler(cct_codegen_t *cg) {
@@ -9172,7 +9660,7 @@ static bool cg_run_host_compiler(cct_codegen_t *cg) {
 #endif
     char command[4096];
     char host_link_flags[1024];
-    cg_host_link_flags(host_link_flags, sizeof(host_link_flags));
+    cg_host_link_flags(cg, host_link_flags, sizeof(host_link_flags));
     if (cg->profile == CCT_PROFILE_FREESTANDING && cg_has_explicit_freestanding_entry(cg)) {
         snprintf(command, sizeof(command),
 #ifdef _WIN32
@@ -9225,6 +9713,7 @@ void cct_codegen_init(cct_codegen_t *cg, const char *filename) {
     memset(cg, 0, sizeof(*cg));
     cg->filename = filename;
     cg->backend_kind = CCT_CODEGEN_BACKEND_C_HOST;
+    cg->uses_sqlite = false;
 #ifdef _WIN32
     cg->host_cc = "gcc";
 #else
