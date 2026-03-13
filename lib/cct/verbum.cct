@@ -16,6 +16,22 @@ RITUALE substring(VERBUM s, REX inicio, REX fim) REDDE VERBUM
   REDDE OBSECRO verbum_substring(s, inicio, fim)
 EXPLICIT RITUALE
 
+RITUALE verbum_dup(VERBUM s) REDDE VERBUM
+  REDDE CONIURA substring(s, 0, CONIURA len(s))
+EXPLICIT RITUALE
+
+RITUALE verbum_hash_fnv1a(VERBUM s) REDDE DUX
+  EVOCA REX hash AD 2166136261
+  EVOCA REX i AD 0
+  EVOCA REX n AD CONIURA len(s)
+  DUM i < n
+    VINCIRE hash AD hash XOR CONIURA char_at(s, i)
+    VINCIRE hash AD (hash * 16777619) % 4294967296
+    VINCIRE i AD i + 1
+  FIN DUM
+  REDDE cast GENUS(DUX)(hash)
+EXPLICIT RITUALE
+
 RITUALE trim(VERBUM s) REDDE VERBUM
   REDDE OBSECRO verbum_trim(s)
 EXPLICIT RITUALE

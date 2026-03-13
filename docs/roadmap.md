@@ -534,36 +534,246 @@ Closure evidence:
 - release/handoff artifacts published for FASE 20.
 - final closure gate: `Passed: 1181 / Failed: 0`.
 
-### FASE 21 — Generic Data Model and Collection Ergonomics
+### FASE 21 — Bootstrap: Foundations + Lexer
 
 Primary objective:
-- broaden user-defined generic modeling and collection usability over the stabilized FASE 20 baseline.
+- begin compiler self-hosting by porting lexer to CCT and establishing library foundations needed for bootstrap.
 
 Planned scope:
-- deeper generic ORDO support and richer collection typing patterns.
-- iteration ergonomics over user-defined abstractions where technically viable.
-- diagnostics improvements for generic/pattern-heavy code.
+- `21A`: library foundations (`cct/char`, `cct/verbum` expansions, `cct/diagnostic`)
+- `21B`: token model and keyword table in CCT
+- `21C`: lexer core (character scanning, literals)
+- `21D`: lexer advanced (comments, error recovery, line tracking)
+- `21E`: validation (lexer CCT tokenizes suite identically to lexer C)
 
 Out of scope:
-- destabilizing compatibility breaks in existing generic contracts.
+- parser, semantic, codegen (FASE 22-28)
+- self-hosting completion (FASE 29)
+- library maturation (FASE 30)
+
+Architecture impact:
+- first compiler component rewritten in CCT
+- library grows incrementally per bootstrap needs
 
 Definition of done:
-- broader generic expressiveness with deterministic behavior and full-suite green.
+- lexer CCT produces identical tokens to lexer C on full suite
+- ~1500 LOC CCT (library ~800 + lexer ~700)
+- 2-3 months duration
 
-### FASE 22 — Bootstrap/Self-Hosting Preparation
+### FASE 22 — Bootstrap: Parser + AST Básico
 
 Primary objective:
-- advance practical bootstrap readiness while preserving the stable host-first compiler flow.
+- port core parser and AST construction to CCT.
 
 Planned scope:
-- bridge/tooling steps that reduce dependence on manual host scaffolding.
-- progressive closure of bootstrap gaps documented in handoff artifacts.
+- `22A`: AST model (94 node types as ORDO/SIGILLUM)
+- `22B`: expression parsing (literals, binary, unary, call)
+- `22C`: basic statement parsing (EVOCA, REDDE, SI, DUM)
+- `22D`: declaration parsing (RITUALE, SIGILLUM, simple ORDO)
+- `22E`: error recovery + synchronization
+- `22F`: validation (parse simple programs from suite)
+
+Critical challenge:
+- AST representation without C unions (ORDO payload vs SPECULUM NIHIL tradeoff)
 
 Out of scope:
-- forcing self-hosting completion in a single phase.
+- advanced control flow (TEMPTA/CAPE, QUANDO, nested loops) → FASE 23
+- GENUS parsing → FASE 23
+- semantic analysis → FASE 24
 
 Definition of done:
-- concrete, test-backed bootstrap milestones with clear rollback/compatibility policy.
+- parser CCT generates valid AST for simple programs
+- ~4500 LOC CCT
+- 3-4 months duration
+
+### FASE 23 — Bootstrap: Parser Avançado + Modularidade
+
+Primary objective:
+- complete parser with advanced control flow, generics, and module system.
+
+Planned scope:
+- `23A`: complex control flow (TEMPTA/CAPE, QUANDO, nested loops)
+- `23B`: GENUS parsing (type parameters, constraints)
+- `23C`: PACTUM/CODEX parsing
+- `23D`: import/module system parsing
+- `23E`: validation (parse full suite including generics)
+
+Out of scope:
+- semantic analysis → FASE 24
+
+Definition of done:
+- parser CCT handles full language surface
+- ~2500 LOC CCT
+- 2-3 months duration
+
+### FASE 24 — Bootstrap: Semantic Analyzer — Types & Scopes
+
+Primary objective:
+- port core semantic analysis (symbol tables, types, scopes) to CCT.
+
+Planned scope:
+- `24A`: symbol table + scope chains
+- `24B`: type system model (13 primitive + composite types)
+- `24C`: type resolution (primitives, SIGILLUM, ORDO)
+- `24D`: expression type checking
+- `24E`: statement validation
+- `24F`: function signature checking
+- `24G`: validation (semantic check on programs without GENUS)
+
+Critical challenge:
+- symbol lookup O(n) may require hashmap (add if profiling shows bottleneck)
+- scope parent chains with SPECULUM
+- type equality and compatibility
+
+Out of scope:
+- generic type instantiation → FASE 25
+
+Definition of done:
+- semantic analyzer CCT validates non-generic programs correctly
+- ~6500 LOC CCT
+- 4-5 months duration
+
+### FASE 25 — Bootstrap: Semantic Avançado — Generics
+
+Primary objective:
+- complete semantic analysis with generic type instantiation and constraint checking.
+
+Planned scope:
+- `25A`: generic type parameter tracking
+- `25B`: generic type instantiation
+- `25C`: constraint checking (PACTUM conformance)
+- `25D`: generic deduplication (FNV hash + canonicalization)
+- `25E`: validation (full semantic check with GENUS)
+
+Critical challenge:
+- instantiation cache and deduplication strategy
+
+Definition of done:
+- semantic analyzer CCT handles full language with generics
+- ~2500 LOC CCT
+- 3-4 months duration
+
+### FASE 26 — Bootstrap: Codegen Básico
+
+Primary objective:
+- port core code generation (expressions, statements, functions) to CCT.
+
+Planned scope:
+- `26A`: codegen context + C emission infrastructure
+- `26B`: expression emission (literals, binary, unary, call)
+- `26C`: statement emission (assign, if, loops)
+- `26D`: function emission (signature, body, return)
+- `26E`: type mapping CCT → C
+- `26F`: runtime bridge emission (includes, helpers)
+- `26G`: validation (generate C for simple programs, compile and execute)
+
+Critical challenge:
+- string building for C code (~311 sprintf uses in C compiler)
+- string pool management
+- temporary variable generation
+
+Out of scope:
+- struct/enum codegen → FASE 27
+- generic instantiation codegen → FASE 28
+
+Definition of done:
+- codegen CCT produces valid C for simple programs
+- ~5500 LOC CCT
+- 4-5 months duration
+
+### FASE 27 — Bootstrap: Codegen — Structs & Enums
+
+Primary objective:
+- complete codegen for structured types (SIGILLUM, ORDO with/without payload).
+
+Planned scope:
+- `27A`: SIGILLUM codegen (typedef, field access, copy)
+- `27B`: simple ORDO codegen (C enum)
+- `27C`: ORDO payload codegen (tagged union)
+- `27D`: QUANDO codegen (switch vs if-chain, payload destructuring)
+- `27E`: validation (generate C for programs with structs/enums)
+
+Definition of done:
+- codegen CCT handles structured types
+- ~2500 LOC CCT
+- 2-3 months duration
+
+### FASE 28 — Bootstrap: Codegen — Generics & Control Flow
+
+Primary objective:
+- complete codegen with generic instantiation, exceptions, and advanced control flow.
+
+Planned scope:
+- `28A`: generic instantiation codegen
+- `28B`: exception handling codegen (TEMPTA/CAPE/SEMPER)
+- `28C`: advanced control flow (nested loops, break/continue labels)
+- `28D`: FORMA (string interpolation) codegen
+- `28E`: validation (generate C for complex programs from suite)
+
+Definition of done:
+- codegen CCT handles full language surface
+- ~3500 LOC CCT
+- 3-4 months duration
+
+### FASE 29 — Bootstrap: Self-Hosting Completo
+
+Primary objective:
+- achieve full self-hosting with multi-stage bootstrap validation.
+
+Planned scope:
+- `29A`: compile CCT compiler with C compiler → stage 0
+- `29B`: stage 0 compiles itself → stage 1
+- `29C`: stage 1 compiles itself → stage 2
+- `29D`: identity validation (stage 1 == stage 2)
+- `29E`: regression testing (full suite with bootstrap compiler)
+- `29F`: performance profiling + critical optimizations
+
+Critical gate:
+- 3-stage bootstrap complete with identical outputs
+- full suite (1181+ tests) passes with bootstrap compiler
+- performance acceptable (10× slower than C compiler is OK)
+
+Definition of done:
+- CCT compiler successfully compiles itself
+- ~500 LOC CCT (scripts + harness)
+- 2-3 months duration
+
+### FASE 30 — Bootstrap: Closure + Biblioteca Madura
+
+Primary objective:
+- finalize bootstrap documentation and complete application library over validated self-hosted compiler.
+
+Planned scope:
+- `30A`: comprehensive documentation (architecture, bootstrap pipeline)
+- `30B`: consolidated release notes (FASE 21-29)
+- `30C`: mature application library (HTTPS, CSV, ORM) over validated compiler
+- `30D`: final handoff
+
+Out of scope:
+- further language surface expansion (post-bootstrap phases)
+
+Definition of done:
+- bootstrap complete and documented
+- library matures to production-ready baseline
+- 2-3 months duration
+
+## Bootstrap Phase Summary
+
+| Phase | Scope | Duration | LOC CCT | Cumulative |
+|-------|-------|----------|---------|------------|
+| 21 | Foundations + Lexer | 2-3 mo | ~1500 | 1500 |
+| 22 | Parser básico | 3-4 mo | ~4500 | 6000 |
+| 23 | Parser avançado | 2-3 mo | ~2500 | 8500 |
+| 24 | Semantic básico | 4-5 mo | ~6500 | 15000 |
+| 25 | Semantic generics | 3-4 mo | ~2500 | 17500 |
+| 26 | Codegen básico | 4-5 mo | ~5500 | 23000 |
+| 27 | Codegen structs/enums | 2-3 mo | ~2500 | 25500 |
+| 28 | Codegen generics | 3-4 mo | ~3500 | 29000 |
+| 29 | Self-hosting | 2-3 mo | ~500 | 29500 |
+| 30 | Closure + library | 2-3 mo | library | 30000+ |
+| **TOTAL** | **10 phases** | **27-37 mo** | **~30K LOC** | |
+
+**Realistic estimate: 2.5-3 years to self-hosting completion.**
 
 ## Version Milestone Targets
 

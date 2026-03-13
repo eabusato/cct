@@ -1,0 +1,52 @@
+INCIPIT grimoire "token_basic_21b2"
+
+ADVOCARE "cct/verbum.cct"
+ADVOCARE "../../src/bootstrap/lexer/token_type.cct"
+ADVOCARE "../../src/bootstrap/lexer/token.cct"
+
+RITUALE main() REDDE REX
+  EVOCA VERBUM lex1 AD CONIURA verbum_dup("INCIPIT")
+  EVOCA Token tok AD CONIURA token_make(TK_INCIPIT, lex1, 1, 1)
+
+  SI tok.kind != TK_INCIPIT
+    REDDE 41
+  FIN SI
+
+  SI tok.line != 1
+    REDDE 42
+  FIN SI
+
+  SI tok.column != 1
+    REDDE 43
+  FIN SI
+
+  SI CONIURA compare(tok.lexeme, "INCIPIT") != 0
+    REDDE 44
+  FIN SI
+
+  EVOCA VERBUM lex2 AD CONIURA verbum_dup("42")
+  EVOCA Token tok2 AD CONIURA token_make(TK_INTEGER, lex2, 10, 5)
+
+  SI tok2.kind != TK_INTEGER
+    REDDE 45
+  FIN SI
+
+  SI tok2.line != 10
+    REDDE 46
+  FIN SI
+
+  SI tok2.column != 5
+    REDDE 47
+  FIN SI
+
+  SI CONIURA compare(tok2.lexeme, "42") != 0
+    REDDE 48
+  FIN SI
+
+  CONIURA token_free(SPECULUM tok)
+  CONIURA token_free(SPECULUM tok2)
+
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

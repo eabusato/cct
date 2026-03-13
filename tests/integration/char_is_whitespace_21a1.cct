@@ -1,0 +1,30 @@
+INCIPIT grimoire "char_is_whitespace_21a1"
+
+ADVOCARE "cct/char.cct"
+
+RITUALE main() REDDE REX
+  SI NON CONIURA char_is_whitespace(32)
+    REDDE 41
+  FIN SI
+  SI NON CONIURA char_is_whitespace(9)
+    REDDE 42
+  FIN SI
+  SI NON CONIURA char_is_whitespace(10)
+    REDDE 43
+  FIN SI
+  SI NON CONIURA char_is_whitespace(13)
+    REDDE 44
+  FIN SI
+  SI CONIURA char_is_whitespace(65)
+    REDDE 45
+  FIN SI
+  SI CONIURA char_is_whitespace(48)
+    REDDE 46
+  FIN SI
+  SI CONIURA char_is_whitespace(0)
+    REDDE 47
+  FIN SI
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

@@ -1,0 +1,9 @@
+INCIPIT grimoire "probe_same_dir_import_21b2"
+
+ADVOCARE "/Users/eabusato/dev/cct/src/bootstrap/lexer/token_type.cct"
+
+SIGILLUM Holder
+  kind: TokenKind
+FIN SIGILLUM
+
+EXPLICIT grimoire

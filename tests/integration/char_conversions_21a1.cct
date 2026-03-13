@@ -1,0 +1,36 @@
+INCIPIT grimoire "char_conversions_21a1"
+
+ADVOCARE "cct/char.cct"
+
+RITUALE main() REDDE REX
+  SI CONIURA char_to_upper(97) != 65
+    REDDE 31
+  FIN SI
+  SI CONIURA char_to_upper(122) != 90
+    REDDE 32
+  FIN SI
+  SI CONIURA char_to_upper(65) != 65
+    REDDE 33
+  FIN SI
+  SI CONIURA char_to_upper(48) != 48
+    REDDE 34
+  FIN SI
+  SI CONIURA char_to_lower(65) != 97
+    REDDE 35
+  FIN SI
+  SI CONIURA char_to_lower(90) != 122
+    REDDE 36
+  FIN SI
+  SI CONIURA char_to_lower(97) != 97
+    REDDE 37
+  FIN SI
+  SI CONIURA char_to_lower(48) != 48
+    REDDE 38
+  FIN SI
+  SI CONIURA char_to_lower(127) != 127
+    REDDE 39
+  FIN SI
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

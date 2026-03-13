@@ -1,0 +1,26 @@
+INCIPIT grimoire "token"
+
+ADVOCARE "token_type.cct"
+
+SIGILLUM Token
+  kind: TokenKind
+  lexeme: VERBUM
+  line: REX
+  column: REX
+FIN SIGILLUM
+
+RITUALE token_make(TokenKind kind, VERBUM lexeme, REX line, REX column) REDDE Token
+  EVOCA Token tok
+  VINCIRE tok.kind AD kind
+  VINCIRE tok.lexeme AD lexeme
+  VINCIRE tok.line AD line
+  VINCIRE tok.column AD column
+  REDDE tok
+EXPLICIT RITUALE
+
+RITUALE token_free(SPECULUM Token tok) REDDE NIHIL
+  DIMITTE (*tok).lexeme
+  REDDE
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

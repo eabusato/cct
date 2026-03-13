@@ -1,0 +1,36 @@
+INCIPIT grimoire "char_is_alpha_21a1"
+
+ADVOCARE "cct/char.cct"
+
+RITUALE main() REDDE REX
+  SI NON CONIURA char_is_alpha(65)
+    REDDE 21
+  FIN SI
+  SI NON CONIURA char_is_alpha(90)
+    REDDE 22
+  FIN SI
+  SI NON CONIURA char_is_alpha(97)
+    REDDE 23
+  FIN SI
+  SI NON CONIURA char_is_alpha(122)
+    REDDE 24
+  FIN SI
+  SI NON CONIURA char_is_alpha(95)
+    REDDE 25
+  FIN SI
+  SI CONIURA char_is_alpha(64)
+    REDDE 26
+  FIN SI
+  SI CONIURA char_is_alpha(91)
+    REDDE 27
+  FIN SI
+  SI CONIURA char_is_alpha(48)
+    REDDE 28
+  FIN SI
+  SI NON CONIURA char_is_alnum(95)
+    REDDE 29
+  FIN SI
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

@@ -1,0 +1,26 @@
+INCIPIT grimoire "verbum_dup_21a2"
+
+ADVOCARE "cct/verbum.cct"
+
+RITUALE main() REDDE REX
+  EVOCA VERBUM literal AD "hello"
+  EVOCA VERBUM dup_literal AD CONIURA verbum_dup(literal)
+  SI CONIURA compare(dup_literal, "hello") != 0
+    REDDE 41
+  FIN SI
+
+  EVOCA VERBUM built AD CONIURA concat("lex", "eme")
+  EVOCA VERBUM dup_built AD CONIURA verbum_dup(built)
+  SI CONIURA compare(dup_built, "lexeme") != 0
+    REDDE 42
+  FIN SI
+
+  EVOCA VERBUM empty AD CONIURA verbum_dup("")
+  SI CONIURA len(empty) != 0
+    REDDE 43
+  FIN SI
+
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

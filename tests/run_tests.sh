@@ -1697,22 +1697,34 @@ else
     test_fail "Direct recursive SIGILLUM composition was not rejected clearly"
 fi
 
-echo "Test 136: by-value SIGILLUM ritual parameter remains restricted with clear error"
+echo "Test 136: by-value SIGILLUM ritual parameter compiles and runs"
 cleanup_codegen_artifacts "tests/integration/codegen_sigillum_param_value_unsupported.cct"
-OUTPUT=$("$CCT_BIN" tests/integration/codegen_sigillum_param_value_unsupported.cct 2>&1) || true
-if echo "$OUTPUT" | grep -qi "SIGILLUM" && echo "$OUTPUT" | grep -qi "parameter"; then
-    test_pass "By-value SIGILLUM ritual parameter rejected clearly"
+if "$CCT_BIN" tests/integration/codegen_sigillum_param_value_unsupported.cct >"$CCT_TMP_DIR/cct_sigillum_param_value_build.out" 2>&1 && \
+   [ -x tests/integration/codegen_sigillum_param_value_unsupported ]; then
+    tests/integration/codegen_sigillum_param_value_unsupported >"$CCT_TMP_DIR/cct_sigillum_param_value_run.out" 2>&1
+    RC=$?
 else
-    test_fail "By-value SIGILLUM ritual parameter did not fail clearly"
+    RC=255
+fi
+if [ "$RC" -eq 5 ]; then
+    test_pass "By-value SIGILLUM ritual parameter is executable"
+else
+    test_fail "By-value SIGILLUM ritual parameter regressed ($RC)"
 fi
 
-echo "Test 137: SIGILLUM return remains restricted with clear error"
+echo "Test 137: SIGILLUM return compiles successfully"
 cleanup_codegen_artifacts "tests/integration/codegen_sigillum_return_unsupported.cct"
-OUTPUT=$("$CCT_BIN" tests/integration/codegen_sigillum_return_unsupported.cct 2>&1) || true
-if echo "$OUTPUT" | grep -qi "SIGILLUM return type" || echo "$OUTPUT" | grep -qi "return type" ; then
-    test_pass "SIGILLUM return restriction reported clearly"
+if "$CCT_BIN" tests/integration/codegen_sigillum_return_unsupported.cct >"$CCT_TMP_DIR/cct_sigillum_return_build.out" 2>&1 && \
+   [ -x tests/integration/codegen_sigillum_return_unsupported ]; then
+    tests/integration/codegen_sigillum_return_unsupported >"$CCT_TMP_DIR/cct_sigillum_return_run.out" 2>&1
+    RC=$?
 else
-    test_fail "SIGILLUM return restriction did not fail clearly"
+    RC=255
+fi
+if [ "$RC" -eq 0 ]; then
+    test_pass "SIGILLUM return by value is executable"
+else
+    test_fail "SIGILLUM return by value regressed ($RC)"
 fi
 
 echo "Test 138: sigilo metadata reflects nested SIGILLUM composition"
@@ -11428,6 +11440,8 @@ echo "========================================"
 echo ""
 
 CCT_VALIDATE_ASM_SCRIPT="tools/validate_freestanding_asm.sh"
+CCT_ASM_INVALID_NO_INTEL="tests/integration/asm_invalid_no_intel_header_16c2.cgen.s"
+CCT_ASM_INVALID_LIBC="tests/integration/asm_invalid_libc_symbol_16c2.cgen.s"
 
 # Test 926: basic freestanding asm validates successfully
 echo "Test 926: asm_validate_basic_16c2 passes validator"
@@ -11501,25 +11515,48 @@ else
     fi
 fi
 
+# Deriva fixtures ASM negativos a partir de output gerado pelo próprio cct.
+rm -f "$CCT_ASM_INVALID_NO_INTEL" "$CCT_ASM_INVALID_LIBC"
+if [ -f "tests/integration/asm_validate_basic_16c2.cgen.s" ]; then
+    cp "tests/integration/asm_validate_basic_16c2.cgen.s" "$CCT_ASM_INVALID_NO_INTEL"
+    perl -0pi -e 's/^[[:space:]]*\.intel_syntax[[:space:]]+noprefix\n//m' "$CCT_ASM_INVALID_NO_INTEL"
+
+    cp "tests/integration/asm_validate_basic_16c2.cgen.s" "$CCT_ASM_INVALID_LIBC"
+    perl -0pi -e 's/^([[:space:]]*ret[l]?[[:space:]]*\n)/    call printf\n$1/m' "$CCT_ASM_INVALID_LIBC"
+fi
+
 # Test 929: validator rejects asm missing .intel_syntax noprefix
 echo "Test 929: validator rejects ASM without Intel syntax header"
-VAL_OUT=$( "$CCT_VALIDATE_ASM_SCRIPT" "tests/integration/asm_invalid_no_intel_header_16c2.cgen.s" 2>&1 )
-RC_929=$?
-if [ "$RC_929" -ne 0 ] && echo "$VAL_OUT" | grep -q "missing .intel_syntax noprefix header"; then
-    test_pass "validator rejects ASM without Intel syntax header"
+if [ "$CCT_PHASE16B3_ENABLED" -eq 0 ]; then
+    test_pass "16C2 invalid-header validation skipped: cross-compiler indisponível (use CCT_CROSS_CC, i686-elf-gcc ou gcc -m32)"
+elif [ ! -f "$CCT_ASM_INVALID_NO_INTEL" ]; then
+    test_fail "validator fixture synthesis failed for missing Intel syntax header"
 else
-    test_fail "validator failed to reject ASM missing Intel syntax header"
+    VAL_OUT=$( "$CCT_VALIDATE_ASM_SCRIPT" "$CCT_ASM_INVALID_NO_INTEL" 2>&1 )
+    RC_929=$?
+    if [ "$RC_929" -ne 0 ] && echo "$VAL_OUT" | grep -q "missing .intel_syntax noprefix header"; then
+        test_pass "validator rejects ASM without Intel syntax header"
+    else
+        test_fail "validator failed to reject ASM missing Intel syntax header"
+    fi
 fi
 
 # Test 930: validator rejects asm with forbidden libc symbol
 echo "Test 930: validator rejects ASM with forbidden libc symbol"
-VAL_OUT=$( "$CCT_VALIDATE_ASM_SCRIPT" "tests/integration/asm_invalid_libc_symbol_16c2.cgen.s" 2>&1 )
-RC_930=$?
-if [ "$RC_930" -ne 0 ] && echo "$VAL_OUT" | grep -q "forbidden libc symbol in asm"; then
-    test_pass "validator rejects forbidden libc symbol in ASM"
+if [ "$CCT_PHASE16B3_ENABLED" -eq 0 ]; then
+    test_pass "16C2 invalid-libc validation skipped: cross-compiler indisponível (use CCT_CROSS_CC, i686-elf-gcc ou gcc -m32)"
+elif [ ! -f "$CCT_ASM_INVALID_LIBC" ]; then
+    test_fail "validator fixture synthesis failed for forbidden libc symbol"
 else
-    test_fail "validator failed to reject forbidden libc symbol in ASM"
+    VAL_OUT=$( "$CCT_VALIDATE_ASM_SCRIPT" "$CCT_ASM_INVALID_LIBC" 2>&1 )
+    RC_930=$?
+    if [ "$RC_930" -ne 0 ] && echo "$VAL_OUT" | grep -q "forbidden libc symbol in asm"; then
+        test_pass "validator rejects forbidden libc symbol in ASM"
+    else
+        test_fail "validator failed to reject forbidden libc symbol in ASM"
+    fi
 fi
+rm -f "$CCT_ASM_INVALID_NO_INTEL" "$CCT_ASM_INVALID_LIBC"
 
 echo ""
 echo "========================================"
@@ -18003,6 +18040,181 @@ if [ "$RC_1263" -eq 0 ]; then
     test_pass "db_finalize_after_error_20e5 valida finalize seguro apos erro de statement"
 else
     test_fail "db_finalize_after_error_20e5 regrediu finalize apos erro SQLite"
+fi
+
+echo ""
+echo "========================================"
+echo "FASE 21A1: cct/char ASCII Classification Tests"
+echo "========================================"
+echo ""
+
+# Test 1264: char_is_digit_21a1
+echo "Test 1264: char_is_digit_21a1"
+SRC_1264="tests/integration/char_is_digit_21a1.cct"
+BIN_1264="${SRC_1264%.cct}"
+cleanup_codegen_artifacts "$SRC_1264"
+if "$CCT_BIN" "$SRC_1264" >"$CCT_TMP_DIR/cct_phase21a1_1264_compile.out" 2>&1; then
+    "$BIN_1264" >"$CCT_TMP_DIR/cct_phase21a1_1264_run.out" 2>&1
+    RC_1264=$?
+else
+    RC_1264=255
+fi
+if [ "$RC_1264" -eq 0 ]; then
+    test_pass "char_is_digit_21a1 valida digitos e alnum ASCII"
+else
+    test_fail "char_is_digit_21a1 regrediu classificacao ASCII de digitos"
+fi
+
+# Test 1265: char_is_alpha_21a1
+echo "Test 1265: char_is_alpha_21a1"
+SRC_1265="tests/integration/char_is_alpha_21a1.cct"
+BIN_1265="${SRC_1265%.cct}"
+cleanup_codegen_artifacts "$SRC_1265"
+if "$CCT_BIN" "$SRC_1265" >"$CCT_TMP_DIR/cct_phase21a1_1265_compile.out" 2>&1; then
+    "$BIN_1265" >"$CCT_TMP_DIR/cct_phase21a1_1265_run.out" 2>&1
+    RC_1265=$?
+else
+    RC_1265=255
+fi
+if [ "$RC_1265" -eq 0 ]; then
+    test_pass "char_is_alpha_21a1 valida letras ASCII e underscore"
+else
+    test_fail "char_is_alpha_21a1 regrediu classificacao ASCII alfabetica"
+fi
+
+# Test 1266: char_conversions_21a1
+echo "Test 1266: char_conversions_21a1"
+SRC_1266="tests/integration/char_conversions_21a1.cct"
+BIN_1266="${SRC_1266%.cct}"
+cleanup_codegen_artifacts "$SRC_1266"
+if "$CCT_BIN" "$SRC_1266" >"$CCT_TMP_DIR/cct_phase21a1_1266_compile.out" 2>&1; then
+    "$BIN_1266" >"$CCT_TMP_DIR/cct_phase21a1_1266_run.out" 2>&1
+    RC_1266=$?
+else
+    RC_1266=255
+fi
+if [ "$RC_1266" -eq 0 ]; then
+    test_pass "char_conversions_21a1 valida to_upper/to_lower ASCII"
+else
+    test_fail "char_conversions_21a1 regrediu conversoes ASCII"
+fi
+
+# Test 1267: char_is_whitespace_21a1
+echo "Test 1267: char_is_whitespace_21a1"
+SRC_1267="tests/integration/char_is_whitespace_21a1.cct"
+BIN_1267="${SRC_1267%.cct}"
+cleanup_codegen_artifacts "$SRC_1267"
+if "$CCT_BIN" "$SRC_1267" >"$CCT_TMP_DIR/cct_phase21a1_1267_compile.out" 2>&1; then
+    "$BIN_1267" >"$CCT_TMP_DIR/cct_phase21a1_1267_run.out" 2>&1
+    RC_1267=$?
+else
+    RC_1267=255
+fi
+if [ "$RC_1267" -eq 0 ]; then
+    test_pass "char_is_whitespace_21a1 valida whitespace ASCII"
+else
+    test_fail "char_is_whitespace_21a1 regrediu classificacao ASCII de whitespace"
+fi
+
+echo ""
+echo "========================================"
+echo "FASE 21A2: cct/verbum Expansoes"
+echo "========================================"
+echo ""
+
+# Test 1268: verbum_dup_21a2
+echo "Test 1268: verbum_dup_21a2"
+SRC_1268="tests/integration/verbum_dup_21a2.cct"
+BIN_1268="${SRC_1268%.cct}"
+cleanup_codegen_artifacts "$SRC_1268"
+if "$CCT_BIN" "$SRC_1268" >"$CCT_TMP_DIR/cct_phase21a2_1268_compile.out" 2>&1; then
+    "$BIN_1268" >"$CCT_TMP_DIR/cct_phase21a2_1268_run.out" 2>&1
+    RC_1268=$?
+else
+    RC_1268=255
+fi
+if [ "$RC_1268" -eq 0 ]; then
+    test_pass "verbum_dup_21a2 valida duplicacao de strings em cct/verbum"
+else
+    test_fail "verbum_dup_21a2 regrediu duplicacao de strings"
+fi
+
+# Test 1269: verbum_hash_21a2
+echo "Test 1269: verbum_hash_21a2"
+SRC_1269="tests/integration/verbum_hash_21a2.cct"
+BIN_1269="${SRC_1269%.cct}"
+cleanup_codegen_artifacts "$SRC_1269"
+if "$CCT_BIN" "$SRC_1269" >"$CCT_TMP_DIR/cct_phase21a2_1269_compile.out" 2>&1; then
+    "$BIN_1269" >"$CCT_TMP_DIR/cct_phase21a2_1269_run.out" 2>&1
+    RC_1269=$?
+else
+    RC_1269=255
+fi
+if [ "$RC_1269" -eq 0 ]; then
+    test_pass "verbum_hash_21a2 valida FNV-1a deterministico de 32-bit"
+else
+    test_fail "verbum_hash_21a2 regrediu hash FNV-1a de cct/verbum"
+fi
+
+echo ""
+echo "========================================"
+echo "FASE 21A3: cct/diagnostic"
+echo "========================================"
+echo ""
+
+# Test 1270: diagnostic_error_21a3
+echo "Test 1270: diagnostic_error_21a3"
+SRC_1270="tests/integration/diagnostic_error_21a3.cct"
+BIN_1270="${SRC_1270%.cct}"
+cleanup_codegen_artifacts "$SRC_1270"
+if "$CCT_BIN" "$SRC_1270" >"$CCT_TMP_DIR/cct_phase21a3_1270_compile.out" 2>&1; then
+    "$BIN_1270" >"$CCT_TMP_DIR/cct_phase21a3_1270_stdout.out" 2>"$CCT_TMP_DIR/cct_phase21a3_1270_stderr.out"
+    RC_1270=$?
+    STDOUT_1270=$(cat "$CCT_TMP_DIR/cct_phase21a3_1270_stdout.out")
+    STDERR_1270=$(cat "$CCT_TMP_DIR/cct_phase21a3_1270_stderr.out")
+else
+    RC_1270=255
+fi
+if [ "$RC_1270" -eq 0 ] && [ -z "$STDOUT_1270" ] && [ "$STDERR_1270" = "test.cct:42:10: erro: Unexpected token" ]; then
+    test_pass "diagnostic_error_21a3 valida formato canonico de erro em stderr"
+else
+    test_fail "diagnostic_error_21a3 regrediu envelope de erro diagnostico"
+fi
+
+# Test 1271: diagnostic_warn_21a3
+echo "Test 1271: diagnostic_warn_21a3"
+SRC_1271="tests/integration/diagnostic_warn_21a3.cct"
+BIN_1271="${SRC_1271%.cct}"
+cleanup_codegen_artifacts "$SRC_1271"
+if "$CCT_BIN" "$SRC_1271" >"$CCT_TMP_DIR/cct_phase21a3_1271_compile.out" 2>&1; then
+    "$BIN_1271" >"$CCT_TMP_DIR/cct_phase21a3_1271_stdout.out" 2>"$CCT_TMP_DIR/cct_phase21a3_1271_stderr.out"
+    RC_1271=$?
+    STDOUT_1271=$(cat "$CCT_TMP_DIR/cct_phase21a3_1271_stdout.out")
+    STDERR_1271=$(cat "$CCT_TMP_DIR/cct_phase21a3_1271_stderr.out")
+else
+    RC_1271=255
+fi
+if [ "$RC_1271" -eq 0 ] && [ -z "$STDOUT_1271" ] && [ "$STDERR_1271" = "example.cct:15:5: aviso: Unused variable" ]; then
+    test_pass "diagnostic_warn_21a3 valida formato canonico de warning em stderr"
+else
+    test_fail "diagnostic_warn_21a3 regrediu envelope de warning diagnostico"
+fi
+
+# Test 1272: token_basic_21b2
+echo "Test 1272: token_basic_21b2"
+SRC_1272="tests/integration/token_basic_21b2.cct"
+BIN_1272="${SRC_1272%.cct}"
+cleanup_codegen_artifacts "$SRC_1272"
+if "$CCT_BIN" "$SRC_1272" >"$CCT_TMP_DIR/cct_phase21b2_1272_compile.out" 2>&1; then
+    "$BIN_1272" >"$CCT_TMP_DIR/cct_phase21b2_1272_run.out" 2>&1
+    RC_1272=$?
+else
+    RC_1272=255
+fi
+if [ "$RC_1272" -eq 0 ]; then
+    test_pass "token_basic_21b2 valida Token com ownership transferido"
+else
+    test_fail "token_basic_21b2 regrediu construcao ou liberacao de Token"
 fi
 
 echo ""

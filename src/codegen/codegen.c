@@ -705,39 +705,6 @@ static bool cg_is_known_ordo_type(cct_codegen_t *cg, const cct_ast_type_t *type)
            cg_find_ordo(cg, type->name) != NULL;
 }
 
-static bool cg_is_variant_sigillum_type(cct_codegen_t *cg, const cct_ast_type_t *type) {
-    if (!type || !type->name || type->is_array || type->is_pointer) return false;
-    const cct_codegen_sigillum_t *sig = NULL;
-    if (type->generic_args && type->generic_args->count > 0) {
-        const char *special = cg_materialize_generic_sigillum_name(cg, type, NULL);
-        if (special) sig = cg_find_sigillum(cg, special);
-    } else {
-        sig = cg_find_sigillum(cg, type->name);
-    }
-    if (!sig || !sig->node || sig->node->type != AST_SIGILLUM || !sig->node->as.sigillum.fields) return false;
-
-    bool has_tag = false;
-    bool has_payload = false;
-    cct_ast_field_list_t *fields = sig->node->as.sigillum.fields;
-    for (size_t i = 0; i < fields->count; i++) {
-        cct_ast_field_t *f = fields->fields[i];
-        if (!f || !f->name || !f->type) continue;
-        if (strcmp(f->name, "tag") == 0 && !f->type->is_pointer && !f->type->is_array && f->type->name &&
-            (strcmp(f->type->name, "REX") == 0 || strcmp(f->type->name, "DUX") == 0 ||
-             strcmp(f->type->name, "COMES") == 0 || strcmp(f->type->name, "MILES") == 0)) {
-            has_tag = true;
-            continue;
-        }
-        if (strcmp(f->name, "payload") == 0 && f->type->is_pointer && f->type->element_type &&
-            !f->type->element_type->is_pointer && !f->type->element_type->is_array &&
-            f->type->element_type->name && strcmp(f->type->element_type->name, "NIHIL") == 0) {
-            has_payload = true;
-            continue;
-        }
-    }
-    return has_tag && has_payload;
-}
-
 static const char* cg_c_scalar_type_for_name(const char *name) {
     if (!name) return NULL;
     if (strcmp(name, "REX") == 0 ||
@@ -849,19 +816,10 @@ static bool cg_validate_rituale_signature_f6b(cct_codegen_t *cg, const cct_ast_n
 
     if (rituale->as.rituale.return_type && rituale->as.rituale.return_type->name &&
         ret_kind == CCT_CODEGEN_VALUE_STRUCT) {
-        if (cg_is_known_sigillum_type(cg, rituale->as.rituale.return_type)) {
-            if (!cg_is_variant_sigillum_type(cg, rituale->as.rituale.return_type)) {
-                cg_report_nodef(cg, rituale, "rituale '%s' SIGILLUM return type is not supported in FASE 6B codegen",
-                                rituale->as.rituale.name);
-                return false;
-            }
-        }
-        if (!cg_is_known_ordo_type(cg, rituale->as.rituale.return_type)) {
-            if (!cg_is_variant_sigillum_type(cg, rituale->as.rituale.return_type)) {
-                cg_report_nodef(cg, rituale, "rituale '%s' return type '%s' is not supported in FASE 6B codegen",
-                                rituale->as.rituale.name, rituale->as.rituale.return_type->name);
-                return false;
-            }
+        if (!cg_c_type_for_ast_type(cg, rituale->as.rituale.return_type)) {
+            cg_report_nodef(cg, rituale, "rituale '%s' return type '%s' is not supported in FASE 6B codegen",
+                            rituale->as.rituale.name, rituale->as.rituale.return_type->name);
+            return false;
         }
     }
 
@@ -885,18 +843,13 @@ static bool cg_validate_rituale_signature_f6b(cct_codegen_t *cg, const cct_ast_n
                 pk == CCT_CODEGEN_LOCAL_ORDO;
 
             if (pk == CCT_CODEGEN_LOCAL_STRUCT && param && param->type) {
-                ok_param = cg_is_variant_sigillum_type(cg, param->type);
+                ok_param = cg_c_type_for_ast_type(cg, param->type) != NULL;
             }
             if (pk == CCT_CODEGEN_LOCAL_STRUCT && param && param->type && cg_is_known_ordo_type(cg, param->type)) {
                 ok_param = true;
             }
 
             if (!ok_param) {
-                if (pk == CCT_CODEGEN_LOCAL_STRUCT && param && param->type && cg_is_known_sigillum_type(cg, param->type)) {
-                    cg_report(cg, param->line, param->column,
-                              "FASE 7B keeps SIGILLUM by-value ritual parameter outside executable subset (use SPECULUM SIGILLUM)");
-                    return false;
-                }
                 cg_report(cg, param ? param->line : rituale->line, param ? param->column : rituale->column,
                           "FASE 7A supports ritual parameters only for executable scalar/SPECULUM subset types");
                 return false;
@@ -8084,13 +8037,12 @@ static void cg_emit_failure_terminal_after_uncaught(FILE *out, cct_codegen_t *cg
     if (cg->current_function_returns_nihil) {
         fputs("return 0;\n", out);
     } else {
-        if (cg_is_variant_sigillum_type(cg, cg->current_function_return_type) ||
-            cg_is_payload_ordo_type(cg, cg->current_function_return_type)) {
-            const char *ret_c = cg_c_type_for_ast_type(cg, cg->current_function_return_type);
-            if (ret_c) {
-                fprintf(out, "return (%s){0};\n", ret_c);
-                return;
-            }
+        const char *ret_c = cg_c_type_for_ast_type(cg, cg->current_function_return_type);
+        if (cg->current_function_return_type &&
+            cg_value_kind_from_ast_type(cg->current_function_return_type) == CCT_CODEGEN_VALUE_STRUCT &&
+            ret_c) {
+            fprintf(out, "return (%s){0};\n", ret_c);
+            return;
         }
         fputs("return 0;\n", out);
     }
@@ -8267,19 +8219,12 @@ static bool cg_emit_stmt(FILE *out, cct_codegen_t *cg, const cct_ast_node_t *stm
                     cg_report_node(cg, stmt, "SIGILLUM type is not executable in FASE 6B codegen");
                     return false;
                 }
-                bool allow_struct_initializer =
-                    cg_is_variant_sigillum_type(cg, stmt->as.evoca.var_type) ||
-                    cg_is_payload_ordo_type(cg, stmt->as.evoca.var_type);
                 if (stmt->as.evoca.initializer) {
-                    if (!allow_struct_initializer) {
-                        cg_report_node(cg, stmt, "SIGILLUM inline initializer is not supported in FASE 6B codegen");
-                        return false;
-                    }
                     fprintf(out, "%s%s %s = ", const_prefix, c_ty, stmt->as.evoca.name);
                     cct_codegen_value_kind_t k = CCT_CODEGEN_VALUE_UNKNOWN;
                     if (!cg_emit_expr(out, cg, stmt->as.evoca.initializer, &k)) return false;
                     if (k != CCT_CODEGEN_VALUE_STRUCT) {
-                        cg_report_node(cg, stmt, "Variant initializer requires struct-compatible expression");
+                        cg_report_node(cg, stmt, "SIGILLUM initializer requires struct-compatible expression");
                         return false;
                     }
                     fputs(";\n", out);
@@ -8376,12 +8321,11 @@ static bool cg_emit_stmt(FILE *out, cct_codegen_t *cg, const cct_ast_node_t *stm
                 if (!cg_emit_coniura_expr_to_temp_with_failcheck(out, cg, stmt->as.redde.value, indent, tmp_name, sizeof(tmp_name), &kind)) {
                     return false;
                 }
-                bool allow_variant_struct =
+                bool allow_struct =
                     (kind == CCT_CODEGEN_VALUE_STRUCT) &&
-                    (cg_is_variant_sigillum_type(cg, cg->current_function_return_type) ||
-                     cg_is_payload_ordo_type(cg, cg->current_function_return_type));
+                    cg_c_type_for_ast_type(cg, cg->current_function_return_type);
                 if (kind == CCT_CODEGEN_VALUE_UNKNOWN || kind == CCT_CODEGEN_VALUE_ARRAY ||
-                    (kind == CCT_CODEGEN_VALUE_STRUCT && !allow_variant_struct)) {
+                    (kind == CCT_CODEGEN_VALUE_STRUCT && !allow_struct)) {
                     cg_report_node(cg, stmt, "subset 8B return codegen does not support returning this CONIURA expression kind");
                     return false;
                 }
@@ -8394,12 +8338,11 @@ static bool cg_emit_stmt(FILE *out, cct_codegen_t *cg, const cct_ast_node_t *stm
             cct_codegen_value_kind_t kind = CCT_CODEGEN_VALUE_UNKNOWN;
             fputs("return (", out);
             if (!cg_emit_expr(out, cg, stmt->as.redde.value, &kind)) return false;
-            bool allow_variant_struct =
+            bool allow_struct =
                 (kind == CCT_CODEGEN_VALUE_STRUCT) &&
-                (cg_is_variant_sigillum_type(cg, cg->current_function_return_type) ||
-                 cg_is_payload_ordo_type(cg, cg->current_function_return_type));
+                cg_c_type_for_ast_type(cg, cg->current_function_return_type);
             if (kind == CCT_CODEGEN_VALUE_UNKNOWN || kind == CCT_CODEGEN_VALUE_ARRAY ||
-                (kind == CCT_CODEGEN_VALUE_STRUCT && !allow_variant_struct)) {
+                (kind == CCT_CODEGEN_VALUE_STRUCT && !allow_struct)) {
                 cg_report_node(cg, stmt, "FASE 6B return codegen does not support returning this expression kind");
                 return false;
             }
@@ -8449,20 +8392,25 @@ static bool cg_emit_stmt(FILE *out, cct_codegen_t *cg, const cct_ast_node_t *stm
 
         case AST_DIMITTE: {
             const cct_ast_node_t *target = stmt->as.dimitte.target;
-            if (!target || target->type != AST_IDENTIFIER) {
-                cg_report_node(cg, stmt, "DIMITTE in subset final da FASE 7 requires identifier pointer symbol");
+            const cct_ast_type_t *target_type = NULL;
+            cct_codegen_value_kind_t target_kind = CCT_CODEGEN_VALUE_UNKNOWN;
+            if (!target || !cg_is_addressable_lvalue_expr(target)) {
+                cg_report_node(cg, stmt, "DIMITTE requires addressable pointer/VERBUM lvalue");
                 return false;
             }
-            cct_codegen_local_t *local = cg_find_local(cg, target->as.identifier.name);
-            if (!local || local->kind != CCT_CODEGEN_LOCAL_POINTER) {
-                cg_report_nodef(cg, target, "DIMITTE target '%s' is not executable SPECULUM local/parameter in subset final da FASE 7",
-                                target->as.identifier.name);
+            target_type = cg_expr_ast_type(cg, target);
+            target_kind = cg_value_kind_from_ast_type_codegen(cg, target_type);
+            if (target_kind != CCT_CODEGEN_VALUE_POINTER && target_kind != CCT_CODEGEN_VALUE_STRING) {
+                cg_report_node(cg, target, "DIMITTE requires executable pointer/VERBUM lvalue");
                 return false;
             }
             cg_emit_indent(out, indent);
-            fprintf(out, "%s((void*)%s);\n", cct_cg_runtime_free_helper_name(), target->as.identifier.name);
+            fprintf(out, "%s((void*)(", cct_cg_runtime_free_helper_name());
+            if (!cg_emit_lvalue(out, cg, target, NULL)) return false;
+            fputs("));\n", out);
             cg_emit_indent(out, indent);
-            fprintf(out, "%s = NULL;\n", target->as.identifier.name);
+            if (!cg_emit_lvalue(out, cg, target, NULL)) return false;
+            fputs(" = NULL;\n", out);
             return true;
         }
 
@@ -9506,8 +9454,7 @@ static bool cg_emit_rituale_function(FILE *out, cct_codegen_t *cg, const cct_cod
     cg->current_function_returns_nihil = prev_returns_nihil;
 
     if (rit->return_kind == CCT_CODEGEN_VALUE_STRUCT &&
-        (cg_is_variant_sigillum_type(cg, rit->node->as.rituale.return_type) ||
-         cg_is_payload_ordo_type(cg, rit->node->as.rituale.return_type))) {
+        cg_c_type_for_ast_type(cg, rit->node->as.rituale.return_type)) {
         fprintf(out, "    return (%s){0};\n", ret_c);
     } else {
         fputs("    return 0;\n", out);

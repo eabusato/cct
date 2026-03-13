@@ -1,0 +1,35 @@
+INCIPIT grimoire "verbum_hash_21a2"
+
+ADVOCARE "cct/verbum.cct"
+
+RITUALE main() REDDE REX
+  EVOCA DUX h0 AD CONIURA verbum_hash_fnv1a("")
+  SI h0 != cast GENUS(DUX)(2166136261)
+    REDDE 51
+  FIN SI
+
+  EVOCA DUX h1 AD CONIURA verbum_hash_fnv1a("a")
+  SI h1 != cast GENUS(DUX)(3826002220)
+    REDDE 52
+  FIN SI
+
+  EVOCA DUX h2 AD CONIURA verbum_hash_fnv1a("INCIPIT")
+  SI h2 != cast GENUS(DUX)(4077788803)
+    REDDE 53
+  FIN SI
+
+  EVOCA DUX h3 AD CONIURA verbum_hash_fnv1a("RITUALE")
+  SI h2 == h3
+    REDDE 54
+  FIN SI
+
+  EVOCA DUX h4 AD CONIURA verbum_hash_fnv1a("test")
+  EVOCA DUX h5 AD CONIURA verbum_hash_fnv1a("test")
+  SI h4 != h5
+    REDDE 55
+  FIN SI
+
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

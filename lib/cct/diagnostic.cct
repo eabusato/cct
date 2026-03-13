@@ -1,0 +1,33 @@
+INCIPIT grimoire "diagnostic"
+
+ADVOCARE "cct/io.cct"
+
+SIGILLUM SourceLocation
+  filename: VERBUM
+  line: REX
+  column: REX
+FIN SIGILLUM
+
+RITUALE diag_error(SPECULUM SourceLocation loc, VERBUM msg) REDDE NIHIL
+  CONIURA eprint((*loc).filename)
+  CONIURA eprint(":")
+  CONIURA eprint_int((*loc).line)
+  CONIURA eprint(":")
+  CONIURA eprint_int((*loc).column)
+  CONIURA eprint(": erro: ")
+  CONIURA eprintln(msg)
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE diag_warn(SPECULUM SourceLocation loc, VERBUM msg) REDDE NIHIL
+  CONIURA eprint((*loc).filename)
+  CONIURA eprint(":")
+  CONIURA eprint_int((*loc).line)
+  CONIURA eprint(":")
+  CONIURA eprint_int((*loc).column)
+  CONIURA eprint(": aviso: ")
+  CONIURA eprintln(msg)
+  REDDE
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

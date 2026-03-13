@@ -1,0 +1,27 @@
+INCIPIT grimoire "char_is_digit_21a1"
+
+ADVOCARE "cct/char.cct"
+
+RITUALE main() REDDE REX
+  SI NON CONIURA char_is_digit(48)
+    REDDE 11
+  FIN SI
+  SI NON CONIURA char_is_digit(57)
+    REDDE 12
+  FIN SI
+  SI CONIURA char_is_digit(47)
+    REDDE 13
+  FIN SI
+  SI CONIURA char_is_digit(58)
+    REDDE 14
+  FIN SI
+  SI NON CONIURA char_is_alnum(48)
+    REDDE 15
+  FIN SI
+  SI CONIURA char_is_alnum(47)
+    REDDE 16
+  FIN SI
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

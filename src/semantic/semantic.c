@@ -57,6 +57,8 @@ static void sem_warn_fpu_type_in_freestanding(
     u32 line,
     u32 col
 );
+static bool sem_is_lvalue_node_supported(const cct_ast_node_t *node);
+static cct_sem_type_t* sem_analyze_lvalue(cct_semantic_analyzer_t *sem, const cct_ast_node_t *node);
 
 /* ========================================================================
  * Allocation Helpers
@@ -4300,28 +4302,22 @@ static void sem_analyze_redde(cct_semantic_analyzer_t *sem, const cct_ast_node_t
 static void sem_analyze_dimitte(cct_semantic_analyzer_t *sem, const cct_ast_node_t *stmt) {
     const cct_ast_node_t *target = stmt->as.dimitte.target;
     if (!target) {
-        sem_report_node(sem, stmt, "DIMITTE requires pointer symbol");
+        sem_report_node(sem, stmt, "DIMITTE requires pointer/VERBUM lvalue");
         return;
     }
-    if (target->type != AST_IDENTIFIER) {
-        /* Keep 7A policy explicit and narrow. */
+    if (!sem_is_lvalue_node_supported(target)) {
         (void)sem_analyze_expr(sem, target);
-        sem_report_node(sem, target, "DIMITTE in subset final da FASE 7 requires identifier pointer symbol");
+        sem_report_node(sem, target, "DIMITTE requires addressable pointer/VERBUM lvalue");
         return;
     }
 
-    cct_sem_symbol_t *sym = sem_lookup(sem, target->as.identifier.name);
-    if (!sym) {
-        sem_report_nodef(sem, target, "undeclared symbol '%s'", target->as.identifier.name);
-        return;
-    }
-    if (sym->kind != CCT_SEM_SYMBOL_VARIABLE && sym->kind != CCT_SEM_SYMBOL_PARAMETER) {
-        sem_report_node(sem, target, "DIMITTE target must be variable/parameter pointer symbol");
-        return;
-    }
-    if (!sym->type || sym->type->kind != CCT_SEM_TYPE_POINTER) {
-        sem_report_nodef(sem, target, "DIMITTE requires pointer symbol (manually-liberable in subset final da FASE 7; got %s)",
-                         cct_sem_type_string(sym->type));
+    cct_sem_type_t *target_type = sem_analyze_lvalue(sem, target);
+    if (sem_is_error_type(target_type)) return;
+
+    if (target_type->kind != CCT_SEM_TYPE_POINTER && target_type->kind != CCT_SEM_TYPE_VERBUM) {
+        sem_report_nodef(sem, target,
+                         "DIMITTE requires pointer/VERBUM lvalue (manually-liberable in subset final da FASE 7; got %s)",
+                         cct_sem_type_string(target_type));
         return;
     }
 }
@@ -5234,20 +5230,6 @@ static void sem_register_named_types_in_node(cct_semantic_analyzer_t *sem, const
                 sym->type = sem_make_named_type(sem, name);
                 sym->type_decl = node;
 
-                if (node->type == AST_SIGILLUM) {
-                    size_t tp_mark = sem_active_type_params_push_from_list(sem, node->as.sigillum.type_params, node);
-                    if (node->as.sigillum.fields) {
-                        for (size_t fi = 0; fi < node->as.sigillum.fields->count; fi++) {
-                            cct_ast_field_t *field = node->as.sigillum.fields->fields[fi];
-                            if (!field) continue;
-                            (void)sem_resolve_ast_type(sem, field->type, field->line, field->column);
-                        }
-                    }
-                    (void)sem_sigillum_fields_have_duplicates(sem, node);
-                    sem_validate_sigillum_field_subset(sem, node);
-                    sem_active_type_params_pop_to(sem, tp_mark);
-                }
-
                 if (node->type == AST_ORDO) {
                     cct_ast_node_t *mutable = (cct_ast_node_t*)node;
                     bool has_payload = false;
@@ -5275,16 +5257,6 @@ static void sem_register_named_types_in_node(cct_semantic_analyzer_t *sem, const
                             for (size_t f = 0; f < variant->field_count; f++) {
                                 cct_ast_ordo_field_t *field = variant->fields[f];
                                 if (!field) continue;
-                                cct_sem_type_t *ft = sem_resolve_ast_type(sem, field->type, field->line, field->column);
-                                if (!sem_is_error_type(ft) && !sem_is_ordo_payload_supported_type(ft)) {
-                                    sem_reportf(
-                                        sem,
-                                        field->line,
-                                        field->column,
-                                        "ORDO payload: tipo %s nao suportado em payload nesta versao",
-                                        cct_sem_type_string(ft)
-                                    );
-                                }
                                 if (sem_is_c_reserved_keyword(field->name)) {
                                     char warn[256];
                                     snprintf(warn, sizeof(warn),
@@ -5314,6 +5286,58 @@ static void sem_register_named_types_in_node(cct_semantic_analyzer_t *sem, const
 
         case AST_CODEX:
             sem_walk_node_list(node->as.codex.declarations, sem_register_named_types_in_node, sem);
+            return;
+
+        default:
+            return;
+    }
+}
+
+static void sem_validate_named_type_definitions_in_node(cct_semantic_analyzer_t *sem, const cct_ast_node_t *node) {
+    if (!node) return;
+
+    switch (node->type) {
+        case AST_SIGILLUM: {
+            size_t tp_mark = sem_active_type_params_push_from_list(sem, node->as.sigillum.type_params, node);
+            if (node->as.sigillum.fields) {
+                for (size_t fi = 0; fi < node->as.sigillum.fields->count; fi++) {
+                    cct_ast_field_t *field = node->as.sigillum.fields->fields[fi];
+                    if (!field) continue;
+                    (void)sem_resolve_ast_type(sem, field->type, field->line, field->column);
+                }
+            }
+            (void)sem_sigillum_fields_have_duplicates(sem, node);
+            sem_validate_sigillum_field_subset(sem, node);
+            sem_active_type_params_pop_to(sem, tp_mark);
+            return;
+        }
+
+        case AST_ORDO: {
+            if (node->as.ordo.variants) {
+                for (size_t i = 0; i < node->as.ordo.variants->count; i++) {
+                    cct_ast_ordo_variant_t *variant = node->as.ordo.variants->variants[i];
+                    if (!variant) continue;
+                    for (size_t f = 0; f < variant->field_count; f++) {
+                        cct_ast_ordo_field_t *field = variant->fields[f];
+                        if (!field) continue;
+                        cct_sem_type_t *ft = sem_resolve_ast_type(sem, field->type, field->line, field->column);
+                        if (!sem_is_error_type(ft) && !sem_is_ordo_payload_supported_type(ft)) {
+                            sem_reportf(
+                                sem,
+                                field->line,
+                                field->column,
+                                "ORDO payload: tipo %s nao suportado em payload nesta versao",
+                                cct_sem_type_string(ft)
+                            );
+                        }
+                    }
+                }
+            }
+            return;
+        }
+
+        case AST_CODEX:
+            sem_walk_node_list(node->as.codex.declarations, sem_validate_named_type_definitions_in_node, sem);
             return;
 
         default:
@@ -5506,10 +5530,13 @@ bool cct_semantic_analyze_program(cct_semantic_analyzer_t *sem, const cct_ast_pr
     /* Pass 1A: register named types that may be referenced by ritual signatures. */
     sem_walk_node_list(program->declarations, sem_register_named_types_in_node, sem);
 
-    /* Pass 1B: register contracts (PACTUM) globally. */
+    /* Pass 1B: validate SIGILLUM/ORDO internals once all named types are known. */
+    sem_walk_node_list(program->declarations, sem_validate_named_type_definitions_in_node, sem);
+
+    /* Pass 1C: register contracts (PACTUM) globally. */
     sem_walk_node_list(program->declarations, sem_register_global_pacta_in_node, sem);
 
-    /* Pass 1C: register rituals (functions) globally. */
+    /* Pass 1D: register rituals (functions) globally. */
     sem_walk_node_list(program->declarations, sem_register_global_rituales_in_node, sem);
 
     /* Pass 2: validate explicit SIGILLUM -> PACTUM conformance. */

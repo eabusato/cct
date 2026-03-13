@@ -1,0 +1,15 @@
+INCIPIT grimoire "diagnostic_error_21a3"
+
+ADVOCARE "cct/diagnostic.cct"
+
+RITUALE main() REDDE REX
+  EVOCA SourceLocation loc
+  VINCIRE loc.filename AD "test.cct"
+  VINCIRE loc.line AD 42
+  VINCIRE loc.column AD 10
+
+  CONIURA diag_error(SPECULUM loc, "Unexpected token")
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

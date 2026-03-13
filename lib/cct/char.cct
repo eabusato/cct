@@ -1,15 +1,51 @@
 INCIPIT grimoire "char"
 
+-- ASCII bootstrap helpers for lexer-oriented character classification.
+RITUALE char_is_digit(MILES c) REDDE VERUM
+  REDDE c >= 48 ET c <= 57
+EXPLICIT RITUALE
+
+-- Includes underscore for bootstrap identifier recognition.
+RITUALE char_is_alpha(MILES c) REDDE VERUM
+  REDDE (c >= 65 ET c <= 90) VEL (c >= 97 ET c <= 122) VEL c == 95
+EXPLICIT RITUALE
+
+RITUALE char_is_alnum(MILES c) REDDE VERUM
+  REDDE CONIURA char_is_alpha(c) VEL CONIURA char_is_digit(c)
+EXPLICIT RITUALE
+
+RITUALE char_is_whitespace(MILES c) REDDE VERUM
+  REDDE c == 32 VEL c == 9 VEL c == 10 VEL c == 13
+EXPLICIT RITUALE
+
+RITUALE char_to_upper(MILES c) REDDE MILES
+  SI c >= 97 ET c <= 122
+    REDDE c - 32
+  FIN SI
+  REDDE c
+EXPLICIT RITUALE
+
+RITUALE char_to_lower(MILES c) REDDE MILES
+  SI c >= 65 ET c <= 90
+    REDDE c + 32
+  FIN SI
+  REDDE c
+EXPLICIT RITUALE
+
 RITUALE is_digit(MILES c) REDDE VERUM
-  REDDE OBSECRO char_is_digit(c)
+  REDDE CONIURA char_is_digit(c)
 EXPLICIT RITUALE
 
 RITUALE is_alpha(MILES c) REDDE VERUM
-  REDDE OBSECRO char_is_alpha(c)
+  REDDE (c >= 65 ET c <= 90) VEL (c >= 97 ET c <= 122)
+EXPLICIT RITUALE
+
+RITUALE is_alnum(MILES c) REDDE VERUM
+  REDDE CONIURA is_alpha(c) VEL CONIURA is_digit(c)
 EXPLICIT RITUALE
 
 RITUALE is_whitespace(MILES c) REDDE VERUM
-  REDDE OBSECRO char_is_whitespace(c)
+  REDDE CONIURA char_is_whitespace(c)
 EXPLICIT RITUALE
 
 EXPLICIT grimoire
