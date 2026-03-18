@@ -1,0 +1,112 @@
+-- CCT - Clavicula Turing
+-- Bootstrap Lexer - Main token dispatch loop
+-- FASE 21C8/21E4: main lexer flow and documentation
+
+INCIPIT grimoire "lexer"
+
+ADVOCARE "cct/char.cct"
+ADVOCARE "lexer_helpers.cct"
+ADVOCARE "lexer_state.cct"
+ADVOCARE "token.cct"
+ADVOCARE "token_type.cct"
+
+-- Produz o proximo token do fonte usando o estado mutavel do lexer.
+-- Retorno: token owned pelo caller, inclusive TK_INVALID e TK_EOF.
+RITUALE lexer_next_token(SPECULUM LexerState lex) REDDE Token
+  CONIURA lexer_skip_whitespace(lex)
+  VINCIRE (*lex).start AD (*lex).current
+
+  SI CONIURA lexer_is_at_end(lex)
+    REDDE CONIURA lexer_make_token(lex, TK_EOF)
+  FIN SI
+
+  EVOCA MILES c AD CONIURA lexer_advance(lex)
+
+  SI CONIURA char_is_alpha(c)
+    REDDE CONIURA lexer_identifier(lex)
+  FIN SI
+
+  SI CONIURA char_is_digit(c)
+    REDDE CONIURA lexer_number(lex)
+  FIN SI
+
+  ELIGE c
+    CASUS 45:
+      SI CONIURA lexer_peek(lex) == 45
+        CONIURA lexer_advance(lex)
+        CONIURA lexer_skip_comment(lex)
+        REDDE CONIURA lexer_next_token(lex)
+      FIN SI
+      SI CONIURA lexer_match(lex, 45)
+        REDDE CONIURA lexer_make_token(lex, TK_MINUS_MINUS)
+      FIN SI
+      REDDE CONIURA lexer_make_token(lex, TK_MINUS)
+
+    CASUS 43:
+      SI CONIURA lexer_match(lex, 43)
+        REDDE CONIURA lexer_make_token(lex, TK_PLUS_PLUS)
+      FIN SI
+      REDDE CONIURA lexer_make_token(lex, TK_PLUS)
+
+    CASUS 61:
+      SI CONIURA lexer_match(lex, 61)
+        REDDE CONIURA lexer_make_token(lex, TK_EQ_EQ)
+      FIN SI
+      REDDE CONIURA lexer_make_token(lex, TK_EQ)
+
+    CASUS 33:
+      SI CONIURA lexer_match(lex, 61)
+        REDDE CONIURA lexer_make_token(lex, TK_BANG_EQ)
+      FIN SI
+      REDDE CONIURA lexer_error_token(lex, "Unexpected character '!'")
+
+    CASUS 60:
+      SI CONIURA lexer_match(lex, 61)
+        REDDE CONIURA lexer_make_token(lex, TK_LESS_EQ)
+      FIN SI
+      REDDE CONIURA lexer_make_token(lex, TK_LESS)
+
+    CASUS 62:
+      SI CONIURA lexer_match(lex, 61)
+        REDDE CONIURA lexer_make_token(lex, TK_GREATER_EQ)
+      FIN SI
+      REDDE CONIURA lexer_make_token(lex, TK_GREATER)
+
+    CASUS 40: REDDE CONIURA lexer_make_token(lex, TK_LPAREN)
+    CASUS 41: REDDE CONIURA lexer_make_token(lex, TK_RPAREN)
+    CASUS 123: REDDE CONIURA lexer_make_token(lex, TK_LBRACE)
+    CASUS 125: REDDE CONIURA lexer_make_token(lex, TK_RBRACE)
+    CASUS 91: REDDE CONIURA lexer_make_token(lex, TK_LBRACKET)
+    CASUS 93: REDDE CONIURA lexer_make_token(lex, TK_RBRACKET)
+    CASUS 44: REDDE CONIURA lexer_make_token(lex, TK_COMMA)
+    CASUS 46: REDDE CONIURA lexer_make_token(lex, TK_DOT)
+    CASUS 58: REDDE CONIURA lexer_make_token(lex, TK_COLON)
+    CASUS 59: REDDE CONIURA lexer_make_token(lex, TK_SEMICOLON)
+
+    CASUS 42:
+      SI CONIURA lexer_match(lex, 42)
+        REDDE CONIURA lexer_make_token(lex, TK_STAR_STAR)
+      FIN SI
+      REDDE CONIURA lexer_make_token(lex, TK_STAR)
+
+    CASUS 47:
+      SI CONIURA lexer_match(lex, 47)
+        REDDE CONIURA lexer_make_token(lex, TK_SLASH_SLASH)
+      FIN SI
+      REDDE CONIURA lexer_make_token(lex, TK_SLASH)
+
+    CASUS 37:
+      SI CONIURA lexer_match(lex, 37)
+        REDDE CONIURA lexer_make_token(lex, TK_PERCENT_PERCENT)
+      FIN SI
+      REDDE CONIURA lexer_make_token(lex, TK_PERCENT)
+
+    CASUS 63: REDDE CONIURA lexer_make_token(lex, TK_QUESTION)
+    CASUS 34: REDDE CONIURA lexer_string(lex)
+
+    ALIOQUIN:
+      REDDE CONIURA lexer_error_character_token(lex, c)
+  FIN ELIGE
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

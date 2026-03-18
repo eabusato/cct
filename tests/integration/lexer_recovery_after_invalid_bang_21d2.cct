@@ -1,0 +1,40 @@
+INCIPIT grimoire "lexer_recovery_after_invalid_bang_21d2"
+
+ADVOCARE "cct/verbum.cct"
+ADVOCARE "../../src/bootstrap/lexer/lexer.cct"
+ADVOCARE "../../src/bootstrap/lexer/lexer_state.cct"
+ADVOCARE "../../src/bootstrap/lexer/token.cct"
+ADVOCARE "../../src/bootstrap/lexer/token_type.cct"
+
+RITUALE main() REDDE REX
+  EVOCA VERBUM source AD "! = foo"
+  EVOCA LexerState lex AD CONIURA lexer_init(source, "test.cct")
+
+  EVOCA Token t1 AD CONIURA lexer_next_token(SPECULUM lex)
+  SI t1.kind != TK_INVALID
+    REDDE 41
+  FIN SI
+  CONIURA token_free(SPECULUM t1)
+
+  EVOCA Token t2 AD CONIURA lexer_next_token(SPECULUM lex)
+  SI t2.kind != TK_EQ VEL CONIURA compare(t2.lexeme, "=") != 0
+    REDDE 42
+  FIN SI
+  CONIURA token_free(SPECULUM t2)
+
+  EVOCA Token t3 AD CONIURA lexer_next_token(SPECULUM lex)
+  SI t3.kind != TK_IDENTIFIER VEL CONIURA compare(t3.lexeme, "foo") != 0
+    REDDE 43
+  FIN SI
+  CONIURA token_free(SPECULUM t3)
+
+  EVOCA Token t4 AD CONIURA lexer_next_token(SPECULUM lex)
+  SI t4.kind != TK_EOF
+    REDDE 44
+  FIN SI
+  CONIURA token_free(SPECULUM t4)
+
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

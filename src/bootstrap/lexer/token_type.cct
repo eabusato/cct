@@ -1,3 +1,7 @@
+-- CCT - Clavicula Turing
+-- Bootstrap Lexer - Token kind enumeration and stringification
+-- FASE 21B1/21E4: token model and documentation
+
 INCIPIT grimoire "token_type"
 
 ORDO TokenKind
@@ -115,5 +119,315 @@ ORDO TokenKind
   TK_SEMICOLON,
   TK_QUESTION
 FIN ORDO
+
+-- Converte um TokenKind no nome textual usado pelo lexer C.
+-- Retorno: nome estavel para comparacao, CLI e diffs.
+RITUALE token_kind_to_string(TokenKind kind) REDDE VERBUM
+
+  SI kind == TK_EOF
+    REDDE "EOF"
+  FIN SI
+  SI kind == TK_INVALID
+    REDDE "INVALID"
+  FIN SI
+  SI kind == TK_IDENTIFIER
+    REDDE "IDENTIFIER"
+  FIN SI
+  SI kind == TK_INTEGER
+    REDDE "INTEGER"
+  FIN SI
+  SI kind == TK_REAL
+    REDDE "REAL"
+  FIN SI
+  SI kind == TK_STRING
+    REDDE "STRING"
+  FIN SI
+  SI kind == TK_INCIPIT
+    REDDE "INCIPIT"
+  FIN SI
+  SI kind == TK_EXPLICIT
+    REDDE "EXPLICIT"
+  FIN SI
+  SI kind == TK_RITUALE
+    REDDE "RITUALE"
+  FIN SI
+  SI kind == TK_EVOCA
+    REDDE "EVOCA"
+  FIN SI
+  SI kind == TK_VINCIRE
+    REDDE "VINCIRE"
+  FIN SI
+  SI kind == TK_DIMITTE
+    REDDE "DIMITTE"
+  FIN SI
+  SI kind == TK_CIRCULUS
+    REDDE "CIRCULUS"
+  FIN SI
+  SI kind == TK_CONIURA
+    REDDE "CONIURA"
+  FIN SI
+  SI kind == TK_CODEX
+    REDDE "CODEX"
+  FIN SI
+  SI kind == TK_SIGILLUM
+    REDDE "SIGILLUM"
+  FIN SI
+  SI kind == TK_PACTUM
+    REDDE "PACTUM"
+  FIN SI
+  SI kind == TK_ORDO
+    REDDE "ORDO"
+  FIN SI
+  SI kind == TK_ARCANUM
+    REDDE "ARCANUM"
+  FIN SI
+  SI kind == TK_GENUS
+    REDDE "GENUS"
+  FIN SI
+  SI kind == TK_ADVOCARE
+    REDDE "ADVOCARE"
+  FIN SI
+  SI kind == TK_CONSTANS
+    REDDE "CONSTANS"
+  FIN SI
+  SI kind == TK_FIN
+    REDDE "FIN"
+  FIN SI
+  SI kind == TK_SI
+    REDDE "SI"
+  FIN SI
+  SI kind == TK_ALITER
+    REDDE "ALITER"
+  FIN SI
+  SI kind == TK_QUANDO
+    REDDE "QUANDO"
+  FIN SI
+  SI kind == TK_CASO
+    REDDE "CASO"
+  FIN SI
+  SI kind == TK_SENAO
+    REDDE "SENAO"
+  FIN SI
+  SI kind == TK_DUM
+    REDDE "DUM"
+  FIN SI
+  SI kind == TK_DONEC
+    REDDE "DONEC"
+  FIN SI
+  SI kind == TK_REPETE
+    REDDE "REPETE"
+  FIN SI
+  SI kind == TK_ITERUM
+    REDDE "ITERUM"
+  FIN SI
+  SI kind == TK_PRO
+    REDDE "PRO"
+  FIN SI
+  SI kind == TK_FRANGE
+    REDDE "FRANGE"
+  FIN SI
+  SI kind == TK_RECEDE
+    REDDE "RECEDE"
+  FIN SI
+  SI kind == TK_REDDE
+    REDDE "REDDE"
+  FIN SI
+  SI kind == TK_TRANSITUS
+    REDDE "TRANSITUS"
+  FIN SI
+  SI kind == TK_TEMPTA
+    REDDE "TEMPTA"
+  FIN SI
+  SI kind == TK_CAPE
+    REDDE "CAPE"
+  FIN SI
+  SI kind == TK_SEMPER
+    REDDE "SEMPER"
+  FIN SI
+  SI kind == TK_IACE
+    REDDE "IACE"
+  FIN SI
+  SI kind == TK_FRACTUM
+    REDDE "FRACTUM"
+  FIN SI
+  SI kind == TK_ET
+    REDDE "ET"
+  FIN SI
+  SI kind == TK_VEL
+    REDDE "VEL"
+  FIN SI
+  SI kind == TK_NON
+    REDDE "NON"
+  FIN SI
+  SI kind == TK_ET_BIT
+    REDDE "ET_BIT"
+  FIN SI
+  SI kind == TK_VEL_BIT
+    REDDE "VEL_BIT"
+  FIN SI
+  SI kind == TK_XOR
+    REDDE "XOR"
+  FIN SI
+  SI kind == TK_NON_BIT
+    REDDE "NON_BIT"
+  FIN SI
+  SI kind == TK_SINISTER
+    REDDE "SINISTER"
+  FIN SI
+  SI kind == TK_DEXTER
+    REDDE "DEXTER"
+  FIN SI
+  SI kind == TK_REX
+    REDDE "REX"
+  FIN SI
+  SI kind == TK_DUX
+    REDDE "DUX"
+  FIN SI
+  SI kind == TK_COMES
+    REDDE "COMES"
+  FIN SI
+  SI kind == TK_MILES
+    REDDE "MILES"
+  FIN SI
+  SI kind == TK_UMBRA
+    REDDE "UMBRA"
+  FIN SI
+  SI kind == TK_FLAMMA
+    REDDE "FLAMMA"
+  FIN SI
+  SI kind == TK_VERBUM
+    REDDE "VERBUM"
+  FIN SI
+  SI kind == TK_VERUM
+    REDDE "VERUM"
+  FIN SI
+  SI kind == TK_FALSUM
+    REDDE "FALSUM"
+  FIN SI
+  SI kind == TK_NIHIL
+    REDDE "NIHIL"
+  FIN SI
+  SI kind == TK_SPECULUM
+    REDDE "SPECULUM"
+  FIN SI
+  SI kind == TK_SERIES
+    REDDE "SERIES"
+  FIN SI
+  SI kind == TK_FLUXUS
+    REDDE "FLUXUS"
+  FIN SI
+  SI kind == TK_VOLATILE
+    REDDE "VOLATILE"
+  FIN SI
+  SI kind == TK_OBSECRO
+    REDDE "OBSECRO"
+  FIN SI
+  SI kind == TK_ANUR
+    REDDE "ANUR"
+  FIN SI
+  SI kind == TK_MENSURA
+    REDDE "MENSURA"
+  FIN SI
+  SI kind == TK_MOLDE
+    REDDE "MOLDE"
+  FIN SI
+  SI kind == TK_DE
+    REDDE "DE"
+  FIN SI
+  SI kind == TK_AD
+    REDDE "AD"
+  FIN SI
+  SI kind == TK_IN
+    REDDE "IN"
+  FIN SI
+  SI kind == TK_GRADUS
+    REDDE "GRADUS"
+  FIN SI
+  SI kind == TK_PLUS
+    REDDE "PLUS"
+  FIN SI
+  SI kind == TK_MINUS
+    REDDE "MINUS"
+  FIN SI
+  SI kind == TK_STAR
+    REDDE "STAR"
+  FIN SI
+  SI kind == TK_STAR_STAR
+    REDDE "STAR_STAR"
+  FIN SI
+  SI kind == TK_SLASH
+    REDDE "SLASH"
+  FIN SI
+  SI kind == TK_SLASH_SLASH
+    REDDE "SLASH_SLASH"
+  FIN SI
+  SI kind == TK_PERCENT
+    REDDE "PERCENT"
+  FIN SI
+  SI kind == TK_PERCENT_PERCENT
+    REDDE "PERCENT_PERCENT"
+  FIN SI
+  SI kind == TK_EQ_EQ
+    REDDE "EQ_EQ"
+  FIN SI
+  SI kind == TK_BANG_EQ
+    REDDE "BANG_EQ"
+  FIN SI
+  SI kind == TK_LESS
+    REDDE "LESS"
+  FIN SI
+  SI kind == TK_LESS_EQ
+    REDDE "LESS_EQ"
+  FIN SI
+  SI kind == TK_GREATER
+    REDDE "GREATER"
+  FIN SI
+  SI kind == TK_GREATER_EQ
+    REDDE "GREATER_EQ"
+  FIN SI
+  SI kind == TK_EQ
+    REDDE "EQ"
+  FIN SI
+  SI kind == TK_PLUS_PLUS
+    REDDE "PLUS_PLUS"
+  FIN SI
+  SI kind == TK_MINUS_MINUS
+    REDDE "MINUS_MINUS"
+  FIN SI
+  SI kind == TK_LPAREN
+    REDDE "LPAREN"
+  FIN SI
+  SI kind == TK_RPAREN
+    REDDE "RPAREN"
+  FIN SI
+  SI kind == TK_LBRACE
+    REDDE "LBRACE"
+  FIN SI
+  SI kind == TK_RBRACE
+    REDDE "RBRACE"
+  FIN SI
+  SI kind == TK_LBRACKET
+    REDDE "LBRACKET"
+  FIN SI
+  SI kind == TK_RBRACKET
+    REDDE "RBRACKET"
+  FIN SI
+  SI kind == TK_COMMA
+    REDDE "COMMA"
+  FIN SI
+  SI kind == TK_DOT
+    REDDE "DOT"
+  FIN SI
+  SI kind == TK_COLON
+    REDDE "COLON"
+  FIN SI
+  SI kind == TK_SEMICOLON
+    REDDE "SEMICOLON"
+  FIN SI
+  SI kind == TK_QUESTION
+    REDDE "QUESTION"
+  FIN SI
+  REDDE "UNKNOWN"
+EXPLICIT RITUALE
 
 EXPLICIT grimoire

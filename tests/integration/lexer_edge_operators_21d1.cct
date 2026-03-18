@@ -1,0 +1,104 @@
+INCIPIT grimoire "lexer_edge_operators_21d1"
+
+ADVOCARE "cct/verbum.cct"
+ADVOCARE "../../src/bootstrap/lexer/lexer.cct"
+ADVOCARE "../../src/bootstrap/lexer/lexer_state.cct"
+ADVOCARE "../../src/bootstrap/lexer/token.cct"
+ADVOCARE "../../src/bootstrap/lexer/token_type.cct"
+
+RITUALE token_kind_name(TokenKind kind) REDDE VERBUM
+  SI kind == TK_STAR_STAR
+    REDDE "STAR_STAR"
+  FIN SI
+  SI kind == TK_SLASH_SLASH
+    REDDE "SLASH_SLASH"
+  FIN SI
+  SI kind == TK_PERCENT_PERCENT
+    REDDE "PERCENT_PERCENT"
+  FIN SI
+  SI kind == TK_EQ_EQ
+    REDDE "EQ_EQ"
+  FIN SI
+  SI kind == TK_BANG_EQ
+    REDDE "BANG_EQ"
+  FIN SI
+  SI kind == TK_LESS_EQ
+    REDDE "LESS_EQ"
+  FIN SI
+  SI kind == TK_GREATER_EQ
+    REDDE "GREATER_EQ"
+  FIN SI
+  SI kind == TK_EOF
+    REDDE "EOF"
+  FIN SI
+  REDDE "OTHER"
+EXPLICIT RITUALE
+
+RITUALE emit_token(SPECULUM Token tok) REDDE NIHIL
+  OBSECRO scribe(CONIURA token_kind_name((*tok).kind), "|", (*tok).lexeme, "\n")
+EXPLICIT RITUALE
+
+RITUALE main() REDDE REX
+  EVOCA VERBUM source AD "** // %% == != <= >="
+  EVOCA LexerState lex AD CONIURA lexer_init(source, "test.cct")
+
+  EVOCA Token t1 AD CONIURA lexer_next_token(SPECULUM lex)
+  SI t1.kind != TK_STAR_STAR
+    REDDE 41
+  FIN SI
+  CONIURA emit_token(SPECULUM t1)
+  CONIURA token_free(SPECULUM t1)
+
+  EVOCA Token t2 AD CONIURA lexer_next_token(SPECULUM lex)
+  SI t2.kind != TK_SLASH_SLASH
+    REDDE 42
+  FIN SI
+  CONIURA emit_token(SPECULUM t2)
+  CONIURA token_free(SPECULUM t2)
+
+  EVOCA Token t3 AD CONIURA lexer_next_token(SPECULUM lex)
+  SI t3.kind != TK_PERCENT_PERCENT
+    REDDE 43
+  FIN SI
+  CONIURA emit_token(SPECULUM t3)
+  CONIURA token_free(SPECULUM t3)
+
+  EVOCA Token t4 AD CONIURA lexer_next_token(SPECULUM lex)
+  SI t4.kind != TK_EQ_EQ
+    REDDE 44
+  FIN SI
+  CONIURA emit_token(SPECULUM t4)
+  CONIURA token_free(SPECULUM t4)
+
+  EVOCA Token t5 AD CONIURA lexer_next_token(SPECULUM lex)
+  SI t5.kind != TK_BANG_EQ
+    REDDE 45
+  FIN SI
+  CONIURA emit_token(SPECULUM t5)
+  CONIURA token_free(SPECULUM t5)
+
+  EVOCA Token t6 AD CONIURA lexer_next_token(SPECULUM lex)
+  SI t6.kind != TK_LESS_EQ
+    REDDE 46
+  FIN SI
+  CONIURA emit_token(SPECULUM t6)
+  CONIURA token_free(SPECULUM t6)
+
+  EVOCA Token t7 AD CONIURA lexer_next_token(SPECULUM lex)
+  SI t7.kind != TK_GREATER_EQ
+    REDDE 47
+  FIN SI
+  CONIURA emit_token(SPECULUM t7)
+  CONIURA token_free(SPECULUM t7)
+
+  EVOCA Token t8 AD CONIURA lexer_next_token(SPECULUM lex)
+  SI t8.kind != TK_EOF
+    REDDE 48
+  FIN SI
+  CONIURA emit_token(SPECULUM t8)
+  CONIURA token_free(SPECULUM t8)
+
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

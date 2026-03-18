@@ -1,0 +1,45 @@
+INCIPIT grimoire "lexer_state_init_21c1"
+
+ADVOCARE "cct/verbum.cct"
+ADVOCARE "../../src/bootstrap/lexer/lexer_state.cct"
+
+RITUALE main() REDDE REX
+  EVOCA VERBUM source AD "INCIPIT\nEXPLICIT"
+  EVOCA LexerState lex AD CONIURA lexer_init(source, "test.cct")
+
+  SI lex.current != 0
+    REDDE 41
+  FIN SI
+
+  SI lex.start != 0
+    REDDE 42
+  FIN SI
+
+  SI lex.line != 1
+    REDDE 43
+  FIN SI
+
+  SI lex.column != 1
+    REDDE 44
+  FIN SI
+
+  SI lex.source_len != 16
+    REDDE 45
+  FIN SI
+
+  SI lex.had_error != FALSUM
+    REDDE 46
+  FIN SI
+
+  SI CONIURA compare(lex.filename, "test.cct") != 0
+    REDDE 47
+  FIN SI
+
+  SI CONIURA compare(lex.source, source) != 0
+    REDDE 48
+  FIN SI
+
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

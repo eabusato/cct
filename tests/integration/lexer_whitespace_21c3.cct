@@ -1,0 +1,75 @@
+INCIPIT grimoire "lexer_whitespace_21c3"
+
+ADVOCARE "cct/verbum.cct"
+ADVOCARE "../../src/bootstrap/lexer/lexer_state.cct"
+ADVOCARE "../../src/bootstrap/lexer/lexer_helpers.cct"
+
+RITUALE main() REDDE REX
+  EVOCA VERBUM source1 AD "   \t  abc"
+  EVOCA LexerState lex1 AD CONIURA lexer_init(source1, "test.cct")
+  CONIURA lexer_skip_whitespace(SPECULUM lex1)
+  SI lex1.current != 6
+    REDDE 41
+  FIN SI
+  SI CONIURA lexer_peek(SPECULUM lex1) != 97
+    REDDE 42
+  FIN SI
+
+  EVOCA VERBUM source2 AD "a\nb"
+  EVOCA LexerState lex2 AD CONIURA lexer_init(source2, "test.cct")
+  CONIURA lexer_advance(SPECULUM lex2)
+  CONIURA lexer_skip_whitespace(SPECULUM lex2)
+  SI lex2.line != 2
+    REDDE 43
+  FIN SI
+  SI lex2.column != 1
+    REDDE 44
+  FIN SI
+  SI CONIURA lexer_peek(SPECULUM lex2) != 98
+    REDDE 45
+  FIN SI
+
+  EVOCA VERBUM source3 AD "a\n\n\nb"
+  EVOCA LexerState lex3 AD CONIURA lexer_init(source3, "test.cct")
+  CONIURA lexer_advance(SPECULUM lex3)
+  CONIURA lexer_skip_whitespace(SPECULUM lex3)
+  SI lex3.line != 4
+    REDDE 46
+  FIN SI
+
+  EVOCA VERBUM source4 AD "-- comentario\nabc"
+  EVOCA LexerState lex4 AD CONIURA lexer_init(source4, "test.cct")
+  CONIURA lexer_advance(SPECULUM lex4)
+  CONIURA lexer_advance(SPECULUM lex4)
+  CONIURA lexer_skip_comment(SPECULUM lex4)
+  SI CONIURA lexer_peek(SPECULUM lex4) != 10
+    REDDE 47
+  FIN SI
+  CONIURA lexer_skip_whitespace(SPECULUM lex4)
+  SI CONIURA lexer_peek(SPECULUM lex4) != 97
+    REDDE 48
+  FIN SI
+
+  EVOCA VERBUM source5 AD "-- comentario sem newline"
+  EVOCA LexerState lex5 AD CONIURA lexer_init(source5, "test.cct")
+  CONIURA lexer_advance(SPECULUM lex5)
+  CONIURA lexer_advance(SPECULUM lex5)
+  CONIURA lexer_skip_comment(SPECULUM lex5)
+  SI NON CONIURA lexer_is_at_end(SPECULUM lex5)
+    REDDE 49
+  FIN SI
+
+  EVOCA VERBUM source6 AD CONIURA concat(CONIURA concat("  \t", CONIURA from_char(13)), "\n  abc")
+  EVOCA LexerState lex6 AD CONIURA lexer_init(source6, "test.cct")
+  CONIURA lexer_skip_whitespace(SPECULUM lex6)
+  SI lex6.line != 2
+    REDDE 50
+  FIN SI
+  SI CONIURA lexer_peek(SPECULUM lex6) != 97
+    REDDE 51
+  FIN SI
+
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

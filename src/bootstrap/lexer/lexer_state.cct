@@ -1,0 +1,35 @@
+-- CCT - Clavicula Turing
+-- Bootstrap Lexer - Mutable scanning state
+-- FASE 21C1/21E4: lexer state and documentation
+
+INCIPIT grimoire "lexer_state"
+
+ADVOCARE "cct/verbum.cct"
+
+SIGILLUM LexerState
+  source: VERBUM
+  source_len: REX
+  current: REX
+  start: REX
+  line: REX
+  column: REX
+  filename: VERBUM
+  had_error: VERUM
+FIN SIGILLUM
+
+-- Inicializa o estado do lexer no inicio do arquivo fonte.
+-- Retorno: estrutura pronta para navegacao e emissao de tokens.
+RITUALE lexer_init(VERBUM source, VERBUM filename) REDDE LexerState
+  EVOCA LexerState lex
+  VINCIRE lex.source AD source
+  VINCIRE lex.source_len AD CONIURA len(source)
+  VINCIRE lex.current AD 0
+  VINCIRE lex.start AD 0
+  VINCIRE lex.line AD 1
+  VINCIRE lex.column AD 1
+  VINCIRE lex.filename AD filename
+  VINCIRE lex.had_error AD FALSUM
+  REDDE lex
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

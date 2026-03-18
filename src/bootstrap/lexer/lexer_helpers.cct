@@ -1,0 +1,204 @@
+-- CCT - Clavicula Turing
+-- Bootstrap Lexer - Navigation, token creation, and literal scanners
+-- FASE 21C2-21C7/21E4: helper contracts and ownership documentation
+
+INCIPIT grimoire "lexer_helpers"
+
+ADVOCARE "cct/char.cct"
+ADVOCARE "cct/diagnostic.cct"
+ADVOCARE "cct/verbum.cct"
+ADVOCARE "keywords.cct"
+ADVOCARE "lexer_state.cct"
+ADVOCARE "token.cct"
+ADVOCARE "token_type.cct"
+
+-- Verifica se o cursor chegou ao fim do fonte.
+RITUALE lexer_is_at_end(SPECULUM LexerState lex) REDDE VERUM
+  REDDE (*lex).current >= (*lex).source_len
+EXPLICIT RITUALE
+
+-- Observa o caractere atual sem consumir.
+RITUALE lexer_peek(SPECULUM LexerState lex) REDDE MILES
+  SI CONIURA lexer_is_at_end(lex)
+    REDDE 0
+  FIN SI
+  REDDE CONIURA char_at((*lex).source, (*lex).current)
+EXPLICIT RITUALE
+
+-- Observa o proximo caractere sem avancar o cursor.
+RITUALE lexer_peek_next(SPECULUM LexerState lex) REDDE MILES
+  SI (*lex).current + 1 >= (*lex).source_len
+    REDDE 0
+  FIN SI
+  REDDE CONIURA char_at((*lex).source, (*lex).current + 1)
+EXPLICIT RITUALE
+
+-- Consome o caractere atual e avanca current/column.
+-- Retorno: caractere consumido ou 0 quando EOF.
+RITUALE lexer_advance(SPECULUM LexerState lex) REDDE MILES
+  SI CONIURA lexer_is_at_end(lex)
+    REDDE 0
+  FIN SI
+  EVOCA MILES c AD CONIURA char_at((*lex).source, (*lex).current)
+  VINCIRE (*lex).current AD (*lex).current + 1
+  VINCIRE (*lex).column AD (*lex).column + 1
+  REDDE c
+EXPLICIT RITUALE
+
+-- Consome o proximo caractere apenas se ele bater com `expected`.
+RITUALE lexer_match(SPECULUM LexerState lex, MILES expected) REDDE VERUM
+  SI CONIURA lexer_is_at_end(lex)
+    REDDE FALSUM
+  FIN SI
+  SI CONIURA char_at((*lex).source, (*lex).current) != expected
+    REDDE FALSUM
+  FIN SI
+  VINCIRE (*lex).current AD (*lex).current + 1
+  VINCIRE (*lex).column AD (*lex).column + 1
+  REDDE VERUM
+EXPLICIT RITUALE
+
+-- Descarta espacos, tabs e novas linhas atualizando line/column.
+RITUALE lexer_skip_whitespace(SPECULUM LexerState lex) REDDE NIHIL
+  DUM NON CONIURA lexer_is_at_end(lex)
+    EVOCA MILES c AD CONIURA lexer_peek(lex)
+    SI c == 32 VEL c == 13 VEL c == 9
+      CONIURA lexer_advance(lex)
+    ALITER
+      SI c == 10
+        VINCIRE (*lex).line AD (*lex).line + 1
+        VINCIRE (*lex).column AD 0
+        CONIURA lexer_advance(lex)
+      ALITER
+        REDDE
+      FIN SI
+    FIN SI
+  FIN DUM
+  REDDE
+EXPLICIT RITUALE
+
+-- Descarta comentario de linha iniciado por `--`.
+RITUALE lexer_skip_comment(SPECULUM LexerState lex) REDDE NIHIL
+  DUM CONIURA lexer_peek(lex) != 10 ET NON CONIURA lexer_is_at_end(lex)
+    CONIURA lexer_advance(lex)
+  FIN DUM
+  REDDE
+EXPLICIT RITUALE
+
+-- Cria substring owned para o token corrente.
+-- Ownership: o caller recebe memoria alocada.
+RITUALE lexer_make_lexeme(SPECULUM LexerState lex) REDDE VERBUM
+  REDDE CONIURA substring((*lex).source, (*lex).start, (*lex).current)
+EXPLICIT RITUALE
+
+-- Cria token comum transferindo ownership do lexeme alocado.
+RITUALE lexer_make_token(SPECULUM LexerState lex, TokenKind kind) REDDE Token
+  EVOCA VERBUM lexeme AD CONIURA lexer_make_lexeme(lex)
+  EVOCA REX col AD (*lex).column - ((*lex).current - (*lex).start)
+  REDDE CONIURA token_make(kind, lexeme, (*lex).line, col)
+EXPLICIT RITUALE
+
+-- Cria token invalido a partir de mensagem textual.
+-- Ownership: duplica `msg` para manter contrato seguro com token_free.
+RITUALE lexer_error_token(SPECULUM LexerState lex, VERBUM msg) REDDE Token
+  VINCIRE (*lex).had_error AD VERUM
+  EVOCA SourceLocation loc
+  VINCIRE loc.line AD (*lex).line
+  VINCIRE loc.column AD (*lex).column
+  VINCIRE loc.filename AD (*lex).filename
+  CONIURA diag_error(SPECULUM loc, msg)
+  EVOCA VERBUM owned_msg AD CONIURA verbum_dup(msg)
+  REDDE CONIURA token_make(TK_INVALID, owned_msg, (*lex).line, (*lex).column)
+EXPLICIT RITUALE
+
+-- Cria token invalido incluindo o caractere ofensivo na mensagem.
+-- Ownership: a mensagem montada passa a ser owned pelo token retornado.
+RITUALE lexer_error_character_token(SPECULUM LexerState lex, MILES c) REDDE Token
+  VINCIRE (*lex).had_error AD VERUM
+  EVOCA SourceLocation loc
+  VINCIRE loc.line AD (*lex).line
+  VINCIRE loc.column AD (*lex).column
+  VINCIRE loc.filename AD (*lex).filename
+
+  EVOCA VERBUM ch AD CONIURA from_char(c)
+  EVOCA VERBUM suffix AD CONIURA concat(ch, "'")
+  EVOCA VERBUM msg AD CONIURA concat("Unexpected character '", suffix)
+  DIMITTE ch
+  DIMITTE suffix
+
+  CONIURA diag_error(SPECULUM loc, msg)
+  REDDE CONIURA token_make(TK_INVALID, msg, (*lex).line, (*lex).column)
+EXPLICIT RITUALE
+
+-- Consome identificadores e keywords latinas do lexer.
+RITUALE lexer_identifier(SPECULUM LexerState lex) REDDE Token
+  DUM CONIURA char_is_alnum(CONIURA lexer_peek(lex)) VEL CONIURA lexer_peek(lex) == 95
+    CONIURA lexer_advance(lex)
+  FIN DUM
+
+  EVOCA VERBUM lexeme AD CONIURA lexer_make_lexeme(lex)
+  EVOCA TokenKind kind AD CONIURA keyword_lookup(lexeme)
+  EVOCA REX col AD (*lex).column - ((*lex).current - (*lex).start)
+
+  REDDE CONIURA token_make(kind, lexeme, (*lex).line, col)
+EXPLICIT RITUALE
+
+-- Consome inteiros e reais simples no formato canonico atual.
+RITUALE lexer_number(SPECULUM LexerState lex) REDDE Token
+  DUM CONIURA char_is_digit(CONIURA lexer_peek(lex))
+    CONIURA lexer_advance(lex)
+  FIN DUM
+
+  EVOCA VERUM is_real AD FALSUM
+  SI CONIURA lexer_peek(lex) == 46 ET CONIURA char_is_digit(CONIURA lexer_peek_next(lex))
+    VINCIRE is_real AD VERUM
+    CONIURA lexer_advance(lex)
+    DUM CONIURA char_is_digit(CONIURA lexer_peek(lex))
+      CONIURA lexer_advance(lex)
+    FIN DUM
+  FIN SI
+
+  EVOCA TokenKind kind
+  SI is_real
+    VINCIRE kind AD TK_REAL
+  ALITER
+    VINCIRE kind AD TK_INTEGER
+  FIN SI
+
+  REDDE CONIURA lexer_make_token(lex, kind)
+EXPLICIT RITUALE
+
+-- Consome literais string com escapes suportados.
+-- Em erro lexico retorna TK_INVALID preservando diagnostico textual.
+RITUALE lexer_string(SPECULUM LexerState lex) REDDE Token
+  DUM CONIURA lexer_peek(lex) != 34 ET NON CONIURA lexer_is_at_end(lex)
+    EVOCA MILES c AD CONIURA lexer_peek(lex)
+
+    SI c == 10
+      REDDE CONIURA lexer_error_token(lex, "Unterminated string")
+    FIN SI
+
+    SI c == 92
+      CONIURA lexer_advance(lex)
+      SI CONIURA lexer_is_at_end(lex)
+        REDDE CONIURA lexer_error_token(lex, "Unterminated string")
+      FIN SI
+
+      EVOCA MILES next AD CONIURA lexer_peek(lex)
+      SI next != 34 ET next != 92 ET next != 110 ET next != 116
+        REDDE CONIURA lexer_error_token(lex, "Invalid escape sequence")
+      FIN SI
+    FIN SI
+
+    CONIURA lexer_advance(lex)
+  FIN DUM
+
+  SI CONIURA lexer_is_at_end(lex)
+    REDDE CONIURA lexer_error_token(lex, "Unterminated string")
+  FIN SI
+
+  CONIURA lexer_advance(lex)
+  REDDE CONIURA lexer_make_token(lex, TK_STRING)
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

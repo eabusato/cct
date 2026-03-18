@@ -1,0 +1,57 @@
+INCIPIT grimoire "lexer_edge_strings_21d1"
+
+ADVOCARE "cct/verbum.cct"
+ADVOCARE "../../src/bootstrap/lexer/lexer.cct"
+ADVOCARE "../../src/bootstrap/lexer/lexer_state.cct"
+ADVOCARE "../../src/bootstrap/lexer/token.cct"
+ADVOCARE "../../src/bootstrap/lexer/token_type.cct"
+
+RITUALE token_kind_name(TokenKind kind) REDDE VERBUM
+  SI kind == TK_STRING
+    REDDE "STRING"
+  FIN SI
+  SI kind == TK_EOF
+    REDDE "EOF"
+  FIN SI
+  REDDE "OTHER"
+EXPLICIT RITUALE
+
+RITUALE emit_token(SPECULUM Token tok) REDDE NIHIL
+  OBSECRO scribe(CONIURA token_kind_name((*tok).kind), "|", (*tok).lexeme, "\n")
+EXPLICIT RITUALE
+
+RITUALE main() REDDE REX
+  EVOCA VERBUM source AD "\"hello\\nworld\" \"tab\\tquote\\\"slash\\\\\""
+  EVOCA LexerState lex AD CONIURA lexer_init(source, "test.cct")
+
+  EVOCA Token t1 AD CONIURA lexer_next_token(SPECULUM lex)
+  SI t1.kind != TK_STRING
+    REDDE 41
+  FIN SI
+  SI CONIURA compare(t1.lexeme, "\"hello\\nworld\"") != 0
+    REDDE 42
+  FIN SI
+  CONIURA emit_token(SPECULUM t1)
+  CONIURA token_free(SPECULUM t1)
+
+  EVOCA Token t2 AD CONIURA lexer_next_token(SPECULUM lex)
+  SI t2.kind != TK_STRING
+    REDDE 43
+  FIN SI
+  SI CONIURA compare(t2.lexeme, "\"tab\\tquote\\\"slash\\\\\"") != 0
+    REDDE 44
+  FIN SI
+  CONIURA emit_token(SPECULUM t2)
+  CONIURA token_free(SPECULUM t2)
+
+  EVOCA Token t3 AD CONIURA lexer_next_token(SPECULUM lex)
+  SI t3.kind != TK_EOF
+    REDDE 45
+  FIN SI
+  CONIURA emit_token(SPECULUM t3)
+  CONIURA token_free(SPECULUM t3)
+
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

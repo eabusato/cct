@@ -1,0 +1,50 @@
+INCIPIT grimoire "lexer_multiple_invalid_chars_21d2"
+
+ADVOCARE "../../src/bootstrap/lexer/lexer.cct"
+ADVOCARE "../../src/bootstrap/lexer/lexer_state.cct"
+ADVOCARE "../../src/bootstrap/lexer/token.cct"
+ADVOCARE "../../src/bootstrap/lexer/token_type.cct"
+
+RITUALE main() REDDE REX
+  EVOCA VERBUM source AD "@ # $ !"
+  EVOCA LexerState lex AD CONIURA lexer_init(source, "test.cct")
+  EVOCA REX count AD 0
+
+  EVOCA Token t1 AD CONIURA lexer_next_token(SPECULUM lex)
+  SI t1.kind == TK_INVALID
+    VINCIRE count AD count + 1
+  FIN SI
+  CONIURA token_free(SPECULUM t1)
+
+  EVOCA Token t2 AD CONIURA lexer_next_token(SPECULUM lex)
+  SI t2.kind == TK_INVALID
+    VINCIRE count AD count + 1
+  FIN SI
+  CONIURA token_free(SPECULUM t2)
+
+  EVOCA Token t3 AD CONIURA lexer_next_token(SPECULUM lex)
+  SI t3.kind == TK_INVALID
+    VINCIRE count AD count + 1
+  FIN SI
+  CONIURA token_free(SPECULUM t3)
+
+  EVOCA Token t4 AD CONIURA lexer_next_token(SPECULUM lex)
+  SI t4.kind == TK_INVALID
+    VINCIRE count AD count + 1
+  FIN SI
+  CONIURA token_free(SPECULUM t4)
+
+  SI count != 4
+    REDDE 41
+  FIN SI
+
+  EVOCA Token t5 AD CONIURA lexer_next_token(SPECULUM lex)
+  SI t5.kind != TK_EOF
+    REDDE 42
+  FIN SI
+  CONIURA token_free(SPECULUM t5)
+
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

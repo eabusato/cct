@@ -161,6 +161,10 @@ clean:
 	@echo "Cleaning build artifacts..."
 	rm -rf $(BUILD_DIR)
 	rm -f $(TARGET)
+	rm -f cct_lexer_bootstrap
+	rm -f src/bootstrap/main_lexer src/bootstrap/main_lexer.cgen.c
+	rm -f src/bootstrap/main_lexer.svg src/bootstrap/main_lexer.sigil
+	rm -f src/bootstrap/main_lexer.system.svg src/bootstrap/main_lexer.system.sigil
 	rm -rf $(CCT_LBOS_OUT)
 	@echo "Clean complete."
 
@@ -168,6 +172,32 @@ clean:
 test: $(TARGET)
 	@echo "Running tests..."
 	@bash tests/run_tests.sh
+
+cct_lexer_bootstrap: $(TARGET) \
+	src/bootstrap/main_lexer.cct \
+	src/bootstrap/lexer/token_type.cct \
+	src/bootstrap/lexer/token.cct \
+	src/bootstrap/lexer/keywords.cct \
+	src/bootstrap/lexer/lexer_state.cct \
+	src/bootstrap/lexer/lexer_helpers.cct \
+	src/bootstrap/lexer/lexer.cct
+	@echo "Building cct_lexer_bootstrap..."
+	@rm -f cct_lexer_bootstrap src/bootstrap/main_lexer src/bootstrap/main_lexer.cgen.c
+	@./cct src/bootstrap/main_lexer.cct >/dev/null
+	@mv src/bootstrap/main_lexer cct_lexer_bootstrap
+	@rm -f src/bootstrap/main_lexer.cgen.c
+	@rm -f src/bootstrap/main_lexer.svg src/bootstrap/main_lexer.sigil
+	@rm -f src/bootstrap/main_lexer.system.svg src/bootstrap/main_lexer.system.sigil
+	@echo "Build complete: cct_lexer_bootstrap"
+
+test_lexer_bootstrap: cct_lexer_bootstrap
+	@bash tests/validate_lexer_full_suite.sh
+
+benchmark_lexer: cct_lexer_bootstrap
+	@bash tests/benchmark_lexer_21e2.sh
+
+valgrind_lexer: cct_lexer_bootstrap
+	@bash tests/valgrind_lexer_21e3.sh
 
 test_fluxus_storage:
 	@echo "Building fluxus storage runtime tests..."

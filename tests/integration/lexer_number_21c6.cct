@@ -1,0 +1,126 @@
+INCIPIT grimoire "lexer_number_21c6"
+
+ADVOCARE "cct/verbum.cct"
+ADVOCARE "../../src/bootstrap/lexer/lexer_state.cct"
+ADVOCARE "../../src/bootstrap/lexer/lexer_helpers.cct"
+ADVOCARE "../../src/bootstrap/lexer/token.cct"
+ADVOCARE "../../src/bootstrap/lexer/token_type.cct"
+
+RITUALE main() REDDE REX
+  EVOCA VERBUM source1 AD "42"
+  EVOCA LexerState lex1 AD CONIURA lexer_init(source1, "test.cct")
+  EVOCA Token tok1 AD CONIURA lexer_number(SPECULUM lex1)
+  SI tok1.kind != TK_INTEGER
+    REDDE 41
+  FIN SI
+  SI CONIURA compare(tok1.lexeme, "42") != 0
+    REDDE 42
+  FIN SI
+  CONIURA token_free(SPECULUM tok1)
+
+  EVOCA VERBUM source2 AD "0"
+  EVOCA LexerState lex2 AD CONIURA lexer_init(source2, "test.cct")
+  EVOCA Token tok2 AD CONIURA lexer_number(SPECULUM lex2)
+  SI tok2.kind != TK_INTEGER
+    REDDE 43
+  FIN SI
+  SI CONIURA compare(tok2.lexeme, "0") != 0
+    REDDE 44
+  FIN SI
+  CONIURA token_free(SPECULUM tok2)
+
+  EVOCA VERBUM source3 AD "123456789"
+  EVOCA LexerState lex3 AD CONIURA lexer_init(source3, "test.cct")
+  EVOCA Token tok3 AD CONIURA lexer_number(SPECULUM lex3)
+  SI tok3.kind != TK_INTEGER
+    REDDE 45
+  FIN SI
+  SI CONIURA compare(tok3.lexeme, "123456789") != 0
+    REDDE 46
+  FIN SI
+  CONIURA token_free(SPECULUM tok3)
+
+  EVOCA VERBUM source4 AD "3.14"
+  EVOCA LexerState lex4 AD CONIURA lexer_init(source4, "test.cct")
+  EVOCA Token tok4 AD CONIURA lexer_number(SPECULUM lex4)
+  SI tok4.kind != TK_REAL
+    REDDE 47
+  FIN SI
+  SI CONIURA compare(tok4.lexeme, "3.14") != 0
+    REDDE 48
+  FIN SI
+  CONIURA token_free(SPECULUM tok4)
+
+  EVOCA VERBUM source5 AD "0.5"
+  EVOCA LexerState lex5 AD CONIURA lexer_init(source5, "test.cct")
+  EVOCA Token tok5 AD CONIURA lexer_number(SPECULUM lex5)
+  SI tok5.kind != TK_REAL
+    REDDE 49
+  FIN SI
+  SI CONIURA compare(tok5.lexeme, "0.5") != 0
+    REDDE 50
+  FIN SI
+  CONIURA token_free(SPECULUM tok5)
+
+  EVOCA VERBUM source6 AD "123.456789"
+  EVOCA LexerState lex6 AD CONIURA lexer_init(source6, "test.cct")
+  EVOCA Token tok6 AD CONIURA lexer_number(SPECULUM lex6)
+  SI tok6.kind != TK_REAL
+    REDDE 51
+  FIN SI
+  SI CONIURA compare(tok6.lexeme, "123.456789") != 0
+    REDDE 52
+  FIN SI
+  CONIURA token_free(SPECULUM tok6)
+
+  EVOCA VERBUM source7 AD "42+"
+  EVOCA LexerState lex7 AD CONIURA lexer_init(source7, "test.cct")
+  EVOCA Token tok7 AD CONIURA lexer_number(SPECULUM lex7)
+  SI CONIURA compare(tok7.lexeme, "42") != 0
+    REDDE 53
+  FIN SI
+  SI CONIURA lexer_peek(SPECULUM lex7) != 43
+    REDDE 54
+  FIN SI
+  CONIURA token_free(SPECULUM tok7)
+
+  EVOCA VERBUM source8 AD "42."
+  EVOCA LexerState lex8 AD CONIURA lexer_init(source8, "test.cct")
+  EVOCA Token tok8 AD CONIURA lexer_number(SPECULUM lex8)
+  SI tok8.kind != TK_INTEGER
+    REDDE 55
+  FIN SI
+  SI CONIURA compare(tok8.lexeme, "42") != 0
+    REDDE 56
+  FIN SI
+  SI CONIURA lexer_peek(SPECULUM lex8) != 46
+    REDDE 57
+  FIN SI
+  CONIURA token_free(SPECULUM tok8)
+
+  EVOCA VERBUM source9 AD "0.0"
+  EVOCA LexerState lex9 AD CONIURA lexer_init(source9, "test.cct")
+  EVOCA Token tok9 AD CONIURA lexer_number(SPECULUM lex9)
+  SI tok9.kind != TK_REAL
+    REDDE 58
+  FIN SI
+  SI CONIURA compare(tok9.lexeme, "0.0") != 0
+    REDDE 59
+  FIN SI
+  CONIURA token_free(SPECULUM tok9)
+
+  EVOCA VERBUM source10 AD "42foo"
+  EVOCA LexerState lex10 AD CONIURA lexer_init(source10, "test.cct")
+  EVOCA Token tok10 AD CONIURA lexer_number(SPECULUM lex10)
+  SI CONIURA compare(tok10.lexeme, "42") != 0
+    REDDE 60
+  FIN SI
+  SI CONIURA lexer_peek(SPECULUM lex10) != 102
+    REDDE 61
+  FIN SI
+  CONIURA token_free(SPECULUM tok10)
+
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

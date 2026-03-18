@@ -1,0 +1,233 @@
+-- CCT - Clavicula Turing
+-- Bootstrap Lexer - Keyword lookup table
+-- FASE 21B3/21E4: keyword mapping and documentation
+
+INCIPIT grimoire "keywords"
+
+ADVOCARE "cct/verbum.cct"
+ADVOCARE "token_type.cct"
+
+-- Resolve identificadores reservados para seu TokenKind canonical.
+-- Retorno: keyword correspondente ou TK_IDENTIFIER quando nao houver match.
+RITUALE keyword_lookup(VERBUM lexeme) REDDE TokenKind
+  SI CONIURA compare(lexeme, "AD") == 0
+    REDDE TK_AD
+  FIN SI
+  SI CONIURA compare(lexeme, "ADVOCARE") == 0
+    REDDE TK_ADVOCARE
+  FIN SI
+  SI CONIURA compare(lexeme, "ALITER") == 0
+    REDDE TK_ALITER
+  FIN SI
+  SI CONIURA compare(lexeme, "ALIOQUIN") == 0
+    REDDE TK_SENAO
+  FIN SI
+  SI CONIURA compare(lexeme, "ANUR") == 0
+    REDDE TK_ANUR
+  FIN SI
+  SI CONIURA compare(lexeme, "ARCANUM") == 0
+    REDDE TK_ARCANUM
+  FIN SI
+  SI CONIURA compare(lexeme, "CAPE") == 0
+    REDDE TK_CAPE
+  FIN SI
+  SI CONIURA compare(lexeme, "CASO") == 0
+    REDDE TK_CASO
+  FIN SI
+  SI CONIURA compare(lexeme, "CASUS") == 0
+    REDDE TK_CASO
+  FIN SI
+  SI CONIURA compare(lexeme, "CIRCULUS") == 0
+    REDDE TK_CIRCULUS
+  FIN SI
+  SI CONIURA compare(lexeme, "CODEX") == 0
+    REDDE TK_CODEX
+  FIN SI
+  SI CONIURA compare(lexeme, "COMES") == 0
+    REDDE TK_COMES
+  FIN SI
+  SI CONIURA compare(lexeme, "CONIURA") == 0
+    REDDE TK_CONIURA
+  FIN SI
+  SI CONIURA compare(lexeme, "CONSTANS") == 0
+    REDDE TK_CONSTANS
+  FIN SI
+  SI CONIURA compare(lexeme, "CUM") == 0
+    REDDE TK_QUANDO
+  FIN SI
+  SI CONIURA compare(lexeme, "DE") == 0
+    REDDE TK_DE
+  FIN SI
+  SI CONIURA compare(lexeme, "DEXTER") == 0
+    REDDE TK_DEXTER
+  FIN SI
+  SI CONIURA compare(lexeme, "DIMITTE") == 0
+    REDDE TK_DIMITTE
+  FIN SI
+  SI CONIURA compare(lexeme, "DONEC") == 0
+    REDDE TK_DONEC
+  FIN SI
+  SI CONIURA compare(lexeme, "DUM") == 0
+    REDDE TK_DUM
+  FIN SI
+  SI CONIURA compare(lexeme, "DUX") == 0
+    REDDE TK_DUX
+  FIN SI
+  SI CONIURA compare(lexeme, "ELIGE") == 0
+    REDDE TK_QUANDO
+  FIN SI
+  SI CONIURA compare(lexeme, "ET") == 0
+    REDDE TK_ET
+  FIN SI
+  SI CONIURA compare(lexeme, "ET_BIT") == 0
+    REDDE TK_ET_BIT
+  FIN SI
+  SI CONIURA compare(lexeme, "EVOCA") == 0
+    REDDE TK_EVOCA
+  FIN SI
+  SI CONIURA compare(lexeme, "EXPLICIT") == 0
+    REDDE TK_EXPLICIT
+  FIN SI
+  SI CONIURA compare(lexeme, "FALSUM") == 0
+    REDDE TK_FALSUM
+  FIN SI
+  SI CONIURA compare(lexeme, "FIN") == 0
+    REDDE TK_FIN
+  FIN SI
+  SI CONIURA compare(lexeme, "FLAMMA") == 0
+    REDDE TK_FLAMMA
+  FIN SI
+  SI CONIURA compare(lexeme, "FLUXUS") == 0
+    REDDE TK_FLUXUS
+  FIN SI
+  SI CONIURA compare(lexeme, "FORMA") == 0
+    REDDE TK_MOLDE
+  FIN SI
+  SI CONIURA compare(lexeme, "FRACTUM") == 0
+    REDDE TK_FRACTUM
+  FIN SI
+  SI CONIURA compare(lexeme, "FRANGE") == 0
+    REDDE TK_FRANGE
+  FIN SI
+  SI CONIURA compare(lexeme, "GENUS") == 0
+    REDDE TK_GENUS
+  FIN SI
+  SI CONIURA compare(lexeme, "GRADUS") == 0
+    REDDE TK_GRADUS
+  FIN SI
+  SI CONIURA compare(lexeme, "IACE") == 0
+    REDDE TK_IACE
+  FIN SI
+  SI CONIURA compare(lexeme, "IN") == 0
+    REDDE TK_IN
+  FIN SI
+  SI CONIURA compare(lexeme, "INCIPIT") == 0
+    REDDE TK_INCIPIT
+  FIN SI
+  SI CONIURA compare(lexeme, "ITERUM") == 0
+    REDDE TK_ITERUM
+  FIN SI
+  SI CONIURA compare(lexeme, "MENSURA") == 0
+    REDDE TK_MENSURA
+  FIN SI
+  SI CONIURA compare(lexeme, "MILES") == 0
+    REDDE TK_MILES
+  FIN SI
+  SI CONIURA compare(lexeme, "MOLDE") == 0
+    REDDE TK_MOLDE
+  FIN SI
+  SI CONIURA compare(lexeme, "NIHIL") == 0
+    REDDE TK_NIHIL
+  FIN SI
+  SI CONIURA compare(lexeme, "NON") == 0
+    REDDE TK_NON
+  FIN SI
+  SI CONIURA compare(lexeme, "NON_BIT") == 0
+    REDDE TK_NON_BIT
+  FIN SI
+  SI CONIURA compare(lexeme, "OBSECRO") == 0
+    REDDE TK_OBSECRO
+  FIN SI
+  SI CONIURA compare(lexeme, "ORDO") == 0
+    REDDE TK_ORDO
+  FIN SI
+  SI CONIURA compare(lexeme, "PACTUM") == 0
+    REDDE TK_PACTUM
+  FIN SI
+  SI CONIURA compare(lexeme, "PRO") == 0
+    REDDE TK_PRO
+  FIN SI
+  SI CONIURA compare(lexeme, "QUANDO") == 0
+    REDDE TK_QUANDO
+  FIN SI
+  SI CONIURA compare(lexeme, "RECEDE") == 0
+    REDDE TK_RECEDE
+  FIN SI
+  SI CONIURA compare(lexeme, "REDDE") == 0
+    REDDE TK_REDDE
+  FIN SI
+  SI CONIURA compare(lexeme, "REPETE") == 0
+    REDDE TK_REPETE
+  FIN SI
+  SI CONIURA compare(lexeme, "REX") == 0
+    REDDE TK_REX
+  FIN SI
+  SI CONIURA compare(lexeme, "RITUALE") == 0
+    REDDE TK_RITUALE
+  FIN SI
+  SI CONIURA compare(lexeme, "SEMPER") == 0
+    REDDE TK_SEMPER
+  FIN SI
+  SI CONIURA compare(lexeme, "SERIES") == 0
+    REDDE TK_SERIES
+  FIN SI
+  SI CONIURA compare(lexeme, "SENAO") == 0
+    REDDE TK_SENAO
+  FIN SI
+  SI CONIURA compare(lexeme, "SI") == 0
+    REDDE TK_SI
+  FIN SI
+  SI CONIURA compare(lexeme, "SIGILLUM") == 0
+    REDDE TK_SIGILLUM
+  FIN SI
+  SI CONIURA compare(lexeme, "SINISTER") == 0
+    REDDE TK_SINISTER
+  FIN SI
+  SI CONIURA compare(lexeme, "SPECULUM") == 0
+    REDDE TK_SPECULUM
+  FIN SI
+  SI CONIURA compare(lexeme, "TEMPTA") == 0
+    REDDE TK_TEMPTA
+  FIN SI
+  SI CONIURA compare(lexeme, "TRANSITUS") == 0
+    REDDE TK_TRANSITUS
+  FIN SI
+  SI CONIURA compare(lexeme, "UMBRA") == 0
+    REDDE TK_UMBRA
+  FIN SI
+  SI CONIURA compare(lexeme, "VEL") == 0
+    REDDE TK_VEL
+  FIN SI
+  SI CONIURA compare(lexeme, "VEL_BIT") == 0
+    REDDE TK_VEL_BIT
+  FIN SI
+  SI CONIURA compare(lexeme, "VERBUM") == 0
+    REDDE TK_VERBUM
+  FIN SI
+  SI CONIURA compare(lexeme, "VERUM") == 0
+    REDDE TK_VERUM
+  FIN SI
+  SI CONIURA compare(lexeme, "VINCIRE") == 0
+    REDDE TK_VINCIRE
+  FIN SI
+  SI CONIURA compare(lexeme, "VOLATILE") == 0
+    REDDE TK_VOLATILE
+  FIN SI
+  SI CONIURA compare(lexeme, "XOR") == 0
+    REDDE TK_XOR
+  FIN SI
+
+  REDDE TK_IDENTIFIER
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

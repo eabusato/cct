@@ -108,6 +108,22 @@ Run full test suite:
 make test
 ```
 
+## Bootstrap
+
+The compiler is being rewritten in CCT as part of the bootstrap track.
+
+FASE 21 implements the bootstrap lexer:
+- `src/bootstrap/lexer/` contains the lexer implemented in CCT
+- `src/bootstrap/main_lexer.cct` provides the standalone bootstrap CLI
+- `tests/integration/lexer_*.cct` contains the bootstrap lexer integration fixtures
+
+Build and run the standalone lexer:
+
+```bash
+make cct_lexer_bootstrap
+./cct_lexer_bootstrap tests/integration/codegen_minimal.cct
+```
+
 ## CLI
 
 Basic usage:

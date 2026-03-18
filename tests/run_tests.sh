@@ -66,6 +66,118 @@ cleanup_codegen_artifacts() {
     rm -f "$exe".__mod_*.svg "$exe".__mod_*.sigil
 }
 
+normalize_c_tokens_to_ids_21d3() {
+    local tokens_file="$1"
+    local out_file="$2"
+    awk '
+        FNR == NR {
+            if ($1 ~ /^TK_[A-Z0-9_]+,?$/) {
+                name = $1
+                gsub(/,/, "", name)
+                sub(/^TK_/, "", name)
+                map[name] = sprintf("%d", idx)
+                idx++
+            }
+            next
+        }
+        FNR > 3 && NF >= 2 {
+            type = $2
+            lex = ""
+            for (i = 3; i <= NF; i++) {
+                if (i > 3) {
+                    lex = lex " "
+                }
+                lex = lex $i
+            }
+            sub(/^"/, "", lex)
+            sub(/"$/, "", lex)
+            print ((type in map) ? map[type] : "-1") "|" lex
+        }
+    ' src/bootstrap/lexer/token_type.cct "$tokens_file" >"$out_file"
+}
+
+run_realworld_group_21d3() {
+    local label="$1"
+    shift
+    local bin_21d3="tests/integration/lexer_dump_file_21d3"
+    local idx=0
+    local file=""
+    local c_tokens=""
+    local expected=""
+    local actual=""
+    local diff_out=""
+
+    for file in "$@"; do
+        idx=$((idx + 1))
+        c_tokens="$CCT_TMP_DIR/${label}_${idx}_c_tokens.out"
+        expected="$CCT_TMP_DIR/${label}_${idx}_expected.out"
+        actual="$CCT_TMP_DIR/${label}_${idx}_actual.out"
+        diff_out="$CCT_TMP_DIR/${label}_${idx}_diff.out"
+
+        if [ ! -f "$file" ]; then
+            return 1
+        fi
+
+        if ! "$CCT_BIN" --tokens "$file" >"$c_tokens" 2>"$CCT_TMP_DIR/${label}_${idx}_c_tokens.err"; then
+            return 1
+        fi
+
+        normalize_c_tokens_to_ids_21d3 "$c_tokens" "$expected"
+
+        if ! "$bin_21d3" "$file" >"$actual" 2>"$CCT_TMP_DIR/${label}_${idx}_bootstrap.err"; then
+            return 1
+        fi
+
+        if ! diff -u "$expected" "$actual" >"$diff_out" 2>&1; then
+            return 1
+        fi
+    done
+
+    return 0
+}
+
+normalize_tokens_table_21e1() {
+    local in_file="$1"
+    local out_file="$2"
+    awk '
+        FNR > 3 && NF >= 3 {
+            loc = $1
+            type = $2
+            lex = ""
+            for (i = 3; i <= NF; i++) {
+                if (i > 3) {
+                    lex = lex " "
+                }
+                lex = lex $i
+            }
+            sub(/^"/, "", lex)
+            sub(/"$/, "", lex)
+            print loc "|" type "|" lex
+        }
+    ' "$in_file" >"$out_file"
+}
+
+compare_bootstrap_file_21e1() {
+    local label="$1"
+    local file="$2"
+    local c_raw="$CCT_TMP_DIR/${label}_c.raw"
+    local b_raw="$CCT_TMP_DIR/${label}_b.raw"
+    local c_norm="$CCT_TMP_DIR/${label}_c.norm"
+    local b_norm="$CCT_TMP_DIR/${label}_b.norm"
+    local diff_out="$CCT_TMP_DIR/${label}.diff"
+
+    ./cct_lexer_bootstrap "$file" >"$b_raw" 2>"$CCT_TMP_DIR/${label}_b.err"
+    local b_status=$?
+
+    "$CCT_BIN" --tokens "$file" >"$c_raw" 2>"$CCT_TMP_DIR/${label}_c.err"
+    local c_status=$?
+
+    normalize_tokens_table_21e1 "$c_raw" "$c_norm"
+    normalize_tokens_table_21e1 "$b_raw" "$b_norm"
+
+    diff -u "$c_norm" "$b_norm" >"$diff_out" 2>&1
+}
+
 resolve_doc_path() {
     local rel="$1"
     if [ -f "$rel" ]; then
@@ -155,6 +267,1274 @@ if echo "$OUTPUT" | grep -qi "Could not open file"; then
     test_pass ".cct file triggers compilation pipeline"
 else
     test_fail ".cct file did not reach compilation pipeline"
+fi
+
+# Test 1275: lexer_state_init_21c1
+echo "Test 1275: lexer_state_init_21c1"
+SRC_1275="tests/integration/lexer_state_init_21c1.cct"
+BIN_1275="${SRC_1275%.cct}"
+cleanup_codegen_artifacts "$SRC_1275"
+if "$CCT_BIN" "$SRC_1275" >"$CCT_TMP_DIR/cct_phase21c1_1275_compile.out" 2>&1; then
+    "$BIN_1275" >"$CCT_TMP_DIR/cct_phase21c1_1275_run.out" 2>&1
+    RC_1275=$?
+else
+    RC_1275=255
+fi
+if [ "$RC_1275" -eq 0 ]; then
+    test_pass "lexer_state_init_21c1 inicializa estado do lexer corretamente"
+else
+    test_fail "lexer_state_init_21c1 regrediu inicializacao do LexerState ($RC_1275)"
+fi
+
+# Test 1276: lexer_navigation_21c2
+echo "Test 1276: lexer_navigation_21c2"
+SRC_1276="tests/integration/lexer_navigation_21c2.cct"
+BIN_1276="${SRC_1276%.cct}"
+cleanup_codegen_artifacts "$SRC_1276"
+if "$CCT_BIN" "$SRC_1276" >"$CCT_TMP_DIR/cct_phase21c2_1276_compile.out" 2>&1; then
+    "$BIN_1276" >"$CCT_TMP_DIR/cct_phase21c2_1276_run.out" 2>&1
+    RC_1276=$?
+else
+    RC_1276=255
+fi
+if [ "$RC_1276" -eq 0 ]; then
+    test_pass "lexer_navigation_21c2 valida peek advance match e EOF"
+else
+    test_fail "lexer_navigation_21c2 regrediu navegacao de caracteres ($RC_1276)"
+fi
+
+# Test 1277: lexer_whitespace_21c3
+echo "Test 1277: lexer_whitespace_21c3"
+SRC_1277="tests/integration/lexer_whitespace_21c3.cct"
+BIN_1277="${SRC_1277%.cct}"
+cleanup_codegen_artifacts "$SRC_1277"
+if "$CCT_BIN" "$SRC_1277" >"$CCT_TMP_DIR/cct_phase21c3_1277_compile.out" 2>&1; then
+    "$BIN_1277" >"$CCT_TMP_DIR/cct_phase21c3_1277_run.out" 2>&1
+    RC_1277=$?
+else
+    RC_1277=255
+fi
+if [ "$RC_1277" -eq 0 ]; then
+    test_pass "lexer_whitespace_21c3 valida spaces newlines e comentarios"
+else
+    test_fail "lexer_whitespace_21c3 regrediu whitespace/comment handling ($RC_1277)"
+fi
+
+# Test 1278: lexer_token_creation_21c4
+echo "Test 1278: lexer_token_creation_21c4"
+SRC_1278="tests/integration/lexer_token_creation_21c4.cct"
+BIN_1278="${SRC_1278%.cct}"
+cleanup_codegen_artifacts "$SRC_1278"
+if "$CCT_BIN" "$SRC_1278" >"$CCT_TMP_DIR/cct_phase21c4_1278_compile.out" 2>&1; then
+    "$BIN_1278" >"$CCT_TMP_DIR/cct_phase21c4_1278_stdout.out" 2>"$CCT_TMP_DIR/cct_phase21c4_1278_stderr.out"
+    RC_1278=$?
+    STDOUT_1278=$(cat "$CCT_TMP_DIR/cct_phase21c4_1278_stdout.out")
+    STDERR_1278=$(cat "$CCT_TMP_DIR/cct_phase21c4_1278_stderr.out")
+else
+    RC_1278=255
+fi
+if [ "$RC_1278" -eq 0 ] && [ -z "$STDOUT_1278" ] && [ "$STDERR_1278" = "test.cct:10:5: erro: Unexpected character" ]; then
+    test_pass "lexer_token_creation_21c4 valida lexeme token column e diagnostic"
+else
+    test_fail "lexer_token_creation_21c4 regrediu criacao de token ou erro diagnostico"
+fi
+
+# Test 1279: lexer_identifier_21c5
+echo "Test 1279: lexer_identifier_21c5"
+SRC_1279="tests/integration/lexer_identifier_21c5.cct"
+BIN_1279="${SRC_1279%.cct}"
+cleanup_codegen_artifacts "$SRC_1279"
+if "$CCT_BIN" "$SRC_1279" >"$CCT_TMP_DIR/cct_phase21c5_1279_compile.out" 2>&1; then
+    "$BIN_1279" >"$CCT_TMP_DIR/cct_phase21c5_1279_run.out" 2>&1
+    RC_1279=$?
+else
+    RC_1279=255
+fi
+if [ "$RC_1279" -eq 0 ]; then
+    test_pass "lexer_identifier_21c5 reconhece identifiers e keywords"
+else
+    test_fail "lexer_identifier_21c5 regrediu reconhecimento de identifiers/keywords ($RC_1279)"
+fi
+
+# Test 1280: lexer_number_21c6
+echo "Test 1280: lexer_number_21c6"
+SRC_1280="tests/integration/lexer_number_21c6.cct"
+BIN_1280="${SRC_1280%.cct}"
+cleanup_codegen_artifacts "$SRC_1280"
+if "$CCT_BIN" "$SRC_1280" >"$CCT_TMP_DIR/cct_phase21c6_1280_compile.out" 2>&1; then
+    "$BIN_1280" >"$CCT_TMP_DIR/cct_phase21c6_1280_run.out" 2>&1
+    RC_1280=$?
+else
+    RC_1280=255
+fi
+if [ "$RC_1280" -eq 0 ]; then
+    test_pass "lexer_number_21c6 reconhece inteiros e reais"
+else
+    test_fail "lexer_number_21c6 regrediu reconhecimento numerico ($RC_1280)"
+fi
+
+# Test 1281: lexer_string_21c7
+echo "Test 1281: lexer_string_21c7"
+SRC_1281="tests/integration/lexer_string_21c7.cct"
+BIN_1281="${SRC_1281%.cct}"
+cleanup_codegen_artifacts "$SRC_1281"
+if "$CCT_BIN" "$SRC_1281" >"$CCT_TMP_DIR/cct_phase21c7_1281_compile.out" 2>&1; then
+    "$BIN_1281" >"$CCT_TMP_DIR/cct_phase21c7_1281_run.out" 2>&1
+    RC_1281=$?
+else
+    RC_1281=255
+fi
+if [ "$RC_1281" -eq 0 ]; then
+    test_pass "lexer_string_21c7 reconhece strings e erros canonicos"
+else
+    test_fail "lexer_string_21c7 regrediu reconhecimento de strings ($RC_1281)"
+fi
+
+# Test 1282: lexer_tokenize_simple_21c8
+echo "Test 1282: lexer_tokenize_simple_21c8"
+SRC_1282="tests/integration/lexer_tokenize_simple_21c8.cct"
+BIN_1282="${SRC_1282%.cct}"
+cleanup_codegen_artifacts "$SRC_1282"
+if "$CCT_BIN" "$SRC_1282" >"$CCT_TMP_DIR/cct_phase21c8_1282_compile.out" 2>&1; then
+    "$BIN_1282" >"$CCT_TMP_DIR/cct_phase21c8_1282_actual.out" 2>"$CCT_TMP_DIR/cct_phase21c8_1282_stderr.out"
+    RC_1282=$?
+else
+    RC_1282=255
+fi
+if [ "$RC_1282" -eq 0 ]; then
+    "$CCT_BIN" --tokens tests/integration/codegen_minimal.cct >"$CCT_TMP_DIR/cct_phase21c8_1282_tokens.out" 2>&1
+    awk 'NR > 3 && NF >= 2 { type=$2; lex=$3; sub(/^"/, "", lex); sub(/"$/, "", lex); print type "|" lex }' \
+        "$CCT_TMP_DIR/cct_phase21c8_1282_tokens.out" >"$CCT_TMP_DIR/cct_phase21c8_1282_expected.out"
+    if diff -u "$CCT_TMP_DIR/cct_phase21c8_1282_expected.out" "$CCT_TMP_DIR/cct_phase21c8_1282_actual.out" >"$CCT_TMP_DIR/cct_phase21c8_1282_diff.out" 2>&1; then
+        test_pass "lexer_tokenize_simple_21c8 integra bootstrap lexer com diff vazio vs lexer C"
+    else
+        test_fail "lexer_tokenize_simple_21c8 divergiu do lexer C"
+    fi
+else
+    test_fail "lexer_tokenize_simple_21c8 regrediu tokenizacao principal ($RC_1282)"
+fi
+
+# Test 1283: lexer_core_gate_21c9
+echo "Test 1283: lexer_core_gate_21c9"
+if [ -f src/bootstrap/lexer/lexer_state.cct ] &&
+   [ -f src/bootstrap/lexer/lexer_helpers.cct ] &&
+   [ -f src/bootstrap/lexer/lexer.cct ] &&
+   grep -q "SIGILLUM LexerState" src/bootstrap/lexer/lexer_state.cct &&
+   grep -q "RITUALE lexer_init" src/bootstrap/lexer/lexer_state.cct &&
+   grep -q "RITUALE lexer_is_at_end" src/bootstrap/lexer/lexer_helpers.cct &&
+   grep -q "RITUALE lexer_peek" src/bootstrap/lexer/lexer_helpers.cct &&
+   grep -q "RITUALE lexer_peek_next" src/bootstrap/lexer/lexer_helpers.cct &&
+   grep -q "RITUALE lexer_advance" src/bootstrap/lexer/lexer_helpers.cct &&
+   grep -q "RITUALE lexer_match" src/bootstrap/lexer/lexer_helpers.cct &&
+   grep -q "RITUALE lexer_skip_whitespace" src/bootstrap/lexer/lexer_helpers.cct &&
+   grep -q "RITUALE lexer_skip_comment" src/bootstrap/lexer/lexer_helpers.cct &&
+   grep -q "RITUALE lexer_make_lexeme" src/bootstrap/lexer/lexer_helpers.cct &&
+   grep -q "RITUALE lexer_make_token" src/bootstrap/lexer/lexer_helpers.cct &&
+   grep -q "RITUALE lexer_error_token" src/bootstrap/lexer/lexer_helpers.cct &&
+   grep -q "RITUALE lexer_identifier" src/bootstrap/lexer/lexer_helpers.cct &&
+   grep -q "RITUALE lexer_number" src/bootstrap/lexer/lexer_helpers.cct &&
+   grep -q "RITUALE lexer_string" src/bootstrap/lexer/lexer_helpers.cct &&
+   grep -q "RITUALE lexer_next_token" src/bootstrap/lexer/lexer.cct; then
+    test_pass "lexer_core_gate_21c9 valida completude estrutural do Lexer Core"
+else
+    test_fail "lexer_core_gate_21c9 encontrou componente ausente ou incompleto"
+fi
+
+# Test 1284: lexer_edge_strings_21d1
+echo "Test 1284: lexer_edge_strings_21d1"
+SRC_1284="tests/integration/lexer_edge_strings_21d1.cct"
+BIN_1284="${SRC_1284%.cct}"
+cleanup_codegen_artifacts "$SRC_1284"
+if "$CCT_BIN" "$SRC_1284" >"$CCT_TMP_DIR/cct_phase21d1_1284_compile.out" 2>&1; then
+    "$BIN_1284" >"$CCT_TMP_DIR/cct_phase21d1_1284_actual.out" 2>"$CCT_TMP_DIR/cct_phase21d1_1284_stderr.out"
+    RC_1284=$?
+else
+    RC_1284=255
+fi
+if [ "$RC_1284" -eq 0 ]; then
+    printf '"hello\\nworld" "tab\\tquote\\"slash\\\\"' >"$CCT_TMP_DIR/lexer_edge_strings_21d1.input.cct"
+    "$CCT_BIN" --tokens "$CCT_TMP_DIR/lexer_edge_strings_21d1.input.cct" >"$CCT_TMP_DIR/cct_phase21d1_1284_tokens.out" 2>&1
+    awk 'NR > 3 && NF >= 2 { type=$2; lex=$3; sub(/^"/, "", lex); sub(/"$/, "", lex); print type "|" lex }' \
+        "$CCT_TMP_DIR/cct_phase21d1_1284_tokens.out" >"$CCT_TMP_DIR/cct_phase21d1_1284_expected.out"
+    if diff -u "$CCT_TMP_DIR/cct_phase21d1_1284_expected.out" "$CCT_TMP_DIR/cct_phase21d1_1284_actual.out" >"$CCT_TMP_DIR/cct_phase21d1_1284_diff.out" 2>&1; then
+        test_pass "lexer_edge_strings_21d1 valida escapes com diff vazio vs lexer C"
+    else
+        test_fail "lexer_edge_strings_21d1 divergiu do lexer C"
+    fi
+else
+    test_fail "lexer_edge_strings_21d1 falhou ($RC_1284)"
+fi
+
+# Test 1285: lexer_edge_numbers_21d1
+echo "Test 1285: lexer_edge_numbers_21d1"
+SRC_1285="tests/integration/lexer_edge_numbers_21d1.cct"
+BIN_1285="${SRC_1285%.cct}"
+cleanup_codegen_artifacts "$SRC_1285"
+if "$CCT_BIN" "$SRC_1285" >"$CCT_TMP_DIR/cct_phase21d1_1285_compile.out" 2>&1; then
+    "$BIN_1285" >"$CCT_TMP_DIR/cct_phase21d1_1285_actual.out" 2>"$CCT_TMP_DIR/cct_phase21d1_1285_stderr.out"
+    RC_1285=$?
+else
+    RC_1285=255
+fi
+if [ "$RC_1285" -eq 0 ]; then
+    printf '3.14 0.5 42 5. .5' >"$CCT_TMP_DIR/lexer_edge_numbers_21d1.input.cct"
+    "$CCT_BIN" --tokens "$CCT_TMP_DIR/lexer_edge_numbers_21d1.input.cct" >"$CCT_TMP_DIR/cct_phase21d1_1285_tokens.out" 2>&1
+    awk 'NR > 3 && NF >= 2 { type=$2; lex=$3; sub(/^"/, "", lex); sub(/"$/, "", lex); print type "|" lex }' \
+        "$CCT_TMP_DIR/cct_phase21d1_1285_tokens.out" >"$CCT_TMP_DIR/cct_phase21d1_1285_expected.out"
+    if diff -u "$CCT_TMP_DIR/cct_phase21d1_1285_expected.out" "$CCT_TMP_DIR/cct_phase21d1_1285_actual.out" >"$CCT_TMP_DIR/cct_phase21d1_1285_diff.out" 2>&1; then
+        test_pass "lexer_edge_numbers_21d1 valida floats e pontos com diff vazio vs lexer C"
+    else
+        test_fail "lexer_edge_numbers_21d1 divergiu do lexer C"
+    fi
+else
+    test_fail "lexer_edge_numbers_21d1 falhou ($RC_1285)"
+fi
+
+# Test 1286: lexer_edge_comments_21d1
+echo "Test 1286: lexer_edge_comments_21d1"
+SRC_1286="tests/integration/lexer_edge_comments_21d1.cct"
+BIN_1286="${SRC_1286%.cct}"
+cleanup_codegen_artifacts "$SRC_1286"
+if "$CCT_BIN" "$SRC_1286" >"$CCT_TMP_DIR/cct_phase21d1_1286_compile.out" 2>&1; then
+    "$BIN_1286" >"$CCT_TMP_DIR/cct_phase21d1_1286_actual.out" 2>"$CCT_TMP_DIR/cct_phase21d1_1286_stderr.out"
+    RC_1286=$?
+else
+    RC_1286=255
+fi
+if [ "$RC_1286" -eq 0 ]; then
+    cat >"$CCT_TMP_DIR/lexer_edge_comments_21d1.input.cct" <<'EOF'
+INCIPIT -- comentario
+EXPLICIT
+-- linha inteira
+INCIPIT
+EOF
+    "$CCT_BIN" --tokens "$CCT_TMP_DIR/lexer_edge_comments_21d1.input.cct" >"$CCT_TMP_DIR/cct_phase21d1_1286_tokens.out" 2>&1
+    awk 'NR > 3 && NF >= 2 { type=$2; lex=$3; sub(/^"/, "", lex); sub(/"$/, "", lex); print type "|" lex }' \
+        "$CCT_TMP_DIR/cct_phase21d1_1286_tokens.out" >"$CCT_TMP_DIR/cct_phase21d1_1286_expected.out"
+    if diff -u "$CCT_TMP_DIR/cct_phase21d1_1286_expected.out" "$CCT_TMP_DIR/cct_phase21d1_1286_actual.out" >"$CCT_TMP_DIR/cct_phase21d1_1286_diff.out" 2>&1; then
+        test_pass "lexer_edge_comments_21d1 valida comentarios com diff vazio vs lexer C"
+    else
+        test_fail "lexer_edge_comments_21d1 divergiu do lexer C"
+    fi
+else
+    test_fail "lexer_edge_comments_21d1 falhou ($RC_1286)"
+fi
+
+# Test 1287: lexer_edge_operators_21d1
+echo "Test 1287: lexer_edge_operators_21d1"
+SRC_1287="tests/integration/lexer_edge_operators_21d1.cct"
+BIN_1287="${SRC_1287%.cct}"
+cleanup_codegen_artifacts "$SRC_1287"
+if "$CCT_BIN" "$SRC_1287" >"$CCT_TMP_DIR/cct_phase21d1_1287_compile.out" 2>&1; then
+    "$BIN_1287" >"$CCT_TMP_DIR/cct_phase21d1_1287_actual.out" 2>"$CCT_TMP_DIR/cct_phase21d1_1287_stderr.out"
+    RC_1287=$?
+else
+    RC_1287=255
+fi
+if [ "$RC_1287" -eq 0 ]; then
+    printf '%s' '** // %% == != <= >=' >"$CCT_TMP_DIR/lexer_edge_operators_21d1.input.cct"
+    "$CCT_BIN" --tokens "$CCT_TMP_DIR/lexer_edge_operators_21d1.input.cct" >"$CCT_TMP_DIR/cct_phase21d1_1287_tokens.out" 2>&1
+    awk 'NR > 3 && NF >= 2 { type=$2; lex=$3; sub(/^"/, "", lex); sub(/"$/, "", lex); print type "|" lex }' \
+        "$CCT_TMP_DIR/cct_phase21d1_1287_tokens.out" >"$CCT_TMP_DIR/cct_phase21d1_1287_expected.out"
+    if diff -u "$CCT_TMP_DIR/cct_phase21d1_1287_expected.out" "$CCT_TMP_DIR/cct_phase21d1_1287_actual.out" >"$CCT_TMP_DIR/cct_phase21d1_1287_diff.out" 2>&1; then
+        test_pass "lexer_edge_operators_21d1 valida multi-char operators com diff vazio vs lexer C"
+    else
+        test_fail "lexer_edge_operators_21d1 divergiu do lexer C"
+    fi
+else
+    test_fail "lexer_edge_operators_21d1 falhou ($RC_1287)"
+fi
+
+# Test 1288: lexer_error_eof_string_21d2
+echo "Test 1288: lexer_error_eof_string_21d2"
+SRC_1288="tests/integration/lexer_error_eof_string_21d2.cct"
+BIN_1288="${SRC_1288%.cct}"
+cleanup_codegen_artifacts "$SRC_1288"
+if "$CCT_BIN" "$SRC_1288" >"$CCT_TMP_DIR/cct_phase21d2_1288_compile.out" 2>&1; then
+    "$BIN_1288" >"$CCT_TMP_DIR/cct_phase21d2_1288_stdout.out" 2>"$CCT_TMP_DIR/cct_phase21d2_1288_stderr.out"
+    RC_1288=$?
+else
+    RC_1288=255
+fi
+if [ "$RC_1288" -eq 0 ] && grep -q "Unterminated string" "$CCT_TMP_DIR/cct_phase21d2_1288_stderr.out"; then
+    test_pass "lexer_error_eof_string_21d2 detecta EOF em string e chega a EOF"
+else
+    test_fail "lexer_error_eof_string_21d2 regrediu recovery de string EOF ($RC_1288)"
+fi
+
+# Test 1289: lexer_error_newline_string_21d2
+echo "Test 1289: lexer_error_newline_string_21d2"
+SRC_1289="tests/integration/lexer_error_newline_string_21d2.cct"
+BIN_1289="${SRC_1289%.cct}"
+cleanup_codegen_artifacts "$SRC_1289"
+if "$CCT_BIN" "$SRC_1289" >"$CCT_TMP_DIR/cct_phase21d2_1289_compile.out" 2>&1; then
+    "$BIN_1289" >"$CCT_TMP_DIR/cct_phase21d2_1289_stdout.out" 2>"$CCT_TMP_DIR/cct_phase21d2_1289_stderr.out"
+    RC_1289=$?
+else
+    RC_1289=255
+fi
+if [ "$RC_1289" -eq 0 ] && [ "$(grep -c "Unterminated string" "$CCT_TMP_DIR/cct_phase21d2_1289_stderr.out")" -ge 2 ]; then
+    test_pass "lexer_error_newline_string_21d2 detecta newline e continua tokenizando"
+else
+    test_fail "lexer_error_newline_string_21d2 regrediu recovery de newline em string ($RC_1289)"
+fi
+
+# Test 1290: lexer_error_invalid_char_at_21d2
+echo "Test 1290: lexer_error_invalid_char_at_21d2"
+SRC_1290="tests/integration/lexer_error_invalid_char_at_21d2.cct"
+BIN_1290="${SRC_1290%.cct}"
+cleanup_codegen_artifacts "$SRC_1290"
+if "$CCT_BIN" "$SRC_1290" >"$CCT_TMP_DIR/cct_phase21d2_1290_compile.out" 2>&1; then
+    "$BIN_1290" >"$CCT_TMP_DIR/cct_phase21d2_1290_stdout.out" 2>"$CCT_TMP_DIR/cct_phase21d2_1290_stderr.out"
+    RC_1290=$?
+else
+    RC_1290=255
+fi
+if [ "$RC_1290" -eq 0 ] && grep -q "Unexpected character" "$CCT_TMP_DIR/cct_phase21d2_1290_stderr.out"; then
+    test_pass "lexer_error_invalid_char_at_21d2 detecta @ e recupera identifier seguinte"
+else
+    test_fail "lexer_error_invalid_char_at_21d2 regrediu recovery de caractere invalido ($RC_1290)"
+fi
+
+# Test 1291: lexer_error_invalid_char_hash_21d2
+echo "Test 1291: lexer_error_invalid_char_hash_21d2"
+SRC_1291="tests/integration/lexer_error_invalid_char_hash_21d2.cct"
+BIN_1291="${SRC_1291%.cct}"
+cleanup_codegen_artifacts "$SRC_1291"
+if "$CCT_BIN" "$SRC_1291" >"$CCT_TMP_DIR/cct_phase21d2_1291_compile.out" 2>&1; then
+    "$BIN_1291" >"$CCT_TMP_DIR/cct_phase21d2_1291_stdout.out" 2>"$CCT_TMP_DIR/cct_phase21d2_1291_stderr.out"
+    RC_1291=$?
+else
+    RC_1291=255
+fi
+if [ "$RC_1291" -eq 0 ] && grep -q "Unexpected character" "$CCT_TMP_DIR/cct_phase21d2_1291_stderr.out"; then
+    test_pass "lexer_error_invalid_char_hash_21d2 detecta # e recupera integer seguinte"
+else
+    test_fail "lexer_error_invalid_char_hash_21d2 regrediu recovery de hash invalido ($RC_1291)"
+fi
+
+# Test 1292: lexer_error_invalid_escape_21d2
+echo "Test 1292: lexer_error_invalid_escape_21d2"
+SRC_1292="tests/integration/lexer_error_invalid_escape_21d2.cct"
+BIN_1292="${SRC_1292%.cct}"
+cleanup_codegen_artifacts "$SRC_1292"
+if "$CCT_BIN" "$SRC_1292" >"$CCT_TMP_DIR/cct_phase21d2_1292_compile.out" 2>&1; then
+    "$BIN_1292" >"$CCT_TMP_DIR/cct_phase21d2_1292_stdout.out" 2>"$CCT_TMP_DIR/cct_phase21d2_1292_stderr.out"
+    RC_1292=$?
+else
+    RC_1292=255
+fi
+if [ "$RC_1292" -eq 0 ] && grep -q "Invalid escape sequence" "$CCT_TMP_DIR/cct_phase21d2_1292_stderr.out"; then
+    test_pass "lexer_error_invalid_escape_21d2 detecta escape invalido e continua"
+else
+    test_fail "lexer_error_invalid_escape_21d2 regrediu handling de escape invalido ($RC_1292)"
+fi
+
+# Test 1293: lexer_recovery_after_invalid_char_21d2
+echo "Test 1293: lexer_recovery_after_invalid_char_21d2"
+SRC_1293="tests/integration/lexer_recovery_after_invalid_char_21d2.cct"
+BIN_1293="${SRC_1293%.cct}"
+cleanup_codegen_artifacts "$SRC_1293"
+if "$CCT_BIN" "$SRC_1293" >"$CCT_TMP_DIR/cct_phase21d2_1293_compile.out" 2>&1; then
+    "$BIN_1293" >"$CCT_TMP_DIR/cct_phase21d2_1293_run.out" 2>&1
+    RC_1293=$?
+else
+    RC_1293=255
+fi
+if [ "$RC_1293" -eq 0 ]; then
+    test_pass "lexer_recovery_after_invalid_char_21d2 avanca para integer e identifier"
+else
+    test_fail "lexer_recovery_after_invalid_char_21d2 regrediu recovery sequencial ($RC_1293)"
+fi
+
+# Test 1294: lexer_recovery_after_invalid_bang_21d2
+echo "Test 1294: lexer_recovery_after_invalid_bang_21d2"
+SRC_1294="tests/integration/lexer_recovery_after_invalid_bang_21d2.cct"
+BIN_1294="${SRC_1294%.cct}"
+cleanup_codegen_artifacts "$SRC_1294"
+if "$CCT_BIN" "$SRC_1294" >"$CCT_TMP_DIR/cct_phase21d2_1294_compile.out" 2>&1; then
+    "$BIN_1294" >"$CCT_TMP_DIR/cct_phase21d2_1294_run.out" 2>&1
+    RC_1294=$?
+else
+    RC_1294=255
+fi
+if [ "$RC_1294" -eq 0 ]; then
+    test_pass "lexer_recovery_after_invalid_bang_21d2 recupera apos ! isolado"
+else
+    test_fail "lexer_recovery_after_invalid_bang_21d2 regrediu recovery apos ! ($RC_1294)"
+fi
+
+# Test 1295: lexer_multiple_invalid_chars_21d2
+echo "Test 1295: lexer_multiple_invalid_chars_21d2"
+SRC_1295="tests/integration/lexer_multiple_invalid_chars_21d2.cct"
+BIN_1295="${SRC_1295%.cct}"
+cleanup_codegen_artifacts "$SRC_1295"
+if "$CCT_BIN" "$SRC_1295" >"$CCT_TMP_DIR/cct_phase21d2_1295_compile.out" 2>&1; then
+    "$BIN_1295" >"$CCT_TMP_DIR/cct_phase21d2_1295_stdout.out" 2>"$CCT_TMP_DIR/cct_phase21d2_1295_stderr.out"
+    RC_1295=$?
+else
+    RC_1295=255
+fi
+if [ "$RC_1295" -eq 0 ] && [ "$(grep -c "Unexpected character" "$CCT_TMP_DIR/cct_phase21d2_1295_stderr.out")" -eq 4 ]; then
+    test_pass "lexer_multiple_invalid_chars_21d2 reporta 4 erros sem travar"
+else
+    test_fail "lexer_multiple_invalid_chars_21d2 regrediu multiplos erros ($RC_1295)"
+fi
+
+# Test 1296: lexer_error_after_valid_tokens_21d2
+echo "Test 1296: lexer_error_after_valid_tokens_21d2"
+SRC_1296="tests/integration/lexer_error_after_valid_tokens_21d2.cct"
+BIN_1296="${SRC_1296%.cct}"
+cleanup_codegen_artifacts "$SRC_1296"
+if "$CCT_BIN" "$SRC_1296" >"$CCT_TMP_DIR/cct_phase21d2_1296_compile.out" 2>&1; then
+    "$BIN_1296" >"$CCT_TMP_DIR/cct_phase21d2_1296_run.out" 2>&1
+    RC_1296=$?
+else
+    RC_1296=255
+fi
+if [ "$RC_1296" -eq 0 ]; then
+    test_pass "lexer_error_after_valid_tokens_21d2 mantem fluxo valido antes e depois do erro"
+else
+    test_fail "lexer_error_after_valid_tokens_21d2 regrediu fluxo misto ($RC_1296)"
+fi
+
+# Test 1297: lexer_reaches_eof_after_errors_21d2
+echo "Test 1297: lexer_reaches_eof_after_errors_21d2"
+SRC_1297="tests/integration/lexer_reaches_eof_after_errors_21d2.cct"
+BIN_1297="${SRC_1297%.cct}"
+cleanup_codegen_artifacts "$SRC_1297"
+if "$CCT_BIN" "$SRC_1297" >"$CCT_TMP_DIR/cct_phase21d2_1297_compile.out" 2>&1; then
+    "$BIN_1297" >"$CCT_TMP_DIR/cct_phase21d2_1297_run.out" 2>&1
+    RC_1297=$?
+else
+    RC_1297=255
+fi
+if [ "$RC_1297" -eq 0 ]; then
+    test_pass "lexer_reaches_eof_after_errors_21d2 chega a EOF apos erros consecutivos"
+else
+    test_fail "lexer_reaches_eof_after_errors_21d2 regrediu terminacao apos erro ($RC_1297)"
+fi
+
+# Test 1298: lexer_dump_file_21d3
+echo "Test 1298: lexer_dump_file_21d3"
+SRC_1298="tests/integration/lexer_dump_file_21d3.cct"
+BIN_1298="${SRC_1298%.cct}"
+cleanup_codegen_artifacts "$SRC_1298"
+if "$CCT_BIN" "$SRC_1298" >"$CCT_TMP_DIR/cct_phase21d3_1298_compile.out" 2>&1 && \
+   "$BIN_1298" tests/integration/codegen_minimal.cct >"$CCT_TMP_DIR/cct_phase21d3_1298_actual.out" 2>"$CCT_TMP_DIR/cct_phase21d3_1298_stderr.out"; then
+    "$CCT_BIN" --tokens tests/integration/codegen_minimal.cct >"$CCT_TMP_DIR/cct_phase21d3_1298_tokens.out" 2>&1
+    normalize_c_tokens_to_ids_21d3 "$CCT_TMP_DIR/cct_phase21d3_1298_tokens.out" "$CCT_TMP_DIR/cct_phase21d3_1298_expected.out"
+    if diff -u "$CCT_TMP_DIR/cct_phase21d3_1298_expected.out" "$CCT_TMP_DIR/cct_phase21d3_1298_actual.out" >"$CCT_TMP_DIR/cct_phase21d3_1298_diff.out" 2>&1; then
+        test_pass "lexer_dump_file_21d3 gera stream numerico identico ao lexer C"
+    else
+        test_fail "lexer_dump_file_21d3 divergiu no smoke inicial"
+    fi
+else
+    test_fail "lexer_dump_file_21d3 falhou ao compilar ou executar"
+fi
+
+# Test 1299: lexer_real_world_stdlib_text_21d3
+echo "Test 1299: lexer_real_world_stdlib_text_21d3"
+if run_realworld_group_21d3 "21d3_stdlib_text" \
+    lib/cct/verbum.cct \
+    lib/cct/fmt.cct \
+    lib/cct/io.cct \
+    lib/cct/char.cct \
+    lib/cct/diagnostic.cct; then
+    test_pass "lexer_real_world_stdlib_text_21d3 valida modulos textuais reais"
+else
+    test_fail "lexer_real_world_stdlib_text_21d3 encontrou divergencia"
+fi
+
+# Test 1300: lexer_real_world_stdlib_collections_21d3
+echo "Test 1300: lexer_real_world_stdlib_collections_21d3"
+if run_realworld_group_21d3 "21d3_stdlib_collections" \
+    lib/cct/fluxus.cct \
+    lib/cct/series.cct \
+    lib/cct/map.cct \
+    lib/cct/set.cct \
+    lib/cct/collection_ops.cct; then
+    test_pass "lexer_real_world_stdlib_collections_21d3 valida collections reais"
+else
+    test_fail "lexer_real_world_stdlib_collections_21d3 encontrou divergencia"
+fi
+
+# Test 1301: lexer_real_world_stdlib_runtime_21d3
+echo "Test 1301: lexer_real_world_stdlib_runtime_21d3"
+if run_realworld_group_21d3 "21d3_stdlib_runtime" \
+    lib/cct/mem.cct \
+    lib/cct/args.cct \
+    lib/cct/env.cct \
+    lib/cct/time.cct \
+    lib/cct/bytes.cct; then
+    test_pass "lexer_real_world_stdlib_runtime_21d3 valida runtime helpers reais"
+else
+    test_fail "lexer_real_world_stdlib_runtime_21d3 encontrou divergencia"
+fi
+
+# Test 1302: lexer_real_world_stdlib_system_21d3
+echo "Test 1302: lexer_real_world_stdlib_system_21d3"
+if run_realworld_group_21d3 "21d3_stdlib_system" \
+    lib/cct/fs.cct \
+    lib/cct/path.cct \
+    lib/cct/process.cct \
+    lib/cct/hash.cct \
+    lib/cct/config.cct; then
+    test_pass "lexer_real_world_stdlib_system_21d3 valida sistema real"
+else
+    test_fail "lexer_real_world_stdlib_system_21d3 encontrou divergencia"
+fi
+
+# Test 1303: lexer_real_world_stdlib_data_net_21d3
+echo "Test 1303: lexer_real_world_stdlib_data_net_21d3"
+if run_realworld_group_21d3 "21d3_stdlib_data_net" \
+    lib/cct/json.cct \
+    lib/cct/parse.cct \
+    lib/cct/cmp.cct \
+    lib/cct/net.cct \
+    lib/cct/http.cct; then
+    test_pass "lexer_real_world_stdlib_data_net_21d3 valida dados e rede reais"
+else
+    test_fail "lexer_real_world_stdlib_data_net_21d3 encontrou divergencia"
+fi
+
+# Test 1304: lexer_real_world_stdlib_misc_21d3
+echo "Test 1304: lexer_real_world_stdlib_misc_21d3"
+if run_realworld_group_21d3 "21d3_stdlib_misc" \
+    lib/cct/math.cct \
+    lib/cct/random.cct \
+    lib/cct/option.cct \
+    lib/cct/result.cct \
+    lib/cct/bit.cct; then
+    test_pass "lexer_real_world_stdlib_misc_21d3 valida modulos misc reais"
+else
+    test_fail "lexer_real_world_stdlib_misc_21d3 encontrou divergencia"
+fi
+
+# Test 1305: lexer_real_world_codegen_core_21d3
+echo "Test 1305: lexer_real_world_codegen_core_21d3"
+if run_realworld_group_21d3 "21d3_codegen_core" \
+    tests/integration/codegen_minimal.cct \
+    tests/integration/codegen_arithmetic.cct \
+    tests/integration/codegen_if.cct \
+    tests/integration/codegen_if_else.cct \
+    tests/integration/codegen_local_var.cct \
+    tests/integration/codegen_anur.cct; then
+    test_pass "lexer_real_world_codegen_core_21d3 valida codegen core real"
+else
+    test_fail "lexer_real_world_codegen_core_21d3 encontrou divergencia"
+fi
+
+# Test 1306: lexer_real_world_codegen_calls_memory_21d3
+echo "Test 1306: lexer_real_world_codegen_calls_memory_21d3"
+if run_realworld_group_21d3 "21d3_codegen_calls_memory" \
+    tests/integration/codegen_call_simple.cct \
+    tests/integration/codegen_call_return.cct \
+    tests/integration/codegen_call_multiarg.cct \
+    tests/integration/codegen_memory_alloc_free.cct \
+    tests/integration/codegen_memory_dimitte_basic.cct; then
+    test_pass "lexer_real_world_codegen_calls_memory_21d3 valida chamadas e memoria reais"
+else
+    test_fail "lexer_real_world_codegen_calls_memory_21d3 encontrou divergencia"
+fi
+
+# Test 1307: lexer_real_world_codegen_failure_21d3
+echo "Test 1307: lexer_real_world_codegen_failure_21d3"
+if run_realworld_group_21d3 "21d3_codegen_failure" \
+    tests/integration/codegen_failure_cleanup_dimitte_semper.cct \
+    tests/integration/codegen_failure_propagation_basic.cct \
+    tests/integration/codegen_failure_uncaught_after_semper.cct \
+    tests/integration/codegen_iace_uncaught.cct \
+    tests/integration/codegen_iace_rethrow_uncaught.cct; then
+    test_pass "lexer_real_world_codegen_failure_21d3 valida fluxos de falha reais"
+else
+    test_fail "lexer_real_world_codegen_failure_21d3 encontrou divergencia"
+fi
+
+# Test 1308: lexer_real_world_codegen_advanced_21d3
+echo "Test 1308: lexer_real_world_codegen_advanced_21d3"
+if run_realworld_group_21d3 "21d3_codegen_advanced" \
+    tests/integration/codegen_genus_rituale_rex_basic_10b.cct \
+    tests/integration/codegen_genus_rituale_verbum_basic_10b.cct \
+    tests/integration/codegen_genus_sigillum_basic_10b.cct \
+    tests/integration/codegen_compare_simple.cct \
+    tests/integration/codegen_donec.cct; then
+    test_pass "lexer_real_world_codegen_advanced_21d3 valida fixtures avancadas reais"
+else
+    test_fail "lexer_real_world_codegen_advanced_21d3 encontrou divergencia"
+fi
+
+# Test 1309: lexer_advanced_gate_edge_fixtures_21d4
+echo "Test 1309: lexer_advanced_gate_edge_fixtures_21d4"
+if [ -f tests/integration/lexer_edge_strings_21d1.cct ] &&
+   [ -f tests/integration/lexer_edge_numbers_21d1.cct ] &&
+   [ -f tests/integration/lexer_edge_comments_21d1.cct ] &&
+   [ -f tests/integration/lexer_edge_operators_21d1.cct ]; then
+    test_pass "lexer_advanced_gate_edge_fixtures_21d4 encontrou as 4 fixtures de edge cases"
+else
+    test_fail "lexer_advanced_gate_edge_fixtures_21d4 nao encontrou todas as fixtures 21D1"
+fi
+
+# Test 1310: lexer_advanced_gate_edge_runner_21d4
+echo "Test 1310: lexer_advanced_gate_edge_runner_21d4"
+if grep -q "lexer_edge_strings_21d1" tests/run_tests.sh &&
+   grep -q "lexer_edge_numbers_21d1" tests/run_tests.sh &&
+   grep -q "lexer_edge_comments_21d1" tests/run_tests.sh &&
+   grep -q "lexer_edge_operators_21d1" tests/run_tests.sh; then
+    test_pass "lexer_advanced_gate_edge_runner_21d4 registrou edge cases no runner"
+else
+    test_fail "lexer_advanced_gate_edge_runner_21d4 nao encontrou registro completo de 21D1"
+fi
+
+# Test 1311: lexer_advanced_gate_recovery_fixture_count_21d4
+echo "Test 1311: lexer_advanced_gate_recovery_fixture_count_21d4"
+RECOVERY_COUNT_1311=$(find tests/integration -maxdepth 1 -name 'lexer_*_21d2.cct' | wc -l | tr -d ' ')
+if [ "$RECOVERY_COUNT_1311" -ge 10 ]; then
+    test_pass "lexer_advanced_gate_recovery_fixture_count_21d4 confirmou 10+ fixtures 21D2"
+else
+    test_fail "lexer_advanced_gate_recovery_fixture_count_21d4 encontrou menos de 10 fixtures 21D2"
+fi
+
+# Test 1312: lexer_advanced_gate_recovery_runner_count_21d4
+echo "Test 1312: lexer_advanced_gate_recovery_runner_count_21d4"
+RECOVERY_RUNNER_COUNT_1312=$(grep -c "21d2" tests/run_tests.sh | tr -d ' ')
+if [ "$RECOVERY_RUNNER_COUNT_1312" -ge 10 ]; then
+    test_pass "lexer_advanced_gate_recovery_runner_count_21d4 confirmou 10+ entradas 21D2 no runner"
+else
+    test_fail "lexer_advanced_gate_recovery_runner_count_21d4 encontrou poucas entradas 21D2"
+fi
+
+# Test 1313: lexer_advanced_gate_realworld_dumper_21d4
+echo "Test 1313: lexer_advanced_gate_realworld_dumper_21d4"
+if [ -f tests/integration/lexer_dump_file_21d3.cct ] &&
+   grep -q "RITUALE main()" tests/integration/lexer_dump_file_21d3.cct &&
+   grep -q "lexer_next_token" tests/integration/lexer_dump_file_21d3.cct; then
+    test_pass "lexer_advanced_gate_realworld_dumper_21d4 confirmou dumper 21D3"
+else
+    test_fail "lexer_advanced_gate_realworld_dumper_21d4 nao encontrou dumper 21D3 valido"
+fi
+
+# Test 1314: lexer_advanced_gate_realworld_helper_21d4
+echo "Test 1314: lexer_advanced_gate_realworld_helper_21d4"
+if grep -q "normalize_c_tokens_to_ids_21d3" tests/run_tests.sh &&
+   grep -q "run_realworld_group_21d3" tests/run_tests.sh; then
+    test_pass "lexer_advanced_gate_realworld_helper_21d4 confirmou helpers de validacao 21D3"
+else
+    test_fail "lexer_advanced_gate_realworld_helper_21d4 nao encontrou helpers 21D3"
+fi
+
+# Test 1315: lexer_advanced_gate_realworld_runner_count_21d4
+echo "Test 1315: lexer_advanced_gate_realworld_runner_count_21d4"
+REALWORLD_COUNT_1315=$(grep -c "lexer_real_world_.*_21d3" tests/run_tests.sh | tr -d ' ')
+if [ "$REALWORLD_COUNT_1315" -ge 10 ]; then
+    test_pass "lexer_advanced_gate_realworld_runner_count_21d4 confirmou 10 grupos 21D3"
+else
+    test_fail "lexer_advanced_gate_realworld_runner_count_21d4 encontrou poucos grupos 21D3"
+fi
+
+# Test 1316: lexer_advanced_gate_realworld_stdlib_refs_21d4
+echo "Test 1316: lexer_advanced_gate_realworld_stdlib_refs_21d4"
+STDLIB_REF_COUNT_1316=$(grep -o "lib/cct/[A-Za-z0-9_]*\\.cct" tests/run_tests.sh | wc -l | tr -d ' ')
+if [ "$STDLIB_REF_COUNT_1316" -ge 30 ]; then
+    test_pass "lexer_advanced_gate_realworld_stdlib_refs_21d4 confirmou 30+ arquivos reais da stdlib"
+else
+    test_fail "lexer_advanced_gate_realworld_stdlib_refs_21d4 encontrou menos de 30 arquivos da stdlib"
+fi
+
+# Test 1317: lexer_advanced_gate_realworld_integration_refs_21d4
+echo "Test 1317: lexer_advanced_gate_realworld_integration_refs_21d4"
+INTEGRATION_REF_COUNT_1317=$(grep -o "tests/integration/[A-Za-z0-9_]*\\.cct" tests/run_tests.sh | wc -l | tr -d ' ')
+if [ "$INTEGRATION_REF_COUNT_1317" -ge 21 ]; then
+    test_pass "lexer_advanced_gate_realworld_integration_refs_21d4 confirmou 21+ fixtures reais"
+else
+    test_fail "lexer_advanced_gate_realworld_integration_refs_21d4 encontrou poucas fixtures reais"
+fi
+
+# Test 1318: lexer_advanced_gate_core_artifacts_21d4
+echo "Test 1318: lexer_advanced_gate_core_artifacts_21d4"
+if [ -f src/bootstrap/lexer/token_type.cct ] &&
+   [ -f src/bootstrap/lexer/token.cct ] &&
+   [ -f src/bootstrap/lexer/keywords.cct ] &&
+   [ -f src/bootstrap/lexer/lexer_state.cct ] &&
+   [ -f src/bootstrap/lexer/lexer_helpers.cct ] &&
+   [ -f src/bootstrap/lexer/lexer.cct ]; then
+    test_pass "lexer_advanced_gate_core_artifacts_21d4 confirmou artefatos completos do bootstrap lexer"
+else
+    test_fail "lexer_advanced_gate_core_artifacts_21d4 encontrou artefatos ausentes"
+fi
+
+# Test 1319: lexer_full_suite_main_source_21e1
+echo "Test 1319: lexer_full_suite_main_source_21e1"
+if [ -f src/bootstrap/main_lexer.cct ] &&
+   grep -q 'RITUALE main()' src/bootstrap/main_lexer.cct &&
+   grep -q 'token_kind_to_string' src/bootstrap/main_lexer.cct; then
+    test_pass "lexer_full_suite_main_source_21e1 encontrou o CLI standalone"
+else
+    test_fail "lexer_full_suite_main_source_21e1 nao encontrou o CLI standalone"
+fi
+
+# Test 1320: lexer_full_suite_make_targets_21e1
+echo "Test 1320: lexer_full_suite_make_targets_21e1"
+if grep -q '^cct_lexer_bootstrap:' Makefile &&
+   grep -q '^test_lexer_bootstrap:' Makefile &&
+   grep -q '^benchmark_lexer:' Makefile &&
+   grep -q '^valgrind_lexer:' Makefile; then
+    test_pass "lexer_full_suite_make_targets_21e1 encontrou os targets do Makefile"
+else
+    test_fail "lexer_full_suite_make_targets_21e1 nao encontrou os targets esperados"
+fi
+
+# Test 1321: lexer_full_suite_build_21e1
+echo "Test 1321: lexer_full_suite_build_21e1"
+if make cct_lexer_bootstrap >"$CCT_TMP_DIR/lexer_full_suite_build_21e1.out" 2>&1 &&
+   [ -x ./cct_lexer_bootstrap ]; then
+    test_pass "lexer_full_suite_build_21e1 compilou o executavel bootstrap"
+else
+    test_fail "lexer_full_suite_build_21e1 nao compilou o executavel bootstrap"
+fi
+
+# Test 1322: lexer_full_suite_usage_21e1
+echo "Test 1322: lexer_full_suite_usage_21e1"
+./cct_lexer_bootstrap >"$CCT_TMP_DIR/lexer_full_suite_usage_21e1.out" 2>&1
+RC_1322=$?
+if [ "$RC_1322" -eq 64 ] &&
+   grep -q 'Uso: cct_lexer_bootstrap <arquivo.cct>' "$CCT_TMP_DIR/lexer_full_suite_usage_21e1.out"; then
+    test_pass "lexer_full_suite_usage_21e1 validou contrato de argumentos"
+else
+    test_fail "lexer_full_suite_usage_21e1 nao validou contrato de argumentos"
+fi
+
+# Test 1323: lexer_full_suite_smoke_codegen_minimal_21e1
+echo "Test 1323: lexer_full_suite_smoke_codegen_minimal_21e1"
+if compare_bootstrap_file_21e1 "21e1_codegen_minimal" tests/integration/codegen_minimal.cct; then
+    test_pass "lexer_full_suite_smoke_codegen_minimal_21e1 comparou bootstrap vs lexer C"
+else
+    test_fail "lexer_full_suite_smoke_codegen_minimal_21e1 encontrou divergencia"
+fi
+
+# Test 1324: lexer_full_suite_smoke_stdlib_fluxus_21e1
+echo "Test 1324: lexer_full_suite_smoke_stdlib_fluxus_21e1"
+if compare_bootstrap_file_21e1 "21e1_stdlib_fluxus" lib/cct/fluxus.cct; then
+    test_pass "lexer_full_suite_smoke_stdlib_fluxus_21e1 comparou bootstrap vs lexer C"
+else
+    test_fail "lexer_full_suite_smoke_stdlib_fluxus_21e1 encontrou divergencia"
+fi
+
+# Test 1325: lexer_full_suite_smoke_errors_21e1
+echo "Test 1325: lexer_full_suite_smoke_errors_21e1"
+if compare_bootstrap_file_21e1 "21e1_errors" tests/integration/lexer_error_invalid_escape_21d2.cct; then
+    test_pass "lexer_full_suite_smoke_errors_21e1 comparou bootstrap vs lexer C com erro lexico"
+else
+    test_fail "lexer_full_suite_smoke_errors_21e1 encontrou divergencia"
+fi
+
+# Test 1326: lexer_full_suite_validate_script_21e1
+echo "Test 1326: lexer_full_suite_validate_script_21e1"
+if [ -x tests/validate_lexer_full_suite.sh ] &&
+   bash tests/validate_lexer_full_suite.sh \
+       tests/integration/codegen_minimal.cct \
+       lib/cct/fluxus.cct \
+       tests/integration/lexer_error_invalid_escape_21d2.cct \
+       >"$CCT_TMP_DIR/lexer_full_suite_validate_21e1.out" 2>&1; then
+    test_pass "lexer_full_suite_validate_script_21e1 executou o validador"
+else
+    test_fail "lexer_full_suite_validate_script_21e1 falhou"
+fi
+
+# Test 1327: lexer_full_suite_benchmark_script_21e1
+echo "Test 1327: lexer_full_suite_benchmark_script_21e1"
+if [ -x tests/benchmark_lexer.sh ] &&
+   bash tests/benchmark_lexer.sh >"$CCT_TMP_DIR/lexer_benchmark_21e1.out" 2>&1 &&
+   grep -q 'Ratio:' "$CCT_TMP_DIR/lexer_benchmark_21e1.out"; then
+    test_pass "lexer_full_suite_benchmark_script_21e1 executou o baseline"
+else
+    test_fail "lexer_full_suite_benchmark_script_21e1 falhou"
+fi
+
+# Test 1328: lexer_full_suite_valgrind_script_21e1
+echo "Test 1328: lexer_full_suite_valgrind_script_21e1"
+if [ -x tests/valgrind_lexer.sh ] &&
+   bash tests/valgrind_lexer.sh >"$CCT_TMP_DIR/lexer_valgrind_21e1.out" 2>&1; then
+    test_pass "lexer_full_suite_valgrind_script_21e1 executou o check de memoria"
+else
+    test_fail "lexer_full_suite_valgrind_script_21e1 falhou"
+fi
+
+# Test 1329: benchmark_script_exists_21e2
+echo "Test 1329: benchmark_script_exists_21e2"
+if [ -x tests/benchmark_lexer_21e2.sh ]; then
+    test_pass "benchmark_script_exists_21e2 encontrou o script dedicado"
+else
+    test_fail "benchmark_script_exists_21e2 nao encontrou o script dedicado"
+fi
+
+# Test 1330: benchmark_wrapper_exists_21e2
+echo "Test 1330: benchmark_wrapper_exists_21e2"
+if [ -x tests/benchmark_lexer.sh ] &&
+   grep -q 'benchmark_lexer_21e2.sh' tests/benchmark_lexer.sh; then
+    test_pass "benchmark_wrapper_exists_21e2 confirmou o wrapper legado"
+else
+    test_fail "benchmark_wrapper_exists_21e2 nao confirmou o wrapper legado"
+fi
+
+# Test 1331: benchmark_make_target_21e2
+echo "Test 1331: benchmark_make_target_21e2"
+if grep -q '^benchmark_lexer: cct_lexer_bootstrap' Makefile &&
+   grep -q 'benchmark_lexer_21e2.sh' Makefile; then
+    test_pass "benchmark_make_target_21e2 confirmou target dedicado"
+else
+    test_fail "benchmark_make_target_21e2 nao confirmou target dedicado"
+fi
+
+# Test 1332: benchmark_defaults_21e2
+echo "Test 1332: benchmark_defaults_21e2"
+if grep -q 'lib/cct/fluxus.cct' tests/benchmark_lexer_21e2.sh &&
+   grep -q 'CCT_BENCH_ITERATIONS:-100' tests/benchmark_lexer_21e2.sh; then
+    test_pass "benchmark_defaults_21e2 confirmou arquivo e iteracoes padrao"
+else
+    test_fail "benchmark_defaults_21e2 nao confirmou defaults"
+fi
+
+# Test 1333: benchmark_smoke_script_21e2
+echo "Test 1333: benchmark_smoke_script_21e2"
+if CCT_BENCH_ITERATIONS=5 bash tests/benchmark_lexer_21e2.sh \
+    >"$CCT_TMP_DIR/benchmark_smoke_21e2.out" 2>&1; then
+    test_pass "benchmark_smoke_script_21e2 executou benchmark reduzido"
+else
+    test_fail "benchmark_smoke_script_21e2 falhou"
+fi
+
+# Test 1334: benchmark_output_ratio_21e2
+echo "Test 1334: benchmark_output_ratio_21e2"
+if grep -q '^Ratio: ' "$CCT_TMP_DIR/benchmark_smoke_21e2.out"; then
+    test_pass "benchmark_output_ratio_21e2 encontrou linha de ratio"
+else
+    test_fail "benchmark_output_ratio_21e2 nao encontrou ratio"
+fi
+
+# Test 1335: benchmark_output_pass_21e2
+echo "Test 1335: benchmark_output_pass_21e2"
+if grep -q 'PASS: Ratio aceitavel (< 10x)' "$CCT_TMP_DIR/benchmark_smoke_21e2.out"; then
+    test_pass "benchmark_output_pass_21e2 confirmou threshold"
+else
+    test_fail "benchmark_output_pass_21e2 nao confirmou threshold"
+fi
+
+# Test 1336: benchmark_log_file_21e2
+echo "Test 1336: benchmark_log_file_21e2"
+if [ -f "$CCT_TMP_DIR/benchmark_lexer_21e2.latest.log" ] &&
+   grep -q 'Benchmarking Lexer CCT' "$CCT_TMP_DIR/benchmark_lexer_21e2.latest.log"; then
+    test_pass "benchmark_log_file_21e2 confirmou log persistido"
+else
+    test_fail "benchmark_log_file_21e2 nao confirmou log persistido"
+fi
+
+# Test 1337: benchmark_make_target_exec_21e2
+echo "Test 1337: benchmark_make_target_exec_21e2"
+if CCT_BENCH_ITERATIONS=5 make benchmark_lexer \
+    >"$CCT_TMP_DIR/benchmark_make_21e2.out" 2>&1; then
+    test_pass "benchmark_make_target_exec_21e2 executou via Makefile"
+else
+    test_fail "benchmark_make_target_exec_21e2 falhou via Makefile"
+fi
+
+# Test 1338: benchmark_doc_exists_21e2
+echo "Test 1338: benchmark_doc_exists_21e2"
+if [ -f docs/bootstrap/FASE_21E2_BENCHMARK.md ] &&
+   grep -q 'Ratio aproximado 1.3x' docs/bootstrap/FASE_21E2_BENCHMARK.md &&
+   grep -q 'PASS (< 10x)' docs/bootstrap/FASE_21E2_BENCHMARK.md; then
+    test_pass "benchmark_doc_exists_21e2 confirmou documentacao do baseline"
+else
+    test_fail "benchmark_doc_exists_21e2 nao confirmou documentacao do baseline"
+fi
+
+# Test 1339: valgrind_script_exists_21e3
+echo "Test 1339: valgrind_script_exists_21e3"
+if [ -x tests/valgrind_lexer_21e3.sh ]; then
+    test_pass "valgrind_script_exists_21e3 encontrou o script dedicado"
+else
+    test_fail "valgrind_script_exists_21e3 nao encontrou o script dedicado"
+fi
+
+# Test 1340: valgrind_wrapper_exists_21e3
+echo "Test 1340: valgrind_wrapper_exists_21e3"
+if [ -x tests/valgrind_lexer.sh ] &&
+   grep -q 'valgrind_lexer_21e3.sh' tests/valgrind_lexer.sh; then
+    test_pass "valgrind_wrapper_exists_21e3 confirmou o wrapper legado"
+else
+    test_fail "valgrind_wrapper_exists_21e3 nao confirmou o wrapper legado"
+fi
+
+# Test 1341: valgrind_make_target_21e3
+echo "Test 1341: valgrind_make_target_21e3"
+if grep -q '^valgrind_lexer: cct_lexer_bootstrap' Makefile &&
+   grep -q 'valgrind_lexer_21e3.sh' Makefile; then
+    test_pass "valgrind_make_target_21e3 confirmou target dedicado"
+else
+    test_fail "valgrind_make_target_21e3 nao confirmou target dedicado"
+fi
+
+# Test 1342: valgrind_defaults_21e3
+echo "Test 1342: valgrind_defaults_21e3"
+if grep -q 'tests/integration/codegen_minimal.cct' tests/valgrind_lexer_21e3.sh &&
+   grep -q 'valgrind_lexer_21e3.log' tests/valgrind_lexer_21e3.sh; then
+    test_pass "valgrind_defaults_21e3 confirmou defaults e log local"
+else
+    test_fail "valgrind_defaults_21e3 nao confirmou defaults"
+fi
+
+# Test 1343: valgrind_flags_21e3
+echo "Test 1343: valgrind_flags_21e3"
+if grep -q -- '--leak-check=full' tests/valgrind_lexer_21e3.sh &&
+   grep -q -- '--show-leak-kinds=all' tests/valgrind_lexer_21e3.sh &&
+   grep -q -- '--track-origins=yes' tests/valgrind_lexer_21e3.sh; then
+    test_pass "valgrind_flags_21e3 confirmou flags principais"
+else
+    test_fail "valgrind_flags_21e3 nao confirmou flags principais"
+fi
+
+# Test 1344: valgrind_smoke_script_21e3
+echo "Test 1344: valgrind_smoke_script_21e3"
+if bash tests/valgrind_lexer_21e3.sh >"$CCT_TMP_DIR/valgrind_smoke_21e3.out" 2>&1; then
+    test_pass "valgrind_smoke_script_21e3 executou o script dedicado"
+else
+    test_fail "valgrind_smoke_script_21e3 falhou"
+fi
+
+# Test 1345: valgrind_smoke_output_21e3
+echo "Test 1345: valgrind_smoke_output_21e3"
+if grep -Eq 'SKIP: valgrind indisponivel neste ambiente|PASS: Nenhum leak detectado' \
+   "$CCT_TMP_DIR/valgrind_smoke_21e3.out"; then
+    test_pass "valgrind_smoke_output_21e3 confirmou status do check"
+else
+    test_fail "valgrind_smoke_output_21e3 nao confirmou status do check"
+fi
+
+# Test 1346: valgrind_log_file_21e3
+echo "Test 1346: valgrind_log_file_21e3"
+if [ -f "$CCT_TMP_DIR/valgrind_lexer_21e3.log" ] &&
+   grep -Eq 'SKIP: valgrind indisponivel neste ambiente|PASS: Nenhum leak detectado' \
+   "$CCT_TMP_DIR/valgrind_lexer_21e3.log"; then
+    test_pass "valgrind_log_file_21e3 confirmou log local"
+else
+    test_fail "valgrind_log_file_21e3 nao confirmou log local"
+fi
+
+# Test 1347: valgrind_make_target_exec_21e3
+echo "Test 1347: valgrind_make_target_exec_21e3"
+if make valgrind_lexer >"$CCT_TMP_DIR/valgrind_make_21e3.out" 2>&1; then
+    test_pass "valgrind_make_target_exec_21e3 executou via Makefile"
+else
+    test_fail "valgrind_make_target_exec_21e3 falhou via Makefile"
+fi
+
+# Test 1348: valgrind_doc_exists_21e3
+echo "Test 1348: valgrind_doc_exists_21e3"
+if [ -f docs/bootstrap/FASE_21E3_VALGRIND.md ] &&
+   grep -q 'Status neste checkout: `SKIP`' docs/bootstrap/FASE_21E3_VALGRIND.md &&
+   grep -q 'valgrind indisponivel neste ambiente' docs/bootstrap/FASE_21E3_VALGRIND.md; then
+    test_pass "valgrind_doc_exists_21e3 confirmou documentacao do check"
+else
+    test_fail "valgrind_doc_exists_21e3 nao confirmou documentacao do check"
+fi
+
+# Test 1349: bootstrap_headers_token_type_21e4
+echo "Test 1349: bootstrap_headers_token_type_21e4"
+if grep -q '^-- CCT - Clavicula Turing' src/bootstrap/lexer/token_type.cct &&
+   grep -q '^-- Bootstrap Lexer -' src/bootstrap/lexer/token_type.cct &&
+   grep -q 'FASE 21B1/21E4' src/bootstrap/lexer/token_type.cct; then
+    test_pass "bootstrap_headers_token_type_21e4 confirmou header do token_type"
+else
+    test_fail "bootstrap_headers_token_type_21e4 nao confirmou header do token_type"
+fi
+
+# Test 1350: bootstrap_headers_token_and_keywords_21e4
+echo "Test 1350: bootstrap_headers_token_and_keywords_21e4"
+if grep -q 'FASE 21B2/21E4' src/bootstrap/lexer/token.cct &&
+   grep -q 'FASE 21B3/21E4' src/bootstrap/lexer/keywords.cct; then
+    test_pass "bootstrap_headers_token_and_keywords_21e4 confirmou headers de 21B"
+else
+    test_fail "bootstrap_headers_token_and_keywords_21e4 nao confirmou headers de 21B"
+fi
+
+# Test 1351: bootstrap_headers_state_helpers_21e4
+echo "Test 1351: bootstrap_headers_state_helpers_21e4"
+if grep -q 'FASE 21C1/21E4' src/bootstrap/lexer/lexer_state.cct &&
+   grep -q 'FASE 21C2-21C7/21E4' src/bootstrap/lexer/lexer_helpers.cct &&
+   grep -q 'FASE 21C8/21E4' src/bootstrap/lexer/lexer.cct; then
+    test_pass "bootstrap_headers_state_helpers_21e4 confirmou headers de 21C"
+else
+    test_fail "bootstrap_headers_state_helpers_21e4 nao confirmou headers de 21C"
+fi
+
+# Test 1352: bootstrap_header_main_cli_21e4
+echo "Test 1352: bootstrap_header_main_cli_21e4"
+if grep -q 'FASE 21E1/21E4' src/bootstrap/main_lexer.cct; then
+    test_pass "bootstrap_header_main_cli_21e4 confirmou header do CLI"
+else
+    test_fail "bootstrap_header_main_cli_21e4 nao confirmou header do CLI"
+fi
+
+# Test 1353: bootstrap_docs_token_ownership_21e4
+echo "Test 1353: bootstrap_docs_token_ownership_21e4"
+if grep -q 'recebendo ownership de `lexeme`' src/bootstrap/lexer/token.cct &&
+   grep -q 'duplica `msg`' src/bootstrap/lexer/lexer_helpers.cct &&
+   grep -q 'Ownership: a mensagem montada passa a ser owned' src/bootstrap/lexer/lexer_helpers.cct; then
+    test_pass "bootstrap_docs_token_ownership_21e4 confirmou ownership documentado"
+else
+    test_fail "bootstrap_docs_token_ownership_21e4 nao confirmou ownership documentado"
+fi
+
+# Test 1354: bootstrap_docs_navigation_21e4
+echo "Test 1354: bootstrap_docs_navigation_21e4"
+if grep -q 'Consome o caractere atual e avanca current/column' src/bootstrap/lexer/lexer_helpers.cct &&
+   grep -q 'Observa o caractere atual sem consumir' src/bootstrap/lexer/lexer_helpers.cct &&
+   grep -q 'Descarta espacos, tabs e novas linhas' src/bootstrap/lexer/lexer_helpers.cct; then
+    test_pass "bootstrap_docs_navigation_21e4 confirmou comentarios de navegacao"
+else
+    test_fail "bootstrap_docs_navigation_21e4 nao confirmou comentarios de navegacao"
+fi
+
+# Test 1355: bootstrap_docs_scanners_21e4
+echo "Test 1355: bootstrap_docs_scanners_21e4"
+if grep -q 'Consome identificadores e keywords latinas' src/bootstrap/lexer/lexer_helpers.cct &&
+   grep -q 'Consome inteiros e reais simples' src/bootstrap/lexer/lexer_helpers.cct &&
+   grep -q 'Consome literais string com escapes suportados' src/bootstrap/lexer/lexer_helpers.cct; then
+    test_pass "bootstrap_docs_scanners_21e4 confirmou comentarios dos scanners"
+else
+    test_fail "bootstrap_docs_scanners_21e4 nao confirmou comentarios dos scanners"
+fi
+
+# Test 1356: bootstrap_docs_readme_section_21e4
+echo "Test 1356: bootstrap_docs_readme_section_21e4"
+if grep -q '^## Bootstrap' README.md &&
+   grep -q 'src/bootstrap/lexer/' README.md &&
+   grep -q 'make cct_lexer_bootstrap' README.md; then
+    test_pass "bootstrap_docs_readme_section_21e4 confirmou secao Bootstrap no README"
+else
+    test_fail "bootstrap_docs_readme_section_21e4 nao confirmou secao Bootstrap no README"
+fi
+
+# Test 1357: bootstrap_docs_readme_cli_21e4
+echo "Test 1357: bootstrap_docs_readme_cli_21e4"
+if grep -q './cct_lexer_bootstrap tests/integration/codegen_minimal.cct' README.md &&
+   grep -q 'standalone bootstrap CLI' README.md; then
+    test_pass "bootstrap_docs_readme_cli_21e4 confirmou exemplo de uso do CLI"
+else
+    test_fail "bootstrap_docs_readme_cli_21e4 nao confirmou exemplo de uso do CLI"
+fi
+
+# Test 1358: bootstrap_docs_public_functions_21e4
+echo "Test 1358: bootstrap_docs_public_functions_21e4"
+if grep -q 'Converte um TokenKind no nome textual usado pelo lexer C' src/bootstrap/lexer/token_type.cct &&
+   grep -q 'Resolve identificadores reservados' src/bootstrap/lexer/keywords.cct &&
+   grep -q 'Produz o proximo token do fonte' src/bootstrap/lexer/lexer.cct &&
+   grep -q 'Executa o lexer bootstrap sobre um arquivo fonte' src/bootstrap/main_lexer.cct; then
+    test_pass "bootstrap_docs_public_functions_21e4 confirmou comentarios das funcoes publicas"
+else
+    test_fail "bootstrap_docs_public_functions_21e4 nao confirmou comentarios das funcoes publicas"
+fi
+
+# Test 1359: release_notes_exists_21e5
+echo "Test 1359: release_notes_exists_21e5"
+if [ -f docs/release/FASE_21_RELEASE_NOTES.md ]; then
+    test_pass "release_notes_exists_21e5 encontrou o arquivo de release notes"
+else
+    test_fail "release_notes_exists_21e5 nao encontrou o arquivo de release notes"
+fi
+
+# Test 1360: release_notes_identity_21e5
+echo "Test 1360: release_notes_identity_21e5"
+if grep -q '^# FASE 21 - Bootstrap Foundations & Lexer - Release Notes' docs/release/FASE_21_RELEASE_NOTES.md &&
+   grep -Fq '**Versao:** 0.21.0' docs/release/FASE_21_RELEASE_NOTES.md &&
+   grep -Fq '**Status:** Concluida' docs/release/FASE_21_RELEASE_NOTES.md; then
+    test_pass "release_notes_identity_21e5 confirmou identidade da release"
+else
+    test_fail "release_notes_identity_21e5 nao confirmou identidade da release"
+fi
+
+# Test 1361: release_notes_features_21e5
+echo "Test 1361: release_notes_features_21e5"
+if grep -q '### 21A - Foundations' docs/release/FASE_21_RELEASE_NOTES.md &&
+   grep -q '### 21B - Token Model' docs/release/FASE_21_RELEASE_NOTES.md &&
+   grep -q '### 21C - Lexer Core' docs/release/FASE_21_RELEASE_NOTES.md &&
+   grep -q '### 21D - Advanced Validation' docs/release/FASE_21_RELEASE_NOTES.md &&
+   grep -q '### 21E - Validation and Documentation' docs/release/FASE_21_RELEASE_NOTES.md; then
+    test_pass "release_notes_features_21e5 confirmou features por bloco"
+else
+    test_fail "release_notes_features_21e5 nao confirmou features por bloco"
+fi
+
+# Test 1362: release_notes_metrics_loc_21e5
+echo "Test 1362: release_notes_metrics_loc_21e5"
+if grep -q '1442' docs/release/FASE_21_RELEASE_NOTES.md &&
+   grep -q '1115 LOC' docs/release/FASE_21_RELEASE_NOTES.md &&
+   grep -q '327 LOC' docs/release/FASE_21_RELEASE_NOTES.md; then
+    test_pass "release_notes_metrics_loc_21e5 confirmou metricas de LOC"
+else
+    test_fail "release_notes_metrics_loc_21e5 nao confirmou metricas de LOC"
+fi
+
+# Test 1363: release_notes_metrics_tests_21e5
+echo "Test 1363: release_notes_metrics_tests_21e5"
+if grep -q '34 arquivos' docs/release/FASE_21_RELEASE_NOTES.md &&
+   grep -q '112 blocos' docs/release/FASE_21_RELEASE_NOTES.md &&
+   grep -q '789 tests' docs/release/FASE_21_RELEASE_NOTES.md; then
+    test_pass "release_notes_metrics_tests_21e5 confirmou metricas de testes"
+else
+    test_fail "release_notes_metrics_tests_21e5 nao confirmou metricas de testes"
+fi
+
+# Test 1364: release_notes_metrics_validation_21e5
+echo "Test 1364: release_notes_metrics_validation_21e5"
+if grep -q '1006 arquivos' docs/release/FASE_21_RELEASE_NOTES.md &&
+   grep -Fq 'ratio aproximado **1.3x**' docs/release/FASE_21_RELEASE_NOTES.md &&
+   grep -Fq 'status atual `SKIP`' docs/release/FASE_21_RELEASE_NOTES.md; then
+    test_pass "release_notes_metrics_validation_21e5 confirmou validacao e performance"
+else
+    test_fail "release_notes_metrics_validation_21e5 nao confirmou validacao e performance"
+fi
+
+# Test 1365: release_notes_limitations_21e5
+echo "Test 1365: release_notes_limitations_21e5"
+if grep -q '## Known Limitations' docs/release/FASE_21_RELEASE_NOTES.md &&
+   grep -q 'ASCII-only' docs/release/FASE_21_RELEASE_NOTES.md &&
+   grep -q 'Notacao cientifica' docs/release/FASE_21_RELEASE_NOTES.md &&
+   grep -q 'valgrind' docs/release/FASE_21_RELEASE_NOTES.md; then
+    test_pass "release_notes_limitations_21e5 confirmou limitacoes conhecidas"
+else
+    test_fail "release_notes_limitations_21e5 nao confirmou limitacoes conhecidas"
+fi
+
+# Test 1366: release_notes_breakdown_21e5
+echo "Test 1366: release_notes_breakdown_21e5"
+if grep -q 'src/bootstrap/lexer/' docs/release/FASE_21_RELEASE_NOTES.md &&
+   grep -q 'main_lexer.cct' docs/release/FASE_21_RELEASE_NOTES.md &&
+   grep -q 'benchmark_lexer_21e2.sh' docs/release/FASE_21_RELEASE_NOTES.md &&
+   grep -q 'valgrind_lexer_21e3.sh' docs/release/FASE_21_RELEASE_NOTES.md; then
+    test_pass "release_notes_breakdown_21e5 confirmou breakdown de arquivos"
+else
+    test_fail "release_notes_breakdown_21e5 nao confirmou breakdown de arquivos"
+fi
+
+# Test 1367: release_notes_validation_snapshot_21e5
+echo "Test 1367: release_notes_validation_snapshot_21e5"
+if grep -q 'make test_lexer_bootstrap' docs/release/FASE_21_RELEASE_NOTES.md &&
+   grep -q 'make benchmark_lexer' docs/release/FASE_21_RELEASE_NOTES.md &&
+   grep -q 'make valgrind_lexer' docs/release/FASE_21_RELEASE_NOTES.md &&
+   grep -q 'make test' docs/release/FASE_21_RELEASE_NOTES.md; then
+    test_pass "release_notes_validation_snapshot_21e5 confirmou snapshot de validacao"
+else
+    test_fail "release_notes_validation_snapshot_21e5 nao confirmou snapshot de validacao"
+fi
+
+# Test 1368: release_notes_next_steps_21e5
+echo "Test 1368: release_notes_next_steps_21e5"
+if grep -q '## Next Steps (FASE 22)' docs/release/FASE_21_RELEASE_NOTES.md &&
+   grep -q 'Parser bootstrap' docs/release/FASE_21_RELEASE_NOTES.md &&
+   grep -q 'Migration Notes' docs/release/FASE_21_RELEASE_NOTES.md; then
+    test_pass "release_notes_next_steps_21e5 confirmou proximos passos e migracao"
+else
+    test_fail "release_notes_next_steps_21e5 nao confirmou proximos passos e migracao"
+fi
+
+# Test 1369: handoff_exists_21e6
+echo "Test 1369: handoff_exists_21e6"
+if [ -f docs/bootstrap/FASE_21_HANDOFF.md ]; then
+    test_pass "handoff_exists_21e6 encontrou o handoff"
+else
+    test_fail "handoff_exists_21e6 nao encontrou o handoff"
+fi
+
+# Test 1370: handoff_identity_21e6
+echo "Test 1370: handoff_identity_21e6"
+if grep -q '^# FASE 21 - Handoff Document' docs/bootstrap/FASE_21_HANDOFF.md &&
+   grep -Fq '**Status:** Concluida' docs/bootstrap/FASE_21_HANDOFF.md &&
+   grep -q 'Proxima FASE:' docs/bootstrap/FASE_21_HANDOFF.md; then
+    test_pass "handoff_identity_21e6 confirmou identidade do documento"
+else
+    test_fail "handoff_identity_21e6 nao confirmou identidade do documento"
+fi
+
+# Test 1371: handoff_summary_21e6
+echo "Test 1371: handoff_summary_21e6"
+if grep -q '## Executive Summary' docs/bootstrap/FASE_21_HANDOFF.md &&
+   grep -q '1006 arquivos' docs/bootstrap/FASE_21_HANDOFF.md &&
+   grep -q '1.3x' docs/bootstrap/FASE_21_HANDOFF.md; then
+    test_pass "handoff_summary_21e6 confirmou sumario executivo"
+else
+    test_fail "handoff_summary_21e6 nao confirmou sumario executivo"
+fi
+
+# Test 1372: handoff_deliverables_21e6
+echo "Test 1372: handoff_deliverables_21e6"
+if grep -q 'src/bootstrap/lexer/token_type.cct' docs/bootstrap/FASE_21_HANDOFF.md &&
+   grep -q 'tests/validate_lexer_full_suite.sh' docs/bootstrap/FASE_21_HANDOFF.md &&
+   grep -q 'docs/release/FASE_21_RELEASE_NOTES.md' docs/bootstrap/FASE_21_HANDOFF.md; then
+    test_pass "handoff_deliverables_21e6 confirmou deliverables"
+else
+    test_fail "handoff_deliverables_21e6 nao confirmou deliverables"
+fi
+
+# Test 1373: handoff_decisions_21e6
+echo "Test 1373: handoff_decisions_21e6"
+if grep -q 'Token Ownership' docs/bootstrap/FASE_21_HANDOFF.md &&
+   grep -Fq '`Token` owns `lexeme`' docs/bootstrap/FASE_21_HANDOFF.md &&
+   grep -q 'Keyword Lookup' docs/bootstrap/FASE_21_HANDOFF.md &&
+   grep -q 'Error Recovery' docs/bootstrap/FASE_21_HANDOFF.md; then
+    test_pass "handoff_decisions_21e6 confirmou decisoes tecnicas"
+else
+    test_fail "handoff_decisions_21e6 nao confirmou decisoes tecnicas"
+fi
+
+# Test 1374: handoff_limits_21e6
+echo "Test 1374: handoff_limits_21e6"
+if grep -q 'Limitacoes Conhecidas' docs/bootstrap/FASE_21_HANDOFF.md &&
+   grep -q 'ASCII-only' docs/bootstrap/FASE_21_HANDOFF.md &&
+   grep -q 'valgrind' docs/bootstrap/FASE_21_HANDOFF.md; then
+    test_pass "handoff_limits_21e6 confirmou limitacoes conhecidas"
+else
+    test_fail "handoff_limits_21e6 nao confirmou limitacoes conhecidas"
+fi
+
+# Test 1375: handoff_metrics_21e6
+echo "Test 1375: handoff_metrics_21e6"
+if grep -q '| LOC total FASE 21 | 1442 |' docs/bootstrap/FASE_21_HANDOFF.md &&
+   grep -q '| Suite full-file validada | 1006 arquivos |' docs/bootstrap/FASE_21_HANDOFF.md &&
+   grep -q '| Runner total atual | 789 tests |' docs/bootstrap/FASE_21_HANDOFF.md; then
+    test_pass "handoff_metrics_21e6 confirmou metricas finais"
+else
+    test_fail "handoff_metrics_21e6 nao confirmou metricas finais"
+fi
+
+# Test 1376: handoff_validation_snapshot_21e6
+echo "Test 1376: handoff_validation_snapshot_21e6"
+if grep -q 'make test_lexer_bootstrap' docs/bootstrap/FASE_21_HANDOFF.md &&
+   grep -q 'make benchmark_lexer' docs/bootstrap/FASE_21_HANDOFF.md &&
+   grep -q 'make valgrind_lexer' docs/bootstrap/FASE_21_HANDOFF.md &&
+   grep -q 'make test' docs/bootstrap/FASE_21_HANDOFF.md; then
+    test_pass "handoff_validation_snapshot_21e6 confirmou snapshot de validacao"
+else
+    test_fail "handoff_validation_snapshot_21e6 nao confirmou snapshot de validacao"
+fi
+
+# Test 1377: handoff_phase22_ready_21e6
+echo "Test 1377: handoff_phase22_ready_21e6"
+if grep -q 'Dependencias para FASE 22' docs/bootstrap/FASE_21_HANDOFF.md &&
+   grep -q 'Lexer bootstrap funcional' docs/bootstrap/FASE_21_HANDOFF.md &&
+   grep -q 'AST nodes do parser bootstrap' docs/bootstrap/FASE_21_HANDOFF.md; then
+    test_pass "handoff_phase22_ready_21e6 confirmou readiness para FASE 22"
+else
+    test_fail "handoff_phase22_ready_21e6 nao confirmou readiness para FASE 22"
+fi
+
+# Test 1378: handoff_signoff_21e6
+echo "Test 1378: handoff_signoff_21e6"
+if grep -q 'Handoff Checklist' docs/bootstrap/FASE_21_HANDOFF.md &&
+   grep -q 'FASE 21 esta pronta para servir de base da FASE 22' docs/bootstrap/FASE_21_HANDOFF.md; then
+    test_pass "handoff_signoff_21e6 confirmou checklist e sign-off"
+else
+    test_fail "handoff_signoff_21e6 nao confirmou checklist e sign-off"
 fi
 
 echo ""
@@ -18215,6 +19595,48 @@ if [ "$RC_1272" -eq 0 ]; then
     test_pass "token_basic_21b2 valida Token com ownership transferido"
 else
     test_fail "token_basic_21b2 regrediu construcao ou liberacao de Token"
+fi
+
+# Test 1273: keyword_lookup_21b3
+echo "Test 1273: keyword_lookup_21b3"
+SRC_1273="tests/integration/keyword_lookup_21b3.cct"
+BIN_1273="${SRC_1273%.cct}"
+cleanup_codegen_artifacts "$SRC_1273"
+if "$CCT_BIN" "$SRC_1273" >"$CCT_TMP_DIR/cct_phase21b3_1273_compile.out" 2>&1; then
+    "$BIN_1273" >"$CCT_TMP_DIR/cct_phase21b3_1273_run.out" 2>&1
+    RC_1273=$?
+else
+    RC_1273=255
+fi
+if [ "$RC_1273" -eq 0 ]; then
+    test_pass "keyword_lookup_21b3 reconhece keywords e aliases do lexer C"
+else
+    test_fail "keyword_lookup_21b3 regrediu reconhecimento de keywords ($RC_1273)"
+fi
+
+# Test 1274: gate_21b4
+echo "Test 1274: gate_21b4"
+TOKENS_C_1274="$CCT_TMP_DIR/fase21b4_c_tokens.txt"
+TOKENS_CCT_1274="$CCT_TMP_DIR/fase21b4_cct_tokens.txt"
+KEYWORDS_C_1274="$CCT_TMP_DIR/fase21b4_c_keywords.txt"
+KEYWORDS_CCT_1274="$CCT_TMP_DIR/fase21b4_cct_keywords.txt"
+rm -f "$TOKENS_C_1274" "$TOKENS_CCT_1274" "$KEYWORDS_C_1274" "$KEYWORDS_CCT_1274"
+if "$CCT_BIN" --check src/bootstrap/lexer/token_type.cct >"$CCT_TMP_DIR/cct_phase21b4_token_type_check.out" 2>&1 && \
+   "$CCT_BIN" --check src/bootstrap/lexer/token.cct >"$CCT_TMP_DIR/cct_phase21b4_token_check.out" 2>&1 && \
+   "$CCT_BIN" --check src/bootstrap/lexer/keywords.cct >"$CCT_TMP_DIR/cct_phase21b4_keywords_check.out" 2>&1 && \
+   sed -n 's/^[[:space:]]*TOKEN_\\([A-Z_]*\\),$/TK_\\1/p' src/lexer/lexer.h | sort >"$TOKENS_C_1274" && \
+   sed -n 's/^[[:space:]]*\\(TK_[A-Z_]*\\),$/\\1/p' src/bootstrap/lexer/token_type.cct | sort >"$TOKENS_CCT_1274" && \
+   diff -u "$TOKENS_C_1274" "$TOKENS_CCT_1274" >"$CCT_TMP_DIR/cct_phase21b4_token_diff.out" 2>&1 && \
+   grep -q '^  kind: TokenKind$' src/bootstrap/lexer/token.cct && \
+   grep -q '^  lexeme: VERBUM$' src/bootstrap/lexer/token.cct && \
+   grep -q '^  line: REX$' src/bootstrap/lexer/token.cct && \
+   grep -q '^  column: REX$' src/bootstrap/lexer/token.cct && \
+   sed -n 's/.*{\"\\([A-Z_]*\\)\", TOKEN_[A-Z_]*}.*/\\1/p' src/lexer/keywords.h | sort >"$KEYWORDS_C_1274" && \
+   sed -n 's/.*compare(lexeme, \"\\([A-Z_]*\\)\").*/\\1/p' src/bootstrap/lexer/keywords.cct | sort >"$KEYWORDS_CCT_1274" && \
+   diff -u "$KEYWORDS_C_1274" "$KEYWORDS_CCT_1274" >"$CCT_TMP_DIR/cct_phase21b4_keyword_diff.out" 2>&1; then
+    test_pass "gate_21b4 valida compilacao e coerencia exata do Token Model"
+else
+    test_fail "gate_21b4 encontrou divergencia em compilacao ou checklist do Token Model"
 fi
 
 echo ""

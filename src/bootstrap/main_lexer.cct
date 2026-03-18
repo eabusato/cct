@@ -1,0 +1,55 @@
+-- CCT - Clavicula Turing
+-- Bootstrap Lexer - Standalone CLI wrapper
+-- FASE 21E1/21E4: full-suite validation entrypoint and documentation
+
+INCIPIT grimoire "main_lexer"
+
+ADVOCARE "cct/args.cct"
+ADVOCARE "cct/fs.cct"
+ADVOCARE "cct/io.cct"
+ADVOCARE "lexer/lexer.cct"
+ADVOCARE "lexer/lexer_state.cct"
+ADVOCARE "lexer/token.cct"
+ADVOCARE "lexer/token_type.cct"
+
+-- Imprime token no formato textual usado pela validacao do bootstrap.
+RITUALE print_token(Token tok) REDDE NIHIL
+  EVOCA VERBUM kind AD CONIURA token_kind_to_string(tok.kind)
+  OBSECRO scribe(tok.line, ":", tok.column, " ", kind, " \"", tok.lexeme, "\"\n")
+  REDDE
+EXPLICIT RITUALE
+
+-- Executa o lexer bootstrap sobre um arquivo fonte.
+-- Retorno: 0 em sucesso, 64 sem argumentos, 1 quando houve erro lexico.
+RITUALE main() REDDE REX
+  SI CONIURA argc() < 2
+    CONIURA eprintln("Uso: cct_lexer_bootstrap <arquivo.cct>")
+    REDDE 64
+  FIN SI
+
+  EVOCA VERBUM filename AD CONIURA arg(1)
+  EVOCA VERBUM source AD CONIURA read_all(filename)
+
+  OBSECRO scribe("Tokenizing: ", filename, "\n")
+  OBSECRO scribe("LINE:COL TYPE                 LEXEME\n")
+  OBSECRO scribe("--------------------------------------------------------\n")
+
+  EVOCA LexerState lex AD CONIURA lexer_init(source, filename)
+
+  DUM VERUM
+    EVOCA Token tok AD CONIURA lexer_next_token(SPECULUM lex)
+    EVOCA VERUM done AD tok.kind == TK_EOF
+    CONIURA print_token(tok)
+    CONIURA token_free(SPECULUM tok)
+    SI done
+      SI lex.had_error
+        REDDE 1
+      FIN SI
+      REDDE 0
+    FIN SI
+  FIN DUM
+
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

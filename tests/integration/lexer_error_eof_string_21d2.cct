@@ -1,0 +1,34 @@
+INCIPIT grimoire "lexer_error_eof_string_21d2"
+
+ADVOCARE "cct/verbum.cct"
+ADVOCARE "../../src/bootstrap/lexer/lexer.cct"
+ADVOCARE "../../src/bootstrap/lexer/lexer_state.cct"
+ADVOCARE "../../src/bootstrap/lexer/token.cct"
+ADVOCARE "../../src/bootstrap/lexer/token_type.cct"
+
+RITUALE main() REDDE REX
+  EVOCA VERBUM source AD "\"unterminated"
+  EVOCA LexerState lex AD CONIURA lexer_init(source, "test.cct")
+
+  EVOCA Token t1 AD CONIURA lexer_next_token(SPECULUM lex)
+  SI t1.kind != TK_INVALID
+    REDDE 41
+  FIN SI
+  SI NON lex.had_error
+    REDDE 42
+  FIN SI
+  SI CONIURA compare(t1.lexeme, "Unterminated string") != 0
+    REDDE 43
+  FIN SI
+  CONIURA token_free(SPECULUM t1)
+
+  EVOCA Token t2 AD CONIURA lexer_next_token(SPECULUM lex)
+  SI t2.kind != TK_EOF
+    REDDE 44
+  FIN SI
+  CONIURA token_free(SPECULUM t2)
+
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

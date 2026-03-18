@@ -1,0 +1,90 @@
+INCIPIT grimoire "lexer_token_creation_21c4"
+
+ADVOCARE "cct/verbum.cct"
+ADVOCARE "../../src/bootstrap/lexer/lexer_state.cct"
+ADVOCARE "../../src/bootstrap/lexer/lexer_helpers.cct"
+ADVOCARE "../../src/bootstrap/lexer/token.cct"
+ADVOCARE "../../src/bootstrap/lexer/token_type.cct"
+
+RITUALE main() REDDE REX
+  EVOCA VERBUM source1 AD "INCIPIT"
+  EVOCA LexerState lex1 AD CONIURA lexer_init(source1, "test.cct")
+  VINCIRE lex1.current AD 7
+  EVOCA VERBUM lexeme1 AD CONIURA lexer_make_lexeme(SPECULUM lex1)
+  SI CONIURA compare(lexeme1, "INCIPIT") != 0
+    REDDE 41
+  FIN SI
+  DIMITTE lexeme1
+
+  EVOCA VERBUM source2 AD "abc def"
+  EVOCA LexerState lex2 AD CONIURA lexer_init(source2, "test.cct")
+  VINCIRE lex2.start AD 0
+  VINCIRE lex2.current AD 3
+  EVOCA VERBUM lexeme2 AD CONIURA lexer_make_lexeme(SPECULUM lex2)
+  SI CONIURA compare(lexeme2, "abc") != 0
+    REDDE 42
+  FIN SI
+  DIMITTE lexeme2
+
+  EVOCA VERBUM source3 AD "  INCIPIT"
+  EVOCA LexerState lex3 AD CONIURA lexer_init(source3, "test.cct")
+  VINCIRE lex3.current AD 2
+  VINCIRE lex3.column AD 3
+  VINCIRE lex3.start AD 2
+  VINCIRE lex3.current AD 9
+  VINCIRE lex3.column AD 10
+  EVOCA Token tok3 AD CONIURA lexer_make_token(SPECULUM lex3, TK_INCIPIT)
+  SI tok3.kind != TK_INCIPIT
+    REDDE 43
+  FIN SI
+  SI CONIURA compare(tok3.lexeme, "INCIPIT") != 0
+    REDDE 44
+  FIN SI
+  SI tok3.line != 1
+    REDDE 45
+  FIN SI
+  SI tok3.column != 3
+    REDDE 46
+  FIN SI
+  CONIURA token_free(SPECULUM tok3)
+
+  EVOCA VERBUM source4 AD "abc"
+  EVOCA LexerState lex4 AD CONIURA lexer_init(source4, "test.cct")
+  VINCIRE lex4.line AD 10
+  VINCIRE lex4.column AD 5
+  EVOCA Token tok4 AD CONIURA lexer_error_token(SPECULUM lex4, "Unexpected character")
+  SI NON lex4.had_error
+    REDDE 47
+  FIN SI
+  SI tok4.kind != TK_INVALID
+    REDDE 48
+  FIN SI
+  SI tok4.line != 10
+    REDDE 49
+  FIN SI
+  SI tok4.column != 5
+    REDDE 50
+  FIN SI
+  SI CONIURA compare(tok4.lexeme, "Unexpected character") != 0
+    REDDE 51
+  FIN SI
+  CONIURA token_free(SPECULUM tok4)
+
+  EVOCA VERBUM source5 AD "+"
+  EVOCA LexerState lex5 AD CONIURA lexer_init(source5, "test.cct")
+  VINCIRE lex5.start AD 0
+  VINCIRE lex5.current AD 1
+  VINCIRE lex5.column AD 2
+  EVOCA Token tok5 AD CONIURA lexer_make_token(SPECULUM lex5, TK_PLUS)
+  SI tok5.column != 1
+    REDDE 52
+  FIN SI
+  SI CONIURA compare(tok5.lexeme, "+") != 0
+    REDDE 53
+  FIN SI
+  CONIURA token_free(SPECULUM tok5)
+
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

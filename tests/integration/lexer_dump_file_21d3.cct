@@ -1,0 +1,32 @@
+INCIPIT grimoire "lexer_dump_file_21d3"
+
+ADVOCARE "cct/args.cct"
+ADVOCARE "cct/fs.cct"
+ADVOCARE "../../src/bootstrap/lexer/lexer.cct"
+ADVOCARE "../../src/bootstrap/lexer/lexer_state.cct"
+ADVOCARE "../../src/bootstrap/lexer/token.cct"
+ADVOCARE "../../src/bootstrap/lexer/token_type.cct"
+
+RITUALE main() REDDE REX
+  SI CONIURA argc() < 2
+    REDDE 64
+  FIN SI
+
+  EVOCA VERBUM path AD CONIURA arg(1)
+  EVOCA VERBUM source AD CONIURA read_all(path)
+  EVOCA LexerState lex AD CONIURA lexer_init(source, path)
+
+  DUM VERUM
+    EVOCA Token tok AD CONIURA lexer_next_token(SPECULUM lex)
+    EVOCA VERUM done AD tok.kind == TK_EOF
+    OBSECRO scribe(tok.kind, "|", tok.lexeme, "\n")
+    CONIURA token_free(SPECULUM tok)
+    SI done
+      REDDE 0
+    FIN SI
+  FIN DUM
+
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

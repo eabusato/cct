@@ -1,0 +1,75 @@
+INCIPIT grimoire "lexer_navigation_21c2"
+
+ADVOCARE "../../src/bootstrap/lexer/lexer_state.cct"
+ADVOCARE "../../src/bootstrap/lexer/lexer_helpers.cct"
+
+RITUALE main() REDDE REX
+  EVOCA VERBUM source AD "abc"
+  EVOCA LexerState lex AD CONIURA lexer_init(source, "test.cct")
+
+  SI CONIURA lexer_is_at_end(SPECULUM lex)
+    REDDE 41
+  FIN SI
+
+  SI CONIURA lexer_peek(SPECULUM lex) != 97
+    REDDE 42
+  FIN SI
+
+  SI CONIURA lexer_peek_next(SPECULUM lex) != 98
+    REDDE 43
+  FIN SI
+
+  SI lex.current != 0
+    REDDE 44
+  FIN SI
+
+  SI CONIURA lexer_advance(SPECULUM lex) != 97
+    REDDE 45
+  FIN SI
+
+  SI lex.current != 1
+    REDDE 46
+  FIN SI
+
+  SI lex.column != 2
+    REDDE 47
+  FIN SI
+
+  SI NON CONIURA lexer_match(SPECULUM lex, 98)
+    REDDE 48
+  FIN SI
+
+  SI lex.current != 2
+    REDDE 49
+  FIN SI
+
+  SI CONIURA lexer_match(SPECULUM lex, 120)
+    REDDE 50
+  FIN SI
+
+  SI lex.current != 2
+    REDDE 51
+  FIN SI
+
+  CONIURA lexer_advance(SPECULUM lex)
+
+  SI NON CONIURA lexer_is_at_end(SPECULUM lex)
+    REDDE 52
+  FIN SI
+
+  SI CONIURA lexer_peek(SPECULUM lex) != 0
+    REDDE 53
+  FIN SI
+
+  SI CONIURA lexer_peek_next(SPECULUM lex) != 0
+    REDDE 54
+  FIN SI
+
+  SI CONIURA lexer_advance(SPECULUM lex) != 0
+    REDDE 55
+  FIN SI
+
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

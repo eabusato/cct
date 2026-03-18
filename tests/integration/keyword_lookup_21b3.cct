@@ -1,0 +1,318 @@
+INCIPIT grimoire "keyword_lookup_21b3"
+
+ADVOCARE "../../src/bootstrap/lexer/token_type.cct"
+ADVOCARE "../../src/bootstrap/lexer/keywords.cct"
+
+RITUALE expect_kind(VERBUM lexeme, TokenKind expected, REX code) REDDE REX
+  SI CONIURA keyword_lookup(lexeme) != expected
+    REDDE code
+  FIN SI
+  REDDE 0
+EXPLICIT RITUALE
+
+RITUALE main() REDDE REX
+  EVOCA REX rc AD 0
+  VINCIRE rc AD CONIURA expect_kind("AD", TK_AD, 1)
+  SI rc != 0
+    REDDE rc
+  FIN SI
+  VINCIRE rc AD CONIURA expect_kind("ADVOCARE", TK_ADVOCARE, 2)
+  SI rc != 0
+    REDDE rc
+  FIN SI
+  VINCIRE rc AD CONIURA expect_kind("ALITER", TK_ALITER, 3)
+  SI rc != 0
+    REDDE rc
+  FIN SI
+  VINCIRE rc AD CONIURA expect_kind("ALIOQUIN", TK_SENAO, 4)
+  SI rc != 0
+    REDDE rc
+  FIN SI
+  VINCIRE rc AD CONIURA expect_kind("ANUR", TK_ANUR, 5)
+  SI rc != 0
+    REDDE rc
+  FIN SI
+  VINCIRE rc AD CONIURA expect_kind("ARCANUM", TK_ARCANUM, 6)
+  SI rc != 0
+    REDDE rc
+  FIN SI
+  VINCIRE rc AD CONIURA expect_kind("CAPE", TK_CAPE, 7)
+  SI rc != 0
+    REDDE rc
+  FIN SI
+  VINCIRE rc AD CONIURA expect_kind("CASO", TK_CASO, 8)
+  SI rc != 0
+    REDDE rc
+  FIN SI
+  VINCIRE rc AD CONIURA expect_kind("CASUS", TK_CASO, 9)
+  SI rc != 0
+    REDDE rc
+  FIN SI
+  VINCIRE rc AD CONIURA expect_kind("CIRCULUS", TK_CIRCULUS, 10)
+  SI rc != 0
+    REDDE rc
+  FIN SI
+  VINCIRE rc AD CONIURA expect_kind("CODEX", TK_CODEX, 11)
+  SI rc != 0
+    REDDE rc
+  FIN SI
+  VINCIRE rc AD CONIURA expect_kind("COMES", TK_COMES, 12)
+  SI rc != 0
+    REDDE rc
+  FIN SI
+  VINCIRE rc AD CONIURA expect_kind("CONIURA", TK_CONIURA, 13)
+  SI rc != 0
+    REDDE rc
+  FIN SI
+  VINCIRE rc AD CONIURA expect_kind("CONSTANS", TK_CONSTANS, 14)
+  SI rc != 0
+    REDDE rc
+  FIN SI
+  VINCIRE rc AD CONIURA expect_kind("CUM", TK_QUANDO, 15)
+  SI rc != 0
+    REDDE rc
+  FIN SI
+  VINCIRE rc AD CONIURA expect_kind("DE", TK_DE, 16)
+  SI rc != 0
+    REDDE rc
+  FIN SI
+  VINCIRE rc AD CONIURA expect_kind("DEXTER", TK_DEXTER, 17)
+  SI rc != 0
+    REDDE rc
+  FIN SI
+  VINCIRE rc AD CONIURA expect_kind("DIMITTE", TK_DIMITTE, 18)
+  SI rc != 0
+    REDDE rc
+  FIN SI
+  VINCIRE rc AD CONIURA expect_kind("DONEC", TK_DONEC, 19)
+  SI rc != 0
+    REDDE rc
+  FIN SI
+  VINCIRE rc AD CONIURA expect_kind("DUM", TK_DUM, 20)
+  SI rc != 0
+    REDDE rc
+  FIN SI
+  VINCIRE rc AD CONIURA expect_kind("DUX", TK_DUX, 21)
+  SI rc != 0
+    REDDE rc
+  FIN SI
+  VINCIRE rc AD CONIURA expect_kind("ELIGE", TK_QUANDO, 22)
+  SI rc != 0
+    REDDE rc
+  FIN SI
+  VINCIRE rc AD CONIURA expect_kind("ET", TK_ET, 23)
+  SI rc != 0
+    REDDE rc
+  FIN SI
+  VINCIRE rc AD CONIURA expect_kind("ET_BIT", TK_ET_BIT, 24)
+  SI rc != 0
+    REDDE rc
+  FIN SI
+  VINCIRE rc AD CONIURA expect_kind("EVOCA", TK_EVOCA, 25)
+  SI rc != 0
+    REDDE rc
+  FIN SI
+  VINCIRE rc AD CONIURA expect_kind("EXPLICIT", TK_EXPLICIT, 26)
+  SI rc != 0
+    REDDE rc
+  FIN SI
+  VINCIRE rc AD CONIURA expect_kind("FALSUM", TK_FALSUM, 27)
+  SI rc != 0
+    REDDE rc
+  FIN SI
+  VINCIRE rc AD CONIURA expect_kind("FIN", TK_FIN, 28)
+  SI rc != 0
+    REDDE rc
+  FIN SI
+  VINCIRE rc AD CONIURA expect_kind("FLAMMA", TK_FLAMMA, 29)
+  SI rc != 0
+    REDDE rc
+  FIN SI
+  VINCIRE rc AD CONIURA expect_kind("FLUXUS", TK_FLUXUS, 30)
+  SI rc != 0
+    REDDE rc
+  FIN SI
+  VINCIRE rc AD CONIURA expect_kind("FORMA", TK_MOLDE, 31)
+  SI rc != 0
+    REDDE rc
+  FIN SI
+  VINCIRE rc AD CONIURA expect_kind("FRACTUM", TK_FRACTUM, 32)
+  SI rc != 0
+    REDDE rc
+  FIN SI
+  VINCIRE rc AD CONIURA expect_kind("FRANGE", TK_FRANGE, 33)
+  SI rc != 0
+    REDDE rc
+  FIN SI
+  VINCIRE rc AD CONIURA expect_kind("GENUS", TK_GENUS, 34)
+  SI rc != 0
+    REDDE rc
+  FIN SI
+  VINCIRE rc AD CONIURA expect_kind("GRADUS", TK_GRADUS, 35)
+  SI rc != 0
+    REDDE rc
+  FIN SI
+  VINCIRE rc AD CONIURA expect_kind("IACE", TK_IACE, 36)
+  SI rc != 0
+    REDDE rc
+  FIN SI
+  VINCIRE rc AD CONIURA expect_kind("IN", TK_IN, 37)
+  SI rc != 0
+    REDDE rc
+  FIN SI
+  VINCIRE rc AD CONIURA expect_kind("INCIPIT", TK_INCIPIT, 38)
+  SI rc != 0
+    REDDE rc
+  FIN SI
+  VINCIRE rc AD CONIURA expect_kind("ITERUM", TK_ITERUM, 39)
+  SI rc != 0
+    REDDE rc
+  FIN SI
+  VINCIRE rc AD CONIURA expect_kind("MENSURA", TK_MENSURA, 40)
+  SI rc != 0
+    REDDE rc
+  FIN SI
+  VINCIRE rc AD CONIURA expect_kind("MILES", TK_MILES, 41)
+  SI rc != 0
+    REDDE rc
+  FIN SI
+  VINCIRE rc AD CONIURA expect_kind("MOLDE", TK_MOLDE, 42)
+  SI rc != 0
+    REDDE rc
+  FIN SI
+  VINCIRE rc AD CONIURA expect_kind("NIHIL", TK_NIHIL, 43)
+  SI rc != 0
+    REDDE rc
+  FIN SI
+  VINCIRE rc AD CONIURA expect_kind("NON", TK_NON, 44)
+  SI rc != 0
+    REDDE rc
+  FIN SI
+  VINCIRE rc AD CONIURA expect_kind("NON_BIT", TK_NON_BIT, 45)
+  SI rc != 0
+    REDDE rc
+  FIN SI
+  VINCIRE rc AD CONIURA expect_kind("OBSECRO", TK_OBSECRO, 46)
+  SI rc != 0
+    REDDE rc
+  FIN SI
+  VINCIRE rc AD CONIURA expect_kind("ORDO", TK_ORDO, 47)
+  SI rc != 0
+    REDDE rc
+  FIN SI
+  VINCIRE rc AD CONIURA expect_kind("PACTUM", TK_PACTUM, 48)
+  SI rc != 0
+    REDDE rc
+  FIN SI
+  VINCIRE rc AD CONIURA expect_kind("PRO", TK_PRO, 49)
+  SI rc != 0
+    REDDE rc
+  FIN SI
+  VINCIRE rc AD CONIURA expect_kind("QUANDO", TK_QUANDO, 50)
+  SI rc != 0
+    REDDE rc
+  FIN SI
+  VINCIRE rc AD CONIURA expect_kind("RECEDE", TK_RECEDE, 51)
+  SI rc != 0
+    REDDE rc
+  FIN SI
+  VINCIRE rc AD CONIURA expect_kind("REDDE", TK_REDDE, 52)
+  SI rc != 0
+    REDDE rc
+  FIN SI
+  VINCIRE rc AD CONIURA expect_kind("REPETE", TK_REPETE, 53)
+  SI rc != 0
+    REDDE rc
+  FIN SI
+  VINCIRE rc AD CONIURA expect_kind("REX", TK_REX, 54)
+  SI rc != 0
+    REDDE rc
+  FIN SI
+  VINCIRE rc AD CONIURA expect_kind("RITUALE", TK_RITUALE, 55)
+  SI rc != 0
+    REDDE rc
+  FIN SI
+  VINCIRE rc AD CONIURA expect_kind("SEMPER", TK_SEMPER, 56)
+  SI rc != 0
+    REDDE rc
+  FIN SI
+  VINCIRE rc AD CONIURA expect_kind("SERIES", TK_SERIES, 57)
+  SI rc != 0
+    REDDE rc
+  FIN SI
+  VINCIRE rc AD CONIURA expect_kind("SENAO", TK_SENAO, 58)
+  SI rc != 0
+    REDDE rc
+  FIN SI
+  VINCIRE rc AD CONIURA expect_kind("SI", TK_SI, 59)
+  SI rc != 0
+    REDDE rc
+  FIN SI
+  VINCIRE rc AD CONIURA expect_kind("SIGILLUM", TK_SIGILLUM, 60)
+  SI rc != 0
+    REDDE rc
+  FIN SI
+  VINCIRE rc AD CONIURA expect_kind("SINISTER", TK_SINISTER, 61)
+  SI rc != 0
+    REDDE rc
+  FIN SI
+  VINCIRE rc AD CONIURA expect_kind("SPECULUM", TK_SPECULUM, 62)
+  SI rc != 0
+    REDDE rc
+  FIN SI
+  VINCIRE rc AD CONIURA expect_kind("TEMPTA", TK_TEMPTA, 63)
+  SI rc != 0
+    REDDE rc
+  FIN SI
+  VINCIRE rc AD CONIURA expect_kind("TRANSITUS", TK_TRANSITUS, 64)
+  SI rc != 0
+    REDDE rc
+  FIN SI
+  VINCIRE rc AD CONIURA expect_kind("UMBRA", TK_UMBRA, 65)
+  SI rc != 0
+    REDDE rc
+  FIN SI
+  VINCIRE rc AD CONIURA expect_kind("VEL", TK_VEL, 66)
+  SI rc != 0
+    REDDE rc
+  FIN SI
+  VINCIRE rc AD CONIURA expect_kind("VEL_BIT", TK_VEL_BIT, 67)
+  SI rc != 0
+    REDDE rc
+  FIN SI
+  VINCIRE rc AD CONIURA expect_kind("VERBUM", TK_VERBUM, 68)
+  SI rc != 0
+    REDDE rc
+  FIN SI
+  VINCIRE rc AD CONIURA expect_kind("VERUM", TK_VERUM, 69)
+  SI rc != 0
+    REDDE rc
+  FIN SI
+  VINCIRE rc AD CONIURA expect_kind("VINCIRE", TK_VINCIRE, 70)
+  SI rc != 0
+    REDDE rc
+  FIN SI
+  VINCIRE rc AD CONIURA expect_kind("VOLATILE", TK_VOLATILE, 71)
+  SI rc != 0
+    REDDE rc
+  FIN SI
+  VINCIRE rc AD CONIURA expect_kind("XOR", TK_XOR, 72)
+  SI rc != 0
+    REDDE rc
+  FIN SI
+  VINCIRE rc AD CONIURA expect_kind("identifier", TK_IDENTIFIER, 73)
+  SI rc != 0
+    REDDE rc
+  FIN SI
+  VINCIRE rc AD CONIURA expect_kind("incipit", TK_IDENTIFIER, 74)
+  SI rc != 0
+    REDDE rc
+  FIN SI
+  VINCIRE rc AD CONIURA expect_kind("Et", TK_IDENTIFIER, 75)
+  SI rc != 0
+    REDDE rc
+  FIN SI
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire
