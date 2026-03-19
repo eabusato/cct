@@ -1,0 +1,475 @@
+INCIPIT grimoire "semantic_context"
+
+ADVOCARE "cct/fluxus.cct"
+ADVOCARE "cct/fmt.cct"
+ADVOCARE "cct/mem.cct"
+ADVOCARE "cct/verbum.cct"
+ADVOCARE "semantic_kind.cct"
+ADVOCARE "semantic_scope.cct"
+ADVOCARE "semantic_symbol.cct"
+ADVOCARE "semantic_type.cct"
+ADVOCARE "semantic_type_kind.cct"
+
+SIGILLUM SemanticContext
+  filename: VERBUM
+  owns_filename: VERUM
+  had_error: VERUM
+  error_count: REX
+  last_error_message: VERBUM
+  owns_last_error_message: VERUM
+  last_error_line: REX
+  last_error_column: REX
+  scopes: SPECULUM NIHIL
+  symbols: SPECULUM NIHIL
+  types: SPECULUM NIHIL
+  global_scope_id: REX
+  current_scope_id: REX
+  current_rituale_id: REX
+  loop_depth: REX
+  type_error: REX
+  type_nihil: REX
+  type_verum: REX
+  type_verbum: REX
+  type_fractum: REX
+  type_rex: REX
+  type_dux: REX
+  type_comes: REX
+  type_miles: REX
+  type_umbra: REX
+  type_flamma: REX
+FIN SIGILLUM
+
+RITUALE semantic_heap_alloc(REX bytes) REDDE SPECULUM NIHIL
+  REDDE CONIURA alloc(bytes)
+EXPLICIT RITUALE
+
+RITUALE semantic_heap_zero(SPECULUM NIHIL ptr, REX bytes) REDDE NIHIL
+  CONIURA zero(ptr, bytes)
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE semantic_heap_free(SPECULUM NIHIL ptr) REDDE NIHIL
+  CONIURA free(ptr)
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE semantic_invalid_id() REDDE REX
+  REDDE -1
+EXPLICIT RITUALE
+
+RITUALE semantic_scope_at(SPECULUM SemanticContext ctx, REX scope_id) REDDE SPECULUM SemanticScope
+  REDDE CONIURA fluxus_get((*ctx).scopes, scope_id)
+EXPLICIT RITUALE
+
+RITUALE semantic_symbol_at(SPECULUM SemanticContext ctx, REX symbol_id) REDDE SPECULUM SemanticSymbol
+  REDDE CONIURA fluxus_get((*ctx).symbols, symbol_id)
+EXPLICIT RITUALE
+
+RITUALE semantic_type_at(SPECULUM SemanticContext ctx, REX type_id) REDDE SPECULUM SemanticType
+  REDDE CONIURA fluxus_get((*ctx).types, type_id)
+EXPLICIT RITUALE
+
+RITUALE semantic_add_scope(SPECULUM SemanticContext ctx, SemanticScopeKind kind, REX parent_id) REDDE REX
+  EVOCA SemanticScope scope
+  VINCIRE scope.id AD CONIURA fluxus_len((*ctx).scopes)
+  VINCIRE scope.kind AD kind
+  VINCIRE scope.parent_id AD parent_id
+  VINCIRE scope.symbol_ids AD CONIURA fluxus_init(MENSURA(REX))
+  SI parent_id == CONIURA semantic_invalid_id()
+    VINCIRE scope.depth AD 0
+  ALITER
+    EVOCA SPECULUM SemanticScope parent_scope AD CONIURA semantic_scope_at(ctx, parent_id)
+    VINCIRE scope.depth AD (*parent_scope).depth + 1
+  FIN SI
+  CONIURA fluxus_push((*ctx).scopes, SPECULUM scope)
+  REDDE scope.id
+EXPLICIT RITUALE
+
+RITUALE semantic_add_type(SPECULUM SemanticContext ctx, VERBUM name, VERUM is_builtin) REDDE REX
+  EVOCA SemanticType type_ref
+  VINCIRE type_ref.id AD CONIURA fluxus_len((*ctx).types)
+  VINCIRE type_ref.kind AD SEM_TYPE_NAMED
+  VINCIRE type_ref.name AD CONIURA verbum_dup(name)
+  VINCIRE type_ref.owns_name AD VERUM
+  VINCIRE type_ref.is_builtin AD is_builtin
+  VINCIRE type_ref.element_type_id AD CONIURA semantic_invalid_id()
+  VINCIRE type_ref.array_size AD 0
+  VINCIRE type_ref.named_symbol_id AD CONIURA semantic_invalid_id()
+  CONIURA fluxus_push((*ctx).types, SPECULUM type_ref)
+  REDDE type_ref.id
+EXPLICIT RITUALE
+
+RITUALE semantic_add_type_full(SPECULUM SemanticContext ctx, SemanticTypeKind kind, VERBUM name, VERUM is_builtin, REX element_type_id, REX array_size, REX named_symbol_id) REDDE REX
+  EVOCA SemanticType type_ref
+  VINCIRE type_ref.id AD CONIURA fluxus_len((*ctx).types)
+  VINCIRE type_ref.kind AD kind
+  VINCIRE type_ref.name AD CONIURA verbum_dup(name)
+  VINCIRE type_ref.owns_name AD VERUM
+  VINCIRE type_ref.is_builtin AD is_builtin
+  VINCIRE type_ref.element_type_id AD element_type_id
+  VINCIRE type_ref.array_size AD array_size
+  VINCIRE type_ref.named_symbol_id AD named_symbol_id
+  CONIURA fluxus_push((*ctx).types, SPECULUM type_ref)
+  REDDE type_ref.id
+EXPLICIT RITUALE
+
+RITUALE semantic_builtin_type_by_name(SPECULUM SemanticContext ctx, VERBUM name) REDDE REX
+  SI CONIURA compare(name, "NIHIL") == 0
+    REDDE (*ctx).type_nihil
+  FIN SI
+  SI CONIURA compare(name, "VERUM") == 0
+    REDDE (*ctx).type_verum
+  FIN SI
+  SI CONIURA compare(name, "VERBUM") == 0
+    REDDE (*ctx).type_verbum
+  FIN SI
+  SI CONIURA compare(name, "FRACTUM") == 0
+    REDDE (*ctx).type_fractum
+  FIN SI
+  SI CONIURA compare(name, "REX") == 0
+    REDDE (*ctx).type_rex
+  FIN SI
+  SI CONIURA compare(name, "DUX") == 0
+    REDDE (*ctx).type_dux
+  FIN SI
+  SI CONIURA compare(name, "COMES") == 0
+    REDDE (*ctx).type_comes
+  FIN SI
+  SI CONIURA compare(name, "MILES") == 0
+    REDDE (*ctx).type_miles
+  FIN SI
+  SI CONIURA compare(name, "UMBRA") == 0
+    REDDE (*ctx).type_umbra
+  FIN SI
+  SI CONIURA compare(name, "FLAMMA") == 0
+    REDDE (*ctx).type_flamma
+  FIN SI
+  REDDE (*ctx).type_error
+EXPLICIT RITUALE
+
+RITUALE semantic_type_is_integer(SPECULUM SemanticContext ctx, REX type_id) REDDE VERUM
+  EVOCA SPECULUM SemanticType type_ref AD CONIURA semantic_type_at(ctx, type_id)
+  REDDE (*type_ref).kind == SEM_TYPE_REX VEL (*type_ref).kind == SEM_TYPE_DUX VEL (*type_ref).kind == SEM_TYPE_COMES VEL (*type_ref).kind == SEM_TYPE_MILES
+EXPLICIT RITUALE
+
+RITUALE semantic_type_is_real(SPECULUM SemanticContext ctx, REX type_id) REDDE VERUM
+  EVOCA SPECULUM SemanticType type_ref AD CONIURA semantic_type_at(ctx, type_id)
+  REDDE (*type_ref).kind == SEM_TYPE_UMBRA VEL (*type_ref).kind == SEM_TYPE_FLAMMA
+EXPLICIT RITUALE
+
+RITUALE semantic_type_is_numeric(SPECULUM SemanticContext ctx, REX type_id) REDDE VERUM
+  REDDE CONIURA semantic_type_is_integer(ctx, type_id) VEL CONIURA semantic_type_is_real(ctx, type_id)
+EXPLICIT RITUALE
+
+RITUALE semantic_type_equal(SPECULUM SemanticContext ctx, REX left_id, REX right_id) REDDE VERUM
+  SI left_id == right_id
+    REDDE VERUM
+  FIN SI
+  SI left_id == CONIURA semantic_invalid_id() VEL right_id == CONIURA semantic_invalid_id()
+    REDDE FALSUM
+  FIN SI
+
+  EVOCA SPECULUM SemanticType left AD CONIURA semantic_type_at(ctx, left_id)
+  EVOCA SPECULUM SemanticType right AD CONIURA semantic_type_at(ctx, right_id)
+
+  SI (*left).kind != (*right).kind
+    REDDE FALSUM
+  FIN SI
+
+  SI (*left).kind == SEM_TYPE_POINTER
+    REDDE CONIURA semantic_type_equal(ctx, (*left).element_type_id, (*right).element_type_id)
+  FIN SI
+
+  SI (*left).kind == SEM_TYPE_ARRAY
+    SI (*left).array_size != (*right).array_size
+      REDDE FALSUM
+    FIN SI
+    REDDE CONIURA semantic_type_equal(ctx, (*left).element_type_id, (*right).element_type_id)
+  FIN SI
+
+  SI (*left).kind == SEM_TYPE_NAMED VEL (*left).kind == SEM_TYPE_TYPE_PARAM
+    REDDE CONIURA compare((*left).name, (*right).name) == 0 ET (*left).named_symbol_id == (*right).named_symbol_id
+  FIN SI
+
+  REDDE VERUM
+EXPLICIT RITUALE
+
+RITUALE semantic_type_make_named(SPECULUM SemanticContext ctx, VERBUM name, REX named_symbol_id) REDDE REX
+  EVOCA REX i AD 0
+  EVOCA REX n AD CONIURA fluxus_len((*ctx).types)
+  DUM i < n
+    EVOCA SPECULUM SemanticType type_ref AD CONIURA semantic_type_at(ctx, i)
+    SI (*type_ref).kind == SEM_TYPE_NAMED ET CONIURA compare((*type_ref).name, name) == 0 ET (*type_ref).named_symbol_id == named_symbol_id
+      REDDE i
+    FIN SI
+    VINCIRE i AD i + 1
+  FIN DUM
+  REDDE CONIURA semantic_add_type_full(ctx, SEM_TYPE_NAMED, name, FALSUM, CONIURA semantic_invalid_id(), 0, named_symbol_id)
+EXPLICIT RITUALE
+
+RITUALE semantic_type_make_pointer(SPECULUM SemanticContext ctx, REX element_type_id) REDDE REX
+  EVOCA REX i AD 0
+  EVOCA REX n AD CONIURA fluxus_len((*ctx).types)
+  DUM i < n
+    EVOCA SPECULUM SemanticType type_ref AD CONIURA semantic_type_at(ctx, i)
+    SI (*type_ref).kind == SEM_TYPE_POINTER ET (*type_ref).element_type_id == element_type_id
+      REDDE i
+    FIN SI
+    VINCIRE i AD i + 1
+  FIN DUM
+  REDDE CONIURA semantic_add_type_full(ctx, SEM_TYPE_POINTER, "SPECULUM", FALSUM, element_type_id, 0, CONIURA semantic_invalid_id())
+EXPLICIT RITUALE
+
+RITUALE semantic_type_make_array(SPECULUM SemanticContext ctx, REX element_type_id, REX array_size) REDDE REX
+  EVOCA REX i AD 0
+  EVOCA REX n AD CONIURA fluxus_len((*ctx).types)
+  DUM i < n
+    EVOCA SPECULUM SemanticType type_ref AD CONIURA semantic_type_at(ctx, i)
+    SI (*type_ref).kind == SEM_TYPE_ARRAY ET (*type_ref).element_type_id == element_type_id ET (*type_ref).array_size == array_size
+      REDDE i
+    FIN SI
+    VINCIRE i AD i + 1
+  FIN DUM
+  REDDE CONIURA semantic_add_type_full(ctx, SEM_TYPE_ARRAY, "SERIES", FALSUM, element_type_id, array_size, CONIURA semantic_invalid_id())
+EXPLICIT RITUALE
+
+RITUALE semantic_type_compatible_assign(SPECULUM SemanticContext ctx, REX target_id, REX value_id) REDDE VERUM
+  SI target_id == CONIURA semantic_invalid_id() VEL value_id == CONIURA semantic_invalid_id()
+    REDDE FALSUM
+  FIN SI
+  SI target_id == (*ctx).type_error VEL value_id == (*ctx).type_error
+    REDDE VERUM
+  FIN SI
+  SI CONIURA semantic_type_equal(ctx, target_id, value_id)
+    REDDE VERUM
+  FIN SI
+
+  EVOCA SPECULUM SemanticType target AD CONIURA semantic_type_at(ctx, target_id)
+  EVOCA SPECULUM SemanticType value AD CONIURA semantic_type_at(ctx, value_id)
+
+  SI (*target).kind == SEM_TYPE_POINTER ET (*value).kind == SEM_TYPE_POINTER
+    EVOCA SPECULUM SemanticType target_elem AD CONIURA semantic_type_at(ctx, (*target).element_type_id)
+    EVOCA SPECULUM SemanticType value_elem AD CONIURA semantic_type_at(ctx, (*value).element_type_id)
+    SI (*target_elem).kind == SEM_TYPE_NIHIL VEL (*value_elem).kind == SEM_TYPE_NIHIL
+      REDDE VERUM
+    FIN SI
+    REDDE FALSUM
+  FIN SI
+
+  SI (*target).kind == SEM_TYPE_MILES ET CONIURA semantic_type_is_integer(ctx, value_id)
+    REDDE VERUM
+  FIN SI
+
+  SI CONIURA semantic_type_is_real(ctx, target_id) ET CONIURA semantic_type_is_integer(ctx, value_id)
+    REDDE VERUM
+  FIN SI
+
+  SI CONIURA semantic_type_is_real(ctx, target_id) ET CONIURA semantic_type_is_real(ctx, value_id)
+    REDDE VERUM
+  FIN SI
+
+  REDDE FALSUM
+EXPLICIT RITUALE
+
+RITUALE semantic_type_debug_string(SPECULUM SemanticContext ctx, REX type_id) REDDE VERBUM
+  EVOCA SPECULUM SemanticType type_ref AD CONIURA semantic_type_at(ctx, type_id)
+
+  SI (*type_ref).kind == SEM_TYPE_POINTER
+    REDDE CONIURA concat("SPECULUM ", CONIURA semantic_type_debug_string(ctx, (*type_ref).element_type_id))
+  FIN SI
+
+  SI (*type_ref).kind == SEM_TYPE_ARRAY
+    SI (*type_ref).array_size == 0
+      REDDE CONIURA concat("SERIES ", CONIURA semantic_type_debug_string(ctx, (*type_ref).element_type_id))
+    FIN SI
+    REDDE CONIURA concat(CONIURA concat(CONIURA concat("SERIES(", CONIURA stringify_int((*type_ref).array_size)), ") "), CONIURA semantic_type_debug_string(ctx, (*type_ref).element_type_id))
+  FIN SI
+
+  REDDE (*type_ref).name
+EXPLICIT RITUALE
+
+RITUALE semantic_lookup_in_scope(SPECULUM SemanticContext ctx, REX scope_id, VERBUM name) REDDE REX
+  EVOCA SPECULUM SemanticScope scope AD CONIURA semantic_scope_at(ctx, scope_id)
+  EVOCA REX i AD 0
+  EVOCA REX n AD CONIURA fluxus_len((*scope).symbol_ids)
+  DUM i < n
+    EVOCA SPECULUM REX slot AD CONIURA fluxus_get((*scope).symbol_ids, i)
+    EVOCA SPECULUM SemanticSymbol sym AD CONIURA semantic_symbol_at(ctx, (*slot))
+    SI CONIURA compare((*sym).name, name) == 0
+      REDDE (*sym).id
+    FIN SI
+    VINCIRE i AD i + 1
+  FIN DUM
+  REDDE CONIURA semantic_invalid_id()
+EXPLICIT RITUALE
+
+RITUALE semantic_lookup_local(SPECULUM SemanticContext ctx, VERBUM name) REDDE REX
+  REDDE CONIURA semantic_lookup_in_scope(ctx, (*ctx).current_scope_id, name)
+EXPLICIT RITUALE
+
+RITUALE semantic_lookup_global(SPECULUM SemanticContext ctx, VERBUM name) REDDE REX
+  REDDE CONIURA semantic_lookup_in_scope(ctx, (*ctx).global_scope_id, name)
+EXPLICIT RITUALE
+
+RITUALE semantic_lookup(SPECULUM SemanticContext ctx, VERBUM name) REDDE REX
+  EVOCA REX scope_id AD (*ctx).current_scope_id
+  DUM scope_id != CONIURA semantic_invalid_id()
+    EVOCA REX found AD CONIURA semantic_lookup_in_scope(ctx, scope_id, name)
+    SI found != CONIURA semantic_invalid_id()
+      REDDE found
+    FIN SI
+    EVOCA SPECULUM SemanticScope scope AD CONIURA semantic_scope_at(ctx, scope_id)
+    VINCIRE scope_id AD (*scope).parent_id
+  FIN DUM
+  REDDE CONIURA semantic_invalid_id()
+EXPLICIT RITUALE
+
+RITUALE semantic_define(SPECULUM SemanticContext ctx, SemanticSymbolKind kind, VERBUM name, REX type_id, REX line, REX column) REDDE REX
+  SI CONIURA semantic_lookup_local(ctx, name) != CONIURA semantic_invalid_id()
+    CONIURA semantic_report_error(ctx, line, column, CONIURA concat("duplicate symbol '", CONIURA concat(name, "' in same scope")))
+    REDDE CONIURA semantic_invalid_id()
+  FIN SI
+
+  EVOCA SemanticSymbol sym
+  VINCIRE sym.id AD CONIURA fluxus_len((*ctx).symbols)
+  VINCIRE sym.name AD CONIURA verbum_dup(name)
+  VINCIRE sym.owns_name AD VERUM
+  VINCIRE sym.kind AD kind
+  VINCIRE sym.type_id AD type_id
+  VINCIRE sym.payload_type_id AD CONIURA semantic_invalid_id()
+  VINCIRE sym.has_decl_node AD FALSUM
+  VINCIRE sym.param_type_ids AD CONIURA fluxus_init(MENSURA(REX))
+  VINCIRE sym.line AD line
+  VINCIRE sym.column AD column
+  CONIURA fluxus_push((*ctx).symbols, SPECULUM sym)
+
+  EVOCA SPECULUM SemanticScope scope AD CONIURA semantic_scope_at(ctx, (*ctx).current_scope_id)
+  EVOCA REX symbol_id AD sym.id
+  CONIURA fluxus_push((*scope).symbol_ids, SPECULUM symbol_id)
+  REDDE sym.id
+EXPLICIT RITUALE
+
+RITUALE semantic_report_error(SPECULUM SemanticContext ctx, REX line, REX column, VERBUM message) REDDE NIHIL
+  VINCIRE (*ctx).had_error AD VERUM
+  VINCIRE (*ctx).error_count AD (*ctx).error_count + 1
+  VINCIRE (*ctx).last_error_line AD line
+  VINCIRE (*ctx).last_error_column AD column
+  SI (*ctx).owns_last_error_message
+    DIMITTE (*ctx).last_error_message
+  FIN SI
+  VINCIRE (*ctx).last_error_message AD CONIURA verbum_dup(message)
+  VINCIRE (*ctx).owns_last_error_message AD VERUM
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE semantic_push_scope(SPECULUM SemanticContext ctx, SemanticScopeKind kind) REDDE REX
+  EVOCA REX scope_id AD CONIURA semantic_add_scope(ctx, kind, (*ctx).current_scope_id)
+  VINCIRE (*ctx).current_scope_id AD scope_id
+  REDDE scope_id
+EXPLICIT RITUALE
+
+RITUALE semantic_pop_scope(SPECULUM SemanticContext ctx) REDDE REX
+  SI (*ctx).current_scope_id == (*ctx).global_scope_id
+    REDDE (*ctx).current_scope_id
+  FIN SI
+  EVOCA SPECULUM SemanticScope scope AD CONIURA semantic_scope_at(ctx, (*ctx).current_scope_id)
+  VINCIRE (*ctx).current_scope_id AD (*scope).parent_id
+  REDDE (*ctx).current_scope_id
+EXPLICIT RITUALE
+
+RITUALE semantic_register_builtin_types(SPECULUM SemanticContext ctx) REDDE NIHIL
+  VINCIRE (*ctx).type_error AD CONIURA semantic_add_type_full(ctx, SEM_TYPE_ERROR, "<error>", FALSUM, CONIURA semantic_invalid_id(), 0, CONIURA semantic_invalid_id())
+  VINCIRE (*ctx).type_nihil AD CONIURA semantic_add_type_full(ctx, SEM_TYPE_NIHIL, "NIHIL", VERUM, CONIURA semantic_invalid_id(), 0, CONIURA semantic_invalid_id())
+  VINCIRE (*ctx).type_verum AD CONIURA semantic_add_type_full(ctx, SEM_TYPE_VERUM, "VERUM", VERUM, CONIURA semantic_invalid_id(), 0, CONIURA semantic_invalid_id())
+  VINCIRE (*ctx).type_verbum AD CONIURA semantic_add_type_full(ctx, SEM_TYPE_VERBUM, "VERBUM", VERUM, CONIURA semantic_invalid_id(), 0, CONIURA semantic_invalid_id())
+  VINCIRE (*ctx).type_fractum AD CONIURA semantic_add_type_full(ctx, SEM_TYPE_FRACTUM, "FRACTUM", VERUM, CONIURA semantic_invalid_id(), 0, CONIURA semantic_invalid_id())
+  VINCIRE (*ctx).type_rex AD CONIURA semantic_add_type_full(ctx, SEM_TYPE_REX, "REX", VERUM, CONIURA semantic_invalid_id(), 0, CONIURA semantic_invalid_id())
+  VINCIRE (*ctx).type_dux AD CONIURA semantic_add_type_full(ctx, SEM_TYPE_DUX, "DUX", VERUM, CONIURA semantic_invalid_id(), 0, CONIURA semantic_invalid_id())
+  VINCIRE (*ctx).type_comes AD CONIURA semantic_add_type_full(ctx, SEM_TYPE_COMES, "COMES", VERUM, CONIURA semantic_invalid_id(), 0, CONIURA semantic_invalid_id())
+  VINCIRE (*ctx).type_miles AD CONIURA semantic_add_type_full(ctx, SEM_TYPE_MILES, "MILES", VERUM, CONIURA semantic_invalid_id(), 0, CONIURA semantic_invalid_id())
+  VINCIRE (*ctx).type_umbra AD CONIURA semantic_add_type_full(ctx, SEM_TYPE_UMBRA, "UMBRA", VERUM, CONIURA semantic_invalid_id(), 0, CONIURA semantic_invalid_id())
+  VINCIRE (*ctx).type_flamma AD CONIURA semantic_add_type_full(ctx, SEM_TYPE_FLAMMA, "FLAMMA", VERUM, CONIURA semantic_invalid_id(), 0, CONIURA semantic_invalid_id())
+
+  CONIURA semantic_define(ctx, SEM_SYMBOL_TYPE, "NIHIL", (*ctx).type_nihil, 0, 0)
+  CONIURA semantic_define(ctx, SEM_SYMBOL_TYPE, "VERUM", (*ctx).type_verum, 0, 0)
+  CONIURA semantic_define(ctx, SEM_SYMBOL_TYPE, "VERBUM", (*ctx).type_verbum, 0, 0)
+  CONIURA semantic_define(ctx, SEM_SYMBOL_TYPE, "FRACTUM", (*ctx).type_fractum, 0, 0)
+  CONIURA semantic_define(ctx, SEM_SYMBOL_TYPE, "REX", (*ctx).type_rex, 0, 0)
+  CONIURA semantic_define(ctx, SEM_SYMBOL_TYPE, "DUX", (*ctx).type_dux, 0, 0)
+  CONIURA semantic_define(ctx, SEM_SYMBOL_TYPE, "COMES", (*ctx).type_comes, 0, 0)
+  CONIURA semantic_define(ctx, SEM_SYMBOL_TYPE, "MILES", (*ctx).type_miles, 0, 0)
+  CONIURA semantic_define(ctx, SEM_SYMBOL_TYPE, "UMBRA", (*ctx).type_umbra, 0, 0)
+  CONIURA semantic_define(ctx, SEM_SYMBOL_TYPE, "FLAMMA", (*ctx).type_flamma, 0, 0)
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE semantic_context_new(VERBUM filename) REDDE SPECULUM SemanticContext
+  EVOCA SPECULUM NIHIL raw AD CONIURA semantic_heap_alloc(MENSURA(SemanticContext))
+  CONIURA semantic_heap_zero(raw, MENSURA(SemanticContext))
+
+  EVOCA SPECULUM SemanticContext ctx
+  VINCIRE ctx AD raw
+  VINCIRE (*ctx).filename AD CONIURA verbum_dup(filename)
+  VINCIRE (*ctx).owns_filename AD VERUM
+  VINCIRE (*ctx).scopes AD CONIURA fluxus_init(MENSURA(SemanticScope))
+  VINCIRE (*ctx).symbols AD CONIURA fluxus_init(MENSURA(SemanticSymbol))
+  VINCIRE (*ctx).types AD CONIURA fluxus_init(MENSURA(SemanticType))
+  VINCIRE (*ctx).current_rituale_id AD CONIURA semantic_invalid_id()
+  VINCIRE (*ctx).global_scope_id AD CONIURA semantic_add_scope(ctx, SEM_SCOPE_GLOBAL, CONIURA semantic_invalid_id())
+  VINCIRE (*ctx).current_scope_id AD (*ctx).global_scope_id
+  CONIURA semantic_register_builtin_types(ctx)
+  REDDE ctx
+EXPLICIT RITUALE
+
+RITUALE semantic_had_error(SPECULUM SemanticContext ctx) REDDE VERUM
+  REDDE (*ctx).had_error
+EXPLICIT RITUALE
+
+RITUALE semantic_error_count(SPECULUM SemanticContext ctx) REDDE REX
+  REDDE (*ctx).error_count
+EXPLICIT RITUALE
+
+RITUALE semantic_context_free(SPECULUM SemanticContext ctx) REDDE NIHIL
+  EVOCA REX i AD 0
+  EVOCA REX n_symbols AD CONIURA fluxus_len((*ctx).symbols)
+  DUM i < n_symbols
+    EVOCA SPECULUM SemanticSymbol sym AD CONIURA semantic_symbol_at(ctx, i)
+    SI (*sym).owns_name
+      DIMITTE (*sym).name
+    FIN SI
+    CONIURA fluxus_free((*sym).param_type_ids)
+    VINCIRE i AD i + 1
+  FIN DUM
+
+  VINCIRE i AD 0
+  EVOCA REX n_types AD CONIURA fluxus_len((*ctx).types)
+  DUM i < n_types
+    EVOCA SPECULUM SemanticType type_ref AD CONIURA semantic_type_at(ctx, i)
+    SI (*type_ref).owns_name
+      DIMITTE (*type_ref).name
+    FIN SI
+    VINCIRE i AD i + 1
+  FIN DUM
+
+  VINCIRE i AD 0
+  EVOCA REX n_scopes AD CONIURA fluxus_len((*ctx).scopes)
+  DUM i < n_scopes
+    EVOCA SPECULUM SemanticScope scope AD CONIURA semantic_scope_at(ctx, i)
+    CONIURA fluxus_free((*scope).symbol_ids)
+    VINCIRE i AD i + 1
+  FIN DUM
+
+  CONIURA fluxus_free((*ctx).scopes)
+  CONIURA fluxus_free((*ctx).symbols)
+  CONIURA fluxus_free((*ctx).types)
+  SI (*ctx).owns_last_error_message
+    DIMITTE (*ctx).last_error_message
+  FIN SI
+  SI (*ctx).owns_filename
+    DIMITTE (*ctx).filename
+  FIN SI
+  CONIURA semantic_heap_free(ctx)
+  REDDE
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

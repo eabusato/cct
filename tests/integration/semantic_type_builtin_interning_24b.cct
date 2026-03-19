@@ -1,0 +1,20 @@
+INCIPIT grimoire "semantic_type_builtin_interning_24b"
+
+ADVOCARE "../../src/bootstrap/semantic/semantic_context.cct"
+
+RITUALE main() REDDE REX
+  EVOCA SPECULUM SemanticContext ctx AD CONIURA semantic_context_new("type_builtin.cct")
+  SI CONIURA semantic_builtin_type_by_name(ctx, "REX") != (*ctx).type_rex
+    REDDE 41
+  FIN SI
+  SI CONIURA semantic_builtin_type_by_name(ctx, "VERBUM") != (*ctx).type_verbum
+    REDDE 42
+  FIN SI
+  SI CONIURA semantic_builtin_type_by_name(ctx, "MISSING") != (*ctx).type_error
+    REDDE 43
+  FIN SI
+  CONIURA semantic_context_free(ctx)
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

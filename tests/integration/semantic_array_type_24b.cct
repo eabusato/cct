@@ -1,0 +1,26 @@
+INCIPIT grimoire "semantic_array_type_24b"
+
+ADVOCARE "../../src/bootstrap/semantic/semantic_context.cct"
+ADVOCARE "../../src/bootstrap/semantic/semantic_type.cct"
+ADVOCARE "../../src/bootstrap/semantic/semantic_type_kind.cct"
+
+RITUALE main() REDDE REX
+  EVOCA SPECULUM SemanticContext ctx AD CONIURA semantic_context_new("type_array.cct")
+  EVOCA REX arr_id AD CONIURA semantic_type_make_array(ctx, (*ctx).type_miles, 8)
+  EVOCA SPECULUM SemanticType arr_type AD CONIURA semantic_type_at(ctx, arr_id)
+
+  SI (*arr_type).kind != SEM_TYPE_ARRAY
+    REDDE 41
+  FIN SI
+  SI (*arr_type).element_type_id != (*ctx).type_miles
+    REDDE 42
+  FIN SI
+  SI (*arr_type).array_size != 8
+    REDDE 43
+  FIN SI
+
+  CONIURA semantic_context_free(ctx)
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

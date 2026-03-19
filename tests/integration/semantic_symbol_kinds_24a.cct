@@ -1,0 +1,35 @@
+INCIPIT grimoire "semantic_symbol_kinds_24a"
+
+ADVOCARE "../../src/bootstrap/semantic/semantic_context.cct"
+ADVOCARE "../../src/bootstrap/semantic/semantic_symbol.cct"
+
+RITUALE main() REDDE REX
+  EVOCA SPECULUM SemanticContext ctx AD CONIURA semantic_context_new("kinds.cct")
+  EVOCA SPECULUM SemanticSymbol var_sym AD CONIURA semantic_symbol_at(ctx, CONIURA semantic_define(ctx, SEM_SYMBOL_VARIABLE, "v", (*ctx).type_rex, 1, 1))
+  EVOCA SPECULUM SemanticSymbol type_sym AD CONIURA semantic_symbol_at(ctx, CONIURA semantic_define(ctx, SEM_SYMBOL_TYPE, "MyType", (*ctx).type_rex, 1, 2))
+  EVOCA SPECULUM SemanticSymbol pactum_sym AD CONIURA semantic_symbol_at(ctx, CONIURA semantic_define(ctx, SEM_SYMBOL_PACTUM, "Printable", (*ctx).type_nihil, 1, 3))
+  EVOCA SPECULUM SemanticSymbol rituale_sym AD CONIURA semantic_symbol_at(ctx, CONIURA semantic_define(ctx, SEM_SYMBOL_RITUALE, "main", (*ctx).type_nihil, 1, 4))
+  CONIURA semantic_push_scope(ctx, SEM_SCOPE_RITUALE)
+  EVOCA SPECULUM SemanticSymbol param_sym AD CONIURA semantic_symbol_at(ctx, CONIURA semantic_define(ctx, SEM_SYMBOL_PARAMETER, "p", (*ctx).type_dux, 2, 5))
+
+  SI (*var_sym).kind != SEM_SYMBOL_VARIABLE
+    REDDE 41
+  FIN SI
+  SI (*type_sym).kind != SEM_SYMBOL_TYPE
+    REDDE 42
+  FIN SI
+  SI (*pactum_sym).kind != SEM_SYMBOL_PACTUM
+    REDDE 43
+  FIN SI
+  SI (*rituale_sym).kind != SEM_SYMBOL_RITUALE
+    REDDE 44
+  FIN SI
+  SI (*param_sym).kind != SEM_SYMBOL_PARAMETER
+    REDDE 45
+  FIN SI
+
+  CONIURA semantic_context_free(ctx)
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

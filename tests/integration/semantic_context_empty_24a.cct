@@ -1,0 +1,40 @@
+INCIPIT grimoire "semantic_context_empty_24a"
+
+ADVOCARE "cct/verbum.cct"
+ADVOCARE "../../src/bootstrap/semantic/semantic_context.cct"
+ADVOCARE "../../src/bootstrap/semantic/semantic_scope.cct"
+
+RITUALE main() REDDE REX
+  EVOCA SPECULUM SemanticContext ctx AD CONIURA semantic_context_new("phase24a.cct")
+  EVOCA SPECULUM SemanticScope global_scope AD CONIURA semantic_scope_at(ctx, (*ctx).global_scope_id)
+
+  SI CONIURA compare((*ctx).filename, "phase24a.cct") != 0
+    REDDE 41
+  FIN SI
+  SI (*ctx).global_scope_id != 0
+    REDDE 42
+  FIN SI
+  SI (*ctx).current_scope_id != (*ctx).global_scope_id
+    REDDE 43
+  FIN SI
+  SI (*global_scope).kind != SEM_SCOPE_GLOBAL
+    REDDE 44
+  FIN SI
+  SI (*global_scope).depth != 0
+    REDDE 45
+  FIN SI
+  SI (*ctx).current_rituale_id != CONIURA semantic_invalid_id()
+    REDDE 46
+  FIN SI
+  SI (*ctx).had_error != FALSUM
+    REDDE 47
+  FIN SI
+  SI (*ctx).error_count != 0
+    REDDE 48
+  FIN SI
+
+  CONIURA semantic_context_free(ctx)
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

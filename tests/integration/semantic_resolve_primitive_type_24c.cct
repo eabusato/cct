@@ -1,0 +1,22 @@
+INCIPIT grimoire "semantic_resolve_primitive_type_24c"
+
+ADVOCARE "../../src/bootstrap/parser/ast.cct"
+ADVOCARE "../../src/bootstrap/semantic/semantic_context.cct"
+ADVOCARE "../../src/bootstrap/semantic/semantic_resolver.cct"
+
+RITUALE main() REDDE REX
+  EVOCA SPECULUM SemanticContext ctx AD CONIURA semantic_context_new("resolve_primitive.cct")
+  EVOCA SPECULUM AstNode type_node AD CONIURA ast_make_type("REX", 1, 1)
+  SI CONIURA semantic_resolve_type_node(ctx, type_node) != (*ctx).type_rex
+    REDDE 41
+  FIN SI
+  SI (*ctx).had_error != FALSUM
+    REDDE 42
+  FIN SI
+
+  CONIURA ast_node_free(type_node)
+  CONIURA semantic_context_free(ctx)
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

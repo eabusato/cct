@@ -1,0 +1,41 @@
+INCIPIT grimoire "semantic_register_rituale_24c"
+
+ADVOCARE "cct/fluxus.cct"
+ADVOCARE "../../src/bootstrap/parser/parser.cct"
+ADVOCARE "../../src/bootstrap/parser/ast.cct"
+ADVOCARE "../../src/bootstrap/semantic/semantic_context.cct"
+ADVOCARE "../../src/bootstrap/semantic/semantic_register.cct"
+ADVOCARE "../../src/bootstrap/semantic/semantic_symbol.cct"
+
+RITUALE main() REDDE REX
+  EVOCA VERBUM src AD "INCIPIT grimoire \"p\" RITUALE main(REX a, DUX b) REDDE NIHIL REDDE EXPLICIT RITUALE EXPLICIT grimoire"
+  EVOCA SPECULUM AstProgram program AD CONIURA parser_parse_program_source(src, "rituale.cct")
+  EVOCA SPECULUM SemanticContext ctx AD CONIURA semantic_context_new("rituale.cct")
+  CONIURA semantic_register_program(ctx, program)
+
+  EVOCA REX sym_id AD CONIURA semantic_lookup_global(ctx, "main")
+  SI sym_id == CONIURA semantic_invalid_id()
+    REDDE 41
+  FIN SI
+  EVOCA SPECULUM SemanticSymbol sym AD CONIURA semantic_symbol_at(ctx, sym_id)
+  SI (*sym).kind != SEM_SYMBOL_RITUALE
+    REDDE 42
+  FIN SI
+  SI (*sym).payload_type_id != (*ctx).type_nihil
+    REDDE 43
+  FIN SI
+  SI CONIURA fluxus_len((*sym).param_type_ids) != 2
+    REDDE 44
+  FIN SI
+  EVOCA SPECULUM REX p0 AD CONIURA fluxus_get((*sym).param_type_ids, 0)
+  EVOCA SPECULUM REX p1 AD CONIURA fluxus_get((*sym).param_type_ids, 1)
+  SI (*p0) != (*ctx).type_rex VEL (*p1) != (*ctx).type_dux
+    REDDE 45
+  FIN SI
+
+  CONIURA semantic_context_free(ctx)
+  CONIURA ast_program_free(program)
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

@@ -1,0 +1,24 @@
+INCIPIT grimoire "semantic_expr_literal_string_24d"
+
+ADVOCARE "../../src/bootstrap/parser/ast.cct"
+ADVOCARE "../../src/bootstrap/semantic/semantic_context.cct"
+ADVOCARE "../../src/bootstrap/semantic/semantic_expr.cct"
+
+RITUALE main() REDDE REX
+  EVOCA SPECULUM SemanticContext ctx AD CONIURA semantic_context_new("literal_string.cct")
+  EVOCA SPECULUM AstNode expr AD CONIURA ast_make_literal_string("abc", 1, 1)
+  EVOCA REX type_id AD CONIURA semantic_analyze_expr(ctx, expr)
+
+  SI type_id != (*ctx).type_verbum
+    REDDE 41
+  FIN SI
+  SI CONIURA semantic_had_error(ctx)
+    REDDE 42
+  FIN SI
+
+  CONIURA semantic_context_free(ctx)
+  CONIURA ast_node_free(expr)
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

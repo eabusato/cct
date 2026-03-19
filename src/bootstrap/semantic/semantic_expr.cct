@@ -1,0 +1,231 @@
+INCIPIT grimoire "semantic_expr"
+
+ADVOCARE "cct/fluxus.cct"
+ADVOCARE "cct/verbum.cct"
+ADVOCARE "../lexer/token_type.cct"
+ADVOCARE "../parser/ast.cct"
+ADVOCARE "semantic_context.cct"
+ADVOCARE "semantic_register.cct"
+ADVOCARE "semantic_resolver.cct"
+ADVOCARE "semantic_symbol.cct"
+ADVOCARE "semantic_type.cct"
+ADVOCARE "semantic_type_kind.cct"
+
+RITUALE semantic_find_field_type(SPECULUM SemanticContext ctx, REX object_type_id, VERBUM field_name, REX line, REX column) REDDE REX
+  EVOCA SPECULUM SemanticType obj_type AD CONIURA semantic_type_at(ctx, object_type_id)
+  SI (*obj_type).kind != SEM_TYPE_NAMED VEL (*obj_type).named_symbol_id == CONIURA semantic_invalid_id()
+    CONIURA semantic_report_error(ctx, line, column, "field access requires SIGILLUM-typed object")
+    REDDE (*ctx).type_error
+  FIN SI
+
+  EVOCA SPECULUM SemanticSymbol type_sym AD CONIURA semantic_symbol_at(ctx, (*obj_type).named_symbol_id)
+  SI NON (*type_sym).has_decl_node VEL (*(*type_sym).decl_node).kind != AST_SIGILLUM
+    CONIURA semantic_report_error(ctx, line, column, "field access requires SIGILLUM-typed object")
+    REDDE (*ctx).type_error
+  FIN SI
+
+  EVOCA REX i AD 0
+  EVOCA REX n AD CONIURA ast_node_list_len((*(*type_sym).decl_node).fields)
+  DUM i < n
+    EVOCA SPECULUM AstNode field AD CONIURA ast_node_list_get((*(*type_sym).decl_node).fields, i)
+    SI CONIURA compare((*field).name, field_name) == 0
+      REDDE CONIURA semantic_resolve_type_node(ctx, (*field).type_expr)
+    FIN SI
+    VINCIRE i AD i + 1
+  FIN DUM
+
+  CONIURA semantic_report_error(ctx, line, column, CONIURA concat("unknown field '", CONIURA concat(field_name, "'")))
+  REDDE (*ctx).type_error
+EXPLICIT RITUALE
+
+RITUALE semantic_analyze_identifier(SPECULUM SemanticContext ctx, SPECULUM AstNode expr) REDDE REX
+  EVOCA REX sym_id AD CONIURA semantic_lookup(ctx, (*expr).name)
+  SI sym_id == CONIURA semantic_invalid_id()
+    CONIURA semantic_report_error(ctx, (*expr).line, (*expr).column, CONIURA concat("undeclared identifier '", CONIURA concat((*expr).name, "'")))
+    REDDE (*ctx).type_error
+  FIN SI
+  EVOCA SPECULUM SemanticSymbol sym AD CONIURA semantic_symbol_at(ctx, sym_id)
+  SI (*sym).kind == SEM_SYMBOL_RITUALE
+    REDDE (*sym).payload_type_id
+  FIN SI
+  REDDE (*sym).type_id
+EXPLICIT RITUALE
+
+RITUALE semantic_analyze_lvalue(SPECULUM SemanticContext ctx, SPECULUM AstNode expr) REDDE REX
+  SI (*expr).kind == AST_IDENTIFIER
+    REDDE CONIURA semantic_analyze_identifier(ctx, expr)
+  FIN SI
+
+  SI (*expr).kind == AST_FIELD_ACCESS
+    EVOCA REX object_type_id AD CONIURA semantic_analyze_expr(ctx, (*expr).left)
+    SI object_type_id == (*ctx).type_error
+      REDDE (*ctx).type_error
+    FIN SI
+    REDDE CONIURA semantic_find_field_type(ctx, object_type_id, (*expr).name, (*expr).line, (*expr).column)
+  FIN SI
+
+  SI (*expr).kind == AST_INDEX_ACCESS
+    EVOCA REX base_type_id AD CONIURA semantic_analyze_expr(ctx, (*expr).left)
+    EVOCA REX index_type_id AD CONIURA semantic_analyze_expr(ctx, (*expr).right)
+    SI NON CONIURA semantic_type_is_integer(ctx, index_type_id)
+      CONIURA semantic_report_error(ctx, (*(*expr).right).line, (*(*expr).right).column, "index expression must be integer")
+      REDDE (*ctx).type_error
+    FIN SI
+    EVOCA SPECULUM SemanticType base_type AD CONIURA semantic_type_at(ctx, base_type_id)
+    SI (*base_type).kind != SEM_TYPE_ARRAY ET (*base_type).kind != SEM_TYPE_POINTER
+      CONIURA semantic_report_error(ctx, (*expr).line, (*expr).column, "indexing requires array or pointer type")
+      REDDE (*ctx).type_error
+    FIN SI
+    REDDE (*base_type).element_type_id
+  FIN SI
+
+  CONIURA semantic_report_error(ctx, (*expr).line, (*expr).column, "assignment target is not a valid lvalue")
+  REDDE (*ctx).type_error
+EXPLICIT RITUALE
+
+RITUALE semantic_analyze_call(SPECULUM SemanticContext ctx, SPECULUM AstNode expr) REDDE REX
+  SI (*(*expr).callee).kind != AST_IDENTIFIER
+    CONIURA semantic_report_error(ctx, (*expr).line, (*expr).column, "call target is not rituale")
+    REDDE (*ctx).type_error
+  FIN SI
+
+  EVOCA REX sym_id AD CONIURA semantic_lookup(ctx, (*(*expr).callee).name)
+  SI sym_id == CONIURA semantic_invalid_id()
+    CONIURA semantic_report_error(ctx, (*expr).line, (*expr).column, CONIURA concat("undeclared identifier '", CONIURA concat((*(*expr).callee).name, "'")))
+    REDDE (*ctx).type_error
+  FIN SI
+
+  EVOCA SPECULUM SemanticSymbol sym AD CONIURA semantic_symbol_at(ctx, sym_id)
+  SI (*sym).kind != SEM_SYMBOL_RITUALE
+    CONIURA semantic_report_error(ctx, (*expr).line, (*expr).column, "call target is not rituale")
+    REDDE (*ctx).type_error
+  FIN SI
+
+  EVOCA REX expected AD CONIURA fluxus_len((*sym).param_type_ids)
+  EVOCA REX actual AD CONIURA ast_node_list_len((*expr).arguments)
+  SI expected != actual
+    CONIURA semantic_report_error(ctx, (*expr).line, (*expr).column, "rituale call arity mismatch")
+    REDDE (*ctx).type_error
+  FIN SI
+
+  EVOCA REX i AD 0
+  DUM i < actual
+    EVOCA SPECULUM AstNode arg AD CONIURA ast_node_list_get((*expr).arguments, i)
+    EVOCA REX arg_type_id AD CONIURA semantic_analyze_expr(ctx, arg)
+    EVOCA SPECULUM REX expected_slot AD CONIURA fluxus_get((*sym).param_type_ids, i)
+    SI NON CONIURA semantic_type_compatible_assign(ctx, (*expected_slot), arg_type_id)
+      CONIURA semantic_report_error(ctx, (*arg).line, (*arg).column, "argument type mismatch")
+      REDDE (*ctx).type_error
+    FIN SI
+    VINCIRE i AD i + 1
+  FIN DUM
+
+  REDDE (*sym).payload_type_id
+EXPLICIT RITUALE
+
+RITUALE semantic_analyze_expr(SPECULUM SemanticContext ctx, SPECULUM AstNode expr) REDDE REX
+  SI (*expr).kind == AST_LITERAL_INT
+    REDDE (*ctx).type_rex
+  FIN SI
+  SI (*expr).kind == AST_LITERAL_REAL
+    REDDE (*ctx).type_umbra
+  FIN SI
+  SI (*expr).kind == AST_LITERAL_STRING
+    REDDE (*ctx).type_verbum
+  FIN SI
+  SI (*expr).kind == AST_LITERAL_BOOL
+    REDDE (*ctx).type_verum
+  FIN SI
+  SI (*expr).kind == AST_LITERAL_NIHIL
+    REDDE (*ctx).type_nihil
+  FIN SI
+  SI (*expr).kind == AST_IDENTIFIER
+    REDDE CONIURA semantic_analyze_identifier(ctx, expr)
+  FIN SI
+
+  SI (*expr).kind == AST_UNARY_OP
+    EVOCA REX operand_type_id AD CONIURA semantic_analyze_expr(ctx, (*expr).left)
+    SI (*expr).operator_kind == TK_MINUS VEL (*expr).operator_kind == TK_PLUS
+      SI NON CONIURA semantic_type_is_numeric(ctx, operand_type_id)
+        CONIURA semantic_report_error(ctx, (*expr).line, (*expr).column, "unary operator requires numeric operand")
+        REDDE (*ctx).type_error
+      FIN SI
+      REDDE operand_type_id
+    FIN SI
+    SI (*expr).operator_kind == TK_NON
+      SI operand_type_id != (*ctx).type_verum
+        CONIURA semantic_report_error(ctx, (*expr).line, (*expr).column, "logical NON requires VERUM operand")
+        REDDE (*ctx).type_error
+      FIN SI
+      REDDE (*ctx).type_verum
+    FIN SI
+    CONIURA semantic_report_error(ctx, (*expr).line, (*expr).column, "unsupported unary operator")
+    REDDE (*ctx).type_error
+  FIN SI
+
+  SI (*expr).kind == AST_BINARY_OP
+    EVOCA REX left_type_id AD CONIURA semantic_analyze_expr(ctx, (*expr).left)
+    EVOCA REX right_type_id AD CONIURA semantic_analyze_expr(ctx, (*expr).right)
+
+    SI (*expr).operator_kind == TK_PLUS VEL (*expr).operator_kind == TK_MINUS VEL (*expr).operator_kind == TK_STAR VEL (*expr).operator_kind == TK_SLASH VEL (*expr).operator_kind == TK_SLASH_SLASH VEL (*expr).operator_kind == TK_PERCENT VEL (*expr).operator_kind == TK_PERCENT_PERCENT
+      SI NON CONIURA semantic_type_is_numeric(ctx, left_type_id) VEL NON CONIURA semantic_type_is_numeric(ctx, right_type_id)
+        CONIURA semantic_report_error(ctx, (*expr).line, (*expr).column, "binary operator requires numeric operands")
+        REDDE (*ctx).type_error
+      FIN SI
+      SI CONIURA semantic_type_is_real(ctx, left_type_id) VEL CONIURA semantic_type_is_real(ctx, right_type_id)
+        REDDE (*ctx).type_umbra
+      FIN SI
+      REDDE (*ctx).type_rex
+    FIN SI
+
+    SI (*expr).operator_kind == TK_LESS VEL (*expr).operator_kind == TK_LESS_EQ VEL (*expr).operator_kind == TK_GREATER VEL (*expr).operator_kind == TK_GREATER_EQ VEL (*expr).operator_kind == TK_EQ_EQ VEL (*expr).operator_kind == TK_BANG_EQ
+      SI NON CONIURA semantic_type_compatible_assign(ctx, left_type_id, right_type_id) ET NON CONIURA semantic_type_compatible_assign(ctx, right_type_id, left_type_id)
+        CONIURA semantic_report_error(ctx, (*expr).line, (*expr).column, "comparison requires compatible operands")
+        REDDE (*ctx).type_error
+      FIN SI
+      REDDE (*ctx).type_verum
+    FIN SI
+
+    SI (*expr).operator_kind == TK_ET VEL (*expr).operator_kind == TK_VEL
+      SI left_type_id != (*ctx).type_verum VEL right_type_id != (*ctx).type_verum
+        CONIURA semantic_report_error(ctx, (*expr).line, (*expr).column, "logical operator requires VERUM operands")
+        REDDE (*ctx).type_error
+      FIN SI
+      REDDE (*ctx).type_verum
+    FIN SI
+
+    CONIURA semantic_report_error(ctx, (*expr).line, (*expr).column, "unsupported binary operator")
+    REDDE (*ctx).type_error
+  FIN SI
+
+  SI (*expr).kind == AST_CALL
+    REDDE CONIURA semantic_analyze_call(ctx, expr)
+  FIN SI
+
+  SI (*expr).kind == AST_FIELD_ACCESS
+    EVOCA REX object_type_id AD CONIURA semantic_analyze_expr(ctx, (*expr).left)
+    SI object_type_id == (*ctx).type_error
+      REDDE (*ctx).type_error
+    FIN SI
+    REDDE CONIURA semantic_find_field_type(ctx, object_type_id, (*expr).name, (*expr).line, (*expr).column)
+  FIN SI
+
+  SI (*expr).kind == AST_INDEX_ACCESS
+    REDDE CONIURA semantic_analyze_lvalue(ctx, expr)
+  FIN SI
+
+  SI (*expr).kind == AST_VINCIRE
+    EVOCA REX target_type_id AD CONIURA semantic_analyze_lvalue(ctx, (*expr).left)
+    EVOCA REX value_type_id AD CONIURA semantic_analyze_expr(ctx, (*expr).right)
+    SI NON CONIURA semantic_type_compatible_assign(ctx, target_type_id, value_type_id)
+      CONIURA semantic_report_error(ctx, (*expr).line, (*expr).column, "assignment type mismatch")
+      REDDE (*ctx).type_error
+    FIN SI
+    REDDE target_type_id
+  FIN SI
+
+  CONIURA semantic_report_error(ctx, (*expr).line, (*expr).column, "unsupported expression node")
+  REDDE (*ctx).type_error
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

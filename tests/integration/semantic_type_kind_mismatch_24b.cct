@@ -1,0 +1,28 @@
+INCIPIT grimoire "semantic_type_kind_mismatch_24b"
+
+ADVOCARE "../../src/bootstrap/semantic/semantic_context.cct"
+ADVOCARE "../../src/bootstrap/semantic/semantic_type.cct"
+ADVOCARE "../../src/bootstrap/semantic/semantic_type_kind.cct"
+
+RITUALE main() REDDE REX
+  EVOCA SPECULUM SemanticContext ctx AD CONIURA semantic_context_new("type_kind.cct")
+  EVOCA REX named_id AD CONIURA semantic_type_make_named(ctx, "Foo", CONIURA semantic_invalid_id())
+  EVOCA REX ptr_id AD CONIURA semantic_type_make_pointer(ctx, (*ctx).type_rex)
+  EVOCA SPECULUM SemanticType named_type AD CONIURA semantic_type_at(ctx, named_id)
+  EVOCA SPECULUM SemanticType ptr_type AD CONIURA semantic_type_at(ctx, ptr_id)
+
+  SI (*named_type).kind != SEM_TYPE_NAMED
+    REDDE 41
+  FIN SI
+  SI (*ptr_type).kind != SEM_TYPE_POINTER
+    REDDE 42
+  FIN SI
+  SI CONIURA semantic_type_equal(ctx, named_id, ptr_id) != FALSUM
+    REDDE 43
+  FIN SI
+
+  CONIURA semantic_context_free(ctx)
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

@@ -1,0 +1,20 @@
+INCIPIT grimoire "semantic_type_equal_builtin_24b"
+
+ADVOCARE "../../src/bootstrap/semantic/semantic_context.cct"
+
+RITUALE main() REDDE REX
+  EVOCA SPECULUM SemanticContext ctx AD CONIURA semantic_context_new("type_equal.cct")
+  SI CONIURA semantic_type_equal(ctx, (*ctx).type_rex, (*ctx).type_rex) != VERUM
+    REDDE 41
+  FIN SI
+  SI CONIURA semantic_type_equal(ctx, (*ctx).type_rex, (*ctx).type_dux) != FALSUM
+    REDDE 42
+  FIN SI
+  SI CONIURA semantic_type_equal(ctx, (*ctx).type_verbum, (*ctx).type_verum) != FALSUM
+    REDDE 43
+  FIN SI
+  CONIURA semantic_context_free(ctx)
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

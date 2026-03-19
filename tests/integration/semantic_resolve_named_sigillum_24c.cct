@@ -1,0 +1,38 @@
+INCIPIT grimoire "semantic_resolve_named_sigillum_24c"
+
+ADVOCARE "cct/fluxus.cct"
+ADVOCARE "cct/verbum.cct"
+ADVOCARE "../../src/bootstrap/parser/parser.cct"
+ADVOCARE "../../src/bootstrap/parser/ast.cct"
+ADVOCARE "../../src/bootstrap/parser/ast.cct"
+ADVOCARE "../../src/bootstrap/semantic/semantic_context.cct"
+ADVOCARE "../../src/bootstrap/semantic/semantic_register.cct"
+ADVOCARE "../../src/bootstrap/semantic/semantic_symbol.cct"
+ADVOCARE "../../src/bootstrap/semantic/semantic_type.cct"
+ADVOCARE "../../src/bootstrap/semantic/semantic_type_kind.cct"
+
+RITUALE main() REDDE REX
+  EVOCA VERBUM src AD "INCIPIT grimoire \"p\" SIGILLUM Caixa valor: REX FIN SIGILLUM RITUALE main(Caixa x) REDDE Caixa REDDE EXPLICIT RITUALE EXPLICIT grimoire"
+  EVOCA SPECULUM AstProgram program AD CONIURA parser_parse_program_source(src, "resolve_sigillum.cct")
+  EVOCA SPECULUM SemanticContext ctx AD CONIURA semantic_context_new("resolve_sigillum.cct")
+  CONIURA semantic_register_program(ctx, program)
+
+  EVOCA REX sym_id AD CONIURA semantic_lookup_global(ctx, "main")
+  EVOCA SPECULUM SemanticSymbol sym AD CONIURA semantic_symbol_at(ctx, sym_id)
+  EVOCA SPECULUM REX p0 AD CONIURA fluxus_get((*sym).param_type_ids, 0)
+  EVOCA SPECULUM SemanticType param_type AD CONIURA semantic_type_at(ctx, (*p0))
+  EVOCA SPECULUM SemanticType ret_type AD CONIURA semantic_type_at(ctx, (*sym).payload_type_id)
+
+  SI (*param_type).kind != SEM_TYPE_NAMED VEL CONIURA compare((*param_type).name, "Caixa") != 0
+    REDDE 41
+  FIN SI
+  SI (*ret_type).kind != SEM_TYPE_NAMED VEL CONIURA compare((*ret_type).name, "Caixa") != 0
+    REDDE 42
+  FIN SI
+
+  CONIURA semantic_context_free(ctx)
+  CONIURA ast_program_free(program)
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

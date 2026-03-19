@@ -1,0 +1,25 @@
+INCIPIT grimoire "semantic_assign_compat_24b"
+
+ADVOCARE "../../src/bootstrap/semantic/semantic_context.cct"
+
+RITUALE main() REDDE REX
+  EVOCA SPECULUM SemanticContext ctx AD CONIURA semantic_context_new("type_assign.cct")
+
+  SI CONIURA semantic_type_compatible_assign(ctx, (*ctx).type_umbra, (*ctx).type_rex) != VERUM
+    REDDE 41
+  FIN SI
+  SI CONIURA semantic_type_compatible_assign(ctx, (*ctx).type_miles, (*ctx).type_dux) != VERUM
+    REDDE 42
+  FIN SI
+  SI CONIURA semantic_type_compatible_assign(ctx, (*ctx).type_rex, (*ctx).type_umbra) != FALSUM
+    REDDE 43
+  FIN SI
+  SI CONIURA semantic_type_compatible_assign(ctx, (*ctx).type_verbum, (*ctx).type_rex) != FALSUM
+    REDDE 44
+  FIN SI
+
+  CONIURA semantic_context_free(ctx)
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

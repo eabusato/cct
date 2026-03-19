@@ -1,0 +1,42 @@
+INCIPIT grimoire "semantic_register_sigillum_24c"
+
+ADVOCARE "cct/verbum.cct"
+ADVOCARE "../../src/bootstrap/parser/parser.cct"
+ADVOCARE "../../src/bootstrap/parser/ast.cct"
+ADVOCARE "../../src/bootstrap/semantic/semantic_context.cct"
+ADVOCARE "../../src/bootstrap/semantic/semantic_register.cct"
+ADVOCARE "../../src/bootstrap/semantic/semantic_symbol.cct"
+ADVOCARE "../../src/bootstrap/semantic/semantic_type.cct"
+ADVOCARE "../../src/bootstrap/semantic/semantic_type_kind.cct"
+
+RITUALE main() REDDE REX
+  EVOCA VERBUM src AD "INCIPIT grimoire \"p\" SIGILLUM Caixa valor: REX FIN SIGILLUM EXPLICIT grimoire"
+  EVOCA SPECULUM AstProgram program AD CONIURA parser_parse_program_source(src, "sigillum.cct")
+  EVOCA SPECULUM SemanticContext ctx AD CONIURA semantic_context_new("sigillum.cct")
+  CONIURA semantic_register_program(ctx, program)
+
+  EVOCA REX sym_id AD CONIURA semantic_lookup_global(ctx, "Caixa")
+  SI sym_id == CONIURA semantic_invalid_id()
+    REDDE 41
+  FIN SI
+  EVOCA SPECULUM SemanticSymbol sym AD CONIURA semantic_symbol_at(ctx, sym_id)
+  EVOCA SPECULUM SemanticType type_ref AD CONIURA semantic_type_at(ctx, (*sym).type_id)
+  SI (*sym).kind != SEM_SYMBOL_TYPE
+    REDDE 42
+  FIN SI
+  SI (*type_ref).kind != SEM_TYPE_NAMED
+    REDDE 43
+  FIN SI
+  SI CONIURA compare((*type_ref).name, "Caixa") != 0
+    REDDE 44
+  FIN SI
+  SI (*type_ref).named_symbol_id != sym_id
+    REDDE 45
+  FIN SI
+
+  CONIURA semantic_context_free(ctx)
+  CONIURA ast_program_free(program)
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

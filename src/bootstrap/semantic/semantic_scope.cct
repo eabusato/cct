@@ -1,0 +1,14 @@
+INCIPIT grimoire "semantic_scope"
+
+ADVOCARE "cct/fluxus.cct"
+ADVOCARE "semantic_kind.cct"
+
+SIGILLUM SemanticScope
+  id: REX
+  kind: SemanticScopeKind
+  parent_id: REX
+  symbol_ids: SPECULUM NIHIL
+  depth: REX
+FIN SIGILLUM
+
+EXPLICIT grimoire

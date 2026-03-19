@@ -1,0 +1,28 @@
+INCIPIT grimoire "semantic_expr_identifier_undeclared_24d"
+
+ADVOCARE "cct/verbum.cct"
+ADVOCARE "../../src/bootstrap/parser/ast.cct"
+ADVOCARE "../../src/bootstrap/semantic/semantic_context.cct"
+ADVOCARE "../../src/bootstrap/semantic/semantic_expr.cct"
+
+RITUALE main() REDDE REX
+  EVOCA SPECULUM SemanticContext ctx AD CONIURA semantic_context_new("identifier_undeclared.cct")
+  EVOCA SPECULUM AstNode expr AD CONIURA ast_make_identifier("missing", 1, 1)
+  EVOCA REX type_id AD CONIURA semantic_analyze_expr(ctx, expr)
+
+  SI type_id != (*ctx).type_error
+    REDDE 41
+  FIN SI
+  SI NON CONIURA semantic_had_error(ctx)
+    REDDE 42
+  FIN SI
+  SI CONIURA compare((*ctx).last_error_message, "undeclared identifier 'missing'") != 0
+    REDDE 43
+  FIN SI
+
+  CONIURA semantic_context_free(ctx)
+  CONIURA ast_node_free(expr)
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

@@ -1,0 +1,31 @@
+INCIPIT grimoire "semantic_named_type_basic_24b"
+
+ADVOCARE "cct/verbum.cct"
+ADVOCARE "../../src/bootstrap/semantic/semantic_context.cct"
+ADVOCARE "../../src/bootstrap/semantic/semantic_type.cct"
+ADVOCARE "../../src/bootstrap/semantic/semantic_type_kind.cct"
+
+RITUALE main() REDDE REX
+  EVOCA SPECULUM SemanticContext ctx AD CONIURA semantic_context_new("type_named.cct")
+  EVOCA REX named_id AD CONIURA semantic_type_make_named(ctx, "MyType", CONIURA semantic_invalid_id())
+  EVOCA REX named_id2 AD CONIURA semantic_type_make_named(ctx, "MyType", CONIURA semantic_invalid_id())
+  EVOCA SPECULUM SemanticType named_type AD CONIURA semantic_type_at(ctx, named_id)
+
+  SI named_id != named_id2
+    REDDE 41
+  FIN SI
+  SI (*named_type).kind != SEM_TYPE_NAMED
+    REDDE 42
+  FIN SI
+  SI CONIURA compare((*named_type).name, "MyType") != 0
+    REDDE 43
+  FIN SI
+  SI (*named_type).named_symbol_id != CONIURA semantic_invalid_id()
+    REDDE 44
+  FIN SI
+
+  CONIURA semantic_context_free(ctx)
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

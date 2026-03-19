@@ -1,0 +1,25 @@
+INCIPIT grimoire "semantic_pointer_nihil_compat_24b"
+
+ADVOCARE "../../src/bootstrap/semantic/semantic_context.cct"
+
+RITUALE main() REDDE REX
+  EVOCA SPECULUM SemanticContext ctx AD CONIURA semantic_context_new("type_ptr_nil.cct")
+  EVOCA REX ptr_void AD CONIURA semantic_type_make_pointer(ctx, (*ctx).type_nihil)
+  EVOCA REX ptr_rex AD CONIURA semantic_type_make_pointer(ctx, (*ctx).type_rex)
+  EVOCA REX ptr_dux AD CONIURA semantic_type_make_pointer(ctx, (*ctx).type_dux)
+
+  SI CONIURA semantic_type_compatible_assign(ctx, ptr_void, ptr_rex) != VERUM
+    REDDE 41
+  FIN SI
+  SI CONIURA semantic_type_compatible_assign(ctx, ptr_rex, ptr_void) != VERUM
+    REDDE 42
+  FIN SI
+  SI CONIURA semantic_type_compatible_assign(ctx, ptr_rex, ptr_dux) != FALSUM
+    REDDE 43
+  FIN SI
+
+  CONIURA semantic_context_free(ctx)
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

@@ -1,0 +1,79 @@
+INCIPIT grimoire "semantic_builtins_24a"
+
+ADVOCARE "cct/verbum.cct"
+ADVOCARE "../../src/bootstrap/semantic/semantic_context.cct"
+ADVOCARE "../../src/bootstrap/semantic/semantic_symbol.cct"
+ADVOCARE "../../src/bootstrap/semantic/semantic_type.cct"
+
+RITUALE assert_builtin(SPECULUM SemanticContext ctx, VERBUM name, REX expected_type_id) REDDE REX
+  EVOCA REX sym_id AD CONIURA semantic_lookup_global(ctx, name)
+  SI sym_id == CONIURA semantic_invalid_id()
+    REDDE 1
+  FIN SI
+  EVOCA SPECULUM SemanticSymbol sym AD CONIURA semantic_symbol_at(ctx, sym_id)
+  EVOCA SPECULUM SemanticType expected_type AD CONIURA semantic_type_at(ctx, expected_type_id)
+  SI (*sym).kind != SEM_SYMBOL_TYPE
+    REDDE 2
+  FIN SI
+  SI (*sym).type_id != expected_type_id
+    REDDE 3
+  FIN SI
+  SI (*expected_type).is_builtin != VERUM
+    REDDE 4
+  FIN SI
+  SI CONIURA compare((*expected_type).name, name) != 0
+    REDDE 5
+  FIN SI
+  REDDE 0
+EXPLICIT RITUALE
+
+RITUALE main() REDDE REX
+  EVOCA SPECULUM SemanticContext ctx AD CONIURA semantic_context_new("builtins.cct")
+  EVOCA REX rc AD 0
+
+  VINCIRE rc AD CONIURA assert_builtin(ctx, "NIHIL", (*ctx).type_nihil)
+  SI rc != 0
+    REDDE 40 + rc
+  FIN SI
+  VINCIRE rc AD CONIURA assert_builtin(ctx, "VERUM", (*ctx).type_verum)
+  SI rc != 0
+    REDDE 50 + rc
+  FIN SI
+  VINCIRE rc AD CONIURA assert_builtin(ctx, "VERBUM", (*ctx).type_verbum)
+  SI rc != 0
+    REDDE 60 + rc
+  FIN SI
+  VINCIRE rc AD CONIURA assert_builtin(ctx, "FRACTUM", (*ctx).type_fractum)
+  SI rc != 0
+    REDDE 70 + rc
+  FIN SI
+  VINCIRE rc AD CONIURA assert_builtin(ctx, "REX", (*ctx).type_rex)
+  SI rc != 0
+    REDDE 80 + rc
+  FIN SI
+  VINCIRE rc AD CONIURA assert_builtin(ctx, "DUX", (*ctx).type_dux)
+  SI rc != 0
+    REDDE 90 + rc
+  FIN SI
+  VINCIRE rc AD CONIURA assert_builtin(ctx, "COMES", (*ctx).type_comes)
+  SI rc != 0
+    REDDE 100 + rc
+  FIN SI
+  VINCIRE rc AD CONIURA assert_builtin(ctx, "MILES", (*ctx).type_miles)
+  SI rc != 0
+    REDDE 110 + rc
+  FIN SI
+  VINCIRE rc AD CONIURA assert_builtin(ctx, "UMBRA", (*ctx).type_umbra)
+  SI rc != 0
+    REDDE 120 + rc
+  FIN SI
+  VINCIRE rc AD CONIURA assert_builtin(ctx, "FLAMMA", (*ctx).type_flamma)
+  SI rc != 0
+    REDDE 130 + rc
+  FIN SI
+
+  CONIURA semantic_context_free(ctx)
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

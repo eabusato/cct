@@ -1,0 +1,26 @@
+INCIPIT grimoire "semantic_pointer_type_24b"
+
+ADVOCARE "../../src/bootstrap/semantic/semantic_context.cct"
+ADVOCARE "../../src/bootstrap/semantic/semantic_type.cct"
+ADVOCARE "../../src/bootstrap/semantic/semantic_type_kind.cct"
+
+RITUALE main() REDDE REX
+  EVOCA SPECULUM SemanticContext ctx AD CONIURA semantic_context_new("type_ptr.cct")
+  EVOCA REX ptr_id AD CONIURA semantic_type_make_pointer(ctx, (*ctx).type_rex)
+  EVOCA SPECULUM SemanticType ptr_type AD CONIURA semantic_type_at(ctx, ptr_id)
+
+  SI (*ptr_type).kind != SEM_TYPE_POINTER
+    REDDE 41
+  FIN SI
+  SI (*ptr_type).element_type_id != (*ctx).type_rex
+    REDDE 42
+  FIN SI
+  SI (*ptr_type).array_size != 0
+    REDDE 43
+  FIN SI
+
+  CONIURA semantic_context_free(ctx)
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

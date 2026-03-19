@@ -1,0 +1,26 @@
+INCIPIT grimoire "semantic_expr_unary_valid_24d"
+
+ADVOCARE "../../src/bootstrap/lexer/token_type.cct"
+ADVOCARE "../../src/bootstrap/parser/ast.cct"
+ADVOCARE "../../src/bootstrap/semantic/semantic_context.cct"
+ADVOCARE "../../src/bootstrap/semantic/semantic_expr.cct"
+
+RITUALE main() REDDE REX
+  EVOCA SPECULUM SemanticContext ctx AD CONIURA semantic_context_new("unary_valid.cct")
+  EVOCA SPECULUM AstNode value AD CONIURA ast_make_literal_int("7", 1, 2)
+  EVOCA SPECULUM AstNode expr AD CONIURA ast_make_unary(TK_MINUS, value, 1, 1)
+  EVOCA REX type_id AD CONIURA semantic_analyze_expr(ctx, expr)
+
+  SI type_id != (*ctx).type_rex
+    REDDE 41
+  FIN SI
+  SI CONIURA semantic_had_error(ctx)
+    REDDE 42
+  FIN SI
+
+  CONIURA semantic_context_free(ctx)
+  CONIURA ast_node_free(expr)
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

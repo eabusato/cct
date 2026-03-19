@@ -1,0 +1,22 @@
+INCIPIT grimoire "semantic_lookup_global_24a"
+
+ADVOCARE "../../src/bootstrap/semantic/semantic_context.cct"
+
+RITUALE main() REDDE REX
+  EVOCA SPECULUM SemanticContext ctx AD CONIURA semantic_context_new("global.cct")
+  EVOCA REX top AD CONIURA semantic_define(ctx, SEM_SYMBOL_RITUALE, "main", (*ctx).type_nihil, 1, 1)
+  CONIURA semantic_push_scope(ctx, SEM_SCOPE_RITUALE)
+  CONIURA semantic_define(ctx, SEM_SYMBOL_VARIABLE, "temp", (*ctx).type_rex, 2, 3)
+
+  SI CONIURA semantic_lookup_global(ctx, "main") != top
+    REDDE 41
+  FIN SI
+  SI CONIURA semantic_lookup_global(ctx, "temp") != CONIURA semantic_invalid_id()
+    REDDE 42
+  FIN SI
+
+  CONIURA semantic_context_free(ctx)
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

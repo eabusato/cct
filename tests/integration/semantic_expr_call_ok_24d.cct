@@ -1,0 +1,34 @@
+INCIPIT grimoire "semantic_expr_call_ok_24d"
+
+ADVOCARE "../../src/bootstrap/parser/parser.cct"
+ADVOCARE "../../src/bootstrap/parser/ast.cct"
+ADVOCARE "../../src/bootstrap/semantic/semantic_context.cct"
+ADVOCARE "../../src/bootstrap/semantic/semantic_register.cct"
+ADVOCARE "../../src/bootstrap/semantic/semantic_expr.cct"
+
+RITUALE main() REDDE REX
+  EVOCA VERBUM src AD "INCIPIT grimoire \"p\" RITUALE soma(REX a, REX b) REDDE REX REDDE a EXPLICIT RITUALE EXPLICIT grimoire"
+  EVOCA SPECULUM AstProgram program AD CONIURA parser_parse_program_source(src, "call_ok.cct")
+  EVOCA SPECULUM SemanticContext ctx AD CONIURA semantic_context_new("call_ok.cct")
+  CONIURA semantic_register_program(ctx, program)
+
+  EVOCA SPECULUM AstNode callee AD CONIURA ast_make_identifier("soma", 1, 1)
+  EVOCA SPECULUM AstNode call AD CONIURA ast_make_call(callee, 1, 1)
+  CONIURA ast_append_argument(call, CONIURA ast_make_literal_int("1", 1, 6))
+  CONIURA ast_append_argument(call, CONIURA ast_make_literal_int("2", 1, 9))
+
+  EVOCA REX type_id AD CONIURA semantic_analyze_expr(ctx, call)
+  SI type_id != (*ctx).type_rex
+    REDDE 41
+  FIN SI
+  SI CONIURA semantic_had_error(ctx)
+    REDDE 42
+  FIN SI
+
+  CONIURA semantic_context_free(ctx)
+  CONIURA ast_program_free(program)
+  CONIURA ast_node_free(call)
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

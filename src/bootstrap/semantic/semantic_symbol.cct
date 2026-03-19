@@ -1,0 +1,21 @@
+INCIPIT grimoire "semantic_symbol"
+
+ADVOCARE "semantic_kind.cct"
+ADVOCARE "semantic_type.cct"
+ADVOCARE "../parser/ast.cct"
+
+SIGILLUM SemanticSymbol
+  id: REX
+  name: VERBUM
+  owns_name: VERUM
+  kind: SemanticSymbolKind
+  type_id: REX
+  payload_type_id: REX
+  decl_node: SPECULUM AstNode
+  has_decl_node: VERUM
+  param_type_ids: SPECULUM NIHIL
+  line: REX
+  column: REX
+FIN SIGILLUM
+
+EXPLICIT grimoire

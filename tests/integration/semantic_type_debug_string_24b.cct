@@ -1,0 +1,28 @@
+INCIPIT grimoire "semantic_type_debug_string_24b"
+
+ADVOCARE "cct/verbum.cct"
+ADVOCARE "../../src/bootstrap/semantic/semantic_context.cct"
+
+RITUALE main() REDDE REX
+  EVOCA SPECULUM SemanticContext ctx AD CONIURA semantic_context_new("type_debug.cct")
+  EVOCA REX ptr_id AD CONIURA semantic_type_make_pointer(ctx, (*ctx).type_rex)
+  EVOCA REX arr_id AD CONIURA semantic_type_make_array(ctx, (*ctx).type_miles, 4)
+  EVOCA VERBUM ptr_dbg AD CONIURA semantic_type_debug_string(ctx, ptr_id)
+  EVOCA VERBUM arr_dbg AD CONIURA semantic_type_debug_string(ctx, arr_id)
+  EVOCA VERBUM builtin_dbg AD CONIURA semantic_type_debug_string(ctx, (*ctx).type_verbum)
+
+  SI CONIURA compare(ptr_dbg, "SPECULUM REX") != 0
+    REDDE 41
+  FIN SI
+  SI CONIURA compare(arr_dbg, "SERIES(4) MILES") != 0
+    REDDE 42
+  FIN SI
+  SI CONIURA compare(builtin_dbg, "VERBUM") != 0
+    REDDE 43
+  FIN SI
+
+  CONIURA semantic_context_free(ctx)
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

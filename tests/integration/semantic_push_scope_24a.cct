@@ -1,0 +1,39 @@
+INCIPIT grimoire "semantic_push_scope_24a"
+
+ADVOCARE "../../src/bootstrap/semantic/semantic_context.cct"
+ADVOCARE "../../src/bootstrap/semantic/semantic_scope.cct"
+
+RITUALE main() REDDE REX
+  EVOCA SPECULUM SemanticContext ctx AD CONIURA semantic_context_new("push.cct")
+  EVOCA REX rituale_id AD CONIURA semantic_push_scope(ctx, SEM_SCOPE_RITUALE)
+  EVOCA SPECULUM SemanticScope rituale_scope AD CONIURA semantic_scope_at(ctx, rituale_id)
+  EVOCA REX block_id AD CONIURA semantic_push_scope(ctx, SEM_SCOPE_BLOCK)
+  EVOCA SPECULUM SemanticScope block_scope AD CONIURA semantic_scope_at(ctx, block_id)
+
+  SI (*rituale_scope).kind != SEM_SCOPE_RITUALE
+    REDDE 41
+  FIN SI
+  SI (*rituale_scope).depth != 1
+    REDDE 42
+  FIN SI
+  SI (*rituale_scope).parent_id != (*ctx).global_scope_id
+    REDDE 43
+  FIN SI
+  SI (*block_scope).kind != SEM_SCOPE_BLOCK
+    REDDE 44
+  FIN SI
+  SI (*block_scope).depth != 2
+    REDDE 45
+  FIN SI
+  SI (*block_scope).parent_id != rituale_id
+    REDDE 46
+  FIN SI
+  SI (*ctx).current_scope_id != block_id
+    REDDE 47
+  FIN SI
+
+  CONIURA semantic_context_free(ctx)
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

@@ -1,0 +1,34 @@
+INCIPIT grimoire "semantic_shadowing_24a"
+
+ADVOCARE "../../src/bootstrap/semantic/semantic_context.cct"
+ADVOCARE "../../src/bootstrap/semantic/semantic_symbol.cct"
+
+RITUALE main() REDDE REX
+  EVOCA SPECULUM SemanticContext ctx AD CONIURA semantic_context_new("shadow.cct")
+  EVOCA REX global_x_id AD CONIURA semantic_define(ctx, SEM_SYMBOL_VARIABLE, "x", (*ctx).type_rex, 1, 1)
+  CONIURA semantic_push_scope(ctx, SEM_SCOPE_BLOCK)
+  EVOCA REX local_x_id AD CONIURA semantic_define(ctx, SEM_SYMBOL_VARIABLE, "x", (*ctx).type_dux, 2, 2)
+  EVOCA SPECULUM SemanticSymbol local_x AD CONIURA semantic_symbol_at(ctx, local_x_id)
+  EVOCA SPECULUM SemanticSymbol global_x AD CONIURA semantic_symbol_at(ctx, global_x_id)
+
+  SI CONIURA semantic_lookup(ctx, "x") != local_x_id
+    REDDE 41
+  FIN SI
+  SI CONIURA semantic_lookup_global(ctx, "x") != global_x_id
+    REDDE 42
+  FIN SI
+  SI (*local_x).type_id != (*ctx).type_dux
+    REDDE 43
+  FIN SI
+  SI (*global_x).type_id != (*ctx).type_rex
+    REDDE 44
+  FIN SI
+  SI (*ctx).error_count != 0
+    REDDE 45
+  FIN SI
+
+  CONIURA semantic_context_free(ctx)
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

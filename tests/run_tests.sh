@@ -21616,6 +21616,744 @@ fi
 
 echo ""
 echo "========================================"
+echo "FASE 24A: Symbol Table + Scope Chains"
+echo "========================================"
+echo ""
+
+# Test 1401: semantic_context_empty_24a
+echo "Test 1401: semantic_context_empty_24a"
+SRC_1401="tests/integration/semantic_context_empty_24a.cct"
+BIN_1401="${SRC_1401%.cct}"
+cleanup_codegen_artifacts "$SRC_1401"
+if "$CCT_BIN" "$SRC_1401" >"$CCT_TMP_DIR/cct_phase24a_1401_compile.out" 2>&1; then
+    "$BIN_1401" >"$CCT_TMP_DIR/cct_phase24a_1401_run.out" 2>&1
+    RC_1401=$?
+else
+    RC_1401=255
+fi
+if [ "$RC_1401" -eq 0 ]; then
+    test_pass "semantic_context_empty_24a valida contexto inicial e scope global"
+else
+    test_fail "semantic_context_empty_24a regrediu contexto inicial"
+fi
+
+# Test 1402: semantic_push_scope_24a
+echo "Test 1402: semantic_push_scope_24a"
+SRC_1402="tests/integration/semantic_push_scope_24a.cct"
+BIN_1402="${SRC_1402%.cct}"
+cleanup_codegen_artifacts "$SRC_1402"
+if "$CCT_BIN" "$SRC_1402" >"$CCT_TMP_DIR/cct_phase24a_1402_compile.out" 2>&1; then
+    "$BIN_1402" >"$CCT_TMP_DIR/cct_phase24a_1402_run.out" 2>&1
+    RC_1402=$?
+else
+    RC_1402=255
+fi
+if [ "$RC_1402" -eq 0 ]; then
+    test_pass "semantic_push_scope_24a valida cadeia de scopes e profundidade"
+else
+    test_fail "semantic_push_scope_24a regrediu push de scope"
+fi
+
+# Test 1403: semantic_pop_scope_24a
+echo "Test 1403: semantic_pop_scope_24a"
+SRC_1403="tests/integration/semantic_pop_scope_24a.cct"
+BIN_1403="${SRC_1403%.cct}"
+cleanup_codegen_artifacts "$SRC_1403"
+if "$CCT_BIN" "$SRC_1403" >"$CCT_TMP_DIR/cct_phase24a_1403_compile.out" 2>&1; then
+    "$BIN_1403" >"$CCT_TMP_DIR/cct_phase24a_1403_run.out" 2>&1
+    RC_1403=$?
+else
+    RC_1403=255
+fi
+if [ "$RC_1403" -eq 0 ]; then
+    test_pass "semantic_pop_scope_24a valida unwind ate o scope global"
+else
+    test_fail "semantic_pop_scope_24a regrediu pop de scope"
+fi
+
+# Test 1404: semantic_define_symbol_24a
+echo "Test 1404: semantic_define_symbol_24a"
+SRC_1404="tests/integration/semantic_define_symbol_24a.cct"
+BIN_1404="${SRC_1404%.cct}"
+cleanup_codegen_artifacts "$SRC_1404"
+if "$CCT_BIN" "$SRC_1404" >"$CCT_TMP_DIR/cct_phase24a_1404_compile.out" 2>&1; then
+    "$BIN_1404" >"$CCT_TMP_DIR/cct_phase24a_1404_run.out" 2>&1
+    RC_1404=$?
+else
+    RC_1404=255
+fi
+if [ "$RC_1404" -eq 0 ]; then
+    test_pass "semantic_define_symbol_24a valida definicao e lookup de simbolo"
+else
+    test_fail "semantic_define_symbol_24a regrediu definicao de simbolo"
+fi
+
+# Test 1405: semantic_duplicate_symbol_24a
+echo "Test 1405: semantic_duplicate_symbol_24a"
+SRC_1405="tests/integration/semantic_duplicate_symbol_24a.cct"
+BIN_1405="${SRC_1405%.cct}"
+cleanup_codegen_artifacts "$SRC_1405"
+if "$CCT_BIN" "$SRC_1405" >"$CCT_TMP_DIR/cct_phase24a_1405_compile.out" 2>&1; then
+    "$BIN_1405" >"$CCT_TMP_DIR/cct_phase24a_1405_run.out" 2>&1
+    RC_1405=$?
+else
+    RC_1405=255
+fi
+if [ "$RC_1405" -eq 0 ]; then
+    test_pass "semantic_duplicate_symbol_24a valida rejeicao de duplicata no mesmo scope"
+else
+    test_fail "semantic_duplicate_symbol_24a regrediu duplicate detection"
+fi
+
+# Test 1406: semantic_shadowing_24a
+echo "Test 1406: semantic_shadowing_24a"
+SRC_1406="tests/integration/semantic_shadowing_24a.cct"
+BIN_1406="${SRC_1406%.cct}"
+cleanup_codegen_artifacts "$SRC_1406"
+if "$CCT_BIN" "$SRC_1406" >"$CCT_TMP_DIR/cct_phase24a_1406_compile.out" 2>&1; then
+    "$BIN_1406" >"$CCT_TMP_DIR/cct_phase24a_1406_run.out" 2>&1
+    RC_1406=$?
+else
+    RC_1406=255
+fi
+if [ "$RC_1406" -eq 0 ]; then
+    test_pass "semantic_shadowing_24a valida shadowing em scope interno"
+else
+    test_fail "semantic_shadowing_24a regrediu shadowing de simbolos"
+fi
+
+# Test 1407: semantic_lookup_parent_24a
+echo "Test 1407: semantic_lookup_parent_24a"
+SRC_1407="tests/integration/semantic_lookup_parent_24a.cct"
+BIN_1407="${SRC_1407%.cct}"
+cleanup_codegen_artifacts "$SRC_1407"
+if "$CCT_BIN" "$SRC_1407" >"$CCT_TMP_DIR/cct_phase24a_1407_compile.out" 2>&1; then
+    "$BIN_1407" >"$CCT_TMP_DIR/cct_phase24a_1407_run.out" 2>&1
+    RC_1407=$?
+else
+    RC_1407=255
+fi
+if [ "$RC_1407" -eq 0 ]; then
+    test_pass "semantic_lookup_parent_24a valida lookup na cadeia de pais"
+else
+    test_fail "semantic_lookup_parent_24a regrediu lookup em parent scope"
+fi
+
+# Test 1408: semantic_lookup_global_24a
+echo "Test 1408: semantic_lookup_global_24a"
+SRC_1408="tests/integration/semantic_lookup_global_24a.cct"
+BIN_1408="${SRC_1408%.cct}"
+cleanup_codegen_artifacts "$SRC_1408"
+if "$CCT_BIN" "$SRC_1408" >"$CCT_TMP_DIR/cct_phase24a_1408_compile.out" 2>&1; then
+    "$BIN_1408" >"$CCT_TMP_DIR/cct_phase24a_1408_run.out" 2>&1
+    RC_1408=$?
+else
+    RC_1408=255
+fi
+if [ "$RC_1408" -eq 0 ]; then
+    test_pass "semantic_lookup_global_24a valida lookup estritamente global"
+else
+    test_fail "semantic_lookup_global_24a regrediu lookup global"
+fi
+
+# Test 1409: semantic_symbol_kinds_24a
+echo "Test 1409: semantic_symbol_kinds_24a"
+SRC_1409="tests/integration/semantic_symbol_kinds_24a.cct"
+BIN_1409="${SRC_1409%.cct}"
+cleanup_codegen_artifacts "$SRC_1409"
+if "$CCT_BIN" "$SRC_1409" >"$CCT_TMP_DIR/cct_phase24a_1409_compile.out" 2>&1; then
+    "$BIN_1409" >"$CCT_TMP_DIR/cct_phase24a_1409_run.out" 2>&1
+    RC_1409=$?
+else
+    RC_1409=255
+fi
+if [ "$RC_1409" -eq 0 ]; then
+    test_pass "semantic_symbol_kinds_24a valida kinds corretos de simbolo"
+else
+    test_fail "semantic_symbol_kinds_24a regrediu classificacao de simbolos"
+fi
+
+# Test 1410: semantic_builtins_24a
+echo "Test 1410: semantic_builtins_24a"
+SRC_1410="tests/integration/semantic_builtins_24a.cct"
+BIN_1410="${SRC_1410%.cct}"
+cleanup_codegen_artifacts "$SRC_1410"
+if "$CCT_BIN" "$SRC_1410" >"$CCT_TMP_DIR/cct_phase24a_1410_compile.out" 2>&1; then
+    "$BIN_1410" >"$CCT_TMP_DIR/cct_phase24a_1410_run.out" 2>&1
+    RC_1410=$?
+else
+    RC_1410=255
+fi
+if [ "$RC_1410" -eq 0 ]; then
+    test_pass "semantic_builtins_24a valida registro inicial de builtins"
+else
+    test_fail "semantic_builtins_24a regrediu builtins do contexto semantico"
+fi
+
+echo ""
+echo "========================================"
+echo "FASE 24B: Type System Model"
+echo "========================================"
+echo ""
+
+# Test 1411: semantic_type_builtin_interning_24b
+echo "Test 1411: semantic_type_builtin_interning_24b"
+SRC_1411="tests/integration/semantic_type_builtin_interning_24b.cct"
+BIN_1411="${SRC_1411%.cct}"
+cleanup_codegen_artifacts "$SRC_1411"
+if "$CCT_BIN" "$SRC_1411" >"$CCT_TMP_DIR/cct_phase24b_1411_compile.out" 2>&1; then
+    "$BIN_1411" >"$CCT_TMP_DIR/cct_phase24b_1411_run.out" 2>&1
+    RC_1411=$?
+else
+    RC_1411=255
+fi
+if [ "$RC_1411" -eq 0 ]; then
+    test_pass "semantic_type_builtin_interning_24b valida internamento de builtins"
+else
+    test_fail "semantic_type_builtin_interning_24b regrediu lookup de builtins"
+fi
+
+# Test 1412: semantic_type_equal_builtin_24b
+echo "Test 1412: semantic_type_equal_builtin_24b"
+SRC_1412="tests/integration/semantic_type_equal_builtin_24b.cct"
+BIN_1412="${SRC_1412%.cct}"
+cleanup_codegen_artifacts "$SRC_1412"
+if "$CCT_BIN" "$SRC_1412" >"$CCT_TMP_DIR/cct_phase24b_1412_compile.out" 2>&1; then
+    "$BIN_1412" >"$CCT_TMP_DIR/cct_phase24b_1412_run.out" 2>&1
+    RC_1412=$?
+else
+    RC_1412=255
+fi
+if [ "$RC_1412" -eq 0 ]; then
+    test_pass "semantic_type_equal_builtin_24b valida igualdade builtin/builtin"
+else
+    test_fail "semantic_type_equal_builtin_24b regrediu igualdade de builtins"
+fi
+
+# Test 1413: semantic_type_kind_mismatch_24b
+echo "Test 1413: semantic_type_kind_mismatch_24b"
+SRC_1413="tests/integration/semantic_type_kind_mismatch_24b.cct"
+BIN_1413="${SRC_1413%.cct}"
+cleanup_codegen_artifacts "$SRC_1413"
+if "$CCT_BIN" "$SRC_1413" >"$CCT_TMP_DIR/cct_phase24b_1413_compile.out" 2>&1; then
+    "$BIN_1413" >"$CCT_TMP_DIR/cct_phase24b_1413_run.out" 2>&1
+    RC_1413=$?
+else
+    RC_1413=255
+fi
+if [ "$RC_1413" -eq 0 ]; then
+    test_pass "semantic_type_kind_mismatch_24b valida kinds distintos"
+else
+    test_fail "semantic_type_kind_mismatch_24b regrediu kinds do modelo de tipo"
+fi
+
+# Test 1414: semantic_named_type_basic_24b
+echo "Test 1414: semantic_named_type_basic_24b"
+SRC_1414="tests/integration/semantic_named_type_basic_24b.cct"
+BIN_1414="${SRC_1414%.cct}"
+cleanup_codegen_artifacts "$SRC_1414"
+if "$CCT_BIN" "$SRC_1414" >"$CCT_TMP_DIR/cct_phase24b_1414_compile.out" 2>&1; then
+    "$BIN_1414" >"$CCT_TMP_DIR/cct_phase24b_1414_run.out" 2>&1
+    RC_1414=$?
+else
+    RC_1414=255
+fi
+if [ "$RC_1414" -eq 0 ]; then
+    test_pass "semantic_named_type_basic_24b valida named type internado"
+else
+    test_fail "semantic_named_type_basic_24b regrediu named type"
+fi
+
+# Test 1415: semantic_pointer_type_24b
+echo "Test 1415: semantic_pointer_type_24b"
+SRC_1415="tests/integration/semantic_pointer_type_24b.cct"
+BIN_1415="${SRC_1415%.cct}"
+cleanup_codegen_artifacts "$SRC_1415"
+if "$CCT_BIN" "$SRC_1415" >"$CCT_TMP_DIR/cct_phase24b_1415_compile.out" 2>&1; then
+    "$BIN_1415" >"$CCT_TMP_DIR/cct_phase24b_1415_run.out" 2>&1
+    RC_1415=$?
+else
+    RC_1415=255
+fi
+if [ "$RC_1415" -eq 0 ]; then
+    test_pass "semantic_pointer_type_24b valida tipo SPECULUM"
+else
+    test_fail "semantic_pointer_type_24b regrediu tipo pointer"
+fi
+
+# Test 1416: semantic_array_type_24b
+echo "Test 1416: semantic_array_type_24b"
+SRC_1416="tests/integration/semantic_array_type_24b.cct"
+BIN_1416="${SRC_1416%.cct}"
+cleanup_codegen_artifacts "$SRC_1416"
+if "$CCT_BIN" "$SRC_1416" >"$CCT_TMP_DIR/cct_phase24b_1416_compile.out" 2>&1; then
+    "$BIN_1416" >"$CCT_TMP_DIR/cct_phase24b_1416_run.out" 2>&1
+    RC_1416=$?
+else
+    RC_1416=255
+fi
+if [ "$RC_1416" -eq 0 ]; then
+    test_pass "semantic_array_type_24b valida tipo SERIES"
+else
+    test_fail "semantic_array_type_24b regrediu tipo array"
+fi
+
+# Test 1417: semantic_pointer_array_equal_24b
+echo "Test 1417: semantic_pointer_array_equal_24b"
+SRC_1417="tests/integration/semantic_pointer_array_equal_24b.cct"
+BIN_1417="${SRC_1417%.cct}"
+cleanup_codegen_artifacts "$SRC_1417"
+if "$CCT_BIN" "$SRC_1417" >"$CCT_TMP_DIR/cct_phase24b_1417_compile.out" 2>&1; then
+    "$BIN_1417" >"$CCT_TMP_DIR/cct_phase24b_1417_run.out" 2>&1
+    RC_1417=$?
+else
+    RC_1417=255
+fi
+if [ "$RC_1417" -eq 0 ]; then
+    test_pass "semantic_pointer_array_equal_24b valida equality e interning de pointer/array"
+else
+    test_fail "semantic_pointer_array_equal_24b regrediu equality de tipos compostos"
+fi
+
+# Test 1418: semantic_assign_compat_24b
+echo "Test 1418: semantic_assign_compat_24b"
+SRC_1418="tests/integration/semantic_assign_compat_24b.cct"
+BIN_1418="${SRC_1418%.cct}"
+cleanup_codegen_artifacts "$SRC_1418"
+if "$CCT_BIN" "$SRC_1418" >"$CCT_TMP_DIR/cct_phase24b_1418_compile.out" 2>&1; then
+    "$BIN_1418" >"$CCT_TMP_DIR/cct_phase24b_1418_run.out" 2>&1
+    RC_1418=$?
+else
+    RC_1418=255
+fi
+if [ "$RC_1418" -eq 0 ]; then
+    test_pass "semantic_assign_compat_24b valida compatibilidade basica de atribuicao"
+else
+    test_fail "semantic_assign_compat_24b regrediu compatibilidade de atribuicao"
+fi
+
+# Test 1419: semantic_pointer_nihil_compat_24b
+echo "Test 1419: semantic_pointer_nihil_compat_24b"
+SRC_1419="tests/integration/semantic_pointer_nihil_compat_24b.cct"
+BIN_1419="${SRC_1419%.cct}"
+cleanup_codegen_artifacts "$SRC_1419"
+if "$CCT_BIN" "$SRC_1419" >"$CCT_TMP_DIR/cct_phase24b_1419_compile.out" 2>&1; then
+    "$BIN_1419" >"$CCT_TMP_DIR/cct_phase24b_1419_run.out" 2>&1
+    RC_1419=$?
+else
+    RC_1419=255
+fi
+if [ "$RC_1419" -eq 0 ]; then
+    test_pass "semantic_pointer_nihil_compat_24b valida regra pragmatica de SPECULUM NIHIL"
+else
+    test_fail "semantic_pointer_nihil_compat_24b regrediu compatibilidade de pointer generico"
+fi
+
+# Test 1420: semantic_type_debug_string_24b
+echo "Test 1420: semantic_type_debug_string_24b"
+SRC_1420="tests/integration/semantic_type_debug_string_24b.cct"
+BIN_1420="${SRC_1420%.cct}"
+cleanup_codegen_artifacts "$SRC_1420"
+if "$CCT_BIN" "$SRC_1420" >"$CCT_TMP_DIR/cct_phase24b_1420_compile.out" 2>&1; then
+    "$BIN_1420" >"$CCT_TMP_DIR/cct_phase24b_1420_run.out" 2>&1
+    RC_1420=$?
+else
+    RC_1420=255
+fi
+if [ "$RC_1420" -eq 0 ]; then
+    test_pass "semantic_type_debug_string_24b valida string canonica de tipos"
+else
+    test_fail "semantic_type_debug_string_24b regrediu pretty/debug string de tipos"
+fi
+
+echo ""
+echo "========================================"
+echo "FASE 24C: Declaration Registration + Type Resolution"
+echo "========================================"
+echo ""
+
+# Test 1421: semantic_register_rituale_24c
+echo "Test 1421: semantic_register_rituale_24c"
+SRC_1421="tests/integration/semantic_register_rituale_24c.cct"
+BIN_1421="${SRC_1421%.cct}"
+cleanup_codegen_artifacts "$SRC_1421"
+if "$CCT_BIN" "$SRC_1421" >"$CCT_TMP_DIR/cct_phase24c_1421_compile.out" 2>&1; then
+    "$BIN_1421" >"$CCT_TMP_DIR/cct_phase24c_1421_run.out" 2>&1
+    RC_1421=$?
+else
+    RC_1421=255
+fi
+if [ "$RC_1421" -eq 0 ]; then
+    test_pass "semantic_register_rituale_24c valida registro global de rituale"
+else
+    test_fail "semantic_register_rituale_24c regrediu registro de rituale"
+fi
+
+# Test 1422: semantic_register_sigillum_24c
+echo "Test 1422: semantic_register_sigillum_24c"
+SRC_1422="tests/integration/semantic_register_sigillum_24c.cct"
+BIN_1422="${SRC_1422%.cct}"
+cleanup_codegen_artifacts "$SRC_1422"
+if "$CCT_BIN" "$SRC_1422" >"$CCT_TMP_DIR/cct_phase24c_1422_compile.out" 2>&1; then
+    "$BIN_1422" >"$CCT_TMP_DIR/cct_phase24c_1422_run.out" 2>&1
+    RC_1422=$?
+else
+    RC_1422=255
+fi
+if [ "$RC_1422" -eq 0 ]; then
+    test_pass "semantic_register_sigillum_24c valida registro global de sigillum"
+else
+    test_fail "semantic_register_sigillum_24c regrediu registro de sigillum"
+fi
+
+# Test 1423: semantic_register_ordo_24c
+echo "Test 1423: semantic_register_ordo_24c"
+SRC_1423="tests/integration/semantic_register_ordo_24c.cct"
+BIN_1423="${SRC_1423%.cct}"
+cleanup_codegen_artifacts "$SRC_1423"
+if "$CCT_BIN" "$SRC_1423" >"$CCT_TMP_DIR/cct_phase24c_1423_compile.out" 2>&1; then
+    "$BIN_1423" >"$CCT_TMP_DIR/cct_phase24c_1423_run.out" 2>&1
+    RC_1423=$?
+else
+    RC_1423=255
+fi
+if [ "$RC_1423" -eq 0 ]; then
+    test_pass "semantic_register_ordo_24c valida registro global de ordo"
+else
+    test_fail "semantic_register_ordo_24c regrediu registro de ordo"
+fi
+
+# Test 1424: semantic_register_pactum_24c
+echo "Test 1424: semantic_register_pactum_24c"
+SRC_1424="tests/integration/semantic_register_pactum_24c.cct"
+BIN_1424="${SRC_1424%.cct}"
+cleanup_codegen_artifacts "$SRC_1424"
+if "$CCT_BIN" "$SRC_1424" >"$CCT_TMP_DIR/cct_phase24c_1424_compile.out" 2>&1; then
+    "$BIN_1424" >"$CCT_TMP_DIR/cct_phase24c_1424_run.out" 2>&1
+    RC_1424=$?
+else
+    RC_1424=255
+fi
+if [ "$RC_1424" -eq 0 ]; then
+    test_pass "semantic_register_pactum_24c valida registro global de pactum"
+else
+    test_fail "semantic_register_pactum_24c regrediu registro de pactum"
+fi
+
+# Test 1425: semantic_duplicate_rituale_24c
+echo "Test 1425: semantic_duplicate_rituale_24c"
+SRC_1425="tests/integration/semantic_duplicate_rituale_24c.cct"
+BIN_1425="${SRC_1425%.cct}"
+cleanup_codegen_artifacts "$SRC_1425"
+if "$CCT_BIN" "$SRC_1425" >"$CCT_TMP_DIR/cct_phase24c_1425_compile.out" 2>&1; then
+    "$BIN_1425" >"$CCT_TMP_DIR/cct_phase24c_1425_run.out" 2>&1
+    RC_1425=$?
+else
+    RC_1425=255
+fi
+if [ "$RC_1425" -eq 0 ]; then
+    test_pass "semantic_duplicate_rituale_24c valida duplicacao global de rituale"
+else
+    test_fail "semantic_duplicate_rituale_24c regrediu duplicate global rituale"
+fi
+
+# Test 1426: semantic_duplicate_type_24c
+echo "Test 1426: semantic_duplicate_type_24c"
+SRC_1426="tests/integration/semantic_duplicate_type_24c.cct"
+BIN_1426="${SRC_1426%.cct}"
+cleanup_codegen_artifacts "$SRC_1426"
+if "$CCT_BIN" "$SRC_1426" >"$CCT_TMP_DIR/cct_phase24c_1426_compile.out" 2>&1; then
+    "$BIN_1426" >"$CCT_TMP_DIR/cct_phase24c_1426_run.out" 2>&1
+    RC_1426=$?
+else
+    RC_1426=255
+fi
+if [ "$RC_1426" -eq 0 ]; then
+    test_pass "semantic_duplicate_type_24c valida duplicacao global de tipo"
+else
+    test_fail "semantic_duplicate_type_24c regrediu duplicate global type"
+fi
+
+# Test 1427: semantic_resolve_primitive_type_24c
+echo "Test 1427: semantic_resolve_primitive_type_24c"
+SRC_1427="tests/integration/semantic_resolve_primitive_type_24c.cct"
+BIN_1427="${SRC_1427%.cct}"
+cleanup_codegen_artifacts "$SRC_1427"
+if "$CCT_BIN" "$SRC_1427" >"$CCT_TMP_DIR/cct_phase24c_1427_compile.out" 2>&1; then
+    "$BIN_1427" >"$CCT_TMP_DIR/cct_phase24c_1427_run.out" 2>&1
+    RC_1427=$?
+else
+    RC_1427=255
+fi
+if [ "$RC_1427" -eq 0 ]; then
+    test_pass "semantic_resolve_primitive_type_24c valida resolucao de tipo primitivo"
+else
+    test_fail "semantic_resolve_primitive_type_24c regrediu resolucao de primitivo"
+fi
+
+# Test 1428: semantic_resolve_named_sigillum_24c
+echo "Test 1428: semantic_resolve_named_sigillum_24c"
+SRC_1428="tests/integration/semantic_resolve_named_sigillum_24c.cct"
+BIN_1428="${SRC_1428%.cct}"
+cleanup_codegen_artifacts "$SRC_1428"
+if "$CCT_BIN" "$SRC_1428" >"$CCT_TMP_DIR/cct_phase24c_1428_compile.out" 2>&1; then
+    "$BIN_1428" >"$CCT_TMP_DIR/cct_phase24c_1428_run.out" 2>&1
+    RC_1428=$?
+else
+    RC_1428=255
+fi
+if [ "$RC_1428" -eq 0 ]; then
+    test_pass "semantic_resolve_named_sigillum_24c valida resolucao de sigillum nomeado"
+else
+    test_fail "semantic_resolve_named_sigillum_24c regrediu resolucao de sigillum nomeado"
+fi
+
+# Test 1429: semantic_resolve_named_ordo_24c
+echo "Test 1429: semantic_resolve_named_ordo_24c"
+SRC_1429="tests/integration/semantic_resolve_named_ordo_24c.cct"
+BIN_1429="${SRC_1429%.cct}"
+cleanup_codegen_artifacts "$SRC_1429"
+if "$CCT_BIN" "$SRC_1429" >"$CCT_TMP_DIR/cct_phase24c_1429_compile.out" 2>&1; then
+    "$BIN_1429" >"$CCT_TMP_DIR/cct_phase24c_1429_run.out" 2>&1
+    RC_1429=$?
+else
+    RC_1429=255
+fi
+if [ "$RC_1429" -eq 0 ]; then
+    test_pass "semantic_resolve_named_ordo_24c valida resolucao de ordo nomeado"
+else
+    test_fail "semantic_resolve_named_ordo_24c regrediu resolucao de ordo nomeado"
+fi
+
+# Test 1430: semantic_unknown_type_24c
+echo "Test 1430: semantic_unknown_type_24c"
+SRC_1430="tests/integration/semantic_unknown_type_24c.cct"
+BIN_1430="${SRC_1430%.cct}"
+cleanup_codegen_artifacts "$SRC_1430"
+if "$CCT_BIN" "$SRC_1430" >"$CCT_TMP_DIR/cct_phase24c_1430_compile.out" 2>&1; then
+    "$BIN_1430" >"$CCT_TMP_DIR/cct_phase24c_1430_run.out" 2>&1
+    RC_1430=$?
+else
+    RC_1430=255
+fi
+if [ "$RC_1430" -eq 0 ]; then
+    test_pass "semantic_unknown_type_24c valida diagnostico de tipo desconhecido"
+else
+    test_fail "semantic_unknown_type_24c regrediu erro de tipo desconhecido"
+fi
+
+echo ""
+echo "========================================"
+echo "FASE 24D: Expression Type Checking"
+echo "========================================"
+echo ""
+
+# Test 1431: semantic_expr_literal_int_24d
+echo "Test 1431: semantic_expr_literal_int_24d"
+SRC_1431="tests/integration/semantic_expr_literal_int_24d.cct"
+BIN_1431="${SRC_1431%.cct}"
+cleanup_codegen_artifacts "$SRC_1431"
+if "$CCT_BIN" "$SRC_1431" >"$CCT_TMP_DIR/cct_phase24d_1431_compile.out" 2>&1; then
+    "$BIN_1431" >"$CCT_TMP_DIR/cct_phase24d_1431_run.out" 2>&1
+    RC_1431=$?
+else
+    RC_1431=255
+fi
+if [ "$RC_1431" -eq 0 ]; then
+    test_pass "semantic_expr_literal_int_24d valida typing de literal inteiro"
+else
+    test_fail "semantic_expr_literal_int_24d regrediu typing de literal inteiro"
+fi
+
+# Test 1432: semantic_expr_literal_string_24d
+echo "Test 1432: semantic_expr_literal_string_24d"
+SRC_1432="tests/integration/semantic_expr_literal_string_24d.cct"
+BIN_1432="${SRC_1432%.cct}"
+cleanup_codegen_artifacts "$SRC_1432"
+if "$CCT_BIN" "$SRC_1432" >"$CCT_TMP_DIR/cct_phase24d_1432_compile.out" 2>&1; then
+    "$BIN_1432" >"$CCT_TMP_DIR/cct_phase24d_1432_run.out" 2>&1
+    RC_1432=$?
+else
+    RC_1432=255
+fi
+if [ "$RC_1432" -eq 0 ]; then
+    test_pass "semantic_expr_literal_string_24d valida typing de literal string"
+else
+    test_fail "semantic_expr_literal_string_24d regrediu typing de literal string"
+fi
+
+# Test 1433: semantic_expr_identifier_valid_24d
+echo "Test 1433: semantic_expr_identifier_valid_24d"
+SRC_1433="tests/integration/semantic_expr_identifier_valid_24d.cct"
+BIN_1433="${SRC_1433%.cct}"
+cleanup_codegen_artifacts "$SRC_1433"
+if "$CCT_BIN" "$SRC_1433" >"$CCT_TMP_DIR/cct_phase24d_1433_compile.out" 2>&1; then
+    "$BIN_1433" >"$CCT_TMP_DIR/cct_phase24d_1433_run.out" 2>&1
+    RC_1433=$?
+else
+    RC_1433=255
+fi
+if [ "$RC_1433" -eq 0 ]; then
+    test_pass "semantic_expr_identifier_valid_24d valida lookup de identifier"
+else
+    test_fail "semantic_expr_identifier_valid_24d regrediu lookup de identifier"
+fi
+
+# Test 1434: semantic_expr_identifier_undeclared_24d
+echo "Test 1434: semantic_expr_identifier_undeclared_24d"
+SRC_1434="tests/integration/semantic_expr_identifier_undeclared_24d.cct"
+BIN_1434="${SRC_1434%.cct}"
+cleanup_codegen_artifacts "$SRC_1434"
+if "$CCT_BIN" "$SRC_1434" >"$CCT_TMP_DIR/cct_phase24d_1434_compile.out" 2>&1; then
+    "$BIN_1434" >"$CCT_TMP_DIR/cct_phase24d_1434_run.out" 2>&1
+    RC_1434=$?
+else
+    RC_1434=255
+fi
+if [ "$RC_1434" -eq 0 ]; then
+    test_pass "semantic_expr_identifier_undeclared_24d valida erro de identificador ausente"
+else
+    test_fail "semantic_expr_identifier_undeclared_24d regrediu erro de identificador ausente"
+fi
+
+# Test 1435: semantic_expr_unary_valid_24d
+echo "Test 1435: semantic_expr_unary_valid_24d"
+SRC_1435="tests/integration/semantic_expr_unary_valid_24d.cct"
+BIN_1435="${SRC_1435%.cct}"
+cleanup_codegen_artifacts "$SRC_1435"
+if "$CCT_BIN" "$SRC_1435" >"$CCT_TMP_DIR/cct_phase24d_1435_compile.out" 2>&1; then
+    "$BIN_1435" >"$CCT_TMP_DIR/cct_phase24d_1435_run.out" 2>&1
+    RC_1435=$?
+else
+    RC_1435=255
+fi
+if [ "$RC_1435" -eq 0 ]; then
+    test_pass "semantic_expr_unary_valid_24d valida unary numerico"
+else
+    test_fail "semantic_expr_unary_valid_24d regrediu unary numerico"
+fi
+
+# Test 1436: semantic_expr_binary_valid_24d
+echo "Test 1436: semantic_expr_binary_valid_24d"
+SRC_1436="tests/integration/semantic_expr_binary_valid_24d.cct"
+BIN_1436="${SRC_1436%.cct}"
+cleanup_codegen_artifacts "$SRC_1436"
+if "$CCT_BIN" "$SRC_1436" >"$CCT_TMP_DIR/cct_phase24d_1436_compile.out" 2>&1; then
+    "$BIN_1436" >"$CCT_TMP_DIR/cct_phase24d_1436_run.out" 2>&1
+    RC_1436=$?
+else
+    RC_1436=255
+fi
+if [ "$RC_1436" -eq 0 ]; then
+    test_pass "semantic_expr_binary_valid_24d valida promocao numerica"
+else
+    test_fail "semantic_expr_binary_valid_24d regrediu typing de binario valido"
+fi
+
+# Test 1437: semantic_expr_binary_invalid_24d
+echo "Test 1437: semantic_expr_binary_invalid_24d"
+SRC_1437="tests/integration/semantic_expr_binary_invalid_24d.cct"
+BIN_1437="${SRC_1437%.cct}"
+cleanup_codegen_artifacts "$SRC_1437"
+if "$CCT_BIN" "$SRC_1437" >"$CCT_TMP_DIR/cct_phase24d_1437_compile.out" 2>&1; then
+    "$BIN_1437" >"$CCT_TMP_DIR/cct_phase24d_1437_run.out" 2>&1
+    RC_1437=$?
+else
+    RC_1437=255
+fi
+if [ "$RC_1437" -eq 0 ]; then
+    test_pass "semantic_expr_binary_invalid_24d valida erro de binario invalido"
+else
+    test_fail "semantic_expr_binary_invalid_24d regrediu erro de binario invalido"
+fi
+
+# Test 1438: semantic_expr_call_ok_24d
+echo "Test 1438: semantic_expr_call_ok_24d"
+SRC_1438="tests/integration/semantic_expr_call_ok_24d.cct"
+BIN_1438="${SRC_1438%.cct}"
+cleanup_codegen_artifacts "$SRC_1438"
+if "$CCT_BIN" "$SRC_1438" >"$CCT_TMP_DIR/cct_phase24d_1438_compile.out" 2>&1; then
+    "$BIN_1438" >"$CCT_TMP_DIR/cct_phase24d_1438_run.out" 2>&1
+    RC_1438=$?
+else
+    RC_1438=255
+fi
+if [ "$RC_1438" -eq 0 ]; then
+    test_pass "semantic_expr_call_ok_24d valida chamada com assinatura correta"
+else
+    test_fail "semantic_expr_call_ok_24d regrediu chamada com assinatura correta"
+fi
+
+# Test 1439: semantic_expr_call_arity_24d
+echo "Test 1439: semantic_expr_call_arity_24d"
+SRC_1439="tests/integration/semantic_expr_call_arity_24d.cct"
+BIN_1439="${SRC_1439%.cct}"
+cleanup_codegen_artifacts "$SRC_1439"
+if "$CCT_BIN" "$SRC_1439" >"$CCT_TMP_DIR/cct_phase24d_1439_compile.out" 2>&1; then
+    "$BIN_1439" >"$CCT_TMP_DIR/cct_phase24d_1439_run.out" 2>&1
+    RC_1439=$?
+else
+    RC_1439=255
+fi
+if [ "$RC_1439" -eq 0 ]; then
+    test_pass "semantic_expr_call_arity_24d valida erro de aridade"
+else
+    test_fail "semantic_expr_call_arity_24d regrediu erro de aridade"
+fi
+
+# Test 1440: semantic_expr_field_access_24d
+echo "Test 1440: semantic_expr_field_access_24d"
+SRC_1440="tests/integration/semantic_expr_field_access_24d.cct"
+BIN_1440="${SRC_1440%.cct}"
+cleanup_codegen_artifacts "$SRC_1440"
+if "$CCT_BIN" "$SRC_1440" >"$CCT_TMP_DIR/cct_phase24d_1440_compile.out" 2>&1; then
+    "$BIN_1440" >"$CCT_TMP_DIR/cct_phase24d_1440_run.out" 2>&1
+    RC_1440=$?
+else
+    RC_1440=255
+fi
+if [ "$RC_1440" -eq 0 ]; then
+    test_pass "semantic_expr_field_access_24d valida typing de acesso a campo"
+else
+    test_fail "semantic_expr_field_access_24d regrediu typing de acesso a campo"
+fi
+
+# Test 1441: semantic_expr_index_access_24d
+echo "Test 1441: semantic_expr_index_access_24d"
+SRC_1441="tests/integration/semantic_expr_index_access_24d.cct"
+BIN_1441="${SRC_1441%.cct}"
+cleanup_codegen_artifacts "$SRC_1441"
+if "$CCT_BIN" "$SRC_1441" >"$CCT_TMP_DIR/cct_phase24d_1441_compile.out" 2>&1; then
+    "$BIN_1441" >"$CCT_TMP_DIR/cct_phase24d_1441_run.out" 2>&1
+    RC_1441=$?
+else
+    RC_1441=255
+fi
+if [ "$RC_1441" -eq 0 ]; then
+    test_pass "semantic_expr_index_access_24d valida typing de index access"
+else
+    test_fail "semantic_expr_index_access_24d regrediu typing de index access"
+fi
+
+# Test 1442: semantic_expr_nested_field_assignment_24d
+echo "Test 1442: semantic_expr_nested_field_assignment_24d"
+SRC_1442="tests/integration/semantic_expr_nested_field_assignment_24d.cct"
+BIN_1442="${SRC_1442%.cct}"
+cleanup_codegen_artifacts "$SRC_1442"
+if "$CCT_BIN" "$SRC_1442" >"$CCT_TMP_DIR/cct_phase24d_1442_compile.out" 2>&1; then
+    "$BIN_1442" >"$CCT_TMP_DIR/cct_phase24d_1442_run.out" 2>&1
+    RC_1442=$?
+else
+    RC_1442=255
+fi
+if [ "$RC_1442" -eq 0 ]; then
+    test_pass "semantic_expr_nested_field_assignment_24d valida lvalue encadeado"
+else
+    test_fail "semantic_expr_nested_field_assignment_24d regrediu lvalue encadeado"
+fi
+
+echo ""
+echo "========================================"
 echo "Test Results:"
 echo -e "  ${GREEN}Passed:${NC} $TESTS_PASSED" >&3
 echo -e "  ${RED}Failed:${NC} $TESTS_FAILED" >&3

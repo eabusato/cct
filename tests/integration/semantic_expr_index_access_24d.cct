@@ -1,0 +1,29 @@
+INCIPIT grimoire "semantic_expr_index_access_24d"
+
+ADVOCARE "../../src/bootstrap/parser/ast.cct"
+ADVOCARE "../../src/bootstrap/semantic/semantic_context.cct"
+ADVOCARE "../../src/bootstrap/semantic/semantic_kind.cct"
+ADVOCARE "../../src/bootstrap/semantic/semantic_expr.cct"
+
+RITUALE main() REDDE REX
+  EVOCA SPECULUM SemanticContext ctx AD CONIURA semantic_context_new("index_access.cct")
+  EVOCA REX array_type_id AD CONIURA semantic_type_make_array(ctx, (*ctx).type_rex, 4)
+  SI CONIURA semantic_define(ctx, SEM_SYMBOL_VARIABLE, "arr", array_type_id, 1, 1) == CONIURA semantic_invalid_id()
+    REDDE 41
+  FIN SI
+
+  EVOCA SPECULUM AstNode expr AD CONIURA ast_make_index_access(CONIURA ast_make_identifier("arr", 1, 1), CONIURA ast_make_literal_int("0", 1, 5), 1, 4)
+  EVOCA REX type_id AD CONIURA semantic_analyze_expr(ctx, expr)
+  SI type_id != (*ctx).type_rex
+    REDDE 42
+  FIN SI
+  SI CONIURA semantic_had_error(ctx)
+    REDDE 43
+  FIN SI
+
+  CONIURA semantic_context_free(ctx)
+  CONIURA ast_node_free(expr)
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

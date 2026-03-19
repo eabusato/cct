@@ -1,0 +1,38 @@
+INCIPIT grimoire "semantic_expr_field_access_24d"
+
+ADVOCARE "../../src/bootstrap/parser/parser.cct"
+ADVOCARE "../../src/bootstrap/parser/ast.cct"
+ADVOCARE "../../src/bootstrap/semantic/semantic_context.cct"
+ADVOCARE "../../src/bootstrap/semantic/semantic_kind.cct"
+ADVOCARE "../../src/bootstrap/semantic/semantic_register.cct"
+ADVOCARE "../../src/bootstrap/semantic/semantic_symbol.cct"
+ADVOCARE "../../src/bootstrap/semantic/semantic_expr.cct"
+
+RITUALE main() REDDE REX
+  EVOCA VERBUM src AD "INCIPIT grimoire \"p\" SIGILLUM Caixa valor: REX FIN SIGILLUM EXPLICIT grimoire"
+  EVOCA SPECULUM AstProgram program AD CONIURA parser_parse_program_source(src, "field_access.cct")
+  EVOCA SPECULUM SemanticContext ctx AD CONIURA semantic_context_new("field_access.cct")
+  CONIURA semantic_register_program(ctx, program)
+
+  EVOCA REX caixa_sym_id AD CONIURA semantic_lookup_global(ctx, "Caixa")
+  EVOCA SPECULUM SemanticSymbol caixa_sym AD CONIURA semantic_symbol_at(ctx, caixa_sym_id)
+  SI CONIURA semantic_define(ctx, SEM_SYMBOL_VARIABLE, "obj", (*caixa_sym).payload_type_id, 1, 1) == CONIURA semantic_invalid_id()
+    REDDE 41
+  FIN SI
+
+  EVOCA SPECULUM AstNode expr AD CONIURA ast_make_field_access(CONIURA ast_make_identifier("obj", 1, 1), "valor", 1, 5)
+  EVOCA REX type_id AD CONIURA semantic_analyze_expr(ctx, expr)
+  SI type_id != (*ctx).type_rex
+    REDDE 42
+  FIN SI
+  SI CONIURA semantic_had_error(ctx)
+    REDDE 43
+  FIN SI
+
+  CONIURA semantic_context_free(ctx)
+  CONIURA ast_program_free(program)
+  CONIURA ast_node_free(expr)
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

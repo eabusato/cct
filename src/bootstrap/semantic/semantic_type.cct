@@ -1,0 +1,16 @@
+INCIPIT grimoire "semantic_type"
+
+ADVOCARE "semantic_type_kind.cct"
+
+SIGILLUM SemanticType
+  id: REX
+  kind: SemanticTypeKind
+  name: VERBUM
+  owns_name: VERUM
+  is_builtin: VERUM
+  element_type_id: REX
+  array_size: REX
+  named_symbol_id: REX
+FIN SIGILLUM
+
+EXPLICIT grimoire

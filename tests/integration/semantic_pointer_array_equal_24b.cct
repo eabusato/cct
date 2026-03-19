@@ -1,0 +1,32 @@
+INCIPIT grimoire "semantic_pointer_array_equal_24b"
+
+ADVOCARE "../../src/bootstrap/semantic/semantic_context.cct"
+
+RITUALE main() REDDE REX
+  EVOCA SPECULUM SemanticContext ctx AD CONIURA semantic_context_new("type_equal_complex.cct")
+  EVOCA REX ptr1 AD CONIURA semantic_type_make_pointer(ctx, (*ctx).type_rex)
+  EVOCA REX ptr2 AD CONIURA semantic_type_make_pointer(ctx, (*ctx).type_rex)
+  EVOCA REX arr1 AD CONIURA semantic_type_make_array(ctx, (*ctx).type_rex, 4)
+  EVOCA REX arr2 AD CONIURA semantic_type_make_array(ctx, (*ctx).type_rex, 4)
+
+  SI ptr1 != ptr2
+    REDDE 41
+  FIN SI
+  SI arr1 != arr2
+    REDDE 42
+  FIN SI
+  SI CONIURA semantic_type_equal(ctx, ptr1, ptr2) != VERUM
+    REDDE 43
+  FIN SI
+  SI CONIURA semantic_type_equal(ctx, arr1, arr2) != VERUM
+    REDDE 44
+  FIN SI
+  SI CONIURA semantic_type_equal(ctx, ptr1, arr1) != FALSUM
+    REDDE 45
+  FIN SI
+
+  CONIURA semantic_context_free(ctx)
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

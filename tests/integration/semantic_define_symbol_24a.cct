@@ -1,0 +1,37 @@
+INCIPIT grimoire "semantic_define_symbol_24a"
+
+ADVOCARE "cct/verbum.cct"
+ADVOCARE "../../src/bootstrap/semantic/semantic_context.cct"
+ADVOCARE "../../src/bootstrap/semantic/semantic_symbol.cct"
+
+RITUALE main() REDDE REX
+  EVOCA SPECULUM SemanticContext ctx AD CONIURA semantic_context_new("define.cct")
+  EVOCA REX sym_id AD CONIURA semantic_define(ctx, SEM_SYMBOL_VARIABLE, "x", (*ctx).type_rex, 10, 20)
+  EVOCA REX local_id AD CONIURA semantic_lookup_local(ctx, "x")
+  EVOCA REX global_id AD CONIURA semantic_lookup_global(ctx, "x")
+  EVOCA SPECULUM SemanticSymbol sym AD CONIURA semantic_symbol_at(ctx, sym_id)
+
+  SI sym_id != local_id
+    REDDE 41
+  FIN SI
+  SI sym_id != global_id
+    REDDE 42
+  FIN SI
+  SI (*sym).kind != SEM_SYMBOL_VARIABLE
+    REDDE 43
+  FIN SI
+  SI (*sym).type_id != (*ctx).type_rex
+    REDDE 44
+  FIN SI
+  SI (*sym).line != 10 VEL (*sym).column != 20
+    REDDE 45
+  FIN SI
+  SI CONIURA compare((*sym).name, "x") != 0
+    REDDE 46
+  FIN SI
+
+  CONIURA semantic_context_free(ctx)
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire
