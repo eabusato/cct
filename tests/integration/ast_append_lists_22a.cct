@@ -1,0 +1,25 @@
+INCIPIT grimoire "ast_append_lists_22a"
+
+ADVOCARE "../../src/bootstrap/parser/ast.cct"
+
+RITUALE main() REDDE REX
+  EVOCA SPECULUM AstNode root AD CONIURA ast_node_new(AST_PROGRAM, 1, 1)
+  CONIURA ast_append_child(root, CONIURA ast_make_identifier("alpha", 1, 1))
+  CONIURA ast_append_declaration(root, CONIURA ast_make_import("std/io", 1, 1))
+  CONIURA ast_append_statement(root, CONIURA ast_make_redde(CONIURA ast_make_literal_int("0", 2, 3), 2, 1))
+
+  SI CONIURA ast_node_list_len((*root).children) != 1
+    REDDE 41
+  FIN SI
+  SI CONIURA ast_node_list_len((*root).declarations) != 1
+    REDDE 42
+  FIN SI
+  SI CONIURA ast_node_list_len((*root).statements) != 1
+    REDDE 43
+  FIN SI
+
+  CONIURA ast_node_free(root)
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

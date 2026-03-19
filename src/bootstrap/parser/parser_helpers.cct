@@ -1,0 +1,116 @@
+INCIPIT grimoire "parser_helpers"
+
+ADVOCARE "cct/diagnostic.cct"
+ADVOCARE "cct/verbum.cct"
+ADVOCARE "../lexer/lexer.cct"
+ADVOCARE "../lexer/lexer_state.cct"
+ADVOCARE "../lexer/token.cct"
+ADVOCARE "../lexer/token_type.cct"
+ADVOCARE "parser_state.cct"
+
+RITUALE parser_empty_token() REDDE Token
+  REDDE CONIURA token_make(TK_EOF, CONIURA verbum_dup(""), 0, 0)
+EXPLICIT RITUALE
+
+RITUALE parser_init(SPECULUM LexerState lexer, VERBUM filename) REDDE ParserState
+  EVOCA ParserState parser
+  VINCIRE parser.lexer AD lexer
+  VINCIRE parser.current AD CONIURA parser_empty_token()
+  VINCIRE parser.previous AD CONIURA parser_empty_token()
+  VINCIRE parser.had_error AD FALSUM
+  VINCIRE parser.panic_mode AD FALSUM
+  VINCIRE parser.filename AD filename
+  CONIURA parser_advance(SPECULUM parser)
+  REDDE parser
+EXPLICIT RITUALE
+
+RITUALE parser_dispose(SPECULUM ParserState parser) REDDE NIHIL
+  CONIURA token_free(SPECULUM (*parser).current)
+  CONIURA token_free(SPECULUM (*parser).previous)
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE parser_advance(SPECULUM ParserState parser) REDDE NIHIL
+  CONIURA token_free(SPECULUM (*parser).previous)
+  VINCIRE (*parser).previous AD (*parser).current
+  VINCIRE (*parser).current AD CONIURA lexer_next_token((*parser).lexer)
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE parser_check(SPECULUM ParserState parser, TokenKind kind) REDDE VERUM
+  REDDE (*parser).current.kind == kind
+EXPLICIT RITUALE
+
+RITUALE parser_match(SPECULUM ParserState parser, TokenKind kind) REDDE VERUM
+  SI NON CONIURA parser_check(parser, kind)
+    REDDE FALSUM
+  FIN SI
+  CONIURA parser_advance(parser)
+  REDDE VERUM
+EXPLICIT RITUALE
+
+RITUALE parser_emit_error(SPECULUM ParserState parser, REX line, REX column, VERBUM message) REDDE NIHIL
+  SI (*parser).panic_mode
+    REDDE
+  FIN SI
+  VINCIRE (*parser).panic_mode AD VERUM
+  VINCIRE (*parser).had_error AD VERUM
+
+  EVOCA SourceLocation loc
+  VINCIRE loc.line AD line
+  VINCIRE loc.column AD column
+  VINCIRE loc.filename AD (*parser).filename
+  CONIURA diag_error(SPECULUM loc, message)
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE parser_error_at_current(SPECULUM ParserState parser, VERBUM message) REDDE NIHIL
+  CONIURA parser_emit_error(parser, (*parser).current.line, (*parser).current.column, message)
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE parser_error_at_previous(SPECULUM ParserState parser, VERBUM message) REDDE NIHIL
+  CONIURA parser_emit_error(parser, (*parser).previous.line, (*parser).previous.column, message)
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE parser_consume(SPECULUM ParserState parser, TokenKind kind, VERBUM message) REDDE VERUM
+  SI CONIURA parser_check(parser, kind)
+    CONIURA parser_advance(parser)
+    REDDE VERUM
+  FIN SI
+  CONIURA parser_error_at_current(parser, message)
+  REDDE FALSUM
+EXPLICIT RITUALE
+
+RITUALE parser_is_declaration_start(TokenKind kind) REDDE VERUM
+  REDDE kind == TK_ADVOCARE VEL kind == TK_RITUALE VEL kind == TK_SIGILLUM VEL kind == TK_ORDO VEL kind == TK_CODEX VEL kind == TK_PACTUM VEL kind == TK_FIN VEL kind == TK_EXPLICIT VEL kind == TK_EOF
+EXPLICIT RITUALE
+
+RITUALE parser_is_statement_start(TokenKind kind) REDDE VERUM
+  REDDE kind == TK_EVOCA VEL kind == TK_VINCIRE VEL kind == TK_REDDE VEL kind == TK_IACE VEL kind == TK_SI VEL kind == TK_QUANDO VEL kind == TK_DUM VEL kind == TK_TEMPTA VEL kind == TK_LBRACE VEL kind == TK_CAPE VEL kind == TK_SEMPER VEL kind == TK_CASO VEL kind == TK_SENAO VEL kind == TK_FIN VEL kind == TK_ALITER VEL kind == TK_RBRACE VEL kind == TK_EXPLICIT VEL kind == TK_EOF
+EXPLICIT RITUALE
+
+RITUALE parser_synchronize_statement(SPECULUM ParserState parser) REDDE NIHIL
+  VINCIRE (*parser).panic_mode AD FALSUM
+  DUM NON CONIURA parser_check(parser, TK_EOF)
+    SI CONIURA parser_is_statement_start((*parser).current.kind) VEL CONIURA parser_is_declaration_start((*parser).current.kind)
+      REDDE
+    FIN SI
+    CONIURA parser_advance(parser)
+  FIN DUM
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE parser_synchronize_declaration(SPECULUM ParserState parser) REDDE NIHIL
+  VINCIRE (*parser).panic_mode AD FALSUM
+  DUM NON CONIURA parser_check(parser, TK_EOF)
+    SI CONIURA parser_is_declaration_start((*parser).current.kind)
+      REDDE
+    FIN SI
+    CONIURA parser_advance(parser)
+  FIN DUM
+  REDDE
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

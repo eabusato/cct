@@ -1,0 +1,21 @@
+INCIPIT grimoire "parse_redde_variants_22c"
+ADVOCARE "cct/verbum.cct"
+ADVOCARE "../../src/bootstrap/parser/ast.cct"
+ADVOCARE "../../src/bootstrap/parser/parse_stmt.cct"
+RITUALE main() REDDE REX
+  EVOCA SPECULUM AstNode with_expr AD CONIURA parser_parse_statement_source("REDDE 9", "stmt.cct")
+  EVOCA SPECULUM AstNode empty AD CONIURA parser_parse_statement_source("REDDE", "stmt.cct")
+  SI (*with_expr).kind != AST_REDDE VEL (*with_expr).has_left != VERUM
+    REDDE 41
+  FIN SI
+  SI CONIURA compare((*(*with_expr).left).value_text, "9") != 0
+    REDDE 42
+  FIN SI
+  SI (*empty).kind != AST_REDDE VEL (*empty).has_left != FALSUM
+    REDDE 43
+  FIN SI
+  CONIURA ast_node_free(with_expr)
+  CONIURA ast_node_free(empty)
+  REDDE 0
+EXPLICIT RITUALE
+EXPLICIT grimoire

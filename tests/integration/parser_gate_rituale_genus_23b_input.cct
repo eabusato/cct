@@ -1,0 +1,5 @@
+INCIPIT grimoire "p"
+RITUALE ident GENUS(T, U PACTUM Forma)(Caixa GENUS(T) box, U value) REDDE Caixa GENUS(U)
+  REDDE box
+EXPLICIT RITUALE
+EXPLICIT grimoire

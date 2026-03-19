@@ -1,0 +1,6 @@
+INCIPIT grimoire "entry"
+ADVOCARE "./parser_module_shared_23d.cct"
+RITUALE id GENUS(T)(T value) REDDE T
+  REDDE value
+EXPLICIT RITUALE
+EXPLICIT grimoire

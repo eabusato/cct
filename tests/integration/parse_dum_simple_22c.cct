@@ -1,0 +1,15 @@
+INCIPIT grimoire "parse_dum_simple_22c"
+ADVOCARE "../../src/bootstrap/parser/ast.cct"
+ADVOCARE "../../src/bootstrap/parser/parse_stmt.cct"
+RITUALE main() REDDE REX
+  EVOCA SPECULUM AstNode stmt AD CONIURA parser_parse_statement_source("DUM VERUM REDDE 1 FIN DUM", "stmt.cct")
+  SI (*stmt).kind != AST_DUM VEL (*stmt).has_condition != VERUM VEL (*stmt).has_body != VERUM
+    REDDE 41
+  FIN SI
+  SI CONIURA ast_node_list_len((*(*stmt).body).statements) != 1
+    REDDE 42
+  FIN SI
+  CONIURA ast_node_free(stmt)
+  REDDE 0
+EXPLICIT RITUALE
+EXPLICIT grimoire

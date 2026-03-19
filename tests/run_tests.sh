@@ -178,6 +178,54 @@ compare_bootstrap_file_21e1() {
     diff -u "$c_norm" "$b_norm" >"$diff_out" 2>&1
 }
 
+normalize_host_ast_22f() {
+    local in_file="$1"
+    local out_file="$2"
+    tail -n +4 "$in_file" >"$out_file"
+}
+
+compare_parser_ast_22f() {
+    local label="$1"
+    local file="$2"
+    local host_raw="$CCT_TMP_DIR/${label}_host.raw"
+    local host_norm="$CCT_TMP_DIR/${label}_host.norm"
+    local boot_out="$CCT_TMP_DIR/${label}_boot.out"
+    local diff_out="$CCT_TMP_DIR/${label}.diff"
+
+    if ! "$CCT_BIN" --ast "$file" >"$host_raw" 2>"$CCT_TMP_DIR/${label}_host.err"; then
+        return 1
+    fi
+
+    normalize_host_ast_22f "$host_raw" "$host_norm"
+
+    if ! tests/integration/parser_dump_stdin_22f <"$file" >"$boot_out" 2>"$CCT_TMP_DIR/${label}_boot.err"; then
+        return 1
+    fi
+
+    diff -u "$host_norm" "$boot_out" >"$diff_out" 2>&1
+}
+
+compare_parser_file_23d() {
+    local label="$1"
+    local file="$2"
+    local host_raw="$CCT_TMP_DIR/${label}_host.raw"
+    local host_norm="$CCT_TMP_DIR/${label}_host.norm"
+    local boot_out="$CCT_TMP_DIR/${label}_boot.out"
+    local diff_out="$CCT_TMP_DIR/${label}.diff"
+
+    if ! "$CCT_BIN" --ast "$file" >"$host_raw" 2>"$CCT_TMP_DIR/${label}_host.err"; then
+        return 1
+    fi
+
+    normalize_host_ast_22f "$host_raw" "$host_norm"
+
+    if ! src/bootstrap/main_parser "$file" >"$boot_out" 2>"$CCT_TMP_DIR/${label}_boot.err"; then
+        return 1
+    fi
+
+    diff -u "$host_norm" "$boot_out" >"$diff_out" 2>&1
+}
+
 resolve_doc_path() {
     local rel="$1"
     if [ -f "$rel" ]; then
@@ -17158,7 +17206,7 @@ SIG14TA1_HELPER_BIN="tests/integration/test_sigilo_source_context_14ta1"
 rm -f "$SIG14TA1_HELPER_BIN"
 rm -f tests/integration/sigilo_source_context_missing_source_14ta1.svg
 rm -f tests/integration/sigilo_source_context_missing_source_14ta1.sigil
-SIG14TA1_SRC_DEPS=$(find src -name '*.c' ! -path 'src/main.c' ! -path 'src/sigilo/sigilo.c' | sort)
+SIG14TA1_SRC_DEPS=$(find src -name '*.c' ! -name '*.cgen.c' ! -path 'src/main.c' ! -path 'src/sigilo/sigilo.c' | sort)
 if gcc -Wall -Wextra -Werror -std=c11 -O2 -g \
     -D_POSIX_C_SOURCE=200809L \
     -D_XOPEN_SOURCE=700 \
@@ -17238,7 +17286,7 @@ echo "Test 1160: internal sigilo context helper"
 SIG14TA2_HELPER_SRC="tests/integration/test_sigilo_context_14ta2.c"
 SIG14TA2_HELPER_BIN="tests/integration/test_sigilo_context_14ta2"
 rm -f "$SIG14TA2_HELPER_BIN"
-SIG14TA2_SRC_DEPS=$(find src -name '*.c' ! -path 'src/main.c' ! -path 'src/sigilo/sigilo.c' | sort)
+SIG14TA2_SRC_DEPS=$(find src -name '*.c' ! -name '*.cgen.c' ! -path 'src/main.c' ! -path 'src/sigilo/sigilo.c' | sort)
 if gcc -Wall -Wextra -Werror -std=c11 -O2 -g \
     -D_POSIX_C_SOURCE=200809L \
     -D_XOPEN_SOURCE=700 \
@@ -17312,7 +17360,7 @@ echo "Test 1163: internal tooltip helper"
 SIG14TA3_HELPER_SRC="tests/integration/test_sigilo_tooltip_14ta3.c"
 SIG14TA3_HELPER_BIN="tests/integration/test_sigilo_tooltip_14ta3"
 rm -f "$SIG14TA3_HELPER_BIN"
-SIG14TA3_SRC_DEPS=$(find src -name '*.c' ! -path 'src/main.c' ! -path 'src/sigilo/sigilo.c' | sort)
+SIG14TA3_SRC_DEPS=$(find src -name '*.c' ! -name '*.cgen.c' ! -path 'src/main.c' ! -path 'src/sigilo/sigilo.c' | sort)
 if gcc -Wall -Wextra -Werror -std=c11 -O2 -g \
     -D_POSIX_C_SOURCE=200809L \
     -D_XOPEN_SOURCE=700 \
@@ -19637,6 +19685,1933 @@ if "$CCT_BIN" --check src/bootstrap/lexer/token_type.cct >"$CCT_TMP_DIR/cct_phas
     test_pass "gate_21b4 valida compilacao e coerencia exata do Token Model"
 else
     test_fail "gate_21b4 encontrou divergencia em compilacao ou checklist do Token Model"
+fi
+
+echo ""
+echo "========================================"
+echo "FASE 22A: AST Backbone"
+echo "========================================"
+echo ""
+
+# Test 1275: ast_program_empty_22a
+echo "Test 1275: ast_program_empty_22a"
+SRC_1275="tests/integration/ast_program_empty_22a.cct"
+BIN_1275="${SRC_1275%.cct}"
+cleanup_codegen_artifacts "$SRC_1275"
+if "$CCT_BIN" "$SRC_1275" >"$CCT_TMP_DIR/cct_phase22a_1275_compile.out" 2>&1; then
+    "$BIN_1275" >"$CCT_TMP_DIR/cct_phase22a_1275_run.out" 2>&1
+    RC_1275=$?
+else
+    RC_1275=255
+fi
+if [ "$RC_1275" -eq 0 ]; then
+    test_pass "ast_program_empty_22a valida programa vazio e free seguro"
+else
+    test_fail "ast_program_empty_22a regrediu programa vazio do AST bootstrap"
+fi
+
+# Test 1276: ast_literals_22a
+echo "Test 1276: ast_literals_22a"
+SRC_1276="tests/integration/ast_literals_22a.cct"
+BIN_1276="${SRC_1276%.cct}"
+cleanup_codegen_artifacts "$SRC_1276"
+if "$CCT_BIN" "$SRC_1276" >"$CCT_TMP_DIR/cct_phase22a_1276_compile.out" 2>&1; then
+    "$BIN_1276" >"$CCT_TMP_DIR/cct_phase22a_1276_run.out" 2>&1
+    RC_1276=$?
+else
+    RC_1276=255
+fi
+if [ "$RC_1276" -eq 0 ]; then
+    test_pass "ast_literals_22a valida literais int/real/string/bool/nihil"
+else
+    test_fail "ast_literals_22a regrediu construcao de literais do AST bootstrap"
+fi
+
+# Test 1277: ast_binary_unary_22a
+echo "Test 1277: ast_binary_unary_22a"
+SRC_1277="tests/integration/ast_binary_unary_22a.cct"
+BIN_1277="${SRC_1277%.cct}"
+cleanup_codegen_artifacts "$SRC_1277"
+if "$CCT_BIN" "$SRC_1277" >"$CCT_TMP_DIR/cct_phase22a_1277_compile.out" 2>&1; then
+    "$BIN_1277" >"$CCT_TMP_DIR/cct_phase22a_1277_run.out" 2>&1
+    RC_1277=$?
+else
+    RC_1277=255
+fi
+if [ "$RC_1277" -eq 0 ]; then
+    test_pass "ast_binary_unary_22a valida nos binario/unario e ownership de filhos"
+else
+    test_fail "ast_binary_unary_22a regrediu operadores do AST bootstrap"
+fi
+
+# Test 1278: ast_call_args_22a
+echo "Test 1278: ast_call_args_22a"
+SRC_1278="tests/integration/ast_call_args_22a.cct"
+BIN_1278="${SRC_1278%.cct}"
+cleanup_codegen_artifacts "$SRC_1278"
+if "$CCT_BIN" "$SRC_1278" >"$CCT_TMP_DIR/cct_phase22a_1278_compile.out" 2>&1; then
+    "$BIN_1278" >"$CCT_TMP_DIR/cct_phase22a_1278_run.out" 2>&1
+    RC_1278=$?
+else
+    RC_1278=255
+fi
+if [ "$RC_1278" -eq 0 ]; then
+    test_pass "ast_call_args_22a valida call com lista owned de argumentos"
+else
+    test_fail "ast_call_args_22a regrediu chamadas do AST bootstrap"
+fi
+
+# Test 1279: ast_block_statements_22a
+echo "Test 1279: ast_block_statements_22a"
+SRC_1279="tests/integration/ast_block_statements_22a.cct"
+BIN_1279="${SRC_1279%.cct}"
+cleanup_codegen_artifacts "$SRC_1279"
+if "$CCT_BIN" "$SRC_1279" >"$CCT_TMP_DIR/cct_phase22a_1279_compile.out" 2>&1; then
+    "$BIN_1279" >"$CCT_TMP_DIR/cct_phase22a_1279_run.out" 2>&1
+    RC_1279=$?
+else
+    RC_1279=255
+fi
+if [ "$RC_1279" -eq 0 ]; then
+    test_pass "ast_block_statements_22a valida bloco com statements owned"
+else
+    test_fail "ast_block_statements_22a regrediu blocos do AST bootstrap"
+fi
+
+# Test 1280: ast_rituale_params_22a
+echo "Test 1280: ast_rituale_params_22a"
+SRC_1280="tests/integration/ast_rituale_params_22a.cct"
+BIN_1280="${SRC_1280%.cct}"
+cleanup_codegen_artifacts "$SRC_1280"
+if "$CCT_BIN" "$SRC_1280" >"$CCT_TMP_DIR/cct_phase22a_1280_compile.out" 2>&1; then
+    "$BIN_1280" >"$CCT_TMP_DIR/cct_phase22a_1280_run.out" 2>&1
+    RC_1280=$?
+else
+    RC_1280=255
+fi
+if [ "$RC_1280" -eq 0 ]; then
+    test_pass "ast_rituale_params_22a valida rituale com params, return type e body"
+else
+    test_fail "ast_rituale_params_22a regrediu declaracao rituale do AST bootstrap"
+fi
+
+# Test 1281: ast_sigillum_fields_22a
+echo "Test 1281: ast_sigillum_fields_22a"
+SRC_1281="tests/integration/ast_sigillum_fields_22a.cct"
+BIN_1281="${SRC_1281%.cct}"
+cleanup_codegen_artifacts "$SRC_1281"
+if "$CCT_BIN" "$SRC_1281" >"$CCT_TMP_DIR/cct_phase22a_1281_compile.out" 2>&1; then
+    "$BIN_1281" >"$CCT_TMP_DIR/cct_phase22a_1281_run.out" 2>&1
+    RC_1281=$?
+else
+    RC_1281=255
+fi
+if [ "$RC_1281" -eq 0 ]; then
+    test_pass "ast_sigillum_fields_22a valida sigillum com fields e type flags"
+else
+    test_fail "ast_sigillum_fields_22a regrediu declaracao sigillum do AST bootstrap"
+fi
+
+# Test 1282: ast_ordo_items_22a
+echo "Test 1282: ast_ordo_items_22a"
+SRC_1282="tests/integration/ast_ordo_items_22a.cct"
+BIN_1282="${SRC_1282%.cct}"
+cleanup_codegen_artifacts "$SRC_1282"
+if "$CCT_BIN" "$SRC_1282" >"$CCT_TMP_DIR/cct_phase22a_1282_compile.out" 2>&1; then
+    "$BIN_1282" >"$CCT_TMP_DIR/cct_phase22a_1282_run.out" 2>&1
+    RC_1282=$?
+else
+    RC_1282=255
+fi
+if [ "$RC_1282" -eq 0 ]; then
+    test_pass "ast_ordo_items_22a valida ordo com enum items owned"
+else
+    test_fail "ast_ordo_items_22a regrediu declaracao ordo do AST bootstrap"
+fi
+
+# Test 1283: ast_append_lists_22a
+echo "Test 1283: ast_append_lists_22a"
+SRC_1283="tests/integration/ast_append_lists_22a.cct"
+BIN_1283="${SRC_1283%.cct}"
+cleanup_codegen_artifacts "$SRC_1283"
+if "$CCT_BIN" "$SRC_1283" >"$CCT_TMP_DIR/cct_phase22a_1283_compile.out" 2>&1; then
+    "$BIN_1283" >"$CCT_TMP_DIR/cct_phase22a_1283_run.out" 2>&1
+    RC_1283=$?
+else
+    RC_1283=255
+fi
+if [ "$RC_1283" -eq 0 ]; then
+    test_pass "ast_append_lists_22a valida append helpers genericos de listas"
+else
+    test_fail "ast_append_lists_22a regrediu append helpers do AST bootstrap"
+fi
+
+# Test 1284: ast_program_decls_22a
+echo "Test 1284: ast_program_decls_22a"
+SRC_1284="tests/integration/ast_program_decls_22a.cct"
+BIN_1284="${SRC_1284%.cct}"
+cleanup_codegen_artifacts "$SRC_1284"
+if "$CCT_BIN" "$SRC_1284" >"$CCT_TMP_DIR/cct_phase22a_1284_compile.out" 2>&1; then
+    "$BIN_1284" >"$CCT_TMP_DIR/cct_phase22a_1284_run.out" 2>&1
+    RC_1284=$?
+else
+    RC_1284=255
+fi
+if [ "$RC_1284" -eq 0 ]; then
+    test_pass "ast_program_decls_22a valida declaracoes top-level owned por AstProgram"
+else
+    test_fail "ast_program_decls_22a regrediu declaracoes de AstProgram"
+fi
+
+# Test 1285: ast_access_flow_22a
+echo "Test 1285: ast_access_flow_22a"
+SRC_1285="tests/integration/ast_access_flow_22a.cct"
+BIN_1285="${SRC_1285%.cct}"
+cleanup_codegen_artifacts "$SRC_1285"
+if "$CCT_BIN" "$SRC_1285" >"$CCT_TMP_DIR/cct_phase22a_1285_compile.out" 2>&1; then
+    "$BIN_1285" >"$CCT_TMP_DIR/cct_phase22a_1285_run.out" 2>&1
+    RC_1285=$?
+else
+    RC_1285=255
+fi
+if [ "$RC_1285" -eq 0 ]; then
+    test_pass "ast_access_flow_22a valida field/index access e control-flow nodes"
+else
+    test_fail "ast_access_flow_22a regrediu nos auxiliares de fluxo e acesso"
+fi
+
+# Test 1286: ast_free_tree_22a
+echo "Test 1286: ast_free_tree_22a"
+SRC_1286="tests/integration/ast_free_tree_22a.cct"
+BIN_1286="${SRC_1286%.cct}"
+cleanup_codegen_artifacts "$SRC_1286"
+if "$CCT_BIN" "$SRC_1286" >"$CCT_TMP_DIR/cct_phase22a_1286_compile.out" 2>&1; then
+    "$BIN_1286" >"$CCT_TMP_DIR/cct_phase22a_1286_run.out" 2>&1
+    RC_1286=$?
+else
+    RC_1286=255
+fi
+if [ "$RC_1286" -eq 0 ]; then
+    test_pass "ast_free_tree_22a valida free de arvore owned sem segfault"
+else
+    test_fail "ast_free_tree_22a regrediu destructor do AST bootstrap"
+fi
+
+echo ""
+echo "========================================"
+echo "FASE 22B: Parser Core + Expressoes"
+echo "========================================"
+echo ""
+
+# Test 1287: parser_state_22b
+echo "Test 1287: parser_state_22b"
+SRC_1287="tests/integration/parser_state_22b.cct"
+BIN_1287="${SRC_1287%.cct}"
+cleanup_codegen_artifacts "$SRC_1287"
+if "$CCT_BIN" "$SRC_1287" >"$CCT_TMP_DIR/cct_phase22b_1287_compile.out" 2>&1; then
+    "$BIN_1287" >"$CCT_TMP_DIR/cct_phase22b_1287_run.out" 2>&1
+    RC_1287=$?
+else
+    RC_1287=255
+fi
+if [ "$RC_1287" -eq 0 ]; then
+    test_pass "parser_state_22b valida init do parser bootstrap com lexer acoplado"
+else
+    test_fail "parser_state_22b regrediu estado inicial do parser bootstrap"
+fi
+
+# Test 1288: parser_helpers_match_consume_22b
+echo "Test 1288: parser_helpers_match_consume_22b"
+SRC_1288="tests/integration/parser_helpers_match_consume_22b.cct"
+BIN_1288="${SRC_1288%.cct}"
+cleanup_codegen_artifacts "$SRC_1288"
+if "$CCT_BIN" "$SRC_1288" >"$CCT_TMP_DIR/cct_phase22b_1288_compile.out" 2>&1; then
+    "$BIN_1288" >"$CCT_TMP_DIR/cct_phase22b_1288_run.out" 2>&1
+    RC_1288=$?
+else
+    RC_1288=255
+fi
+if [ "$RC_1288" -eq 0 ]; then
+    test_pass "parser_helpers_match_consume_22b valida advance/check/match/consume"
+else
+    test_fail "parser_helpers_match_consume_22b regrediu helpers basicos do parser"
+fi
+
+# Test 1289: parse_precedence_mul_add_22b
+echo "Test 1289: parse_precedence_mul_add_22b"
+SRC_1289="tests/integration/parse_precedence_mul_add_22b.cct"
+BIN_1289="${SRC_1289%.cct}"
+cleanup_codegen_artifacts "$SRC_1289"
+if "$CCT_BIN" "$SRC_1289" >"$CCT_TMP_DIR/cct_phase22b_1289_compile.out" 2>&1; then
+    "$BIN_1289" >"$CCT_TMP_DIR/cct_phase22b_1289_run.out" 2>&1
+    RC_1289=$?
+else
+    RC_1289=255
+fi
+if [ "$RC_1289" -eq 0 ]; then
+    test_pass "parse_precedence_mul_add_22b valida precedencia de multiplicacao sobre soma"
+else
+    test_fail "parse_precedence_mul_add_22b regrediu ladder de precedencia do parser"
+fi
+
+# Test 1290: parse_grouping_22b
+echo "Test 1290: parse_grouping_22b"
+SRC_1290="tests/integration/parse_grouping_22b.cct"
+BIN_1290="${SRC_1290%.cct}"
+cleanup_codegen_artifacts "$SRC_1290"
+if "$CCT_BIN" "$SRC_1290" >"$CCT_TMP_DIR/cct_phase22b_1290_compile.out" 2>&1; then
+    "$BIN_1290" >"$CCT_TMP_DIR/cct_phase22b_1290_run.out" 2>&1
+    RC_1290=$?
+else
+    RC_1290=255
+fi
+if [ "$RC_1290" -eq 0 ]; then
+    test_pass "parse_grouping_22b valida parenteses alterando a associatividade esperada"
+else
+    test_fail "parse_grouping_22b regrediu parsing de grouping"
+fi
+
+# Test 1291: parse_unary_literal_22b
+echo "Test 1291: parse_unary_literal_22b"
+SRC_1291="tests/integration/parse_unary_literal_22b.cct"
+BIN_1291="${SRC_1291%.cct}"
+cleanup_codegen_artifacts "$SRC_1291"
+if "$CCT_BIN" "$SRC_1291" >"$CCT_TMP_DIR/cct_phase22b_1291_compile.out" 2>&1; then
+    "$BIN_1291" >"$CCT_TMP_DIR/cct_phase22b_1291_run.out" 2>&1
+    RC_1291=$?
+else
+    RC_1291=255
+fi
+if [ "$RC_1291" -eq 0 ]; then
+    test_pass "parse_unary_literal_22b valida unary sobre literal"
+else
+    test_fail "parse_unary_literal_22b regrediu parse unary"
+fi
+
+# Test 1292: parse_equality_comparison_22b
+echo "Test 1292: parse_equality_comparison_22b"
+SRC_1292="tests/integration/parse_equality_comparison_22b.cct"
+BIN_1292="${SRC_1292%.cct}"
+cleanup_codegen_artifacts "$SRC_1292"
+if "$CCT_BIN" "$SRC_1292" >"$CCT_TMP_DIR/cct_phase22b_1292_compile.out" 2>&1; then
+    "$BIN_1292" >"$CCT_TMP_DIR/cct_phase22b_1292_run.out" 2>&1
+    RC_1292=$?
+else
+    RC_1292=255
+fi
+if [ "$RC_1292" -eq 0 ]; then
+    test_pass "parse_equality_comparison_22b valida equality/comparison com nesting correto"
+else
+    test_fail "parse_equality_comparison_22b regrediu operadores de comparacao"
+fi
+
+# Test 1293: parse_logical_ops_22b
+echo "Test 1293: parse_logical_ops_22b"
+SRC_1293="tests/integration/parse_logical_ops_22b.cct"
+BIN_1293="${SRC_1293%.cct}"
+cleanup_codegen_artifacts "$SRC_1293"
+if "$CCT_BIN" "$SRC_1293" >"$CCT_TMP_DIR/cct_phase22b_1293_compile.out" 2>&1; then
+    "$BIN_1293" >"$CCT_TMP_DIR/cct_phase22b_1293_run.out" 2>&1
+    RC_1293=$?
+else
+    RC_1293=255
+fi
+if [ "$RC_1293" -eq 0 ]; then
+    test_pass "parse_logical_ops_22b valida precedencia de ET e VEL"
+else
+    test_fail "parse_logical_ops_22b regrediu operadores logicos do parser"
+fi
+
+# Test 1294: parse_identifier_simple_22b
+echo "Test 1294: parse_identifier_simple_22b"
+SRC_1294="tests/integration/parse_identifier_simple_22b.cct"
+BIN_1294="${SRC_1294%.cct}"
+cleanup_codegen_artifacts "$SRC_1294"
+if "$CCT_BIN" "$SRC_1294" >"$CCT_TMP_DIR/cct_phase22b_1294_compile.out" 2>&1; then
+    "$BIN_1294" >"$CCT_TMP_DIR/cct_phase22b_1294_run.out" 2>&1
+    RC_1294=$?
+else
+    RC_1294=255
+fi
+if [ "$RC_1294" -eq 0 ]; then
+    test_pass "parse_identifier_simple_22b valida identifier primario"
+else
+    test_fail "parse_identifier_simple_22b regrediu identifier primario"
+fi
+
+# Test 1295: parse_call_variants_22b
+echo "Test 1295: parse_call_variants_22b"
+SRC_1295="tests/integration/parse_call_variants_22b.cct"
+BIN_1295="${SRC_1295%.cct}"
+cleanup_codegen_artifacts "$SRC_1295"
+if "$CCT_BIN" "$SRC_1295" >"$CCT_TMP_DIR/cct_phase22b_1295_compile.out" 2>&1; then
+    "$BIN_1295" >"$CCT_TMP_DIR/cct_phase22b_1295_run.out" 2>&1
+    RC_1295=$?
+else
+    RC_1295=255
+fi
+if [ "$RC_1295" -eq 0 ]; then
+    test_pass "parse_call_variants_22b valida call com 0, 1 e N argumentos"
+else
+    test_fail "parse_call_variants_22b regrediu parse de chamadas"
+fi
+
+# Test 1296: parse_field_chain_22b
+echo "Test 1296: parse_field_chain_22b"
+SRC_1296="tests/integration/parse_field_chain_22b.cct"
+BIN_1296="${SRC_1296%.cct}"
+cleanup_codegen_artifacts "$SRC_1296"
+if "$CCT_BIN" "$SRC_1296" >"$CCT_TMP_DIR/cct_phase22b_1296_compile.out" 2>&1; then
+    "$BIN_1296" >"$CCT_TMP_DIR/cct_phase22b_1296_run.out" 2>&1
+    RC_1296=$?
+else
+    RC_1296=255
+fi
+if [ "$RC_1296" -eq 0 ]; then
+    test_pass "parse_field_chain_22b valida chained field access"
+else
+    test_fail "parse_field_chain_22b regrediu acesso encadeado por campo"
+fi
+
+# Test 1297: parse_index_access_22b
+echo "Test 1297: parse_index_access_22b"
+SRC_1297="tests/integration/parse_index_access_22b.cct"
+BIN_1297="${SRC_1297%.cct}"
+cleanup_codegen_artifacts "$SRC_1297"
+if "$CCT_BIN" "$SRC_1297" >"$CCT_TMP_DIR/cct_phase22b_1297_compile.out" 2>&1; then
+    "$BIN_1297" >"$CCT_TMP_DIR/cct_phase22b_1297_run.out" 2>&1
+    RC_1297=$?
+else
+    RC_1297=255
+fi
+if [ "$RC_1297" -eq 0 ]; then
+    test_pass "parse_index_access_22b valida acesso por indice com nesting"
+else
+    test_fail "parse_index_access_22b regrediu acesso por indice"
+fi
+
+# Test 1298: parse_assignment_expr_22b
+echo "Test 1298: parse_assignment_expr_22b"
+SRC_1298="tests/integration/parse_assignment_expr_22b.cct"
+BIN_1298="${SRC_1298%.cct}"
+cleanup_codegen_artifacts "$SRC_1298"
+if "$CCT_BIN" "$SRC_1298" >"$CCT_TMP_DIR/cct_phase22b_1298_compile.out" 2>&1; then
+    "$BIN_1298" >"$CCT_TMP_DIR/cct_phase22b_1298_run.out" 2>&1
+    RC_1298=$?
+else
+    RC_1298=255
+fi
+if [ "$RC_1298" -eq 0 ]; then
+    test_pass "parse_assignment_expr_22b valida assignment expression com target path minimo"
+else
+    test_fail "parse_assignment_expr_22b regrediu assignment expression do parser"
+fi
+
+echo ""
+echo "========================================"
+echo "FASE 22C: Statements Basicos"
+echo "========================================"
+echo ""
+
+# Test 1299: parse_expr_stmt_22c
+echo "Test 1299: parse_expr_stmt_22c"
+SRC_1299="tests/integration/parse_expr_stmt_22c.cct"
+BIN_1299="${SRC_1299%.cct}"
+cleanup_codegen_artifacts "$SRC_1299"
+if "$CCT_BIN" "$SRC_1299" >"$CCT_TMP_DIR/cct_phase22c_1299_compile.out" 2>&1; then
+    "$BIN_1299" >"$CCT_TMP_DIR/cct_phase22c_1299_run.out" 2>&1
+    RC_1299=$?
+else
+    RC_1299=255
+fi
+if [ "$RC_1299" -eq 0 ]; then
+    test_pass "parse_expr_stmt_22c valida expression statement simples"
+else
+    test_fail "parse_expr_stmt_22c regrediu statement de expressao"
+fi
+
+# Test 1300: parse_block_empty_22c
+echo "Test 1300: parse_block_empty_22c"
+SRC_1300="tests/integration/parse_block_empty_22c.cct"
+BIN_1300="${SRC_1300%.cct}"
+cleanup_codegen_artifacts "$SRC_1300"
+if "$CCT_BIN" "$SRC_1300" >"$CCT_TMP_DIR/cct_phase22c_1300_compile.out" 2>&1; then
+    "$BIN_1300" >"$CCT_TMP_DIR/cct_phase22c_1300_run.out" 2>&1
+    RC_1300=$?
+else
+    RC_1300=255
+fi
+if [ "$RC_1300" -eq 0 ]; then
+    test_pass "parse_block_empty_22c valida bloco vazio"
+else
+    test_fail "parse_block_empty_22c regrediu bloco vazio"
+fi
+
+# Test 1301: parse_block_multiple_22c
+echo "Test 1301: parse_block_multiple_22c"
+SRC_1301="tests/integration/parse_block_multiple_22c.cct"
+BIN_1301="${SRC_1301%.cct}"
+cleanup_codegen_artifacts "$SRC_1301"
+if "$CCT_BIN" "$SRC_1301" >"$CCT_TMP_DIR/cct_phase22c_1301_compile.out" 2>&1; then
+    "$BIN_1301" >"$CCT_TMP_DIR/cct_phase22c_1301_run.out" 2>&1
+    RC_1301=$?
+else
+    RC_1301=255
+fi
+if [ "$RC_1301" -eq 0 ]; then
+    test_pass "parse_block_multiple_22c valida bloco com multiplos statements"
+else
+    test_fail "parse_block_multiple_22c regrediu bloco com multiplos statements"
+fi
+
+# Test 1302: parse_evoca_no_init_22c
+echo "Test 1302: parse_evoca_no_init_22c"
+SRC_1302="tests/integration/parse_evoca_no_init_22c.cct"
+BIN_1302="${SRC_1302%.cct}"
+cleanup_codegen_artifacts "$SRC_1302"
+if "$CCT_BIN" "$SRC_1302" >"$CCT_TMP_DIR/cct_phase22c_1302_compile.out" 2>&1; then
+    "$BIN_1302" >"$CCT_TMP_DIR/cct_phase22c_1302_run.out" 2>&1
+    RC_1302=$?
+else
+    RC_1302=255
+fi
+if [ "$RC_1302" -eq 0 ]; then
+    test_pass "parse_evoca_no_init_22c valida EVOCA sem inicializador"
+else
+    test_fail "parse_evoca_no_init_22c regrediu EVOCA sem inicializador"
+fi
+
+# Test 1303: parse_evoca_with_init_22c
+echo "Test 1303: parse_evoca_with_init_22c"
+SRC_1303="tests/integration/parse_evoca_with_init_22c.cct"
+BIN_1303="${SRC_1303%.cct}"
+cleanup_codegen_artifacts "$SRC_1303"
+if "$CCT_BIN" "$SRC_1303" >"$CCT_TMP_DIR/cct_phase22c_1303_compile.out" 2>&1; then
+    "$BIN_1303" >"$CCT_TMP_DIR/cct_phase22c_1303_run.out" 2>&1
+    RC_1303=$?
+else
+    RC_1303=255
+fi
+if [ "$RC_1303" -eq 0 ]; then
+    test_pass "parse_evoca_with_init_22c valida EVOCA com inicializador"
+else
+    test_fail "parse_evoca_with_init_22c regrediu EVOCA com inicializador"
+fi
+
+# Test 1304: parse_vincire_simple_22c
+echo "Test 1304: parse_vincire_simple_22c"
+SRC_1304="tests/integration/parse_vincire_simple_22c.cct"
+BIN_1304="${SRC_1304%.cct}"
+cleanup_codegen_artifacts "$SRC_1304"
+if "$CCT_BIN" "$SRC_1304" >"$CCT_TMP_DIR/cct_phase22c_1304_compile.out" 2>&1; then
+    "$BIN_1304" >"$CCT_TMP_DIR/cct_phase22c_1304_run.out" 2>&1
+    RC_1304=$?
+else
+    RC_1304=255
+fi
+if [ "$RC_1304" -eq 0 ]; then
+    test_pass "parse_vincire_simple_22c valida VINCIRE simples"
+else
+    test_fail "parse_vincire_simple_22c regrediu VINCIRE simples"
+fi
+
+# Test 1305: parse_redde_variants_22c
+echo "Test 1305: parse_redde_variants_22c"
+SRC_1305="tests/integration/parse_redde_variants_22c.cct"
+BIN_1305="${SRC_1305%.cct}"
+cleanup_codegen_artifacts "$SRC_1305"
+if "$CCT_BIN" "$SRC_1305" >"$CCT_TMP_DIR/cct_phase22c_1305_compile.out" 2>&1; then
+    "$BIN_1305" >"$CCT_TMP_DIR/cct_phase22c_1305_run.out" 2>&1
+    RC_1305=$?
+else
+    RC_1305=255
+fi
+if [ "$RC_1305" -eq 0 ]; then
+    test_pass "parse_redde_variants_22c valida REDDE com e sem expressao"
+else
+    test_fail "parse_redde_variants_22c regrediu variantes de REDDE"
+fi
+
+# Test 1306: parse_si_no_else_22c
+echo "Test 1306: parse_si_no_else_22c"
+SRC_1306="tests/integration/parse_si_no_else_22c.cct"
+BIN_1306="${SRC_1306%.cct}"
+cleanup_codegen_artifacts "$SRC_1306"
+if "$CCT_BIN" "$SRC_1306" >"$CCT_TMP_DIR/cct_phase22c_1306_compile.out" 2>&1; then
+    "$BIN_1306" >"$CCT_TMP_DIR/cct_phase22c_1306_run.out" 2>&1
+    RC_1306=$?
+else
+    RC_1306=255
+fi
+if [ "$RC_1306" -eq 0 ]; then
+    test_pass "parse_si_no_else_22c valida SI sem ALITER"
+else
+    test_fail "parse_si_no_else_22c regrediu SI sem ALITER"
+fi
+
+# Test 1307: parse_si_with_else_22c
+echo "Test 1307: parse_si_with_else_22c"
+SRC_1307="tests/integration/parse_si_with_else_22c.cct"
+BIN_1307="${SRC_1307%.cct}"
+cleanup_codegen_artifacts "$SRC_1307"
+if "$CCT_BIN" "$SRC_1307" >"$CCT_TMP_DIR/cct_phase22c_1307_compile.out" 2>&1; then
+    "$BIN_1307" >"$CCT_TMP_DIR/cct_phase22c_1307_run.out" 2>&1
+    RC_1307=$?
+else
+    RC_1307=255
+fi
+if [ "$RC_1307" -eq 0 ]; then
+    test_pass "parse_si_with_else_22c valida SI com ALITER"
+else
+    test_fail "parse_si_with_else_22c regrediu SI com ALITER"
+fi
+
+# Test 1308: parse_dum_simple_22c
+echo "Test 1308: parse_dum_simple_22c"
+SRC_1308="tests/integration/parse_dum_simple_22c.cct"
+BIN_1308="${SRC_1308%.cct}"
+cleanup_codegen_artifacts "$SRC_1308"
+if "$CCT_BIN" "$SRC_1308" >"$CCT_TMP_DIR/cct_phase22c_1308_compile.out" 2>&1; then
+    "$BIN_1308" >"$CCT_TMP_DIR/cct_phase22c_1308_run.out" 2>&1
+    RC_1308=$?
+else
+    RC_1308=255
+fi
+if [ "$RC_1308" -eq 0 ]; then
+    test_pass "parse_dum_simple_22c valida DUM simples"
+else
+    test_fail "parse_dum_simple_22c regrediu DUM simples"
+fi
+
+# Test 1309: parse_statement_combo_22c
+echo "Test 1309: parse_statement_combo_22c"
+SRC_1309="tests/integration/parse_statement_combo_22c.cct"
+BIN_1309="${SRC_1309%.cct}"
+cleanup_codegen_artifacts "$SRC_1309"
+if "$CCT_BIN" "$SRC_1309" >"$CCT_TMP_DIR/cct_phase22c_1309_compile.out" 2>&1; then
+    "$BIN_1309" >"$CCT_TMP_DIR/cct_phase22c_1309_run.out" 2>&1
+    RC_1309=$?
+else
+    RC_1309=255
+fi
+if [ "$RC_1309" -eq 0 ]; then
+    test_pass "parse_statement_combo_22c valida combinacao canonica de statements"
+else
+    test_fail "parse_statement_combo_22c regrediu combinacao de statements"
+fi
+
+echo ""
+echo "========================================"
+echo "FASE 22D: Declaracoes Basicas"
+echo "========================================"
+echo ""
+
+# Test 1310: parse_program_import_22d
+echo "Test 1310: parse_program_import_22d"
+SRC_1310="tests/integration/parse_program_import_22d.cct"
+BIN_1310="${SRC_1310%.cct}"
+cleanup_codegen_artifacts "$SRC_1310"
+if "$CCT_BIN" "$SRC_1310" >"$CCT_TMP_DIR/cct_phase22d_1310_compile.out" 2>&1; then
+    "$BIN_1310" >"$CCT_TMP_DIR/cct_phase22d_1310_run.out" 2>&1
+    RC_1310=$?
+else
+    RC_1310=255
+fi
+if [ "$RC_1310" -eq 0 ]; then
+    test_pass "parse_program_import_22d valida declaracao ADVOCARE"
+else
+    test_fail "parse_program_import_22d regrediu parse de import"
+fi
+
+# Test 1311: parse_rituale_simple_22d
+echo "Test 1311: parse_rituale_simple_22d"
+SRC_1311="tests/integration/parse_rituale_simple_22d.cct"
+BIN_1311="${SRC_1311%.cct}"
+cleanup_codegen_artifacts "$SRC_1311"
+if "$CCT_BIN" "$SRC_1311" >"$CCT_TMP_DIR/cct_phase22d_1311_compile.out" 2>&1; then
+    "$BIN_1311" >"$CCT_TMP_DIR/cct_phase22d_1311_run.out" 2>&1
+    RC_1311=$?
+else
+    RC_1311=255
+fi
+if [ "$RC_1311" -eq 0 ]; then
+    test_pass "parse_rituale_simple_22d valida rituale basico com corpo inline"
+else
+    test_fail "parse_rituale_simple_22d regrediu rituale simples"
+fi
+
+# Test 1312: parse_rituale_params_return_22d
+echo "Test 1312: parse_rituale_params_return_22d"
+SRC_1312="tests/integration/parse_rituale_params_return_22d.cct"
+BIN_1312="${SRC_1312%.cct}"
+cleanup_codegen_artifacts "$SRC_1312"
+if "$CCT_BIN" "$SRC_1312" >"$CCT_TMP_DIR/cct_phase22d_1312_compile.out" 2>&1; then
+    "$BIN_1312" >"$CCT_TMP_DIR/cct_phase22d_1312_run.out" 2>&1
+    RC_1312=$?
+else
+    RC_1312=255
+fi
+if [ "$RC_1312" -eq 0 ]; then
+    test_pass "parse_rituale_params_return_22d valida parametros e retorno"
+else
+    test_fail "parse_rituale_params_return_22d regrediu assinatura de rituale"
+fi
+
+# Test 1313: parse_sigillum_simple_22d
+echo "Test 1313: parse_sigillum_simple_22d"
+SRC_1313="tests/integration/parse_sigillum_simple_22d.cct"
+BIN_1313="${SRC_1313%.cct}"
+cleanup_codegen_artifacts "$SRC_1313"
+if "$CCT_BIN" "$SRC_1313" >"$CCT_TMP_DIR/cct_phase22d_1313_compile.out" 2>&1; then
+    "$BIN_1313" >"$CCT_TMP_DIR/cct_phase22d_1313_run.out" 2>&1
+    RC_1313=$?
+else
+    RC_1313=255
+fi
+if [ "$RC_1313" -eq 0 ]; then
+    test_pass "parse_sigillum_simple_22d valida SIGILLUM com campos"
+else
+    test_fail "parse_sigillum_simple_22d regrediu parse de SIGILLUM"
+fi
+
+# Test 1314: parse_ordo_simple_22d
+echo "Test 1314: parse_ordo_simple_22d"
+SRC_1314="tests/integration/parse_ordo_simple_22d.cct"
+BIN_1314="${SRC_1314%.cct}"
+cleanup_codegen_artifacts "$SRC_1314"
+if "$CCT_BIN" "$SRC_1314" >"$CCT_TMP_DIR/cct_phase22d_1314_compile.out" 2>&1; then
+    "$BIN_1314" >"$CCT_TMP_DIR/cct_phase22d_1314_run.out" 2>&1
+    RC_1314=$?
+else
+    RC_1314=255
+fi
+if [ "$RC_1314" -eq 0 ]; then
+    test_pass "parse_ordo_simple_22d valida ORDO com itens"
+else
+    test_fail "parse_ordo_simple_22d regrediu parse de ORDO"
+fi
+
+# Test 1315: parse_program_multiple_decls_22d
+echo "Test 1315: parse_program_multiple_decls_22d"
+SRC_1315="tests/integration/parse_program_multiple_decls_22d.cct"
+BIN_1315="${SRC_1315%.cct}"
+cleanup_codegen_artifacts "$SRC_1315"
+if "$CCT_BIN" "$SRC_1315" >"$CCT_TMP_DIR/cct_phase22d_1315_compile.out" 2>&1; then
+    "$BIN_1315" >"$CCT_TMP_DIR/cct_phase22d_1315_run.out" 2>&1
+    RC_1315=$?
+else
+    RC_1315=255
+fi
+if [ "$RC_1315" -eq 0 ]; then
+    test_pass "parse_program_multiple_decls_22d valida programa com multiplas declaracoes"
+else
+    test_fail "parse_program_multiple_decls_22d regrediu agregacao de declaracoes"
+fi
+
+# Test 1316: parse_rituale_body_statements_22d
+echo "Test 1316: parse_rituale_body_statements_22d"
+SRC_1316="tests/integration/parse_rituale_body_statements_22d.cct"
+BIN_1316="${SRC_1316%.cct}"
+cleanup_codegen_artifacts "$SRC_1316"
+if "$CCT_BIN" "$SRC_1316" >"$CCT_TMP_DIR/cct_phase22d_1316_compile.out" 2>&1; then
+    "$BIN_1316" >"$CCT_TMP_DIR/cct_phase22d_1316_run.out" 2>&1
+    RC_1316=$?
+else
+    RC_1316=255
+fi
+if [ "$RC_1316" -eq 0 ]; then
+    test_pass "parse_rituale_body_statements_22d valida corpo inline com statements"
+else
+    test_fail "parse_rituale_body_statements_22d regrediu corpo inline de rituale"
+fi
+
+# Test 1317: parse_types_pointer_series_22d
+echo "Test 1317: parse_types_pointer_series_22d"
+SRC_1317="tests/integration/parse_types_pointer_series_22d.cct"
+BIN_1317="${SRC_1317%.cct}"
+cleanup_codegen_artifacts "$SRC_1317"
+if "$CCT_BIN" "$SRC_1317" >"$CCT_TMP_DIR/cct_phase22d_1317_compile.out" 2>&1; then
+    "$BIN_1317" >"$CCT_TMP_DIR/cct_phase22d_1317_run.out" 2>&1
+    RC_1317=$?
+else
+    RC_1317=255
+fi
+if [ "$RC_1317" -eq 0 ]; then
+    test_pass "parse_types_pointer_series_22d valida tipos SPECULUM e SERIES"
+else
+    test_fail "parse_types_pointer_series_22d regrediu parse de tipos compostos"
+fi
+
+# Test 1318: parse_fixture_real_22d
+echo "Test 1318: parse_fixture_real_22d"
+SRC_1318="tests/integration/parse_fixture_real_22d.cct"
+BIN_1318="${SRC_1318%.cct}"
+cleanup_codegen_artifacts "$SRC_1318"
+if "$CCT_BIN" "$SRC_1318" >"$CCT_TMP_DIR/cct_phase22d_1318_compile.out" 2>&1; then
+    "$BIN_1318" >"$CCT_TMP_DIR/cct_phase22d_1318_run.out" 2>&1
+    RC_1318=$?
+else
+    RC_1318=255
+fi
+if [ "$RC_1318" -eq 0 ]; then
+    test_pass "parse_fixture_real_22d valida fixture realista do parser"
+else
+    test_fail "parse_fixture_real_22d regrediu parse de fixture realista"
+fi
+
+# Test 1319: parse_program_brace_rituale_22d
+echo "Test 1319: parse_program_brace_rituale_22d"
+SRC_1319="tests/integration/parse_program_brace_rituale_22d.cct"
+BIN_1319="${SRC_1319%.cct}"
+cleanup_codegen_artifacts "$SRC_1319"
+if "$CCT_BIN" "$SRC_1319" >"$CCT_TMP_DIR/cct_phase22d_1319_compile.out" 2>&1; then
+    "$BIN_1319" >"$CCT_TMP_DIR/cct_phase22d_1319_run.out" 2>&1
+    RC_1319=$?
+else
+    RC_1319=255
+fi
+if [ "$RC_1319" -eq 0 ]; then
+    test_pass "parse_program_brace_rituale_22d valida corpo com chaves"
+else
+    test_fail "parse_program_brace_rituale_22d regrediu rituale com bloco"
+fi
+
+echo ""
+echo "========================================"
+echo "FASE 22E: Recovery e AST Dump"
+echo "========================================"
+echo ""
+
+# Test 1320: parser_dump_program_22e
+echo "Test 1320: parser_dump_program_22e"
+SRC_1320="tests/integration/parser_dump_program_22e.cct"
+BIN_1320="${SRC_1320%.cct}"
+cleanup_codegen_artifacts "$SRC_1320"
+if "$CCT_BIN" "$SRC_1320" >"$CCT_TMP_DIR/cct_phase22e_1320_compile.out" 2>&1; then
+    "$BIN_1320" >"$CCT_TMP_DIR/cct_phase22e_1320_run.out" 2>&1
+    RC_1320=$?
+else
+    RC_1320=255
+fi
+if [ "$RC_1320" -eq 0 ]; then
+    test_pass "parser_dump_program_22e valida dump canonico de programa simples"
+else
+    test_fail "parser_dump_program_22e regrediu dump textual basico"
+fi
+
+# Test 1321: parser_dump_rituale_22e
+echo "Test 1321: parser_dump_rituale_22e"
+SRC_1321="tests/integration/parser_dump_rituale_22e.cct"
+BIN_1321="${SRC_1321%.cct}"
+cleanup_codegen_artifacts "$SRC_1321"
+if "$CCT_BIN" "$SRC_1321" >"$CCT_TMP_DIR/cct_phase22e_1321_compile.out" 2>&1; then
+    "$BIN_1321" >"$CCT_TMP_DIR/cct_phase22e_1321_run.out" 2>&1
+    RC_1321=$?
+else
+    RC_1321=255
+fi
+if [ "$RC_1321" -eq 0 ]; then
+    test_pass "parser_dump_rituale_22e valida dump de rituale com parametros compostos"
+else
+    test_fail "parser_dump_rituale_22e regrediu dump de rituale"
+fi
+
+# Test 1322: parser_dump_sigillum_22e
+echo "Test 1322: parser_dump_sigillum_22e"
+SRC_1322="tests/integration/parser_dump_sigillum_22e.cct"
+BIN_1322="${SRC_1322%.cct}"
+cleanup_codegen_artifacts "$SRC_1322"
+if "$CCT_BIN" "$SRC_1322" >"$CCT_TMP_DIR/cct_phase22e_1322_compile.out" 2>&1; then
+    "$BIN_1322" >"$CCT_TMP_DIR/cct_phase22e_1322_run.out" 2>&1
+    RC_1322=$?
+else
+    RC_1322=255
+fi
+if [ "$RC_1322" -eq 0 ]; then
+    test_pass "parser_dump_sigillum_22e valida dump de SIGILLUM"
+else
+    test_fail "parser_dump_sigillum_22e regrediu dump de SIGILLUM"
+fi
+
+# Test 1323: parser_dump_ordo_22e
+echo "Test 1323: parser_dump_ordo_22e"
+SRC_1323="tests/integration/parser_dump_ordo_22e.cct"
+BIN_1323="${SRC_1323%.cct}"
+cleanup_codegen_artifacts "$SRC_1323"
+if "$CCT_BIN" "$SRC_1323" >"$CCT_TMP_DIR/cct_phase22e_1323_compile.out" 2>&1; then
+    "$BIN_1323" >"$CCT_TMP_DIR/cct_phase22e_1323_run.out" 2>&1
+    RC_1323=$?
+else
+    RC_1323=255
+fi
+if [ "$RC_1323" -eq 0 ]; then
+    test_pass "parser_dump_ordo_22e valida dump de ORDO"
+else
+    test_fail "parser_dump_ordo_22e regrediu dump de ORDO"
+fi
+
+# Test 1324: parser_dump_control_flow_22e
+echo "Test 1324: parser_dump_control_flow_22e"
+SRC_1324="tests/integration/parser_dump_control_flow_22e.cct"
+BIN_1324="${SRC_1324%.cct}"
+cleanup_codegen_artifacts "$SRC_1324"
+if "$CCT_BIN" "$SRC_1324" >"$CCT_TMP_DIR/cct_phase22e_1324_compile.out" 2>&1; then
+    "$BIN_1324" >"$CCT_TMP_DIR/cct_phase22e_1324_run.out" 2>&1
+    RC_1324=$?
+else
+    RC_1324=255
+fi
+if [ "$RC_1324" -eq 0 ]; then
+    test_pass "parser_dump_control_flow_22e valida dump de SI e DUM"
+else
+    test_fail "parser_dump_control_flow_22e regrediu dump de controle"
+fi
+
+# Test 1325: parser_recovery_expr_22e
+echo "Test 1325: parser_recovery_expr_22e"
+SRC_1325="tests/integration/parser_recovery_expr_22e.cct"
+BIN_1325="${SRC_1325%.cct}"
+cleanup_codegen_artifacts "$SRC_1325"
+if "$CCT_BIN" "$SRC_1325" >"$CCT_TMP_DIR/cct_phase22e_1325_compile.out" 2>&1; then
+    "$BIN_1325" >"$CCT_TMP_DIR/cct_phase22e_1325_run.out" 2>&1
+    RC_1325=$?
+else
+    RC_1325=255
+fi
+if [ "$RC_1325" -eq 0 ]; then
+    test_pass "parser_recovery_expr_22e valida recovery apos erro em expressao"
+else
+    test_fail "parser_recovery_expr_22e regrediu recovery de expressao"
+fi
+
+# Test 1326: parser_recovery_statement_22e
+echo "Test 1326: parser_recovery_statement_22e"
+SRC_1326="tests/integration/parser_recovery_statement_22e.cct"
+BIN_1326="${SRC_1326%.cct}"
+cleanup_codegen_artifacts "$SRC_1326"
+if "$CCT_BIN" "$SRC_1326" >"$CCT_TMP_DIR/cct_phase22e_1326_compile.out" 2>&1; then
+    "$BIN_1326" >"$CCT_TMP_DIR/cct_phase22e_1326_run.out" 2>&1
+    RC_1326=$?
+else
+    RC_1326=255
+fi
+if [ "$RC_1326" -eq 0 ]; then
+    test_pass "parser_recovery_statement_22e valida recovery apos statement invalido"
+else
+    test_fail "parser_recovery_statement_22e regrediu recovery de statement"
+fi
+
+# Test 1327: parser_recovery_declaration_22e
+echo "Test 1327: parser_recovery_declaration_22e"
+SRC_1327="tests/integration/parser_recovery_declaration_22e.cct"
+BIN_1327="${SRC_1327%.cct}"
+cleanup_codegen_artifacts "$SRC_1327"
+if "$CCT_BIN" "$SRC_1327" >"$CCT_TMP_DIR/cct_phase22e_1327_compile.out" 2>&1; then
+    "$BIN_1327" >"$CCT_TMP_DIR/cct_phase22e_1327_run.out" 2>&1
+    RC_1327=$?
+else
+    RC_1327=255
+fi
+if [ "$RC_1327" -eq 0 ]; then
+    test_pass "parser_recovery_declaration_22e valida sincronizacao ate proxima declaracao"
+else
+    test_fail "parser_recovery_declaration_22e regrediu recovery top-level"
+fi
+
+# Test 1328: parser_recovery_dump_22e
+echo "Test 1328: parser_recovery_dump_22e"
+SRC_1328="tests/integration/parser_recovery_dump_22e.cct"
+BIN_1328="${SRC_1328%.cct}"
+cleanup_codegen_artifacts "$SRC_1328"
+if "$CCT_BIN" "$SRC_1328" >"$CCT_TMP_DIR/cct_phase22e_1328_compile.out" 2>&1; then
+    "$BIN_1328" >"$CCT_TMP_DIR/cct_phase22e_1328_run.out" 2>&1
+    RC_1328=$?
+else
+    RC_1328=255
+fi
+if [ "$RC_1328" -eq 0 ]; then
+    test_pass "parser_recovery_dump_22e valida dump apos recovery de declaracao invalida"
+else
+    test_fail "parser_recovery_dump_22e regrediu dump com recovery"
+fi
+
+# Test 1329: parser_negative_fixture_22e
+echo "Test 1329: parser_negative_fixture_22e"
+SRC_1329="tests/integration/parser_negative_fixture_22e.cct"
+BIN_1329="${SRC_1329%.cct}"
+cleanup_codegen_artifacts "$SRC_1329"
+if "$CCT_BIN" "$SRC_1329" >"$CCT_TMP_DIR/cct_phase22e_1329_compile.out" 2>&1; then
+    "$BIN_1329" >"$CCT_TMP_DIR/cct_phase22e_1329_run.out" 2>&1
+    RC_1329=$?
+else
+    RC_1329=255
+fi
+if [ "$RC_1329" -eq 0 ]; then
+    test_pass "parser_negative_fixture_22e valida fixture negativa realista com recovery"
+else
+    test_fail "parser_negative_fixture_22e regrediu fixture negativa do parser"
+fi
+
+echo ""
+echo "========================================"
+echo "FASE 22F: Validation Gate"
+echo "========================================"
+echo ""
+
+# Test 1330: parser_dump_stdin_22f
+echo "Test 1330: parser_dump_stdin_22f"
+SRC_1330="tests/integration/parser_dump_stdin_22f.cct"
+BIN_1330="${SRC_1330%.cct}"
+cleanup_codegen_artifacts "$SRC_1330"
+if "$CCT_BIN" "$SRC_1330" >"$CCT_TMP_DIR/cct_phase22f_1330_compile.out" 2>&1; then
+    RC_1330=0
+else
+    RC_1330=255
+fi
+if [ "$RC_1330" -eq 0 ] && [ -x "$BIN_1330" ]; then
+    test_pass "parser_dump_stdin_22f compila dumper bootstrap via stdin"
+else
+    test_fail "parser_dump_stdin_22f falhou ao compilar dumper bootstrap"
+fi
+
+# Test 1331: parser_gate_import_22f_input
+echo "Test 1331: parser_gate_import_22f_input"
+if [ "$RC_1330" -eq 0 ] && compare_parser_ast_22f "phase22f_1331" "tests/integration/parser_gate_import_22f_input.cct"; then
+    test_pass "22F import fixture bate 1:1 com parser C"
+else
+    test_fail "22F import fixture divergiu do parser C"
+fi
+
+# Test 1332: parser_gate_rituale_22f_input
+echo "Test 1332: parser_gate_rituale_22f_input"
+if [ "$RC_1330" -eq 0 ] && compare_parser_ast_22f "phase22f_1332" "tests/integration/parser_gate_rituale_22f_input.cct"; then
+    test_pass "22F rituale fixture bate 1:1 com parser C"
+else
+    test_fail "22F rituale fixture divergiu do parser C"
+fi
+
+# Test 1333: parser_gate_sigillum_22f_input
+echo "Test 1333: parser_gate_sigillum_22f_input"
+if [ "$RC_1330" -eq 0 ] && compare_parser_ast_22f "phase22f_1333" "tests/integration/parser_gate_sigillum_22f_input.cct"; then
+    test_pass "22F sigillum fixture bate 1:1 com parser C"
+else
+    test_fail "22F sigillum fixture divergiu do parser C"
+fi
+
+# Test 1334: parser_gate_ordo_22f_input
+echo "Test 1334: parser_gate_ordo_22f_input"
+if [ "$RC_1330" -eq 0 ] && compare_parser_ast_22f "phase22f_1334" "tests/integration/parser_gate_ordo_22f_input.cct"; then
+    test_pass "22F ordo fixture bate 1:1 com parser C"
+else
+    test_fail "22F ordo fixture divergiu do parser C"
+fi
+
+# Test 1335: parser_gate_block_22f_input
+echo "Test 1335: parser_gate_block_22f_input"
+if [ "$RC_1330" -eq 0 ] && compare_parser_ast_22f "phase22f_1335" "tests/integration/parser_gate_block_22f_input.cct"; then
+    test_pass "22F block fixture bate 1:1 com parser C"
+else
+    test_fail "22F block fixture divergiu do parser C"
+fi
+
+# Test 1336: parser_gate_if_22f_input
+echo "Test 1336: parser_gate_if_22f_input"
+if [ "$RC_1330" -eq 0 ] && compare_parser_ast_22f "phase22f_1336" "tests/integration/parser_gate_if_22f_input.cct"; then
+    test_pass "22F if fixture bate 1:1 com parser C"
+else
+    test_fail "22F if fixture divergiu do parser C"
+fi
+
+# Test 1337: parser_gate_while_22f_input
+echo "Test 1337: parser_gate_while_22f_input"
+if [ "$RC_1330" -eq 0 ] && compare_parser_ast_22f "phase22f_1337" "tests/integration/parser_gate_while_22f_input.cct"; then
+    test_pass "22F while fixture bate 1:1 com parser C"
+else
+    test_fail "22F while fixture divergiu do parser C"
+fi
+
+# Test 1338: parser_gate_binary_22f_input
+echo "Test 1338: parser_gate_binary_22f_input"
+if [ "$RC_1330" -eq 0 ] && compare_parser_ast_22f "phase22f_1338" "tests/integration/parser_gate_binary_22f_input.cct"; then
+    test_pass "22F binary fixture bate 1:1 com parser C"
+else
+    test_fail "22F binary fixture divergiu do parser C"
+fi
+
+# Test 1339: parser_gate_call_22f_input
+echo "Test 1339: parser_gate_call_22f_input"
+if [ "$RC_1330" -eq 0 ] && compare_parser_ast_22f "phase22f_1339" "tests/integration/parser_gate_call_22f_input.cct"; then
+    test_pass "22F call fixture bate 1:1 com parser C"
+else
+    test_fail "22F call fixture divergiu do parser C"
+fi
+
+# Test 1340: parser_gate_field_index_22f_input
+echo "Test 1340: parser_gate_field_index_22f_input"
+if [ "$RC_1330" -eq 0 ] && compare_parser_ast_22f "phase22f_1340" "tests/integration/parser_gate_field_index_22f_input.cct"; then
+    test_pass "22F field/index fixture bate 1:1 com parser C"
+else
+    test_fail "22F field/index fixture divergiu do parser C"
+fi
+
+echo ""
+echo "========================================"
+echo "FASE 23A: Advanced Control Flow + AST Expansion"
+echo "========================================"
+echo ""
+
+# Test 1341: parse_iace_23a
+echo "Test 1341: parse_iace_23a"
+SRC_1341="tests/integration/parse_iace_23a.cct"
+BIN_1341="${SRC_1341%.cct}"
+cleanup_codegen_artifacts "$SRC_1341"
+if "$CCT_BIN" "$SRC_1341" >"$CCT_TMP_DIR/cct_phase23a_1341_compile.out" 2>&1; then
+    "$BIN_1341" >"$CCT_TMP_DIR/cct_phase23a_1341_run.out" 2>&1
+    RC_1341=$?
+else
+    RC_1341=255
+fi
+if [ "$RC_1341" -eq 0 ]; then
+    test_pass "parse_iace_23a valida AST de IACE"
+else
+    test_fail "parse_iace_23a regrediu parse de IACE"
+fi
+
+# Test 1342: parse_tempta_basic_23a
+echo "Test 1342: parse_tempta_basic_23a"
+SRC_1342="tests/integration/parse_tempta_basic_23a.cct"
+BIN_1342="${SRC_1342%.cct}"
+cleanup_codegen_artifacts "$SRC_1342"
+if "$CCT_BIN" "$SRC_1342" >"$CCT_TMP_DIR/cct_phase23a_1342_compile.out" 2>&1; then
+    "$BIN_1342" >"$CCT_TMP_DIR/cct_phase23a_1342_run.out" 2>&1
+    RC_1342=$?
+else
+    RC_1342=255
+fi
+if [ "$RC_1342" -eq 0 ]; then
+    test_pass "parse_tempta_basic_23a valida TEMPTA/CAPE basico"
+else
+    test_fail "parse_tempta_basic_23a regrediu parse de TEMPTA"
+fi
+
+# Test 1343: parse_tempta_semper_23a
+echo "Test 1343: parse_tempta_semper_23a"
+SRC_1343="tests/integration/parse_tempta_semper_23a.cct"
+BIN_1343="${SRC_1343%.cct}"
+cleanup_codegen_artifacts "$SRC_1343"
+if "$CCT_BIN" "$SRC_1343" >"$CCT_TMP_DIR/cct_phase23a_1343_compile.out" 2>&1; then
+    "$BIN_1343" >"$CCT_TMP_DIR/cct_phase23a_1343_run.out" 2>&1
+    RC_1343=$?
+else
+    RC_1343=255
+fi
+if [ "$RC_1343" -eq 0 ]; then
+    test_pass "parse_tempta_semper_23a valida bloco SEMPER"
+else
+    test_fail "parse_tempta_semper_23a regrediu parse de SEMPER"
+fi
+
+# Test 1344: parse_tempta_nested_23a
+echo "Test 1344: parse_tempta_nested_23a"
+SRC_1344="tests/integration/parse_tempta_nested_23a.cct"
+BIN_1344="${SRC_1344%.cct}"
+cleanup_codegen_artifacts "$SRC_1344"
+if "$CCT_BIN" "$SRC_1344" >"$CCT_TMP_DIR/cct_phase23a_1344_compile.out" 2>&1; then
+    "$BIN_1344" >"$CCT_TMP_DIR/cct_phase23a_1344_run.out" 2>&1
+    RC_1344=$?
+else
+    RC_1344=255
+fi
+if [ "$RC_1344" -eq 0 ]; then
+    test_pass "parse_tempta_nested_23a valida nesting de TEMPTA"
+else
+    test_fail "parse_tempta_nested_23a regrediu nesting de TEMPTA"
+fi
+
+# Test 1345: parse_quando_basic_23a
+echo "Test 1345: parse_quando_basic_23a"
+SRC_1345="tests/integration/parse_quando_basic_23a.cct"
+BIN_1345="${SRC_1345%.cct}"
+cleanup_codegen_artifacts "$SRC_1345"
+if "$CCT_BIN" "$SRC_1345" >"$CCT_TMP_DIR/cct_phase23a_1345_compile.out" 2>&1; then
+    "$BIN_1345" >"$CCT_TMP_DIR/cct_phase23a_1345_run.out" 2>&1
+    RC_1345=$?
+else
+    RC_1345=255
+fi
+if [ "$RC_1345" -eq 0 ]; then
+    test_pass "parse_quando_basic_23a valida QUANDO com um caso"
+else
+    test_fail "parse_quando_basic_23a regrediu parse de QUANDO"
+fi
+
+# Test 1346: parse_quando_orcases_23a
+echo "Test 1346: parse_quando_orcases_23a"
+SRC_1346="tests/integration/parse_quando_orcases_23a.cct"
+BIN_1346="${SRC_1346%.cct}"
+cleanup_codegen_artifacts "$SRC_1346"
+if "$CCT_BIN" "$SRC_1346" >"$CCT_TMP_DIR/cct_phase23a_1346_compile.out" 2>&1; then
+    "$BIN_1346" >"$CCT_TMP_DIR/cct_phase23a_1346_run.out" 2>&1
+    RC_1346=$?
+else
+    RC_1346=255
+fi
+if [ "$RC_1346" -eq 0 ]; then
+    test_pass "parse_quando_orcases_23a valida multiplos CASO no mesmo branch"
+else
+    test_fail "parse_quando_orcases_23a regrediu agrupamento de CASO"
+fi
+
+# Test 1347: parse_quando_else_23a
+echo "Test 1347: parse_quando_else_23a"
+SRC_1347="tests/integration/parse_quando_else_23a.cct"
+BIN_1347="${SRC_1347%.cct}"
+cleanup_codegen_artifacts "$SRC_1347"
+if "$CCT_BIN" "$SRC_1347" >"$CCT_TMP_DIR/cct_phase23a_1347_compile.out" 2>&1; then
+    "$BIN_1347" >"$CCT_TMP_DIR/cct_phase23a_1347_run.out" 2>&1
+    RC_1347=$?
+else
+    RC_1347=255
+fi
+if [ "$RC_1347" -eq 0 ]; then
+    test_pass "parse_quando_else_23a valida branch SENAO"
+else
+    test_fail "parse_quando_else_23a regrediu branch SENAO"
+fi
+
+# Test 1348: parse_quando_bindings_23a
+echo "Test 1348: parse_quando_bindings_23a"
+SRC_1348="tests/integration/parse_quando_bindings_23a.cct"
+BIN_1348="${SRC_1348%.cct}"
+cleanup_codegen_artifacts "$SRC_1348"
+if "$CCT_BIN" "$SRC_1348" >"$CCT_TMP_DIR/cct_phase23a_1348_compile.out" 2>&1; then
+    "$BIN_1348" >"$CCT_TMP_DIR/cct_phase23a_1348_run.out" 2>&1
+    RC_1348=$?
+else
+    RC_1348=255
+fi
+if [ "$RC_1348" -eq 0 ]; then
+    test_pass "parse_quando_bindings_23a valida bindings de CASO"
+else
+    test_fail "parse_quando_bindings_23a regrediu bindings de CASO"
+fi
+
+# Test 1349: parser_dump_tempta_23a
+echo "Test 1349: parser_dump_tempta_23a"
+SRC_1349="tests/integration/parser_dump_tempta_23a.cct"
+BIN_1349="${SRC_1349%.cct}"
+cleanup_codegen_artifacts "$SRC_1349"
+if "$CCT_BIN" "$SRC_1349" >"$CCT_TMP_DIR/cct_phase23a_1349_compile.out" 2>&1; then
+    "$BIN_1349" >"$CCT_TMP_DIR/cct_phase23a_1349_run.out" 2>&1
+    RC_1349=$?
+else
+    RC_1349=255
+fi
+if [ "$RC_1349" -eq 0 ]; then
+    test_pass "parser_dump_tempta_23a valida dump textual de TEMPTA"
+else
+    test_fail "parser_dump_tempta_23a regrediu dump de TEMPTA"
+fi
+
+# Test 1350: parser_dump_quando_23a
+echo "Test 1350: parser_dump_quando_23a"
+SRC_1350="tests/integration/parser_dump_quando_23a.cct"
+BIN_1350="${SRC_1350%.cct}"
+cleanup_codegen_artifacts "$SRC_1350"
+if "$CCT_BIN" "$SRC_1350" >"$CCT_TMP_DIR/cct_phase23a_1350_compile.out" 2>&1; then
+    "$BIN_1350" >"$CCT_TMP_DIR/cct_phase23a_1350_run.out" 2>&1
+    RC_1350=$?
+else
+    RC_1350=255
+fi
+if [ "$RC_1350" -eq 0 ]; then
+    test_pass "parser_dump_quando_23a valida dump textual de QUANDO"
+else
+    test_fail "parser_dump_quando_23a regrediu dump de QUANDO"
+fi
+
+# Test 1351: parser_recovery_tempta_invalid_23a
+echo "Test 1351: parser_recovery_tempta_invalid_23a"
+SRC_1351="tests/integration/parser_recovery_tempta_invalid_23a.cct"
+BIN_1351="${SRC_1351%.cct}"
+cleanup_codegen_artifacts "$SRC_1351"
+if "$CCT_BIN" "$SRC_1351" >"$CCT_TMP_DIR/cct_phase23a_1351_compile.out" 2>&1; then
+    "$BIN_1351" >"$CCT_TMP_DIR/cct_phase23a_1351_run.out" 2>&1
+    RC_1351=$?
+else
+    RC_1351=255
+fi
+if [ "$RC_1351" -eq 0 ]; then
+    test_pass "parser_recovery_tempta_invalid_23a valida recovery em TEMPTA invalido"
+else
+    test_fail "parser_recovery_tempta_invalid_23a regrediu recovery de TEMPTA"
+fi
+
+echo ""
+echo "========================================"
+echo "FASE 23B: GENUS Parsing"
+echo "========================================"
+echo ""
+
+# Test 1352: parse_rituale_genus_single_23b
+echo "Test 1352: parse_rituale_genus_single_23b"
+SRC_1352="tests/integration/parse_rituale_genus_single_23b.cct"
+BIN_1352="${SRC_1352%.cct}"
+cleanup_codegen_artifacts "$SRC_1352"
+if "$CCT_BIN" "$SRC_1352" >"$CCT_TMP_DIR/cct_phase23b_1352_compile.out" 2>&1; then
+    "$BIN_1352" >"$CCT_TMP_DIR/cct_phase23b_1352_run.out" 2>&1
+    RC_1352=$?
+else
+    RC_1352=255
+fi
+if [ "$RC_1352" -eq 0 ]; then
+    test_pass "parse_rituale_genus_single_23b valida type param unico em RITUALE"
+else
+    test_fail "parse_rituale_genus_single_23b regrediu GENUS em RITUALE"
+fi
+
+# Test 1353: parse_rituale_genus_constraint_23b
+echo "Test 1353: parse_rituale_genus_constraint_23b"
+SRC_1353="tests/integration/parse_rituale_genus_constraint_23b.cct"
+BIN_1353="${SRC_1353%.cct}"
+cleanup_codegen_artifacts "$SRC_1353"
+if "$CCT_BIN" "$SRC_1353" >"$CCT_TMP_DIR/cct_phase23b_1353_compile.out" 2>&1; then
+    "$BIN_1353" >"$CCT_TMP_DIR/cct_phase23b_1353_run.out" 2>&1
+    RC_1353=$?
+else
+    RC_1353=255
+fi
+if [ "$RC_1353" -eq 0 ]; then
+    test_pass "parse_rituale_genus_constraint_23b valida constraint PACTUM"
+else
+    test_fail "parse_rituale_genus_constraint_23b regrediu constraint de GENUS"
+fi
+
+# Test 1354: parse_rituale_genus_multi_23b
+echo "Test 1354: parse_rituale_genus_multi_23b"
+SRC_1354="tests/integration/parse_rituale_genus_multi_23b.cct"
+BIN_1354="${SRC_1354%.cct}"
+cleanup_codegen_artifacts "$SRC_1354"
+if "$CCT_BIN" "$SRC_1354" >"$CCT_TMP_DIR/cct_phase23b_1354_compile.out" 2>&1; then
+    "$BIN_1354" >"$CCT_TMP_DIR/cct_phase23b_1354_run.out" 2>&1
+    RC_1354=$?
+else
+    RC_1354=255
+fi
+if [ "$RC_1354" -eq 0 ]; then
+    test_pass "parse_rituale_genus_multi_23b valida multiplos type params"
+else
+    test_fail "parse_rituale_genus_multi_23b regrediu multiplos type params"
+fi
+
+# Test 1355: parse_sigillum_genus_single_23b
+echo "Test 1355: parse_sigillum_genus_single_23b"
+SRC_1355="tests/integration/parse_sigillum_genus_single_23b.cct"
+BIN_1355="${SRC_1355%.cct}"
+cleanup_codegen_artifacts "$SRC_1355"
+if "$CCT_BIN" "$SRC_1355" >"$CCT_TMP_DIR/cct_phase23b_1355_compile.out" 2>&1; then
+    "$BIN_1355" >"$CCT_TMP_DIR/cct_phase23b_1355_run.out" 2>&1
+    RC_1355=$?
+else
+    RC_1355=255
+fi
+if [ "$RC_1355" -eq 0 ]; then
+    test_pass "parse_sigillum_genus_single_23b valida GENUS em SIGILLUM"
+else
+    test_fail "parse_sigillum_genus_single_23b regrediu GENUS em SIGILLUM"
+fi
+
+# Test 1356: parse_generic_param_type_23b
+echo "Test 1356: parse_generic_param_type_23b"
+SRC_1356="tests/integration/parse_generic_param_type_23b.cct"
+BIN_1356="${SRC_1356%.cct}"
+cleanup_codegen_artifacts "$SRC_1356"
+if "$CCT_BIN" "$SRC_1356" >"$CCT_TMP_DIR/cct_phase23b_1356_compile.out" 2>&1; then
+    "$BIN_1356" >"$CCT_TMP_DIR/cct_phase23b_1356_run.out" 2>&1
+    RC_1356=$?
+else
+    RC_1356=255
+fi
+if [ "$RC_1356" -eq 0 ]; then
+    test_pass "parse_generic_param_type_23b valida type args em parametro"
+else
+    test_fail "parse_generic_param_type_23b regrediu type args em parametro"
+fi
+
+# Test 1357: parse_generic_return_type_23b
+echo "Test 1357: parse_generic_return_type_23b"
+SRC_1357="tests/integration/parse_generic_return_type_23b.cct"
+BIN_1357="${SRC_1357%.cct}"
+cleanup_codegen_artifacts "$SRC_1357"
+if "$CCT_BIN" "$SRC_1357" >"$CCT_TMP_DIR/cct_phase23b_1357_compile.out" 2>&1; then
+    "$BIN_1357" >"$CCT_TMP_DIR/cct_phase23b_1357_run.out" 2>&1
+    RC_1357=$?
+else
+    RC_1357=255
+fi
+if [ "$RC_1357" -eq 0 ]; then
+    test_pass "parse_generic_return_type_23b valida retorno generico"
+else
+    test_fail "parse_generic_return_type_23b regrediu retorno generico"
+fi
+
+# Test 1358: parse_generic_field_type_23b
+echo "Test 1358: parse_generic_field_type_23b"
+SRC_1358="tests/integration/parse_generic_field_type_23b.cct"
+BIN_1358="${SRC_1358%.cct}"
+cleanup_codegen_artifacts "$SRC_1358"
+if "$CCT_BIN" "$SRC_1358" >"$CCT_TMP_DIR/cct_phase23b_1358_compile.out" 2>&1; then
+    "$BIN_1358" >"$CCT_TMP_DIR/cct_phase23b_1358_run.out" 2>&1
+    RC_1358=$?
+else
+    RC_1358=255
+fi
+if [ "$RC_1358" -eq 0 ]; then
+    test_pass "parse_generic_field_type_23b valida field generico"
+else
+    test_fail "parse_generic_field_type_23b regrediu field generico"
+fi
+
+# Test 1359: parse_evoca_generic_type_23b
+echo "Test 1359: parse_evoca_generic_type_23b"
+SRC_1359="tests/integration/parse_evoca_generic_type_23b.cct"
+BIN_1359="${SRC_1359%.cct}"
+cleanup_codegen_artifacts "$SRC_1359"
+if "$CCT_BIN" "$SRC_1359" >"$CCT_TMP_DIR/cct_phase23b_1359_compile.out" 2>&1; then
+    "$BIN_1359" >"$CCT_TMP_DIR/cct_phase23b_1359_run.out" 2>&1
+    RC_1359=$?
+else
+    RC_1359=255
+fi
+if [ "$RC_1359" -eq 0 ]; then
+    test_pass "parse_evoca_generic_type_23b valida tipo generico em EVOCA"
+else
+    test_fail "parse_evoca_generic_type_23b regrediu tipo generico em EVOCA"
+fi
+
+# Test 1360: parse_nested_generic_type_23b
+echo "Test 1360: parse_nested_generic_type_23b"
+SRC_1360="tests/integration/parse_nested_generic_type_23b.cct"
+BIN_1360="${SRC_1360%.cct}"
+cleanup_codegen_artifacts "$SRC_1360"
+if "$CCT_BIN" "$SRC_1360" >"$CCT_TMP_DIR/cct_phase23b_1360_compile.out" 2>&1; then
+    "$BIN_1360" >"$CCT_TMP_DIR/cct_phase23b_1360_run.out" 2>&1
+    RC_1360=$?
+else
+    RC_1360=255
+fi
+if [ "$RC_1360" -eq 0 ]; then
+    test_pass "parse_nested_generic_type_23b valida nested GENUS"
+else
+    test_fail "parse_nested_generic_type_23b regrediu nested GENUS"
+fi
+
+# Test 1361: parser_dump_rituale_genus_23b
+echo "Test 1361: parser_dump_rituale_genus_23b"
+SRC_1361="tests/integration/parser_dump_rituale_genus_23b.cct"
+BIN_1361="${SRC_1361%.cct}"
+cleanup_codegen_artifacts "$SRC_1361"
+if "$CCT_BIN" "$SRC_1361" >"$CCT_TMP_DIR/cct_phase23b_1361_compile.out" 2>&1; then
+    "$BIN_1361" >"$CCT_TMP_DIR/cct_phase23b_1361_run.out" 2>&1
+    RC_1361=$?
+else
+    RC_1361=255
+fi
+if [ "$RC_1361" -eq 0 ]; then
+    test_pass "parser_dump_rituale_genus_23b valida dump de RITUALE generico"
+else
+    test_fail "parser_dump_rituale_genus_23b regrediu dump de RITUALE generico"
+fi
+
+# Test 1362: parser_dump_sigillum_genus_23b
+echo "Test 1362: parser_dump_sigillum_genus_23b"
+SRC_1362="tests/integration/parser_dump_sigillum_genus_23b.cct"
+BIN_1362="${SRC_1362%.cct}"
+cleanup_codegen_artifacts "$SRC_1362"
+if "$CCT_BIN" "$SRC_1362" >"$CCT_TMP_DIR/cct_phase23b_1362_compile.out" 2>&1; then
+    "$BIN_1362" >"$CCT_TMP_DIR/cct_phase23b_1362_run.out" 2>&1
+    RC_1362=$?
+else
+    RC_1362=255
+fi
+if [ "$RC_1362" -eq 0 ]; then
+    test_pass "parser_dump_sigillum_genus_23b valida dump de SIGILLUM generico"
+else
+    test_fail "parser_dump_sigillum_genus_23b regrediu dump de SIGILLUM generico"
+fi
+
+# Test 1363: parser_recovery_genus_empty_23b
+echo "Test 1363: parser_recovery_genus_empty_23b"
+SRC_1363="tests/integration/parser_recovery_genus_empty_23b.cct"
+BIN_1363="${SRC_1363%.cct}"
+cleanup_codegen_artifacts "$SRC_1363"
+if "$CCT_BIN" "$SRC_1363" >"$CCT_TMP_DIR/cct_phase23b_1363_compile.out" 2>&1; then
+    "$BIN_1363" >"$CCT_TMP_DIR/cct_phase23b_1363_run.out" 2>&1
+    RC_1363=$?
+else
+    RC_1363=255
+fi
+if [ "$RC_1363" -eq 0 ]; then
+    test_pass "parser_recovery_genus_empty_23b valida recovery apos GENUS() invalido"
+else
+    test_fail "parser_recovery_genus_empty_23b regrediu recovery de GENUS()"
+fi
+
+# Test 1364: parser_gate_rituale_genus_23b_input
+echo "Test 1364: parser_gate_rituale_genus_23b_input"
+if [ "$RC_1330" -eq 0 ] && compare_parser_ast_22f "phase23b_1364" "tests/integration/parser_gate_rituale_genus_23b_input.cct"; then
+    test_pass "23B rituale generico bate 1:1 com parser C"
+else
+    test_fail "23B rituale generico divergiu do parser C"
+fi
+
+# Test 1365: parser_gate_sigillum_genus_23b_input
+echo "Test 1365: parser_gate_sigillum_genus_23b_input"
+if [ "$RC_1330" -eq 0 ] && compare_parser_ast_22f "phase23b_1365" "tests/integration/parser_gate_sigillum_genus_23b_input.cct"; then
+    test_pass "23B sigillum generico bate 1:1 com parser C"
+else
+    test_fail "23B sigillum generico divergiu do parser C"
+fi
+
+echo ""
+echo "========================================"
+echo "FASE 23C: PACTUM + CODEX Parsing"
+echo "========================================"
+echo ""
+
+# Test 1366: parse_pactum_simple_23c
+echo "Test 1366: parse_pactum_simple_23c"
+SRC_1366="tests/integration/parse_pactum_simple_23c.cct"
+BIN_1366="${SRC_1366%.cct}"
+cleanup_codegen_artifacts "$SRC_1366"
+if "$CCT_BIN" "$SRC_1366" >"$CCT_TMP_DIR/cct_phase23c_1366_compile.out" 2>&1; then
+    "$BIN_1366" >"$CCT_TMP_DIR/cct_phase23c_1366_run.out" 2>&1
+    RC_1366=$?
+else
+    RC_1366=255
+fi
+if [ "$RC_1366" -eq 0 ]; then
+    test_pass "parse_pactum_simple_23c valida PACTUM basico"
+else
+    test_fail "parse_pactum_simple_23c regrediu PACTUM basico"
+fi
+
+# Test 1367: parse_pactum_multiple_signatures_23c
+echo "Test 1367: parse_pactum_multiple_signatures_23c"
+SRC_1367="tests/integration/parse_pactum_multiple_signatures_23c.cct"
+BIN_1367="${SRC_1367%.cct}"
+cleanup_codegen_artifacts "$SRC_1367"
+if "$CCT_BIN" "$SRC_1367" >"$CCT_TMP_DIR/cct_phase23c_1367_compile.out" 2>&1; then
+    "$BIN_1367" >"$CCT_TMP_DIR/cct_phase23c_1367_run.out" 2>&1
+    RC_1367=$?
+else
+    RC_1367=255
+fi
+if [ "$RC_1367" -eq 0 ]; then
+    test_pass "parse_pactum_multiple_signatures_23c valida multiplas assinaturas"
+else
+    test_fail "parse_pactum_multiple_signatures_23c regrediu multiplas assinaturas"
+fi
+
+# Test 1368: parse_pactum_signature_return_23c
+echo "Test 1368: parse_pactum_signature_return_23c"
+SRC_1368="tests/integration/parse_pactum_signature_return_23c.cct"
+BIN_1368="${SRC_1368%.cct}"
+cleanup_codegen_artifacts "$SRC_1368"
+if "$CCT_BIN" "$SRC_1368" >"$CCT_TMP_DIR/cct_phase23c_1368_compile.out" 2>&1; then
+    "$BIN_1368" >"$CCT_TMP_DIR/cct_phase23c_1368_run.out" 2>&1
+    RC_1368=$?
+else
+    RC_1368=255
+fi
+if [ "$RC_1368" -eq 0 ]; then
+    test_pass "parse_pactum_signature_return_23c valida retorno em assinatura"
+else
+    test_fail "parse_pactum_signature_return_23c regrediu retorno em assinatura"
+fi
+
+# Test 1369: parse_codex_simple_23c
+echo "Test 1369: parse_codex_simple_23c"
+SRC_1369="tests/integration/parse_codex_simple_23c.cct"
+BIN_1369="${SRC_1369%.cct}"
+cleanup_codegen_artifacts "$SRC_1369"
+if "$CCT_BIN" "$SRC_1369" >"$CCT_TMP_DIR/cct_phase23c_1369_compile.out" 2>&1; then
+    "$BIN_1369" >"$CCT_TMP_DIR/cct_phase23c_1369_run.out" 2>&1
+    RC_1369=$?
+else
+    RC_1369=255
+fi
+if [ "$RC_1369" -eq 0 ]; then
+    test_pass "parse_codex_simple_23c valida CODEX basico"
+else
+    test_fail "parse_codex_simple_23c regrediu CODEX basico"
+fi
+
+# Test 1370: parse_codex_multiple_decls_23c
+echo "Test 1370: parse_codex_multiple_decls_23c"
+SRC_1370="tests/integration/parse_codex_multiple_decls_23c.cct"
+BIN_1370="${SRC_1370%.cct}"
+cleanup_codegen_artifacts "$SRC_1370"
+if "$CCT_BIN" "$SRC_1370" >"$CCT_TMP_DIR/cct_phase23c_1370_compile.out" 2>&1; then
+    "$BIN_1370" >"$CCT_TMP_DIR/cct_phase23c_1370_run.out" 2>&1
+    RC_1370=$?
+else
+    RC_1370=255
+fi
+if [ "$RC_1370" -eq 0 ]; then
+    test_pass "parse_codex_multiple_decls_23c valida multiplas declaracoes"
+else
+    test_fail "parse_codex_multiple_decls_23c regrediu multiplas declaracoes em CODEX"
+fi
+
+# Test 1371: parse_codex_nested_sigillum_23c
+echo "Test 1371: parse_codex_nested_sigillum_23c"
+SRC_1371="tests/integration/parse_codex_nested_sigillum_23c.cct"
+BIN_1371="${SRC_1371%.cct}"
+cleanup_codegen_artifacts "$SRC_1371"
+if "$CCT_BIN" "$SRC_1371" >"$CCT_TMP_DIR/cct_phase23c_1371_compile.out" 2>&1; then
+    "$BIN_1371" >"$CCT_TMP_DIR/cct_phase23c_1371_run.out" 2>&1
+    RC_1371=$?
+else
+    RC_1371=255
+fi
+if [ "$RC_1371" -eq 0 ]; then
+    test_pass "parse_codex_nested_sigillum_23c valida SIGILLUM dentro de CODEX"
+else
+    test_fail "parse_codex_nested_sigillum_23c regrediu SIGILLUM dentro de CODEX"
+fi
+
+# Test 1372: parse_codex_generics_inside_23c
+echo "Test 1372: parse_codex_generics_inside_23c"
+SRC_1372="tests/integration/parse_codex_generics_inside_23c.cct"
+BIN_1372="${SRC_1372%.cct}"
+cleanup_codegen_artifacts "$SRC_1372"
+if "$CCT_BIN" "$SRC_1372" >"$CCT_TMP_DIR/cct_phase23c_1372_compile.out" 2>&1; then
+    "$BIN_1372" >"$CCT_TMP_DIR/cct_phase23c_1372_run.out" 2>&1
+    RC_1372=$?
+else
+    RC_1372=255
+fi
+if [ "$RC_1372" -eq 0 ]; then
+    test_pass "parse_codex_generics_inside_23c valida declaracoes genericas em CODEX"
+else
+    test_fail "parse_codex_generics_inside_23c regrediu generics dentro de CODEX"
+fi
+
+# Test 1373: parser_dump_pactum_23c
+echo "Test 1373: parser_dump_pactum_23c"
+SRC_1373="tests/integration/parser_dump_pactum_23c.cct"
+BIN_1373="${SRC_1373%.cct}"
+cleanup_codegen_artifacts "$SRC_1373"
+if "$CCT_BIN" "$SRC_1373" >"$CCT_TMP_DIR/cct_phase23c_1373_compile.out" 2>&1; then
+    "$BIN_1373" >"$CCT_TMP_DIR/cct_phase23c_1373_run.out" 2>&1
+    RC_1373=$?
+else
+    RC_1373=255
+fi
+if [ "$RC_1373" -eq 0 ]; then
+    test_pass "parser_dump_pactum_23c valida dump textual de PACTUM"
+else
+    test_fail "parser_dump_pactum_23c regrediu dump de PACTUM"
+fi
+
+# Test 1374: parser_dump_codex_23c
+echo "Test 1374: parser_dump_codex_23c"
+SRC_1374="tests/integration/parser_dump_codex_23c.cct"
+BIN_1374="${SRC_1374%.cct}"
+cleanup_codegen_artifacts "$SRC_1374"
+if "$CCT_BIN" "$SRC_1374" >"$CCT_TMP_DIR/cct_phase23c_1374_compile.out" 2>&1; then
+    "$BIN_1374" >"$CCT_TMP_DIR/cct_phase23c_1374_run.out" 2>&1
+    RC_1374=$?
+else
+    RC_1374=255
+fi
+if [ "$RC_1374" -eq 0 ]; then
+    test_pass "parser_dump_codex_23c valida dump textual de CODEX"
+else
+    test_fail "parser_dump_codex_23c regrediu dump de CODEX"
+fi
+
+# Test 1375: parser_recovery_pactum_invalid_member_23c
+echo "Test 1375: parser_recovery_pactum_invalid_member_23c"
+SRC_1375="tests/integration/parser_recovery_pactum_invalid_member_23c.cct"
+BIN_1375="${SRC_1375%.cct}"
+cleanup_codegen_artifacts "$SRC_1375"
+if "$CCT_BIN" "$SRC_1375" >"$CCT_TMP_DIR/cct_phase23c_1375_compile.out" 2>&1; then
+    "$BIN_1375" >"$CCT_TMP_DIR/cct_phase23c_1375_run.out" 2>&1
+    RC_1375=$?
+else
+    RC_1375=255
+fi
+if [ "$RC_1375" -eq 0 ]; then
+    test_pass "parser_recovery_pactum_invalid_member_23c valida recovery em PACTUM"
+else
+    test_fail "parser_recovery_pactum_invalid_member_23c regrediu recovery em PACTUM"
+fi
+
+# Test 1376: parser_pactum_genus_invalid_23c
+echo "Test 1376: parser_pactum_genus_invalid_23c"
+SRC_1376="tests/integration/parser_pactum_genus_invalid_23c.cct"
+BIN_1376="${SRC_1376%.cct}"
+cleanup_codegen_artifacts "$SRC_1376"
+if "$CCT_BIN" "$SRC_1376" >"$CCT_TMP_DIR/cct_phase23c_1376_compile.out" 2>&1; then
+    "$BIN_1376" >"$CCT_TMP_DIR/cct_phase23c_1376_run.out" 2>&1
+    RC_1376=$?
+else
+    RC_1376=255
+fi
+if [ "$RC_1376" -eq 0 ]; then
+    test_pass "parser_pactum_genus_invalid_23c valida caso negativo GENUS + PACTUM"
+else
+    test_fail "parser_pactum_genus_invalid_23c regrediu caso negativo GENUS + PACTUM"
+fi
+
+# Test 1377: parser_gate_pactum_23c_input
+echo "Test 1377: parser_gate_pactum_23c_input"
+if [ "$RC_1330" -eq 0 ] && compare_parser_ast_22f "phase23c_1377" "tests/integration/parser_gate_pactum_23c_input.cct"; then
+    test_pass "23C pactum bate 1:1 com parser C"
+else
+    test_fail "23C pactum divergiu do parser C"
+fi
+
+# Test 1378: parser_gate_codex_23c_input
+echo "Test 1378: parser_gate_codex_23c_input"
+if [ "$RC_1330" -eq 0 ] && compare_parser_ast_22f "phase23c_1378" "tests/integration/parser_gate_codex_23c_input.cct"; then
+    test_pass "23C codex bate 1:1 com parser C"
+else
+    test_fail "23C codex divergiu do parser C"
+fi
+
+echo ""
+echo "========================================"
+echo "FASE 23D: Module Parsing + Composite Entry"
+echo "========================================"
+echo ""
+
+# Test 1379: main_parser_bootstrap_23d
+echo "Test 1379: main_parser_bootstrap_23d"
+SRC_1379="src/bootstrap/main_parser.cct"
+BIN_1379="${SRC_1379%.cct}"
+cleanup_codegen_artifacts "$SRC_1379"
+if "$CCT_BIN" "$SRC_1379" >"$CCT_TMP_DIR/cct_phase23d_1379_compile.out" 2>&1; then
+    RC_1379=0
+else
+    RC_1379=255
+fi
+if [ "$RC_1379" -eq 0 ] && [ -x "$BIN_1379" ]; then
+    test_pass "main_parser_bootstrap_23d compila entrypoint bootstrap do parser"
+else
+    test_fail "main_parser_bootstrap_23d falhou ao compilar entrypoint bootstrap"
+fi
+
+# Test 1380: parse_import_single_23d
+echo "Test 1380: parse_import_single_23d"
+SRC_1380="tests/integration/parse_import_single_23d.cct"
+BIN_1380="${SRC_1380%.cct}"
+cleanup_codegen_artifacts "$SRC_1380"
+if "$CCT_BIN" "$SRC_1380" >"$CCT_TMP_DIR/cct_phase23d_1380_compile.out" 2>&1; then
+    "$BIN_1380" >"$CCT_TMP_DIR/cct_phase23d_1380_run.out" 2>&1
+    RC_1380=$?
+else
+    RC_1380=255
+fi
+if [ "$RC_1380" -eq 0 ]; then
+    test_pass "parse_import_single_23d valida import unico"
+else
+    test_fail "parse_import_single_23d regrediu import unico"
+fi
+
+# Test 1381: parse_import_multiple_23d
+echo "Test 1381: parse_import_multiple_23d"
+SRC_1381="tests/integration/parse_import_multiple_23d.cct"
+BIN_1381="${SRC_1381%.cct}"
+cleanup_codegen_artifacts "$SRC_1381"
+if "$CCT_BIN" "$SRC_1381" >"$CCT_TMP_DIR/cct_phase23d_1381_compile.out" 2>&1; then
+    "$BIN_1381" >"$CCT_TMP_DIR/cct_phase23d_1381_run.out" 2>&1
+    RC_1381=$?
+else
+    RC_1381=255
+fi
+if [ "$RC_1381" -eq 0 ]; then
+    test_pass "parse_import_multiple_23d valida multiplos imports"
+else
+    test_fail "parse_import_multiple_23d regrediu multiplos imports"
+fi
+
+# Test 1382: parser_dump_import_program_23d
+echo "Test 1382: parser_dump_import_program_23d"
+SRC_1382="tests/integration/parser_dump_import_program_23d.cct"
+BIN_1382="${SRC_1382%.cct}"
+cleanup_codegen_artifacts "$SRC_1382"
+if "$CCT_BIN" "$SRC_1382" >"$CCT_TMP_DIR/cct_phase23d_1382_compile.out" 2>&1; then
+    "$BIN_1382" >"$CCT_TMP_DIR/cct_phase23d_1382_run.out" 2>&1
+    RC_1382=$?
+else
+    RC_1382=255
+fi
+if [ "$RC_1382" -eq 0 ]; then
+    test_pass "parser_dump_import_program_23d valida dump com imports"
+else
+    test_fail "parser_dump_import_program_23d regrediu dump com imports"
+fi
+
+# Test 1383: parser_recovery_import_invalid_23d
+echo "Test 1383: parser_recovery_import_invalid_23d"
+SRC_1383="tests/integration/parser_recovery_import_invalid_23d.cct"
+BIN_1383="${SRC_1383%.cct}"
+cleanup_codegen_artifacts "$SRC_1383"
+if "$CCT_BIN" "$SRC_1383" >"$CCT_TMP_DIR/cct_phase23d_1383_compile.out" 2>&1; then
+    "$BIN_1383" >"$CCT_TMP_DIR/cct_phase23d_1383_run.out" 2>&1
+    RC_1383=$?
+else
+    RC_1383=255
+fi
+if [ "$RC_1383" -eq 0 ]; then
+    test_pass "parser_recovery_import_invalid_23d valida recovery de import invalido"
+else
+    test_fail "parser_recovery_import_invalid_23d regrediu recovery de import invalido"
+fi
+
+# Test 1384: parser_module_single_import_23d_input
+echo "Test 1384: parser_module_single_import_23d_input"
+if [ "$RC_1379" -eq 0 ] && compare_parser_file_23d "phase23d_1384" "tests/integration/parser_module_single_import_23d_input.cct"; then
+    test_pass "23D modulo com import unico bate 1:1 com parser C"
+else
+    test_fail "23D modulo com import unico divergiu do parser C"
+fi
+
+# Test 1385: parser_module_multiple_imports_23d_input
+echo "Test 1385: parser_module_multiple_imports_23d_input"
+if [ "$RC_1379" -eq 0 ] && compare_parser_file_23d "phase23d_1385" "tests/integration/parser_module_multiple_imports_23d_input.cct"; then
+    test_pass "23D modulo com multiplos imports bate 1:1 com parser C"
+else
+    test_fail "23D modulo com multiplos imports divergiu do parser C"
+fi
+
+# Test 1386: parser_module_advanced_23d_input
+echo "Test 1386: parser_module_advanced_23d_input"
+if [ "$RC_1379" -eq 0 ] && compare_parser_file_23d "phase23d_1386" "tests/integration/parser_module_advanced_23d_input.cct"; then
+    test_pass "23D modulo com declaracoes avancadas bate 1:1 com parser C"
+else
+    test_fail "23D modulo com declaracoes avancadas divergiu do parser C"
+fi
+
+# Test 1387: parser_module_genus_23d_input
+echo "Test 1387: parser_module_genus_23d_input"
+if [ "$RC_1379" -eq 0 ] && compare_parser_file_23d "phase23d_1387" "tests/integration/parser_module_genus_23d_input.cct"; then
+    test_pass "23D modulo com GENUS bate 1:1 com parser C"
+else
+    test_fail "23D modulo com GENUS divergiu do parser C"
+fi
+
+# Test 1388: parser_module_pactum_codex_23d_input
+echo "Test 1388: parser_module_pactum_codex_23d_input"
+if [ "$RC_1379" -eq 0 ] && compare_parser_file_23d "phase23d_1388" "tests/integration/parser_module_pactum_codex_23d_input.cct"; then
+    test_pass "23D modulo com PACTUM/CODEX bate 1:1 com parser C"
+else
+    test_fail "23D modulo com PACTUM/CODEX divergiu do parser C"
+fi
+
+echo ""
+echo "========================================"
+echo "FASE 23E: Validation Gate"
+echo "========================================"
+echo ""
+
+# Test 1389: parser_gate_tempta_23e_input
+echo "Test 1389: parser_gate_tempta_23e_input"
+if [ "$RC_1330" -eq 0 ] && compare_parser_ast_22f "phase23e_1389" "tests/integration/parser_gate_tempta_23e_input.cct"; then
+    test_pass "23E TEMPTA/CAPE/SEMPER bate 1:1 com parser C"
+else
+    test_fail "23E TEMPTA/CAPE/SEMPER divergiu do parser C"
+fi
+
+# Test 1390: parser_gate_quando_23e_input
+echo "Test 1390: parser_gate_quando_23e_input"
+if [ "$RC_1330" -eq 0 ] && compare_parser_ast_22f "phase23e_1390" "tests/integration/parser_gate_quando_23e_input.cct"; then
+    test_pass "23E QUANDO/CASO/SENAO bate 1:1 com parser C"
+else
+    test_fail "23E QUANDO/CASO/SENAO divergiu do parser C"
+fi
+
+# Test 1391: parser_gate_nested_flow_23e_input
+echo "Test 1391: parser_gate_nested_flow_23e_input"
+if [ "$RC_1330" -eq 0 ] && compare_parser_ast_22f "phase23e_1391" "tests/integration/parser_gate_nested_flow_23e_input.cct"; then
+    test_pass "23E nested flow bate 1:1 com parser C"
+else
+    test_fail "23E nested flow divergiu do parser C"
+fi
+
+# Test 1392: parser_gate_mixed_flow_23e_input
+echo "Test 1392: parser_gate_mixed_flow_23e_input"
+if [ "$RC_1330" -eq 0 ] && compare_parser_ast_22f "phase23e_1392" "tests/integration/parser_gate_mixed_flow_23e_input.cct"; then
+    test_pass "23E mixed flow bate 1:1 com parser C"
+else
+    test_fail "23E mixed flow divergiu do parser C"
+fi
+
+# Test 1393: parser_gate_rituale_genus_23b_input
+echo "Test 1393: parser_gate_rituale_genus_23b_input"
+if [ "$RC_1330" -eq 0 ] && compare_parser_ast_22f "phase23e_1393" "tests/integration/parser_gate_rituale_genus_23b_input.cct"; then
+    test_pass "23E rituale GENUS bate 1:1 com parser C"
+else
+    test_fail "23E rituale GENUS divergiu do parser C"
+fi
+
+# Test 1394: parser_gate_sigillum_genus_23b_input
+echo "Test 1394: parser_gate_sigillum_genus_23b_input"
+if [ "$RC_1330" -eq 0 ] && compare_parser_ast_22f "phase23e_1394" "tests/integration/parser_gate_sigillum_genus_23b_input.cct"; then
+    test_pass "23E sigillum GENUS bate 1:1 com parser C"
+else
+    test_fail "23E sigillum GENUS divergiu do parser C"
+fi
+
+# Test 1395: parser_gate_pactum_23c_input
+echo "Test 1395: parser_gate_pactum_23c_input"
+if [ "$RC_1330" -eq 0 ] && compare_parser_ast_22f "phase23e_1395" "tests/integration/parser_gate_pactum_23c_input.cct"; then
+    test_pass "23E PACTUM bate 1:1 com parser C"
+else
+    test_fail "23E PACTUM divergiu do parser C"
+fi
+
+# Test 1396: parser_gate_codex_23c_input
+echo "Test 1396: parser_gate_codex_23c_input"
+if [ "$RC_1330" -eq 0 ] && compare_parser_ast_22f "phase23e_1396" "tests/integration/parser_gate_codex_23c_input.cct"; then
+    test_pass "23E CODEX bate 1:1 com parser C"
+else
+    test_fail "23E CODEX divergiu do parser C"
+fi
+
+# Test 1397: parser_module_single_import_23d_input
+echo "Test 1397: parser_module_single_import_23d_input"
+if [ "$RC_1379" -eq 0 ] && compare_parser_file_23d "phase23e_1397" "tests/integration/parser_module_single_import_23d_input.cct"; then
+    test_pass "23E modulo com import unico bate 1:1 com parser C"
+else
+    test_fail "23E modulo com import unico divergiu do parser C"
+fi
+
+# Test 1398: parser_module_genus_23d_input
+echo "Test 1398: parser_module_genus_23d_input"
+if [ "$RC_1379" -eq 0 ] && compare_parser_file_23d "phase23e_1398" "tests/integration/parser_module_genus_23d_input.cct"; then
+    test_pass "23E modulo com import + GENUS bate 1:1 com parser C"
+else
+    test_fail "23E modulo com import + GENUS divergiu do parser C"
+fi
+
+# Test 1399: parser_module_pactum_codex_23d_input
+echo "Test 1399: parser_module_pactum_codex_23d_input"
+if [ "$RC_1379" -eq 0 ] && compare_parser_file_23d "phase23e_1399" "tests/integration/parser_module_pactum_codex_23d_input.cct"; then
+    test_pass "23E modulo com import + PACTUM/CODEX bate 1:1 com parser C"
+else
+    test_fail "23E modulo com import + PACTUM/CODEX divergiu do parser C"
+fi
+
+# Test 1400: parser_module_multiple_imports_23d_input
+echo "Test 1400: parser_module_multiple_imports_23d_input"
+if [ "$RC_1379" -eq 0 ] && compare_parser_file_23d "phase23e_1400" "tests/integration/parser_module_multiple_imports_23d_input.cct"; then
+    test_pass "23E modulo com multiplos imports bate 1:1 com parser C"
+else
+    test_fail "23E modulo com multiplos imports divergiu do parser C"
 fi
 
 echo ""

@@ -1,0 +1,12 @@
+INCIPIT grimoire "entry"
+ADVOCARE "./parser_module_contract_23d.cct"
+ADVOCARE "./parser_module_namespace_23d.cct"
+PACTUM Local
+  RITUALE run() REDDE NIHIL
+FIN PACTUM
+CODEX LocalMath
+  RITUALE zero() REDDE REX
+    REDDE 0
+  EXPLICIT RITUALE
+FIN CODEX
+EXPLICIT grimoire

@@ -1,0 +1,22 @@
+INCIPIT grimoire "parse_unary_literal_22b"
+
+ADVOCARE "cct/verbum.cct"
+ADVOCARE "../../src/bootstrap/lexer/token_type.cct"
+ADVOCARE "../../src/bootstrap/parser/ast.cct"
+ADVOCARE "../../src/bootstrap/parser/parse_expr.cct"
+
+RITUALE main() REDDE REX
+  EVOCA SPECULUM AstNode expr AD CONIURA parser_parse_expression_source("-42", "expr.cct")
+
+  SI (*expr).kind != AST_UNARY_OP VEL (*expr).operator_kind != TK_MINUS
+    REDDE 41
+  FIN SI
+  SI CONIURA compare((*(*expr).left).value_text, "42") != 0
+    REDDE 42
+  FIN SI
+
+  CONIURA ast_node_free(expr)
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

@@ -1,0 +1,18 @@
+INCIPIT grimoire "parse_ordo_simple_22d"
+ADVOCARE "cct/verbum.cct"
+ADVOCARE "../../src/bootstrap/parser/ast.cct"
+ADVOCARE "../../src/bootstrap/parser/parser.cct"
+RITUALE main() REDDE REX
+  EVOCA VERBUM src AD "INCIPIT grimoire \"x\" ORDO Cor RUBER, VIRIDIS, CAERULEUS FIN ORDO EXPLICIT grimoire"
+  EVOCA SPECULUM AstProgram program AD CONIURA parser_parse_program_source(src, "m.cct")
+  EVOCA SPECULUM AstNode decl AD CONIURA ast_node_list_get((*program).declarations, 0)
+  SI (*decl).kind != AST_ORDO VEL CONIURA ast_node_list_len((*decl).items) != 3
+    REDDE 41
+  FIN SI
+  SI CONIURA compare((*decl).name, "Cor") != 0
+    REDDE 42
+  FIN SI
+  CONIURA ast_program_free(program)
+  REDDE 0
+EXPLICIT RITUALE
+EXPLICIT grimoire

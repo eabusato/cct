@@ -1,0 +1,11 @@
+INCIPIT grimoire "p"
+RITUALE main() REDDE NIHIL
+  TEMPTA
+    IACE "boom"
+  CAPE FRACTUM erro
+    REDDE
+  SEMPER
+    REDDE
+  FIN TEMPTA
+EXPLICIT RITUALE
+EXPLICIT grimoire

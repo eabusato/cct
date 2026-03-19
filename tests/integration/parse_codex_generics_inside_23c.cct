@@ -1,0 +1,20 @@
+INCIPIT grimoire "parse_codex_generics_inside_23c"
+ADVOCARE "cct/verbum.cct"
+ADVOCARE "../../src/bootstrap/parser/ast.cct"
+ADVOCARE "../../src/bootstrap/parser/parser.cct"
+RITUALE main() REDDE REX
+  EVOCA VERBUM src AD "INCIPIT grimoire \"p\" CODEX Math SIGILLUM Caixa GENUS(T) value: T FIN SIGILLUM RITUALE id GENUS(T)(T value) REDDE T REDDE value EXPLICIT RITUALE FIN CODEX EXPLICIT grimoire"
+  EVOCA SPECULUM AstProgram program AD CONIURA parser_parse_program_source(src, "m.cct")
+  EVOCA SPECULUM AstNode codex AD CONIURA ast_node_list_get((*program).declarations, 0)
+  EVOCA SPECULUM AstNode sig AD CONIURA ast_node_list_get((*codex).declarations, 0)
+  EVOCA SPECULUM AstNode rit AD CONIURA ast_node_list_get((*codex).declarations, 1)
+  SI CONIURA ast_node_list_len((*sig).type_params) != 1
+    REDDE 41
+  FIN SI
+  SI CONIURA ast_node_list_len((*rit).type_params) != 1
+    REDDE 42
+  FIN SI
+  CONIURA ast_program_free(program)
+  REDDE 0
+EXPLICIT RITUALE
+EXPLICIT grimoire

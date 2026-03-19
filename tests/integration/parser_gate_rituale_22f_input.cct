@@ -1,0 +1,5 @@
+INCIPIT grimoire "gate_rituale"
+RITUALE main(REX a, SPECULUM REX p) REDDE REX
+  REDDE a
+EXPLICIT RITUALE
+EXPLICIT grimoire

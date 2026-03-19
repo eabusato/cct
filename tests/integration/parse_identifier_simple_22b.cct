@@ -1,0 +1,21 @@
+INCIPIT grimoire "parse_identifier_simple_22b"
+
+ADVOCARE "cct/verbum.cct"
+ADVOCARE "../../src/bootstrap/parser/ast.cct"
+ADVOCARE "../../src/bootstrap/parser/parse_expr.cct"
+
+RITUALE main() REDDE REX
+  EVOCA SPECULUM AstNode expr AD CONIURA parser_parse_expression_source("alpha_1", "expr.cct")
+
+  SI (*expr).kind != AST_IDENTIFIER
+    REDDE 41
+  FIN SI
+  SI CONIURA compare((*expr).name, "alpha_1") != 0
+    REDDE 42
+  FIN SI
+
+  CONIURA ast_node_free(expr)
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

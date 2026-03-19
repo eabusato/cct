@@ -1,0 +1,27 @@
+INCIPIT grimoire "parser_dump_rituale_22e"
+ADVOCARE "cct/verbum.cct"
+ADVOCARE "../../src/bootstrap/parser/parser.cct"
+RITUALE main() REDDE REX
+  EVOCA VERBUM src AD "INCIPIT grimoire \"probe\"\nRITUALE sum(REX a, SPECULUM REX p, SERIES REX[4] xs) REDDE REX\n  REDDE a\nEXPLICIT RITUALE\nEXPLICIT grimoire\n"
+  EVOCA VERBUM dump AD CONIURA parser_dump_program_source(src, "m.cct")
+  SI NON CONIURA contains(dump, "Name: sum")
+    REDDE 41
+  FIN SI
+  SI NON CONIURA contains(dump, "Parameters: (3)")
+    REDDE 42
+  FIN SI
+  SI NON CONIURA contains(dump, "- a: REX")
+    REDDE 43
+  FIN SI
+  SI NON CONIURA contains(dump, "- p: SPECULUM REX")
+    REDDE 44
+  FIN SI
+  SI NON CONIURA contains(dump, "- xs: SERIES REX[4]")
+    REDDE 45
+  FIN SI
+  SI NON CONIURA contains(dump, "Type: REX")
+    REDDE 46
+  FIN SI
+  REDDE 0
+EXPLICIT RITUALE
+EXPLICIT grimoire

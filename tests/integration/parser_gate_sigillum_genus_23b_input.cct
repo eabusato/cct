@@ -1,0 +1,5 @@
+INCIPIT grimoire "p"
+SIGILLUM Caixa GENUS(T)
+  value: Envelope GENUS(T)
+FIN SIGILLUM
+EXPLICIT grimoire

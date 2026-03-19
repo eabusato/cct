@@ -1,0 +1,5 @@
+INCIPIT grimoire "gate_field_index"
+RITUALE main() REDDE NIHIL
+  foo.bar[1]
+EXPLICIT RITUALE
+EXPLICIT grimoire

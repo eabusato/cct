@@ -1,0 +1,30 @@
+INCIPIT grimoire "parser_recovery_declaration_22e"
+ADVOCARE "cct/verbum.cct"
+ADVOCARE "../../src/bootstrap/lexer/lexer_state.cct"
+ADVOCARE "../../src/bootstrap/parser/ast.cct"
+ADVOCARE "../../src/bootstrap/parser/parser.cct"
+ADVOCARE "../../src/bootstrap/parser/parser_helpers.cct"
+ADVOCARE "../../src/bootstrap/parser/parser_state.cct"
+RITUALE main() REDDE REX
+  EVOCA VERBUM src AD "INCIPIT grimoire \"probe\"\nEVOCA REX x AD 1\nRITUALE ok() REDDE NIHIL\n  REDDE\nEXPLICIT RITUALE\nEXPLICIT grimoire\n"
+  EVOCA LexerState lex AD CONIURA lexer_init(src, "m.cct")
+  EVOCA ParserState parser AD CONIURA parser_init(SPECULUM lex, "m.cct")
+  EVOCA SPECULUM AstProgram program AD CONIURA parse_program(SPECULUM parser)
+  EVOCA SPECULUM AstNode decl2 AD CONIURA ast_node_list_get((*program).declarations, 1)
+  SI parser.had_error != VERUM
+    REDDE 41
+  FIN SI
+  SI CONIURA ast_node_list_len((*program).declarations) != 2
+    REDDE 42
+  FIN SI
+  SI (*decl2).kind != AST_RITUALE
+    REDDE 43
+  FIN SI
+  SI CONIURA compare((*decl2).name, "ok") != 0
+    REDDE 44
+  FIN SI
+  CONIURA ast_program_free(program)
+  CONIURA parser_dispose(SPECULUM parser)
+  REDDE 0
+EXPLICIT RITUALE
+EXPLICIT grimoire

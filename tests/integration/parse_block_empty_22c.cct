@@ -1,0 +1,12 @@
+INCIPIT grimoire "parse_block_empty_22c"
+ADVOCARE "../../src/bootstrap/parser/ast.cct"
+ADVOCARE "../../src/bootstrap/parser/parse_stmt.cct"
+RITUALE main() REDDE REX
+  EVOCA SPECULUM AstNode stmt AD CONIURA parser_parse_statement_source("{}", "stmt.cct")
+  SI (*stmt).kind != AST_BLOCK VEL CONIURA ast_node_list_len((*stmt).statements) != 0
+    REDDE 41
+  FIN SI
+  CONIURA ast_node_free(stmt)
+  REDDE 0
+EXPLICIT RITUALE
+EXPLICIT grimoire

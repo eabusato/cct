@@ -1,0 +1,19 @@
+INCIPIT grimoire "parse_rituale_genus_multi_23b"
+ADVOCARE "cct/verbum.cct"
+ADVOCARE "../../src/bootstrap/parser/ast.cct"
+ADVOCARE "../../src/bootstrap/parser/parser.cct"
+RITUALE main() REDDE REX
+  EVOCA VERBUM src AD "INCIPIT grimoire \"p\" RITUALE tri GENUS(A, B, C)(A a, B b, C c) REDDE C REDDE c EXPLICIT RITUALE EXPLICIT grimoire"
+  EVOCA SPECULUM AstProgram program AD CONIURA parser_parse_program_source(src, "m.cct")
+  EVOCA SPECULUM AstNode rit AD CONIURA ast_node_list_get((*program).declarations, 0)
+  SI CONIURA ast_node_list_len((*rit).type_params) != 3
+    REDDE 41
+  FIN SI
+  EVOCA SPECULUM AstNode third AD CONIURA ast_node_list_get((*rit).type_params, 2)
+  SI CONIURA compare((*third).name, "C") != 0
+    REDDE 42
+  FIN SI
+  CONIURA ast_program_free(program)
+  REDDE 0
+EXPLICIT RITUALE
+EXPLICIT grimoire

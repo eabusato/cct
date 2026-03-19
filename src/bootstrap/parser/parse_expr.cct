@@ -1,0 +1,196 @@
+INCIPIT grimoire "parse_expr"
+
+ADVOCARE "ast.cct"
+ADVOCARE "parser_helpers.cct"
+ADVOCARE "parser_state.cct"
+ADVOCARE "../lexer/lexer_state.cct"
+ADVOCARE "../lexer/token_type.cct"
+
+RITUALE parser_is_assignment_target(SPECULUM AstNode node) REDDE VERUM
+  REDDE (*node).kind == AST_IDENTIFIER VEL (*node).kind == AST_FIELD_ACCESS VEL (*node).kind == AST_INDEX_ACCESS
+EXPLICIT RITUALE
+
+RITUALE parse_expression(SPECULUM ParserState parser) REDDE SPECULUM AstNode
+  REDDE CONIURA parse_assignment(parser)
+EXPLICIT RITUALE
+
+RITUALE parse_primary(SPECULUM ParserState parser) REDDE SPECULUM AstNode
+  SI CONIURA parser_match(parser, TK_INTEGER)
+    REDDE CONIURA ast_make_literal_int((*parser).previous.lexeme, (*parser).previous.line, (*parser).previous.column)
+  FIN SI
+
+  SI CONIURA parser_match(parser, TK_REAL)
+    REDDE CONIURA ast_make_literal_real((*parser).previous.lexeme, (*parser).previous.line, (*parser).previous.column)
+  FIN SI
+
+  SI CONIURA parser_match(parser, TK_STRING)
+    REDDE CONIURA ast_make_literal_string((*parser).previous.lexeme, (*parser).previous.line, (*parser).previous.column)
+  FIN SI
+
+  SI CONIURA parser_match(parser, TK_VERUM)
+    REDDE CONIURA ast_make_literal_bool(VERUM, (*parser).previous.line, (*parser).previous.column)
+  FIN SI
+
+  SI CONIURA parser_match(parser, TK_FALSUM)
+    REDDE CONIURA ast_make_literal_bool(FALSUM, (*parser).previous.line, (*parser).previous.column)
+  FIN SI
+
+  SI CONIURA parser_match(parser, TK_NIHIL)
+    REDDE CONIURA ast_make_literal_nihil((*parser).previous.line, (*parser).previous.column)
+  FIN SI
+
+  SI CONIURA parser_match(parser, TK_IDENTIFIER)
+    REDDE CONIURA ast_make_identifier((*parser).previous.lexeme, (*parser).previous.line, (*parser).previous.column)
+  FIN SI
+
+  SI CONIURA parser_match(parser, TK_LPAREN)
+    EVOCA SPECULUM AstNode expr AD CONIURA parse_expression(parser)
+    CONIURA parser_consume(parser, TK_RPAREN, "Expected ')' after expression")
+    REDDE expr
+  FIN SI
+
+  CONIURA parser_error_at_current(parser, "Expected expression")
+  REDDE CONIURA ast_make_identifier("<error>", (*parser).current.line, (*parser).current.column)
+EXPLICIT RITUALE
+
+RITUALE parse_postfix(SPECULUM ParserState parser) REDDE SPECULUM AstNode
+  EVOCA SPECULUM AstNode expr AD CONIURA parse_primary(parser)
+
+  DUM VERUM
+    EVOCA VERUM matched AD FALSUM
+
+    SI CONIURA parser_match(parser, TK_LPAREN)
+      EVOCA SPECULUM AstNode call AD CONIURA ast_make_call(expr, (*parser).previous.line, (*parser).previous.column)
+      SI NON CONIURA parser_check(parser, TK_RPAREN)
+        CONIURA ast_append_argument(call, CONIURA parse_expression(parser))
+        DUM CONIURA parser_match(parser, TK_COMMA)
+          CONIURA ast_append_argument(call, CONIURA parse_expression(parser))
+        FIN DUM
+      FIN SI
+      CONIURA parser_consume(parser, TK_RPAREN, "Expected ')' after arguments")
+      VINCIRE expr AD call
+      VINCIRE matched AD VERUM
+    FIN SI
+
+    SI NON matched ET CONIURA parser_match(parser, TK_DOT)
+      EVOCA REX line AD (*parser).previous.line
+      EVOCA REX column AD (*parser).previous.column
+      SI NON CONIURA parser_check(parser, TK_IDENTIFIER)
+        CONIURA parser_error_at_current(parser, "Expected field name after '.'")
+        REDDE expr
+      FIN SI
+      CONIURA parser_advance(parser)
+      VINCIRE expr AD CONIURA ast_make_field_access(expr, (*parser).previous.lexeme, line, column)
+      VINCIRE matched AD VERUM
+    FIN SI
+
+    SI NON matched ET CONIURA parser_match(parser, TK_LBRACKET)
+      EVOCA REX line AD (*parser).previous.line
+      EVOCA REX column AD (*parser).previous.column
+      EVOCA SPECULUM AstNode index AD CONIURA parse_expression(parser)
+      CONIURA parser_consume(parser, TK_RBRACKET, "Expected ']' after index")
+      VINCIRE expr AD CONIURA ast_make_index_access(expr, index, line, column)
+      VINCIRE matched AD VERUM
+    FIN SI
+
+    SI NON matched
+      REDDE expr
+    FIN SI
+  FIN DUM
+
+  REDDE expr
+EXPLICIT RITUALE
+
+RITUALE parse_unary(SPECULUM ParserState parser) REDDE SPECULUM AstNode
+  SI CONIURA parser_match(parser, TK_MINUS) VEL CONIURA parser_match(parser, TK_PLUS) VEL CONIURA parser_match(parser, TK_NON)
+    REDDE CONIURA ast_make_unary((*parser).previous.kind, CONIURA parse_unary(parser), (*parser).previous.line, (*parser).previous.column)
+  FIN SI
+  REDDE CONIURA parse_postfix(parser)
+EXPLICIT RITUALE
+
+RITUALE parse_multiplicative(SPECULUM ParserState parser) REDDE SPECULUM AstNode
+  EVOCA SPECULUM AstNode expr AD CONIURA parse_unary(parser)
+  DUM CONIURA parser_match(parser, TK_STAR) VEL CONIURA parser_match(parser, TK_SLASH) VEL CONIURA parser_match(parser, TK_SLASH_SLASH) VEL CONIURA parser_match(parser, TK_PERCENT) VEL CONIURA parser_match(parser, TK_PERCENT_PERCENT)
+    EVOCA TokenKind op AD (*parser).previous.kind
+    EVOCA REX line AD (*parser).previous.line
+    EVOCA REX column AD (*parser).previous.column
+    VINCIRE expr AD CONIURA ast_make_binary(op, expr, CONIURA parse_unary(parser), line, column)
+  FIN DUM
+  REDDE expr
+EXPLICIT RITUALE
+
+RITUALE parse_additive(SPECULUM ParserState parser) REDDE SPECULUM AstNode
+  EVOCA SPECULUM AstNode expr AD CONIURA parse_multiplicative(parser)
+  DUM CONIURA parser_match(parser, TK_PLUS) VEL CONIURA parser_match(parser, TK_MINUS)
+    EVOCA TokenKind op AD (*parser).previous.kind
+    EVOCA REX line AD (*parser).previous.line
+    EVOCA REX column AD (*parser).previous.column
+    VINCIRE expr AD CONIURA ast_make_binary(op, expr, CONIURA parse_multiplicative(parser), line, column)
+  FIN DUM
+  REDDE expr
+EXPLICIT RITUALE
+
+RITUALE parse_comparison(SPECULUM ParserState parser) REDDE SPECULUM AstNode
+  EVOCA SPECULUM AstNode expr AD CONIURA parse_additive(parser)
+  DUM CONIURA parser_match(parser, TK_LESS) VEL CONIURA parser_match(parser, TK_LESS_EQ) VEL CONIURA parser_match(parser, TK_GREATER) VEL CONIURA parser_match(parser, TK_GREATER_EQ)
+    EVOCA TokenKind op AD (*parser).previous.kind
+    EVOCA REX line AD (*parser).previous.line
+    EVOCA REX column AD (*parser).previous.column
+    VINCIRE expr AD CONIURA ast_make_binary(op, expr, CONIURA parse_additive(parser), line, column)
+  FIN DUM
+  REDDE expr
+EXPLICIT RITUALE
+
+RITUALE parse_equality(SPECULUM ParserState parser) REDDE SPECULUM AstNode
+  EVOCA SPECULUM AstNode expr AD CONIURA parse_comparison(parser)
+  DUM CONIURA parser_match(parser, TK_EQ_EQ) VEL CONIURA parser_match(parser, TK_BANG_EQ)
+    EVOCA TokenKind op AD (*parser).previous.kind
+    EVOCA REX line AD (*parser).previous.line
+    EVOCA REX column AD (*parser).previous.column
+    VINCIRE expr AD CONIURA ast_make_binary(op, expr, CONIURA parse_comparison(parser), line, column)
+  FIN DUM
+  REDDE expr
+EXPLICIT RITUALE
+
+RITUALE parse_logical_and(SPECULUM ParserState parser) REDDE SPECULUM AstNode
+  EVOCA SPECULUM AstNode expr AD CONIURA parse_equality(parser)
+  DUM CONIURA parser_match(parser, TK_ET)
+    VINCIRE expr AD CONIURA ast_make_binary(TK_ET, expr, CONIURA parse_equality(parser), (*parser).previous.line, (*parser).previous.column)
+  FIN DUM
+  REDDE expr
+EXPLICIT RITUALE
+
+RITUALE parse_logical_or(SPECULUM ParserState parser) REDDE SPECULUM AstNode
+  EVOCA SPECULUM AstNode expr AD CONIURA parse_logical_and(parser)
+  DUM CONIURA parser_match(parser, TK_VEL)
+    VINCIRE expr AD CONIURA ast_make_binary(TK_VEL, expr, CONIURA parse_logical_and(parser), (*parser).previous.line, (*parser).previous.column)
+  FIN DUM
+  REDDE expr
+EXPLICIT RITUALE
+
+RITUALE parse_assignment(SPECULUM ParserState parser) REDDE SPECULUM AstNode
+  EVOCA SPECULUM AstNode expr AD CONIURA parse_logical_or(parser)
+
+  SI CONIURA parser_match(parser, TK_EQ)
+    EVOCA REX line AD (*parser).previous.line
+    EVOCA REX column AD (*parser).previous.column
+    EVOCA SPECULUM AstNode value AD CONIURA parse_assignment(parser)
+    SI NON CONIURA parser_is_assignment_target(expr)
+      CONIURA parser_error_at_previous(parser, "Invalid assignment target")
+      REDDE expr
+    FIN SI
+    REDDE CONIURA ast_make_vincire(expr, value, line, column)
+  FIN SI
+
+  REDDE expr
+EXPLICIT RITUALE
+
+RITUALE parser_parse_expression_source(VERBUM source, VERBUM filename) REDDE SPECULUM AstNode
+  EVOCA LexerState lex AD CONIURA lexer_init(source, filename)
+  EVOCA ParserState parser AD CONIURA parser_init(SPECULUM lex, filename)
+  EVOCA SPECULUM AstNode expr AD CONIURA parse_expression(SPECULUM parser)
+  CONIURA parser_dispose(SPECULUM parser)
+  REDDE expr
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

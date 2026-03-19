@@ -1,0 +1,32 @@
+INCIPIT grimoire "ast_block_statements_22a"
+
+ADVOCARE "../../src/bootstrap/parser/ast.cct"
+
+RITUALE main() REDDE REX
+  EVOCA SPECULUM AstNode block AD CONIURA ast_make_block(1, 1)
+  EVOCA SPECULUM AstNode expr AD CONIURA ast_make_expr_stmt(CONIURA ast_make_literal_int("7", 2, 3), 2, 1)
+  EVOCA SPECULUM AstNode ret AD CONIURA ast_make_redde(CONIURA ast_make_identifier("x", 3, 7), 3, 1)
+
+  CONIURA ast_append_statement(block, expr)
+  CONIURA ast_append_statement(block, ret)
+
+  SI (*block).kind != AST_BLOCK
+    REDDE 41
+  FIN SI
+  SI CONIURA ast_node_list_len((*block).statements) != 2
+    REDDE 42
+  FIN SI
+  EVOCA SPECULUM AstNode stmt1 AD CONIURA ast_node_list_get((*block).statements, 0)
+  EVOCA SPECULUM AstNode stmt2 AD CONIURA ast_node_list_get((*block).statements, 1)
+  SI (*stmt1).kind != AST_EXPR_STMT
+    REDDE 43
+  FIN SI
+  SI (*stmt2).kind != AST_REDDE
+    REDDE 44
+  FIN SI
+
+  CONIURA ast_node_free(block)
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

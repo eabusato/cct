@@ -1,0 +1,6 @@
+INCIPIT grimoire "gate_block"
+RITUALE main() REDDE NIHIL {
+  EVOCA REX x AD 1
+  REDDE x
+}
+EXPLICIT grimoire

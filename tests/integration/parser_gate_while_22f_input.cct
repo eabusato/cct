@@ -1,0 +1,7 @@
+INCIPIT grimoire "gate_while"
+RITUALE main() REDDE NIHIL
+  DUM x < 3
+    REDDE
+  FIN DUM
+EXPLICIT RITUALE
+EXPLICIT grimoire

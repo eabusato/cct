@@ -1,0 +1,38 @@
+INCIPIT grimoire "ast_sigillum_fields_22a"
+
+ADVOCARE "cct/verbum.cct"
+ADVOCARE "../../src/bootstrap/parser/ast.cct"
+
+RITUALE main() REDDE REX
+  EVOCA SPECULUM AstNode sig AD CONIURA ast_make_sigillum("Pessoa", 1, 1)
+  EVOCA SPECULUM AstNode f1 AD CONIURA ast_make_field("nome", CONIURA ast_make_type("VERBUM", 2, 3), 2, 3)
+  EVOCA SPECULUM AstNode t2 AD CONIURA ast_make_type("REX", 3, 3)
+  CONIURA ast_type_mark_pointer(t2)
+  EVOCA SPECULUM AstNode f2 AD CONIURA ast_make_field("idade_ptr", t2, 3, 3)
+
+  CONIURA ast_append_field(sig, f1)
+  CONIURA ast_append_field(sig, f2)
+
+  SI (*sig).kind != AST_SIGILLUM
+    REDDE 41
+  FIN SI
+  SI CONIURA compare((*sig).name, "Pessoa") != 0
+    REDDE 42
+  FIN SI
+  SI CONIURA ast_node_list_len((*sig).fields) != 2
+    REDDE 43
+  FIN SI
+
+  EVOCA SPECULUM AstNode got2 AD CONIURA ast_node_list_get((*sig).fields, 1)
+  SI CONIURA compare((*got2).name, "idade_ptr") != 0
+    REDDE 44
+  FIN SI
+  SI (*(*got2).type_expr).is_pointer != VERUM
+    REDDE 45
+  FIN SI
+
+  CONIURA ast_node_free(sig)
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

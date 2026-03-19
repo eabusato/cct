@@ -1,0 +1,20 @@
+INCIPIT grimoire "p"
+RITUALE main(REX x) REDDE NIHIL
+  SI x > 0
+    QUANDO x
+    CASO 1:
+      REDDE
+    CASO 2:
+      REDDE
+    SENAO:
+      REDDE
+    FIN QUANDO
+  ALITER
+    TEMPTA
+      IACE "boom"
+    CAPE FRACTUM erro
+      REDDE
+    FIN TEMPTA
+  FIN SI
+EXPLICIT RITUALE
+EXPLICIT grimoire

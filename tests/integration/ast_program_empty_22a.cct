@@ -1,0 +1,16 @@
+INCIPIT grimoire "ast_program_empty_22a"
+
+ADVOCARE "../../src/bootstrap/parser/ast.cct"
+
+RITUALE main() REDDE REX
+  EVOCA SPECULUM AstProgram program AD CONIURA ast_program_new()
+
+  SI CONIURA ast_node_list_len((*program).declarations) != 0
+    REDDE 41
+  FIN SI
+
+  CONIURA ast_program_free(program)
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

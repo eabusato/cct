@@ -1,0 +1,11 @@
+INCIPIT grimoire "fixture22d"
+ADVOCARE "cct/io.cct"
+SIGILLUM Pair
+  left: REX
+  right: REX
+FIN SIGILLUM
+RITUALE main() REDDE REX
+  EVOCA REX x AD 1
+  REDDE x
+EXPLICIT RITUALE
+EXPLICIT grimoire

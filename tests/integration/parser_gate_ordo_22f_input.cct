@@ -1,0 +1,6 @@
+INCIPIT grimoire "gate_ordo"
+ORDO Cor
+  RUBER = 1
+  VERDE
+FIN ORDO
+EXPLICIT grimoire

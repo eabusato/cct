@@ -1,0 +1,63 @@
+INCIPIT grimoire "parser"
+
+ADVOCARE "cct/verbum.cct"
+ADVOCARE "ast.cct"
+ADVOCARE "parse_decl.cct"
+ADVOCARE "parser_helpers.cct"
+ADVOCARE "parser_state.cct"
+ADVOCARE "../lexer/lexer_state.cct"
+ADVOCARE "../lexer/token_type.cct"
+
+RITUALE parse_program(SPECULUM ParserState parser) REDDE SPECULUM AstProgram
+  EVOCA SPECULUM AstProgram program AD CONIURA ast_program_new()
+  CONIURA parser_consume(parser, TK_INCIPIT, "Expected INCIPIT at start of program")
+  SI NON CONIURA parser_check(parser, TK_IDENTIFIER) VEL CONIURA compare((*parser).current.lexeme, "grimoire") != 0
+    CONIURA parser_error_at_current(parser, "Expected 'grimoire' after INCIPIT")
+  ALITER
+    CONIURA parser_advance(parser)
+  FIN SI
+  SI CONIURA parser_check(parser, TK_STRING)
+    CONIURA parser_advance(parser)
+    SI CONIURA len((*parser).previous.lexeme) >= 2
+      CONIURA ast_program_set_name(program, CONIURA substring((*parser).previous.lexeme, 1, CONIURA len((*parser).previous.lexeme) - 1))
+    ALITER
+      CONIURA ast_program_set_name(program, "<anon>")
+    FIN SI
+  ALITER
+    CONIURA parser_error_at_current(parser, "Expected grimoire name string")
+    CONIURA ast_program_set_name(program, "<error>")
+  FIN SI
+
+  DUM NON CONIURA parser_check(parser, TK_EOF)
+    SI CONIURA parser_match(parser, TK_EXPLICIT)
+      SI NON CONIURA parser_check(parser, TK_IDENTIFIER) VEL CONIURA compare((*parser).current.lexeme, "grimoire") != 0
+        CONIURA parser_error_at_current(parser, "Expected grimoire after EXPLICIT")
+      ALITER
+        CONIURA parser_advance(parser)
+      FIN SI
+      REDDE program
+    FIN SI
+    CONIURA ast_program_append_decl(program, CONIURA parse_declaration(parser))
+    SI (*parser).panic_mode
+      CONIURA parser_synchronize_declaration(parser)
+    FIN SI
+  FIN DUM
+  REDDE program
+EXPLICIT RITUALE
+
+RITUALE parser_parse_program_source(VERBUM source, VERBUM filename) REDDE SPECULUM AstProgram
+  EVOCA LexerState lex AD CONIURA lexer_init(source, filename)
+  EVOCA ParserState parser AD CONIURA parser_init(SPECULUM lex, filename)
+  EVOCA SPECULUM AstProgram program AD CONIURA parse_program(SPECULUM parser)
+  CONIURA parser_dispose(SPECULUM parser)
+  REDDE program
+EXPLICIT RITUALE
+
+RITUALE parser_dump_program_source(VERBUM source, VERBUM filename) REDDE VERBUM
+  EVOCA SPECULUM AstProgram program AD CONIURA parser_parse_program_source(source, filename)
+  EVOCA VERBUM dump AD CONIURA ast_dump_program(program)
+  CONIURA ast_program_free(program)
+  REDDE dump
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

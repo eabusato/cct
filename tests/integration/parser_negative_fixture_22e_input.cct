@@ -1,0 +1,9 @@
+INCIPIT grimoire "negfixture"
+EVOCA REX x AD 1
+RITUALE ok(REX a) REDDE REX
+  REDDE a
+EXPLICIT RITUALE
+SIGILLUM Pair
+  left: REX
+FIN SIGILLUM
+EXPLICIT grimoire

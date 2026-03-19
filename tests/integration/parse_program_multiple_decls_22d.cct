@@ -1,0 +1,13 @@
+INCIPIT grimoire "parse_program_multiple_decls_22d"
+ADVOCARE "../../src/bootstrap/parser/ast.cct"
+ADVOCARE "../../src/bootstrap/parser/parser.cct"
+RITUALE main() REDDE REX
+  EVOCA VERBUM src AD "INCIPIT grimoire \"x\" ADVOCARE \"cct/io.cct\" SIGILLUM Ponto x: REX y: REX FIN SIGILLUM ORDO Cor A, B FIN ORDO EXPLICIT grimoire"
+  EVOCA SPECULUM AstProgram program AD CONIURA parser_parse_program_source(src, "m.cct")
+  SI CONIURA ast_node_list_len((*program).declarations) != 3
+    REDDE 41
+  FIN SI
+  CONIURA ast_program_free(program)
+  REDDE 0
+EXPLICIT RITUALE
+EXPLICIT grimoire

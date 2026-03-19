@@ -1,0 +1,12 @@
+INCIPIT grimoire "parser_dump_program_22e"
+ADVOCARE "cct/verbum.cct"
+ADVOCARE "../../src/bootstrap/parser/parser.cct"
+RITUALE main() REDDE REX
+  EVOCA VERBUM src AD "INCIPIT grimoire \"probe\"\nADVOCARE \"cct/io.cct\"\nRITUALE main() REDDE REX\n  REDDE 1\nEXPLICIT RITUALE\nEXPLICIT grimoire\n"
+  EVOCA VERBUM expected AD "PROGRAM: probe\nDeclarations: (2)\n  IMPORT (line 2, col 1)\n    Filename: \"cct/io.cct\"\n  RITUALE (line 3, col 1)\n    Name: main\n    Parameters: (0)\n    Type: REX\n    Body:\n      BLOCK (line 4, col 3)\n        Statements: (1)\n          REDDE (line 4, col 3)\n            Value:\n              LITERAL_INT (line 4, col 9)\n                Value: 1\n"
+  SI CONIURA compare(CONIURA parser_dump_program_source(src, "m.cct"), expected) != 0
+    REDDE 41
+  FIN SI
+  REDDE 0
+EXPLICIT RITUALE
+EXPLICIT grimoire

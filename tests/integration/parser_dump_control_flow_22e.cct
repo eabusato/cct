@@ -1,0 +1,27 @@
+INCIPIT grimoire "parser_dump_control_flow_22e"
+ADVOCARE "cct/verbum.cct"
+ADVOCARE "../../src/bootstrap/parser/parser.cct"
+RITUALE main() REDDE REX
+  EVOCA VERBUM src AD "INCIPIT grimoire \"probe\"\nRITUALE main() REDDE NIHIL\n  SI x < 2\n    REDDE x\n  FIN SI\n  DUM x < 3\n    REDDE\n  FIN DUM\nEXPLICIT RITUALE\nEXPLICIT grimoire\n"
+  EVOCA VERBUM dump AD CONIURA parser_dump_program_source(src, "m.cct")
+  SI NON CONIURA contains(dump, "SI (line 3, col 3)")
+    REDDE 41
+  FIN SI
+  SI NON CONIURA contains(dump, "Condition:")
+    REDDE 42
+  FIN SI
+  SI NON CONIURA contains(dump, "Operator: LESS")
+    REDDE 43
+  FIN SI
+  SI NON CONIURA contains(dump, "Then:")
+    REDDE 44
+  FIN SI
+  SI NON CONIURA contains(dump, "DUM (line 6, col 3)")
+    REDDE 45
+  FIN SI
+  SI NON CONIURA contains(dump, "Body:")
+    REDDE 46
+  FIN SI
+  REDDE 0
+EXPLICIT RITUALE
+EXPLICIT grimoire

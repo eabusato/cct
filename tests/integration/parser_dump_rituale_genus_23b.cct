@@ -1,0 +1,21 @@
+INCIPIT grimoire "parser_dump_rituale_genus_23b"
+ADVOCARE "cct/verbum.cct"
+ADVOCARE "../../src/bootstrap/parser/parser.cct"
+RITUALE main() REDDE REX
+  EVOCA VERBUM src AD "INCIPIT grimoire \"p\"\nRITUALE ident GENUS(T, U PACTUM Forma)(Caixa GENUS(T) box, U value) REDDE Caixa GENUS(U)\n  REDDE box\nEXPLICIT RITUALE\nEXPLICIT grimoire\n"
+  EVOCA VERBUM dump AD CONIURA parser_dump_program_source(src, "m.cct")
+  SI NON CONIURA contains(dump, "GENUS Parameters: (2)")
+    REDDE 41
+  FIN SI
+  SI NON CONIURA contains(dump, "- U PACTUM Forma")
+    REDDE 42
+  FIN SI
+  SI NON CONIURA contains(dump, "- box: Caixa GENUS(T)")
+    REDDE 43
+  FIN SI
+  SI NON CONIURA contains(dump, "Type: Caixa GENUS(U)")
+    REDDE 44
+  FIN SI
+  REDDE 0
+EXPLICIT RITUALE
+EXPLICIT grimoire

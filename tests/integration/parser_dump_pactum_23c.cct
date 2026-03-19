@@ -1,0 +1,21 @@
+INCIPIT grimoire "parser_dump_pactum_23c"
+ADVOCARE "cct/verbum.cct"
+ADVOCARE "../../src/bootstrap/parser/parser.cct"
+RITUALE main() REDDE REX
+  EVOCA VERBUM src AD "INCIPIT grimoire \"p\"\nPACTUM Forma\n  RITUALE apply(REX value) REDDE REX\n  RITUALE reset() REDDE NIHIL\nFIN PACTUM\nEXPLICIT grimoire\n"
+  EVOCA VERBUM dump AD CONIURA parser_dump_program_source(src, "m.cct")
+  SI NON CONIURA contains(dump, "PACTUM (line 2, col 1)")
+    REDDE 41
+  FIN SI
+  SI NON CONIURA contains(dump, "Signatures:")
+    REDDE 42
+  FIN SI
+  SI NON CONIURA contains(dump, "Name: apply")
+    REDDE 43
+  FIN SI
+  SI NON CONIURA contains(dump, "Name: reset")
+    REDDE 44
+  FIN SI
+  REDDE 0
+EXPLICIT RITUALE
+EXPLICIT grimoire

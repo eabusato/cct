@@ -1,0 +1,19 @@
+INCIPIT grimoire "parse_import_multiple_23d"
+ADVOCARE "cct/verbum.cct"
+ADVOCARE "../../src/bootstrap/parser/ast.cct"
+ADVOCARE "../../src/bootstrap/parser/parser.cct"
+RITUALE main() REDDE REX
+  EVOCA VERBUM src AD "INCIPIT grimoire \"p\" ADVOCARE \"./a.cct\" ADVOCARE \"./b.cct\" RITUALE main() REDDE NIHIL REDDE EXPLICIT RITUALE EXPLICIT grimoire"
+  EVOCA SPECULUM AstProgram program AD CONIURA parser_parse_program_source(src, "entry.cct")
+  SI CONIURA ast_node_list_len((*program).declarations) != 3
+    REDDE 41
+  FIN SI
+  EVOCA SPECULUM AstNode first AD CONIURA ast_node_list_get((*program).declarations, 0)
+  EVOCA SPECULUM AstNode second AD CONIURA ast_node_list_get((*program).declarations, 1)
+  SI CONIURA compare((*first).value_text, "./a.cct") != 0 VEL CONIURA compare((*second).value_text, "./b.cct") != 0
+    REDDE 42
+  FIN SI
+  CONIURA ast_program_free(program)
+  REDDE 0
+EXPLICIT RITUALE
+EXPLICIT grimoire

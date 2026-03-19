@@ -1,0 +1,37 @@
+INCIPIT grimoire "ast_access_flow_22a"
+
+ADVOCARE "cct/verbum.cct"
+ADVOCARE "../../src/bootstrap/parser/ast.cct"
+
+RITUALE main() REDDE REX
+  EVOCA SPECULUM AstNode access AD CONIURA ast_make_field_access(CONIURA ast_make_identifier("obj", 1, 1), "campo", 1, 4)
+  EVOCA SPECULUM AstNode index AD CONIURA ast_make_index_access(CONIURA ast_make_identifier("arr", 2, 1), CONIURA ast_make_literal_int("3", 2, 5), 2, 2)
+  EVOCA SPECULUM AstNode ev AD CONIURA ast_make_evoca("x", CONIURA ast_make_type("REX", 3, 7), CONIURA ast_make_literal_int("9", 3, 12), 3, 1)
+  EVOCA SPECULUM AstNode si AD CONIURA ast_make_si(CONIURA ast_make_literal_bool(VERUM, 4, 4), CONIURA ast_make_block(4, 10), CONIURA ast_make_block(5, 3), 4, 1)
+  EVOCA SPECULUM AstNode dum AD CONIURA ast_make_dum(CONIURA ast_make_literal_bool(FALSUM, 6, 5), CONIURA ast_make_block(6, 10), 6, 1)
+
+  SI (*access).kind != AST_FIELD_ACCESS VEL CONIURA compare((*access).name, "campo") != 0
+    REDDE 41
+  FIN SI
+  SI (*index).kind != AST_INDEX_ACCESS VEL (*index).has_left != VERUM VEL (*index).has_right != VERUM
+    REDDE 42
+  FIN SI
+  SI (*ev).kind != AST_EVOCA VEL (*ev).has_type_expr != VERUM VEL (*ev).has_right != VERUM
+    REDDE 43
+  FIN SI
+  SI (*si).kind != AST_SI VEL (*si).has_condition != VERUM VEL (*si).has_body != VERUM VEL (*si).has_else_branch != VERUM
+    REDDE 44
+  FIN SI
+  SI (*dum).kind != AST_DUM VEL (*dum).has_condition != VERUM VEL (*dum).has_body != VERUM
+    REDDE 45
+  FIN SI
+
+  CONIURA ast_node_free(access)
+  CONIURA ast_node_free(index)
+  CONIURA ast_node_free(ev)
+  CONIURA ast_node_free(si)
+  CONIURA ast_node_free(dum)
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

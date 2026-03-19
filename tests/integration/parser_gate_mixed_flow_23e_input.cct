@@ -1,0 +1,11 @@
+INCIPIT grimoire "p"
+RITUALE main(REX x) REDDE NIHIL
+  DUM x > 0
+    SI x == 1
+      REDDE
+    ALITER
+      VINCIRE x AD x - 1
+    FIN SI
+  FIN DUM
+EXPLICIT RITUALE
+EXPLICIT grimoire

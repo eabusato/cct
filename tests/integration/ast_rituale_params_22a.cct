@@ -1,0 +1,37 @@
+INCIPIT grimoire "ast_rituale_params_22a"
+
+ADVOCARE "cct/verbum.cct"
+ADVOCARE "../../src/bootstrap/parser/ast.cct"
+
+RITUALE main() REDDE REX
+  EVOCA SPECULUM AstNode ret_type AD CONIURA ast_make_type("REX", 1, 20)
+  EVOCA SPECULUM AstNode body AD CONIURA ast_make_block(2, 1)
+  EVOCA SPECULUM AstNode rit AD CONIURA ast_make_rituale("somma", ret_type, body, 1, 1)
+  EVOCA SPECULUM AstNode p1 AD CONIURA ast_make_param("a", CONIURA ast_make_type("REX", 1, 8), 1, 8)
+  EVOCA SPECULUM AstNode p2 AD CONIURA ast_make_param("b", CONIURA ast_make_type("REX", 1, 15), 1, 15)
+
+  CONIURA ast_append_param(rit, p1)
+  CONIURA ast_append_param(rit, p2)
+
+  SI (*rit).kind != AST_RITUALE VEL (*rit).has_return_type != VERUM VEL (*rit).has_body != VERUM
+    REDDE 41
+  FIN SI
+  SI CONIURA compare((*rit).name, "somma") != 0
+    REDDE 42
+  FIN SI
+  SI CONIURA ast_node_list_len((*rit).params) != 2
+    REDDE 43
+  FIN SI
+  EVOCA SPECULUM AstNode param1 AD CONIURA ast_node_list_get((*rit).params, 0)
+  SI CONIURA compare((*param1).name, "a") != 0
+    REDDE 44
+  FIN SI
+  SI CONIURA compare((*(*rit).return_type).type_name, "REX") != 0
+    REDDE 45
+  FIN SI
+
+  CONIURA ast_node_free(rit)
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

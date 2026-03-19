@@ -1,0 +1,31 @@
+INCIPIT grimoire "parse_call_variants_22b"
+
+ADVOCARE "cct/verbum.cct"
+ADVOCARE "../../src/bootstrap/parser/ast.cct"
+ADVOCARE "../../src/bootstrap/parser/parse_expr.cct"
+
+RITUALE main() REDDE REX
+  EVOCA SPECULUM AstNode zero AD CONIURA parser_parse_expression_source("foo()", "expr.cct")
+  EVOCA SPECULUM AstNode one AD CONIURA parser_parse_expression_source("foo(1)", "expr.cct")
+  EVOCA SPECULUM AstNode many AD CONIURA parser_parse_expression_source("foo(1, 2, 3)", "expr.cct")
+
+  SI (*zero).kind != AST_CALL VEL CONIURA ast_node_list_len((*zero).arguments) != 0
+    REDDE 41
+  FIN SI
+  SI (*one).kind != AST_CALL VEL CONIURA ast_node_list_len((*one).arguments) != 1
+    REDDE 42
+  FIN SI
+  SI (*many).kind != AST_CALL VEL CONIURA ast_node_list_len((*many).arguments) != 3
+    REDDE 43
+  FIN SI
+  SI CONIURA compare((*(*many).callee).name, "foo") != 0
+    REDDE 44
+  FIN SI
+
+  CONIURA ast_node_free(zero)
+  CONIURA ast_node_free(one)
+  CONIURA ast_node_free(many)
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

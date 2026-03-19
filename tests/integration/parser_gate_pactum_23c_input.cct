@@ -1,0 +1,6 @@
+INCIPIT grimoire "p"
+PACTUM Forma
+  RITUALE apply(REX value) REDDE REX
+  RITUALE reset() REDDE NIHIL
+FIN PACTUM
+EXPLICIT grimoire

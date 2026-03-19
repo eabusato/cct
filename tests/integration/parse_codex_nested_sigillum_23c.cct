@@ -1,0 +1,20 @@
+INCIPIT grimoire "parse_codex_nested_sigillum_23c"
+ADVOCARE "cct/verbum.cct"
+ADVOCARE "../../src/bootstrap/parser/ast.cct"
+ADVOCARE "../../src/bootstrap/parser/parser.cct"
+RITUALE main() REDDE REX
+  EVOCA VERBUM src AD "INCIPIT grimoire \"p\" CODEX Math SIGILLUM Box value: Envelope GENUS(REX) FIN SIGILLUM FIN CODEX EXPLICIT grimoire"
+  EVOCA SPECULUM AstProgram program AD CONIURA parser_parse_program_source(src, "m.cct")
+  EVOCA SPECULUM AstNode codex AD CONIURA ast_node_list_get((*program).declarations, 0)
+  EVOCA SPECULUM AstNode sig AD CONIURA ast_node_list_get((*codex).declarations, 0)
+  EVOCA SPECULUM AstNode field AD CONIURA ast_node_list_get((*sig).fields, 0)
+  SI CONIURA compare((*(*field).type_expr).type_name, "Envelope") != 0
+    REDDE 41
+  FIN SI
+  SI CONIURA ast_node_list_len((*(*field).type_expr).generic_args) != 1
+    REDDE 42
+  FIN SI
+  CONIURA ast_program_free(program)
+  REDDE 0
+EXPLICIT RITUALE
+EXPLICIT grimoire

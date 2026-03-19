@@ -1,0 +1,9 @@
+INCIPIT grimoire "gate_if"
+RITUALE main() REDDE NIHIL
+  SI x < 2
+    REDDE x
+  ALITER
+    REDDE 0
+  FIN SI
+EXPLICIT RITUALE
+EXPLICIT grimoire

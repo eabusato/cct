@@ -1,0 +1,30 @@
+INCIPIT grimoire "parse_assignment_expr_22b"
+
+ADVOCARE "cct/verbum.cct"
+ADVOCARE "../../src/bootstrap/parser/ast.cct"
+ADVOCARE "../../src/bootstrap/parser/parse_expr.cct"
+
+RITUALE main() REDDE REX
+  EVOCA SPECULUM AstNode expr AD CONIURA parser_parse_expression_source("obj.x = arr[1]", "expr.cct")
+
+  SI (*expr).kind != AST_VINCIRE
+    REDDE 41
+  FIN SI
+  SI (*(*expr).left).kind != AST_FIELD_ACCESS VEL CONIURA compare((*(*expr).left).name, "x") != 0
+    REDDE 42
+  FIN SI
+  SI (*(*expr).right).kind != AST_INDEX_ACCESS
+    REDDE 43
+  FIN SI
+  SI CONIURA compare((*(*(*expr).left).left).name, "obj") != 0
+    REDDE 44
+  FIN SI
+  SI CONIURA compare((*(*(*expr).right).left).name, "arr") != 0
+    REDDE 45
+  FIN SI
+
+  CONIURA ast_node_free(expr)
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

@@ -1,0 +1,7 @@
+INCIPIT grimoire "entry"
+ADVOCARE "./parser_module_contract_23d.cct"
+ADVOCARE "./parser_module_namespace_23d.cct"
+RITUALE main() REDDE NIHIL
+  REDDE
+EXPLICIT RITUALE
+EXPLICIT grimoire

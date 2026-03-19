@@ -1,0 +1,15 @@
+INCIPIT grimoire "parse_si_with_else_22c"
+ADVOCARE "../../src/bootstrap/parser/ast.cct"
+ADVOCARE "../../src/bootstrap/parser/parse_stmt.cct"
+RITUALE main() REDDE REX
+  EVOCA SPECULUM AstNode stmt AD CONIURA parser_parse_statement_source("SI VERUM REDDE 1 ALITER REDDE 2 FIN SI", "stmt.cct")
+  SI (*stmt).kind != AST_SI VEL (*stmt).has_else_branch != VERUM
+    REDDE 41
+  FIN SI
+  SI CONIURA ast_node_list_len((*(*stmt).body).statements) != 1 VEL CONIURA ast_node_list_len((*(*stmt).else_branch).statements) != 1
+    REDDE 42
+  FIN SI
+  CONIURA ast_node_free(stmt)
+  REDDE 0
+EXPLICIT RITUALE
+EXPLICIT grimoire

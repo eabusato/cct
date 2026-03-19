@@ -1,0 +1,12 @@
+INCIPIT grimoire "p"
+RITUALE main(REX x) REDDE NIHIL
+  QUANDO x
+  CASO 1:
+    REDDE
+  CASO 2:
+    REDDE
+  SENAO:
+    REDDE
+  FIN QUANDO
+EXPLICIT RITUALE
+EXPLICIT grimoire

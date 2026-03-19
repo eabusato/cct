@@ -1,0 +1,6 @@
+INCIPIT grimoire "gate_sigillum"
+SIGILLUM Pair
+  left: REX
+  right: SPECULUM REX
+FIN SIGILLUM
+EXPLICIT grimoire

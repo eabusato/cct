@@ -1,0 +1,35 @@
+INCIPIT grimoire "ast_call_args_22a"
+
+ADVOCARE "cct/verbum.cct"
+ADVOCARE "../../src/bootstrap/parser/ast.cct"
+
+RITUALE main() REDDE REX
+  EVOCA SPECULUM AstNode callee AD CONIURA ast_make_identifier("somma", 1, 1)
+  EVOCA SPECULUM AstNode call AD CONIURA ast_make_call(callee, 1, 1)
+  EVOCA SPECULUM AstNode a1 AD CONIURA ast_make_literal_int("10", 1, 7)
+  EVOCA SPECULUM AstNode a2 AD CONIURA ast_make_literal_int("20", 1, 11)
+
+  CONIURA ast_append_argument(call, a1)
+  CONIURA ast_append_argument(call, a2)
+
+  SI (*call).kind != AST_CALL VEL (*call).has_callee != VERUM
+    REDDE 41
+  FIN SI
+  SI CONIURA compare((*(*call).callee).name, "somma") != 0
+    REDDE 42
+  FIN SI
+  SI CONIURA ast_node_list_len((*call).arguments) != 2
+    REDDE 43
+  FIN SI
+
+  EVOCA SPECULUM AstNode got1 AD CONIURA ast_node_list_get((*call).arguments, 0)
+  EVOCA SPECULUM AstNode got2 AD CONIURA ast_node_list_get((*call).arguments, 1)
+  SI CONIURA compare((*got1).value_text, "10") != 0 VEL CONIURA compare((*got2).value_text, "20") != 0
+    REDDE 44
+  FIN SI
+
+  CONIURA ast_node_free(call)
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

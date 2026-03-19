@@ -1,0 +1,28 @@
+INCIPIT grimoire "parse_precedence_mul_add_22b"
+
+ADVOCARE "cct/verbum.cct"
+ADVOCARE "../../src/bootstrap/lexer/token_type.cct"
+ADVOCARE "../../src/bootstrap/parser/ast.cct"
+ADVOCARE "../../src/bootstrap/parser/parse_expr.cct"
+
+RITUALE main() REDDE REX
+  EVOCA SPECULUM AstNode expr AD CONIURA parser_parse_expression_source("1 + 2 * 3", "expr.cct")
+
+  SI (*expr).kind != AST_BINARY_OP VEL (*expr).operator_kind != TK_PLUS
+    REDDE 41
+  FIN SI
+  SI CONIURA compare((*(*expr).left).value_text, "1") != 0
+    REDDE 42
+  FIN SI
+  SI (*(*expr).right).kind != AST_BINARY_OP VEL (*(*expr).right).operator_kind != TK_STAR
+    REDDE 43
+  FIN SI
+  SI CONIURA compare((*(*(*expr).right).left).value_text, "2") != 0 VEL CONIURA compare((*(*(*expr).right).right).value_text, "3") != 0
+    REDDE 44
+  FIN SI
+
+  CONIURA ast_node_free(expr)
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

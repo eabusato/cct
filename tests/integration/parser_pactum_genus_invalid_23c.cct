@@ -1,0 +1,20 @@
+INCIPIT grimoire "parser_pactum_genus_invalid_23c"
+ADVOCARE "cct/verbum.cct"
+ADVOCARE "../../src/bootstrap/parser/ast.cct"
+ADVOCARE "../../src/bootstrap/parser/parser.cct"
+RITUALE main() REDDE REX
+  EVOCA VERBUM src AD "INCIPIT grimoire \"p\" PACTUM Forma RITUALE map GENUS(T)(T value) REDDE T RITUALE ok(REX value) REDDE REX FIN PACTUM EXPLICIT grimoire"
+  EVOCA SPECULUM AstProgram program AD CONIURA parser_parse_program_source(src, "m.cct")
+  EVOCA SPECULUM AstNode pact AD CONIURA ast_node_list_get((*program).declarations, 0)
+  SI CONIURA ast_node_list_len((*pact).signatures) != 2
+    REDDE 41
+  FIN SI
+  EVOCA SPECULUM AstNode first AD CONIURA ast_node_list_get((*pact).signatures, 0)
+  EVOCA SPECULUM AstNode second AD CONIURA ast_node_list_get((*pact).signatures, 1)
+  SI CONIURA compare((*first).name, "map") != 0 VEL CONIURA compare((*second).name, "ok") != 0
+    REDDE 42
+  FIN SI
+  CONIURA ast_program_free(program)
+  REDDE 0
+EXPLICIT RITUALE
+EXPLICIT grimoire

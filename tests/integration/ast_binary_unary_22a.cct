@@ -1,0 +1,35 @@
+INCIPIT grimoire "ast_binary_unary_22a"
+
+ADVOCARE "cct/verbum.cct"
+ADVOCARE "../../src/bootstrap/parser/ast.cct"
+ADVOCARE "../../src/bootstrap/lexer/token_type.cct"
+
+RITUALE main() REDDE REX
+  EVOCA SPECULUM AstNode left AD CONIURA ast_make_literal_int("1", 1, 1)
+  EVOCA SPECULUM AstNode right AD CONIURA ast_make_literal_int("2", 1, 5)
+  EVOCA SPECULUM AstNode bin AD CONIURA ast_make_binary(TK_PLUS, left, right, 1, 3)
+  EVOCA SPECULUM AstNode operand AD CONIURA ast_make_identifier("x", 2, 2)
+  EVOCA SPECULUM AstNode un AD CONIURA ast_make_unary(TK_MINUS, operand, 2, 1)
+
+  SI (*bin).kind != AST_BINARY_OP VEL (*bin).operator_kind != TK_PLUS
+    REDDE 41
+  FIN SI
+  SI (*bin).has_left != VERUM VEL (*bin).has_right != VERUM
+    REDDE 42
+  FIN SI
+  SI CONIURA compare((*(*bin).left).value_text, "1") != 0 VEL CONIURA compare((*(*bin).right).value_text, "2") != 0
+    REDDE 43
+  FIN SI
+  SI (*un).kind != AST_UNARY_OP VEL (*un).operator_kind != TK_MINUS VEL (*un).has_left != VERUM
+    REDDE 44
+  FIN SI
+  SI CONIURA compare((*(*un).left).name, "x") != 0
+    REDDE 45
+  FIN SI
+
+  CONIURA ast_node_free(bin)
+  CONIURA ast_node_free(un)
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

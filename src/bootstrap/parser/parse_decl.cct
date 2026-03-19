@@ -1,0 +1,370 @@
+INCIPIT grimoire "parse_decl"
+
+ADVOCARE "cct/parse.cct"
+ADVOCARE "cct/verbum.cct"
+ADVOCARE "ast.cct"
+ADVOCARE "parse_stmt.cct"
+ADVOCARE "parser_helpers.cct"
+ADVOCARE "parser_state.cct"
+ADVOCARE "../lexer/token_type.cct"
+
+RITUALE parse_type(SPECULUM ParserState parser) REDDE SPECULUM AstNode
+  SI CONIURA parser_match(parser, TK_SPECULUM)
+    EVOCA SPECULUM AstNode base AD CONIURA parse_type(parser)
+    CONIURA ast_type_mark_pointer(base)
+    REDDE base
+  FIN SI
+
+  SI CONIURA parser_match(parser, TK_SERIES)
+    EVOCA SPECULUM AstNode base AD CONIURA parse_type(parser)
+    CONIURA parser_consume(parser, TK_LBRACKET, "Expected '[' after SERIES element type")
+    SI NON CONIURA parser_check(parser, TK_INTEGER)
+      CONIURA parser_error_at_current(parser, "Expected array size")
+      REDDE base
+    FIN SI
+    CONIURA parser_advance(parser)
+    CONIURA ast_type_mark_array(base, CONIURA parse_int((*parser).previous.lexeme))
+    CONIURA parser_consume(parser, TK_RBRACKET, "Expected ']' after array size")
+    REDDE base
+  FIN SI
+
+  EVOCA SPECULUM AstNode base AD CONIURA parse_type_simple(parser)
+  CONIURA parse_optional_generic_type_args(parser, base)
+  REDDE base
+EXPLICIT RITUALE
+
+RITUALE parse_optional_generic_type_args(SPECULUM ParserState parser, SPECULUM AstNode type_expr) REDDE NIHIL
+  SI NON CONIURA parser_match(parser, TK_GENUS)
+    REDDE
+  FIN SI
+
+  CONIURA parser_consume(parser, TK_LPAREN, "Expected '(' after GENUS")
+  SI CONIURA parser_check(parser, TK_RPAREN)
+    CONIURA parser_error_at_current(parser, "GENUS() is invalid (expected at least one type argument)")
+    CONIURA parser_advance(parser)
+    REDDE
+  FIN SI
+
+  DUM VERUM
+    CONIURA ast_append_generic_arg(type_expr, CONIURA parse_type(parser))
+    SI NON CONIURA parser_match(parser, TK_COMMA)
+      CONIURA parser_consume(parser, TK_RPAREN, "Expected ')' after GENUS type arguments")
+      REDDE
+    FIN SI
+  FIN DUM
+EXPLICIT RITUALE
+
+RITUALE parse_type_param_exists(SPECULUM NIHIL list, VERBUM name) REDDE VERUM
+  EVOCA REX i AD 0
+  EVOCA REX n AD CONIURA ast_node_list_len(list)
+  DUM i < n
+    EVOCA SPECULUM AstNode param AD CONIURA ast_node_list_get(list, i)
+    SI CONIURA compare((*param).name, name) == 0
+      REDDE VERUM
+    FIN SI
+    VINCIRE i AD i + 1
+  FIN DUM
+  REDDE FALSUM
+EXPLICIT RITUALE
+
+RITUALE parse_optional_type_params(SPECULUM ParserState parser, SPECULUM AstNode owner, VERUM allow_constraint) REDDE NIHIL
+  SI NON CONIURA parser_match(parser, TK_GENUS)
+    REDDE
+  FIN SI
+
+  CONIURA parser_consume(parser, TK_LPAREN, "Expected '(' after GENUS")
+  SI CONIURA parser_check(parser, TK_RPAREN)
+    CONIURA parser_error_at_current(parser, "GENUS() is invalid (expected at least one type parameter)")
+    CONIURA parser_advance(parser)
+    REDDE
+  FIN SI
+
+  DUM VERUM
+    EVOCA REX line AD (*parser).current.line
+    EVOCA REX column AD (*parser).current.column
+    SI NON CONIURA parser_check(parser, TK_IDENTIFIER)
+      CONIURA parser_error_at_current(parser, "GENUS parameters must be identifiers")
+      REDDE
+    FIN SI
+
+    CONIURA parser_advance(parser)
+    EVOCA VERBUM name AD CONIURA verbum_dup((*parser).previous.lexeme)
+    EVOCA SPECULUM AstNode param AD CONIURA ast_make_type_param_no_constraint(name, line, column)
+
+    SI CONIURA parser_match(parser, TK_PACTUM)
+      SI NON allow_constraint
+        CONIURA parser_error_at_previous(parser, "GENUS constraints are only supported in RITUALE declarations")
+      FIN SI
+      SI NON CONIURA parser_check(parser, TK_IDENTIFIER)
+        CONIURA parser_error_at_current(parser, "Expected contract identifier after PACTUM in GENUS parameter")
+      ALITER
+        CONIURA parser_advance(parser)
+        CONIURA ast_node_free(param)
+        VINCIRE param AD CONIURA ast_make_type_param(name, CONIURA ast_make_type((*parser).previous.lexeme, (*parser).previous.line, (*parser).previous.column), line, column)
+      FIN SI
+    FIN SI
+
+    SI CONIURA parse_type_param_exists((*owner).type_params, name)
+      CONIURA parser_error_at_current(parser, "Duplicate GENUS parameter in declaration")
+      CONIURA ast_node_free(param)
+    ALITER
+      CONIURA ast_append_type_param(owner, param)
+    FIN SI
+
+    DIMITTE name
+    SI NON CONIURA parser_match(parser, TK_COMMA)
+      CONIURA parser_consume(parser, TK_RPAREN, "Expected ')' after GENUS parameters")
+      REDDE
+    FIN SI
+  FIN DUM
+EXPLICIT RITUALE
+
+RITUALE parse_param_list(SPECULUM ParserState parser, SPECULUM AstNode rituale) REDDE NIHIL
+  SI CONIURA parser_check(parser, TK_RPAREN)
+    REDDE
+  FIN SI
+
+  DUM VERUM
+    EVOCA REX line AD (*parser).current.line
+    EVOCA REX column AD (*parser).current.column
+    EVOCA SPECULUM AstNode type_expr AD CONIURA parse_type(parser)
+    SI NON CONIURA parser_check(parser, TK_IDENTIFIER)
+      CONIURA parser_error_at_current(parser, "Expected parameter name")
+      REDDE
+    FIN SI
+    CONIURA parser_advance(parser)
+    CONIURA ast_append_param(rituale, CONIURA ast_make_param((*parser).previous.lexeme, type_expr, line, column))
+    SI NON CONIURA parser_match(parser, TK_COMMA)
+      REDDE
+    FIN SI
+  FIN DUM
+EXPLICIT RITUALE
+
+RITUALE parse_import_declaration(SPECULUM ParserState parser) REDDE SPECULUM AstNode
+  EVOCA REX line AD (*parser).current.line
+  EVOCA REX column AD (*parser).current.column
+  CONIURA parser_consume(parser, TK_ADVOCARE, "Expected ADVOCARE")
+  SI NON CONIURA parser_check(parser, TK_STRING)
+    CONIURA parser_error_at_current(parser, "Expected filename string after ADVOCARE")
+    REDDE CONIURA ast_make_import("<error>", line, column)
+  FIN SI
+  CONIURA parser_advance(parser)
+  EVOCA VERBUM raw AD (*parser).previous.lexeme
+  EVOCA VERBUM path AD raw
+  EVOCA VERUM owns_path AD FALSUM
+  SI CONIURA len(raw) >= 2
+    VINCIRE path AD CONIURA substring(raw, 1, CONIURA len(raw) - 1)
+    VINCIRE owns_path AD VERUM
+  FIN SI
+  EVOCA SPECULUM AstNode node AD CONIURA ast_make_import(path, line, column)
+  SI owns_path
+    DIMITTE path
+  FIN SI
+  CONIURA parser_match(parser, TK_SEMICOLON)
+  REDDE node
+EXPLICIT RITUALE
+
+RITUALE parse_rituale_body_until_explicit(SPECULUM ParserState parser) REDDE SPECULUM AstNode
+  EVOCA SPECULUM AstNode block AD CONIURA ast_make_block((*parser).current.line, (*parser).current.column)
+  DUM NON CONIURA parser_check(parser, TK_EOF) ET NON CONIURA parser_check(parser, TK_EXPLICIT)
+    CONIURA ast_append_statement(block, CONIURA parse_statement(parser))
+    SI (*parser).panic_mode
+      CONIURA parser_synchronize_statement(parser)
+    FIN SI
+  FIN DUM
+  CONIURA parser_consume(parser, TK_EXPLICIT, "Expected EXPLICIT after RITUALE body")
+  CONIURA parser_consume(parser, TK_RITUALE, "Expected RITUALE after EXPLICIT")
+  REDDE block
+EXPLICIT RITUALE
+
+RITUALE parse_rituale_signature_only(SPECULUM ParserState parser, VERBUM name, REX line, REX column) REDDE SPECULUM AstNode
+  EVOCA SPECULUM AstNode rituale AD CONIURA ast_make_rituale_decl(name, line, column)
+  SI CONIURA parser_check(parser, TK_GENUS)
+    CONIURA parser_error_at_current(parser, "GENUS is outside subset 10A for PACTUM signatures")
+    CONIURA parse_optional_type_params(parser, rituale, FALSUM)
+  FIN SI
+  CONIURA parser_consume(parser, TK_LPAREN, "Expected '(' after ritual name")
+  CONIURA parse_param_list(parser, rituale)
+  CONIURA parser_consume(parser, TK_RPAREN, "Expected ')' after parameters")
+  SI CONIURA parser_match(parser, TK_REDDE)
+    VINCIRE (*rituale).return_type AD CONIURA parse_type(parser)
+    VINCIRE (*rituale).has_return_type AD VERUM
+  FIN SI
+  CONIURA parser_match(parser, TK_SEMICOLON)
+  REDDE rituale
+EXPLICIT RITUALE
+
+RITUALE parse_rituale_declaration(SPECULUM ParserState parser) REDDE SPECULUM AstNode
+  EVOCA REX line AD (*parser).current.line
+  EVOCA REX column AD (*parser).current.column
+  CONIURA parser_consume(parser, TK_RITUALE, "Expected RITUALE")
+  SI NON CONIURA parser_check(parser, TK_IDENTIFIER)
+    CONIURA parser_error_at_current(parser, "Expected ritual name")
+    REDDE CONIURA ast_make_rituale("<error>", CONIURA ast_make_type("NIHIL", line, column), CONIURA ast_make_block(line, column), line, column)
+  FIN SI
+  CONIURA parser_advance(parser)
+  EVOCA SPECULUM AstNode rituale AD CONIURA ast_make_rituale_decl((*parser).previous.lexeme, line, column)
+  CONIURA parse_optional_type_params(parser, rituale, VERUM)
+  CONIURA parser_consume(parser, TK_LPAREN, "Expected '(' after ritual name")
+  CONIURA parse_param_list(parser, rituale)
+  CONIURA parser_consume(parser, TK_RPAREN, "Expected ')' after parameters")
+  SI CONIURA parser_match(parser, TK_REDDE)
+    VINCIRE (*rituale).return_type AD CONIURA parse_type(parser)
+    VINCIRE (*rituale).has_return_type AD VERUM
+  FIN SI
+  SI CONIURA parser_check(parser, TK_LBRACE)
+    VINCIRE (*rituale).body AD CONIURA parse_block(parser)
+  ALITER
+    VINCIRE (*rituale).body AD CONIURA parse_rituale_body_until_explicit(parser)
+  FIN SI
+  VINCIRE (*rituale).has_body AD VERUM
+  REDDE rituale
+EXPLICIT RITUALE
+
+RITUALE parse_sigillum_declaration(SPECULUM ParserState parser) REDDE SPECULUM AstNode
+  EVOCA REX line AD (*parser).current.line
+  EVOCA REX column AD (*parser).current.column
+  CONIURA parser_consume(parser, TK_SIGILLUM, "Expected SIGILLUM")
+  SI NON CONIURA parser_check(parser, TK_IDENTIFIER)
+    CONIURA parser_error_at_current(parser, "Expected SIGILLUM name")
+    REDDE CONIURA ast_make_sigillum("<error>", line, column)
+  FIN SI
+  CONIURA parser_advance(parser)
+  EVOCA SPECULUM AstNode sig AD CONIURA ast_make_sigillum((*parser).previous.lexeme, line, column)
+  CONIURA parse_optional_type_params(parser, sig, FALSUM)
+  DUM NON CONIURA parser_check(parser, TK_EOF) ET NON CONIURA parser_check(parser, TK_FIN)
+    EVOCA REX field_line AD (*parser).current.line
+    EVOCA REX field_column AD (*parser).current.column
+    SI NON CONIURA parser_check(parser, TK_IDENTIFIER)
+      CONIURA parser_error_at_current(parser, "Expected field name")
+      REDDE sig
+    FIN SI
+    CONIURA parser_advance(parser)
+    EVOCA VERBUM field_name AD CONIURA verbum_dup((*parser).previous.lexeme)
+    CONIURA parser_consume(parser, TK_COLON, "Expected ':' after field name")
+    EVOCA SPECULUM AstNode field AD CONIURA ast_make_field(field_name, CONIURA parse_type(parser), field_line, field_column)
+    DIMITTE field_name
+    CONIURA ast_append_field(sig, field)
+    CONIURA parser_match(parser, TK_SEMICOLON)
+  FIN DUM
+  CONIURA parser_consume(parser, TK_FIN, "Expected FIN after SIGILLUM body")
+  CONIURA parser_consume(parser, TK_SIGILLUM, "Expected SIGILLUM after FIN")
+  REDDE sig
+EXPLICIT RITUALE
+
+RITUALE parse_ordo_declaration(SPECULUM ParserState parser) REDDE SPECULUM AstNode
+  EVOCA REX line AD (*parser).current.line
+  EVOCA REX column AD (*parser).current.column
+  CONIURA parser_consume(parser, TK_ORDO, "Expected ORDO")
+  SI NON CONIURA parser_check(parser, TK_IDENTIFIER)
+    CONIURA parser_error_at_current(parser, "Expected ORDO name")
+    REDDE CONIURA ast_make_ordo("<error>", line, column)
+  FIN SI
+  CONIURA parser_advance(parser)
+  EVOCA SPECULUM AstNode ord AD CONIURA ast_make_ordo((*parser).previous.lexeme, line, column)
+  DUM NON CONIURA parser_check(parser, TK_EOF) ET NON CONIURA parser_check(parser, TK_FIN)
+    EVOCA REX item_line AD (*parser).current.line
+    EVOCA REX item_column AD (*parser).current.column
+    SI NON CONIURA parser_check(parser, TK_IDENTIFIER)
+      CONIURA parser_error_at_current(parser, "Expected ORDO item name")
+      REDDE ord
+    FIN SI
+    CONIURA parser_advance(parser)
+    EVOCA VERBUM item_name AD CONIURA verbum_dup((*parser).previous.lexeme)
+    SI CONIURA parser_match(parser, TK_EQ)
+      SI NON CONIURA parser_check(parser, TK_INTEGER)
+        CONIURA parser_error_at_current(parser, "Expected integer enum value")
+        DIMITTE item_name
+        REDDE ord
+      FIN SI
+      CONIURA parser_advance(parser)
+      CONIURA ast_append_item(ord, CONIURA ast_make_enum_item(item_name, CONIURA ast_make_literal_int((*parser).previous.lexeme, (*parser).previous.line, (*parser).previous.column), item_line, item_column))
+    ALITER
+      CONIURA ast_append_item(ord, CONIURA ast_make_enum_item_no_value(item_name, item_line, item_column))
+    FIN SI
+    DIMITTE item_name
+    CONIURA parser_match(parser, TK_COMMA)
+    CONIURA parser_match(parser, TK_SEMICOLON)
+  FIN DUM
+  CONIURA parser_consume(parser, TK_FIN, "Expected FIN after ORDO body")
+  CONIURA parser_consume(parser, TK_ORDO, "Expected ORDO after FIN")
+  REDDE ord
+EXPLICIT RITUALE
+
+RITUALE parse_codex_declaration(SPECULUM ParserState parser) REDDE SPECULUM AstNode
+  EVOCA REX line AD (*parser).current.line
+  EVOCA REX column AD (*parser).current.column
+  CONIURA parser_consume(parser, TK_CODEX, "Expected CODEX")
+  SI NON CONIURA parser_check(parser, TK_IDENTIFIER)
+    CONIURA parser_error_at_current(parser, "Expected CODEX name")
+    REDDE CONIURA ast_make_codex("<error>", line, column)
+  FIN SI
+  CONIURA parser_advance(parser)
+  EVOCA SPECULUM AstNode codex AD CONIURA ast_make_codex((*parser).previous.lexeme, line, column)
+  DUM NON CONIURA parser_check(parser, TK_EOF) ET NON CONIURA parser_check(parser, TK_FIN)
+    CONIURA ast_append_declaration(codex, CONIURA parse_declaration(parser))
+    SI (*parser).panic_mode
+      CONIURA parser_synchronize_declaration(parser)
+    FIN SI
+  FIN DUM
+  CONIURA parser_consume(parser, TK_FIN, "Expected FIN after CODEX body")
+  CONIURA parser_consume(parser, TK_CODEX, "Expected CODEX after FIN")
+  REDDE codex
+EXPLICIT RITUALE
+
+RITUALE parse_pactum_declaration(SPECULUM ParserState parser) REDDE SPECULUM AstNode
+  EVOCA REX line AD (*parser).current.line
+  EVOCA REX column AD (*parser).current.column
+  CONIURA parser_consume(parser, TK_PACTUM, "Expected PACTUM")
+  SI NON CONIURA parser_check(parser, TK_IDENTIFIER)
+    CONIURA parser_error_at_current(parser, "Expected PACTUM name")
+    REDDE CONIURA ast_make_pactum("<error>", line, column)
+  FIN SI
+  CONIURA parser_advance(parser)
+  EVOCA SPECULUM AstNode pactum AD CONIURA ast_make_pactum((*parser).previous.lexeme, line, column)
+  DUM NON CONIURA parser_check(parser, TK_EOF) ET NON CONIURA parser_check(parser, TK_FIN)
+    SI NON CONIURA parser_match(parser, TK_RITUALE)
+      CONIURA parser_error_at_current(parser, "Expected RITUALE signature in PACTUM")
+      CONIURA parser_synchronize_declaration(parser)
+    ALITER
+      EVOCA REX sig_line AD (*parser).previous.line
+      EVOCA REX sig_column AD (*parser).previous.column
+      SI NON CONIURA parser_check(parser, TK_IDENTIFIER)
+        CONIURA parser_error_at_current(parser, "Expected ritual name in PACTUM")
+        CONIURA parser_synchronize_declaration(parser)
+      ALITER
+        CONIURA parser_advance(parser)
+        CONIURA ast_append_signature(pactum, CONIURA parse_rituale_signature_only(parser, (*parser).previous.lexeme, sig_line, sig_column))
+      FIN SI
+    FIN SI
+  FIN DUM
+  CONIURA parser_consume(parser, TK_FIN, "Expected FIN after PACTUM body")
+  CONIURA parser_consume(parser, TK_PACTUM, "Expected PACTUM after FIN")
+  REDDE pactum
+EXPLICIT RITUALE
+
+RITUALE parse_declaration(SPECULUM ParserState parser) REDDE SPECULUM AstNode
+  SI CONIURA parser_check(parser, TK_ADVOCARE)
+    REDDE CONIURA parse_import_declaration(parser)
+  FIN SI
+  SI CONIURA parser_check(parser, TK_RITUALE)
+    REDDE CONIURA parse_rituale_declaration(parser)
+  FIN SI
+  SI CONIURA parser_check(parser, TK_SIGILLUM)
+    REDDE CONIURA parse_sigillum_declaration(parser)
+  FIN SI
+  SI CONIURA parser_check(parser, TK_ORDO)
+    REDDE CONIURA parse_ordo_declaration(parser)
+  FIN SI
+  SI CONIURA parser_check(parser, TK_CODEX)
+    REDDE CONIURA parse_codex_declaration(parser)
+  FIN SI
+  SI CONIURA parser_check(parser, TK_PACTUM)
+    REDDE CONIURA parse_pactum_declaration(parser)
+  FIN SI
+  CONIURA parser_error_at_current(parser, "Expected top-level declaration")
+  CONIURA parser_advance(parser)
+  REDDE CONIURA ast_make_import("<error>", (*parser).previous.line, (*parser).previous.column)
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

@@ -1,0 +1,12 @@
+INCIPIT grimoire "parser_dump_ordo_22e"
+ADVOCARE "cct/verbum.cct"
+ADVOCARE "../../src/bootstrap/parser/parser.cct"
+RITUALE main() REDDE REX
+  EVOCA VERBUM src AD "INCIPIT grimoire \"probe\"\nORDO Cor\n  RUBER = 1\n  VERDE\nFIN ORDO\nEXPLICIT grimoire\n"
+  EVOCA VERBUM expected AD "PROGRAM: probe\nDeclarations: (1)\n  ORDO (line 2, col 1)\n    Name: Cor\n    Variants: (2)\n      - RUBER (tag=0, value=1)\n      - VERDE (tag=0)\n"
+  SI CONIURA compare(CONIURA parser_dump_program_source(src, "m.cct"), expected) != 0
+    REDDE 41
+  FIN SI
+  REDDE 0
+EXPLICIT RITUALE
+EXPLICIT grimoire

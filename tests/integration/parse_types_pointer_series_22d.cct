@@ -1,0 +1,19 @@
+INCIPIT grimoire "parse_types_pointer_series_22d"
+ADVOCARE "../../src/bootstrap/parser/ast.cct"
+ADVOCARE "../../src/bootstrap/parser/parser.cct"
+RITUALE main() REDDE REX
+  EVOCA VERBUM src AD "INCIPIT grimoire \"x\" RITUALE f(SPECULUM REX p, SERIES REX[4] xs) REDDE NIHIL REDDE EXPLICIT RITUALE EXPLICIT grimoire"
+  EVOCA SPECULUM AstProgram program AD CONIURA parser_parse_program_source(src, "m.cct")
+  EVOCA SPECULUM AstNode rit AD CONIURA ast_node_list_get((*program).declarations, 0)
+  EVOCA SPECULUM AstNode p1 AD CONIURA ast_node_list_get((*rit).params, 0)
+  EVOCA SPECULUM AstNode p2 AD CONIURA ast_node_list_get((*rit).params, 1)
+  SI (*(*p1).type_expr).is_pointer != VERUM
+    REDDE 41
+  FIN SI
+  SI (*(*p2).type_expr).is_array != VERUM VEL (*(*p2).type_expr).array_size != 4
+    REDDE 42
+  FIN SI
+  CONIURA ast_program_free(program)
+  REDDE 0
+EXPLICIT RITUALE
+EXPLICIT grimoire

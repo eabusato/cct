@@ -1,0 +1,42 @@
+INCIPIT grimoire "ast_literals_22a"
+
+ADVOCARE "cct/verbum.cct"
+ADVOCARE "../../src/bootstrap/parser/ast.cct"
+
+RITUALE main() REDDE REX
+  EVOCA SPECULUM AstNode n1 AD CONIURA ast_make_literal_int("42", 1, 1)
+  EVOCA SPECULUM AstNode n2 AD CONIURA ast_make_literal_real("3.14", 1, 4)
+  EVOCA SPECULUM AstNode n3 AD CONIURA ast_make_literal_string("abc", 1, 8)
+  EVOCA SPECULUM AstNode n4 AD CONIURA ast_make_literal_bool(VERUM, 1, 13)
+  EVOCA SPECULUM AstNode n5 AD CONIURA ast_make_literal_bool(FALSUM, 1, 19)
+  EVOCA SPECULUM AstNode n6 AD CONIURA ast_make_literal_nihil(1, 26)
+
+  SI (*n1).kind != AST_LITERAL_INT VEL CONIURA compare((*n1).value_text, "42") != 0
+    REDDE 41
+  FIN SI
+  SI (*n2).kind != AST_LITERAL_REAL VEL CONIURA compare((*n2).value_text, "3.14") != 0
+    REDDE 42
+  FIN SI
+  SI (*n3).kind != AST_LITERAL_STRING VEL CONIURA compare((*n3).value_text, "abc") != 0
+    REDDE 43
+  FIN SI
+  SI (*n4).kind != AST_LITERAL_BOOL VEL (*n4).bool_value != VERUM VEL CONIURA compare((*n4).value_text, "VERUM") != 0
+    REDDE 44
+  FIN SI
+  SI (*n5).kind != AST_LITERAL_BOOL VEL (*n5).bool_value != FALSUM VEL CONIURA compare((*n5).value_text, "FALSUM") != 0
+    REDDE 45
+  FIN SI
+  SI (*n6).kind != AST_LITERAL_NIHIL VEL CONIURA compare((*n6).value_text, "NIHIL") != 0
+    REDDE 46
+  FIN SI
+
+  CONIURA ast_node_free(n1)
+  CONIURA ast_node_free(n2)
+  CONIURA ast_node_free(n3)
+  CONIURA ast_node_free(n4)
+  CONIURA ast_node_free(n5)
+  CONIURA ast_node_free(n6)
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

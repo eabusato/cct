@@ -1,0 +1,5 @@
+INCIPIT grimoire "gate_binary"
+RITUALE main() REDDE REX
+  REDDE 1 + 2 * 3
+EXPLICIT RITUALE
+EXPLICIT grimoire

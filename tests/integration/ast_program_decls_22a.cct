@@ -1,0 +1,28 @@
+INCIPIT grimoire "ast_program_decls_22a"
+
+ADVOCARE "cct/verbum.cct"
+ADVOCARE "../../src/bootstrap/parser/ast.cct"
+
+RITUALE main() REDDE REX
+  EVOCA SPECULUM AstProgram program AD CONIURA ast_program_new()
+  CONIURA ast_program_append_decl(program, CONIURA ast_make_import("cct/io.cct", 1, 1))
+  CONIURA ast_program_append_decl(program, CONIURA ast_make_sigillum("Ponto", 2, 1))
+
+  SI CONIURA ast_node_list_len((*program).declarations) != 2
+    REDDE 41
+  FIN SI
+
+  EVOCA SPECULUM AstNode decl1 AD CONIURA ast_node_list_get((*program).declarations, 0)
+  EVOCA SPECULUM AstNode decl2 AD CONIURA ast_node_list_get((*program).declarations, 1)
+  SI (*decl1).kind != AST_IMPORT VEL CONIURA compare((*decl1).value_text, "cct/io.cct") != 0
+    REDDE 42
+  FIN SI
+  SI (*decl2).kind != AST_SIGILLUM VEL CONIURA compare((*decl2).name, "Ponto") != 0
+    REDDE 43
+  FIN SI
+
+  CONIURA ast_program_free(program)
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

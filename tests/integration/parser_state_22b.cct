@@ -1,0 +1,32 @@
+INCIPIT grimoire "parser_state_22b"
+
+ADVOCARE "cct/verbum.cct"
+ADVOCARE "../../src/bootstrap/lexer/lexer_state.cct"
+ADVOCARE "../../src/bootstrap/parser/parser_helpers.cct"
+ADVOCARE "../../src/bootstrap/parser/parser_state.cct"
+
+RITUALE main() REDDE REX
+  EVOCA LexerState lex AD CONIURA lexer_init("abc + 1", "expr.cct")
+  EVOCA ParserState parser AD CONIURA parser_init(SPECULUM lex, "expr.cct")
+
+  SI parser.current.kind != TK_IDENTIFIER
+    REDDE 41
+  FIN SI
+  SI CONIURA compare(parser.current.lexeme, "abc") != 0
+    REDDE 42
+  FIN SI
+  SI parser.previous.kind != TK_EOF
+    REDDE 43
+  FIN SI
+  SI parser.had_error != FALSUM VEL parser.panic_mode != FALSUM
+    REDDE 44
+  FIN SI
+  SI CONIURA compare(parser.filename, "expr.cct") != 0
+    REDDE 45
+  FIN SI
+
+  CONIURA parser_dispose(SPECULUM parser)
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

@@ -1,0 +1,27 @@
+INCIPIT grimoire "parser_recovery_statement_22e"
+ADVOCARE "../../src/bootstrap/lexer/lexer_state.cct"
+ADVOCARE "../../src/bootstrap/parser/ast.cct"
+ADVOCARE "../../src/bootstrap/parser/parser.cct"
+ADVOCARE "../../src/bootstrap/parser/parser_helpers.cct"
+ADVOCARE "../../src/bootstrap/parser/parser_state.cct"
+RITUALE main() REDDE REX
+  EVOCA VERBUM src AD "INCIPIT grimoire \"probe\"\nRITUALE main() REDDE NIHIL\n  )\n  REDDE 0\nEXPLICIT RITUALE\nEXPLICIT grimoire\n"
+  EVOCA LexerState lex AD CONIURA lexer_init(src, "m.cct")
+  EVOCA ParserState parser AD CONIURA parser_init(SPECULUM lex, "m.cct")
+  EVOCA SPECULUM AstProgram program AD CONIURA parse_program(SPECULUM parser)
+  EVOCA SPECULUM AstNode rit AD CONIURA ast_node_list_get((*program).declarations, 0)
+  EVOCA SPECULUM AstNode stmt2 AD CONIURA ast_node_list_get((*(*rit).body).statements, 1)
+  SI parser.had_error != VERUM
+    REDDE 41
+  FIN SI
+  SI CONIURA ast_node_list_len((*(*rit).body).statements) != 2
+    REDDE 42
+  FIN SI
+  SI (*stmt2).kind != AST_REDDE
+    REDDE 43
+  FIN SI
+  CONIURA ast_program_free(program)
+  CONIURA parser_dispose(SPECULUM parser)
+  REDDE 0
+EXPLICIT RITUALE
+EXPLICIT grimoire

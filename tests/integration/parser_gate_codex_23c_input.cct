@@ -1,0 +1,10 @@
+INCIPIT grimoire "p"
+CODEX Math
+  SIGILLUM Box
+    value: REX
+  FIN SIGILLUM
+  RITUALE sum(REX a, REX b) REDDE REX
+    REDDE a
+  EXPLICIT RITUALE
+FIN CODEX
+EXPLICIT grimoire

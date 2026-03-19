@@ -1,0 +1,5 @@
+INCIPIT grimoire "gate_call"
+RITUALE main() REDDE NIHIL
+  foo(1, 2)
+EXPLICIT RITUALE
+EXPLICIT grimoire

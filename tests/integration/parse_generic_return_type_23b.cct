@@ -1,0 +1,22 @@
+INCIPIT grimoire "parse_generic_return_type_23b"
+ADVOCARE "cct/verbum.cct"
+ADVOCARE "../../src/bootstrap/parser/ast.cct"
+ADVOCARE "../../src/bootstrap/parser/parser.cct"
+RITUALE main() REDDE REX
+  EVOCA VERBUM src AD "INCIPIT grimoire \"p\" RITUALE make(REX value) REDDE Caixa GENUS(REX) REDDE value EXPLICIT RITUALE EXPLICIT grimoire"
+  EVOCA SPECULUM AstProgram program AD CONIURA parser_parse_program_source(src, "m.cct")
+  EVOCA SPECULUM AstNode rit AD CONIURA ast_node_list_get((*program).declarations, 0)
+  SI CONIURA compare((*(*rit).return_type).type_name, "Caixa") != 0
+    REDDE 41
+  FIN SI
+  SI CONIURA ast_node_list_len((*(*rit).return_type).generic_args) != 1
+    REDDE 42
+  FIN SI
+  EVOCA SPECULUM AstNode arg AD CONIURA ast_node_list_get((*(*rit).return_type).generic_args, 0)
+  SI CONIURA compare((*arg).type_name, "REX") != 0
+    REDDE 43
+  FIN SI
+  CONIURA ast_program_free(program)
+  REDDE 0
+EXPLICIT RITUALE
+EXPLICIT grimoire

@@ -1,0 +1,15 @@
+INCIPIT grimoire "parser_state"
+
+ADVOCARE "../lexer/lexer_state.cct"
+ADVOCARE "../lexer/token.cct"
+
+SIGILLUM ParserState
+  lexer: SPECULUM LexerState
+  current: Token
+  previous: Token
+  had_error: VERUM
+  panic_mode: VERUM
+  filename: VERBUM
+FIN SIGILLUM
+
+EXPLICIT grimoire

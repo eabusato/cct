@@ -1,0 +1,19 @@
+INCIPIT grimoire "parse_pactum_signature_return_23c"
+ADVOCARE "cct/verbum.cct"
+ADVOCARE "../../src/bootstrap/parser/ast.cct"
+ADVOCARE "../../src/bootstrap/parser/parser.cct"
+RITUALE main() REDDE REX
+  EVOCA VERBUM src AD "INCIPIT grimoire \"p\" PACTUM Forma RITUALE build(REX value) REDDE Caixa GENUS(REX) FIN PACTUM EXPLICIT grimoire"
+  EVOCA SPECULUM AstProgram program AD CONIURA parser_parse_program_source(src, "m.cct")
+  EVOCA SPECULUM AstNode pact AD CONIURA ast_node_list_get((*program).declarations, 0)
+  EVOCA SPECULUM AstNode sig AD CONIURA ast_node_list_get((*pact).signatures, 0)
+  SI CONIURA compare((*(*sig).return_type).type_name, "Caixa") != 0
+    REDDE 41
+  FIN SI
+  SI CONIURA ast_node_list_len((*(*sig).return_type).generic_args) != 1
+    REDDE 42
+  FIN SI
+  CONIURA ast_program_free(program)
+  REDDE 0
+EXPLICIT RITUALE
+EXPLICIT grimoire

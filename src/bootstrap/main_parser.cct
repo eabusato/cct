@@ -1,0 +1,15 @@
+INCIPIT grimoire "main_parser"
+ADVOCARE "cct/args.cct"
+ADVOCARE "cct/io.cct"
+ADVOCARE "parser/parser.cct"
+RITUALE main() REDDE REX
+  SI CONIURA argc() < 2
+    CONIURA eprintln("Uso: cct_parser_bootstrap <arquivo.cct>")
+    REDDE 64
+  FIN SI
+  EVOCA VERBUM filename AD CONIURA arg(1)
+  EVOCA VERBUM source AD OBSECRO fs_read_all(filename)
+  CONIURA print(CONIURA parser_dump_program_source(source, filename))
+  REDDE 0
+EXPLICIT RITUALE
+EXPLICIT grimoire

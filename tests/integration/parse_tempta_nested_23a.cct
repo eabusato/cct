@@ -1,0 +1,16 @@
+INCIPIT grimoire "parse_tempta_nested_23a"
+ADVOCARE "../../src/bootstrap/parser/ast.cct"
+ADVOCARE "../../src/bootstrap/parser/parser.cct"
+RITUALE main() REDDE REX
+  EVOCA VERBUM src AD "INCIPIT grimoire \"x\" RITUALE main() REDDE NIHIL TEMPTA TEMPTA IACE \"boom\" CAPE FRACTUM inner REDDE FIN TEMPTA CAPE FRACTUM outer REDDE FIN TEMPTA EXPLICIT RITUALE EXPLICIT grimoire"
+  EVOCA SPECULUM AstProgram program AD CONIURA parser_parse_program_source(src, "m.cct")
+  EVOCA SPECULUM AstNode rit AD CONIURA ast_node_list_get((*program).declarations, 0)
+  EVOCA SPECULUM AstNode outer AD CONIURA ast_node_list_get((*(*rit).body).statements, 0)
+  EVOCA SPECULUM AstNode inner AD CONIURA ast_node_list_get((*(*outer).try_block).statements, 0)
+  SI (*outer).kind != AST_TEMPTA VEL (*inner).kind != AST_TEMPTA
+    REDDE 41
+  FIN SI
+  CONIURA ast_program_free(program)
+  REDDE 0
+EXPLICIT RITUALE
+EXPLICIT grimoire
