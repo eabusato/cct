@@ -1,14 +1,14 @@
 INCIPIT grimoire "p"
 RITUALE main(REX x) REDDE NIHIL
   SI x > 0
-    QUANDO x
-    CASO 1:
+    ELIGE x
+    CASUS 1:
       REDDE
-    CASO 2:
+    CASUS 2:
       REDDE
-    SENAO:
+    ALIOQUIN:
       REDDE
-    FIN QUANDO
+    FIN ELIGE
   ALITER
     TEMPTA
       IACE "boom"

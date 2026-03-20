@@ -162,7 +162,7 @@ RITUALE parse_statement_block_until_failure_clause(SPECULUM ParserState parser) 
   REDDE block
 EXPLICIT RITUALE
 
-RITUALE parse_statement_block_until_quando_boundary(SPECULUM ParserState parser) REDDE SPECULUM AstNode
+RITUALE parse_statement_block_until_elige_boundary(SPECULUM ParserState parser) REDDE SPECULUM AstNode
   EVOCA SPECULUM AstNode block AD CONIURA ast_make_block((*parser).current.line, (*parser).current.column)
   DUM NON CONIURA parser_check(parser, TK_EOF) ET NON CONIURA parser_check(parser, TK_CASO) ET NON CONIURA parser_check(parser, TK_SENAO) ET NON CONIURA parser_check(parser, TK_FIN)
     CONIURA ast_append_statement(block, CONIURA parse_statement(parser))
@@ -173,13 +173,13 @@ RITUALE parse_statement_block_until_quando_boundary(SPECULUM ParserState parser)
   REDDE block
 EXPLICIT RITUALE
 
-RITUALE parse_quando_literal(SPECULUM ParserState parser) REDDE SPECULUM AstNode
+RITUALE parse_elige_literal(SPECULUM ParserState parser) REDDE SPECULUM AstNode
   EVOCA REX line AD (*parser).current.line
   EVOCA REX column AD (*parser).current.column
 
   SI CONIURA parser_match(parser, TK_MINUS)
     SI NON CONIURA parser_check(parser, TK_INTEGER)
-      CONIURA parser_error_at_current(parser, "Expected integer literal after '-' in CASO")
+      CONIURA parser_error_at_current(parser, "Expected integer literal after '-' in CASUS")
       REDDE CONIURA ast_make_literal_int("0", line, column)
     FIN SI
     CONIURA parser_advance(parser)
@@ -191,7 +191,7 @@ RITUALE parse_quando_literal(SPECULUM ParserState parser) REDDE SPECULUM AstNode
 
   SI CONIURA parser_match(parser, TK_PLUS)
     SI NON CONIURA parser_check(parser, TK_INTEGER)
-      CONIURA parser_error_at_current(parser, "Expected integer literal after '+' in CASO")
+      CONIURA parser_error_at_current(parser, "Expected integer literal after '+' in CASUS")
       REDDE CONIURA ast_make_literal_int("0", line, column)
     FIN SI
     CONIURA parser_advance(parser)
@@ -218,7 +218,7 @@ RITUALE parse_quando_literal(SPECULUM ParserState parser) REDDE SPECULUM AstNode
     REDDE CONIURA ast_make_literal_bool(FALSUM, line, column)
   FIN SI
 
-  CONIURA parser_error_at_current(parser, "Expected CASO literal (integer/string/identifier/VERUM/FALSUM)")
+  CONIURA parser_error_at_current(parser, "Expected CASUS literal (integer/string/identifier/VERUM/FALSUM)")
   REDDE CONIURA ast_make_identifier("<error>", line, column)
 EXPLICIT RITUALE
 
@@ -263,10 +263,10 @@ RITUALE parse_tempta_statement(SPECULUM ParserState parser) REDDE SPECULUM AstNo
   REDDE node
 EXPLICIT RITUALE
 
-RITUALE parse_quando_statement(SPECULUM ParserState parser) REDDE SPECULUM AstNode
+RITUALE parse_elige_statement(SPECULUM ParserState parser) REDDE SPECULUM AstNode
   EVOCA REX line AD (*parser).current.line
   EVOCA REX column AD (*parser).current.column
-  CONIURA parser_consume(parser, TK_QUANDO, "Expected QUANDO")
+  CONIURA parser_consume(parser, TK_QUANDO, "Expected ELIGE")
 
   EVOCA SPECULUM AstNode expr AD CONIURA parse_expression(parser)
   EVOCA SPECULUM AstNode quando AD CONIURA ast_make_quando(expr, line, column)
@@ -279,7 +279,7 @@ RITUALE parse_quando_statement(SPECULUM ParserState parser) REDDE SPECULUM AstNo
       VINCIRE has_pending_case AD VERUM
     FIN SI
 
-    CONIURA ast_append_child(pending_case, CONIURA parse_quando_literal(parser))
+    CONIURA ast_append_child(pending_case, CONIURA parse_elige_literal(parser))
 
     SI CONIURA parser_check(parser, TK_LPAREN)
       CONIURA parser_advance(parser)
@@ -287,7 +287,7 @@ RITUALE parse_quando_statement(SPECULUM ParserState parser) REDDE SPECULUM AstNo
         EVOCA VERUM reading_bindings AD VERUM
         DUM reading_bindings
           SI NON CONIURA parser_check(parser, TK_IDENTIFIER)
-            CONIURA parser_error_at_current(parser, "Expected binding name in CASO payload destructuring")
+            CONIURA parser_error_at_current(parser, "Expected binding name in CASUS payload destructuring")
             VINCIRE reading_bindings AD FALSUM
           ALITER
             CONIURA parser_advance(parser)
@@ -298,13 +298,13 @@ RITUALE parse_quando_statement(SPECULUM ParserState parser) REDDE SPECULUM AstNo
           FIN SI
         FIN DUM
       FIN SI
-      CONIURA parser_consume(parser, TK_RPAREN, "Expected ')' after CASO payload bindings")
+      CONIURA parser_consume(parser, TK_RPAREN, "Expected ')' after CASUS payload bindings")
     FIN SI
 
-    CONIURA parser_consume(parser, TK_COLON, "Expected ':' after CASO literal")
+    CONIURA parser_consume(parser, TK_COLON, "Expected ':' after CASUS literal")
 
     SI NON CONIURA parser_check(parser, TK_CASO) ET NON CONIURA parser_check(parser, TK_SENAO) ET NON CONIURA parser_check(parser, TK_FIN) ET NON CONIURA parser_check(parser, TK_EOF)
-      VINCIRE (*pending_case).body AD CONIURA parse_statement_block_until_quando_boundary(parser)
+      VINCIRE (*pending_case).body AD CONIURA parse_statement_block_until_elige_boundary(parser)
       VINCIRE (*pending_case).has_body AD VERUM
       CONIURA ast_append_case(quando, pending_case)
       VINCIRE has_pending_case AD FALSUM
@@ -318,13 +318,13 @@ RITUALE parse_quando_statement(SPECULUM ParserState parser) REDDE SPECULUM AstNo
   FIN SI
 
   SI CONIURA parser_match(parser, TK_SENAO)
-    CONIURA parser_consume(parser, TK_COLON, "Expected ':' after SENAO")
-    VINCIRE (*quando).else_branch AD CONIURA parse_statement_block_until_quando_boundary(parser)
+    CONIURA parser_consume(parser, TK_COLON, "Expected ':' after ALIOQUIN")
+    VINCIRE (*quando).else_branch AD CONIURA parse_statement_block_until_elige_boundary(parser)
     VINCIRE (*quando).has_else_branch AD VERUM
   FIN SI
 
-  CONIURA parser_consume(parser, TK_FIN, "Expected FIN after QUANDO block")
-  CONIURA parser_consume(parser, TK_QUANDO, "Expected QUANDO after FIN")
+  CONIURA parser_consume(parser, TK_FIN, "Expected FIN after ELIGE block")
+  CONIURA parser_consume(parser, TK_QUANDO, "Expected ELIGE after FIN")
   REDDE quando
 EXPLICIT RITUALE
 
@@ -390,7 +390,7 @@ RITUALE parse_statement(SPECULUM ParserState parser) REDDE SPECULUM AstNode
     REDDE CONIURA parse_si_statement(parser)
   FIN SI
   SI CONIURA parser_check(parser, TK_QUANDO)
-    REDDE CONIURA parse_quando_statement(parser)
+    REDDE CONIURA parse_elige_statement(parser)
   FIN SI
   SI CONIURA parser_check(parser, TK_DUM)
     REDDE CONIURA parse_dum_statement(parser)
@@ -409,12 +409,12 @@ RITUALE parse_statement(SPECULUM ParserState parser) REDDE SPECULUM AstNode
     REDDE CONIURA ast_make_expr_stmt(CONIURA ast_make_identifier("<error>", (*parser).previous.line, (*parser).previous.column), (*parser).previous.line, (*parser).previous.column)
   FIN SI
   SI CONIURA parser_check(parser, TK_CASO)
-    CONIURA parser_error_at_current(parser, "CASO can only appear inside QUANDO")
+    CONIURA parser_error_at_current(parser, "CASUS can only appear inside ELIGE")
     CONIURA parser_advance(parser)
     REDDE CONIURA ast_make_expr_stmt(CONIURA ast_make_identifier("<error>", (*parser).previous.line, (*parser).previous.column), (*parser).previous.line, (*parser).previous.column)
   FIN SI
   SI CONIURA parser_check(parser, TK_SENAO)
-    CONIURA parser_error_at_current(parser, "SENAO can only appear inside QUANDO")
+    CONIURA parser_error_at_current(parser, "ALIOQUIN can only appear inside ELIGE")
     CONIURA parser_advance(parser)
     REDDE CONIURA ast_make_expr_stmt(CONIURA ast_make_identifier("<error>", (*parser).previous.line, (*parser).previous.column), (*parser).previous.line, (*parser).previous.column)
   FIN SI

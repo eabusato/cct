@@ -1,0 +1,25 @@
+INCIPIT grimoire "codegen_gate_ordo_si_27b_input"
+
+ORDO Cor
+  RUBER
+  VIRIDIS
+FIN ORDO
+
+RITUALE escolher(VERUM flag) REDDE Cor
+  SI flag
+    REDDE RUBER
+  ALITER
+    REDDE VIRIDIS
+  FIN SI
+EXPLICIT RITUALE
+
+RITUALE main() REDDE REX
+  EVOCA Cor cor AD escolher(VERUM)
+  SI cor == RUBER
+    REDDE 7
+  ALITER
+    REDDE 9
+  FIN SI
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

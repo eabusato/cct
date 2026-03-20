@@ -1,0 +1,31 @@
+INCIPIT grimoire "codegen_ordo_payload_constructor_expr_27c"
+
+ADVOCARE "../../src/bootstrap/codegen/codegen_context.cct"
+ADVOCARE "../../src/bootstrap/codegen/codegen_expr.cct"
+ADVOCARE "../../src/bootstrap/parser/ast.cct"
+ADVOCARE "cct/verbum.cct"
+
+RITUALE main() REDDE REX
+  EVOCA SPECULUM CodegenContext ctx AD CONIURA codegen_context_new("ordo_ctor.cct")
+  CONIURA codegen_register_ordo(ctx, "Option", "cct_boot_ord_Option")
+  CONIURA codegen_mark_ordo_has_payload(ctx, "Option")
+  CONIURA codegen_ordo_append_item_with_arity(ctx, "Option", "None", "cct_boot_tag_Option__None", 0)
+  CONIURA codegen_ordo_append_item_with_arity(ctx, "Option", "Some", "cct_boot_tag_Option__Some", 1)
+  EVOCA SPECULUM AstNode call AD CONIURA ast_make_call(CONIURA ast_make_identifier("Some", 1, 1), 1, 1)
+  CONIURA ast_append_argument(call, CONIURA ast_make_literal_int("7", 1, 6))
+  CONIURA codegen_emit_expr(ctx, call)
+  EVOCA VERBUM out AD CONIURA codegen_output(ctx)
+  EVOCA REX rc AD 0
+  SI NON CONIURA contains(out, ".__tag = cct_boot_tag_Option__Some")
+    VINCIRE rc AD 1
+  FIN SI
+  SI NON CONIURA contains(out, ".__payload.Some = { 7 }")
+    VINCIRE rc AD 2
+  FIN SI
+  DIMITTE out
+  CONIURA ast_node_free(call)
+  CONIURA codegen_context_free(ctx)
+  REDDE rc
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

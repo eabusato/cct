@@ -106,14 +106,14 @@ RITUALE semantic_analyze_iace_stmt(SPECULUM SemanticContext ctx, SPECULUM AstNod
   REDDE
 EXPLICIT RITUALE
 
-RITUALE semantic_analyze_quando_case(SPECULUM SemanticContext ctx, REX subject_type_id, SPECULUM AstNode case_node) REDDE NIHIL
+RITUALE semantic_analyze_elige_case(SPECULUM SemanticContext ctx, REX subject_type_id, SPECULUM AstNode case_node) REDDE NIHIL
   EVOCA REX i AD 0
   EVOCA REX n_literals AD CONIURA ast_node_list_len((*case_node).children)
   DUM i < n_literals
     EVOCA SPECULUM AstNode literal_node AD CONIURA ast_node_list_get((*case_node).children, i)
     EVOCA REX literal_type_id AD CONIURA semantic_analyze_expr(ctx, literal_node)
     SI NON CONIURA semantic_type_compatible_assign(ctx, subject_type_id, literal_type_id) ET NON CONIURA semantic_type_compatible_assign(ctx, literal_type_id, subject_type_id)
-      CONIURA semantic_report_error(ctx, (*literal_node).line, (*literal_node).column, "QUANDO case requires compatible literal")
+      CONIURA semantic_report_error(ctx, (*literal_node).line, (*literal_node).column, "ELIGE case requires compatible literal")
     FIN SI
     VINCIRE i AD i + 1
   FIN DUM
@@ -131,13 +131,13 @@ RITUALE semantic_analyze_quando_case(SPECULUM SemanticContext ctx, REX subject_t
   REDDE
 EXPLICIT RITUALE
 
-RITUALE semantic_analyze_quando_stmt(SPECULUM SemanticContext ctx, SPECULUM AstNode stmt) REDDE NIHIL
+RITUALE semantic_analyze_elige_stmt(SPECULUM SemanticContext ctx, SPECULUM AstNode stmt) REDDE NIHIL
   EVOCA REX subject_type_id AD CONIURA semantic_analyze_expr(ctx, (*stmt).condition)
   EVOCA REX i AD 0
   EVOCA REX n AD CONIURA ast_node_list_len((*stmt).cases)
   DUM i < n
     EVOCA SPECULUM AstNode case_node AD CONIURA ast_node_list_get((*stmt).cases, i)
-    CONIURA semantic_analyze_quando_case(ctx, subject_type_id, case_node)
+    CONIURA semantic_analyze_elige_case(ctx, subject_type_id, case_node)
     VINCIRE i AD i + 1
   FIN DUM
   SI (*stmt).has_else_branch
@@ -202,7 +202,7 @@ RITUALE semantic_analyze_stmt(SPECULUM SemanticContext ctx, SPECULUM AstNode stm
   FIN SI
 
   SI (*stmt).kind == AST_QUANDO
-    CONIURA semantic_analyze_quando_stmt(ctx, stmt)
+    CONIURA semantic_analyze_elige_stmt(ctx, stmt)
     REDDE
   FIN SI
 

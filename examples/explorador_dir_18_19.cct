@@ -5,8 +5,8 @@
 --
 -- Demonstra (FASE 18+19):
 --   * ORDO payload: RelDiretorio(REX total, REX cct_files) para sumario
---   * QUANDO sobre ORDO payload com destruturacao e logica de nivel
---   * QUANDO sobre VERBUM para classificar nivel de alerta
+--   * ELIGE sobre ORDO payload com destruturacao e logica de nivel
+--   * ELIGE sobre VERBUM para classificar nivel de alerta
 --   * fs: list_dir, is_dir, size para inspecao do projeto
 --   * path: path_basename, path_join para manipulacao de caminhos
 --   * verbum: join, count_occurrences, contains, len
@@ -62,13 +62,13 @@ EXPLICIT RITUALE
 -- Exibe uma linha do relatorio para um diretorio
 RITUALE exibir_dir(VERBUM dir, RelDiretorio rel) REDDE NIHIL
   EVOCA VERBUM base AD CONIURA path_basename(dir)
-  QUANDO rel
-    CASO Vazio:
+  ELIGE rel
+    CASUS Vazio:
       OBSECRO scribe(MOLDE "  {base:<20}: (nao encontrado ou vazio)\n")
-    CASO Scanado(total, n_cct, n_c):
+    CASUS Scanado(total, n_cct, n_c):
       EVOCA VERBUM avl AD CONIURA avaliar_diretorio(total, n_cct)
       OBSECRO scribe(MOLDE "  {base:<20}: {total:3d} itens  .cct={n_cct:2d}  .c={n_c:2d}  [{avl}]\n")
-  FIN QUANDO
+  FIN ELIGE
 EXPLICIT RITUALE
 
 RITUALE main() REDDE NIHIL
@@ -112,84 +112,84 @@ RITUALE main() REDDE NIHIL
 
   OBSECRO scribe("  ---------------------+-------+------+----+-------\n\n")
 
-  -- Agregar totais usando QUANDO sobre cada RelDiretorio
+  -- Agregar totais usando ELIGE sobre cada RelDiretorio
   EVOCA REX total_itens AD 0
   EVOCA REX total_cct   AD 0
   EVOCA REX total_c     AD 0
   EVOCA REX dirs_ativos AD 0
 
-  QUANDO r0
-    CASO Scanado(t0, cct0, c0):
+  ELIGE r0
+    CASUS Scanado(t0, cct0, c0):
       VINCIRE total_itens AD total_itens + t0
       VINCIRE total_cct   AD total_cct   + cct0
       VINCIRE total_c     AD total_c     + c0
       VINCIRE dirs_ativos AD dirs_ativos + 1
-    SENAO:
+    ALIOQUIN:
       VINCIRE dirs_ativos AD dirs_ativos
-  FIN QUANDO
-  QUANDO r1
-    CASO Scanado(t1, cct1, c1):
+  FIN ELIGE
+  ELIGE r1
+    CASUS Scanado(t1, cct1, c1):
       VINCIRE total_itens AD total_itens + t1
       VINCIRE total_cct   AD total_cct   + cct1
       VINCIRE total_c     AD total_c     + c1
       VINCIRE dirs_ativos AD dirs_ativos + 1
-    SENAO:
+    ALIOQUIN:
       VINCIRE dirs_ativos AD dirs_ativos
-  FIN QUANDO
-  QUANDO r2
-    CASO Scanado(t2, cct2, c2):
+  FIN ELIGE
+  ELIGE r2
+    CASUS Scanado(t2, cct2, c2):
       VINCIRE total_itens AD total_itens + t2
       VINCIRE total_cct   AD total_cct   + cct2
       VINCIRE total_c     AD total_c     + c2
       VINCIRE dirs_ativos AD dirs_ativos + 1
-    SENAO:
+    ALIOQUIN:
       VINCIRE dirs_ativos AD dirs_ativos
-  FIN QUANDO
-  QUANDO r3
-    CASO Scanado(t3, cct3, c3):
+  FIN ELIGE
+  ELIGE r3
+    CASUS Scanado(t3, cct3, c3):
       VINCIRE total_itens AD total_itens + t3
       VINCIRE total_cct   AD total_cct   + cct3
       VINCIRE total_c     AD total_c     + c3
       VINCIRE dirs_ativos AD dirs_ativos + 1
-    SENAO:
+    ALIOQUIN:
       VINCIRE dirs_ativos AD dirs_ativos
-  FIN QUANDO
-  QUANDO r4
-    CASO Scanado(t4, cct4, c4):
+  FIN ELIGE
+  ELIGE r4
+    CASUS Scanado(t4, cct4, c4):
       VINCIRE total_itens AD total_itens + t4
       VINCIRE total_cct   AD total_cct   + cct4
       VINCIRE total_c     AD total_c     + c4
       VINCIRE dirs_ativos AD dirs_ativos + 1
-    SENAO:
+    ALIOQUIN:
       VINCIRE dirs_ativos AD dirs_ativos
-  FIN QUANDO
-  QUANDO r5
-    CASO Scanado(t5, cct5, c5):
+  FIN ELIGE
+  ELIGE r5
+    CASUS Scanado(t5, cct5, c5):
       VINCIRE total_itens AD total_itens + t5
       VINCIRE total_cct   AD total_cct   + cct5
       VINCIRE total_c     AD total_c     + c5
       VINCIRE dirs_ativos AD dirs_ativos + 1
-    SENAO:
+    ALIOQUIN:
       VINCIRE dirs_ativos AD dirs_ativos
-  FIN QUANDO
-  QUANDO r6
-    CASO Scanado(t6, cct6, c6):
+  FIN ELIGE
+  ELIGE r6
+    CASUS Scanado(t6, cct6, c6):
       VINCIRE total_itens AD total_itens + t6
       VINCIRE total_cct   AD total_cct   + cct6
       VINCIRE total_c     AD total_c     + c6
       VINCIRE dirs_ativos AD dirs_ativos + 1
-    SENAO:
+    ALIOQUIN:
       VINCIRE dirs_ativos AD dirs_ativos
-  FIN QUANDO
-  QUANDO r7
-    CASO Scanado(t7, cct7, c7):
+  FIN ELIGE
+  ELIGE r7
+    CASUS Scanado(t7, cct7, c7):
       VINCIRE total_itens AD total_itens + t7
       VINCIRE total_cct   AD total_cct   + cct7
       VINCIRE total_c     AD total_c     + c7
       VINCIRE dirs_ativos AD dirs_ativos + 1
-    SENAO:
+    ALIOQUIN:
       VINCIRE dirs_ativos AD dirs_ativos
-  FIN QUANDO
+  FIN ELIGE
 
   -- Mapa de distribuicao: 0=cct, 1=c/h, 2=outros
   EVOCA SPECULUM NIHIL dist AD CONIURA map_init GENUS(REX, REX)()
@@ -213,14 +213,14 @@ RITUALE main() REDDE NIHIL
   OBSECRO scribe("  Distribuicao de tipos (cada # = 25 arquivos):\n")
   ITERUM tipo, qtd IN dist COM
     EVOCA VERBUM tnome AD ""
-    QUANDO tipo
-      CASO 0:
+    ELIGE tipo
+      CASUS 0:
         VINCIRE tnome AD ".cct "
-      CASO 1:
+      CASUS 1:
         VINCIRE tnome AD ".c/h "
-      SENAO:
+      ALIOQUIN:
         VINCIRE tnome AD "outro"
-    FIN QUANDO
+    FIN ELIGE
     EVOCA REX nbars AD qtd / escala
     SI nbars > 40
       VINCIRE nbars AD 40
@@ -231,24 +231,24 @@ RITUALE main() REDDE NIHIL
   OBSECRO scribe("\n")
 
   -- Verificar se projeto tem exemplos e testes
-  QUANDO r7
-    CASO Vazio:
+  ELIGE r7
+    CASUS Vazio:
       OBSECRO scribe("  AVISO: diretorio examples/ nao encontrado!\n")
-    CASO Scanado(tot, cct, cc):
+    CASUS Scanado(tot, cct, cc):
       SI tot == 0
         OBSECRO scribe("  AVISO: examples/ esta vazio!\n")
       FIN SI
       SI tot > 0
         OBSECRO scribe(MOLDE "  Projeto tem {tot} exemplo(s) em examples/\n")
       FIN SI
-  FIN QUANDO
+  FIN ELIGE
 
-  QUANDO r5
-    CASO Vazio:
+  ELIGE r5
+    CASUS Vazio:
       OBSECRO scribe("  AVISO: suite de testes nao encontrada!\n")
-    CASO Scanado(tot, cct, cc):
+    CASUS Scanado(tot, cct, cc):
       OBSECRO scribe(MOLDE "  Suite de testes: {tot} fixtures ({cct} .cct)\n")
-  FIN QUANDO
+  FIN ELIGE
 
   OBSECRO scribe("\n")
 

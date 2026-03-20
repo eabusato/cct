@@ -1,0 +1,24 @@
+INCIPIT grimoire "codegen_elige_ordo_simple_27d"
+
+ADVOCARE "../../src/bootstrap/parser/parser.cct"
+ADVOCARE "../../src/bootstrap/parser/ast.cct"
+ADVOCARE "../../src/bootstrap/codegen/codegen_decl.cct"
+ADVOCARE "cct/verbum.cct"
+
+RITUALE main() REDDE REX
+  EVOCA VERBUM source AD "INCIPIT grimoire \"g\"\nORDO Cor\n  RUBER\n  VIRIDIS\nFIN ORDO\nRITUALE main() REDDE REX\n  EVOCA Cor c AD RUBER\n  ELIGE c\n  CASUS RUBER:\n    REDDE 1\n  CASUS VIRIDIS:\n    REDDE 2\n  FIN ELIGE\nEXPLICIT RITUALE\nEXPLICIT grimoire\n"
+  EVOCA SPECULUM AstProgram program AD CONIURA parser_parse_program_source(source, "elige_ordo_simple.cct")
+  EVOCA VERBUM out AD CONIURA codegen_generate_program(program, "elige_ordo_simple.cct")
+  EVOCA REX rc AD 0
+  SI NON CONIURA contains(out, "case cct_boot_ord_Cor__RUBER:")
+    VINCIRE rc AD 1
+  FIN SI
+  SI NON CONIURA contains(out, "case cct_boot_ord_Cor__VIRIDIS:")
+    VINCIRE rc AD 2
+  FIN SI
+  DIMITTE out
+  CONIURA ast_program_free(program)
+  REDDE rc
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

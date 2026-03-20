@@ -58,15 +58,14 @@ RITUALE codegen_runtime_string_symbol(SPECULUM CodegenContext ctx, VERBUM raw_te
 EXPLICIT RITUALE
 
 RITUALE codegen_runtime_emit_includes(SPECULUM CodegenContext ctx) REDDE NIHIL
+  CONIURA codegen_emit_line(ctx, "#include <string.h>")
   SI (*ctx).needs_stdio
     CONIURA codegen_emit_line(ctx, "#include <stdio.h>")
   FIN SI
   SI (*ctx).needs_stdlib
     CONIURA codegen_emit_line(ctx, "#include <stdlib.h>")
   FIN SI
-  SI (*ctx).needs_stdio VEL (*ctx).needs_stdlib
-    CONIURA codegen_emit_blank_line(ctx)
-  FIN SI
+  CONIURA codegen_emit_blank_line(ctx)
   REDDE
 EXPLICIT RITUALE
 

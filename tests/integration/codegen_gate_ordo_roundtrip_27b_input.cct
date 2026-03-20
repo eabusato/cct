@@ -1,0 +1,26 @@
+INCIPIT grimoire "codegen_gate_ordo_roundtrip_27b_input"
+
+ORDO Estado
+  INICIO = 3
+  FIM = 9
+FIN ORDO
+
+RITUALE proximo(Estado atual) REDDE Estado
+  SI atual == INICIO
+    REDDE FIM
+  ALITER
+    REDDE atual
+  FIN SI
+EXPLICIT RITUALE
+
+RITUALE main() REDDE REX
+  EVOCA Estado estado AD INICIO
+  VINCIRE estado AD proximo(estado)
+  SI estado == FIM
+    REDDE 9
+  ALITER
+    REDDE 1
+  FIN SI
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

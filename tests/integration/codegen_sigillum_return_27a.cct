@@ -1,0 +1,33 @@
+INCIPIT grimoire "codegen_sigillum_return_27a"
+
+ADVOCARE "../../src/bootstrap/codegen/codegen_context.cct"
+ADVOCARE "../../src/bootstrap/codegen/codegen_struct.cct"
+ADVOCARE "../../src/bootstrap/codegen/codegen_decl.cct"
+ADVOCARE "../../src/bootstrap/parser/ast.cct"
+ADVOCARE "cct/verbum.cct"
+
+RITUALE main() REDDE REX
+  EVOCA SPECULUM CodegenContext ctx AD CONIURA codegen_context_new("ret.cct")
+  EVOCA SPECULUM AstNode sig AD CONIURA ast_make_sigillum("Point", 1, 1)
+  CONIURA ast_append_field(sig, CONIURA ast_make_field("x", CONIURA ast_make_type("REX", 1, 1), 1, 1))
+  CONIURA codegen_register_sigillum_decl(ctx, sig)
+
+  EVOCA SPECULUM AstNode body AD CONIURA ast_make_block(1, 1)
+  EVOCA SPECULUM AstNode fn AD CONIURA ast_make_rituale("make", CONIURA ast_make_type("Point", 1, 1), body, 1, 1)
+  CONIURA codegen_register_rituale_decl(ctx, fn)
+  CONIURA codegen_emit_rituale_signature(ctx, fn)
+
+  EVOCA VERBUM out AD CONIURA codegen_output(ctx)
+  EVOCA REX rc AD 0
+  SI CONIURA compare(out, "cct_boot_sig_Point cct_boot_rit_make_0(void)") != 0
+    VINCIRE rc AD 1
+  FIN SI
+
+  DIMITTE out
+  CONIURA ast_node_free(sig)
+  CONIURA ast_node_free(fn)
+  CONIURA codegen_context_free(ctx)
+  REDDE rc
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

@@ -1,0 +1,20 @@
+INCIPIT grimoire "codegen_gate_elige_ordo_simple_27d_input"
+
+ORDO Cor
+  RUBER
+  VIRIDIS
+FIN ORDO
+
+RITUALE main() REDDE REX
+  EVOCA Cor c AD VIRIDIS
+  ELIGE c
+  CASUS RUBER:
+    REDDE 1
+  CASUS VIRIDIS:
+    REDDE 7
+  ALIOQUIN:
+    REDDE 9
+  FIN ELIGE
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

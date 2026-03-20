@@ -1,0 +1,36 @@
+INCIPIT grimoire "codegen_ordo_compare_si_27b"
+
+ADVOCARE "../../src/bootstrap/codegen/codegen_decl.cct"
+ADVOCARE "../../src/bootstrap/parser/ast.cct"
+ADVOCARE "../../src/bootstrap/lexer/token_type.cct"
+ADVOCARE "cct/verbum.cct"
+
+RITUALE main() REDDE REX
+  EVOCA SPECULUM AstProgram program AD CONIURA ast_program_new()
+  EVOCA SPECULUM AstNode ord AD CONIURA ast_make_ordo("Cor", 1, 1)
+  CONIURA ast_append_item(ord, CONIURA ast_make_enum_item_no_value("RUBER", 1, 1))
+  CONIURA ast_append_item(ord, CONIURA ast_make_enum_item_no_value("VIRIDIS", 2, 1))
+  CONIURA ast_program_append_decl(program, ord)
+
+  EVOCA SPECULUM AstNode then_block AD CONIURA ast_make_block(4, 1)
+  CONIURA ast_append_statement(then_block, CONIURA ast_make_redde(CONIURA ast_make_literal_int("7", 4, 1), 4, 1))
+  EVOCA SPECULUM AstNode else_block AD CONIURA ast_make_block(5, 1)
+  CONIURA ast_append_statement(else_block, CONIURA ast_make_redde(CONIURA ast_make_literal_int("9", 5, 1), 5, 1))
+
+  EVOCA SPECULUM AstNode body AD CONIURA ast_make_block(3, 1)
+  CONIURA ast_append_statement(body, CONIURA ast_make_evoca("estado", CONIURA ast_make_type("Cor", 3, 1), CONIURA ast_make_identifier("RUBER", 3, 1), 3, 1))
+  CONIURA ast_append_statement(body, CONIURA ast_make_si(CONIURA ast_make_binary(TK_EQ_EQ, CONIURA ast_make_identifier("estado", 4, 1), CONIURA ast_make_identifier("RUBER", 4, 10), 4, 5), then_block, else_block, 4, 1))
+  CONIURA ast_program_append_decl(program, CONIURA ast_make_rituale("main", CONIURA ast_make_type("REX", 3, 1), body, 3, 1))
+
+  EVOCA VERBUM out AD CONIURA codegen_generate_program(program, "ordo_si.cct")
+  EVOCA REX rc AD 0
+  SI NON CONIURA contains(out, "if (estado == cct_boot_ord_Cor__RUBER)")
+    VINCIRE rc AD 1
+  FIN SI
+
+  DIMITTE out
+  CONIURA ast_program_free(program)
+  REDDE rc
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

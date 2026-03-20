@@ -6,11 +6,34 @@ ADVOCARE "../parser/ast.cct"
 ADVOCARE "codegen.cct"
 ADVOCARE "codegen_context.cct"
 ADVOCARE "codegen_emitter.cct"
+ADVOCARE "codegen_elige.cct"
 ADVOCARE "codegen_expr.cct"
 ADVOCARE "codegen_type.cct"
 
 RITUALE codegen_stmt_type_text(SPECULUM CodegenContext ctx, SPECULUM AstNode type_expr) REDDE VERBUM
   REDDE CONIURA codegen_type_text(ctx, type_expr)
+EXPLICIT RITUALE
+
+RITUALE codegen_stmt_is_switch_subject(SPECULUM CodegenContext ctx, VERBUM type_name) REDDE VERUM
+  SI CONIURA compare(type_name, "REX") == 0
+    REDDE VERUM
+  FIN SI
+  SI CONIURA compare(type_name, "DUX") == 0
+    REDDE VERUM
+  FIN SI
+  SI CONIURA compare(type_name, "COMES") == 0
+    REDDE VERUM
+  FIN SI
+  SI CONIURA compare(type_name, "MILES") == 0
+    REDDE VERUM
+  FIN SI
+  SI CONIURA compare(type_name, "VERUM") == 0
+    REDDE VERUM
+  FIN SI
+  SI CONIURA compare(CONIURA codegen_lookup_ordo_c_name(ctx, type_name), "") != 0
+    REDDE VERUM
+  FIN SI
+  REDDE FALSUM
 EXPLICIT RITUALE
 
 RITUALE codegen_emit_stmt_as_block(SPECULUM CodegenContext ctx, SPECULUM AstNode stmt) REDDE NIHIL
@@ -51,7 +74,7 @@ RITUALE codegen_emit_stmt(SPECULUM CodegenContext ctx, SPECULUM AstNode stmt) RE
     SI CONIURA compare(type_text, "") == 0
       REDDE
     FIN SI
-    EVOCA VERBUM local_name AD CONIURA codegen_define_local(ctx, (*stmt).name, (*stmt).name)
+    EVOCA VERBUM local_name AD CONIURA codegen_define_local(ctx, (*stmt).name, (*stmt).name, (*(*stmt).type_expr).type_name)
     CONIURA codegen_emit(ctx, type_text)
     CONIURA codegen_emit(ctx, " ")
     CONIURA codegen_emit(ctx, local_name)
@@ -93,7 +116,7 @@ RITUALE codegen_emit_stmt(SPECULUM CodegenContext ctx, SPECULUM AstNode stmt) RE
 
   SI (*stmt).kind == AST_SI
     CONIURA codegen_emit(ctx, "if (")
-    CONIURA codegen_emit_expr(ctx, (*stmt).condition)
+    CONIURA codegen_emit_condition_expr(ctx, (*stmt).condition)
     CONIURA codegen_emit_line(ctx, ")")
     CONIURA codegen_emit_stmt_as_block(ctx, (*stmt).body)
     SI (*stmt).has_else_branch
@@ -105,13 +128,104 @@ RITUALE codegen_emit_stmt(SPECULUM CodegenContext ctx, SPECULUM AstNode stmt) RE
 
   SI (*stmt).kind == AST_DUM
     CONIURA codegen_emit(ctx, "while (")
-    CONIURA codegen_emit_expr(ctx, (*stmt).condition)
+    CONIURA codegen_emit_condition_expr(ctx, (*stmt).condition)
     CONIURA codegen_emit_line(ctx, ")")
     CONIURA codegen_emit_stmt_as_block(ctx, (*stmt).body)
     REDDE
   FIN SI
 
-  SI (*stmt).kind == AST_TEMPTA VEL (*stmt).kind == AST_QUANDO VEL (*stmt).kind == AST_IACE
+  SI (*stmt).kind == AST_QUANDO
+    EVOCA VERBUM subject_type_name AD CONIURA codegen_elige_subject_type_name(ctx, stmt)
+    SI CONIURA compare(subject_type_name, "") == 0
+      REDDE
+    FIN SI
+
+    EVOCA VERBUM subject_name AD CONIURA codegen_next_temp_name(ctx)
+    CONIURA codegen_elige_emit_subject_temp(ctx, subject_name, subject_type_name, (*stmt).condition)
+    SI (*ctx).had_error
+      REDDE
+    FIN SI
+
+    SI CONIURA compare(subject_type_name, "VERBUM") == 0
+      EVOCA REX case_idx AD 0
+      EVOCA REX case_n AD CONIURA ast_node_list_len((*stmt).cases)
+      DUM case_idx < case_n
+        EVOCA SPECULUM AstNode case_node AD CONIURA ast_node_list_get((*stmt).cases, case_idx)
+        SI case_idx == 0
+          CONIURA codegen_emit(ctx, "if (")
+        ALITER
+          CONIURA codegen_emit(ctx, "else if (")
+        FIN SI
+        CONIURA codegen_elige_emit_string_condition(ctx, subject_name, case_node)
+        CONIURA codegen_emit_line(ctx, ")")
+        CONIURA codegen_emit_stmt_as_block(ctx, (*case_node).body)
+        VINCIRE case_idx AD case_idx + 1
+      FIN DUM
+      SI (*stmt).has_else_branch
+        CONIURA codegen_emit_line(ctx, "else")
+        CONIURA codegen_emit_stmt_as_block(ctx, (*stmt).else_branch)
+      FIN SI
+      REDDE
+    FIN SI
+
+    SI NON CONIURA codegen_stmt_is_switch_subject(ctx, subject_type_name)
+      CONIURA codegen_report_error(ctx, (*stmt).line, (*stmt).column, "ELIGE subject type outside bootstrap codegen subset")
+      REDDE
+    FIN SI
+
+    EVOCA VERUM subject_is_ordo AD CONIURA compare(CONIURA codegen_lookup_ordo_c_name(ctx, subject_type_name), "") != 0
+    EVOCA VERUM subject_has_payload AD FALSUM
+    SI subject_is_ordo
+      VINCIRE subject_has_payload AD CONIURA codegen_ordo_has_payload(ctx, subject_type_name)
+    FIN SI
+
+    CONIURA codegen_emit(ctx, "switch (")
+    SI subject_has_payload
+      CONIURA codegen_emit(ctx, subject_name)
+      CONIURA codegen_emit(ctx, ".__tag")
+    ALITER
+      CONIURA codegen_emit(ctx, subject_name)
+    FIN SI
+    CONIURA codegen_emit_line(ctx, ")")
+    CONIURA codegen_emit_block_open(ctx)
+
+    EVOCA REX case_idx AD 0
+    EVOCA REX case_n AD CONIURA ast_node_list_len((*stmt).cases)
+    DUM case_idx < case_n
+      EVOCA SPECULUM AstNode case_node AD CONIURA ast_node_list_get((*stmt).cases, case_idx)
+      SI subject_is_ordo
+        CONIURA codegen_elige_emit_simple_ordo_case_labels(ctx, case_node)
+      ALITER
+        CONIURA codegen_elige_emit_scalar_case_labels(ctx, case_node)
+      FIN SI
+
+      SI subject_has_payload ET CONIURA codegen_elige_case_bindings_len(case_node) > 0
+        CONIURA codegen_emit_block_open(ctx)
+        CONIURA codegen_elige_emit_payload_bindings(ctx, subject_name, subject_type_name, case_node)
+        SI NON (*ctx).had_error
+          CONIURA codegen_emit_stmt(ctx, (*case_node).body)
+          CONIURA codegen_emit_line(ctx, "break;")
+        FIN SI
+        CONIURA codegen_elige_finish_payload_case_scope(ctx, case_node)
+        CONIURA codegen_emit_block_close(ctx)
+      ALITER
+        CONIURA codegen_emit_stmt(ctx, (*case_node).body)
+        CONIURA codegen_emit_line(ctx, "break;")
+      FIN SI
+      VINCIRE case_idx AD case_idx + 1
+    FIN DUM
+
+    SI (*stmt).has_else_branch
+      CONIURA codegen_emit_line(ctx, "default:")
+      CONIURA codegen_emit_stmt(ctx, (*stmt).else_branch)
+      CONIURA codegen_emit_line(ctx, "break;")
+    FIN SI
+
+    CONIURA codegen_emit_block_close(ctx)
+    REDDE
+  FIN SI
+
+  SI (*stmt).kind == AST_TEMPTA VEL (*stmt).kind == AST_IACE
     CONIURA codegen_report_error(ctx, (*stmt).line, (*stmt).column, "statement outside bootstrap codegen subset in 26C")
     REDDE
   FIN SI

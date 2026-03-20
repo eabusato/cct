@@ -5,6 +5,8 @@ ADVOCARE "../parser/ast.cct"
 ADVOCARE "codegen.cct"
 ADVOCARE "codegen_context.cct"
 ADVOCARE "codegen_emitter.cct"
+ADVOCARE "codegen_ordo.cct"
+ADVOCARE "codegen_struct.cct"
 ADVOCARE "codegen_stmt.cct"
 ADVOCARE "codegen_type.cct"
 
@@ -64,7 +66,7 @@ RITUALE codegen_bind_rituale_params(SPECULUM CodegenContext ctx, SPECULUM AstNod
   EVOCA REX n AD CONIURA ast_node_list_len((*rituale_decl).params)
   DUM i < n
     EVOCA SPECULUM AstNode param AD CONIURA ast_node_list_get((*rituale_decl).params, i)
-    CONIURA codegen_define_local(ctx, (*param).name, (*param).name)
+    CONIURA codegen_define_local(ctx, (*param).name, (*param).name, (*(*param).type_expr).type_name)
     VINCIRE i AD i + 1
   FIN DUM
   REDDE
@@ -88,6 +90,11 @@ RITUALE codegen_emit_rituale_definition(SPECULUM CodegenContext ctx, SPECULUM As
 EXPLICIT RITUALE
 
 RITUALE codegen_emit_program_body(SPECULUM CodegenContext ctx, SPECULUM AstProgram program) REDDE NIHIL
+  CONIURA codegen_register_program_shapes(ctx, program)
+  CONIURA codegen_emit_sigillum_forward_decls(ctx)
+  CONIURA codegen_emit_ordo_definitions(ctx, program)
+  CONIURA codegen_emit_sigillum_definitions(ctx, program)
+
   EVOCA REX i AD 0
   EVOCA REX n AD CONIURA ast_node_list_len((*program).declarations)
   DUM i < n
@@ -95,8 +102,8 @@ RITUALE codegen_emit_program_body(SPECULUM CodegenContext ctx, SPECULUM AstProgr
     SI (*decl).kind == AST_RITUALE
       CONIURA codegen_emit_rituale_prototype(ctx, decl)
     FIN SI
-    SI (*decl).kind != AST_RITUALE ET (*decl).kind != AST_IMPORT
-      CONIURA codegen_report_error(ctx, (*decl).line, (*decl).column, "declaration outside bootstrap codegen subset in 26D")
+    SI (*decl).kind != AST_RITUALE ET (*decl).kind != AST_IMPORT ET (*decl).kind != AST_SIGILLUM ET (*decl).kind != AST_ORDO
+      CONIURA codegen_report_error(ctx, (*decl).line, (*decl).column, "declaration outside bootstrap codegen subset in 27B")
       REDDE
     FIN SI
     VINCIRE i AD i + 1

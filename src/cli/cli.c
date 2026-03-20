@@ -142,7 +142,7 @@ void cct_cli_show_help(void) {
     printf("Bibliotheca Canonica (stdlib) consolidated with stability guarantees.\n\n");
 
     printf("License: Copyright (c) Erick Andrade Busato. Todos os direitos reservados.\n");
-    printf("Project: https://github.com/your-repo/cct\n");
+    printf("Project: https://github.com/eabusato/cct\n");
 }
 
 /*

@@ -1,0 +1,170 @@
+INCIPIT grimoire "codegen_elige"
+
+ADVOCARE "cct/verbum.cct"
+ADVOCARE "../parser/ast.cct"
+ADVOCARE "codegen.cct"
+ADVOCARE "codegen_context.cct"
+ADVOCARE "codegen_emitter.cct"
+ADVOCARE "codegen_expr.cct"
+ADVOCARE "codegen_ordo.cct"
+ADVOCARE "codegen_type.cct"
+
+RITUALE codegen_elige_subject_type_name(SPECULUM CodegenContext ctx, SPECULUM AstNode stmt) REDDE VERBUM
+  REDDE CONIURA codegen_expr_type_name(ctx, (*stmt).condition)
+EXPLICIT RITUALE
+
+RITUALE codegen_elige_emit_subject_temp(SPECULUM CodegenContext ctx, VERBUM temp_name, VERBUM subject_type_name, SPECULUM AstNode expr) REDDE NIHIL
+  EVOCA VERBUM type_text AD CONIURA codegen_named_c_type_name(ctx, subject_type_name, (*expr).line, (*expr).column)
+  SI CONIURA compare(type_text, "") == 0
+    REDDE
+  FIN SI
+  CONIURA codegen_emit(ctx, type_text)
+  CONIURA codegen_emit(ctx, " ")
+  CONIURA codegen_emit(ctx, temp_name)
+  CONIURA codegen_emit(ctx, " = ")
+  CONIURA codegen_emit_expr(ctx, expr)
+  CONIURA codegen_emit_line(ctx, ";")
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE codegen_elige_emit_string_condition(SPECULUM CodegenContext ctx, VERBUM subject_name, SPECULUM AstNode case_node) REDDE NIHIL
+  EVOCA REX i AD 0
+  EVOCA REX n AD CONIURA ast_node_list_len((*case_node).children)
+  DUM i < n
+    SI i > 0
+      CONIURA codegen_emit(ctx, " || ")
+    FIN SI
+    CONIURA codegen_emit(ctx, "strcmp(")
+    CONIURA codegen_emit(ctx, subject_name)
+    CONIURA codegen_emit(ctx, ", ")
+    CONIURA codegen_emit_expr(ctx, CONIURA ast_node_list_get((*case_node).children, i))
+    CONIURA codegen_emit(ctx, ") == 0")
+    VINCIRE i AD i + 1
+  FIN DUM
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE codegen_elige_emit_scalar_case_labels(SPECULUM CodegenContext ctx, SPECULUM AstNode case_node) REDDE NIHIL
+  EVOCA REX i AD 0
+  EVOCA REX n AD CONIURA ast_node_list_len((*case_node).children)
+  DUM i < n
+    CONIURA codegen_emit(ctx, "case ")
+    CONIURA codegen_emit_expr(ctx, CONIURA ast_node_list_get((*case_node).children, i))
+    CONIURA codegen_emit_line(ctx, ":")
+    VINCIRE i AD i + 1
+  FIN DUM
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE codegen_elige_emit_simple_ordo_case_labels(SPECULUM CodegenContext ctx, SPECULUM AstNode case_node) REDDE NIHIL
+  EVOCA REX lit_idx AD 0
+  EVOCA REX lit_n AD CONIURA ast_node_list_len((*case_node).children)
+  DUM lit_idx < lit_n
+    EVOCA SPECULUM AstNode literal AD CONIURA ast_node_list_get((*case_node).children, lit_idx)
+    CONIURA codegen_emit(ctx, "case ")
+    CONIURA codegen_emit(ctx, CONIURA codegen_lookup_ordo_item_c_name(ctx, (*literal).name))
+    CONIURA codegen_emit_line(ctx, ":")
+    VINCIRE lit_idx AD lit_idx + 1
+  FIN DUM
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE codegen_elige_case_bindings_len(SPECULUM AstNode case_node) REDDE REX
+  REDDE CONIURA ast_node_list_len((*case_node).bindings)
+EXPLICIT RITUALE
+
+RITUALE codegen_elige_case_literals_len(SPECULUM AstNode case_node) REDDE REX
+  REDDE CONIURA ast_node_list_len((*case_node).children)
+EXPLICIT RITUALE
+
+RITUALE codegen_elige_case_first_literal(SPECULUM AstNode case_node) REDDE SPECULUM AstNode
+  REDDE CONIURA ast_node_list_get((*case_node).children, 0)
+EXPLICIT RITUALE
+
+RITUALE codegen_elige_emit_payload_bindings(SPECULUM CodegenContext ctx, VERBUM subject_name, VERBUM owner_name, SPECULUM AstNode case_node) REDDE NIHIL
+  EVOCA REX bind_n AD CONIURA codegen_elige_case_bindings_len(case_node)
+  SI bind_n <= 0
+    REDDE
+  FIN SI
+
+  SI CONIURA codegen_elige_case_literals_len(case_node) != 1
+    CONIURA codegen_report_error(ctx, (*case_node).line, (*case_node).column, "OR-cases with payload bindings are unsupported in bootstrap codegen")
+    REDDE
+  FIN SI
+
+  EVOCA SPECULUM AstNode literal AD CONIURA codegen_elige_case_first_literal(case_node)
+  EVOCA REX ordo_idx AD CONIURA codegen_find_ordo_index(ctx, owner_name)
+  SI ordo_idx < 0
+    CONIURA codegen_report_error(ctx, (*case_node).line, (*case_node).column, "unknown ORDO subject in ELIGE lowering")
+    REDDE
+  FIN SI
+
+  EVOCA SPECULUM CodegenOrdo ordo AD CONIURA codegen_context_ordo_at(ctx, ordo_idx)
+  SI NON (*ordo).has_decl_node
+    CONIURA codegen_report_error(ctx, (*case_node).line, (*case_node).column, "missing ORDO declaration metadata in ELIGE lowering")
+    REDDE
+  FIN SI
+
+  EVOCA REX item_n AD CONIURA ast_node_list_len((*(*ordo).decl_node).items)
+  SI item_n <= 0
+    CONIURA codegen_report_error(ctx, (*case_node).line, (*case_node).column, "ORDO without variants in ELIGE lowering")
+    REDDE
+  FIN SI
+
+  EVOCA SPECULUM AstNode item_node AD CONIURA ast_node_list_get((*(*ordo).decl_node).items, 0)
+  EVOCA VERUM found_item AD FALSUM
+  EVOCA REX item_idx AD 0
+  DUM item_idx < item_n
+    EVOCA SPECULUM AstNode candidate AD CONIURA ast_node_list_get((*(*ordo).decl_node).items, item_idx)
+    SI CONIURA compare((*candidate).name, (*literal).name) == 0
+      VINCIRE item_node AD candidate
+      VINCIRE found_item AD VERUM
+      VINCIRE item_idx AD item_n
+    ALITER
+      VINCIRE item_idx AD item_idx + 1
+    FIN SI
+  FIN DUM
+
+  SI NON found_item
+    CONIURA codegen_report_error(ctx, (*case_node).line, (*case_node).column, "unknown ORDO variant in ELIGE payload lowering")
+    REDDE
+  FIN SI
+
+  SI CONIURA ast_node_list_len((*item_node).fields) != bind_n
+    CONIURA codegen_report_error(ctx, (*case_node).line, (*case_node).column, "ELIGE payload binding arity mismatch in bootstrap codegen")
+    REDDE
+  FIN SI
+
+  CONIURA codegen_push_local_scope(ctx)
+  EVOCA REX bind_idx AD 0
+  DUM bind_idx < bind_n
+    EVOCA SPECULUM AstNode binding AD CONIURA ast_node_list_get((*case_node).bindings, bind_idx)
+    EVOCA SPECULUM AstNode field AD CONIURA ast_node_list_get((*item_node).fields, bind_idx)
+    EVOCA VERBUM type_text AD CONIURA codegen_type_text(ctx, (*field).type_expr)
+    SI CONIURA compare(type_text, "") == 0
+      REDDE
+    FIN SI
+    EVOCA VERBUM local_name AD CONIURA codegen_define_local(ctx, (*binding).name, (*binding).name, (*(*field).type_expr).type_name)
+    CONIURA codegen_emit(ctx, type_text)
+    CONIURA codegen_emit(ctx, " ")
+    CONIURA codegen_emit(ctx, local_name)
+    CONIURA codegen_emit(ctx, " = ")
+    CONIURA codegen_emit(ctx, subject_name)
+    CONIURA codegen_emit(ctx, ".__payload.")
+    CONIURA codegen_emit(ctx, (*item_node).name)
+    CONIURA codegen_emit(ctx, ".")
+    CONIURA codegen_emit(ctx, (*field).name)
+    CONIURA codegen_emit_line(ctx, ";")
+    VINCIRE bind_idx AD bind_idx + 1
+  FIN DUM
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE codegen_elige_finish_payload_case_scope(SPECULUM CodegenContext ctx, SPECULUM AstNode case_node) REDDE NIHIL
+  SI CONIURA codegen_elige_case_bindings_len(case_node) > 0
+    CONIURA codegen_pop_local_scope(ctx)
+  FIN SI
+  REDDE
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

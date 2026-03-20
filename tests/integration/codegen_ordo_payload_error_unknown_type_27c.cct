@@ -1,0 +1,31 @@
+INCIPIT grimoire "codegen_ordo_payload_error_unknown_type_27c"
+
+ADVOCARE "../../src/bootstrap/codegen/codegen_context.cct"
+ADVOCARE "../../src/bootstrap/codegen/codegen_decl.cct"
+ADVOCARE "../../src/bootstrap/parser/ast.cct"
+ADVOCARE "cct/verbum.cct"
+
+RITUALE main() REDDE REX
+  EVOCA SPECULUM AstProgram program AD CONIURA ast_program_new()
+  EVOCA SPECULUM AstNode ord AD CONIURA ast_make_ordo("Option", 1, 1)
+  EVOCA SPECULUM AstNode some_item AD CONIURA ast_make_enum_item_no_value("Some", 1, 1)
+  CONIURA ast_append_field(some_item, CONIURA ast_make_field("value", CONIURA ast_make_type("Missing", 1, 1), 1, 1))
+  CONIURA ast_append_item(ord, some_item)
+  CONIURA ast_program_append_decl(program, ord)
+  CONIURA ast_program_append_decl(program, CONIURA ast_make_rituale("main", CONIURA ast_make_type("REX", 2, 1), CONIURA ast_make_block(2, 1), 2, 1))
+
+  EVOCA SPECULUM CodegenContext ctx AD CONIURA codegen_context_new("bad_payload.cct")
+  CONIURA codegen_emit_program(ctx, program)
+  EVOCA REX rc AD 0
+  SI NON CONIURA codegen_had_error(ctx)
+    VINCIRE rc AD 1
+  FIN SI
+  SI NON CONIURA contains((*ctx).last_error_message, "unsupported type in bootstrap type mapping")
+    VINCIRE rc AD 2
+  FIN SI
+  CONIURA codegen_context_free(ctx)
+  CONIURA ast_program_free(program)
+  REDDE rc
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

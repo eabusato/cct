@@ -5,8 +5,8 @@
 --
 -- Demonstra (FASE 18+19):
 --   * ORDO payload: Resultado(REX valor) / Err(VERBUM causa)
---   * QUANDO sobre ORDO payload com destruturacao
---   * QUANDO sobre VERBUM com OR-cases (operadores)
+--   * ELIGE sobre ORDO payload com destruturacao
+--   * ELIGE sobre VERBUM com OR-cases (operadores)
 --   * map GENUS(REX,REX) para contagem de resultados
 --   * ITERUM sobre map no sumario final
 --   * MOLDE com especificadores {:d} e strings
@@ -28,26 +28,26 @@ FIN ORDO
 
 -- Calcula a op b, retornando Ok ou Err conforme o caso
 RITUALE calcular(REX a, VERBUM op, REX b) REDDE Resultado
-  QUANDO op
-    CASO "+":
+  ELIGE op
+    CASUS "+":
       REDDE Ok(a + b)
-    CASO "-":
+    CASUS "-":
       REDDE Ok(a - b)
-    CASO "*":
+    CASUS "*":
       REDDE Ok(a * b)
-    CASO "/":
-    CASO "div":
+    CASUS "/":
+    CASUS "div":
       SI b == 0
         REDDE Err("divisao por zero")
       FIN SI
       REDDE Ok(a / b)
-    CASO "%":
-    CASO "mod":
+    CASUS "%":
+    CASUS "mod":
       SI b == 0
         REDDE Err("modulo por zero")
       FIN SI
       REDDE Ok(a % b)
-    CASO "^":
+    CASUS "^":
       SI b < 0
         REDDE Err("expoente negativo")
       FIN SI
@@ -59,17 +59,17 @@ RITUALE calcular(REX a, VERBUM op, REX b) REDDE Resultado
         VINCIRE acc AD acc * a
       FIN REPETE
       REDDE Ok(acc)
-    CASO "max":
+    CASUS "max":
       SI a >= b
         REDDE Ok(a)
       FIN SI
       REDDE Ok(b)
-    CASO "min":
+    CASUS "min":
       SI a <= b
         REDDE Ok(a)
       FIN SI
       REDDE Ok(b)
-    CASO "gcd":
+    CASUS "gcd":
       -- MDC por Euclides iterativo
       EVOCA REX xa AD a
       EVOCA REX xb AD b
@@ -85,32 +85,32 @@ RITUALE calcular(REX a, VERBUM op, REX b) REDDE Resultado
         VINCIRE xa AD t
       FIN DUM
       REDDE Ok(xa)
-    SENAO:
+    ALIOQUIN:
       REDDE Err("operador desconhecido")
-  FIN QUANDO
+  FIN ELIGE
 EXPLICIT RITUALE
 
 -- Exibe o resultado de uma expressao: "a op b = valor" ou "ERRO: causa"
 RITUALE exibir(REX a, VERBUM op, REX b, Resultado r) REDDE NIHIL
   EVOCA VERBUM sa AD CONIURA stringify_int(a)
   EVOCA VERBUM sb AD CONIURA stringify_int(b)
-  QUANDO r
-    CASO Ok(v):
+  ELIGE r
+    CASUS Ok(v):
       EVOCA VERBUM sv AD CONIURA stringify_int(v)
       OBSECRO scribe(MOLDE "  {sa} {op} {sb} = {sv}\n")
-    CASO Err(msg):
+    CASUS Err(msg):
       OBSECRO scribe(MOLDE "  {sa} {op} {sb} => ERRO: {msg}\n")
-  FIN QUANDO
+  FIN ELIGE
 EXPLICIT RITUALE
 
 -- Retorna 0 se Err, 1 se Ok
 RITUALE is_ok(Resultado r) REDDE REX
-  QUANDO r
-    CASO Ok(v):
+  ELIGE r
+    CASUS Ok(v):
       REDDE 1
-    CASO Err(msg):
+    CASUS Err(msg):
       REDDE 0
-  FIN QUANDO
+  FIN ELIGE
 EXPLICIT RITUALE
 
 RITUALE main() REDDE NIHIL

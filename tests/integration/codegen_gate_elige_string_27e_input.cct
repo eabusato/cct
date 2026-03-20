@@ -1,0 +1,15 @@
+INCIPIT grimoire "codegen_gate_elige_string_27e_input"
+
+RITUALE main() REDDE REX
+  EVOCA VERBUM x AD "vale"
+  ELIGE x
+  CASUS "salve":
+    REDDE 1
+  CASUS "vale":
+    REDDE 3
+  ALIOQUIN:
+    REDDE 9
+  FIN ELIGE
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

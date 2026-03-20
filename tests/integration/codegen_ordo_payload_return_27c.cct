@@ -1,0 +1,34 @@
+INCIPIT grimoire "codegen_ordo_payload_return_27c"
+
+ADVOCARE "../../src/bootstrap/codegen/codegen_decl.cct"
+ADVOCARE "../../src/bootstrap/parser/ast.cct"
+ADVOCARE "cct/verbum.cct"
+
+RITUALE main() REDDE REX
+  EVOCA SPECULUM AstProgram program AD CONIURA ast_program_new()
+  EVOCA SPECULUM AstNode ord AD CONIURA ast_make_ordo("Option", 1, 1)
+  EVOCA SPECULUM AstNode some_item AD CONIURA ast_make_enum_item_no_value("Some", 1, 1)
+  CONIURA ast_append_field(some_item, CONIURA ast_make_field("value", CONIURA ast_make_type("REX", 1, 1), 1, 1))
+  CONIURA ast_append_item(ord, some_item)
+  CONIURA ast_program_append_decl(program, ord)
+
+  EVOCA SPECULUM AstNode body AD CONIURA ast_make_block(2, 1)
+  EVOCA SPECULUM AstNode call AD CONIURA ast_make_call(CONIURA ast_make_identifier("Some", 2, 1), 2, 1)
+  CONIURA ast_append_argument(call, CONIURA ast_make_literal_int("7", 2, 6))
+  CONIURA ast_append_statement(body, CONIURA ast_make_redde(call, 2, 1))
+  CONIURA ast_program_append_decl(program, CONIURA ast_make_rituale("make", CONIURA ast_make_type("Option", 2, 1), body, 2, 1))
+
+  EVOCA VERBUM out AD CONIURA codegen_generate_program(program, "ordo_payload_return.cct")
+  EVOCA REX rc AD 0
+  SI NON CONIURA contains(out, "cct_boot_ord_Option cct_boot_rit_make_0(void)")
+    VINCIRE rc AD 1
+  FIN SI
+  SI NON CONIURA contains(out, ".__payload.Some = { 7 }")
+    VINCIRE rc AD 2
+  FIN SI
+  DIMITTE out
+  CONIURA ast_program_free(program)
+  REDDE rc
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

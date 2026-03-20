@@ -1,0 +1,24 @@
+INCIPIT grimoire "codegen_gate_sigillum_sum_27a_input"
+
+SIGILLUM Pair
+  x: REX
+  y: REX
+FIN SIGILLUM
+
+RITUALE build(REX a, REX b) REDDE Pair
+  EVOCA Pair p
+  VINCIRE p.x AD a
+  VINCIRE p.y AD b
+  REDDE p
+EXPLICIT RITUALE
+
+RITUALE sum(Pair p) REDDE REX
+  REDDE p.x + p.y
+EXPLICIT RITUALE
+
+RITUALE main() REDDE REX
+  EVOCA Pair p AD build(2, 3)
+  REDDE sum(p)
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

@@ -7,7 +7,7 @@ ADVOCARE "cct/verbum.cct"
 
 RITUALE main() REDDE REX
   EVOCA SPECULUM AstProgram program AD CONIURA ast_program_new()
-  CONIURA ast_program_append_decl(program, CONIURA ast_make_sigillum("Ponto", 1, 1))
+  CONIURA ast_program_append_decl(program, CONIURA ast_make_pactum("Forma", 1, 1))
   EVOCA SPECULUM CodegenContext ctx AD CONIURA codegen_context_new("bad.cct")
   CONIURA codegen_emit_program(ctx, program)
   EVOCA REX rc AD 0

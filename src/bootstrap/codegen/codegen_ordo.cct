@@ -1,0 +1,196 @@
+INCIPIT grimoire "codegen_ordo"
+
+ADVOCARE "cct/verbum.cct"
+ADVOCARE "../parser/ast.cct"
+ADVOCARE "codegen_context.cct"
+ADVOCARE "codegen_emitter.cct"
+ADVOCARE "codegen_type.cct"
+
+RITUALE codegen_make_ordo_c_name(VERBUM source_name) REDDE VERBUM
+  REDDE CONIURA concat("cct_boot_ord_", source_name)
+EXPLICIT RITUALE
+
+RITUALE codegen_make_ordo_tag_c_name(VERBUM ordo_name, VERBUM item_name) REDDE VERBUM
+  REDDE CONIURA concat(CONIURA concat("cct_boot_tag_", ordo_name), CONIURA concat("__", item_name))
+EXPLICIT RITUALE
+
+RITUALE codegen_make_ordo_item_c_name(VERBUM ordo_name, VERBUM item_name) REDDE VERBUM
+  REDDE CONIURA concat(CONIURA codegen_make_ordo_c_name(ordo_name), CONIURA concat("__", item_name))
+EXPLICIT RITUALE
+
+RITUALE codegen_ordo_item_payload_arity(SPECULUM AstNode item) REDDE REX
+  REDDE CONIURA ast_node_list_len((*item).fields)
+EXPLICIT RITUALE
+
+RITUALE codegen_ordo_decl_has_payload(SPECULUM AstNode decl) REDDE VERUM
+  EVOCA REX i AD 0
+  EVOCA REX n AD CONIURA ast_node_list_len((*decl).items)
+  DUM i < n
+    EVOCA SPECULUM AstNode item AD CONIURA ast_node_list_get((*decl).items, i)
+    SI CONIURA codegen_ordo_item_payload_arity(item) > 0
+      REDDE VERUM
+    FIN SI
+    VINCIRE i AD i + 1
+  FIN DUM
+  REDDE FALSUM
+EXPLICIT RITUALE
+
+RITUALE codegen_register_ordo_decl(SPECULUM CodegenContext ctx, SPECULUM AstNode decl) REDDE NIHIL
+  EVOCA VERUM has_payload AD CONIURA codegen_ordo_decl_has_payload(decl)
+  EVOCA VERBUM c_name AD CONIURA codegen_make_ordo_c_name((*decl).name)
+  EVOCA REX ordo_idx
+  EVOCA SPECULUM CodegenOrdo ordo
+  CONIURA codegen_register_ordo(ctx, (*decl).name, c_name)
+  VINCIRE ordo_idx AD CONIURA codegen_find_ordo_index(ctx, (*decl).name)
+  VINCIRE ordo AD CONIURA codegen_context_ordo_at(ctx, ordo_idx)
+  VINCIRE (*ordo).decl_node AD decl
+  VINCIRE (*ordo).has_decl_node AD VERUM
+  SI has_payload
+    CONIURA codegen_mark_ordo_has_payload(ctx, (*decl).name)
+  FIN SI
+
+  EVOCA REX i AD 0
+  EVOCA REX n AD CONIURA ast_node_list_len((*decl).items)
+  DUM i < n
+    EVOCA SPECULUM AstNode item AD CONIURA ast_node_list_get((*decl).items, i)
+    EVOCA REX payload_arity AD CONIURA codegen_ordo_item_payload_arity(item)
+    SI has_payload
+      CONIURA codegen_ordo_append_item_with_arity(ctx, (*decl).name, (*item).name, CONIURA codegen_make_ordo_tag_c_name((*decl).name, (*item).name), payload_arity)
+    ALITER
+      CONIURA codegen_ordo_append_item_with_arity(ctx, (*decl).name, (*item).name, CONIURA codegen_make_ordo_item_c_name((*decl).name, (*item).name), payload_arity)
+    FIN SI
+    VINCIRE i AD i + 1
+  FIN DUM
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE codegen_emit_ordo_simple_definition(SPECULUM CodegenContext ctx, SPECULUM AstNode decl) REDDE NIHIL
+  EVOCA VERBUM c_name AD CONIURA codegen_lookup_ordo_c_name(ctx, (*decl).name)
+  CONIURA codegen_emit(ctx, "typedef enum ")
+  CONIURA codegen_emit(ctx, c_name)
+  CONIURA codegen_emit_line(ctx, "")
+  CONIURA codegen_emit_block_open(ctx)
+
+  EVOCA REX i AD 0
+  EVOCA REX n AD CONIURA ast_node_list_len((*decl).items)
+  DUM i < n
+    EVOCA SPECULUM AstNode item AD CONIURA ast_node_list_get((*decl).items, i)
+    CONIURA codegen_emit(ctx, CONIURA codegen_lookup_ordo_item_c_name(ctx, (*item).name))
+    SI (*item).has_right
+      CONIURA codegen_emit(ctx, " = ")
+      CONIURA codegen_emit(ctx, (*(*item).right).value_text)
+    FIN SI
+    SI i + 1 < n
+      CONIURA codegen_emit_line(ctx, ",")
+    ALITER
+      CONIURA codegen_emit_line(ctx, "")
+    FIN SI
+    VINCIRE i AD i + 1
+  FIN DUM
+
+  CONIURA codegen_dedent(ctx)
+  CONIURA codegen_emit(ctx, "} ")
+  CONIURA codegen_emit(ctx, c_name)
+  CONIURA codegen_emit_line(ctx, ";")
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE codegen_emit_ordo_payload_definition(SPECULUM CodegenContext ctx, SPECULUM AstNode decl) REDDE NIHIL
+  EVOCA VERBUM c_name AD CONIURA codegen_lookup_ordo_c_name(ctx, (*decl).name)
+
+  CONIURA codegen_emit_line(ctx, "enum")
+  CONIURA codegen_emit_block_open(ctx)
+  EVOCA REX i AD 0
+  EVOCA REX n AD CONIURA ast_node_list_len((*decl).items)
+  DUM i < n
+    EVOCA SPECULUM AstNode item AD CONIURA ast_node_list_get((*decl).items, i)
+    CONIURA codegen_emit(ctx, CONIURA codegen_lookup_ordo_item_c_name(ctx, (*item).name))
+    SI (*item).has_right
+      CONIURA codegen_emit(ctx, " = ")
+      CONIURA codegen_emit(ctx, (*(*item).right).value_text)
+    FIN SI
+    SI i + 1 < n
+      CONIURA codegen_emit_line(ctx, ",")
+    ALITER
+      CONIURA codegen_emit_line(ctx, "")
+    FIN SI
+    VINCIRE i AD i + 1
+  FIN DUM
+  CONIURA codegen_dedent(ctx)
+  CONIURA codegen_emit_line(ctx, "};")
+  CONIURA codegen_emit_blank_line(ctx)
+
+  CONIURA codegen_emit(ctx, "typedef struct ")
+  CONIURA codegen_emit(ctx, c_name)
+  CONIURA codegen_emit_line(ctx, "")
+  CONIURA codegen_emit_block_open(ctx)
+  CONIURA codegen_emit_line(ctx, "int __tag;")
+  CONIURA codegen_emit_line(ctx, "union")
+  CONIURA codegen_emit_block_open(ctx)
+
+  VINCIRE i AD 0
+  DUM i < n
+    EVOCA SPECULUM AstNode item AD CONIURA ast_node_list_get((*decl).items, i)
+    SI CONIURA codegen_ordo_item_payload_arity(item) > 0
+      CONIURA codegen_emit_line(ctx, "struct")
+      CONIURA codegen_emit_block_open(ctx)
+      EVOCA REX field_idx AD 0
+      EVOCA REX field_n AD CONIURA ast_node_list_len((*item).fields)
+      DUM field_idx < field_n
+        EVOCA SPECULUM AstNode field AD CONIURA ast_node_list_get((*item).fields, field_idx)
+        EVOCA VERBUM field_type_text AD CONIURA codegen_type_text(ctx, (*field).type_expr)
+        SI CONIURA compare(field_type_text, "") == 0
+          REDDE
+        FIN SI
+        CONIURA codegen_emit(ctx, field_type_text)
+        CONIURA codegen_emit(ctx, " ")
+        CONIURA codegen_emit(ctx, (*field).name)
+        CONIURA codegen_emit_line(ctx, ";")
+        VINCIRE field_idx AD field_idx + 1
+      FIN DUM
+      CONIURA codegen_dedent(ctx)
+      CONIURA codegen_emit(ctx, "} ")
+      CONIURA codegen_emit(ctx, (*item).name)
+      CONIURA codegen_emit_line(ctx, ";")
+    FIN SI
+    VINCIRE i AD i + 1
+  FIN DUM
+
+  CONIURA codegen_dedent(ctx)
+  CONIURA codegen_emit_line(ctx, "} __payload;")
+  CONIURA codegen_dedent(ctx)
+  CONIURA codegen_emit(ctx, "} ")
+  CONIURA codegen_emit(ctx, c_name)
+  CONIURA codegen_emit_line(ctx, ";")
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE codegen_emit_ordo_definition(SPECULUM CodegenContext ctx, SPECULUM AstNode decl) REDDE NIHIL
+  SI CONIURA codegen_ordo_decl_has_payload(decl)
+    CONIURA codegen_emit_ordo_payload_definition(ctx, decl)
+  ALITER
+    CONIURA codegen_emit_ordo_simple_definition(ctx, decl)
+  FIN SI
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE codegen_emit_ordo_definitions(SPECULUM CodegenContext ctx, SPECULUM AstProgram program) REDDE NIHIL
+  EVOCA REX i AD 0
+  EVOCA REX n AD CONIURA ast_node_list_len((*program).declarations)
+  EVOCA VERUM emitted_any AD FALSUM
+  DUM i < n
+    EVOCA SPECULUM AstNode decl AD CONIURA ast_node_list_get((*program).declarations, i)
+    SI (*decl).kind == AST_ORDO
+      CONIURA codegen_emit_ordo_definition(ctx, decl)
+      CONIURA codegen_emit_blank_line(ctx)
+      VINCIRE emitted_any AD VERUM
+    FIN SI
+    VINCIRE i AD i + 1
+  FIN DUM
+  SI emitted_any
+    REDDE
+  FIN SI
+  REDDE
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

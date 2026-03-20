@@ -32,10 +32,10 @@ RITUALE main() REDDE REX
     EVOCA NetAddr addr AD CONIURA option_unwrap GENUS(NetAddr)(addr_opt)
     CONIURA option_free GENUS(NetAddr)(addr_opt)
     EVOCA REX port AD 0
-    QUANDO addr
-      CASO Addr(host, found_port):
+    ELIGE addr
+      CASUS Addr(host, found_port):
         VINCIRE port AD found_port
-    FIN QUANDO
+    FIN ELIGE
     EVOCA SPECULUM NIHIL sender AD CONIURA socket_udp()
     CONIURA sock_set_timeout_ms(receiver, 1000)
 
@@ -51,10 +51,10 @@ RITUALE main() REDDE REX
     EVOCA NetDatagram pkt AD CONIURA option_unwrap GENUS(NetDatagram)(pkt_opt)
     CONIURA option_free GENUS(NetDatagram)(pkt_opt)
 
-    QUANDO pkt
-      CASO Datagram(host, pkt_port, data):
+    ELIGE pkt
+      CASUS Datagram(host, pkt_port, data):
         CONIURA println(data)
-    FIN QUANDO
+    FIN ELIGE
 
     CONIURA net_close(sender)
     CONIURA net_close(receiver)

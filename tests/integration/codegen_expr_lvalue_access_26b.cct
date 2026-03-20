@@ -6,10 +6,13 @@ ADVOCARE "../../src/bootstrap/parser/ast.cct"
 ADVOCARE "cct/verbum.cct"
 
 RITUALE main() REDDE REX
+  EVOCA SPECULUM CodegenContext ctx AD CONIURA codegen_context_new("lvalue.cct")
+  CONIURA codegen_register_sigillum(ctx, "Lista", "cct_boot_sig_Lista")
+  CONIURA codegen_sigillum_append_field(ctx, "Lista", "items", "REX*")
+  CONIURA codegen_define_local(ctx, "state", "state", "Lista")
   EVOCA SPECULUM AstNode obj AD CONIURA ast_make_identifier("state", 1, 1)
   EVOCA SPECULUM AstNode fld AD CONIURA ast_make_field_access(obj, "items", 1, 7)
   EVOCA SPECULUM AstNode idx AD CONIURA ast_make_index_access(fld, CONIURA ast_make_literal_int("0", 1, 13), 1, 12)
-  EVOCA SPECULUM CodegenContext ctx AD CONIURA codegen_context_new("lvalue.cct")
   CONIURA codegen_emit_lvalue(ctx, idx)
   EVOCA VERBUM out AD CONIURA codegen_output(ctx)
   EVOCA REX rc AD 0

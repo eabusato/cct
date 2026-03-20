@@ -1,0 +1,27 @@
+INCIPIT grimoire "codegen_elige_int_switch_27d"
+
+ADVOCARE "../../src/bootstrap/parser/parser.cct"
+ADVOCARE "../../src/bootstrap/parser/ast.cct"
+ADVOCARE "../../src/bootstrap/codegen/codegen_decl.cct"
+ADVOCARE "cct/verbum.cct"
+
+RITUALE main() REDDE REX
+  EVOCA VERBUM source AD "INCIPIT grimoire \"g\"\nRITUALE main() REDDE REX\n  EVOCA REX x AD 2\n  ELIGE x\n  CASUS 1:\n    REDDE 1\n  CASUS 2:\n    REDDE 2\n  ALIOQUIN:\n    REDDE 3\n  FIN ELIGE\nEXPLICIT RITUALE\nEXPLICIT grimoire\n"
+  EVOCA SPECULUM AstProgram program AD CONIURA parser_parse_program_source(source, "elige_int.cct")
+  EVOCA VERBUM out AD CONIURA codegen_generate_program(program, "elige_int.cct")
+  EVOCA REX rc AD 0
+  SI NON CONIURA contains(out, "switch (__cct_tmp_")
+    VINCIRE rc AD 1
+  FIN SI
+  SI NON CONIURA contains(out, "case 1:")
+    VINCIRE rc AD 2
+  FIN SI
+  SI NON CONIURA contains(out, "default:")
+    VINCIRE rc AD 3
+  FIN SI
+  DIMITTE out
+  CONIURA ast_program_free(program)
+  REDDE rc
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

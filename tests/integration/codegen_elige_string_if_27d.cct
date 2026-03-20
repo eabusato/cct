@@ -1,0 +1,28 @@
+INCIPIT grimoire "codegen_elige_string_if_27d"
+
+ADVOCARE "../../src/bootstrap/parser/parser.cct"
+ADVOCARE "../../src/bootstrap/parser/ast.cct"
+ADVOCARE "../../src/bootstrap/codegen/codegen_context.cct"
+ADVOCARE "../../src/bootstrap/codegen/codegen_runtime.cct"
+ADVOCARE "cct/verbum.cct"
+
+RITUALE main() REDDE REX
+  EVOCA VERBUM source AD "INCIPIT grimoire \"g\"\nRITUALE main() REDDE REX\n  EVOCA VERBUM x AD \"salve\"\n  ELIGE x\n  CASUS \"salve\":\n    REDDE 1\n  CASUS \"vale\":\n    REDDE 2\n  FIN ELIGE\nEXPLICIT RITUALE\nEXPLICIT grimoire\n"
+  EVOCA SPECULUM AstProgram program AD CONIURA parser_parse_program_source(source, "elige_string.cct")
+  EVOCA SPECULUM CodegenContext ctx AD CONIURA codegen_context_new("elige_string.cct")
+  CONIURA codegen_context_reset(ctx)
+  EVOCA VERBUM out AD CONIURA codegen_generate_translation_unit_with_context(ctx, program)
+  EVOCA REX rc AD 0
+  SI NON CONIURA contains(out, "#include <string.h>")
+    VINCIRE rc AD 1
+  FIN SI
+  SI NON CONIURA contains(out, "strcmp(__cct_tmp_")
+    VINCIRE rc AD 2
+  FIN SI
+  DIMITTE out
+  CONIURA codegen_context_free(ctx)
+  CONIURA ast_program_free(program)
+  REDDE rc
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

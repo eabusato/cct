@@ -1,13 +1,13 @@
-INCIPIT grimoire "parse_quando_orcases_23a"
+INCIPIT grimoire "parse_elige_orcases_23a"
 ADVOCARE "../../src/bootstrap/parser/ast.cct"
 ADVOCARE "../../src/bootstrap/parser/parser.cct"
 RITUALE main() REDDE REX
-  EVOCA VERBUM src AD "INCIPIT grimoire \"x\" RITUALE main() REDDE NIHIL QUANDO x CASO 2: CASO 3: REDDE FIN QUANDO EXPLICIT RITUALE EXPLICIT grimoire"
+  EVOCA VERBUM src AD "INCIPIT grimoire \"x\" RITUALE main() REDDE NIHIL ELIGE x CASUS 2: CASUS 3: REDDE FIN ELIGE EXPLICIT RITUALE EXPLICIT grimoire"
   EVOCA SPECULUM AstProgram program AD CONIURA parser_parse_program_source(src, "m.cct")
   EVOCA SPECULUM AstNode rit AD CONIURA ast_node_list_get((*program).declarations, 0)
-  EVOCA SPECULUM AstNode quando AD CONIURA ast_node_list_get((*(*rit).body).statements, 0)
-  EVOCA SPECULUM AstNode case1 AD CONIURA ast_node_list_get((*quando).cases, 0)
-  SI CONIURA ast_node_list_len((*quando).cases) != 1
+  EVOCA SPECULUM AstNode elige_stmt AD CONIURA ast_node_list_get((*(*rit).body).statements, 0)
+  EVOCA SPECULUM AstNode case1 AD CONIURA ast_node_list_get((*elige_stmt).cases, 0)
+  SI CONIURA ast_node_list_len((*elige_stmt).cases) != 1
     REDDE 41
   FIN SI
   SI CONIURA ast_node_list_len((*case1).children) != 2

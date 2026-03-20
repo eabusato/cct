@@ -577,7 +577,7 @@ Critical challenge:
 - AST representation without C unions (ORDO payload vs SPECULUM NIHIL tradeoff)
 
 Out of scope:
-- advanced control flow (TEMPTA/CAPE, QUANDO, nested loops) → FASE 23
+- advanced control flow (TEMPTA/CAPE, ELIGE with QUANDO fallback, nested loops) → FASE 23
 - GENUS parsing → FASE 23
 - semantic analysis → FASE 24
 
@@ -592,7 +592,7 @@ Primary objective:
 - complete parser with advanced control flow, generics, and module system.
 
 Planned scope:
-- `23A`: complex control flow (TEMPTA/CAPE, QUANDO, nested loops)
+- `23A`: complex control flow (TEMPTA/CAPE, ELIGE with QUANDO fallback, nested loops)
 - `23B`: GENUS parsing (type parameters, constraints)
 - `23C`: PACTUM/CODEX parsing
 - `23D`: import/module system parsing
@@ -690,7 +690,7 @@ Planned scope:
 - `27A`: SIGILLUM codegen (typedef, field access, copy)
 - `27B`: simple ORDO codegen (C enum)
 - `27C`: ORDO payload codegen (tagged union)
-- `27D`: QUANDO codegen (switch vs if-chain, payload destructuring)
+- `27D`: ELIGE codegen (QUANDO fallback compatibility; switch vs if-chain, payload destructuring)
 - `27E`: validation (generate C for programs with structs/enums)
 
 Definition of done:

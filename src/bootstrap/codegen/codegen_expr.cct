@@ -6,6 +6,8 @@ ADVOCARE "../parser/ast.cct"
 ADVOCARE "codegen_context.cct"
 ADVOCARE "codegen_emitter.cct"
 ADVOCARE "codegen.cct"
+ADVOCARE "codegen_ordo.cct"
+ADVOCARE "codegen_type.cct"
 
 RITUALE codegen_unary_op_text(TokenKind kind) REDDE VERBUM
   SI kind == TK_PLUS
@@ -63,18 +65,91 @@ RITUALE codegen_binary_op_text(TokenKind kind) REDDE VERBUM
   REDDE ""
 EXPLICIT RITUALE
 
+RITUALE codegen_expr_type_name(SPECULUM CodegenContext ctx, SPECULUM AstNode expr) REDDE VERBUM
+  SI (*expr).kind == AST_LITERAL_INT
+    REDDE "REX"
+  FIN SI
+  SI (*expr).kind == AST_LITERAL_REAL
+    REDDE "UMBRA"
+  FIN SI
+  SI (*expr).kind == AST_LITERAL_BOOL
+    REDDE "VERUM"
+  FIN SI
+  SI (*expr).kind == AST_LITERAL_STRING
+    REDDE "VERBUM"
+  FIN SI
+  SI (*expr).kind == AST_LITERAL_NIHIL
+    REDDE "NIHIL"
+  FIN SI
+
+  SI (*expr).kind == AST_IDENTIFIER
+    EVOCA VERBUM local_type_name AD CONIURA codegen_lookup_local_type_name(ctx, (*expr).name)
+    SI CONIURA compare(local_type_name, "") != 0
+      REDDE local_type_name
+    FIN SI
+
+    EVOCA REX item_matches AD CONIURA codegen_count_ordo_item_matches(ctx, (*expr).name)
+    SI item_matches > 1
+      CONIURA codegen_report_error(ctx, (*expr).line, (*expr).column, "ambiguous ORDO variant in bootstrap codegen")
+      REDDE ""
+    FIN SI
+    SI item_matches == 1
+      REDDE CONIURA codegen_lookup_ordo_item_owner_name(ctx, (*expr).name)
+    FIN SI
+    REDDE ""
+  FIN SI
+
+  SI (*expr).kind == AST_CALL ET (*(*expr).callee).kind == AST_IDENTIFIER
+    REDDE CONIURA codegen_lookup_rituale_return_type(ctx, (*(*expr).callee).name)
+  FIN SI
+
+  SI (*expr).kind == AST_FIELD_ACCESS
+    EVOCA VERBUM object_type_name AD CONIURA codegen_expr_type_name(ctx, (*expr).left)
+    SI CONIURA compare(object_type_name, "") == 0
+      CONIURA codegen_report_error(ctx, (*expr).line, (*expr).column, "field access requires known local SIGILLUM type")
+      REDDE ""
+    FIN SI
+
+    EVOCA VERBUM field_type_name AD CONIURA codegen_lookup_sigillum_field_type(ctx, object_type_name, (*expr).name)
+    SI CONIURA compare(field_type_name, "") == 0
+      CONIURA codegen_report_error(ctx, (*expr).line, (*expr).column, "unknown SIGILLUM field in bootstrap codegen")
+      REDDE ""
+    FIN SI
+    REDDE field_type_name
+  FIN SI
+
+  REDDE ""
+EXPLICIT RITUALE
+
 RITUALE codegen_emit_lvalue(SPECULUM CodegenContext ctx, SPECULUM AstNode expr) REDDE NIHIL
   SI (*expr).kind == AST_IDENTIFIER
     EVOCA VERBUM local_name AD CONIURA codegen_lookup_local_c_name(ctx, (*expr).name)
     SI CONIURA compare(local_name, "") != 0
       CONIURA codegen_emit(ctx, local_name)
     ALITER
-      CONIURA codegen_emit(ctx, (*expr).name)
+      EVOCA REX item_matches AD CONIURA codegen_count_ordo_item_matches(ctx, (*expr).name)
+      SI item_matches > 1
+        CONIURA codegen_report_error(ctx, (*expr).line, (*expr).column, "ambiguous ORDO variant in bootstrap codegen")
+        REDDE
+      FIN SI
+      SI item_matches == 1
+        CONIURA codegen_emit(ctx, CONIURA codegen_lookup_ordo_item_c_name(ctx, (*expr).name))
+      ALITER
+        CONIURA codegen_emit(ctx, (*expr).name)
+      FIN SI
     FIN SI
     REDDE
   FIN SI
 
   SI (*expr).kind == AST_FIELD_ACCESS
+    EVOCA VERBUM object_type_name AD CONIURA codegen_expr_type_name(ctx, (*expr).left)
+    SI CONIURA compare(object_type_name, "") == 0
+      REDDE
+    FIN SI
+    SI CONIURA compare(CONIURA codegen_lookup_sigillum_field_type(ctx, object_type_name, (*expr).name), "") == 0
+      CONIURA codegen_report_error(ctx, (*expr).line, (*expr).column, "unknown SIGILLUM field in bootstrap codegen")
+      REDDE
+    FIN SI
     CONIURA codegen_emit_lvalue(ctx, (*expr).left)
     CONIURA codegen_emit(ctx, ".")
     CONIURA codegen_emit(ctx, (*expr).name)
@@ -99,6 +174,44 @@ RITUALE codegen_emit_call_expr(SPECULUM CodegenContext ctx, SPECULUM AstNode exp
     REDDE
   FIN SI
 
+  EVOCA REX item_matches AD CONIURA codegen_count_ordo_item_matches(ctx, (*(*expr).callee).name)
+  SI item_matches > 1
+    CONIURA codegen_report_error(ctx, (*expr).line, (*expr).column, "ambiguous ORDO variant in bootstrap codegen")
+    REDDE
+  FIN SI
+  SI item_matches == 1
+    EVOCA VERBUM owner_name AD CONIURA codegen_lookup_ordo_item_owner_name(ctx, (*(*expr).callee).name)
+    SI CONIURA codegen_ordo_has_payload(ctx, owner_name)
+      EVOCA REX expected_arity AD CONIURA codegen_lookup_ordo_item_payload_arity(ctx, (*(*expr).callee).name)
+      EVOCA REX actual_arity AD CONIURA ast_node_list_len((*expr).arguments)
+      SI expected_arity != actual_arity
+        CONIURA codegen_report_error(ctx, (*expr).line, (*expr).column, "ORDO payload constructor arity mismatch in bootstrap codegen")
+        REDDE
+      FIN SI
+
+      CONIURA codegen_emit(ctx, "(( ")
+      CONIURA codegen_emit(ctx, CONIURA codegen_lookup_ordo_c_name(ctx, owner_name))
+      CONIURA codegen_emit(ctx, "){ .__tag = ")
+      CONIURA codegen_emit(ctx, CONIURA codegen_lookup_ordo_item_c_name(ctx, (*(*expr).callee).name))
+      SI expected_arity > 0
+        CONIURA codegen_emit(ctx, ", .__payload.")
+        CONIURA codegen_emit(ctx, (*(*expr).callee).name)
+        CONIURA codegen_emit(ctx, " = { ")
+        EVOCA REX i AD 0
+        DUM i < actual_arity
+          SI i > 0
+            CONIURA codegen_emit(ctx, ", ")
+          FIN SI
+          CONIURA codegen_emit_expr(ctx, CONIURA ast_node_list_get((*expr).arguments, i))
+          VINCIRE i AD i + 1
+        FIN DUM
+        CONIURA codegen_emit(ctx, " }")
+      FIN SI
+      CONIURA codegen_emit(ctx, " })")
+      REDDE
+    FIN SI
+  FIN SI
+
   CONIURA codegen_emit(ctx, CONIURA codegen_rituale_c_name(ctx, (*(*expr).callee).name))
   CONIURA codegen_emit(ctx, "(")
 
@@ -114,6 +227,36 @@ RITUALE codegen_emit_call_expr(SPECULUM CodegenContext ctx, SPECULUM AstNode exp
   FIN DUM
 
   CONIURA codegen_emit(ctx, ")")
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE codegen_emit_condition_expr(SPECULUM CodegenContext ctx, SPECULUM AstNode expr) REDDE NIHIL
+  SI (*expr).kind == AST_BINARY_OP
+    EVOCA VERBUM op_text AD CONIURA codegen_binary_op_text((*expr).operator_kind)
+    SI CONIURA compare(op_text, "") == 0
+      CONIURA codegen_report_error(ctx, (*expr).line, (*expr).column, "unsupported binary operator in bootstrap codegen")
+      REDDE
+    FIN SI
+    CONIURA codegen_emit_expr(ctx, (*expr).left)
+    CONIURA codegen_emit(ctx, " ")
+    CONIURA codegen_emit(ctx, op_text)
+    CONIURA codegen_emit(ctx, " ")
+    CONIURA codegen_emit_expr(ctx, (*expr).right)
+    REDDE
+  FIN SI
+
+  SI (*expr).kind == AST_UNARY_OP
+    EVOCA VERBUM op_text AD CONIURA codegen_unary_op_text((*expr).operator_kind)
+    SI CONIURA compare(op_text, "") == 0
+      CONIURA codegen_report_error(ctx, (*expr).line, (*expr).column, "unsupported unary operator in bootstrap codegen")
+      REDDE
+    FIN SI
+    CONIURA codegen_emit(ctx, op_text)
+    CONIURA codegen_emit_expr(ctx, (*expr).left)
+    REDDE
+  FIN SI
+
+  CONIURA codegen_emit_expr(ctx, expr)
   REDDE
 EXPLICIT RITUALE
 
@@ -147,7 +290,29 @@ RITUALE codegen_emit_expr(SPECULUM CodegenContext ctx, SPECULUM AstNode expr) RE
     SI CONIURA compare(local_name, "") != 0
       CONIURA codegen_emit(ctx, local_name)
     ALITER
-      CONIURA codegen_emit(ctx, (*expr).name)
+      EVOCA REX item_matches AD CONIURA codegen_count_ordo_item_matches(ctx, (*expr).name)
+      SI item_matches > 1
+        CONIURA codegen_report_error(ctx, (*expr).line, (*expr).column, "ambiguous ORDO variant in bootstrap codegen")
+        REDDE
+      FIN SI
+      SI item_matches == 1
+        EVOCA VERBUM owner_name AD CONIURA codegen_lookup_ordo_item_owner_name(ctx, (*expr).name)
+        SI CONIURA codegen_ordo_has_payload(ctx, owner_name)
+          SI CONIURA codegen_lookup_ordo_item_payload_arity(ctx, (*expr).name) > 0
+            CONIURA codegen_report_error(ctx, (*expr).line, (*expr).column, "payload ORDO constructor requires call syntax in bootstrap codegen")
+            REDDE
+          FIN SI
+          CONIURA codegen_emit(ctx, "(( ")
+          CONIURA codegen_emit(ctx, CONIURA codegen_lookup_ordo_c_name(ctx, owner_name))
+          CONIURA codegen_emit(ctx, "){ .__tag = ")
+          CONIURA codegen_emit(ctx, CONIURA codegen_lookup_ordo_item_c_name(ctx, (*expr).name))
+          CONIURA codegen_emit(ctx, " })")
+        ALITER
+          CONIURA codegen_emit(ctx, CONIURA codegen_lookup_ordo_item_c_name(ctx, (*expr).name))
+        FIN SI
+      ALITER
+        CONIURA codegen_emit(ctx, (*expr).name)
+      FIN SI
     FIN SI
     REDDE
   FIN SI

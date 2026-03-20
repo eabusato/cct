@@ -37,7 +37,7 @@ RITUALE codegen_rituale_c_name(SPECULUM CodegenContext ctx, VERBUM rituale_name)
   FIN SI
 
   EVOCA VERBUM c_name AD CONIURA codegen_make_rituale_c_name(ctx, rituale_name)
-  REDDE CONIURA codegen_register_rituale_c_name(ctx, rituale_name, c_name)
+  REDDE CONIURA codegen_register_rituale_c_name(ctx, rituale_name, c_name, "NIHIL")
 EXPLICIT RITUALE
 
 RITUALE codegen_normalize_string_literal(VERBUM raw_text) REDDE VERBUM

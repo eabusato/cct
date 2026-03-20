@@ -1,10 +1,10 @@
-INCIPIT grimoire "parser_dump_quando_23a"
+INCIPIT grimoire "parser_dump_elige_23a"
 ADVOCARE "cct/verbum.cct"
 ADVOCARE "../../src/bootstrap/parser/parser.cct"
 RITUALE main() REDDE REX
-  EVOCA VERBUM src AD "INCIPIT grimoire \"probe\"\nRITUALE main() REDDE NIHIL\n  QUANDO r\n    CASO Ok(v):\n      REDDE\n    CASO Err(msg):\n      REDDE\n    SENAO:\n      REDDE\n  FIN QUANDO\nEXPLICIT RITUALE\nEXPLICIT grimoire\n"
+  EVOCA VERBUM src AD "INCIPIT grimoire \"probe\"\nRITUALE main() REDDE NIHIL\n  ELIGE r\n    CASUS Ok(v):\n      REDDE\n    CASUS Err(msg):\n      REDDE\n    ALIOQUIN:\n      REDDE\n  FIN ELIGE\nEXPLICIT RITUALE\nEXPLICIT grimoire\n"
   EVOCA VERBUM dump AD CONIURA parser_dump_program_source(src, "m.cct")
-  SI NON CONIURA contains(dump, "QUANDO (line 3, col 3)")
+  SI NON CONIURA contains(dump, "ELIGE (line 3, col 3)")
     REDDE 41
   FIN SI
   SI NON CONIURA contains(dump, "Cases: (2)")

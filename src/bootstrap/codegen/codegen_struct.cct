@@ -1,0 +1,127 @@
+INCIPIT grimoire "codegen_struct"
+
+ADVOCARE "cct/verbum.cct"
+ADVOCARE "../parser/ast.cct"
+ADVOCARE "codegen.cct"
+ADVOCARE "codegen_context.cct"
+ADVOCARE "codegen_emitter.cct"
+ADVOCARE "codegen_ordo.cct"
+ADVOCARE "codegen_type.cct"
+
+RITUALE codegen_make_sigillum_c_name(VERBUM source_name) REDDE VERBUM
+  REDDE CONIURA concat("cct_boot_sig_", source_name)
+EXPLICIT RITUALE
+
+RITUALE codegen_register_sigillum_decl(SPECULUM CodegenContext ctx, SPECULUM AstNode decl) REDDE NIHIL
+  EVOCA VERBUM c_name AD CONIURA codegen_make_sigillum_c_name((*decl).name)
+  CONIURA codegen_register_sigillum(ctx, (*decl).name, c_name)
+
+  EVOCA REX i AD 0
+  EVOCA REX n AD CONIURA ast_node_list_len((*decl).fields)
+  DUM i < n
+    EVOCA SPECULUM AstNode field AD CONIURA ast_node_list_get((*decl).fields, i)
+    CONIURA codegen_sigillum_append_field(ctx, (*decl).name, (*field).name, (*(*field).type_expr).type_name)
+    VINCIRE i AD i + 1
+  FIN DUM
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE codegen_register_rituale_decl(SPECULUM CodegenContext ctx, SPECULUM AstNode decl) REDDE NIHIL
+  EVOCA VERBUM existing AD CONIURA codegen_lookup_rituale_c_name(ctx, (*decl).name)
+  SI CONIURA compare(existing, "") != 0
+    REDDE
+  FIN SI
+
+  EVOCA VERBUM c_name AD CONIURA codegen_make_rituale_c_name(ctx, (*decl).name)
+  EVOCA VERBUM return_type_name AD "NIHIL"
+  SI (*decl).has_return_type
+    VINCIRE return_type_name AD (*(*decl).return_type).type_name
+  FIN SI
+  CONIURA codegen_register_rituale_c_name(ctx, (*decl).name, c_name, return_type_name)
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE codegen_register_program_shapes(SPECULUM CodegenContext ctx, SPECULUM AstProgram program) REDDE NIHIL
+  EVOCA REX i AD 0
+  EVOCA REX n AD CONIURA ast_node_list_len((*program).declarations)
+  DUM i < n
+    EVOCA SPECULUM AstNode decl AD CONIURA ast_node_list_get((*program).declarations, i)
+    SI (*decl).kind == AST_SIGILLUM
+      CONIURA codegen_register_sigillum_decl(ctx, decl)
+    FIN SI
+    SI (*decl).kind == AST_ORDO
+      CONIURA codegen_register_ordo_decl(ctx, decl)
+    FIN SI
+    SI (*decl).kind == AST_RITUALE
+      CONIURA codegen_register_rituale_decl(ctx, decl)
+    FIN SI
+    VINCIRE i AD i + 1
+  FIN DUM
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE codegen_emit_sigillum_forward_decls(SPECULUM CodegenContext ctx) REDDE NIHIL
+  EVOCA REX i AD 0
+  EVOCA REX n AD CONIURA codegen_registered_sigillum_count(ctx)
+  DUM i < n
+    EVOCA SPECULUM CodegenSigillum sigillum AD CONIURA codegen_context_sigillum_at(ctx, i)
+    CONIURA codegen_emit(ctx, "typedef struct ")
+    CONIURA codegen_emit(ctx, (*sigillum).c_name)
+    CONIURA codegen_emit(ctx, " ")
+    CONIURA codegen_emit(ctx, (*sigillum).c_name)
+    CONIURA codegen_emit_line(ctx, ";")
+    VINCIRE i AD i + 1
+  FIN DUM
+  SI n > 0
+    CONIURA codegen_emit_blank_line(ctx)
+  FIN SI
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE codegen_emit_sigillum_definition(SPECULUM CodegenContext ctx, SPECULUM AstNode decl) REDDE NIHIL
+  EVOCA VERBUM c_name AD CONIURA codegen_lookup_sigillum_c_name(ctx, (*decl).name)
+  CONIURA codegen_emit(ctx, "struct ")
+  CONIURA codegen_emit(ctx, c_name)
+  CONIURA codegen_emit_line(ctx, "")
+  CONIURA codegen_emit_block_open(ctx)
+
+  EVOCA REX i AD 0
+  EVOCA REX n AD CONIURA ast_node_list_len((*decl).fields)
+  DUM i < n
+    EVOCA SPECULUM AstNode field AD CONIURA ast_node_list_get((*decl).fields, i)
+    EVOCA VERBUM field_type_text AD CONIURA codegen_type_text(ctx, (*field).type_expr)
+    SI CONIURA compare(field_type_text, "") == 0
+      REDDE
+    FIN SI
+    CONIURA codegen_emit(ctx, field_type_text)
+    CONIURA codegen_emit(ctx, " ")
+    CONIURA codegen_emit(ctx, (*field).name)
+    CONIURA codegen_emit_line(ctx, ";")
+    VINCIRE i AD i + 1
+  FIN DUM
+
+  CONIURA codegen_dedent(ctx)
+  CONIURA codegen_emit_line(ctx, "};")
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE codegen_emit_sigillum_definitions(SPECULUM CodegenContext ctx, SPECULUM AstProgram program) REDDE NIHIL
+  EVOCA REX i AD 0
+  EVOCA REX n AD CONIURA ast_node_list_len((*program).declarations)
+  EVOCA VERUM emitted_any AD FALSUM
+  DUM i < n
+    EVOCA SPECULUM AstNode decl AD CONIURA ast_node_list_get((*program).declarations, i)
+    SI (*decl).kind == AST_SIGILLUM
+      CONIURA codegen_emit_sigillum_definition(ctx, decl)
+      CONIURA codegen_emit_blank_line(ctx)
+      VINCIRE emitted_any AD VERUM
+    FIN SI
+    VINCIRE i AD i + 1
+  FIN DUM
+  SI emitted_any
+    REDDE
+  FIN SI
+  REDDE
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

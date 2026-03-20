@@ -1,0 +1,18 @@
+INCIPIT grimoire "codegen_gate_elige_ordo_payload_27d_input"
+
+ORDO Option
+  None
+  Some(value: REX)
+FIN ORDO
+
+RITUALE main() REDDE REX
+  EVOCA Option opt AD Some(7)
+  ELIGE opt
+  CASUS Some(value):
+    REDDE value
+  ALIOQUIN:
+    REDDE 0
+  FIN ELIGE
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

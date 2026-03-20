@@ -1,0 +1,27 @@
+INCIPIT grimoire "codegen_elige_payload_multi_binding_27d"
+
+ADVOCARE "../../src/bootstrap/parser/parser.cct"
+ADVOCARE "../../src/bootstrap/parser/ast.cct"
+ADVOCARE "../../src/bootstrap/codegen/codegen_decl.cct"
+ADVOCARE "cct/verbum.cct"
+
+RITUALE main() REDDE REX
+  EVOCA VERBUM source AD "INCIPIT grimoire \"g\"\nORDO Pair\n  Both(x: REX, y: REX)\nFIN ORDO\nRITUALE main() REDDE REX\n  EVOCA Pair p AD Both(2, 3)\n  ELIGE p\n  CASUS Both(x, y):\n    REDDE x + y\n  FIN ELIGE\nEXPLICIT RITUALE\nEXPLICIT grimoire\n"
+  EVOCA SPECULUM AstProgram program AD CONIURA parser_parse_program_source(source, "elige_payload_multi.cct")
+  EVOCA VERBUM out AD CONIURA codegen_generate_program(program, "elige_payload_multi.cct")
+  EVOCA REX rc AD 0
+  SI NON CONIURA contains(out, "long long x = __cct_tmp_")
+    VINCIRE rc AD 1
+  FIN SI
+  SI NON CONIURA contains(out, ".__payload.Both.x;")
+    VINCIRE rc AD 2
+  FIN SI
+  SI NON CONIURA contains(out, "long long y = __cct_tmp_")
+    VINCIRE rc AD 3
+  FIN SI
+  DIMITTE out
+  CONIURA ast_program_free(program)
+  REDDE rc
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

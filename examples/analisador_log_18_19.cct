@@ -4,8 +4,8 @@
 --
 -- Demonstra (FASE 18+19):
 --   * ORDO payload: EntradaLog(REX nivel, VERBUM msg)
---   * QUANDO sobre VERBUM com OR-cases ("WARN"/"WARNING", "ERROR"/"ERRO")
---   * QUANDO sobre ORDO payload com destruturacao de campos
+--   * ELIGE sobre VERBUM com OR-cases ("WARN"/"WARNING", "ERROR"/"ERRO")
+--   * ELIGE sobre ORDO payload com destruturacao de campos
 --   * SERIES VERBUM para armazenar linhas de log
 --   * map GENUS(REX,REX) para contagem por nivel de severidade
 --   * ITERUM sobre map gerando histograma ASCII com repeat_char
@@ -28,40 +28,40 @@ FIN ORDO
 
 -- Mapeia texto de nivel para codigo inteiro (OR-cases em acao)
 RITUALE parse_nivel(VERBUM tag) REDDE REX
-  QUANDO tag
-    CASO "DEBUG":
+  ELIGE tag
+    CASUS "DEBUG":
       REDDE 0
-    CASO "INFO":
+    CASUS "INFO":
       REDDE 1
-    CASO "WARN":
-    CASO "WARNING":
+    CASUS "WARN":
+    CASUS "WARNING":
       REDDE 2
-    CASO "ERROR":
-    CASO "ERRO":
+    CASUS "ERROR":
+    CASUS "ERRO":
       REDDE 3
-    CASO "FATAL":
+    CASUS "FATAL":
       REDDE 4
-    SENAO:
+    ALIOQUIN:
       REDDE 1
-  FIN QUANDO
+  FIN ELIGE
 EXPLICIT RITUALE
 
 -- Decodifica nivel para nome exibivel (5 chars, padded)
 RITUALE nivel_nome(REX n) REDDE VERBUM
-  QUANDO n
-    CASO 0:
+  ELIGE n
+    CASUS 0:
       REDDE "DEBUG"
-    CASO 1:
+    CASUS 1:
       REDDE "INFO "
-    CASO 2:
+    CASUS 2:
       REDDE "WARN "
-    CASO 3:
+    CASUS 3:
       REDDE "ERROR"
-    CASO 4:
+    CASUS 4:
       REDDE "FATAL"
-    SENAO:
+    ALIOQUIN:
       REDDE "?????"
-  FIN QUANDO
+  FIN ELIGE
 EXPLICIT RITUALE
 
 -- Parseia "NIVEL: mensagem" -> EntradaLog
@@ -106,21 +106,21 @@ RITUALE main() REDDE NIHIL
   EVOCA REX criticos AD 0
   EVOCA REX invalidas AD 0
 
-  -- Processar cada linha com QUANDO sobre ORDO payload
+  -- Processar cada linha com ELIGE sobre ORDO payload
   REPETE i DE 0 AD 11
     EVOCA EntradaLog e AD CONIURA parse_linha(linhas[i])
-    QUANDO e
-      CASO Entrada(nivel, msg):
+    ELIGE e
+      CASUS Entrada(nivel, msg):
         EVOCA REX ant AD CONIURA map_get_or_default GENUS(REX, REX)(cnt, nivel, 0)
         CONIURA map_update_or_insert GENUS(REX, REX)(cnt, nivel, ant + 1)
         VINCIRE total AD total + 1
         SI nivel >= 3
           VINCIRE criticos AD criticos + 1
         FIN SI
-      CASO Invalida(ln):
+      CASUS Invalida(ln):
         OBSECRO scribe(MOLDE "  [ignorada] '{ln}'\n")
         VINCIRE invalidas AD invalidas + 1
-    FIN QUANDO
+    FIN ELIGE
   FIN REPETE
 
   -- Caracter do histograma

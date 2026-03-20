@@ -1,0 +1,26 @@
+INCIPIT grimoire "codegen_elige_payload_or_case_error_27d"
+
+ADVOCARE "../../src/bootstrap/parser/parser.cct"
+ADVOCARE "../../src/bootstrap/parser/ast.cct"
+ADVOCARE "../../src/bootstrap/codegen/codegen_context.cct"
+ADVOCARE "../../src/bootstrap/codegen/codegen_decl.cct"
+ADVOCARE "cct/verbum.cct"
+
+RITUALE main() REDDE REX
+  EVOCA VERBUM source AD "INCIPIT grimoire \"g\"\nORDO Result\n  Ok(code: REX)\n  Err(msg: VERBUM)\nFIN ORDO\nRITUALE main() REDDE REX\n  EVOCA Result r AD Ok(1)\n  ELIGE r\n  CASUS Ok:\n  CASUS Err(v):\n    REDDE 1\n  FIN ELIGE\nEXPLICIT RITUALE\nEXPLICIT grimoire\n"
+  EVOCA SPECULUM AstProgram program AD CONIURA parser_parse_program_source(source, "elige_payload_or_error.cct")
+  EVOCA SPECULUM CodegenContext ctx AD CONIURA codegen_context_new("elige_payload_or_error.cct")
+  CONIURA codegen_emit_program(ctx, program)
+  EVOCA REX rc AD 0
+  SI NON CONIURA codegen_had_error(ctx)
+    VINCIRE rc AD 1
+  FIN SI
+  SI NON CONIURA contains((*ctx).last_error_message, "OR-cases with payload bindings")
+    VINCIRE rc AD 2
+  FIN SI
+  CONIURA codegen_context_free(ctx)
+  CONIURA ast_program_free(program)
+  REDDE rc
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

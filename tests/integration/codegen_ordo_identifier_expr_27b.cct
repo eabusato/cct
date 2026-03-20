@@ -1,0 +1,25 @@
+INCIPIT grimoire "codegen_ordo_identifier_expr_27b"
+
+ADVOCARE "../../src/bootstrap/codegen/codegen_context.cct"
+ADVOCARE "../../src/bootstrap/codegen/codegen_expr.cct"
+ADVOCARE "../../src/bootstrap/parser/ast.cct"
+ADVOCARE "cct/verbum.cct"
+
+RITUALE main() REDDE REX
+  EVOCA SPECULUM CodegenContext ctx AD CONIURA codegen_context_new("ordo_expr.cct")
+  CONIURA codegen_register_ordo(ctx, "Cor", "cct_boot_ord_Cor")
+  CONIURA codegen_ordo_append_item(ctx, "Cor", "RUBER", "cct_boot_ord_Cor__RUBER")
+  EVOCA SPECULUM AstNode expr AD CONIURA ast_make_identifier("RUBER", 1, 1)
+  CONIURA codegen_emit_expr(ctx, expr)
+  EVOCA VERBUM out AD CONIURA codegen_output(ctx)
+  EVOCA REX rc AD 0
+  SI CONIURA compare(out, "cct_boot_ord_Cor__RUBER") != 0
+    VINCIRE rc AD 1
+  FIN SI
+  DIMITTE out
+  CONIURA ast_node_free(expr)
+  CONIURA codegen_context_free(ctx)
+  REDDE rc
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

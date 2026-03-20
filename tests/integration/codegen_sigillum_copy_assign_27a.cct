@@ -1,0 +1,27 @@
+INCIPIT grimoire "codegen_sigillum_copy_assign_27a"
+
+ADVOCARE "../../src/bootstrap/codegen/codegen_context.cct"
+ADVOCARE "../../src/bootstrap/codegen/codegen_stmt.cct"
+ADVOCARE "../../src/bootstrap/parser/ast.cct"
+ADVOCARE "cct/verbum.cct"
+
+RITUALE main() REDDE REX
+  EVOCA SPECULUM CodegenContext ctx AD CONIURA codegen_context_new("copy.cct")
+  CONIURA codegen_define_local(ctx, "left", "left", "Point")
+  CONIURA codegen_define_local(ctx, "right", "right", "Point")
+
+  EVOCA SPECULUM AstNode stmt AD CONIURA ast_make_vincire(CONIURA ast_make_identifier("left", 1, 1), CONIURA ast_make_identifier("right", 1, 8), 1, 1)
+  CONIURA codegen_emit_stmt(ctx, stmt)
+  EVOCA VERBUM out AD CONIURA codegen_output(ctx)
+  EVOCA REX rc AD 0
+  SI CONIURA compare(out, "left = right;\n") != 0
+    VINCIRE rc AD 1
+  FIN SI
+
+  DIMITTE out
+  CONIURA ast_node_free(stmt)
+  CONIURA codegen_context_free(ctx)
+  REDDE rc
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

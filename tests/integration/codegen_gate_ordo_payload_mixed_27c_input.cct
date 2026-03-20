@@ -1,0 +1,19 @@
+INCIPIT grimoire "codegen_gate_ordo_payload_mixed_27c_input"
+
+ORDO Result
+  Ok(code: REX, flag: VERUM)
+  Err
+FIN ORDO
+
+RITUALE build() REDDE Result
+  REDDE Ok(9, VERUM)
+EXPLICIT RITUALE
+
+RITUALE main() REDDE REX
+  EVOCA Result r AD build()
+  EVOCA Result copy AD r
+  VINCIRE r AD copy
+  REDDE 6
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

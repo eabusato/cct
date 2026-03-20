@@ -1,0 +1,17 @@
+INCIPIT grimoire "codegen_gate_elige_payload_or_error_27e_input"
+
+ORDO Result
+  Ok(code: REX)
+  Err(msg: VERBUM)
+FIN ORDO
+
+RITUALE main() REDDE REX
+  EVOCA Result r AD Ok(1)
+  ELIGE r
+  CASUS Ok:
+  CASUS Err(v):
+    REDDE 1
+  FIN ELIGE
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

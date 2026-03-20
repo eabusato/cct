@@ -252,6 +252,21 @@ RITUALE parse_sigillum_declaration(SPECULUM ParserState parser) REDDE SPECULUM A
   REDDE sig
 EXPLICIT RITUALE
 
+RITUALE parse_ordo_payload_field(SPECULUM ParserState parser) REDDE SPECULUM AstNode
+  EVOCA REX line AD (*parser).current.line
+  EVOCA REX column AD (*parser).current.column
+  SI NON CONIURA parser_check(parser, TK_IDENTIFIER)
+    CONIURA parser_error_at_current(parser, "Expected ORDO payload field name")
+    REDDE CONIURA ast_make_field("<error>", CONIURA ast_make_type("NIHIL", line, column), line, column)
+  FIN SI
+  CONIURA parser_advance(parser)
+  EVOCA VERBUM field_name AD CONIURA verbum_dup((*parser).previous.lexeme)
+  CONIURA parser_consume(parser, TK_COLON, "Expected ':' after ORDO payload field name")
+  EVOCA SPECULUM AstNode field AD CONIURA ast_make_field(field_name, CONIURA parse_type(parser), line, column)
+  DIMITTE field_name
+  REDDE field
+EXPLICIT RITUALE
+
 RITUALE parse_ordo_declaration(SPECULUM ParserState parser) REDDE SPECULUM AstNode
   EVOCA REX line AD (*parser).current.line
   EVOCA REX column AD (*parser).current.column
@@ -271,17 +286,37 @@ RITUALE parse_ordo_declaration(SPECULUM ParserState parser) REDDE SPECULUM AstNo
     FIN SI
     CONIURA parser_advance(parser)
     EVOCA VERBUM item_name AD CONIURA verbum_dup((*parser).previous.lexeme)
+    EVOCA SPECULUM AstNode item AD CONIURA ast_make_enum_item_no_value(item_name, item_line, item_column)
+    SI CONIURA parser_match(parser, TK_LPAREN)
+      SI NON CONIURA parser_check(parser, TK_RPAREN)
+        EVOCA VERUM reading_fields AD VERUM
+        DUM reading_fields
+          CONIURA ast_append_field(item, CONIURA parse_ordo_payload_field(parser))
+          SI NON CONIURA parser_match(parser, TK_COMMA)
+            VINCIRE reading_fields AD FALSUM
+          FIN SI
+        FIN DUM
+      FIN SI
+      CONIURA parser_consume(parser, TK_RPAREN, "Expected ')' after ORDO payload fields")
+    FIN SI
     SI CONIURA parser_match(parser, TK_EQ)
+      SI CONIURA ast_node_list_len((*item).fields) > 0
+        CONIURA parser_error_at_previous(parser, "ORDO payload variants cannot declare explicit numeric tag with '='")
+        DIMITTE item_name
+        CONIURA ast_node_free(item)
+        REDDE ord
+      FIN SI
       SI NON CONIURA parser_check(parser, TK_INTEGER)
         CONIURA parser_error_at_current(parser, "Expected integer enum value")
         DIMITTE item_name
+        CONIURA ast_node_free(item)
         REDDE ord
       FIN SI
       CONIURA parser_advance(parser)
-      CONIURA ast_append_item(ord, CONIURA ast_make_enum_item(item_name, CONIURA ast_make_literal_int((*parser).previous.lexeme, (*parser).previous.line, (*parser).previous.column), item_line, item_column))
-    ALITER
-      CONIURA ast_append_item(ord, CONIURA ast_make_enum_item_no_value(item_name, item_line, item_column))
+      VINCIRE (*item).right AD CONIURA ast_make_literal_int((*parser).previous.lexeme, (*parser).previous.line, (*parser).previous.column)
+      VINCIRE (*item).has_right AD VERUM
     FIN SI
+    CONIURA ast_append_item(ord, item)
     DIMITTE item_name
     CONIURA parser_match(parser, TK_COMMA)
     CONIURA parser_match(parser, TK_SEMICOLON)

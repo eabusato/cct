@@ -1,15 +1,15 @@
-INCIPIT grimoire "parse_quando_else_23a"
+INCIPIT grimoire "parse_elige_else_23a"
 ADVOCARE "../../src/bootstrap/parser/ast.cct"
 ADVOCARE "../../src/bootstrap/parser/parser.cct"
 RITUALE main() REDDE REX
-  EVOCA VERBUM src AD "INCIPIT grimoire \"x\" RITUALE main() REDDE NIHIL QUANDO x CASO 1: REDDE SENAO: REDDE FIN QUANDO EXPLICIT RITUALE EXPLICIT grimoire"
+  EVOCA VERBUM src AD "INCIPIT grimoire \"x\" RITUALE main() REDDE NIHIL ELIGE x CASUS 1: REDDE ALIOQUIN: REDDE FIN ELIGE EXPLICIT RITUALE EXPLICIT grimoire"
   EVOCA SPECULUM AstProgram program AD CONIURA parser_parse_program_source(src, "m.cct")
   EVOCA SPECULUM AstNode rit AD CONIURA ast_node_list_get((*program).declarations, 0)
-  EVOCA SPECULUM AstNode quando AD CONIURA ast_node_list_get((*(*rit).body).statements, 0)
-  SI (*quando).has_else_branch != VERUM
+  EVOCA SPECULUM AstNode elige_stmt AD CONIURA ast_node_list_get((*(*rit).body).statements, 0)
+  SI (*elige_stmt).has_else_branch != VERUM
     REDDE 41
   FIN SI
-  SI (*(*quando).else_branch).kind != AST_BLOCK
+  SI (*(*elige_stmt).else_branch).kind != AST_BLOCK
     REDDE 42
   FIN SI
   CONIURA ast_program_free(program)

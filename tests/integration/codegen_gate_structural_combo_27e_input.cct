@@ -1,0 +1,41 @@
+INCIPIT grimoire "codegen_gate_structural_combo_27e_input"
+
+SIGILLUM Pair
+  x: REX
+  y: REX
+FIN SIGILLUM
+
+ORDO Result
+  Ok(total: REX)
+  Err(code: REX)
+FIN ORDO
+
+RITUALE build(REX a, REX b) REDDE Pair
+  EVOCA Pair p
+  VINCIRE p.x AD a
+  VINCIRE p.y AD b
+  REDDE p
+EXPLICIT RITUALE
+
+RITUALE eval(Pair p) REDDE Result
+  SI p.x == p.y
+    REDDE Ok(p.x + p.y)
+  ALITER
+    REDDE Err(p.y - p.x)
+  FIN SI
+EXPLICIT RITUALE
+
+RITUALE main() REDDE REX
+  EVOCA Pair p AD build(2, 2)
+  EVOCA Result r AD eval(p)
+  ELIGE r
+  CASUS Ok(total):
+    REDDE total
+  CASUS Err(code):
+    REDDE code
+  ALIOQUIN:
+    REDDE 0
+  FIN ELIGE
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

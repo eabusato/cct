@@ -769,7 +769,7 @@ RITUALE ast_dump_node(SPECULUM AstNode node, REX level, VERBUM out) REDDE VERBUM
       REDDE out
 
     CASUS AST_QUANDO:
-      VINCIRE out AD CONIURA ast_dump_append_line(out, level, CONIURA concat("QUANDO ", location))
+      VINCIRE out AD CONIURA ast_dump_append_line(out, level, CONIURA concat("ELIGE ", location))
       VINCIRE out AD CONIURA ast_dump_append_line(out, level + 1, "Expression:")
       VINCIRE out AD CONIURA ast_dump_node((*node).condition, level + 2, out)
       VINCIRE out AD CONIURA ast_dump_append_line(out, level + 1, CONIURA concat("Cases: (", CONIURA concat(CONIURA stringify_int(CONIURA ast_node_list_len((*node).cases)), ")")))

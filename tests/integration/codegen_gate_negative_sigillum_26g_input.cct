@@ -1,8 +1,7 @@
 INCIPIT grimoire "codegen_gate_negative_sigillum_26g_input"
 
-SIGILLUM Persona
-  idade: REX
-FIN SIGILLUM
+PACTUM Forma
+FIN PACTUM
 
 RITUALE main() REDDE REX
   REDDE 0
