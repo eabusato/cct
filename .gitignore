@@ -100,3 +100,5 @@ md_out/
 /third_party/cct-boot/format/._README.md
 /third_party/cct-boot/tools/._README.md
 /third_party/cct-boot/
+/tests/.tmp.*/
+/out/codex_tmp/

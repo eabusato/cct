@@ -1,0 +1,13 @@
+INCIPIT grimoire "codegen_gate_dum_26g_input"
+
+RITUALE main() REDDE REX
+  EVOCA REX i AD 0
+  EVOCA REX acc AD 0
+  DUM i < 4
+    VINCIRE acc AD acc + i
+    VINCIRE i AD i + 1
+  FIN DUM
+  REDDE acc
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

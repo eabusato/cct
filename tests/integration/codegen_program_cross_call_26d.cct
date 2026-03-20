@@ -1,0 +1,29 @@
+INCIPIT grimoire "codegen_program_cross_call_26d"
+
+ADVOCARE "../../src/bootstrap/codegen/codegen_decl.cct"
+ADVOCARE "../../src/bootstrap/parser/ast.cct"
+ADVOCARE "cct/verbum.cct"
+
+RITUALE main() REDDE REX
+  EVOCA SPECULUM AstProgram program AD CONIURA ast_program_new()
+
+  EVOCA SPECULUM AstNode body_a AD CONIURA ast_make_block(1, 1)
+  CONIURA ast_append_statement(body_a, CONIURA ast_make_redde(CONIURA ast_make_literal_int("2", 1, 1), 1, 1))
+  CONIURA ast_program_append_decl(program, CONIURA ast_make_rituale("a", CONIURA ast_make_type("REX", 1, 1), body_a, 1, 1))
+
+  EVOCA SPECULUM AstNode body_main AD CONIURA ast_make_block(1, 1)
+  EVOCA SPECULUM AstNode call_a AD CONIURA ast_make_call(CONIURA ast_make_identifier("a", 1, 1), 1, 1)
+  CONIURA ast_append_statement(body_main, CONIURA ast_make_redde(call_a, 1, 1))
+  CONIURA ast_program_append_decl(program, CONIURA ast_make_rituale("main", CONIURA ast_make_type("REX", 1, 1), body_main, 1, 1))
+
+  EVOCA VERBUM out AD CONIURA codegen_generate_program(program, "cross.cct")
+  EVOCA REX rc AD 0
+  SI NON CONIURA contains(out, "return cct_boot_rit_a_0();")
+    VINCIRE rc AD 1
+  FIN SI
+  DIMITTE out
+  CONIURA ast_program_free(program)
+  REDDE rc
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

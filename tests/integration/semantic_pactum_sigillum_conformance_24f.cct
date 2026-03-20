@@ -1,0 +1,25 @@
+INCIPIT grimoire "semantic_pactum_sigillum_conformance_24f"
+
+ADVOCARE "../../src/bootstrap/parser/parser.cct"
+ADVOCARE "../../src/bootstrap/parser/ast.cct"
+ADVOCARE "../../src/bootstrap/semantic/semantic_context.cct"
+ADVOCARE "../../src/bootstrap/semantic/semantic_register.cct"
+ADVOCARE "../../src/bootstrap/semantic/semantic_pactum.cct"
+
+RITUALE main() REDDE REX
+  EVOCA VERBUM src AD "INCIPIT grimoire \"p\" SIGILLUM Caixa valor: REX FIN SIGILLUM PACTUM Forma RITUALE render(REX value) REDDE REX FIN PACTUM RITUALE render(SPECULUM Caixa self, REX value) REDDE REX REDDE value EXPLICIT RITUALE EXPLICIT grimoire"
+  EVOCA SPECULUM AstProgram program AD CONIURA parser_parse_program_source(src, "pactum_conformance.cct")
+  EVOCA SPECULUM SemanticContext ctx AD CONIURA semantic_context_new("pactum_conformance.cct")
+  CONIURA semantic_register_program(ctx, program)
+  CONIURA semantic_validate_sigillum_pactum(ctx, "Caixa", "Forma")
+
+  SI CONIURA semantic_had_error(ctx)
+    REDDE 41
+  FIN SI
+
+  CONIURA semantic_context_free(ctx)
+  CONIURA ast_program_free(program)
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

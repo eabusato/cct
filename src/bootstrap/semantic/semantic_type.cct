@@ -1,6 +1,7 @@
 INCIPIT grimoire "semantic_type"
 
 ADVOCARE "semantic_type_kind.cct"
+ADVOCARE "cct/fluxus.cct"
 
 SIGILLUM SemanticType
   id: REX
@@ -11,6 +12,13 @@ SIGILLUM SemanticType
   element_type_id: REX
   array_size: REX
   named_symbol_id: REX
+  owner_symbol_id: REX
+  constraint_symbol_id: REX
+  generic_origin_symbol_id: REX
+  type_arg_ids: SPECULUM NIHIL
+  canonical_key: VERBUM
+  owns_canonical_key: VERUM
+  canonical_hash: DUX
 FIN SIGILLUM
 
 EXPLICIT grimoire

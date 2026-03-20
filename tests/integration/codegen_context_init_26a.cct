@@ -1,0 +1,30 @@
+INCIPIT grimoire "codegen_context_init_26a"
+
+ADVOCARE "../../src/bootstrap/codegen/codegen_context.cct"
+ADVOCARE "cct/verbum.cct"
+
+RITUALE main() REDDE REX
+  EVOCA SPECULUM CodegenContext ctx AD CONIURA codegen_context_new("alpha.cct")
+  EVOCA REX rc AD 0
+
+  SI CONIURA compare((*ctx).filename, "alpha.cct") != 0
+    VINCIRE rc AD 1
+  FIN SI
+  SI (*ctx).indent_level != 0
+    VINCIRE rc AD 2
+  FIN SI
+  SI (*ctx).next_temp_id != 0 VEL (*ctx).next_label_id != 0
+    VINCIRE rc AD 3
+  FIN SI
+  SI CONIURA codegen_had_error(ctx)
+    VINCIRE rc AD 4
+  FIN SI
+  SI CONIURA codegen_registered_rituale_count(ctx) != 0
+    VINCIRE rc AD 5
+  FIN SI
+
+  CONIURA codegen_context_free(ctx)
+  REDDE rc
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

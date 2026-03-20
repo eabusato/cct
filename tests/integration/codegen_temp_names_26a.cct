@@ -1,0 +1,29 @@
+INCIPIT grimoire "codegen_temp_names_26a"
+
+ADVOCARE "../../src/bootstrap/codegen/codegen.cct"
+ADVOCARE "../../src/bootstrap/codegen/codegen_context.cct"
+ADVOCARE "cct/verbum.cct"
+
+RITUALE main() REDDE REX
+  EVOCA SPECULUM CodegenContext ctx AD CONIURA codegen_context_new("temp.cct")
+  EVOCA VERBUM a AD CONIURA codegen_next_temp_name(ctx)
+  EVOCA VERBUM b AD CONIURA codegen_next_temp_name(ctx)
+  EVOCA REX rc AD 0
+
+  SI CONIURA compare(a, "__cct_tmp_0") != 0
+    VINCIRE rc AD 1
+  FIN SI
+  SI CONIURA compare(b, "__cct_tmp_1") != 0
+    VINCIRE rc AD 2
+  FIN SI
+  SI (*ctx).next_temp_id != 2
+    VINCIRE rc AD 3
+  FIN SI
+
+  DIMITTE a
+  DIMITTE b
+  CONIURA codegen_context_free(ctx)
+  REDDE rc
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

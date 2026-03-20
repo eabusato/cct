@@ -1,0 +1,7 @@
+INCIPIT grimoire "codegen_gate_arith_26g_input"
+
+RITUALE main() REDDE REX
+  REDDE (2 + 3) * 4 - 6
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

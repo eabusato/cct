@@ -1,0 +1,29 @@
+INCIPIT grimoire "codegen_runtime_string_pool_dedup_26f"
+
+ADVOCARE "../../src/bootstrap/codegen/codegen_context.cct"
+ADVOCARE "../../src/bootstrap/codegen/codegen_runtime.cct"
+ADVOCARE "../../src/bootstrap/codegen/codegen.cct"
+ADVOCARE "cct/verbum.cct"
+
+RITUALE main() REDDE REX
+  EVOCA SPECULUM CodegenContext ctx AD CONIURA codegen_context_new("dedup.cct")
+  EVOCA VERBUM a AD CONIURA codegen_string_symbol(ctx, "idem")
+  EVOCA VERBUM b AD CONIURA codegen_string_symbol(ctx, "idem")
+  CONIURA codegen_runtime_emit_string_pool(ctx)
+  EVOCA VERBUM out AD CONIURA codegen_output(ctx)
+  EVOCA REX rc AD 0
+  SI CONIURA compare(a, b) != 0
+    VINCIRE rc AD 1
+  FIN SI
+  SI CONIURA codegen_registered_string_count(ctx) != 1
+    VINCIRE rc AD 2
+  FIN SI
+  SI CONIURA contains(out, "cct_boot_str_1") == VERUM
+    VINCIRE rc AD 3
+  FIN SI
+  DIMITTE out
+  CONIURA codegen_context_free(ctx)
+  REDDE rc
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

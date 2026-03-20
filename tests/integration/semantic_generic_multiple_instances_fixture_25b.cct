@@ -1,0 +1,21 @@
+INCIPIT grimoire "semantic_generic_multiple_instances_fixture_25b"
+
+ADVOCARE "../../src/bootstrap/parser/parser.cct"
+ADVOCARE "../../src/bootstrap/parser/ast.cct"
+ADVOCARE "../../src/bootstrap/semantic/semantic_context.cct"
+ADVOCARE "../../src/bootstrap/semantic/semantic_decl.cct"
+
+RITUALE main() REDDE REX
+  EVOCA VERBUM src AD "INCIPIT grimoire \"p\" RITUALE identitas GENUS(T)(T valor) REDDE T REDDE valor EXPLICIT RITUALE RITUALE main() REDDE NIHIL EVOCA REX a AD identitas GENUS(REX)(1) EVOCA VERBUM b AD identitas GENUS(VERBUM)(\"x\") REDDE EXPLICIT RITUALE EXPLICIT grimoire"
+  EVOCA SPECULUM AstProgram program AD CONIURA parser_parse_program_source(src, "multi_instances_fixture.cct")
+  EVOCA SPECULUM SemanticContext ctx AD CONIURA semantic_context_new("multi_instances_fixture.cct")
+  CONIURA semantic_validate_program(ctx, program)
+  SI (*ctx).had_error != FALSUM
+    REDDE 41
+  FIN SI
+  CONIURA semantic_context_free(ctx)
+  CONIURA ast_program_free(program)
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

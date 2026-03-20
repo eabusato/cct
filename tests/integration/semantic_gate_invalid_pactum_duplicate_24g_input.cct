@@ -1,0 +1,6 @@
+INCIPIT grimoire "gate_dup_pactum"
+PACTUM Forma
+  RITUALE render(REX value) REDDE REX
+  RITUALE render(REX value) REDDE REX
+FIN PACTUM
+EXPLICIT grimoire

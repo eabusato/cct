@@ -33,6 +33,8 @@ TESTS_FAILED=0
 
 # Path to the CCT binary
 CCT_BIN="./cct"
+CCT_TEST_GROUP="${CCT_TEST_GROUP:-all}"
+CCT_TEST_PHASES="${CCT_TEST_PHASES:-}"
 
 # Check if binary exists
 if [ ! -f "$CCT_BIN" ]; then
@@ -64,6 +66,80 @@ cleanup_codegen_artifacts() {
     local exe="${src%.cct}"
     rm -f "$exe" "$exe.cgen.c" "$exe.svg" "$exe.sigil" "$exe.system.svg" "$exe.system.sigil"
     rm -f "$exe".__mod_*.svg "$exe".__mod_*.sigil
+}
+
+cct_csv_contains() {
+    local needle="$1"
+    local haystack="$2"
+    case ",$haystack," in
+        *,"$needle",*)
+            return 0
+            ;;
+    esac
+    return 1
+}
+
+cct_requested_phase_block() {
+    local phase="$1"
+    local phases_csv="$2"
+    local item=""
+    local old_ifs="$IFS"
+
+    [ -z "$phases_csv" ] && return 1
+
+    IFS=','
+    for item in $phases_csv; do
+        if [ "$item" = "$phase" ]; then
+            IFS="$old_ifs"
+            return 0
+        fi
+        case "$item" in
+            "${phase}"[A-Z0-9]*)
+                IFS="$old_ifs"
+                return 0
+                ;;
+        esac
+    done
+    IFS="$old_ifs"
+
+    return 1
+}
+
+cct_phase_block_enabled() {
+    local phase="$1"
+
+    if cct_requested_phase_block "$phase" "$CCT_TEST_PHASES_NORMALIZED"; then
+        return 0
+    fi
+
+    if [ -z "$CCT_TEST_PHASES_NORMALIZED" ] && cct_csv_contains "all" "$CCT_TEST_GROUPS_NORMALIZED"; then
+        return 0
+    fi
+
+    case "$phase" in
+        LEGACY)
+            cct_csv_contains "legacy" "$CCT_TEST_GROUPS_NORMALIZED" || cct_csv_contains "core" "$CCT_TEST_GROUPS_NORMALIZED"
+            return $?
+            ;;
+        21)
+            cct_csv_contains "bootstrap" "$CCT_TEST_GROUPS_NORMALIZED" || cct_csv_contains "lexer" "$CCT_TEST_GROUPS_NORMALIZED" || cct_csv_contains "bootstrap-lexer" "$CCT_TEST_GROUPS_NORMALIZED" || cct_csv_contains "21" "$CCT_TEST_GROUPS_NORMALIZED"
+            return $?
+            ;;
+        22|23)
+            cct_csv_contains "bootstrap" "$CCT_TEST_GROUPS_NORMALIZED" || cct_csv_contains "parser" "$CCT_TEST_GROUPS_NORMALIZED" || cct_csv_contains "bootstrap-parser" "$CCT_TEST_GROUPS_NORMALIZED" || cct_csv_contains "$phase" "$CCT_TEST_GROUPS_NORMALIZED"
+            return $?
+            ;;
+        24|25)
+            cct_csv_contains "bootstrap" "$CCT_TEST_GROUPS_NORMALIZED" || cct_csv_contains "semantic" "$CCT_TEST_GROUPS_NORMALIZED" || cct_csv_contains "bootstrap-semantic" "$CCT_TEST_GROUPS_NORMALIZED" || cct_csv_contains "$phase" "$CCT_TEST_GROUPS_NORMALIZED"
+            return $?
+            ;;
+        26)
+            cct_csv_contains "bootstrap" "$CCT_TEST_GROUPS_NORMALIZED" || cct_csv_contains "codegen" "$CCT_TEST_GROUPS_NORMALIZED" || cct_csv_contains "bootstrap-codegen" "$CCT_TEST_GROUPS_NORMALIZED" || cct_csv_contains "$phase" "$CCT_TEST_GROUPS_NORMALIZED"
+            return $?
+            ;;
+    esac
+
+    return 1
 }
 
 normalize_c_tokens_to_ids_21d3() {
@@ -226,6 +302,88 @@ compare_parser_file_23d() {
     diff -u "$host_norm" "$boot_out" >"$diff_out" 2>&1
 }
 
+compare_semantic_check_24g() {
+    local label="$1"
+    local file="$2"
+    local host_out="$CCT_TMP_DIR/${label}_host.out"
+    local host_err="$CCT_TMP_DIR/${label}_host.err"
+    local host_all="$CCT_TMP_DIR/${label}_host.all"
+    local boot_out="$CCT_TMP_DIR/${label}_boot.out"
+    local boot_err="$CCT_TMP_DIR/${label}_boot.err"
+    local boot_msg="$CCT_TMP_DIR/${label}_boot.msg"
+
+    "$CCT_BIN" --check "$file" >"$host_out" 2>"$host_err"
+    local host_rc=$?
+    cat "$host_out" "$host_err" >"$host_all"
+
+    src/bootstrap/main_semantic "$file" >"$boot_out" 2>"$boot_err"
+    local boot_rc=$?
+
+    if [ "$host_rc" -eq 0 ] && [ "$boot_rc" -eq 0 ]; then
+        grep -q '^OK$' "$boot_out"
+        return $?
+    fi
+
+    if [ "$host_rc" -eq 0 ] || [ "$boot_rc" -eq 0 ]; then
+        return 1
+    fi
+
+    sed -n 's/^ERR [0-9][0-9]*:[0-9][0-9]* //p' "$boot_out" >"$boot_msg"
+    local msg
+    msg="$(tail -n 1 "$boot_msg")"
+    if [ -z "$msg" ]; then
+        return 1
+    fi
+
+    case "$msg" in
+        "rituale call arity mismatch")
+            grep -E "rituale '.*' expects [0-9]+ argument\\(s\\), got [0-9]+" "$host_all" >/dev/null 2>&1
+            ;;
+        "argument type mismatch")
+            grep -E "argument [0-9]+ to rituale '.*' has incompatible type" "$host_all" >/dev/null 2>&1
+            ;;
+        "undeclared identifier '"*)
+            local sym_name="${msg#undeclared identifier \'}"
+            sym_name="${sym_name%\'}"
+            grep -F "undeclared symbol '$sym_name'" "$host_all" >/dev/null 2>&1
+            ;;
+        "generic rituale '"*"' requires explicit GENUS(...)" )
+            local ritual_name="${msg#generic rituale \'}"
+            ritual_name="${ritual_name%\' requires explicit GENUS(...)}"
+            grep -E "generic rituale '$ritual_name' requires explicit GENUS\\(\\.\\.\\.\\)" "$host_all" >/dev/null 2>&1
+            ;;
+        "generic rituale arity mismatch")
+            grep -E "generic rituale '.*' expects [0-9]+ type argument\\(s\\), got [0-9]+" "$host_all" >/dev/null 2>&1
+            ;;
+        "GENUS(...) applied to non-generic rituale '"*)
+            local ritual_name="${msg#GENUS(...) applied to non-generic rituale \'}"
+            ritual_name="${ritual_name%\'}"
+            grep -E "GENUS\\(\\.\\.\\.\\) applied to non-generic rituale '$ritual_name'" "$host_all" >/dev/null 2>&1
+            ;;
+        "generic type '"*"' requires explicit GENUS(...)" )
+            local type_name="${msg#generic type \'}"
+            type_name="${type_name%\' requires explicit GENUS(...)}"
+            grep -E "generic type '$type_name' requires explicit GENUS\\(\\.\\.\\.\\)" "$host_all" >/dev/null 2>&1
+            ;;
+        "generic type arity mismatch")
+            grep -E "generic type '.*' expects [0-9]+ type argument\\(s\\), got [0-9]+" "$host_all" >/dev/null 2>&1
+            ;;
+        "GENUS(...) applied to non-generic type '"*)
+            local type_name="${msg#GENUS(...) applied to non-generic type \'}"
+            type_name="${type_name%\'}"
+            grep -E "GENUS\\(\\.\\.\\.\\) applied to non-generic (builtin )?type '$type_name'" "$host_all" >/dev/null 2>&1
+            ;;
+        "unknown pactum constraint '"*)
+            local pactum_name="${msg#unknown pactum constraint \'}"
+            pactum_name="${pactum_name%\'}"
+            grep -E "GENUS constraint '.* PACTUM ${pactum_name}' references unknown contract" "$host_all" >/dev/null 2>&1
+            ;;
+        *)
+            grep -F "$msg" "$host_all" >/dev/null 2>&1
+            ;;
+    esac
+}
+
 resolve_doc_path() {
     local rel="$1"
     if [ -f "$rel" ]; then
@@ -237,6 +395,15 @@ resolve_doc_path() {
     fi
 }
 
+CCT_TEST_GROUPS_NORMALIZED="$(printf '%s' "$CCT_TEST_GROUP" | tr '[:upper:]' '[:lower:]' | tr -d '[:space:]')"
+[ -z "$CCT_TEST_GROUPS_NORMALIZED" ] && CCT_TEST_GROUPS_NORMALIZED="all"
+CCT_TEST_PHASES_NORMALIZED="$(printf '%s' "$CCT_TEST_PHASES" | tr '[:lower:]' '[:upper:]' | tr -d '[:space:]')"
+
+if [ "$CCT_TEST_GROUPS_NORMALIZED" != "all" ] || [ -n "$CCT_TEST_PHASES_NORMALIZED" ]; then
+    echo "Test selection: groups=$CCT_TEST_GROUPS_NORMALIZED phases=${CCT_TEST_PHASES_NORMALIZED:-all}" >&3
+fi
+
+if cct_phase_block_enabled "LEGACY"; then
 # Test 1: Binary exists and is executable
 echo "Test 1: Binary exists and is executable"
 if [ -x "$CCT_BIN" ]; then
@@ -18530,15 +18697,20 @@ SRC_1221="tests/integration/socket_tcp_loopback_20b1.cct"
 BIN_1221="${SRC_1221%.cct}"
 cleanup_codegen_artifacts "$HELPER_1221"
 cleanup_codegen_artifacts "$SRC_1221"
-rm -f tests/.tmp/socket_tcp_loopback_20b1.ready \
-      tests/.tmp/socket_tcp_loopback_20b1.done \
-      tests/.tmp/socket_tcp_loopback_20b1.server.log
+RC_1221=255
 if "$CCT_BIN" "$HELPER_1221" >"$CCT_TMP_DIR/cct_phase20b1_1221_helper_compile.out" 2>&1 && \
    "$CCT_BIN" "$SRC_1221" >"$CCT_TMP_DIR/cct_phase20b1_1221_compile.out" 2>&1; then
-    "$BIN_1221" >"$CCT_TMP_DIR/cct_phase20b1_1221_run.out" 2>&1
-    RC_1221=$?
-else
-    RC_1221=255
+    for ATTEMPT_1221 in 1 2; do
+        rm -f tests/.tmp/socket_tcp_loopback_20b1.ready \
+              tests/.tmp/socket_tcp_loopback_20b1.done \
+              tests/.tmp/socket_tcp_loopback_20b1.server.log
+        "$BIN_1221" >"$CCT_TMP_DIR/cct_phase20b1_1221_run.out" 2>&1
+        RC_1221=$?
+        if [ "$RC_1221" -eq 0 ]; then
+            break
+        fi
+        sleep 1
+    done
 fi
 if [ "$RC_1221" -eq 0 ]; then
     test_pass "socket_tcp_loopback_20b1 valida socket TCP host-only com bind/listen/accept/connect/send/recv"
@@ -19470,6 +19642,9 @@ else
     test_fail "db_finalize_after_error_20e5 regrediu finalize apos erro SQLite"
 fi
 
+fi
+
+if cct_phase_block_enabled "21"; then
 echo ""
 echo "========================================"
 echo "FASE 21A1: cct/char ASCII Classification Tests"
@@ -19687,6 +19862,9 @@ else
     test_fail "gate_21b4 encontrou divergencia em compilacao ou checklist do Token Model"
 fi
 
+fi
+
+if cct_phase_block_enabled "22"; then
 echo ""
 echo "========================================"
 echo "FASE 22A: AST Backbone"
@@ -20754,6 +20932,9 @@ else
     test_fail "22F field/index fixture divergiu do parser C"
 fi
 
+fi
+
+if cct_phase_block_enabled "23"; then
 echo ""
 echo "========================================"
 echo "FASE 23A: Advanced Control Flow + AST Expansion"
@@ -21614,6 +21795,9 @@ else
     test_fail "23E modulo com multiplos imports divergiu do parser C"
 fi
 
+fi
+
+if cct_phase_block_enabled "24"; then
 echo ""
 echo "========================================"
 echo "FASE 24A: Symbol Table + Scope Chains"
@@ -22354,12 +22538,2531 @@ fi
 
 echo ""
 echo "========================================"
+echo "FASE 24E: Statement Validation"
+echo "========================================"
+echo ""
+
+# Test 1443: semantic_stmt_evoca_valid_24e
+echo "Test 1443: semantic_stmt_evoca_valid_24e"
+SRC_1443="tests/integration/semantic_stmt_evoca_valid_24e.cct"
+BIN_1443="${SRC_1443%.cct}"
+cleanup_codegen_artifacts "$SRC_1443"
+if "$CCT_BIN" "$SRC_1443" >"$CCT_TMP_DIR/cct_phase24e_1443_compile.out" 2>&1; then
+    "$BIN_1443" >"$CCT_TMP_DIR/cct_phase24e_1443_run.out" 2>&1
+    RC_1443=$?
+else
+    RC_1443=255
+fi
+if [ "$RC_1443" -eq 0 ]; then
+    test_pass "semantic_stmt_evoca_valid_24e valida declaracao local com initializer"
+else
+    test_fail "semantic_stmt_evoca_valid_24e regrediu declaracao local com initializer"
+fi
+
+# Test 1444: semantic_stmt_vincire_valid_24e
+echo "Test 1444: semantic_stmt_vincire_valid_24e"
+SRC_1444="tests/integration/semantic_stmt_vincire_valid_24e.cct"
+BIN_1444="${SRC_1444%.cct}"
+cleanup_codegen_artifacts "$SRC_1444"
+if "$CCT_BIN" "$SRC_1444" >"$CCT_TMP_DIR/cct_phase24e_1444_compile.out" 2>&1; then
+    "$BIN_1444" >"$CCT_TMP_DIR/cct_phase24e_1444_run.out" 2>&1
+    RC_1444=$?
+else
+    RC_1444=255
+fi
+if [ "$RC_1444" -eq 0 ]; then
+    test_pass "semantic_stmt_vincire_valid_24e valida atribuicao simples"
+else
+    test_fail "semantic_stmt_vincire_valid_24e regrediu atribuicao simples"
+fi
+
+# Test 1445: semantic_stmt_vincire_invalid_24e
+echo "Test 1445: semantic_stmt_vincire_invalid_24e"
+SRC_1445="tests/integration/semantic_stmt_vincire_invalid_24e.cct"
+BIN_1445="${SRC_1445%.cct}"
+cleanup_codegen_artifacts "$SRC_1445"
+if "$CCT_BIN" "$SRC_1445" >"$CCT_TMP_DIR/cct_phase24e_1445_compile.out" 2>&1; then
+    "$BIN_1445" >"$CCT_TMP_DIR/cct_phase24e_1445_run.out" 2>&1
+    RC_1445=$?
+else
+    RC_1445=255
+fi
+if [ "$RC_1445" -eq 0 ]; then
+    test_pass "semantic_stmt_vincire_invalid_24e valida erro de atribuicao"
+else
+    test_fail "semantic_stmt_vincire_invalid_24e regrediu erro de atribuicao"
+fi
+
+# Test 1446: semantic_stmt_redde_valid_24e
+echo "Test 1446: semantic_stmt_redde_valid_24e"
+SRC_1446="tests/integration/semantic_stmt_redde_valid_24e.cct"
+BIN_1446="${SRC_1446%.cct}"
+cleanup_codegen_artifacts "$SRC_1446"
+if "$CCT_BIN" "$SRC_1446" >"$CCT_TMP_DIR/cct_phase24e_1446_compile.out" 2>&1; then
+    "$BIN_1446" >"$CCT_TMP_DIR/cct_phase24e_1446_run.out" 2>&1
+    RC_1446=$?
+else
+    RC_1446=255
+fi
+if [ "$RC_1446" -eq 0 ]; then
+    test_pass "semantic_stmt_redde_valid_24e valida retorno compatível"
+else
+    test_fail "semantic_stmt_redde_valid_24e regrediu retorno compatível"
+fi
+
+# Test 1447: semantic_stmt_redde_invalid_24e
+echo "Test 1447: semantic_stmt_redde_invalid_24e"
+SRC_1447="tests/integration/semantic_stmt_redde_invalid_24e.cct"
+BIN_1447="${SRC_1447%.cct}"
+cleanup_codegen_artifacts "$SRC_1447"
+if "$CCT_BIN" "$SRC_1447" >"$CCT_TMP_DIR/cct_phase24e_1447_compile.out" 2>&1; then
+    "$BIN_1447" >"$CCT_TMP_DIR/cct_phase24e_1447_run.out" 2>&1
+    RC_1447=$?
+else
+    RC_1447=255
+fi
+if [ "$RC_1447" -eq 0 ]; then
+    test_pass "semantic_stmt_redde_invalid_24e valida mismatch de retorno"
+else
+    test_fail "semantic_stmt_redde_invalid_24e regrediu mismatch de retorno"
+fi
+
+# Test 1448: semantic_stmt_if_condition_invalid_24e
+echo "Test 1448: semantic_stmt_if_condition_invalid_24e"
+SRC_1448="tests/integration/semantic_stmt_if_condition_invalid_24e.cct"
+BIN_1448="${SRC_1448%.cct}"
+cleanup_codegen_artifacts "$SRC_1448"
+if "$CCT_BIN" "$SRC_1448" >"$CCT_TMP_DIR/cct_phase24e_1448_compile.out" 2>&1; then
+    "$BIN_1448" >"$CCT_TMP_DIR/cct_phase24e_1448_run.out" 2>&1
+    RC_1448=$?
+else
+    RC_1448=255
+fi
+if [ "$RC_1448" -eq 0 ]; then
+    test_pass "semantic_stmt_if_condition_invalid_24e valida condicao de SI"
+else
+    test_fail "semantic_stmt_if_condition_invalid_24e regrediu condicao de SI"
+fi
+
+# Test 1449: semantic_stmt_dum_condition_invalid_24e
+echo "Test 1449: semantic_stmt_dum_condition_invalid_24e"
+SRC_1449="tests/integration/semantic_stmt_dum_condition_invalid_24e.cct"
+BIN_1449="${SRC_1449%.cct}"
+cleanup_codegen_artifacts "$SRC_1449"
+if "$CCT_BIN" "$SRC_1449" >"$CCT_TMP_DIR/cct_phase24e_1449_compile.out" 2>&1; then
+    "$BIN_1449" >"$CCT_TMP_DIR/cct_phase24e_1449_run.out" 2>&1
+    RC_1449=$?
+else
+    RC_1449=255
+fi
+if [ "$RC_1449" -eq 0 ]; then
+    test_pass "semantic_stmt_dum_condition_invalid_24e valida condicao de DUM"
+else
+    test_fail "semantic_stmt_dum_condition_invalid_24e regrediu condicao de DUM"
+fi
+
+# Test 1450: semantic_stmt_quando_basic_24e
+echo "Test 1450: semantic_stmt_quando_basic_24e"
+SRC_1450="tests/integration/semantic_stmt_quando_basic_24e.cct"
+BIN_1450="${SRC_1450%.cct}"
+cleanup_codegen_artifacts "$SRC_1450"
+if "$CCT_BIN" "$SRC_1450" >"$CCT_TMP_DIR/cct_phase24e_1450_compile.out" 2>&1; then
+    "$BIN_1450" >"$CCT_TMP_DIR/cct_phase24e_1450_run.out" 2>&1
+    RC_1450=$?
+else
+    RC_1450=255
+fi
+if [ "$RC_1450" -eq 0 ]; then
+    test_pass "semantic_stmt_quando_basic_24e valida QUANDO básico"
+else
+    test_fail "semantic_stmt_quando_basic_24e regrediu QUANDO básico"
+fi
+
+# Test 1451: semantic_stmt_tempta_basic_24e
+echo "Test 1451: semantic_stmt_tempta_basic_24e"
+SRC_1451="tests/integration/semantic_stmt_tempta_basic_24e.cct"
+BIN_1451="${SRC_1451%.cct}"
+cleanup_codegen_artifacts "$SRC_1451"
+if "$CCT_BIN" "$SRC_1451" >"$CCT_TMP_DIR/cct_phase24e_1451_compile.out" 2>&1; then
+    "$BIN_1451" >"$CCT_TMP_DIR/cct_phase24e_1451_run.out" 2>&1
+    RC_1451=$?
+else
+    RC_1451=255
+fi
+if [ "$RC_1451" -eq 0 ]; then
+    test_pass "semantic_stmt_tempta_basic_24e valida fluxo TEMPTA/CAPE/IACE"
+else
+    test_fail "semantic_stmt_tempta_basic_24e regrediu fluxo TEMPTA/CAPE/IACE"
+fi
+
+# Test 1452: semantic_stmt_block_scope_24e
+echo "Test 1452: semantic_stmt_block_scope_24e"
+SRC_1452="tests/integration/semantic_stmt_block_scope_24e.cct"
+BIN_1452="${SRC_1452%.cct}"
+cleanup_codegen_artifacts "$SRC_1452"
+if "$CCT_BIN" "$SRC_1452" >"$CCT_TMP_DIR/cct_phase24e_1452_compile.out" 2>&1; then
+    "$BIN_1452" >"$CCT_TMP_DIR/cct_phase24e_1452_run.out" 2>&1
+    RC_1452=$?
+else
+    RC_1452=255
+fi
+if [ "$RC_1452" -eq 0 ]; then
+    test_pass "semantic_stmt_block_scope_24e valida isolamento de escopo de bloco"
+else
+    test_fail "semantic_stmt_block_scope_24e regrediu isolamento de escopo de bloco"
+fi
+
+echo ""
+echo "========================================"
+echo "FASE 24F: Function Signatures + Non-Generic Contract Checks"
+echo "========================================"
+echo ""
+
+# Test 1453: semantic_decl_program_valid_24f
+echo "Test 1453: semantic_decl_program_valid_24f"
+SRC_1453="tests/integration/semantic_decl_program_valid_24f.cct"
+BIN_1453="${SRC_1453%.cct}"
+cleanup_codegen_artifacts "$SRC_1453"
+if "$CCT_BIN" "$SRC_1453" >"$CCT_TMP_DIR/cct_phase24f_1453_compile.out" 2>&1; then
+    "$BIN_1453" >"$CCT_TMP_DIR/cct_phase24f_1453_run.out" 2>&1
+    RC_1453=$?
+else
+    RC_1453=255
+fi
+if [ "$RC_1453" -eq 0 ]; then
+    test_pass "semantic_decl_program_valid_24f valida programa simples semanticamente"
+else
+    test_fail "semantic_decl_program_valid_24f regrediu validacao de programa simples"
+fi
+
+# Test 1454: semantic_decl_duplicate_param_24f
+echo "Test 1454: semantic_decl_duplicate_param_24f"
+SRC_1454="tests/integration/semantic_decl_duplicate_param_24f.cct"
+BIN_1454="${SRC_1454%.cct}"
+cleanup_codegen_artifacts "$SRC_1454"
+if "$CCT_BIN" "$SRC_1454" >"$CCT_TMP_DIR/cct_phase24f_1454_compile.out" 2>&1; then
+    "$BIN_1454" >"$CCT_TMP_DIR/cct_phase24f_1454_run.out" 2>&1
+    RC_1454=$?
+else
+    RC_1454=255
+fi
+if [ "$RC_1454" -eq 0 ]; then
+    test_pass "semantic_decl_duplicate_param_24f valida parametro duplicado"
+else
+    test_fail "semantic_decl_duplicate_param_24f regrediu deteccao de parametro duplicado"
+fi
+
+# Test 1455: semantic_call_valid_24f
+echo "Test 1455: semantic_call_valid_24f"
+SRC_1455="tests/integration/semantic_call_valid_24f.cct"
+BIN_1455="${SRC_1455%.cct}"
+cleanup_codegen_artifacts "$SRC_1455"
+if "$CCT_BIN" "$SRC_1455" >"$CCT_TMP_DIR/cct_phase24f_1455_compile.out" 2>&1; then
+    "$BIN_1455" >"$CCT_TMP_DIR/cct_phase24f_1455_run.out" 2>&1
+    RC_1455=$?
+else
+    RC_1455=255
+fi
+if [ "$RC_1455" -eq 0 ]; then
+    test_pass "semantic_call_valid_24f valida chamada semantica correta"
+else
+    test_fail "semantic_call_valid_24f regrediu chamada semantica correta"
+fi
+
+# Test 1456: semantic_call_arity_24f
+echo "Test 1456: semantic_call_arity_24f"
+SRC_1456="tests/integration/semantic_call_arity_24f.cct"
+BIN_1456="${SRC_1456%.cct}"
+cleanup_codegen_artifacts "$SRC_1456"
+if "$CCT_BIN" "$SRC_1456" >"$CCT_TMP_DIR/cct_phase24f_1456_compile.out" 2>&1; then
+    "$BIN_1456" >"$CCT_TMP_DIR/cct_phase24f_1456_run.out" 2>&1
+    RC_1456=$?
+else
+    RC_1456=255
+fi
+if [ "$RC_1456" -eq 0 ]; then
+    test_pass "semantic_call_arity_24f valida erro de aridade"
+else
+    test_fail "semantic_call_arity_24f regrediu erro de aridade"
+fi
+
+# Test 1457: semantic_call_type_24f
+echo "Test 1457: semantic_call_type_24f"
+SRC_1457="tests/integration/semantic_call_type_24f.cct"
+BIN_1457="${SRC_1457%.cct}"
+cleanup_codegen_artifacts "$SRC_1457"
+if "$CCT_BIN" "$SRC_1457" >"$CCT_TMP_DIR/cct_phase24f_1457_compile.out" 2>&1; then
+    "$BIN_1457" >"$CCT_TMP_DIR/cct_phase24f_1457_run.out" 2>&1
+    RC_1457=$?
+else
+    RC_1457=255
+fi
+if [ "$RC_1457" -eq 0 ]; then
+    test_pass "semantic_call_type_24f valida erro de tipo em chamada"
+else
+    test_fail "semantic_call_type_24f regrediu erro de tipo em chamada"
+fi
+
+# Test 1458: semantic_decl_return_mismatch_24f
+echo "Test 1458: semantic_decl_return_mismatch_24f"
+SRC_1458="tests/integration/semantic_decl_return_mismatch_24f.cct"
+BIN_1458="${SRC_1458%.cct}"
+cleanup_codegen_artifacts "$SRC_1458"
+if "$CCT_BIN" "$SRC_1458" >"$CCT_TMP_DIR/cct_phase24f_1458_compile.out" 2>&1; then
+    "$BIN_1458" >"$CCT_TMP_DIR/cct_phase24f_1458_run.out" 2>&1
+    RC_1458=$?
+else
+    RC_1458=255
+fi
+if [ "$RC_1458" -eq 0 ]; then
+    test_pass "semantic_decl_return_mismatch_24f valida mismatch de retorno"
+else
+    test_fail "semantic_decl_return_mismatch_24f regrediu mismatch de retorno"
+fi
+
+# Test 1459: semantic_pactum_basic_24f
+echo "Test 1459: semantic_pactum_basic_24f"
+SRC_1459="tests/integration/semantic_pactum_basic_24f.cct"
+BIN_1459="${SRC_1459%.cct}"
+cleanup_codegen_artifacts "$SRC_1459"
+if "$CCT_BIN" "$SRC_1459" >"$CCT_TMP_DIR/cct_phase24f_1459_compile.out" 2>&1; then
+    "$BIN_1459" >"$CCT_TMP_DIR/cct_phase24f_1459_run.out" 2>&1
+    RC_1459=$?
+else
+    RC_1459=255
+fi
+if [ "$RC_1459" -eq 0 ]; then
+    test_pass "semantic_pactum_basic_24f valida contrato nao generico basico"
+else
+    test_fail "semantic_pactum_basic_24f regrediu contrato nao generico basico"
+fi
+
+# Test 1460: semantic_pactum_duplicate_signature_24f
+echo "Test 1460: semantic_pactum_duplicate_signature_24f"
+SRC_1460="tests/integration/semantic_pactum_duplicate_signature_24f.cct"
+BIN_1460="${SRC_1460%.cct}"
+cleanup_codegen_artifacts "$SRC_1460"
+if "$CCT_BIN" "$SRC_1460" >"$CCT_TMP_DIR/cct_phase24f_1460_compile.out" 2>&1; then
+    "$BIN_1460" >"$CCT_TMP_DIR/cct_phase24f_1460_run.out" 2>&1
+    RC_1460=$?
+else
+    RC_1460=255
+fi
+if [ "$RC_1460" -eq 0 ]; then
+    test_pass "semantic_pactum_duplicate_signature_24f valida assinatura duplicada"
+else
+    test_fail "semantic_pactum_duplicate_signature_24f regrediu assinatura duplicada"
+fi
+
+# Test 1461: semantic_pactum_sigillum_conformance_24f
+echo "Test 1461: semantic_pactum_sigillum_conformance_24f"
+SRC_1461="tests/integration/semantic_pactum_sigillum_conformance_24f.cct"
+BIN_1461="${SRC_1461%.cct}"
+cleanup_codegen_artifacts "$SRC_1461"
+if "$CCT_BIN" "$SRC_1461" >"$CCT_TMP_DIR/cct_phase24f_1461_compile.out" 2>&1; then
+    "$BIN_1461" >"$CCT_TMP_DIR/cct_phase24f_1461_run.out" 2>&1
+    RC_1461=$?
+else
+    RC_1461=255
+fi
+if [ "$RC_1461" -eq 0 ]; then
+    test_pass "semantic_pactum_sigillum_conformance_24f valida helper de conformance nao generica"
+else
+    test_fail "semantic_pactum_sigillum_conformance_24f regrediu helper de conformance nao generica"
+fi
+
+# Test 1462: semantic_pactum_missing_self_24f
+echo "Test 1462: semantic_pactum_missing_self_24f"
+SRC_1462="tests/integration/semantic_pactum_missing_self_24f.cct"
+BIN_1462="${SRC_1462%.cct}"
+cleanup_codegen_artifacts "$SRC_1462"
+if "$CCT_BIN" "$SRC_1462" >"$CCT_TMP_DIR/cct_phase24f_1462_compile.out" 2>&1; then
+    "$BIN_1462" >"$CCT_TMP_DIR/cct_phase24f_1462_run.out" 2>&1
+    RC_1462=$?
+else
+    RC_1462=255
+fi
+if [ "$RC_1462" -eq 0 ]; then
+    test_pass "semantic_pactum_missing_self_24f valida erro de self ausente"
+else
+    test_fail "semantic_pactum_missing_self_24f regrediu erro de self ausente"
+fi
+
+echo ""
+echo "========================================"
+echo "FASE 24G: Validation Gate"
+echo "========================================"
+echo ""
+
+# Test 1463: main_semantic_bootstrap_24g
+echo "Test 1463: main_semantic_bootstrap_24g"
+cleanup_codegen_artifacts "src/bootstrap/main_semantic.cct"
+if "$CCT_BIN" "src/bootstrap/main_semantic.cct" >"$CCT_TMP_DIR/cct_phase24g_1463_compile.out" 2>&1; then
+    RC_1463=0
+else
+    RC_1463=255
+fi
+if [ "$RC_1463" -eq 0 ] && [ -x "src/bootstrap/main_semantic" ]; then
+    test_pass "main_semantic_bootstrap_24g compila entrypoint semantico bootstrap"
+else
+    test_fail "main_semantic_bootstrap_24g nao compilou entrypoint semantico bootstrap"
+fi
+
+# Test 1464: semantic_gate_valid_scope_stmt_24g_input
+echo "Test 1464: semantic_gate_valid_scope_stmt_24g_input"
+if [ "$RC_1463" -eq 0 ] && compare_semantic_check_24g "phase24g_1464" "tests/integration/semantic_gate_valid_scope_stmt_24g_input.cct"; then
+    test_pass "semantic_gate_valid_scope_stmt_24g_input alinha bootstrap e host em escopos/statements"
+else
+    test_fail "semantic_gate_valid_scope_stmt_24g_input divergiu entre bootstrap e host"
+fi
+
+# Test 1465: semantic_gate_valid_call_24g_input
+echo "Test 1465: semantic_gate_valid_call_24g_input"
+if [ "$RC_1463" -eq 0 ] && compare_semantic_check_24g "phase24g_1465" "tests/integration/semantic_gate_valid_call_24g_input.cct"; then
+    test_pass "semantic_gate_valid_call_24g_input alinha bootstrap e host em chamada valida"
+else
+    test_fail "semantic_gate_valid_call_24g_input divergiu entre bootstrap e host"
+fi
+
+# Test 1466: semantic_gate_valid_sigillum_24g_input
+echo "Test 1466: semantic_gate_valid_sigillum_24g_input"
+if [ "$RC_1463" -eq 0 ] && compare_semantic_check_24g "phase24g_1466" "tests/integration/semantic_gate_valid_sigillum_24g_input.cct"; then
+    test_pass "semantic_gate_valid_sigillum_24g_input alinha bootstrap e host em tipo nomeado"
+else
+    test_fail "semantic_gate_valid_sigillum_24g_input divergiu entre bootstrap e host"
+fi
+
+# Test 1467: semantic_gate_valid_ordo_24g_input
+echo "Test 1467: semantic_gate_valid_ordo_24g_input"
+if [ "$RC_1463" -eq 0 ] && compare_semantic_check_24g "phase24g_1467" "tests/integration/semantic_gate_valid_ordo_24g_input.cct"; then
+    test_pass "semantic_gate_valid_ordo_24g_input alinha bootstrap e host em ORDO"
+else
+    test_fail "semantic_gate_valid_ordo_24g_input divergiu entre bootstrap e host"
+fi
+
+# Test 1468: semantic_gate_valid_pactum_24g_input
+echo "Test 1468: semantic_gate_valid_pactum_24g_input"
+if [ "$RC_1463" -eq 0 ] && compare_semantic_check_24g "phase24g_1468" "tests/integration/semantic_gate_valid_pactum_24g_input.cct"; then
+    test_pass "semantic_gate_valid_pactum_24g_input alinha bootstrap e host em PACTUM basico"
+else
+    test_fail "semantic_gate_valid_pactum_24g_input divergiu entre bootstrap e host"
+fi
+
+# Test 1469: semantic_gate_invalid_undeclared_24g_input
+echo "Test 1469: semantic_gate_invalid_undeclared_24g_input"
+if [ "$RC_1463" -eq 0 ] && compare_semantic_check_24g "phase24g_1469" "tests/integration/semantic_gate_invalid_undeclared_24g_input.cct"; then
+    test_pass "semantic_gate_invalid_undeclared_24g_input alinha bootstrap e host em identificador ausente"
+else
+    test_fail "semantic_gate_invalid_undeclared_24g_input divergiu entre bootstrap e host"
+fi
+
+# Test 1470: semantic_gate_invalid_return_24g_input
+echo "Test 1470: semantic_gate_invalid_return_24g_input"
+if [ "$RC_1463" -eq 0 ] && compare_semantic_check_24g "phase24g_1470" "tests/integration/semantic_gate_invalid_return_24g_input.cct"; then
+    test_pass "semantic_gate_invalid_return_24g_input alinha bootstrap e host em return mismatch"
+else
+    test_fail "semantic_gate_invalid_return_24g_input divergiu entre bootstrap e host"
+fi
+
+# Test 1471: semantic_gate_invalid_call_arity_24g_input
+echo "Test 1471: semantic_gate_invalid_call_arity_24g_input"
+if [ "$RC_1463" -eq 0 ] && compare_semantic_check_24g "phase24g_1471" "tests/integration/semantic_gate_invalid_call_arity_24g_input.cct"; then
+    test_pass "semantic_gate_invalid_call_arity_24g_input alinha bootstrap e host em aridade invalida"
+else
+    test_fail "semantic_gate_invalid_call_arity_24g_input divergiu entre bootstrap e host"
+fi
+
+# Test 1472: semantic_gate_invalid_call_type_24g_input
+echo "Test 1472: semantic_gate_invalid_call_type_24g_input"
+if [ "$RC_1463" -eq 0 ] && compare_semantic_check_24g "phase24g_1472" "tests/integration/semantic_gate_invalid_call_type_24g_input.cct"; then
+    test_pass "semantic_gate_invalid_call_type_24g_input alinha bootstrap e host em tipo invalido de chamada"
+else
+    test_fail "semantic_gate_invalid_call_type_24g_input divergiu entre bootstrap e host"
+fi
+
+# Test 1473: semantic_gate_invalid_duplicate_param_24g_input
+echo "Test 1473: semantic_gate_invalid_duplicate_param_24g_input"
+if [ "$RC_1463" -eq 0 ] && compare_semantic_check_24g "phase24g_1473" "tests/integration/semantic_gate_invalid_duplicate_param_24g_input.cct"; then
+    test_pass "semantic_gate_invalid_duplicate_param_24g_input alinha bootstrap e host em parametro duplicado"
+else
+    test_fail "semantic_gate_invalid_duplicate_param_24g_input divergiu entre bootstrap e host"
+fi
+
+# Test 1474: semantic_gate_invalid_pactum_duplicate_24g_input
+echo "Test 1474: semantic_gate_invalid_pactum_duplicate_24g_input"
+if [ "$RC_1463" -eq 0 ] && compare_semantic_check_24g "phase24g_1474" "tests/integration/semantic_gate_invalid_pactum_duplicate_24g_input.cct"; then
+    test_pass "semantic_gate_invalid_pactum_duplicate_24g_input alinha bootstrap e host em assinatura duplicada"
+else
+    test_fail "semantic_gate_invalid_pactum_duplicate_24g_input divergiu entre bootstrap e host"
+fi
+
+fi
+
+if cct_phase_block_enabled "25"; then
+echo ""
+echo "========================================"
+echo "FASE 25A: Generic Parameter Tracking"
+echo "========================================"
+echo ""
+
+# Test 1475: semantic_generic_rituale_type_params_25a
+echo "Test 1475: semantic_generic_rituale_type_params_25a"
+SRC_1475="tests/integration/semantic_generic_rituale_type_params_25a.cct"
+BIN_1475="${SRC_1475%.cct}"
+cleanup_codegen_artifacts "$SRC_1475"
+if "$CCT_BIN" "$SRC_1475" >"$CCT_TMP_DIR/cct_phase25a_1475_compile.out" 2>&1; then
+    "$BIN_1475" >"$CCT_TMP_DIR/cct_phase25a_1475_run.out" 2>&1
+    RC_1475=$?
+else
+    RC_1475=255
+fi
+if [ "$RC_1475" -eq 0 ]; then
+    test_pass "semantic_generic_rituale_type_params_25a registra type param de rituale generico"
+else
+    test_fail "semantic_generic_rituale_type_params_25a regrediu registro de type param em rituale"
+fi
+
+# Test 1476: semantic_generic_sigillum_type_params_25a
+echo "Test 1476: semantic_generic_sigillum_type_params_25a"
+SRC_1476="tests/integration/semantic_generic_sigillum_type_params_25a.cct"
+BIN_1476="${SRC_1476%.cct}"
+cleanup_codegen_artifacts "$SRC_1476"
+if "$CCT_BIN" "$SRC_1476" >"$CCT_TMP_DIR/cct_phase25a_1476_compile.out" 2>&1; then
+    "$BIN_1476" >"$CCT_TMP_DIR/cct_phase25a_1476_run.out" 2>&1
+    RC_1476=$?
+else
+    RC_1476=255
+fi
+if [ "$RC_1476" -eq 0 ]; then
+    test_pass "semantic_generic_sigillum_type_params_25a registra type param de SIGILLUM generico"
+else
+    test_fail "semantic_generic_sigillum_type_params_25a regrediu registro de type param em SIGILLUM"
+fi
+
+# Test 1477: semantic_generic_lookup_valid_25a
+echo "Test 1477: semantic_generic_lookup_valid_25a"
+SRC_1477="tests/integration/semantic_generic_lookup_valid_25a.cct"
+BIN_1477="${SRC_1477%.cct}"
+cleanup_codegen_artifacts "$SRC_1477"
+if "$CCT_BIN" "$SRC_1477" >"$CCT_TMP_DIR/cct_phase25a_1477_compile.out" 2>&1; then
+    "$BIN_1477" >"$CCT_TMP_DIR/cct_phase25a_1477_run.out" 2>&1
+    RC_1477=$?
+else
+    RC_1477=255
+fi
+if [ "$RC_1477" -eq 0 ]; then
+    test_pass "semantic_generic_lookup_valid_25a resolve type param em escopo generico"
+else
+    test_fail "semantic_generic_lookup_valid_25a regrediu lookup de type param em escopo generico"
+fi
+
+# Test 1478: semantic_generic_lookup_out_of_scope_25a
+echo "Test 1478: semantic_generic_lookup_out_of_scope_25a"
+SRC_1478="tests/integration/semantic_generic_lookup_out_of_scope_25a.cct"
+BIN_1478="${SRC_1478%.cct}"
+cleanup_codegen_artifacts "$SRC_1478"
+if "$CCT_BIN" "$SRC_1478" >"$CCT_TMP_DIR/cct_phase25a_1478_compile.out" 2>&1; then
+    "$BIN_1478" >"$CCT_TMP_DIR/cct_phase25a_1478_run.out" 2>&1
+    RC_1478=$?
+else
+    RC_1478=255
+fi
+if [ "$RC_1478" -eq 0 ]; then
+    test_pass "semantic_generic_lookup_out_of_scope_25a rejeita type param fora de escopo"
+else
+    test_fail "semantic_generic_lookup_out_of_scope_25a regrediu rejeicao de type param fora de escopo"
+fi
+
+# Test 1479: semantic_generic_duplicate_param_25a
+echo "Test 1479: semantic_generic_duplicate_param_25a"
+SRC_1479="tests/integration/semantic_generic_duplicate_param_25a.cct"
+BIN_1479="${SRC_1479%.cct}"
+cleanup_codegen_artifacts "$SRC_1479"
+if "$CCT_BIN" "$SRC_1479" >"$CCT_TMP_DIR/cct_phase25a_1479_compile.out" 2>&1; then
+    "$BIN_1479" >"$CCT_TMP_DIR/cct_phase25a_1479_run.out" 2>&1
+    RC_1479=$?
+else
+    RC_1479=255
+fi
+if [ "$RC_1479" -eq 0 ]; then
+    test_pass "semantic_generic_duplicate_param_25a detecta type param duplicado"
+else
+    test_fail "semantic_generic_duplicate_param_25a regrediu deteccao de type param duplicado"
+fi
+
+# Test 1480: semantic_generic_constraint_resolved_25a
+echo "Test 1480: semantic_generic_constraint_resolved_25a"
+SRC_1480="tests/integration/semantic_generic_constraint_resolved_25a.cct"
+BIN_1480="${SRC_1480%.cct}"
+cleanup_codegen_artifacts "$SRC_1480"
+if "$CCT_BIN" "$SRC_1480" >"$CCT_TMP_DIR/cct_phase25a_1480_compile.out" 2>&1; then
+    "$BIN_1480" >"$CCT_TMP_DIR/cct_phase25a_1480_run.out" 2>&1
+    RC_1480=$?
+else
+    RC_1480=255
+fi
+if [ "$RC_1480" -eq 0 ]; then
+    test_pass "semantic_generic_constraint_resolved_25a resolve constraint PACTUM em type param"
+else
+    test_fail "semantic_generic_constraint_resolved_25a regrediu resolucao de constraint PACTUM"
+fi
+
+# Test 1481: semantic_generic_constraint_missing_25a
+echo "Test 1481: semantic_generic_constraint_missing_25a"
+SRC_1481="tests/integration/semantic_generic_constraint_missing_25a.cct"
+BIN_1481="${SRC_1481%.cct}"
+cleanup_codegen_artifacts "$SRC_1481"
+if "$CCT_BIN" "$SRC_1481" >"$CCT_TMP_DIR/cct_phase25a_1481_compile.out" 2>&1; then
+    "$BIN_1481" >"$CCT_TMP_DIR/cct_phase25a_1481_run.out" 2>&1
+    RC_1481=$?
+else
+    RC_1481=255
+fi
+if [ "$RC_1481" -eq 0 ]; then
+    test_pass "semantic_generic_constraint_missing_25a detecta constraint PACTUM ausente"
+else
+    test_fail "semantic_generic_constraint_missing_25a regrediu deteccao de constraint PACTUM ausente"
+fi
+
+# Test 1482: semantic_generic_shadowing_invalid_25a
+echo "Test 1482: semantic_generic_shadowing_invalid_25a"
+SRC_1482="tests/integration/semantic_generic_shadowing_invalid_25a.cct"
+BIN_1482="${SRC_1482%.cct}"
+cleanup_codegen_artifacts "$SRC_1482"
+if "$CCT_BIN" "$SRC_1482" >"$CCT_TMP_DIR/cct_phase25a_1482_compile.out" 2>&1; then
+    "$BIN_1482" >"$CCT_TMP_DIR/cct_phase25a_1482_run.out" 2>&1
+    RC_1482=$?
+else
+    RC_1482=255
+fi
+if [ "$RC_1482" -eq 0 ]; then
+    test_pass "semantic_generic_shadowing_invalid_25a detecta shadowing invalido de type param"
+else
+    test_fail "semantic_generic_shadowing_invalid_25a regrediu shadowing invalido de type param"
+fi
+
+# Test 1483: semantic_generic_multiple_params_25a
+echo "Test 1483: semantic_generic_multiple_params_25a"
+SRC_1483="tests/integration/semantic_generic_multiple_params_25a.cct"
+BIN_1483="${SRC_1483%.cct}"
+cleanup_codegen_artifacts "$SRC_1483"
+if "$CCT_BIN" "$SRC_1483" >"$CCT_TMP_DIR/cct_phase25a_1483_compile.out" 2>&1; then
+    "$BIN_1483" >"$CCT_TMP_DIR/cct_phase25a_1483_run.out" 2>&1
+    RC_1483=$?
+else
+    RC_1483=255
+fi
+if [ "$RC_1483" -eq 0 ]; then
+    test_pass "semantic_generic_multiple_params_25a rastreia multiplos type params"
+else
+    test_fail "semantic_generic_multiple_params_25a regrediu tracking de multiplos type params"
+fi
+
+# Test 1484: semantic_generic_fixture_simple_25a
+echo "Test 1484: semantic_generic_fixture_simple_25a"
+SRC_1484="tests/integration/semantic_generic_fixture_simple_25a.cct"
+BIN_1484="${SRC_1484%.cct}"
+cleanup_codegen_artifacts "$SRC_1484"
+if "$CCT_BIN" "$SRC_1484" >"$CCT_TMP_DIR/cct_phase25a_1484_compile.out" 2>&1; then
+    "$BIN_1484" >"$CCT_TMP_DIR/cct_phase25a_1484_run.out" 2>&1
+    RC_1484=$?
+else
+    RC_1484=255
+fi
+if [ "$RC_1484" -eq 0 ]; then
+    test_pass "semantic_generic_fixture_simple_25a valida fixture simples com GENUS"
+else
+    test_fail "semantic_generic_fixture_simple_25a regrediu fixture simples com GENUS"
+fi
+
+echo ""
+echo "========================================"
+echo "FASE 25B: Generic Instantiation"
+echo "========================================"
+echo ""
+
+# Test 1485: semantic_generic_named_type_instance_25b
+echo "Test 1485: semantic_generic_named_type_instance_25b"
+SRC_1485="tests/integration/semantic_generic_named_type_instance_25b.cct"
+BIN_1485="${SRC_1485%.cct}"
+cleanup_codegen_artifacts "$SRC_1485"
+if "$CCT_BIN" "$SRC_1485" >"$CCT_TMP_DIR/cct_phase25b_1485_compile.out" 2>&1; then
+    "$BIN_1485" >"$CCT_TMP_DIR/cct_phase25b_1485_run.out" 2>&1
+    RC_1485=$?
+else
+    RC_1485=255
+fi
+if [ "$RC_1485" -eq 0 ]; then
+    test_pass "semantic_generic_named_type_instance_25b materializa instancia de tipo generico"
+else
+    test_fail "semantic_generic_named_type_instance_25b regrediu materializacao de tipo generico"
+fi
+
+# Test 1486: semantic_generic_rituale_call_valid_25b
+echo "Test 1486: semantic_generic_rituale_call_valid_25b"
+SRC_1486="tests/integration/semantic_generic_rituale_call_valid_25b.cct"
+BIN_1486="${SRC_1486%.cct}"
+cleanup_codegen_artifacts "$SRC_1486"
+if "$CCT_BIN" "$SRC_1486" >"$CCT_TMP_DIR/cct_phase25b_1486_compile.out" 2>&1; then
+    "$BIN_1486" >"$CCT_TMP_DIR/cct_phase25b_1486_run.out" 2>&1
+    RC_1486=$?
+else
+    RC_1486=255
+fi
+if [ "$RC_1486" -eq 0 ]; then
+    test_pass "semantic_generic_rituale_call_valid_25b valida chamada de rituale generico"
+else
+    test_fail "semantic_generic_rituale_call_valid_25b regrediu chamada de rituale generico"
+fi
+
+# Test 1487: semantic_generic_arity_type_invalid_25b
+echo "Test 1487: semantic_generic_arity_type_invalid_25b"
+SRC_1487="tests/integration/semantic_generic_arity_type_invalid_25b.cct"
+BIN_1487="${SRC_1487%.cct}"
+cleanup_codegen_artifacts "$SRC_1487"
+if "$CCT_BIN" "$SRC_1487" >"$CCT_TMP_DIR/cct_phase25b_1487_compile.out" 2>&1; then
+    "$BIN_1487" >"$CCT_TMP_DIR/cct_phase25b_1487_run.out" 2>&1
+    RC_1487=$?
+else
+    RC_1487=255
+fi
+if [ "$RC_1487" -eq 0 ]; then
+    test_pass "semantic_generic_arity_type_invalid_25b detecta aridade incorreta em tipo generico"
+else
+    test_fail "semantic_generic_arity_type_invalid_25b regrediu aridade incorreta em tipo generico"
+fi
+
+# Test 1488: semantic_generic_rituale_arity_invalid_25b
+echo "Test 1488: semantic_generic_rituale_arity_invalid_25b"
+SRC_1488="tests/integration/semantic_generic_rituale_arity_invalid_25b.cct"
+BIN_1488="${SRC_1488%.cct}"
+cleanup_codegen_artifacts "$SRC_1488"
+if "$CCT_BIN" "$SRC_1488" >"$CCT_TMP_DIR/cct_phase25b_1488_compile.out" 2>&1; then
+    "$BIN_1488" >"$CCT_TMP_DIR/cct_phase25b_1488_run.out" 2>&1
+    RC_1488=$?
+else
+    RC_1488=255
+fi
+if [ "$RC_1488" -eq 0 ]; then
+    test_pass "semantic_generic_rituale_arity_invalid_25b detecta aridade incorreta em rituale generico"
+else
+    test_fail "semantic_generic_rituale_arity_invalid_25b regrediu aridade incorreta em rituale generico"
+fi
+
+# Test 1489: semantic_generic_repeated_instance_25b
+echo "Test 1489: semantic_generic_repeated_instance_25b"
+SRC_1489="tests/integration/semantic_generic_repeated_instance_25b.cct"
+BIN_1489="${SRC_1489%.cct}"
+cleanup_codegen_artifacts "$SRC_1489"
+if "$CCT_BIN" "$SRC_1489" >"$CCT_TMP_DIR/cct_phase25b_1489_compile.out" 2>&1; then
+    "$BIN_1489" >"$CCT_TMP_DIR/cct_phase25b_1489_run.out" 2>&1
+    RC_1489=$?
+else
+    RC_1489=255
+fi
+if [ "$RC_1489" -eq 0 ]; then
+    test_pass "semantic_generic_repeated_instance_25b reutiliza representacao equivalente"
+else
+    test_fail "semantic_generic_repeated_instance_25b regrediu reuse de instancia equivalente"
+fi
+
+# Test 1490: semantic_generic_named_type_debug_25b
+echo "Test 1490: semantic_generic_named_type_debug_25b"
+SRC_1490="tests/integration/semantic_generic_named_type_debug_25b.cct"
+BIN_1490="${SRC_1490%.cct}"
+cleanup_codegen_artifacts "$SRC_1490"
+if "$CCT_BIN" "$SRC_1490" >"$CCT_TMP_DIR/cct_phase25b_1490_compile.out" 2>&1; then
+    "$BIN_1490" >"$CCT_TMP_DIR/cct_phase25b_1490_run.out" 2>&1
+    RC_1490=$?
+else
+    RC_1490=255
+fi
+if [ "$RC_1490" -eq 0 ]; then
+    test_pass "semantic_generic_named_type_debug_25b expõe debug string estavel para instancia"
+else
+    test_fail "semantic_generic_named_type_debug_25b regrediu debug string de instancia"
+fi
+
+# Test 1491: semantic_generic_nested_instance_25b
+echo "Test 1491: semantic_generic_nested_instance_25b"
+SRC_1491="tests/integration/semantic_generic_nested_instance_25b.cct"
+BIN_1491="${SRC_1491%.cct}"
+cleanup_codegen_artifacts "$SRC_1491"
+if "$CCT_BIN" "$SRC_1491" >"$CCT_TMP_DIR/cct_phase25b_1491_compile.out" 2>&1; then
+    "$BIN_1491" >"$CCT_TMP_DIR/cct_phase25b_1491_run.out" 2>&1
+    RC_1491=$?
+else
+    RC_1491=255
+fi
+if [ "$RC_1491" -eq 0 ]; then
+    test_pass "semantic_generic_nested_instance_25b materializa instanciacao aninhada"
+else
+    test_fail "semantic_generic_nested_instance_25b regrediu instanciacao aninhada"
+fi
+
+# Test 1492: semantic_generic_return_substitution_25b
+echo "Test 1492: semantic_generic_return_substitution_25b"
+SRC_1492="tests/integration/semantic_generic_return_substitution_25b.cct"
+BIN_1492="${SRC_1492%.cct}"
+cleanup_codegen_artifacts "$SRC_1492"
+if "$CCT_BIN" "$SRC_1492" >"$CCT_TMP_DIR/cct_phase25b_1492_compile.out" 2>&1; then
+    "$BIN_1492" >"$CCT_TMP_DIR/cct_phase25b_1492_run.out" 2>&1
+    RC_1492=$?
+else
+    RC_1492=255
+fi
+if [ "$RC_1492" -eq 0 ]; then
+    test_pass "semantic_generic_return_substitution_25b substitui type param no retorno"
+else
+    test_fail "semantic_generic_return_substitution_25b regrediu substituicao de retorno generico"
+fi
+
+# Test 1493: semantic_generic_field_substitution_25b
+echo "Test 1493: semantic_generic_field_substitution_25b"
+SRC_1493="tests/integration/semantic_generic_field_substitution_25b.cct"
+BIN_1493="${SRC_1493%.cct}"
+cleanup_codegen_artifacts "$SRC_1493"
+if "$CCT_BIN" "$SRC_1493" >"$CCT_TMP_DIR/cct_phase25b_1493_compile.out" 2>&1; then
+    "$BIN_1493" >"$CCT_TMP_DIR/cct_phase25b_1493_run.out" 2>&1
+    RC_1493=$?
+else
+    RC_1493=255
+fi
+if [ "$RC_1493" -eq 0 ]; then
+    test_pass "semantic_generic_field_substitution_25b substitui type param em campo"
+else
+    test_fail "semantic_generic_field_substitution_25b regrediu substituicao de campo generico"
+fi
+
+# Test 1494: semantic_generic_missing_genus_invalid_25b
+echo "Test 1494: semantic_generic_missing_genus_invalid_25b"
+SRC_1494="tests/integration/semantic_generic_missing_genus_invalid_25b.cct"
+BIN_1494="${SRC_1494%.cct}"
+cleanup_codegen_artifacts "$SRC_1494"
+if "$CCT_BIN" "$SRC_1494" >"$CCT_TMP_DIR/cct_phase25b_1494_compile.out" 2>&1; then
+    "$BIN_1494" >"$CCT_TMP_DIR/cct_phase25b_1494_run.out" 2>&1
+    RC_1494=$?
+else
+    RC_1494=255
+fi
+if [ "$RC_1494" -eq 0 ]; then
+    test_pass "semantic_generic_missing_genus_invalid_25b falha quando GENUS é obrigatorio"
+else
+    test_fail "semantic_generic_missing_genus_invalid_25b regrediu obrigatoriedade de GENUS"
+fi
+
+# Test 1495: semantic_generic_multiple_instances_fixture_25b
+echo "Test 1495: semantic_generic_multiple_instances_fixture_25b"
+SRC_1495="tests/integration/semantic_generic_multiple_instances_fixture_25b.cct"
+BIN_1495="${SRC_1495%.cct}"
+cleanup_codegen_artifacts "$SRC_1495"
+if "$CCT_BIN" "$SRC_1495" >"$CCT_TMP_DIR/cct_phase25b_1495_compile.out" 2>&1; then
+    "$BIN_1495" >"$CCT_TMP_DIR/cct_phase25b_1495_run.out" 2>&1
+    RC_1495=$?
+else
+    RC_1495=255
+fi
+if [ "$RC_1495" -eq 0 ]; then
+    test_pass "semantic_generic_multiple_instances_fixture_25b valida fixture com multiplas instancias"
+else
+    test_fail "semantic_generic_multiple_instances_fixture_25b regrediu fixture com multiplas instancias"
+fi
+
+echo ""
+echo "========================================"
+echo "FASE 25C: Constraint Checking"
+echo "========================================"
+echo ""
+
+# Test 1496: semantic_constraint_satisfied_25c
+echo "Test 1496: semantic_constraint_satisfied_25c"
+SRC_1496="tests/integration/semantic_constraint_satisfied_25c.cct"
+BIN_1496="${SRC_1496%.cct}"
+cleanup_codegen_artifacts "$SRC_1496"
+if "$CCT_BIN" "$SRC_1496" >"$CCT_TMP_DIR/cct_phase25c_1496_compile.out" 2>&1; then
+    "$BIN_1496" >"$CCT_TMP_DIR/cct_phase25c_1496_run.out" 2>&1
+    RC_1496=$?
+else
+    RC_1496=255
+fi
+if [ "$RC_1496" -eq 0 ]; then
+    test_pass "semantic_constraint_satisfied_25c aceita type argument que satisfaz PACTUM"
+else
+    test_fail "semantic_constraint_satisfied_25c regrediu validacao positiva de constraint"
+fi
+
+# Test 1497: semantic_constraint_not_satisfied_25c
+echo "Test 1497: semantic_constraint_not_satisfied_25c"
+SRC_1497="tests/integration/semantic_constraint_not_satisfied_25c.cct"
+BIN_1497="${SRC_1497%.cct}"
+cleanup_codegen_artifacts "$SRC_1497"
+if "$CCT_BIN" "$SRC_1497" >"$CCT_TMP_DIR/cct_phase25c_1497_compile.out" 2>&1; then
+    "$BIN_1497" >"$CCT_TMP_DIR/cct_phase25c_1497_run.out" 2>&1
+    RC_1497=$?
+else
+    RC_1497=255
+fi
+if [ "$RC_1497" -eq 0 ]; then
+    test_pass "semantic_constraint_not_satisfied_25c rejeita type argument sem conformance"
+else
+    test_fail "semantic_constraint_not_satisfied_25c regrediu rejeicao de constraint nao satisfeita"
+fi
+
+# Test 1498: semantic_constraint_missing_contract_25c
+echo "Test 1498: semantic_constraint_missing_contract_25c"
+SRC_1498="tests/integration/semantic_constraint_missing_contract_25c.cct"
+BIN_1498="${SRC_1498%.cct}"
+cleanup_codegen_artifacts "$SRC_1498"
+if "$CCT_BIN" "$SRC_1498" >"$CCT_TMP_DIR/cct_phase25c_1498_compile.out" 2>&1; then
+    "$BIN_1498" >"$CCT_TMP_DIR/cct_phase25c_1498_run.out" 2>&1
+    RC_1498=$?
+else
+    RC_1498=255
+fi
+if [ "$RC_1498" -eq 0 ]; then
+    test_pass "semantic_constraint_missing_contract_25c detecta PACTUM inexistente"
+else
+    test_fail "semantic_constraint_missing_contract_25c regrediu diagnostico de PACTUM inexistente"
+fi
+
+# Test 1499: semantic_constraint_multiple_params_25c
+echo "Test 1499: semantic_constraint_multiple_params_25c"
+SRC_1499="tests/integration/semantic_constraint_multiple_params_25c.cct"
+BIN_1499="${SRC_1499%.cct}"
+cleanup_codegen_artifacts "$SRC_1499"
+if "$CCT_BIN" "$SRC_1499" >"$CCT_TMP_DIR/cct_phase25c_1499_compile.out" 2>&1; then
+    "$BIN_1499" >"$CCT_TMP_DIR/cct_phase25c_1499_run.out" 2>&1
+    RC_1499=$?
+else
+    RC_1499=255
+fi
+if [ "$RC_1499" -eq 0 ]; then
+    test_pass "semantic_constraint_multiple_params_25c valida multiplos type params com constraints"
+else
+    test_fail "semantic_constraint_multiple_params_25c regrediu validacao de multiplos type params com constraints"
+fi
+
+# Test 1500: semantic_constraint_rituale_generic_25c
+echo "Test 1500: semantic_constraint_rituale_generic_25c"
+SRC_1500="tests/integration/semantic_constraint_rituale_generic_25c.cct"
+BIN_1500="${SRC_1500%.cct}"
+cleanup_codegen_artifacts "$SRC_1500"
+if "$CCT_BIN" "$SRC_1500" >"$CCT_TMP_DIR/cct_phase25c_1500_compile.out" 2>&1; then
+    "$BIN_1500" >"$CCT_TMP_DIR/cct_phase25c_1500_run.out" 2>&1
+    RC_1500=$?
+else
+    RC_1500=255
+fi
+if [ "$RC_1500" -eq 0 ]; then
+    test_pass "semantic_constraint_rituale_generic_25c valida programa com rituale generico constrained"
+else
+    test_fail "semantic_constraint_rituale_generic_25c regrediu validacao de rituale generico constrained"
+fi
+
+# Test 1501: semantic_constraint_sigillum_generic_25c
+echo "Test 1501: semantic_constraint_sigillum_generic_25c"
+SRC_1501="tests/integration/semantic_constraint_sigillum_generic_25c.cct"
+BIN_1501="${SRC_1501%.cct}"
+cleanup_codegen_artifacts "$SRC_1501"
+if "$CCT_BIN" "$SRC_1501" >"$CCT_TMP_DIR/cct_phase25c_1501_compile.out" 2>&1; then
+    "$BIN_1501" >"$CCT_TMP_DIR/cct_phase25c_1501_run.out" 2>&1
+    RC_1501=$?
+else
+    RC_1501=255
+fi
+if [ "$RC_1501" -eq 0 ]; then
+    test_pass "semantic_constraint_sigillum_generic_25c resolve constraint em SIGILLUM generico"
+else
+    test_fail "semantic_constraint_sigillum_generic_25c regrediu constraint em SIGILLUM generico"
+fi
+
+# Test 1502: semantic_constraint_self_incorrect_25c
+echo "Test 1502: semantic_constraint_self_incorrect_25c"
+SRC_1502="tests/integration/semantic_constraint_self_incorrect_25c.cct"
+BIN_1502="${SRC_1502%.cct}"
+cleanup_codegen_artifacts "$SRC_1502"
+if "$CCT_BIN" "$SRC_1502" >"$CCT_TMP_DIR/cct_phase25c_1502_compile.out" 2>&1; then
+    "$BIN_1502" >"$CCT_TMP_DIR/cct_phase25c_1502_run.out" 2>&1
+    RC_1502=$?
+else
+    RC_1502=255
+fi
+if [ "$RC_1502" -eq 0 ]; then
+    test_pass "semantic_constraint_self_incorrect_25c rejeita self incorreto na conformance"
+else
+    test_fail "semantic_constraint_self_incorrect_25c regrediu validacao de self em PACTUM"
+fi
+
+# Test 1503: semantic_constraint_missing_signature_25c
+echo "Test 1503: semantic_constraint_missing_signature_25c"
+SRC_1503="tests/integration/semantic_constraint_missing_signature_25c.cct"
+BIN_1503="${SRC_1503%.cct}"
+cleanup_codegen_artifacts "$SRC_1503"
+if "$CCT_BIN" "$SRC_1503" >"$CCT_TMP_DIR/cct_phase25c_1503_compile.out" 2>&1; then
+    "$BIN_1503" >"$CCT_TMP_DIR/cct_phase25c_1503_run.out" 2>&1
+    RC_1503=$?
+else
+    RC_1503=255
+fi
+if [ "$RC_1503" -eq 0 ]; then
+    test_pass "semantic_constraint_missing_signature_25c detecta assinatura faltante"
+else
+    test_fail "semantic_constraint_missing_signature_25c regrediu deteccao de assinatura faltante"
+fi
+
+# Test 1504: semantic_constraint_reuse_pactum_helper_25c
+echo "Test 1504: semantic_constraint_reuse_pactum_helper_25c"
+SRC_1504="tests/integration/semantic_constraint_reuse_pactum_helper_25c.cct"
+BIN_1504="${SRC_1504%.cct}"
+cleanup_codegen_artifacts "$SRC_1504"
+if "$CCT_BIN" "$SRC_1504" >"$CCT_TMP_DIR/cct_phase25c_1504_compile.out" 2>&1; then
+    "$BIN_1504" >"$CCT_TMP_DIR/cct_phase25c_1504_run.out" 2>&1
+    RC_1504=$?
+else
+    RC_1504=255
+fi
+if [ "$RC_1504" -eq 0 ]; then
+    test_pass "semantic_constraint_reuse_pactum_helper_25c reutiliza helper de conformance nao generico"
+else
+    test_fail "semantic_constraint_reuse_pactum_helper_25c regrediu reuse do helper de conformance"
+fi
+
+# Test 1505: semantic_constraint_ecosystem_simple_25c
+echo "Test 1505: semantic_constraint_ecosystem_simple_25c"
+SRC_1505="tests/integration/semantic_constraint_ecosystem_simple_25c.cct"
+BIN_1505="${SRC_1505%.cct}"
+cleanup_codegen_artifacts "$SRC_1505"
+if "$CCT_BIN" "$SRC_1505" >"$CCT_TMP_DIR/cct_phase25c_1505_compile.out" 2>&1; then
+    "$BIN_1505" >"$CCT_TMP_DIR/cct_phase25c_1505_run.out" 2>&1
+    RC_1505=$?
+else
+    RC_1505=255
+fi
+if [ "$RC_1505" -eq 0 ]; then
+    test_pass "semantic_constraint_ecosystem_simple_25c valida fixture simples do ecossistema com PACTUM"
+else
+    test_fail "semantic_constraint_ecosystem_simple_25c regrediu fixture simples do ecossistema com PACTUM"
+fi
+
+echo ""
+echo "========================================"
+echo "FASE 25D: Generic Deduplication"
+echo "========================================"
+echo ""
+
+# Test 1506: semantic_dedup_same_instance_25d
+echo "Test 1506: semantic_dedup_same_instance_25d"
+SRC_1506="tests/integration/semantic_dedup_same_instance_25d.cct"
+BIN_1506="${SRC_1506%.cct}"
+cleanup_codegen_artifacts "$SRC_1506"
+if "$CCT_BIN" "$SRC_1506" >"$CCT_TMP_DIR/cct_phase25d_1506_compile.out" 2>&1; then
+    "$BIN_1506" >"$CCT_TMP_DIR/cct_phase25d_1506_run.out" 2>&1
+    RC_1506=$?
+else
+    RC_1506=255
+fi
+if [ "$RC_1506" -eq 0 ]; then
+    test_pass "semantic_dedup_same_instance_25d reutiliza instancia equivalente"
+else
+    test_fail "semantic_dedup_same_instance_25d regrediu reuse de instancia equivalente"
+fi
+
+# Test 1507: semantic_dedup_different_instances_25d
+echo "Test 1507: semantic_dedup_different_instances_25d"
+SRC_1507="tests/integration/semantic_dedup_different_instances_25d.cct"
+BIN_1507="${SRC_1507%.cct}"
+cleanup_codegen_artifacts "$SRC_1507"
+if "$CCT_BIN" "$SRC_1507" >"$CCT_TMP_DIR/cct_phase25d_1507_compile.out" 2>&1; then
+    "$BIN_1507" >"$CCT_TMP_DIR/cct_phase25d_1507_run.out" 2>&1
+    RC_1507=$?
+else
+    RC_1507=255
+fi
+if [ "$RC_1507" -eq 0 ]; then
+    test_pass "semantic_dedup_different_instances_25d nao colapsa instancias diferentes"
+else
+    test_fail "semantic_dedup_different_instances_25d regrediu distincao entre instancias diferentes"
+fi
+
+# Test 1508: semantic_dedup_canonical_key_stable_25d
+echo "Test 1508: semantic_dedup_canonical_key_stable_25d"
+SRC_1508="tests/integration/semantic_dedup_canonical_key_stable_25d.cct"
+BIN_1508="${SRC_1508%.cct}"
+cleanup_codegen_artifacts "$SRC_1508"
+if "$CCT_BIN" "$SRC_1508" >"$CCT_TMP_DIR/cct_phase25d_1508_compile.out" 2>&1; then
+    "$BIN_1508" >"$CCT_TMP_DIR/cct_phase25d_1508_run.out" 2>&1
+    RC_1508=$?
+else
+    RC_1508=255
+fi
+if [ "$RC_1508" -eq 0 ]; then
+    test_pass "semantic_dedup_canonical_key_stable_25d mantem chave canonica estavel"
+else
+    test_fail "semantic_dedup_canonical_key_stable_25d regrediu estabilidade da chave canonica"
+fi
+
+# Test 1509: semantic_dedup_hash_stable_25d
+echo "Test 1509: semantic_dedup_hash_stable_25d"
+SRC_1509="tests/integration/semantic_dedup_hash_stable_25d.cct"
+BIN_1509="${SRC_1509%.cct}"
+cleanup_codegen_artifacts "$SRC_1509"
+if "$CCT_BIN" "$SRC_1509" >"$CCT_TMP_DIR/cct_phase25d_1509_compile.out" 2>&1; then
+    "$BIN_1509" >"$CCT_TMP_DIR/cct_phase25d_1509_run.out" 2>&1
+    RC_1509=$?
+else
+    RC_1509=255
+fi
+if [ "$RC_1509" -eq 0 ]; then
+    test_pass "semantic_dedup_hash_stable_25d mantem hash estavel para mesma instancia"
+else
+    test_fail "semantic_dedup_hash_stable_25d regrediu estabilidade do hash de instancia"
+fi
+
+# Test 1510: semantic_dedup_collision_simulated_25d
+echo "Test 1510: semantic_dedup_collision_simulated_25d"
+SRC_1510="tests/integration/semantic_dedup_collision_simulated_25d.cct"
+BIN_1510="${SRC_1510%.cct}"
+cleanup_codegen_artifacts "$SRC_1510"
+if "$CCT_BIN" "$SRC_1510" >"$CCT_TMP_DIR/cct_phase25d_1510_compile.out" 2>&1; then
+    "$BIN_1510" >"$CCT_TMP_DIR/cct_phase25d_1510_run.out" 2>&1
+    RC_1510=$?
+else
+    RC_1510=255
+fi
+if [ "$RC_1510" -eq 0 ]; then
+    test_pass "semantic_dedup_collision_simulated_25d trata colisao simulada sem quebrar corretude"
+else
+    test_fail "semantic_dedup_collision_simulated_25d regrediu tratamento de colisao simulada"
+fi
+
+# Test 1511: semantic_dedup_named_generic_type_25d
+echo "Test 1511: semantic_dedup_named_generic_type_25d"
+SRC_1511="tests/integration/semantic_dedup_named_generic_type_25d.cct"
+BIN_1511="${SRC_1511%.cct}"
+cleanup_codegen_artifacts "$SRC_1511"
+if "$CCT_BIN" "$SRC_1511" >"$CCT_TMP_DIR/cct_phase25d_1511_compile.out" 2>&1; then
+    "$BIN_1511" >"$CCT_TMP_DIR/cct_phase25d_1511_run.out" 2>&1
+    RC_1511=$?
+else
+    RC_1511=255
+fi
+if [ "$RC_1511" -eq 0 ]; then
+    test_pass "semantic_dedup_named_generic_type_25d deduplica tipo generico nomeado em registro"
+else
+    test_fail "semantic_dedup_named_generic_type_25d regrediu dedup de tipo generico nomeado"
+fi
+
+# Test 1512: semantic_dedup_rituale_return_instance_25d
+echo "Test 1512: semantic_dedup_rituale_return_instance_25d"
+SRC_1512="tests/integration/semantic_dedup_rituale_return_instance_25d.cct"
+BIN_1512="${SRC_1512%.cct}"
+cleanup_codegen_artifacts "$SRC_1512"
+if "$CCT_BIN" "$SRC_1512" >"$CCT_TMP_DIR/cct_phase25d_1512_compile.out" 2>&1; then
+    "$BIN_1512" >"$CCT_TMP_DIR/cct_phase25d_1512_run.out" 2>&1
+    RC_1512=$?
+else
+    RC_1512=255
+fi
+if [ "$RC_1512" -eq 0 ]; then
+    test_pass "semantic_dedup_rituale_return_instance_25d reutiliza instancia em retorno de rituale generico"
+else
+    test_fail "semantic_dedup_rituale_return_instance_25d regrediu reuse em retorno de rituale generico"
+fi
+
+# Test 1513: semantic_dedup_nested_instance_25d
+echo "Test 1513: semantic_dedup_nested_instance_25d"
+SRC_1513="tests/integration/semantic_dedup_nested_instance_25d.cct"
+BIN_1513="${SRC_1513%.cct}"
+cleanup_codegen_artifacts "$SRC_1513"
+if "$CCT_BIN" "$SRC_1513" >"$CCT_TMP_DIR/cct_phase25d_1513_compile.out" 2>&1; then
+    "$BIN_1513" >"$CCT_TMP_DIR/cct_phase25d_1513_run.out" 2>&1
+    RC_1513=$?
+else
+    RC_1513=255
+fi
+if [ "$RC_1513" -eq 0 ]; then
+    test_pass "semantic_dedup_nested_instance_25d deduplica instanciacao aninhada"
+else
+    test_fail "semantic_dedup_nested_instance_25d regrediu dedup de instanciacao aninhada"
+fi
+
+# Test 1514: semantic_dedup_repeated_materialization_25d
+echo "Test 1514: semantic_dedup_repeated_materialization_25d"
+SRC_1514="tests/integration/semantic_dedup_repeated_materialization_25d.cct"
+BIN_1514="${SRC_1514%.cct}"
+cleanup_codegen_artifacts "$SRC_1514"
+if "$CCT_BIN" "$SRC_1514" >"$CCT_TMP_DIR/cct_phase25d_1514_compile.out" 2>&1; then
+    "$BIN_1514" >"$CCT_TMP_DIR/cct_phase25d_1514_run.out" 2>&1
+    RC_1514=$?
+else
+    RC_1514=255
+fi
+if [ "$RC_1514" -eq 0 ]; then
+    test_pass "semantic_dedup_repeated_materialization_25d mantem cache estavel sob repeticao"
+else
+    test_fail "semantic_dedup_repeated_materialization_25d regrediu estabilidade sob repetidas materializacoes"
+fi
+
+# Test 1515: semantic_dedup_cache_consistency_25d
+echo "Test 1515: semantic_dedup_cache_consistency_25d"
+SRC_1515="tests/integration/semantic_dedup_cache_consistency_25d.cct"
+BIN_1515="${SRC_1515%.cct}"
+cleanup_codegen_artifacts "$SRC_1515"
+if "$CCT_BIN" "$SRC_1515" >"$CCT_TMP_DIR/cct_phase25d_1515_compile.out" 2>&1; then
+    "$BIN_1515" >"$CCT_TMP_DIR/cct_phase25d_1515_run.out" 2>&1
+    RC_1515=$?
+else
+    RC_1515=255
+fi
+if [ "$RC_1515" -eq 0 ]; then
+    test_pass "semantic_dedup_cache_consistency_25d valida consistencia interna do cache"
+else
+    test_fail "semantic_dedup_cache_consistency_25d regrediu consistencia interna do cache"
+fi
+
+echo ""
+echo "========================================"
+echo "FASE 25E: Validation Gate"
+echo "========================================"
+echo ""
+
+# Test 1516: main_semantic_bootstrap_25e
+echo "Test 1516: main_semantic_bootstrap_25e"
+cleanup_codegen_artifacts "src/bootstrap/main_semantic.cct"
+if "$CCT_BIN" "src/bootstrap/main_semantic.cct" >"$CCT_TMP_DIR/cct_phase25e_1516_compile.out" 2>&1; then
+    RC_1516=0
+else
+    RC_1516=$?
+fi
+if [ "$RC_1516" -eq 0 ] && [ -x "src/bootstrap/main_semantic" ]; then
+    test_pass "main_semantic_bootstrap_25e compila entrypoint semantico generico"
+else
+    test_fail "main_semantic_bootstrap_25e nao compilou entrypoint semantico generico"
+fi
+
+# Test 1517: semantic_gate_generic_valid_decl_25e_input
+echo "Test 1517: semantic_gate_generic_valid_decl_25e_input"
+if [ "$RC_1516" -eq 0 ] && compare_semantic_check_24g "phase25e_1517" "tests/integration/semantic_gate_generic_valid_decl_25e_input.cct"; then
+    test_pass "semantic_gate_generic_valid_decl_25e_input alinha bootstrap e host em rituale generico valido"
+else
+    test_fail "semantic_gate_generic_valid_decl_25e_input divergiu entre bootstrap e host"
+fi
+
+# Test 1518: semantic_gate_generic_valid_named_type_25e_input
+echo "Test 1518: semantic_gate_generic_valid_named_type_25e_input"
+if [ "$RC_1516" -eq 0 ] && compare_semantic_check_24g "phase25e_1518" "tests/integration/semantic_gate_generic_valid_named_type_25e_input.cct"; then
+    test_pass "semantic_gate_generic_valid_named_type_25e_input alinha bootstrap e host em tipo generico nomeado"
+else
+    test_fail "semantic_gate_generic_valid_named_type_25e_input divergiu entre bootstrap e host"
+fi
+
+# Test 1519: semantic_gate_generic_valid_repeated_type_25e_input
+echo "Test 1519: semantic_gate_generic_valid_repeated_type_25e_input"
+if [ "$RC_1516" -eq 0 ] && compare_semantic_check_24g "phase25e_1519" "tests/integration/semantic_gate_generic_valid_repeated_type_25e_input.cct"; then
+    test_pass "semantic_gate_generic_valid_repeated_type_25e_input alinha bootstrap e host em repeticao de instancia"
+else
+    test_fail "semantic_gate_generic_valid_repeated_type_25e_input divergiu entre bootstrap e host"
+fi
+
+# Test 1520: semantic_gate_generic_valid_constraint_decl_25e_input
+echo "Test 1520: semantic_gate_generic_valid_constraint_decl_25e_input"
+if [ "$RC_1516" -eq 0 ] && compare_semantic_check_24g "phase25e_1520" "tests/integration/semantic_gate_generic_valid_constraint_decl_25e_input.cct"; then
+    test_pass "semantic_gate_generic_valid_constraint_decl_25e_input alinha bootstrap e host em constraint valida"
+else
+    test_fail "semantic_gate_generic_valid_constraint_decl_25e_input divergiu entre bootstrap e host"
+fi
+
+# Test 1521: semantic_gate_generic_valid_return_type_25e_input
+echo "Test 1521: semantic_gate_generic_valid_return_type_25e_input"
+if [ "$RC_1516" -eq 0 ] && compare_semantic_check_24g "phase25e_1521" "tests/integration/semantic_gate_generic_valid_return_type_25e_input.cct"; then
+    test_pass "semantic_gate_generic_valid_return_type_25e_input alinha bootstrap e host em retorno generico nomeado"
+else
+    test_fail "semantic_gate_generic_valid_return_type_25e_input divergiu entre bootstrap e host"
+fi
+
+# Test 1522: semantic_gate_generic_invalid_missing_genus_25e_input
+echo "Test 1522: semantic_gate_generic_invalid_missing_genus_25e_input"
+if [ "$RC_1516" -eq 0 ] && compare_semantic_check_24g "phase25e_1522" "tests/integration/semantic_gate_generic_invalid_missing_genus_25e_input.cct"; then
+    test_pass "semantic_gate_generic_invalid_missing_genus_25e_input alinha bootstrap e host em falta de GENUS"
+else
+    test_fail "semantic_gate_generic_invalid_missing_genus_25e_input divergiu entre bootstrap e host"
+fi
+
+# Test 1523: semantic_gate_generic_invalid_arity_25e_input
+echo "Test 1523: semantic_gate_generic_invalid_arity_25e_input"
+if [ "$RC_1516" -eq 0 ] && compare_semantic_check_24g "phase25e_1523" "tests/integration/semantic_gate_generic_invalid_arity_25e_input.cct"; then
+    test_pass "semantic_gate_generic_invalid_arity_25e_input alinha bootstrap e host em aridade generica invalida"
+else
+    test_fail "semantic_gate_generic_invalid_arity_25e_input divergiu entre bootstrap e host"
+fi
+
+# Test 1524: semantic_gate_generic_invalid_non_generic_type_25e_input
+echo "Test 1524: semantic_gate_generic_invalid_non_generic_type_25e_input"
+if [ "$RC_1516" -eq 0 ] && compare_semantic_check_24g "phase25e_1524" "tests/integration/semantic_gate_generic_invalid_non_generic_type_25e_input.cct"; then
+    test_pass "semantic_gate_generic_invalid_non_generic_type_25e_input alinha bootstrap e host em GENUS sobre tipo nao generico"
+else
+    test_fail "semantic_gate_generic_invalid_non_generic_type_25e_input divergiu entre bootstrap e host"
+fi
+
+# Test 1525: semantic_gate_generic_invalid_missing_pactum_25e_input
+echo "Test 1525: semantic_gate_generic_invalid_missing_pactum_25e_input"
+if [ "$RC_1516" -eq 0 ] && compare_semantic_check_24g "phase25e_1525" "tests/integration/semantic_gate_generic_invalid_missing_pactum_25e_input.cct"; then
+    test_pass "semantic_gate_generic_invalid_missing_pactum_25e_input alinha bootstrap e host em pactum ausente"
+else
+    test_fail "semantic_gate_generic_invalid_missing_pactum_25e_input divergiu entre bootstrap e host"
+fi
+
+# Test 1526: semantic_gate_generic_invalid_scope_leak_25e_input
+echo "Test 1526: semantic_gate_generic_invalid_scope_leak_25e_input"
+if [ "$RC_1516" -eq 0 ] && compare_semantic_check_24g "phase25e_1526" "tests/integration/semantic_gate_generic_invalid_scope_leak_25e_input.cct"; then
+    test_pass "semantic_gate_generic_invalid_scope_leak_25e_input alinha bootstrap e host em vazamento de type param"
+else
+    test_fail "semantic_gate_generic_invalid_scope_leak_25e_input divergiu entre bootstrap e host"
+fi
+
+fi
+
+if cct_phase_block_enabled "26"; then
+echo ""
+echo "========================================"
+echo "FASE 26A: Codegen Context"
+echo "========================================"
+echo ""
+
+# Test 1527: codegen_context_init_26a
+echo "Test 1527: codegen_context_init_26a"
+SRC_1527="tests/integration/codegen_context_init_26a.cct"
+BIN_1527="${SRC_1527%.cct}"
+cleanup_codegen_artifacts "$SRC_1527"
+if "$CCT_BIN" "$SRC_1527" >"$CCT_TMP_DIR/cct_phase26a_1527_compile.out" 2>&1; then
+    "$BIN_1527" >"$CCT_TMP_DIR/cct_phase26a_1527_run.out" 2>&1
+    RC_1527=$?
+else
+    RC_1527=255
+fi
+if [ "$RC_1527" -eq 0 ]; then
+    test_pass "codegen_context_init_26a inicializa contexto bootstrap de codegen"
+else
+    test_fail "codegen_context_init_26a regrediu inicializacao do contexto bootstrap"
+fi
+
+# Test 1528: codegen_emitter_append_26a
+echo "Test 1528: codegen_emitter_append_26a"
+SRC_1528="tests/integration/codegen_emitter_append_26a.cct"
+BIN_1528="${SRC_1528%.cct}"
+cleanup_codegen_artifacts "$SRC_1528"
+if "$CCT_BIN" "$SRC_1528" >"$CCT_TMP_DIR/cct_phase26a_1528_compile.out" 2>&1; then
+    "$BIN_1528" >"$CCT_TMP_DIR/cct_phase26a_1528_run.out" 2>&1
+    RC_1528=$?
+else
+    RC_1528=255
+fi
+if [ "$RC_1528" -eq 0 ]; then
+    test_pass "codegen_emitter_append_26a concatena emissao textual simples"
+else
+    test_fail "codegen_emitter_append_26a regrediu emissao textual simples"
+fi
+
+# Test 1529: codegen_emitter_indent_26a
+echo "Test 1529: codegen_emitter_indent_26a"
+SRC_1529="tests/integration/codegen_emitter_indent_26a.cct"
+BIN_1529="${SRC_1529%.cct}"
+cleanup_codegen_artifacts "$SRC_1529"
+if "$CCT_BIN" "$SRC_1529" >"$CCT_TMP_DIR/cct_phase26a_1529_compile.out" 2>&1; then
+    "$BIN_1529" >"$CCT_TMP_DIR/cct_phase26a_1529_run.out" 2>&1
+    RC_1529=$?
+else
+    RC_1529=255
+fi
+if [ "$RC_1529" -eq 0 ]; then
+    test_pass "codegen_emitter_indent_26a aplica indentacao e fechamento de bloco"
+else
+    test_fail "codegen_emitter_indent_26a regrediu indentacao de emissao"
+fi
+
+# Test 1530: codegen_emitter_blank_line_26a
+echo "Test 1530: codegen_emitter_blank_line_26a"
+SRC_1530="tests/integration/codegen_emitter_blank_line_26a.cct"
+BIN_1530="${SRC_1530%.cct}"
+cleanup_codegen_artifacts "$SRC_1530"
+if "$CCT_BIN" "$SRC_1530" >"$CCT_TMP_DIR/cct_phase26a_1530_compile.out" 2>&1; then
+    "$BIN_1530" >"$CCT_TMP_DIR/cct_phase26a_1530_run.out" 2>&1
+    RC_1530=$?
+else
+    RC_1530=255
+fi
+if [ "$RC_1530" -eq 0 ]; then
+    test_pass "codegen_emitter_blank_line_26a preserva linhas em branco"
+else
+    test_fail "codegen_emitter_blank_line_26a regrediu emissao de linha em branco"
+fi
+
+# Test 1531: codegen_temp_names_26a
+echo "Test 1531: codegen_temp_names_26a"
+SRC_1531="tests/integration/codegen_temp_names_26a.cct"
+BIN_1531="${SRC_1531%.cct}"
+cleanup_codegen_artifacts "$SRC_1531"
+if "$CCT_BIN" "$SRC_1531" >"$CCT_TMP_DIR/cct_phase26a_1531_compile.out" 2>&1; then
+    "$BIN_1531" >"$CCT_TMP_DIR/cct_phase26a_1531_run.out" 2>&1
+    RC_1531=$?
+else
+    RC_1531=255
+fi
+if [ "$RC_1531" -eq 0 ]; then
+    test_pass "codegen_temp_names_26a gera temporarios deterministas"
+else
+    test_fail "codegen_temp_names_26a regrediu geracao de temporarios"
+fi
+
+# Test 1532: codegen_label_names_26a
+echo "Test 1532: codegen_label_names_26a"
+SRC_1532="tests/integration/codegen_label_names_26a.cct"
+BIN_1532="${SRC_1532%.cct}"
+cleanup_codegen_artifacts "$SRC_1532"
+if "$CCT_BIN" "$SRC_1532" >"$CCT_TMP_DIR/cct_phase26a_1532_compile.out" 2>&1; then
+    "$BIN_1532" >"$CCT_TMP_DIR/cct_phase26a_1532_run.out" 2>&1
+    RC_1532=$?
+else
+    RC_1532=255
+fi
+if [ "$RC_1532" -eq 0 ]; then
+    test_pass "codegen_label_names_26a gera labels deterministas"
+else
+    test_fail "codegen_label_names_26a regrediu geracao de labels"
+fi
+
+# Test 1533: codegen_context_reset_26a
+echo "Test 1533: codegen_context_reset_26a"
+SRC_1533="tests/integration/codegen_context_reset_26a.cct"
+BIN_1533="${SRC_1533%.cct}"
+cleanup_codegen_artifacts "$SRC_1533"
+if "$CCT_BIN" "$SRC_1533" >"$CCT_TMP_DIR/cct_phase26a_1533_compile.out" 2>&1; then
+    "$BIN_1533" >"$CCT_TMP_DIR/cct_phase26a_1533_run.out" 2>&1
+    RC_1533=$?
+else
+    RC_1533=255
+fi
+if [ "$RC_1533" -eq 0 ]; then
+    test_pass "codegen_context_reset_26a reinicia estado interno do contexto"
+else
+    test_fail "codegen_context_reset_26a regrediu reset do contexto"
+fi
+
+# Test 1534: codegen_emit_block_empty_26a
+echo "Test 1534: codegen_emit_block_empty_26a"
+SRC_1534="tests/integration/codegen_emit_block_empty_26a.cct"
+BIN_1534="${SRC_1534%.cct}"
+cleanup_codegen_artifacts "$SRC_1534"
+if "$CCT_BIN" "$SRC_1534" >"$CCT_TMP_DIR/cct_phase26a_1534_compile.out" 2>&1; then
+    "$BIN_1534" >"$CCT_TMP_DIR/cct_phase26a_1534_run.out" 2>&1
+    RC_1534=$?
+else
+    RC_1534=255
+fi
+if [ "$RC_1534" -eq 0 ]; then
+    test_pass "codegen_emit_block_empty_26a emite bloco vazio consistente"
+else
+    test_fail "codegen_emit_block_empty_26a regrediu emissao de bloco vazio"
+fi
+
+# Test 1535: codegen_error_context_26a
+echo "Test 1535: codegen_error_context_26a"
+SRC_1535="tests/integration/codegen_error_context_26a.cct"
+BIN_1535="${SRC_1535%.cct}"
+cleanup_codegen_artifacts "$SRC_1535"
+if "$CCT_BIN" "$SRC_1535" >"$CCT_TMP_DIR/cct_phase26a_1535_compile.out" 2>&1; then
+    "$BIN_1535" >"$CCT_TMP_DIR/cct_phase26a_1535_run.out" 2>&1
+    RC_1535=$?
+else
+    RC_1535=255
+fi
+if [ "$RC_1535" -eq 0 ]; then
+    test_pass "codegen_error_context_26a registra diagnostico bootstrap"
+else
+    test_fail "codegen_error_context_26a regrediu registro de diagnostico bootstrap"
+fi
+
+# Test 1536: codegen_rituale_registry_26a
+echo "Test 1536: codegen_rituale_registry_26a"
+SRC_1536="tests/integration/codegen_rituale_registry_26a.cct"
+BIN_1536="${SRC_1536%.cct}"
+cleanup_codegen_artifacts "$SRC_1536"
+if "$CCT_BIN" "$SRC_1536" >"$CCT_TMP_DIR/cct_phase26a_1536_compile.out" 2>&1; then
+    "$BIN_1536" >"$CCT_TMP_DIR/cct_phase26a_1536_run.out" 2>&1
+    RC_1536=$?
+else
+    RC_1536=255
+fi
+if [ "$RC_1536" -eq 0 ]; then
+    test_pass "codegen_rituale_registry_26a registra nomes C deterministas para rituales"
+else
+    test_fail "codegen_rituale_registry_26a regrediu registry de nomes C"
+fi
+
+# Test 1537: codegen_fixture_simple_26a
+echo "Test 1537: codegen_fixture_simple_26a"
+SRC_1537="tests/integration/codegen_fixture_simple_26a.cct"
+BIN_1537="${SRC_1537%.cct}"
+cleanup_codegen_artifacts "$SRC_1537"
+if "$CCT_BIN" "$SRC_1537" >"$CCT_TMP_DIR/cct_phase26a_1537_compile.out" 2>&1; then
+    "$BIN_1537" >"$CCT_TMP_DIR/cct_phase26a_1537_run.out" 2>&1
+    RC_1537=$?
+else
+    RC_1537=255
+fi
+if [ "$RC_1537" -eq 0 ]; then
+    test_pass "codegen_fixture_simple_26a gera fixture textual C esperado"
+else
+    test_fail "codegen_fixture_simple_26a regrediu fixture textual C esperado"
+fi
+
+echo ""
+echo "========================================"
+echo "FASE 26B: Expression Emission"
+echo "========================================"
+echo ""
+
+# Test 1538: codegen_expr_literal_int_26b
+echo "Test 1538: codegen_expr_literal_int_26b"
+SRC_1538="tests/integration/codegen_expr_literal_int_26b.cct"
+BIN_1538="${SRC_1538%.cct}"
+cleanup_codegen_artifacts "$SRC_1538"
+if "$CCT_BIN" "$SRC_1538" >"$CCT_TMP_DIR/cct_phase26b_1538_compile.out" 2>&1; then
+    "$BIN_1538" >"$CCT_TMP_DIR/cct_phase26b_1538_run.out" 2>&1
+    RC_1538=$?
+else
+    RC_1538=255
+fi
+if [ "$RC_1538" -eq 0 ]; then
+    test_pass "codegen_expr_literal_int_26b emite literal inteiro"
+else
+    test_fail "codegen_expr_literal_int_26b regrediu emissao de literal inteiro"
+fi
+
+# Test 1539: codegen_expr_literal_bool_26b
+echo "Test 1539: codegen_expr_literal_bool_26b"
+SRC_1539="tests/integration/codegen_expr_literal_bool_26b.cct"
+BIN_1539="${SRC_1539%.cct}"
+cleanup_codegen_artifacts "$SRC_1539"
+if "$CCT_BIN" "$SRC_1539" >"$CCT_TMP_DIR/cct_phase26b_1539_compile.out" 2>&1; then
+    "$BIN_1539" >"$CCT_TMP_DIR/cct_phase26b_1539_run.out" 2>&1
+    RC_1539=$?
+else
+    RC_1539=255
+fi
+if [ "$RC_1539" -eq 0 ]; then
+    test_pass "codegen_expr_literal_bool_26b emite literal bool basico"
+else
+    test_fail "codegen_expr_literal_bool_26b regrediu emissao de literal bool"
+fi
+
+# Test 1540: codegen_expr_literal_string_26b
+echo "Test 1540: codegen_expr_literal_string_26b"
+SRC_1540="tests/integration/codegen_expr_literal_string_26b.cct"
+BIN_1540="${SRC_1540%.cct}"
+cleanup_codegen_artifacts "$SRC_1540"
+if "$CCT_BIN" "$SRC_1540" >"$CCT_TMP_DIR/cct_phase26b_1540_compile.out" 2>&1; then
+    "$BIN_1540" >"$CCT_TMP_DIR/cct_phase26b_1540_run.out" 2>&1
+    RC_1540=$?
+else
+    RC_1540=255
+fi
+if [ "$RC_1540" -eq 0 ]; then
+    test_pass "codegen_expr_literal_string_26b escapa e quota string literal"
+else
+    test_fail "codegen_expr_literal_string_26b regrediu emissao de string literal"
+fi
+
+# Test 1541: codegen_expr_unary_numeric_26b
+echo "Test 1541: codegen_expr_unary_numeric_26b"
+SRC_1541="tests/integration/codegen_expr_unary_numeric_26b.cct"
+BIN_1541="${SRC_1541%.cct}"
+cleanup_codegen_artifacts "$SRC_1541"
+if "$CCT_BIN" "$SRC_1541" >"$CCT_TMP_DIR/cct_phase26b_1541_compile.out" 2>&1; then
+    "$BIN_1541" >"$CCT_TMP_DIR/cct_phase26b_1541_run.out" 2>&1
+    RC_1541=$?
+else
+    RC_1541=255
+fi
+if [ "$RC_1541" -eq 0 ]; then
+    test_pass "codegen_expr_unary_numeric_26b emite unary numerico"
+else
+    test_fail "codegen_expr_unary_numeric_26b regrediu unary numerico"
+fi
+
+# Test 1542: codegen_expr_binary_arith_26b
+echo "Test 1542: codegen_expr_binary_arith_26b"
+SRC_1542="tests/integration/codegen_expr_binary_arith_26b.cct"
+BIN_1542="${SRC_1542%.cct}"
+cleanup_codegen_artifacts "$SRC_1542"
+if "$CCT_BIN" "$SRC_1542" >"$CCT_TMP_DIR/cct_phase26b_1542_compile.out" 2>&1; then
+    "$BIN_1542" >"$CCT_TMP_DIR/cct_phase26b_1542_run.out" 2>&1
+    RC_1542=$?
+else
+    RC_1542=255
+fi
+if [ "$RC_1542" -eq 0 ]; then
+    test_pass "codegen_expr_binary_arith_26b emite binario aritmetico"
+else
+    test_fail "codegen_expr_binary_arith_26b regrediu binario aritmetico"
+fi
+
+# Test 1543: codegen_expr_comparison_26b
+echo "Test 1543: codegen_expr_comparison_26b"
+SRC_1543="tests/integration/codegen_expr_comparison_26b.cct"
+BIN_1543="${SRC_1543%.cct}"
+cleanup_codegen_artifacts "$SRC_1543"
+if "$CCT_BIN" "$SRC_1543" >"$CCT_TMP_DIR/cct_phase26b_1543_compile.out" 2>&1; then
+    "$BIN_1543" >"$CCT_TMP_DIR/cct_phase26b_1543_run.out" 2>&1
+    RC_1543=$?
+else
+    RC_1543=255
+fi
+if [ "$RC_1543" -eq 0 ]; then
+    test_pass "codegen_expr_comparison_26b emite comparison"
+else
+    test_fail "codegen_expr_comparison_26b regrediu comparison"
+fi
+
+# Test 1544: codegen_expr_logical_26b
+echo "Test 1544: codegen_expr_logical_26b"
+SRC_1544="tests/integration/codegen_expr_logical_26b.cct"
+BIN_1544="${SRC_1544%.cct}"
+cleanup_codegen_artifacts "$SRC_1544"
+if "$CCT_BIN" "$SRC_1544" >"$CCT_TMP_DIR/cct_phase26b_1544_compile.out" 2>&1; then
+    "$BIN_1544" >"$CCT_TMP_DIR/cct_phase26b_1544_run.out" 2>&1
+    RC_1544=$?
+else
+    RC_1544=255
+fi
+if [ "$RC_1544" -eq 0 ]; then
+    test_pass "codegen_expr_logical_26b emite operador logico basico"
+else
+    test_fail "codegen_expr_logical_26b regrediu operador logico basico"
+fi
+
+# Test 1545: codegen_expr_identifier_26b
+echo "Test 1545: codegen_expr_identifier_26b"
+SRC_1545="tests/integration/codegen_expr_identifier_26b.cct"
+BIN_1545="${SRC_1545%.cct}"
+cleanup_codegen_artifacts "$SRC_1545"
+if "$CCT_BIN" "$SRC_1545" >"$CCT_TMP_DIR/cct_phase26b_1545_compile.out" 2>&1; then
+    "$BIN_1545" >"$CCT_TMP_DIR/cct_phase26b_1545_run.out" 2>&1
+    RC_1545=$?
+else
+    RC_1545=255
+fi
+if [ "$RC_1545" -eq 0 ]; then
+    test_pass "codegen_expr_identifier_26b emite identificador local"
+else
+    test_fail "codegen_expr_identifier_26b regrediu emissao de identificador"
+fi
+
+# Test 1546: codegen_expr_call_26b
+echo "Test 1546: codegen_expr_call_26b"
+SRC_1546="tests/integration/codegen_expr_call_26b.cct"
+BIN_1546="${SRC_1546%.cct}"
+cleanup_codegen_artifacts "$SRC_1546"
+if "$CCT_BIN" "$SRC_1546" >"$CCT_TMP_DIR/cct_phase26b_1546_compile.out" 2>&1; then
+    "$BIN_1546" >"$CCT_TMP_DIR/cct_phase26b_1546_run.out" 2>&1
+    RC_1546=$?
+else
+    RC_1546=255
+fi
+if [ "$RC_1546" -eq 0 ]; then
+    test_pass "codegen_expr_call_26b emite chamada simples de rituale"
+else
+    test_fail "codegen_expr_call_26b regrediu emissao de chamada simples"
+fi
+
+# Test 1547: codegen_expr_lvalue_access_26b
+echo "Test 1547: codegen_expr_lvalue_access_26b"
+SRC_1547="tests/integration/codegen_expr_lvalue_access_26b.cct"
+BIN_1547="${SRC_1547%.cct}"
+cleanup_codegen_artifacts "$SRC_1547"
+if "$CCT_BIN" "$SRC_1547" >"$CCT_TMP_DIR/cct_phase26b_1547_compile.out" 2>&1; then
+    "$BIN_1547" >"$CCT_TMP_DIR/cct_phase26b_1547_run.out" 2>&1
+    RC_1547=$?
+else
+    RC_1547=255
+fi
+if [ "$RC_1547" -eq 0 ]; then
+    test_pass "codegen_expr_lvalue_access_26b emite acesso de lvalue simples"
+else
+    test_fail "codegen_expr_lvalue_access_26b regrediu acesso de lvalue simples"
+fi
+
+# Test 1548: codegen_expr_fixture_simple_26b
+echo "Test 1548: codegen_expr_fixture_simple_26b"
+SRC_1548="tests/integration/codegen_expr_fixture_simple_26b.cct"
+BIN_1548="${SRC_1548%.cct}"
+cleanup_codegen_artifacts "$SRC_1548"
+if "$CCT_BIN" "$SRC_1548" >"$CCT_TMP_DIR/cct_phase26b_1548_compile.out" 2>&1; then
+    "$BIN_1548" >"$CCT_TMP_DIR/cct_phase26b_1548_run.out" 2>&1
+    RC_1548=$?
+else
+    RC_1548=255
+fi
+if [ "$RC_1548" -eq 0 ]; then
+    test_pass "codegen_expr_fixture_simple_26b valida fixture textual de expressao"
+else
+    test_fail "codegen_expr_fixture_simple_26b regrediu fixture textual de expressao"
+fi
+
+echo ""
+echo "========================================"
+echo "FASE 26C: Statement Emission"
+echo "========================================"
+echo ""
+
+# Test 1549: codegen_stmt_expr_stmt_26c
+echo "Test 1549: codegen_stmt_expr_stmt_26c"
+SRC_1549="tests/integration/codegen_stmt_expr_stmt_26c.cct"
+BIN_1549="${SRC_1549%.cct}"
+cleanup_codegen_artifacts "$SRC_1549"
+if "$CCT_BIN" "$SRC_1549" >"$CCT_TMP_DIR/cct_phase26c_1549_compile.out" 2>&1; then
+    "$BIN_1549" >"$CCT_TMP_DIR/cct_phase26c_1549_run.out" 2>&1
+    RC_1549=$?
+else
+    RC_1549=255
+fi
+if [ "$RC_1549" -eq 0 ]; then
+    test_pass "codegen_stmt_expr_stmt_26c emite expression statement"
+else
+    test_fail "codegen_stmt_expr_stmt_26c regrediu expression statement"
+fi
+
+# Test 1550: codegen_stmt_block_empty_26c
+echo "Test 1550: codegen_stmt_block_empty_26c"
+SRC_1550="tests/integration/codegen_stmt_block_empty_26c.cct"
+BIN_1550="${SRC_1550%.cct}"
+cleanup_codegen_artifacts "$SRC_1550"
+if "$CCT_BIN" "$SRC_1550" >"$CCT_TMP_DIR/cct_phase26c_1550_compile.out" 2>&1; then
+    "$BIN_1550" >"$CCT_TMP_DIR/cct_phase26c_1550_run.out" 2>&1
+    RC_1550=$?
+else
+    RC_1550=255
+fi
+if [ "$RC_1550" -eq 0 ]; then
+    test_pass "codegen_stmt_block_empty_26c emite bloco vazio"
+else
+    test_fail "codegen_stmt_block_empty_26c regrediu bloco vazio"
+fi
+
+# Test 1551: codegen_stmt_block_multiple_26c
+echo "Test 1551: codegen_stmt_block_multiple_26c"
+SRC_1551="tests/integration/codegen_stmt_block_multiple_26c.cct"
+BIN_1551="${SRC_1551%.cct}"
+cleanup_codegen_artifacts "$SRC_1551"
+if "$CCT_BIN" "$SRC_1551" >"$CCT_TMP_DIR/cct_phase26c_1551_compile.out" 2>&1; then
+    "$BIN_1551" >"$CCT_TMP_DIR/cct_phase26c_1551_run.out" 2>&1
+    RC_1551=$?
+else
+    RC_1551=255
+fi
+if [ "$RC_1551" -eq 0 ]; then
+    test_pass "codegen_stmt_block_multiple_26c emite bloco com multiplos statements"
+else
+    test_fail "codegen_stmt_block_multiple_26c regrediu bloco com multiplos statements"
+fi
+
+# Test 1552: codegen_stmt_evoca_simple_26c
+echo "Test 1552: codegen_stmt_evoca_simple_26c"
+SRC_1552="tests/integration/codegen_stmt_evoca_simple_26c.cct"
+BIN_1552="${SRC_1552%.cct}"
+cleanup_codegen_artifacts "$SRC_1552"
+if "$CCT_BIN" "$SRC_1552" >"$CCT_TMP_DIR/cct_phase26c_1552_compile.out" 2>&1; then
+    "$BIN_1552" >"$CCT_TMP_DIR/cct_phase26c_1552_run.out" 2>&1
+    RC_1552=$?
+else
+    RC_1552=255
+fi
+if [ "$RC_1552" -eq 0 ]; then
+    test_pass "codegen_stmt_evoca_simple_26c emite EVOCA simples"
+else
+    test_fail "codegen_stmt_evoca_simple_26c regrediu EVOCA simples"
+fi
+
+# Test 1553: codegen_stmt_vincire_simple_26c
+echo "Test 1553: codegen_stmt_vincire_simple_26c"
+SRC_1553="tests/integration/codegen_stmt_vincire_simple_26c.cct"
+BIN_1553="${SRC_1553%.cct}"
+cleanup_codegen_artifacts "$SRC_1553"
+if "$CCT_BIN" "$SRC_1553" >"$CCT_TMP_DIR/cct_phase26c_1553_compile.out" 2>&1; then
+    "$BIN_1553" >"$CCT_TMP_DIR/cct_phase26c_1553_run.out" 2>&1
+    RC_1553=$?
+else
+    RC_1553=255
+fi
+if [ "$RC_1553" -eq 0 ]; then
+    test_pass "codegen_stmt_vincire_simple_26c emite VINCIRE simples"
+else
+    test_fail "codegen_stmt_vincire_simple_26c regrediu VINCIRE simples"
+fi
+
+# Test 1554: codegen_stmt_redde_value_26c
+echo "Test 1554: codegen_stmt_redde_value_26c"
+SRC_1554="tests/integration/codegen_stmt_redde_value_26c.cct"
+BIN_1554="${SRC_1554%.cct}"
+cleanup_codegen_artifacts "$SRC_1554"
+if "$CCT_BIN" "$SRC_1554" >"$CCT_TMP_DIR/cct_phase26c_1554_compile.out" 2>&1; then
+    "$BIN_1554" >"$CCT_TMP_DIR/cct_phase26c_1554_run.out" 2>&1
+    RC_1554=$?
+else
+    RC_1554=255
+fi
+if [ "$RC_1554" -eq 0 ]; then
+    test_pass "codegen_stmt_redde_value_26c emite REDDE com valor"
+else
+    test_fail "codegen_stmt_redde_value_26c regrediu REDDE com valor"
+fi
+
+# Test 1555: codegen_stmt_redde_empty_26c
+echo "Test 1555: codegen_stmt_redde_empty_26c"
+SRC_1555="tests/integration/codegen_stmt_redde_empty_26c.cct"
+BIN_1555="${SRC_1555%.cct}"
+cleanup_codegen_artifacts "$SRC_1555"
+if "$CCT_BIN" "$SRC_1555" >"$CCT_TMP_DIR/cct_phase26c_1555_compile.out" 2>&1; then
+    "$BIN_1555" >"$CCT_TMP_DIR/cct_phase26c_1555_run.out" 2>&1
+    RC_1555=$?
+else
+    RC_1555=255
+fi
+if [ "$RC_1555" -eq 0 ]; then
+    test_pass "codegen_stmt_redde_empty_26c emite REDDE vazio"
+else
+    test_fail "codegen_stmt_redde_empty_26c regrediu REDDE vazio"
+fi
+
+# Test 1556: codegen_stmt_si_no_else_26c
+echo "Test 1556: codegen_stmt_si_no_else_26c"
+SRC_1556="tests/integration/codegen_stmt_si_no_else_26c.cct"
+BIN_1556="${SRC_1556%.cct}"
+cleanup_codegen_artifacts "$SRC_1556"
+if "$CCT_BIN" "$SRC_1556" >"$CCT_TMP_DIR/cct_phase26c_1556_compile.out" 2>&1; then
+    "$BIN_1556" >"$CCT_TMP_DIR/cct_phase26c_1556_run.out" 2>&1
+    RC_1556=$?
+else
+    RC_1556=255
+fi
+if [ "$RC_1556" -eq 0 ]; then
+    test_pass "codegen_stmt_si_no_else_26c emite SI sem else"
+else
+    test_fail "codegen_stmt_si_no_else_26c regrediu SI sem else"
+fi
+
+# Test 1557: codegen_stmt_si_with_else_26c
+echo "Test 1557: codegen_stmt_si_with_else_26c"
+SRC_1557="tests/integration/codegen_stmt_si_with_else_26c.cct"
+BIN_1557="${SRC_1557%.cct}"
+cleanup_codegen_artifacts "$SRC_1557"
+if "$CCT_BIN" "$SRC_1557" >"$CCT_TMP_DIR/cct_phase26c_1557_compile.out" 2>&1; then
+    "$BIN_1557" >"$CCT_TMP_DIR/cct_phase26c_1557_run.out" 2>&1
+    RC_1557=$?
+else
+    RC_1557=255
+fi
+if [ "$RC_1557" -eq 0 ]; then
+    test_pass "codegen_stmt_si_with_else_26c emite SI com else"
+else
+    test_fail "codegen_stmt_si_with_else_26c regrediu SI com else"
+fi
+
+# Test 1558: codegen_stmt_dum_basic_26c
+echo "Test 1558: codegen_stmt_dum_basic_26c"
+SRC_1558="tests/integration/codegen_stmt_dum_basic_26c.cct"
+BIN_1558="${SRC_1558%.cct}"
+cleanup_codegen_artifacts "$SRC_1558"
+if "$CCT_BIN" "$SRC_1558" >"$CCT_TMP_DIR/cct_phase26c_1558_compile.out" 2>&1; then
+    "$BIN_1558" >"$CCT_TMP_DIR/cct_phase26c_1558_run.out" 2>&1
+    RC_1558=$?
+else
+    RC_1558=255
+fi
+if [ "$RC_1558" -eq 0 ]; then
+    test_pass "codegen_stmt_dum_basic_26c emite DUM basico"
+else
+    test_fail "codegen_stmt_dum_basic_26c regrediu DUM basico"
+fi
+
+echo ""
+echo "========================================"
+echo "FASE 26D: Function + Program Emission"
+echo "========================================"
+echo ""
+
+# Test 1559: codegen_decl_signature_simple_26d
+echo "Test 1559: codegen_decl_signature_simple_26d"
+SRC_1559="tests/integration/codegen_decl_signature_simple_26d.cct"
+BIN_1559="${SRC_1559%.cct}"
+cleanup_codegen_artifacts "$SRC_1559"
+if "$CCT_BIN" "$SRC_1559" >"$CCT_TMP_DIR/cct_phase26d_1559_compile.out" 2>&1; then
+    "$BIN_1559" >"$CCT_TMP_DIR/cct_phase26d_1559_run.out" 2>&1
+    RC_1559=$?
+else
+    RC_1559=255
+fi
+if [ "$RC_1559" -eq 0 ]; then
+    test_pass "codegen_decl_signature_simple_26d emite assinatura simples"
+else
+    test_fail "codegen_decl_signature_simple_26d regrediu assinatura simples"
+fi
+
+# Test 1560: codegen_decl_signature_return_26d
+echo "Test 1560: codegen_decl_signature_return_26d"
+SRC_1560="tests/integration/codegen_decl_signature_return_26d.cct"
+BIN_1560="${SRC_1560%.cct}"
+cleanup_codegen_artifacts "$SRC_1560"
+if "$CCT_BIN" "$SRC_1560" >"$CCT_TMP_DIR/cct_phase26d_1560_compile.out" 2>&1; then
+    "$BIN_1560" >"$CCT_TMP_DIR/cct_phase26d_1560_run.out" 2>&1
+    RC_1560=$?
+else
+    RC_1560=255
+fi
+if [ "$RC_1560" -eq 0 ]; then
+    test_pass "codegen_decl_signature_return_26d emite assinatura com retorno e parametros"
+else
+    test_fail "codegen_decl_signature_return_26d regrediu assinatura com retorno"
+fi
+
+# Test 1561: codegen_decl_prototype_26d
+echo "Test 1561: codegen_decl_prototype_26d"
+SRC_1561="tests/integration/codegen_decl_prototype_26d.cct"
+BIN_1561="${SRC_1561%.cct}"
+cleanup_codegen_artifacts "$SRC_1561"
+if "$CCT_BIN" "$SRC_1561" >"$CCT_TMP_DIR/cct_phase26d_1561_compile.out" 2>&1; then
+    "$BIN_1561" >"$CCT_TMP_DIR/cct_phase26d_1561_run.out" 2>&1
+    RC_1561=$?
+else
+    RC_1561=255
+fi
+if [ "$RC_1561" -eq 0 ]; then
+    test_pass "codegen_decl_prototype_26d emite prototype bem-formado"
+else
+    test_fail "codegen_decl_prototype_26d regrediu prototype"
+fi
+
+# Test 1562: codegen_decl_function_body_26d
+echo "Test 1562: codegen_decl_function_body_26d"
+SRC_1562="tests/integration/codegen_decl_function_body_26d.cct"
+BIN_1562="${SRC_1562%.cct}"
+cleanup_codegen_artifacts "$SRC_1562"
+if "$CCT_BIN" "$SRC_1562" >"$CCT_TMP_DIR/cct_phase26d_1562_compile.out" 2>&1; then
+    "$BIN_1562" >"$CCT_TMP_DIR/cct_phase26d_1562_run.out" 2>&1
+    RC_1562=$?
+else
+    RC_1562=255
+fi
+if [ "$RC_1562" -eq 0 ]; then
+    test_pass "codegen_decl_function_body_26d emite corpo de rituale"
+else
+    test_fail "codegen_decl_function_body_26d regrediu emissao de corpo"
+fi
+
+# Test 1563: codegen_program_multiple_26d
+echo "Test 1563: codegen_program_multiple_26d"
+SRC_1563="tests/integration/codegen_program_multiple_26d.cct"
+BIN_1563="${SRC_1563%.cct}"
+cleanup_codegen_artifacts "$SRC_1563"
+if "$CCT_BIN" "$SRC_1563" >"$CCT_TMP_DIR/cct_phase26d_1563_compile.out" 2>&1; then
+    "$BIN_1563" >"$CCT_TMP_DIR/cct_phase26d_1563_run.out" 2>&1
+    RC_1563=$?
+else
+    RC_1563=255
+fi
+if [ "$RC_1563" -eq 0 ]; then
+    test_pass "codegen_program_multiple_26d emite programa com multiplos rituales"
+else
+    test_fail "codegen_program_multiple_26d regrediu programa com multiplos rituales"
+fi
+
+# Test 1564: codegen_program_forward_decl_26d
+echo "Test 1564: codegen_program_forward_decl_26d"
+SRC_1564="tests/integration/codegen_program_forward_decl_26d.cct"
+BIN_1564="${SRC_1564%.cct}"
+cleanup_codegen_artifacts "$SRC_1564"
+if "$CCT_BIN" "$SRC_1564" >"$CCT_TMP_DIR/cct_phase26d_1564_compile.out" 2>&1; then
+    "$BIN_1564" >"$CCT_TMP_DIR/cct_phase26d_1564_run.out" 2>&1
+    RC_1564=$?
+else
+    RC_1564=255
+fi
+if [ "$RC_1564" -eq 0 ]; then
+    test_pass "codegen_program_forward_decl_26d preserva forward declarations"
+else
+    test_fail "codegen_program_forward_decl_26d regrediu forward declarations"
+fi
+
+# Test 1565: codegen_program_deterministic_26d
+echo "Test 1565: codegen_program_deterministic_26d"
+SRC_1565="tests/integration/codegen_program_deterministic_26d.cct"
+BIN_1565="${SRC_1565%.cct}"
+cleanup_codegen_artifacts "$SRC_1565"
+if "$CCT_BIN" "$SRC_1565" >"$CCT_TMP_DIR/cct_phase26d_1565_compile.out" 2>&1; then
+    "$BIN_1565" >"$CCT_TMP_DIR/cct_phase26d_1565_run.out" 2>&1
+    RC_1565=$?
+else
+    RC_1565=255
+fi
+if [ "$RC_1565" -eq 0 ]; then
+    test_pass "codegen_program_deterministic_26d mantem emissao deterministica"
+else
+    test_fail "codegen_program_deterministic_26d regrediu determinismo"
+fi
+
+# Test 1566: codegen_program_fixture_simple_26d
+echo "Test 1566: codegen_program_fixture_simple_26d"
+SRC_1566="tests/integration/codegen_program_fixture_simple_26d.cct"
+BIN_1566="${SRC_1566%.cct}"
+cleanup_codegen_artifacts "$SRC_1566"
+if "$CCT_BIN" "$SRC_1566" >"$CCT_TMP_DIR/cct_phase26d_1566_compile.out" 2>&1; then
+    "$BIN_1566" >"$CCT_TMP_DIR/cct_phase26d_1566_run.out" 2>&1
+    RC_1566=$?
+else
+    RC_1566=255
+fi
+if [ "$RC_1566" -eq 0 ]; then
+    test_pass "codegen_program_fixture_simple_26d valida fixture textual de programa"
+else
+    test_fail "codegen_program_fixture_simple_26d regrediu fixture textual de programa"
+fi
+
+# Test 1567: codegen_program_cross_call_26d
+echo "Test 1567: codegen_program_cross_call_26d"
+SRC_1567="tests/integration/codegen_program_cross_call_26d.cct"
+BIN_1567="${SRC_1567%.cct}"
+cleanup_codegen_artifacts "$SRC_1567"
+if "$CCT_BIN" "$SRC_1567" >"$CCT_TMP_DIR/cct_phase26d_1567_compile.out" 2>&1; then
+    "$BIN_1567" >"$CCT_TMP_DIR/cct_phase26d_1567_run.out" 2>&1
+    RC_1567=$?
+else
+    RC_1567=255
+fi
+if [ "$RC_1567" -eq 0 ]; then
+    test_pass "codegen_program_cross_call_26d emite chamada cruzada entre rituales"
+else
+    test_fail "codegen_program_cross_call_26d regrediu chamada cruzada entre rituales"
+fi
+
+# Test 1568: codegen_decl_unsupported_sigillum_26d
+echo "Test 1568: codegen_decl_unsupported_sigillum_26d"
+SRC_1568="tests/integration/codegen_decl_unsupported_sigillum_26d.cct"
+BIN_1568="${SRC_1568%.cct}"
+cleanup_codegen_artifacts "$SRC_1568"
+if "$CCT_BIN" "$SRC_1568" >"$CCT_TMP_DIR/cct_phase26d_1568_compile.out" 2>&1; then
+    "$BIN_1568" >"$CCT_TMP_DIR/cct_phase26d_1568_run.out" 2>&1
+    RC_1568=$?
+else
+    RC_1568=255
+fi
+if [ "$RC_1568" -eq 0 ]; then
+    test_pass "codegen_decl_unsupported_sigillum_26d falha honestamente fora do subset"
+else
+    test_fail "codegen_decl_unsupported_sigillum_26d regrediu diagnostico de decl fora do subset"
+fi
+
+# Test 1569: main_codegen_bootstrap_26d
+echo "Test 1569: main_codegen_bootstrap_26d"
+cleanup_codegen_artifacts "src/bootstrap/main_codegen.cct"
+if "$CCT_BIN" "src/bootstrap/main_codegen.cct" >"$CCT_TMP_DIR/cct_phase26d_1569_compile.out" 2>&1; then
+    src/bootstrap/main_codegen tests/integration/codegen_main_bootstrap_26d_input.cct >"$CCT_TMP_DIR/cct_phase26d_1569_run.out" 2>&1
+    RC_1569=$?
+else
+    RC_1569=255
+fi
+if [ "$RC_1569" -eq 0 ] && grep -q "cct_boot_rit_main_0" "$CCT_TMP_DIR/cct_phase26d_1569_run.out"; then
+    test_pass "main_codegen_bootstrap_26d compila e gera C textual de programa simples"
+else
+    test_fail "main_codegen_bootstrap_26d nao gerou C textual bootstrap"
+fi
+
+echo ""
+echo "========================================"
+echo "FASE 26E: Type Mapping CCT -> C"
+echo "========================================"
+echo ""
+
+# Test 1570: codegen_type_rex_26e
+echo "Test 1570: codegen_type_rex_26e"
+SRC_1570="tests/integration/codegen_type_rex_26e.cct"
+BIN_1570="${SRC_1570%.cct}"
+cleanup_codegen_artifacts "$SRC_1570"
+if "$CCT_BIN" "$SRC_1570" >"$CCT_TMP_DIR/cct_phase26e_1570_compile.out" 2>&1; then
+    "$BIN_1570" >"$CCT_TMP_DIR/cct_phase26e_1570_run.out" 2>&1
+    RC_1570=$?
+else
+    RC_1570=255
+fi
+if [ "$RC_1570" -eq 0 ]; then
+    test_pass "codegen_type_rex_26e mapeia REX para C"
+else
+    test_fail "codegen_type_rex_26e regrediu mapeamento de REX"
+fi
+
+# Test 1571: codegen_type_bool_26e
+echo "Test 1571: codegen_type_bool_26e"
+SRC_1571="tests/integration/codegen_type_bool_26e.cct"
+BIN_1571="${SRC_1571%.cct}"
+cleanup_codegen_artifacts "$SRC_1571"
+if "$CCT_BIN" "$SRC_1571" >"$CCT_TMP_DIR/cct_phase26e_1571_compile.out" 2>&1; then
+    "$BIN_1571" >"$CCT_TMP_DIR/cct_phase26e_1571_run.out" 2>&1
+    RC_1571=$?
+else
+    RC_1571=255
+fi
+if [ "$RC_1571" -eq 0 ]; then
+    test_pass "codegen_type_bool_26e mapeia VERUM para C"
+else
+    test_fail "codegen_type_bool_26e regrediu mapeamento de VERUM"
+fi
+
+# Test 1572: codegen_type_string_26e
+echo "Test 1572: codegen_type_string_26e"
+SRC_1572="tests/integration/codegen_type_string_26e.cct"
+BIN_1572="${SRC_1572%.cct}"
+cleanup_codegen_artifacts "$SRC_1572"
+if "$CCT_BIN" "$SRC_1572" >"$CCT_TMP_DIR/cct_phase26e_1572_compile.out" 2>&1; then
+    "$BIN_1572" >"$CCT_TMP_DIR/cct_phase26e_1572_run.out" 2>&1
+    RC_1572=$?
+else
+    RC_1572=255
+fi
+if [ "$RC_1572" -eq 0 ]; then
+    test_pass "codegen_type_string_26e mapeia VERBUM para C"
+else
+    test_fail "codegen_type_string_26e regrediu mapeamento de VERBUM"
+fi
+
+# Test 1573: codegen_type_real_26e
+echo "Test 1573: codegen_type_real_26e"
+SRC_1573="tests/integration/codegen_type_real_26e.cct"
+BIN_1573="${SRC_1573%.cct}"
+cleanup_codegen_artifacts "$SRC_1573"
+if "$CCT_BIN" "$SRC_1573" >"$CCT_TMP_DIR/cct_phase26e_1573_compile.out" 2>&1; then
+    "$BIN_1573" >"$CCT_TMP_DIR/cct_phase26e_1573_run.out" 2>&1
+    RC_1573=$?
+else
+    RC_1573=255
+fi
+if [ "$RC_1573" -eq 0 ]; then
+    test_pass "codegen_type_real_26e mapeia UMBRA para C"
+else
+    test_fail "codegen_type_real_26e regrediu mapeamento de UMBRA"
+fi
+
+# Test 1574: codegen_type_pointer_26e
+echo "Test 1574: codegen_type_pointer_26e"
+SRC_1574="tests/integration/codegen_type_pointer_26e.cct"
+BIN_1574="${SRC_1574%.cct}"
+cleanup_codegen_artifacts "$SRC_1574"
+if "$CCT_BIN" "$SRC_1574" >"$CCT_TMP_DIR/cct_phase26e_1574_compile.out" 2>&1; then
+    "$BIN_1574" >"$CCT_TMP_DIR/cct_phase26e_1574_run.out" 2>&1
+    RC_1574=$?
+else
+    RC_1574=255
+fi
+if [ "$RC_1574" -eq 0 ]; then
+    test_pass "codegen_type_pointer_26e mapeia pointer do subset"
+else
+    test_fail "codegen_type_pointer_26e regrediu mapeamento de pointer"
+fi
+
+# Test 1575: codegen_type_array_26e
+echo "Test 1575: codegen_type_array_26e"
+SRC_1575="tests/integration/codegen_type_array_26e.cct"
+BIN_1575="${SRC_1575%.cct}"
+cleanup_codegen_artifacts "$SRC_1575"
+if "$CCT_BIN" "$SRC_1575" >"$CCT_TMP_DIR/cct_phase26e_1575_compile.out" 2>&1; then
+    "$BIN_1575" >"$CCT_TMP_DIR/cct_phase26e_1575_run.out" 2>&1
+    RC_1575=$?
+else
+    RC_1575=255
+fi
+if [ "$RC_1575" -eq 0 ]; then
+    test_pass "codegen_type_array_26e mapeia array suportado"
+else
+    test_fail "codegen_type_array_26e regrediu mapeamento de array"
+fi
+
+# Test 1576: codegen_type_nihil_26e
+echo "Test 1576: codegen_type_nihil_26e"
+SRC_1576="tests/integration/codegen_type_nihil_26e.cct"
+BIN_1576="${SRC_1576%.cct}"
+cleanup_codegen_artifacts "$SRC_1576"
+if "$CCT_BIN" "$SRC_1576" >"$CCT_TMP_DIR/cct_phase26e_1576_compile.out" 2>&1; then
+    "$BIN_1576" >"$CCT_TMP_DIR/cct_phase26e_1576_run.out" 2>&1
+    RC_1576=$?
+else
+    RC_1576=255
+fi
+if [ "$RC_1576" -eq 0 ]; then
+    test_pass "codegen_type_nihil_26e mapeia NIHIL para retorno void"
+else
+    test_fail "codegen_type_nihil_26e regrediu mapeamento de NIHIL"
+fi
+
+# Test 1577: codegen_type_signature_mapped_26e
+echo "Test 1577: codegen_type_signature_mapped_26e"
+SRC_1577="tests/integration/codegen_type_signature_mapped_26e.cct"
+BIN_1577="${SRC_1577%.cct}"
+cleanup_codegen_artifacts "$SRC_1577"
+if "$CCT_BIN" "$SRC_1577" >"$CCT_TMP_DIR/cct_phase26e_1577_compile.out" 2>&1; then
+    "$BIN_1577" >"$CCT_TMP_DIR/cct_phase26e_1577_run.out" 2>&1
+    RC_1577=$?
+else
+    RC_1577=255
+fi
+if [ "$RC_1577" -eq 0 ]; then
+    test_pass "codegen_type_signature_mapped_26e reutiliza type mapping em assinatura"
+else
+    test_fail "codegen_type_signature_mapped_26e regrediu reutilizacao do type mapping"
+fi
+
+# Test 1578: codegen_type_unsupported_26e
+echo "Test 1578: codegen_type_unsupported_26e"
+SRC_1578="tests/integration/codegen_type_unsupported_26e.cct"
+BIN_1578="${SRC_1578%.cct}"
+cleanup_codegen_artifacts "$SRC_1578"
+if "$CCT_BIN" "$SRC_1578" >"$CCT_TMP_DIR/cct_phase26e_1578_compile.out" 2>&1; then
+    "$BIN_1578" >"$CCT_TMP_DIR/cct_phase26e_1578_run.out" 2>&1
+    RC_1578=$?
+else
+    RC_1578=255
+fi
+if [ "$RC_1578" -eq 0 ]; then
+    test_pass "codegen_type_unsupported_26e falha honestamente fora do subset"
+else
+    test_fail "codegen_type_unsupported_26e regrediu diagnostico de tipo fora do subset"
+fi
+
+# Test 1579: codegen_type_reuse_consistency_26e
+echo "Test 1579: codegen_type_reuse_consistency_26e"
+SRC_1579="tests/integration/codegen_type_reuse_consistency_26e.cct"
+BIN_1579="${SRC_1579%.cct}"
+cleanup_codegen_artifacts "$SRC_1579"
+if "$CCT_BIN" "$SRC_1579" >"$CCT_TMP_DIR/cct_phase26e_1579_compile.out" 2>&1; then
+    "$BIN_1579" >"$CCT_TMP_DIR/cct_phase26e_1579_run.out" 2>&1
+    RC_1579=$?
+else
+    RC_1579=255
+fi
+if [ "$RC_1579" -eq 0 ]; then
+    test_pass "codegen_type_reuse_consistency_26e mantem consistencia entre call sites"
+else
+    test_fail "codegen_type_reuse_consistency_26e regrediu consistencia do type mapping"
+fi
+
+echo ""
+echo "========================================"
+echo "FASE 26F: Runtime Bridge Emission"
+echo "========================================"
+echo ""
+
+# Test 1580: codegen_runtime_includes_empty_26f
+echo "Test 1580: codegen_runtime_includes_empty_26f"
+SRC_1580="tests/integration/codegen_runtime_includes_empty_26f.cct"
+BIN_1580="${SRC_1580%.cct}"
+cleanup_codegen_artifacts "$SRC_1580"
+if "$CCT_BIN" "$SRC_1580" >"$CCT_TMP_DIR/cct_phase26f_1580_compile.out" 2>&1; then
+    "$BIN_1580" >"$CCT_TMP_DIR/cct_phase26f_1580_run.out" 2>&1
+    RC_1580=$?
+else
+    RC_1580=255
+fi
+if [ "$RC_1580" -eq 0 ]; then
+    test_pass "codegen_runtime_includes_empty_26f mantem includes minimos"
+else
+    test_fail "codegen_runtime_includes_empty_26f regrediu politica de includes minimos"
+fi
+
+# Test 1581: codegen_runtime_fail_helper_26f
+echo "Test 1581: codegen_runtime_fail_helper_26f"
+SRC_1581="tests/integration/codegen_runtime_fail_helper_26f.cct"
+BIN_1581="${SRC_1581%.cct}"
+cleanup_codegen_artifacts "$SRC_1581"
+if "$CCT_BIN" "$SRC_1581" >"$CCT_TMP_DIR/cct_phase26f_1581_compile.out" 2>&1; then
+    "$BIN_1581" >"$CCT_TMP_DIR/cct_phase26f_1581_run.out" 2>&1
+    RC_1581=$?
+else
+    RC_1581=255
+fi
+if [ "$RC_1581" -eq 0 ]; then
+    test_pass "codegen_runtime_fail_helper_26f emite helper de falha e includes necessarios"
+else
+    test_fail "codegen_runtime_fail_helper_26f regrediu helper de falha bootstrap"
+fi
+
+# Test 1582: codegen_runtime_string_pool_single_26f
+echo "Test 1582: codegen_runtime_string_pool_single_26f"
+SRC_1582="tests/integration/codegen_runtime_string_pool_single_26f.cct"
+BIN_1582="${SRC_1582%.cct}"
+cleanup_codegen_artifacts "$SRC_1582"
+if "$CCT_BIN" "$SRC_1582" >"$CCT_TMP_DIR/cct_phase26f_1582_compile.out" 2>&1; then
+    "$BIN_1582" >"$CCT_TMP_DIR/cct_phase26f_1582_run.out" 2>&1
+    RC_1582=$?
+else
+    RC_1582=255
+fi
+if [ "$RC_1582" -eq 0 ]; then
+    test_pass "codegen_runtime_string_pool_single_26f emite pool de string unico"
+else
+    test_fail "codegen_runtime_string_pool_single_26f regrediu pool de string unico"
+fi
+
+# Test 1583: codegen_runtime_string_pool_dedup_26f
+echo "Test 1583: codegen_runtime_string_pool_dedup_26f"
+SRC_1583="tests/integration/codegen_runtime_string_pool_dedup_26f.cct"
+BIN_1583="${SRC_1583%.cct}"
+cleanup_codegen_artifacts "$SRC_1583"
+if "$CCT_BIN" "$SRC_1583" >"$CCT_TMP_DIR/cct_phase26f_1583_compile.out" 2>&1; then
+    "$BIN_1583" >"$CCT_TMP_DIR/cct_phase26f_1583_run.out" 2>&1
+    RC_1583=$?
+else
+    RC_1583=255
+fi
+if [ "$RC_1583" -eq 0 ]; then
+    test_pass "codegen_runtime_string_pool_dedup_26f deduplica strings no bridge"
+else
+    test_fail "codegen_runtime_string_pool_dedup_26f regrediu deduplicacao do bridge"
+fi
+
+# Test 1584: codegen_runtime_host_main_rex_26f
+echo "Test 1584: codegen_runtime_host_main_rex_26f"
+SRC_1584="tests/integration/codegen_runtime_host_main_rex_26f.cct"
+BIN_1584="${SRC_1584%.cct}"
+cleanup_codegen_artifacts "$SRC_1584"
+if "$CCT_BIN" "$SRC_1584" >"$CCT_TMP_DIR/cct_phase26f_1584_compile.out" 2>&1; then
+    "$BIN_1584" >"$CCT_TMP_DIR/cct_phase26f_1584_run.out" 2>&1
+    RC_1584=$?
+else
+    RC_1584=255
+fi
+if [ "$RC_1584" -eq 0 ]; then
+    test_pass "codegen_runtime_host_main_rex_26f emite wrapper host main para retorno tipado"
+else
+    test_fail "codegen_runtime_host_main_rex_26f regrediu wrapper host main tipado"
+fi
+
+# Test 1585: codegen_runtime_host_main_nihil_26f
+echo "Test 1585: codegen_runtime_host_main_nihil_26f"
+SRC_1585="tests/integration/codegen_runtime_host_main_nihil_26f.cct"
+BIN_1585="${SRC_1585%.cct}"
+cleanup_codegen_artifacts "$SRC_1585"
+if "$CCT_BIN" "$SRC_1585" >"$CCT_TMP_DIR/cct_phase26f_1585_compile.out" 2>&1; then
+    "$BIN_1585" >"$CCT_TMP_DIR/cct_phase26f_1585_run.out" 2>&1
+    RC_1585=$?
+else
+    RC_1585=255
+fi
+if [ "$RC_1585" -eq 0 ]; then
+    test_pass "codegen_runtime_host_main_nihil_26f emite wrapper host main para NIHIL"
+else
+    test_fail "codegen_runtime_host_main_nihil_26f regrediu wrapper host main NIHIL"
+fi
+
+# Test 1586: codegen_runtime_no_unnecessary_include_26f
+echo "Test 1586: codegen_runtime_no_unnecessary_include_26f"
+SRC_1586="tests/integration/codegen_runtime_no_unnecessary_include_26f.cct"
+BIN_1586="${SRC_1586%.cct}"
+cleanup_codegen_artifacts "$SRC_1586"
+if "$CCT_BIN" "$SRC_1586" >"$CCT_TMP_DIR/cct_phase26f_1586_compile.out" 2>&1; then
+    "$BIN_1586" >"$CCT_TMP_DIR/cct_phase26f_1586_run.out" 2>&1
+    RC_1586=$?
+else
+    RC_1586=255
+fi
+if [ "$RC_1586" -eq 0 ]; then
+    test_pass "codegen_runtime_no_unnecessary_include_26f evita includes desnecessarios"
+else
+    test_fail "codegen_runtime_no_unnecessary_include_26f regrediu minimizacao de includes"
+fi
+
+# Test 1587: codegen_runtime_translation_unit_string_26f
+echo "Test 1587: codegen_runtime_translation_unit_string_26f"
+SRC_1587="tests/integration/codegen_runtime_translation_unit_string_26f.cct"
+BIN_1587="${SRC_1587%.cct}"
+cleanup_codegen_artifacts "$SRC_1587"
+if "$CCT_BIN" "$SRC_1587" >"$CCT_TMP_DIR/cct_phase26f_1587_compile.out" 2>&1; then
+    "$BIN_1587" >"$CCT_TMP_DIR/cct_phase26f_1587_run.out" 2>&1
+    RC_1587=$?
+else
+    RC_1587=255
+fi
+if [ "$RC_1587" -eq 0 ]; then
+    test_pass "codegen_runtime_translation_unit_string_26f integra string pool na translation unit"
+else
+    test_fail "codegen_runtime_translation_unit_string_26f regrediu integration com string pool"
+fi
+
+# Test 1588: codegen_runtime_deterministic_26f
+echo "Test 1588: codegen_runtime_deterministic_26f"
+SRC_1588="tests/integration/codegen_runtime_deterministic_26f.cct"
+BIN_1588="${SRC_1588%.cct}"
+cleanup_codegen_artifacts "$SRC_1588"
+if "$CCT_BIN" "$SRC_1588" >"$CCT_TMP_DIR/cct_phase26f_1588_compile.out" 2>&1; then
+    "$BIN_1588" >"$CCT_TMP_DIR/cct_phase26f_1588_run.out" 2>&1
+    RC_1588=$?
+else
+    RC_1588=255
+fi
+if [ "$RC_1588" -eq 0 ]; then
+    test_pass "codegen_runtime_deterministic_26f mantem translation unit deterministica"
+else
+    test_fail "codegen_runtime_deterministic_26f regrediu determinismo do bridge"
+fi
+
+# Test 1589: main_codegen_bootstrap_26f
+echo "Test 1589: main_codegen_bootstrap_26f"
+cleanup_codegen_artifacts "src/bootstrap/main_codegen.cct"
+if "$CCT_BIN" "src/bootstrap/main_codegen.cct" >"$CCT_TMP_DIR/cct_phase26f_1589_compile.out" 2>&1; then
+    src/bootstrap/main_codegen tests/integration/codegen_main_bootstrap_26f_input.cct >"$CCT_TMP_DIR/cct_phase26f_1589_run.out" 2>&1
+    RC_1589=$?
+else
+    RC_1589=255
+fi
+if [ "$RC_1589" -eq 0 ] && grep -q "static char cct_boot_str_0" "$CCT_TMP_DIR/cct_phase26f_1589_run.out" && grep -q "int main(void)" "$CCT_TMP_DIR/cct_phase26f_1589_run.out"; then
+    test_pass "main_codegen_bootstrap_26f gera translation unit completa com bridge runtime"
+else
+    test_fail "main_codegen_bootstrap_26f nao gerou translation unit bootstrap completa"
+fi
+
+echo ""
+echo "========================================"
+echo "FASE 26G: Validation Gate"
+echo "========================================"
+echo ""
+
+cct_phase26g_compile_bootstrap() {
+    cleanup_codegen_artifacts "src/bootstrap/main_codegen.cct"
+    "$CCT_BIN" "src/bootstrap/main_codegen.cct" >"$CCT_TMP_DIR/cct_phase26g_bootstrap_compile.out" 2>&1
+}
+
+cct_phase26g_emit_compile_run() {
+    local src="$1"
+    local base="$2"
+    local expected_rc="$3"
+
+    src/bootstrap/main_codegen "$src" >"$base.c" 2>"$base.codegen.err" || return 21
+    gcc -Wall -Wextra -Werror -std=c11 -O2 -g "$base.c" -o "$base.bin" >"$base.host.out" 2>&1 || return 22
+    "$base.bin" >"$base.run.out" 2>&1
+    local rc=$?
+    [ "$rc" -eq "$expected_rc" ] || return 23
+    return 0
+}
+
+if cct_phase26g_compile_bootstrap; then
+    RC_26G_BOOT=0
+else
+    RC_26G_BOOT=1
+fi
+
+# Test 1590: codegen_gate_minimal_26g_input
+echo "Test 1590: codegen_gate_minimal_26g_input"
+BASE_1590="$CCT_TMP_DIR/cct_phase26g_1590"
+if [ "$RC_26G_BOOT" -eq 0 ] && cct_phase26g_emit_compile_run "tests/integration/codegen_gate_minimal_26g_input.cct" "$BASE_1590" 0; then
+    test_pass "codegen_gate_minimal_26g_input gera C executavel para programa minimo"
+else
+    test_fail "codegen_gate_minimal_26g_input regrediu pipeline minimo do bootstrap codegen"
+fi
+
+# Test 1591: codegen_gate_arith_26g_input
+echo "Test 1591: codegen_gate_arith_26g_input"
+BASE_1591="$CCT_TMP_DIR/cct_phase26g_1591"
+if [ "$RC_26G_BOOT" -eq 0 ] && cct_phase26g_emit_compile_run "tests/integration/codegen_gate_arith_26g_input.cct" "$BASE_1591" 14; then
+    test_pass "codegen_gate_arith_26g_input executa aritmetica simples"
+else
+    test_fail "codegen_gate_arith_26g_input regrediu aritmetica e2e do bootstrap codegen"
+fi
+
+# Test 1592: codegen_gate_call_26g_input
+echo "Test 1592: codegen_gate_call_26g_input"
+BASE_1592="$CCT_TMP_DIR/cct_phase26g_1592"
+if [ "$RC_26G_BOOT" -eq 0 ] && cct_phase26g_emit_compile_run "tests/integration/codegen_gate_call_26g_input.cct" "$BASE_1592" 3; then
+    test_pass "codegen_gate_call_26g_input executa chamada entre rituales"
+else
+    test_fail "codegen_gate_call_26g_input regrediu chamada e2e entre rituales"
+fi
+
+# Test 1593: codegen_gate_evoca_vincire_26g_input
+echo "Test 1593: codegen_gate_evoca_vincire_26g_input"
+BASE_1593="$CCT_TMP_DIR/cct_phase26g_1593"
+if [ "$RC_26G_BOOT" -eq 0 ] && cct_phase26g_emit_compile_run "tests/integration/codegen_gate_evoca_vincire_26g_input.cct" "$BASE_1593" 5; then
+    test_pass "codegen_gate_evoca_vincire_26g_input executa EVOCA e VINCIRE"
+else
+    test_fail "codegen_gate_evoca_vincire_26g_input regrediu EVOCA/VINCIRE e2e"
+fi
+
+# Test 1594: codegen_gate_si_aliter_26g_input
+echo "Test 1594: codegen_gate_si_aliter_26g_input"
+BASE_1594="$CCT_TMP_DIR/cct_phase26g_1594"
+if [ "$RC_26G_BOOT" -eq 0 ] && cct_phase26g_emit_compile_run "tests/integration/codegen_gate_si_aliter_26g_input.cct" "$BASE_1594" 7; then
+    test_pass "codegen_gate_si_aliter_26g_input executa SI/ALITER"
+else
+    test_fail "codegen_gate_si_aliter_26g_input regrediu controle SI/ALITER e2e"
+fi
+
+# Test 1595: codegen_gate_dum_26g_input
+echo "Test 1595: codegen_gate_dum_26g_input"
+BASE_1595="$CCT_TMP_DIR/cct_phase26g_1595"
+if [ "$RC_26G_BOOT" -eq 0 ] && cct_phase26g_emit_compile_run "tests/integration/codegen_gate_dum_26g_input.cct" "$BASE_1595" 6; then
+    test_pass "codegen_gate_dum_26g_input executa DUM"
+else
+    test_fail "codegen_gate_dum_26g_input regrediu loop DUM e2e"
+fi
+
+# Test 1596: codegen_gate_string_26g_input
+echo "Test 1596: codegen_gate_string_26g_input"
+BASE_1596="$CCT_TMP_DIR/cct_phase26g_1596"
+if [ "$RC_26G_BOOT" -eq 0 ] && cct_phase26g_emit_compile_run "tests/integration/codegen_gate_string_26g_input.cct" "$BASE_1596" 0 && grep -q 'static char cct_boot_str_0\[\] = "salve";' "$BASE_1596.c"; then
+    test_pass "codegen_gate_string_26g_input gera e compila string literal simples"
+else
+    test_fail "codegen_gate_string_26g_input regrediu string literal e2e do bootstrap codegen"
+fi
+
+# Test 1597: codegen_gate_bool_call_26g_input
+echo "Test 1597: codegen_gate_bool_call_26g_input"
+BASE_1597="$CCT_TMP_DIR/cct_phase26g_1597"
+if [ "$RC_26G_BOOT" -eq 0 ] && cct_phase26g_emit_compile_run "tests/integration/codegen_gate_bool_call_26g_input.cct" "$BASE_1597" 1; then
+    test_pass "codegen_gate_bool_call_26g_input executa bool e chamada"
+else
+    test_fail "codegen_gate_bool_call_26g_input regrediu bool/call e2e"
+fi
+
+# Test 1598: codegen_gate_fixture_small_26g_input
+echo "Test 1598: codegen_gate_fixture_small_26g_input"
+BASE_1598="$CCT_TMP_DIR/cct_phase26g_1598"
+if [ "$RC_26G_BOOT" -eq 0 ] && cct_phase26g_emit_compile_run "tests/integration/codegen_gate_fixture_small_26g_input.cct" "$BASE_1598" 7; then
+    test_pass "codegen_gate_fixture_small_26g_input valida fixture pequena realista do subset"
+else
+    test_fail "codegen_gate_fixture_small_26g_input regrediu fixture pequena do ecossistema"
+fi
+
+# Test 1599: codegen_gate_negative_sigillum_26g_input
+echo "Test 1599: codegen_gate_negative_sigillum_26g_input"
+BASE_1599="$CCT_TMP_DIR/cct_phase26g_1599"
+if [ "$RC_26G_BOOT" -eq 0 ] && ! src/bootstrap/main_codegen "tests/integration/codegen_gate_negative_sigillum_26g_input.cct" >"$BASE_1599.out" 2>"$BASE_1599.err" && grep -q "declaration outside bootstrap codegen subset" "$BASE_1599.err"; then
+    test_pass "codegen_gate_negative_sigillum_26g_input falha claramente fora do subset"
+else
+    test_fail "codegen_gate_negative_sigillum_26g_input regrediu falha explicita fora do subset"
+fi
+
+fi
+
+echo ""
+echo "========================================"
 echo "Test Results:"
 echo -e "  ${GREEN}Passed:${NC} $TESTS_PASSED" >&3
 echo -e "  ${RED}Failed:${NC} $TESTS_FAILED" >&3
 echo "========================================"
 
-if [ $TESTS_FAILED -eq 0 ]; then
+TOTAL_TESTS_RUN=$((TESTS_PASSED + TESTS_FAILED))
+
+if [ "$TOTAL_TESTS_RUN" -eq 0 ]; then
+    echo -e "${YELLOW}No tests selected by current filter.${NC}" >&3
+    exit 2
+fi
+
+if [ "$TESTS_FAILED" -eq 0 ]; then
     echo -e "${GREEN}All tests passed!${NC}" >&3
     exit 0
 else

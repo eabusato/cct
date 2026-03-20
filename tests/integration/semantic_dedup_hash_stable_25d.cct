@@ -1,0 +1,32 @@
+INCIPIT grimoire "semantic_dedup_hash_stable_25d"
+
+ADVOCARE "../../src/bootstrap/parser/parser.cct"
+ADVOCARE "../../src/bootstrap/parser/ast.cct"
+ADVOCARE "../../src/bootstrap/semantic/semantic_context.cct"
+ADVOCARE "../../src/bootstrap/semantic/semantic_generic.cct"
+ADVOCARE "../../src/bootstrap/semantic/semantic_register.cct"
+ADVOCARE "../../src/bootstrap/semantic/semantic_resolver.cct"
+
+RITUALE resolve_hash_once(VERBUM src, VERBUM filename) REDDE DUX
+  EVOCA SPECULUM AstProgram program AD CONIURA parser_parse_program_source(src, filename)
+  EVOCA SPECULUM SemanticContext ctx AD CONIURA semantic_context_new(filename)
+  CONIURA semantic_register_program(ctx, program)
+  EVOCA SPECULUM AstNode t AD CONIURA ast_make_type("Caixa", 1, 1)
+  CONIURA ast_append_generic_arg(t, CONIURA ast_make_type("REX", 1, 10))
+  EVOCA REX type_id AD CONIURA semantic_resolve_type_node(ctx, t)
+  EVOCA DUX hash AD CONIURA semantic_type_instance_hash(ctx, type_id)
+  CONIURA ast_node_free(t)
+  CONIURA semantic_context_free(ctx)
+  CONIURA ast_program_free(program)
+  REDDE hash
+EXPLICIT RITUALE
+
+RITUALE main() REDDE REX
+  EVOCA VERBUM src AD "INCIPIT grimoire \"p\" SIGILLUM Caixa GENUS(T) valor: T FIN SIGILLUM EXPLICIT grimoire"
+  SI CONIURA resolve_hash_once(src, "hash_a_25d.cct") != CONIURA resolve_hash_once(src, "hash_b_25d.cct")
+    REDDE 41
+  FIN SI
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

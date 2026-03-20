@@ -1,0 +1,20 @@
+INCIPIT grimoire "codegen_runtime_includes_empty_26f"
+
+ADVOCARE "../../src/bootstrap/codegen/codegen_context.cct"
+ADVOCARE "../../src/bootstrap/codegen/codegen_runtime.cct"
+ADVOCARE "cct/verbum.cct"
+
+RITUALE main() REDDE REX
+  EVOCA SPECULUM CodegenContext ctx AD CONIURA codegen_context_new("empty.cct")
+  CONIURA codegen_runtime_emit_includes(ctx)
+  EVOCA VERBUM out AD CONIURA codegen_output(ctx)
+  EVOCA REX rc AD 0
+  SI CONIURA compare(out, "") != 0
+    VINCIRE rc AD 1
+  FIN SI
+  DIMITTE out
+  CONIURA codegen_context_free(ctx)
+  REDDE rc
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

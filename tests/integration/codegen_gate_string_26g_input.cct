@@ -1,0 +1,12 @@
+INCIPIT grimoire "codegen_gate_string_26g_input"
+
+RITUALE msg() REDDE VERBUM
+  REDDE "salve"
+EXPLICIT RITUALE
+
+RITUALE main() REDDE REX
+  msg()
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

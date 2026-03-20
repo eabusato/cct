@@ -1,0 +1,217 @@
+INCIPIT grimoire "semantic_pactum"
+
+ADVOCARE "cct/fluxus.cct"
+ADVOCARE "cct/verbum.cct"
+ADVOCARE "../parser/ast.cct"
+ADVOCARE "semantic_context.cct"
+ADVOCARE "semantic_resolver.cct"
+ADVOCARE "semantic_symbol.cct"
+ADVOCARE "semantic_type.cct"
+ADVOCARE "semantic_type_kind.cct"
+
+RITUALE semantic_signature_return_type(SPECULUM SemanticContext ctx, SPECULUM AstNode rituale_decl) REDDE REX
+  SI (*rituale_decl).has_return_type
+    REDDE CONIURA semantic_resolve_type_node(ctx, (*rituale_decl).return_type)
+  FIN SI
+  REDDE (*ctx).type_nihil
+EXPLICIT RITUALE
+
+RITUALE semantic_signature_param_count(SPECULUM AstNode rituale_decl) REDDE REX
+  REDDE CONIURA ast_node_list_len((*rituale_decl).params)
+EXPLICIT RITUALE
+
+RITUALE semantic_signature_param_type(SPECULUM SemanticContext ctx, SPECULUM AstNode rituale_decl, REX idx) REDDE REX
+  EVOCA SPECULUM AstNode param AD CONIURA ast_node_list_get((*rituale_decl).params, idx)
+  REDDE CONIURA semantic_resolve_type_node(ctx, (*param).type_expr)
+EXPLICIT RITUALE
+
+RITUALE semantic_signature_same(SPECULUM SemanticContext ctx, SPECULUM AstNode left, SPECULUM AstNode right) REDDE VERUM
+  SI CONIURA compare((*left).name, (*right).name) != 0
+    REDDE FALSUM
+  FIN SI
+
+  SI CONIURA semantic_signature_param_count(left) != CONIURA semantic_signature_param_count(right)
+    REDDE FALSUM
+  FIN SI
+
+  SI NON CONIURA semantic_type_equal(ctx, CONIURA semantic_signature_return_type(ctx, left), CONIURA semantic_signature_return_type(ctx, right))
+    REDDE FALSUM
+  FIN SI
+
+  EVOCA REX i AD 0
+  EVOCA REX n AD CONIURA semantic_signature_param_count(left)
+  DUM i < n
+    SI NON CONIURA semantic_type_equal(ctx, CONIURA semantic_signature_param_type(ctx, left, i), CONIURA semantic_signature_param_type(ctx, right, i))
+      REDDE FALSUM
+    FIN SI
+    VINCIRE i AD i + 1
+  FIN DUM
+
+  REDDE VERUM
+EXPLICIT RITUALE
+
+RITUALE semantic_validate_pactum_signature_duplicates(SPECULUM SemanticContext ctx, SPECULUM AstNode pactum_decl) REDDE NIHIL
+  EVOCA REX i AD 0
+  EVOCA REX n AD CONIURA ast_node_list_len((*pactum_decl).signatures)
+  DUM i < n
+    EVOCA SPECULUM AstNode sig_a AD CONIURA ast_node_list_get((*pactum_decl).signatures, i)
+    EVOCA REX j AD i + 1
+    DUM j < n
+      EVOCA SPECULUM AstNode sig_b AD CONIURA ast_node_list_get((*pactum_decl).signatures, j)
+      SI CONIURA semantic_signature_same(ctx, sig_a, sig_b)
+        CONIURA semantic_report_error(ctx, (*sig_b).line, (*sig_b).column, CONIURA concat("duplicate PACTUM signature '", CONIURA concat((*sig_b).name, CONIURA concat("' in contract '", CONIURA concat((*pactum_decl).name, "'")))))
+        REDDE
+      FIN SI
+      VINCIRE j AD j + 1
+    FIN DUM
+    VINCIRE i AD i + 1
+  FIN DUM
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE semantic_contract_self_param_ok(SPECULUM SemanticContext ctx, REX sigillum_sym_id, REX self_type_id) REDDE VERUM
+  EVOCA SPECULUM SemanticType self_type AD CONIURA semantic_type_at(ctx, self_type_id)
+  SI (*self_type).kind != SEM_TYPE_POINTER
+    REDDE FALSUM
+  FIN SI
+  EVOCA SPECULUM SemanticType element_type AD CONIURA semantic_type_at(ctx, (*self_type).element_type_id)
+  REDDE (*element_type).kind == SEM_TYPE_NAMED ET (*element_type).named_symbol_id == sigillum_sym_id
+EXPLICIT RITUALE
+
+RITUALE semantic_pactum_rituale_matches_signature(SPECULUM SemanticContext ctx, REX sigillum_sym_id, SPECULUM AstNode contract_sig, REX rituale_sym_id) REDDE VERUM
+  EVOCA SPECULUM SemanticSymbol rituale_sym AD CONIURA semantic_symbol_at(ctx, rituale_sym_id)
+  SI NON (*rituale_sym).has_decl_node VEL (*(*rituale_sym).decl_node).kind != AST_RITUALE
+    CONIURA semantic_report_error(ctx, (*contract_sig).line, (*contract_sig).column, "PACTUM implementation requires rituale declaration")
+    REDDE FALSUM
+  FIN SI
+
+  EVOCA SPECULUM AstNode rituale_decl AD (*rituale_sym).decl_node
+  EVOCA REX expected_param_count AD CONIURA semantic_signature_param_count(contract_sig) + 1
+  EVOCA REX actual_param_count AD CONIURA semantic_signature_param_count(rituale_decl)
+  SI actual_param_count == 0
+    CONIURA semantic_report_error(ctx, (*rituale_decl).line, (*rituale_decl).column, "PACTUM rituale parameter count mismatch")
+    REDDE FALSUM
+  FIN SI
+
+  SI NON CONIURA semantic_contract_self_param_ok(ctx, sigillum_sym_id, CONIURA semantic_signature_param_type(ctx, rituale_decl, 0))
+    CONIURA semantic_report_error(ctx, (*rituale_decl).line, (*rituale_decl).column, "PACTUM rituale must start with SPECULUM self parameter")
+    REDDE FALSUM
+  FIN SI
+
+  SI expected_param_count != actual_param_count
+    CONIURA semantic_report_error(ctx, (*rituale_decl).line, (*rituale_decl).column, "PACTUM rituale parameter count mismatch")
+    REDDE FALSUM
+  FIN SI
+
+  EVOCA REX i AD 0
+  EVOCA REX n AD CONIURA semantic_signature_param_count(contract_sig)
+  DUM i < n
+    SI NON CONIURA semantic_type_equal(ctx, CONIURA semantic_signature_param_type(ctx, contract_sig, i), CONIURA semantic_signature_param_type(ctx, rituale_decl, i + 1))
+      CONIURA semantic_report_error(ctx, (*rituale_decl).line, (*rituale_decl).column, "PACTUM rituale parameter mismatch")
+      REDDE FALSUM
+    FIN SI
+    VINCIRE i AD i + 1
+  FIN DUM
+
+  SI NON CONIURA semantic_type_equal(ctx, CONIURA semantic_signature_return_type(ctx, contract_sig), CONIURA semantic_signature_return_type(ctx, rituale_decl))
+    CONIURA semantic_report_error(ctx, (*rituale_decl).line, (*rituale_decl).column, "PACTUM rituale return mismatch")
+    REDDE FALSUM
+  FIN SI
+
+  REDDE VERUM
+EXPLICIT RITUALE
+
+RITUALE semantic_pactum_rituale_matches_signature_silent(SPECULUM SemanticContext ctx, REX sigillum_sym_id, SPECULUM AstNode contract_sig, REX rituale_sym_id) REDDE VERUM
+  EVOCA SPECULUM SemanticSymbol rituale_sym AD CONIURA semantic_symbol_at(ctx, rituale_sym_id)
+  SI NON (*rituale_sym).has_decl_node VEL (*(*rituale_sym).decl_node).kind != AST_RITUALE
+    REDDE FALSUM
+  FIN SI
+
+  EVOCA SPECULUM AstNode rituale_decl AD (*rituale_sym).decl_node
+  EVOCA REX expected_param_count AD CONIURA semantic_signature_param_count(contract_sig) + 1
+  EVOCA REX actual_param_count AD CONIURA semantic_signature_param_count(rituale_decl)
+  SI actual_param_count == 0
+    REDDE FALSUM
+  FIN SI
+
+  SI NON CONIURA semantic_contract_self_param_ok(ctx, sigillum_sym_id, CONIURA semantic_signature_param_type(ctx, rituale_decl, 0))
+    REDDE FALSUM
+  FIN SI
+
+  SI expected_param_count != actual_param_count
+    REDDE FALSUM
+  FIN SI
+
+  EVOCA REX i AD 0
+  EVOCA REX n AD CONIURA semantic_signature_param_count(contract_sig)
+  DUM i < n
+    SI NON CONIURA semantic_type_equal(ctx, CONIURA semantic_signature_param_type(ctx, contract_sig, i), CONIURA semantic_signature_param_type(ctx, rituale_decl, i + 1))
+      REDDE FALSUM
+    FIN SI
+    VINCIRE i AD i + 1
+  FIN DUM
+
+  SI NON CONIURA semantic_type_equal(ctx, CONIURA semantic_signature_return_type(ctx, contract_sig), CONIURA semantic_signature_return_type(ctx, rituale_decl))
+    REDDE FALSUM
+  FIN SI
+
+  REDDE VERUM
+EXPLICIT RITUALE
+
+RITUALE semantic_sigillum_conforms_pactum_symbol_ids(SPECULUM SemanticContext ctx, REX sigillum_sym_id, REX pactum_sym_id) REDDE VERUM
+  EVOCA SPECULUM SemanticSymbol pactum_sym AD CONIURA semantic_symbol_at(ctx, pactum_sym_id)
+  SI NON (*pactum_sym).has_decl_node VEL (*(*pactum_sym).decl_node).kind != AST_PACTUM
+    REDDE FALSUM
+  FIN SI
+
+  EVOCA SPECULUM AstNode pactum_decl AD (*pactum_sym).decl_node
+  EVOCA REX i AD 0
+  EVOCA REX n AD CONIURA ast_node_list_len((*pactum_decl).signatures)
+  DUM i < n
+    EVOCA SPECULUM AstNode contract_sig AD CONIURA ast_node_list_get((*pactum_decl).signatures, i)
+    EVOCA REX rituale_sym_id AD CONIURA semantic_lookup_global(ctx, (*contract_sig).name)
+    SI rituale_sym_id == CONIURA semantic_invalid_id()
+      REDDE FALSUM
+    FIN SI
+    SI NON CONIURA semantic_pactum_rituale_matches_signature_silent(ctx, sigillum_sym_id, contract_sig, rituale_sym_id)
+      REDDE FALSUM
+    FIN SI
+    VINCIRE i AD i + 1
+  FIN DUM
+  REDDE VERUM
+EXPLICIT RITUALE
+
+RITUALE semantic_validate_sigillum_pactum(SPECULUM SemanticContext ctx, VERBUM sigillum_name, VERBUM pactum_name) REDDE NIHIL
+  EVOCA REX sigillum_sym_id AD CONIURA semantic_lookup_global(ctx, sigillum_name)
+  EVOCA REX pactum_sym_id AD CONIURA semantic_lookup_global(ctx, pactum_name)
+
+  SI sigillum_sym_id == CONIURA semantic_invalid_id() VEL pactum_sym_id == CONIURA semantic_invalid_id()
+    CONIURA semantic_report_error(ctx, 0, 0, "SIGILLUM or PACTUM not found for conformance check")
+    REDDE
+  FIN SI
+
+  EVOCA SPECULUM SemanticSymbol pactum_sym AD CONIURA semantic_symbol_at(ctx, pactum_sym_id)
+  SI NON (*pactum_sym).has_decl_node VEL (*(*pactum_sym).decl_node).kind != AST_PACTUM
+    CONIURA semantic_report_error(ctx, 0, 0, "conformance target is not PACTUM")
+    REDDE
+  FIN SI
+
+  EVOCA SPECULUM AstNode pactum_decl AD (*pactum_sym).decl_node
+  EVOCA REX i AD 0
+  EVOCA REX n AD CONIURA ast_node_list_len((*pactum_decl).signatures)
+  DUM i < n
+    EVOCA SPECULUM AstNode contract_sig AD CONIURA ast_node_list_get((*pactum_decl).signatures, i)
+    EVOCA REX rituale_sym_id AD CONIURA semantic_lookup_global(ctx, (*contract_sig).name)
+    SI rituale_sym_id == CONIURA semantic_invalid_id()
+      CONIURA semantic_report_error(ctx, (*contract_sig).line, (*contract_sig).column, CONIURA concat("SIGILLUM '", CONIURA concat(sigillum_name, CONIURA concat("' does not implement PACTUM '", CONIURA concat(pactum_name, CONIURA concat("': missing RITUALE '", CONIURA concat((*contract_sig).name, "'")))))))
+      REDDE
+    FIN SI
+    SI NON CONIURA semantic_pactum_rituale_matches_signature(ctx, sigillum_sym_id, contract_sig, rituale_sym_id)
+      REDDE
+    FIN SI
+    VINCIRE i AD i + 1
+  FIN DUM
+  REDDE
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

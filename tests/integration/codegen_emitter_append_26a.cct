@@ -1,0 +1,26 @@
+INCIPIT grimoire "codegen_emitter_append_26a"
+
+ADVOCARE "../../src/bootstrap/codegen/codegen.cct"
+ADVOCARE "../../src/bootstrap/codegen/codegen_context.cct"
+ADVOCARE "../../src/bootstrap/codegen/codegen_emitter.cct"
+ADVOCARE "cct/verbum.cct"
+
+RITUALE main() REDDE REX
+  EVOCA SPECULUM CodegenContext ctx AD CONIURA codegen_context_new("append.cct")
+  CONIURA codegen_emit(ctx, "int")
+  CONIURA codegen_emit(ctx, " ")
+  CONIURA codegen_emit(ctx, "x")
+  CONIURA codegen_emit(ctx, " = 1;")
+
+  EVOCA VERBUM out AD CONIURA codegen_output(ctx)
+  EVOCA REX rc AD 0
+  SI CONIURA compare(out, "int x = 1;") != 0
+    VINCIRE rc AD 1
+  FIN SI
+
+  DIMITTE out
+  CONIURA codegen_context_free(ctx)
+  REDDE rc
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

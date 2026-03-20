@@ -1,0 +1,226 @@
+INCIPIT grimoire "semantic_stmt"
+
+ADVOCARE "cct/fluxus.cct"
+ADVOCARE "cct/verbum.cct"
+ADVOCARE "../parser/ast.cct"
+ADVOCARE "semantic_block.cct"
+ADVOCARE "semantic_context.cct"
+ADVOCARE "semantic_expr.cct"
+ADVOCARE "semantic_kind.cct"
+ADVOCARE "semantic_resolver.cct"
+ADVOCARE "semantic_symbol.cct"
+ADVOCARE "semantic_type.cct"
+ADVOCARE "semantic_type_kind.cct"
+
+RITUALE semantic_current_rituale_return_type(SPECULUM SemanticContext ctx, REX line, REX column) REDDE REX
+  SI (*ctx).current_rituale_id == CONIURA semantic_invalid_id()
+    CONIURA semantic_report_error(ctx, line, column, "REDDE outside rituale context")
+    REDDE (*ctx).type_error
+  FIN SI
+
+  EVOCA SPECULUM SemanticSymbol sym AD CONIURA semantic_symbol_at(ctx, (*ctx).current_rituale_id)
+  SI (*sym).kind != SEM_SYMBOL_RITUALE
+    CONIURA semantic_report_error(ctx, line, column, "current semantic context is not rituale")
+    REDDE (*ctx).type_error
+  FIN SI
+
+  REDDE (*sym).payload_type_id
+EXPLICIT RITUALE
+
+RITUALE semantic_analyze_condition(SPECULUM SemanticContext ctx, SPECULUM AstNode expr, VERBUM label) REDDE NIHIL
+  EVOCA REX type_id AD CONIURA semantic_analyze_expr(ctx, expr)
+  SI type_id == (*ctx).type_error
+    REDDE
+  FIN SI
+  SI type_id != (*ctx).type_verum
+    CONIURA semantic_report_error(ctx, (*expr).line, (*expr).column, CONIURA concat(label, " condition must be VERUM"))
+  FIN SI
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE semantic_analyze_block(SPECULUM SemanticContext ctx, SPECULUM AstNode block, VERUM create_scope) REDDE NIHIL
+  SI (*block).kind != AST_BLOCK
+    CONIURA semantic_report_error(ctx, (*block).line, (*block).column, "expected AST_BLOCK during semantic analysis")
+    REDDE
+  FIN SI
+
+  SI create_scope
+    CONIURA semantic_block_enter(ctx)
+  FIN SI
+
+  EVOCA REX i AD 0
+  EVOCA REX n AD CONIURA ast_node_list_len((*block).statements)
+  DUM i < n
+    EVOCA SPECULUM AstNode stmt AD CONIURA ast_node_list_get((*block).statements, i)
+    CONIURA semantic_analyze_stmt(ctx, stmt)
+    VINCIRE i AD i + 1
+  FIN DUM
+
+  SI create_scope
+    CONIURA semantic_block_leave(ctx)
+  FIN SI
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE semantic_analyze_evoca_stmt(SPECULUM SemanticContext ctx, SPECULUM AstNode stmt) REDDE NIHIL
+  EVOCA REX declared_type_id AD CONIURA semantic_resolve_type_node(ctx, (*stmt).type_expr)
+  EVOCA REX init_type_id AD (*ctx).type_error
+
+  SI (*stmt).has_right
+    VINCIRE init_type_id AD CONIURA semantic_analyze_expr(ctx, (*stmt).right)
+  FIN SI
+
+  CONIURA semantic_define(ctx, SEM_SYMBOL_VARIABLE, (*stmt).name, declared_type_id, (*stmt).line, (*stmt).column)
+
+  SI (*stmt).has_right ET NON CONIURA semantic_type_compatible_assign(ctx, declared_type_id, init_type_id)
+    CONIURA semantic_report_error(ctx, (*stmt).line, (*stmt).column, "initializer type mismatch")
+  FIN SI
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE semantic_analyze_redde_stmt(SPECULUM SemanticContext ctx, SPECULUM AstNode stmt) REDDE NIHIL
+  EVOCA REX return_type_id AD CONIURA semantic_current_rituale_return_type(ctx, (*stmt).line, (*stmt).column)
+  SI return_type_id == (*ctx).type_error
+    REDDE
+  FIN SI
+
+  SI NON (*stmt).has_left
+    SI return_type_id != (*ctx).type_nihil
+      CONIURA semantic_report_error(ctx, (*stmt).line, (*stmt).column, "REDDE requires value for non-NIHIL rituale")
+    FIN SI
+    REDDE
+  FIN SI
+
+  EVOCA REX value_type_id AD CONIURA semantic_analyze_expr(ctx, (*stmt).left)
+  SI NON CONIURA semantic_type_compatible_assign(ctx, return_type_id, value_type_id)
+    CONIURA semantic_report_error(ctx, (*stmt).line, (*stmt).column, "return type mismatch")
+  FIN SI
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE semantic_analyze_iace_stmt(SPECULUM SemanticContext ctx, SPECULUM AstNode stmt) REDDE NIHIL
+  EVOCA REX value_type_id AD CONIURA semantic_analyze_expr(ctx, (*stmt).left)
+  SI NON CONIURA semantic_type_compatible_assign(ctx, (*ctx).type_fractum, value_type_id)
+    CONIURA semantic_report_error(ctx, (*stmt).line, (*stmt).column, "IACE requires FRACTUM value")
+  FIN SI
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE semantic_analyze_quando_case(SPECULUM SemanticContext ctx, REX subject_type_id, SPECULUM AstNode case_node) REDDE NIHIL
+  EVOCA REX i AD 0
+  EVOCA REX n_literals AD CONIURA ast_node_list_len((*case_node).children)
+  DUM i < n_literals
+    EVOCA SPECULUM AstNode literal_node AD CONIURA ast_node_list_get((*case_node).children, i)
+    EVOCA REX literal_type_id AD CONIURA semantic_analyze_expr(ctx, literal_node)
+    SI NON CONIURA semantic_type_compatible_assign(ctx, subject_type_id, literal_type_id) ET NON CONIURA semantic_type_compatible_assign(ctx, literal_type_id, subject_type_id)
+      CONIURA semantic_report_error(ctx, (*literal_node).line, (*literal_node).column, "QUANDO case requires compatible literal")
+    FIN SI
+    VINCIRE i AD i + 1
+  FIN DUM
+
+  CONIURA semantic_block_enter(ctx)
+  VINCIRE i AD 0
+  EVOCA REX n_bindings AD CONIURA ast_node_list_len((*case_node).bindings)
+  DUM i < n_bindings
+    EVOCA SPECULUM AstNode binding AD CONIURA ast_node_list_get((*case_node).bindings, i)
+    CONIURA semantic_define(ctx, SEM_SYMBOL_VARIABLE, (*binding).name, subject_type_id, (*binding).line, (*binding).column)
+    VINCIRE i AD i + 1
+  FIN DUM
+  CONIURA semantic_analyze_block(ctx, (*case_node).body, FALSUM)
+  CONIURA semantic_block_leave(ctx)
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE semantic_analyze_quando_stmt(SPECULUM SemanticContext ctx, SPECULUM AstNode stmt) REDDE NIHIL
+  EVOCA REX subject_type_id AD CONIURA semantic_analyze_expr(ctx, (*stmt).condition)
+  EVOCA REX i AD 0
+  EVOCA REX n AD CONIURA ast_node_list_len((*stmt).cases)
+  DUM i < n
+    EVOCA SPECULUM AstNode case_node AD CONIURA ast_node_list_get((*stmt).cases, i)
+    CONIURA semantic_analyze_quando_case(ctx, subject_type_id, case_node)
+    VINCIRE i AD i + 1
+  FIN DUM
+  SI (*stmt).has_else_branch
+    CONIURA semantic_analyze_block(ctx, (*stmt).else_branch, VERUM)
+  FIN SI
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE semantic_analyze_tempta_stmt(SPECULUM SemanticContext ctx, SPECULUM AstNode stmt) REDDE NIHIL
+  CONIURA semantic_analyze_block(ctx, (*stmt).try_block, VERUM)
+
+  EVOCA REX cape_type_id AD CONIURA semantic_resolve_type_node(ctx, (*stmt).cape_type)
+  CONIURA semantic_block_enter(ctx)
+  CONIURA semantic_define(ctx, SEM_SYMBOL_VARIABLE, (*stmt).name, cape_type_id, (*stmt).line, (*stmt).column)
+  CONIURA semantic_analyze_block(ctx, (*stmt).cape_block, FALSUM)
+  CONIURA semantic_block_leave(ctx)
+
+  SI (*stmt).has_semper_block
+    CONIURA semantic_analyze_block(ctx, (*stmt).semper_block, VERUM)
+  FIN SI
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE semantic_analyze_stmt(SPECULUM SemanticContext ctx, SPECULUM AstNode stmt) REDDE NIHIL
+  SI (*stmt).kind == AST_BLOCK
+    CONIURA semantic_analyze_block(ctx, stmt, VERUM)
+    REDDE
+  FIN SI
+
+  SI (*stmt).kind == AST_EVOCA
+    CONIURA semantic_analyze_evoca_stmt(ctx, stmt)
+    REDDE
+  FIN SI
+
+  SI (*stmt).kind == AST_VINCIRE
+    CONIURA semantic_analyze_expr(ctx, stmt)
+    REDDE
+  FIN SI
+
+  SI (*stmt).kind == AST_REDDE
+    CONIURA semantic_analyze_redde_stmt(ctx, stmt)
+    REDDE
+  FIN SI
+
+  SI (*stmt).kind == AST_IACE
+    CONIURA semantic_analyze_iace_stmt(ctx, stmt)
+    REDDE
+  FIN SI
+
+  SI (*stmt).kind == AST_EXPR_STMT
+    CONIURA semantic_analyze_expr(ctx, (*stmt).left)
+    REDDE
+  FIN SI
+
+  SI (*stmt).kind == AST_SI
+    CONIURA semantic_analyze_condition(ctx, (*stmt).condition, "SI")
+    CONIURA semantic_analyze_block(ctx, (*stmt).body, VERUM)
+    SI (*stmt).has_else_branch
+      CONIURA semantic_analyze_block(ctx, (*stmt).else_branch, VERUM)
+    FIN SI
+    REDDE
+  FIN SI
+
+  SI (*stmt).kind == AST_QUANDO
+    CONIURA semantic_analyze_quando_stmt(ctx, stmt)
+    REDDE
+  FIN SI
+
+  SI (*stmt).kind == AST_DUM
+    CONIURA semantic_analyze_condition(ctx, (*stmt).condition, "DUM")
+    VINCIRE (*ctx).loop_depth AD (*ctx).loop_depth + 1
+    CONIURA semantic_analyze_block(ctx, (*stmt).body, VERUM)
+    VINCIRE (*ctx).loop_depth AD (*ctx).loop_depth - 1
+    REDDE
+  FIN SI
+
+  SI (*stmt).kind == AST_TEMPTA
+    CONIURA semantic_analyze_tempta_stmt(ctx, stmt)
+    REDDE
+  FIN SI
+
+  CONIURA semantic_report_error(ctx, (*stmt).line, (*stmt).column, "unsupported statement node")
+  REDDE
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

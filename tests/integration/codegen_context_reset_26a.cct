@@ -1,0 +1,45 @@
+INCIPIT grimoire "codegen_context_reset_26a"
+
+ADVOCARE "../../src/bootstrap/codegen/codegen.cct"
+ADVOCARE "../../src/bootstrap/codegen/codegen_context.cct"
+ADVOCARE "../../src/bootstrap/codegen/codegen_emitter.cct"
+ADVOCARE "cct/verbum.cct"
+
+RITUALE main() REDDE REX
+  EVOCA SPECULUM CodegenContext ctx AD CONIURA codegen_context_new("reset.cct")
+  EVOCA VERBUM temp0 AD CONIURA codegen_next_temp_name(ctx)
+  EVOCA VERBUM label0 AD CONIURA codegen_next_label_name(ctx)
+  CONIURA codegen_emit_line(ctx, "payload")
+  CONIURA codegen_report_error(ctx, 7, 3, "broken")
+  SI CONIURA compare(CONIURA codegen_rituale_c_name(ctx, "main"), "") == 0
+    DIMITTE temp0
+    DIMITTE label0
+    CONIURA codegen_context_free(ctx)
+    REDDE 9
+  FIN SI
+
+  CONIURA codegen_context_reset(ctx)
+
+  EVOCA VERBUM out AD CONIURA codegen_output(ctx)
+  EVOCA REX rc AD 0
+  SI CONIURA compare(out, "") != 0
+    VINCIRE rc AD 1
+  FIN SI
+  SI (*ctx).next_temp_id != 0 VEL (*ctx).next_label_id != 0
+    VINCIRE rc AD 2
+  FIN SI
+  SI CONIURA codegen_had_error(ctx) VEL (*ctx).error_count != 0
+    VINCIRE rc AD 3
+  FIN SI
+  SI CONIURA codegen_registered_rituale_count(ctx) != 0
+    VINCIRE rc AD 4
+  FIN SI
+
+  DIMITTE out
+  DIMITTE temp0
+  DIMITTE label0
+  CONIURA codegen_context_free(ctx)
+  REDDE rc
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

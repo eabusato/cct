@@ -1,0 +1,37 @@
+INCIPIT grimoire "semantic_dedup_different_instances_25d"
+
+ADVOCARE "../../src/bootstrap/parser/parser.cct"
+ADVOCARE "../../src/bootstrap/parser/ast.cct"
+ADVOCARE "../../src/bootstrap/semantic/semantic_context.cct"
+ADVOCARE "../../src/bootstrap/semantic/semantic_generic.cct"
+ADVOCARE "../../src/bootstrap/semantic/semantic_register.cct"
+ADVOCARE "../../src/bootstrap/semantic/semantic_resolver.cct"
+
+RITUALE main() REDDE REX
+  EVOCA VERBUM src AD "INCIPIT grimoire \"p\" SIGILLUM Caixa GENUS(T) valor: T FIN SIGILLUM EXPLICIT grimoire"
+  EVOCA SPECULUM AstProgram program AD CONIURA parser_parse_program_source(src, "different_instances_25d.cct")
+  EVOCA SPECULUM SemanticContext ctx AD CONIURA semantic_context_new("different_instances_25d.cct")
+  CONIURA semantic_register_program(ctx, program)
+
+  EVOCA SPECULUM AstNode rex_type AD CONIURA ast_make_type("Caixa", 1, 1)
+  CONIURA ast_append_generic_arg(rex_type, CONIURA ast_make_type("REX", 1, 10))
+  EVOCA SPECULUM AstNode verum_type AD CONIURA ast_make_type("Caixa", 2, 1)
+  CONIURA ast_append_generic_arg(verum_type, CONIURA ast_make_type("VERUM", 2, 10))
+
+  EVOCA REX id1 AD CONIURA semantic_resolve_type_node(ctx, rex_type)
+  EVOCA REX id2 AD CONIURA semantic_resolve_type_node(ctx, verum_type)
+  SI id1 == id2
+    REDDE 41
+  FIN SI
+  SI CONIURA semantic_instance_cache_len(ctx) != 2
+    REDDE 42
+  FIN SI
+
+  CONIURA ast_node_free(rex_type)
+  CONIURA ast_node_free(verum_type)
+  CONIURA semantic_context_free(ctx)
+  CONIURA ast_program_free(program)
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

@@ -1,0 +1,38 @@
+INCIPIT grimoire "semantic_dedup_rituale_return_instance_25d"
+
+ADVOCARE "../../src/bootstrap/parser/parser.cct"
+ADVOCARE "../../src/bootstrap/parser/parse_expr.cct"
+ADVOCARE "../../src/bootstrap/parser/ast.cct"
+ADVOCARE "../../src/bootstrap/semantic/semantic_context.cct"
+ADVOCARE "../../src/bootstrap/semantic/semantic_expr.cct"
+ADVOCARE "../../src/bootstrap/semantic/semantic_generic.cct"
+ADVOCARE "../../src/bootstrap/semantic/semantic_register.cct"
+
+RITUALE main() REDDE REX
+  EVOCA VERBUM src AD "INCIPIT grimoire \"p\" SIGILLUM Caixa GENUS(T) valor: T FIN SIGILLUM RITUALE fabrica GENUS(T)(T valor) REDDE Caixa GENUS(T) REDDE NIHIL EXPLICIT RITUALE EXPLICIT grimoire"
+  EVOCA SPECULUM AstProgram program AD CONIURA parser_parse_program_source(src, "rituale_return_instance_25d.cct")
+  EVOCA SPECULUM SemanticContext ctx AD CONIURA semantic_context_new("rituale_return_instance_25d.cct")
+  CONIURA semantic_register_program(ctx, program)
+
+  EVOCA SPECULUM AstNode expr1 AD CONIURA parser_parse_expression_source("fabrica GENUS(REX)(1)", "expr1.cct")
+  EVOCA SPECULUM AstNode expr2 AD CONIURA parser_parse_expression_source("fabrica GENUS(REX)(1)", "expr2.cct")
+  EVOCA REX id1 AD CONIURA semantic_analyze_expr(ctx, expr1)
+  EVOCA REX id2 AD CONIURA semantic_analyze_expr(ctx, expr2)
+  SI id1 != id2
+    REDDE 41
+  FIN SI
+  SI CONIURA semantic_instance_cache_len(ctx) != 2
+    REDDE 42
+  FIN SI
+  SI NON CONIURA semantic_instance_cache_validate(ctx)
+    REDDE 43
+  FIN SI
+
+  CONIURA ast_node_free(expr1)
+  CONIURA ast_node_free(expr2)
+  CONIURA semantic_context_free(ctx)
+  CONIURA ast_program_free(program)
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

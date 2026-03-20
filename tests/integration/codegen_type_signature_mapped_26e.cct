@@ -1,0 +1,26 @@
+INCIPIT grimoire "codegen_type_signature_mapped_26e"
+
+ADVOCARE "../../src/bootstrap/codegen/codegen_context.cct"
+ADVOCARE "../../src/bootstrap/codegen/codegen_decl.cct"
+ADVOCARE "../../src/bootstrap/parser/ast.cct"
+ADVOCARE "cct/verbum.cct"
+
+RITUALE main() REDDE REX
+  EVOCA SPECULUM CodegenContext ctx AD CONIURA codegen_context_new("sigmap.cct")
+  EVOCA SPECULUM AstNode body AD CONIURA ast_make_block(1, 1)
+  EVOCA SPECULUM AstNode fn AD CONIURA ast_make_rituale("mix", CONIURA ast_make_type("VERBUM", 1, 1), body, 1, 1)
+  CONIURA ast_append_param(fn, CONIURA ast_make_param("count", CONIURA ast_make_type("REX", 1, 1), 1, 1))
+  CONIURA ast_append_param(fn, CONIURA ast_make_param("flag", CONIURA ast_make_type("VERUM", 1, 1), 1, 1))
+  CONIURA codegen_emit_rituale_signature(ctx, fn)
+  EVOCA VERBUM out AD CONIURA codegen_output(ctx)
+  EVOCA REX rc AD 0
+  SI CONIURA compare(out, "char* cct_boot_rit_mix_0(long long count, int flag)") != 0
+    VINCIRE rc AD 1
+  FIN SI
+  DIMITTE out
+  CONIURA ast_node_free(fn)
+  CONIURA codegen_context_free(ctx)
+  REDDE rc
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

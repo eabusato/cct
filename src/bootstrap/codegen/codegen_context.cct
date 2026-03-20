@@ -1,0 +1,374 @@
+INCIPIT grimoire "codegen_context"
+
+ADVOCARE "cct/code_writer.cct"
+ADVOCARE "cct/fluxus.cct"
+ADVOCARE "cct/mem.cct"
+ADVOCARE "cct/verbum.cct"
+
+SIGILLUM CodegenRitualeName
+  source_name: VERBUM
+  owns_source_name: VERUM
+  c_name: VERBUM
+  owns_c_name: VERUM
+FIN SIGILLUM
+
+SIGILLUM CodegenLocal
+  source_name: VERBUM
+  owns_source_name: VERUM
+  c_name: VERBUM
+  owns_c_name: VERUM
+FIN SIGILLUM
+
+SIGILLUM CodegenStringLiteral
+  raw_text: VERBUM
+  owns_raw_text: VERUM
+  symbol_name: VERBUM
+  owns_symbol_name: VERUM
+FIN SIGILLUM
+
+SIGILLUM CodegenContext
+  filename: VERBUM
+  owns_filename: VERUM
+  writer: SPECULUM NIHIL
+  indent_level: REX
+  next_temp_id: REX
+  next_label_id: REX
+  had_error: VERUM
+  error_count: REX
+  last_error_message: VERBUM
+  owns_last_error_message: VERUM
+  last_error_line: REX
+  last_error_column: REX
+  rituale_names: SPECULUM NIHIL
+  local_names: SPECULUM NIHIL
+  local_scope_marks: SPECULUM NIHIL
+  string_literals: SPECULUM NIHIL
+  current_return_type: VERBUM
+  owns_current_return_type: VERUM
+  needs_stdio: VERUM
+  needs_stdlib: VERUM
+  needs_fail_helper: VERUM
+FIN SIGILLUM
+
+RITUALE codegen_heap_alloc(REX bytes) REDDE SPECULUM NIHIL
+  REDDE CONIURA alloc(bytes)
+EXPLICIT RITUALE
+
+RITUALE codegen_heap_zero(SPECULUM NIHIL ptr, REX bytes) REDDE NIHIL
+  CONIURA zero(ptr, bytes)
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE codegen_heap_free(SPECULUM NIHIL ptr) REDDE NIHIL
+  CONIURA free(ptr)
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE codegen_context_record_at(SPECULUM CodegenContext ctx, REX idx) REDDE SPECULUM CodegenRitualeName
+  REDDE CONIURA fluxus_get((*ctx).rituale_names, idx)
+EXPLICIT RITUALE
+
+RITUALE codegen_context_local_at(SPECULUM CodegenContext ctx, REX idx) REDDE SPECULUM CodegenLocal
+  REDDE CONIURA fluxus_get((*ctx).local_names, idx)
+EXPLICIT RITUALE
+
+RITUALE codegen_context_string_at(SPECULUM CodegenContext ctx, REX idx) REDDE SPECULUM CodegenStringLiteral
+  REDDE CONIURA fluxus_get((*ctx).string_literals, idx)
+EXPLICIT RITUALE
+
+RITUALE codegen_context_free_records(SPECULUM CodegenContext ctx) REDDE NIHIL
+  EVOCA REX i AD 0
+  EVOCA REX n AD CONIURA fluxus_len((*ctx).rituale_names)
+  DUM i < n
+    EVOCA SPECULUM CodegenRitualeName record AD CONIURA codegen_context_record_at(ctx, i)
+    SI (*record).owns_source_name
+      DIMITTE (*record).source_name
+      VINCIRE (*record).owns_source_name AD FALSUM
+    FIN SI
+    SI (*record).owns_c_name
+      DIMITTE (*record).c_name
+      VINCIRE (*record).owns_c_name AD FALSUM
+    FIN SI
+    VINCIRE i AD i + 1
+  FIN DUM
+  CONIURA fluxus_clear((*ctx).rituale_names)
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE codegen_context_free_locals(SPECULUM CodegenContext ctx) REDDE NIHIL
+  EVOCA REX i AD 0
+  EVOCA REX n AD CONIURA fluxus_len((*ctx).local_names)
+  DUM i < n
+    EVOCA SPECULUM CodegenLocal local AD CONIURA codegen_context_local_at(ctx, i)
+    SI (*local).owns_source_name
+      DIMITTE (*local).source_name
+      VINCIRE (*local).owns_source_name AD FALSUM
+    FIN SI
+    SI (*local).owns_c_name
+      DIMITTE (*local).c_name
+      VINCIRE (*local).owns_c_name AD FALSUM
+    FIN SI
+    VINCIRE i AD i + 1
+  FIN DUM
+  CONIURA fluxus_clear((*ctx).local_names)
+  CONIURA fluxus_clear((*ctx).local_scope_marks)
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE codegen_context_free_string_literals(SPECULUM CodegenContext ctx) REDDE NIHIL
+  EVOCA REX i AD 0
+  EVOCA REX n AD CONIURA fluxus_len((*ctx).string_literals)
+  DUM i < n
+    EVOCA SPECULUM CodegenStringLiteral item AD CONIURA codegen_context_string_at(ctx, i)
+    SI (*item).owns_raw_text
+      DIMITTE (*item).raw_text
+      VINCIRE (*item).owns_raw_text AD FALSUM
+    FIN SI
+    SI (*item).owns_symbol_name
+      DIMITTE (*item).symbol_name
+      VINCIRE (*item).owns_symbol_name AD FALSUM
+    FIN SI
+    VINCIRE i AD i + 1
+  FIN DUM
+  CONIURA fluxus_clear((*ctx).string_literals)
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE codegen_context_new(VERBUM filename) REDDE SPECULUM CodegenContext
+  EVOCA SPECULUM NIHIL raw AD CONIURA codegen_heap_alloc(MENSURA(CodegenContext))
+  CONIURA codegen_heap_zero(raw, MENSURA(CodegenContext))
+
+  EVOCA SPECULUM CodegenContext ctx
+  VINCIRE ctx AD raw
+
+  VINCIRE (*ctx).filename AD CONIURA verbum_dup(filename)
+  VINCIRE (*ctx).owns_filename AD VERUM
+  VINCIRE (*ctx).writer AD CONIURA writer_init()
+  VINCIRE (*ctx).rituale_names AD CONIURA fluxus_init(MENSURA(CodegenRitualeName))
+  VINCIRE (*ctx).local_names AD CONIURA fluxus_init(MENSURA(CodegenLocal))
+  VINCIRE (*ctx).local_scope_marks AD CONIURA fluxus_init(MENSURA(REX))
+  VINCIRE (*ctx).string_literals AD CONIURA fluxus_init(MENSURA(CodegenStringLiteral))
+  VINCIRE (*ctx).current_return_type AD CONIURA verbum_dup("NIHIL")
+  VINCIRE (*ctx).owns_current_return_type AD VERUM
+
+  REDDE ctx
+EXPLICIT RITUALE
+
+RITUALE codegen_context_reset_output(SPECULUM CodegenContext ctx) REDDE NIHIL
+  CONIURA writer_free((*ctx).writer)
+  VINCIRE (*ctx).writer AD CONIURA writer_init()
+  VINCIRE (*ctx).indent_level AD 0
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE codegen_context_reset(SPECULUM CodegenContext ctx) REDDE NIHIL
+  CONIURA codegen_context_reset_output(ctx)
+  VINCIRE (*ctx).next_temp_id AD 0
+  VINCIRE (*ctx).next_label_id AD 0
+  VINCIRE (*ctx).had_error AD FALSUM
+  VINCIRE (*ctx).error_count AD 0
+  SI (*ctx).owns_last_error_message
+    DIMITTE (*ctx).last_error_message
+    VINCIRE (*ctx).owns_last_error_message AD FALSUM
+  FIN SI
+  VINCIRE (*ctx).last_error_line AD 0
+  VINCIRE (*ctx).last_error_column AD 0
+  CONIURA codegen_context_free_records(ctx)
+  CONIURA codegen_context_free_locals(ctx)
+  CONIURA codegen_context_free_string_literals(ctx)
+  SI (*ctx).owns_current_return_type
+    DIMITTE (*ctx).current_return_type
+  FIN SI
+  VINCIRE (*ctx).current_return_type AD CONIURA verbum_dup("NIHIL")
+  VINCIRE (*ctx).owns_current_return_type AD VERUM
+  VINCIRE (*ctx).needs_stdio AD FALSUM
+  VINCIRE (*ctx).needs_stdlib AD FALSUM
+  VINCIRE (*ctx).needs_fail_helper AD FALSUM
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE codegen_context_free(SPECULUM CodegenContext ctx) REDDE NIHIL
+  SI (*ctx).owns_filename
+    DIMITTE (*ctx).filename
+  FIN SI
+  SI (*ctx).owns_last_error_message
+    DIMITTE (*ctx).last_error_message
+  FIN SI
+  CONIURA codegen_context_free_records(ctx)
+  CONIURA codegen_context_free_locals(ctx)
+  CONIURA codegen_context_free_string_literals(ctx)
+  CONIURA fluxus_free((*ctx).rituale_names)
+  CONIURA fluxus_free((*ctx).local_names)
+  CONIURA fluxus_free((*ctx).local_scope_marks)
+  CONIURA fluxus_free((*ctx).string_literals)
+  SI (*ctx).owns_current_return_type
+    DIMITTE (*ctx).current_return_type
+  FIN SI
+  CONIURA writer_free((*ctx).writer)
+  CONIURA codegen_heap_free(ctx)
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE codegen_report_error(SPECULUM CodegenContext ctx, REX line, REX column, VERBUM message) REDDE NIHIL
+  VINCIRE (*ctx).had_error AD VERUM
+  VINCIRE (*ctx).error_count AD (*ctx).error_count + 1
+  SI (*ctx).owns_last_error_message
+    DIMITTE (*ctx).last_error_message
+  FIN SI
+  VINCIRE (*ctx).last_error_message AD CONIURA verbum_dup(message)
+  VINCIRE (*ctx).owns_last_error_message AD VERUM
+  VINCIRE (*ctx).last_error_line AD line
+  VINCIRE (*ctx).last_error_column AD column
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE codegen_had_error(SPECULUM CodegenContext ctx) REDDE VERUM
+  REDDE (*ctx).had_error
+EXPLICIT RITUALE
+
+RITUALE codegen_output(SPECULUM CodegenContext ctx) REDDE VERBUM
+  REDDE CONIURA writer_to_verbum((*ctx).writer)
+EXPLICIT RITUALE
+
+RITUALE codegen_registered_rituale_count(SPECULUM CodegenContext ctx) REDDE REX
+  REDDE CONIURA fluxus_len((*ctx).rituale_names)
+EXPLICIT RITUALE
+
+RITUALE codegen_lookup_rituale_c_name(SPECULUM CodegenContext ctx, VERBUM source_name) REDDE VERBUM
+  EVOCA REX i AD 0
+  EVOCA REX n AD CONIURA fluxus_len((*ctx).rituale_names)
+  DUM i < n
+    EVOCA SPECULUM CodegenRitualeName record AD CONIURA codegen_context_record_at(ctx, i)
+    SI CONIURA compare((*record).source_name, source_name) == 0
+      REDDE (*record).c_name
+    FIN SI
+    VINCIRE i AD i + 1
+  FIN DUM
+  REDDE ""
+EXPLICIT RITUALE
+
+RITUALE codegen_register_rituale_c_name(SPECULUM CodegenContext ctx, VERBUM source_name, VERBUM c_name) REDDE VERBUM
+  EVOCA VERBUM existing AD CONIURA codegen_lookup_rituale_c_name(ctx, source_name)
+  SI CONIURA compare(existing, "") != 0
+    REDDE existing
+  FIN SI
+
+  EVOCA CodegenRitualeName record
+  VINCIRE record.source_name AD CONIURA verbum_dup(source_name)
+  VINCIRE record.owns_source_name AD VERUM
+  VINCIRE record.c_name AD CONIURA verbum_dup(c_name)
+  VINCIRE record.owns_c_name AD VERUM
+  CONIURA fluxus_push((*ctx).rituale_names, SPECULUM record)
+
+  REDDE CONIURA codegen_lookup_rituale_c_name(ctx, source_name)
+EXPLICIT RITUALE
+
+RITUALE codegen_set_current_return_type(SPECULUM CodegenContext ctx, VERBUM type_name) REDDE NIHIL
+  SI (*ctx).owns_current_return_type
+    DIMITTE (*ctx).current_return_type
+  FIN SI
+  VINCIRE (*ctx).current_return_type AD CONIURA verbum_dup(type_name)
+  VINCIRE (*ctx).owns_current_return_type AD VERUM
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE codegen_push_local_scope(SPECULUM CodegenContext ctx) REDDE NIHIL
+  EVOCA REX mark AD CONIURA fluxus_len((*ctx).local_names)
+  CONIURA fluxus_push((*ctx).local_scope_marks, SPECULUM mark)
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE codegen_pop_local_scope(SPECULUM CodegenContext ctx) REDDE NIHIL
+  SI CONIURA fluxus_len((*ctx).local_scope_marks) == 0
+    REDDE
+  FIN SI
+
+  EVOCA REX mark AD 0
+  CONIURA fluxus_pop((*ctx).local_scope_marks, SPECULUM mark)
+
+  DUM CONIURA fluxus_len((*ctx).local_names) > mark
+    EVOCA REX idx AD CONIURA fluxus_len((*ctx).local_names) - 1
+    EVOCA SPECULUM CodegenLocal local AD CONIURA codegen_context_local_at(ctx, idx)
+    SI (*local).owns_source_name
+      DIMITTE (*local).source_name
+    FIN SI
+    SI (*local).owns_c_name
+      DIMITTE (*local).c_name
+    FIN SI
+    CONIURA fluxus_remove((*ctx).local_names, idx)
+  FIN DUM
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE codegen_lookup_local_c_name(SPECULUM CodegenContext ctx, VERBUM source_name) REDDE VERBUM
+  EVOCA REX i AD CONIURA fluxus_len((*ctx).local_names) - 1
+  DUM i >= 0
+    EVOCA SPECULUM CodegenLocal local AD CONIURA codegen_context_local_at(ctx, i)
+    SI CONIURA compare((*local).source_name, source_name) == 0
+      REDDE (*local).c_name
+    FIN SI
+    VINCIRE i AD i - 1
+  FIN DUM
+  REDDE ""
+EXPLICIT RITUALE
+
+RITUALE codegen_define_local(SPECULUM CodegenContext ctx, VERBUM source_name, VERBUM c_name) REDDE VERBUM
+  EVOCA CodegenLocal local
+  VINCIRE local.source_name AD CONIURA verbum_dup(source_name)
+  VINCIRE local.owns_source_name AD VERUM
+  VINCIRE local.c_name AD CONIURA verbum_dup(c_name)
+  VINCIRE local.owns_c_name AD VERUM
+  CONIURA fluxus_push((*ctx).local_names, SPECULUM local)
+  REDDE CONIURA codegen_lookup_local_c_name(ctx, source_name)
+EXPLICIT RITUALE
+
+RITUALE codegen_registered_string_count(SPECULUM CodegenContext ctx) REDDE REX
+  REDDE CONIURA fluxus_len((*ctx).string_literals)
+EXPLICIT RITUALE
+
+RITUALE codegen_lookup_string_symbol(SPECULUM CodegenContext ctx, VERBUM raw_text) REDDE VERBUM
+  EVOCA REX i AD 0
+  EVOCA REX n AD CONIURA fluxus_len((*ctx).string_literals)
+  DUM i < n
+    EVOCA SPECULUM CodegenStringLiteral item AD CONIURA codegen_context_string_at(ctx, i)
+    SI CONIURA compare((*item).raw_text, raw_text) == 0
+      REDDE (*item).symbol_name
+    FIN SI
+    VINCIRE i AD i + 1
+  FIN DUM
+  REDDE ""
+EXPLICIT RITUALE
+
+RITUALE codegen_register_string_symbol(SPECULUM CodegenContext ctx, VERBUM raw_text, VERBUM symbol_name) REDDE VERBUM
+  EVOCA VERBUM existing AD CONIURA codegen_lookup_string_symbol(ctx, raw_text)
+  SI CONIURA compare(existing, "") != 0
+    REDDE existing
+  FIN SI
+
+  EVOCA CodegenStringLiteral item
+  VINCIRE item.raw_text AD CONIURA verbum_dup(raw_text)
+  VINCIRE item.owns_raw_text AD VERUM
+  VINCIRE item.symbol_name AD CONIURA verbum_dup(symbol_name)
+  VINCIRE item.owns_symbol_name AD VERUM
+  CONIURA fluxus_push((*ctx).string_literals, SPECULUM item)
+  REDDE CONIURA codegen_lookup_string_symbol(ctx, raw_text)
+EXPLICIT RITUALE
+
+RITUALE codegen_require_stdio(SPECULUM CodegenContext ctx) REDDE NIHIL
+  VINCIRE (*ctx).needs_stdio AD VERUM
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE codegen_require_stdlib(SPECULUM CodegenContext ctx) REDDE NIHIL
+  VINCIRE (*ctx).needs_stdlib AD VERUM
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE codegen_require_fail_helper(SPECULUM CodegenContext ctx) REDDE NIHIL
+  VINCIRE (*ctx).needs_fail_helper AD VERUM
+  CONIURA codegen_require_stdio(ctx)
+  CONIURA codegen_require_stdlib(ctx)
+  REDDE
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

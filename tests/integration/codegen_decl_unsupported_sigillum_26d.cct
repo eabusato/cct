@@ -1,0 +1,25 @@
+INCIPIT grimoire "codegen_decl_unsupported_sigillum_26d"
+
+ADVOCARE "../../src/bootstrap/codegen/codegen_context.cct"
+ADVOCARE "../../src/bootstrap/codegen/codegen_decl.cct"
+ADVOCARE "../../src/bootstrap/parser/ast.cct"
+ADVOCARE "cct/verbum.cct"
+
+RITUALE main() REDDE REX
+  EVOCA SPECULUM AstProgram program AD CONIURA ast_program_new()
+  CONIURA ast_program_append_decl(program, CONIURA ast_make_sigillum("Ponto", 1, 1))
+  EVOCA SPECULUM CodegenContext ctx AD CONIURA codegen_context_new("bad.cct")
+  CONIURA codegen_emit_program(ctx, program)
+  EVOCA REX rc AD 0
+  SI NON CONIURA codegen_had_error(ctx)
+    VINCIRE rc AD 1
+  FIN SI
+  SI NON CONIURA contains((*ctx).last_error_message, "declaration outside bootstrap codegen subset")
+    VINCIRE rc AD 2
+  FIN SI
+  CONIURA codegen_context_free(ctx)
+  CONIURA ast_program_free(program)
+  REDDE rc
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

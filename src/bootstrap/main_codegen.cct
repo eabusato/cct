@@ -1,0 +1,38 @@
+INCIPIT grimoire "main_codegen"
+
+ADVOCARE "cct/args.cct"
+ADVOCARE "cct/fmt.cct"
+ADVOCARE "cct/io.cct"
+ADVOCARE "cct/verbum.cct"
+ADVOCARE "parser/ast.cct"
+ADVOCARE "parser/parser.cct"
+ADVOCARE "codegen/codegen_context.cct"
+ADVOCARE "codegen/codegen_runtime.cct"
+
+RITUALE main() REDDE REX
+  SI CONIURA argc() < 2
+    CONIURA eprintln("Uso: cct_codegen_bootstrap <arquivo.cct>")
+    REDDE 64
+  FIN SI
+
+  EVOCA VERBUM filename AD CONIURA arg(1)
+  EVOCA VERBUM source AD OBSECRO fs_read_all(filename)
+  EVOCA SPECULUM AstProgram program AD CONIURA parser_parse_program_source(source, filename)
+  EVOCA SPECULUM CodegenContext ctx AD CONIURA codegen_context_new(filename)
+  CONIURA codegen_context_reset(ctx)
+  EVOCA VERBUM out AD CONIURA codegen_generate_translation_unit_with_context(ctx, program)
+  SI CONIURA codegen_had_error(ctx)
+    CONIURA eprintln(CONIURA concat(CONIURA concat(CONIURA concat("codegen error: ", (*ctx).last_error_message), " @"), CONIURA concat(CONIURA stringify_int((*ctx).last_error_line), CONIURA concat(":", CONIURA stringify_int((*ctx).last_error_column)))))
+    DIMITTE out
+    CONIURA codegen_context_free(ctx)
+    CONIURA ast_program_free(program)
+    REDDE 1
+  FIN SI
+  CONIURA print(out)
+  DIMITTE out
+  CONIURA codegen_context_free(ctx)
+  CONIURA ast_program_free(program)
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

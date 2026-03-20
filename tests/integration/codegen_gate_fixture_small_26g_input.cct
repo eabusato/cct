@@ -1,0 +1,15 @@
+INCIPIT grimoire "codegen_gate_fixture_small_26g_input"
+
+RITUALE duplica(REX x) REDDE REX
+  REDDE x + x
+EXPLICIT RITUALE
+
+RITUALE soma_um(REX x) REDDE REX
+  REDDE x + 1
+EXPLICIT RITUALE
+
+RITUALE main() REDDE REX
+  REDDE soma_um(duplica(3))
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

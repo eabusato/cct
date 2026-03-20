@@ -1,0 +1,14 @@
+INCIPIT grimoire "semantic_gate_generic_invalid_constraint_unsatisfied_25e_input"
+PACTUM Forma
+RITUALE medir() REDDE REX
+FIN PACTUM
+SIGILLUM Bloco
+  valor: REX
+FIN SIGILLUM
+SIGILLUM Caixa GENUS(T PACTUM Forma)
+  valor: T
+FIN SIGILLUM
+RITUALE usa(Caixa GENUS(Bloco) c) REDDE NIHIL
+  REDDE
+EXPLICIT RITUALE
+EXPLICIT grimoire

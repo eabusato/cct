@@ -1,0 +1,49 @@
+INCIPIT grimoire "semantic_generic_sigillum_type_params_25a"
+
+ADVOCARE "cct/fluxus.cct"
+ADVOCARE "../../src/bootstrap/parser/parser.cct"
+ADVOCARE "../../src/bootstrap/parser/ast.cct"
+ADVOCARE "../../src/bootstrap/semantic/semantic_context.cct"
+ADVOCARE "../../src/bootstrap/semantic/semantic_generic.cct"
+ADVOCARE "../../src/bootstrap/semantic/semantic_register.cct"
+ADVOCARE "../../src/bootstrap/semantic/semantic_symbol.cct"
+
+RITUALE main() REDDE REX
+  EVOCA VERBUM src AD "INCIPIT grimoire \"p\" SIGILLUM Arca GENUS(T) valor: T FIN SIGILLUM EXPLICIT grimoire"
+  EVOCA SPECULUM AstProgram program AD CONIURA parser_parse_program_source(src, "generic_sigillum.cct")
+  EVOCA SPECULUM SemanticContext ctx AD CONIURA semantic_context_new("generic_sigillum.cct")
+  CONIURA semantic_register_program(ctx, program)
+
+  EVOCA REX sig_id AD CONIURA semantic_lookup_global(ctx, "Arca")
+  SI sig_id == CONIURA semantic_invalid_id()
+    REDDE 41
+  FIN SI
+
+  EVOCA SPECULUM SemanticSymbol sig_sym AD CONIURA semantic_symbol_at(ctx, sig_id)
+  SI (*sig_sym).kind != SEM_SYMBOL_TYPE
+    REDDE 42
+  FIN SI
+  SI (*sig_sym).generic_scope_id == CONIURA semantic_invalid_id()
+    REDDE 43
+  FIN SI
+  SI CONIURA fluxus_len((*sig_sym).type_param_ids) != 1
+    REDDE 44
+  FIN SI
+
+  CONIURA semantic_enter_owner_generic_scope(ctx, sig_id)
+  EVOCA REX t_id AD CONIURA semantic_lookup(ctx, "T")
+  SI t_id == CONIURA semantic_invalid_id()
+    REDDE 45
+  FIN SI
+  EVOCA SPECULUM SemanticSymbol t_sym AD CONIURA semantic_symbol_at(ctx, t_id)
+  SI (*t_sym).kind != SEM_SYMBOL_TYPE_PARAM
+    REDDE 46
+  FIN SI
+  CONIURA semantic_restore_scope(ctx, (*ctx).global_scope_id)
+
+  CONIURA semantic_context_free(ctx)
+  CONIURA ast_program_free(program)
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

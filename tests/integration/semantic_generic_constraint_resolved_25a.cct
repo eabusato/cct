@@ -1,0 +1,39 @@
+INCIPIT grimoire "semantic_generic_constraint_resolved_25a"
+
+ADVOCARE "cct/fluxus.cct"
+ADVOCARE "../../src/bootstrap/parser/parser.cct"
+ADVOCARE "../../src/bootstrap/parser/ast.cct"
+ADVOCARE "../../src/bootstrap/semantic/semantic_context.cct"
+ADVOCARE "../../src/bootstrap/semantic/semantic_register.cct"
+ADVOCARE "../../src/bootstrap/semantic/semantic_symbol.cct"
+ADVOCARE "../../src/bootstrap/semantic/semantic_type.cct"
+
+RITUALE main() REDDE REX
+  EVOCA VERBUM src AD "INCIPIT grimoire \"p\" PACTUM Forma RITUALE medir(SPECULUM NIHIL self) REDDE NIHIL FIN PACTUM RITUALE usar GENUS(T PACTUM Forma)(T valor) REDDE NIHIL REDDE EXPLICIT RITUALE EXPLICIT grimoire"
+  EVOCA SPECULUM AstProgram program AD CONIURA parser_parse_program_source(src, "constraint_ok.cct")
+  EVOCA SPECULUM SemanticContext ctx AD CONIURA semantic_context_new("constraint_ok.cct")
+  CONIURA semantic_register_program(ctx, program)
+
+  EVOCA REX pact_id AD CONIURA semantic_lookup_global(ctx, "Forma")
+  EVOCA REX rituale_id AD CONIURA semantic_lookup_global(ctx, "usar")
+  EVOCA SPECULUM SemanticSymbol rituale_sym AD CONIURA semantic_symbol_at(ctx, rituale_id)
+  EVOCA SPECULUM REX type_param_slot AD CONIURA fluxus_get((*rituale_sym).type_param_ids, 0)
+  EVOCA SPECULUM SemanticSymbol type_param_sym AD CONIURA semantic_symbol_at(ctx, (*type_param_slot))
+  EVOCA SPECULUM SemanticType type_param_type AD CONIURA semantic_type_at(ctx, (*type_param_sym).type_id)
+
+  SI (*type_param_sym).constraint_symbol_id != pact_id
+    REDDE 41
+  FIN SI
+  SI (*type_param_type).constraint_symbol_id != pact_id
+    REDDE 42
+  FIN SI
+  SI (*ctx).had_error == VERUM
+    REDDE 43
+  FIN SI
+
+  CONIURA semantic_context_free(ctx)
+  CONIURA ast_program_free(program)
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

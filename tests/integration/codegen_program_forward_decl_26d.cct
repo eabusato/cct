@@ -1,0 +1,36 @@
+INCIPIT grimoire "codegen_program_forward_decl_26d"
+
+ADVOCARE "../../src/bootstrap/codegen/codegen_decl.cct"
+ADVOCARE "../../src/bootstrap/parser/ast.cct"
+ADVOCARE "../../src/bootstrap/lexer/token_type.cct"
+ADVOCARE "cct/verbum.cct"
+
+RITUALE main() REDDE REX
+  EVOCA SPECULUM AstProgram program AD CONIURA ast_program_new()
+
+  EVOCA SPECULUM AstNode body_main AD CONIURA ast_make_block(1, 1)
+  EVOCA SPECULUM AstNode call_helper AD CONIURA ast_make_call(CONIURA ast_make_identifier("helper", 1, 1), 1, 1)
+  CONIURA ast_append_statement(body_main, CONIURA ast_make_redde(call_helper, 1, 1))
+  CONIURA ast_program_append_decl(program, CONIURA ast_make_rituale("main", CONIURA ast_make_type("REX", 1, 1), body_main, 1, 1))
+
+  EVOCA SPECULUM AstNode body_helper AD CONIURA ast_make_block(1, 1)
+  CONIURA ast_append_statement(body_helper, CONIURA ast_make_redde(CONIURA ast_make_literal_int("3", 1, 1), 1, 1))
+  CONIURA ast_program_append_decl(program, CONIURA ast_make_rituale("helper", CONIURA ast_make_type("REX", 1, 1), body_helper, 1, 1))
+
+  EVOCA VERBUM out AD CONIURA codegen_generate_program(program, "forward.cct")
+  EVOCA REX rc AD 0
+  EVOCA REX proto_main AD CONIURA find(out, "long long cct_boot_rit_main_0(void);")
+  EVOCA REX proto_helper AD CONIURA find(out, "long long cct_boot_rit_helper_1(void);")
+  EVOCA REX def_main AD CONIURA find(out, "long long cct_boot_rit_main_0(void)\n{")
+  SI proto_main == -1 VEL proto_helper == -1 VEL def_main == -1
+    VINCIRE rc AD 1
+  FIN SI
+  SI NON (proto_helper < def_main)
+    VINCIRE rc AD 2
+  FIN SI
+  DIMITTE out
+  CONIURA ast_program_free(program)
+  REDDE rc
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

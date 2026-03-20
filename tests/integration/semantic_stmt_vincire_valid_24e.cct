@@ -1,0 +1,23 @@
+INCIPIT grimoire "semantic_stmt_vincire_valid_24e"
+
+ADVOCARE "../../src/bootstrap/parser/ast.cct"
+ADVOCARE "../../src/bootstrap/semantic/semantic_context.cct"
+ADVOCARE "../../src/bootstrap/semantic/semantic_kind.cct"
+ADVOCARE "../../src/bootstrap/semantic/semantic_stmt.cct"
+
+RITUALE main() REDDE REX
+  EVOCA SPECULUM SemanticContext ctx AD CONIURA semantic_context_new("vincire_valid.cct")
+  CONIURA semantic_define(ctx, SEM_SYMBOL_VARIABLE, "x", (*ctx).type_rex, 1, 1)
+  EVOCA SPECULUM AstNode stmt AD CONIURA ast_make_vincire(CONIURA ast_make_identifier("x", 1, 1), CONIURA ast_make_literal_int("9", 1, 8), 1, 1)
+  CONIURA semantic_analyze_stmt(ctx, stmt)
+
+  SI CONIURA semantic_had_error(ctx)
+    REDDE 41
+  FIN SI
+
+  CONIURA semantic_context_free(ctx)
+  CONIURA ast_node_free(stmt)
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

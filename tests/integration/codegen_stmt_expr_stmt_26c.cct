@@ -1,0 +1,23 @@
+INCIPIT grimoire "codegen_stmt_expr_stmt_26c"
+
+ADVOCARE "../../src/bootstrap/codegen/codegen_context.cct"
+ADVOCARE "../../src/bootstrap/codegen/codegen_stmt.cct"
+ADVOCARE "../../src/bootstrap/parser/ast.cct"
+ADVOCARE "cct/verbum.cct"
+
+RITUALE main() REDDE REX
+  EVOCA SPECULUM CodegenContext ctx AD CONIURA codegen_context_new("stmt.cct")
+  EVOCA SPECULUM AstNode stmt AD CONIURA ast_make_expr_stmt(CONIURA ast_make_literal_int("42", 1, 1), 1, 1)
+  CONIURA codegen_emit_stmt(ctx, stmt)
+  EVOCA VERBUM out AD CONIURA codegen_output(ctx)
+  EVOCA REX rc AD 0
+  SI CONIURA compare(out, "42;\n") != 0
+    VINCIRE rc AD 1
+  FIN SI
+  DIMITTE out
+  CONIURA ast_node_free(stmt)
+  CONIURA codegen_context_free(ctx)
+  REDDE rc
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

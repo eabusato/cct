@@ -11,9 +11,13 @@ SIGILLUM SemanticSymbol
   kind: SemanticSymbolKind
   type_id: REX
   payload_type_id: REX
+  owner_symbol_id: REX
+  constraint_symbol_id: REX
+  generic_scope_id: REX
   decl_node: SPECULUM AstNode
   has_decl_node: VERUM
   param_type_ids: SPECULUM NIHIL
+  type_param_ids: SPECULUM NIHIL
   line: REX
   column: REX
 FIN SIGILLUM

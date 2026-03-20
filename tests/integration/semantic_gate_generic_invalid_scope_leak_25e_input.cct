@@ -1,0 +1,9 @@
+INCIPIT grimoire "semantic_gate_generic_invalid_scope_leak_25e_input"
+RITUALE identitas GENUS(T)(T valor) REDDE T
+  REDDE valor
+EXPLICIT RITUALE
+RITUALE usa() REDDE NIHIL
+  EVOCA T fora
+  REDDE
+EXPLICIT RITUALE
+EXPLICIT grimoire

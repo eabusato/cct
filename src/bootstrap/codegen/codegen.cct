@@ -1,0 +1,105 @@
+INCIPIT grimoire "codegen"
+
+ADVOCARE "cct/fmt.cct"
+ADVOCARE "cct/verbum.cct"
+ADVOCARE "cct/verbum_builder.cct"
+ADVOCARE "codegen_context.cct"
+ADVOCARE "codegen_emitter.cct"
+
+RITUALE codegen_make_counter_name(VERBUM prefix, REX id) REDDE VERBUM
+  EVOCA VERBUM left AD CONIURA concat(prefix, CONIURA stringify_int(id))
+  REDDE left
+EXPLICIT RITUALE
+
+RITUALE codegen_next_temp_name(SPECULUM CodegenContext ctx) REDDE VERBUM
+  EVOCA REX id AD (*ctx).next_temp_id
+  VINCIRE (*ctx).next_temp_id AD id + 1
+  REDDE CONIURA codegen_make_counter_name("__cct_tmp_", id)
+EXPLICIT RITUALE
+
+RITUALE codegen_next_label_name(SPECULUM CodegenContext ctx) REDDE VERBUM
+  EVOCA REX id AD (*ctx).next_label_id
+  VINCIRE (*ctx).next_label_id AD id + 1
+  REDDE CONIURA codegen_make_counter_name("__cct_label_", id)
+EXPLICIT RITUALE
+
+RITUALE codegen_make_rituale_c_name(SPECULUM CodegenContext ctx, VERBUM rituale_name) REDDE VERBUM
+  EVOCA VERBUM prefix AD CONIURA concat("cct_boot_rit_", rituale_name)
+  EVOCA VERBUM suffix AD CONIURA codegen_make_counter_name("_", CONIURA codegen_registered_rituale_count(ctx))
+  EVOCA VERBUM c_name AD CONIURA concat(prefix, suffix)
+  REDDE c_name
+EXPLICIT RITUALE
+
+RITUALE codegen_rituale_c_name(SPECULUM CodegenContext ctx, VERBUM rituale_name) REDDE VERBUM
+  EVOCA VERBUM existing AD CONIURA codegen_lookup_rituale_c_name(ctx, rituale_name)
+  SI CONIURA compare(existing, "") != 0
+    REDDE existing
+  FIN SI
+
+  EVOCA VERBUM c_name AD CONIURA codegen_make_rituale_c_name(ctx, rituale_name)
+  REDDE CONIURA codegen_register_rituale_c_name(ctx, rituale_name, c_name)
+EXPLICIT RITUALE
+
+RITUALE codegen_normalize_string_literal(VERBUM raw_text) REDDE VERBUM
+  EVOCA REX n AD CONIURA len(raw_text)
+  EVOCA MILES quote AD 34
+  SI n >= 2 ET CONIURA char_at(raw_text, 0) == quote ET CONIURA char_at(raw_text, n - 1) == quote
+    EVOCA SPECULUM NIHIL b AD CONIURA builder_init()
+    EVOCA REX i AD 1
+    DUM i < n - 1
+      CONIURA builder_append_char(b, CONIURA char_at(raw_text, i))
+      VINCIRE i AD i + 1
+    FIN DUM
+    EVOCA VERBUM out AD CONIURA builder_to_verbum(b)
+    CONIURA builder_free(b)
+    REDDE out
+  FIN SI
+  REDDE CONIURA verbum_dup(raw_text)
+EXPLICIT RITUALE
+
+RITUALE codegen_string_symbol(SPECULUM CodegenContext ctx, VERBUM raw_text) REDDE VERBUM
+  EVOCA VERBUM normalized AD CONIURA codegen_normalize_string_literal(raw_text)
+  EVOCA VERBUM existing AD CONIURA codegen_lookup_string_symbol(ctx, normalized)
+  SI CONIURA compare(existing, "") != 0
+    DIMITTE normalized
+    REDDE existing
+  FIN SI
+
+  EVOCA VERBUM symbol AD CONIURA concat("cct_boot_str_", CONIURA stringify_int(CONIURA codegen_registered_string_count(ctx)))
+  EVOCA VERBUM out AD CONIURA codegen_register_string_symbol(ctx, normalized, symbol)
+  DIMITTE normalized
+  REDDE out
+EXPLICIT RITUALE
+
+RITUALE codegen_basic_c_type(VERBUM type_name) REDDE VERBUM
+  SI CONIURA compare(type_name, "REX") == 0
+    REDDE "long long"
+  FIN SI
+  SI CONIURA compare(type_name, "DUX") == 0
+    REDDE "unsigned long long"
+  FIN SI
+  SI CONIURA compare(type_name, "COMES") == 0
+    REDDE "int"
+  FIN SI
+  SI CONIURA compare(type_name, "MILES") == 0
+    REDDE "char"
+  FIN SI
+  SI CONIURA compare(type_name, "UMBRA") == 0
+    REDDE "double"
+  FIN SI
+  SI CONIURA compare(type_name, "FLAMMA") == 0
+    REDDE "float"
+  FIN SI
+  SI CONIURA compare(type_name, "VERUM") == 0
+    REDDE "int"
+  FIN SI
+  SI CONIURA compare(type_name, "VERBUM") == 0
+    REDDE "char*"
+  FIN SI
+  SI CONIURA compare(type_name, "NIHIL") == 0
+    REDDE "void"
+  FIN SI
+  REDDE ""
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

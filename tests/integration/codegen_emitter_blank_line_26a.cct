@@ -1,0 +1,25 @@
+INCIPIT grimoire "codegen_emitter_blank_line_26a"
+
+ADVOCARE "../../src/bootstrap/codegen/codegen.cct"
+ADVOCARE "../../src/bootstrap/codegen/codegen_context.cct"
+ADVOCARE "../../src/bootstrap/codegen/codegen_emitter.cct"
+ADVOCARE "cct/verbum.cct"
+
+RITUALE main() REDDE REX
+  EVOCA SPECULUM CodegenContext ctx AD CONIURA codegen_context_new("blank.cct")
+  CONIURA codegen_emit_line(ctx, "alpha")
+  CONIURA codegen_emit_blank_line(ctx)
+  CONIURA codegen_emit_line(ctx, "beta")
+
+  EVOCA VERBUM out AD CONIURA codegen_output(ctx)
+  EVOCA REX rc AD 0
+  SI CONIURA compare(out, "alpha\n\nbeta\n") != 0
+    VINCIRE rc AD 1
+  FIN SI
+
+  DIMITTE out
+  CONIURA codegen_context_free(ctx)
+  REDDE rc
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

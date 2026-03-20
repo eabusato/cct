@@ -1,6 +1,7 @@
 INCIPIT grimoire "parse_expr"
 
 ADVOCARE "ast.cct"
+ADVOCARE "cct/parse.cct"
 ADVOCARE "parser_helpers.cct"
 ADVOCARE "parser_state.cct"
 ADVOCARE "../lexer/lexer_state.cct"
@@ -12,6 +13,74 @@ EXPLICIT RITUALE
 
 RITUALE parse_expression(SPECULUM ParserState parser) REDDE SPECULUM AstNode
   REDDE CONIURA parse_assignment(parser)
+EXPLICIT RITUALE
+
+RITUALE parse_expr_is_simple_type_token(TokenKind kind) REDDE VERUM
+  REDDE kind == TK_IDENTIFIER VEL kind == TK_REX VEL kind == TK_DUX VEL kind == TK_COMES VEL kind == TK_MILES VEL kind == TK_UMBRA VEL kind == TK_FLAMMA VEL kind == TK_VERBUM VEL kind == TK_VERUM VEL kind == TK_NIHIL VEL kind == TK_FRACTUM
+EXPLICIT RITUALE
+
+RITUALE parse_expr_generic_type(SPECULUM ParserState parser) REDDE SPECULUM AstNode
+  SI CONIURA parser_match(parser, TK_SPECULUM)
+    EVOCA SPECULUM AstNode base_ptr AD CONIURA parse_expr_generic_type(parser)
+    CONIURA ast_type_mark_pointer(base_ptr)
+    REDDE base_ptr
+  FIN SI
+
+  SI CONIURA parser_match(parser, TK_SERIES)
+    EVOCA SPECULUM AstNode base_array AD CONIURA parse_expr_generic_type(parser)
+    CONIURA parser_consume(parser, TK_LBRACKET, "Expected '[' after SERIES element type")
+    SI NON CONIURA parser_check(parser, TK_INTEGER)
+      CONIURA parser_error_at_current(parser, "Expected array size")
+      REDDE base_array
+    FIN SI
+    CONIURA parser_advance(parser)
+    CONIURA ast_type_mark_array(base_array, CONIURA parse_int((*parser).previous.lexeme))
+    CONIURA parser_consume(parser, TK_RBRACKET, "Expected ']' after array size")
+    REDDE base_array
+  FIN SI
+
+  SI NON CONIURA parse_expr_is_simple_type_token((*parser).current.kind)
+    CONIURA parser_error_at_current(parser, "Expected type name in GENUS(...)")
+    REDDE CONIURA ast_make_type("<error>", (*parser).current.line, (*parser).current.column)
+  FIN SI
+
+  CONIURA parser_advance(parser)
+  EVOCA SPECULUM AstNode node AD CONIURA ast_make_type((*parser).previous.lexeme, (*parser).previous.line, (*parser).previous.column)
+
+  SI CONIURA parser_match(parser, TK_GENUS)
+    CONIURA parser_consume(parser, TK_LPAREN, "Expected '(' after GENUS")
+    SI CONIURA parser_check(parser, TK_RPAREN)
+      CONIURA parser_error_at_current(parser, "GENUS() is invalid (expected at least one type argument)")
+      CONIURA parser_advance(parser)
+      REDDE node
+    FIN SI
+    DUM VERUM
+      CONIURA ast_append_generic_arg(node, CONIURA parse_expr_generic_type(parser))
+      SI NON CONIURA parser_match(parser, TK_COMMA)
+        CONIURA parser_consume(parser, TK_RPAREN, "Expected ')' after GENUS type arguments")
+        REDDE node
+      FIN SI
+    FIN DUM
+  FIN SI
+
+  REDDE node
+EXPLICIT RITUALE
+
+RITUALE parse_postfix_generic_args(SPECULUM ParserState parser, SPECULUM AstNode expr) REDDE NIHIL
+  CONIURA parser_consume(parser, TK_LPAREN, "Expected '(' after GENUS")
+  SI CONIURA parser_check(parser, TK_RPAREN)
+    CONIURA parser_error_at_current(parser, "GENUS() is invalid (expected at least one type argument)")
+    CONIURA parser_advance(parser)
+    REDDE
+  FIN SI
+
+  DUM VERUM
+    CONIURA ast_append_generic_arg(expr, CONIURA parse_expr_generic_type(parser))
+    SI NON CONIURA parser_match(parser, TK_COMMA)
+      CONIURA parser_consume(parser, TK_RPAREN, "Expected ')' after GENUS type arguments")
+      REDDE
+    FIN SI
+  FIN DUM
 EXPLICIT RITUALE
 
 RITUALE parse_primary(SPECULUM ParserState parser) REDDE SPECULUM AstNode
@@ -58,6 +127,11 @@ RITUALE parse_postfix(SPECULUM ParserState parser) REDDE SPECULUM AstNode
 
   DUM VERUM
     EVOCA VERUM matched AD FALSUM
+
+    SI (*expr).kind == AST_IDENTIFIER ET CONIURA parser_match(parser, TK_GENUS)
+      CONIURA parse_postfix_generic_args(parser, expr)
+      VINCIRE matched AD VERUM
+    FIN SI
 
     SI CONIURA parser_match(parser, TK_LPAREN)
       EVOCA SPECULUM AstNode call AD CONIURA ast_make_call(expr, (*parser).previous.line, (*parser).previous.column)

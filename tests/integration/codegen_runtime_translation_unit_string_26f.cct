@@ -1,0 +1,31 @@
+INCIPIT grimoire "codegen_runtime_translation_unit_string_26f"
+
+ADVOCARE "../../src/bootstrap/codegen/codegen_runtime.cct"
+ADVOCARE "../../src/bootstrap/parser/ast.cct"
+ADVOCARE "cct/verbum.cct"
+
+RITUALE main() REDDE REX
+  EVOCA SPECULUM AstProgram program AD CONIURA ast_program_new()
+
+  EVOCA SPECULUM AstNode msg_body AD CONIURA ast_make_block(1, 1)
+  CONIURA ast_append_statement(msg_body, CONIURA ast_make_redde(CONIURA ast_make_literal_string("salve", 1, 1), 1, 1))
+  CONIURA ast_program_append_decl(program, CONIURA ast_make_rituale("msg", CONIURA ast_make_type("VERBUM", 1, 1), msg_body, 1, 1))
+
+  EVOCA SPECULUM AstNode main_body AD CONIURA ast_make_block(1, 1)
+  CONIURA ast_append_statement(main_body, CONIURA ast_make_redde(CONIURA ast_make_literal_int("0", 1, 1), 1, 1))
+  CONIURA ast_program_append_decl(program, CONIURA ast_make_rituale("main", CONIURA ast_make_type("REX", 1, 1), main_body, 1, 1))
+
+  EVOCA VERBUM out AD CONIURA codegen_generate_translation_unit(program, "stringtu.cct")
+  EVOCA REX rc AD 0
+  SI CONIURA contains(out, "static char cct_boot_str_0[] = \"salve\";") != VERUM
+    VINCIRE rc AD 1
+  FIN SI
+  SI CONIURA contains(out, "return cct_boot_str_0;") != VERUM
+    VINCIRE rc AD 2
+  FIN SI
+  DIMITTE out
+  CONIURA ast_program_free(program)
+  REDDE rc
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

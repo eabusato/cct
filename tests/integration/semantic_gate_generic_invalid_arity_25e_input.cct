@@ -1,0 +1,8 @@
+INCIPIT grimoire "semantic_gate_generic_invalid_arity_25e_input"
+SIGILLUM Caixa GENUS(T)
+  valor: T
+FIN SIGILLUM
+RITUALE usa(Caixa GENUS(REX, VERUM) c) REDDE NIHIL
+  REDDE
+EXPLICIT RITUALE
+EXPLICIT grimoire

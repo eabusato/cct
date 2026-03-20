@@ -1,0 +1,36 @@
+INCIPIT grimoire "semantic_generic_lookup_valid_25a"
+
+ADVOCARE "../../src/bootstrap/parser/parser.cct"
+ADVOCARE "../../src/bootstrap/parser/ast.cct"
+ADVOCARE "../../src/bootstrap/semantic/semantic_context.cct"
+ADVOCARE "../../src/bootstrap/semantic/semantic_generic.cct"
+ADVOCARE "../../src/bootstrap/semantic/semantic_register.cct"
+ADVOCARE "../../src/bootstrap/semantic/semantic_symbol.cct"
+
+RITUALE main() REDDE REX
+  EVOCA VERBUM src AD "INCIPIT grimoire \"p\" RITUALE fabrica GENUS(T)(T valor) REDDE T REDDE valor EXPLICIT RITUALE EXPLICIT grimoire"
+  EVOCA SPECULUM AstProgram program AD CONIURA parser_parse_program_source(src, "lookup_valid.cct")
+  EVOCA SPECULUM SemanticContext ctx AD CONIURA semantic_context_new("lookup_valid.cct")
+  CONIURA semantic_register_program(ctx, program)
+
+  EVOCA REX rituale_id AD CONIURA semantic_lookup_global(ctx, "fabrica")
+  EVOCA REX saved_scope_id AD CONIURA semantic_enter_owner_generic_scope(ctx, rituale_id)
+  EVOCA REX found_id AD CONIURA semantic_lookup(ctx, "T")
+  SI found_id == CONIURA semantic_invalid_id()
+    REDDE 41
+  FIN SI
+  EVOCA SPECULUM SemanticSymbol found_sym AD CONIURA semantic_symbol_at(ctx, found_id)
+  SI (*found_sym).kind != SEM_SYMBOL_TYPE_PARAM
+    REDDE 42
+  FIN SI
+  SI (*found_sym).owner_symbol_id != rituale_id
+    REDDE 43
+  FIN SI
+  CONIURA semantic_restore_scope(ctx, saved_scope_id)
+
+  CONIURA semantic_context_free(ctx)
+  CONIURA ast_program_free(program)
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

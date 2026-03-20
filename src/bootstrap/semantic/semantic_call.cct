@@ -1,0 +1,29 @@
+INCIPIT grimoire "semantic_call"
+
+ADVOCARE "cct/fluxus.cct"
+ADVOCARE "semantic_context.cct"
+ADVOCARE "semantic_symbol.cct"
+
+RITUALE semantic_validate_call_type_vector(SPECULUM SemanticContext ctx, SPECULUM SemanticSymbol sym, SPECULUM NIHIL arg_type_ids, REX line, REX column) REDDE REX
+  EVOCA REX expected AD CONIURA fluxus_len((*sym).param_type_ids)
+  EVOCA REX actual AD CONIURA fluxus_len(arg_type_ids)
+  SI expected != actual
+    CONIURA semantic_report_error(ctx, line, column, "rituale call arity mismatch")
+    REDDE (*ctx).type_error
+  FIN SI
+
+  EVOCA REX i AD 0
+  DUM i < actual
+    EVOCA SPECULUM REX arg_slot AD CONIURA fluxus_get(arg_type_ids, i)
+    EVOCA SPECULUM REX expected_slot AD CONIURA fluxus_get((*sym).param_type_ids, i)
+    SI NON CONIURA semantic_type_compatible_assign(ctx, (*expected_slot), (*arg_slot))
+      CONIURA semantic_report_error(ctx, line, column, "argument type mismatch")
+      REDDE (*ctx).type_error
+    FIN SI
+    VINCIRE i AD i + 1
+  FIN DUM
+
+  REDDE (*sym).payload_type_id
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

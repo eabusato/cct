@@ -1,0 +1,30 @@
+INCIPIT grimoire "semantic_dedup_collision_simulated_25d"
+
+ADVOCARE "../../src/bootstrap/parser/parser.cct"
+ADVOCARE "../../src/bootstrap/parser/ast.cct"
+ADVOCARE "../../src/bootstrap/semantic/semantic_context.cct"
+ADVOCARE "../../src/bootstrap/semantic/semantic_generic.cct"
+ADVOCARE "../../src/bootstrap/semantic/semantic_register.cct"
+ADVOCARE "../../src/bootstrap/semantic/semantic_resolver.cct"
+
+RITUALE main() REDDE REX
+  EVOCA VERBUM src AD "INCIPIT grimoire \"p\" SIGILLUM Caixa GENUS(T) valor: T FIN SIGILLUM EXPLICIT grimoire"
+  EVOCA SPECULUM AstProgram program AD CONIURA parser_parse_program_source(src, "collision_25d.cct")
+  EVOCA SPECULUM SemanticContext ctx AD CONIURA semantic_context_new("collision_25d.cct")
+  CONIURA semantic_register_program(ctx, program)
+
+  EVOCA SPECULUM AstNode t AD CONIURA ast_make_type("Caixa", 1, 1)
+  CONIURA ast_append_generic_arg(t, CONIURA ast_make_type("REX", 1, 10))
+  EVOCA REX type_id AD CONIURA semantic_resolve_type_node(ctx, t)
+  EVOCA DUX real_hash AD CONIURA semantic_type_instance_hash(ctx, type_id)
+  SI CONIURA semantic_instance_cache_lookup_with_hash(ctx, real_hash, "I:Caixa<B:VERUM>") != CONIURA semantic_invalid_id()
+    REDDE 41
+  FIN SI
+
+  CONIURA ast_node_free(t)
+  CONIURA semantic_context_free(ctx)
+  CONIURA ast_program_free(program)
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

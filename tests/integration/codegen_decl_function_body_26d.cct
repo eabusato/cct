@@ -1,0 +1,26 @@
+INCIPIT grimoire "codegen_decl_function_body_26d"
+
+ADVOCARE "../../src/bootstrap/codegen/codegen_context.cct"
+ADVOCARE "../../src/bootstrap/codegen/codegen_decl.cct"
+ADVOCARE "../../src/bootstrap/parser/ast.cct"
+ADVOCARE "cct/verbum.cct"
+
+RITUALE main() REDDE REX
+  EVOCA SPECULUM AstNode body AD CONIURA ast_make_block(1, 1)
+  CONIURA ast_append_statement(body, CONIURA ast_make_redde(CONIURA ast_make_literal_int("7", 1, 1), 1, 1))
+  EVOCA SPECULUM AstNode fn AD CONIURA ast_make_rituale("main", CONIURA ast_make_type("REX", 1, 1), body, 1, 1)
+  EVOCA SPECULUM CodegenContext ctx AD CONIURA codegen_context_new("fnbody.cct")
+  CONIURA codegen_emit_rituale_definition(ctx, fn)
+  EVOCA VERBUM out AD CONIURA codegen_output(ctx)
+  EVOCA VERBUM expected AD "long long cct_boot_rit_main_0(void)\n{\n  return 7;\n}\n"
+  EVOCA REX rc AD 0
+  SI CONIURA compare(out, expected) != 0
+    VINCIRE rc AD 1
+  FIN SI
+  DIMITTE out
+  CONIURA ast_node_free(fn)
+  CONIURA codegen_context_free(ctx)
+  REDDE rc
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

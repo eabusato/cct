@@ -1,0 +1,17 @@
+INCIPIT grimoire "semantic_gate_generic_valid_constraint_type_25e_input"
+PACTUM Forma
+RITUALE medir() REDDE REX
+FIN PACTUM
+SIGILLUM Pixel
+  valor: REX
+FIN SIGILLUM
+RITUALE medir(SPECULUM Pixel self) REDDE REX
+  REDDE 1
+EXPLICIT RITUALE
+SIGILLUM Caixa GENUS(T PACTUM Forma)
+  valor: T
+FIN SIGILLUM
+RITUALE usa(Caixa GENUS(Pixel) c) REDDE NIHIL
+  REDDE
+EXPLICIT RITUALE
+EXPLICIT grimoire

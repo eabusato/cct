@@ -1,0 +1,36 @@
+INCIPIT grimoire "semantic_constraint_multiple_params_25c"
+
+ADVOCARE "../../src/bootstrap/parser/parser.cct"
+ADVOCARE "../../src/bootstrap/parser/parse_expr.cct"
+ADVOCARE "../../src/bootstrap/parser/ast.cct"
+ADVOCARE "../../src/bootstrap/semantic/semantic_context.cct"
+ADVOCARE "../../src/bootstrap/semantic/semantic_expr.cct"
+ADVOCARE "../../src/bootstrap/semantic/semantic_register.cct"
+ADVOCARE "../../src/bootstrap/semantic/semantic_symbol.cct"
+
+RITUALE main() REDDE REX
+  EVOCA VERBUM src AD "INCIPIT grimoire \"p\" PACTUM A RITUALE fa() REDDE NIHIL FIN PACTUM PACTUM B RITUALE fb() REDDE NIHIL FIN PACTUM SIGILLUM Xa valor: REX FIN SIGILLUM SIGILLUM Yb valor: REX FIN SIGILLUM RITUALE fa(SPECULUM Xa self) REDDE NIHIL REDDE EXPLICIT RITUALE RITUALE fb(SPECULUM Yb self) REDDE NIHIL REDDE EXPLICIT RITUALE RITUALE mistura GENUS(T PACTUM A, U PACTUM B)(T a, U b) REDDE NIHIL REDDE EXPLICIT RITUALE EXPLICIT grimoire"
+  EVOCA SPECULUM AstProgram program AD CONIURA parser_parse_program_source(src, "constraint_multi_25c.cct")
+  EVOCA SPECULUM SemanticContext ctx AD CONIURA semantic_context_new("constraint_multi_25c.cct")
+  CONIURA semantic_register_program(ctx, program)
+
+  EVOCA REX xa_id AD CONIURA semantic_lookup_global(ctx, "Xa")
+  EVOCA REX yb_id AD CONIURA semantic_lookup_global(ctx, "Yb")
+  EVOCA SPECULUM SemanticSymbol xa_sym AD CONIURA semantic_symbol_at(ctx, xa_id)
+  EVOCA SPECULUM SemanticSymbol yb_sym AD CONIURA semantic_symbol_at(ctx, yb_id)
+  CONIURA semantic_define(ctx, SEM_SYMBOL_VARIABLE, "x", (*xa_sym).type_id, 1, 1)
+  CONIURA semantic_define(ctx, SEM_SYMBOL_VARIABLE, "y", (*yb_sym).type_id, 1, 1)
+
+  EVOCA SPECULUM AstNode expr AD CONIURA parser_parse_expression_source("mistura GENUS(Xa, Yb)(x, y)", "expr.cct")
+  EVOCA REX type_id AD CONIURA semantic_analyze_expr(ctx, expr)
+  SI type_id != (*ctx).type_nihil VEL (*ctx).had_error != FALSUM
+    REDDE 41
+  FIN SI
+
+  CONIURA ast_node_free(expr)
+  CONIURA semantic_context_free(ctx)
+  CONIURA ast_program_free(program)
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

@@ -1,0 +1,47 @@
+INCIPIT grimoire "semantic_dedup_cache_consistency_25d"
+
+ADVOCARE "../../src/bootstrap/parser/parser.cct"
+ADVOCARE "../../src/bootstrap/parser/parse_expr.cct"
+ADVOCARE "../../src/bootstrap/parser/ast.cct"
+ADVOCARE "../../src/bootstrap/semantic/semantic_context.cct"
+ADVOCARE "../../src/bootstrap/semantic/semantic_expr.cct"
+ADVOCARE "../../src/bootstrap/semantic/semantic_generic.cct"
+ADVOCARE "../../src/bootstrap/semantic/semantic_register.cct"
+ADVOCARE "../../src/bootstrap/semantic/semantic_resolver.cct"
+
+RITUALE main() REDDE REX
+  EVOCA VERBUM src AD "INCIPIT grimoire \"p\" SIGILLUM Caixa GENUS(T) valor: T FIN SIGILLUM SIGILLUM Porta GENUS(U) interno: U FIN SIGILLUM RITUALE fabrica GENUS(T)(T valor) REDDE Caixa GENUS(T) REDDE NIHIL EXPLICIT RITUALE EXPLICIT grimoire"
+  EVOCA SPECULUM AstProgram program AD CONIURA parser_parse_program_source(src, "cache_consistency_25d.cct")
+  EVOCA SPECULUM SemanticContext ctx AD CONIURA semantic_context_new("cache_consistency_25d.cct")
+  CONIURA semantic_register_program(ctx, program)
+
+  EVOCA SPECULUM AstNode t1 AD CONIURA ast_make_type("Caixa", 1, 1)
+  CONIURA ast_append_generic_arg(t1, CONIURA ast_make_type("REX", 1, 10))
+  EVOCA SPECULUM AstNode t2_inner AD CONIURA ast_make_type("Caixa", 2, 1)
+  CONIURA ast_append_generic_arg(t2_inner, CONIURA ast_make_type("REX", 2, 10))
+  EVOCA SPECULUM AstNode t2 AD CONIURA ast_make_type("Porta", 2, 20)
+  CONIURA ast_append_generic_arg(t2, t2_inner)
+  EVOCA SPECULUM AstNode expr AD CONIURA parser_parse_expression_source("fabrica GENUS(REX)(1)", "expr.cct")
+
+  SI CONIURA semantic_resolve_type_node(ctx, t1) == (*ctx).type_error
+    REDDE 41
+  FIN SI
+  SI CONIURA semantic_resolve_type_node(ctx, t2) == (*ctx).type_error
+    REDDE 42
+  FIN SI
+  SI CONIURA semantic_analyze_expr(ctx, expr) == (*ctx).type_error
+    REDDE 43
+  FIN SI
+  SI NON CONIURA semantic_instance_cache_validate(ctx)
+    REDDE 44
+  FIN SI
+
+  CONIURA ast_node_free(t1)
+  CONIURA ast_node_free(t2)
+  CONIURA ast_node_free(expr)
+  CONIURA semantic_context_free(ctx)
+  CONIURA ast_program_free(program)
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

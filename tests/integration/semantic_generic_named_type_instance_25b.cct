@@ -1,0 +1,36 @@
+INCIPIT grimoire "semantic_generic_named_type_instance_25b"
+
+ADVOCARE "cct/fluxus.cct"
+ADVOCARE "../../src/bootstrap/parser/parser.cct"
+ADVOCARE "../../src/bootstrap/parser/ast.cct"
+ADVOCARE "../../src/bootstrap/semantic/semantic_context.cct"
+ADVOCARE "../../src/bootstrap/semantic/semantic_register.cct"
+ADVOCARE "../../src/bootstrap/semantic/semantic_symbol.cct"
+ADVOCARE "../../src/bootstrap/semantic/semantic_type.cct"
+
+RITUALE main() REDDE REX
+  EVOCA VERBUM src AD "INCIPIT grimoire \"p\" SIGILLUM Caixa GENUS(T) valor: T FIN SIGILLUM RITUALE usa(Caixa GENUS(REX) c) REDDE NIHIL REDDE EXPLICIT RITUALE EXPLICIT grimoire"
+  EVOCA SPECULUM AstProgram program AD CONIURA parser_parse_program_source(src, "named_instance.cct")
+  EVOCA SPECULUM SemanticContext ctx AD CONIURA semantic_context_new("named_instance.cct")
+  CONIURA semantic_register_program(ctx, program)
+
+  EVOCA REX rituale_id AD CONIURA semantic_lookup_global(ctx, "usa")
+  EVOCA SPECULUM SemanticSymbol rituale_sym AD CONIURA semantic_symbol_at(ctx, rituale_id)
+  EVOCA SPECULUM REX param_slot AD CONIURA fluxus_get((*rituale_sym).param_type_ids, 0)
+  EVOCA SPECULUM SemanticType param_type AD CONIURA semantic_type_at(ctx, (*param_slot))
+  SI (*param_type).kind != SEM_TYPE_INSTANCE
+    REDDE 41
+  FIN SI
+  SI (*param_type).generic_origin_symbol_id != CONIURA semantic_lookup_global(ctx, "Caixa")
+    REDDE 42
+  FIN SI
+  SI CONIURA fluxus_len((*param_type).type_arg_ids) != 1
+    REDDE 43
+  FIN SI
+
+  CONIURA semantic_context_free(ctx)
+  CONIURA ast_program_free(program)
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

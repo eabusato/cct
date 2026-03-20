@@ -1,0 +1,8 @@
+INCIPIT grimoire "semantic_gate_generic_valid_return_type_25e_input"
+SIGILLUM Caixa GENUS(T)
+  valor: T
+FIN SIGILLUM
+RITUALE eco(Caixa GENUS(REX) x) REDDE Caixa GENUS(REX)
+  REDDE x
+EXPLICIT RITUALE
+EXPLICIT grimoire

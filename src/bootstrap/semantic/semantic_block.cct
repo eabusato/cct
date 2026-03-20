@@ -1,0 +1,14 @@
+INCIPIT grimoire "semantic_block"
+
+ADVOCARE "semantic_context.cct"
+ADVOCARE "semantic_kind.cct"
+
+RITUALE semantic_block_enter(SPECULUM SemanticContext ctx) REDDE REX
+  REDDE CONIURA semantic_push_scope(ctx, SEM_SCOPE_BLOCK)
+EXPLICIT RITUALE
+
+RITUALE semantic_block_leave(SPECULUM SemanticContext ctx) REDDE REX
+  REDDE CONIURA semantic_pop_scope(ctx)
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

@@ -1,0 +1,37 @@
+INCIPIT grimoire "semantic_dedup_canonical_key_stable_25d"
+
+ADVOCARE "cct/verbum.cct"
+ADVOCARE "../../src/bootstrap/parser/parser.cct"
+ADVOCARE "../../src/bootstrap/parser/ast.cct"
+ADVOCARE "../../src/bootstrap/semantic/semantic_context.cct"
+ADVOCARE "../../src/bootstrap/semantic/semantic_generic.cct"
+ADVOCARE "../../src/bootstrap/semantic/semantic_register.cct"
+ADVOCARE "../../src/bootstrap/semantic/semantic_resolver.cct"
+
+RITUALE resolve_once(VERBUM src, VERBUM filename) REDDE VERBUM
+  EVOCA SPECULUM AstProgram program AD CONIURA parser_parse_program_source(src, filename)
+  EVOCA SPECULUM SemanticContext ctx AD CONIURA semantic_context_new(filename)
+  CONIURA semantic_register_program(ctx, program)
+  EVOCA SPECULUM AstNode t AD CONIURA ast_make_type("Caixa", 1, 1)
+  CONIURA ast_append_generic_arg(t, CONIURA ast_make_type("REX", 1, 10))
+  EVOCA REX type_id AD CONIURA semantic_resolve_type_node(ctx, t)
+  EVOCA VERBUM key AD CONIURA semantic_type_instance_key(ctx, type_id)
+  CONIURA ast_node_free(t)
+  CONIURA semantic_context_free(ctx)
+  CONIURA ast_program_free(program)
+  REDDE key
+EXPLICIT RITUALE
+
+RITUALE main() REDDE REX
+  EVOCA VERBUM src AD "INCIPIT grimoire \"p\" SIGILLUM Caixa GENUS(T) valor: T FIN SIGILLUM EXPLICIT grimoire"
+  EVOCA VERBUM k1 AD CONIURA resolve_once(src, "key_a_25d.cct")
+  EVOCA VERBUM k2 AD CONIURA resolve_once(src, "key_b_25d.cct")
+  SI CONIURA compare(k1, k2) != 0
+    REDDE 41
+  FIN SI
+  DIMITTE k1
+  DIMITTE k2
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

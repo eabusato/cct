@@ -1,0 +1,66 @@
+INCIPIT grimoire "semantic_generic_rituale_type_params_25a"
+
+ADVOCARE "cct/fluxus.cct"
+ADVOCARE "../../src/bootstrap/parser/parser.cct"
+ADVOCARE "../../src/bootstrap/parser/ast.cct"
+ADVOCARE "../../src/bootstrap/semantic/semantic_context.cct"
+ADVOCARE "../../src/bootstrap/semantic/semantic_register.cct"
+ADVOCARE "../../src/bootstrap/semantic/semantic_symbol.cct"
+ADVOCARE "../../src/bootstrap/semantic/semantic_type.cct"
+
+RITUALE main() REDDE REX
+  EVOCA VERBUM src AD "INCIPIT grimoire \"p\" RITUALE identitas GENUS(T)(T valor) REDDE T REDDE valor EXPLICIT RITUALE EXPLICIT grimoire"
+  EVOCA SPECULUM AstProgram program AD CONIURA parser_parse_program_source(src, "generic_rituale.cct")
+  EVOCA SPECULUM SemanticContext ctx AD CONIURA semantic_context_new("generic_rituale.cct")
+  CONIURA semantic_register_program(ctx, program)
+
+  EVOCA REX rituale_id AD CONIURA semantic_lookup_global(ctx, "identitas")
+  SI rituale_id == CONIURA semantic_invalid_id()
+    REDDE 41
+  FIN SI
+
+  EVOCA SPECULUM SemanticSymbol rituale_sym AD CONIURA semantic_symbol_at(ctx, rituale_id)
+  SI (*rituale_sym).kind != SEM_SYMBOL_RITUALE
+    REDDE 42
+  FIN SI
+  SI (*rituale_sym).generic_scope_id == CONIURA semantic_invalid_id()
+    REDDE 43
+  FIN SI
+  SI CONIURA fluxus_len((*rituale_sym).type_param_ids) != 1
+    REDDE 44
+  FIN SI
+
+  EVOCA SPECULUM REX type_param_slot AD CONIURA fluxus_get((*rituale_sym).type_param_ids, 0)
+  EVOCA SPECULUM SemanticSymbol type_param_sym AD CONIURA semantic_symbol_at(ctx, (*type_param_slot))
+  SI (*type_param_sym).kind != SEM_SYMBOL_TYPE_PARAM
+    REDDE 45
+  FIN SI
+  SI (*type_param_sym).owner_symbol_id != rituale_id
+    REDDE 46
+  FIN SI
+  SI (*rituale_sym).payload_type_id != (*type_param_sym).type_id
+    REDDE 47
+  FIN SI
+  SI CONIURA fluxus_len((*rituale_sym).param_type_ids) != 1
+    REDDE 48
+  FIN SI
+
+  EVOCA SPECULUM REX param_type_slot AD CONIURA fluxus_get((*rituale_sym).param_type_ids, 0)
+  SI (*param_type_slot) != (*type_param_sym).type_id
+    REDDE 49
+  FIN SI
+
+  EVOCA SPECULUM SemanticType type_param_type AD CONIURA semantic_type_at(ctx, (*type_param_sym).type_id)
+  SI (*type_param_type).kind != SEM_TYPE_TYPE_PARAM
+    REDDE 50
+  FIN SI
+  SI (*type_param_type).owner_symbol_id != rituale_id
+    REDDE 51
+  FIN SI
+
+  CONIURA semantic_context_free(ctx)
+  CONIURA ast_program_free(program)
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

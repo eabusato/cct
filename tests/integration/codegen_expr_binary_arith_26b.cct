@@ -1,0 +1,26 @@
+INCIPIT grimoire "codegen_expr_binary_arith_26b"
+
+ADVOCARE "../../src/bootstrap/codegen/codegen_context.cct"
+ADVOCARE "../../src/bootstrap/codegen/codegen_expr.cct"
+ADVOCARE "../../src/bootstrap/parser/ast.cct"
+ADVOCARE "../../src/bootstrap/lexer/token_type.cct"
+ADVOCARE "cct/verbum.cct"
+
+RITUALE main() REDDE REX
+  EVOCA SPECULUM AstNode left AD CONIURA ast_make_literal_int("2", 1, 1)
+  EVOCA SPECULUM AstNode right AD CONIURA ast_make_literal_int("3", 1, 3)
+  EVOCA SPECULUM AstNode expr AD CONIURA ast_make_binary(TK_PLUS, left, right, 1, 2)
+  EVOCA SPECULUM CodegenContext ctx AD CONIURA codegen_context_new("arith.cct")
+  CONIURA codegen_emit_expr(ctx, expr)
+  EVOCA VERBUM out AD CONIURA codegen_output(ctx)
+  EVOCA REX rc AD 0
+  SI CONIURA compare(out, "(2 + 3)") != 0
+    VINCIRE rc AD 1
+  FIN SI
+  DIMITTE out
+  CONIURA ast_node_free(expr)
+  CONIURA codegen_context_free(ctx)
+  REDDE rc
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

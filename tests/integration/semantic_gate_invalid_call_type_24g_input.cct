@@ -1,0 +1,8 @@
+INCIPIT grimoire "gate_call_type"
+RITUALE foo(REX x) REDDE REX
+  REDDE x
+EXPLICIT RITUALE
+RITUALE main() REDDE REX
+  REDDE foo("a")
+EXPLICIT RITUALE
+EXPLICIT grimoire

@@ -1,0 +1,25 @@
+INCIPIT grimoire "codegen_runtime_string_pool_single_26f"
+
+ADVOCARE "../../src/bootstrap/codegen/codegen_context.cct"
+ADVOCARE "../../src/bootstrap/codegen/codegen_runtime.cct"
+ADVOCARE "../../src/bootstrap/codegen/codegen.cct"
+ADVOCARE "cct/verbum.cct"
+
+RITUALE main() REDDE REX
+  EVOCA SPECULUM CodegenContext ctx AD CONIURA codegen_context_new("pool.cct")
+  EVOCA VERBUM symbol AD CONIURA codegen_string_symbol(ctx, "salve")
+  CONIURA codegen_runtime_emit_string_pool(ctx)
+  EVOCA VERBUM out AD CONIURA codegen_output(ctx)
+  EVOCA REX rc AD 0
+  SI CONIURA compare(symbol, "cct_boot_str_0") != 0
+    VINCIRE rc AD 1
+  FIN SI
+  SI CONIURA contains(out, "static char cct_boot_str_0[] = \"salve\";") != VERUM
+    VINCIRE rc AD 2
+  FIN SI
+  DIMITTE out
+  CONIURA codegen_context_free(ctx)
+  REDDE rc
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

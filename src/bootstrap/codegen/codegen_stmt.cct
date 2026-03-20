@@ -1,0 +1,123 @@
+INCIPIT grimoire "codegen_stmt"
+
+ADVOCARE "cct/fmt.cct"
+ADVOCARE "cct/verbum.cct"
+ADVOCARE "../parser/ast.cct"
+ADVOCARE "codegen.cct"
+ADVOCARE "codegen_context.cct"
+ADVOCARE "codegen_emitter.cct"
+ADVOCARE "codegen_expr.cct"
+ADVOCARE "codegen_type.cct"
+
+RITUALE codegen_stmt_type_text(SPECULUM CodegenContext ctx, SPECULUM AstNode type_expr) REDDE VERBUM
+  REDDE CONIURA codegen_type_text(ctx, type_expr)
+EXPLICIT RITUALE
+
+RITUALE codegen_emit_stmt_as_block(SPECULUM CodegenContext ctx, SPECULUM AstNode stmt) REDDE NIHIL
+  SI (*stmt).kind == AST_BLOCK
+    CONIURA codegen_emit_stmt(ctx, stmt)
+    REDDE
+  FIN SI
+
+  CONIURA codegen_emit_block_open(ctx)
+  CONIURA codegen_emit_stmt(ctx, stmt)
+  CONIURA codegen_emit_block_close(ctx)
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE codegen_emit_stmt(SPECULUM CodegenContext ctx, SPECULUM AstNode stmt) REDDE NIHIL
+  SI (*stmt).kind == AST_EXPR_STMT
+    CONIURA codegen_emit_expr(ctx, (*stmt).left)
+    CONIURA codegen_emit_line(ctx, ";")
+    REDDE
+  FIN SI
+
+  SI (*stmt).kind == AST_BLOCK
+    CONIURA codegen_push_local_scope(ctx)
+    CONIURA codegen_emit_block_open(ctx)
+    EVOCA REX i AD 0
+    EVOCA REX n AD CONIURA ast_node_list_len((*stmt).statements)
+    DUM i < n
+      CONIURA codegen_emit_stmt(ctx, CONIURA ast_node_list_get((*stmt).statements, i))
+      VINCIRE i AD i + 1
+    FIN DUM
+    CONIURA codegen_emit_block_close(ctx)
+    CONIURA codegen_pop_local_scope(ctx)
+    REDDE
+  FIN SI
+
+  SI (*stmt).kind == AST_EVOCA
+    EVOCA VERBUM type_text AD CONIURA codegen_stmt_type_text(ctx, (*stmt).type_expr)
+    SI CONIURA compare(type_text, "") == 0
+      REDDE
+    FIN SI
+    EVOCA VERBUM local_name AD CONIURA codegen_define_local(ctx, (*stmt).name, (*stmt).name)
+    CONIURA codegen_emit(ctx, type_text)
+    CONIURA codegen_emit(ctx, " ")
+    CONIURA codegen_emit(ctx, local_name)
+    SI (*stmt).has_right
+      CONIURA codegen_emit(ctx, " = ")
+      CONIURA codegen_emit_expr(ctx, (*stmt).right)
+    FIN SI
+    CONIURA codegen_emit_line(ctx, ";")
+    REDDE
+  FIN SI
+
+  SI (*stmt).kind == AST_VINCIRE
+    CONIURA codegen_emit_lvalue(ctx, (*stmt).left)
+    CONIURA codegen_emit(ctx, " = ")
+    CONIURA codegen_emit_expr(ctx, (*stmt).right)
+    CONIURA codegen_emit_line(ctx, ";")
+    REDDE
+  FIN SI
+
+  SI (*stmt).kind == AST_REDDE ET (*stmt).has_left
+    SI CONIURA compare((*ctx).current_return_type, "NIHIL") == 0
+      CONIURA codegen_report_error(ctx, (*stmt).line, (*stmt).column, "return with value in NIHIL rituale is unsupported")
+      REDDE
+    FIN SI
+    CONIURA codegen_emit(ctx, "return ")
+    CONIURA codegen_emit_expr(ctx, (*stmt).left)
+    CONIURA codegen_emit_line(ctx, ";")
+    REDDE
+  FIN SI
+
+  SI (*stmt).kind == AST_REDDE ET NON (*stmt).has_left
+    SI CONIURA compare((*ctx).current_return_type, "NIHIL") != 0
+      CONIURA codegen_report_error(ctx, (*stmt).line, (*stmt).column, "empty return in non-NIHIL rituale is unsupported")
+      REDDE
+    FIN SI
+    CONIURA codegen_emit_line(ctx, "return;")
+    REDDE
+  FIN SI
+
+  SI (*stmt).kind == AST_SI
+    CONIURA codegen_emit(ctx, "if (")
+    CONIURA codegen_emit_expr(ctx, (*stmt).condition)
+    CONIURA codegen_emit_line(ctx, ")")
+    CONIURA codegen_emit_stmt_as_block(ctx, (*stmt).body)
+    SI (*stmt).has_else_branch
+      CONIURA codegen_emit_line(ctx, "else")
+      CONIURA codegen_emit_stmt_as_block(ctx, (*stmt).else_branch)
+    FIN SI
+    REDDE
+  FIN SI
+
+  SI (*stmt).kind == AST_DUM
+    CONIURA codegen_emit(ctx, "while (")
+    CONIURA codegen_emit_expr(ctx, (*stmt).condition)
+    CONIURA codegen_emit_line(ctx, ")")
+    CONIURA codegen_emit_stmt_as_block(ctx, (*stmt).body)
+    REDDE
+  FIN SI
+
+  SI (*stmt).kind == AST_TEMPTA VEL (*stmt).kind == AST_QUANDO VEL (*stmt).kind == AST_IACE
+    CONIURA codegen_report_error(ctx, (*stmt).line, (*stmt).column, "statement outside bootstrap codegen subset in 26C")
+    REDDE
+  FIN SI
+
+  CONIURA codegen_report_error(ctx, (*stmt).line, (*stmt).column, "unsupported statement node in bootstrap codegen")
+  REDDE
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

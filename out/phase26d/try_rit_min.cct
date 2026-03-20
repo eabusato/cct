@@ -1,0 +1,10 @@
+INCIPIT grimoire "try_rit_min"
+ADVOCARE "../../src/bootstrap/parser/ast.cct"
+RITUALE main() REDDE REX
+  EVOCA SPECULUM AstNode ret_type AD CONIURA ast_make_type("REX", 1, 1)
+  EVOCA SPECULUM AstNode body AD CONIURA ast_make_block(1, 1)
+  EVOCA SPECULUM AstNode rit AD CONIURA ast_make_rituale("main", ret_type, body, 1, 1)
+  CONIURA ast_node_free(rit)
+  REDDE 0
+EXPLICIT RITUALE
+EXPLICIT grimoire

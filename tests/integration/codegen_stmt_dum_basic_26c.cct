@@ -1,0 +1,27 @@
+INCIPIT grimoire "codegen_stmt_dum_basic_26c"
+
+ADVOCARE "../../src/bootstrap/codegen/codegen_context.cct"
+ADVOCARE "../../src/bootstrap/codegen/codegen_stmt.cct"
+ADVOCARE "../../src/bootstrap/parser/ast.cct"
+ADVOCARE "cct/verbum.cct"
+
+RITUALE main() REDDE REX
+  EVOCA SPECULUM AstNode cond AD CONIURA ast_make_identifier("keep", 1, 1)
+  EVOCA SPECULUM AstNode body AD CONIURA ast_make_block(1, 6)
+  CONIURA ast_append_statement(body, CONIURA ast_make_expr_stmt(CONIURA ast_make_literal_int("1", 1, 8), 1, 8))
+  EVOCA SPECULUM AstNode stmt AD CONIURA ast_make_dum(cond, body, 1, 1)
+  EVOCA SPECULUM CodegenContext ctx AD CONIURA codegen_context_new("while.cct")
+  CONIURA codegen_emit_stmt(ctx, stmt)
+  EVOCA VERBUM out AD CONIURA codegen_output(ctx)
+  EVOCA VERBUM expected AD "while (keep)\n{\n  1;\n}\n"
+  EVOCA REX rc AD 0
+  SI CONIURA compare(out, expected) != 0
+    VINCIRE rc AD 1
+  FIN SI
+  DIMITTE out
+  CONIURA ast_node_free(stmt)
+  CONIURA codegen_context_free(ctx)
+  REDDE rc
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

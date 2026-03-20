@@ -1,0 +1,43 @@
+INCIPIT grimoire "semantic_generic_multiple_params_25a"
+
+ADVOCARE "cct/fluxus.cct"
+ADVOCARE "../../src/bootstrap/parser/parser.cct"
+ADVOCARE "../../src/bootstrap/parser/ast.cct"
+ADVOCARE "../../src/bootstrap/semantic/semantic_context.cct"
+ADVOCARE "../../src/bootstrap/semantic/semantic_generic.cct"
+ADVOCARE "../../src/bootstrap/semantic/semantic_register.cct"
+ADVOCARE "../../src/bootstrap/semantic/semantic_symbol.cct"
+
+RITUALE main() REDDE REX
+  EVOCA VERBUM src AD "INCIPIT grimoire \"p\" RITUALE compor GENUS(T, U, V)(T a, U b, SPECULUM V c) REDDE T REDDE a EXPLICIT RITUALE EXPLICIT grimoire"
+  EVOCA SPECULUM AstProgram program AD CONIURA parser_parse_program_source(src, "multi_params.cct")
+  EVOCA SPECULUM SemanticContext ctx AD CONIURA semantic_context_new("multi_params.cct")
+  CONIURA semantic_register_program(ctx, program)
+
+  EVOCA REX rituale_id AD CONIURA semantic_lookup_global(ctx, "compor")
+  EVOCA SPECULUM SemanticSymbol rituale_sym AD CONIURA semantic_symbol_at(ctx, rituale_id)
+  SI CONIURA fluxus_len((*rituale_sym).type_param_ids) != 3
+    REDDE 41
+  FIN SI
+  SI CONIURA fluxus_len((*rituale_sym).param_type_ids) != 3
+    REDDE 42
+  FIN SI
+
+  EVOCA REX saved_scope_id AD CONIURA semantic_enter_owner_generic_scope(ctx, rituale_id)
+  SI CONIURA semantic_lookup(ctx, "T") == CONIURA semantic_invalid_id()
+    REDDE 43
+  FIN SI
+  SI CONIURA semantic_lookup(ctx, "U") == CONIURA semantic_invalid_id()
+    REDDE 44
+  FIN SI
+  SI CONIURA semantic_lookup(ctx, "V") == CONIURA semantic_invalid_id()
+    REDDE 45
+  FIN SI
+  CONIURA semantic_restore_scope(ctx, saved_scope_id)
+
+  CONIURA semantic_context_free(ctx)
+  CONIURA ast_program_free(program)
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

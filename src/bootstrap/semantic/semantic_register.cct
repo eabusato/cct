@@ -3,6 +3,7 @@ INCIPIT grimoire "semantic_register"
 ADVOCARE "cct/fluxus.cct"
 ADVOCARE "../parser/ast.cct"
 ADVOCARE "semantic_context.cct"
+ADVOCARE "semantic_generic.cct"
 ADVOCARE "semantic_resolver.cct"
 ADVOCARE "semantic_symbol.cct"
 
@@ -17,6 +18,9 @@ RITUALE semantic_register_named_type_decl(SPECULUM SemanticContext ctx, SPECULUM
   VINCIRE (*sym).payload_type_id AD type_id
   VINCIRE (*sym).decl_node AD decl
   VINCIRE (*sym).has_decl_node AD VERUM
+  SI (*decl).kind == AST_SIGILLUM
+    CONIURA semantic_register_type_params_for_decl(ctx, sym_id, decl)
+  FIN SI
   REDDE sym_id
 EXPLICIT RITUALE
 
@@ -41,6 +45,13 @@ RITUALE semantic_register_rituale_decl(SPECULUM SemanticContext ctx, SPECULUM As
   VINCIRE (*sym).decl_node AD decl
   VINCIRE (*sym).has_decl_node AD VERUM
 
+  EVOCA REX generic_scope_id AD CONIURA semantic_register_type_params_for_decl(ctx, sym_id, decl)
+  VINCIRE sym AD CONIURA semantic_symbol_at(ctx, sym_id)
+  EVOCA REX saved_scope_id AD (*ctx).current_scope_id
+  SI generic_scope_id != CONIURA semantic_invalid_id()
+    VINCIRE (*ctx).current_scope_id AD generic_scope_id
+  FIN SI
+
   SI (*decl).has_return_type
     VINCIRE (*sym).payload_type_id AD CONIURA semantic_resolve_type_node(ctx, (*decl).return_type)
   ALITER
@@ -55,6 +66,8 @@ RITUALE semantic_register_rituale_decl(SPECULUM SemanticContext ctx, SPECULUM As
     CONIURA fluxus_push((*sym).param_type_ids, SPECULUM param_type_id)
     VINCIRE i AD i + 1
   FIN DUM
+
+  VINCIRE (*ctx).current_scope_id AD saved_scope_id
 
   REDDE sym_id
 EXPLICIT RITUALE

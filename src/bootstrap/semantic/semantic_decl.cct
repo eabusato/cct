@@ -1,0 +1,75 @@
+INCIPIT grimoire "semantic_decl"
+
+ADVOCARE "../parser/ast.cct"
+ADVOCARE "semantic_context.cct"
+ADVOCARE "semantic_generic.cct"
+ADVOCARE "semantic_kind.cct"
+ADVOCARE "semantic_pactum.cct"
+ADVOCARE "semantic_register.cct"
+ADVOCARE "semantic_resolver.cct"
+ADVOCARE "semantic_stmt.cct"
+ADVOCARE "semantic_symbol.cct"
+
+RITUALE semantic_bind_rituale_params(SPECULUM SemanticContext ctx, SPECULUM AstNode rituale_decl) REDDE NIHIL
+  EVOCA REX i AD 0
+  EVOCA REX n AD CONIURA ast_node_list_len((*rituale_decl).params)
+  DUM i < n
+    EVOCA SPECULUM AstNode param AD CONIURA ast_node_list_get((*rituale_decl).params, i)
+    EVOCA REX param_type_id AD CONIURA semantic_resolve_type_node(ctx, (*param).type_expr)
+    CONIURA semantic_define(ctx, SEM_SYMBOL_PARAMETER, (*param).name, param_type_id, (*param).line, (*param).column)
+    VINCIRE i AD i + 1
+  FIN DUM
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE semantic_validate_rituale_decl(SPECULUM SemanticContext ctx, REX rituale_sym_id) REDDE NIHIL
+  EVOCA SPECULUM SemanticSymbol sym AD CONIURA semantic_symbol_at(ctx, rituale_sym_id)
+  SI NON (*sym).has_decl_node VEL (*(*sym).decl_node).kind != AST_RITUALE
+    CONIURA semantic_report_error(ctx, (*sym).line, (*sym).column, "rituale symbol is missing declaration node")
+    REDDE
+  FIN SI
+
+  EVOCA SPECULUM AstNode rituale_decl AD (*sym).decl_node
+  EVOCA REX saved_rituale_id AD (*ctx).current_rituale_id
+  EVOCA REX saved_scope_id AD CONIURA semantic_enter_owner_generic_scope(ctx, rituale_sym_id)
+  VINCIRE (*ctx).current_rituale_id AD rituale_sym_id
+  CONIURA semantic_push_scope(ctx, SEM_SCOPE_RITUALE)
+  CONIURA semantic_bind_rituale_params(ctx, rituale_decl)
+  CONIURA semantic_analyze_block(ctx, (*rituale_decl).body, FALSUM)
+  CONIURA semantic_pop_scope(ctx)
+  CONIURA semantic_restore_scope(ctx, saved_scope_id)
+  VINCIRE (*ctx).current_rituale_id AD saved_rituale_id
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE semantic_validate_decl_node(SPECULUM SemanticContext ctx, SPECULUM AstNode decl) REDDE NIHIL
+  SI (*decl).kind == AST_PACTUM
+    CONIURA semantic_validate_pactum_signature_duplicates(ctx, decl)
+    REDDE
+  FIN SI
+
+  SI (*decl).kind == AST_RITUALE
+    EVOCA REX rituale_sym_id AD CONIURA semantic_lookup_global(ctx, (*decl).name)
+    SI rituale_sym_id != CONIURA semantic_invalid_id()
+      CONIURA semantic_validate_rituale_decl(ctx, rituale_sym_id)
+    FIN SI
+    REDDE
+  FIN SI
+
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE semantic_validate_program(SPECULUM SemanticContext ctx, SPECULUM AstProgram program) REDDE NIHIL
+  CONIURA semantic_register_program(ctx, program)
+
+  EVOCA REX i AD 0
+  EVOCA REX n AD CONIURA ast_node_list_len((*program).declarations)
+  DUM i < n
+    EVOCA SPECULUM AstNode decl AD CONIURA ast_node_list_get((*program).declarations, i)
+    CONIURA semantic_validate_decl_node(ctx, decl)
+    VINCIRE i AD i + 1
+  FIN DUM
+  REDDE
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

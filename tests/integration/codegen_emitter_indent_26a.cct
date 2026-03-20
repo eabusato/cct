@@ -1,0 +1,30 @@
+INCIPIT grimoire "codegen_emitter_indent_26a"
+
+ADVOCARE "../../src/bootstrap/codegen/codegen.cct"
+ADVOCARE "../../src/bootstrap/codegen/codegen_context.cct"
+ADVOCARE "../../src/bootstrap/codegen/codegen_emitter.cct"
+ADVOCARE "cct/verbum.cct"
+
+RITUALE main() REDDE REX
+  EVOCA SPECULUM CodegenContext ctx AD CONIURA codegen_context_new("indent.cct")
+  CONIURA codegen_emit_line(ctx, "if (x)")
+  CONIURA codegen_emit_block_open(ctx)
+  CONIURA codegen_emit_line(ctx, "return 1;")
+  CONIURA codegen_emit_block_close(ctx)
+
+  EVOCA VERBUM out AD CONIURA codegen_output(ctx)
+  EVOCA VERBUM expected AD "if (x)\n{\n  return 1;\n}\n"
+  EVOCA REX rc AD 0
+  SI CONIURA compare(out, expected) != 0
+    VINCIRE rc AD 1
+  FIN SI
+  SI (*ctx).indent_level != 0
+    VINCIRE rc AD 2
+  FIN SI
+
+  DIMITTE out
+  CONIURA codegen_context_free(ctx)
+  REDDE rc
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

@@ -1,0 +1,5 @@
+INCIPIT grimoire "semantic_gate_generic_invalid_missing_pactum_25e_input"
+RITUALE aplica GENUS(T PACTUM Inexistens)(T valor) REDDE T
+  REDDE valor
+EXPLICIT RITUALE
+EXPLICIT grimoire

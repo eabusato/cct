@@ -1,0 +1,25 @@
+INCIPIT grimoire "semantic_generic_arity_type_invalid_25b"
+
+ADVOCARE "cct/verbum.cct"
+ADVOCARE "../../src/bootstrap/parser/parser.cct"
+ADVOCARE "../../src/bootstrap/parser/ast.cct"
+ADVOCARE "../../src/bootstrap/semantic/semantic_context.cct"
+ADVOCARE "../../src/bootstrap/semantic/semantic_register.cct"
+
+RITUALE main() REDDE REX
+  EVOCA VERBUM src AD "INCIPIT grimoire \"p\" SIGILLUM Caixa GENUS(T) valor: T FIN SIGILLUM RITUALE usa(Caixa GENUS(REX, DUX) c) REDDE NIHIL REDDE EXPLICIT RITUALE EXPLICIT grimoire"
+  EVOCA SPECULUM AstProgram program AD CONIURA parser_parse_program_source(src, "arity_invalid_25b.cct")
+  EVOCA SPECULUM SemanticContext ctx AD CONIURA semantic_context_new("arity_invalid_25b.cct")
+  CONIURA semantic_register_program(ctx, program)
+  SI (*ctx).had_error != VERUM
+    REDDE 41
+  FIN SI
+  SI CONIURA compare((*ctx).last_error_message, "generic type arity mismatch") != 0
+    REDDE 42
+  FIN SI
+  CONIURA semantic_context_free(ctx)
+  CONIURA ast_program_free(program)
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

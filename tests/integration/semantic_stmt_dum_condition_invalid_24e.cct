@@ -1,0 +1,26 @@
+INCIPIT grimoire "semantic_stmt_dum_condition_invalid_24e"
+
+ADVOCARE "cct/verbum.cct"
+ADVOCARE "../../src/bootstrap/parser/ast.cct"
+ADVOCARE "../../src/bootstrap/semantic/semantic_context.cct"
+ADVOCARE "../../src/bootstrap/semantic/semantic_stmt.cct"
+
+RITUALE main() REDDE REX
+  EVOCA SPECULUM SemanticContext ctx AD CONIURA semantic_context_new("dum_invalid.cct")
+  EVOCA SPECULUM AstNode body AD CONIURA ast_make_block(1, 6)
+  EVOCA SPECULUM AstNode stmt AD CONIURA ast_make_dum(CONIURA ast_make_literal_int("1", 1, 5), body, 1, 1)
+  CONIURA semantic_analyze_stmt(ctx, stmt)
+
+  SI NON CONIURA semantic_had_error(ctx)
+    REDDE 41
+  FIN SI
+  SI CONIURA compare((*ctx).last_error_message, "DUM condition must be VERUM") != 0
+    REDDE 42
+  FIN SI
+
+  CONIURA semantic_context_free(ctx)
+  CONIURA ast_node_free(stmt)
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

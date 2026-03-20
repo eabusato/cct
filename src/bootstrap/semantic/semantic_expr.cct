@@ -5,6 +5,7 @@ ADVOCARE "cct/verbum.cct"
 ADVOCARE "../lexer/token_type.cct"
 ADVOCARE "../parser/ast.cct"
 ADVOCARE "semantic_context.cct"
+ADVOCARE "semantic_generic.cct"
 ADVOCARE "semantic_register.cct"
 ADVOCARE "semantic_resolver.cct"
 ADVOCARE "semantic_symbol.cct"
@@ -13,7 +14,7 @@ ADVOCARE "semantic_type_kind.cct"
 
 RITUALE semantic_find_field_type(SPECULUM SemanticContext ctx, REX object_type_id, VERBUM field_name, REX line, REX column) REDDE REX
   EVOCA SPECULUM SemanticType obj_type AD CONIURA semantic_type_at(ctx, object_type_id)
-  SI (*obj_type).kind != SEM_TYPE_NAMED VEL (*obj_type).named_symbol_id == CONIURA semantic_invalid_id()
+  SI ((*obj_type).kind != SEM_TYPE_NAMED ET (*obj_type).kind != SEM_TYPE_INSTANCE) VEL (*obj_type).named_symbol_id == CONIURA semantic_invalid_id()
     CONIURA semantic_report_error(ctx, line, column, "field access requires SIGILLUM-typed object")
     REDDE (*ctx).type_error
   FIN SI
@@ -29,7 +30,13 @@ RITUALE semantic_find_field_type(SPECULUM SemanticContext ctx, REX object_type_i
   DUM i < n
     EVOCA SPECULUM AstNode field AD CONIURA ast_node_list_get((*(*type_sym).decl_node).fields, i)
     SI CONIURA compare((*field).name, field_name) == 0
-      REDDE CONIURA semantic_resolve_type_node(ctx, (*field).type_expr)
+      EVOCA REX saved_scope_id AD CONIURA semantic_enter_owner_generic_scope(ctx, (*type_sym).id)
+      EVOCA REX field_type_id AD CONIURA semantic_resolve_type_node(ctx, (*field).type_expr)
+      CONIURA semantic_restore_scope(ctx, saved_scope_id)
+      SI (*obj_type).kind == SEM_TYPE_INSTANCE
+        REDDE CONIURA semantic_substitute_instantiated_type(ctx, field_type_id, (*type_sym).id, (*obj_type).type_arg_ids)
+      FIN SI
+      REDDE field_type_id
     FIN SI
     VINCIRE i AD i + 1
   FIN DUM
@@ -101,10 +108,58 @@ RITUALE semantic_analyze_call(SPECULUM SemanticContext ctx, SPECULUM AstNode exp
     REDDE (*ctx).type_error
   FIN SI
 
-  EVOCA REX expected AD CONIURA fluxus_len((*sym).param_type_ids)
+  EVOCA REX generic_expected AD CONIURA semantic_symbol_generic_arity(sym)
+  EVOCA REX generic_actual AD CONIURA ast_node_list_len((*(*expr).callee).generic_args)
+  EVOCA SPECULUM NIHIL instantiated_param_type_ids AD CONIURA fluxus_init(MENSURA(REX))
+  EVOCA REX return_type_id AD (*sym).payload_type_id
+  SI CONIURA semantic_symbol_is_generic_owner(sym)
+    SI generic_actual == 0
+      CONIURA semantic_report_error(ctx, (*expr).line, (*expr).column, CONIURA concat("generic rituale '", CONIURA concat((*sym).name, "' requires explicit GENUS(...)")))
+      CONIURA fluxus_free(instantiated_param_type_ids)
+      REDDE (*ctx).type_error
+    FIN SI
+    SI generic_actual != generic_expected
+      CONIURA semantic_report_error(ctx, (*expr).line, (*expr).column, "generic rituale arity mismatch")
+      CONIURA fluxus_free(instantiated_param_type_ids)
+      REDDE (*ctx).type_error
+    FIN SI
+    EVOCA REX saved_error_count AD (*ctx).error_count
+    EVOCA SPECULUM NIHIL type_arg_ids AD CONIURA semantic_resolve_generic_type_args(ctx, (*(*expr).callee).generic_args)
+    SI (*ctx).error_count != saved_error_count
+      CONIURA fluxus_free(type_arg_ids)
+      CONIURA fluxus_free(instantiated_param_type_ids)
+      REDDE (*ctx).type_error
+    FIN SI
+    SI NON CONIURA semantic_validate_type_arg_constraints(ctx, sym_id, type_arg_ids, (*expr).line, (*expr).column)
+      CONIURA fluxus_free(type_arg_ids)
+      CONIURA fluxus_free(instantiated_param_type_ids)
+      REDDE (*ctx).type_error
+    FIN SI
+    VINCIRE return_type_id AD CONIURA semantic_instantiate_generic_symbol_types(ctx, sym_id, type_arg_ids, instantiated_param_type_ids)
+    CONIURA fluxus_free(type_arg_ids)
+  FIN SI
+
+  SI NON CONIURA semantic_symbol_is_generic_owner(sym)
+    SI generic_actual > 0
+      CONIURA semantic_report_error(ctx, (*expr).line, (*expr).column, CONIURA concat("GENUS(...) applied to non-generic rituale '", CONIURA concat((*sym).name, "'")))
+      CONIURA fluxus_free(instantiated_param_type_ids)
+      REDDE (*ctx).type_error
+    FIN SI
+    EVOCA REX seed_i AD 0
+    EVOCA REX seed_n AD CONIURA fluxus_len((*sym).param_type_ids)
+    DUM seed_i < seed_n
+      EVOCA SPECULUM REX seed_slot AD CONIURA fluxus_get((*sym).param_type_ids, seed_i)
+      EVOCA REX seed_type_id AD (*seed_slot)
+      CONIURA fluxus_push(instantiated_param_type_ids, SPECULUM seed_type_id)
+      VINCIRE seed_i AD seed_i + 1
+    FIN DUM
+  FIN SI
+
+  EVOCA REX expected AD CONIURA fluxus_len(instantiated_param_type_ids)
   EVOCA REX actual AD CONIURA ast_node_list_len((*expr).arguments)
   SI expected != actual
     CONIURA semantic_report_error(ctx, (*expr).line, (*expr).column, "rituale call arity mismatch")
+    CONIURA fluxus_free(instantiated_param_type_ids)
     REDDE (*ctx).type_error
   FIN SI
 
@@ -112,15 +167,17 @@ RITUALE semantic_analyze_call(SPECULUM SemanticContext ctx, SPECULUM AstNode exp
   DUM i < actual
     EVOCA SPECULUM AstNode arg AD CONIURA ast_node_list_get((*expr).arguments, i)
     EVOCA REX arg_type_id AD CONIURA semantic_analyze_expr(ctx, arg)
-    EVOCA SPECULUM REX expected_slot AD CONIURA fluxus_get((*sym).param_type_ids, i)
+    EVOCA SPECULUM REX expected_slot AD CONIURA fluxus_get(instantiated_param_type_ids, i)
     SI NON CONIURA semantic_type_compatible_assign(ctx, (*expected_slot), arg_type_id)
       CONIURA semantic_report_error(ctx, (*arg).line, (*arg).column, "argument type mismatch")
+      CONIURA fluxus_free(instantiated_param_type_ids)
       REDDE (*ctx).type_error
     FIN SI
     VINCIRE i AD i + 1
   FIN DUM
 
-  REDDE (*sym).payload_type_id
+  CONIURA fluxus_free(instantiated_param_type_ids)
+  REDDE return_type_id
 EXPLICIT RITUALE
 
 RITUALE semantic_analyze_expr(SPECULUM SemanticContext ctx, SPECULUM AstNode expr) REDDE REX

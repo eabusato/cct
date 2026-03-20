@@ -1,0 +1,19 @@
+INCIPIT grimoire "debug_register_only"
+
+ADVOCARE "../../src/bootstrap/parser/parser.cct"
+ADVOCARE "../../src/bootstrap/parser/ast.cct"
+ADVOCARE "../../src/bootstrap/semantic/semantic_context.cct"
+ADVOCARE "../../src/bootstrap/semantic/semantic_register.cct"
+
+RITUALE main() REDDE REX
+  EVOCA VERBUM src AD "INCIPIT grimoire \"p\" PACTUM Forma RITUALE medir() REDDE REX FIN PACTUM SIGILLUM Pixel valor: REX FIN SIGILLUM RITUALE medir(SPECULUM Pixel self) REDDE REX REDDE 1 EXPLICIT RITUALE RITUALE usar GENUS(T PACTUM Forma)(T valor) REDDE NIHIL REDDE EXPLICIT RITUALE RITUALE main() REDDE NIHIL REDDE EXPLICIT RITUALE EXPLICIT grimoire"
+  EVOCA SPECULUM AstProgram program AD CONIURA parser_parse_program_source(src, "constraint_rituale_generic_25c.cct")
+  EVOCA SPECULUM SemanticContext ctx AD CONIURA semantic_context_new("constraint_rituale_generic_25c.cct")
+  CONIURA semantic_register_program(ctx, program)
+  SI (*ctx).had_error != FALSUM
+    REDDE 41
+  FIN SI
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

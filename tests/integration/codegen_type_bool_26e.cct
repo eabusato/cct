@@ -1,0 +1,21 @@
+INCIPIT grimoire "codegen_type_bool_26e"
+
+ADVOCARE "../../src/bootstrap/codegen/codegen_context.cct"
+ADVOCARE "../../src/bootstrap/codegen/codegen_type.cct"
+ADVOCARE "../../src/bootstrap/parser/ast.cct"
+ADVOCARE "cct/verbum.cct"
+
+RITUALE main() REDDE REX
+  EVOCA SPECULUM CodegenContext ctx AD CONIURA codegen_context_new("bool.cct")
+  EVOCA SPECULUM AstNode ty AD CONIURA ast_make_type("VERUM", 1, 1)
+  EVOCA VERBUM out AD CONIURA codegen_type_text(ctx, ty)
+  EVOCA REX rc AD 0
+  SI CONIURA compare(out, "int") != 0
+    VINCIRE rc AD 1
+  FIN SI
+  CONIURA ast_node_free(ty)
+  CONIURA codegen_context_free(ctx)
+  REDDE rc
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

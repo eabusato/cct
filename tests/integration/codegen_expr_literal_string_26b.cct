@@ -1,0 +1,30 @@
+INCIPIT grimoire "codegen_expr_literal_string_26b"
+
+ADVOCARE "../../src/bootstrap/codegen/codegen_context.cct"
+ADVOCARE "../../src/bootstrap/codegen/codegen_expr.cct"
+ADVOCARE "../../src/bootstrap/parser/ast.cct"
+ADVOCARE "cct/verbum.cct"
+
+RITUALE main() REDDE REX
+  EVOCA MILES q AD 34
+  EVOCA MILES nl AD 10
+  EVOCA VERBUM raw AD CONIURA concat("a", CONIURA concat(CONIURA from_char(q), CONIURA concat("b", CONIURA concat(CONIURA from_char(nl), "c"))))
+  EVOCA SPECULUM CodegenContext ctx AD CONIURA codegen_context_new("string.cct")
+  EVOCA SPECULUM AstNode expr AD CONIURA ast_make_literal_string(raw, 1, 1)
+  CONIURA codegen_emit_expr(ctx, expr)
+  EVOCA VERBUM out AD CONIURA codegen_output(ctx)
+  EVOCA REX rc AD 0
+  SI CONIURA compare(out, "cct_boot_str_0") != 0
+    VINCIRE rc AD 1
+  FIN SI
+  SI CONIURA codegen_registered_string_count(ctx) != 1
+    VINCIRE rc AD 2
+  FIN SI
+  DIMITTE raw
+  DIMITTE out
+  CONIURA ast_node_free(expr)
+  CONIURA codegen_context_free(ctx)
+  REDDE rc
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

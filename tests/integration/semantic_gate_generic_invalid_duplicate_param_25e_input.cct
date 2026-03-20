@@ -1,0 +1,5 @@
+INCIPIT grimoire "semantic_gate_generic_invalid_duplicate_param_25e_input"
+RITUALE idem GENUS(T, T)(T valor) REDDE T
+  REDDE valor
+EXPLICIT RITUALE
+EXPLICIT grimoire

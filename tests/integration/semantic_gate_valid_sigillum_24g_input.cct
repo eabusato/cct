@@ -1,0 +1,8 @@
+INCIPIT grimoire "gate_sigillum"
+SIGILLUM Caixa
+  valor: REX
+FIN SIGILLUM
+RITUALE main(Caixa c) REDDE Caixa
+  REDDE c
+EXPLICIT RITUALE
+EXPLICIT grimoire

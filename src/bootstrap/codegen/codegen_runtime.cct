@@ -1,0 +1,170 @@
+INCIPIT grimoire "codegen_runtime"
+
+ADVOCARE "cct/fmt.cct"
+ADVOCARE "cct/verbum.cct"
+ADVOCARE "cct/verbum_builder.cct"
+ADVOCARE "../parser/ast.cct"
+ADVOCARE "codegen.cct"
+ADVOCARE "codegen_context.cct"
+ADVOCARE "codegen_decl.cct"
+ADVOCARE "codegen_emitter.cct"
+
+RITUALE codegen_runtime_escape_c_string(VERBUM raw) REDDE VERBUM
+  EVOCA SPECULUM NIHIL b AD CONIURA builder_init()
+  CONIURA builder_append_char(b, 34)
+
+  EVOCA REX i AD 0
+  EVOCA REX n AD CONIURA len(raw)
+  DUM i < n
+    EVOCA MILES ch AD CONIURA char_at(raw, i)
+    SI ch == 34
+      CONIURA builder_append(b, "\\\"")
+    ALITER
+      SI ch == 92
+        CONIURA builder_append(b, "\\\\")
+      ALITER
+        SI ch == 10
+          CONIURA builder_append(b, "\\n")
+        ALITER
+          SI ch == 13
+            CONIURA builder_append(b, "\\r")
+          ALITER
+            SI ch == 9
+              CONIURA builder_append(b, "\\t")
+            ALITER
+              CONIURA builder_append_char(b, ch)
+            FIN SI
+          FIN SI
+        FIN SI
+      FIN SI
+    FIN SI
+    VINCIRE i AD i + 1
+  FIN DUM
+
+  CONIURA builder_append_char(b, 34)
+  EVOCA VERBUM out AD CONIURA builder_to_verbum(b)
+  CONIURA builder_free(b)
+  REDDE out
+EXPLICIT RITUALE
+
+RITUALE codegen_runtime_string_symbol(SPECULUM CodegenContext ctx, VERBUM raw_text) REDDE VERBUM
+  EVOCA VERBUM existing AD CONIURA codegen_lookup_string_symbol(ctx, raw_text)
+  SI CONIURA compare(existing, "") != 0
+    REDDE existing
+  FIN SI
+
+  EVOCA VERBUM symbol AD CONIURA concat("cct_boot_str_", CONIURA stringify_int(CONIURA codegen_registered_string_count(ctx)))
+  REDDE CONIURA codegen_register_string_symbol(ctx, raw_text, symbol)
+EXPLICIT RITUALE
+
+RITUALE codegen_runtime_emit_includes(SPECULUM CodegenContext ctx) REDDE NIHIL
+  SI (*ctx).needs_stdio
+    CONIURA codegen_emit_line(ctx, "#include <stdio.h>")
+  FIN SI
+  SI (*ctx).needs_stdlib
+    CONIURA codegen_emit_line(ctx, "#include <stdlib.h>")
+  FIN SI
+  SI (*ctx).needs_stdio VEL (*ctx).needs_stdlib
+    CONIURA codegen_emit_blank_line(ctx)
+  FIN SI
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE codegen_runtime_emit_fail_helper(SPECULUM CodegenContext ctx) REDDE NIHIL
+  SI NON (*ctx).needs_fail_helper
+    REDDE
+  FIN SI
+
+  CONIURA codegen_emit_line(ctx, "static void cct_boot_fail(const char* message)")
+  CONIURA codegen_emit_block_open(ctx)
+  CONIURA codegen_emit_line(ctx, "fputs(message, stderr);")
+  CONIURA codegen_emit_line(ctx, "fputc('\\n', stderr);")
+  CONIURA codegen_emit_line(ctx, "exit(1);")
+  CONIURA codegen_emit_block_close(ctx)
+  CONIURA codegen_emit_blank_line(ctx)
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE codegen_runtime_emit_string_pool(SPECULUM CodegenContext ctx) REDDE NIHIL
+  EVOCA REX n AD CONIURA codegen_registered_string_count(ctx)
+  SI n == 0
+    REDDE
+  FIN SI
+
+  EVOCA REX i AD 0
+  DUM i < n
+    EVOCA SPECULUM CodegenStringLiteral item AD CONIURA codegen_context_string_at(ctx, i)
+    EVOCA VERBUM quoted AD CONIURA codegen_runtime_escape_c_string((*item).raw_text)
+    CONIURA codegen_emit(ctx, "static char ")
+    CONIURA codegen_emit(ctx, (*item).symbol_name)
+    CONIURA codegen_emit(ctx, "[] = ")
+    CONIURA codegen_emit(ctx, quoted)
+    CONIURA codegen_emit_line(ctx, ";")
+    DIMITTE quoted
+    VINCIRE i AD i + 1
+  FIN DUM
+  CONIURA codegen_emit_blank_line(ctx)
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE codegen_runtime_find_entry_main_index(SPECULUM AstProgram program) REDDE REX
+  EVOCA REX i AD 0
+  EVOCA REX n AD CONIURA ast_node_list_len((*program).declarations)
+  DUM i < n
+    EVOCA SPECULUM AstNode decl AD CONIURA ast_node_list_get((*program).declarations, i)
+    SI (*decl).kind == AST_RITUALE ET CONIURA compare((*decl).name, "main") == 0
+      REDDE i
+    FIN SI
+    VINCIRE i AD i + 1
+  FIN DUM
+  REDDE -1
+EXPLICIT RITUALE
+
+RITUALE codegen_runtime_emit_host_main(SPECULUM CodegenContext ctx, SPECULUM AstProgram program) REDDE NIHIL
+  EVOCA REX entry_idx AD CONIURA codegen_runtime_find_entry_main_index(program)
+  SI entry_idx < 0
+    REDDE
+  FIN SI
+  EVOCA SPECULUM AstNode entry AD CONIURA ast_node_list_get((*program).declarations, entry_idx)
+
+  CONIURA codegen_emit_line(ctx, "int main(void)")
+  CONIURA codegen_emit_block_open(ctx)
+  SI (*entry).has_return_type ET CONIURA compare((*(*entry).return_type).type_name, "NIHIL") == 0
+    CONIURA codegen_emit(ctx, CONIURA codegen_rituale_c_name(ctx, "main"))
+    CONIURA codegen_emit_line(ctx, "();")
+    CONIURA codegen_emit_line(ctx, "return 0;")
+  ALITER
+    CONIURA codegen_emit(ctx, "return (int)")
+    CONIURA codegen_emit(ctx, CONIURA codegen_rituale_c_name(ctx, "main"))
+    CONIURA codegen_emit_line(ctx, "();")
+  FIN SI
+  CONIURA codegen_emit_block_close(ctx)
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE codegen_generate_translation_unit_with_context(SPECULUM CodegenContext ctx, SPECULUM AstProgram program) REDDE VERBUM
+  CONIURA codegen_emit_program_body(ctx, program)
+  EVOCA VERBUM body AD CONIURA codegen_output(ctx)
+
+  CONIURA codegen_context_reset_output(ctx)
+  CONIURA codegen_emit_line(ctx, "/* generated by cct bootstrap codegen */")
+  CONIURA codegen_emit_blank_line(ctx)
+  CONIURA codegen_runtime_emit_includes(ctx)
+  CONIURA codegen_runtime_emit_fail_helper(ctx)
+  CONIURA codegen_runtime_emit_string_pool(ctx)
+  CONIURA codegen_emit(ctx, body)
+  DIMITTE body
+  CONIURA codegen_emit_blank_line(ctx)
+  CONIURA codegen_runtime_emit_host_main(ctx, program)
+  REDDE CONIURA codegen_output(ctx)
+EXPLICIT RITUALE
+
+RITUALE codegen_generate_translation_unit(SPECULUM AstProgram program, VERBUM filename) REDDE VERBUM
+  EVOCA SPECULUM CodegenContext ctx AD CONIURA codegen_context_new(filename)
+  CONIURA codegen_context_reset(ctx)
+  EVOCA VERBUM out AD CONIURA codegen_generate_translation_unit_with_context(ctx, program)
+  CONIURA codegen_context_free(ctx)
+  REDDE out
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

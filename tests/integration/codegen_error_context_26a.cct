@@ -1,0 +1,29 @@
+INCIPIT grimoire "codegen_error_context_26a"
+
+ADVOCARE "../../src/bootstrap/codegen/codegen_context.cct"
+ADVOCARE "cct/verbum.cct"
+
+RITUALE main() REDDE REX
+  EVOCA SPECULUM CodegenContext ctx AD CONIURA codegen_context_new("error.cct")
+  CONIURA codegen_report_error(ctx, 10, 4, "first")
+  CONIURA codegen_report_error(ctx, 12, 9, "second")
+
+  EVOCA REX rc AD 0
+  SI NON CONIURA codegen_had_error(ctx)
+    VINCIRE rc AD 1
+  FIN SI
+  SI (*ctx).error_count != 2
+    VINCIRE rc AD 2
+  FIN SI
+  SI (*ctx).last_error_line != 12 VEL (*ctx).last_error_column != 9
+    VINCIRE rc AD 3
+  FIN SI
+  SI CONIURA compare((*ctx).last_error_message, "second") != 0
+    VINCIRE rc AD 4
+  FIN SI
+
+  CONIURA codegen_context_free(ctx)
+  REDDE rc
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

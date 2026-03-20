@@ -1,0 +1,9 @@
+INCIPIT grimoire "gate_ordo"
+ORDO Status
+  Ok,
+  Err
+FIN ORDO
+RITUALE main(Status s) REDDE Status
+  REDDE s
+EXPLICIT RITUALE
+EXPLICIT grimoire

@@ -1,0 +1,11 @@
+INCIPIT grimoire "codegen_gate_call_26g_input"
+
+RITUALE tres() REDDE REX
+  REDDE 3
+EXPLICIT RITUALE
+
+RITUALE main() REDDE REX
+  REDDE tres()
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

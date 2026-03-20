@@ -1,0 +1,198 @@
+INCIPIT grimoire "codegen_expr"
+
+ADVOCARE "cct/verbum.cct"
+ADVOCARE "../lexer/token_type.cct"
+ADVOCARE "../parser/ast.cct"
+ADVOCARE "codegen_context.cct"
+ADVOCARE "codegen_emitter.cct"
+ADVOCARE "codegen.cct"
+
+RITUALE codegen_unary_op_text(TokenKind kind) REDDE VERBUM
+  SI kind == TK_PLUS
+    REDDE "+"
+  FIN SI
+  SI kind == TK_MINUS
+    REDDE "-"
+  FIN SI
+  SI kind == TK_NON
+    REDDE "!"
+  FIN SI
+  REDDE ""
+EXPLICIT RITUALE
+
+RITUALE codegen_binary_op_text(TokenKind kind) REDDE VERBUM
+  SI kind == TK_PLUS
+    REDDE "+"
+  FIN SI
+  SI kind == TK_MINUS
+    REDDE "-"
+  FIN SI
+  SI kind == TK_STAR
+    REDDE "*"
+  FIN SI
+  SI kind == TK_SLASH
+    REDDE "/"
+  FIN SI
+  SI kind == TK_PERCENT
+    REDDE "%"
+  FIN SI
+  SI kind == TK_EQ_EQ
+    REDDE "=="
+  FIN SI
+  SI kind == TK_BANG_EQ
+    REDDE "!="
+  FIN SI
+  SI kind == TK_LESS
+    REDDE "<"
+  FIN SI
+  SI kind == TK_LESS_EQ
+    REDDE "<="
+  FIN SI
+  SI kind == TK_GREATER
+    REDDE ">"
+  FIN SI
+  SI kind == TK_GREATER_EQ
+    REDDE ">="
+  FIN SI
+  SI kind == TK_ET
+    REDDE "&&"
+  FIN SI
+  SI kind == TK_VEL
+    REDDE "||"
+  FIN SI
+  REDDE ""
+EXPLICIT RITUALE
+
+RITUALE codegen_emit_lvalue(SPECULUM CodegenContext ctx, SPECULUM AstNode expr) REDDE NIHIL
+  SI (*expr).kind == AST_IDENTIFIER
+    EVOCA VERBUM local_name AD CONIURA codegen_lookup_local_c_name(ctx, (*expr).name)
+    SI CONIURA compare(local_name, "") != 0
+      CONIURA codegen_emit(ctx, local_name)
+    ALITER
+      CONIURA codegen_emit(ctx, (*expr).name)
+    FIN SI
+    REDDE
+  FIN SI
+
+  SI (*expr).kind == AST_FIELD_ACCESS
+    CONIURA codegen_emit_lvalue(ctx, (*expr).left)
+    CONIURA codegen_emit(ctx, ".")
+    CONIURA codegen_emit(ctx, (*expr).name)
+    REDDE
+  FIN SI
+
+  SI (*expr).kind == AST_INDEX_ACCESS
+    CONIURA codegen_emit_lvalue(ctx, (*expr).left)
+    CONIURA codegen_emit(ctx, "[")
+    CONIURA codegen_emit_expr(ctx, (*expr).right)
+    CONIURA codegen_emit(ctx, "]")
+    REDDE
+  FIN SI
+
+  CONIURA codegen_report_error(ctx, (*expr).line, (*expr).column, "unsupported lvalue in bootstrap codegen")
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE codegen_emit_call_expr(SPECULUM CodegenContext ctx, SPECULUM AstNode expr) REDDE NIHIL
+  SI (*(*expr).callee).kind != AST_IDENTIFIER
+    CONIURA codegen_report_error(ctx, (*expr).line, (*expr).column, "bootstrap codegen only supports rituale identifier calls")
+    REDDE
+  FIN SI
+
+  CONIURA codegen_emit(ctx, CONIURA codegen_rituale_c_name(ctx, (*(*expr).callee).name))
+  CONIURA codegen_emit(ctx, "(")
+
+  EVOCA REX i AD 0
+  EVOCA REX n AD CONIURA ast_node_list_len((*expr).arguments)
+  DUM i < n
+    EVOCA SPECULUM AstNode arg AD CONIURA ast_node_list_get((*expr).arguments, i)
+    SI i > 0
+      CONIURA codegen_emit(ctx, ", ")
+    FIN SI
+    CONIURA codegen_emit_expr(ctx, arg)
+    VINCIRE i AD i + 1
+  FIN DUM
+
+  CONIURA codegen_emit(ctx, ")")
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE codegen_emit_expr(SPECULUM CodegenContext ctx, SPECULUM AstNode expr) REDDE NIHIL
+  SI (*expr).kind == AST_LITERAL_INT VEL (*expr).kind == AST_LITERAL_REAL
+    CONIURA codegen_emit(ctx, (*expr).value_text)
+    REDDE
+  FIN SI
+
+  SI (*expr).kind == AST_LITERAL_BOOL
+    SI (*expr).bool_value
+      CONIURA codegen_emit(ctx, "1")
+    ALITER
+      CONIURA codegen_emit(ctx, "0")
+    FIN SI
+    REDDE
+  FIN SI
+
+  SI (*expr).kind == AST_LITERAL_STRING
+    CONIURA codegen_emit(ctx, CONIURA codegen_string_symbol(ctx, (*expr).value_text))
+    REDDE
+  FIN SI
+
+  SI (*expr).kind == AST_LITERAL_NIHIL
+    CONIURA codegen_emit(ctx, "((void*)0)")
+    REDDE
+  FIN SI
+
+  SI (*expr).kind == AST_IDENTIFIER
+    EVOCA VERBUM local_name AD CONIURA codegen_lookup_local_c_name(ctx, (*expr).name)
+    SI CONIURA compare(local_name, "") != 0
+      CONIURA codegen_emit(ctx, local_name)
+    ALITER
+      CONIURA codegen_emit(ctx, (*expr).name)
+    FIN SI
+    REDDE
+  FIN SI
+
+  SI (*expr).kind == AST_UNARY_OP
+    EVOCA VERBUM op_text AD CONIURA codegen_unary_op_text((*expr).operator_kind)
+    SI CONIURA compare(op_text, "") == 0
+      CONIURA codegen_report_error(ctx, (*expr).line, (*expr).column, "unsupported unary operator in bootstrap codegen")
+      REDDE
+    FIN SI
+    CONIURA codegen_emit(ctx, "(")
+    CONIURA codegen_emit(ctx, op_text)
+    CONIURA codegen_emit_expr(ctx, (*expr).left)
+    CONIURA codegen_emit(ctx, ")")
+    REDDE
+  FIN SI
+
+  SI (*expr).kind == AST_BINARY_OP
+    EVOCA VERBUM op_text AD CONIURA codegen_binary_op_text((*expr).operator_kind)
+    SI CONIURA compare(op_text, "") == 0
+      CONIURA codegen_report_error(ctx, (*expr).line, (*expr).column, "unsupported binary operator in bootstrap codegen")
+      REDDE
+    FIN SI
+    CONIURA codegen_emit(ctx, "(")
+    CONIURA codegen_emit_expr(ctx, (*expr).left)
+    CONIURA codegen_emit(ctx, " ")
+    CONIURA codegen_emit(ctx, op_text)
+    CONIURA codegen_emit(ctx, " ")
+    CONIURA codegen_emit_expr(ctx, (*expr).right)
+    CONIURA codegen_emit(ctx, ")")
+    REDDE
+  FIN SI
+
+  SI (*expr).kind == AST_CALL
+    CONIURA codegen_emit_call_expr(ctx, expr)
+    REDDE
+  FIN SI
+
+  SI (*expr).kind == AST_FIELD_ACCESS VEL (*expr).kind == AST_INDEX_ACCESS
+    CONIURA codegen_emit_lvalue(ctx, expr)
+    REDDE
+  FIN SI
+
+  CONIURA codegen_report_error(ctx, (*expr).line, (*expr).column, "unsupported expression node in bootstrap codegen")
+  REDDE
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

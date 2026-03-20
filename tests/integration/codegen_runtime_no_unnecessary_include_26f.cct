@@ -1,0 +1,25 @@
+INCIPIT grimoire "codegen_runtime_no_unnecessary_include_26f"
+
+ADVOCARE "../../src/bootstrap/codegen/codegen_runtime.cct"
+ADVOCARE "../../src/bootstrap/parser/ast.cct"
+ADVOCARE "cct/verbum.cct"
+
+RITUALE main() REDDE REX
+  EVOCA SPECULUM AstProgram program AD CONIURA ast_program_new()
+  EVOCA SPECULUM AstNode body AD CONIURA ast_make_block(1, 1)
+  CONIURA ast_append_statement(body, CONIURA ast_make_redde(CONIURA ast_make_literal_int("0", 1, 1), 1, 1))
+  CONIURA ast_program_append_decl(program, CONIURA ast_make_rituale("main", CONIURA ast_make_type("REX", 1, 1), body, 1, 1))
+  EVOCA VERBUM out AD CONIURA codegen_generate_translation_unit(program, "nomin.cct")
+  EVOCA REX rc AD 0
+  SI CONIURA contains(out, "#include <stdio.h>") == VERUM
+    VINCIRE rc AD 1
+  FIN SI
+  SI CONIURA contains(out, "#include <stdlib.h>") == VERUM
+    VINCIRE rc AD 2
+  FIN SI
+  DIMITTE out
+  CONIURA ast_program_free(program)
+  REDDE rc
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

@@ -1,0 +1,31 @@
+INCIPIT grimoire "semantic_stmt_tempta_basic_24e"
+
+ADVOCARE "../../src/bootstrap/parser/ast.cct"
+ADVOCARE "../../src/bootstrap/semantic/semantic_context.cct"
+ADVOCARE "../../src/bootstrap/semantic/semantic_kind.cct"
+ADVOCARE "../../src/bootstrap/semantic/semantic_stmt.cct"
+
+RITUALE main() REDDE REX
+  EVOCA SPECULUM SemanticContext ctx AD CONIURA semantic_context_new("tempta_basic.cct")
+  CONIURA semantic_define(ctx, SEM_SYMBOL_VARIABLE, "err", (*ctx).type_fractum, 1, 1)
+
+  EVOCA SPECULUM AstNode try_block AD CONIURA ast_make_block(1, 1)
+  CONIURA ast_append_statement(try_block, CONIURA ast_make_iace(CONIURA ast_make_identifier("err", 1, 5), 1, 1))
+
+  EVOCA SPECULUM AstNode cape_type AD CONIURA ast_make_type("FRACTUM", 1, 10)
+  EVOCA SPECULUM AstNode cape_block AD CONIURA ast_make_block(1, 20)
+  CONIURA ast_append_statement(cape_block, CONIURA ast_make_expr_stmt(CONIURA ast_make_identifier("caught", 1, 25), 1, 25))
+
+  EVOCA SPECULUM AstNode stmt AD CONIURA ast_make_tempta_no_semper(try_block, cape_type, "caught", cape_block, 1, 1)
+  CONIURA semantic_analyze_stmt(ctx, stmt)
+
+  SI CONIURA semantic_had_error(ctx)
+    REDDE 41
+  FIN SI
+
+  CONIURA semantic_context_free(ctx)
+  CONIURA ast_node_free(stmt)
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

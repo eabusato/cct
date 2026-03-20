@@ -1,0 +1,12 @@
+INCIPIT grimoire "codegen_gate_si_aliter_26g_input"
+
+RITUALE main() REDDE REX
+  EVOCA REX x AD 1
+  SI x < 2
+    REDDE 7
+  ALITER
+    REDDE 9
+  FIN SI
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

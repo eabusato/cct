@@ -1,0 +1,31 @@
+INCIPIT grimoire "codegen_program_deterministic_26d"
+
+ADVOCARE "../../src/bootstrap/codegen/codegen_decl.cct"
+ADVOCARE "../../src/bootstrap/parser/ast.cct"
+ADVOCARE "cct/verbum.cct"
+
+RITUALE make_program() REDDE SPECULUM AstProgram
+  EVOCA SPECULUM AstProgram program AD CONIURA ast_program_new()
+  EVOCA SPECULUM AstNode body AD CONIURA ast_make_block(1, 1)
+  CONIURA ast_append_statement(body, CONIURA ast_make_redde(CONIURA ast_make_literal_int("5", 1, 1), 1, 1))
+  CONIURA ast_program_append_decl(program, CONIURA ast_make_rituale("main", CONIURA ast_make_type("REX", 1, 1), body, 1, 1))
+  REDDE program
+EXPLICIT RITUALE
+
+RITUALE main() REDDE REX
+  EVOCA SPECULUM AstProgram a AD CONIURA make_program()
+  EVOCA SPECULUM AstProgram b AD CONIURA make_program()
+  EVOCA VERBUM out_a AD CONIURA codegen_generate_program(a, "det.cct")
+  EVOCA VERBUM out_b AD CONIURA codegen_generate_program(b, "det.cct")
+  EVOCA REX rc AD 0
+  SI CONIURA compare(out_a, out_b) != 0
+    VINCIRE rc AD 1
+  FIN SI
+  DIMITTE out_a
+  DIMITTE out_b
+  CONIURA ast_program_free(a)
+  CONIURA ast_program_free(b)
+  REDDE rc
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

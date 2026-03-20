@@ -173,6 +173,38 @@ test: $(TARGET)
 	@echo "Running tests..."
 	@bash tests/run_tests.sh
 
+test-legacy: $(TARGET)
+	@echo "Running legacy/core tests..."
+	@CCT_TEST_GROUP=legacy bash tests/run_tests.sh
+
+test-bootstrap: $(TARGET)
+	@echo "Running bootstrap tests..."
+	@CCT_TEST_GROUP=bootstrap bash tests/run_tests.sh
+
+test-bootstrap-lexer: $(TARGET)
+	@echo "Running bootstrap lexer tests..."
+	@CCT_TEST_GROUP=bootstrap-lexer bash tests/run_tests.sh
+
+test-bootstrap-parser: $(TARGET)
+	@echo "Running bootstrap parser tests..."
+	@CCT_TEST_GROUP=bootstrap-parser bash tests/run_tests.sh
+
+test-bootstrap-semantic: $(TARGET)
+	@echo "Running bootstrap semantic tests..."
+	@CCT_TEST_GROUP=bootstrap-semantic bash tests/run_tests.sh
+
+test-bootstrap-codegen: $(TARGET)
+	@echo "Running bootstrap codegen tests..."
+	@CCT_TEST_GROUP=bootstrap-codegen bash tests/run_tests.sh
+
+test-phase: $(TARGET)
+	@if [ -z "$(PHASE)" ]; then \
+		echo "Usage: make test-phase PHASE=26"; \
+		exit 1; \
+	fi
+	@echo "Running phase-selected tests: $(PHASE)"
+	@CCT_TEST_PHASES=$(PHASE) bash tests/run_tests.sh
+
 cct_lexer_bootstrap: $(TARGET) \
 	src/bootstrap/main_lexer.cct \
 	src/bootstrap/lexer/token_type.cct \
@@ -405,6 +437,13 @@ help:
 	@echo "  all       - Build the compiler (default)"
 	@echo "  clean     - Remove build artifacts"
 	@echo "  test      - Run test suite"
+	@echo "  test-legacy            - Run pre-bootstrap test block (phases before 21)"
+	@echo "  test-bootstrap         - Run bootstrap blocks (phases 21-26)"
+	@echo "  test-bootstrap-lexer   - Run bootstrap lexer block (phase 21)"
+	@echo "  test-bootstrap-parser  - Run bootstrap parser blocks (phases 22-23)"
+	@echo "  test-bootstrap-semantic - Run bootstrap semantic blocks (phases 24-25)"
+	@echo "  test-bootstrap-codegen - Run bootstrap codegen block (phase 26)"
+	@echo "  test-phase PHASE=26    - Run a selected major phase block"
 	@echo "  fmt       - Format .cct sources in lib/, examples/, tests/integration/"
 	@echo "  fmt-check - Check formatting without rewriting files"
 	@echo "  lint      - Run canonical linter over 12E.2 integration fixtures"
@@ -491,4 +530,4 @@ phase12-final-audit: $(TARGET)
 	@echo ""
 	@echo "Audit complete."
 
-.PHONY: all clean test test_fluxus_storage test_diagnostic_taxonomy dist release install uninstall help fmt fmt-check lint lbos-bridge project-build project-run project-test project-test-strict project-bench project-clean doc doc-strict release-check phase12-final-audit
+.PHONY: all clean test test-legacy test-bootstrap test-bootstrap-lexer test-bootstrap-parser test-bootstrap-semantic test-bootstrap-codegen test-phase test_fluxus_storage test_diagnostic_taxonomy dist release install uninstall help fmt fmt-check lint lbos-bridge project-build project-run project-test project-test-strict project-bench project-clean doc doc-strict release-check phase12-final-audit

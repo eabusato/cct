@@ -1,0 +1,11 @@
+INCIPIT grimoire "semantic_gate_generic_valid_nested_type_25e_input"
+SIGILLUM Caixa GENUS(T)
+  valor: T
+FIN SIGILLUM
+SIGILLUM Porta GENUS(U)
+  interno: U
+FIN SIGILLUM
+RITUALE usa(Porta GENUS(Caixa GENUS(REX)) p) REDDE NIHIL
+  REDDE
+EXPLICIT RITUALE
+EXPLICIT grimoire

@@ -1,0 +1,15 @@
+INCIPIT grimoire "codegen_gate_bool_call_26g_input"
+
+RITUALE truth() REDDE VERUM
+  REDDE VERUM
+EXPLICIT RITUALE
+
+RITUALE main() REDDE REX
+  SI truth()
+    REDDE 1
+  ALITER
+    REDDE 0
+  FIN SI
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

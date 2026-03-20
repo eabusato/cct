@@ -1,0 +1,28 @@
+INCIPIT grimoire "codegen_runtime_fail_helper_26f"
+
+ADVOCARE "../../src/bootstrap/codegen/codegen_context.cct"
+ADVOCARE "../../src/bootstrap/codegen/codegen_runtime.cct"
+ADVOCARE "cct/verbum.cct"
+
+RITUALE main() REDDE REX
+  EVOCA SPECULUM CodegenContext ctx AD CONIURA codegen_context_new("fail.cct")
+  CONIURA codegen_require_fail_helper(ctx)
+  CONIURA codegen_runtime_emit_includes(ctx)
+  CONIURA codegen_runtime_emit_fail_helper(ctx)
+  EVOCA VERBUM out AD CONIURA codegen_output(ctx)
+  EVOCA REX rc AD 0
+  SI CONIURA contains(out, "#include <stdio.h>") != VERUM
+    VINCIRE rc AD 1
+  FIN SI
+  SI CONIURA contains(out, "#include <stdlib.h>") != VERUM
+    VINCIRE rc AD 2
+  FIN SI
+  SI CONIURA contains(out, "static void cct_boot_fail") != VERUM
+    VINCIRE rc AD 3
+  FIN SI
+  DIMITTE out
+  CONIURA codegen_context_free(ctx)
+  REDDE rc
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

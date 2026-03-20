@@ -1,0 +1,31 @@
+INCIPIT grimoire "semantic_stmt_quando_basic_24e"
+
+ADVOCARE "../../src/bootstrap/parser/ast.cct"
+ADVOCARE "../../src/bootstrap/semantic/semantic_context.cct"
+ADVOCARE "../../src/bootstrap/semantic/semantic_kind.cct"
+ADVOCARE "../../src/bootstrap/semantic/semantic_stmt.cct"
+
+RITUALE main() REDDE REX
+  EVOCA SPECULUM SemanticContext ctx AD CONIURA semantic_context_new("quando_basic.cct")
+  CONIURA semantic_define(ctx, SEM_SYMBOL_VARIABLE, "x", (*ctx).type_rex, 1, 1)
+
+  EVOCA SPECULUM AstNode quando AD CONIURA ast_make_quando(CONIURA ast_make_identifier("x", 1, 8), 1, 1)
+  EVOCA SPECULUM AstNode case_node AD CONIURA ast_make_case(1, 10)
+  CONIURA ast_append_child(case_node, CONIURA ast_make_literal_int("1", 1, 15))
+  VINCIRE (*case_node).body AD CONIURA ast_make_block(1, 18)
+  VINCIRE (*case_node).has_body AD VERUM
+  CONIURA ast_append_case(quando, case_node)
+  VINCIRE (*quando).else_branch AD CONIURA ast_make_block(1, 20)
+  VINCIRE (*quando).has_else_branch AD VERUM
+
+  CONIURA semantic_analyze_stmt(ctx, quando)
+  SI CONIURA semantic_had_error(ctx)
+    REDDE 41
+  FIN SI
+
+  CONIURA semantic_context_free(ctx)
+  CONIURA ast_node_free(quando)
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

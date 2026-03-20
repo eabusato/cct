@@ -1,0 +1,32 @@
+INCIPIT grimoire "semantic_generic_nested_instance_25b"
+
+ADVOCARE "cct/verbum.cct"
+ADVOCARE "../../src/bootstrap/parser/parser.cct"
+ADVOCARE "../../src/bootstrap/parser/ast.cct"
+ADVOCARE "../../src/bootstrap/semantic/semantic_context.cct"
+ADVOCARE "../../src/bootstrap/semantic/semantic_register.cct"
+ADVOCARE "../../src/bootstrap/semantic/semantic_resolver.cct"
+
+RITUALE main() REDDE REX
+  EVOCA VERBUM src AD "INCIPIT grimoire \"p\" SIGILLUM Caixa GENUS(T) valor: T FIN SIGILLUM SIGILLUM Porta GENUS(U) interno: U FIN SIGILLUM EXPLICIT grimoire"
+  EVOCA SPECULUM AstProgram program AD CONIURA parser_parse_program_source(src, "nested_instance.cct")
+  EVOCA SPECULUM SemanticContext ctx AD CONIURA semantic_context_new("nested_instance.cct")
+  CONIURA semantic_register_program(ctx, program)
+
+  EVOCA SPECULUM AstNode caixa_type AD CONIURA ast_make_type("Caixa", 1, 1)
+  CONIURA ast_append_generic_arg(caixa_type, CONIURA ast_make_type("REX", 1, 10))
+  EVOCA SPECULUM AstNode porta_type AD CONIURA ast_make_type("Porta", 1, 20)
+  CONIURA ast_append_generic_arg(porta_type, caixa_type)
+
+  EVOCA REX type_id AD CONIURA semantic_resolve_type_node(ctx, porta_type)
+  SI CONIURA compare(CONIURA semantic_type_debug_string(ctx, type_id), "Porta GENUS(Caixa GENUS(REX))") != 0
+    REDDE 41
+  FIN SI
+
+  CONIURA ast_node_free(porta_type)
+  CONIURA semantic_context_free(ctx)
+  CONIURA ast_program_free(program)
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

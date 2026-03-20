@@ -1,0 +1,29 @@
+INCIPIT grimoire "codegen_stmt_si_with_else_26c"
+
+ADVOCARE "../../src/bootstrap/codegen/codegen_context.cct"
+ADVOCARE "../../src/bootstrap/codegen/codegen_stmt.cct"
+ADVOCARE "../../src/bootstrap/parser/ast.cct"
+ADVOCARE "cct/verbum.cct"
+
+RITUALE main() REDDE REX
+  EVOCA SPECULUM AstNode cond AD CONIURA ast_make_identifier("ok", 1, 1)
+  EVOCA SPECULUM AstNode then_block AD CONIURA ast_make_block(1, 4)
+  EVOCA SPECULUM AstNode else_block AD CONIURA ast_make_block(1, 10)
+  CONIURA ast_append_statement(then_block, CONIURA ast_make_expr_stmt(CONIURA ast_make_literal_int("1", 1, 6), 1, 6))
+  CONIURA ast_append_statement(else_block, CONIURA ast_make_expr_stmt(CONIURA ast_make_literal_int("0", 1, 12), 1, 12))
+  EVOCA SPECULUM AstNode stmt AD CONIURA ast_make_si(cond, then_block, else_block, 1, 1)
+  EVOCA SPECULUM CodegenContext ctx AD CONIURA codegen_context_new("if_else.cct")
+  CONIURA codegen_emit_stmt(ctx, stmt)
+  EVOCA VERBUM out AD CONIURA codegen_output(ctx)
+  EVOCA VERBUM expected AD "if (ok)\n{\n  1;\n}\nelse\n{\n  0;\n}\n"
+  EVOCA REX rc AD 0
+  SI CONIURA compare(out, expected) != 0
+    VINCIRE rc AD 1
+  FIN SI
+  DIMITTE out
+  CONIURA ast_node_free(stmt)
+  CONIURA codegen_context_free(ctx)
+  REDDE rc
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

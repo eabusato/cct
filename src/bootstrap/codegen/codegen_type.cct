@@ -1,0 +1,66 @@
+INCIPIT grimoire "codegen_type"
+
+ADVOCARE "cct/fmt.cct"
+ADVOCARE "cct/verbum.cct"
+ADVOCARE "../parser/ast.cct"
+ADVOCARE "codegen_context.cct"
+
+RITUALE codegen_basic_c_type_name(SPECULUM CodegenContext ctx, VERBUM type_name, REX line, REX column) REDDE VERBUM
+  SI CONIURA compare(type_name, "REX") == 0
+    REDDE "long long"
+  FIN SI
+  SI CONIURA compare(type_name, "DUX") == 0
+    REDDE "unsigned long long"
+  FIN SI
+  SI CONIURA compare(type_name, "COMES") == 0
+    REDDE "int"
+  FIN SI
+  SI CONIURA compare(type_name, "MILES") == 0
+    REDDE "char"
+  FIN SI
+  SI CONIURA compare(type_name, "UMBRA") == 0
+    REDDE "double"
+  FIN SI
+  SI CONIURA compare(type_name, "FLAMMA") == 0
+    REDDE "float"
+  FIN SI
+  SI CONIURA compare(type_name, "VERUM") == 0
+    REDDE "int"
+  FIN SI
+  SI CONIURA compare(type_name, "VERBUM") == 0
+    REDDE "char*"
+  FIN SI
+  SI CONIURA compare(type_name, "NIHIL") == 0
+    REDDE "void"
+  FIN SI
+  CONIURA codegen_report_error(ctx, line, column, "unsupported type in bootstrap type mapping")
+  REDDE ""
+EXPLICIT RITUALE
+
+RITUALE codegen_type_text(SPECULUM CodegenContext ctx, SPECULUM AstNode type_expr) REDDE VERBUM
+  SI NON (*type_expr).is_pointer ET NON (*type_expr).is_array ET NON (*type_expr).has_type_expr
+    REDDE CONIURA codegen_basic_c_type_name(ctx, (*type_expr).type_name, (*type_expr).line, (*type_expr).column)
+  FIN SI
+
+  SI (*type_expr).is_pointer
+    EVOCA VERBUM base AD CONIURA codegen_basic_c_type_name(ctx, (*type_expr).type_name, (*type_expr).line, (*type_expr).column)
+    SI CONIURA compare(base, "") == 0
+      REDDE ""
+    FIN SI
+    REDDE CONIURA concat(base, "*")
+  FIN SI
+
+  SI (*type_expr).is_array
+    EVOCA VERBUM base AD CONIURA codegen_basic_c_type_name(ctx, (*type_expr).type_name, (*type_expr).line, (*type_expr).column)
+    SI CONIURA compare(base, "") == 0
+      REDDE ""
+    FIN SI
+    EVOCA VERBUM suffix AD CONIURA concat("[", CONIURA concat(CONIURA stringify_int((*type_expr).array_size), "]"))
+    REDDE CONIURA concat(base, suffix)
+  FIN SI
+
+  CONIURA codegen_report_error(ctx, (*type_expr).line, (*type_expr).column, "unsupported complex type in bootstrap type mapping")
+  REDDE ""
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

@@ -1,0 +1,51 @@
+INCIPIT grimoire "semantic_constraint_sigillum_generic_25c"
+
+ADVOCARE "../../src/bootstrap/parser/ast.cct"
+ADVOCARE "../../src/bootstrap/semantic/semantic_context.cct"
+ADVOCARE "../../src/bootstrap/semantic/semantic_register.cct"
+ADVOCARE "../../src/bootstrap/semantic/semantic_resolver.cct"
+
+RITUALE main() REDDE REX
+  EVOCA SPECULUM AstProgram program AD CONIURA ast_program_new()
+
+  EVOCA SPECULUM AstNode pactum AD CONIURA ast_make_pactum("Forma", 1, 1)
+  EVOCA SPECULUM AstNode sig AD CONIURA ast_make_rituale_decl("medir", 1, 10)
+  VINCIRE (*sig).return_type AD CONIURA ast_make_type("REX", 1, 20)
+  VINCIRE (*sig).has_return_type AD VERUM
+  CONIURA ast_append_signature(pactum, sig)
+  CONIURA ast_program_append_decl(program, pactum)
+
+  EVOCA SPECULUM AstNode pixel AD CONIURA ast_make_sigillum("Pixel", 2, 1)
+  CONIURA ast_append_field(pixel, CONIURA ast_make_field("valor", CONIURA ast_make_type("REX", 2, 20), 2, 10))
+  CONIURA ast_program_append_decl(program, pixel)
+
+  EVOCA SPECULUM AstNode medir_body AD CONIURA ast_make_block(3, 1)
+  CONIURA ast_append_statement(medir_body, CONIURA ast_make_redde(CONIURA ast_make_literal_int("1", 3, 20), 3, 10))
+  EVOCA SPECULUM AstNode medir_impl AD CONIURA ast_make_rituale("medir", CONIURA ast_make_type("REX", 3, 1), medir_body, 3, 1)
+  EVOCA SPECULUM AstNode self_type AD CONIURA ast_make_type("Pixel", 3, 15)
+  CONIURA ast_type_mark_pointer(self_type)
+  CONIURA ast_append_param(medir_impl, CONIURA ast_make_param("self", self_type, 3, 10))
+  CONIURA ast_program_append_decl(program, medir_impl)
+
+  EVOCA SPECULUM AstNode caixa AD CONIURA ast_make_sigillum("Caixa", 4, 1)
+  CONIURA ast_append_type_param(caixa, CONIURA ast_make_type_param("T", CONIURA ast_make_type("Forma", 4, 20), 4, 10))
+  CONIURA ast_append_field(caixa, CONIURA ast_make_field("item", CONIURA ast_make_type("T", 4, 30), 4, 25))
+  CONIURA ast_program_append_decl(program, caixa)
+
+  EVOCA SPECULUM SemanticContext ctx AD CONIURA semantic_context_new("constraint_sigillum_generic_25c.cct")
+  CONIURA semantic_register_program(ctx, program)
+
+  EVOCA SPECULUM AstNode type_node AD CONIURA ast_make_type("Caixa", 5, 1)
+  CONIURA ast_append_generic_arg(type_node, CONIURA ast_make_type("Pixel", 5, 10))
+  EVOCA REX type_id AD CONIURA semantic_resolve_type_node(ctx, type_node)
+  SI type_id == (*ctx).type_error VEL (*ctx).had_error != FALSUM
+    REDDE 41
+  FIN SI
+
+  CONIURA ast_node_free(type_node)
+  CONIURA semantic_context_free(ctx)
+  CONIURA ast_program_free(program)
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

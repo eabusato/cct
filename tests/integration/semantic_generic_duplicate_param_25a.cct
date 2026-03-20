@@ -1,0 +1,41 @@
+INCIPIT grimoire "semantic_generic_duplicate_param_25a"
+
+ADVOCARE "cct/fluxus.cct"
+ADVOCARE "cct/verbum.cct"
+ADVOCARE "../../src/bootstrap/parser/ast.cct"
+ADVOCARE "../../src/bootstrap/semantic/semantic_context.cct"
+ADVOCARE "../../src/bootstrap/semantic/semantic_register.cct"
+ADVOCARE "../../src/bootstrap/semantic/semantic_symbol.cct"
+
+RITUALE main() REDDE REX
+  EVOCA SPECULUM AstProgram program AD CONIURA ast_program_new()
+  EVOCA SPECULUM AstNode rituale AD CONIURA ast_make_rituale_decl("dup", 1, 1)
+  CONIURA ast_append_type_param(rituale, CONIURA ast_make_type_param_no_constraint("T", 1, 10))
+  CONIURA ast_append_type_param(rituale, CONIURA ast_make_type_param_no_constraint("T", 1, 13))
+  CONIURA ast_program_append_decl(program, rituale)
+
+  EVOCA SPECULUM SemanticContext ctx AD CONIURA semantic_context_new("dup_type_param.cct")
+  CONIURA semantic_register_program(ctx, program)
+
+  SI (*ctx).had_error != VERUM
+    REDDE 41
+  FIN SI
+  SI (*ctx).error_count != 1
+    REDDE 42
+  FIN SI
+  SI CONIURA compare((*ctx).last_error_message, "duplicate symbol 'T' in same scope") != 0
+    REDDE 43
+  FIN SI
+
+  EVOCA REX rituale_id AD CONIURA semantic_lookup_global(ctx, "dup")
+  EVOCA SPECULUM SemanticSymbol rituale_sym AD CONIURA semantic_symbol_at(ctx, rituale_id)
+  SI CONIURA fluxus_len((*rituale_sym).type_param_ids) != 1
+    REDDE 44
+  FIN SI
+
+  CONIURA semantic_context_free(ctx)
+  CONIURA ast_program_free(program)
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

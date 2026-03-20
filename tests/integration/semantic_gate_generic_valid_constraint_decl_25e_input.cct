@@ -1,0 +1,8 @@
+INCIPIT grimoire "semantic_gate_generic_valid_constraint_decl_25e_input"
+PACTUM Forma
+RITUALE medir() REDDE REX
+FIN PACTUM
+RITUALE aplica GENUS(T PACTUM Forma)(T valor) REDDE T
+  REDDE valor
+EXPLICIT RITUALE
+EXPLICIT grimoire

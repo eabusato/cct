@@ -1,0 +1,47 @@
+INCIPIT grimoire "codegen_emitter"
+
+ADVOCARE "cct/code_writer.cct"
+ADVOCARE "codegen_context.cct"
+
+RITUALE codegen_emit(SPECULUM CodegenContext ctx, VERBUM text) REDDE NIHIL
+  CONIURA writer_write((*ctx).writer, text)
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE codegen_emit_line(SPECULUM CodegenContext ctx, VERBUM text) REDDE NIHIL
+  CONIURA writer_writeln((*ctx).writer, text)
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE codegen_emit_blank_line(SPECULUM CodegenContext ctx) REDDE NIHIL
+  CONIURA writer_writeln((*ctx).writer, "")
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE codegen_indent(SPECULUM CodegenContext ctx) REDDE NIHIL
+  CONIURA writer_indent((*ctx).writer)
+  VINCIRE (*ctx).indent_level AD (*ctx).indent_level + 1
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE codegen_dedent(SPECULUM CodegenContext ctx) REDDE NIHIL
+  SI (*ctx).indent_level > 0
+    CONIURA writer_dedent((*ctx).writer)
+    VINCIRE (*ctx).indent_level AD (*ctx).indent_level - 1
+  FIN SI
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE codegen_emit_block_open(SPECULUM CodegenContext ctx) REDDE NIHIL
+  CONIURA codegen_emit_line(ctx, "{")
+  CONIURA codegen_indent(ctx)
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE codegen_emit_block_close(SPECULUM CodegenContext ctx) REDDE NIHIL
+  CONIURA codegen_dedent(ctx)
+  CONIURA codegen_emit_line(ctx, "}")
+  REDDE
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

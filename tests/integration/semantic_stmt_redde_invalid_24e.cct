@@ -1,0 +1,38 @@
+INCIPIT grimoire "semantic_stmt_redde_invalid_24e"
+
+ADVOCARE "cct/verbum.cct"
+ADVOCARE "../../src/bootstrap/parser/parser.cct"
+ADVOCARE "../../src/bootstrap/parser/ast.cct"
+ADVOCARE "../../src/bootstrap/semantic/semantic_context.cct"
+ADVOCARE "../../src/bootstrap/semantic/semantic_kind.cct"
+ADVOCARE "../../src/bootstrap/semantic/semantic_register.cct"
+ADVOCARE "../../src/bootstrap/semantic/semantic_stmt.cct"
+
+RITUALE main() REDDE REX
+  EVOCA VERBUM src AD "INCIPIT grimoire \"p\" RITUALE main() REDDE REX REDDE 1 EXPLICIT RITUALE EXPLICIT grimoire"
+  EVOCA SPECULUM AstProgram program AD CONIURA parser_parse_program_source(src, "redde_invalid.cct")
+  EVOCA SPECULUM SemanticContext ctx AD CONIURA semantic_context_new("redde_invalid.cct")
+  CONIURA semantic_register_program(ctx, program)
+
+  EVOCA REX rituale_id AD CONIURA semantic_lookup_global(ctx, "main")
+  VINCIRE (*ctx).current_rituale_id AD rituale_id
+  CONIURA semantic_push_scope(ctx, SEM_SCOPE_RITUALE)
+
+  EVOCA SPECULUM AstNode stmt AD CONIURA ast_make_redde(CONIURA ast_make_literal_string("oops", 1, 1), 1, 1)
+  CONIURA semantic_analyze_stmt(ctx, stmt)
+
+  SI NON CONIURA semantic_had_error(ctx)
+    REDDE 41
+  FIN SI
+  SI CONIURA compare((*ctx).last_error_message, "return type mismatch") != 0
+    REDDE 42
+  FIN SI
+
+  CONIURA semantic_pop_scope(ctx)
+  CONIURA semantic_context_free(ctx)
+  CONIURA ast_program_free(program)
+  CONIURA ast_node_free(stmt)
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

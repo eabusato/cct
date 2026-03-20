@@ -1,0 +1,9 @@
+INCIPIT grimoire "gate_scope"
+RITUALE main() REDDE NIHIL
+  EVOCA REX x AD 1
+  {
+    EVOCA REX y AD x
+  }
+  REDDE
+EXPLICIT RITUALE
+EXPLICIT grimoire

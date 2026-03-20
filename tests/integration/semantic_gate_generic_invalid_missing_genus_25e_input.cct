@@ -1,0 +1,8 @@
+INCIPIT grimoire "semantic_gate_generic_invalid_missing_genus_25e_input"
+SIGILLUM Caixa GENUS(T)
+  valor: T
+FIN SIGILLUM
+RITUALE usa(Caixa c) REDDE NIHIL
+  REDDE
+EXPLICIT RITUALE
+EXPLICIT grimoire
