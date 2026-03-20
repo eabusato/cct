@@ -59,12 +59,117 @@ EXPLICIT RITUALE
 
 RITUALE codegen_runtime_emit_includes(SPECULUM CodegenContext ctx) REDDE NIHIL
   CONIURA codegen_emit_line(ctx, "#include <string.h>")
+  SI (*ctx).needs_failure_runtime
+    CONIURA codegen_emit_line(ctx, "#include <setjmp.h>")
+  FIN SI
   SI (*ctx).needs_stdio
     CONIURA codegen_emit_line(ctx, "#include <stdio.h>")
   FIN SI
   SI (*ctx).needs_stdlib
     CONIURA codegen_emit_line(ctx, "#include <stdlib.h>")
   FIN SI
+  CONIURA codegen_emit_blank_line(ctx)
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE codegen_runtime_emit_failure_runtime(SPECULUM CodegenContext ctx) REDDE NIHIL
+  SI NON (*ctx).needs_failure_runtime
+    REDDE
+  FIN SI
+
+  CONIURA codegen_emit_line(ctx, "static jmp_buf *cct_boot_try_top = NULL;")
+  CONIURA codegen_emit_line(ctx, "static const char *cct_boot_error_value = NULL;")
+  CONIURA codegen_emit_blank_line(ctx)
+  CONIURA codegen_emit_line(ctx, "static void cct_boot_throw(const char* message) __attribute__((unused));")
+  CONIURA codegen_emit_line(ctx, "static void cct_boot_throw(const char* message)")
+  CONIURA codegen_emit_block_open(ctx)
+  CONIURA codegen_emit_line(ctx, "cct_boot_error_value = message ? message : \"\";")
+  CONIURA codegen_emit_line(ctx, "if (cct_boot_try_top) longjmp(*cct_boot_try_top, 1);")
+  CONIURA codegen_emit_line(ctx, "cct_boot_fail(cct_boot_error_value);")
+  CONIURA codegen_emit_block_close(ctx)
+  CONIURA codegen_emit_blank_line(ctx)
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE codegen_runtime_emit_fmt_runtime(SPECULUM CodegenContext ctx) REDDE NIHIL
+  SI NON (*ctx).needs_fmt_runtime
+    REDDE
+  FIN SI
+
+  CONIURA codegen_emit_line(ctx, "static char *cct_rt_copy_string(const char *s) __attribute__((unused));")
+  CONIURA codegen_emit_line(ctx, "static char *cct_rt_copy_string(const char *s)")
+  CONIURA codegen_emit_block_open(ctx)
+  CONIURA codegen_emit_line(ctx, "size_t n = strlen(s);")
+  CONIURA codegen_emit_line(ctx, "char *out = (char*)malloc(n + 1);")
+  CONIURA codegen_emit_line(ctx, "if (!out) cct_boot_fail(\"out of memory\");")
+  CONIURA codegen_emit_line(ctx, "memcpy(out, s, n + 1);")
+  CONIURA codegen_emit_line(ctx, "return out;")
+  CONIURA codegen_emit_block_close(ctx)
+  CONIURA codegen_emit_blank_line(ctx)
+
+  CONIURA codegen_emit_line(ctx, "static char *cct_rt_fmt_stringify_int(long long x) __attribute__((unused));")
+  CONIURA codegen_emit_line(ctx, "static char *cct_rt_fmt_stringify_int(long long x)")
+  CONIURA codegen_emit_block_open(ctx)
+  CONIURA codegen_emit_line(ctx, "char buf[64];")
+  CONIURA codegen_emit_line(ctx, "snprintf(buf, sizeof(buf), \"%lld\", x);")
+  CONIURA codegen_emit_line(ctx, "return cct_rt_copy_string(buf);")
+  CONIURA codegen_emit_block_close(ctx)
+  CONIURA codegen_emit_blank_line(ctx)
+
+  CONIURA codegen_emit_line(ctx, "static char *cct_rt_fmt_stringify_real(double x) __attribute__((unused));")
+  CONIURA codegen_emit_line(ctx, "static char *cct_rt_fmt_stringify_real(double x)")
+  CONIURA codegen_emit_block_open(ctx)
+  CONIURA codegen_emit_line(ctx, "char buf[128];")
+  CONIURA codegen_emit_line(ctx, "snprintf(buf, sizeof(buf), \"%.15g\", x);")
+  CONIURA codegen_emit_line(ctx, "return cct_rt_copy_string(buf);")
+  CONIURA codegen_emit_block_close(ctx)
+  CONIURA codegen_emit_blank_line(ctx)
+
+  CONIURA codegen_emit_line(ctx, "static char *cct_rt_fmt_format_1(const char *tmpl, const char *a) __attribute__((unused));")
+  CONIURA codegen_emit_line(ctx, "static char *cct_rt_fmt_format_1(const char *tmpl, const char *a)")
+  CONIURA codegen_emit_block_open(ctx)
+  CONIURA codegen_emit_line(ctx, "const char *hole = strstr(tmpl, \"{}\");")
+  CONIURA codegen_emit_line(ctx, "if (!hole) return cct_rt_copy_string(tmpl);")
+  CONIURA codegen_emit_line(ctx, "size_t prefix = (size_t)(hole - tmpl);")
+  CONIURA codegen_emit_line(ctx, "size_t a_len = strlen(a);")
+  CONIURA codegen_emit_line(ctx, "size_t suffix = strlen(hole + 2);")
+  CONIURA codegen_emit_line(ctx, "char *out = (char*)malloc(prefix + a_len + suffix + 1);")
+  CONIURA codegen_emit_line(ctx, "if (!out) cct_boot_fail(\"out of memory\");")
+  CONIURA codegen_emit_line(ctx, "memcpy(out, tmpl, prefix);")
+  CONIURA codegen_emit_line(ctx, "memcpy(out + prefix, a, a_len);")
+  CONIURA codegen_emit_line(ctx, "memcpy(out + prefix + a_len, hole + 2, suffix + 1);")
+  CONIURA codegen_emit_line(ctx, "return out;")
+  CONIURA codegen_emit_block_close(ctx)
+  CONIURA codegen_emit_blank_line(ctx)
+
+  CONIURA codegen_emit_line(ctx, "static char *cct_rt_fmt_format_2(const char *tmpl, const char *a, const char *b) __attribute__((unused));")
+  CONIURA codegen_emit_line(ctx, "static char *cct_rt_fmt_format_2(const char *tmpl, const char *a, const char *b)")
+  CONIURA codegen_emit_block_open(ctx)
+  CONIURA codegen_emit_line(ctx, "char *step = cct_rt_fmt_format_1(tmpl, a);")
+  CONIURA codegen_emit_line(ctx, "char *out = cct_rt_fmt_format_1(step, b);")
+  CONIURA codegen_emit_line(ctx, "free(step);")
+  CONIURA codegen_emit_line(ctx, "return out;")
+  CONIURA codegen_emit_block_close(ctx)
+  CONIURA codegen_emit_blank_line(ctx)
+
+  CONIURA codegen_emit_line(ctx, "static char *cct_rt_fmt_format_3(const char *tmpl, const char *a, const char *b, const char *c) __attribute__((unused));")
+  CONIURA codegen_emit_line(ctx, "static char *cct_rt_fmt_format_3(const char *tmpl, const char *a, const char *b, const char *c)")
+  CONIURA codegen_emit_block_open(ctx)
+  CONIURA codegen_emit_line(ctx, "char *step = cct_rt_fmt_format_2(tmpl, a, b);")
+  CONIURA codegen_emit_line(ctx, "char *out = cct_rt_fmt_format_1(step, c);")
+  CONIURA codegen_emit_line(ctx, "free(step);")
+  CONIURA codegen_emit_line(ctx, "return out;")
+  CONIURA codegen_emit_block_close(ctx)
+  CONIURA codegen_emit_blank_line(ctx)
+
+  CONIURA codegen_emit_line(ctx, "static char *cct_rt_fmt_format_4(const char *tmpl, const char *a, const char *b, const char *c, const char *d) __attribute__((unused));")
+  CONIURA codegen_emit_line(ctx, "static char *cct_rt_fmt_format_4(const char *tmpl, const char *a, const char *b, const char *c, const char *d)")
+  CONIURA codegen_emit_block_open(ctx)
+  CONIURA codegen_emit_line(ctx, "char *step = cct_rt_fmt_format_3(tmpl, a, b, c);")
+  CONIURA codegen_emit_line(ctx, "char *out = cct_rt_fmt_format_1(step, d);")
+  CONIURA codegen_emit_line(ctx, "free(step);")
+  CONIURA codegen_emit_line(ctx, "return out;")
+  CONIURA codegen_emit_block_close(ctx)
   CONIURA codegen_emit_blank_line(ctx)
   REDDE
 EXPLICIT RITUALE
@@ -150,6 +255,8 @@ RITUALE codegen_generate_translation_unit_with_context(SPECULUM CodegenContext c
   CONIURA codegen_emit_blank_line(ctx)
   CONIURA codegen_runtime_emit_includes(ctx)
   CONIURA codegen_runtime_emit_fail_helper(ctx)
+  CONIURA codegen_runtime_emit_failure_runtime(ctx)
+  CONIURA codegen_runtime_emit_fmt_runtime(ctx)
   CONIURA codegen_runtime_emit_string_pool(ctx)
   CONIURA codegen_emit(ctx, body)
   DIMITTE body

@@ -351,6 +351,10 @@ RITUALE ast_make_expr_stmt(SPECULUM AstNode expr, REX line, REX column) REDDE SP
   REDDE node
 EXPLICIT RITUALE
 
+RITUALE ast_make_molde(REX line, REX column) REDDE SPECULUM AstNode
+  REDDE CONIURA ast_node_new(AST_MOLDE, line, column)
+EXPLICIT RITUALE
+
 RITUALE ast_make_redde(SPECULUM AstNode expr, REX line, REX column) REDDE SPECULUM AstNode
   EVOCA SPECULUM AstNode node AD CONIURA ast_node_new(AST_REDDE, line, column)
   VINCIRE (*node).left AD expr
@@ -522,6 +526,14 @@ RITUALE ast_make_dum(SPECULUM AstNode condition, SPECULUM AstNode body, REX line
   VINCIRE (*node).has_condition AD VERUM
   VINCIRE (*node).has_body AD VERUM
   REDDE node
+EXPLICIT RITUALE
+
+RITUALE ast_make_frange(REX line, REX column) REDDE SPECULUM AstNode
+  REDDE CONIURA ast_node_new(AST_FRANGE, line, column)
+EXPLICIT RITUALE
+
+RITUALE ast_make_recede(REX line, REX column) REDDE SPECULUM AstNode
+  REDDE CONIURA ast_node_new(AST_RECEDE, line, column)
 EXPLICIT RITUALE
 
 RITUALE ast_make_tempta_no_semper(SPECULUM AstNode try_block, SPECULUM AstNode cape_type, VERBUM cape_name, SPECULUM AstNode cape_block, REX line, REX column) REDDE SPECULUM AstNode
@@ -812,6 +824,12 @@ RITUALE ast_dump_node(SPECULUM AstNode node, REX level, VERBUM out) REDDE VERBUM
       VINCIRE out AD CONIURA ast_dump_append_line(out, level + 1, "Body:")
       REDDE CONIURA ast_dump_node((*node).body, level + 2, out)
 
+    CASUS AST_FRANGE:
+      REDDE CONIURA ast_dump_append_line(out, level, CONIURA concat("FRANGE ", location))
+
+    CASUS AST_RECEDE:
+      REDDE CONIURA ast_dump_append_line(out, level, CONIURA concat("RECEDE ", location))
+
     CASUS AST_TEMPTA:
       VINCIRE out AD CONIURA ast_dump_append_line(out, level, CONIURA concat("TEMPTA ", location))
       VINCIRE out AD CONIURA ast_dump_append_line(out, level + 1, "Try:")
@@ -830,6 +848,18 @@ RITUALE ast_dump_node(SPECULUM AstNode node, REX level, VERBUM out) REDDE VERBUM
     CASUS AST_EXPR_STMT:
       VINCIRE out AD CONIURA ast_dump_append_line(out, level, CONIURA concat("EXPR_STMT ", location))
       REDDE CONIURA ast_dump_node((*node).left, level + 1, out)
+
+    CASUS AST_MOLDE:
+      VINCIRE out AD CONIURA ast_dump_append_line(out, level, CONIURA concat("FORMA ", location))
+      VINCIRE out AD CONIURA ast_dump_append_line(out, level + 1, CONIURA concat("Parts: (", CONIURA concat(CONIURA stringify_int(CONIURA ast_node_list_len((*node).children)), ")")))
+      EVOCA REX part_i AD 0
+      EVOCA REX part_n AD CONIURA ast_node_list_len((*node).children)
+      DUM part_i < part_n
+        EVOCA SPECULUM AstNode part AD CONIURA ast_node_list_get((*node).children, part_i)
+        VINCIRE out AD CONIURA ast_dump_node(part, level + 2, out)
+        VINCIRE part_i AD part_i + 1
+      FIN DUM
+      REDDE out
 
     CASUS AST_LITERAL_INT:
       VINCIRE out AD CONIURA ast_dump_append_line(out, level, CONIURA concat("LITERAL_INT ", location))

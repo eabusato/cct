@@ -1,0 +1,5 @@
+---
+triple:          'arm64-apple-darwin'
+binary-path:     'tests/integration/codegen_gate_forma_multi_segment_28d_input.bin'
+relocations:     []
+...

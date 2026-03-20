@@ -1,11 +1,14 @@
 INCIPIT grimoire "codegen_expr"
 
+ADVOCARE "cct/fmt.cct"
 ADVOCARE "cct/verbum.cct"
 ADVOCARE "../lexer/token_type.cct"
 ADVOCARE "../parser/ast.cct"
 ADVOCARE "codegen_context.cct"
 ADVOCARE "codegen_emitter.cct"
 ADVOCARE "codegen.cct"
+ADVOCARE "codegen_forma.cct"
+ADVOCARE "codegen_generic.cct"
 ADVOCARE "codegen_ordo.cct"
 ADVOCARE "codegen_type.cct"
 
@@ -65,7 +68,75 @@ RITUALE codegen_binary_op_text(TokenKind kind) REDDE VERBUM
   REDDE ""
 EXPLICIT RITUALE
 
+RITUALE codegen_forma_emit_argument(SPECULUM CodegenContext ctx, SPECULUM AstNode part) REDDE NIHIL
+  EVOCA VERBUM type_name AD CONIURA codegen_expr_type_name(ctx, part)
+  SI CONIURA compare(type_name, "VERBUM") == 0
+    CONIURA codegen_emit_expr(ctx, part)
+    REDDE
+  FIN SI
+  SI CONIURA compare(type_name, "REX") == 0 VEL CONIURA compare(type_name, "DUX") == 0 VEL CONIURA compare(type_name, "COMES") == 0 VEL CONIURA compare(type_name, "MILES") == 0
+    CONIURA codegen_emit(ctx, "cct_rt_fmt_stringify_int((long long)(")
+    CONIURA codegen_emit_expr(ctx, part)
+    CONIURA codegen_emit(ctx, "))")
+    REDDE
+  FIN SI
+  SI CONIURA compare(type_name, "UMBRA") == 0 VEL CONIURA compare(type_name, "FLAMMA") == 0
+    CONIURA codegen_emit(ctx, "cct_rt_fmt_stringify_real((double)(")
+    CONIURA codegen_emit_expr(ctx, part)
+    CONIURA codegen_emit(ctx, "))")
+    REDDE
+  FIN SI
+  SI CONIURA compare(type_name, "VERUM") == 0
+    CONIURA codegen_emit(ctx, "((")
+    CONIURA codegen_emit_expr(ctx, part)
+    CONIURA codegen_emit(ctx, ") ? \"VERUM\" : \"FALSUM\")")
+    REDDE
+  FIN SI
+  CONIURA codegen_report_error(ctx, (*part).line, (*part).column, "FORMA interpolation type outside bootstrap codegen subset")
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE codegen_emit_forma_expr(SPECULUM CodegenContext ctx, SPECULUM AstNode expr) REDDE NIHIL
+  EVOCA REX arity AD CONIURA codegen_forma_placeholder_count(expr)
+  EVOCA VERBUM template_text AD CONIURA codegen_forma_template_text(expr)
+  EVOCA VERBUM template_symbol AD CONIURA codegen_string_symbol(ctx, template_text)
+  DIMITTE template_text
+
+  SI arity == 0
+    CONIURA codegen_emit(ctx, template_symbol)
+    REDDE
+  FIN SI
+
+  SI arity > 4
+    CONIURA codegen_report_error(ctx, (*expr).line, (*expr).column, "FORMA supports at most 4 interpolations in bootstrap codegen")
+    REDDE
+  FIN SI
+
+  CONIURA codegen_require_fmt_runtime(ctx)
+  CONIURA codegen_emit(ctx, "cct_rt_fmt_format_")
+  CONIURA codegen_emit(ctx, CONIURA stringify_int(arity))
+  CONIURA codegen_emit(ctx, "(")
+  CONIURA codegen_emit(ctx, template_symbol)
+
+  EVOCA REX i AD 0
+  EVOCA REX n AD CONIURA ast_node_list_len((*expr).children)
+  DUM i < n
+    EVOCA SPECULUM AstNode part AD CONIURA ast_node_list_get((*expr).children, i)
+    SI (*part).kind != AST_LITERAL_STRING
+      CONIURA codegen_emit(ctx, ", ")
+      CONIURA codegen_forma_emit_argument(ctx, part)
+    FIN SI
+    VINCIRE i AD i + 1
+  FIN DUM
+
+  CONIURA codegen_emit(ctx, ")")
+  REDDE
+EXPLICIT RITUALE
+
 RITUALE codegen_expr_type_name(SPECULUM CodegenContext ctx, SPECULUM AstNode expr) REDDE VERBUM
+  SI (*expr).kind == AST_MOLDE
+    REDDE "VERBUM"
+  FIN SI
   SI (*expr).kind == AST_LITERAL_INT
     REDDE "REX"
   FIN SI
@@ -100,6 +171,12 @@ RITUALE codegen_expr_type_name(SPECULUM CodegenContext ctx, SPECULUM AstNode exp
   FIN SI
 
   SI (*expr).kind == AST_CALL ET (*(*expr).callee).kind == AST_IDENTIFIER
+    SI CONIURA ast_node_list_len((*(*expr).callee).generic_args) > 0
+      EVOCA VERBUM key AD CONIURA codegen_generic_type_identity_named(ctx, (*(*expr).callee).name, (*(*expr).callee).generic_args, (*expr).line, (*expr).column)
+      EVOCA VERBUM out AD CONIURA codegen_lookup_rituale_return_type(ctx, key)
+      DIMITTE key
+      REDDE out
+    FIN SI
     REDDE CONIURA codegen_lookup_rituale_return_type(ctx, (*(*expr).callee).name)
   FIN SI
 
@@ -116,6 +193,26 @@ RITUALE codegen_expr_type_name(SPECULUM CodegenContext ctx, SPECULUM AstNode exp
       REDDE ""
     FIN SI
     REDDE field_type_name
+  FIN SI
+
+  SI (*expr).kind == AST_UNARY_OP
+    SI (*expr).operator_kind == TK_NON
+      REDDE "VERUM"
+    FIN SI
+    REDDE CONIURA codegen_expr_type_name(ctx, (*expr).left)
+  FIN SI
+
+  SI (*expr).kind == AST_BINARY_OP
+    SI (*expr).operator_kind == TK_LESS VEL (*expr).operator_kind == TK_LESS_EQ VEL (*expr).operator_kind == TK_GREATER VEL (*expr).operator_kind == TK_GREATER_EQ VEL (*expr).operator_kind == TK_EQ_EQ VEL (*expr).operator_kind == TK_BANG_EQ VEL (*expr).operator_kind == TK_ET VEL (*expr).operator_kind == TK_VEL
+      REDDE "VERUM"
+    FIN SI
+
+    EVOCA VERBUM left_type_name AD CONIURA codegen_expr_type_name(ctx, (*expr).left)
+    EVOCA VERBUM right_type_name AD CONIURA codegen_expr_type_name(ctx, (*expr).right)
+    SI CONIURA compare(left_type_name, "UMBRA") == 0 VEL CONIURA compare(left_type_name, "FLAMMA") == 0 VEL CONIURA compare(right_type_name, "UMBRA") == 0 VEL CONIURA compare(right_type_name, "FLAMMA") == 0
+      REDDE "UMBRA"
+    FIN SI
+    REDDE "REX"
   FIN SI
 
   REDDE ""
@@ -212,7 +309,15 @@ RITUALE codegen_emit_call_expr(SPECULUM CodegenContext ctx, SPECULUM AstNode exp
     FIN SI
   FIN SI
 
-  CONIURA codegen_emit(ctx, CONIURA codegen_rituale_c_name(ctx, (*(*expr).callee).name))
+  SI CONIURA ast_node_list_len((*(*expr).callee).generic_args) > 0
+    EVOCA VERBUM materialized AD CONIURA codegen_generic_ensure_rituale_instance(ctx, (*(*expr).callee).name, (*(*expr).callee).generic_args, expr)
+    SI CONIURA compare(materialized, "") == 0
+      REDDE
+    FIN SI
+    CONIURA codegen_emit(ctx, materialized)
+  ALITER
+    CONIURA codegen_emit(ctx, CONIURA codegen_rituale_c_name(ctx, (*(*expr).callee).name))
+  FIN SI
   CONIURA codegen_emit(ctx, "(")
 
   EVOCA REX i AD 0
@@ -261,6 +366,11 @@ RITUALE codegen_emit_condition_expr(SPECULUM CodegenContext ctx, SPECULUM AstNod
 EXPLICIT RITUALE
 
 RITUALE codegen_emit_expr(SPECULUM CodegenContext ctx, SPECULUM AstNode expr) REDDE NIHIL
+  SI (*expr).kind == AST_MOLDE
+    CONIURA codegen_emit_forma_expr(ctx, expr)
+    REDDE
+  FIN SI
+
   SI (*expr).kind == AST_LITERAL_INT VEL (*expr).kind == AST_LITERAL_REAL
     CONIURA codegen_emit(ctx, (*expr).value_text)
     REDDE

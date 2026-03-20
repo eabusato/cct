@@ -106,6 +106,20 @@ RITUALE semantic_analyze_iace_stmt(SPECULUM SemanticContext ctx, SPECULUM AstNod
   REDDE
 EXPLICIT RITUALE
 
+RITUALE semantic_analyze_frange_stmt(SPECULUM SemanticContext ctx, SPECULUM AstNode stmt) REDDE NIHIL
+  SI (*ctx).loop_depth == 0
+    CONIURA semantic_report_error(ctx, (*stmt).line, (*stmt).column, "FRANGE outside loop context")
+  FIN SI
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE semantic_analyze_recede_stmt(SPECULUM SemanticContext ctx, SPECULUM AstNode stmt) REDDE NIHIL
+  SI (*ctx).loop_depth == 0
+    CONIURA semantic_report_error(ctx, (*stmt).line, (*stmt).column, "RECEDE outside loop context")
+  FIN SI
+  REDDE
+EXPLICIT RITUALE
+
 RITUALE semantic_analyze_elige_case(SPECULUM SemanticContext ctx, REX subject_type_id, SPECULUM AstNode case_node) REDDE NIHIL
   EVOCA REX i AD 0
   EVOCA REX n_literals AD CONIURA ast_node_list_len((*case_node).children)
@@ -184,6 +198,16 @@ RITUALE semantic_analyze_stmt(SPECULUM SemanticContext ctx, SPECULUM AstNode stm
 
   SI (*stmt).kind == AST_IACE
     CONIURA semantic_analyze_iace_stmt(ctx, stmt)
+    REDDE
+  FIN SI
+
+  SI (*stmt).kind == AST_FRANGE
+    CONIURA semantic_analyze_frange_stmt(ctx, stmt)
+    REDDE
+  FIN SI
+
+  SI (*stmt).kind == AST_RECEDE
+    CONIURA semantic_analyze_recede_stmt(ctx, stmt)
     REDDE
   FIN SI
 

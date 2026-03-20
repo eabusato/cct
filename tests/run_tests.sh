@@ -133,7 +133,7 @@ cct_phase_block_enabled() {
             cct_csv_contains "bootstrap" "$CCT_TEST_GROUPS_NORMALIZED" || cct_csv_contains "semantic" "$CCT_TEST_GROUPS_NORMALIZED" || cct_csv_contains "bootstrap-semantic" "$CCT_TEST_GROUPS_NORMALIZED" || cct_csv_contains "$phase" "$CCT_TEST_GROUPS_NORMALIZED"
             return $?
             ;;
-        26|27)
+        26|27|28)
             cct_csv_contains "bootstrap" "$CCT_TEST_GROUPS_NORMALIZED" || cct_csv_contains "codegen" "$CCT_TEST_GROUPS_NORMALIZED" || cct_csv_contains "bootstrap-codegen" "$CCT_TEST_GROUPS_NORMALIZED" || cct_csv_contains "$phase" "$CCT_TEST_GROUPS_NORMALIZED"
             return $?
             ;;
@@ -7689,6 +7689,341 @@ if [ "$RC_27C_BOOT" -eq 0 ] && ! src/bootstrap/main_codegen "tests/integration/c
     test_pass "codegen_gate_elige_payload_or_error_27e_input falha claramente para OR-case com payload"
 else
     test_fail "codegen_gate_elige_payload_or_error_27e_input regrediu negativa de ELIGE payload"
+fi
+
+fi
+if cct_phase_block_enabled "28"; then
+echo ""
+echo "========================================"
+echo "FASE 28A: Generic Instantiation Codegen"
+echo "========================================"
+echo ""
+
+cct_phase28a_compile_bootstrap() {
+    cleanup_codegen_artifacts "src/bootstrap/main_codegen.cct"
+    "$CCT_BIN" "src/bootstrap/main_codegen.cct" >"$CCT_TMP_DIR/cct_phase28a_bootstrap_compile.out" 2>&1
+}
+
+cct_phase28a_emit_compile_run() {
+    local src="$1"
+    local base="$2"
+    local expected_rc="$3"
+
+    src/bootstrap/main_codegen "$src" >"$base.c" 2>"$base.codegen.err" || return 21
+    gcc -Wall -Wextra -Werror -std=c11 -O2 -g "$base.c" -o "$base.bin" >"$base.host.out" 2>&1 || return 22
+    "$base.bin" >"$base.run.out" 2>&1
+    local rc=$?
+    [ "$rc" -eq "$expected_rc" ] || return 23
+    return 0
+}
+
+if cct_phase28a_compile_bootstrap; then
+    RC_28A_BOOT=0
+else
+    RC_28A_BOOT=1
+fi
+
+# Test 1648: codegen_gate_generic_rituale_rex_28a_input
+echo "Test 1648: codegen_gate_generic_rituale_rex_28a_input"
+BASE_1648="$CCT_TMP_DIR/cct_phase28a_1648"
+if [ "$RC_28A_BOOT" -eq 0 ] && cct_phase28a_emit_compile_run "tests/integration/codegen_gate_generic_rituale_rex_28a_input.cct" "$BASE_1648" 7 && grep -q "cct_boot_rit_identitas__REX" "$BASE_1648.c"; then
+    test_pass "codegen_gate_generic_rituale_rex_28a_input materializa rituale generica para REX"
+else
+    test_fail "codegen_gate_generic_rituale_rex_28a_input regrediu materializacao de rituale generica REX"
+fi
+
+# Test 1649: codegen_gate_generic_rituale_bool_28a_input
+echo "Test 1649: codegen_gate_generic_rituale_bool_28a_input"
+BASE_1649="$CCT_TMP_DIR/cct_phase28a_1649"
+if [ "$RC_28A_BOOT" -eq 0 ] && cct_phase28a_emit_compile_run "tests/integration/codegen_gate_generic_rituale_bool_28a_input.cct" "$BASE_1649" 1 && grep -q "cct_boot_rit_identitas__VERUM" "$BASE_1649.c"; then
+    test_pass "codegen_gate_generic_rituale_bool_28a_input materializa rituale generica para VERUM"
+else
+    test_fail "codegen_gate_generic_rituale_bool_28a_input regrediu materializacao de rituale generica VERUM"
+fi
+
+# Test 1650: codegen_gate_generic_sigillum_28a_input
+echo "Test 1650: codegen_gate_generic_sigillum_28a_input"
+BASE_1650="$CCT_TMP_DIR/cct_phase28a_1650"
+if [ "$RC_28A_BOOT" -eq 0 ] && cct_phase28a_emit_compile_run "tests/integration/codegen_gate_generic_sigillum_28a_input.cct" "$BASE_1650" 0 && grep -q "struct cct_boot_sig_Caixa__REX" "$BASE_1650.c" && grep -q "long long valor;" "$BASE_1650.c"; then
+    test_pass "codegen_gate_generic_sigillum_28a_input materializa SIGILLUM generica com substituicao de campo"
+else
+    test_fail "codegen_gate_generic_sigillum_28a_input regrediu materializacao de SIGILLUM generica"
+fi
+
+# Test 1651: codegen_gate_generic_sigillum_dedup_28a_input
+echo "Test 1651: codegen_gate_generic_sigillum_dedup_28a_input"
+BASE_1651="$CCT_TMP_DIR/cct_phase28a_1651"
+if [ "$RC_28A_BOOT" -eq 0 ] && cct_phase28a_emit_compile_run "tests/integration/codegen_gate_generic_sigillum_dedup_28a_input.cct" "$BASE_1651" 0 && [ "$(grep -c "typedef struct cct_boot_sig_Caixa__REX cct_boot_sig_Caixa__REX;" "$BASE_1651.c")" -eq 1 ]; then
+    test_pass "codegen_gate_generic_sigillum_dedup_28a_input deduplica instancia repetida de SIGILLUM"
+else
+    test_fail "codegen_gate_generic_sigillum_dedup_28a_input regrediu deduplicacao de SIGILLUM generica"
+fi
+
+# Test 1652: codegen_gate_generic_builtin_error_28a_input
+echo "Test 1652: codegen_gate_generic_builtin_error_28a_input"
+BASE_1652="$CCT_TMP_DIR/cct_phase28a_1652"
+if [ "$RC_28A_BOOT" -eq 0 ] && ! src/bootstrap/main_codegen "tests/integration/codegen_gate_generic_builtin_error_28a_input.cct" >"$BASE_1652.out" 2>"$BASE_1652.err" && grep -q "GENUS(...) applied to builtin type" "$BASE_1652.err"; then
+    test_pass "codegen_gate_generic_builtin_error_28a_input falha claramente para builtin com GENUS"
+else
+    test_fail "codegen_gate_generic_builtin_error_28a_input regrediu negativa de builtin com GENUS"
+fi
+
+# Test 1653: codegen_gate_generic_nongeneric_call_error_28a_input
+echo "Test 1653: codegen_gate_generic_nongeneric_call_error_28a_input"
+BASE_1653="$CCT_TMP_DIR/cct_phase28a_1653"
+if [ "$RC_28A_BOOT" -eq 0 ] && ! src/bootstrap/main_codegen "tests/integration/codegen_gate_generic_nongeneric_call_error_28a_input.cct" >"$BASE_1653.out" 2>"$BASE_1653.err" && grep -q "GENUS(...) applied to non-generic rituale" "$BASE_1653.err"; then
+    test_pass "codegen_gate_generic_nongeneric_call_error_28a_input falha claramente para rituale nao generica"
+else
+    test_fail "codegen_gate_generic_nongeneric_call_error_28a_input regrediu negativa de rituale nao generica"
+fi
+
+echo ""
+echo "========================================"
+echo "FASE 28B: Exception Handling Codegen"
+echo "========================================"
+echo ""
+
+# Test 1654: codegen_gate_tempta_cape_basic_28b_input
+echo "Test 1654: codegen_gate_tempta_cape_basic_28b_input"
+BASE_1654="$CCT_TMP_DIR/cct_phase28b_1654"
+if [ "$RC_28A_BOOT" -eq 0 ] && cct_phase28a_emit_compile_run "tests/integration/codegen_gate_tempta_cape_basic_28b_input.cct" "$BASE_1654" 7 && grep -q "setjmp" "$BASE_1654.c" && grep -q "cct_boot_throw" "$BASE_1654.c"; then
+    test_pass "codegen_gate_tempta_cape_basic_28b_input materializa TEMPTA/CAPE com throw"
+else
+    test_fail "codegen_gate_tempta_cape_basic_28b_input regrediu lowering basico de TEMPTA/CAPE"
+fi
+
+# Test 1655: codegen_gate_tempta_semper_28b_input
+echo "Test 1655: codegen_gate_tempta_semper_28b_input"
+BASE_1655="$CCT_TMP_DIR/cct_phase28b_1655"
+if [ "$RC_28A_BOOT" -eq 0 ] && cct_phase28a_emit_compile_run "tests/integration/codegen_gate_tempta_semper_28b_input.cct" "$BASE_1655" 42 && grep -q "setjmp" "$BASE_1655.c" && grep -q "cct_boot_error_value" "$BASE_1655.c"; then
+    test_pass "codegen_gate_tempta_semper_28b_input executa SEMPER apos CAPE"
+else
+    test_fail "codegen_gate_tempta_semper_28b_input regrediu SEMPER em fluxo com excecao"
+fi
+
+# Test 1656: codegen_gate_tempta_no_throw_semper_28b_input
+echo "Test 1656: codegen_gate_tempta_no_throw_semper_28b_input"
+BASE_1656="$CCT_TMP_DIR/cct_phase28b_1656"
+if [ "$RC_28A_BOOT" -eq 0 ] && cct_phase28a_emit_compile_run "tests/integration/codegen_gate_tempta_no_throw_semper_28b_input.cct" "$BASE_1656" 8 && grep -q "setjmp" "$BASE_1656.c"; then
+    test_pass "codegen_gate_tempta_no_throw_semper_28b_input executa SEMPER sem throw"
+else
+    test_fail "codegen_gate_tempta_no_throw_semper_28b_input regrediu SEMPER sem excecao"
+fi
+
+# Test 1657: codegen_gate_tempta_nested_rethrow_28b_input
+echo "Test 1657: codegen_gate_tempta_nested_rethrow_28b_input"
+BASE_1657="$CCT_TMP_DIR/cct_phase28b_1657"
+if [ "$RC_28A_BOOT" -eq 0 ] && cct_phase28a_emit_compile_run "tests/integration/codegen_gate_tempta_nested_rethrow_28b_input.cct" "$BASE_1657" 5 && [ "$(grep -c "setjmp" "$BASE_1657.c")" -ge 2 ]; then
+    test_pass "codegen_gate_tempta_nested_rethrow_28b_input suporta nesting com rethrow"
+else
+    test_fail "codegen_gate_tempta_nested_rethrow_28b_input regrediu nesting de TEMPTA"
+fi
+
+# Test 1658: codegen_gate_tempta_bad_cape_type_28b_input
+echo "Test 1658: codegen_gate_tempta_bad_cape_type_28b_input"
+BASE_1658="$CCT_TMP_DIR/cct_phase28b_1658"
+if [ "$RC_28A_BOOT" -eq 0 ] && ! src/bootstrap/main_codegen "tests/integration/codegen_gate_tempta_bad_cape_type_28b_input.cct" >"$BASE_1658.out" 2>"$BASE_1658.err" && grep -q "TEMPTA/CAPE type outside bootstrap failure subset" "$BASE_1658.err"; then
+    test_pass "codegen_gate_tempta_bad_cape_type_28b_input falha claramente para tipo fora do subset"
+else
+    test_fail "codegen_gate_tempta_bad_cape_type_28b_input regrediu negativa de tipo em CAPE"
+fi
+
+# Test 1659: codegen_gate_tempta_uncaught_28b_input
+echo "Test 1659: codegen_gate_tempta_uncaught_28b_input"
+BASE_1659="$CCT_TMP_DIR/cct_phase28b_1659"
+if [ "$RC_28A_BOOT" -eq 0 ] && cct_phase28a_emit_compile_run "tests/integration/codegen_gate_tempta_uncaught_28b_input.cct" "$BASE_1659" 1 && grep -q "uncaught" "$BASE_1659.run.out"; then
+    test_pass "codegen_gate_tempta_uncaught_28b_input usa fail helper para throw sem handler"
+else
+    test_fail "codegen_gate_tempta_uncaught_28b_input regrediu fallback de throw sem handler"
+fi
+
+echo ""
+echo "========================================"
+echo "FASE 28C: Advanced Control Flow Codegen"
+echo "========================================"
+echo ""
+
+# Test 1660: codegen_gate_frange_basic_28c_input
+echo "Test 1660: codegen_gate_frange_basic_28c_input"
+BASE_1660="$CCT_TMP_DIR/cct_phase28c_1660"
+if [ "$RC_28A_BOOT" -eq 0 ] && cct_phase28a_emit_compile_run "tests/integration/codegen_gate_frange_basic_28c_input.cct" "$BASE_1660" 7 && grep -q "goto __cct_label_" "$BASE_1660.c"; then
+    test_pass "codegen_gate_frange_basic_28c_input suporta FRANGE com label de loop"
+else
+    test_fail "codegen_gate_frange_basic_28c_input regrediu lowering de FRANGE"
+fi
+
+# Test 1661: codegen_gate_recede_basic_28c_input
+echo "Test 1661: codegen_gate_recede_basic_28c_input"
+BASE_1661="$CCT_TMP_DIR/cct_phase28c_1661"
+if [ "$RC_28A_BOOT" -eq 0 ] && cct_phase28a_emit_compile_run "tests/integration/codegen_gate_recede_basic_28c_input.cct" "$BASE_1661" 4 && [ "$(grep -c "goto __cct_label_" "$BASE_1661.c")" -ge 2 ]; then
+    test_pass "codegen_gate_recede_basic_28c_input suporta RECEDE com label de loop"
+else
+    test_fail "codegen_gate_recede_basic_28c_input regrediu lowering de RECEDE"
+fi
+
+# Test 1662: codegen_gate_nested_loop_frange_28c_input
+echo "Test 1662: codegen_gate_nested_loop_frange_28c_input"
+BASE_1662="$CCT_TMP_DIR/cct_phase28c_1662"
+if [ "$RC_28A_BOOT" -eq 0 ] && cct_phase28a_emit_compile_run "tests/integration/codegen_gate_nested_loop_frange_28c_input.cct" "$BASE_1662" 3 && [ "$(grep -c "__cct_label_" "$BASE_1662.c")" -ge 4 ]; then
+    test_pass "codegen_gate_nested_loop_frange_28c_input suporta labels distintos em loops aninhados"
+else
+    test_fail "codegen_gate_nested_loop_frange_28c_input regrediu loops aninhados com FRANGE"
+fi
+
+# Test 1663: codegen_gate_elige_frange_28c_input
+echo "Test 1663: codegen_gate_elige_frange_28c_input"
+BASE_1663="$CCT_TMP_DIR/cct_phase28c_1663"
+if [ "$RC_28A_BOOT" -eq 0 ] && cct_phase28a_emit_compile_run "tests/integration/codegen_gate_elige_frange_28c_input.cct" "$BASE_1663" 9 && grep -q "switch (" "$BASE_1663.c" && grep -q "goto __cct_label_" "$BASE_1663.c"; then
+    test_pass "codegen_gate_elige_frange_28c_input combina ELIGE com FRANGE corretamente"
+else
+    test_fail "codegen_gate_elige_frange_28c_input regrediu FRANGE dentro de ELIGE"
+fi
+
+# Test 1664: codegen_gate_tempta_recede_28c_input
+echo "Test 1664: codegen_gate_tempta_recede_28c_input"
+BASE_1664="$CCT_TMP_DIR/cct_phase28c_1664"
+if [ "$RC_28A_BOOT" -eq 0 ] && cct_phase28a_emit_compile_run "tests/integration/codegen_gate_tempta_recede_28c_input.cct" "$BASE_1664" 8 && grep -q "setjmp" "$BASE_1664.c" && grep -q "goto __cct_label_" "$BASE_1664.c"; then
+    test_pass "codegen_gate_tempta_recede_28c_input combina TEMPTA com RECEDE corretamente"
+else
+    test_fail "codegen_gate_tempta_recede_28c_input regrediu RECEDE dentro de TEMPTA"
+fi
+
+# Test 1665: codegen_gate_frange_outside_loop_28c_input
+echo "Test 1665: codegen_gate_frange_outside_loop_28c_input"
+BASE_1665="$CCT_TMP_DIR/cct_phase28c_1665"
+if [ "$RC_28A_BOOT" -eq 0 ] && ! src/bootstrap/main_codegen "tests/integration/codegen_gate_frange_outside_loop_28c_input.cct" >"$BASE_1665.out" 2>"$BASE_1665.err" && grep -q "FRANGE outside loop context" "$BASE_1665.err"; then
+    test_pass "codegen_gate_frange_outside_loop_28c_input falha claramente fora de loop"
+else
+    test_fail "codegen_gate_frange_outside_loop_28c_input regrediu negativa de FRANGE fora de loop"
+fi
+
+echo ""
+echo "========================================"
+echo "FASE 28D: FORMA Codegen"
+echo "========================================"
+echo ""
+
+# Test 1666: codegen_gate_forma_literal_28d_input
+echo "Test 1666: codegen_gate_forma_literal_28d_input"
+BASE_1666="$CCT_TMP_DIR/cct_phase28d_1666"
+if [ "$RC_28A_BOOT" -eq 0 ] && cct_phase28a_emit_compile_run "tests/integration/codegen_gate_forma_literal_28d_input.cct" "$BASE_1666" 1 && grep -q "cct_boot_str_" "$BASE_1666.c"; then
+    test_pass "codegen_gate_forma_literal_28d_input suporta FORMA sem interpolacao"
+else
+    test_fail "codegen_gate_forma_literal_28d_input regrediu FORMA literal"
+fi
+
+# Test 1667: codegen_gate_forma_multi_segment_28d_input
+echo "Test 1667: codegen_gate_forma_multi_segment_28d_input"
+BASE_1667="$CCT_TMP_DIR/cct_phase28d_1667"
+if [ "$RC_28A_BOOT" -eq 0 ] && cct_phase28a_emit_compile_run "tests/integration/codegen_gate_forma_multi_segment_28d_input.cct" "$BASE_1667" 2 && grep -q "cct_rt_fmt_format_2" "$BASE_1667.c"; then
+    test_pass "codegen_gate_forma_multi_segment_28d_input suporta multiplos segmentos"
+else
+    test_fail "codegen_gate_forma_multi_segment_28d_input regrediu FORMA com multiplos segmentos"
+fi
+
+# Test 1668: codegen_gate_forma_verbum_28d_input
+echo "Test 1668: codegen_gate_forma_verbum_28d_input"
+BASE_1668="$CCT_TMP_DIR/cct_phase28d_1668"
+if [ "$RC_28A_BOOT" -eq 0 ] && cct_phase28a_emit_compile_run "tests/integration/codegen_gate_forma_verbum_28d_input.cct" "$BASE_1668" 3 && grep -q "cct_rt_fmt_format_1" "$BASE_1668.c"; then
+    test_pass "codegen_gate_forma_verbum_28d_input suporta interpolacao VERBUM"
+else
+    test_fail "codegen_gate_forma_verbum_28d_input regrediu interpolacao VERBUM"
+fi
+
+# Test 1669: codegen_gate_forma_call_28d_input
+echo "Test 1669: codegen_gate_forma_call_28d_input"
+BASE_1669="$CCT_TMP_DIR/cct_phase28d_1669"
+if [ "$RC_28A_BOOT" -eq 0 ] && cct_phase28a_emit_compile_run "tests/integration/codegen_gate_forma_call_28d_input.cct" "$BASE_1669" 4 && grep -q "cct_rt_fmt_stringify_int" "$BASE_1669.c"; then
+    test_pass "codegen_gate_forma_call_28d_input suporta chamadas e interpolacao numerica"
+else
+    test_fail "codegen_gate_forma_call_28d_input regrediu FORMA com chamada/temporario"
+fi
+
+# Test 1670: codegen_gate_forma_bool_28d_input
+echo "Test 1670: codegen_gate_forma_bool_28d_input"
+BASE_1670="$CCT_TMP_DIR/cct_phase28d_1670"
+if [ "$RC_28A_BOOT" -eq 0 ] && cct_phase28a_emit_compile_run "tests/integration/codegen_gate_forma_bool_28d_input.cct" "$BASE_1670" 5 && grep -q '\"VERUM\" : \"FALSUM\"' "$BASE_1670.c"; then
+    test_pass "codegen_gate_forma_bool_28d_input suporta interpolacao de VERUM"
+else
+    test_fail "codegen_gate_forma_bool_28d_input regrediu interpolacao de VERUM"
+fi
+
+# Test 1671: codegen_gate_forma_too_many_28d_input
+echo "Test 1671: codegen_gate_forma_too_many_28d_input"
+BASE_1671="$CCT_TMP_DIR/cct_phase28d_1671"
+if [ "$RC_28A_BOOT" -eq 0 ] && ! src/bootstrap/main_codegen "tests/integration/codegen_gate_forma_too_many_28d_input.cct" >"$BASE_1671.out" 2>"$BASE_1671.err" && grep -q "FORMA supports at most 4 interpolations" "$BASE_1671.err"; then
+    test_pass "codegen_gate_forma_too_many_28d_input falha claramente fora do shape suportado"
+else
+    test_fail "codegen_gate_forma_too_many_28d_input regrediu negativa de FORMA"
+fi
+
+echo ""
+echo "========================================"
+echo "FASE 28E: Validation Gate"
+echo "========================================"
+echo ""
+
+# Test 1672: phase28 gate generic rituale
+echo "Test 1672: phase28 gate generic rituale"
+BASE_1672="$CCT_TMP_DIR/cct_phase28e_1672"
+if [ "$RC_28A_BOOT" -eq 0 ] && cct_phase28a_emit_compile_run "tests/integration/codegen_gate_generic_rituale_rex_28a_input.cct" "$BASE_1672" 7 && grep -q "cct_boot_rit_identitas__REX" "$BASE_1672.c"; then
+    test_pass "phase28 gate confirma rituale generica materializada"
+else
+    test_fail "phase28 gate regrediu rituale generica"
+fi
+
+# Test 1673: phase28 gate generic sigillum dedup
+echo "Test 1673: phase28 gate generic sigillum dedup"
+BASE_1673="$CCT_TMP_DIR/cct_phase28e_1673"
+if [ "$RC_28A_BOOT" -eq 0 ] && cct_phase28a_emit_compile_run "tests/integration/codegen_gate_generic_sigillum_dedup_28a_input.cct" "$BASE_1673" 0 && [ "$(grep -c "typedef struct cct_boot_sig_Caixa__REX cct_boot_sig_Caixa__REX;" "$BASE_1673.c")" -eq 1 ]; then
+    test_pass "phase28 gate confirma dedup de SIGILLUM generica"
+else
+    test_fail "phase28 gate regrediu dedup de SIGILLUM generica"
+fi
+
+# Test 1674: phase28 gate tempta/semper
+echo "Test 1674: phase28 gate tempta/semper"
+BASE_1674="$CCT_TMP_DIR/cct_phase28e_1674"
+if [ "$RC_28A_BOOT" -eq 0 ] && cct_phase28a_emit_compile_run "tests/integration/codegen_gate_tempta_semper_28b_input.cct" "$BASE_1674" 42 && grep -q "setjmp" "$BASE_1674.c"; then
+    test_pass "phase28 gate confirma TEMPTA/CAPE/SEMPER"
+else
+    test_fail "phase28 gate regrediu TEMPTA/CAPE/SEMPER"
+fi
+
+# Test 1675: phase28 gate advanced flow
+echo "Test 1675: phase28 gate advanced flow"
+BASE_1675="$CCT_TMP_DIR/cct_phase28e_1675"
+if [ "$RC_28A_BOOT" -eq 0 ] && cct_phase28a_emit_compile_run "tests/integration/codegen_gate_elige_frange_28c_input.cct" "$BASE_1675" 9 && grep -q "goto __cct_label_" "$BASE_1675.c"; then
+    test_pass "phase28 gate confirma controle de fluxo avancado"
+else
+    test_fail "phase28 gate regrediu controle de fluxo avancado"
+fi
+
+# Test 1676: phase28 gate forma
+echo "Test 1676: phase28 gate forma"
+BASE_1676="$CCT_TMP_DIR/cct_phase28e_1676"
+if [ "$RC_28A_BOOT" -eq 0 ] && cct_phase28a_emit_compile_run "tests/integration/codegen_gate_forma_call_28d_input.cct" "$BASE_1676" 4 && grep -q "cct_rt_fmt_format_1" "$BASE_1676.c"; then
+    test_pass "phase28 gate confirma FORMA"
+else
+    test_fail "phase28 gate regrediu FORMA"
+fi
+
+# Test 1677: phase28 gate combined fixture
+echo "Test 1677: phase28 gate combined fixture"
+BASE_1677="$CCT_TMP_DIR/cct_phase28e_1677"
+if [ "$RC_28A_BOOT" -eq 0 ] && cct_phase28a_emit_compile_run "tests/integration/codegen_gate_phase28_combined_28e_input.cct" "$BASE_1677" 6 && grep -q "cct_boot_rit_ident__REX" "$BASE_1677.c" && grep -q "setjmp" "$BASE_1677.c" && grep -q "cct_rt_fmt_format_1" "$BASE_1677.c"; then
+    test_pass "phase28 gate confirma fixture combinada"
+else
+    test_fail "phase28 gate regrediu fixture combinada"
+fi
+
+# Test 1678: phase28 gate negative outside subset
+echo "Test 1678: phase28 gate negative outside subset"
+BASE_1678="$CCT_TMP_DIR/cct_phase28e_1678"
+if [ "$RC_28A_BOOT" -eq 0 ] && ! src/bootstrap/main_codegen "tests/integration/codegen_gate_forma_too_many_28d_input.cct" >"$BASE_1678.out" 2>"$BASE_1678.err" && grep -q "FORMA supports at most 4 interpolations" "$BASE_1678.err"; then
+    test_pass "phase28 gate confirma negativa clara fora do subset"
+else
+    test_fail "phase28 gate regrediu negativa final do subset"
 fi
 
 fi

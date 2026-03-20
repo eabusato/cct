@@ -1,0 +1,22 @@
+INCIPIT grimoire "codegen_gate_tempta_nested_rethrow_28b_input"
+
+RITUALE main() REDDE REX
+  EVOCA REX x AD 0
+  TEMPTA
+    TEMPTA
+      IACE "inner"
+    CAPE FRACTUM e
+      VINCIRE x AD x + 4
+      IACE e
+    SEMPER
+      VINCIRE x AD x + 1
+    FIN TEMPTA
+  CAPE FRACTUM outer
+    VINCIRE x AD x + 4
+  SEMPER
+    VINCIRE x AD x + 1
+  FIN TEMPTA
+  REDDE x
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

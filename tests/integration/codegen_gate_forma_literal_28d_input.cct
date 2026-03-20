@@ -1,0 +1,13 @@
+INCIPIT grimoire "codegen_gate_forma_literal_28d_input"
+
+RITUALE main() REDDE REX
+  EVOCA VERBUM msg AD FORMA "salve"
+  ELIGE msg
+  CASUS "salve":
+    REDDE 1
+  ALIOQUIN:
+    REDDE 9
+  FIN ELIGE
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

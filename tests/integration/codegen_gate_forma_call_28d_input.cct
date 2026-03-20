@@ -1,0 +1,17 @@
+INCIPIT grimoire "codegen_gate_forma_call_28d_input"
+
+RITUALE inc(REX x) REDDE REX
+  REDDE x + 1
+EXPLICIT RITUALE
+
+RITUALE main() REDDE REX
+  EVOCA VERBUM msg AD FORMA "v={inc(2)}"
+  ELIGE msg
+  CASUS "v=3":
+    REDDE 4
+  ALIOQUIN:
+    REDDE 9
+  FIN ELIGE
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

@@ -1,0 +1,9 @@
+INCIPIT grimoire "codegen_failure"
+
+ADVOCARE "cct/verbum.cct"
+
+RITUALE codegen_failure_supported_cape_type(VERBUM type_name) REDDE VERUM
+  REDDE CONIURA compare(type_name, "FRACTUM") == 0 VEL CONIURA compare(type_name, "VERBUM") == 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

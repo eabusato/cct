@@ -1,0 +1,15 @@
+INCIPIT grimoire "codegen_gate_forma_multi_segment_28d_input"
+
+RITUALE main() REDDE REX
+  EVOCA REX a AD 2
+  EVOCA REX b AD 5
+  EVOCA VERBUM msg AD FORMA "a={a},b={b}"
+  ELIGE msg
+  CASUS "a=2,b=5":
+    REDDE 2
+  ALIOQUIN:
+    REDDE 9
+  FIN ELIGE
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

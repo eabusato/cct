@@ -1,0 +1,432 @@
+INCIPIT grimoire "codegen_generic"
+
+ADVOCARE "cct/fluxus.cct"
+ADVOCARE "cct/fmt.cct"
+ADVOCARE "cct/verbum.cct"
+ADVOCARE "cct/verbum_builder.cct"
+ADVOCARE "../parser/ast.cct"
+ADVOCARE "codegen.cct"
+ADVOCARE "codegen_context.cct"
+
+RITUALE codegen_generic_is_builtin_type_name(VERBUM type_name) REDDE VERUM
+  REDDE CONIURA compare(type_name, "REX") == 0 VEL CONIURA compare(type_name, "DUX") == 0 VEL CONIURA compare(type_name, "COMES") == 0 VEL CONIURA compare(type_name, "MILES") == 0 VEL CONIURA compare(type_name, "UMBRA") == 0 VEL CONIURA compare(type_name, "FLAMMA") == 0 VEL CONIURA compare(type_name, "VERUM") == 0 VEL CONIURA compare(type_name, "VERBUM") == 0 VEL CONIURA compare(type_name, "NIHIL") == 0 VEL CONIURA compare(type_name, "FRACTUM") == 0
+EXPLICIT RITUALE
+
+RITUALE codegen_generic_type_identity(SPECULUM CodegenContext ctx, SPECULUM AstNode type_expr) REDDE VERBUM
+  SI (*type_expr).is_pointer
+    EVOCA REX bound_ptr_idx AD CONIURA codegen_find_generic_binding_index(ctx, (*type_expr).type_name)
+    SI bound_ptr_idx >= 0
+      EVOCA SPECULUM AstNode bound_ptr AD CONIURA codegen_lookup_generic_binding(ctx, (*type_expr).type_name)
+      EVOCA VERBUM out_bound_ptr AD CONIURA codegen_generic_type_identity(ctx, bound_ptr)
+      EVOCA VERBUM out_ptr AD CONIURA concat("SPECULUM(", out_bound_ptr)
+      DIMITTE out_bound_ptr
+      EVOCA VERBUM out_ptr_final AD CONIURA concat(out_ptr, ")")
+      DIMITTE out_ptr
+      REDDE out_ptr_final
+    FIN SI
+  FIN SI
+
+  SI (*type_expr).is_array
+    EVOCA REX bound_array_idx AD CONIURA codegen_find_generic_binding_index(ctx, (*type_expr).type_name)
+    EVOCA VERBUM elem_identity AD ""
+    SI bound_array_idx >= 0
+      EVOCA SPECULUM AstNode bound_array AD CONIURA codegen_lookup_generic_binding(ctx, (*type_expr).type_name)
+      VINCIRE elem_identity AD CONIURA codegen_generic_type_identity(ctx, bound_array)
+    ALITER
+      SI CONIURA ast_node_list_len((*type_expr).generic_args) > 0
+        VINCIRE elem_identity AD CONIURA codegen_generic_type_identity_named(ctx, (*type_expr).type_name, (*type_expr).generic_args, (*type_expr).line, (*type_expr).column)
+      ALITER
+        VINCIRE elem_identity AD CONIURA verbum_dup((*type_expr).type_name)
+      FIN SI
+    FIN SI
+    EVOCA VERBUM prefix AD CONIURA concat("SERIES(", elem_identity)
+    EVOCA VERBUM middle AD CONIURA concat(prefix, ")[")
+    EVOCA VERBUM size_text AD CONIURA stringify_int((*type_expr).array_size)
+    EVOCA VERBUM body AD CONIURA concat(middle, size_text)
+    EVOCA VERBUM out AD CONIURA concat(body, "]")
+    DIMITTE elem_identity
+    DIMITTE prefix
+    DIMITTE middle
+    DIMITTE size_text
+    DIMITTE body
+    REDDE out
+  FIN SI
+
+  EVOCA REX bound_idx AD CONIURA codegen_find_generic_binding_index(ctx, (*type_expr).type_name)
+  SI bound_idx >= 0
+    EVOCA SPECULUM AstNode bound AD CONIURA codegen_lookup_generic_binding(ctx, (*type_expr).type_name)
+    REDDE CONIURA codegen_generic_type_identity(ctx, bound)
+  FIN SI
+
+  SI CONIURA ast_node_list_len((*type_expr).generic_args) > 0
+    REDDE CONIURA codegen_generic_type_identity_named(ctx, (*type_expr).type_name, (*type_expr).generic_args, (*type_expr).line, (*type_expr).column)
+  FIN SI
+
+  REDDE CONIURA verbum_dup((*type_expr).type_name)
+EXPLICIT RITUALE
+
+RITUALE codegen_generic_sanitize_identifier(VERBUM raw) REDDE VERBUM
+  EVOCA SPECULUM NIHIL b AD CONIURA builder_init()
+  EVOCA REX i AD 0
+  EVOCA REX n AD CONIURA len(raw)
+  DUM i < n
+    EVOCA MILES ch AD CONIURA char_at(raw, i)
+    SI ch >= 48 ET ch <= 57
+      CONIURA builder_append_char(b, ch)
+    ALITER
+      SI ch >= 65 ET ch <= 90
+        CONIURA builder_append_char(b, ch)
+      ALITER
+        SI ch >= 97 ET ch <= 122
+          CONIURA builder_append_char(b, ch)
+        ALITER
+          CONIURA builder_append_char(b, 95)
+        FIN SI
+      FIN SI
+    FIN SI
+    VINCIRE i AD i + 1
+  FIN DUM
+  EVOCA VERBUM out AD CONIURA builder_to_verbum(b)
+  CONIURA builder_free(b)
+  REDDE out
+EXPLICIT RITUALE
+
+RITUALE codegen_generic_type_arg_suffix(SPECULUM CodegenContext ctx, SPECULUM NIHIL type_args) REDDE VERBUM
+  EVOCA SPECULUM NIHIL b AD CONIURA builder_init()
+  EVOCA REX i AD 0
+  EVOCA REX n AD CONIURA ast_node_list_len(type_args)
+  DUM i < n
+    EVOCA SPECULUM AstNode arg AD CONIURA ast_node_list_get(type_args, i)
+    EVOCA VERBUM identity AD CONIURA codegen_generic_type_identity(ctx, arg)
+    EVOCA VERBUM safe AD CONIURA codegen_generic_sanitize_identifier(identity)
+    SI i > 0
+      CONIURA builder_append(b, "__")
+    FIN SI
+    CONIURA builder_append(b, safe)
+    DIMITTE identity
+    DIMITTE safe
+    VINCIRE i AD i + 1
+  FIN DUM
+  EVOCA VERBUM out AD CONIURA builder_to_verbum(b)
+  CONIURA builder_free(b)
+  REDDE out
+EXPLICIT RITUALE
+
+RITUALE codegen_generic_instance_key(VERBUM source_name, VERBUM suffix) REDDE VERBUM
+  EVOCA VERBUM left AD CONIURA concat(source_name, "<")
+  EVOCA VERBUM right AD CONIURA concat(left, suffix)
+  EVOCA VERBUM out AD CONIURA concat(right, ">")
+  DIMITTE left
+  DIMITTE right
+  REDDE out
+EXPLICIT RITUALE
+
+RITUALE codegen_generic_type_identity_named(SPECULUM CodegenContext ctx, VERBUM type_name, SPECULUM NIHIL type_args, REX line, REX column) REDDE VERBUM
+  SI CONIURA codegen_generic_is_builtin_type_name(type_name)
+    CONIURA codegen_report_error(ctx, line, column, "GENUS(...) applied to builtin type in bootstrap codegen")
+    REDDE CONIURA verbum_dup("")
+  FIN SI
+
+  EVOCA VERBUM suffix AD CONIURA codegen_generic_type_arg_suffix(ctx, type_args)
+  EVOCA VERBUM out AD CONIURA codegen_generic_instance_key(type_name, suffix)
+  DIMITTE suffix
+  REDDE out
+EXPLICIT RITUALE
+
+RITUALE codegen_generic_make_sigillum_c_name(SPECULUM CodegenContext ctx, VERBUM source_name, SPECULUM NIHIL type_args) REDDE VERBUM
+  EVOCA VERBUM suffix AD CONIURA codegen_generic_type_arg_suffix(ctx, type_args)
+  EVOCA VERBUM out AD CONIURA concat(CONIURA concat("cct_boot_sig_", source_name), CONIURA concat("__", suffix))
+  DIMITTE suffix
+  REDDE out
+EXPLICIT RITUALE
+
+RITUALE codegen_generic_make_rituale_c_name(SPECULUM CodegenContext ctx, VERBUM source_name, SPECULUM NIHIL type_args) REDDE VERBUM
+  EVOCA VERBUM suffix AD CONIURA codegen_generic_type_arg_suffix(ctx, type_args)
+  EVOCA VERBUM out AD CONIURA concat(CONIURA concat("cct_boot_rit_", source_name), CONIURA concat("__", suffix))
+  DIMITTE suffix
+  REDDE out
+EXPLICIT RITUALE
+
+RITUALE codegen_generic_bind_template_args(SPECULUM CodegenContext ctx, SPECULUM AstNode template_decl, SPECULUM NIHIL type_args) REDDE NIHIL
+  CONIURA codegen_push_generic_binding_scope(ctx)
+  EVOCA REX i AD 0
+  EVOCA REX n AD CONIURA ast_node_list_len((*template_decl).type_params)
+  DUM i < n
+    EVOCA SPECULUM AstNode param AD CONIURA ast_node_list_get((*template_decl).type_params, i)
+    EVOCA SPECULUM AstNode arg AD CONIURA ast_node_list_get(type_args, i)
+    CONIURA codegen_define_generic_binding(ctx, (*param).name, arg)
+    VINCIRE i AD i + 1
+  FIN DUM
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE codegen_generic_unbind_template_args(SPECULUM CodegenContext ctx) REDDE NIHIL
+  CONIURA codegen_pop_generic_binding_scope(ctx)
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE codegen_generic_scan_type_use(SPECULUM CodegenContext ctx, SPECULUM AstNode type_expr) REDDE NIHIL
+  EVOCA REX bound_idx AD CONIURA codegen_find_generic_binding_index(ctx, (*type_expr).type_name)
+  SI bound_idx >= 0
+    EVOCA SPECULUM AstNode bound AD CONIURA codegen_lookup_generic_binding(ctx, (*type_expr).type_name)
+    CONIURA codegen_generic_scan_type_use(ctx, bound)
+    REDDE
+  FIN SI
+
+  SI CONIURA ast_node_list_len((*type_expr).generic_args) > 0
+    CONIURA codegen_generic_ensure_sigillum_instance(ctx, (*type_expr).type_name, (*type_expr).generic_args, type_expr)
+  FIN SI
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE codegen_generic_scan_expr_use(SPECULUM CodegenContext ctx, SPECULUM AstNode expr) REDDE NIHIL
+  SI (*expr).kind == AST_MOLDE
+    EVOCA REX part_i AD 0
+    EVOCA REX part_n AD CONIURA ast_node_list_len((*expr).children)
+    DUM part_i < part_n
+      EVOCA SPECULUM AstNode part AD CONIURA ast_node_list_get((*expr).children, part_i)
+      SI (*part).kind != AST_LITERAL_STRING
+        CONIURA codegen_generic_scan_expr_use(ctx, part)
+      FIN SI
+      VINCIRE part_i AD part_i + 1
+    FIN DUM
+    REDDE
+  FIN SI
+
+  SI (*expr).kind == AST_CALL
+    CONIURA codegen_generic_scan_expr_use(ctx, (*expr).callee)
+    EVOCA REX arg_i AD 0
+    EVOCA REX arg_n AD CONIURA ast_node_list_len((*expr).arguments)
+    DUM arg_i < arg_n
+      CONIURA codegen_generic_scan_expr_use(ctx, CONIURA ast_node_list_get((*expr).arguments, arg_i))
+      VINCIRE arg_i AD arg_i + 1
+    FIN DUM
+    SI (*(*expr).callee).kind == AST_IDENTIFIER ET CONIURA ast_node_list_len((*(*expr).callee).generic_args) > 0
+      CONIURA codegen_generic_ensure_rituale_instance(ctx, (*(*expr).callee).name, (*(*expr).callee).generic_args, expr)
+    FIN SI
+    REDDE
+  FIN SI
+
+  SI (*expr).kind == AST_FIELD_ACCESS VEL (*expr).kind == AST_INDEX_ACCESS VEL (*expr).kind == AST_BINARY_OP VEL (*expr).kind == AST_UNARY_OP VEL (*expr).kind == AST_VINCIRE
+    SI (*expr).has_left
+      CONIURA codegen_generic_scan_expr_use(ctx, (*expr).left)
+    FIN SI
+    SI (*expr).has_right
+      CONIURA codegen_generic_scan_expr_use(ctx, (*expr).right)
+    FIN SI
+    REDDE
+  FIN SI
+
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE codegen_generic_scan_stmt_use(SPECULUM CodegenContext ctx, SPECULUM AstNode stmt) REDDE NIHIL
+  SI (*stmt).kind == AST_BLOCK
+    EVOCA REX i AD 0
+    EVOCA REX n AD CONIURA ast_node_list_len((*stmt).statements)
+    DUM i < n
+      CONIURA codegen_generic_scan_stmt_use(ctx, CONIURA ast_node_list_get((*stmt).statements, i))
+      VINCIRE i AD i + 1
+    FIN DUM
+    REDDE
+  FIN SI
+
+  SI (*stmt).kind == AST_EVOCA
+    CONIURA codegen_generic_scan_type_use(ctx, (*stmt).type_expr)
+    SI (*stmt).has_right
+      CONIURA codegen_generic_scan_expr_use(ctx, (*stmt).right)
+    FIN SI
+    REDDE
+  FIN SI
+
+  SI (*stmt).kind == AST_VINCIRE VEL (*stmt).kind == AST_EXPR_STMT VEL (*stmt).kind == AST_REDDE VEL (*stmt).kind == AST_IACE
+    SI (*stmt).has_left
+      CONIURA codegen_generic_scan_expr_use(ctx, (*stmt).left)
+    FIN SI
+    SI (*stmt).has_right
+      CONIURA codegen_generic_scan_expr_use(ctx, (*stmt).right)
+    FIN SI
+    REDDE
+  FIN SI
+
+  SI (*stmt).kind == AST_SI VEL (*stmt).kind == AST_DUM VEL (*stmt).kind == AST_QUANDO
+    SI (*stmt).has_condition
+      CONIURA codegen_generic_scan_expr_use(ctx, (*stmt).condition)
+    FIN SI
+    SI (*stmt).has_body
+      CONIURA codegen_generic_scan_stmt_use(ctx, (*stmt).body)
+    FIN SI
+    SI (*stmt).has_else_branch
+      CONIURA codegen_generic_scan_stmt_use(ctx, (*stmt).else_branch)
+    FIN SI
+    EVOCA REX case_i AD 0
+    EVOCA REX case_n AD CONIURA ast_node_list_len((*stmt).cases)
+    DUM case_i < case_n
+      EVOCA SPECULUM AstNode case_node AD CONIURA ast_node_list_get((*stmt).cases, case_i)
+      CONIURA codegen_generic_scan_stmt_use(ctx, (*case_node).body)
+      VINCIRE case_i AD case_i + 1
+    FIN DUM
+    REDDE
+  FIN SI
+
+  SI (*stmt).kind == AST_TEMPTA
+    CONIURA codegen_generic_scan_stmt_use(ctx, (*stmt).try_block)
+    CONIURA codegen_generic_scan_type_use(ctx, (*stmt).cape_type)
+    CONIURA codegen_generic_scan_stmt_use(ctx, (*stmt).cape_block)
+    SI (*stmt).has_semper_block
+      CONIURA codegen_generic_scan_stmt_use(ctx, (*stmt).semper_block)
+    FIN SI
+    REDDE
+  FIN SI
+
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE codegen_generic_scan_decl_use(SPECULUM CodegenContext ctx, SPECULUM AstNode decl) REDDE NIHIL
+  SI (*decl).kind == AST_SIGILLUM
+    SI CONIURA ast_node_list_len((*decl).type_params) > 0
+      REDDE
+    FIN SI
+    EVOCA REX field_i AD 0
+    EVOCA REX field_n AD CONIURA ast_node_list_len((*decl).fields)
+    DUM field_i < field_n
+      EVOCA SPECULUM AstNode field AD CONIURA ast_node_list_get((*decl).fields, field_i)
+      CONIURA codegen_generic_scan_type_use(ctx, (*field).type_expr)
+      VINCIRE field_i AD field_i + 1
+    FIN DUM
+    REDDE
+  FIN SI
+
+  SI (*decl).kind == AST_RITUALE
+    SI CONIURA ast_node_list_len((*decl).type_params) > 0
+      REDDE
+    FIN SI
+    EVOCA REX i AD 0
+    EVOCA REX n AD CONIURA ast_node_list_len((*decl).params)
+    DUM i < n
+      EVOCA SPECULUM AstNode param AD CONIURA ast_node_list_get((*decl).params, i)
+      CONIURA codegen_generic_scan_type_use(ctx, (*param).type_expr)
+      VINCIRE i AD i + 1
+    FIN DUM
+    SI (*decl).has_return_type
+      CONIURA codegen_generic_scan_type_use(ctx, (*decl).return_type)
+    FIN SI
+    CONIURA codegen_generic_scan_stmt_use(ctx, (*decl).body)
+    REDDE
+  FIN SI
+
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE codegen_generic_collect_program_uses(SPECULUM CodegenContext ctx, SPECULUM AstProgram program) REDDE NIHIL
+  EVOCA REX i AD 0
+  EVOCA REX n AD CONIURA ast_node_list_len((*program).declarations)
+  DUM i < n
+    CONIURA codegen_generic_scan_decl_use(ctx, CONIURA ast_node_list_get((*program).declarations, i))
+    VINCIRE i AD i + 1
+  FIN DUM
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE codegen_generic_ensure_sigillum_instance(SPECULUM CodegenContext ctx, VERBUM source_name, SPECULUM NIHIL type_args, SPECULUM AstNode at) REDDE VERBUM
+  EVOCA REX templ_idx AD CONIURA codegen_find_generic_sigillum_template_index(ctx, source_name)
+  SI templ_idx < 0
+    CONIURA codegen_report_error(ctx, (*at).line, (*at).column, "GENUS(...) applied to non-generic SIGILLUM in bootstrap codegen")
+    REDDE ""
+  FIN SI
+  EVOCA SPECULUM AstNode templ AD CONIURA codegen_lookup_generic_sigillum_template(ctx, source_name)
+
+  EVOCA REX expected AD CONIURA ast_node_list_len((*templ).type_params)
+  EVOCA REX actual AD CONIURA ast_node_list_len(type_args)
+  SI expected != actual
+    CONIURA codegen_report_error(ctx, (*at).line, (*at).column, "generic SIGILLUM arity mismatch in bootstrap codegen")
+    REDDE ""
+  FIN SI
+
+  EVOCA VERBUM suffix AD CONIURA codegen_generic_type_arg_suffix(ctx, type_args)
+  EVOCA VERBUM instance_key AD CONIURA codegen_generic_instance_key(source_name, suffix)
+  EVOCA VERBUM existing AD CONIURA codegen_lookup_sigillum_c_name(ctx, instance_key)
+  SI CONIURA compare(existing, "") != 0
+    DIMITTE suffix
+    DIMITTE instance_key
+    REDDE existing
+  FIN SI
+
+  EVOCA VERBUM c_name AD CONIURA codegen_generic_make_sigillum_c_name(ctx, source_name, type_args)
+  CONIURA codegen_register_sigillum(ctx, instance_key, c_name)
+  CONIURA codegen_register_generic_sigillum_instance(ctx, instance_key, c_name, templ, type_args)
+
+  CONIURA codegen_generic_bind_template_args(ctx, templ, type_args)
+  EVOCA REX field_i AD 0
+  EVOCA REX field_n AD CONIURA ast_node_list_len((*templ).fields)
+  DUM field_i < field_n
+    EVOCA SPECULUM AstNode field AD CONIURA ast_node_list_get((*templ).fields, field_i)
+    EVOCA VERBUM field_identity AD CONIURA codegen_generic_type_identity(ctx, (*field).type_expr)
+    CONIURA codegen_sigillum_append_field(ctx, instance_key, (*field).name, field_identity)
+    CONIURA codegen_generic_scan_type_use(ctx, (*field).type_expr)
+    DIMITTE field_identity
+    VINCIRE field_i AD field_i + 1
+  FIN DUM
+  CONIURA codegen_generic_unbind_template_args(ctx)
+
+  DIMITTE suffix
+  DIMITTE instance_key
+  REDDE c_name
+EXPLICIT RITUALE
+
+RITUALE codegen_generic_rituale_return_identity(SPECULUM CodegenContext ctx, SPECULUM AstNode templ) REDDE VERBUM
+  SI NON (*templ).has_return_type
+    REDDE CONIURA verbum_dup("NIHIL")
+  FIN SI
+  REDDE CONIURA codegen_generic_type_identity(ctx, (*templ).return_type)
+EXPLICIT RITUALE
+
+RITUALE codegen_generic_ensure_rituale_instance(SPECULUM CodegenContext ctx, VERBUM source_name, SPECULUM NIHIL type_args, SPECULUM AstNode at) REDDE VERBUM
+  EVOCA REX templ_idx AD CONIURA codegen_find_generic_rituale_template_index(ctx, source_name)
+  SI templ_idx < 0
+    CONIURA codegen_report_error(ctx, (*at).line, (*at).column, "GENUS(...) applied to non-generic rituale in bootstrap codegen")
+    REDDE ""
+  FIN SI
+  EVOCA SPECULUM AstNode templ AD CONIURA codegen_lookup_generic_rituale_template(ctx, source_name)
+
+  EVOCA REX expected AD CONIURA ast_node_list_len((*templ).type_params)
+  EVOCA REX actual AD CONIURA ast_node_list_len(type_args)
+  SI expected != actual
+    CONIURA codegen_report_error(ctx, (*at).line, (*at).column, "generic rituale arity mismatch in bootstrap codegen")
+    REDDE ""
+  FIN SI
+
+  EVOCA VERBUM suffix AD CONIURA codegen_generic_type_arg_suffix(ctx, type_args)
+  EVOCA VERBUM instance_key AD CONIURA codegen_generic_instance_key(source_name, suffix)
+  EVOCA VERBUM existing AD CONIURA codegen_lookup_rituale_c_name(ctx, instance_key)
+  SI CONIURA compare(existing, "") != 0
+    DIMITTE suffix
+    DIMITTE instance_key
+    REDDE existing
+  FIN SI
+
+  EVOCA VERBUM c_name AD CONIURA codegen_generic_make_rituale_c_name(ctx, source_name, type_args)
+  CONIURA codegen_generic_bind_template_args(ctx, templ, type_args)
+  EVOCA VERBUM return_identity AD CONIURA codegen_generic_rituale_return_identity(ctx, templ)
+  CONIURA codegen_register_rituale_c_name(ctx, instance_key, c_name, return_identity)
+  CONIURA codegen_register_generic_rituale_instance(ctx, instance_key, c_name, return_identity, templ, type_args)
+  EVOCA REX param_i AD 0
+  EVOCA REX param_n AD CONIURA ast_node_list_len((*templ).params)
+  DUM param_i < param_n
+    EVOCA SPECULUM AstNode param AD CONIURA ast_node_list_get((*templ).params, param_i)
+    CONIURA codegen_generic_scan_type_use(ctx, (*param).type_expr)
+    VINCIRE param_i AD param_i + 1
+  FIN DUM
+  SI (*templ).has_return_type
+    CONIURA codegen_generic_scan_type_use(ctx, (*templ).return_type)
+  FIN SI
+  CONIURA codegen_generic_scan_stmt_use(ctx, (*templ).body)
+  CONIURA codegen_generic_unbind_template_args(ctx)
+
+  DIMITTE return_identity
+  DIMITTE suffix
+  DIMITTE instance_key
+  REDDE c_name
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

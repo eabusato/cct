@@ -1,0 +1,19 @@
+INCIPIT grimoire "codegen_gate_elige_frange_28c_input"
+
+RITUALE main() REDDE REX
+  EVOCA REX x AD 1
+  EVOCA REX total AD 0
+  DUM VERUM
+    ELIGE x
+    CASUS 1:
+      VINCIRE total AD 9
+      FRANGE
+    ALIOQUIN:
+      VINCIRE total AD 99
+    FIN ELIGE
+    VINCIRE total AD 77
+  FIN DUM
+  REDDE total
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

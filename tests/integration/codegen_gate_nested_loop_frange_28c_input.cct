@@ -1,0 +1,16 @@
+INCIPIT grimoire "codegen_gate_nested_loop_frange_28c_input"
+
+RITUALE main() REDDE REX
+  EVOCA REX outer AD 0
+  EVOCA REX hits AD 0
+  DUM outer < 3
+    VINCIRE outer AD outer + 1
+    DUM VERUM
+      VINCIRE hits AD hits + 1
+      FRANGE
+    FIN DUM
+  FIN DUM
+  REDDE hits
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

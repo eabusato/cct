@@ -1,0 +1,16 @@
+INCIPIT grimoire "codegen_gate_recede_basic_28c_input"
+
+RITUALE main() REDDE REX
+  EVOCA REX x AD 0
+  EVOCA REX y AD 0
+  DUM x < 5
+    VINCIRE x AD x + 1
+    SI x == 3
+      RECEDE
+    FIN SI
+    VINCIRE y AD y + 1
+  FIN DUM
+  REDDE y
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

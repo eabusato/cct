@@ -67,6 +67,46 @@ SIGILLUM CodegenStringLiteral
   owns_symbol_name: VERUM
 FIN SIGILLUM
 
+SIGILLUM CodegenGenericSigillumTemplate
+  source_name: VERBUM
+  owns_source_name: VERUM
+  decl_node: SPECULUM AstNode
+  arity: REX
+FIN SIGILLUM
+
+SIGILLUM CodegenGenericSigillumInstance
+  instance_key: VERBUM
+  owns_instance_key: VERUM
+  c_name: VERBUM
+  owns_c_name: VERUM
+  template_decl: SPECULUM AstNode
+  type_args: SPECULUM NIHIL
+FIN SIGILLUM
+
+SIGILLUM CodegenGenericRitualeTemplate
+  source_name: VERBUM
+  owns_source_name: VERUM
+  decl_node: SPECULUM AstNode
+  arity: REX
+FIN SIGILLUM
+
+SIGILLUM CodegenGenericRitualeInstance
+  instance_key: VERBUM
+  owns_instance_key: VERUM
+  c_name: VERBUM
+  owns_c_name: VERUM
+  return_type_name: VERBUM
+  owns_return_type_name: VERUM
+  template_decl: SPECULUM AstNode
+  type_args: SPECULUM NIHIL
+FIN SIGILLUM
+
+SIGILLUM CodegenGenericBinding
+  param_name: VERBUM
+  owns_param_name: VERUM
+  type_expr: SPECULUM AstNode
+FIN SIGILLUM
+
 SIGILLUM CodegenContext
   filename: VERBUM
   owns_filename: VERUM
@@ -83,14 +123,24 @@ SIGILLUM CodegenContext
   rituale_names: SPECULUM NIHIL
   local_names: SPECULUM NIHIL
   local_scope_marks: SPECULUM NIHIL
+  loop_break_labels: SPECULUM NIHIL
+  loop_continue_labels: SPECULUM NIHIL
   sigillum_types: SPECULUM NIHIL
   ordo_types: SPECULUM NIHIL
   string_literals: SPECULUM NIHIL
+  generic_sigillum_templates: SPECULUM NIHIL
+  generic_sigillum_instances: SPECULUM NIHIL
+  generic_rituale_templates: SPECULUM NIHIL
+  generic_rituale_instances: SPECULUM NIHIL
+  generic_bindings: SPECULUM NIHIL
+  generic_binding_marks: SPECULUM NIHIL
   current_return_type: VERBUM
   owns_current_return_type: VERUM
   needs_stdio: VERUM
   needs_stdlib: VERUM
   needs_fail_helper: VERUM
+  needs_failure_runtime: VERUM
+  needs_fmt_runtime: VERUM
 FIN SIGILLUM
 
 RITUALE codegen_heap_alloc(REX bytes) REDDE SPECULUM NIHIL
@@ -133,6 +183,26 @@ EXPLICIT RITUALE
 
 RITUALE codegen_context_ordo_item_at(SPECULUM CodegenOrdo ordo, REX idx) REDDE SPECULUM CodegenOrdoItem
   REDDE CONIURA fluxus_get((*ordo).items, idx)
+EXPLICIT RITUALE
+
+RITUALE codegen_context_generic_sigillum_template_at(SPECULUM CodegenContext ctx, REX idx) REDDE SPECULUM CodegenGenericSigillumTemplate
+  REDDE CONIURA fluxus_get((*ctx).generic_sigillum_templates, idx)
+EXPLICIT RITUALE
+
+RITUALE codegen_context_generic_sigillum_instance_at(SPECULUM CodegenContext ctx, REX idx) REDDE SPECULUM CodegenGenericSigillumInstance
+  REDDE CONIURA fluxus_get((*ctx).generic_sigillum_instances, idx)
+EXPLICIT RITUALE
+
+RITUALE codegen_context_generic_rituale_template_at(SPECULUM CodegenContext ctx, REX idx) REDDE SPECULUM CodegenGenericRitualeTemplate
+  REDDE CONIURA fluxus_get((*ctx).generic_rituale_templates, idx)
+EXPLICIT RITUALE
+
+RITUALE codegen_context_generic_rituale_instance_at(SPECULUM CodegenContext ctx, REX idx) REDDE SPECULUM CodegenGenericRitualeInstance
+  REDDE CONIURA fluxus_get((*ctx).generic_rituale_instances, idx)
+EXPLICIT RITUALE
+
+RITUALE codegen_context_generic_binding_at(SPECULUM CodegenContext ctx, REX idx) REDDE SPECULUM CodegenGenericBinding
+  REDDE CONIURA fluxus_get((*ctx).generic_bindings, idx)
 EXPLICIT RITUALE
 
 RITUALE codegen_context_free_records(SPECULUM CodegenContext ctx) REDDE NIHIL
@@ -179,6 +249,20 @@ RITUALE codegen_context_free_locals(SPECULUM CodegenContext ctx) REDDE NIHIL
   FIN DUM
   CONIURA fluxus_clear((*ctx).local_names)
   CONIURA fluxus_clear((*ctx).local_scope_marks)
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE codegen_context_free_loop_labels(SPECULUM CodegenContext ctx) REDDE NIHIL
+  DUM CONIURA fluxus_len((*ctx).loop_break_labels) > 0
+    EVOCA VERBUM label AD ""
+    CONIURA fluxus_pop((*ctx).loop_break_labels, SPECULUM label)
+    DIMITTE label
+  FIN DUM
+  DUM CONIURA fluxus_len((*ctx).loop_continue_labels) > 0
+    EVOCA VERBUM label AD ""
+    CONIURA fluxus_pop((*ctx).loop_continue_labels, SPECULUM label)
+    DIMITTE label
+  FIN DUM
   REDDE
 EXPLICIT RITUALE
 
@@ -273,6 +357,94 @@ RITUALE codegen_context_free_ordo_types(SPECULUM CodegenContext ctx) REDDE NIHIL
   REDDE
 EXPLICIT RITUALE
 
+RITUALE codegen_context_free_generic_sigillum_templates(SPECULUM CodegenContext ctx) REDDE NIHIL
+  EVOCA REX i AD 0
+  EVOCA REX n AD CONIURA fluxus_len((*ctx).generic_sigillum_templates)
+  DUM i < n
+    EVOCA SPECULUM CodegenGenericSigillumTemplate item AD CONIURA codegen_context_generic_sigillum_template_at(ctx, i)
+    SI (*item).owns_source_name
+      DIMITTE (*item).source_name
+      VINCIRE (*item).owns_source_name AD FALSUM
+    FIN SI
+    VINCIRE i AD i + 1
+  FIN DUM
+  CONIURA fluxus_clear((*ctx).generic_sigillum_templates)
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE codegen_context_free_generic_sigillum_instances(SPECULUM CodegenContext ctx) REDDE NIHIL
+  EVOCA REX i AD 0
+  EVOCA REX n AD CONIURA fluxus_len((*ctx).generic_sigillum_instances)
+  DUM i < n
+    EVOCA SPECULUM CodegenGenericSigillumInstance item AD CONIURA codegen_context_generic_sigillum_instance_at(ctx, i)
+    SI (*item).owns_instance_key
+      DIMITTE (*item).instance_key
+      VINCIRE (*item).owns_instance_key AD FALSUM
+    FIN SI
+    SI (*item).owns_c_name
+      DIMITTE (*item).c_name
+      VINCIRE (*item).owns_c_name AD FALSUM
+    FIN SI
+    VINCIRE i AD i + 1
+  FIN DUM
+  CONIURA fluxus_clear((*ctx).generic_sigillum_instances)
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE codegen_context_free_generic_rituale_templates(SPECULUM CodegenContext ctx) REDDE NIHIL
+  EVOCA REX i AD 0
+  EVOCA REX n AD CONIURA fluxus_len((*ctx).generic_rituale_templates)
+  DUM i < n
+    EVOCA SPECULUM CodegenGenericRitualeTemplate item AD CONIURA codegen_context_generic_rituale_template_at(ctx, i)
+    SI (*item).owns_source_name
+      DIMITTE (*item).source_name
+      VINCIRE (*item).owns_source_name AD FALSUM
+    FIN SI
+    VINCIRE i AD i + 1
+  FIN DUM
+  CONIURA fluxus_clear((*ctx).generic_rituale_templates)
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE codegen_context_free_generic_rituale_instances(SPECULUM CodegenContext ctx) REDDE NIHIL
+  EVOCA REX i AD 0
+  EVOCA REX n AD CONIURA fluxus_len((*ctx).generic_rituale_instances)
+  DUM i < n
+    EVOCA SPECULUM CodegenGenericRitualeInstance item AD CONIURA codegen_context_generic_rituale_instance_at(ctx, i)
+    SI (*item).owns_instance_key
+      DIMITTE (*item).instance_key
+      VINCIRE (*item).owns_instance_key AD FALSUM
+    FIN SI
+    SI (*item).owns_c_name
+      DIMITTE (*item).c_name
+      VINCIRE (*item).owns_c_name AD FALSUM
+    FIN SI
+    SI (*item).owns_return_type_name
+      DIMITTE (*item).return_type_name
+      VINCIRE (*item).owns_return_type_name AD FALSUM
+    FIN SI
+    VINCIRE i AD i + 1
+  FIN DUM
+  CONIURA fluxus_clear((*ctx).generic_rituale_instances)
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE codegen_context_free_generic_bindings(SPECULUM CodegenContext ctx) REDDE NIHIL
+  EVOCA REX i AD 0
+  EVOCA REX n AD CONIURA fluxus_len((*ctx).generic_bindings)
+  DUM i < n
+    EVOCA SPECULUM CodegenGenericBinding item AD CONIURA codegen_context_generic_binding_at(ctx, i)
+    SI (*item).owns_param_name
+      DIMITTE (*item).param_name
+      VINCIRE (*item).owns_param_name AD FALSUM
+    FIN SI
+    VINCIRE i AD i + 1
+  FIN DUM
+  CONIURA fluxus_clear((*ctx).generic_bindings)
+  CONIURA fluxus_clear((*ctx).generic_binding_marks)
+  REDDE
+EXPLICIT RITUALE
+
 RITUALE codegen_context_new(VERBUM filename) REDDE SPECULUM CodegenContext
   EVOCA SPECULUM NIHIL raw AD CONIURA codegen_heap_alloc(MENSURA(CodegenContext))
   CONIURA codegen_heap_zero(raw, MENSURA(CodegenContext))
@@ -286,9 +458,17 @@ RITUALE codegen_context_new(VERBUM filename) REDDE SPECULUM CodegenContext
   VINCIRE (*ctx).rituale_names AD CONIURA fluxus_init(MENSURA(CodegenRitualeName))
   VINCIRE (*ctx).local_names AD CONIURA fluxus_init(MENSURA(CodegenLocal))
   VINCIRE (*ctx).local_scope_marks AD CONIURA fluxus_init(MENSURA(REX))
+  VINCIRE (*ctx).loop_break_labels AD CONIURA fluxus_init(MENSURA(VERBUM))
+  VINCIRE (*ctx).loop_continue_labels AD CONIURA fluxus_init(MENSURA(VERBUM))
   VINCIRE (*ctx).sigillum_types AD CONIURA fluxus_init(MENSURA(CodegenSigillum))
   VINCIRE (*ctx).ordo_types AD CONIURA fluxus_init(MENSURA(CodegenOrdo))
   VINCIRE (*ctx).string_literals AD CONIURA fluxus_init(MENSURA(CodegenStringLiteral))
+  VINCIRE (*ctx).generic_sigillum_templates AD CONIURA fluxus_init(MENSURA(CodegenGenericSigillumTemplate))
+  VINCIRE (*ctx).generic_sigillum_instances AD CONIURA fluxus_init(MENSURA(CodegenGenericSigillumInstance))
+  VINCIRE (*ctx).generic_rituale_templates AD CONIURA fluxus_init(MENSURA(CodegenGenericRitualeTemplate))
+  VINCIRE (*ctx).generic_rituale_instances AD CONIURA fluxus_init(MENSURA(CodegenGenericRitualeInstance))
+  VINCIRE (*ctx).generic_bindings AD CONIURA fluxus_init(MENSURA(CodegenGenericBinding))
+  VINCIRE (*ctx).generic_binding_marks AD CONIURA fluxus_init(MENSURA(REX))
   VINCIRE (*ctx).current_return_type AD CONIURA verbum_dup("NIHIL")
   VINCIRE (*ctx).owns_current_return_type AD VERUM
 
@@ -316,9 +496,15 @@ RITUALE codegen_context_reset(SPECULUM CodegenContext ctx) REDDE NIHIL
   VINCIRE (*ctx).last_error_column AD 0
   CONIURA codegen_context_free_records(ctx)
   CONIURA codegen_context_free_locals(ctx)
+  CONIURA codegen_context_free_loop_labels(ctx)
   CONIURA codegen_context_free_sigillum_types(ctx)
   CONIURA codegen_context_free_ordo_types(ctx)
   CONIURA codegen_context_free_string_literals(ctx)
+  CONIURA codegen_context_free_generic_sigillum_templates(ctx)
+  CONIURA codegen_context_free_generic_sigillum_instances(ctx)
+  CONIURA codegen_context_free_generic_rituale_templates(ctx)
+  CONIURA codegen_context_free_generic_rituale_instances(ctx)
+  CONIURA codegen_context_free_generic_bindings(ctx)
   SI (*ctx).owns_current_return_type
     DIMITTE (*ctx).current_return_type
   FIN SI
@@ -327,6 +513,8 @@ RITUALE codegen_context_reset(SPECULUM CodegenContext ctx) REDDE NIHIL
   VINCIRE (*ctx).needs_stdio AD FALSUM
   VINCIRE (*ctx).needs_stdlib AD FALSUM
   VINCIRE (*ctx).needs_fail_helper AD FALSUM
+  VINCIRE (*ctx).needs_failure_runtime AD FALSUM
+  VINCIRE (*ctx).needs_fmt_runtime AD FALSUM
   REDDE
 EXPLICIT RITUALE
 
@@ -339,15 +527,29 @@ RITUALE codegen_context_free(SPECULUM CodegenContext ctx) REDDE NIHIL
   FIN SI
   CONIURA codegen_context_free_records(ctx)
   CONIURA codegen_context_free_locals(ctx)
+  CONIURA codegen_context_free_loop_labels(ctx)
   CONIURA codegen_context_free_sigillum_types(ctx)
   CONIURA codegen_context_free_ordo_types(ctx)
   CONIURA codegen_context_free_string_literals(ctx)
+  CONIURA codegen_context_free_generic_sigillum_templates(ctx)
+  CONIURA codegen_context_free_generic_sigillum_instances(ctx)
+  CONIURA codegen_context_free_generic_rituale_templates(ctx)
+  CONIURA codegen_context_free_generic_rituale_instances(ctx)
+  CONIURA codegen_context_free_generic_bindings(ctx)
   CONIURA fluxus_free((*ctx).rituale_names)
   CONIURA fluxus_free((*ctx).local_names)
   CONIURA fluxus_free((*ctx).local_scope_marks)
+  CONIURA fluxus_free((*ctx).loop_break_labels)
+  CONIURA fluxus_free((*ctx).loop_continue_labels)
   CONIURA fluxus_free((*ctx).sigillum_types)
   CONIURA fluxus_free((*ctx).ordo_types)
   CONIURA fluxus_free((*ctx).string_literals)
+  CONIURA fluxus_free((*ctx).generic_sigillum_templates)
+  CONIURA fluxus_free((*ctx).generic_sigillum_instances)
+  CONIURA fluxus_free((*ctx).generic_rituale_templates)
+  CONIURA fluxus_free((*ctx).generic_rituale_instances)
+  CONIURA fluxus_free((*ctx).generic_bindings)
+  CONIURA fluxus_free((*ctx).generic_binding_marks)
   SI (*ctx).owns_current_return_type
     DIMITTE (*ctx).current_return_type
   FIN SI
@@ -797,6 +999,204 @@ RITUALE codegen_require_fail_helper(SPECULUM CodegenContext ctx) REDDE NIHIL
   CONIURA codegen_require_stdio(ctx)
   CONIURA codegen_require_stdlib(ctx)
   REDDE
+EXPLICIT RITUALE
+
+RITUALE codegen_require_failure_runtime(SPECULUM CodegenContext ctx) REDDE NIHIL
+  VINCIRE (*ctx).needs_failure_runtime AD VERUM
+  CONIURA codegen_require_fail_helper(ctx)
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE codegen_registered_generic_sigillum_template_count(SPECULUM CodegenContext ctx) REDDE REX
+  REDDE CONIURA fluxus_len((*ctx).generic_sigillum_templates)
+EXPLICIT RITUALE
+
+RITUALE codegen_find_generic_sigillum_template_index(SPECULUM CodegenContext ctx, VERBUM source_name) REDDE REX
+  EVOCA REX i AD 0
+  EVOCA REX n AD CONIURA fluxus_len((*ctx).generic_sigillum_templates)
+  DUM i < n
+    EVOCA SPECULUM CodegenGenericSigillumTemplate item AD CONIURA codegen_context_generic_sigillum_template_at(ctx, i)
+    SI CONIURA compare((*item).source_name, source_name) == 0
+      REDDE i
+    FIN SI
+    VINCIRE i AD i + 1
+  FIN DUM
+  REDDE -1
+EXPLICIT RITUALE
+
+RITUALE codegen_register_generic_sigillum_template(SPECULUM CodegenContext ctx, VERBUM source_name, SPECULUM AstNode decl_node, REX arity) REDDE NIHIL
+  SI CONIURA codegen_find_generic_sigillum_template_index(ctx, source_name) >= 0
+    REDDE
+  FIN SI
+  EVOCA CodegenGenericSigillumTemplate item
+  VINCIRE item.source_name AD CONIURA verbum_dup(source_name)
+  VINCIRE item.owns_source_name AD VERUM
+  VINCIRE item.decl_node AD decl_node
+  VINCIRE item.arity AD arity
+  CONIURA fluxus_push((*ctx).generic_sigillum_templates, SPECULUM item)
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE codegen_lookup_generic_sigillum_template(SPECULUM CodegenContext ctx, VERBUM source_name) REDDE SPECULUM AstNode
+  EVOCA REX idx AD CONIURA codegen_find_generic_sigillum_template_index(ctx, source_name)
+  EVOCA SPECULUM CodegenGenericSigillumTemplate item AD CONIURA codegen_context_generic_sigillum_template_at(ctx, idx)
+  REDDE (*item).decl_node
+EXPLICIT RITUALE
+
+RITUALE codegen_registered_generic_sigillum_instance_count(SPECULUM CodegenContext ctx) REDDE REX
+  REDDE CONIURA fluxus_len((*ctx).generic_sigillum_instances)
+EXPLICIT RITUALE
+
+RITUALE codegen_find_generic_sigillum_instance_index(SPECULUM CodegenContext ctx, VERBUM instance_key) REDDE REX
+  EVOCA REX i AD 0
+  EVOCA REX n AD CONIURA fluxus_len((*ctx).generic_sigillum_instances)
+  DUM i < n
+    EVOCA SPECULUM CodegenGenericSigillumInstance item AD CONIURA codegen_context_generic_sigillum_instance_at(ctx, i)
+    SI CONIURA compare((*item).instance_key, instance_key) == 0
+      REDDE i
+    FIN SI
+    VINCIRE i AD i + 1
+  FIN DUM
+  REDDE -1
+EXPLICIT RITUALE
+
+RITUALE codegen_register_generic_sigillum_instance(SPECULUM CodegenContext ctx, VERBUM instance_key, VERBUM c_name, SPECULUM AstNode template_decl, SPECULUM NIHIL type_args) REDDE VERBUM
+  EVOCA REX idx AD CONIURA codegen_find_generic_sigillum_instance_index(ctx, instance_key)
+  SI idx >= 0
+    EVOCA SPECULUM CodegenGenericSigillumInstance existing AD CONIURA codegen_context_generic_sigillum_instance_at(ctx, idx)
+    REDDE (*existing).c_name
+  FIN SI
+  EVOCA CodegenGenericSigillumInstance item
+  VINCIRE item.instance_key AD CONIURA verbum_dup(instance_key)
+  VINCIRE item.owns_instance_key AD VERUM
+  VINCIRE item.c_name AD CONIURA verbum_dup(c_name)
+  VINCIRE item.owns_c_name AD VERUM
+  VINCIRE item.template_decl AD template_decl
+  VINCIRE item.type_args AD type_args
+  CONIURA fluxus_push((*ctx).generic_sigillum_instances, SPECULUM item)
+  REDDE c_name
+EXPLICIT RITUALE
+
+RITUALE codegen_registered_generic_rituale_template_count(SPECULUM CodegenContext ctx) REDDE REX
+  REDDE CONIURA fluxus_len((*ctx).generic_rituale_templates)
+EXPLICIT RITUALE
+
+RITUALE codegen_find_generic_rituale_template_index(SPECULUM CodegenContext ctx, VERBUM source_name) REDDE REX
+  EVOCA REX i AD 0
+  EVOCA REX n AD CONIURA fluxus_len((*ctx).generic_rituale_templates)
+  DUM i < n
+    EVOCA SPECULUM CodegenGenericRitualeTemplate item AD CONIURA codegen_context_generic_rituale_template_at(ctx, i)
+    SI CONIURA compare((*item).source_name, source_name) == 0
+      REDDE i
+    FIN SI
+    VINCIRE i AD i + 1
+  FIN DUM
+  REDDE -1
+EXPLICIT RITUALE
+
+RITUALE codegen_register_generic_rituale_template(SPECULUM CodegenContext ctx, VERBUM source_name, SPECULUM AstNode decl_node, REX arity) REDDE NIHIL
+  SI CONIURA codegen_find_generic_rituale_template_index(ctx, source_name) >= 0
+    REDDE
+  FIN SI
+  EVOCA CodegenGenericRitualeTemplate item
+  VINCIRE item.source_name AD CONIURA verbum_dup(source_name)
+  VINCIRE item.owns_source_name AD VERUM
+  VINCIRE item.decl_node AD decl_node
+  VINCIRE item.arity AD arity
+  CONIURA fluxus_push((*ctx).generic_rituale_templates, SPECULUM item)
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE codegen_lookup_generic_rituale_template(SPECULUM CodegenContext ctx, VERBUM source_name) REDDE SPECULUM AstNode
+  EVOCA REX idx AD CONIURA codegen_find_generic_rituale_template_index(ctx, source_name)
+  EVOCA SPECULUM CodegenGenericRitualeTemplate item AD CONIURA codegen_context_generic_rituale_template_at(ctx, idx)
+  REDDE (*item).decl_node
+EXPLICIT RITUALE
+
+RITUALE codegen_registered_generic_rituale_instance_count(SPECULUM CodegenContext ctx) REDDE REX
+  REDDE CONIURA fluxus_len((*ctx).generic_rituale_instances)
+EXPLICIT RITUALE
+
+RITUALE codegen_find_generic_rituale_instance_index(SPECULUM CodegenContext ctx, VERBUM instance_key) REDDE REX
+  EVOCA REX i AD 0
+  EVOCA REX n AD CONIURA fluxus_len((*ctx).generic_rituale_instances)
+  DUM i < n
+    EVOCA SPECULUM CodegenGenericRitualeInstance item AD CONIURA codegen_context_generic_rituale_instance_at(ctx, i)
+    SI CONIURA compare((*item).instance_key, instance_key) == 0
+      REDDE i
+    FIN SI
+    VINCIRE i AD i + 1
+  FIN DUM
+  REDDE -1
+EXPLICIT RITUALE
+
+RITUALE codegen_register_generic_rituale_instance(SPECULUM CodegenContext ctx, VERBUM instance_key, VERBUM c_name, VERBUM return_type_name, SPECULUM AstNode template_decl, SPECULUM NIHIL type_args) REDDE VERBUM
+  EVOCA REX idx AD CONIURA codegen_find_generic_rituale_instance_index(ctx, instance_key)
+  SI idx >= 0
+    EVOCA SPECULUM CodegenGenericRitualeInstance existing AD CONIURA codegen_context_generic_rituale_instance_at(ctx, idx)
+    REDDE (*existing).c_name
+  FIN SI
+  EVOCA CodegenGenericRitualeInstance item
+  VINCIRE item.instance_key AD CONIURA verbum_dup(instance_key)
+  VINCIRE item.owns_instance_key AD VERUM
+  VINCIRE item.c_name AD CONIURA verbum_dup(c_name)
+  VINCIRE item.owns_c_name AD VERUM
+  VINCIRE item.return_type_name AD CONIURA verbum_dup(return_type_name)
+  VINCIRE item.owns_return_type_name AD VERUM
+  VINCIRE item.template_decl AD template_decl
+  VINCIRE item.type_args AD type_args
+  CONIURA fluxus_push((*ctx).generic_rituale_instances, SPECULUM item)
+  REDDE c_name
+EXPLICIT RITUALE
+
+RITUALE codegen_push_generic_binding_scope(SPECULUM CodegenContext ctx) REDDE NIHIL
+  EVOCA REX mark AD CONIURA fluxus_len((*ctx).generic_bindings)
+  CONIURA fluxus_push((*ctx).generic_binding_marks, SPECULUM mark)
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE codegen_pop_generic_binding_scope(SPECULUM CodegenContext ctx) REDDE NIHIL
+  SI CONIURA fluxus_len((*ctx).generic_binding_marks) == 0
+    REDDE
+  FIN SI
+  EVOCA REX mark AD 0
+  CONIURA fluxus_pop((*ctx).generic_binding_marks, SPECULUM mark)
+  DUM CONIURA fluxus_len((*ctx).generic_bindings) > mark
+    EVOCA REX idx AD CONIURA fluxus_len((*ctx).generic_bindings) - 1
+    EVOCA SPECULUM CodegenGenericBinding item AD CONIURA codegen_context_generic_binding_at(ctx, idx)
+    SI (*item).owns_param_name
+      DIMITTE (*item).param_name
+    FIN SI
+    CONIURA fluxus_remove((*ctx).generic_bindings, idx)
+  FIN DUM
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE codegen_define_generic_binding(SPECULUM CodegenContext ctx, VERBUM param_name, SPECULUM AstNode type_expr) REDDE NIHIL
+  EVOCA CodegenGenericBinding item
+  VINCIRE item.param_name AD CONIURA verbum_dup(param_name)
+  VINCIRE item.owns_param_name AD VERUM
+  VINCIRE item.type_expr AD type_expr
+  CONIURA fluxus_push((*ctx).generic_bindings, SPECULUM item)
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE codegen_find_generic_binding_index(SPECULUM CodegenContext ctx, VERBUM param_name) REDDE REX
+  EVOCA REX i AD CONIURA fluxus_len((*ctx).generic_bindings) - 1
+  DUM i >= 0
+    EVOCA SPECULUM CodegenGenericBinding item AD CONIURA codegen_context_generic_binding_at(ctx, i)
+    SI CONIURA compare((*item).param_name, param_name) == 0
+      REDDE i
+    FIN SI
+    VINCIRE i AD i - 1
+  FIN DUM
+  REDDE -1
+EXPLICIT RITUALE
+
+RITUALE codegen_lookup_generic_binding(SPECULUM CodegenContext ctx, VERBUM param_name) REDDE SPECULUM AstNode
+  EVOCA REX idx AD CONIURA codegen_find_generic_binding_index(ctx, param_name)
+  EVOCA SPECULUM CodegenGenericBinding item AD CONIURA codegen_context_generic_binding_at(ctx, idx)
+  REDDE (*item).type_expr
 EXPLICIT RITUALE
 
 EXPLICIT grimoire

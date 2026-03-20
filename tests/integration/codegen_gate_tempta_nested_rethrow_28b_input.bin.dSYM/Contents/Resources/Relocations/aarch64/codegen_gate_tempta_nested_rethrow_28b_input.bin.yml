@@ -1,0 +1,5 @@
+---
+triple:          'arm64-apple-darwin'
+binary-path:     'tests/integration/codegen_gate_tempta_nested_rethrow_28b_input.bin'
+relocations:     []
+...

@@ -8,6 +8,9 @@ ADVOCARE "codegen_context.cct"
 ADVOCARE "codegen_emitter.cct"
 ADVOCARE "codegen_elige.cct"
 ADVOCARE "codegen_expr.cct"
+ADVOCARE "codegen_failure.cct"
+ADVOCARE "codegen_flow.cct"
+ADVOCARE "codegen_generic.cct"
 ADVOCARE "codegen_type.cct"
 
 RITUALE codegen_stmt_type_text(SPECULUM CodegenContext ctx, SPECULUM AstNode type_expr) REDDE VERBUM
@@ -48,6 +51,86 @@ RITUALE codegen_emit_stmt_as_block(SPECULUM CodegenContext ctx, SPECULUM AstNode
   REDDE
 EXPLICIT RITUALE
 
+RITUALE codegen_emit_iace_stmt(SPECULUM CodegenContext ctx, SPECULUM AstNode stmt) REDDE NIHIL
+  CONIURA codegen_require_failure_runtime(ctx)
+  CONIURA codegen_emit(ctx, "cct_boot_throw(")
+  CONIURA codegen_emit_expr(ctx, (*stmt).left)
+  CONIURA codegen_emit_line(ctx, ");")
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE codegen_emit_tempta_stmt(SPECULUM CodegenContext ctx, SPECULUM AstNode stmt) REDDE NIHIL
+  EVOCA VERBUM cape_type_text AD CONIURA codegen_type_text(ctx, (*stmt).cape_type)
+  EVOCA VERBUM cape_identity AD CONIURA codegen_generic_type_identity(ctx, (*stmt).cape_type)
+  SI NON CONIURA codegen_failure_supported_cape_type(cape_identity)
+    CONIURA codegen_report_error(ctx, (*stmt).line, (*stmt).column, "TEMPTA/CAPE type outside bootstrap failure subset")
+    DIMITTE cape_identity
+    REDDE
+  FIN SI
+
+  CONIURA codegen_require_failure_runtime(ctx)
+
+  EVOCA VERBUM jmp_name AD CONIURA codegen_next_temp_name(ctx)
+  EVOCA VERBUM prev_try_name AD CONIURA codegen_next_temp_name(ctx)
+  EVOCA VERBUM prev_err_name AD CONIURA codegen_next_temp_name(ctx)
+
+  CONIURA codegen_emit_line(ctx, "do")
+  CONIURA codegen_emit_block_open(ctx)
+  CONIURA codegen_emit(ctx, "jmp_buf ")
+  CONIURA codegen_emit(ctx, jmp_name)
+  CONIURA codegen_emit_line(ctx, ";")
+  CONIURA codegen_emit(ctx, "jmp_buf* ")
+  CONIURA codegen_emit(ctx, prev_try_name)
+  CONIURA codegen_emit_line(ctx, " = cct_boot_try_top;")
+  CONIURA codegen_emit(ctx, "const char* ")
+  CONIURA codegen_emit(ctx, prev_err_name)
+  CONIURA codegen_emit_line(ctx, " = cct_boot_error_value;")
+  CONIURA codegen_emit(ctx, "cct_boot_try_top = &")
+  CONIURA codegen_emit(ctx, jmp_name)
+  CONIURA codegen_emit_line(ctx, ";")
+  CONIURA codegen_emit(ctx, "if (setjmp(")
+  CONIURA codegen_emit(ctx, jmp_name)
+  CONIURA codegen_emit_line(ctx, ") == 0)")
+  CONIURA codegen_emit_block_open(ctx)
+  CONIURA codegen_emit_stmt(ctx, (*stmt).try_block)
+  CONIURA codegen_emit(ctx, "cct_boot_try_top = ")
+  CONIURA codegen_emit(ctx, prev_try_name)
+  CONIURA codegen_emit_line(ctx, ";")
+  CONIURA codegen_emit(ctx, "cct_boot_error_value = ")
+  CONIURA codegen_emit(ctx, prev_err_name)
+  CONIURA codegen_emit_line(ctx, ";")
+  CONIURA codegen_emit_block_close(ctx)
+  CONIURA codegen_emit_line(ctx, "else")
+  CONIURA codegen_emit_block_open(ctx)
+  CONIURA codegen_emit(ctx, "cct_boot_try_top = ")
+  CONIURA codegen_emit(ctx, prev_try_name)
+  CONIURA codegen_emit_line(ctx, ";")
+  CONIURA codegen_push_local_scope(ctx)
+  CONIURA codegen_define_local(ctx, (*stmt).name, (*stmt).name, cape_identity)
+  CONIURA codegen_emit(ctx, cape_type_text)
+  CONIURA codegen_emit(ctx, " ")
+  CONIURA codegen_emit(ctx, (*stmt).name)
+  CONIURA codegen_emit_line(ctx, " = (char*)cct_boot_error_value;")
+  CONIURA codegen_emit(ctx, "(void)")
+  CONIURA codegen_emit(ctx, (*stmt).name)
+  CONIURA codegen_emit_line(ctx, ";")
+  CONIURA codegen_emit_stmt(ctx, (*stmt).cape_block)
+  CONIURA codegen_pop_local_scope(ctx)
+  CONIURA codegen_emit(ctx, "cct_boot_error_value = ")
+  CONIURA codegen_emit(ctx, prev_err_name)
+  CONIURA codegen_emit_line(ctx, ";")
+  CONIURA codegen_emit_block_close(ctx)
+
+  SI (*stmt).has_semper_block
+    CONIURA codegen_emit_stmt(ctx, (*stmt).semper_block)
+  FIN SI
+
+  CONIURA codegen_emit_block_close(ctx)
+  CONIURA codegen_emit_line(ctx, "while (0);")
+  DIMITTE cape_identity
+  REDDE
+EXPLICIT RITUALE
+
 RITUALE codegen_emit_stmt(SPECULUM CodegenContext ctx, SPECULUM AstNode stmt) REDDE NIHIL
   SI (*stmt).kind == AST_EXPR_STMT
     CONIURA codegen_emit_expr(ctx, (*stmt).left)
@@ -74,7 +157,9 @@ RITUALE codegen_emit_stmt(SPECULUM CodegenContext ctx, SPECULUM AstNode stmt) RE
     SI CONIURA compare(type_text, "") == 0
       REDDE
     FIN SI
-    EVOCA VERBUM local_name AD CONIURA codegen_define_local(ctx, (*stmt).name, (*stmt).name, (*(*stmt).type_expr).type_name)
+    EVOCA VERBUM local_type_identity AD CONIURA codegen_generic_type_identity(ctx, (*stmt).type_expr)
+    EVOCA VERBUM local_name AD CONIURA codegen_define_local(ctx, (*stmt).name, (*stmt).name, local_type_identity)
+    DIMITTE local_type_identity
     CONIURA codegen_emit(ctx, type_text)
     CONIURA codegen_emit(ctx, " ")
     CONIURA codegen_emit(ctx, local_name)
@@ -127,10 +212,52 @@ RITUALE codegen_emit_stmt(SPECULUM CodegenContext ctx, SPECULUM AstNode stmt) RE
   FIN SI
 
   SI (*stmt).kind == AST_DUM
+    EVOCA VERBUM break_label AD CONIURA codegen_next_label_name(ctx)
+    EVOCA VERBUM continue_label AD CONIURA codegen_next_label_name(ctx)
+    CONIURA codegen_flow_push_loop(ctx, break_label, continue_label)
     CONIURA codegen_emit(ctx, "while (")
     CONIURA codegen_emit_condition_expr(ctx, (*stmt).condition)
     CONIURA codegen_emit_line(ctx, ")")
-    CONIURA codegen_emit_stmt_as_block(ctx, (*stmt).body)
+    CONIURA codegen_emit_block_open(ctx)
+    CONIURA codegen_emit_stmt(ctx, (*stmt).body)
+    CONIURA codegen_emit(ctx, "if (0) goto ")
+    CONIURA codegen_emit(ctx, continue_label)
+    CONIURA codegen_emit_line(ctx, ";")
+    CONIURA codegen_emit(ctx, continue_label)
+    CONIURA codegen_emit_line(ctx, ": ;")
+    CONIURA codegen_emit_block_close(ctx)
+    CONIURA codegen_flow_pop_loop(ctx)
+    CONIURA codegen_emit(ctx, "if (0) goto ")
+    CONIURA codegen_emit(ctx, break_label)
+    CONIURA codegen_emit_line(ctx, ";")
+    CONIURA codegen_emit(ctx, break_label)
+    CONIURA codegen_emit_line(ctx, ": ;")
+    DIMITTE break_label
+    DIMITTE continue_label
+    REDDE
+  FIN SI
+
+  SI (*stmt).kind == AST_FRANGE
+    EVOCA VERBUM break_label AD CONIURA codegen_flow_current_break_label(ctx)
+    SI CONIURA compare(break_label, "") == 0
+      CONIURA codegen_report_error(ctx, (*stmt).line, (*stmt).column, "FRANGE outside loop context")
+      REDDE
+    FIN SI
+    CONIURA codegen_emit(ctx, "goto ")
+    CONIURA codegen_emit(ctx, break_label)
+    CONIURA codegen_emit_line(ctx, ";")
+    REDDE
+  FIN SI
+
+  SI (*stmt).kind == AST_RECEDE
+    EVOCA VERBUM continue_label AD CONIURA codegen_flow_current_continue_label(ctx)
+    SI CONIURA compare(continue_label, "") == 0
+      CONIURA codegen_report_error(ctx, (*stmt).line, (*stmt).column, "RECEDE outside loop context")
+      REDDE
+    FIN SI
+    CONIURA codegen_emit(ctx, "goto ")
+    CONIURA codegen_emit(ctx, continue_label)
+    CONIURA codegen_emit_line(ctx, ";")
     REDDE
   FIN SI
 
@@ -225,8 +352,13 @@ RITUALE codegen_emit_stmt(SPECULUM CodegenContext ctx, SPECULUM AstNode stmt) RE
     REDDE
   FIN SI
 
-  SI (*stmt).kind == AST_TEMPTA VEL (*stmt).kind == AST_IACE
-    CONIURA codegen_report_error(ctx, (*stmt).line, (*stmt).column, "statement outside bootstrap codegen subset in 26C")
+  SI (*stmt).kind == AST_IACE
+    CONIURA codegen_emit_iace_stmt(ctx, stmt)
+    REDDE
+  FIN SI
+
+  SI (*stmt).kind == AST_TEMPTA
+    CONIURA codegen_emit_tempta_stmt(ctx, stmt)
     REDDE
   FIN SI
 

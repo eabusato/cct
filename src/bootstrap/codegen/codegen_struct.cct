@@ -5,6 +5,7 @@ ADVOCARE "../parser/ast.cct"
 ADVOCARE "codegen.cct"
 ADVOCARE "codegen_context.cct"
 ADVOCARE "codegen_emitter.cct"
+ADVOCARE "codegen_generic.cct"
 ADVOCARE "codegen_ordo.cct"
 ADVOCARE "codegen_type.cct"
 
@@ -13,6 +14,10 @@ RITUALE codegen_make_sigillum_c_name(VERBUM source_name) REDDE VERBUM
 EXPLICIT RITUALE
 
 RITUALE codegen_register_sigillum_decl(SPECULUM CodegenContext ctx, SPECULUM AstNode decl) REDDE NIHIL
+  SI CONIURA ast_node_list_len((*decl).type_params) > 0
+    CONIURA codegen_register_generic_sigillum_template(ctx, (*decl).name, decl, CONIURA ast_node_list_len((*decl).type_params))
+    REDDE
+  FIN SI
   EVOCA VERBUM c_name AD CONIURA codegen_make_sigillum_c_name((*decl).name)
   CONIURA codegen_register_sigillum(ctx, (*decl).name, c_name)
 
@@ -20,13 +25,19 @@ RITUALE codegen_register_sigillum_decl(SPECULUM CodegenContext ctx, SPECULUM Ast
   EVOCA REX n AD CONIURA ast_node_list_len((*decl).fields)
   DUM i < n
     EVOCA SPECULUM AstNode field AD CONIURA ast_node_list_get((*decl).fields, i)
-    CONIURA codegen_sigillum_append_field(ctx, (*decl).name, (*field).name, (*(*field).type_expr).type_name)
+    EVOCA VERBUM field_identity AD CONIURA codegen_generic_type_identity(ctx, (*field).type_expr)
+    CONIURA codegen_sigillum_append_field(ctx, (*decl).name, (*field).name, field_identity)
+    DIMITTE field_identity
     VINCIRE i AD i + 1
   FIN DUM
   REDDE
 EXPLICIT RITUALE
 
 RITUALE codegen_register_rituale_decl(SPECULUM CodegenContext ctx, SPECULUM AstNode decl) REDDE NIHIL
+  SI CONIURA ast_node_list_len((*decl).type_params) > 0
+    CONIURA codegen_register_generic_rituale_template(ctx, (*decl).name, decl, CONIURA ast_node_list_len((*decl).type_params))
+    REDDE
+  FIN SI
   EVOCA VERBUM existing AD CONIURA codegen_lookup_rituale_c_name(ctx, (*decl).name)
   SI CONIURA compare(existing, "") != 0
     REDDE
@@ -35,7 +46,7 @@ RITUALE codegen_register_rituale_decl(SPECULUM CodegenContext ctx, SPECULUM AstN
   EVOCA VERBUM c_name AD CONIURA codegen_make_rituale_c_name(ctx, (*decl).name)
   EVOCA VERBUM return_type_name AD "NIHIL"
   SI (*decl).has_return_type
-    VINCIRE return_type_name AD (*(*decl).return_type).type_name
+    VINCIRE return_type_name AD CONIURA codegen_generic_type_identity(ctx, (*decl).return_type)
   FIN SI
   CONIURA codegen_register_rituale_c_name(ctx, (*decl).name, c_name, return_type_name)
   REDDE
@@ -105,13 +116,42 @@ RITUALE codegen_emit_sigillum_definition(SPECULUM CodegenContext ctx, SPECULUM A
   REDDE
 EXPLICIT RITUALE
 
+RITUALE codegen_emit_generic_sigillum_instance_definition(SPECULUM CodegenContext ctx, SPECULUM CodegenGenericSigillumInstance inst) REDDE NIHIL
+  CONIURA codegen_generic_bind_template_args(ctx, (*inst).template_decl, (*inst).type_args)
+  CONIURA codegen_emit(ctx, "struct ")
+  CONIURA codegen_emit(ctx, (*inst).c_name)
+  CONIURA codegen_emit_line(ctx, "")
+  CONIURA codegen_emit_block_open(ctx)
+
+  EVOCA REX i AD 0
+  EVOCA REX n AD CONIURA ast_node_list_len((*(*inst).template_decl).fields)
+  DUM i < n
+    EVOCA SPECULUM AstNode field AD CONIURA ast_node_list_get((*(*inst).template_decl).fields, i)
+    EVOCA VERBUM field_type_text AD CONIURA codegen_type_text(ctx, (*field).type_expr)
+    SI CONIURA compare(field_type_text, "") == 0
+      CONIURA codegen_generic_unbind_template_args(ctx)
+      REDDE
+    FIN SI
+    CONIURA codegen_emit(ctx, field_type_text)
+    CONIURA codegen_emit(ctx, " ")
+    CONIURA codegen_emit(ctx, (*field).name)
+    CONIURA codegen_emit_line(ctx, ";")
+    VINCIRE i AD i + 1
+  FIN DUM
+
+  CONIURA codegen_dedent(ctx)
+  CONIURA codegen_emit_line(ctx, "};")
+  CONIURA codegen_generic_unbind_template_args(ctx)
+  REDDE
+EXPLICIT RITUALE
+
 RITUALE codegen_emit_sigillum_definitions(SPECULUM CodegenContext ctx, SPECULUM AstProgram program) REDDE NIHIL
   EVOCA REX i AD 0
   EVOCA REX n AD CONIURA ast_node_list_len((*program).declarations)
   EVOCA VERUM emitted_any AD FALSUM
   DUM i < n
     EVOCA SPECULUM AstNode decl AD CONIURA ast_node_list_get((*program).declarations, i)
-    SI (*decl).kind == AST_SIGILLUM
+    SI (*decl).kind == AST_SIGILLUM ET CONIURA ast_node_list_len((*decl).type_params) == 0
       CONIURA codegen_emit_sigillum_definition(ctx, decl)
       CONIURA codegen_emit_blank_line(ctx)
       VINCIRE emitted_any AD VERUM
@@ -119,8 +159,22 @@ RITUALE codegen_emit_sigillum_definitions(SPECULUM CodegenContext ctx, SPECULUM 
     VINCIRE i AD i + 1
   FIN DUM
   SI emitted_any
+    EVOCA REX inst_i AD 0
+    EVOCA REX inst_n AD CONIURA codegen_registered_generic_sigillum_instance_count(ctx)
+    DUM inst_i < inst_n
+      CONIURA codegen_emit_generic_sigillum_instance_definition(ctx, CONIURA codegen_context_generic_sigillum_instance_at(ctx, inst_i))
+      CONIURA codegen_emit_blank_line(ctx)
+      VINCIRE inst_i AD inst_i + 1
+    FIN DUM
     REDDE
   FIN SI
+  EVOCA REX inst_i AD 0
+  EVOCA REX inst_n AD CONIURA codegen_registered_generic_sigillum_instance_count(ctx)
+  DUM inst_i < inst_n
+    CONIURA codegen_emit_generic_sigillum_instance_definition(ctx, CONIURA codegen_context_generic_sigillum_instance_at(ctx, inst_i))
+    CONIURA codegen_emit_blank_line(ctx)
+    VINCIRE inst_i AD inst_i + 1
+  FIN DUM
   REDDE
 EXPLICIT RITUALE
 

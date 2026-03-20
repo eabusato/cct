@@ -1,0 +1,25 @@
+INCIPIT grimoire "codegen_gate_generic_sigillum_dedup_28a_input"
+
+SIGILLUM Caixa GENUS(T)
+  valor: T
+FIN SIGILLUM
+
+RITUALE usa_a(Caixa GENUS(REX) a) REDDE NIHIL
+  SI a.valor == 999
+    REDDE
+  FIN SI
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE usa_b(Caixa GENUS(REX) b) REDDE NIHIL
+  SI b.valor == 998
+    REDDE
+  FIN SI
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE main() REDDE REX
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

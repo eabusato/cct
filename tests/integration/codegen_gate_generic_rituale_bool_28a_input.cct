@@ -1,0 +1,15 @@
+INCIPIT grimoire "codegen_gate_generic_rituale_bool_28a_input"
+
+RITUALE identitas GENUS(T)(T valor) REDDE T
+  REDDE valor
+EXPLICIT RITUALE
+
+RITUALE main() REDDE REX
+  EVOCA VERUM ok AD identitas GENUS(VERUM)(VERUM)
+  SI ok
+    REDDE 1
+  FIN SI
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

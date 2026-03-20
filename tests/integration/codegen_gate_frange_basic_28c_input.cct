@@ -1,0 +1,13 @@
+INCIPIT grimoire "codegen_gate_frange_basic_28c_input"
+
+RITUALE main() REDDE REX
+  EVOCA REX x AD 0
+  DUM VERUM
+    VINCIRE x AD 7
+    FRANGE
+    VINCIRE x AD 99
+  FIN DUM
+  REDDE x
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

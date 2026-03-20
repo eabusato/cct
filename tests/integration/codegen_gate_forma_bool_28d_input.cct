@@ -1,0 +1,13 @@
+INCIPIT grimoire "codegen_gate_forma_bool_28d_input"
+
+RITUALE main() REDDE REX
+  EVOCA VERBUM msg AD FORMA "ok={2 < 3}"
+  ELIGE msg
+  CASUS "ok=VERUM":
+    REDDE 5
+  ALIOQUIN:
+    REDDE 9
+  FIN ELIGE
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

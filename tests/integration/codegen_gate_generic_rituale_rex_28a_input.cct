@@ -1,0 +1,12 @@
+INCIPIT grimoire "codegen_gate_generic_rituale_rex_28a_input"
+
+RITUALE identitas GENUS(T)(T valor) REDDE T
+  REDDE valor
+EXPLICIT RITUALE
+
+RITUALE main() REDDE REX
+  EVOCA REX x AD identitas GENUS(REX)(7)
+  REDDE x
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

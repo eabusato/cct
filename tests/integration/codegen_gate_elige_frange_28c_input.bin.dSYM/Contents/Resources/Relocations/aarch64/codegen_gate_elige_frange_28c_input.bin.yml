@@ -1,0 +1,5 @@
+---
+triple:          'arm64-apple-darwin'
+binary-path:     'tests/integration/codegen_gate_elige_frange_28c_input.bin'
+relocations:     []
+...

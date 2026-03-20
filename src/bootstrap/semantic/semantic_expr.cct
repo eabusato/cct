@@ -180,7 +180,27 @@ RITUALE semantic_analyze_call(SPECULUM SemanticContext ctx, SPECULUM AstNode exp
   REDDE return_type_id
 EXPLICIT RITUALE
 
+RITUALE semantic_analyze_molde(SPECULUM SemanticContext ctx, SPECULUM AstNode expr) REDDE REX
+  EVOCA REX i AD 0
+  EVOCA REX n AD CONIURA ast_node_list_len((*expr).children)
+  DUM i < n
+    EVOCA SPECULUM AstNode part AD CONIURA ast_node_list_get((*expr).children, i)
+    SI (*part).kind != AST_LITERAL_STRING
+      EVOCA REX part_type_id AD CONIURA semantic_analyze_expr(ctx, part)
+      SI NON CONIURA semantic_type_is_integer(ctx, part_type_id) ET NON CONIURA semantic_type_is_real(ctx, part_type_id) ET part_type_id != (*ctx).type_verum ET part_type_id != (*ctx).type_verbum
+        CONIURA semantic_report_error(ctx, (*part).line, (*part).column, "FORMA interpolation type outside bootstrap subset")
+        REDDE (*ctx).type_error
+      FIN SI
+    FIN SI
+    VINCIRE i AD i + 1
+  FIN DUM
+  REDDE (*ctx).type_verbum
+EXPLICIT RITUALE
+
 RITUALE semantic_analyze_expr(SPECULUM SemanticContext ctx, SPECULUM AstNode expr) REDDE REX
+  SI (*expr).kind == AST_MOLDE
+    REDDE CONIURA semantic_analyze_molde(ctx, expr)
+  FIN SI
   SI (*expr).kind == AST_LITERAL_INT
     REDDE (*ctx).type_rex
   FIN SI

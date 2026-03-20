@@ -1,0 +1,8 @@
+INCIPIT grimoire "codegen_gate_frange_outside_loop_28c_input"
+
+RITUALE main() REDDE REX
+  FRANGE
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

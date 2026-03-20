@@ -88,7 +88,7 @@ RITUALE parser_is_declaration_start(TokenKind kind) REDDE VERUM
 EXPLICIT RITUALE
 
 RITUALE parser_is_statement_start(TokenKind kind) REDDE VERUM
-  REDDE kind == TK_EVOCA VEL kind == TK_VINCIRE VEL kind == TK_REDDE VEL kind == TK_IACE VEL kind == TK_SI VEL kind == TK_QUANDO VEL kind == TK_DUM VEL kind == TK_TEMPTA VEL kind == TK_LBRACE VEL kind == TK_CAPE VEL kind == TK_SEMPER VEL kind == TK_CASO VEL kind == TK_SENAO VEL kind == TK_FIN VEL kind == TK_ALITER VEL kind == TK_RBRACE VEL kind == TK_EXPLICIT VEL kind == TK_EOF
+  REDDE kind == TK_EVOCA VEL kind == TK_VINCIRE VEL kind == TK_REDDE VEL kind == TK_IACE VEL kind == TK_SI VEL kind == TK_QUANDO VEL kind == TK_DUM VEL kind == TK_FRANGE VEL kind == TK_RECEDE VEL kind == TK_TEMPTA VEL kind == TK_LBRACE VEL kind == TK_CAPE VEL kind == TK_SEMPER VEL kind == TK_CASO VEL kind == TK_SENAO VEL kind == TK_FIN VEL kind == TK_ALITER VEL kind == TK_RBRACE VEL kind == TK_EXPLICIT VEL kind == TK_EOF
 EXPLICIT RITUALE
 
 RITUALE parser_synchronize_statement(SPECULUM ParserState parser) REDDE NIHIL

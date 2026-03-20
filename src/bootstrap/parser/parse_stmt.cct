@@ -151,6 +151,22 @@ RITUALE parse_iace_statement(SPECULUM ParserState parser) REDDE SPECULUM AstNode
   REDDE CONIURA ast_make_iace(value, line, column)
 EXPLICIT RITUALE
 
+RITUALE parse_frange_statement(SPECULUM ParserState parser) REDDE SPECULUM AstNode
+  EVOCA REX line AD (*parser).current.line
+  EVOCA REX column AD (*parser).current.column
+  CONIURA parser_consume(parser, TK_FRANGE, "Expected FRANGE")
+  CONIURA parser_match(parser, TK_SEMICOLON)
+  REDDE CONIURA ast_make_frange(line, column)
+EXPLICIT RITUALE
+
+RITUALE parse_recede_statement(SPECULUM ParserState parser) REDDE SPECULUM AstNode
+  EVOCA REX line AD (*parser).current.line
+  EVOCA REX column AD (*parser).current.column
+  CONIURA parser_consume(parser, TK_RECEDE, "Expected RECEDE")
+  CONIURA parser_match(parser, TK_SEMICOLON)
+  REDDE CONIURA ast_make_recede(line, column)
+EXPLICIT RITUALE
+
 RITUALE parse_statement_block_until_failure_clause(SPECULUM ParserState parser) REDDE SPECULUM AstNode
   EVOCA SPECULUM AstNode block AD CONIURA ast_make_block((*parser).current.line, (*parser).current.column)
   DUM NON CONIURA parser_check(parser, TK_EOF) ET NON CONIURA parser_check(parser, TK_CAPE) ET NON CONIURA parser_check(parser, TK_SEMPER) ET NON CONIURA parser_check(parser, TK_FIN)
@@ -385,6 +401,12 @@ RITUALE parse_statement(SPECULUM ParserState parser) REDDE SPECULUM AstNode
   FIN SI
   SI CONIURA parser_check(parser, TK_IACE)
     REDDE CONIURA parse_iace_statement(parser)
+  FIN SI
+  SI CONIURA parser_check(parser, TK_FRANGE)
+    REDDE CONIURA parse_frange_statement(parser)
+  FIN SI
+  SI CONIURA parser_check(parser, TK_RECEDE)
+    REDDE CONIURA parse_recede_statement(parser)
   FIN SI
   SI CONIURA parser_check(parser, TK_SI)
     REDDE CONIURA parse_si_statement(parser)

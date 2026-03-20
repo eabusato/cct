@@ -1,0 +1,11 @@
+INCIPIT grimoire "codegen_gate_generic_nongeneric_call_error_28a_input"
+
+RITUALE valor(REX x) REDDE REX
+  REDDE x
+EXPLICIT RITUALE
+
+RITUALE main() REDDE REX
+  REDDE valor GENUS(REX)(3)
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

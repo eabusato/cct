@@ -2,6 +2,8 @@ INCIPIT grimoire "parse_expr"
 
 ADVOCARE "ast.cct"
 ADVOCARE "cct/parse.cct"
+ADVOCARE "cct/verbum.cct"
+ADVOCARE "cct/verbum_builder.cct"
 ADVOCARE "parser_helpers.cct"
 ADVOCARE "parser_state.cct"
 ADVOCARE "../lexer/lexer_state.cct"
@@ -83,7 +85,99 @@ RITUALE parse_postfix_generic_args(SPECULUM ParserState parser, SPECULUM AstNode
   FIN DUM
 EXPLICIT RITUALE
 
+RITUALE parse_forma_unquote(VERBUM raw_text) REDDE VERBUM
+  EVOCA REX n AD CONIURA len(raw_text)
+  SI n >= 2 ET CONIURA char_at(raw_text, 0) == 34 ET CONIURA char_at(raw_text, n - 1) == 34
+    REDDE CONIURA substring(raw_text, 1, n - 1)
+  FIN SI
+  REDDE CONIURA verbum_dup(raw_text)
+EXPLICIT RITUALE
+
+RITUALE parse_forma_flush_literal(SPECULUM AstNode molde, SPECULUM NIHIL literal_builder, REX line, REX column) REDDE NIHIL
+  SI CONIURA builder_len(literal_builder) == 0
+    REDDE
+  FIN SI
+  EVOCA VERBUM text AD CONIURA builder_to_verbum(literal_builder)
+  CONIURA ast_append_child(molde, CONIURA ast_make_literal_string(text, line, column))
+  DIMITTE text
+  CONIURA builder_clear(literal_builder)
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE parse_forma_expression(SPECULUM ParserState parser) REDDE SPECULUM AstNode
+  EVOCA REX line AD (*parser).current.line
+  EVOCA REX column AD (*parser).current.column
+  CONIURA parser_consume(parser, TK_MOLDE, "Expected FORMA")
+  SI NON CONIURA parser_check(parser, TK_STRING)
+    CONIURA parser_error_at_current(parser, "Expected string literal after FORMA")
+    REDDE CONIURA ast_make_literal_string("\"\"", line, column)
+  FIN SI
+  CONIURA parser_advance(parser)
+
+  EVOCA VERBUM raw_text AD CONIURA parse_forma_unquote((*parser).previous.lexeme)
+  EVOCA SPECULUM AstNode molde AD CONIURA ast_make_molde(line, column)
+  EVOCA SPECULUM NIHIL literal_builder AD CONIURA builder_init()
+  EVOCA REX i AD 0
+  EVOCA REX n AD CONIURA len(raw_text)
+
+  DUM i < n
+    EVOCA MILES ch AD CONIURA char_at(raw_text, i)
+    SI ch == 123
+      SI i + 1 < n ET CONIURA char_at(raw_text, i + 1) == 123
+        CONIURA builder_append_char(literal_builder, 123)
+        VINCIRE i AD i + 2
+      ALITER
+        CONIURA parse_forma_flush_literal(molde, literal_builder, line, column)
+        EVOCA REX expr_start AD i + 1
+        EVOCA REX expr_end AD expr_start
+        DUM expr_end < n ET CONIURA char_at(raw_text, expr_end) != 125
+          VINCIRE expr_end AD expr_end + 1
+        FIN DUM
+        SI expr_end >= n
+          CONIURA parser_error_at_previous(parser, "FORMA: '{' sem '}' correspondente")
+          DIMITTE raw_text
+          CONIURA builder_free(literal_builder)
+          REDDE molde
+        FIN SI
+        SI expr_end == expr_start
+          CONIURA parser_error_at_previous(parser, "FORMA: expressao vazia em {}")
+          VINCIRE i AD expr_end + 1
+        ALITER
+          EVOCA VERBUM expr_text AD CONIURA substring(raw_text, expr_start, expr_end)
+          SI CONIURA contains(expr_text, ":")
+            CONIURA parser_error_at_previous(parser, "FORMA: especificador de formato ainda nao suportado no bootstrap")
+            DIMITTE expr_text
+            DIMITTE raw_text
+            CONIURA builder_free(literal_builder)
+            REDDE molde
+          FIN SI
+          CONIURA ast_append_child(molde, CONIURA parser_parse_expression_source(expr_text, (*parser).filename))
+          DIMITTE expr_text
+          VINCIRE i AD expr_end + 1
+        FIN SI
+      FIN SI
+    ALITER
+      SI ch == 125 ET i + 1 < n ET CONIURA char_at(raw_text, i + 1) == 125
+        CONIURA builder_append_char(literal_builder, 125)
+        VINCIRE i AD i + 2
+      ALITER
+        CONIURA builder_append_char(literal_builder, ch)
+        VINCIRE i AD i + 1
+      FIN SI
+    FIN SI
+  FIN DUM
+
+  CONIURA parse_forma_flush_literal(molde, literal_builder, line, column)
+  DIMITTE raw_text
+  CONIURA builder_free(literal_builder)
+  REDDE molde
+EXPLICIT RITUALE
+
 RITUALE parse_primary(SPECULUM ParserState parser) REDDE SPECULUM AstNode
+  SI CONIURA parser_check(parser, TK_MOLDE)
+    REDDE CONIURA parse_forma_expression(parser)
+  FIN SI
+
   SI CONIURA parser_match(parser, TK_INTEGER)
     REDDE CONIURA ast_make_literal_int((*parser).previous.lexeme, (*parser).previous.line, (*parser).previous.column)
   FIN SI

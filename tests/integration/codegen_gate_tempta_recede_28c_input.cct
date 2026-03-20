@@ -1,0 +1,20 @@
+INCIPIT grimoire "codegen_gate_tempta_recede_28c_input"
+
+RITUALE main() REDDE REX
+  EVOCA REX i AD 0
+  EVOCA REX total AD 0
+  DUM i < 4
+    VINCIRE i AD i + 1
+    TEMPTA
+      SI i == 2
+        IACE "skip"
+      FIN SI
+      VINCIRE total AD total + i
+    CAPE FRACTUM err
+      RECEDE
+    FIN TEMPTA
+  FIN DUM
+  REDDE total
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

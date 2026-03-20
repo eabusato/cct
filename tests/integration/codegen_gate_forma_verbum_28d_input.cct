@@ -1,0 +1,14 @@
+INCIPIT grimoire "codegen_gate_forma_verbum_28d_input"
+
+RITUALE main() REDDE REX
+  EVOCA VERBUM nome AD "Luna"
+  EVOCA VERBUM msg AD FORMA "oi {nome}"
+  ELIGE msg
+  CASUS "oi Luna":
+    REDDE 3
+  ALIOQUIN:
+    REDDE 9
+  FIN ELIGE
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

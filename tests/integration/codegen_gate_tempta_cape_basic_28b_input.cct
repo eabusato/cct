@@ -1,0 +1,14 @@
+INCIPIT grimoire "codegen_gate_tempta_cape_basic_28b_input"
+
+RITUALE main() REDDE REX
+  EVOCA REX x AD 1
+  TEMPTA
+    IACE "boom-basic"
+    VINCIRE x AD 99
+  CAPE FRACTUM erro
+    VINCIRE x AD 7
+  FIN TEMPTA
+  REDDE x
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

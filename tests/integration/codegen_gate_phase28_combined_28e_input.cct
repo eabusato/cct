@@ -1,0 +1,31 @@
+INCIPIT grimoire "codegen_gate_phase28_combined_28e_input"
+
+RITUALE ident GENUS(T)(T x) REDDE T
+  REDDE x
+EXPLICIT RITUALE
+
+RITUALE main() REDDE REX
+  EVOCA REX i AD 0
+  EVOCA REX total AD 0
+  DUM i < 3
+    VINCIRE i AD i + 1
+    TEMPTA
+      SI i == 2
+        IACE "skip"
+      FIN SI
+      VINCIRE total AD total + ident GENUS(REX)(i)
+    CAPE FRACTUM err
+      RECEDE
+    FIN TEMPTA
+  FIN DUM
+
+  EVOCA VERBUM msg AD FORMA "t={total}"
+  ELIGE msg
+  CASUS "t=4":
+    REDDE 6
+  ALIOQUIN:
+    REDDE 9
+  FIN ELIGE
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

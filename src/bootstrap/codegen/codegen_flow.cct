@@ -1,0 +1,49 @@
+INCIPIT grimoire "codegen_flow"
+
+ADVOCARE "cct/fluxus.cct"
+ADVOCARE "cct/verbum.cct"
+ADVOCARE "codegen_context.cct"
+
+RITUALE codegen_flow_push_loop(SPECULUM CodegenContext ctx, VERBUM break_label, VERBUM continue_label) REDDE NIHIL
+  EVOCA VERBUM owned_break AD CONIURA verbum_dup(break_label)
+  EVOCA VERBUM owned_continue AD CONIURA verbum_dup(continue_label)
+  CONIURA fluxus_push((*ctx).loop_break_labels, SPECULUM owned_break)
+  CONIURA fluxus_push((*ctx).loop_continue_labels, SPECULUM owned_continue)
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE codegen_flow_pop_loop(SPECULUM CodegenContext ctx) REDDE NIHIL
+  SI CONIURA fluxus_len((*ctx).loop_break_labels) == 0
+    REDDE
+  FIN SI
+
+  EVOCA VERBUM break_label AD ""
+  EVOCA VERBUM continue_label AD ""
+  CONIURA fluxus_pop((*ctx).loop_break_labels, SPECULUM break_label)
+  CONIURA fluxus_pop((*ctx).loop_continue_labels, SPECULUM continue_label)
+  DIMITTE break_label
+  DIMITTE continue_label
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE codegen_flow_current_break_label(SPECULUM CodegenContext ctx) REDDE VERBUM
+  SI CONIURA fluxus_len((*ctx).loop_break_labels) == 0
+    REDDE ""
+  FIN SI
+  EVOCA VERBUM label AD ""
+  CONIURA fluxus_pop((*ctx).loop_break_labels, SPECULUM label)
+  CONIURA fluxus_push((*ctx).loop_break_labels, SPECULUM label)
+  REDDE label
+EXPLICIT RITUALE
+
+RITUALE codegen_flow_current_continue_label(SPECULUM CodegenContext ctx) REDDE VERBUM
+  SI CONIURA fluxus_len((*ctx).loop_continue_labels) == 0
+    REDDE ""
+  FIN SI
+  EVOCA VERBUM label AD ""
+  CONIURA fluxus_pop((*ctx).loop_continue_labels, SPECULUM label)
+  CONIURA fluxus_push((*ctx).loop_continue_labels, SPECULUM label)
+  REDDE label
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

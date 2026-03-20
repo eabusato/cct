@@ -4,6 +4,7 @@ ADVOCARE "cct/fmt.cct"
 ADVOCARE "cct/verbum.cct"
 ADVOCARE "../parser/ast.cct"
 ADVOCARE "codegen_context.cct"
+ADVOCARE "codegen_generic.cct"
 
 RITUALE codegen_basic_c_type_name(SPECULUM CodegenContext ctx, VERBUM type_name, REX line, REX column) REDDE VERBUM
   SI CONIURA compare(type_name, "REX") == 0
@@ -30,6 +31,9 @@ RITUALE codegen_basic_c_type_name(SPECULUM CodegenContext ctx, VERBUM type_name,
   SI CONIURA compare(type_name, "VERBUM") == 0
     REDDE "char*"
   FIN SI
+  SI CONIURA compare(type_name, "FRACTUM") == 0
+    REDDE "char*"
+  FIN SI
   SI CONIURA compare(type_name, "NIHIL") == 0
     REDDE "void"
   FIN SI
@@ -37,6 +41,12 @@ RITUALE codegen_basic_c_type_name(SPECULUM CodegenContext ctx, VERBUM type_name,
 EXPLICIT RITUALE
 
 RITUALE codegen_named_c_type_name(SPECULUM CodegenContext ctx, VERBUM type_name, REX line, REX column) REDDE VERBUM
+  EVOCA REX bound_idx AD CONIURA codegen_find_generic_binding_index(ctx, type_name)
+  SI bound_idx >= 0
+    EVOCA SPECULUM AstNode bound AD CONIURA codegen_lookup_generic_binding(ctx, type_name)
+    REDDE CONIURA codegen_type_text(ctx, bound)
+  FIN SI
+
   EVOCA VERBUM basic AD CONIURA codegen_basic_c_type_name(ctx, type_name, 0, 0)
   SI CONIURA compare(basic, "") != 0
     REDDE basic
@@ -57,12 +67,21 @@ RITUALE codegen_named_c_type_name(SPECULUM CodegenContext ctx, VERBUM type_name,
 EXPLICIT RITUALE
 
 RITUALE codegen_type_text(SPECULUM CodegenContext ctx, SPECULUM AstNode type_expr) REDDE VERBUM
-  SI NON (*type_expr).is_pointer ET NON (*type_expr).is_array ET NON (*type_expr).has_type_expr
-    REDDE CONIURA codegen_named_c_type_name(ctx, (*type_expr).type_name, (*type_expr).line, (*type_expr).column)
-  FIN SI
-
   SI (*type_expr).is_pointer
-    EVOCA VERBUM base AD CONIURA codegen_named_c_type_name(ctx, (*type_expr).type_name, (*type_expr).line, (*type_expr).column)
+    EVOCA REX bound_ptr_idx AD CONIURA codegen_find_generic_binding_index(ctx, (*type_expr).type_name)
+    EVOCA VERBUM base AD ""
+    SI bound_ptr_idx >= 0
+      EVOCA SPECULUM AstNode bound_ptr AD CONIURA codegen_lookup_generic_binding(ctx, (*type_expr).type_name)
+      VINCIRE base AD CONIURA codegen_type_text(ctx, bound_ptr)
+    ALITER
+      SI CONIURA ast_node_list_len((*type_expr).generic_args) > 0
+        EVOCA VERBUM identity_ptr AD CONIURA codegen_generic_type_identity_named(ctx, (*type_expr).type_name, (*type_expr).generic_args, (*type_expr).line, (*type_expr).column)
+        VINCIRE base AD CONIURA codegen_named_c_type_name(ctx, identity_ptr, (*type_expr).line, (*type_expr).column)
+        DIMITTE identity_ptr
+      ALITER
+        VINCIRE base AD CONIURA codegen_named_c_type_name(ctx, (*type_expr).type_name, (*type_expr).line, (*type_expr).column)
+      FIN SI
+    FIN SI
     SI CONIURA compare(base, "") == 0
       REDDE ""
     FIN SI
@@ -70,12 +89,36 @@ RITUALE codegen_type_text(SPECULUM CodegenContext ctx, SPECULUM AstNode type_exp
   FIN SI
 
   SI (*type_expr).is_array
-    EVOCA VERBUM base AD CONIURA codegen_named_c_type_name(ctx, (*type_expr).type_name, (*type_expr).line, (*type_expr).column)
+    EVOCA REX bound_array_idx AD CONIURA codegen_find_generic_binding_index(ctx, (*type_expr).type_name)
+    EVOCA VERBUM base AD ""
+    SI bound_array_idx >= 0
+      EVOCA SPECULUM AstNode bound_array AD CONIURA codegen_lookup_generic_binding(ctx, (*type_expr).type_name)
+      VINCIRE base AD CONIURA codegen_type_text(ctx, bound_array)
+    ALITER
+      SI CONIURA ast_node_list_len((*type_expr).generic_args) > 0
+        EVOCA VERBUM identity_array AD CONIURA codegen_generic_type_identity_named(ctx, (*type_expr).type_name, (*type_expr).generic_args, (*type_expr).line, (*type_expr).column)
+        VINCIRE base AD CONIURA codegen_named_c_type_name(ctx, identity_array, (*type_expr).line, (*type_expr).column)
+        DIMITTE identity_array
+      ALITER
+        VINCIRE base AD CONIURA codegen_named_c_type_name(ctx, (*type_expr).type_name, (*type_expr).line, (*type_expr).column)
+      FIN SI
+    FIN SI
     SI CONIURA compare(base, "") == 0
       REDDE ""
     FIN SI
     EVOCA VERBUM suffix AD CONIURA concat("[", CONIURA concat(CONIURA stringify_int((*type_expr).array_size), "]"))
     REDDE CONIURA concat(base, suffix)
+  FIN SI
+
+  SI CONIURA ast_node_list_len((*type_expr).generic_args) > 0
+    EVOCA VERBUM identity AD CONIURA codegen_generic_type_identity_named(ctx, (*type_expr).type_name, (*type_expr).generic_args, (*type_expr).line, (*type_expr).column)
+    EVOCA VERBUM out AD CONIURA codegen_named_c_type_name(ctx, identity, (*type_expr).line, (*type_expr).column)
+    DIMITTE identity
+    REDDE out
+  FIN SI
+
+  SI NON (*type_expr).has_type_expr
+    REDDE CONIURA codegen_named_c_type_name(ctx, (*type_expr).type_name, (*type_expr).line, (*type_expr).column)
   FIN SI
 
   CONIURA codegen_report_error(ctx, (*type_expr).line, (*type_expr).column, "unsupported complex type in bootstrap type mapping")

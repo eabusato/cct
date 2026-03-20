@@ -1,0 +1,51 @@
+INCIPIT grimoire "codegen_forma"
+
+ADVOCARE "cct/verbum.cct"
+ADVOCARE "cct/verbum_builder.cct"
+ADVOCARE "../parser/ast.cct"
+ADVOCARE "codegen.cct"
+ADVOCARE "codegen_context.cct"
+
+RITUALE codegen_require_fmt_runtime(SPECULUM CodegenContext ctx) REDDE NIHIL
+  VINCIRE (*ctx).needs_fmt_runtime AD VERUM
+  VINCIRE (*ctx).needs_stdio AD VERUM
+  VINCIRE (*ctx).needs_stdlib AD VERUM
+  VINCIRE (*ctx).needs_fail_helper AD VERUM
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE codegen_forma_placeholder_count(SPECULUM AstNode expr) REDDE REX
+  EVOCA REX count AD 0
+  EVOCA REX i AD 0
+  EVOCA REX n AD CONIURA ast_node_list_len((*expr).children)
+  DUM i < n
+    EVOCA SPECULUM AstNode part AD CONIURA ast_node_list_get((*expr).children, i)
+    SI (*part).kind != AST_LITERAL_STRING
+      VINCIRE count AD count + 1
+    FIN SI
+    VINCIRE i AD i + 1
+  FIN DUM
+  REDDE count
+EXPLICIT RITUALE
+
+RITUALE codegen_forma_template_text(SPECULUM AstNode expr) REDDE VERBUM
+  EVOCA SPECULUM NIHIL b AD CONIURA builder_init()
+  EVOCA REX i AD 0
+  EVOCA REX n AD CONIURA ast_node_list_len((*expr).children)
+  DUM i < n
+    EVOCA SPECULUM AstNode part AD CONIURA ast_node_list_get((*expr).children, i)
+    SI (*part).kind == AST_LITERAL_STRING
+      EVOCA VERBUM raw_text AD CONIURA codegen_normalize_string_literal((*part).value_text)
+      CONIURA builder_append(b, raw_text)
+      DIMITTE raw_text
+    ALITER
+      CONIURA builder_append(b, "{}")
+    FIN SI
+    VINCIRE i AD i + 1
+  FIN DUM
+  EVOCA VERBUM out AD CONIURA builder_to_verbum(b)
+  CONIURA builder_free(b)
+  REDDE out
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

@@ -5,6 +5,7 @@ ADVOCARE "../parser/ast.cct"
 ADVOCARE "codegen.cct"
 ADVOCARE "codegen_context.cct"
 ADVOCARE "codegen_emitter.cct"
+ADVOCARE "codegen_generic.cct"
 ADVOCARE "codegen_ordo.cct"
 ADVOCARE "codegen_struct.cct"
 ADVOCARE "codegen_stmt.cct"
@@ -55,9 +56,34 @@ RITUALE codegen_emit_rituale_signature(SPECULUM CodegenContext ctx, SPECULUM Ast
   CONIURA codegen_emit(ctx, ")")
 EXPLICIT RITUALE
 
+RITUALE codegen_emit_rituale_signature_instance(SPECULUM CodegenContext ctx, SPECULUM AstNode rituale_decl, VERBUM c_name) REDDE NIHIL
+  EVOCA VERBUM return_text AD "void"
+  SI (*rituale_decl).has_return_type
+    VINCIRE return_text AD CONIURA codegen_decl_type_text(ctx, (*rituale_decl).return_type)
+  FIN SI
+  SI CONIURA compare(return_text, "") == 0
+    REDDE
+  FIN SI
+
+  CONIURA codegen_emit(ctx, return_text)
+  CONIURA codegen_emit(ctx, " ")
+  CONIURA codegen_emit(ctx, c_name)
+  CONIURA codegen_emit(ctx, "(")
+  CONIURA codegen_emit_param_list(ctx, rituale_decl)
+  CONIURA codegen_emit(ctx, ")")
+EXPLICIT RITUALE
+
 RITUALE codegen_emit_rituale_prototype(SPECULUM CodegenContext ctx, SPECULUM AstNode rituale_decl) REDDE NIHIL
   CONIURA codegen_emit_rituale_signature(ctx, rituale_decl)
   CONIURA codegen_emit_line(ctx, ";")
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE codegen_emit_rituale_prototype_instance(SPECULUM CodegenContext ctx, SPECULUM CodegenGenericRitualeInstance inst) REDDE NIHIL
+  CONIURA codegen_generic_bind_template_args(ctx, (*inst).template_decl, (*inst).type_args)
+  CONIURA codegen_emit_rituale_signature_instance(ctx, (*inst).template_decl, (*inst).c_name)
+  CONIURA codegen_emit_line(ctx, ";")
+  CONIURA codegen_generic_unbind_template_args(ctx)
   REDDE
 EXPLICIT RITUALE
 
@@ -66,7 +92,9 @@ RITUALE codegen_bind_rituale_params(SPECULUM CodegenContext ctx, SPECULUM AstNod
   EVOCA REX n AD CONIURA ast_node_list_len((*rituale_decl).params)
   DUM i < n
     EVOCA SPECULUM AstNode param AD CONIURA ast_node_list_get((*rituale_decl).params, i)
-    CONIURA codegen_define_local(ctx, (*param).name, (*param).name, (*(*param).type_expr).type_name)
+    EVOCA VERBUM param_identity AD CONIURA codegen_generic_type_identity(ctx, (*param).type_expr)
+    CONIURA codegen_define_local(ctx, (*param).name, (*param).name, param_identity)
+    DIMITTE param_identity
     VINCIRE i AD i + 1
   FIN DUM
   REDDE
@@ -77,7 +105,9 @@ RITUALE codegen_emit_rituale_definition(SPECULUM CodegenContext ctx, SPECULUM As
   CONIURA codegen_emit_line(ctx, "")
 
   SI (*rituale_decl).has_return_type
-    CONIURA codegen_set_current_return_type(ctx, (*(*rituale_decl).return_type).type_name)
+    EVOCA VERBUM return_identity AD CONIURA codegen_generic_type_identity(ctx, (*rituale_decl).return_type)
+    CONIURA codegen_set_current_return_type(ctx, return_identity)
+    DIMITTE return_identity
   ALITER
     CONIURA codegen_set_current_return_type(ctx, "NIHIL")
   FIN SI
@@ -89,8 +119,30 @@ RITUALE codegen_emit_rituale_definition(SPECULUM CodegenContext ctx, SPECULUM As
   REDDE
 EXPLICIT RITUALE
 
+RITUALE codegen_emit_rituale_definition_instance(SPECULUM CodegenContext ctx, SPECULUM CodegenGenericRitualeInstance inst) REDDE NIHIL
+  CONIURA codegen_generic_bind_template_args(ctx, (*inst).template_decl, (*inst).type_args)
+  CONIURA codegen_emit_rituale_signature_instance(ctx, (*inst).template_decl, (*inst).c_name)
+  CONIURA codegen_emit_line(ctx, "")
+
+  SI (*(*inst).template_decl).has_return_type
+    EVOCA VERBUM ret_identity AD CONIURA codegen_generic_type_identity(ctx, (*(*inst).template_decl).return_type)
+    CONIURA codegen_set_current_return_type(ctx, ret_identity)
+    DIMITTE ret_identity
+  ALITER
+    CONIURA codegen_set_current_return_type(ctx, "NIHIL")
+  FIN SI
+
+  CONIURA codegen_push_local_scope(ctx)
+  CONIURA codegen_bind_rituale_params(ctx, (*inst).template_decl)
+  CONIURA codegen_emit_stmt(ctx, (*(*inst).template_decl).body)
+  CONIURA codegen_pop_local_scope(ctx)
+  CONIURA codegen_generic_unbind_template_args(ctx)
+  REDDE
+EXPLICIT RITUALE
+
 RITUALE codegen_emit_program_body(SPECULUM CodegenContext ctx, SPECULUM AstProgram program) REDDE NIHIL
   CONIURA codegen_register_program_shapes(ctx, program)
+  CONIURA codegen_generic_collect_program_uses(ctx, program)
   CONIURA codegen_emit_sigillum_forward_decls(ctx)
   CONIURA codegen_emit_ordo_definitions(ctx, program)
   CONIURA codegen_emit_sigillum_definitions(ctx, program)
@@ -99,7 +151,7 @@ RITUALE codegen_emit_program_body(SPECULUM CodegenContext ctx, SPECULUM AstProgr
   EVOCA REX n AD CONIURA ast_node_list_len((*program).declarations)
   DUM i < n
     EVOCA SPECULUM AstNode decl AD CONIURA ast_node_list_get((*program).declarations, i)
-    SI (*decl).kind == AST_RITUALE
+    SI (*decl).kind == AST_RITUALE ET CONIURA ast_node_list_len((*decl).type_params) == 0
       CONIURA codegen_emit_rituale_prototype(ctx, decl)
     FIN SI
     SI (*decl).kind != AST_RITUALE ET (*decl).kind != AST_IMPORT ET (*decl).kind != AST_SIGILLUM ET (*decl).kind != AST_ORDO
@@ -109,18 +161,36 @@ RITUALE codegen_emit_program_body(SPECULUM CodegenContext ctx, SPECULUM AstProgr
     VINCIRE i AD i + 1
   FIN DUM
 
+  VINCIRE i AD 0
+  VINCIRE n AD CONIURA codegen_registered_generic_rituale_instance_count(ctx)
+  DUM i < n
+    CONIURA codegen_emit_rituale_prototype_instance(ctx, CONIURA codegen_context_generic_rituale_instance_at(ctx, i))
+    VINCIRE i AD i + 1
+  FIN DUM
+
   SI n > 0
     CONIURA codegen_emit_blank_line(ctx)
   FIN SI
 
   VINCIRE i AD 0
+  VINCIRE n AD CONIURA ast_node_list_len((*program).declarations)
   DUM i < n
     EVOCA SPECULUM AstNode decl AD CONIURA ast_node_list_get((*program).declarations, i)
-    SI (*decl).kind == AST_RITUALE
+    SI (*decl).kind == AST_RITUALE ET CONIURA ast_node_list_len((*decl).type_params) == 0
       CONIURA codegen_emit_rituale_definition(ctx, decl)
       SI i + 1 < n
         CONIURA codegen_emit_blank_line(ctx)
       FIN SI
+    FIN SI
+    VINCIRE i AD i + 1
+  FIN DUM
+
+  VINCIRE i AD 0
+  VINCIRE n AD CONIURA codegen_registered_generic_rituale_instance_count(ctx)
+  DUM i < n
+    CONIURA codegen_emit_rituale_definition_instance(ctx, CONIURA codegen_context_generic_rituale_instance_at(ctx, i))
+    SI i + 1 < n
+      CONIURA codegen_emit_blank_line(ctx)
     FIN SI
     VINCIRE i AD i + 1
   FIN DUM
