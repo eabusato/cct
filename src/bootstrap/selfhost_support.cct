@@ -1,0 +1,15 @@
+INCIPIT grimoire "selfhost_support"
+
+ADVOCARE "cct/args.cct"
+ADVOCARE "cct/io.cct"
+ADVOCARE "cct/path.cct"
+ADVOCARE "cct/char.cct"
+ADVOCARE "cct/verbum.cct"
+ADVOCARE "cct/verbum_builder.cct"
+ADVOCARE "cct/code_writer.cct"
+ADVOCARE "cct/diagnostic.cct"
+ADVOCARE "cct/fmt.cct"
+ADVOCARE "cct/mem.cct"
+ADVOCARE "cct/fluxus.cct"
+
+EXPLICIT grimoire

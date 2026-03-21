@@ -106,6 +106,24 @@ RITUALE semantic_analyze_iace_stmt(SPECULUM SemanticContext ctx, SPECULUM AstNod
   REDDE
 EXPLICIT RITUALE
 
+RITUALE semantic_analyze_dimitte_stmt(SPECULUM SemanticContext ctx, SPECULUM AstNode stmt) REDDE NIHIL
+  SI NON (*stmt).has_left
+    CONIURA semantic_report_error(ctx, (*stmt).line, (*stmt).column, "DIMITTE requires pointer/VERBUM lvalue")
+    REDDE
+  FIN SI
+
+  EVOCA REX target_type_id AD CONIURA semantic_analyze_lvalue(ctx, (*stmt).left)
+  SI target_type_id == (*ctx).type_error
+    REDDE
+  FIN SI
+
+  EVOCA SPECULUM SemanticType target_type AD CONIURA semantic_type_at(ctx, target_type_id)
+  SI (*target_type).kind != SEM_TYPE_POINTER ET target_type_id != (*ctx).type_verbum ET target_type_id != (*ctx).type_fractum
+    CONIURA semantic_report_error(ctx, (*stmt).line, (*stmt).column, "DIMITTE requires pointer/VERBUM lvalue")
+  FIN SI
+  REDDE
+EXPLICIT RITUALE
+
 RITUALE semantic_analyze_frange_stmt(SPECULUM SemanticContext ctx, SPECULUM AstNode stmt) REDDE NIHIL
   SI (*ctx).loop_depth == 0
     CONIURA semantic_report_error(ctx, (*stmt).line, (*stmt).column, "FRANGE outside loop context")
@@ -198,6 +216,11 @@ RITUALE semantic_analyze_stmt(SPECULUM SemanticContext ctx, SPECULUM AstNode stm
 
   SI (*stmt).kind == AST_IACE
     CONIURA semantic_analyze_iace_stmt(ctx, stmt)
+    REDDE
+  FIN SI
+
+  SI (*stmt).kind == AST_DIMITTE
+    CONIURA semantic_analyze_dimitte_stmt(ctx, stmt)
     REDDE
   FIN SI
 

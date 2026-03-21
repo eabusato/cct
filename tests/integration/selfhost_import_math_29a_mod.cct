@@ -1,0 +1,7 @@
+INCIPIT grimoire "selfhost_import_math_29a_mod"
+
+RITUALE add(REX a, REX b) REDDE REX
+  REDDE a + b
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

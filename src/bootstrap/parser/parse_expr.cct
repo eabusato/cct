@@ -10,7 +10,13 @@ ADVOCARE "../lexer/lexer_state.cct"
 ADVOCARE "../lexer/token_type.cct"
 
 RITUALE parser_is_assignment_target(SPECULUM AstNode node) REDDE VERUM
-  REDDE (*node).kind == AST_IDENTIFIER VEL (*node).kind == AST_FIELD_ACCESS VEL (*node).kind == AST_INDEX_ACCESS
+  SI (*node).kind == AST_IDENTIFIER VEL (*node).kind == AST_FIELD_ACCESS VEL (*node).kind == AST_INDEX_ACCESS
+    REDDE VERUM
+  FIN SI
+  SI (*node).kind == AST_UNARY_OP ET (*node).operator_kind == TK_STAR
+    REDDE VERUM
+  FIN SI
+  REDDE FALSUM
 EXPLICIT RITUALE
 
 RITUALE parse_expression(SPECULUM ParserState parser) REDDE SPECULUM AstNode
@@ -178,6 +184,36 @@ RITUALE parse_primary(SPECULUM ParserState parser) REDDE SPECULUM AstNode
     REDDE CONIURA parse_forma_expression(parser)
   FIN SI
 
+  SI CONIURA parser_match(parser, TK_OBSECRO)
+    EVOCA REX line AD (*parser).previous.line
+    EVOCA REX column AD (*parser).previous.column
+    SI NON CONIURA parser_check(parser, TK_IDENTIFIER)
+      CONIURA parser_error_at_current(parser, "Expected builtin identifier after OBSECRO")
+      REDDE CONIURA ast_make_identifier("<error>", line, column)
+    FIN SI
+    CONIURA parser_advance(parser)
+    EVOCA SPECULUM AstNode callee AD CONIURA ast_make_identifier((*parser).previous.lexeme, (*parser).previous.line, (*parser).previous.column)
+    CONIURA parser_consume(parser, TK_LPAREN, "Expected '(' after OBSECRO builtin name")
+    EVOCA SPECULUM AstNode call AD CONIURA ast_make_obsecro_call(callee, line, column)
+    SI NON CONIURA parser_check(parser, TK_RPAREN)
+      CONIURA ast_append_argument(call, CONIURA parse_expression(parser))
+      DUM CONIURA parser_match(parser, TK_COMMA)
+        CONIURA ast_append_argument(call, CONIURA parse_expression(parser))
+      FIN DUM
+    FIN SI
+    CONIURA parser_consume(parser, TK_RPAREN, "Expected ')' after OBSECRO builtin arguments")
+    REDDE call
+  FIN SI
+
+  SI CONIURA parser_match(parser, TK_MENSURA)
+    EVOCA REX line AD (*parser).previous.line
+    EVOCA REX column AD (*parser).previous.column
+    CONIURA parser_consume(parser, TK_LPAREN, "Expected '(' after MENSURA")
+    EVOCA SPECULUM AstNode type_expr AD CONIURA parse_expr_generic_type(parser)
+    CONIURA parser_consume(parser, TK_RPAREN, "Expected ')' after MENSURA type")
+    REDDE CONIURA ast_make_mensura(type_expr, line, column)
+  FIN SI
+
   SI CONIURA parser_match(parser, TK_INTEGER)
     REDDE CONIURA ast_make_literal_int((*parser).previous.lexeme, (*parser).previous.line, (*parser).previous.column)
   FIN SI
@@ -216,9 +252,7 @@ RITUALE parse_primary(SPECULUM ParserState parser) REDDE SPECULUM AstNode
   REDDE CONIURA ast_make_identifier("<error>", (*parser).current.line, (*parser).current.column)
 EXPLICIT RITUALE
 
-RITUALE parse_postfix(SPECULUM ParserState parser) REDDE SPECULUM AstNode
-  EVOCA SPECULUM AstNode expr AD CONIURA parse_primary(parser)
-
+RITUALE parse_postfix_suffixes(SPECULUM ParserState parser, SPECULUM AstNode expr) REDDE SPECULUM AstNode
   DUM VERUM
     EVOCA VERUM matched AD FALSUM
 
@@ -265,13 +299,28 @@ RITUALE parse_postfix(SPECULUM ParserState parser) REDDE SPECULUM AstNode
       REDDE expr
     FIN SI
   FIN DUM
+EXPLICIT RITUALE
+
+RITUALE parse_postfix(SPECULUM ParserState parser) REDDE SPECULUM AstNode
+  EVOCA VERUM forced_call AD FALSUM
+  SI CONIURA parser_match(parser, TK_CONIURA)
+    VINCIRE forced_call AD VERUM
+  FIN SI
+
+  EVOCA SPECULUM AstNode expr AD CONIURA parse_primary(parser)
+  VINCIRE expr AD CONIURA parse_postfix_suffixes(parser, expr)
+
+  SI forced_call ET (*expr).kind != AST_CALL ET (*expr).kind != AST_OBSECRO_CALL
+    CONIURA parser_error_at_previous(parser, "CONIURA requires call expression")
+  FIN SI
 
   REDDE expr
 EXPLICIT RITUALE
 
 RITUALE parse_unary(SPECULUM ParserState parser) REDDE SPECULUM AstNode
-  SI CONIURA parser_match(parser, TK_MINUS) VEL CONIURA parser_match(parser, TK_PLUS) VEL CONIURA parser_match(parser, TK_NON)
-    REDDE CONIURA ast_make_unary((*parser).previous.kind, CONIURA parse_unary(parser), (*parser).previous.line, (*parser).previous.column)
+  SI CONIURA parser_match(parser, TK_MINUS) VEL CONIURA parser_match(parser, TK_PLUS) VEL CONIURA parser_match(parser, TK_NON) VEL CONIURA parser_match(parser, TK_STAR) VEL CONIURA parser_match(parser, TK_SPECULUM)
+    EVOCA SPECULUM AstNode expr AD CONIURA ast_make_unary((*parser).previous.kind, CONIURA parse_unary(parser), (*parser).previous.line, (*parser).previous.column)
+    REDDE CONIURA parse_postfix_suffixes(parser, expr)
   FIN SI
   REDDE CONIURA parse_postfix(parser)
 EXPLICIT RITUALE

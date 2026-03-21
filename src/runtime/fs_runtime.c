@@ -12,6 +12,17 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <errno.h>
+
+#ifdef _WIN32
+#include <direct.h>
+#define cct_rt_mkdir(path) _mkdir(path)
+#else
+#include <sys/stat.h>
+#include <sys/types.h>
+#include <unistd.h>
+#define cct_rt_mkdir(path) mkdir((path), 0777)
+#endif
 
 static void cct_rt_fs_abort(const char *msg) {
     fprintf(stderr, "cct runtime: %s\n", msg ? msg : "fs failure");
@@ -23,6 +34,19 @@ static FILE* cct_rt_fs_open_or_fail(const char *path, const char *mode, const ch
     FILE *f = fopen(p, mode);
     if (!f) cct_rt_fs_abort(ctx);
     return f;
+}
+
+static void cct_rt_fs_abort1(const char *fmt, const char *a) {
+    char msg[1024];
+    const char *sa = a ? a : "";
+    snprintf(msg, sizeof(msg), fmt ? fmt : "fs failure", sa);
+    cct_rt_fs_abort(msg);
+}
+
+static int cct_rt_fs_is_dir_local(const char *path) {
+    struct stat st;
+    if (stat(path ? path : "", &st) != 0) return 0;
+    return S_ISDIR(st.st_mode) ? 1 : 0;
 }
 
 char* cct_rt_fs_read_all(const char *path) {
@@ -79,6 +103,39 @@ void cct_rt_fs_append_all(const char *path, const char *content) {
         cct_rt_fs_abort("fs append_all write failed");
     }
     fclose(f);
+}
+
+void cct_rt_fs_mkdir_all(const char *path) {
+    const char *src = path ? path : "";
+    size_t n = strlen(src);
+    if (n == 0) return;
+
+    char *tmp = (char*)malloc(n + 1);
+    if (!tmp) cct_rt_fs_abort("fs mkdir_all allocation failed");
+    memcpy(tmp, src, n + 1);
+
+    for (size_t i = 1; i < n; i++) {
+        if (tmp[i] == '/' || tmp[i] == '\\') {
+            char hold = tmp[i];
+            tmp[i] = '\0';
+            if (strlen(tmp) > 0) {
+                if (cct_rt_mkdir(tmp) != 0 && errno != EEXIST) {
+                    free(tmp);
+                    cct_rt_fs_abort1("fs mkdir_all failed: %s", src);
+                }
+            }
+            tmp[i] = hold;
+        }
+    }
+
+    if (cct_rt_mkdir(tmp) != 0) {
+        if (errno != EEXIST || !cct_rt_fs_is_dir_local(tmp)) {
+            free(tmp);
+            cct_rt_fs_abort1("fs mkdir_all failed: %s", src);
+        }
+    }
+
+    free(tmp);
 }
 
 long long cct_rt_fs_exists(const char *path) {

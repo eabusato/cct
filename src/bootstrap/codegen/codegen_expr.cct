@@ -22,7 +22,27 @@ RITUALE codegen_unary_op_text(TokenKind kind) REDDE VERBUM
   SI kind == TK_NON
     REDDE "!"
   FIN SI
+  SI kind == TK_STAR
+    REDDE "*"
+  FIN SI
+  SI kind == TK_SPECULUM
+    REDDE "&"
+  FIN SI
   REDDE ""
+EXPLICIT RITUALE
+
+RITUALE codegen_pointer_element_identity(VERBUM pointer_identity) REDDE VERBUM
+  SI NON CONIURA starts_with(pointer_identity, "SPECULUM(")
+    REDDE ""
+  FIN SI
+  EVOCA REX n AD CONIURA len(pointer_identity)
+  SI n < 11
+    REDDE ""
+  FIN SI
+  SI CONIURA char_at(pointer_identity, n - 1) != 41
+    REDDE ""
+  FIN SI
+  REDDE CONIURA substring(pointer_identity, 9, n - 1)
 EXPLICIT RITUALE
 
 RITUALE codegen_binary_op_text(TokenKind kind) REDDE VERBUM
@@ -137,6 +157,9 @@ RITUALE codegen_expr_type_name(SPECULUM CodegenContext ctx, SPECULUM AstNode exp
   SI (*expr).kind == AST_MOLDE
     REDDE "VERBUM"
   FIN SI
+  SI (*expr).kind == AST_MENSURA
+    REDDE "REX"
+  FIN SI
   SI (*expr).kind == AST_LITERAL_INT
     REDDE "REX"
   FIN SI
@@ -171,6 +194,13 @@ RITUALE codegen_expr_type_name(SPECULUM CodegenContext ctx, SPECULUM AstNode exp
   FIN SI
 
   SI (*expr).kind == AST_CALL ET (*(*expr).callee).kind == AST_IDENTIFIER
+    SI CONIURA compare((*(*expr).callee).name, "cast") == 0
+      SI CONIURA ast_node_list_len((*(*expr).callee).generic_args) == 1
+        EVOCA SPECULUM AstNode target_type_expr AD CONIURA ast_node_list_get((*(*expr).callee).generic_args, 0)
+        REDDE CONIURA codegen_generic_type_identity(ctx, target_type_expr)
+      FIN SI
+      REDDE ""
+    FIN SI
     SI CONIURA ast_node_list_len((*(*expr).callee).generic_args) > 0
       EVOCA VERBUM key AD CONIURA codegen_generic_type_identity_named(ctx, (*(*expr).callee).name, (*(*expr).callee).generic_args, (*expr).line, (*expr).column)
       EVOCA VERBUM out AD CONIURA codegen_lookup_rituale_return_type(ctx, key)
@@ -183,7 +213,23 @@ RITUALE codegen_expr_type_name(SPECULUM CodegenContext ctx, SPECULUM AstNode exp
   SI (*expr).kind == AST_FIELD_ACCESS
     EVOCA VERBUM object_type_name AD CONIURA codegen_expr_type_name(ctx, (*expr).left)
     SI CONIURA compare(object_type_name, "") == 0
-      CONIURA codegen_report_error(ctx, (*expr).line, (*expr).column, "field access requires known local SIGILLUM type")
+      SI (*(*expr).left).kind == AST_UNARY_OP
+        CONIURA codegen_report_error(ctx, (*expr).line, (*expr).column, "field access requires known local SIGILLUM type (left unary)")
+      ALITER
+        SI (*(*expr).left).kind == AST_IDENTIFIER
+          CONIURA codegen_report_error(ctx, (*expr).line, (*expr).column, "field access requires known local SIGILLUM type (left identifier)")
+        ALITER
+          SI (*(*expr).left).kind == AST_FIELD_ACCESS
+            CONIURA codegen_report_error(ctx, (*expr).line, (*expr).column, "field access requires known local SIGILLUM type (left field)")
+          ALITER
+            SI (*(*expr).left).kind == AST_CALL
+              CONIURA codegen_report_error(ctx, (*expr).line, (*expr).column, "field access requires known local SIGILLUM type (left call)")
+            ALITER
+              CONIURA codegen_report_error(ctx, (*expr).line, (*expr).column, "field access requires known local SIGILLUM type")
+            FIN SI
+          FIN SI
+        FIN SI
+      FIN SI
       REDDE ""
     FIN SI
 
@@ -196,6 +242,17 @@ RITUALE codegen_expr_type_name(SPECULUM CodegenContext ctx, SPECULUM AstNode exp
   FIN SI
 
   SI (*expr).kind == AST_UNARY_OP
+    SI (*expr).operator_kind == TK_SPECULUM
+      EVOCA VERBUM target_type_name AD CONIURA codegen_expr_type_name(ctx, (*expr).left)
+      SI CONIURA compare(target_type_name, "") == 0
+        REDDE ""
+      FIN SI
+      REDDE CONIURA concat(CONIURA concat("SPECULUM(", target_type_name), ")")
+    FIN SI
+    SI (*expr).operator_kind == TK_STAR
+      EVOCA VERBUM pointed AD CONIURA codegen_expr_type_name(ctx, (*expr).left)
+      REDDE CONIURA codegen_pointer_element_identity(pointed)
+    FIN SI
     SI (*expr).operator_kind == TK_NON
       REDDE "VERUM"
     FIN SI
@@ -261,6 +318,13 @@ RITUALE codegen_emit_lvalue(SPECULUM CodegenContext ctx, SPECULUM AstNode expr) 
     REDDE
   FIN SI
 
+  SI (*expr).kind == AST_UNARY_OP ET (*expr).operator_kind == TK_STAR
+    CONIURA codegen_emit(ctx, "(*")
+    CONIURA codegen_emit_expr(ctx, (*expr).left)
+    CONIURA codegen_emit(ctx, ")")
+    REDDE
+  FIN SI
+
   CONIURA codegen_report_error(ctx, (*expr).line, (*expr).column, "unsupported lvalue in bootstrap codegen")
   REDDE
 EXPLICIT RITUALE
@@ -268,6 +332,28 @@ EXPLICIT RITUALE
 RITUALE codegen_emit_call_expr(SPECULUM CodegenContext ctx, SPECULUM AstNode expr) REDDE NIHIL
   SI (*(*expr).callee).kind != AST_IDENTIFIER
     CONIURA codegen_report_error(ctx, (*expr).line, (*expr).column, "bootstrap codegen only supports rituale identifier calls")
+    REDDE
+  FIN SI
+
+  SI CONIURA compare((*(*expr).callee).name, "cast") == 0
+    SI CONIURA ast_node_list_len((*(*expr).callee).generic_args) != 1
+      CONIURA codegen_report_error(ctx, (*expr).line, (*expr).column, "cast requires exactly one target type in GENUS(T) (bootstrap subset)")
+      REDDE
+    FIN SI
+    SI CONIURA ast_node_list_len((*expr).arguments) != 1
+      CONIURA codegen_report_error(ctx, (*expr).line, (*expr).column, "cast requires exactly one source expression (bootstrap subset)")
+      REDDE
+    FIN SI
+    EVOCA SPECULUM AstNode target_type_expr AD CONIURA ast_node_list_get((*(*expr).callee).generic_args, 0)
+    EVOCA VERBUM target_type_text AD CONIURA codegen_type_text(ctx, target_type_expr)
+    SI CONIURA compare(target_type_text, "") == 0
+      REDDE
+    FIN SI
+    CONIURA codegen_emit(ctx, "(( ")
+    CONIURA codegen_emit(ctx, target_type_text)
+    CONIURA codegen_emit(ctx, ")(")
+    CONIURA codegen_emit_expr(ctx, CONIURA ast_node_list_get((*expr).arguments, 0))
+    CONIURA codegen_emit(ctx, "))")
     REDDE
   FIN SI
 
@@ -335,6 +421,31 @@ RITUALE codegen_emit_call_expr(SPECULUM CodegenContext ctx, SPECULUM AstNode exp
   REDDE
 EXPLICIT RITUALE
 
+RITUALE codegen_emit_obsecro_call_expr(SPECULUM CodegenContext ctx, SPECULUM AstNode expr) REDDE NIHIL
+  SI (*(*expr).callee).kind != AST_IDENTIFIER
+    CONIURA codegen_report_error(ctx, (*expr).line, (*expr).column, "OBSECRO target must be builtin identifier")
+    REDDE
+  FIN SI
+
+  CONIURA codegen_emit(ctx, "cct_rt_")
+  CONIURA codegen_emit(ctx, (*(*expr).callee).name)
+  CONIURA codegen_emit(ctx, "(")
+
+  EVOCA REX i AD 0
+  EVOCA REX n AD CONIURA ast_node_list_len((*expr).arguments)
+  DUM i < n
+    EVOCA SPECULUM AstNode arg AD CONIURA ast_node_list_get((*expr).arguments, i)
+    SI i > 0
+      CONIURA codegen_emit(ctx, ", ")
+    FIN SI
+    CONIURA codegen_emit_expr(ctx, arg)
+    VINCIRE i AD i + 1
+  FIN DUM
+
+  CONIURA codegen_emit(ctx, ")")
+  REDDE
+EXPLICIT RITUALE
+
 RITUALE codegen_emit_condition_expr(SPECULUM CodegenContext ctx, SPECULUM AstNode expr) REDDE NIHIL
   SI (*expr).kind == AST_BINARY_OP
     EVOCA VERBUM op_text AD CONIURA codegen_binary_op_text((*expr).operator_kind)
@@ -368,6 +479,17 @@ EXPLICIT RITUALE
 RITUALE codegen_emit_expr(SPECULUM CodegenContext ctx, SPECULUM AstNode expr) REDDE NIHIL
   SI (*expr).kind == AST_MOLDE
     CONIURA codegen_emit_forma_expr(ctx, expr)
+    REDDE
+  FIN SI
+
+  SI (*expr).kind == AST_MENSURA
+    EVOCA VERBUM type_text AD CONIURA codegen_type_text(ctx, (*expr).type_expr)
+    SI CONIURA compare(type_text, "") == 0
+      REDDE
+    FIN SI
+    CONIURA codegen_emit(ctx, "((long long)sizeof(")
+    CONIURA codegen_emit(ctx, type_text)
+    CONIURA codegen_emit(ctx, "))")
     REDDE
   FIN SI
 
@@ -433,10 +555,22 @@ RITUALE codegen_emit_expr(SPECULUM CodegenContext ctx, SPECULUM AstNode expr) RE
       CONIURA codegen_report_error(ctx, (*expr).line, (*expr).column, "unsupported unary operator in bootstrap codegen")
       REDDE
     FIN SI
-    CONIURA codegen_emit(ctx, "(")
-    CONIURA codegen_emit(ctx, op_text)
-    CONIURA codegen_emit_expr(ctx, (*expr).left)
-    CONIURA codegen_emit(ctx, ")")
+    SI (*expr).operator_kind == TK_STAR
+      CONIURA codegen_emit(ctx, "(*")
+      CONIURA codegen_emit_expr(ctx, (*expr).left)
+      CONIURA codegen_emit(ctx, ")")
+    ALITER
+      SI (*expr).operator_kind == TK_SPECULUM
+        CONIURA codegen_emit(ctx, "(&")
+        CONIURA codegen_emit_lvalue(ctx, (*expr).left)
+        CONIURA codegen_emit(ctx, ")")
+      ALITER
+        CONIURA codegen_emit(ctx, "(")
+        CONIURA codegen_emit(ctx, op_text)
+        CONIURA codegen_emit_expr(ctx, (*expr).left)
+        CONIURA codegen_emit(ctx, ")")
+      FIN SI
+    FIN SI
     REDDE
   FIN SI
 
@@ -458,6 +592,11 @@ RITUALE codegen_emit_expr(SPECULUM CodegenContext ctx, SPECULUM AstNode expr) RE
 
   SI (*expr).kind == AST_CALL
     CONIURA codegen_emit_call_expr(ctx, expr)
+    REDDE
+  FIN SI
+
+  SI (*expr).kind == AST_OBSECRO_CALL
+    CONIURA codegen_emit_obsecro_call_expr(ctx, expr)
     REDDE
   FIN SI
 

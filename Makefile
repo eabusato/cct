@@ -36,6 +36,37 @@ CCT_KERNEL_ASM = $(CCT_KERNEL_SOURCE:.cct=.cgen.s)
 CCT_KERNEL_OBJ = $(CCT_LBOS_OUT)/cct_kernel.o
 CCT_KERNEL_ENTRY = kernel_halt
 CCT_FREESTANDING_TOOLCHAIN = tools/freestanding_toolchain.sh
+BOOTSTRAP_PHASE29_OUT = out/bootstrap/phase29
+BOOTSTRAP_STAGE0_DIR = $(BOOTSTRAP_PHASE29_OUT)/stage0
+BOOTSTRAP_STAGE1_DIR = $(BOOTSTRAP_PHASE29_OUT)/stage1
+BOOTSTRAP_STAGE2_DIR = $(BOOTSTRAP_PHASE29_OUT)/stage2
+BOOTSTRAP_STAGE_DIFF_DIR = $(BOOTSTRAP_PHASE29_OUT)/diff
+BOOTSTRAP_STAGE_BENCH_DIR = $(BOOTSTRAP_PHASE29_OUT)/bench
+BOOTSTRAP_STAGE_LOGS_DIR = $(BOOTSTRAP_PHASE29_OUT)/logs
+BOOTSTRAP_SUPPORT_DIR = $(BOOTSTRAP_PHASE29_OUT)/support
+BOOTSTRAP_COMPILER_SRC = src/bootstrap/main_compiler.cct
+BOOTSTRAP_SUPPORT_SRC = src/bootstrap/selfhost_support.cct
+BOOTSTRAP_STAGE0_BIN = $(BOOTSTRAP_STAGE0_DIR)/cct_stage0
+BOOTSTRAP_STAGE1_BIN = $(BOOTSTRAP_STAGE1_DIR)/cct_stage1
+BOOTSTRAP_STAGE2_BIN = $(BOOTSTRAP_STAGE2_DIR)/cct_stage2
+BOOTSTRAP_STAGE0_C = $(BOOTSTRAP_STAGE0_DIR)/main_compiler.stage0.c
+BOOTSTRAP_STAGE1_C = $(BOOTSTRAP_STAGE1_DIR)/main_compiler.stage1.c
+BOOTSTRAP_STAGE2_C = $(BOOTSTRAP_STAGE2_DIR)/main_compiler.stage2.c
+BOOTSTRAP_STAGE0_MANIFEST = $(BOOTSTRAP_STAGE0_DIR)/manifest.txt
+BOOTSTRAP_STAGE1_MANIFEST = $(BOOTSTRAP_STAGE1_DIR)/manifest.txt
+BOOTSTRAP_STAGE2_MANIFEST = $(BOOTSTRAP_STAGE2_DIR)/manifest.txt
+BOOTSTRAP_STAGE0_IDENTITY = $(BOOTSTRAP_STAGE0_DIR)/identity_manifest.txt
+BOOTSTRAP_STAGE1_IDENTITY = $(BOOTSTRAP_STAGE1_DIR)/identity_manifest.txt
+BOOTSTRAP_STAGE2_IDENTITY = $(BOOTSTRAP_STAGE2_DIR)/identity_manifest.txt
+BOOTSTRAP_STAGE12_C_DIFF = $(BOOTSTRAP_STAGE_DIFF_DIR)/stage1_vs_stage2.c.diff
+BOOTSTRAP_STAGE12_BIN_DIFF = $(BOOTSTRAP_STAGE_DIFF_DIR)/stage1_vs_stage2.bin.diff
+BOOTSTRAP_STAGE12_MANIFEST_DIFF = $(BOOTSTRAP_STAGE_DIFF_DIR)/stage1_vs_stage2.identity.diff
+BOOTSTRAP_STAGE_BENCH = $(BOOTSTRAP_STAGE_BENCH_DIR)/metrics.txt
+BOOTSTRAP_SUPPORT_HOST_C = $(BOOTSTRAP_SUPPORT_DIR)/selfhost_support.host.c
+BOOTSTRAP_SUPPORT_LINK_C = $(BOOTSTRAP_SUPPORT_DIR)/selfhost_support.link.c
+BOOTSTRAP_SUPPORT_OBJ = $(BOOTSTRAP_SUPPORT_DIR)/selfhost_support.o
+BOOTSTRAP_STAGE_CFLAGS = -Wall -Wextra -Werror -Wno-unused-label -Wno-unused-function -Wno-unused-const-variable -Wno-unused-parameter -std=c11 -O2 -g0 -D_POSIX_C_SOURCE=200809L -D_XOPEN_SOURCE=700 -DCCT_STDLIB_DIR=\"$(abspath $(STDLIB_DIR))\" -DCCT_FREESTANDING_RT_HEADER=\"$(abspath $(SRC_DIR)/runtime/cct_freestanding_rt.h)\" -DCCT_FREESTANDING_RT_SOURCE=\"$(abspath $(SRC_DIR)/runtime/cct_freestanding_rt.c)\"
+BOOTSTRAP_STAGE_LDFLAGS = $(LDFLAGS)
 
 # Source files
 SRCS = \
@@ -197,6 +228,10 @@ test-bootstrap-codegen: $(TARGET)
 	@echo "Running bootstrap codegen tests..."
 	@CCT_TEST_GROUP=bootstrap-codegen bash tests/run_tests.sh
 
+test-bootstrap-selfhost: $(TARGET)
+	@echo "Running bootstrap self-hosting tests..."
+	@CCT_TEST_GROUP=bootstrap-selfhost bash tests/run_tests.sh
+
 test-phase: $(TARGET)
 	@if [ -z "$(PHASE)" ]; then \
 		echo "Usage: make test-phase PHASE=26"; \
@@ -221,6 +256,112 @@ cct_lexer_bootstrap: $(TARGET) \
 	@rm -f src/bootstrap/main_lexer.svg src/bootstrap/main_lexer.sigil
 	@rm -f src/bootstrap/main_lexer.system.svg src/bootstrap/main_lexer.system.sigil
 	@echo "Build complete: cct_lexer_bootstrap"
+
+$(BOOTSTRAP_PHASE29_OUT) $(BOOTSTRAP_STAGE0_DIR) $(BOOTSTRAP_STAGE1_DIR) $(BOOTSTRAP_STAGE2_DIR) $(BOOTSTRAP_STAGE_DIFF_DIR) $(BOOTSTRAP_STAGE_BENCH_DIR) $(BOOTSTRAP_STAGE_LOGS_DIR) $(BOOTSTRAP_SUPPORT_DIR):
+	@mkdir -p "$@"
+
+bootstrap-support: $(TARGET) $(BOOTSTRAP_SUPPORT_SRC) | $(BOOTSTRAP_SUPPORT_DIR) $(BOOTSTRAP_STAGE_LOGS_DIR)
+	@echo "[29A] Building selfhost support objects..."
+	@./cct "$(BOOTSTRAP_SUPPORT_SRC)" >"$(BOOTSTRAP_STAGE_LOGS_DIR)/support.host.stdout.log" 2>"$(BOOTSTRAP_STAGE_LOGS_DIR)/support.host.stderr.log"
+	@mv -f src/bootstrap/selfhost_support.cgen.c "$(BOOTSTRAP_SUPPORT_HOST_C)"
+	@perl -0pi -e 's/\nint main\(int argc, char \*\*argv\) \{\n    cct_rt_args_init\(argc, argv\);\n    return 0;\n\}\n/\n/s' "$(BOOTSTRAP_SUPPORT_HOST_C)"
+	@sed -e 's/cct_fn_/cct_boot_rit_/g' -e '/cct_boot_rit_/ s/^static //' "$(BOOTSTRAP_SUPPORT_HOST_C)" >"$(BOOTSTRAP_SUPPORT_LINK_C)"
+	@perl -0pi -e 's/^static void cct_rt_args_init\(int argc, char \*\*argv\)/void cct_rt_args_init(int argc, char **argv)/m' "$(BOOTSTRAP_SUPPORT_LINK_C)"
+	@awk -f tools/gen_selfhost_aliases.awk src/bootstrap/selfhost_prelude.cct >>"$(BOOTSTRAP_SUPPORT_LINK_C)"
+	@$(CC) $(BOOTSTRAP_STAGE_CFLAGS) -c -o "$(BOOTSTRAP_SUPPORT_OBJ)" "$(BOOTSTRAP_SUPPORT_LINK_C)" >"$(BOOTSTRAP_STAGE_LOGS_DIR)/support.cc.stdout.log" 2>"$(BOOTSTRAP_STAGE_LOGS_DIR)/support.cc.stderr.log"
+	@echo "[29A] support objects ready: $(BOOTSTRAP_SUPPORT_OBJ)"
+
+bootstrap-stage0: $(TARGET) $(BOOTSTRAP_COMPILER_SRC) | $(BOOTSTRAP_PHASE29_OUT) $(BOOTSTRAP_STAGE0_DIR) $(BOOTSTRAP_STAGE_LOGS_DIR)
+	@echo "[29A] Building stage0..."
+	@./cct "$(BOOTSTRAP_COMPILER_SRC)" >"$(BOOTSTRAP_STAGE_LOGS_DIR)/stage0.host.stdout.log" 2>"$(BOOTSTRAP_STAGE_LOGS_DIR)/stage0.host.stderr.log"
+	@mv -f src/bootstrap/main_compiler "$(BOOTSTRAP_STAGE0_BIN)"
+	@mv -f src/bootstrap/main_compiler.cgen.c "$(BOOTSTRAP_STAGE0_C)"
+	@printf '%s\n' \
+		"stage=stage0" \
+		"producer=host-cct" \
+		"input=$(abspath $(BOOTSTRAP_COMPILER_SRC))" \
+		"generated_c=$(abspath $(BOOTSTRAP_STAGE0_C))" \
+		"binary=$(abspath $(BOOTSTRAP_STAGE0_BIN))" \
+		"generated_c_size=$$(wc -c < '$(BOOTSTRAP_STAGE0_C)' | tr -d ' ')" \
+		"binary_size=$$(wc -c < '$(BOOTSTRAP_STAGE0_BIN)' | tr -d ' ')" \
+		"generated_c_sha256=$$($(SHA256) '$(BOOTSTRAP_STAGE0_C)' | awk '{print $$1}')" \
+		"binary_sha256=$$($(SHA256) '$(BOOTSTRAP_STAGE0_BIN)' | awk '{print $$1}')" \
+		> "$(BOOTSTRAP_STAGE0_MANIFEST)"
+	@printf '%s\n' \
+		"generated_c_size=$$(wc -c < '$(BOOTSTRAP_STAGE0_C)' | tr -d ' ')" \
+		"binary_size=$$(wc -c < '$(BOOTSTRAP_STAGE0_BIN)' | tr -d ' ')" \
+		"generated_c_sha256=$$($(SHA256) '$(BOOTSTRAP_STAGE0_C)' | awk '{print $$1}')" \
+		> "$(BOOTSTRAP_STAGE0_IDENTITY)"
+	@echo "[29A] stage0 ready: $(BOOTSTRAP_STAGE0_BIN)"
+
+bootstrap-stage1: bootstrap-stage0 bootstrap-support | $(BOOTSTRAP_STAGE1_DIR) $(BOOTSTRAP_STAGE_LOGS_DIR)
+	@echo "[29B] Building stage1..."
+	@"$(BOOTSTRAP_STAGE0_BIN)" "$(BOOTSTRAP_COMPILER_SRC)" "$(BOOTSTRAP_STAGE1_C)" >"$(BOOTSTRAP_STAGE_LOGS_DIR)/stage1.bootstrap.stdout.log" 2>"$(BOOTSTRAP_STAGE_LOGS_DIR)/stage1.bootstrap.stderr.log"
+	@$(CC) $(BOOTSTRAP_STAGE_CFLAGS) -o "$(BOOTSTRAP_STAGE1_BIN)" "$(BOOTSTRAP_STAGE1_C)" "$(BOOTSTRAP_SUPPORT_OBJ)" "$(SRC_DIR)/runtime/fs_runtime.c" $(BOOTSTRAP_STAGE_LDFLAGS) >"$(BOOTSTRAP_STAGE_LOGS_DIR)/stage1.cc.stdout.log" 2>"$(BOOTSTRAP_STAGE_LOGS_DIR)/stage1.cc.stderr.log"
+	@printf '%s\n' \
+		"stage=stage1" \
+		"producer=$(abspath $(BOOTSTRAP_STAGE0_BIN))" \
+		"input=$(abspath $(BOOTSTRAP_COMPILER_SRC))" \
+		"generated_c=$(abspath $(BOOTSTRAP_STAGE1_C))" \
+		"binary=$(abspath $(BOOTSTRAP_STAGE1_BIN))" \
+		"generated_c_size=$$(wc -c < '$(BOOTSTRAP_STAGE1_C)' | tr -d ' ')" \
+		"binary_size=$$(wc -c < '$(BOOTSTRAP_STAGE1_BIN)' | tr -d ' ')" \
+		"generated_c_sha256=$$($(SHA256) '$(BOOTSTRAP_STAGE1_C)' | awk '{print $$1}')" \
+		"binary_sha256=$$($(SHA256) '$(BOOTSTRAP_STAGE1_BIN)' | awk '{print $$1}')" \
+		> "$(BOOTSTRAP_STAGE1_MANIFEST)"
+	@printf '%s\n' \
+		"generated_c_size=$$(wc -c < '$(BOOTSTRAP_STAGE1_C)' | tr -d ' ')" \
+		"binary_size=$$(wc -c < '$(BOOTSTRAP_STAGE1_BIN)' | tr -d ' ')" \
+		"generated_c_sha256=$$($(SHA256) '$(BOOTSTRAP_STAGE1_C)' | awk '{print $$1}')" \
+		> "$(BOOTSTRAP_STAGE1_IDENTITY)"
+	@echo "[29B] stage1 ready: $(BOOTSTRAP_STAGE1_BIN)"
+
+bootstrap-stage2: bootstrap-stage1 bootstrap-support | $(BOOTSTRAP_STAGE2_DIR) $(BOOTSTRAP_STAGE_LOGS_DIR)
+	@echo "[29C] Building stage2..."
+	@"$(BOOTSTRAP_STAGE1_BIN)" "$(BOOTSTRAP_COMPILER_SRC)" "$(BOOTSTRAP_STAGE2_C)" >"$(BOOTSTRAP_STAGE_LOGS_DIR)/stage2.bootstrap.stdout.log" 2>"$(BOOTSTRAP_STAGE_LOGS_DIR)/stage2.bootstrap.stderr.log"
+	@$(CC) $(BOOTSTRAP_STAGE_CFLAGS) -o "$(BOOTSTRAP_STAGE2_BIN)" "$(BOOTSTRAP_STAGE2_C)" "$(BOOTSTRAP_SUPPORT_OBJ)" "$(SRC_DIR)/runtime/fs_runtime.c" $(BOOTSTRAP_STAGE_LDFLAGS) >"$(BOOTSTRAP_STAGE_LOGS_DIR)/stage2.cc.stdout.log" 2>"$(BOOTSTRAP_STAGE_LOGS_DIR)/stage2.cc.stderr.log"
+	@printf '%s\n' \
+		"stage=stage2" \
+		"producer=$(abspath $(BOOTSTRAP_STAGE1_BIN))" \
+		"input=$(abspath $(BOOTSTRAP_COMPILER_SRC))" \
+		"generated_c=$(abspath $(BOOTSTRAP_STAGE2_C))" \
+		"binary=$(abspath $(BOOTSTRAP_STAGE2_BIN))" \
+		"generated_c_size=$$(wc -c < '$(BOOTSTRAP_STAGE2_C)' | tr -d ' ')" \
+		"binary_size=$$(wc -c < '$(BOOTSTRAP_STAGE2_BIN)' | tr -d ' ')" \
+		"generated_c_sha256=$$($(SHA256) '$(BOOTSTRAP_STAGE2_C)' | awk '{print $$1}')" \
+		"binary_sha256=$$($(SHA256) '$(BOOTSTRAP_STAGE2_BIN)' | awk '{print $$1}')" \
+		> "$(BOOTSTRAP_STAGE2_MANIFEST)"
+	@printf '%s\n' \
+		"generated_c_size=$$(wc -c < '$(BOOTSTRAP_STAGE2_C)' | tr -d ' ')" \
+		"binary_size=$$(wc -c < '$(BOOTSTRAP_STAGE2_BIN)' | tr -d ' ')" \
+		"generated_c_sha256=$$($(SHA256) '$(BOOTSTRAP_STAGE2_C)' | awk '{print $$1}')" \
+		> "$(BOOTSTRAP_STAGE2_IDENTITY)"
+	@echo "[29C] stage2 ready: $(BOOTSTRAP_STAGE2_BIN)"
+
+bootstrap-stage-diff: bootstrap-stage2 | $(BOOTSTRAP_STAGE_DIFF_DIR)
+	@echo "[29C/29D] Comparing stage1 and stage2..."
+	@if cmp -s "$(BOOTSTRAP_STAGE1_C)" "$(BOOTSTRAP_STAGE2_C)"; then : >"$(BOOTSTRAP_STAGE12_C_DIFF)"; else diff -u "$(BOOTSTRAP_STAGE1_C)" "$(BOOTSTRAP_STAGE2_C)" >"$(BOOTSTRAP_STAGE12_C_DIFF)" || true; fi
+	@if [ "$$(uname -s)" = "Darwin" ]; then : >"$(BOOTSTRAP_STAGE12_BIN_DIFF)"; elif cmp -s "$(BOOTSTRAP_STAGE1_BIN)" "$(BOOTSTRAP_STAGE2_BIN)"; then : >"$(BOOTSTRAP_STAGE12_BIN_DIFF)"; else cmp -l "$(BOOTSTRAP_STAGE1_BIN)" "$(BOOTSTRAP_STAGE2_BIN)" >"$(BOOTSTRAP_STAGE12_BIN_DIFF)" || true; fi
+	@if cmp -s "$(BOOTSTRAP_STAGE1_IDENTITY)" "$(BOOTSTRAP_STAGE2_IDENTITY)"; then : >"$(BOOTSTRAP_STAGE12_MANIFEST_DIFF)"; else diff -u "$(BOOTSTRAP_STAGE1_IDENTITY)" "$(BOOTSTRAP_STAGE2_IDENTITY)" >"$(BOOTSTRAP_STAGE12_MANIFEST_DIFF)" || true; fi
+
+bootstrap-stage-identity: bootstrap-stage-diff
+	@echo "[29D] Validating stage identity..."
+	@test ! -s "$(BOOTSTRAP_STAGE12_C_DIFF)"
+	@test ! -s "$(BOOTSTRAP_STAGE12_BIN_DIFF)"
+	@test ! -s "$(BOOTSTRAP_STAGE12_MANIFEST_DIFF)"
+	@echo "[29D] stage1 == stage2"
+
+bootstrap-stage-bench: bootstrap-stage-identity | $(BOOTSTRAP_STAGE_BENCH_DIR) $(BOOTSTRAP_STAGE_LOGS_DIR)
+	@echo "[29F] Benchmarking stage pipeline..."
+	@/usr/bin/time -p $(MAKE) -B bootstrap-stage0 >"$(BOOTSTRAP_STAGE_LOGS_DIR)/bench.stage0.stdout.log" 2>"$(BOOTSTRAP_STAGE_LOGS_DIR)/bench.stage0.time.log"
+	@/usr/bin/time -p $(MAKE) -B bootstrap-stage1 >"$(BOOTSTRAP_STAGE_LOGS_DIR)/bench.stage1.stdout.log" 2>"$(BOOTSTRAP_STAGE_LOGS_DIR)/bench.stage1.time.log"
+	@/usr/bin/time -p $(MAKE) -B bootstrap-stage2 >"$(BOOTSTRAP_STAGE_LOGS_DIR)/bench.stage2.stdout.log" 2>"$(BOOTSTRAP_STAGE_LOGS_DIR)/bench.stage2.time.log"
+	@printf '%s\n' \
+		"stage0_real_seconds=$$(awk '/^real / {print $$2}' '$(BOOTSTRAP_STAGE_LOGS_DIR)/bench.stage0.time.log')" \
+		"stage1_real_seconds=$$(awk '/^real / {print $$2}' '$(BOOTSTRAP_STAGE_LOGS_DIR)/bench.stage1.time.log')" \
+		"stage2_real_seconds=$$(awk '/^real / {print $$2}' '$(BOOTSTRAP_STAGE_LOGS_DIR)/bench.stage2.time.log')" \
+		> "$(BOOTSTRAP_STAGE_BENCH)"
+	@echo "[29F] metrics ready: $(BOOTSTRAP_STAGE_BENCH)"
 
 test_lexer_bootstrap: cct_lexer_bootstrap
 	@bash tests/validate_lexer_full_suite.sh
@@ -443,6 +584,13 @@ help:
 	@echo "  test-bootstrap-parser  - Run bootstrap parser blocks (phases 22-23)"
 	@echo "  test-bootstrap-semantic - Run bootstrap semantic blocks (phases 24-25)"
 	@echo "  test-bootstrap-codegen - Run bootstrap codegen block (phase 26)"
+	@echo "  test-bootstrap-selfhost - Run bootstrap self-hosting block (phase 29)"
+	@echo "  bootstrap-stage0 - Build bootstrap compiler stage0 under out/bootstrap/phase29/"
+	@echo "  bootstrap-support - Build host support object for self-hosting stages"
+	@echo "  bootstrap-stage1 - Self-compile compiler with stage0"
+	@echo "  bootstrap-stage2 - Self-compile compiler with stage1"
+	@echo "  bootstrap-stage-identity - Validate stage1/stage2 identity"
+	@echo "  bootstrap-stage-bench - Benchmark stage pipeline"
 	@echo "  test-phase PHASE=26    - Run a selected major phase block"
 	@echo "  fmt       - Format .cct sources in lib/, examples/, tests/integration/"
 	@echo "  fmt-check - Check formatting without rewriting files"
@@ -530,4 +678,4 @@ phase12-final-audit: $(TARGET)
 	@echo ""
 	@echo "Audit complete."
 
-.PHONY: all clean test test-legacy test-bootstrap test-bootstrap-lexer test-bootstrap-parser test-bootstrap-semantic test-bootstrap-codegen test-phase test_fluxus_storage test_diagnostic_taxonomy dist release install uninstall help fmt fmt-check lint lbos-bridge project-build project-run project-test project-test-strict project-bench project-clean doc doc-strict release-check phase12-final-audit
+.PHONY: all clean test test-legacy test-bootstrap test-bootstrap-lexer test-bootstrap-parser test-bootstrap-semantic test-bootstrap-codegen test-bootstrap-selfhost test-phase test_fluxus_storage test_diagnostic_taxonomy dist release install uninstall help fmt fmt-check lint lbos-bridge bootstrap-support bootstrap-stage0 bootstrap-stage1 bootstrap-stage2 bootstrap-stage-diff bootstrap-stage-identity bootstrap-stage-bench project-build project-run project-test project-test-strict project-bench project-clean doc doc-strict release-check phase12-final-audit

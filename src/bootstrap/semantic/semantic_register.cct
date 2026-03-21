@@ -7,6 +7,17 @@ ADVOCARE "semantic_generic.cct"
 ADVOCARE "semantic_resolver.cct"
 ADVOCARE "semantic_symbol.cct"
 
+RITUALE semantic_register_ordo_items(SPECULUM SemanticContext ctx, SPECULUM AstNode decl, REX type_id) REDDE NIHIL
+  EVOCA REX i AD 0
+  EVOCA REX n AD CONIURA ast_node_list_len((*decl).items)
+  DUM i < n
+    EVOCA SPECULUM AstNode item AD CONIURA ast_node_list_get((*decl).items, i)
+    CONIURA semantic_define(ctx, SEM_SYMBOL_VARIABLE, (*item).name, type_id, (*item).line, (*item).column)
+    VINCIRE i AD i + 1
+  FIN DUM
+  REDDE
+EXPLICIT RITUALE
+
 RITUALE semantic_register_named_type_decl(SPECULUM SemanticContext ctx, SPECULUM AstNode decl) REDDE REX
   EVOCA REX sym_id AD CONIURA semantic_define(ctx, SEM_SYMBOL_TYPE, (*decl).name, CONIURA semantic_invalid_id(), (*decl).line, (*decl).column)
   SI sym_id == CONIURA semantic_invalid_id()
@@ -20,6 +31,9 @@ RITUALE semantic_register_named_type_decl(SPECULUM SemanticContext ctx, SPECULUM
   VINCIRE (*sym).has_decl_node AD VERUM
   SI (*decl).kind == AST_SIGILLUM
     CONIURA semantic_register_type_params_for_decl(ctx, sym_id, decl)
+  FIN SI
+  SI (*decl).kind == AST_ORDO
+    CONIURA semantic_register_ordo_items(ctx, decl, type_id)
   FIN SI
   REDDE sym_id
 EXPLICIT RITUALE

@@ -131,8 +131,63 @@ RITUALE codegen_emit_tempta_stmt(SPECULUM CodegenContext ctx, SPECULUM AstNode s
   REDDE
 EXPLICIT RITUALE
 
+RITUALE codegen_emit_obsecro_scribe_stmt(SPECULUM CodegenContext ctx, SPECULUM AstNode expr) REDDE NIHIL
+  SI (*(*expr).callee).kind != AST_IDENTIFIER VEL CONIURA compare((*(*expr).callee).name, "scribe") != 0
+    CONIURA codegen_report_error(ctx, (*expr).line, (*expr).column, "bootstrap codegen only supports OBSECRO scribe as statement builtin")
+    REDDE
+  FIN SI
+
+  EVOCA REX n AD CONIURA ast_node_list_len((*expr).arguments)
+  SI n < 1
+    CONIURA codegen_report_error(ctx, (*expr).line, (*expr).column, "OBSECRO scribe requires at least one argument in bootstrap codegen")
+    REDDE
+  FIN SI
+
+  CONIURA codegen_require_stdio(ctx)
+
+  EVOCA REX i AD 0
+  DUM i < n
+    EVOCA SPECULUM AstNode arg AD CONIURA ast_node_list_get((*expr).arguments, i)
+    EVOCA VERBUM type_name AD CONIURA codegen_expr_type_name(ctx, arg)
+
+    SI CONIURA compare(type_name, "VERBUM") == 0
+      CONIURA codegen_emit(ctx, "cct_rt_scribe_str(")
+      CONIURA codegen_emit_expr(ctx, arg)
+      CONIURA codegen_emit_line(ctx, ");")
+    ALITER
+      SI CONIURA compare(type_name, "REX") == 0 VEL CONIURA compare(type_name, "DUX") == 0 VEL CONIURA compare(type_name, "COMES") == 0 VEL CONIURA compare(type_name, "MILES") == 0
+        CONIURA codegen_emit(ctx, "cct_rt_scribe_int((long long)(")
+        CONIURA codegen_emit_expr(ctx, arg)
+        CONIURA codegen_emit_line(ctx, "));")
+      ALITER
+        SI CONIURA compare(type_name, "UMBRA") == 0 VEL CONIURA compare(type_name, "FLAMMA") == 0
+          CONIURA codegen_emit(ctx, "cct_rt_scribe_real((double)(")
+          CONIURA codegen_emit_expr(ctx, arg)
+          CONIURA codegen_emit_line(ctx, "));")
+        ALITER
+          SI CONIURA compare(type_name, "VERUM") == 0
+            CONIURA codegen_emit(ctx, "cct_rt_scribe_bool((long long)(")
+            CONIURA codegen_emit_expr(ctx, arg)
+            CONIURA codegen_emit_line(ctx, "));")
+          ALITER
+            CONIURA codegen_report_error(ctx, (*arg).line, (*arg).column, "OBSECRO scribe argument outside bootstrap codegen subset")
+            REDDE
+          FIN SI
+        FIN SI
+      FIN SI
+    FIN SI
+
+    VINCIRE i AD i + 1
+  FIN DUM
+  REDDE
+EXPLICIT RITUALE
+
 RITUALE codegen_emit_stmt(SPECULUM CodegenContext ctx, SPECULUM AstNode stmt) REDDE NIHIL
   SI (*stmt).kind == AST_EXPR_STMT
+    SI (*(*stmt).left).kind == AST_OBSECRO_CALL ET (*(*(*stmt).left).callee).kind == AST_IDENTIFIER ET CONIURA compare((*(*(*stmt).left).callee).name, "scribe") == 0
+      CONIURA codegen_emit_obsecro_scribe_stmt(ctx, (*stmt).left)
+      REDDE
+    FIN SI
     CONIURA codegen_emit_expr(ctx, (*stmt).left)
     CONIURA codegen_emit_line(ctx, ";")
     REDDE
@@ -196,6 +251,13 @@ RITUALE codegen_emit_stmt(SPECULUM CodegenContext ctx, SPECULUM AstNode stmt) RE
       REDDE
     FIN SI
     CONIURA codegen_emit_line(ctx, "return;")
+    REDDE
+  FIN SI
+
+  SI (*stmt).kind == AST_DIMITTE
+    CONIURA codegen_emit(ctx, "free((void*)(")
+    CONIURA codegen_emit_lvalue(ctx, (*stmt).left)
+    CONIURA codegen_emit_line(ctx, "));")
     REDDE
   FIN SI
 

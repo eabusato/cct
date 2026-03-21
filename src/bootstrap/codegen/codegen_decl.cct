@@ -176,7 +176,7 @@ RITUALE codegen_emit_program_body(SPECULUM CodegenContext ctx, SPECULUM AstProgr
   VINCIRE n AD CONIURA ast_node_list_len((*program).declarations)
   DUM i < n
     EVOCA SPECULUM AstNode decl AD CONIURA ast_node_list_get((*program).declarations, i)
-    SI (*decl).kind == AST_RITUALE ET CONIURA ast_node_list_len((*decl).type_params) == 0
+    SI (*decl).kind == AST_RITUALE ET CONIURA ast_node_list_len((*decl).type_params) == 0 ET (*decl).has_body
       CONIURA codegen_emit_rituale_definition(ctx, decl)
       SI i + 1 < n
         CONIURA codegen_emit_blank_line(ctx)

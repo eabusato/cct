@@ -63,6 +63,16 @@ RITUALE semantic_analyze_lvalue(SPECULUM SemanticContext ctx, SPECULUM AstNode e
     REDDE CONIURA semantic_analyze_identifier(ctx, expr)
   FIN SI
 
+  SI (*expr).kind == AST_UNARY_OP ET (*expr).operator_kind == TK_STAR
+    EVOCA REX base_type_id AD CONIURA semantic_analyze_expr(ctx, (*expr).left)
+    EVOCA SPECULUM SemanticType base_type AD CONIURA semantic_type_at(ctx, base_type_id)
+    SI (*base_type).kind != SEM_TYPE_POINTER ET (*base_type).kind != SEM_TYPE_ARRAY
+      CONIURA semantic_report_error(ctx, (*expr).line, (*expr).column, "dereference requires pointer or array type")
+      REDDE (*ctx).type_error
+    FIN SI
+    REDDE (*base_type).element_type_id
+  FIN SI
+
   SI (*expr).kind == AST_FIELD_ACCESS
     EVOCA REX object_type_id AD CONIURA semantic_analyze_expr(ctx, (*expr).left)
     SI object_type_id == (*ctx).type_error
@@ -94,6 +104,30 @@ RITUALE semantic_analyze_call(SPECULUM SemanticContext ctx, SPECULUM AstNode exp
   SI (*(*expr).callee).kind != AST_IDENTIFIER
     CONIURA semantic_report_error(ctx, (*expr).line, (*expr).column, "call target is not rituale")
     REDDE (*ctx).type_error
+  FIN SI
+
+  SI CONIURA compare((*(*expr).callee).name, "cast") == 0
+    SI CONIURA ast_node_list_len((*(*expr).callee).generic_args) != 1
+      CONIURA semantic_report_error(ctx, (*expr).line, (*expr).column, "cast requires exactly one target type in GENUS(T)")
+      REDDE (*ctx).type_error
+    FIN SI
+    SI CONIURA ast_node_list_len((*expr).arguments) != 1
+      CONIURA semantic_report_error(ctx, (*expr).line, (*expr).column, "cast requires exactly one source argument")
+      REDDE (*ctx).type_error
+    FIN SI
+
+    EVOCA SPECULUM AstNode target_type_node AD CONIURA ast_node_list_get((*(*expr).callee).generic_args, 0)
+    EVOCA SPECULUM AstNode source_expr AD CONIURA ast_node_list_get((*expr).arguments, 0)
+    EVOCA REX target_type_id AD CONIURA semantic_resolve_type_node(ctx, target_type_node)
+    EVOCA REX source_type_id AD CONIURA semantic_analyze_expr(ctx, source_expr)
+    SI target_type_id == (*ctx).type_error VEL source_type_id == (*ctx).type_error
+      REDDE (*ctx).type_error
+    FIN SI
+    SI NON CONIURA semantic_type_is_numeric(ctx, target_type_id) VEL NON CONIURA semantic_type_is_numeric(ctx, source_type_id)
+      CONIURA semantic_report_error(ctx, (*expr).line, (*expr).column, "cast invalid: only numeric primitive conversions are allowed in bootstrap subset")
+      REDDE (*ctx).type_error
+    FIN SI
+    REDDE target_type_id
   FIN SI
 
   EVOCA REX sym_id AD CONIURA semantic_lookup(ctx, (*(*expr).callee).name)
@@ -180,6 +214,97 @@ RITUALE semantic_analyze_call(SPECULUM SemanticContext ctx, SPECULUM AstNode exp
   REDDE return_type_id
 EXPLICIT RITUALE
 
+RITUALE semantic_obsecro_expected_arity(VERBUM builtin_name) REDDE REX
+  SI CONIURA compare(builtin_name, "fs_read_all") == 0
+    REDDE 1
+  FIN SI
+  SI CONIURA compare(builtin_name, "fs_write_all") == 0
+    REDDE 2
+  FIN SI
+  SI CONIURA compare(builtin_name, "fs_exists") == 0
+    REDDE 1
+  FIN SI
+  SI CONIURA compare(builtin_name, "fs_mkdir_all") == 0
+    REDDE 1
+  FIN SI
+  REDDE -1
+EXPLICIT RITUALE
+
+RITUALE semantic_obsecro_return_type_id(SPECULUM SemanticContext ctx, VERBUM builtin_name) REDDE REX
+  SI CONIURA compare(builtin_name, "scribe") == 0
+    REDDE (*ctx).type_nihil
+  FIN SI
+  SI CONIURA compare(builtin_name, "fs_read_all") == 0
+    REDDE (*ctx).type_verbum
+  FIN SI
+  SI CONIURA compare(builtin_name, "fs_exists") == 0
+    REDDE (*ctx).type_verum
+  FIN SI
+  SI CONIURA compare(builtin_name, "fs_write_all") == 0 VEL CONIURA compare(builtin_name, "fs_mkdir_all") == 0
+    REDDE (*ctx).type_nihil
+  FIN SI
+  REDDE (*ctx).type_error
+EXPLICIT RITUALE
+
+RITUALE semantic_analyze_obsecro_call(SPECULUM SemanticContext ctx, SPECULUM AstNode expr) REDDE REX
+  SI (*(*expr).callee).kind != AST_IDENTIFIER
+    CONIURA semantic_report_error(ctx, (*expr).line, (*expr).column, "OBSECRO target must be builtin identifier")
+    REDDE (*ctx).type_error
+  FIN SI
+
+  EVOCA VERBUM builtin_name AD (*(*expr).callee).name
+  SI CONIURA compare(builtin_name, "scribe") == 0
+    EVOCA REX actual_scribe AD CONIURA ast_node_list_len((*expr).arguments)
+    SI actual_scribe < 1
+      CONIURA semantic_report_error(ctx, (*expr).line, (*expr).column, "OBSECRO scribe requires at least one argument in bootstrap subset")
+      REDDE (*ctx).type_error
+    FIN SI
+
+    EVOCA REX si AD 0
+    DUM si < actual_scribe
+      EVOCA SPECULUM AstNode arg AD CONIURA ast_node_list_get((*expr).arguments, si)
+      EVOCA REX arg_type_id AD CONIURA semantic_analyze_expr(ctx, arg)
+      SI arg_type_id == (*ctx).type_error
+        REDDE (*ctx).type_error
+      FIN SI
+      SI NON CONIURA semantic_type_is_integer(ctx, arg_type_id) ET NON CONIURA semantic_type_is_real(ctx, arg_type_id) ET arg_type_id != (*ctx).type_verum ET arg_type_id != (*ctx).type_verbum
+        CONIURA semantic_report_error(ctx, (*arg).line, (*arg).column, "OBSECRO scribe supports VERBUM, integer, real, and VERUM arguments in bootstrap subset")
+        REDDE (*ctx).type_error
+      FIN SI
+      VINCIRE si AD si + 1
+    FIN DUM
+
+    REDDE (*ctx).type_nihil
+  FIN SI
+
+  EVOCA REX expected AD CONIURA semantic_obsecro_expected_arity(builtin_name)
+  EVOCA REX actual AD CONIURA ast_node_list_len((*expr).arguments)
+  SI expected < 0
+    CONIURA semantic_report_error(ctx, (*expr).line, (*expr).column, "unsupported OBSECRO builtin in bootstrap subset")
+    REDDE (*ctx).type_error
+  FIN SI
+  SI expected != actual
+    CONIURA semantic_report_error(ctx, (*expr).line, (*expr).column, "OBSECRO builtin arity mismatch")
+    REDDE (*ctx).type_error
+  FIN SI
+
+  EVOCA REX i AD 0
+  DUM i < actual
+    EVOCA SPECULUM AstNode arg AD CONIURA ast_node_list_get((*expr).arguments, i)
+    EVOCA REX arg_type_id AD CONIURA semantic_analyze_expr(ctx, arg)
+    SI arg_type_id == (*ctx).type_error
+      REDDE (*ctx).type_error
+    FIN SI
+    SI NON CONIURA semantic_type_compatible_assign(ctx, (*ctx).type_verbum, arg_type_id)
+      CONIURA semantic_report_error(ctx, (*arg).line, (*arg).column, "OBSECRO fs builtin expects VERBUM arguments in bootstrap subset")
+      REDDE (*ctx).type_error
+    FIN SI
+    VINCIRE i AD i + 1
+  FIN DUM
+
+  REDDE CONIURA semantic_obsecro_return_type_id(ctx, builtin_name)
+EXPLICIT RITUALE
+
 RITUALE semantic_analyze_molde(SPECULUM SemanticContext ctx, SPECULUM AstNode expr) REDDE REX
   EVOCA REX i AD 0
   EVOCA REX n AD CONIURA ast_node_list_len((*expr).children)
@@ -200,6 +325,12 @@ EXPLICIT RITUALE
 RITUALE semantic_analyze_expr(SPECULUM SemanticContext ctx, SPECULUM AstNode expr) REDDE REX
   SI (*expr).kind == AST_MOLDE
     REDDE CONIURA semantic_analyze_molde(ctx, expr)
+  FIN SI
+  SI (*expr).kind == AST_MENSURA
+    SI (*expr).has_type_expr
+      CONIURA semantic_resolve_type_node(ctx, (*expr).type_expr)
+    FIN SI
+    REDDE (*ctx).type_rex
   FIN SI
   SI (*expr).kind == AST_LITERAL_INT
     REDDE (*ctx).type_rex
@@ -222,6 +353,21 @@ RITUALE semantic_analyze_expr(SPECULUM SemanticContext ctx, SPECULUM AstNode exp
 
   SI (*expr).kind == AST_UNARY_OP
     EVOCA REX operand_type_id AD CONIURA semantic_analyze_expr(ctx, (*expr).left)
+    SI (*expr).operator_kind == TK_SPECULUM
+      EVOCA REX target_type_id AD CONIURA semantic_analyze_lvalue(ctx, (*expr).left)
+      SI target_type_id == (*ctx).type_error
+        REDDE (*ctx).type_error
+      FIN SI
+      REDDE CONIURA semantic_type_make_pointer(ctx, target_type_id)
+    FIN SI
+    SI (*expr).operator_kind == TK_STAR
+      EVOCA SPECULUM SemanticType operand_type AD CONIURA semantic_type_at(ctx, operand_type_id)
+      SI (*operand_type).kind != SEM_TYPE_POINTER ET (*operand_type).kind != SEM_TYPE_ARRAY
+        CONIURA semantic_report_error(ctx, (*expr).line, (*expr).column, "dereference requires pointer or array type")
+        REDDE (*ctx).type_error
+      FIN SI
+      REDDE (*operand_type).element_type_id
+    FIN SI
     SI (*expr).operator_kind == TK_MINUS VEL (*expr).operator_kind == TK_PLUS
       SI NON CONIURA semantic_type_is_numeric(ctx, operand_type_id)
         CONIURA semantic_report_error(ctx, (*expr).line, (*expr).column, "unary operator requires numeric operand")
@@ -277,6 +423,9 @@ RITUALE semantic_analyze_expr(SPECULUM SemanticContext ctx, SPECULUM AstNode exp
 
   SI (*expr).kind == AST_CALL
     REDDE CONIURA semantic_analyze_call(ctx, expr)
+  FIN SI
+  SI (*expr).kind == AST_OBSECRO_CALL
+    REDDE CONIURA semantic_analyze_obsecro_call(ctx, expr)
   FIN SI
 
   SI (*expr).kind == AST_FIELD_ACCESS

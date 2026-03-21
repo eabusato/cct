@@ -151,6 +151,19 @@ RITUALE parse_iace_statement(SPECULUM ParserState parser) REDDE SPECULUM AstNode
   REDDE CONIURA ast_make_iace(value, line, column)
 EXPLICIT RITUALE
 
+RITUALE parse_dimitte_statement(SPECULUM ParserState parser) REDDE SPECULUM AstNode
+  EVOCA REX line AD (*parser).current.line
+  EVOCA REX column AD (*parser).current.column
+  CONIURA parser_consume(parser, TK_DIMITTE, "Expected DIMITTE")
+  SI NON CONIURA parser_check(parser, TK_IDENTIFIER) ET NON CONIURA parser_check(parser, TK_LPAREN) ET NON CONIURA parser_check(parser, TK_STAR)
+    CONIURA parser_error_at_current(parser, "Expected pointer symbol after DIMITTE")
+    REDDE CONIURA ast_make_dimitte(CONIURA ast_make_identifier("<error>", line, column), line, column)
+  FIN SI
+  EVOCA SPECULUM AstNode target AD CONIURA parse_unary(parser)
+  CONIURA parser_match(parser, TK_SEMICOLON)
+  REDDE CONIURA ast_make_dimitte(target, line, column)
+EXPLICIT RITUALE
+
 RITUALE parse_frange_statement(SPECULUM ParserState parser) REDDE SPECULUM AstNode
   EVOCA REX line AD (*parser).current.line
   EVOCA REX column AD (*parser).current.column
@@ -401,6 +414,9 @@ RITUALE parse_statement(SPECULUM ParserState parser) REDDE SPECULUM AstNode
   FIN SI
   SI CONIURA parser_check(parser, TK_IACE)
     REDDE CONIURA parse_iace_statement(parser)
+  FIN SI
+  SI CONIURA parser_check(parser, TK_DIMITTE)
+    REDDE CONIURA parse_dimitte_statement(parser)
   FIN SI
   SI CONIURA parser_check(parser, TK_FRANGE)
     REDDE CONIURA parse_frange_statement(parser)

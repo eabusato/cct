@@ -1,0 +1,292 @@
+INCIPIT grimoire "main_compiler"
+
+ADVOCARE "cct/args.cct"
+ADVOCARE "cct/fluxus.cct"
+ADVOCARE "cct/fmt.cct"
+ADVOCARE "cct/io.cct"
+ADVOCARE "cct/path.cct"
+ADVOCARE "cct/verbum.cct"
+ADVOCARE "parser/ast.cct"
+ADVOCARE "parser/parser.cct"
+ADVOCARE "semantic/semantic_context.cct"
+ADVOCARE "semantic/semantic_decl.cct"
+ADVOCARE "codegen/codegen_context.cct"
+ADVOCARE "codegen/codegen_runtime.cct"
+
+SIGILLUM CompilerContext
+  root_filename: VERBUM
+  owns_root_filename: VERUM
+  loaded_index: VERBUM
+  owns_loaded_index: VERUM
+  had_error: VERUM
+  error_message: VERBUM
+  owns_error_message: VERUM
+FIN SIGILLUM
+
+RITUALE compiler_context_new(VERBUM root_filename) REDDE SPECULUM CompilerContext
+  EVOCA SPECULUM NIHIL raw AD CONIURA ast_heap_alloc(MENSURA(CompilerContext))
+  CONIURA ast_heap_zero(raw, MENSURA(CompilerContext))
+
+  EVOCA SPECULUM CompilerContext ctx
+  VINCIRE ctx AD raw
+  VINCIRE (*ctx).root_filename AD CONIURA verbum_dup(root_filename)
+  VINCIRE (*ctx).owns_root_filename AD VERUM
+  VINCIRE (*ctx).loaded_index AD CONIURA verbum_dup("\n")
+  VINCIRE (*ctx).owns_loaded_index AD VERUM
+  REDDE ctx
+EXPLICIT RITUALE
+
+RITUALE compiler_context_set_error(SPECULUM CompilerContext ctx, VERBUM msg) REDDE NIHIL
+  SI (*ctx).had_error
+    REDDE
+  FIN SI
+  VINCIRE (*ctx).had_error AD VERUM
+  VINCIRE (*ctx).error_message AD CONIURA verbum_dup(msg)
+  VINCIRE (*ctx).owns_error_message AD VERUM
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE compiler_context_free(SPECULUM CompilerContext ctx) REDDE NIHIL
+  SI (*ctx).owns_root_filename
+    DIMITTE (*ctx).root_filename
+  FIN SI
+  SI (*ctx).owns_loaded_index
+    DIMITTE (*ctx).loaded_index
+  FIN SI
+  SI (*ctx).owns_error_message
+    DIMITTE (*ctx).error_message
+  FIN SI
+  CONIURA ast_heap_free(ctx)
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE compiler_has_loaded_path(SPECULUM CompilerContext ctx, VERBUM path_value) REDDE VERUM
+  EVOCA VERBUM needle AD CONIURA concat("\n", path_value)
+  VINCIRE needle AD CONIURA concat(needle, "\n")
+  EVOCA VERUM found AD CONIURA contains((*ctx).loaded_index, needle)
+  DIMITTE needle
+  REDDE found
+EXPLICIT RITUALE
+
+RITUALE compiler_mark_loaded_path(SPECULUM CompilerContext ctx, VERBUM path_value) REDDE NIHIL
+  VINCIRE (*ctx).loaded_index AD CONIURA concat((*ctx).loaded_index, path_value)
+  VINCIRE (*ctx).loaded_index AD CONIURA concat((*ctx).loaded_index, "\n")
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE compiler_resolve_import_path(VERBUM current_file, VERBUM import_path) REDDE VERBUM
+  EVOCA VERBUM combined AD ""
+  SI CONIURA is_absolute(import_path)
+    VINCIRE combined AD CONIURA normalize(import_path)
+    REDDE CONIURA resolve(combined)
+  FIN SI
+
+  SI CONIURA starts_with(import_path, "cct/")
+    VINCIRE combined AD CONIURA path_join("lib", import_path)
+    VINCIRE combined AD CONIURA normalize(combined)
+    REDDE CONIURA resolve(combined)
+  FIN SI
+
+  EVOCA VERBUM base_dir AD CONIURA parent(current_file)
+  VINCIRE combined AD CONIURA path_join(base_dir, import_path)
+  VINCIRE combined AD CONIURA normalize(combined)
+  REDDE CONIURA resolve(combined)
+EXPLICIT RITUALE
+
+RITUALE compiler_is_support_import(VERBUM import_path) REDDE VERUM
+  REDDE CONIURA starts_with(import_path, "cct/")
+EXPLICIT RITUALE
+
+RITUALE compiler_read_all(VERBUM path_value) REDDE VERBUM
+  REDDE OBSECRO fs_read_all(path_value)
+EXPLICIT RITUALE
+
+RITUALE compiler_write_all(VERBUM path_value, VERBUM content) REDDE NIHIL
+  OBSECRO fs_write_all(path_value, content)
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE compiler_exists(VERBUM path_value) REDDE VERUM
+  REDDE OBSECRO fs_exists(path_value)
+EXPLICIT RITUALE
+
+RITUALE compiler_mkdir_all(VERBUM path_value) REDDE NIHIL
+  OBSECRO fs_mkdir_all(path_value)
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE compiler_set_import_error(SPECULUM CompilerContext ctx, VERBUM owner_file, VERBUM import_path) REDDE NIHIL
+  EVOCA VERBUM msg AD CONIURA concat("Import not found: ", import_path)
+  VINCIRE msg AD CONIURA concat(msg, " from ")
+  VINCIRE msg AD CONIURA concat(msg, owner_file)
+  CONIURA compiler_context_set_error(ctx, msg)
+  DIMITTE msg
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE compiler_program_shell_free(SPECULUM AstProgram program) REDDE NIHIL
+  SI (*program).owns_name
+    DIMITTE (*program).name
+  FIN SI
+  CONIURA fluxus_free((*program).declarations)
+  CONIURA ast_heap_free(program)
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE compiler_transfer_program_declarations(SPECULUM CompilerContext ctx, SPECULUM AstProgram composite, SPECULUM AstProgram parsed, VERBUM current_file) REDDE NIHIL
+  EVOCA REX i AD 0
+  EVOCA REX n AD CONIURA ast_node_list_len((*parsed).declarations)
+  DUM i < n
+    EVOCA SPECULUM AstNode decl AD CONIURA ast_node_list_get((*parsed).declarations, i)
+    SI (*decl).kind == AST_IMPORT
+      SI CONIURA compiler_is_support_import((*decl).value_text)
+        CONIURA ast_node_free(decl)
+      ALITER
+        EVOCA VERBUM import_path AD CONIURA compiler_resolve_import_path(current_file, (*decl).value_text)
+        SI CONIURA compiler_exists(import_path)
+          CONIURA compiler_load_program_into(ctx, composite, import_path, FALSUM)
+        ALITER
+          CONIURA compiler_set_import_error(ctx, current_file, (*decl).value_text)
+        FIN SI
+        DIMITTE import_path
+        CONIURA ast_node_free(decl)
+      FIN SI
+    ALITER
+      CONIURA ast_program_append_decl(composite, decl)
+    FIN SI
+    SI (*ctx).had_error
+      REDDE
+    FIN SI
+    VINCIRE i AD i + 1
+  FIN DUM
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE compiler_load_program_into(SPECULUM CompilerContext ctx, SPECULUM AstProgram composite, VERBUM filename, VERUM set_program_name) REDDE NIHIL
+  SI (*ctx).had_error
+    REDDE
+  FIN SI
+
+  SI CONIURA compiler_has_loaded_path(ctx, filename)
+    REDDE
+  FIN SI
+  CONIURA compiler_mark_loaded_path(ctx, filename)
+
+  SI NON CONIURA compiler_exists(filename)
+    CONIURA compiler_context_set_error(ctx, CONIURA concat("Input file not found: ", filename))
+    REDDE
+  FIN SI
+
+  EVOCA VERBUM source AD CONIURA compiler_read_all(filename)
+  EVOCA SPECULUM AstProgram parsed AD CONIURA parser_parse_program_source(source, filename)
+  DIMITTE source
+
+  SI set_program_name
+    SI (*parsed).owns_name ET CONIURA len((*parsed).name) > 0
+      CONIURA ast_program_set_name(composite, (*parsed).name)
+    ALITER
+      CONIURA ast_program_set_name(composite, CONIURA path_basename(filename))
+    FIN SI
+  FIN SI
+
+  CONIURA compiler_transfer_program_declarations(ctx, composite, parsed, filename)
+  CONIURA compiler_program_shell_free(parsed)
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE compiler_parse_composite_program(SPECULUM CompilerContext ctx, VERBUM root_filename) REDDE SPECULUM AstProgram
+  EVOCA SPECULUM AstProgram program AD CONIURA ast_program_new()
+  EVOCA VERBUM prelude_file AD CONIURA resolve(CONIURA normalize("src/bootstrap/selfhost_prelude.cct"))
+  CONIURA compiler_load_program_into(ctx, program, prelude_file, FALSUM)
+  DIMITTE prelude_file
+  CONIURA compiler_load_program_into(ctx, program, root_filename, VERUM)
+  REDDE program
+EXPLICIT RITUALE
+
+RITUALE compiler_emit_semantic_error(SPECULUM SemanticContext ctx) REDDE NIHIL
+  EVOCA VERBUM msg AD CONIURA concat("semantic error: ", (*ctx).last_error_message)
+  VINCIRE msg AD CONIURA concat(msg, " @")
+  VINCIRE msg AD CONIURA concat(msg, CONIURA stringify_int((*ctx).last_error_line))
+  VINCIRE msg AD CONIURA concat(msg, ":")
+  VINCIRE msg AD CONIURA concat(msg, CONIURA stringify_int((*ctx).last_error_column))
+  CONIURA eprintln(msg)
+  DIMITTE msg
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE compiler_emit_codegen_error(SPECULUM CodegenContext ctx) REDDE NIHIL
+  EVOCA VERBUM msg AD CONIURA concat("codegen error: ", (*ctx).last_error_message)
+  VINCIRE msg AD CONIURA concat(msg, " @")
+  VINCIRE msg AD CONIURA concat(msg, CONIURA stringify_int((*ctx).last_error_line))
+  VINCIRE msg AD CONIURA concat(msg, ":")
+  VINCIRE msg AD CONIURA concat(msg, CONIURA stringify_int((*ctx).last_error_column))
+  CONIURA eprintln(msg)
+  DIMITTE msg
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE main() REDDE REX
+  SI CONIURA argc() < 3
+    CONIURA eprintln("Uso: cct_compiler_bootstrap <arquivo.cct> <saida.c>")
+    REDDE 64
+  FIN SI
+
+  EVOCA VERBUM input_file AD CONIURA resolve(CONIURA normalize(CONIURA arg(1)))
+  EVOCA VERBUM output_file AD CONIURA normalize(CONIURA arg(2))
+  EVOCA SPECULUM CompilerContext compiler_ctx AD CONIURA compiler_context_new(input_file)
+  EVOCA SPECULUM AstProgram program AD CONIURA compiler_parse_composite_program(compiler_ctx, input_file)
+
+  SI (*compiler_ctx).had_error
+    CONIURA eprintln((*compiler_ctx).error_message)
+    CONIURA ast_program_free(program)
+    CONIURA compiler_context_free(compiler_ctx)
+    DIMITTE input_file
+    DIMITTE output_file
+    REDDE 1
+  FIN SI
+
+  EVOCA SPECULUM SemanticContext semantic_ctx AD CONIURA semantic_context_new(input_file)
+  CONIURA semantic_validate_program(semantic_ctx, program)
+  SI CONIURA semantic_had_error(semantic_ctx)
+    CONIURA compiler_emit_semantic_error(semantic_ctx)
+    CONIURA semantic_context_free(semantic_ctx)
+    CONIURA ast_program_free(program)
+    CONIURA compiler_context_free(compiler_ctx)
+    DIMITTE input_file
+    DIMITTE output_file
+    REDDE 1
+  FIN SI
+
+  EVOCA SPECULUM CodegenContext codegen_ctx AD CONIURA codegen_context_new(input_file)
+  CONIURA codegen_context_reset(codegen_ctx)
+  EVOCA VERBUM out AD CONIURA codegen_generate_translation_unit_with_context(codegen_ctx, program)
+  SI CONIURA codegen_had_error(codegen_ctx)
+    CONIURA compiler_emit_codegen_error(codegen_ctx)
+    DIMITTE out
+    CONIURA codegen_context_free(codegen_ctx)
+    CONIURA semantic_context_free(semantic_ctx)
+    CONIURA ast_program_free(program)
+    CONIURA compiler_context_free(compiler_ctx)
+    DIMITTE input_file
+    DIMITTE output_file
+    REDDE 1
+  FIN SI
+
+  EVOCA VERBUM out_dir AD CONIURA parent(output_file)
+  SI CONIURA compare(out_dir, ".") != 0
+    CONIURA compiler_mkdir_all(out_dir)
+  FIN SI
+  CONIURA compiler_write_all(output_file, out)
+
+  DIMITTE out_dir
+  DIMITTE out
+  CONIURA codegen_context_free(codegen_ctx)
+  CONIURA semantic_context_free(semantic_ctx)
+  CONIURA ast_program_free(program)
+  CONIURA compiler_context_free(compiler_ctx)
+  DIMITTE input_file
+  DIMITTE output_file
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

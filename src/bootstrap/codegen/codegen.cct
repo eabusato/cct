@@ -47,8 +47,40 @@ RITUALE codegen_normalize_string_literal(VERBUM raw_text) REDDE VERBUM
     EVOCA SPECULUM NIHIL b AD CONIURA builder_init()
     EVOCA REX i AD 1
     DUM i < n - 1
-      CONIURA builder_append_char(b, CONIURA char_at(raw_text, i))
-      VINCIRE i AD i + 1
+      EVOCA MILES ch AD CONIURA char_at(raw_text, i)
+      SI ch == 92 ET i + 1 < n - 1
+        EVOCA MILES next AD CONIURA char_at(raw_text, i + 1)
+        SI next == 34
+          CONIURA builder_append_char(b, 34)
+          VINCIRE i AD i + 2
+        ALITER
+          SI next == 92
+            CONIURA builder_append_char(b, 92)
+            VINCIRE i AD i + 2
+          ALITER
+            SI next == 110
+              CONIURA builder_append_char(b, 10)
+              VINCIRE i AD i + 2
+            ALITER
+              SI next == 116
+                CONIURA builder_append_char(b, 9)
+                VINCIRE i AD i + 2
+              ALITER
+                SI next == 114
+                  CONIURA builder_append_char(b, 13)
+                  VINCIRE i AD i + 2
+                ALITER
+                  CONIURA builder_append_char(b, next)
+                  VINCIRE i AD i + 2
+                FIN SI
+              FIN SI
+            FIN SI
+          FIN SI
+        FIN SI
+      ALITER
+        CONIURA builder_append_char(b, ch)
+        VINCIRE i AD i + 1
+      FIN SI
     FIN DUM
     EVOCA VERBUM out AD CONIURA builder_to_verbum(b)
     CONIURA builder_free(b)

@@ -137,6 +137,10 @@ cct_phase_block_enabled() {
             cct_csv_contains "bootstrap" "$CCT_TEST_GROUPS_NORMALIZED" || cct_csv_contains "codegen" "$CCT_TEST_GROUPS_NORMALIZED" || cct_csv_contains "bootstrap-codegen" "$CCT_TEST_GROUPS_NORMALIZED" || cct_csv_contains "$phase" "$CCT_TEST_GROUPS_NORMALIZED"
             return $?
             ;;
+        29)
+            cct_csv_contains "bootstrap" "$CCT_TEST_GROUPS_NORMALIZED" || cct_csv_contains "selfhost" "$CCT_TEST_GROUPS_NORMALIZED" || cct_csv_contains "bootstrap-selfhost" "$CCT_TEST_GROUPS_NORMALIZED" || cct_csv_contains "$phase" "$CCT_TEST_GROUPS_NORMALIZED"
+            return $?
+            ;;
     esac
 
     return 1
@@ -386,6 +390,68 @@ compare_semantic_check_24g() {
             grep -F "$msg" "$host_all" >/dev/null 2>&1
             ;;
     esac
+}
+
+cct_phase29_prepare() {
+    if [ -n "${RC_29_BOOT+x}" ]; then
+        return "$RC_29_BOOT"
+    fi
+
+    make bootstrap-stage-identity >"$CCT_TMP_DIR/cct_phase29_bootstrap.out" 2>"$CCT_TMP_DIR/cct_phase29_bootstrap.err"
+    RC_29_BOOT=$?
+    PHASE29_STAGE1_BIN="$ROOT_DIR/out/bootstrap/phase29/stage1/cct_stage1"
+    PHASE29_STAGE2_BIN="$ROOT_DIR/out/bootstrap/phase29/stage2/cct_stage2"
+    PHASE29_SUPPORT_OBJ="$ROOT_DIR/out/bootstrap/phase29/support/selfhost_support.o"
+    return "$RC_29_BOOT"
+}
+
+cct_phase29_host_compile() {
+    local c_file="$1"
+    local out_bin="$2"
+    cc \
+        -Wall -Wextra -Werror \
+        -Wno-unused-label -Wno-unused-function -Wno-unused-const-variable -Wno-unused-parameter \
+        -std=c11 -O2 -g0 \
+        -D_POSIX_C_SOURCE=200809L -D_XOPEN_SOURCE=700 \
+        -o "$out_bin" \
+        "$c_file" \
+        "$PHASE29_SUPPORT_OBJ" \
+        src/runtime/fs_runtime.c \
+        -lm
+}
+
+cct_phase29_emit_compile_run() {
+    local compiler_bin="$1"
+    local src="$2"
+    local base="$3"
+    local expected_rc="$4"
+
+    "$compiler_bin" "$src" "$base.c" >"$base.emit.out" 2>"$base.emit.err" || return 11
+    cct_phase29_host_compile "$base.c" "$base.bin" >"$base.cc.out" 2>"$base.cc.err" || return 12
+    "$base.bin" >"$base.run.out" 2>"$base.run.err"
+    local rc=$?
+    [ "$rc" -eq "$expected_rc" ] || return 13
+    return 0
+}
+
+cct_phase29_build_tool() {
+    local src="$1"
+    local base="$2"
+
+    "$PHASE29_STAGE2_BIN" "$src" "$base.c" >"$base.emit.out" 2>"$base.emit.err" || return 21
+    cct_phase29_host_compile "$base.c" "$base.bin" >"$base.cc.out" 2>"$base.cc.err" || return 22
+    return 0
+}
+
+cct_phase29_prepare_bench() {
+    if [ -n "${RC_29_BENCH+x}" ]; then
+        return "$RC_29_BENCH"
+    fi
+
+    make bootstrap-stage-bench >"$CCT_TMP_DIR/cct_phase29_bench.out" 2>"$CCT_TMP_DIR/cct_phase29_bench.err"
+    RC_29_BENCH=$?
+    PHASE29_BENCH_FILE="$ROOT_DIR/out/bootstrap/phase29/bench/metrics.txt"
+    return "$RC_29_BENCH"
 }
 
 resolve_doc_path() {
@@ -8024,6 +8090,138 @@ if [ "$RC_28A_BOOT" -eq 0 ] && ! src/bootstrap/main_codegen "tests/integration/c
     test_pass "phase28 gate confirma negativa clara fora do subset"
 else
     test_fail "phase28 gate regrediu negativa final do subset"
+fi
+
+fi
+if cct_phase_block_enabled "29"; then
+echo ""
+echo "========================================"
+echo "FASE 29E: Regression Testing with Bootstrap Compiler"
+echo "========================================"
+echo ""
+
+cct_phase29_prepare
+
+# Test 1679: stage1 minimal fixture
+echo "Test 1679: stage1 compila fixture minima"
+BASE_1679="$CCT_TMP_DIR/cct_phase29e_1679"
+if [ "$RC_29_BOOT" -eq 0 ] && cct_phase29_emit_compile_run "$PHASE29_STAGE1_BIN" "tests/integration/selfhost_minimal_29a_input.cct" "$BASE_1679" 7; then
+    test_pass "stage1 compila e executa fixture minima"
+else
+    test_fail "stage1 regrediu compilacao minima self-hosted"
+fi
+
+# Test 1680: stage2 import smoke fixture
+echo "Test 1680: stage2 compila fixture com import"
+BASE_1680="$CCT_TMP_DIR/cct_phase29e_1680"
+if [ "$RC_29_BOOT" -eq 0 ] && cct_phase29_emit_compile_run "$PHASE29_STAGE2_BIN" "tests/integration/selfhost_import_smoke_29a_input.cct" "$BASE_1680" 42; then
+    test_pass "stage2 compila e executa fixture com import"
+else
+    test_fail "stage2 regrediu fixture com import"
+fi
+
+# Test 1681: stage2 recompila main_parser
+echo "Test 1681: stage2 recompila main_parser"
+BASE_1681="$CCT_TMP_DIR/cct_phase29e_1681"
+HOST_1681="$CCT_TMP_DIR/cct_phase29e_1681_host.ast"
+HOST_1681_NORM="$CCT_TMP_DIR/cct_phase29e_1681_host.norm"
+BOOT_1681="$CCT_TMP_DIR/cct_phase29e_1681_boot.ast"
+if [ "$RC_29_BOOT" -eq 0 ] && cct_phase29_build_tool "src/bootstrap/main_parser.cct" "$BASE_1681" && "$CCT_BIN" --ast "tests/integration/parser_gate_binary_22f_input.cct" >"$HOST_1681" 2>"$BASE_1681.host.err" && normalize_host_ast_22f "$HOST_1681" "$HOST_1681_NORM" && "$BASE_1681.bin" "tests/integration/parser_gate_binary_22f_input.cct" >"$BOOT_1681" 2>"$BASE_1681.run.err" && diff -u "$HOST_1681_NORM" "$BOOT_1681" >"$BASE_1681.diff" 2>&1; then
+    test_pass "stage2 recompila main_parser e preserva AST dump"
+else
+    test_fail "stage2 regrediu recompilacao funcional de main_parser"
+fi
+
+# Test 1682: stage2 recompila main_semantic
+echo "Test 1682: stage2 recompila main_semantic"
+BASE_1682="$CCT_TMP_DIR/cct_phase29e_1682"
+if [ "$RC_29_BOOT" -eq 0 ] && cct_phase29_build_tool "src/bootstrap/main_semantic.cct" "$BASE_1682" && "$CCT_BIN" --check "tests/integration/semantic_gate_generic_valid_decl_25e_input.cct" >"$BASE_1682.host.out" 2>"$BASE_1682.host.err" && "$BASE_1682.bin" "tests/integration/semantic_gate_generic_valid_decl_25e_input.cct" >"$BASE_1682.boot.out" 2>"$BASE_1682.boot.err" && grep -q '^OK$' "$BASE_1682.boot.out"; then
+    test_pass "stage2 recompila main_semantic e valida fixture real"
+else
+    test_fail "stage2 regrediu recompilacao funcional de main_semantic"
+fi
+
+# Test 1683: stage2 recompila main_codegen
+echo "Test 1683: stage2 recompila main_codegen"
+BASE_1683="$CCT_TMP_DIR/cct_phase29e_1683"
+if [ "$RC_29_BOOT" -eq 0 ] && cct_phase29_build_tool "src/bootstrap/main_codegen.cct" "$BASE_1683" && "$BASE_1683.bin" "tests/integration/codegen_gate_forma_call_28d_input.cct" >"$BASE_1683.gen.c" 2>"$BASE_1683.codegen.err" && cct_phase29_host_compile "$BASE_1683.gen.c" "$BASE_1683.gen.bin" >"$BASE_1683.cc.out" 2>"$BASE_1683.cc.err"; then
+    "$BASE_1683.gen.bin" >"$BASE_1683.run.out" 2>"$BASE_1683.run.err"
+    RC_1683_RUN=$?
+else
+    RC_1683_RUN=999
+fi
+if [ "$RC_1683_RUN" -eq 4 ]; then
+    test_pass "stage2 recompila main_codegen e gera programa executavel"
+else
+    test_fail "stage2 regrediu recompilacao funcional de main_codegen"
+fi
+
+# Test 1684: stage2 falha claramente em fixture invalida
+echo "Test 1684: stage2 falha claramente em fixture invalida"
+BASE_1684="$CCT_TMP_DIR/cct_phase29e_1684"
+if [ "$RC_29_BOOT" -eq 0 ] && ! "$PHASE29_STAGE2_BIN" "tests/integration/codegen_gate_forma_too_many_28d_input.cct" "$BASE_1684.c" >"$BASE_1684.out" 2>"$BASE_1684.err" && grep -q "codegen error: FORMA supports at most 4 interpolations" "$BASE_1684.err"; then
+    test_pass "stage2 falha claramente em fixture fora do subset"
+else
+    test_fail "stage2 regrediu diagnostico claro em fixture invalida"
+fi
+
+echo ""
+echo "========================================"
+echo "FASE 29F: Performance Profiling + Critical Optimizations"
+echo "========================================"
+echo ""
+
+cct_phase29_prepare_bench
+
+# Test 1685: benchmark target
+echo "Test 1685: bootstrap-stage-bench gera metrics"
+if [ "$RC_29_BENCH" -eq 0 ] && [ -s "$PHASE29_BENCH_FILE" ]; then
+    test_pass "bootstrap-stage-bench gera arquivo de metricas"
+else
+    test_fail "bootstrap-stage-bench nao gerou metricas validas"
+fi
+
+# Test 1686: stage0 metric
+echo "Test 1686: metric stage0_real_seconds"
+PHASE29_STAGE0_SECONDS="$(awk -F= '/^stage0_real_seconds=/{print $2}' "$PHASE29_BENCH_FILE" 2>/dev/null)"
+if [ "$RC_29_BENCH" -eq 0 ] && awk 'BEGIN {v = "'"$PHASE29_STAGE0_SECONDS"'"; exit !(v + 0 > 0)}'; then
+    test_pass "metric stage0_real_seconds e numerica e positiva"
+else
+    test_fail "metric stage0_real_seconds invalida"
+fi
+
+# Test 1687: stage1 metric
+echo "Test 1687: metric stage1_real_seconds"
+PHASE29_STAGE1_SECONDS="$(awk -F= '/^stage1_real_seconds=/{print $2}' "$PHASE29_BENCH_FILE" 2>/dev/null)"
+if [ "$RC_29_BENCH" -eq 0 ] && awk 'BEGIN {v = "'"$PHASE29_STAGE1_SECONDS"'"; exit !(v + 0 > 0)}'; then
+    test_pass "metric stage1_real_seconds e numerica e positiva"
+else
+    test_fail "metric stage1_real_seconds invalida"
+fi
+
+# Test 1688: stage2 metric
+echo "Test 1688: metric stage2_real_seconds"
+PHASE29_STAGE2_SECONDS="$(awk -F= '/^stage2_real_seconds=/{print $2}' "$PHASE29_BENCH_FILE" 2>/dev/null)"
+if [ "$RC_29_BENCH" -eq 0 ] && awk 'BEGIN {v = "'"$PHASE29_STAGE2_SECONDS"'"; exit !(v + 0 > 0)}'; then
+    test_pass "metric stage2_real_seconds e numerica e positiva"
+else
+    test_fail "metric stage2_real_seconds invalida"
+fi
+
+# Test 1689: identity preserved after bench
+echo "Test 1689: bench preserva identidade"
+if [ "$RC_29_BENCH" -eq 0 ] && [ ! -s "out/bootstrap/phase29/diff/stage1_vs_stage2.c.diff" ] && [ ! -s "out/bootstrap/phase29/diff/stage1_vs_stage2.bin.diff" ] && [ ! -s "out/bootstrap/phase29/diff/stage1_vs_stage2.identity.diff" ]; then
+    test_pass "bench preserva gate de identidade"
+else
+    test_fail "bench reabriu drift entre stage1 e stage2"
+fi
+
+# Test 1690: bench logs exist
+echo "Test 1690: bench gera logs por estagio"
+if [ "$RC_29_BENCH" -eq 0 ] && [ -s "out/bootstrap/phase29/logs/bench.stage0.time.log" ] && [ -s "out/bootstrap/phase29/logs/bench.stage1.time.log" ] && [ -s "out/bootstrap/phase29/logs/bench.stage2.time.log" ]; then
+    test_pass "bench gera logs por estagio"
+else
+    test_fail "bench nao gerou logs completos por estagio"
 fi
 
 fi

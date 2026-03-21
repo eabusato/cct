@@ -212,6 +212,9 @@ RITUALE parse_rituale_declaration(SPECULUM ParserState parser) REDDE SPECULUM As
     VINCIRE (*rituale).return_type AD CONIURA parse_type(parser)
     VINCIRE (*rituale).has_return_type AD VERUM
   FIN SI
+  SI CONIURA parser_match(parser, TK_SEMICOLON)
+    REDDE rituale
+  FIN SI
   SI CONIURA parser_check(parser, TK_LBRACE)
     VINCIRE (*rituale).body AD CONIURA parse_block(parser)
   ALITER

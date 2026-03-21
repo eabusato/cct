@@ -327,6 +327,13 @@ RITUALE ast_make_call(SPECULUM AstNode callee, REX line, REX column) REDDE SPECU
   REDDE node
 EXPLICIT RITUALE
 
+RITUALE ast_make_obsecro_call(SPECULUM AstNode callee, REX line, REX column) REDDE SPECULUM AstNode
+  EVOCA SPECULUM AstNode node AD CONIURA ast_node_new(AST_OBSECRO_CALL, line, column)
+  VINCIRE (*node).callee AD callee
+  VINCIRE (*node).has_callee AD VERUM
+  REDDE node
+EXPLICIT RITUALE
+
 RITUALE ast_make_field_access(SPECULUM AstNode object, VERBUM field_name, REX line, REX column) REDDE SPECULUM AstNode
   EVOCA SPECULUM AstNode node AD CONIURA ast_node_new(AST_FIELD_ACCESS, line, column)
   VINCIRE (*node).left AD object
@@ -355,6 +362,13 @@ RITUALE ast_make_molde(REX line, REX column) REDDE SPECULUM AstNode
   REDDE CONIURA ast_node_new(AST_MOLDE, line, column)
 EXPLICIT RITUALE
 
+RITUALE ast_make_mensura(SPECULUM AstNode type_expr, REX line, REX column) REDDE SPECULUM AstNode
+  EVOCA SPECULUM AstNode node AD CONIURA ast_node_new(AST_MENSURA, line, column)
+  VINCIRE (*node).type_expr AD type_expr
+  VINCIRE (*node).has_type_expr AD VERUM
+  REDDE node
+EXPLICIT RITUALE
+
 RITUALE ast_make_redde(SPECULUM AstNode expr, REX line, REX column) REDDE SPECULUM AstNode
   EVOCA SPECULUM AstNode node AD CONIURA ast_node_new(AST_REDDE, line, column)
   VINCIRE (*node).left AD expr
@@ -370,6 +384,13 @@ EXPLICIT RITUALE
 RITUALE ast_make_iace(SPECULUM AstNode expr, REX line, REX column) REDDE SPECULUM AstNode
   EVOCA SPECULUM AstNode node AD CONIURA ast_node_new(AST_IACE, line, column)
   VINCIRE (*node).left AD expr
+  VINCIRE (*node).has_left AD VERUM
+  REDDE node
+EXPLICIT RITUALE
+
+RITUALE ast_make_dimitte(SPECULUM AstNode target, REX line, REX column) REDDE SPECULUM AstNode
+  EVOCA SPECULUM AstNode node AD CONIURA ast_node_new(AST_DIMITTE, line, column)
+  VINCIRE (*node).left AD target
   VINCIRE (*node).has_left AD VERUM
   REDDE node
 EXPLICIT RITUALE
@@ -768,6 +789,10 @@ RITUALE ast_dump_node(SPECULUM AstNode node, REX level, VERBUM out) REDDE VERBUM
       VINCIRE out AD CONIURA ast_dump_append_line(out, level, CONIURA concat("IACE ", location))
       REDDE CONIURA ast_dump_value_with_label(out, level + 1, "Value:", (*node).left)
 
+    CASUS AST_DIMITTE:
+      VINCIRE out AD CONIURA ast_dump_append_line(out, level, CONIURA concat("DIMITTE ", location))
+      REDDE CONIURA ast_dump_value_with_label(out, level + 1, "Target:", (*node).left)
+
     CASUS AST_SI:
       VINCIRE out AD CONIURA ast_dump_append_line(out, level, CONIURA concat("SI ", location))
       VINCIRE out AD CONIURA ast_dump_append_line(out, level + 1, "Condition:")
@@ -861,6 +886,10 @@ RITUALE ast_dump_node(SPECULUM AstNode node, REX level, VERBUM out) REDDE VERBUM
       FIN DUM
       REDDE out
 
+    CASUS AST_MENSURA:
+      VINCIRE out AD CONIURA ast_dump_append_line(out, level, CONIURA concat("MENSURA ", location))
+      REDDE CONIURA ast_dump_append_line(out, level + 1, CONIURA concat("Type: ", CONIURA ast_dump_type_inline((*node).type_expr)))
+
     CASUS AST_LITERAL_INT:
       VINCIRE out AD CONIURA ast_dump_append_line(out, level, CONIURA concat("LITERAL_INT ", location))
       REDDE CONIURA ast_dump_append_line(out, level + 1, CONIURA concat("Value: ", (*node).value_text))
@@ -909,6 +938,20 @@ RITUALE ast_dump_node(SPECULUM AstNode node, REX level, VERBUM out) REDDE VERBUM
         EVOCA SPECULUM AstNode arg AD CONIURA ast_node_list_get((*node).arguments, i)
         VINCIRE out AD CONIURA ast_dump_node(arg, level + 2, out)
         VINCIRE i AD i + 1
+      FIN DUM
+      REDDE out
+
+    CASUS AST_OBSECRO_CALL:
+      VINCIRE out AD CONIURA ast_dump_append_line(out, level, CONIURA concat("OBSECRO_CALL ", location))
+      VINCIRE out AD CONIURA ast_dump_append_line(out, level + 1, "Callee:")
+      VINCIRE out AD CONIURA ast_dump_node((*node).callee, level + 2, out)
+      VINCIRE out AD CONIURA ast_dump_append_line(out, level + 1, CONIURA concat("Arguments: (", CONIURA concat(CONIURA stringify_int(CONIURA ast_node_list_len((*node).arguments)), ")")))
+      EVOCA REX ob_i AD 0
+      EVOCA REX ob_n AD CONIURA ast_node_list_len((*node).arguments)
+      DUM ob_i < ob_n
+        EVOCA SPECULUM AstNode arg AD CONIURA ast_node_list_get((*node).arguments, ob_i)
+        VINCIRE out AD CONIURA ast_dump_node(arg, level + 2, out)
+        VINCIRE ob_i AD ob_i + 1
       FIN DUM
       REDDE out
 

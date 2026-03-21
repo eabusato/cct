@@ -30,6 +30,9 @@ RITUALE semantic_validate_rituale_decl(SPECULUM SemanticContext ctx, REX rituale
   FIN SI
 
   EVOCA SPECULUM AstNode rituale_decl AD (*sym).decl_node
+  SI NON (*rituale_decl).has_body
+    REDDE
+  FIN SI
   EVOCA REX saved_rituale_id AD (*ctx).current_rituale_id
   EVOCA REX saved_scope_id AD CONIURA semantic_enter_owner_generic_scope(ctx, rituale_sym_id)
   VINCIRE (*ctx).current_rituale_id AD rituale_sym_id

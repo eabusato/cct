@@ -14,16 +14,23 @@ EXPLICIT RITUALE
 
 RITUALE codegen_generic_type_identity(SPECULUM CodegenContext ctx, SPECULUM AstNode type_expr) REDDE VERBUM
   SI (*type_expr).is_pointer
+    EVOCA VERBUM elem_identity AD ""
     EVOCA REX bound_ptr_idx AD CONIURA codegen_find_generic_binding_index(ctx, (*type_expr).type_name)
     SI bound_ptr_idx >= 0
       EVOCA SPECULUM AstNode bound_ptr AD CONIURA codegen_lookup_generic_binding(ctx, (*type_expr).type_name)
-      EVOCA VERBUM out_bound_ptr AD CONIURA codegen_generic_type_identity(ctx, bound_ptr)
-      EVOCA VERBUM out_ptr AD CONIURA concat("SPECULUM(", out_bound_ptr)
-      DIMITTE out_bound_ptr
-      EVOCA VERBUM out_ptr_final AD CONIURA concat(out_ptr, ")")
-      DIMITTE out_ptr
-      REDDE out_ptr_final
+      VINCIRE elem_identity AD CONIURA codegen_generic_type_identity(ctx, bound_ptr)
+    ALITER
+      SI CONIURA ast_node_list_len((*type_expr).generic_args) > 0
+        VINCIRE elem_identity AD CONIURA codegen_generic_type_identity_named(ctx, (*type_expr).type_name, (*type_expr).generic_args, (*type_expr).line, (*type_expr).column)
+      ALITER
+        VINCIRE elem_identity AD CONIURA verbum_dup((*type_expr).type_name)
+      FIN SI
     FIN SI
+    EVOCA VERBUM out_ptr AD CONIURA concat("SPECULUM(", elem_identity)
+    DIMITTE elem_identity
+    EVOCA VERBUM out_ptr_final AD CONIURA concat(out_ptr, ")")
+    DIMITTE out_ptr
+    REDDE out_ptr_final
   FIN SI
 
   SI (*type_expr).is_array
@@ -202,7 +209,17 @@ RITUALE codegen_generic_scan_expr_use(SPECULUM CodegenContext ctx, SPECULUM AstN
       VINCIRE arg_i AD arg_i + 1
     FIN DUM
     SI (*(*expr).callee).kind == AST_IDENTIFIER ET CONIURA ast_node_list_len((*(*expr).callee).generic_args) > 0
+      SI CONIURA compare((*(*expr).callee).name, "cast") == 0
+        REDDE
+      FIN SI
       CONIURA codegen_generic_ensure_rituale_instance(ctx, (*(*expr).callee).name, (*(*expr).callee).generic_args, expr)
+    FIN SI
+    REDDE
+  FIN SI
+
+  SI (*expr).kind == AST_MENSURA
+    SI (*expr).has_type_expr
+      CONIURA codegen_generic_scan_type_use(ctx, (*expr).type_expr)
     FIN SI
     REDDE
   FIN SI
@@ -239,7 +256,7 @@ RITUALE codegen_generic_scan_stmt_use(SPECULUM CodegenContext ctx, SPECULUM AstN
     REDDE
   FIN SI
 
-  SI (*stmt).kind == AST_VINCIRE VEL (*stmt).kind == AST_EXPR_STMT VEL (*stmt).kind == AST_REDDE VEL (*stmt).kind == AST_IACE
+  SI (*stmt).kind == AST_VINCIRE VEL (*stmt).kind == AST_EXPR_STMT VEL (*stmt).kind == AST_REDDE VEL (*stmt).kind == AST_IACE VEL (*stmt).kind == AST_DIMITTE
     SI (*stmt).has_left
       CONIURA codegen_generic_scan_expr_use(ctx, (*stmt).left)
     FIN SI
@@ -311,7 +328,9 @@ RITUALE codegen_generic_scan_decl_use(SPECULUM CodegenContext ctx, SPECULUM AstN
     SI (*decl).has_return_type
       CONIURA codegen_generic_scan_type_use(ctx, (*decl).return_type)
     FIN SI
-    CONIURA codegen_generic_scan_stmt_use(ctx, (*decl).body)
+    SI (*decl).has_body
+      CONIURA codegen_generic_scan_stmt_use(ctx, (*decl).body)
+    FIN SI
     REDDE
   FIN SI
 
@@ -420,7 +439,9 @@ RITUALE codegen_generic_ensure_rituale_instance(SPECULUM CodegenContext ctx, VER
   SI (*templ).has_return_type
     CONIURA codegen_generic_scan_type_use(ctx, (*templ).return_type)
   FIN SI
-  CONIURA codegen_generic_scan_stmt_use(ctx, (*templ).body)
+  SI (*templ).has_body
+    CONIURA codegen_generic_scan_stmt_use(ctx, (*templ).body)
+  FIN SI
   CONIURA codegen_generic_unbind_template_args(ctx)
 
   DIMITTE return_identity

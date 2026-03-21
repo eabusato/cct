@@ -1,0 +1,9 @@
+INCIPIT grimoire "selfhost_import_smoke_29a"
+
+ADVOCARE "selfhost_import_math_29a_mod.cct"
+
+RITUALE main() REDDE REX
+  REDDE add(19, 23)
+EXPLICIT RITUALE
+
+EXPLICIT grimoire
