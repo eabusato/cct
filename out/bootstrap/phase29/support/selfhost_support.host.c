@@ -24,6 +24,8 @@
 #include <math.h>
 #include <time.h>
 
+#include <sqlite3.h>
+
 #ifdef _WIN32
 #include <direct.h>
 #include <io.h>
@@ -4288,22 +4290,314 @@ static void cct_rt_sock_set_timeout_ms(void *sock_ptr, long long timeout_ms) {
 #endif
 }
 
+typedef struct {
+    sqlite3 *db;
+    char last_error[256];
+} cct_rt_db_t;
+
+typedef struct {
+    cct_rt_db_t *owner;
+    sqlite3_stmt *stmt;
+    int has_row;
+} cct_rt_rows_t;
+
+typedef struct {
+    cct_rt_db_t *owner;
+    sqlite3_stmt *stmt;
+} cct_rt_stmt_t;
+
+static char *cct_rt_db_dup_cstr(const char *s) {
+    const char *src = s ? s : "";
+    size_t n = strlen(src);
+    char *buf = (char*)cct_rt_alloc_or_fail(n + 1U);
+    memcpy(buf, src, n + 1U);
+    return buf;
+}
+
+static cct_rt_db_t *cct_rt_db_require(void *db_ptr, const char *ctx) {
+    cct_rt_db_t *db = (cct_rt_db_t*)db_ptr;
+    if (!db) cct_rt_fail((ctx && *ctx) ? ctx : "db nulo");
+    return db;
+}
+
+static cct_rt_rows_t *cct_rt_rows_require(void *rows_ptr, const char *ctx) {
+    cct_rt_rows_t *rows = (cct_rt_rows_t*)rows_ptr;
+    if (!rows) cct_rt_fail((ctx && *ctx) ? ctx : "rows nulo");
+    return rows;
+}
+
+static cct_rt_stmt_t *cct_rt_stmt_require(void *stmt_ptr, const char *ctx) {
+    cct_rt_stmt_t *stmt = (cct_rt_stmt_t*)stmt_ptr;
+    if (!stmt) cct_rt_fail((ctx && *ctx) ? ctx : "stmt nulo");
+    return stmt;
+}
+
+static void cct_rt_db_set_last_error(cct_rt_db_t *db, const char *msg) {
+    const char *src = msg ? msg : "";
+    size_t n = strlen(src);
+    if (n >= sizeof(db->last_error)) n = sizeof(db->last_error) - 1U;
+    memcpy(db->last_error, src, n);
+    db->last_error[n] = '\0';
+}
+
+static void cct_rt_db_clear_last_error(cct_rt_db_t *db) {
+    db->last_error[0] = '\0';
+}
+
+static void *cct_rt_db_open(const char *path) {
+    cct_rt_db_t *wrap = (cct_rt_db_t*)cct_rt_alloc_or_fail(sizeof(cct_rt_db_t));
+    wrap->db = NULL;
+    wrap->last_error[0] = '\0';
+    if (sqlite3_open((path && *path) ? path : ":memory:", &wrap->db) != SQLITE_OK) {
+        cct_rt_db_set_last_error(wrap, wrap->db ? sqlite3_errmsg(wrap->db) : "db_open falhou");
+    }
+    return (void*)wrap;
+}
+
+static void cct_rt_db_close(void *db_ptr) {
+    cct_rt_db_t *db = (cct_rt_db_t*)db_ptr;
+    if (!db) return;
+    if (db->db) {
+        (void)sqlite3_close(db->db);
+        db->db = NULL;
+    }
+}
+
+static void cct_rt_db_exec(void *db_ptr, const char *sql) {
+    cct_rt_db_t *db = cct_rt_db_require(db_ptr, "db_exec recebeu db nulo");
+    if (!db->db) {
+        cct_rt_db_set_last_error(db, "db nao aberto");
+        return;
+    }
+    char *err = NULL;
+    if (sqlite3_exec(db->db, (sql && *sql) ? sql : "", NULL, NULL, &err) != SQLITE_OK) {
+        cct_rt_db_set_last_error(db, err ? err : sqlite3_errmsg(db->db));
+        if (err) sqlite3_free(err);
+        return;
+    }
+    if (err) sqlite3_free(err);
+    cct_rt_db_clear_last_error(db);
+}
+
+static char *cct_rt_db_last_error(void *db_ptr) {
+    cct_rt_db_t *db = cct_rt_db_require(db_ptr, "db_last_error recebeu db nulo");
+    return cct_rt_db_dup_cstr(db->last_error);
+}
+
+static void *cct_rt_db_query(void *db_ptr, const char *sql) {
+    cct_rt_db_t *db = cct_rt_db_require(db_ptr, "db_query recebeu db nulo");
+    cct_rt_rows_t *rows = (cct_rt_rows_t*)cct_rt_alloc_or_fail(sizeof(cct_rt_rows_t));
+    rows->owner = db;
+    rows->stmt = NULL;
+    rows->has_row = 0;
+    if (!db->db) {
+        cct_rt_db_set_last_error(db, "db nao aberto");
+        return (void*)rows;
+    }
+    if (sqlite3_prepare_v2(db->db, (sql && *sql) ? sql : "", -1, &rows->stmt, NULL) != SQLITE_OK) {
+        cct_rt_db_set_last_error(db, sqlite3_errmsg(db->db));
+        if (rows->stmt) {
+            (void)sqlite3_finalize(rows->stmt);
+            rows->stmt = NULL;
+        }
+        return (void*)rows;
+    }
+    cct_rt_db_clear_last_error(db);
+    return (void*)rows;
+}
+
+static long long cct_rt_rows_next(void *rows_ptr) {
+    cct_rt_rows_t *rows = cct_rt_rows_require(rows_ptr, "rows_next recebeu rows nulo");
+    rows->has_row = 0;
+    if (!rows->stmt) return 0LL;
+    int rc = sqlite3_step(rows->stmt);
+    if (rc == SQLITE_ROW) {
+        rows->has_row = 1;
+        if (rows->owner) cct_rt_db_clear_last_error(rows->owner);
+        return 1LL;
+    }
+    if (rc == SQLITE_DONE) {
+        if (rows->owner) cct_rt_db_clear_last_error(rows->owner);
+        return 0LL;
+    }
+    if (rows->owner) cct_rt_db_set_last_error(rows->owner, sqlite3_errmsg(rows->owner->db));
+    return 0LL;
+}
+
+static int cct_rt_rows_has_col(cct_rt_rows_t *rows, long long col) {
+    if (!rows || !rows->stmt || !rows->has_row) return 0;
+    if (col < 0) return 0;
+    return col < (long long)sqlite3_column_count(rows->stmt);
+}
+
+static char *cct_rt_rows_get_text(void *rows_ptr, long long col) {
+    cct_rt_rows_t *rows = cct_rt_rows_require(rows_ptr, "rows_get_text recebeu rows nulo");
+    if (!cct_rt_rows_has_col(rows, col)) return cct_rt_db_dup_cstr("");
+    const unsigned char *text = sqlite3_column_text(rows->stmt, (int)col);
+    return cct_rt_db_dup_cstr(text ? (const char*)text : "");
+}
+
+static long long cct_rt_rows_get_int(void *rows_ptr, long long col) {
+    cct_rt_rows_t *rows = cct_rt_rows_require(rows_ptr, "rows_get_int recebeu rows nulo");
+    if (!cct_rt_rows_has_col(rows, col)) return 0LL;
+    return (long long)sqlite3_column_int64(rows->stmt, (int)col);
+}
+
+static double cct_rt_rows_get_real(void *rows_ptr, long long col) {
+    cct_rt_rows_t *rows = cct_rt_rows_require(rows_ptr, "rows_get_real recebeu rows nulo");
+    if (!cct_rt_rows_has_col(rows, col)) return 0.0;
+    return sqlite3_column_double(rows->stmt, (int)col);
+}
+
+static void cct_rt_rows_close(void *rows_ptr) {
+    cct_rt_rows_t *rows = (cct_rt_rows_t*)rows_ptr;
+    if (!rows) return;
+    if (rows->stmt) {
+        (void)sqlite3_finalize(rows->stmt);
+        rows->stmt = NULL;
+    }
+    cct_rt_free_ptr(rows);
+}
+
+static void *cct_rt_db_prepare(void *db_ptr, const char *sql) {
+    cct_rt_db_t *db = cct_rt_db_require(db_ptr, "db_prepare recebeu db nulo");
+    cct_rt_stmt_t *stmt = (cct_rt_stmt_t*)cct_rt_alloc_or_fail(sizeof(cct_rt_stmt_t));
+    stmt->owner = db;
+    stmt->stmt = NULL;
+    if (!db->db) {
+        cct_rt_db_set_last_error(db, "db nao aberto");
+        return (void*)stmt;
+    }
+    if (sqlite3_prepare_v2(db->db, (sql && *sql) ? sql : "", -1, &stmt->stmt, NULL) != SQLITE_OK) {
+        cct_rt_db_set_last_error(db, sqlite3_errmsg(db->db));
+        if (stmt->stmt) {
+            (void)sqlite3_finalize(stmt->stmt);
+            stmt->stmt = NULL;
+        }
+        return (void*)stmt;
+    }
+    cct_rt_db_clear_last_error(db);
+    return (void*)stmt;
+}
+
+static void cct_rt_stmt_bind_text(void *stmt_ptr, long long idx, const char *value) {
+    cct_rt_stmt_t *stmt = cct_rt_stmt_require(stmt_ptr, "stmt_bind_text recebeu stmt nulo");
+    if (!stmt->stmt) {
+        if (stmt->owner) cct_rt_db_set_last_error(stmt->owner, "stmt nao preparado");
+        return;
+    }
+    if (sqlite3_bind_text(stmt->stmt, (int)idx, value ? value : "", -1, SQLITE_TRANSIENT) != SQLITE_OK) {
+        if (stmt->owner) cct_rt_db_set_last_error(stmt->owner, sqlite3_errmsg(stmt->owner->db));
+        return;
+    }
+    if (stmt->owner) cct_rt_db_clear_last_error(stmt->owner);
+}
+
+static void cct_rt_stmt_bind_int(void *stmt_ptr, long long idx, long long value) {
+    cct_rt_stmt_t *stmt = cct_rt_stmt_require(stmt_ptr, "stmt_bind_int recebeu stmt nulo");
+    if (!stmt->stmt) {
+        if (stmt->owner) cct_rt_db_set_last_error(stmt->owner, "stmt nao preparado");
+        return;
+    }
+    if (sqlite3_bind_int64(stmt->stmt, (int)idx, (sqlite3_int64)value) != SQLITE_OK) {
+        if (stmt->owner) cct_rt_db_set_last_error(stmt->owner, sqlite3_errmsg(stmt->owner->db));
+        return;
+    }
+    if (stmt->owner) cct_rt_db_clear_last_error(stmt->owner);
+}
+
+static void cct_rt_stmt_bind_real(void *stmt_ptr, long long idx, double value) {
+    cct_rt_stmt_t *stmt = cct_rt_stmt_require(stmt_ptr, "stmt_bind_real recebeu stmt nulo");
+    if (!stmt->stmt) {
+        if (stmt->owner) cct_rt_db_set_last_error(stmt->owner, "stmt nao preparado");
+        return;
+    }
+    if (sqlite3_bind_double(stmt->stmt, (int)idx, value) != SQLITE_OK) {
+        if (stmt->owner) cct_rt_db_set_last_error(stmt->owner, sqlite3_errmsg(stmt->owner->db));
+        return;
+    }
+    if (stmt->owner) cct_rt_db_clear_last_error(stmt->owner);
+}
+
+static long long cct_rt_stmt_step(void *stmt_ptr) {
+    cct_rt_stmt_t *stmt = cct_rt_stmt_require(stmt_ptr, "stmt_step recebeu stmt nulo");
+    if (!stmt->stmt) {
+        if (stmt->owner) cct_rt_db_set_last_error(stmt->owner, "stmt nao preparado");
+        return 0LL;
+    }
+    int rc = sqlite3_step(stmt->stmt);
+    if (rc == SQLITE_ROW || rc == SQLITE_DONE) {
+        if (stmt->owner) cct_rt_db_clear_last_error(stmt->owner);
+        return 1LL;
+    }
+    if (stmt->owner) cct_rt_db_set_last_error(stmt->owner, sqlite3_errmsg(stmt->owner->db));
+    return 0LL;
+}
+
+static void cct_rt_stmt_reset(void *stmt_ptr) {
+    cct_rt_stmt_t *stmt = cct_rt_stmt_require(stmt_ptr, "stmt_reset recebeu stmt nulo");
+    if (!stmt->stmt) return;
+    (void)sqlite3_reset(stmt->stmt);
+    (void)sqlite3_clear_bindings(stmt->stmt);
+    if (stmt->owner) cct_rt_db_clear_last_error(stmt->owner);
+}
+
+static void cct_rt_stmt_finalize(void *stmt_ptr) {
+    cct_rt_stmt_t *stmt = (cct_rt_stmt_t*)stmt_ptr;
+    if (!stmt) return;
+    if (stmt->stmt) {
+        (void)sqlite3_finalize(stmt->stmt);
+        stmt->stmt = NULL;
+    }
+    cct_rt_free_ptr(stmt);
+}
+
+static void cct_rt_db_begin(void *db_ptr) {
+    cct_rt_db_exec(db_ptr, "BEGIN TRANSACTION;");
+}
+
+static void cct_rt_db_commit(void *db_ptr) {
+    cct_rt_db_exec(db_ptr, "COMMIT;");
+}
+
+static void cct_rt_db_rollback(void *db_ptr) {
+    cct_rt_db_exec(db_ptr, "ROLLBACK;");
+}
+
+static long long cct_rt_db_scalar_int(void *db_ptr, const char *sql) {
+    cct_rt_rows_t *rows = (cct_rt_rows_t*)cct_rt_db_query(db_ptr, sql);
+    long long value = 0LL;
+    if (rows && cct_rt_rows_next(rows)) value = cct_rt_rows_get_int(rows, 0);
+    cct_rt_rows_close(rows);
+    return value;
+}
+
+static char *cct_rt_db_scalar_text(void *db_ptr, const char *sql) {
+    cct_rt_rows_t *rows = (cct_rt_rows_t*)cct_rt_db_query(db_ptr, sql);
+    char *value = cct_rt_db_dup_cstr("");
+    if (rows && cct_rt_rows_next(rows)) value = cct_rt_rows_get_text(rows, 0);
+    cct_rt_rows_close(rows);
+    return value;
+}
+
 /* ===== End CCT Runtime Helpers ===== */
 
 /* ===== String Pool ===== */
 /* CCT string pool (FASE 4A/4B/4C) */
-static const char cct_str_11[] = "fluxus slice intervalo invalido";
-static const char cct_str_10[] = ": aviso: ";
-static const char cct_str_9[] = ": erro: ";
-static const char cct_str_8[] = ":";
-static const char cct_str_7[] = ": ";
-static const char cct_str_6[] = "fmt parse_bool invalid input";
-static const char cct_str_5[] = "verbum find_from offset invalido";
-static const char cct_str_4[] = "verbum repeat count negativo";
-static const char cct_str_3[] = ".";
-static const char cct_str_2[] = "";
-static const char cct_str_1[] = "false";
-static const char cct_str_0[] = "true";
+static const char cct_str_13[] = "fluxus slice intervalo invalido";
+static const char cct_str_12[] = ": aviso: ";
+static const char cct_str_11[] = ": erro: ";
+static const char cct_str_10[] = ":";
+static const char cct_str_9[] = ": ";
+static const char cct_str_8[] = "fmt parse_bool invalid input";
+static const char cct_str_7[] = "verbum find_from offset invalido";
+static const char cct_str_6[] = "verbum repeat count negativo";
+static const char cct_str_5[] = ".";
+static const char cct_str_4[] = "";
+static const char cct_str_3[] = "false";
+static const char cct_str_2[] = "true";
+static const char cct_str_1[] = " ; } 2>&1 >/dev/null";
+static const char cct_str_0[] = "{ ";
 
 /* ===== Type Declarations ===== */
 typedef struct SourceLocation SourceLocation;
@@ -4473,6 +4767,51 @@ static long long cct_fn_println(const char * s);
 static long long cct_fn_print(const char * s);
 static const char * cct_fn_arg(long long i);
 static long long cct_fn_argc();
+static const char * cct_fn_db_scalar_text(void * db, const char * sql);
+static long long cct_fn_db_scalar_int(void * db, const char * sql);
+static long long cct_fn_db_rollback(void * db);
+static long long cct_fn_db_commit(void * db);
+static long long cct_fn_db_begin(void * db);
+static long long cct_fn_stmt_finalize(void * stmt);
+static long long cct_fn_stmt_reset(void * stmt);
+static long long cct_fn_stmt_step(void * stmt);
+static long long cct_fn_stmt_bind_real(void * stmt, long long idx, double v);
+static long long cct_fn_stmt_bind_int(void * stmt, long long idx, long long v);
+static long long cct_fn_stmt_bind_text(void * stmt, long long idx, const char * v);
+static void * cct_fn_db_prepare(void * db, const char * sql);
+static long long cct_fn_rows_close(void * rows);
+static double cct_fn_rows_get_real(void * rows, long long col);
+static long long cct_fn_rows_get_int(void * rows, long long col);
+static const char * cct_fn_rows_get_text(void * rows, long long col);
+static long long cct_fn_rows_next(void * rows);
+static void * cct_fn_db_query(void * db, const char * sql);
+static const char * cct_fn_db_last_error(void * db);
+static long long cct_fn_db_exec(void * db, const char * sql);
+static long long cct_fn_db_close(void * db);
+static void * cct_fn_db_open(const char * path);
+static long long cct_fn_run_timeout(const char * cmd, long long timeout_ms);
+static long long cct_fn_run_env(const char * cmd, void * env_pairs);
+static const char * cct_fn_run_with_input(const char * cmd, const char * input);
+static const char * cct_fn_run_capture_err(const char * cmd);
+static const char * cct_fn_run_capture(const char * cmd);
+static long long cct_fn_run(const char * cmd);
+static long long cct_fn_is_real(const char * s);
+static long long cct_fn_is_int(const char * s);
+static void * cct_fn_parse_csv_line_sep(const char * s, long long sep);
+static void * cct_fn_parse_csv_line(const char * s);
+static void * cct_fn_parse_lines(const char * s);
+static void * cct_fn_read_lines(const char * path);
+static long long cct_fn_size(const char * path);
+static long long cct_fn_exists(const char * path);
+static long long cct_fn_is_dir(const char * path);
+static long long cct_fn_is_file(const char * path);
+static long long cct_fn_delete_dir(const char * path);
+static long long cct_fn_delete_file(const char * path);
+static long long cct_fn_mkdir_all(const char * path);
+static long long cct_fn_mkdir(const char * path);
+static long long cct_fn_append_all(const char * path, const char * content);
+static long long cct_fn_write_all(const char * path, const char * content);
+static const char * cct_fn_read_all(const char * path);
 
 /* ===== Generated Rituales ===== */
 static void * cct_fn_fluxus_to_ptr(void * flux) {
@@ -4625,7 +4964,7 @@ static long long cct_fn_diag_warn(SourceLocation * loc, const char * msg) {
     if (cct_rt_fractum_is_active()) {
         return 0;
     }
-    cct_fn_eprint(cct_str_8);
+    cct_fn_eprint(cct_str_10);
     if (cct_rt_fractum_is_active()) {
         return 0;
     }
@@ -4633,7 +4972,7 @@ static long long cct_fn_diag_warn(SourceLocation * loc, const char * msg) {
     if (cct_rt_fractum_is_active()) {
         return 0;
     }
-    cct_fn_eprint(cct_str_8);
+    cct_fn_eprint(cct_str_10);
     if (cct_rt_fractum_is_active()) {
         return 0;
     }
@@ -4641,7 +4980,7 @@ static long long cct_fn_diag_warn(SourceLocation * loc, const char * msg) {
     if (cct_rt_fractum_is_active()) {
         return 0;
     }
-    cct_fn_eprint(cct_str_10);
+    cct_fn_eprint(cct_str_12);
     if (cct_rt_fractum_is_active()) {
         return 0;
     }
@@ -4658,7 +4997,7 @@ static long long cct_fn_diag_error(SourceLocation * loc, const char * msg) {
     if (cct_rt_fractum_is_active()) {
         return 0;
     }
-    cct_fn_eprint(cct_str_8);
+    cct_fn_eprint(cct_str_10);
     if (cct_rt_fractum_is_active()) {
         return 0;
     }
@@ -4666,7 +5005,7 @@ static long long cct_fn_diag_error(SourceLocation * loc, const char * msg) {
     if (cct_rt_fractum_is_active()) {
         return 0;
     }
-    cct_fn_eprint(cct_str_8);
+    cct_fn_eprint(cct_str_10);
     if (cct_rt_fractum_is_active()) {
         return 0;
     }
@@ -4674,7 +5013,7 @@ static long long cct_fn_diag_error(SourceLocation * loc, const char * msg) {
     if (cct_rt_fractum_is_active()) {
         return 0;
     }
-    cct_fn_eprint(cct_str_9);
+    cct_fn_eprint(cct_str_11);
     if (cct_rt_fractum_is_active()) {
         return 0;
     }
@@ -4838,7 +5177,7 @@ static const char * cct_fn_stringify_int_hex(long long n) {
 }
 
 static const char * cct_fn_format_pair(const char * label, const char * value) {
-    const char *left = cct_fn_concat(label, cct_str_7);
+    const char *left = cct_fn_concat(label, cct_str_9);
     if (cct_rt_fractum_is_active()) {
         return 0;
     }
@@ -4851,15 +5190,15 @@ static const char * cct_fn_format_pair(const char * label, const char * value) {
 }
 
 static long long cct_fn_fmt_parse_bool(const char * s) {
-    if ((cct_fn_compare(s, cct_str_0) == 0 ? 1 : 0))
+    if ((cct_fn_compare(s, cct_str_2) == 0 ? 1 : 0))
     {
         return (1);
     }
-    if ((cct_fn_compare(s, cct_str_1) == 0 ? 1 : 0))
+    if ((cct_fn_compare(s, cct_str_3) == 0 ? 1 : 0))
     {
         return (0);
     }
-    cct_rt_fractum_throw_str((const char*)(cct_str_6));
+    cct_rt_fractum_throw_str((const char*)(cct_str_8));
         return 0;
     return (0);
     return 0;
@@ -4878,9 +5217,9 @@ static long long cct_fn_fmt_parse_int(const char * s) {
 static const char * cct_fn_stringify_bool(long long b) {
     if ((b == 1 ? 1 : 0))
     {
-        return (cct_str_0);
+        return (cct_str_2);
     }
-    return (cct_str_1);
+    return (cct_str_3);
     return 0;
 }
 
@@ -5047,7 +5386,7 @@ static long long cct_fn_find_from(const char * s, const char * sub, long long of
     }
     if (((offset < 0 ? 1 : 0) || (offset > slen ? 1 : 0)))
     {
-        cct_rt_fractum_throw_str((const char*)(cct_str_5));
+        cct_rt_fractum_throw_str((const char*)(cct_str_7));
                 return 0;
     }
     long long sublen = cct_fn_len(sub);
@@ -5165,14 +5504,14 @@ static const char * cct_fn_pad_left(const char * s, long long width, long long f
 static const char * cct_fn_repeat(const char * s, long long n) {
     if ((n < 0 ? 1 : 0))
     {
-        cct_rt_fractum_throw_str((const char*)(cct_str_4));
+        cct_rt_fractum_throw_str((const char*)(cct_str_6));
                 return 0;
     }
     if ((n == 0 ? 1 : 0))
     {
-        return (cct_str_2);
+        return (cct_str_4);
     }
-    const char *out = cct_str_2;
+    const char *out = cct_str_4;
     if (cct_rt_fractum_is_active()) {
         return 0;
     }
@@ -5502,7 +5841,7 @@ static const char * cct_fn_parent(const char * p) {
     }
     if ((cct_rt_verbum_len(d) == 0 ? 1 : 0))
     {
-        return (cct_str_3);
+        return (cct_str_5);
     }
     return (d);
     return 0;
@@ -5617,7 +5956,7 @@ static const char * cct_fn_read_all_stdin() {
         cct_rt_builder_append_char((void*)(b), c);
     }
     __cct_loop_brk_20:;
-    return (cct_str_2);
+    return (cct_str_4);
     return 0;
 }
 
@@ -5646,14 +5985,14 @@ static long long cct_fn_flush() {
 static long long cct_fn_eprint_bool(long long b) {
     if ((b == 1 ? 1 : 0))
     {
-        cct_fn_eprint(cct_str_0);
+        cct_fn_eprint(cct_str_2);
         if (cct_rt_fractum_is_active()) {
             return 0;
         }
     }
     else
     {
-        cct_fn_eprint(cct_str_1);
+        cct_fn_eprint(cct_str_3);
         if (cct_rt_fractum_is_active()) {
             return 0;
         }
@@ -5704,14 +6043,14 @@ static long long cct_fn_print_char(long long c) {
 static long long cct_fn_print_bool(long long b) {
     if ((b == 1 ? 1 : 0))
     {
-        cct_fn_print(cct_str_0);
+        cct_fn_print(cct_str_2);
         if (cct_rt_fractum_is_active()) {
             return 0;
         }
     }
     else
     {
-        cct_fn_print(cct_str_1);
+        cct_fn_print(cct_str_3);
         if (cct_rt_fractum_is_active()) {
             return 0;
         }
@@ -5751,6 +6090,268 @@ static const char * cct_fn_arg(long long i) {
 
 static long long cct_fn_argc() {
     return (cct_rt_args_argc());
+    return 0;
+}
+
+static const char * cct_fn_db_scalar_text(void * db, const char * sql) {
+    return (cct_rt_db_scalar_text((void*)(db), sql));
+    return 0;
+}
+
+static long long cct_fn_db_scalar_int(void * db, const char * sql) {
+    return (cct_rt_db_scalar_int((void*)(db), sql));
+    return 0;
+}
+
+static long long cct_fn_db_rollback(void * db) {
+    cct_rt_db_rollback((void*)(db));
+    return 0;
+    return 0;
+}
+
+static long long cct_fn_db_commit(void * db) {
+    cct_rt_db_commit((void*)(db));
+    return 0;
+    return 0;
+}
+
+static long long cct_fn_db_begin(void * db) {
+    cct_rt_db_begin((void*)(db));
+    return 0;
+    return 0;
+}
+
+static long long cct_fn_stmt_finalize(void * stmt) {
+    cct_rt_stmt_finalize((void*)(stmt));
+    return 0;
+    return 0;
+}
+
+static long long cct_fn_stmt_reset(void * stmt) {
+    cct_rt_stmt_reset((void*)(stmt));
+    return 0;
+    return 0;
+}
+
+static long long cct_fn_stmt_step(void * stmt) {
+    return ((cct_rt_stmt_step((void*)(stmt))));
+    return 0;
+}
+
+static long long cct_fn_stmt_bind_real(void * stmt, long long idx, double v) {
+    cct_rt_stmt_bind_real((void*)(stmt), (long long)(idx), v);
+    return 0;
+    return 0;
+}
+
+static long long cct_fn_stmt_bind_int(void * stmt, long long idx, long long v) {
+    cct_rt_stmt_bind_int((void*)(stmt), (long long)(idx), v);
+    return 0;
+    return 0;
+}
+
+static long long cct_fn_stmt_bind_text(void * stmt, long long idx, const char * v) {
+    cct_rt_stmt_bind_text((void*)(stmt), (long long)(idx), v);
+    return 0;
+    return 0;
+}
+
+static void * cct_fn_db_prepare(void * db, const char * sql) {
+    return (((void*)cct_rt_db_prepare((void*)(db), sql)));
+    return 0;
+}
+
+static long long cct_fn_rows_close(void * rows) {
+    cct_rt_rows_close((void*)(rows));
+    return 0;
+    return 0;
+}
+
+static double cct_fn_rows_get_real(void * rows, long long col) {
+    return ((cct_rt_rows_get_real((void*)(rows), (long long)(col))));
+    return 0;
+}
+
+static long long cct_fn_rows_get_int(void * rows, long long col) {
+    return ((cct_rt_rows_get_int((void*)(rows), (long long)(col))));
+    return 0;
+}
+
+static const char * cct_fn_rows_get_text(void * rows, long long col) {
+    return (cct_rt_rows_get_text((void*)(rows), (long long)(col)));
+    return 0;
+}
+
+static long long cct_fn_rows_next(void * rows) {
+    return ((cct_rt_rows_next((void*)(rows))));
+    return 0;
+}
+
+static void * cct_fn_db_query(void * db, const char * sql) {
+    return (((void*)cct_rt_db_query((void*)(db), sql)));
+    return 0;
+}
+
+static const char * cct_fn_db_last_error(void * db) {
+    return (cct_rt_db_last_error((void*)(db)));
+    return 0;
+}
+
+static long long cct_fn_db_exec(void * db, const char * sql) {
+    cct_rt_db_exec((void*)(db), sql);
+    return 0;
+    return 0;
+}
+
+static long long cct_fn_db_close(void * db) {
+    cct_rt_db_close((void*)(db));
+    return 0;
+    return 0;
+}
+
+static void * cct_fn_db_open(const char * path) {
+    return (((void*)cct_rt_db_open(path)));
+    return 0;
+}
+
+static long long cct_fn_run_timeout(const char * cmd, long long timeout_ms) {
+    return (cct_rt_process_run_timeout(cmd, timeout_ms));
+    return 0;
+}
+
+static long long cct_fn_run_env(const char * cmd, void * env_pairs) {
+    return (cct_rt_process_run_env(cmd, (void*)(env_pairs)));
+    return 0;
+}
+
+static const char * cct_fn_run_with_input(const char * cmd, const char * input) {
+    return (cct_rt_process_run_with_input(cmd, input));
+    return 0;
+}
+
+static const char * cct_fn_run_capture_err(const char * cmd) {
+    const char *wrapped = cct_fn_concat(cct_fn_concat(cct_str_0, cmd), cct_str_1);
+    if (cct_rt_fractum_is_active()) {
+        return 0;
+    }
+    const char * __cct_failtmp_21 = cct_fn_run_capture(wrapped);
+    if (cct_rt_fractum_is_active()) {
+        return 0;
+    }
+    return (__cct_failtmp_21);
+    return 0;
+}
+
+static const char * cct_fn_run_capture(const char * cmd) {
+    return (cct_rt_process_run_capture(cmd));
+    return 0;
+}
+
+static long long cct_fn_run(const char * cmd) {
+    return (cct_rt_process_run(cmd));
+    return 0;
+}
+
+static long long cct_fn_is_real(const char * s) {
+    return (cct_rt_parse_is_real(s));
+    return 0;
+}
+
+static long long cct_fn_is_int(const char * s) {
+    return (cct_rt_parse_is_int(s));
+    return 0;
+}
+
+static void * cct_fn_parse_csv_line_sep(const char * s, long long sep) {
+    return (((void*)cct_rt_parse_csv_line(s, sep)));
+    return 0;
+}
+
+static void * cct_fn_parse_csv_line(const char * s) {
+    return (((void*)cct_rt_parse_csv_line(s, 44)));
+    return 0;
+}
+
+static void * cct_fn_parse_lines(const char * s) {
+    void * __cct_failtmp_22 = cct_fn_lines(s);
+    if (cct_rt_fractum_is_active()) {
+        return 0;
+    }
+    return (__cct_failtmp_22);
+    return 0;
+}
+
+static void * cct_fn_read_lines(const char * path) {
+    const char *content = cct_fn_read_all(path);
+    if (cct_rt_fractum_is_active()) {
+        return 0;
+    }
+    void * __cct_failtmp_23 = cct_fn_lines(content);
+    if (cct_rt_fractum_is_active()) {
+        return 0;
+    }
+    return (__cct_failtmp_23);
+    return 0;
+}
+
+static long long cct_fn_size(const char * path) {
+    return (cct_rt_fs_size(path));
+    return 0;
+}
+
+static long long cct_fn_exists(const char * path) {
+    return (cct_rt_fs_exists(path));
+    return 0;
+}
+
+static long long cct_fn_is_dir(const char * path) {
+    return (cct_rt_fs_is_dir(path));
+    return 0;
+}
+
+static long long cct_fn_is_file(const char * path) {
+    return (cct_rt_fs_is_file(path));
+    return 0;
+}
+
+static long long cct_fn_delete_dir(const char * path) {
+    cct_rt_fs_delete_dir(path);
+    return 0;
+    return 0;
+}
+
+static long long cct_fn_delete_file(const char * path) {
+    cct_rt_fs_delete_file(path);
+    return 0;
+    return 0;
+}
+
+static long long cct_fn_mkdir_all(const char * path) {
+    cct_rt_fs_mkdir_all(path);
+    return 0;
+    return 0;
+}
+
+static long long cct_fn_mkdir(const char * path) {
+    cct_rt_fs_mkdir(path);
+    return 0;
+    return 0;
+}
+
+static long long cct_fn_append_all(const char * path, const char * content) {
+    cct_rt_fs_append_all(path, content);
+    return 0;
+    return 0;
+}
+
+static long long cct_fn_write_all(const char * path, const char * content) {
+    cct_rt_fs_write_all(path, content);
+    return 0;
+    return 0;
+}
+
+static const char * cct_fn_read_all(const char * path) {
+    return (cct_rt_fs_read_all(path));
     return 0;
 }
 

@@ -12,4 +12,203 @@ ADVOCARE "cct/fmt.cct"
 ADVOCARE "cct/mem.cct"
 ADVOCARE "cct/fluxus.cct"
 
+RITUALE read_all(VERBUM path) REDDE VERBUM
+  REDDE OBSECRO fs_read_all(path)
+EXPLICIT RITUALE
+
+RITUALE write_all(VERBUM path, VERBUM content) REDDE NIHIL
+  OBSECRO fs_write_all(path, content)
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE append_all(VERBUM path, VERBUM content) REDDE NIHIL
+  OBSECRO fs_append_all(path, content)
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE mkdir(VERBUM path) REDDE NIHIL
+  OBSECRO fs_mkdir(path)
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE mkdir_all(VERBUM path) REDDE NIHIL
+  OBSECRO fs_mkdir_all(path)
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE delete_file(VERBUM path) REDDE NIHIL
+  OBSECRO fs_delete_file(path)
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE delete_dir(VERBUM path) REDDE NIHIL
+  OBSECRO fs_delete_dir(path)
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE is_file(VERBUM path) REDDE VERUM
+  REDDE OBSECRO fs_is_file(path)
+EXPLICIT RITUALE
+
+RITUALE is_dir(VERBUM path) REDDE VERUM
+  REDDE OBSECRO fs_is_dir(path)
+EXPLICIT RITUALE
+
+RITUALE exists(VERBUM path) REDDE VERUM
+  REDDE OBSECRO fs_exists(path)
+EXPLICIT RITUALE
+
+RITUALE size(VERBUM path) REDDE REX
+  REDDE OBSECRO fs_size(path)
+EXPLICIT RITUALE
+
+RITUALE read_lines(VERBUM path) REDDE SPECULUM NIHIL
+  EVOCA VERBUM content AD CONIURA read_all(path)
+  REDDE CONIURA lines(content)
+EXPLICIT RITUALE
+
+RITUALE parse_lines(VERBUM s) REDDE SPECULUM NIHIL
+  REDDE CONIURA lines(s)
+EXPLICIT RITUALE
+
+RITUALE parse_csv_line(VERBUM s) REDDE SPECULUM NIHIL
+  REDDE OBSECRO parse_csv_line(s, 44)
+EXPLICIT RITUALE
+
+RITUALE parse_csv_line_sep(VERBUM s, MILES sep) REDDE SPECULUM NIHIL
+  REDDE OBSECRO parse_csv_line(s, sep)
+EXPLICIT RITUALE
+
+RITUALE is_int(VERBUM s) REDDE VERUM
+  REDDE OBSECRO parse_is_int(s)
+EXPLICIT RITUALE
+
+RITUALE is_real(VERBUM s) REDDE VERUM
+  REDDE OBSECRO parse_is_real(s)
+EXPLICIT RITUALE
+
+RITUALE run(VERBUM cmd) REDDE REX
+  REDDE OBSECRO process_run(cmd)
+EXPLICIT RITUALE
+
+RITUALE run_capture(VERBUM cmd) REDDE VERBUM
+  REDDE OBSECRO process_run_capture(cmd)
+EXPLICIT RITUALE
+
+RITUALE run_capture_err(VERBUM cmd) REDDE VERBUM
+  EVOCA VERBUM wrapped AD CONIURA concat(CONIURA concat("{ ", cmd), " ; } 2>&1 >/dev/null")
+  REDDE CONIURA run_capture(wrapped)
+EXPLICIT RITUALE
+
+RITUALE run_with_input(VERBUM cmd, VERBUM input) REDDE VERBUM
+  REDDE OBSECRO process_run_with_input(cmd, input)
+EXPLICIT RITUALE
+
+RITUALE run_env(VERBUM cmd, SPECULUM NIHIL env_pairs) REDDE REX
+  REDDE OBSECRO process_run_env(cmd, env_pairs)
+EXPLICIT RITUALE
+
+RITUALE run_timeout(VERBUM cmd, REX timeout_ms) REDDE REX
+  REDDE OBSECRO process_run_timeout(cmd, timeout_ms)
+EXPLICIT RITUALE
+
+RITUALE db_open(VERBUM path) REDDE SPECULUM NIHIL
+  REDDE OBSECRO db_open(path)
+EXPLICIT RITUALE
+
+RITUALE db_close(SPECULUM NIHIL db) REDDE NIHIL
+  OBSECRO db_close(db)
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE db_exec(SPECULUM NIHIL db, VERBUM sql) REDDE NIHIL
+  OBSECRO db_exec(db, sql)
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE db_last_error(SPECULUM NIHIL db) REDDE VERBUM
+  REDDE OBSECRO db_last_error(db)
+EXPLICIT RITUALE
+
+RITUALE db_query(SPECULUM NIHIL db, VERBUM sql) REDDE SPECULUM NIHIL
+  REDDE OBSECRO db_query(db, sql)
+EXPLICIT RITUALE
+
+RITUALE rows_next(SPECULUM NIHIL rows) REDDE VERUM
+  REDDE OBSECRO rows_next(rows)
+EXPLICIT RITUALE
+
+RITUALE rows_get_text(SPECULUM NIHIL rows, REX col) REDDE VERBUM
+  REDDE OBSECRO rows_get_text(rows, col)
+EXPLICIT RITUALE
+
+RITUALE rows_get_int(SPECULUM NIHIL rows, REX col) REDDE REX
+  REDDE OBSECRO rows_get_int(rows, col)
+EXPLICIT RITUALE
+
+RITUALE rows_get_real(SPECULUM NIHIL rows, REX col) REDDE UMBRA
+  REDDE OBSECRO rows_get_real(rows, col)
+EXPLICIT RITUALE
+
+RITUALE rows_close(SPECULUM NIHIL rows) REDDE NIHIL
+  OBSECRO rows_close(rows)
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE db_prepare(SPECULUM NIHIL db, VERBUM sql) REDDE SPECULUM NIHIL
+  REDDE OBSECRO db_prepare(db, sql)
+EXPLICIT RITUALE
+
+RITUALE stmt_bind_text(SPECULUM NIHIL stmt, REX idx, VERBUM v) REDDE NIHIL
+  OBSECRO stmt_bind_text(stmt, idx, v)
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE stmt_bind_int(SPECULUM NIHIL stmt, REX idx, REX v) REDDE NIHIL
+  OBSECRO stmt_bind_int(stmt, idx, v)
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE stmt_bind_real(SPECULUM NIHIL stmt, REX idx, UMBRA v) REDDE NIHIL
+  OBSECRO stmt_bind_real(stmt, idx, v)
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE stmt_step(SPECULUM NIHIL stmt) REDDE VERUM
+  REDDE OBSECRO stmt_step(stmt)
+EXPLICIT RITUALE
+
+RITUALE stmt_reset(SPECULUM NIHIL stmt) REDDE NIHIL
+  OBSECRO stmt_reset(stmt)
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE stmt_finalize(SPECULUM NIHIL stmt) REDDE NIHIL
+  OBSECRO stmt_finalize(stmt)
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE db_begin(SPECULUM NIHIL db) REDDE NIHIL
+  OBSECRO db_begin(db)
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE db_commit(SPECULUM NIHIL db) REDDE NIHIL
+  OBSECRO db_commit(db)
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE db_rollback(SPECULUM NIHIL db) REDDE NIHIL
+  OBSECRO db_rollback(db)
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE db_scalar_int(SPECULUM NIHIL db, VERBUM sql) REDDE REX
+  REDDE OBSECRO db_scalar_int(db, sql)
+EXPLICIT RITUALE
+
+RITUALE db_scalar_text(SPECULUM NIHIL db, VERBUM sql) REDDE VERBUM
+  REDDE OBSECRO db_scalar_text(db, sql)
+EXPLICIT RITUALE
+
 EXPLICIT grimoire

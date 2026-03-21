@@ -1,0 +1,20 @@
+INCIPIT grimoire "selfhost_csv_encode_30c"
+ADVOCARE "cct/csv.cct"
+ADVOCARE "cct/fluxus.cct"
+ADVOCARE "cct/verbum.cct"
+
+RITUALE main() REDDE REX
+  EVOCA SPECULUM NIHIL row AD CONIURA fluxus_init(MENSURA(VERBUM))
+  EVOCA VERBUM a AD "alpha"
+  EVOCA VERBUM b AD "beta,gamma"
+  CONIURA fluxus_push(row, SPECULUM a)
+  CONIURA fluxus_push(row, SPECULUM b)
+  EVOCA VERBUM encoded AD CONIURA csv_encode_row(row)
+  CONIURA fluxus_free(row)
+  SI CONIURA compare(encoded, "alpha,\"beta,gamma\"") == 0
+    REDDE 36
+  FIN SI
+  REDDE 1
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

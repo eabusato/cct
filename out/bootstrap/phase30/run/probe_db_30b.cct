@@ -1,0 +1,6 @@
+INCIPIT grimoire "probe_db_30b"
+ADVOCARE "cct/db_sqlite.cct"
+RITUALE main() REDDE REX
+  REDDE 0
+EXPLICIT RITUALE
+EXPLICIT grimoire

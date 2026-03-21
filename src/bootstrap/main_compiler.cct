@@ -93,8 +93,45 @@ RITUALE compiler_resolve_import_path(VERBUM current_file, VERBUM import_path) RE
   REDDE CONIURA resolve(combined)
 EXPLICIT RITUALE
 
-RITUALE compiler_is_support_import(VERBUM import_path) REDDE VERUM
-  REDDE CONIURA starts_with(import_path, "cct/")
+RITUALE compiler_is_prelude_import(VERBUM import_path) REDDE VERUM
+  SI CONIURA compare(import_path, "cct/args.cct") == 0 VEL CONIURA compare(import_path, "cct/io.cct") == 0
+    REDDE VERUM
+  FIN SI
+  SI CONIURA compare(import_path, "cct/path.cct") == 0 VEL CONIURA compare(import_path, "cct/char.cct") == 0
+    REDDE VERUM
+  FIN SI
+  SI CONIURA compare(import_path, "cct/verbum.cct") == 0 VEL CONIURA compare(import_path, "cct/verbum_builder.cct") == 0
+    REDDE VERUM
+  FIN SI
+  SI CONIURA compare(import_path, "cct/code_writer.cct") == 0 VEL CONIURA compare(import_path, "cct/diagnostic.cct") == 0
+    REDDE VERUM
+  FIN SI
+  SI CONIURA compare(import_path, "cct/fmt.cct") == 0 VEL CONIURA compare(import_path, "cct/mem.cct") == 0
+    REDDE VERUM
+  FIN SI
+  SI CONIURA compare(import_path, "cct/fluxus.cct") == 0 VEL CONIURA compare(import_path, "cct/fs.cct") == 0
+    REDDE VERUM
+  FIN SI
+  SI CONIURA compare(import_path, "cct/parse.cct") == 0 VEL CONIURA compare(import_path, "cct/process.cct") == 0
+    REDDE VERUM
+  FIN SI
+  SI CONIURA compare(import_path, "cct/db_sqlite.cct") == 0
+    REDDE VERUM
+  FIN SI
+  REDDE FALSUM
+EXPLICIT RITUALE
+
+RITUALE compiler_is_source_backed_cct_import(VERBUM import_path) REDDE VERUM
+  SI CONIURA compare(import_path, "cct/csv.cct") == 0
+    REDDE VERUM
+  FIN SI
+  SI CONIURA compare(import_path, "cct/https.cct") == 0
+    REDDE VERUM
+  FIN SI
+  SI CONIURA compare(import_path, "cct/orm_lite.cct") == 0
+    REDDE VERUM
+  FIN SI
+  REDDE FALSUM
 EXPLICIT RITUALE
 
 RITUALE compiler_read_all(VERBUM path_value) REDDE VERBUM
@@ -124,6 +161,13 @@ RITUALE compiler_set_import_error(SPECULUM CompilerContext ctx, VERBUM owner_fil
   REDDE
 EXPLICIT RITUALE
 
+RITUALE compiler_set_unsupported_cct_import_error(SPECULUM CompilerContext ctx, VERBUM import_path) REDDE NIHIL
+  EVOCA VERBUM msg AD CONIURA concat("Self-hosted compiler does not operationally expose module yet: ", import_path)
+  CONIURA compiler_context_set_error(ctx, msg)
+  DIMITTE msg
+  REDDE
+EXPLICIT RITUALE
+
 RITUALE compiler_program_shell_free(SPECULUM AstProgram program) REDDE NIHIL
   SI (*program).owns_name
     DIMITTE (*program).name
@@ -139,17 +183,22 @@ RITUALE compiler_transfer_program_declarations(SPECULUM CompilerContext ctx, SPE
   DUM i < n
     EVOCA SPECULUM AstNode decl AD CONIURA ast_node_list_get((*parsed).declarations, i)
     SI (*decl).kind == AST_IMPORT
-      SI CONIURA compiler_is_support_import((*decl).value_text)
+      SI CONIURA compiler_is_prelude_import((*decl).value_text)
         CONIURA ast_node_free(decl)
       ALITER
-        EVOCA VERBUM import_path AD CONIURA compiler_resolve_import_path(current_file, (*decl).value_text)
-        SI CONIURA compiler_exists(import_path)
-          CONIURA compiler_load_program_into(ctx, composite, import_path, FALSUM)
+        SI CONIURA starts_with((*decl).value_text, "cct/") ET NON CONIURA compiler_is_source_backed_cct_import((*decl).value_text)
+          CONIURA compiler_set_unsupported_cct_import_error(ctx, (*decl).value_text)
+          CONIURA ast_node_free(decl)
         ALITER
-          CONIURA compiler_set_import_error(ctx, current_file, (*decl).value_text)
+          EVOCA VERBUM import_path AD CONIURA compiler_resolve_import_path(current_file, (*decl).value_text)
+          SI CONIURA compiler_exists(import_path)
+            CONIURA compiler_load_program_into(ctx, composite, import_path, FALSUM)
+          ALITER
+            CONIURA compiler_set_import_error(ctx, current_file, (*decl).value_text)
+          FIN SI
+          DIMITTE import_path
+          CONIURA ast_node_free(decl)
         FIN SI
-        DIMITTE import_path
-        CONIURA ast_node_free(decl)
       FIN SI
     ALITER
       CONIURA ast_program_append_decl(composite, decl)

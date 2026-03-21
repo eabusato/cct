@@ -1,0 +1,7 @@
+INCIPIT grimoire "selfhost_operational_import_30a_math"
+
+RITUALE somar(REX a, REX b) REDDE REX
+  REDDE a + b
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

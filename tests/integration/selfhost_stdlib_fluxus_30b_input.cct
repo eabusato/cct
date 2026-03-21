@@ -1,0 +1,19 @@
+INCIPIT grimoire "selfhost_stdlib_fluxus_30b"
+ADVOCARE "cct/fluxus.cct"
+
+RITUALE main() REDDE REX
+  EVOCA SPECULUM NIHIL xs AD CONIURA fluxus_init(MENSURA(REX))
+  EVOCA REX a AD 7
+  EVOCA REX b AD 11
+  CONIURA fluxus_push(xs, SPECULUM a)
+  CONIURA fluxus_push(xs, SPECULUM b)
+  EVOCA SPECULUM REX second AD CONIURA fluxus_get(xs, 1)
+  SI CONIURA fluxus_len(xs) == 2 ET *second == 11
+    CONIURA fluxus_free(xs)
+    REDDE 32
+  FIN SI
+  CONIURA fluxus_free(xs)
+  REDDE 1
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

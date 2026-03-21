@@ -427,6 +427,19 @@ RITUALE codegen_emit_obsecro_call_expr(SPECULUM CodegenContext ctx, SPECULUM Ast
     REDDE
   FIN SI
 
+  SI CONIURA compare((*(*expr).callee).name, "fs_read_all") == 0
+    CONIURA codegen_require_fs_runtime(ctx)
+  FIN SI
+  SI CONIURA compare((*(*expr).callee).name, "fs_write_all") == 0
+    CONIURA codegen_require_fs_runtime(ctx)
+  FIN SI
+  SI CONIURA compare((*(*expr).callee).name, "fs_exists") == 0
+    CONIURA codegen_require_fs_runtime(ctx)
+  FIN SI
+  SI CONIURA compare((*(*expr).callee).name, "fs_mkdir_all") == 0
+    CONIURA codegen_require_fs_runtime(ctx)
+  FIN SI
+
   CONIURA codegen_emit(ctx, "cct_rt_")
   CONIURA codegen_emit(ctx, (*(*expr).callee).name)
   CONIURA codegen_emit(ctx, "(")

@@ -1,0 +1,16 @@
+INCIPIT grimoire "selfhost_stdlib_fs_path_30b"
+ADVOCARE "cct/fs.cct"
+ADVOCARE "cct/path.cct"
+ADVOCARE "cct/verbum.cct"
+
+RITUALE main() REDDE REX
+  EVOCA VERBUM dir AD "out/bootstrap/phase30/run"
+  EVOCA VERBUM file AD CONIURA path_join(dir, "selfhost_stdlib_fs_path_30b.txt")
+  CONIURA write_all(file, "phase30b")
+  SI CONIURA exists(file) ET CONIURA is_file(file) ET CONIURA is_dir(dir) ET CONIURA compare(CONIURA path_basename(file), "selfhost_stdlib_fs_path_30b.txt") == 0 ET CONIURA size(file) == 8 ET CONIURA compare(CONIURA read_all(file), "phase30b") == 0
+    REDDE 31
+  FIN SI
+  REDDE 1
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

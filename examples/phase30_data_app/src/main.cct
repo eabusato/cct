@@ -1,0 +1,13 @@
+INCIPIT grimoire "phase30_data_app_main"
+
+ADVOCARE "../lib/data_app.cct"
+
+RITUALE main() REDDE REX
+  EVOCA REX score AD CONIURA data_app_score()
+  SI score == 43
+    REDDE 0
+  FIN SI
+  REDDE score
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

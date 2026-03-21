@@ -143,7 +143,7 @@ RITUALE codegen_emit_obsecro_scribe_stmt(SPECULUM CodegenContext ctx, SPECULUM A
     REDDE
   FIN SI
 
-  CONIURA codegen_require_stdio(ctx)
+  CONIURA codegen_require_scribe_runtime(ctx)
 
   EVOCA REX i AD 0
   DUM i < n

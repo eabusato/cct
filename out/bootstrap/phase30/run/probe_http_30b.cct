@@ -1,0 +1,10 @@
+INCIPIT grimoire "probe_http_30b"
+ADVOCARE "cct/http.cct"
+RITUALE main() REDDE REX
+  EVOCA HttpResponse r AD CONIURA http_response_new(200, "ok")
+  SI CONIURA http_response_status(r) == 200
+    REDDE 0
+  FIN SI
+  REDDE 1
+EXPLICIT RITUALE
+EXPLICIT grimoire

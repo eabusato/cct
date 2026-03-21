@@ -149,10 +149,12 @@ RITUALE codegen_emit_program_body(SPECULUM CodegenContext ctx, SPECULUM AstProgr
 
   EVOCA REX i AD 0
   EVOCA REX n AD CONIURA ast_node_list_len((*program).declarations)
+  EVOCA VERUM emitted_prototypes AD FALSUM
   DUM i < n
     EVOCA SPECULUM AstNode decl AD CONIURA ast_node_list_get((*program).declarations, i)
     SI (*decl).kind == AST_RITUALE ET CONIURA ast_node_list_len((*decl).type_params) == 0
       CONIURA codegen_emit_rituale_prototype(ctx, decl)
+      VINCIRE emitted_prototypes AD VERUM
     FIN SI
     SI (*decl).kind != AST_RITUALE ET (*decl).kind != AST_IMPORT ET (*decl).kind != AST_SIGILLUM ET (*decl).kind != AST_ORDO
       CONIURA codegen_report_error(ctx, (*decl).line, (*decl).column, "declaration outside bootstrap codegen subset in 27B")
@@ -165,10 +167,11 @@ RITUALE codegen_emit_program_body(SPECULUM CodegenContext ctx, SPECULUM AstProgr
   VINCIRE n AD CONIURA codegen_registered_generic_rituale_instance_count(ctx)
   DUM i < n
     CONIURA codegen_emit_rituale_prototype_instance(ctx, CONIURA codegen_context_generic_rituale_instance_at(ctx, i))
+    VINCIRE emitted_prototypes AD VERUM
     VINCIRE i AD i + 1
   FIN DUM
 
-  SI n > 0
+  SI emitted_prototypes
     CONIURA codegen_emit_blank_line(ctx)
   FIN SI
 

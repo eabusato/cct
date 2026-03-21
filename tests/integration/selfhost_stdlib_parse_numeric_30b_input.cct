@@ -1,0 +1,11 @@
+INCIPIT grimoire "selfhost_stdlib_parse_numeric_30b"
+ADVOCARE "cct/parse.cct"
+
+RITUALE main() REDDE REX
+  SI CONIURA is_int("42") ET NON CONIURA is_int("4x") ET CONIURA parse_int("42") == 42
+    REDDE 34
+  FIN SI
+  REDDE 1
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

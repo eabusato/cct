@@ -1,0 +1,34 @@
+INCIPIT grimoire "https"
+
+ADVOCARE "cct/process.cct"
+ADVOCARE "cct/verbum.cct"
+
+SIGILLUM HttpsResponse
+  status: REX
+  body: VERBUM
+FIN SIGILLUM
+
+RITUALE https_supports(VERBUM url) REDDE VERUM
+  REDDE CONIURA starts_with(url, "https://") VEL CONIURA starts_with(url, "file://")
+EXPLICIT RITUALE
+
+RITUALE https_build_get_command(VERBUM url) REDDE VERBUM
+  EVOCA VERBUM quote AD CONIURA from_char(34)
+  REDDE CONIURA concat(CONIURA concat(CONIURA concat("curl -fsSL ", quote), url), quote)
+EXPLICIT RITUALE
+
+RITUALE https_get_text(VERBUM url) REDDE VERBUM
+  SI NON CONIURA https_supports(url)
+    REDDE ""
+  FIN SI
+  REDDE CONIURA run_capture(CONIURA https_build_get_command(url))
+EXPLICIT RITUALE
+
+RITUALE https_get(VERBUM url) REDDE HttpsResponse
+  EVOCA HttpsResponse res
+  VINCIRE res.status AD 200
+  VINCIRE res.body AD CONIURA https_get_text(url)
+  REDDE res
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

@@ -1,0 +1,4 @@
+[project]
+name = "phase30_data_app"
+entry = "src/main.cct"
+

@@ -1,0 +1,13 @@
+INCIPIT grimoire "selfhost_https_command_30c"
+ADVOCARE "cct/https.cct"
+ADVOCARE "cct/verbum.cct"
+
+RITUALE main() REDDE REX
+  EVOCA VERBUM cmd AD CONIURA https_build_get_command("https://example.com/data")
+  SI CONIURA compare(cmd, "curl -fsSL \"https://example.com/data\"") == 0
+    REDDE 37
+  FIN SI
+  REDDE 1
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

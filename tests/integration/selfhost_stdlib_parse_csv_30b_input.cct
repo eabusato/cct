@@ -1,0 +1,16 @@
+INCIPIT grimoire "selfhost_stdlib_parse_csv_30b"
+ADVOCARE "cct/parse.cct"
+ADVOCARE "cct/fluxus.cct"
+ADVOCARE "cct/verbum.cct"
+
+RITUALE main() REDDE REX
+  EVOCA SPECULUM NIHIL items AD CONIURA parse_csv_line("alpha,beta,gamma")
+  EVOCA SPECULUM VERBUM first AD CONIURA fluxus_get(items, 0)
+  EVOCA SPECULUM VERBUM third AD CONIURA fluxus_get(items, 2)
+  SI CONIURA fluxus_len(items) == 3 ET CONIURA compare(*first, "alpha") == 0 ET CONIURA compare(*third, "gamma") == 0
+    REDDE 33
+  FIN SI
+  REDDE 1
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

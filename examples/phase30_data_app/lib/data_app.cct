@@ -1,0 +1,41 @@
+INCIPIT grimoire "phase30_data_app_data"
+
+ADVOCARE "cct/csv.cct"
+ADVOCARE "cct/db_sqlite.cct"
+ADVOCARE "cct/fluxus.cct"
+ADVOCARE "cct/fs.cct"
+ADVOCARE "cct/orm_lite.cct"
+ADVOCARE "cct/verbum.cct"
+
+RITUALE data_app_score() REDDE REX
+  EVOCA SPECULUM NIHIL row AD CONIURA csv_parse_row("alpha,one")
+  EVOCA SPECULUM VERBUM first AD CONIURA fluxus_get(row, 0)
+  EVOCA SPECULUM VERBUM second AD CONIURA fluxus_get(row, 1)
+  SI CONIURA compare(*first, "alpha") != 0 VEL CONIURA compare(*second, "one") != 0
+    CONIURA fluxus_free(row)
+    REDDE 2
+  FIN SI
+
+  EVOCA VERBUM db_path AD "out/bootstrap/phase30/run/phase30_data_app.sqlite"
+  SI CONIURA exists(db_path)
+    CONIURA delete_file(db_path)
+  FIN SI
+
+  EVOCA SPECULUM NIHIL db AD CONIURA db_open(db_path)
+  CONIURA db_exec(db, "CREATE TABLE kv (k TEXT PRIMARY KEY, v TEXT);")
+  CONIURA orm_insert_kv(db, "kv", "k", *first, "v", *second)
+
+  EVOCA REX count AD CONIURA orm_count(db, "kv")
+  EVOCA VERBUM value AD CONIURA orm_select_text_by_key(db, "kv", "v", "k", "alpha")
+
+  CONIURA db_close(db)
+  CONIURA fluxus_free(row)
+
+  SI count == 1 ET CONIURA compare(value, "one") == 0
+    REDDE 43
+  FIN SI
+  REDDE 3
+EXPLICIT RITUALE
+
+EXPLICIT grimoire
+

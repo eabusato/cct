@@ -1,0 +1,11 @@
+INCIPIT grimoire "selfhost_https_negative_30c"
+ADVOCARE "cct/https.cct"
+
+RITUALE main() REDDE REX
+  SI NON CONIURA https_supports("http://example.com")
+    REDDE 41
+  FIN SI
+  REDDE 1
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

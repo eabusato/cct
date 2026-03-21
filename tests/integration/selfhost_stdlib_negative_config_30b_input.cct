@@ -1,0 +1,9 @@
+INCIPIT grimoire "selfhost_stdlib_negative_config_30b"
+ADVOCARE "cct/config.cct"
+
+RITUALE main() REDDE REX
+  EVOCA SPECULUM NIHIL cfg AD CONIURA config_new()
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

@@ -741,21 +741,23 @@ Definition of done:
 ### FASE 30 — Bootstrap: Closure + Biblioteca Madura
 
 Primary objective:
-- finalize bootstrap documentation and complete application library over validated self-hosted compiler.
+- close the operational transition from validated bootstrap to usable self-hosted platform.
 
-Planned scope:
-- `30A`: comprehensive documentation (architecture, bootstrap pipeline)
-- `30B`: consolidated release notes (FASE 21-29)
-- `30C`: mature application library (HTTPS, CSV, ORM) over validated compiler
-- `30D`: final handoff
+Delivered scope:
+- `30A`: self-hosted toolchain as default operational path
+- `30B`: self-hosted stdlib/runtime compatibility subset
+- `30C`: mature application libraries (`csv`, `https`, `orm_lite`)
+- `30D`: self-hosted project workflows, packaging, and distribution
+- `30E`: final gate, release notes, and handoff
 
 Out of scope:
 - further language surface expansion (post-bootstrap phases)
 
 Definition of done:
-- bootstrap complete and documented
-- library matures to production-ready baseline
-- 2-3 months duration
+- self-hosted compiler is an operational path
+- application-library subset is usable over the self-hosted compiler
+- project workflows are validated over the self-hosted path
+- release/handoff docs match the validated state
 
 ## Bootstrap Phase Summary
 
@@ -773,7 +775,7 @@ Definition of done:
 | 30 | Closure + library | 2-3 mo | library | 30000+ |
 | **TOTAL** | **10 phases** | **27-37 mo** | **~30K LOC** | |
 
-**Realistic estimate: 2.5-3 years to self-hosting completion.**
+**Bootstrap status:** phases 21-30 completed on the current validated baseline.
 
 ## Version Milestone Targets
 

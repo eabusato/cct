@@ -1,0 +1,9 @@
+INCIPIT grimoire "selfhost_operational_import_30a"
+
+ADVOCARE "selfhost_operational_import_30a_math.cct"
+
+RITUALE main() REDDE REX
+  REDDE CONIURA somar(12, 7)
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

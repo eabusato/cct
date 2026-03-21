@@ -1,0 +1,23 @@
+INCIPIT grimoire "debug_sigillum_1601"
+
+ADVOCARE "../../../../src/bootstrap/codegen/codegen_decl.cct"
+ADVOCARE "../../../../src/bootstrap/parser/ast.cct"
+ADVOCARE "cct/io.cct"
+
+RITUALE main() REDDE REX
+  EVOCA SPECULUM AstProgram program AD CONIURA ast_program_new()
+  EVOCA SPECULUM AstNode sig AD CONIURA ast_make_sigillum("Point", 1, 1)
+  CONIURA ast_append_field(sig, CONIURA ast_make_field("x", CONIURA ast_make_type("REX", 1, 1), 1, 1))
+  CONIURA ast_append_field(sig, CONIURA ast_make_field("y", CONIURA ast_make_type("REX", 1, 1), 1, 1))
+  CONIURA ast_program_append_decl(program, sig)
+  EVOCA SPECULUM AstNode body AD CONIURA ast_make_block(2, 1)
+  CONIURA ast_append_statement(body, CONIURA ast_make_redde(CONIURA ast_make_literal_int("0", 2, 1), 2, 1))
+  CONIURA ast_program_append_decl(program, CONIURA ast_make_rituale("main", CONIURA ast_make_type("REX", 2, 1), body, 2, 1))
+  EVOCA VERBUM out AD CONIURA codegen_generate_program(program, "sigdef.cct")
+  CONIURA println(out)
+  DIMITTE out
+  CONIURA ast_program_free(program)
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

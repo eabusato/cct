@@ -1,0 +1,44 @@
+INCIPIT grimoire "orm_lite"
+
+ADVOCARE "cct/db_sqlite.cct"
+ADVOCARE "cct/fmt.cct"
+ADVOCARE "cct/verbum.cct"
+
+RITUALE orm_quote_text(VERBUM value) REDDE VERBUM
+  EVOCA VERBUM escaped AD CONIURA replace_all(value, "'", "''")
+  REDDE CONIURA concat(CONIURA concat("'", escaped), "'")
+EXPLICIT RITUALE
+
+RITUALE orm_insert_kv(SPECULUM NIHIL db, VERBUM table, VERBUM key_col, VERBUM key_val, VERBUM value_col, VERBUM value_val) REDDE NIHIL
+  EVOCA VERBUM sql AD "INSERT INTO "
+  VINCIRE sql AD CONIURA concat(sql, table)
+  VINCIRE sql AD CONIURA concat(sql, " (")
+  VINCIRE sql AD CONIURA concat(sql, key_col)
+  VINCIRE sql AD CONIURA concat(sql, ", ")
+  VINCIRE sql AD CONIURA concat(sql, value_col)
+  VINCIRE sql AD CONIURA concat(sql, ") VALUES (")
+  VINCIRE sql AD CONIURA concat(sql, CONIURA orm_quote_text(key_val))
+  VINCIRE sql AD CONIURA concat(sql, ", ")
+  VINCIRE sql AD CONIURA concat(sql, CONIURA orm_quote_text(value_val))
+  VINCIRE sql AD CONIURA concat(sql, ");")
+  CONIURA db_exec(db, sql)
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE orm_count(SPECULUM NIHIL db, VERBUM table) REDDE REX
+  EVOCA VERBUM sql AD CONIURA concat("SELECT COUNT(*) FROM ", table)
+  REDDE CONIURA db_scalar_int(db, sql)
+EXPLICIT RITUALE
+
+RITUALE orm_select_text_by_key(SPECULUM NIHIL db, VERBUM table, VERBUM text_col, VERBUM key_col, VERBUM key_val) REDDE VERBUM
+  EVOCA VERBUM sql AD CONIURA concat("SELECT ", text_col)
+  VINCIRE sql AD CONIURA concat(sql, " FROM ")
+  VINCIRE sql AD CONIURA concat(sql, table)
+  VINCIRE sql AD CONIURA concat(sql, " WHERE ")
+  VINCIRE sql AD CONIURA concat(sql, key_col)
+  VINCIRE sql AD CONIURA concat(sql, " = ")
+  VINCIRE sql AD CONIURA concat(sql, CONIURA orm_quote_text(key_val))
+  REDDE CONIURA db_scalar_text(db, sql)
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

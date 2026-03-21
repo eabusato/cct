@@ -1,0 +1,2 @@
+project-selfhost-build: entry file not found (expected src/main.cct or explicit ENTRY)
+make: *** [project-selfhost-build] Error 2

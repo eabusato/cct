@@ -1,0 +1,23 @@
+INCIPIT grimoire "selfhost_orm_select_30c"
+ADVOCARE "cct/db_sqlite.cct"
+ADVOCARE "cct/fs.cct"
+ADVOCARE "cct/orm_lite.cct"
+ADVOCARE "cct/verbum.cct"
+
+RITUALE main() REDDE REX
+  EVOCA VERBUM db_path AD "out/bootstrap/phase30/run/selfhost_orm_select_30c.sqlite"
+  SI CONIURA exists(db_path)
+    CONIURA delete_file(db_path)
+  FIN SI
+  EVOCA SPECULUM NIHIL db AD CONIURA db_open(db_path)
+  CONIURA db_exec(db, "CREATE TABLE kv (k TEXT PRIMARY KEY, v TEXT);")
+  CONIURA orm_insert_kv(db, "kv", "k", "gamma", "v", "three")
+  EVOCA VERBUM value AD CONIURA orm_select_text_by_key(db, "kv", "v", "k", "gamma")
+  CONIURA db_close(db)
+  SI CONIURA compare(value, "three") == 0
+    REDDE 40
+  FIN SI
+  REDDE 1
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

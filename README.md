@@ -13,9 +13,9 @@ CCT is a compiled, ritual-themed programming language with deterministic sigil g
 
 ## Status
 
-**Current status: FASE 20F completed** (the application-library stack is now closed across JSON, sockets/networking, HTTP, configuration, SQLite, examples, and release handoff artifacts).
+**Current status: FASE 30 completed** (bootstrap, multi-stage self-hosting, operational self-hosted workflows, and the mature application-library subset are now closed on the validated baseline).
 
-Implemented phases: **0 → 20F**, plus the interstitial **FASE 14T** closure.
+Implemented phases: **0 → 30**, plus the interstitial **FASE 14T** closure.
 
 **Phase-reference convention:** phase labels found in file/module headers, local markers, or help text may refer to the phase in which that specific component was introduced or stabilized. They are historical markers and do not necessarily represent the current global project status shown above.
 
@@ -64,6 +64,8 @@ Highlights of the current baseline:
 - FASE 17/18 canonical-library expansion: text/parsing/IO/FS/path utilities, algorithms/collections growth, plus `process`, `hash`, and `bit` modules
 - FASE 19 language-surface expansion: `ELIGE`/`CASUS`/`ALIOQUIN` (with legacy `CUM` compatibility), `FORMA`, payload `ORDO`, and `ITERUM` over `map`/`set` with insertion-order semantics
 - FASE 20 application-library expansion: `cct/json`, `cct/socket`, `cct/net`, `cct/http`, `cct/config`, and `cct/db_sqlite`
+- FASE 21-29 bootstrap closure: lexer, parser, semantic analyzer, codegen, stage0/stage1/stage2 self-host convergence
+- FASE 30 operational closure: self-hosted project workflows, mature `csv` / `https` / `orm_lite`, and final operational handoff
 
 ## Recent Phase Closures (16-19)
 
@@ -110,19 +112,41 @@ make test
 
 ## Bootstrap
 
-The compiler is being rewritten in CCT as part of the bootstrap track.
+The bootstrap track is complete through FASE 30.
 
-FASE 21 implements the bootstrap lexer:
-- `src/bootstrap/lexer/` contains the lexer implemented in CCT
+Validated bootstrap layers:
+- `src/bootstrap/lexer/` — lexer in CCT
+- `src/bootstrap/parser/` — parser + AST in CCT
+- `src/bootstrap/semantic/` — semantic analysis in CCT
+- `src/bootstrap/codegen/` — code generation in CCT
+- `src/bootstrap/main_compiler.cct` — self-hosted compiler entrypoint
+
+Historical bootstrap entrypoint retained from FASE 21:
 - `src/bootstrap/main_lexer.cct` provides the standalone bootstrap CLI
 - `tests/integration/lexer_*.cct` contains the bootstrap lexer integration fixtures
 
-Build and run the standalone lexer:
+Operational self-hosted workflow:
+
+```bash
+make bootstrap-stage-identity
+make bootstrap-selfhost-ready
+make project-selfhost-build PROJECT=examples/phase30_data_app
+make project-selfhost-run PROJECT=examples/phase30_data_app
+make project-selfhost-test PROJECT=examples/phase30_data_app
+```
+
+Standalone bootstrap CLI example retained for the lexer layer:
 
 ```bash
 make cct_lexer_bootstrap
 ./cct_lexer_bootstrap tests/integration/codegen_minimal.cct
 ```
+
+Operational validation targets:
+- `make test-bootstrap-selfhost` — FASE 29 gate
+- `make test-operational-selfhost` — FASE 30A gate
+- `make test-operational-platform` — FASE 30B-30D gate
+- `make test-phase30-final` — consolidated FASE 30 gate
 
 ## CLI
 

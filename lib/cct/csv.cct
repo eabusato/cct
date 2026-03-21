@@ -1,0 +1,35 @@
+INCIPIT grimoire "csv"
+
+ADVOCARE "cct/fluxus.cct"
+ADVOCARE "cct/parse.cct"
+ADVOCARE "cct/verbum.cct"
+
+RITUALE csv_parse_row(VERBUM line) REDDE SPECULUM NIHIL
+  REDDE CONIURA parse_csv_line(line)
+EXPLICIT RITUALE
+
+RITUALE csv_escape_field(VERBUM field) REDDE VERBUM
+  EVOCA VERUM needs_quotes AD CONIURA contains(field, ",") VEL CONIURA contains(field, "\"") VEL CONIURA contains(field, "\n")
+  EVOCA VERBUM escaped AD CONIURA replace_all(field, "\"", "\"\"")
+  SI needs_quotes
+    REDDE CONIURA concat(CONIURA concat("\"", escaped), "\"")
+  FIN SI
+  REDDE field
+EXPLICIT RITUALE
+
+RITUALE csv_encode_row(SPECULUM NIHIL fields) REDDE VERBUM
+  EVOCA REX i AD 0
+  EVOCA REX n AD CONIURA fluxus_len(fields)
+  EVOCA VERBUM out AD ""
+  DUM i < n
+    EVOCA SPECULUM VERBUM field AD CONIURA fluxus_get(fields, i)
+    SI i != 0
+      VINCIRE out AD CONIURA concat(out, ",")
+    FIN SI
+    VINCIRE out AD CONIURA concat(out, CONIURA csv_escape_field(*field))
+    VINCIRE i AD i + 1
+  FIN DUM
+  REDDE out
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

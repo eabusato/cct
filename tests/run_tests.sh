@@ -141,6 +141,10 @@ cct_phase_block_enabled() {
             cct_csv_contains "bootstrap" "$CCT_TEST_GROUPS_NORMALIZED" || cct_csv_contains "selfhost" "$CCT_TEST_GROUPS_NORMALIZED" || cct_csv_contains "bootstrap-selfhost" "$CCT_TEST_GROUPS_NORMALIZED" || cct_csv_contains "$phase" "$CCT_TEST_GROUPS_NORMALIZED"
             return $?
             ;;
+        30)
+            cct_csv_contains "operational" "$CCT_TEST_GROUPS_NORMALIZED" || cct_csv_contains "selfhost" "$CCT_TEST_GROUPS_NORMALIZED" || cct_csv_contains "bootstrap-operational" "$CCT_TEST_GROUPS_NORMALIZED" || cct_csv_contains "$phase" "$CCT_TEST_GROUPS_NORMALIZED"
+            return $?
+            ;;
     esac
 
     return 1
@@ -417,7 +421,7 @@ cct_phase29_host_compile() {
         "$c_file" \
         "$PHASE29_SUPPORT_OBJ" \
         src/runtime/fs_runtime.c \
-        -lm
+        -lm -lsqlite3
 }
 
 cct_phase29_emit_compile_run() {
@@ -452,6 +456,36 @@ cct_phase29_prepare_bench() {
     RC_29_BENCH=$?
     PHASE29_BENCH_FILE="$ROOT_DIR/out/bootstrap/phase29/bench/metrics.txt"
     return "$RC_29_BENCH"
+}
+
+cct_phase30_prepare() {
+    if [ -n "${RC_30_READY+x}" ]; then
+        return "$RC_30_READY"
+    fi
+
+    cct_phase29_prepare >/dev/null 2>&1
+    mkdir -p "$ROOT_DIR/out/bootstrap/phase30/logs" "$ROOT_DIR/out/bootstrap/phase30/run" "$ROOT_DIR/out/bootstrap/phase30/manifests" "$ROOT_DIR/out/bootstrap/phase30/tools" "$ROOT_DIR/out/bootstrap/phase30/bin"
+    make bootstrap-selfhost-ready >"$ROOT_DIR/out/bootstrap/phase30/logs/phase30.ready.stdout.log" 2>"$ROOT_DIR/out/bootstrap/phase30/logs/phase30.ready.stderr.log"
+    RC_30_READY=$?
+    PHASE30_WRAPPER="$ROOT_DIR/out/bootstrap/phase30/bin/cct_selfhost"
+    PHASE30_PARSER_BIN="$ROOT_DIR/out/bootstrap/phase30/tools/cct_parser_bootstrap"
+    PHASE30_SEMANTIC_BIN="$ROOT_DIR/out/bootstrap/phase30/tools/cct_semantic_bootstrap"
+    PHASE30_CODEGEN_BIN="$ROOT_DIR/out/bootstrap/phase30/tools/cct_codegen_bootstrap"
+    PHASE30_RUN_DIR="$ROOT_DIR/out/bootstrap/phase30/run"
+    return "$RC_30_READY"
+}
+
+cct_phase30_build_and_run() {
+    local label="$1"
+    local src="$2"
+    local out_bin="$3"
+    local expected_rc="$4"
+
+    make bootstrap-selfhost-build SRC="$src" OUT="$out_bin" >"$ROOT_DIR/out/bootstrap/phase30/logs/${label}.make.stdout.log" 2>"$ROOT_DIR/out/bootstrap/phase30/logs/${label}.make.stderr.log" || return 11
+    "$out_bin" >"$ROOT_DIR/out/bootstrap/phase30/run/${label}.run.out" 2>"$ROOT_DIR/out/bootstrap/phase30/run/${label}.run.err"
+    local rc=$?
+    [ "$rc" -eq "$expected_rc" ] || return 12
+    return 0
 }
 
 resolve_doc_path() {
@@ -8222,6 +8256,347 @@ if [ "$RC_29_BENCH" -eq 0 ] && [ -s "out/bootstrap/phase29/logs/bench.stage0.tim
     test_pass "bench gera logs por estagio"
 else
     test_fail "bench nao gerou logs completos por estagio"
+fi
+
+fi
+if cct_phase_block_enabled "30"; then
+if cct_phase_block_enabled "30A"; then
+echo ""
+echo "========================================"
+echo "FASE 30A: Self-Hosted Toolchain as Default Path"
+echo "========================================"
+echo ""
+
+cct_phase30_prepare
+
+# Test 1691: ready target
+echo "Test 1691: bootstrap-selfhost-ready gera wrapper e manifest"
+if [ "$RC_30_READY" -eq 0 ] && [ -x "$PHASE30_WRAPPER" ] && [ -s "$ROOT_DIR/out/bootstrap/phase30/manifests/selfhost_ready.txt" ]; then
+    test_pass "bootstrap-selfhost-ready gera wrapper e manifest"
+else
+    test_fail "bootstrap-selfhost-ready nao materializou artefatos esperados"
+fi
+
+# Test 1692: parser tool
+echo "Test 1692: bootstrap-selfhost-parser recompila parser operacional"
+BASE_1692="$ROOT_DIR/out/bootstrap/phase30/run/test_1692_parser"
+HOST_1692="$ROOT_DIR/out/bootstrap/phase30/run/test_1692_parser.host.ast"
+HOST_1692_NORM="$ROOT_DIR/out/bootstrap/phase30/run/test_1692_parser.host.norm"
+BOOT_1692="$ROOT_DIR/out/bootstrap/phase30/run/test_1692_parser.boot.ast"
+if [ "$RC_30_READY" -eq 0 ] && make bootstrap-selfhost-parser >"$ROOT_DIR/out/bootstrap/phase30/logs/test_1692.make.stdout.log" 2>"$ROOT_DIR/out/bootstrap/phase30/logs/test_1692.make.stderr.log" && "$CCT_BIN" --ast "tests/integration/parser_gate_binary_22f_input.cct" >"$HOST_1692" 2>"$BASE_1692.host.err" && normalize_host_ast_22f "$HOST_1692" "$HOST_1692_NORM" && "$PHASE30_PARSER_BIN" "tests/integration/parser_gate_binary_22f_input.cct" >"$BOOT_1692" 2>"$BASE_1692.boot.err" && diff -u "$HOST_1692_NORM" "$BOOT_1692" >"$BASE_1692.diff" 2>&1; then
+    test_pass "bootstrap-selfhost-parser recompila parser operacional"
+else
+    test_fail "bootstrap-selfhost-parser regrediu"
+fi
+
+# Test 1693: semantic tool
+echo "Test 1693: bootstrap-selfhost-semantic recompila semantic operacional"
+if [ "$RC_30_READY" -eq 0 ] && make bootstrap-selfhost-semantic >"$ROOT_DIR/out/bootstrap/phase30/logs/test_1693.make.stdout.log" 2>"$ROOT_DIR/out/bootstrap/phase30/logs/test_1693.make.stderr.log" && "$PHASE30_SEMANTIC_BIN" "tests/integration/semantic_gate_generic_valid_decl_25e_input.cct" >"$ROOT_DIR/out/bootstrap/phase30/run/test_1693.boot.out" 2>"$ROOT_DIR/out/bootstrap/phase30/run/test_1693.boot.err" && grep -q '^OK$' "$ROOT_DIR/out/bootstrap/phase30/run/test_1693.boot.out"; then
+    test_pass "bootstrap-selfhost-semantic recompila semantic operacional"
+else
+    test_fail "bootstrap-selfhost-semantic regrediu"
+fi
+
+# Test 1694: codegen tool
+echo "Test 1694: bootstrap-selfhost-codegen recompila codegen operacional"
+if [ "$RC_30_READY" -eq 0 ] && make bootstrap-selfhost-codegen >"$ROOT_DIR/out/bootstrap/phase30/logs/test_1694.make.stdout.log" 2>"$ROOT_DIR/out/bootstrap/phase30/logs/test_1694.make.stderr.log" && "$PHASE30_CODEGEN_BIN" "tests/integration/codegen_gate_forma_call_28d_input.cct" >"$ROOT_DIR/out/bootstrap/phase30/run/test_1694.gen.c" 2>"$ROOT_DIR/out/bootstrap/phase30/run/test_1694.codegen.err" && cct_phase29_host_compile "$ROOT_DIR/out/bootstrap/phase30/run/test_1694.gen.c" "$ROOT_DIR/out/bootstrap/phase30/run/test_1694.gen.bin" >"$ROOT_DIR/out/bootstrap/phase30/run/test_1694.cc.out" 2>"$ROOT_DIR/out/bootstrap/phase30/run/test_1694.cc.err"; then
+    "$ROOT_DIR/out/bootstrap/phase30/run/test_1694.gen.bin" >"$ROOT_DIR/out/bootstrap/phase30/run/test_1694.run.out" 2>"$ROOT_DIR/out/bootstrap/phase30/run/test_1694.run.err"
+    RC_1694_RUN=$?
+else
+    RC_1694_RUN=999
+fi
+if [ "$RC_1694_RUN" -eq 4 ]; then
+    test_pass "bootstrap-selfhost-codegen recompila codegen operacional"
+else
+    test_fail "bootstrap-selfhost-codegen regrediu"
+fi
+
+# Test 1695: selfhost build minimal
+echo "Test 1695: bootstrap-selfhost-build compila fixture minima"
+if [ "$RC_30_READY" -eq 0 ] && make bootstrap-selfhost-build SRC=tests/integration/selfhost_operational_minimal_30a_input.cct OUT=out/bootstrap/phase30/run/selfhost_operational_minimal_30a >"$ROOT_DIR/out/bootstrap/phase30/logs/test_1695.make.stdout.log" 2>"$ROOT_DIR/out/bootstrap/phase30/logs/test_1695.make.stderr.log"; then
+    "$ROOT_DIR/out/bootstrap/phase30/run/selfhost_operational_minimal_30a" >"$ROOT_DIR/out/bootstrap/phase30/run/test_1695.run.out" 2>"$ROOT_DIR/out/bootstrap/phase30/run/test_1695.run.err"
+    RC_1695_RUN=$?
+else
+    RC_1695_RUN=999
+fi
+if [ "$RC_1695_RUN" -eq 11 ]; then
+    test_pass "bootstrap-selfhost-build compila fixture minima"
+else
+    test_fail "bootstrap-selfhost-build regrediu fixture minima"
+fi
+
+# Test 1696: selfhost build modular
+echo "Test 1696: bootstrap-selfhost-build compila fixture modular"
+if [ "$RC_30_READY" -eq 0 ] && make bootstrap-selfhost-build SRC=tests/integration/selfhost_operational_import_30a_input.cct OUT=out/bootstrap/phase30/run/selfhost_operational_import_30a >"$ROOT_DIR/out/bootstrap/phase30/logs/test_1696.make.stdout.log" 2>"$ROOT_DIR/out/bootstrap/phase30/logs/test_1696.make.stderr.log"; then
+    "$ROOT_DIR/out/bootstrap/phase30/run/selfhost_operational_import_30a" >"$ROOT_DIR/out/bootstrap/phase30/run/test_1696.run.out" 2>"$ROOT_DIR/out/bootstrap/phase30/run/test_1696.run.err"
+    RC_1696_RUN=$?
+else
+    RC_1696_RUN=999
+fi
+if [ "$RC_1696_RUN" -eq 19 ]; then
+    test_pass "bootstrap-selfhost-build compila fixture modular"
+else
+    test_fail "bootstrap-selfhost-build regrediu fixture modular"
+fi
+
+# Test 1697: clear failure without SRC
+echo "Test 1697: bootstrap-selfhost-build falha claramente sem SRC"
+if ! make bootstrap-selfhost-build >"$ROOT_DIR/out/bootstrap/phase30/run/test_1697.out" 2>"$ROOT_DIR/out/bootstrap/phase30/run/test_1697.err" && grep -q "missing SRC=<file.cct>" "$ROOT_DIR/out/bootstrap/phase30/run/test_1697.err"; then
+    test_pass "bootstrap-selfhost-build falha claramente sem SRC"
+else
+    test_fail "bootstrap-selfhost-build nao explicou ausencia de SRC"
+fi
+fi
+
+if cct_phase_block_enabled "30B"; then
+echo ""
+echo "========================================"
+echo "FASE 30B: Stdlib/Runtime Compatibility Closure"
+echo "========================================"
+echo ""
+
+cct_phase30_prepare >/dev/null 2>&1
+
+# Test 1698: stdlib matrix
+echo "Test 1698: bootstrap-selfhost-stdlib-matrix materializa subset explicito"
+if [ "$RC_30_READY" -eq 0 ] && make bootstrap-selfhost-stdlib-matrix >"$ROOT_DIR/out/bootstrap/phase30/logs/test_1698.make.stdout.log" 2>"$ROOT_DIR/out/bootstrap/phase30/logs/test_1698.make.stderr.log" && [ -s "$ROOT_DIR/out/bootstrap/phase30/compat/selfhost_stdlib_matrix.txt" ] && grep -q 'module.verbum=SUPPORTED' "$ROOT_DIR/out/bootstrap/phase30/compat/selfhost_stdlib_matrix.txt" && grep -q 'module.config=PENDING' "$ROOT_DIR/out/bootstrap/phase30/compat/selfhost_stdlib_matrix.txt"; then
+    test_pass "bootstrap-selfhost-stdlib-matrix materializa subset explicito"
+else
+    test_fail "bootstrap-selfhost-stdlib-matrix nao materializou a matriz"
+fi
+
+# Test 1699: text modules
+echo "Test 1699: selfhost stdlib text/fmt/verbum"
+if [ "$RC_30_READY" -eq 0 ] && cct_phase30_build_and_run "test_1699" "tests/integration/selfhost_stdlib_text_30b_input.cct" "$ROOT_DIR/out/bootstrap/phase30/run/selfhost_stdlib_text_30b" 30; then
+    test_pass "selfhost stdlib text/fmt/verbum"
+else
+    test_fail "selfhost stdlib text/fmt/verbum regrediu"
+fi
+
+# Test 1700: fs/path modules
+echo "Test 1700: selfhost stdlib fs/path"
+if [ "$RC_30_READY" -eq 0 ] && cct_phase30_build_and_run "test_1700" "tests/integration/selfhost_stdlib_fs_path_30b_input.cct" "$ROOT_DIR/out/bootstrap/phase30/run/selfhost_stdlib_fs_path_30b" 31; then
+    test_pass "selfhost stdlib fs/path"
+else
+    test_fail "selfhost stdlib fs/path regrediu"
+fi
+
+# Test 1701: fluxus
+echo "Test 1701: selfhost stdlib fluxus"
+if [ "$RC_30_READY" -eq 0 ] && cct_phase30_build_and_run "test_1701" "tests/integration/selfhost_stdlib_fluxus_30b_input.cct" "$ROOT_DIR/out/bootstrap/phase30/run/selfhost_stdlib_fluxus_30b" 32; then
+    test_pass "selfhost stdlib fluxus"
+else
+    test_fail "selfhost stdlib fluxus regrediu"
+fi
+
+# Test 1702: parse csv
+echo "Test 1702: selfhost stdlib parse csv"
+if [ "$RC_30_READY" -eq 0 ] && cct_phase30_build_and_run "test_1702" "tests/integration/selfhost_stdlib_parse_csv_30b_input.cct" "$ROOT_DIR/out/bootstrap/phase30/run/selfhost_stdlib_parse_csv_30b" 33; then
+    test_pass "selfhost stdlib parse csv"
+else
+    test_fail "selfhost stdlib parse csv regrediu"
+fi
+
+# Test 1703: parse numeric
+echo "Test 1703: selfhost stdlib parse numeric"
+if [ "$RC_30_READY" -eq 0 ] && cct_phase30_build_and_run "test_1703" "tests/integration/selfhost_stdlib_parse_numeric_30b_input.cct" "$ROOT_DIR/out/bootstrap/phase30/run/selfhost_stdlib_parse_numeric_30b" 34; then
+    test_pass "selfhost stdlib parse numeric"
+else
+    test_fail "selfhost stdlib parse numeric regrediu"
+fi
+
+# Test 1704: unsupported module stays explicit
+echo "Test 1704: selfhost stdlib negativa clara para config"
+if [ "$RC_30_READY" -eq 0 ] && ! make bootstrap-selfhost-build SRC=tests/integration/selfhost_stdlib_negative_config_30b_input.cct OUT=out/bootstrap/phase30/run/selfhost_stdlib_negative_config_30b >"$ROOT_DIR/out/bootstrap/phase30/logs/test_1704.make.stdout.log" 2>"$ROOT_DIR/out/bootstrap/phase30/logs/test_1704.make.stderr.log" && grep -q "Self-hosted compiler does not operationally expose module yet: cct/config.cct" "$ROOT_DIR/out/bootstrap/phase30/logs/build.selfhost_stdlib_negative_config_30b.emit.stderr.log"; then
+    test_pass "selfhost stdlib negativa clara para config"
+else
+    test_fail "selfhost stdlib negativa de config nao ficou clara"
+fi
+fi
+
+if cct_phase_block_enabled "30C"; then
+echo ""
+echo "========================================"
+echo "FASE 30C: Mature Application Libraries"
+echo "========================================"
+echo ""
+
+cct_phase30_prepare >/dev/null 2>&1
+
+# Test 1705: csv parse
+echo "Test 1705: selfhost csv parse"
+if [ "$RC_30_READY" -eq 0 ] && cct_phase30_build_and_run "test_1705" "tests/integration/selfhost_csv_parse_30c_input.cct" "$ROOT_DIR/out/bootstrap/phase30/run/selfhost_csv_parse_30c" 35; then
+    test_pass "selfhost csv parse"
+else
+    test_fail "selfhost csv parse regrediu"
+fi
+
+# Test 1706: csv encode
+echo "Test 1706: selfhost csv encode"
+if [ "$RC_30_READY" -eq 0 ] && cct_phase30_build_and_run "test_1706" "tests/integration/selfhost_csv_encode_30c_input.cct" "$ROOT_DIR/out/bootstrap/phase30/run/selfhost_csv_encode_30c" 36; then
+    test_pass "selfhost csv encode"
+else
+    test_fail "selfhost csv encode regrediu"
+fi
+
+# Test 1707: https command
+echo "Test 1707: selfhost https command"
+if [ "$RC_30_READY" -eq 0 ] && cct_phase30_build_and_run "test_1707" "tests/integration/selfhost_https_command_30c_input.cct" "$ROOT_DIR/out/bootstrap/phase30/run/selfhost_https_command_30c" 37; then
+    test_pass "selfhost https command"
+else
+    test_fail "selfhost https command regrediu"
+fi
+
+# Test 1708: https file fetch
+echo "Test 1708: selfhost https file fetch"
+if [ "$RC_30_READY" -eq 0 ] && cct_phase30_build_and_run "test_1708" "tests/integration/selfhost_https_file_fetch_30c_input.cct" "$ROOT_DIR/out/bootstrap/phase30/run/selfhost_https_file_fetch_30c" 38; then
+    test_pass "selfhost https file fetch"
+else
+    test_fail "selfhost https file fetch regrediu"
+fi
+
+# Test 1709: https negative
+echo "Test 1709: selfhost https negativa clara"
+if [ "$RC_30_READY" -eq 0 ] && cct_phase30_build_and_run "test_1709" "tests/integration/selfhost_https_negative_30c_input.cct" "$ROOT_DIR/out/bootstrap/phase30/run/selfhost_https_negative_30c" 41; then
+    test_pass "selfhost https negativa clara"
+else
+    test_fail "selfhost https negativa nao ficou clara"
+fi
+
+# Test 1710: orm count
+echo "Test 1710: selfhost orm count"
+if [ "$RC_30_READY" -eq 0 ] && cct_phase30_build_and_run "test_1710" "tests/integration/selfhost_orm_count_30c_input.cct" "$ROOT_DIR/out/bootstrap/phase30/run/selfhost_orm_count_30c" 39; then
+    test_pass "selfhost orm count"
+else
+    test_fail "selfhost orm count regrediu"
+fi
+
+# Test 1711: orm select
+echo "Test 1711: selfhost orm select"
+if [ "$RC_30_READY" -eq 0 ] && cct_phase30_build_and_run "test_1711" "tests/integration/selfhost_orm_select_30c_input.cct" "$ROOT_DIR/out/bootstrap/phase30/run/selfhost_orm_select_30c" 40; then
+    test_pass "selfhost orm select"
+else
+    test_fail "selfhost orm select regrediu"
+fi
+fi
+
+if cct_phase_block_enabled "30D"; then
+echo ""
+echo "========================================"
+echo "FASE 30D: Project Workflows and Distribution"
+echo "========================================"
+echo ""
+
+cct_phase30_prepare >/dev/null 2>&1
+
+# Test 1712: selfhost project build modular
+echo "Test 1712: project-selfhost-build compila projeto modular"
+if [ "$RC_30_READY" -eq 0 ] && make project-selfhost-build PROJECT=examples/project_modular_12f >"$ROOT_DIR/out/bootstrap/phase30/logs/test_1712.make.stdout.log" 2>"$ROOT_DIR/out/bootstrap/phase30/logs/test_1712.make.stderr.log" && [ -x "$ROOT_DIR/examples/project_modular_12f/dist/project_modular_12f_selfhost" ]; then
+    test_pass "project-selfhost-build compila projeto modular"
+else
+    test_fail "project-selfhost-build nao compilou projeto modular"
+fi
+
+# Test 1713: modular project binary runs
+echo "Test 1713: projeto modular selfhosted executa artefato gerado"
+if [ "$RC_30_READY" -eq 0 ] && "$ROOT_DIR/examples/project_modular_12f/dist/project_modular_12f_selfhost" >"$ROOT_DIR/out/bootstrap/phase30/run/test_1713.run.out" 2>"$ROOT_DIR/out/bootstrap/phase30/run/test_1713.run.err"; then
+    RC_1713_RUN=0
+else
+    RC_1713_RUN=$?
+fi
+if [ "$RC_1713_RUN" -eq 42 ]; then
+    test_pass "projeto modular selfhosted executa artefato gerado"
+else
+    test_fail "artefato selfhost do projeto modular retornou codigo inesperado"
+fi
+
+# Test 1714: selfhost project run
+echo "Test 1714: project-selfhost-run executa projeto de aplicacao"
+if [ "$RC_30_READY" -eq 0 ] && make project-selfhost-run PROJECT=examples/phase30_data_app >"$ROOT_DIR/out/bootstrap/phase30/logs/test_1714.make.stdout.log" 2>"$ROOT_DIR/out/bootstrap/phase30/logs/test_1714.make.stderr.log"; then
+    test_pass "project-selfhost-run executa projeto de aplicacao"
+else
+    test_fail "project-selfhost-run regrediu projeto de aplicacao"
+fi
+
+# Test 1715: selfhost project test
+echo "Test 1715: project-selfhost-test valida suite do projeto"
+if [ "$RC_30_READY" -eq 0 ] && make project-selfhost-test PROJECT=examples/phase30_data_app >"$ROOT_DIR/out/bootstrap/phase30/logs/test_1715.make.stdout.log" 2>"$ROOT_DIR/out/bootstrap/phase30/logs/test_1715.make.stderr.log" && grep -q "\[test\] summary: pass=1 fail=0" "$ROOT_DIR/out/bootstrap/phase30/logs/test_1715.make.stdout.log"; then
+    test_pass "project-selfhost-test valida suite do projeto"
+else
+    test_fail "project-selfhost-test nao fechou verde"
+fi
+
+# Test 1716: package with manifest
+echo "Test 1716: project-selfhost-package materializa artefato e manifest"
+if [ "$RC_30_READY" -eq 0 ] && make project-selfhost-package PROJECT=examples/phase30_data_app >"$ROOT_DIR/out/bootstrap/phase30/logs/test_1716.make.stdout.log" 2>"$ROOT_DIR/out/bootstrap/phase30/logs/test_1716.make.stderr.log" && [ -x "$ROOT_DIR/examples/phase30_data_app/dist/phase30_data_app_selfhost" ] && [ -s "$ROOT_DIR/examples/phase30_data_app/dist/phase30_data_app_selfhost.manifest.txt" ] && grep -q "compiler=.*stage2/cct_stage2" "$ROOT_DIR/examples/phase30_data_app/dist/phase30_data_app_selfhost.manifest.txt"; then
+    test_pass "project-selfhost-package materializa artefato e manifest"
+else
+    test_fail "project-selfhost-package nao materializou distribuicao coerente"
+fi
+
+# Test 1717: broken project failure
+echo "Test 1717: project-selfhost-build falha claramente em projeto quebrado"
+if [ "$RC_30_READY" -eq 0 ] && ! make project-selfhost-build PROJECT=examples/project_broken_30d >"$ROOT_DIR/out/bootstrap/phase30/logs/test_1717.make.stdout.log" 2>"$ROOT_DIR/out/bootstrap/phase30/logs/test_1717.make.stderr.log" && grep -q "entry file not found" "$ROOT_DIR/out/bootstrap/phase30/logs/test_1717.make.stderr.log"; then
+    test_pass "project-selfhost-build falha claramente em projeto quebrado"
+else
+    test_fail "project-selfhost-build nao explicou projeto quebrado"
+fi
+fi
+
+if cct_phase_block_enabled "30E"; then
+echo ""
+echo "========================================"
+echo "FASE 30E: Final Gate, Release and Handoff"
+echo "========================================"
+echo ""
+
+# Test 1718: selfhost bootstrap identity artifacts
+echo "Test 1718: artefatos de identidade stage1/stage2 permanecem verdes"
+if [ -x "$ROOT_DIR/out/bootstrap/phase29/stage2/cct_stage2" ] && [ ! -s "$ROOT_DIR/out/bootstrap/phase29/diff/stage1_vs_stage2.c.diff" ] && [ ! -s "$ROOT_DIR/out/bootstrap/phase29/diff/stage1_vs_stage2.bin.diff" ] && [ ! -s "$ROOT_DIR/out/bootstrap/phase29/diff/stage1_vs_stage2.identity.diff" ]; then
+    test_pass "artefatos de identidade stage1/stage2 permanecem verdes"
+else
+    test_fail "gate bootstrap selfhost regrediu"
+fi
+
+# Test 1719: stdlib compatibility artifacts
+echo "Test 1719: matriz de compatibilidade selfhost permanece materializada"
+if [ -s "$ROOT_DIR/out/bootstrap/phase30/compat/selfhost_stdlib_matrix.txt" ] && grep -q 'module.verbum=SUPPORTED' "$ROOT_DIR/out/bootstrap/phase30/compat/selfhost_stdlib_matrix.txt" && grep -q 'module.config=PENDING' "$ROOT_DIR/out/bootstrap/phase30/compat/selfhost_stdlib_matrix.txt"; then
+    test_pass "matriz de compatibilidade selfhost permanece materializada"
+else
+    test_fail "gate operacional da plataforma regrediu"
+fi
+
+# Test 1720: workflow/package artifacts
+echo "Test 1720: artefatos operacionais de projeto permanecem coerentes"
+if [ -x "$ROOT_DIR/examples/project_modular_12f/dist/project_modular_12f_selfhost" ] && [ -x "$ROOT_DIR/examples/phase30_data_app/dist/phase30_data_app_selfhost" ] && [ -s "$ROOT_DIR/examples/phase30_data_app/dist/phase30_data_app_selfhost.manifest.txt" ] && grep -q "compiler=.*stage2/cct_stage2" "$ROOT_DIR/examples/phase30_data_app/dist/phase30_data_app_selfhost.manifest.txt" && grep -q "entry file not found" "$ROOT_DIR/out/bootstrap/phase30/logs/test_1717.make.stderr.log"; then
+    test_pass "artefatos operacionais de projeto permanecem coerentes"
+else
+    test_fail "gate final da fase 30 regrediu"
+fi
+
+# Test 1721: release notes
+echo "Test 1721: release notes da fase 30 existem e refletem os workflows"
+if [ -s "$ROOT_DIR/docs/release/FASE_30_RELEASE_NOTES.md" ] && grep -q "project-selfhost-build" "$ROOT_DIR/docs/release/FASE_30_RELEASE_NOTES.md" && grep -q "cct_stage2" "$ROOT_DIR/docs/release/FASE_30_RELEASE_NOTES.md"; then
+    test_pass "release notes da fase 30 existem e refletem os workflows"
+else
+    test_fail "release notes da fase 30 estao ausentes ou incompletas"
+fi
+
+# Test 1722: handoff
+echo "Test 1722: handoff tecnico da fase 30 existe e lista riscos"
+if [ -s "$ROOT_DIR/docs/bootstrap/FASE_30_HANDOFF.md" ] && grep -q "examples/phase30_data_app" "$ROOT_DIR/docs/bootstrap/FASE_30_HANDOFF.md" && grep -q "Riscos Residuais" "$ROOT_DIR/docs/bootstrap/FASE_30_HANDOFF.md"; then
+    test_pass "handoff tecnico da fase 30 existe e lista riscos"
+else
+    test_fail "handoff tecnico da fase 30 estah ausente ou incompleto"
+fi
+
+# Test 1723: public docs status
+echo "Test 1723: README e roadmap refletem FASE 30 concluida"
+if grep -q "Current status: FASE 30 completed" "$ROOT_DIR/README.md" && grep -q "Bootstrap status:" "$ROOT_DIR/docs/roadmap.md"; then
+    test_pass "README e roadmap refletem FASE 30 concluida"
+else
+    test_fail "README/roadmap nao refletem o estado final da FASE 30"
+fi
 fi
 
 fi

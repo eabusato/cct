@@ -1,0 +1,18 @@
+INCIPIT grimoire "selfhost_https_file_fetch_30c"
+ADVOCARE "cct/fs.cct"
+ADVOCARE "cct/https.cct"
+ADVOCARE "cct/path.cct"
+ADVOCARE "cct/verbum.cct"
+
+RITUALE main() REDDE REX
+  EVOCA VERBUM file AD "out/bootstrap/phase30/run/selfhost_https_file_fetch_30c.txt"
+  CONIURA write_all(file, "phase30-https")
+  EVOCA VERBUM url AD CONIURA concat("file://", CONIURA resolve(file))
+  EVOCA VERBUM body AD CONIURA https_get_text(url)
+  SI CONIURA compare(body, "phase30-https") == 0
+    REDDE 38
+  FIN SI
+  REDDE 1
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

@@ -1,0 +1,14 @@
+INCIPIT grimoire "selfhost_stdlib_text_30b"
+ADVOCARE "cct/fmt.cct"
+ADVOCARE "cct/verbum.cct"
+
+RITUALE main() REDDE REX
+  EVOCA VERBUM pair AD CONIURA format_pair("toolchain", "selfhost")
+  EVOCA VERBUM msg AD CONIURA concat(pair, " ready")
+  SI CONIURA compare(msg, "toolchain: selfhost ready") == 0
+    REDDE 30
+  FIN SI
+  REDDE 1
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

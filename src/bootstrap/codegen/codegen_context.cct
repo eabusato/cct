@@ -138,6 +138,9 @@ SIGILLUM CodegenContext
   owns_current_return_type: VERUM
   needs_stdio: VERUM
   needs_stdlib: VERUM
+  needs_args_runtime: VERUM
+  needs_fs_runtime: VERUM
+  needs_scribe_runtime: VERUM
   needs_fail_helper: VERUM
   needs_failure_runtime: VERUM
   needs_fmt_runtime: VERUM
@@ -512,6 +515,9 @@ RITUALE codegen_context_reset(SPECULUM CodegenContext ctx) REDDE NIHIL
   VINCIRE (*ctx).owns_current_return_type AD VERUM
   VINCIRE (*ctx).needs_stdio AD FALSUM
   VINCIRE (*ctx).needs_stdlib AD FALSUM
+  VINCIRE (*ctx).needs_args_runtime AD FALSUM
+  VINCIRE (*ctx).needs_fs_runtime AD FALSUM
+  VINCIRE (*ctx).needs_scribe_runtime AD FALSUM
   VINCIRE (*ctx).needs_fail_helper AD FALSUM
   VINCIRE (*ctx).needs_failure_runtime AD FALSUM
   VINCIRE (*ctx).needs_fmt_runtime AD FALSUM
@@ -991,6 +997,22 @@ EXPLICIT RITUALE
 
 RITUALE codegen_require_stdlib(SPECULUM CodegenContext ctx) REDDE NIHIL
   VINCIRE (*ctx).needs_stdlib AD VERUM
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE codegen_require_args_runtime(SPECULUM CodegenContext ctx) REDDE NIHIL
+  VINCIRE (*ctx).needs_args_runtime AD VERUM
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE codegen_require_fs_runtime(SPECULUM CodegenContext ctx) REDDE NIHIL
+  VINCIRE (*ctx).needs_fs_runtime AD VERUM
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE codegen_require_scribe_runtime(SPECULUM CodegenContext ctx) REDDE NIHIL
+  VINCIRE (*ctx).needs_scribe_runtime AD VERUM
+  CONIURA codegen_require_stdio(ctx)
   REDDE
 EXPLICIT RITUALE
 

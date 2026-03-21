@@ -58,20 +58,34 @@ RITUALE codegen_runtime_string_symbol(SPECULUM CodegenContext ctx, VERBUM raw_te
 EXPLICIT RITUALE
 
 RITUALE codegen_runtime_emit_includes(SPECULUM CodegenContext ctx) REDDE NIHIL
-  CONIURA codegen_emit_line(ctx, "#include <string.h>")
-  CONIURA codegen_emit_line(ctx, "#include <stdlib.h>")
-  CONIURA codegen_emit_line(ctx, "void cct_rt_args_init(int argc, char **argv);")
+  EVOCA VERUM emitted_any AD FALSUM
+  SI (*ctx).needs_stdlib
+    CONIURA codegen_emit_line(ctx, "#include <string.h>")
+    CONIURA codegen_emit_line(ctx, "#include <stdlib.h>")
+    VINCIRE emitted_any AD VERUM
+  FIN SI
+  SI (*ctx).needs_args_runtime
+    CONIURA codegen_emit_line(ctx, "void cct_rt_args_init(int argc, char **argv);")
+    VINCIRE emitted_any AD VERUM
+  FIN SI
   SI (*ctx).needs_failure_runtime
     CONIURA codegen_emit_line(ctx, "#include <setjmp.h>")
+    VINCIRE emitted_any AD VERUM
   FIN SI
   SI (*ctx).needs_stdio
     CONIURA codegen_emit_line(ctx, "#include <stdio.h>")
+    VINCIRE emitted_any AD VERUM
   FIN SI
-  CONIURA codegen_emit_line(ctx, "char* cct_rt_fs_read_all(const char *path);")
-  CONIURA codegen_emit_line(ctx, "void cct_rt_fs_write_all(const char *path, const char *content);")
-  CONIURA codegen_emit_line(ctx, "long long cct_rt_fs_exists(const char *path);")
-  CONIURA codegen_emit_line(ctx, "void cct_rt_fs_mkdir_all(const char *path);")
-  CONIURA codegen_emit_blank_line(ctx)
+  SI (*ctx).needs_fs_runtime
+    CONIURA codegen_emit_line(ctx, "char* cct_rt_fs_read_all(const char *path);")
+    CONIURA codegen_emit_line(ctx, "void cct_rt_fs_write_all(const char *path, const char *content);")
+    CONIURA codegen_emit_line(ctx, "long long cct_rt_fs_exists(const char *path);")
+    CONIURA codegen_emit_line(ctx, "void cct_rt_fs_mkdir_all(const char *path);")
+    VINCIRE emitted_any AD VERUM
+  FIN SI
+  SI emitted_any
+    CONIURA codegen_emit_blank_line(ctx)
+  FIN SI
   REDDE
 EXPLICIT RITUALE
 
@@ -193,7 +207,7 @@ RITUALE codegen_runtime_emit_fail_helper(SPECULUM CodegenContext ctx) REDDE NIHI
 EXPLICIT RITUALE
 
 RITUALE codegen_runtime_emit_scribe_runtime(SPECULUM CodegenContext ctx) REDDE NIHIL
-  SI NON (*ctx).needs_stdio
+  SI NON (*ctx).needs_scribe_runtime
     REDDE
   FIN SI
 
@@ -258,6 +272,43 @@ RITUALE codegen_runtime_find_entry_main_index(SPECULUM AstProgram program) REDDE
   REDDE -1
 EXPLICIT RITUALE
 
+RITUALE codegen_runtime_program_needs_args_init(SPECULUM AstProgram program) REDDE VERUM
+  EVOCA REX i AD 0
+  EVOCA REX n AD CONIURA ast_node_list_len((*program).declarations)
+  DUM i < n
+    EVOCA SPECULUM AstNode decl AD CONIURA ast_node_list_get((*program).declarations, i)
+    SI (*decl).kind == AST_RITUALE
+      SI CONIURA compare((*decl).name, "argc") == 0 VEL CONIURA compare((*decl).name, "arg") == 0
+        REDDE VERUM
+      FIN SI
+    FIN SI
+    VINCIRE i AD i + 1
+  FIN DUM
+  REDDE FALSUM
+EXPLICIT RITUALE
+
+RITUALE codegen_runtime_detect_body_dependencies(SPECULUM CodegenContext ctx, VERBUM body) REDDE NIHIL
+  SI CONIURA contains(body, "free(")
+    CONIURA codegen_require_stdlib(ctx)
+  FIN SI
+  SI CONIURA contains(body, "malloc(")
+    CONIURA codegen_require_stdlib(ctx)
+  FIN SI
+  SI CONIURA contains(body, "strcmp(")
+    CONIURA codegen_require_stdlib(ctx)
+  FIN SI
+  SI CONIURA contains(body, "strlen(")
+    CONIURA codegen_require_stdlib(ctx)
+  FIN SI
+  SI CONIURA contains(body, "memcpy(")
+    CONIURA codegen_require_stdlib(ctx)
+  FIN SI
+  SI CONIURA contains(body, "memset(")
+    CONIURA codegen_require_stdlib(ctx)
+  FIN SI
+  REDDE
+EXPLICIT RITUALE
+
 RITUALE codegen_runtime_emit_host_main(SPECULUM CodegenContext ctx, SPECULUM AstProgram program) REDDE NIHIL
   EVOCA REX entry_idx AD CONIURA codegen_runtime_find_entry_main_index(program)
   SI entry_idx < 0
@@ -265,9 +316,15 @@ RITUALE codegen_runtime_emit_host_main(SPECULUM CodegenContext ctx, SPECULUM Ast
   FIN SI
   EVOCA SPECULUM AstNode entry AD CONIURA ast_node_list_get((*program).declarations, entry_idx)
 
-  CONIURA codegen_emit_line(ctx, "int main(int argc, char **argv)")
+  SI (*ctx).needs_args_runtime
+    CONIURA codegen_emit_line(ctx, "int main(int argc, char **argv)")
+  ALITER
+    CONIURA codegen_emit_line(ctx, "int main(void)")
+  FIN SI
   CONIURA codegen_emit_block_open(ctx)
-  CONIURA codegen_emit_line(ctx, "cct_rt_args_init(argc, argv);")
+  SI (*ctx).needs_args_runtime
+    CONIURA codegen_emit_line(ctx, "cct_rt_args_init(argc, argv);")
+  FIN SI
   SI (*entry).has_return_type ET CONIURA compare((*(*entry).return_type).type_name, "NIHIL") == 0
     CONIURA codegen_emit(ctx, CONIURA codegen_rituale_c_name(ctx, "main"))
     CONIURA codegen_emit_line(ctx, "();")
@@ -283,7 +340,11 @@ EXPLICIT RITUALE
 
 RITUALE codegen_generate_translation_unit_with_context(SPECULUM CodegenContext ctx, SPECULUM AstProgram program) REDDE VERBUM
   CONIURA codegen_emit_program_body(ctx, program)
+  SI CONIURA codegen_runtime_program_needs_args_init(program)
+    CONIURA codegen_require_args_runtime(ctx)
+  FIN SI
   EVOCA VERBUM body AD CONIURA codegen_output(ctx)
+  CONIURA codegen_runtime_detect_body_dependencies(ctx, body)
 
   CONIURA codegen_context_reset_output(ctx)
   CONIURA codegen_emit_line(ctx, "/* generated by cct bootstrap codegen */")

@@ -28,6 +28,7 @@ RITUALE codegen_elige_emit_subject_temp(SPECULUM CodegenContext ctx, VERBUM temp
 EXPLICIT RITUALE
 
 RITUALE codegen_elige_emit_string_condition(SPECULUM CodegenContext ctx, VERBUM subject_name, SPECULUM AstNode case_node) REDDE NIHIL
+  CONIURA codegen_require_stdlib(ctx)
   EVOCA REX i AD 0
   EVOCA REX n AD CONIURA ast_node_list_len((*case_node).children)
   DUM i < n
