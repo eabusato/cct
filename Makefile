@@ -220,6 +220,18 @@ test: $(TARGET)
 	@echo "Running tests..."
 	@bash tests/run_tests.sh
 
+test-legacy-full: $(TARGET)
+	@echo "Running restored legacy test suite (phases 0-20)..."
+	@bash tests/run_tests_legacy_0_20.sh
+
+test-legacy-rebased: $(TARGET)
+	@echo "Running rebased legacy test suite (phases 0-20)..."
+	@bash tests/run_tests_legacy_0_20_rebased.sh
+
+test-all-0-30: $(TARGET)
+	@echo "Running full aggregated suite (phases 0-30)..."
+	@bash tests/run_tests_all_0_30.sh
+
 test-legacy: $(TARGET)
 	@echo "Running legacy/core tests..."
 	@CCT_TEST_GROUP=legacy bash tests/run_tests.sh
@@ -782,6 +794,9 @@ help:
 	@echo "  all       - Build the compiler (default)"
 	@echo "  clean     - Remove build artifacts"
 	@echo "  test      - Run test suite"
+	@echo "  test-legacy-full       - Run restored full legacy suite (phases 0-20)"
+	@echo "  test-legacy-rebased    - Run rebased legacy suite (phases 0-20)"
+	@echo "  test-all-0-30          - Run aggregated full suite (phases 0-30)"
 	@echo "  test-legacy            - Run pre-bootstrap test block (phases before 21)"
 	@echo "  test-bootstrap         - Run bootstrap blocks (phases 21-26)"
 	@echo "  test-bootstrap-lexer   - Run bootstrap lexer block (phase 21)"
@@ -897,4 +912,4 @@ phase12-final-audit: $(TARGET)
 	@echo ""
 	@echo "Audit complete."
 
-.PHONY: all clean test test-legacy test-bootstrap test-bootstrap-lexer test-bootstrap-parser test-bootstrap-semantic test-bootstrap-codegen test-bootstrap-selfhost test-operational-selfhost test-operational-platform test-phase30-final test-phase test_fluxus_storage test_diagnostic_taxonomy dist release install uninstall help fmt fmt-check lint lbos-bridge bootstrap-support bootstrap-stage0 bootstrap-stage1 bootstrap-stage2 bootstrap-stage-diff bootstrap-stage-identity bootstrap-stage-bench bootstrap-selfhost-ready bootstrap-selfhost-parser bootstrap-selfhost-semantic bootstrap-selfhost-codegen bootstrap-selfhost-build bootstrap-selfhost-run bootstrap-selfhost-stdlib-matrix project-selfhost-build project-selfhost-run project-selfhost-test project-selfhost-clean project-selfhost-package project-build project-run project-test project-test-strict project-bench project-clean doc doc-strict release-check phase12-final-audit
+.PHONY: all clean test test-legacy-full test-legacy-rebased test-all-0-30 test-legacy test-bootstrap test-bootstrap-lexer test-bootstrap-parser test-bootstrap-semantic test-bootstrap-codegen test-bootstrap-selfhost test-operational-selfhost test-operational-platform test-phase30-final test-phase test_fluxus_storage test_diagnostic_taxonomy dist release install uninstall help fmt fmt-check lint lbos-bridge bootstrap-support bootstrap-stage0 bootstrap-stage1 bootstrap-stage2 bootstrap-stage-diff bootstrap-stage-identity bootstrap-stage-bench bootstrap-selfhost-ready bootstrap-selfhost-parser bootstrap-selfhost-semantic bootstrap-selfhost-codegen bootstrap-selfhost-build bootstrap-selfhost-run bootstrap-selfhost-stdlib-matrix project-selfhost-build project-selfhost-run project-selfhost-test project-selfhost-clean project-selfhost-package project-build project-run project-test project-test-strict project-bench project-clean doc doc-strict release-check phase12-final-audit
