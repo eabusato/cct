@@ -1,7 +1,9 @@
 /*
  * CCT — Clavicula Turing
  * Sigilo Baseline Persistence (FASE 13A.4)
- */
+ 
+ * Copyright (c) Erick Andrade Busato. Todos os direitos reservados.
+*/
 
 #include "sigilo_baseline.h"
 

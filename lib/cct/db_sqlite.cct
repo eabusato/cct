@@ -1,3 +1,5 @@
+-- Copyright (c) Erick Andrade Busato. Todos os direitos reservados.
+
 INCIPIT grimoire "db_sqlite"
 
 RITUALE db_open(VERBUM path) REDDE SPECULUM NIHIL

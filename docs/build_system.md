@@ -1,93 +1,81 @@
-# CCT Build System
+# CCT Build and Validation System
 
 ## Overview
 
-FASE 12F introduces canonical project workflow commands:
+CCT now ships with two families of workflows:
+- host-compiler workflows
+- bootstrap/self-host workflows
 
-- `cct build`
-- `cct run`
-- `cct test`
-- `cct bench`
-- `cct clean`
+Both are part of the supported engineering surface.
 
-FASE 12G adds:
+## Host Compiler Targets
 
-- `cct doc`
-
-The legacy single-file flow remains fully supported.
-
-## Project Discovery
-
-Root resolution order:
-
-1. `--project <dir>`
-2. current directory containing `cct.toml`
-3. current directory containing `src/main.cct`
-4. upward traversal until `cct.toml` or `src/main.cct`
-
-Default entry is `src/main.cct`, unless overridden with `--entry`.
-
-## Build
+Core commands:
 
 ```bash
-cct build [--release] [--project DIR] [--entry FILE.cct] [--out PATH] \
-          [--sigilo-check] [--sigilo-strict] [--sigilo-baseline PATH]
+make
+make test
+make dist
 ```
 
-Optional quality gates:
+## Validation Targets
 
-- `--lint`
-- `--fmt-check`
-
-Optional sigilo baseline gate:
-
-- `--sigilo-check`: runs `cct sigilo baseline check` for the built artifact sigilo
-- `--sigilo-strict`: enables strict baseline check behavior (exit `2` on blocking drift)
-- `--sigilo-baseline PATH`: baseline path override (relative paths are resolved from project root)
-- default baseline path without override is `docs/sigilo/baseline/local.sigil` or `system.sigil` based on artifact scope
-
-Incremental cache is stored in `.cct/cache/manifest.txt`.
-
-## Run
+Default runner:
 
 ```bash
-cct run [--release] [--project DIR] [--entry FILE.cct] \
-        [--sigilo-check] [--sigilo-strict] [--sigilo-baseline PATH] [-- --args]
+make test
 ```
 
-Builds first, then executes resulting binary, returning the program exit code.
-
-## Test
+Legacy and compatibility runners:
 
 ```bash
-cct test [PATTERN] [--project DIR] [--strict-lint] [--fmt-check] \
-         [--sigilo-check] [--sigilo-strict] [--sigilo-baseline PATH]
+make test-legacy-full
+make test-legacy-rebased
+make test-all-0-30
 ```
 
-Discovers `*.test.cct` recursively under `tests/`.
-
-## Bench
+Focused modern runners:
 
 ```bash
-cct bench [PATTERN] [--project DIR] [--iterations N] [--release] \
-          [--sigilo-check] [--sigilo-strict] [--sigilo-baseline PATH]
+make test-bootstrap
+make test-bootstrap-selfhost
+make test-phase30-final
 ```
 
-Discovers `*.bench.cct` recursively under `bench/` and reports average/total runtime.
+## Bootstrap and Self-Host Targets
 
-## Clean
+Compiler stages:
 
 ```bash
-cct clean [--project DIR] [--all]
+make bootstrap-stage0
+make bootstrap-stage1
+make bootstrap-stage2
+make bootstrap-stage-identity
 ```
 
-- default: removes `.cct/build`, `.cct/cache`, `.cct/test-bin`, `.cct/bench-bin`
-- `--all`: also removes generated project binaries under `dist/`
+Operational self-hosting:
 
-## Exit Codes
+```bash
+make bootstrap-selfhost-ready
+make project-selfhost-build PROJECT=examples/phase30_data_app
+make project-selfhost-run PROJECT=examples/phase30_data_app
+make project-selfhost-test PROJECT=examples/phase30_data_app
+make project-selfhost-package PROJECT=examples/phase30_data_app
+```
 
-- `0` success
-- `1` command/build/run/test failure
-- `2` quality gate failure (`--strict-lint`, `--fmt-check`)
-- `2` also for strict sigilo baseline gate blocking drift
-- `3` internal tooling error (reserved)
+## Design Rules
+
+- historical validation is preserved separately from current compatibility validation
+- the aggregated `0..30` runner must remain available
+- bootstrap/self-host validation must remain runnable independently from legacy suites
+- operational project flows must stay scriptable from `make`
+
+## Artifact Areas
+
+Common locations:
+- `out/bootstrap/`
+- `tests/.tmp/`
+- project-local `.cct/`
+- project-local `dist/`
+
+Generated artifacts should remain reproducible and disposable.

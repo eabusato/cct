@@ -1,6 +1,6 @@
 # CCT Project Conventions
 
-## Canonical Layout
+## Canonical Project Layout
 
 ```text
 project/
@@ -9,38 +9,47 @@ project/
 ├── lib/
 ├── tests/
 ├── bench/
-├── examples/
 ├── docs/
-└── cct.toml (optional in FASE 12F)
+├── dist/
+├── .cct/
+└── cct.toml
 ```
 
 ## Naming
 
 - modules: `snake_case.cct`
-- tests: `<feature>.test.cct`
-- benchmarks: `<feature>.bench.cct`
+- tests: `*.test.cct`
+- benchmarks: `*.bench.cct`
+- generated C: `*.cgen.c`
 
-## Modular Organization
+## Project Rules
 
-- keep orchestration in `src/main.cct`
+- keep entry orchestration in `src/main.cct`
 - keep reusable code in `lib/`
-- keep tests isolated from import side effects
-- keep benchmarks deterministic whenever practical
+- keep tests deterministic whenever possible
+- keep benchmark fixtures explicit and isolated
+- do not commit transient `.cct/` artifacts
 
-## Build Artifacts
+## Self-Hosted Project Rules
 
-Generated artifacts are local to project:
+When using the self-hosted toolchain:
+- keep the canonical layout unchanged
+- use `project-selfhost-*` targets from the repository root
+- treat support/prelude constraints as explicit product boundaries
 
-- `.cct/` for internal cache and runners
-- `dist/` for final binaries
+## Validation Rules
 
-Never commit `.cct/` artifacts.
-
-## Recommended Local Flow
+Recommended local workflow:
 
 ```bash
 cct fmt src/main.cct
 cct lint --strict src/main.cct
 cct test
 cct build --release
+```
+
+Repository-level validation:
+
+```bash
+make test-all-0-30
 ```

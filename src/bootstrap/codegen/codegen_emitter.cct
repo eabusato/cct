@@ -1,3 +1,5 @@
+-- Copyright (c) Erick Andrade Busato. Todos os direitos reservados.
+
 INCIPIT grimoire "codegen_emitter"
 
 ADVOCARE "cct/code_writer.cct"

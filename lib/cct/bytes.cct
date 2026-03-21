@@ -1,3 +1,5 @@
+-- Copyright (c) Erick Andrade Busato. Todos os direitos reservados.
+
 INCIPIT grimoire "bytes"
 
 RITUALE bytes_new(REX size) REDDE SPECULUM NIHIL

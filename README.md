@@ -2,714 +2,129 @@
 
 > "To name is to invoke. To invoke is to bind. To bind is to compute."
 
-CCT is a compiled, ritual-themed programming language with deterministic sigil generation.
+CCT is a compiled, ritual-themed programming language with a deterministic sigil system, a C-hosted production backend, and a fully validated self-hosting bootstrap pipeline.
 
 <div align="center">
-  <img src="docs/example_sigil_ars_magna.svg" alt="CCT System Sigil Example - Ars Magna Omniversal" width="600"/>
-  <p><em>System sigil generated from a multi-module CCT program (Ars Magna Omniversal)</em></p>
-  <p><sub>Each program generates a unique, deterministic visual sigil representing its structure, calls, and module dependencies</sub></p>
-  <p><sub>Open the SVG in a browser and hover the circles and lines: sigilo components now reveal ritual names, statement kinds, call edges, and source context through native SVG tooltips.</sub></p>
+  <img src="docs/example_sigil_ars_magna.svg" alt="CCT system sigil example" width="600"/>
+  <p><em>Deterministic system sigil generated from a multi-module CCT program.</em></p>
 </div>
 
 ## Status
 
-**Current status: FASE 30 completed** (bootstrap, multi-stage self-hosting, operational self-hosted workflows, and the mature application-library subset are now closed on the validated baseline).
+Current status: FASE 30 completed.
 
-Implemented phases: **0 → 30**, plus the interstitial **FASE 14T** closure.
+Implemented scope:
+- Phases **0 through 30**
+- Bootstrap compiler stack completed through lexer, parser, semantic analysis, code generation, multi-stage self-hosting, and operational self-hosted workflows
+- Full aggregated validation available from **phase 0 to phase 30**
 
-**Phase-reference convention:** phase labels found in file/module headers, local markers, or help text may refer to the phase in which that specific component was introduced or stabilized. They are historical markers and do not necessarily represent the current global project status shown above.
-
-Highlights of the current baseline:
-- Real end-to-end compiler pipeline (`.cct -> parse/semantic -> codegen -> .cgen.c -> host C compiler -> binary`)
-- Deterministic sigil generation (`.svg` + `.sigil`) integrated into normal compile and `--sigilo-only`
-- Sigils are no longer static pictures only: local and system SVG components can be hovered directly in the browser
-- Multi-module support with `ADVOCARE`, cycle detection, direct-import visibility rules, and internal visibility via `ARCANUM`
-- Modular sigils with two official emission modes (`essencial` / `completo`, aliases `essential` / `complete`)
-- Advanced typing subset consolidated: `GENUS`, `PACTUM`, and basic constraints `GENUS(T PACTUM C)`
-- Bibliotheca Canonica foundation: reserved namespace `cct/...` with canonical stdlib resolution
-- Canonical text-core module: `cct/verbum` (`len`, `concat`, `compare`, `substring`, `trim`, `contains`, `find`)
-- Canonical formatting/conversion module: `cct/fmt` (`stringify_*`, `fmt_parse_*`, `format_pair`)
-- Canonical static-collection module: `cct/series` (`series_len`, `series_fill`, `series_copy`, `series_reverse`, `series_contains`)
-- Canonical baseline algorithms module: `cct/alg` (`alg_linear_search`, `alg_compare_arrays`, `alg_binary_search`, `alg_sort_insertion`)
-- Canonical memory utility module: `cct/mem` (`alloc`, `free`, `realloc`, `copy`, `set`, `zero`, `mem_compare`)
-- Canonical dynamic-vector module: `cct/fluxus` (`fluxus_init`, `fluxus_free`, `fluxus_push`, `fluxus_pop`, `fluxus_len`, `fluxus_get`, `fluxus_clear`, `fluxus_reserve`, `fluxus_capacity`)
-- Canonical IO module: `cct/io` (`print`, `println`, `print_int`, `read_line`)
-- Canonical filesystem module: `cct/fs` (`read_all`, `write_all`, `append_all`, `exists`, `size`)
-- Canonical path module: `cct/path` (`path_join`, `path_basename`, `path_dirname`, `path_ext`)
-- Canonical math module: `cct/math` (`abs`, `min`, `max`, `clamp`)
-- Canonical random module: `cct/random` (`seed`, `random_int`, `random_real`)
-- Canonical parse module: `cct/parse` (`parse_int`, `parse_real`, `parse_bool`)
-- Canonical compare module: `cct/cmp` (`cmp_int`, `cmp_real`, `cmp_bool`, `cmp_verbum`)
-- Canonical Option/Result modules: `cct/option` and `cct/result` (`Some`/`None`, `Ok`/`Err`, `unwrap`/`unwrap_or`/`expect`)
-- Moderate canonical algorithm extras: `cct/alg` (`alg_binary_search`, `alg_sort_insertion`)
-- Canonical public showcases for stdlib usage (`string`, `collection`, `io/fs`, `parse/math/random`, `multi-module`)
-- Sigilo metadata now exposes stdlib usage counters and module list in showcase/public flows
-- Final stdlib stability matrix and release notes are published for the 11H freeze
-- Relocatable distribution bundle (`make dist`) with wrapper-based stdlib resolution
-- Structured diagnostics with source snippets and actionable suggestions (FASE 12A)
-- Numeric cast expression baseline (`cast GENUS(T)(value)`) in FASE 12B
-- Functional error ergonomics via Option/Result in FASE 12C
-- Hash-backed canonical collections via `cct/map` and `cct/set` in FASE 12D.1
-- Functional collection combinators via `cct/collection_ops` in FASE 12D.2 (`fluxus_map`, `fluxus_filter`, `fluxus_fold`, `fluxus_find`, `fluxus_any`, `fluxus_all`, `series_map`, `series_filter`, `series_reduce`, `series_find`, `series_any`, `series_all`)
-- Baseline collection iterator syntax from FASE 12D.3, expanded in FASE 19D.1 to `map`/`set` (`ITERUM key, value IN map` and `ITERUM item IN set`)
-- Standalone formatter command in FASE 12E.1 (`cct fmt`, `cct fmt --check`, `cct fmt --diff`)
-- Canonical linter command in FASE 12E.2 (`cct lint`, `cct lint --strict`, `cct lint --fix`)
-- Canonical project workflow in FASE 12F (`cct build`, `cct run`, `cct test`, `cct bench`, `cct clean`) with basic incremental cache
-- Canonical documentation generator in FASE 12G (`cct doc`) for module/symbol API pages (markdown/html)
-- Common math operators in FASE 13M: `**` (power), `//` (floor integer division), `%%` (euclidean modulo)
-- FASE 14A hardening: canonical diagnostic taxonomy + canonical exit-code contract + sigilo explain mode + deterministic sigilo diagnostic ordering
-- FASE 14T sigilo instrumentation: native SVG `<title>` hover on semantic elements, deterministic additive `data-*` on local nodes/call edges, lightweight root semantics, and explicit enable/disable toggles
-- FASE 15 closure set: `FRANGE`/`RECEDE` loop-control stability, logical `ET`/`VEL` with precedence/parentheses, stable bitwise/shift operators, and `CONSTANS` semantic+codegen enforcement (locals, parameters, and const-pointer binding)
-- FASE 16 closure set: freestanding profile (`--profile freestanding`), bridge-safe `cct/kernel`, ASM emission path (`--emit-asm`), and bridge packaging gates
-- FASE 17/18 canonical-library expansion: text/parsing/IO/FS/path utilities, algorithms/collections growth, plus `process`, `hash`, and `bit` modules
-- FASE 19 language-surface expansion: `ELIGE`/`CASUS`/`ALIOQUIN` (with legacy `CUM` compatibility), `FORMA`, payload `ORDO`, and `ITERUM` over `map`/`set` with insertion-order semantics
-- FASE 20 application-library expansion: `cct/json`, `cct/socket`, `cct/net`, `cct/http`, `cct/config`, and `cct/db_sqlite`
-- FASE 21-29 bootstrap closure: lexer, parser, semantic analyzer, codegen, stage0/stage1/stage2 self-host convergence
-- FASE 30 operational closure: self-hosted project workflows, mature `csv` / `https` / `orm_lite`, and final operational handoff
-
-## Recent Phase Closures (16-19)
-
-### FASE 16 (Freestanding/ASM Bridge)
-- `--profile freestanding`, `--emit-asm`, and entrypoint contract stabilization
-- `cct/kernel` module family for freestanding-only targets
-- host behavior preserved while bridge/ABI/linkability gates were added
-
-### FASE 17 + 18 (Canonical Library Expansion)
-- 17: tooling-oriented modules (`char`, `args`, `verbum_scan`, `verbum_builder`, `code_writer`, `env`, `time`, `bytes`)
-- 18: broad stdlib growth (`verbum`, `fmt`, `parse`, `fs`, `io`, `path`, `fluxus`, `set`, `map`, `alg`, `series`, `random`)
-- 18: new modules `process`, `hash`, and `bit`
-
-### FASE 19 (Language Surface Expansion)
-- `ELIGE` with `CASUS`/`ALIOQUIN` for integer, `VERBUM`, and `ORDO` (`CUM` remains accepted as a legacy alias)
-- `FORMA` interpolation with format specifiers
-- payload-capable `ORDO` and `ELIGE` destructuring
-- `ITERUM` expanded to `map` and `set`
-
-### FASE 20 (Application Library Stack)
-- `cct/json` for canonical JSON values, parser, stringify/pretty-print, navigation, and mutation helpers
-- `cct/socket` / `cct/net` for host-only TCP/UDP runtime bridging and ergonomic text/network helpers
-- `cct/http` for HTTP/1.1 request/response modeling, parsing, client flows, and single-request server handling
-- `cct/config` for INI configuration parsing, typed access, writing, env overlays, and JSON bridging
-- `cct/db_sqlite` for host-only SQLite open/query/prepare/transaction/scalar workflows
+Current platform highlights:
+- End-to-end compiler pipeline: `.cct -> parse -> semantic -> codegen -> .cgen.c -> host C compiler -> executable`
+- Deterministic sigil generation (`.svg` + `.sigil`)
+- Multi-module compilation with `ADVOCARE`, visibility control, and module closure
+- Stable standard-library foundation under `lib/cct/`
+- Bootstrap implementation in CCT under `src/bootstrap/`
+- Stage0 / stage1 / stage2 self-host convergence
+- Operational self-hosted workflows for building, running, testing, packaging, and validating projects
 
 ## Build
 
 Requirements:
-- C compiler (`gcc` or `clang`)
+- POSIX shell
 - `make`
+- `gcc` or `clang`
 
-Build:
+Build the host compiler:
 
 ```bash
 make
 ```
 
-Run full test suite:
+## Test Matrix
+
+Run the current default runner:
 
 ```bash
 make test
 ```
 
-## Bootstrap
-
-The bootstrap track is complete through FASE 30.
-
-Validated bootstrap layers:
-- `src/bootstrap/lexer/` — lexer in CCT
-- `src/bootstrap/parser/` — parser + AST in CCT
-- `src/bootstrap/semantic/` — semantic analysis in CCT
-- `src/bootstrap/codegen/` — code generation in CCT
-- `src/bootstrap/main_compiler.cct` — self-hosted compiler entrypoint
-
-Historical bootstrap entrypoint retained from FASE 21:
-- `src/bootstrap/main_lexer.cct` provides the standalone bootstrap CLI
-- `tests/integration/lexer_*.cct` contains the bootstrap lexer integration fixtures
-
-Operational self-hosted workflow:
+Run the restored historical legacy suite (phases 0-20, frozen reference):
 
 ```bash
+make test-legacy-full
+```
+
+Run the rebased legacy suite against the current compiler:
+
+```bash
+make test-legacy-rebased
+```
+
+Run the complete aggregated validation from phase 0 through phase 30:
+
+```bash
+make test-all-0-30
+```
+
+Focused runners:
+
+```bash
+make test-bootstrap
+make test-bootstrap-selfhost
+make test-phase30-final
+```
+
+## Bootstrap and Self-Hosting
+
+Important locations:
+- `src/bootstrap/lexer/`
+- `src/bootstrap/parser/`
+- `src/bootstrap/semantic/`
+- `src/bootstrap/codegen/`
+- `out/bootstrap/phase29/`
+- `out/bootstrap/phase30/`
+
+Useful targets:
+
+```bash
+make bootstrap-stage0
+make bootstrap-stage1
+make bootstrap-stage2
 make bootstrap-stage-identity
 make bootstrap-selfhost-ready
 make project-selfhost-build PROJECT=examples/phase30_data_app
-make project-selfhost-run PROJECT=examples/phase30_data_app
-make project-selfhost-test PROJECT=examples/phase30_data_app
 ```
 
-Standalone bootstrap CLI example retained for the lexer layer:
-
-```bash
-make cct_lexer_bootstrap
-./cct_lexer_bootstrap tests/integration/codegen_minimal.cct
-```
-
-Operational validation targets:
-- `make test-bootstrap-selfhost` — FASE 29 gate
-- `make test-operational-selfhost` — FASE 30A gate
-- `make test-operational-platform` — FASE 30B-30D gate
-- `make test-phase30-final` — consolidated FASE 30 gate
-
-## CLI
-
-Basic usage:
-
-```bash
-./cct [options] <file.cct>
-```
-
-Main commands:
-- `./cct <file.cct>`: compile (and generate sigil artifacts)
-- `./cct fmt <file.cct> [more.cct ...]`: format file(s) in place
-- `./cct fmt --check <file.cct> [more.cct ...]`: check formatting only (exit `2` on mismatch)
-- `./cct fmt --diff <file.cct> [more.cct ...]`: show formatting diff without writing
-- `./cct lint <file.cct>`: run canonical lint rule set
-- `./cct lint --strict <file.cct>`: treat lint warnings as CI failure (exit `2`)
-- `./cct lint --fix <file.cct>`: apply safe automatic fixes
-- `./cct build [--project DIR]`: build project using canonical structure
-- `./cct run [--project DIR] [-- --args]`: build and run project binary
-- `./cct test [pattern] [--project DIR]`: run `*.test.cct` project tests
-- `./cct bench [pattern] [--project DIR]`: run `*.bench.cct` project benchmarks
-- `./cct build|test|bench ... --sigilo-check [--sigilo-strict] [--sigilo-baseline PATH]`: opt-in sigilo baseline gate in project workflow
-- `./cct build|test|bench ... --sigilo-ci-profile advisory|gated|release`: CI profile contract for progressive sigilo gates
-- `./cct build|test|bench ... --sigilo-override-behavioral-risk`: explicit/audited override for behavioral-risk CI blocks
-- `./cct build|test|bench ... --sigilo-report summary|detailed`: operational report verbosity for sigilo-check (default `summary`)
-- `./cct build|test|bench ... --sigilo-explain`: actionable diagnosis line with probable cause and recommended next step
-- `./cct clean [--project DIR] [--all]`: clean `.cct` artifacts (and `dist` with `--all`)
-- `./cct doc [--project DIR] [--format markdown|html|both]`: generate API docs under `docs/api`
-- `./cct --tokens <file.cct>`: token stream
-- `./cct --ast <file.cct>`: single-module AST
-- `./cct --ast-composite <entry.cct>`: composed AST for module closure
-- `./cct --check <file.cct>`: syntax + semantic checks only
-- `./cct --sigilo-only <file.cct>`: generate sigil artifacts without executable
-- `./cct sigilo inspect <artifact.sigil>`: inspect sigilo metadata
-- `./cct sigilo validate <artifact.sigil>`: run formal sigilo validation (tolerant/strict profiles)
-- `./cct sigilo diff <left.sigil> <right.sigil>`: compare two sigilo artifacts
-- `./cct sigilo check <left.sigil> <right.sigil> --strict --summary`: gate drift by severity
-- `./cct sigilo inspect|diff|check ... --consumer-profile legacy-tolerant|current-default|strict-contract`: explicit consumer compatibility profile
-- `./cct sigilo validate ... --consumer-profile legacy-tolerant|current-default|strict-contract`: explicit strict/tolerant validator profile
-- `./cct sigilo baseline check <artifact.sigil> [--baseline PATH]`: compare artifact vs persisted baseline
-- `./cct sigilo baseline update <artifact.sigil> [--baseline PATH] [--force]`: explicit baseline update
-- `./cct --no-color ...`: disable ANSI colors in diagnostics
-
-Sigil options:
-- `--sigilo-style network|seal|scriptum`
-- `--sigilo-mode essencial|completo` (aliases: `essential|complete`)
-- `--sigilo-out <basepath>`
-- `--sigilo-no-meta`
-- `--sigilo-no-svg`
-- `--sigilo-no-titles`
-- `--sigilo-no-data`
-
-## What Is Implemented
-
-### Core Language and Execution
-- Lexer, parser, AST, semantic analysis, and executable code generation
-- Structured flow control: `SI/ALITER`, `ELIGE/CASUS/ALIOQUIN`, `DUM`, `DONEC`, `REPETE`, `ITERUM`
-- Calls and returns: `CONIURA`, `REDDE`, `ANUR`
-- Scalars, booleans, strings, and real-number subset (`UMBRA`, `FLAMMA`)
-- String interpolation expression: `FORMA`
-- Basic arrays (`SERIES`) and payload-capable `ORDO` subset (with `ELIGE` destructuring)
-- Collection iteration over `FLUXUS`, `SERIES`, `map`, and `set` (with arity validation)
-
-### Memory and Structural Subset (FASE 7 block)
-- `SPECULUM` pointers (supported subset)
-- Address-of, dereference read/write, and pass-by-reference patterns
-- Runtime-backed allocation/discard primitives:
-  - `OBSECRO pete(...)`
-  - `OBSECRO libera(...)`
-  - `DIMITTE`
-  - `MENSURA(...)`
-- Executable `SIGILLUM` subset with nested composition and controlled by-reference mutation
-
-### Failure-Control Subset (FASE 8 block)
-- `IACE`, `TEMPTA ... CAPE`, `SEMPER`
-- Local catch and multi-call propagation subset
-- Documented runtime-failure bridging subset and clear direct-abort behavior outside integrated paths
-
-### Modules and Sigils (FASE 9 block)
-- `ADVOCARE` module loading with deterministic closure
-- Direct-import resolution (no implicit transitive symbol visibility)
-- Visibility boundary with `ARCANUM` for internal top-level declarations
-- Two-level sigil architecture:
-  - local sigil per module
-  - composed system sigil (`.system.svg` / `.system.sigil`)
-- System sigil rendered as **sigil-of-sigils** (inline vector composition of module sigils)
-
-### Advanced Typing (FASE 10 block)
-- `GENUS(...)` generic declarations and explicit instantiation
-- Pragmatic executable monomorphization (deterministic naming and dedup)
-- `PACTUM` contract declarations and explicit `SIGILLUM ... PACTUM ...` conformance
-- Basic constrained generics: `GENUS(T PACTUM C)` in generic `RITUALE`
-- Final 10E consolidation: harmonized boundary diagnostics and finalized metadata contract
-
-## Current Typing Contract (FASE 10E)
-
-Supported in the final FASE 10 subset:
-- Explicit generic instantiation (`GENUS(...)`) for executable materialization
-- Explicit contract conformance (`PACTUM`) for named `SIGILLUM`
-- Single-constraint form per type parameter in generic rituals: `GENUS(T PACTUM C)`
-
-Out of scope in this subset:
-- Type argument inference
-- Multiple contracts per type parameter
-- Advanced constraint solver behavior
-- Dynamic dispatch runtime for contracts
-
-## Sigil Artifacts
-
-Sigilo is now both a deterministic visual artifact and a native hover-readable map of the program.
-
-For a valid input program, CCT emits:
-- `<base>.svg`
-- `<base>.sigil`
-
-For modular system sigils:
-- `<entry>.system.svg`
-- `<entry>.system.sigil`
-
-In `--sigilo-mode completo`, imported module sigils are also emitted as deterministic module-indexed artifacts.
-
-FASE 14T keeps sigilo output as pure SVG, exportable, and diff-friendly while adding native semantic hover:
-- local and system SVGs emit `<title>` on semantic elements already present in the drawing
-- local semantic nodes and call edges emit deterministic additive `data-*`
-- SVG roots can expose lightweight semantics via `role`, `aria-label`, and `desc`
-- no JavaScript is required
-
-In practice:
-- hover a ritual node to see the ritual name, structural metrics, and normalized source excerpt
-- hover a structural node to see the statement kind (`SI`, `DUM`, `REDDE`, `EVOCA`, etc.)
-- hover an edge to see the relationship it represents (`primary`, `call`, `branch`, `loop`, `bind`, `term`)
-- open a `.system.svg` and hover module circles and cross-module lines the same way
-
-The instrumentation is selectable at generation time:
-- default: titles + additive metadata enabled
-- `--sigilo-no-titles`: suppress `<title>` and hover wrappers, preserving geometry and additive `data-*`
-- `--sigilo-no-data`: suppress additive `data-*` and root `<desc>`, preserving `<title>`
-- `--sigilo-no-titles --sigilo-no-data`: restore the pre-14T plain SVG contract
-
-Typical tooltip payloads include the ritual name, statement kind, depth/call metrics, and normalized source excerpt, for example `RITUALE main`, `stmt: RITUALE`, and `source: ...`.
-
-## Project Workflow (Introduced in FASE 12F, Still Current)
-
-Canonical project layout:
-
-```text
-project/
-├── src/main.cct
-├── lib/
-├── tests/*.test.cct
-├── bench/*.bench.cct
-└── cct.toml (optional)
-```
-
-Typical local flow:
-
-```bash
-./cct test --project .
-./cct build --project .
-./cct run --project .
-./cct bench --project . --iterations 5
-./cct clean --project . --all
-./cct doc --project . --format both
-```
-
-Sigilo-focused local workflows (FASE 13B.1):
-- minimal daily loop and strict pre-merge loop are consolidated in `docs/sigilo_operations_14b2.md`
-- strict baseline gate uses:
-  - `./cct sigilo baseline check <artifact.sigil> --strict --summary`
-  - exit code `2` for blocking drift (`review-required` or `behavioral-risk`)
-
-Sigilo-focused CI profiles (FASE 13B.3):
-- profiles:
-  - `advisory`: informative; blocks only `behavioral-risk` unless explicit override
-  - `gated`: blocks `review-required` and `behavioral-risk`
-  - `release`: strict profile; requires baseline and blocks `review-required` and `behavioral-risk`
-- commands:
-  - `./cct build --project . --sigilo-check --sigilo-ci-profile advisory`
-  - `./cct test --project . --sigilo-check --sigilo-ci-profile gated`
-  - `./cct build --project . --sigilo-check --sigilo-ci-profile release`
-  - `./cct build --project . --sigilo-check --sigilo-ci-profile advisory --sigilo-override-behavioral-risk`
-- operational contract reference: `docs/sigilo_operations_14b2.md`
-
-Sigilo operational observability (FASE 13B.4):
-- report signature: `format=cct.sigilo.report.v1`
-- default output is summary-oriented and script-safe
-- detailed output (`--sigilo-report detailed`) adds per-item `domain`, `before`, and `after`
-- explain output (`--sigilo-explain`) adds probable cause + recommended action + troubleshooting doc reference
-- troubleshooting playbook: `docs/sigilo_troubleshooting_13b4.md`
-
-Sigilo consumer compatibility (FASE 13C.3):
-- profiles:
-  - `legacy-tolerant`: maximum compatibility for legacy readers
-  - `current-default`: canonical default profile in FASE 13 tooling
-  - `strict-contract`: blocking contract enforcement (`--strict` alias)
-- migration and fallback behavior is covered in current operational guidance and validator profile docs
-
-Sigilo strict/tolerant validation (FASE 13C.4):
-- canonical validator command: `./cct sigilo validate <artifact.sigil> [--strict] [--consumer-profile ...]`
-- tolerant profiles keep compatibility-first behavior with warning classification
-- strict-contract profile blocks contractual violations for release gates
-
-FASE 13 release package (FASE 13D.4):
-- `docs/release/FASE_13_RELEASE_NOTES.md`
-
-FASE 13M addendum package (FASE 13M.B2):
-- details were consolidated into historical internal release records
-
-## Common Math Operators (FASE 13M)
-
-Stable additions:
-- `**`: exponentiation (right-associative)
-- `//`: integer floor division (integer operands only)
-- `%%`: euclidean modulo (integer operands only)
-- `%`: preserved with legacy behavior
-
-Executable example:
-
-```bash
-./cct examples/math_common_ops_13m.cct
-./examples/math_common_ops_13m
-```
-
-Expected output excerpt:
-- `pow 2**5 = 32`
-- `idiv -7//3 = -3`
-- `emod -7%%3 = 2`
-
-## Bibliotheca Canonica (Standard Library)
-
-The standard library is now formally introduced as **Bibliotheca Canonica**.
-
-Current delivery in FASE 11A:
-- reserved import namespace `cct/...`
-- canonical physical stdlib root (`lib/cct/`)
-- deterministic resolver path for canonical modules
-
-Current delivery in FASE 11B.1:
-- `cct/verbum` public text primitives
-- strict substring bounds behavior
-- predictable text operations for later `cct/fmt`, IO, and parse modules
-
-Current delivery in FASE 11B.2:
-- `cct/fmt` formatting and conversion surface
-- canonical stringify for integer/real/float/bool
-- canonical parse façade (`fmt_parse_int`, `fmt_parse_real`, `fmt_parse_bool`)
-- simple formatting composition (`format_pair`)
-
-Current delivery in FASE 11C:
-- `cct/series` static-collection helpers (generic mutation helpers + integer-lookup helper)
-- `cct/alg` baseline algorithms for integer arrays
-- practical interop with `cct/fmt` in collection workflows
-
-Current delivery in FASE 11D.1:
-- `cct/mem` memory utility primitives for allocation, release, resize, and raw buffer operations
-- explicit ownership/discard contract for stdlib dynamic-storage evolution
-- dedicated ownership reference: `docs/ownership_contract.md`
-
-Current delivery in FASE 11D.2:
-- standalone FLUXUS storage runtime core (`cct_rt_fluxus_init/free/reserve/grow/push/pop/get/clear`)
-- deterministic growth/capacity semantics validated through dedicated runtime tests
-
-Current delivery in FASE 11D.3:
-- canonical stdlib module `cct/fluxus`
-- ergonomic dynamic-vector API backed by runtime storage core
-- dedicated 11D.3 integration tests and sigilo metadata counters for FLUXUS operations
-- usage guide: `docs/fluxus_usage.md`
-
-Current delivery in FASE 11E.1:
-- canonical stdlib modules `cct/io` and `cct/fs`
-- runtime-backed IO primitives (`print`, `println`, `print_int`, `read_line`)
-- runtime-backed filesystem primitives (`read_all`, `write_all`, `append_all`, `exists`, `size`)
-- dedicated 11E.1 integration tests and sigilo compatibility coverage
-
-Current delivery in FASE 11E.2:
-- canonical stdlib module `cct/path`
-- stable path API for composition and decomposition (`path_join`, `path_basename`, `path_dirname`, `path_ext`)
-- verified integration with `cct/fs` workflows
-- sigilo metadata support for path usage counters
-
-Current delivery in FASE 11F.1:
-- canonical stdlib modules `cct/math` and `cct/random`
-- deterministic numeric helpers (`abs`, `min`, `max`, `clamp`)
-- reproducible pseudo-random baseline (`seed`, `random_int`, `random_real`)
-- sigilo metadata support for math/random usage counters
-
-Current delivery in FASE 11F.2:
-- canonical stdlib modules `cct/parse` and `cct/cmp`
-- strict textual conversions (`parse_int`, `parse_real`, `parse_bool`)
-- canonical comparator contract (`cmp_int`, `cmp_real`, `cmp_bool`, `cmp_verbum`)
-- moderate `cct/alg` expansion (`alg_binary_search`, `alg_sort_insertion`)
-- sigilo metadata support for parse/cmp/alg usage counters
-
-Current delivery in FASE 11G:
-- canonical showcase suite under `examples/` and `tests/integration/`
-- modular showcase exercising stdlib + user modules with `--ast-composite`
-- sigilo metadata enrichment for stdlib usage counters and module inventory
-- public-facing usage narrative aligned across README/spec/docs
-
-Current delivery in FASE 11H:
-- final stdlib subset manifest freeze (`docs/stdlib_subset_11h.md`)
-- final stability matrix (stable/experimental/runtime-internal) (`docs/stdlib_stability_matrix_11h.md`)
-- packaging/install closure (`make dist`, `make install`, `make uninstall`)
-- public technical release notes (`docs/release/FASE_11_RELEASE_NOTES.md`)
-
-Current delivery in FASE 12C + 12D.1:
-- canonical stdlib modules `cct/option` and `cct/result`
-- Option baseline (`Some`, `None`, `option_is_some`, `option_unwrap`, `option_unwrap_or`, `option_expect`, `option_free`)
-- Result baseline (`Ok`, `Err`, `result_is_ok`, `result_unwrap`, `result_unwrap_or`, `result_unwrap_err`, `result_expect`, `result_free`)
-- integration with FASE 12B numeric cast flow (`cast GENUS(T)(value)`)
-- canonical HashMap baseline (`map_init`, `map_insert`, `map_get`, `map_remove`, `map_contains`, `map_len`, `map_is_empty`, `map_capacity`, `map_clear`, `map_reserve`, `map_free`)
-- canonical Set baseline (`set_init`, `set_insert`, `set_remove`, `set_contains`, `set_len`, `set_is_empty`, `set_clear`, `set_free`)
-- sigilo metadata counters for Option/Result and Map/Set usage
-
-Current delivery in FASE 12D.2:
-- canonical stdlib module `cct/collection_ops`
-- functional combinators for FLUXUS and SERIES (`map/filter/fold/find/any/all`)
-- callback bridge through rituale-pointer arguments in collection operations
-- Option integration preserved via `fluxus_find`/`series_find`
-- sigilo metadata counter for collection-ops usage (`collection_ops_count`)
-
-Current delivery in FASE 12D.3:
-- baseline iterator statement `ITERUM item IN collection COM ... FIN ITERUM`
-- semantic/type checks for iterator collections (FLUXUS and SERIES subset)
-- codegen lowering to deterministic C loops
-- sigilo metadata counter for iterator usage (`iterum_count`)
-
-Current delivery in FASE 12E.1:
-- standalone formatter command integrated in CLI (`cct fmt`)
-- check/diff formatter modes for CI/editor integration
-- deterministic indentation and spacing normalization for core CCT syntax
-- formatter coverage tests in `tests/formatter/` plus `tests/run_tests.sh`
-
-Current delivery in FASE 12E.2:
-- standalone linter command integrated in CLI (`cct lint`)
-- canonical rule IDs: `unused-variable`, `unused-parameter`, `unused-import`, `dead-code-after-return`, `dead-code-after-throw`, `shadowing-local`
-- strict lint mode (`--strict`) and safe auto-fix mode (`--fix`)
-- dedicated lint documentation (`docs/linter.md`) and integration tests
-
-Current delivery in FASE 16:
-- freestanding bridge profile and kernel-facing stdlib surface (`cct/kernel`)
-- profile-aware behavior separation for host vs freestanding flows
-
-Current delivery in FASE 17:
-- bootstrap/tooling-oriented stdlib modules (`char`, `args`, `verbum_scan`, `verbum_builder`, `code_writer`, `env`, `time`, `bytes`)
-
-Current delivery in FASE 18:
-- major canonical-library expansion across text/format/parse, io/fs/path, collections/algorithms
-- new modules: `cct/process`, `cct/hash`, `cct/bit`
-
-Current delivery in FASE 19:
-- language-facing integration with stdlib usage via `ELIGE`, `FORMA`, payload `ORDO`, and `ITERUM` over `map`/`set`
-- reference module `lib/cct/ordo_samples.cct` documenting idiomatic `Resultado`/`Opcao` payload patterns
-
-Current delivery in FASE 20:
-- `cct/json`: canonical JSON model, strict parse, stringify/pretty-print, key/index access, mutation, and typed expect helpers
-- `cct/socket` / `cct/net`: thin host socket bridge plus TCP/UDP wrappers, line-oriented text I/O, and address helpers
-- `cct/http`: request/response model, parser/stringifier, client GET/POST/JSON flows, and single-request server primitives
-- `cct/config`: INI parse/load/write, typed getters, section listing, env overlay, and JSON conversion helpers
-- `cct/db_sqlite`: host-only persistence with query cursors, prepared statements, transactions, and scalar helpers
-- generated host builds link `-lsqlite3` only when the SQLite surface is used
-- fallback policy: if the host toolchain lacks `sqlite3`, the host compile step fails clearly instead of silently disabling the module
-
-Example import:
-
-```cct
-ADVOCARE "cct/stub_test.cct"
-```
-
-Reference: `docs/bibliotheca_canonica.md`.
-
-## Canonical Showcases (Introduced in FASE 11G)
-
-Run canonical showcase programs:
-
-```bash
-./cct examples/showcase_stdlib_string_11g.cct && ./examples/showcase_stdlib_string_11g
-./cct examples/showcase_stdlib_collection_11g.cct && ./examples/showcase_stdlib_collection_11g
-./cct examples/showcase_stdlib_io_fs_11g.cct && ./examples/showcase_stdlib_io_fs_11g
-./cct examples/showcase_stdlib_parse_math_random_11g.cct && ./examples/showcase_stdlib_parse_math_random_11g
-./cct examples/showcase_stdlib_modular_11g_main.cct && ./examples/showcase_stdlib_modular_11g_main
-```
-
-Inspect modular composition and sigilo:
-
-```bash
-./cct --ast-composite examples/showcase_stdlib_modular_11g_main.cct
-./cct --sigilo-only --sigilo-mode essencial examples/showcase_stdlib_modular_11g_main.cct
-./cct --sigilo-only --sigilo-mode completo examples/showcase_stdlib_modular_11g_main.cct
-```
-
-## Packaging and Install (Introduced in FASE 11H)
-
-Build a relocatable distribution bundle:
-
-```bash
-make dist
-./dist/cct/bin/cct --version
-./dist/cct/bin/cct --check tests/integration/stdlib_resolution_basic_11a.cct
-```
-
-Install under default prefix (`/usr/local`):
-
-```bash
-make install
-```
-
-Install under custom prefix:
-
-```bash
-make install PREFIX="$HOME/.local"
-```
-
-References:
-- `docs/install.md`
-- `docs/stdlib_subset_11h.md`
-- `docs/stdlib_stability_matrix_11h.md`
-- `docs/release/FASE_11_RELEASE_NOTES.md`
-
-## Quick Examples
-
-Tokenize:
-
-```bash
-./cct --tokens examples/hello.cct
-```
-
-Semantic check:
-
-```bash
-./cct --check examples/hello.cct
-```
-
-Compile and run:
-
-```bash
-./cct examples/hello.cct
-./examples/hello
-```
-
-Sigil-only (system + local in essential mode):
-
-```bash
-./cct --sigilo-only --sigilo-mode essencial tests/integration/sigilo_final_modular_entry.cct
-```
+## Documentation Map
+
+Core documents:
+- [Installation](docs/install.md)
+- [Build System](docs/build_system.md)
+- [Architecture](docs/architecture.md)
+- [Language Specification](docs/spec.md)
+- [Testing and Validation](docs/testing.md)
+- [Self-Hosting Pipeline](docs/self_hosting.md)
+- [Roadmap](docs/roadmap.md)
+
+Release and handoff artifacts:
+- `docs/release/`
+- `docs/bootstrap/`
+
+Implementation phase prompts:
+- `md_out/`
 
 ## Repository Layout
 
-- `src/`: compiler implementation
-  - `lexer/`, `parser/`, `semantic/`, `codegen/`, `sigilo/`, `module/`, `runtime/`, `cli/`, `common/`
-- `tests/`: integration and phase regression suite
-- `examples/`: language examples
-- `docs/`: specification, architecture, and roadmap
-- `FASE_*_CCT.md`: phase planning/execution documents
+```text
+src/        host compiler in C
+src/bootstrap/  bootstrap compiler in CCT
+lib/cct/    standard library modules
+examples/   public examples and operational project fixtures
+tests/      integration runners and validation tooling
+docs/       project-facing documentation
+md_out/     phase implementation prompts and archival planning docs
+```
 
-## Release Documentation Packages
+## Current Direction
 
-The current project baseline is **FASE 20F completed**. Historical release packages remain available for traceability and migration references.
-
-**Current-phase release documentation:**
-- `docs/release/FASE_20_RELEASE_NOTES.md` — FASE 20 application-stack closure summary (`json`, `socket/net`, `http`, `config`, `db_sqlite`, examples, hardening)
-- `docs/release/FASE_14T_RELEASE_NOTES.md` — FASE 14T sigilo SVG instrumentation summary (`<title>`, `data-*`, root semantics, toggles)
-- `docs/release/FASE_19_RELEASE_NOTES.md` — FASE 19 completion summary (`ELIGE`, `FORMA`, payload `ORDO`, `ITERUM map/set`)
-
-**Historical package documentation:**
-- `docs/release/FASE_18_RELEASE_NOTES.md` — FASE 18 canonical-library expansion summary
-- `docs/release/FASE_17_RELEASE_NOTES.md` — FASE 17 canonical-library expansion summary
-- `docs/release/FASE_16_RELEASE_NOTES.md` — FASE 16 freestanding/bridge summary
-- `docs/release/FASE_11_RELEASE_NOTES.md` — Early stdlib/platform release notes
-- `docs/release/FASE_12_RELEASE_NOTES.md` — FASE 12 delivery notes
-- `docs/release/FASE_13_RELEASE_NOTES.md` — Highlights and operational guidance
-- `docs/release/FASE_14_RELEASE_NOTES.md` — Hardening-stream release notes
-- `docs/release/FASE_15_RELEASE_NOTES.md` — FASE 15 semantic/operator closure notes
-- detailed matrices/snapshots from older phases were archived from the public `docs/release` surface
-
-**Quick reference:**
-- FASE 0–20 public contracts remain stable
-- FASE 19 closure set remains complete (`ELIGE`, `FORMA`, payload `ORDO`, `ITERUM map/set`)
-- FASE 14T is closed with SVG hover/metadata instrumentation that can be disabled explicitly
-- FASE 20 closes the application-library stack with canonical JSON/network/HTTP/config/SQLite modules
-- Next planned phase is FASE 21
-- Zero silent-breaking-change policy remains active
-
-See `docs/roadmap.md` and `docs/spec.md` for current-phase status and language-surface details.
-
-## Documentation
-
-CCT documentation is organized by audience and purpose. Choose your reading path:
-
-### For New Users (Start Here)
-1. This README (you're reading it!)
-2. [Installation Guide](docs/install.md) - Setup and verification
-3. [Spec - Sections 1-3, 12](docs/spec.md) - Basic syntax and examples
-4. [Project Conventions](docs/project_conventions.md) - Code organization
-5. [Examples Catalog](examples/README.md) - Runnable examples including the FASE 20 app stack
-
-**Estimated time**: 1 hour
-
-### For Language Learners
-1. [Language Specification](docs/spec.md) - Complete language reference
-2. [Bibliotheca Canonica](docs/bibliotheca_canonica.md) - Standard library guide
-3. [FLUXUS Usage](docs/fluxus_usage.md) - Dynamic vectors in depth
-4. [Build System](docs/build_system.md) - Project workflow
-5. Explore `examples/showcase_stdlib_*.cct` for real-world patterns
-6. Explore `examples/*_20f2.cct` for JSON/network/HTTP/config/SQLite flows
-
-**Estimated time**: 4-6 hours
-
-### Quick Reference (Keep Handy)
-- [Spec - Sections 1, 4-11](docs/spec.md) - Language reference
-- [Bibliotheca Canonica - Sections 12+](docs/bibliotheca_canonica.md) - Stdlib API
-- [Linter Rules](docs/linter.md) - Lint rule reference
-- [Doc Generator](docs/doc_generator.md) - Doc comment syntax
-
-### For Advanced Users and Contributors
-1. [Architecture](docs/architecture.md) - Compiler internals
-2. [Roadmap](docs/roadmap.md) - Phase history and future plans
-3. [Release Documentation](docs/release/):
-   - [FASE 20 Release Notes](docs/release/FASE_20_RELEASE_NOTES.md) - Application-library stack closure summary
-   - [FASE 19 Release Notes](docs/release/FASE_19_RELEASE_NOTES.md) - FASE 19 language-surface closure summary
-   - [FASE 18 Release Notes](docs/release/FASE_18_RELEASE_NOTES.md) - Canonical-library expansion closure summary
-   - [FASE 17 Release Notes](docs/release/FASE_17_RELEASE_NOTES.md) - Canonical-library expansion highlights
-   - [FASE 16 Release Notes](docs/release/FASE_16_RELEASE_NOTES.md) - Freestanding/bridge trajectory summary
-   - [FASE 15 Release Notes](docs/release/FASE_15_RELEASE_NOTES.md) - Semantic/operator closure summary
-   - [FASE 14 Release Notes](docs/release/FASE_14_RELEASE_NOTES.md) - Hardening-stream highlights
-   - [FASE 13 Release Notes](docs/release/FASE_13_RELEASE_NOTES.md) - Highlights and migration guide
-   - [FASE 12 Release Notes](docs/release/FASE_12_RELEASE_NOTES.md) - FASE 12 delivery summary
-   - [FASE 11 Release Notes](docs/release/FASE_11_RELEASE_NOTES.md) - Early stdlib/platform notes
-
-**Estimated time**: 3-4 hours
-
-### Documentation Philosophy
-- **spec.md**: Authoritative language reference (what is valid CCT)
-- **architecture.md**: How the compiler works internally
-- **bibliotheca_canonica.md**: Standard library concepts and APIs
-- **roadmap.md**: Where we came from, where we're going
-- **release/**: phase release notes and public-facing closure summaries
-
-### All Documentation Files
-Primary docs:
-- `docs/spec.md`
-- `docs/architecture.md`
-- `docs/roadmap.md`
-- `docs/bibliotheca_canonica.md`
-- `docs/release/FASE_19_RELEASE_NOTES.md` — current phase release notes
-- `docs/release/` — phase release-note index (11..19 where published)
-
-Tooling and guides:
-- `docs/install.md`
-- `docs/build_system.md`
-- `docs/project_conventions.md`
-- `docs/fluxus_usage.md`
-- `docs/linter.md`
-- `docs/doc_generator.md`
-- `docs/sigilo_operations_14b2.md`
-
-Project and phase dossiers:
-- `PROJETO_CCT.md`
-- `PROJETO_CCT_V2.md`
-- `md_out/FASE_*_CCT.md` (phase execution plans and records, including the full FASE 19 track)
-
-## License
-
-MIT License - Copyright (c) 2026 Erick Andrade Busato
-
-See [LICENSE](LICENSE) file for details.
+The bootstrap is complete. The next engineering track is no longer “make it self-host once”, but “evolve the self-hosted compiler as the primary development toolchain while preserving determinism, compatibility gates, and release discipline”.

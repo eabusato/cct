@@ -1,7 +1,9 @@
 /*
  * cct_freestanding_rt.c — CCT Freestanding Runtime Shim
  * AVISO: nenhum header de libc deve ser incluído aqui.
- */
+ 
+ * Copyright (c) Erick Andrade Busato. Todos os direitos reservados.
+*/
 
 #include "cct_freestanding_rt.h"
 

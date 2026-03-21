@@ -1,3 +1,5 @@
+-- Copyright (c) Erick Andrade Busato. Todos os direitos reservados.
+
 INCIPIT grimoire "map"
 
 RITUALE map_init GENUS(K, V)() REDDE SPECULUM NIHIL
