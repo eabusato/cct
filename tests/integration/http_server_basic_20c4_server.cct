@@ -8,7 +8,7 @@ RITUALE main() REDDE REX
   EVOCA VERBUM ready AD "tests/.tmp/http_server_basic_20c4.ready"
   EVOCA VERBUM done AD "tests/.tmp/http_server_basic_20c4.done"
   TEMPTA
-    EVOCA SPECULUM NIHIL srv AD CONIURA http_server_listen("", 22334)
+    EVOCA SPECULUM NIHIL srv AD CONIURA http_server_listen("0.0.0.0", 22334)
     CONIURA write_all(ready, "ready")
 
     EVOCA HttpRequest req AD CONIURA http_server_accept(srv)

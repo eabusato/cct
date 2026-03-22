@@ -5,9 +5,9 @@ ADVOCARE "cct/verbum.cct"
 
 RITUALE main() REDDE REX
   TEMPTA
-    EVOCA SPECULUM NIHIL first AD CONIURA tcp_listen("", 22313)
+    EVOCA SPECULUM NIHIL first AD CONIURA tcp_listen("0.0.0.0", 22313)
     TEMPTA
-      EVOCA SPECULUM NIHIL second AD CONIURA tcp_listen("", 22313)
+      EVOCA SPECULUM NIHIL second AD CONIURA tcp_listen("0.0.0.0", 22313)
       CONIURA net_close(second)
       CONIURA net_close(first)
       REDDE 2

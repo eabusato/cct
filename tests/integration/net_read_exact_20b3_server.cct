@@ -9,7 +9,7 @@ RITUALE main() REDDE REX
   EVOCA VERBUM ready AD "tests/.tmp/net_read_exact_20b3.ready"
   EVOCA VERBUM done AD "tests/.tmp/net_read_exact_20b3.done"
   TEMPTA
-    EVOCA SPECULUM NIHIL listener AD CONIURA tcp_listen("", 22315)
+    EVOCA SPECULUM NIHIL listener AD CONIURA tcp_listen("0.0.0.0", 22315)
     CONIURA write_all(ready, "ready")
 
     EVOCA SPECULUM NIHIL client AD CONIURA tcp_accept(listener)
@@ -17,9 +17,9 @@ RITUALE main() REDDE REX
       REDDE 10
     FIN SI
 
+    CONIURA write_all(done, "ok")
     CONIURA net_close(client)
     CONIURA net_close(listener)
-    CONIURA write_all(done, "ok")
     REDDE 0
   CAPE FRACTUM erro
     EVOCA VERBUM msg AD OBSECRO fractum_to_verbum(erro)

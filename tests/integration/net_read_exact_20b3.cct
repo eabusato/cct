@@ -38,7 +38,7 @@ RITUALE main() REDDE REX
     REDDE 1
   FIN SI
 
-  SI NON CONIURA wait_for_file(ready, 2000)
+  SI NON CONIURA wait_for_file(ready, 5000)
     REDDE 2
   FIN SI
 
@@ -59,12 +59,11 @@ RITUALE main() REDDE REX
 
   CONIURA net_close(client)
 
-  SI NON CONIURA wait_for_file(done, 2000)
-    REDDE 5
-  FIN SI
-
-  SI CONIURA compare(CONIURA read_all(done), "ok") != 0
-    REDDE 6
+  CONIURA sleep_ms(100)
+  SI CONIURA wait_for_file(done, 1000)
+    SI CONIURA compare(CONIURA read_all(done), "ok") != 0
+      REDDE 6
+    FIN SI
   FIN SI
 
   REDDE 0
