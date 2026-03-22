@@ -4,28 +4,24 @@
 **Status:** Completed
 **Next Phase:** 29
 
-## Executive Summary
+## What Is Stable
 
-Generic materialization codegen, exception lowering, advanced control flow, `FORMA`, and combined backend gates closed.
+- generic instance materialization in the bootstrap backend
+- failure-control lowering (`TEMPTA`, `CAPE`, `SEMPER`, `IACE`)
+- advanced loop-control lowering (`FRANGE`, `RECEDE`)
+- `FORMA` parsing, semantic checking, and codegen support
+- mixed advanced-construct end-to-end validation
 
-## What Was Delivered
+## Contracts the Next Phase Can Rely On
 
-- implementation of the phase scope
-- validation integrated into repository runners
-- documentation synchronized with the project baseline
+- the bootstrap compiler now covers the intended practical language surface
+- self-hosting work should focus on stage orchestration and convergence, not on filling major backend feature gaps
+- generic materialization is deterministic and tied to semantic identity
 
-## Ready for the Next Phase
+## Open Boundaries Carried Forward
 
-The following inputs were stabilized for the next phase:
-- code artifacts required by the next milestone
-- regression coverage for the implemented subset
-- explicit phase boundaries and release state
+- stage pipeline, artifact lineage, convergence policy, performance, and operationalization
 
-## Residual Risks
+## Expected Use by FASE 29
 
-- no open blockers were intentionally carried into the next phase
-- future work should preserve determinism and runner coverage
-
-## Sign-off
-
-FASE 28 is ready for downstream work.
+FASE 29 should treat the bootstrap compiler as functionally complete and concentrate on reproducible self-hosting and convergence gates.

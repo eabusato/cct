@@ -1,81 +1,119 @@
-# CCT Build and Validation System
+# CCT Build System
 
 ## Overview
 
-CCT now ships with two families of workflows:
-- host-compiler workflows
-- bootstrap/self-host workflows
+FASE 12F introduced the canonical project workflow commands:
 
-Both are part of the supported engineering surface.
+- `cct build`
+- `cct run`
+- `cct test`
+- `cct bench`
+- `cct clean`
 
-## Host Compiler Targets
+FASE 12G added:
 
-Core commands:
+- `cct doc`
 
-```bash
-make
-make test
-make dist
-```
+The legacy single-file flow remains fully supported, and post-bootstrap repository runners and self-hosted project targets are now part of the supported build-system surface.
 
-## Validation Targets
+## Project Discovery
 
-Default runner:
+Root resolution order:
 
-```bash
-make test
-```
+1. `--project <dir>`
+2. current directory containing `cct.toml`
+3. current directory containing `src/main.cct`
+4. upward traversal until `cct.toml` or `src/main.cct`
 
-Legacy and compatibility runners:
+Default entry is `src/main.cct`, unless overridden with `--entry`.
 
-```bash
-make test-legacy-full
-make test-legacy-rebased
-make test-all-0-30
-```
-
-Focused modern runners:
+## Build
 
 ```bash
-make test-bootstrap
-make test-bootstrap-selfhost
-make test-phase30-final
+cct build [--release] [--project DIR] [--entry FILE.cct] [--out PATH] \
+          [--sigilo-check] [--sigilo-strict] [--sigilo-baseline PATH]
 ```
 
-## Bootstrap and Self-Host Targets
+Optional quality gates:
 
-Compiler stages:
+- `--lint`
+- `--fmt-check`
+
+Optional sigilo baseline gate:
+
+- `--sigilo-check`: runs `cct sigilo baseline check` for the built artifact sigilo
+- `--sigilo-strict`: enables strict baseline check behavior (exit `2` on blocking drift)
+- `--sigilo-baseline PATH`: baseline path override (relative paths are resolved from project root)
+- default baseline path without override is `docs/sigilo/baseline/local.sigil` or `system.sigil` based on artifact scope
+
+Incremental cache is stored in `.cct/cache/manifest.txt`.
+
+## Run
 
 ```bash
-make bootstrap-stage0
-make bootstrap-stage1
-make bootstrap-stage2
-make bootstrap-stage-identity
+cct run [--release] [--project DIR] [--entry FILE.cct] \
+        [--sigilo-check] [--sigilo-strict] [--sigilo-baseline PATH] [-- --args]
 ```
 
-Operational self-hosting:
+Builds first, then executes resulting binary, returning the program exit code.
+
+## Test
 
 ```bash
-make bootstrap-selfhost-ready
-make project-selfhost-build PROJECT=examples/phase30_data_app
-make project-selfhost-run PROJECT=examples/phase30_data_app
-make project-selfhost-test PROJECT=examples/phase30_data_app
-make project-selfhost-package PROJECT=examples/phase30_data_app
+cct test [PATTERN] [--project DIR] [--strict-lint] [--fmt-check] \
+         [--sigilo-check] [--sigilo-strict] [--sigilo-baseline PATH]
 ```
 
-## Design Rules
+Discovers `*.test.cct` recursively under `tests/`.
 
-- historical validation is preserved separately from current compatibility validation
-- the aggregated `0..30` runner must remain available
-- bootstrap/self-host validation must remain runnable independently from legacy suites
-- operational project flows must stay scriptable from `make`
+## Bench
 
-## Artifact Areas
+```bash
+cct bench [PATTERN] [--project DIR] [--iterations N] [--release] \
+          [--sigilo-check] [--sigilo-strict] [--sigilo-baseline PATH]
+```
 
-Common locations:
-- `out/bootstrap/`
-- `tests/.tmp/`
-- project-local `.cct/`
-- project-local `dist/`
+Discovers `*.bench.cct` recursively under `bench/` and reports average/total runtime.
 
-Generated artifacts should remain reproducible and disposable.
+## Clean
+
+```bash
+cct clean [--project DIR] [--all]
+```
+
+- default: removes `.cct/build`, `.cct/cache`, `.cct/test-bin`, `.cct/bench-bin`
+- `--all`: also removes generated project binaries under `dist/`
+
+## Exit Codes
+
+- `0` success
+- `1` command/build/run/test failure
+- `2` quality gate failure (`--strict-lint`, `--fmt-check`)
+- `2` also for strict sigilo baseline gate blocking drift
+- `3` internal tooling error (reserved)
+
+## Aggregated Validation Targets (Post-FASE-30)
+
+The repository now distinguishes between historical, rebased, bootstrap, self-host, and operational validation layers.
+
+Primary entrypoints:
+- `make test`
+- `make test-legacy-full`
+- `make test-legacy-rebased`
+- `make test-bootstrap`
+- `make test-bootstrap-selfhost`
+- `make test-phase30-final`
+- `make test-all-0-30`
+
+`make test-all-0-30` is the full aggregated gate across the validated project history.
+
+## Self-Hosted Project Workflow Targets
+
+Post-bootstrap operational targets include:
+- `project-selfhost-build`
+- `project-selfhost-run`
+- `project-selfhost-test`
+- `project-selfhost-clean`
+- `project-selfhost-package`
+
+These targets are exercised in the FASE 30 operational platform gates.

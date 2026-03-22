@@ -1,6 +1,8 @@
 # CCT Project Conventions
 
-## Canonical Project Layout
+This document preserves the original project-layout conventions and extends them with the bootstrap, self-host, and aggregated-validation conventions that are now part of the operational repository baseline.
+
+## Canonical Layout
 
 ```text
 project/
@@ -9,37 +11,34 @@ project/
 ├── lib/
 ├── tests/
 ├── bench/
+├── examples/
 ├── docs/
-├── dist/
-├── .cct/
-└── cct.toml
+└── cct.toml (optional in FASE 12F)
 ```
 
 ## Naming
 
 - modules: `snake_case.cct`
-- tests: `*.test.cct`
-- benchmarks: `*.bench.cct`
-- generated C: `*.cgen.c`
+- tests: `<feature>.test.cct`
+- benchmarks: `<feature>.bench.cct`
 
-## Project Rules
+## Modular Organization
 
-- keep entry orchestration in `src/main.cct`
+- keep orchestration in `src/main.cct`
 - keep reusable code in `lib/`
-- keep tests deterministic whenever possible
-- keep benchmark fixtures explicit and isolated
-- do not commit transient `.cct/` artifacts
+- keep tests isolated from import side effects
+- keep benchmarks deterministic whenever practical
 
-## Self-Hosted Project Rules
+## Build Artifacts
 
-When using the self-hosted toolchain:
-- keep the canonical layout unchanged
-- use `project-selfhost-*` targets from the repository root
-- treat support/prelude constraints as explicit product boundaries
+Generated artifacts are local to project:
 
-## Validation Rules
+- `.cct/` for internal cache and runners
+- `dist/` for final binaries
 
-Recommended local workflow:
+Never commit `.cct/` artifacts.
+
+## Recommended Local Flow
 
 ```bash
 cct fmt src/main.cct
@@ -48,8 +47,18 @@ cct test
 cct build --release
 ```
 
-Repository-level validation:
+## Bootstrap and Self-Host Layout Conventions
 
-```bash
-make test-all-0-30
-```
+Additional repository-owned locations now matter operationally:
+- `src/bootstrap/` for the self-hosted compiler implementation
+- `out/bootstrap/` for stage artifacts, reports, and convergence metadata
+- `tests/integration/` for both host-era and bootstrap/self-host integration fixtures
+
+## Validation Conventions
+
+Use the narrowest runner that matches the subsystem under active development, but use `make test-all-0-30` before treating documentation, release work, or large refactors as complete.
+
+Recommended hierarchy:
+1. subsystem runner
+2. phase runner
+3. aggregated whole-project runner

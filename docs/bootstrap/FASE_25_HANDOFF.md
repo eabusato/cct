@@ -4,28 +4,26 @@
 **Status:** Completed
 **Next Phase:** 26
 
-## Executive Summary
+## What Is Stable
 
-Type-parameter tracking, generic instantiation, constraint checking, canonicalization, and generic semantic gates.
+- generic parameter tracking
+- canonical generic instance identity
+- generic instantiation and deduplication
+- `PACTUM`-based constraint checking for the supported subset
+- generic semantic validation gates
 
-## What Was Delivered
+## Contracts the Next Phase Can Rely On
 
-- implementation of the phase scope
-- validation integrated into repository runners
-- documentation synchronized with the project baseline
+- code generation can treat generic instance identity as a semantic input rather than re-deriving it from AST shape
+- deduplication is deterministic and repository-valid
+- generic constraints have already been enforced before backend materialization
 
-## Ready for the Next Phase
+## Open Boundaries Carried Forward
 
-The following inputs were stabilized for the next phase:
-- code artifacts required by the next milestone
-- regression coverage for the implemented subset
-- explicit phase boundaries and release state
+- actual backend materialization of generic instances
+- structured data lowering in the bootstrap backend
+- self-hosting pipeline
 
-## Residual Risks
+## Expected Use by FASE 26
 
-- no open blockers were intentionally carried into the next phase
-- future work should preserve determinism and runner coverage
-
-## Sign-off
-
-FASE 25 is ready for downstream work.
+FASE 26 should consume semantic generic identity and preserve deterministic naming/materialization behavior in code generation.

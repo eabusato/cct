@@ -1,3 +1,3 @@
-stage0_real_seconds=7.21
-stage1_real_seconds=9.56
-stage2_real_seconds=10.98
+stage0_real_seconds=7.67
+stage1_real_seconds=9.50
+stage2_real_seconds=12.02

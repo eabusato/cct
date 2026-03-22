@@ -4,28 +4,26 @@
 **Status:** Completed
 **Next Phase:** 23
 
-## Executive Summary
+## What Is Stable
 
-AST backbone, parser core, statements, declarations, recovery, and AST dump closed.
+- AST node inventory for the baseline parser subset
+- parser state and helper routines
+- expression parsing for the core executable subset
+- statement and declaration parsing for the baseline language surface
+- recovery and AST dump compatibility infrastructure
 
-## What Was Delivered
+## Contracts the Next Phase Can Rely On
 
-- implementation of the phase scope
-- validation integrated into repository runners
-- documentation synchronized with the project baseline
+- AST ownership and destruction are explicit and usable by later phases
+- parser dump output is stable enough for compatibility comparison
+- parser recovery exists and should be extended rather than replaced
 
-## Ready for the Next Phase
+## Open Boundaries Carried Forward
 
-The following inputs were stabilized for the next phase:
-- code artifacts required by the next milestone
-- regression coverage for the implemented subset
-- explicit phase boundaries and release state
+- advanced control flow and richer syntax surface
+- full generic syntax coverage
+- modular/composite parser closure details
 
-## Residual Risks
+## Expected Use by FASE 23
 
-- no open blockers were intentionally carried into the next phase
-- future work should preserve determinism and runner coverage
-
-## Sign-off
-
-FASE 22 is ready for downstream work.
+FASE 23 should extend the parser/AST contract already established here instead of creating a second parser shape for advanced constructs.

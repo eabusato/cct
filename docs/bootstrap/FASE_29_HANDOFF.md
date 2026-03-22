@@ -4,28 +4,26 @@
 **Status:** Completed
 **Next Phase:** 30
 
-## Executive Summary
+## What Is Stable
 
-Stage0/stage1/stage2 pipeline, convergence checks, identity validation, self-host regression, and performance profiling closed.
+- stage0/stage1/stage2 pipeline
+- stage identity validation
+- self-host artifact lineage and manifests
+- bootstrap-compiler regression execution path
+- benchmark capture for the self-host pipeline
 
-## What Was Delivered
+## Contracts the Next Phase Can Rely On
 
-- implementation of the phase scope
-- validation integrated into repository runners
-- documentation synchronized with the project baseline
+- the repository knows how to build converged self-host artifacts repeatably
+- self-host convergence is a required gate, not a manual ceremony
+- phase-30 operational work does not need to solve basic self-compilation anymore
 
-## Ready for the Next Phase
+## Open Boundaries Carried Forward
 
-The following inputs were stabilized for the next phase:
-- code artifacts required by the next milestone
-- regression coverage for the implemented subset
-- explicit phase boundaries and release state
+- operational packaging and project workflows
+- self-host-compatible application-library maturity
+- release-quality platform documentation and handoff discipline
 
-## Residual Risks
+## Expected Use by FASE 30
 
-- no open blockers were intentionally carried into the next phase
-- future work should preserve determinism and runner coverage
-
-## Sign-off
-
-FASE 29 is ready for downstream work.
+FASE 30 should assume the compiler can already self-host and should focus on making that capability usable as a developer-facing platform path.

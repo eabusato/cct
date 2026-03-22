@@ -4,28 +4,27 @@
 **Status:** Completed
 **Next Phase:** 27
 
-## Executive Summary
+## What Is Stable
 
-Emitter/context, expression and statement lowering, declaration/program emission, type mapping, runtime bridge, and end-to-end codegen gates.
+- bootstrap codegen context and emitter model
+- expression and statement lowering for the core subset
+- declaration/program emission path
+- foundational CCT-to-C type mapping
+- runtime bridge / translation-unit support
+- end-to-end generated-C compile/run validation for the foundational subset
 
-## What Was Delivered
+## Contracts the Next Phase Can Rely On
 
-- implementation of the phase scope
-- validation integrated into repository runners
-- documentation synchronized with the project baseline
+- code generation should continue to flow through the emitter/context model rather than bypassing it
+- phase-local codegen work is validated through generated C and host compilation, not only textual inspection
+- runtime bridge responsibilities are explicit and central, not hidden inside arbitrary emitters
 
-## Ready for the Next Phase
+## Open Boundaries Carried Forward
 
-The following inputs were stabilized for the next phase:
-- code artifacts required by the next milestone
-- regression coverage for the implemented subset
-- explicit phase boundaries and release state
+- structured data lowering
+- advanced selection lowering
+- generic code generation and advanced control flow
 
-## Residual Risks
+## Expected Use by FASE 27
 
-- no open blockers were intentionally carried into the next phase
-- future work should preserve determinism and runner coverage
-
-## Sign-off
-
-FASE 26 is ready for downstream work.
+FASE 27 should extend the existing backend infrastructure with structural data lowering rather than creating a second backend path for `SIGILLUM` and `ORDO`.

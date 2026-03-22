@@ -1,33 +1,62 @@
-# FASE 23 - Bootstrap Parser Surface Completion - Release Notes
+# FASE 23 - Advanced Bootstrap Parser - Release Notes
 
 **Date:** 2026-03-21
 **Version:** 0.23.0
 **Status:** Completed
 
-## Summary
+## Executive Summary
 
-Advanced control flow, generics syntax, contracts, modular parsing, and parser gate closure.
+FASE 23 completed the syntax-surface closure of the bootstrap parser. The phase added advanced control flow, generic syntax, contracts and namespaces, composite/module-oriented parsing behavior, and a broader host-vs-bootstrap AST compatibility gate.
 
 ## Scope Closed
 
-- implementation completed for the phase objective
-- integration tests added and validated
-- runner integration aligned with the repository validation model
-- project-facing documentation synchronized
+Delivered subphases:
+- advanced control flow parsing (`TEMPTA`, `CAPE`, `SEMPER`, `ELIGE`, `CASUS`, `ALIOQUIN`)
+- generic syntax parsing (`GENUS` parameters and type-surface support)
+- parsing for `PACTUM` and `CODEX`
+- module/composite entry flow suitable for bootstrap parser gates
+- real-language compatibility fixtures against the host AST surface
 
-## Deliverables
+## Key Deliverables
 
-- code in the relevant compiler/bootstrap/runtime/library areas
-- integration fixtures under `tests/integration/`
-- runner coverage in the project test harness
-- release and handoff documentation for the phase
+Implementation concentrated in:
+- `src/bootstrap/parser/ast_kind.cct`
+- `src/bootstrap/parser/ast.cct`
+- `src/bootstrap/parser/parse_stmt.cct`
+- `src/bootstrap/parser/parse_expr.cct`
+- `src/bootstrap/parser/parse_decl.cct`
+- `src/bootstrap/main_parser.cct`
 
-## Validation Snapshot
+## Major Technical Decisions
 
-- phase-specific gates completed during implementation
-- repository validation kept green at the time of phase closure
-- current cross-era validation path available via `make test-all-0-30`
+- `ELIGE` became the primary user-facing selection surface, while legacy `QUANDO` compatibility remained internal/historical
+- generic syntax was represented structurally in the AST so semantic phases could consume it directly rather than reparsing textual forms
+- parser recovery remained active for advanced declarations and control constructs, preventing FASE 23 from becoming a “happy path only” parser completion
 
-## Transition
+## Validation Summary
 
-This phase is closed and handed off to the next phase in the roadmap.
+The phase closed with:
+- parser fixtures for advanced control flow and nested constructs
+- generic-syntax fixtures
+- `PACTUM` and `CODEX` coverage
+- composite/bootstrap parser CLI coverage
+- real host-vs-bootstrap AST dump checks on advanced inputs
+
+## User-Facing Impact
+
+The bootstrap parser now understands the practical full syntax surface needed by the remaining bootstrap phases. This did not change the host compiler language, but it removed the parser as a blocker for self-hosting.
+
+## Residual Limits at Phase Close
+
+After FASE 23, syntax was no longer the main bootstrap gap. The remaining gaps were semantic and backend-oriented:
+- symbol tables and scopes
+- type resolution and checking
+- generics semantics
+- code generation
+
+## Transition to FASE 24
+
+FASE 24 inherited:
+- a syntax-complete bootstrap parser
+- stable AST representation for advanced constructs
+- composite/module parsing behavior suitable for semantic passes

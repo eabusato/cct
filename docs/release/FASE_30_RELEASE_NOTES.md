@@ -4,35 +4,57 @@
 **Version:** 0.30.0
 **Status:** Completed
 
-## Summary
+## Executive Summary
 
-Self-hosted workflows, operational stdlib/runtime subset, application libraries, packaging, and final platform release closed.
+FASE 30 closed the bootstrap era by turning self-hosting into an operational platform baseline. The phase delivered self-hosted workflow targets, self-host-compatible runtime and stdlib support, mature application-library modules, project packaging/distribution flow, and the final release/handoff package for the phase-0-through-phase-30 baseline.
 
 ## Scope Closed
 
-- implementation completed for the phase objective
-- integration tests added and validated
-- runner integration aligned with the repository validation model
-- project-facing documentation synchronized
+Delivered subphases:
+- self-hosted toolchain as a supported developer workflow
+- self-host-compatible stdlib/runtime path for the validated subset
+- application libraries `cct/csv`, `cct/https`, and `cct/orm_lite`
+- self-hosted project build/run/test/package workflows
+- final operational validation and release package
 
-## Deliverables
+## Key Deliverables
 
-- code in the relevant compiler/bootstrap/runtime/library areas
-- integration fixtures under `tests/integration/`
-- runner coverage in the project test harness
-- release and handoff documentation for the phase
-- `project-selfhost-build`
-- `project-selfhost-run`
-- `project-selfhost-test`
-- `project-selfhost-package`
-- converged compiler artifact lineage including `cct_stage2`
+Implementation and operational deliverables include:
+- `src/bootstrap/main_compiler.cct`
+- `src/bootstrap/selfhost_prelude.cct`
+- `src/bootstrap/selfhost_support.cct`
+- `lib/cct/csv.cct`
+- `lib/cct/https.cct`
+- `lib/cct/orm_lite.cct`
+- operational `Makefile` targets for self-hosted projects
+- operational examples under `examples/phase30_data_app/`
+- release and handoff artifacts for the full bootstrap era
 
-## Validation Snapshot
+## Major Technical Decisions
 
-- phase-specific gates completed during implementation
-- repository validation kept green at the time of phase closure
-- current cross-era validation path available via `make test-all-0-30`
+- the self-hosted compiler path is treated as an operationally supported path, not a demo-only side channel
+- application-library additions were deliberately small and mature rather than broad and speculative
+- release validation moved to aggregated multi-block runners that cover legacy, bootstrap, self-host, and operational suites together
 
-## Transition
+## Validation Summary
 
-This phase is closed and handed off to the next phase in the roadmap.
+The phase closed with:
+- operational self-host project workflow gates
+- phase-30 final runner coverage
+- preserved stage identity from FASE 29
+- full aggregated validation path `make test-all-0-30`
+
+## User-Facing Impact
+
+This is the first phase where CCT can be presented not only as a compiler project but as an operational self-hosted platform with realistic project workflows and mature application-library support.
+
+## Residual Limits at Phase Close
+
+Future work after FASE 30 should focus on platform maturity, parity improvements, performance, diagnostics, and ecosystem depth rather than bootstrap enablement.
+
+## Release Outcome
+
+FASE 30 defines the current publication baseline:
+- host compiler and bootstrap compiler both validated
+- self-hosted workflows operational
+- full aggregated validation available from phase 0 through phase 30

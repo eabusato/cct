@@ -4,28 +4,26 @@
 **Status:** Completed
 **Next Phase:** 25
 
-## Executive Summary
+## What Is Stable
 
-Scopes, symbols, types, declaration registration, expression checking, statements, and semantic gate closure.
+- semantic context, scopes, and symbol registration
+- named and composite type modeling for the non-generic subset
+- declaration registration and resolution
+- expression and statement validation for the non-generic subset
+- semantic CLI and host comparison gate
 
-## What Was Delivered
+## Contracts the Next Phase Can Rely On
 
-- implementation of the phase scope
-- validation integrated into repository runners
-- documentation synchronized with the project baseline
+- semantic entities are tracked by stable ids/handles instead of pointer identity assumptions
+- generic semantics can be layered on top of the existing semantic core rather than requiring redesign of scopes or symbols
+- host-vs-bootstrap semantic comparison is already operational
 
-## Ready for the Next Phase
+## Open Boundaries Carried Forward
 
-The following inputs were stabilized for the next phase:
-- code artifacts required by the next milestone
-- regression coverage for the implemented subset
-- explicit phase boundaries and release state
+- generic instantiation and deduplication
+- `PACTUM`-based generic constraint enforcement
+- backend consumption of semantic generic identity
 
-## Residual Risks
+## Expected Use by FASE 25
 
-- no open blockers were intentionally carried into the next phase
-- future work should preserve determinism and runner coverage
-
-## Sign-off
-
-FASE 24 is ready for downstream work.
+FASE 25 should extend the semantic core with generic behavior while preserving the pass structure and stable identifiers already established here.

@@ -2,31 +2,34 @@
 
 **Date:** 2026-03-21
 **Status:** Completed
-**Next Phase:** post-30 operational evolution
+**Next Phase:** Post-bootstrap platform work
 
-## Executive Summary
+## What Is Stable
 
-Self-hosted workflows, operational stdlib/runtime subset, application libraries, packaging, and final platform release closed.
+- host compiler remains production-valid
+- bootstrap compiler stack is complete
+- stage convergence and identity validation exist
+- self-hosted project workflows are operational
+- application-library maturity baseline includes `csv`, `https`, and `orm_lite`
+- aggregated validation from phase 0 through phase 30 exists
 
-## What Was Delivered
+## Platform Contract Going Forward
 
-- implementation of the phase scope
-- validation integrated into repository runners
-- documentation synchronized with the project baseline
-- operational example project: `examples/phase30_data_app`
+Future phases should treat the following as non-negotiable platform contracts:
+- deterministic behavior across host/bootstrap/self-host paths
+- explicit validation layers rather than ad hoc test invocation
+- self-hosted workflows as supported product surface
+- release documentation and handoff artifacts kept in sync with the validated state
 
-## Ready for the Next Phase
+## Open Work After the Bootstrap Era
 
-The following inputs were stabilized for the next phase:
-- code artifacts required by the next milestone
-- regression coverage for the implemented subset
-- explicit phase boundaries and release state
-
-## Riscos Residuais (Residual Risks)
-
-- no open blockers were intentionally carried into the next phase
-- future work should preserve determinism and runner coverage
+The remaining work is platform maturity work, not bootstrap enablement:
+- self-host-first developer ergonomics
+- performance improvement
+- diagnostics quality improvement
+- stdlib and ecosystem depth expansion
+- packaging and release discipline at larger scale
 
 ## Sign-off
 
-FASE 30 is ready for downstream work.
+FASE 30 closes the bootstrap era and establishes the current publication baseline for CCT.

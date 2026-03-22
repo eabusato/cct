@@ -4,28 +4,26 @@
 **Status:** Completed
 **Next Phase:** 24
 
-## Executive Summary
+## What Is Stable
 
-Advanced control flow, generics syntax, contracts, modular parsing, and parser gate closure.
+- syntax-complete bootstrap parser for the intended language surface
+- advanced control flow AST representation
+- generic syntax representation
+- `PACTUM` and `CODEX` parsing
+- composite/module-oriented parser entry path
 
-## What Was Delivered
+## Contracts the Next Phase Can Rely On
 
-- implementation of the phase scope
-- validation integrated into repository runners
-- documentation synchronized with the project baseline
+- semantic phases receive a structurally rich AST, not a reduced core-only tree
+- `ELIGE` is the primary user-facing surface; legacy aliases remain compatibility concerns, not semantic design centers
+- advanced parser recovery exists and is part of the supported parser baseline
 
-## Ready for the Next Phase
+## Open Boundaries Carried Forward
 
-The following inputs were stabilized for the next phase:
-- code artifacts required by the next milestone
-- regression coverage for the implemented subset
-- explicit phase boundaries and release state
+- symbol tables and type system work
+- semantic generic instantiation
+- code generation
 
-## Residual Risks
+## Expected Use by FASE 24
 
-- no open blockers were intentionally carried into the next phase
-- future work should preserve determinism and runner coverage
-
-## Sign-off
-
-FASE 23 is ready for downstream work.
+FASE 24 should consume the syntax-complete AST directly and avoid pushing semantic interpretation back into parser-specific workarounds.

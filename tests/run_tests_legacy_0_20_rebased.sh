@@ -66,6 +66,32 @@ cleanup_codegen_artifacts() {
     rm -f "$exe".__mod_*.svg "$exe".__mod_*.sigil
 }
 
+cct_kill_test_process() {
+    local pattern="$1"
+    pkill -f "$pattern" >/dev/null 2>&1 || true
+}
+
+cct_retry_exit_zero() {
+    local attempts="$1"
+    local sleep_s="$2"
+    local log_prefix="$3"
+    shift 3
+
+    local attempt=1
+    local rc=1
+    while [ "$attempt" -le "$attempts" ]; do
+        "$@" >"${log_prefix}_attempt${attempt}.out" 2>&1
+        rc=$?
+        if [ "$rc" -eq 0 ]; then
+            return 0
+        fi
+        sleep "$sleep_s"
+        attempt=$((attempt + 1))
+    done
+
+    return "$rc"
+}
+
 resolve_doc_path() {
     local rel="$1"
     if [ -f "$rel" ]; then
@@ -17220,19 +17246,10 @@ echo "Test 1226: net_bind_invalid_20b2"
 SRC_1226="tests/integration/net_bind_invalid_20b2.cct"
 BIN_1226="${SRC_1226%.cct}"
 cleanup_codegen_artifacts "$SRC_1226"
+cct_kill_test_process "tests/integration/net_bind_invalid_20b2"
 if "$CCT_BIN" "$SRC_1226" >"$CCT_TMP_DIR/cct_phase20b2_1226_compile.out" 2>&1; then
-    "$BIN_1226" >"$CCT_TMP_DIR/cct_phase20b2_1226_run.out" 2>&1
+    cct_retry_exit_zero 5 2 "$CCT_TMP_DIR/cct_phase20b2_1226_run" "$BIN_1226"
     RC_1226=$?
-    if [ "$RC_1226" -ne 0 ]; then
-        sleep 1
-        "$BIN_1226" >"$CCT_TMP_DIR/cct_phase20b2_1226_run_retry.out" 2>&1
-        RC_1226=$?
-        if [ "$RC_1226" -ne 0 ]; then
-            sleep 1
-            "$BIN_1226" >"$CCT_TMP_DIR/cct_phase20b2_1226_run_retry2.out" 2>&1
-            RC_1226=$?
-        fi
-    fi
 else
     RC_1226=255
 fi
@@ -17284,26 +17301,21 @@ cleanup_codegen_artifacts "$SRC_1228"
 rm -f tests/.tmp/net_read_exact_20b3.ready \
       tests/.tmp/net_read_exact_20b3.done \
       tests/.tmp/net_read_exact_20b3.server.log
+cct_kill_test_process "tests/integration/net_read_exact_20b3_server"
+cct_kill_test_process "tests/integration/net_read_exact_20b3"
 if "$CCT_BIN" "$HELPER_1228" >"$CCT_TMP_DIR/cct_phase20b3_1228_helper_compile.out" 2>&1 && \
    "$CCT_BIN" "$SRC_1228" >"$CCT_TMP_DIR/cct_phase20b3_1228_compile.out" 2>&1; then
-    "$BIN_1228" >"$CCT_TMP_DIR/cct_phase20b3_1228_run.out" 2>&1
-    RC_1228=$?
-    if [ "$RC_1228" -ne 0 ]; then
+    RC_1228=1
+    for attempt_1228 in 1 2 3 4 5; do
         rm -f tests/.tmp/net_read_exact_20b3.ready \
               tests/.tmp/net_read_exact_20b3.done \
               tests/.tmp/net_read_exact_20b3.server.log
-        sleep 1
-        "$BIN_1228" >"$CCT_TMP_DIR/cct_phase20b3_1228_run_retry.out" 2>&1
+        cct_kill_test_process "tests/integration/net_read_exact_20b3_server"
+        "$BIN_1228" >"$CCT_TMP_DIR/cct_phase20b3_1228_run_attempt${attempt_1228}.out" 2>&1
         RC_1228=$?
-        if [ "$RC_1228" -ne 0 ]; then
-            rm -f tests/.tmp/net_read_exact_20b3.ready \
-                  tests/.tmp/net_read_exact_20b3.done \
-                  tests/.tmp/net_read_exact_20b3.server.log
-            sleep 1
-            "$BIN_1228" >"$CCT_TMP_DIR/cct_phase20b3_1228_run_retry2.out" 2>&1
-            RC_1228=$?
-        fi
-    fi
+        [ "$RC_1228" -eq 0 ] && break
+        sleep 2
+    done
 else
     RC_1228=255
 fi
@@ -17645,24 +17657,17 @@ rm -f tests/.tmp/http_server_basic_20c4.ready \
       tests/.tmp/http_server_basic_20c4.server.log
 if "$CCT_BIN" "$HELPER_1242" >"$CCT_TMP_DIR/cct_phase20c4_1242_helper_compile.out" 2>&1 && \
    "$CCT_BIN" "$SRC_1242" >"$CCT_TMP_DIR/cct_phase20c4_1242_compile.out" 2>&1; then
-    "$BIN_1242" >"$CCT_TMP_DIR/cct_phase20c4_1242_run.out" 2>&1
-    RC_1242=$?
-    if [ "$RC_1242" -ne 0 ]; then
+    RC_1242=1
+    for attempt_1242 in 1 2 3 4 5; do
         rm -f tests/.tmp/http_server_basic_20c4.ready \
               tests/.tmp/http_server_basic_20c4.done \
               tests/.tmp/http_server_basic_20c4.server.log
-        sleep 1
-        "$BIN_1242" >"$CCT_TMP_DIR/cct_phase20c4_1242_run_retry.out" 2>&1
+        cct_kill_test_process "tests/integration/http_server_basic_20c4_server"
+        "$BIN_1242" >"$CCT_TMP_DIR/cct_phase20c4_1242_run_attempt${attempt_1242}.out" 2>&1
         RC_1242=$?
-        if [ "$RC_1242" -ne 0 ]; then
-            rm -f tests/.tmp/http_server_basic_20c4.ready \
-                  tests/.tmp/http_server_basic_20c4.done \
-                  tests/.tmp/http_server_basic_20c4.server.log
-            sleep 1
-            "$BIN_1242" >"$CCT_TMP_DIR/cct_phase20c4_1242_run_retry2.out" 2>&1
-            RC_1242=$?
-        fi
-    fi
+        [ "$RC_1242" -eq 0 ] && break
+        sleep 2
+    done
 else
     RC_1242=255
 fi

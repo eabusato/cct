@@ -4,28 +4,26 @@
 **Status:** Completed
 **Next Phase:** 28
 
-## Executive Summary
+## What Is Stable
 
-Structured `SIGILLUM`, `ORDO`, payload variants, and `ELIGE` lowering completed with end-to-end validation.
+- `SIGILLUM` lowering
+- simple and payload `ORDO` lowering
+- `ELIGE` lowering over scalar, string, and tagged-union subjects
+- payload binding model for supported `CASUS` forms
+- structural end-to-end backend validation
 
-## What Was Delivered
+## Contracts the Next Phase Can Rely On
 
-- implementation of the phase scope
-- validation integrated into repository runners
-- documentation synchronized with the project baseline
+- structural types now have explicit C-level representation in the bootstrap backend
+- payload tags are a real backend contract, not an inferred convention
+- unsupported destructuring combinations fail explicitly instead of silently miscompiling
 
-## Ready for the Next Phase
+## Open Boundaries Carried Forward
 
-The following inputs were stabilized for the next phase:
-- code artifacts required by the next milestone
-- regression coverage for the implemented subset
-- explicit phase boundaries and release state
+- generic materialization in codegen
+- advanced loop/failure-control lowering
+- `FORMA`
 
-## Residual Risks
+## Expected Use by FASE 28
 
-- no open blockers were intentionally carried into the next phase
-- future work should preserve determinism and runner coverage
-
-## Sign-off
-
-FASE 27 is ready for downstream work.
+FASE 28 should compose with the structural data model already delivered here, especially for mixed control-flow and generic materialization scenarios.

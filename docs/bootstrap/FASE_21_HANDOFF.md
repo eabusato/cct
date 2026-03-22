@@ -4,28 +4,27 @@
 **Status:** Completed
 **Next Phase:** 22
 
-## Executive Summary
+## What Is Stable
 
-Bootstrap lexer, foundations, and validation tooling closed.
+- bootstrap support-library pieces needed by compiler code (`char`, `verbum`, `diagnostic`)
+- token kinds and token ownership contract
+- keyword lookup and lexer state management
+- tokenization for identifiers, literals, strings, comments, recovery, and EOF behavior
+- host-vs-bootstrap token stream comparison flow
 
-## What Was Delivered
+## Contracts the Next Phase Can Rely On
 
-- implementation of the phase scope
-- validation integrated into repository runners
-- documentation synchronized with the project baseline
+- `Token` owns `lexeme`
+- invalid/error tokens duplicate borrowed/literal messages before ownership transfer
+- token kind parity is exact, not approximate
+- lexer position tracking is stable enough for parser diagnostics and later semantic work
 
-## Ready for the Next Phase
+## Open Boundaries Carried Forward
 
-The following inputs were stabilized for the next phase:
-- code artifacts required by the next milestone
-- regression coverage for the implemented subset
-- explicit phase boundaries and release state
+- no AST yet
+- no parser recovery beyond lexical recovery
+- no semantic or backend behavior
 
-## Residual Risks
+## Expected Use by FASE 22
 
-- no open blockers were intentionally carried into the next phase
-- future work should preserve determinism and runner coverage
-
-## Sign-off
-
-FASE 21 is ready for downstream work.
+FASE 22 should build directly on the bootstrap token stream and must not invent parser-side token conventions that diverge from the host lexer contract.
