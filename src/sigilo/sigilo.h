@@ -1,8 +1,8 @@
 /*
  * CCT — Clavicula Turing
- * Sigillum Generatio v2.1 (FASE 6A)
+ * Sigilo Generation Definitions
  *
- * Structural-first network sigil generation from AST.
+ * FASE 12H: Structural maturity milestone
  *
  * Copyright (c) Erick Andrade Busato. Todos os direitos reservados.
  */

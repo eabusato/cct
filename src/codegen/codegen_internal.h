@@ -1,9 +1,8 @@
 /*
  * CCT — Clavicula Turing
- * Codegen Internal Contracts (FASE 6D)
+ * Code Generator Internal Definitions
  *
- * Internal-only helpers shared across codegen modules.
- * Public API remains in `codegen.h`.
+ * FASE 12H: Structural maturity milestone
  *
  * Copyright (c) Erick Andrade Busato. Todos os direitos reservados.
  */

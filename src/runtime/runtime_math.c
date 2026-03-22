@@ -1,8 +1,8 @@
 /*
  * CCT — Clavicula Turing
- * Runtime Math Library
+ * Math Runtime Support Implementation
  *
- * FASE 13A: Advanced math functions backed by C <math.h>
+ * FASE 13A: Math runtime support
  *
  * Copyright (c) Erick Andrade Busato. Todos os direitos reservados.
  */

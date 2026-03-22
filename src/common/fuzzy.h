@@ -1,8 +1,8 @@
 /*
  * CCT — Clavicula Turing
- * Fuzzy Matching Helpers
+ * Fuzzy Matching Helpers Definitions
  *
- * FASE 12A: typo suggestions for diagnostics.
+ * FASE 12H: Structural maturity milestone
  *
  * Copyright (c) Erick Andrade Busato. Todos os direitos reservados.
  */

@@ -1,11 +1,8 @@
 /*
  * CCT — Clavicula Turing
- * Keyword Table
+ * Lexer Keywords Definitions
  *
- * FASE 1: Keyword lookup table
- *
- * This file contains the mapping of keyword strings to token types.
- * Keywords are case-sensitive and derived from Latin.
+ * FASE 12H: Structural maturity milestone
  *
  * Copyright (c) Erick Andrade Busato. Todos os direitos reservados.
  */

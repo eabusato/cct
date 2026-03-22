@@ -1,8 +1,9 @@
+-- CCT — Clavicula Turing
+-- Bootstrap Lexer Module: lexer_state
+--
+-- FASE 21: Bootstrap lexer implementation
+--
 -- Copyright (c) Erick Andrade Busato. Todos os direitos reservados.
-
--- CCT - Clavicula Turing
--- Bootstrap Lexer - Mutable scanning state
--- FASE 21C1/21E4: lexer state and documentation
 
 INCIPIT grimoire "lexer_state"
 

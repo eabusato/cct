@@ -1,8 +1,9 @@
 /*
  * CCT — Clavicula Turing
- * Recursive Descent Parser
+ * Parser Implementation
  *
- * FASE 2B: Hardened syntax analysis and AST construction
+ * FASE 12H: Structural maturity milestone
+ *
  * Copyright (c) Erick Andrade Busato. Todos os direitos reservados.
  */
 

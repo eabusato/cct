@@ -1,13 +1,8 @@
 /*
  * CCT — Clavicula Turing
- * Module Bundle Loader/Resolver (FASE 9A/9B/9C)
+ * Module System Implementation
  *
- * Deterministic ADVOCARE discovery with:
- * - relative-to-importer path resolution
- * - canonical-path deduplication
- * - cycle detection
- * - composed AST emission for semantic/sigilo/codegen pipeline
- * - ARCANUM visibility boundary (public-by-default top-level symbols)
+ * FASE 12H: Structural maturity milestone
  *
  * Copyright (c) Erick Andrade Busato. Todos os direitos reservados.
  */

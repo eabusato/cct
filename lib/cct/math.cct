@@ -1,3 +1,8 @@
+-- CCT — Clavicula Turing
+-- Standard Library Module: math
+--
+-- FASE 18: Canonical standard library expansion
+--
 -- Copyright (c) Erick Andrade Busato. Todos os direitos reservados.
 
 INCIPIT grimoire "math"

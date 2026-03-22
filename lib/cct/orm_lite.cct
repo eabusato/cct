@@ -1,3 +1,8 @@
+-- CCT — Clavicula Turing
+-- Standard Library Module: orm_lite
+--
+-- FASE 30: Operational self-hosted application libraries
+--
 -- Copyright (c) Erick Andrade Busato. Todos os direitos reservados.
 
 INCIPIT grimoire "orm_lite"

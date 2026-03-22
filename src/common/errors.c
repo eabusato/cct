@@ -1,8 +1,8 @@
 /*
  * CCT — Clavicula Turing
- * Error Handling System Implementation
+ * Error Handling Implementation
  *
- * FASE 0: Base error system implementation
+ * FASE 12H: Structural maturity milestone
  *
  * Copyright (c) Erick Andrade Busato. Todos os direitos reservados.
  */

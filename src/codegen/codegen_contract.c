@@ -1,8 +1,8 @@
 /*
  * CCT — Clavicula Turing
- * Codegen Internal Contracts (FASE 6D)
+ * Code Generator Contract Helpers Implementation
  *
- * Shared executable-kind compatibility helpers for codegen modules.
+ * FASE 12H: Structural maturity milestone
  *
  * Copyright (c) Erick Andrade Busato. Todos os direitos reservados.
  */

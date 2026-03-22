@@ -2,7 +2,7 @@
  * CCT — Clavicula Turing
  * Documentation Generator Implementation
  *
- * FASE 12G: API documentation generator for modules and symbols
+ * FASE 12H: Structural maturity milestone
  *
  * Copyright (c) Erick Andrade Busato. Todos os direitos reservados.
  */

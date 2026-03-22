@@ -1,10 +1,8 @@
 /*
  * CCT — Clavicula Turing
- * Codegen Runtime Bridge (FASE 8D)
+ * Code Generation Runtime Bridge
  *
- * Emits generated-C prelude/runtime helper integration and maps codegen kinds
- * to runtime helper calls. This keeps runtime-related textual emission out of
- * the main codegen orchestration path.
+ * FASE 12H: Structural maturity milestone
  *
  * Copyright (c) Erick Andrade Busato. Todos os direitos reservados.
  */

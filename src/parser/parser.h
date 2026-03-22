@@ -1,14 +1,8 @@
 /*
  * CCT — Clavicula Turing
- * Parser (Recursive Descent)
+ * Parser Definitions
  *
- * FASE 2: Complete syntax analysis implementation
- *
- * This module handles parsing of token streams into AST:
- * - Recursive descent parsing
- * - AST construction
- * - Syntax error reporting
- * - Error recovery
+ * FASE 12H: Structural maturity milestone
  *
  * Copyright (c) Erick Andrade Busato. Todos os direitos reservados.
  */

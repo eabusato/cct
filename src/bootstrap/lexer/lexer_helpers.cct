@@ -1,8 +1,9 @@
+-- CCT — Clavicula Turing
+-- Bootstrap Lexer Module: lexer_helpers
+--
+-- FASE 21: Bootstrap lexer implementation
+--
 -- Copyright (c) Erick Andrade Busato. Todos os direitos reservados.
-
--- CCT - Clavicula Turing
--- Bootstrap Lexer - Navigation, token creation, and literal scanners
--- FASE 21C2-21C7/21E4: helper contracts and ownership documentation
 
 INCIPIT grimoire "lexer_helpers"
 

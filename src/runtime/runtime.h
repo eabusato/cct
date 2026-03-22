@@ -1,10 +1,8 @@
 /*
  * CCT — Clavicula Turing
- * Runtime Support (FASE 6D)
+ * Runtime Helper Emission Definitions
  *
- * Minimal organized runtime layer used by the current C-hosted backend.
- * It emits helper functions into generated `.cgen.c` files so codegen can
- * stay simpler and more predictable.
+ * FASE 12H: Structural maturity milestone
  *
  * Copyright (c) Erick Andrade Busato. Todos os direitos reservados.
  */

@@ -1,14 +1,8 @@
 /*
  * CCT — Clavicula Turing
- * Abstract Syntax Tree Definitions
+ * AST Definitions
  *
- * FASE 2: Complete AST node definitions
- *
- * This module defines all AST node types for the CCT language.
- * The AST is organized in a hierarchical structure suitable for:
- * - Syntax analysis (FASE 2)
- * - Semantic analysis (FASE 3)
- * - Code generation (FASE 4)
+ * FASE 12H: Structural maturity milestone
  *
  * Copyright (c) Erick Andrade Busato. Todos os direitos reservados.
  */

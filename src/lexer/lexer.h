@@ -1,15 +1,8 @@
 /*
  * CCT — Clavicula Turing
- * Lexical Analyzer
+ * Lexical Analyzer Definitions
  *
- * FASE 1: Complete tokenization implementation
- *
- * This module handles tokenization of .cct source files:
- * - Keyword recognition (INCIPIT, EVOCA, VINCIRE, etc.)
- * - Number, string, identifier parsing
- * - Comment handling (-- style)
- * - Line/column tracking for error reporting
- * - Operator and punctuation recognition
+ * FASE 12H: Structural maturity milestone
  *
  * Copyright (c) Erick Andrade Busato. Todos os direitos reservados.
  */

@@ -1,8 +1,8 @@
 /*
  * CCT — Clavicula Turing
- * Semantic Analyzer
+ * Semantic Analyzer Definitions
  *
- * FASE 3: Semantic analysis and type checking
+ * FASE 12H: Structural maturity milestone
  *
  * Copyright (c) Erick Andrade Busato. Todos os direitos reservados.
  */

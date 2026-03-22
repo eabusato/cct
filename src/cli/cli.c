@@ -2,7 +2,7 @@
  * CCT — Clavicula Turing
  * Command Line Interface Implementation
  *
- * FASE 7A: CLI integration for lexer/parser/semantic/codegen/sigilo commands
+ * FASE 12H: Structural maturity milestone
  *
  * Copyright (c) Erick Andrade Busato. Todos os direitos reservados.
  */

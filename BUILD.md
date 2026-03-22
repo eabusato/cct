@@ -114,6 +114,12 @@ sudo make uninstall
 
 CCT can be built on Windows using WSL2 (recommended) or MSYS2/MinGW.
 
+Important status note:
+- Windows is not yet a fully validated first-class platform for CCT.
+- Multiple Windows-specific problems remain unresolved across the compiler, runtime, shell/process integration, packaging flow, and sections of the test suite.
+- Some commands may work, some may work only in specific terminal/toolchain combinations, and some may fail entirely.
+- If you need a reliable environment, use Linux or macOS. On Windows, WSL2 is the least risky option.
+
 ### Option 1: WSL2 (Recommended)
 
 **Best for:** Development and testing on Windows.
@@ -269,6 +275,11 @@ invoking `cct`:
 set CC=C:\msys64\ucrt64\bin\gcc.exe
 ```
 Or add `C:\msys64\ucrt64\bin` to the system `PATH` permanently.
+
+### Windows: build succeeds but compilation or tests still fail
+This is a known limitation of the current project state.
+
+Native Windows support is incomplete, and parity with Linux/macOS is not guaranteed. If you hit inconsistent behavior in process execution, shell integration, file/path semantics, packaging, or network-backed tests, move the workflow to WSL2 or a Unix-like host before treating it as a language/runtime bug.
 
 ### All Platforms: "Permission denied"
 Make the binary executable: `chmod +x cct` (Unix) or check file permissions (Windows)

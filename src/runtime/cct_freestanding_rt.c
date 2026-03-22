@@ -1,9 +1,11 @@
 /*
- * cct_freestanding_rt.c — CCT Freestanding Runtime Shim
- * AVISO: nenhum header de libc deve ser incluído aqui.
- 
+ * CCT — Clavicula Turing
+ * Freestanding Runtime Shim Implementation
+ *
+ * FASE 16B.1: Freestanding runtime shim
+ *
  * Copyright (c) Erick Andrade Busato. Todos os direitos reservados.
-*/
+ */
 
 #include "cct_freestanding_rt.h"
 

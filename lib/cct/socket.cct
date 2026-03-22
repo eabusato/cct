@@ -1,3 +1,8 @@
+-- CCT — Clavicula Turing
+-- Standard Library Module: socket
+--
+-- FASE 20: Application-library and networking stack
+--
 -- Copyright (c) Erick Andrade Busato. Todos os direitos reservados.
 
 INCIPIT grimoire "socket"

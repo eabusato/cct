@@ -1,9 +1,11 @@
 /*
- * cct_freestanding_rt.h — CCT Freestanding Runtime Shim (sem libc)
- * Gerado/mantido pelo pipeline CCT.
- 
+ * CCT — Clavicula Turing
+ * Freestanding Runtime Shim Definitions
+ *
+ * FASE 16B.1: Freestanding runtime shim
+ *
  * Copyright (c) Erick Andrade Busato. Todos os direitos reservados.
-*/
+ */
 
 #ifndef CCT_FREESTANDING_RT_H
 #define CCT_FREESTANDING_RT_H

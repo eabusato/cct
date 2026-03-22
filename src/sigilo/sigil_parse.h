@@ -1,8 +1,8 @@
 /*
  * CCT — Clavicula Turing
- * Sigil Metadata Parser (FASE 13A.1)
+ * Sigilo Parser Definitions
  *
- * Canonical parser for `.sigil` artifacts (local/system).
+ * FASE 14A: Sigilo inspection, validation, and diff tooling
  *
  * Copyright (c) Erick Andrade Busato. Todos os direitos reservados.
  */

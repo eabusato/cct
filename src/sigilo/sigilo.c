@@ -1,9 +1,8 @@
 /*
  * CCT — Clavicula Turing
- * Sigillum Generatio v2.1 (FASE 6A)
+ * Sigilo Generation Implementation
  *
- * Structural-first deterministic network sigil generation.
- * The AST defines the anatomy; a secondary semantic hash only modulates details.
+ * FASE 12H: Structural maturity milestone
  *
  * Copyright (c) Erick Andrade Busato. Todos os direitos reservados.
  */

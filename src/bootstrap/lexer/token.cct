@@ -1,8 +1,9 @@
+-- CCT — Clavicula Turing
+-- Bootstrap Lexer Module: token
+--
+-- FASE 21B2: Bootstrap token model integration
+--
 -- Copyright (c) Erick Andrade Busato. Todos os direitos reservados.
-
--- CCT - Clavicula Turing
--- Bootstrap Lexer - Token payload and ownership contract
--- FASE 21B2/21E4: token model and ownership documentation
 
 INCIPIT grimoire "token"
 

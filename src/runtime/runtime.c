@@ -1,8 +1,8 @@
 /*
  * CCT — Clavicula Turing
- * Runtime Support (FASE 8D)
+ * Runtime Helper Emission Implementation
  *
- * Minimal helper emission for the C-hosted backend.
+ * FASE 12H: Structural maturity milestone
  *
  * Copyright (c) Erick Andrade Busato. Todos os direitos reservados.
  */

@@ -1,8 +1,8 @@
 /*
  * CCT — Clavicula Turing
- * Module Bundle Loader/Resolver (FASE 9A/9B/9C)
+ * Module System Definitions
  *
- * Deterministic ADVOCARE discovery for single-entry multi-file composition.
+ * FASE 12H: Structural maturity milestone
  *
  * Copyright (c) Erick Andrade Busato. Todos os direitos reservados.
  */

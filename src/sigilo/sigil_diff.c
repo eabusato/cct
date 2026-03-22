@@ -1,8 +1,8 @@
 /*
  * CCT — Clavicula Turing
- * Sigil Metadata Diff Engine (FASE 13A.2)
+ * Sigilo Diff Implementation
  *
- * Structural/semantic comparison between parsed `.sigil` documents.
+ * FASE 14A: Sigilo inspection, validation, and diff tooling
  *
  * Copyright (c) Erick Andrade Busato. Todos os direitos reservados.
  */

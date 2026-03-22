@@ -1,8 +1,8 @@
 /*
  * CCT — Clavicula Turing
- * Common Types and Definitions
+ * Common Type Definitions
  *
- * FASE 0: Types base definitions
+ * FASE 12H: Structural maturity milestone
  *
  * Copyright (c) Erick Andrade Busato. Todos os direitos reservados.
  */

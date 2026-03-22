@@ -1,8 +1,8 @@
 /*
  * CCT — Clavicula Turing
- * Linter
+ * Linter Definitions
  *
- * FASE 12E.2: pragmatic static-quality checks.
+ * FASE 12H: Structural maturity milestone
  *
  * Copyright (c) Erick Andrade Busato. Todos os direitos reservados.
  */

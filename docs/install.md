@@ -10,6 +10,12 @@ This guide defines the supported installation and validation paths for the curre
 - C compiler (`gcc` or `clang`)
 - `make`
 
+Platform note:
+- Linux and macOS are the supported validation targets for the current toolchain.
+- Native Windows usage is not fully addressed and should be treated as experimental.
+- Known Windows issues remain in shell/process behavior, path semantics, packaging, and some runtime-backed workflows.
+- If you need a stable installation path, use Linux, macOS, or WSL2 rather than native Windows.
+
 ## 1. Build
 
 ```bash
@@ -108,6 +114,10 @@ Resolver order:
   - ensure positional file ends with `.cct`
 - packaging smoke fails:
   - rebuild with `make` then `make dist`
+- Windows-specific failures:
+  - do not assume parity with Linux/macOS
+  - prefer WSL2 first
+  - if native Windows is required, expect unsupported gaps and partial failures in some workflows
 
 ## 9. Bootstrap and Self-Host Validation Targets
 

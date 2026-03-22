@@ -1,3 +1,8 @@
+-- CCT — Clavicula Turing
+-- Bootstrap Parser Module: parser_state
+--
+-- FASE 22/23: Bootstrap AST and parser implementation
+--
 -- Copyright (c) Erick Andrade Busato. Todos os direitos reservados.
 
 INCIPIT grimoire "parser_state"

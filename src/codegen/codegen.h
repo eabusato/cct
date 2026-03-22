@@ -1,9 +1,8 @@
 /*
  * CCT — Clavicula Turing
- * Code Generator (FASE 4A..6D)
+ * Code Generator Definitions
  *
- * First executable subset backend implemented as C textual generation
- * compiled by the host C compiler (cc/gcc/clang).
+ * FASE 12H: Structural maturity milestone
  *
  * Copyright (c) Erick Andrade Busato. Todos os direitos reservados.
  */

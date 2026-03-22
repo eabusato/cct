@@ -1,8 +1,8 @@
 /*
  * CCT — Clavicula Turing
- * Project Runner Header
+ * Project Runner Definitions
  *
- * FASE 12C: Build, test, bench, and clean workflow execution
+ * FASE 12H: Structural maturity milestone
  *
  * Copyright (c) Erick Andrade Busato. Todos os direitos reservados.
  */

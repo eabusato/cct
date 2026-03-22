@@ -1,8 +1,8 @@
 /*
  * CCT — Clavicula Turing
- * I/O Runtime Header
+ * I/O Runtime Definitions
  *
- * FASE 10A: Standard I/O runtime implementation
+ * FASE 10A: Host runtime support modules
  *
  * Copyright (c) Erick Andrade Busato. Todos os direitos reservados.
  */

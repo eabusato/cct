@@ -2,7 +2,7 @@
  * CCT — Clavicula Turing
  * Lexical Analyzer Implementation
  *
- * FASE 1: Complete tokenization implementation
+ * FASE 12H: Structural maturity milestone
  *
  * Copyright (c) Erick Andrade Busato. Todos os direitos reservados.
  */

@@ -1,8 +1,9 @@
+-- CCT — Clavicula Turing
+-- Bootstrap Lexer CLI
+--
+-- FASE 21: Bootstrap lexer implementation
+--
 -- Copyright (c) Erick Andrade Busato. Todos os direitos reservados.
-
--- CCT - Clavicula Turing
--- Bootstrap Lexer - Standalone CLI wrapper
--- FASE 21E1/21E4: full-suite validation entrypoint and documentation
 
 INCIPIT grimoire "main_lexer"
 

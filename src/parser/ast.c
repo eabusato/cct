@@ -2,7 +2,8 @@
  * CCT — Clavicula Turing
  * AST Implementation
  *
- * FASE 2: Complete AST node construction, memory management, and printing
+ * FASE 12H: Structural maturity milestone
+ *
  * Copyright (c) Erick Andrade Busato. Todos os direitos reservados.
  */
 

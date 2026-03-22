@@ -2,7 +2,7 @@
  * CCT — Clavicula Turing
  * Diagnostic Helpers Implementation
  *
- * FASE 12A: unified diagnostics with location snippets and suggestions.
+ * FASE 12H: Structural maturity milestone
  *
  * Copyright (c) Erick Andrade Busato. Todos os direitos reservados.
  */

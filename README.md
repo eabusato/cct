@@ -98,6 +98,13 @@ Requirements:
 - C compiler (`gcc` or `clang`)
 - `make`
 
+Platform support note:
+- Linux and macOS are the primary validated platforms.
+- Windows support is currently experimental and incomplete.
+- Several Windows-specific issues remain unresolved across process execution, shell integration, path handling, packaging, and parts of the runtime/test stack.
+- The compiler and the language may therefore fail partially or completely on native Windows depending on the workflow.
+- For serious development, validation, and release work, prefer Linux, macOS, or WSL2.
+
 Build:
 
 ```bash

@@ -1,8 +1,8 @@
 /*
  * CCT — Clavicula Turing
- * Formatter
+ * Formatter Definitions
  *
- * FASE 12E.1: standalone source formatter.
+ * FASE 12H: Structural maturity milestone
  *
  * Copyright (c) Erick Andrade Busato. Todos os direitos reservados.
  */

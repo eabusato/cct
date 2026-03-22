@@ -1,8 +1,8 @@
 /*
  * CCT — Clavicula Turing
- * Filesystem Runtime Header
+ * Filesystem Runtime Definitions
  *
- * FASE 10A: File I/O runtime implementation
+ * FASE 10A: Host runtime support modules
  *
  * Copyright (c) Erick Andrade Busato. Todos os direitos reservados.
  */

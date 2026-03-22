@@ -1,8 +1,9 @@
+-- CCT — Clavicula Turing
+-- Bootstrap Lexer Module: lexer
+--
+-- FASE 21: Bootstrap lexer implementation
+--
 -- Copyright (c) Erick Andrade Busato. Todos os direitos reservados.
-
--- CCT - Clavicula Turing
--- Bootstrap Lexer - Main token dispatch loop
--- FASE 21C8/21E4: main lexer flow and documentation
 
 INCIPIT grimoire "lexer"
 

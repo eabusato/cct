@@ -1,24 +1,8 @@
 /*
  * CCT — Clavicula Turing
- * Command Line Interface
+ * Command Line Interface Definitions
  *
- * FASE 7A: CLI argument parsing for compiler + sigilo generation UX
- *
- * This module handles command-line argument parsing and provides
- * a clean interface for the main program.
- *
- * Current commands:
- * - --help    : Display usage information
- * - --version : Display version information
- * - --tokens  : Display token stream (FASE 1)
- * - --ast     : Display abstract syntax tree (FASE 2B)
- * - --ast-composite : Display composed AST for module closure (FASE 9E)
- * - --check   : Syntax + semantic check (FASE 3)
- *
- * Current commands:
- * - --sigilo-only : Generate sigil artifacts only (FASE 5/5B/6A)
- * - --sigilo-style / --sigilo-out / --sigilo-no-meta / --sigilo-no-svg
- * - <file.cct>    : Compile source file + generate sigil artifacts
+ * FASE 12H: Structural maturity milestone
  *
  * Copyright (c) Erick Andrade Busato. Todos os direitos reservados.
  */

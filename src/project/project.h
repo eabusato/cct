@@ -1,8 +1,8 @@
 /*
  * CCT — Clavicula Turing
- * Project Management Header
+ * Project Workflow Definitions
  *
- * FASE 12C: Project-level build, test, and workflow orchestration
+ * FASE 12H: Structural maturity milestone
  *
  * Copyright (c) Erick Andrade Busato. Todos os direitos reservados.
  */

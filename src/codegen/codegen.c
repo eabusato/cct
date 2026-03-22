@@ -1,13 +1,8 @@
 /*
  * CCT — Clavicula Turing
- * Code Generator (FASE 4A..6D)
+ * Code Generator Implementation
  *
- * Backend strategy:
- * - Generate C textual code for an executable subset
- * - Invoke host compiler (cc) to produce a native executable
- *
- * This remains the official C-hosted backend through FASE 6D.
- * Future phases may add/replace backends behind the same public entrypoints.
+ * FASE 12H: Structural maturity milestone
  *
  * Copyright (c) Erick Andrade Busato. Todos os direitos reservados.
  */

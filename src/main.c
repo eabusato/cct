@@ -1,21 +1,8 @@
 /*
  * CCT — Clavicula Turing
- * Main Entry Point
+ * Compiler Entry Point
  *
- * FASE 9E: C-hosted backend + modular subset final (ADVOCARE + visibility + dual sigilo + AST composed view)
- *
- * This is the entry point for the CCT compiler.
- * Currently implements:
- * - FASE 0: Foundation - CLI and error handling
- * - FASE 1: Lexical analysis - tokenization
- * - FASE 2: Syntax analysis and AST construction
- * - FASE 3: Semantic analysis (--check)
- * - FASE 4A/4B/4C: Executable code generation subset (compile .cct)
- * - FASE 5/5B/6A: Sigil generation (.svg + .sigil), styles, --sigilo-only
- * - FASE 9A/9B/9C/9D/9E: ADVOCARE discovery + resolution/visibility + dual-level modular sigilo + composed AST CLI
- *
- * Future phases will add:
- * - FASE 6+: Advanced features, optimization, bootstrap
+ * FASE 12H: Structural maturity milestone
  *
  * Copyright (c) Erick Andrade Busato. Todos os direitos reservados.
  */

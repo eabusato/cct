@@ -1,8 +1,8 @@
 /*
  * CCT — Clavicula Turing
- * FLUXUS Runtime Implementation
+ * Fluxus Runtime Implementation
  *
- * FASE 10A: Dynamic vector runtime implementation
+ * FASE 10A: Host runtime support modules
  *
  * Copyright (c) Erick Andrade Busato. Todos os direitos reservados.
  */

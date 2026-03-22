@@ -1,3 +1,8 @@
+-- CCT — Clavicula Turing
+-- Standard Library Module: collection_ops
+--
+-- FASE 12D.2: Functional collection combinators
+--
 -- Copyright (c) Erick Andrade Busato. Todos os direitos reservados.
 
 INCIPIT grimoire "collection_ops"

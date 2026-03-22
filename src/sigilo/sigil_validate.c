@@ -1,8 +1,8 @@
 /*
  * CCT — Clavicula Turing
- * Sigil Validation Engine (FASE 13C.4)
+ * Sigilo Validator Implementation
  *
- * Strict/tolerant validation rules for parsed `.sigil` documents.
+ * FASE 14A: Sigilo inspection, validation, and diff tooling
  *
  * Copyright (c) Erick Andrade Busato. Todos os direitos reservados.
  */

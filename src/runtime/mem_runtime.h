@@ -1,8 +1,8 @@
 /*
  * CCT — Clavicula Turing
- * Memory Runtime Header
+ * Memory Runtime Definitions
  *
- * FASE 10A: Memory allocation runtime implementation
+ * FASE 10A: Host runtime support modules
  *
  * Copyright (c) Erick Andrade Busato. Todos os direitos reservados.
  */
