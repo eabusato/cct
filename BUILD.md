@@ -31,7 +31,7 @@ sudo pacman -S base-devel
 
 ```bash
 # Clone the repository
-git clone https://github.com/your-repo/cct.git
+git clone https://github.com/eabusato/cct.git
 cd cct
 
 # Build the compiler
@@ -80,7 +80,7 @@ xcode-select --install
 
 ```bash
 # Clone the repository
-git clone https://github.com/your-repo/cct.git
+git clone https://github.com/eabusato/cct.git
 cd cct
 
 # Build the compiler
@@ -132,7 +132,7 @@ CCT can be built on Windows using WSL2 (recommended) or MSYS2/MinGW.
    sudo apt update
    sudo apt install build-essential
 
-   git clone https://github.com/your-repo/cct.git
+   git clone https://github.com/eabusato/cct.git
    cd cct
    make release
    ```
@@ -312,5 +312,5 @@ For creating multi-platform releases, build on each platform separately:
 ## Questions?
 
 - Documentation: `docs/`
-- Issues: https://github.com/your-repo/cct/issues
+- Issues: https://github.com/eabusato/cct/issues
 - Release Notes: `docs/release/FASE_12_RELEASE_NOTES.md`
