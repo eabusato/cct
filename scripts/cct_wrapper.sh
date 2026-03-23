@@ -173,19 +173,6 @@ print_compile_artifacts() {
   input="$1"
   output="$2"
   c_file="$3"
-  base_input="${input%.cct}"
-  if [ -f "${base_input}.svg" ]; then
-    echo "Sigil SVG: ${base_input}.svg"
-  fi
-  if [ -f "${base_input}.sigil" ]; then
-    echo "Sigil Meta: ${base_input}.sigil"
-  fi
-  if [ -f "${base_input}.system.svg" ]; then
-    echo "Sigil SVG: ${base_input}.system.svg"
-  fi
-  if [ -f "${base_input}.system.sigil" ]; then
-    echo "Sigil Meta: ${base_input}.system.sigil"
-  fi
   echo "Compiled: $input -> $output"
   echo "Intermediate C: $c_file"
 }
@@ -231,6 +218,10 @@ compile_via_selfhost() {
     echo "error: C compilation failed" >&2
     exit 1
   }
+  "$HOST_BIN" --sigilo-only "$input" || {
+    echo "error: sigilo generation failed" >&2
+    exit 1
+  }
   print_compile_artifacts "$input" "$output" "$c_file"
 }
 
@@ -260,6 +251,13 @@ should_dispatch_compile_to_host() {
 
 dispatch_host() {
   exec "$HOST_BIN" "$@"
+}
+
+dispatch_host_preserving_entrypoint() {
+  entrypoint="$1"
+  shift
+  exec perl -e 'my ($bin, $argv0, @args) = @ARGV; exec {$bin} $argv0, @args or die "exec failed: $!";' \
+    "$HOST_BIN" "$entrypoint" "$@"
 }
 
 print_selfhost_usage() {
@@ -322,7 +320,7 @@ dispatch_selfhost() {
       ;;
     build|run|test|bench|clean|package)
       ensure_make_target bootstrap-selfhost-ready
-      run_project_command "$@"
+      dispatch_host_preserving_entrypoint "$ROOT_DIR/cct-selfhost" "$@"
       ;;
     --check)
       if [ "$#" -ne 2 ]; then

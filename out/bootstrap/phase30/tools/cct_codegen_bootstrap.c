@@ -912,8 +912,8 @@ static char cct_boot_str_846[] = "memset(";
 static char cct_boot_str_847[] = "int main(int argc, char **argv)";
 static char cct_boot_str_848[] = "int main(void)";
 static char cct_boot_str_849[] = "cct_rt_args_init(argc, argv);";
-static char cct_boot_str_850[] = "();";
-static char cct_boot_str_851[] = "return 0;";
+static char cct_boot_str_850[] = "return 0;";
+static char cct_boot_str_851[] = "();";
 static char cct_boot_str_852[] = "return (int)";
 static char cct_boot_str_853[] = "Uso: cct_codegen_bootstrap <arquivo.cct>";
 static char cct_boot_str_854[] = "codegen error: ";
@@ -12896,11 +12896,6 @@ void cct_boot_rit_codegen_runtime_detect_body_dependencies_620(cct_boot_sig_Code
 void cct_boot_rit_codegen_runtime_emit_host_main_621(cct_boot_sig_CodegenContext* ctx, cct_boot_sig_AstProgram* program)
 {
   long long entry_idx = cct_boot_rit_codegen_runtime_find_entry_main_index_618(program);
-  if (entry_idx < 0)
-  {
-    return;
-  }
-  cct_boot_sig_AstNode* entry = cct_boot_rit_ast_node_list_get_210((*program).declarations, entry_idx);
   if ((*ctx).needs_args_runtime)
   {
     cct_boot_rit_codegen_emit_line_499(ctx, cct_boot_str_847);
@@ -12914,17 +12909,24 @@ void cct_boot_rit_codegen_runtime_emit_host_main_621(cct_boot_sig_CodegenContext
   {
     cct_boot_rit_codegen_emit_line_499(ctx, cct_boot_str_849);
   }
+  if (entry_idx < 0)
+  {
+    cct_boot_rit_codegen_emit_line_499(ctx, cct_boot_str_850);
+    cct_boot_rit_codegen_emit_block_close_504(ctx);
+    return;
+  }
+  cct_boot_sig_AstNode* entry = cct_boot_rit_ast_node_list_get_210((*program).declarations, entry_idx);
   if ((*entry).has_return_type && (cct_boot_rit_compare_38((*(*entry).return_type).type_name, cct_boot_str_60) == 0))
   {
     cct_boot_rit_codegen_emit_498(ctx, cct_boot_rit_codegen_rituale_c_name_509(ctx, cct_boot_str_839));
-    cct_boot_rit_codegen_emit_line_499(ctx, cct_boot_str_850);
     cct_boot_rit_codegen_emit_line_499(ctx, cct_boot_str_851);
+    cct_boot_rit_codegen_emit_line_499(ctx, cct_boot_str_850);
   }
   else
   {
     cct_boot_rit_codegen_emit_498(ctx, cct_boot_str_852);
     cct_boot_rit_codegen_emit_498(ctx, cct_boot_rit_codegen_rituale_c_name_509(ctx, cct_boot_str_839));
-    cct_boot_rit_codegen_emit_line_499(ctx, cct_boot_str_850);
+    cct_boot_rit_codegen_emit_line_499(ctx, cct_boot_str_851);
   }
   cct_boot_rit_codegen_emit_block_close_504(ctx);
   return;

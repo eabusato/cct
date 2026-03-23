@@ -612,10 +612,6 @@ EXPLICIT RITUALE
 
 RITUALE codegen_runtime_emit_host_main(SPECULUM CodegenContext ctx, SPECULUM AstProgram program) REDDE NIHIL
   EVOCA REX entry_idx AD CONIURA codegen_runtime_find_entry_main_index(program)
-  SI entry_idx < 0
-    REDDE
-  FIN SI
-  EVOCA SPECULUM AstNode entry AD CONIURA ast_node_list_get((*program).declarations, entry_idx)
 
   SI (*ctx).needs_args_runtime
     CONIURA codegen_emit_line(ctx, "int main(int argc, char **argv)")
@@ -626,6 +622,12 @@ RITUALE codegen_runtime_emit_host_main(SPECULUM CodegenContext ctx, SPECULUM Ast
   SI (*ctx).needs_args_runtime
     CONIURA codegen_emit_line(ctx, "cct_rt_args_init(argc, argv);")
   FIN SI
+  SI entry_idx < 0
+    CONIURA codegen_emit_line(ctx, "return 0;")
+    CONIURA codegen_emit_block_close(ctx)
+    REDDE
+  FIN SI
+  EVOCA SPECULUM AstNode entry AD CONIURA ast_node_list_get((*program).declarations, entry_idx)
   SI (*entry).has_return_type ET CONIURA compare((*(*entry).return_type).type_name, "NIHIL") == 0
     CONIURA codegen_emit(ctx, CONIURA codegen_rituale_c_name(ctx, "main"))
     CONIURA codegen_emit_line(ctx, "();")
