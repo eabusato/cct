@@ -2781,6 +2781,16 @@ bool cct_runtime_emit_c_helpers(FILE *out, const cct_runtime_codegen_config_t *c
         fputs("    return f;\n", out);
         fputs("}\n\n", out);
 
+        fputs("static char *cct_rt_fs_make_atomic_tmp_path(const char *path) {\n", out);
+        fputs("    static unsigned long counter = 0;\n", out);
+        fputs("    const char *p = path ? path : \"\";\n", out);
+        fputs("    size_t len = strlen(p);\n", out);
+        fputs("    char *tmp = (char*)malloc(len + 64U);\n", out);
+        fputs("    if (!tmp) cct_rt_fail(\"fs write_all tmp allocation failed\");\n", out);
+        fputs("    snprintf(tmp, len + 64U, \"%s.tmp.%ld.%lu\", p, (long)getpid(), ++counter);\n", out);
+        fputs("    return tmp;\n", out);
+        fputs("}\n\n", out);
+
         fputs("static char *cct_rt_fs_read_all(const char *path) {\n", out);
         fputs("    FILE *f = cct_rt_fs_open_or_fail(path, \"rb\", \"fs read_all open failed\");\n", out);
         fputs("    if (fseek(f, 0, SEEK_END) != 0) {\n", out);
@@ -2813,14 +2823,42 @@ bool cct_runtime_emit_c_helpers(FILE *out, const cct_runtime_codegen_config_t *c
         fputs("}\n\n", out);
 
         fputs("static void cct_rt_fs_write_all(const char *path, const char *content) {\n", out);
-        fputs("    FILE *f = cct_rt_fs_open_or_fail(path, \"wb\", \"fs write_all open failed\");\n", out);
+        fputs("    const char *dst = path ? path : \"\";\n", out);
+        fputs("    char *tmp_path = cct_rt_fs_make_atomic_tmp_path(dst);\n", out);
+        fputs("    FILE *f = cct_rt_fs_open_or_fail(tmp_path, \"wb\", \"fs write_all open failed\");\n", out);
         fputs("    const char *src = content ? content : \"\";\n", out);
         fputs("    size_t len = strlen(src);\n", out);
         fputs("    if (len > 0 && fwrite(src, 1, len, f) != len) {\n", out);
         fputs("        fclose(f);\n", out);
+        fputs("        unlink(tmp_path);\n", out);
+        fputs("        free(tmp_path);\n", out);
         fputs("        cct_rt_fail(\"fs write_all write failed\");\n", out);
         fputs("    }\n", out);
-        fputs("    fclose(f);\n", out);
+        fputs("    if (fflush(f) != 0) {\n", out);
+        fputs("        fclose(f);\n", out);
+        fputs("        unlink(tmp_path);\n", out);
+        fputs("        free(tmp_path);\n", out);
+        fputs("        cct_rt_fail(\"fs write_all flush failed\");\n", out);
+        fputs("    }\n", out);
+        fputs("#ifndef _WIN32\n", out);
+        fputs("    if (fsync(fileno(f)) != 0) {\n", out);
+        fputs("        fclose(f);\n", out);
+        fputs("        unlink(tmp_path);\n", out);
+        fputs("        free(tmp_path);\n", out);
+        fputs("        cct_rt_fail(\"fs write_all sync failed\");\n", out);
+        fputs("    }\n", out);
+        fputs("#endif\n", out);
+        fputs("    if (fclose(f) != 0) {\n", out);
+        fputs("        unlink(tmp_path);\n", out);
+        fputs("        free(tmp_path);\n", out);
+        fputs("        cct_rt_fail(\"fs write_all close failed\");\n", out);
+        fputs("    }\n", out);
+        fputs("    if (rename(tmp_path, dst) != 0) {\n", out);
+        fputs("        unlink(tmp_path);\n", out);
+        fputs("        free(tmp_path);\n", out);
+        fputs("        cct_rt_fail(\"fs write_all rename failed\");\n", out);
+        fputs("    }\n", out);
+        fputs("    free(tmp_path);\n", out);
         fputs("}\n\n", out);
 
         fputs("static void cct_rt_fs_append_all(const char *path, const char *content) {\n", out);

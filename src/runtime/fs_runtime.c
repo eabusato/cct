@@ -49,6 +49,16 @@ static int cct_rt_fs_is_dir_local(const char *path) {
     return S_ISDIR(st.st_mode) ? 1 : 0;
 }
 
+static char* cct_rt_fs_make_atomic_tmp_path(const char *path) {
+    static unsigned long counter = 0;
+    const char *p = path ? path : "";
+    size_t len = strlen(p);
+    char *tmp = (char*)malloc(len + 64U);
+    if (!tmp) cct_rt_fs_abort("fs write_all tmp allocation failed");
+    snprintf(tmp, len + 64U, "%s.tmp.%ld.%lu", p, (long)getpid(), ++counter);
+    return tmp;
+}
+
 char* cct_rt_fs_read_all(const char *path) {
     FILE *f = cct_rt_fs_open_or_fail(path, "rb", "fs read_all open failed");
     if (fseek(f, 0, SEEK_END) != 0) {
@@ -84,14 +94,42 @@ char* cct_rt_fs_read_all(const char *path) {
 }
 
 void cct_rt_fs_write_all(const char *path, const char *content) {
-    FILE *f = cct_rt_fs_open_or_fail(path, "wb", "fs write_all open failed");
+    const char *dst = path ? path : "";
+    char *tmp_path = cct_rt_fs_make_atomic_tmp_path(dst);
+    FILE *f = cct_rt_fs_open_or_fail(tmp_path, "wb", "fs write_all open failed");
     const char *src = content ? content : "";
     size_t len = strlen(src);
     if (len > 0 && fwrite(src, 1, len, f) != len) {
         fclose(f);
+        unlink(tmp_path);
+        free(tmp_path);
         cct_rt_fs_abort("fs write_all write failed");
     }
-    fclose(f);
+    if (fflush(f) != 0) {
+        fclose(f);
+        unlink(tmp_path);
+        free(tmp_path);
+        cct_rt_fs_abort("fs write_all flush failed");
+    }
+#ifndef _WIN32
+    if (fsync(fileno(f)) != 0) {
+        fclose(f);
+        unlink(tmp_path);
+        free(tmp_path);
+        cct_rt_fs_abort("fs write_all sync failed");
+    }
+#endif
+    if (fclose(f) != 0) {
+        unlink(tmp_path);
+        free(tmp_path);
+        cct_rt_fs_abort("fs write_all close failed");
+    }
+    if (rename(tmp_path, dst) != 0) {
+        unlink(tmp_path);
+        free(tmp_path);
+        cct_rt_fs_abort("fs write_all rename failed");
+    }
+    free(tmp_path);
 }
 
 void cct_rt_fs_append_all(const char *path, const char *content) {

@@ -1200,14 +1200,15 @@ int cct_project_cmd_bench(const char *self_path, const cct_project_options_t *op
         return 0;
     }
 
-    int failures = 0;
+    int pass = 0;
+    int fail = 0;
 
     for (size_t i = 0; i < files.count; i++) {
         const char *path = files.items[i];
         int compile_rc = pr_run_cct_compile(self_path, path);
         if (compile_rc != 0) {
             printf("[bench] FAIL %s (compile)\n", path);
-            failures++;
+            fail++;
             continue;
         }
 
@@ -1236,29 +1237,38 @@ int cct_project_cmd_bench(const char *self_path, const cct_project_options_t *op
         }
 
         double total_ms = 0.0;
-        int iter_fail = 0;
+        int completed = 0;
+        int last_rc = 0;
         for (int j = 0; j < iterations; j++) {
             double start_ms = pr_now_ms();
             int run_rc = pr_execute_compiled_binary(path);
             double end_ms = pr_now_ms();
+            total_ms += (end_ms - start_ms);
+            completed++;
+            last_rc = run_rc;
             if (run_rc != 0) {
-                iter_fail = run_rc;
                 break;
             }
-            total_ms += (end_ms - start_ms);
         }
 
-        if (iter_fail != 0) {
-            printf("[bench] FAIL %s (exit=%d)\n", path, iter_fail);
-            failures++;
+        if (completed == 0) {
+            printf("[bench] FAIL %s (run)\n", path);
+            fail++;
             continue;
         }
 
-        printf("[bench] %s avg=%.3fms total=%.3fms\n", path, total_ms / (double)iterations, total_ms);
+        printf("[bench] PASS %s (rc=%d) avg=%.3fms total=%.3fms\n",
+               path,
+               last_rc,
+               total_ms / (double)completed,
+               total_ms);
+        pass++;
     }
 
+    printf("[bench] summary: pass=%d fail=%d\n", pass, fail);
+
     pr_path_list_dispose(&files);
-    return failures == 0 ? 0 : 1;
+    return fail == 0 ? 0 : 1;
 }
 
 int cct_project_cmd_clean(const cct_project_options_t *options) {

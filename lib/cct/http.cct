@@ -648,7 +648,7 @@ RITUALE http_request(HttpRequest req) REDDE HttpResponse
 
   EVOCA HttpRequest outbound AD CONIURA http_request_prepare(req, host, port, path)
   EVOCA SPECULUM NIHIL sock AD CONIURA tcp_connect(host, port)
-  CONIURA sock_set_timeout_ms(sock, 2000)
+  CONIURA sock_set_timeout_ms(sock, 5000)
 
   EVOCA VERBUM raw_req AD CONIURA http_stringify_request(outbound)
   SI CONIURA sock_send(sock, raw_req) != CONIURA len(raw_req)
@@ -693,7 +693,7 @@ RITUALE http_server_accept(SPECULUM NIHIL srv_ptr) REDDE HttpRequest
     VINCIRE (*srv).has_client AD FALSUM
   FIN SI
   VINCIRE (*srv).current_client AD CONIURA tcp_accept((*srv).listener)
-  CONIURA sock_set_timeout_ms((*srv).current_client, 2000)
+  CONIURA sock_set_timeout_ms((*srv).current_client, 5000)
   VINCIRE (*srv).has_client AD VERUM
   REDDE CONIURA http_parse_request(CONIURA http_read_request_raw((*srv).current_client))
 EXPLICIT RITUALE
