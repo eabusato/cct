@@ -157,14 +157,58 @@ RITUALE parse_forma_expression(SPECULUM ParserState parser) REDDE SPECULUM AstNo
           VINCIRE i AD expr_end + 1
         ALITER
           EVOCA VERBUM expr_text AD CONIURA substring(raw_text, expr_start, expr_end)
-          SI CONIURA contains(expr_text, ":")
-            CONIURA parser_error_at_previous(parser, "FORMA: especificador de formato ainda nao suportado no bootstrap")
-            DIMITTE expr_text
-            DIMITTE raw_text
-            CONIURA builder_free(literal_builder)
-            REDDE molde
+          EVOCA VERBUM parse_text AD expr_text
+          EVOCA VERBUM fmt_spec AD ""
+          EVOCA VERUM has_fmt_spec AD FALSUM
+          EVOCA REX colon_i AD 0
+          EVOCA REX colon_pos AD -1
+          EVOCA REX expr_text_n AD CONIURA len(expr_text)
+          DUM colon_i < expr_text_n
+            SI CONIURA char_at(expr_text, colon_i) == 58
+              VINCIRE colon_pos AD colon_i
+              VINCIRE colon_i AD expr_text_n
+            ALITER
+              VINCIRE colon_i AD colon_i + 1
+            FIN SI
+          FIN DUM
+          SI colon_pos >= 0
+            VINCIRE parse_text AD CONIURA substring(expr_text, 0, colon_pos)
+            VINCIRE fmt_spec AD CONIURA substring(expr_text, colon_pos + 1, expr_text_n)
+            VINCIRE has_fmt_spec AD VERUM
+            EVOCA REX spec_n AD CONIURA len(fmt_spec)
+            EVOCA REX spec_start AD 0
+            EVOCA REX spec_end AD spec_n
+            DUM spec_start < spec_n ET (CONIURA char_at(fmt_spec, spec_start) == 32 VEL CONIURA char_at(fmt_spec, spec_start) == 9 VEL CONIURA char_at(fmt_spec, spec_start) == 10 VEL CONIURA char_at(fmt_spec, spec_start) == 13)
+              VINCIRE spec_start AD spec_start + 1
+            FIN DUM
+            DUM spec_end > spec_start ET (CONIURA char_at(fmt_spec, spec_end - 1) == 32 VEL CONIURA char_at(fmt_spec, spec_end - 1) == 9 VEL CONIURA char_at(fmt_spec, spec_end - 1) == 10 VEL CONIURA char_at(fmt_spec, spec_end - 1) == 13)
+              VINCIRE spec_end AD spec_end - 1
+            FIN DUM
+            SI spec_end == spec_start
+              CONIURA parser_error_at_previous(parser, "MOLDE: especificador de formato vazio apos ':'")
+              DIMITTE expr_text
+              DIMITTE fmt_spec
+              SI colon_pos >= 0
+                DIMITTE parse_text
+              FIN SI
+              VINCIRE i AD expr_end + 1
+              RECEDE
+            FIN SI
+            EVOCA VERBUM compact_spec AD CONIURA substring(fmt_spec, spec_start, spec_end)
+            DIMITTE fmt_spec
+            VINCIRE fmt_spec AD compact_spec
           FIN SI
-          CONIURA ast_append_child(molde, CONIURA parser_parse_expression_source(expr_text, (*parser).filename))
+          EVOCA SPECULUM AstNode part_expr AD CONIURA parser_parse_expression_source(parse_text, (*parser).filename)
+          SI CONIURA compare(fmt_spec, "") != 0
+            CONIURA ast_node_set_fmt_spec(part_expr, fmt_spec)
+          FIN SI
+          SI has_fmt_spec
+            DIMITTE fmt_spec
+          FIN SI
+          SI colon_pos >= 0
+            DIMITTE parse_text
+          FIN SI
+          CONIURA ast_append_child(molde, part_expr)
           DIMITTE expr_text
           VINCIRE i AD expr_end + 1
         FIN SI
@@ -332,13 +376,24 @@ RITUALE parse_unary(SPECULUM ParserState parser) REDDE SPECULUM AstNode
   REDDE CONIURA parse_postfix(parser)
 EXPLICIT RITUALE
 
-RITUALE parse_multiplicative(SPECULUM ParserState parser) REDDE SPECULUM AstNode
+RITUALE parse_power(SPECULUM ParserState parser) REDDE SPECULUM AstNode
   EVOCA SPECULUM AstNode expr AD CONIURA parse_unary(parser)
+  SI CONIURA parser_match(parser, TK_STAR_STAR)
+    EVOCA TokenKind op AD (*parser).previous.kind
+    EVOCA REX line AD (*parser).previous.line
+    EVOCA REX column AD (*parser).previous.column
+    VINCIRE expr AD CONIURA ast_make_binary(op, expr, CONIURA parse_power(parser), line, column)
+  FIN SI
+  REDDE expr
+EXPLICIT RITUALE
+
+RITUALE parse_multiplicative(SPECULUM ParserState parser) REDDE SPECULUM AstNode
+  EVOCA SPECULUM AstNode expr AD CONIURA parse_power(parser)
   DUM CONIURA parser_match(parser, TK_STAR) VEL CONIURA parser_match(parser, TK_SLASH) VEL CONIURA parser_match(parser, TK_SLASH_SLASH) VEL CONIURA parser_match(parser, TK_PERCENT) VEL CONIURA parser_match(parser, TK_PERCENT_PERCENT)
     EVOCA TokenKind op AD (*parser).previous.kind
     EVOCA REX line AD (*parser).previous.line
     EVOCA REX column AD (*parser).previous.column
-    VINCIRE expr AD CONIURA ast_make_binary(op, expr, CONIURA parse_unary(parser), line, column)
+    VINCIRE expr AD CONIURA ast_make_binary(op, expr, CONIURA parse_power(parser), line, column)
   FIN DUM
   REDDE expr
 EXPLICIT RITUALE

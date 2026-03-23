@@ -1,7 +1,7 @@
 INCIPIT grimoire "codegen_gate_ordo_payload_mixed_27c_input"
 
 ORDO Result
-  Ok(code: REX, flag: VERUM)
+  Ok(REX code, VERUM flag)
   Err
 FIN ORDO
 

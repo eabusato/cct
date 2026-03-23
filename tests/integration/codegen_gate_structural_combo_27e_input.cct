@@ -6,8 +6,8 @@ SIGILLUM Pair
 FIN SIGILLUM
 
 ORDO Result
-  Ok(total: REX)
-  Err(code: REX)
+  Ok(REX total)
+  Err(REX code)
 FIN ORDO
 
 RITUALE build(REX a, REX b) REDDE Pair

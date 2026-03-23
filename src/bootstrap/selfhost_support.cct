@@ -18,6 +18,10 @@ ADVOCARE "cct/diagnostic.cct"
 ADVOCARE "cct/fmt.cct"
 ADVOCARE "cct/mem.cct"
 ADVOCARE "cct/fluxus.cct"
+ADVOCARE "cct/option.cct"
+ADVOCARE "cct/result.cct"
+ADVOCARE "cct/map.cct"
+ADVOCARE "cct/set.cct"
 
 RITUALE read_all(VERBUM path) REDDE VERBUM
   REDDE OBSECRO fs_read_all(path)
@@ -216,6 +220,74 @@ EXPLICIT RITUALE
 
 RITUALE db_scalar_text(SPECULUM NIHIL db, VERBUM sql) REDDE VERBUM
   REDDE OBSECRO db_scalar_text(db, sql)
+EXPLICIT RITUALE
+
+RITUALE sqrt_real(UMBRA x) REDDE UMBRA
+  REDDE OBSECRO math_sqrt(x)
+EXPLICIT RITUALE
+
+RITUALE cbrt_real(UMBRA x) REDDE UMBRA
+  REDDE OBSECRO math_cbrt(x)
+EXPLICIT RITUALE
+
+RITUALE pow_real(UMBRA base, UMBRA exp) REDDE UMBRA
+  REDDE OBSECRO math_pow(base, exp)
+EXPLICIT RITUALE
+
+RITUALE abs_real(UMBRA x) REDDE UMBRA
+  SI x < 0.0
+    REDDE 0.0 - x
+  FIN SI
+  REDDE x
+EXPLICIT RITUALE
+
+RITUALE floor_real(UMBRA x) REDDE REX
+  EVOCA REX truncated AD cast GENUS(REX)(x)
+  SI x < 0.0
+    EVOCA UMBRA check AD cast GENUS(UMBRA)(truncated)
+    SI check > x
+      REDDE truncated - 1
+    FIN SI
+  FIN SI
+  REDDE truncated
+EXPLICIT RITUALE
+
+RITUALE ceil_real(UMBRA x) REDDE REX
+  EVOCA REX truncated AD cast GENUS(REX)(x)
+  SI x > 0.0
+    EVOCA UMBRA check AD cast GENUS(UMBRA)(truncated)
+    SI check < x
+      REDDE truncated + 1
+    FIN SI
+  FIN SI
+  REDDE truncated
+EXPLICIT RITUALE
+
+RITUALE round_real(UMBRA x) REDDE REX
+  SI x >= 0.0
+    REDDE CONIURA floor_real(x + 0.5)
+  FIN SI
+  REDDE CONIURA ceil_real(x - 0.5)
+EXPLICIT RITUALE
+
+RITUALE sin_real(UMBRA x) REDDE UMBRA
+  REDDE OBSECRO math_sin(x)
+EXPLICIT RITUALE
+
+RITUALE cos_real(UMBRA x) REDDE UMBRA
+  REDDE OBSECRO math_cos(x)
+EXPLICIT RITUALE
+
+RITUALE tan_real(UMBRA x) REDDE UMBRA
+  REDDE OBSECRO math_tan(x)
+EXPLICIT RITUALE
+
+RITUALE log_real(UMBRA x) REDDE UMBRA
+  REDDE OBSECRO math_log(x)
+EXPLICIT RITUALE
+
+RITUALE exp_real(UMBRA x) REDDE UMBRA
+  REDDE OBSECRO math_exp(x)
 EXPLICIT RITUALE
 
 EXPLICIT grimoire

@@ -102,3 +102,58 @@ md_out/
 /third_party/cct-boot/
 /tests/.tmp.*/
 /out/codex_tmp/
+/out/
+/out_27e_combo.bin.dSYM/
+/out_27e_string.bin.dSYM/
+
+# ============================================================================
+# Additional Generated Artifacts and Local Worktrees
+# Explicit catch-all section kept at the end on purpose, even when duplicated
+# elsewhere in this file.
+# ============================================================================
+
+# Generated output trees
+out/
+build/
+dist/
+.cct/
+.logs/
+artifacts/
+
+# Local/editor state
+.idea/
+.vscode/
+
+# Root compiler/wrapper binaries
+cct
+cct.bin
+cct-host
+cct-selfhost
+cct_lexer_bootstrap
+
+# Generated test/example temp trees
+tests/.tmp*/
+examples/.tmp/
+examples/**/.cct/
+examples/**/dist/
+
+# Generated compiler artifacts
+*.cgen.c
+*.cgen.s
+*.svg
+*.sigil
+*.log
+*.test
+*.bench
+
+# Release/debug artifacts
+*.tar.gz
+*.tar.gz.sha256
+*.zip
+*.zip.sha256
+*.dSYM/
+
+# Local scratch files
+teste_bootstrap
+teste_bootstrap.c
+teste_bootstrap.cct

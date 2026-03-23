@@ -1,9 +1,0 @@
-stage=stage1
-producer=/Users/eabusato/dev/cct/out/bootstrap/phase29/stage0/cct_stage0
-input=/Users/eabusato/dev/cct/src/bootstrap/main_compiler.cct
-generated_c=/Users/eabusato/dev/cct/out/bootstrap/phase29/stage1/main_compiler.stage1.c
-binary=/Users/eabusato/dev/cct/out/bootstrap/phase29/stage1/cct_stage1
-generated_c_size=592309
-binary_size=330408
-generated_c_sha256=2d5db040eb75eb16c65cfebd1192b48101d341148f5d4f26f5ef660d82e43b3d
-binary_sha256=a3ede2a3c13a363ba3a2e825a5ed8b4cb25c903cae0aa4b5d56492bc3c7267f4

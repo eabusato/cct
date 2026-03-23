@@ -24,6 +24,10 @@ SIGILLUM AstNode
   owns_value_text: VERUM
   type_name: VERBUM
   owns_type_name: VERUM
+  aux_name: VERBUM
+  owns_aux_name: VERUM
+  fmt_spec: VERBUM
+  owns_fmt_spec: VERUM
   operator_kind: TokenKind
   bool_value: VERUM
   array_size: REX
@@ -124,6 +128,8 @@ RITUALE ast_node_new(AstKind kind, REX line, REX column) REDDE SPECULUM AstNode
   VINCIRE (*node).kind AD kind
   VINCIRE (*node).line AD line
   VINCIRE (*node).column AD column
+  VINCIRE (*node).aux_name AD ""
+  VINCIRE (*node).fmt_spec AD ""
   VINCIRE (*node).children AD CONIURA ast_node_list_new()
   VINCIRE (*node).cases AD CONIURA ast_node_list_new()
   VINCIRE (*node).bindings AD CONIURA ast_node_list_new()
@@ -165,6 +171,18 @@ EXPLICIT RITUALE
 RITUALE ast_node_set_type_name(SPECULUM AstNode node, VERBUM type_name) REDDE NIHIL
   VINCIRE (*node).type_name AD CONIURA verbum_dup(type_name)
   VINCIRE (*node).owns_type_name AD VERUM
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE ast_node_set_aux_name(SPECULUM AstNode node, VERBUM aux_name) REDDE NIHIL
+  VINCIRE (*node).aux_name AD CONIURA verbum_dup(aux_name)
+  VINCIRE (*node).owns_aux_name AD VERUM
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE ast_node_set_fmt_spec(SPECULUM AstNode node, VERBUM fmt_spec) REDDE NIHIL
+  VINCIRE (*node).fmt_spec AD CONIURA verbum_dup(fmt_spec)
+  VINCIRE (*node).owns_fmt_spec AD VERUM
   REDDE
 EXPLICIT RITUALE
 
@@ -388,6 +406,18 @@ RITUALE ast_make_redde_empty(REX line, REX column) REDDE SPECULUM AstNode
   REDDE node
 EXPLICIT RITUALE
 
+RITUALE ast_make_anur(SPECULUM AstNode expr, REX line, REX column) REDDE SPECULUM AstNode
+  EVOCA SPECULUM AstNode node AD CONIURA ast_node_new(AST_ANUR, line, column)
+  VINCIRE (*node).left AD expr
+  VINCIRE (*node).has_left AD VERUM
+  REDDE node
+EXPLICIT RITUALE
+
+RITUALE ast_make_anur_empty(REX line, REX column) REDDE SPECULUM AstNode
+  EVOCA SPECULUM AstNode node AD CONIURA ast_node_new(AST_ANUR, line, column)
+  REDDE node
+EXPLICIT RITUALE
+
 RITUALE ast_make_iace(SPECULUM AstNode expr, REX line, REX column) REDDE SPECULUM AstNode
   EVOCA SPECULUM AstNode node AD CONIURA ast_node_new(AST_IACE, line, column)
   VINCIRE (*node).left AD expr
@@ -552,6 +582,61 @@ RITUALE ast_make_dum(SPECULUM AstNode condition, SPECULUM AstNode body, REX line
   VINCIRE (*node).condition AD condition
   VINCIRE (*node).body AD body
   VINCIRE (*node).has_condition AD VERUM
+  VINCIRE (*node).has_body AD VERUM
+  REDDE node
+EXPLICIT RITUALE
+
+RITUALE ast_make_donec(SPECULUM AstNode body, SPECULUM AstNode condition, REX line, REX column) REDDE SPECULUM AstNode
+  EVOCA SPECULUM AstNode node AD CONIURA ast_node_new(AST_DONEC, line, column)
+  VINCIRE (*node).body AD body
+  VINCIRE (*node).has_body AD VERUM
+  VINCIRE (*node).condition AD condition
+  VINCIRE (*node).has_condition AD VERUM
+  REDDE node
+EXPLICIT RITUALE
+
+RITUALE ast_make_donec_no_condition(SPECULUM AstNode body, REX line, REX column) REDDE SPECULUM AstNode
+  EVOCA SPECULUM AstNode node AD CONIURA ast_node_new(AST_DONEC, line, column)
+  VINCIRE (*node).body AD body
+  VINCIRE (*node).has_body AD VERUM
+  REDDE node
+EXPLICIT RITUALE
+
+RITUALE ast_make_repete(VERBUM iterator_name, SPECULUM AstNode start_expr, SPECULUM AstNode end_expr, SPECULUM AstNode step_expr, SPECULUM AstNode body, REX line, REX column) REDDE SPECULUM AstNode
+  EVOCA SPECULUM AstNode node AD CONIURA ast_node_new(AST_REPETE, line, column)
+  CONIURA ast_node_set_name(node, iterator_name)
+  VINCIRE (*node).left AD start_expr
+  VINCIRE (*node).right AD end_expr
+  VINCIRE (*node).condition AD step_expr
+  VINCIRE (*node).body AD body
+  VINCIRE (*node).has_left AD VERUM
+  VINCIRE (*node).has_right AD VERUM
+  VINCIRE (*node).has_condition AD VERUM
+  VINCIRE (*node).has_body AD VERUM
+  REDDE node
+EXPLICIT RITUALE
+
+RITUALE ast_make_repete_no_step(VERBUM iterator_name, SPECULUM AstNode start_expr, SPECULUM AstNode end_expr, SPECULUM AstNode body, REX line, REX column) REDDE SPECULUM AstNode
+  EVOCA SPECULUM AstNode node AD CONIURA ast_node_new(AST_REPETE, line, column)
+  CONIURA ast_node_set_name(node, iterator_name)
+  VINCIRE (*node).left AD start_expr
+  VINCIRE (*node).right AD end_expr
+  VINCIRE (*node).body AD body
+  VINCIRE (*node).has_left AD VERUM
+  VINCIRE (*node).has_right AD VERUM
+  VINCIRE (*node).has_body AD VERUM
+  REDDE node
+EXPLICIT RITUALE
+
+RITUALE ast_make_iterum(VERBUM item_name, VERBUM value_name, SPECULUM AstNode collection, SPECULUM AstNode body, REX line, REX column) REDDE SPECULUM AstNode
+  EVOCA SPECULUM AstNode node AD CONIURA ast_node_new(AST_ITERUM, line, column)
+  CONIURA ast_node_set_name(node, item_name)
+  SI CONIURA compare(value_name, "") != 0
+    CONIURA ast_node_set_aux_name(node, value_name)
+  FIN SI
+  VINCIRE (*node).left AD collection
+  VINCIRE (*node).body AD body
+  VINCIRE (*node).has_left AD VERUM
   VINCIRE (*node).has_body AD VERUM
   REDDE node
 EXPLICIT RITUALE
@@ -792,6 +877,13 @@ RITUALE ast_dump_node(SPECULUM AstNode node, REX level, VERBUM out) REDDE VERBUM
       FIN SI
       REDDE out
 
+    CASUS AST_ANUR:
+      VINCIRE out AD CONIURA ast_dump_append_line(out, level, CONIURA concat("ANUR ", location))
+      SI (*node).has_left
+        REDDE CONIURA ast_dump_value_with_label(out, level + 1, "Value:", (*node).left)
+      FIN SI
+      REDDE out
+
     CASUS AST_IACE:
       VINCIRE out AD CONIURA ast_dump_append_line(out, level, CONIURA concat("IACE ", location))
       REDDE CONIURA ast_dump_value_with_label(out, level + 1, "Value:", (*node).left)
@@ -856,6 +948,41 @@ RITUALE ast_dump_node(SPECULUM AstNode node, REX level, VERBUM out) REDDE VERBUM
       VINCIRE out AD CONIURA ast_dump_append_line(out, level + 1, "Body:")
       REDDE CONIURA ast_dump_node((*node).body, level + 2, out)
 
+    CASUS AST_DONEC:
+      VINCIRE out AD CONIURA ast_dump_append_line(out, level, CONIURA concat("DONEC ", location))
+      VINCIRE out AD CONIURA ast_dump_append_line(out, level + 1, "Body:")
+      VINCIRE out AD CONIURA ast_dump_node((*node).body, level + 2, out)
+      SI (*node).has_condition
+        VINCIRE out AD CONIURA ast_dump_append_line(out, level + 1, "Condition:")
+        VINCIRE out AD CONIURA ast_dump_node((*node).condition, level + 2, out)
+      FIN SI
+      REDDE out
+
+    CASUS AST_REPETE:
+      VINCIRE out AD CONIURA ast_dump_append_line(out, level, CONIURA concat("REPETE ", location))
+      VINCIRE out AD CONIURA ast_dump_append_line(out, level + 1, CONIURA concat("Iterator: ", (*node).name))
+      VINCIRE out AD CONIURA ast_dump_append_line(out, level + 1, "Start:")
+      VINCIRE out AD CONIURA ast_dump_node((*node).left, level + 2, out)
+      VINCIRE out AD CONIURA ast_dump_append_line(out, level + 1, "End:")
+      VINCIRE out AD CONIURA ast_dump_node((*node).right, level + 2, out)
+      SI (*node).has_condition
+        VINCIRE out AD CONIURA ast_dump_append_line(out, level + 1, "Step:")
+        VINCIRE out AD CONIURA ast_dump_node((*node).condition, level + 2, out)
+      FIN SI
+      VINCIRE out AD CONIURA ast_dump_append_line(out, level + 1, "Body:")
+      REDDE CONIURA ast_dump_node((*node).body, level + 2, out)
+
+    CASUS AST_ITERUM:
+      VINCIRE out AD CONIURA ast_dump_append_line(out, level, CONIURA concat("ITERUM ", location))
+      VINCIRE out AD CONIURA ast_dump_append_line(out, level + 1, CONIURA concat("Item: ", (*node).name))
+      SI CONIURA compare((*node).aux_name, "") != 0
+        VINCIRE out AD CONIURA ast_dump_append_line(out, level + 1, CONIURA concat("Value: ", (*node).aux_name))
+      FIN SI
+      VINCIRE out AD CONIURA ast_dump_append_line(out, level + 1, "Collection:")
+      VINCIRE out AD CONIURA ast_dump_node((*node).left, level + 2, out)
+      VINCIRE out AD CONIURA ast_dump_append_line(out, level + 1, "Body:")
+      REDDE CONIURA ast_dump_node((*node).body, level + 2, out)
+
     CASUS AST_FRANGE:
       REDDE CONIURA ast_dump_append_line(out, level, CONIURA concat("FRANGE ", location))
 
@@ -888,6 +1015,9 @@ RITUALE ast_dump_node(SPECULUM AstNode node, REX level, VERBUM out) REDDE VERBUM
       EVOCA REX part_n AD CONIURA ast_node_list_len((*node).children)
       DUM part_i < part_n
         EVOCA SPECULUM AstNode part AD CONIURA ast_node_list_get((*node).children, part_i)
+        SI CONIURA compare((*part).fmt_spec, "") != 0
+          VINCIRE out AD CONIURA ast_dump_append_line(out, level + 2, CONIURA concat("Fmt: ", (*part).fmt_spec))
+        FIN SI
         VINCIRE out AD CONIURA ast_dump_node(part, level + 2, out)
         VINCIRE part_i AD part_i + 1
       FIN DUM
@@ -1015,6 +1145,12 @@ RITUALE ast_node_free(SPECULUM AstNode node) REDDE NIHIL
   FIN SI
   SI (*node).owns_type_name
     DIMITTE (*node).type_name
+  FIN SI
+  SI (*node).owns_aux_name
+    DIMITTE (*node).aux_name
+  FIN SI
+  SI (*node).owns_fmt_spec
+    DIMITTE (*node).fmt_spec
   FIN SI
 
   SI (*node).has_left

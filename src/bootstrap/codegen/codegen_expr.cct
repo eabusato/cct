@@ -97,26 +97,67 @@ EXPLICIT RITUALE
 
 RITUALE codegen_forma_emit_argument(SPECULUM CodegenContext ctx, SPECULUM AstNode part) REDDE NIHIL
   EVOCA VERBUM type_name AD CONIURA codegen_expr_type_name(ctx, part)
+  EVOCA VERBUM fmt_spec AD (*part).fmt_spec
+  EVOCA VERUM has_fmt AD CONIURA compare(fmt_spec, "") != 0
   SI CONIURA compare(type_name, "VERBUM") == 0
-    CONIURA codegen_emit_expr(ctx, part)
+    SI has_fmt
+      EVOCA VERBUM fmt_symbol AD CONIURA codegen_string_symbol(ctx, fmt_spec)
+      CONIURA codegen_emit(ctx, "cct_rt_molde_str_fmt(__cct_molde_ctx, (const char*)(")
+      CONIURA codegen_emit_expr(ctx, part)
+      CONIURA codegen_emit(ctx, "), ")
+      CONIURA codegen_emit(ctx, fmt_symbol)
+      CONIURA codegen_emit(ctx, ")")
+    ALITER
+      CONIURA codegen_emit(ctx, "cct_rt_molde_str(__cct_molde_ctx, (const char*)(")
+      CONIURA codegen_emit_expr(ctx, part)
+      CONIURA codegen_emit(ctx, "))")
+    FIN SI
     REDDE
   FIN SI
   SI CONIURA compare(type_name, "REX") == 0 VEL CONIURA compare(type_name, "DUX") == 0 VEL CONIURA compare(type_name, "COMES") == 0 VEL CONIURA compare(type_name, "MILES") == 0
-    CONIURA codegen_emit(ctx, "cct_rt_fmt_stringify_int((long long)(")
-    CONIURA codegen_emit_expr(ctx, part)
-    CONIURA codegen_emit(ctx, "))")
+    SI has_fmt
+      EVOCA REX fmt_n AD CONIURA len(fmt_spec)
+      EVOCA MILES conv AD CONIURA char_at(fmt_spec, fmt_n - 1)
+      EVOCA VERBUM fmt_symbol AD CONIURA codegen_string_symbol(ctx, fmt_spec)
+      SI conv == 117 VEL conv == 120 VEL conv == 88
+        CONIURA codegen_emit(ctx, "cct_rt_molde_dux_fmt(__cct_molde_ctx, (unsigned long long)(")
+      ALITER
+        CONIURA codegen_emit(ctx, "cct_rt_molde_rex_fmt(__cct_molde_ctx, (long long)(")
+      FIN SI
+      CONIURA codegen_emit_expr(ctx, part)
+      CONIURA codegen_emit(ctx, "), ")
+      CONIURA codegen_emit(ctx, fmt_symbol)
+      CONIURA codegen_emit(ctx, ")")
+    ALITER
+      CONIURA codegen_emit(ctx, "cct_rt_molde_rex(__cct_molde_ctx, (long long)(")
+      CONIURA codegen_emit_expr(ctx, part)
+      CONIURA codegen_emit(ctx, "))")
+    FIN SI
     REDDE
   FIN SI
   SI CONIURA compare(type_name, "UMBRA") == 0 VEL CONIURA compare(type_name, "FLAMMA") == 0
-    CONIURA codegen_emit(ctx, "cct_rt_fmt_stringify_real((double)(")
-    CONIURA codegen_emit_expr(ctx, part)
-    CONIURA codegen_emit(ctx, "))")
+    SI has_fmt
+      EVOCA VERBUM fmt_symbol AD CONIURA codegen_string_symbol(ctx, fmt_spec)
+      CONIURA codegen_emit(ctx, "cct_rt_molde_umbra_fmt(__cct_molde_ctx, (double)(")
+      CONIURA codegen_emit_expr(ctx, part)
+      CONIURA codegen_emit(ctx, "), ")
+      CONIURA codegen_emit(ctx, fmt_symbol)
+      CONIURA codegen_emit(ctx, ")")
+    ALITER
+      CONIURA codegen_emit(ctx, "cct_rt_molde_umbra(__cct_molde_ctx, (double)(")
+      CONIURA codegen_emit_expr(ctx, part)
+      CONIURA codegen_emit(ctx, "))")
+    FIN SI
     REDDE
   FIN SI
   SI CONIURA compare(type_name, "VERUM") == 0
-    CONIURA codegen_emit(ctx, "((")
+    SI has_fmt
+      CONIURA codegen_report_error(ctx, (*part).line, (*part).column, "FORMA bool formatting with spec is unsupported in bootstrap codegen")
+      REDDE
+    FIN SI
+    CONIURA codegen_emit(ctx, "cct_rt_molde_verum(__cct_molde_ctx, (long long)(")
     CONIURA codegen_emit_expr(ctx, part)
-    CONIURA codegen_emit(ctx, ") ? \"VERUM\" : \"FALSUM\")")
+    CONIURA codegen_emit(ctx, "))")
     REDDE
   FIN SI
   CONIURA codegen_report_error(ctx, (*part).line, (*part).column, "FORMA interpolation type outside bootstrap codegen subset")
@@ -124,39 +165,24 @@ RITUALE codegen_forma_emit_argument(SPECULUM CodegenContext ctx, SPECULUM AstNod
 EXPLICIT RITUALE
 
 RITUALE codegen_emit_forma_expr(SPECULUM CodegenContext ctx, SPECULUM AstNode expr) REDDE NIHIL
-  EVOCA REX arity AD CONIURA codegen_forma_placeholder_count(expr)
-  EVOCA VERBUM template_text AD CONIURA codegen_forma_template_text(expr)
-  EVOCA VERBUM template_symbol AD CONIURA codegen_string_symbol(ctx, template_text)
-  DIMITTE template_text
-
-  SI arity == 0
-    CONIURA codegen_emit(ctx, template_symbol)
-    REDDE
-  FIN SI
-
-  SI arity > 4
-    CONIURA codegen_report_error(ctx, (*expr).line, (*expr).column, "FORMA supports at most 4 interpolations in bootstrap codegen")
-    REDDE
-  FIN SI
-
   CONIURA codegen_require_fmt_runtime(ctx)
-  CONIURA codegen_emit(ctx, "cct_rt_fmt_format_")
-  CONIURA codegen_emit(ctx, CONIURA stringify_int(arity))
-  CONIURA codegen_emit(ctx, "(")
-  CONIURA codegen_emit(ctx, template_symbol)
-
+  CONIURA codegen_emit(ctx, "({ cct_rt_molde_ctx_t *__cct_molde_ctx = cct_rt_molde_begin(); ")
   EVOCA REX i AD 0
   EVOCA REX n AD CONIURA ast_node_list_len((*expr).children)
   DUM i < n
     EVOCA SPECULUM AstNode part AD CONIURA ast_node_list_get((*expr).children, i)
-    SI (*part).kind != AST_LITERAL_STRING
-      CONIURA codegen_emit(ctx, ", ")
+    SI (*part).kind == AST_LITERAL_STRING
+      EVOCA VERBUM literal_symbol AD CONIURA codegen_string_symbol(ctx, (*part).value_text)
+      CONIURA codegen_emit(ctx, "cct_rt_molde_str(__cct_molde_ctx, ")
+      CONIURA codegen_emit(ctx, literal_symbol)
+      CONIURA codegen_emit(ctx, "); ")
+    ALITER
       CONIURA codegen_forma_emit_argument(ctx, part)
+      CONIURA codegen_emit(ctx, "; ")
     FIN SI
     VINCIRE i AD i + 1
   FIN DUM
-
-  CONIURA codegen_emit(ctx, ")")
+  CONIURA codegen_emit(ctx, "cct_rt_molde_end(__cct_molde_ctx); })")
   REDDE
 EXPLICIT RITUALE
 
@@ -434,6 +460,21 @@ RITUALE codegen_emit_obsecro_call_expr(SPECULUM CodegenContext ctx, SPECULUM Ast
     REDDE
   FIN SI
 
+  SI CONIURA compare((*(*expr).callee).name, "pete") == 0
+    CONIURA codegen_require_stdlib(ctx)
+    CONIURA codegen_emit(ctx, "((void*)malloc((size_t)(")
+    CONIURA codegen_emit_expr(ctx, CONIURA ast_node_list_get((*expr).arguments, 0))
+    CONIURA codegen_emit(ctx, ")))")
+    REDDE
+  FIN SI
+  SI CONIURA compare((*(*expr).callee).name, "verbum_char_at") == 0
+    CONIURA codegen_require_stdlib(ctx)
+    CONIURA codegen_require_stdio(ctx)
+  FIN SI
+  SI CONIURA starts_with((*(*expr).callee).name, "option_") VEL CONIURA starts_with((*(*expr).callee).name, "result_") VEL CONIURA starts_with((*(*expr).callee).name, "map_") VEL CONIURA starts_with((*(*expr).callee).name, "set_")
+    CONIURA codegen_require_stdlib(ctx)
+  FIN SI
+
   SI CONIURA compare((*(*expr).callee).name, "fs_read_all") == 0
     CONIURA codegen_require_fs_runtime(ctx)
   FIN SI
@@ -468,6 +509,15 @@ EXPLICIT RITUALE
 
 RITUALE codegen_emit_condition_expr(SPECULUM CodegenContext ctx, SPECULUM AstNode expr) REDDE NIHIL
   SI (*expr).kind == AST_BINARY_OP
+    SI (*expr).operator_kind == TK_STAR_STAR
+      CONIURA codegen_require_math_runtime(ctx)
+      CONIURA codegen_emit(ctx, "(pow((double)(")
+      CONIURA codegen_emit_expr(ctx, (*expr).left)
+      CONIURA codegen_emit(ctx, "), (double)(")
+      CONIURA codegen_emit_expr(ctx, (*expr).right)
+      CONIURA codegen_emit(ctx, ")))")
+      REDDE
+    FIN SI
     EVOCA VERBUM op_text AD CONIURA codegen_binary_op_text((*expr).operator_kind)
     SI CONIURA compare(op_text, "") == 0
       CONIURA codegen_report_error(ctx, (*expr).line, (*expr).column, "unsupported binary operator in bootstrap codegen")
@@ -595,6 +645,15 @@ RITUALE codegen_emit_expr(SPECULUM CodegenContext ctx, SPECULUM AstNode expr) RE
   FIN SI
 
   SI (*expr).kind == AST_BINARY_OP
+    SI (*expr).operator_kind == TK_STAR_STAR
+      CONIURA codegen_require_math_runtime(ctx)
+      CONIURA codegen_emit(ctx, "(pow((double)(")
+      CONIURA codegen_emit_expr(ctx, (*expr).left)
+      CONIURA codegen_emit(ctx, "), (double)(")
+      CONIURA codegen_emit_expr(ctx, (*expr).right)
+      CONIURA codegen_emit(ctx, ")))")
+      REDDE
+    FIN SI
     EVOCA VERBUM op_text AD CONIURA codegen_binary_op_text((*expr).operator_kind)
     SI CONIURA compare(op_text, "") == 0
       CONIURA codegen_report_error(ctx, (*expr).line, (*expr).column, "unsupported binary operator in bootstrap codegen")

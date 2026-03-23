@@ -6,6 +6,14 @@ cd "$ROOT_DIR" || exit 1
 source "$ROOT_DIR/tests/test_tmpdir.sh"
 cct_setup_tmpdir "$ROOT_DIR"
 
+if [ -z "${CCT_BIN:-}" ]; then
+  if [ -x ./cct-host ]; then
+    CCT_BIN="./cct-host"
+  else
+    CCT_BIN="./cct"
+  fi
+fi
+
 BENCH_FILE="${CCT_BENCH_FILE:-lib/cct/fluxus.cct}"
 ITERATIONS="${CCT_BENCH_ITERATIONS:-100}"
 LOG_FILE="$CCT_TMP_DIR/benchmark_lexer_21e2.latest.log"
@@ -26,7 +34,7 @@ measure_seconds() {
   { time bash -lc "$cmd"; } 2>&1 >/dev/null | tail -1
 }
 
-TIME_C=$(measure_seconds "for ((i=0; i<$ITERATIONS; i++)); do ./cct --tokens '$BENCH_FILE' >/dev/null 2>&1; done")
+TIME_C=$(measure_seconds "for ((i=0; i<$ITERATIONS; i++)); do '$CCT_BIN' --tokens '$BENCH_FILE' >/dev/null 2>&1; done")
 TIME_CCT=$(measure_seconds "for ((i=0; i<$ITERATIONS; i++)); do ./cct_lexer_bootstrap '$BENCH_FILE' >/dev/null 2>&1; done")
 PER_C=$(awk -v t="$TIME_C" -v n="$ITERATIONS" 'BEGIN { printf "%.4f", t / n }')
 PER_CCT=$(awk -v t="$TIME_CCT" -v n="$ITERATIONS" 'BEGIN { printf "%.4f", t / n }')

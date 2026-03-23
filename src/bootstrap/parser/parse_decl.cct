@@ -265,14 +265,14 @@ EXPLICIT RITUALE
 RITUALE parse_ordo_payload_field(SPECULUM ParserState parser) REDDE SPECULUM AstNode
   EVOCA REX line AD (*parser).current.line
   EVOCA REX column AD (*parser).current.column
+  EVOCA SPECULUM AstNode type_expr AD CONIURA parse_type(parser)
   SI NON CONIURA parser_check(parser, TK_IDENTIFIER)
     CONIURA parser_error_at_current(parser, "Expected ORDO payload field name")
-    REDDE CONIURA ast_make_field("<error>", CONIURA ast_make_type("NIHIL", line, column), line, column)
+    REDDE CONIURA ast_make_field("<error>", type_expr, line, column)
   FIN SI
   CONIURA parser_advance(parser)
   EVOCA VERBUM field_name AD CONIURA verbum_dup((*parser).previous.lexeme)
-  CONIURA parser_consume(parser, TK_COLON, "Expected ':' after ORDO payload field name")
-  EVOCA SPECULUM AstNode field AD CONIURA ast_make_field(field_name, CONIURA parse_type(parser), line, column)
+  EVOCA SPECULUM AstNode field AD CONIURA ast_make_field(field_name, type_expr, line, column)
   DIMITTE field_name
   REDDE field
 EXPLICIT RITUALE

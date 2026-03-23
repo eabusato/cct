@@ -28,8 +28,12 @@ CFLAGS += -DCCT_STDLIB_DIR=\"$(abspath $(STDLIB_DIR))\"
 CFLAGS += -DCCT_FREESTANDING_RT_HEADER=\"$(abspath $(SRC_DIR)/runtime/cct_freestanding_rt.h)\"
 CFLAGS += -DCCT_FREESTANDING_RT_SOURCE=\"$(abspath $(SRC_DIR)/runtime/cct_freestanding_rt.c)\"
 
-# Output binary
+# Output binaries / wrappers
+HOST_TARGET = $(BIN_DIR)/cct.bin
 TARGET    = $(BIN_DIR)/cct
+CCT_HOST_WRAPPER = $(BIN_DIR)/cct-host
+CCT_SELFHOST_ROOT = $(BIN_DIR)/cct-selfhost
+CORE_WRAPPERS = $(TARGET) $(CCT_HOST_WRAPPER) $(CCT_SELFHOST_ROOT)
 CCT_LBOS_OUT = build/lbos-bridge
 CCT_KERNEL_SOURCE = lib/cct/kernel/kernel.cct
 CCT_KERNEL_ASM = $(CCT_KERNEL_SOURCE:.cct=.cgen.s)
@@ -75,6 +79,17 @@ BOOTSTRAP_PHASE30_MANIFESTS_DIR = $(BOOTSTRAP_PHASE30_OUT)/manifests
 BOOTSTRAP_PHASE30_RUN_DIR = $(BOOTSTRAP_PHASE30_OUT)/run
 BOOTSTRAP_PHASE30_COMPAT_DIR = $(BOOTSTRAP_PHASE30_OUT)/compat
 BOOTSTRAP_SELFHOST_WRAPPER = $(BOOTSTRAP_PHASE30_BIN_DIR)/cct_selfhost
+BOOTSTRAP_PHASE31_OUT = out/bootstrap/phase31
+BOOTSTRAP_PHASE31_BIN_DIR = $(BOOTSTRAP_PHASE31_OUT)/bin
+BOOTSTRAP_PHASE31_TOOLS_DIR = $(BOOTSTRAP_PHASE31_OUT)/tools
+BOOTSTRAP_PHASE31_STATE_DIR = $(BOOTSTRAP_PHASE31_OUT)/state
+BOOTSTRAP_PHASE31_LOGS_DIR = $(BOOTSTRAP_PHASE31_OUT)/logs
+BOOTSTRAP_PHASE31_MANIFESTS_DIR = $(BOOTSTRAP_PHASE31_OUT)/manifests
+BOOTSTRAP_PHASE31_PERSIST_DIR = .cct/toolchain
+BOOTSTRAP_PHASE31_DEFAULT_MODE = $(BOOTSTRAP_PHASE31_PERSIST_DIR)/default_mode.txt
+BOOTSTRAP_PHASE31_ACTIVE_MANIFEST = $(BOOTSTRAP_PHASE31_MANIFESTS_DIR)/active_compiler.txt
+BOOTSTRAP_SELFHOST_LEXER_BIN = $(BOOTSTRAP_PHASE31_TOOLS_DIR)/cct_lexer_bootstrap
+BOOTSTRAP_SELFHOST_LEXER_C = $(BOOTSTRAP_PHASE31_TOOLS_DIR)/cct_lexer_bootstrap.c
 BOOTSTRAP_SELFHOST_PARSER_BIN = $(BOOTSTRAP_PHASE30_TOOLS_DIR)/cct_parser_bootstrap
 BOOTSTRAP_SELFHOST_PARSER_C = $(BOOTSTRAP_PHASE30_TOOLS_DIR)/cct_parser_bootstrap.c
 BOOTSTRAP_SELFHOST_SEMANTIC_BIN = $(BOOTSTRAP_PHASE30_TOOLS_DIR)/cct_semantic_bootstrap
@@ -148,13 +163,39 @@ DEPS = \
 	$(SRC_DIR)/doc/doc.h
 
 # Default target
-all: $(TARGET)
+all: $(HOST_TARGET) $(CORE_WRAPPERS)
 
-# Link the final binary
-$(TARGET): $(OBJS) | $(BIN_DIR)
-	@echo "Linking $(TARGET)..."
+# Link the final host binary
+$(HOST_TARGET): $(OBJS) | $(BIN_DIR)
+	@echo "Linking $(HOST_TARGET)..."
 	$(CC) -o $@ $^ $(LDFLAGS)
-	@echo "Build complete: $(TARGET)"
+	@echo "Build complete: $(HOST_TARGET)"
+
+$(TARGET): scripts/cct_wrapper.sh | $(BIN_DIR) $(BOOTSTRAP_PHASE31_STATE_DIR) $(BOOTSTRAP_PHASE31_PERSIST_DIR) $(BOOTSTRAP_PHASE31_MANIFESTS_DIR)
+	@chmod +x scripts/cct_wrapper.sh
+	@printf '%s\n' '#!/bin/sh' \
+		'SCRIPT_DIR="$$(CDPATH= cd -- "$$(dirname -- "$$0")" && pwd)"' \
+		'export CCT_WRAPPER_MODE=default' \
+		'exec "$$SCRIPT_DIR/scripts/cct_wrapper.sh" "$$@"' >"$@"
+	@chmod +x "$@"
+	@if [ ! -f "$(BOOTSTRAP_PHASE31_DEFAULT_MODE)" ]; then printf '%s\n' 'selfhost' >"$(BOOTSTRAP_PHASE31_DEFAULT_MODE)"; fi
+	@printf '%s\n' "active=default-wrapper" "mode_file=$(abspath $(BOOTSTRAP_PHASE31_DEFAULT_MODE))" >"$(BOOTSTRAP_PHASE31_ACTIVE_MANIFEST)"
+
+$(CCT_HOST_WRAPPER): scripts/cct_wrapper.sh | $(BIN_DIR)
+	@chmod +x scripts/cct_wrapper.sh
+	@printf '%s\n' '#!/bin/sh' \
+		'SCRIPT_DIR="$$(CDPATH= cd -- "$$(dirname -- "$$0")" && pwd)"' \
+		'export CCT_WRAPPER_MODE=host' \
+		'exec "$$SCRIPT_DIR/scripts/cct_wrapper.sh" "$$@"' >"$@"
+	@chmod +x "$@"
+
+$(CCT_SELFHOST_ROOT): scripts/cct_wrapper.sh | $(BIN_DIR)
+	@chmod +x scripts/cct_wrapper.sh
+	@printf '%s\n' '#!/bin/sh' \
+		'SCRIPT_DIR="$$(CDPATH= cd -- "$$(dirname -- "$$0")" && pwd)"' \
+		'export CCT_WRAPPER_MODE=selfhost' \
+		'exec "$$SCRIPT_DIR/scripts/cct_wrapper.sh" "$$@"' >"$@"
+	@chmod +x "$@"
 
 # Compile C source files to object files
 $(BUILD_DIR)/%.o: $(SRC_DIR)/%.c $(DEPS) | $(BUILD_DIR)
@@ -184,9 +225,9 @@ $(BIN_DIR):
 	@mkdir -p $(BIN_DIR)
 
 # Build freestanding bridge artifact consumable by LBOS integration
-lbos-bridge: $(TARGET) $(CCT_LBOS_OUT)
+lbos-bridge: $(HOST_TARGET) $(CCT_LBOS_OUT)
 	@echo "[CCT] lbos-bridge: emitindo ASM freestanding..."
-	@$(TARGET) --profile freestanding --emit-asm --entry $(CCT_KERNEL_ENTRY) "$(CCT_KERNEL_SOURCE)"
+	@$(HOST_TARGET) --profile freestanding --emit-asm --entry $(CCT_KERNEL_ENTRY) "$(CCT_KERNEL_SOURCE)"
 	@echo "[CCT] lbos-bridge: montando objeto freestanding..."
 	@$(CCT_FREESTANDING_TOOLCHAIN) assemble "$(CCT_KERNEL_ASM)" "$(CCT_KERNEL_OBJ)"
 	@echo "[CCT] lbos-bridge: auditando símbolos undefined proibidos..."
@@ -208,71 +249,93 @@ clean:
 	@echo "Cleaning build artifacts..."
 	rm -rf $(BUILD_DIR)
 	rm -f $(TARGET)
+	rm -f $(HOST_TARGET)
+	rm -f $(CCT_HOST_WRAPPER)
+	rm -f $(CCT_SELFHOST_ROOT)
 	rm -f cct_lexer_bootstrap
 	rm -f src/bootstrap/main_lexer src/bootstrap/main_lexer.cgen.c
 	rm -f src/bootstrap/main_lexer.svg src/bootstrap/main_lexer.sigil
 	rm -f src/bootstrap/main_lexer.system.svg src/bootstrap/main_lexer.system.sigil
 	rm -rf $(CCT_LBOS_OUT)
+	rm -rf $(BOOTSTRAP_PHASE31_OUT)
 	@echo "Clean complete."
 
 # Run tests
-test: $(TARGET)
+test: $(HOST_TARGET) $(CORE_WRAPPERS)
 	@echo "Running tests..."
 	@bash tests/run_tests.sh
 
-test-legacy-full: $(TARGET)
+test-legacy-full: $(HOST_TARGET) $(CORE_WRAPPERS)
 	@echo "Running restored legacy test suite (phases 0-20)..."
 	@bash tests/run_tests_legacy_0_20.sh
 
-test-legacy-rebased: $(TARGET)
+test-legacy-rebased: $(HOST_TARGET) $(CORE_WRAPPERS)
 	@echo "Running rebased legacy test suite (phases 0-20)..."
 	@bash tests/run_tests_legacy_0_20_rebased.sh
 
-test-all-0-30: $(TARGET)
+test-host-legacy: $(HOST_TARGET) $(CORE_WRAPPERS)
+	@echo "Running host fallback legacy test suite..."
+	@bash tests/run_tests_legacy_0_20_rebased.sh
+
+test-all-0-30: $(HOST_TARGET) $(CORE_WRAPPERS)
 	@echo "Running full aggregated suite (phases 0-30)..."
 	@bash tests/run_tests_all_0_30.sh
 
-test-legacy: $(TARGET)
+test-all-0-31: $(HOST_TARGET) $(CORE_WRAPPERS)
+	@echo "Running full aggregated suite (phases 0-31)..."
+	@bash tests/run_tests_all_0_31.sh
+
+test-bootstrap-parity: $(HOST_TARGET) $(CORE_WRAPPERS) bootstrap-promote
+	@echo "Running bootstrap parity tests (legacy + bootstrap + selfhost suite via promoted compiler)..."
+	@echo "This validates that the promoted self-hosted compiler can pass the core language tests."
+	@echo "Parity matrix: docs/bootstrap_parity_matrix.txt"
+	@bash tests/run_bootstrap_parity.sh
+
+test-legacy: $(HOST_TARGET) $(CORE_WRAPPERS)
 	@echo "Running legacy/core tests..."
 	@CCT_TEST_GROUP=legacy bash tests/run_tests.sh
 
-test-bootstrap: $(TARGET)
+test-bootstrap: $(HOST_TARGET) $(CORE_WRAPPERS)
 	@echo "Running bootstrap tests..."
 	@CCT_TEST_GROUP=bootstrap bash tests/run_tests.sh
 
-test-bootstrap-lexer: $(TARGET)
+test-bootstrap-lexer: $(HOST_TARGET) $(CORE_WRAPPERS)
 	@echo "Running bootstrap lexer tests..."
 	@CCT_TEST_GROUP=bootstrap-lexer bash tests/run_tests.sh
 
-test-bootstrap-parser: $(TARGET)
+test-bootstrap-parser: $(HOST_TARGET) $(CORE_WRAPPERS)
 	@echo "Running bootstrap parser tests..."
 	@CCT_TEST_GROUP=bootstrap-parser bash tests/run_tests.sh
 
-test-bootstrap-semantic: $(TARGET)
+test-bootstrap-semantic: $(HOST_TARGET) $(CORE_WRAPPERS)
 	@echo "Running bootstrap semantic tests..."
 	@CCT_TEST_GROUP=bootstrap-semantic bash tests/run_tests.sh
 
-test-bootstrap-codegen: $(TARGET)
+test-bootstrap-codegen: $(HOST_TARGET) $(CORE_WRAPPERS)
 	@echo "Running bootstrap codegen tests..."
 	@CCT_TEST_GROUP=bootstrap-codegen bash tests/run_tests.sh
 
-test-bootstrap-selfhost: $(TARGET)
+test-bootstrap-selfhost: $(HOST_TARGET) $(CORE_WRAPPERS)
 	@echo "Running bootstrap self-hosting tests..."
 	@env -u CCT_TEST_PHASES CCT_TEST_GROUP=bootstrap-selfhost bash tests/run_tests.sh
 
-test-operational-selfhost: $(TARGET)
+test-operational-selfhost: $(HOST_TARGET) $(CORE_WRAPPERS)
 	@echo "Running operational self-hosted tests..."
 	@env -u CCT_TEST_GROUP CCT_TEST_PHASES=30A bash tests/run_tests.sh
 
-test-operational-platform: $(TARGET)
+test-operational-platform: $(HOST_TARGET) $(CORE_WRAPPERS)
 	@echo "Running operational platform tests..."
 	@env -u CCT_TEST_GROUP CCT_TEST_PHASES=30B,30C,30D bash tests/run_tests.sh
 
-test-phase30-final: $(TARGET)
+test-phase30-final: $(HOST_TARGET) $(CORE_WRAPPERS)
 	@echo "Running final FASE 30 gate..."
 	@env -u CCT_TEST_GROUP CCT_TEST_PHASES=30A,30B,30C,30D bash tests/run_tests.sh
 
-test-phase: $(TARGET)
+test-phase31-final: $(HOST_TARGET) $(CORE_WRAPPERS)
+	@echo "Running final FASE 31 gate..."
+	@env -u CCT_TEST_GROUP CCT_TEST_PHASES=31A,31B,31C,31D,31E bash tests/run_tests.sh
+
+test-phase: $(HOST_TARGET) $(CORE_WRAPPERS)
 	@if [ -z "$(PHASE)" ]; then \
 		echo "Usage: make test-phase PHASE=26"; \
 		exit 1; \
@@ -280,7 +343,7 @@ test-phase: $(TARGET)
 	@echo "Running phase-selected tests: $(PHASE)"
 	@env -u CCT_TEST_GROUP CCT_TEST_PHASES=$(PHASE) bash tests/run_tests.sh
 
-cct_lexer_bootstrap: $(TARGET) \
+cct_lexer_bootstrap: $(HOST_TARGET) $(CCT_HOST_WRAPPER) \
 	src/bootstrap/main_lexer.cct \
 	src/bootstrap/lexer/token_type.cct \
 	src/bootstrap/lexer/token.cct \
@@ -290,7 +353,7 @@ cct_lexer_bootstrap: $(TARGET) \
 	src/bootstrap/lexer/lexer.cct
 	@echo "Building cct_lexer_bootstrap..."
 	@rm -f cct_lexer_bootstrap src/bootstrap/main_lexer src/bootstrap/main_lexer.cgen.c
-	@./cct src/bootstrap/main_lexer.cct >/dev/null
+	@./cct-host src/bootstrap/main_lexer.cct >/dev/null
 	@mv src/bootstrap/main_lexer cct_lexer_bootstrap
 	@rm -f src/bootstrap/main_lexer.cgen.c
 	@rm -f src/bootstrap/main_lexer.svg src/bootstrap/main_lexer.sigil
@@ -303,24 +366,28 @@ $(BOOTSTRAP_PHASE29_OUT) $(BOOTSTRAP_STAGE0_DIR) $(BOOTSTRAP_STAGE1_DIR) $(BOOTS
 $(BOOTSTRAP_PHASE30_OUT) $(BOOTSTRAP_PHASE30_BIN_DIR) $(BOOTSTRAP_PHASE30_TOOLS_DIR) $(BOOTSTRAP_PHASE30_LOGS_DIR) $(BOOTSTRAP_PHASE30_MANIFESTS_DIR) $(BOOTSTRAP_PHASE30_RUN_DIR) $(BOOTSTRAP_PHASE30_COMPAT_DIR):
 	@mkdir -p "$@"
 
-bootstrap-support: $(TARGET) $(BOOTSTRAP_SUPPORT_SRC) | $(BOOTSTRAP_SUPPORT_DIR) $(BOOTSTRAP_STAGE_LOGS_DIR)
+$(BOOTSTRAP_PHASE31_OUT) $(BOOTSTRAP_PHASE31_BIN_DIR) $(BOOTSTRAP_PHASE31_TOOLS_DIR) $(BOOTSTRAP_PHASE31_STATE_DIR) $(BOOTSTRAP_PHASE31_LOGS_DIR) $(BOOTSTRAP_PHASE31_MANIFESTS_DIR) $(BOOTSTRAP_PHASE31_PERSIST_DIR):
+	@mkdir -p "$@"
+
+bootstrap-support: $(HOST_TARGET) $(CCT_HOST_WRAPPER) $(BOOTSTRAP_SUPPORT_SRC) | $(BOOTSTRAP_SUPPORT_DIR) $(BOOTSTRAP_STAGE_LOGS_DIR)
 	@echo "[29A] Building selfhost support objects..."
 	@rm -f src/bootstrap/selfhost_support.cgen.c
-	@./cct "$(BOOTSTRAP_SUPPORT_SRC)" >"$(BOOTSTRAP_STAGE_LOGS_DIR)/support.host.stdout.log" 2>"$(BOOTSTRAP_STAGE_LOGS_DIR)/support.host.stderr.log"
+	@./cct-host "$(BOOTSTRAP_SUPPORT_SRC)" >"$(BOOTSTRAP_STAGE_LOGS_DIR)/support.host.stdout.log" 2>"$(BOOTSTRAP_STAGE_LOGS_DIR)/support.host.stderr.log"
 	@for attempt in 1 2 3 4 5 6 7 8 9 10; do [ -f src/bootstrap/selfhost_support.cgen.c ] && break; sleep 0.1; done
 	@test -f src/bootstrap/selfhost_support.cgen.c
 	@mv -f src/bootstrap/selfhost_support.cgen.c "$(BOOTSTRAP_SUPPORT_HOST_C)"
 	@perl -0pi -e 's/\nint main\(int argc, char \*\*argv\) \{\n    cct_rt_args_init\(argc, argv\);\n    return 0;\n\}\n/\n/s' "$(BOOTSTRAP_SUPPORT_HOST_C)"
 	@sed -e 's/cct_fn_/cct_boot_rit_/g' -e '/cct_boot_rit_/ s/^static //' "$(BOOTSTRAP_SUPPORT_HOST_C)" >"$(BOOTSTRAP_SUPPORT_LINK_C)"
 	@perl -0pi -e 's/^static void cct_rt_args_init\(int argc, char \*\*argv\)/void cct_rt_args_init(int argc, char **argv)/m' "$(BOOTSTRAP_SUPPORT_LINK_C)"
+	@perl -0pi -e 's/^static ((?:[A-Za-z_][A-Za-z0-9_]*\s+)*[A-Za-z_][A-Za-z0-9_]*\s*\*?\s*cct_rt_(?:option_[A-Za-z0-9_]+|result_[A-Za-z0-9_]+|map_[A-Za-z0-9_]+|set_[A-Za-z0-9_]+)\()/$$1/mg' "$(BOOTSTRAP_SUPPORT_LINK_C)"
 	@awk -f tools/gen_selfhost_aliases.awk src/bootstrap/selfhost_prelude.cct >>"$(BOOTSTRAP_SUPPORT_LINK_C)"
 	@$(CC) $(BOOTSTRAP_STAGE_CFLAGS) -c -o "$(BOOTSTRAP_SUPPORT_OBJ)" "$(BOOTSTRAP_SUPPORT_LINK_C)" >"$(BOOTSTRAP_STAGE_LOGS_DIR)/support.cc.stdout.log" 2>"$(BOOTSTRAP_STAGE_LOGS_DIR)/support.cc.stderr.log"
 	@echo "[29A] support objects ready: $(BOOTSTRAP_SUPPORT_OBJ)"
 
-bootstrap-stage0: $(TARGET) $(BOOTSTRAP_COMPILER_SRC) | $(BOOTSTRAP_PHASE29_OUT) $(BOOTSTRAP_STAGE0_DIR) $(BOOTSTRAP_STAGE_LOGS_DIR)
+bootstrap-stage0: $(HOST_TARGET) $(CCT_HOST_WRAPPER) $(BOOTSTRAP_COMPILER_SRC) | $(BOOTSTRAP_PHASE29_OUT) $(BOOTSTRAP_STAGE0_DIR) $(BOOTSTRAP_STAGE_LOGS_DIR)
 	@echo "[29A] Building stage0..."
 	@rm -f src/bootstrap/main_compiler src/bootstrap/main_compiler.cgen.c
-	@./cct "$(BOOTSTRAP_COMPILER_SRC)" >"$(BOOTSTRAP_STAGE_LOGS_DIR)/stage0.host.stdout.log" 2>"$(BOOTSTRAP_STAGE_LOGS_DIR)/stage0.host.stderr.log"
+	@./cct-host "$(BOOTSTRAP_COMPILER_SRC)" >"$(BOOTSTRAP_STAGE_LOGS_DIR)/stage0.host.stdout.log" 2>"$(BOOTSTRAP_STAGE_LOGS_DIR)/stage0.host.stderr.log"
 	@for attempt in 1 2 3 4 5 6 7 8 9 10; do [ -f src/bootstrap/main_compiler ] && [ -f src/bootstrap/main_compiler.cgen.c ] && break; sleep 0.1; done
 	@test -f src/bootstrap/main_compiler
 	@test -f src/bootstrap/main_compiler.cgen.c
@@ -427,6 +494,17 @@ bootstrap-selfhost-ready: bootstrap-stage-identity | $(BOOTSTRAP_PHASE30_OUT) $(
 		"identity_diff=$(abspath $(BOOTSTRAP_STAGE12_MANIFEST_DIFF))" \
 		> "$(BOOTSTRAP_PHASE30_READY_MANIFEST)"
 	@echo "[30A] ready: $(BOOTSTRAP_SELFHOST_WRAPPER)"
+
+bootstrap-selfhost-lexer: bootstrap-selfhost-ready | $(BOOTSTRAP_PHASE31_TOOLS_DIR) $(BOOTSTRAP_PHASE31_LOGS_DIR) $(BOOTSTRAP_PHASE31_MANIFESTS_DIR)
+	@echo "[31B] Building bootstrap lexer tool with the self-hosted compiler..."
+	@"$(BOOTSTRAP_STAGE2_BIN)" src/bootstrap/main_lexer.cct "$(BOOTSTRAP_SELFHOST_LEXER_C)" >"$(BOOTSTRAP_PHASE31_LOGS_DIR)/lexer.emit.stdout.log" 2>"$(BOOTSTRAP_PHASE31_LOGS_DIR)/lexer.emit.stderr.log"
+	@$(CC) $(BOOTSTRAP_STAGE_CFLAGS) -o "$(BOOTSTRAP_SELFHOST_LEXER_BIN)" "$(BOOTSTRAP_SELFHOST_LEXER_C)" "$(BOOTSTRAP_SUPPORT_OBJ)" src/runtime/fs_runtime.c $(BOOTSTRAP_STAGE_LDFLAGS) >"$(BOOTSTRAP_PHASE31_LOGS_DIR)/lexer.cc.stdout.log" 2>"$(BOOTSTRAP_PHASE31_LOGS_DIR)/lexer.cc.stderr.log"
+	@printf '%s\n' \
+		"tool=lexer" \
+		"producer=$(abspath $(BOOTSTRAP_STAGE2_BIN))" \
+		"generated_c=$(abspath $(BOOTSTRAP_SELFHOST_LEXER_C))" \
+		"binary=$(abspath $(BOOTSTRAP_SELFHOST_LEXER_BIN))" \
+		> "$(BOOTSTRAP_PHASE31_MANIFESTS_DIR)/lexer.txt"
 
 bootstrap-selfhost-parser: bootstrap-selfhost-ready | $(BOOTSTRAP_PHASE30_TOOLS_DIR) $(BOOTSTRAP_PHASE30_LOGS_DIR) $(BOOTSTRAP_PHASE30_MANIFESTS_DIR)
 	@echo "[30A] Building bootstrap parser tool with self-hosted compiler..."
@@ -579,6 +657,59 @@ project-selfhost-package:
 		"profile=release" \
 		> "$$OUT_BIN.manifest.txt"
 
+project-selfhost-bench:
+	@if [ -z "$(PROJECT)" ]; then echo "project-selfhost-bench: missing PROJECT=<dir>" >&2; exit 2; fi
+	@if [ ! -x "$(BOOTSTRAP_SELFHOST_WRAPPER)" ] || [ ! -x "$(BOOTSTRAP_STAGE2_BIN)" ] || [ ! -f "$(BOOTSTRAP_SUPPORT_OBJ)" ]; then $(MAKE) --no-print-directory bootstrap-selfhost-ready >/dev/null; fi
+	@PROJECT_ROOT="$$(cd "$(PROJECT)" && pwd)"; \
+	BENCH_ROOT="$$PROJECT_ROOT/bench"; \
+	[ -d "$$BENCH_ROOT" ] || BENCH_ROOT="$$PROJECT_ROOT/tests"; \
+	ARTIFACT_DIR="$$PROJECT_ROOT/.cct/selfhost/bench"; \
+	mkdir -p "$$ARTIFACT_DIR"; \
+	DISCOVERED=0; PASS=0; FAIL=0; \
+	for BENCH_SRC in "$$BENCH_ROOT"/*.bench.cct; do \
+		[ -e "$$BENCH_SRC" ] || continue; \
+		BENCH_NAME="$$(basename "$$BENCH_SRC")"; \
+		if [ -n "$(PATTERN)" ] && ! printf '%s' "$$BENCH_NAME" | grep -F -q -- "$(PATTERN)"; then \
+			continue; \
+		fi; \
+		DISCOVERED=$$((DISCOVERED + 1)); \
+		BENCH_BIN="$$ARTIFACT_DIR/$${BENCH_NAME%.cct}.selfhost"; \
+		BENCH_C="$$BENCH_BIN.c"; \
+		if "$(BOOTSTRAP_STAGE2_BIN)" "$$BENCH_SRC" "$$BENCH_C" >/dev/null 2>"$$BENCH_BIN.emit.err" && \
+		   $(CC) $(BOOTSTRAP_STAGE_CFLAGS) -o "$$BENCH_BIN" "$$BENCH_C" "$(BOOTSTRAP_SUPPORT_OBJ)" src/runtime/fs_runtime.c $(BOOTSTRAP_STAGE_LDFLAGS) >/dev/null 2>"$$BENCH_BIN.cc.err"; then \
+			"$$BENCH_BIN" >/dev/null 2>"$$BENCH_BIN.run.err"; \
+			RC="$$?"; \
+			echo "[bench] PASS $$BENCH_SRC (rc=$$RC)"; \
+			PASS=$$((PASS + 1)); \
+		else \
+			echo "[bench] FAIL $$BENCH_SRC"; \
+			FAIL=$$((FAIL + 1)); \
+		fi; \
+	done; \
+	echo "[bench] discovered: $$DISCOVERED"; \
+	echo "[bench] summary: pass=$$PASS fail=$$FAIL"; \
+	test "$$FAIL" -eq 0
+
+bootstrap-promote: $(TARGET) $(CCT_HOST_WRAPPER) $(CCT_SELFHOST_ROOT) bootstrap-selfhost-ready | $(BOOTSTRAP_PHASE31_STATE_DIR) $(BOOTSTRAP_PHASE31_PERSIST_DIR) $(BOOTSTRAP_PHASE31_MANIFESTS_DIR)
+	@printf '%s\n' 'selfhost' >"$(BOOTSTRAP_PHASE31_DEFAULT_MODE)"
+	@printf '%s\n' \
+		"active=selfhost" \
+		"default_wrapper=$(abspath $(TARGET))" \
+		"host_wrapper=$(abspath $(CCT_HOST_WRAPPER))" \
+		"selfhost_wrapper=$(abspath $(CCT_SELFHOST_ROOT))" \
+		> "$(BOOTSTRAP_PHASE31_ACTIVE_MANIFEST)"
+	@echo "[31D] default compiler promoted to selfhost"
+
+bootstrap-demote: $(TARGET) $(CCT_HOST_WRAPPER) $(CCT_SELFHOST_ROOT) | $(BOOTSTRAP_PHASE31_STATE_DIR) $(BOOTSTRAP_PHASE31_PERSIST_DIR) $(BOOTSTRAP_PHASE31_MANIFESTS_DIR)
+	@printf '%s\n' 'host' >"$(BOOTSTRAP_PHASE31_DEFAULT_MODE)"
+	@printf '%s\n' \
+		"active=host" \
+		"default_wrapper=$(abspath $(TARGET))" \
+		"host_wrapper=$(abspath $(CCT_HOST_WRAPPER))" \
+		"selfhost_wrapper=$(abspath $(CCT_SELFHOST_ROOT))" \
+		> "$(BOOTSTRAP_PHASE31_ACTIVE_MANIFEST)"
+	@echo "[31D] default compiler demoted to host"
+
 test_lexer_bootstrap: cct_lexer_bootstrap
 	@bash tests/validate_lexer_full_suite.sh
 
@@ -626,20 +757,20 @@ test_diagnostic_taxonomy:
 	@./tests/runtime/test_diagnostic_taxonomy
 
 # Build relocatable distribution bundle
-dist: $(TARGET)
+dist: $(HOST_TARGET) $(TARGET) $(CCT_HOST_WRAPPER) $(CCT_SELFHOST_ROOT)
 	@echo "Building distribution bundle at $(DIST_DIR)..."
 	@mkdir -p $(DIST_DIR)/bin
 	@mkdir -p $(DIST_DIR)/lib/cct
 	@mkdir -p $(DIST_DIR)/docs
 	@mkdir -p $(DIST_DIR)/examples
 ifeq ($(IS_WINDOWS),1)
-	@cp $(TARGET) $(DIST_DIR)/bin/cct.exe
+	@cp $(HOST_TARGET) $(DIST_DIR)/bin/cct.exe
 	@printf '%s\r\n' '@echo off' \
 		'set "SCRIPT_DIR=%~dp0"' \
 		'if not defined CCT_STDLIB_DIR set "CCT_STDLIB_DIR=%SCRIPT_DIR%..\\lib\\cct"' \
 		'"%SCRIPT_DIR%cct.exe" %*' > $(DIST_DIR)/bin/cct.bat
 else
-	@cp $(TARGET) $(DIST_DIR)/bin/cct.bin
+	@cp $(HOST_TARGET) $(DIST_DIR)/bin/cct.bin
 	@printf '%s\n' '#!/bin/sh' \
 		'SCRIPT_DIR="$$(CDPATH= cd -- "$$(dirname -- "$$0")" && pwd)"' \
 		'export CCT_STDLIB_DIR="$${CCT_STDLIB_DIR:-$$SCRIPT_DIR/../lib/cct}"' \
@@ -751,16 +882,16 @@ endif
 	@cat $(RELEASE_ARCHIVE).sha256
 
 # Install binary (requires sudo on Linux)
-install: $(TARGET)
+install: $(HOST_TARGET) $(TARGET)
 	@echo "Installing $(TARGET) to $(PREFIX)/bin/..."
 	mkdir -p $(PREFIX)/bin
 ifeq ($(IS_WINDOWS),1)
-	cp $(TARGET) $(PREFIX)/bin/cct.exe
+	cp $(HOST_TARGET) $(PREFIX)/bin/cct.exe
 	@printf '%s\r\n' '@echo off' \
 		'if not defined CCT_STDLIB_DIR set "CCT_STDLIB_DIR=$(PREFIX)\\lib\\cct"' \
 		'"$(PREFIX)\\bin\\cct.exe" %*' > $(PREFIX)/bin/cct.bat
 else
-	cp $(TARGET) $(PREFIX)/bin/cct.bin
+	cp $(HOST_TARGET) $(PREFIX)/bin/cct.bin
 	@printf '%s\n' '#!/bin/sh' \
 		'export CCT_STDLIB_DIR="$${CCT_STDLIB_DIR:-$(PREFIX)/lib/cct}"' \
 		'exec "$(PREFIX)/bin/cct.bin" "$$@"' > $(PREFIX)/bin/cct
@@ -796,6 +927,7 @@ help:
 	@echo "  test      - Run test suite"
 	@echo "  test-legacy-full       - Run restored full legacy suite (phases 0-20)"
 	@echo "  test-legacy-rebased    - Run rebased legacy suite (phases 0-20)"
+	@echo "  test-host-legacy       - Run host fallback legacy suite"
 	@echo "  test-all-0-30          - Run aggregated full suite (phases 0-30)"
 	@echo "  test-legacy            - Run pre-bootstrap test block (phases before 21)"
 	@echo "  test-bootstrap         - Run bootstrap blocks (phases 21-26)"
@@ -807,6 +939,9 @@ help:
 	@echo "  test-operational-selfhost - Run operational self-hosted block (phase 30A)"
 	@echo "  test-operational-platform - Run operational platform blocks (phases 30B-30D)"
 	@echo "  test-phase30-final - Run final operational gate (phases 30A-30D)"
+	@echo "  test-phase31-final - Run self-hosted promotion gate (phase 31)"
+	@echo "  test-bootstrap-parity - Validate promoted compiler passes core language tests (parity gate)"
+	@echo "  test-all-0-31 - Run legacy + bootstrap + selfhost + operational + promotion suites"
 	@echo "  bootstrap-stage0 - Build bootstrap compiler stage0 under out/bootstrap/phase29/"
 	@echo "  bootstrap-support - Build host support object for self-hosting stages"
 	@echo "  bootstrap-stage1 - Self-compile compiler with stage0"
@@ -817,12 +952,16 @@ help:
 	@echo "  bootstrap-selfhost-parser - Build parser bootstrap tool with the self-hosted compiler"
 	@echo "  bootstrap-selfhost-semantic - Build semantic bootstrap tool with the self-hosted compiler"
 	@echo "  bootstrap-selfhost-codegen - Build codegen bootstrap tool with the self-hosted compiler"
+	@echo "  bootstrap-selfhost-lexer - Build lexer bootstrap tool with the self-hosted compiler"
 	@echo "  bootstrap-selfhost-build SRC=... OUT=... - Build a CCT program with the self-hosted compiler"
 	@echo "  bootstrap-selfhost-run SRC=... OUT=... [ARGS=...] - Build and run a CCT program with the self-hosted compiler"
 	@echo "  bootstrap-selfhost-stdlib-matrix - Materialize the explicit supported stdlib subset for the self-hosted path"
+	@echo "  bootstrap-promote - Switch default ./cct wrapper to self-host mode"
+	@echo "  bootstrap-demote - Switch default ./cct wrapper back to host mode"
 	@echo "  project-selfhost-build PROJECT=... [OUT=...] - Build a project with the self-hosted compiler"
 	@echo "  project-selfhost-run PROJECT=... [OUT=...] [ARGS=...] - Run a project with the self-hosted compiler"
 	@echo "  project-selfhost-test PROJECT=... [PATTERN=...] - Run project tests with the self-hosted compiler"
+	@echo "  project-selfhost-bench PROJECT=... [PATTERN=...] - Run project benchmarks with the self-hosted compiler"
 	@echo "  project-selfhost-clean PROJECT=... [ALL=1] - Clean project artifacts with the self-hosted compiler"
 	@echo "  project-selfhost-package PROJECT=... [OUT=...] - Build release artifact + manifest with the self-hosted compiler"
 	@echo "  test-phase PHASE=26    - Run a selected major phase block"
@@ -847,48 +986,48 @@ help:
 	@echo ""
 	@echo "Current status: FASE 11H target (stdlib consolidation + release packaging)"
 
-fmt: $(TARGET)
+fmt: $(HOST_TARGET) $(CORE_WRAPPERS)
 	@echo "Formatting .cct files..."
 	@find lib/cct -name "*.cct" -exec ./cct fmt {} \;
 	@find examples -name "*.cct" -exec ./cct fmt {} \;
 	@find tests/integration -name "*.cct" -exec ./cct fmt {} \;
 
-fmt-check: $(TARGET)
+fmt-check: $(HOST_TARGET) $(CORE_WRAPPERS)
 	@echo "Checking .cct formatting..."
 	@find lib/cct -name "*.cct" -exec ./cct fmt --check {} \; && \
 	 find examples -name "*.cct" -exec ./cct fmt --check {} \; && \
 	 find tests/integration -name "*.cct" -exec ./cct fmt --check {} \;
 
-lint: $(TARGET)
+lint: $(HOST_TARGET) $(CORE_WRAPPERS)
 	@echo "Running lint on integration fixtures..."
 	@find tests/integration -name "lint_*_12e2.cct" -exec ./cct lint {} \;
 
-project-build: $(TARGET)
+project-build: $(HOST_TARGET) $(CORE_WRAPPERS)
 	@./cct build
 
-project-run: $(TARGET)
+project-run: $(HOST_TARGET) $(CORE_WRAPPERS)
 	@./cct run
 
-project-test: $(TARGET)
+project-test: $(HOST_TARGET) $(CORE_WRAPPERS)
 	@./cct test
 
-project-test-strict: $(TARGET)
+project-test-strict: $(HOST_TARGET) $(CORE_WRAPPERS)
 	@./cct test --strict-lint --fmt-check
 
-project-bench: $(TARGET)
+project-bench: $(HOST_TARGET) $(CORE_WRAPPERS)
 	@./cct bench
 
-project-clean: $(TARGET)
+project-clean: $(HOST_TARGET) $(CORE_WRAPPERS)
 	@./cct clean
 
-doc: $(TARGET)
+doc: $(HOST_TARGET) $(CORE_WRAPPERS)
 	@./cct doc
 
-doc-strict: $(TARGET)
+doc-strict: $(HOST_TARGET) $(CORE_WRAPPERS)
 	@./cct doc --warn-missing-docs --strict-docs
 
 # FASE 12H: Release check targets
-release-check: $(TARGET)
+release-check: $(HOST_TARGET) $(CORE_WRAPPERS)
 	@echo "Running FASE 12 release validation..."
 	@./cct fmt --check lib/cct/*.cct examples/**/*.cct || true
 	@./cct lint --strict lib/cct/*.cct || true
@@ -896,7 +1035,7 @@ release-check: $(TARGET)
 	@./cct doc --project . --format both --no-timestamp || true
 	@echo "Release check complete."
 
-phase12-final-audit: $(TARGET)
+phase12-final-audit: $(HOST_TARGET) $(CORE_WRAPPERS)
 	@echo "=== FASE 12 Final Audit ==="
 	@./cct --version || echo "Version flag not implemented"
 	@echo ""
@@ -912,4 +1051,4 @@ phase12-final-audit: $(TARGET)
 	@echo ""
 	@echo "Audit complete."
 
-.PHONY: all clean test test-legacy-full test-legacy-rebased test-all-0-30 test-legacy test-bootstrap test-bootstrap-lexer test-bootstrap-parser test-bootstrap-semantic test-bootstrap-codegen test-bootstrap-selfhost test-operational-selfhost test-operational-platform test-phase30-final test-phase test_fluxus_storage test_diagnostic_taxonomy dist release install uninstall help fmt fmt-check lint lbos-bridge bootstrap-support bootstrap-stage0 bootstrap-stage1 bootstrap-stage2 bootstrap-stage-diff bootstrap-stage-identity bootstrap-stage-bench bootstrap-selfhost-ready bootstrap-selfhost-parser bootstrap-selfhost-semantic bootstrap-selfhost-codegen bootstrap-selfhost-build bootstrap-selfhost-run bootstrap-selfhost-stdlib-matrix project-selfhost-build project-selfhost-run project-selfhost-test project-selfhost-clean project-selfhost-package project-build project-run project-test project-test-strict project-bench project-clean doc doc-strict release-check phase12-final-audit
+.PHONY: all clean test test-legacy-full test-legacy-rebased test-host-legacy test-all-0-30 test-all-0-31 test-bootstrap-parity test-legacy test-bootstrap test-bootstrap-lexer test-bootstrap-parser test-bootstrap-semantic test-bootstrap-codegen test-bootstrap-selfhost test-operational-selfhost test-operational-platform test-phase30-final test-phase31-final test-phase test_fluxus_storage test_diagnostic_taxonomy dist release install uninstall help fmt fmt-check lint lbos-bridge bootstrap-support bootstrap-stage0 bootstrap-stage1 bootstrap-stage2 bootstrap-stage-diff bootstrap-stage-identity bootstrap-stage-bench bootstrap-selfhost-ready bootstrap-selfhost-parser bootstrap-selfhost-semantic bootstrap-selfhost-codegen bootstrap-selfhost-lexer bootstrap-selfhost-build bootstrap-selfhost-run bootstrap-selfhost-stdlib-matrix bootstrap-promote bootstrap-demote project-selfhost-build project-selfhost-run project-selfhost-test project-selfhost-bench project-selfhost-clean project-selfhost-package project-build project-run project-test project-test-strict project-bench project-clean doc doc-strict release-check phase12-final-audit

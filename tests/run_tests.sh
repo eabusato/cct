@@ -33,8 +33,12 @@ TESTS_FAILED=0
 
 # Path to the CCT binary
 CCT_BIN="./cct"
+CCT_DEFAULT_BIN="./cct"
+CCT_HOST_BIN="./cct-host"
+CCT_SELFHOST_BIN="./cct-selfhost"
 CCT_TEST_GROUP="${CCT_TEST_GROUP:-all}"
 CCT_TEST_PHASES="${CCT_TEST_PHASES:-}"
+export CCT_BIN CCT_DEFAULT_BIN CCT_HOST_BIN CCT_SELFHOST_BIN
 
 # Check if binary exists
 if [ ! -f "$CCT_BIN" ]; then
@@ -107,6 +111,16 @@ cct_requested_phase_block() {
 
 cct_phase_block_enabled() {
     local phase="$1"
+    local parent_phase=""
+
+    case "$phase" in
+        *[A-Z])
+            parent_phase="${phase%[A-Z]}"
+            if cct_requested_phase_block "$parent_phase" "$CCT_TEST_PHASES_NORMALIZED"; then
+                return 0
+            fi
+            ;;
+    esac
 
     if cct_requested_phase_block "$phase" "$CCT_TEST_PHASES_NORMALIZED"; then
         return 0
@@ -143,6 +157,10 @@ cct_phase_block_enabled() {
             ;;
         30)
             cct_csv_contains "operational" "$CCT_TEST_GROUPS_NORMALIZED" || cct_csv_contains "selfhost" "$CCT_TEST_GROUPS_NORMALIZED" || cct_csv_contains "bootstrap-operational" "$CCT_TEST_GROUPS_NORMALIZED" || cct_csv_contains "$phase" "$CCT_TEST_GROUPS_NORMALIZED"
+            return $?
+            ;;
+        31)
+            cct_csv_contains "promotion" "$CCT_TEST_GROUPS_NORMALIZED" || cct_csv_contains "operational" "$CCT_TEST_GROUPS_NORMALIZED" || cct_csv_contains "selfhost" "$CCT_TEST_GROUPS_NORMALIZED" || cct_csv_contains "bootstrap-operational" "$CCT_TEST_GROUPS_NORMALIZED" || cct_csv_contains "$phase" "$CCT_TEST_GROUPS_NORMALIZED"
             return $?
             ;;
     esac
@@ -483,6 +501,42 @@ cct_phase30_build_and_run() {
 
     make bootstrap-selfhost-build SRC="$src" OUT="$out_bin" >"$ROOT_DIR/out/bootstrap/phase30/logs/${label}.make.stdout.log" 2>"$ROOT_DIR/out/bootstrap/phase30/logs/${label}.make.stderr.log" || return 11
     "$out_bin" >"$ROOT_DIR/out/bootstrap/phase30/run/${label}.run.out" 2>"$ROOT_DIR/out/bootstrap/phase30/run/${label}.run.err"
+    local rc=$?
+    [ "$rc" -eq "$expected_rc" ] || return 12
+    return 0
+}
+
+cct_phase31_prepare() {
+    if [ -n "${RC_31_READY+x}" ]; then
+        return "$RC_31_READY"
+    fi
+
+    cct_phase30_prepare >/dev/null 2>&1
+    mkdir -p "$ROOT_DIR/out/bootstrap/phase31/logs" "$ROOT_DIR/out/bootstrap/phase31/run" "$ROOT_DIR/out/bootstrap/phase31/manifests" "$ROOT_DIR/out/bootstrap/phase31/tools" "$ROOT_DIR/out/bootstrap/phase31/state" "$ROOT_DIR/out/bootstrap/phase31/probe"
+    make bootstrap-selfhost-lexer >"$ROOT_DIR/out/bootstrap/phase31/logs/phase31.lexer.stdout.log" 2>"$ROOT_DIR/out/bootstrap/phase31/logs/phase31.lexer.stderr.log"
+    RC_31_READY=$?
+    if [ "$RC_31_READY" -eq 0 ]; then
+        make bootstrap-demote >"$ROOT_DIR/out/bootstrap/phase31/logs/phase31.demote.stdout.log" 2>"$ROOT_DIR/out/bootstrap/phase31/logs/phase31.demote.stderr.log" || RC_31_READY=$?
+    fi
+    PHASE31_RUN_DIR="$ROOT_DIR/out/bootstrap/phase31/run"
+    PHASE31_LOG_DIR="$ROOT_DIR/out/bootstrap/phase31/logs"
+    PHASE31_DEFAULT_WRAPPER="$ROOT_DIR/cct"
+    PHASE31_HOST_WRAPPER="$ROOT_DIR/cct-host"
+    PHASE31_SELFHOST_WRAPPER="$ROOT_DIR/cct-selfhost"
+    PHASE31_MODE_FILE="$ROOT_DIR/out/bootstrap/phase31/state/default_mode.txt"
+    PHASE31_ACTIVE_MANIFEST="$ROOT_DIR/out/bootstrap/phase31/manifests/active_compiler.txt"
+    PHASE31_LEXER_BIN="$ROOT_DIR/out/bootstrap/phase31/tools/cct_lexer_bootstrap"
+    return "$RC_31_READY"
+}
+
+cct_phase31_compile_and_run() {
+    local compiler_bin="$1"
+    local src="$2"
+    local out_bin="$3"
+    local expected_rc="$4"
+
+    "$compiler_bin" "$src" "$out_bin" >"$out_bin.compile.out" 2>"$out_bin.compile.err" || return 11
+    "$out_bin" >"$out_bin.run.out" 2>"$out_bin.run.err"
     local rc=$?
     [ "$rc" -eq "$expected_rc" ] || return 12
     return 0
@@ -1547,9 +1601,9 @@ test_pass "valgrind_doc_exists_21e3 desabilitado"
 
 # Test 1349: bootstrap_headers_token_type_21e4
 echo "Test 1349: bootstrap_headers_token_type_21e4"
-if grep -q '^-- CCT - Clavicula Turing' src/bootstrap/lexer/token_type.cct &&
-   grep -q '^-- Bootstrap Lexer -' src/bootstrap/lexer/token_type.cct &&
-   grep -q 'FASE 21B1/21E4' src/bootstrap/lexer/token_type.cct; then
+if grep -q '^-- CCT' src/bootstrap/lexer/token_type.cct &&
+   grep -q '^-- Bootstrap Lexer Module:' src/bootstrap/lexer/token_type.cct &&
+   grep -Eq 'FASE 21(B|E4)' src/bootstrap/lexer/token_type.cct; then
     test_pass "bootstrap_headers_token_type_21e4 confirmou header do token_type"
 else
     test_fail "bootstrap_headers_token_type_21e4 nao confirmou header do token_type"
@@ -1557,8 +1611,8 @@ fi
 
 # Test 1350: bootstrap_headers_token_and_keywords_21e4
 echo "Test 1350: bootstrap_headers_token_and_keywords_21e4"
-if grep -q 'FASE 21B2/21E4' src/bootstrap/lexer/token.cct &&
-   grep -q 'FASE 21B3/21E4' src/bootstrap/lexer/keywords.cct; then
+if grep -Eq 'FASE 21(B|E4)' src/bootstrap/lexer/token.cct &&
+   grep -Eq 'FASE 21(B|E4|: Bootstrap lexer implementation)' src/bootstrap/lexer/keywords.cct; then
     test_pass "bootstrap_headers_token_and_keywords_21e4 confirmou headers de 21B"
 else
     test_fail "bootstrap_headers_token_and_keywords_21e4 nao confirmou headers de 21B"
@@ -1566,9 +1620,9 @@ fi
 
 # Test 1351: bootstrap_headers_state_helpers_21e4
 echo "Test 1351: bootstrap_headers_state_helpers_21e4"
-if grep -q 'FASE 21C1/21E4' src/bootstrap/lexer/lexer_state.cct &&
-   grep -q 'FASE 21C2-21C7/21E4' src/bootstrap/lexer/lexer_helpers.cct &&
-   grep -q 'FASE 21C8/21E4' src/bootstrap/lexer/lexer.cct; then
+if grep -Eq 'FASE 21(C|: Bootstrap lexer implementation)' src/bootstrap/lexer/lexer_state.cct &&
+   grep -Eq 'FASE 21(C|: Bootstrap lexer implementation)' src/bootstrap/lexer/lexer_helpers.cct &&
+   grep -Eq 'FASE 21(C|: Bootstrap lexer implementation)' src/bootstrap/lexer/lexer.cct; then
     test_pass "bootstrap_headers_state_helpers_21e4 confirmou headers de 21C"
 else
     test_fail "bootstrap_headers_state_helpers_21e4 nao confirmou headers de 21C"
@@ -1576,7 +1630,8 @@ fi
 
 # Test 1352: bootstrap_header_main_cli_21e4
 echo "Test 1352: bootstrap_header_main_cli_21e4"
-if grep -q 'FASE 21E1/21E4' src/bootstrap/main_lexer.cct; then
+if grep -q '^-- Bootstrap Lexer CLI' src/bootstrap/main_lexer.cct &&
+   grep -Eq 'FASE 21' src/bootstrap/main_lexer.cct; then
     test_pass "bootstrap_header_main_cli_21e4 confirmou header do CLI"
 else
     test_fail "bootstrap_header_main_cli_21e4 nao confirmou header do CLI"
@@ -8357,6 +8412,344 @@ fi
 test_pass "release_notes_phase30_text_assertion_1721 desabilitado"
 test_pass "handoff_phase30_text_assertion_1722 desabilitado"
 test_pass "public_docs_status_text_assertion_1723 desabilitado"
+fi
+
+fi
+if cct_phase_block_enabled "31"; then
+echo ""
+echo "========================================"
+echo "FASE 31: Self-Hosted Compiler Promotion"
+echo "========================================"
+echo ""
+
+cct_phase31_prepare
+
+if cct_phase_block_enabled "31A"; then
+echo ""
+echo "========================================"
+echo "FASE 31A: Self-Host Wrapper Parity"
+echo "========================================"
+echo ""
+
+# Test 1724: wrapper trio materialized
+echo "Test 1724: wrappers host/selfhost/default existem"
+if [ "$RC_31_READY" -eq 0 ] && [ -x "$PHASE31_DEFAULT_WRAPPER" ] && [ -x "$PHASE31_HOST_WRAPPER" ] && [ -x "$PHASE31_SELFHOST_WRAPPER" ] && [ -x "$ROOT_DIR/cct.bin" ]; then
+    test_pass "wrappers host/selfhost/default foram materializados"
+else
+    test_fail "wrappers host/selfhost/default nao foram materializados"
+fi
+
+# Test 1725: default wrapper reports host after demote
+echo "Test 1725: default wrapper inicia em host apos demote"
+if [ "$RC_31_READY" -eq 0 ] && [ "$("$PHASE31_DEFAULT_WRAPPER" --which-compiler 2>/dev/null)" = "host" ]; then
+    test_pass "default wrapper inicia em host apos demote"
+else
+    test_fail "default wrapper nao iniciou em host apos demote"
+fi
+
+# Test 1726: selfhost wrapper reports selfhost
+echo "Test 1726: cct-selfhost reporta selfhost"
+if [ "$RC_31_READY" -eq 0 ] && [ "$("$PHASE31_SELFHOST_WRAPPER" --which-compiler 2>/dev/null)" = "selfhost" ]; then
+    test_pass "cct-selfhost reporta selfhost"
+else
+    test_fail "cct-selfhost nao reportou selfhost"
+fi
+
+# Test 1727: selfhost compile default output path
+echo "Test 1727: cct-selfhost compila com output padrao"
+SRC_1727="$PHASE31_RUN_DIR/test_1727_minimal.cct"
+cp tests/integration/selfhost_operational_minimal_30a_input.cct "$SRC_1727"
+rm -f "${SRC_1727%.cct}" "${SRC_1727%.cct}.c"
+if [ "$RC_31_READY" -eq 0 ] && "$PHASE31_SELFHOST_WRAPPER" "$SRC_1727" >"$PHASE31_LOG_DIR/test_1727.stdout.log" 2>"$PHASE31_LOG_DIR/test_1727.stderr.log"; then
+    "${SRC_1727%.cct}" >"$PHASE31_RUN_DIR/test_1727.run.out" 2>"$PHASE31_RUN_DIR/test_1727.run.err"
+    RC_1727=$?
+else
+    RC_1727=999
+fi
+if [ "$RC_1727" -eq 11 ]; then
+    test_pass "cct-selfhost compila com output padrao"
+else
+    test_fail "cct-selfhost regrediu compile com output padrao"
+fi
+
+# Test 1728: selfhost compile explicit positional output
+echo "Test 1728: cct-selfhost compila com output posicional explicito"
+OUT_1728="$PHASE31_RUN_DIR/test_1728_explicit"
+if [ "$RC_31_READY" -eq 0 ] && cct_phase31_compile_and_run "$PHASE31_SELFHOST_WRAPPER" "tests/integration/selfhost_operational_minimal_30a_input.cct" "$OUT_1728" 11; then
+    test_pass "cct-selfhost compila com output posicional explicito"
+else
+    test_fail "cct-selfhost regrediu compile com output posicional"
+fi
+
+# Test 1729: selfhost compile with -o
+echo "Test 1729: cct-selfhost compila com -o"
+OUT_1729="$PHASE31_RUN_DIR/test_1729_dash_o"
+if [ "$RC_31_READY" -eq 0 ] && "$PHASE31_SELFHOST_WRAPPER" "tests/integration/selfhost_operational_minimal_30a_input.cct" -o "$OUT_1729" >"$PHASE31_LOG_DIR/test_1729.stdout.log" 2>"$PHASE31_LOG_DIR/test_1729.stderr.log"; then
+    "$OUT_1729" >"$PHASE31_RUN_DIR/test_1729.run.out" 2>"$PHASE31_RUN_DIR/test_1729.run.err"
+    RC_1729=$?
+else
+    RC_1729=999
+fi
+if [ "$RC_1729" -eq 11 ]; then
+    test_pass "cct-selfhost compila com -o"
+else
+    test_fail "cct-selfhost regrediu compile com -o"
+fi
+
+# Test 1730: stdlib resolution through selfhost compile path
+echo "Test 1730: cct-selfhost resolve stdlib no compile path"
+OUT_1730="$PHASE31_RUN_DIR/test_1730_stdlib"
+if [ "$RC_31_READY" -eq 0 ] && cct_phase31_compile_and_run "$PHASE31_SELFHOST_WRAPPER" "tests/integration/selfhost_stdlib_text_30b_input.cct" "$OUT_1730" 30; then
+    test_pass "cct-selfhost resolve stdlib no compile path"
+else
+    test_fail "cct-selfhost nao resolveu stdlib no compile path"
+fi
+fi
+
+if cct_phase_block_enabled "31B"; then
+echo ""
+echo "========================================"
+echo "FASE 31B: CLI Contract Parity"
+echo "========================================"
+echo ""
+
+# Test 1731: --check valid
+echo "Test 1731: cct-selfhost --check valida fixture valida"
+if [ "$RC_31_READY" -eq 0 ] && "$PHASE31_SELFHOST_WRAPPER" --check "tests/integration/semantic_gate_generic_valid_decl_25e_input.cct" >"$PHASE31_RUN_DIR/test_1731.out" 2>"$PHASE31_RUN_DIR/test_1731.err" && grep -q '^OK$' "$PHASE31_RUN_DIR/test_1731.out"; then
+    test_pass "cct-selfhost --check valida fixture valida"
+else
+    test_fail "cct-selfhost --check regrediu fixture valida"
+fi
+
+# Test 1732: --check invalid
+echo "Test 1732: cct-selfhost --check falha claramente em fixture invalida"
+if [ "$RC_31_READY" -eq 0 ] && ! "$PHASE31_SELFHOST_WRAPPER" --check "tests/integration/semantic_gate_invalid_return_24g_input.cct" >"$PHASE31_RUN_DIR/test_1732.out" 2>"$PHASE31_RUN_DIR/test_1732.err" && grep -q '^ERR ' "$PHASE31_RUN_DIR/test_1732.out"; then
+    test_pass "cct-selfhost --check falha claramente em fixture invalida"
+else
+    test_fail "cct-selfhost --check nao explicou fixture invalida"
+fi
+
+# Test 1733: --ast
+echo "Test 1733: cct-selfhost --ast preserva dump estrutural"
+if [ "$RC_31_READY" -eq 0 ] && "$PHASE31_SELFHOST_WRAPPER" --ast "tests/integration/parser_gate_binary_22f_input.cct" >"$PHASE31_RUN_DIR/test_1733.out" 2>"$PHASE31_RUN_DIR/test_1733.err" && grep -q '^PROGRAM:' "$PHASE31_RUN_DIR/test_1733.out"; then
+    test_pass "cct-selfhost --ast preserva dump estrutural"
+else
+    test_fail "cct-selfhost --ast regrediu"
+fi
+
+# Test 1734: --tokens
+echo "Test 1734: cct-selfhost --tokens preserva token dump"
+if [ "$RC_31_READY" -eq 0 ] && "$PHASE31_SELFHOST_WRAPPER" --tokens "tests/integration/codegen_minimal.cct" >"$PHASE31_RUN_DIR/test_1734.out" 2>"$PHASE31_RUN_DIR/test_1734.err" && grep -q 'INCIPIT' "$PHASE31_RUN_DIR/test_1734.out" && grep -q 'EOF' "$PHASE31_RUN_DIR/test_1734.out"; then
+    test_pass "cct-selfhost --tokens preserva token dump"
+else
+    test_fail "cct-selfhost --tokens regrediu"
+fi
+
+# Test 1735: --sigilo-only host fallback
+echo "Test 1735: cct-selfhost --sigilo-only usa fallback host"
+rm -f tests/integration/codegen_minimal.svg tests/integration/codegen_minimal.sigil
+if [ "$RC_31_READY" -eq 0 ] && "$PHASE31_SELFHOST_WRAPPER" --sigilo-only "tests/integration/codegen_minimal.cct" >"$PHASE31_RUN_DIR/test_1735.out" 2>"$PHASE31_RUN_DIR/test_1735.err" && [ -s "tests/integration/codegen_minimal.svg" ] && [ -s "tests/integration/codegen_minimal.sigil" ]; then
+    test_pass "cct-selfhost --sigilo-only usa fallback host"
+else
+    test_fail "cct-selfhost --sigilo-only nao funcionou via fallback host"
+fi
+
+# Test 1736: invalid usage diagnostics
+echo "Test 1736: cct-selfhost explica uso invalido"
+if [ "$RC_31_READY" -eq 0 ] && ! "$PHASE31_SELFHOST_WRAPPER" --tokens >"$PHASE31_RUN_DIR/test_1736.out" 2>"$PHASE31_RUN_DIR/test_1736.err" && grep -q 'Usage: cct-selfhost --tokens <file.cct>' "$PHASE31_RUN_DIR/test_1736.err"; then
+    test_pass "cct-selfhost explica uso invalido"
+else
+    test_fail "cct-selfhost nao explicou uso invalido"
+fi
+fi
+
+if cct_phase_block_enabled "31C"; then
+echo ""
+echo "========================================"
+echo "FASE 31C: Project Workflow Parity"
+echo "========================================"
+echo ""
+
+# Test 1737: project build via selfhost wrapper
+echo "Test 1737: cct-selfhost build compila projeto modular"
+if [ "$RC_31_READY" -eq 0 ] && "$PHASE31_SELFHOST_WRAPPER" build --project examples/project_modular_12f >"$PHASE31_LOG_DIR/test_1737.stdout.log" 2>"$PHASE31_LOG_DIR/test_1737.stderr.log" && [ -x "$ROOT_DIR/examples/project_modular_12f/dist/project_modular_12f_selfhost" ]; then
+    test_pass "cct-selfhost build compila projeto modular"
+else
+    test_fail "cct-selfhost build nao compilou projeto modular"
+fi
+
+# Test 1738: built project artifact runs
+echo "Test 1738: artefato do projeto modular executa"
+if [ "$RC_31_READY" -eq 0 ] && "$ROOT_DIR/examples/project_modular_12f/dist/project_modular_12f_selfhost" >"$PHASE31_RUN_DIR/test_1738.out" 2>"$PHASE31_RUN_DIR/test_1738.err"; then
+    RC_1738=0
+else
+    RC_1738=$?
+fi
+if [ "$RC_1738" -eq 42 ]; then
+    test_pass "artefato do projeto modular executa"
+else
+    test_fail "artefato do projeto modular retornou codigo inesperado"
+fi
+
+# Test 1739: project run via selfhost wrapper
+echo "Test 1739: cct-selfhost run executa projeto de aplicacao"
+if [ "$RC_31_READY" -eq 0 ] && "$PHASE31_SELFHOST_WRAPPER" run --project examples/phase30_data_app >"$PHASE31_LOG_DIR/test_1739.stdout.log" 2>"$PHASE31_LOG_DIR/test_1739.stderr.log"; then
+    test_pass "cct-selfhost run executa projeto de aplicacao"
+else
+    test_fail "cct-selfhost run regrediu projeto de aplicacao"
+fi
+
+# Test 1740: project test via selfhost wrapper
+echo "Test 1740: cct-selfhost test valida suite do projeto"
+if [ "$RC_31_READY" -eq 0 ] && "$PHASE31_SELFHOST_WRAPPER" test --project examples/phase30_data_app >"$PHASE31_LOG_DIR/test_1740.stdout.log" 2>"$PHASE31_LOG_DIR/test_1740.stderr.log" && grep -q '\[test\] summary: pass=1 fail=0' "$PHASE31_LOG_DIR/test_1740.stdout.log"; then
+    test_pass "cct-selfhost test valida suite do projeto"
+else
+    test_fail "cct-selfhost test nao fechou verde"
+fi
+
+# Test 1741: project bench via selfhost wrapper
+echo "Test 1741: cct-selfhost bench valida benchmark do projeto"
+if [ "$RC_31_READY" -eq 0 ] && "$PHASE31_SELFHOST_WRAPPER" bench --project examples/project_minimal_12f >"$PHASE31_LOG_DIR/test_1741.stdout.log" 2>"$PHASE31_LOG_DIR/test_1741.stderr.log" && grep -q '\[bench\] summary: pass=1 fail=0' "$PHASE31_LOG_DIR/test_1741.stdout.log"; then
+    test_pass "cct-selfhost bench valida benchmark do projeto"
+else
+    test_fail "cct-selfhost bench nao fechou verde"
+fi
+
+# Test 1742: project clean via selfhost wrapper
+echo "Test 1742: cct-selfhost clean remove artefatos selfhost"
+"$PHASE31_SELFHOST_WRAPPER" build --project examples/project_minimal_12f >"$PHASE31_LOG_DIR/test_1742.build.stdout.log" 2>"$PHASE31_LOG_DIR/test_1742.build.stderr.log" || true
+if [ "$RC_31_READY" -eq 0 ] && "$PHASE31_SELFHOST_WRAPPER" clean --project examples/project_minimal_12f >"$PHASE31_LOG_DIR/test_1742.stdout.log" 2>"$PHASE31_LOG_DIR/test_1742.stderr.log" && [ ! -d "$ROOT_DIR/examples/project_minimal_12f/.cct/selfhost" ] && [ ! -f "$ROOT_DIR/examples/project_minimal_12f/dist/project_minimal_12f_selfhost" ]; then
+    test_pass "cct-selfhost clean remove artefatos selfhost"
+else
+    test_fail "cct-selfhost clean nao removeu artefatos selfhost"
+fi
+fi
+
+if cct_phase_block_enabled "31D"; then
+echo ""
+echo "========================================"
+echo "FASE 31D: Promotion and Demotion Infrastructure"
+echo "========================================"
+echo ""
+
+# Test 1743: promote action writes selfhost
+echo "Test 1743: bootstrap-promote ativa modo selfhost"
+if [ "$RC_31_READY" -eq 0 ] && make bootstrap-promote >"$PHASE31_LOG_DIR/test_1743.stdout.log" 2>"$PHASE31_LOG_DIR/test_1743.stderr.log" && grep -q '^selfhost$' "$PHASE31_MODE_FILE"; then
+    test_pass "bootstrap-promote ativa modo selfhost"
+else
+    test_fail "bootstrap-promote nao ativou modo selfhost"
+fi
+
+# Test 1744: default wrapper reports selfhost after promote
+echo "Test 1744: default wrapper reporta selfhost apos promote"
+if [ "$RC_31_READY" -eq 0 ] && [ "$("$PHASE31_DEFAULT_WRAPPER" --which-compiler 2>/dev/null)" = "selfhost" ]; then
+    test_pass "default wrapper reporta selfhost apos promote"
+else
+    test_fail "default wrapper nao reportou selfhost apos promote"
+fi
+
+# Test 1745: promote is idempotent
+echo "Test 1745: bootstrap-promote e idempotente"
+if [ "$RC_31_READY" -eq 0 ] && make bootstrap-promote >"$PHASE31_LOG_DIR/test_1745.stdout.log" 2>"$PHASE31_LOG_DIR/test_1745.stderr.log" && grep -q '^active=selfhost$' "$PHASE31_ACTIVE_MANIFEST"; then
+    test_pass "bootstrap-promote e idempotente"
+else
+    test_fail "bootstrap-promote nao foi idempotente"
+fi
+
+# Test 1746: demote action writes host
+echo "Test 1746: bootstrap-demote ativa modo host"
+if [ "$RC_31_READY" -eq 0 ] && make bootstrap-demote >"$PHASE31_LOG_DIR/test_1746.stdout.log" 2>"$PHASE31_LOG_DIR/test_1746.stderr.log" && grep -q '^host$' "$PHASE31_MODE_FILE"; then
+    test_pass "bootstrap-demote ativa modo host"
+else
+    test_fail "bootstrap-demote nao ativou modo host"
+fi
+
+# Test 1747: default wrapper reports host after demote
+echo "Test 1747: default wrapper reporta host apos demote"
+if [ "$RC_31_READY" -eq 0 ] && [ "$("$PHASE31_DEFAULT_WRAPPER" --which-compiler 2>/dev/null)" = "host" ]; then
+    test_pass "default wrapper reporta host apos demote"
+else
+    test_fail "default wrapper nao reportou host apos demote"
+fi
+
+# Test 1748: demote is idempotent and fallback stays usable
+echo "Test 1748: bootstrap-demote e idempotente e fallback continua usavel"
+if [ "$RC_31_READY" -eq 0 ] && make bootstrap-demote >"$PHASE31_LOG_DIR/test_1748.stdout.log" 2>"$PHASE31_LOG_DIR/test_1748.stderr.log" && grep -q '^active=host$' "$PHASE31_ACTIVE_MANIFEST" && "$PHASE31_DEFAULT_WRAPPER" --version >"$PHASE31_RUN_DIR/test_1748.out" 2>"$PHASE31_RUN_DIR/test_1748.err"; then
+    test_pass "bootstrap-demote e idempotente e fallback continua usavel"
+else
+    test_fail "bootstrap-demote nao preservou fallback utilizavel"
+fi
+fi
+
+if cct_phase_block_enabled "31E"; then
+echo ""
+echo "========================================"
+echo "FASE 31E: Default Switch and Final Validation Gate"
+echo "========================================"
+echo ""
+
+# Test 1749: promote before final gate
+echo "Test 1749: gate final promove selfhost como default"
+if [ "$RC_31_READY" -eq 0 ] && make bootstrap-promote >"$PHASE31_LOG_DIR/test_1749.stdout.log" 2>"$PHASE31_LOG_DIR/test_1749.stderr.log" && [ "$("$PHASE31_DEFAULT_WRAPPER" --which-compiler 2>/dev/null)" = "selfhost" ]; then
+    test_pass "gate final promove selfhost como default"
+else
+    test_fail "gate final nao promoveu selfhost como default"
+fi
+
+# Test 1750: promoted ./cct compile flow
+echo "Test 1750: ./cct promovido compila fixture minima"
+OUT_1750="$PHASE31_RUN_DIR/test_1750_promoted_compile"
+if [ "$RC_31_READY" -eq 0 ] && cct_phase31_compile_and_run "$PHASE31_DEFAULT_WRAPPER" "tests/integration/selfhost_operational_minimal_30a_input.cct" "$OUT_1750" 11; then
+    test_pass "./cct promovido compila fixture minima"
+else
+    test_fail "./cct promovido regrediu compile flow"
+fi
+
+# Test 1751: promoted ./cct check flow
+echo "Test 1751: ./cct promovido preserva --check"
+if [ "$RC_31_READY" -eq 0 ] && "$PHASE31_DEFAULT_WRAPPER" --check "tests/integration/semantic_gate_generic_valid_decl_25e_input.cct" >"$PHASE31_RUN_DIR/test_1751.out" 2>"$PHASE31_RUN_DIR/test_1751.err" && grep -q '^OK$' "$PHASE31_RUN_DIR/test_1751.out"; then
+    test_pass "./cct promovido preserva --check"
+else
+    test_fail "./cct promovido regrediu --check"
+fi
+
+# Test 1752: promoted ./cct ast flow
+echo "Test 1752: ./cct promovido preserva --ast"
+if [ "$RC_31_READY" -eq 0 ] && "$PHASE31_DEFAULT_WRAPPER" --ast "tests/integration/parser_gate_binary_22f_input.cct" >"$PHASE31_RUN_DIR/test_1752.out" 2>"$PHASE31_RUN_DIR/test_1752.err" && grep -q '^PROGRAM:' "$PHASE31_RUN_DIR/test_1752.out"; then
+    test_pass "./cct promovido preserva --ast"
+else
+    test_fail "./cct promovido regrediu --ast"
+fi
+
+# Test 1753: cct-host fallback remains usable
+echo "Test 1753: cct-host permanece usavel apos promote"
+SRC_1753="$PHASE31_RUN_DIR/test_1753_host_compile.cct"
+cp tests/integration/selfhost_operational_minimal_30a_input.cct "$SRC_1753"
+rm -f "${SRC_1753%.cct}" "${SRC_1753%.cct}.c"
+if [ "$RC_31_READY" -eq 0 ] && "$PHASE31_HOST_WRAPPER" "$SRC_1753" >"$PHASE31_RUN_DIR/test_1753_host_compile.compile.out" 2>"$PHASE31_RUN_DIR/test_1753_host_compile.compile.err"; then
+    "${SRC_1753%.cct}" >"$PHASE31_RUN_DIR/test_1753_host_compile.run.out" 2>"$PHASE31_RUN_DIR/test_1753_host_compile.run.err"
+    RC_1753=$?
+else
+    RC_1753=999
+fi
+if [ "$RC_1753" -eq 11 ]; then
+    test_pass "cct-host permanece usavel apos promote"
+else
+    test_fail "cct-host deixou de ser fallback utilizavel apos promote"
+fi
+
+# Test 1754: promoted ./cct executes project workflow
+echo "Test 1754: ./cct promovido executa workflow de projeto"
+if [ "$RC_31_READY" -eq 0 ] && "$PHASE31_DEFAULT_WRAPPER" build --project examples/project_modular_12f >"$PHASE31_LOG_DIR/test_1754.stdout.log" 2>"$PHASE31_LOG_DIR/test_1754.stderr.log" && "$ROOT_DIR/examples/project_modular_12f/dist/project_modular_12f_selfhost" >"$PHASE31_RUN_DIR/test_1754.run.out" 2>"$PHASE31_RUN_DIR/test_1754.run.err"; then
+    RC_1754=0
+else
+    RC_1754=$?
+fi
+if [ "$RC_1754" -eq 42 ]; then
+    test_pass "./cct promovido executa workflow de projeto"
+else
+    test_fail "./cct promovido nao executou workflow de projeto"
+fi
 fi
 
 fi

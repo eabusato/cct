@@ -13,6 +13,7 @@ ADVOCARE "../parser/ast.cct"
 ADVOCARE "semantic_block.cct"
 ADVOCARE "semantic_context.cct"
 ADVOCARE "semantic_expr.cct"
+ADVOCARE "semantic_generic.cct"
 ADVOCARE "semantic_kind.cct"
 ADVOCARE "semantic_resolver.cct"
 ADVOCARE "semantic_symbol.cct"
@@ -77,7 +78,12 @@ RITUALE semantic_analyze_evoca_stmt(SPECULUM SemanticContext ctx, SPECULUM AstNo
     VINCIRE init_type_id AD CONIURA semantic_analyze_expr(ctx, (*stmt).right)
   FIN SI
 
-  CONIURA semantic_define(ctx, SEM_SYMBOL_VARIABLE, (*stmt).name, declared_type_id, (*stmt).line, (*stmt).column)
+  EVOCA REX sym_id AD CONIURA semantic_define(ctx, SEM_SYMBOL_VARIABLE, (*stmt).name, declared_type_id, (*stmt).line, (*stmt).column)
+  SI sym_id != CONIURA semantic_invalid_id()
+    EVOCA SPECULUM SemanticSymbol sym AD CONIURA semantic_symbol_at(ctx, sym_id)
+    VINCIRE (*sym).decl_node AD stmt
+    VINCIRE (*sym).has_decl_node AD VERUM
+  FIN SI
 
   SI (*stmt).has_right ET NON CONIURA semantic_type_compatible_assign(ctx, declared_type_id, init_type_id)
     CONIURA semantic_report_error(ctx, (*stmt).line, (*stmt).column, "initializer type mismatch")
@@ -105,10 +111,24 @@ RITUALE semantic_analyze_redde_stmt(SPECULUM SemanticContext ctx, SPECULUM AstNo
   REDDE
 EXPLICIT RITUALE
 
+RITUALE semantic_analyze_anur_stmt(SPECULUM SemanticContext ctx, SPECULUM AstNode stmt) REDDE NIHIL
+  SI NON (*stmt).has_left
+    REDDE
+  FIN SI
+  EVOCA REX value_type_id AD CONIURA semantic_analyze_expr(ctx, (*stmt).left)
+  SI value_type_id == (*ctx).type_error
+    REDDE
+  FIN SI
+  SI NON CONIURA semantic_type_is_integer(ctx, value_type_id)
+    CONIURA semantic_report_error(ctx, (*stmt).line, (*stmt).column, "ANUR argument must be integer")
+  FIN SI
+  REDDE
+EXPLICIT RITUALE
+
 RITUALE semantic_analyze_iace_stmt(SPECULUM SemanticContext ctx, SPECULUM AstNode stmt) REDDE NIHIL
   EVOCA REX value_type_id AD CONIURA semantic_analyze_expr(ctx, (*stmt).left)
-  SI NON CONIURA semantic_type_compatible_assign(ctx, (*ctx).type_fractum, value_type_id)
-    CONIURA semantic_report_error(ctx, (*stmt).line, (*stmt).column, "IACE requires FRACTUM value")
+  SI value_type_id != (*ctx).type_fractum ET value_type_id != (*ctx).type_verbum
+    CONIURA semantic_report_error(ctx, (*stmt).line, (*stmt).column, "IACE requires FRACTUM/VERBUM value")
   FIN SI
   REDDE
 EXPLICIT RITUALE
@@ -145,6 +165,212 @@ RITUALE semantic_analyze_recede_stmt(SPECULUM SemanticContext ctx, SPECULUM AstN
   REDDE
 EXPLICIT RITUALE
 
+RITUALE semantic_analyze_repete_stmt(SPECULUM SemanticContext ctx, SPECULUM AstNode stmt) REDDE NIHIL
+  EVOCA REX start_type_id AD CONIURA semantic_analyze_expr(ctx, (*stmt).left)
+  EVOCA REX end_type_id AD CONIURA semantic_analyze_expr(ctx, (*stmt).right)
+  EVOCA REX step_type_id AD (*ctx).type_rex
+  SI (*stmt).has_condition
+    VINCIRE step_type_id AD CONIURA semantic_analyze_expr(ctx, (*stmt).condition)
+  FIN SI
+
+  SI start_type_id != (*ctx).type_error ET NON CONIURA semantic_type_is_integer(ctx, start_type_id)
+    CONIURA semantic_report_error(ctx, (*(*stmt).left).line, (*(*stmt).left).column, "REPETE start value must be integer")
+  FIN SI
+  SI end_type_id != (*ctx).type_error ET NON CONIURA semantic_type_is_integer(ctx, end_type_id)
+    CONIURA semantic_report_error(ctx, (*(*stmt).right).line, (*(*stmt).right).column, "REPETE end value must be integer")
+  FIN SI
+  SI step_type_id != (*ctx).type_error ET NON CONIURA semantic_type_is_integer(ctx, step_type_id)
+    CONIURA semantic_report_error(ctx, (*stmt).line, (*stmt).column, "REPETE GRADUS value must be integer")
+  FIN SI
+
+  CONIURA semantic_block_enter(ctx)
+  CONIURA semantic_define(ctx, SEM_SYMBOL_VARIABLE, (*stmt).name, (*ctx).type_rex, (*stmt).line, (*stmt).column)
+  VINCIRE (*ctx).loop_depth AD (*ctx).loop_depth + 1
+  CONIURA semantic_analyze_block(ctx, (*stmt).body, FALSUM)
+  VINCIRE (*ctx).loop_depth AD (*ctx).loop_depth - 1
+  CONIURA semantic_block_leave(ctx)
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE semantic_analyze_donec_stmt(SPECULUM SemanticContext ctx, SPECULUM AstNode stmt) REDDE NIHIL
+  VINCIRE (*ctx).loop_depth AD (*ctx).loop_depth + 1
+  CONIURA semantic_analyze_block(ctx, (*stmt).body, VERUM)
+  VINCIRE (*ctx).loop_depth AD (*ctx).loop_depth - 1
+  SI (*stmt).has_condition
+    CONIURA semantic_analyze_condition(ctx, (*stmt).condition, "DONEC")
+  FIN SI
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE semantic_iterum_infer_from_call(SPECULUM SemanticContext ctx, SPECULUM AstNode expr, SPECULUM REX item_type_id, SPECULUM REX value_type_id) REDDE REX
+  SI (*expr).kind != AST_CALL VEL (*(*expr).callee).kind != AST_IDENTIFIER
+    REDDE 0
+  FIN SI
+  EVOCA VERBUM callee_name AD (*(*expr).callee).name
+  SI (CONIURA compare(callee_name, "map_init") == 0 VEL CONIURA compare(callee_name, "map_copy") == 0) ET CONIURA ast_node_list_len((*(*expr).callee).generic_args) == 2
+    EVOCA SPECULUM AstNode key_type_expr AD CONIURA ast_node_list_get((*(*expr).callee).generic_args, 0)
+    EVOCA SPECULUM AstNode value_type_expr AD CONIURA ast_node_list_get((*(*expr).callee).generic_args, 1)
+    VINCIRE *item_type_id AD CONIURA semantic_resolve_type_node(ctx, key_type_expr)
+    VINCIRE *value_type_id AD CONIURA semantic_resolve_type_node(ctx, value_type_expr)
+    REDDE 3
+  FIN SI
+  SI (CONIURA compare(callee_name, "set_init") == 0 VEL CONIURA compare(callee_name, "set_copy") == 0) ET CONIURA ast_node_list_len((*(*expr).callee).generic_args) == 1
+    EVOCA SPECULUM AstNode item_type_expr AD CONIURA ast_node_list_get((*(*expr).callee).generic_args, 0)
+    VINCIRE *item_type_id AD CONIURA semantic_resolve_type_node(ctx, item_type_expr)
+    REDDE 4
+  FIN SI
+  REDDE 0
+EXPLICIT RITUALE
+
+RITUALE semantic_iterum_infer_collection_kind(SPECULUM SemanticContext ctx, SPECULUM AstNode expr, SPECULUM REX item_type_id, SPECULUM REX value_type_id) REDDE REX
+  SI (*expr).kind == AST_IDENTIFIER
+    EVOCA REX sym_id AD CONIURA semantic_lookup(ctx, (*expr).name)
+    SI sym_id != CONIURA semantic_invalid_id()
+      EVOCA SPECULUM SemanticSymbol sym AD CONIURA semantic_symbol_at(ctx, sym_id)
+      EVOCA SPECULUM SemanticType sym_type AD CONIURA semantic_type_at(ctx, (*sym).type_id)
+      SI (*sym_type).kind == SEM_TYPE_ARRAY
+        VINCIRE *item_type_id AD (*sym_type).element_type_id
+        REDDE 2
+      FIN SI
+      SI (*sym).has_decl_node ET (*(*sym).decl_node).kind == AST_EVOCA ET (*(*sym).decl_node).has_right
+        EVOCA REX inferred AD CONIURA semantic_iterum_infer_collection_kind(ctx, (*(*sym).decl_node).right, item_type_id, value_type_id)
+        SI inferred != 0
+          REDDE inferred
+        FIN SI
+      FIN SI
+      SI (*sym_type).kind == SEM_TYPE_POINTER ET (*sym_type).element_type_id == (*ctx).type_nihil
+        REDDE 1
+      FIN SI
+    FIN SI
+  FIN SI
+  SI (*expr).kind == AST_CALL
+    REDDE CONIURA semantic_iterum_infer_from_call(ctx, expr, item_type_id, value_type_id)
+  FIN SI
+  REDDE 0
+EXPLICIT RITUALE
+
+RITUALE semantic_analyze_iterum_stmt(SPECULUM SemanticContext ctx, SPECULUM AstNode stmt) REDDE NIHIL
+  EVOCA REX collection_type_id AD CONIURA semantic_analyze_expr(ctx, (*stmt).left)
+  EVOCA REX item_type_id AD (*ctx).type_error
+  EVOCA REX value_type_id AD (*ctx).type_error
+  EVOCA REX inferred_kind AD CONIURA semantic_iterum_infer_collection_kind(ctx, (*stmt).left, SPECULUM item_type_id, SPECULUM value_type_id)
+  EVOCA VERUM is_series_iter AD FALSUM
+  EVOCA VERUM is_fluxus_iter AD FALSUM
+  EVOCA VERUM is_map_iter AD FALSUM
+  EVOCA VERUM is_set_iter AD FALSUM
+  EVOCA SPECULUM SemanticType collection_type AD CONIURA semantic_type_at(ctx, collection_type_id)
+
+  SI inferred_kind == 3
+    VINCIRE is_map_iter AD VERUM
+  FIN SI
+  SI inferred_kind == 4
+    VINCIRE is_set_iter AD VERUM
+  FIN SI
+
+  SI (*collection_type).kind == SEM_TYPE_ARRAY
+    VINCIRE is_series_iter AD VERUM
+    VINCIRE item_type_id AD (*collection_type).element_type_id
+  ALITER
+    SI (*collection_type).kind == SEM_TYPE_POINTER ET (*collection_type).element_type_id == (*ctx).type_nihil
+      VINCIRE is_fluxus_iter AD VERUM
+      SI inferred_kind == 0
+        VINCIRE item_type_id AD (*ctx).type_rex
+      FIN SI
+    ALITER
+      SI NON is_map_iter ET NON is_set_iter ET collection_type_id != (*ctx).type_error
+        CONIURA semantic_report_error(ctx, (*(*stmt).left).line, (*(*stmt).left).column, "ITERUM requires FLUXUS or SERIES (and now map/set)")
+        REDDE
+      FIN SI
+    FIN SI
+  FIN SI
+
+  SI is_map_iter
+    SI CONIURA compare((*stmt).aux_name, "") == 0
+      CONIURA semantic_report_error(ctx, (*stmt).line, (*stmt).column, "ITERUM sobre map requer 2 variaveis (chave, valor)")
+      REDDE
+    FIN SI
+  ALITER
+    SI CONIURA compare((*stmt).aux_name, "") != 0
+      SI is_set_iter
+        CONIURA semantic_report_error(ctx, (*stmt).line, (*stmt).column, "ITERUM sobre set requer 1 variavel (elemento)")
+      ALITER
+        SI is_fluxus_iter VEL is_series_iter
+          CONIURA semantic_report_error(ctx, (*stmt).line, (*stmt).column, "ITERUM sobre FLUXUS/SERIES requer 1 variavel")
+        ALITER
+          CONIURA semantic_report_error(ctx, (*stmt).line, (*stmt).column, "ITERUM com 2 variaveis so e suportado para map")
+        FIN SI
+      FIN SI
+      REDDE
+    FIN SI
+  FIN SI
+
+  CONIURA semantic_block_enter(ctx)
+  CONIURA semantic_define(ctx, SEM_SYMBOL_VARIABLE, (*stmt).name, item_type_id, (*stmt).line, (*stmt).column)
+  SI is_map_iter
+    CONIURA semantic_define(ctx, SEM_SYMBOL_VARIABLE, (*stmt).aux_name, value_type_id, (*stmt).line, (*stmt).column)
+  FIN SI
+  VINCIRE (*ctx).loop_depth AD (*ctx).loop_depth + 1
+  CONIURA semantic_analyze_block(ctx, (*stmt).body, FALSUM)
+  VINCIRE (*ctx).loop_depth AD (*ctx).loop_depth - 1
+  CONIURA semantic_block_leave(ctx)
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE semantic_elige_case_binding_type(SPECULUM SemanticContext ctx, REX subject_type_id, SPECULUM AstNode case_node, REX binding_index) REDDE REX
+  SI CONIURA ast_node_list_len((*case_node).children) != 1
+    CONIURA semantic_report_error(ctx, (*case_node).line, (*case_node).column, "ELIGE OR-cases with payload bindings are unsupported")
+    REDDE (*ctx).type_error
+  FIN SI
+
+  EVOCA SPECULUM AstNode literal_node AD CONIURA ast_node_list_get((*case_node).children, 0)
+  SI (*literal_node).kind != AST_IDENTIFIER
+    CONIURA semantic_report_error(ctx, (*literal_node).line, (*literal_node).column, "ELIGE bindings require ORDO variant identifier")
+    REDDE (*ctx).type_error
+  FIN SI
+
+  EVOCA SPECULUM SemanticType subject_type AD CONIURA semantic_type_at(ctx, subject_type_id)
+  SI ((*subject_type).kind != SEM_TYPE_NAMED ET (*subject_type).kind != SEM_TYPE_INSTANCE) VEL (*subject_type).named_symbol_id == CONIURA semantic_invalid_id()
+    CONIURA semantic_report_error(ctx, (*literal_node).line, (*literal_node).column, "ELIGE bindings require ORDO subject")
+    REDDE (*ctx).type_error
+  FIN SI
+
+  EVOCA SPECULUM SemanticSymbol type_sym AD CONIURA semantic_symbol_at(ctx, (*subject_type).named_symbol_id)
+  SI NON (*type_sym).has_decl_node VEL (*(*type_sym).decl_node).kind != AST_ORDO
+    CONIURA semantic_report_error(ctx, (*literal_node).line, (*literal_node).column, "ELIGE bindings require ORDO subject")
+    REDDE (*ctx).type_error
+  FIN SI
+
+  EVOCA REX variant_i AD 0
+  EVOCA REX variant_n AD CONIURA ast_node_list_len((*(*type_sym).decl_node).items)
+  DUM variant_i < variant_n
+    EVOCA SPECULUM AstNode variant_node AD CONIURA ast_node_list_get((*(*type_sym).decl_node).items, variant_i)
+    SI CONIURA compare((*variant_node).name, (*literal_node).name) == 0
+      EVOCA REX field_n AD CONIURA ast_node_list_len((*variant_node).fields)
+      EVOCA REX binding_n AD CONIURA ast_node_list_len((*case_node).bindings)
+      SI field_n == 0 ET binding_n > 0
+        CONIURA semantic_report_error(ctx, (*literal_node).line, (*literal_node).column, "ELIGE payload variant has no payload; remove bindings")
+        REDDE (*ctx).type_error
+      FIN SI
+      SI binding_n != field_n
+        CONIURA semantic_report_error(ctx, (*literal_node).line, (*literal_node).column, "ELIGE payload binding arity mismatch")
+        REDDE (*ctx).type_error
+      FIN SI
+      EVOCA SPECULUM AstNode field_node AD CONIURA ast_node_list_get((*variant_node).fields, binding_index)
+      EVOCA REX saved_scope_id AD CONIURA semantic_enter_owner_generic_scope(ctx, (*type_sym).id)
+      EVOCA REX field_type_id AD CONIURA semantic_resolve_type_node(ctx, (*field_node).type_expr)
+      CONIURA semantic_restore_scope(ctx, saved_scope_id)
+      SI (*subject_type).kind == SEM_TYPE_INSTANCE
+        REDDE CONIURA semantic_substitute_instantiated_type(ctx, field_type_id, (*type_sym).id, (*subject_type).type_arg_ids)
+      FIN SI
+      REDDE field_type_id
+    FIN SI
+    VINCIRE variant_i AD variant_i + 1
+  FIN DUM
+
+  CONIURA semantic_report_error(ctx, (*literal_node).line, (*literal_node).column, "ELIGE references unknown ORDO variant")
+  REDDE (*ctx).type_error
+EXPLICIT RITUALE
+
 RITUALE semantic_analyze_elige_case(SPECULUM SemanticContext ctx, REX subject_type_id, SPECULUM AstNode case_node) REDDE NIHIL
   EVOCA REX i AD 0
   EVOCA REX n_literals AD CONIURA ast_node_list_len((*case_node).children)
@@ -162,7 +388,8 @@ RITUALE semantic_analyze_elige_case(SPECULUM SemanticContext ctx, REX subject_ty
   EVOCA REX n_bindings AD CONIURA ast_node_list_len((*case_node).bindings)
   DUM i < n_bindings
     EVOCA SPECULUM AstNode binding AD CONIURA ast_node_list_get((*case_node).bindings, i)
-    CONIURA semantic_define(ctx, SEM_SYMBOL_VARIABLE, (*binding).name, subject_type_id, (*binding).line, (*binding).column)
+    EVOCA REX binding_type_id AD CONIURA semantic_elige_case_binding_type(ctx, subject_type_id, case_node, i)
+    CONIURA semantic_define(ctx, SEM_SYMBOL_VARIABLE, (*binding).name, binding_type_id, (*binding).line, (*binding).column)
     VINCIRE i AD i + 1
   FIN DUM
   CONIURA semantic_analyze_block(ctx, (*case_node).body, FALSUM)
@@ -221,6 +448,11 @@ RITUALE semantic_analyze_stmt(SPECULUM SemanticContext ctx, SPECULUM AstNode stm
     REDDE
   FIN SI
 
+  SI (*stmt).kind == AST_ANUR
+    CONIURA semantic_analyze_anur_stmt(ctx, stmt)
+    REDDE
+  FIN SI
+
   SI (*stmt).kind == AST_IACE
     CONIURA semantic_analyze_iace_stmt(ctx, stmt)
     REDDE
@@ -265,6 +497,21 @@ RITUALE semantic_analyze_stmt(SPECULUM SemanticContext ctx, SPECULUM AstNode stm
     VINCIRE (*ctx).loop_depth AD (*ctx).loop_depth + 1
     CONIURA semantic_analyze_block(ctx, (*stmt).body, VERUM)
     VINCIRE (*ctx).loop_depth AD (*ctx).loop_depth - 1
+    REDDE
+  FIN SI
+
+  SI (*stmt).kind == AST_DONEC
+    CONIURA semantic_analyze_donec_stmt(ctx, stmt)
+    REDDE
+  FIN SI
+
+  SI (*stmt).kind == AST_REPETE
+    CONIURA semantic_analyze_repete_stmt(ctx, stmt)
+    REDDE
+  FIN SI
+
+  SI (*stmt).kind == AST_ITERUM
+    CONIURA semantic_analyze_iterum_stmt(ctx, stmt)
     REDDE
   FIN SI
 

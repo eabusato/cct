@@ -32,7 +32,12 @@ TESTS_PASSED=0
 TESTS_FAILED=0
 
 # Path to the CCT binary
-CCT_BIN="./cct"
+if [ -x "./cct-host" ]; then
+    CCT_BIN="./cct-host"
+else
+    CCT_BIN="./cct"
+fi
+export CCT_BIN
 
 # Check if binary exists
 if [ ! -f "$CCT_BIN" ]; then

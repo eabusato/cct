@@ -2,7 +2,7 @@ INCIPIT grimoire "codegen_gate_elige_ordo_payload_27d_input"
 
 ORDO Option
   None
-  Some(value: REX)
+  Some(REX value)
 FIN ORDO
 
 RITUALE main() REDDE REX

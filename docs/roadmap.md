@@ -16,16 +16,17 @@ It has two goals:
 
 ## Current Project Snapshot
 
-- Current completed phase: FASE 30
-- Current completed subphase: FASE 30E
-- Current phase context: the bootstrap era is closed and the project now has a validated operational self-hosted platform
+- Current completed phase: FASE 31
+- Current completed subphase: FASE 31E
+- Current phase context: the self-hosted compiler is now promoted to the operational default compiler path
 - Phase-21 delivery status: bootstrap foundations and lexer implemented and closed
 - Phase-22 and 23 delivery status: bootstrap parser, AST, advanced syntax surface, and modular parsing implemented and closed
 - Phase-24 and 25 delivery status: bootstrap semantic core, generic semantics, constraints, and deduplicated instantiation implemented and closed
 - Phase-26, 27, and 28 delivery status: bootstrap code generation, structural data lowering, advanced control flow, `FORMA`, and generic materialization implemented and closed
 - Phase-29 delivery status: stage0/stage1/stage2 self-host convergence and identity validation implemented and closed
 - Phase-30 delivery status: self-hosted workflows, mature application libraries, packaging, and final operational handoff implemented and closed
-- Current whole-project regression gate: `make test-all-0-30`
+- Phase-31 delivery status: self-hosted compiler promoted to default, CLI parity, workflow integration, promotion/demotion infrastructure, and parity validation matrix implemented and closed
+- Current whole-project regression gate: `make test-all-0-31`
 - **Compiler maturity:** host compiler plus validated bootstrap/self-host compiler stack
 - **Backend strategy:** generated C plus host C compiler remains the official backend for both host and bootstrap paths
 - **Sigilo model:** dual-level modular model remains stable and continues to be part of the release contract
@@ -477,9 +478,9 @@ Quality gate achieved:
 
 ## Phase Status Matrix
 
-- **Completed:** FASE 0 to FASE 30, plus FASE 14T
-- **Current operational baseline:** self-hosted platform and aggregated validation through phase 30
-- **Next work category:** post-bootstrap platform maturity
+- **Completed:** FASE 0 to FASE 31, plus FASE 14T
+- **Current operational baseline:** promoted self-hosted compiler as default, aggregated validation through phase 31
+- **Next work category:** post-bootstrap platform maturity (diagnostics, performance, stdlib expansion)
 ## Bootstrap Delivery Record (Historical Plan, Now Executed)
 
 ### FASE 14T — Sigilo SVG Instrumentation Interstitial (Completed)
@@ -761,6 +762,32 @@ Definition of done:
 - project workflows are validated over the self-hosted path
 - release/handoff docs match the validated state
 
+### FASE 31 — Self-Hosted Compiler Promotion ✅
+
+Primary objective:
+- promote the validated self-hosted compiler from bootstrap artifact to operational default compiler path
+
+Delivered scope:
+- `31A`: self-host wrapper parity (compile, output handling, stdlib resolution)
+- `31B`: CLI contract parity (--check, --ast, --tokens, fallback delegation)
+- `31C`: project workflow parity (build, run, test, bench, clean, package)
+- `31D`: promotion and demotion infrastructure (explicit, reversible, testable)
+- `31E`: default switch and final validation gate
+
+Out of scope:
+- complete tooling parity (fmt, lint, doc remain host-delegated)
+- pending stdlib modules (config, json, db_sqlite, http)
+- performance optimization (bootstrap 2-3x slower than host acceptable)
+
+Definition of done:
+- `./cct` defaults to self-hosted compiler after promotion
+- `cct-host` and `cct-selfhost` explicit paths available
+- promotion/demotion via `make bootstrap-promote` / `make bootstrap-demote`
+- formal parity matrix documented (`docs/bootstrap_parity_matrix.txt`)
+- parity validation automated (`make test-bootstrap-parity`)
+- 31 promotion tests passing (1724-1754)
+- host compiler preserved as fallback
+
 ## Bootstrap Phase Summary
 
 | Phase | Scope | Duration | LOC CCT | Cumulative |
@@ -775,9 +802,10 @@ Definition of done:
 | 28 | Codegen generics | 3-4 mo | ~3500 | 29000 |
 | 29 | Self-hosting | 2-3 mo | ~500 | 29500 |
 | 30 | Closure + library | 2-3 mo | library | 30000+ |
-| **TOTAL** | **10 phases** | **27-37 mo** | **~30K LOC** | |
+| 31 | Promotion + parity | 1-2 mo | wrapper | 30000+ |
+| **TOTAL** | **11 phases** | **29-40 mo** | **~30K LOC** | |
 
-**Bootstrap status:** phases 21-30 completed on the current validated baseline.
+**Bootstrap status:** phases 21-31 completed on the current validated baseline.
 
 ## Version Milestone Targets
 
@@ -817,11 +845,18 @@ Every phase must pass these gates before closure:
 
 ## Immediate Next Step
 
-The bootstrap roadmap is complete.
+The bootstrap roadmap (phases 21-31) is complete. The self-hosted compiler is now the operational default.
 
 Immediate engineering focus:
-- keep `make test-all-0-30` green
+- keep `make test-all-0-31` green
+- maintain parity validation (`make test-bootstrap-parity`)
 - preserve host/bootstrap/self-host behavioral convergence
 - grow the post-bootstrap platform without regressing the validated operational baseline
+
+Post-31 priorities:
+- diagnostics quality (error messages, source highlighting, suggestions)
+- performance optimization (reduce 2-3x overhead vs host)
+- stdlib parity (export pending modules: config, json, db_sqlite, http)
+- developer experience (LSP, formatter, linter via selfhost)
 
 Historical traceability note: closure artifacts from the host-era and bootstrap-era phases are preserved under `docs/release/` and `docs/bootstrap/`.

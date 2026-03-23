@@ -1,8 +1,8 @@
 INCIPIT grimoire "codegen_gate_elige_payload_or_error_27e_input"
 
 ORDO Result
-  Ok(code: REX)
-  Err(msg: VERBUM)
+  Ok(REX code)
+  Err(VERBUM msg)
 FIN ORDO
 
 RITUALE main() REDDE REX

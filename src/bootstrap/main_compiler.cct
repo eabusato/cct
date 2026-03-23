@@ -122,7 +122,22 @@ RITUALE compiler_is_prelude_import(VERBUM import_path) REDDE VERUM
   SI CONIURA compare(import_path, "cct/parse.cct") == 0 VEL CONIURA compare(import_path, "cct/process.cct") == 0
     REDDE VERUM
   FIN SI
-  SI CONIURA compare(import_path, "cct/db_sqlite.cct") == 0
+  SI CONIURA compare(import_path, "cct/db_sqlite.cct") == 0 VEL CONIURA compare(import_path, "cct/math.cct") == 0
+    REDDE VERUM
+  FIN SI
+  SI CONIURA compare(import_path, "cct/bit.cct") == 0 VEL CONIURA compare(import_path, "cct/bytes.cct") == 0
+    REDDE VERUM
+  FIN SI
+  SI CONIURA compare(import_path, "cct/cmp.cct") == 0 VEL CONIURA compare(import_path, "cct/env.cct") == 0
+    REDDE VERUM
+  FIN SI
+  SI CONIURA compare(import_path, "cct/hash.cct") == 0 VEL CONIURA compare(import_path, "cct/random.cct") == 0
+    REDDE VERUM
+  FIN SI
+  SI CONIURA compare(import_path, "cct/time.cct") == 0 VEL CONIURA compare(import_path, "cct/verbum_scan.cct") == 0
+    REDDE VERUM
+  FIN SI
+  SI CONIURA compare(import_path, "cct/ast_node.cct") == 0
     REDDE VERUM
   FIN SI
   REDDE FALSUM
@@ -132,10 +147,22 @@ RITUALE compiler_is_source_backed_cct_import(VERBUM import_path) REDDE VERUM
   SI CONIURA compare(import_path, "cct/csv.cct") == 0
     REDDE VERUM
   FIN SI
-  SI CONIURA compare(import_path, "cct/https.cct") == 0
+  SI CONIURA compare(import_path, "cct/https.cct") == 0 VEL CONIURA compare(import_path, "cct/http.cct") == 0
     REDDE VERUM
   FIN SI
   SI CONIURA compare(import_path, "cct/orm_lite.cct") == 0
+    REDDE VERUM
+  FIN SI
+  SI CONIURA compare(import_path, "cct/alg.cct") == 0 VEL CONIURA compare(import_path, "cct/collection_ops.cct") == 0
+    REDDE VERUM
+  FIN SI
+  SI CONIURA compare(import_path, "cct/config.cct") == 0 VEL CONIURA compare(import_path, "cct/json.cct") == 0
+    REDDE VERUM
+  FIN SI
+  SI CONIURA compare(import_path, "cct/net.cct") == 0 VEL CONIURA compare(import_path, "cct/socket.cct") == 0
+    REDDE VERUM
+  FIN SI
+  SI CONIURA compare(import_path, "cct/series.cct") == 0 VEL CONIURA compare(import_path, "cct/map.cct") == 0 VEL CONIURA compare(import_path, "cct/set.cct") == 0
     REDDE VERUM
   FIN SI
   REDDE FALSUM

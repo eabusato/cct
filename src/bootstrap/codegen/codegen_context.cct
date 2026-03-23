@@ -29,6 +29,11 @@ SIGILLUM CodegenLocal
   owns_c_name: VERUM
   type_name: VERBUM
   owns_type_name: VERUM
+  iter_collection_kind: REX
+  iter_item_type_text: VERBUM
+  owns_iter_item_type_text: VERUM
+  iter_value_type_text: VERBUM
+  owns_iter_value_type_text: VERUM
 FIN SIGILLUM
 
 SIGILLUM CodegenSigillumField
@@ -151,6 +156,7 @@ SIGILLUM CodegenContext
   needs_fail_helper: VERUM
   needs_failure_runtime: VERUM
   needs_fmt_runtime: VERUM
+  needs_math_runtime: VERUM
 FIN SIGILLUM
 
 RITUALE codegen_heap_alloc(REX bytes) REDDE SPECULUM NIHIL
@@ -528,6 +534,7 @@ RITUALE codegen_context_reset(SPECULUM CodegenContext ctx) REDDE NIHIL
   VINCIRE (*ctx).needs_fail_helper AD FALSUM
   VINCIRE (*ctx).needs_failure_runtime AD FALSUM
   VINCIRE (*ctx).needs_fmt_runtime AD FALSUM
+  VINCIRE (*ctx).needs_math_runtime AD FALSUM
   REDDE
 EXPLICIT RITUALE
 
@@ -675,6 +682,12 @@ RITUALE codegen_pop_local_scope(SPECULUM CodegenContext ctx) REDDE NIHIL
     SI (*local).owns_type_name
       DIMITTE (*local).type_name
     FIN SI
+    SI (*local).owns_iter_item_type_text
+      DIMITTE (*local).iter_item_type_text
+    FIN SI
+    SI (*local).owns_iter_value_type_text
+      DIMITTE (*local).iter_value_type_text
+    FIN SI
     CONIURA fluxus_remove((*ctx).local_names, idx)
   FIN DUM
   REDDE
@@ -700,6 +713,11 @@ RITUALE codegen_define_local(SPECULUM CodegenContext ctx, VERBUM source_name, VE
   VINCIRE local.owns_c_name AD VERUM
   VINCIRE local.type_name AD CONIURA verbum_dup(type_name)
   VINCIRE local.owns_type_name AD VERUM
+  VINCIRE local.iter_collection_kind AD 0
+  VINCIRE local.iter_item_type_text AD ""
+  VINCIRE local.owns_iter_item_type_text AD FALSUM
+  VINCIRE local.iter_value_type_text AD ""
+  VINCIRE local.owns_iter_value_type_text AD FALSUM
   CONIURA fluxus_push((*ctx).local_names, SPECULUM local)
   REDDE CONIURA codegen_lookup_local_c_name(ctx, source_name)
 EXPLICIT RITUALE
@@ -710,6 +728,65 @@ RITUALE codegen_lookup_local_type_name(SPECULUM CodegenContext ctx, VERBUM sourc
     EVOCA SPECULUM CodegenLocal local AD CONIURA codegen_context_local_at(ctx, i)
     SI CONIURA compare((*local).source_name, source_name) == 0
       REDDE (*local).type_name
+    FIN SI
+    VINCIRE i AD i - 1
+  FIN DUM
+  REDDE ""
+EXPLICIT RITUALE
+
+RITUALE codegen_set_local_iter_info(SPECULUM CodegenContext ctx, VERBUM source_name, REX kind, VERBUM item_type_text, VERBUM value_type_text) REDDE NIHIL
+  EVOCA REX i AD CONIURA fluxus_len((*ctx).local_names) - 1
+  DUM i >= 0
+    EVOCA SPECULUM CodegenLocal local AD CONIURA codegen_context_local_at(ctx, i)
+    SI CONIURA compare((*local).source_name, source_name) == 0
+      VINCIRE (*local).iter_collection_kind AD kind
+      SI (*local).owns_iter_item_type_text
+        DIMITTE (*local).iter_item_type_text
+      FIN SI
+      SI (*local).owns_iter_value_type_text
+        DIMITTE (*local).iter_value_type_text
+      FIN SI
+      VINCIRE (*local).iter_item_type_text AD CONIURA verbum_dup(item_type_text)
+      VINCIRE (*local).owns_iter_item_type_text AD VERUM
+      VINCIRE (*local).iter_value_type_text AD CONIURA verbum_dup(value_type_text)
+      VINCIRE (*local).owns_iter_value_type_text AD VERUM
+      REDDE
+    FIN SI
+    VINCIRE i AD i - 1
+  FIN DUM
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE codegen_lookup_local_iter_kind(SPECULUM CodegenContext ctx, VERBUM source_name) REDDE REX
+  EVOCA REX i AD CONIURA fluxus_len((*ctx).local_names) - 1
+  DUM i >= 0
+    EVOCA SPECULUM CodegenLocal local AD CONIURA codegen_context_local_at(ctx, i)
+    SI CONIURA compare((*local).source_name, source_name) == 0
+      REDDE (*local).iter_collection_kind
+    FIN SI
+    VINCIRE i AD i - 1
+  FIN DUM
+  REDDE 0
+EXPLICIT RITUALE
+
+RITUALE codegen_lookup_local_iter_item_type_text(SPECULUM CodegenContext ctx, VERBUM source_name) REDDE VERBUM
+  EVOCA REX i AD CONIURA fluxus_len((*ctx).local_names) - 1
+  DUM i >= 0
+    EVOCA SPECULUM CodegenLocal local AD CONIURA codegen_context_local_at(ctx, i)
+    SI CONIURA compare((*local).source_name, source_name) == 0
+      REDDE (*local).iter_item_type_text
+    FIN SI
+    VINCIRE i AD i - 1
+  FIN DUM
+  REDDE ""
+EXPLICIT RITUALE
+
+RITUALE codegen_lookup_local_iter_value_type_text(SPECULUM CodegenContext ctx, VERBUM source_name) REDDE VERBUM
+  EVOCA REX i AD CONIURA fluxus_len((*ctx).local_names) - 1
+  DUM i >= 0
+    EVOCA SPECULUM CodegenLocal local AD CONIURA codegen_context_local_at(ctx, i)
+    SI CONIURA compare((*local).source_name, source_name) == 0
+      REDDE (*local).iter_value_type_text
     FIN SI
     VINCIRE i AD i - 1
   FIN DUM
@@ -1033,6 +1110,11 @@ EXPLICIT RITUALE
 RITUALE codegen_require_failure_runtime(SPECULUM CodegenContext ctx) REDDE NIHIL
   VINCIRE (*ctx).needs_failure_runtime AD VERUM
   CONIURA codegen_require_fail_helper(ctx)
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE codegen_require_math_runtime(SPECULUM CodegenContext ctx) REDDE NIHIL
+  VINCIRE (*ctx).needs_math_runtime AD VERUM
   REDDE
 EXPLICIT RITUALE
 

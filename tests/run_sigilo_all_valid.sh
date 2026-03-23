@@ -20,7 +20,13 @@ RED='\033[0;31m'
 YELLOW='\033[1;33m'
 NC='\033[0m'
 
-CCT_BIN="${CCT_BIN:-./cct}"
+if [ -z "${CCT_BIN:-}" ]; then
+    if [ -x ./cct-host ]; then
+        CCT_BIN="./cct-host"
+    else
+        CCT_BIN="./cct"
+    fi
+fi
 
 GENERATED_OK=0
 SKIPPED_INVALID=0
@@ -89,4 +95,3 @@ fi
 
 echo -e "${RED}Sigilo batch completed with failures.${NC}"
 exit 1
-

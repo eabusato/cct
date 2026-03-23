@@ -9,6 +9,14 @@ ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 source "$ROOT_DIR/tests/test_tmpdir.sh"
 cct_setup_tmpdir "$ROOT_DIR"
 
+if [ -z "${CCT_BIN:-}" ]; then
+  if [ -x ./cct-host ]; then
+    CCT_BIN="./cct-host"
+  else
+    CCT_BIN="./cct"
+  fi
+fi
+
 echo "FASE 13A.3 — Sigilo CLI Tests"
 echo "========================================"
 
@@ -40,20 +48,20 @@ semantic_hash = abcdef0123456789
 rituale = 2
 SIGEOF
 
-./cct sigilo inspect "$SIG_A" --format structured --summary >$CCT_TMP_DIR/cct_sigilo_cli_13a3_inspect.out
+"$CCT_BIN" sigilo inspect "$SIG_A" --format structured --summary >$CCT_TMP_DIR/cct_sigilo_cli_13a3_inspect.out
 if ! grep -q "format = cct.sigil.inspect.v1" $CCT_TMP_DIR/cct_sigilo_cli_13a3_inspect.out; then
   echo "inspect structured output mismatch"
   exit 1
 fi
 
-./cct sigilo diff "$SIG_A" "$SIG_B" --format text --summary >$CCT_TMP_DIR/cct_sigilo_cli_13a3_diff.out
+"$CCT_BIN" sigilo diff "$SIG_A" "$SIG_B" --format text --summary >$CCT_TMP_DIR/cct_sigilo_cli_13a3_diff.out
 if ! grep -q "highest=behavioral-risk" $CCT_TMP_DIR/cct_sigilo_cli_13a3_diff.out; then
   echo "diff summary severity mismatch"
   exit 1
 fi
 
 set +e
-./cct sigilo check "$SIG_A" "$SIG_B" --strict --summary >$CCT_TMP_DIR/cct_sigilo_cli_13a3_check.out
+"$CCT_BIN" sigilo check "$SIG_A" "$SIG_B" --strict --summary >$CCT_TMP_DIR/cct_sigilo_cli_13a3_check.out
 RC=$?
 set -e
 if [ "$RC" -ne 2 ]; then
@@ -62,7 +70,7 @@ if [ "$RC" -ne 2 ]; then
 fi
 
 set +e
-./cct sigilo check "$SIG_A" "$SIG_C" --strict --summary >$CCT_TMP_DIR/cct_sigilo_cli_13a3_check_info.out
+"$CCT_BIN" sigilo check "$SIG_A" "$SIG_C" --strict --summary >$CCT_TMP_DIR/cct_sigilo_cli_13a3_check_info.out
 RC=$?
 set -e
 if [ "$RC" -ne 0 ]; then

@@ -24,6 +24,335 @@ RITUALE codegen_stmt_type_text(SPECULUM CodegenContext ctx, SPECULUM AstNode typ
   REDDE CONIURA codegen_type_text(ctx, type_expr)
 EXPLICIT RITUALE
 
+RITUALE codegen_series_identity_size(VERBUM identity) REDDE REX
+  SI NON CONIURA starts_with(identity, "SERIES(")
+    REDDE -1
+  FIN SI
+  EVOCA REX i AD 7
+  EVOCA REX n AD CONIURA len(identity)
+  EVOCA REX value AD 0
+  DUM i < n ET CONIURA char_at(identity, i) != 41
+    EVOCA MILES ch AD CONIURA char_at(identity, i)
+    SI ch < 48 VEL ch > 57
+      REDDE -1
+    FIN SI
+    VINCIRE value AD value * 10 + (ch - 48)
+    VINCIRE i AD i + 1
+  FIN DUM
+  REDDE value
+EXPLICIT RITUALE
+
+RITUALE codegen_series_identity_element(VERBUM identity) REDDE VERBUM
+  SI NON CONIURA starts_with(identity, "SERIES(")
+    REDDE ""
+  FIN SI
+  EVOCA REX n AD CONIURA len(identity)
+  EVOCA REX i AD 7
+  DUM i < n ET CONIURA char_at(identity, i) != 41
+    VINCIRE i AD i + 1
+  FIN DUM
+  SI i + 2 > n
+    REDDE ""
+  FIN SI
+  REDDE CONIURA substring(identity, i + 2, n)
+EXPLICIT RITUALE
+
+RITUALE codegen_iter_identity_to_c_type(SPECULUM CodegenContext ctx, VERBUM identity) REDDE VERBUM
+  SI CONIURA compare(identity, "REX") == 0 VEL CONIURA compare(identity, "DUX") == 0 VEL CONIURA compare(identity, "COMES") == 0 VEL CONIURA compare(identity, "MILES") == 0 VEL CONIURA compare(identity, "VERUM") == 0
+    REDDE "long long"
+  FIN SI
+  SI CONIURA compare(identity, "UMBRA") == 0
+    REDDE "double"
+  FIN SI
+  SI CONIURA compare(identity, "FLAMMA") == 0
+    REDDE "float"
+  FIN SI
+  SI CONIURA compare(identity, "VERBUM") == 0
+    REDDE "const char *"
+  FIN SI
+  SI CONIURA starts_with(identity, "SPECULUM(")
+    EVOCA VERBUM elem_identity AD CONIURA codegen_pointer_element_identity(identity)
+    SI CONIURA compare(elem_identity, "NIHIL") == 0
+      DIMITTE elem_identity
+      REDDE "void *"
+    FIN SI
+    EVOCA VERBUM elem_c AD CONIURA codegen_iter_identity_to_c_type(ctx, elem_identity)
+    DIMITTE elem_identity
+    SI CONIURA compare(elem_c, "") == 0
+      REDDE ""
+    FIN SI
+    REDDE CONIURA concat(elem_c, "*")
+  FIN SI
+  EVOCA VERBUM sigillum_name AD CONIURA codegen_lookup_sigillum_c_name(ctx, identity)
+  SI CONIURA compare(sigillum_name, "") != 0
+    REDDE sigillum_name
+  FIN SI
+  EVOCA VERBUM ordo_name AD CONIURA codegen_lookup_ordo_c_name(ctx, identity)
+  SI CONIURA compare(ordo_name, "") != 0
+    REDDE ordo_name
+  FIN SI
+  REDDE ""
+EXPLICIT RITUALE
+
+RITUALE codegen_capture_iter_local_info(SPECULUM CodegenContext ctx, SPECULUM AstNode stmt, VERBUM local_identity) REDDE NIHIL
+  EVOCA REX iter_kind AD 0
+  EVOCA VERBUM item_identity AD ""
+  EVOCA VERBUM value_identity AD ""
+  SI (*stmt).has_type_expr
+    SI (*(*stmt).type_expr).is_array ET (*(*stmt).type_expr).has_type_expr
+      VINCIRE iter_kind AD 2
+      VINCIRE item_identity AD CONIURA codegen_generic_type_identity(ctx, (*(*stmt).type_expr).type_expr)
+    FIN SI
+  FIN SI
+  SI iter_kind == 0
+    SI CONIURA compare(local_identity, "SPECULUM(NIHIL)") == 0
+      VINCIRE iter_kind AD 1
+      VINCIRE item_identity AD "REX"
+    FIN SI
+  FIN SI
+  SI (*stmt).has_right ET (*(*stmt).right).kind == AST_CALL ET (*(*(*stmt).right).callee).kind == AST_IDENTIFIER
+    EVOCA VERBUM callee_name AD (*(*(*stmt).right).callee).name
+    SI CONIURA compare(callee_name, "map_init") == 0 VEL CONIURA compare(callee_name, "map_copy") == 0
+      SI CONIURA ast_node_list_len((*(*(*stmt).right).callee).generic_args) == 2
+        VINCIRE iter_kind AD 3
+        VINCIRE item_identity AD CONIURA codegen_generic_type_identity(ctx, CONIURA ast_node_list_get((*(*(*stmt).right).callee).generic_args, 0))
+        VINCIRE value_identity AD CONIURA codegen_generic_type_identity(ctx, CONIURA ast_node_list_get((*(*(*stmt).right).callee).generic_args, 1))
+      FIN SI
+    FIN SI
+    SI CONIURA compare(callee_name, "set_init") == 0 VEL CONIURA compare(callee_name, "set_copy") == 0
+      SI CONIURA ast_node_list_len((*(*(*stmt).right).callee).generic_args) == 1
+        VINCIRE iter_kind AD 4
+        VINCIRE item_identity AD CONIURA codegen_generic_type_identity(ctx, CONIURA ast_node_list_get((*(*(*stmt).right).callee).generic_args, 0))
+        VINCIRE value_identity AD ""
+      FIN SI
+    FIN SI
+  FIN SI
+  SI iter_kind != 0
+    CONIURA codegen_set_local_iter_info(ctx, (*stmt).name, iter_kind, item_identity, value_identity)
+  FIN SI
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE codegen_emit_iterum_binding_decl(SPECULUM CodegenContext ctx, VERBUM binding_name, VERBUM identity) REDDE NIHIL
+  EVOCA VERBUM c_type AD CONIURA codegen_iter_identity_to_c_type(ctx, identity)
+  SI CONIURA compare(c_type, "") == 0
+    CONIURA codegen_report_error(ctx, 0, 0, "ITERUM binding type is unsupported in bootstrap codegen")
+    REDDE
+  FIN SI
+  CONIURA codegen_emit(ctx, c_type)
+  CONIURA codegen_emit(ctx, " ")
+  CONIURA codegen_emit(ctx, binding_name)
+  SI CONIURA compare(identity, "VERBUM") == 0 VEL CONIURA starts_with(identity, "SPECULUM(")
+    CONIURA codegen_emit_line(ctx, " = NULL;")
+  ALITER
+    SI CONIURA compare(identity, "UMBRA") == 0
+      CONIURA codegen_emit_line(ctx, " = 0.0;")
+    ALITER
+      SI CONIURA compare(identity, "FLAMMA") == 0
+        CONIURA codegen_emit_line(ctx, " = 0.0f;")
+      ALITER
+        CONIURA codegen_emit_line(ctx, " = 0;")
+      FIN SI
+    FIN SI
+  FIN SI
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE codegen_emit_iterum_assign_from_ptr(SPECULUM CodegenContext ctx, VERBUM binding_name, VERBUM identity, VERBUM ptr_name) REDDE NIHIL
+  EVOCA VERBUM c_type AD CONIURA codegen_iter_identity_to_c_type(ctx, identity)
+  SI CONIURA compare(c_type, "") == 0
+    CONIURA codegen_report_error(ctx, 0, 0, "ITERUM binding pointer cast type unavailable in bootstrap codegen")
+    REDDE
+  FIN SI
+  CONIURA codegen_emit(ctx, binding_name)
+  CONIURA codegen_emit(ctx, " = *((")
+  CONIURA codegen_emit(ctx, c_type)
+  CONIURA codegen_emit(ctx, "*)")
+  CONIURA codegen_emit(ctx, ptr_name)
+  CONIURA codegen_emit_line(ctx, ");")
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE codegen_emit_iterum_stmt(SPECULUM CodegenContext ctx, SPECULUM AstNode stmt) REDDE NIHIL
+  EVOCA VERBUM item_identity AD "REX"
+  EVOCA VERBUM value_identity AD ""
+  EVOCA REX iter_kind AD 0
+
+  SI (*(*stmt).left).kind == AST_IDENTIFIER
+    VINCIRE iter_kind AD CONIURA codegen_lookup_local_iter_kind(ctx, (*(*stmt).left).name)
+    VINCIRE item_identity AD CONIURA codegen_lookup_local_iter_item_type_text(ctx, (*(*stmt).left).name)
+    VINCIRE value_identity AD CONIURA codegen_lookup_local_iter_value_type_text(ctx, (*(*stmt).left).name)
+    SI iter_kind == 0
+      EVOCA VERBUM collection_identity AD CONIURA codegen_lookup_local_type_name(ctx, (*(*stmt).left).name)
+      SI CONIURA starts_with(collection_identity, "SERIES(")
+        VINCIRE iter_kind AD 2
+        VINCIRE item_identity AD CONIURA codegen_series_identity_element(collection_identity)
+      ALITER
+        SI CONIURA compare(collection_identity, "SPECULUM(NIHIL)") == 0
+          VINCIRE iter_kind AD 1
+          VINCIRE item_identity AD "REX"
+        FIN SI
+      FIN SI
+    FIN SI
+  FIN SI
+
+  SI iter_kind == 0 ET CONIURA compare(CONIURA codegen_expr_type_name(ctx, (*stmt).left), "SPECULUM(NIHIL)") == 0
+    VINCIRE iter_kind AD 1
+    VINCIRE item_identity AD "REX"
+  FIN SI
+
+  SI iter_kind == 0
+    CONIURA codegen_report_error(ctx, (*stmt).line, (*stmt).column, "ITERUM requires FLUXUS or SERIES (and now map/set) in bootstrap codegen")
+    REDDE
+  FIN SI
+
+  EVOCA VERBUM break_label AD CONIURA codegen_next_label_name(ctx)
+  EVOCA VERBUM continue_label AD CONIURA codegen_next_label_name(ctx)
+  EVOCA VERBUM idx_name AD CONIURA codegen_next_temp_name(ctx)
+  EVOCA VERBUM len_name AD CONIURA codegen_next_temp_name(ctx)
+  EVOCA VERBUM collection_name AD CONIURA codegen_next_temp_name(ctx)
+  EVOCA VERBUM ptr_name AD CONIURA codegen_next_temp_name(ctx)
+  EVOCA VERBUM iter_name AD CONIURA codegen_next_temp_name(ctx)
+  EVOCA VERBUM value_ptr_name AD CONIURA codegen_next_temp_name(ctx)
+
+  CONIURA codegen_emit_block_open(ctx)
+  CONIURA codegen_push_local_scope(ctx)
+  CONIURA codegen_define_local(ctx, (*stmt).name, (*stmt).name, item_identity)
+  CONIURA codegen_emit_iterum_binding_decl(ctx, (*stmt).name, item_identity)
+  SI iter_kind == 3
+    CONIURA codegen_define_local(ctx, (*stmt).aux_name, (*stmt).aux_name, value_identity)
+    CONIURA codegen_emit_iterum_binding_decl(ctx, (*stmt).aux_name, value_identity)
+  FIN SI
+  CONIURA codegen_flow_push_loop(ctx, break_label, continue_label)
+
+  SI iter_kind == 2
+    EVOCA VERBUM collection_identity AD CONIURA codegen_lookup_local_type_name(ctx, (*(*stmt).left).name)
+    EVOCA REX array_size AD CONIURA codegen_series_identity_size(collection_identity)
+    CONIURA codegen_emit(ctx, "for (long long ")
+    CONIURA codegen_emit(ctx, idx_name)
+    CONIURA codegen_emit(ctx, " = 0; ")
+    CONIURA codegen_emit(ctx, idx_name)
+    CONIURA codegen_emit(ctx, " < ")
+    CONIURA codegen_emit(ctx, CONIURA stringify_int(array_size))
+    CONIURA codegen_emit(ctx, "; ")
+    CONIURA codegen_emit(ctx, idx_name)
+    CONIURA codegen_emit_line(ctx, "++)")
+    CONIURA codegen_emit_block_open(ctx)
+    CONIURA codegen_emit(ctx, (*stmt).name)
+    CONIURA codegen_emit(ctx, " = ")
+    CONIURA codegen_emit_expr(ctx, (*stmt).left)
+    CONIURA codegen_emit(ctx, "[")
+    CONIURA codegen_emit(ctx, idx_name)
+    CONIURA codegen_emit_line(ctx, "];")
+  FIN SI
+
+  SI iter_kind == 1
+    CONIURA codegen_emit(ctx, "void *")
+    CONIURA codegen_emit(ctx, collection_name)
+    CONIURA codegen_emit(ctx, " = ")
+    CONIURA codegen_emit_expr(ctx, (*stmt).left)
+    CONIURA codegen_emit_line(ctx, ";")
+    CONIURA codegen_emit(ctx, "long long ")
+    CONIURA codegen_emit(ctx, len_name)
+    CONIURA codegen_emit(ctx, " = cct_rt_fluxus_len(")
+    CONIURA codegen_emit(ctx, collection_name)
+    CONIURA codegen_emit_line(ctx, ");")
+    CONIURA codegen_emit(ctx, "for (long long ")
+    CONIURA codegen_emit(ctx, idx_name)
+    CONIURA codegen_emit(ctx, " = 0; ")
+    CONIURA codegen_emit(ctx, idx_name)
+    CONIURA codegen_emit(ctx, " < ")
+    CONIURA codegen_emit(ctx, len_name)
+    CONIURA codegen_emit(ctx, "; ")
+    CONIURA codegen_emit(ctx, idx_name)
+    CONIURA codegen_emit_line(ctx, "++)")
+    CONIURA codegen_emit_block_open(ctx)
+    CONIURA codegen_emit(ctx, "void *")
+    CONIURA codegen_emit(ctx, ptr_name)
+    CONIURA codegen_emit(ctx, " = cct_rt_fluxus_get(")
+    CONIURA codegen_emit(ctx, collection_name)
+    CONIURA codegen_emit(ctx, ", ")
+    CONIURA codegen_emit(ctx, idx_name)
+    CONIURA codegen_emit_line(ctx, ");")
+    CONIURA codegen_emit_iterum_assign_from_ptr(ctx, (*stmt).name, item_identity, ptr_name)
+  FIN SI
+
+  SI iter_kind == 3
+    CONIURA codegen_require_stdlib(ctx)
+    CONIURA codegen_emit(ctx, "void *")
+    CONIURA codegen_emit(ctx, collection_name)
+    CONIURA codegen_emit(ctx, " = ")
+    CONIURA codegen_emit_expr(ctx, (*stmt).left)
+    CONIURA codegen_emit_line(ctx, ";")
+    CONIURA codegen_emit(ctx, "void *")
+    CONIURA codegen_emit(ctx, iter_name)
+    CONIURA codegen_emit(ctx, " = cct_rt_map_iter_begin(")
+    CONIURA codegen_emit(ctx, collection_name)
+    CONIURA codegen_emit_line(ctx, ");")
+    CONIURA codegen_emit(ctx, "void *")
+    CONIURA codegen_emit(ctx, ptr_name)
+    CONIURA codegen_emit_line(ctx, " = NULL;")
+    CONIURA codegen_emit(ctx, "void *")
+    CONIURA codegen_emit(ctx, value_ptr_name)
+    CONIURA codegen_emit_line(ctx, " = NULL;")
+    CONIURA codegen_emit(ctx, "while (cct_rt_map_iter_next(")
+    CONIURA codegen_emit(ctx, iter_name)
+    CONIURA codegen_emit(ctx, ", &")
+    CONIURA codegen_emit(ctx, ptr_name)
+    CONIURA codegen_emit(ctx, ", &")
+    CONIURA codegen_emit(ctx, value_ptr_name)
+    CONIURA codegen_emit_line(ctx, "))")
+    CONIURA codegen_emit_block_open(ctx)
+    CONIURA codegen_emit_iterum_assign_from_ptr(ctx, (*stmt).name, item_identity, ptr_name)
+    CONIURA codegen_emit_iterum_assign_from_ptr(ctx, (*stmt).aux_name, value_identity, value_ptr_name)
+  FIN SI
+
+  SI iter_kind == 4
+    CONIURA codegen_require_stdlib(ctx)
+    CONIURA codegen_emit(ctx, "void *")
+    CONIURA codegen_emit(ctx, collection_name)
+    CONIURA codegen_emit(ctx, " = ")
+    CONIURA codegen_emit_expr(ctx, (*stmt).left)
+    CONIURA codegen_emit_line(ctx, ";")
+    CONIURA codegen_emit(ctx, "void *")
+    CONIURA codegen_emit(ctx, iter_name)
+    CONIURA codegen_emit(ctx, " = cct_rt_set_iter_begin(")
+    CONIURA codegen_emit(ctx, collection_name)
+    CONIURA codegen_emit_line(ctx, ");")
+    CONIURA codegen_emit(ctx, "void *")
+    CONIURA codegen_emit(ctx, ptr_name)
+    CONIURA codegen_emit_line(ctx, " = NULL;")
+    CONIURA codegen_emit(ctx, "while (cct_rt_set_iter_next(")
+    CONIURA codegen_emit(ctx, iter_name)
+    CONIURA codegen_emit(ctx, ", &")
+    CONIURA codegen_emit(ctx, ptr_name)
+    CONIURA codegen_emit_line(ctx, "))")
+    CONIURA codegen_emit_block_open(ctx)
+    CONIURA codegen_emit_iterum_assign_from_ptr(ctx, (*stmt).name, item_identity, ptr_name)
+  FIN SI
+
+  CONIURA codegen_emit_stmt(ctx, (*stmt).body)
+  CONIURA codegen_emit(ctx, continue_label)
+  CONIURA codegen_emit_line(ctx, ": ;")
+  CONIURA codegen_emit_block_close(ctx)
+  SI iter_kind == 3
+    CONIURA codegen_emit(ctx, "cct_rt_map_iter_end(")
+    CONIURA codegen_emit(ctx, iter_name)
+    CONIURA codegen_emit_line(ctx, ");")
+  FIN SI
+  SI iter_kind == 4
+    CONIURA codegen_emit(ctx, "cct_rt_set_iter_end(")
+    CONIURA codegen_emit(ctx, iter_name)
+    CONIURA codegen_emit_line(ctx, ");")
+  FIN SI
+  CONIURA codegen_flow_pop_loop(ctx)
+  CONIURA codegen_emit(ctx, break_label)
+  CONIURA codegen_emit_line(ctx, ": ;")
+  CONIURA codegen_pop_local_scope(ctx)
+  CONIURA codegen_emit_block_close(ctx)
+  REDDE
+EXPLICIT RITUALE
+
 RITUALE codegen_stmt_is_switch_subject(SPECULUM CodegenContext ctx, VERBUM type_name) REDDE VERUM
   SI CONIURA compare(type_name, "REX") == 0
     REDDE VERUM
@@ -157,12 +486,12 @@ RITUALE codegen_emit_obsecro_scribe_stmt(SPECULUM CodegenContext ctx, SPECULUM A
     EVOCA SPECULUM AstNode arg AD CONIURA ast_node_list_get((*expr).arguments, i)
     EVOCA VERBUM type_name AD CONIURA codegen_expr_type_name(ctx, arg)
 
-    SI CONIURA compare(type_name, "VERBUM") == 0
+    SI CONIURA compare(type_name, "VERBUM") == 0 VEL CONIURA compare(type_name, "FRACTUM") == 0
       CONIURA codegen_emit(ctx, "cct_rt_scribe_str(")
       CONIURA codegen_emit_expr(ctx, arg)
       CONIURA codegen_emit_line(ctx, ");")
     ALITER
-      SI CONIURA compare(type_name, "REX") == 0 VEL CONIURA compare(type_name, "DUX") == 0 VEL CONIURA compare(type_name, "COMES") == 0 VEL CONIURA compare(type_name, "MILES") == 0
+      SI CONIURA compare(type_name, "REX") == 0 VEL CONIURA compare(type_name, "DUX") == 0 VEL CONIURA compare(type_name, "COMES") == 0 VEL CONIURA compare(type_name, "MILES") == 0 VEL (CONIURA compare(CONIURA codegen_lookup_ordo_c_name(ctx, type_name), "") != 0 ET NON CONIURA codegen_ordo_has_payload(ctx, type_name))
         CONIURA codegen_emit(ctx, "cct_rt_scribe_int((long long)(")
         CONIURA codegen_emit_expr(ctx, arg)
         CONIURA codegen_emit_line(ctx, "));")
@@ -189,10 +518,30 @@ RITUALE codegen_emit_obsecro_scribe_stmt(SPECULUM CodegenContext ctx, SPECULUM A
   REDDE
 EXPLICIT RITUALE
 
+RITUALE codegen_emit_obsecro_libera_stmt(SPECULUM CodegenContext ctx, SPECULUM AstNode expr) REDDE NIHIL
+  SI (*(*expr).callee).kind != AST_IDENTIFIER VEL CONIURA compare((*(*expr).callee).name, "libera") != 0
+    CONIURA codegen_report_error(ctx, (*expr).line, (*expr).column, "bootstrap codegen only supports OBSECRO libera as statement builtin")
+    REDDE
+  FIN SI
+  SI CONIURA ast_node_list_len((*expr).arguments) != 1
+    CONIURA codegen_report_error(ctx, (*expr).line, (*expr).column, "OBSECRO libera requires one argument in bootstrap codegen")
+    REDDE
+  FIN SI
+  CONIURA codegen_require_stdlib(ctx)
+  CONIURA codegen_emit(ctx, "free((void*)(")
+  CONIURA codegen_emit_expr(ctx, CONIURA ast_node_list_get((*expr).arguments, 0))
+  CONIURA codegen_emit_line(ctx, "));")
+  REDDE
+EXPLICIT RITUALE
+
 RITUALE codegen_emit_stmt(SPECULUM CodegenContext ctx, SPECULUM AstNode stmt) REDDE NIHIL
   SI (*stmt).kind == AST_EXPR_STMT
     SI (*(*stmt).left).kind == AST_OBSECRO_CALL ET (*(*(*stmt).left).callee).kind == AST_IDENTIFIER ET CONIURA compare((*(*(*stmt).left).callee).name, "scribe") == 0
       CONIURA codegen_emit_obsecro_scribe_stmt(ctx, (*stmt).left)
+      REDDE
+    FIN SI
+    SI (*(*stmt).left).kind == AST_OBSECRO_CALL ET (*(*(*stmt).left).callee).kind == AST_IDENTIFIER ET CONIURA compare((*(*(*stmt).left).callee).name, "libera") == 0
+      CONIURA codegen_emit_obsecro_libera_stmt(ctx, (*stmt).left)
       REDDE
     FIN SI
     CONIURA codegen_emit_expr(ctx, (*stmt).left)
@@ -221,10 +570,29 @@ RITUALE codegen_emit_stmt(SPECULUM CodegenContext ctx, SPECULUM AstNode stmt) RE
     FIN SI
     EVOCA VERBUM local_type_identity AD CONIURA codegen_generic_type_identity(ctx, (*stmt).type_expr)
     EVOCA VERBUM local_name AD CONIURA codegen_define_local(ctx, (*stmt).name, (*stmt).name, local_type_identity)
+    CONIURA codegen_capture_iter_local_info(ctx, stmt, local_type_identity)
     DIMITTE local_type_identity
-    CONIURA codegen_emit(ctx, type_text)
-    CONIURA codegen_emit(ctx, " ")
-    CONIURA codegen_emit(ctx, local_name)
+    SI (*stmt).has_type_expr ET (*(*stmt).type_expr).is_array
+      EVOCA REX bracket_idx AD CONIURA find(type_text, "[")
+      EVOCA VERBUM array_prefix AD type_text
+      EVOCA VERBUM array_suffix AD ""
+      SI bracket_idx >= 0
+        VINCIRE array_prefix AD CONIURA substring(type_text, 0, bracket_idx)
+        VINCIRE array_suffix AD CONIURA substring(type_text, bracket_idx, CONIURA len(type_text))
+      FIN SI
+      CONIURA codegen_emit(ctx, array_prefix)
+      CONIURA codegen_emit(ctx, " ")
+      CONIURA codegen_emit(ctx, local_name)
+      CONIURA codegen_emit(ctx, array_suffix)
+      SI bracket_idx >= 0
+        DIMITTE array_prefix
+        DIMITTE array_suffix
+      FIN SI
+    ALITER
+      CONIURA codegen_emit(ctx, type_text)
+      CONIURA codegen_emit(ctx, " ")
+      CONIURA codegen_emit(ctx, local_name)
+    FIN SI
     SI (*stmt).has_right
       CONIURA codegen_emit(ctx, " = ")
       CONIURA codegen_emit_expr(ctx, (*stmt).right)
@@ -258,6 +626,17 @@ RITUALE codegen_emit_stmt(SPECULUM CodegenContext ctx, SPECULUM AstNode stmt) RE
       REDDE
     FIN SI
     CONIURA codegen_emit_line(ctx, "return;")
+    REDDE
+  FIN SI
+
+  SI (*stmt).kind == AST_ANUR
+    SI NON (*stmt).has_left
+      CONIURA codegen_emit_line(ctx, "exit(0);")
+      REDDE
+    FIN SI
+    CONIURA codegen_emit(ctx, "exit((int)(")
+    CONIURA codegen_emit_expr(ctx, (*stmt).left)
+    CONIURA codegen_emit_line(ctx, "));")
     REDDE
   FIN SI
 
@@ -303,6 +682,107 @@ RITUALE codegen_emit_stmt(SPECULUM CodegenContext ctx, SPECULUM AstNode stmt) RE
     CONIURA codegen_emit_line(ctx, ": ;")
     DIMITTE break_label
     DIMITTE continue_label
+    REDDE
+  FIN SI
+
+  SI (*stmt).kind == AST_DONEC
+    EVOCA VERBUM break_label AD CONIURA codegen_next_label_name(ctx)
+    EVOCA VERBUM continue_label AD CONIURA codegen_next_label_name(ctx)
+    CONIURA codegen_flow_push_loop(ctx, break_label, continue_label)
+    CONIURA codegen_emit_line(ctx, "do")
+    CONIURA codegen_emit_block_open(ctx)
+    CONIURA codegen_emit_stmt(ctx, (*stmt).body)
+    CONIURA codegen_emit(ctx, continue_label)
+    CONIURA codegen_emit_line(ctx, ": ;")
+    CONIURA codegen_emit_block_close(ctx)
+    CONIURA codegen_flow_pop_loop(ctx)
+    CONIURA codegen_emit(ctx, "while (")
+    SI (*stmt).has_condition
+      CONIURA codegen_emit_condition_expr(ctx, (*stmt).condition)
+    ALITER
+      CONIURA codegen_emit(ctx, "1")
+    FIN SI
+    CONIURA codegen_emit_line(ctx, ");")
+    CONIURA codegen_emit(ctx, break_label)
+    CONIURA codegen_emit_line(ctx, ": ;")
+    DIMITTE break_label
+    DIMITTE continue_label
+    REDDE
+  FIN SI
+
+  SI (*stmt).kind == AST_REPETE
+    EVOCA VERBUM start_name AD CONIURA codegen_next_temp_name(ctx)
+    EVOCA VERBUM end_name AD CONIURA codegen_next_temp_name(ctx)
+    EVOCA VERBUM step_name AD CONIURA codegen_next_temp_name(ctx)
+    EVOCA VERBUM break_label AD CONIURA codegen_next_label_name(ctx)
+    EVOCA VERBUM continue_label AD CONIURA codegen_next_label_name(ctx)
+
+    CONIURA codegen_emit_block_open(ctx)
+    CONIURA codegen_push_local_scope(ctx)
+    CONIURA codegen_define_local(ctx, (*stmt).name, (*stmt).name, "REX")
+
+    CONIURA codegen_emit(ctx, "long long ")
+    CONIURA codegen_emit(ctx, start_name)
+    CONIURA codegen_emit(ctx, " = ")
+    CONIURA codegen_emit_expr(ctx, (*stmt).left)
+    CONIURA codegen_emit_line(ctx, ";")
+
+    CONIURA codegen_emit(ctx, "long long ")
+    CONIURA codegen_emit(ctx, end_name)
+    CONIURA codegen_emit(ctx, " = ")
+    CONIURA codegen_emit_expr(ctx, (*stmt).right)
+    CONIURA codegen_emit_line(ctx, ";")
+
+    CONIURA codegen_emit(ctx, "long long ")
+    CONIURA codegen_emit(ctx, step_name)
+    CONIURA codegen_emit(ctx, " = ")
+    SI (*stmt).has_condition
+      CONIURA codegen_emit_expr(ctx, (*stmt).condition)
+    ALITER
+      CONIURA codegen_emit(ctx, "1")
+    FIN SI
+    CONIURA codegen_emit_line(ctx, ";")
+
+    CONIURA codegen_emit(ctx, "if (")
+    CONIURA codegen_emit(ctx, step_name)
+    CONIURA codegen_emit_line(ctx, " == 0) exit(1);")
+
+    CONIURA codegen_flow_push_loop(ctx, break_label, continue_label)
+    CONIURA codegen_emit(ctx, "for (long long ")
+    CONIURA codegen_emit(ctx, (*stmt).name)
+    CONIURA codegen_emit(ctx, " = ")
+    CONIURA codegen_emit(ctx, start_name)
+    CONIURA codegen_emit(ctx, "; ((")
+    CONIURA codegen_emit(ctx, step_name)
+    CONIURA codegen_emit(ctx, " > 0) ? (")
+    CONIURA codegen_emit(ctx, (*stmt).name)
+    CONIURA codegen_emit(ctx, " <= ")
+    CONIURA codegen_emit(ctx, end_name)
+    CONIURA codegen_emit(ctx, ") : (")
+    CONIURA codegen_emit(ctx, (*stmt).name)
+    CONIURA codegen_emit(ctx, " >= ")
+    CONIURA codegen_emit(ctx, end_name)
+    CONIURA codegen_emit(ctx, ")); ")
+    CONIURA codegen_emit(ctx, (*stmt).name)
+    CONIURA codegen_emit(ctx, " += ")
+    CONIURA codegen_emit(ctx, step_name)
+    CONIURA codegen_emit_line(ctx, ")")
+    CONIURA codegen_emit_block_open(ctx)
+    CONIURA codegen_emit_stmt(ctx, (*stmt).body)
+    CONIURA codegen_emit(ctx, continue_label)
+    CONIURA codegen_emit_line(ctx, ": ;")
+    CONIURA codegen_emit_block_close(ctx)
+    CONIURA codegen_flow_pop_loop(ctx)
+
+    CONIURA codegen_emit(ctx, break_label)
+    CONIURA codegen_emit_line(ctx, ": ;")
+    CONIURA codegen_pop_local_scope(ctx)
+    CONIURA codegen_emit_block_close(ctx)
+    REDDE
+  FIN SI
+
+  SI (*stmt).kind == AST_ITERUM
+    CONIURA codegen_emit_iterum_stmt(ctx, stmt)
     REDDE
   FIN SI
 

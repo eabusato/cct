@@ -6,7 +6,6 @@ INCIPIT grimoire "calculadora_real_18_19_v2"
 
 ADVOCARE "cct/io.cct"
 ADVOCARE "cct/parse.cct"
-ADVOCARE "cct/option.cct"
 ADVOCARE "cct/verbum.cct"
 ADVOCARE "cct/fluxus.cct"
 ADVOCARE "cct/fmt.cct"

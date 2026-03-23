@@ -6,7 +6,7 @@ ADVOCARE "../../src/bootstrap/codegen/codegen_decl.cct"
 ADVOCARE "cct/verbum.cct"
 
 RITUALE main() REDDE REX
-  EVOCA VERBUM source AD "INCIPIT grimoire \"g\"\nORDO Option\n  None\n  Some(value: REX)\nFIN ORDO\nRITUALE main() REDDE REX\n  EVOCA Option o AD Some(7)\n  ELIGE o\n  CASUS Some(value):\n    REDDE value\n  ALIOQUIN:\n    REDDE 0\n  FIN ELIGE\nEXPLICIT RITUALE\nEXPLICIT grimoire\n"
+  EVOCA VERBUM source AD "INCIPIT grimoire \"g\"\nORDO Option\n  None\n  Some(REX value)\nFIN ORDO\nRITUALE main() REDDE REX\n  EVOCA Option o AD Some(7)\n  ELIGE o\n  CASUS Some(value):\n    REDDE value\n  ALIOQUIN:\n    REDDE 0\n  FIN ELIGE\nEXPLICIT RITUALE\nEXPLICIT grimoire\n"
   EVOCA SPECULUM AstProgram program AD CONIURA parser_parse_program_source(source, "elige_payload_bind.cct")
   EVOCA VERBUM out AD CONIURA codegen_generate_program(program, "elige_payload_bind.cct")
   EVOCA REX rc AD 0

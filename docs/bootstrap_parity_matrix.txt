@@ -1,0 +1,180 @@
+# Bootstrap Compiler Parity Matrix
+# This document defines which tests from phases 0-30 the bootstrap compiler MUST pass
+# when used as the default compiler via the promoted ./cct wrapper.
+
+# Legend:
+# MUST_PASS: Bootstrap must behave identically to host (bugs if fails)
+# SHOULD_PASS: Expected to pass but minor differences tolerated
+# PENDING: Feature not yet implemented in bootstrap (documented gap)
+# DELEGATE_TO_HOST: Feature exists only in host, wrapper delegates
+# OUT_OF_SCOPE: Not applicable to bootstrap compiler
+# BEHAVIORAL_PARITY: Different implementation OK if behavior correct
+
+# ============================================================================
+# PHASE 0-10: Legacy Foundation Tests (Tests 1-1696)
+# ============================================================================
+
+# These tests validate core language functionality that any CCT compiler
+# must support. Bootstrap MUST pass these.
+
+phase00_foundation=MUST_PASS:100%
+phase01_lexer=MUST_PASS:100%
+phase02_parser_basic=MUST_PASS:100%
+phase03_parser_advanced=MUST_PASS:100%
+phase04_types_basic=MUST_PASS:100%
+phase05_types_advanced=MUST_PASS:100%
+phase06_codegen_expressions=MUST_PASS:100%
+phase07_codegen_statements=MUST_PASS:100%
+phase08_codegen_functions=MUST_PASS:100%
+phase09_stdlib_core=MUST_PASS:verbum,io,fmt,fs,path
+phase10_stdlib_data=SHOULD_PASS:fluxus,parse
+
+# ============================================================================
+# PHASE 11-20: Stdlib and Tooling (Variable test ranges)
+# ============================================================================
+
+# Stdlib modules that are SUPPORTED in selfhost_prelude
+phase11_stdlib_io=MUST_PASS:file operations
+phase12_stdlib_text=MUST_PASS:string manipulation
+phase13_stdlib_collections=MUST_PASS:fluxus (dynamic arrays)
+phase14_stdlib_parsing=SHOULD_PASS:csv,numeric parsing
+
+# Stdlib modules marked PENDING in phase30 compat matrix
+phase15_stdlib_config=PENDING:not exported in selfhost_prelude
+phase16_stdlib_json=PENDING:not exported in selfhost_prelude
+phase17_stdlib_db=PENDING:not exported in selfhost_prelude
+phase18_stdlib_http=PENDING:not exported in selfhost_prelude
+
+# Tooling commands (host-only features)
+phase_fmt=DELEGATE_TO_HOST:formatter is host feature
+phase_lint=DELEGATE_TO_HOST:linter is host feature
+phase_doc=DELEGATE_TO_HOST:doc generator is host feature
+phase_lsp=OUT_OF_SCOPE:LSP not applicable to compiler
+
+# ============================================================================
+# PHASE 21-23: Bootstrap Lexer/Parser (Tests 1697-3629)
+# ============================================================================
+
+# These validate the bootstrap implementation itself.
+# Bootstrap MUST pass all these - they define what bootstrap IS.
+
+phase21_lexer_bootstrap=MUST_PASS:100%
+phase22_parser_bootstrap=MUST_PASS:100%
+phase23_advanced_syntax_bootstrap=MUST_PASS:100%
+
+# ============================================================================
+# PHASE 24-25: Semantic Analysis (Tests 3630-5654)
+# ============================================================================
+
+# Type checking, symbol resolution, generic semantics
+# These are core language semantics - bootstrap MUST match host
+
+phase24_semantic_symbols=MUST_PASS:100%
+phase24_semantic_types=MUST_PASS:100%
+phase24_semantic_expressions=MUST_PASS:100%
+phase24_semantic_statements=MUST_PASS:100%
+phase24_semantic_validation=MUST_PASS:100%
+
+phase25_generic_parameters=MUST_PASS:100%
+phase25_generic_instantiation=MUST_PASS:100%
+phase25_generic_constraints=MUST_PASS:100%
+phase25_generic_deduplication=MUST_PASS:100%
+
+# ============================================================================
+# PHASE 26-28: Code Generation (Tests 5655-8420)
+# ============================================================================
+
+# C emission, struct/enum codegen, advanced features
+# Bootstrap MUST generate equivalent C code
+
+phase26_codegen_context=MUST_PASS:100%
+phase26_codegen_expressions=MUST_PASS:100%
+phase26_codegen_statements=MUST_PASS:100%
+phase26_codegen_functions=MUST_PASS:100%
+phase26_codegen_types=MUST_PASS:100%
+
+phase27_codegen_structs=MUST_PASS:SIGILLUM codegen
+phase27_codegen_enums_simple=MUST_PASS:simple ORDO codegen
+phase27_codegen_enums_payload=MUST_PASS:payload ORDO codegen
+phase27_codegen_pattern_match=MUST_PASS:ELIGE lowering
+
+phase28_codegen_generics=MUST_PASS:monomorfization
+phase28_codegen_exceptions=MUST_PASS:TEMPTA/CAPE/SEMPER
+phase28_codegen_advanced_flow=MUST_PASS:FRANGE/RECEDE
+phase28_codegen_interpolation=MUST_PASS:FORMA
+
+# ============================================================================
+# PHASE 29-30: Self-Hosting and Operations (Tests 8421-1723)
+# ============================================================================
+
+# Bootstrap validation and operational workflows
+# By definition, these MUST pass if bootstrap is operational
+
+phase29_selfhost_stage0=MUST_PASS:100%
+phase29_selfhost_stage1=MUST_PASS:100%
+phase29_selfhost_stage2=MUST_PASS:100%
+phase29_identity_validation=MUST_PASS:deterministic C generation
+
+phase30_operational_workflows=MUST_PASS:compile,build,run,test
+phase30_stdlib_compat=MUST_PASS:supported modules only
+phase30_application_libs=SHOULD_PASS:csv,https,orm_lite
+
+# ============================================================================
+# PHASE 31: Promotion (Tests 1724-1754)
+# ============================================================================
+
+# Wrapper infrastructure and CLI parity
+# All 31 tests MUST pass - they validate the promotion itself
+
+phase31_wrapper_parity=MUST_PASS:100%
+phase31_cli_parity=MUST_PASS:100%
+phase31_workflow_parity=MUST_PASS:100%
+phase31_promotion_infrastructure=MUST_PASS:100%
+phase31_final_gate=MUST_PASS:100%
+
+# ============================================================================
+# ERROR MESSAGE PARITY
+# ============================================================================
+
+# Error detection MUST be identical, but error message TEXT can differ
+# as long as it's clear and actionable
+
+error_detection=MUST_PASS:same errors detected
+error_messages=BEHAVIORAL_PARITY:text can differ
+error_exit_codes=MUST_PASS:same exit codes
+
+# ============================================================================
+# PERFORMANCE EXPECTATIONS
+# ============================================================================
+
+# Bootstrap is expected to be slower than host (implemented in CCT vs C)
+# But correctness must be identical
+
+compilation_speed=BEHAVIORAL_PARITY:2-3x slower acceptable
+generated_code_quality=MUST_PASS:same runtime behavior
+memory_usage=BEHAVIORAL_PARITY:higher usage acceptable
+
+# ============================================================================
+# DETERMINISM EXPECTATIONS
+# ============================================================================
+
+# Bootstrap must maintain deterministic compilation
+
+deterministic_c_generation=MUST_PASS:100%
+deterministic_binaries=SHOULD_PASS:same size, may differ in metadata
+reproducible_builds=MUST_PASS:same input -> same C output
+
+# ============================================================================
+# SUMMARY TARGETS
+# ============================================================================
+
+# Minimum passing rates for promotion gate:
+# - Language core (phases 0-10, 21-28): 95%+ MUST_PASS tests green
+# - Stdlib supported modules: 90%+ tests green
+# - Self-hosting (phases 29-30): 100% tests green
+# - Promotion (phase 31): 100% tests green
+
+minimum_core_parity=95%
+minimum_stdlib_parity=90%
+minimum_selfhost_parity=100%
+minimum_promotion_parity=100%

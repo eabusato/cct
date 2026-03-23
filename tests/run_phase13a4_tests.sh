@@ -9,6 +9,14 @@ ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 source "$ROOT_DIR/tests/test_tmpdir.sh"
 cct_setup_tmpdir "$ROOT_DIR"
 
+if [ -z "${CCT_BIN:-}" ]; then
+  if [ -x ./cct-host ]; then
+    CCT_BIN="./cct-host"
+  else
+    CCT_BIN="./cct"
+  fi
+fi
+
 echo "FASE 13A.4 — Sigilo Baseline Tests"
 echo "========================================"
 
@@ -32,26 +40,26 @@ semantic_hash = 1111111111111111
 rituale = 1
 SIGEOF
 
-./cct sigilo baseline check "$SIG_A" --baseline "$BASE" --summary >$CCT_TMP_DIR/cct_sigilo_cli_13a4_missing.out
+"$CCT_BIN" sigilo baseline check "$SIG_A" --baseline "$BASE" --summary >$CCT_TMP_DIR/cct_sigilo_cli_13a4_missing.out
 if ! grep -q "status=missing" $CCT_TMP_DIR/cct_sigilo_cli_13a4_missing.out; then
   echo "expected missing baseline status"
   exit 1
 fi
 
-./cct sigilo baseline update "$SIG_A" --baseline "$BASE" >$CCT_TMP_DIR/cct_sigilo_cli_13a4_update.out
+"$CCT_BIN" sigilo baseline update "$SIG_A" --baseline "$BASE" >$CCT_TMP_DIR/cct_sigilo_cli_13a4_update.out
 if ! grep -q "status=written" $CCT_TMP_DIR/cct_sigilo_cli_13a4_update.out; then
   echo "expected baseline update status=written"
   exit 1
 fi
 
-./cct sigilo baseline check "$SIG_A" --baseline "$BASE" --summary >$CCT_TMP_DIR/cct_sigilo_cli_13a4_ok.out
+"$CCT_BIN" sigilo baseline check "$SIG_A" --baseline "$BASE" --summary >$CCT_TMP_DIR/cct_sigilo_cli_13a4_ok.out
 if ! grep -q "status=ok" $CCT_TMP_DIR/cct_sigilo_cli_13a4_ok.out; then
   echo "expected baseline check status=ok"
   exit 1
 fi
 
 set +e
-./cct sigilo baseline check "$SIG_B" --baseline "$BASE" --strict --summary >$CCT_TMP_DIR/cct_sigilo_cli_13a4_strict.out
+"$CCT_BIN" sigilo baseline check "$SIG_B" --baseline "$BASE" --strict --summary >$CCT_TMP_DIR/cct_sigilo_cli_13a4_strict.out
 RC=$?
 set -e
 if [ "$RC" -ne 2 ]; then

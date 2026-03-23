@@ -273,6 +273,13 @@ RITUALE codegen_generic_scan_stmt_use(SPECULUM CodegenContext ctx, SPECULUM AstN
     REDDE
   FIN SI
 
+  SI (*stmt).kind == AST_ANUR
+    SI (*stmt).has_left
+      CONIURA codegen_generic_scan_expr_use(ctx, (*stmt).left)
+    FIN SI
+    REDDE
+  FIN SI
+
   SI (*stmt).kind == AST_SI VEL (*stmt).kind == AST_DUM VEL (*stmt).kind == AST_QUANDO
     SI (*stmt).has_condition
       CONIURA codegen_generic_scan_expr_use(ctx, (*stmt).condition)
@@ -290,6 +297,42 @@ RITUALE codegen_generic_scan_stmt_use(SPECULUM CodegenContext ctx, SPECULUM AstN
       CONIURA codegen_generic_scan_stmt_use(ctx, (*case_node).body)
       VINCIRE case_i AD case_i + 1
     FIN DUM
+    REDDE
+  FIN SI
+
+  SI (*stmt).kind == AST_DONEC
+    SI (*stmt).has_body
+      CONIURA codegen_generic_scan_stmt_use(ctx, (*stmt).body)
+    FIN SI
+    SI (*stmt).has_condition
+      CONIURA codegen_generic_scan_expr_use(ctx, (*stmt).condition)
+    FIN SI
+    REDDE
+  FIN SI
+
+  SI (*stmt).kind == AST_REPETE
+    SI (*stmt).has_left
+      CONIURA codegen_generic_scan_expr_use(ctx, (*stmt).left)
+    FIN SI
+    SI (*stmt).has_right
+      CONIURA codegen_generic_scan_expr_use(ctx, (*stmt).right)
+    FIN SI
+    SI (*stmt).has_condition
+      CONIURA codegen_generic_scan_expr_use(ctx, (*stmt).condition)
+    FIN SI
+    SI (*stmt).has_body
+      CONIURA codegen_generic_scan_stmt_use(ctx, (*stmt).body)
+    FIN SI
+    REDDE
+  FIN SI
+
+  SI (*stmt).kind == AST_ITERUM
+    SI (*stmt).has_left
+      CONIURA codegen_generic_scan_expr_use(ctx, (*stmt).left)
+    FIN SI
+    SI (*stmt).has_body
+      CONIURA codegen_generic_scan_stmt_use(ctx, (*stmt).body)
+    FIN SI
     REDDE
   FIN SI
 
@@ -344,6 +387,30 @@ RITUALE codegen_generic_scan_decl_use(SPECULUM CodegenContext ctx, SPECULUM AstN
   REDDE
 EXPLICIT RITUALE
 
+RITUALE codegen_generic_collect_instance_closure(SPECULUM CodegenContext ctx) REDDE NIHIL
+  EVOCA REX i AD 0
+  DUM i < CONIURA codegen_registered_generic_rituale_instance_count(ctx)
+    EVOCA SPECULUM CodegenGenericRitualeInstance inst AD CONIURA codegen_context_generic_rituale_instance_at(ctx, i)
+    CONIURA codegen_generic_bind_template_args(ctx, (*inst).template_decl, (*inst).type_args)
+    EVOCA REX param_i AD 0
+    EVOCA REX param_n AD CONIURA ast_node_list_len((*(*inst).template_decl).params)
+    DUM param_i < param_n
+      EVOCA SPECULUM AstNode param AD CONIURA ast_node_list_get((*(*inst).template_decl).params, param_i)
+      CONIURA codegen_generic_scan_type_use(ctx, (*param).type_expr)
+      VINCIRE param_i AD param_i + 1
+    FIN DUM
+    SI (*(*inst).template_decl).has_return_type
+      CONIURA codegen_generic_scan_type_use(ctx, (*(*inst).template_decl).return_type)
+    FIN SI
+    SI (*(*inst).template_decl).has_body
+      CONIURA codegen_generic_scan_stmt_use(ctx, (*(*inst).template_decl).body)
+    FIN SI
+    CONIURA codegen_generic_unbind_template_args(ctx)
+    VINCIRE i AD i + 1
+  FIN DUM
+  REDDE
+EXPLICIT RITUALE
+
 RITUALE codegen_generic_collect_program_uses(SPECULUM CodegenContext ctx, SPECULUM AstProgram program) REDDE NIHIL
   EVOCA REX i AD 0
   EVOCA REX n AD CONIURA ast_node_list_len((*program).declarations)
@@ -351,6 +418,7 @@ RITUALE codegen_generic_collect_program_uses(SPECULUM CodegenContext ctx, SPECUL
     CONIURA codegen_generic_scan_decl_use(ctx, CONIURA ast_node_list_get((*program).declarations, i))
     VINCIRE i AD i + 1
   FIN DUM
+  CONIURA codegen_generic_collect_instance_closure(ctx)
   REDDE
 EXPLICIT RITUALE
 

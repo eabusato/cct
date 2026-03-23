@@ -144,6 +144,53 @@ RITUALE semantic_analyze_call(SPECULUM SemanticContext ctx, SPECULUM AstNode exp
   FIN SI
 
   EVOCA SPECULUM SemanticSymbol sym AD CONIURA semantic_symbol_at(ctx, sym_id)
+  SI (*sym).kind == SEM_SYMBOL_VARIABLE
+    EVOCA SPECULUM SemanticType owner_type AD CONIURA semantic_type_at(ctx, (*sym).type_id)
+    SI ((*owner_type).kind == SEM_TYPE_NAMED VEL (*owner_type).kind == SEM_TYPE_INSTANCE) ET (*owner_type).named_symbol_id != CONIURA semantic_invalid_id()
+      EVOCA SPECULUM SemanticSymbol owner_sym AD CONIURA semantic_symbol_at(ctx, (*owner_type).named_symbol_id)
+      SI (*owner_sym).has_decl_node ET (*(*owner_sym).decl_node).kind == AST_ORDO
+        EVOCA REX variant_i AD 0
+        EVOCA REX variant_n AD CONIURA ast_node_list_len((*(*owner_sym).decl_node).items)
+        DUM variant_i < variant_n
+          EVOCA SPECULUM AstNode variant_node AD CONIURA ast_node_list_get((*(*owner_sym).decl_node).items, variant_i)
+          SI CONIURA compare((*variant_node).name, (*(*expr).callee).name) == 0
+            EVOCA REX expected_args AD CONIURA ast_node_list_len((*variant_node).fields)
+            EVOCA REX actual_args AD CONIURA ast_node_list_len((*expr).arguments)
+            SI expected_args == 0
+              CONIURA semantic_report_error(ctx, (*expr).line, (*expr).column, "ORDO payload: variant without payload must be used without parentheses")
+              REDDE (*ctx).type_error
+            FIN SI
+            SI actual_args != expected_args
+              CONIURA semantic_report_error(ctx, (*expr).line, (*expr).column, "ORDO payload constructor arity mismatch")
+              REDDE (*ctx).type_error
+            FIN SI
+
+            EVOCA REX arg_i AD 0
+            DUM arg_i < actual_args
+              EVOCA SPECULUM AstNode arg AD CONIURA ast_node_list_get((*expr).arguments, arg_i)
+              EVOCA SPECULUM AstNode field_node AD CONIURA ast_node_list_get((*variant_node).fields, arg_i)
+              EVOCA REX field_scope_id AD CONIURA semantic_enter_owner_generic_scope(ctx, (*owner_sym).id)
+              EVOCA REX field_type_id AD CONIURA semantic_resolve_type_node(ctx, (*field_node).type_expr)
+              CONIURA semantic_restore_scope(ctx, field_scope_id)
+              SI (*owner_type).kind == SEM_TYPE_INSTANCE
+                VINCIRE field_type_id AD CONIURA semantic_substitute_instantiated_type(ctx, field_type_id, (*owner_sym).id, (*owner_type).type_arg_ids)
+              FIN SI
+              EVOCA REX arg_type_id AD CONIURA semantic_analyze_expr(ctx, arg)
+              SI NON CONIURA semantic_type_compatible_assign(ctx, field_type_id, arg_type_id)
+                CONIURA semantic_report_error(ctx, (*arg).line, (*arg).column, "ORDO payload constructor argument type mismatch")
+                REDDE (*ctx).type_error
+              FIN SI
+              VINCIRE arg_i AD arg_i + 1
+            FIN DUM
+
+            REDDE (*sym).type_id
+          FIN SI
+          VINCIRE variant_i AD variant_i + 1
+        FIN DUM
+      FIN SI
+    FIN SI
+  FIN SI
+
   SI (*sym).kind != SEM_SYMBOL_RITUALE
     CONIURA semantic_report_error(ctx, (*expr).line, (*expr).column, "call target is not rituale")
     REDDE (*ctx).type_error
@@ -222,6 +269,15 @@ RITUALE semantic_analyze_call(SPECULUM SemanticContext ctx, SPECULUM AstNode exp
 EXPLICIT RITUALE
 
 RITUALE semantic_obsecro_expected_arity(VERBUM builtin_name) REDDE REX
+  SI CONIURA compare(builtin_name, "pete") == 0
+    REDDE 1
+  FIN SI
+  SI CONIURA compare(builtin_name, "libera") == 0
+    REDDE 1
+  FIN SI
+  SI CONIURA compare(builtin_name, "verbum_char_at") == 0
+    REDDE 2
+  FIN SI
   SI CONIURA compare(builtin_name, "fs_read_all") == 0
     REDDE 1
   FIN SI
@@ -234,12 +290,72 @@ RITUALE semantic_obsecro_expected_arity(VERBUM builtin_name) REDDE REX
   SI CONIURA compare(builtin_name, "fs_mkdir_all") == 0
     REDDE 1
   FIN SI
+  SI CONIURA compare(builtin_name, "option_some") == 0
+    REDDE 2
+  FIN SI
+  SI CONIURA compare(builtin_name, "option_none") == 0
+    REDDE 1
+  FIN SI
+  SI CONIURA compare(builtin_name, "option_is_some") == 0 VEL CONIURA compare(builtin_name, "option_is_none") == 0
+    REDDE 1
+  FIN SI
+  SI CONIURA compare(builtin_name, "option_unwrap_ptr") == 0 VEL CONIURA compare(builtin_name, "option_free") == 0
+    REDDE 1
+  FIN SI
+  SI CONIURA compare(builtin_name, "option_expect_ptr") == 0
+    REDDE 2
+  FIN SI
+  SI CONIURA compare(builtin_name, "result_ok") == 0 VEL CONIURA compare(builtin_name, "result_err") == 0
+    REDDE 3
+  FIN SI
+  SI CONIURA compare(builtin_name, "result_is_ok") == 0 VEL CONIURA compare(builtin_name, "result_is_err") == 0
+    REDDE 1
+  FIN SI
+  SI CONIURA compare(builtin_name, "result_unwrap_ptr") == 0 VEL CONIURA compare(builtin_name, "result_unwrap_err_ptr") == 0 VEL CONIURA compare(builtin_name, "result_free") == 0
+    REDDE 1
+  FIN SI
+  SI CONIURA compare(builtin_name, "result_expect_ptr") == 0
+    REDDE 2
+  FIN SI
+  SI CONIURA compare(builtin_name, "map_init") == 0
+    REDDE 2
+  FIN SI
+  SI CONIURA compare(builtin_name, "map_free") == 0 VEL CONIURA compare(builtin_name, "map_len") == 0 VEL CONIURA compare(builtin_name, "map_is_empty") == 0 VEL CONIURA compare(builtin_name, "map_capacity") == 0 VEL CONIURA compare(builtin_name, "map_clear") == 0 VEL CONIURA compare(builtin_name, "map_copy") == 0
+    REDDE 1
+  FIN SI
+  SI CONIURA compare(builtin_name, "map_insert") == 0
+    REDDE 3
+  FIN SI
+  SI CONIURA compare(builtin_name, "map_remove") == 0 VEL CONIURA compare(builtin_name, "map_get_ptr") == 0 VEL CONIURA compare(builtin_name, "map_contains") == 0 VEL CONIURA compare(builtin_name, "map_reserve") == 0 VEL CONIURA compare(builtin_name, "map_keys") == 0 VEL CONIURA compare(builtin_name, "map_values") == 0 VEL CONIURA compare(builtin_name, "map_merge") == 0
+    REDDE 2
+  FIN SI
+  SI CONIURA compare(builtin_name, "set_init") == 0
+    REDDE 1
+  FIN SI
+  SI CONIURA compare(builtin_name, "set_free") == 0 VEL CONIURA compare(builtin_name, "set_len") == 0 VEL CONIURA compare(builtin_name, "set_is_empty") == 0 VEL CONIURA compare(builtin_name, "set_clear") == 0 VEL CONIURA compare(builtin_name, "set_capacity") == 0
+    REDDE 1
+  FIN SI
+  SI CONIURA compare(builtin_name, "set_insert") == 0 VEL CONIURA compare(builtin_name, "set_remove") == 0 VEL CONIURA compare(builtin_name, "set_contains") == 0 VEL CONIURA compare(builtin_name, "set_copy") == 0 VEL CONIURA compare(builtin_name, "set_to_fluxus") == 0 VEL CONIURA compare(builtin_name, "set_reserve") == 0
+    REDDE 2
+  FIN SI
+  SI CONIURA compare(builtin_name, "set_union") == 0 VEL CONIURA compare(builtin_name, "set_intersection") == 0 VEL CONIURA compare(builtin_name, "set_difference") == 0 VEL CONIURA compare(builtin_name, "set_symmetric_difference") == 0 VEL CONIURA compare(builtin_name, "set_is_subset") == 0 VEL CONIURA compare(builtin_name, "set_equals") == 0
+    REDDE 3
+  FIN SI
   REDDE -1
 EXPLICIT RITUALE
 
 RITUALE semantic_obsecro_return_type_id(SPECULUM SemanticContext ctx, VERBUM builtin_name) REDDE REX
   SI CONIURA compare(builtin_name, "scribe") == 0
     REDDE (*ctx).type_nihil
+  FIN SI
+  SI CONIURA compare(builtin_name, "pete") == 0
+    REDDE CONIURA semantic_type_make_pointer(ctx, (*ctx).type_nihil)
+  FIN SI
+  SI CONIURA compare(builtin_name, "libera") == 0
+    REDDE (*ctx).type_nihil
+  FIN SI
+  SI CONIURA compare(builtin_name, "verbum_char_at") == 0
+    REDDE (*ctx).type_miles
   FIN SI
   SI CONIURA compare(builtin_name, "fs_read_all") == 0
     REDDE (*ctx).type_verbum
@@ -250,7 +366,201 @@ RITUALE semantic_obsecro_return_type_id(SPECULUM SemanticContext ctx, VERBUM bui
   SI CONIURA compare(builtin_name, "fs_write_all") == 0 VEL CONIURA compare(builtin_name, "fs_mkdir_all") == 0
     REDDE (*ctx).type_nihil
   FIN SI
+  SI CONIURA compare(builtin_name, "option_some") == 0 VEL CONIURA compare(builtin_name, "option_none") == 0
+    REDDE CONIURA semantic_type_make_pointer(ctx, (*ctx).type_nihil)
+  FIN SI
+  SI CONIURA compare(builtin_name, "option_is_some") == 0 VEL CONIURA compare(builtin_name, "option_is_none") == 0
+    REDDE (*ctx).type_verum
+  FIN SI
+  SI CONIURA compare(builtin_name, "option_unwrap_ptr") == 0 VEL CONIURA compare(builtin_name, "option_expect_ptr") == 0
+    REDDE CONIURA semantic_type_make_pointer(ctx, (*ctx).type_nihil)
+  FIN SI
+  SI CONIURA compare(builtin_name, "option_free") == 0
+    REDDE (*ctx).type_nihil
+  FIN SI
+  SI CONIURA compare(builtin_name, "result_ok") == 0 VEL CONIURA compare(builtin_name, "result_err") == 0
+    REDDE CONIURA semantic_type_make_pointer(ctx, (*ctx).type_nihil)
+  FIN SI
+  SI CONIURA compare(builtin_name, "result_is_ok") == 0 VEL CONIURA compare(builtin_name, "result_is_err") == 0
+    REDDE (*ctx).type_verum
+  FIN SI
+  SI CONIURA compare(builtin_name, "result_unwrap_ptr") == 0 VEL CONIURA compare(builtin_name, "result_unwrap_err_ptr") == 0 VEL CONIURA compare(builtin_name, "result_expect_ptr") == 0
+    REDDE CONIURA semantic_type_make_pointer(ctx, (*ctx).type_nihil)
+  FIN SI
+  SI CONIURA compare(builtin_name, "result_free") == 0
+    REDDE (*ctx).type_nihil
+  FIN SI
+  SI CONIURA compare(builtin_name, "map_init") == 0 VEL CONIURA compare(builtin_name, "map_get_ptr") == 0 VEL CONIURA compare(builtin_name, "map_copy") == 0 VEL CONIURA compare(builtin_name, "map_keys") == 0 VEL CONIURA compare(builtin_name, "map_values") == 0
+    REDDE CONIURA semantic_type_make_pointer(ctx, (*ctx).type_nihil)
+  FIN SI
+  SI CONIURA compare(builtin_name, "map_remove") == 0 VEL CONIURA compare(builtin_name, "map_contains") == 0 VEL CONIURA compare(builtin_name, "map_is_empty") == 0
+    REDDE (*ctx).type_verum
+  FIN SI
+  SI CONIURA compare(builtin_name, "map_len") == 0 VEL CONIURA compare(builtin_name, "map_capacity") == 0
+    REDDE (*ctx).type_rex
+  FIN SI
+  SI CONIURA compare(builtin_name, "map_free") == 0 VEL CONIURA compare(builtin_name, "map_insert") == 0 VEL CONIURA compare(builtin_name, "map_clear") == 0 VEL CONIURA compare(builtin_name, "map_reserve") == 0 VEL CONIURA compare(builtin_name, "map_merge") == 0
+    REDDE (*ctx).type_nihil
+  FIN SI
+  SI CONIURA compare(builtin_name, "set_init") == 0 VEL CONIURA compare(builtin_name, "set_union") == 0 VEL CONIURA compare(builtin_name, "set_intersection") == 0 VEL CONIURA compare(builtin_name, "set_difference") == 0 VEL CONIURA compare(builtin_name, "set_symmetric_difference") == 0 VEL CONIURA compare(builtin_name, "set_copy") == 0 VEL CONIURA compare(builtin_name, "set_to_fluxus") == 0
+    REDDE CONIURA semantic_type_make_pointer(ctx, (*ctx).type_nihil)
+  FIN SI
+  SI CONIURA compare(builtin_name, "set_insert") == 0 VEL CONIURA compare(builtin_name, "set_remove") == 0 VEL CONIURA compare(builtin_name, "set_contains") == 0 VEL CONIURA compare(builtin_name, "set_is_empty") == 0 VEL CONIURA compare(builtin_name, "set_is_subset") == 0 VEL CONIURA compare(builtin_name, "set_equals") == 0
+    REDDE (*ctx).type_verum
+  FIN SI
+  SI CONIURA compare(builtin_name, "set_len") == 0 VEL CONIURA compare(builtin_name, "set_capacity") == 0
+    REDDE (*ctx).type_rex
+  FIN SI
+  SI CONIURA compare(builtin_name, "set_free") == 0 VEL CONIURA compare(builtin_name, "set_clear") == 0 VEL CONIURA compare(builtin_name, "set_reserve") == 0
+    REDDE (*ctx).type_nihil
+  FIN SI
   REDDE (*ctx).type_error
+EXPLICIT RITUALE
+
+RITUALE semantic_obsecro_type_is_pointerish(SPECULUM SemanticContext ctx, REX type_id) REDDE VERUM
+  SI type_id == (*ctx).type_error
+    REDDE VERUM
+  FIN SI
+  EVOCA SPECULUM SemanticType sem_type AD CONIURA semantic_type_at(ctx, type_id)
+  SI (*sem_type).kind == SEM_TYPE_POINTER
+    REDDE VERUM
+  FIN SI
+  REDDE FALSUM
+EXPLICIT RITUALE
+
+RITUALE semantic_obsecro_type_is_integerish(SPECULUM SemanticContext ctx, REX type_id) REDDE VERUM
+  SI type_id == (*ctx).type_error
+    REDDE VERUM
+  FIN SI
+  REDDE CONIURA semantic_type_is_integer(ctx, type_id)
+EXPLICIT RITUALE
+
+RITUALE semantic_type_is_simple_ordo(SPECULUM SemanticContext ctx, REX type_id) REDDE VERUM
+  EVOCA SPECULUM SemanticType sem_type AD CONIURA semantic_type_at(ctx, type_id)
+  SI ((*sem_type).kind != SEM_TYPE_NAMED ET (*sem_type).kind != SEM_TYPE_INSTANCE) VEL (*sem_type).named_symbol_id == CONIURA semantic_invalid_id()
+    REDDE FALSUM
+  FIN SI
+  EVOCA SPECULUM SemanticSymbol owner_sym AD CONIURA semantic_symbol_at(ctx, (*sem_type).named_symbol_id)
+  SI (*owner_sym).kind != SEM_SYMBOL_TYPE VEL NON (*owner_sym).has_decl_node VEL (*(*owner_sym).decl_node).kind != AST_ORDO
+    REDDE FALSUM
+  FIN SI
+  EVOCA REX item_i AD 0
+  EVOCA REX item_n AD CONIURA ast_node_list_len((*(*owner_sym).decl_node).items)
+  DUM item_i < item_n
+    EVOCA SPECULUM AstNode item AD CONIURA ast_node_list_get((*(*owner_sym).decl_node).items, item_i)
+    SI (*item).has_return_type
+      REDDE FALSUM
+    FIN SI
+    VINCIRE item_i AD item_i + 1
+  FIN DUM
+  REDDE VERUM
+EXPLICIT RITUALE
+
+RITUALE semantic_classify_molde_fmt_spec(VERBUM spec) REDDE REX
+  SI CONIURA compare(spec, "") == 0
+    REDDE 0
+  FIN SI
+  EVOCA REX n AD CONIURA len(spec)
+  SI n <= 0
+    REDDE 0
+  FIN SI
+  SI (CONIURA char_at(spec, 0) == 60 VEL CONIURA char_at(spec, 0) == 62)
+    SI n == 1
+      REDDE 0
+    FIN SI
+    EVOCA REX i AD 1
+    DUM i < n
+      EVOCA MILES ch AD CONIURA char_at(spec, i)
+      SI ch < 48 VEL ch > 57
+        REDDE 0
+      FIN SI
+      VINCIRE i AD i + 1
+    FIN DUM
+    REDDE 4
+  FIN SI
+  EVOCA REX i AD 0
+  DUM i < n
+    EVOCA MILES ch AD CONIURA char_at(spec, i)
+    SI ch < 48 VEL ch > 57
+      VINCIRE i AD n
+    ALITER
+      VINCIRE i AD i + 1
+    FIN SI
+  FIN DUM
+  EVOCA VERUM saw_precision AD FALSUM
+  EVOCA REX digit_prefix AD 0
+  DUM digit_prefix < n
+    EVOCA MILES ch AD CONIURA char_at(spec, digit_prefix)
+    SI ch < 48 VEL ch > 57
+      VINCIRE digit_prefix AD n
+    ALITER
+      VINCIRE digit_prefix AD digit_prefix + 1
+    FIN SI
+  FIN DUM
+  VINCIRE i AD digit_prefix
+  SI i < n ET CONIURA char_at(spec, i) == 46
+    VINCIRE saw_precision AD VERUM
+    VINCIRE i AD i + 1
+    EVOCA REX prec_start AD i
+    DUM i < n
+      EVOCA MILES ch AD CONIURA char_at(spec, i)
+      SI ch < 48 VEL ch > 57
+        VINCIRE i AD n
+      ALITER
+        VINCIRE i AD i + 1
+      FIN SI
+    FIN DUM
+    SI prec_start == i
+      REDDE 0
+    FIN SI
+  FIN SI
+  SI n <= 0
+    REDDE 0
+  FIN SI
+  EVOCA MILES tail AD CONIURA char_at(spec, n - 1)
+  SI tail == 100 VEL tail == 117 VEL tail == 120 VEL tail == 88
+    SI saw_precision
+      REDDE 0
+    FIN SI
+    REDDE 1
+  FIN SI
+  SI tail == 102 VEL tail == 101 VEL tail == 103
+    REDDE 2
+  FIN SI
+  SI tail == 115
+    SI saw_precision
+      REDDE 0
+    FIN SI
+    REDDE 3
+  FIN SI
+  REDDE 0
+EXPLICIT RITUALE
+
+RITUALE semantic_validate_molde_fmt_spec(SPECULUM SemanticContext ctx, SPECULUM AstNode part, REX part_type_id) REDDE NIHIL
+  SI CONIURA compare((*part).fmt_spec, "") == 0
+    REDDE
+  FIN SI
+  EVOCA REX fmt_kind AD CONIURA semantic_classify_molde_fmt_spec((*part).fmt_spec)
+  SI fmt_kind == 0
+    CONIURA semantic_report_error(ctx, (*part).line, (*part).column, CONIURA concat("MOLDE: especificador de formato invalido: ", (*part).fmt_spec))
+    REDDE
+  FIN SI
+  SI fmt_kind == 1 ET NON CONIURA semantic_type_is_integer(ctx, part_type_id)
+    CONIURA semantic_report_error(ctx, (*part).line, (*part).column, CONIURA concat("MOLDE: especificador '", CONIURA concat((*part).fmt_spec, "' requer tipo inteiro")))
+    REDDE
+  FIN SI
+  SI fmt_kind == 2 ET NON CONIURA semantic_type_is_real(ctx, part_type_id)
+    CONIURA semantic_report_error(ctx, (*part).line, (*part).column, CONIURA concat("MOLDE: especificador '", CONIURA concat((*part).fmt_spec, "' requer tipo real")))
+    REDDE
+  FIN SI
+  SI fmt_kind == 3 ET part_type_id != (*ctx).type_verbum
+    CONIURA semantic_report_error(ctx, (*part).line, (*part).column, "MOLDE: especificador 's' requer tipo VERBUM")
+    REDDE
+  FIN SI
+  SI fmt_kind == 4 ET part_type_id != (*ctx).type_verbum
+    CONIURA semantic_report_error(ctx, (*part).line, (*part).column, "MOLDE: alinhamento requer tipo VERBUM")
+  FIN SI
+  REDDE
 EXPLICIT RITUALE
 
 RITUALE semantic_analyze_obsecro_call(SPECULUM SemanticContext ctx, SPECULUM AstNode expr) REDDE REX
@@ -274,14 +584,63 @@ RITUALE semantic_analyze_obsecro_call(SPECULUM SemanticContext ctx, SPECULUM Ast
       SI arg_type_id == (*ctx).type_error
         REDDE (*ctx).type_error
       FIN SI
-      SI NON CONIURA semantic_type_is_integer(ctx, arg_type_id) ET NON CONIURA semantic_type_is_real(ctx, arg_type_id) ET arg_type_id != (*ctx).type_verum ET arg_type_id != (*ctx).type_verbum
-        CONIURA semantic_report_error(ctx, (*arg).line, (*arg).column, "OBSECRO scribe supports VERBUM, integer, real, and VERUM arguments in bootstrap subset")
+      SI NON CONIURA semantic_type_is_integer(ctx, arg_type_id) ET NON CONIURA semantic_type_is_real(ctx, arg_type_id) ET NON CONIURA semantic_type_is_simple_ordo(ctx, arg_type_id) ET arg_type_id != (*ctx).type_verum ET arg_type_id != (*ctx).type_verbum ET arg_type_id != (*ctx).type_fractum
+        CONIURA semantic_report_error(ctx, (*arg).line, (*arg).column, "OBSECRO scribe supports VERBUM, FRACTUM, integer, real, and VERUM arguments in bootstrap subset")
         REDDE (*ctx).type_error
       FIN SI
       VINCIRE si AD si + 1
     FIN DUM
 
     REDDE (*ctx).type_nihil
+  FIN SI
+
+  SI CONIURA compare(builtin_name, "pete") == 0
+    SI CONIURA ast_node_list_len((*expr).arguments) != 1
+      CONIURA semantic_report_error(ctx, (*expr).line, (*expr).column, "OBSECRO pete expects one size argument")
+      REDDE (*ctx).type_error
+    FIN SI
+    EVOCA SPECULUM AstNode size_arg AD CONIURA ast_node_list_get((*expr).arguments, 0)
+    EVOCA REX size_type_id AD CONIURA semantic_analyze_expr(ctx, size_arg)
+    SI NON CONIURA semantic_type_is_integer(ctx, size_type_id)
+      CONIURA semantic_report_error(ctx, (*size_arg).line, (*size_arg).column, "OBSECRO pete expects integer size argument")
+      REDDE (*ctx).type_error
+    FIN SI
+    REDDE CONIURA semantic_type_make_pointer(ctx, (*ctx).type_nihil)
+  FIN SI
+
+  SI CONIURA compare(builtin_name, "libera") == 0
+    SI CONIURA ast_node_list_len((*expr).arguments) != 1
+      CONIURA semantic_report_error(ctx, (*expr).line, (*expr).column, "OBSECRO libera expects one pointer argument")
+      REDDE (*ctx).type_error
+    FIN SI
+    EVOCA SPECULUM AstNode ptr_arg AD CONIURA ast_node_list_get((*expr).arguments, 0)
+    EVOCA REX ptr_type_id AD CONIURA semantic_analyze_expr(ctx, ptr_arg)
+    EVOCA SPECULUM SemanticType ptr_type AD CONIURA semantic_type_at(ctx, ptr_type_id)
+    SI (*ptr_type).kind != SEM_TYPE_POINTER ET ptr_type_id != (*ctx).type_verbum ET ptr_type_id != (*ctx).type_fractum
+      CONIURA semantic_report_error(ctx, (*ptr_arg).line, (*ptr_arg).column, "OBSECRO libera expects pointer/VERBUM/FRACTUM argument")
+      REDDE (*ctx).type_error
+    FIN SI
+    REDDE (*ctx).type_nihil
+  FIN SI
+
+  SI CONIURA compare(builtin_name, "verbum_char_at") == 0
+    SI CONIURA ast_node_list_len((*expr).arguments) != 2
+      CONIURA semantic_report_error(ctx, (*expr).line, (*expr).column, "OBSECRO verbum_char_at expects VERBUM and integer index")
+      REDDE (*ctx).type_error
+    FIN SI
+    EVOCA SPECULUM AstNode text_arg AD CONIURA ast_node_list_get((*expr).arguments, 0)
+    EVOCA SPECULUM AstNode index_arg AD CONIURA ast_node_list_get((*expr).arguments, 1)
+    EVOCA REX text_type_id AD CONIURA semantic_analyze_expr(ctx, text_arg)
+    EVOCA REX index_type_id AD CONIURA semantic_analyze_expr(ctx, index_arg)
+    SI text_type_id != (*ctx).type_verbum
+      CONIURA semantic_report_error(ctx, (*text_arg).line, (*text_arg).column, "OBSECRO verbum_char_at expects first argument as VERBUM")
+      REDDE (*ctx).type_error
+    FIN SI
+    SI NON CONIURA semantic_type_is_integer(ctx, index_type_id)
+      CONIURA semantic_report_error(ctx, (*index_arg).line, (*index_arg).column, "OBSECRO verbum_char_at expects integer index")
+      REDDE (*ctx).type_error
+    FIN SI
+    REDDE (*ctx).type_miles
   FIN SI
 
   EVOCA REX expected AD CONIURA semantic_obsecro_expected_arity(builtin_name)
@@ -302,9 +661,115 @@ RITUALE semantic_analyze_obsecro_call(SPECULUM SemanticContext ctx, SPECULUM Ast
     SI arg_type_id == (*ctx).type_error
       REDDE (*ctx).type_error
     FIN SI
-    SI NON CONIURA semantic_type_compatible_assign(ctx, (*ctx).type_verbum, arg_type_id)
-      CONIURA semantic_report_error(ctx, (*arg).line, (*arg).column, "OBSECRO fs builtin expects VERBUM arguments in bootstrap subset")
+    SI CONIURA compare(builtin_name, "option_some") == 0
+      SI i == 0 ET NON CONIURA semantic_obsecro_type_is_pointerish(ctx, arg_type_id)
+        CONIURA semantic_report_error(ctx, (*arg).line, (*arg).column, "OBSECRO option_some expects pointer value argument")
+        REDDE (*ctx).type_error
+      FIN SI
+      SI i == 1 ET NON CONIURA semantic_obsecro_type_is_integerish(ctx, arg_type_id)
+        CONIURA semantic_report_error(ctx, (*arg).line, (*arg).column, "OBSECRO option_some expects integer type size argument")
+        REDDE (*ctx).type_error
+      FIN SI
+    FIN SI
+    SI CONIURA compare(builtin_name, "option_none") == 0 ET i == 0 ET NON CONIURA semantic_obsecro_type_is_integerish(ctx, arg_type_id)
+      CONIURA semantic_report_error(ctx, (*arg).line, (*arg).column, "OBSECRO option_none expects integer type size argument")
       REDDE (*ctx).type_error
+    FIN SI
+    SI (CONIURA compare(builtin_name, "option_is_some") == 0 VEL CONIURA compare(builtin_name, "option_is_none") == 0 VEL CONIURA compare(builtin_name, "option_unwrap_ptr") == 0 VEL CONIURA compare(builtin_name, "option_free") == 0 VEL CONIURA compare(builtin_name, "result_is_ok") == 0 VEL CONIURA compare(builtin_name, "result_is_err") == 0 VEL CONIURA compare(builtin_name, "result_unwrap_ptr") == 0 VEL CONIURA compare(builtin_name, "result_unwrap_err_ptr") == 0 VEL CONIURA compare(builtin_name, "result_free") == 0) ET i == 0 ET NON CONIURA semantic_obsecro_type_is_pointerish(ctx, arg_type_id)
+      CONIURA semantic_report_error(ctx, (*arg).line, (*arg).column, "OBSECRO builtin expects pointer argument")
+      REDDE (*ctx).type_error
+    FIN SI
+    SI (CONIURA compare(builtin_name, "option_expect_ptr") == 0 VEL CONIURA compare(builtin_name, "result_expect_ptr") == 0)
+      SI i == 0 ET NON CONIURA semantic_obsecro_type_is_pointerish(ctx, arg_type_id)
+        CONIURA semantic_report_error(ctx, (*arg).line, (*arg).column, "OBSECRO builtin expects pointer value as first argument")
+        REDDE (*ctx).type_error
+      FIN SI
+      SI i == 1 ET arg_type_id != (*ctx).type_verbum
+        CONIURA semantic_report_error(ctx, (*arg).line, (*arg).column, "OBSECRO builtin expects VERBUM message as second argument")
+        REDDE (*ctx).type_error
+      FIN SI
+    FIN SI
+    SI (CONIURA compare(builtin_name, "result_ok") == 0 VEL CONIURA compare(builtin_name, "result_err") == 0)
+      SI i == 0 ET NON CONIURA semantic_obsecro_type_is_pointerish(ctx, arg_type_id)
+        CONIURA semantic_report_error(ctx, (*arg).line, (*arg).column, "OBSECRO result builtin expects pointer payload as first argument")
+        REDDE (*ctx).type_error
+      FIN SI
+      SI i > 0 ET NON CONIURA semantic_obsecro_type_is_integerish(ctx, arg_type_id)
+        CONIURA semantic_report_error(ctx, (*arg).line, (*arg).column, "OBSECRO result builtin expects integer type sizes")
+        REDDE (*ctx).type_error
+      FIN SI
+    FIN SI
+    SI CONIURA compare(builtin_name, "map_init") == 0 ET NON CONIURA semantic_obsecro_type_is_integerish(ctx, arg_type_id)
+      CONIURA semantic_report_error(ctx, (*arg).line, (*arg).column, "OBSECRO map_init expects integer key/value size arguments")
+      REDDE (*ctx).type_error
+    FIN SI
+    SI (CONIURA compare(builtin_name, "map_free") == 0 VEL CONIURA compare(builtin_name, "map_len") == 0 VEL CONIURA compare(builtin_name, "map_is_empty") == 0 VEL CONIURA compare(builtin_name, "map_capacity") == 0 VEL CONIURA compare(builtin_name, "map_clear") == 0 VEL CONIURA compare(builtin_name, "map_copy") == 0) ET i == 0 ET NON CONIURA semantic_obsecro_type_is_pointerish(ctx, arg_type_id)
+      CONIURA semantic_report_error(ctx, (*arg).line, (*arg).column, "OBSECRO map builtin expects pointer argument")
+      REDDE (*ctx).type_error
+    FIN SI
+    SI (CONIURA compare(builtin_name, "map_insert") == 0 VEL CONIURA compare(builtin_name, "map_remove") == 0 VEL CONIURA compare(builtin_name, "map_get_ptr") == 0 VEL CONIURA compare(builtin_name, "map_contains") == 0 VEL CONIURA compare(builtin_name, "map_reserve") == 0 VEL CONIURA compare(builtin_name, "map_merge") == 0) ET i == 0 ET NON CONIURA semantic_obsecro_type_is_pointerish(ctx, arg_type_id)
+      CONIURA semantic_report_error(ctx, (*arg).line, (*arg).column, "OBSECRO map builtin expects pointer container argument")
+      REDDE (*ctx).type_error
+    FIN SI
+    SI (CONIURA compare(builtin_name, "map_insert") == 0 VEL CONIURA compare(builtin_name, "map_remove") == 0 VEL CONIURA compare(builtin_name, "map_get_ptr") == 0 VEL CONIURA compare(builtin_name, "map_contains") == 0 VEL CONIURA compare(builtin_name, "map_merge") == 0) ET i == 1 ET NON CONIURA semantic_obsecro_type_is_pointerish(ctx, arg_type_id)
+      CONIURA semantic_report_error(ctx, (*arg).line, (*arg).column, "OBSECRO map builtin expects pointer payload argument")
+      REDDE (*ctx).type_error
+    FIN SI
+    SI CONIURA compare(builtin_name, "map_insert") == 0 ET i == 2 ET NON CONIURA semantic_obsecro_type_is_pointerish(ctx, arg_type_id)
+      CONIURA semantic_report_error(ctx, (*arg).line, (*arg).column, "OBSECRO map_insert expects pointer value argument")
+      REDDE (*ctx).type_error
+    FIN SI
+    SI CONIURA compare(builtin_name, "map_reserve") == 0 ET i == 1 ET NON CONIURA semantic_obsecro_type_is_integerish(ctx, arg_type_id)
+      CONIURA semantic_report_error(ctx, (*arg).line, (*arg).column, "OBSECRO map_reserve expects integer size argument")
+      REDDE (*ctx).type_error
+    FIN SI
+    SI (CONIURA compare(builtin_name, "map_keys") == 0 VEL CONIURA compare(builtin_name, "map_values") == 0)
+      SI i == 0 ET NON CONIURA semantic_obsecro_type_is_pointerish(ctx, arg_type_id)
+        CONIURA semantic_report_error(ctx, (*arg).line, (*arg).column, "OBSECRO map builtin expects pointer argument")
+        REDDE (*ctx).type_error
+      FIN SI
+      SI i == 1 ET NON CONIURA semantic_obsecro_type_is_integerish(ctx, arg_type_id)
+        CONIURA semantic_report_error(ctx, (*arg).line, (*arg).column, "OBSECRO map builtin expects integer element-size argument")
+        REDDE (*ctx).type_error
+      FIN SI
+    FIN SI
+    SI CONIURA compare(builtin_name, "set_init") == 0 ET i == 0 ET NON CONIURA semantic_obsecro_type_is_integerish(ctx, arg_type_id)
+      CONIURA semantic_report_error(ctx, (*arg).line, (*arg).column, "OBSECRO set_init expects integer size argument")
+      REDDE (*ctx).type_error
+    FIN SI
+    SI (CONIURA compare(builtin_name, "set_free") == 0 VEL CONIURA compare(builtin_name, "set_len") == 0 VEL CONIURA compare(builtin_name, "set_is_empty") == 0 VEL CONIURA compare(builtin_name, "set_clear") == 0 VEL CONIURA compare(builtin_name, "set_capacity") == 0) ET i == 0 ET NON CONIURA semantic_obsecro_type_is_pointerish(ctx, arg_type_id)
+      CONIURA semantic_report_error(ctx, (*arg).line, (*arg).column, "OBSECRO set builtin expects pointer argument")
+      REDDE (*ctx).type_error
+    FIN SI
+    SI (CONIURA compare(builtin_name, "set_insert") == 0 VEL CONIURA compare(builtin_name, "set_remove") == 0 VEL CONIURA compare(builtin_name, "set_contains") == 0 VEL CONIURA compare(builtin_name, "set_copy") == 0 VEL CONIURA compare(builtin_name, "set_to_fluxus") == 0 VEL CONIURA compare(builtin_name, "set_reserve") == 0)
+      SI i == 0 ET NON CONIURA semantic_obsecro_type_is_pointerish(ctx, arg_type_id)
+        CONIURA semantic_report_error(ctx, (*arg).line, (*arg).column, "OBSECRO set builtin expects pointer argument")
+        REDDE (*ctx).type_error
+      FIN SI
+      SI i == 1 ET (CONIURA compare(builtin_name, "set_insert") == 0 VEL CONIURA compare(builtin_name, "set_remove") == 0 VEL CONIURA compare(builtin_name, "set_contains") == 0) ET NON CONIURA semantic_obsecro_type_is_pointerish(ctx, arg_type_id)
+        CONIURA semantic_report_error(ctx, (*arg).line, (*arg).column, "OBSECRO set builtin expects pointer payload argument")
+        REDDE (*ctx).type_error
+      FIN SI
+      SI i == 1 ET (CONIURA compare(builtin_name, "set_copy") == 0 VEL CONIURA compare(builtin_name, "set_to_fluxus") == 0 VEL CONIURA compare(builtin_name, "set_reserve") == 0) ET NON CONIURA semantic_obsecro_type_is_integerish(ctx, arg_type_id)
+        CONIURA semantic_report_error(ctx, (*arg).line, (*arg).column, "OBSECRO set builtin expects integer size argument")
+        REDDE (*ctx).type_error
+      FIN SI
+    FIN SI
+    SI (CONIURA compare(builtin_name, "set_union") == 0 VEL CONIURA compare(builtin_name, "set_intersection") == 0 VEL CONIURA compare(builtin_name, "set_difference") == 0 VEL CONIURA compare(builtin_name, "set_symmetric_difference") == 0 VEL CONIURA compare(builtin_name, "set_is_subset") == 0 VEL CONIURA compare(builtin_name, "set_equals") == 0)
+      SI (i == 0 VEL i == 1) ET NON CONIURA semantic_obsecro_type_is_pointerish(ctx, arg_type_id)
+        CONIURA semantic_report_error(ctx, (*arg).line, (*arg).column, "OBSECRO set builtin expects pointer set argument")
+        REDDE (*ctx).type_error
+      FIN SI
+      SI i == 2 ET NON CONIURA semantic_obsecro_type_is_integerish(ctx, arg_type_id)
+        CONIURA semantic_report_error(ctx, (*arg).line, (*arg).column, "OBSECRO set builtin expects integer item-size argument")
+        REDDE (*ctx).type_error
+      FIN SI
+    FIN SI
+    SI CONIURA compare(builtin_name, "fs_read_all") == 0 VEL CONIURA compare(builtin_name, "fs_write_all") == 0 VEL CONIURA compare(builtin_name, "fs_exists") == 0 VEL CONIURA compare(builtin_name, "fs_mkdir_all") == 0
+      SI NON CONIURA semantic_type_compatible_assign(ctx, (*ctx).type_verbum, arg_type_id)
+        CONIURA semantic_report_error(ctx, (*arg).line, (*arg).column, "OBSECRO fs builtin expects VERBUM arguments in bootstrap subset")
+        REDDE (*ctx).type_error
+      FIN SI
     FIN SI
     VINCIRE i AD i + 1
   FIN DUM
@@ -323,6 +788,7 @@ RITUALE semantic_analyze_molde(SPECULUM SemanticContext ctx, SPECULUM AstNode ex
         CONIURA semantic_report_error(ctx, (*part).line, (*part).column, "FORMA interpolation type outside bootstrap subset")
         REDDE (*ctx).type_error
       FIN SI
+      CONIURA semantic_validate_molde_fmt_spec(ctx, part, part_type_id)
     FIN SI
     VINCIRE i AD i + 1
   FIN DUM
@@ -397,7 +863,7 @@ RITUALE semantic_analyze_expr(SPECULUM SemanticContext ctx, SPECULUM AstNode exp
     EVOCA REX left_type_id AD CONIURA semantic_analyze_expr(ctx, (*expr).left)
     EVOCA REX right_type_id AD CONIURA semantic_analyze_expr(ctx, (*expr).right)
 
-    SI (*expr).operator_kind == TK_PLUS VEL (*expr).operator_kind == TK_MINUS VEL (*expr).operator_kind == TK_STAR VEL (*expr).operator_kind == TK_SLASH VEL (*expr).operator_kind == TK_SLASH_SLASH VEL (*expr).operator_kind == TK_PERCENT VEL (*expr).operator_kind == TK_PERCENT_PERCENT
+    SI (*expr).operator_kind == TK_PLUS VEL (*expr).operator_kind == TK_MINUS VEL (*expr).operator_kind == TK_STAR VEL (*expr).operator_kind == TK_SLASH VEL (*expr).operator_kind == TK_STAR_STAR VEL (*expr).operator_kind == TK_SLASH_SLASH VEL (*expr).operator_kind == TK_PERCENT VEL (*expr).operator_kind == TK_PERCENT_PERCENT
       SI NON CONIURA semantic_type_is_numeric(ctx, left_type_id) VEL NON CONIURA semantic_type_is_numeric(ctx, right_type_id)
         CONIURA semantic_report_error(ctx, (*expr).line, (*expr).column, "binary operator requires numeric operands")
         REDDE (*ctx).type_error

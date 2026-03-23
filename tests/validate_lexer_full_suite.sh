@@ -6,6 +6,14 @@ cd "$ROOT_DIR" || exit 1
 source "$ROOT_DIR/tests/test_tmpdir.sh"
 cct_setup_tmpdir "$ROOT_DIR"
 
+if [ -z "${CCT_BIN:-}" ]; then
+  if [ -x ./cct-host ]; then
+    CCT_BIN="./cct-host"
+  else
+    CCT_BIN="./cct"
+  fi
+fi
+
 if [ ! -x ./cct_lexer_bootstrap ]; then
   echo "ERROR: ./cct_lexer_bootstrap nao encontrado"
   exit 1
@@ -61,7 +69,7 @@ while IFS= read -r file; do
   b_norm="$CCT_TMP_DIR/lexer_full_${INDEX}_b.norm"
   diff_out="$CCT_TMP_DIR/lexer_full_${INDEX}.diff"
 
-  ./cct --tokens "$file" >"$c_raw" 2>"$CCT_TMP_DIR/lexer_full_${INDEX}_c.err"
+  "$CCT_BIN" --tokens "$file" >"$c_raw" 2>"$CCT_TMP_DIR/lexer_full_${INDEX}_c.err"
   c_status=$?
 
   ./cct_lexer_bootstrap "$file" >"$b_raw" 2>"$CCT_TMP_DIR/lexer_full_${INDEX}_b.err"

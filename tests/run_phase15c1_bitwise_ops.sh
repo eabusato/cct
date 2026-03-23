@@ -7,7 +7,13 @@ cd "$ROOT"
 source "$ROOT/tests/test_tmpdir.sh"
 cct_setup_tmpdir "$ROOT"
 
-CCT_BIN="./cct"
+if [ -z "${CCT_BIN:-}" ]; then
+  if [ -x ./cct-host ]; then
+    CCT_BIN="./cct-host"
+  else
+    CCT_BIN="./cct"
+  fi
+fi
 
 cleanup_codegen_artifacts() {
   local src="$1"
