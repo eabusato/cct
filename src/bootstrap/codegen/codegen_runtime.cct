@@ -214,6 +214,7 @@ RITUALE codegen_runtime_emit_fmt_runtime(SPECULUM CodegenContext ctx) REDDE NIHI
   CONIURA codegen_emit_line(ctx, "} cct_rt_molde_ctx_t;")
   CONIURA codegen_emit_blank_line(ctx)
 
+  CONIURA codegen_emit_line(ctx, "static cct_rt_molde_ctx_t *cct_rt_molde_begin(void) __attribute__((unused));")
   CONIURA codegen_emit_line(ctx, "static cct_rt_molde_ctx_t *cct_rt_molde_begin(void)")
   CONIURA codegen_emit_block_open(ctx)
   CONIURA codegen_emit_line(ctx, "cct_rt_molde_ctx_t *m = (cct_rt_molde_ctx_t*)malloc(sizeof(cct_rt_molde_ctx_t));")
@@ -227,6 +228,7 @@ RITUALE codegen_runtime_emit_fmt_runtime(SPECULUM CodegenContext ctx) REDDE NIHI
   CONIURA codegen_emit_block_close(ctx)
   CONIURA codegen_emit_blank_line(ctx)
 
+  CONIURA codegen_emit_line(ctx, "static void cct_rt_molde_append(cct_rt_molde_ctx_t *m, const char *s, size_t slen) __attribute__((unused));")
   CONIURA codegen_emit_line(ctx, "static void cct_rt_molde_append(cct_rt_molde_ctx_t *m, const char *s, size_t slen)")
   CONIURA codegen_emit_block_open(ctx)
   CONIURA codegen_emit_line(ctx, "if (!m || !s || slen == 0) return;")
@@ -244,6 +246,7 @@ RITUALE codegen_runtime_emit_fmt_runtime(SPECULUM CodegenContext ctx) REDDE NIHI
   CONIURA codegen_emit_block_close(ctx)
   CONIURA codegen_emit_blank_line(ctx)
 
+  CONIURA codegen_emit_line(ctx, "static void cct_rt_molde_str(cct_rt_molde_ctx_t *m, const char *s) __attribute__((unused));")
   CONIURA codegen_emit_line(ctx, "static void cct_rt_molde_str(cct_rt_molde_ctx_t *m, const char *s)")
   CONIURA codegen_emit_block_open(ctx)
   CONIURA codegen_emit_line(ctx, "const char *src = s ? s : \"\";")
@@ -251,6 +254,7 @@ RITUALE codegen_runtime_emit_fmt_runtime(SPECULUM CodegenContext ctx) REDDE NIHI
   CONIURA codegen_emit_block_close(ctx)
   CONIURA codegen_emit_blank_line(ctx)
 
+  CONIURA codegen_emit_line(ctx, "static void cct_rt_molde_rex(cct_rt_molde_ctx_t *m, long long v) __attribute__((unused));")
   CONIURA codegen_emit_line(ctx, "static void cct_rt_molde_rex(cct_rt_molde_ctx_t *m, long long v)")
   CONIURA codegen_emit_block_open(ctx)
   CONIURA codegen_emit_line(ctx, "char tmp[64];")
@@ -260,6 +264,7 @@ RITUALE codegen_runtime_emit_fmt_runtime(SPECULUM CodegenContext ctx) REDDE NIHI
   CONIURA codegen_emit_block_close(ctx)
   CONIURA codegen_emit_blank_line(ctx)
 
+  CONIURA codegen_emit_line(ctx, "static void cct_rt_molde_dux(cct_rt_molde_ctx_t *m, unsigned long long v) __attribute__((unused));")
   CONIURA codegen_emit_line(ctx, "static void cct_rt_molde_dux(cct_rt_molde_ctx_t *m, unsigned long long v)")
   CONIURA codegen_emit_block_open(ctx)
   CONIURA codegen_emit_line(ctx, "char tmp[64];")
@@ -269,6 +274,7 @@ RITUALE codegen_runtime_emit_fmt_runtime(SPECULUM CodegenContext ctx) REDDE NIHI
   CONIURA codegen_emit_block_close(ctx)
   CONIURA codegen_emit_blank_line(ctx)
 
+  CONIURA codegen_emit_line(ctx, "static void cct_rt_molde_umbra(cct_rt_molde_ctx_t *m, double v) __attribute__((unused));")
   CONIURA codegen_emit_line(ctx, "static void cct_rt_molde_umbra(cct_rt_molde_ctx_t *m, double v)")
   CONIURA codegen_emit_block_open(ctx)
   CONIURA codegen_emit_line(ctx, "char tmp[128];")
@@ -278,13 +284,15 @@ RITUALE codegen_runtime_emit_fmt_runtime(SPECULUM CodegenContext ctx) REDDE NIHI
   CONIURA codegen_emit_block_close(ctx)
   CONIURA codegen_emit_blank_line(ctx)
 
+  CONIURA codegen_emit_line(ctx, "static void cct_rt_molde_verum(cct_rt_molde_ctx_t *m, long long v) __attribute__((unused));")
   CONIURA codegen_emit_line(ctx, "static void cct_rt_molde_verum(cct_rt_molde_ctx_t *m, long long v)")
   CONIURA codegen_emit_block_open(ctx)
-  CONIURA codegen_emit_line(ctx, "const char *txt = v ? \"verum\" : \"falsum\";")
+  CONIURA codegen_emit_line(ctx, "const char *txt = v ? \"VERUM\" : \"FALSUM\";")
   CONIURA codegen_emit_line(ctx, "cct_rt_molde_append(m, txt, strlen(txt));")
   CONIURA codegen_emit_block_close(ctx)
   CONIURA codegen_emit_blank_line(ctx)
 
+  CONIURA codegen_emit_line(ctx, "static void cct_rt_molde_fmt_build(char *fmt, size_t fmt_cap, const char *spec, const char *length_mod) __attribute__((unused));")
   CONIURA codegen_emit_line(ctx, "static void cct_rt_molde_fmt_build(char *fmt, size_t fmt_cap, const char *spec, const char *length_mod)")
   CONIURA codegen_emit_block_open(ctx)
   CONIURA codegen_emit_line(ctx, "if (!fmt || fmt_cap == 0) cct_boot_fail(\"MOLDE format buffer invalid\");")
@@ -299,6 +307,7 @@ RITUALE codegen_runtime_emit_fmt_runtime(SPECULUM CodegenContext ctx) REDDE NIHI
   CONIURA codegen_emit_block_close(ctx)
   CONIURA codegen_emit_blank_line(ctx)
 
+  CONIURA codegen_emit_line(ctx, "static void cct_rt_molde_rex_fmt(cct_rt_molde_ctx_t *m, long long v, const char *spec) __attribute__((unused));")
   CONIURA codegen_emit_line(ctx, "static void cct_rt_molde_rex_fmt(cct_rt_molde_ctx_t *m, long long v, const char *spec)")
   CONIURA codegen_emit_block_open(ctx)
   CONIURA codegen_emit_line(ctx, "char fmt[64];")
@@ -314,6 +323,7 @@ RITUALE codegen_runtime_emit_fmt_runtime(SPECULUM CodegenContext ctx) REDDE NIHI
   CONIURA codegen_emit_block_close(ctx)
   CONIURA codegen_emit_blank_line(ctx)
 
+  CONIURA codegen_emit_line(ctx, "static void cct_rt_molde_dux_fmt(cct_rt_molde_ctx_t *m, unsigned long long v, const char *spec) __attribute__((unused));")
   CONIURA codegen_emit_line(ctx, "static void cct_rt_molde_dux_fmt(cct_rt_molde_ctx_t *m, unsigned long long v, const char *spec)")
   CONIURA codegen_emit_block_open(ctx)
   CONIURA codegen_emit_line(ctx, "char fmt[64];")
@@ -329,6 +339,7 @@ RITUALE codegen_runtime_emit_fmt_runtime(SPECULUM CodegenContext ctx) REDDE NIHI
   CONIURA codegen_emit_block_close(ctx)
   CONIURA codegen_emit_blank_line(ctx)
 
+  CONIURA codegen_emit_line(ctx, "static void cct_rt_molde_umbra_fmt(cct_rt_molde_ctx_t *m, double v, const char *spec) __attribute__((unused));")
   CONIURA codegen_emit_line(ctx, "static void cct_rt_molde_umbra_fmt(cct_rt_molde_ctx_t *m, double v, const char *spec)")
   CONIURA codegen_emit_block_open(ctx)
   CONIURA codegen_emit_line(ctx, "char fmt[64];")
@@ -344,6 +355,7 @@ RITUALE codegen_runtime_emit_fmt_runtime(SPECULUM CodegenContext ctx) REDDE NIHI
   CONIURA codegen_emit_block_close(ctx)
   CONIURA codegen_emit_blank_line(ctx)
 
+  CONIURA codegen_emit_line(ctx, "static int cct_rt_molde_parse_align_spec(const char *spec, char *dir, long long *width) __attribute__((unused));")
   CONIURA codegen_emit_line(ctx, "static int cct_rt_molde_parse_align_spec(const char *spec, char *dir, long long *width)")
   CONIURA codegen_emit_block_open(ctx)
   CONIURA codegen_emit_line(ctx, "if (!spec || !dir || !width) return 0;")
@@ -361,6 +373,7 @@ RITUALE codegen_runtime_emit_fmt_runtime(SPECULUM CodegenContext ctx) REDDE NIHI
   CONIURA codegen_emit_block_close(ctx)
   CONIURA codegen_emit_blank_line(ctx)
 
+  CONIURA codegen_emit_line(ctx, "static void cct_rt_molde_append_spaces(cct_rt_molde_ctx_t *m, size_t count) __attribute__((unused));")
   CONIURA codegen_emit_line(ctx, "static void cct_rt_molde_append_spaces(cct_rt_molde_ctx_t *m, size_t count)")
   CONIURA codegen_emit_block_open(ctx)
   CONIURA codegen_emit_line(ctx, "while (count > 0) {")
@@ -370,6 +383,7 @@ RITUALE codegen_runtime_emit_fmt_runtime(SPECULUM CodegenContext ctx) REDDE NIHI
   CONIURA codegen_emit_block_close(ctx)
   CONIURA codegen_emit_blank_line(ctx)
 
+  CONIURA codegen_emit_line(ctx, "static void cct_rt_molde_str_fmt(cct_rt_molde_ctx_t *m, const char *s, const char *spec) __attribute__((unused));")
   CONIURA codegen_emit_line(ctx, "static void cct_rt_molde_str_fmt(cct_rt_molde_ctx_t *m, const char *s, const char *spec)")
   CONIURA codegen_emit_block_open(ctx)
   CONIURA codegen_emit_line(ctx, "const char *src = s ? s : \"\";")
@@ -396,6 +410,7 @@ RITUALE codegen_runtime_emit_fmt_runtime(SPECULUM CodegenContext ctx) REDDE NIHI
   CONIURA codegen_emit_block_close(ctx)
   CONIURA codegen_emit_blank_line(ctx)
 
+  CONIURA codegen_emit_line(ctx, "static char *cct_rt_molde_end(cct_rt_molde_ctx_t *m) __attribute__((unused));")
   CONIURA codegen_emit_line(ctx, "static char *cct_rt_molde_end(cct_rt_molde_ctx_t *m)")
   CONIURA codegen_emit_block_open(ctx)
   CONIURA codegen_emit_line(ctx, "if (!m) return NULL;")
@@ -460,6 +475,7 @@ RITUALE codegen_runtime_emit_fail_helper(SPECULUM CodegenContext ctx) REDDE NIHI
     REDDE
   FIN SI
 
+  CONIURA codegen_emit_line(ctx, "static void cct_boot_fail(const char* message) __attribute__((unused));")
   CONIURA codegen_emit_line(ctx, "static void cct_boot_fail(const char* message)")
   CONIURA codegen_emit_block_open(ctx)
   CONIURA codegen_emit_line(ctx, "fputs(message, stderr);")
@@ -475,24 +491,28 @@ RITUALE codegen_runtime_emit_scribe_runtime(SPECULUM CodegenContext ctx) REDDE N
     REDDE
   FIN SI
 
+  CONIURA codegen_emit_line(ctx, "static void cct_rt_scribe_str(const char *s) __attribute__((unused));")
   CONIURA codegen_emit_line(ctx, "static void cct_rt_scribe_str(const char *s)")
   CONIURA codegen_emit_block_open(ctx)
   CONIURA codegen_emit_line(ctx, "fputs(s ? s : \"\", stdout);")
   CONIURA codegen_emit_block_close(ctx)
   CONIURA codegen_emit_blank_line(ctx)
 
+  CONIURA codegen_emit_line(ctx, "static void cct_rt_scribe_int(long long v) __attribute__((unused));")
   CONIURA codegen_emit_line(ctx, "static void cct_rt_scribe_int(long long v)")
   CONIURA codegen_emit_block_open(ctx)
   CONIURA codegen_emit_line(ctx, "printf(\"%lld\", v);")
   CONIURA codegen_emit_block_close(ctx)
   CONIURA codegen_emit_blank_line(ctx)
 
+  CONIURA codegen_emit_line(ctx, "static void cct_rt_scribe_bool(long long v) __attribute__((unused));")
   CONIURA codegen_emit_line(ctx, "static void cct_rt_scribe_bool(long long v)")
   CONIURA codegen_emit_block_open(ctx)
   CONIURA codegen_emit_line(ctx, "printf(\"%lld\", (v ? 1LL : 0LL));")
   CONIURA codegen_emit_block_close(ctx)
   CONIURA codegen_emit_blank_line(ctx)
 
+  CONIURA codegen_emit_line(ctx, "static void cct_rt_scribe_real(double v) __attribute__((unused));")
   CONIURA codegen_emit_line(ctx, "static void cct_rt_scribe_real(double v)")
   CONIURA codegen_emit_block_open(ctx)
   CONIURA codegen_emit_line(ctx, "printf(\"%.15g\", v);")
@@ -506,6 +526,7 @@ RITUALE codegen_runtime_emit_verbum_runtime(SPECULUM CodegenContext ctx) REDDE N
     REDDE
   FIN SI
 
+  CONIURA codegen_emit_line(ctx, "static long long cct_rt_verbum_char_at(const char *s, long long i) __attribute__((unused));")
   CONIURA codegen_emit_line(ctx, "static long long cct_rt_verbum_char_at(const char *s, long long i)")
   CONIURA codegen_emit_block_open(ctx)
   CONIURA codegen_emit_line(ctx, "const char *src = s ? s : \"\";")

@@ -83,6 +83,7 @@ BOOTSTRAP_PHASE31_OUT = out/bootstrap/phase31
 BOOTSTRAP_PHASE31_BIN_DIR = $(BOOTSTRAP_PHASE31_OUT)/bin
 BOOTSTRAP_PHASE31_TOOLS_DIR = $(BOOTSTRAP_PHASE31_OUT)/tools
 BOOTSTRAP_PHASE31_STATE_DIR = $(BOOTSTRAP_PHASE31_OUT)/state
+BOOTSTRAP_PHASE31_STATE_MODE = $(BOOTSTRAP_PHASE31_STATE_DIR)/default_mode.txt
 BOOTSTRAP_PHASE31_LOGS_DIR = $(BOOTSTRAP_PHASE31_OUT)/logs
 BOOTSTRAP_PHASE31_MANIFESTS_DIR = $(BOOTSTRAP_PHASE31_OUT)/manifests
 BOOTSTRAP_PHASE31_PERSIST_DIR = .cct/toolchain
@@ -692,6 +693,7 @@ project-selfhost-bench:
 
 bootstrap-promote: $(TARGET) $(CCT_HOST_WRAPPER) $(CCT_SELFHOST_ROOT) bootstrap-selfhost-ready | $(BOOTSTRAP_PHASE31_STATE_DIR) $(BOOTSTRAP_PHASE31_PERSIST_DIR) $(BOOTSTRAP_PHASE31_MANIFESTS_DIR)
 	@printf '%s\n' 'selfhost' >"$(BOOTSTRAP_PHASE31_DEFAULT_MODE)"
+	@printf '%s\n' 'selfhost' >"$(BOOTSTRAP_PHASE31_STATE_MODE)"
 	@printf '%s\n' \
 		"active=selfhost" \
 		"default_wrapper=$(abspath $(TARGET))" \
@@ -702,6 +704,7 @@ bootstrap-promote: $(TARGET) $(CCT_HOST_WRAPPER) $(CCT_SELFHOST_ROOT) bootstrap-
 
 bootstrap-demote: $(TARGET) $(CCT_HOST_WRAPPER) $(CCT_SELFHOST_ROOT) | $(BOOTSTRAP_PHASE31_STATE_DIR) $(BOOTSTRAP_PHASE31_PERSIST_DIR) $(BOOTSTRAP_PHASE31_MANIFESTS_DIR)
 	@printf '%s\n' 'host' >"$(BOOTSTRAP_PHASE31_DEFAULT_MODE)"
+	@printf '%s\n' 'host' >"$(BOOTSTRAP_PHASE31_STATE_MODE)"
 	@printf '%s\n' \
 		"active=host" \
 		"default_wrapper=$(abspath $(TARGET))" \

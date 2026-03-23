@@ -262,6 +262,24 @@ dispatch_host() {
   exec "$HOST_BIN" "$@"
 }
 
+print_selfhost_usage() {
+  command_name="$1"
+  case "$command_name" in
+    --tokens)
+      echo "Usage: cct-selfhost --tokens <file.cct>" >&2
+      ;;
+    --ast)
+      echo "Usage: cct-selfhost --ast <file.cct>" >&2
+      ;;
+    --check)
+      echo "Usage: cct-selfhost --check <file.cct>" >&2
+      ;;
+    *)
+      echo "Usage: cct-selfhost <input.cct> [output]" >&2
+      ;;
+  esac
+}
+
 dispatch_default() {
   active="selfhost"
   if [ -f "$MODE_FILE" ]; then
@@ -278,6 +296,13 @@ dispatch_default() {
   fi
 
   if [ "$active" = "selfhost" ]; then
+    case "${1:-}" in
+      --tokens|--ast|--check)
+        if [ "$#" -ne 2 ]; then
+          dispatch_host "$@"
+        fi
+        ;;
+    esac
     export CCT_WRAPPER_MODE=selfhost
     exec "$SCRIPT_DIR/cct_wrapper.sh" "$@"
   fi
@@ -300,19 +325,28 @@ dispatch_selfhost() {
       run_project_command "$@"
       ;;
     --check)
-      [ "$#" -eq 2 ] || dispatch_host "$@"
+      if [ "$#" -ne 2 ]; then
+        print_selfhost_usage --check
+        exit 64
+      fi
       ensure_bootstrap_artifact bootstrap-selfhost-semantic "$PHASE30_SEMANTIC"
       exec "$PHASE30_SEMANTIC" "$2"
       ;;
     --ast)
-      [ "$#" -eq 2 ] || dispatch_host "$@"
+      if [ "$#" -ne 2 ]; then
+        print_selfhost_usage --ast
+        exit 64
+      fi
       ensure_bootstrap_artifact bootstrap-selfhost-parser "$PHASE30_PARSER"
       printf 'Parsing: %s\n' "$2"
       printf '========================================\n\n'
       exec "$PHASE30_PARSER" "$2"
       ;;
     --tokens)
-      [ "$#" -eq 2 ] || dispatch_host "$@"
+      if [ "$#" -ne 2 ]; then
+        print_selfhost_usage --tokens
+        exit 64
+      fi
       ensure_bootstrap_artifact bootstrap-selfhost-lexer "$PHASE31_LEXER"
       exec "$PHASE31_LEXER" "$2"
       ;;

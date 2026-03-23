@@ -147,6 +147,9 @@ RITUALE compiler_is_source_backed_cct_import(VERBUM import_path) REDDE VERUM
   SI CONIURA compare(import_path, "cct/csv.cct") == 0
     REDDE VERUM
   FIN SI
+  SI CONIURA compare(import_path, "cct/option.cct") == 0 VEL CONIURA compare(import_path, "cct/result.cct") == 0
+    REDDE VERUM
+  FIN SI
   SI CONIURA compare(import_path, "cct/https.cct") == 0 VEL CONIURA compare(import_path, "cct/http.cct") == 0
     REDDE VERUM
   FIN SI
