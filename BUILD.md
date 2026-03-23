@@ -325,3 +325,54 @@ For creating multi-platform releases, build on each platform separately:
 - Documentation: `docs/`
 - Issues: https://github.com/eabusato/cct/issues
 - Release Notes: `docs/release/FASE_12_RELEASE_NOTES.md`
+
+---
+
+## FASE 31 Compiler Mode Verification
+
+After `make`, verify which compiler path the wrappers expose:
+
+```bash
+./cct --which-compiler
+./cct-host --which-compiler
+./cct-selfhost --which-compiler
+```
+
+Interpretation:
+- `./cct` reports the current default wrapper mode
+- `./cct-host` is the preserved host fallback path
+- `./cct-selfhost` is the explicit self-hosted path
+
+## Promotion and Demotion
+
+```bash
+make bootstrap-promote
+./cct --which-compiler
+
+make bootstrap-demote
+./cct --which-compiler
+```
+
+Use promotion when you want the repository default path to be self-hosted. Use demotion when you want to force the host compiler as the default wrapper mode.
+
+## Recommended Post-Build Smoke Sequence
+
+```bash
+make
+./cct --which-compiler
+make bootstrap-stage-identity
+make test
+make test-host-legacy
+```
+
+Release-oriented validation:
+
+```bash
+make test-all-0-31
+make test-phase30-final
+make test-phase31-final
+```
+
+## Build Note for Installed and Bundled Layouts
+
+The short build contract remains unchanged: users call `cct`. What changed in FASE 31 is the meaning of the wrapper layer behind that command. The installed or bundled wrapper may now resolve either the promoted self-host path or the explicit host fallback path depending on the active mode and local packaging layout.

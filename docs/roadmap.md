@@ -860,3 +860,22 @@ Post-31 priorities:
 - developer experience (LSP, formatter, linter via selfhost)
 
 Historical traceability note: closure artifacts from the host-era and bootstrap-era phases are preserved under `docs/release/` and `docs/bootstrap/`.
+
+## FASE 31 Closure Summary
+
+FASE 31 closes the compiler-promotion problem.
+
+Closed outcomes:
+- the self-hosted compiler is no longer only a validated bootstrap artifact
+- the repository exposes explicit host and self-host wrappers side by side
+- the default wrapper path can be promoted or demoted intentionally
+- the testing model now distinguishes product validation, host fallback validation, bootstrap identity, and phase-specific promotion gates
+
+## Next Frontier After Promotion
+
+The roadmap after FASE 31 should be read as platform maturation, not bootstrap enablement.
+
+Immediate forward frontier:
+- preserve host/self-host behavioral convergence
+- continue moving practical workflows from host delegation to fully self-hosted implementations where justified
+- improve diagnostics, performance, and stdlib parity without breaking the promoted operational model

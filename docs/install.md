@@ -150,3 +150,54 @@ make bootstrap-stage-identity
 ```
 
 These targets are part of the supported operational toolchain as of FASE 29 and FASE 30.
+
+## 11. FASE 31 First-Run Verification
+
+After a fresh build, verify the wrapper state explicitly:
+
+```bash
+./cct --which-compiler
+./cct-host --which-compiler
+./cct-selfhost --which-compiler
+```
+
+Current repository baseline:
+- `./cct` is the default user-facing compiler entrypoint
+- `./cct-host` is the explicit host fallback
+- `./cct-selfhost` is the explicit self-hosted entrypoint
+
+If you want to force the default wrapper mode explicitly after install:
+
+```bash
+make bootstrap-promote
+# or
+make bootstrap-demote
+```
+
+## 12. Bundle and Installed Wrapper Roles
+
+In bundled or installed layouts, the user should still call `cct` first. FASE 31 changes the compiler mode behind that wrapper, not the top-level command name users are expected to memorize.
+
+Wrapper roles in installed layouts:
+- `cct`: default operational wrapper
+- `cct-host`: explicit host path where installed or packaged
+- `cct-selfhost`: explicit self-host path where installed or packaged
+
+## 13. Recommended Validation After Installation
+
+Daily validation after installation:
+
+```bash
+./cct --which-compiler
+make bootstrap-stage-identity
+make test
+```
+
+Release-oriented validation after installation:
+
+```bash
+make test-host-legacy
+make test-all-0-31
+make test-phase30-final
+make test-phase31-final
+```

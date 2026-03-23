@@ -790,3 +790,99 @@ The application-library maturity work extended the canonical library with:
 - `cct/orm_lite`
 
 These modules are documented in the language manual and are exercised by the phase-30 operational examples.
+
+## Status Update (FASE 31)
+
+FASE 31 is now complete.
+
+Operational consequence of this closure:
+- the repository now documents a promoted self-hosted compiler path in addition to the historical host path
+- `./cct` is the default user-facing entrypoint
+- `./cct-host` is the explicit host fallback entrypoint
+- `./cct-selfhost` is the explicit self-hosted entrypoint
+- `./cct --which-compiler` reports the active compiler mode used by the wrapper
+
+This section updates the practical baseline beyond the earlier FASE 30 snapshot without removing the historical status text above.
+
+## FASE 31: Compiler Modes and Entrypoints
+
+### Compiler Entrypoints
+
+The repository now exposes three compiler-facing entrypoints with different operational roles:
+- `./cct`: the default wrapper users should call in normal workflows
+- `./cct-host`: the preserved host compiler path for fallback, regression comparison, and emergency recovery
+- `./cct-selfhost`: the explicit self-hosted compiler path for direct operational validation
+
+### Inspecting the Active Compiler
+
+Use:
+
+```bash
+./cct --which-compiler
+./cct-host --which-compiler
+./cct-selfhost --which-compiler
+```
+
+Expected interpretation:
+- `./cct --which-compiler` reports the current default wrapper mode (`selfhost` or `host`)
+- `./cct-host --which-compiler` reports `host`
+- `./cct-selfhost --which-compiler` reports `selfhost`
+
+### Promotion and Demotion
+
+The promoted compiler path is controlled explicitly:
+
+```bash
+make bootstrap-promote
+./cct --which-compiler
+
+make bootstrap-demote
+./cct --which-compiler
+```
+
+Operational meaning:
+- `make bootstrap-promote`: activate the self-hosted compiler as the default `./cct` mode
+- `make bootstrap-demote`: switch the default `./cct` mode back to the host compiler
+- `./cct-host` and `./cct-selfhost` remain available regardless of the current default mode
+
+### Daily Workflow Guidance
+
+Recommended daily validation after FASE 31:
+
+```bash
+make bootstrap-stage-identity
+make test
+make test-host-legacy
+```
+
+Recommended release validation:
+
+```bash
+make bootstrap-stage-identity
+make test
+make test-host-legacy
+make test-all-0-31
+make test-phase30-final
+make test-phase31-final
+```
+
+### Current Delegation Boundaries
+
+The promoted self-host path is the default compiler path, but the wrapper still preserves host fallback in selected areas.
+
+Current practical model:
+- direct compile, `--check`, `--ast`, and `--tokens` are part of the promoted compiler contract
+- project commands remain available through `./cct` and `./cct-selfhost`
+- some tooling-oriented flows still reuse host-side implementation layers to preserve CLI continuity and repository stability
+- explicit tooling commands such as `fmt`, `lint`, `doc`, and `--sigilo-only` may still delegate to the host path where the repository has not yet promoted a self-host implementation end to end
+
+This is an intentional compatibility strategy, not an undocumented divergence.
+
+## Bootstrap and Promotion Layers
+
+The bootstrap trajectory should now be read in three layers:
+- FASE 29: convergence and identity (`stage0`, `stage1`, `stage2`)
+- FASE 30: operational self-host workflows on top of the converged compiler
+- FASE 31: promotion of the self-hosted compiler to the default user-facing compiler path
+
+That means the bootstrap compiler is no longer only a validation artifact. It is now part of the normal operational toolchain exposed to users.

@@ -485,3 +485,37 @@ CCT should now be understood as a dual-implementation compiler platform:
 - bootstrap/self-host compiler in CCT for language self-sufficiency and future primary-toolchain evolution
 
 This duality is intentional and is part of the current architecture, not technical debt.
+
+## FASE 31 Addendum: Compiler Entry Layer
+
+The architecture after FASE 31 adds an entry-layer abstraction on top of the already-complete dual-implementation model.
+
+### Compiler Entry Layer
+
+The repository should now be read as four distinct layers:
+- host compiler binary (`cct.bin` and the `cct-host` wrapper)
+- explicit self-host wrapper (`cct-selfhost`)
+- default wrapper (`cct`)
+- mode state controlling which compiler path the default wrapper exposes
+
+This layer exists to preserve CLI continuity while changing the operational implementation path.
+
+### Why the Wrapper Layer Exists
+
+The wrapper is not cosmetic. It solves a real architectural problem:
+- users should not need different top-level commands for normal work depending on the active compiler implementation
+- the project must preserve an emergency fallback path while promoting the self-hosted compiler
+- promotion and demotion must be reversible and testable without replacing or destroying the host implementation
+
+### Updated Phase Evolution
+
+The architecture evolution should now be read as:
+- FASE 29: self-host convergence achieved
+- FASE 30: self-host operational workflows validated
+- FASE 31: self-hosted compiler promoted to the default operational compiler path
+
+### Current Architectural Consequence
+
+CCT is no longer only a dual-implementation compiler platform. It is now a dual-implementation platform with an explicit operational entry layer and state-driven mode switching.
+
+The authoritative whole-project gate therefore moves conceptually from `make test-all-0-30` toward `make test-all-0-31` for publication and post-promotion auditing.

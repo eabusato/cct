@@ -273,3 +273,65 @@ The self-hosted compiler is no longer just a validation artifact - it is now the
 **Validation checkpoint:** `make test-phase31-final && make test-all-0-31`
 **Parity validation:** `make test-bootstrap-parity` (requires promotion)
 **Promotion status:** `./cct --which-compiler`
+
+## Before and After FASE 31
+
+### Before FASE 31
+
+- the self-hosted compiler existed and converged
+- operational self-host workflows existed in the repository
+- the bootstrap compiler was still primarily treated as a validated artifact, not as the default user-facing compiler path
+- users still had to reason about bootstrap artifacts directly when they wanted explicit self-host execution
+
+### After FASE 31
+
+- the self-hosted compiler is part of the normal operational compiler model
+- `cct`, `cct-host`, and `cct-selfhost` are documented entrypoints with distinct roles
+- the repository exposes explicit promotion and demotion commands
+- wrapper-based mode switching preserves CLI continuity while allowing a promoted self-host default
+
+## Wrapper Contract
+
+The wrapper contract closed in FASE 31 is:
+- `cct`: default operational compiler wrapper
+- `cct-host`: explicit host fallback wrapper
+- `cct-selfhost`: explicit self-host wrapper
+- `./cct --which-compiler`: inspection command for the current default wrapper mode
+
+Promotion state is managed by the repository through explicit build-system state rather than destructive binary replacement.
+
+## Validation Evidence
+
+The phase should be considered closed only in combination with the following evidence:
+- `make bootstrap-stage-identity`: proves stage convergence and stable identity expectations
+- `make test`: validates the promoted/default compiler path
+- `make test-host-legacy`: validates the preserved host fallback path
+- `make test-phase30-final`: validates operational self-host workflows
+- `make test-phase31-final`: validates compiler-promotion behavior and wrapper-mode flows
+- `make test-all-0-31`: provides the broad aggregated post-promotion audit path
+
+## User-Visible Behavior Changes
+
+User-visible changes introduced by FASE 31:
+- a documented default compiler wrapper model now exists
+- users can query the active compiler implementation path directly
+- users can promote or demote the default wrapper mode intentionally
+- project workflows are now documented in terms of operational compiler modes rather than only host-vs-bootstrap artifacts
+
+## Migration and Operator Guidance
+
+For repository operators and CI users:
+- prefer `./cct` for normal workflows
+- pin `./cct-host` when you need explicit fallback or historical comparison
+- pin `./cct-selfhost` when you need explicit self-host validation independent of the default wrapper mode
+- use `make bootstrap-promote` and `make bootstrap-demote` rather than ad hoc wrapper edits or manual binary replacement
+
+## Risk and Rollback Posture
+
+The phase closes with a conservative rollback model:
+- host compiler preserved
+- self-host compiler preserved
+- default wrapper mode switch is reversible
+- no destructive promotion step is required to recover the host path
+
+This is the correct operational posture for a compiler-promotion phase.

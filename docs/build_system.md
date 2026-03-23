@@ -117,3 +117,55 @@ Post-bootstrap operational targets include:
 - `project-selfhost-package`
 
 These targets are exercised in the FASE 30 operational platform gates.
+
+## Compiler Mode Resolution (FASE 31)
+
+The build system now has an explicit compiler-entry layer.
+
+Operational entrypoints:
+- `./cct`: default wrapper exposed to users
+- `./cct-host`: explicit host compiler wrapper
+- `./cct-selfhost`: explicit self-host wrapper
+
+Mode inspection:
+
+```bash
+./cct --which-compiler
+```
+
+Mode control:
+
+```bash
+make bootstrap-promote
+make bootstrap-demote
+```
+
+## Project Commands and Wrapper Behavior
+
+The following commands remain part of the stable user workflow:
+- `cct build`
+- `cct run`
+- `cct test`
+- `cct bench`
+- `cct clean`
+- `cct doc`
+
+Post-FASE-31 interpretation:
+- `cct build|run|test|bench|clean|package` are valid operational commands on the promoted compiler path
+- the wrapper preserves CLI continuity while allowing self-hosted compilation to sit behind the default command surface
+- some command orchestration layers may still reuse host implementation internally when that is the compatibility-preserving path accepted by the current release
+- `cct doc`, `fmt`, `lint`, and `--sigilo-only` should still be understood as areas where host delegation may remain active
+
+## Promotion-Aware Usage
+
+```bash
+./cct --which-compiler
+./cct build --project examples/phase30_data_app
+./cct-selfhost build --project examples/phase30_data_app
+./cct-host build --project examples/phase30_data_app
+```
+
+This gives users three levels of control:
+- default operational path
+- explicit self-host path
+- explicit host fallback path

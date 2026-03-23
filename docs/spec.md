@@ -2724,3 +2724,70 @@ The practical project contract through FASE 30 is:
 - full-project release confidence requires the aggregated validation path, not a narrow per-phase subset
 
 That is the baseline from which future post-bootstrap platform work must proceed.
+
+## 20. FASE 31 Addendum: Compiler Entrypoints and Modes
+
+This addendum extends the manual from the FASE 30 baseline to the promoted compiler model closed in FASE 31.
+
+### 20.1 Practical Entrypoints
+
+The manual command surface now includes three compiler-facing entrypoints:
+- `./cct`: default wrapper that users should call first
+- `./cct-host`: explicit host fallback entrypoint
+- `./cct-selfhost`: explicit self-hosted entrypoint
+
+### 20.2 Inspecting the Active Compiler
+
+```bash
+./cct --which-compiler
+```
+
+Expected values:
+- `selfhost`
+- `host`
+
+This command reports which implementation path the default wrapper is using.
+
+### 20.3 Promotion and Demotion Commands
+
+```bash
+make bootstrap-promote
+make bootstrap-demote
+```
+
+Contract:
+- promotion activates the self-hosted compiler as the default `./cct` mode
+- demotion restores the host compiler as the default `./cct` mode
+- explicit wrappers remain available regardless of the active default mode
+
+### 20.4 Practical Guidance for Users
+
+For normal repository work:
+- call `./cct` first
+- inspect `./cct --which-compiler` when compiler-path certainty matters
+- use `./cct-host` when you need explicit fallback or regression comparison
+- use `./cct-selfhost` when you need explicit self-host validation independent of the default wrapper mode
+
+### 20.5 Delegated Commands and Compatibility Boundaries
+
+The promoted compiler path does not imply that every tooling command is already implemented end to end in the self-host compiler.
+
+Current practical rule:
+- compilation-facing flows are part of the promoted compiler contract
+- selected tooling commands may still delegate to host-side implementation layers for compatibility
+- this includes areas such as `fmt`, `lint`, `doc`, and `--sigilo-only` where the wrapper preserves a stable user contract while the implementation remains host-backed
+
+### 20.6 Release Validation Contract After Promotion
+
+Recommended validation sequence for a release-grade repository state:
+
+```bash
+make bootstrap-stage-identity
+make test
+make test-host-legacy
+make test-all-0-31
+make test-phase30-final
+make test-phase31-final
+```
+
+This sequence is the practical post-promotion manual contract for proving the repository is healthy.

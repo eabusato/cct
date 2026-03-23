@@ -223,3 +223,13 @@ Future work focuses on **platform maturation**, not bootstrap enablement.
 **Promotion status:** Controlled via `make bootstrap-promote` / `make bootstrap-demote`
 **Parity validation:** `make test-bootstrap-parity` (requires promotion)
 **Full validation:** `make test-all-0-31`
+
+## Additional FASE 31 Validation Model Notes
+
+The post-promotion repository should now be interpreted through four distinct validation lenses:
+- `make test`: promoted/default compiler validation
+- `make test-host-legacy`: host fallback validation
+- `make bootstrap-stage-identity`: structural bootstrap convergence validation
+- `make test-all-0-31`: publication-scale aggregated validation
+
+This distinction matters because a green promoted compiler path does not replace the need to keep the host fallback alive, and a green host fallback does not replace promotion validation.
