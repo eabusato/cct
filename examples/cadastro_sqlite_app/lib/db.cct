@@ -1,0 +1,131 @@
+INCIPIT grimoire "cadastro_sqlite_app_db"
+
+ADVOCARE "./types.cct"
+ADVOCARE "cct/db_sqlite.cct"
+ADVOCARE "cct/fs.cct"
+ADVOCARE "cct/fmt.cct"
+ADVOCARE "cct/verbum.cct"
+
+RITUALE aluno_data_dir() REDDE VERBUM
+  REDDE "examples/cadastro_sqlite_app/data"
+EXPLICIT RITUALE
+
+RITUALE aluno_db_path() REDDE VERBUM
+  REDDE "examples/cadastro_sqlite_app/data/alunos.sqlite"
+EXPLICIT RITUALE
+
+RITUALE aluno_ensure_storage() REDDE NIHIL
+  CONIURA mkdir_all(CONIURA aluno_data_dir())
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE aluno_reset_default_db() REDDE NIHIL
+  EVOCA VERBUM path AD CONIURA aluno_db_path()
+  SI CONIURA exists(path)
+    CONIURA delete_file(path)
+  FIN SI
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE sql_quote_text(VERBUM value) REDDE VERBUM
+  EVOCA VERBUM escaped AD CONIURA replace_all(value, "'", "''")
+  REDDE CONIURA concat(CONIURA concat("'", escaped), "'")
+EXPLICIT RITUALE
+
+RITUALE aluno_open_default() REDDE SPECULUM NIHIL
+  CONIURA aluno_ensure_storage()
+  REDDE CONIURA db_open(CONIURA aluno_db_path())
+EXPLICIT RITUALE
+
+RITUALE aluno_init_schema(SPECULUM NIHIL db) REDDE NIHIL
+  CONIURA db_exec(
+    db,
+    "CREATE TABLE IF NOT EXISTS alunos(id INTEGER PRIMARY KEY AUTOINCREMENT, nome TEXT NOT NULL, classe TEXT NOT NULL, media REAL NOT NULL);"
+  )
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE aluno_from_rows(SPECULUM NIHIL rows) REDDE Aluno
+  EVOCA Aluno aluno
+  VINCIRE aluno.id AD CONIURA rows_get_int(rows, 0)
+  VINCIRE aluno.nome AD CONIURA rows_get_text(rows, 1)
+  VINCIRE aluno.classe AD CONIURA rows_get_text(rows, 2)
+  VINCIRE aluno.media AD CONIURA rows_get_real(rows, 3)
+  REDDE aluno
+EXPLICIT RITUALE
+
+RITUALE aluno_query_all(SPECULUM NIHIL db) REDDE SPECULUM NIHIL
+  REDDE CONIURA db_query(db, "SELECT id, nome, classe, media FROM alunos ORDER BY id;")
+EXPLICIT RITUALE
+
+RITUALE aluno_query_by_nome(SPECULUM NIHIL db, VERBUM termo) REDDE SPECULUM NIHIL
+  EVOCA VERBUM pattern AD CONIURA concat("%", termo)
+  VINCIRE pattern AD CONIURA concat(pattern, "%")
+  EVOCA VERBUM sql AD "SELECT id, nome, classe, media FROM alunos WHERE nome LIKE "
+  VINCIRE sql AD CONIURA concat(sql, CONIURA sql_quote_text(pattern))
+  VINCIRE sql AD CONIURA concat(sql, " ORDER BY id;")
+  REDDE CONIURA db_query(db, sql)
+EXPLICIT RITUALE
+
+RITUALE aluno_query_by_classe(SPECULUM NIHIL db, VERBUM classe) REDDE SPECULUM NIHIL
+  EVOCA VERBUM sql AD "SELECT id, nome, classe, media FROM alunos WHERE classe = "
+  VINCIRE sql AD CONIURA concat(sql, CONIURA sql_quote_text(classe))
+  VINCIRE sql AD CONIURA concat(sql, " ORDER BY id;")
+  REDDE CONIURA db_query(db, sql)
+EXPLICIT RITUALE
+
+RITUALE aluno_count(SPECULUM NIHIL db) REDDE REX
+  REDDE CONIURA db_scalar_int(db, "SELECT COUNT(*) FROM alunos;")
+EXPLICIT RITUALE
+
+RITUALE aluno_exists_id(SPECULUM NIHIL db, REX id) REDDE VERUM
+  EVOCA VERBUM sql AD CONIURA concat("SELECT COUNT(*) FROM alunos WHERE id = ", CONIURA stringify_int(id))
+  REDDE CONIURA db_scalar_int(db, sql) > 0
+EXPLICIT RITUALE
+
+RITUALE aluno_insert(SPECULUM NIHIL db, VERBUM nome, VERBUM classe, UMBRA media) REDDE VERUM
+  EVOCA SPECULUM NIHIL stmt AD CONIURA db_prepare(db, "INSERT INTO alunos(nome, classe, media) VALUES(?1, ?2, ?3);")
+  CONIURA db_begin(db)
+  CONIURA stmt_bind_text(stmt, 1, nome)
+  CONIURA stmt_bind_text(stmt, 2, classe)
+  CONIURA stmt_bind_real(stmt, 3, media)
+  SI NON CONIURA stmt_step(stmt)
+    CONIURA stmt_finalize(stmt)
+    CONIURA db_rollback(db)
+    REDDE FALSUM
+  FIN SI
+  CONIURA stmt_finalize(stmt)
+  CONIURA db_commit(db)
+  REDDE VERUM
+EXPLICIT RITUALE
+
+RITUALE aluno_update_media(SPECULUM NIHIL db, REX id, UMBRA media) REDDE VERUM
+  EVOCA SPECULUM NIHIL stmt AD CONIURA db_prepare(db, "UPDATE alunos SET media = ?1 WHERE id = ?2;")
+  CONIURA db_begin(db)
+  CONIURA stmt_bind_real(stmt, 1, media)
+  CONIURA stmt_bind_int(stmt, 2, id)
+  SI NON CONIURA stmt_step(stmt)
+    CONIURA stmt_finalize(stmt)
+    CONIURA db_rollback(db)
+    REDDE FALSUM
+  FIN SI
+  CONIURA stmt_finalize(stmt)
+  CONIURA db_commit(db)
+  REDDE VERUM
+EXPLICIT RITUALE
+
+RITUALE aluno_delete(SPECULUM NIHIL db, REX id) REDDE VERUM
+  EVOCA SPECULUM NIHIL stmt AD CONIURA db_prepare(db, "DELETE FROM alunos WHERE id = ?1;")
+  CONIURA db_begin(db)
+  CONIURA stmt_bind_int(stmt, 1, id)
+  SI NON CONIURA stmt_step(stmt)
+    CONIURA stmt_finalize(stmt)
+    CONIURA db_rollback(db)
+    REDDE FALSUM
+  FIN SI
+  CONIURA stmt_finalize(stmt)
+  CONIURA db_commit(db)
+  REDDE VERUM
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

@@ -1,0 +1,51 @@
+INCIPIT grimoire "cadastro_sqlite_app_db_smoke_test"
+
+ADVOCARE "../lib/db.cct"
+ADVOCARE "../lib/types.cct"
+ADVOCARE "cct/db_sqlite.cct"
+ADVOCARE "cct/verbum.cct"
+
+RITUALE main() REDDE REX
+  EVOCA SPECULUM NIHIL db AD CONIURA db_open(":memory:")
+  CONIURA aluno_init_schema(db)
+
+  SI CONIURA aluno_count(db) != 0
+    REDDE 1
+  FIN SI
+
+  SI NON CONIURA aluno_insert(db, "Ana Souza", "9A", 8.5)
+    REDDE 2
+  FIN SI
+  SI NON CONIURA aluno_insert(db, "Bruno Lima", "9B", 7.25)
+    REDDE 3
+  FIN SI
+
+  SI CONIURA aluno_count(db) != 2
+    REDDE 4
+  FIN SI
+
+  EVOCA SPECULUM NIHIL rows AD CONIURA aluno_query_all(db)
+  SI NON CONIURA rows_next(rows)
+    REDDE 5
+  FIN SI
+
+  EVOCA Aluno primeiro AD CONIURA aluno_from_rows(rows)
+  SI primeiro.id != 1
+    REDDE 6
+  FIN SI
+  SI CONIURA compare(primeiro.nome, "Ana Souza") != 0
+    REDDE 7
+  FIN SI
+  SI CONIURA compare(primeiro.classe, "9A") != 0
+    REDDE 8
+  FIN SI
+  SI primeiro.media < 8.49 VEL primeiro.media > 8.51
+    REDDE 9
+  FIN SI
+
+  CONIURA rows_close(rows)
+  CONIURA db_close(db)
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

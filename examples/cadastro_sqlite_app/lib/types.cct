@@ -1,0 +1,10 @@
+INCIPIT grimoire "cadastro_sqlite_app_types"
+
+SIGILLUM Aluno
+  id: REX
+  nome: VERBUM
+  classe: VERBUM
+  media: UMBRA
+FIN SIGILLUM
+
+EXPLICIT grimoire

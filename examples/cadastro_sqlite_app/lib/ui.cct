@@ -1,0 +1,169 @@
+INCIPIT grimoire "cadastro_sqlite_app_ui"
+
+ADVOCARE "./app.cct"
+ADVOCARE "./db.cct"
+ADVOCARE "./types.cct"
+ADVOCARE "cct/db_sqlite.cct"
+ADVOCARE "cct/fmt.cct"
+ADVOCARE "cct/io.cct"
+ADVOCARE "cct/result.cct"
+ADVOCARE "cct/verbum.cct"
+
+RITUALE ui_print_result_message(SPECULUM NIHIL res) REDDE NIHIL
+  SI CONIURA result_is_ok GENUS(VERBUM, VERBUM)(res)
+    CONIURA println(CONIURA result_unwrap GENUS(VERBUM, VERBUM)(res))
+  ALITER
+    CONIURA println(CONIURA concat("erro: ", CONIURA result_unwrap_err GENUS(VERBUM, VERBUM)(res)))
+  FIN SI
+  CONIURA result_free GENUS(VERBUM, VERBUM)(res)
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE ui_print_separator() REDDE NIHIL
+  CONIURA println(CONIURA repeat("-", 64))
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE ui_print_header() REDDE NIHIL
+  CONIURA ui_print_separator()
+  CONIURA println("ID   | NOME                     | CLASSE       | MEDIA")
+  CONIURA ui_print_separator()
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE ui_print_aluno(Aluno aluno) REDDE NIHIL
+  EVOCA VERBUM id_txt AD CONIURA pad_right(CONIURA stringify_int(aluno.id), 4, 32)
+  EVOCA VERBUM nome_txt AD CONIURA pad_right(aluno.nome, 24, 32)
+  EVOCA VERBUM classe_txt AD CONIURA pad_right(aluno.classe, 12, 32)
+  EVOCA VERBUM media_txt AD CONIURA stringify_real(aluno.media)
+
+  EVOCA VERBUM linha AD id_txt
+  VINCIRE linha AD CONIURA concat(linha, " | ")
+  VINCIRE linha AD CONIURA concat(linha, nome_txt)
+  VINCIRE linha AD CONIURA concat(linha, " | ")
+  VINCIRE linha AD CONIURA concat(linha, classe_txt)
+  VINCIRE linha AD CONIURA concat(linha, " | ")
+  VINCIRE linha AD CONIURA concat(linha, media_txt)
+
+  CONIURA println(linha)
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE ui_print_rows(SPECULUM NIHIL rows) REDDE REX
+  EVOCA REX total AD 0
+  CONIURA ui_print_header()
+  DUM CONIURA rows_next(rows)
+    EVOCA Aluno aluno AD CONIURA aluno_from_rows(rows)
+    CONIURA ui_print_aluno(aluno)
+    VINCIRE total AD total + 1
+  FIN DUM
+  CONIURA ui_print_separator()
+  SI total == 0
+    CONIURA println("(nenhum registro)")
+  FIN SI
+  REDDE total
+EXPLICIT RITUALE
+
+RITUALE ui_show_menu() REDDE NIHIL
+  CONIURA println("")
+  CONIURA println("Cadastro SQLite de Alunos")
+  CONIURA println("1 - cadastrar aluno")
+  CONIURA println("2 - listar alunos")
+  CONIURA println("3 - buscar por nome")
+  CONIURA println("4 - listar por classe")
+  CONIURA println("5 - atualizar media")
+  CONIURA println("6 - remover aluno")
+  CONIURA println("7 - mostrar total de alunos")
+  CONIURA println("0 - sair")
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE ui_handle_cadastrar(SPECULUM NIHIL db) REDDE NIHIL
+  EVOCA VERBUM nome AD CONIURA read_line_prompt("nome> ")
+  EVOCA VERBUM classe AD CONIURA read_line_prompt("classe> ")
+  EVOCA VERBUM media AD CONIURA read_line_prompt("media> ")
+  EVOCA SPECULUM NIHIL res AD CONIURA app_cadastrar(db, nome, classe, media)
+  CONIURA ui_print_result_message(res)
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE ui_handle_listar(SPECULUM NIHIL db) REDDE NIHIL
+  EVOCA SPECULUM NIHIL rows AD CONIURA aluno_query_all(db)
+  CONIURA ui_print_rows(rows)
+  CONIURA rows_close(rows)
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE ui_handle_busca_nome(SPECULUM NIHIL db) REDDE NIHIL
+  EVOCA VERBUM termo AD CONIURA trim(CONIURA read_line_prompt("nome> "))
+  SI CONIURA len(termo) == 0
+    CONIURA println("erro: nome nao pode ser vazio")
+    REDDE
+  FIN SI
+  EVOCA SPECULUM NIHIL rows AD CONIURA aluno_query_by_nome(db, termo)
+  CONIURA ui_print_rows(rows)
+  CONIURA rows_close(rows)
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE ui_handle_listar_classe(SPECULUM NIHIL db) REDDE NIHIL
+  EVOCA VERBUM classe AD CONIURA trim(CONIURA read_line_prompt("classe> "))
+  SI CONIURA len(classe) == 0
+    CONIURA println("erro: classe nao pode ser vazia")
+    REDDE
+  FIN SI
+  EVOCA SPECULUM NIHIL rows AD CONIURA aluno_query_by_classe(db, classe)
+  CONIURA ui_print_rows(rows)
+  CONIURA rows_close(rows)
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE ui_handle_atualizar_media(SPECULUM NIHIL db) REDDE NIHIL
+  EVOCA VERBUM id_txt AD CONIURA read_line_prompt("id> ")
+  EVOCA VERBUM media_txt AD CONIURA read_line_prompt("nova media> ")
+  EVOCA SPECULUM NIHIL res AD CONIURA app_atualizar_media(db, id_txt, media_txt)
+  CONIURA ui_print_result_message(res)
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE ui_handle_remover(SPECULUM NIHIL db) REDDE NIHIL
+  EVOCA VERBUM id_txt AD CONIURA read_line_prompt("id> ")
+  EVOCA SPECULUM NIHIL res AD CONIURA app_remover(db, id_txt)
+  CONIURA ui_print_result_message(res)
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE ui_handle_total(SPECULUM NIHIL db) REDDE NIHIL
+  CONIURA println(CONIURA concat("total=", CONIURA stringify_int(CONIURA aluno_count(db))))
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE ui_run(SPECULUM NIHIL db) REDDE NIHIL
+  DUM VERUM
+    CONIURA ui_show_menu()
+    EVOCA VERBUM opcao AD CONIURA trim(CONIURA read_line_prompt("opcao> "))
+    ELIGE opcao
+      CASUS "1":
+        CONIURA ui_handle_cadastrar(db)
+      CASUS "2":
+        CONIURA ui_handle_listar(db)
+      CASUS "3":
+        CONIURA ui_handle_busca_nome(db)
+      CASUS "4":
+        CONIURA ui_handle_listar_classe(db)
+      CASUS "5":
+        CONIURA ui_handle_atualizar_media(db)
+      CASUS "6":
+        CONIURA ui_handle_remover(db)
+      CASUS "7":
+        CONIURA ui_handle_total(db)
+      CASUS "0":
+        FRANGE
+      ALIOQUIN:
+        CONIURA println("erro: opcao invalida")
+    FIN ELIGE
+  FIN DUM
+  REDDE
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

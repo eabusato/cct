@@ -1,0 +1,50 @@
+INCIPIT grimoire "cadastro_sqlite_app_query_filters_test"
+
+ADVOCARE "../lib/db.cct"
+ADVOCARE "../lib/types.cct"
+ADVOCARE "cct/db_sqlite.cct"
+ADVOCARE "cct/verbum.cct"
+
+RITUALE main() REDDE REX
+  EVOCA SPECULUM NIHIL db AD CONIURA db_open(":memory:")
+  CONIURA aluno_init_schema(db)
+
+  SI NON CONIURA aluno_insert(db, "Ana Souza", "9A", 8.5)
+    REDDE 1
+  FIN SI
+  SI NON CONIURA aluno_insert(db, "Ana Lima", "9B", 7.0)
+    REDDE 2
+  FIN SI
+  SI NON CONIURA aluno_insert(db, "Carlos", "9A", 6.5)
+    REDDE 3
+  FIN SI
+
+  EVOCA SPECULUM NIHIL rows_nome AD CONIURA aluno_query_by_nome(db, "Ana")
+  EVOCA REX count_nome AD 0
+  DUM CONIURA rows_next(rows_nome)
+    VINCIRE count_nome AD count_nome + 1
+  FIN DUM
+  CONIURA rows_close(rows_nome)
+  SI count_nome != 2
+    REDDE 4
+  FIN SI
+
+  EVOCA SPECULUM NIHIL rows_classe AD CONIURA aluno_query_by_classe(db, "9A")
+  EVOCA REX count_classe AD 0
+  DUM CONIURA rows_next(rows_classe)
+    EVOCA Aluno aluno AD CONIURA aluno_from_rows(rows_classe)
+    SI CONIURA compare(aluno.classe, "9A") != 0
+      REDDE 5
+    FIN SI
+    VINCIRE count_classe AD count_classe + 1
+  FIN DUM
+  CONIURA rows_close(rows_classe)
+  SI count_classe != 2
+    REDDE 6
+  FIN SI
+
+  CONIURA db_close(db)
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

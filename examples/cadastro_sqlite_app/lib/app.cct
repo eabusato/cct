@@ -1,0 +1,140 @@
+INCIPIT grimoire "cadastro_sqlite_app_app"
+
+ADVOCARE "./db.cct"
+ADVOCARE "cct/db_sqlite.cct"
+ADVOCARE "cct/option.cct"
+ADVOCARE "cct/parse.cct"
+ADVOCARE "cct/result.cct"
+ADVOCARE "cct/verbum.cct"
+
+RITUALE validar_texto_obrigatorio(VERBUM campo, VERBUM bruto) REDDE SPECULUM NIHIL
+  EVOCA VERBUM valor AD CONIURA trim(bruto)
+  SI CONIURA len(valor) == 0
+    EVOCA VERBUM msg AD CONIURA concat(campo, " nao pode ser vazio")
+    REDDE CONIURA Err GENUS(VERBUM, VERBUM)(msg)
+  FIN SI
+  REDDE CONIURA Ok GENUS(VERBUM, VERBUM)(valor)
+EXPLICIT RITUALE
+
+RITUALE validar_media(VERBUM bruto) REDDE SPECULUM NIHIL
+  EVOCA VERBUM valor AD CONIURA trim(bruto)
+  EVOCA SPECULUM NIHIL opt AD CONIURA try_real(valor)
+  SI NON CONIURA option_is_some GENUS(UMBRA)(opt)
+    CONIURA option_free GENUS(UMBRA)(opt)
+    REDDE CONIURA Err GENUS(UMBRA, VERBUM)("media invalida")
+  FIN SI
+
+  EVOCA UMBRA media AD CONIURA option_unwrap GENUS(UMBRA)(opt)
+  CONIURA option_free GENUS(UMBRA)(opt)
+
+  SI media < 0.0 VEL media > 10.0
+    REDDE CONIURA Err GENUS(UMBRA, VERBUM)("media deve estar entre 0.0 e 10.0")
+  FIN SI
+
+  REDDE CONIURA Ok GENUS(UMBRA, VERBUM)(media)
+EXPLICIT RITUALE
+
+RITUALE validar_id(VERBUM bruto) REDDE SPECULUM NIHIL
+  EVOCA VERBUM valor AD CONIURA trim(bruto)
+  EVOCA SPECULUM NIHIL opt AD CONIURA try_int(valor)
+  SI NON CONIURA option_is_some GENUS(REX)(opt)
+    CONIURA option_free GENUS(REX)(opt)
+    REDDE CONIURA Err GENUS(REX, VERBUM)("id invalido")
+  FIN SI
+
+  EVOCA REX id AD CONIURA option_unwrap GENUS(REX)(opt)
+  CONIURA option_free GENUS(REX)(opt)
+
+  SI id <= 0
+    REDDE CONIURA Err GENUS(REX, VERBUM)("id deve ser positivo")
+  FIN SI
+
+  REDDE CONIURA Ok GENUS(REX, VERBUM)(id)
+EXPLICIT RITUALE
+
+RITUALE app_cadastrar(SPECULUM NIHIL db, VERBUM nome_txt, VERBUM classe_txt, VERBUM media_txt) REDDE SPECULUM NIHIL
+  EVOCA SPECULUM NIHIL nome_res AD CONIURA validar_texto_obrigatorio("nome", nome_txt)
+  SI CONIURA result_is_err GENUS(VERBUM, VERBUM)(nome_res)
+    REDDE nome_res
+  FIN SI
+  EVOCA VERBUM nome AD CONIURA result_unwrap GENUS(VERBUM, VERBUM)(nome_res)
+  CONIURA result_free GENUS(VERBUM, VERBUM)(nome_res)
+
+  EVOCA SPECULUM NIHIL classe_res AD CONIURA validar_texto_obrigatorio("classe", classe_txt)
+  SI CONIURA result_is_err GENUS(VERBUM, VERBUM)(classe_res)
+    REDDE classe_res
+  FIN SI
+  EVOCA VERBUM classe AD CONIURA result_unwrap GENUS(VERBUM, VERBUM)(classe_res)
+  CONIURA result_free GENUS(VERBUM, VERBUM)(classe_res)
+
+  EVOCA SPECULUM NIHIL media_res AD CONIURA validar_media(media_txt)
+  SI CONIURA result_is_err GENUS(UMBRA, VERBUM)(media_res)
+    EVOCA VERBUM msg AD CONIURA result_unwrap_err GENUS(UMBRA, VERBUM)(media_res)
+    CONIURA result_free GENUS(UMBRA, VERBUM)(media_res)
+    REDDE CONIURA Err GENUS(VERBUM, VERBUM)(msg)
+  FIN SI
+  EVOCA UMBRA media AD CONIURA result_unwrap GENUS(UMBRA, VERBUM)(media_res)
+  CONIURA result_free GENUS(UMBRA, VERBUM)(media_res)
+
+  SI NON CONIURA aluno_insert(db, nome, classe, media)
+    EVOCA VERBUM msg AD CONIURA concat("falha ao cadastrar: ", CONIURA db_last_error(db))
+    REDDE CONIURA Err GENUS(VERBUM, VERBUM)(msg)
+  FIN SI
+
+  REDDE CONIURA Ok GENUS(VERBUM, VERBUM)("ok: aluno cadastrado")
+EXPLICIT RITUALE
+
+RITUALE app_atualizar_media(SPECULUM NIHIL db, VERBUM id_txt, VERBUM media_txt) REDDE SPECULUM NIHIL
+  EVOCA SPECULUM NIHIL id_res AD CONIURA validar_id(id_txt)
+  SI CONIURA result_is_err GENUS(REX, VERBUM)(id_res)
+    EVOCA VERBUM msg AD CONIURA result_unwrap_err GENUS(REX, VERBUM)(id_res)
+    CONIURA result_free GENUS(REX, VERBUM)(id_res)
+    REDDE CONIURA Err GENUS(VERBUM, VERBUM)(msg)
+  FIN SI
+  EVOCA REX id AD CONIURA result_unwrap GENUS(REX, VERBUM)(id_res)
+  CONIURA result_free GENUS(REX, VERBUM)(id_res)
+
+  EVOCA SPECULUM NIHIL media_res AD CONIURA validar_media(media_txt)
+  SI CONIURA result_is_err GENUS(UMBRA, VERBUM)(media_res)
+    EVOCA VERBUM msg AD CONIURA result_unwrap_err GENUS(UMBRA, VERBUM)(media_res)
+    CONIURA result_free GENUS(UMBRA, VERBUM)(media_res)
+    REDDE CONIURA Err GENUS(VERBUM, VERBUM)(msg)
+  FIN SI
+  EVOCA UMBRA media AD CONIURA result_unwrap GENUS(UMBRA, VERBUM)(media_res)
+  CONIURA result_free GENUS(UMBRA, VERBUM)(media_res)
+
+  SI NON CONIURA aluno_exists_id(db, id)
+    REDDE CONIURA Err GENUS(VERBUM, VERBUM)("aluno nao encontrado")
+  FIN SI
+
+  SI NON CONIURA aluno_update_media(db, id, media)
+    EVOCA VERBUM msg AD CONIURA concat("falha ao atualizar: ", CONIURA db_last_error(db))
+    REDDE CONIURA Err GENUS(VERBUM, VERBUM)(msg)
+  FIN SI
+
+  REDDE CONIURA Ok GENUS(VERBUM, VERBUM)("ok: media atualizada")
+EXPLICIT RITUALE
+
+RITUALE app_remover(SPECULUM NIHIL db, VERBUM id_txt) REDDE SPECULUM NIHIL
+  EVOCA SPECULUM NIHIL id_res AD CONIURA validar_id(id_txt)
+  SI CONIURA result_is_err GENUS(REX, VERBUM)(id_res)
+    EVOCA VERBUM msg AD CONIURA result_unwrap_err GENUS(REX, VERBUM)(id_res)
+    CONIURA result_free GENUS(REX, VERBUM)(id_res)
+    REDDE CONIURA Err GENUS(VERBUM, VERBUM)(msg)
+  FIN SI
+  EVOCA REX id AD CONIURA result_unwrap GENUS(REX, VERBUM)(id_res)
+  CONIURA result_free GENUS(REX, VERBUM)(id_res)
+
+  SI NON CONIURA aluno_exists_id(db, id)
+    REDDE CONIURA Err GENUS(VERBUM, VERBUM)("aluno nao encontrado")
+  FIN SI
+
+  SI NON CONIURA aluno_delete(db, id)
+    EVOCA VERBUM msg AD CONIURA concat("falha ao remover: ", CONIURA db_last_error(db))
+    REDDE CONIURA Err GENUS(VERBUM, VERBUM)(msg)
+  FIN SI
+
+  REDDE CONIURA Ok GENUS(VERBUM, VERBUM)("ok: aluno removido")
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

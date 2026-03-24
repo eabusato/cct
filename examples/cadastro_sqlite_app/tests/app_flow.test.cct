@@ -1,0 +1,67 @@
+INCIPIT grimoire "cadastro_sqlite_app_flow_test"
+
+ADVOCARE "../lib/app.cct"
+ADVOCARE "../lib/db.cct"
+ADVOCARE "cct/db_sqlite.cct"
+ADVOCARE "cct/result.cct"
+ADVOCARE "cct/verbum.cct"
+
+RITUALE expect_ok(SPECULUM NIHIL res) REDDE VERUM
+  EVOCA VERUM ok AD CONIURA result_is_ok GENUS(VERBUM, VERBUM)(res)
+  CONIURA result_free GENUS(VERBUM, VERBUM)(res)
+  REDDE ok
+EXPLICIT RITUALE
+
+RITUALE expect_err(SPECULUM NIHIL res, VERBUM expected) REDDE VERUM
+  SI NON CONIURA result_is_err GENUS(VERBUM, VERBUM)(res)
+    CONIURA result_free GENUS(VERBUM, VERBUM)(res)
+    REDDE FALSUM
+  FIN SI
+  EVOCA VERBUM msg AD CONIURA result_unwrap_err GENUS(VERBUM, VERBUM)(res)
+  CONIURA result_free GENUS(VERBUM, VERBUM)(res)
+  REDDE CONIURA compare(msg, expected) == 0
+EXPLICIT RITUALE
+
+RITUALE main() REDDE REX
+  EVOCA SPECULUM NIHIL db AD CONIURA db_open(":memory:")
+  CONIURA aluno_init_schema(db)
+
+  SI NON CONIURA expect_ok(CONIURA app_cadastrar(db, " Ana Souza ", " 9A ", "8.5"))
+    REDDE 1
+  FIN SI
+
+  SI NON CONIURA expect_err(CONIURA app_cadastrar(db, "", "9A", "8.5"), "nome nao pode ser vazio")
+    REDDE 2
+  FIN SI
+
+  SI NON CONIURA expect_err(CONIURA app_cadastrar(db, "Bruno", "9B", "12.0"), "media deve estar entre 0.0 e 10.0")
+    REDDE 3
+  FIN SI
+
+  SI NON CONIURA expect_ok(CONIURA app_atualizar_media(db, "1", "9.25"))
+    REDDE 4
+  FIN SI
+
+  SI CONIURA db_scalar_int(db, "SELECT COUNT(*) FROM alunos;") != 1
+    REDDE 5
+  FIN SI
+  SI CONIURA db_scalar_text(db, "SELECT classe FROM alunos WHERE id = 1;") == ""
+    REDDE 6
+  FIN SI
+  SI CONIURA db_scalar_text(db, "SELECT nome FROM alunos WHERE id = 1;") == ""
+    REDDE 7
+  FIN SI
+
+  SI NON CONIURA expect_ok(CONIURA app_remover(db, "1"))
+    REDDE 8
+  FIN SI
+
+  SI CONIURA aluno_count(db) != 0
+    REDDE 9
+  FIN SI
+
+  CONIURA db_close(db)
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

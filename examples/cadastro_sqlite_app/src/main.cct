@@ -1,0 +1,15 @@
+INCIPIT grimoire "cadastro_sqlite_app_main"
+
+ADVOCARE "../lib/db.cct"
+ADVOCARE "../lib/ui.cct"
+ADVOCARE "cct/db_sqlite.cct"
+
+RITUALE main() REDDE REX
+  EVOCA SPECULUM NIHIL db AD CONIURA aluno_open_default()
+  CONIURA aluno_init_schema(db)
+  CONIURA ui_run(db)
+  CONIURA db_close(db)
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire
