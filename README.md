@@ -13,9 +13,9 @@ CCT is a compiled, ritual-themed programming language with deterministic sigil g
 
 ## Status
 
-**Current status: FASE 30 completed** (bootstrap, multi-stage self-hosting, operational self-hosted workflows, and the mature application-library subset are now closed on the validated baseline).
+**Current status: FASE 31 completed** (bootstrap, multi-stage self-hosting, operational self-hosted workflows, and promotion of the self-hosted compiler to the default user-facing path are now closed on the validated baseline).
 
-Implemented phases: **0 → 30**, plus the interstitial **FASE 14T** closure.
+Implemented phases: **0 -> 31**, plus the interstitial **FASE 14T** closure.
 
 **Phase-reference convention:** phase labels found in file/module headers, local markers, or help text may refer to the phase in which that specific component was introduced or stabilized. They are historical markers and do not necessarily represent the current global project status shown above.
 
@@ -66,8 +66,147 @@ Highlights of the current baseline:
 - FASE 20 application-library expansion: `cct/json`, `cct/socket`, `cct/net`, `cct/http`, `cct/config`, and `cct/db_sqlite`
 - FASE 21-29 bootstrap closure: lexer, parser, semantic analyzer, codegen, stage0/stage1/stage2 self-host convergence
 - FASE 30 operational closure: self-hosted project workflows, mature `csv` / `https` / `orm_lite`, and final operational handoff
+- FASE 31 promotion closure: `./cct` is now the default wrapper, with `./cct-host` and `./cct-selfhost` exposed explicitly and `./cct --which-compiler` reporting the active mode
+- Aggregated whole-project validation now extends through promotion with `make test-all-0-31` and `make test-phase31-final`
 
-## Recent Phase Closures (16-19)
+## Documentation
+
+CCT documentation is organized by audience and purpose. Choose your reading path:
+
+### For New Users (Start Here)
+1. This README (you're reading it!)
+2. [Installation Guide](docs/install.md) - Setup and verification
+3. [Current Release Status Through FASE 31](docs/release/STATUS_0_31.md) - Current validated baseline at a glance
+4. [FASE 31 Release Notes](docs/release/FASE_31_RELEASE_NOTES.md) - Current compiler-promotion closure summary
+5. [Spec - Sections 1-3, 12](docs/spec.md) - Basic syntax and examples
+6. [Project Conventions](docs/project_conventions.md) - Code organization
+7. [Examples Catalog](examples/README.md) - Runnable examples including the FASE 20 app stack
+
+**Estimated time**: 1 hour
+
+### For Language Learners
+1. [Language Specification](docs/spec.md) - Complete language reference
+2. [Bibliotheca Canonica](docs/bibliotheca_canonica.md) - Standard library guide
+3. [FLUXUS Usage](docs/fluxus_usage.md) - Dynamic vectors in depth
+4. [Build System](docs/build_system.md) - Project workflow
+5. [Self-Hosting Guide](docs/self_hosting.md) - Bootstrap, promotion, and operational modes
+6. Explore `examples/showcase_stdlib_*.cct` for real-world patterns
+7. Explore `examples/*_20f2.cct` for JSON/network/HTTP/config/SQLite flows
+
+**Estimated time**: 4-6 hours
+
+### Quick Reference (Keep Handy)
+- [Spec - Sections 1, 4-11, 20](docs/spec.md) - Language reference plus the FASE 31 compiler-entry addendum
+- [Bibliotheca Canonica - Sections 12+](docs/bibliotheca_canonica.md) - Stdlib API
+- [Linter Rules](docs/linter.md) - Lint rule reference
+- [Doc Generator](docs/doc_generator.md) - Doc comment syntax
+- [Testing Guide](docs/testing.md) - Post-FASE-31 validation model
+
+### For Advanced Users and Contributors
+1. [Architecture](docs/architecture.md) - Compiler internals
+2. [Roadmap](docs/roadmap.md) - Phase history and future plans
+3. [Release Status Through FASE 31](docs/release/STATUS_0_31.md) - Current cross-phase validation and release baseline
+4. [Release Documentation](docs/release/):
+   - [FASE 31 Release Notes](docs/release/FASE_31_RELEASE_NOTES.md) - Self-hosted compiler promotion closure summary
+   - [FASE 30 Release Notes](docs/release/FASE_30_RELEASE_NOTES.md) - Operational self-hosted platform closure summary
+   - [FASE 29 Release Notes](docs/release/FASE_29_RELEASE_NOTES.md) - Self-host convergence and identity-validation summary
+   - [FASE 28 Release Notes](docs/release/FASE_28_RELEASE_NOTES.md) - Advanced bootstrap codegen closure summary
+   - [FASE 27 Release Notes](docs/release/FASE_27_RELEASE_NOTES.md) - Structural codegen closure summary
+   - [FASE 26 Release Notes](docs/release/FASE_26_RELEASE_NOTES.md) - Bootstrap codegen foundation summary
+   - [FASE 25 Release Notes](docs/release/FASE_25_RELEASE_NOTES.md) - Bootstrap generic semantic closure summary
+   - [FASE 24 Release Notes](docs/release/FASE_24_RELEASE_NOTES.md) - Bootstrap semantic-core summary
+   - [FASE 23 Release Notes](docs/release/FASE_23_RELEASE_NOTES.md) - Advanced bootstrap parser closure summary
+   - [FASE 22 Release Notes](docs/release/FASE_22_RELEASE_NOTES.md) - Bootstrap parser-core summary
+   - [FASE 21 Release Notes](docs/release/FASE_21_RELEASE_NOTES.md) - Bootstrap lexer/foundation closure summary
+   - [FASE 20 Release Notes](docs/release/FASE_20_RELEASE_NOTES.md) - Application-library stack closure summary
+   - [FASE 19 Release Notes](docs/release/FASE_19_RELEASE_NOTES.md) - FASE 19 language-surface closure summary
+   - [FASE 18 Release Notes](docs/release/FASE_18_RELEASE_NOTES.md) - Canonical-library expansion closure summary
+   - [FASE 17 Release Notes](docs/release/FASE_17_RELEASE_NOTES.md) - Canonical-library expansion highlights
+   - [FASE 16 Release Notes](docs/release/FASE_16_RELEASE_NOTES.md) - Freestanding/bridge trajectory summary
+   - [FASE 15 Release Notes](docs/release/FASE_15_RELEASE_NOTES.md) - Semantic/operator closure summary
+   - [FASE 14T Release Notes](docs/release/FASE_14T_RELEASE_NOTES.md) - Sigilo hover and additive metadata closure summary
+   - [FASE 14 Release Notes](docs/release/FASE_14_RELEASE_NOTES.md) - Hardening-stream highlights
+   - [FASE 13 Release Notes](docs/release/FASE_13_RELEASE_NOTES.md) - Highlights and migration guide
+   - [FASE 12 Release Notes](docs/release/FASE_12_RELEASE_NOTES.md) - FASE 12 delivery summary
+   - [FASE 11 Release Notes](docs/release/FASE_11_RELEASE_NOTES.md) - Early stdlib/platform notes
+
+**Estimated time**: 3-4 hours
+
+### Documentation Philosophy
+- **spec.md**: Authoritative language reference (what is valid CCT)
+- **architecture.md**: How the compiler works internally
+- **bibliotheca_canonica.md**: Standard library concepts and APIs
+- **roadmap.md**: Where we came from, where we're going
+- **release/**: phase release notes and public-facing closure summaries
+
+### All Documentation Files
+Primary docs:
+- `docs/spec.md`
+- `docs/architecture.md`
+- `docs/roadmap.md`
+- `docs/bibliotheca_canonica.md`
+- `docs/release/STATUS_0_31.md` — current cross-phase release status index
+- `docs/release/STATUS_0_30.md` — historical pre-promotion release status snapshot
+- `docs/release/` — phase release-note archive through FASE 31
+
+Tooling and guides:
+- `docs/install.md`
+- `docs/build_system.md`
+- `docs/project_conventions.md`
+- `docs/testing.md`
+- `docs/self_hosting.md`
+- `docs/fluxus_usage.md`
+- `docs/linter.md`
+- `docs/doc_generator.md`
+- `docs/sigilo_operations_14b2.md`
+
+Project and phase dossiers:
+- `PROJETO_CCT.md`
+- `PROJETO_CCT_V2.md`
+- `md_out/FASE_*_CCT.md` (phase execution plans and records, including the full FASE 19 track)
+
+## Release Documentation Packages
+
+The current project baseline is **FASE 31 completed**. Historical and bootstrap-era release packages remain available for traceability, migration references, and operational handoff.
+
+**Current-phase release documentation:**
+- `docs/release/FASE_31_RELEASE_NOTES.md` — compiler-promotion and wrapper-mode closure summary
+- `docs/release/FASE_30_RELEASE_NOTES.md` — operational self-hosted platform closure summary
+- `docs/release/FASE_29_RELEASE_NOTES.md` — self-hosting convergence and stage-identity closure summary
+- `docs/release/FASE_28_RELEASE_NOTES.md` — advanced bootstrap codegen closure summary
+- `docs/release/FASE_27_RELEASE_NOTES.md` — structural codegen (`SIGILLUM`, `ORDO`, `ELIGE`) closure summary
+- `docs/release/FASE_26_RELEASE_NOTES.md` — bootstrap codegen foundation closure summary
+- `docs/release/FASE_25_RELEASE_NOTES.md` — bootstrap generic semantic closure summary
+- `docs/release/FASE_24_RELEASE_NOTES.md` — bootstrap semantic core closure summary
+- `docs/release/FASE_23_RELEASE_NOTES.md` — advanced bootstrap parser closure summary
+- `docs/release/FASE_22_RELEASE_NOTES.md` — bootstrap parser-core closure summary
+- `docs/release/FASE_21_RELEASE_NOTES.md` — bootstrap foundations and lexer closure summary
+
+**Historical package documentation:**
+- `docs/release/FASE_20_RELEASE_NOTES.md` — FASE 20 application-library stack closure summary
+- `docs/release/FASE_19_RELEASE_NOTES.md` — FASE 19 language-surface closure summary
+- `docs/release/FASE_18_RELEASE_NOTES.md` — FASE 18 canonical-library expansion summary
+- `docs/release/FASE_17_RELEASE_NOTES.md` — FASE 17 canonical-library expansion summary
+- `docs/release/FASE_16_RELEASE_NOTES.md` — FASE 16 freestanding/bridge summary
+- `docs/release/FASE_15_RELEASE_NOTES.md` — FASE 15 semantic/operator closure notes
+- `docs/release/FASE_14T_RELEASE_NOTES.md` — FASE 14T sigilo hover/additive metadata closure notes
+- `docs/release/FASE_14_RELEASE_NOTES.md` — Hardening-stream release notes
+- `docs/release/FASE_13_RELEASE_NOTES.md` — Highlights and operational guidance
+- `docs/release/FASE_12_RELEASE_NOTES.md` — FASE 12 delivery notes
+- `docs/release/FASE_11_RELEASE_NOTES.md` — Early stdlib/platform release notes
+- detailed matrices/snapshots from older phases were archived from the public `docs/release` surface
+
+**Quick reference:**
+- FASE 0-20 public contracts remain stable
+- FASE 21-29 closed the bootstrap compiler stack through self-host convergence
+- FASE 30 closed the operational self-host platform baseline
+- FASE 31 closed promotion of the self-hosted compiler to the default path
+- `make test-all-0-31` is the authoritative whole-project validation path
+- Zero silent-breaking-change policy remains active
+
+See `docs/roadmap.md`, `docs/spec.md`, and `docs/release/STATUS_0_31.md` for current-phase status and language-surface details.
+
+## Phase Closure Summary (16-31)
 
 ### FASE 16 (Freestanding/ASM Bridge)
 - `--profile freestanding`, `--emit-asm`, and entrypoint contract stabilization
@@ -91,6 +230,96 @@ Highlights of the current baseline:
 - `cct/http` for HTTP/1.1 request/response modeling, parsing, client flows, and single-request server handling
 - `cct/config` for INI configuration parsing, typed access, writing, env overlays, and JSON bridging
 - `cct/db_sqlite` for host-only SQLite open/query/prepare/transaction/scalar workflows
+
+### FASE 21-30 (Bootstrap Closure to Operational Self-Hosting)
+- 21-28: bootstrap compiler foundations through advanced parser, semantic, and codegen closure
+- 29: stage0/stage1/stage2 self-host convergence and identity validation
+- 30: operational self-host workflows, mature application-library subset, and final operational handoff
+
+### FASE 31 (Compiler Modes and Entrypoints)
+
+FASE 31 is now complete.
+
+Operational consequence of this closure:
+- the repository now documents a promoted self-hosted compiler path in addition to the historical host path
+- `./cct` is the default user-facing entrypoint
+- `./cct-host` is the explicit host fallback entrypoint
+- `./cct-selfhost` is the explicit self-hosted entrypoint
+- `./cct --which-compiler` reports the active compiler mode used by the wrapper
+
+This updates the practical baseline beyond the earlier FASE 30 snapshot without removing the historical status record.
+
+#### Compiler Entrypoints
+
+The repository now exposes three compiler-facing entrypoints with different operational roles:
+- `./cct`: the default wrapper users should call in normal workflows
+- `./cct-host`: the preserved host compiler path for fallback, regression comparison, and emergency recovery
+- `./cct-selfhost`: the explicit self-hosted compiler path for direct operational validation
+
+#### Inspecting the Active Compiler
+
+Use:
+
+```bash
+./cct --which-compiler
+./cct-host --which-compiler
+./cct-selfhost --which-compiler
+```
+
+Expected interpretation:
+- `./cct --which-compiler` reports the current default wrapper mode (`selfhost` or `host`)
+- `./cct-host --which-compiler` reports `host`
+- `./cct-selfhost --which-compiler` reports `selfhost`
+
+#### Promotion and Demotion
+
+The promoted compiler path is controlled explicitly:
+
+```bash
+make bootstrap-promote
+./cct --which-compiler
+
+make bootstrap-demote
+./cct --which-compiler
+```
+
+Operational meaning:
+- `make bootstrap-promote`: activate the self-hosted compiler as the default `./cct` mode
+- `make bootstrap-demote`: switch the default `./cct` mode back to the host compiler
+- `./cct-host` and `./cct-selfhost` remain available regardless of the current default mode
+
+#### Daily Workflow Guidance
+
+Recommended daily validation after FASE 31:
+
+```bash
+make bootstrap-stage-identity
+make test
+make test-host-legacy
+```
+
+Recommended release validation:
+
+```bash
+make bootstrap-stage-identity
+make test
+make test-host-legacy
+make test-all-0-31
+make test-phase30-final
+make test-phase31-final
+```
+
+#### Current Delegation Boundaries
+
+The promoted self-host path is the default compiler path, but the wrapper still preserves host fallback in selected areas.
+
+Current practical model:
+- direct compile, `--check`, `--ast`, and `--tokens` are part of the promoted compiler contract
+- project commands remain available through `./cct` and `./cct-selfhost`
+- some tooling-oriented flows still reuse host-side implementation layers to preserve CLI continuity and repository stability
+- explicit tooling commands such as `fmt`, `lint`, `doc`, and `--sigilo-only` may still delegate to the host path where the repository has not yet promoted a self-host implementation end to end
+
+This is an intentional compatibility strategy, not an undocumented divergence.
 
 ## Build
 
@@ -117,43 +346,32 @@ Run full test suite:
 make test
 ```
 
-## Bootstrap
+## Quick Examples
 
-The bootstrap track is complete through FASE 30.
-
-Validated bootstrap layers:
-- `src/bootstrap/lexer/` — lexer in CCT
-- `src/bootstrap/parser/` — parser + AST in CCT
-- `src/bootstrap/semantic/` — semantic analysis in CCT
-- `src/bootstrap/codegen/` — code generation in CCT
-- `src/bootstrap/main_compiler.cct` — self-hosted compiler entrypoint
-
-Historical bootstrap entrypoint retained from FASE 21:
-- `src/bootstrap/main_lexer.cct` provides the standalone bootstrap CLI
-- `tests/integration/lexer_*.cct` contains the bootstrap lexer integration fixtures
-
-Operational self-hosted workflow:
+Tokenize:
 
 ```bash
-make bootstrap-stage-identity
-make bootstrap-selfhost-ready
-make project-selfhost-build PROJECT=examples/phase30_data_app
-make project-selfhost-run PROJECT=examples/phase30_data_app
-make project-selfhost-test PROJECT=examples/phase30_data_app
+./cct --tokens examples/hello.cct
 ```
 
-Standalone bootstrap CLI example retained for the lexer layer:
+Semantic check:
 
 ```bash
-make cct_lexer_bootstrap
-./cct_lexer_bootstrap tests/integration/codegen_minimal.cct
+./cct --check examples/hello.cct
 ```
 
-Operational validation targets:
-- `make test-bootstrap-selfhost` — FASE 29 gate
-- `make test-operational-selfhost` — FASE 30A gate
-- `make test-operational-platform` — FASE 30B-30D gate
-- `make test-phase30-final` — consolidated FASE 30 gate
+Compile and run:
+
+```bash
+./cct examples/hello.cct
+./examples/hello
+```
+
+Sigil-only (system + local in essential mode):
+
+```bash
+./cct --sigilo-only --sigilo-mode essencial tests/integration/sigilo_final_modular_entry.cct
+```
 
 ## CLI
 
@@ -195,6 +413,7 @@ Main commands:
 - `./cct sigilo validate ... --consumer-profile legacy-tolerant|current-default|strict-contract`: explicit strict/tolerant validator profile
 - `./cct sigilo baseline check <artifact.sigil> [--baseline PATH]`: compare artifact vs persisted baseline
 - `./cct sigilo baseline update <artifact.sigil> [--baseline PATH] [--force]`: explicit baseline update
+- `./cct --which-compiler`: report which compiler mode the wrapper will use
 - `./cct --no-color ...`: disable ANSI colors in diagnostics
 
 Sigil options:
@@ -205,6 +424,171 @@ Sigil options:
 - `--sigilo-no-svg`
 - `--sigilo-no-titles`
 - `--sigilo-no-data`
+
+## Project Workflow (Introduced in FASE 12F, Still Current)
+
+Canonical project layout:
+
+```text
+project/
+├── src/main.cct
+├── lib/
+├── tests/*.test.cct
+├── bench/*.bench.cct
+└── cct.toml (optional)
+```
+
+Typical local flow:
+
+```bash
+./cct test --project .
+./cct build --project .
+./cct run --project .
+./cct bench --project . --iterations 5
+./cct clean --project . --all
+./cct doc --project . --format both
+```
+
+Sigilo-focused local workflows (FASE 13B.1):
+- minimal daily loop and strict pre-merge loop are consolidated in `docs/sigilo_operations_14b2.md`
+- strict baseline gate uses:
+  - `./cct sigilo baseline check <artifact.sigil> --strict --summary`
+  - exit code `2` for blocking drift (`review-required` or `behavioral-risk`)
+
+Sigilo-focused CI profiles (FASE 13B.3):
+- profiles:
+  - `advisory`: informative; blocks only `behavioral-risk` unless explicit override
+  - `gated`: blocks `review-required` and `behavioral-risk`
+  - `release`: strict profile; requires baseline and blocks `review-required` and `behavioral-risk`
+- commands:
+  - `./cct build --project . --sigilo-check --sigilo-ci-profile advisory`
+  - `./cct test --project . --sigilo-check --sigilo-ci-profile gated`
+  - `./cct build --project . --sigilo-check --sigilo-ci-profile release`
+  - `./cct build --project . --sigilo-check --sigilo-ci-profile advisory --sigilo-override-behavioral-risk`
+- operational contract reference: `docs/sigilo_operations_14b2.md`
+
+Sigilo operational observability (FASE 13B.4):
+- report signature: `format=cct.sigilo.report.v1`
+- default output is summary-oriented and script-safe
+- detailed output (`--sigilo-report detailed`) adds per-item `domain`, `before`, and `after`
+- explain output (`--sigilo-explain`) adds probable cause + recommended action + troubleshooting doc reference
+- troubleshooting playbook: `docs/sigilo_troubleshooting_13b4.md`
+
+Sigilo consumer compatibility (FASE 13C.3):
+- profiles:
+  - `legacy-tolerant`: maximum compatibility for legacy readers
+  - `current-default`: canonical default profile in FASE 13 tooling
+  - `strict-contract`: blocking contract enforcement (`--strict` alias)
+- migration and fallback behavior is covered in current operational guidance and validator profile docs
+
+Sigilo strict/tolerant validation (FASE 13C.4):
+- canonical validator command: `./cct sigilo validate <artifact.sigil> [--strict] [--consumer-profile ...]`
+- tolerant profiles keep compatibility-first behavior with warning classification
+- strict-contract profile blocks contractual violations for release gates
+
+FASE 13 release package (FASE 13D.4):
+- `docs/release/FASE_13_RELEASE_NOTES.md`
+
+FASE 13M addendum package (FASE 13M.B2):
+- details were consolidated into historical internal release records
+
+## Extended Validation Matrix (Post-FASE-30 / Post-FASE-31)
+
+The historical `make test` path is no longer the only meaningful repository gate. CCT now maintains explicit validation layers:
+
+```bash
+make test
+make test-legacy-full
+make test-legacy-rebased
+make test-all-0-30
+make test-bootstrap
+make test-bootstrap-selfhost
+make test-phase30-final
+make test-host-legacy
+make test-all-0-31
+make test-phase31-final
+```
+
+Meaning:
+- `make test`: current default repository runner
+- `make test-legacy-full`: frozen historical legacy suite for phases 0-20
+- `make test-legacy-rebased`: legacy 0-20 expectations rebased to the current compiler behavior
+- `make test-all-0-30`: authoritative aggregated validation across the pre-promotion operational baseline
+- `make test-bootstrap`: bootstrap compiler phases (`21-28`)
+- `make test-bootstrap-selfhost`: multi-stage self-host convergence (`29`)
+- `make test-phase30-final`: operational self-hosted platform gate (`30`)
+- `make test-host-legacy`: explicit host-path regression coverage retained after promotion
+- `make test-all-0-31`: authoritative aggregated validation across all implemented phases including compiler promotion
+- `make test-phase31-final`: compiler-promotion and wrapper-mode gate (`31`)
+
+For publication, release gating, or major refactors, `make test-all-0-31` is the correct whole-project validation entrypoint.
+
+## Self-Hosted Operational Workflow (Current Baseline)
+
+The compiler is no longer only a host-compiler project. The validated self-host operational path is:
+
+```bash
+make bootstrap-stage0
+make bootstrap-stage1
+make bootstrap-stage2
+make bootstrap-stage-identity
+make bootstrap-selfhost-ready
+make project-selfhost-build PROJECT=examples/phase30_data_app
+make project-selfhost-run PROJECT=examples/phase30_data_app
+make project-selfhost-test PROJECT=examples/phase30_data_app
+make project-selfhost-package PROJECT=examples/phase30_data_app
+```
+
+This path is backed by the phase-29, phase-30, and phase-31 validation gates and is the basis for future primary-toolchain work.
+
+## Bootstrap
+
+The bootstrap track is complete through FASE 31.
+
+Validated bootstrap layers:
+- `src/bootstrap/lexer/` — lexer in CCT
+- `src/bootstrap/parser/` — parser + AST in CCT
+- `src/bootstrap/semantic/` — semantic analysis in CCT
+- `src/bootstrap/codegen/` — code generation in CCT
+- `src/bootstrap/main_compiler.cct` — self-hosted compiler entrypoint
+
+Historical bootstrap entrypoint retained from FASE 21:
+- `src/bootstrap/main_lexer.cct` provides the standalone bootstrap CLI
+- `tests/integration/lexer_*.cct` contains the bootstrap lexer integration fixtures
+
+Operational self-hosted workflow:
+
+```bash
+make bootstrap-stage-identity
+make bootstrap-selfhost-ready
+make project-selfhost-build PROJECT=examples/phase30_data_app
+make project-selfhost-run PROJECT=examples/phase30_data_app
+make project-selfhost-test PROJECT=examples/phase30_data_app
+```
+
+Standalone bootstrap CLI example retained for the lexer layer:
+
+```bash
+make cct_lexer_bootstrap
+./cct_lexer_bootstrap tests/integration/codegen_minimal.cct
+```
+
+Operational validation targets:
+- `make test-bootstrap-selfhost` — FASE 29 gate
+- `make test-operational-selfhost` — FASE 30A gate
+- `make test-operational-platform` — FASE 30B-30D gate
+- `make test-phase30-final` — consolidated FASE 30 gate
+- `make test-phase31-final` — promotion/default-wrapper gate
+- `make test-all-0-31` — aggregated end-to-end validation through promotion
+
+## Bootstrap and Promotion Layers
+
+The bootstrap trajectory should now be read in three layers:
+- FASE 29: convergence and identity (`stage0`, `stage1`, `stage2`)
+- FASE 30: operational self-host workflows on top of the converged compiler
+- FASE 31: promotion of the self-hosted compiler to the default user-facing compiler path
+
+That means the bootstrap compiler is no longer only a validation artifact. It is now part of the normal operational toolchain exposed to users.
 
 ## What Is Implemented
 
@@ -295,73 +679,6 @@ The instrumentation is selectable at generation time:
 
 Typical tooltip payloads include the ritual name, statement kind, depth/call metrics, and normalized source excerpt, for example `RITUALE main`, `stmt: RITUALE`, and `source: ...`.
 
-## Project Workflow (Introduced in FASE 12F, Still Current)
-
-Canonical project layout:
-
-```text
-project/
-├── src/main.cct
-├── lib/
-├── tests/*.test.cct
-├── bench/*.bench.cct
-└── cct.toml (optional)
-```
-
-Typical local flow:
-
-```bash
-./cct test --project .
-./cct build --project .
-./cct run --project .
-./cct bench --project . --iterations 5
-./cct clean --project . --all
-./cct doc --project . --format both
-```
-
-Sigilo-focused local workflows (FASE 13B.1):
-- minimal daily loop and strict pre-merge loop are consolidated in `docs/sigilo_operations_14b2.md`
-- strict baseline gate uses:
-  - `./cct sigilo baseline check <artifact.sigil> --strict --summary`
-  - exit code `2` for blocking drift (`review-required` or `behavioral-risk`)
-
-Sigilo-focused CI profiles (FASE 13B.3):
-- profiles:
-  - `advisory`: informative; blocks only `behavioral-risk` unless explicit override
-  - `gated`: blocks `review-required` and `behavioral-risk`
-  - `release`: strict profile; requires baseline and blocks `review-required` and `behavioral-risk`
-- commands:
-  - `./cct build --project . --sigilo-check --sigilo-ci-profile advisory`
-  - `./cct test --project . --sigilo-check --sigilo-ci-profile gated`
-  - `./cct build --project . --sigilo-check --sigilo-ci-profile release`
-  - `./cct build --project . --sigilo-check --sigilo-ci-profile advisory --sigilo-override-behavioral-risk`
-- operational contract reference: `docs/sigilo_operations_14b2.md`
-
-Sigilo operational observability (FASE 13B.4):
-- report signature: `format=cct.sigilo.report.v1`
-- default output is summary-oriented and script-safe
-- detailed output (`--sigilo-report detailed`) adds per-item `domain`, `before`, and `after`
-- explain output (`--sigilo-explain`) adds probable cause + recommended action + troubleshooting doc reference
-- troubleshooting playbook: `docs/sigilo_troubleshooting_13b4.md`
-
-Sigilo consumer compatibility (FASE 13C.3):
-- profiles:
-  - `legacy-tolerant`: maximum compatibility for legacy readers
-  - `current-default`: canonical default profile in FASE 13 tooling
-  - `strict-contract`: blocking contract enforcement (`--strict` alias)
-- migration and fallback behavior is covered in current operational guidance and validator profile docs
-
-Sigilo strict/tolerant validation (FASE 13C.4):
-- canonical validator command: `./cct sigilo validate <artifact.sigil> [--strict] [--consumer-profile ...]`
-- tolerant profiles keep compatibility-first behavior with warning classification
-- strict-contract profile blocks contractual violations for release gates
-
-FASE 13 release package (FASE 13D.4):
-- `docs/release/FASE_13_RELEASE_NOTES.md`
-
-FASE 13M addendum package (FASE 13M.B2):
-- details were consolidated into historical internal release records
-
 ## Common Math Operators (FASE 13M)
 
 Stable additions:
@@ -399,7 +716,7 @@ Current delivery in FASE 11B.1:
 Current delivery in FASE 11B.2:
 - `cct/fmt` formatting and conversion surface
 - canonical stringify for integer/real/float/bool
-- canonical parse façade (`fmt_parse_int`, `fmt_parse_real`, `fmt_parse_bool`)
+- canonical parse facade (`fmt_parse_int`, `fmt_parse_real`, `fmt_parse_bool`)
 - simple formatting composition (`format_pair`)
 
 Current delivery in FASE 11C:
@@ -525,6 +842,15 @@ ADVOCARE "cct/stub_test.cct"
 
 Reference: `docs/bibliotheca_canonica.md`.
 
+## New Canonical Modules Added After the Original Manual Baseline
+
+The application-library maturity work extended the canonical library with:
+- `cct/csv`
+- `cct/https`
+- `cct/orm_lite`
+
+These modules are documented in the language manual and are exercised by the phase-30 operational examples.
+
 ## Canonical Showcases (Introduced in FASE 11G)
 
 Run canonical showcase programs:
@@ -573,316 +899,18 @@ References:
 - `docs/stdlib_stability_matrix_11h.md`
 - `docs/release/FASE_11_RELEASE_NOTES.md`
 
-## Quick Examples
-
-Tokenize:
-
-```bash
-./cct --tokens examples/hello.cct
-```
-
-Semantic check:
-
-```bash
-./cct --check examples/hello.cct
-```
-
-Compile and run:
-
-```bash
-./cct examples/hello.cct
-./examples/hello
-```
-
-Sigil-only (system + local in essential mode):
-
-```bash
-./cct --sigilo-only --sigilo-mode essencial tests/integration/sigilo_final_modular_entry.cct
-```
-
 ## Repository Layout
 
 - `src/`: compiler implementation
   - `lexer/`, `parser/`, `semantic/`, `codegen/`, `sigilo/`, `module/`, `runtime/`, `cli/`, `common/`
 - `tests/`: integration and phase regression suite
 - `examples/`: language examples
-- `docs/`: specification, architecture, and roadmap
+- `docs/`: specification, architecture, roadmap, release records, and operational guides
+- `docs/bootstrap/`: bootstrap handoff and promotion-specific dossiers
 - `FASE_*_CCT.md`: phase planning/execution documents
-
-## Release Documentation Packages
-
-The current project baseline is **FASE 30 completed**. Historical and bootstrap-era release packages remain available for traceability, migration references, and operational handoff.
-
-**Current-phase release documentation:**
-- `docs/release/FASE_30_RELEASE_NOTES.md` — operational self-hosted platform closure summary
-- `docs/release/FASE_29_RELEASE_NOTES.md` — self-hosting convergence and stage-identity closure summary
-- `docs/release/FASE_28_RELEASE_NOTES.md` — advanced bootstrap codegen closure summary
-- `docs/release/FASE_27_RELEASE_NOTES.md` — structural codegen (`SIGILLUM`, `ORDO`, `ELIGE`) closure summary
-- `docs/release/FASE_26_RELEASE_NOTES.md` — bootstrap codegen foundation closure summary
-- `docs/release/FASE_25_RELEASE_NOTES.md` — bootstrap generic semantic closure summary
-- `docs/release/FASE_24_RELEASE_NOTES.md` — bootstrap semantic core closure summary
-- `docs/release/FASE_23_RELEASE_NOTES.md` — advanced bootstrap parser closure summary
-- `docs/release/FASE_22_RELEASE_NOTES.md` — bootstrap parser-core closure summary
-- `docs/release/FASE_21_RELEASE_NOTES.md` — bootstrap foundations and lexer closure summary
-
-**Historical package documentation:**
-- `docs/release/FASE_18_RELEASE_NOTES.md` — FASE 18 canonical-library expansion summary
-- `docs/release/FASE_17_RELEASE_NOTES.md` — FASE 17 canonical-library expansion summary
-- `docs/release/FASE_16_RELEASE_NOTES.md` — FASE 16 freestanding/bridge summary
-- `docs/release/FASE_11_RELEASE_NOTES.md` — Early stdlib/platform release notes
-- `docs/release/FASE_12_RELEASE_NOTES.md` — FASE 12 delivery notes
-- `docs/release/FASE_13_RELEASE_NOTES.md` — Highlights and operational guidance
-- `docs/release/FASE_14_RELEASE_NOTES.md` — Hardening-stream release notes
-- `docs/release/FASE_15_RELEASE_NOTES.md` — FASE 15 semantic/operator closure notes
-- detailed matrices/snapshots from older phases were archived from the public `docs/release` surface
-
-**Quick reference:**
-- FASE 0–20 public contracts remain stable
-- FASE 21–29 closed the bootstrap compiler stack through self-host convergence
-- FASE 30 closed the operational self-host platform baseline
-- `make test-all-0-30` is the authoritative whole-project validation path
-- Zero silent-breaking-change policy remains active
-
-See `docs/roadmap.md` and `docs/spec.md` for current-phase status and language-surface details.
-
-## Documentation
-
-CCT documentation is organized by audience and purpose. Choose your reading path:
-
-### For New Users (Start Here)
-1. This README (you're reading it!)
-2. [Installation Guide](docs/install.md) - Setup and verification
-3. [Spec - Sections 1-3, 12](docs/spec.md) - Basic syntax and examples
-4. [Project Conventions](docs/project_conventions.md) - Code organization
-5. [Examples Catalog](examples/README.md) - Runnable examples including the FASE 20 app stack
-
-**Estimated time**: 1 hour
-
-### For Language Learners
-1. [Language Specification](docs/spec.md) - Complete language reference
-2. [Bibliotheca Canonica](docs/bibliotheca_canonica.md) - Standard library guide
-3. [FLUXUS Usage](docs/fluxus_usage.md) - Dynamic vectors in depth
-4. [Build System](docs/build_system.md) - Project workflow
-5. Explore `examples/showcase_stdlib_*.cct` for real-world patterns
-6. Explore `examples/*_20f2.cct` for JSON/network/HTTP/config/SQLite flows
-
-**Estimated time**: 4-6 hours
-
-### Quick Reference (Keep Handy)
-- [Spec - Sections 1, 4-11](docs/spec.md) - Language reference
-- [Bibliotheca Canonica - Sections 12+](docs/bibliotheca_canonica.md) - Stdlib API
-- [Linter Rules](docs/linter.md) - Lint rule reference
-- [Doc Generator](docs/doc_generator.md) - Doc comment syntax
-
-### For Advanced Users and Contributors
-1. [Architecture](docs/architecture.md) - Compiler internals
-2. [Roadmap](docs/roadmap.md) - Phase history and future plans
-3. [Release Documentation](docs/release/):
-   - [FASE 30 Release Notes](docs/release/FASE_30_RELEASE_NOTES.md) - Operational self-hosted platform closure summary
-   - [FASE 29 Release Notes](docs/release/FASE_29_RELEASE_NOTES.md) - Self-host convergence and identity-validation summary
-   - [FASE 28 Release Notes](docs/release/FASE_28_RELEASE_NOTES.md) - Advanced bootstrap codegen closure summary
-   - [FASE 27 Release Notes](docs/release/FASE_27_RELEASE_NOTES.md) - Structural codegen closure summary
-   - [FASE 26 Release Notes](docs/release/FASE_26_RELEASE_NOTES.md) - Bootstrap codegen foundation summary
-   - [FASE 25 Release Notes](docs/release/FASE_25_RELEASE_NOTES.md) - Bootstrap generic semantic closure summary
-   - [FASE 24 Release Notes](docs/release/FASE_24_RELEASE_NOTES.md) - Bootstrap semantic-core summary
-   - [FASE 23 Release Notes](docs/release/FASE_23_RELEASE_NOTES.md) - Advanced bootstrap parser closure summary
-   - [FASE 22 Release Notes](docs/release/FASE_22_RELEASE_NOTES.md) - Bootstrap parser-core summary
-   - [FASE 21 Release Notes](docs/release/FASE_21_RELEASE_NOTES.md) - Bootstrap lexer/foundation closure summary
-   - [FASE 20 Release Notes](docs/release/FASE_20_RELEASE_NOTES.md) - Application-library stack closure summary
-   - [FASE 19 Release Notes](docs/release/FASE_19_RELEASE_NOTES.md) - FASE 19 language-surface closure summary
-   - [FASE 18 Release Notes](docs/release/FASE_18_RELEASE_NOTES.md) - Canonical-library expansion closure summary
-   - [FASE 17 Release Notes](docs/release/FASE_17_RELEASE_NOTES.md) - Canonical-library expansion highlights
-   - [FASE 16 Release Notes](docs/release/FASE_16_RELEASE_NOTES.md) - Freestanding/bridge trajectory summary
-   - [FASE 15 Release Notes](docs/release/FASE_15_RELEASE_NOTES.md) - Semantic/operator closure summary
-   - [FASE 14 Release Notes](docs/release/FASE_14_RELEASE_NOTES.md) - Hardening-stream highlights
-   - [FASE 13 Release Notes](docs/release/FASE_13_RELEASE_NOTES.md) - Highlights and migration guide
-   - [FASE 12 Release Notes](docs/release/FASE_12_RELEASE_NOTES.md) - FASE 12 delivery summary
-   - [FASE 11 Release Notes](docs/release/FASE_11_RELEASE_NOTES.md) - Early stdlib/platform notes
-
-**Estimated time**: 3-4 hours
-
-### Documentation Philosophy
-- **spec.md**: Authoritative language reference (what is valid CCT)
-- **architecture.md**: How the compiler works internally
-- **bibliotheca_canonica.md**: Standard library concepts and APIs
-- **roadmap.md**: Where we came from, where we're going
-- **release/**: phase release notes and public-facing closure summaries
-
-### All Documentation Files
-Primary docs:
-- `docs/spec.md`
-- `docs/architecture.md`
-- `docs/roadmap.md`
-- `docs/bibliotheca_canonica.md`
-- `docs/release/STATUS_0_30.md` — current cross-phase release status index
-- `docs/release/` — phase release-note archive through FASE 30
-
-Tooling and guides:
-- `docs/install.md`
-- `docs/build_system.md`
-- `docs/project_conventions.md`
-- `docs/testing.md`
-- `docs/self_hosting.md`
-- `docs/fluxus_usage.md`
-- `docs/linter.md`
-- `docs/doc_generator.md`
-- `docs/sigilo_operations_14b2.md`
-
-Project and phase dossiers:
-- `PROJETO_CCT.md`
-- `PROJETO_CCT_V2.md`
-- `md_out/FASE_*_CCT.md` (phase execution plans and records, including the full FASE 19 track)
 
 ## License
 
 MIT License - Copyright (c) 2026 Erick Andrade Busato
 
 See [LICENSE](LICENSE) file for details.
-
-## Extended Validation Matrix (Post-FASE-30)
-
-The historical `make test` path is no longer the only meaningful repository gate. CCT now maintains explicit validation layers:
-
-```bash
-make test
-make test-legacy-full
-make test-legacy-rebased
-make test-all-0-30
-make test-bootstrap
-make test-bootstrap-selfhost
-make test-phase30-final
-```
-
-Meaning:
-- `make test`: current default repository runner
-- `make test-legacy-full`: frozen historical legacy suite for phases 0-20
-- `make test-legacy-rebased`: legacy 0-20 expectations rebased to the current compiler behavior
-- `make test-all-0-30`: authoritative aggregated validation across all implemented phases
-- `make test-bootstrap`: bootstrap compiler phases (`21-28`)
-- `make test-bootstrap-selfhost`: multi-stage self-host convergence (`29`)
-- `make test-phase30-final`: operational self-hosted platform gate (`30`)
-
-For publication, release gating, or major refactors, `make test-all-0-30` is the correct whole-project validation entrypoint.
-
-## Self-Hosted Operational Workflow (Current Baseline)
-
-The compiler is no longer only a host-compiler project. The validated self-host operational path is:
-
-```bash
-make bootstrap-stage0
-make bootstrap-stage1
-make bootstrap-stage2
-make bootstrap-stage-identity
-make bootstrap-selfhost-ready
-make project-selfhost-build PROJECT=examples/phase30_data_app
-make project-selfhost-run PROJECT=examples/phase30_data_app
-make project-selfhost-test PROJECT=examples/phase30_data_app
-make project-selfhost-package PROJECT=examples/phase30_data_app
-```
-
-This path is backed by the phase-29 and phase-30 validation gates and is the basis for future primary-toolchain work.
-
-## New Canonical Modules Added After the Original Manual Baseline
-
-The application-library maturity work extended the canonical library with:
-- `cct/csv`
-- `cct/https`
-- `cct/orm_lite`
-
-These modules are documented in the language manual and are exercised by the phase-30 operational examples.
-
-## Status Update (FASE 31)
-
-FASE 31 is now complete.
-
-Operational consequence of this closure:
-- the repository now documents a promoted self-hosted compiler path in addition to the historical host path
-- `./cct` is the default user-facing entrypoint
-- `./cct-host` is the explicit host fallback entrypoint
-- `./cct-selfhost` is the explicit self-hosted entrypoint
-- `./cct --which-compiler` reports the active compiler mode used by the wrapper
-
-This section updates the practical baseline beyond the earlier FASE 30 snapshot without removing the historical status text above.
-
-## FASE 31: Compiler Modes and Entrypoints
-
-### Compiler Entrypoints
-
-The repository now exposes three compiler-facing entrypoints with different operational roles:
-- `./cct`: the default wrapper users should call in normal workflows
-- `./cct-host`: the preserved host compiler path for fallback, regression comparison, and emergency recovery
-- `./cct-selfhost`: the explicit self-hosted compiler path for direct operational validation
-
-### Inspecting the Active Compiler
-
-Use:
-
-```bash
-./cct --which-compiler
-./cct-host --which-compiler
-./cct-selfhost --which-compiler
-```
-
-Expected interpretation:
-- `./cct --which-compiler` reports the current default wrapper mode (`selfhost` or `host`)
-- `./cct-host --which-compiler` reports `host`
-- `./cct-selfhost --which-compiler` reports `selfhost`
-
-### Promotion and Demotion
-
-The promoted compiler path is controlled explicitly:
-
-```bash
-make bootstrap-promote
-./cct --which-compiler
-
-make bootstrap-demote
-./cct --which-compiler
-```
-
-Operational meaning:
-- `make bootstrap-promote`: activate the self-hosted compiler as the default `./cct` mode
-- `make bootstrap-demote`: switch the default `./cct` mode back to the host compiler
-- `./cct-host` and `./cct-selfhost` remain available regardless of the current default mode
-
-### Daily Workflow Guidance
-
-Recommended daily validation after FASE 31:
-
-```bash
-make bootstrap-stage-identity
-make test
-make test-host-legacy
-```
-
-Recommended release validation:
-
-```bash
-make bootstrap-stage-identity
-make test
-make test-host-legacy
-make test-all-0-31
-make test-phase30-final
-make test-phase31-final
-```
-
-### Current Delegation Boundaries
-
-The promoted self-host path is the default compiler path, but the wrapper still preserves host fallback in selected areas.
-
-Current practical model:
-- direct compile, `--check`, `--ast`, and `--tokens` are part of the promoted compiler contract
-- project commands remain available through `./cct` and `./cct-selfhost`
-- some tooling-oriented flows still reuse host-side implementation layers to preserve CLI continuity and repository stability
-- explicit tooling commands such as `fmt`, `lint`, `doc`, and `--sigilo-only` may still delegate to the host path where the repository has not yet promoted a self-host implementation end to end
-
-This is an intentional compatibility strategy, not an undocumented divergence.
-
-## Bootstrap and Promotion Layers
-
-The bootstrap trajectory should now be read in three layers:
-- FASE 29: convergence and identity (`stage0`, `stage1`, `stage2`)
-- FASE 30: operational self-host workflows on top of the converged compiler
-- FASE 31: promotion of the self-hosted compiler to the default user-facing compiler path
-
-That means the bootstrap compiler is no longer only a validation artifact. It is now part of the normal operational toolchain exposed to users.
