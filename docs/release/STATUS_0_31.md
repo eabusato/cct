@@ -130,14 +130,20 @@ These are tooling features, not compiler features. Wrapper transparently delegat
 
 | Phase Group | Tests | Status |
 |-------------|-------|--------|
-| Legacy (0-10) | ~1,696 | Host: ✅ / Bootstrap: Parity subset |
-| Bootstrap (21-23) | ~1,932 | ✅ 100% (defines bootstrap itself) |
-| Semantic (24-25) | ~2,025 | ✅ 100% (core language) |
-| Codegen (26-28) | ~2,796 | ✅ 100% (code generation) |
-| Self-hosting (29) | ~303 | ✅ 100% (identity validation) |
-| Operational (30) | ~334 | ✅ 100% (workflows) |
+| Legacy core (0-10) | 26 | Host: ✅ via `tests/run_tests_legacy_0_20_rebased.sh` |
+| Library/tooling/application baseline (11-20) | 665 | ✅ rebased legacy runner coverage |
+| Bootstrap (21-23) | 208 | ✅ runner-defined bootstrap foundations + parser coverage |
+| Semantic (24-25) | 126 | ✅ runner-defined semantic coverage |
+| Codegen (26-28) | 152 | ✅ runner-defined codegen coverage |
+| Self-hosting (29) | 12 | ✅ identity validation lane |
+| Operational (30) | 30 | ✅ workflow and platform lane |
 | Promotion (31) | 31 | ✅ 100% (wrapper, parity, workflows) |
-| **Total** | **~9,117+** | ✅ All relevant tests passing |
+| **Total** | **1,250** | ✅ current runner-defined phase coverage |
+
+These counts are taken from the checked-in test runners as they exist today:
+- `tests/run_tests_legacy_0_20_rebased.sh`: 691 test definitions covering phases 0-20
+- `tests/run_tests.sh`: 567 test definitions in the current runner inventory
+- the phase-group totals above remove the duplicated FASE 0 foundation overlap and report the distinct documented phase coverage through FASE 31
 
 ## Known Limitations (Documented)
 
