@@ -1,0 +1,24 @@
+INCIPIT grimoire "verbum_split_join_33a"
+
+ADVOCARE "cct/fluxus.cct"
+ADVOCARE "cct/io.cct"
+ADVOCARE "cct/verbum.cct"
+
+RITUALE main() REDDE REX
+  EVOCA SPECULUM NIHIL parts AD CONIURA split("um::dois::tres", "::")
+  SI CONIURA fluxus_len(parts) != 3
+    CONIURA eprint("split len invalido\n")
+    REDDE 1
+  FIN SI
+
+  EVOCA VERBUM joined AD CONIURA join(parts, "|")
+  SI CONIURA compare(joined, "um|dois|tres") != 0
+    CONIURA eprint("join invalido\n")
+    REDDE 1
+  FIN SI
+
+  CONIURA fluxus_free(parts)
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

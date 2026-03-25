@@ -8447,7 +8447,7 @@ test_pass "public_docs_status_text_assertion_1723 desabilitado"
 fi
 
 fi
-if cct_phase_block_enabled "31" || cct_requested_phase_block "32" "$CCT_TEST_PHASES_NORMALIZED"; then
+if cct_phase_block_enabled "31" || cct_requested_phase_block "32" "$CCT_TEST_PHASES_NORMALIZED" || cct_requested_phase_block "33" "$CCT_TEST_PHASES_NORMALIZED"; then
 echo ""
 echo "========================================"
 echo "FASE 31: Self-Hosted Compiler Promotion"
@@ -9617,6 +9617,142 @@ if [ "$RC_31_READY" -eq 0 ] && make bootstrap-promote >"$PHASE31_LOG_DIR/test_18
     test_pass "./cct promovido executa text_lang source-backed"
 else
     test_fail "./cct promovido nao executou text_lang source-backed corretamente"
+fi
+fi
+
+if cct_phase_block_enabled "33A"; then
+echo ""
+echo "========================================"
+echo "FASE 33A: cct/verbum expansao"
+echo "========================================"
+mkdir -p "$CCT_TMP_DIR/phase33a"
+
+# Test 1836: split/join
+echo "Test 1836: cct/verbum split e join preservam contrato"
+SRC_1836="tests/integration/verbum_split_join_33a.cct"
+BIN_1836="${SRC_1836%.cct}"
+cleanup_codegen_artifacts "$SRC_1836"
+if "$CCT_BIN" "$SRC_1836" >"$CCT_TMP_DIR/phase33a/test_1836_compile.out" 2>&1 && "$BIN_1836" >"$CCT_TMP_DIR/phase33a/test_1836_run.out" 2>&1; then
+    test_pass "cct/verbum split e join preservam contrato"
+else
+    test_fail "cct/verbum regrediu split/join"
+fi
+
+# Test 1837: predicates and counting
+echo "Test 1837: cct/verbum predicados e contagem preservam contrato"
+SRC_1837="tests/integration/verbum_predicates_33a.cct"
+BIN_1837="${SRC_1837%.cct}"
+cleanup_codegen_artifacts "$SRC_1837"
+if "$CCT_BIN" "$SRC_1837" >"$CCT_TMP_DIR/phase33a/test_1837_compile.out" 2>&1 && "$BIN_1837" >"$CCT_TMP_DIR/phase33a/test_1837_run.out" 2>&1; then
+    test_pass "cct/verbum predicados e contagem preservam contrato"
+else
+    test_fail "cct/verbum regrediu predicados/contagem"
+fi
+
+# Test 1838: pad and repeat
+echo "Test 1838: cct/verbum repeat e pad textual preservam contrato"
+SRC_1838="tests/integration/verbum_pad_repeat_33a.cct"
+BIN_1838="${SRC_1838%.cct}"
+cleanup_codegen_artifacts "$SRC_1838"
+if "$CCT_BIN" "$SRC_1838" >"$CCT_TMP_DIR/phase33a/test_1838_compile.out" 2>&1 && "$BIN_1838" >"$CCT_TMP_DIR/phase33a/test_1838_run.out" 2>&1; then
+    test_pass "cct/verbum repeat e pad textual preservam contrato"
+else
+    test_fail "cct/verbum regrediu repeat/pad textual"
+fi
+
+# Test 1839: replace and trim
+echo "Test 1839: cct/verbum replace e trim_chars preservam contrato"
+SRC_1839="tests/integration/verbum_replace_trim_33a.cct"
+BIN_1839="${SRC_1839%.cct}"
+cleanup_codegen_artifacts "$SRC_1839"
+if "$CCT_BIN" "$SRC_1839" >"$CCT_TMP_DIR/phase33a/test_1839_compile.out" 2>&1 && "$BIN_1839" >"$CCT_TMP_DIR/phase33a/test_1839_run.out" 2>&1; then
+    test_pass "cct/verbum replace e trim_chars preservam contrato"
+else
+    test_fail "cct/verbum regrediu replace/trim_chars"
+fi
+
+# Test 1840: regex split handle helper
+echo "Test 1840: cct/verbum split por regex preserva contrato"
+SRC_1840="tests/integration/verbum_regex_split_33a.cct"
+BIN_1840="${SRC_1840%.cct}"
+cleanup_codegen_artifacts "$SRC_1840"
+if "$CCT_BIN" "$SRC_1840" >"$CCT_TMP_DIR/phase33a/test_1840_compile.out" 2>&1 && "$BIN_1840" >"$CCT_TMP_DIR/phase33a/test_1840_run.out" 2>&1; then
+    test_pass "cct/verbum split por regex preserva contrato"
+else
+    test_fail "cct/verbum regrediu split por regex"
+fi
+
+# Test 1841: ascii helpers
+echo "Test 1841: cct/verbum helpers ASCII preservam contrato"
+SRC_1841="tests/integration/verbum_ascii_helpers_33a.cct"
+BIN_1841="${SRC_1841%.cct}"
+cleanup_codegen_artifacts "$SRC_1841"
+if "$CCT_BIN" "$SRC_1841" >"$CCT_TMP_DIR/phase33a/test_1841_compile.out" 2>&1 && "$BIN_1841" >"$CCT_TMP_DIR/phase33a/test_1841_run.out" 2>&1; then
+    test_pass "cct/verbum helpers ASCII preservam contrato"
+else
+    test_fail "cct/verbum regrediu helpers ASCII"
+fi
+fi
+
+if cct_phase_block_enabled "33B"; then
+echo ""
+echo "========================================"
+echo "FASE 33B: cct/lexer_util"
+echo "========================================"
+mkdir -p "$CCT_TMP_DIR/phase33b"
+
+# Test 1842: position tracking
+echo "Test 1842: cct/lexer_util preserva peek e rastreamento de posicao"
+BASE_1842="$CCT_TMP_DIR/phase33b/test_1842_lexer_position"
+if [ "$RC_31_READY" -eq 0 ] && cct_phase32_copy_compile_and_run "$PHASE31_SELFHOST_WRAPPER" "tests/integration/lexer_scanner_position_33b.cct" "$BASE_1842" 0; then
+    test_pass "cct/lexer_util preserva peek e rastreamento de posicao"
+else
+    test_fail "cct/lexer_util regrediu rastreamento de posicao"
+fi
+
+# Test 1843: expect + remaining
+echo "Test 1843: cct/lexer_util preserva expect e remaining"
+BASE_1843="$CCT_TMP_DIR/phase33b/test_1843_lexer_expect"
+if [ "$RC_31_READY" -eq 0 ] && cct_phase32_copy_compile_and_run "$PHASE31_SELFHOST_WRAPPER" "tests/integration/lexer_expect_remaining_33b.cct" "$BASE_1843" 0; then
+    test_pass "cct/lexer_util preserva expect e remaining"
+else
+    test_fail "cct/lexer_util regrediu expect/remaining"
+fi
+
+# Test 1844: class consumption
+echo "Test 1844: cct/lexer_util consome classes ASCII canonicas"
+BASE_1844="$CCT_TMP_DIR/phase33b/test_1844_lexer_classes"
+if [ "$RC_31_READY" -eq 0 ] && cct_phase32_copy_compile_and_run "$PHASE31_SELFHOST_WRAPPER" "tests/integration/lexer_classes_33b.cct" "$BASE_1844" 0; then
+    test_pass "cct/lexer_util consome classes ASCII canonicas"
+else
+    test_fail "cct/lexer_util regrediu consumo por classe"
+fi
+
+# Test 1845: save/restore
+echo "Test 1845: cct/lexer_util preserva save e restore de posicao"
+BASE_1845="$CCT_TMP_DIR/phase33b/test_1845_lexer_mark"
+if [ "$RC_31_READY" -eq 0 ] && cct_phase32_copy_compile_and_run "$PHASE31_SELFHOST_WRAPPER" "tests/integration/lexer_save_restore_33b.cct" "$BASE_1845" 0; then
+    test_pass "cct/lexer_util preserva save e restore de posicao"
+else
+    test_fail "cct/lexer_util regrediu save/restore"
+fi
+
+# Test 1846: error contract
+echo "Test 1846: cct/lexer_util preserva erro de expectativa"
+BASE_1846="$CCT_TMP_DIR/phase33b/test_1846_lexer_error"
+if [ "$RC_31_READY" -eq 0 ] && cct_phase32_copy_compile_and_run "$PHASE31_SELFHOST_WRAPPER" "tests/integration/lexer_error_33b.cct" "$BASE_1846" 0; then
+    test_pass "cct/lexer_util preserva erro de expectativa"
+else
+    test_fail "cct/lexer_util regrediu erro de expectativa"
+fi
+
+# Test 1847: default wrapper / promoted compiler
+echo "Test 1847: ./cct promovido executa lexer_util source-backed"
+BASE_1847="$CCT_TMP_DIR/phase33b/test_1847_default_wrapper_lexer"
+if [ "$RC_31_READY" -eq 0 ] && make bootstrap-promote >"$PHASE31_LOG_DIR/test_1847.stdout.log" 2>"$PHASE31_LOG_DIR/test_1847.stderr.log" && cct_phase32_copy_compile_and_run "$PHASE31_DEFAULT_WRAPPER" "tests/integration/lexer_peek_consume_n_33b.cct" "$BASE_1847" 0; then
+    test_pass "./cct promovido executa lexer_util source-backed"
+else
+    test_fail "./cct promovido nao executou lexer_util source-backed"
 fi
 fi
 

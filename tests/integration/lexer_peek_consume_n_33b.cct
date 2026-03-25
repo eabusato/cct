@@ -1,0 +1,23 @@
+INCIPIT grimoire "lexer_peek_consume_n_33b"
+
+ADVOCARE "cct/lexer_util.cct"
+ADVOCARE "cct/verbum.cct"
+
+RITUALE main() REDDE REX
+  EVOCA Scanner s AD CONIURA scanner_new("abcdef")
+  SI CONIURA compare(CONIURA scanner_peek_n(SPECULUM s, 3), "abc") != 0
+    REDDE 1
+  FIN SI
+
+  SI CONIURA compare(CONIURA scanner_consume_n(SPECULUM s, 4), "abcd") != 0
+    REDDE 1
+  FIN SI
+
+  SI CONIURA compare(CONIURA scanner_peek_n(SPECULUM s, 4), "ef") != 0
+    REDDE 1
+  FIN SI
+
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

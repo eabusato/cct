@@ -1,0 +1,24 @@
+INCIPIT grimoire "lexer_save_restore_33b"
+
+ADVOCARE "cct/lexer_util.cct"
+ADVOCARE "cct/verbum.cct"
+
+RITUALE main() REDDE REX
+  EVOCA Scanner s AD CONIURA scanner_new("rota:param")
+  CONIURA scanner_consume_n(SPECULUM s, 4)
+  EVOCA ScannerMark mark AD CONIURA scanner_save_position(SPECULUM s)
+
+  CONIURA scanner_consume_n(SPECULUM s, 3)
+  SI CONIURA compare(CONIURA scanner_remaining(SPECULUM s), "ram") != 0
+    REDDE 1
+  FIN SI
+
+  CONIURA scanner_restore_position(SPECULUM s, mark)
+  SI CONIURA compare(CONIURA scanner_remaining(SPECULUM s), ":param") != 0
+    REDDE 1
+  FIN SI
+
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

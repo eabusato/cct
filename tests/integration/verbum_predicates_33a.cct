@@ -1,0 +1,30 @@
+INCIPIT grimoire "verbum_predicates_33a"
+
+ADVOCARE "cct/io.cct"
+ADVOCARE "cct/verbum.cct"
+
+RITUALE main() REDDE REX
+  SI NON CONIURA starts_with("civitas-core", "civitas")
+    CONIURA eprint("starts_with falhou\n")
+    REDDE 1
+  FIN SI
+
+  SI NON CONIURA ends_with("civitas-core", "core")
+    CONIURA eprint("ends_with falhou\n")
+    REDDE 1
+  FIN SI
+
+  SI CONIURA count_occurrences("aa-bb-aa-cc-aa", "aa") != 3
+    CONIURA eprint("count_occurrences falhou\n")
+    REDDE 1
+  FIN SI
+
+  SI CONIURA verbum_find_from("abc-abc-abc", "abc", 4) != 4
+    CONIURA eprint("verbum_find_from falhou\n")
+    REDDE 1
+  FIN SI
+
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

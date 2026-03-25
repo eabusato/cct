@@ -1,0 +1,26 @@
+INCIPIT grimoire "lexer_expect_remaining_33b"
+
+ADVOCARE "cct/lexer_util.cct"
+ADVOCARE "cct/result.cct"
+ADVOCARE "cct/verbum.cct"
+
+RITUALE main() REDDE REX
+  EVOCA Scanner s AD CONIURA scanner_new("GET /index")
+  EVOCA SPECULUM NIHIL step1 AD CONIURA scanner_expect(SPECULUM s, "GET")
+  SI CONIURA result_is_err GENUS(REX, ScanError)(step1)
+    REDDE 1
+  FIN SI
+
+  EVOCA SPECULUM NIHIL step2 AD CONIURA scanner_expect_char(SPECULUM s, 32)
+  SI CONIURA result_is_err GENUS(REX, ScanError)(step2)
+    REDDE 1
+  FIN SI
+
+  SI CONIURA compare(CONIURA scanner_remaining(SPECULUM s), "/index") != 0
+    REDDE 1
+  FIN SI
+
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

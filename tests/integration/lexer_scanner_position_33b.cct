@@ -1,0 +1,34 @@
+INCIPIT grimoire "lexer_scanner_position_33b"
+
+ADVOCARE "cct/lexer_util.cct"
+ADVOCARE "cct/option.cct"
+ADVOCARE "cct/verbum.cct"
+
+RITUALE main() REDDE REX
+  EVOCA Scanner s AD CONIURA scanner_new("a\nb")
+  EVOCA SPECULUM NIHIL peek0 AD CONIURA scanner_peek(SPECULUM s)
+  SI CONIURA option_is_none GENUS(MILES)(peek0)
+    REDDE 1
+  FIN SI
+  SI CONIURA option_unwrap GENUS(MILES)(peek0) != 97
+    REDDE 1
+  FIN SI
+
+  CONIURA scanner_consume(SPECULUM s)
+  SI s.position != 1 VEL s.line != 1 VEL s.column != 2
+    REDDE 1
+  FIN SI
+
+  CONIURA scanner_consume(SPECULUM s)
+  SI s.position != 2 VEL s.line != 2 VEL s.column != 1
+    REDDE 1
+  FIN SI
+
+  SI CONIURA compare(CONIURA scanner_remaining(SPECULUM s), "b") != 0
+    REDDE 1
+  FIN SI
+
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

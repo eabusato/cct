@@ -1,0 +1,25 @@
+INCIPIT grimoire "verbum_pad_repeat_33a"
+
+ADVOCARE "cct/io.cct"
+ADVOCARE "cct/verbum.cct"
+
+RITUALE main() REDDE REX
+  SI CONIURA compare(CONIURA repeat("ab", 3), "ababab") != 0
+    CONIURA eprint("repeat falhou\n")
+    REDDE 1
+  FIN SI
+
+  SI CONIURA compare(CONIURA verbum_pad_left_text("42", 6, "0"), "000042") != 0
+    CONIURA eprint("pad_left_text falhou\n")
+    REDDE 1
+  FIN SI
+
+  SI CONIURA compare(CONIURA verbum_pad_right_text("id", 7, "xy"), "idxyxyx") != 0
+    CONIURA eprint("pad_right_text falhou\n")
+    REDDE 1
+  FIN SI
+
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

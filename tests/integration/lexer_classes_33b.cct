@@ -1,0 +1,28 @@
+INCIPIT grimoire "lexer_classes_33b"
+
+ADVOCARE "cct/lexer_util.cct"
+ADVOCARE "cct/verbum.cct"
+
+RITUALE main() REDDE REX
+  EVOCA Scanner s AD CONIURA scanner_new("   alpha_12 99")
+  CONIURA scanner_skip_whitespace(SPECULUM s)
+
+  EVOCA VERBUM ident AD CONIURA scanner_consume_while_class(SPECULUM s, Identifier)
+  SI CONIURA compare(ident, "alpha_12") != 0
+    REDDE 1
+  FIN SI
+
+  CONIURA scanner_skip_whitespace(SPECULUM s)
+  EVOCA VERBUM digits AD CONIURA scanner_consume_while_class(SPECULUM s, Digit)
+  SI CONIURA compare(digits, "99") != 0
+    REDDE 1
+  FIN SI
+
+  SI NON CONIURA scanner_is_eof(SPECULUM s)
+    REDDE 1
+  FIN SI
+
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

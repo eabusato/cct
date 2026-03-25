@@ -764,335 +764,342 @@ void* cct_boot_rit_split_char_71(char* s, char c);
 char* cct_boot_rit_join_72(void* parts, char* sep);
 void* cct_boot_rit_lines_73(char* s);
 void* cct_boot_rit_words_74(char* s);
-void* cct_boot_rit_builder_init_75(void);
-void cct_boot_rit_builder_append_76(void* b, char* s);
-void cct_boot_rit_builder_append_char_77(void* b, char c);
-void cct_boot_rit_builder_append_int_78(void* b, long long v);
-void cct_boot_rit_builder_append_bool_79(void* b, int v);
-void cct_boot_rit_builder_append_real_80(void* b, double v);
-char* cct_boot_rit_builder_to_verbum_81(void* b);
-long long cct_boot_rit_builder_len_82(void* b);
-void cct_boot_rit_builder_clear_83(void* b);
-void cct_boot_rit_builder_free_84(void* b);
-void* cct_boot_rit_writer_init_85(void);
-void cct_boot_rit_writer_indent_86(void* w);
-void cct_boot_rit_writer_dedent_87(void* w);
-void cct_boot_rit_writer_write_88(void* w, char* s);
-void cct_boot_rit_writer_writeln_89(void* w, char* s);
-void cct_boot_rit_writer_write_int_90(void* w, long long v);
-void cct_boot_rit_writer_writeln_int_91(void* w, long long v);
-void cct_boot_rit_writer_write_bool_92(void* w, int v);
-char* cct_boot_rit_writer_to_verbum_93(void* w);
-void cct_boot_rit_writer_free_94(void* w);
-char* cct_boot_rit_stringify_int_95(long long n);
-char* cct_boot_rit_stringify_real_96(double x);
-char* cct_boot_rit_stringify_bool_97(int b);
-char* cct_boot_rit_stringify_hex_98(long long n);
-char* cct_boot_rit_format_pair_99(char* label, char* value);
-char* cct_boot_rit_format_1_100(char* tmpl, char* a);
-char* cct_boot_rit_format_2_101(char* tmpl, char* a, char* b);
-char* cct_boot_rit_format_3_102(char* tmpl, char* a, char* b, char* c);
-char* cct_boot_rit_format_4_103(char* tmpl, char* a, char* b, char* c, char* d);
-char* cct_boot_rit_repeat_char_104(char c, long long n);
-long long cct_boot_rit_parse_int_105(char* s);
-double cct_boot_rit_parse_real_106(char* s);
-int cct_boot_rit_parse_bool_107(char* s);
-void* cct_boot_rit_try_int_108(char* s);
-void* cct_boot_rit_try_real_109(char* s);
-void* cct_boot_rit_try_bool_110(char* s);
-long long cct_boot_rit_parse_int_hex_111(char* s);
-void* cct_boot_rit_try_int_hex_112(char* s);
-long long cct_boot_rit_parse_int_radix_113(char* s, long long radix);
-void* cct_boot_rit_try_int_radix_114(char* s, long long radix);
-void* cct_boot_rit_parse_lines_115(char* s);
-void* cct_boot_rit_parse_csv_line_116(char* s);
-void* cct_boot_rit_parse_csv_line_sep_117(char* s, char sep);
-int cct_boot_rit_is_int_118(char* s);
-int cct_boot_rit_is_real_119(char* s);
-void cct_boot_rit_diag_error_120(cct_boot_sig_SourceLocation* loc, char* msg);
-void cct_boot_rit_diag_warn_121(cct_boot_sig_SourceLocation* loc, char* msg);
-char* cct_boot_rit_read_all_122(char* path);
-void cct_boot_rit_write_all_123(char* path, char* content);
-void cct_boot_rit_append_all_124(char* path, char* content);
-void cct_boot_rit_mkdir_125(char* path);
-void cct_boot_rit_mkdir_all_126(char* path);
-void cct_boot_rit_delete_file_127(char* path);
-void cct_boot_rit_delete_dir_128(char* path);
-int cct_boot_rit_is_file_129(char* path);
-int cct_boot_rit_is_dir_130(char* path);
-int cct_boot_rit_exists_131(char* path);
-long long cct_boot_rit_size_132(char* path);
-void* cct_boot_rit_read_lines_133(char* path);
-long long cct_boot_rit_run_134(char* cmd);
-char* cct_boot_rit_run_capture_135(char* cmd);
-char* cct_boot_rit_run_capture_err_136(char* cmd);
-char* cct_boot_rit_run_with_input_137(char* cmd, char* input);
-long long cct_boot_rit_run_env_138(char* cmd, void* env_pairs);
-long long cct_boot_rit_run_timeout_139(char* cmd, long long timeout_ms);
-char* cct_boot_rit_getenv_140(char* name);
-int cct_boot_rit_has_env_141(char* name);
-char* cct_boot_rit_cwd_142(void);
-void* cct_boot_rit_db_open_143(char* path);
-void cct_boot_rit_db_close_144(void* db);
-void cct_boot_rit_db_exec_145(void* db, char* sql);
-char* cct_boot_rit_db_last_error_146(void* db);
-void* cct_boot_rit_db_query_147(void* db, char* sql);
-int cct_boot_rit_rows_next_148(void* rows);
-char* cct_boot_rit_rows_get_text_149(void* rows, long long col);
-long long cct_boot_rit_rows_get_int_150(void* rows, long long col);
-double cct_boot_rit_rows_get_real_151(void* rows, long long col);
-void cct_boot_rit_rows_close_152(void* rows);
-void* cct_boot_rit_db_prepare_153(void* db, char* sql);
-void cct_boot_rit_stmt_bind_text_154(void* stmt, long long idx, char* v);
-void cct_boot_rit_stmt_bind_int_155(void* stmt, long long idx, long long v);
-void cct_boot_rit_stmt_bind_real_156(void* stmt, long long idx, double v);
-int cct_boot_rit_stmt_step_157(void* stmt);
-void cct_boot_rit_stmt_reset_158(void* stmt);
-void cct_boot_rit_stmt_finalize_159(void* stmt);
-void cct_boot_rit_db_begin_160(void* db);
-void cct_boot_rit_db_commit_161(void* db);
-void cct_boot_rit_db_rollback_162(void* db);
-long long cct_boot_rit_db_scalar_int_163(void* db, char* sql);
-char* cct_boot_rit_db_scalar_text_164(void* db, char* sql);
-long long* cct_boot_rit_alloc_165(long long tamanho);
-void cct_boot_rit_free_166(long long* ptr);
-long long* cct_boot_rit_realloc_167(long long* ptr, long long novo_tamanho);
-void cct_boot_rit_copy_168(long long* dest, long long* src, long long tamanho);
-void cct_boot_rit_set_169(long long* ptr, long long valor, long long tamanho);
-void cct_boot_rit_zero_170(long long* ptr, long long tamanho);
-long long cct_boot_rit_mem_compare_171(long long* a, long long* b, long long tamanho);
-void* cct_boot_rit_fluxus_init_172(long long elem_size);
-void cct_boot_rit_fluxus_free_173(void* flux);
-void cct_boot_rit_fluxus_push_174(void* flux, void* elem);
-void cct_boot_rit_fluxus_pop_175(void* flux, void* out);
-long long cct_boot_rit_fluxus_len_176(void* flux);
-void* cct_boot_rit_fluxus_get_177(void* flux, long long idx);
-void cct_boot_rit_fluxus_clear_178(void* flux);
-void cct_boot_rit_fluxus_reserve_179(void* flux, long long cap);
-long long cct_boot_rit_fluxus_capacity_180(void* flux);
-void* cct_boot_rit_fluxus_peek_181(void* flux);
-void cct_boot_rit_fluxus_set_182(void* flux, long long idx, void* elem);
-void cct_boot_rit_fluxus_remove_183(void* flux, long long idx);
-void cct_boot_rit_fluxus_insert_184(void* flux, long long idx, void* elem);
-int cct_boot_rit_fluxus_contains_185(void* flux, void* elem);
-int cct_boot_rit_fluxus_is_empty_186(void* flux);
-void cct_boot_rit_fluxus_reverse_187(void* flux);
-void cct_boot_rit_fluxus_sort_int_188(void* flux);
-void cct_boot_rit_fluxus_sort_verbum_189(void* flux);
-void* cct_boot_rit_fluxus_to_ptr_190(void* flux);
-double cct_boot_rit_sqrt_real_191(double x);
-double cct_boot_rit_cbrt_real_192(double x);
-double cct_boot_rit_pow_real_193(double base, double exp);
-double cct_boot_rit_abs_real_194(double x);
-long long cct_boot_rit_floor_real_195(double x);
-long long cct_boot_rit_ceil_real_196(double x);
-long long cct_boot_rit_round_real_197(double x);
-double cct_boot_rit_sin_real_198(double x);
-double cct_boot_rit_cos_real_199(double x);
-double cct_boot_rit_tan_real_200(double x);
-double cct_boot_rit_log_real_201(double x);
-double cct_boot_rit_exp_real_202(double x);
-void* cct_boot_rit_ast_heap_alloc_203(long long bytes);
-void cct_boot_rit_ast_heap_zero_204(void* ptr, long long bytes);
-void cct_boot_rit_ast_heap_free_205(void* ptr);
-void cct_boot_rit_ast_heap_copy_206(void* dest, void* src, long long bytes);
-void* cct_boot_rit_ast_node_list_new_207(void);
-void cct_boot_rit_ast_node_list_push_208(void* list, cct_boot_sig_AstNode* node);
-long long cct_boot_rit_ast_node_list_len_209(void* list);
-cct_boot_sig_AstNode* cct_boot_rit_ast_node_list_get_210(void* list, long long idx);
-cct_boot_sig_AstNode* cct_boot_rit_ast_node_new_211(cct_boot_ord_AstKind kind, long long line, long long column);
-cct_boot_sig_AstProgram* cct_boot_rit_ast_program_new_212(void);
-void cct_boot_rit_ast_node_set_name_213(cct_boot_sig_AstNode* node, char* name);
-void cct_boot_rit_ast_node_set_value_text_214(cct_boot_sig_AstNode* node, char* value_text);
-void cct_boot_rit_ast_node_set_type_name_215(cct_boot_sig_AstNode* node, char* type_name);
-void cct_boot_rit_ast_node_set_aux_name_216(cct_boot_sig_AstNode* node, char* aux_name);
-void cct_boot_rit_ast_node_set_fmt_spec_217(cct_boot_sig_AstNode* node, char* fmt_spec);
-void cct_boot_rit_ast_program_set_name_218(cct_boot_sig_AstProgram* program, char* name);
-void cct_boot_rit_ast_program_append_decl_219(cct_boot_sig_AstProgram* program, cct_boot_sig_AstNode* decl);
-void cct_boot_rit_ast_append_child_220(cct_boot_sig_AstNode* node, cct_boot_sig_AstNode* child);
-void cct_boot_rit_ast_append_case_221(cct_boot_sig_AstNode* node, cct_boot_sig_AstNode* case_node);
-void cct_boot_rit_ast_append_binding_222(cct_boot_sig_AstNode* node, cct_boot_sig_AstNode* binding);
-void cct_boot_rit_ast_append_type_param_223(cct_boot_sig_AstNode* node, cct_boot_sig_AstNode* param);
-void cct_boot_rit_ast_append_generic_arg_224(cct_boot_sig_AstNode* node, cct_boot_sig_AstNode* arg);
-void cct_boot_rit_ast_append_param_225(cct_boot_sig_AstNode* node, cct_boot_sig_AstNode* param);
-void cct_boot_rit_ast_append_field_226(cct_boot_sig_AstNode* node, cct_boot_sig_AstNode* field);
-void cct_boot_rit_ast_append_item_227(cct_boot_sig_AstNode* node, cct_boot_sig_AstNode* item);
-void cct_boot_rit_ast_append_argument_228(cct_boot_sig_AstNode* node, cct_boot_sig_AstNode* argument);
-void cct_boot_rit_ast_append_declaration_229(cct_boot_sig_AstNode* node, cct_boot_sig_AstNode* decl);
-void cct_boot_rit_ast_append_signature_230(cct_boot_sig_AstNode* node, cct_boot_sig_AstNode* sig);
-void cct_boot_rit_ast_append_statement_231(cct_boot_sig_AstNode* node, cct_boot_sig_AstNode* stmt);
-cct_boot_sig_AstNode* cct_boot_rit_ast_make_import_232(char* path, long long line, long long column);
-cct_boot_sig_AstNode* cct_boot_rit_ast_make_type_233(char* name, long long line, long long column);
-void cct_boot_rit_ast_type_mark_pointer_234(cct_boot_sig_AstNode* node);
-void cct_boot_rit_ast_type_mark_array_235(cct_boot_sig_AstNode* node, long long array_size);
-void cct_boot_rit_ast_type_set_element_236(cct_boot_sig_AstNode* node, cct_boot_sig_AstNode* element_type);
-cct_boot_sig_AstNode* cct_boot_rit_ast_make_literal_int_237(char* text, long long line, long long column);
-cct_boot_sig_AstNode* cct_boot_rit_ast_make_literal_real_238(char* text, long long line, long long column);
-cct_boot_sig_AstNode* cct_boot_rit_ast_make_literal_string_239(char* text, long long line, long long column);
-cct_boot_sig_AstNode* cct_boot_rit_ast_make_literal_bool_240(int value, long long line, long long column);
-cct_boot_sig_AstNode* cct_boot_rit_ast_make_literal_nihil_241(long long line, long long column);
-cct_boot_sig_AstNode* cct_boot_rit_ast_make_identifier_242(char* name, long long line, long long column);
-cct_boot_sig_AstNode* cct_boot_rit_ast_make_binary_243(cct_boot_ord_TokenKind operator_kind, cct_boot_sig_AstNode* left, cct_boot_sig_AstNode* right, long long line, long long column);
-cct_boot_sig_AstNode* cct_boot_rit_ast_make_unary_244(cct_boot_ord_TokenKind operator_kind, cct_boot_sig_AstNode* operand, long long line, long long column);
-cct_boot_sig_AstNode* cct_boot_rit_ast_make_call_245(cct_boot_sig_AstNode* callee, long long line, long long column);
-cct_boot_sig_AstNode* cct_boot_rit_ast_make_obsecro_call_246(cct_boot_sig_AstNode* callee, long long line, long long column);
-cct_boot_sig_AstNode* cct_boot_rit_ast_make_field_access_247(cct_boot_sig_AstNode* object, char* field_name, long long line, long long column);
-cct_boot_sig_AstNode* cct_boot_rit_ast_make_index_access_248(cct_boot_sig_AstNode* object, cct_boot_sig_AstNode* index, long long line, long long column);
-cct_boot_sig_AstNode* cct_boot_rit_ast_make_expr_stmt_249(cct_boot_sig_AstNode* expr, long long line, long long column);
-cct_boot_sig_AstNode* cct_boot_rit_ast_make_molde_250(long long line, long long column);
-cct_boot_sig_AstNode* cct_boot_rit_ast_make_mensura_251(cct_boot_sig_AstNode* type_expr, long long line, long long column);
-cct_boot_sig_AstNode* cct_boot_rit_ast_make_redde_252(cct_boot_sig_AstNode* expr, long long line, long long column);
-cct_boot_sig_AstNode* cct_boot_rit_ast_make_redde_empty_253(long long line, long long column);
-cct_boot_sig_AstNode* cct_boot_rit_ast_make_anur_254(cct_boot_sig_AstNode* expr, long long line, long long column);
-cct_boot_sig_AstNode* cct_boot_rit_ast_make_anur_empty_255(long long line, long long column);
-cct_boot_sig_AstNode* cct_boot_rit_ast_make_iace_256(cct_boot_sig_AstNode* expr, long long line, long long column);
-cct_boot_sig_AstNode* cct_boot_rit_ast_make_dimitte_257(cct_boot_sig_AstNode* target, long long line, long long column);
-cct_boot_sig_AstNode* cct_boot_rit_ast_make_block_258(long long line, long long column);
-cct_boot_sig_AstNode* cct_boot_rit_ast_make_case_259(long long line, long long column);
-cct_boot_sig_AstNode* cct_boot_rit_ast_make_param_260(char* name, cct_boot_sig_AstNode* type_expr, long long line, long long column);
-cct_boot_sig_AstNode* cct_boot_rit_ast_make_type_param_no_constraint_261(char* name, long long line, long long column);
-cct_boot_sig_AstNode* cct_boot_rit_ast_make_type_param_262(char* name, cct_boot_sig_AstNode* constraint_type, long long line, long long column);
-cct_boot_sig_AstNode* cct_boot_rit_ast_make_field_263(char* name, cct_boot_sig_AstNode* type_expr, long long line, long long column);
-cct_boot_sig_AstNode* cct_boot_rit_ast_make_enum_item_264(char* name, cct_boot_sig_AstNode* value, long long line, long long column);
-cct_boot_sig_AstNode* cct_boot_rit_ast_make_enum_item_no_value_265(char* name, long long line, long long column);
-cct_boot_sig_AstNode* cct_boot_rit_ast_make_rituale_266(char* name, cct_boot_sig_AstNode* return_type, cct_boot_sig_AstNode* body, long long line, long long column);
-cct_boot_sig_AstNode* cct_boot_rit_ast_make_rituale_decl_267(char* name, long long line, long long column);
-cct_boot_sig_AstNode* cct_boot_rit_ast_make_sigillum_268(char* name, long long line, long long column);
-cct_boot_sig_AstNode* cct_boot_rit_ast_make_ordo_269(char* name, long long line, long long column);
-cct_boot_sig_AstNode* cct_boot_rit_ast_make_codex_270(char* name, long long line, long long column);
-cct_boot_sig_AstNode* cct_boot_rit_ast_make_pactum_271(char* name, long long line, long long column);
-cct_boot_sig_AstNode* cct_boot_rit_ast_make_evoca_272(char* name, cct_boot_sig_AstNode* type_expr, cct_boot_sig_AstNode* init_expr, long long line, long long column);
-cct_boot_sig_AstNode* cct_boot_rit_ast_make_evoca_no_init_273(char* name, cct_boot_sig_AstNode* type_expr, long long line, long long column);
-cct_boot_sig_AstNode* cct_boot_rit_ast_make_vincire_274(cct_boot_sig_AstNode* target, cct_boot_sig_AstNode* value, long long line, long long column);
-cct_boot_sig_AstNode* cct_boot_rit_ast_make_si_275(cct_boot_sig_AstNode* condition, cct_boot_sig_AstNode* body, cct_boot_sig_AstNode* else_branch, long long line, long long column);
-cct_boot_sig_AstNode* cct_boot_rit_ast_make_si_no_else_276(cct_boot_sig_AstNode* condition, cct_boot_sig_AstNode* body, long long line, long long column);
-cct_boot_sig_AstNode* cct_boot_rit_ast_make_quando_277(cct_boot_sig_AstNode* expr, long long line, long long column);
-cct_boot_sig_AstNode* cct_boot_rit_ast_make_dum_278(cct_boot_sig_AstNode* condition, cct_boot_sig_AstNode* body, long long line, long long column);
-cct_boot_sig_AstNode* cct_boot_rit_ast_make_donec_279(cct_boot_sig_AstNode* body, cct_boot_sig_AstNode* condition, long long line, long long column);
-cct_boot_sig_AstNode* cct_boot_rit_ast_make_donec_no_condition_280(cct_boot_sig_AstNode* body, long long line, long long column);
-cct_boot_sig_AstNode* cct_boot_rit_ast_make_repete_281(char* iterator_name, cct_boot_sig_AstNode* start_expr, cct_boot_sig_AstNode* end_expr, cct_boot_sig_AstNode* step_expr, cct_boot_sig_AstNode* body, long long line, long long column);
-cct_boot_sig_AstNode* cct_boot_rit_ast_make_repete_no_step_282(char* iterator_name, cct_boot_sig_AstNode* start_expr, cct_boot_sig_AstNode* end_expr, cct_boot_sig_AstNode* body, long long line, long long column);
-cct_boot_sig_AstNode* cct_boot_rit_ast_make_iterum_283(char* item_name, char* value_name, cct_boot_sig_AstNode* collection, cct_boot_sig_AstNode* body, long long line, long long column);
-cct_boot_sig_AstNode* cct_boot_rit_ast_make_frange_284(long long line, long long column);
-cct_boot_sig_AstNode* cct_boot_rit_ast_make_recede_285(long long line, long long column);
-cct_boot_sig_AstNode* cct_boot_rit_ast_make_tempta_no_semper_286(cct_boot_sig_AstNode* try_block, cct_boot_sig_AstNode* cape_type, char* cape_name, cct_boot_sig_AstNode* cape_block, long long line, long long column);
-cct_boot_sig_AstNode* cct_boot_rit_ast_make_tempta_287(cct_boot_sig_AstNode* try_block, cct_boot_sig_AstNode* cape_type, char* cape_name, cct_boot_sig_AstNode* cape_block, cct_boot_sig_AstNode* semper_block, long long line, long long column);
-char* cct_boot_rit_ast_dump_indent_288(long long level);
-char* cct_boot_rit_ast_dump_append_289(char* out, char* text);
-char* cct_boot_rit_ast_dump_append_line_290(char* out, long long level, char* text);
-char* cct_boot_rit_ast_dump_location_291(long long line, long long column);
-char* cct_boot_rit_ast_dump_type_inline_292(cct_boot_sig_AstNode* type_expr);
-char* cct_boot_rit_ast_dump_type_params_293(char* out, long long level, void* list);
-char* cct_boot_rit_ast_dump_value_with_label_294(char* out, long long level, char* label, cct_boot_sig_AstNode* node);
-char* cct_boot_rit_ast_dump_named_type_list_295(char* out, long long level, void* list, char* label);
-char* cct_boot_rit_ast_dump_enum_items_296(char* out, long long level, void* list);
-char* cct_boot_rit_ast_dump_node_list_with_label_297(char* out, long long level, void* list, char* label);
-char* cct_boot_rit_ast_dump_node_298(cct_boot_sig_AstNode* node, long long level, char* out);
-char* cct_boot_rit_ast_dump_program_299(cct_boot_sig_AstProgram* program);
-void cct_boot_rit_ast_list_free_owned_300(void* list);
-void cct_boot_rit_ast_node_free_301(cct_boot_sig_AstNode* node);
-void cct_boot_rit_ast_program_free_302(cct_boot_sig_AstProgram* program);
-cct_boot_ord_TokenKind cct_boot_rit_keyword_lookup_303(char* lexeme);
-cct_boot_sig_LexerState cct_boot_rit_lexer_init_304(char* source, char* filename);
-cct_boot_sig_Token cct_boot_rit_token_make_305(cct_boot_ord_TokenKind kind, char* lexeme, long long line, long long column);
-void cct_boot_rit_token_free_306(cct_boot_sig_Token* tok);
-int cct_boot_rit_lexer_is_at_end_307(cct_boot_sig_LexerState* lex);
-char cct_boot_rit_lexer_peek_308(cct_boot_sig_LexerState* lex);
-char cct_boot_rit_lexer_peek_next_309(cct_boot_sig_LexerState* lex);
-char cct_boot_rit_lexer_advance_310(cct_boot_sig_LexerState* lex);
-int cct_boot_rit_lexer_match_311(cct_boot_sig_LexerState* lex, char expected);
-void cct_boot_rit_lexer_skip_whitespace_312(cct_boot_sig_LexerState* lex);
-void cct_boot_rit_lexer_skip_comment_313(cct_boot_sig_LexerState* lex);
-char* cct_boot_rit_lexer_make_lexeme_314(cct_boot_sig_LexerState* lex);
-cct_boot_sig_Token cct_boot_rit_lexer_make_token_315(cct_boot_sig_LexerState* lex, cct_boot_ord_TokenKind kind);
-cct_boot_sig_Token cct_boot_rit_lexer_error_token_316(cct_boot_sig_LexerState* lex, char* msg);
-cct_boot_sig_Token cct_boot_rit_lexer_error_character_token_317(cct_boot_sig_LexerState* lex, char c);
-cct_boot_sig_Token cct_boot_rit_lexer_identifier_318(cct_boot_sig_LexerState* lex);
-cct_boot_sig_Token cct_boot_rit_lexer_number_319(cct_boot_sig_LexerState* lex);
-cct_boot_sig_Token cct_boot_rit_lexer_string_320(cct_boot_sig_LexerState* lex);
-cct_boot_sig_Token cct_boot_rit_lexer_next_token_321(cct_boot_sig_LexerState* lex);
-cct_boot_sig_Token cct_boot_rit_parser_empty_token_322(void);
-cct_boot_sig_ParserState cct_boot_rit_parser_init_323(cct_boot_sig_LexerState* lexer, char* filename);
-void cct_boot_rit_parser_dispose_324(cct_boot_sig_ParserState* parser);
-void cct_boot_rit_parser_advance_325(cct_boot_sig_ParserState* parser);
-int cct_boot_rit_parser_check_326(cct_boot_sig_ParserState* parser, cct_boot_ord_TokenKind kind);
-int cct_boot_rit_parser_match_327(cct_boot_sig_ParserState* parser, cct_boot_ord_TokenKind kind);
-void cct_boot_rit_parser_emit_error_328(cct_boot_sig_ParserState* parser, long long line, long long column, char* message);
-void cct_boot_rit_parser_error_at_current_329(cct_boot_sig_ParserState* parser, char* message);
-void cct_boot_rit_parser_error_at_previous_330(cct_boot_sig_ParserState* parser, char* message);
-int cct_boot_rit_parser_consume_331(cct_boot_sig_ParserState* parser, cct_boot_ord_TokenKind kind, char* message);
-int cct_boot_rit_parser_is_declaration_start_332(cct_boot_ord_TokenKind kind);
-int cct_boot_rit_parser_is_statement_start_333(cct_boot_ord_TokenKind kind);
-void cct_boot_rit_parser_synchronize_statement_334(cct_boot_sig_ParserState* parser);
-void cct_boot_rit_parser_synchronize_declaration_335(cct_boot_sig_ParserState* parser);
-int cct_boot_rit_parser_is_assignment_target_336(cct_boot_sig_AstNode* node);
-cct_boot_sig_AstNode* cct_boot_rit_parse_expression_337(cct_boot_sig_ParserState* parser);
-int cct_boot_rit_parse_expr_is_simple_type_token_338(cct_boot_ord_TokenKind kind);
-cct_boot_sig_AstNode* cct_boot_rit_parse_expr_generic_type_339(cct_boot_sig_ParserState* parser);
-void cct_boot_rit_parse_postfix_generic_args_340(cct_boot_sig_ParserState* parser, cct_boot_sig_AstNode* expr);
-char* cct_boot_rit_parse_forma_unquote_341(char* raw_text);
-void cct_boot_rit_parse_forma_flush_literal_342(cct_boot_sig_AstNode* molde, void* literal_builder, long long line, long long column);
-cct_boot_sig_AstNode* cct_boot_rit_parse_forma_expression_343(cct_boot_sig_ParserState* parser);
-cct_boot_sig_AstNode* cct_boot_rit_parse_primary_344(cct_boot_sig_ParserState* parser);
-cct_boot_sig_AstNode* cct_boot_rit_parse_postfix_suffixes_345(cct_boot_sig_ParserState* parser, cct_boot_sig_AstNode* expr);
-cct_boot_sig_AstNode* cct_boot_rit_parse_postfix_346(cct_boot_sig_ParserState* parser);
-cct_boot_sig_AstNode* cct_boot_rit_parse_unary_347(cct_boot_sig_ParserState* parser);
-cct_boot_sig_AstNode* cct_boot_rit_parse_power_348(cct_boot_sig_ParserState* parser);
-cct_boot_sig_AstNode* cct_boot_rit_parse_multiplicative_349(cct_boot_sig_ParserState* parser);
-cct_boot_sig_AstNode* cct_boot_rit_parse_additive_350(cct_boot_sig_ParserState* parser);
-cct_boot_sig_AstNode* cct_boot_rit_parse_comparison_351(cct_boot_sig_ParserState* parser);
-cct_boot_sig_AstNode* cct_boot_rit_parse_equality_352(cct_boot_sig_ParserState* parser);
-cct_boot_sig_AstNode* cct_boot_rit_parse_logical_and_353(cct_boot_sig_ParserState* parser);
-cct_boot_sig_AstNode* cct_boot_rit_parse_logical_or_354(cct_boot_sig_ParserState* parser);
-cct_boot_sig_AstNode* cct_boot_rit_parse_assignment_355(cct_boot_sig_ParserState* parser);
-cct_boot_sig_AstNode* cct_boot_rit_parser_parse_expression_source_356(char* source, char* filename);
-int cct_boot_rit_parser_is_simple_type_token_357(cct_boot_ord_TokenKind kind);
-void cct_boot_rit_parse_stmt_type_args_358(cct_boot_sig_ParserState* parser, cct_boot_sig_AstNode* type_expr);
-int cct_boot_rit_parser_is_statement_boundary_359(cct_boot_ord_TokenKind kind);
-cct_boot_sig_AstNode* cct_boot_rit_parse_type_simple_360(cct_boot_sig_ParserState* parser);
-cct_boot_sig_AstNode* cct_boot_rit_parse_expression_statement_361(cct_boot_sig_ParserState* parser);
-cct_boot_sig_AstNode* cct_boot_rit_parse_block_362(cct_boot_sig_ParserState* parser);
-cct_boot_sig_AstNode* cct_boot_rit_parse_evoca_statement_363(cct_boot_sig_ParserState* parser);
-cct_boot_sig_AstNode* cct_boot_rit_parse_vincire_statement_364(cct_boot_sig_ParserState* parser);
-cct_boot_sig_AstNode* cct_boot_rit_parse_redde_statement_365(cct_boot_sig_ParserState* parser);
-cct_boot_sig_AstNode* cct_boot_rit_parse_anur_statement_366(cct_boot_sig_ParserState* parser);
-cct_boot_sig_AstNode* cct_boot_rit_parse_iace_statement_367(cct_boot_sig_ParserState* parser);
-cct_boot_sig_AstNode* cct_boot_rit_parse_dimitte_statement_368(cct_boot_sig_ParserState* parser);
-cct_boot_sig_AstNode* cct_boot_rit_parse_frange_statement_369(cct_boot_sig_ParserState* parser);
-cct_boot_sig_AstNode* cct_boot_rit_parse_recede_statement_370(cct_boot_sig_ParserState* parser);
-cct_boot_sig_AstNode* cct_boot_rit_parse_statement_block_until_failure_clause_371(cct_boot_sig_ParserState* parser);
-cct_boot_sig_AstNode* cct_boot_rit_parse_statement_block_until_elige_boundary_372(cct_boot_sig_ParserState* parser);
-cct_boot_sig_AstNode* cct_boot_rit_parse_elige_literal_373(cct_boot_sig_ParserState* parser);
-cct_boot_sig_AstNode* cct_boot_rit_parse_tempta_statement_374(cct_boot_sig_ParserState* parser);
-cct_boot_sig_AstNode* cct_boot_rit_parse_elige_statement_375(cct_boot_sig_ParserState* parser);
-cct_boot_sig_AstNode* cct_boot_rit_parse_inline_statement_block_until_376(cct_boot_sig_ParserState* parser, cct_boot_ord_TokenKind terminator, int stop_on_aliter);
-cct_boot_sig_AstNode* cct_boot_rit_parse_si_statement_377(cct_boot_sig_ParserState* parser);
-cct_boot_sig_AstNode* cct_boot_rit_parse_dum_statement_378(cct_boot_sig_ParserState* parser);
-cct_boot_sig_AstNode* cct_boot_rit_parse_donec_body_379(cct_boot_sig_ParserState* parser);
-cct_boot_sig_AstNode* cct_boot_rit_parse_donec_statement_380(cct_boot_sig_ParserState* parser);
-cct_boot_sig_AstNode* cct_boot_rit_parse_repete_statement_381(cct_boot_sig_ParserState* parser);
-cct_boot_sig_AstNode* cct_boot_rit_parse_iterum_statement_382(cct_boot_sig_ParserState* parser);
-cct_boot_sig_AstNode* cct_boot_rit_parse_statement_383(cct_boot_sig_ParserState* parser);
-cct_boot_sig_AstNode* cct_boot_rit_parser_parse_statement_source_384(char* source, char* filename);
-cct_boot_sig_AstNode* cct_boot_rit_parse_type_385(cct_boot_sig_ParserState* parser);
-void cct_boot_rit_parse_optional_generic_type_args_386(cct_boot_sig_ParserState* parser, cct_boot_sig_AstNode* type_expr);
-int cct_boot_rit_parse_type_param_exists_387(void* list, char* name);
-void cct_boot_rit_parse_optional_type_params_388(cct_boot_sig_ParserState* parser, cct_boot_sig_AstNode* owner, int allow_constraint);
-void cct_boot_rit_parse_param_list_389(cct_boot_sig_ParserState* parser, cct_boot_sig_AstNode* rituale);
-cct_boot_sig_AstNode* cct_boot_rit_parse_import_declaration_390(cct_boot_sig_ParserState* parser);
-cct_boot_sig_AstNode* cct_boot_rit_parse_rituale_body_until_explicit_391(cct_boot_sig_ParserState* parser);
-cct_boot_sig_AstNode* cct_boot_rit_parse_rituale_signature_only_392(cct_boot_sig_ParserState* parser, char* name, long long line, long long column);
-cct_boot_sig_AstNode* cct_boot_rit_parse_rituale_declaration_393(cct_boot_sig_ParserState* parser);
-cct_boot_sig_AstNode* cct_boot_rit_parse_sigillum_declaration_394(cct_boot_sig_ParserState* parser);
-cct_boot_sig_AstNode* cct_boot_rit_parse_ordo_payload_field_395(cct_boot_sig_ParserState* parser);
-cct_boot_sig_AstNode* cct_boot_rit_parse_ordo_declaration_396(cct_boot_sig_ParserState* parser);
-cct_boot_sig_AstNode* cct_boot_rit_parse_codex_declaration_397(cct_boot_sig_ParserState* parser);
-cct_boot_sig_AstNode* cct_boot_rit_parse_pactum_declaration_398(cct_boot_sig_ParserState* parser);
-cct_boot_sig_AstNode* cct_boot_rit_parse_declaration_399(cct_boot_sig_ParserState* parser);
-cct_boot_sig_AstProgram* cct_boot_rit_parse_program_400(cct_boot_sig_ParserState* parser);
-cct_boot_sig_AstProgram* cct_boot_rit_parser_parse_program_source_401(char* source, char* filename);
-char* cct_boot_rit_parser_dump_program_source_402(char* source, char* filename);
-long long cct_boot_rit_main_403(void);
+long long cct_boot_rit_verbum_length_75(char* s);
+long long cct_boot_rit_verbum_find_from_76(char* s, char* sub, long long offset);
+void* cct_boot_rit_verbum_split_regex_77(char* s, void* regex_handle);
+char* cct_boot_rit_verbum_trim_chars_78(char* s, char* chars);
+char* cct_boot_rit_verbum_pad_left_text_79(char* s, long long width, char* fill);
+char* cct_boot_rit_verbum_pad_right_text_80(char* s, long long width, char* fill);
+char* cct_boot_rit_verbum_ascii_only_81(char* s);
+void* cct_boot_rit_builder_init_82(void);
+void cct_boot_rit_builder_append_83(void* b, char* s);
+void cct_boot_rit_builder_append_char_84(void* b, char c);
+void cct_boot_rit_builder_append_int_85(void* b, long long v);
+void cct_boot_rit_builder_append_bool_86(void* b, int v);
+void cct_boot_rit_builder_append_real_87(void* b, double v);
+char* cct_boot_rit_builder_to_verbum_88(void* b);
+long long cct_boot_rit_builder_len_89(void* b);
+void cct_boot_rit_builder_clear_90(void* b);
+void cct_boot_rit_builder_free_91(void* b);
+void* cct_boot_rit_writer_init_92(void);
+void cct_boot_rit_writer_indent_93(void* w);
+void cct_boot_rit_writer_dedent_94(void* w);
+void cct_boot_rit_writer_write_95(void* w, char* s);
+void cct_boot_rit_writer_writeln_96(void* w, char* s);
+void cct_boot_rit_writer_write_int_97(void* w, long long v);
+void cct_boot_rit_writer_writeln_int_98(void* w, long long v);
+void cct_boot_rit_writer_write_bool_99(void* w, int v);
+char* cct_boot_rit_writer_to_verbum_100(void* w);
+void cct_boot_rit_writer_free_101(void* w);
+char* cct_boot_rit_stringify_int_102(long long n);
+char* cct_boot_rit_stringify_real_103(double x);
+char* cct_boot_rit_stringify_bool_104(int b);
+char* cct_boot_rit_stringify_hex_105(long long n);
+char* cct_boot_rit_format_pair_106(char* label, char* value);
+char* cct_boot_rit_format_1_107(char* tmpl, char* a);
+char* cct_boot_rit_format_2_108(char* tmpl, char* a, char* b);
+char* cct_boot_rit_format_3_109(char* tmpl, char* a, char* b, char* c);
+char* cct_boot_rit_format_4_110(char* tmpl, char* a, char* b, char* c, char* d);
+char* cct_boot_rit_repeat_char_111(char c, long long n);
+long long cct_boot_rit_parse_int_112(char* s);
+double cct_boot_rit_parse_real_113(char* s);
+int cct_boot_rit_parse_bool_114(char* s);
+void* cct_boot_rit_try_int_115(char* s);
+void* cct_boot_rit_try_real_116(char* s);
+void* cct_boot_rit_try_bool_117(char* s);
+long long cct_boot_rit_parse_int_hex_118(char* s);
+void* cct_boot_rit_try_int_hex_119(char* s);
+long long cct_boot_rit_parse_int_radix_120(char* s, long long radix);
+void* cct_boot_rit_try_int_radix_121(char* s, long long radix);
+void* cct_boot_rit_parse_lines_122(char* s);
+void* cct_boot_rit_parse_csv_line_123(char* s);
+void* cct_boot_rit_parse_csv_line_sep_124(char* s, char sep);
+int cct_boot_rit_is_int_125(char* s);
+int cct_boot_rit_is_real_126(char* s);
+void cct_boot_rit_diag_error_127(cct_boot_sig_SourceLocation* loc, char* msg);
+void cct_boot_rit_diag_warn_128(cct_boot_sig_SourceLocation* loc, char* msg);
+char* cct_boot_rit_read_all_129(char* path);
+void cct_boot_rit_write_all_130(char* path, char* content);
+void cct_boot_rit_append_all_131(char* path, char* content);
+void cct_boot_rit_mkdir_132(char* path);
+void cct_boot_rit_mkdir_all_133(char* path);
+void cct_boot_rit_delete_file_134(char* path);
+void cct_boot_rit_delete_dir_135(char* path);
+int cct_boot_rit_is_file_136(char* path);
+int cct_boot_rit_is_dir_137(char* path);
+int cct_boot_rit_exists_138(char* path);
+long long cct_boot_rit_size_139(char* path);
+void* cct_boot_rit_read_lines_140(char* path);
+long long cct_boot_rit_run_141(char* cmd);
+char* cct_boot_rit_run_capture_142(char* cmd);
+char* cct_boot_rit_run_capture_err_143(char* cmd);
+char* cct_boot_rit_run_with_input_144(char* cmd, char* input);
+long long cct_boot_rit_run_env_145(char* cmd, void* env_pairs);
+long long cct_boot_rit_run_timeout_146(char* cmd, long long timeout_ms);
+char* cct_boot_rit_getenv_147(char* name);
+int cct_boot_rit_has_env_148(char* name);
+char* cct_boot_rit_cwd_149(void);
+void* cct_boot_rit_db_open_150(char* path);
+void cct_boot_rit_db_close_151(void* db);
+void cct_boot_rit_db_exec_152(void* db, char* sql);
+char* cct_boot_rit_db_last_error_153(void* db);
+void* cct_boot_rit_db_query_154(void* db, char* sql);
+int cct_boot_rit_rows_next_155(void* rows);
+char* cct_boot_rit_rows_get_text_156(void* rows, long long col);
+long long cct_boot_rit_rows_get_int_157(void* rows, long long col);
+double cct_boot_rit_rows_get_real_158(void* rows, long long col);
+void cct_boot_rit_rows_close_159(void* rows);
+void* cct_boot_rit_db_prepare_160(void* db, char* sql);
+void cct_boot_rit_stmt_bind_text_161(void* stmt, long long idx, char* v);
+void cct_boot_rit_stmt_bind_int_162(void* stmt, long long idx, long long v);
+void cct_boot_rit_stmt_bind_real_163(void* stmt, long long idx, double v);
+int cct_boot_rit_stmt_step_164(void* stmt);
+void cct_boot_rit_stmt_reset_165(void* stmt);
+void cct_boot_rit_stmt_finalize_166(void* stmt);
+void cct_boot_rit_db_begin_167(void* db);
+void cct_boot_rit_db_commit_168(void* db);
+void cct_boot_rit_db_rollback_169(void* db);
+long long cct_boot_rit_db_scalar_int_170(void* db, char* sql);
+char* cct_boot_rit_db_scalar_text_171(void* db, char* sql);
+long long* cct_boot_rit_alloc_172(long long tamanho);
+void cct_boot_rit_free_173(long long* ptr);
+long long* cct_boot_rit_realloc_174(long long* ptr, long long novo_tamanho);
+void cct_boot_rit_copy_175(long long* dest, long long* src, long long tamanho);
+void cct_boot_rit_set_176(long long* ptr, long long valor, long long tamanho);
+void cct_boot_rit_zero_177(long long* ptr, long long tamanho);
+long long cct_boot_rit_mem_compare_178(long long* a, long long* b, long long tamanho);
+void* cct_boot_rit_fluxus_init_179(long long elem_size);
+void cct_boot_rit_fluxus_free_180(void* flux);
+void cct_boot_rit_fluxus_push_181(void* flux, void* elem);
+void cct_boot_rit_fluxus_pop_182(void* flux, void* out);
+long long cct_boot_rit_fluxus_len_183(void* flux);
+void* cct_boot_rit_fluxus_get_184(void* flux, long long idx);
+void cct_boot_rit_fluxus_clear_185(void* flux);
+void cct_boot_rit_fluxus_reserve_186(void* flux, long long cap);
+long long cct_boot_rit_fluxus_capacity_187(void* flux);
+void* cct_boot_rit_fluxus_peek_188(void* flux);
+void cct_boot_rit_fluxus_set_189(void* flux, long long idx, void* elem);
+void cct_boot_rit_fluxus_remove_190(void* flux, long long idx);
+void cct_boot_rit_fluxus_insert_191(void* flux, long long idx, void* elem);
+int cct_boot_rit_fluxus_contains_192(void* flux, void* elem);
+int cct_boot_rit_fluxus_is_empty_193(void* flux);
+void cct_boot_rit_fluxus_reverse_194(void* flux);
+void cct_boot_rit_fluxus_sort_int_195(void* flux);
+void cct_boot_rit_fluxus_sort_verbum_196(void* flux);
+void* cct_boot_rit_fluxus_to_ptr_197(void* flux);
+double cct_boot_rit_sqrt_real_198(double x);
+double cct_boot_rit_cbrt_real_199(double x);
+double cct_boot_rit_pow_real_200(double base, double exp);
+double cct_boot_rit_abs_real_201(double x);
+long long cct_boot_rit_floor_real_202(double x);
+long long cct_boot_rit_ceil_real_203(double x);
+long long cct_boot_rit_round_real_204(double x);
+double cct_boot_rit_sin_real_205(double x);
+double cct_boot_rit_cos_real_206(double x);
+double cct_boot_rit_tan_real_207(double x);
+double cct_boot_rit_log_real_208(double x);
+double cct_boot_rit_exp_real_209(double x);
+void* cct_boot_rit_ast_heap_alloc_210(long long bytes);
+void cct_boot_rit_ast_heap_zero_211(void* ptr, long long bytes);
+void cct_boot_rit_ast_heap_free_212(void* ptr);
+void cct_boot_rit_ast_heap_copy_213(void* dest, void* src, long long bytes);
+void* cct_boot_rit_ast_node_list_new_214(void);
+void cct_boot_rit_ast_node_list_push_215(void* list, cct_boot_sig_AstNode* node);
+long long cct_boot_rit_ast_node_list_len_216(void* list);
+cct_boot_sig_AstNode* cct_boot_rit_ast_node_list_get_217(void* list, long long idx);
+cct_boot_sig_AstNode* cct_boot_rit_ast_node_new_218(cct_boot_ord_AstKind kind, long long line, long long column);
+cct_boot_sig_AstProgram* cct_boot_rit_ast_program_new_219(void);
+void cct_boot_rit_ast_node_set_name_220(cct_boot_sig_AstNode* node, char* name);
+void cct_boot_rit_ast_node_set_value_text_221(cct_boot_sig_AstNode* node, char* value_text);
+void cct_boot_rit_ast_node_set_type_name_222(cct_boot_sig_AstNode* node, char* type_name);
+void cct_boot_rit_ast_node_set_aux_name_223(cct_boot_sig_AstNode* node, char* aux_name);
+void cct_boot_rit_ast_node_set_fmt_spec_224(cct_boot_sig_AstNode* node, char* fmt_spec);
+void cct_boot_rit_ast_program_set_name_225(cct_boot_sig_AstProgram* program, char* name);
+void cct_boot_rit_ast_program_append_decl_226(cct_boot_sig_AstProgram* program, cct_boot_sig_AstNode* decl);
+void cct_boot_rit_ast_append_child_227(cct_boot_sig_AstNode* node, cct_boot_sig_AstNode* child);
+void cct_boot_rit_ast_append_case_228(cct_boot_sig_AstNode* node, cct_boot_sig_AstNode* case_node);
+void cct_boot_rit_ast_append_binding_229(cct_boot_sig_AstNode* node, cct_boot_sig_AstNode* binding);
+void cct_boot_rit_ast_append_type_param_230(cct_boot_sig_AstNode* node, cct_boot_sig_AstNode* param);
+void cct_boot_rit_ast_append_generic_arg_231(cct_boot_sig_AstNode* node, cct_boot_sig_AstNode* arg);
+void cct_boot_rit_ast_append_param_232(cct_boot_sig_AstNode* node, cct_boot_sig_AstNode* param);
+void cct_boot_rit_ast_append_field_233(cct_boot_sig_AstNode* node, cct_boot_sig_AstNode* field);
+void cct_boot_rit_ast_append_item_234(cct_boot_sig_AstNode* node, cct_boot_sig_AstNode* item);
+void cct_boot_rit_ast_append_argument_235(cct_boot_sig_AstNode* node, cct_boot_sig_AstNode* argument);
+void cct_boot_rit_ast_append_declaration_236(cct_boot_sig_AstNode* node, cct_boot_sig_AstNode* decl);
+void cct_boot_rit_ast_append_signature_237(cct_boot_sig_AstNode* node, cct_boot_sig_AstNode* sig);
+void cct_boot_rit_ast_append_statement_238(cct_boot_sig_AstNode* node, cct_boot_sig_AstNode* stmt);
+cct_boot_sig_AstNode* cct_boot_rit_ast_make_import_239(char* path, long long line, long long column);
+cct_boot_sig_AstNode* cct_boot_rit_ast_make_type_240(char* name, long long line, long long column);
+void cct_boot_rit_ast_type_mark_pointer_241(cct_boot_sig_AstNode* node);
+void cct_boot_rit_ast_type_mark_array_242(cct_boot_sig_AstNode* node, long long array_size);
+void cct_boot_rit_ast_type_set_element_243(cct_boot_sig_AstNode* node, cct_boot_sig_AstNode* element_type);
+cct_boot_sig_AstNode* cct_boot_rit_ast_make_literal_int_244(char* text, long long line, long long column);
+cct_boot_sig_AstNode* cct_boot_rit_ast_make_literal_real_245(char* text, long long line, long long column);
+cct_boot_sig_AstNode* cct_boot_rit_ast_make_literal_string_246(char* text, long long line, long long column);
+cct_boot_sig_AstNode* cct_boot_rit_ast_make_literal_bool_247(int value, long long line, long long column);
+cct_boot_sig_AstNode* cct_boot_rit_ast_make_literal_nihil_248(long long line, long long column);
+cct_boot_sig_AstNode* cct_boot_rit_ast_make_identifier_249(char* name, long long line, long long column);
+cct_boot_sig_AstNode* cct_boot_rit_ast_make_binary_250(cct_boot_ord_TokenKind operator_kind, cct_boot_sig_AstNode* left, cct_boot_sig_AstNode* right, long long line, long long column);
+cct_boot_sig_AstNode* cct_boot_rit_ast_make_unary_251(cct_boot_ord_TokenKind operator_kind, cct_boot_sig_AstNode* operand, long long line, long long column);
+cct_boot_sig_AstNode* cct_boot_rit_ast_make_call_252(cct_boot_sig_AstNode* callee, long long line, long long column);
+cct_boot_sig_AstNode* cct_boot_rit_ast_make_obsecro_call_253(cct_boot_sig_AstNode* callee, long long line, long long column);
+cct_boot_sig_AstNode* cct_boot_rit_ast_make_field_access_254(cct_boot_sig_AstNode* object, char* field_name, long long line, long long column);
+cct_boot_sig_AstNode* cct_boot_rit_ast_make_index_access_255(cct_boot_sig_AstNode* object, cct_boot_sig_AstNode* index, long long line, long long column);
+cct_boot_sig_AstNode* cct_boot_rit_ast_make_expr_stmt_256(cct_boot_sig_AstNode* expr, long long line, long long column);
+cct_boot_sig_AstNode* cct_boot_rit_ast_make_molde_257(long long line, long long column);
+cct_boot_sig_AstNode* cct_boot_rit_ast_make_mensura_258(cct_boot_sig_AstNode* type_expr, long long line, long long column);
+cct_boot_sig_AstNode* cct_boot_rit_ast_make_redde_259(cct_boot_sig_AstNode* expr, long long line, long long column);
+cct_boot_sig_AstNode* cct_boot_rit_ast_make_redde_empty_260(long long line, long long column);
+cct_boot_sig_AstNode* cct_boot_rit_ast_make_anur_261(cct_boot_sig_AstNode* expr, long long line, long long column);
+cct_boot_sig_AstNode* cct_boot_rit_ast_make_anur_empty_262(long long line, long long column);
+cct_boot_sig_AstNode* cct_boot_rit_ast_make_iace_263(cct_boot_sig_AstNode* expr, long long line, long long column);
+cct_boot_sig_AstNode* cct_boot_rit_ast_make_dimitte_264(cct_boot_sig_AstNode* target, long long line, long long column);
+cct_boot_sig_AstNode* cct_boot_rit_ast_make_block_265(long long line, long long column);
+cct_boot_sig_AstNode* cct_boot_rit_ast_make_case_266(long long line, long long column);
+cct_boot_sig_AstNode* cct_boot_rit_ast_make_param_267(char* name, cct_boot_sig_AstNode* type_expr, long long line, long long column);
+cct_boot_sig_AstNode* cct_boot_rit_ast_make_type_param_no_constraint_268(char* name, long long line, long long column);
+cct_boot_sig_AstNode* cct_boot_rit_ast_make_type_param_269(char* name, cct_boot_sig_AstNode* constraint_type, long long line, long long column);
+cct_boot_sig_AstNode* cct_boot_rit_ast_make_field_270(char* name, cct_boot_sig_AstNode* type_expr, long long line, long long column);
+cct_boot_sig_AstNode* cct_boot_rit_ast_make_enum_item_271(char* name, cct_boot_sig_AstNode* value, long long line, long long column);
+cct_boot_sig_AstNode* cct_boot_rit_ast_make_enum_item_no_value_272(char* name, long long line, long long column);
+cct_boot_sig_AstNode* cct_boot_rit_ast_make_rituale_273(char* name, cct_boot_sig_AstNode* return_type, cct_boot_sig_AstNode* body, long long line, long long column);
+cct_boot_sig_AstNode* cct_boot_rit_ast_make_rituale_decl_274(char* name, long long line, long long column);
+cct_boot_sig_AstNode* cct_boot_rit_ast_make_sigillum_275(char* name, long long line, long long column);
+cct_boot_sig_AstNode* cct_boot_rit_ast_make_ordo_276(char* name, long long line, long long column);
+cct_boot_sig_AstNode* cct_boot_rit_ast_make_codex_277(char* name, long long line, long long column);
+cct_boot_sig_AstNode* cct_boot_rit_ast_make_pactum_278(char* name, long long line, long long column);
+cct_boot_sig_AstNode* cct_boot_rit_ast_make_evoca_279(char* name, cct_boot_sig_AstNode* type_expr, cct_boot_sig_AstNode* init_expr, long long line, long long column);
+cct_boot_sig_AstNode* cct_boot_rit_ast_make_evoca_no_init_280(char* name, cct_boot_sig_AstNode* type_expr, long long line, long long column);
+cct_boot_sig_AstNode* cct_boot_rit_ast_make_vincire_281(cct_boot_sig_AstNode* target, cct_boot_sig_AstNode* value, long long line, long long column);
+cct_boot_sig_AstNode* cct_boot_rit_ast_make_si_282(cct_boot_sig_AstNode* condition, cct_boot_sig_AstNode* body, cct_boot_sig_AstNode* else_branch, long long line, long long column);
+cct_boot_sig_AstNode* cct_boot_rit_ast_make_si_no_else_283(cct_boot_sig_AstNode* condition, cct_boot_sig_AstNode* body, long long line, long long column);
+cct_boot_sig_AstNode* cct_boot_rit_ast_make_quando_284(cct_boot_sig_AstNode* expr, long long line, long long column);
+cct_boot_sig_AstNode* cct_boot_rit_ast_make_dum_285(cct_boot_sig_AstNode* condition, cct_boot_sig_AstNode* body, long long line, long long column);
+cct_boot_sig_AstNode* cct_boot_rit_ast_make_donec_286(cct_boot_sig_AstNode* body, cct_boot_sig_AstNode* condition, long long line, long long column);
+cct_boot_sig_AstNode* cct_boot_rit_ast_make_donec_no_condition_287(cct_boot_sig_AstNode* body, long long line, long long column);
+cct_boot_sig_AstNode* cct_boot_rit_ast_make_repete_288(char* iterator_name, cct_boot_sig_AstNode* start_expr, cct_boot_sig_AstNode* end_expr, cct_boot_sig_AstNode* step_expr, cct_boot_sig_AstNode* body, long long line, long long column);
+cct_boot_sig_AstNode* cct_boot_rit_ast_make_repete_no_step_289(char* iterator_name, cct_boot_sig_AstNode* start_expr, cct_boot_sig_AstNode* end_expr, cct_boot_sig_AstNode* body, long long line, long long column);
+cct_boot_sig_AstNode* cct_boot_rit_ast_make_iterum_290(char* item_name, char* value_name, cct_boot_sig_AstNode* collection, cct_boot_sig_AstNode* body, long long line, long long column);
+cct_boot_sig_AstNode* cct_boot_rit_ast_make_frange_291(long long line, long long column);
+cct_boot_sig_AstNode* cct_boot_rit_ast_make_recede_292(long long line, long long column);
+cct_boot_sig_AstNode* cct_boot_rit_ast_make_tempta_no_semper_293(cct_boot_sig_AstNode* try_block, cct_boot_sig_AstNode* cape_type, char* cape_name, cct_boot_sig_AstNode* cape_block, long long line, long long column);
+cct_boot_sig_AstNode* cct_boot_rit_ast_make_tempta_294(cct_boot_sig_AstNode* try_block, cct_boot_sig_AstNode* cape_type, char* cape_name, cct_boot_sig_AstNode* cape_block, cct_boot_sig_AstNode* semper_block, long long line, long long column);
+char* cct_boot_rit_ast_dump_indent_295(long long level);
+char* cct_boot_rit_ast_dump_append_296(char* out, char* text);
+char* cct_boot_rit_ast_dump_append_line_297(char* out, long long level, char* text);
+char* cct_boot_rit_ast_dump_location_298(long long line, long long column);
+char* cct_boot_rit_ast_dump_type_inline_299(cct_boot_sig_AstNode* type_expr);
+char* cct_boot_rit_ast_dump_type_params_300(char* out, long long level, void* list);
+char* cct_boot_rit_ast_dump_value_with_label_301(char* out, long long level, char* label, cct_boot_sig_AstNode* node);
+char* cct_boot_rit_ast_dump_named_type_list_302(char* out, long long level, void* list, char* label);
+char* cct_boot_rit_ast_dump_enum_items_303(char* out, long long level, void* list);
+char* cct_boot_rit_ast_dump_node_list_with_label_304(char* out, long long level, void* list, char* label);
+char* cct_boot_rit_ast_dump_node_305(cct_boot_sig_AstNode* node, long long level, char* out);
+char* cct_boot_rit_ast_dump_program_306(cct_boot_sig_AstProgram* program);
+void cct_boot_rit_ast_list_free_owned_307(void* list);
+void cct_boot_rit_ast_node_free_308(cct_boot_sig_AstNode* node);
+void cct_boot_rit_ast_program_free_309(cct_boot_sig_AstProgram* program);
+cct_boot_ord_TokenKind cct_boot_rit_keyword_lookup_310(char* lexeme);
+cct_boot_sig_LexerState cct_boot_rit_lexer_init_311(char* source, char* filename);
+cct_boot_sig_Token cct_boot_rit_token_make_312(cct_boot_ord_TokenKind kind, char* lexeme, long long line, long long column);
+void cct_boot_rit_token_free_313(cct_boot_sig_Token* tok);
+int cct_boot_rit_lexer_is_at_end_314(cct_boot_sig_LexerState* lex);
+char cct_boot_rit_lexer_peek_315(cct_boot_sig_LexerState* lex);
+char cct_boot_rit_lexer_peek_next_316(cct_boot_sig_LexerState* lex);
+char cct_boot_rit_lexer_advance_317(cct_boot_sig_LexerState* lex);
+int cct_boot_rit_lexer_match_318(cct_boot_sig_LexerState* lex, char expected);
+void cct_boot_rit_lexer_skip_whitespace_319(cct_boot_sig_LexerState* lex);
+void cct_boot_rit_lexer_skip_comment_320(cct_boot_sig_LexerState* lex);
+char* cct_boot_rit_lexer_make_lexeme_321(cct_boot_sig_LexerState* lex);
+cct_boot_sig_Token cct_boot_rit_lexer_make_token_322(cct_boot_sig_LexerState* lex, cct_boot_ord_TokenKind kind);
+cct_boot_sig_Token cct_boot_rit_lexer_error_token_323(cct_boot_sig_LexerState* lex, char* msg);
+cct_boot_sig_Token cct_boot_rit_lexer_error_character_token_324(cct_boot_sig_LexerState* lex, char c);
+cct_boot_sig_Token cct_boot_rit_lexer_identifier_325(cct_boot_sig_LexerState* lex);
+cct_boot_sig_Token cct_boot_rit_lexer_number_326(cct_boot_sig_LexerState* lex);
+cct_boot_sig_Token cct_boot_rit_lexer_string_327(cct_boot_sig_LexerState* lex);
+cct_boot_sig_Token cct_boot_rit_lexer_next_token_328(cct_boot_sig_LexerState* lex);
+cct_boot_sig_Token cct_boot_rit_parser_empty_token_329(void);
+cct_boot_sig_ParserState cct_boot_rit_parser_init_330(cct_boot_sig_LexerState* lexer, char* filename);
+void cct_boot_rit_parser_dispose_331(cct_boot_sig_ParserState* parser);
+void cct_boot_rit_parser_advance_332(cct_boot_sig_ParserState* parser);
+int cct_boot_rit_parser_check_333(cct_boot_sig_ParserState* parser, cct_boot_ord_TokenKind kind);
+int cct_boot_rit_parser_match_334(cct_boot_sig_ParserState* parser, cct_boot_ord_TokenKind kind);
+void cct_boot_rit_parser_emit_error_335(cct_boot_sig_ParserState* parser, long long line, long long column, char* message);
+void cct_boot_rit_parser_error_at_current_336(cct_boot_sig_ParserState* parser, char* message);
+void cct_boot_rit_parser_error_at_previous_337(cct_boot_sig_ParserState* parser, char* message);
+int cct_boot_rit_parser_consume_338(cct_boot_sig_ParserState* parser, cct_boot_ord_TokenKind kind, char* message);
+int cct_boot_rit_parser_is_declaration_start_339(cct_boot_ord_TokenKind kind);
+int cct_boot_rit_parser_is_statement_start_340(cct_boot_ord_TokenKind kind);
+void cct_boot_rit_parser_synchronize_statement_341(cct_boot_sig_ParserState* parser);
+void cct_boot_rit_parser_synchronize_declaration_342(cct_boot_sig_ParserState* parser);
+int cct_boot_rit_parser_is_assignment_target_343(cct_boot_sig_AstNode* node);
+cct_boot_sig_AstNode* cct_boot_rit_parse_expression_344(cct_boot_sig_ParserState* parser);
+int cct_boot_rit_parse_expr_is_simple_type_token_345(cct_boot_ord_TokenKind kind);
+cct_boot_sig_AstNode* cct_boot_rit_parse_expr_generic_type_346(cct_boot_sig_ParserState* parser);
+void cct_boot_rit_parse_postfix_generic_args_347(cct_boot_sig_ParserState* parser, cct_boot_sig_AstNode* expr);
+char* cct_boot_rit_parse_forma_unquote_348(char* raw_text);
+void cct_boot_rit_parse_forma_flush_literal_349(cct_boot_sig_AstNode* molde, void* literal_builder, long long line, long long column);
+cct_boot_sig_AstNode* cct_boot_rit_parse_forma_expression_350(cct_boot_sig_ParserState* parser);
+cct_boot_sig_AstNode* cct_boot_rit_parse_primary_351(cct_boot_sig_ParserState* parser);
+cct_boot_sig_AstNode* cct_boot_rit_parse_postfix_suffixes_352(cct_boot_sig_ParserState* parser, cct_boot_sig_AstNode* expr);
+cct_boot_sig_AstNode* cct_boot_rit_parse_postfix_353(cct_boot_sig_ParserState* parser);
+cct_boot_sig_AstNode* cct_boot_rit_parse_unary_354(cct_boot_sig_ParserState* parser);
+cct_boot_sig_AstNode* cct_boot_rit_parse_power_355(cct_boot_sig_ParserState* parser);
+cct_boot_sig_AstNode* cct_boot_rit_parse_multiplicative_356(cct_boot_sig_ParserState* parser);
+cct_boot_sig_AstNode* cct_boot_rit_parse_additive_357(cct_boot_sig_ParserState* parser);
+cct_boot_sig_AstNode* cct_boot_rit_parse_comparison_358(cct_boot_sig_ParserState* parser);
+cct_boot_sig_AstNode* cct_boot_rit_parse_equality_359(cct_boot_sig_ParserState* parser);
+cct_boot_sig_AstNode* cct_boot_rit_parse_logical_and_360(cct_boot_sig_ParserState* parser);
+cct_boot_sig_AstNode* cct_boot_rit_parse_logical_or_361(cct_boot_sig_ParserState* parser);
+cct_boot_sig_AstNode* cct_boot_rit_parse_assignment_362(cct_boot_sig_ParserState* parser);
+cct_boot_sig_AstNode* cct_boot_rit_parser_parse_expression_source_363(char* source, char* filename);
+int cct_boot_rit_parser_is_simple_type_token_364(cct_boot_ord_TokenKind kind);
+void cct_boot_rit_parse_stmt_type_args_365(cct_boot_sig_ParserState* parser, cct_boot_sig_AstNode* type_expr);
+int cct_boot_rit_parser_is_statement_boundary_366(cct_boot_ord_TokenKind kind);
+cct_boot_sig_AstNode* cct_boot_rit_parse_type_simple_367(cct_boot_sig_ParserState* parser);
+cct_boot_sig_AstNode* cct_boot_rit_parse_expression_statement_368(cct_boot_sig_ParserState* parser);
+cct_boot_sig_AstNode* cct_boot_rit_parse_block_369(cct_boot_sig_ParserState* parser);
+cct_boot_sig_AstNode* cct_boot_rit_parse_evoca_statement_370(cct_boot_sig_ParserState* parser);
+cct_boot_sig_AstNode* cct_boot_rit_parse_vincire_statement_371(cct_boot_sig_ParserState* parser);
+cct_boot_sig_AstNode* cct_boot_rit_parse_redde_statement_372(cct_boot_sig_ParserState* parser);
+cct_boot_sig_AstNode* cct_boot_rit_parse_anur_statement_373(cct_boot_sig_ParserState* parser);
+cct_boot_sig_AstNode* cct_boot_rit_parse_iace_statement_374(cct_boot_sig_ParserState* parser);
+cct_boot_sig_AstNode* cct_boot_rit_parse_dimitte_statement_375(cct_boot_sig_ParserState* parser);
+cct_boot_sig_AstNode* cct_boot_rit_parse_frange_statement_376(cct_boot_sig_ParserState* parser);
+cct_boot_sig_AstNode* cct_boot_rit_parse_recede_statement_377(cct_boot_sig_ParserState* parser);
+cct_boot_sig_AstNode* cct_boot_rit_parse_statement_block_until_failure_clause_378(cct_boot_sig_ParserState* parser);
+cct_boot_sig_AstNode* cct_boot_rit_parse_statement_block_until_elige_boundary_379(cct_boot_sig_ParserState* parser);
+cct_boot_sig_AstNode* cct_boot_rit_parse_elige_literal_380(cct_boot_sig_ParserState* parser);
+cct_boot_sig_AstNode* cct_boot_rit_parse_tempta_statement_381(cct_boot_sig_ParserState* parser);
+cct_boot_sig_AstNode* cct_boot_rit_parse_elige_statement_382(cct_boot_sig_ParserState* parser);
+cct_boot_sig_AstNode* cct_boot_rit_parse_inline_statement_block_until_383(cct_boot_sig_ParserState* parser, cct_boot_ord_TokenKind terminator, int stop_on_aliter);
+cct_boot_sig_AstNode* cct_boot_rit_parse_si_statement_384(cct_boot_sig_ParserState* parser);
+cct_boot_sig_AstNode* cct_boot_rit_parse_dum_statement_385(cct_boot_sig_ParserState* parser);
+cct_boot_sig_AstNode* cct_boot_rit_parse_donec_body_386(cct_boot_sig_ParserState* parser);
+cct_boot_sig_AstNode* cct_boot_rit_parse_donec_statement_387(cct_boot_sig_ParserState* parser);
+cct_boot_sig_AstNode* cct_boot_rit_parse_repete_statement_388(cct_boot_sig_ParserState* parser);
+cct_boot_sig_AstNode* cct_boot_rit_parse_iterum_statement_389(cct_boot_sig_ParserState* parser);
+cct_boot_sig_AstNode* cct_boot_rit_parse_statement_390(cct_boot_sig_ParserState* parser);
+cct_boot_sig_AstNode* cct_boot_rit_parser_parse_statement_source_391(char* source, char* filename);
+cct_boot_sig_AstNode* cct_boot_rit_parse_type_392(cct_boot_sig_ParserState* parser);
+void cct_boot_rit_parse_optional_generic_type_args_393(cct_boot_sig_ParserState* parser, cct_boot_sig_AstNode* type_expr);
+int cct_boot_rit_parse_type_param_exists_394(void* list, char* name);
+void cct_boot_rit_parse_optional_type_params_395(cct_boot_sig_ParserState* parser, cct_boot_sig_AstNode* owner, int allow_constraint);
+void cct_boot_rit_parse_param_list_396(cct_boot_sig_ParserState* parser, cct_boot_sig_AstNode* rituale);
+cct_boot_sig_AstNode* cct_boot_rit_parse_import_declaration_397(cct_boot_sig_ParserState* parser);
+cct_boot_sig_AstNode* cct_boot_rit_parse_rituale_body_until_explicit_398(cct_boot_sig_ParserState* parser);
+cct_boot_sig_AstNode* cct_boot_rit_parse_rituale_signature_only_399(cct_boot_sig_ParserState* parser, char* name, long long line, long long column);
+cct_boot_sig_AstNode* cct_boot_rit_parse_rituale_declaration_400(cct_boot_sig_ParserState* parser);
+cct_boot_sig_AstNode* cct_boot_rit_parse_sigillum_declaration_401(cct_boot_sig_ParserState* parser);
+cct_boot_sig_AstNode* cct_boot_rit_parse_ordo_payload_field_402(cct_boot_sig_ParserState* parser);
+cct_boot_sig_AstNode* cct_boot_rit_parse_ordo_declaration_403(cct_boot_sig_ParserState* parser);
+cct_boot_sig_AstNode* cct_boot_rit_parse_codex_declaration_404(cct_boot_sig_ParserState* parser);
+cct_boot_sig_AstNode* cct_boot_rit_parse_pactum_declaration_405(cct_boot_sig_ParserState* parser);
+cct_boot_sig_AstNode* cct_boot_rit_parse_declaration_406(cct_boot_sig_ParserState* parser);
+cct_boot_sig_AstProgram* cct_boot_rit_parse_program_407(cct_boot_sig_ParserState* parser);
+cct_boot_sig_AstProgram* cct_boot_rit_parser_parse_program_source_408(char* source, char* filename);
+char* cct_boot_rit_parser_dump_program_source_409(char* source, char* filename);
+long long cct_boot_rit_main_410(void);
 
 char* cct_boot_rit_token_kind_to_string_0(cct_boot_ord_TokenKind kind)
 {
@@ -1503,59 +1510,59 @@ char* cct_boot_rit_token_kind_to_string_0(cct_boot_ord_TokenKind kind)
   return cct_boot_str_101;
 }
 
-void* cct_boot_rit_ast_heap_alloc_203(long long bytes)
+void* cct_boot_rit_ast_heap_alloc_210(long long bytes)
 {
-  return cct_boot_rit_alloc_165(bytes);
+  return cct_boot_rit_alloc_172(bytes);
 }
 
-void cct_boot_rit_ast_heap_zero_204(void* ptr, long long bytes)
+void cct_boot_rit_ast_heap_zero_211(void* ptr, long long bytes)
 {
-  cct_boot_rit_zero_170(ptr, bytes);
+  cct_boot_rit_zero_177(ptr, bytes);
   return;
 }
 
-void cct_boot_rit_ast_heap_free_205(void* ptr)
+void cct_boot_rit_ast_heap_free_212(void* ptr)
 {
-  cct_boot_rit_free_166(ptr);
+  cct_boot_rit_free_173(ptr);
   return;
 }
 
-void cct_boot_rit_ast_heap_copy_206(void* dest, void* src, long long bytes)
+void cct_boot_rit_ast_heap_copy_213(void* dest, void* src, long long bytes)
 {
-  cct_boot_rit_copy_168(dest, src, bytes);
+  cct_boot_rit_copy_175(dest, src, bytes);
   return;
 }
 
-void* cct_boot_rit_ast_node_list_new_207(void)
+void* cct_boot_rit_ast_node_list_new_214(void)
 {
-  return cct_boot_rit_fluxus_init_172(((long long)sizeof(cct_boot_sig_AstNode*)));
+  return cct_boot_rit_fluxus_init_179(((long long)sizeof(cct_boot_sig_AstNode*)));
 }
 
-void cct_boot_rit_ast_node_list_push_208(void* list, cct_boot_sig_AstNode* node)
+void cct_boot_rit_ast_node_list_push_215(void* list, cct_boot_sig_AstNode* node)
 {
   cct_boot_sig_AstNode* slot;
   slot = node;
-  cct_boot_rit_fluxus_push_174(list, (&slot));
+  cct_boot_rit_fluxus_push_181(list, (&slot));
   return;
 }
 
-long long cct_boot_rit_ast_node_list_len_209(void* list)
+long long cct_boot_rit_ast_node_list_len_216(void* list)
 {
-  return cct_boot_rit_fluxus_len_176(list);
+  return cct_boot_rit_fluxus_len_183(list);
 }
 
-cct_boot_sig_AstNode* cct_boot_rit_ast_node_list_get_210(void* list, long long idx)
+cct_boot_sig_AstNode* cct_boot_rit_ast_node_list_get_217(void* list, long long idx)
 {
-  void* raw_slot = cct_boot_rit_fluxus_get_177(list, idx);
+  void* raw_slot = cct_boot_rit_fluxus_get_184(list, idx);
   cct_boot_sig_AstNode* node;
-  cct_boot_rit_ast_heap_copy_206((&node), raw_slot, ((long long)sizeof(cct_boot_sig_AstNode*)));
+  cct_boot_rit_ast_heap_copy_213((&node), raw_slot, ((long long)sizeof(cct_boot_sig_AstNode*)));
   return node;
 }
 
-cct_boot_sig_AstNode* cct_boot_rit_ast_node_new_211(cct_boot_ord_AstKind kind, long long line, long long column)
+cct_boot_sig_AstNode* cct_boot_rit_ast_node_new_218(cct_boot_ord_AstKind kind, long long line, long long column)
 {
-  void* raw = cct_boot_rit_ast_heap_alloc_203(((long long)sizeof(cct_boot_sig_AstNode)));
-  cct_boot_rit_ast_heap_zero_204(raw, ((long long)sizeof(cct_boot_sig_AstNode)));
+  void* raw = cct_boot_rit_ast_heap_alloc_210(((long long)sizeof(cct_boot_sig_AstNode)));
+  cct_boot_rit_ast_heap_zero_211(raw, ((long long)sizeof(cct_boot_sig_AstNode)));
   cct_boot_sig_AstNode* node;
   node = raw;
   (*node).kind = kind;
@@ -1563,238 +1570,238 @@ cct_boot_sig_AstNode* cct_boot_rit_ast_node_new_211(cct_boot_ord_AstKind kind, l
   (*node).column = column;
   (*node).aux_name = cct_boot_str_102;
   (*node).fmt_spec = cct_boot_str_102;
-  (*node).children = cct_boot_rit_ast_node_list_new_207();
-  (*node).cases = cct_boot_rit_ast_node_list_new_207();
-  (*node).bindings = cct_boot_rit_ast_node_list_new_207();
-  (*node).type_params = cct_boot_rit_ast_node_list_new_207();
-  (*node).generic_args = cct_boot_rit_ast_node_list_new_207();
-  (*node).params = cct_boot_rit_ast_node_list_new_207();
-  (*node).fields = cct_boot_rit_ast_node_list_new_207();
-  (*node).items = cct_boot_rit_ast_node_list_new_207();
-  (*node).arguments = cct_boot_rit_ast_node_list_new_207();
-  (*node).declarations = cct_boot_rit_ast_node_list_new_207();
-  (*node).signatures = cct_boot_rit_ast_node_list_new_207();
-  (*node).statements = cct_boot_rit_ast_node_list_new_207();
+  (*node).children = cct_boot_rit_ast_node_list_new_214();
+  (*node).cases = cct_boot_rit_ast_node_list_new_214();
+  (*node).bindings = cct_boot_rit_ast_node_list_new_214();
+  (*node).type_params = cct_boot_rit_ast_node_list_new_214();
+  (*node).generic_args = cct_boot_rit_ast_node_list_new_214();
+  (*node).params = cct_boot_rit_ast_node_list_new_214();
+  (*node).fields = cct_boot_rit_ast_node_list_new_214();
+  (*node).items = cct_boot_rit_ast_node_list_new_214();
+  (*node).arguments = cct_boot_rit_ast_node_list_new_214();
+  (*node).declarations = cct_boot_rit_ast_node_list_new_214();
+  (*node).signatures = cct_boot_rit_ast_node_list_new_214();
+  (*node).statements = cct_boot_rit_ast_node_list_new_214();
   return node;
 }
 
-cct_boot_sig_AstProgram* cct_boot_rit_ast_program_new_212(void)
+cct_boot_sig_AstProgram* cct_boot_rit_ast_program_new_219(void)
 {
-  void* raw = cct_boot_rit_ast_heap_alloc_203(((long long)sizeof(cct_boot_sig_AstProgram)));
-  cct_boot_rit_ast_heap_zero_204(raw, ((long long)sizeof(cct_boot_sig_AstProgram)));
+  void* raw = cct_boot_rit_ast_heap_alloc_210(((long long)sizeof(cct_boot_sig_AstProgram)));
+  cct_boot_rit_ast_heap_zero_211(raw, ((long long)sizeof(cct_boot_sig_AstProgram)));
   cct_boot_sig_AstProgram* program;
   program = raw;
-  (*program).declarations = cct_boot_rit_ast_node_list_new_207();
+  (*program).declarations = cct_boot_rit_ast_node_list_new_214();
   return program;
 }
 
-void cct_boot_rit_ast_node_set_name_213(cct_boot_sig_AstNode* node, char* name)
+void cct_boot_rit_ast_node_set_name_220(cct_boot_sig_AstNode* node, char* name)
 {
   (*node).name = cct_boot_rit_verbum_dup_40(name);
   (*node).owns_name = 1;
   return;
 }
 
-void cct_boot_rit_ast_node_set_value_text_214(cct_boot_sig_AstNode* node, char* value_text)
+void cct_boot_rit_ast_node_set_value_text_221(cct_boot_sig_AstNode* node, char* value_text)
 {
   (*node).value_text = cct_boot_rit_verbum_dup_40(value_text);
   (*node).owns_value_text = 1;
   return;
 }
 
-void cct_boot_rit_ast_node_set_type_name_215(cct_boot_sig_AstNode* node, char* type_name)
+void cct_boot_rit_ast_node_set_type_name_222(cct_boot_sig_AstNode* node, char* type_name)
 {
   (*node).type_name = cct_boot_rit_verbum_dup_40(type_name);
   (*node).owns_type_name = 1;
   return;
 }
 
-void cct_boot_rit_ast_node_set_aux_name_216(cct_boot_sig_AstNode* node, char* aux_name)
+void cct_boot_rit_ast_node_set_aux_name_223(cct_boot_sig_AstNode* node, char* aux_name)
 {
   (*node).aux_name = cct_boot_rit_verbum_dup_40(aux_name);
   (*node).owns_aux_name = 1;
   return;
 }
 
-void cct_boot_rit_ast_node_set_fmt_spec_217(cct_boot_sig_AstNode* node, char* fmt_spec)
+void cct_boot_rit_ast_node_set_fmt_spec_224(cct_boot_sig_AstNode* node, char* fmt_spec)
 {
   (*node).fmt_spec = cct_boot_rit_verbum_dup_40(fmt_spec);
   (*node).owns_fmt_spec = 1;
   return;
 }
 
-void cct_boot_rit_ast_program_set_name_218(cct_boot_sig_AstProgram* program, char* name)
+void cct_boot_rit_ast_program_set_name_225(cct_boot_sig_AstProgram* program, char* name)
 {
   (*program).name = cct_boot_rit_verbum_dup_40(name);
   (*program).owns_name = 1;
   return;
 }
 
-void cct_boot_rit_ast_program_append_decl_219(cct_boot_sig_AstProgram* program, cct_boot_sig_AstNode* decl)
+void cct_boot_rit_ast_program_append_decl_226(cct_boot_sig_AstProgram* program, cct_boot_sig_AstNode* decl)
 {
-  cct_boot_rit_ast_node_list_push_208((*program).declarations, decl);
+  cct_boot_rit_ast_node_list_push_215((*program).declarations, decl);
   return;
 }
 
-void cct_boot_rit_ast_append_child_220(cct_boot_sig_AstNode* node, cct_boot_sig_AstNode* child)
+void cct_boot_rit_ast_append_child_227(cct_boot_sig_AstNode* node, cct_boot_sig_AstNode* child)
 {
-  cct_boot_rit_ast_node_list_push_208((*node).children, child);
+  cct_boot_rit_ast_node_list_push_215((*node).children, child);
   return;
 }
 
-void cct_boot_rit_ast_append_case_221(cct_boot_sig_AstNode* node, cct_boot_sig_AstNode* case_node)
+void cct_boot_rit_ast_append_case_228(cct_boot_sig_AstNode* node, cct_boot_sig_AstNode* case_node)
 {
-  cct_boot_rit_ast_node_list_push_208((*node).cases, case_node);
+  cct_boot_rit_ast_node_list_push_215((*node).cases, case_node);
   return;
 }
 
-void cct_boot_rit_ast_append_binding_222(cct_boot_sig_AstNode* node, cct_boot_sig_AstNode* binding)
+void cct_boot_rit_ast_append_binding_229(cct_boot_sig_AstNode* node, cct_boot_sig_AstNode* binding)
 {
-  cct_boot_rit_ast_node_list_push_208((*node).bindings, binding);
+  cct_boot_rit_ast_node_list_push_215((*node).bindings, binding);
   return;
 }
 
-void cct_boot_rit_ast_append_type_param_223(cct_boot_sig_AstNode* node, cct_boot_sig_AstNode* param)
+void cct_boot_rit_ast_append_type_param_230(cct_boot_sig_AstNode* node, cct_boot_sig_AstNode* param)
 {
-  cct_boot_rit_ast_node_list_push_208((*node).type_params, param);
+  cct_boot_rit_ast_node_list_push_215((*node).type_params, param);
   return;
 }
 
-void cct_boot_rit_ast_append_generic_arg_224(cct_boot_sig_AstNode* node, cct_boot_sig_AstNode* arg)
+void cct_boot_rit_ast_append_generic_arg_231(cct_boot_sig_AstNode* node, cct_boot_sig_AstNode* arg)
 {
-  cct_boot_rit_ast_node_list_push_208((*node).generic_args, arg);
+  cct_boot_rit_ast_node_list_push_215((*node).generic_args, arg);
   return;
 }
 
-void cct_boot_rit_ast_append_param_225(cct_boot_sig_AstNode* node, cct_boot_sig_AstNode* param)
+void cct_boot_rit_ast_append_param_232(cct_boot_sig_AstNode* node, cct_boot_sig_AstNode* param)
 {
-  cct_boot_rit_ast_node_list_push_208((*node).params, param);
+  cct_boot_rit_ast_node_list_push_215((*node).params, param);
   return;
 }
 
-void cct_boot_rit_ast_append_field_226(cct_boot_sig_AstNode* node, cct_boot_sig_AstNode* field)
+void cct_boot_rit_ast_append_field_233(cct_boot_sig_AstNode* node, cct_boot_sig_AstNode* field)
 {
-  cct_boot_rit_ast_node_list_push_208((*node).fields, field);
+  cct_boot_rit_ast_node_list_push_215((*node).fields, field);
   return;
 }
 
-void cct_boot_rit_ast_append_item_227(cct_boot_sig_AstNode* node, cct_boot_sig_AstNode* item)
+void cct_boot_rit_ast_append_item_234(cct_boot_sig_AstNode* node, cct_boot_sig_AstNode* item)
 {
-  cct_boot_rit_ast_node_list_push_208((*node).items, item);
+  cct_boot_rit_ast_node_list_push_215((*node).items, item);
   return;
 }
 
-void cct_boot_rit_ast_append_argument_228(cct_boot_sig_AstNode* node, cct_boot_sig_AstNode* argument)
+void cct_boot_rit_ast_append_argument_235(cct_boot_sig_AstNode* node, cct_boot_sig_AstNode* argument)
 {
-  cct_boot_rit_ast_node_list_push_208((*node).arguments, argument);
+  cct_boot_rit_ast_node_list_push_215((*node).arguments, argument);
   return;
 }
 
-void cct_boot_rit_ast_append_declaration_229(cct_boot_sig_AstNode* node, cct_boot_sig_AstNode* decl)
+void cct_boot_rit_ast_append_declaration_236(cct_boot_sig_AstNode* node, cct_boot_sig_AstNode* decl)
 {
-  cct_boot_rit_ast_node_list_push_208((*node).declarations, decl);
+  cct_boot_rit_ast_node_list_push_215((*node).declarations, decl);
   return;
 }
 
-void cct_boot_rit_ast_append_signature_230(cct_boot_sig_AstNode* node, cct_boot_sig_AstNode* sig)
+void cct_boot_rit_ast_append_signature_237(cct_boot_sig_AstNode* node, cct_boot_sig_AstNode* sig)
 {
-  cct_boot_rit_ast_node_list_push_208((*node).signatures, sig);
+  cct_boot_rit_ast_node_list_push_215((*node).signatures, sig);
   return;
 }
 
-void cct_boot_rit_ast_append_statement_231(cct_boot_sig_AstNode* node, cct_boot_sig_AstNode* stmt)
+void cct_boot_rit_ast_append_statement_238(cct_boot_sig_AstNode* node, cct_boot_sig_AstNode* stmt)
 {
-  cct_boot_rit_ast_node_list_push_208((*node).statements, stmt);
+  cct_boot_rit_ast_node_list_push_215((*node).statements, stmt);
   return;
 }
 
-cct_boot_sig_AstNode* cct_boot_rit_ast_make_import_232(char* path, long long line, long long column)
+cct_boot_sig_AstNode* cct_boot_rit_ast_make_import_239(char* path, long long line, long long column)
 {
-  cct_boot_sig_AstNode* node = cct_boot_rit_ast_node_new_211(cct_boot_ord_AstKind__AST_IMPORT, line, column);
-  cct_boot_rit_ast_node_set_value_text_214(node, path);
+  cct_boot_sig_AstNode* node = cct_boot_rit_ast_node_new_218(cct_boot_ord_AstKind__AST_IMPORT, line, column);
+  cct_boot_rit_ast_node_set_value_text_221(node, path);
   return node;
 }
 
-cct_boot_sig_AstNode* cct_boot_rit_ast_make_type_233(char* name, long long line, long long column)
+cct_boot_sig_AstNode* cct_boot_rit_ast_make_type_240(char* name, long long line, long long column)
 {
-  cct_boot_sig_AstNode* node = cct_boot_rit_ast_node_new_211(cct_boot_ord_AstKind__AST_TYPE, line, column);
-  cct_boot_rit_ast_node_set_type_name_215(node, name);
+  cct_boot_sig_AstNode* node = cct_boot_rit_ast_node_new_218(cct_boot_ord_AstKind__AST_TYPE, line, column);
+  cct_boot_rit_ast_node_set_type_name_222(node, name);
   return node;
 }
 
-void cct_boot_rit_ast_type_mark_pointer_234(cct_boot_sig_AstNode* node)
+void cct_boot_rit_ast_type_mark_pointer_241(cct_boot_sig_AstNode* node)
 {
   (*node).is_pointer = 1;
   return;
 }
 
-void cct_boot_rit_ast_type_mark_array_235(cct_boot_sig_AstNode* node, long long array_size)
+void cct_boot_rit_ast_type_mark_array_242(cct_boot_sig_AstNode* node, long long array_size)
 {
   (*node).is_array = 1;
   (*node).array_size = array_size;
   return;
 }
 
-void cct_boot_rit_ast_type_set_element_236(cct_boot_sig_AstNode* node, cct_boot_sig_AstNode* element_type)
+void cct_boot_rit_ast_type_set_element_243(cct_boot_sig_AstNode* node, cct_boot_sig_AstNode* element_type)
 {
   (*node).type_expr = element_type;
   (*node).has_type_expr = 1;
   return;
 }
 
-cct_boot_sig_AstNode* cct_boot_rit_ast_make_literal_int_237(char* text, long long line, long long column)
+cct_boot_sig_AstNode* cct_boot_rit_ast_make_literal_int_244(char* text, long long line, long long column)
 {
-  cct_boot_sig_AstNode* node = cct_boot_rit_ast_node_new_211(cct_boot_ord_AstKind__AST_LITERAL_INT, line, column);
-  cct_boot_rit_ast_node_set_value_text_214(node, text);
+  cct_boot_sig_AstNode* node = cct_boot_rit_ast_node_new_218(cct_boot_ord_AstKind__AST_LITERAL_INT, line, column);
+  cct_boot_rit_ast_node_set_value_text_221(node, text);
   return node;
 }
 
-cct_boot_sig_AstNode* cct_boot_rit_ast_make_literal_real_238(char* text, long long line, long long column)
+cct_boot_sig_AstNode* cct_boot_rit_ast_make_literal_real_245(char* text, long long line, long long column)
 {
-  cct_boot_sig_AstNode* node = cct_boot_rit_ast_node_new_211(cct_boot_ord_AstKind__AST_LITERAL_REAL, line, column);
-  cct_boot_rit_ast_node_set_value_text_214(node, text);
+  cct_boot_sig_AstNode* node = cct_boot_rit_ast_node_new_218(cct_boot_ord_AstKind__AST_LITERAL_REAL, line, column);
+  cct_boot_rit_ast_node_set_value_text_221(node, text);
   return node;
 }
 
-cct_boot_sig_AstNode* cct_boot_rit_ast_make_literal_string_239(char* text, long long line, long long column)
+cct_boot_sig_AstNode* cct_boot_rit_ast_make_literal_string_246(char* text, long long line, long long column)
 {
-  cct_boot_sig_AstNode* node = cct_boot_rit_ast_node_new_211(cct_boot_ord_AstKind__AST_LITERAL_STRING, line, column);
-  cct_boot_rit_ast_node_set_value_text_214(node, text);
+  cct_boot_sig_AstNode* node = cct_boot_rit_ast_node_new_218(cct_boot_ord_AstKind__AST_LITERAL_STRING, line, column);
+  cct_boot_rit_ast_node_set_value_text_221(node, text);
   return node;
 }
 
-cct_boot_sig_AstNode* cct_boot_rit_ast_make_literal_bool_240(int value, long long line, long long column)
+cct_boot_sig_AstNode* cct_boot_rit_ast_make_literal_bool_247(int value, long long line, long long column)
 {
-  cct_boot_sig_AstNode* node = cct_boot_rit_ast_node_new_211(cct_boot_ord_AstKind__AST_LITERAL_BOOL, line, column);
+  cct_boot_sig_AstNode* node = cct_boot_rit_ast_node_new_218(cct_boot_ord_AstKind__AST_LITERAL_BOOL, line, column);
   (*node).bool_value = value;
   if (value)
   {
-    cct_boot_rit_ast_node_set_value_text_214(node, cct_boot_str_58);
+    cct_boot_rit_ast_node_set_value_text_221(node, cct_boot_str_58);
   }
   else
   {
-    cct_boot_rit_ast_node_set_value_text_214(node, cct_boot_str_59);
+    cct_boot_rit_ast_node_set_value_text_221(node, cct_boot_str_59);
   }
   return node;
 }
 
-cct_boot_sig_AstNode* cct_boot_rit_ast_make_literal_nihil_241(long long line, long long column)
+cct_boot_sig_AstNode* cct_boot_rit_ast_make_literal_nihil_248(long long line, long long column)
 {
-  cct_boot_sig_AstNode* node = cct_boot_rit_ast_node_new_211(cct_boot_ord_AstKind__AST_LITERAL_NIHIL, line, column);
-  cct_boot_rit_ast_node_set_value_text_214(node, cct_boot_str_60);
+  cct_boot_sig_AstNode* node = cct_boot_rit_ast_node_new_218(cct_boot_ord_AstKind__AST_LITERAL_NIHIL, line, column);
+  cct_boot_rit_ast_node_set_value_text_221(node, cct_boot_str_60);
   return node;
 }
 
-cct_boot_sig_AstNode* cct_boot_rit_ast_make_identifier_242(char* name, long long line, long long column)
+cct_boot_sig_AstNode* cct_boot_rit_ast_make_identifier_249(char* name, long long line, long long column)
 {
-  cct_boot_sig_AstNode* node = cct_boot_rit_ast_node_new_211(cct_boot_ord_AstKind__AST_IDENTIFIER, line, column);
-  cct_boot_rit_ast_node_set_name_213(node, name);
+  cct_boot_sig_AstNode* node = cct_boot_rit_ast_node_new_218(cct_boot_ord_AstKind__AST_IDENTIFIER, line, column);
+  cct_boot_rit_ast_node_set_name_220(node, name);
   return node;
 }
 
-cct_boot_sig_AstNode* cct_boot_rit_ast_make_binary_243(cct_boot_ord_TokenKind operator_kind, cct_boot_sig_AstNode* left, cct_boot_sig_AstNode* right, long long line, long long column)
+cct_boot_sig_AstNode* cct_boot_rit_ast_make_binary_250(cct_boot_ord_TokenKind operator_kind, cct_boot_sig_AstNode* left, cct_boot_sig_AstNode* right, long long line, long long column)
 {
-  cct_boot_sig_AstNode* node = cct_boot_rit_ast_node_new_211(cct_boot_ord_AstKind__AST_BINARY_OP, line, column);
+  cct_boot_sig_AstNode* node = cct_boot_rit_ast_node_new_218(cct_boot_ord_AstKind__AST_BINARY_OP, line, column);
   (*node).operator_kind = operator_kind;
   (*node).left = left;
   (*node).right = right;
@@ -1803,43 +1810,43 @@ cct_boot_sig_AstNode* cct_boot_rit_ast_make_binary_243(cct_boot_ord_TokenKind op
   return node;
 }
 
-cct_boot_sig_AstNode* cct_boot_rit_ast_make_unary_244(cct_boot_ord_TokenKind operator_kind, cct_boot_sig_AstNode* operand, long long line, long long column)
+cct_boot_sig_AstNode* cct_boot_rit_ast_make_unary_251(cct_boot_ord_TokenKind operator_kind, cct_boot_sig_AstNode* operand, long long line, long long column)
 {
-  cct_boot_sig_AstNode* node = cct_boot_rit_ast_node_new_211(cct_boot_ord_AstKind__AST_UNARY_OP, line, column);
+  cct_boot_sig_AstNode* node = cct_boot_rit_ast_node_new_218(cct_boot_ord_AstKind__AST_UNARY_OP, line, column);
   (*node).operator_kind = operator_kind;
   (*node).left = operand;
   (*node).has_left = 1;
   return node;
 }
 
-cct_boot_sig_AstNode* cct_boot_rit_ast_make_call_245(cct_boot_sig_AstNode* callee, long long line, long long column)
+cct_boot_sig_AstNode* cct_boot_rit_ast_make_call_252(cct_boot_sig_AstNode* callee, long long line, long long column)
 {
-  cct_boot_sig_AstNode* node = cct_boot_rit_ast_node_new_211(cct_boot_ord_AstKind__AST_CALL, line, column);
+  cct_boot_sig_AstNode* node = cct_boot_rit_ast_node_new_218(cct_boot_ord_AstKind__AST_CALL, line, column);
   (*node).callee = callee;
   (*node).has_callee = 1;
   return node;
 }
 
-cct_boot_sig_AstNode* cct_boot_rit_ast_make_obsecro_call_246(cct_boot_sig_AstNode* callee, long long line, long long column)
+cct_boot_sig_AstNode* cct_boot_rit_ast_make_obsecro_call_253(cct_boot_sig_AstNode* callee, long long line, long long column)
 {
-  cct_boot_sig_AstNode* node = cct_boot_rit_ast_node_new_211(cct_boot_ord_AstKind__AST_OBSECRO_CALL, line, column);
+  cct_boot_sig_AstNode* node = cct_boot_rit_ast_node_new_218(cct_boot_ord_AstKind__AST_OBSECRO_CALL, line, column);
   (*node).callee = callee;
   (*node).has_callee = 1;
   return node;
 }
 
-cct_boot_sig_AstNode* cct_boot_rit_ast_make_field_access_247(cct_boot_sig_AstNode* object, char* field_name, long long line, long long column)
+cct_boot_sig_AstNode* cct_boot_rit_ast_make_field_access_254(cct_boot_sig_AstNode* object, char* field_name, long long line, long long column)
 {
-  cct_boot_sig_AstNode* node = cct_boot_rit_ast_node_new_211(cct_boot_ord_AstKind__AST_FIELD_ACCESS, line, column);
+  cct_boot_sig_AstNode* node = cct_boot_rit_ast_node_new_218(cct_boot_ord_AstKind__AST_FIELD_ACCESS, line, column);
   (*node).left = object;
   (*node).has_left = 1;
-  cct_boot_rit_ast_node_set_name_213(node, field_name);
+  cct_boot_rit_ast_node_set_name_220(node, field_name);
   return node;
 }
 
-cct_boot_sig_AstNode* cct_boot_rit_ast_make_index_access_248(cct_boot_sig_AstNode* object, cct_boot_sig_AstNode* index, long long line, long long column)
+cct_boot_sig_AstNode* cct_boot_rit_ast_make_index_access_255(cct_boot_sig_AstNode* object, cct_boot_sig_AstNode* index, long long line, long long column)
 {
-  cct_boot_sig_AstNode* node = cct_boot_rit_ast_node_new_211(cct_boot_ord_AstKind__AST_INDEX_ACCESS, line, column);
+  cct_boot_sig_AstNode* node = cct_boot_rit_ast_node_new_218(cct_boot_ord_AstKind__AST_INDEX_ACCESS, line, column);
   (*node).left = object;
   (*node).right = index;
   (*node).has_left = 1;
@@ -1847,134 +1854,134 @@ cct_boot_sig_AstNode* cct_boot_rit_ast_make_index_access_248(cct_boot_sig_AstNod
   return node;
 }
 
-cct_boot_sig_AstNode* cct_boot_rit_ast_make_expr_stmt_249(cct_boot_sig_AstNode* expr, long long line, long long column)
+cct_boot_sig_AstNode* cct_boot_rit_ast_make_expr_stmt_256(cct_boot_sig_AstNode* expr, long long line, long long column)
 {
-  cct_boot_sig_AstNode* node = cct_boot_rit_ast_node_new_211(cct_boot_ord_AstKind__AST_EXPR_STMT, line, column);
+  cct_boot_sig_AstNode* node = cct_boot_rit_ast_node_new_218(cct_boot_ord_AstKind__AST_EXPR_STMT, line, column);
   (*node).left = expr;
   (*node).has_left = 1;
   return node;
 }
 
-cct_boot_sig_AstNode* cct_boot_rit_ast_make_molde_250(long long line, long long column)
+cct_boot_sig_AstNode* cct_boot_rit_ast_make_molde_257(long long line, long long column)
 {
-  return cct_boot_rit_ast_node_new_211(cct_boot_ord_AstKind__AST_MOLDE, line, column);
+  return cct_boot_rit_ast_node_new_218(cct_boot_ord_AstKind__AST_MOLDE, line, column);
 }
 
-cct_boot_sig_AstNode* cct_boot_rit_ast_make_mensura_251(cct_boot_sig_AstNode* type_expr, long long line, long long column)
+cct_boot_sig_AstNode* cct_boot_rit_ast_make_mensura_258(cct_boot_sig_AstNode* type_expr, long long line, long long column)
 {
-  cct_boot_sig_AstNode* node = cct_boot_rit_ast_node_new_211(cct_boot_ord_AstKind__AST_MENSURA, line, column);
+  cct_boot_sig_AstNode* node = cct_boot_rit_ast_node_new_218(cct_boot_ord_AstKind__AST_MENSURA, line, column);
   (*node).type_expr = type_expr;
   (*node).has_type_expr = 1;
   return node;
 }
 
-cct_boot_sig_AstNode* cct_boot_rit_ast_make_redde_252(cct_boot_sig_AstNode* expr, long long line, long long column)
+cct_boot_sig_AstNode* cct_boot_rit_ast_make_redde_259(cct_boot_sig_AstNode* expr, long long line, long long column)
 {
-  cct_boot_sig_AstNode* node = cct_boot_rit_ast_node_new_211(cct_boot_ord_AstKind__AST_REDDE, line, column);
+  cct_boot_sig_AstNode* node = cct_boot_rit_ast_node_new_218(cct_boot_ord_AstKind__AST_REDDE, line, column);
   (*node).left = expr;
   (*node).has_left = 1;
   return node;
 }
 
-cct_boot_sig_AstNode* cct_boot_rit_ast_make_redde_empty_253(long long line, long long column)
+cct_boot_sig_AstNode* cct_boot_rit_ast_make_redde_empty_260(long long line, long long column)
 {
-  cct_boot_sig_AstNode* node = cct_boot_rit_ast_node_new_211(cct_boot_ord_AstKind__AST_REDDE, line, column);
+  cct_boot_sig_AstNode* node = cct_boot_rit_ast_node_new_218(cct_boot_ord_AstKind__AST_REDDE, line, column);
   return node;
 }
 
-cct_boot_sig_AstNode* cct_boot_rit_ast_make_anur_254(cct_boot_sig_AstNode* expr, long long line, long long column)
+cct_boot_sig_AstNode* cct_boot_rit_ast_make_anur_261(cct_boot_sig_AstNode* expr, long long line, long long column)
 {
-  cct_boot_sig_AstNode* node = cct_boot_rit_ast_node_new_211(cct_boot_ord_AstKind__AST_ANUR, line, column);
+  cct_boot_sig_AstNode* node = cct_boot_rit_ast_node_new_218(cct_boot_ord_AstKind__AST_ANUR, line, column);
   (*node).left = expr;
   (*node).has_left = 1;
   return node;
 }
 
-cct_boot_sig_AstNode* cct_boot_rit_ast_make_anur_empty_255(long long line, long long column)
+cct_boot_sig_AstNode* cct_boot_rit_ast_make_anur_empty_262(long long line, long long column)
 {
-  cct_boot_sig_AstNode* node = cct_boot_rit_ast_node_new_211(cct_boot_ord_AstKind__AST_ANUR, line, column);
+  cct_boot_sig_AstNode* node = cct_boot_rit_ast_node_new_218(cct_boot_ord_AstKind__AST_ANUR, line, column);
   return node;
 }
 
-cct_boot_sig_AstNode* cct_boot_rit_ast_make_iace_256(cct_boot_sig_AstNode* expr, long long line, long long column)
+cct_boot_sig_AstNode* cct_boot_rit_ast_make_iace_263(cct_boot_sig_AstNode* expr, long long line, long long column)
 {
-  cct_boot_sig_AstNode* node = cct_boot_rit_ast_node_new_211(cct_boot_ord_AstKind__AST_IACE, line, column);
+  cct_boot_sig_AstNode* node = cct_boot_rit_ast_node_new_218(cct_boot_ord_AstKind__AST_IACE, line, column);
   (*node).left = expr;
   (*node).has_left = 1;
   return node;
 }
 
-cct_boot_sig_AstNode* cct_boot_rit_ast_make_dimitte_257(cct_boot_sig_AstNode* target, long long line, long long column)
+cct_boot_sig_AstNode* cct_boot_rit_ast_make_dimitte_264(cct_boot_sig_AstNode* target, long long line, long long column)
 {
-  cct_boot_sig_AstNode* node = cct_boot_rit_ast_node_new_211(cct_boot_ord_AstKind__AST_DIMITTE, line, column);
+  cct_boot_sig_AstNode* node = cct_boot_rit_ast_node_new_218(cct_boot_ord_AstKind__AST_DIMITTE, line, column);
   (*node).left = target;
   (*node).has_left = 1;
   return node;
 }
 
-cct_boot_sig_AstNode* cct_boot_rit_ast_make_block_258(long long line, long long column)
+cct_boot_sig_AstNode* cct_boot_rit_ast_make_block_265(long long line, long long column)
 {
-  return cct_boot_rit_ast_node_new_211(cct_boot_ord_AstKind__AST_BLOCK, line, column);
+  return cct_boot_rit_ast_node_new_218(cct_boot_ord_AstKind__AST_BLOCK, line, column);
 }
 
-cct_boot_sig_AstNode* cct_boot_rit_ast_make_case_259(long long line, long long column)
+cct_boot_sig_AstNode* cct_boot_rit_ast_make_case_266(long long line, long long column)
 {
-  return cct_boot_rit_ast_node_new_211(cct_boot_ord_AstKind__AST_CASE, line, column);
+  return cct_boot_rit_ast_node_new_218(cct_boot_ord_AstKind__AST_CASE, line, column);
 }
 
-cct_boot_sig_AstNode* cct_boot_rit_ast_make_param_260(char* name, cct_boot_sig_AstNode* type_expr, long long line, long long column)
+cct_boot_sig_AstNode* cct_boot_rit_ast_make_param_267(char* name, cct_boot_sig_AstNode* type_expr, long long line, long long column)
 {
-  cct_boot_sig_AstNode* node = cct_boot_rit_ast_node_new_211(cct_boot_ord_AstKind__AST_PARAM, line, column);
-  cct_boot_rit_ast_node_set_name_213(node, name);
+  cct_boot_sig_AstNode* node = cct_boot_rit_ast_node_new_218(cct_boot_ord_AstKind__AST_PARAM, line, column);
+  cct_boot_rit_ast_node_set_name_220(node, name);
   (*node).type_expr = type_expr;
   (*node).has_type_expr = 1;
   return node;
 }
 
-cct_boot_sig_AstNode* cct_boot_rit_ast_make_type_param_no_constraint_261(char* name, long long line, long long column)
+cct_boot_sig_AstNode* cct_boot_rit_ast_make_type_param_no_constraint_268(char* name, long long line, long long column)
 {
-  cct_boot_sig_AstNode* node = cct_boot_rit_ast_node_new_211(cct_boot_ord_AstKind__AST_TYPE_PARAM, line, column);
-  cct_boot_rit_ast_node_set_name_213(node, name);
+  cct_boot_sig_AstNode* node = cct_boot_rit_ast_node_new_218(cct_boot_ord_AstKind__AST_TYPE_PARAM, line, column);
+  cct_boot_rit_ast_node_set_name_220(node, name);
   return node;
 }
 
-cct_boot_sig_AstNode* cct_boot_rit_ast_make_type_param_262(char* name, cct_boot_sig_AstNode* constraint_type, long long line, long long column)
+cct_boot_sig_AstNode* cct_boot_rit_ast_make_type_param_269(char* name, cct_boot_sig_AstNode* constraint_type, long long line, long long column)
 {
-  cct_boot_sig_AstNode* node = cct_boot_rit_ast_make_type_param_no_constraint_261(name, line, column);
+  cct_boot_sig_AstNode* node = cct_boot_rit_ast_make_type_param_no_constraint_268(name, line, column);
   (*node).type_expr = constraint_type;
   (*node).has_type_expr = 1;
   return node;
 }
 
-cct_boot_sig_AstNode* cct_boot_rit_ast_make_field_263(char* name, cct_boot_sig_AstNode* type_expr, long long line, long long column)
+cct_boot_sig_AstNode* cct_boot_rit_ast_make_field_270(char* name, cct_boot_sig_AstNode* type_expr, long long line, long long column)
 {
-  cct_boot_sig_AstNode* node = cct_boot_rit_ast_node_new_211(cct_boot_ord_AstKind__AST_FIELD, line, column);
-  cct_boot_rit_ast_node_set_name_213(node, name);
+  cct_boot_sig_AstNode* node = cct_boot_rit_ast_node_new_218(cct_boot_ord_AstKind__AST_FIELD, line, column);
+  cct_boot_rit_ast_node_set_name_220(node, name);
   (*node).type_expr = type_expr;
   (*node).has_type_expr = 1;
   return node;
 }
 
-cct_boot_sig_AstNode* cct_boot_rit_ast_make_enum_item_264(char* name, cct_boot_sig_AstNode* value, long long line, long long column)
+cct_boot_sig_AstNode* cct_boot_rit_ast_make_enum_item_271(char* name, cct_boot_sig_AstNode* value, long long line, long long column)
 {
-  cct_boot_sig_AstNode* node = cct_boot_rit_ast_node_new_211(cct_boot_ord_AstKind__AST_ENUM_ITEM, line, column);
-  cct_boot_rit_ast_node_set_name_213(node, name);
+  cct_boot_sig_AstNode* node = cct_boot_rit_ast_node_new_218(cct_boot_ord_AstKind__AST_ENUM_ITEM, line, column);
+  cct_boot_rit_ast_node_set_name_220(node, name);
   (*node).right = value;
   (*node).has_right = 1;
   return node;
 }
 
-cct_boot_sig_AstNode* cct_boot_rit_ast_make_enum_item_no_value_265(char* name, long long line, long long column)
+cct_boot_sig_AstNode* cct_boot_rit_ast_make_enum_item_no_value_272(char* name, long long line, long long column)
 {
-  cct_boot_sig_AstNode* node = cct_boot_rit_ast_node_new_211(cct_boot_ord_AstKind__AST_ENUM_ITEM, line, column);
-  cct_boot_rit_ast_node_set_name_213(node, name);
+  cct_boot_sig_AstNode* node = cct_boot_rit_ast_node_new_218(cct_boot_ord_AstKind__AST_ENUM_ITEM, line, column);
+  cct_boot_rit_ast_node_set_name_220(node, name);
   return node;
 }
 
-cct_boot_sig_AstNode* cct_boot_rit_ast_make_rituale_266(char* name, cct_boot_sig_AstNode* return_type, cct_boot_sig_AstNode* body, long long line, long long column)
+cct_boot_sig_AstNode* cct_boot_rit_ast_make_rituale_273(char* name, cct_boot_sig_AstNode* return_type, cct_boot_sig_AstNode* body, long long line, long long column)
 {
-  cct_boot_sig_AstNode* node = cct_boot_rit_ast_node_new_211(cct_boot_ord_AstKind__AST_RITUALE, line, column);
-  cct_boot_rit_ast_node_set_name_213(node, name);
+  cct_boot_sig_AstNode* node = cct_boot_rit_ast_node_new_218(cct_boot_ord_AstKind__AST_RITUALE, line, column);
+  cct_boot_rit_ast_node_set_name_220(node, name);
   (*node).return_type = return_type;
   (*node).body = body;
   (*node).has_return_type = 1;
@@ -1982,45 +1989,45 @@ cct_boot_sig_AstNode* cct_boot_rit_ast_make_rituale_266(char* name, cct_boot_sig
   return node;
 }
 
-cct_boot_sig_AstNode* cct_boot_rit_ast_make_rituale_decl_267(char* name, long long line, long long column)
+cct_boot_sig_AstNode* cct_boot_rit_ast_make_rituale_decl_274(char* name, long long line, long long column)
 {
-  cct_boot_sig_AstNode* node = cct_boot_rit_ast_node_new_211(cct_boot_ord_AstKind__AST_RITUALE, line, column);
-  cct_boot_rit_ast_node_set_name_213(node, name);
+  cct_boot_sig_AstNode* node = cct_boot_rit_ast_node_new_218(cct_boot_ord_AstKind__AST_RITUALE, line, column);
+  cct_boot_rit_ast_node_set_name_220(node, name);
   return node;
 }
 
-cct_boot_sig_AstNode* cct_boot_rit_ast_make_sigillum_268(char* name, long long line, long long column)
+cct_boot_sig_AstNode* cct_boot_rit_ast_make_sigillum_275(char* name, long long line, long long column)
 {
-  cct_boot_sig_AstNode* node = cct_boot_rit_ast_node_new_211(cct_boot_ord_AstKind__AST_SIGILLUM, line, column);
-  cct_boot_rit_ast_node_set_name_213(node, name);
+  cct_boot_sig_AstNode* node = cct_boot_rit_ast_node_new_218(cct_boot_ord_AstKind__AST_SIGILLUM, line, column);
+  cct_boot_rit_ast_node_set_name_220(node, name);
   return node;
 }
 
-cct_boot_sig_AstNode* cct_boot_rit_ast_make_ordo_269(char* name, long long line, long long column)
+cct_boot_sig_AstNode* cct_boot_rit_ast_make_ordo_276(char* name, long long line, long long column)
 {
-  cct_boot_sig_AstNode* node = cct_boot_rit_ast_node_new_211(cct_boot_ord_AstKind__AST_ORDO, line, column);
-  cct_boot_rit_ast_node_set_name_213(node, name);
+  cct_boot_sig_AstNode* node = cct_boot_rit_ast_node_new_218(cct_boot_ord_AstKind__AST_ORDO, line, column);
+  cct_boot_rit_ast_node_set_name_220(node, name);
   return node;
 }
 
-cct_boot_sig_AstNode* cct_boot_rit_ast_make_codex_270(char* name, long long line, long long column)
+cct_boot_sig_AstNode* cct_boot_rit_ast_make_codex_277(char* name, long long line, long long column)
 {
-  cct_boot_sig_AstNode* node = cct_boot_rit_ast_node_new_211(cct_boot_ord_AstKind__AST_CODEX, line, column);
-  cct_boot_rit_ast_node_set_name_213(node, name);
+  cct_boot_sig_AstNode* node = cct_boot_rit_ast_node_new_218(cct_boot_ord_AstKind__AST_CODEX, line, column);
+  cct_boot_rit_ast_node_set_name_220(node, name);
   return node;
 }
 
-cct_boot_sig_AstNode* cct_boot_rit_ast_make_pactum_271(char* name, long long line, long long column)
+cct_boot_sig_AstNode* cct_boot_rit_ast_make_pactum_278(char* name, long long line, long long column)
 {
-  cct_boot_sig_AstNode* node = cct_boot_rit_ast_node_new_211(cct_boot_ord_AstKind__AST_PACTUM, line, column);
-  cct_boot_rit_ast_node_set_name_213(node, name);
+  cct_boot_sig_AstNode* node = cct_boot_rit_ast_node_new_218(cct_boot_ord_AstKind__AST_PACTUM, line, column);
+  cct_boot_rit_ast_node_set_name_220(node, name);
   return node;
 }
 
-cct_boot_sig_AstNode* cct_boot_rit_ast_make_evoca_272(char* name, cct_boot_sig_AstNode* type_expr, cct_boot_sig_AstNode* init_expr, long long line, long long column)
+cct_boot_sig_AstNode* cct_boot_rit_ast_make_evoca_279(char* name, cct_boot_sig_AstNode* type_expr, cct_boot_sig_AstNode* init_expr, long long line, long long column)
 {
-  cct_boot_sig_AstNode* node = cct_boot_rit_ast_node_new_211(cct_boot_ord_AstKind__AST_EVOCA, line, column);
-  cct_boot_rit_ast_node_set_name_213(node, name);
+  cct_boot_sig_AstNode* node = cct_boot_rit_ast_node_new_218(cct_boot_ord_AstKind__AST_EVOCA, line, column);
+  cct_boot_rit_ast_node_set_name_220(node, name);
   (*node).type_expr = type_expr;
   (*node).right = init_expr;
   (*node).has_type_expr = 1;
@@ -2028,18 +2035,18 @@ cct_boot_sig_AstNode* cct_boot_rit_ast_make_evoca_272(char* name, cct_boot_sig_A
   return node;
 }
 
-cct_boot_sig_AstNode* cct_boot_rit_ast_make_evoca_no_init_273(char* name, cct_boot_sig_AstNode* type_expr, long long line, long long column)
+cct_boot_sig_AstNode* cct_boot_rit_ast_make_evoca_no_init_280(char* name, cct_boot_sig_AstNode* type_expr, long long line, long long column)
 {
-  cct_boot_sig_AstNode* node = cct_boot_rit_ast_node_new_211(cct_boot_ord_AstKind__AST_EVOCA, line, column);
-  cct_boot_rit_ast_node_set_name_213(node, name);
+  cct_boot_sig_AstNode* node = cct_boot_rit_ast_node_new_218(cct_boot_ord_AstKind__AST_EVOCA, line, column);
+  cct_boot_rit_ast_node_set_name_220(node, name);
   (*node).type_expr = type_expr;
   (*node).has_type_expr = 1;
   return node;
 }
 
-cct_boot_sig_AstNode* cct_boot_rit_ast_make_vincire_274(cct_boot_sig_AstNode* target, cct_boot_sig_AstNode* value, long long line, long long column)
+cct_boot_sig_AstNode* cct_boot_rit_ast_make_vincire_281(cct_boot_sig_AstNode* target, cct_boot_sig_AstNode* value, long long line, long long column)
 {
-  cct_boot_sig_AstNode* node = cct_boot_rit_ast_node_new_211(cct_boot_ord_AstKind__AST_VINCIRE, line, column);
+  cct_boot_sig_AstNode* node = cct_boot_rit_ast_node_new_218(cct_boot_ord_AstKind__AST_VINCIRE, line, column);
   (*node).left = target;
   (*node).right = value;
   (*node).has_left = 1;
@@ -2047,9 +2054,9 @@ cct_boot_sig_AstNode* cct_boot_rit_ast_make_vincire_274(cct_boot_sig_AstNode* ta
   return node;
 }
 
-cct_boot_sig_AstNode* cct_boot_rit_ast_make_si_275(cct_boot_sig_AstNode* condition, cct_boot_sig_AstNode* body, cct_boot_sig_AstNode* else_branch, long long line, long long column)
+cct_boot_sig_AstNode* cct_boot_rit_ast_make_si_282(cct_boot_sig_AstNode* condition, cct_boot_sig_AstNode* body, cct_boot_sig_AstNode* else_branch, long long line, long long column)
 {
-  cct_boot_sig_AstNode* node = cct_boot_rit_ast_node_new_211(cct_boot_ord_AstKind__AST_SI, line, column);
+  cct_boot_sig_AstNode* node = cct_boot_rit_ast_node_new_218(cct_boot_ord_AstKind__AST_SI, line, column);
   (*node).condition = condition;
   (*node).body = body;
   (*node).else_branch = else_branch;
@@ -2059,9 +2066,9 @@ cct_boot_sig_AstNode* cct_boot_rit_ast_make_si_275(cct_boot_sig_AstNode* conditi
   return node;
 }
 
-cct_boot_sig_AstNode* cct_boot_rit_ast_make_si_no_else_276(cct_boot_sig_AstNode* condition, cct_boot_sig_AstNode* body, long long line, long long column)
+cct_boot_sig_AstNode* cct_boot_rit_ast_make_si_no_else_283(cct_boot_sig_AstNode* condition, cct_boot_sig_AstNode* body, long long line, long long column)
 {
-  cct_boot_sig_AstNode* node = cct_boot_rit_ast_node_new_211(cct_boot_ord_AstKind__AST_SI, line, column);
+  cct_boot_sig_AstNode* node = cct_boot_rit_ast_node_new_218(cct_boot_ord_AstKind__AST_SI, line, column);
   (*node).condition = condition;
   (*node).body = body;
   (*node).has_condition = 1;
@@ -2069,17 +2076,17 @@ cct_boot_sig_AstNode* cct_boot_rit_ast_make_si_no_else_276(cct_boot_sig_AstNode*
   return node;
 }
 
-cct_boot_sig_AstNode* cct_boot_rit_ast_make_quando_277(cct_boot_sig_AstNode* expr, long long line, long long column)
+cct_boot_sig_AstNode* cct_boot_rit_ast_make_quando_284(cct_boot_sig_AstNode* expr, long long line, long long column)
 {
-  cct_boot_sig_AstNode* node = cct_boot_rit_ast_node_new_211(cct_boot_ord_AstKind__AST_QUANDO, line, column);
+  cct_boot_sig_AstNode* node = cct_boot_rit_ast_node_new_218(cct_boot_ord_AstKind__AST_QUANDO, line, column);
   (*node).condition = expr;
   (*node).has_condition = 1;
   return node;
 }
 
-cct_boot_sig_AstNode* cct_boot_rit_ast_make_dum_278(cct_boot_sig_AstNode* condition, cct_boot_sig_AstNode* body, long long line, long long column)
+cct_boot_sig_AstNode* cct_boot_rit_ast_make_dum_285(cct_boot_sig_AstNode* condition, cct_boot_sig_AstNode* body, long long line, long long column)
 {
-  cct_boot_sig_AstNode* node = cct_boot_rit_ast_node_new_211(cct_boot_ord_AstKind__AST_DUM, line, column);
+  cct_boot_sig_AstNode* node = cct_boot_rit_ast_node_new_218(cct_boot_ord_AstKind__AST_DUM, line, column);
   (*node).condition = condition;
   (*node).body = body;
   (*node).has_condition = 1;
@@ -2087,9 +2094,9 @@ cct_boot_sig_AstNode* cct_boot_rit_ast_make_dum_278(cct_boot_sig_AstNode* condit
   return node;
 }
 
-cct_boot_sig_AstNode* cct_boot_rit_ast_make_donec_279(cct_boot_sig_AstNode* body, cct_boot_sig_AstNode* condition, long long line, long long column)
+cct_boot_sig_AstNode* cct_boot_rit_ast_make_donec_286(cct_boot_sig_AstNode* body, cct_boot_sig_AstNode* condition, long long line, long long column)
 {
-  cct_boot_sig_AstNode* node = cct_boot_rit_ast_node_new_211(cct_boot_ord_AstKind__AST_DONEC, line, column);
+  cct_boot_sig_AstNode* node = cct_boot_rit_ast_node_new_218(cct_boot_ord_AstKind__AST_DONEC, line, column);
   (*node).body = body;
   (*node).has_body = 1;
   (*node).condition = condition;
@@ -2097,18 +2104,18 @@ cct_boot_sig_AstNode* cct_boot_rit_ast_make_donec_279(cct_boot_sig_AstNode* body
   return node;
 }
 
-cct_boot_sig_AstNode* cct_boot_rit_ast_make_donec_no_condition_280(cct_boot_sig_AstNode* body, long long line, long long column)
+cct_boot_sig_AstNode* cct_boot_rit_ast_make_donec_no_condition_287(cct_boot_sig_AstNode* body, long long line, long long column)
 {
-  cct_boot_sig_AstNode* node = cct_boot_rit_ast_node_new_211(cct_boot_ord_AstKind__AST_DONEC, line, column);
+  cct_boot_sig_AstNode* node = cct_boot_rit_ast_node_new_218(cct_boot_ord_AstKind__AST_DONEC, line, column);
   (*node).body = body;
   (*node).has_body = 1;
   return node;
 }
 
-cct_boot_sig_AstNode* cct_boot_rit_ast_make_repete_281(char* iterator_name, cct_boot_sig_AstNode* start_expr, cct_boot_sig_AstNode* end_expr, cct_boot_sig_AstNode* step_expr, cct_boot_sig_AstNode* body, long long line, long long column)
+cct_boot_sig_AstNode* cct_boot_rit_ast_make_repete_288(char* iterator_name, cct_boot_sig_AstNode* start_expr, cct_boot_sig_AstNode* end_expr, cct_boot_sig_AstNode* step_expr, cct_boot_sig_AstNode* body, long long line, long long column)
 {
-  cct_boot_sig_AstNode* node = cct_boot_rit_ast_node_new_211(cct_boot_ord_AstKind__AST_REPETE, line, column);
-  cct_boot_rit_ast_node_set_name_213(node, iterator_name);
+  cct_boot_sig_AstNode* node = cct_boot_rit_ast_node_new_218(cct_boot_ord_AstKind__AST_REPETE, line, column);
+  cct_boot_rit_ast_node_set_name_220(node, iterator_name);
   (*node).left = start_expr;
   (*node).right = end_expr;
   (*node).condition = step_expr;
@@ -2120,10 +2127,10 @@ cct_boot_sig_AstNode* cct_boot_rit_ast_make_repete_281(char* iterator_name, cct_
   return node;
 }
 
-cct_boot_sig_AstNode* cct_boot_rit_ast_make_repete_no_step_282(char* iterator_name, cct_boot_sig_AstNode* start_expr, cct_boot_sig_AstNode* end_expr, cct_boot_sig_AstNode* body, long long line, long long column)
+cct_boot_sig_AstNode* cct_boot_rit_ast_make_repete_no_step_289(char* iterator_name, cct_boot_sig_AstNode* start_expr, cct_boot_sig_AstNode* end_expr, cct_boot_sig_AstNode* body, long long line, long long column)
 {
-  cct_boot_sig_AstNode* node = cct_boot_rit_ast_node_new_211(cct_boot_ord_AstKind__AST_REPETE, line, column);
-  cct_boot_rit_ast_node_set_name_213(node, iterator_name);
+  cct_boot_sig_AstNode* node = cct_boot_rit_ast_node_new_218(cct_boot_ord_AstKind__AST_REPETE, line, column);
+  cct_boot_rit_ast_node_set_name_220(node, iterator_name);
   (*node).left = start_expr;
   (*node).right = end_expr;
   (*node).body = body;
@@ -2133,13 +2140,13 @@ cct_boot_sig_AstNode* cct_boot_rit_ast_make_repete_no_step_282(char* iterator_na
   return node;
 }
 
-cct_boot_sig_AstNode* cct_boot_rit_ast_make_iterum_283(char* item_name, char* value_name, cct_boot_sig_AstNode* collection, cct_boot_sig_AstNode* body, long long line, long long column)
+cct_boot_sig_AstNode* cct_boot_rit_ast_make_iterum_290(char* item_name, char* value_name, cct_boot_sig_AstNode* collection, cct_boot_sig_AstNode* body, long long line, long long column)
 {
-  cct_boot_sig_AstNode* node = cct_boot_rit_ast_node_new_211(cct_boot_ord_AstKind__AST_ITERUM, line, column);
-  cct_boot_rit_ast_node_set_name_213(node, item_name);
+  cct_boot_sig_AstNode* node = cct_boot_rit_ast_node_new_218(cct_boot_ord_AstKind__AST_ITERUM, line, column);
+  cct_boot_rit_ast_node_set_name_220(node, item_name);
   if (cct_boot_rit_compare_38(value_name, cct_boot_str_102) != 0)
   {
-    cct_boot_rit_ast_node_set_aux_name_216(node, value_name);
+    cct_boot_rit_ast_node_set_aux_name_223(node, value_name);
   }
   (*node).left = collection;
   (*node).body = body;
@@ -2148,64 +2155,64 @@ cct_boot_sig_AstNode* cct_boot_rit_ast_make_iterum_283(char* item_name, char* va
   return node;
 }
 
-cct_boot_sig_AstNode* cct_boot_rit_ast_make_frange_284(long long line, long long column)
+cct_boot_sig_AstNode* cct_boot_rit_ast_make_frange_291(long long line, long long column)
 {
-  return cct_boot_rit_ast_node_new_211(cct_boot_ord_AstKind__AST_FRANGE, line, column);
+  return cct_boot_rit_ast_node_new_218(cct_boot_ord_AstKind__AST_FRANGE, line, column);
 }
 
-cct_boot_sig_AstNode* cct_boot_rit_ast_make_recede_285(long long line, long long column)
+cct_boot_sig_AstNode* cct_boot_rit_ast_make_recede_292(long long line, long long column)
 {
-  return cct_boot_rit_ast_node_new_211(cct_boot_ord_AstKind__AST_RECEDE, line, column);
+  return cct_boot_rit_ast_node_new_218(cct_boot_ord_AstKind__AST_RECEDE, line, column);
 }
 
-cct_boot_sig_AstNode* cct_boot_rit_ast_make_tempta_no_semper_286(cct_boot_sig_AstNode* try_block, cct_boot_sig_AstNode* cape_type, char* cape_name, cct_boot_sig_AstNode* cape_block, long long line, long long column)
+cct_boot_sig_AstNode* cct_boot_rit_ast_make_tempta_no_semper_293(cct_boot_sig_AstNode* try_block, cct_boot_sig_AstNode* cape_type, char* cape_name, cct_boot_sig_AstNode* cape_block, long long line, long long column)
 {
-  cct_boot_sig_AstNode* node = cct_boot_rit_ast_node_new_211(cct_boot_ord_AstKind__AST_TEMPTA, line, column);
+  cct_boot_sig_AstNode* node = cct_boot_rit_ast_node_new_218(cct_boot_ord_AstKind__AST_TEMPTA, line, column);
   (*node).try_block = try_block;
   (*node).has_try_block = 1;
   (*node).cape_type = cape_type;
   (*node).has_cape_type = 1;
-  cct_boot_rit_ast_node_set_name_213(node, cape_name);
+  cct_boot_rit_ast_node_set_name_220(node, cape_name);
   (*node).cape_block = cape_block;
   (*node).has_cape_block = 1;
   return node;
 }
 
-cct_boot_sig_AstNode* cct_boot_rit_ast_make_tempta_287(cct_boot_sig_AstNode* try_block, cct_boot_sig_AstNode* cape_type, char* cape_name, cct_boot_sig_AstNode* cape_block, cct_boot_sig_AstNode* semper_block, long long line, long long column)
+cct_boot_sig_AstNode* cct_boot_rit_ast_make_tempta_294(cct_boot_sig_AstNode* try_block, cct_boot_sig_AstNode* cape_type, char* cape_name, cct_boot_sig_AstNode* cape_block, cct_boot_sig_AstNode* semper_block, long long line, long long column)
 {
-  cct_boot_sig_AstNode* node = cct_boot_rit_ast_make_tempta_no_semper_286(try_block, cape_type, cape_name, cape_block, line, column);
+  cct_boot_sig_AstNode* node = cct_boot_rit_ast_make_tempta_no_semper_293(try_block, cape_type, cape_name, cape_block, line, column);
   (*node).semper_block = semper_block;
   (*node).has_semper_block = 1;
   return node;
 }
 
-char* cct_boot_rit_ast_dump_indent_288(long long level)
+char* cct_boot_rit_ast_dump_indent_295(long long level)
 {
   return cct_boot_rit_repeat_58(cct_boot_str_103, level);
 }
 
-char* cct_boot_rit_ast_dump_append_289(char* out, char* text)
+char* cct_boot_rit_ast_dump_append_296(char* out, char* text)
 {
   return cct_boot_rit_concat_37(out, text);
 }
 
-char* cct_boot_rit_ast_dump_append_line_290(char* out, long long level, char* text)
+char* cct_boot_rit_ast_dump_append_line_297(char* out, long long level, char* text)
 {
-  char* line = cct_boot_rit_concat_37(cct_boot_rit_ast_dump_indent_288(level), text);
+  char* line = cct_boot_rit_concat_37(cct_boot_rit_ast_dump_indent_295(level), text);
   return cct_boot_rit_concat_37(out, cct_boot_rit_concat_37(line, cct_boot_str_104));
 }
 
-char* cct_boot_rit_ast_dump_location_291(long long line, long long column)
+char* cct_boot_rit_ast_dump_location_298(long long line, long long column)
 {
   char* out = cct_boot_str_105;
-  out = cct_boot_rit_concat_37(out, cct_boot_rit_stringify_int_95(line));
+  out = cct_boot_rit_concat_37(out, cct_boot_rit_stringify_int_102(line));
   out = cct_boot_rit_concat_37(out, cct_boot_str_106);
-  out = cct_boot_rit_concat_37(out, cct_boot_rit_stringify_int_95(column));
+  out = cct_boot_rit_concat_37(out, cct_boot_rit_stringify_int_102(column));
   out = cct_boot_rit_concat_37(out, cct_boot_str_107);
   return out;
 }
 
-char* cct_boot_rit_ast_dump_type_inline_292(cct_boot_sig_AstNode* type_expr)
+char* cct_boot_rit_ast_dump_type_inline_299(cct_boot_sig_AstNode* type_expr)
 {
   char* out = cct_boot_str_102;
   if ((*type_expr).is_array)
@@ -2217,20 +2224,20 @@ char* cct_boot_rit_ast_dump_type_inline_292(cct_boot_sig_AstNode* type_expr)
     out = cct_boot_rit_concat_37(out, cct_boot_str_109);
   }
   out = cct_boot_rit_concat_37(out, (*type_expr).type_name);
-  if (cct_boot_rit_ast_node_list_len_209((*type_expr).generic_args) > 0)
+  if (cct_boot_rit_ast_node_list_len_216((*type_expr).generic_args) > 0)
   {
     out = cct_boot_rit_concat_37(out, cct_boot_str_110);
     long long i = 0;
-    long long n = cct_boot_rit_ast_node_list_len_209((*type_expr).generic_args);
+    long long n = cct_boot_rit_ast_node_list_len_216((*type_expr).generic_args);
     while (i < n)
     {
       {
-        cct_boot_sig_AstNode* arg = cct_boot_rit_ast_node_list_get_210((*type_expr).generic_args, i);
+        cct_boot_sig_AstNode* arg = cct_boot_rit_ast_node_list_get_217((*type_expr).generic_args, i);
         if (i > 0)
         {
           out = cct_boot_rit_concat_37(out, cct_boot_str_111);
         }
-        out = cct_boot_rit_concat_37(out, cct_boot_rit_ast_dump_type_inline_292(arg));
+        out = cct_boot_rit_concat_37(out, cct_boot_rit_ast_dump_type_inline_299(arg));
         i = (i + 1);
       }
       if (0) goto __cct_label_1;
@@ -2243,29 +2250,29 @@ char* cct_boot_rit_ast_dump_type_inline_292(cct_boot_sig_AstNode* type_expr)
   if ((*type_expr).is_array)
   {
     out = cct_boot_rit_concat_37(out, cct_boot_str_112);
-    out = cct_boot_rit_concat_37(out, cct_boot_rit_stringify_int_95((*type_expr).array_size));
+    out = cct_boot_rit_concat_37(out, cct_boot_rit_stringify_int_102((*type_expr).array_size));
     out = cct_boot_rit_concat_37(out, cct_boot_str_113);
   }
   return out;
 }
 
-char* cct_boot_rit_ast_dump_type_params_293(char* out, long long level, void* list)
+char* cct_boot_rit_ast_dump_type_params_300(char* out, long long level, void* list)
 {
-  char* next = cct_boot_rit_ast_dump_append_line_290(out, level, cct_boot_rit_concat_37(cct_boot_str_114, cct_boot_rit_concat_37(cct_boot_rit_stringify_int_95(cct_boot_rit_ast_node_list_len_209(list)), cct_boot_str_107)));
+  char* next = cct_boot_rit_ast_dump_append_line_297(out, level, cct_boot_rit_concat_37(cct_boot_str_114, cct_boot_rit_concat_37(cct_boot_rit_stringify_int_102(cct_boot_rit_ast_node_list_len_216(list)), cct_boot_str_107)));
   long long i = 0;
-  long long n = cct_boot_rit_ast_node_list_len_209(list);
+  long long n = cct_boot_rit_ast_node_list_len_216(list);
   while (i < n)
   {
     {
-      cct_boot_sig_AstNode* item = cct_boot_rit_ast_node_list_get_210(list, i);
+      cct_boot_sig_AstNode* item = cct_boot_rit_ast_node_list_get_217(list, i);
       char* line = cct_boot_str_115;
       line = cct_boot_rit_concat_37(line, (*item).name);
       if ((*item).has_type_expr)
       {
         line = cct_boot_rit_concat_37(line, cct_boot_str_116);
-        line = cct_boot_rit_concat_37(line, cct_boot_rit_ast_dump_type_inline_292((*item).type_expr));
+        line = cct_boot_rit_concat_37(line, cct_boot_rit_ast_dump_type_inline_299((*item).type_expr));
       }
-      next = cct_boot_rit_ast_dump_append_line_290(next, (level + 1), line);
+      next = cct_boot_rit_ast_dump_append_line_297(next, (level + 1), line);
       i = (i + 1);
     }
     if (0) goto __cct_label_3;
@@ -2276,26 +2283,26 @@ char* cct_boot_rit_ast_dump_type_params_293(char* out, long long level, void* li
   return next;
 }
 
-char* cct_boot_rit_ast_dump_value_with_label_294(char* out, long long level, char* label, cct_boot_sig_AstNode* node)
+char* cct_boot_rit_ast_dump_value_with_label_301(char* out, long long level, char* label, cct_boot_sig_AstNode* node)
 {
-  char* next = cct_boot_rit_ast_dump_append_line_290(out, level, label);
-  return cct_boot_rit_ast_dump_node_298(node, (level + 1), next);
+  char* next = cct_boot_rit_ast_dump_append_line_297(out, level, label);
+  return cct_boot_rit_ast_dump_node_305(node, (level + 1), next);
 }
 
-char* cct_boot_rit_ast_dump_named_type_list_295(char* out, long long level, void* list, char* label)
+char* cct_boot_rit_ast_dump_named_type_list_302(char* out, long long level, void* list, char* label)
 {
-  char* next = cct_boot_rit_ast_dump_append_line_290(out, level, cct_boot_rit_concat_37(cct_boot_rit_concat_37(label, cct_boot_str_117), cct_boot_rit_concat_37(cct_boot_rit_stringify_int_95(cct_boot_rit_ast_node_list_len_209(list)), cct_boot_str_107)));
+  char* next = cct_boot_rit_ast_dump_append_line_297(out, level, cct_boot_rit_concat_37(cct_boot_rit_concat_37(label, cct_boot_str_117), cct_boot_rit_concat_37(cct_boot_rit_stringify_int_102(cct_boot_rit_ast_node_list_len_216(list)), cct_boot_str_107)));
   long long i = 0;
-  long long n = cct_boot_rit_ast_node_list_len_209(list);
+  long long n = cct_boot_rit_ast_node_list_len_216(list);
   while (i < n)
   {
     {
-      cct_boot_sig_AstNode* item = cct_boot_rit_ast_node_list_get_210(list, i);
+      cct_boot_sig_AstNode* item = cct_boot_rit_ast_node_list_get_217(list, i);
       char* line = cct_boot_str_115;
       line = cct_boot_rit_concat_37(line, (*item).name);
       line = cct_boot_rit_concat_37(line, cct_boot_str_118);
-      line = cct_boot_rit_concat_37(line, cct_boot_rit_ast_dump_type_inline_292((*item).type_expr));
-      next = cct_boot_rit_ast_dump_append_line_290(next, (level + 1), line);
+      line = cct_boot_rit_concat_37(line, cct_boot_rit_ast_dump_type_inline_299((*item).type_expr));
+      next = cct_boot_rit_ast_dump_append_line_297(next, (level + 1), line);
       i = (i + 1);
     }
     if (0) goto __cct_label_5;
@@ -2306,15 +2313,15 @@ char* cct_boot_rit_ast_dump_named_type_list_295(char* out, long long level, void
   return next;
 }
 
-char* cct_boot_rit_ast_dump_enum_items_296(char* out, long long level, void* list)
+char* cct_boot_rit_ast_dump_enum_items_303(char* out, long long level, void* list)
 {
-  char* next = cct_boot_rit_ast_dump_append_line_290(out, level, cct_boot_rit_concat_37(cct_boot_str_119, cct_boot_rit_concat_37(cct_boot_rit_stringify_int_95(cct_boot_rit_ast_node_list_len_209(list)), cct_boot_str_107)));
+  char* next = cct_boot_rit_ast_dump_append_line_297(out, level, cct_boot_rit_concat_37(cct_boot_str_119, cct_boot_rit_concat_37(cct_boot_rit_stringify_int_102(cct_boot_rit_ast_node_list_len_216(list)), cct_boot_str_107)));
   long long i = 0;
-  long long n = cct_boot_rit_ast_node_list_len_209(list);
+  long long n = cct_boot_rit_ast_node_list_len_216(list);
   while (i < n)
   {
     {
-      cct_boot_sig_AstNode* item = cct_boot_rit_ast_node_list_get_210(list, i);
+      cct_boot_sig_AstNode* item = cct_boot_rit_ast_node_list_get_217(list, i);
       char* line = cct_boot_str_115;
       line = cct_boot_rit_concat_37(line, (*item).name);
       if ((*item).has_right)
@@ -2327,7 +2334,7 @@ char* cct_boot_rit_ast_dump_enum_items_296(char* out, long long level, void* lis
       {
         line = cct_boot_rit_concat_37(line, cct_boot_str_121);
       }
-      next = cct_boot_rit_ast_dump_append_line_290(next, (level + 1), line);
+      next = cct_boot_rit_ast_dump_append_line_297(next, (level + 1), line);
       i = (i + 1);
     }
     if (0) goto __cct_label_7;
@@ -2338,16 +2345,16 @@ char* cct_boot_rit_ast_dump_enum_items_296(char* out, long long level, void* lis
   return next;
 }
 
-char* cct_boot_rit_ast_dump_node_list_with_label_297(char* out, long long level, void* list, char* label)
+char* cct_boot_rit_ast_dump_node_list_with_label_304(char* out, long long level, void* list, char* label)
 {
-  char* next = cct_boot_rit_ast_dump_append_line_290(out, level, label);
+  char* next = cct_boot_rit_ast_dump_append_line_297(out, level, label);
   long long i = 0;
-  long long n = cct_boot_rit_ast_node_list_len_209(list);
+  long long n = cct_boot_rit_ast_node_list_len_216(list);
   while (i < n)
   {
     {
-      cct_boot_sig_AstNode* item = cct_boot_rit_ast_node_list_get_210(list, i);
-      next = cct_boot_rit_ast_dump_node_298(item, (level + 1), next);
+      cct_boot_sig_AstNode* item = cct_boot_rit_ast_node_list_get_217(list, i);
+      next = cct_boot_rit_ast_dump_node_305(item, (level + 1), next);
       i = (i + 1);
     }
     if (0) goto __cct_label_9;
@@ -2358,86 +2365,86 @@ char* cct_boot_rit_ast_dump_node_list_with_label_297(char* out, long long level,
   return next;
 }
 
-char* cct_boot_rit_ast_dump_node_298(cct_boot_sig_AstNode* node, long long level, char* out)
+char* cct_boot_rit_ast_dump_node_305(cct_boot_sig_AstNode* node, long long level, char* out)
 {
-  char* location = cct_boot_rit_ast_dump_location_291((*node).line, (*node).column);
+  char* location = cct_boot_rit_ast_dump_location_298((*node).line, (*node).column);
   cct_boot_ord_AstKind __cct_tmp_0 = (*node).kind;
   switch (__cct_tmp_0)
   {
     case cct_boot_ord_AstKind__AST_IMPORT:
     {
-      out = cct_boot_rit_ast_dump_append_line_290(out, level, cct_boot_rit_concat_37(cct_boot_str_122, location));
-      return cct_boot_rit_ast_dump_append_line_290(out, (level + 1), cct_boot_rit_concat_37(cct_boot_str_123, cct_boot_rit_concat_37((*node).value_text, cct_boot_str_124)));
+      out = cct_boot_rit_ast_dump_append_line_297(out, level, cct_boot_rit_concat_37(cct_boot_str_122, location));
+      return cct_boot_rit_ast_dump_append_line_297(out, (level + 1), cct_boot_rit_concat_37(cct_boot_str_123, cct_boot_rit_concat_37((*node).value_text, cct_boot_str_124)));
     }
     break;
     case cct_boot_ord_AstKind__AST_RITUALE:
     {
-      out = cct_boot_rit_ast_dump_append_line_290(out, level, cct_boot_rit_concat_37(cct_boot_str_125, location));
-      out = cct_boot_rit_ast_dump_append_line_290(out, (level + 1), cct_boot_rit_concat_37(cct_boot_str_126, (*node).name));
-      if (cct_boot_rit_ast_node_list_len_209((*node).type_params) > 0)
+      out = cct_boot_rit_ast_dump_append_line_297(out, level, cct_boot_rit_concat_37(cct_boot_str_125, location));
+      out = cct_boot_rit_ast_dump_append_line_297(out, (level + 1), cct_boot_rit_concat_37(cct_boot_str_126, (*node).name));
+      if (cct_boot_rit_ast_node_list_len_216((*node).type_params) > 0)
       {
-        out = cct_boot_rit_ast_dump_type_params_293(out, (level + 1), (*node).type_params);
+        out = cct_boot_rit_ast_dump_type_params_300(out, (level + 1), (*node).type_params);
       }
-      out = cct_boot_rit_ast_dump_named_type_list_295(out, (level + 1), (*node).params, cct_boot_str_127);
+      out = cct_boot_rit_ast_dump_named_type_list_302(out, (level + 1), (*node).params, cct_boot_str_127);
       if ((*node).has_return_type)
       {
-        out = cct_boot_rit_ast_dump_append_line_290(out, (level + 1), cct_boot_rit_concat_37(cct_boot_str_128, cct_boot_rit_ast_dump_type_inline_292((*node).return_type)));
+        out = cct_boot_rit_ast_dump_append_line_297(out, (level + 1), cct_boot_rit_concat_37(cct_boot_str_128, cct_boot_rit_ast_dump_type_inline_299((*node).return_type)));
       }
       else
       {
-        out = cct_boot_rit_ast_dump_append_line_290(out, (level + 1), cct_boot_str_129);
+        out = cct_boot_rit_ast_dump_append_line_297(out, (level + 1), cct_boot_str_129);
       }
       if ((*node).has_body)
       {
-        out = cct_boot_rit_ast_dump_append_line_290(out, (level + 1), cct_boot_str_130);
-        return cct_boot_rit_ast_dump_node_298((*node).body, (level + 2), out);
+        out = cct_boot_rit_ast_dump_append_line_297(out, (level + 1), cct_boot_str_130);
+        return cct_boot_rit_ast_dump_node_305((*node).body, (level + 2), out);
       }
       return out;
     }
     break;
     case cct_boot_ord_AstKind__AST_SIGILLUM:
     {
-      out = cct_boot_rit_ast_dump_append_line_290(out, level, cct_boot_rit_concat_37(cct_boot_str_131, location));
-      out = cct_boot_rit_ast_dump_append_line_290(out, (level + 1), cct_boot_rit_concat_37(cct_boot_str_126, (*node).name));
-      if (cct_boot_rit_ast_node_list_len_209((*node).type_params) > 0)
+      out = cct_boot_rit_ast_dump_append_line_297(out, level, cct_boot_rit_concat_37(cct_boot_str_131, location));
+      out = cct_boot_rit_ast_dump_append_line_297(out, (level + 1), cct_boot_rit_concat_37(cct_boot_str_126, (*node).name));
+      if (cct_boot_rit_ast_node_list_len_216((*node).type_params) > 0)
       {
-        out = cct_boot_rit_ast_dump_type_params_293(out, (level + 1), (*node).type_params);
+        out = cct_boot_rit_ast_dump_type_params_300(out, (level + 1), (*node).type_params);
       }
-      return cct_boot_rit_ast_dump_named_type_list_295(out, (level + 1), (*node).fields, cct_boot_str_132);
+      return cct_boot_rit_ast_dump_named_type_list_302(out, (level + 1), (*node).fields, cct_boot_str_132);
     }
     break;
     case cct_boot_ord_AstKind__AST_ORDO:
     {
-      out = cct_boot_rit_ast_dump_append_line_290(out, level, cct_boot_rit_concat_37(cct_boot_str_133, location));
-      out = cct_boot_rit_ast_dump_append_line_290(out, (level + 1), cct_boot_rit_concat_37(cct_boot_str_126, (*node).name));
-      return cct_boot_rit_ast_dump_enum_items_296(out, (level + 1), (*node).items);
+      out = cct_boot_rit_ast_dump_append_line_297(out, level, cct_boot_rit_concat_37(cct_boot_str_133, location));
+      out = cct_boot_rit_ast_dump_append_line_297(out, (level + 1), cct_boot_rit_concat_37(cct_boot_str_126, (*node).name));
+      return cct_boot_rit_ast_dump_enum_items_303(out, (level + 1), (*node).items);
     }
     break;
     case cct_boot_ord_AstKind__AST_CODEX:
     {
-      out = cct_boot_rit_ast_dump_append_line_290(out, level, cct_boot_rit_concat_37(cct_boot_str_134, location));
-      out = cct_boot_rit_ast_dump_append_line_290(out, (level + 1), cct_boot_rit_concat_37(cct_boot_str_126, (*node).name));
-      return cct_boot_rit_ast_dump_node_list_with_label_297(out, (level + 1), (*node).declarations, cct_boot_str_135);
+      out = cct_boot_rit_ast_dump_append_line_297(out, level, cct_boot_rit_concat_37(cct_boot_str_134, location));
+      out = cct_boot_rit_ast_dump_append_line_297(out, (level + 1), cct_boot_rit_concat_37(cct_boot_str_126, (*node).name));
+      return cct_boot_rit_ast_dump_node_list_with_label_304(out, (level + 1), (*node).declarations, cct_boot_str_135);
     }
     break;
     case cct_boot_ord_AstKind__AST_PACTUM:
     {
-      out = cct_boot_rit_ast_dump_append_line_290(out, level, cct_boot_rit_concat_37(cct_boot_str_136, location));
-      out = cct_boot_rit_ast_dump_append_line_290(out, (level + 1), cct_boot_rit_concat_37(cct_boot_str_126, (*node).name));
-      return cct_boot_rit_ast_dump_node_list_with_label_297(out, (level + 1), (*node).signatures, cct_boot_str_137);
+      out = cct_boot_rit_ast_dump_append_line_297(out, level, cct_boot_rit_concat_37(cct_boot_str_136, location));
+      out = cct_boot_rit_ast_dump_append_line_297(out, (level + 1), cct_boot_rit_concat_37(cct_boot_str_126, (*node).name));
+      return cct_boot_rit_ast_dump_node_list_with_label_304(out, (level + 1), (*node).signatures, cct_boot_str_137);
     }
     break;
     case cct_boot_ord_AstKind__AST_BLOCK:
     {
-      out = cct_boot_rit_ast_dump_append_line_290(out, level, cct_boot_rit_concat_37(cct_boot_str_138, location));
-      out = cct_boot_rit_ast_dump_append_line_290(out, (level + 1), cct_boot_rit_concat_37(cct_boot_str_139, cct_boot_rit_concat_37(cct_boot_rit_stringify_int_95(cct_boot_rit_ast_node_list_len_209((*node).statements)), cct_boot_str_107)));
+      out = cct_boot_rit_ast_dump_append_line_297(out, level, cct_boot_rit_concat_37(cct_boot_str_138, location));
+      out = cct_boot_rit_ast_dump_append_line_297(out, (level + 1), cct_boot_rit_concat_37(cct_boot_str_139, cct_boot_rit_concat_37(cct_boot_rit_stringify_int_102(cct_boot_rit_ast_node_list_len_216((*node).statements)), cct_boot_str_107)));
       long long i = 0;
-      long long n = cct_boot_rit_ast_node_list_len_209((*node).statements);
+      long long n = cct_boot_rit_ast_node_list_len_216((*node).statements);
       while (i < n)
       {
         {
-          cct_boot_sig_AstNode* stmt = cct_boot_rit_ast_node_list_get_210((*node).statements, i);
-          out = cct_boot_rit_ast_dump_node_298(stmt, (level + 2), out);
+          cct_boot_sig_AstNode* stmt = cct_boot_rit_ast_node_list_get_217((*node).statements, i);
+          out = cct_boot_rit_ast_dump_node_305(stmt, (level + 2), out);
           i = (i + 1);
         }
         if (0) goto __cct_label_11;
@@ -2450,92 +2457,92 @@ char* cct_boot_rit_ast_dump_node_298(cct_boot_sig_AstNode* node, long long level
     break;
     case cct_boot_ord_AstKind__AST_EVOCA:
     {
-      out = cct_boot_rit_ast_dump_append_line_290(out, level, cct_boot_rit_concat_37(cct_boot_str_140, location));
-      out = cct_boot_rit_ast_dump_append_line_290(out, (level + 1), cct_boot_rit_concat_37(cct_boot_str_126, (*node).name));
-      out = cct_boot_rit_ast_dump_append_line_290(out, (level + 1), cct_boot_rit_concat_37(cct_boot_str_128, cct_boot_rit_ast_dump_type_inline_292((*node).type_expr)));
+      out = cct_boot_rit_ast_dump_append_line_297(out, level, cct_boot_rit_concat_37(cct_boot_str_140, location));
+      out = cct_boot_rit_ast_dump_append_line_297(out, (level + 1), cct_boot_rit_concat_37(cct_boot_str_126, (*node).name));
+      out = cct_boot_rit_ast_dump_append_line_297(out, (level + 1), cct_boot_rit_concat_37(cct_boot_str_128, cct_boot_rit_ast_dump_type_inline_299((*node).type_expr)));
       if ((*node).has_right)
       {
-        return cct_boot_rit_ast_dump_value_with_label_294(out, (level + 1), cct_boot_str_141, (*node).right);
+        return cct_boot_rit_ast_dump_value_with_label_301(out, (level + 1), cct_boot_str_141, (*node).right);
       }
       return out;
     }
     break;
     case cct_boot_ord_AstKind__AST_VINCIRE:
     {
-      out = cct_boot_rit_ast_dump_append_line_290(out, level, cct_boot_rit_concat_37(cct_boot_str_142, location));
-      out = cct_boot_rit_ast_dump_append_line_290(out, (level + 1), cct_boot_str_143);
-      out = cct_boot_rit_ast_dump_node_298((*node).left, (level + 2), out);
-      out = cct_boot_rit_ast_dump_append_line_290(out, (level + 1), cct_boot_str_144);
-      return cct_boot_rit_ast_dump_node_298((*node).right, (level + 2), out);
+      out = cct_boot_rit_ast_dump_append_line_297(out, level, cct_boot_rit_concat_37(cct_boot_str_142, location));
+      out = cct_boot_rit_ast_dump_append_line_297(out, (level + 1), cct_boot_str_143);
+      out = cct_boot_rit_ast_dump_node_305((*node).left, (level + 2), out);
+      out = cct_boot_rit_ast_dump_append_line_297(out, (level + 1), cct_boot_str_144);
+      return cct_boot_rit_ast_dump_node_305((*node).right, (level + 2), out);
     }
     break;
     case cct_boot_ord_AstKind__AST_REDDE:
     {
-      out = cct_boot_rit_ast_dump_append_line_290(out, level, cct_boot_rit_concat_37(cct_boot_str_145, location));
+      out = cct_boot_rit_ast_dump_append_line_297(out, level, cct_boot_rit_concat_37(cct_boot_str_145, location));
       if ((*node).has_left)
       {
-        return cct_boot_rit_ast_dump_value_with_label_294(out, (level + 1), cct_boot_str_144, (*node).left);
+        return cct_boot_rit_ast_dump_value_with_label_301(out, (level + 1), cct_boot_str_144, (*node).left);
       }
       return out;
     }
     break;
     case cct_boot_ord_AstKind__AST_ANUR:
     {
-      out = cct_boot_rit_ast_dump_append_line_290(out, level, cct_boot_rit_concat_37(cct_boot_str_146, location));
+      out = cct_boot_rit_ast_dump_append_line_297(out, level, cct_boot_rit_concat_37(cct_boot_str_146, location));
       if ((*node).has_left)
       {
-        return cct_boot_rit_ast_dump_value_with_label_294(out, (level + 1), cct_boot_str_144, (*node).left);
+        return cct_boot_rit_ast_dump_value_with_label_301(out, (level + 1), cct_boot_str_144, (*node).left);
       }
       return out;
     }
     break;
     case cct_boot_ord_AstKind__AST_IACE:
     {
-      out = cct_boot_rit_ast_dump_append_line_290(out, level, cct_boot_rit_concat_37(cct_boot_str_147, location));
-      return cct_boot_rit_ast_dump_value_with_label_294(out, (level + 1), cct_boot_str_144, (*node).left);
+      out = cct_boot_rit_ast_dump_append_line_297(out, level, cct_boot_rit_concat_37(cct_boot_str_147, location));
+      return cct_boot_rit_ast_dump_value_with_label_301(out, (level + 1), cct_boot_str_144, (*node).left);
     }
     break;
     case cct_boot_ord_AstKind__AST_DIMITTE:
     {
-      out = cct_boot_rit_ast_dump_append_line_290(out, level, cct_boot_rit_concat_37(cct_boot_str_148, location));
-      return cct_boot_rit_ast_dump_value_with_label_294(out, (level + 1), cct_boot_str_143, (*node).left);
+      out = cct_boot_rit_ast_dump_append_line_297(out, level, cct_boot_rit_concat_37(cct_boot_str_148, location));
+      return cct_boot_rit_ast_dump_value_with_label_301(out, (level + 1), cct_boot_str_143, (*node).left);
     }
     break;
     case cct_boot_ord_AstKind__AST_SI:
     {
-      out = cct_boot_rit_ast_dump_append_line_290(out, level, cct_boot_rit_concat_37(cct_boot_str_149, location));
-      out = cct_boot_rit_ast_dump_append_line_290(out, (level + 1), cct_boot_str_150);
-      out = cct_boot_rit_ast_dump_node_298((*node).condition, (level + 2), out);
-      out = cct_boot_rit_ast_dump_append_line_290(out, (level + 1), cct_boot_str_151);
-      out = cct_boot_rit_ast_dump_node_298((*node).body, (level + 2), out);
+      out = cct_boot_rit_ast_dump_append_line_297(out, level, cct_boot_rit_concat_37(cct_boot_str_149, location));
+      out = cct_boot_rit_ast_dump_append_line_297(out, (level + 1), cct_boot_str_150);
+      out = cct_boot_rit_ast_dump_node_305((*node).condition, (level + 2), out);
+      out = cct_boot_rit_ast_dump_append_line_297(out, (level + 1), cct_boot_str_151);
+      out = cct_boot_rit_ast_dump_node_305((*node).body, (level + 2), out);
       if ((*node).has_else_branch)
       {
-        out = cct_boot_rit_ast_dump_append_line_290(out, (level + 1), cct_boot_str_152);
-        out = cct_boot_rit_ast_dump_node_298((*node).else_branch, (level + 2), out);
+        out = cct_boot_rit_ast_dump_append_line_297(out, (level + 1), cct_boot_str_152);
+        out = cct_boot_rit_ast_dump_node_305((*node).else_branch, (level + 2), out);
       }
       return out;
     }
     break;
     case cct_boot_ord_AstKind__AST_QUANDO:
     {
-      out = cct_boot_rit_ast_dump_append_line_290(out, level, cct_boot_rit_concat_37(cct_boot_str_153, location));
-      out = cct_boot_rit_ast_dump_append_line_290(out, (level + 1), cct_boot_str_154);
-      out = cct_boot_rit_ast_dump_node_298((*node).condition, (level + 2), out);
-      out = cct_boot_rit_ast_dump_append_line_290(out, (level + 1), cct_boot_rit_concat_37(cct_boot_str_155, cct_boot_rit_concat_37(cct_boot_rit_stringify_int_95(cct_boot_rit_ast_node_list_len_209((*node).cases)), cct_boot_str_107)));
+      out = cct_boot_rit_ast_dump_append_line_297(out, level, cct_boot_rit_concat_37(cct_boot_str_153, location));
+      out = cct_boot_rit_ast_dump_append_line_297(out, (level + 1), cct_boot_str_154);
+      out = cct_boot_rit_ast_dump_node_305((*node).condition, (level + 2), out);
+      out = cct_boot_rit_ast_dump_append_line_297(out, (level + 1), cct_boot_rit_concat_37(cct_boot_str_155, cct_boot_rit_concat_37(cct_boot_rit_stringify_int_102(cct_boot_rit_ast_node_list_len_216((*node).cases)), cct_boot_str_107)));
       long long i = 0;
-      long long n = cct_boot_rit_ast_node_list_len_209((*node).cases);
+      long long n = cct_boot_rit_ast_node_list_len_216((*node).cases);
       while (i < n)
       {
         {
-          cct_boot_sig_AstNode* case_node = cct_boot_rit_ast_node_list_get_210((*node).cases, i);
-          out = cct_boot_rit_ast_dump_append_line_290(out, (level + 2), cct_boot_rit_concat_37(cct_boot_rit_concat_37(cct_boot_str_156, cct_boot_rit_stringify_int_95((i + 1))), cct_boot_rit_concat_37(cct_boot_str_157, cct_boot_rit_concat_37(cct_boot_rit_stringify_int_95(cct_boot_rit_ast_node_list_len_209((*case_node).children)), cct_boot_str_107))));
+          cct_boot_sig_AstNode* case_node = cct_boot_rit_ast_node_list_get_217((*node).cases, i);
+          out = cct_boot_rit_ast_dump_append_line_297(out, (level + 2), cct_boot_rit_concat_37(cct_boot_rit_concat_37(cct_boot_str_156, cct_boot_rit_stringify_int_102((i + 1))), cct_boot_rit_concat_37(cct_boot_str_157, cct_boot_rit_concat_37(cct_boot_rit_stringify_int_102(cct_boot_rit_ast_node_list_len_216((*case_node).children)), cct_boot_str_107))));
           long long j = 0;
-          long long m = cct_boot_rit_ast_node_list_len_209((*case_node).children);
+          long long m = cct_boot_rit_ast_node_list_len_216((*case_node).children);
           while (j < m)
           {
             {
-              cct_boot_sig_AstNode* lit = cct_boot_rit_ast_node_list_get_210((*case_node).children, j);
-              out = cct_boot_rit_ast_dump_node_298(lit, (level + 3), out);
+              cct_boot_sig_AstNode* lit = cct_boot_rit_ast_node_list_get_217((*case_node).children, j);
+              out = cct_boot_rit_ast_dump_node_305(lit, (level + 3), out);
               j = (j + 1);
             }
             if (0) goto __cct_label_15;
@@ -2543,16 +2550,16 @@ char* cct_boot_rit_ast_dump_node_298(cct_boot_sig_AstNode* node, long long level
           }
           if (0) goto __cct_label_14;
           __cct_label_14: ;
-          if (cct_boot_rit_ast_node_list_len_209((*case_node).bindings) > 0)
+          if (cct_boot_rit_ast_node_list_len_216((*case_node).bindings) > 0)
           {
-            out = cct_boot_rit_ast_dump_append_line_290(out, (level + 2), cct_boot_rit_concat_37(cct_boot_str_158, cct_boot_rit_concat_37(cct_boot_rit_stringify_int_95(cct_boot_rit_ast_node_list_len_209((*case_node).bindings)), cct_boot_str_107)));
+            out = cct_boot_rit_ast_dump_append_line_297(out, (level + 2), cct_boot_rit_concat_37(cct_boot_str_158, cct_boot_rit_concat_37(cct_boot_rit_stringify_int_102(cct_boot_rit_ast_node_list_len_216((*case_node).bindings)), cct_boot_str_107)));
             j = 0;
-            m = cct_boot_rit_ast_node_list_len_209((*case_node).bindings);
+            m = cct_boot_rit_ast_node_list_len_216((*case_node).bindings);
             while (j < m)
             {
               {
-                cct_boot_sig_AstNode* binding = cct_boot_rit_ast_node_list_get_210((*case_node).bindings, j);
-                out = cct_boot_rit_ast_dump_append_line_290(out, (level + 3), cct_boot_rit_concat_37(cct_boot_str_115, (*binding).name));
+                cct_boot_sig_AstNode* binding = cct_boot_rit_ast_node_list_get_217((*case_node).bindings, j);
+                out = cct_boot_rit_ast_dump_append_line_297(out, (level + 3), cct_boot_rit_concat_37(cct_boot_str_115, (*binding).name));
                 j = (j + 1);
               }
               if (0) goto __cct_label_17;
@@ -2561,8 +2568,8 @@ char* cct_boot_rit_ast_dump_node_298(cct_boot_sig_AstNode* node, long long level
             if (0) goto __cct_label_16;
             __cct_label_16: ;
           }
-          out = cct_boot_rit_ast_dump_append_line_290(out, (level + 2), cct_boot_str_130);
-          out = cct_boot_rit_ast_dump_node_298((*case_node).body, (level + 3), out);
+          out = cct_boot_rit_ast_dump_append_line_297(out, (level + 2), cct_boot_str_130);
+          out = cct_boot_rit_ast_dump_node_305((*case_node).body, (level + 3), out);
           i = (i + 1);
         }
         if (0) goto __cct_label_13;
@@ -2572,114 +2579,114 @@ char* cct_boot_rit_ast_dump_node_298(cct_boot_sig_AstNode* node, long long level
       __cct_label_12: ;
       if ((*node).has_else_branch)
       {
-        out = cct_boot_rit_ast_dump_append_line_290(out, (level + 1), cct_boot_str_152);
-        out = cct_boot_rit_ast_dump_node_298((*node).else_branch, (level + 2), out);
+        out = cct_boot_rit_ast_dump_append_line_297(out, (level + 1), cct_boot_str_152);
+        out = cct_boot_rit_ast_dump_node_305((*node).else_branch, (level + 2), out);
       }
       return out;
     }
     break;
     case cct_boot_ord_AstKind__AST_DUM:
     {
-      out = cct_boot_rit_ast_dump_append_line_290(out, level, cct_boot_rit_concat_37(cct_boot_str_159, location));
-      out = cct_boot_rit_ast_dump_append_line_290(out, (level + 1), cct_boot_str_150);
-      out = cct_boot_rit_ast_dump_node_298((*node).condition, (level + 2), out);
-      out = cct_boot_rit_ast_dump_append_line_290(out, (level + 1), cct_boot_str_130);
-      return cct_boot_rit_ast_dump_node_298((*node).body, (level + 2), out);
+      out = cct_boot_rit_ast_dump_append_line_297(out, level, cct_boot_rit_concat_37(cct_boot_str_159, location));
+      out = cct_boot_rit_ast_dump_append_line_297(out, (level + 1), cct_boot_str_150);
+      out = cct_boot_rit_ast_dump_node_305((*node).condition, (level + 2), out);
+      out = cct_boot_rit_ast_dump_append_line_297(out, (level + 1), cct_boot_str_130);
+      return cct_boot_rit_ast_dump_node_305((*node).body, (level + 2), out);
     }
     break;
     case cct_boot_ord_AstKind__AST_DONEC:
     {
-      out = cct_boot_rit_ast_dump_append_line_290(out, level, cct_boot_rit_concat_37(cct_boot_str_160, location));
-      out = cct_boot_rit_ast_dump_append_line_290(out, (level + 1), cct_boot_str_130);
-      out = cct_boot_rit_ast_dump_node_298((*node).body, (level + 2), out);
+      out = cct_boot_rit_ast_dump_append_line_297(out, level, cct_boot_rit_concat_37(cct_boot_str_160, location));
+      out = cct_boot_rit_ast_dump_append_line_297(out, (level + 1), cct_boot_str_130);
+      out = cct_boot_rit_ast_dump_node_305((*node).body, (level + 2), out);
       if ((*node).has_condition)
       {
-        out = cct_boot_rit_ast_dump_append_line_290(out, (level + 1), cct_boot_str_150);
-        out = cct_boot_rit_ast_dump_node_298((*node).condition, (level + 2), out);
+        out = cct_boot_rit_ast_dump_append_line_297(out, (level + 1), cct_boot_str_150);
+        out = cct_boot_rit_ast_dump_node_305((*node).condition, (level + 2), out);
       }
       return out;
     }
     break;
     case cct_boot_ord_AstKind__AST_REPETE:
     {
-      out = cct_boot_rit_ast_dump_append_line_290(out, level, cct_boot_rit_concat_37(cct_boot_str_161, location));
-      out = cct_boot_rit_ast_dump_append_line_290(out, (level + 1), cct_boot_rit_concat_37(cct_boot_str_162, (*node).name));
-      out = cct_boot_rit_ast_dump_append_line_290(out, (level + 1), cct_boot_str_163);
-      out = cct_boot_rit_ast_dump_node_298((*node).left, (level + 2), out);
-      out = cct_boot_rit_ast_dump_append_line_290(out, (level + 1), cct_boot_str_164);
-      out = cct_boot_rit_ast_dump_node_298((*node).right, (level + 2), out);
+      out = cct_boot_rit_ast_dump_append_line_297(out, level, cct_boot_rit_concat_37(cct_boot_str_161, location));
+      out = cct_boot_rit_ast_dump_append_line_297(out, (level + 1), cct_boot_rit_concat_37(cct_boot_str_162, (*node).name));
+      out = cct_boot_rit_ast_dump_append_line_297(out, (level + 1), cct_boot_str_163);
+      out = cct_boot_rit_ast_dump_node_305((*node).left, (level + 2), out);
+      out = cct_boot_rit_ast_dump_append_line_297(out, (level + 1), cct_boot_str_164);
+      out = cct_boot_rit_ast_dump_node_305((*node).right, (level + 2), out);
       if ((*node).has_condition)
       {
-        out = cct_boot_rit_ast_dump_append_line_290(out, (level + 1), cct_boot_str_165);
-        out = cct_boot_rit_ast_dump_node_298((*node).condition, (level + 2), out);
+        out = cct_boot_rit_ast_dump_append_line_297(out, (level + 1), cct_boot_str_165);
+        out = cct_boot_rit_ast_dump_node_305((*node).condition, (level + 2), out);
       }
-      out = cct_boot_rit_ast_dump_append_line_290(out, (level + 1), cct_boot_str_130);
-      return cct_boot_rit_ast_dump_node_298((*node).body, (level + 2), out);
+      out = cct_boot_rit_ast_dump_append_line_297(out, (level + 1), cct_boot_str_130);
+      return cct_boot_rit_ast_dump_node_305((*node).body, (level + 2), out);
     }
     break;
     case cct_boot_ord_AstKind__AST_ITERUM:
     {
-      out = cct_boot_rit_ast_dump_append_line_290(out, level, cct_boot_rit_concat_37(cct_boot_str_166, location));
-      out = cct_boot_rit_ast_dump_append_line_290(out, (level + 1), cct_boot_rit_concat_37(cct_boot_str_167, (*node).name));
+      out = cct_boot_rit_ast_dump_append_line_297(out, level, cct_boot_rit_concat_37(cct_boot_str_166, location));
+      out = cct_boot_rit_ast_dump_append_line_297(out, (level + 1), cct_boot_rit_concat_37(cct_boot_str_167, (*node).name));
       if (cct_boot_rit_compare_38((*node).aux_name, cct_boot_str_102) != 0)
       {
-        out = cct_boot_rit_ast_dump_append_line_290(out, (level + 1), cct_boot_rit_concat_37(cct_boot_str_168, (*node).aux_name));
+        out = cct_boot_rit_ast_dump_append_line_297(out, (level + 1), cct_boot_rit_concat_37(cct_boot_str_168, (*node).aux_name));
       }
-      out = cct_boot_rit_ast_dump_append_line_290(out, (level + 1), cct_boot_str_169);
-      out = cct_boot_rit_ast_dump_node_298((*node).left, (level + 2), out);
-      out = cct_boot_rit_ast_dump_append_line_290(out, (level + 1), cct_boot_str_130);
-      return cct_boot_rit_ast_dump_node_298((*node).body, (level + 2), out);
+      out = cct_boot_rit_ast_dump_append_line_297(out, (level + 1), cct_boot_str_169);
+      out = cct_boot_rit_ast_dump_node_305((*node).left, (level + 2), out);
+      out = cct_boot_rit_ast_dump_append_line_297(out, (level + 1), cct_boot_str_130);
+      return cct_boot_rit_ast_dump_node_305((*node).body, (level + 2), out);
     }
     break;
     case cct_boot_ord_AstKind__AST_FRANGE:
     {
-      return cct_boot_rit_ast_dump_append_line_290(out, level, cct_boot_rit_concat_37(cct_boot_str_170, location));
+      return cct_boot_rit_ast_dump_append_line_297(out, level, cct_boot_rit_concat_37(cct_boot_str_170, location));
     }
     break;
     case cct_boot_ord_AstKind__AST_RECEDE:
     {
-      return cct_boot_rit_ast_dump_append_line_290(out, level, cct_boot_rit_concat_37(cct_boot_str_171, location));
+      return cct_boot_rit_ast_dump_append_line_297(out, level, cct_boot_rit_concat_37(cct_boot_str_171, location));
     }
     break;
     case cct_boot_ord_AstKind__AST_TEMPTA:
     {
-      out = cct_boot_rit_ast_dump_append_line_290(out, level, cct_boot_rit_concat_37(cct_boot_str_172, location));
-      out = cct_boot_rit_ast_dump_append_line_290(out, (level + 1), cct_boot_str_173);
-      out = cct_boot_rit_ast_dump_node_298((*node).try_block, (level + 2), out);
-      out = cct_boot_rit_ast_dump_append_line_290(out, (level + 1), cct_boot_str_174);
-      out = cct_boot_rit_ast_dump_append_line_290(out, (level + 2), cct_boot_rit_concat_37(cct_boot_str_128, cct_boot_rit_ast_dump_type_inline_292((*node).cape_type)));
-      out = cct_boot_rit_ast_dump_append_line_290(out, (level + 1), cct_boot_rit_concat_37(cct_boot_str_175, (*node).name));
-      out = cct_boot_rit_ast_dump_append_line_290(out, (level + 1), cct_boot_str_176);
-      out = cct_boot_rit_ast_dump_node_298((*node).cape_block, (level + 2), out);
+      out = cct_boot_rit_ast_dump_append_line_297(out, level, cct_boot_rit_concat_37(cct_boot_str_172, location));
+      out = cct_boot_rit_ast_dump_append_line_297(out, (level + 1), cct_boot_str_173);
+      out = cct_boot_rit_ast_dump_node_305((*node).try_block, (level + 2), out);
+      out = cct_boot_rit_ast_dump_append_line_297(out, (level + 1), cct_boot_str_174);
+      out = cct_boot_rit_ast_dump_append_line_297(out, (level + 2), cct_boot_rit_concat_37(cct_boot_str_128, cct_boot_rit_ast_dump_type_inline_299((*node).cape_type)));
+      out = cct_boot_rit_ast_dump_append_line_297(out, (level + 1), cct_boot_rit_concat_37(cct_boot_str_175, (*node).name));
+      out = cct_boot_rit_ast_dump_append_line_297(out, (level + 1), cct_boot_str_176);
+      out = cct_boot_rit_ast_dump_node_305((*node).cape_block, (level + 2), out);
       if ((*node).has_semper_block)
       {
-        out = cct_boot_rit_ast_dump_append_line_290(out, (level + 1), cct_boot_str_177);
-        out = cct_boot_rit_ast_dump_node_298((*node).semper_block, (level + 2), out);
+        out = cct_boot_rit_ast_dump_append_line_297(out, (level + 1), cct_boot_str_177);
+        out = cct_boot_rit_ast_dump_node_305((*node).semper_block, (level + 2), out);
       }
       return out;
     }
     break;
     case cct_boot_ord_AstKind__AST_EXPR_STMT:
     {
-      out = cct_boot_rit_ast_dump_append_line_290(out, level, cct_boot_rit_concat_37(cct_boot_str_178, location));
-      return cct_boot_rit_ast_dump_node_298((*node).left, (level + 1), out);
+      out = cct_boot_rit_ast_dump_append_line_297(out, level, cct_boot_rit_concat_37(cct_boot_str_178, location));
+      return cct_boot_rit_ast_dump_node_305((*node).left, (level + 1), out);
     }
     break;
     case cct_boot_ord_AstKind__AST_MOLDE:
     {
-      out = cct_boot_rit_ast_dump_append_line_290(out, level, cct_boot_rit_concat_37(cct_boot_str_179, location));
-      out = cct_boot_rit_ast_dump_append_line_290(out, (level + 1), cct_boot_rit_concat_37(cct_boot_str_180, cct_boot_rit_concat_37(cct_boot_rit_stringify_int_95(cct_boot_rit_ast_node_list_len_209((*node).children)), cct_boot_str_107)));
+      out = cct_boot_rit_ast_dump_append_line_297(out, level, cct_boot_rit_concat_37(cct_boot_str_179, location));
+      out = cct_boot_rit_ast_dump_append_line_297(out, (level + 1), cct_boot_rit_concat_37(cct_boot_str_180, cct_boot_rit_concat_37(cct_boot_rit_stringify_int_102(cct_boot_rit_ast_node_list_len_216((*node).children)), cct_boot_str_107)));
       long long part_i = 0;
-      long long part_n = cct_boot_rit_ast_node_list_len_209((*node).children);
+      long long part_n = cct_boot_rit_ast_node_list_len_216((*node).children);
       while (part_i < part_n)
       {
         {
-          cct_boot_sig_AstNode* part = cct_boot_rit_ast_node_list_get_210((*node).children, part_i);
+          cct_boot_sig_AstNode* part = cct_boot_rit_ast_node_list_get_217((*node).children, part_i);
           if (cct_boot_rit_compare_38((*part).fmt_spec, cct_boot_str_102) != 0)
           {
-            out = cct_boot_rit_ast_dump_append_line_290(out, (level + 2), cct_boot_rit_concat_37(cct_boot_str_181, (*part).fmt_spec));
+            out = cct_boot_rit_ast_dump_append_line_297(out, (level + 2), cct_boot_rit_concat_37(cct_boot_str_181, (*part).fmt_spec));
           }
-          out = cct_boot_rit_ast_dump_node_298(part, (level + 2), out);
+          out = cct_boot_rit_ast_dump_node_305(part, (level + 2), out);
           part_i = (part_i + 1);
         }
         if (0) goto __cct_label_19;
@@ -2692,76 +2699,76 @@ char* cct_boot_rit_ast_dump_node_298(cct_boot_sig_AstNode* node, long long level
     break;
     case cct_boot_ord_AstKind__AST_MENSURA:
     {
-      out = cct_boot_rit_ast_dump_append_line_290(out, level, cct_boot_rit_concat_37(cct_boot_str_182, location));
-      return cct_boot_rit_ast_dump_append_line_290(out, (level + 1), cct_boot_rit_concat_37(cct_boot_str_128, cct_boot_rit_ast_dump_type_inline_292((*node).type_expr)));
+      out = cct_boot_rit_ast_dump_append_line_297(out, level, cct_boot_rit_concat_37(cct_boot_str_182, location));
+      return cct_boot_rit_ast_dump_append_line_297(out, (level + 1), cct_boot_rit_concat_37(cct_boot_str_128, cct_boot_rit_ast_dump_type_inline_299((*node).type_expr)));
     }
     break;
     case cct_boot_ord_AstKind__AST_LITERAL_INT:
     {
-      out = cct_boot_rit_ast_dump_append_line_290(out, level, cct_boot_rit_concat_37(cct_boot_str_183, location));
-      return cct_boot_rit_ast_dump_append_line_290(out, (level + 1), cct_boot_rit_concat_37(cct_boot_str_168, (*node).value_text));
+      out = cct_boot_rit_ast_dump_append_line_297(out, level, cct_boot_rit_concat_37(cct_boot_str_183, location));
+      return cct_boot_rit_ast_dump_append_line_297(out, (level + 1), cct_boot_rit_concat_37(cct_boot_str_168, (*node).value_text));
     }
     break;
     case cct_boot_ord_AstKind__AST_LITERAL_REAL:
     {
-      out = cct_boot_rit_ast_dump_append_line_290(out, level, cct_boot_rit_concat_37(cct_boot_str_184, location));
-      return cct_boot_rit_ast_dump_append_line_290(out, (level + 1), cct_boot_rit_concat_37(cct_boot_str_168, (*node).value_text));
+      out = cct_boot_rit_ast_dump_append_line_297(out, level, cct_boot_rit_concat_37(cct_boot_str_184, location));
+      return cct_boot_rit_ast_dump_append_line_297(out, (level + 1), cct_boot_rit_concat_37(cct_boot_str_168, (*node).value_text));
     }
     break;
     case cct_boot_ord_AstKind__AST_LITERAL_STRING:
     {
-      out = cct_boot_rit_ast_dump_append_line_290(out, level, cct_boot_rit_concat_37(cct_boot_str_185, location));
-      return cct_boot_rit_ast_dump_append_line_290(out, (level + 1), cct_boot_rit_concat_37(cct_boot_str_168, (*node).value_text));
+      out = cct_boot_rit_ast_dump_append_line_297(out, level, cct_boot_rit_concat_37(cct_boot_str_185, location));
+      return cct_boot_rit_ast_dump_append_line_297(out, (level + 1), cct_boot_rit_concat_37(cct_boot_str_168, (*node).value_text));
     }
     break;
     case cct_boot_ord_AstKind__AST_LITERAL_BOOL:
     {
-      out = cct_boot_rit_ast_dump_append_line_290(out, level, cct_boot_rit_concat_37(cct_boot_str_186, location));
-      return cct_boot_rit_ast_dump_append_line_290(out, (level + 1), cct_boot_rit_concat_37(cct_boot_str_168, (*node).value_text));
+      out = cct_boot_rit_ast_dump_append_line_297(out, level, cct_boot_rit_concat_37(cct_boot_str_186, location));
+      return cct_boot_rit_ast_dump_append_line_297(out, (level + 1), cct_boot_rit_concat_37(cct_boot_str_168, (*node).value_text));
     }
     break;
     case cct_boot_ord_AstKind__AST_LITERAL_NIHIL:
     {
-      return cct_boot_rit_ast_dump_append_line_290(out, level, cct_boot_rit_concat_37(cct_boot_str_187, location));
+      return cct_boot_rit_ast_dump_append_line_297(out, level, cct_boot_rit_concat_37(cct_boot_str_187, location));
     }
     break;
     case cct_boot_ord_AstKind__AST_IDENTIFIER:
     {
-      out = cct_boot_rit_ast_dump_append_line_290(out, level, cct_boot_rit_concat_37(cct_boot_str_188, location));
-      return cct_boot_rit_ast_dump_append_line_290(out, (level + 1), cct_boot_rit_concat_37(cct_boot_str_126, (*node).name));
+      out = cct_boot_rit_ast_dump_append_line_297(out, level, cct_boot_rit_concat_37(cct_boot_str_188, location));
+      return cct_boot_rit_ast_dump_append_line_297(out, (level + 1), cct_boot_rit_concat_37(cct_boot_str_126, (*node).name));
     }
     break;
     case cct_boot_ord_AstKind__AST_BINARY_OP:
     {
-      out = cct_boot_rit_ast_dump_append_line_290(out, level, cct_boot_rit_concat_37(cct_boot_str_189, location));
-      out = cct_boot_rit_ast_dump_append_line_290(out, (level + 1), cct_boot_rit_concat_37(cct_boot_str_190, cct_boot_rit_token_kind_to_string_0((*node).operator_kind)));
-      out = cct_boot_rit_ast_dump_append_line_290(out, (level + 1), cct_boot_str_191);
-      out = cct_boot_rit_ast_dump_node_298((*node).left, (level + 2), out);
-      out = cct_boot_rit_ast_dump_append_line_290(out, (level + 1), cct_boot_str_192);
-      return cct_boot_rit_ast_dump_node_298((*node).right, (level + 2), out);
+      out = cct_boot_rit_ast_dump_append_line_297(out, level, cct_boot_rit_concat_37(cct_boot_str_189, location));
+      out = cct_boot_rit_ast_dump_append_line_297(out, (level + 1), cct_boot_rit_concat_37(cct_boot_str_190, cct_boot_rit_token_kind_to_string_0((*node).operator_kind)));
+      out = cct_boot_rit_ast_dump_append_line_297(out, (level + 1), cct_boot_str_191);
+      out = cct_boot_rit_ast_dump_node_305((*node).left, (level + 2), out);
+      out = cct_boot_rit_ast_dump_append_line_297(out, (level + 1), cct_boot_str_192);
+      return cct_boot_rit_ast_dump_node_305((*node).right, (level + 2), out);
     }
     break;
     case cct_boot_ord_AstKind__AST_UNARY_OP:
     {
-      out = cct_boot_rit_ast_dump_append_line_290(out, level, cct_boot_rit_concat_37(cct_boot_str_193, location));
-      out = cct_boot_rit_ast_dump_append_line_290(out, (level + 1), cct_boot_rit_concat_37(cct_boot_str_190, cct_boot_rit_token_kind_to_string_0((*node).operator_kind)));
-      out = cct_boot_rit_ast_dump_append_line_290(out, (level + 1), cct_boot_str_194);
-      return cct_boot_rit_ast_dump_node_298((*node).left, (level + 2), out);
+      out = cct_boot_rit_ast_dump_append_line_297(out, level, cct_boot_rit_concat_37(cct_boot_str_193, location));
+      out = cct_boot_rit_ast_dump_append_line_297(out, (level + 1), cct_boot_rit_concat_37(cct_boot_str_190, cct_boot_rit_token_kind_to_string_0((*node).operator_kind)));
+      out = cct_boot_rit_ast_dump_append_line_297(out, (level + 1), cct_boot_str_194);
+      return cct_boot_rit_ast_dump_node_305((*node).left, (level + 2), out);
     }
     break;
     case cct_boot_ord_AstKind__AST_CALL:
     {
-      out = cct_boot_rit_ast_dump_append_line_290(out, level, cct_boot_rit_concat_37(cct_boot_str_195, location));
-      out = cct_boot_rit_ast_dump_append_line_290(out, (level + 1), cct_boot_str_196);
-      out = cct_boot_rit_ast_dump_node_298((*node).callee, (level + 2), out);
-      out = cct_boot_rit_ast_dump_append_line_290(out, (level + 1), cct_boot_rit_concat_37(cct_boot_str_197, cct_boot_rit_concat_37(cct_boot_rit_stringify_int_95(cct_boot_rit_ast_node_list_len_209((*node).arguments)), cct_boot_str_107)));
+      out = cct_boot_rit_ast_dump_append_line_297(out, level, cct_boot_rit_concat_37(cct_boot_str_195, location));
+      out = cct_boot_rit_ast_dump_append_line_297(out, (level + 1), cct_boot_str_196);
+      out = cct_boot_rit_ast_dump_node_305((*node).callee, (level + 2), out);
+      out = cct_boot_rit_ast_dump_append_line_297(out, (level + 1), cct_boot_rit_concat_37(cct_boot_str_197, cct_boot_rit_concat_37(cct_boot_rit_stringify_int_102(cct_boot_rit_ast_node_list_len_216((*node).arguments)), cct_boot_str_107)));
       long long i = 0;
-      long long n = cct_boot_rit_ast_node_list_len_209((*node).arguments);
+      long long n = cct_boot_rit_ast_node_list_len_216((*node).arguments);
       while (i < n)
       {
         {
-          cct_boot_sig_AstNode* arg = cct_boot_rit_ast_node_list_get_210((*node).arguments, i);
-          out = cct_boot_rit_ast_dump_node_298(arg, (level + 2), out);
+          cct_boot_sig_AstNode* arg = cct_boot_rit_ast_node_list_get_217((*node).arguments, i);
+          out = cct_boot_rit_ast_dump_node_305(arg, (level + 2), out);
           i = (i + 1);
         }
         if (0) goto __cct_label_21;
@@ -2774,17 +2781,17 @@ char* cct_boot_rit_ast_dump_node_298(cct_boot_sig_AstNode* node, long long level
     break;
     case cct_boot_ord_AstKind__AST_OBSECRO_CALL:
     {
-      out = cct_boot_rit_ast_dump_append_line_290(out, level, cct_boot_rit_concat_37(cct_boot_str_198, location));
-      out = cct_boot_rit_ast_dump_append_line_290(out, (level + 1), cct_boot_str_196);
-      out = cct_boot_rit_ast_dump_node_298((*node).callee, (level + 2), out);
-      out = cct_boot_rit_ast_dump_append_line_290(out, (level + 1), cct_boot_rit_concat_37(cct_boot_str_197, cct_boot_rit_concat_37(cct_boot_rit_stringify_int_95(cct_boot_rit_ast_node_list_len_209((*node).arguments)), cct_boot_str_107)));
+      out = cct_boot_rit_ast_dump_append_line_297(out, level, cct_boot_rit_concat_37(cct_boot_str_198, location));
+      out = cct_boot_rit_ast_dump_append_line_297(out, (level + 1), cct_boot_str_196);
+      out = cct_boot_rit_ast_dump_node_305((*node).callee, (level + 2), out);
+      out = cct_boot_rit_ast_dump_append_line_297(out, (level + 1), cct_boot_rit_concat_37(cct_boot_str_197, cct_boot_rit_concat_37(cct_boot_rit_stringify_int_102(cct_boot_rit_ast_node_list_len_216((*node).arguments)), cct_boot_str_107)));
       long long ob_i = 0;
-      long long ob_n = cct_boot_rit_ast_node_list_len_209((*node).arguments);
+      long long ob_n = cct_boot_rit_ast_node_list_len_216((*node).arguments);
       while (ob_i < ob_n)
       {
         {
-          cct_boot_sig_AstNode* arg = cct_boot_rit_ast_node_list_get_210((*node).arguments, ob_i);
-          out = cct_boot_rit_ast_dump_node_298(arg, (level + 2), out);
+          cct_boot_sig_AstNode* arg = cct_boot_rit_ast_node_list_get_217((*node).arguments, ob_i);
+          out = cct_boot_rit_ast_dump_node_305(arg, (level + 2), out);
           ob_i = (ob_i + 1);
         }
         if (0) goto __cct_label_23;
@@ -2797,41 +2804,41 @@ char* cct_boot_rit_ast_dump_node_298(cct_boot_sig_AstNode* node, long long level
     break;
     case cct_boot_ord_AstKind__AST_FIELD_ACCESS:
     {
-      out = cct_boot_rit_ast_dump_append_line_290(out, level, cct_boot_rit_concat_37(cct_boot_str_199, location));
-      out = cct_boot_rit_ast_dump_append_line_290(out, (level + 1), cct_boot_str_200);
-      out = cct_boot_rit_ast_dump_node_298((*node).left, (level + 2), out);
-      return cct_boot_rit_ast_dump_append_line_290(out, (level + 1), cct_boot_rit_concat_37(cct_boot_str_201, (*node).name));
+      out = cct_boot_rit_ast_dump_append_line_297(out, level, cct_boot_rit_concat_37(cct_boot_str_199, location));
+      out = cct_boot_rit_ast_dump_append_line_297(out, (level + 1), cct_boot_str_200);
+      out = cct_boot_rit_ast_dump_node_305((*node).left, (level + 2), out);
+      return cct_boot_rit_ast_dump_append_line_297(out, (level + 1), cct_boot_rit_concat_37(cct_boot_str_201, (*node).name));
     }
     break;
     case cct_boot_ord_AstKind__AST_INDEX_ACCESS:
     {
-      out = cct_boot_rit_ast_dump_append_line_290(out, level, cct_boot_rit_concat_37(cct_boot_str_202, location));
-      out = cct_boot_rit_ast_dump_append_line_290(out, (level + 1), cct_boot_str_203);
-      out = cct_boot_rit_ast_dump_node_298((*node).left, (level + 2), out);
-      out = cct_boot_rit_ast_dump_append_line_290(out, (level + 1), cct_boot_str_204);
-      return cct_boot_rit_ast_dump_node_298((*node).right, (level + 2), out);
+      out = cct_boot_rit_ast_dump_append_line_297(out, level, cct_boot_rit_concat_37(cct_boot_str_202, location));
+      out = cct_boot_rit_ast_dump_append_line_297(out, (level + 1), cct_boot_str_203);
+      out = cct_boot_rit_ast_dump_node_305((*node).left, (level + 2), out);
+      out = cct_boot_rit_ast_dump_append_line_297(out, (level + 1), cct_boot_str_204);
+      return cct_boot_rit_ast_dump_node_305((*node).right, (level + 2), out);
     }
     break;
     default:
     {
-      return cct_boot_rit_ast_dump_append_line_290(out, level, cct_boot_str_205);
+      return cct_boot_rit_ast_dump_append_line_297(out, level, cct_boot_str_205);
     }
     break;
   }
 }
 
-char* cct_boot_rit_ast_dump_program_299(cct_boot_sig_AstProgram* program)
+char* cct_boot_rit_ast_dump_program_306(cct_boot_sig_AstProgram* program)
 {
   char* out = cct_boot_rit_concat_37(cct_boot_str_206, (*program).name);
   out = cct_boot_rit_concat_37(out, cct_boot_str_104);
-  out = cct_boot_rit_ast_dump_append_line_290(out, 0, cct_boot_rit_concat_37(cct_boot_str_207, cct_boot_rit_concat_37(cct_boot_rit_stringify_int_95(cct_boot_rit_ast_node_list_len_209((*program).declarations)), cct_boot_str_107)));
+  out = cct_boot_rit_ast_dump_append_line_297(out, 0, cct_boot_rit_concat_37(cct_boot_str_207, cct_boot_rit_concat_37(cct_boot_rit_stringify_int_102(cct_boot_rit_ast_node_list_len_216((*program).declarations)), cct_boot_str_107)));
   long long i = 0;
-  long long n = cct_boot_rit_ast_node_list_len_209((*program).declarations);
+  long long n = cct_boot_rit_ast_node_list_len_216((*program).declarations);
   while (i < n)
   {
     {
-      cct_boot_sig_AstNode* decl = cct_boot_rit_ast_node_list_get_210((*program).declarations, i);
-      out = cct_boot_rit_ast_dump_node_298(decl, 1, out);
+      cct_boot_sig_AstNode* decl = cct_boot_rit_ast_node_list_get_217((*program).declarations, i);
+      out = cct_boot_rit_ast_dump_node_305(decl, 1, out);
       i = (i + 1);
     }
     if (0) goto __cct_label_25;
@@ -2842,15 +2849,15 @@ char* cct_boot_rit_ast_dump_program_299(cct_boot_sig_AstProgram* program)
   return out;
 }
 
-void cct_boot_rit_ast_list_free_owned_300(void* list)
+void cct_boot_rit_ast_list_free_owned_307(void* list)
 {
   long long i = 0;
-  long long n = cct_boot_rit_ast_node_list_len_209(list);
+  long long n = cct_boot_rit_ast_node_list_len_216(list);
   while (i < n)
   {
     {
-      cct_boot_sig_AstNode* node = cct_boot_rit_ast_node_list_get_210(list, i);
-      cct_boot_rit_ast_node_free_301(node);
+      cct_boot_sig_AstNode* node = cct_boot_rit_ast_node_list_get_217(list, i);
+      cct_boot_rit_ast_node_free_308(node);
       i = (i + 1);
     }
     if (0) goto __cct_label_27;
@@ -2858,11 +2865,11 @@ void cct_boot_rit_ast_list_free_owned_300(void* list)
   }
   if (0) goto __cct_label_26;
   __cct_label_26: ;
-  cct_boot_rit_fluxus_free_173(list);
+  cct_boot_rit_fluxus_free_180(list);
   return;
 }
 
-void cct_boot_rit_ast_node_free_301(cct_boot_sig_AstNode* node)
+void cct_boot_rit_ast_node_free_308(cct_boot_sig_AstNode* node)
 {
   if ((*node).owns_name)
   {
@@ -2886,80 +2893,80 @@ void cct_boot_rit_ast_node_free_301(cct_boot_sig_AstNode* node)
   }
   if ((*node).has_left)
   {
-    cct_boot_rit_ast_node_free_301((*node).left);
+    cct_boot_rit_ast_node_free_308((*node).left);
   }
   if ((*node).has_right)
   {
-    cct_boot_rit_ast_node_free_301((*node).right);
+    cct_boot_rit_ast_node_free_308((*node).right);
   }
   if ((*node).has_condition)
   {
-    cct_boot_rit_ast_node_free_301((*node).condition);
+    cct_boot_rit_ast_node_free_308((*node).condition);
   }
   if ((*node).has_body)
   {
-    cct_boot_rit_ast_node_free_301((*node).body);
+    cct_boot_rit_ast_node_free_308((*node).body);
   }
   if ((*node).has_else_branch)
   {
-    cct_boot_rit_ast_node_free_301((*node).else_branch);
+    cct_boot_rit_ast_node_free_308((*node).else_branch);
   }
   if ((*node).has_callee)
   {
-    cct_boot_rit_ast_node_free_301((*node).callee);
+    cct_boot_rit_ast_node_free_308((*node).callee);
   }
   if ((*node).has_type_expr)
   {
-    cct_boot_rit_ast_node_free_301((*node).type_expr);
+    cct_boot_rit_ast_node_free_308((*node).type_expr);
   }
   if ((*node).has_return_type)
   {
-    cct_boot_rit_ast_node_free_301((*node).return_type);
+    cct_boot_rit_ast_node_free_308((*node).return_type);
   }
   if ((*node).has_try_block)
   {
-    cct_boot_rit_ast_node_free_301((*node).try_block);
+    cct_boot_rit_ast_node_free_308((*node).try_block);
   }
   if ((*node).has_cape_type)
   {
-    cct_boot_rit_ast_node_free_301((*node).cape_type);
+    cct_boot_rit_ast_node_free_308((*node).cape_type);
   }
   if ((*node).has_cape_block)
   {
-    cct_boot_rit_ast_node_free_301((*node).cape_block);
+    cct_boot_rit_ast_node_free_308((*node).cape_block);
   }
   if ((*node).has_semper_block)
   {
-    cct_boot_rit_ast_node_free_301((*node).semper_block);
+    cct_boot_rit_ast_node_free_308((*node).semper_block);
   }
-  cct_boot_rit_ast_list_free_owned_300((*node).children);
-  cct_boot_rit_ast_list_free_owned_300((*node).cases);
-  cct_boot_rit_ast_list_free_owned_300((*node).bindings);
-  cct_boot_rit_ast_list_free_owned_300((*node).type_params);
-  cct_boot_rit_ast_list_free_owned_300((*node).generic_args);
-  cct_boot_rit_ast_list_free_owned_300((*node).params);
-  cct_boot_rit_ast_list_free_owned_300((*node).fields);
-  cct_boot_rit_ast_list_free_owned_300((*node).items);
-  cct_boot_rit_ast_list_free_owned_300((*node).arguments);
-  cct_boot_rit_ast_list_free_owned_300((*node).declarations);
-  cct_boot_rit_ast_list_free_owned_300((*node).signatures);
-  cct_boot_rit_ast_list_free_owned_300((*node).statements);
-  cct_boot_rit_ast_heap_free_205(node);
+  cct_boot_rit_ast_list_free_owned_307((*node).children);
+  cct_boot_rit_ast_list_free_owned_307((*node).cases);
+  cct_boot_rit_ast_list_free_owned_307((*node).bindings);
+  cct_boot_rit_ast_list_free_owned_307((*node).type_params);
+  cct_boot_rit_ast_list_free_owned_307((*node).generic_args);
+  cct_boot_rit_ast_list_free_owned_307((*node).params);
+  cct_boot_rit_ast_list_free_owned_307((*node).fields);
+  cct_boot_rit_ast_list_free_owned_307((*node).items);
+  cct_boot_rit_ast_list_free_owned_307((*node).arguments);
+  cct_boot_rit_ast_list_free_owned_307((*node).declarations);
+  cct_boot_rit_ast_list_free_owned_307((*node).signatures);
+  cct_boot_rit_ast_list_free_owned_307((*node).statements);
+  cct_boot_rit_ast_heap_free_212(node);
   return;
 }
 
-void cct_boot_rit_ast_program_free_302(cct_boot_sig_AstProgram* program)
+void cct_boot_rit_ast_program_free_309(cct_boot_sig_AstProgram* program)
 {
   if ((*program).owns_name)
   {
     free((void*)((*program).name));
   }
-  cct_boot_rit_ast_list_free_owned_300((*program).declarations);
-  cct_boot_rit_ast_heap_free_205(program);
+  cct_boot_rit_ast_list_free_owned_307((*program).declarations);
+  cct_boot_rit_ast_heap_free_212(program);
   return;
 }
 
-cct_boot_ord_TokenKind cct_boot_rit_keyword_lookup_303(char* lexeme)
+cct_boot_ord_TokenKind cct_boot_rit_keyword_lookup_310(char* lexeme)
 {
   if (cct_boot_rit_compare_38(lexeme, cct_boot_str_70) == 0)
   {
@@ -3252,7 +3259,7 @@ cct_boot_ord_TokenKind cct_boot_rit_keyword_lookup_303(char* lexeme)
   return cct_boot_ord_TokenKind__TK_IDENTIFIER;
 }
 
-cct_boot_sig_LexerState cct_boot_rit_lexer_init_304(char* source, char* filename)
+cct_boot_sig_LexerState cct_boot_rit_lexer_init_311(char* source, char* filename)
 {
   cct_boot_sig_LexerState lex;
   lex.source = source;
@@ -3266,7 +3273,7 @@ cct_boot_sig_LexerState cct_boot_rit_lexer_init_304(char* source, char* filename
   return lex;
 }
 
-cct_boot_sig_Token cct_boot_rit_token_make_305(cct_boot_ord_TokenKind kind, char* lexeme, long long line, long long column)
+cct_boot_sig_Token cct_boot_rit_token_make_312(cct_boot_ord_TokenKind kind, char* lexeme, long long line, long long column)
 {
   cct_boot_sig_Token tok;
   tok.kind = kind;
@@ -3276,27 +3283,27 @@ cct_boot_sig_Token cct_boot_rit_token_make_305(cct_boot_ord_TokenKind kind, char
   return tok;
 }
 
-void cct_boot_rit_token_free_306(cct_boot_sig_Token* tok)
+void cct_boot_rit_token_free_313(cct_boot_sig_Token* tok)
 {
   free((void*)((*tok).lexeme));
   return;
 }
 
-int cct_boot_rit_lexer_is_at_end_307(cct_boot_sig_LexerState* lex)
+int cct_boot_rit_lexer_is_at_end_314(cct_boot_sig_LexerState* lex)
 {
   return ((*lex).current >= (*lex).source_len);
 }
 
-char cct_boot_rit_lexer_peek_308(cct_boot_sig_LexerState* lex)
+char cct_boot_rit_lexer_peek_315(cct_boot_sig_LexerState* lex)
 {
-  if (cct_boot_rit_lexer_is_at_end_307(lex))
+  if (cct_boot_rit_lexer_is_at_end_314(lex))
   {
     return 0;
   }
   return cct_boot_rit_char_at_44((*lex).source, (*lex).current);
 }
 
-char cct_boot_rit_lexer_peek_next_309(cct_boot_sig_LexerState* lex)
+char cct_boot_rit_lexer_peek_next_316(cct_boot_sig_LexerState* lex)
 {
   if (((*lex).current + 1) >= (*lex).source_len)
   {
@@ -3305,9 +3312,9 @@ char cct_boot_rit_lexer_peek_next_309(cct_boot_sig_LexerState* lex)
   return cct_boot_rit_char_at_44((*lex).source, ((*lex).current + 1));
 }
 
-char cct_boot_rit_lexer_advance_310(cct_boot_sig_LexerState* lex)
+char cct_boot_rit_lexer_advance_317(cct_boot_sig_LexerState* lex)
 {
-  if (cct_boot_rit_lexer_is_at_end_307(lex))
+  if (cct_boot_rit_lexer_is_at_end_314(lex))
   {
     return 0;
   }
@@ -3317,9 +3324,9 @@ char cct_boot_rit_lexer_advance_310(cct_boot_sig_LexerState* lex)
   return c;
 }
 
-int cct_boot_rit_lexer_match_311(cct_boot_sig_LexerState* lex, char expected)
+int cct_boot_rit_lexer_match_318(cct_boot_sig_LexerState* lex, char expected)
 {
-  if (cct_boot_rit_lexer_is_at_end_307(lex))
+  if (cct_boot_rit_lexer_is_at_end_314(lex))
   {
     return 0;
   }
@@ -3332,15 +3339,15 @@ int cct_boot_rit_lexer_match_311(cct_boot_sig_LexerState* lex, char expected)
   return 1;
 }
 
-void cct_boot_rit_lexer_skip_whitespace_312(cct_boot_sig_LexerState* lex)
+void cct_boot_rit_lexer_skip_whitespace_319(cct_boot_sig_LexerState* lex)
 {
-  while (!cct_boot_rit_lexer_is_at_end_307(lex))
+  while (!cct_boot_rit_lexer_is_at_end_314(lex))
   {
     {
-      char c = cct_boot_rit_lexer_peek_308(lex);
+      char c = cct_boot_rit_lexer_peek_315(lex);
       if (((c == 32) || (c == 13)) || (c == 9))
       {
-        cct_boot_rit_lexer_advance_310(lex);
+        cct_boot_rit_lexer_advance_317(lex);
       }
       else
       {
@@ -3348,7 +3355,7 @@ void cct_boot_rit_lexer_skip_whitespace_312(cct_boot_sig_LexerState* lex)
         {
           (*lex).line = ((*lex).line + 1);
           (*lex).column = 0;
-          cct_boot_rit_lexer_advance_310(lex);
+          cct_boot_rit_lexer_advance_317(lex);
         }
         else
         {
@@ -3364,12 +3371,12 @@ void cct_boot_rit_lexer_skip_whitespace_312(cct_boot_sig_LexerState* lex)
   return;
 }
 
-void cct_boot_rit_lexer_skip_comment_313(cct_boot_sig_LexerState* lex)
+void cct_boot_rit_lexer_skip_comment_320(cct_boot_sig_LexerState* lex)
 {
-  while ((cct_boot_rit_lexer_peek_308(lex) != 10) && (!cct_boot_rit_lexer_is_at_end_307(lex)))
+  while ((cct_boot_rit_lexer_peek_315(lex) != 10) && (!cct_boot_rit_lexer_is_at_end_314(lex)))
   {
     {
-      cct_boot_rit_lexer_advance_310(lex);
+      cct_boot_rit_lexer_advance_317(lex);
     }
     if (0) goto __cct_label_31;
     __cct_label_31: ;
@@ -3379,31 +3386,31 @@ void cct_boot_rit_lexer_skip_comment_313(cct_boot_sig_LexerState* lex)
   return;
 }
 
-char* cct_boot_rit_lexer_make_lexeme_314(cct_boot_sig_LexerState* lex)
+char* cct_boot_rit_lexer_make_lexeme_321(cct_boot_sig_LexerState* lex)
 {
   return cct_boot_rit_substring_39((*lex).source, (*lex).start, (*lex).current);
 }
 
-cct_boot_sig_Token cct_boot_rit_lexer_make_token_315(cct_boot_sig_LexerState* lex, cct_boot_ord_TokenKind kind)
+cct_boot_sig_Token cct_boot_rit_lexer_make_token_322(cct_boot_sig_LexerState* lex, cct_boot_ord_TokenKind kind)
 {
-  char* lexeme = cct_boot_rit_lexer_make_lexeme_314(lex);
+  char* lexeme = cct_boot_rit_lexer_make_lexeme_321(lex);
   long long col = ((*lex).column - ((*lex).current - (*lex).start));
-  return cct_boot_rit_token_make_305(kind, lexeme, (*lex).line, col);
+  return cct_boot_rit_token_make_312(kind, lexeme, (*lex).line, col);
 }
 
-cct_boot_sig_Token cct_boot_rit_lexer_error_token_316(cct_boot_sig_LexerState* lex, char* msg)
+cct_boot_sig_Token cct_boot_rit_lexer_error_token_323(cct_boot_sig_LexerState* lex, char* msg)
 {
   (*lex).had_error = 1;
   cct_boot_sig_SourceLocation loc;
   loc.line = (*lex).line;
   loc.column = (*lex).column;
   loc.filename = (*lex).filename;
-  cct_boot_rit_diag_error_120((&loc), msg);
+  cct_boot_rit_diag_error_127((&loc), msg);
   char* owned_msg = cct_boot_rit_verbum_dup_40(msg);
-  return cct_boot_rit_token_make_305(cct_boot_ord_TokenKind__TK_INVALID, owned_msg, (*lex).line, (*lex).column);
+  return cct_boot_rit_token_make_312(cct_boot_ord_TokenKind__TK_INVALID, owned_msg, (*lex).line, (*lex).column);
 }
 
-cct_boot_sig_Token cct_boot_rit_lexer_error_character_token_317(cct_boot_sig_LexerState* lex, char c)
+cct_boot_sig_Token cct_boot_rit_lexer_error_character_token_324(cct_boot_sig_LexerState* lex, char c)
 {
   (*lex).had_error = 1;
   cct_boot_sig_SourceLocation loc;
@@ -3415,34 +3422,34 @@ cct_boot_sig_Token cct_boot_rit_lexer_error_character_token_317(cct_boot_sig_Lex
   char* msg = cct_boot_rit_concat_37(cct_boot_str_214, suffix);
   free((void*)(ch));
   free((void*)(suffix));
-  cct_boot_rit_diag_error_120((&loc), msg);
-  return cct_boot_rit_token_make_305(cct_boot_ord_TokenKind__TK_INVALID, msg, (*lex).line, (*lex).column);
+  cct_boot_rit_diag_error_127((&loc), msg);
+  return cct_boot_rit_token_make_312(cct_boot_ord_TokenKind__TK_INVALID, msg, (*lex).line, (*lex).column);
 }
 
-cct_boot_sig_Token cct_boot_rit_lexer_identifier_318(cct_boot_sig_LexerState* lex)
+cct_boot_sig_Token cct_boot_rit_lexer_identifier_325(cct_boot_sig_LexerState* lex)
 {
-  while (cct_boot_rit_char_is_alnum_33(cct_boot_rit_lexer_peek_308(lex)) || (cct_boot_rit_lexer_peek_308(lex) == 95))
+  while (cct_boot_rit_char_is_alnum_33(cct_boot_rit_lexer_peek_315(lex)) || (cct_boot_rit_lexer_peek_315(lex) == 95))
   {
     {
-      cct_boot_rit_lexer_advance_310(lex);
+      cct_boot_rit_lexer_advance_317(lex);
     }
     if (0) goto __cct_label_33;
     __cct_label_33: ;
   }
   if (0) goto __cct_label_32;
   __cct_label_32: ;
-  char* lexeme = cct_boot_rit_lexer_make_lexeme_314(lex);
-  cct_boot_ord_TokenKind kind = cct_boot_rit_keyword_lookup_303(lexeme);
+  char* lexeme = cct_boot_rit_lexer_make_lexeme_321(lex);
+  cct_boot_ord_TokenKind kind = cct_boot_rit_keyword_lookup_310(lexeme);
   long long col = ((*lex).column - ((*lex).current - (*lex).start));
-  return cct_boot_rit_token_make_305(kind, lexeme, (*lex).line, col);
+  return cct_boot_rit_token_make_312(kind, lexeme, (*lex).line, col);
 }
 
-cct_boot_sig_Token cct_boot_rit_lexer_number_319(cct_boot_sig_LexerState* lex)
+cct_boot_sig_Token cct_boot_rit_lexer_number_326(cct_boot_sig_LexerState* lex)
 {
-  while (cct_boot_rit_char_is_digit_31(cct_boot_rit_lexer_peek_308(lex)))
+  while (cct_boot_rit_char_is_digit_31(cct_boot_rit_lexer_peek_315(lex)))
   {
     {
-      cct_boot_rit_lexer_advance_310(lex);
+      cct_boot_rit_lexer_advance_317(lex);
     }
     if (0) goto __cct_label_35;
     __cct_label_35: ;
@@ -3450,14 +3457,14 @@ cct_boot_sig_Token cct_boot_rit_lexer_number_319(cct_boot_sig_LexerState* lex)
   if (0) goto __cct_label_34;
   __cct_label_34: ;
   int is_real = 0;
-  if ((cct_boot_rit_lexer_peek_308(lex) == 46) && cct_boot_rit_char_is_digit_31(cct_boot_rit_lexer_peek_next_309(lex)))
+  if ((cct_boot_rit_lexer_peek_315(lex) == 46) && cct_boot_rit_char_is_digit_31(cct_boot_rit_lexer_peek_next_316(lex)))
   {
     is_real = 1;
-    cct_boot_rit_lexer_advance_310(lex);
-    while (cct_boot_rit_char_is_digit_31(cct_boot_rit_lexer_peek_308(lex)))
+    cct_boot_rit_lexer_advance_317(lex);
+    while (cct_boot_rit_char_is_digit_31(cct_boot_rit_lexer_peek_315(lex)))
     {
       {
-        cct_boot_rit_lexer_advance_310(lex);
+        cct_boot_rit_lexer_advance_317(lex);
       }
       if (0) goto __cct_label_37;
       __cct_label_37: ;
@@ -3474,271 +3481,271 @@ cct_boot_sig_Token cct_boot_rit_lexer_number_319(cct_boot_sig_LexerState* lex)
   {
     kind = cct_boot_ord_TokenKind__TK_INTEGER;
   }
-  return cct_boot_rit_lexer_make_token_315(lex, kind);
+  return cct_boot_rit_lexer_make_token_322(lex, kind);
 }
 
-cct_boot_sig_Token cct_boot_rit_lexer_string_320(cct_boot_sig_LexerState* lex)
+cct_boot_sig_Token cct_boot_rit_lexer_string_327(cct_boot_sig_LexerState* lex)
 {
-  while ((cct_boot_rit_lexer_peek_308(lex) != 34) && (!cct_boot_rit_lexer_is_at_end_307(lex)))
+  while ((cct_boot_rit_lexer_peek_315(lex) != 34) && (!cct_boot_rit_lexer_is_at_end_314(lex)))
   {
     {
-      char c = cct_boot_rit_lexer_peek_308(lex);
+      char c = cct_boot_rit_lexer_peek_315(lex);
       if (c == 10)
       {
-        return cct_boot_rit_lexer_error_token_316(lex, cct_boot_str_215);
+        return cct_boot_rit_lexer_error_token_323(lex, cct_boot_str_215);
       }
       if (c == 92)
       {
-        cct_boot_rit_lexer_advance_310(lex);
-        if (cct_boot_rit_lexer_is_at_end_307(lex))
+        cct_boot_rit_lexer_advance_317(lex);
+        if (cct_boot_rit_lexer_is_at_end_314(lex))
         {
-          return cct_boot_rit_lexer_error_token_316(lex, cct_boot_str_215);
+          return cct_boot_rit_lexer_error_token_323(lex, cct_boot_str_215);
         }
-        char next = cct_boot_rit_lexer_peek_308(lex);
+        char next = cct_boot_rit_lexer_peek_315(lex);
         if ((((next != 34) && (next != 92)) && (next != 110)) && (next != 116))
         {
-          return cct_boot_rit_lexer_error_token_316(lex, cct_boot_str_216);
+          return cct_boot_rit_lexer_error_token_323(lex, cct_boot_str_216);
         }
       }
-      cct_boot_rit_lexer_advance_310(lex);
+      cct_boot_rit_lexer_advance_317(lex);
     }
     if (0) goto __cct_label_39;
     __cct_label_39: ;
   }
   if (0) goto __cct_label_38;
   __cct_label_38: ;
-  if (cct_boot_rit_lexer_is_at_end_307(lex))
+  if (cct_boot_rit_lexer_is_at_end_314(lex))
   {
-    return cct_boot_rit_lexer_error_token_316(lex, cct_boot_str_215);
+    return cct_boot_rit_lexer_error_token_323(lex, cct_boot_str_215);
   }
-  cct_boot_rit_lexer_advance_310(lex);
-  return cct_boot_rit_lexer_make_token_315(lex, cct_boot_ord_TokenKind__TK_STRING);
+  cct_boot_rit_lexer_advance_317(lex);
+  return cct_boot_rit_lexer_make_token_322(lex, cct_boot_ord_TokenKind__TK_STRING);
 }
 
-cct_boot_sig_Token cct_boot_rit_lexer_next_token_321(cct_boot_sig_LexerState* lex)
+cct_boot_sig_Token cct_boot_rit_lexer_next_token_328(cct_boot_sig_LexerState* lex)
 {
-  cct_boot_rit_lexer_skip_whitespace_312(lex);
+  cct_boot_rit_lexer_skip_whitespace_319(lex);
   (*lex).start = (*lex).current;
-  if (cct_boot_rit_lexer_is_at_end_307(lex))
+  if (cct_boot_rit_lexer_is_at_end_314(lex))
   {
-    return cct_boot_rit_lexer_make_token_315(lex, cct_boot_ord_TokenKind__TK_EOF);
+    return cct_boot_rit_lexer_make_token_322(lex, cct_boot_ord_TokenKind__TK_EOF);
   }
-  char c = cct_boot_rit_lexer_advance_310(lex);
+  char c = cct_boot_rit_lexer_advance_317(lex);
   if (cct_boot_rit_char_is_alpha_32(c))
   {
-    return cct_boot_rit_lexer_identifier_318(lex);
+    return cct_boot_rit_lexer_identifier_325(lex);
   }
   if (cct_boot_rit_char_is_digit_31(c))
   {
-    return cct_boot_rit_lexer_number_319(lex);
+    return cct_boot_rit_lexer_number_326(lex);
   }
   char __cct_tmp_1 = c;
   switch (__cct_tmp_1)
   {
     case 45:
     {
-      if (cct_boot_rit_lexer_peek_308(lex) == 45)
+      if (cct_boot_rit_lexer_peek_315(lex) == 45)
       {
-        cct_boot_rit_lexer_advance_310(lex);
-        cct_boot_rit_lexer_skip_comment_313(lex);
-        return cct_boot_rit_lexer_next_token_321(lex);
+        cct_boot_rit_lexer_advance_317(lex);
+        cct_boot_rit_lexer_skip_comment_320(lex);
+        return cct_boot_rit_lexer_next_token_328(lex);
       }
-      if (cct_boot_rit_lexer_match_311(lex, 45))
+      if (cct_boot_rit_lexer_match_318(lex, 45))
       {
-        return cct_boot_rit_lexer_make_token_315(lex, cct_boot_ord_TokenKind__TK_MINUS_MINUS);
+        return cct_boot_rit_lexer_make_token_322(lex, cct_boot_ord_TokenKind__TK_MINUS_MINUS);
       }
-      return cct_boot_rit_lexer_make_token_315(lex, cct_boot_ord_TokenKind__TK_MINUS);
+      return cct_boot_rit_lexer_make_token_322(lex, cct_boot_ord_TokenKind__TK_MINUS);
     }
     break;
     case 43:
     {
-      if (cct_boot_rit_lexer_match_311(lex, 43))
+      if (cct_boot_rit_lexer_match_318(lex, 43))
       {
-        return cct_boot_rit_lexer_make_token_315(lex, cct_boot_ord_TokenKind__TK_PLUS_PLUS);
+        return cct_boot_rit_lexer_make_token_322(lex, cct_boot_ord_TokenKind__TK_PLUS_PLUS);
       }
-      return cct_boot_rit_lexer_make_token_315(lex, cct_boot_ord_TokenKind__TK_PLUS);
+      return cct_boot_rit_lexer_make_token_322(lex, cct_boot_ord_TokenKind__TK_PLUS);
     }
     break;
     case 61:
     {
-      if (cct_boot_rit_lexer_match_311(lex, 61))
+      if (cct_boot_rit_lexer_match_318(lex, 61))
       {
-        return cct_boot_rit_lexer_make_token_315(lex, cct_boot_ord_TokenKind__TK_EQ_EQ);
+        return cct_boot_rit_lexer_make_token_322(lex, cct_boot_ord_TokenKind__TK_EQ_EQ);
       }
-      return cct_boot_rit_lexer_make_token_315(lex, cct_boot_ord_TokenKind__TK_EQ);
+      return cct_boot_rit_lexer_make_token_322(lex, cct_boot_ord_TokenKind__TK_EQ);
     }
     break;
     case 33:
     {
-      if (cct_boot_rit_lexer_match_311(lex, 61))
+      if (cct_boot_rit_lexer_match_318(lex, 61))
       {
-        return cct_boot_rit_lexer_make_token_315(lex, cct_boot_ord_TokenKind__TK_BANG_EQ);
+        return cct_boot_rit_lexer_make_token_322(lex, cct_boot_ord_TokenKind__TK_BANG_EQ);
       }
-      return cct_boot_rit_lexer_error_token_316(lex, cct_boot_str_217);
+      return cct_boot_rit_lexer_error_token_323(lex, cct_boot_str_217);
     }
     break;
     case 60:
     {
-      if (cct_boot_rit_lexer_match_311(lex, 61))
+      if (cct_boot_rit_lexer_match_318(lex, 61))
       {
-        return cct_boot_rit_lexer_make_token_315(lex, cct_boot_ord_TokenKind__TK_LESS_EQ);
+        return cct_boot_rit_lexer_make_token_322(lex, cct_boot_ord_TokenKind__TK_LESS_EQ);
       }
-      return cct_boot_rit_lexer_make_token_315(lex, cct_boot_ord_TokenKind__TK_LESS);
+      return cct_boot_rit_lexer_make_token_322(lex, cct_boot_ord_TokenKind__TK_LESS);
     }
     break;
     case 62:
     {
-      if (cct_boot_rit_lexer_match_311(lex, 61))
+      if (cct_boot_rit_lexer_match_318(lex, 61))
       {
-        return cct_boot_rit_lexer_make_token_315(lex, cct_boot_ord_TokenKind__TK_GREATER_EQ);
+        return cct_boot_rit_lexer_make_token_322(lex, cct_boot_ord_TokenKind__TK_GREATER_EQ);
       }
-      return cct_boot_rit_lexer_make_token_315(lex, cct_boot_ord_TokenKind__TK_GREATER);
+      return cct_boot_rit_lexer_make_token_322(lex, cct_boot_ord_TokenKind__TK_GREATER);
     }
     break;
     case 40:
     {
-      return cct_boot_rit_lexer_make_token_315(lex, cct_boot_ord_TokenKind__TK_LPAREN);
+      return cct_boot_rit_lexer_make_token_322(lex, cct_boot_ord_TokenKind__TK_LPAREN);
     }
     break;
     case 41:
     {
-      return cct_boot_rit_lexer_make_token_315(lex, cct_boot_ord_TokenKind__TK_RPAREN);
+      return cct_boot_rit_lexer_make_token_322(lex, cct_boot_ord_TokenKind__TK_RPAREN);
     }
     break;
     case 123:
     {
-      return cct_boot_rit_lexer_make_token_315(lex, cct_boot_ord_TokenKind__TK_LBRACE);
+      return cct_boot_rit_lexer_make_token_322(lex, cct_boot_ord_TokenKind__TK_LBRACE);
     }
     break;
     case 125:
     {
-      return cct_boot_rit_lexer_make_token_315(lex, cct_boot_ord_TokenKind__TK_RBRACE);
+      return cct_boot_rit_lexer_make_token_322(lex, cct_boot_ord_TokenKind__TK_RBRACE);
     }
     break;
     case 91:
     {
-      return cct_boot_rit_lexer_make_token_315(lex, cct_boot_ord_TokenKind__TK_LBRACKET);
+      return cct_boot_rit_lexer_make_token_322(lex, cct_boot_ord_TokenKind__TK_LBRACKET);
     }
     break;
     case 93:
     {
-      return cct_boot_rit_lexer_make_token_315(lex, cct_boot_ord_TokenKind__TK_RBRACKET);
+      return cct_boot_rit_lexer_make_token_322(lex, cct_boot_ord_TokenKind__TK_RBRACKET);
     }
     break;
     case 44:
     {
-      return cct_boot_rit_lexer_make_token_315(lex, cct_boot_ord_TokenKind__TK_COMMA);
+      return cct_boot_rit_lexer_make_token_322(lex, cct_boot_ord_TokenKind__TK_COMMA);
     }
     break;
     case 46:
     {
-      return cct_boot_rit_lexer_make_token_315(lex, cct_boot_ord_TokenKind__TK_DOT);
+      return cct_boot_rit_lexer_make_token_322(lex, cct_boot_ord_TokenKind__TK_DOT);
     }
     break;
     case 58:
     {
-      return cct_boot_rit_lexer_make_token_315(lex, cct_boot_ord_TokenKind__TK_COLON);
+      return cct_boot_rit_lexer_make_token_322(lex, cct_boot_ord_TokenKind__TK_COLON);
     }
     break;
     case 59:
     {
-      return cct_boot_rit_lexer_make_token_315(lex, cct_boot_ord_TokenKind__TK_SEMICOLON);
+      return cct_boot_rit_lexer_make_token_322(lex, cct_boot_ord_TokenKind__TK_SEMICOLON);
     }
     break;
     case 42:
     {
-      if (cct_boot_rit_lexer_match_311(lex, 42))
+      if (cct_boot_rit_lexer_match_318(lex, 42))
       {
-        return cct_boot_rit_lexer_make_token_315(lex, cct_boot_ord_TokenKind__TK_STAR_STAR);
+        return cct_boot_rit_lexer_make_token_322(lex, cct_boot_ord_TokenKind__TK_STAR_STAR);
       }
-      return cct_boot_rit_lexer_make_token_315(lex, cct_boot_ord_TokenKind__TK_STAR);
+      return cct_boot_rit_lexer_make_token_322(lex, cct_boot_ord_TokenKind__TK_STAR);
     }
     break;
     case 47:
     {
-      if (cct_boot_rit_lexer_match_311(lex, 47))
+      if (cct_boot_rit_lexer_match_318(lex, 47))
       {
-        return cct_boot_rit_lexer_make_token_315(lex, cct_boot_ord_TokenKind__TK_SLASH_SLASH);
+        return cct_boot_rit_lexer_make_token_322(lex, cct_boot_ord_TokenKind__TK_SLASH_SLASH);
       }
-      return cct_boot_rit_lexer_make_token_315(lex, cct_boot_ord_TokenKind__TK_SLASH);
+      return cct_boot_rit_lexer_make_token_322(lex, cct_boot_ord_TokenKind__TK_SLASH);
     }
     break;
     case 37:
     {
-      if (cct_boot_rit_lexer_match_311(lex, 37))
+      if (cct_boot_rit_lexer_match_318(lex, 37))
       {
-        return cct_boot_rit_lexer_make_token_315(lex, cct_boot_ord_TokenKind__TK_PERCENT_PERCENT);
+        return cct_boot_rit_lexer_make_token_322(lex, cct_boot_ord_TokenKind__TK_PERCENT_PERCENT);
       }
-      return cct_boot_rit_lexer_make_token_315(lex, cct_boot_ord_TokenKind__TK_PERCENT);
+      return cct_boot_rit_lexer_make_token_322(lex, cct_boot_ord_TokenKind__TK_PERCENT);
     }
     break;
     case 63:
     {
-      return cct_boot_rit_lexer_make_token_315(lex, cct_boot_ord_TokenKind__TK_QUESTION);
+      return cct_boot_rit_lexer_make_token_322(lex, cct_boot_ord_TokenKind__TK_QUESTION);
     }
     break;
     case 34:
     {
-      return cct_boot_rit_lexer_string_320(lex);
+      return cct_boot_rit_lexer_string_327(lex);
     }
     break;
     default:
     {
-      return cct_boot_rit_lexer_error_character_token_317(lex, c);
+      return cct_boot_rit_lexer_error_character_token_324(lex, c);
     }
     break;
   }
 }
 
-cct_boot_sig_Token cct_boot_rit_parser_empty_token_322(void)
+cct_boot_sig_Token cct_boot_rit_parser_empty_token_329(void)
 {
-  return cct_boot_rit_token_make_305(cct_boot_ord_TokenKind__TK_EOF, cct_boot_rit_verbum_dup_40(cct_boot_str_102), 0, 0);
+  return cct_boot_rit_token_make_312(cct_boot_ord_TokenKind__TK_EOF, cct_boot_rit_verbum_dup_40(cct_boot_str_102), 0, 0);
 }
 
-cct_boot_sig_ParserState cct_boot_rit_parser_init_323(cct_boot_sig_LexerState* lexer, char* filename)
+cct_boot_sig_ParserState cct_boot_rit_parser_init_330(cct_boot_sig_LexerState* lexer, char* filename)
 {
   cct_boot_sig_ParserState parser;
   parser.lexer = lexer;
-  parser.current = cct_boot_rit_parser_empty_token_322();
-  parser.previous = cct_boot_rit_parser_empty_token_322();
+  parser.current = cct_boot_rit_parser_empty_token_329();
+  parser.previous = cct_boot_rit_parser_empty_token_329();
   parser.had_error = 0;
   parser.panic_mode = 0;
   parser.filename = filename;
-  cct_boot_rit_parser_advance_325((&parser));
+  cct_boot_rit_parser_advance_332((&parser));
   return parser;
 }
 
-void cct_boot_rit_parser_dispose_324(cct_boot_sig_ParserState* parser)
+void cct_boot_rit_parser_dispose_331(cct_boot_sig_ParserState* parser)
 {
-  cct_boot_rit_token_free_306((&(*parser).current));
-  cct_boot_rit_token_free_306((&(*parser).previous));
+  cct_boot_rit_token_free_313((&(*parser).current));
+  cct_boot_rit_token_free_313((&(*parser).previous));
   return;
 }
 
-void cct_boot_rit_parser_advance_325(cct_boot_sig_ParserState* parser)
+void cct_boot_rit_parser_advance_332(cct_boot_sig_ParserState* parser)
 {
-  cct_boot_rit_token_free_306((&(*parser).previous));
+  cct_boot_rit_token_free_313((&(*parser).previous));
   (*parser).previous = (*parser).current;
-  (*parser).current = cct_boot_rit_lexer_next_token_321((*parser).lexer);
+  (*parser).current = cct_boot_rit_lexer_next_token_328((*parser).lexer);
   return;
 }
 
-int cct_boot_rit_parser_check_326(cct_boot_sig_ParserState* parser, cct_boot_ord_TokenKind kind)
+int cct_boot_rit_parser_check_333(cct_boot_sig_ParserState* parser, cct_boot_ord_TokenKind kind)
 {
   return ((*parser).current.kind == kind);
 }
 
-int cct_boot_rit_parser_match_327(cct_boot_sig_ParserState* parser, cct_boot_ord_TokenKind kind)
+int cct_boot_rit_parser_match_334(cct_boot_sig_ParserState* parser, cct_boot_ord_TokenKind kind)
 {
-  if (!cct_boot_rit_parser_check_326(parser, kind))
+  if (!cct_boot_rit_parser_check_333(parser, kind))
   {
     return 0;
   }
-  cct_boot_rit_parser_advance_325(parser);
+  cct_boot_rit_parser_advance_332(parser);
   return 1;
 }
 
-void cct_boot_rit_parser_emit_error_328(cct_boot_sig_ParserState* parser, long long line, long long column, char* message)
+void cct_boot_rit_parser_emit_error_335(cct_boot_sig_ParserState* parser, long long line, long long column, char* message)
 {
   if ((*parser).panic_mode)
   {
@@ -3750,54 +3757,54 @@ void cct_boot_rit_parser_emit_error_328(cct_boot_sig_ParserState* parser, long l
   loc.line = line;
   loc.column = column;
   loc.filename = (*parser).filename;
-  cct_boot_rit_diag_error_120((&loc), message);
+  cct_boot_rit_diag_error_127((&loc), message);
   return;
 }
 
-void cct_boot_rit_parser_error_at_current_329(cct_boot_sig_ParserState* parser, char* message)
+void cct_boot_rit_parser_error_at_current_336(cct_boot_sig_ParserState* parser, char* message)
 {
-  cct_boot_rit_parser_emit_error_328(parser, (*parser).current.line, (*parser).current.column, message);
+  cct_boot_rit_parser_emit_error_335(parser, (*parser).current.line, (*parser).current.column, message);
   return;
 }
 
-void cct_boot_rit_parser_error_at_previous_330(cct_boot_sig_ParserState* parser, char* message)
+void cct_boot_rit_parser_error_at_previous_337(cct_boot_sig_ParserState* parser, char* message)
 {
-  cct_boot_rit_parser_emit_error_328(parser, (*parser).previous.line, (*parser).previous.column, message);
+  cct_boot_rit_parser_emit_error_335(parser, (*parser).previous.line, (*parser).previous.column, message);
   return;
 }
 
-int cct_boot_rit_parser_consume_331(cct_boot_sig_ParserState* parser, cct_boot_ord_TokenKind kind, char* message)
+int cct_boot_rit_parser_consume_338(cct_boot_sig_ParserState* parser, cct_boot_ord_TokenKind kind, char* message)
 {
-  if (cct_boot_rit_parser_check_326(parser, kind))
+  if (cct_boot_rit_parser_check_333(parser, kind))
   {
-    cct_boot_rit_parser_advance_325(parser);
+    cct_boot_rit_parser_advance_332(parser);
     return 1;
   }
-  cct_boot_rit_parser_error_at_current_329(parser, message);
+  cct_boot_rit_parser_error_at_current_336(parser, message);
   return 0;
 }
 
-int cct_boot_rit_parser_is_declaration_start_332(cct_boot_ord_TokenKind kind)
+int cct_boot_rit_parser_is_declaration_start_339(cct_boot_ord_TokenKind kind)
 {
   return (((((((((kind == cct_boot_ord_TokenKind__TK_ADVOCARE) || (kind == cct_boot_ord_TokenKind__TK_RITUALE)) || (kind == cct_boot_ord_TokenKind__TK_SIGILLUM)) || (kind == cct_boot_ord_TokenKind__TK_ORDO)) || (kind == cct_boot_ord_TokenKind__TK_CODEX)) || (kind == cct_boot_ord_TokenKind__TK_PACTUM)) || (kind == cct_boot_ord_TokenKind__TK_FIN)) || (kind == cct_boot_ord_TokenKind__TK_EXPLICIT)) || (kind == cct_boot_ord_TokenKind__TK_EOF));
 }
 
-int cct_boot_rit_parser_is_statement_start_333(cct_boot_ord_TokenKind kind)
+int cct_boot_rit_parser_is_statement_start_340(cct_boot_ord_TokenKind kind)
 {
   return ((((((((((((((((((((kind == cct_boot_ord_TokenKind__TK_EVOCA) || (kind == cct_boot_ord_TokenKind__TK_VINCIRE)) || (kind == cct_boot_ord_TokenKind__TK_REDDE)) || (kind == cct_boot_ord_TokenKind__TK_IACE)) || (kind == cct_boot_ord_TokenKind__TK_SI)) || (kind == cct_boot_ord_TokenKind__TK_QUANDO)) || (kind == cct_boot_ord_TokenKind__TK_DUM)) || (kind == cct_boot_ord_TokenKind__TK_FRANGE)) || (kind == cct_boot_ord_TokenKind__TK_RECEDE)) || (kind == cct_boot_ord_TokenKind__TK_TEMPTA)) || (kind == cct_boot_ord_TokenKind__TK_LBRACE)) || (kind == cct_boot_ord_TokenKind__TK_CAPE)) || (kind == cct_boot_ord_TokenKind__TK_SEMPER)) || (kind == cct_boot_ord_TokenKind__TK_CASO)) || (kind == cct_boot_ord_TokenKind__TK_SENAO)) || (kind == cct_boot_ord_TokenKind__TK_FIN)) || (kind == cct_boot_ord_TokenKind__TK_ALITER)) || (kind == cct_boot_ord_TokenKind__TK_RBRACE)) || (kind == cct_boot_ord_TokenKind__TK_EXPLICIT)) || (kind == cct_boot_ord_TokenKind__TK_EOF));
 }
 
-void cct_boot_rit_parser_synchronize_statement_334(cct_boot_sig_ParserState* parser)
+void cct_boot_rit_parser_synchronize_statement_341(cct_boot_sig_ParserState* parser)
 {
   (*parser).panic_mode = 0;
-  while (!cct_boot_rit_parser_check_326(parser, cct_boot_ord_TokenKind__TK_EOF))
+  while (!cct_boot_rit_parser_check_333(parser, cct_boot_ord_TokenKind__TK_EOF))
   {
     {
-      if (cct_boot_rit_parser_is_statement_start_333((*parser).current.kind) || cct_boot_rit_parser_is_declaration_start_332((*parser).current.kind))
+      if (cct_boot_rit_parser_is_statement_start_340((*parser).current.kind) || cct_boot_rit_parser_is_declaration_start_339((*parser).current.kind))
       {
         return;
       }
-      cct_boot_rit_parser_advance_325(parser);
+      cct_boot_rit_parser_advance_332(parser);
     }
     if (0) goto __cct_label_41;
     __cct_label_41: ;
@@ -3807,17 +3814,17 @@ void cct_boot_rit_parser_synchronize_statement_334(cct_boot_sig_ParserState* par
   return;
 }
 
-void cct_boot_rit_parser_synchronize_declaration_335(cct_boot_sig_ParserState* parser)
+void cct_boot_rit_parser_synchronize_declaration_342(cct_boot_sig_ParserState* parser)
 {
   (*parser).panic_mode = 0;
-  while (!cct_boot_rit_parser_check_326(parser, cct_boot_ord_TokenKind__TK_EOF))
+  while (!cct_boot_rit_parser_check_333(parser, cct_boot_ord_TokenKind__TK_EOF))
   {
     {
-      if (cct_boot_rit_parser_is_declaration_start_332((*parser).current.kind))
+      if (cct_boot_rit_parser_is_declaration_start_339((*parser).current.kind))
       {
         return;
       }
-      cct_boot_rit_parser_advance_325(parser);
+      cct_boot_rit_parser_advance_332(parser);
     }
     if (0) goto __cct_label_43;
     __cct_label_43: ;
@@ -3827,7 +3834,7 @@ void cct_boot_rit_parser_synchronize_declaration_335(cct_boot_sig_ParserState* p
   return;
 }
 
-int cct_boot_rit_parser_is_assignment_target_336(cct_boot_sig_AstNode* node)
+int cct_boot_rit_parser_is_assignment_target_343(cct_boot_sig_AstNode* node)
 {
   if ((((*node).kind == cct_boot_ord_AstKind__AST_IDENTIFIER) || ((*node).kind == cct_boot_ord_AstKind__AST_FIELD_ACCESS)) || ((*node).kind == cct_boot_ord_AstKind__AST_INDEX_ACCESS))
   {
@@ -3840,61 +3847,61 @@ int cct_boot_rit_parser_is_assignment_target_336(cct_boot_sig_AstNode* node)
   return 0;
 }
 
-cct_boot_sig_AstNode* cct_boot_rit_parse_expression_337(cct_boot_sig_ParserState* parser)
+cct_boot_sig_AstNode* cct_boot_rit_parse_expression_344(cct_boot_sig_ParserState* parser)
 {
-  return cct_boot_rit_parse_assignment_355(parser);
+  return cct_boot_rit_parse_assignment_362(parser);
 }
 
-int cct_boot_rit_parse_expr_is_simple_type_token_338(cct_boot_ord_TokenKind kind)
+int cct_boot_rit_parse_expr_is_simple_type_token_345(cct_boot_ord_TokenKind kind)
 {
   return (((((((((((kind == cct_boot_ord_TokenKind__TK_IDENTIFIER) || (kind == cct_boot_ord_TokenKind__TK_REX)) || (kind == cct_boot_ord_TokenKind__TK_DUX)) || (kind == cct_boot_ord_TokenKind__TK_COMES)) || (kind == cct_boot_ord_TokenKind__TK_MILES)) || (kind == cct_boot_ord_TokenKind__TK_UMBRA)) || (kind == cct_boot_ord_TokenKind__TK_FLAMMA)) || (kind == cct_boot_ord_TokenKind__TK_VERBUM)) || (kind == cct_boot_ord_TokenKind__TK_VERUM)) || (kind == cct_boot_ord_TokenKind__TK_NIHIL)) || (kind == cct_boot_ord_TokenKind__TK_FRACTUM));
 }
 
-cct_boot_sig_AstNode* cct_boot_rit_parse_expr_generic_type_339(cct_boot_sig_ParserState* parser)
+cct_boot_sig_AstNode* cct_boot_rit_parse_expr_generic_type_346(cct_boot_sig_ParserState* parser)
 {
-  if (cct_boot_rit_parser_match_327(parser, cct_boot_ord_TokenKind__TK_SPECULUM))
+  if (cct_boot_rit_parser_match_334(parser, cct_boot_ord_TokenKind__TK_SPECULUM))
   {
-    cct_boot_sig_AstNode* base_ptr = cct_boot_rit_parse_expr_generic_type_339(parser);
-    cct_boot_rit_ast_type_mark_pointer_234(base_ptr);
+    cct_boot_sig_AstNode* base_ptr = cct_boot_rit_parse_expr_generic_type_346(parser);
+    cct_boot_rit_ast_type_mark_pointer_241(base_ptr);
     return base_ptr;
   }
-  if (cct_boot_rit_parser_match_327(parser, cct_boot_ord_TokenKind__TK_SERIES))
+  if (cct_boot_rit_parser_match_334(parser, cct_boot_ord_TokenKind__TK_SERIES))
   {
-    cct_boot_sig_AstNode* base_array = cct_boot_rit_parse_expr_generic_type_339(parser);
-    cct_boot_rit_parser_consume_331(parser, cct_boot_ord_TokenKind__TK_LBRACKET, cct_boot_str_218);
-    if (!cct_boot_rit_parser_check_326(parser, cct_boot_ord_TokenKind__TK_INTEGER))
+    cct_boot_sig_AstNode* base_array = cct_boot_rit_parse_expr_generic_type_346(parser);
+    cct_boot_rit_parser_consume_338(parser, cct_boot_ord_TokenKind__TK_LBRACKET, cct_boot_str_218);
+    if (!cct_boot_rit_parser_check_333(parser, cct_boot_ord_TokenKind__TK_INTEGER))
     {
-      cct_boot_rit_parser_error_at_current_329(parser, cct_boot_str_219);
+      cct_boot_rit_parser_error_at_current_336(parser, cct_boot_str_219);
       return base_array;
     }
-    cct_boot_rit_parser_advance_325(parser);
-    cct_boot_rit_ast_type_mark_array_235(base_array, cct_boot_rit_parse_int_105((*parser).previous.lexeme));
-    cct_boot_rit_parser_consume_331(parser, cct_boot_ord_TokenKind__TK_RBRACKET, cct_boot_str_220);
+    cct_boot_rit_parser_advance_332(parser);
+    cct_boot_rit_ast_type_mark_array_242(base_array, cct_boot_rit_parse_int_112((*parser).previous.lexeme));
+    cct_boot_rit_parser_consume_338(parser, cct_boot_ord_TokenKind__TK_RBRACKET, cct_boot_str_220);
     return base_array;
   }
-  if (!cct_boot_rit_parse_expr_is_simple_type_token_338((*parser).current.kind))
+  if (!cct_boot_rit_parse_expr_is_simple_type_token_345((*parser).current.kind))
   {
-    cct_boot_rit_parser_error_at_current_329(parser, cct_boot_str_221);
-    return cct_boot_rit_ast_make_type_233(cct_boot_str_222, (*parser).current.line, (*parser).current.column);
+    cct_boot_rit_parser_error_at_current_336(parser, cct_boot_str_221);
+    return cct_boot_rit_ast_make_type_240(cct_boot_str_222, (*parser).current.line, (*parser).current.column);
   }
-  cct_boot_rit_parser_advance_325(parser);
-  cct_boot_sig_AstNode* node = cct_boot_rit_ast_make_type_233((*parser).previous.lexeme, (*parser).previous.line, (*parser).previous.column);
-  if (cct_boot_rit_parser_match_327(parser, cct_boot_ord_TokenKind__TK_GENUS))
+  cct_boot_rit_parser_advance_332(parser);
+  cct_boot_sig_AstNode* node = cct_boot_rit_ast_make_type_240((*parser).previous.lexeme, (*parser).previous.line, (*parser).previous.column);
+  if (cct_boot_rit_parser_match_334(parser, cct_boot_ord_TokenKind__TK_GENUS))
   {
-    cct_boot_rit_parser_consume_331(parser, cct_boot_ord_TokenKind__TK_LPAREN, cct_boot_str_223);
-    if (cct_boot_rit_parser_check_326(parser, cct_boot_ord_TokenKind__TK_RPAREN))
+    cct_boot_rit_parser_consume_338(parser, cct_boot_ord_TokenKind__TK_LPAREN, cct_boot_str_223);
+    if (cct_boot_rit_parser_check_333(parser, cct_boot_ord_TokenKind__TK_RPAREN))
     {
-      cct_boot_rit_parser_error_at_current_329(parser, cct_boot_str_224);
-      cct_boot_rit_parser_advance_325(parser);
+      cct_boot_rit_parser_error_at_current_336(parser, cct_boot_str_224);
+      cct_boot_rit_parser_advance_332(parser);
       return node;
     }
     while (1)
     {
       {
-        cct_boot_rit_ast_append_generic_arg_224(node, cct_boot_rit_parse_expr_generic_type_339(parser));
-        if (!cct_boot_rit_parser_match_327(parser, cct_boot_ord_TokenKind__TK_COMMA))
+        cct_boot_rit_ast_append_generic_arg_231(node, cct_boot_rit_parse_expr_generic_type_346(parser));
+        if (!cct_boot_rit_parser_match_334(parser, cct_boot_ord_TokenKind__TK_COMMA))
         {
-          cct_boot_rit_parser_consume_331(parser, cct_boot_ord_TokenKind__TK_RPAREN, cct_boot_str_225);
+          cct_boot_rit_parser_consume_338(parser, cct_boot_ord_TokenKind__TK_RPAREN, cct_boot_str_225);
           return node;
         }
       }
@@ -3907,22 +3914,22 @@ cct_boot_sig_AstNode* cct_boot_rit_parse_expr_generic_type_339(cct_boot_sig_Pars
   return node;
 }
 
-void cct_boot_rit_parse_postfix_generic_args_340(cct_boot_sig_ParserState* parser, cct_boot_sig_AstNode* expr)
+void cct_boot_rit_parse_postfix_generic_args_347(cct_boot_sig_ParserState* parser, cct_boot_sig_AstNode* expr)
 {
-  cct_boot_rit_parser_consume_331(parser, cct_boot_ord_TokenKind__TK_LPAREN, cct_boot_str_223);
-  if (cct_boot_rit_parser_check_326(parser, cct_boot_ord_TokenKind__TK_RPAREN))
+  cct_boot_rit_parser_consume_338(parser, cct_boot_ord_TokenKind__TK_LPAREN, cct_boot_str_223);
+  if (cct_boot_rit_parser_check_333(parser, cct_boot_ord_TokenKind__TK_RPAREN))
   {
-    cct_boot_rit_parser_error_at_current_329(parser, cct_boot_str_224);
-    cct_boot_rit_parser_advance_325(parser);
+    cct_boot_rit_parser_error_at_current_336(parser, cct_boot_str_224);
+    cct_boot_rit_parser_advance_332(parser);
     return;
   }
   while (1)
   {
     {
-      cct_boot_rit_ast_append_generic_arg_224(expr, cct_boot_rit_parse_expr_generic_type_339(parser));
-      if (!cct_boot_rit_parser_match_327(parser, cct_boot_ord_TokenKind__TK_COMMA))
+      cct_boot_rit_ast_append_generic_arg_231(expr, cct_boot_rit_parse_expr_generic_type_346(parser));
+      if (!cct_boot_rit_parser_match_334(parser, cct_boot_ord_TokenKind__TK_COMMA))
       {
-        cct_boot_rit_parser_consume_331(parser, cct_boot_ord_TokenKind__TK_RPAREN, cct_boot_str_225);
+        cct_boot_rit_parser_consume_338(parser, cct_boot_ord_TokenKind__TK_RPAREN, cct_boot_str_225);
         return;
       }
     }
@@ -3933,7 +3940,7 @@ void cct_boot_rit_parse_postfix_generic_args_340(cct_boot_sig_ParserState* parse
   __cct_label_46: ;
 }
 
-char* cct_boot_rit_parse_forma_unquote_341(char* raw_text)
+char* cct_boot_rit_parse_forma_unquote_348(char* raw_text)
 {
   long long n = cct_boot_rit_len_30(raw_text);
   if (((n >= 2) && (cct_boot_rit_char_at_44(raw_text, 0) == 34)) && (cct_boot_rit_char_at_44(raw_text, (n - 1)) == 34))
@@ -3943,33 +3950,33 @@ char* cct_boot_rit_parse_forma_unquote_341(char* raw_text)
   return cct_boot_rit_verbum_dup_40(raw_text);
 }
 
-void cct_boot_rit_parse_forma_flush_literal_342(cct_boot_sig_AstNode* molde, void* literal_builder, long long line, long long column)
+void cct_boot_rit_parse_forma_flush_literal_349(cct_boot_sig_AstNode* molde, void* literal_builder, long long line, long long column)
 {
-  if (cct_boot_rit_builder_len_82(literal_builder) == 0)
+  if (cct_boot_rit_builder_len_89(literal_builder) == 0)
   {
     return;
   }
-  char* text = cct_boot_rit_builder_to_verbum_81(literal_builder);
-  cct_boot_rit_ast_append_child_220(molde, cct_boot_rit_ast_make_literal_string_239(text, line, column));
+  char* text = cct_boot_rit_builder_to_verbum_88(literal_builder);
+  cct_boot_rit_ast_append_child_227(molde, cct_boot_rit_ast_make_literal_string_246(text, line, column));
   free((void*)(text));
-  cct_boot_rit_builder_clear_83(literal_builder);
+  cct_boot_rit_builder_clear_90(literal_builder);
   return;
 }
 
-cct_boot_sig_AstNode* cct_boot_rit_parse_forma_expression_343(cct_boot_sig_ParserState* parser)
+cct_boot_sig_AstNode* cct_boot_rit_parse_forma_expression_350(cct_boot_sig_ParserState* parser)
 {
   long long line = (*parser).current.line;
   long long column = (*parser).current.column;
-  cct_boot_rit_parser_consume_331(parser, cct_boot_ord_TokenKind__TK_MOLDE, cct_boot_str_226);
-  if (!cct_boot_rit_parser_check_326(parser, cct_boot_ord_TokenKind__TK_STRING))
+  cct_boot_rit_parser_consume_338(parser, cct_boot_ord_TokenKind__TK_MOLDE, cct_boot_str_226);
+  if (!cct_boot_rit_parser_check_333(parser, cct_boot_ord_TokenKind__TK_STRING))
   {
-    cct_boot_rit_parser_error_at_current_329(parser, cct_boot_str_227);
-    return cct_boot_rit_ast_make_literal_string_239(cct_boot_str_228, line, column);
+    cct_boot_rit_parser_error_at_current_336(parser, cct_boot_str_227);
+    return cct_boot_rit_ast_make_literal_string_246(cct_boot_str_228, line, column);
   }
-  cct_boot_rit_parser_advance_325(parser);
-  char* raw_text = cct_boot_rit_parse_forma_unquote_341((*parser).previous.lexeme);
-  cct_boot_sig_AstNode* molde = cct_boot_rit_ast_make_molde_250(line, column);
-  void* literal_builder = cct_boot_rit_builder_init_75();
+  cct_boot_rit_parser_advance_332(parser);
+  char* raw_text = cct_boot_rit_parse_forma_unquote_348((*parser).previous.lexeme);
+  cct_boot_sig_AstNode* molde = cct_boot_rit_ast_make_molde_257(line, column);
+  void* literal_builder = cct_boot_rit_builder_init_82();
   long long i = 0;
   long long n = cct_boot_rit_len_30(raw_text);
   while (i < n)
@@ -3980,12 +3987,12 @@ cct_boot_sig_AstNode* cct_boot_rit_parse_forma_expression_343(cct_boot_sig_Parse
       {
         if (((i + 1) < n) && (cct_boot_rit_char_at_44(raw_text, (i + 1)) == 123))
         {
-          cct_boot_rit_builder_append_char_77(literal_builder, 123);
+          cct_boot_rit_builder_append_char_84(literal_builder, 123);
           i = (i + 2);
         }
         else
         {
-          cct_boot_rit_parse_forma_flush_literal_342(molde, literal_builder, line, column);
+          cct_boot_rit_parse_forma_flush_literal_349(molde, literal_builder, line, column);
           long long expr_start = (i + 1);
           long long expr_end = expr_start;
           while ((expr_end < n) && (cct_boot_rit_char_at_44(raw_text, expr_end) != 125))
@@ -4000,14 +4007,14 @@ cct_boot_sig_AstNode* cct_boot_rit_parse_forma_expression_343(cct_boot_sig_Parse
           __cct_label_50: ;
           if (expr_end >= n)
           {
-            cct_boot_rit_parser_error_at_previous_330(parser, cct_boot_str_229);
+            cct_boot_rit_parser_error_at_previous_337(parser, cct_boot_str_229);
             free((void*)(raw_text));
-            cct_boot_rit_builder_free_84(literal_builder);
+            cct_boot_rit_builder_free_91(literal_builder);
             return molde;
           }
           if (expr_end == expr_start)
           {
-            cct_boot_rit_parser_error_at_previous_330(parser, cct_boot_str_230);
+            cct_boot_rit_parser_error_at_previous_337(parser, cct_boot_str_230);
             i = (expr_end + 1);
           }
           else
@@ -4067,7 +4074,7 @@ cct_boot_sig_AstNode* cct_boot_rit_parse_forma_expression_343(cct_boot_sig_Parse
               __cct_label_56: ;
               if (spec_end == spec_start)
               {
-                cct_boot_rit_parser_error_at_previous_330(parser, cct_boot_str_231);
+                cct_boot_rit_parser_error_at_previous_337(parser, cct_boot_str_231);
                 free((void*)(expr_text));
                 free((void*)(fmt_spec));
                 if (colon_pos >= 0)
@@ -4081,10 +4088,10 @@ cct_boot_sig_AstNode* cct_boot_rit_parse_forma_expression_343(cct_boot_sig_Parse
               free((void*)(fmt_spec));
               fmt_spec = compact_spec;
             }
-            cct_boot_sig_AstNode* part_expr = cct_boot_rit_parser_parse_expression_source_356(parse_text, (*parser).filename);
+            cct_boot_sig_AstNode* part_expr = cct_boot_rit_parser_parse_expression_source_363(parse_text, (*parser).filename);
             if (cct_boot_rit_compare_38(fmt_spec, cct_boot_str_102) != 0)
             {
-              cct_boot_rit_ast_node_set_fmt_spec_217(part_expr, fmt_spec);
+              cct_boot_rit_ast_node_set_fmt_spec_224(part_expr, fmt_spec);
             }
             if (has_fmt_spec)
             {
@@ -4094,7 +4101,7 @@ cct_boot_sig_AstNode* cct_boot_rit_parse_forma_expression_343(cct_boot_sig_Parse
             {
               free((void*)(parse_text));
             }
-            cct_boot_rit_ast_append_child_220(molde, part_expr);
+            cct_boot_rit_ast_append_child_227(molde, part_expr);
             free((void*)(expr_text));
             i = (expr_end + 1);
           }
@@ -4104,12 +4111,12 @@ cct_boot_sig_AstNode* cct_boot_rit_parse_forma_expression_343(cct_boot_sig_Parse
       {
         if (((ch == 125) && ((i + 1) < n)) && (cct_boot_rit_char_at_44(raw_text, (i + 1)) == 125))
         {
-          cct_boot_rit_builder_append_char_77(literal_builder, 125);
+          cct_boot_rit_builder_append_char_84(literal_builder, 125);
           i = (i + 2);
         }
         else
         {
-          cct_boot_rit_builder_append_char_77(literal_builder, ch);
+          cct_boot_rit_builder_append_char_84(literal_builder, ch);
           i = (i + 1);
         }
       }
@@ -4119,38 +4126,38 @@ cct_boot_sig_AstNode* cct_boot_rit_parse_forma_expression_343(cct_boot_sig_Parse
   }
   if (0) goto __cct_label_48;
   __cct_label_48: ;
-  cct_boot_rit_parse_forma_flush_literal_342(molde, literal_builder, line, column);
+  cct_boot_rit_parse_forma_flush_literal_349(molde, literal_builder, line, column);
   free((void*)(raw_text));
-  cct_boot_rit_builder_free_84(literal_builder);
+  cct_boot_rit_builder_free_91(literal_builder);
   return molde;
 }
 
-cct_boot_sig_AstNode* cct_boot_rit_parse_primary_344(cct_boot_sig_ParserState* parser)
+cct_boot_sig_AstNode* cct_boot_rit_parse_primary_351(cct_boot_sig_ParserState* parser)
 {
-  if (cct_boot_rit_parser_check_326(parser, cct_boot_ord_TokenKind__TK_MOLDE))
+  if (cct_boot_rit_parser_check_333(parser, cct_boot_ord_TokenKind__TK_MOLDE))
   {
-    return cct_boot_rit_parse_forma_expression_343(parser);
+    return cct_boot_rit_parse_forma_expression_350(parser);
   }
-  if (cct_boot_rit_parser_match_327(parser, cct_boot_ord_TokenKind__TK_OBSECRO))
+  if (cct_boot_rit_parser_match_334(parser, cct_boot_ord_TokenKind__TK_OBSECRO))
   {
     long long line = (*parser).previous.line;
     long long column = (*parser).previous.column;
-    if (!cct_boot_rit_parser_check_326(parser, cct_boot_ord_TokenKind__TK_IDENTIFIER))
+    if (!cct_boot_rit_parser_check_333(parser, cct_boot_ord_TokenKind__TK_IDENTIFIER))
     {
-      cct_boot_rit_parser_error_at_current_329(parser, cct_boot_str_232);
-      return cct_boot_rit_ast_make_identifier_242(cct_boot_str_222, line, column);
+      cct_boot_rit_parser_error_at_current_336(parser, cct_boot_str_232);
+      return cct_boot_rit_ast_make_identifier_249(cct_boot_str_222, line, column);
     }
-    cct_boot_rit_parser_advance_325(parser);
-    cct_boot_sig_AstNode* callee = cct_boot_rit_ast_make_identifier_242((*parser).previous.lexeme, (*parser).previous.line, (*parser).previous.column);
-    cct_boot_rit_parser_consume_331(parser, cct_boot_ord_TokenKind__TK_LPAREN, cct_boot_str_233);
-    cct_boot_sig_AstNode* call = cct_boot_rit_ast_make_obsecro_call_246(callee, line, column);
-    if (!cct_boot_rit_parser_check_326(parser, cct_boot_ord_TokenKind__TK_RPAREN))
+    cct_boot_rit_parser_advance_332(parser);
+    cct_boot_sig_AstNode* callee = cct_boot_rit_ast_make_identifier_249((*parser).previous.lexeme, (*parser).previous.line, (*parser).previous.column);
+    cct_boot_rit_parser_consume_338(parser, cct_boot_ord_TokenKind__TK_LPAREN, cct_boot_str_233);
+    cct_boot_sig_AstNode* call = cct_boot_rit_ast_make_obsecro_call_253(callee, line, column);
+    if (!cct_boot_rit_parser_check_333(parser, cct_boot_ord_TokenKind__TK_RPAREN))
     {
-      cct_boot_rit_ast_append_argument_228(call, cct_boot_rit_parse_expression_337(parser));
-      while (cct_boot_rit_parser_match_327(parser, cct_boot_ord_TokenKind__TK_COMMA))
+      cct_boot_rit_ast_append_argument_235(call, cct_boot_rit_parse_expression_344(parser));
+      while (cct_boot_rit_parser_match_334(parser, cct_boot_ord_TokenKind__TK_COMMA))
       {
         {
-          cct_boot_rit_ast_append_argument_228(call, cct_boot_rit_parse_expression_337(parser));
+          cct_boot_rit_ast_append_argument_235(call, cct_boot_rit_parse_expression_344(parser));
         }
         if (0) goto __cct_label_59;
         __cct_label_59: ;
@@ -4158,77 +4165,77 @@ cct_boot_sig_AstNode* cct_boot_rit_parse_primary_344(cct_boot_sig_ParserState* p
       if (0) goto __cct_label_58;
       __cct_label_58: ;
     }
-    cct_boot_rit_parser_consume_331(parser, cct_boot_ord_TokenKind__TK_RPAREN, cct_boot_str_234);
+    cct_boot_rit_parser_consume_338(parser, cct_boot_ord_TokenKind__TK_RPAREN, cct_boot_str_234);
     return call;
   }
-  if (cct_boot_rit_parser_match_327(parser, cct_boot_ord_TokenKind__TK_MENSURA))
+  if (cct_boot_rit_parser_match_334(parser, cct_boot_ord_TokenKind__TK_MENSURA))
   {
     long long line = (*parser).previous.line;
     long long column = (*parser).previous.column;
-    cct_boot_rit_parser_consume_331(parser, cct_boot_ord_TokenKind__TK_LPAREN, cct_boot_str_235);
-    cct_boot_sig_AstNode* type_expr = cct_boot_rit_parse_expr_generic_type_339(parser);
-    cct_boot_rit_parser_consume_331(parser, cct_boot_ord_TokenKind__TK_RPAREN, cct_boot_str_236);
-    return cct_boot_rit_ast_make_mensura_251(type_expr, line, column);
+    cct_boot_rit_parser_consume_338(parser, cct_boot_ord_TokenKind__TK_LPAREN, cct_boot_str_235);
+    cct_boot_sig_AstNode* type_expr = cct_boot_rit_parse_expr_generic_type_346(parser);
+    cct_boot_rit_parser_consume_338(parser, cct_boot_ord_TokenKind__TK_RPAREN, cct_boot_str_236);
+    return cct_boot_rit_ast_make_mensura_258(type_expr, line, column);
   }
-  if (cct_boot_rit_parser_match_327(parser, cct_boot_ord_TokenKind__TK_INTEGER))
+  if (cct_boot_rit_parser_match_334(parser, cct_boot_ord_TokenKind__TK_INTEGER))
   {
-    return cct_boot_rit_ast_make_literal_int_237((*parser).previous.lexeme, (*parser).previous.line, (*parser).previous.column);
+    return cct_boot_rit_ast_make_literal_int_244((*parser).previous.lexeme, (*parser).previous.line, (*parser).previous.column);
   }
-  if (cct_boot_rit_parser_match_327(parser, cct_boot_ord_TokenKind__TK_REAL))
+  if (cct_boot_rit_parser_match_334(parser, cct_boot_ord_TokenKind__TK_REAL))
   {
-    return cct_boot_rit_ast_make_literal_real_238((*parser).previous.lexeme, (*parser).previous.line, (*parser).previous.column);
+    return cct_boot_rit_ast_make_literal_real_245((*parser).previous.lexeme, (*parser).previous.line, (*parser).previous.column);
   }
-  if (cct_boot_rit_parser_match_327(parser, cct_boot_ord_TokenKind__TK_STRING))
+  if (cct_boot_rit_parser_match_334(parser, cct_boot_ord_TokenKind__TK_STRING))
   {
-    return cct_boot_rit_ast_make_literal_string_239((*parser).previous.lexeme, (*parser).previous.line, (*parser).previous.column);
+    return cct_boot_rit_ast_make_literal_string_246((*parser).previous.lexeme, (*parser).previous.line, (*parser).previous.column);
   }
-  if (cct_boot_rit_parser_match_327(parser, cct_boot_ord_TokenKind__TK_VERUM))
+  if (cct_boot_rit_parser_match_334(parser, cct_boot_ord_TokenKind__TK_VERUM))
   {
-    return cct_boot_rit_ast_make_literal_bool_240(1, (*parser).previous.line, (*parser).previous.column);
+    return cct_boot_rit_ast_make_literal_bool_247(1, (*parser).previous.line, (*parser).previous.column);
   }
-  if (cct_boot_rit_parser_match_327(parser, cct_boot_ord_TokenKind__TK_FALSUM))
+  if (cct_boot_rit_parser_match_334(parser, cct_boot_ord_TokenKind__TK_FALSUM))
   {
-    return cct_boot_rit_ast_make_literal_bool_240(0, (*parser).previous.line, (*parser).previous.column);
+    return cct_boot_rit_ast_make_literal_bool_247(0, (*parser).previous.line, (*parser).previous.column);
   }
-  if (cct_boot_rit_parser_match_327(parser, cct_boot_ord_TokenKind__TK_NIHIL))
+  if (cct_boot_rit_parser_match_334(parser, cct_boot_ord_TokenKind__TK_NIHIL))
   {
-    return cct_boot_rit_ast_make_literal_nihil_241((*parser).previous.line, (*parser).previous.column);
+    return cct_boot_rit_ast_make_literal_nihil_248((*parser).previous.line, (*parser).previous.column);
   }
-  if (cct_boot_rit_parser_match_327(parser, cct_boot_ord_TokenKind__TK_IDENTIFIER))
+  if (cct_boot_rit_parser_match_334(parser, cct_boot_ord_TokenKind__TK_IDENTIFIER))
   {
-    return cct_boot_rit_ast_make_identifier_242((*parser).previous.lexeme, (*parser).previous.line, (*parser).previous.column);
+    return cct_boot_rit_ast_make_identifier_249((*parser).previous.lexeme, (*parser).previous.line, (*parser).previous.column);
   }
-  if (cct_boot_rit_parser_match_327(parser, cct_boot_ord_TokenKind__TK_LPAREN))
+  if (cct_boot_rit_parser_match_334(parser, cct_boot_ord_TokenKind__TK_LPAREN))
   {
-    cct_boot_sig_AstNode* expr = cct_boot_rit_parse_expression_337(parser);
-    cct_boot_rit_parser_consume_331(parser, cct_boot_ord_TokenKind__TK_RPAREN, cct_boot_str_237);
+    cct_boot_sig_AstNode* expr = cct_boot_rit_parse_expression_344(parser);
+    cct_boot_rit_parser_consume_338(parser, cct_boot_ord_TokenKind__TK_RPAREN, cct_boot_str_237);
     return expr;
   }
-  cct_boot_rit_parser_error_at_current_329(parser, cct_boot_str_238);
-  return cct_boot_rit_ast_make_identifier_242(cct_boot_str_222, (*parser).current.line, (*parser).current.column);
+  cct_boot_rit_parser_error_at_current_336(parser, cct_boot_str_238);
+  return cct_boot_rit_ast_make_identifier_249(cct_boot_str_222, (*parser).current.line, (*parser).current.column);
 }
 
-cct_boot_sig_AstNode* cct_boot_rit_parse_postfix_suffixes_345(cct_boot_sig_ParserState* parser, cct_boot_sig_AstNode* expr)
+cct_boot_sig_AstNode* cct_boot_rit_parse_postfix_suffixes_352(cct_boot_sig_ParserState* parser, cct_boot_sig_AstNode* expr)
 {
   while (1)
   {
     {
       int matched = 0;
-      if (((*expr).kind == cct_boot_ord_AstKind__AST_IDENTIFIER) && cct_boot_rit_parser_match_327(parser, cct_boot_ord_TokenKind__TK_GENUS))
+      if (((*expr).kind == cct_boot_ord_AstKind__AST_IDENTIFIER) && cct_boot_rit_parser_match_334(parser, cct_boot_ord_TokenKind__TK_GENUS))
       {
-        cct_boot_rit_parse_postfix_generic_args_340(parser, expr);
+        cct_boot_rit_parse_postfix_generic_args_347(parser, expr);
         matched = 1;
       }
-      if (cct_boot_rit_parser_match_327(parser, cct_boot_ord_TokenKind__TK_LPAREN))
+      if (cct_boot_rit_parser_match_334(parser, cct_boot_ord_TokenKind__TK_LPAREN))
       {
-        cct_boot_sig_AstNode* call = cct_boot_rit_ast_make_call_245(expr, (*parser).previous.line, (*parser).previous.column);
-        if (!cct_boot_rit_parser_check_326(parser, cct_boot_ord_TokenKind__TK_RPAREN))
+        cct_boot_sig_AstNode* call = cct_boot_rit_ast_make_call_252(expr, (*parser).previous.line, (*parser).previous.column);
+        if (!cct_boot_rit_parser_check_333(parser, cct_boot_ord_TokenKind__TK_RPAREN))
         {
-          cct_boot_rit_ast_append_argument_228(call, cct_boot_rit_parse_expression_337(parser));
-          while (cct_boot_rit_parser_match_327(parser, cct_boot_ord_TokenKind__TK_COMMA))
+          cct_boot_rit_ast_append_argument_235(call, cct_boot_rit_parse_expression_344(parser));
+          while (cct_boot_rit_parser_match_334(parser, cct_boot_ord_TokenKind__TK_COMMA))
           {
             {
-              cct_boot_rit_ast_append_argument_228(call, cct_boot_rit_parse_expression_337(parser));
+              cct_boot_rit_ast_append_argument_235(call, cct_boot_rit_parse_expression_344(parser));
             }
             if (0) goto __cct_label_63;
             __cct_label_63: ;
@@ -4236,30 +4243,30 @@ cct_boot_sig_AstNode* cct_boot_rit_parse_postfix_suffixes_345(cct_boot_sig_Parse
           if (0) goto __cct_label_62;
           __cct_label_62: ;
         }
-        cct_boot_rit_parser_consume_331(parser, cct_boot_ord_TokenKind__TK_RPAREN, cct_boot_str_239);
+        cct_boot_rit_parser_consume_338(parser, cct_boot_ord_TokenKind__TK_RPAREN, cct_boot_str_239);
         expr = call;
         matched = 1;
       }
-      if ((!matched) && cct_boot_rit_parser_match_327(parser, cct_boot_ord_TokenKind__TK_DOT))
+      if ((!matched) && cct_boot_rit_parser_match_334(parser, cct_boot_ord_TokenKind__TK_DOT))
       {
         long long line = (*parser).previous.line;
         long long column = (*parser).previous.column;
-        if (!cct_boot_rit_parser_check_326(parser, cct_boot_ord_TokenKind__TK_IDENTIFIER))
+        if (!cct_boot_rit_parser_check_333(parser, cct_boot_ord_TokenKind__TK_IDENTIFIER))
         {
-          cct_boot_rit_parser_error_at_current_329(parser, cct_boot_str_240);
+          cct_boot_rit_parser_error_at_current_336(parser, cct_boot_str_240);
           return expr;
         }
-        cct_boot_rit_parser_advance_325(parser);
-        expr = cct_boot_rit_ast_make_field_access_247(expr, (*parser).previous.lexeme, line, column);
+        cct_boot_rit_parser_advance_332(parser);
+        expr = cct_boot_rit_ast_make_field_access_254(expr, (*parser).previous.lexeme, line, column);
         matched = 1;
       }
-      if ((!matched) && cct_boot_rit_parser_match_327(parser, cct_boot_ord_TokenKind__TK_LBRACKET))
+      if ((!matched) && cct_boot_rit_parser_match_334(parser, cct_boot_ord_TokenKind__TK_LBRACKET))
       {
         long long line = (*parser).previous.line;
         long long column = (*parser).previous.column;
-        cct_boot_sig_AstNode* index = cct_boot_rit_parse_expression_337(parser);
-        cct_boot_rit_parser_consume_331(parser, cct_boot_ord_TokenKind__TK_RBRACKET, cct_boot_str_241);
-        expr = cct_boot_rit_ast_make_index_access_248(expr, index, line, column);
+        cct_boot_sig_AstNode* index = cct_boot_rit_parse_expression_344(parser);
+        cct_boot_rit_parser_consume_338(parser, cct_boot_ord_TokenKind__TK_RBRACKET, cct_boot_str_241);
+        expr = cct_boot_rit_ast_make_index_access_255(expr, index, line, column);
         matched = 1;
       }
       if (!matched)
@@ -4274,55 +4281,55 @@ cct_boot_sig_AstNode* cct_boot_rit_parse_postfix_suffixes_345(cct_boot_sig_Parse
   __cct_label_60: ;
 }
 
-cct_boot_sig_AstNode* cct_boot_rit_parse_postfix_346(cct_boot_sig_ParserState* parser)
+cct_boot_sig_AstNode* cct_boot_rit_parse_postfix_353(cct_boot_sig_ParserState* parser)
 {
   int forced_call = 0;
-  if (cct_boot_rit_parser_match_327(parser, cct_boot_ord_TokenKind__TK_CONIURA))
+  if (cct_boot_rit_parser_match_334(parser, cct_boot_ord_TokenKind__TK_CONIURA))
   {
     forced_call = 1;
   }
-  cct_boot_sig_AstNode* expr = cct_boot_rit_parse_primary_344(parser);
-  expr = cct_boot_rit_parse_postfix_suffixes_345(parser, expr);
+  cct_boot_sig_AstNode* expr = cct_boot_rit_parse_primary_351(parser);
+  expr = cct_boot_rit_parse_postfix_suffixes_352(parser, expr);
   if ((forced_call && ((*expr).kind != cct_boot_ord_AstKind__AST_CALL)) && ((*expr).kind != cct_boot_ord_AstKind__AST_OBSECRO_CALL))
   {
-    cct_boot_rit_parser_error_at_previous_330(parser, cct_boot_str_242);
+    cct_boot_rit_parser_error_at_previous_337(parser, cct_boot_str_242);
   }
   return expr;
 }
 
-cct_boot_sig_AstNode* cct_boot_rit_parse_unary_347(cct_boot_sig_ParserState* parser)
+cct_boot_sig_AstNode* cct_boot_rit_parse_unary_354(cct_boot_sig_ParserState* parser)
 {
-  if ((((cct_boot_rit_parser_match_327(parser, cct_boot_ord_TokenKind__TK_MINUS) || cct_boot_rit_parser_match_327(parser, cct_boot_ord_TokenKind__TK_PLUS)) || cct_boot_rit_parser_match_327(parser, cct_boot_ord_TokenKind__TK_NON)) || cct_boot_rit_parser_match_327(parser, cct_boot_ord_TokenKind__TK_STAR)) || cct_boot_rit_parser_match_327(parser, cct_boot_ord_TokenKind__TK_SPECULUM))
+  if ((((cct_boot_rit_parser_match_334(parser, cct_boot_ord_TokenKind__TK_MINUS) || cct_boot_rit_parser_match_334(parser, cct_boot_ord_TokenKind__TK_PLUS)) || cct_boot_rit_parser_match_334(parser, cct_boot_ord_TokenKind__TK_NON)) || cct_boot_rit_parser_match_334(parser, cct_boot_ord_TokenKind__TK_STAR)) || cct_boot_rit_parser_match_334(parser, cct_boot_ord_TokenKind__TK_SPECULUM))
   {
-    cct_boot_sig_AstNode* expr = cct_boot_rit_ast_make_unary_244((*parser).previous.kind, cct_boot_rit_parse_unary_347(parser), (*parser).previous.line, (*parser).previous.column);
-    return cct_boot_rit_parse_postfix_suffixes_345(parser, expr);
+    cct_boot_sig_AstNode* expr = cct_boot_rit_ast_make_unary_251((*parser).previous.kind, cct_boot_rit_parse_unary_354(parser), (*parser).previous.line, (*parser).previous.column);
+    return cct_boot_rit_parse_postfix_suffixes_352(parser, expr);
   }
-  return cct_boot_rit_parse_postfix_346(parser);
+  return cct_boot_rit_parse_postfix_353(parser);
 }
 
-cct_boot_sig_AstNode* cct_boot_rit_parse_power_348(cct_boot_sig_ParserState* parser)
+cct_boot_sig_AstNode* cct_boot_rit_parse_power_355(cct_boot_sig_ParserState* parser)
 {
-  cct_boot_sig_AstNode* expr = cct_boot_rit_parse_unary_347(parser);
-  if (cct_boot_rit_parser_match_327(parser, cct_boot_ord_TokenKind__TK_STAR_STAR))
+  cct_boot_sig_AstNode* expr = cct_boot_rit_parse_unary_354(parser);
+  if (cct_boot_rit_parser_match_334(parser, cct_boot_ord_TokenKind__TK_STAR_STAR))
   {
     cct_boot_ord_TokenKind op = (*parser).previous.kind;
     long long line = (*parser).previous.line;
     long long column = (*parser).previous.column;
-    expr = cct_boot_rit_ast_make_binary_243(op, expr, cct_boot_rit_parse_power_348(parser), line, column);
+    expr = cct_boot_rit_ast_make_binary_250(op, expr, cct_boot_rit_parse_power_355(parser), line, column);
   }
   return expr;
 }
 
-cct_boot_sig_AstNode* cct_boot_rit_parse_multiplicative_349(cct_boot_sig_ParserState* parser)
+cct_boot_sig_AstNode* cct_boot_rit_parse_multiplicative_356(cct_boot_sig_ParserState* parser)
 {
-  cct_boot_sig_AstNode* expr = cct_boot_rit_parse_power_348(parser);
-  while ((((cct_boot_rit_parser_match_327(parser, cct_boot_ord_TokenKind__TK_STAR) || cct_boot_rit_parser_match_327(parser, cct_boot_ord_TokenKind__TK_SLASH)) || cct_boot_rit_parser_match_327(parser, cct_boot_ord_TokenKind__TK_SLASH_SLASH)) || cct_boot_rit_parser_match_327(parser, cct_boot_ord_TokenKind__TK_PERCENT)) || cct_boot_rit_parser_match_327(parser, cct_boot_ord_TokenKind__TK_PERCENT_PERCENT))
+  cct_boot_sig_AstNode* expr = cct_boot_rit_parse_power_355(parser);
+  while ((((cct_boot_rit_parser_match_334(parser, cct_boot_ord_TokenKind__TK_STAR) || cct_boot_rit_parser_match_334(parser, cct_boot_ord_TokenKind__TK_SLASH)) || cct_boot_rit_parser_match_334(parser, cct_boot_ord_TokenKind__TK_SLASH_SLASH)) || cct_boot_rit_parser_match_334(parser, cct_boot_ord_TokenKind__TK_PERCENT)) || cct_boot_rit_parser_match_334(parser, cct_boot_ord_TokenKind__TK_PERCENT_PERCENT))
   {
     {
       cct_boot_ord_TokenKind op = (*parser).previous.kind;
       long long line = (*parser).previous.line;
       long long column = (*parser).previous.column;
-      expr = cct_boot_rit_ast_make_binary_243(op, expr, cct_boot_rit_parse_power_348(parser), line, column);
+      expr = cct_boot_rit_ast_make_binary_250(op, expr, cct_boot_rit_parse_power_355(parser), line, column);
     }
     if (0) goto __cct_label_65;
     __cct_label_65: ;
@@ -4332,16 +4339,16 @@ cct_boot_sig_AstNode* cct_boot_rit_parse_multiplicative_349(cct_boot_sig_ParserS
   return expr;
 }
 
-cct_boot_sig_AstNode* cct_boot_rit_parse_additive_350(cct_boot_sig_ParserState* parser)
+cct_boot_sig_AstNode* cct_boot_rit_parse_additive_357(cct_boot_sig_ParserState* parser)
 {
-  cct_boot_sig_AstNode* expr = cct_boot_rit_parse_multiplicative_349(parser);
-  while (cct_boot_rit_parser_match_327(parser, cct_boot_ord_TokenKind__TK_PLUS) || cct_boot_rit_parser_match_327(parser, cct_boot_ord_TokenKind__TK_MINUS))
+  cct_boot_sig_AstNode* expr = cct_boot_rit_parse_multiplicative_356(parser);
+  while (cct_boot_rit_parser_match_334(parser, cct_boot_ord_TokenKind__TK_PLUS) || cct_boot_rit_parser_match_334(parser, cct_boot_ord_TokenKind__TK_MINUS))
   {
     {
       cct_boot_ord_TokenKind op = (*parser).previous.kind;
       long long line = (*parser).previous.line;
       long long column = (*parser).previous.column;
-      expr = cct_boot_rit_ast_make_binary_243(op, expr, cct_boot_rit_parse_multiplicative_349(parser), line, column);
+      expr = cct_boot_rit_ast_make_binary_250(op, expr, cct_boot_rit_parse_multiplicative_356(parser), line, column);
     }
     if (0) goto __cct_label_67;
     __cct_label_67: ;
@@ -4351,16 +4358,16 @@ cct_boot_sig_AstNode* cct_boot_rit_parse_additive_350(cct_boot_sig_ParserState* 
   return expr;
 }
 
-cct_boot_sig_AstNode* cct_boot_rit_parse_comparison_351(cct_boot_sig_ParserState* parser)
+cct_boot_sig_AstNode* cct_boot_rit_parse_comparison_358(cct_boot_sig_ParserState* parser)
 {
-  cct_boot_sig_AstNode* expr = cct_boot_rit_parse_additive_350(parser);
-  while (((cct_boot_rit_parser_match_327(parser, cct_boot_ord_TokenKind__TK_LESS) || cct_boot_rit_parser_match_327(parser, cct_boot_ord_TokenKind__TK_LESS_EQ)) || cct_boot_rit_parser_match_327(parser, cct_boot_ord_TokenKind__TK_GREATER)) || cct_boot_rit_parser_match_327(parser, cct_boot_ord_TokenKind__TK_GREATER_EQ))
+  cct_boot_sig_AstNode* expr = cct_boot_rit_parse_additive_357(parser);
+  while (((cct_boot_rit_parser_match_334(parser, cct_boot_ord_TokenKind__TK_LESS) || cct_boot_rit_parser_match_334(parser, cct_boot_ord_TokenKind__TK_LESS_EQ)) || cct_boot_rit_parser_match_334(parser, cct_boot_ord_TokenKind__TK_GREATER)) || cct_boot_rit_parser_match_334(parser, cct_boot_ord_TokenKind__TK_GREATER_EQ))
   {
     {
       cct_boot_ord_TokenKind op = (*parser).previous.kind;
       long long line = (*parser).previous.line;
       long long column = (*parser).previous.column;
-      expr = cct_boot_rit_ast_make_binary_243(op, expr, cct_boot_rit_parse_additive_350(parser), line, column);
+      expr = cct_boot_rit_ast_make_binary_250(op, expr, cct_boot_rit_parse_additive_357(parser), line, column);
     }
     if (0) goto __cct_label_69;
     __cct_label_69: ;
@@ -4370,16 +4377,16 @@ cct_boot_sig_AstNode* cct_boot_rit_parse_comparison_351(cct_boot_sig_ParserState
   return expr;
 }
 
-cct_boot_sig_AstNode* cct_boot_rit_parse_equality_352(cct_boot_sig_ParserState* parser)
+cct_boot_sig_AstNode* cct_boot_rit_parse_equality_359(cct_boot_sig_ParserState* parser)
 {
-  cct_boot_sig_AstNode* expr = cct_boot_rit_parse_comparison_351(parser);
-  while (cct_boot_rit_parser_match_327(parser, cct_boot_ord_TokenKind__TK_EQ_EQ) || cct_boot_rit_parser_match_327(parser, cct_boot_ord_TokenKind__TK_BANG_EQ))
+  cct_boot_sig_AstNode* expr = cct_boot_rit_parse_comparison_358(parser);
+  while (cct_boot_rit_parser_match_334(parser, cct_boot_ord_TokenKind__TK_EQ_EQ) || cct_boot_rit_parser_match_334(parser, cct_boot_ord_TokenKind__TK_BANG_EQ))
   {
     {
       cct_boot_ord_TokenKind op = (*parser).previous.kind;
       long long line = (*parser).previous.line;
       long long column = (*parser).previous.column;
-      expr = cct_boot_rit_ast_make_binary_243(op, expr, cct_boot_rit_parse_comparison_351(parser), line, column);
+      expr = cct_boot_rit_ast_make_binary_250(op, expr, cct_boot_rit_parse_comparison_358(parser), line, column);
     }
     if (0) goto __cct_label_71;
     __cct_label_71: ;
@@ -4389,13 +4396,13 @@ cct_boot_sig_AstNode* cct_boot_rit_parse_equality_352(cct_boot_sig_ParserState* 
   return expr;
 }
 
-cct_boot_sig_AstNode* cct_boot_rit_parse_logical_and_353(cct_boot_sig_ParserState* parser)
+cct_boot_sig_AstNode* cct_boot_rit_parse_logical_and_360(cct_boot_sig_ParserState* parser)
 {
-  cct_boot_sig_AstNode* expr = cct_boot_rit_parse_equality_352(parser);
-  while (cct_boot_rit_parser_match_327(parser, cct_boot_ord_TokenKind__TK_ET))
+  cct_boot_sig_AstNode* expr = cct_boot_rit_parse_equality_359(parser);
+  while (cct_boot_rit_parser_match_334(parser, cct_boot_ord_TokenKind__TK_ET))
   {
     {
-      expr = cct_boot_rit_ast_make_binary_243(cct_boot_ord_TokenKind__TK_ET, expr, cct_boot_rit_parse_equality_352(parser), (*parser).previous.line, (*parser).previous.column);
+      expr = cct_boot_rit_ast_make_binary_250(cct_boot_ord_TokenKind__TK_ET, expr, cct_boot_rit_parse_equality_359(parser), (*parser).previous.line, (*parser).previous.column);
     }
     if (0) goto __cct_label_73;
     __cct_label_73: ;
@@ -4405,13 +4412,13 @@ cct_boot_sig_AstNode* cct_boot_rit_parse_logical_and_353(cct_boot_sig_ParserStat
   return expr;
 }
 
-cct_boot_sig_AstNode* cct_boot_rit_parse_logical_or_354(cct_boot_sig_ParserState* parser)
+cct_boot_sig_AstNode* cct_boot_rit_parse_logical_or_361(cct_boot_sig_ParserState* parser)
 {
-  cct_boot_sig_AstNode* expr = cct_boot_rit_parse_logical_and_353(parser);
-  while (cct_boot_rit_parser_match_327(parser, cct_boot_ord_TokenKind__TK_VEL))
+  cct_boot_sig_AstNode* expr = cct_boot_rit_parse_logical_and_360(parser);
+  while (cct_boot_rit_parser_match_334(parser, cct_boot_ord_TokenKind__TK_VEL))
   {
     {
-      expr = cct_boot_rit_ast_make_binary_243(cct_boot_ord_TokenKind__TK_VEL, expr, cct_boot_rit_parse_logical_and_353(parser), (*parser).previous.line, (*parser).previous.column);
+      expr = cct_boot_rit_ast_make_binary_250(cct_boot_ord_TokenKind__TK_VEL, expr, cct_boot_rit_parse_logical_and_360(parser), (*parser).previous.line, (*parser).previous.column);
     }
     if (0) goto __cct_label_75;
     __cct_label_75: ;
@@ -4421,58 +4428,58 @@ cct_boot_sig_AstNode* cct_boot_rit_parse_logical_or_354(cct_boot_sig_ParserState
   return expr;
 }
 
-cct_boot_sig_AstNode* cct_boot_rit_parse_assignment_355(cct_boot_sig_ParserState* parser)
+cct_boot_sig_AstNode* cct_boot_rit_parse_assignment_362(cct_boot_sig_ParserState* parser)
 {
-  cct_boot_sig_AstNode* expr = cct_boot_rit_parse_logical_or_354(parser);
-  if (cct_boot_rit_parser_match_327(parser, cct_boot_ord_TokenKind__TK_EQ))
+  cct_boot_sig_AstNode* expr = cct_boot_rit_parse_logical_or_361(parser);
+  if (cct_boot_rit_parser_match_334(parser, cct_boot_ord_TokenKind__TK_EQ))
   {
     long long line = (*parser).previous.line;
     long long column = (*parser).previous.column;
-    cct_boot_sig_AstNode* value = cct_boot_rit_parse_assignment_355(parser);
-    if (!cct_boot_rit_parser_is_assignment_target_336(expr))
+    cct_boot_sig_AstNode* value = cct_boot_rit_parse_assignment_362(parser);
+    if (!cct_boot_rit_parser_is_assignment_target_343(expr))
     {
-      cct_boot_rit_parser_error_at_previous_330(parser, cct_boot_str_243);
+      cct_boot_rit_parser_error_at_previous_337(parser, cct_boot_str_243);
       return expr;
     }
-    return cct_boot_rit_ast_make_vincire_274(expr, value, line, column);
+    return cct_boot_rit_ast_make_vincire_281(expr, value, line, column);
   }
   return expr;
 }
 
-cct_boot_sig_AstNode* cct_boot_rit_parser_parse_expression_source_356(char* source, char* filename)
+cct_boot_sig_AstNode* cct_boot_rit_parser_parse_expression_source_363(char* source, char* filename)
 {
-  cct_boot_sig_LexerState lex = cct_boot_rit_lexer_init_304(source, filename);
-  cct_boot_sig_ParserState parser = cct_boot_rit_parser_init_323((&lex), filename);
-  cct_boot_sig_AstNode* expr = cct_boot_rit_parse_expression_337((&parser));
-  cct_boot_rit_parser_dispose_324((&parser));
+  cct_boot_sig_LexerState lex = cct_boot_rit_lexer_init_311(source, filename);
+  cct_boot_sig_ParserState parser = cct_boot_rit_parser_init_330((&lex), filename);
+  cct_boot_sig_AstNode* expr = cct_boot_rit_parse_expression_344((&parser));
+  cct_boot_rit_parser_dispose_331((&parser));
   return expr;
 }
 
-int cct_boot_rit_parser_is_simple_type_token_357(cct_boot_ord_TokenKind kind)
+int cct_boot_rit_parser_is_simple_type_token_364(cct_boot_ord_TokenKind kind)
 {
   return (((((((((((kind == cct_boot_ord_TokenKind__TK_REX) || (kind == cct_boot_ord_TokenKind__TK_DUX)) || (kind == cct_boot_ord_TokenKind__TK_COMES)) || (kind == cct_boot_ord_TokenKind__TK_MILES)) || (kind == cct_boot_ord_TokenKind__TK_UMBRA)) || (kind == cct_boot_ord_TokenKind__TK_FLAMMA)) || (kind == cct_boot_ord_TokenKind__TK_VERUM)) || (kind == cct_boot_ord_TokenKind__TK_VERBUM)) || (kind == cct_boot_ord_TokenKind__TK_FRACTUM)) || (kind == cct_boot_ord_TokenKind__TK_NIHIL)) || (kind == cct_boot_ord_TokenKind__TK_IDENTIFIER));
 }
 
-void cct_boot_rit_parse_stmt_type_args_358(cct_boot_sig_ParserState* parser, cct_boot_sig_AstNode* type_expr)
+void cct_boot_rit_parse_stmt_type_args_365(cct_boot_sig_ParserState* parser, cct_boot_sig_AstNode* type_expr)
 {
-  if (!cct_boot_rit_parser_match_327(parser, cct_boot_ord_TokenKind__TK_GENUS))
+  if (!cct_boot_rit_parser_match_334(parser, cct_boot_ord_TokenKind__TK_GENUS))
   {
     return;
   }
-  cct_boot_rit_parser_consume_331(parser, cct_boot_ord_TokenKind__TK_LPAREN, cct_boot_str_223);
-  if (cct_boot_rit_parser_check_326(parser, cct_boot_ord_TokenKind__TK_RPAREN))
+  cct_boot_rit_parser_consume_338(parser, cct_boot_ord_TokenKind__TK_LPAREN, cct_boot_str_223);
+  if (cct_boot_rit_parser_check_333(parser, cct_boot_ord_TokenKind__TK_RPAREN))
   {
-    cct_boot_rit_parser_error_at_current_329(parser, cct_boot_str_224);
-    cct_boot_rit_parser_advance_325(parser);
+    cct_boot_rit_parser_error_at_current_336(parser, cct_boot_str_224);
+    cct_boot_rit_parser_advance_332(parser);
     return;
   }
   while (1)
   {
     {
-      cct_boot_rit_ast_append_generic_arg_224(type_expr, cct_boot_rit_parse_type_simple_360(parser));
-      if (!cct_boot_rit_parser_match_327(parser, cct_boot_ord_TokenKind__TK_COMMA))
+      cct_boot_rit_ast_append_generic_arg_231(type_expr, cct_boot_rit_parse_type_simple_367(parser));
+      if (!cct_boot_rit_parser_match_334(parser, cct_boot_ord_TokenKind__TK_COMMA))
       {
-        cct_boot_rit_parser_consume_331(parser, cct_boot_ord_TokenKind__TK_RPAREN, cct_boot_str_225);
+        cct_boot_rit_parser_consume_338(parser, cct_boot_ord_TokenKind__TK_RPAREN, cct_boot_str_225);
         return;
       }
     }
@@ -4483,29 +4490,29 @@ void cct_boot_rit_parse_stmt_type_args_358(cct_boot_sig_ParserState* parser, cct
   __cct_label_76: ;
 }
 
-int cct_boot_rit_parser_is_statement_boundary_359(cct_boot_ord_TokenKind kind)
+int cct_boot_rit_parser_is_statement_boundary_366(cct_boot_ord_TokenKind kind)
 {
   return ((((((((((kind == cct_boot_ord_TokenKind__TK_EOF) || (kind == cct_boot_ord_TokenKind__TK_FIN)) || (kind == cct_boot_ord_TokenKind__TK_ALITER)) || (kind == cct_boot_ord_TokenKind__TK_EXPLICIT)) || (kind == cct_boot_ord_TokenKind__TK_RBRACE)) || (kind == cct_boot_ord_TokenKind__TK_SEMICOLON)) || (kind == cct_boot_ord_TokenKind__TK_CAPE)) || (kind == cct_boot_ord_TokenKind__TK_SEMPER)) || (kind == cct_boot_ord_TokenKind__TK_CASO)) || (kind == cct_boot_ord_TokenKind__TK_SENAO));
 }
 
-cct_boot_sig_AstNode* cct_boot_rit_parse_type_simple_360(cct_boot_sig_ParserState* parser)
+cct_boot_sig_AstNode* cct_boot_rit_parse_type_simple_367(cct_boot_sig_ParserState* parser)
 {
-  if (cct_boot_rit_parser_match_327(parser, cct_boot_ord_TokenKind__TK_SERIES))
+  if (cct_boot_rit_parser_match_334(parser, cct_boot_ord_TokenKind__TK_SERIES))
   {
-    cct_boot_sig_AstNode* base_array = cct_boot_rit_parse_type_simple_360(parser);
-    cct_boot_rit_parser_consume_331(parser, cct_boot_ord_TokenKind__TK_LBRACKET, cct_boot_str_218);
-    if (!cct_boot_rit_parser_check_326(parser, cct_boot_ord_TokenKind__TK_INTEGER))
+    cct_boot_sig_AstNode* base_array = cct_boot_rit_parse_type_simple_367(parser);
+    cct_boot_rit_parser_consume_338(parser, cct_boot_ord_TokenKind__TK_LBRACKET, cct_boot_str_218);
+    if (!cct_boot_rit_parser_check_333(parser, cct_boot_ord_TokenKind__TK_INTEGER))
     {
-      cct_boot_rit_parser_error_at_current_329(parser, cct_boot_str_219);
+      cct_boot_rit_parser_error_at_current_336(parser, cct_boot_str_219);
       return base_array;
     }
-    cct_boot_rit_parser_advance_325(parser);
-    cct_boot_rit_ast_type_mark_array_235(base_array, cct_boot_rit_parse_int_105((*parser).previous.lexeme));
-    cct_boot_rit_parser_consume_331(parser, cct_boot_ord_TokenKind__TK_RBRACKET, cct_boot_str_220);
+    cct_boot_rit_parser_advance_332(parser);
+    cct_boot_rit_ast_type_mark_array_242(base_array, cct_boot_rit_parse_int_112((*parser).previous.lexeme));
+    cct_boot_rit_parser_consume_338(parser, cct_boot_ord_TokenKind__TK_RBRACKET, cct_boot_str_220);
     return base_array;
   }
   int is_pointer = 0;
-  while (cct_boot_rit_parser_match_327(parser, cct_boot_ord_TokenKind__TK_SPECULUM))
+  while (cct_boot_rit_parser_match_334(parser, cct_boot_ord_TokenKind__TK_SPECULUM))
   {
     {
       is_pointer = 1;
@@ -4515,43 +4522,43 @@ cct_boot_sig_AstNode* cct_boot_rit_parse_type_simple_360(cct_boot_sig_ParserStat
   }
   if (0) goto __cct_label_78;
   __cct_label_78: ;
-  if (!cct_boot_rit_parser_is_simple_type_token_357((*parser).current.kind))
+  if (!cct_boot_rit_parser_is_simple_type_token_364((*parser).current.kind))
   {
-    cct_boot_rit_parser_error_at_current_329(parser, cct_boot_str_244);
-    return cct_boot_rit_ast_make_type_233(cct_boot_str_222, (*parser).current.line, (*parser).current.column);
+    cct_boot_rit_parser_error_at_current_336(parser, cct_boot_str_244);
+    return cct_boot_rit_ast_make_type_240(cct_boot_str_222, (*parser).current.line, (*parser).current.column);
   }
-  cct_boot_rit_parser_advance_325(parser);
-  cct_boot_sig_AstNode* node = cct_boot_rit_ast_make_type_233((*parser).previous.lexeme, (*parser).previous.line, (*parser).previous.column);
-  cct_boot_rit_parse_stmt_type_args_358(parser, node);
+  cct_boot_rit_parser_advance_332(parser);
+  cct_boot_sig_AstNode* node = cct_boot_rit_ast_make_type_240((*parser).previous.lexeme, (*parser).previous.line, (*parser).previous.column);
+  cct_boot_rit_parse_stmt_type_args_365(parser, node);
   if (is_pointer)
   {
-    cct_boot_rit_ast_type_mark_pointer_234(node);
+    cct_boot_rit_ast_type_mark_pointer_241(node);
   }
   return node;
 }
 
-cct_boot_sig_AstNode* cct_boot_rit_parse_expression_statement_361(cct_boot_sig_ParserState* parser)
+cct_boot_sig_AstNode* cct_boot_rit_parse_expression_statement_368(cct_boot_sig_ParserState* parser)
 {
   long long line = (*parser).current.line;
   long long column = (*parser).current.column;
-  cct_boot_sig_AstNode* expr = cct_boot_rit_parse_expression_337(parser);
-  cct_boot_rit_parser_match_327(parser, cct_boot_ord_TokenKind__TK_SEMICOLON);
-  return cct_boot_rit_ast_make_expr_stmt_249(expr, line, column);
+  cct_boot_sig_AstNode* expr = cct_boot_rit_parse_expression_344(parser);
+  cct_boot_rit_parser_match_334(parser, cct_boot_ord_TokenKind__TK_SEMICOLON);
+  return cct_boot_rit_ast_make_expr_stmt_256(expr, line, column);
 }
 
-cct_boot_sig_AstNode* cct_boot_rit_parse_block_362(cct_boot_sig_ParserState* parser)
+cct_boot_sig_AstNode* cct_boot_rit_parse_block_369(cct_boot_sig_ParserState* parser)
 {
   long long line = (*parser).current.line;
   long long column = (*parser).current.column;
-  cct_boot_rit_parser_consume_331(parser, cct_boot_ord_TokenKind__TK_LBRACE, cct_boot_str_245);
-  cct_boot_sig_AstNode* block = cct_boot_rit_ast_make_block_258(line, column);
-  while ((!cct_boot_rit_parser_check_326(parser, cct_boot_ord_TokenKind__TK_RBRACE)) && (!cct_boot_rit_parser_check_326(parser, cct_boot_ord_TokenKind__TK_EOF)))
+  cct_boot_rit_parser_consume_338(parser, cct_boot_ord_TokenKind__TK_LBRACE, cct_boot_str_245);
+  cct_boot_sig_AstNode* block = cct_boot_rit_ast_make_block_265(line, column);
+  while ((!cct_boot_rit_parser_check_333(parser, cct_boot_ord_TokenKind__TK_RBRACE)) && (!cct_boot_rit_parser_check_333(parser, cct_boot_ord_TokenKind__TK_EOF)))
   {
     {
-      cct_boot_rit_ast_append_statement_231(block, cct_boot_rit_parse_statement_383(parser));
+      cct_boot_rit_ast_append_statement_238(block, cct_boot_rit_parse_statement_390(parser));
       if ((*parser).panic_mode)
       {
-        cct_boot_rit_parser_synchronize_statement_334(parser);
+        cct_boot_rit_parser_synchronize_statement_341(parser);
       }
     }
     if (0) goto __cct_label_81;
@@ -4559,132 +4566,132 @@ cct_boot_sig_AstNode* cct_boot_rit_parse_block_362(cct_boot_sig_ParserState* par
   }
   if (0) goto __cct_label_80;
   __cct_label_80: ;
-  cct_boot_rit_parser_consume_331(parser, cct_boot_ord_TokenKind__TK_RBRACE, cct_boot_str_246);
+  cct_boot_rit_parser_consume_338(parser, cct_boot_ord_TokenKind__TK_RBRACE, cct_boot_str_246);
   return block;
 }
 
-cct_boot_sig_AstNode* cct_boot_rit_parse_evoca_statement_363(cct_boot_sig_ParserState* parser)
+cct_boot_sig_AstNode* cct_boot_rit_parse_evoca_statement_370(cct_boot_sig_ParserState* parser)
 {
   long long line = (*parser).current.line;
   long long column = (*parser).current.column;
-  cct_boot_rit_parser_consume_331(parser, cct_boot_ord_TokenKind__TK_EVOCA, cct_boot_str_247);
-  cct_boot_sig_AstNode* type_expr = cct_boot_rit_parse_type_simple_360(parser);
-  if (!cct_boot_rit_parser_check_326(parser, cct_boot_ord_TokenKind__TK_IDENTIFIER))
+  cct_boot_rit_parser_consume_338(parser, cct_boot_ord_TokenKind__TK_EVOCA, cct_boot_str_247);
+  cct_boot_sig_AstNode* type_expr = cct_boot_rit_parse_type_simple_367(parser);
+  if (!cct_boot_rit_parser_check_333(parser, cct_boot_ord_TokenKind__TK_IDENTIFIER))
   {
-    cct_boot_rit_parser_error_at_current_329(parser, cct_boot_str_248);
-    return cct_boot_rit_ast_make_evoca_no_init_273(cct_boot_str_222, type_expr, line, column);
+    cct_boot_rit_parser_error_at_current_336(parser, cct_boot_str_248);
+    return cct_boot_rit_ast_make_evoca_no_init_280(cct_boot_str_222, type_expr, line, column);
   }
-  cct_boot_rit_parser_advance_325(parser);
+  cct_boot_rit_parser_advance_332(parser);
   char* name = cct_boot_rit_verbum_dup_40((*parser).previous.lexeme);
-  if (cct_boot_rit_parser_match_327(parser, cct_boot_ord_TokenKind__TK_AD))
+  if (cct_boot_rit_parser_match_334(parser, cct_boot_ord_TokenKind__TK_AD))
   {
-    cct_boot_sig_AstNode* init_expr = cct_boot_rit_parse_expression_337(parser);
-    cct_boot_rit_parser_match_327(parser, cct_boot_ord_TokenKind__TK_SEMICOLON);
-    cct_boot_sig_AstNode* stmt = cct_boot_rit_ast_make_evoca_272(name, type_expr, init_expr, line, column);
+    cct_boot_sig_AstNode* init_expr = cct_boot_rit_parse_expression_344(parser);
+    cct_boot_rit_parser_match_334(parser, cct_boot_ord_TokenKind__TK_SEMICOLON);
+    cct_boot_sig_AstNode* stmt = cct_boot_rit_ast_make_evoca_279(name, type_expr, init_expr, line, column);
     free((void*)(name));
     return stmt;
   }
-  cct_boot_rit_parser_match_327(parser, cct_boot_ord_TokenKind__TK_SEMICOLON);
-  cct_boot_sig_AstNode* stmt = cct_boot_rit_ast_make_evoca_no_init_273(name, type_expr, line, column);
+  cct_boot_rit_parser_match_334(parser, cct_boot_ord_TokenKind__TK_SEMICOLON);
+  cct_boot_sig_AstNode* stmt = cct_boot_rit_ast_make_evoca_no_init_280(name, type_expr, line, column);
   free((void*)(name));
   return stmt;
 }
 
-cct_boot_sig_AstNode* cct_boot_rit_parse_vincire_statement_364(cct_boot_sig_ParserState* parser)
+cct_boot_sig_AstNode* cct_boot_rit_parse_vincire_statement_371(cct_boot_sig_ParserState* parser)
 {
   long long line = (*parser).current.line;
   long long column = (*parser).current.column;
-  cct_boot_rit_parser_consume_331(parser, cct_boot_ord_TokenKind__TK_VINCIRE, cct_boot_str_249);
-  cct_boot_sig_AstNode* target = cct_boot_rit_parse_unary_347(parser);
-  cct_boot_rit_parser_consume_331(parser, cct_boot_ord_TokenKind__TK_AD, cct_boot_str_250);
-  cct_boot_sig_AstNode* value = cct_boot_rit_parse_expression_337(parser);
-  cct_boot_rit_parser_match_327(parser, cct_boot_ord_TokenKind__TK_SEMICOLON);
-  return cct_boot_rit_ast_make_vincire_274(target, value, line, column);
+  cct_boot_rit_parser_consume_338(parser, cct_boot_ord_TokenKind__TK_VINCIRE, cct_boot_str_249);
+  cct_boot_sig_AstNode* target = cct_boot_rit_parse_unary_354(parser);
+  cct_boot_rit_parser_consume_338(parser, cct_boot_ord_TokenKind__TK_AD, cct_boot_str_250);
+  cct_boot_sig_AstNode* value = cct_boot_rit_parse_expression_344(parser);
+  cct_boot_rit_parser_match_334(parser, cct_boot_ord_TokenKind__TK_SEMICOLON);
+  return cct_boot_rit_ast_make_vincire_281(target, value, line, column);
 }
 
-cct_boot_sig_AstNode* cct_boot_rit_parse_redde_statement_365(cct_boot_sig_ParserState* parser)
+cct_boot_sig_AstNode* cct_boot_rit_parse_redde_statement_372(cct_boot_sig_ParserState* parser)
 {
   long long line = (*parser).current.line;
   long long column = (*parser).current.column;
-  cct_boot_rit_parser_consume_331(parser, cct_boot_ord_TokenKind__TK_REDDE, cct_boot_str_251);
-  if (!cct_boot_rit_parser_is_statement_boundary_359((*parser).current.kind))
+  cct_boot_rit_parser_consume_338(parser, cct_boot_ord_TokenKind__TK_REDDE, cct_boot_str_251);
+  if (!cct_boot_rit_parser_is_statement_boundary_366((*parser).current.kind))
   {
-    cct_boot_sig_AstNode* value = cct_boot_rit_parse_expression_337(parser);
-    cct_boot_rit_parser_match_327(parser, cct_boot_ord_TokenKind__TK_SEMICOLON);
-    return cct_boot_rit_ast_make_redde_252(value, line, column);
+    cct_boot_sig_AstNode* value = cct_boot_rit_parse_expression_344(parser);
+    cct_boot_rit_parser_match_334(parser, cct_boot_ord_TokenKind__TK_SEMICOLON);
+    return cct_boot_rit_ast_make_redde_259(value, line, column);
   }
-  cct_boot_rit_parser_match_327(parser, cct_boot_ord_TokenKind__TK_SEMICOLON);
-  return cct_boot_rit_ast_make_redde_empty_253(line, column);
+  cct_boot_rit_parser_match_334(parser, cct_boot_ord_TokenKind__TK_SEMICOLON);
+  return cct_boot_rit_ast_make_redde_empty_260(line, column);
 }
 
-cct_boot_sig_AstNode* cct_boot_rit_parse_anur_statement_366(cct_boot_sig_ParserState* parser)
+cct_boot_sig_AstNode* cct_boot_rit_parse_anur_statement_373(cct_boot_sig_ParserState* parser)
 {
   long long line = (*parser).current.line;
   long long column = (*parser).current.column;
-  cct_boot_rit_parser_consume_331(parser, cct_boot_ord_TokenKind__TK_ANUR, cct_boot_str_252);
-  if (!cct_boot_rit_parser_is_statement_boundary_359((*parser).current.kind))
+  cct_boot_rit_parser_consume_338(parser, cct_boot_ord_TokenKind__TK_ANUR, cct_boot_str_252);
+  if (!cct_boot_rit_parser_is_statement_boundary_366((*parser).current.kind))
   {
-    cct_boot_sig_AstNode* value = cct_boot_rit_parse_expression_337(parser);
-    cct_boot_rit_parser_match_327(parser, cct_boot_ord_TokenKind__TK_SEMICOLON);
-    return cct_boot_rit_ast_make_anur_254(value, line, column);
+    cct_boot_sig_AstNode* value = cct_boot_rit_parse_expression_344(parser);
+    cct_boot_rit_parser_match_334(parser, cct_boot_ord_TokenKind__TK_SEMICOLON);
+    return cct_boot_rit_ast_make_anur_261(value, line, column);
   }
-  cct_boot_rit_parser_match_327(parser, cct_boot_ord_TokenKind__TK_SEMICOLON);
-  return cct_boot_rit_ast_make_anur_empty_255(line, column);
+  cct_boot_rit_parser_match_334(parser, cct_boot_ord_TokenKind__TK_SEMICOLON);
+  return cct_boot_rit_ast_make_anur_empty_262(line, column);
 }
 
-cct_boot_sig_AstNode* cct_boot_rit_parse_iace_statement_367(cct_boot_sig_ParserState* parser)
+cct_boot_sig_AstNode* cct_boot_rit_parse_iace_statement_374(cct_boot_sig_ParserState* parser)
 {
   long long line = (*parser).current.line;
   long long column = (*parser).current.column;
-  cct_boot_rit_parser_consume_331(parser, cct_boot_ord_TokenKind__TK_IACE, cct_boot_str_253);
-  cct_boot_sig_AstNode* value = cct_boot_rit_parse_expression_337(parser);
-  cct_boot_rit_parser_match_327(parser, cct_boot_ord_TokenKind__TK_SEMICOLON);
-  return cct_boot_rit_ast_make_iace_256(value, line, column);
+  cct_boot_rit_parser_consume_338(parser, cct_boot_ord_TokenKind__TK_IACE, cct_boot_str_253);
+  cct_boot_sig_AstNode* value = cct_boot_rit_parse_expression_344(parser);
+  cct_boot_rit_parser_match_334(parser, cct_boot_ord_TokenKind__TK_SEMICOLON);
+  return cct_boot_rit_ast_make_iace_263(value, line, column);
 }
 
-cct_boot_sig_AstNode* cct_boot_rit_parse_dimitte_statement_368(cct_boot_sig_ParserState* parser)
+cct_boot_sig_AstNode* cct_boot_rit_parse_dimitte_statement_375(cct_boot_sig_ParserState* parser)
 {
   long long line = (*parser).current.line;
   long long column = (*parser).current.column;
-  cct_boot_rit_parser_consume_331(parser, cct_boot_ord_TokenKind__TK_DIMITTE, cct_boot_str_254);
-  if (((!cct_boot_rit_parser_check_326(parser, cct_boot_ord_TokenKind__TK_IDENTIFIER)) && (!cct_boot_rit_parser_check_326(parser, cct_boot_ord_TokenKind__TK_LPAREN))) && (!cct_boot_rit_parser_check_326(parser, cct_boot_ord_TokenKind__TK_STAR)))
+  cct_boot_rit_parser_consume_338(parser, cct_boot_ord_TokenKind__TK_DIMITTE, cct_boot_str_254);
+  if (((!cct_boot_rit_parser_check_333(parser, cct_boot_ord_TokenKind__TK_IDENTIFIER)) && (!cct_boot_rit_parser_check_333(parser, cct_boot_ord_TokenKind__TK_LPAREN))) && (!cct_boot_rit_parser_check_333(parser, cct_boot_ord_TokenKind__TK_STAR)))
   {
-    cct_boot_rit_parser_error_at_current_329(parser, cct_boot_str_255);
-    return cct_boot_rit_ast_make_dimitte_257(cct_boot_rit_ast_make_identifier_242(cct_boot_str_222, line, column), line, column);
+    cct_boot_rit_parser_error_at_current_336(parser, cct_boot_str_255);
+    return cct_boot_rit_ast_make_dimitte_264(cct_boot_rit_ast_make_identifier_249(cct_boot_str_222, line, column), line, column);
   }
-  cct_boot_sig_AstNode* target = cct_boot_rit_parse_unary_347(parser);
-  cct_boot_rit_parser_match_327(parser, cct_boot_ord_TokenKind__TK_SEMICOLON);
-  return cct_boot_rit_ast_make_dimitte_257(target, line, column);
+  cct_boot_sig_AstNode* target = cct_boot_rit_parse_unary_354(parser);
+  cct_boot_rit_parser_match_334(parser, cct_boot_ord_TokenKind__TK_SEMICOLON);
+  return cct_boot_rit_ast_make_dimitte_264(target, line, column);
 }
 
-cct_boot_sig_AstNode* cct_boot_rit_parse_frange_statement_369(cct_boot_sig_ParserState* parser)
+cct_boot_sig_AstNode* cct_boot_rit_parse_frange_statement_376(cct_boot_sig_ParserState* parser)
 {
   long long line = (*parser).current.line;
   long long column = (*parser).current.column;
-  cct_boot_rit_parser_consume_331(parser, cct_boot_ord_TokenKind__TK_FRANGE, cct_boot_str_256);
-  cct_boot_rit_parser_match_327(parser, cct_boot_ord_TokenKind__TK_SEMICOLON);
-  return cct_boot_rit_ast_make_frange_284(line, column);
+  cct_boot_rit_parser_consume_338(parser, cct_boot_ord_TokenKind__TK_FRANGE, cct_boot_str_256);
+  cct_boot_rit_parser_match_334(parser, cct_boot_ord_TokenKind__TK_SEMICOLON);
+  return cct_boot_rit_ast_make_frange_291(line, column);
 }
 
-cct_boot_sig_AstNode* cct_boot_rit_parse_recede_statement_370(cct_boot_sig_ParserState* parser)
+cct_boot_sig_AstNode* cct_boot_rit_parse_recede_statement_377(cct_boot_sig_ParserState* parser)
 {
   long long line = (*parser).current.line;
   long long column = (*parser).current.column;
-  cct_boot_rit_parser_consume_331(parser, cct_boot_ord_TokenKind__TK_RECEDE, cct_boot_str_257);
-  cct_boot_rit_parser_match_327(parser, cct_boot_ord_TokenKind__TK_SEMICOLON);
-  return cct_boot_rit_ast_make_recede_285(line, column);
+  cct_boot_rit_parser_consume_338(parser, cct_boot_ord_TokenKind__TK_RECEDE, cct_boot_str_257);
+  cct_boot_rit_parser_match_334(parser, cct_boot_ord_TokenKind__TK_SEMICOLON);
+  return cct_boot_rit_ast_make_recede_292(line, column);
 }
 
-cct_boot_sig_AstNode* cct_boot_rit_parse_statement_block_until_failure_clause_371(cct_boot_sig_ParserState* parser)
+cct_boot_sig_AstNode* cct_boot_rit_parse_statement_block_until_failure_clause_378(cct_boot_sig_ParserState* parser)
 {
-  cct_boot_sig_AstNode* block = cct_boot_rit_ast_make_block_258((*parser).current.line, (*parser).current.column);
-  while ((((!cct_boot_rit_parser_check_326(parser, cct_boot_ord_TokenKind__TK_EOF)) && (!cct_boot_rit_parser_check_326(parser, cct_boot_ord_TokenKind__TK_CAPE))) && (!cct_boot_rit_parser_check_326(parser, cct_boot_ord_TokenKind__TK_SEMPER))) && (!cct_boot_rit_parser_check_326(parser, cct_boot_ord_TokenKind__TK_FIN)))
+  cct_boot_sig_AstNode* block = cct_boot_rit_ast_make_block_265((*parser).current.line, (*parser).current.column);
+  while ((((!cct_boot_rit_parser_check_333(parser, cct_boot_ord_TokenKind__TK_EOF)) && (!cct_boot_rit_parser_check_333(parser, cct_boot_ord_TokenKind__TK_CAPE))) && (!cct_boot_rit_parser_check_333(parser, cct_boot_ord_TokenKind__TK_SEMPER))) && (!cct_boot_rit_parser_check_333(parser, cct_boot_ord_TokenKind__TK_FIN)))
   {
     {
-      cct_boot_rit_ast_append_statement_231(block, cct_boot_rit_parse_statement_383(parser));
+      cct_boot_rit_ast_append_statement_238(block, cct_boot_rit_parse_statement_390(parser));
       if ((*parser).panic_mode)
       {
-        cct_boot_rit_parser_synchronize_statement_334(parser);
+        cct_boot_rit_parser_synchronize_statement_341(parser);
       }
     }
     if (0) goto __cct_label_83;
@@ -4695,16 +4702,16 @@ cct_boot_sig_AstNode* cct_boot_rit_parse_statement_block_until_failure_clause_37
   return block;
 }
 
-cct_boot_sig_AstNode* cct_boot_rit_parse_statement_block_until_elige_boundary_372(cct_boot_sig_ParserState* parser)
+cct_boot_sig_AstNode* cct_boot_rit_parse_statement_block_until_elige_boundary_379(cct_boot_sig_ParserState* parser)
 {
-  cct_boot_sig_AstNode* block = cct_boot_rit_ast_make_block_258((*parser).current.line, (*parser).current.column);
-  while ((((!cct_boot_rit_parser_check_326(parser, cct_boot_ord_TokenKind__TK_EOF)) && (!cct_boot_rit_parser_check_326(parser, cct_boot_ord_TokenKind__TK_CASO))) && (!cct_boot_rit_parser_check_326(parser, cct_boot_ord_TokenKind__TK_SENAO))) && (!cct_boot_rit_parser_check_326(parser, cct_boot_ord_TokenKind__TK_FIN)))
+  cct_boot_sig_AstNode* block = cct_boot_rit_ast_make_block_265((*parser).current.line, (*parser).current.column);
+  while ((((!cct_boot_rit_parser_check_333(parser, cct_boot_ord_TokenKind__TK_EOF)) && (!cct_boot_rit_parser_check_333(parser, cct_boot_ord_TokenKind__TK_CASO))) && (!cct_boot_rit_parser_check_333(parser, cct_boot_ord_TokenKind__TK_SENAO))) && (!cct_boot_rit_parser_check_333(parser, cct_boot_ord_TokenKind__TK_FIN)))
   {
     {
-      cct_boot_rit_ast_append_statement_231(block, cct_boot_rit_parse_statement_383(parser));
+      cct_boot_rit_ast_append_statement_238(block, cct_boot_rit_parse_statement_390(parser));
       if ((*parser).panic_mode)
       {
-        cct_boot_rit_parser_synchronize_statement_334(parser);
+        cct_boot_rit_parser_synchronize_statement_341(parser);
       }
     }
     if (0) goto __cct_label_85;
@@ -4715,134 +4722,134 @@ cct_boot_sig_AstNode* cct_boot_rit_parse_statement_block_until_elige_boundary_37
   return block;
 }
 
-cct_boot_sig_AstNode* cct_boot_rit_parse_elige_literal_373(cct_boot_sig_ParserState* parser)
+cct_boot_sig_AstNode* cct_boot_rit_parse_elige_literal_380(cct_boot_sig_ParserState* parser)
 {
   long long line = (*parser).current.line;
   long long column = (*parser).current.column;
-  if (cct_boot_rit_parser_match_327(parser, cct_boot_ord_TokenKind__TK_MINUS))
+  if (cct_boot_rit_parser_match_334(parser, cct_boot_ord_TokenKind__TK_MINUS))
   {
-    if (!cct_boot_rit_parser_check_326(parser, cct_boot_ord_TokenKind__TK_INTEGER))
+    if (!cct_boot_rit_parser_check_333(parser, cct_boot_ord_TokenKind__TK_INTEGER))
     {
-      cct_boot_rit_parser_error_at_current_329(parser, cct_boot_str_258);
-      return cct_boot_rit_ast_make_literal_int_237(cct_boot_str_259, line, column);
+      cct_boot_rit_parser_error_at_current_336(parser, cct_boot_str_258);
+      return cct_boot_rit_ast_make_literal_int_244(cct_boot_str_259, line, column);
     }
-    cct_boot_rit_parser_advance_325(parser);
+    cct_boot_rit_parser_advance_332(parser);
     char* text = cct_boot_rit_concat_37(cct_boot_str_260, (*parser).previous.lexeme);
-    cct_boot_sig_AstNode* node = cct_boot_rit_ast_make_literal_int_237(text, line, column);
+    cct_boot_sig_AstNode* node = cct_boot_rit_ast_make_literal_int_244(text, line, column);
     free((void*)(text));
     return node;
   }
-  if (cct_boot_rit_parser_match_327(parser, cct_boot_ord_TokenKind__TK_PLUS))
+  if (cct_boot_rit_parser_match_334(parser, cct_boot_ord_TokenKind__TK_PLUS))
   {
-    if (!cct_boot_rit_parser_check_326(parser, cct_boot_ord_TokenKind__TK_INTEGER))
+    if (!cct_boot_rit_parser_check_333(parser, cct_boot_ord_TokenKind__TK_INTEGER))
     {
-      cct_boot_rit_parser_error_at_current_329(parser, cct_boot_str_261);
-      return cct_boot_rit_ast_make_literal_int_237(cct_boot_str_259, line, column);
+      cct_boot_rit_parser_error_at_current_336(parser, cct_boot_str_261);
+      return cct_boot_rit_ast_make_literal_int_244(cct_boot_str_259, line, column);
     }
-    cct_boot_rit_parser_advance_325(parser);
-    return cct_boot_rit_ast_make_literal_int_237((*parser).previous.lexeme, line, column);
+    cct_boot_rit_parser_advance_332(parser);
+    return cct_boot_rit_ast_make_literal_int_244((*parser).previous.lexeme, line, column);
   }
-  if (cct_boot_rit_parser_match_327(parser, cct_boot_ord_TokenKind__TK_INTEGER))
+  if (cct_boot_rit_parser_match_334(parser, cct_boot_ord_TokenKind__TK_INTEGER))
   {
-    return cct_boot_rit_ast_make_literal_int_237((*parser).previous.lexeme, line, column);
+    return cct_boot_rit_ast_make_literal_int_244((*parser).previous.lexeme, line, column);
   }
-  if (cct_boot_rit_parser_match_327(parser, cct_boot_ord_TokenKind__TK_STRING))
+  if (cct_boot_rit_parser_match_334(parser, cct_boot_ord_TokenKind__TK_STRING))
   {
-    return cct_boot_rit_ast_make_literal_string_239((*parser).previous.lexeme, line, column);
+    return cct_boot_rit_ast_make_literal_string_246((*parser).previous.lexeme, line, column);
   }
-  if (cct_boot_rit_parser_match_327(parser, cct_boot_ord_TokenKind__TK_IDENTIFIER))
+  if (cct_boot_rit_parser_match_334(parser, cct_boot_ord_TokenKind__TK_IDENTIFIER))
   {
-    return cct_boot_rit_ast_make_identifier_242((*parser).previous.lexeme, line, column);
+    return cct_boot_rit_ast_make_identifier_249((*parser).previous.lexeme, line, column);
   }
-  if (cct_boot_rit_parser_match_327(parser, cct_boot_ord_TokenKind__TK_VERUM))
+  if (cct_boot_rit_parser_match_334(parser, cct_boot_ord_TokenKind__TK_VERUM))
   {
-    return cct_boot_rit_ast_make_literal_bool_240(1, line, column);
+    return cct_boot_rit_ast_make_literal_bool_247(1, line, column);
   }
-  if (cct_boot_rit_parser_match_327(parser, cct_boot_ord_TokenKind__TK_FALSUM))
+  if (cct_boot_rit_parser_match_334(parser, cct_boot_ord_TokenKind__TK_FALSUM))
   {
-    return cct_boot_rit_ast_make_literal_bool_240(0, line, column);
+    return cct_boot_rit_ast_make_literal_bool_247(0, line, column);
   }
-  cct_boot_rit_parser_error_at_current_329(parser, cct_boot_str_262);
-  return cct_boot_rit_ast_make_identifier_242(cct_boot_str_222, line, column);
+  cct_boot_rit_parser_error_at_current_336(parser, cct_boot_str_262);
+  return cct_boot_rit_ast_make_identifier_249(cct_boot_str_222, line, column);
 }
 
-cct_boot_sig_AstNode* cct_boot_rit_parse_tempta_statement_374(cct_boot_sig_ParserState* parser)
+cct_boot_sig_AstNode* cct_boot_rit_parse_tempta_statement_381(cct_boot_sig_ParserState* parser)
 {
   long long line = (*parser).current.line;
   long long column = (*parser).current.column;
-  cct_boot_rit_parser_consume_331(parser, cct_boot_ord_TokenKind__TK_TEMPTA, cct_boot_str_263);
-  cct_boot_sig_AstNode* try_block = cct_boot_rit_parse_statement_block_until_failure_clause_371(parser);
-  if (!cct_boot_rit_parser_match_327(parser, cct_boot_ord_TokenKind__TK_CAPE))
+  cct_boot_rit_parser_consume_338(parser, cct_boot_ord_TokenKind__TK_TEMPTA, cct_boot_str_263);
+  cct_boot_sig_AstNode* try_block = cct_boot_rit_parse_statement_block_until_failure_clause_378(parser);
+  if (!cct_boot_rit_parser_match_334(parser, cct_boot_ord_TokenKind__TK_CAPE))
   {
-    cct_boot_rit_parser_error_at_current_329(parser, cct_boot_str_264);
-    cct_boot_rit_parser_consume_331(parser, cct_boot_ord_TokenKind__TK_FIN, cct_boot_str_265);
-    cct_boot_rit_parser_consume_331(parser, cct_boot_ord_TokenKind__TK_TEMPTA, cct_boot_str_266);
-    return cct_boot_rit_ast_make_tempta_no_semper_286(try_block, cct_boot_rit_ast_make_type_233(cct_boot_str_222, line, column), cct_boot_str_222, cct_boot_rit_ast_make_block_258(line, column), line, column);
+    cct_boot_rit_parser_error_at_current_336(parser, cct_boot_str_264);
+    cct_boot_rit_parser_consume_338(parser, cct_boot_ord_TokenKind__TK_FIN, cct_boot_str_265);
+    cct_boot_rit_parser_consume_338(parser, cct_boot_ord_TokenKind__TK_TEMPTA, cct_boot_str_266);
+    return cct_boot_rit_ast_make_tempta_no_semper_293(try_block, cct_boot_rit_ast_make_type_240(cct_boot_str_222, line, column), cct_boot_str_222, cct_boot_rit_ast_make_block_265(line, column), line, column);
   }
-  cct_boot_sig_AstNode* cape_type = cct_boot_rit_parse_type_simple_360(parser);
-  if (!cct_boot_rit_parser_check_326(parser, cct_boot_ord_TokenKind__TK_IDENTIFIER))
+  cct_boot_sig_AstNode* cape_type = cct_boot_rit_parse_type_simple_367(parser);
+  if (!cct_boot_rit_parser_check_333(parser, cct_boot_ord_TokenKind__TK_IDENTIFIER))
   {
-    cct_boot_rit_parser_error_at_current_329(parser, cct_boot_str_267);
-    cct_boot_rit_parser_consume_331(parser, cct_boot_ord_TokenKind__TK_FIN, cct_boot_str_268);
-    cct_boot_rit_parser_consume_331(parser, cct_boot_ord_TokenKind__TK_TEMPTA, cct_boot_str_266);
-    return cct_boot_rit_ast_make_tempta_no_semper_286(try_block, cape_type, cct_boot_str_222, cct_boot_rit_ast_make_block_258(line, column), line, column);
+    cct_boot_rit_parser_error_at_current_336(parser, cct_boot_str_267);
+    cct_boot_rit_parser_consume_338(parser, cct_boot_ord_TokenKind__TK_FIN, cct_boot_str_268);
+    cct_boot_rit_parser_consume_338(parser, cct_boot_ord_TokenKind__TK_TEMPTA, cct_boot_str_266);
+    return cct_boot_rit_ast_make_tempta_no_semper_293(try_block, cape_type, cct_boot_str_222, cct_boot_rit_ast_make_block_265(line, column), line, column);
   }
-  cct_boot_rit_parser_advance_325(parser);
+  cct_boot_rit_parser_advance_332(parser);
   char* cape_name = cct_boot_rit_verbum_dup_40((*parser).previous.lexeme);
-  cct_boot_sig_AstNode* cape_block = cct_boot_rit_parse_statement_block_until_failure_clause_371(parser);
-  if (cct_boot_rit_parser_match_327(parser, cct_boot_ord_TokenKind__TK_SEMPER))
+  cct_boot_sig_AstNode* cape_block = cct_boot_rit_parse_statement_block_until_failure_clause_378(parser);
+  if (cct_boot_rit_parser_match_334(parser, cct_boot_ord_TokenKind__TK_SEMPER))
   {
-    cct_boot_sig_AstNode* semper_block = cct_boot_rit_parse_statement_block_until_failure_clause_371(parser);
-    cct_boot_rit_parser_consume_331(parser, cct_boot_ord_TokenKind__TK_FIN, cct_boot_str_265);
-    cct_boot_rit_parser_consume_331(parser, cct_boot_ord_TokenKind__TK_TEMPTA, cct_boot_str_266);
-    cct_boot_sig_AstNode* node = cct_boot_rit_ast_make_tempta_287(try_block, cape_type, cape_name, cape_block, semper_block, line, column);
+    cct_boot_sig_AstNode* semper_block = cct_boot_rit_parse_statement_block_until_failure_clause_378(parser);
+    cct_boot_rit_parser_consume_338(parser, cct_boot_ord_TokenKind__TK_FIN, cct_boot_str_265);
+    cct_boot_rit_parser_consume_338(parser, cct_boot_ord_TokenKind__TK_TEMPTA, cct_boot_str_266);
+    cct_boot_sig_AstNode* node = cct_boot_rit_ast_make_tempta_294(try_block, cape_type, cape_name, cape_block, semper_block, line, column);
     free((void*)(cape_name));
     return node;
   }
-  cct_boot_rit_parser_consume_331(parser, cct_boot_ord_TokenKind__TK_FIN, cct_boot_str_265);
-  cct_boot_rit_parser_consume_331(parser, cct_boot_ord_TokenKind__TK_TEMPTA, cct_boot_str_266);
-  cct_boot_sig_AstNode* node = cct_boot_rit_ast_make_tempta_no_semper_286(try_block, cape_type, cape_name, cape_block, line, column);
+  cct_boot_rit_parser_consume_338(parser, cct_boot_ord_TokenKind__TK_FIN, cct_boot_str_265);
+  cct_boot_rit_parser_consume_338(parser, cct_boot_ord_TokenKind__TK_TEMPTA, cct_boot_str_266);
+  cct_boot_sig_AstNode* node = cct_boot_rit_ast_make_tempta_no_semper_293(try_block, cape_type, cape_name, cape_block, line, column);
   free((void*)(cape_name));
   return node;
 }
 
-cct_boot_sig_AstNode* cct_boot_rit_parse_elige_statement_375(cct_boot_sig_ParserState* parser)
+cct_boot_sig_AstNode* cct_boot_rit_parse_elige_statement_382(cct_boot_sig_ParserState* parser)
 {
   long long line = (*parser).current.line;
   long long column = (*parser).current.column;
-  cct_boot_rit_parser_consume_331(parser, cct_boot_ord_TokenKind__TK_QUANDO, cct_boot_str_269);
-  cct_boot_sig_AstNode* expr = cct_boot_rit_parse_expression_337(parser);
-  cct_boot_sig_AstNode* quando = cct_boot_rit_ast_make_quando_277(expr, line, column);
+  cct_boot_rit_parser_consume_338(parser, cct_boot_ord_TokenKind__TK_QUANDO, cct_boot_str_269);
+  cct_boot_sig_AstNode* expr = cct_boot_rit_parse_expression_344(parser);
+  cct_boot_sig_AstNode* quando = cct_boot_rit_ast_make_quando_284(expr, line, column);
   cct_boot_sig_AstNode* pending_case;
   int has_pending_case = 0;
-  while (cct_boot_rit_parser_match_327(parser, cct_boot_ord_TokenKind__TK_CASO))
+  while (cct_boot_rit_parser_match_334(parser, cct_boot_ord_TokenKind__TK_CASO))
   {
     {
       if (!has_pending_case)
       {
-        pending_case = cct_boot_rit_ast_make_case_259((*parser).previous.line, (*parser).previous.column);
+        pending_case = cct_boot_rit_ast_make_case_266((*parser).previous.line, (*parser).previous.column);
         has_pending_case = 1;
       }
-      cct_boot_rit_ast_append_child_220(pending_case, cct_boot_rit_parse_elige_literal_373(parser));
-      if (cct_boot_rit_parser_check_326(parser, cct_boot_ord_TokenKind__TK_LPAREN))
+      cct_boot_rit_ast_append_child_227(pending_case, cct_boot_rit_parse_elige_literal_380(parser));
+      if (cct_boot_rit_parser_check_333(parser, cct_boot_ord_TokenKind__TK_LPAREN))
       {
-        cct_boot_rit_parser_advance_325(parser);
-        if (!cct_boot_rit_parser_check_326(parser, cct_boot_ord_TokenKind__TK_RPAREN))
+        cct_boot_rit_parser_advance_332(parser);
+        if (!cct_boot_rit_parser_check_333(parser, cct_boot_ord_TokenKind__TK_RPAREN))
         {
           int reading_bindings = 1;
           while (reading_bindings)
           {
             {
-              if (!cct_boot_rit_parser_check_326(parser, cct_boot_ord_TokenKind__TK_IDENTIFIER))
+              if (!cct_boot_rit_parser_check_333(parser, cct_boot_ord_TokenKind__TK_IDENTIFIER))
               {
-                cct_boot_rit_parser_error_at_current_329(parser, cct_boot_str_270);
+                cct_boot_rit_parser_error_at_current_336(parser, cct_boot_str_270);
                 reading_bindings = 0;
               }
               else
               {
-                cct_boot_rit_parser_advance_325(parser);
-                cct_boot_rit_ast_append_binding_222(pending_case, cct_boot_rit_ast_make_identifier_242((*parser).previous.lexeme, (*parser).previous.line, (*parser).previous.column));
-                if (!cct_boot_rit_parser_match_327(parser, cct_boot_ord_TokenKind__TK_COMMA))
+                cct_boot_rit_parser_advance_332(parser);
+                cct_boot_rit_ast_append_binding_229(pending_case, cct_boot_rit_ast_make_identifier_249((*parser).previous.lexeme, (*parser).previous.line, (*parser).previous.column));
+                if (!cct_boot_rit_parser_match_334(parser, cct_boot_ord_TokenKind__TK_COMMA))
                 {
                   reading_bindings = 0;
                 }
@@ -4854,14 +4861,14 @@ cct_boot_sig_AstNode* cct_boot_rit_parse_elige_statement_375(cct_boot_sig_Parser
           if (0) goto __cct_label_88;
           __cct_label_88: ;
         }
-        cct_boot_rit_parser_consume_331(parser, cct_boot_ord_TokenKind__TK_RPAREN, cct_boot_str_271);
+        cct_boot_rit_parser_consume_338(parser, cct_boot_ord_TokenKind__TK_RPAREN, cct_boot_str_271);
       }
-      cct_boot_rit_parser_consume_331(parser, cct_boot_ord_TokenKind__TK_COLON, cct_boot_str_272);
-      if ((((!cct_boot_rit_parser_check_326(parser, cct_boot_ord_TokenKind__TK_CASO)) && (!cct_boot_rit_parser_check_326(parser, cct_boot_ord_TokenKind__TK_SENAO))) && (!cct_boot_rit_parser_check_326(parser, cct_boot_ord_TokenKind__TK_FIN))) && (!cct_boot_rit_parser_check_326(parser, cct_boot_ord_TokenKind__TK_EOF)))
+      cct_boot_rit_parser_consume_338(parser, cct_boot_ord_TokenKind__TK_COLON, cct_boot_str_272);
+      if ((((!cct_boot_rit_parser_check_333(parser, cct_boot_ord_TokenKind__TK_CASO)) && (!cct_boot_rit_parser_check_333(parser, cct_boot_ord_TokenKind__TK_SENAO))) && (!cct_boot_rit_parser_check_333(parser, cct_boot_ord_TokenKind__TK_FIN))) && (!cct_boot_rit_parser_check_333(parser, cct_boot_ord_TokenKind__TK_EOF)))
       {
-        (*pending_case).body = cct_boot_rit_parse_statement_block_until_elige_boundary_372(parser);
+        (*pending_case).body = cct_boot_rit_parse_statement_block_until_elige_boundary_379(parser);
         (*pending_case).has_body = 1;
-        cct_boot_rit_ast_append_case_221(quando, pending_case);
+        cct_boot_rit_ast_append_case_228(quando, pending_case);
         has_pending_case = 0;
       }
     }
@@ -4872,35 +4879,35 @@ cct_boot_sig_AstNode* cct_boot_rit_parse_elige_statement_375(cct_boot_sig_Parser
   __cct_label_86: ;
   if (has_pending_case)
   {
-    (*pending_case).body = cct_boot_rit_ast_make_block_258((*parser).current.line, (*parser).current.column);
+    (*pending_case).body = cct_boot_rit_ast_make_block_265((*parser).current.line, (*parser).current.column);
     (*pending_case).has_body = 1;
-    cct_boot_rit_ast_append_case_221(quando, pending_case);
+    cct_boot_rit_ast_append_case_228(quando, pending_case);
   }
-  if (cct_boot_rit_parser_match_327(parser, cct_boot_ord_TokenKind__TK_SENAO))
+  if (cct_boot_rit_parser_match_334(parser, cct_boot_ord_TokenKind__TK_SENAO))
   {
-    cct_boot_rit_parser_consume_331(parser, cct_boot_ord_TokenKind__TK_COLON, cct_boot_str_273);
-    (*quando).else_branch = cct_boot_rit_parse_statement_block_until_elige_boundary_372(parser);
+    cct_boot_rit_parser_consume_338(parser, cct_boot_ord_TokenKind__TK_COLON, cct_boot_str_273);
+    (*quando).else_branch = cct_boot_rit_parse_statement_block_until_elige_boundary_379(parser);
     (*quando).has_else_branch = 1;
   }
-  cct_boot_rit_parser_consume_331(parser, cct_boot_ord_TokenKind__TK_FIN, cct_boot_str_274);
-  cct_boot_rit_parser_consume_331(parser, cct_boot_ord_TokenKind__TK_QUANDO, cct_boot_str_275);
+  cct_boot_rit_parser_consume_338(parser, cct_boot_ord_TokenKind__TK_FIN, cct_boot_str_274);
+  cct_boot_rit_parser_consume_338(parser, cct_boot_ord_TokenKind__TK_QUANDO, cct_boot_str_275);
   return quando;
 }
 
-cct_boot_sig_AstNode* cct_boot_rit_parse_inline_statement_block_until_376(cct_boot_sig_ParserState* parser, cct_boot_ord_TokenKind terminator, int stop_on_aliter)
+cct_boot_sig_AstNode* cct_boot_rit_parse_inline_statement_block_until_383(cct_boot_sig_ParserState* parser, cct_boot_ord_TokenKind terminator, int stop_on_aliter)
 {
-  cct_boot_sig_AstNode* block = cct_boot_rit_ast_make_block_258((*parser).current.line, (*parser).current.column);
-  while ((!cct_boot_rit_parser_check_326(parser, terminator)) && (!cct_boot_rit_parser_check_326(parser, cct_boot_ord_TokenKind__TK_EOF)))
+  cct_boot_sig_AstNode* block = cct_boot_rit_ast_make_block_265((*parser).current.line, (*parser).current.column);
+  while ((!cct_boot_rit_parser_check_333(parser, terminator)) && (!cct_boot_rit_parser_check_333(parser, cct_boot_ord_TokenKind__TK_EOF)))
   {
     {
-      if (stop_on_aliter && cct_boot_rit_parser_check_326(parser, cct_boot_ord_TokenKind__TK_ALITER))
+      if (stop_on_aliter && cct_boot_rit_parser_check_333(parser, cct_boot_ord_TokenKind__TK_ALITER))
       {
         return block;
       }
-      cct_boot_rit_ast_append_statement_231(block, cct_boot_rit_parse_statement_383(parser));
+      cct_boot_rit_ast_append_statement_238(block, cct_boot_rit_parse_statement_390(parser));
       if ((*parser).panic_mode)
       {
-        cct_boot_rit_parser_synchronize_statement_334(parser);
+        cct_boot_rit_parser_synchronize_statement_341(parser);
       }
     }
     if (0) goto __cct_label_91;
@@ -4911,47 +4918,47 @@ cct_boot_sig_AstNode* cct_boot_rit_parse_inline_statement_block_until_376(cct_bo
   return block;
 }
 
-cct_boot_sig_AstNode* cct_boot_rit_parse_si_statement_377(cct_boot_sig_ParserState* parser)
+cct_boot_sig_AstNode* cct_boot_rit_parse_si_statement_384(cct_boot_sig_ParserState* parser)
 {
   long long line = (*parser).current.line;
   long long column = (*parser).current.column;
-  cct_boot_rit_parser_consume_331(parser, cct_boot_ord_TokenKind__TK_SI, cct_boot_str_276);
-  cct_boot_sig_AstNode* condition = cct_boot_rit_parse_expression_337(parser);
-  cct_boot_sig_AstNode* then_branch = cct_boot_rit_parse_inline_statement_block_until_376(parser, cct_boot_ord_TokenKind__TK_FIN, 1);
-  if (cct_boot_rit_parser_match_327(parser, cct_boot_ord_TokenKind__TK_ALITER))
+  cct_boot_rit_parser_consume_338(parser, cct_boot_ord_TokenKind__TK_SI, cct_boot_str_276);
+  cct_boot_sig_AstNode* condition = cct_boot_rit_parse_expression_344(parser);
+  cct_boot_sig_AstNode* then_branch = cct_boot_rit_parse_inline_statement_block_until_383(parser, cct_boot_ord_TokenKind__TK_FIN, 1);
+  if (cct_boot_rit_parser_match_334(parser, cct_boot_ord_TokenKind__TK_ALITER))
   {
-    cct_boot_sig_AstNode* else_branch = cct_boot_rit_parse_inline_statement_block_until_376(parser, cct_boot_ord_TokenKind__TK_FIN, 0);
-    cct_boot_rit_parser_consume_331(parser, cct_boot_ord_TokenKind__TK_FIN, cct_boot_str_277);
-    cct_boot_rit_parser_consume_331(parser, cct_boot_ord_TokenKind__TK_SI, cct_boot_str_278);
-    return cct_boot_rit_ast_make_si_275(condition, then_branch, else_branch, line, column);
+    cct_boot_sig_AstNode* else_branch = cct_boot_rit_parse_inline_statement_block_until_383(parser, cct_boot_ord_TokenKind__TK_FIN, 0);
+    cct_boot_rit_parser_consume_338(parser, cct_boot_ord_TokenKind__TK_FIN, cct_boot_str_277);
+    cct_boot_rit_parser_consume_338(parser, cct_boot_ord_TokenKind__TK_SI, cct_boot_str_278);
+    return cct_boot_rit_ast_make_si_282(condition, then_branch, else_branch, line, column);
   }
-  cct_boot_rit_parser_consume_331(parser, cct_boot_ord_TokenKind__TK_FIN, cct_boot_str_277);
-  cct_boot_rit_parser_consume_331(parser, cct_boot_ord_TokenKind__TK_SI, cct_boot_str_278);
-  return cct_boot_rit_ast_make_si_no_else_276(condition, then_branch, line, column);
+  cct_boot_rit_parser_consume_338(parser, cct_boot_ord_TokenKind__TK_FIN, cct_boot_str_277);
+  cct_boot_rit_parser_consume_338(parser, cct_boot_ord_TokenKind__TK_SI, cct_boot_str_278);
+  return cct_boot_rit_ast_make_si_no_else_283(condition, then_branch, line, column);
 }
 
-cct_boot_sig_AstNode* cct_boot_rit_parse_dum_statement_378(cct_boot_sig_ParserState* parser)
+cct_boot_sig_AstNode* cct_boot_rit_parse_dum_statement_385(cct_boot_sig_ParserState* parser)
 {
   long long line = (*parser).current.line;
   long long column = (*parser).current.column;
-  cct_boot_rit_parser_consume_331(parser, cct_boot_ord_TokenKind__TK_DUM, cct_boot_str_279);
-  cct_boot_sig_AstNode* condition = cct_boot_rit_parse_expression_337(parser);
-  cct_boot_sig_AstNode* body = cct_boot_rit_parse_inline_statement_block_until_376(parser, cct_boot_ord_TokenKind__TK_FIN, 0);
-  cct_boot_rit_parser_consume_331(parser, cct_boot_ord_TokenKind__TK_FIN, cct_boot_str_280);
-  cct_boot_rit_parser_consume_331(parser, cct_boot_ord_TokenKind__TK_DUM, cct_boot_str_281);
-  return cct_boot_rit_ast_make_dum_278(condition, body, line, column);
+  cct_boot_rit_parser_consume_338(parser, cct_boot_ord_TokenKind__TK_DUM, cct_boot_str_279);
+  cct_boot_sig_AstNode* condition = cct_boot_rit_parse_expression_344(parser);
+  cct_boot_sig_AstNode* body = cct_boot_rit_parse_inline_statement_block_until_383(parser, cct_boot_ord_TokenKind__TK_FIN, 0);
+  cct_boot_rit_parser_consume_338(parser, cct_boot_ord_TokenKind__TK_FIN, cct_boot_str_280);
+  cct_boot_rit_parser_consume_338(parser, cct_boot_ord_TokenKind__TK_DUM, cct_boot_str_281);
+  return cct_boot_rit_ast_make_dum_285(condition, body, line, column);
 }
 
-cct_boot_sig_AstNode* cct_boot_rit_parse_donec_body_379(cct_boot_sig_ParserState* parser)
+cct_boot_sig_AstNode* cct_boot_rit_parse_donec_body_386(cct_boot_sig_ParserState* parser)
 {
-  cct_boot_sig_AstNode* block = cct_boot_rit_ast_make_block_258((*parser).current.line, (*parser).current.column);
-  while (((!cct_boot_rit_parser_check_326(parser, cct_boot_ord_TokenKind__TK_EOF)) && (!cct_boot_rit_parser_check_326(parser, cct_boot_ord_TokenKind__TK_DUM))) && (!cct_boot_rit_parser_check_326(parser, cct_boot_ord_TokenKind__TK_FIN)))
+  cct_boot_sig_AstNode* block = cct_boot_rit_ast_make_block_265((*parser).current.line, (*parser).current.column);
+  while (((!cct_boot_rit_parser_check_333(parser, cct_boot_ord_TokenKind__TK_EOF)) && (!cct_boot_rit_parser_check_333(parser, cct_boot_ord_TokenKind__TK_DUM))) && (!cct_boot_rit_parser_check_333(parser, cct_boot_ord_TokenKind__TK_FIN)))
   {
     {
-      cct_boot_rit_ast_append_statement_231(block, cct_boot_rit_parse_statement_383(parser));
+      cct_boot_rit_ast_append_statement_238(block, cct_boot_rit_parse_statement_390(parser));
       if ((*parser).panic_mode)
       {
-        cct_boot_rit_parser_synchronize_statement_334(parser);
+        cct_boot_rit_parser_synchronize_statement_341(parser);
       }
     }
     if (0) goto __cct_label_93;
@@ -4962,94 +4969,94 @@ cct_boot_sig_AstNode* cct_boot_rit_parse_donec_body_379(cct_boot_sig_ParserState
   return block;
 }
 
-cct_boot_sig_AstNode* cct_boot_rit_parse_donec_statement_380(cct_boot_sig_ParserState* parser)
+cct_boot_sig_AstNode* cct_boot_rit_parse_donec_statement_387(cct_boot_sig_ParserState* parser)
 {
   long long line = (*parser).current.line;
   long long column = (*parser).current.column;
-  cct_boot_rit_parser_consume_331(parser, cct_boot_ord_TokenKind__TK_DONEC, cct_boot_str_282);
-  cct_boot_sig_AstNode* body = cct_boot_rit_parse_donec_body_379(parser);
-  if (!cct_boot_rit_parser_match_327(parser, cct_boot_ord_TokenKind__TK_DUM))
+  cct_boot_rit_parser_consume_338(parser, cct_boot_ord_TokenKind__TK_DONEC, cct_boot_str_282);
+  cct_boot_sig_AstNode* body = cct_boot_rit_parse_donec_body_386(parser);
+  if (!cct_boot_rit_parser_match_334(parser, cct_boot_ord_TokenKind__TK_DUM))
   {
-    return cct_boot_rit_ast_make_donec_no_condition_280(body, line, column);
+    return cct_boot_rit_ast_make_donec_no_condition_287(body, line, column);
   }
-  cct_boot_sig_AstNode* condition = cct_boot_rit_parse_expression_337(parser);
-  cct_boot_rit_parser_match_327(parser, cct_boot_ord_TokenKind__TK_SEMICOLON);
-  return cct_boot_rit_ast_make_donec_279(body, condition, line, column);
+  cct_boot_sig_AstNode* condition = cct_boot_rit_parse_expression_344(parser);
+  cct_boot_rit_parser_match_334(parser, cct_boot_ord_TokenKind__TK_SEMICOLON);
+  return cct_boot_rit_ast_make_donec_286(body, condition, line, column);
 }
 
-cct_boot_sig_AstNode* cct_boot_rit_parse_repete_statement_381(cct_boot_sig_ParserState* parser)
+cct_boot_sig_AstNode* cct_boot_rit_parse_repete_statement_388(cct_boot_sig_ParserState* parser)
 {
   long long line = (*parser).current.line;
   long long column = (*parser).current.column;
-  cct_boot_rit_parser_consume_331(parser, cct_boot_ord_TokenKind__TK_REPETE, cct_boot_str_283);
-  if (!cct_boot_rit_parser_check_326(parser, cct_boot_ord_TokenKind__TK_IDENTIFIER))
+  cct_boot_rit_parser_consume_338(parser, cct_boot_ord_TokenKind__TK_REPETE, cct_boot_str_283);
+  if (!cct_boot_rit_parser_check_333(parser, cct_boot_ord_TokenKind__TK_IDENTIFIER))
   {
-    cct_boot_rit_parser_error_at_current_329(parser, cct_boot_str_284);
-    return cct_boot_rit_ast_make_expr_stmt_249(cct_boot_rit_ast_make_identifier_242(cct_boot_str_222, line, column), line, column);
+    cct_boot_rit_parser_error_at_current_336(parser, cct_boot_str_284);
+    return cct_boot_rit_ast_make_expr_stmt_256(cct_boot_rit_ast_make_identifier_249(cct_boot_str_222, line, column), line, column);
   }
-  cct_boot_rit_parser_advance_325(parser);
+  cct_boot_rit_parser_advance_332(parser);
   char* iterator_name = cct_boot_rit_verbum_dup_40((*parser).previous.lexeme);
-  cct_boot_rit_parser_consume_331(parser, cct_boot_ord_TokenKind__TK_DE, cct_boot_str_285);
-  cct_boot_sig_AstNode* start_expr = cct_boot_rit_parse_expression_337(parser);
-  cct_boot_rit_parser_consume_331(parser, cct_boot_ord_TokenKind__TK_AD, cct_boot_str_286);
-  cct_boot_sig_AstNode* end_expr = cct_boot_rit_parse_expression_337(parser);
+  cct_boot_rit_parser_consume_338(parser, cct_boot_ord_TokenKind__TK_DE, cct_boot_str_285);
+  cct_boot_sig_AstNode* start_expr = cct_boot_rit_parse_expression_344(parser);
+  cct_boot_rit_parser_consume_338(parser, cct_boot_ord_TokenKind__TK_AD, cct_boot_str_286);
+  cct_boot_sig_AstNode* end_expr = cct_boot_rit_parse_expression_344(parser);
   int has_step = 0;
   cct_boot_sig_AstNode* step_expr;
-  if (cct_boot_rit_parser_match_327(parser, cct_boot_ord_TokenKind__TK_GRADUS))
+  if (cct_boot_rit_parser_match_334(parser, cct_boot_ord_TokenKind__TK_GRADUS))
   {
     has_step = 1;
-    step_expr = cct_boot_rit_parse_expression_337(parser);
+    step_expr = cct_boot_rit_parse_expression_344(parser);
   }
-  cct_boot_sig_AstNode* body = cct_boot_rit_parse_inline_statement_block_until_376(parser, cct_boot_ord_TokenKind__TK_FIN, 0);
-  cct_boot_rit_parser_consume_331(parser, cct_boot_ord_TokenKind__TK_FIN, cct_boot_str_287);
-  cct_boot_rit_parser_consume_331(parser, cct_boot_ord_TokenKind__TK_REPETE, cct_boot_str_288);
+  cct_boot_sig_AstNode* body = cct_boot_rit_parse_inline_statement_block_until_383(parser, cct_boot_ord_TokenKind__TK_FIN, 0);
+  cct_boot_rit_parser_consume_338(parser, cct_boot_ord_TokenKind__TK_FIN, cct_boot_str_287);
+  cct_boot_rit_parser_consume_338(parser, cct_boot_ord_TokenKind__TK_REPETE, cct_boot_str_288);
   cct_boot_sig_AstNode* stmt;
   if (has_step)
   {
-    stmt = cct_boot_rit_ast_make_repete_281(iterator_name, start_expr, end_expr, step_expr, body, line, column);
+    stmt = cct_boot_rit_ast_make_repete_288(iterator_name, start_expr, end_expr, step_expr, body, line, column);
   }
   else
   {
-    stmt = cct_boot_rit_ast_make_repete_no_step_282(iterator_name, start_expr, end_expr, body, line, column);
+    stmt = cct_boot_rit_ast_make_repete_no_step_289(iterator_name, start_expr, end_expr, body, line, column);
   }
   free((void*)(iterator_name));
   return stmt;
 }
 
-cct_boot_sig_AstNode* cct_boot_rit_parse_iterum_statement_382(cct_boot_sig_ParserState* parser)
+cct_boot_sig_AstNode* cct_boot_rit_parse_iterum_statement_389(cct_boot_sig_ParserState* parser)
 {
   long long line = (*parser).current.line;
   long long column = (*parser).current.column;
-  cct_boot_rit_parser_consume_331(parser, cct_boot_ord_TokenKind__TK_ITERUM, cct_boot_str_289);
-  if (!cct_boot_rit_parser_check_326(parser, cct_boot_ord_TokenKind__TK_IDENTIFIER))
+  cct_boot_rit_parser_consume_338(parser, cct_boot_ord_TokenKind__TK_ITERUM, cct_boot_str_289);
+  if (!cct_boot_rit_parser_check_333(parser, cct_boot_ord_TokenKind__TK_IDENTIFIER))
   {
-    cct_boot_rit_parser_error_at_current_329(parser, cct_boot_str_290);
-    return cct_boot_rit_ast_make_expr_stmt_249(cct_boot_rit_ast_make_identifier_242(cct_boot_str_222, line, column), line, column);
+    cct_boot_rit_parser_error_at_current_336(parser, cct_boot_str_290);
+    return cct_boot_rit_ast_make_expr_stmt_256(cct_boot_rit_ast_make_identifier_249(cct_boot_str_222, line, column), line, column);
   }
-  cct_boot_rit_parser_advance_325(parser);
+  cct_boot_rit_parser_advance_332(parser);
   char* item_name = cct_boot_rit_verbum_dup_40((*parser).previous.lexeme);
   char* value_name = cct_boot_str_102;
-  if (cct_boot_rit_parser_match_327(parser, cct_boot_ord_TokenKind__TK_COMMA))
+  if (cct_boot_rit_parser_match_334(parser, cct_boot_ord_TokenKind__TK_COMMA))
   {
-    if (!cct_boot_rit_parser_check_326(parser, cct_boot_ord_TokenKind__TK_IDENTIFIER))
+    if (!cct_boot_rit_parser_check_333(parser, cct_boot_ord_TokenKind__TK_IDENTIFIER))
     {
-      cct_boot_rit_parser_error_at_current_329(parser, cct_boot_str_291);
+      cct_boot_rit_parser_error_at_current_336(parser, cct_boot_str_291);
       free((void*)(item_name));
-      return cct_boot_rit_ast_make_expr_stmt_249(cct_boot_rit_ast_make_identifier_242(cct_boot_str_222, line, column), line, column);
+      return cct_boot_rit_ast_make_expr_stmt_256(cct_boot_rit_ast_make_identifier_249(cct_boot_str_222, line, column), line, column);
     }
-    cct_boot_rit_parser_advance_325(parser);
+    cct_boot_rit_parser_advance_332(parser);
     value_name = cct_boot_rit_verbum_dup_40((*parser).previous.lexeme);
   }
-  cct_boot_rit_parser_consume_331(parser, cct_boot_ord_TokenKind__TK_IN, cct_boot_str_292);
-  cct_boot_sig_AstNode* collection = cct_boot_rit_parse_expression_337(parser);
-  if (cct_boot_rit_parser_check_326(parser, cct_boot_ord_TokenKind__TK_IDENTIFIER) && (cct_boot_rit_compare_38((*parser).current.lexeme, cct_boot_str_293) == 0))
+  cct_boot_rit_parser_consume_338(parser, cct_boot_ord_TokenKind__TK_IN, cct_boot_str_292);
+  cct_boot_sig_AstNode* collection = cct_boot_rit_parse_expression_344(parser);
+  if (cct_boot_rit_parser_check_333(parser, cct_boot_ord_TokenKind__TK_IDENTIFIER) && (cct_boot_rit_compare_38((*parser).current.lexeme, cct_boot_str_293) == 0))
   {
-    cct_boot_rit_parser_advance_325(parser);
+    cct_boot_rit_parser_advance_332(parser);
   }
-  cct_boot_sig_AstNode* body = cct_boot_rit_parse_inline_statement_block_until_376(parser, cct_boot_ord_TokenKind__TK_FIN, 0);
-  cct_boot_rit_parser_consume_331(parser, cct_boot_ord_TokenKind__TK_FIN, cct_boot_str_294);
-  cct_boot_rit_parser_consume_331(parser, cct_boot_ord_TokenKind__TK_ITERUM, cct_boot_str_295);
-  cct_boot_sig_AstNode* node = cct_boot_rit_ast_make_iterum_283(item_name, value_name, collection, body, line, column);
+  cct_boot_sig_AstNode* body = cct_boot_rit_parse_inline_statement_block_until_383(parser, cct_boot_ord_TokenKind__TK_FIN, 0);
+  cct_boot_rit_parser_consume_338(parser, cct_boot_ord_TokenKind__TK_FIN, cct_boot_str_294);
+  cct_boot_rit_parser_consume_338(parser, cct_boot_ord_TokenKind__TK_ITERUM, cct_boot_str_295);
+  cct_boot_sig_AstNode* node = cct_boot_rit_ast_make_iterum_290(item_name, value_name, collection, body, line, column);
   free((void*)(item_name));
   if (cct_boot_rit_compare_38(value_name, cct_boot_str_102) != 0)
   {
@@ -5058,155 +5065,155 @@ cct_boot_sig_AstNode* cct_boot_rit_parse_iterum_statement_382(cct_boot_sig_Parse
   return node;
 }
 
-cct_boot_sig_AstNode* cct_boot_rit_parse_statement_383(cct_boot_sig_ParserState* parser)
+cct_boot_sig_AstNode* cct_boot_rit_parse_statement_390(cct_boot_sig_ParserState* parser)
 {
-  if (cct_boot_rit_parser_check_326(parser, cct_boot_ord_TokenKind__TK_LBRACE))
+  if (cct_boot_rit_parser_check_333(parser, cct_boot_ord_TokenKind__TK_LBRACE))
   {
-    return cct_boot_rit_parse_block_362(parser);
+    return cct_boot_rit_parse_block_369(parser);
   }
-  if (cct_boot_rit_parser_check_326(parser, cct_boot_ord_TokenKind__TK_EVOCA))
+  if (cct_boot_rit_parser_check_333(parser, cct_boot_ord_TokenKind__TK_EVOCA))
   {
-    return cct_boot_rit_parse_evoca_statement_363(parser);
+    return cct_boot_rit_parse_evoca_statement_370(parser);
   }
-  if (cct_boot_rit_parser_check_326(parser, cct_boot_ord_TokenKind__TK_VINCIRE))
+  if (cct_boot_rit_parser_check_333(parser, cct_boot_ord_TokenKind__TK_VINCIRE))
   {
-    return cct_boot_rit_parse_vincire_statement_364(parser);
+    return cct_boot_rit_parse_vincire_statement_371(parser);
   }
-  if (cct_boot_rit_parser_check_326(parser, cct_boot_ord_TokenKind__TK_REDDE))
+  if (cct_boot_rit_parser_check_333(parser, cct_boot_ord_TokenKind__TK_REDDE))
   {
-    return cct_boot_rit_parse_redde_statement_365(parser);
+    return cct_boot_rit_parse_redde_statement_372(parser);
   }
-  if (cct_boot_rit_parser_check_326(parser, cct_boot_ord_TokenKind__TK_ANUR))
+  if (cct_boot_rit_parser_check_333(parser, cct_boot_ord_TokenKind__TK_ANUR))
   {
-    return cct_boot_rit_parse_anur_statement_366(parser);
+    return cct_boot_rit_parse_anur_statement_373(parser);
   }
-  if (cct_boot_rit_parser_check_326(parser, cct_boot_ord_TokenKind__TK_IACE))
+  if (cct_boot_rit_parser_check_333(parser, cct_boot_ord_TokenKind__TK_IACE))
   {
-    return cct_boot_rit_parse_iace_statement_367(parser);
+    return cct_boot_rit_parse_iace_statement_374(parser);
   }
-  if (cct_boot_rit_parser_check_326(parser, cct_boot_ord_TokenKind__TK_DIMITTE))
+  if (cct_boot_rit_parser_check_333(parser, cct_boot_ord_TokenKind__TK_DIMITTE))
   {
-    return cct_boot_rit_parse_dimitte_statement_368(parser);
+    return cct_boot_rit_parse_dimitte_statement_375(parser);
   }
-  if (cct_boot_rit_parser_check_326(parser, cct_boot_ord_TokenKind__TK_FRANGE))
+  if (cct_boot_rit_parser_check_333(parser, cct_boot_ord_TokenKind__TK_FRANGE))
   {
-    return cct_boot_rit_parse_frange_statement_369(parser);
+    return cct_boot_rit_parse_frange_statement_376(parser);
   }
-  if (cct_boot_rit_parser_check_326(parser, cct_boot_ord_TokenKind__TK_RECEDE))
+  if (cct_boot_rit_parser_check_333(parser, cct_boot_ord_TokenKind__TK_RECEDE))
   {
-    return cct_boot_rit_parse_recede_statement_370(parser);
+    return cct_boot_rit_parse_recede_statement_377(parser);
   }
-  if (cct_boot_rit_parser_check_326(parser, cct_boot_ord_TokenKind__TK_SI))
+  if (cct_boot_rit_parser_check_333(parser, cct_boot_ord_TokenKind__TK_SI))
   {
-    return cct_boot_rit_parse_si_statement_377(parser);
+    return cct_boot_rit_parse_si_statement_384(parser);
   }
-  if (cct_boot_rit_parser_check_326(parser, cct_boot_ord_TokenKind__TK_QUANDO))
+  if (cct_boot_rit_parser_check_333(parser, cct_boot_ord_TokenKind__TK_QUANDO))
   {
-    return cct_boot_rit_parse_elige_statement_375(parser);
+    return cct_boot_rit_parse_elige_statement_382(parser);
   }
-  if (cct_boot_rit_parser_check_326(parser, cct_boot_ord_TokenKind__TK_DUM))
+  if (cct_boot_rit_parser_check_333(parser, cct_boot_ord_TokenKind__TK_DUM))
   {
-    return cct_boot_rit_parse_dum_statement_378(parser);
+    return cct_boot_rit_parse_dum_statement_385(parser);
   }
-  if (cct_boot_rit_parser_check_326(parser, cct_boot_ord_TokenKind__TK_DONEC))
+  if (cct_boot_rit_parser_check_333(parser, cct_boot_ord_TokenKind__TK_DONEC))
   {
-    return cct_boot_rit_parse_donec_statement_380(parser);
+    return cct_boot_rit_parse_donec_statement_387(parser);
   }
-  if (cct_boot_rit_parser_check_326(parser, cct_boot_ord_TokenKind__TK_REPETE))
+  if (cct_boot_rit_parser_check_333(parser, cct_boot_ord_TokenKind__TK_REPETE))
   {
-    return cct_boot_rit_parse_repete_statement_381(parser);
+    return cct_boot_rit_parse_repete_statement_388(parser);
   }
-  if (cct_boot_rit_parser_check_326(parser, cct_boot_ord_TokenKind__TK_ITERUM))
+  if (cct_boot_rit_parser_check_333(parser, cct_boot_ord_TokenKind__TK_ITERUM))
   {
-    return cct_boot_rit_parse_iterum_statement_382(parser);
+    return cct_boot_rit_parse_iterum_statement_389(parser);
   }
-  if (cct_boot_rit_parser_check_326(parser, cct_boot_ord_TokenKind__TK_TEMPTA))
+  if (cct_boot_rit_parser_check_333(parser, cct_boot_ord_TokenKind__TK_TEMPTA))
   {
-    return cct_boot_rit_parse_tempta_statement_374(parser);
+    return cct_boot_rit_parse_tempta_statement_381(parser);
   }
-  if (cct_boot_rit_parser_check_326(parser, cct_boot_ord_TokenKind__TK_CAPE))
+  if (cct_boot_rit_parser_check_333(parser, cct_boot_ord_TokenKind__TK_CAPE))
   {
-    cct_boot_rit_parser_error_at_current_329(parser, cct_boot_str_296);
-    cct_boot_rit_parser_advance_325(parser);
-    return cct_boot_rit_ast_make_expr_stmt_249(cct_boot_rit_ast_make_identifier_242(cct_boot_str_222, (*parser).previous.line, (*parser).previous.column), (*parser).previous.line, (*parser).previous.column);
+    cct_boot_rit_parser_error_at_current_336(parser, cct_boot_str_296);
+    cct_boot_rit_parser_advance_332(parser);
+    return cct_boot_rit_ast_make_expr_stmt_256(cct_boot_rit_ast_make_identifier_249(cct_boot_str_222, (*parser).previous.line, (*parser).previous.column), (*parser).previous.line, (*parser).previous.column);
   }
-  if (cct_boot_rit_parser_check_326(parser, cct_boot_ord_TokenKind__TK_SEMPER))
+  if (cct_boot_rit_parser_check_333(parser, cct_boot_ord_TokenKind__TK_SEMPER))
   {
-    cct_boot_rit_parser_error_at_current_329(parser, cct_boot_str_297);
-    cct_boot_rit_parser_advance_325(parser);
-    return cct_boot_rit_ast_make_expr_stmt_249(cct_boot_rit_ast_make_identifier_242(cct_boot_str_222, (*parser).previous.line, (*parser).previous.column), (*parser).previous.line, (*parser).previous.column);
+    cct_boot_rit_parser_error_at_current_336(parser, cct_boot_str_297);
+    cct_boot_rit_parser_advance_332(parser);
+    return cct_boot_rit_ast_make_expr_stmt_256(cct_boot_rit_ast_make_identifier_249(cct_boot_str_222, (*parser).previous.line, (*parser).previous.column), (*parser).previous.line, (*parser).previous.column);
   }
-  if (cct_boot_rit_parser_check_326(parser, cct_boot_ord_TokenKind__TK_CASO))
+  if (cct_boot_rit_parser_check_333(parser, cct_boot_ord_TokenKind__TK_CASO))
   {
-    cct_boot_rit_parser_error_at_current_329(parser, cct_boot_str_298);
-    cct_boot_rit_parser_advance_325(parser);
-    return cct_boot_rit_ast_make_expr_stmt_249(cct_boot_rit_ast_make_identifier_242(cct_boot_str_222, (*parser).previous.line, (*parser).previous.column), (*parser).previous.line, (*parser).previous.column);
+    cct_boot_rit_parser_error_at_current_336(parser, cct_boot_str_298);
+    cct_boot_rit_parser_advance_332(parser);
+    return cct_boot_rit_ast_make_expr_stmt_256(cct_boot_rit_ast_make_identifier_249(cct_boot_str_222, (*parser).previous.line, (*parser).previous.column), (*parser).previous.line, (*parser).previous.column);
   }
-  if (cct_boot_rit_parser_check_326(parser, cct_boot_ord_TokenKind__TK_SENAO))
+  if (cct_boot_rit_parser_check_333(parser, cct_boot_ord_TokenKind__TK_SENAO))
   {
-    cct_boot_rit_parser_error_at_current_329(parser, cct_boot_str_299);
-    cct_boot_rit_parser_advance_325(parser);
-    return cct_boot_rit_ast_make_expr_stmt_249(cct_boot_rit_ast_make_identifier_242(cct_boot_str_222, (*parser).previous.line, (*parser).previous.column), (*parser).previous.line, (*parser).previous.column);
+    cct_boot_rit_parser_error_at_current_336(parser, cct_boot_str_299);
+    cct_boot_rit_parser_advance_332(parser);
+    return cct_boot_rit_ast_make_expr_stmt_256(cct_boot_rit_ast_make_identifier_249(cct_boot_str_222, (*parser).previous.line, (*parser).previous.column), (*parser).previous.line, (*parser).previous.column);
   }
-  return cct_boot_rit_parse_expression_statement_361(parser);
+  return cct_boot_rit_parse_expression_statement_368(parser);
 }
 
-cct_boot_sig_AstNode* cct_boot_rit_parser_parse_statement_source_384(char* source, char* filename)
+cct_boot_sig_AstNode* cct_boot_rit_parser_parse_statement_source_391(char* source, char* filename)
 {
-  cct_boot_sig_LexerState lex = cct_boot_rit_lexer_init_304(source, filename);
-  cct_boot_sig_ParserState parser = cct_boot_rit_parser_init_323((&lex), filename);
-  cct_boot_sig_AstNode* stmt = cct_boot_rit_parse_statement_383((&parser));
-  cct_boot_rit_parser_dispose_324((&parser));
+  cct_boot_sig_LexerState lex = cct_boot_rit_lexer_init_311(source, filename);
+  cct_boot_sig_ParserState parser = cct_boot_rit_parser_init_330((&lex), filename);
+  cct_boot_sig_AstNode* stmt = cct_boot_rit_parse_statement_390((&parser));
+  cct_boot_rit_parser_dispose_331((&parser));
   return stmt;
 }
 
-cct_boot_sig_AstNode* cct_boot_rit_parse_type_385(cct_boot_sig_ParserState* parser)
+cct_boot_sig_AstNode* cct_boot_rit_parse_type_392(cct_boot_sig_ParserState* parser)
 {
-  if (cct_boot_rit_parser_match_327(parser, cct_boot_ord_TokenKind__TK_SPECULUM))
+  if (cct_boot_rit_parser_match_334(parser, cct_boot_ord_TokenKind__TK_SPECULUM))
   {
-    cct_boot_sig_AstNode* base = cct_boot_rit_parse_type_385(parser);
-    cct_boot_rit_ast_type_mark_pointer_234(base);
+    cct_boot_sig_AstNode* base = cct_boot_rit_parse_type_392(parser);
+    cct_boot_rit_ast_type_mark_pointer_241(base);
     return base;
   }
-  if (cct_boot_rit_parser_match_327(parser, cct_boot_ord_TokenKind__TK_SERIES))
+  if (cct_boot_rit_parser_match_334(parser, cct_boot_ord_TokenKind__TK_SERIES))
   {
-    cct_boot_sig_AstNode* base = cct_boot_rit_parse_type_385(parser);
-    cct_boot_rit_parser_consume_331(parser, cct_boot_ord_TokenKind__TK_LBRACKET, cct_boot_str_218);
-    if (!cct_boot_rit_parser_check_326(parser, cct_boot_ord_TokenKind__TK_INTEGER))
+    cct_boot_sig_AstNode* base = cct_boot_rit_parse_type_392(parser);
+    cct_boot_rit_parser_consume_338(parser, cct_boot_ord_TokenKind__TK_LBRACKET, cct_boot_str_218);
+    if (!cct_boot_rit_parser_check_333(parser, cct_boot_ord_TokenKind__TK_INTEGER))
     {
-      cct_boot_rit_parser_error_at_current_329(parser, cct_boot_str_219);
+      cct_boot_rit_parser_error_at_current_336(parser, cct_boot_str_219);
       return base;
     }
-    cct_boot_rit_parser_advance_325(parser);
-    cct_boot_rit_ast_type_mark_array_235(base, cct_boot_rit_parse_int_105((*parser).previous.lexeme));
-    cct_boot_rit_parser_consume_331(parser, cct_boot_ord_TokenKind__TK_RBRACKET, cct_boot_str_220);
+    cct_boot_rit_parser_advance_332(parser);
+    cct_boot_rit_ast_type_mark_array_242(base, cct_boot_rit_parse_int_112((*parser).previous.lexeme));
+    cct_boot_rit_parser_consume_338(parser, cct_boot_ord_TokenKind__TK_RBRACKET, cct_boot_str_220);
     return base;
   }
-  cct_boot_sig_AstNode* base = cct_boot_rit_parse_type_simple_360(parser);
-  cct_boot_rit_parse_optional_generic_type_args_386(parser, base);
+  cct_boot_sig_AstNode* base = cct_boot_rit_parse_type_simple_367(parser);
+  cct_boot_rit_parse_optional_generic_type_args_393(parser, base);
   return base;
 }
 
-void cct_boot_rit_parse_optional_generic_type_args_386(cct_boot_sig_ParserState* parser, cct_boot_sig_AstNode* type_expr)
+void cct_boot_rit_parse_optional_generic_type_args_393(cct_boot_sig_ParserState* parser, cct_boot_sig_AstNode* type_expr)
 {
-  if (!cct_boot_rit_parser_match_327(parser, cct_boot_ord_TokenKind__TK_GENUS))
+  if (!cct_boot_rit_parser_match_334(parser, cct_boot_ord_TokenKind__TK_GENUS))
   {
     return;
   }
-  cct_boot_rit_parser_consume_331(parser, cct_boot_ord_TokenKind__TK_LPAREN, cct_boot_str_223);
-  if (cct_boot_rit_parser_check_326(parser, cct_boot_ord_TokenKind__TK_RPAREN))
+  cct_boot_rit_parser_consume_338(parser, cct_boot_ord_TokenKind__TK_LPAREN, cct_boot_str_223);
+  if (cct_boot_rit_parser_check_333(parser, cct_boot_ord_TokenKind__TK_RPAREN))
   {
-    cct_boot_rit_parser_error_at_current_329(parser, cct_boot_str_224);
-    cct_boot_rit_parser_advance_325(parser);
+    cct_boot_rit_parser_error_at_current_336(parser, cct_boot_str_224);
+    cct_boot_rit_parser_advance_332(parser);
     return;
   }
   while (1)
   {
     {
-      cct_boot_rit_ast_append_generic_arg_224(type_expr, cct_boot_rit_parse_type_385(parser));
-      if (!cct_boot_rit_parser_match_327(parser, cct_boot_ord_TokenKind__TK_COMMA))
+      cct_boot_rit_ast_append_generic_arg_231(type_expr, cct_boot_rit_parse_type_392(parser));
+      if (!cct_boot_rit_parser_match_334(parser, cct_boot_ord_TokenKind__TK_COMMA))
       {
-        cct_boot_rit_parser_consume_331(parser, cct_boot_ord_TokenKind__TK_RPAREN, cct_boot_str_225);
+        cct_boot_rit_parser_consume_338(parser, cct_boot_ord_TokenKind__TK_RPAREN, cct_boot_str_225);
         return;
       }
     }
@@ -5217,14 +5224,14 @@ void cct_boot_rit_parse_optional_generic_type_args_386(cct_boot_sig_ParserState*
   __cct_label_94: ;
 }
 
-int cct_boot_rit_parse_type_param_exists_387(void* list, char* name)
+int cct_boot_rit_parse_type_param_exists_394(void* list, char* name)
 {
   long long i = 0;
-  long long n = cct_boot_rit_ast_node_list_len_209(list);
+  long long n = cct_boot_rit_ast_node_list_len_216(list);
   while (i < n)
   {
     {
-      cct_boot_sig_AstNode* param = cct_boot_rit_ast_node_list_get_210(list, i);
+      cct_boot_sig_AstNode* param = cct_boot_rit_ast_node_list_get_217(list, i);
       if (cct_boot_rit_compare_38((*param).name, name) == 0)
       {
         return 1;
@@ -5239,17 +5246,17 @@ int cct_boot_rit_parse_type_param_exists_387(void* list, char* name)
   return 0;
 }
 
-void cct_boot_rit_parse_optional_type_params_388(cct_boot_sig_ParserState* parser, cct_boot_sig_AstNode* owner, int allow_constraint)
+void cct_boot_rit_parse_optional_type_params_395(cct_boot_sig_ParserState* parser, cct_boot_sig_AstNode* owner, int allow_constraint)
 {
-  if (!cct_boot_rit_parser_match_327(parser, cct_boot_ord_TokenKind__TK_GENUS))
+  if (!cct_boot_rit_parser_match_334(parser, cct_boot_ord_TokenKind__TK_GENUS))
   {
     return;
   }
-  cct_boot_rit_parser_consume_331(parser, cct_boot_ord_TokenKind__TK_LPAREN, cct_boot_str_223);
-  if (cct_boot_rit_parser_check_326(parser, cct_boot_ord_TokenKind__TK_RPAREN))
+  cct_boot_rit_parser_consume_338(parser, cct_boot_ord_TokenKind__TK_LPAREN, cct_boot_str_223);
+  if (cct_boot_rit_parser_check_333(parser, cct_boot_ord_TokenKind__TK_RPAREN))
   {
-    cct_boot_rit_parser_error_at_current_329(parser, cct_boot_str_300);
-    cct_boot_rit_parser_advance_325(parser);
+    cct_boot_rit_parser_error_at_current_336(parser, cct_boot_str_300);
+    cct_boot_rit_parser_advance_332(parser);
     return;
   }
   while (1)
@@ -5257,44 +5264,44 @@ void cct_boot_rit_parse_optional_type_params_388(cct_boot_sig_ParserState* parse
     {
       long long line = (*parser).current.line;
       long long column = (*parser).current.column;
-      if (!cct_boot_rit_parser_check_326(parser, cct_boot_ord_TokenKind__TK_IDENTIFIER))
+      if (!cct_boot_rit_parser_check_333(parser, cct_boot_ord_TokenKind__TK_IDENTIFIER))
       {
-        cct_boot_rit_parser_error_at_current_329(parser, cct_boot_str_301);
+        cct_boot_rit_parser_error_at_current_336(parser, cct_boot_str_301);
         return;
       }
-      cct_boot_rit_parser_advance_325(parser);
+      cct_boot_rit_parser_advance_332(parser);
       char* name = cct_boot_rit_verbum_dup_40((*parser).previous.lexeme);
-      cct_boot_sig_AstNode* param = cct_boot_rit_ast_make_type_param_no_constraint_261(name, line, column);
-      if (cct_boot_rit_parser_match_327(parser, cct_boot_ord_TokenKind__TK_PACTUM))
+      cct_boot_sig_AstNode* param = cct_boot_rit_ast_make_type_param_no_constraint_268(name, line, column);
+      if (cct_boot_rit_parser_match_334(parser, cct_boot_ord_TokenKind__TK_PACTUM))
       {
         if (!allow_constraint)
         {
-          cct_boot_rit_parser_error_at_previous_330(parser, cct_boot_str_302);
+          cct_boot_rit_parser_error_at_previous_337(parser, cct_boot_str_302);
         }
-        if (!cct_boot_rit_parser_check_326(parser, cct_boot_ord_TokenKind__TK_IDENTIFIER))
+        if (!cct_boot_rit_parser_check_333(parser, cct_boot_ord_TokenKind__TK_IDENTIFIER))
         {
-          cct_boot_rit_parser_error_at_current_329(parser, cct_boot_str_303);
+          cct_boot_rit_parser_error_at_current_336(parser, cct_boot_str_303);
         }
         else
         {
-          cct_boot_rit_parser_advance_325(parser);
-          cct_boot_rit_ast_node_free_301(param);
-          param = cct_boot_rit_ast_make_type_param_262(name, cct_boot_rit_ast_make_type_233((*parser).previous.lexeme, (*parser).previous.line, (*parser).previous.column), line, column);
+          cct_boot_rit_parser_advance_332(parser);
+          cct_boot_rit_ast_node_free_308(param);
+          param = cct_boot_rit_ast_make_type_param_269(name, cct_boot_rit_ast_make_type_240((*parser).previous.lexeme, (*parser).previous.line, (*parser).previous.column), line, column);
         }
       }
-      if (cct_boot_rit_parse_type_param_exists_387((*owner).type_params, name))
+      if (cct_boot_rit_parse_type_param_exists_394((*owner).type_params, name))
       {
-        cct_boot_rit_parser_error_at_current_329(parser, cct_boot_str_304);
-        cct_boot_rit_ast_node_free_301(param);
+        cct_boot_rit_parser_error_at_current_336(parser, cct_boot_str_304);
+        cct_boot_rit_ast_node_free_308(param);
       }
       else
       {
-        cct_boot_rit_ast_append_type_param_223(owner, param);
+        cct_boot_rit_ast_append_type_param_230(owner, param);
       }
       free((void*)(name));
-      if (!cct_boot_rit_parser_match_327(parser, cct_boot_ord_TokenKind__TK_COMMA))
+      if (!cct_boot_rit_parser_match_334(parser, cct_boot_ord_TokenKind__TK_COMMA))
       {
-        cct_boot_rit_parser_consume_331(parser, cct_boot_ord_TokenKind__TK_RPAREN, cct_boot_str_305);
+        cct_boot_rit_parser_consume_338(parser, cct_boot_ord_TokenKind__TK_RPAREN, cct_boot_str_305);
         return;
       }
     }
@@ -5305,9 +5312,9 @@ void cct_boot_rit_parse_optional_type_params_388(cct_boot_sig_ParserState* parse
   __cct_label_98: ;
 }
 
-void cct_boot_rit_parse_param_list_389(cct_boot_sig_ParserState* parser, cct_boot_sig_AstNode* rituale)
+void cct_boot_rit_parse_param_list_396(cct_boot_sig_ParserState* parser, cct_boot_sig_AstNode* rituale)
 {
-  if (cct_boot_rit_parser_check_326(parser, cct_boot_ord_TokenKind__TK_RPAREN))
+  if (cct_boot_rit_parser_check_333(parser, cct_boot_ord_TokenKind__TK_RPAREN))
   {
     return;
   }
@@ -5316,15 +5323,15 @@ void cct_boot_rit_parse_param_list_389(cct_boot_sig_ParserState* parser, cct_boo
     {
       long long line = (*parser).current.line;
       long long column = (*parser).current.column;
-      cct_boot_sig_AstNode* type_expr = cct_boot_rit_parse_type_385(parser);
-      if (!cct_boot_rit_parser_check_326(parser, cct_boot_ord_TokenKind__TK_IDENTIFIER))
+      cct_boot_sig_AstNode* type_expr = cct_boot_rit_parse_type_392(parser);
+      if (!cct_boot_rit_parser_check_333(parser, cct_boot_ord_TokenKind__TK_IDENTIFIER))
       {
-        cct_boot_rit_parser_error_at_current_329(parser, cct_boot_str_306);
+        cct_boot_rit_parser_error_at_current_336(parser, cct_boot_str_306);
         return;
       }
-      cct_boot_rit_parser_advance_325(parser);
-      cct_boot_rit_ast_append_param_225(rituale, cct_boot_rit_ast_make_param_260((*parser).previous.lexeme, type_expr, line, column));
-      if (!cct_boot_rit_parser_match_327(parser, cct_boot_ord_TokenKind__TK_COMMA))
+      cct_boot_rit_parser_advance_332(parser);
+      cct_boot_rit_ast_append_param_232(rituale, cct_boot_rit_ast_make_param_267((*parser).previous.lexeme, type_expr, line, column));
+      if (!cct_boot_rit_parser_match_334(parser, cct_boot_ord_TokenKind__TK_COMMA))
       {
         return;
       }
@@ -5336,17 +5343,17 @@ void cct_boot_rit_parse_param_list_389(cct_boot_sig_ParserState* parser, cct_boo
   __cct_label_100: ;
 }
 
-cct_boot_sig_AstNode* cct_boot_rit_parse_import_declaration_390(cct_boot_sig_ParserState* parser)
+cct_boot_sig_AstNode* cct_boot_rit_parse_import_declaration_397(cct_boot_sig_ParserState* parser)
 {
   long long line = (*parser).current.line;
   long long column = (*parser).current.column;
-  cct_boot_rit_parser_consume_331(parser, cct_boot_ord_TokenKind__TK_ADVOCARE, cct_boot_str_307);
-  if (!cct_boot_rit_parser_check_326(parser, cct_boot_ord_TokenKind__TK_STRING))
+  cct_boot_rit_parser_consume_338(parser, cct_boot_ord_TokenKind__TK_ADVOCARE, cct_boot_str_307);
+  if (!cct_boot_rit_parser_check_333(parser, cct_boot_ord_TokenKind__TK_STRING))
   {
-    cct_boot_rit_parser_error_at_current_329(parser, cct_boot_str_308);
-    return cct_boot_rit_ast_make_import_232(cct_boot_str_222, line, column);
+    cct_boot_rit_parser_error_at_current_336(parser, cct_boot_str_308);
+    return cct_boot_rit_ast_make_import_239(cct_boot_str_222, line, column);
   }
-  cct_boot_rit_parser_advance_325(parser);
+  cct_boot_rit_parser_advance_332(parser);
   char* raw = (*parser).previous.lexeme;
   char* path = raw;
   int owns_path = 0;
@@ -5355,25 +5362,25 @@ cct_boot_sig_AstNode* cct_boot_rit_parse_import_declaration_390(cct_boot_sig_Par
     path = cct_boot_rit_substring_39(raw, 1, (cct_boot_rit_len_30(raw) - 1));
     owns_path = 1;
   }
-  cct_boot_sig_AstNode* node = cct_boot_rit_ast_make_import_232(path, line, column);
+  cct_boot_sig_AstNode* node = cct_boot_rit_ast_make_import_239(path, line, column);
   if (owns_path)
   {
     free((void*)(path));
   }
-  cct_boot_rit_parser_match_327(parser, cct_boot_ord_TokenKind__TK_SEMICOLON);
+  cct_boot_rit_parser_match_334(parser, cct_boot_ord_TokenKind__TK_SEMICOLON);
   return node;
 }
 
-cct_boot_sig_AstNode* cct_boot_rit_parse_rituale_body_until_explicit_391(cct_boot_sig_ParserState* parser)
+cct_boot_sig_AstNode* cct_boot_rit_parse_rituale_body_until_explicit_398(cct_boot_sig_ParserState* parser)
 {
-  cct_boot_sig_AstNode* block = cct_boot_rit_ast_make_block_258((*parser).current.line, (*parser).current.column);
-  while ((!cct_boot_rit_parser_check_326(parser, cct_boot_ord_TokenKind__TK_EOF)) && (!cct_boot_rit_parser_check_326(parser, cct_boot_ord_TokenKind__TK_EXPLICIT)))
+  cct_boot_sig_AstNode* block = cct_boot_rit_ast_make_block_265((*parser).current.line, (*parser).current.column);
+  while ((!cct_boot_rit_parser_check_333(parser, cct_boot_ord_TokenKind__TK_EOF)) && (!cct_boot_rit_parser_check_333(parser, cct_boot_ord_TokenKind__TK_EXPLICIT)))
   {
     {
-      cct_boot_rit_ast_append_statement_231(block, cct_boot_rit_parse_statement_383(parser));
+      cct_boot_rit_ast_append_statement_238(block, cct_boot_rit_parse_statement_390(parser));
       if ((*parser).panic_mode)
       {
-        cct_boot_rit_parser_synchronize_statement_334(parser);
+        cct_boot_rit_parser_synchronize_statement_341(parser);
       }
     }
     if (0) goto __cct_label_103;
@@ -5381,161 +5388,161 @@ cct_boot_sig_AstNode* cct_boot_rit_parse_rituale_body_until_explicit_391(cct_boo
   }
   if (0) goto __cct_label_102;
   __cct_label_102: ;
-  cct_boot_rit_parser_consume_331(parser, cct_boot_ord_TokenKind__TK_EXPLICIT, cct_boot_str_309);
-  cct_boot_rit_parser_consume_331(parser, cct_boot_ord_TokenKind__TK_RITUALE, cct_boot_str_310);
+  cct_boot_rit_parser_consume_338(parser, cct_boot_ord_TokenKind__TK_EXPLICIT, cct_boot_str_309);
+  cct_boot_rit_parser_consume_338(parser, cct_boot_ord_TokenKind__TK_RITUALE, cct_boot_str_310);
   return block;
 }
 
-cct_boot_sig_AstNode* cct_boot_rit_parse_rituale_signature_only_392(cct_boot_sig_ParserState* parser, char* name, long long line, long long column)
+cct_boot_sig_AstNode* cct_boot_rit_parse_rituale_signature_only_399(cct_boot_sig_ParserState* parser, char* name, long long line, long long column)
 {
-  cct_boot_sig_AstNode* rituale = cct_boot_rit_ast_make_rituale_decl_267(name, line, column);
-  if (cct_boot_rit_parser_check_326(parser, cct_boot_ord_TokenKind__TK_GENUS))
+  cct_boot_sig_AstNode* rituale = cct_boot_rit_ast_make_rituale_decl_274(name, line, column);
+  if (cct_boot_rit_parser_check_333(parser, cct_boot_ord_TokenKind__TK_GENUS))
   {
-    cct_boot_rit_parser_error_at_current_329(parser, cct_boot_str_311);
-    cct_boot_rit_parse_optional_type_params_388(parser, rituale, 0);
+    cct_boot_rit_parser_error_at_current_336(parser, cct_boot_str_311);
+    cct_boot_rit_parse_optional_type_params_395(parser, rituale, 0);
   }
-  cct_boot_rit_parser_consume_331(parser, cct_boot_ord_TokenKind__TK_LPAREN, cct_boot_str_312);
-  cct_boot_rit_parse_param_list_389(parser, rituale);
-  cct_boot_rit_parser_consume_331(parser, cct_boot_ord_TokenKind__TK_RPAREN, cct_boot_str_313);
-  if (cct_boot_rit_parser_match_327(parser, cct_boot_ord_TokenKind__TK_REDDE))
+  cct_boot_rit_parser_consume_338(parser, cct_boot_ord_TokenKind__TK_LPAREN, cct_boot_str_312);
+  cct_boot_rit_parse_param_list_396(parser, rituale);
+  cct_boot_rit_parser_consume_338(parser, cct_boot_ord_TokenKind__TK_RPAREN, cct_boot_str_313);
+  if (cct_boot_rit_parser_match_334(parser, cct_boot_ord_TokenKind__TK_REDDE))
   {
-    (*rituale).return_type = cct_boot_rit_parse_type_385(parser);
+    (*rituale).return_type = cct_boot_rit_parse_type_392(parser);
     (*rituale).has_return_type = 1;
   }
-  cct_boot_rit_parser_match_327(parser, cct_boot_ord_TokenKind__TK_SEMICOLON);
+  cct_boot_rit_parser_match_334(parser, cct_boot_ord_TokenKind__TK_SEMICOLON);
   return rituale;
 }
 
-cct_boot_sig_AstNode* cct_boot_rit_parse_rituale_declaration_393(cct_boot_sig_ParserState* parser)
+cct_boot_sig_AstNode* cct_boot_rit_parse_rituale_declaration_400(cct_boot_sig_ParserState* parser)
 {
   long long line = (*parser).current.line;
   long long column = (*parser).current.column;
-  cct_boot_rit_parser_consume_331(parser, cct_boot_ord_TokenKind__TK_RITUALE, cct_boot_str_314);
-  if (!cct_boot_rit_parser_check_326(parser, cct_boot_ord_TokenKind__TK_IDENTIFIER))
+  cct_boot_rit_parser_consume_338(parser, cct_boot_ord_TokenKind__TK_RITUALE, cct_boot_str_314);
+  if (!cct_boot_rit_parser_check_333(parser, cct_boot_ord_TokenKind__TK_IDENTIFIER))
   {
-    cct_boot_rit_parser_error_at_current_329(parser, cct_boot_str_315);
-    return cct_boot_rit_ast_make_rituale_266(cct_boot_str_222, cct_boot_rit_ast_make_type_233(cct_boot_str_60, line, column), cct_boot_rit_ast_make_block_258(line, column), line, column);
+    cct_boot_rit_parser_error_at_current_336(parser, cct_boot_str_315);
+    return cct_boot_rit_ast_make_rituale_273(cct_boot_str_222, cct_boot_rit_ast_make_type_240(cct_boot_str_60, line, column), cct_boot_rit_ast_make_block_265(line, column), line, column);
   }
-  cct_boot_rit_parser_advance_325(parser);
-  cct_boot_sig_AstNode* rituale = cct_boot_rit_ast_make_rituale_decl_267((*parser).previous.lexeme, line, column);
-  cct_boot_rit_parse_optional_type_params_388(parser, rituale, 1);
-  cct_boot_rit_parser_consume_331(parser, cct_boot_ord_TokenKind__TK_LPAREN, cct_boot_str_312);
-  cct_boot_rit_parse_param_list_389(parser, rituale);
-  cct_boot_rit_parser_consume_331(parser, cct_boot_ord_TokenKind__TK_RPAREN, cct_boot_str_313);
-  if (cct_boot_rit_parser_match_327(parser, cct_boot_ord_TokenKind__TK_REDDE))
+  cct_boot_rit_parser_advance_332(parser);
+  cct_boot_sig_AstNode* rituale = cct_boot_rit_ast_make_rituale_decl_274((*parser).previous.lexeme, line, column);
+  cct_boot_rit_parse_optional_type_params_395(parser, rituale, 1);
+  cct_boot_rit_parser_consume_338(parser, cct_boot_ord_TokenKind__TK_LPAREN, cct_boot_str_312);
+  cct_boot_rit_parse_param_list_396(parser, rituale);
+  cct_boot_rit_parser_consume_338(parser, cct_boot_ord_TokenKind__TK_RPAREN, cct_boot_str_313);
+  if (cct_boot_rit_parser_match_334(parser, cct_boot_ord_TokenKind__TK_REDDE))
   {
-    (*rituale).return_type = cct_boot_rit_parse_type_385(parser);
+    (*rituale).return_type = cct_boot_rit_parse_type_392(parser);
     (*rituale).has_return_type = 1;
   }
-  if (cct_boot_rit_parser_match_327(parser, cct_boot_ord_TokenKind__TK_SEMICOLON))
+  if (cct_boot_rit_parser_match_334(parser, cct_boot_ord_TokenKind__TK_SEMICOLON))
   {
     return rituale;
   }
-  if (cct_boot_rit_parser_check_326(parser, cct_boot_ord_TokenKind__TK_LBRACE))
+  if (cct_boot_rit_parser_check_333(parser, cct_boot_ord_TokenKind__TK_LBRACE))
   {
-    (*rituale).body = cct_boot_rit_parse_block_362(parser);
+    (*rituale).body = cct_boot_rit_parse_block_369(parser);
   }
   else
   {
-    (*rituale).body = cct_boot_rit_parse_rituale_body_until_explicit_391(parser);
+    (*rituale).body = cct_boot_rit_parse_rituale_body_until_explicit_398(parser);
   }
   (*rituale).has_body = 1;
   return rituale;
 }
 
-cct_boot_sig_AstNode* cct_boot_rit_parse_sigillum_declaration_394(cct_boot_sig_ParserState* parser)
+cct_boot_sig_AstNode* cct_boot_rit_parse_sigillum_declaration_401(cct_boot_sig_ParserState* parser)
 {
   long long line = (*parser).current.line;
   long long column = (*parser).current.column;
-  cct_boot_rit_parser_consume_331(parser, cct_boot_ord_TokenKind__TK_SIGILLUM, cct_boot_str_316);
-  if (!cct_boot_rit_parser_check_326(parser, cct_boot_ord_TokenKind__TK_IDENTIFIER))
+  cct_boot_rit_parser_consume_338(parser, cct_boot_ord_TokenKind__TK_SIGILLUM, cct_boot_str_316);
+  if (!cct_boot_rit_parser_check_333(parser, cct_boot_ord_TokenKind__TK_IDENTIFIER))
   {
-    cct_boot_rit_parser_error_at_current_329(parser, cct_boot_str_317);
-    return cct_boot_rit_ast_make_sigillum_268(cct_boot_str_222, line, column);
+    cct_boot_rit_parser_error_at_current_336(parser, cct_boot_str_317);
+    return cct_boot_rit_ast_make_sigillum_275(cct_boot_str_222, line, column);
   }
-  cct_boot_rit_parser_advance_325(parser);
-  cct_boot_sig_AstNode* sig = cct_boot_rit_ast_make_sigillum_268((*parser).previous.lexeme, line, column);
-  cct_boot_rit_parse_optional_type_params_388(parser, sig, 0);
-  while ((!cct_boot_rit_parser_check_326(parser, cct_boot_ord_TokenKind__TK_EOF)) && (!cct_boot_rit_parser_check_326(parser, cct_boot_ord_TokenKind__TK_FIN)))
+  cct_boot_rit_parser_advance_332(parser);
+  cct_boot_sig_AstNode* sig = cct_boot_rit_ast_make_sigillum_275((*parser).previous.lexeme, line, column);
+  cct_boot_rit_parse_optional_type_params_395(parser, sig, 0);
+  while ((!cct_boot_rit_parser_check_333(parser, cct_boot_ord_TokenKind__TK_EOF)) && (!cct_boot_rit_parser_check_333(parser, cct_boot_ord_TokenKind__TK_FIN)))
   {
     {
       long long field_line = (*parser).current.line;
       long long field_column = (*parser).current.column;
-      if (!cct_boot_rit_parser_check_326(parser, cct_boot_ord_TokenKind__TK_IDENTIFIER))
+      if (!cct_boot_rit_parser_check_333(parser, cct_boot_ord_TokenKind__TK_IDENTIFIER))
       {
-        cct_boot_rit_parser_error_at_current_329(parser, cct_boot_str_318);
+        cct_boot_rit_parser_error_at_current_336(parser, cct_boot_str_318);
         return sig;
       }
-      cct_boot_rit_parser_advance_325(parser);
+      cct_boot_rit_parser_advance_332(parser);
       char* field_name = cct_boot_rit_verbum_dup_40((*parser).previous.lexeme);
-      cct_boot_rit_parser_consume_331(parser, cct_boot_ord_TokenKind__TK_COLON, cct_boot_str_319);
-      cct_boot_sig_AstNode* field = cct_boot_rit_ast_make_field_263(field_name, cct_boot_rit_parse_type_385(parser), field_line, field_column);
+      cct_boot_rit_parser_consume_338(parser, cct_boot_ord_TokenKind__TK_COLON, cct_boot_str_319);
+      cct_boot_sig_AstNode* field = cct_boot_rit_ast_make_field_270(field_name, cct_boot_rit_parse_type_392(parser), field_line, field_column);
       free((void*)(field_name));
-      cct_boot_rit_ast_append_field_226(sig, field);
-      cct_boot_rit_parser_match_327(parser, cct_boot_ord_TokenKind__TK_SEMICOLON);
+      cct_boot_rit_ast_append_field_233(sig, field);
+      cct_boot_rit_parser_match_334(parser, cct_boot_ord_TokenKind__TK_SEMICOLON);
     }
     if (0) goto __cct_label_105;
     __cct_label_105: ;
   }
   if (0) goto __cct_label_104;
   __cct_label_104: ;
-  cct_boot_rit_parser_consume_331(parser, cct_boot_ord_TokenKind__TK_FIN, cct_boot_str_320);
-  cct_boot_rit_parser_consume_331(parser, cct_boot_ord_TokenKind__TK_SIGILLUM, cct_boot_str_321);
+  cct_boot_rit_parser_consume_338(parser, cct_boot_ord_TokenKind__TK_FIN, cct_boot_str_320);
+  cct_boot_rit_parser_consume_338(parser, cct_boot_ord_TokenKind__TK_SIGILLUM, cct_boot_str_321);
   return sig;
 }
 
-cct_boot_sig_AstNode* cct_boot_rit_parse_ordo_payload_field_395(cct_boot_sig_ParserState* parser)
+cct_boot_sig_AstNode* cct_boot_rit_parse_ordo_payload_field_402(cct_boot_sig_ParserState* parser)
 {
   long long line = (*parser).current.line;
   long long column = (*parser).current.column;
-  cct_boot_sig_AstNode* type_expr = cct_boot_rit_parse_type_385(parser);
-  if (!cct_boot_rit_parser_check_326(parser, cct_boot_ord_TokenKind__TK_IDENTIFIER))
+  cct_boot_sig_AstNode* type_expr = cct_boot_rit_parse_type_392(parser);
+  if (!cct_boot_rit_parser_check_333(parser, cct_boot_ord_TokenKind__TK_IDENTIFIER))
   {
-    cct_boot_rit_parser_error_at_current_329(parser, cct_boot_str_322);
-    return cct_boot_rit_ast_make_field_263(cct_boot_str_222, type_expr, line, column);
+    cct_boot_rit_parser_error_at_current_336(parser, cct_boot_str_322);
+    return cct_boot_rit_ast_make_field_270(cct_boot_str_222, type_expr, line, column);
   }
-  cct_boot_rit_parser_advance_325(parser);
+  cct_boot_rit_parser_advance_332(parser);
   char* field_name = cct_boot_rit_verbum_dup_40((*parser).previous.lexeme);
-  cct_boot_sig_AstNode* field = cct_boot_rit_ast_make_field_263(field_name, type_expr, line, column);
+  cct_boot_sig_AstNode* field = cct_boot_rit_ast_make_field_270(field_name, type_expr, line, column);
   free((void*)(field_name));
   return field;
 }
 
-cct_boot_sig_AstNode* cct_boot_rit_parse_ordo_declaration_396(cct_boot_sig_ParserState* parser)
+cct_boot_sig_AstNode* cct_boot_rit_parse_ordo_declaration_403(cct_boot_sig_ParserState* parser)
 {
   long long line = (*parser).current.line;
   long long column = (*parser).current.column;
-  cct_boot_rit_parser_consume_331(parser, cct_boot_ord_TokenKind__TK_ORDO, cct_boot_str_323);
-  if (!cct_boot_rit_parser_check_326(parser, cct_boot_ord_TokenKind__TK_IDENTIFIER))
+  cct_boot_rit_parser_consume_338(parser, cct_boot_ord_TokenKind__TK_ORDO, cct_boot_str_323);
+  if (!cct_boot_rit_parser_check_333(parser, cct_boot_ord_TokenKind__TK_IDENTIFIER))
   {
-    cct_boot_rit_parser_error_at_current_329(parser, cct_boot_str_324);
-    return cct_boot_rit_ast_make_ordo_269(cct_boot_str_222, line, column);
+    cct_boot_rit_parser_error_at_current_336(parser, cct_boot_str_324);
+    return cct_boot_rit_ast_make_ordo_276(cct_boot_str_222, line, column);
   }
-  cct_boot_rit_parser_advance_325(parser);
-  cct_boot_sig_AstNode* ord = cct_boot_rit_ast_make_ordo_269((*parser).previous.lexeme, line, column);
-  while ((!cct_boot_rit_parser_check_326(parser, cct_boot_ord_TokenKind__TK_EOF)) && (!cct_boot_rit_parser_check_326(parser, cct_boot_ord_TokenKind__TK_FIN)))
+  cct_boot_rit_parser_advance_332(parser);
+  cct_boot_sig_AstNode* ord = cct_boot_rit_ast_make_ordo_276((*parser).previous.lexeme, line, column);
+  while ((!cct_boot_rit_parser_check_333(parser, cct_boot_ord_TokenKind__TK_EOF)) && (!cct_boot_rit_parser_check_333(parser, cct_boot_ord_TokenKind__TK_FIN)))
   {
     {
       long long item_line = (*parser).current.line;
       long long item_column = (*parser).current.column;
-      if (!cct_boot_rit_parser_check_326(parser, cct_boot_ord_TokenKind__TK_IDENTIFIER))
+      if (!cct_boot_rit_parser_check_333(parser, cct_boot_ord_TokenKind__TK_IDENTIFIER))
       {
-        cct_boot_rit_parser_error_at_current_329(parser, cct_boot_str_325);
+        cct_boot_rit_parser_error_at_current_336(parser, cct_boot_str_325);
         return ord;
       }
-      cct_boot_rit_parser_advance_325(parser);
+      cct_boot_rit_parser_advance_332(parser);
       char* item_name = cct_boot_rit_verbum_dup_40((*parser).previous.lexeme);
-      cct_boot_sig_AstNode* item = cct_boot_rit_ast_make_enum_item_no_value_265(item_name, item_line, item_column);
-      if (cct_boot_rit_parser_match_327(parser, cct_boot_ord_TokenKind__TK_LPAREN))
+      cct_boot_sig_AstNode* item = cct_boot_rit_ast_make_enum_item_no_value_272(item_name, item_line, item_column);
+      if (cct_boot_rit_parser_match_334(parser, cct_boot_ord_TokenKind__TK_LPAREN))
       {
-        if (!cct_boot_rit_parser_check_326(parser, cct_boot_ord_TokenKind__TK_RPAREN))
+        if (!cct_boot_rit_parser_check_333(parser, cct_boot_ord_TokenKind__TK_RPAREN))
         {
           int reading_fields = 1;
           while (reading_fields)
           {
             {
-              cct_boot_rit_ast_append_field_226(item, cct_boot_rit_parse_ordo_payload_field_395(parser));
-              if (!cct_boot_rit_parser_match_327(parser, cct_boot_ord_TokenKind__TK_COMMA))
+              cct_boot_rit_ast_append_field_233(item, cct_boot_rit_parse_ordo_payload_field_402(parser));
+              if (!cct_boot_rit_parser_match_334(parser, cct_boot_ord_TokenKind__TK_COMMA))
               {
                 reading_fields = 0;
               }
@@ -5546,62 +5553,62 @@ cct_boot_sig_AstNode* cct_boot_rit_parse_ordo_declaration_396(cct_boot_sig_Parse
           if (0) goto __cct_label_108;
           __cct_label_108: ;
         }
-        cct_boot_rit_parser_consume_331(parser, cct_boot_ord_TokenKind__TK_RPAREN, cct_boot_str_326);
+        cct_boot_rit_parser_consume_338(parser, cct_boot_ord_TokenKind__TK_RPAREN, cct_boot_str_326);
       }
-      if (cct_boot_rit_parser_match_327(parser, cct_boot_ord_TokenKind__TK_EQ))
+      if (cct_boot_rit_parser_match_334(parser, cct_boot_ord_TokenKind__TK_EQ))
       {
-        if (cct_boot_rit_ast_node_list_len_209((*item).fields) > 0)
+        if (cct_boot_rit_ast_node_list_len_216((*item).fields) > 0)
         {
-          cct_boot_rit_parser_error_at_previous_330(parser, cct_boot_str_327);
+          cct_boot_rit_parser_error_at_previous_337(parser, cct_boot_str_327);
           free((void*)(item_name));
-          cct_boot_rit_ast_node_free_301(item);
+          cct_boot_rit_ast_node_free_308(item);
           return ord;
         }
-        if (!cct_boot_rit_parser_check_326(parser, cct_boot_ord_TokenKind__TK_INTEGER))
+        if (!cct_boot_rit_parser_check_333(parser, cct_boot_ord_TokenKind__TK_INTEGER))
         {
-          cct_boot_rit_parser_error_at_current_329(parser, cct_boot_str_328);
+          cct_boot_rit_parser_error_at_current_336(parser, cct_boot_str_328);
           free((void*)(item_name));
-          cct_boot_rit_ast_node_free_301(item);
+          cct_boot_rit_ast_node_free_308(item);
           return ord;
         }
-        cct_boot_rit_parser_advance_325(parser);
-        (*item).right = cct_boot_rit_ast_make_literal_int_237((*parser).previous.lexeme, (*parser).previous.line, (*parser).previous.column);
+        cct_boot_rit_parser_advance_332(parser);
+        (*item).right = cct_boot_rit_ast_make_literal_int_244((*parser).previous.lexeme, (*parser).previous.line, (*parser).previous.column);
         (*item).has_right = 1;
       }
-      cct_boot_rit_ast_append_item_227(ord, item);
+      cct_boot_rit_ast_append_item_234(ord, item);
       free((void*)(item_name));
-      cct_boot_rit_parser_match_327(parser, cct_boot_ord_TokenKind__TK_COMMA);
-      cct_boot_rit_parser_match_327(parser, cct_boot_ord_TokenKind__TK_SEMICOLON);
+      cct_boot_rit_parser_match_334(parser, cct_boot_ord_TokenKind__TK_COMMA);
+      cct_boot_rit_parser_match_334(parser, cct_boot_ord_TokenKind__TK_SEMICOLON);
     }
     if (0) goto __cct_label_107;
     __cct_label_107: ;
   }
   if (0) goto __cct_label_106;
   __cct_label_106: ;
-  cct_boot_rit_parser_consume_331(parser, cct_boot_ord_TokenKind__TK_FIN, cct_boot_str_329);
-  cct_boot_rit_parser_consume_331(parser, cct_boot_ord_TokenKind__TK_ORDO, cct_boot_str_330);
+  cct_boot_rit_parser_consume_338(parser, cct_boot_ord_TokenKind__TK_FIN, cct_boot_str_329);
+  cct_boot_rit_parser_consume_338(parser, cct_boot_ord_TokenKind__TK_ORDO, cct_boot_str_330);
   return ord;
 }
 
-cct_boot_sig_AstNode* cct_boot_rit_parse_codex_declaration_397(cct_boot_sig_ParserState* parser)
+cct_boot_sig_AstNode* cct_boot_rit_parse_codex_declaration_404(cct_boot_sig_ParserState* parser)
 {
   long long line = (*parser).current.line;
   long long column = (*parser).current.column;
-  cct_boot_rit_parser_consume_331(parser, cct_boot_ord_TokenKind__TK_CODEX, cct_boot_str_331);
-  if (!cct_boot_rit_parser_check_326(parser, cct_boot_ord_TokenKind__TK_IDENTIFIER))
+  cct_boot_rit_parser_consume_338(parser, cct_boot_ord_TokenKind__TK_CODEX, cct_boot_str_331);
+  if (!cct_boot_rit_parser_check_333(parser, cct_boot_ord_TokenKind__TK_IDENTIFIER))
   {
-    cct_boot_rit_parser_error_at_current_329(parser, cct_boot_str_332);
-    return cct_boot_rit_ast_make_codex_270(cct_boot_str_222, line, column);
+    cct_boot_rit_parser_error_at_current_336(parser, cct_boot_str_332);
+    return cct_boot_rit_ast_make_codex_277(cct_boot_str_222, line, column);
   }
-  cct_boot_rit_parser_advance_325(parser);
-  cct_boot_sig_AstNode* codex = cct_boot_rit_ast_make_codex_270((*parser).previous.lexeme, line, column);
-  while ((!cct_boot_rit_parser_check_326(parser, cct_boot_ord_TokenKind__TK_EOF)) && (!cct_boot_rit_parser_check_326(parser, cct_boot_ord_TokenKind__TK_FIN)))
+  cct_boot_rit_parser_advance_332(parser);
+  cct_boot_sig_AstNode* codex = cct_boot_rit_ast_make_codex_277((*parser).previous.lexeme, line, column);
+  while ((!cct_boot_rit_parser_check_333(parser, cct_boot_ord_TokenKind__TK_EOF)) && (!cct_boot_rit_parser_check_333(parser, cct_boot_ord_TokenKind__TK_FIN)))
   {
     {
-      cct_boot_rit_ast_append_declaration_229(codex, cct_boot_rit_parse_declaration_399(parser));
+      cct_boot_rit_ast_append_declaration_236(codex, cct_boot_rit_parse_declaration_406(parser));
       if ((*parser).panic_mode)
       {
-        cct_boot_rit_parser_synchronize_declaration_335(parser);
+        cct_boot_rit_parser_synchronize_declaration_342(parser);
       }
     }
     if (0) goto __cct_label_111;
@@ -5609,44 +5616,44 @@ cct_boot_sig_AstNode* cct_boot_rit_parse_codex_declaration_397(cct_boot_sig_Pars
   }
   if (0) goto __cct_label_110;
   __cct_label_110: ;
-  cct_boot_rit_parser_consume_331(parser, cct_boot_ord_TokenKind__TK_FIN, cct_boot_str_333);
-  cct_boot_rit_parser_consume_331(parser, cct_boot_ord_TokenKind__TK_CODEX, cct_boot_str_334);
+  cct_boot_rit_parser_consume_338(parser, cct_boot_ord_TokenKind__TK_FIN, cct_boot_str_333);
+  cct_boot_rit_parser_consume_338(parser, cct_boot_ord_TokenKind__TK_CODEX, cct_boot_str_334);
   return codex;
 }
 
-cct_boot_sig_AstNode* cct_boot_rit_parse_pactum_declaration_398(cct_boot_sig_ParserState* parser)
+cct_boot_sig_AstNode* cct_boot_rit_parse_pactum_declaration_405(cct_boot_sig_ParserState* parser)
 {
   long long line = (*parser).current.line;
   long long column = (*parser).current.column;
-  cct_boot_rit_parser_consume_331(parser, cct_boot_ord_TokenKind__TK_PACTUM, cct_boot_str_335);
-  if (!cct_boot_rit_parser_check_326(parser, cct_boot_ord_TokenKind__TK_IDENTIFIER))
+  cct_boot_rit_parser_consume_338(parser, cct_boot_ord_TokenKind__TK_PACTUM, cct_boot_str_335);
+  if (!cct_boot_rit_parser_check_333(parser, cct_boot_ord_TokenKind__TK_IDENTIFIER))
   {
-    cct_boot_rit_parser_error_at_current_329(parser, cct_boot_str_336);
-    return cct_boot_rit_ast_make_pactum_271(cct_boot_str_222, line, column);
+    cct_boot_rit_parser_error_at_current_336(parser, cct_boot_str_336);
+    return cct_boot_rit_ast_make_pactum_278(cct_boot_str_222, line, column);
   }
-  cct_boot_rit_parser_advance_325(parser);
-  cct_boot_sig_AstNode* pactum = cct_boot_rit_ast_make_pactum_271((*parser).previous.lexeme, line, column);
-  while ((!cct_boot_rit_parser_check_326(parser, cct_boot_ord_TokenKind__TK_EOF)) && (!cct_boot_rit_parser_check_326(parser, cct_boot_ord_TokenKind__TK_FIN)))
+  cct_boot_rit_parser_advance_332(parser);
+  cct_boot_sig_AstNode* pactum = cct_boot_rit_ast_make_pactum_278((*parser).previous.lexeme, line, column);
+  while ((!cct_boot_rit_parser_check_333(parser, cct_boot_ord_TokenKind__TK_EOF)) && (!cct_boot_rit_parser_check_333(parser, cct_boot_ord_TokenKind__TK_FIN)))
   {
     {
-      if (!cct_boot_rit_parser_match_327(parser, cct_boot_ord_TokenKind__TK_RITUALE))
+      if (!cct_boot_rit_parser_match_334(parser, cct_boot_ord_TokenKind__TK_RITUALE))
       {
-        cct_boot_rit_parser_error_at_current_329(parser, cct_boot_str_337);
-        cct_boot_rit_parser_synchronize_declaration_335(parser);
+        cct_boot_rit_parser_error_at_current_336(parser, cct_boot_str_337);
+        cct_boot_rit_parser_synchronize_declaration_342(parser);
       }
       else
       {
         long long sig_line = (*parser).previous.line;
         long long sig_column = (*parser).previous.column;
-        if (!cct_boot_rit_parser_check_326(parser, cct_boot_ord_TokenKind__TK_IDENTIFIER))
+        if (!cct_boot_rit_parser_check_333(parser, cct_boot_ord_TokenKind__TK_IDENTIFIER))
         {
-          cct_boot_rit_parser_error_at_current_329(parser, cct_boot_str_338);
-          cct_boot_rit_parser_synchronize_declaration_335(parser);
+          cct_boot_rit_parser_error_at_current_336(parser, cct_boot_str_338);
+          cct_boot_rit_parser_synchronize_declaration_342(parser);
         }
         else
         {
-          cct_boot_rit_parser_advance_325(parser);
-          cct_boot_rit_ast_append_signature_230(pactum, cct_boot_rit_parse_rituale_signature_only_392(parser, (*parser).previous.lexeme, sig_line, sig_column));
+          cct_boot_rit_parser_advance_332(parser);
+          cct_boot_rit_ast_append_signature_237(pactum, cct_boot_rit_parse_rituale_signature_only_399(parser, (*parser).previous.lexeme, sig_line, sig_column));
         }
       }
     }
@@ -5655,90 +5662,90 @@ cct_boot_sig_AstNode* cct_boot_rit_parse_pactum_declaration_398(cct_boot_sig_Par
   }
   if (0) goto __cct_label_112;
   __cct_label_112: ;
-  cct_boot_rit_parser_consume_331(parser, cct_boot_ord_TokenKind__TK_FIN, cct_boot_str_339);
-  cct_boot_rit_parser_consume_331(parser, cct_boot_ord_TokenKind__TK_PACTUM, cct_boot_str_340);
+  cct_boot_rit_parser_consume_338(parser, cct_boot_ord_TokenKind__TK_FIN, cct_boot_str_339);
+  cct_boot_rit_parser_consume_338(parser, cct_boot_ord_TokenKind__TK_PACTUM, cct_boot_str_340);
   return pactum;
 }
 
-cct_boot_sig_AstNode* cct_boot_rit_parse_declaration_399(cct_boot_sig_ParserState* parser)
+cct_boot_sig_AstNode* cct_boot_rit_parse_declaration_406(cct_boot_sig_ParserState* parser)
 {
-  if (cct_boot_rit_parser_check_326(parser, cct_boot_ord_TokenKind__TK_ADVOCARE))
+  if (cct_boot_rit_parser_check_333(parser, cct_boot_ord_TokenKind__TK_ADVOCARE))
   {
-    return cct_boot_rit_parse_import_declaration_390(parser);
+    return cct_boot_rit_parse_import_declaration_397(parser);
   }
-  if (cct_boot_rit_parser_check_326(parser, cct_boot_ord_TokenKind__TK_RITUALE))
+  if (cct_boot_rit_parser_check_333(parser, cct_boot_ord_TokenKind__TK_RITUALE))
   {
-    return cct_boot_rit_parse_rituale_declaration_393(parser);
+    return cct_boot_rit_parse_rituale_declaration_400(parser);
   }
-  if (cct_boot_rit_parser_check_326(parser, cct_boot_ord_TokenKind__TK_SIGILLUM))
+  if (cct_boot_rit_parser_check_333(parser, cct_boot_ord_TokenKind__TK_SIGILLUM))
   {
-    return cct_boot_rit_parse_sigillum_declaration_394(parser);
+    return cct_boot_rit_parse_sigillum_declaration_401(parser);
   }
-  if (cct_boot_rit_parser_check_326(parser, cct_boot_ord_TokenKind__TK_ORDO))
+  if (cct_boot_rit_parser_check_333(parser, cct_boot_ord_TokenKind__TK_ORDO))
   {
-    return cct_boot_rit_parse_ordo_declaration_396(parser);
+    return cct_boot_rit_parse_ordo_declaration_403(parser);
   }
-  if (cct_boot_rit_parser_check_326(parser, cct_boot_ord_TokenKind__TK_CODEX))
+  if (cct_boot_rit_parser_check_333(parser, cct_boot_ord_TokenKind__TK_CODEX))
   {
-    return cct_boot_rit_parse_codex_declaration_397(parser);
+    return cct_boot_rit_parse_codex_declaration_404(parser);
   }
-  if (cct_boot_rit_parser_check_326(parser, cct_boot_ord_TokenKind__TK_PACTUM))
+  if (cct_boot_rit_parser_check_333(parser, cct_boot_ord_TokenKind__TK_PACTUM))
   {
-    return cct_boot_rit_parse_pactum_declaration_398(parser);
+    return cct_boot_rit_parse_pactum_declaration_405(parser);
   }
-  cct_boot_rit_parser_error_at_current_329(parser, cct_boot_str_341);
-  cct_boot_rit_parser_advance_325(parser);
-  return cct_boot_rit_ast_make_import_232(cct_boot_str_222, (*parser).previous.line, (*parser).previous.column);
+  cct_boot_rit_parser_error_at_current_336(parser, cct_boot_str_341);
+  cct_boot_rit_parser_advance_332(parser);
+  return cct_boot_rit_ast_make_import_239(cct_boot_str_222, (*parser).previous.line, (*parser).previous.column);
 }
 
-cct_boot_sig_AstProgram* cct_boot_rit_parse_program_400(cct_boot_sig_ParserState* parser)
+cct_boot_sig_AstProgram* cct_boot_rit_parse_program_407(cct_boot_sig_ParserState* parser)
 {
-  cct_boot_sig_AstProgram* program = cct_boot_rit_ast_program_new_212();
-  cct_boot_rit_parser_consume_331(parser, cct_boot_ord_TokenKind__TK_INCIPIT, cct_boot_str_342);
-  if ((!cct_boot_rit_parser_check_326(parser, cct_boot_ord_TokenKind__TK_IDENTIFIER)) || (cct_boot_rit_compare_38((*parser).current.lexeme, cct_boot_str_343) != 0))
+  cct_boot_sig_AstProgram* program = cct_boot_rit_ast_program_new_219();
+  cct_boot_rit_parser_consume_338(parser, cct_boot_ord_TokenKind__TK_INCIPIT, cct_boot_str_342);
+  if ((!cct_boot_rit_parser_check_333(parser, cct_boot_ord_TokenKind__TK_IDENTIFIER)) || (cct_boot_rit_compare_38((*parser).current.lexeme, cct_boot_str_343) != 0))
   {
-    cct_boot_rit_parser_error_at_current_329(parser, cct_boot_str_344);
+    cct_boot_rit_parser_error_at_current_336(parser, cct_boot_str_344);
   }
   else
   {
-    cct_boot_rit_parser_advance_325(parser);
+    cct_boot_rit_parser_advance_332(parser);
   }
-  if (cct_boot_rit_parser_check_326(parser, cct_boot_ord_TokenKind__TK_STRING))
+  if (cct_boot_rit_parser_check_333(parser, cct_boot_ord_TokenKind__TK_STRING))
   {
-    cct_boot_rit_parser_advance_325(parser);
+    cct_boot_rit_parser_advance_332(parser);
     if (cct_boot_rit_len_30((*parser).previous.lexeme) >= 2)
     {
-      cct_boot_rit_ast_program_set_name_218(program, cct_boot_rit_substring_39((*parser).previous.lexeme, 1, (cct_boot_rit_len_30((*parser).previous.lexeme) - 1)));
+      cct_boot_rit_ast_program_set_name_225(program, cct_boot_rit_substring_39((*parser).previous.lexeme, 1, (cct_boot_rit_len_30((*parser).previous.lexeme) - 1)));
     }
     else
     {
-      cct_boot_rit_ast_program_set_name_218(program, cct_boot_str_345);
+      cct_boot_rit_ast_program_set_name_225(program, cct_boot_str_345);
     }
   }
   else
   {
-    cct_boot_rit_parser_error_at_current_329(parser, cct_boot_str_346);
-    cct_boot_rit_ast_program_set_name_218(program, cct_boot_str_222);
+    cct_boot_rit_parser_error_at_current_336(parser, cct_boot_str_346);
+    cct_boot_rit_ast_program_set_name_225(program, cct_boot_str_222);
   }
-  while (!cct_boot_rit_parser_check_326(parser, cct_boot_ord_TokenKind__TK_EOF))
+  while (!cct_boot_rit_parser_check_333(parser, cct_boot_ord_TokenKind__TK_EOF))
   {
     {
-      if (cct_boot_rit_parser_match_327(parser, cct_boot_ord_TokenKind__TK_EXPLICIT))
+      if (cct_boot_rit_parser_match_334(parser, cct_boot_ord_TokenKind__TK_EXPLICIT))
       {
-        if ((!cct_boot_rit_parser_check_326(parser, cct_boot_ord_TokenKind__TK_IDENTIFIER)) || (cct_boot_rit_compare_38((*parser).current.lexeme, cct_boot_str_343) != 0))
+        if ((!cct_boot_rit_parser_check_333(parser, cct_boot_ord_TokenKind__TK_IDENTIFIER)) || (cct_boot_rit_compare_38((*parser).current.lexeme, cct_boot_str_343) != 0))
         {
-          cct_boot_rit_parser_error_at_current_329(parser, cct_boot_str_347);
+          cct_boot_rit_parser_error_at_current_336(parser, cct_boot_str_347);
         }
         else
         {
-          cct_boot_rit_parser_advance_325(parser);
+          cct_boot_rit_parser_advance_332(parser);
         }
         return program;
       }
-      cct_boot_rit_ast_program_append_decl_219(program, cct_boot_rit_parse_declaration_399(parser));
+      cct_boot_rit_ast_program_append_decl_226(program, cct_boot_rit_parse_declaration_406(parser));
       if ((*parser).panic_mode)
       {
-        cct_boot_rit_parser_synchronize_declaration_335(parser);
+        cct_boot_rit_parser_synchronize_declaration_342(parser);
       }
     }
     if (0) goto __cct_label_115;
@@ -5749,24 +5756,24 @@ cct_boot_sig_AstProgram* cct_boot_rit_parse_program_400(cct_boot_sig_ParserState
   return program;
 }
 
-cct_boot_sig_AstProgram* cct_boot_rit_parser_parse_program_source_401(char* source, char* filename)
+cct_boot_sig_AstProgram* cct_boot_rit_parser_parse_program_source_408(char* source, char* filename)
 {
-  cct_boot_sig_LexerState lex = cct_boot_rit_lexer_init_304(source, filename);
-  cct_boot_sig_ParserState parser = cct_boot_rit_parser_init_323((&lex), filename);
-  cct_boot_sig_AstProgram* program = cct_boot_rit_parse_program_400((&parser));
-  cct_boot_rit_parser_dispose_324((&parser));
+  cct_boot_sig_LexerState lex = cct_boot_rit_lexer_init_311(source, filename);
+  cct_boot_sig_ParserState parser = cct_boot_rit_parser_init_330((&lex), filename);
+  cct_boot_sig_AstProgram* program = cct_boot_rit_parse_program_407((&parser));
+  cct_boot_rit_parser_dispose_331((&parser));
   return program;
 }
 
-char* cct_boot_rit_parser_dump_program_source_402(char* source, char* filename)
+char* cct_boot_rit_parser_dump_program_source_409(char* source, char* filename)
 {
-  cct_boot_sig_AstProgram* program = cct_boot_rit_parser_parse_program_source_401(source, filename);
-  char* dump = cct_boot_rit_ast_dump_program_299(program);
-  cct_boot_rit_ast_program_free_302(program);
+  cct_boot_sig_AstProgram* program = cct_boot_rit_parser_parse_program_source_408(source, filename);
+  char* dump = cct_boot_rit_ast_dump_program_306(program);
+  cct_boot_rit_ast_program_free_309(program);
   return dump;
 }
 
-long long cct_boot_rit_main_403(void)
+long long cct_boot_rit_main_410(void)
 {
   if (cct_boot_rit_argc_1() < 2)
   {
@@ -5775,12 +5782,12 @@ long long cct_boot_rit_main_403(void)
   }
   char* filename = cct_boot_rit_arg_2(1);
   char* source = cct_rt_fs_read_all(filename);
-  cct_boot_rit_print_3(cct_boot_rit_parser_dump_program_source_402(source, filename));
+  cct_boot_rit_print_3(cct_boot_rit_parser_dump_program_source_409(source, filename));
   return 0;
 }
 
 int main(int argc, char **argv)
 {
   cct_rt_args_init(argc, argv);
-  return (int)cct_boot_rit_main_403();
+  return (int)cct_boot_rit_main_410();
 }

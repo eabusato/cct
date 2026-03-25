@@ -1,0 +1,30 @@
+INCIPIT grimoire "verbum_replace_trim_33a"
+
+ADVOCARE "cct/io.cct"
+ADVOCARE "cct/verbum.cct"
+
+RITUALE main() REDDE REX
+  EVOCA VERBUM text AD "  Ola Mundo Mundo  "
+  EVOCA VERBUM trimmed AD CONIURA trim(text)
+  SI CONIURA compare(trimmed, "Ola Mundo Mundo") != 0
+    CONIURA eprint("trim falhou\n")
+    REDDE 1
+  FIN SI
+
+  EVOCA VERBUM cleaned AD CONIURA verbum_trim_chars("---slug---", "-")
+  SI CONIURA compare(cleaned, "slug") != 0
+    CONIURA eprint("trim_chars falhou\n")
+    REDDE 1
+  FIN SI
+
+  EVOCA VERBUM replaced AD CONIURA replace("abc abc abc", "abc", "x")
+  EVOCA VERBUM replaced_all AD CONIURA replace_all("abc abc abc", "abc", "x")
+  SI CONIURA compare(replaced, "x abc abc") != 0 VEL CONIURA compare(replaced_all, "x x x") != 0
+    CONIURA eprint("replace falhou\n")
+    REDDE 1
+  FIN SI
+
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

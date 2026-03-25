@@ -1462,559 +1462,566 @@ void* cct_boot_rit_split_char_71(char* s, char c);
 char* cct_boot_rit_join_72(void* parts, char* sep);
 void* cct_boot_rit_lines_73(char* s);
 void* cct_boot_rit_words_74(char* s);
-void* cct_boot_rit_builder_init_75(void);
-void cct_boot_rit_builder_append_76(void* b, char* s);
-void cct_boot_rit_builder_append_char_77(void* b, char c);
-void cct_boot_rit_builder_append_int_78(void* b, long long v);
-void cct_boot_rit_builder_append_bool_79(void* b, int v);
-void cct_boot_rit_builder_append_real_80(void* b, double v);
-char* cct_boot_rit_builder_to_verbum_81(void* b);
-long long cct_boot_rit_builder_len_82(void* b);
-void cct_boot_rit_builder_clear_83(void* b);
-void cct_boot_rit_builder_free_84(void* b);
-void* cct_boot_rit_writer_init_85(void);
-void cct_boot_rit_writer_indent_86(void* w);
-void cct_boot_rit_writer_dedent_87(void* w);
-void cct_boot_rit_writer_write_88(void* w, char* s);
-void cct_boot_rit_writer_writeln_89(void* w, char* s);
-void cct_boot_rit_writer_write_int_90(void* w, long long v);
-void cct_boot_rit_writer_writeln_int_91(void* w, long long v);
-void cct_boot_rit_writer_write_bool_92(void* w, int v);
-char* cct_boot_rit_writer_to_verbum_93(void* w);
-void cct_boot_rit_writer_free_94(void* w);
-char* cct_boot_rit_stringify_int_95(long long n);
-char* cct_boot_rit_stringify_real_96(double x);
-char* cct_boot_rit_stringify_bool_97(int b);
-char* cct_boot_rit_stringify_hex_98(long long n);
-char* cct_boot_rit_format_pair_99(char* label, char* value);
-char* cct_boot_rit_format_1_100(char* tmpl, char* a);
-char* cct_boot_rit_format_2_101(char* tmpl, char* a, char* b);
-char* cct_boot_rit_format_3_102(char* tmpl, char* a, char* b, char* c);
-char* cct_boot_rit_format_4_103(char* tmpl, char* a, char* b, char* c, char* d);
-char* cct_boot_rit_repeat_char_104(char c, long long n);
-long long cct_boot_rit_parse_int_105(char* s);
-double cct_boot_rit_parse_real_106(char* s);
-int cct_boot_rit_parse_bool_107(char* s);
-void* cct_boot_rit_try_int_108(char* s);
-void* cct_boot_rit_try_real_109(char* s);
-void* cct_boot_rit_try_bool_110(char* s);
-long long cct_boot_rit_parse_int_hex_111(char* s);
-void* cct_boot_rit_try_int_hex_112(char* s);
-long long cct_boot_rit_parse_int_radix_113(char* s, long long radix);
-void* cct_boot_rit_try_int_radix_114(char* s, long long radix);
-void* cct_boot_rit_parse_lines_115(char* s);
-void* cct_boot_rit_parse_csv_line_116(char* s);
-void* cct_boot_rit_parse_csv_line_sep_117(char* s, char sep);
-int cct_boot_rit_is_int_118(char* s);
-int cct_boot_rit_is_real_119(char* s);
-void cct_boot_rit_diag_error_120(cct_boot_sig_SourceLocation* loc, char* msg);
-void cct_boot_rit_diag_warn_121(cct_boot_sig_SourceLocation* loc, char* msg);
-char* cct_boot_rit_read_all_122(char* path);
-void cct_boot_rit_write_all_123(char* path, char* content);
-void cct_boot_rit_append_all_124(char* path, char* content);
-void cct_boot_rit_mkdir_125(char* path);
-void cct_boot_rit_mkdir_all_126(char* path);
-void cct_boot_rit_delete_file_127(char* path);
-void cct_boot_rit_delete_dir_128(char* path);
-int cct_boot_rit_is_file_129(char* path);
-int cct_boot_rit_is_dir_130(char* path);
-int cct_boot_rit_exists_131(char* path);
-long long cct_boot_rit_size_132(char* path);
-void* cct_boot_rit_read_lines_133(char* path);
-long long cct_boot_rit_run_134(char* cmd);
-char* cct_boot_rit_run_capture_135(char* cmd);
-char* cct_boot_rit_run_capture_err_136(char* cmd);
-char* cct_boot_rit_run_with_input_137(char* cmd, char* input);
-long long cct_boot_rit_run_env_138(char* cmd, void* env_pairs);
-long long cct_boot_rit_run_timeout_139(char* cmd, long long timeout_ms);
-char* cct_boot_rit_getenv_140(char* name);
-int cct_boot_rit_has_env_141(char* name);
-char* cct_boot_rit_cwd_142(void);
-void* cct_boot_rit_db_open_143(char* path);
-void cct_boot_rit_db_close_144(void* db);
-void cct_boot_rit_db_exec_145(void* db, char* sql);
-char* cct_boot_rit_db_last_error_146(void* db);
-void* cct_boot_rit_db_query_147(void* db, char* sql);
-int cct_boot_rit_rows_next_148(void* rows);
-char* cct_boot_rit_rows_get_text_149(void* rows, long long col);
-long long cct_boot_rit_rows_get_int_150(void* rows, long long col);
-double cct_boot_rit_rows_get_real_151(void* rows, long long col);
-void cct_boot_rit_rows_close_152(void* rows);
-void* cct_boot_rit_db_prepare_153(void* db, char* sql);
-void cct_boot_rit_stmt_bind_text_154(void* stmt, long long idx, char* v);
-void cct_boot_rit_stmt_bind_int_155(void* stmt, long long idx, long long v);
-void cct_boot_rit_stmt_bind_real_156(void* stmt, long long idx, double v);
-int cct_boot_rit_stmt_step_157(void* stmt);
-void cct_boot_rit_stmt_reset_158(void* stmt);
-void cct_boot_rit_stmt_finalize_159(void* stmt);
-void cct_boot_rit_db_begin_160(void* db);
-void cct_boot_rit_db_commit_161(void* db);
-void cct_boot_rit_db_rollback_162(void* db);
-long long cct_boot_rit_db_scalar_int_163(void* db, char* sql);
-char* cct_boot_rit_db_scalar_text_164(void* db, char* sql);
-long long* cct_boot_rit_alloc_165(long long tamanho);
-void cct_boot_rit_free_166(long long* ptr);
-long long* cct_boot_rit_realloc_167(long long* ptr, long long novo_tamanho);
-void cct_boot_rit_copy_168(long long* dest, long long* src, long long tamanho);
-void cct_boot_rit_set_169(long long* ptr, long long valor, long long tamanho);
-void cct_boot_rit_zero_170(long long* ptr, long long tamanho);
-long long cct_boot_rit_mem_compare_171(long long* a, long long* b, long long tamanho);
-void* cct_boot_rit_fluxus_init_172(long long elem_size);
-void cct_boot_rit_fluxus_free_173(void* flux);
-void cct_boot_rit_fluxus_push_174(void* flux, void* elem);
-void cct_boot_rit_fluxus_pop_175(void* flux, void* out);
-long long cct_boot_rit_fluxus_len_176(void* flux);
-void* cct_boot_rit_fluxus_get_177(void* flux, long long idx);
-void cct_boot_rit_fluxus_clear_178(void* flux);
-void cct_boot_rit_fluxus_reserve_179(void* flux, long long cap);
-long long cct_boot_rit_fluxus_capacity_180(void* flux);
-void* cct_boot_rit_fluxus_peek_181(void* flux);
-void cct_boot_rit_fluxus_set_182(void* flux, long long idx, void* elem);
-void cct_boot_rit_fluxus_remove_183(void* flux, long long idx);
-void cct_boot_rit_fluxus_insert_184(void* flux, long long idx, void* elem);
-int cct_boot_rit_fluxus_contains_185(void* flux, void* elem);
-int cct_boot_rit_fluxus_is_empty_186(void* flux);
-void cct_boot_rit_fluxus_reverse_187(void* flux);
-void cct_boot_rit_fluxus_sort_int_188(void* flux);
-void cct_boot_rit_fluxus_sort_verbum_189(void* flux);
-void* cct_boot_rit_fluxus_to_ptr_190(void* flux);
-double cct_boot_rit_sqrt_real_191(double x);
-double cct_boot_rit_cbrt_real_192(double x);
-double cct_boot_rit_pow_real_193(double base, double exp);
-double cct_boot_rit_abs_real_194(double x);
-long long cct_boot_rit_floor_real_195(double x);
-long long cct_boot_rit_ceil_real_196(double x);
-long long cct_boot_rit_round_real_197(double x);
-double cct_boot_rit_sin_real_198(double x);
-double cct_boot_rit_cos_real_199(double x);
-double cct_boot_rit_tan_real_200(double x);
-double cct_boot_rit_log_real_201(double x);
-double cct_boot_rit_exp_real_202(double x);
-void* cct_boot_rit_ast_heap_alloc_203(long long bytes);
-void cct_boot_rit_ast_heap_zero_204(void* ptr, long long bytes);
-void cct_boot_rit_ast_heap_free_205(void* ptr);
-void cct_boot_rit_ast_heap_copy_206(void* dest, void* src, long long bytes);
-void* cct_boot_rit_ast_node_list_new_207(void);
-void cct_boot_rit_ast_node_list_push_208(void* list, cct_boot_sig_AstNode* node);
-long long cct_boot_rit_ast_node_list_len_209(void* list);
-cct_boot_sig_AstNode* cct_boot_rit_ast_node_list_get_210(void* list, long long idx);
-cct_boot_sig_AstNode* cct_boot_rit_ast_node_new_211(cct_boot_ord_AstKind kind, long long line, long long column);
-cct_boot_sig_AstProgram* cct_boot_rit_ast_program_new_212(void);
-void cct_boot_rit_ast_node_set_name_213(cct_boot_sig_AstNode* node, char* name);
-void cct_boot_rit_ast_node_set_value_text_214(cct_boot_sig_AstNode* node, char* value_text);
-void cct_boot_rit_ast_node_set_type_name_215(cct_boot_sig_AstNode* node, char* type_name);
-void cct_boot_rit_ast_node_set_aux_name_216(cct_boot_sig_AstNode* node, char* aux_name);
-void cct_boot_rit_ast_node_set_fmt_spec_217(cct_boot_sig_AstNode* node, char* fmt_spec);
-void cct_boot_rit_ast_program_set_name_218(cct_boot_sig_AstProgram* program, char* name);
-void cct_boot_rit_ast_program_append_decl_219(cct_boot_sig_AstProgram* program, cct_boot_sig_AstNode* decl);
-void cct_boot_rit_ast_append_child_220(cct_boot_sig_AstNode* node, cct_boot_sig_AstNode* child);
-void cct_boot_rit_ast_append_case_221(cct_boot_sig_AstNode* node, cct_boot_sig_AstNode* case_node);
-void cct_boot_rit_ast_append_binding_222(cct_boot_sig_AstNode* node, cct_boot_sig_AstNode* binding);
-void cct_boot_rit_ast_append_type_param_223(cct_boot_sig_AstNode* node, cct_boot_sig_AstNode* param);
-void cct_boot_rit_ast_append_generic_arg_224(cct_boot_sig_AstNode* node, cct_boot_sig_AstNode* arg);
-void cct_boot_rit_ast_append_param_225(cct_boot_sig_AstNode* node, cct_boot_sig_AstNode* param);
-void cct_boot_rit_ast_append_field_226(cct_boot_sig_AstNode* node, cct_boot_sig_AstNode* field);
-void cct_boot_rit_ast_append_item_227(cct_boot_sig_AstNode* node, cct_boot_sig_AstNode* item);
-void cct_boot_rit_ast_append_argument_228(cct_boot_sig_AstNode* node, cct_boot_sig_AstNode* argument);
-void cct_boot_rit_ast_append_declaration_229(cct_boot_sig_AstNode* node, cct_boot_sig_AstNode* decl);
-void cct_boot_rit_ast_append_signature_230(cct_boot_sig_AstNode* node, cct_boot_sig_AstNode* sig);
-void cct_boot_rit_ast_append_statement_231(cct_boot_sig_AstNode* node, cct_boot_sig_AstNode* stmt);
-cct_boot_sig_AstNode* cct_boot_rit_ast_make_import_232(char* path, long long line, long long column);
-cct_boot_sig_AstNode* cct_boot_rit_ast_make_type_233(char* name, long long line, long long column);
-void cct_boot_rit_ast_type_mark_pointer_234(cct_boot_sig_AstNode* node);
-void cct_boot_rit_ast_type_mark_array_235(cct_boot_sig_AstNode* node, long long array_size);
-void cct_boot_rit_ast_type_set_element_236(cct_boot_sig_AstNode* node, cct_boot_sig_AstNode* element_type);
-cct_boot_sig_AstNode* cct_boot_rit_ast_make_literal_int_237(char* text, long long line, long long column);
-cct_boot_sig_AstNode* cct_boot_rit_ast_make_literal_real_238(char* text, long long line, long long column);
-cct_boot_sig_AstNode* cct_boot_rit_ast_make_literal_string_239(char* text, long long line, long long column);
-cct_boot_sig_AstNode* cct_boot_rit_ast_make_literal_bool_240(int value, long long line, long long column);
-cct_boot_sig_AstNode* cct_boot_rit_ast_make_literal_nihil_241(long long line, long long column);
-cct_boot_sig_AstNode* cct_boot_rit_ast_make_identifier_242(char* name, long long line, long long column);
-cct_boot_sig_AstNode* cct_boot_rit_ast_make_binary_243(cct_boot_ord_TokenKind operator_kind, cct_boot_sig_AstNode* left, cct_boot_sig_AstNode* right, long long line, long long column);
-cct_boot_sig_AstNode* cct_boot_rit_ast_make_unary_244(cct_boot_ord_TokenKind operator_kind, cct_boot_sig_AstNode* operand, long long line, long long column);
-cct_boot_sig_AstNode* cct_boot_rit_ast_make_call_245(cct_boot_sig_AstNode* callee, long long line, long long column);
-cct_boot_sig_AstNode* cct_boot_rit_ast_make_obsecro_call_246(cct_boot_sig_AstNode* callee, long long line, long long column);
-cct_boot_sig_AstNode* cct_boot_rit_ast_make_field_access_247(cct_boot_sig_AstNode* object, char* field_name, long long line, long long column);
-cct_boot_sig_AstNode* cct_boot_rit_ast_make_index_access_248(cct_boot_sig_AstNode* object, cct_boot_sig_AstNode* index, long long line, long long column);
-cct_boot_sig_AstNode* cct_boot_rit_ast_make_expr_stmt_249(cct_boot_sig_AstNode* expr, long long line, long long column);
-cct_boot_sig_AstNode* cct_boot_rit_ast_make_molde_250(long long line, long long column);
-cct_boot_sig_AstNode* cct_boot_rit_ast_make_mensura_251(cct_boot_sig_AstNode* type_expr, long long line, long long column);
-cct_boot_sig_AstNode* cct_boot_rit_ast_make_redde_252(cct_boot_sig_AstNode* expr, long long line, long long column);
-cct_boot_sig_AstNode* cct_boot_rit_ast_make_redde_empty_253(long long line, long long column);
-cct_boot_sig_AstNode* cct_boot_rit_ast_make_anur_254(cct_boot_sig_AstNode* expr, long long line, long long column);
-cct_boot_sig_AstNode* cct_boot_rit_ast_make_anur_empty_255(long long line, long long column);
-cct_boot_sig_AstNode* cct_boot_rit_ast_make_iace_256(cct_boot_sig_AstNode* expr, long long line, long long column);
-cct_boot_sig_AstNode* cct_boot_rit_ast_make_dimitte_257(cct_boot_sig_AstNode* target, long long line, long long column);
-cct_boot_sig_AstNode* cct_boot_rit_ast_make_block_258(long long line, long long column);
-cct_boot_sig_AstNode* cct_boot_rit_ast_make_case_259(long long line, long long column);
-cct_boot_sig_AstNode* cct_boot_rit_ast_make_param_260(char* name, cct_boot_sig_AstNode* type_expr, long long line, long long column);
-cct_boot_sig_AstNode* cct_boot_rit_ast_make_type_param_no_constraint_261(char* name, long long line, long long column);
-cct_boot_sig_AstNode* cct_boot_rit_ast_make_type_param_262(char* name, cct_boot_sig_AstNode* constraint_type, long long line, long long column);
-cct_boot_sig_AstNode* cct_boot_rit_ast_make_field_263(char* name, cct_boot_sig_AstNode* type_expr, long long line, long long column);
-cct_boot_sig_AstNode* cct_boot_rit_ast_make_enum_item_264(char* name, cct_boot_sig_AstNode* value, long long line, long long column);
-cct_boot_sig_AstNode* cct_boot_rit_ast_make_enum_item_no_value_265(char* name, long long line, long long column);
-cct_boot_sig_AstNode* cct_boot_rit_ast_make_rituale_266(char* name, cct_boot_sig_AstNode* return_type, cct_boot_sig_AstNode* body, long long line, long long column);
-cct_boot_sig_AstNode* cct_boot_rit_ast_make_rituale_decl_267(char* name, long long line, long long column);
-cct_boot_sig_AstNode* cct_boot_rit_ast_make_sigillum_268(char* name, long long line, long long column);
-cct_boot_sig_AstNode* cct_boot_rit_ast_make_ordo_269(char* name, long long line, long long column);
-cct_boot_sig_AstNode* cct_boot_rit_ast_make_codex_270(char* name, long long line, long long column);
-cct_boot_sig_AstNode* cct_boot_rit_ast_make_pactum_271(char* name, long long line, long long column);
-cct_boot_sig_AstNode* cct_boot_rit_ast_make_evoca_272(char* name, cct_boot_sig_AstNode* type_expr, cct_boot_sig_AstNode* init_expr, long long line, long long column);
-cct_boot_sig_AstNode* cct_boot_rit_ast_make_evoca_no_init_273(char* name, cct_boot_sig_AstNode* type_expr, long long line, long long column);
-cct_boot_sig_AstNode* cct_boot_rit_ast_make_vincire_274(cct_boot_sig_AstNode* target, cct_boot_sig_AstNode* value, long long line, long long column);
-cct_boot_sig_AstNode* cct_boot_rit_ast_make_si_275(cct_boot_sig_AstNode* condition, cct_boot_sig_AstNode* body, cct_boot_sig_AstNode* else_branch, long long line, long long column);
-cct_boot_sig_AstNode* cct_boot_rit_ast_make_si_no_else_276(cct_boot_sig_AstNode* condition, cct_boot_sig_AstNode* body, long long line, long long column);
-cct_boot_sig_AstNode* cct_boot_rit_ast_make_quando_277(cct_boot_sig_AstNode* expr, long long line, long long column);
-cct_boot_sig_AstNode* cct_boot_rit_ast_make_dum_278(cct_boot_sig_AstNode* condition, cct_boot_sig_AstNode* body, long long line, long long column);
-cct_boot_sig_AstNode* cct_boot_rit_ast_make_donec_279(cct_boot_sig_AstNode* body, cct_boot_sig_AstNode* condition, long long line, long long column);
-cct_boot_sig_AstNode* cct_boot_rit_ast_make_donec_no_condition_280(cct_boot_sig_AstNode* body, long long line, long long column);
-cct_boot_sig_AstNode* cct_boot_rit_ast_make_repete_281(char* iterator_name, cct_boot_sig_AstNode* start_expr, cct_boot_sig_AstNode* end_expr, cct_boot_sig_AstNode* step_expr, cct_boot_sig_AstNode* body, long long line, long long column);
-cct_boot_sig_AstNode* cct_boot_rit_ast_make_repete_no_step_282(char* iterator_name, cct_boot_sig_AstNode* start_expr, cct_boot_sig_AstNode* end_expr, cct_boot_sig_AstNode* body, long long line, long long column);
-cct_boot_sig_AstNode* cct_boot_rit_ast_make_iterum_283(char* item_name, char* value_name, cct_boot_sig_AstNode* collection, cct_boot_sig_AstNode* body, long long line, long long column);
-cct_boot_sig_AstNode* cct_boot_rit_ast_make_frange_284(long long line, long long column);
-cct_boot_sig_AstNode* cct_boot_rit_ast_make_recede_285(long long line, long long column);
-cct_boot_sig_AstNode* cct_boot_rit_ast_make_tempta_no_semper_286(cct_boot_sig_AstNode* try_block, cct_boot_sig_AstNode* cape_type, char* cape_name, cct_boot_sig_AstNode* cape_block, long long line, long long column);
-cct_boot_sig_AstNode* cct_boot_rit_ast_make_tempta_287(cct_boot_sig_AstNode* try_block, cct_boot_sig_AstNode* cape_type, char* cape_name, cct_boot_sig_AstNode* cape_block, cct_boot_sig_AstNode* semper_block, long long line, long long column);
-char* cct_boot_rit_ast_dump_indent_288(long long level);
-char* cct_boot_rit_ast_dump_append_289(char* out, char* text);
-char* cct_boot_rit_ast_dump_append_line_290(char* out, long long level, char* text);
-char* cct_boot_rit_ast_dump_location_291(long long line, long long column);
-char* cct_boot_rit_ast_dump_type_inline_292(cct_boot_sig_AstNode* type_expr);
-char* cct_boot_rit_ast_dump_type_params_293(char* out, long long level, void* list);
-char* cct_boot_rit_ast_dump_value_with_label_294(char* out, long long level, char* label, cct_boot_sig_AstNode* node);
-char* cct_boot_rit_ast_dump_named_type_list_295(char* out, long long level, void* list, char* label);
-char* cct_boot_rit_ast_dump_enum_items_296(char* out, long long level, void* list);
-char* cct_boot_rit_ast_dump_node_list_with_label_297(char* out, long long level, void* list, char* label);
-char* cct_boot_rit_ast_dump_node_298(cct_boot_sig_AstNode* node, long long level, char* out);
-char* cct_boot_rit_ast_dump_program_299(cct_boot_sig_AstProgram* program);
-void cct_boot_rit_ast_list_free_owned_300(void* list);
-void cct_boot_rit_ast_node_free_301(cct_boot_sig_AstNode* node);
-void cct_boot_rit_ast_program_free_302(cct_boot_sig_AstProgram* program);
-cct_boot_ord_TokenKind cct_boot_rit_keyword_lookup_303(char* lexeme);
-cct_boot_sig_LexerState cct_boot_rit_lexer_init_304(char* source, char* filename);
-cct_boot_sig_Token cct_boot_rit_token_make_305(cct_boot_ord_TokenKind kind, char* lexeme, long long line, long long column);
-void cct_boot_rit_token_free_306(cct_boot_sig_Token* tok);
-int cct_boot_rit_lexer_is_at_end_307(cct_boot_sig_LexerState* lex);
-char cct_boot_rit_lexer_peek_308(cct_boot_sig_LexerState* lex);
-char cct_boot_rit_lexer_peek_next_309(cct_boot_sig_LexerState* lex);
-char cct_boot_rit_lexer_advance_310(cct_boot_sig_LexerState* lex);
-int cct_boot_rit_lexer_match_311(cct_boot_sig_LexerState* lex, char expected);
-void cct_boot_rit_lexer_skip_whitespace_312(cct_boot_sig_LexerState* lex);
-void cct_boot_rit_lexer_skip_comment_313(cct_boot_sig_LexerState* lex);
-char* cct_boot_rit_lexer_make_lexeme_314(cct_boot_sig_LexerState* lex);
-cct_boot_sig_Token cct_boot_rit_lexer_make_token_315(cct_boot_sig_LexerState* lex, cct_boot_ord_TokenKind kind);
-cct_boot_sig_Token cct_boot_rit_lexer_error_token_316(cct_boot_sig_LexerState* lex, char* msg);
-cct_boot_sig_Token cct_boot_rit_lexer_error_character_token_317(cct_boot_sig_LexerState* lex, char c);
-cct_boot_sig_Token cct_boot_rit_lexer_identifier_318(cct_boot_sig_LexerState* lex);
-cct_boot_sig_Token cct_boot_rit_lexer_number_319(cct_boot_sig_LexerState* lex);
-cct_boot_sig_Token cct_boot_rit_lexer_string_320(cct_boot_sig_LexerState* lex);
-cct_boot_sig_Token cct_boot_rit_lexer_next_token_321(cct_boot_sig_LexerState* lex);
-cct_boot_sig_Token cct_boot_rit_parser_empty_token_322(void);
-cct_boot_sig_ParserState cct_boot_rit_parser_init_323(cct_boot_sig_LexerState* lexer, char* filename);
-void cct_boot_rit_parser_dispose_324(cct_boot_sig_ParserState* parser);
-void cct_boot_rit_parser_advance_325(cct_boot_sig_ParserState* parser);
-int cct_boot_rit_parser_check_326(cct_boot_sig_ParserState* parser, cct_boot_ord_TokenKind kind);
-int cct_boot_rit_parser_match_327(cct_boot_sig_ParserState* parser, cct_boot_ord_TokenKind kind);
-void cct_boot_rit_parser_emit_error_328(cct_boot_sig_ParserState* parser, long long line, long long column, char* message);
-void cct_boot_rit_parser_error_at_current_329(cct_boot_sig_ParserState* parser, char* message);
-void cct_boot_rit_parser_error_at_previous_330(cct_boot_sig_ParserState* parser, char* message);
-int cct_boot_rit_parser_consume_331(cct_boot_sig_ParserState* parser, cct_boot_ord_TokenKind kind, char* message);
-int cct_boot_rit_parser_is_declaration_start_332(cct_boot_ord_TokenKind kind);
-int cct_boot_rit_parser_is_statement_start_333(cct_boot_ord_TokenKind kind);
-void cct_boot_rit_parser_synchronize_statement_334(cct_boot_sig_ParserState* parser);
-void cct_boot_rit_parser_synchronize_declaration_335(cct_boot_sig_ParserState* parser);
-int cct_boot_rit_parser_is_assignment_target_336(cct_boot_sig_AstNode* node);
-cct_boot_sig_AstNode* cct_boot_rit_parse_expression_337(cct_boot_sig_ParserState* parser);
-int cct_boot_rit_parse_expr_is_simple_type_token_338(cct_boot_ord_TokenKind kind);
-cct_boot_sig_AstNode* cct_boot_rit_parse_expr_generic_type_339(cct_boot_sig_ParserState* parser);
-void cct_boot_rit_parse_postfix_generic_args_340(cct_boot_sig_ParserState* parser, cct_boot_sig_AstNode* expr);
-char* cct_boot_rit_parse_forma_unquote_341(char* raw_text);
-void cct_boot_rit_parse_forma_flush_literal_342(cct_boot_sig_AstNode* molde, void* literal_builder, long long line, long long column);
-cct_boot_sig_AstNode* cct_boot_rit_parse_forma_expression_343(cct_boot_sig_ParserState* parser);
-cct_boot_sig_AstNode* cct_boot_rit_parse_primary_344(cct_boot_sig_ParserState* parser);
-cct_boot_sig_AstNode* cct_boot_rit_parse_postfix_suffixes_345(cct_boot_sig_ParserState* parser, cct_boot_sig_AstNode* expr);
-cct_boot_sig_AstNode* cct_boot_rit_parse_postfix_346(cct_boot_sig_ParserState* parser);
-cct_boot_sig_AstNode* cct_boot_rit_parse_unary_347(cct_boot_sig_ParserState* parser);
-cct_boot_sig_AstNode* cct_boot_rit_parse_power_348(cct_boot_sig_ParserState* parser);
-cct_boot_sig_AstNode* cct_boot_rit_parse_multiplicative_349(cct_boot_sig_ParserState* parser);
-cct_boot_sig_AstNode* cct_boot_rit_parse_additive_350(cct_boot_sig_ParserState* parser);
-cct_boot_sig_AstNode* cct_boot_rit_parse_comparison_351(cct_boot_sig_ParserState* parser);
-cct_boot_sig_AstNode* cct_boot_rit_parse_equality_352(cct_boot_sig_ParserState* parser);
-cct_boot_sig_AstNode* cct_boot_rit_parse_logical_and_353(cct_boot_sig_ParserState* parser);
-cct_boot_sig_AstNode* cct_boot_rit_parse_logical_or_354(cct_boot_sig_ParserState* parser);
-cct_boot_sig_AstNode* cct_boot_rit_parse_assignment_355(cct_boot_sig_ParserState* parser);
-cct_boot_sig_AstNode* cct_boot_rit_parser_parse_expression_source_356(char* source, char* filename);
-int cct_boot_rit_parser_is_simple_type_token_357(cct_boot_ord_TokenKind kind);
-void cct_boot_rit_parse_stmt_type_args_358(cct_boot_sig_ParserState* parser, cct_boot_sig_AstNode* type_expr);
-int cct_boot_rit_parser_is_statement_boundary_359(cct_boot_ord_TokenKind kind);
-cct_boot_sig_AstNode* cct_boot_rit_parse_type_simple_360(cct_boot_sig_ParserState* parser);
-cct_boot_sig_AstNode* cct_boot_rit_parse_expression_statement_361(cct_boot_sig_ParserState* parser);
-cct_boot_sig_AstNode* cct_boot_rit_parse_block_362(cct_boot_sig_ParserState* parser);
-cct_boot_sig_AstNode* cct_boot_rit_parse_evoca_statement_363(cct_boot_sig_ParserState* parser);
-cct_boot_sig_AstNode* cct_boot_rit_parse_vincire_statement_364(cct_boot_sig_ParserState* parser);
-cct_boot_sig_AstNode* cct_boot_rit_parse_redde_statement_365(cct_boot_sig_ParserState* parser);
-cct_boot_sig_AstNode* cct_boot_rit_parse_anur_statement_366(cct_boot_sig_ParserState* parser);
-cct_boot_sig_AstNode* cct_boot_rit_parse_iace_statement_367(cct_boot_sig_ParserState* parser);
-cct_boot_sig_AstNode* cct_boot_rit_parse_dimitte_statement_368(cct_boot_sig_ParserState* parser);
-cct_boot_sig_AstNode* cct_boot_rit_parse_frange_statement_369(cct_boot_sig_ParserState* parser);
-cct_boot_sig_AstNode* cct_boot_rit_parse_recede_statement_370(cct_boot_sig_ParserState* parser);
-cct_boot_sig_AstNode* cct_boot_rit_parse_statement_block_until_failure_clause_371(cct_boot_sig_ParserState* parser);
-cct_boot_sig_AstNode* cct_boot_rit_parse_statement_block_until_elige_boundary_372(cct_boot_sig_ParserState* parser);
-cct_boot_sig_AstNode* cct_boot_rit_parse_elige_literal_373(cct_boot_sig_ParserState* parser);
-cct_boot_sig_AstNode* cct_boot_rit_parse_tempta_statement_374(cct_boot_sig_ParserState* parser);
-cct_boot_sig_AstNode* cct_boot_rit_parse_elige_statement_375(cct_boot_sig_ParserState* parser);
-cct_boot_sig_AstNode* cct_boot_rit_parse_inline_statement_block_until_376(cct_boot_sig_ParserState* parser, cct_boot_ord_TokenKind terminator, int stop_on_aliter);
-cct_boot_sig_AstNode* cct_boot_rit_parse_si_statement_377(cct_boot_sig_ParserState* parser);
-cct_boot_sig_AstNode* cct_boot_rit_parse_dum_statement_378(cct_boot_sig_ParserState* parser);
-cct_boot_sig_AstNode* cct_boot_rit_parse_donec_body_379(cct_boot_sig_ParserState* parser);
-cct_boot_sig_AstNode* cct_boot_rit_parse_donec_statement_380(cct_boot_sig_ParserState* parser);
-cct_boot_sig_AstNode* cct_boot_rit_parse_repete_statement_381(cct_boot_sig_ParserState* parser);
-cct_boot_sig_AstNode* cct_boot_rit_parse_iterum_statement_382(cct_boot_sig_ParserState* parser);
-cct_boot_sig_AstNode* cct_boot_rit_parse_statement_383(cct_boot_sig_ParserState* parser);
-cct_boot_sig_AstNode* cct_boot_rit_parser_parse_statement_source_384(char* source, char* filename);
-cct_boot_sig_AstNode* cct_boot_rit_parse_type_385(cct_boot_sig_ParserState* parser);
-void cct_boot_rit_parse_optional_generic_type_args_386(cct_boot_sig_ParserState* parser, cct_boot_sig_AstNode* type_expr);
-int cct_boot_rit_parse_type_param_exists_387(void* list, char* name);
-void cct_boot_rit_parse_optional_type_params_388(cct_boot_sig_ParserState* parser, cct_boot_sig_AstNode* owner, int allow_constraint);
-void cct_boot_rit_parse_param_list_389(cct_boot_sig_ParserState* parser, cct_boot_sig_AstNode* rituale);
-cct_boot_sig_AstNode* cct_boot_rit_parse_import_declaration_390(cct_boot_sig_ParserState* parser);
-cct_boot_sig_AstNode* cct_boot_rit_parse_rituale_body_until_explicit_391(cct_boot_sig_ParserState* parser);
-cct_boot_sig_AstNode* cct_boot_rit_parse_rituale_signature_only_392(cct_boot_sig_ParserState* parser, char* name, long long line, long long column);
-cct_boot_sig_AstNode* cct_boot_rit_parse_rituale_declaration_393(cct_boot_sig_ParserState* parser);
-cct_boot_sig_AstNode* cct_boot_rit_parse_sigillum_declaration_394(cct_boot_sig_ParserState* parser);
-cct_boot_sig_AstNode* cct_boot_rit_parse_ordo_payload_field_395(cct_boot_sig_ParserState* parser);
-cct_boot_sig_AstNode* cct_boot_rit_parse_ordo_declaration_396(cct_boot_sig_ParserState* parser);
-cct_boot_sig_AstNode* cct_boot_rit_parse_codex_declaration_397(cct_boot_sig_ParserState* parser);
-cct_boot_sig_AstNode* cct_boot_rit_parse_pactum_declaration_398(cct_boot_sig_ParserState* parser);
-cct_boot_sig_AstNode* cct_boot_rit_parse_declaration_399(cct_boot_sig_ParserState* parser);
-cct_boot_sig_AstProgram* cct_boot_rit_parse_program_400(cct_boot_sig_ParserState* parser);
-cct_boot_sig_AstProgram* cct_boot_rit_parser_parse_program_source_401(char* source, char* filename);
-char* cct_boot_rit_parser_dump_program_source_402(char* source, char* filename);
-void* cct_boot_rit_codegen_heap_alloc_403(long long bytes);
-void cct_boot_rit_codegen_heap_zero_404(void* ptr, long long bytes);
-void cct_boot_rit_codegen_heap_free_405(void* ptr);
-cct_boot_sig_CodegenRitualeName* cct_boot_rit_codegen_context_record_at_406(cct_boot_sig_CodegenContext* ctx, long long idx);
-cct_boot_sig_CodegenLocal* cct_boot_rit_codegen_context_local_at_407(cct_boot_sig_CodegenContext* ctx, long long idx);
-cct_boot_sig_CodegenSigillum* cct_boot_rit_codegen_context_sigillum_at_408(cct_boot_sig_CodegenContext* ctx, long long idx);
-cct_boot_sig_CodegenSigillumField* cct_boot_rit_codegen_context_sigillum_field_at_409(cct_boot_sig_CodegenSigillum* sigillum, long long idx);
-cct_boot_sig_CodegenStringLiteral* cct_boot_rit_codegen_context_string_at_410(cct_boot_sig_CodegenContext* ctx, long long idx);
-cct_boot_sig_CodegenOrdo* cct_boot_rit_codegen_context_ordo_at_411(cct_boot_sig_CodegenContext* ctx, long long idx);
-cct_boot_sig_CodegenOrdoItem* cct_boot_rit_codegen_context_ordo_item_at_412(cct_boot_sig_CodegenOrdo* ordo, long long idx);
-cct_boot_sig_CodegenGenericSigillumTemplate* cct_boot_rit_codegen_context_generic_sigillum_template_at_413(cct_boot_sig_CodegenContext* ctx, long long idx);
-cct_boot_sig_CodegenGenericSigillumInstance* cct_boot_rit_codegen_context_generic_sigillum_instance_at_414(cct_boot_sig_CodegenContext* ctx, long long idx);
-cct_boot_sig_CodegenGenericRitualeTemplate* cct_boot_rit_codegen_context_generic_rituale_template_at_415(cct_boot_sig_CodegenContext* ctx, long long idx);
-cct_boot_sig_CodegenGenericRitualeInstance* cct_boot_rit_codegen_context_generic_rituale_instance_at_416(cct_boot_sig_CodegenContext* ctx, long long idx);
-cct_boot_sig_CodegenGenericBinding* cct_boot_rit_codegen_context_generic_binding_at_417(cct_boot_sig_CodegenContext* ctx, long long idx);
-void cct_boot_rit_codegen_context_free_records_418(cct_boot_sig_CodegenContext* ctx);
-void cct_boot_rit_codegen_context_free_locals_419(cct_boot_sig_CodegenContext* ctx);
-void cct_boot_rit_codegen_context_free_loop_labels_420(cct_boot_sig_CodegenContext* ctx);
-void cct_boot_rit_codegen_context_free_sigillum_types_421(cct_boot_sig_CodegenContext* ctx);
-void cct_boot_rit_codegen_context_free_string_literals_422(cct_boot_sig_CodegenContext* ctx);
-void cct_boot_rit_codegen_context_free_ordo_types_423(cct_boot_sig_CodegenContext* ctx);
-void cct_boot_rit_codegen_context_free_generic_sigillum_templates_424(cct_boot_sig_CodegenContext* ctx);
-void cct_boot_rit_codegen_context_free_generic_sigillum_instances_425(cct_boot_sig_CodegenContext* ctx);
-void cct_boot_rit_codegen_context_free_generic_rituale_templates_426(cct_boot_sig_CodegenContext* ctx);
-void cct_boot_rit_codegen_context_free_generic_rituale_instances_427(cct_boot_sig_CodegenContext* ctx);
-void cct_boot_rit_codegen_context_free_generic_bindings_428(cct_boot_sig_CodegenContext* ctx);
-cct_boot_sig_CodegenContext* cct_boot_rit_codegen_context_new_429(char* filename);
-void cct_boot_rit_codegen_context_reset_output_430(cct_boot_sig_CodegenContext* ctx);
-void cct_boot_rit_codegen_context_reset_431(cct_boot_sig_CodegenContext* ctx);
-void cct_boot_rit_codegen_context_free_432(cct_boot_sig_CodegenContext* ctx);
-void cct_boot_rit_codegen_report_error_433(cct_boot_sig_CodegenContext* ctx, long long line, long long column, char* message);
-int cct_boot_rit_codegen_had_error_434(cct_boot_sig_CodegenContext* ctx);
-char* cct_boot_rit_codegen_output_435(cct_boot_sig_CodegenContext* ctx);
-long long cct_boot_rit_codegen_registered_rituale_count_436(cct_boot_sig_CodegenContext* ctx);
-char* cct_boot_rit_codegen_lookup_rituale_c_name_437(cct_boot_sig_CodegenContext* ctx, char* source_name);
-char* cct_boot_rit_codegen_register_rituale_c_name_438(cct_boot_sig_CodegenContext* ctx, char* source_name, char* c_name, char* return_type_name);
-char* cct_boot_rit_codegen_lookup_rituale_return_type_439(cct_boot_sig_CodegenContext* ctx, char* source_name);
-void cct_boot_rit_codegen_set_current_return_type_440(cct_boot_sig_CodegenContext* ctx, char* type_name);
-void cct_boot_rit_codegen_push_local_scope_441(cct_boot_sig_CodegenContext* ctx);
-void cct_boot_rit_codegen_pop_local_scope_442(cct_boot_sig_CodegenContext* ctx);
-char* cct_boot_rit_codegen_lookup_local_c_name_443(cct_boot_sig_CodegenContext* ctx, char* source_name);
-char* cct_boot_rit_codegen_define_local_444(cct_boot_sig_CodegenContext* ctx, char* source_name, char* c_name, char* type_name);
-char* cct_boot_rit_codegen_lookup_local_type_name_445(cct_boot_sig_CodegenContext* ctx, char* source_name);
-void cct_boot_rit_codegen_set_local_iter_info_446(cct_boot_sig_CodegenContext* ctx, char* source_name, long long kind, char* item_type_text, char* value_type_text);
-long long cct_boot_rit_codegen_lookup_local_iter_kind_447(cct_boot_sig_CodegenContext* ctx, char* source_name);
-char* cct_boot_rit_codegen_lookup_local_iter_item_type_text_448(cct_boot_sig_CodegenContext* ctx, char* source_name);
-char* cct_boot_rit_codegen_lookup_local_iter_value_type_text_449(cct_boot_sig_CodegenContext* ctx, char* source_name);
-long long cct_boot_rit_codegen_registered_string_count_450(cct_boot_sig_CodegenContext* ctx);
-char* cct_boot_rit_codegen_lookup_string_symbol_451(cct_boot_sig_CodegenContext* ctx, char* raw_text);
-char* cct_boot_rit_codegen_register_string_symbol_452(cct_boot_sig_CodegenContext* ctx, char* raw_text, char* symbol_name);
-long long cct_boot_rit_codegen_registered_sigillum_count_453(cct_boot_sig_CodegenContext* ctx);
-char* cct_boot_rit_codegen_lookup_sigillum_c_name_454(cct_boot_sig_CodegenContext* ctx, char* source_name);
-long long cct_boot_rit_codegen_find_sigillum_index_455(cct_boot_sig_CodegenContext* ctx, char* source_name);
-char* cct_boot_rit_codegen_register_sigillum_456(cct_boot_sig_CodegenContext* ctx, char* source_name, char* c_name);
-void cct_boot_rit_codegen_sigillum_append_field_457(cct_boot_sig_CodegenContext* ctx, char* sigillum_name, char* field_name, char* type_name);
-char* cct_boot_rit_codegen_lookup_sigillum_field_type_458(cct_boot_sig_CodegenContext* ctx, char* sigillum_name, char* field_name);
-long long cct_boot_rit_codegen_registered_ordo_count_459(cct_boot_sig_CodegenContext* ctx);
-char* cct_boot_rit_codegen_lookup_ordo_c_name_460(cct_boot_sig_CodegenContext* ctx, char* source_name);
-long long cct_boot_rit_codegen_find_ordo_index_461(cct_boot_sig_CodegenContext* ctx, char* source_name);
-char* cct_boot_rit_codegen_register_ordo_462(cct_boot_sig_CodegenContext* ctx, char* source_name, char* c_name);
-void cct_boot_rit_codegen_ordo_append_item_463(cct_boot_sig_CodegenContext* ctx, char* ordo_name, char* item_name, char* c_name);
-void cct_boot_rit_codegen_ordo_append_item_with_arity_464(cct_boot_sig_CodegenContext* ctx, char* ordo_name, char* item_name, char* c_name, long long payload_arity);
-void cct_boot_rit_codegen_mark_ordo_has_payload_465(cct_boot_sig_CodegenContext* ctx, char* ordo_name);
-int cct_boot_rit_codegen_ordo_has_payload_466(cct_boot_sig_CodegenContext* ctx, char* ordo_name);
-long long cct_boot_rit_codegen_count_ordo_item_matches_467(cct_boot_sig_CodegenContext* ctx, char* item_name);
-char* cct_boot_rit_codegen_lookup_ordo_item_c_name_468(cct_boot_sig_CodegenContext* ctx, char* item_name);
-char* cct_boot_rit_codegen_lookup_ordo_item_owner_name_469(cct_boot_sig_CodegenContext* ctx, char* item_name);
-long long cct_boot_rit_codegen_lookup_ordo_item_payload_arity_470(cct_boot_sig_CodegenContext* ctx, char* item_name);
-void cct_boot_rit_codegen_require_stdio_471(cct_boot_sig_CodegenContext* ctx);
-void cct_boot_rit_codegen_require_stdlib_472(cct_boot_sig_CodegenContext* ctx);
-void cct_boot_rit_codegen_require_args_runtime_473(cct_boot_sig_CodegenContext* ctx);
-void cct_boot_rit_codegen_require_fs_runtime_474(cct_boot_sig_CodegenContext* ctx);
-void cct_boot_rit_codegen_require_scribe_runtime_475(cct_boot_sig_CodegenContext* ctx);
-void cct_boot_rit_codegen_require_fail_helper_476(cct_boot_sig_CodegenContext* ctx);
-void cct_boot_rit_codegen_require_failure_runtime_477(cct_boot_sig_CodegenContext* ctx);
-void cct_boot_rit_codegen_require_math_runtime_478(cct_boot_sig_CodegenContext* ctx);
-void cct_boot_rit_codegen_require_time_runtime_479(cct_boot_sig_CodegenContext* ctx);
-long long cct_boot_rit_codegen_registered_generic_sigillum_template_count_480(cct_boot_sig_CodegenContext* ctx);
-long long cct_boot_rit_codegen_find_generic_sigillum_template_index_481(cct_boot_sig_CodegenContext* ctx, char* source_name);
-void cct_boot_rit_codegen_register_generic_sigillum_template_482(cct_boot_sig_CodegenContext* ctx, char* source_name, cct_boot_sig_AstNode* decl_node, long long arity);
-cct_boot_sig_AstNode* cct_boot_rit_codegen_lookup_generic_sigillum_template_483(cct_boot_sig_CodegenContext* ctx, char* source_name);
-long long cct_boot_rit_codegen_registered_generic_sigillum_instance_count_484(cct_boot_sig_CodegenContext* ctx);
-long long cct_boot_rit_codegen_find_generic_sigillum_instance_index_485(cct_boot_sig_CodegenContext* ctx, char* instance_key);
-char* cct_boot_rit_codegen_register_generic_sigillum_instance_486(cct_boot_sig_CodegenContext* ctx, char* instance_key, char* c_name, cct_boot_sig_AstNode* template_decl, void* type_args);
-long long cct_boot_rit_codegen_registered_generic_rituale_template_count_487(cct_boot_sig_CodegenContext* ctx);
-long long cct_boot_rit_codegen_find_generic_rituale_template_index_488(cct_boot_sig_CodegenContext* ctx, char* source_name);
-void cct_boot_rit_codegen_register_generic_rituale_template_489(cct_boot_sig_CodegenContext* ctx, char* source_name, cct_boot_sig_AstNode* decl_node, long long arity);
-cct_boot_sig_AstNode* cct_boot_rit_codegen_lookup_generic_rituale_template_490(cct_boot_sig_CodegenContext* ctx, char* source_name);
-long long cct_boot_rit_codegen_registered_generic_rituale_instance_count_491(cct_boot_sig_CodegenContext* ctx);
-long long cct_boot_rit_codegen_find_generic_rituale_instance_index_492(cct_boot_sig_CodegenContext* ctx, char* instance_key);
-char* cct_boot_rit_codegen_register_generic_rituale_instance_493(cct_boot_sig_CodegenContext* ctx, char* instance_key, char* c_name, char* return_type_name, cct_boot_sig_AstNode* template_decl, void* type_args);
-void cct_boot_rit_codegen_push_generic_binding_scope_494(cct_boot_sig_CodegenContext* ctx);
-void cct_boot_rit_codegen_pop_generic_binding_scope_495(cct_boot_sig_CodegenContext* ctx);
-void cct_boot_rit_codegen_define_generic_binding_496(cct_boot_sig_CodegenContext* ctx, char* param_name, cct_boot_sig_AstNode* type_expr);
-long long cct_boot_rit_codegen_find_generic_binding_index_497(cct_boot_sig_CodegenContext* ctx, char* param_name);
-cct_boot_sig_AstNode* cct_boot_rit_codegen_lookup_generic_binding_498(cct_boot_sig_CodegenContext* ctx, char* param_name);
-void cct_boot_rit_codegen_emit_499(cct_boot_sig_CodegenContext* ctx, char* text);
-void cct_boot_rit_codegen_emit_line_500(cct_boot_sig_CodegenContext* ctx, char* text);
-void cct_boot_rit_codegen_emit_blank_line_501(cct_boot_sig_CodegenContext* ctx);
-void cct_boot_rit_codegen_indent_502(cct_boot_sig_CodegenContext* ctx);
-void cct_boot_rit_codegen_dedent_503(cct_boot_sig_CodegenContext* ctx);
-void cct_boot_rit_codegen_emit_block_open_504(cct_boot_sig_CodegenContext* ctx);
-void cct_boot_rit_codegen_emit_block_close_505(cct_boot_sig_CodegenContext* ctx);
-char* cct_boot_rit_codegen_make_counter_name_506(char* prefix, long long id);
-char* cct_boot_rit_codegen_next_temp_name_507(cct_boot_sig_CodegenContext* ctx);
-char* cct_boot_rit_codegen_next_label_name_508(cct_boot_sig_CodegenContext* ctx);
-char* cct_boot_rit_codegen_make_rituale_c_name_509(cct_boot_sig_CodegenContext* ctx, char* rituale_name);
-char* cct_boot_rit_codegen_rituale_c_name_510(cct_boot_sig_CodegenContext* ctx, char* rituale_name);
-char* cct_boot_rit_codegen_normalize_string_literal_511(char* raw_text);
-char* cct_boot_rit_codegen_string_symbol_512(cct_boot_sig_CodegenContext* ctx, char* raw_text);
-char* cct_boot_rit_codegen_basic_c_type_513(char* type_name);
-int cct_boot_rit_codegen_generic_is_builtin_type_name_514(char* type_name);
-char* cct_boot_rit_codegen_generic_type_identity_515(cct_boot_sig_CodegenContext* ctx, cct_boot_sig_AstNode* type_expr);
-char* cct_boot_rit_codegen_generic_sanitize_identifier_516(char* raw);
-char* cct_boot_rit_codegen_generic_type_arg_suffix_517(cct_boot_sig_CodegenContext* ctx, void* type_args);
-char* cct_boot_rit_codegen_generic_instance_key_518(char* source_name, char* suffix);
-char* cct_boot_rit_codegen_generic_type_identity_named_519(cct_boot_sig_CodegenContext* ctx, char* type_name, void* type_args, long long line, long long column);
-char* cct_boot_rit_codegen_generic_make_sigillum_c_name_520(cct_boot_sig_CodegenContext* ctx, char* source_name, void* type_args);
-char* cct_boot_rit_codegen_generic_make_rituale_c_name_521(cct_boot_sig_CodegenContext* ctx, char* source_name, void* type_args);
-void cct_boot_rit_codegen_generic_bind_template_args_522(cct_boot_sig_CodegenContext* ctx, cct_boot_sig_AstNode* template_decl, void* type_args);
-void cct_boot_rit_codegen_generic_unbind_template_args_523(cct_boot_sig_CodegenContext* ctx);
-void cct_boot_rit_codegen_generic_scan_type_use_524(cct_boot_sig_CodegenContext* ctx, cct_boot_sig_AstNode* type_expr);
-void cct_boot_rit_codegen_generic_scan_expr_use_525(cct_boot_sig_CodegenContext* ctx, cct_boot_sig_AstNode* expr);
-void cct_boot_rit_codegen_generic_scan_stmt_use_526(cct_boot_sig_CodegenContext* ctx, cct_boot_sig_AstNode* stmt);
-void cct_boot_rit_codegen_generic_scan_decl_use_527(cct_boot_sig_CodegenContext* ctx, cct_boot_sig_AstNode* decl);
-void cct_boot_rit_codegen_generic_collect_instance_closure_528(cct_boot_sig_CodegenContext* ctx);
-void cct_boot_rit_codegen_generic_collect_program_uses_529(cct_boot_sig_CodegenContext* ctx, cct_boot_sig_AstProgram* program);
-char* cct_boot_rit_codegen_generic_ensure_sigillum_instance_530(cct_boot_sig_CodegenContext* ctx, char* source_name, void* type_args, cct_boot_sig_AstNode* at);
-char* cct_boot_rit_codegen_generic_rituale_return_identity_531(cct_boot_sig_CodegenContext* ctx, cct_boot_sig_AstNode* templ);
-char* cct_boot_rit_codegen_generic_ensure_rituale_instance_532(cct_boot_sig_CodegenContext* ctx, char* source_name, void* type_args, cct_boot_sig_AstNode* at);
-char* cct_boot_rit_codegen_basic_c_type_name_533(cct_boot_sig_CodegenContext* ctx, char* type_name, long long line, long long column);
-char* cct_boot_rit_codegen_named_c_type_name_534(cct_boot_sig_CodegenContext* ctx, char* type_name, long long line, long long column);
-char* cct_boot_rit_codegen_type_text_535(cct_boot_sig_CodegenContext* ctx, cct_boot_sig_AstNode* type_expr);
-char* cct_boot_rit_codegen_make_ordo_c_name_536(char* source_name);
-char* cct_boot_rit_codegen_make_ordo_tag_c_name_537(char* ordo_name, char* item_name);
-char* cct_boot_rit_codegen_make_ordo_item_c_name_538(char* ordo_name, char* item_name);
-long long cct_boot_rit_codegen_ordo_item_payload_arity_539(cct_boot_sig_AstNode* item);
-int cct_boot_rit_codegen_ordo_decl_has_payload_540(cct_boot_sig_AstNode* decl);
-void cct_boot_rit_codegen_register_ordo_decl_541(cct_boot_sig_CodegenContext* ctx, cct_boot_sig_AstNode* decl);
-void cct_boot_rit_codegen_emit_ordo_simple_definition_542(cct_boot_sig_CodegenContext* ctx, cct_boot_sig_AstNode* decl);
-void cct_boot_rit_codegen_emit_ordo_payload_definition_543(cct_boot_sig_CodegenContext* ctx, cct_boot_sig_AstNode* decl);
-void cct_boot_rit_codegen_emit_ordo_definition_544(cct_boot_sig_CodegenContext* ctx, cct_boot_sig_AstNode* decl);
-void cct_boot_rit_codegen_emit_ordo_definitions_545(cct_boot_sig_CodegenContext* ctx, cct_boot_sig_AstProgram* program);
-char* cct_boot_rit_codegen_make_sigillum_c_name_546(char* source_name);
-void cct_boot_rit_codegen_register_sigillum_decl_547(cct_boot_sig_CodegenContext* ctx, cct_boot_sig_AstNode* decl);
-void cct_boot_rit_codegen_register_rituale_decl_548(cct_boot_sig_CodegenContext* ctx, cct_boot_sig_AstNode* decl);
-void cct_boot_rit_codegen_register_program_shapes_549(cct_boot_sig_CodegenContext* ctx, cct_boot_sig_AstProgram* program);
-void cct_boot_rit_codegen_emit_sigillum_forward_decls_550(cct_boot_sig_CodegenContext* ctx);
-void cct_boot_rit_codegen_emit_sigillum_definition_551(cct_boot_sig_CodegenContext* ctx, cct_boot_sig_AstNode* decl);
-void cct_boot_rit_codegen_emit_generic_sigillum_instance_definition_552(cct_boot_sig_CodegenContext* ctx, cct_boot_sig_CodegenGenericSigillumInstance* inst);
-void cct_boot_rit_codegen_emit_sigillum_definitions_553(cct_boot_sig_CodegenContext* ctx, cct_boot_sig_AstProgram* program);
-void cct_boot_rit_codegen_require_fmt_runtime_554(cct_boot_sig_CodegenContext* ctx);
-long long cct_boot_rit_codegen_forma_placeholder_count_555(cct_boot_sig_AstNode* expr);
-char* cct_boot_rit_codegen_forma_template_text_556(cct_boot_sig_AstNode* expr);
-char* cct_boot_rit_codegen_unary_op_text_557(cct_boot_ord_TokenKind kind);
-char* cct_boot_rit_codegen_pointer_element_identity_558(char* pointer_identity);
-char* cct_boot_rit_codegen_binary_op_text_559(cct_boot_ord_TokenKind kind);
-void cct_boot_rit_codegen_forma_emit_argument_560(cct_boot_sig_CodegenContext* ctx, cct_boot_sig_AstNode* part);
-void cct_boot_rit_codegen_emit_forma_expr_561(cct_boot_sig_CodegenContext* ctx, cct_boot_sig_AstNode* expr);
-char* cct_boot_rit_codegen_expr_type_name_562(cct_boot_sig_CodegenContext* ctx, cct_boot_sig_AstNode* expr);
-void cct_boot_rit_codegen_emit_lvalue_563(cct_boot_sig_CodegenContext* ctx, cct_boot_sig_AstNode* expr);
-void cct_boot_rit_codegen_emit_call_expr_564(cct_boot_sig_CodegenContext* ctx, cct_boot_sig_AstNode* expr);
-void cct_boot_rit_codegen_emit_obsecro_call_expr_565(cct_boot_sig_CodegenContext* ctx, cct_boot_sig_AstNode* expr);
-void cct_boot_rit_codegen_emit_condition_expr_566(cct_boot_sig_CodegenContext* ctx, cct_boot_sig_AstNode* expr);
-void cct_boot_rit_codegen_emit_expr_567(cct_boot_sig_CodegenContext* ctx, cct_boot_sig_AstNode* expr);
-char* cct_boot_rit_codegen_elige_subject_type_name_568(cct_boot_sig_CodegenContext* ctx, cct_boot_sig_AstNode* stmt);
-void cct_boot_rit_codegen_elige_emit_subject_temp_569(cct_boot_sig_CodegenContext* ctx, char* temp_name, char* subject_type_name, cct_boot_sig_AstNode* expr);
-void cct_boot_rit_codegen_elige_emit_string_condition_570(cct_boot_sig_CodegenContext* ctx, char* subject_name, cct_boot_sig_AstNode* case_node);
-void cct_boot_rit_codegen_elige_emit_scalar_case_labels_571(cct_boot_sig_CodegenContext* ctx, cct_boot_sig_AstNode* case_node);
-void cct_boot_rit_codegen_elige_emit_simple_ordo_case_labels_572(cct_boot_sig_CodegenContext* ctx, cct_boot_sig_AstNode* case_node);
-long long cct_boot_rit_codegen_elige_case_bindings_len_573(cct_boot_sig_AstNode* case_node);
-long long cct_boot_rit_codegen_elige_case_literals_len_574(cct_boot_sig_AstNode* case_node);
-cct_boot_sig_AstNode* cct_boot_rit_codegen_elige_case_first_literal_575(cct_boot_sig_AstNode* case_node);
-void cct_boot_rit_codegen_elige_emit_payload_bindings_576(cct_boot_sig_CodegenContext* ctx, char* subject_name, char* owner_name, cct_boot_sig_AstNode* case_node);
-void cct_boot_rit_codegen_elige_finish_payload_case_scope_577(cct_boot_sig_CodegenContext* ctx, cct_boot_sig_AstNode* case_node);
-int cct_boot_rit_codegen_failure_supported_cape_type_578(char* type_name);
-void cct_boot_rit_codegen_flow_push_loop_579(cct_boot_sig_CodegenContext* ctx, char* break_label, char* continue_label);
-void cct_boot_rit_codegen_flow_pop_loop_580(cct_boot_sig_CodegenContext* ctx);
-char* cct_boot_rit_codegen_flow_current_break_label_581(cct_boot_sig_CodegenContext* ctx);
-char* cct_boot_rit_codegen_flow_current_continue_label_582(cct_boot_sig_CodegenContext* ctx);
-char* cct_boot_rit_codegen_stmt_type_text_583(cct_boot_sig_CodegenContext* ctx, cct_boot_sig_AstNode* type_expr);
-long long cct_boot_rit_codegen_series_identity_size_584(char* identity);
-char* cct_boot_rit_codegen_series_identity_element_585(char* identity);
-char* cct_boot_rit_codegen_iter_identity_to_c_type_586(cct_boot_sig_CodegenContext* ctx, char* identity);
-void cct_boot_rit_codegen_capture_iter_local_info_587(cct_boot_sig_CodegenContext* ctx, cct_boot_sig_AstNode* stmt, char* local_identity);
-void cct_boot_rit_codegen_emit_iterum_binding_decl_588(cct_boot_sig_CodegenContext* ctx, char* binding_name, char* identity);
-void cct_boot_rit_codegen_emit_iterum_assign_from_ptr_589(cct_boot_sig_CodegenContext* ctx, char* binding_name, char* identity, char* ptr_name);
-void cct_boot_rit_codegen_emit_iterum_stmt_590(cct_boot_sig_CodegenContext* ctx, cct_boot_sig_AstNode* stmt);
-int cct_boot_rit_codegen_stmt_is_switch_subject_591(cct_boot_sig_CodegenContext* ctx, char* type_name);
-void cct_boot_rit_codegen_emit_stmt_as_block_592(cct_boot_sig_CodegenContext* ctx, cct_boot_sig_AstNode* stmt);
-void cct_boot_rit_codegen_emit_iace_stmt_593(cct_boot_sig_CodegenContext* ctx, cct_boot_sig_AstNode* stmt);
-void cct_boot_rit_codegen_emit_tempta_stmt_594(cct_boot_sig_CodegenContext* ctx, cct_boot_sig_AstNode* stmt);
-void cct_boot_rit_codegen_emit_obsecro_scribe_stmt_595(cct_boot_sig_CodegenContext* ctx, cct_boot_sig_AstNode* expr);
-void cct_boot_rit_codegen_emit_obsecro_libera_stmt_596(cct_boot_sig_CodegenContext* ctx, cct_boot_sig_AstNode* expr);
-void cct_boot_rit_codegen_emit_stmt_597(cct_boot_sig_CodegenContext* ctx, cct_boot_sig_AstNode* stmt);
-char* cct_boot_rit_codegen_decl_type_text_598(cct_boot_sig_CodegenContext* ctx, cct_boot_sig_AstNode* type_expr);
-void cct_boot_rit_codegen_emit_param_list_599(cct_boot_sig_CodegenContext* ctx, cct_boot_sig_AstNode* rituale_decl);
-void cct_boot_rit_codegen_emit_rituale_signature_600(cct_boot_sig_CodegenContext* ctx, cct_boot_sig_AstNode* rituale_decl);
-void cct_boot_rit_codegen_emit_rituale_signature_instance_601(cct_boot_sig_CodegenContext* ctx, cct_boot_sig_AstNode* rituale_decl, char* c_name);
-void cct_boot_rit_codegen_emit_rituale_prototype_602(cct_boot_sig_CodegenContext* ctx, cct_boot_sig_AstNode* rituale_decl);
-void cct_boot_rit_codegen_emit_rituale_prototype_instance_603(cct_boot_sig_CodegenContext* ctx, cct_boot_sig_CodegenGenericRitualeInstance* inst);
-void cct_boot_rit_codegen_bind_rituale_params_604(cct_boot_sig_CodegenContext* ctx, cct_boot_sig_AstNode* rituale_decl);
-void cct_boot_rit_codegen_emit_rituale_definition_605(cct_boot_sig_CodegenContext* ctx, cct_boot_sig_AstNode* rituale_decl);
-void cct_boot_rit_codegen_emit_rituale_definition_instance_606(cct_boot_sig_CodegenContext* ctx, cct_boot_sig_CodegenGenericRitualeInstance* inst);
-void cct_boot_rit_codegen_emit_program_body_607(cct_boot_sig_CodegenContext* ctx, cct_boot_sig_AstProgram* program);
-void cct_boot_rit_codegen_emit_program_608(cct_boot_sig_CodegenContext* ctx, cct_boot_sig_AstProgram* program);
-char* cct_boot_rit_codegen_generate_program_609(cct_boot_sig_AstProgram* program, char* filename);
-char* cct_boot_rit_codegen_runtime_escape_c_string_610(char* raw);
-char* cct_boot_rit_codegen_runtime_string_symbol_611(cct_boot_sig_CodegenContext* ctx, char* raw_text);
-void cct_boot_rit_codegen_runtime_emit_includes_612(cct_boot_sig_CodegenContext* ctx);
-void cct_boot_rit_codegen_runtime_emit_failure_runtime_613(cct_boot_sig_CodegenContext* ctx);
-void cct_boot_rit_codegen_runtime_emit_fmt_runtime_614(cct_boot_sig_CodegenContext* ctx);
-void cct_boot_rit_codegen_runtime_emit_time_runtime_615(cct_boot_sig_CodegenContext* ctx);
-void cct_boot_rit_codegen_runtime_emit_fail_helper_616(cct_boot_sig_CodegenContext* ctx);
-void cct_boot_rit_codegen_runtime_emit_scribe_runtime_617(cct_boot_sig_CodegenContext* ctx);
-void cct_boot_rit_codegen_runtime_emit_verbum_runtime_618(cct_boot_sig_CodegenContext* ctx);
-void cct_boot_rit_codegen_runtime_emit_bytes_runtime_619(cct_boot_sig_CodegenContext* ctx);
-void cct_boot_rit_codegen_runtime_emit_string_pool_620(cct_boot_sig_CodegenContext* ctx);
-long long cct_boot_rit_codegen_runtime_find_entry_main_index_621(cct_boot_sig_AstProgram* program);
-int cct_boot_rit_codegen_runtime_program_needs_args_init_622(cct_boot_sig_AstProgram* program);
-void cct_boot_rit_codegen_runtime_detect_body_dependencies_623(cct_boot_sig_CodegenContext* ctx, char* body);
-void cct_boot_rit_codegen_runtime_emit_host_main_624(cct_boot_sig_CodegenContext* ctx, cct_boot_sig_AstProgram* program);
-char* cct_boot_rit_codegen_generate_translation_unit_with_context_625(cct_boot_sig_CodegenContext* ctx, cct_boot_sig_AstProgram* program);
-char* cct_boot_rit_codegen_generate_translation_unit_626(cct_boot_sig_AstProgram* program, char* filename);
-long long cct_boot_rit_main_627(void);
+long long cct_boot_rit_verbum_length_75(char* s);
+long long cct_boot_rit_verbum_find_from_76(char* s, char* sub, long long offset);
+void* cct_boot_rit_verbum_split_regex_77(char* s, void* regex_handle);
+char* cct_boot_rit_verbum_trim_chars_78(char* s, char* chars);
+char* cct_boot_rit_verbum_pad_left_text_79(char* s, long long width, char* fill);
+char* cct_boot_rit_verbum_pad_right_text_80(char* s, long long width, char* fill);
+char* cct_boot_rit_verbum_ascii_only_81(char* s);
+void* cct_boot_rit_builder_init_82(void);
+void cct_boot_rit_builder_append_83(void* b, char* s);
+void cct_boot_rit_builder_append_char_84(void* b, char c);
+void cct_boot_rit_builder_append_int_85(void* b, long long v);
+void cct_boot_rit_builder_append_bool_86(void* b, int v);
+void cct_boot_rit_builder_append_real_87(void* b, double v);
+char* cct_boot_rit_builder_to_verbum_88(void* b);
+long long cct_boot_rit_builder_len_89(void* b);
+void cct_boot_rit_builder_clear_90(void* b);
+void cct_boot_rit_builder_free_91(void* b);
+void* cct_boot_rit_writer_init_92(void);
+void cct_boot_rit_writer_indent_93(void* w);
+void cct_boot_rit_writer_dedent_94(void* w);
+void cct_boot_rit_writer_write_95(void* w, char* s);
+void cct_boot_rit_writer_writeln_96(void* w, char* s);
+void cct_boot_rit_writer_write_int_97(void* w, long long v);
+void cct_boot_rit_writer_writeln_int_98(void* w, long long v);
+void cct_boot_rit_writer_write_bool_99(void* w, int v);
+char* cct_boot_rit_writer_to_verbum_100(void* w);
+void cct_boot_rit_writer_free_101(void* w);
+char* cct_boot_rit_stringify_int_102(long long n);
+char* cct_boot_rit_stringify_real_103(double x);
+char* cct_boot_rit_stringify_bool_104(int b);
+char* cct_boot_rit_stringify_hex_105(long long n);
+char* cct_boot_rit_format_pair_106(char* label, char* value);
+char* cct_boot_rit_format_1_107(char* tmpl, char* a);
+char* cct_boot_rit_format_2_108(char* tmpl, char* a, char* b);
+char* cct_boot_rit_format_3_109(char* tmpl, char* a, char* b, char* c);
+char* cct_boot_rit_format_4_110(char* tmpl, char* a, char* b, char* c, char* d);
+char* cct_boot_rit_repeat_char_111(char c, long long n);
+long long cct_boot_rit_parse_int_112(char* s);
+double cct_boot_rit_parse_real_113(char* s);
+int cct_boot_rit_parse_bool_114(char* s);
+void* cct_boot_rit_try_int_115(char* s);
+void* cct_boot_rit_try_real_116(char* s);
+void* cct_boot_rit_try_bool_117(char* s);
+long long cct_boot_rit_parse_int_hex_118(char* s);
+void* cct_boot_rit_try_int_hex_119(char* s);
+long long cct_boot_rit_parse_int_radix_120(char* s, long long radix);
+void* cct_boot_rit_try_int_radix_121(char* s, long long radix);
+void* cct_boot_rit_parse_lines_122(char* s);
+void* cct_boot_rit_parse_csv_line_123(char* s);
+void* cct_boot_rit_parse_csv_line_sep_124(char* s, char sep);
+int cct_boot_rit_is_int_125(char* s);
+int cct_boot_rit_is_real_126(char* s);
+void cct_boot_rit_diag_error_127(cct_boot_sig_SourceLocation* loc, char* msg);
+void cct_boot_rit_diag_warn_128(cct_boot_sig_SourceLocation* loc, char* msg);
+char* cct_boot_rit_read_all_129(char* path);
+void cct_boot_rit_write_all_130(char* path, char* content);
+void cct_boot_rit_append_all_131(char* path, char* content);
+void cct_boot_rit_mkdir_132(char* path);
+void cct_boot_rit_mkdir_all_133(char* path);
+void cct_boot_rit_delete_file_134(char* path);
+void cct_boot_rit_delete_dir_135(char* path);
+int cct_boot_rit_is_file_136(char* path);
+int cct_boot_rit_is_dir_137(char* path);
+int cct_boot_rit_exists_138(char* path);
+long long cct_boot_rit_size_139(char* path);
+void* cct_boot_rit_read_lines_140(char* path);
+long long cct_boot_rit_run_141(char* cmd);
+char* cct_boot_rit_run_capture_142(char* cmd);
+char* cct_boot_rit_run_capture_err_143(char* cmd);
+char* cct_boot_rit_run_with_input_144(char* cmd, char* input);
+long long cct_boot_rit_run_env_145(char* cmd, void* env_pairs);
+long long cct_boot_rit_run_timeout_146(char* cmd, long long timeout_ms);
+char* cct_boot_rit_getenv_147(char* name);
+int cct_boot_rit_has_env_148(char* name);
+char* cct_boot_rit_cwd_149(void);
+void* cct_boot_rit_db_open_150(char* path);
+void cct_boot_rit_db_close_151(void* db);
+void cct_boot_rit_db_exec_152(void* db, char* sql);
+char* cct_boot_rit_db_last_error_153(void* db);
+void* cct_boot_rit_db_query_154(void* db, char* sql);
+int cct_boot_rit_rows_next_155(void* rows);
+char* cct_boot_rit_rows_get_text_156(void* rows, long long col);
+long long cct_boot_rit_rows_get_int_157(void* rows, long long col);
+double cct_boot_rit_rows_get_real_158(void* rows, long long col);
+void cct_boot_rit_rows_close_159(void* rows);
+void* cct_boot_rit_db_prepare_160(void* db, char* sql);
+void cct_boot_rit_stmt_bind_text_161(void* stmt, long long idx, char* v);
+void cct_boot_rit_stmt_bind_int_162(void* stmt, long long idx, long long v);
+void cct_boot_rit_stmt_bind_real_163(void* stmt, long long idx, double v);
+int cct_boot_rit_stmt_step_164(void* stmt);
+void cct_boot_rit_stmt_reset_165(void* stmt);
+void cct_boot_rit_stmt_finalize_166(void* stmt);
+void cct_boot_rit_db_begin_167(void* db);
+void cct_boot_rit_db_commit_168(void* db);
+void cct_boot_rit_db_rollback_169(void* db);
+long long cct_boot_rit_db_scalar_int_170(void* db, char* sql);
+char* cct_boot_rit_db_scalar_text_171(void* db, char* sql);
+long long* cct_boot_rit_alloc_172(long long tamanho);
+void cct_boot_rit_free_173(long long* ptr);
+long long* cct_boot_rit_realloc_174(long long* ptr, long long novo_tamanho);
+void cct_boot_rit_copy_175(long long* dest, long long* src, long long tamanho);
+void cct_boot_rit_set_176(long long* ptr, long long valor, long long tamanho);
+void cct_boot_rit_zero_177(long long* ptr, long long tamanho);
+long long cct_boot_rit_mem_compare_178(long long* a, long long* b, long long tamanho);
+void* cct_boot_rit_fluxus_init_179(long long elem_size);
+void cct_boot_rit_fluxus_free_180(void* flux);
+void cct_boot_rit_fluxus_push_181(void* flux, void* elem);
+void cct_boot_rit_fluxus_pop_182(void* flux, void* out);
+long long cct_boot_rit_fluxus_len_183(void* flux);
+void* cct_boot_rit_fluxus_get_184(void* flux, long long idx);
+void cct_boot_rit_fluxus_clear_185(void* flux);
+void cct_boot_rit_fluxus_reserve_186(void* flux, long long cap);
+long long cct_boot_rit_fluxus_capacity_187(void* flux);
+void* cct_boot_rit_fluxus_peek_188(void* flux);
+void cct_boot_rit_fluxus_set_189(void* flux, long long idx, void* elem);
+void cct_boot_rit_fluxus_remove_190(void* flux, long long idx);
+void cct_boot_rit_fluxus_insert_191(void* flux, long long idx, void* elem);
+int cct_boot_rit_fluxus_contains_192(void* flux, void* elem);
+int cct_boot_rit_fluxus_is_empty_193(void* flux);
+void cct_boot_rit_fluxus_reverse_194(void* flux);
+void cct_boot_rit_fluxus_sort_int_195(void* flux);
+void cct_boot_rit_fluxus_sort_verbum_196(void* flux);
+void* cct_boot_rit_fluxus_to_ptr_197(void* flux);
+double cct_boot_rit_sqrt_real_198(double x);
+double cct_boot_rit_cbrt_real_199(double x);
+double cct_boot_rit_pow_real_200(double base, double exp);
+double cct_boot_rit_abs_real_201(double x);
+long long cct_boot_rit_floor_real_202(double x);
+long long cct_boot_rit_ceil_real_203(double x);
+long long cct_boot_rit_round_real_204(double x);
+double cct_boot_rit_sin_real_205(double x);
+double cct_boot_rit_cos_real_206(double x);
+double cct_boot_rit_tan_real_207(double x);
+double cct_boot_rit_log_real_208(double x);
+double cct_boot_rit_exp_real_209(double x);
+void* cct_boot_rit_ast_heap_alloc_210(long long bytes);
+void cct_boot_rit_ast_heap_zero_211(void* ptr, long long bytes);
+void cct_boot_rit_ast_heap_free_212(void* ptr);
+void cct_boot_rit_ast_heap_copy_213(void* dest, void* src, long long bytes);
+void* cct_boot_rit_ast_node_list_new_214(void);
+void cct_boot_rit_ast_node_list_push_215(void* list, cct_boot_sig_AstNode* node);
+long long cct_boot_rit_ast_node_list_len_216(void* list);
+cct_boot_sig_AstNode* cct_boot_rit_ast_node_list_get_217(void* list, long long idx);
+cct_boot_sig_AstNode* cct_boot_rit_ast_node_new_218(cct_boot_ord_AstKind kind, long long line, long long column);
+cct_boot_sig_AstProgram* cct_boot_rit_ast_program_new_219(void);
+void cct_boot_rit_ast_node_set_name_220(cct_boot_sig_AstNode* node, char* name);
+void cct_boot_rit_ast_node_set_value_text_221(cct_boot_sig_AstNode* node, char* value_text);
+void cct_boot_rit_ast_node_set_type_name_222(cct_boot_sig_AstNode* node, char* type_name);
+void cct_boot_rit_ast_node_set_aux_name_223(cct_boot_sig_AstNode* node, char* aux_name);
+void cct_boot_rit_ast_node_set_fmt_spec_224(cct_boot_sig_AstNode* node, char* fmt_spec);
+void cct_boot_rit_ast_program_set_name_225(cct_boot_sig_AstProgram* program, char* name);
+void cct_boot_rit_ast_program_append_decl_226(cct_boot_sig_AstProgram* program, cct_boot_sig_AstNode* decl);
+void cct_boot_rit_ast_append_child_227(cct_boot_sig_AstNode* node, cct_boot_sig_AstNode* child);
+void cct_boot_rit_ast_append_case_228(cct_boot_sig_AstNode* node, cct_boot_sig_AstNode* case_node);
+void cct_boot_rit_ast_append_binding_229(cct_boot_sig_AstNode* node, cct_boot_sig_AstNode* binding);
+void cct_boot_rit_ast_append_type_param_230(cct_boot_sig_AstNode* node, cct_boot_sig_AstNode* param);
+void cct_boot_rit_ast_append_generic_arg_231(cct_boot_sig_AstNode* node, cct_boot_sig_AstNode* arg);
+void cct_boot_rit_ast_append_param_232(cct_boot_sig_AstNode* node, cct_boot_sig_AstNode* param);
+void cct_boot_rit_ast_append_field_233(cct_boot_sig_AstNode* node, cct_boot_sig_AstNode* field);
+void cct_boot_rit_ast_append_item_234(cct_boot_sig_AstNode* node, cct_boot_sig_AstNode* item);
+void cct_boot_rit_ast_append_argument_235(cct_boot_sig_AstNode* node, cct_boot_sig_AstNode* argument);
+void cct_boot_rit_ast_append_declaration_236(cct_boot_sig_AstNode* node, cct_boot_sig_AstNode* decl);
+void cct_boot_rit_ast_append_signature_237(cct_boot_sig_AstNode* node, cct_boot_sig_AstNode* sig);
+void cct_boot_rit_ast_append_statement_238(cct_boot_sig_AstNode* node, cct_boot_sig_AstNode* stmt);
+cct_boot_sig_AstNode* cct_boot_rit_ast_make_import_239(char* path, long long line, long long column);
+cct_boot_sig_AstNode* cct_boot_rit_ast_make_type_240(char* name, long long line, long long column);
+void cct_boot_rit_ast_type_mark_pointer_241(cct_boot_sig_AstNode* node);
+void cct_boot_rit_ast_type_mark_array_242(cct_boot_sig_AstNode* node, long long array_size);
+void cct_boot_rit_ast_type_set_element_243(cct_boot_sig_AstNode* node, cct_boot_sig_AstNode* element_type);
+cct_boot_sig_AstNode* cct_boot_rit_ast_make_literal_int_244(char* text, long long line, long long column);
+cct_boot_sig_AstNode* cct_boot_rit_ast_make_literal_real_245(char* text, long long line, long long column);
+cct_boot_sig_AstNode* cct_boot_rit_ast_make_literal_string_246(char* text, long long line, long long column);
+cct_boot_sig_AstNode* cct_boot_rit_ast_make_literal_bool_247(int value, long long line, long long column);
+cct_boot_sig_AstNode* cct_boot_rit_ast_make_literal_nihil_248(long long line, long long column);
+cct_boot_sig_AstNode* cct_boot_rit_ast_make_identifier_249(char* name, long long line, long long column);
+cct_boot_sig_AstNode* cct_boot_rit_ast_make_binary_250(cct_boot_ord_TokenKind operator_kind, cct_boot_sig_AstNode* left, cct_boot_sig_AstNode* right, long long line, long long column);
+cct_boot_sig_AstNode* cct_boot_rit_ast_make_unary_251(cct_boot_ord_TokenKind operator_kind, cct_boot_sig_AstNode* operand, long long line, long long column);
+cct_boot_sig_AstNode* cct_boot_rit_ast_make_call_252(cct_boot_sig_AstNode* callee, long long line, long long column);
+cct_boot_sig_AstNode* cct_boot_rit_ast_make_obsecro_call_253(cct_boot_sig_AstNode* callee, long long line, long long column);
+cct_boot_sig_AstNode* cct_boot_rit_ast_make_field_access_254(cct_boot_sig_AstNode* object, char* field_name, long long line, long long column);
+cct_boot_sig_AstNode* cct_boot_rit_ast_make_index_access_255(cct_boot_sig_AstNode* object, cct_boot_sig_AstNode* index, long long line, long long column);
+cct_boot_sig_AstNode* cct_boot_rit_ast_make_expr_stmt_256(cct_boot_sig_AstNode* expr, long long line, long long column);
+cct_boot_sig_AstNode* cct_boot_rit_ast_make_molde_257(long long line, long long column);
+cct_boot_sig_AstNode* cct_boot_rit_ast_make_mensura_258(cct_boot_sig_AstNode* type_expr, long long line, long long column);
+cct_boot_sig_AstNode* cct_boot_rit_ast_make_redde_259(cct_boot_sig_AstNode* expr, long long line, long long column);
+cct_boot_sig_AstNode* cct_boot_rit_ast_make_redde_empty_260(long long line, long long column);
+cct_boot_sig_AstNode* cct_boot_rit_ast_make_anur_261(cct_boot_sig_AstNode* expr, long long line, long long column);
+cct_boot_sig_AstNode* cct_boot_rit_ast_make_anur_empty_262(long long line, long long column);
+cct_boot_sig_AstNode* cct_boot_rit_ast_make_iace_263(cct_boot_sig_AstNode* expr, long long line, long long column);
+cct_boot_sig_AstNode* cct_boot_rit_ast_make_dimitte_264(cct_boot_sig_AstNode* target, long long line, long long column);
+cct_boot_sig_AstNode* cct_boot_rit_ast_make_block_265(long long line, long long column);
+cct_boot_sig_AstNode* cct_boot_rit_ast_make_case_266(long long line, long long column);
+cct_boot_sig_AstNode* cct_boot_rit_ast_make_param_267(char* name, cct_boot_sig_AstNode* type_expr, long long line, long long column);
+cct_boot_sig_AstNode* cct_boot_rit_ast_make_type_param_no_constraint_268(char* name, long long line, long long column);
+cct_boot_sig_AstNode* cct_boot_rit_ast_make_type_param_269(char* name, cct_boot_sig_AstNode* constraint_type, long long line, long long column);
+cct_boot_sig_AstNode* cct_boot_rit_ast_make_field_270(char* name, cct_boot_sig_AstNode* type_expr, long long line, long long column);
+cct_boot_sig_AstNode* cct_boot_rit_ast_make_enum_item_271(char* name, cct_boot_sig_AstNode* value, long long line, long long column);
+cct_boot_sig_AstNode* cct_boot_rit_ast_make_enum_item_no_value_272(char* name, long long line, long long column);
+cct_boot_sig_AstNode* cct_boot_rit_ast_make_rituale_273(char* name, cct_boot_sig_AstNode* return_type, cct_boot_sig_AstNode* body, long long line, long long column);
+cct_boot_sig_AstNode* cct_boot_rit_ast_make_rituale_decl_274(char* name, long long line, long long column);
+cct_boot_sig_AstNode* cct_boot_rit_ast_make_sigillum_275(char* name, long long line, long long column);
+cct_boot_sig_AstNode* cct_boot_rit_ast_make_ordo_276(char* name, long long line, long long column);
+cct_boot_sig_AstNode* cct_boot_rit_ast_make_codex_277(char* name, long long line, long long column);
+cct_boot_sig_AstNode* cct_boot_rit_ast_make_pactum_278(char* name, long long line, long long column);
+cct_boot_sig_AstNode* cct_boot_rit_ast_make_evoca_279(char* name, cct_boot_sig_AstNode* type_expr, cct_boot_sig_AstNode* init_expr, long long line, long long column);
+cct_boot_sig_AstNode* cct_boot_rit_ast_make_evoca_no_init_280(char* name, cct_boot_sig_AstNode* type_expr, long long line, long long column);
+cct_boot_sig_AstNode* cct_boot_rit_ast_make_vincire_281(cct_boot_sig_AstNode* target, cct_boot_sig_AstNode* value, long long line, long long column);
+cct_boot_sig_AstNode* cct_boot_rit_ast_make_si_282(cct_boot_sig_AstNode* condition, cct_boot_sig_AstNode* body, cct_boot_sig_AstNode* else_branch, long long line, long long column);
+cct_boot_sig_AstNode* cct_boot_rit_ast_make_si_no_else_283(cct_boot_sig_AstNode* condition, cct_boot_sig_AstNode* body, long long line, long long column);
+cct_boot_sig_AstNode* cct_boot_rit_ast_make_quando_284(cct_boot_sig_AstNode* expr, long long line, long long column);
+cct_boot_sig_AstNode* cct_boot_rit_ast_make_dum_285(cct_boot_sig_AstNode* condition, cct_boot_sig_AstNode* body, long long line, long long column);
+cct_boot_sig_AstNode* cct_boot_rit_ast_make_donec_286(cct_boot_sig_AstNode* body, cct_boot_sig_AstNode* condition, long long line, long long column);
+cct_boot_sig_AstNode* cct_boot_rit_ast_make_donec_no_condition_287(cct_boot_sig_AstNode* body, long long line, long long column);
+cct_boot_sig_AstNode* cct_boot_rit_ast_make_repete_288(char* iterator_name, cct_boot_sig_AstNode* start_expr, cct_boot_sig_AstNode* end_expr, cct_boot_sig_AstNode* step_expr, cct_boot_sig_AstNode* body, long long line, long long column);
+cct_boot_sig_AstNode* cct_boot_rit_ast_make_repete_no_step_289(char* iterator_name, cct_boot_sig_AstNode* start_expr, cct_boot_sig_AstNode* end_expr, cct_boot_sig_AstNode* body, long long line, long long column);
+cct_boot_sig_AstNode* cct_boot_rit_ast_make_iterum_290(char* item_name, char* value_name, cct_boot_sig_AstNode* collection, cct_boot_sig_AstNode* body, long long line, long long column);
+cct_boot_sig_AstNode* cct_boot_rit_ast_make_frange_291(long long line, long long column);
+cct_boot_sig_AstNode* cct_boot_rit_ast_make_recede_292(long long line, long long column);
+cct_boot_sig_AstNode* cct_boot_rit_ast_make_tempta_no_semper_293(cct_boot_sig_AstNode* try_block, cct_boot_sig_AstNode* cape_type, char* cape_name, cct_boot_sig_AstNode* cape_block, long long line, long long column);
+cct_boot_sig_AstNode* cct_boot_rit_ast_make_tempta_294(cct_boot_sig_AstNode* try_block, cct_boot_sig_AstNode* cape_type, char* cape_name, cct_boot_sig_AstNode* cape_block, cct_boot_sig_AstNode* semper_block, long long line, long long column);
+char* cct_boot_rit_ast_dump_indent_295(long long level);
+char* cct_boot_rit_ast_dump_append_296(char* out, char* text);
+char* cct_boot_rit_ast_dump_append_line_297(char* out, long long level, char* text);
+char* cct_boot_rit_ast_dump_location_298(long long line, long long column);
+char* cct_boot_rit_ast_dump_type_inline_299(cct_boot_sig_AstNode* type_expr);
+char* cct_boot_rit_ast_dump_type_params_300(char* out, long long level, void* list);
+char* cct_boot_rit_ast_dump_value_with_label_301(char* out, long long level, char* label, cct_boot_sig_AstNode* node);
+char* cct_boot_rit_ast_dump_named_type_list_302(char* out, long long level, void* list, char* label);
+char* cct_boot_rit_ast_dump_enum_items_303(char* out, long long level, void* list);
+char* cct_boot_rit_ast_dump_node_list_with_label_304(char* out, long long level, void* list, char* label);
+char* cct_boot_rit_ast_dump_node_305(cct_boot_sig_AstNode* node, long long level, char* out);
+char* cct_boot_rit_ast_dump_program_306(cct_boot_sig_AstProgram* program);
+void cct_boot_rit_ast_list_free_owned_307(void* list);
+void cct_boot_rit_ast_node_free_308(cct_boot_sig_AstNode* node);
+void cct_boot_rit_ast_program_free_309(cct_boot_sig_AstProgram* program);
+cct_boot_ord_TokenKind cct_boot_rit_keyword_lookup_310(char* lexeme);
+cct_boot_sig_LexerState cct_boot_rit_lexer_init_311(char* source, char* filename);
+cct_boot_sig_Token cct_boot_rit_token_make_312(cct_boot_ord_TokenKind kind, char* lexeme, long long line, long long column);
+void cct_boot_rit_token_free_313(cct_boot_sig_Token* tok);
+int cct_boot_rit_lexer_is_at_end_314(cct_boot_sig_LexerState* lex);
+char cct_boot_rit_lexer_peek_315(cct_boot_sig_LexerState* lex);
+char cct_boot_rit_lexer_peek_next_316(cct_boot_sig_LexerState* lex);
+char cct_boot_rit_lexer_advance_317(cct_boot_sig_LexerState* lex);
+int cct_boot_rit_lexer_match_318(cct_boot_sig_LexerState* lex, char expected);
+void cct_boot_rit_lexer_skip_whitespace_319(cct_boot_sig_LexerState* lex);
+void cct_boot_rit_lexer_skip_comment_320(cct_boot_sig_LexerState* lex);
+char* cct_boot_rit_lexer_make_lexeme_321(cct_boot_sig_LexerState* lex);
+cct_boot_sig_Token cct_boot_rit_lexer_make_token_322(cct_boot_sig_LexerState* lex, cct_boot_ord_TokenKind kind);
+cct_boot_sig_Token cct_boot_rit_lexer_error_token_323(cct_boot_sig_LexerState* lex, char* msg);
+cct_boot_sig_Token cct_boot_rit_lexer_error_character_token_324(cct_boot_sig_LexerState* lex, char c);
+cct_boot_sig_Token cct_boot_rit_lexer_identifier_325(cct_boot_sig_LexerState* lex);
+cct_boot_sig_Token cct_boot_rit_lexer_number_326(cct_boot_sig_LexerState* lex);
+cct_boot_sig_Token cct_boot_rit_lexer_string_327(cct_boot_sig_LexerState* lex);
+cct_boot_sig_Token cct_boot_rit_lexer_next_token_328(cct_boot_sig_LexerState* lex);
+cct_boot_sig_Token cct_boot_rit_parser_empty_token_329(void);
+cct_boot_sig_ParserState cct_boot_rit_parser_init_330(cct_boot_sig_LexerState* lexer, char* filename);
+void cct_boot_rit_parser_dispose_331(cct_boot_sig_ParserState* parser);
+void cct_boot_rit_parser_advance_332(cct_boot_sig_ParserState* parser);
+int cct_boot_rit_parser_check_333(cct_boot_sig_ParserState* parser, cct_boot_ord_TokenKind kind);
+int cct_boot_rit_parser_match_334(cct_boot_sig_ParserState* parser, cct_boot_ord_TokenKind kind);
+void cct_boot_rit_parser_emit_error_335(cct_boot_sig_ParserState* parser, long long line, long long column, char* message);
+void cct_boot_rit_parser_error_at_current_336(cct_boot_sig_ParserState* parser, char* message);
+void cct_boot_rit_parser_error_at_previous_337(cct_boot_sig_ParserState* parser, char* message);
+int cct_boot_rit_parser_consume_338(cct_boot_sig_ParserState* parser, cct_boot_ord_TokenKind kind, char* message);
+int cct_boot_rit_parser_is_declaration_start_339(cct_boot_ord_TokenKind kind);
+int cct_boot_rit_parser_is_statement_start_340(cct_boot_ord_TokenKind kind);
+void cct_boot_rit_parser_synchronize_statement_341(cct_boot_sig_ParserState* parser);
+void cct_boot_rit_parser_synchronize_declaration_342(cct_boot_sig_ParserState* parser);
+int cct_boot_rit_parser_is_assignment_target_343(cct_boot_sig_AstNode* node);
+cct_boot_sig_AstNode* cct_boot_rit_parse_expression_344(cct_boot_sig_ParserState* parser);
+int cct_boot_rit_parse_expr_is_simple_type_token_345(cct_boot_ord_TokenKind kind);
+cct_boot_sig_AstNode* cct_boot_rit_parse_expr_generic_type_346(cct_boot_sig_ParserState* parser);
+void cct_boot_rit_parse_postfix_generic_args_347(cct_boot_sig_ParserState* parser, cct_boot_sig_AstNode* expr);
+char* cct_boot_rit_parse_forma_unquote_348(char* raw_text);
+void cct_boot_rit_parse_forma_flush_literal_349(cct_boot_sig_AstNode* molde, void* literal_builder, long long line, long long column);
+cct_boot_sig_AstNode* cct_boot_rit_parse_forma_expression_350(cct_boot_sig_ParserState* parser);
+cct_boot_sig_AstNode* cct_boot_rit_parse_primary_351(cct_boot_sig_ParserState* parser);
+cct_boot_sig_AstNode* cct_boot_rit_parse_postfix_suffixes_352(cct_boot_sig_ParserState* parser, cct_boot_sig_AstNode* expr);
+cct_boot_sig_AstNode* cct_boot_rit_parse_postfix_353(cct_boot_sig_ParserState* parser);
+cct_boot_sig_AstNode* cct_boot_rit_parse_unary_354(cct_boot_sig_ParserState* parser);
+cct_boot_sig_AstNode* cct_boot_rit_parse_power_355(cct_boot_sig_ParserState* parser);
+cct_boot_sig_AstNode* cct_boot_rit_parse_multiplicative_356(cct_boot_sig_ParserState* parser);
+cct_boot_sig_AstNode* cct_boot_rit_parse_additive_357(cct_boot_sig_ParserState* parser);
+cct_boot_sig_AstNode* cct_boot_rit_parse_comparison_358(cct_boot_sig_ParserState* parser);
+cct_boot_sig_AstNode* cct_boot_rit_parse_equality_359(cct_boot_sig_ParserState* parser);
+cct_boot_sig_AstNode* cct_boot_rit_parse_logical_and_360(cct_boot_sig_ParserState* parser);
+cct_boot_sig_AstNode* cct_boot_rit_parse_logical_or_361(cct_boot_sig_ParserState* parser);
+cct_boot_sig_AstNode* cct_boot_rit_parse_assignment_362(cct_boot_sig_ParserState* parser);
+cct_boot_sig_AstNode* cct_boot_rit_parser_parse_expression_source_363(char* source, char* filename);
+int cct_boot_rit_parser_is_simple_type_token_364(cct_boot_ord_TokenKind kind);
+void cct_boot_rit_parse_stmt_type_args_365(cct_boot_sig_ParserState* parser, cct_boot_sig_AstNode* type_expr);
+int cct_boot_rit_parser_is_statement_boundary_366(cct_boot_ord_TokenKind kind);
+cct_boot_sig_AstNode* cct_boot_rit_parse_type_simple_367(cct_boot_sig_ParserState* parser);
+cct_boot_sig_AstNode* cct_boot_rit_parse_expression_statement_368(cct_boot_sig_ParserState* parser);
+cct_boot_sig_AstNode* cct_boot_rit_parse_block_369(cct_boot_sig_ParserState* parser);
+cct_boot_sig_AstNode* cct_boot_rit_parse_evoca_statement_370(cct_boot_sig_ParserState* parser);
+cct_boot_sig_AstNode* cct_boot_rit_parse_vincire_statement_371(cct_boot_sig_ParserState* parser);
+cct_boot_sig_AstNode* cct_boot_rit_parse_redde_statement_372(cct_boot_sig_ParserState* parser);
+cct_boot_sig_AstNode* cct_boot_rit_parse_anur_statement_373(cct_boot_sig_ParserState* parser);
+cct_boot_sig_AstNode* cct_boot_rit_parse_iace_statement_374(cct_boot_sig_ParserState* parser);
+cct_boot_sig_AstNode* cct_boot_rit_parse_dimitte_statement_375(cct_boot_sig_ParserState* parser);
+cct_boot_sig_AstNode* cct_boot_rit_parse_frange_statement_376(cct_boot_sig_ParserState* parser);
+cct_boot_sig_AstNode* cct_boot_rit_parse_recede_statement_377(cct_boot_sig_ParserState* parser);
+cct_boot_sig_AstNode* cct_boot_rit_parse_statement_block_until_failure_clause_378(cct_boot_sig_ParserState* parser);
+cct_boot_sig_AstNode* cct_boot_rit_parse_statement_block_until_elige_boundary_379(cct_boot_sig_ParserState* parser);
+cct_boot_sig_AstNode* cct_boot_rit_parse_elige_literal_380(cct_boot_sig_ParserState* parser);
+cct_boot_sig_AstNode* cct_boot_rit_parse_tempta_statement_381(cct_boot_sig_ParserState* parser);
+cct_boot_sig_AstNode* cct_boot_rit_parse_elige_statement_382(cct_boot_sig_ParserState* parser);
+cct_boot_sig_AstNode* cct_boot_rit_parse_inline_statement_block_until_383(cct_boot_sig_ParserState* parser, cct_boot_ord_TokenKind terminator, int stop_on_aliter);
+cct_boot_sig_AstNode* cct_boot_rit_parse_si_statement_384(cct_boot_sig_ParserState* parser);
+cct_boot_sig_AstNode* cct_boot_rit_parse_dum_statement_385(cct_boot_sig_ParserState* parser);
+cct_boot_sig_AstNode* cct_boot_rit_parse_donec_body_386(cct_boot_sig_ParserState* parser);
+cct_boot_sig_AstNode* cct_boot_rit_parse_donec_statement_387(cct_boot_sig_ParserState* parser);
+cct_boot_sig_AstNode* cct_boot_rit_parse_repete_statement_388(cct_boot_sig_ParserState* parser);
+cct_boot_sig_AstNode* cct_boot_rit_parse_iterum_statement_389(cct_boot_sig_ParserState* parser);
+cct_boot_sig_AstNode* cct_boot_rit_parse_statement_390(cct_boot_sig_ParserState* parser);
+cct_boot_sig_AstNode* cct_boot_rit_parser_parse_statement_source_391(char* source, char* filename);
+cct_boot_sig_AstNode* cct_boot_rit_parse_type_392(cct_boot_sig_ParserState* parser);
+void cct_boot_rit_parse_optional_generic_type_args_393(cct_boot_sig_ParserState* parser, cct_boot_sig_AstNode* type_expr);
+int cct_boot_rit_parse_type_param_exists_394(void* list, char* name);
+void cct_boot_rit_parse_optional_type_params_395(cct_boot_sig_ParserState* parser, cct_boot_sig_AstNode* owner, int allow_constraint);
+void cct_boot_rit_parse_param_list_396(cct_boot_sig_ParserState* parser, cct_boot_sig_AstNode* rituale);
+cct_boot_sig_AstNode* cct_boot_rit_parse_import_declaration_397(cct_boot_sig_ParserState* parser);
+cct_boot_sig_AstNode* cct_boot_rit_parse_rituale_body_until_explicit_398(cct_boot_sig_ParserState* parser);
+cct_boot_sig_AstNode* cct_boot_rit_parse_rituale_signature_only_399(cct_boot_sig_ParserState* parser, char* name, long long line, long long column);
+cct_boot_sig_AstNode* cct_boot_rit_parse_rituale_declaration_400(cct_boot_sig_ParserState* parser);
+cct_boot_sig_AstNode* cct_boot_rit_parse_sigillum_declaration_401(cct_boot_sig_ParserState* parser);
+cct_boot_sig_AstNode* cct_boot_rit_parse_ordo_payload_field_402(cct_boot_sig_ParserState* parser);
+cct_boot_sig_AstNode* cct_boot_rit_parse_ordo_declaration_403(cct_boot_sig_ParserState* parser);
+cct_boot_sig_AstNode* cct_boot_rit_parse_codex_declaration_404(cct_boot_sig_ParserState* parser);
+cct_boot_sig_AstNode* cct_boot_rit_parse_pactum_declaration_405(cct_boot_sig_ParserState* parser);
+cct_boot_sig_AstNode* cct_boot_rit_parse_declaration_406(cct_boot_sig_ParserState* parser);
+cct_boot_sig_AstProgram* cct_boot_rit_parse_program_407(cct_boot_sig_ParserState* parser);
+cct_boot_sig_AstProgram* cct_boot_rit_parser_parse_program_source_408(char* source, char* filename);
+char* cct_boot_rit_parser_dump_program_source_409(char* source, char* filename);
+void* cct_boot_rit_codegen_heap_alloc_410(long long bytes);
+void cct_boot_rit_codegen_heap_zero_411(void* ptr, long long bytes);
+void cct_boot_rit_codegen_heap_free_412(void* ptr);
+cct_boot_sig_CodegenRitualeName* cct_boot_rit_codegen_context_record_at_413(cct_boot_sig_CodegenContext* ctx, long long idx);
+cct_boot_sig_CodegenLocal* cct_boot_rit_codegen_context_local_at_414(cct_boot_sig_CodegenContext* ctx, long long idx);
+cct_boot_sig_CodegenSigillum* cct_boot_rit_codegen_context_sigillum_at_415(cct_boot_sig_CodegenContext* ctx, long long idx);
+cct_boot_sig_CodegenSigillumField* cct_boot_rit_codegen_context_sigillum_field_at_416(cct_boot_sig_CodegenSigillum* sigillum, long long idx);
+cct_boot_sig_CodegenStringLiteral* cct_boot_rit_codegen_context_string_at_417(cct_boot_sig_CodegenContext* ctx, long long idx);
+cct_boot_sig_CodegenOrdo* cct_boot_rit_codegen_context_ordo_at_418(cct_boot_sig_CodegenContext* ctx, long long idx);
+cct_boot_sig_CodegenOrdoItem* cct_boot_rit_codegen_context_ordo_item_at_419(cct_boot_sig_CodegenOrdo* ordo, long long idx);
+cct_boot_sig_CodegenGenericSigillumTemplate* cct_boot_rit_codegen_context_generic_sigillum_template_at_420(cct_boot_sig_CodegenContext* ctx, long long idx);
+cct_boot_sig_CodegenGenericSigillumInstance* cct_boot_rit_codegen_context_generic_sigillum_instance_at_421(cct_boot_sig_CodegenContext* ctx, long long idx);
+cct_boot_sig_CodegenGenericRitualeTemplate* cct_boot_rit_codegen_context_generic_rituale_template_at_422(cct_boot_sig_CodegenContext* ctx, long long idx);
+cct_boot_sig_CodegenGenericRitualeInstance* cct_boot_rit_codegen_context_generic_rituale_instance_at_423(cct_boot_sig_CodegenContext* ctx, long long idx);
+cct_boot_sig_CodegenGenericBinding* cct_boot_rit_codegen_context_generic_binding_at_424(cct_boot_sig_CodegenContext* ctx, long long idx);
+void cct_boot_rit_codegen_context_free_records_425(cct_boot_sig_CodegenContext* ctx);
+void cct_boot_rit_codegen_context_free_locals_426(cct_boot_sig_CodegenContext* ctx);
+void cct_boot_rit_codegen_context_free_loop_labels_427(cct_boot_sig_CodegenContext* ctx);
+void cct_boot_rit_codegen_context_free_sigillum_types_428(cct_boot_sig_CodegenContext* ctx);
+void cct_boot_rit_codegen_context_free_string_literals_429(cct_boot_sig_CodegenContext* ctx);
+void cct_boot_rit_codegen_context_free_ordo_types_430(cct_boot_sig_CodegenContext* ctx);
+void cct_boot_rit_codegen_context_free_generic_sigillum_templates_431(cct_boot_sig_CodegenContext* ctx);
+void cct_boot_rit_codegen_context_free_generic_sigillum_instances_432(cct_boot_sig_CodegenContext* ctx);
+void cct_boot_rit_codegen_context_free_generic_rituale_templates_433(cct_boot_sig_CodegenContext* ctx);
+void cct_boot_rit_codegen_context_free_generic_rituale_instances_434(cct_boot_sig_CodegenContext* ctx);
+void cct_boot_rit_codegen_context_free_generic_bindings_435(cct_boot_sig_CodegenContext* ctx);
+cct_boot_sig_CodegenContext* cct_boot_rit_codegen_context_new_436(char* filename);
+void cct_boot_rit_codegen_context_reset_output_437(cct_boot_sig_CodegenContext* ctx);
+void cct_boot_rit_codegen_context_reset_438(cct_boot_sig_CodegenContext* ctx);
+void cct_boot_rit_codegen_context_free_439(cct_boot_sig_CodegenContext* ctx);
+void cct_boot_rit_codegen_report_error_440(cct_boot_sig_CodegenContext* ctx, long long line, long long column, char* message);
+int cct_boot_rit_codegen_had_error_441(cct_boot_sig_CodegenContext* ctx);
+char* cct_boot_rit_codegen_output_442(cct_boot_sig_CodegenContext* ctx);
+long long cct_boot_rit_codegen_registered_rituale_count_443(cct_boot_sig_CodegenContext* ctx);
+char* cct_boot_rit_codegen_lookup_rituale_c_name_444(cct_boot_sig_CodegenContext* ctx, char* source_name);
+char* cct_boot_rit_codegen_register_rituale_c_name_445(cct_boot_sig_CodegenContext* ctx, char* source_name, char* c_name, char* return_type_name);
+char* cct_boot_rit_codegen_lookup_rituale_return_type_446(cct_boot_sig_CodegenContext* ctx, char* source_name);
+void cct_boot_rit_codegen_set_current_return_type_447(cct_boot_sig_CodegenContext* ctx, char* type_name);
+void cct_boot_rit_codegen_push_local_scope_448(cct_boot_sig_CodegenContext* ctx);
+void cct_boot_rit_codegen_pop_local_scope_449(cct_boot_sig_CodegenContext* ctx);
+char* cct_boot_rit_codegen_lookup_local_c_name_450(cct_boot_sig_CodegenContext* ctx, char* source_name);
+char* cct_boot_rit_codegen_define_local_451(cct_boot_sig_CodegenContext* ctx, char* source_name, char* c_name, char* type_name);
+char* cct_boot_rit_codegen_lookup_local_type_name_452(cct_boot_sig_CodegenContext* ctx, char* source_name);
+void cct_boot_rit_codegen_set_local_iter_info_453(cct_boot_sig_CodegenContext* ctx, char* source_name, long long kind, char* item_type_text, char* value_type_text);
+long long cct_boot_rit_codegen_lookup_local_iter_kind_454(cct_boot_sig_CodegenContext* ctx, char* source_name);
+char* cct_boot_rit_codegen_lookup_local_iter_item_type_text_455(cct_boot_sig_CodegenContext* ctx, char* source_name);
+char* cct_boot_rit_codegen_lookup_local_iter_value_type_text_456(cct_boot_sig_CodegenContext* ctx, char* source_name);
+long long cct_boot_rit_codegen_registered_string_count_457(cct_boot_sig_CodegenContext* ctx);
+char* cct_boot_rit_codegen_lookup_string_symbol_458(cct_boot_sig_CodegenContext* ctx, char* raw_text);
+char* cct_boot_rit_codegen_register_string_symbol_459(cct_boot_sig_CodegenContext* ctx, char* raw_text, char* symbol_name);
+long long cct_boot_rit_codegen_registered_sigillum_count_460(cct_boot_sig_CodegenContext* ctx);
+char* cct_boot_rit_codegen_lookup_sigillum_c_name_461(cct_boot_sig_CodegenContext* ctx, char* source_name);
+long long cct_boot_rit_codegen_find_sigillum_index_462(cct_boot_sig_CodegenContext* ctx, char* source_name);
+char* cct_boot_rit_codegen_register_sigillum_463(cct_boot_sig_CodegenContext* ctx, char* source_name, char* c_name);
+void cct_boot_rit_codegen_sigillum_append_field_464(cct_boot_sig_CodegenContext* ctx, char* sigillum_name, char* field_name, char* type_name);
+char* cct_boot_rit_codegen_lookup_sigillum_field_type_465(cct_boot_sig_CodegenContext* ctx, char* sigillum_name, char* field_name);
+long long cct_boot_rit_codegen_registered_ordo_count_466(cct_boot_sig_CodegenContext* ctx);
+char* cct_boot_rit_codegen_lookup_ordo_c_name_467(cct_boot_sig_CodegenContext* ctx, char* source_name);
+long long cct_boot_rit_codegen_find_ordo_index_468(cct_boot_sig_CodegenContext* ctx, char* source_name);
+char* cct_boot_rit_codegen_register_ordo_469(cct_boot_sig_CodegenContext* ctx, char* source_name, char* c_name);
+void cct_boot_rit_codegen_ordo_append_item_470(cct_boot_sig_CodegenContext* ctx, char* ordo_name, char* item_name, char* c_name);
+void cct_boot_rit_codegen_ordo_append_item_with_arity_471(cct_boot_sig_CodegenContext* ctx, char* ordo_name, char* item_name, char* c_name, long long payload_arity);
+void cct_boot_rit_codegen_mark_ordo_has_payload_472(cct_boot_sig_CodegenContext* ctx, char* ordo_name);
+int cct_boot_rit_codegen_ordo_has_payload_473(cct_boot_sig_CodegenContext* ctx, char* ordo_name);
+long long cct_boot_rit_codegen_count_ordo_item_matches_474(cct_boot_sig_CodegenContext* ctx, char* item_name);
+char* cct_boot_rit_codegen_lookup_ordo_item_c_name_475(cct_boot_sig_CodegenContext* ctx, char* item_name);
+char* cct_boot_rit_codegen_lookup_ordo_item_owner_name_476(cct_boot_sig_CodegenContext* ctx, char* item_name);
+long long cct_boot_rit_codegen_lookup_ordo_item_payload_arity_477(cct_boot_sig_CodegenContext* ctx, char* item_name);
+void cct_boot_rit_codegen_require_stdio_478(cct_boot_sig_CodegenContext* ctx);
+void cct_boot_rit_codegen_require_stdlib_479(cct_boot_sig_CodegenContext* ctx);
+void cct_boot_rit_codegen_require_args_runtime_480(cct_boot_sig_CodegenContext* ctx);
+void cct_boot_rit_codegen_require_fs_runtime_481(cct_boot_sig_CodegenContext* ctx);
+void cct_boot_rit_codegen_require_scribe_runtime_482(cct_boot_sig_CodegenContext* ctx);
+void cct_boot_rit_codegen_require_fail_helper_483(cct_boot_sig_CodegenContext* ctx);
+void cct_boot_rit_codegen_require_failure_runtime_484(cct_boot_sig_CodegenContext* ctx);
+void cct_boot_rit_codegen_require_math_runtime_485(cct_boot_sig_CodegenContext* ctx);
+void cct_boot_rit_codegen_require_time_runtime_486(cct_boot_sig_CodegenContext* ctx);
+long long cct_boot_rit_codegen_registered_generic_sigillum_template_count_487(cct_boot_sig_CodegenContext* ctx);
+long long cct_boot_rit_codegen_find_generic_sigillum_template_index_488(cct_boot_sig_CodegenContext* ctx, char* source_name);
+void cct_boot_rit_codegen_register_generic_sigillum_template_489(cct_boot_sig_CodegenContext* ctx, char* source_name, cct_boot_sig_AstNode* decl_node, long long arity);
+cct_boot_sig_AstNode* cct_boot_rit_codegen_lookup_generic_sigillum_template_490(cct_boot_sig_CodegenContext* ctx, char* source_name);
+long long cct_boot_rit_codegen_registered_generic_sigillum_instance_count_491(cct_boot_sig_CodegenContext* ctx);
+long long cct_boot_rit_codegen_find_generic_sigillum_instance_index_492(cct_boot_sig_CodegenContext* ctx, char* instance_key);
+char* cct_boot_rit_codegen_register_generic_sigillum_instance_493(cct_boot_sig_CodegenContext* ctx, char* instance_key, char* c_name, cct_boot_sig_AstNode* template_decl, void* type_args);
+long long cct_boot_rit_codegen_registered_generic_rituale_template_count_494(cct_boot_sig_CodegenContext* ctx);
+long long cct_boot_rit_codegen_find_generic_rituale_template_index_495(cct_boot_sig_CodegenContext* ctx, char* source_name);
+void cct_boot_rit_codegen_register_generic_rituale_template_496(cct_boot_sig_CodegenContext* ctx, char* source_name, cct_boot_sig_AstNode* decl_node, long long arity);
+cct_boot_sig_AstNode* cct_boot_rit_codegen_lookup_generic_rituale_template_497(cct_boot_sig_CodegenContext* ctx, char* source_name);
+long long cct_boot_rit_codegen_registered_generic_rituale_instance_count_498(cct_boot_sig_CodegenContext* ctx);
+long long cct_boot_rit_codegen_find_generic_rituale_instance_index_499(cct_boot_sig_CodegenContext* ctx, char* instance_key);
+char* cct_boot_rit_codegen_register_generic_rituale_instance_500(cct_boot_sig_CodegenContext* ctx, char* instance_key, char* c_name, char* return_type_name, cct_boot_sig_AstNode* template_decl, void* type_args);
+void cct_boot_rit_codegen_push_generic_binding_scope_501(cct_boot_sig_CodegenContext* ctx);
+void cct_boot_rit_codegen_pop_generic_binding_scope_502(cct_boot_sig_CodegenContext* ctx);
+void cct_boot_rit_codegen_define_generic_binding_503(cct_boot_sig_CodegenContext* ctx, char* param_name, cct_boot_sig_AstNode* type_expr);
+long long cct_boot_rit_codegen_find_generic_binding_index_504(cct_boot_sig_CodegenContext* ctx, char* param_name);
+cct_boot_sig_AstNode* cct_boot_rit_codegen_lookup_generic_binding_505(cct_boot_sig_CodegenContext* ctx, char* param_name);
+void cct_boot_rit_codegen_emit_506(cct_boot_sig_CodegenContext* ctx, char* text);
+void cct_boot_rit_codegen_emit_line_507(cct_boot_sig_CodegenContext* ctx, char* text);
+void cct_boot_rit_codegen_emit_blank_line_508(cct_boot_sig_CodegenContext* ctx);
+void cct_boot_rit_codegen_indent_509(cct_boot_sig_CodegenContext* ctx);
+void cct_boot_rit_codegen_dedent_510(cct_boot_sig_CodegenContext* ctx);
+void cct_boot_rit_codegen_emit_block_open_511(cct_boot_sig_CodegenContext* ctx);
+void cct_boot_rit_codegen_emit_block_close_512(cct_boot_sig_CodegenContext* ctx);
+char* cct_boot_rit_codegen_make_counter_name_513(char* prefix, long long id);
+char* cct_boot_rit_codegen_next_temp_name_514(cct_boot_sig_CodegenContext* ctx);
+char* cct_boot_rit_codegen_next_label_name_515(cct_boot_sig_CodegenContext* ctx);
+char* cct_boot_rit_codegen_make_rituale_c_name_516(cct_boot_sig_CodegenContext* ctx, char* rituale_name);
+char* cct_boot_rit_codegen_rituale_c_name_517(cct_boot_sig_CodegenContext* ctx, char* rituale_name);
+char* cct_boot_rit_codegen_normalize_string_literal_518(char* raw_text);
+char* cct_boot_rit_codegen_string_symbol_519(cct_boot_sig_CodegenContext* ctx, char* raw_text);
+char* cct_boot_rit_codegen_basic_c_type_520(char* type_name);
+int cct_boot_rit_codegen_generic_is_builtin_type_name_521(char* type_name);
+char* cct_boot_rit_codegen_generic_type_identity_522(cct_boot_sig_CodegenContext* ctx, cct_boot_sig_AstNode* type_expr);
+char* cct_boot_rit_codegen_generic_sanitize_identifier_523(char* raw);
+char* cct_boot_rit_codegen_generic_type_arg_suffix_524(cct_boot_sig_CodegenContext* ctx, void* type_args);
+char* cct_boot_rit_codegen_generic_instance_key_525(char* source_name, char* suffix);
+char* cct_boot_rit_codegen_generic_type_identity_named_526(cct_boot_sig_CodegenContext* ctx, char* type_name, void* type_args, long long line, long long column);
+char* cct_boot_rit_codegen_generic_make_sigillum_c_name_527(cct_boot_sig_CodegenContext* ctx, char* source_name, void* type_args);
+char* cct_boot_rit_codegen_generic_make_rituale_c_name_528(cct_boot_sig_CodegenContext* ctx, char* source_name, void* type_args);
+void cct_boot_rit_codegen_generic_bind_template_args_529(cct_boot_sig_CodegenContext* ctx, cct_boot_sig_AstNode* template_decl, void* type_args);
+void cct_boot_rit_codegen_generic_unbind_template_args_530(cct_boot_sig_CodegenContext* ctx);
+void cct_boot_rit_codegen_generic_scan_type_use_531(cct_boot_sig_CodegenContext* ctx, cct_boot_sig_AstNode* type_expr);
+void cct_boot_rit_codegen_generic_scan_expr_use_532(cct_boot_sig_CodegenContext* ctx, cct_boot_sig_AstNode* expr);
+void cct_boot_rit_codegen_generic_scan_stmt_use_533(cct_boot_sig_CodegenContext* ctx, cct_boot_sig_AstNode* stmt);
+void cct_boot_rit_codegen_generic_scan_decl_use_534(cct_boot_sig_CodegenContext* ctx, cct_boot_sig_AstNode* decl);
+void cct_boot_rit_codegen_generic_collect_instance_closure_535(cct_boot_sig_CodegenContext* ctx);
+void cct_boot_rit_codegen_generic_collect_program_uses_536(cct_boot_sig_CodegenContext* ctx, cct_boot_sig_AstProgram* program);
+char* cct_boot_rit_codegen_generic_ensure_sigillum_instance_537(cct_boot_sig_CodegenContext* ctx, char* source_name, void* type_args, cct_boot_sig_AstNode* at);
+char* cct_boot_rit_codegen_generic_rituale_return_identity_538(cct_boot_sig_CodegenContext* ctx, cct_boot_sig_AstNode* templ);
+char* cct_boot_rit_codegen_generic_ensure_rituale_instance_539(cct_boot_sig_CodegenContext* ctx, char* source_name, void* type_args, cct_boot_sig_AstNode* at);
+char* cct_boot_rit_codegen_basic_c_type_name_540(cct_boot_sig_CodegenContext* ctx, char* type_name, long long line, long long column);
+char* cct_boot_rit_codegen_named_c_type_name_541(cct_boot_sig_CodegenContext* ctx, char* type_name, long long line, long long column);
+char* cct_boot_rit_codegen_type_text_542(cct_boot_sig_CodegenContext* ctx, cct_boot_sig_AstNode* type_expr);
+char* cct_boot_rit_codegen_make_ordo_c_name_543(char* source_name);
+char* cct_boot_rit_codegen_make_ordo_tag_c_name_544(char* ordo_name, char* item_name);
+char* cct_boot_rit_codegen_make_ordo_item_c_name_545(char* ordo_name, char* item_name);
+long long cct_boot_rit_codegen_ordo_item_payload_arity_546(cct_boot_sig_AstNode* item);
+int cct_boot_rit_codegen_ordo_decl_has_payload_547(cct_boot_sig_AstNode* decl);
+void cct_boot_rit_codegen_register_ordo_decl_548(cct_boot_sig_CodegenContext* ctx, cct_boot_sig_AstNode* decl);
+void cct_boot_rit_codegen_emit_ordo_simple_definition_549(cct_boot_sig_CodegenContext* ctx, cct_boot_sig_AstNode* decl);
+void cct_boot_rit_codegen_emit_ordo_payload_definition_550(cct_boot_sig_CodegenContext* ctx, cct_boot_sig_AstNode* decl);
+void cct_boot_rit_codegen_emit_ordo_definition_551(cct_boot_sig_CodegenContext* ctx, cct_boot_sig_AstNode* decl);
+void cct_boot_rit_codegen_emit_ordo_definitions_552(cct_boot_sig_CodegenContext* ctx, cct_boot_sig_AstProgram* program);
+char* cct_boot_rit_codegen_make_sigillum_c_name_553(char* source_name);
+void cct_boot_rit_codegen_register_sigillum_decl_554(cct_boot_sig_CodegenContext* ctx, cct_boot_sig_AstNode* decl);
+void cct_boot_rit_codegen_register_rituale_decl_555(cct_boot_sig_CodegenContext* ctx, cct_boot_sig_AstNode* decl);
+void cct_boot_rit_codegen_register_program_shapes_556(cct_boot_sig_CodegenContext* ctx, cct_boot_sig_AstProgram* program);
+void cct_boot_rit_codegen_emit_sigillum_forward_decls_557(cct_boot_sig_CodegenContext* ctx);
+void cct_boot_rit_codegen_emit_sigillum_definition_558(cct_boot_sig_CodegenContext* ctx, cct_boot_sig_AstNode* decl);
+void cct_boot_rit_codegen_emit_generic_sigillum_instance_definition_559(cct_boot_sig_CodegenContext* ctx, cct_boot_sig_CodegenGenericSigillumInstance* inst);
+void cct_boot_rit_codegen_emit_sigillum_definitions_560(cct_boot_sig_CodegenContext* ctx, cct_boot_sig_AstProgram* program);
+void cct_boot_rit_codegen_require_fmt_runtime_561(cct_boot_sig_CodegenContext* ctx);
+long long cct_boot_rit_codegen_forma_placeholder_count_562(cct_boot_sig_AstNode* expr);
+char* cct_boot_rit_codegen_forma_template_text_563(cct_boot_sig_AstNode* expr);
+char* cct_boot_rit_codegen_unary_op_text_564(cct_boot_ord_TokenKind kind);
+char* cct_boot_rit_codegen_pointer_element_identity_565(char* pointer_identity);
+char* cct_boot_rit_codegen_binary_op_text_566(cct_boot_ord_TokenKind kind);
+void cct_boot_rit_codegen_forma_emit_argument_567(cct_boot_sig_CodegenContext* ctx, cct_boot_sig_AstNode* part);
+void cct_boot_rit_codegen_emit_forma_expr_568(cct_boot_sig_CodegenContext* ctx, cct_boot_sig_AstNode* expr);
+char* cct_boot_rit_codegen_expr_type_name_569(cct_boot_sig_CodegenContext* ctx, cct_boot_sig_AstNode* expr);
+void cct_boot_rit_codegen_emit_lvalue_570(cct_boot_sig_CodegenContext* ctx, cct_boot_sig_AstNode* expr);
+void cct_boot_rit_codegen_emit_call_expr_571(cct_boot_sig_CodegenContext* ctx, cct_boot_sig_AstNode* expr);
+void cct_boot_rit_codegen_emit_obsecro_call_expr_572(cct_boot_sig_CodegenContext* ctx, cct_boot_sig_AstNode* expr);
+void cct_boot_rit_codegen_emit_condition_expr_573(cct_boot_sig_CodegenContext* ctx, cct_boot_sig_AstNode* expr);
+void cct_boot_rit_codegen_emit_expr_574(cct_boot_sig_CodegenContext* ctx, cct_boot_sig_AstNode* expr);
+char* cct_boot_rit_codegen_elige_subject_type_name_575(cct_boot_sig_CodegenContext* ctx, cct_boot_sig_AstNode* stmt);
+void cct_boot_rit_codegen_elige_emit_subject_temp_576(cct_boot_sig_CodegenContext* ctx, char* temp_name, char* subject_type_name, cct_boot_sig_AstNode* expr);
+void cct_boot_rit_codegen_elige_emit_string_condition_577(cct_boot_sig_CodegenContext* ctx, char* subject_name, cct_boot_sig_AstNode* case_node);
+void cct_boot_rit_codegen_elige_emit_scalar_case_labels_578(cct_boot_sig_CodegenContext* ctx, cct_boot_sig_AstNode* case_node);
+void cct_boot_rit_codegen_elige_emit_simple_ordo_case_labels_579(cct_boot_sig_CodegenContext* ctx, cct_boot_sig_AstNode* case_node);
+long long cct_boot_rit_codegen_elige_case_bindings_len_580(cct_boot_sig_AstNode* case_node);
+long long cct_boot_rit_codegen_elige_case_literals_len_581(cct_boot_sig_AstNode* case_node);
+cct_boot_sig_AstNode* cct_boot_rit_codegen_elige_case_first_literal_582(cct_boot_sig_AstNode* case_node);
+void cct_boot_rit_codegen_elige_emit_payload_bindings_583(cct_boot_sig_CodegenContext* ctx, char* subject_name, char* owner_name, cct_boot_sig_AstNode* case_node);
+void cct_boot_rit_codegen_elige_finish_payload_case_scope_584(cct_boot_sig_CodegenContext* ctx, cct_boot_sig_AstNode* case_node);
+int cct_boot_rit_codegen_failure_supported_cape_type_585(char* type_name);
+void cct_boot_rit_codegen_flow_push_loop_586(cct_boot_sig_CodegenContext* ctx, char* break_label, char* continue_label);
+void cct_boot_rit_codegen_flow_pop_loop_587(cct_boot_sig_CodegenContext* ctx);
+char* cct_boot_rit_codegen_flow_current_break_label_588(cct_boot_sig_CodegenContext* ctx);
+char* cct_boot_rit_codegen_flow_current_continue_label_589(cct_boot_sig_CodegenContext* ctx);
+char* cct_boot_rit_codegen_stmt_type_text_590(cct_boot_sig_CodegenContext* ctx, cct_boot_sig_AstNode* type_expr);
+long long cct_boot_rit_codegen_series_identity_size_591(char* identity);
+char* cct_boot_rit_codegen_series_identity_element_592(char* identity);
+char* cct_boot_rit_codegen_iter_identity_to_c_type_593(cct_boot_sig_CodegenContext* ctx, char* identity);
+void cct_boot_rit_codegen_capture_iter_local_info_594(cct_boot_sig_CodegenContext* ctx, cct_boot_sig_AstNode* stmt, char* local_identity);
+void cct_boot_rit_codegen_emit_iterum_binding_decl_595(cct_boot_sig_CodegenContext* ctx, char* binding_name, char* identity);
+void cct_boot_rit_codegen_emit_iterum_assign_from_ptr_596(cct_boot_sig_CodegenContext* ctx, char* binding_name, char* identity, char* ptr_name);
+void cct_boot_rit_codegen_emit_iterum_stmt_597(cct_boot_sig_CodegenContext* ctx, cct_boot_sig_AstNode* stmt);
+int cct_boot_rit_codegen_stmt_is_switch_subject_598(cct_boot_sig_CodegenContext* ctx, char* type_name);
+void cct_boot_rit_codegen_emit_stmt_as_block_599(cct_boot_sig_CodegenContext* ctx, cct_boot_sig_AstNode* stmt);
+void cct_boot_rit_codegen_emit_iace_stmt_600(cct_boot_sig_CodegenContext* ctx, cct_boot_sig_AstNode* stmt);
+void cct_boot_rit_codegen_emit_tempta_stmt_601(cct_boot_sig_CodegenContext* ctx, cct_boot_sig_AstNode* stmt);
+void cct_boot_rit_codegen_emit_obsecro_scribe_stmt_602(cct_boot_sig_CodegenContext* ctx, cct_boot_sig_AstNode* expr);
+void cct_boot_rit_codegen_emit_obsecro_libera_stmt_603(cct_boot_sig_CodegenContext* ctx, cct_boot_sig_AstNode* expr);
+void cct_boot_rit_codegen_emit_stmt_604(cct_boot_sig_CodegenContext* ctx, cct_boot_sig_AstNode* stmt);
+char* cct_boot_rit_codegen_decl_type_text_605(cct_boot_sig_CodegenContext* ctx, cct_boot_sig_AstNode* type_expr);
+void cct_boot_rit_codegen_emit_param_list_606(cct_boot_sig_CodegenContext* ctx, cct_boot_sig_AstNode* rituale_decl);
+void cct_boot_rit_codegen_emit_rituale_signature_607(cct_boot_sig_CodegenContext* ctx, cct_boot_sig_AstNode* rituale_decl);
+void cct_boot_rit_codegen_emit_rituale_signature_instance_608(cct_boot_sig_CodegenContext* ctx, cct_boot_sig_AstNode* rituale_decl, char* c_name);
+void cct_boot_rit_codegen_emit_rituale_prototype_609(cct_boot_sig_CodegenContext* ctx, cct_boot_sig_AstNode* rituale_decl);
+void cct_boot_rit_codegen_emit_rituale_prototype_instance_610(cct_boot_sig_CodegenContext* ctx, cct_boot_sig_CodegenGenericRitualeInstance* inst);
+void cct_boot_rit_codegen_bind_rituale_params_611(cct_boot_sig_CodegenContext* ctx, cct_boot_sig_AstNode* rituale_decl);
+void cct_boot_rit_codegen_emit_rituale_definition_612(cct_boot_sig_CodegenContext* ctx, cct_boot_sig_AstNode* rituale_decl);
+void cct_boot_rit_codegen_emit_rituale_definition_instance_613(cct_boot_sig_CodegenContext* ctx, cct_boot_sig_CodegenGenericRitualeInstance* inst);
+void cct_boot_rit_codegen_emit_program_body_614(cct_boot_sig_CodegenContext* ctx, cct_boot_sig_AstProgram* program);
+void cct_boot_rit_codegen_emit_program_615(cct_boot_sig_CodegenContext* ctx, cct_boot_sig_AstProgram* program);
+char* cct_boot_rit_codegen_generate_program_616(cct_boot_sig_AstProgram* program, char* filename);
+char* cct_boot_rit_codegen_runtime_escape_c_string_617(char* raw);
+char* cct_boot_rit_codegen_runtime_string_symbol_618(cct_boot_sig_CodegenContext* ctx, char* raw_text);
+void cct_boot_rit_codegen_runtime_emit_includes_619(cct_boot_sig_CodegenContext* ctx);
+void cct_boot_rit_codegen_runtime_emit_failure_runtime_620(cct_boot_sig_CodegenContext* ctx);
+void cct_boot_rit_codegen_runtime_emit_fmt_runtime_621(cct_boot_sig_CodegenContext* ctx);
+void cct_boot_rit_codegen_runtime_emit_time_runtime_622(cct_boot_sig_CodegenContext* ctx);
+void cct_boot_rit_codegen_runtime_emit_fail_helper_623(cct_boot_sig_CodegenContext* ctx);
+void cct_boot_rit_codegen_runtime_emit_scribe_runtime_624(cct_boot_sig_CodegenContext* ctx);
+void cct_boot_rit_codegen_runtime_emit_verbum_runtime_625(cct_boot_sig_CodegenContext* ctx);
+void cct_boot_rit_codegen_runtime_emit_bytes_runtime_626(cct_boot_sig_CodegenContext* ctx);
+void cct_boot_rit_codegen_runtime_emit_string_pool_627(cct_boot_sig_CodegenContext* ctx);
+long long cct_boot_rit_codegen_runtime_find_entry_main_index_628(cct_boot_sig_AstProgram* program);
+int cct_boot_rit_codegen_runtime_program_needs_args_init_629(cct_boot_sig_AstProgram* program);
+void cct_boot_rit_codegen_runtime_detect_body_dependencies_630(cct_boot_sig_CodegenContext* ctx, char* body);
+void cct_boot_rit_codegen_runtime_emit_host_main_631(cct_boot_sig_CodegenContext* ctx, cct_boot_sig_AstProgram* program);
+char* cct_boot_rit_codegen_generate_translation_unit_with_context_632(cct_boot_sig_CodegenContext* ctx, cct_boot_sig_AstProgram* program);
+char* cct_boot_rit_codegen_generate_translation_unit_633(cct_boot_sig_AstProgram* program, char* filename);
+long long cct_boot_rit_main_634(void);
 
 char* cct_boot_rit_token_kind_to_string_0(cct_boot_ord_TokenKind kind)
 {
@@ -2425,59 +2432,59 @@ char* cct_boot_rit_token_kind_to_string_0(cct_boot_ord_TokenKind kind)
   return cct_boot_str_101;
 }
 
-void* cct_boot_rit_ast_heap_alloc_203(long long bytes)
+void* cct_boot_rit_ast_heap_alloc_210(long long bytes)
 {
-  return cct_boot_rit_alloc_165(bytes);
+  return cct_boot_rit_alloc_172(bytes);
 }
 
-void cct_boot_rit_ast_heap_zero_204(void* ptr, long long bytes)
+void cct_boot_rit_ast_heap_zero_211(void* ptr, long long bytes)
 {
-  cct_boot_rit_zero_170(ptr, bytes);
+  cct_boot_rit_zero_177(ptr, bytes);
   return;
 }
 
-void cct_boot_rit_ast_heap_free_205(void* ptr)
+void cct_boot_rit_ast_heap_free_212(void* ptr)
 {
-  cct_boot_rit_free_166(ptr);
+  cct_boot_rit_free_173(ptr);
   return;
 }
 
-void cct_boot_rit_ast_heap_copy_206(void* dest, void* src, long long bytes)
+void cct_boot_rit_ast_heap_copy_213(void* dest, void* src, long long bytes)
 {
-  cct_boot_rit_copy_168(dest, src, bytes);
+  cct_boot_rit_copy_175(dest, src, bytes);
   return;
 }
 
-void* cct_boot_rit_ast_node_list_new_207(void)
+void* cct_boot_rit_ast_node_list_new_214(void)
 {
-  return cct_boot_rit_fluxus_init_172(((long long)sizeof(cct_boot_sig_AstNode*)));
+  return cct_boot_rit_fluxus_init_179(((long long)sizeof(cct_boot_sig_AstNode*)));
 }
 
-void cct_boot_rit_ast_node_list_push_208(void* list, cct_boot_sig_AstNode* node)
+void cct_boot_rit_ast_node_list_push_215(void* list, cct_boot_sig_AstNode* node)
 {
   cct_boot_sig_AstNode* slot;
   slot = node;
-  cct_boot_rit_fluxus_push_174(list, (&slot));
+  cct_boot_rit_fluxus_push_181(list, (&slot));
   return;
 }
 
-long long cct_boot_rit_ast_node_list_len_209(void* list)
+long long cct_boot_rit_ast_node_list_len_216(void* list)
 {
-  return cct_boot_rit_fluxus_len_176(list);
+  return cct_boot_rit_fluxus_len_183(list);
 }
 
-cct_boot_sig_AstNode* cct_boot_rit_ast_node_list_get_210(void* list, long long idx)
+cct_boot_sig_AstNode* cct_boot_rit_ast_node_list_get_217(void* list, long long idx)
 {
-  void* raw_slot = cct_boot_rit_fluxus_get_177(list, idx);
+  void* raw_slot = cct_boot_rit_fluxus_get_184(list, idx);
   cct_boot_sig_AstNode* node;
-  cct_boot_rit_ast_heap_copy_206((&node), raw_slot, ((long long)sizeof(cct_boot_sig_AstNode*)));
+  cct_boot_rit_ast_heap_copy_213((&node), raw_slot, ((long long)sizeof(cct_boot_sig_AstNode*)));
   return node;
 }
 
-cct_boot_sig_AstNode* cct_boot_rit_ast_node_new_211(cct_boot_ord_AstKind kind, long long line, long long column)
+cct_boot_sig_AstNode* cct_boot_rit_ast_node_new_218(cct_boot_ord_AstKind kind, long long line, long long column)
 {
-  void* raw = cct_boot_rit_ast_heap_alloc_203(((long long)sizeof(cct_boot_sig_AstNode)));
-  cct_boot_rit_ast_heap_zero_204(raw, ((long long)sizeof(cct_boot_sig_AstNode)));
+  void* raw = cct_boot_rit_ast_heap_alloc_210(((long long)sizeof(cct_boot_sig_AstNode)));
+  cct_boot_rit_ast_heap_zero_211(raw, ((long long)sizeof(cct_boot_sig_AstNode)));
   cct_boot_sig_AstNode* node;
   node = raw;
   (*node).kind = kind;
@@ -2485,238 +2492,238 @@ cct_boot_sig_AstNode* cct_boot_rit_ast_node_new_211(cct_boot_ord_AstKind kind, l
   (*node).column = column;
   (*node).aux_name = cct_boot_str_102;
   (*node).fmt_spec = cct_boot_str_102;
-  (*node).children = cct_boot_rit_ast_node_list_new_207();
-  (*node).cases = cct_boot_rit_ast_node_list_new_207();
-  (*node).bindings = cct_boot_rit_ast_node_list_new_207();
-  (*node).type_params = cct_boot_rit_ast_node_list_new_207();
-  (*node).generic_args = cct_boot_rit_ast_node_list_new_207();
-  (*node).params = cct_boot_rit_ast_node_list_new_207();
-  (*node).fields = cct_boot_rit_ast_node_list_new_207();
-  (*node).items = cct_boot_rit_ast_node_list_new_207();
-  (*node).arguments = cct_boot_rit_ast_node_list_new_207();
-  (*node).declarations = cct_boot_rit_ast_node_list_new_207();
-  (*node).signatures = cct_boot_rit_ast_node_list_new_207();
-  (*node).statements = cct_boot_rit_ast_node_list_new_207();
+  (*node).children = cct_boot_rit_ast_node_list_new_214();
+  (*node).cases = cct_boot_rit_ast_node_list_new_214();
+  (*node).bindings = cct_boot_rit_ast_node_list_new_214();
+  (*node).type_params = cct_boot_rit_ast_node_list_new_214();
+  (*node).generic_args = cct_boot_rit_ast_node_list_new_214();
+  (*node).params = cct_boot_rit_ast_node_list_new_214();
+  (*node).fields = cct_boot_rit_ast_node_list_new_214();
+  (*node).items = cct_boot_rit_ast_node_list_new_214();
+  (*node).arguments = cct_boot_rit_ast_node_list_new_214();
+  (*node).declarations = cct_boot_rit_ast_node_list_new_214();
+  (*node).signatures = cct_boot_rit_ast_node_list_new_214();
+  (*node).statements = cct_boot_rit_ast_node_list_new_214();
   return node;
 }
 
-cct_boot_sig_AstProgram* cct_boot_rit_ast_program_new_212(void)
+cct_boot_sig_AstProgram* cct_boot_rit_ast_program_new_219(void)
 {
-  void* raw = cct_boot_rit_ast_heap_alloc_203(((long long)sizeof(cct_boot_sig_AstProgram)));
-  cct_boot_rit_ast_heap_zero_204(raw, ((long long)sizeof(cct_boot_sig_AstProgram)));
+  void* raw = cct_boot_rit_ast_heap_alloc_210(((long long)sizeof(cct_boot_sig_AstProgram)));
+  cct_boot_rit_ast_heap_zero_211(raw, ((long long)sizeof(cct_boot_sig_AstProgram)));
   cct_boot_sig_AstProgram* program;
   program = raw;
-  (*program).declarations = cct_boot_rit_ast_node_list_new_207();
+  (*program).declarations = cct_boot_rit_ast_node_list_new_214();
   return program;
 }
 
-void cct_boot_rit_ast_node_set_name_213(cct_boot_sig_AstNode* node, char* name)
+void cct_boot_rit_ast_node_set_name_220(cct_boot_sig_AstNode* node, char* name)
 {
   (*node).name = cct_boot_rit_verbum_dup_40(name);
   (*node).owns_name = 1;
   return;
 }
 
-void cct_boot_rit_ast_node_set_value_text_214(cct_boot_sig_AstNode* node, char* value_text)
+void cct_boot_rit_ast_node_set_value_text_221(cct_boot_sig_AstNode* node, char* value_text)
 {
   (*node).value_text = cct_boot_rit_verbum_dup_40(value_text);
   (*node).owns_value_text = 1;
   return;
 }
 
-void cct_boot_rit_ast_node_set_type_name_215(cct_boot_sig_AstNode* node, char* type_name)
+void cct_boot_rit_ast_node_set_type_name_222(cct_boot_sig_AstNode* node, char* type_name)
 {
   (*node).type_name = cct_boot_rit_verbum_dup_40(type_name);
   (*node).owns_type_name = 1;
   return;
 }
 
-void cct_boot_rit_ast_node_set_aux_name_216(cct_boot_sig_AstNode* node, char* aux_name)
+void cct_boot_rit_ast_node_set_aux_name_223(cct_boot_sig_AstNode* node, char* aux_name)
 {
   (*node).aux_name = cct_boot_rit_verbum_dup_40(aux_name);
   (*node).owns_aux_name = 1;
   return;
 }
 
-void cct_boot_rit_ast_node_set_fmt_spec_217(cct_boot_sig_AstNode* node, char* fmt_spec)
+void cct_boot_rit_ast_node_set_fmt_spec_224(cct_boot_sig_AstNode* node, char* fmt_spec)
 {
   (*node).fmt_spec = cct_boot_rit_verbum_dup_40(fmt_spec);
   (*node).owns_fmt_spec = 1;
   return;
 }
 
-void cct_boot_rit_ast_program_set_name_218(cct_boot_sig_AstProgram* program, char* name)
+void cct_boot_rit_ast_program_set_name_225(cct_boot_sig_AstProgram* program, char* name)
 {
   (*program).name = cct_boot_rit_verbum_dup_40(name);
   (*program).owns_name = 1;
   return;
 }
 
-void cct_boot_rit_ast_program_append_decl_219(cct_boot_sig_AstProgram* program, cct_boot_sig_AstNode* decl)
+void cct_boot_rit_ast_program_append_decl_226(cct_boot_sig_AstProgram* program, cct_boot_sig_AstNode* decl)
 {
-  cct_boot_rit_ast_node_list_push_208((*program).declarations, decl);
+  cct_boot_rit_ast_node_list_push_215((*program).declarations, decl);
   return;
 }
 
-void cct_boot_rit_ast_append_child_220(cct_boot_sig_AstNode* node, cct_boot_sig_AstNode* child)
+void cct_boot_rit_ast_append_child_227(cct_boot_sig_AstNode* node, cct_boot_sig_AstNode* child)
 {
-  cct_boot_rit_ast_node_list_push_208((*node).children, child);
+  cct_boot_rit_ast_node_list_push_215((*node).children, child);
   return;
 }
 
-void cct_boot_rit_ast_append_case_221(cct_boot_sig_AstNode* node, cct_boot_sig_AstNode* case_node)
+void cct_boot_rit_ast_append_case_228(cct_boot_sig_AstNode* node, cct_boot_sig_AstNode* case_node)
 {
-  cct_boot_rit_ast_node_list_push_208((*node).cases, case_node);
+  cct_boot_rit_ast_node_list_push_215((*node).cases, case_node);
   return;
 }
 
-void cct_boot_rit_ast_append_binding_222(cct_boot_sig_AstNode* node, cct_boot_sig_AstNode* binding)
+void cct_boot_rit_ast_append_binding_229(cct_boot_sig_AstNode* node, cct_boot_sig_AstNode* binding)
 {
-  cct_boot_rit_ast_node_list_push_208((*node).bindings, binding);
+  cct_boot_rit_ast_node_list_push_215((*node).bindings, binding);
   return;
 }
 
-void cct_boot_rit_ast_append_type_param_223(cct_boot_sig_AstNode* node, cct_boot_sig_AstNode* param)
+void cct_boot_rit_ast_append_type_param_230(cct_boot_sig_AstNode* node, cct_boot_sig_AstNode* param)
 {
-  cct_boot_rit_ast_node_list_push_208((*node).type_params, param);
+  cct_boot_rit_ast_node_list_push_215((*node).type_params, param);
   return;
 }
 
-void cct_boot_rit_ast_append_generic_arg_224(cct_boot_sig_AstNode* node, cct_boot_sig_AstNode* arg)
+void cct_boot_rit_ast_append_generic_arg_231(cct_boot_sig_AstNode* node, cct_boot_sig_AstNode* arg)
 {
-  cct_boot_rit_ast_node_list_push_208((*node).generic_args, arg);
+  cct_boot_rit_ast_node_list_push_215((*node).generic_args, arg);
   return;
 }
 
-void cct_boot_rit_ast_append_param_225(cct_boot_sig_AstNode* node, cct_boot_sig_AstNode* param)
+void cct_boot_rit_ast_append_param_232(cct_boot_sig_AstNode* node, cct_boot_sig_AstNode* param)
 {
-  cct_boot_rit_ast_node_list_push_208((*node).params, param);
+  cct_boot_rit_ast_node_list_push_215((*node).params, param);
   return;
 }
 
-void cct_boot_rit_ast_append_field_226(cct_boot_sig_AstNode* node, cct_boot_sig_AstNode* field)
+void cct_boot_rit_ast_append_field_233(cct_boot_sig_AstNode* node, cct_boot_sig_AstNode* field)
 {
-  cct_boot_rit_ast_node_list_push_208((*node).fields, field);
+  cct_boot_rit_ast_node_list_push_215((*node).fields, field);
   return;
 }
 
-void cct_boot_rit_ast_append_item_227(cct_boot_sig_AstNode* node, cct_boot_sig_AstNode* item)
+void cct_boot_rit_ast_append_item_234(cct_boot_sig_AstNode* node, cct_boot_sig_AstNode* item)
 {
-  cct_boot_rit_ast_node_list_push_208((*node).items, item);
+  cct_boot_rit_ast_node_list_push_215((*node).items, item);
   return;
 }
 
-void cct_boot_rit_ast_append_argument_228(cct_boot_sig_AstNode* node, cct_boot_sig_AstNode* argument)
+void cct_boot_rit_ast_append_argument_235(cct_boot_sig_AstNode* node, cct_boot_sig_AstNode* argument)
 {
-  cct_boot_rit_ast_node_list_push_208((*node).arguments, argument);
+  cct_boot_rit_ast_node_list_push_215((*node).arguments, argument);
   return;
 }
 
-void cct_boot_rit_ast_append_declaration_229(cct_boot_sig_AstNode* node, cct_boot_sig_AstNode* decl)
+void cct_boot_rit_ast_append_declaration_236(cct_boot_sig_AstNode* node, cct_boot_sig_AstNode* decl)
 {
-  cct_boot_rit_ast_node_list_push_208((*node).declarations, decl);
+  cct_boot_rit_ast_node_list_push_215((*node).declarations, decl);
   return;
 }
 
-void cct_boot_rit_ast_append_signature_230(cct_boot_sig_AstNode* node, cct_boot_sig_AstNode* sig)
+void cct_boot_rit_ast_append_signature_237(cct_boot_sig_AstNode* node, cct_boot_sig_AstNode* sig)
 {
-  cct_boot_rit_ast_node_list_push_208((*node).signatures, sig);
+  cct_boot_rit_ast_node_list_push_215((*node).signatures, sig);
   return;
 }
 
-void cct_boot_rit_ast_append_statement_231(cct_boot_sig_AstNode* node, cct_boot_sig_AstNode* stmt)
+void cct_boot_rit_ast_append_statement_238(cct_boot_sig_AstNode* node, cct_boot_sig_AstNode* stmt)
 {
-  cct_boot_rit_ast_node_list_push_208((*node).statements, stmt);
+  cct_boot_rit_ast_node_list_push_215((*node).statements, stmt);
   return;
 }
 
-cct_boot_sig_AstNode* cct_boot_rit_ast_make_import_232(char* path, long long line, long long column)
+cct_boot_sig_AstNode* cct_boot_rit_ast_make_import_239(char* path, long long line, long long column)
 {
-  cct_boot_sig_AstNode* node = cct_boot_rit_ast_node_new_211(cct_boot_ord_AstKind__AST_IMPORT, line, column);
-  cct_boot_rit_ast_node_set_value_text_214(node, path);
+  cct_boot_sig_AstNode* node = cct_boot_rit_ast_node_new_218(cct_boot_ord_AstKind__AST_IMPORT, line, column);
+  cct_boot_rit_ast_node_set_value_text_221(node, path);
   return node;
 }
 
-cct_boot_sig_AstNode* cct_boot_rit_ast_make_type_233(char* name, long long line, long long column)
+cct_boot_sig_AstNode* cct_boot_rit_ast_make_type_240(char* name, long long line, long long column)
 {
-  cct_boot_sig_AstNode* node = cct_boot_rit_ast_node_new_211(cct_boot_ord_AstKind__AST_TYPE, line, column);
-  cct_boot_rit_ast_node_set_type_name_215(node, name);
+  cct_boot_sig_AstNode* node = cct_boot_rit_ast_node_new_218(cct_boot_ord_AstKind__AST_TYPE, line, column);
+  cct_boot_rit_ast_node_set_type_name_222(node, name);
   return node;
 }
 
-void cct_boot_rit_ast_type_mark_pointer_234(cct_boot_sig_AstNode* node)
+void cct_boot_rit_ast_type_mark_pointer_241(cct_boot_sig_AstNode* node)
 {
   (*node).is_pointer = 1;
   return;
 }
 
-void cct_boot_rit_ast_type_mark_array_235(cct_boot_sig_AstNode* node, long long array_size)
+void cct_boot_rit_ast_type_mark_array_242(cct_boot_sig_AstNode* node, long long array_size)
 {
   (*node).is_array = 1;
   (*node).array_size = array_size;
   return;
 }
 
-void cct_boot_rit_ast_type_set_element_236(cct_boot_sig_AstNode* node, cct_boot_sig_AstNode* element_type)
+void cct_boot_rit_ast_type_set_element_243(cct_boot_sig_AstNode* node, cct_boot_sig_AstNode* element_type)
 {
   (*node).type_expr = element_type;
   (*node).has_type_expr = 1;
   return;
 }
 
-cct_boot_sig_AstNode* cct_boot_rit_ast_make_literal_int_237(char* text, long long line, long long column)
+cct_boot_sig_AstNode* cct_boot_rit_ast_make_literal_int_244(char* text, long long line, long long column)
 {
-  cct_boot_sig_AstNode* node = cct_boot_rit_ast_node_new_211(cct_boot_ord_AstKind__AST_LITERAL_INT, line, column);
-  cct_boot_rit_ast_node_set_value_text_214(node, text);
+  cct_boot_sig_AstNode* node = cct_boot_rit_ast_node_new_218(cct_boot_ord_AstKind__AST_LITERAL_INT, line, column);
+  cct_boot_rit_ast_node_set_value_text_221(node, text);
   return node;
 }
 
-cct_boot_sig_AstNode* cct_boot_rit_ast_make_literal_real_238(char* text, long long line, long long column)
+cct_boot_sig_AstNode* cct_boot_rit_ast_make_literal_real_245(char* text, long long line, long long column)
 {
-  cct_boot_sig_AstNode* node = cct_boot_rit_ast_node_new_211(cct_boot_ord_AstKind__AST_LITERAL_REAL, line, column);
-  cct_boot_rit_ast_node_set_value_text_214(node, text);
+  cct_boot_sig_AstNode* node = cct_boot_rit_ast_node_new_218(cct_boot_ord_AstKind__AST_LITERAL_REAL, line, column);
+  cct_boot_rit_ast_node_set_value_text_221(node, text);
   return node;
 }
 
-cct_boot_sig_AstNode* cct_boot_rit_ast_make_literal_string_239(char* text, long long line, long long column)
+cct_boot_sig_AstNode* cct_boot_rit_ast_make_literal_string_246(char* text, long long line, long long column)
 {
-  cct_boot_sig_AstNode* node = cct_boot_rit_ast_node_new_211(cct_boot_ord_AstKind__AST_LITERAL_STRING, line, column);
-  cct_boot_rit_ast_node_set_value_text_214(node, text);
+  cct_boot_sig_AstNode* node = cct_boot_rit_ast_node_new_218(cct_boot_ord_AstKind__AST_LITERAL_STRING, line, column);
+  cct_boot_rit_ast_node_set_value_text_221(node, text);
   return node;
 }
 
-cct_boot_sig_AstNode* cct_boot_rit_ast_make_literal_bool_240(int value, long long line, long long column)
+cct_boot_sig_AstNode* cct_boot_rit_ast_make_literal_bool_247(int value, long long line, long long column)
 {
-  cct_boot_sig_AstNode* node = cct_boot_rit_ast_node_new_211(cct_boot_ord_AstKind__AST_LITERAL_BOOL, line, column);
+  cct_boot_sig_AstNode* node = cct_boot_rit_ast_node_new_218(cct_boot_ord_AstKind__AST_LITERAL_BOOL, line, column);
   (*node).bool_value = value;
   if (value)
   {
-    cct_boot_rit_ast_node_set_value_text_214(node, cct_boot_str_58);
+    cct_boot_rit_ast_node_set_value_text_221(node, cct_boot_str_58);
   }
   else
   {
-    cct_boot_rit_ast_node_set_value_text_214(node, cct_boot_str_59);
+    cct_boot_rit_ast_node_set_value_text_221(node, cct_boot_str_59);
   }
   return node;
 }
 
-cct_boot_sig_AstNode* cct_boot_rit_ast_make_literal_nihil_241(long long line, long long column)
+cct_boot_sig_AstNode* cct_boot_rit_ast_make_literal_nihil_248(long long line, long long column)
 {
-  cct_boot_sig_AstNode* node = cct_boot_rit_ast_node_new_211(cct_boot_ord_AstKind__AST_LITERAL_NIHIL, line, column);
-  cct_boot_rit_ast_node_set_value_text_214(node, cct_boot_str_60);
+  cct_boot_sig_AstNode* node = cct_boot_rit_ast_node_new_218(cct_boot_ord_AstKind__AST_LITERAL_NIHIL, line, column);
+  cct_boot_rit_ast_node_set_value_text_221(node, cct_boot_str_60);
   return node;
 }
 
-cct_boot_sig_AstNode* cct_boot_rit_ast_make_identifier_242(char* name, long long line, long long column)
+cct_boot_sig_AstNode* cct_boot_rit_ast_make_identifier_249(char* name, long long line, long long column)
 {
-  cct_boot_sig_AstNode* node = cct_boot_rit_ast_node_new_211(cct_boot_ord_AstKind__AST_IDENTIFIER, line, column);
-  cct_boot_rit_ast_node_set_name_213(node, name);
+  cct_boot_sig_AstNode* node = cct_boot_rit_ast_node_new_218(cct_boot_ord_AstKind__AST_IDENTIFIER, line, column);
+  cct_boot_rit_ast_node_set_name_220(node, name);
   return node;
 }
 
-cct_boot_sig_AstNode* cct_boot_rit_ast_make_binary_243(cct_boot_ord_TokenKind operator_kind, cct_boot_sig_AstNode* left, cct_boot_sig_AstNode* right, long long line, long long column)
+cct_boot_sig_AstNode* cct_boot_rit_ast_make_binary_250(cct_boot_ord_TokenKind operator_kind, cct_boot_sig_AstNode* left, cct_boot_sig_AstNode* right, long long line, long long column)
 {
-  cct_boot_sig_AstNode* node = cct_boot_rit_ast_node_new_211(cct_boot_ord_AstKind__AST_BINARY_OP, line, column);
+  cct_boot_sig_AstNode* node = cct_boot_rit_ast_node_new_218(cct_boot_ord_AstKind__AST_BINARY_OP, line, column);
   (*node).operator_kind = operator_kind;
   (*node).left = left;
   (*node).right = right;
@@ -2725,43 +2732,43 @@ cct_boot_sig_AstNode* cct_boot_rit_ast_make_binary_243(cct_boot_ord_TokenKind op
   return node;
 }
 
-cct_boot_sig_AstNode* cct_boot_rit_ast_make_unary_244(cct_boot_ord_TokenKind operator_kind, cct_boot_sig_AstNode* operand, long long line, long long column)
+cct_boot_sig_AstNode* cct_boot_rit_ast_make_unary_251(cct_boot_ord_TokenKind operator_kind, cct_boot_sig_AstNode* operand, long long line, long long column)
 {
-  cct_boot_sig_AstNode* node = cct_boot_rit_ast_node_new_211(cct_boot_ord_AstKind__AST_UNARY_OP, line, column);
+  cct_boot_sig_AstNode* node = cct_boot_rit_ast_node_new_218(cct_boot_ord_AstKind__AST_UNARY_OP, line, column);
   (*node).operator_kind = operator_kind;
   (*node).left = operand;
   (*node).has_left = 1;
   return node;
 }
 
-cct_boot_sig_AstNode* cct_boot_rit_ast_make_call_245(cct_boot_sig_AstNode* callee, long long line, long long column)
+cct_boot_sig_AstNode* cct_boot_rit_ast_make_call_252(cct_boot_sig_AstNode* callee, long long line, long long column)
 {
-  cct_boot_sig_AstNode* node = cct_boot_rit_ast_node_new_211(cct_boot_ord_AstKind__AST_CALL, line, column);
+  cct_boot_sig_AstNode* node = cct_boot_rit_ast_node_new_218(cct_boot_ord_AstKind__AST_CALL, line, column);
   (*node).callee = callee;
   (*node).has_callee = 1;
   return node;
 }
 
-cct_boot_sig_AstNode* cct_boot_rit_ast_make_obsecro_call_246(cct_boot_sig_AstNode* callee, long long line, long long column)
+cct_boot_sig_AstNode* cct_boot_rit_ast_make_obsecro_call_253(cct_boot_sig_AstNode* callee, long long line, long long column)
 {
-  cct_boot_sig_AstNode* node = cct_boot_rit_ast_node_new_211(cct_boot_ord_AstKind__AST_OBSECRO_CALL, line, column);
+  cct_boot_sig_AstNode* node = cct_boot_rit_ast_node_new_218(cct_boot_ord_AstKind__AST_OBSECRO_CALL, line, column);
   (*node).callee = callee;
   (*node).has_callee = 1;
   return node;
 }
 
-cct_boot_sig_AstNode* cct_boot_rit_ast_make_field_access_247(cct_boot_sig_AstNode* object, char* field_name, long long line, long long column)
+cct_boot_sig_AstNode* cct_boot_rit_ast_make_field_access_254(cct_boot_sig_AstNode* object, char* field_name, long long line, long long column)
 {
-  cct_boot_sig_AstNode* node = cct_boot_rit_ast_node_new_211(cct_boot_ord_AstKind__AST_FIELD_ACCESS, line, column);
+  cct_boot_sig_AstNode* node = cct_boot_rit_ast_node_new_218(cct_boot_ord_AstKind__AST_FIELD_ACCESS, line, column);
   (*node).left = object;
   (*node).has_left = 1;
-  cct_boot_rit_ast_node_set_name_213(node, field_name);
+  cct_boot_rit_ast_node_set_name_220(node, field_name);
   return node;
 }
 
-cct_boot_sig_AstNode* cct_boot_rit_ast_make_index_access_248(cct_boot_sig_AstNode* object, cct_boot_sig_AstNode* index, long long line, long long column)
+cct_boot_sig_AstNode* cct_boot_rit_ast_make_index_access_255(cct_boot_sig_AstNode* object, cct_boot_sig_AstNode* index, long long line, long long column)
 {
-  cct_boot_sig_AstNode* node = cct_boot_rit_ast_node_new_211(cct_boot_ord_AstKind__AST_INDEX_ACCESS, line, column);
+  cct_boot_sig_AstNode* node = cct_boot_rit_ast_node_new_218(cct_boot_ord_AstKind__AST_INDEX_ACCESS, line, column);
   (*node).left = object;
   (*node).right = index;
   (*node).has_left = 1;
@@ -2769,134 +2776,134 @@ cct_boot_sig_AstNode* cct_boot_rit_ast_make_index_access_248(cct_boot_sig_AstNod
   return node;
 }
 
-cct_boot_sig_AstNode* cct_boot_rit_ast_make_expr_stmt_249(cct_boot_sig_AstNode* expr, long long line, long long column)
+cct_boot_sig_AstNode* cct_boot_rit_ast_make_expr_stmt_256(cct_boot_sig_AstNode* expr, long long line, long long column)
 {
-  cct_boot_sig_AstNode* node = cct_boot_rit_ast_node_new_211(cct_boot_ord_AstKind__AST_EXPR_STMT, line, column);
+  cct_boot_sig_AstNode* node = cct_boot_rit_ast_node_new_218(cct_boot_ord_AstKind__AST_EXPR_STMT, line, column);
   (*node).left = expr;
   (*node).has_left = 1;
   return node;
 }
 
-cct_boot_sig_AstNode* cct_boot_rit_ast_make_molde_250(long long line, long long column)
+cct_boot_sig_AstNode* cct_boot_rit_ast_make_molde_257(long long line, long long column)
 {
-  return cct_boot_rit_ast_node_new_211(cct_boot_ord_AstKind__AST_MOLDE, line, column);
+  return cct_boot_rit_ast_node_new_218(cct_boot_ord_AstKind__AST_MOLDE, line, column);
 }
 
-cct_boot_sig_AstNode* cct_boot_rit_ast_make_mensura_251(cct_boot_sig_AstNode* type_expr, long long line, long long column)
+cct_boot_sig_AstNode* cct_boot_rit_ast_make_mensura_258(cct_boot_sig_AstNode* type_expr, long long line, long long column)
 {
-  cct_boot_sig_AstNode* node = cct_boot_rit_ast_node_new_211(cct_boot_ord_AstKind__AST_MENSURA, line, column);
+  cct_boot_sig_AstNode* node = cct_boot_rit_ast_node_new_218(cct_boot_ord_AstKind__AST_MENSURA, line, column);
   (*node).type_expr = type_expr;
   (*node).has_type_expr = 1;
   return node;
 }
 
-cct_boot_sig_AstNode* cct_boot_rit_ast_make_redde_252(cct_boot_sig_AstNode* expr, long long line, long long column)
+cct_boot_sig_AstNode* cct_boot_rit_ast_make_redde_259(cct_boot_sig_AstNode* expr, long long line, long long column)
 {
-  cct_boot_sig_AstNode* node = cct_boot_rit_ast_node_new_211(cct_boot_ord_AstKind__AST_REDDE, line, column);
+  cct_boot_sig_AstNode* node = cct_boot_rit_ast_node_new_218(cct_boot_ord_AstKind__AST_REDDE, line, column);
   (*node).left = expr;
   (*node).has_left = 1;
   return node;
 }
 
-cct_boot_sig_AstNode* cct_boot_rit_ast_make_redde_empty_253(long long line, long long column)
+cct_boot_sig_AstNode* cct_boot_rit_ast_make_redde_empty_260(long long line, long long column)
 {
-  cct_boot_sig_AstNode* node = cct_boot_rit_ast_node_new_211(cct_boot_ord_AstKind__AST_REDDE, line, column);
+  cct_boot_sig_AstNode* node = cct_boot_rit_ast_node_new_218(cct_boot_ord_AstKind__AST_REDDE, line, column);
   return node;
 }
 
-cct_boot_sig_AstNode* cct_boot_rit_ast_make_anur_254(cct_boot_sig_AstNode* expr, long long line, long long column)
+cct_boot_sig_AstNode* cct_boot_rit_ast_make_anur_261(cct_boot_sig_AstNode* expr, long long line, long long column)
 {
-  cct_boot_sig_AstNode* node = cct_boot_rit_ast_node_new_211(cct_boot_ord_AstKind__AST_ANUR, line, column);
+  cct_boot_sig_AstNode* node = cct_boot_rit_ast_node_new_218(cct_boot_ord_AstKind__AST_ANUR, line, column);
   (*node).left = expr;
   (*node).has_left = 1;
   return node;
 }
 
-cct_boot_sig_AstNode* cct_boot_rit_ast_make_anur_empty_255(long long line, long long column)
+cct_boot_sig_AstNode* cct_boot_rit_ast_make_anur_empty_262(long long line, long long column)
 {
-  cct_boot_sig_AstNode* node = cct_boot_rit_ast_node_new_211(cct_boot_ord_AstKind__AST_ANUR, line, column);
+  cct_boot_sig_AstNode* node = cct_boot_rit_ast_node_new_218(cct_boot_ord_AstKind__AST_ANUR, line, column);
   return node;
 }
 
-cct_boot_sig_AstNode* cct_boot_rit_ast_make_iace_256(cct_boot_sig_AstNode* expr, long long line, long long column)
+cct_boot_sig_AstNode* cct_boot_rit_ast_make_iace_263(cct_boot_sig_AstNode* expr, long long line, long long column)
 {
-  cct_boot_sig_AstNode* node = cct_boot_rit_ast_node_new_211(cct_boot_ord_AstKind__AST_IACE, line, column);
+  cct_boot_sig_AstNode* node = cct_boot_rit_ast_node_new_218(cct_boot_ord_AstKind__AST_IACE, line, column);
   (*node).left = expr;
   (*node).has_left = 1;
   return node;
 }
 
-cct_boot_sig_AstNode* cct_boot_rit_ast_make_dimitte_257(cct_boot_sig_AstNode* target, long long line, long long column)
+cct_boot_sig_AstNode* cct_boot_rit_ast_make_dimitte_264(cct_boot_sig_AstNode* target, long long line, long long column)
 {
-  cct_boot_sig_AstNode* node = cct_boot_rit_ast_node_new_211(cct_boot_ord_AstKind__AST_DIMITTE, line, column);
+  cct_boot_sig_AstNode* node = cct_boot_rit_ast_node_new_218(cct_boot_ord_AstKind__AST_DIMITTE, line, column);
   (*node).left = target;
   (*node).has_left = 1;
   return node;
 }
 
-cct_boot_sig_AstNode* cct_boot_rit_ast_make_block_258(long long line, long long column)
+cct_boot_sig_AstNode* cct_boot_rit_ast_make_block_265(long long line, long long column)
 {
-  return cct_boot_rit_ast_node_new_211(cct_boot_ord_AstKind__AST_BLOCK, line, column);
+  return cct_boot_rit_ast_node_new_218(cct_boot_ord_AstKind__AST_BLOCK, line, column);
 }
 
-cct_boot_sig_AstNode* cct_boot_rit_ast_make_case_259(long long line, long long column)
+cct_boot_sig_AstNode* cct_boot_rit_ast_make_case_266(long long line, long long column)
 {
-  return cct_boot_rit_ast_node_new_211(cct_boot_ord_AstKind__AST_CASE, line, column);
+  return cct_boot_rit_ast_node_new_218(cct_boot_ord_AstKind__AST_CASE, line, column);
 }
 
-cct_boot_sig_AstNode* cct_boot_rit_ast_make_param_260(char* name, cct_boot_sig_AstNode* type_expr, long long line, long long column)
+cct_boot_sig_AstNode* cct_boot_rit_ast_make_param_267(char* name, cct_boot_sig_AstNode* type_expr, long long line, long long column)
 {
-  cct_boot_sig_AstNode* node = cct_boot_rit_ast_node_new_211(cct_boot_ord_AstKind__AST_PARAM, line, column);
-  cct_boot_rit_ast_node_set_name_213(node, name);
+  cct_boot_sig_AstNode* node = cct_boot_rit_ast_node_new_218(cct_boot_ord_AstKind__AST_PARAM, line, column);
+  cct_boot_rit_ast_node_set_name_220(node, name);
   (*node).type_expr = type_expr;
   (*node).has_type_expr = 1;
   return node;
 }
 
-cct_boot_sig_AstNode* cct_boot_rit_ast_make_type_param_no_constraint_261(char* name, long long line, long long column)
+cct_boot_sig_AstNode* cct_boot_rit_ast_make_type_param_no_constraint_268(char* name, long long line, long long column)
 {
-  cct_boot_sig_AstNode* node = cct_boot_rit_ast_node_new_211(cct_boot_ord_AstKind__AST_TYPE_PARAM, line, column);
-  cct_boot_rit_ast_node_set_name_213(node, name);
+  cct_boot_sig_AstNode* node = cct_boot_rit_ast_node_new_218(cct_boot_ord_AstKind__AST_TYPE_PARAM, line, column);
+  cct_boot_rit_ast_node_set_name_220(node, name);
   return node;
 }
 
-cct_boot_sig_AstNode* cct_boot_rit_ast_make_type_param_262(char* name, cct_boot_sig_AstNode* constraint_type, long long line, long long column)
+cct_boot_sig_AstNode* cct_boot_rit_ast_make_type_param_269(char* name, cct_boot_sig_AstNode* constraint_type, long long line, long long column)
 {
-  cct_boot_sig_AstNode* node = cct_boot_rit_ast_make_type_param_no_constraint_261(name, line, column);
+  cct_boot_sig_AstNode* node = cct_boot_rit_ast_make_type_param_no_constraint_268(name, line, column);
   (*node).type_expr = constraint_type;
   (*node).has_type_expr = 1;
   return node;
 }
 
-cct_boot_sig_AstNode* cct_boot_rit_ast_make_field_263(char* name, cct_boot_sig_AstNode* type_expr, long long line, long long column)
+cct_boot_sig_AstNode* cct_boot_rit_ast_make_field_270(char* name, cct_boot_sig_AstNode* type_expr, long long line, long long column)
 {
-  cct_boot_sig_AstNode* node = cct_boot_rit_ast_node_new_211(cct_boot_ord_AstKind__AST_FIELD, line, column);
-  cct_boot_rit_ast_node_set_name_213(node, name);
+  cct_boot_sig_AstNode* node = cct_boot_rit_ast_node_new_218(cct_boot_ord_AstKind__AST_FIELD, line, column);
+  cct_boot_rit_ast_node_set_name_220(node, name);
   (*node).type_expr = type_expr;
   (*node).has_type_expr = 1;
   return node;
 }
 
-cct_boot_sig_AstNode* cct_boot_rit_ast_make_enum_item_264(char* name, cct_boot_sig_AstNode* value, long long line, long long column)
+cct_boot_sig_AstNode* cct_boot_rit_ast_make_enum_item_271(char* name, cct_boot_sig_AstNode* value, long long line, long long column)
 {
-  cct_boot_sig_AstNode* node = cct_boot_rit_ast_node_new_211(cct_boot_ord_AstKind__AST_ENUM_ITEM, line, column);
-  cct_boot_rit_ast_node_set_name_213(node, name);
+  cct_boot_sig_AstNode* node = cct_boot_rit_ast_node_new_218(cct_boot_ord_AstKind__AST_ENUM_ITEM, line, column);
+  cct_boot_rit_ast_node_set_name_220(node, name);
   (*node).right = value;
   (*node).has_right = 1;
   return node;
 }
 
-cct_boot_sig_AstNode* cct_boot_rit_ast_make_enum_item_no_value_265(char* name, long long line, long long column)
+cct_boot_sig_AstNode* cct_boot_rit_ast_make_enum_item_no_value_272(char* name, long long line, long long column)
 {
-  cct_boot_sig_AstNode* node = cct_boot_rit_ast_node_new_211(cct_boot_ord_AstKind__AST_ENUM_ITEM, line, column);
-  cct_boot_rit_ast_node_set_name_213(node, name);
+  cct_boot_sig_AstNode* node = cct_boot_rit_ast_node_new_218(cct_boot_ord_AstKind__AST_ENUM_ITEM, line, column);
+  cct_boot_rit_ast_node_set_name_220(node, name);
   return node;
 }
 
-cct_boot_sig_AstNode* cct_boot_rit_ast_make_rituale_266(char* name, cct_boot_sig_AstNode* return_type, cct_boot_sig_AstNode* body, long long line, long long column)
+cct_boot_sig_AstNode* cct_boot_rit_ast_make_rituale_273(char* name, cct_boot_sig_AstNode* return_type, cct_boot_sig_AstNode* body, long long line, long long column)
 {
-  cct_boot_sig_AstNode* node = cct_boot_rit_ast_node_new_211(cct_boot_ord_AstKind__AST_RITUALE, line, column);
-  cct_boot_rit_ast_node_set_name_213(node, name);
+  cct_boot_sig_AstNode* node = cct_boot_rit_ast_node_new_218(cct_boot_ord_AstKind__AST_RITUALE, line, column);
+  cct_boot_rit_ast_node_set_name_220(node, name);
   (*node).return_type = return_type;
   (*node).body = body;
   (*node).has_return_type = 1;
@@ -2904,45 +2911,45 @@ cct_boot_sig_AstNode* cct_boot_rit_ast_make_rituale_266(char* name, cct_boot_sig
   return node;
 }
 
-cct_boot_sig_AstNode* cct_boot_rit_ast_make_rituale_decl_267(char* name, long long line, long long column)
+cct_boot_sig_AstNode* cct_boot_rit_ast_make_rituale_decl_274(char* name, long long line, long long column)
 {
-  cct_boot_sig_AstNode* node = cct_boot_rit_ast_node_new_211(cct_boot_ord_AstKind__AST_RITUALE, line, column);
-  cct_boot_rit_ast_node_set_name_213(node, name);
+  cct_boot_sig_AstNode* node = cct_boot_rit_ast_node_new_218(cct_boot_ord_AstKind__AST_RITUALE, line, column);
+  cct_boot_rit_ast_node_set_name_220(node, name);
   return node;
 }
 
-cct_boot_sig_AstNode* cct_boot_rit_ast_make_sigillum_268(char* name, long long line, long long column)
+cct_boot_sig_AstNode* cct_boot_rit_ast_make_sigillum_275(char* name, long long line, long long column)
 {
-  cct_boot_sig_AstNode* node = cct_boot_rit_ast_node_new_211(cct_boot_ord_AstKind__AST_SIGILLUM, line, column);
-  cct_boot_rit_ast_node_set_name_213(node, name);
+  cct_boot_sig_AstNode* node = cct_boot_rit_ast_node_new_218(cct_boot_ord_AstKind__AST_SIGILLUM, line, column);
+  cct_boot_rit_ast_node_set_name_220(node, name);
   return node;
 }
 
-cct_boot_sig_AstNode* cct_boot_rit_ast_make_ordo_269(char* name, long long line, long long column)
+cct_boot_sig_AstNode* cct_boot_rit_ast_make_ordo_276(char* name, long long line, long long column)
 {
-  cct_boot_sig_AstNode* node = cct_boot_rit_ast_node_new_211(cct_boot_ord_AstKind__AST_ORDO, line, column);
-  cct_boot_rit_ast_node_set_name_213(node, name);
+  cct_boot_sig_AstNode* node = cct_boot_rit_ast_node_new_218(cct_boot_ord_AstKind__AST_ORDO, line, column);
+  cct_boot_rit_ast_node_set_name_220(node, name);
   return node;
 }
 
-cct_boot_sig_AstNode* cct_boot_rit_ast_make_codex_270(char* name, long long line, long long column)
+cct_boot_sig_AstNode* cct_boot_rit_ast_make_codex_277(char* name, long long line, long long column)
 {
-  cct_boot_sig_AstNode* node = cct_boot_rit_ast_node_new_211(cct_boot_ord_AstKind__AST_CODEX, line, column);
-  cct_boot_rit_ast_node_set_name_213(node, name);
+  cct_boot_sig_AstNode* node = cct_boot_rit_ast_node_new_218(cct_boot_ord_AstKind__AST_CODEX, line, column);
+  cct_boot_rit_ast_node_set_name_220(node, name);
   return node;
 }
 
-cct_boot_sig_AstNode* cct_boot_rit_ast_make_pactum_271(char* name, long long line, long long column)
+cct_boot_sig_AstNode* cct_boot_rit_ast_make_pactum_278(char* name, long long line, long long column)
 {
-  cct_boot_sig_AstNode* node = cct_boot_rit_ast_node_new_211(cct_boot_ord_AstKind__AST_PACTUM, line, column);
-  cct_boot_rit_ast_node_set_name_213(node, name);
+  cct_boot_sig_AstNode* node = cct_boot_rit_ast_node_new_218(cct_boot_ord_AstKind__AST_PACTUM, line, column);
+  cct_boot_rit_ast_node_set_name_220(node, name);
   return node;
 }
 
-cct_boot_sig_AstNode* cct_boot_rit_ast_make_evoca_272(char* name, cct_boot_sig_AstNode* type_expr, cct_boot_sig_AstNode* init_expr, long long line, long long column)
+cct_boot_sig_AstNode* cct_boot_rit_ast_make_evoca_279(char* name, cct_boot_sig_AstNode* type_expr, cct_boot_sig_AstNode* init_expr, long long line, long long column)
 {
-  cct_boot_sig_AstNode* node = cct_boot_rit_ast_node_new_211(cct_boot_ord_AstKind__AST_EVOCA, line, column);
-  cct_boot_rit_ast_node_set_name_213(node, name);
+  cct_boot_sig_AstNode* node = cct_boot_rit_ast_node_new_218(cct_boot_ord_AstKind__AST_EVOCA, line, column);
+  cct_boot_rit_ast_node_set_name_220(node, name);
   (*node).type_expr = type_expr;
   (*node).right = init_expr;
   (*node).has_type_expr = 1;
@@ -2950,18 +2957,18 @@ cct_boot_sig_AstNode* cct_boot_rit_ast_make_evoca_272(char* name, cct_boot_sig_A
   return node;
 }
 
-cct_boot_sig_AstNode* cct_boot_rit_ast_make_evoca_no_init_273(char* name, cct_boot_sig_AstNode* type_expr, long long line, long long column)
+cct_boot_sig_AstNode* cct_boot_rit_ast_make_evoca_no_init_280(char* name, cct_boot_sig_AstNode* type_expr, long long line, long long column)
 {
-  cct_boot_sig_AstNode* node = cct_boot_rit_ast_node_new_211(cct_boot_ord_AstKind__AST_EVOCA, line, column);
-  cct_boot_rit_ast_node_set_name_213(node, name);
+  cct_boot_sig_AstNode* node = cct_boot_rit_ast_node_new_218(cct_boot_ord_AstKind__AST_EVOCA, line, column);
+  cct_boot_rit_ast_node_set_name_220(node, name);
   (*node).type_expr = type_expr;
   (*node).has_type_expr = 1;
   return node;
 }
 
-cct_boot_sig_AstNode* cct_boot_rit_ast_make_vincire_274(cct_boot_sig_AstNode* target, cct_boot_sig_AstNode* value, long long line, long long column)
+cct_boot_sig_AstNode* cct_boot_rit_ast_make_vincire_281(cct_boot_sig_AstNode* target, cct_boot_sig_AstNode* value, long long line, long long column)
 {
-  cct_boot_sig_AstNode* node = cct_boot_rit_ast_node_new_211(cct_boot_ord_AstKind__AST_VINCIRE, line, column);
+  cct_boot_sig_AstNode* node = cct_boot_rit_ast_node_new_218(cct_boot_ord_AstKind__AST_VINCIRE, line, column);
   (*node).left = target;
   (*node).right = value;
   (*node).has_left = 1;
@@ -2969,9 +2976,9 @@ cct_boot_sig_AstNode* cct_boot_rit_ast_make_vincire_274(cct_boot_sig_AstNode* ta
   return node;
 }
 
-cct_boot_sig_AstNode* cct_boot_rit_ast_make_si_275(cct_boot_sig_AstNode* condition, cct_boot_sig_AstNode* body, cct_boot_sig_AstNode* else_branch, long long line, long long column)
+cct_boot_sig_AstNode* cct_boot_rit_ast_make_si_282(cct_boot_sig_AstNode* condition, cct_boot_sig_AstNode* body, cct_boot_sig_AstNode* else_branch, long long line, long long column)
 {
-  cct_boot_sig_AstNode* node = cct_boot_rit_ast_node_new_211(cct_boot_ord_AstKind__AST_SI, line, column);
+  cct_boot_sig_AstNode* node = cct_boot_rit_ast_node_new_218(cct_boot_ord_AstKind__AST_SI, line, column);
   (*node).condition = condition;
   (*node).body = body;
   (*node).else_branch = else_branch;
@@ -2981,9 +2988,9 @@ cct_boot_sig_AstNode* cct_boot_rit_ast_make_si_275(cct_boot_sig_AstNode* conditi
   return node;
 }
 
-cct_boot_sig_AstNode* cct_boot_rit_ast_make_si_no_else_276(cct_boot_sig_AstNode* condition, cct_boot_sig_AstNode* body, long long line, long long column)
+cct_boot_sig_AstNode* cct_boot_rit_ast_make_si_no_else_283(cct_boot_sig_AstNode* condition, cct_boot_sig_AstNode* body, long long line, long long column)
 {
-  cct_boot_sig_AstNode* node = cct_boot_rit_ast_node_new_211(cct_boot_ord_AstKind__AST_SI, line, column);
+  cct_boot_sig_AstNode* node = cct_boot_rit_ast_node_new_218(cct_boot_ord_AstKind__AST_SI, line, column);
   (*node).condition = condition;
   (*node).body = body;
   (*node).has_condition = 1;
@@ -2991,17 +2998,17 @@ cct_boot_sig_AstNode* cct_boot_rit_ast_make_si_no_else_276(cct_boot_sig_AstNode*
   return node;
 }
 
-cct_boot_sig_AstNode* cct_boot_rit_ast_make_quando_277(cct_boot_sig_AstNode* expr, long long line, long long column)
+cct_boot_sig_AstNode* cct_boot_rit_ast_make_quando_284(cct_boot_sig_AstNode* expr, long long line, long long column)
 {
-  cct_boot_sig_AstNode* node = cct_boot_rit_ast_node_new_211(cct_boot_ord_AstKind__AST_QUANDO, line, column);
+  cct_boot_sig_AstNode* node = cct_boot_rit_ast_node_new_218(cct_boot_ord_AstKind__AST_QUANDO, line, column);
   (*node).condition = expr;
   (*node).has_condition = 1;
   return node;
 }
 
-cct_boot_sig_AstNode* cct_boot_rit_ast_make_dum_278(cct_boot_sig_AstNode* condition, cct_boot_sig_AstNode* body, long long line, long long column)
+cct_boot_sig_AstNode* cct_boot_rit_ast_make_dum_285(cct_boot_sig_AstNode* condition, cct_boot_sig_AstNode* body, long long line, long long column)
 {
-  cct_boot_sig_AstNode* node = cct_boot_rit_ast_node_new_211(cct_boot_ord_AstKind__AST_DUM, line, column);
+  cct_boot_sig_AstNode* node = cct_boot_rit_ast_node_new_218(cct_boot_ord_AstKind__AST_DUM, line, column);
   (*node).condition = condition;
   (*node).body = body;
   (*node).has_condition = 1;
@@ -3009,9 +3016,9 @@ cct_boot_sig_AstNode* cct_boot_rit_ast_make_dum_278(cct_boot_sig_AstNode* condit
   return node;
 }
 
-cct_boot_sig_AstNode* cct_boot_rit_ast_make_donec_279(cct_boot_sig_AstNode* body, cct_boot_sig_AstNode* condition, long long line, long long column)
+cct_boot_sig_AstNode* cct_boot_rit_ast_make_donec_286(cct_boot_sig_AstNode* body, cct_boot_sig_AstNode* condition, long long line, long long column)
 {
-  cct_boot_sig_AstNode* node = cct_boot_rit_ast_node_new_211(cct_boot_ord_AstKind__AST_DONEC, line, column);
+  cct_boot_sig_AstNode* node = cct_boot_rit_ast_node_new_218(cct_boot_ord_AstKind__AST_DONEC, line, column);
   (*node).body = body;
   (*node).has_body = 1;
   (*node).condition = condition;
@@ -3019,18 +3026,18 @@ cct_boot_sig_AstNode* cct_boot_rit_ast_make_donec_279(cct_boot_sig_AstNode* body
   return node;
 }
 
-cct_boot_sig_AstNode* cct_boot_rit_ast_make_donec_no_condition_280(cct_boot_sig_AstNode* body, long long line, long long column)
+cct_boot_sig_AstNode* cct_boot_rit_ast_make_donec_no_condition_287(cct_boot_sig_AstNode* body, long long line, long long column)
 {
-  cct_boot_sig_AstNode* node = cct_boot_rit_ast_node_new_211(cct_boot_ord_AstKind__AST_DONEC, line, column);
+  cct_boot_sig_AstNode* node = cct_boot_rit_ast_node_new_218(cct_boot_ord_AstKind__AST_DONEC, line, column);
   (*node).body = body;
   (*node).has_body = 1;
   return node;
 }
 
-cct_boot_sig_AstNode* cct_boot_rit_ast_make_repete_281(char* iterator_name, cct_boot_sig_AstNode* start_expr, cct_boot_sig_AstNode* end_expr, cct_boot_sig_AstNode* step_expr, cct_boot_sig_AstNode* body, long long line, long long column)
+cct_boot_sig_AstNode* cct_boot_rit_ast_make_repete_288(char* iterator_name, cct_boot_sig_AstNode* start_expr, cct_boot_sig_AstNode* end_expr, cct_boot_sig_AstNode* step_expr, cct_boot_sig_AstNode* body, long long line, long long column)
 {
-  cct_boot_sig_AstNode* node = cct_boot_rit_ast_node_new_211(cct_boot_ord_AstKind__AST_REPETE, line, column);
-  cct_boot_rit_ast_node_set_name_213(node, iterator_name);
+  cct_boot_sig_AstNode* node = cct_boot_rit_ast_node_new_218(cct_boot_ord_AstKind__AST_REPETE, line, column);
+  cct_boot_rit_ast_node_set_name_220(node, iterator_name);
   (*node).left = start_expr;
   (*node).right = end_expr;
   (*node).condition = step_expr;
@@ -3042,10 +3049,10 @@ cct_boot_sig_AstNode* cct_boot_rit_ast_make_repete_281(char* iterator_name, cct_
   return node;
 }
 
-cct_boot_sig_AstNode* cct_boot_rit_ast_make_repete_no_step_282(char* iterator_name, cct_boot_sig_AstNode* start_expr, cct_boot_sig_AstNode* end_expr, cct_boot_sig_AstNode* body, long long line, long long column)
+cct_boot_sig_AstNode* cct_boot_rit_ast_make_repete_no_step_289(char* iterator_name, cct_boot_sig_AstNode* start_expr, cct_boot_sig_AstNode* end_expr, cct_boot_sig_AstNode* body, long long line, long long column)
 {
-  cct_boot_sig_AstNode* node = cct_boot_rit_ast_node_new_211(cct_boot_ord_AstKind__AST_REPETE, line, column);
-  cct_boot_rit_ast_node_set_name_213(node, iterator_name);
+  cct_boot_sig_AstNode* node = cct_boot_rit_ast_node_new_218(cct_boot_ord_AstKind__AST_REPETE, line, column);
+  cct_boot_rit_ast_node_set_name_220(node, iterator_name);
   (*node).left = start_expr;
   (*node).right = end_expr;
   (*node).body = body;
@@ -3055,13 +3062,13 @@ cct_boot_sig_AstNode* cct_boot_rit_ast_make_repete_no_step_282(char* iterator_na
   return node;
 }
 
-cct_boot_sig_AstNode* cct_boot_rit_ast_make_iterum_283(char* item_name, char* value_name, cct_boot_sig_AstNode* collection, cct_boot_sig_AstNode* body, long long line, long long column)
+cct_boot_sig_AstNode* cct_boot_rit_ast_make_iterum_290(char* item_name, char* value_name, cct_boot_sig_AstNode* collection, cct_boot_sig_AstNode* body, long long line, long long column)
 {
-  cct_boot_sig_AstNode* node = cct_boot_rit_ast_node_new_211(cct_boot_ord_AstKind__AST_ITERUM, line, column);
-  cct_boot_rit_ast_node_set_name_213(node, item_name);
+  cct_boot_sig_AstNode* node = cct_boot_rit_ast_node_new_218(cct_boot_ord_AstKind__AST_ITERUM, line, column);
+  cct_boot_rit_ast_node_set_name_220(node, item_name);
   if (cct_boot_rit_compare_38(value_name, cct_boot_str_102) != 0)
   {
-    cct_boot_rit_ast_node_set_aux_name_216(node, value_name);
+    cct_boot_rit_ast_node_set_aux_name_223(node, value_name);
   }
   (*node).left = collection;
   (*node).body = body;
@@ -3070,64 +3077,64 @@ cct_boot_sig_AstNode* cct_boot_rit_ast_make_iterum_283(char* item_name, char* va
   return node;
 }
 
-cct_boot_sig_AstNode* cct_boot_rit_ast_make_frange_284(long long line, long long column)
+cct_boot_sig_AstNode* cct_boot_rit_ast_make_frange_291(long long line, long long column)
 {
-  return cct_boot_rit_ast_node_new_211(cct_boot_ord_AstKind__AST_FRANGE, line, column);
+  return cct_boot_rit_ast_node_new_218(cct_boot_ord_AstKind__AST_FRANGE, line, column);
 }
 
-cct_boot_sig_AstNode* cct_boot_rit_ast_make_recede_285(long long line, long long column)
+cct_boot_sig_AstNode* cct_boot_rit_ast_make_recede_292(long long line, long long column)
 {
-  return cct_boot_rit_ast_node_new_211(cct_boot_ord_AstKind__AST_RECEDE, line, column);
+  return cct_boot_rit_ast_node_new_218(cct_boot_ord_AstKind__AST_RECEDE, line, column);
 }
 
-cct_boot_sig_AstNode* cct_boot_rit_ast_make_tempta_no_semper_286(cct_boot_sig_AstNode* try_block, cct_boot_sig_AstNode* cape_type, char* cape_name, cct_boot_sig_AstNode* cape_block, long long line, long long column)
+cct_boot_sig_AstNode* cct_boot_rit_ast_make_tempta_no_semper_293(cct_boot_sig_AstNode* try_block, cct_boot_sig_AstNode* cape_type, char* cape_name, cct_boot_sig_AstNode* cape_block, long long line, long long column)
 {
-  cct_boot_sig_AstNode* node = cct_boot_rit_ast_node_new_211(cct_boot_ord_AstKind__AST_TEMPTA, line, column);
+  cct_boot_sig_AstNode* node = cct_boot_rit_ast_node_new_218(cct_boot_ord_AstKind__AST_TEMPTA, line, column);
   (*node).try_block = try_block;
   (*node).has_try_block = 1;
   (*node).cape_type = cape_type;
   (*node).has_cape_type = 1;
-  cct_boot_rit_ast_node_set_name_213(node, cape_name);
+  cct_boot_rit_ast_node_set_name_220(node, cape_name);
   (*node).cape_block = cape_block;
   (*node).has_cape_block = 1;
   return node;
 }
 
-cct_boot_sig_AstNode* cct_boot_rit_ast_make_tempta_287(cct_boot_sig_AstNode* try_block, cct_boot_sig_AstNode* cape_type, char* cape_name, cct_boot_sig_AstNode* cape_block, cct_boot_sig_AstNode* semper_block, long long line, long long column)
+cct_boot_sig_AstNode* cct_boot_rit_ast_make_tempta_294(cct_boot_sig_AstNode* try_block, cct_boot_sig_AstNode* cape_type, char* cape_name, cct_boot_sig_AstNode* cape_block, cct_boot_sig_AstNode* semper_block, long long line, long long column)
 {
-  cct_boot_sig_AstNode* node = cct_boot_rit_ast_make_tempta_no_semper_286(try_block, cape_type, cape_name, cape_block, line, column);
+  cct_boot_sig_AstNode* node = cct_boot_rit_ast_make_tempta_no_semper_293(try_block, cape_type, cape_name, cape_block, line, column);
   (*node).semper_block = semper_block;
   (*node).has_semper_block = 1;
   return node;
 }
 
-char* cct_boot_rit_ast_dump_indent_288(long long level)
+char* cct_boot_rit_ast_dump_indent_295(long long level)
 {
   return cct_boot_rit_repeat_58(cct_boot_str_103, level);
 }
 
-char* cct_boot_rit_ast_dump_append_289(char* out, char* text)
+char* cct_boot_rit_ast_dump_append_296(char* out, char* text)
 {
   return cct_boot_rit_concat_37(out, text);
 }
 
-char* cct_boot_rit_ast_dump_append_line_290(char* out, long long level, char* text)
+char* cct_boot_rit_ast_dump_append_line_297(char* out, long long level, char* text)
 {
-  char* line = cct_boot_rit_concat_37(cct_boot_rit_ast_dump_indent_288(level), text);
+  char* line = cct_boot_rit_concat_37(cct_boot_rit_ast_dump_indent_295(level), text);
   return cct_boot_rit_concat_37(out, cct_boot_rit_concat_37(line, cct_boot_str_104));
 }
 
-char* cct_boot_rit_ast_dump_location_291(long long line, long long column)
+char* cct_boot_rit_ast_dump_location_298(long long line, long long column)
 {
   char* out = cct_boot_str_105;
-  out = cct_boot_rit_concat_37(out, cct_boot_rit_stringify_int_95(line));
+  out = cct_boot_rit_concat_37(out, cct_boot_rit_stringify_int_102(line));
   out = cct_boot_rit_concat_37(out, cct_boot_str_106);
-  out = cct_boot_rit_concat_37(out, cct_boot_rit_stringify_int_95(column));
+  out = cct_boot_rit_concat_37(out, cct_boot_rit_stringify_int_102(column));
   out = cct_boot_rit_concat_37(out, cct_boot_str_107);
   return out;
 }
 
-char* cct_boot_rit_ast_dump_type_inline_292(cct_boot_sig_AstNode* type_expr)
+char* cct_boot_rit_ast_dump_type_inline_299(cct_boot_sig_AstNode* type_expr)
 {
   char* out = cct_boot_str_102;
   if ((*type_expr).is_array)
@@ -3139,20 +3146,20 @@ char* cct_boot_rit_ast_dump_type_inline_292(cct_boot_sig_AstNode* type_expr)
     out = cct_boot_rit_concat_37(out, cct_boot_str_109);
   }
   out = cct_boot_rit_concat_37(out, (*type_expr).type_name);
-  if (cct_boot_rit_ast_node_list_len_209((*type_expr).generic_args) > 0)
+  if (cct_boot_rit_ast_node_list_len_216((*type_expr).generic_args) > 0)
   {
     out = cct_boot_rit_concat_37(out, cct_boot_str_110);
     long long i = 0;
-    long long n = cct_boot_rit_ast_node_list_len_209((*type_expr).generic_args);
+    long long n = cct_boot_rit_ast_node_list_len_216((*type_expr).generic_args);
     while (i < n)
     {
       {
-        cct_boot_sig_AstNode* arg = cct_boot_rit_ast_node_list_get_210((*type_expr).generic_args, i);
+        cct_boot_sig_AstNode* arg = cct_boot_rit_ast_node_list_get_217((*type_expr).generic_args, i);
         if (i > 0)
         {
           out = cct_boot_rit_concat_37(out, cct_boot_str_111);
         }
-        out = cct_boot_rit_concat_37(out, cct_boot_rit_ast_dump_type_inline_292(arg));
+        out = cct_boot_rit_concat_37(out, cct_boot_rit_ast_dump_type_inline_299(arg));
         i = (i + 1);
       }
       if (0) goto __cct_label_1;
@@ -3165,29 +3172,29 @@ char* cct_boot_rit_ast_dump_type_inline_292(cct_boot_sig_AstNode* type_expr)
   if ((*type_expr).is_array)
   {
     out = cct_boot_rit_concat_37(out, cct_boot_str_112);
-    out = cct_boot_rit_concat_37(out, cct_boot_rit_stringify_int_95((*type_expr).array_size));
+    out = cct_boot_rit_concat_37(out, cct_boot_rit_stringify_int_102((*type_expr).array_size));
     out = cct_boot_rit_concat_37(out, cct_boot_str_113);
   }
   return out;
 }
 
-char* cct_boot_rit_ast_dump_type_params_293(char* out, long long level, void* list)
+char* cct_boot_rit_ast_dump_type_params_300(char* out, long long level, void* list)
 {
-  char* next = cct_boot_rit_ast_dump_append_line_290(out, level, cct_boot_rit_concat_37(cct_boot_str_114, cct_boot_rit_concat_37(cct_boot_rit_stringify_int_95(cct_boot_rit_ast_node_list_len_209(list)), cct_boot_str_107)));
+  char* next = cct_boot_rit_ast_dump_append_line_297(out, level, cct_boot_rit_concat_37(cct_boot_str_114, cct_boot_rit_concat_37(cct_boot_rit_stringify_int_102(cct_boot_rit_ast_node_list_len_216(list)), cct_boot_str_107)));
   long long i = 0;
-  long long n = cct_boot_rit_ast_node_list_len_209(list);
+  long long n = cct_boot_rit_ast_node_list_len_216(list);
   while (i < n)
   {
     {
-      cct_boot_sig_AstNode* item = cct_boot_rit_ast_node_list_get_210(list, i);
+      cct_boot_sig_AstNode* item = cct_boot_rit_ast_node_list_get_217(list, i);
       char* line = cct_boot_str_115;
       line = cct_boot_rit_concat_37(line, (*item).name);
       if ((*item).has_type_expr)
       {
         line = cct_boot_rit_concat_37(line, cct_boot_str_116);
-        line = cct_boot_rit_concat_37(line, cct_boot_rit_ast_dump_type_inline_292((*item).type_expr));
+        line = cct_boot_rit_concat_37(line, cct_boot_rit_ast_dump_type_inline_299((*item).type_expr));
       }
-      next = cct_boot_rit_ast_dump_append_line_290(next, (level + 1), line);
+      next = cct_boot_rit_ast_dump_append_line_297(next, (level + 1), line);
       i = (i + 1);
     }
     if (0) goto __cct_label_3;
@@ -3198,26 +3205,26 @@ char* cct_boot_rit_ast_dump_type_params_293(char* out, long long level, void* li
   return next;
 }
 
-char* cct_boot_rit_ast_dump_value_with_label_294(char* out, long long level, char* label, cct_boot_sig_AstNode* node)
+char* cct_boot_rit_ast_dump_value_with_label_301(char* out, long long level, char* label, cct_boot_sig_AstNode* node)
 {
-  char* next = cct_boot_rit_ast_dump_append_line_290(out, level, label);
-  return cct_boot_rit_ast_dump_node_298(node, (level + 1), next);
+  char* next = cct_boot_rit_ast_dump_append_line_297(out, level, label);
+  return cct_boot_rit_ast_dump_node_305(node, (level + 1), next);
 }
 
-char* cct_boot_rit_ast_dump_named_type_list_295(char* out, long long level, void* list, char* label)
+char* cct_boot_rit_ast_dump_named_type_list_302(char* out, long long level, void* list, char* label)
 {
-  char* next = cct_boot_rit_ast_dump_append_line_290(out, level, cct_boot_rit_concat_37(cct_boot_rit_concat_37(label, cct_boot_str_117), cct_boot_rit_concat_37(cct_boot_rit_stringify_int_95(cct_boot_rit_ast_node_list_len_209(list)), cct_boot_str_107)));
+  char* next = cct_boot_rit_ast_dump_append_line_297(out, level, cct_boot_rit_concat_37(cct_boot_rit_concat_37(label, cct_boot_str_117), cct_boot_rit_concat_37(cct_boot_rit_stringify_int_102(cct_boot_rit_ast_node_list_len_216(list)), cct_boot_str_107)));
   long long i = 0;
-  long long n = cct_boot_rit_ast_node_list_len_209(list);
+  long long n = cct_boot_rit_ast_node_list_len_216(list);
   while (i < n)
   {
     {
-      cct_boot_sig_AstNode* item = cct_boot_rit_ast_node_list_get_210(list, i);
+      cct_boot_sig_AstNode* item = cct_boot_rit_ast_node_list_get_217(list, i);
       char* line = cct_boot_str_115;
       line = cct_boot_rit_concat_37(line, (*item).name);
       line = cct_boot_rit_concat_37(line, cct_boot_str_118);
-      line = cct_boot_rit_concat_37(line, cct_boot_rit_ast_dump_type_inline_292((*item).type_expr));
-      next = cct_boot_rit_ast_dump_append_line_290(next, (level + 1), line);
+      line = cct_boot_rit_concat_37(line, cct_boot_rit_ast_dump_type_inline_299((*item).type_expr));
+      next = cct_boot_rit_ast_dump_append_line_297(next, (level + 1), line);
       i = (i + 1);
     }
     if (0) goto __cct_label_5;
@@ -3228,15 +3235,15 @@ char* cct_boot_rit_ast_dump_named_type_list_295(char* out, long long level, void
   return next;
 }
 
-char* cct_boot_rit_ast_dump_enum_items_296(char* out, long long level, void* list)
+char* cct_boot_rit_ast_dump_enum_items_303(char* out, long long level, void* list)
 {
-  char* next = cct_boot_rit_ast_dump_append_line_290(out, level, cct_boot_rit_concat_37(cct_boot_str_119, cct_boot_rit_concat_37(cct_boot_rit_stringify_int_95(cct_boot_rit_ast_node_list_len_209(list)), cct_boot_str_107)));
+  char* next = cct_boot_rit_ast_dump_append_line_297(out, level, cct_boot_rit_concat_37(cct_boot_str_119, cct_boot_rit_concat_37(cct_boot_rit_stringify_int_102(cct_boot_rit_ast_node_list_len_216(list)), cct_boot_str_107)));
   long long i = 0;
-  long long n = cct_boot_rit_ast_node_list_len_209(list);
+  long long n = cct_boot_rit_ast_node_list_len_216(list);
   while (i < n)
   {
     {
-      cct_boot_sig_AstNode* item = cct_boot_rit_ast_node_list_get_210(list, i);
+      cct_boot_sig_AstNode* item = cct_boot_rit_ast_node_list_get_217(list, i);
       char* line = cct_boot_str_115;
       line = cct_boot_rit_concat_37(line, (*item).name);
       if ((*item).has_right)
@@ -3249,7 +3256,7 @@ char* cct_boot_rit_ast_dump_enum_items_296(char* out, long long level, void* lis
       {
         line = cct_boot_rit_concat_37(line, cct_boot_str_121);
       }
-      next = cct_boot_rit_ast_dump_append_line_290(next, (level + 1), line);
+      next = cct_boot_rit_ast_dump_append_line_297(next, (level + 1), line);
       i = (i + 1);
     }
     if (0) goto __cct_label_7;
@@ -3260,16 +3267,16 @@ char* cct_boot_rit_ast_dump_enum_items_296(char* out, long long level, void* lis
   return next;
 }
 
-char* cct_boot_rit_ast_dump_node_list_with_label_297(char* out, long long level, void* list, char* label)
+char* cct_boot_rit_ast_dump_node_list_with_label_304(char* out, long long level, void* list, char* label)
 {
-  char* next = cct_boot_rit_ast_dump_append_line_290(out, level, label);
+  char* next = cct_boot_rit_ast_dump_append_line_297(out, level, label);
   long long i = 0;
-  long long n = cct_boot_rit_ast_node_list_len_209(list);
+  long long n = cct_boot_rit_ast_node_list_len_216(list);
   while (i < n)
   {
     {
-      cct_boot_sig_AstNode* item = cct_boot_rit_ast_node_list_get_210(list, i);
-      next = cct_boot_rit_ast_dump_node_298(item, (level + 1), next);
+      cct_boot_sig_AstNode* item = cct_boot_rit_ast_node_list_get_217(list, i);
+      next = cct_boot_rit_ast_dump_node_305(item, (level + 1), next);
       i = (i + 1);
     }
     if (0) goto __cct_label_9;
@@ -3280,86 +3287,86 @@ char* cct_boot_rit_ast_dump_node_list_with_label_297(char* out, long long level,
   return next;
 }
 
-char* cct_boot_rit_ast_dump_node_298(cct_boot_sig_AstNode* node, long long level, char* out)
+char* cct_boot_rit_ast_dump_node_305(cct_boot_sig_AstNode* node, long long level, char* out)
 {
-  char* location = cct_boot_rit_ast_dump_location_291((*node).line, (*node).column);
+  char* location = cct_boot_rit_ast_dump_location_298((*node).line, (*node).column);
   cct_boot_ord_AstKind __cct_tmp_0 = (*node).kind;
   switch (__cct_tmp_0)
   {
     case cct_boot_ord_AstKind__AST_IMPORT:
     {
-      out = cct_boot_rit_ast_dump_append_line_290(out, level, cct_boot_rit_concat_37(cct_boot_str_122, location));
-      return cct_boot_rit_ast_dump_append_line_290(out, (level + 1), cct_boot_rit_concat_37(cct_boot_str_123, cct_boot_rit_concat_37((*node).value_text, cct_boot_str_124)));
+      out = cct_boot_rit_ast_dump_append_line_297(out, level, cct_boot_rit_concat_37(cct_boot_str_122, location));
+      return cct_boot_rit_ast_dump_append_line_297(out, (level + 1), cct_boot_rit_concat_37(cct_boot_str_123, cct_boot_rit_concat_37((*node).value_text, cct_boot_str_124)));
     }
     break;
     case cct_boot_ord_AstKind__AST_RITUALE:
     {
-      out = cct_boot_rit_ast_dump_append_line_290(out, level, cct_boot_rit_concat_37(cct_boot_str_125, location));
-      out = cct_boot_rit_ast_dump_append_line_290(out, (level + 1), cct_boot_rit_concat_37(cct_boot_str_126, (*node).name));
-      if (cct_boot_rit_ast_node_list_len_209((*node).type_params) > 0)
+      out = cct_boot_rit_ast_dump_append_line_297(out, level, cct_boot_rit_concat_37(cct_boot_str_125, location));
+      out = cct_boot_rit_ast_dump_append_line_297(out, (level + 1), cct_boot_rit_concat_37(cct_boot_str_126, (*node).name));
+      if (cct_boot_rit_ast_node_list_len_216((*node).type_params) > 0)
       {
-        out = cct_boot_rit_ast_dump_type_params_293(out, (level + 1), (*node).type_params);
+        out = cct_boot_rit_ast_dump_type_params_300(out, (level + 1), (*node).type_params);
       }
-      out = cct_boot_rit_ast_dump_named_type_list_295(out, (level + 1), (*node).params, cct_boot_str_127);
+      out = cct_boot_rit_ast_dump_named_type_list_302(out, (level + 1), (*node).params, cct_boot_str_127);
       if ((*node).has_return_type)
       {
-        out = cct_boot_rit_ast_dump_append_line_290(out, (level + 1), cct_boot_rit_concat_37(cct_boot_str_128, cct_boot_rit_ast_dump_type_inline_292((*node).return_type)));
+        out = cct_boot_rit_ast_dump_append_line_297(out, (level + 1), cct_boot_rit_concat_37(cct_boot_str_128, cct_boot_rit_ast_dump_type_inline_299((*node).return_type)));
       }
       else
       {
-        out = cct_boot_rit_ast_dump_append_line_290(out, (level + 1), cct_boot_str_129);
+        out = cct_boot_rit_ast_dump_append_line_297(out, (level + 1), cct_boot_str_129);
       }
       if ((*node).has_body)
       {
-        out = cct_boot_rit_ast_dump_append_line_290(out, (level + 1), cct_boot_str_130);
-        return cct_boot_rit_ast_dump_node_298((*node).body, (level + 2), out);
+        out = cct_boot_rit_ast_dump_append_line_297(out, (level + 1), cct_boot_str_130);
+        return cct_boot_rit_ast_dump_node_305((*node).body, (level + 2), out);
       }
       return out;
     }
     break;
     case cct_boot_ord_AstKind__AST_SIGILLUM:
     {
-      out = cct_boot_rit_ast_dump_append_line_290(out, level, cct_boot_rit_concat_37(cct_boot_str_131, location));
-      out = cct_boot_rit_ast_dump_append_line_290(out, (level + 1), cct_boot_rit_concat_37(cct_boot_str_126, (*node).name));
-      if (cct_boot_rit_ast_node_list_len_209((*node).type_params) > 0)
+      out = cct_boot_rit_ast_dump_append_line_297(out, level, cct_boot_rit_concat_37(cct_boot_str_131, location));
+      out = cct_boot_rit_ast_dump_append_line_297(out, (level + 1), cct_boot_rit_concat_37(cct_boot_str_126, (*node).name));
+      if (cct_boot_rit_ast_node_list_len_216((*node).type_params) > 0)
       {
-        out = cct_boot_rit_ast_dump_type_params_293(out, (level + 1), (*node).type_params);
+        out = cct_boot_rit_ast_dump_type_params_300(out, (level + 1), (*node).type_params);
       }
-      return cct_boot_rit_ast_dump_named_type_list_295(out, (level + 1), (*node).fields, cct_boot_str_132);
+      return cct_boot_rit_ast_dump_named_type_list_302(out, (level + 1), (*node).fields, cct_boot_str_132);
     }
     break;
     case cct_boot_ord_AstKind__AST_ORDO:
     {
-      out = cct_boot_rit_ast_dump_append_line_290(out, level, cct_boot_rit_concat_37(cct_boot_str_133, location));
-      out = cct_boot_rit_ast_dump_append_line_290(out, (level + 1), cct_boot_rit_concat_37(cct_boot_str_126, (*node).name));
-      return cct_boot_rit_ast_dump_enum_items_296(out, (level + 1), (*node).items);
+      out = cct_boot_rit_ast_dump_append_line_297(out, level, cct_boot_rit_concat_37(cct_boot_str_133, location));
+      out = cct_boot_rit_ast_dump_append_line_297(out, (level + 1), cct_boot_rit_concat_37(cct_boot_str_126, (*node).name));
+      return cct_boot_rit_ast_dump_enum_items_303(out, (level + 1), (*node).items);
     }
     break;
     case cct_boot_ord_AstKind__AST_CODEX:
     {
-      out = cct_boot_rit_ast_dump_append_line_290(out, level, cct_boot_rit_concat_37(cct_boot_str_134, location));
-      out = cct_boot_rit_ast_dump_append_line_290(out, (level + 1), cct_boot_rit_concat_37(cct_boot_str_126, (*node).name));
-      return cct_boot_rit_ast_dump_node_list_with_label_297(out, (level + 1), (*node).declarations, cct_boot_str_135);
+      out = cct_boot_rit_ast_dump_append_line_297(out, level, cct_boot_rit_concat_37(cct_boot_str_134, location));
+      out = cct_boot_rit_ast_dump_append_line_297(out, (level + 1), cct_boot_rit_concat_37(cct_boot_str_126, (*node).name));
+      return cct_boot_rit_ast_dump_node_list_with_label_304(out, (level + 1), (*node).declarations, cct_boot_str_135);
     }
     break;
     case cct_boot_ord_AstKind__AST_PACTUM:
     {
-      out = cct_boot_rit_ast_dump_append_line_290(out, level, cct_boot_rit_concat_37(cct_boot_str_136, location));
-      out = cct_boot_rit_ast_dump_append_line_290(out, (level + 1), cct_boot_rit_concat_37(cct_boot_str_126, (*node).name));
-      return cct_boot_rit_ast_dump_node_list_with_label_297(out, (level + 1), (*node).signatures, cct_boot_str_137);
+      out = cct_boot_rit_ast_dump_append_line_297(out, level, cct_boot_rit_concat_37(cct_boot_str_136, location));
+      out = cct_boot_rit_ast_dump_append_line_297(out, (level + 1), cct_boot_rit_concat_37(cct_boot_str_126, (*node).name));
+      return cct_boot_rit_ast_dump_node_list_with_label_304(out, (level + 1), (*node).signatures, cct_boot_str_137);
     }
     break;
     case cct_boot_ord_AstKind__AST_BLOCK:
     {
-      out = cct_boot_rit_ast_dump_append_line_290(out, level, cct_boot_rit_concat_37(cct_boot_str_138, location));
-      out = cct_boot_rit_ast_dump_append_line_290(out, (level + 1), cct_boot_rit_concat_37(cct_boot_str_139, cct_boot_rit_concat_37(cct_boot_rit_stringify_int_95(cct_boot_rit_ast_node_list_len_209((*node).statements)), cct_boot_str_107)));
+      out = cct_boot_rit_ast_dump_append_line_297(out, level, cct_boot_rit_concat_37(cct_boot_str_138, location));
+      out = cct_boot_rit_ast_dump_append_line_297(out, (level + 1), cct_boot_rit_concat_37(cct_boot_str_139, cct_boot_rit_concat_37(cct_boot_rit_stringify_int_102(cct_boot_rit_ast_node_list_len_216((*node).statements)), cct_boot_str_107)));
       long long i = 0;
-      long long n = cct_boot_rit_ast_node_list_len_209((*node).statements);
+      long long n = cct_boot_rit_ast_node_list_len_216((*node).statements);
       while (i < n)
       {
         {
-          cct_boot_sig_AstNode* stmt = cct_boot_rit_ast_node_list_get_210((*node).statements, i);
-          out = cct_boot_rit_ast_dump_node_298(stmt, (level + 2), out);
+          cct_boot_sig_AstNode* stmt = cct_boot_rit_ast_node_list_get_217((*node).statements, i);
+          out = cct_boot_rit_ast_dump_node_305(stmt, (level + 2), out);
           i = (i + 1);
         }
         if (0) goto __cct_label_11;
@@ -3372,92 +3379,92 @@ char* cct_boot_rit_ast_dump_node_298(cct_boot_sig_AstNode* node, long long level
     break;
     case cct_boot_ord_AstKind__AST_EVOCA:
     {
-      out = cct_boot_rit_ast_dump_append_line_290(out, level, cct_boot_rit_concat_37(cct_boot_str_140, location));
-      out = cct_boot_rit_ast_dump_append_line_290(out, (level + 1), cct_boot_rit_concat_37(cct_boot_str_126, (*node).name));
-      out = cct_boot_rit_ast_dump_append_line_290(out, (level + 1), cct_boot_rit_concat_37(cct_boot_str_128, cct_boot_rit_ast_dump_type_inline_292((*node).type_expr)));
+      out = cct_boot_rit_ast_dump_append_line_297(out, level, cct_boot_rit_concat_37(cct_boot_str_140, location));
+      out = cct_boot_rit_ast_dump_append_line_297(out, (level + 1), cct_boot_rit_concat_37(cct_boot_str_126, (*node).name));
+      out = cct_boot_rit_ast_dump_append_line_297(out, (level + 1), cct_boot_rit_concat_37(cct_boot_str_128, cct_boot_rit_ast_dump_type_inline_299((*node).type_expr)));
       if ((*node).has_right)
       {
-        return cct_boot_rit_ast_dump_value_with_label_294(out, (level + 1), cct_boot_str_141, (*node).right);
+        return cct_boot_rit_ast_dump_value_with_label_301(out, (level + 1), cct_boot_str_141, (*node).right);
       }
       return out;
     }
     break;
     case cct_boot_ord_AstKind__AST_VINCIRE:
     {
-      out = cct_boot_rit_ast_dump_append_line_290(out, level, cct_boot_rit_concat_37(cct_boot_str_142, location));
-      out = cct_boot_rit_ast_dump_append_line_290(out, (level + 1), cct_boot_str_143);
-      out = cct_boot_rit_ast_dump_node_298((*node).left, (level + 2), out);
-      out = cct_boot_rit_ast_dump_append_line_290(out, (level + 1), cct_boot_str_144);
-      return cct_boot_rit_ast_dump_node_298((*node).right, (level + 2), out);
+      out = cct_boot_rit_ast_dump_append_line_297(out, level, cct_boot_rit_concat_37(cct_boot_str_142, location));
+      out = cct_boot_rit_ast_dump_append_line_297(out, (level + 1), cct_boot_str_143);
+      out = cct_boot_rit_ast_dump_node_305((*node).left, (level + 2), out);
+      out = cct_boot_rit_ast_dump_append_line_297(out, (level + 1), cct_boot_str_144);
+      return cct_boot_rit_ast_dump_node_305((*node).right, (level + 2), out);
     }
     break;
     case cct_boot_ord_AstKind__AST_REDDE:
     {
-      out = cct_boot_rit_ast_dump_append_line_290(out, level, cct_boot_rit_concat_37(cct_boot_str_145, location));
+      out = cct_boot_rit_ast_dump_append_line_297(out, level, cct_boot_rit_concat_37(cct_boot_str_145, location));
       if ((*node).has_left)
       {
-        return cct_boot_rit_ast_dump_value_with_label_294(out, (level + 1), cct_boot_str_144, (*node).left);
+        return cct_boot_rit_ast_dump_value_with_label_301(out, (level + 1), cct_boot_str_144, (*node).left);
       }
       return out;
     }
     break;
     case cct_boot_ord_AstKind__AST_ANUR:
     {
-      out = cct_boot_rit_ast_dump_append_line_290(out, level, cct_boot_rit_concat_37(cct_boot_str_146, location));
+      out = cct_boot_rit_ast_dump_append_line_297(out, level, cct_boot_rit_concat_37(cct_boot_str_146, location));
       if ((*node).has_left)
       {
-        return cct_boot_rit_ast_dump_value_with_label_294(out, (level + 1), cct_boot_str_144, (*node).left);
+        return cct_boot_rit_ast_dump_value_with_label_301(out, (level + 1), cct_boot_str_144, (*node).left);
       }
       return out;
     }
     break;
     case cct_boot_ord_AstKind__AST_IACE:
     {
-      out = cct_boot_rit_ast_dump_append_line_290(out, level, cct_boot_rit_concat_37(cct_boot_str_147, location));
-      return cct_boot_rit_ast_dump_value_with_label_294(out, (level + 1), cct_boot_str_144, (*node).left);
+      out = cct_boot_rit_ast_dump_append_line_297(out, level, cct_boot_rit_concat_37(cct_boot_str_147, location));
+      return cct_boot_rit_ast_dump_value_with_label_301(out, (level + 1), cct_boot_str_144, (*node).left);
     }
     break;
     case cct_boot_ord_AstKind__AST_DIMITTE:
     {
-      out = cct_boot_rit_ast_dump_append_line_290(out, level, cct_boot_rit_concat_37(cct_boot_str_148, location));
-      return cct_boot_rit_ast_dump_value_with_label_294(out, (level + 1), cct_boot_str_143, (*node).left);
+      out = cct_boot_rit_ast_dump_append_line_297(out, level, cct_boot_rit_concat_37(cct_boot_str_148, location));
+      return cct_boot_rit_ast_dump_value_with_label_301(out, (level + 1), cct_boot_str_143, (*node).left);
     }
     break;
     case cct_boot_ord_AstKind__AST_SI:
     {
-      out = cct_boot_rit_ast_dump_append_line_290(out, level, cct_boot_rit_concat_37(cct_boot_str_149, location));
-      out = cct_boot_rit_ast_dump_append_line_290(out, (level + 1), cct_boot_str_150);
-      out = cct_boot_rit_ast_dump_node_298((*node).condition, (level + 2), out);
-      out = cct_boot_rit_ast_dump_append_line_290(out, (level + 1), cct_boot_str_151);
-      out = cct_boot_rit_ast_dump_node_298((*node).body, (level + 2), out);
+      out = cct_boot_rit_ast_dump_append_line_297(out, level, cct_boot_rit_concat_37(cct_boot_str_149, location));
+      out = cct_boot_rit_ast_dump_append_line_297(out, (level + 1), cct_boot_str_150);
+      out = cct_boot_rit_ast_dump_node_305((*node).condition, (level + 2), out);
+      out = cct_boot_rit_ast_dump_append_line_297(out, (level + 1), cct_boot_str_151);
+      out = cct_boot_rit_ast_dump_node_305((*node).body, (level + 2), out);
       if ((*node).has_else_branch)
       {
-        out = cct_boot_rit_ast_dump_append_line_290(out, (level + 1), cct_boot_str_152);
-        out = cct_boot_rit_ast_dump_node_298((*node).else_branch, (level + 2), out);
+        out = cct_boot_rit_ast_dump_append_line_297(out, (level + 1), cct_boot_str_152);
+        out = cct_boot_rit_ast_dump_node_305((*node).else_branch, (level + 2), out);
       }
       return out;
     }
     break;
     case cct_boot_ord_AstKind__AST_QUANDO:
     {
-      out = cct_boot_rit_ast_dump_append_line_290(out, level, cct_boot_rit_concat_37(cct_boot_str_153, location));
-      out = cct_boot_rit_ast_dump_append_line_290(out, (level + 1), cct_boot_str_154);
-      out = cct_boot_rit_ast_dump_node_298((*node).condition, (level + 2), out);
-      out = cct_boot_rit_ast_dump_append_line_290(out, (level + 1), cct_boot_rit_concat_37(cct_boot_str_155, cct_boot_rit_concat_37(cct_boot_rit_stringify_int_95(cct_boot_rit_ast_node_list_len_209((*node).cases)), cct_boot_str_107)));
+      out = cct_boot_rit_ast_dump_append_line_297(out, level, cct_boot_rit_concat_37(cct_boot_str_153, location));
+      out = cct_boot_rit_ast_dump_append_line_297(out, (level + 1), cct_boot_str_154);
+      out = cct_boot_rit_ast_dump_node_305((*node).condition, (level + 2), out);
+      out = cct_boot_rit_ast_dump_append_line_297(out, (level + 1), cct_boot_rit_concat_37(cct_boot_str_155, cct_boot_rit_concat_37(cct_boot_rit_stringify_int_102(cct_boot_rit_ast_node_list_len_216((*node).cases)), cct_boot_str_107)));
       long long i = 0;
-      long long n = cct_boot_rit_ast_node_list_len_209((*node).cases);
+      long long n = cct_boot_rit_ast_node_list_len_216((*node).cases);
       while (i < n)
       {
         {
-          cct_boot_sig_AstNode* case_node = cct_boot_rit_ast_node_list_get_210((*node).cases, i);
-          out = cct_boot_rit_ast_dump_append_line_290(out, (level + 2), cct_boot_rit_concat_37(cct_boot_rit_concat_37(cct_boot_str_156, cct_boot_rit_stringify_int_95((i + 1))), cct_boot_rit_concat_37(cct_boot_str_157, cct_boot_rit_concat_37(cct_boot_rit_stringify_int_95(cct_boot_rit_ast_node_list_len_209((*case_node).children)), cct_boot_str_107))));
+          cct_boot_sig_AstNode* case_node = cct_boot_rit_ast_node_list_get_217((*node).cases, i);
+          out = cct_boot_rit_ast_dump_append_line_297(out, (level + 2), cct_boot_rit_concat_37(cct_boot_rit_concat_37(cct_boot_str_156, cct_boot_rit_stringify_int_102((i + 1))), cct_boot_rit_concat_37(cct_boot_str_157, cct_boot_rit_concat_37(cct_boot_rit_stringify_int_102(cct_boot_rit_ast_node_list_len_216((*case_node).children)), cct_boot_str_107))));
           long long j = 0;
-          long long m = cct_boot_rit_ast_node_list_len_209((*case_node).children);
+          long long m = cct_boot_rit_ast_node_list_len_216((*case_node).children);
           while (j < m)
           {
             {
-              cct_boot_sig_AstNode* lit = cct_boot_rit_ast_node_list_get_210((*case_node).children, j);
-              out = cct_boot_rit_ast_dump_node_298(lit, (level + 3), out);
+              cct_boot_sig_AstNode* lit = cct_boot_rit_ast_node_list_get_217((*case_node).children, j);
+              out = cct_boot_rit_ast_dump_node_305(lit, (level + 3), out);
               j = (j + 1);
             }
             if (0) goto __cct_label_15;
@@ -3465,16 +3472,16 @@ char* cct_boot_rit_ast_dump_node_298(cct_boot_sig_AstNode* node, long long level
           }
           if (0) goto __cct_label_14;
           __cct_label_14: ;
-          if (cct_boot_rit_ast_node_list_len_209((*case_node).bindings) > 0)
+          if (cct_boot_rit_ast_node_list_len_216((*case_node).bindings) > 0)
           {
-            out = cct_boot_rit_ast_dump_append_line_290(out, (level + 2), cct_boot_rit_concat_37(cct_boot_str_158, cct_boot_rit_concat_37(cct_boot_rit_stringify_int_95(cct_boot_rit_ast_node_list_len_209((*case_node).bindings)), cct_boot_str_107)));
+            out = cct_boot_rit_ast_dump_append_line_297(out, (level + 2), cct_boot_rit_concat_37(cct_boot_str_158, cct_boot_rit_concat_37(cct_boot_rit_stringify_int_102(cct_boot_rit_ast_node_list_len_216((*case_node).bindings)), cct_boot_str_107)));
             j = 0;
-            m = cct_boot_rit_ast_node_list_len_209((*case_node).bindings);
+            m = cct_boot_rit_ast_node_list_len_216((*case_node).bindings);
             while (j < m)
             {
               {
-                cct_boot_sig_AstNode* binding = cct_boot_rit_ast_node_list_get_210((*case_node).bindings, j);
-                out = cct_boot_rit_ast_dump_append_line_290(out, (level + 3), cct_boot_rit_concat_37(cct_boot_str_115, (*binding).name));
+                cct_boot_sig_AstNode* binding = cct_boot_rit_ast_node_list_get_217((*case_node).bindings, j);
+                out = cct_boot_rit_ast_dump_append_line_297(out, (level + 3), cct_boot_rit_concat_37(cct_boot_str_115, (*binding).name));
                 j = (j + 1);
               }
               if (0) goto __cct_label_17;
@@ -3483,8 +3490,8 @@ char* cct_boot_rit_ast_dump_node_298(cct_boot_sig_AstNode* node, long long level
             if (0) goto __cct_label_16;
             __cct_label_16: ;
           }
-          out = cct_boot_rit_ast_dump_append_line_290(out, (level + 2), cct_boot_str_130);
-          out = cct_boot_rit_ast_dump_node_298((*case_node).body, (level + 3), out);
+          out = cct_boot_rit_ast_dump_append_line_297(out, (level + 2), cct_boot_str_130);
+          out = cct_boot_rit_ast_dump_node_305((*case_node).body, (level + 3), out);
           i = (i + 1);
         }
         if (0) goto __cct_label_13;
@@ -3494,114 +3501,114 @@ char* cct_boot_rit_ast_dump_node_298(cct_boot_sig_AstNode* node, long long level
       __cct_label_12: ;
       if ((*node).has_else_branch)
       {
-        out = cct_boot_rit_ast_dump_append_line_290(out, (level + 1), cct_boot_str_152);
-        out = cct_boot_rit_ast_dump_node_298((*node).else_branch, (level + 2), out);
+        out = cct_boot_rit_ast_dump_append_line_297(out, (level + 1), cct_boot_str_152);
+        out = cct_boot_rit_ast_dump_node_305((*node).else_branch, (level + 2), out);
       }
       return out;
     }
     break;
     case cct_boot_ord_AstKind__AST_DUM:
     {
-      out = cct_boot_rit_ast_dump_append_line_290(out, level, cct_boot_rit_concat_37(cct_boot_str_159, location));
-      out = cct_boot_rit_ast_dump_append_line_290(out, (level + 1), cct_boot_str_150);
-      out = cct_boot_rit_ast_dump_node_298((*node).condition, (level + 2), out);
-      out = cct_boot_rit_ast_dump_append_line_290(out, (level + 1), cct_boot_str_130);
-      return cct_boot_rit_ast_dump_node_298((*node).body, (level + 2), out);
+      out = cct_boot_rit_ast_dump_append_line_297(out, level, cct_boot_rit_concat_37(cct_boot_str_159, location));
+      out = cct_boot_rit_ast_dump_append_line_297(out, (level + 1), cct_boot_str_150);
+      out = cct_boot_rit_ast_dump_node_305((*node).condition, (level + 2), out);
+      out = cct_boot_rit_ast_dump_append_line_297(out, (level + 1), cct_boot_str_130);
+      return cct_boot_rit_ast_dump_node_305((*node).body, (level + 2), out);
     }
     break;
     case cct_boot_ord_AstKind__AST_DONEC:
     {
-      out = cct_boot_rit_ast_dump_append_line_290(out, level, cct_boot_rit_concat_37(cct_boot_str_160, location));
-      out = cct_boot_rit_ast_dump_append_line_290(out, (level + 1), cct_boot_str_130);
-      out = cct_boot_rit_ast_dump_node_298((*node).body, (level + 2), out);
+      out = cct_boot_rit_ast_dump_append_line_297(out, level, cct_boot_rit_concat_37(cct_boot_str_160, location));
+      out = cct_boot_rit_ast_dump_append_line_297(out, (level + 1), cct_boot_str_130);
+      out = cct_boot_rit_ast_dump_node_305((*node).body, (level + 2), out);
       if ((*node).has_condition)
       {
-        out = cct_boot_rit_ast_dump_append_line_290(out, (level + 1), cct_boot_str_150);
-        out = cct_boot_rit_ast_dump_node_298((*node).condition, (level + 2), out);
+        out = cct_boot_rit_ast_dump_append_line_297(out, (level + 1), cct_boot_str_150);
+        out = cct_boot_rit_ast_dump_node_305((*node).condition, (level + 2), out);
       }
       return out;
     }
     break;
     case cct_boot_ord_AstKind__AST_REPETE:
     {
-      out = cct_boot_rit_ast_dump_append_line_290(out, level, cct_boot_rit_concat_37(cct_boot_str_161, location));
-      out = cct_boot_rit_ast_dump_append_line_290(out, (level + 1), cct_boot_rit_concat_37(cct_boot_str_162, (*node).name));
-      out = cct_boot_rit_ast_dump_append_line_290(out, (level + 1), cct_boot_str_163);
-      out = cct_boot_rit_ast_dump_node_298((*node).left, (level + 2), out);
-      out = cct_boot_rit_ast_dump_append_line_290(out, (level + 1), cct_boot_str_164);
-      out = cct_boot_rit_ast_dump_node_298((*node).right, (level + 2), out);
+      out = cct_boot_rit_ast_dump_append_line_297(out, level, cct_boot_rit_concat_37(cct_boot_str_161, location));
+      out = cct_boot_rit_ast_dump_append_line_297(out, (level + 1), cct_boot_rit_concat_37(cct_boot_str_162, (*node).name));
+      out = cct_boot_rit_ast_dump_append_line_297(out, (level + 1), cct_boot_str_163);
+      out = cct_boot_rit_ast_dump_node_305((*node).left, (level + 2), out);
+      out = cct_boot_rit_ast_dump_append_line_297(out, (level + 1), cct_boot_str_164);
+      out = cct_boot_rit_ast_dump_node_305((*node).right, (level + 2), out);
       if ((*node).has_condition)
       {
-        out = cct_boot_rit_ast_dump_append_line_290(out, (level + 1), cct_boot_str_165);
-        out = cct_boot_rit_ast_dump_node_298((*node).condition, (level + 2), out);
+        out = cct_boot_rit_ast_dump_append_line_297(out, (level + 1), cct_boot_str_165);
+        out = cct_boot_rit_ast_dump_node_305((*node).condition, (level + 2), out);
       }
-      out = cct_boot_rit_ast_dump_append_line_290(out, (level + 1), cct_boot_str_130);
-      return cct_boot_rit_ast_dump_node_298((*node).body, (level + 2), out);
+      out = cct_boot_rit_ast_dump_append_line_297(out, (level + 1), cct_boot_str_130);
+      return cct_boot_rit_ast_dump_node_305((*node).body, (level + 2), out);
     }
     break;
     case cct_boot_ord_AstKind__AST_ITERUM:
     {
-      out = cct_boot_rit_ast_dump_append_line_290(out, level, cct_boot_rit_concat_37(cct_boot_str_166, location));
-      out = cct_boot_rit_ast_dump_append_line_290(out, (level + 1), cct_boot_rit_concat_37(cct_boot_str_167, (*node).name));
+      out = cct_boot_rit_ast_dump_append_line_297(out, level, cct_boot_rit_concat_37(cct_boot_str_166, location));
+      out = cct_boot_rit_ast_dump_append_line_297(out, (level + 1), cct_boot_rit_concat_37(cct_boot_str_167, (*node).name));
       if (cct_boot_rit_compare_38((*node).aux_name, cct_boot_str_102) != 0)
       {
-        out = cct_boot_rit_ast_dump_append_line_290(out, (level + 1), cct_boot_rit_concat_37(cct_boot_str_168, (*node).aux_name));
+        out = cct_boot_rit_ast_dump_append_line_297(out, (level + 1), cct_boot_rit_concat_37(cct_boot_str_168, (*node).aux_name));
       }
-      out = cct_boot_rit_ast_dump_append_line_290(out, (level + 1), cct_boot_str_169);
-      out = cct_boot_rit_ast_dump_node_298((*node).left, (level + 2), out);
-      out = cct_boot_rit_ast_dump_append_line_290(out, (level + 1), cct_boot_str_130);
-      return cct_boot_rit_ast_dump_node_298((*node).body, (level + 2), out);
+      out = cct_boot_rit_ast_dump_append_line_297(out, (level + 1), cct_boot_str_169);
+      out = cct_boot_rit_ast_dump_node_305((*node).left, (level + 2), out);
+      out = cct_boot_rit_ast_dump_append_line_297(out, (level + 1), cct_boot_str_130);
+      return cct_boot_rit_ast_dump_node_305((*node).body, (level + 2), out);
     }
     break;
     case cct_boot_ord_AstKind__AST_FRANGE:
     {
-      return cct_boot_rit_ast_dump_append_line_290(out, level, cct_boot_rit_concat_37(cct_boot_str_170, location));
+      return cct_boot_rit_ast_dump_append_line_297(out, level, cct_boot_rit_concat_37(cct_boot_str_170, location));
     }
     break;
     case cct_boot_ord_AstKind__AST_RECEDE:
     {
-      return cct_boot_rit_ast_dump_append_line_290(out, level, cct_boot_rit_concat_37(cct_boot_str_171, location));
+      return cct_boot_rit_ast_dump_append_line_297(out, level, cct_boot_rit_concat_37(cct_boot_str_171, location));
     }
     break;
     case cct_boot_ord_AstKind__AST_TEMPTA:
     {
-      out = cct_boot_rit_ast_dump_append_line_290(out, level, cct_boot_rit_concat_37(cct_boot_str_172, location));
-      out = cct_boot_rit_ast_dump_append_line_290(out, (level + 1), cct_boot_str_173);
-      out = cct_boot_rit_ast_dump_node_298((*node).try_block, (level + 2), out);
-      out = cct_boot_rit_ast_dump_append_line_290(out, (level + 1), cct_boot_str_174);
-      out = cct_boot_rit_ast_dump_append_line_290(out, (level + 2), cct_boot_rit_concat_37(cct_boot_str_128, cct_boot_rit_ast_dump_type_inline_292((*node).cape_type)));
-      out = cct_boot_rit_ast_dump_append_line_290(out, (level + 1), cct_boot_rit_concat_37(cct_boot_str_175, (*node).name));
-      out = cct_boot_rit_ast_dump_append_line_290(out, (level + 1), cct_boot_str_176);
-      out = cct_boot_rit_ast_dump_node_298((*node).cape_block, (level + 2), out);
+      out = cct_boot_rit_ast_dump_append_line_297(out, level, cct_boot_rit_concat_37(cct_boot_str_172, location));
+      out = cct_boot_rit_ast_dump_append_line_297(out, (level + 1), cct_boot_str_173);
+      out = cct_boot_rit_ast_dump_node_305((*node).try_block, (level + 2), out);
+      out = cct_boot_rit_ast_dump_append_line_297(out, (level + 1), cct_boot_str_174);
+      out = cct_boot_rit_ast_dump_append_line_297(out, (level + 2), cct_boot_rit_concat_37(cct_boot_str_128, cct_boot_rit_ast_dump_type_inline_299((*node).cape_type)));
+      out = cct_boot_rit_ast_dump_append_line_297(out, (level + 1), cct_boot_rit_concat_37(cct_boot_str_175, (*node).name));
+      out = cct_boot_rit_ast_dump_append_line_297(out, (level + 1), cct_boot_str_176);
+      out = cct_boot_rit_ast_dump_node_305((*node).cape_block, (level + 2), out);
       if ((*node).has_semper_block)
       {
-        out = cct_boot_rit_ast_dump_append_line_290(out, (level + 1), cct_boot_str_177);
-        out = cct_boot_rit_ast_dump_node_298((*node).semper_block, (level + 2), out);
+        out = cct_boot_rit_ast_dump_append_line_297(out, (level + 1), cct_boot_str_177);
+        out = cct_boot_rit_ast_dump_node_305((*node).semper_block, (level + 2), out);
       }
       return out;
     }
     break;
     case cct_boot_ord_AstKind__AST_EXPR_STMT:
     {
-      out = cct_boot_rit_ast_dump_append_line_290(out, level, cct_boot_rit_concat_37(cct_boot_str_178, location));
-      return cct_boot_rit_ast_dump_node_298((*node).left, (level + 1), out);
+      out = cct_boot_rit_ast_dump_append_line_297(out, level, cct_boot_rit_concat_37(cct_boot_str_178, location));
+      return cct_boot_rit_ast_dump_node_305((*node).left, (level + 1), out);
     }
     break;
     case cct_boot_ord_AstKind__AST_MOLDE:
     {
-      out = cct_boot_rit_ast_dump_append_line_290(out, level, cct_boot_rit_concat_37(cct_boot_str_179, location));
-      out = cct_boot_rit_ast_dump_append_line_290(out, (level + 1), cct_boot_rit_concat_37(cct_boot_str_180, cct_boot_rit_concat_37(cct_boot_rit_stringify_int_95(cct_boot_rit_ast_node_list_len_209((*node).children)), cct_boot_str_107)));
+      out = cct_boot_rit_ast_dump_append_line_297(out, level, cct_boot_rit_concat_37(cct_boot_str_179, location));
+      out = cct_boot_rit_ast_dump_append_line_297(out, (level + 1), cct_boot_rit_concat_37(cct_boot_str_180, cct_boot_rit_concat_37(cct_boot_rit_stringify_int_102(cct_boot_rit_ast_node_list_len_216((*node).children)), cct_boot_str_107)));
       long long part_i = 0;
-      long long part_n = cct_boot_rit_ast_node_list_len_209((*node).children);
+      long long part_n = cct_boot_rit_ast_node_list_len_216((*node).children);
       while (part_i < part_n)
       {
         {
-          cct_boot_sig_AstNode* part = cct_boot_rit_ast_node_list_get_210((*node).children, part_i);
+          cct_boot_sig_AstNode* part = cct_boot_rit_ast_node_list_get_217((*node).children, part_i);
           if (cct_boot_rit_compare_38((*part).fmt_spec, cct_boot_str_102) != 0)
           {
-            out = cct_boot_rit_ast_dump_append_line_290(out, (level + 2), cct_boot_rit_concat_37(cct_boot_str_181, (*part).fmt_spec));
+            out = cct_boot_rit_ast_dump_append_line_297(out, (level + 2), cct_boot_rit_concat_37(cct_boot_str_181, (*part).fmt_spec));
           }
-          out = cct_boot_rit_ast_dump_node_298(part, (level + 2), out);
+          out = cct_boot_rit_ast_dump_node_305(part, (level + 2), out);
           part_i = (part_i + 1);
         }
         if (0) goto __cct_label_19;
@@ -3614,76 +3621,76 @@ char* cct_boot_rit_ast_dump_node_298(cct_boot_sig_AstNode* node, long long level
     break;
     case cct_boot_ord_AstKind__AST_MENSURA:
     {
-      out = cct_boot_rit_ast_dump_append_line_290(out, level, cct_boot_rit_concat_37(cct_boot_str_182, location));
-      return cct_boot_rit_ast_dump_append_line_290(out, (level + 1), cct_boot_rit_concat_37(cct_boot_str_128, cct_boot_rit_ast_dump_type_inline_292((*node).type_expr)));
+      out = cct_boot_rit_ast_dump_append_line_297(out, level, cct_boot_rit_concat_37(cct_boot_str_182, location));
+      return cct_boot_rit_ast_dump_append_line_297(out, (level + 1), cct_boot_rit_concat_37(cct_boot_str_128, cct_boot_rit_ast_dump_type_inline_299((*node).type_expr)));
     }
     break;
     case cct_boot_ord_AstKind__AST_LITERAL_INT:
     {
-      out = cct_boot_rit_ast_dump_append_line_290(out, level, cct_boot_rit_concat_37(cct_boot_str_183, location));
-      return cct_boot_rit_ast_dump_append_line_290(out, (level + 1), cct_boot_rit_concat_37(cct_boot_str_168, (*node).value_text));
+      out = cct_boot_rit_ast_dump_append_line_297(out, level, cct_boot_rit_concat_37(cct_boot_str_183, location));
+      return cct_boot_rit_ast_dump_append_line_297(out, (level + 1), cct_boot_rit_concat_37(cct_boot_str_168, (*node).value_text));
     }
     break;
     case cct_boot_ord_AstKind__AST_LITERAL_REAL:
     {
-      out = cct_boot_rit_ast_dump_append_line_290(out, level, cct_boot_rit_concat_37(cct_boot_str_184, location));
-      return cct_boot_rit_ast_dump_append_line_290(out, (level + 1), cct_boot_rit_concat_37(cct_boot_str_168, (*node).value_text));
+      out = cct_boot_rit_ast_dump_append_line_297(out, level, cct_boot_rit_concat_37(cct_boot_str_184, location));
+      return cct_boot_rit_ast_dump_append_line_297(out, (level + 1), cct_boot_rit_concat_37(cct_boot_str_168, (*node).value_text));
     }
     break;
     case cct_boot_ord_AstKind__AST_LITERAL_STRING:
     {
-      out = cct_boot_rit_ast_dump_append_line_290(out, level, cct_boot_rit_concat_37(cct_boot_str_185, location));
-      return cct_boot_rit_ast_dump_append_line_290(out, (level + 1), cct_boot_rit_concat_37(cct_boot_str_168, (*node).value_text));
+      out = cct_boot_rit_ast_dump_append_line_297(out, level, cct_boot_rit_concat_37(cct_boot_str_185, location));
+      return cct_boot_rit_ast_dump_append_line_297(out, (level + 1), cct_boot_rit_concat_37(cct_boot_str_168, (*node).value_text));
     }
     break;
     case cct_boot_ord_AstKind__AST_LITERAL_BOOL:
     {
-      out = cct_boot_rit_ast_dump_append_line_290(out, level, cct_boot_rit_concat_37(cct_boot_str_186, location));
-      return cct_boot_rit_ast_dump_append_line_290(out, (level + 1), cct_boot_rit_concat_37(cct_boot_str_168, (*node).value_text));
+      out = cct_boot_rit_ast_dump_append_line_297(out, level, cct_boot_rit_concat_37(cct_boot_str_186, location));
+      return cct_boot_rit_ast_dump_append_line_297(out, (level + 1), cct_boot_rit_concat_37(cct_boot_str_168, (*node).value_text));
     }
     break;
     case cct_boot_ord_AstKind__AST_LITERAL_NIHIL:
     {
-      return cct_boot_rit_ast_dump_append_line_290(out, level, cct_boot_rit_concat_37(cct_boot_str_187, location));
+      return cct_boot_rit_ast_dump_append_line_297(out, level, cct_boot_rit_concat_37(cct_boot_str_187, location));
     }
     break;
     case cct_boot_ord_AstKind__AST_IDENTIFIER:
     {
-      out = cct_boot_rit_ast_dump_append_line_290(out, level, cct_boot_rit_concat_37(cct_boot_str_188, location));
-      return cct_boot_rit_ast_dump_append_line_290(out, (level + 1), cct_boot_rit_concat_37(cct_boot_str_126, (*node).name));
+      out = cct_boot_rit_ast_dump_append_line_297(out, level, cct_boot_rit_concat_37(cct_boot_str_188, location));
+      return cct_boot_rit_ast_dump_append_line_297(out, (level + 1), cct_boot_rit_concat_37(cct_boot_str_126, (*node).name));
     }
     break;
     case cct_boot_ord_AstKind__AST_BINARY_OP:
     {
-      out = cct_boot_rit_ast_dump_append_line_290(out, level, cct_boot_rit_concat_37(cct_boot_str_189, location));
-      out = cct_boot_rit_ast_dump_append_line_290(out, (level + 1), cct_boot_rit_concat_37(cct_boot_str_190, cct_boot_rit_token_kind_to_string_0((*node).operator_kind)));
-      out = cct_boot_rit_ast_dump_append_line_290(out, (level + 1), cct_boot_str_191);
-      out = cct_boot_rit_ast_dump_node_298((*node).left, (level + 2), out);
-      out = cct_boot_rit_ast_dump_append_line_290(out, (level + 1), cct_boot_str_192);
-      return cct_boot_rit_ast_dump_node_298((*node).right, (level + 2), out);
+      out = cct_boot_rit_ast_dump_append_line_297(out, level, cct_boot_rit_concat_37(cct_boot_str_189, location));
+      out = cct_boot_rit_ast_dump_append_line_297(out, (level + 1), cct_boot_rit_concat_37(cct_boot_str_190, cct_boot_rit_token_kind_to_string_0((*node).operator_kind)));
+      out = cct_boot_rit_ast_dump_append_line_297(out, (level + 1), cct_boot_str_191);
+      out = cct_boot_rit_ast_dump_node_305((*node).left, (level + 2), out);
+      out = cct_boot_rit_ast_dump_append_line_297(out, (level + 1), cct_boot_str_192);
+      return cct_boot_rit_ast_dump_node_305((*node).right, (level + 2), out);
     }
     break;
     case cct_boot_ord_AstKind__AST_UNARY_OP:
     {
-      out = cct_boot_rit_ast_dump_append_line_290(out, level, cct_boot_rit_concat_37(cct_boot_str_193, location));
-      out = cct_boot_rit_ast_dump_append_line_290(out, (level + 1), cct_boot_rit_concat_37(cct_boot_str_190, cct_boot_rit_token_kind_to_string_0((*node).operator_kind)));
-      out = cct_boot_rit_ast_dump_append_line_290(out, (level + 1), cct_boot_str_194);
-      return cct_boot_rit_ast_dump_node_298((*node).left, (level + 2), out);
+      out = cct_boot_rit_ast_dump_append_line_297(out, level, cct_boot_rit_concat_37(cct_boot_str_193, location));
+      out = cct_boot_rit_ast_dump_append_line_297(out, (level + 1), cct_boot_rit_concat_37(cct_boot_str_190, cct_boot_rit_token_kind_to_string_0((*node).operator_kind)));
+      out = cct_boot_rit_ast_dump_append_line_297(out, (level + 1), cct_boot_str_194);
+      return cct_boot_rit_ast_dump_node_305((*node).left, (level + 2), out);
     }
     break;
     case cct_boot_ord_AstKind__AST_CALL:
     {
-      out = cct_boot_rit_ast_dump_append_line_290(out, level, cct_boot_rit_concat_37(cct_boot_str_195, location));
-      out = cct_boot_rit_ast_dump_append_line_290(out, (level + 1), cct_boot_str_196);
-      out = cct_boot_rit_ast_dump_node_298((*node).callee, (level + 2), out);
-      out = cct_boot_rit_ast_dump_append_line_290(out, (level + 1), cct_boot_rit_concat_37(cct_boot_str_197, cct_boot_rit_concat_37(cct_boot_rit_stringify_int_95(cct_boot_rit_ast_node_list_len_209((*node).arguments)), cct_boot_str_107)));
+      out = cct_boot_rit_ast_dump_append_line_297(out, level, cct_boot_rit_concat_37(cct_boot_str_195, location));
+      out = cct_boot_rit_ast_dump_append_line_297(out, (level + 1), cct_boot_str_196);
+      out = cct_boot_rit_ast_dump_node_305((*node).callee, (level + 2), out);
+      out = cct_boot_rit_ast_dump_append_line_297(out, (level + 1), cct_boot_rit_concat_37(cct_boot_str_197, cct_boot_rit_concat_37(cct_boot_rit_stringify_int_102(cct_boot_rit_ast_node_list_len_216((*node).arguments)), cct_boot_str_107)));
       long long i = 0;
-      long long n = cct_boot_rit_ast_node_list_len_209((*node).arguments);
+      long long n = cct_boot_rit_ast_node_list_len_216((*node).arguments);
       while (i < n)
       {
         {
-          cct_boot_sig_AstNode* arg = cct_boot_rit_ast_node_list_get_210((*node).arguments, i);
-          out = cct_boot_rit_ast_dump_node_298(arg, (level + 2), out);
+          cct_boot_sig_AstNode* arg = cct_boot_rit_ast_node_list_get_217((*node).arguments, i);
+          out = cct_boot_rit_ast_dump_node_305(arg, (level + 2), out);
           i = (i + 1);
         }
         if (0) goto __cct_label_21;
@@ -3696,17 +3703,17 @@ char* cct_boot_rit_ast_dump_node_298(cct_boot_sig_AstNode* node, long long level
     break;
     case cct_boot_ord_AstKind__AST_OBSECRO_CALL:
     {
-      out = cct_boot_rit_ast_dump_append_line_290(out, level, cct_boot_rit_concat_37(cct_boot_str_198, location));
-      out = cct_boot_rit_ast_dump_append_line_290(out, (level + 1), cct_boot_str_196);
-      out = cct_boot_rit_ast_dump_node_298((*node).callee, (level + 2), out);
-      out = cct_boot_rit_ast_dump_append_line_290(out, (level + 1), cct_boot_rit_concat_37(cct_boot_str_197, cct_boot_rit_concat_37(cct_boot_rit_stringify_int_95(cct_boot_rit_ast_node_list_len_209((*node).arguments)), cct_boot_str_107)));
+      out = cct_boot_rit_ast_dump_append_line_297(out, level, cct_boot_rit_concat_37(cct_boot_str_198, location));
+      out = cct_boot_rit_ast_dump_append_line_297(out, (level + 1), cct_boot_str_196);
+      out = cct_boot_rit_ast_dump_node_305((*node).callee, (level + 2), out);
+      out = cct_boot_rit_ast_dump_append_line_297(out, (level + 1), cct_boot_rit_concat_37(cct_boot_str_197, cct_boot_rit_concat_37(cct_boot_rit_stringify_int_102(cct_boot_rit_ast_node_list_len_216((*node).arguments)), cct_boot_str_107)));
       long long ob_i = 0;
-      long long ob_n = cct_boot_rit_ast_node_list_len_209((*node).arguments);
+      long long ob_n = cct_boot_rit_ast_node_list_len_216((*node).arguments);
       while (ob_i < ob_n)
       {
         {
-          cct_boot_sig_AstNode* arg = cct_boot_rit_ast_node_list_get_210((*node).arguments, ob_i);
-          out = cct_boot_rit_ast_dump_node_298(arg, (level + 2), out);
+          cct_boot_sig_AstNode* arg = cct_boot_rit_ast_node_list_get_217((*node).arguments, ob_i);
+          out = cct_boot_rit_ast_dump_node_305(arg, (level + 2), out);
           ob_i = (ob_i + 1);
         }
         if (0) goto __cct_label_23;
@@ -3719,41 +3726,41 @@ char* cct_boot_rit_ast_dump_node_298(cct_boot_sig_AstNode* node, long long level
     break;
     case cct_boot_ord_AstKind__AST_FIELD_ACCESS:
     {
-      out = cct_boot_rit_ast_dump_append_line_290(out, level, cct_boot_rit_concat_37(cct_boot_str_199, location));
-      out = cct_boot_rit_ast_dump_append_line_290(out, (level + 1), cct_boot_str_200);
-      out = cct_boot_rit_ast_dump_node_298((*node).left, (level + 2), out);
-      return cct_boot_rit_ast_dump_append_line_290(out, (level + 1), cct_boot_rit_concat_37(cct_boot_str_201, (*node).name));
+      out = cct_boot_rit_ast_dump_append_line_297(out, level, cct_boot_rit_concat_37(cct_boot_str_199, location));
+      out = cct_boot_rit_ast_dump_append_line_297(out, (level + 1), cct_boot_str_200);
+      out = cct_boot_rit_ast_dump_node_305((*node).left, (level + 2), out);
+      return cct_boot_rit_ast_dump_append_line_297(out, (level + 1), cct_boot_rit_concat_37(cct_boot_str_201, (*node).name));
     }
     break;
     case cct_boot_ord_AstKind__AST_INDEX_ACCESS:
     {
-      out = cct_boot_rit_ast_dump_append_line_290(out, level, cct_boot_rit_concat_37(cct_boot_str_202, location));
-      out = cct_boot_rit_ast_dump_append_line_290(out, (level + 1), cct_boot_str_203);
-      out = cct_boot_rit_ast_dump_node_298((*node).left, (level + 2), out);
-      out = cct_boot_rit_ast_dump_append_line_290(out, (level + 1), cct_boot_str_204);
-      return cct_boot_rit_ast_dump_node_298((*node).right, (level + 2), out);
+      out = cct_boot_rit_ast_dump_append_line_297(out, level, cct_boot_rit_concat_37(cct_boot_str_202, location));
+      out = cct_boot_rit_ast_dump_append_line_297(out, (level + 1), cct_boot_str_203);
+      out = cct_boot_rit_ast_dump_node_305((*node).left, (level + 2), out);
+      out = cct_boot_rit_ast_dump_append_line_297(out, (level + 1), cct_boot_str_204);
+      return cct_boot_rit_ast_dump_node_305((*node).right, (level + 2), out);
     }
     break;
     default:
     {
-      return cct_boot_rit_ast_dump_append_line_290(out, level, cct_boot_str_205);
+      return cct_boot_rit_ast_dump_append_line_297(out, level, cct_boot_str_205);
     }
     break;
   }
 }
 
-char* cct_boot_rit_ast_dump_program_299(cct_boot_sig_AstProgram* program)
+char* cct_boot_rit_ast_dump_program_306(cct_boot_sig_AstProgram* program)
 {
   char* out = cct_boot_rit_concat_37(cct_boot_str_206, (*program).name);
   out = cct_boot_rit_concat_37(out, cct_boot_str_104);
-  out = cct_boot_rit_ast_dump_append_line_290(out, 0, cct_boot_rit_concat_37(cct_boot_str_207, cct_boot_rit_concat_37(cct_boot_rit_stringify_int_95(cct_boot_rit_ast_node_list_len_209((*program).declarations)), cct_boot_str_107)));
+  out = cct_boot_rit_ast_dump_append_line_297(out, 0, cct_boot_rit_concat_37(cct_boot_str_207, cct_boot_rit_concat_37(cct_boot_rit_stringify_int_102(cct_boot_rit_ast_node_list_len_216((*program).declarations)), cct_boot_str_107)));
   long long i = 0;
-  long long n = cct_boot_rit_ast_node_list_len_209((*program).declarations);
+  long long n = cct_boot_rit_ast_node_list_len_216((*program).declarations);
   while (i < n)
   {
     {
-      cct_boot_sig_AstNode* decl = cct_boot_rit_ast_node_list_get_210((*program).declarations, i);
-      out = cct_boot_rit_ast_dump_node_298(decl, 1, out);
+      cct_boot_sig_AstNode* decl = cct_boot_rit_ast_node_list_get_217((*program).declarations, i);
+      out = cct_boot_rit_ast_dump_node_305(decl, 1, out);
       i = (i + 1);
     }
     if (0) goto __cct_label_25;
@@ -3764,15 +3771,15 @@ char* cct_boot_rit_ast_dump_program_299(cct_boot_sig_AstProgram* program)
   return out;
 }
 
-void cct_boot_rit_ast_list_free_owned_300(void* list)
+void cct_boot_rit_ast_list_free_owned_307(void* list)
 {
   long long i = 0;
-  long long n = cct_boot_rit_ast_node_list_len_209(list);
+  long long n = cct_boot_rit_ast_node_list_len_216(list);
   while (i < n)
   {
     {
-      cct_boot_sig_AstNode* node = cct_boot_rit_ast_node_list_get_210(list, i);
-      cct_boot_rit_ast_node_free_301(node);
+      cct_boot_sig_AstNode* node = cct_boot_rit_ast_node_list_get_217(list, i);
+      cct_boot_rit_ast_node_free_308(node);
       i = (i + 1);
     }
     if (0) goto __cct_label_27;
@@ -3780,11 +3787,11 @@ void cct_boot_rit_ast_list_free_owned_300(void* list)
   }
   if (0) goto __cct_label_26;
   __cct_label_26: ;
-  cct_boot_rit_fluxus_free_173(list);
+  cct_boot_rit_fluxus_free_180(list);
   return;
 }
 
-void cct_boot_rit_ast_node_free_301(cct_boot_sig_AstNode* node)
+void cct_boot_rit_ast_node_free_308(cct_boot_sig_AstNode* node)
 {
   if ((*node).owns_name)
   {
@@ -3808,80 +3815,80 @@ void cct_boot_rit_ast_node_free_301(cct_boot_sig_AstNode* node)
   }
   if ((*node).has_left)
   {
-    cct_boot_rit_ast_node_free_301((*node).left);
+    cct_boot_rit_ast_node_free_308((*node).left);
   }
   if ((*node).has_right)
   {
-    cct_boot_rit_ast_node_free_301((*node).right);
+    cct_boot_rit_ast_node_free_308((*node).right);
   }
   if ((*node).has_condition)
   {
-    cct_boot_rit_ast_node_free_301((*node).condition);
+    cct_boot_rit_ast_node_free_308((*node).condition);
   }
   if ((*node).has_body)
   {
-    cct_boot_rit_ast_node_free_301((*node).body);
+    cct_boot_rit_ast_node_free_308((*node).body);
   }
   if ((*node).has_else_branch)
   {
-    cct_boot_rit_ast_node_free_301((*node).else_branch);
+    cct_boot_rit_ast_node_free_308((*node).else_branch);
   }
   if ((*node).has_callee)
   {
-    cct_boot_rit_ast_node_free_301((*node).callee);
+    cct_boot_rit_ast_node_free_308((*node).callee);
   }
   if ((*node).has_type_expr)
   {
-    cct_boot_rit_ast_node_free_301((*node).type_expr);
+    cct_boot_rit_ast_node_free_308((*node).type_expr);
   }
   if ((*node).has_return_type)
   {
-    cct_boot_rit_ast_node_free_301((*node).return_type);
+    cct_boot_rit_ast_node_free_308((*node).return_type);
   }
   if ((*node).has_try_block)
   {
-    cct_boot_rit_ast_node_free_301((*node).try_block);
+    cct_boot_rit_ast_node_free_308((*node).try_block);
   }
   if ((*node).has_cape_type)
   {
-    cct_boot_rit_ast_node_free_301((*node).cape_type);
+    cct_boot_rit_ast_node_free_308((*node).cape_type);
   }
   if ((*node).has_cape_block)
   {
-    cct_boot_rit_ast_node_free_301((*node).cape_block);
+    cct_boot_rit_ast_node_free_308((*node).cape_block);
   }
   if ((*node).has_semper_block)
   {
-    cct_boot_rit_ast_node_free_301((*node).semper_block);
+    cct_boot_rit_ast_node_free_308((*node).semper_block);
   }
-  cct_boot_rit_ast_list_free_owned_300((*node).children);
-  cct_boot_rit_ast_list_free_owned_300((*node).cases);
-  cct_boot_rit_ast_list_free_owned_300((*node).bindings);
-  cct_boot_rit_ast_list_free_owned_300((*node).type_params);
-  cct_boot_rit_ast_list_free_owned_300((*node).generic_args);
-  cct_boot_rit_ast_list_free_owned_300((*node).params);
-  cct_boot_rit_ast_list_free_owned_300((*node).fields);
-  cct_boot_rit_ast_list_free_owned_300((*node).items);
-  cct_boot_rit_ast_list_free_owned_300((*node).arguments);
-  cct_boot_rit_ast_list_free_owned_300((*node).declarations);
-  cct_boot_rit_ast_list_free_owned_300((*node).signatures);
-  cct_boot_rit_ast_list_free_owned_300((*node).statements);
-  cct_boot_rit_ast_heap_free_205(node);
+  cct_boot_rit_ast_list_free_owned_307((*node).children);
+  cct_boot_rit_ast_list_free_owned_307((*node).cases);
+  cct_boot_rit_ast_list_free_owned_307((*node).bindings);
+  cct_boot_rit_ast_list_free_owned_307((*node).type_params);
+  cct_boot_rit_ast_list_free_owned_307((*node).generic_args);
+  cct_boot_rit_ast_list_free_owned_307((*node).params);
+  cct_boot_rit_ast_list_free_owned_307((*node).fields);
+  cct_boot_rit_ast_list_free_owned_307((*node).items);
+  cct_boot_rit_ast_list_free_owned_307((*node).arguments);
+  cct_boot_rit_ast_list_free_owned_307((*node).declarations);
+  cct_boot_rit_ast_list_free_owned_307((*node).signatures);
+  cct_boot_rit_ast_list_free_owned_307((*node).statements);
+  cct_boot_rit_ast_heap_free_212(node);
   return;
 }
 
-void cct_boot_rit_ast_program_free_302(cct_boot_sig_AstProgram* program)
+void cct_boot_rit_ast_program_free_309(cct_boot_sig_AstProgram* program)
 {
   if ((*program).owns_name)
   {
     free((void*)((*program).name));
   }
-  cct_boot_rit_ast_list_free_owned_300((*program).declarations);
-  cct_boot_rit_ast_heap_free_205(program);
+  cct_boot_rit_ast_list_free_owned_307((*program).declarations);
+  cct_boot_rit_ast_heap_free_212(program);
   return;
 }
 
-cct_boot_ord_TokenKind cct_boot_rit_keyword_lookup_303(char* lexeme)
+cct_boot_ord_TokenKind cct_boot_rit_keyword_lookup_310(char* lexeme)
 {
   if (cct_boot_rit_compare_38(lexeme, cct_boot_str_70) == 0)
   {
@@ -4174,7 +4181,7 @@ cct_boot_ord_TokenKind cct_boot_rit_keyword_lookup_303(char* lexeme)
   return cct_boot_ord_TokenKind__TK_IDENTIFIER;
 }
 
-cct_boot_sig_LexerState cct_boot_rit_lexer_init_304(char* source, char* filename)
+cct_boot_sig_LexerState cct_boot_rit_lexer_init_311(char* source, char* filename)
 {
   cct_boot_sig_LexerState lex;
   lex.source = source;
@@ -4188,7 +4195,7 @@ cct_boot_sig_LexerState cct_boot_rit_lexer_init_304(char* source, char* filename
   return lex;
 }
 
-cct_boot_sig_Token cct_boot_rit_token_make_305(cct_boot_ord_TokenKind kind, char* lexeme, long long line, long long column)
+cct_boot_sig_Token cct_boot_rit_token_make_312(cct_boot_ord_TokenKind kind, char* lexeme, long long line, long long column)
 {
   cct_boot_sig_Token tok;
   tok.kind = kind;
@@ -4198,27 +4205,27 @@ cct_boot_sig_Token cct_boot_rit_token_make_305(cct_boot_ord_TokenKind kind, char
   return tok;
 }
 
-void cct_boot_rit_token_free_306(cct_boot_sig_Token* tok)
+void cct_boot_rit_token_free_313(cct_boot_sig_Token* tok)
 {
   free((void*)((*tok).lexeme));
   return;
 }
 
-int cct_boot_rit_lexer_is_at_end_307(cct_boot_sig_LexerState* lex)
+int cct_boot_rit_lexer_is_at_end_314(cct_boot_sig_LexerState* lex)
 {
   return ((*lex).current >= (*lex).source_len);
 }
 
-char cct_boot_rit_lexer_peek_308(cct_boot_sig_LexerState* lex)
+char cct_boot_rit_lexer_peek_315(cct_boot_sig_LexerState* lex)
 {
-  if (cct_boot_rit_lexer_is_at_end_307(lex))
+  if (cct_boot_rit_lexer_is_at_end_314(lex))
   {
     return 0;
   }
   return cct_boot_rit_char_at_44((*lex).source, (*lex).current);
 }
 
-char cct_boot_rit_lexer_peek_next_309(cct_boot_sig_LexerState* lex)
+char cct_boot_rit_lexer_peek_next_316(cct_boot_sig_LexerState* lex)
 {
   if (((*lex).current + 1) >= (*lex).source_len)
   {
@@ -4227,9 +4234,9 @@ char cct_boot_rit_lexer_peek_next_309(cct_boot_sig_LexerState* lex)
   return cct_boot_rit_char_at_44((*lex).source, ((*lex).current + 1));
 }
 
-char cct_boot_rit_lexer_advance_310(cct_boot_sig_LexerState* lex)
+char cct_boot_rit_lexer_advance_317(cct_boot_sig_LexerState* lex)
 {
-  if (cct_boot_rit_lexer_is_at_end_307(lex))
+  if (cct_boot_rit_lexer_is_at_end_314(lex))
   {
     return 0;
   }
@@ -4239,9 +4246,9 @@ char cct_boot_rit_lexer_advance_310(cct_boot_sig_LexerState* lex)
   return c;
 }
 
-int cct_boot_rit_lexer_match_311(cct_boot_sig_LexerState* lex, char expected)
+int cct_boot_rit_lexer_match_318(cct_boot_sig_LexerState* lex, char expected)
 {
-  if (cct_boot_rit_lexer_is_at_end_307(lex))
+  if (cct_boot_rit_lexer_is_at_end_314(lex))
   {
     return 0;
   }
@@ -4254,15 +4261,15 @@ int cct_boot_rit_lexer_match_311(cct_boot_sig_LexerState* lex, char expected)
   return 1;
 }
 
-void cct_boot_rit_lexer_skip_whitespace_312(cct_boot_sig_LexerState* lex)
+void cct_boot_rit_lexer_skip_whitespace_319(cct_boot_sig_LexerState* lex)
 {
-  while (!cct_boot_rit_lexer_is_at_end_307(lex))
+  while (!cct_boot_rit_lexer_is_at_end_314(lex))
   {
     {
-      char c = cct_boot_rit_lexer_peek_308(lex);
+      char c = cct_boot_rit_lexer_peek_315(lex);
       if (((c == 32) || (c == 13)) || (c == 9))
       {
-        cct_boot_rit_lexer_advance_310(lex);
+        cct_boot_rit_lexer_advance_317(lex);
       }
       else
       {
@@ -4270,7 +4277,7 @@ void cct_boot_rit_lexer_skip_whitespace_312(cct_boot_sig_LexerState* lex)
         {
           (*lex).line = ((*lex).line + 1);
           (*lex).column = 0;
-          cct_boot_rit_lexer_advance_310(lex);
+          cct_boot_rit_lexer_advance_317(lex);
         }
         else
         {
@@ -4286,12 +4293,12 @@ void cct_boot_rit_lexer_skip_whitespace_312(cct_boot_sig_LexerState* lex)
   return;
 }
 
-void cct_boot_rit_lexer_skip_comment_313(cct_boot_sig_LexerState* lex)
+void cct_boot_rit_lexer_skip_comment_320(cct_boot_sig_LexerState* lex)
 {
-  while ((cct_boot_rit_lexer_peek_308(lex) != 10) && (!cct_boot_rit_lexer_is_at_end_307(lex)))
+  while ((cct_boot_rit_lexer_peek_315(lex) != 10) && (!cct_boot_rit_lexer_is_at_end_314(lex)))
   {
     {
-      cct_boot_rit_lexer_advance_310(lex);
+      cct_boot_rit_lexer_advance_317(lex);
     }
     if (0) goto __cct_label_31;
     __cct_label_31: ;
@@ -4301,31 +4308,31 @@ void cct_boot_rit_lexer_skip_comment_313(cct_boot_sig_LexerState* lex)
   return;
 }
 
-char* cct_boot_rit_lexer_make_lexeme_314(cct_boot_sig_LexerState* lex)
+char* cct_boot_rit_lexer_make_lexeme_321(cct_boot_sig_LexerState* lex)
 {
   return cct_boot_rit_substring_39((*lex).source, (*lex).start, (*lex).current);
 }
 
-cct_boot_sig_Token cct_boot_rit_lexer_make_token_315(cct_boot_sig_LexerState* lex, cct_boot_ord_TokenKind kind)
+cct_boot_sig_Token cct_boot_rit_lexer_make_token_322(cct_boot_sig_LexerState* lex, cct_boot_ord_TokenKind kind)
 {
-  char* lexeme = cct_boot_rit_lexer_make_lexeme_314(lex);
+  char* lexeme = cct_boot_rit_lexer_make_lexeme_321(lex);
   long long col = ((*lex).column - ((*lex).current - (*lex).start));
-  return cct_boot_rit_token_make_305(kind, lexeme, (*lex).line, col);
+  return cct_boot_rit_token_make_312(kind, lexeme, (*lex).line, col);
 }
 
-cct_boot_sig_Token cct_boot_rit_lexer_error_token_316(cct_boot_sig_LexerState* lex, char* msg)
+cct_boot_sig_Token cct_boot_rit_lexer_error_token_323(cct_boot_sig_LexerState* lex, char* msg)
 {
   (*lex).had_error = 1;
   cct_boot_sig_SourceLocation loc;
   loc.line = (*lex).line;
   loc.column = (*lex).column;
   loc.filename = (*lex).filename;
-  cct_boot_rit_diag_error_120((&loc), msg);
+  cct_boot_rit_diag_error_127((&loc), msg);
   char* owned_msg = cct_boot_rit_verbum_dup_40(msg);
-  return cct_boot_rit_token_make_305(cct_boot_ord_TokenKind__TK_INVALID, owned_msg, (*lex).line, (*lex).column);
+  return cct_boot_rit_token_make_312(cct_boot_ord_TokenKind__TK_INVALID, owned_msg, (*lex).line, (*lex).column);
 }
 
-cct_boot_sig_Token cct_boot_rit_lexer_error_character_token_317(cct_boot_sig_LexerState* lex, char c)
+cct_boot_sig_Token cct_boot_rit_lexer_error_character_token_324(cct_boot_sig_LexerState* lex, char c)
 {
   (*lex).had_error = 1;
   cct_boot_sig_SourceLocation loc;
@@ -4337,34 +4344,34 @@ cct_boot_sig_Token cct_boot_rit_lexer_error_character_token_317(cct_boot_sig_Lex
   char* msg = cct_boot_rit_concat_37(cct_boot_str_214, suffix);
   free((void*)(ch));
   free((void*)(suffix));
-  cct_boot_rit_diag_error_120((&loc), msg);
-  return cct_boot_rit_token_make_305(cct_boot_ord_TokenKind__TK_INVALID, msg, (*lex).line, (*lex).column);
+  cct_boot_rit_diag_error_127((&loc), msg);
+  return cct_boot_rit_token_make_312(cct_boot_ord_TokenKind__TK_INVALID, msg, (*lex).line, (*lex).column);
 }
 
-cct_boot_sig_Token cct_boot_rit_lexer_identifier_318(cct_boot_sig_LexerState* lex)
+cct_boot_sig_Token cct_boot_rit_lexer_identifier_325(cct_boot_sig_LexerState* lex)
 {
-  while (cct_boot_rit_char_is_alnum_33(cct_boot_rit_lexer_peek_308(lex)) || (cct_boot_rit_lexer_peek_308(lex) == 95))
+  while (cct_boot_rit_char_is_alnum_33(cct_boot_rit_lexer_peek_315(lex)) || (cct_boot_rit_lexer_peek_315(lex) == 95))
   {
     {
-      cct_boot_rit_lexer_advance_310(lex);
+      cct_boot_rit_lexer_advance_317(lex);
     }
     if (0) goto __cct_label_33;
     __cct_label_33: ;
   }
   if (0) goto __cct_label_32;
   __cct_label_32: ;
-  char* lexeme = cct_boot_rit_lexer_make_lexeme_314(lex);
-  cct_boot_ord_TokenKind kind = cct_boot_rit_keyword_lookup_303(lexeme);
+  char* lexeme = cct_boot_rit_lexer_make_lexeme_321(lex);
+  cct_boot_ord_TokenKind kind = cct_boot_rit_keyword_lookup_310(lexeme);
   long long col = ((*lex).column - ((*lex).current - (*lex).start));
-  return cct_boot_rit_token_make_305(kind, lexeme, (*lex).line, col);
+  return cct_boot_rit_token_make_312(kind, lexeme, (*lex).line, col);
 }
 
-cct_boot_sig_Token cct_boot_rit_lexer_number_319(cct_boot_sig_LexerState* lex)
+cct_boot_sig_Token cct_boot_rit_lexer_number_326(cct_boot_sig_LexerState* lex)
 {
-  while (cct_boot_rit_char_is_digit_31(cct_boot_rit_lexer_peek_308(lex)))
+  while (cct_boot_rit_char_is_digit_31(cct_boot_rit_lexer_peek_315(lex)))
   {
     {
-      cct_boot_rit_lexer_advance_310(lex);
+      cct_boot_rit_lexer_advance_317(lex);
     }
     if (0) goto __cct_label_35;
     __cct_label_35: ;
@@ -4372,14 +4379,14 @@ cct_boot_sig_Token cct_boot_rit_lexer_number_319(cct_boot_sig_LexerState* lex)
   if (0) goto __cct_label_34;
   __cct_label_34: ;
   int is_real = 0;
-  if ((cct_boot_rit_lexer_peek_308(lex) == 46) && cct_boot_rit_char_is_digit_31(cct_boot_rit_lexer_peek_next_309(lex)))
+  if ((cct_boot_rit_lexer_peek_315(lex) == 46) && cct_boot_rit_char_is_digit_31(cct_boot_rit_lexer_peek_next_316(lex)))
   {
     is_real = 1;
-    cct_boot_rit_lexer_advance_310(lex);
-    while (cct_boot_rit_char_is_digit_31(cct_boot_rit_lexer_peek_308(lex)))
+    cct_boot_rit_lexer_advance_317(lex);
+    while (cct_boot_rit_char_is_digit_31(cct_boot_rit_lexer_peek_315(lex)))
     {
       {
-        cct_boot_rit_lexer_advance_310(lex);
+        cct_boot_rit_lexer_advance_317(lex);
       }
       if (0) goto __cct_label_37;
       __cct_label_37: ;
@@ -4396,271 +4403,271 @@ cct_boot_sig_Token cct_boot_rit_lexer_number_319(cct_boot_sig_LexerState* lex)
   {
     kind = cct_boot_ord_TokenKind__TK_INTEGER;
   }
-  return cct_boot_rit_lexer_make_token_315(lex, kind);
+  return cct_boot_rit_lexer_make_token_322(lex, kind);
 }
 
-cct_boot_sig_Token cct_boot_rit_lexer_string_320(cct_boot_sig_LexerState* lex)
+cct_boot_sig_Token cct_boot_rit_lexer_string_327(cct_boot_sig_LexerState* lex)
 {
-  while ((cct_boot_rit_lexer_peek_308(lex) != 34) && (!cct_boot_rit_lexer_is_at_end_307(lex)))
+  while ((cct_boot_rit_lexer_peek_315(lex) != 34) && (!cct_boot_rit_lexer_is_at_end_314(lex)))
   {
     {
-      char c = cct_boot_rit_lexer_peek_308(lex);
+      char c = cct_boot_rit_lexer_peek_315(lex);
       if (c == 10)
       {
-        return cct_boot_rit_lexer_error_token_316(lex, cct_boot_str_215);
+        return cct_boot_rit_lexer_error_token_323(lex, cct_boot_str_215);
       }
       if (c == 92)
       {
-        cct_boot_rit_lexer_advance_310(lex);
-        if (cct_boot_rit_lexer_is_at_end_307(lex))
+        cct_boot_rit_lexer_advance_317(lex);
+        if (cct_boot_rit_lexer_is_at_end_314(lex))
         {
-          return cct_boot_rit_lexer_error_token_316(lex, cct_boot_str_215);
+          return cct_boot_rit_lexer_error_token_323(lex, cct_boot_str_215);
         }
-        char next = cct_boot_rit_lexer_peek_308(lex);
+        char next = cct_boot_rit_lexer_peek_315(lex);
         if ((((next != 34) && (next != 92)) && (next != 110)) && (next != 116))
         {
-          return cct_boot_rit_lexer_error_token_316(lex, cct_boot_str_216);
+          return cct_boot_rit_lexer_error_token_323(lex, cct_boot_str_216);
         }
       }
-      cct_boot_rit_lexer_advance_310(lex);
+      cct_boot_rit_lexer_advance_317(lex);
     }
     if (0) goto __cct_label_39;
     __cct_label_39: ;
   }
   if (0) goto __cct_label_38;
   __cct_label_38: ;
-  if (cct_boot_rit_lexer_is_at_end_307(lex))
+  if (cct_boot_rit_lexer_is_at_end_314(lex))
   {
-    return cct_boot_rit_lexer_error_token_316(lex, cct_boot_str_215);
+    return cct_boot_rit_lexer_error_token_323(lex, cct_boot_str_215);
   }
-  cct_boot_rit_lexer_advance_310(lex);
-  return cct_boot_rit_lexer_make_token_315(lex, cct_boot_ord_TokenKind__TK_STRING);
+  cct_boot_rit_lexer_advance_317(lex);
+  return cct_boot_rit_lexer_make_token_322(lex, cct_boot_ord_TokenKind__TK_STRING);
 }
 
-cct_boot_sig_Token cct_boot_rit_lexer_next_token_321(cct_boot_sig_LexerState* lex)
+cct_boot_sig_Token cct_boot_rit_lexer_next_token_328(cct_boot_sig_LexerState* lex)
 {
-  cct_boot_rit_lexer_skip_whitespace_312(lex);
+  cct_boot_rit_lexer_skip_whitespace_319(lex);
   (*lex).start = (*lex).current;
-  if (cct_boot_rit_lexer_is_at_end_307(lex))
+  if (cct_boot_rit_lexer_is_at_end_314(lex))
   {
-    return cct_boot_rit_lexer_make_token_315(lex, cct_boot_ord_TokenKind__TK_EOF);
+    return cct_boot_rit_lexer_make_token_322(lex, cct_boot_ord_TokenKind__TK_EOF);
   }
-  char c = cct_boot_rit_lexer_advance_310(lex);
+  char c = cct_boot_rit_lexer_advance_317(lex);
   if (cct_boot_rit_char_is_alpha_32(c))
   {
-    return cct_boot_rit_lexer_identifier_318(lex);
+    return cct_boot_rit_lexer_identifier_325(lex);
   }
   if (cct_boot_rit_char_is_digit_31(c))
   {
-    return cct_boot_rit_lexer_number_319(lex);
+    return cct_boot_rit_lexer_number_326(lex);
   }
   char __cct_tmp_1 = c;
   switch (__cct_tmp_1)
   {
     case 45:
     {
-      if (cct_boot_rit_lexer_peek_308(lex) == 45)
+      if (cct_boot_rit_lexer_peek_315(lex) == 45)
       {
-        cct_boot_rit_lexer_advance_310(lex);
-        cct_boot_rit_lexer_skip_comment_313(lex);
-        return cct_boot_rit_lexer_next_token_321(lex);
+        cct_boot_rit_lexer_advance_317(lex);
+        cct_boot_rit_lexer_skip_comment_320(lex);
+        return cct_boot_rit_lexer_next_token_328(lex);
       }
-      if (cct_boot_rit_lexer_match_311(lex, 45))
+      if (cct_boot_rit_lexer_match_318(lex, 45))
       {
-        return cct_boot_rit_lexer_make_token_315(lex, cct_boot_ord_TokenKind__TK_MINUS_MINUS);
+        return cct_boot_rit_lexer_make_token_322(lex, cct_boot_ord_TokenKind__TK_MINUS_MINUS);
       }
-      return cct_boot_rit_lexer_make_token_315(lex, cct_boot_ord_TokenKind__TK_MINUS);
+      return cct_boot_rit_lexer_make_token_322(lex, cct_boot_ord_TokenKind__TK_MINUS);
     }
     break;
     case 43:
     {
-      if (cct_boot_rit_lexer_match_311(lex, 43))
+      if (cct_boot_rit_lexer_match_318(lex, 43))
       {
-        return cct_boot_rit_lexer_make_token_315(lex, cct_boot_ord_TokenKind__TK_PLUS_PLUS);
+        return cct_boot_rit_lexer_make_token_322(lex, cct_boot_ord_TokenKind__TK_PLUS_PLUS);
       }
-      return cct_boot_rit_lexer_make_token_315(lex, cct_boot_ord_TokenKind__TK_PLUS);
+      return cct_boot_rit_lexer_make_token_322(lex, cct_boot_ord_TokenKind__TK_PLUS);
     }
     break;
     case 61:
     {
-      if (cct_boot_rit_lexer_match_311(lex, 61))
+      if (cct_boot_rit_lexer_match_318(lex, 61))
       {
-        return cct_boot_rit_lexer_make_token_315(lex, cct_boot_ord_TokenKind__TK_EQ_EQ);
+        return cct_boot_rit_lexer_make_token_322(lex, cct_boot_ord_TokenKind__TK_EQ_EQ);
       }
-      return cct_boot_rit_lexer_make_token_315(lex, cct_boot_ord_TokenKind__TK_EQ);
+      return cct_boot_rit_lexer_make_token_322(lex, cct_boot_ord_TokenKind__TK_EQ);
     }
     break;
     case 33:
     {
-      if (cct_boot_rit_lexer_match_311(lex, 61))
+      if (cct_boot_rit_lexer_match_318(lex, 61))
       {
-        return cct_boot_rit_lexer_make_token_315(lex, cct_boot_ord_TokenKind__TK_BANG_EQ);
+        return cct_boot_rit_lexer_make_token_322(lex, cct_boot_ord_TokenKind__TK_BANG_EQ);
       }
-      return cct_boot_rit_lexer_error_token_316(lex, cct_boot_str_217);
+      return cct_boot_rit_lexer_error_token_323(lex, cct_boot_str_217);
     }
     break;
     case 60:
     {
-      if (cct_boot_rit_lexer_match_311(lex, 61))
+      if (cct_boot_rit_lexer_match_318(lex, 61))
       {
-        return cct_boot_rit_lexer_make_token_315(lex, cct_boot_ord_TokenKind__TK_LESS_EQ);
+        return cct_boot_rit_lexer_make_token_322(lex, cct_boot_ord_TokenKind__TK_LESS_EQ);
       }
-      return cct_boot_rit_lexer_make_token_315(lex, cct_boot_ord_TokenKind__TK_LESS);
+      return cct_boot_rit_lexer_make_token_322(lex, cct_boot_ord_TokenKind__TK_LESS);
     }
     break;
     case 62:
     {
-      if (cct_boot_rit_lexer_match_311(lex, 61))
+      if (cct_boot_rit_lexer_match_318(lex, 61))
       {
-        return cct_boot_rit_lexer_make_token_315(lex, cct_boot_ord_TokenKind__TK_GREATER_EQ);
+        return cct_boot_rit_lexer_make_token_322(lex, cct_boot_ord_TokenKind__TK_GREATER_EQ);
       }
-      return cct_boot_rit_lexer_make_token_315(lex, cct_boot_ord_TokenKind__TK_GREATER);
+      return cct_boot_rit_lexer_make_token_322(lex, cct_boot_ord_TokenKind__TK_GREATER);
     }
     break;
     case 40:
     {
-      return cct_boot_rit_lexer_make_token_315(lex, cct_boot_ord_TokenKind__TK_LPAREN);
+      return cct_boot_rit_lexer_make_token_322(lex, cct_boot_ord_TokenKind__TK_LPAREN);
     }
     break;
     case 41:
     {
-      return cct_boot_rit_lexer_make_token_315(lex, cct_boot_ord_TokenKind__TK_RPAREN);
+      return cct_boot_rit_lexer_make_token_322(lex, cct_boot_ord_TokenKind__TK_RPAREN);
     }
     break;
     case 123:
     {
-      return cct_boot_rit_lexer_make_token_315(lex, cct_boot_ord_TokenKind__TK_LBRACE);
+      return cct_boot_rit_lexer_make_token_322(lex, cct_boot_ord_TokenKind__TK_LBRACE);
     }
     break;
     case 125:
     {
-      return cct_boot_rit_lexer_make_token_315(lex, cct_boot_ord_TokenKind__TK_RBRACE);
+      return cct_boot_rit_lexer_make_token_322(lex, cct_boot_ord_TokenKind__TK_RBRACE);
     }
     break;
     case 91:
     {
-      return cct_boot_rit_lexer_make_token_315(lex, cct_boot_ord_TokenKind__TK_LBRACKET);
+      return cct_boot_rit_lexer_make_token_322(lex, cct_boot_ord_TokenKind__TK_LBRACKET);
     }
     break;
     case 93:
     {
-      return cct_boot_rit_lexer_make_token_315(lex, cct_boot_ord_TokenKind__TK_RBRACKET);
+      return cct_boot_rit_lexer_make_token_322(lex, cct_boot_ord_TokenKind__TK_RBRACKET);
     }
     break;
     case 44:
     {
-      return cct_boot_rit_lexer_make_token_315(lex, cct_boot_ord_TokenKind__TK_COMMA);
+      return cct_boot_rit_lexer_make_token_322(lex, cct_boot_ord_TokenKind__TK_COMMA);
     }
     break;
     case 46:
     {
-      return cct_boot_rit_lexer_make_token_315(lex, cct_boot_ord_TokenKind__TK_DOT);
+      return cct_boot_rit_lexer_make_token_322(lex, cct_boot_ord_TokenKind__TK_DOT);
     }
     break;
     case 58:
     {
-      return cct_boot_rit_lexer_make_token_315(lex, cct_boot_ord_TokenKind__TK_COLON);
+      return cct_boot_rit_lexer_make_token_322(lex, cct_boot_ord_TokenKind__TK_COLON);
     }
     break;
     case 59:
     {
-      return cct_boot_rit_lexer_make_token_315(lex, cct_boot_ord_TokenKind__TK_SEMICOLON);
+      return cct_boot_rit_lexer_make_token_322(lex, cct_boot_ord_TokenKind__TK_SEMICOLON);
     }
     break;
     case 42:
     {
-      if (cct_boot_rit_lexer_match_311(lex, 42))
+      if (cct_boot_rit_lexer_match_318(lex, 42))
       {
-        return cct_boot_rit_lexer_make_token_315(lex, cct_boot_ord_TokenKind__TK_STAR_STAR);
+        return cct_boot_rit_lexer_make_token_322(lex, cct_boot_ord_TokenKind__TK_STAR_STAR);
       }
-      return cct_boot_rit_lexer_make_token_315(lex, cct_boot_ord_TokenKind__TK_STAR);
+      return cct_boot_rit_lexer_make_token_322(lex, cct_boot_ord_TokenKind__TK_STAR);
     }
     break;
     case 47:
     {
-      if (cct_boot_rit_lexer_match_311(lex, 47))
+      if (cct_boot_rit_lexer_match_318(lex, 47))
       {
-        return cct_boot_rit_lexer_make_token_315(lex, cct_boot_ord_TokenKind__TK_SLASH_SLASH);
+        return cct_boot_rit_lexer_make_token_322(lex, cct_boot_ord_TokenKind__TK_SLASH_SLASH);
       }
-      return cct_boot_rit_lexer_make_token_315(lex, cct_boot_ord_TokenKind__TK_SLASH);
+      return cct_boot_rit_lexer_make_token_322(lex, cct_boot_ord_TokenKind__TK_SLASH);
     }
     break;
     case 37:
     {
-      if (cct_boot_rit_lexer_match_311(lex, 37))
+      if (cct_boot_rit_lexer_match_318(lex, 37))
       {
-        return cct_boot_rit_lexer_make_token_315(lex, cct_boot_ord_TokenKind__TK_PERCENT_PERCENT);
+        return cct_boot_rit_lexer_make_token_322(lex, cct_boot_ord_TokenKind__TK_PERCENT_PERCENT);
       }
-      return cct_boot_rit_lexer_make_token_315(lex, cct_boot_ord_TokenKind__TK_PERCENT);
+      return cct_boot_rit_lexer_make_token_322(lex, cct_boot_ord_TokenKind__TK_PERCENT);
     }
     break;
     case 63:
     {
-      return cct_boot_rit_lexer_make_token_315(lex, cct_boot_ord_TokenKind__TK_QUESTION);
+      return cct_boot_rit_lexer_make_token_322(lex, cct_boot_ord_TokenKind__TK_QUESTION);
     }
     break;
     case 34:
     {
-      return cct_boot_rit_lexer_string_320(lex);
+      return cct_boot_rit_lexer_string_327(lex);
     }
     break;
     default:
     {
-      return cct_boot_rit_lexer_error_character_token_317(lex, c);
+      return cct_boot_rit_lexer_error_character_token_324(lex, c);
     }
     break;
   }
 }
 
-cct_boot_sig_Token cct_boot_rit_parser_empty_token_322(void)
+cct_boot_sig_Token cct_boot_rit_parser_empty_token_329(void)
 {
-  return cct_boot_rit_token_make_305(cct_boot_ord_TokenKind__TK_EOF, cct_boot_rit_verbum_dup_40(cct_boot_str_102), 0, 0);
+  return cct_boot_rit_token_make_312(cct_boot_ord_TokenKind__TK_EOF, cct_boot_rit_verbum_dup_40(cct_boot_str_102), 0, 0);
 }
 
-cct_boot_sig_ParserState cct_boot_rit_parser_init_323(cct_boot_sig_LexerState* lexer, char* filename)
+cct_boot_sig_ParserState cct_boot_rit_parser_init_330(cct_boot_sig_LexerState* lexer, char* filename)
 {
   cct_boot_sig_ParserState parser;
   parser.lexer = lexer;
-  parser.current = cct_boot_rit_parser_empty_token_322();
-  parser.previous = cct_boot_rit_parser_empty_token_322();
+  parser.current = cct_boot_rit_parser_empty_token_329();
+  parser.previous = cct_boot_rit_parser_empty_token_329();
   parser.had_error = 0;
   parser.panic_mode = 0;
   parser.filename = filename;
-  cct_boot_rit_parser_advance_325((&parser));
+  cct_boot_rit_parser_advance_332((&parser));
   return parser;
 }
 
-void cct_boot_rit_parser_dispose_324(cct_boot_sig_ParserState* parser)
+void cct_boot_rit_parser_dispose_331(cct_boot_sig_ParserState* parser)
 {
-  cct_boot_rit_token_free_306((&(*parser).current));
-  cct_boot_rit_token_free_306((&(*parser).previous));
+  cct_boot_rit_token_free_313((&(*parser).current));
+  cct_boot_rit_token_free_313((&(*parser).previous));
   return;
 }
 
-void cct_boot_rit_parser_advance_325(cct_boot_sig_ParserState* parser)
+void cct_boot_rit_parser_advance_332(cct_boot_sig_ParserState* parser)
 {
-  cct_boot_rit_token_free_306((&(*parser).previous));
+  cct_boot_rit_token_free_313((&(*parser).previous));
   (*parser).previous = (*parser).current;
-  (*parser).current = cct_boot_rit_lexer_next_token_321((*parser).lexer);
+  (*parser).current = cct_boot_rit_lexer_next_token_328((*parser).lexer);
   return;
 }
 
-int cct_boot_rit_parser_check_326(cct_boot_sig_ParserState* parser, cct_boot_ord_TokenKind kind)
+int cct_boot_rit_parser_check_333(cct_boot_sig_ParserState* parser, cct_boot_ord_TokenKind kind)
 {
   return ((*parser).current.kind == kind);
 }
 
-int cct_boot_rit_parser_match_327(cct_boot_sig_ParserState* parser, cct_boot_ord_TokenKind kind)
+int cct_boot_rit_parser_match_334(cct_boot_sig_ParserState* parser, cct_boot_ord_TokenKind kind)
 {
-  if (!cct_boot_rit_parser_check_326(parser, kind))
+  if (!cct_boot_rit_parser_check_333(parser, kind))
   {
     return 0;
   }
-  cct_boot_rit_parser_advance_325(parser);
+  cct_boot_rit_parser_advance_332(parser);
   return 1;
 }
 
-void cct_boot_rit_parser_emit_error_328(cct_boot_sig_ParserState* parser, long long line, long long column, char* message)
+void cct_boot_rit_parser_emit_error_335(cct_boot_sig_ParserState* parser, long long line, long long column, char* message)
 {
   if ((*parser).panic_mode)
   {
@@ -4672,54 +4679,54 @@ void cct_boot_rit_parser_emit_error_328(cct_boot_sig_ParserState* parser, long l
   loc.line = line;
   loc.column = column;
   loc.filename = (*parser).filename;
-  cct_boot_rit_diag_error_120((&loc), message);
+  cct_boot_rit_diag_error_127((&loc), message);
   return;
 }
 
-void cct_boot_rit_parser_error_at_current_329(cct_boot_sig_ParserState* parser, char* message)
+void cct_boot_rit_parser_error_at_current_336(cct_boot_sig_ParserState* parser, char* message)
 {
-  cct_boot_rit_parser_emit_error_328(parser, (*parser).current.line, (*parser).current.column, message);
+  cct_boot_rit_parser_emit_error_335(parser, (*parser).current.line, (*parser).current.column, message);
   return;
 }
 
-void cct_boot_rit_parser_error_at_previous_330(cct_boot_sig_ParserState* parser, char* message)
+void cct_boot_rit_parser_error_at_previous_337(cct_boot_sig_ParserState* parser, char* message)
 {
-  cct_boot_rit_parser_emit_error_328(parser, (*parser).previous.line, (*parser).previous.column, message);
+  cct_boot_rit_parser_emit_error_335(parser, (*parser).previous.line, (*parser).previous.column, message);
   return;
 }
 
-int cct_boot_rit_parser_consume_331(cct_boot_sig_ParserState* parser, cct_boot_ord_TokenKind kind, char* message)
+int cct_boot_rit_parser_consume_338(cct_boot_sig_ParserState* parser, cct_boot_ord_TokenKind kind, char* message)
 {
-  if (cct_boot_rit_parser_check_326(parser, kind))
+  if (cct_boot_rit_parser_check_333(parser, kind))
   {
-    cct_boot_rit_parser_advance_325(parser);
+    cct_boot_rit_parser_advance_332(parser);
     return 1;
   }
-  cct_boot_rit_parser_error_at_current_329(parser, message);
+  cct_boot_rit_parser_error_at_current_336(parser, message);
   return 0;
 }
 
-int cct_boot_rit_parser_is_declaration_start_332(cct_boot_ord_TokenKind kind)
+int cct_boot_rit_parser_is_declaration_start_339(cct_boot_ord_TokenKind kind)
 {
   return (((((((((kind == cct_boot_ord_TokenKind__TK_ADVOCARE) || (kind == cct_boot_ord_TokenKind__TK_RITUALE)) || (kind == cct_boot_ord_TokenKind__TK_SIGILLUM)) || (kind == cct_boot_ord_TokenKind__TK_ORDO)) || (kind == cct_boot_ord_TokenKind__TK_CODEX)) || (kind == cct_boot_ord_TokenKind__TK_PACTUM)) || (kind == cct_boot_ord_TokenKind__TK_FIN)) || (kind == cct_boot_ord_TokenKind__TK_EXPLICIT)) || (kind == cct_boot_ord_TokenKind__TK_EOF));
 }
 
-int cct_boot_rit_parser_is_statement_start_333(cct_boot_ord_TokenKind kind)
+int cct_boot_rit_parser_is_statement_start_340(cct_boot_ord_TokenKind kind)
 {
   return ((((((((((((((((((((kind == cct_boot_ord_TokenKind__TK_EVOCA) || (kind == cct_boot_ord_TokenKind__TK_VINCIRE)) || (kind == cct_boot_ord_TokenKind__TK_REDDE)) || (kind == cct_boot_ord_TokenKind__TK_IACE)) || (kind == cct_boot_ord_TokenKind__TK_SI)) || (kind == cct_boot_ord_TokenKind__TK_QUANDO)) || (kind == cct_boot_ord_TokenKind__TK_DUM)) || (kind == cct_boot_ord_TokenKind__TK_FRANGE)) || (kind == cct_boot_ord_TokenKind__TK_RECEDE)) || (kind == cct_boot_ord_TokenKind__TK_TEMPTA)) || (kind == cct_boot_ord_TokenKind__TK_LBRACE)) || (kind == cct_boot_ord_TokenKind__TK_CAPE)) || (kind == cct_boot_ord_TokenKind__TK_SEMPER)) || (kind == cct_boot_ord_TokenKind__TK_CASO)) || (kind == cct_boot_ord_TokenKind__TK_SENAO)) || (kind == cct_boot_ord_TokenKind__TK_FIN)) || (kind == cct_boot_ord_TokenKind__TK_ALITER)) || (kind == cct_boot_ord_TokenKind__TK_RBRACE)) || (kind == cct_boot_ord_TokenKind__TK_EXPLICIT)) || (kind == cct_boot_ord_TokenKind__TK_EOF));
 }
 
-void cct_boot_rit_parser_synchronize_statement_334(cct_boot_sig_ParserState* parser)
+void cct_boot_rit_parser_synchronize_statement_341(cct_boot_sig_ParserState* parser)
 {
   (*parser).panic_mode = 0;
-  while (!cct_boot_rit_parser_check_326(parser, cct_boot_ord_TokenKind__TK_EOF))
+  while (!cct_boot_rit_parser_check_333(parser, cct_boot_ord_TokenKind__TK_EOF))
   {
     {
-      if (cct_boot_rit_parser_is_statement_start_333((*parser).current.kind) || cct_boot_rit_parser_is_declaration_start_332((*parser).current.kind))
+      if (cct_boot_rit_parser_is_statement_start_340((*parser).current.kind) || cct_boot_rit_parser_is_declaration_start_339((*parser).current.kind))
       {
         return;
       }
-      cct_boot_rit_parser_advance_325(parser);
+      cct_boot_rit_parser_advance_332(parser);
     }
     if (0) goto __cct_label_41;
     __cct_label_41: ;
@@ -4729,17 +4736,17 @@ void cct_boot_rit_parser_synchronize_statement_334(cct_boot_sig_ParserState* par
   return;
 }
 
-void cct_boot_rit_parser_synchronize_declaration_335(cct_boot_sig_ParserState* parser)
+void cct_boot_rit_parser_synchronize_declaration_342(cct_boot_sig_ParserState* parser)
 {
   (*parser).panic_mode = 0;
-  while (!cct_boot_rit_parser_check_326(parser, cct_boot_ord_TokenKind__TK_EOF))
+  while (!cct_boot_rit_parser_check_333(parser, cct_boot_ord_TokenKind__TK_EOF))
   {
     {
-      if (cct_boot_rit_parser_is_declaration_start_332((*parser).current.kind))
+      if (cct_boot_rit_parser_is_declaration_start_339((*parser).current.kind))
       {
         return;
       }
-      cct_boot_rit_parser_advance_325(parser);
+      cct_boot_rit_parser_advance_332(parser);
     }
     if (0) goto __cct_label_43;
     __cct_label_43: ;
@@ -4749,7 +4756,7 @@ void cct_boot_rit_parser_synchronize_declaration_335(cct_boot_sig_ParserState* p
   return;
 }
 
-int cct_boot_rit_parser_is_assignment_target_336(cct_boot_sig_AstNode* node)
+int cct_boot_rit_parser_is_assignment_target_343(cct_boot_sig_AstNode* node)
 {
   if ((((*node).kind == cct_boot_ord_AstKind__AST_IDENTIFIER) || ((*node).kind == cct_boot_ord_AstKind__AST_FIELD_ACCESS)) || ((*node).kind == cct_boot_ord_AstKind__AST_INDEX_ACCESS))
   {
@@ -4762,61 +4769,61 @@ int cct_boot_rit_parser_is_assignment_target_336(cct_boot_sig_AstNode* node)
   return 0;
 }
 
-cct_boot_sig_AstNode* cct_boot_rit_parse_expression_337(cct_boot_sig_ParserState* parser)
+cct_boot_sig_AstNode* cct_boot_rit_parse_expression_344(cct_boot_sig_ParserState* parser)
 {
-  return cct_boot_rit_parse_assignment_355(parser);
+  return cct_boot_rit_parse_assignment_362(parser);
 }
 
-int cct_boot_rit_parse_expr_is_simple_type_token_338(cct_boot_ord_TokenKind kind)
+int cct_boot_rit_parse_expr_is_simple_type_token_345(cct_boot_ord_TokenKind kind)
 {
   return (((((((((((kind == cct_boot_ord_TokenKind__TK_IDENTIFIER) || (kind == cct_boot_ord_TokenKind__TK_REX)) || (kind == cct_boot_ord_TokenKind__TK_DUX)) || (kind == cct_boot_ord_TokenKind__TK_COMES)) || (kind == cct_boot_ord_TokenKind__TK_MILES)) || (kind == cct_boot_ord_TokenKind__TK_UMBRA)) || (kind == cct_boot_ord_TokenKind__TK_FLAMMA)) || (kind == cct_boot_ord_TokenKind__TK_VERBUM)) || (kind == cct_boot_ord_TokenKind__TK_VERUM)) || (kind == cct_boot_ord_TokenKind__TK_NIHIL)) || (kind == cct_boot_ord_TokenKind__TK_FRACTUM));
 }
 
-cct_boot_sig_AstNode* cct_boot_rit_parse_expr_generic_type_339(cct_boot_sig_ParserState* parser)
+cct_boot_sig_AstNode* cct_boot_rit_parse_expr_generic_type_346(cct_boot_sig_ParserState* parser)
 {
-  if (cct_boot_rit_parser_match_327(parser, cct_boot_ord_TokenKind__TK_SPECULUM))
+  if (cct_boot_rit_parser_match_334(parser, cct_boot_ord_TokenKind__TK_SPECULUM))
   {
-    cct_boot_sig_AstNode* base_ptr = cct_boot_rit_parse_expr_generic_type_339(parser);
-    cct_boot_rit_ast_type_mark_pointer_234(base_ptr);
+    cct_boot_sig_AstNode* base_ptr = cct_boot_rit_parse_expr_generic_type_346(parser);
+    cct_boot_rit_ast_type_mark_pointer_241(base_ptr);
     return base_ptr;
   }
-  if (cct_boot_rit_parser_match_327(parser, cct_boot_ord_TokenKind__TK_SERIES))
+  if (cct_boot_rit_parser_match_334(parser, cct_boot_ord_TokenKind__TK_SERIES))
   {
-    cct_boot_sig_AstNode* base_array = cct_boot_rit_parse_expr_generic_type_339(parser);
-    cct_boot_rit_parser_consume_331(parser, cct_boot_ord_TokenKind__TK_LBRACKET, cct_boot_str_218);
-    if (!cct_boot_rit_parser_check_326(parser, cct_boot_ord_TokenKind__TK_INTEGER))
+    cct_boot_sig_AstNode* base_array = cct_boot_rit_parse_expr_generic_type_346(parser);
+    cct_boot_rit_parser_consume_338(parser, cct_boot_ord_TokenKind__TK_LBRACKET, cct_boot_str_218);
+    if (!cct_boot_rit_parser_check_333(parser, cct_boot_ord_TokenKind__TK_INTEGER))
     {
-      cct_boot_rit_parser_error_at_current_329(parser, cct_boot_str_219);
+      cct_boot_rit_parser_error_at_current_336(parser, cct_boot_str_219);
       return base_array;
     }
-    cct_boot_rit_parser_advance_325(parser);
-    cct_boot_rit_ast_type_mark_array_235(base_array, cct_boot_rit_parse_int_105((*parser).previous.lexeme));
-    cct_boot_rit_parser_consume_331(parser, cct_boot_ord_TokenKind__TK_RBRACKET, cct_boot_str_220);
+    cct_boot_rit_parser_advance_332(parser);
+    cct_boot_rit_ast_type_mark_array_242(base_array, cct_boot_rit_parse_int_112((*parser).previous.lexeme));
+    cct_boot_rit_parser_consume_338(parser, cct_boot_ord_TokenKind__TK_RBRACKET, cct_boot_str_220);
     return base_array;
   }
-  if (!cct_boot_rit_parse_expr_is_simple_type_token_338((*parser).current.kind))
+  if (!cct_boot_rit_parse_expr_is_simple_type_token_345((*parser).current.kind))
   {
-    cct_boot_rit_parser_error_at_current_329(parser, cct_boot_str_221);
-    return cct_boot_rit_ast_make_type_233(cct_boot_str_222, (*parser).current.line, (*parser).current.column);
+    cct_boot_rit_parser_error_at_current_336(parser, cct_boot_str_221);
+    return cct_boot_rit_ast_make_type_240(cct_boot_str_222, (*parser).current.line, (*parser).current.column);
   }
-  cct_boot_rit_parser_advance_325(parser);
-  cct_boot_sig_AstNode* node = cct_boot_rit_ast_make_type_233((*parser).previous.lexeme, (*parser).previous.line, (*parser).previous.column);
-  if (cct_boot_rit_parser_match_327(parser, cct_boot_ord_TokenKind__TK_GENUS))
+  cct_boot_rit_parser_advance_332(parser);
+  cct_boot_sig_AstNode* node = cct_boot_rit_ast_make_type_240((*parser).previous.lexeme, (*parser).previous.line, (*parser).previous.column);
+  if (cct_boot_rit_parser_match_334(parser, cct_boot_ord_TokenKind__TK_GENUS))
   {
-    cct_boot_rit_parser_consume_331(parser, cct_boot_ord_TokenKind__TK_LPAREN, cct_boot_str_223);
-    if (cct_boot_rit_parser_check_326(parser, cct_boot_ord_TokenKind__TK_RPAREN))
+    cct_boot_rit_parser_consume_338(parser, cct_boot_ord_TokenKind__TK_LPAREN, cct_boot_str_223);
+    if (cct_boot_rit_parser_check_333(parser, cct_boot_ord_TokenKind__TK_RPAREN))
     {
-      cct_boot_rit_parser_error_at_current_329(parser, cct_boot_str_224);
-      cct_boot_rit_parser_advance_325(parser);
+      cct_boot_rit_parser_error_at_current_336(parser, cct_boot_str_224);
+      cct_boot_rit_parser_advance_332(parser);
       return node;
     }
     while (1)
     {
       {
-        cct_boot_rit_ast_append_generic_arg_224(node, cct_boot_rit_parse_expr_generic_type_339(parser));
-        if (!cct_boot_rit_parser_match_327(parser, cct_boot_ord_TokenKind__TK_COMMA))
+        cct_boot_rit_ast_append_generic_arg_231(node, cct_boot_rit_parse_expr_generic_type_346(parser));
+        if (!cct_boot_rit_parser_match_334(parser, cct_boot_ord_TokenKind__TK_COMMA))
         {
-          cct_boot_rit_parser_consume_331(parser, cct_boot_ord_TokenKind__TK_RPAREN, cct_boot_str_225);
+          cct_boot_rit_parser_consume_338(parser, cct_boot_ord_TokenKind__TK_RPAREN, cct_boot_str_225);
           return node;
         }
       }
@@ -4829,22 +4836,22 @@ cct_boot_sig_AstNode* cct_boot_rit_parse_expr_generic_type_339(cct_boot_sig_Pars
   return node;
 }
 
-void cct_boot_rit_parse_postfix_generic_args_340(cct_boot_sig_ParserState* parser, cct_boot_sig_AstNode* expr)
+void cct_boot_rit_parse_postfix_generic_args_347(cct_boot_sig_ParserState* parser, cct_boot_sig_AstNode* expr)
 {
-  cct_boot_rit_parser_consume_331(parser, cct_boot_ord_TokenKind__TK_LPAREN, cct_boot_str_223);
-  if (cct_boot_rit_parser_check_326(parser, cct_boot_ord_TokenKind__TK_RPAREN))
+  cct_boot_rit_parser_consume_338(parser, cct_boot_ord_TokenKind__TK_LPAREN, cct_boot_str_223);
+  if (cct_boot_rit_parser_check_333(parser, cct_boot_ord_TokenKind__TK_RPAREN))
   {
-    cct_boot_rit_parser_error_at_current_329(parser, cct_boot_str_224);
-    cct_boot_rit_parser_advance_325(parser);
+    cct_boot_rit_parser_error_at_current_336(parser, cct_boot_str_224);
+    cct_boot_rit_parser_advance_332(parser);
     return;
   }
   while (1)
   {
     {
-      cct_boot_rit_ast_append_generic_arg_224(expr, cct_boot_rit_parse_expr_generic_type_339(parser));
-      if (!cct_boot_rit_parser_match_327(parser, cct_boot_ord_TokenKind__TK_COMMA))
+      cct_boot_rit_ast_append_generic_arg_231(expr, cct_boot_rit_parse_expr_generic_type_346(parser));
+      if (!cct_boot_rit_parser_match_334(parser, cct_boot_ord_TokenKind__TK_COMMA))
       {
-        cct_boot_rit_parser_consume_331(parser, cct_boot_ord_TokenKind__TK_RPAREN, cct_boot_str_225);
+        cct_boot_rit_parser_consume_338(parser, cct_boot_ord_TokenKind__TK_RPAREN, cct_boot_str_225);
         return;
       }
     }
@@ -4855,7 +4862,7 @@ void cct_boot_rit_parse_postfix_generic_args_340(cct_boot_sig_ParserState* parse
   __cct_label_46: ;
 }
 
-char* cct_boot_rit_parse_forma_unquote_341(char* raw_text)
+char* cct_boot_rit_parse_forma_unquote_348(char* raw_text)
 {
   long long n = cct_boot_rit_len_30(raw_text);
   if (((n >= 2) && (cct_boot_rit_char_at_44(raw_text, 0) == 34)) && (cct_boot_rit_char_at_44(raw_text, (n - 1)) == 34))
@@ -4865,33 +4872,33 @@ char* cct_boot_rit_parse_forma_unquote_341(char* raw_text)
   return cct_boot_rit_verbum_dup_40(raw_text);
 }
 
-void cct_boot_rit_parse_forma_flush_literal_342(cct_boot_sig_AstNode* molde, void* literal_builder, long long line, long long column)
+void cct_boot_rit_parse_forma_flush_literal_349(cct_boot_sig_AstNode* molde, void* literal_builder, long long line, long long column)
 {
-  if (cct_boot_rit_builder_len_82(literal_builder) == 0)
+  if (cct_boot_rit_builder_len_89(literal_builder) == 0)
   {
     return;
   }
-  char* text = cct_boot_rit_builder_to_verbum_81(literal_builder);
-  cct_boot_rit_ast_append_child_220(molde, cct_boot_rit_ast_make_literal_string_239(text, line, column));
+  char* text = cct_boot_rit_builder_to_verbum_88(literal_builder);
+  cct_boot_rit_ast_append_child_227(molde, cct_boot_rit_ast_make_literal_string_246(text, line, column));
   free((void*)(text));
-  cct_boot_rit_builder_clear_83(literal_builder);
+  cct_boot_rit_builder_clear_90(literal_builder);
   return;
 }
 
-cct_boot_sig_AstNode* cct_boot_rit_parse_forma_expression_343(cct_boot_sig_ParserState* parser)
+cct_boot_sig_AstNode* cct_boot_rit_parse_forma_expression_350(cct_boot_sig_ParserState* parser)
 {
   long long line = (*parser).current.line;
   long long column = (*parser).current.column;
-  cct_boot_rit_parser_consume_331(parser, cct_boot_ord_TokenKind__TK_MOLDE, cct_boot_str_226);
-  if (!cct_boot_rit_parser_check_326(parser, cct_boot_ord_TokenKind__TK_STRING))
+  cct_boot_rit_parser_consume_338(parser, cct_boot_ord_TokenKind__TK_MOLDE, cct_boot_str_226);
+  if (!cct_boot_rit_parser_check_333(parser, cct_boot_ord_TokenKind__TK_STRING))
   {
-    cct_boot_rit_parser_error_at_current_329(parser, cct_boot_str_227);
-    return cct_boot_rit_ast_make_literal_string_239(cct_boot_str_228, line, column);
+    cct_boot_rit_parser_error_at_current_336(parser, cct_boot_str_227);
+    return cct_boot_rit_ast_make_literal_string_246(cct_boot_str_228, line, column);
   }
-  cct_boot_rit_parser_advance_325(parser);
-  char* raw_text = cct_boot_rit_parse_forma_unquote_341((*parser).previous.lexeme);
-  cct_boot_sig_AstNode* molde = cct_boot_rit_ast_make_molde_250(line, column);
-  void* literal_builder = cct_boot_rit_builder_init_75();
+  cct_boot_rit_parser_advance_332(parser);
+  char* raw_text = cct_boot_rit_parse_forma_unquote_348((*parser).previous.lexeme);
+  cct_boot_sig_AstNode* molde = cct_boot_rit_ast_make_molde_257(line, column);
+  void* literal_builder = cct_boot_rit_builder_init_82();
   long long i = 0;
   long long n = cct_boot_rit_len_30(raw_text);
   while (i < n)
@@ -4902,12 +4909,12 @@ cct_boot_sig_AstNode* cct_boot_rit_parse_forma_expression_343(cct_boot_sig_Parse
       {
         if (((i + 1) < n) && (cct_boot_rit_char_at_44(raw_text, (i + 1)) == 123))
         {
-          cct_boot_rit_builder_append_char_77(literal_builder, 123);
+          cct_boot_rit_builder_append_char_84(literal_builder, 123);
           i = (i + 2);
         }
         else
         {
-          cct_boot_rit_parse_forma_flush_literal_342(molde, literal_builder, line, column);
+          cct_boot_rit_parse_forma_flush_literal_349(molde, literal_builder, line, column);
           long long expr_start = (i + 1);
           long long expr_end = expr_start;
           while ((expr_end < n) && (cct_boot_rit_char_at_44(raw_text, expr_end) != 125))
@@ -4922,14 +4929,14 @@ cct_boot_sig_AstNode* cct_boot_rit_parse_forma_expression_343(cct_boot_sig_Parse
           __cct_label_50: ;
           if (expr_end >= n)
           {
-            cct_boot_rit_parser_error_at_previous_330(parser, cct_boot_str_229);
+            cct_boot_rit_parser_error_at_previous_337(parser, cct_boot_str_229);
             free((void*)(raw_text));
-            cct_boot_rit_builder_free_84(literal_builder);
+            cct_boot_rit_builder_free_91(literal_builder);
             return molde;
           }
           if (expr_end == expr_start)
           {
-            cct_boot_rit_parser_error_at_previous_330(parser, cct_boot_str_230);
+            cct_boot_rit_parser_error_at_previous_337(parser, cct_boot_str_230);
             i = (expr_end + 1);
           }
           else
@@ -4989,7 +4996,7 @@ cct_boot_sig_AstNode* cct_boot_rit_parse_forma_expression_343(cct_boot_sig_Parse
               __cct_label_56: ;
               if (spec_end == spec_start)
               {
-                cct_boot_rit_parser_error_at_previous_330(parser, cct_boot_str_231);
+                cct_boot_rit_parser_error_at_previous_337(parser, cct_boot_str_231);
                 free((void*)(expr_text));
                 free((void*)(fmt_spec));
                 if (colon_pos >= 0)
@@ -5003,10 +5010,10 @@ cct_boot_sig_AstNode* cct_boot_rit_parse_forma_expression_343(cct_boot_sig_Parse
               free((void*)(fmt_spec));
               fmt_spec = compact_spec;
             }
-            cct_boot_sig_AstNode* part_expr = cct_boot_rit_parser_parse_expression_source_356(parse_text, (*parser).filename);
+            cct_boot_sig_AstNode* part_expr = cct_boot_rit_parser_parse_expression_source_363(parse_text, (*parser).filename);
             if (cct_boot_rit_compare_38(fmt_spec, cct_boot_str_102) != 0)
             {
-              cct_boot_rit_ast_node_set_fmt_spec_217(part_expr, fmt_spec);
+              cct_boot_rit_ast_node_set_fmt_spec_224(part_expr, fmt_spec);
             }
             if (has_fmt_spec)
             {
@@ -5016,7 +5023,7 @@ cct_boot_sig_AstNode* cct_boot_rit_parse_forma_expression_343(cct_boot_sig_Parse
             {
               free((void*)(parse_text));
             }
-            cct_boot_rit_ast_append_child_220(molde, part_expr);
+            cct_boot_rit_ast_append_child_227(molde, part_expr);
             free((void*)(expr_text));
             i = (expr_end + 1);
           }
@@ -5026,12 +5033,12 @@ cct_boot_sig_AstNode* cct_boot_rit_parse_forma_expression_343(cct_boot_sig_Parse
       {
         if (((ch == 125) && ((i + 1) < n)) && (cct_boot_rit_char_at_44(raw_text, (i + 1)) == 125))
         {
-          cct_boot_rit_builder_append_char_77(literal_builder, 125);
+          cct_boot_rit_builder_append_char_84(literal_builder, 125);
           i = (i + 2);
         }
         else
         {
-          cct_boot_rit_builder_append_char_77(literal_builder, ch);
+          cct_boot_rit_builder_append_char_84(literal_builder, ch);
           i = (i + 1);
         }
       }
@@ -5041,38 +5048,38 @@ cct_boot_sig_AstNode* cct_boot_rit_parse_forma_expression_343(cct_boot_sig_Parse
   }
   if (0) goto __cct_label_48;
   __cct_label_48: ;
-  cct_boot_rit_parse_forma_flush_literal_342(molde, literal_builder, line, column);
+  cct_boot_rit_parse_forma_flush_literal_349(molde, literal_builder, line, column);
   free((void*)(raw_text));
-  cct_boot_rit_builder_free_84(literal_builder);
+  cct_boot_rit_builder_free_91(literal_builder);
   return molde;
 }
 
-cct_boot_sig_AstNode* cct_boot_rit_parse_primary_344(cct_boot_sig_ParserState* parser)
+cct_boot_sig_AstNode* cct_boot_rit_parse_primary_351(cct_boot_sig_ParserState* parser)
 {
-  if (cct_boot_rit_parser_check_326(parser, cct_boot_ord_TokenKind__TK_MOLDE))
+  if (cct_boot_rit_parser_check_333(parser, cct_boot_ord_TokenKind__TK_MOLDE))
   {
-    return cct_boot_rit_parse_forma_expression_343(parser);
+    return cct_boot_rit_parse_forma_expression_350(parser);
   }
-  if (cct_boot_rit_parser_match_327(parser, cct_boot_ord_TokenKind__TK_OBSECRO))
+  if (cct_boot_rit_parser_match_334(parser, cct_boot_ord_TokenKind__TK_OBSECRO))
   {
     long long line = (*parser).previous.line;
     long long column = (*parser).previous.column;
-    if (!cct_boot_rit_parser_check_326(parser, cct_boot_ord_TokenKind__TK_IDENTIFIER))
+    if (!cct_boot_rit_parser_check_333(parser, cct_boot_ord_TokenKind__TK_IDENTIFIER))
     {
-      cct_boot_rit_parser_error_at_current_329(parser, cct_boot_str_232);
-      return cct_boot_rit_ast_make_identifier_242(cct_boot_str_222, line, column);
+      cct_boot_rit_parser_error_at_current_336(parser, cct_boot_str_232);
+      return cct_boot_rit_ast_make_identifier_249(cct_boot_str_222, line, column);
     }
-    cct_boot_rit_parser_advance_325(parser);
-    cct_boot_sig_AstNode* callee = cct_boot_rit_ast_make_identifier_242((*parser).previous.lexeme, (*parser).previous.line, (*parser).previous.column);
-    cct_boot_rit_parser_consume_331(parser, cct_boot_ord_TokenKind__TK_LPAREN, cct_boot_str_233);
-    cct_boot_sig_AstNode* call = cct_boot_rit_ast_make_obsecro_call_246(callee, line, column);
-    if (!cct_boot_rit_parser_check_326(parser, cct_boot_ord_TokenKind__TK_RPAREN))
+    cct_boot_rit_parser_advance_332(parser);
+    cct_boot_sig_AstNode* callee = cct_boot_rit_ast_make_identifier_249((*parser).previous.lexeme, (*parser).previous.line, (*parser).previous.column);
+    cct_boot_rit_parser_consume_338(parser, cct_boot_ord_TokenKind__TK_LPAREN, cct_boot_str_233);
+    cct_boot_sig_AstNode* call = cct_boot_rit_ast_make_obsecro_call_253(callee, line, column);
+    if (!cct_boot_rit_parser_check_333(parser, cct_boot_ord_TokenKind__TK_RPAREN))
     {
-      cct_boot_rit_ast_append_argument_228(call, cct_boot_rit_parse_expression_337(parser));
-      while (cct_boot_rit_parser_match_327(parser, cct_boot_ord_TokenKind__TK_COMMA))
+      cct_boot_rit_ast_append_argument_235(call, cct_boot_rit_parse_expression_344(parser));
+      while (cct_boot_rit_parser_match_334(parser, cct_boot_ord_TokenKind__TK_COMMA))
       {
         {
-          cct_boot_rit_ast_append_argument_228(call, cct_boot_rit_parse_expression_337(parser));
+          cct_boot_rit_ast_append_argument_235(call, cct_boot_rit_parse_expression_344(parser));
         }
         if (0) goto __cct_label_59;
         __cct_label_59: ;
@@ -5080,77 +5087,77 @@ cct_boot_sig_AstNode* cct_boot_rit_parse_primary_344(cct_boot_sig_ParserState* p
       if (0) goto __cct_label_58;
       __cct_label_58: ;
     }
-    cct_boot_rit_parser_consume_331(parser, cct_boot_ord_TokenKind__TK_RPAREN, cct_boot_str_234);
+    cct_boot_rit_parser_consume_338(parser, cct_boot_ord_TokenKind__TK_RPAREN, cct_boot_str_234);
     return call;
   }
-  if (cct_boot_rit_parser_match_327(parser, cct_boot_ord_TokenKind__TK_MENSURA))
+  if (cct_boot_rit_parser_match_334(parser, cct_boot_ord_TokenKind__TK_MENSURA))
   {
     long long line = (*parser).previous.line;
     long long column = (*parser).previous.column;
-    cct_boot_rit_parser_consume_331(parser, cct_boot_ord_TokenKind__TK_LPAREN, cct_boot_str_235);
-    cct_boot_sig_AstNode* type_expr = cct_boot_rit_parse_expr_generic_type_339(parser);
-    cct_boot_rit_parser_consume_331(parser, cct_boot_ord_TokenKind__TK_RPAREN, cct_boot_str_236);
-    return cct_boot_rit_ast_make_mensura_251(type_expr, line, column);
+    cct_boot_rit_parser_consume_338(parser, cct_boot_ord_TokenKind__TK_LPAREN, cct_boot_str_235);
+    cct_boot_sig_AstNode* type_expr = cct_boot_rit_parse_expr_generic_type_346(parser);
+    cct_boot_rit_parser_consume_338(parser, cct_boot_ord_TokenKind__TK_RPAREN, cct_boot_str_236);
+    return cct_boot_rit_ast_make_mensura_258(type_expr, line, column);
   }
-  if (cct_boot_rit_parser_match_327(parser, cct_boot_ord_TokenKind__TK_INTEGER))
+  if (cct_boot_rit_parser_match_334(parser, cct_boot_ord_TokenKind__TK_INTEGER))
   {
-    return cct_boot_rit_ast_make_literal_int_237((*parser).previous.lexeme, (*parser).previous.line, (*parser).previous.column);
+    return cct_boot_rit_ast_make_literal_int_244((*parser).previous.lexeme, (*parser).previous.line, (*parser).previous.column);
   }
-  if (cct_boot_rit_parser_match_327(parser, cct_boot_ord_TokenKind__TK_REAL))
+  if (cct_boot_rit_parser_match_334(parser, cct_boot_ord_TokenKind__TK_REAL))
   {
-    return cct_boot_rit_ast_make_literal_real_238((*parser).previous.lexeme, (*parser).previous.line, (*parser).previous.column);
+    return cct_boot_rit_ast_make_literal_real_245((*parser).previous.lexeme, (*parser).previous.line, (*parser).previous.column);
   }
-  if (cct_boot_rit_parser_match_327(parser, cct_boot_ord_TokenKind__TK_STRING))
+  if (cct_boot_rit_parser_match_334(parser, cct_boot_ord_TokenKind__TK_STRING))
   {
-    return cct_boot_rit_ast_make_literal_string_239((*parser).previous.lexeme, (*parser).previous.line, (*parser).previous.column);
+    return cct_boot_rit_ast_make_literal_string_246((*parser).previous.lexeme, (*parser).previous.line, (*parser).previous.column);
   }
-  if (cct_boot_rit_parser_match_327(parser, cct_boot_ord_TokenKind__TK_VERUM))
+  if (cct_boot_rit_parser_match_334(parser, cct_boot_ord_TokenKind__TK_VERUM))
   {
-    return cct_boot_rit_ast_make_literal_bool_240(1, (*parser).previous.line, (*parser).previous.column);
+    return cct_boot_rit_ast_make_literal_bool_247(1, (*parser).previous.line, (*parser).previous.column);
   }
-  if (cct_boot_rit_parser_match_327(parser, cct_boot_ord_TokenKind__TK_FALSUM))
+  if (cct_boot_rit_parser_match_334(parser, cct_boot_ord_TokenKind__TK_FALSUM))
   {
-    return cct_boot_rit_ast_make_literal_bool_240(0, (*parser).previous.line, (*parser).previous.column);
+    return cct_boot_rit_ast_make_literal_bool_247(0, (*parser).previous.line, (*parser).previous.column);
   }
-  if (cct_boot_rit_parser_match_327(parser, cct_boot_ord_TokenKind__TK_NIHIL))
+  if (cct_boot_rit_parser_match_334(parser, cct_boot_ord_TokenKind__TK_NIHIL))
   {
-    return cct_boot_rit_ast_make_literal_nihil_241((*parser).previous.line, (*parser).previous.column);
+    return cct_boot_rit_ast_make_literal_nihil_248((*parser).previous.line, (*parser).previous.column);
   }
-  if (cct_boot_rit_parser_match_327(parser, cct_boot_ord_TokenKind__TK_IDENTIFIER))
+  if (cct_boot_rit_parser_match_334(parser, cct_boot_ord_TokenKind__TK_IDENTIFIER))
   {
-    return cct_boot_rit_ast_make_identifier_242((*parser).previous.lexeme, (*parser).previous.line, (*parser).previous.column);
+    return cct_boot_rit_ast_make_identifier_249((*parser).previous.lexeme, (*parser).previous.line, (*parser).previous.column);
   }
-  if (cct_boot_rit_parser_match_327(parser, cct_boot_ord_TokenKind__TK_LPAREN))
+  if (cct_boot_rit_parser_match_334(parser, cct_boot_ord_TokenKind__TK_LPAREN))
   {
-    cct_boot_sig_AstNode* expr = cct_boot_rit_parse_expression_337(parser);
-    cct_boot_rit_parser_consume_331(parser, cct_boot_ord_TokenKind__TK_RPAREN, cct_boot_str_237);
+    cct_boot_sig_AstNode* expr = cct_boot_rit_parse_expression_344(parser);
+    cct_boot_rit_parser_consume_338(parser, cct_boot_ord_TokenKind__TK_RPAREN, cct_boot_str_237);
     return expr;
   }
-  cct_boot_rit_parser_error_at_current_329(parser, cct_boot_str_238);
-  return cct_boot_rit_ast_make_identifier_242(cct_boot_str_222, (*parser).current.line, (*parser).current.column);
+  cct_boot_rit_parser_error_at_current_336(parser, cct_boot_str_238);
+  return cct_boot_rit_ast_make_identifier_249(cct_boot_str_222, (*parser).current.line, (*parser).current.column);
 }
 
-cct_boot_sig_AstNode* cct_boot_rit_parse_postfix_suffixes_345(cct_boot_sig_ParserState* parser, cct_boot_sig_AstNode* expr)
+cct_boot_sig_AstNode* cct_boot_rit_parse_postfix_suffixes_352(cct_boot_sig_ParserState* parser, cct_boot_sig_AstNode* expr)
 {
   while (1)
   {
     {
       int matched = 0;
-      if (((*expr).kind == cct_boot_ord_AstKind__AST_IDENTIFIER) && cct_boot_rit_parser_match_327(parser, cct_boot_ord_TokenKind__TK_GENUS))
+      if (((*expr).kind == cct_boot_ord_AstKind__AST_IDENTIFIER) && cct_boot_rit_parser_match_334(parser, cct_boot_ord_TokenKind__TK_GENUS))
       {
-        cct_boot_rit_parse_postfix_generic_args_340(parser, expr);
+        cct_boot_rit_parse_postfix_generic_args_347(parser, expr);
         matched = 1;
       }
-      if (cct_boot_rit_parser_match_327(parser, cct_boot_ord_TokenKind__TK_LPAREN))
+      if (cct_boot_rit_parser_match_334(parser, cct_boot_ord_TokenKind__TK_LPAREN))
       {
-        cct_boot_sig_AstNode* call = cct_boot_rit_ast_make_call_245(expr, (*parser).previous.line, (*parser).previous.column);
-        if (!cct_boot_rit_parser_check_326(parser, cct_boot_ord_TokenKind__TK_RPAREN))
+        cct_boot_sig_AstNode* call = cct_boot_rit_ast_make_call_252(expr, (*parser).previous.line, (*parser).previous.column);
+        if (!cct_boot_rit_parser_check_333(parser, cct_boot_ord_TokenKind__TK_RPAREN))
         {
-          cct_boot_rit_ast_append_argument_228(call, cct_boot_rit_parse_expression_337(parser));
-          while (cct_boot_rit_parser_match_327(parser, cct_boot_ord_TokenKind__TK_COMMA))
+          cct_boot_rit_ast_append_argument_235(call, cct_boot_rit_parse_expression_344(parser));
+          while (cct_boot_rit_parser_match_334(parser, cct_boot_ord_TokenKind__TK_COMMA))
           {
             {
-              cct_boot_rit_ast_append_argument_228(call, cct_boot_rit_parse_expression_337(parser));
+              cct_boot_rit_ast_append_argument_235(call, cct_boot_rit_parse_expression_344(parser));
             }
             if (0) goto __cct_label_63;
             __cct_label_63: ;
@@ -5158,30 +5165,30 @@ cct_boot_sig_AstNode* cct_boot_rit_parse_postfix_suffixes_345(cct_boot_sig_Parse
           if (0) goto __cct_label_62;
           __cct_label_62: ;
         }
-        cct_boot_rit_parser_consume_331(parser, cct_boot_ord_TokenKind__TK_RPAREN, cct_boot_str_239);
+        cct_boot_rit_parser_consume_338(parser, cct_boot_ord_TokenKind__TK_RPAREN, cct_boot_str_239);
         expr = call;
         matched = 1;
       }
-      if ((!matched) && cct_boot_rit_parser_match_327(parser, cct_boot_ord_TokenKind__TK_DOT))
+      if ((!matched) && cct_boot_rit_parser_match_334(parser, cct_boot_ord_TokenKind__TK_DOT))
       {
         long long line = (*parser).previous.line;
         long long column = (*parser).previous.column;
-        if (!cct_boot_rit_parser_check_326(parser, cct_boot_ord_TokenKind__TK_IDENTIFIER))
+        if (!cct_boot_rit_parser_check_333(parser, cct_boot_ord_TokenKind__TK_IDENTIFIER))
         {
-          cct_boot_rit_parser_error_at_current_329(parser, cct_boot_str_240);
+          cct_boot_rit_parser_error_at_current_336(parser, cct_boot_str_240);
           return expr;
         }
-        cct_boot_rit_parser_advance_325(parser);
-        expr = cct_boot_rit_ast_make_field_access_247(expr, (*parser).previous.lexeme, line, column);
+        cct_boot_rit_parser_advance_332(parser);
+        expr = cct_boot_rit_ast_make_field_access_254(expr, (*parser).previous.lexeme, line, column);
         matched = 1;
       }
-      if ((!matched) && cct_boot_rit_parser_match_327(parser, cct_boot_ord_TokenKind__TK_LBRACKET))
+      if ((!matched) && cct_boot_rit_parser_match_334(parser, cct_boot_ord_TokenKind__TK_LBRACKET))
       {
         long long line = (*parser).previous.line;
         long long column = (*parser).previous.column;
-        cct_boot_sig_AstNode* index = cct_boot_rit_parse_expression_337(parser);
-        cct_boot_rit_parser_consume_331(parser, cct_boot_ord_TokenKind__TK_RBRACKET, cct_boot_str_241);
-        expr = cct_boot_rit_ast_make_index_access_248(expr, index, line, column);
+        cct_boot_sig_AstNode* index = cct_boot_rit_parse_expression_344(parser);
+        cct_boot_rit_parser_consume_338(parser, cct_boot_ord_TokenKind__TK_RBRACKET, cct_boot_str_241);
+        expr = cct_boot_rit_ast_make_index_access_255(expr, index, line, column);
         matched = 1;
       }
       if (!matched)
@@ -5196,55 +5203,55 @@ cct_boot_sig_AstNode* cct_boot_rit_parse_postfix_suffixes_345(cct_boot_sig_Parse
   __cct_label_60: ;
 }
 
-cct_boot_sig_AstNode* cct_boot_rit_parse_postfix_346(cct_boot_sig_ParserState* parser)
+cct_boot_sig_AstNode* cct_boot_rit_parse_postfix_353(cct_boot_sig_ParserState* parser)
 {
   int forced_call = 0;
-  if (cct_boot_rit_parser_match_327(parser, cct_boot_ord_TokenKind__TK_CONIURA))
+  if (cct_boot_rit_parser_match_334(parser, cct_boot_ord_TokenKind__TK_CONIURA))
   {
     forced_call = 1;
   }
-  cct_boot_sig_AstNode* expr = cct_boot_rit_parse_primary_344(parser);
-  expr = cct_boot_rit_parse_postfix_suffixes_345(parser, expr);
+  cct_boot_sig_AstNode* expr = cct_boot_rit_parse_primary_351(parser);
+  expr = cct_boot_rit_parse_postfix_suffixes_352(parser, expr);
   if ((forced_call && ((*expr).kind != cct_boot_ord_AstKind__AST_CALL)) && ((*expr).kind != cct_boot_ord_AstKind__AST_OBSECRO_CALL))
   {
-    cct_boot_rit_parser_error_at_previous_330(parser, cct_boot_str_242);
+    cct_boot_rit_parser_error_at_previous_337(parser, cct_boot_str_242);
   }
   return expr;
 }
 
-cct_boot_sig_AstNode* cct_boot_rit_parse_unary_347(cct_boot_sig_ParserState* parser)
+cct_boot_sig_AstNode* cct_boot_rit_parse_unary_354(cct_boot_sig_ParserState* parser)
 {
-  if ((((cct_boot_rit_parser_match_327(parser, cct_boot_ord_TokenKind__TK_MINUS) || cct_boot_rit_parser_match_327(parser, cct_boot_ord_TokenKind__TK_PLUS)) || cct_boot_rit_parser_match_327(parser, cct_boot_ord_TokenKind__TK_NON)) || cct_boot_rit_parser_match_327(parser, cct_boot_ord_TokenKind__TK_STAR)) || cct_boot_rit_parser_match_327(parser, cct_boot_ord_TokenKind__TK_SPECULUM))
+  if ((((cct_boot_rit_parser_match_334(parser, cct_boot_ord_TokenKind__TK_MINUS) || cct_boot_rit_parser_match_334(parser, cct_boot_ord_TokenKind__TK_PLUS)) || cct_boot_rit_parser_match_334(parser, cct_boot_ord_TokenKind__TK_NON)) || cct_boot_rit_parser_match_334(parser, cct_boot_ord_TokenKind__TK_STAR)) || cct_boot_rit_parser_match_334(parser, cct_boot_ord_TokenKind__TK_SPECULUM))
   {
-    cct_boot_sig_AstNode* expr = cct_boot_rit_ast_make_unary_244((*parser).previous.kind, cct_boot_rit_parse_unary_347(parser), (*parser).previous.line, (*parser).previous.column);
-    return cct_boot_rit_parse_postfix_suffixes_345(parser, expr);
+    cct_boot_sig_AstNode* expr = cct_boot_rit_ast_make_unary_251((*parser).previous.kind, cct_boot_rit_parse_unary_354(parser), (*parser).previous.line, (*parser).previous.column);
+    return cct_boot_rit_parse_postfix_suffixes_352(parser, expr);
   }
-  return cct_boot_rit_parse_postfix_346(parser);
+  return cct_boot_rit_parse_postfix_353(parser);
 }
 
-cct_boot_sig_AstNode* cct_boot_rit_parse_power_348(cct_boot_sig_ParserState* parser)
+cct_boot_sig_AstNode* cct_boot_rit_parse_power_355(cct_boot_sig_ParserState* parser)
 {
-  cct_boot_sig_AstNode* expr = cct_boot_rit_parse_unary_347(parser);
-  if (cct_boot_rit_parser_match_327(parser, cct_boot_ord_TokenKind__TK_STAR_STAR))
+  cct_boot_sig_AstNode* expr = cct_boot_rit_parse_unary_354(parser);
+  if (cct_boot_rit_parser_match_334(parser, cct_boot_ord_TokenKind__TK_STAR_STAR))
   {
     cct_boot_ord_TokenKind op = (*parser).previous.kind;
     long long line = (*parser).previous.line;
     long long column = (*parser).previous.column;
-    expr = cct_boot_rit_ast_make_binary_243(op, expr, cct_boot_rit_parse_power_348(parser), line, column);
+    expr = cct_boot_rit_ast_make_binary_250(op, expr, cct_boot_rit_parse_power_355(parser), line, column);
   }
   return expr;
 }
 
-cct_boot_sig_AstNode* cct_boot_rit_parse_multiplicative_349(cct_boot_sig_ParserState* parser)
+cct_boot_sig_AstNode* cct_boot_rit_parse_multiplicative_356(cct_boot_sig_ParserState* parser)
 {
-  cct_boot_sig_AstNode* expr = cct_boot_rit_parse_power_348(parser);
-  while ((((cct_boot_rit_parser_match_327(parser, cct_boot_ord_TokenKind__TK_STAR) || cct_boot_rit_parser_match_327(parser, cct_boot_ord_TokenKind__TK_SLASH)) || cct_boot_rit_parser_match_327(parser, cct_boot_ord_TokenKind__TK_SLASH_SLASH)) || cct_boot_rit_parser_match_327(parser, cct_boot_ord_TokenKind__TK_PERCENT)) || cct_boot_rit_parser_match_327(parser, cct_boot_ord_TokenKind__TK_PERCENT_PERCENT))
+  cct_boot_sig_AstNode* expr = cct_boot_rit_parse_power_355(parser);
+  while ((((cct_boot_rit_parser_match_334(parser, cct_boot_ord_TokenKind__TK_STAR) || cct_boot_rit_parser_match_334(parser, cct_boot_ord_TokenKind__TK_SLASH)) || cct_boot_rit_parser_match_334(parser, cct_boot_ord_TokenKind__TK_SLASH_SLASH)) || cct_boot_rit_parser_match_334(parser, cct_boot_ord_TokenKind__TK_PERCENT)) || cct_boot_rit_parser_match_334(parser, cct_boot_ord_TokenKind__TK_PERCENT_PERCENT))
   {
     {
       cct_boot_ord_TokenKind op = (*parser).previous.kind;
       long long line = (*parser).previous.line;
       long long column = (*parser).previous.column;
-      expr = cct_boot_rit_ast_make_binary_243(op, expr, cct_boot_rit_parse_power_348(parser), line, column);
+      expr = cct_boot_rit_ast_make_binary_250(op, expr, cct_boot_rit_parse_power_355(parser), line, column);
     }
     if (0) goto __cct_label_65;
     __cct_label_65: ;
@@ -5254,16 +5261,16 @@ cct_boot_sig_AstNode* cct_boot_rit_parse_multiplicative_349(cct_boot_sig_ParserS
   return expr;
 }
 
-cct_boot_sig_AstNode* cct_boot_rit_parse_additive_350(cct_boot_sig_ParserState* parser)
+cct_boot_sig_AstNode* cct_boot_rit_parse_additive_357(cct_boot_sig_ParserState* parser)
 {
-  cct_boot_sig_AstNode* expr = cct_boot_rit_parse_multiplicative_349(parser);
-  while (cct_boot_rit_parser_match_327(parser, cct_boot_ord_TokenKind__TK_PLUS) || cct_boot_rit_parser_match_327(parser, cct_boot_ord_TokenKind__TK_MINUS))
+  cct_boot_sig_AstNode* expr = cct_boot_rit_parse_multiplicative_356(parser);
+  while (cct_boot_rit_parser_match_334(parser, cct_boot_ord_TokenKind__TK_PLUS) || cct_boot_rit_parser_match_334(parser, cct_boot_ord_TokenKind__TK_MINUS))
   {
     {
       cct_boot_ord_TokenKind op = (*parser).previous.kind;
       long long line = (*parser).previous.line;
       long long column = (*parser).previous.column;
-      expr = cct_boot_rit_ast_make_binary_243(op, expr, cct_boot_rit_parse_multiplicative_349(parser), line, column);
+      expr = cct_boot_rit_ast_make_binary_250(op, expr, cct_boot_rit_parse_multiplicative_356(parser), line, column);
     }
     if (0) goto __cct_label_67;
     __cct_label_67: ;
@@ -5273,16 +5280,16 @@ cct_boot_sig_AstNode* cct_boot_rit_parse_additive_350(cct_boot_sig_ParserState* 
   return expr;
 }
 
-cct_boot_sig_AstNode* cct_boot_rit_parse_comparison_351(cct_boot_sig_ParserState* parser)
+cct_boot_sig_AstNode* cct_boot_rit_parse_comparison_358(cct_boot_sig_ParserState* parser)
 {
-  cct_boot_sig_AstNode* expr = cct_boot_rit_parse_additive_350(parser);
-  while (((cct_boot_rit_parser_match_327(parser, cct_boot_ord_TokenKind__TK_LESS) || cct_boot_rit_parser_match_327(parser, cct_boot_ord_TokenKind__TK_LESS_EQ)) || cct_boot_rit_parser_match_327(parser, cct_boot_ord_TokenKind__TK_GREATER)) || cct_boot_rit_parser_match_327(parser, cct_boot_ord_TokenKind__TK_GREATER_EQ))
+  cct_boot_sig_AstNode* expr = cct_boot_rit_parse_additive_357(parser);
+  while (((cct_boot_rit_parser_match_334(parser, cct_boot_ord_TokenKind__TK_LESS) || cct_boot_rit_parser_match_334(parser, cct_boot_ord_TokenKind__TK_LESS_EQ)) || cct_boot_rit_parser_match_334(parser, cct_boot_ord_TokenKind__TK_GREATER)) || cct_boot_rit_parser_match_334(parser, cct_boot_ord_TokenKind__TK_GREATER_EQ))
   {
     {
       cct_boot_ord_TokenKind op = (*parser).previous.kind;
       long long line = (*parser).previous.line;
       long long column = (*parser).previous.column;
-      expr = cct_boot_rit_ast_make_binary_243(op, expr, cct_boot_rit_parse_additive_350(parser), line, column);
+      expr = cct_boot_rit_ast_make_binary_250(op, expr, cct_boot_rit_parse_additive_357(parser), line, column);
     }
     if (0) goto __cct_label_69;
     __cct_label_69: ;
@@ -5292,16 +5299,16 @@ cct_boot_sig_AstNode* cct_boot_rit_parse_comparison_351(cct_boot_sig_ParserState
   return expr;
 }
 
-cct_boot_sig_AstNode* cct_boot_rit_parse_equality_352(cct_boot_sig_ParserState* parser)
+cct_boot_sig_AstNode* cct_boot_rit_parse_equality_359(cct_boot_sig_ParserState* parser)
 {
-  cct_boot_sig_AstNode* expr = cct_boot_rit_parse_comparison_351(parser);
-  while (cct_boot_rit_parser_match_327(parser, cct_boot_ord_TokenKind__TK_EQ_EQ) || cct_boot_rit_parser_match_327(parser, cct_boot_ord_TokenKind__TK_BANG_EQ))
+  cct_boot_sig_AstNode* expr = cct_boot_rit_parse_comparison_358(parser);
+  while (cct_boot_rit_parser_match_334(parser, cct_boot_ord_TokenKind__TK_EQ_EQ) || cct_boot_rit_parser_match_334(parser, cct_boot_ord_TokenKind__TK_BANG_EQ))
   {
     {
       cct_boot_ord_TokenKind op = (*parser).previous.kind;
       long long line = (*parser).previous.line;
       long long column = (*parser).previous.column;
-      expr = cct_boot_rit_ast_make_binary_243(op, expr, cct_boot_rit_parse_comparison_351(parser), line, column);
+      expr = cct_boot_rit_ast_make_binary_250(op, expr, cct_boot_rit_parse_comparison_358(parser), line, column);
     }
     if (0) goto __cct_label_71;
     __cct_label_71: ;
@@ -5311,13 +5318,13 @@ cct_boot_sig_AstNode* cct_boot_rit_parse_equality_352(cct_boot_sig_ParserState* 
   return expr;
 }
 
-cct_boot_sig_AstNode* cct_boot_rit_parse_logical_and_353(cct_boot_sig_ParserState* parser)
+cct_boot_sig_AstNode* cct_boot_rit_parse_logical_and_360(cct_boot_sig_ParserState* parser)
 {
-  cct_boot_sig_AstNode* expr = cct_boot_rit_parse_equality_352(parser);
-  while (cct_boot_rit_parser_match_327(parser, cct_boot_ord_TokenKind__TK_ET))
+  cct_boot_sig_AstNode* expr = cct_boot_rit_parse_equality_359(parser);
+  while (cct_boot_rit_parser_match_334(parser, cct_boot_ord_TokenKind__TK_ET))
   {
     {
-      expr = cct_boot_rit_ast_make_binary_243(cct_boot_ord_TokenKind__TK_ET, expr, cct_boot_rit_parse_equality_352(parser), (*parser).previous.line, (*parser).previous.column);
+      expr = cct_boot_rit_ast_make_binary_250(cct_boot_ord_TokenKind__TK_ET, expr, cct_boot_rit_parse_equality_359(parser), (*parser).previous.line, (*parser).previous.column);
     }
     if (0) goto __cct_label_73;
     __cct_label_73: ;
@@ -5327,13 +5334,13 @@ cct_boot_sig_AstNode* cct_boot_rit_parse_logical_and_353(cct_boot_sig_ParserStat
   return expr;
 }
 
-cct_boot_sig_AstNode* cct_boot_rit_parse_logical_or_354(cct_boot_sig_ParserState* parser)
+cct_boot_sig_AstNode* cct_boot_rit_parse_logical_or_361(cct_boot_sig_ParserState* parser)
 {
-  cct_boot_sig_AstNode* expr = cct_boot_rit_parse_logical_and_353(parser);
-  while (cct_boot_rit_parser_match_327(parser, cct_boot_ord_TokenKind__TK_VEL))
+  cct_boot_sig_AstNode* expr = cct_boot_rit_parse_logical_and_360(parser);
+  while (cct_boot_rit_parser_match_334(parser, cct_boot_ord_TokenKind__TK_VEL))
   {
     {
-      expr = cct_boot_rit_ast_make_binary_243(cct_boot_ord_TokenKind__TK_VEL, expr, cct_boot_rit_parse_logical_and_353(parser), (*parser).previous.line, (*parser).previous.column);
+      expr = cct_boot_rit_ast_make_binary_250(cct_boot_ord_TokenKind__TK_VEL, expr, cct_boot_rit_parse_logical_and_360(parser), (*parser).previous.line, (*parser).previous.column);
     }
     if (0) goto __cct_label_75;
     __cct_label_75: ;
@@ -5343,58 +5350,58 @@ cct_boot_sig_AstNode* cct_boot_rit_parse_logical_or_354(cct_boot_sig_ParserState
   return expr;
 }
 
-cct_boot_sig_AstNode* cct_boot_rit_parse_assignment_355(cct_boot_sig_ParserState* parser)
+cct_boot_sig_AstNode* cct_boot_rit_parse_assignment_362(cct_boot_sig_ParserState* parser)
 {
-  cct_boot_sig_AstNode* expr = cct_boot_rit_parse_logical_or_354(parser);
-  if (cct_boot_rit_parser_match_327(parser, cct_boot_ord_TokenKind__TK_EQ))
+  cct_boot_sig_AstNode* expr = cct_boot_rit_parse_logical_or_361(parser);
+  if (cct_boot_rit_parser_match_334(parser, cct_boot_ord_TokenKind__TK_EQ))
   {
     long long line = (*parser).previous.line;
     long long column = (*parser).previous.column;
-    cct_boot_sig_AstNode* value = cct_boot_rit_parse_assignment_355(parser);
-    if (!cct_boot_rit_parser_is_assignment_target_336(expr))
+    cct_boot_sig_AstNode* value = cct_boot_rit_parse_assignment_362(parser);
+    if (!cct_boot_rit_parser_is_assignment_target_343(expr))
     {
-      cct_boot_rit_parser_error_at_previous_330(parser, cct_boot_str_243);
+      cct_boot_rit_parser_error_at_previous_337(parser, cct_boot_str_243);
       return expr;
     }
-    return cct_boot_rit_ast_make_vincire_274(expr, value, line, column);
+    return cct_boot_rit_ast_make_vincire_281(expr, value, line, column);
   }
   return expr;
 }
 
-cct_boot_sig_AstNode* cct_boot_rit_parser_parse_expression_source_356(char* source, char* filename)
+cct_boot_sig_AstNode* cct_boot_rit_parser_parse_expression_source_363(char* source, char* filename)
 {
-  cct_boot_sig_LexerState lex = cct_boot_rit_lexer_init_304(source, filename);
-  cct_boot_sig_ParserState parser = cct_boot_rit_parser_init_323((&lex), filename);
-  cct_boot_sig_AstNode* expr = cct_boot_rit_parse_expression_337((&parser));
-  cct_boot_rit_parser_dispose_324((&parser));
+  cct_boot_sig_LexerState lex = cct_boot_rit_lexer_init_311(source, filename);
+  cct_boot_sig_ParserState parser = cct_boot_rit_parser_init_330((&lex), filename);
+  cct_boot_sig_AstNode* expr = cct_boot_rit_parse_expression_344((&parser));
+  cct_boot_rit_parser_dispose_331((&parser));
   return expr;
 }
 
-int cct_boot_rit_parser_is_simple_type_token_357(cct_boot_ord_TokenKind kind)
+int cct_boot_rit_parser_is_simple_type_token_364(cct_boot_ord_TokenKind kind)
 {
   return (((((((((((kind == cct_boot_ord_TokenKind__TK_REX) || (kind == cct_boot_ord_TokenKind__TK_DUX)) || (kind == cct_boot_ord_TokenKind__TK_COMES)) || (kind == cct_boot_ord_TokenKind__TK_MILES)) || (kind == cct_boot_ord_TokenKind__TK_UMBRA)) || (kind == cct_boot_ord_TokenKind__TK_FLAMMA)) || (kind == cct_boot_ord_TokenKind__TK_VERUM)) || (kind == cct_boot_ord_TokenKind__TK_VERBUM)) || (kind == cct_boot_ord_TokenKind__TK_FRACTUM)) || (kind == cct_boot_ord_TokenKind__TK_NIHIL)) || (kind == cct_boot_ord_TokenKind__TK_IDENTIFIER));
 }
 
-void cct_boot_rit_parse_stmt_type_args_358(cct_boot_sig_ParserState* parser, cct_boot_sig_AstNode* type_expr)
+void cct_boot_rit_parse_stmt_type_args_365(cct_boot_sig_ParserState* parser, cct_boot_sig_AstNode* type_expr)
 {
-  if (!cct_boot_rit_parser_match_327(parser, cct_boot_ord_TokenKind__TK_GENUS))
+  if (!cct_boot_rit_parser_match_334(parser, cct_boot_ord_TokenKind__TK_GENUS))
   {
     return;
   }
-  cct_boot_rit_parser_consume_331(parser, cct_boot_ord_TokenKind__TK_LPAREN, cct_boot_str_223);
-  if (cct_boot_rit_parser_check_326(parser, cct_boot_ord_TokenKind__TK_RPAREN))
+  cct_boot_rit_parser_consume_338(parser, cct_boot_ord_TokenKind__TK_LPAREN, cct_boot_str_223);
+  if (cct_boot_rit_parser_check_333(parser, cct_boot_ord_TokenKind__TK_RPAREN))
   {
-    cct_boot_rit_parser_error_at_current_329(parser, cct_boot_str_224);
-    cct_boot_rit_parser_advance_325(parser);
+    cct_boot_rit_parser_error_at_current_336(parser, cct_boot_str_224);
+    cct_boot_rit_parser_advance_332(parser);
     return;
   }
   while (1)
   {
     {
-      cct_boot_rit_ast_append_generic_arg_224(type_expr, cct_boot_rit_parse_type_simple_360(parser));
-      if (!cct_boot_rit_parser_match_327(parser, cct_boot_ord_TokenKind__TK_COMMA))
+      cct_boot_rit_ast_append_generic_arg_231(type_expr, cct_boot_rit_parse_type_simple_367(parser));
+      if (!cct_boot_rit_parser_match_334(parser, cct_boot_ord_TokenKind__TK_COMMA))
       {
-        cct_boot_rit_parser_consume_331(parser, cct_boot_ord_TokenKind__TK_RPAREN, cct_boot_str_225);
+        cct_boot_rit_parser_consume_338(parser, cct_boot_ord_TokenKind__TK_RPAREN, cct_boot_str_225);
         return;
       }
     }
@@ -5405,29 +5412,29 @@ void cct_boot_rit_parse_stmt_type_args_358(cct_boot_sig_ParserState* parser, cct
   __cct_label_76: ;
 }
 
-int cct_boot_rit_parser_is_statement_boundary_359(cct_boot_ord_TokenKind kind)
+int cct_boot_rit_parser_is_statement_boundary_366(cct_boot_ord_TokenKind kind)
 {
   return ((((((((((kind == cct_boot_ord_TokenKind__TK_EOF) || (kind == cct_boot_ord_TokenKind__TK_FIN)) || (kind == cct_boot_ord_TokenKind__TK_ALITER)) || (kind == cct_boot_ord_TokenKind__TK_EXPLICIT)) || (kind == cct_boot_ord_TokenKind__TK_RBRACE)) || (kind == cct_boot_ord_TokenKind__TK_SEMICOLON)) || (kind == cct_boot_ord_TokenKind__TK_CAPE)) || (kind == cct_boot_ord_TokenKind__TK_SEMPER)) || (kind == cct_boot_ord_TokenKind__TK_CASO)) || (kind == cct_boot_ord_TokenKind__TK_SENAO));
 }
 
-cct_boot_sig_AstNode* cct_boot_rit_parse_type_simple_360(cct_boot_sig_ParserState* parser)
+cct_boot_sig_AstNode* cct_boot_rit_parse_type_simple_367(cct_boot_sig_ParserState* parser)
 {
-  if (cct_boot_rit_parser_match_327(parser, cct_boot_ord_TokenKind__TK_SERIES))
+  if (cct_boot_rit_parser_match_334(parser, cct_boot_ord_TokenKind__TK_SERIES))
   {
-    cct_boot_sig_AstNode* base_array = cct_boot_rit_parse_type_simple_360(parser);
-    cct_boot_rit_parser_consume_331(parser, cct_boot_ord_TokenKind__TK_LBRACKET, cct_boot_str_218);
-    if (!cct_boot_rit_parser_check_326(parser, cct_boot_ord_TokenKind__TK_INTEGER))
+    cct_boot_sig_AstNode* base_array = cct_boot_rit_parse_type_simple_367(parser);
+    cct_boot_rit_parser_consume_338(parser, cct_boot_ord_TokenKind__TK_LBRACKET, cct_boot_str_218);
+    if (!cct_boot_rit_parser_check_333(parser, cct_boot_ord_TokenKind__TK_INTEGER))
     {
-      cct_boot_rit_parser_error_at_current_329(parser, cct_boot_str_219);
+      cct_boot_rit_parser_error_at_current_336(parser, cct_boot_str_219);
       return base_array;
     }
-    cct_boot_rit_parser_advance_325(parser);
-    cct_boot_rit_ast_type_mark_array_235(base_array, cct_boot_rit_parse_int_105((*parser).previous.lexeme));
-    cct_boot_rit_parser_consume_331(parser, cct_boot_ord_TokenKind__TK_RBRACKET, cct_boot_str_220);
+    cct_boot_rit_parser_advance_332(parser);
+    cct_boot_rit_ast_type_mark_array_242(base_array, cct_boot_rit_parse_int_112((*parser).previous.lexeme));
+    cct_boot_rit_parser_consume_338(parser, cct_boot_ord_TokenKind__TK_RBRACKET, cct_boot_str_220);
     return base_array;
   }
   int is_pointer = 0;
-  while (cct_boot_rit_parser_match_327(parser, cct_boot_ord_TokenKind__TK_SPECULUM))
+  while (cct_boot_rit_parser_match_334(parser, cct_boot_ord_TokenKind__TK_SPECULUM))
   {
     {
       is_pointer = 1;
@@ -5437,43 +5444,43 @@ cct_boot_sig_AstNode* cct_boot_rit_parse_type_simple_360(cct_boot_sig_ParserStat
   }
   if (0) goto __cct_label_78;
   __cct_label_78: ;
-  if (!cct_boot_rit_parser_is_simple_type_token_357((*parser).current.kind))
+  if (!cct_boot_rit_parser_is_simple_type_token_364((*parser).current.kind))
   {
-    cct_boot_rit_parser_error_at_current_329(parser, cct_boot_str_244);
-    return cct_boot_rit_ast_make_type_233(cct_boot_str_222, (*parser).current.line, (*parser).current.column);
+    cct_boot_rit_parser_error_at_current_336(parser, cct_boot_str_244);
+    return cct_boot_rit_ast_make_type_240(cct_boot_str_222, (*parser).current.line, (*parser).current.column);
   }
-  cct_boot_rit_parser_advance_325(parser);
-  cct_boot_sig_AstNode* node = cct_boot_rit_ast_make_type_233((*parser).previous.lexeme, (*parser).previous.line, (*parser).previous.column);
-  cct_boot_rit_parse_stmt_type_args_358(parser, node);
+  cct_boot_rit_parser_advance_332(parser);
+  cct_boot_sig_AstNode* node = cct_boot_rit_ast_make_type_240((*parser).previous.lexeme, (*parser).previous.line, (*parser).previous.column);
+  cct_boot_rit_parse_stmt_type_args_365(parser, node);
   if (is_pointer)
   {
-    cct_boot_rit_ast_type_mark_pointer_234(node);
+    cct_boot_rit_ast_type_mark_pointer_241(node);
   }
   return node;
 }
 
-cct_boot_sig_AstNode* cct_boot_rit_parse_expression_statement_361(cct_boot_sig_ParserState* parser)
+cct_boot_sig_AstNode* cct_boot_rit_parse_expression_statement_368(cct_boot_sig_ParserState* parser)
 {
   long long line = (*parser).current.line;
   long long column = (*parser).current.column;
-  cct_boot_sig_AstNode* expr = cct_boot_rit_parse_expression_337(parser);
-  cct_boot_rit_parser_match_327(parser, cct_boot_ord_TokenKind__TK_SEMICOLON);
-  return cct_boot_rit_ast_make_expr_stmt_249(expr, line, column);
+  cct_boot_sig_AstNode* expr = cct_boot_rit_parse_expression_344(parser);
+  cct_boot_rit_parser_match_334(parser, cct_boot_ord_TokenKind__TK_SEMICOLON);
+  return cct_boot_rit_ast_make_expr_stmt_256(expr, line, column);
 }
 
-cct_boot_sig_AstNode* cct_boot_rit_parse_block_362(cct_boot_sig_ParserState* parser)
+cct_boot_sig_AstNode* cct_boot_rit_parse_block_369(cct_boot_sig_ParserState* parser)
 {
   long long line = (*parser).current.line;
   long long column = (*parser).current.column;
-  cct_boot_rit_parser_consume_331(parser, cct_boot_ord_TokenKind__TK_LBRACE, cct_boot_str_245);
-  cct_boot_sig_AstNode* block = cct_boot_rit_ast_make_block_258(line, column);
-  while ((!cct_boot_rit_parser_check_326(parser, cct_boot_ord_TokenKind__TK_RBRACE)) && (!cct_boot_rit_parser_check_326(parser, cct_boot_ord_TokenKind__TK_EOF)))
+  cct_boot_rit_parser_consume_338(parser, cct_boot_ord_TokenKind__TK_LBRACE, cct_boot_str_245);
+  cct_boot_sig_AstNode* block = cct_boot_rit_ast_make_block_265(line, column);
+  while ((!cct_boot_rit_parser_check_333(parser, cct_boot_ord_TokenKind__TK_RBRACE)) && (!cct_boot_rit_parser_check_333(parser, cct_boot_ord_TokenKind__TK_EOF)))
   {
     {
-      cct_boot_rit_ast_append_statement_231(block, cct_boot_rit_parse_statement_383(parser));
+      cct_boot_rit_ast_append_statement_238(block, cct_boot_rit_parse_statement_390(parser));
       if ((*parser).panic_mode)
       {
-        cct_boot_rit_parser_synchronize_statement_334(parser);
+        cct_boot_rit_parser_synchronize_statement_341(parser);
       }
     }
     if (0) goto __cct_label_81;
@@ -5481,132 +5488,132 @@ cct_boot_sig_AstNode* cct_boot_rit_parse_block_362(cct_boot_sig_ParserState* par
   }
   if (0) goto __cct_label_80;
   __cct_label_80: ;
-  cct_boot_rit_parser_consume_331(parser, cct_boot_ord_TokenKind__TK_RBRACE, cct_boot_str_246);
+  cct_boot_rit_parser_consume_338(parser, cct_boot_ord_TokenKind__TK_RBRACE, cct_boot_str_246);
   return block;
 }
 
-cct_boot_sig_AstNode* cct_boot_rit_parse_evoca_statement_363(cct_boot_sig_ParserState* parser)
+cct_boot_sig_AstNode* cct_boot_rit_parse_evoca_statement_370(cct_boot_sig_ParserState* parser)
 {
   long long line = (*parser).current.line;
   long long column = (*parser).current.column;
-  cct_boot_rit_parser_consume_331(parser, cct_boot_ord_TokenKind__TK_EVOCA, cct_boot_str_247);
-  cct_boot_sig_AstNode* type_expr = cct_boot_rit_parse_type_simple_360(parser);
-  if (!cct_boot_rit_parser_check_326(parser, cct_boot_ord_TokenKind__TK_IDENTIFIER))
+  cct_boot_rit_parser_consume_338(parser, cct_boot_ord_TokenKind__TK_EVOCA, cct_boot_str_247);
+  cct_boot_sig_AstNode* type_expr = cct_boot_rit_parse_type_simple_367(parser);
+  if (!cct_boot_rit_parser_check_333(parser, cct_boot_ord_TokenKind__TK_IDENTIFIER))
   {
-    cct_boot_rit_parser_error_at_current_329(parser, cct_boot_str_248);
-    return cct_boot_rit_ast_make_evoca_no_init_273(cct_boot_str_222, type_expr, line, column);
+    cct_boot_rit_parser_error_at_current_336(parser, cct_boot_str_248);
+    return cct_boot_rit_ast_make_evoca_no_init_280(cct_boot_str_222, type_expr, line, column);
   }
-  cct_boot_rit_parser_advance_325(parser);
+  cct_boot_rit_parser_advance_332(parser);
   char* name = cct_boot_rit_verbum_dup_40((*parser).previous.lexeme);
-  if (cct_boot_rit_parser_match_327(parser, cct_boot_ord_TokenKind__TK_AD))
+  if (cct_boot_rit_parser_match_334(parser, cct_boot_ord_TokenKind__TK_AD))
   {
-    cct_boot_sig_AstNode* init_expr = cct_boot_rit_parse_expression_337(parser);
-    cct_boot_rit_parser_match_327(parser, cct_boot_ord_TokenKind__TK_SEMICOLON);
-    cct_boot_sig_AstNode* stmt = cct_boot_rit_ast_make_evoca_272(name, type_expr, init_expr, line, column);
+    cct_boot_sig_AstNode* init_expr = cct_boot_rit_parse_expression_344(parser);
+    cct_boot_rit_parser_match_334(parser, cct_boot_ord_TokenKind__TK_SEMICOLON);
+    cct_boot_sig_AstNode* stmt = cct_boot_rit_ast_make_evoca_279(name, type_expr, init_expr, line, column);
     free((void*)(name));
     return stmt;
   }
-  cct_boot_rit_parser_match_327(parser, cct_boot_ord_TokenKind__TK_SEMICOLON);
-  cct_boot_sig_AstNode* stmt = cct_boot_rit_ast_make_evoca_no_init_273(name, type_expr, line, column);
+  cct_boot_rit_parser_match_334(parser, cct_boot_ord_TokenKind__TK_SEMICOLON);
+  cct_boot_sig_AstNode* stmt = cct_boot_rit_ast_make_evoca_no_init_280(name, type_expr, line, column);
   free((void*)(name));
   return stmt;
 }
 
-cct_boot_sig_AstNode* cct_boot_rit_parse_vincire_statement_364(cct_boot_sig_ParserState* parser)
+cct_boot_sig_AstNode* cct_boot_rit_parse_vincire_statement_371(cct_boot_sig_ParserState* parser)
 {
   long long line = (*parser).current.line;
   long long column = (*parser).current.column;
-  cct_boot_rit_parser_consume_331(parser, cct_boot_ord_TokenKind__TK_VINCIRE, cct_boot_str_249);
-  cct_boot_sig_AstNode* target = cct_boot_rit_parse_unary_347(parser);
-  cct_boot_rit_parser_consume_331(parser, cct_boot_ord_TokenKind__TK_AD, cct_boot_str_250);
-  cct_boot_sig_AstNode* value = cct_boot_rit_parse_expression_337(parser);
-  cct_boot_rit_parser_match_327(parser, cct_boot_ord_TokenKind__TK_SEMICOLON);
-  return cct_boot_rit_ast_make_vincire_274(target, value, line, column);
+  cct_boot_rit_parser_consume_338(parser, cct_boot_ord_TokenKind__TK_VINCIRE, cct_boot_str_249);
+  cct_boot_sig_AstNode* target = cct_boot_rit_parse_unary_354(parser);
+  cct_boot_rit_parser_consume_338(parser, cct_boot_ord_TokenKind__TK_AD, cct_boot_str_250);
+  cct_boot_sig_AstNode* value = cct_boot_rit_parse_expression_344(parser);
+  cct_boot_rit_parser_match_334(parser, cct_boot_ord_TokenKind__TK_SEMICOLON);
+  return cct_boot_rit_ast_make_vincire_281(target, value, line, column);
 }
 
-cct_boot_sig_AstNode* cct_boot_rit_parse_redde_statement_365(cct_boot_sig_ParserState* parser)
+cct_boot_sig_AstNode* cct_boot_rit_parse_redde_statement_372(cct_boot_sig_ParserState* parser)
 {
   long long line = (*parser).current.line;
   long long column = (*parser).current.column;
-  cct_boot_rit_parser_consume_331(parser, cct_boot_ord_TokenKind__TK_REDDE, cct_boot_str_251);
-  if (!cct_boot_rit_parser_is_statement_boundary_359((*parser).current.kind))
+  cct_boot_rit_parser_consume_338(parser, cct_boot_ord_TokenKind__TK_REDDE, cct_boot_str_251);
+  if (!cct_boot_rit_parser_is_statement_boundary_366((*parser).current.kind))
   {
-    cct_boot_sig_AstNode* value = cct_boot_rit_parse_expression_337(parser);
-    cct_boot_rit_parser_match_327(parser, cct_boot_ord_TokenKind__TK_SEMICOLON);
-    return cct_boot_rit_ast_make_redde_252(value, line, column);
+    cct_boot_sig_AstNode* value = cct_boot_rit_parse_expression_344(parser);
+    cct_boot_rit_parser_match_334(parser, cct_boot_ord_TokenKind__TK_SEMICOLON);
+    return cct_boot_rit_ast_make_redde_259(value, line, column);
   }
-  cct_boot_rit_parser_match_327(parser, cct_boot_ord_TokenKind__TK_SEMICOLON);
-  return cct_boot_rit_ast_make_redde_empty_253(line, column);
+  cct_boot_rit_parser_match_334(parser, cct_boot_ord_TokenKind__TK_SEMICOLON);
+  return cct_boot_rit_ast_make_redde_empty_260(line, column);
 }
 
-cct_boot_sig_AstNode* cct_boot_rit_parse_anur_statement_366(cct_boot_sig_ParserState* parser)
+cct_boot_sig_AstNode* cct_boot_rit_parse_anur_statement_373(cct_boot_sig_ParserState* parser)
 {
   long long line = (*parser).current.line;
   long long column = (*parser).current.column;
-  cct_boot_rit_parser_consume_331(parser, cct_boot_ord_TokenKind__TK_ANUR, cct_boot_str_252);
-  if (!cct_boot_rit_parser_is_statement_boundary_359((*parser).current.kind))
+  cct_boot_rit_parser_consume_338(parser, cct_boot_ord_TokenKind__TK_ANUR, cct_boot_str_252);
+  if (!cct_boot_rit_parser_is_statement_boundary_366((*parser).current.kind))
   {
-    cct_boot_sig_AstNode* value = cct_boot_rit_parse_expression_337(parser);
-    cct_boot_rit_parser_match_327(parser, cct_boot_ord_TokenKind__TK_SEMICOLON);
-    return cct_boot_rit_ast_make_anur_254(value, line, column);
+    cct_boot_sig_AstNode* value = cct_boot_rit_parse_expression_344(parser);
+    cct_boot_rit_parser_match_334(parser, cct_boot_ord_TokenKind__TK_SEMICOLON);
+    return cct_boot_rit_ast_make_anur_261(value, line, column);
   }
-  cct_boot_rit_parser_match_327(parser, cct_boot_ord_TokenKind__TK_SEMICOLON);
-  return cct_boot_rit_ast_make_anur_empty_255(line, column);
+  cct_boot_rit_parser_match_334(parser, cct_boot_ord_TokenKind__TK_SEMICOLON);
+  return cct_boot_rit_ast_make_anur_empty_262(line, column);
 }
 
-cct_boot_sig_AstNode* cct_boot_rit_parse_iace_statement_367(cct_boot_sig_ParserState* parser)
+cct_boot_sig_AstNode* cct_boot_rit_parse_iace_statement_374(cct_boot_sig_ParserState* parser)
 {
   long long line = (*parser).current.line;
   long long column = (*parser).current.column;
-  cct_boot_rit_parser_consume_331(parser, cct_boot_ord_TokenKind__TK_IACE, cct_boot_str_253);
-  cct_boot_sig_AstNode* value = cct_boot_rit_parse_expression_337(parser);
-  cct_boot_rit_parser_match_327(parser, cct_boot_ord_TokenKind__TK_SEMICOLON);
-  return cct_boot_rit_ast_make_iace_256(value, line, column);
+  cct_boot_rit_parser_consume_338(parser, cct_boot_ord_TokenKind__TK_IACE, cct_boot_str_253);
+  cct_boot_sig_AstNode* value = cct_boot_rit_parse_expression_344(parser);
+  cct_boot_rit_parser_match_334(parser, cct_boot_ord_TokenKind__TK_SEMICOLON);
+  return cct_boot_rit_ast_make_iace_263(value, line, column);
 }
 
-cct_boot_sig_AstNode* cct_boot_rit_parse_dimitte_statement_368(cct_boot_sig_ParserState* parser)
+cct_boot_sig_AstNode* cct_boot_rit_parse_dimitte_statement_375(cct_boot_sig_ParserState* parser)
 {
   long long line = (*parser).current.line;
   long long column = (*parser).current.column;
-  cct_boot_rit_parser_consume_331(parser, cct_boot_ord_TokenKind__TK_DIMITTE, cct_boot_str_254);
-  if (((!cct_boot_rit_parser_check_326(parser, cct_boot_ord_TokenKind__TK_IDENTIFIER)) && (!cct_boot_rit_parser_check_326(parser, cct_boot_ord_TokenKind__TK_LPAREN))) && (!cct_boot_rit_parser_check_326(parser, cct_boot_ord_TokenKind__TK_STAR)))
+  cct_boot_rit_parser_consume_338(parser, cct_boot_ord_TokenKind__TK_DIMITTE, cct_boot_str_254);
+  if (((!cct_boot_rit_parser_check_333(parser, cct_boot_ord_TokenKind__TK_IDENTIFIER)) && (!cct_boot_rit_parser_check_333(parser, cct_boot_ord_TokenKind__TK_LPAREN))) && (!cct_boot_rit_parser_check_333(parser, cct_boot_ord_TokenKind__TK_STAR)))
   {
-    cct_boot_rit_parser_error_at_current_329(parser, cct_boot_str_255);
-    return cct_boot_rit_ast_make_dimitte_257(cct_boot_rit_ast_make_identifier_242(cct_boot_str_222, line, column), line, column);
+    cct_boot_rit_parser_error_at_current_336(parser, cct_boot_str_255);
+    return cct_boot_rit_ast_make_dimitte_264(cct_boot_rit_ast_make_identifier_249(cct_boot_str_222, line, column), line, column);
   }
-  cct_boot_sig_AstNode* target = cct_boot_rit_parse_unary_347(parser);
-  cct_boot_rit_parser_match_327(parser, cct_boot_ord_TokenKind__TK_SEMICOLON);
-  return cct_boot_rit_ast_make_dimitte_257(target, line, column);
+  cct_boot_sig_AstNode* target = cct_boot_rit_parse_unary_354(parser);
+  cct_boot_rit_parser_match_334(parser, cct_boot_ord_TokenKind__TK_SEMICOLON);
+  return cct_boot_rit_ast_make_dimitte_264(target, line, column);
 }
 
-cct_boot_sig_AstNode* cct_boot_rit_parse_frange_statement_369(cct_boot_sig_ParserState* parser)
+cct_boot_sig_AstNode* cct_boot_rit_parse_frange_statement_376(cct_boot_sig_ParserState* parser)
 {
   long long line = (*parser).current.line;
   long long column = (*parser).current.column;
-  cct_boot_rit_parser_consume_331(parser, cct_boot_ord_TokenKind__TK_FRANGE, cct_boot_str_256);
-  cct_boot_rit_parser_match_327(parser, cct_boot_ord_TokenKind__TK_SEMICOLON);
-  return cct_boot_rit_ast_make_frange_284(line, column);
+  cct_boot_rit_parser_consume_338(parser, cct_boot_ord_TokenKind__TK_FRANGE, cct_boot_str_256);
+  cct_boot_rit_parser_match_334(parser, cct_boot_ord_TokenKind__TK_SEMICOLON);
+  return cct_boot_rit_ast_make_frange_291(line, column);
 }
 
-cct_boot_sig_AstNode* cct_boot_rit_parse_recede_statement_370(cct_boot_sig_ParserState* parser)
+cct_boot_sig_AstNode* cct_boot_rit_parse_recede_statement_377(cct_boot_sig_ParserState* parser)
 {
   long long line = (*parser).current.line;
   long long column = (*parser).current.column;
-  cct_boot_rit_parser_consume_331(parser, cct_boot_ord_TokenKind__TK_RECEDE, cct_boot_str_257);
-  cct_boot_rit_parser_match_327(parser, cct_boot_ord_TokenKind__TK_SEMICOLON);
-  return cct_boot_rit_ast_make_recede_285(line, column);
+  cct_boot_rit_parser_consume_338(parser, cct_boot_ord_TokenKind__TK_RECEDE, cct_boot_str_257);
+  cct_boot_rit_parser_match_334(parser, cct_boot_ord_TokenKind__TK_SEMICOLON);
+  return cct_boot_rit_ast_make_recede_292(line, column);
 }
 
-cct_boot_sig_AstNode* cct_boot_rit_parse_statement_block_until_failure_clause_371(cct_boot_sig_ParserState* parser)
+cct_boot_sig_AstNode* cct_boot_rit_parse_statement_block_until_failure_clause_378(cct_boot_sig_ParserState* parser)
 {
-  cct_boot_sig_AstNode* block = cct_boot_rit_ast_make_block_258((*parser).current.line, (*parser).current.column);
-  while ((((!cct_boot_rit_parser_check_326(parser, cct_boot_ord_TokenKind__TK_EOF)) && (!cct_boot_rit_parser_check_326(parser, cct_boot_ord_TokenKind__TK_CAPE))) && (!cct_boot_rit_parser_check_326(parser, cct_boot_ord_TokenKind__TK_SEMPER))) && (!cct_boot_rit_parser_check_326(parser, cct_boot_ord_TokenKind__TK_FIN)))
+  cct_boot_sig_AstNode* block = cct_boot_rit_ast_make_block_265((*parser).current.line, (*parser).current.column);
+  while ((((!cct_boot_rit_parser_check_333(parser, cct_boot_ord_TokenKind__TK_EOF)) && (!cct_boot_rit_parser_check_333(parser, cct_boot_ord_TokenKind__TK_CAPE))) && (!cct_boot_rit_parser_check_333(parser, cct_boot_ord_TokenKind__TK_SEMPER))) && (!cct_boot_rit_parser_check_333(parser, cct_boot_ord_TokenKind__TK_FIN)))
   {
     {
-      cct_boot_rit_ast_append_statement_231(block, cct_boot_rit_parse_statement_383(parser));
+      cct_boot_rit_ast_append_statement_238(block, cct_boot_rit_parse_statement_390(parser));
       if ((*parser).panic_mode)
       {
-        cct_boot_rit_parser_synchronize_statement_334(parser);
+        cct_boot_rit_parser_synchronize_statement_341(parser);
       }
     }
     if (0) goto __cct_label_83;
@@ -5617,16 +5624,16 @@ cct_boot_sig_AstNode* cct_boot_rit_parse_statement_block_until_failure_clause_37
   return block;
 }
 
-cct_boot_sig_AstNode* cct_boot_rit_parse_statement_block_until_elige_boundary_372(cct_boot_sig_ParserState* parser)
+cct_boot_sig_AstNode* cct_boot_rit_parse_statement_block_until_elige_boundary_379(cct_boot_sig_ParserState* parser)
 {
-  cct_boot_sig_AstNode* block = cct_boot_rit_ast_make_block_258((*parser).current.line, (*parser).current.column);
-  while ((((!cct_boot_rit_parser_check_326(parser, cct_boot_ord_TokenKind__TK_EOF)) && (!cct_boot_rit_parser_check_326(parser, cct_boot_ord_TokenKind__TK_CASO))) && (!cct_boot_rit_parser_check_326(parser, cct_boot_ord_TokenKind__TK_SENAO))) && (!cct_boot_rit_parser_check_326(parser, cct_boot_ord_TokenKind__TK_FIN)))
+  cct_boot_sig_AstNode* block = cct_boot_rit_ast_make_block_265((*parser).current.line, (*parser).current.column);
+  while ((((!cct_boot_rit_parser_check_333(parser, cct_boot_ord_TokenKind__TK_EOF)) && (!cct_boot_rit_parser_check_333(parser, cct_boot_ord_TokenKind__TK_CASO))) && (!cct_boot_rit_parser_check_333(parser, cct_boot_ord_TokenKind__TK_SENAO))) && (!cct_boot_rit_parser_check_333(parser, cct_boot_ord_TokenKind__TK_FIN)))
   {
     {
-      cct_boot_rit_ast_append_statement_231(block, cct_boot_rit_parse_statement_383(parser));
+      cct_boot_rit_ast_append_statement_238(block, cct_boot_rit_parse_statement_390(parser));
       if ((*parser).panic_mode)
       {
-        cct_boot_rit_parser_synchronize_statement_334(parser);
+        cct_boot_rit_parser_synchronize_statement_341(parser);
       }
     }
     if (0) goto __cct_label_85;
@@ -5637,134 +5644,134 @@ cct_boot_sig_AstNode* cct_boot_rit_parse_statement_block_until_elige_boundary_37
   return block;
 }
 
-cct_boot_sig_AstNode* cct_boot_rit_parse_elige_literal_373(cct_boot_sig_ParserState* parser)
+cct_boot_sig_AstNode* cct_boot_rit_parse_elige_literal_380(cct_boot_sig_ParserState* parser)
 {
   long long line = (*parser).current.line;
   long long column = (*parser).current.column;
-  if (cct_boot_rit_parser_match_327(parser, cct_boot_ord_TokenKind__TK_MINUS))
+  if (cct_boot_rit_parser_match_334(parser, cct_boot_ord_TokenKind__TK_MINUS))
   {
-    if (!cct_boot_rit_parser_check_326(parser, cct_boot_ord_TokenKind__TK_INTEGER))
+    if (!cct_boot_rit_parser_check_333(parser, cct_boot_ord_TokenKind__TK_INTEGER))
     {
-      cct_boot_rit_parser_error_at_current_329(parser, cct_boot_str_258);
-      return cct_boot_rit_ast_make_literal_int_237(cct_boot_str_259, line, column);
+      cct_boot_rit_parser_error_at_current_336(parser, cct_boot_str_258);
+      return cct_boot_rit_ast_make_literal_int_244(cct_boot_str_259, line, column);
     }
-    cct_boot_rit_parser_advance_325(parser);
+    cct_boot_rit_parser_advance_332(parser);
     char* text = cct_boot_rit_concat_37(cct_boot_str_260, (*parser).previous.lexeme);
-    cct_boot_sig_AstNode* node = cct_boot_rit_ast_make_literal_int_237(text, line, column);
+    cct_boot_sig_AstNode* node = cct_boot_rit_ast_make_literal_int_244(text, line, column);
     free((void*)(text));
     return node;
   }
-  if (cct_boot_rit_parser_match_327(parser, cct_boot_ord_TokenKind__TK_PLUS))
+  if (cct_boot_rit_parser_match_334(parser, cct_boot_ord_TokenKind__TK_PLUS))
   {
-    if (!cct_boot_rit_parser_check_326(parser, cct_boot_ord_TokenKind__TK_INTEGER))
+    if (!cct_boot_rit_parser_check_333(parser, cct_boot_ord_TokenKind__TK_INTEGER))
     {
-      cct_boot_rit_parser_error_at_current_329(parser, cct_boot_str_261);
-      return cct_boot_rit_ast_make_literal_int_237(cct_boot_str_259, line, column);
+      cct_boot_rit_parser_error_at_current_336(parser, cct_boot_str_261);
+      return cct_boot_rit_ast_make_literal_int_244(cct_boot_str_259, line, column);
     }
-    cct_boot_rit_parser_advance_325(parser);
-    return cct_boot_rit_ast_make_literal_int_237((*parser).previous.lexeme, line, column);
+    cct_boot_rit_parser_advance_332(parser);
+    return cct_boot_rit_ast_make_literal_int_244((*parser).previous.lexeme, line, column);
   }
-  if (cct_boot_rit_parser_match_327(parser, cct_boot_ord_TokenKind__TK_INTEGER))
+  if (cct_boot_rit_parser_match_334(parser, cct_boot_ord_TokenKind__TK_INTEGER))
   {
-    return cct_boot_rit_ast_make_literal_int_237((*parser).previous.lexeme, line, column);
+    return cct_boot_rit_ast_make_literal_int_244((*parser).previous.lexeme, line, column);
   }
-  if (cct_boot_rit_parser_match_327(parser, cct_boot_ord_TokenKind__TK_STRING))
+  if (cct_boot_rit_parser_match_334(parser, cct_boot_ord_TokenKind__TK_STRING))
   {
-    return cct_boot_rit_ast_make_literal_string_239((*parser).previous.lexeme, line, column);
+    return cct_boot_rit_ast_make_literal_string_246((*parser).previous.lexeme, line, column);
   }
-  if (cct_boot_rit_parser_match_327(parser, cct_boot_ord_TokenKind__TK_IDENTIFIER))
+  if (cct_boot_rit_parser_match_334(parser, cct_boot_ord_TokenKind__TK_IDENTIFIER))
   {
-    return cct_boot_rit_ast_make_identifier_242((*parser).previous.lexeme, line, column);
+    return cct_boot_rit_ast_make_identifier_249((*parser).previous.lexeme, line, column);
   }
-  if (cct_boot_rit_parser_match_327(parser, cct_boot_ord_TokenKind__TK_VERUM))
+  if (cct_boot_rit_parser_match_334(parser, cct_boot_ord_TokenKind__TK_VERUM))
   {
-    return cct_boot_rit_ast_make_literal_bool_240(1, line, column);
+    return cct_boot_rit_ast_make_literal_bool_247(1, line, column);
   }
-  if (cct_boot_rit_parser_match_327(parser, cct_boot_ord_TokenKind__TK_FALSUM))
+  if (cct_boot_rit_parser_match_334(parser, cct_boot_ord_TokenKind__TK_FALSUM))
   {
-    return cct_boot_rit_ast_make_literal_bool_240(0, line, column);
+    return cct_boot_rit_ast_make_literal_bool_247(0, line, column);
   }
-  cct_boot_rit_parser_error_at_current_329(parser, cct_boot_str_262);
-  return cct_boot_rit_ast_make_identifier_242(cct_boot_str_222, line, column);
+  cct_boot_rit_parser_error_at_current_336(parser, cct_boot_str_262);
+  return cct_boot_rit_ast_make_identifier_249(cct_boot_str_222, line, column);
 }
 
-cct_boot_sig_AstNode* cct_boot_rit_parse_tempta_statement_374(cct_boot_sig_ParserState* parser)
+cct_boot_sig_AstNode* cct_boot_rit_parse_tempta_statement_381(cct_boot_sig_ParserState* parser)
 {
   long long line = (*parser).current.line;
   long long column = (*parser).current.column;
-  cct_boot_rit_parser_consume_331(parser, cct_boot_ord_TokenKind__TK_TEMPTA, cct_boot_str_263);
-  cct_boot_sig_AstNode* try_block = cct_boot_rit_parse_statement_block_until_failure_clause_371(parser);
-  if (!cct_boot_rit_parser_match_327(parser, cct_boot_ord_TokenKind__TK_CAPE))
+  cct_boot_rit_parser_consume_338(parser, cct_boot_ord_TokenKind__TK_TEMPTA, cct_boot_str_263);
+  cct_boot_sig_AstNode* try_block = cct_boot_rit_parse_statement_block_until_failure_clause_378(parser);
+  if (!cct_boot_rit_parser_match_334(parser, cct_boot_ord_TokenKind__TK_CAPE))
   {
-    cct_boot_rit_parser_error_at_current_329(parser, cct_boot_str_264);
-    cct_boot_rit_parser_consume_331(parser, cct_boot_ord_TokenKind__TK_FIN, cct_boot_str_265);
-    cct_boot_rit_parser_consume_331(parser, cct_boot_ord_TokenKind__TK_TEMPTA, cct_boot_str_266);
-    return cct_boot_rit_ast_make_tempta_no_semper_286(try_block, cct_boot_rit_ast_make_type_233(cct_boot_str_222, line, column), cct_boot_str_222, cct_boot_rit_ast_make_block_258(line, column), line, column);
+    cct_boot_rit_parser_error_at_current_336(parser, cct_boot_str_264);
+    cct_boot_rit_parser_consume_338(parser, cct_boot_ord_TokenKind__TK_FIN, cct_boot_str_265);
+    cct_boot_rit_parser_consume_338(parser, cct_boot_ord_TokenKind__TK_TEMPTA, cct_boot_str_266);
+    return cct_boot_rit_ast_make_tempta_no_semper_293(try_block, cct_boot_rit_ast_make_type_240(cct_boot_str_222, line, column), cct_boot_str_222, cct_boot_rit_ast_make_block_265(line, column), line, column);
   }
-  cct_boot_sig_AstNode* cape_type = cct_boot_rit_parse_type_simple_360(parser);
-  if (!cct_boot_rit_parser_check_326(parser, cct_boot_ord_TokenKind__TK_IDENTIFIER))
+  cct_boot_sig_AstNode* cape_type = cct_boot_rit_parse_type_simple_367(parser);
+  if (!cct_boot_rit_parser_check_333(parser, cct_boot_ord_TokenKind__TK_IDENTIFIER))
   {
-    cct_boot_rit_parser_error_at_current_329(parser, cct_boot_str_267);
-    cct_boot_rit_parser_consume_331(parser, cct_boot_ord_TokenKind__TK_FIN, cct_boot_str_268);
-    cct_boot_rit_parser_consume_331(parser, cct_boot_ord_TokenKind__TK_TEMPTA, cct_boot_str_266);
-    return cct_boot_rit_ast_make_tempta_no_semper_286(try_block, cape_type, cct_boot_str_222, cct_boot_rit_ast_make_block_258(line, column), line, column);
+    cct_boot_rit_parser_error_at_current_336(parser, cct_boot_str_267);
+    cct_boot_rit_parser_consume_338(parser, cct_boot_ord_TokenKind__TK_FIN, cct_boot_str_268);
+    cct_boot_rit_parser_consume_338(parser, cct_boot_ord_TokenKind__TK_TEMPTA, cct_boot_str_266);
+    return cct_boot_rit_ast_make_tempta_no_semper_293(try_block, cape_type, cct_boot_str_222, cct_boot_rit_ast_make_block_265(line, column), line, column);
   }
-  cct_boot_rit_parser_advance_325(parser);
+  cct_boot_rit_parser_advance_332(parser);
   char* cape_name = cct_boot_rit_verbum_dup_40((*parser).previous.lexeme);
-  cct_boot_sig_AstNode* cape_block = cct_boot_rit_parse_statement_block_until_failure_clause_371(parser);
-  if (cct_boot_rit_parser_match_327(parser, cct_boot_ord_TokenKind__TK_SEMPER))
+  cct_boot_sig_AstNode* cape_block = cct_boot_rit_parse_statement_block_until_failure_clause_378(parser);
+  if (cct_boot_rit_parser_match_334(parser, cct_boot_ord_TokenKind__TK_SEMPER))
   {
-    cct_boot_sig_AstNode* semper_block = cct_boot_rit_parse_statement_block_until_failure_clause_371(parser);
-    cct_boot_rit_parser_consume_331(parser, cct_boot_ord_TokenKind__TK_FIN, cct_boot_str_265);
-    cct_boot_rit_parser_consume_331(parser, cct_boot_ord_TokenKind__TK_TEMPTA, cct_boot_str_266);
-    cct_boot_sig_AstNode* node = cct_boot_rit_ast_make_tempta_287(try_block, cape_type, cape_name, cape_block, semper_block, line, column);
+    cct_boot_sig_AstNode* semper_block = cct_boot_rit_parse_statement_block_until_failure_clause_378(parser);
+    cct_boot_rit_parser_consume_338(parser, cct_boot_ord_TokenKind__TK_FIN, cct_boot_str_265);
+    cct_boot_rit_parser_consume_338(parser, cct_boot_ord_TokenKind__TK_TEMPTA, cct_boot_str_266);
+    cct_boot_sig_AstNode* node = cct_boot_rit_ast_make_tempta_294(try_block, cape_type, cape_name, cape_block, semper_block, line, column);
     free((void*)(cape_name));
     return node;
   }
-  cct_boot_rit_parser_consume_331(parser, cct_boot_ord_TokenKind__TK_FIN, cct_boot_str_265);
-  cct_boot_rit_parser_consume_331(parser, cct_boot_ord_TokenKind__TK_TEMPTA, cct_boot_str_266);
-  cct_boot_sig_AstNode* node = cct_boot_rit_ast_make_tempta_no_semper_286(try_block, cape_type, cape_name, cape_block, line, column);
+  cct_boot_rit_parser_consume_338(parser, cct_boot_ord_TokenKind__TK_FIN, cct_boot_str_265);
+  cct_boot_rit_parser_consume_338(parser, cct_boot_ord_TokenKind__TK_TEMPTA, cct_boot_str_266);
+  cct_boot_sig_AstNode* node = cct_boot_rit_ast_make_tempta_no_semper_293(try_block, cape_type, cape_name, cape_block, line, column);
   free((void*)(cape_name));
   return node;
 }
 
-cct_boot_sig_AstNode* cct_boot_rit_parse_elige_statement_375(cct_boot_sig_ParserState* parser)
+cct_boot_sig_AstNode* cct_boot_rit_parse_elige_statement_382(cct_boot_sig_ParserState* parser)
 {
   long long line = (*parser).current.line;
   long long column = (*parser).current.column;
-  cct_boot_rit_parser_consume_331(parser, cct_boot_ord_TokenKind__TK_QUANDO, cct_boot_str_269);
-  cct_boot_sig_AstNode* expr = cct_boot_rit_parse_expression_337(parser);
-  cct_boot_sig_AstNode* quando = cct_boot_rit_ast_make_quando_277(expr, line, column);
+  cct_boot_rit_parser_consume_338(parser, cct_boot_ord_TokenKind__TK_QUANDO, cct_boot_str_269);
+  cct_boot_sig_AstNode* expr = cct_boot_rit_parse_expression_344(parser);
+  cct_boot_sig_AstNode* quando = cct_boot_rit_ast_make_quando_284(expr, line, column);
   cct_boot_sig_AstNode* pending_case;
   int has_pending_case = 0;
-  while (cct_boot_rit_parser_match_327(parser, cct_boot_ord_TokenKind__TK_CASO))
+  while (cct_boot_rit_parser_match_334(parser, cct_boot_ord_TokenKind__TK_CASO))
   {
     {
       if (!has_pending_case)
       {
-        pending_case = cct_boot_rit_ast_make_case_259((*parser).previous.line, (*parser).previous.column);
+        pending_case = cct_boot_rit_ast_make_case_266((*parser).previous.line, (*parser).previous.column);
         has_pending_case = 1;
       }
-      cct_boot_rit_ast_append_child_220(pending_case, cct_boot_rit_parse_elige_literal_373(parser));
-      if (cct_boot_rit_parser_check_326(parser, cct_boot_ord_TokenKind__TK_LPAREN))
+      cct_boot_rit_ast_append_child_227(pending_case, cct_boot_rit_parse_elige_literal_380(parser));
+      if (cct_boot_rit_parser_check_333(parser, cct_boot_ord_TokenKind__TK_LPAREN))
       {
-        cct_boot_rit_parser_advance_325(parser);
-        if (!cct_boot_rit_parser_check_326(parser, cct_boot_ord_TokenKind__TK_RPAREN))
+        cct_boot_rit_parser_advance_332(parser);
+        if (!cct_boot_rit_parser_check_333(parser, cct_boot_ord_TokenKind__TK_RPAREN))
         {
           int reading_bindings = 1;
           while (reading_bindings)
           {
             {
-              if (!cct_boot_rit_parser_check_326(parser, cct_boot_ord_TokenKind__TK_IDENTIFIER))
+              if (!cct_boot_rit_parser_check_333(parser, cct_boot_ord_TokenKind__TK_IDENTIFIER))
               {
-                cct_boot_rit_parser_error_at_current_329(parser, cct_boot_str_270);
+                cct_boot_rit_parser_error_at_current_336(parser, cct_boot_str_270);
                 reading_bindings = 0;
               }
               else
               {
-                cct_boot_rit_parser_advance_325(parser);
-                cct_boot_rit_ast_append_binding_222(pending_case, cct_boot_rit_ast_make_identifier_242((*parser).previous.lexeme, (*parser).previous.line, (*parser).previous.column));
-                if (!cct_boot_rit_parser_match_327(parser, cct_boot_ord_TokenKind__TK_COMMA))
+                cct_boot_rit_parser_advance_332(parser);
+                cct_boot_rit_ast_append_binding_229(pending_case, cct_boot_rit_ast_make_identifier_249((*parser).previous.lexeme, (*parser).previous.line, (*parser).previous.column));
+                if (!cct_boot_rit_parser_match_334(parser, cct_boot_ord_TokenKind__TK_COMMA))
                 {
                   reading_bindings = 0;
                 }
@@ -5776,14 +5783,14 @@ cct_boot_sig_AstNode* cct_boot_rit_parse_elige_statement_375(cct_boot_sig_Parser
           if (0) goto __cct_label_88;
           __cct_label_88: ;
         }
-        cct_boot_rit_parser_consume_331(parser, cct_boot_ord_TokenKind__TK_RPAREN, cct_boot_str_271);
+        cct_boot_rit_parser_consume_338(parser, cct_boot_ord_TokenKind__TK_RPAREN, cct_boot_str_271);
       }
-      cct_boot_rit_parser_consume_331(parser, cct_boot_ord_TokenKind__TK_COLON, cct_boot_str_272);
-      if ((((!cct_boot_rit_parser_check_326(parser, cct_boot_ord_TokenKind__TK_CASO)) && (!cct_boot_rit_parser_check_326(parser, cct_boot_ord_TokenKind__TK_SENAO))) && (!cct_boot_rit_parser_check_326(parser, cct_boot_ord_TokenKind__TK_FIN))) && (!cct_boot_rit_parser_check_326(parser, cct_boot_ord_TokenKind__TK_EOF)))
+      cct_boot_rit_parser_consume_338(parser, cct_boot_ord_TokenKind__TK_COLON, cct_boot_str_272);
+      if ((((!cct_boot_rit_parser_check_333(parser, cct_boot_ord_TokenKind__TK_CASO)) && (!cct_boot_rit_parser_check_333(parser, cct_boot_ord_TokenKind__TK_SENAO))) && (!cct_boot_rit_parser_check_333(parser, cct_boot_ord_TokenKind__TK_FIN))) && (!cct_boot_rit_parser_check_333(parser, cct_boot_ord_TokenKind__TK_EOF)))
       {
-        (*pending_case).body = cct_boot_rit_parse_statement_block_until_elige_boundary_372(parser);
+        (*pending_case).body = cct_boot_rit_parse_statement_block_until_elige_boundary_379(parser);
         (*pending_case).has_body = 1;
-        cct_boot_rit_ast_append_case_221(quando, pending_case);
+        cct_boot_rit_ast_append_case_228(quando, pending_case);
         has_pending_case = 0;
       }
     }
@@ -5794,35 +5801,35 @@ cct_boot_sig_AstNode* cct_boot_rit_parse_elige_statement_375(cct_boot_sig_Parser
   __cct_label_86: ;
   if (has_pending_case)
   {
-    (*pending_case).body = cct_boot_rit_ast_make_block_258((*parser).current.line, (*parser).current.column);
+    (*pending_case).body = cct_boot_rit_ast_make_block_265((*parser).current.line, (*parser).current.column);
     (*pending_case).has_body = 1;
-    cct_boot_rit_ast_append_case_221(quando, pending_case);
+    cct_boot_rit_ast_append_case_228(quando, pending_case);
   }
-  if (cct_boot_rit_parser_match_327(parser, cct_boot_ord_TokenKind__TK_SENAO))
+  if (cct_boot_rit_parser_match_334(parser, cct_boot_ord_TokenKind__TK_SENAO))
   {
-    cct_boot_rit_parser_consume_331(parser, cct_boot_ord_TokenKind__TK_COLON, cct_boot_str_273);
-    (*quando).else_branch = cct_boot_rit_parse_statement_block_until_elige_boundary_372(parser);
+    cct_boot_rit_parser_consume_338(parser, cct_boot_ord_TokenKind__TK_COLON, cct_boot_str_273);
+    (*quando).else_branch = cct_boot_rit_parse_statement_block_until_elige_boundary_379(parser);
     (*quando).has_else_branch = 1;
   }
-  cct_boot_rit_parser_consume_331(parser, cct_boot_ord_TokenKind__TK_FIN, cct_boot_str_274);
-  cct_boot_rit_parser_consume_331(parser, cct_boot_ord_TokenKind__TK_QUANDO, cct_boot_str_275);
+  cct_boot_rit_parser_consume_338(parser, cct_boot_ord_TokenKind__TK_FIN, cct_boot_str_274);
+  cct_boot_rit_parser_consume_338(parser, cct_boot_ord_TokenKind__TK_QUANDO, cct_boot_str_275);
   return quando;
 }
 
-cct_boot_sig_AstNode* cct_boot_rit_parse_inline_statement_block_until_376(cct_boot_sig_ParserState* parser, cct_boot_ord_TokenKind terminator, int stop_on_aliter)
+cct_boot_sig_AstNode* cct_boot_rit_parse_inline_statement_block_until_383(cct_boot_sig_ParserState* parser, cct_boot_ord_TokenKind terminator, int stop_on_aliter)
 {
-  cct_boot_sig_AstNode* block = cct_boot_rit_ast_make_block_258((*parser).current.line, (*parser).current.column);
-  while ((!cct_boot_rit_parser_check_326(parser, terminator)) && (!cct_boot_rit_parser_check_326(parser, cct_boot_ord_TokenKind__TK_EOF)))
+  cct_boot_sig_AstNode* block = cct_boot_rit_ast_make_block_265((*parser).current.line, (*parser).current.column);
+  while ((!cct_boot_rit_parser_check_333(parser, terminator)) && (!cct_boot_rit_parser_check_333(parser, cct_boot_ord_TokenKind__TK_EOF)))
   {
     {
-      if (stop_on_aliter && cct_boot_rit_parser_check_326(parser, cct_boot_ord_TokenKind__TK_ALITER))
+      if (stop_on_aliter && cct_boot_rit_parser_check_333(parser, cct_boot_ord_TokenKind__TK_ALITER))
       {
         return block;
       }
-      cct_boot_rit_ast_append_statement_231(block, cct_boot_rit_parse_statement_383(parser));
+      cct_boot_rit_ast_append_statement_238(block, cct_boot_rit_parse_statement_390(parser));
       if ((*parser).panic_mode)
       {
-        cct_boot_rit_parser_synchronize_statement_334(parser);
+        cct_boot_rit_parser_synchronize_statement_341(parser);
       }
     }
     if (0) goto __cct_label_91;
@@ -5833,47 +5840,47 @@ cct_boot_sig_AstNode* cct_boot_rit_parse_inline_statement_block_until_376(cct_bo
   return block;
 }
 
-cct_boot_sig_AstNode* cct_boot_rit_parse_si_statement_377(cct_boot_sig_ParserState* parser)
+cct_boot_sig_AstNode* cct_boot_rit_parse_si_statement_384(cct_boot_sig_ParserState* parser)
 {
   long long line = (*parser).current.line;
   long long column = (*parser).current.column;
-  cct_boot_rit_parser_consume_331(parser, cct_boot_ord_TokenKind__TK_SI, cct_boot_str_276);
-  cct_boot_sig_AstNode* condition = cct_boot_rit_parse_expression_337(parser);
-  cct_boot_sig_AstNode* then_branch = cct_boot_rit_parse_inline_statement_block_until_376(parser, cct_boot_ord_TokenKind__TK_FIN, 1);
-  if (cct_boot_rit_parser_match_327(parser, cct_boot_ord_TokenKind__TK_ALITER))
+  cct_boot_rit_parser_consume_338(parser, cct_boot_ord_TokenKind__TK_SI, cct_boot_str_276);
+  cct_boot_sig_AstNode* condition = cct_boot_rit_parse_expression_344(parser);
+  cct_boot_sig_AstNode* then_branch = cct_boot_rit_parse_inline_statement_block_until_383(parser, cct_boot_ord_TokenKind__TK_FIN, 1);
+  if (cct_boot_rit_parser_match_334(parser, cct_boot_ord_TokenKind__TK_ALITER))
   {
-    cct_boot_sig_AstNode* else_branch = cct_boot_rit_parse_inline_statement_block_until_376(parser, cct_boot_ord_TokenKind__TK_FIN, 0);
-    cct_boot_rit_parser_consume_331(parser, cct_boot_ord_TokenKind__TK_FIN, cct_boot_str_277);
-    cct_boot_rit_parser_consume_331(parser, cct_boot_ord_TokenKind__TK_SI, cct_boot_str_278);
-    return cct_boot_rit_ast_make_si_275(condition, then_branch, else_branch, line, column);
+    cct_boot_sig_AstNode* else_branch = cct_boot_rit_parse_inline_statement_block_until_383(parser, cct_boot_ord_TokenKind__TK_FIN, 0);
+    cct_boot_rit_parser_consume_338(parser, cct_boot_ord_TokenKind__TK_FIN, cct_boot_str_277);
+    cct_boot_rit_parser_consume_338(parser, cct_boot_ord_TokenKind__TK_SI, cct_boot_str_278);
+    return cct_boot_rit_ast_make_si_282(condition, then_branch, else_branch, line, column);
   }
-  cct_boot_rit_parser_consume_331(parser, cct_boot_ord_TokenKind__TK_FIN, cct_boot_str_277);
-  cct_boot_rit_parser_consume_331(parser, cct_boot_ord_TokenKind__TK_SI, cct_boot_str_278);
-  return cct_boot_rit_ast_make_si_no_else_276(condition, then_branch, line, column);
+  cct_boot_rit_parser_consume_338(parser, cct_boot_ord_TokenKind__TK_FIN, cct_boot_str_277);
+  cct_boot_rit_parser_consume_338(parser, cct_boot_ord_TokenKind__TK_SI, cct_boot_str_278);
+  return cct_boot_rit_ast_make_si_no_else_283(condition, then_branch, line, column);
 }
 
-cct_boot_sig_AstNode* cct_boot_rit_parse_dum_statement_378(cct_boot_sig_ParserState* parser)
+cct_boot_sig_AstNode* cct_boot_rit_parse_dum_statement_385(cct_boot_sig_ParserState* parser)
 {
   long long line = (*parser).current.line;
   long long column = (*parser).current.column;
-  cct_boot_rit_parser_consume_331(parser, cct_boot_ord_TokenKind__TK_DUM, cct_boot_str_279);
-  cct_boot_sig_AstNode* condition = cct_boot_rit_parse_expression_337(parser);
-  cct_boot_sig_AstNode* body = cct_boot_rit_parse_inline_statement_block_until_376(parser, cct_boot_ord_TokenKind__TK_FIN, 0);
-  cct_boot_rit_parser_consume_331(parser, cct_boot_ord_TokenKind__TK_FIN, cct_boot_str_280);
-  cct_boot_rit_parser_consume_331(parser, cct_boot_ord_TokenKind__TK_DUM, cct_boot_str_281);
-  return cct_boot_rit_ast_make_dum_278(condition, body, line, column);
+  cct_boot_rit_parser_consume_338(parser, cct_boot_ord_TokenKind__TK_DUM, cct_boot_str_279);
+  cct_boot_sig_AstNode* condition = cct_boot_rit_parse_expression_344(parser);
+  cct_boot_sig_AstNode* body = cct_boot_rit_parse_inline_statement_block_until_383(parser, cct_boot_ord_TokenKind__TK_FIN, 0);
+  cct_boot_rit_parser_consume_338(parser, cct_boot_ord_TokenKind__TK_FIN, cct_boot_str_280);
+  cct_boot_rit_parser_consume_338(parser, cct_boot_ord_TokenKind__TK_DUM, cct_boot_str_281);
+  return cct_boot_rit_ast_make_dum_285(condition, body, line, column);
 }
 
-cct_boot_sig_AstNode* cct_boot_rit_parse_donec_body_379(cct_boot_sig_ParserState* parser)
+cct_boot_sig_AstNode* cct_boot_rit_parse_donec_body_386(cct_boot_sig_ParserState* parser)
 {
-  cct_boot_sig_AstNode* block = cct_boot_rit_ast_make_block_258((*parser).current.line, (*parser).current.column);
-  while (((!cct_boot_rit_parser_check_326(parser, cct_boot_ord_TokenKind__TK_EOF)) && (!cct_boot_rit_parser_check_326(parser, cct_boot_ord_TokenKind__TK_DUM))) && (!cct_boot_rit_parser_check_326(parser, cct_boot_ord_TokenKind__TK_FIN)))
+  cct_boot_sig_AstNode* block = cct_boot_rit_ast_make_block_265((*parser).current.line, (*parser).current.column);
+  while (((!cct_boot_rit_parser_check_333(parser, cct_boot_ord_TokenKind__TK_EOF)) && (!cct_boot_rit_parser_check_333(parser, cct_boot_ord_TokenKind__TK_DUM))) && (!cct_boot_rit_parser_check_333(parser, cct_boot_ord_TokenKind__TK_FIN)))
   {
     {
-      cct_boot_rit_ast_append_statement_231(block, cct_boot_rit_parse_statement_383(parser));
+      cct_boot_rit_ast_append_statement_238(block, cct_boot_rit_parse_statement_390(parser));
       if ((*parser).panic_mode)
       {
-        cct_boot_rit_parser_synchronize_statement_334(parser);
+        cct_boot_rit_parser_synchronize_statement_341(parser);
       }
     }
     if (0) goto __cct_label_93;
@@ -5884,94 +5891,94 @@ cct_boot_sig_AstNode* cct_boot_rit_parse_donec_body_379(cct_boot_sig_ParserState
   return block;
 }
 
-cct_boot_sig_AstNode* cct_boot_rit_parse_donec_statement_380(cct_boot_sig_ParserState* parser)
+cct_boot_sig_AstNode* cct_boot_rit_parse_donec_statement_387(cct_boot_sig_ParserState* parser)
 {
   long long line = (*parser).current.line;
   long long column = (*parser).current.column;
-  cct_boot_rit_parser_consume_331(parser, cct_boot_ord_TokenKind__TK_DONEC, cct_boot_str_282);
-  cct_boot_sig_AstNode* body = cct_boot_rit_parse_donec_body_379(parser);
-  if (!cct_boot_rit_parser_match_327(parser, cct_boot_ord_TokenKind__TK_DUM))
+  cct_boot_rit_parser_consume_338(parser, cct_boot_ord_TokenKind__TK_DONEC, cct_boot_str_282);
+  cct_boot_sig_AstNode* body = cct_boot_rit_parse_donec_body_386(parser);
+  if (!cct_boot_rit_parser_match_334(parser, cct_boot_ord_TokenKind__TK_DUM))
   {
-    return cct_boot_rit_ast_make_donec_no_condition_280(body, line, column);
+    return cct_boot_rit_ast_make_donec_no_condition_287(body, line, column);
   }
-  cct_boot_sig_AstNode* condition = cct_boot_rit_parse_expression_337(parser);
-  cct_boot_rit_parser_match_327(parser, cct_boot_ord_TokenKind__TK_SEMICOLON);
-  return cct_boot_rit_ast_make_donec_279(body, condition, line, column);
+  cct_boot_sig_AstNode* condition = cct_boot_rit_parse_expression_344(parser);
+  cct_boot_rit_parser_match_334(parser, cct_boot_ord_TokenKind__TK_SEMICOLON);
+  return cct_boot_rit_ast_make_donec_286(body, condition, line, column);
 }
 
-cct_boot_sig_AstNode* cct_boot_rit_parse_repete_statement_381(cct_boot_sig_ParserState* parser)
+cct_boot_sig_AstNode* cct_boot_rit_parse_repete_statement_388(cct_boot_sig_ParserState* parser)
 {
   long long line = (*parser).current.line;
   long long column = (*parser).current.column;
-  cct_boot_rit_parser_consume_331(parser, cct_boot_ord_TokenKind__TK_REPETE, cct_boot_str_283);
-  if (!cct_boot_rit_parser_check_326(parser, cct_boot_ord_TokenKind__TK_IDENTIFIER))
+  cct_boot_rit_parser_consume_338(parser, cct_boot_ord_TokenKind__TK_REPETE, cct_boot_str_283);
+  if (!cct_boot_rit_parser_check_333(parser, cct_boot_ord_TokenKind__TK_IDENTIFIER))
   {
-    cct_boot_rit_parser_error_at_current_329(parser, cct_boot_str_284);
-    return cct_boot_rit_ast_make_expr_stmt_249(cct_boot_rit_ast_make_identifier_242(cct_boot_str_222, line, column), line, column);
+    cct_boot_rit_parser_error_at_current_336(parser, cct_boot_str_284);
+    return cct_boot_rit_ast_make_expr_stmt_256(cct_boot_rit_ast_make_identifier_249(cct_boot_str_222, line, column), line, column);
   }
-  cct_boot_rit_parser_advance_325(parser);
+  cct_boot_rit_parser_advance_332(parser);
   char* iterator_name = cct_boot_rit_verbum_dup_40((*parser).previous.lexeme);
-  cct_boot_rit_parser_consume_331(parser, cct_boot_ord_TokenKind__TK_DE, cct_boot_str_285);
-  cct_boot_sig_AstNode* start_expr = cct_boot_rit_parse_expression_337(parser);
-  cct_boot_rit_parser_consume_331(parser, cct_boot_ord_TokenKind__TK_AD, cct_boot_str_286);
-  cct_boot_sig_AstNode* end_expr = cct_boot_rit_parse_expression_337(parser);
+  cct_boot_rit_parser_consume_338(parser, cct_boot_ord_TokenKind__TK_DE, cct_boot_str_285);
+  cct_boot_sig_AstNode* start_expr = cct_boot_rit_parse_expression_344(parser);
+  cct_boot_rit_parser_consume_338(parser, cct_boot_ord_TokenKind__TK_AD, cct_boot_str_286);
+  cct_boot_sig_AstNode* end_expr = cct_boot_rit_parse_expression_344(parser);
   int has_step = 0;
   cct_boot_sig_AstNode* step_expr;
-  if (cct_boot_rit_parser_match_327(parser, cct_boot_ord_TokenKind__TK_GRADUS))
+  if (cct_boot_rit_parser_match_334(parser, cct_boot_ord_TokenKind__TK_GRADUS))
   {
     has_step = 1;
-    step_expr = cct_boot_rit_parse_expression_337(parser);
+    step_expr = cct_boot_rit_parse_expression_344(parser);
   }
-  cct_boot_sig_AstNode* body = cct_boot_rit_parse_inline_statement_block_until_376(parser, cct_boot_ord_TokenKind__TK_FIN, 0);
-  cct_boot_rit_parser_consume_331(parser, cct_boot_ord_TokenKind__TK_FIN, cct_boot_str_287);
-  cct_boot_rit_parser_consume_331(parser, cct_boot_ord_TokenKind__TK_REPETE, cct_boot_str_288);
+  cct_boot_sig_AstNode* body = cct_boot_rit_parse_inline_statement_block_until_383(parser, cct_boot_ord_TokenKind__TK_FIN, 0);
+  cct_boot_rit_parser_consume_338(parser, cct_boot_ord_TokenKind__TK_FIN, cct_boot_str_287);
+  cct_boot_rit_parser_consume_338(parser, cct_boot_ord_TokenKind__TK_REPETE, cct_boot_str_288);
   cct_boot_sig_AstNode* stmt;
   if (has_step)
   {
-    stmt = cct_boot_rit_ast_make_repete_281(iterator_name, start_expr, end_expr, step_expr, body, line, column);
+    stmt = cct_boot_rit_ast_make_repete_288(iterator_name, start_expr, end_expr, step_expr, body, line, column);
   }
   else
   {
-    stmt = cct_boot_rit_ast_make_repete_no_step_282(iterator_name, start_expr, end_expr, body, line, column);
+    stmt = cct_boot_rit_ast_make_repete_no_step_289(iterator_name, start_expr, end_expr, body, line, column);
   }
   free((void*)(iterator_name));
   return stmt;
 }
 
-cct_boot_sig_AstNode* cct_boot_rit_parse_iterum_statement_382(cct_boot_sig_ParserState* parser)
+cct_boot_sig_AstNode* cct_boot_rit_parse_iterum_statement_389(cct_boot_sig_ParserState* parser)
 {
   long long line = (*parser).current.line;
   long long column = (*parser).current.column;
-  cct_boot_rit_parser_consume_331(parser, cct_boot_ord_TokenKind__TK_ITERUM, cct_boot_str_289);
-  if (!cct_boot_rit_parser_check_326(parser, cct_boot_ord_TokenKind__TK_IDENTIFIER))
+  cct_boot_rit_parser_consume_338(parser, cct_boot_ord_TokenKind__TK_ITERUM, cct_boot_str_289);
+  if (!cct_boot_rit_parser_check_333(parser, cct_boot_ord_TokenKind__TK_IDENTIFIER))
   {
-    cct_boot_rit_parser_error_at_current_329(parser, cct_boot_str_290);
-    return cct_boot_rit_ast_make_expr_stmt_249(cct_boot_rit_ast_make_identifier_242(cct_boot_str_222, line, column), line, column);
+    cct_boot_rit_parser_error_at_current_336(parser, cct_boot_str_290);
+    return cct_boot_rit_ast_make_expr_stmt_256(cct_boot_rit_ast_make_identifier_249(cct_boot_str_222, line, column), line, column);
   }
-  cct_boot_rit_parser_advance_325(parser);
+  cct_boot_rit_parser_advance_332(parser);
   char* item_name = cct_boot_rit_verbum_dup_40((*parser).previous.lexeme);
   char* value_name = cct_boot_str_102;
-  if (cct_boot_rit_parser_match_327(parser, cct_boot_ord_TokenKind__TK_COMMA))
+  if (cct_boot_rit_parser_match_334(parser, cct_boot_ord_TokenKind__TK_COMMA))
   {
-    if (!cct_boot_rit_parser_check_326(parser, cct_boot_ord_TokenKind__TK_IDENTIFIER))
+    if (!cct_boot_rit_parser_check_333(parser, cct_boot_ord_TokenKind__TK_IDENTIFIER))
     {
-      cct_boot_rit_parser_error_at_current_329(parser, cct_boot_str_291);
+      cct_boot_rit_parser_error_at_current_336(parser, cct_boot_str_291);
       free((void*)(item_name));
-      return cct_boot_rit_ast_make_expr_stmt_249(cct_boot_rit_ast_make_identifier_242(cct_boot_str_222, line, column), line, column);
+      return cct_boot_rit_ast_make_expr_stmt_256(cct_boot_rit_ast_make_identifier_249(cct_boot_str_222, line, column), line, column);
     }
-    cct_boot_rit_parser_advance_325(parser);
+    cct_boot_rit_parser_advance_332(parser);
     value_name = cct_boot_rit_verbum_dup_40((*parser).previous.lexeme);
   }
-  cct_boot_rit_parser_consume_331(parser, cct_boot_ord_TokenKind__TK_IN, cct_boot_str_292);
-  cct_boot_sig_AstNode* collection = cct_boot_rit_parse_expression_337(parser);
-  if (cct_boot_rit_parser_check_326(parser, cct_boot_ord_TokenKind__TK_IDENTIFIER) && (cct_boot_rit_compare_38((*parser).current.lexeme, cct_boot_str_293) == 0))
+  cct_boot_rit_parser_consume_338(parser, cct_boot_ord_TokenKind__TK_IN, cct_boot_str_292);
+  cct_boot_sig_AstNode* collection = cct_boot_rit_parse_expression_344(parser);
+  if (cct_boot_rit_parser_check_333(parser, cct_boot_ord_TokenKind__TK_IDENTIFIER) && (cct_boot_rit_compare_38((*parser).current.lexeme, cct_boot_str_293) == 0))
   {
-    cct_boot_rit_parser_advance_325(parser);
+    cct_boot_rit_parser_advance_332(parser);
   }
-  cct_boot_sig_AstNode* body = cct_boot_rit_parse_inline_statement_block_until_376(parser, cct_boot_ord_TokenKind__TK_FIN, 0);
-  cct_boot_rit_parser_consume_331(parser, cct_boot_ord_TokenKind__TK_FIN, cct_boot_str_294);
-  cct_boot_rit_parser_consume_331(parser, cct_boot_ord_TokenKind__TK_ITERUM, cct_boot_str_295);
-  cct_boot_sig_AstNode* node = cct_boot_rit_ast_make_iterum_283(item_name, value_name, collection, body, line, column);
+  cct_boot_sig_AstNode* body = cct_boot_rit_parse_inline_statement_block_until_383(parser, cct_boot_ord_TokenKind__TK_FIN, 0);
+  cct_boot_rit_parser_consume_338(parser, cct_boot_ord_TokenKind__TK_FIN, cct_boot_str_294);
+  cct_boot_rit_parser_consume_338(parser, cct_boot_ord_TokenKind__TK_ITERUM, cct_boot_str_295);
+  cct_boot_sig_AstNode* node = cct_boot_rit_ast_make_iterum_290(item_name, value_name, collection, body, line, column);
   free((void*)(item_name));
   if (cct_boot_rit_compare_38(value_name, cct_boot_str_102) != 0)
   {
@@ -5980,155 +5987,155 @@ cct_boot_sig_AstNode* cct_boot_rit_parse_iterum_statement_382(cct_boot_sig_Parse
   return node;
 }
 
-cct_boot_sig_AstNode* cct_boot_rit_parse_statement_383(cct_boot_sig_ParserState* parser)
+cct_boot_sig_AstNode* cct_boot_rit_parse_statement_390(cct_boot_sig_ParserState* parser)
 {
-  if (cct_boot_rit_parser_check_326(parser, cct_boot_ord_TokenKind__TK_LBRACE))
+  if (cct_boot_rit_parser_check_333(parser, cct_boot_ord_TokenKind__TK_LBRACE))
   {
-    return cct_boot_rit_parse_block_362(parser);
+    return cct_boot_rit_parse_block_369(parser);
   }
-  if (cct_boot_rit_parser_check_326(parser, cct_boot_ord_TokenKind__TK_EVOCA))
+  if (cct_boot_rit_parser_check_333(parser, cct_boot_ord_TokenKind__TK_EVOCA))
   {
-    return cct_boot_rit_parse_evoca_statement_363(parser);
+    return cct_boot_rit_parse_evoca_statement_370(parser);
   }
-  if (cct_boot_rit_parser_check_326(parser, cct_boot_ord_TokenKind__TK_VINCIRE))
+  if (cct_boot_rit_parser_check_333(parser, cct_boot_ord_TokenKind__TK_VINCIRE))
   {
-    return cct_boot_rit_parse_vincire_statement_364(parser);
+    return cct_boot_rit_parse_vincire_statement_371(parser);
   }
-  if (cct_boot_rit_parser_check_326(parser, cct_boot_ord_TokenKind__TK_REDDE))
+  if (cct_boot_rit_parser_check_333(parser, cct_boot_ord_TokenKind__TK_REDDE))
   {
-    return cct_boot_rit_parse_redde_statement_365(parser);
+    return cct_boot_rit_parse_redde_statement_372(parser);
   }
-  if (cct_boot_rit_parser_check_326(parser, cct_boot_ord_TokenKind__TK_ANUR))
+  if (cct_boot_rit_parser_check_333(parser, cct_boot_ord_TokenKind__TK_ANUR))
   {
-    return cct_boot_rit_parse_anur_statement_366(parser);
+    return cct_boot_rit_parse_anur_statement_373(parser);
   }
-  if (cct_boot_rit_parser_check_326(parser, cct_boot_ord_TokenKind__TK_IACE))
+  if (cct_boot_rit_parser_check_333(parser, cct_boot_ord_TokenKind__TK_IACE))
   {
-    return cct_boot_rit_parse_iace_statement_367(parser);
+    return cct_boot_rit_parse_iace_statement_374(parser);
   }
-  if (cct_boot_rit_parser_check_326(parser, cct_boot_ord_TokenKind__TK_DIMITTE))
+  if (cct_boot_rit_parser_check_333(parser, cct_boot_ord_TokenKind__TK_DIMITTE))
   {
-    return cct_boot_rit_parse_dimitte_statement_368(parser);
+    return cct_boot_rit_parse_dimitte_statement_375(parser);
   }
-  if (cct_boot_rit_parser_check_326(parser, cct_boot_ord_TokenKind__TK_FRANGE))
+  if (cct_boot_rit_parser_check_333(parser, cct_boot_ord_TokenKind__TK_FRANGE))
   {
-    return cct_boot_rit_parse_frange_statement_369(parser);
+    return cct_boot_rit_parse_frange_statement_376(parser);
   }
-  if (cct_boot_rit_parser_check_326(parser, cct_boot_ord_TokenKind__TK_RECEDE))
+  if (cct_boot_rit_parser_check_333(parser, cct_boot_ord_TokenKind__TK_RECEDE))
   {
-    return cct_boot_rit_parse_recede_statement_370(parser);
+    return cct_boot_rit_parse_recede_statement_377(parser);
   }
-  if (cct_boot_rit_parser_check_326(parser, cct_boot_ord_TokenKind__TK_SI))
+  if (cct_boot_rit_parser_check_333(parser, cct_boot_ord_TokenKind__TK_SI))
   {
-    return cct_boot_rit_parse_si_statement_377(parser);
+    return cct_boot_rit_parse_si_statement_384(parser);
   }
-  if (cct_boot_rit_parser_check_326(parser, cct_boot_ord_TokenKind__TK_QUANDO))
+  if (cct_boot_rit_parser_check_333(parser, cct_boot_ord_TokenKind__TK_QUANDO))
   {
-    return cct_boot_rit_parse_elige_statement_375(parser);
+    return cct_boot_rit_parse_elige_statement_382(parser);
   }
-  if (cct_boot_rit_parser_check_326(parser, cct_boot_ord_TokenKind__TK_DUM))
+  if (cct_boot_rit_parser_check_333(parser, cct_boot_ord_TokenKind__TK_DUM))
   {
-    return cct_boot_rit_parse_dum_statement_378(parser);
+    return cct_boot_rit_parse_dum_statement_385(parser);
   }
-  if (cct_boot_rit_parser_check_326(parser, cct_boot_ord_TokenKind__TK_DONEC))
+  if (cct_boot_rit_parser_check_333(parser, cct_boot_ord_TokenKind__TK_DONEC))
   {
-    return cct_boot_rit_parse_donec_statement_380(parser);
+    return cct_boot_rit_parse_donec_statement_387(parser);
   }
-  if (cct_boot_rit_parser_check_326(parser, cct_boot_ord_TokenKind__TK_REPETE))
+  if (cct_boot_rit_parser_check_333(parser, cct_boot_ord_TokenKind__TK_REPETE))
   {
-    return cct_boot_rit_parse_repete_statement_381(parser);
+    return cct_boot_rit_parse_repete_statement_388(parser);
   }
-  if (cct_boot_rit_parser_check_326(parser, cct_boot_ord_TokenKind__TK_ITERUM))
+  if (cct_boot_rit_parser_check_333(parser, cct_boot_ord_TokenKind__TK_ITERUM))
   {
-    return cct_boot_rit_parse_iterum_statement_382(parser);
+    return cct_boot_rit_parse_iterum_statement_389(parser);
   }
-  if (cct_boot_rit_parser_check_326(parser, cct_boot_ord_TokenKind__TK_TEMPTA))
+  if (cct_boot_rit_parser_check_333(parser, cct_boot_ord_TokenKind__TK_TEMPTA))
   {
-    return cct_boot_rit_parse_tempta_statement_374(parser);
+    return cct_boot_rit_parse_tempta_statement_381(parser);
   }
-  if (cct_boot_rit_parser_check_326(parser, cct_boot_ord_TokenKind__TK_CAPE))
+  if (cct_boot_rit_parser_check_333(parser, cct_boot_ord_TokenKind__TK_CAPE))
   {
-    cct_boot_rit_parser_error_at_current_329(parser, cct_boot_str_296);
-    cct_boot_rit_parser_advance_325(parser);
-    return cct_boot_rit_ast_make_expr_stmt_249(cct_boot_rit_ast_make_identifier_242(cct_boot_str_222, (*parser).previous.line, (*parser).previous.column), (*parser).previous.line, (*parser).previous.column);
+    cct_boot_rit_parser_error_at_current_336(parser, cct_boot_str_296);
+    cct_boot_rit_parser_advance_332(parser);
+    return cct_boot_rit_ast_make_expr_stmt_256(cct_boot_rit_ast_make_identifier_249(cct_boot_str_222, (*parser).previous.line, (*parser).previous.column), (*parser).previous.line, (*parser).previous.column);
   }
-  if (cct_boot_rit_parser_check_326(parser, cct_boot_ord_TokenKind__TK_SEMPER))
+  if (cct_boot_rit_parser_check_333(parser, cct_boot_ord_TokenKind__TK_SEMPER))
   {
-    cct_boot_rit_parser_error_at_current_329(parser, cct_boot_str_297);
-    cct_boot_rit_parser_advance_325(parser);
-    return cct_boot_rit_ast_make_expr_stmt_249(cct_boot_rit_ast_make_identifier_242(cct_boot_str_222, (*parser).previous.line, (*parser).previous.column), (*parser).previous.line, (*parser).previous.column);
+    cct_boot_rit_parser_error_at_current_336(parser, cct_boot_str_297);
+    cct_boot_rit_parser_advance_332(parser);
+    return cct_boot_rit_ast_make_expr_stmt_256(cct_boot_rit_ast_make_identifier_249(cct_boot_str_222, (*parser).previous.line, (*parser).previous.column), (*parser).previous.line, (*parser).previous.column);
   }
-  if (cct_boot_rit_parser_check_326(parser, cct_boot_ord_TokenKind__TK_CASO))
+  if (cct_boot_rit_parser_check_333(parser, cct_boot_ord_TokenKind__TK_CASO))
   {
-    cct_boot_rit_parser_error_at_current_329(parser, cct_boot_str_298);
-    cct_boot_rit_parser_advance_325(parser);
-    return cct_boot_rit_ast_make_expr_stmt_249(cct_boot_rit_ast_make_identifier_242(cct_boot_str_222, (*parser).previous.line, (*parser).previous.column), (*parser).previous.line, (*parser).previous.column);
+    cct_boot_rit_parser_error_at_current_336(parser, cct_boot_str_298);
+    cct_boot_rit_parser_advance_332(parser);
+    return cct_boot_rit_ast_make_expr_stmt_256(cct_boot_rit_ast_make_identifier_249(cct_boot_str_222, (*parser).previous.line, (*parser).previous.column), (*parser).previous.line, (*parser).previous.column);
   }
-  if (cct_boot_rit_parser_check_326(parser, cct_boot_ord_TokenKind__TK_SENAO))
+  if (cct_boot_rit_parser_check_333(parser, cct_boot_ord_TokenKind__TK_SENAO))
   {
-    cct_boot_rit_parser_error_at_current_329(parser, cct_boot_str_299);
-    cct_boot_rit_parser_advance_325(parser);
-    return cct_boot_rit_ast_make_expr_stmt_249(cct_boot_rit_ast_make_identifier_242(cct_boot_str_222, (*parser).previous.line, (*parser).previous.column), (*parser).previous.line, (*parser).previous.column);
+    cct_boot_rit_parser_error_at_current_336(parser, cct_boot_str_299);
+    cct_boot_rit_parser_advance_332(parser);
+    return cct_boot_rit_ast_make_expr_stmt_256(cct_boot_rit_ast_make_identifier_249(cct_boot_str_222, (*parser).previous.line, (*parser).previous.column), (*parser).previous.line, (*parser).previous.column);
   }
-  return cct_boot_rit_parse_expression_statement_361(parser);
+  return cct_boot_rit_parse_expression_statement_368(parser);
 }
 
-cct_boot_sig_AstNode* cct_boot_rit_parser_parse_statement_source_384(char* source, char* filename)
+cct_boot_sig_AstNode* cct_boot_rit_parser_parse_statement_source_391(char* source, char* filename)
 {
-  cct_boot_sig_LexerState lex = cct_boot_rit_lexer_init_304(source, filename);
-  cct_boot_sig_ParserState parser = cct_boot_rit_parser_init_323((&lex), filename);
-  cct_boot_sig_AstNode* stmt = cct_boot_rit_parse_statement_383((&parser));
-  cct_boot_rit_parser_dispose_324((&parser));
+  cct_boot_sig_LexerState lex = cct_boot_rit_lexer_init_311(source, filename);
+  cct_boot_sig_ParserState parser = cct_boot_rit_parser_init_330((&lex), filename);
+  cct_boot_sig_AstNode* stmt = cct_boot_rit_parse_statement_390((&parser));
+  cct_boot_rit_parser_dispose_331((&parser));
   return stmt;
 }
 
-cct_boot_sig_AstNode* cct_boot_rit_parse_type_385(cct_boot_sig_ParserState* parser)
+cct_boot_sig_AstNode* cct_boot_rit_parse_type_392(cct_boot_sig_ParserState* parser)
 {
-  if (cct_boot_rit_parser_match_327(parser, cct_boot_ord_TokenKind__TK_SPECULUM))
+  if (cct_boot_rit_parser_match_334(parser, cct_boot_ord_TokenKind__TK_SPECULUM))
   {
-    cct_boot_sig_AstNode* base = cct_boot_rit_parse_type_385(parser);
-    cct_boot_rit_ast_type_mark_pointer_234(base);
+    cct_boot_sig_AstNode* base = cct_boot_rit_parse_type_392(parser);
+    cct_boot_rit_ast_type_mark_pointer_241(base);
     return base;
   }
-  if (cct_boot_rit_parser_match_327(parser, cct_boot_ord_TokenKind__TK_SERIES))
+  if (cct_boot_rit_parser_match_334(parser, cct_boot_ord_TokenKind__TK_SERIES))
   {
-    cct_boot_sig_AstNode* base = cct_boot_rit_parse_type_385(parser);
-    cct_boot_rit_parser_consume_331(parser, cct_boot_ord_TokenKind__TK_LBRACKET, cct_boot_str_218);
-    if (!cct_boot_rit_parser_check_326(parser, cct_boot_ord_TokenKind__TK_INTEGER))
+    cct_boot_sig_AstNode* base = cct_boot_rit_parse_type_392(parser);
+    cct_boot_rit_parser_consume_338(parser, cct_boot_ord_TokenKind__TK_LBRACKET, cct_boot_str_218);
+    if (!cct_boot_rit_parser_check_333(parser, cct_boot_ord_TokenKind__TK_INTEGER))
     {
-      cct_boot_rit_parser_error_at_current_329(parser, cct_boot_str_219);
+      cct_boot_rit_parser_error_at_current_336(parser, cct_boot_str_219);
       return base;
     }
-    cct_boot_rit_parser_advance_325(parser);
-    cct_boot_rit_ast_type_mark_array_235(base, cct_boot_rit_parse_int_105((*parser).previous.lexeme));
-    cct_boot_rit_parser_consume_331(parser, cct_boot_ord_TokenKind__TK_RBRACKET, cct_boot_str_220);
+    cct_boot_rit_parser_advance_332(parser);
+    cct_boot_rit_ast_type_mark_array_242(base, cct_boot_rit_parse_int_112((*parser).previous.lexeme));
+    cct_boot_rit_parser_consume_338(parser, cct_boot_ord_TokenKind__TK_RBRACKET, cct_boot_str_220);
     return base;
   }
-  cct_boot_sig_AstNode* base = cct_boot_rit_parse_type_simple_360(parser);
-  cct_boot_rit_parse_optional_generic_type_args_386(parser, base);
+  cct_boot_sig_AstNode* base = cct_boot_rit_parse_type_simple_367(parser);
+  cct_boot_rit_parse_optional_generic_type_args_393(parser, base);
   return base;
 }
 
-void cct_boot_rit_parse_optional_generic_type_args_386(cct_boot_sig_ParserState* parser, cct_boot_sig_AstNode* type_expr)
+void cct_boot_rit_parse_optional_generic_type_args_393(cct_boot_sig_ParserState* parser, cct_boot_sig_AstNode* type_expr)
 {
-  if (!cct_boot_rit_parser_match_327(parser, cct_boot_ord_TokenKind__TK_GENUS))
+  if (!cct_boot_rit_parser_match_334(parser, cct_boot_ord_TokenKind__TK_GENUS))
   {
     return;
   }
-  cct_boot_rit_parser_consume_331(parser, cct_boot_ord_TokenKind__TK_LPAREN, cct_boot_str_223);
-  if (cct_boot_rit_parser_check_326(parser, cct_boot_ord_TokenKind__TK_RPAREN))
+  cct_boot_rit_parser_consume_338(parser, cct_boot_ord_TokenKind__TK_LPAREN, cct_boot_str_223);
+  if (cct_boot_rit_parser_check_333(parser, cct_boot_ord_TokenKind__TK_RPAREN))
   {
-    cct_boot_rit_parser_error_at_current_329(parser, cct_boot_str_224);
-    cct_boot_rit_parser_advance_325(parser);
+    cct_boot_rit_parser_error_at_current_336(parser, cct_boot_str_224);
+    cct_boot_rit_parser_advance_332(parser);
     return;
   }
   while (1)
   {
     {
-      cct_boot_rit_ast_append_generic_arg_224(type_expr, cct_boot_rit_parse_type_385(parser));
-      if (!cct_boot_rit_parser_match_327(parser, cct_boot_ord_TokenKind__TK_COMMA))
+      cct_boot_rit_ast_append_generic_arg_231(type_expr, cct_boot_rit_parse_type_392(parser));
+      if (!cct_boot_rit_parser_match_334(parser, cct_boot_ord_TokenKind__TK_COMMA))
       {
-        cct_boot_rit_parser_consume_331(parser, cct_boot_ord_TokenKind__TK_RPAREN, cct_boot_str_225);
+        cct_boot_rit_parser_consume_338(parser, cct_boot_ord_TokenKind__TK_RPAREN, cct_boot_str_225);
         return;
       }
     }
@@ -6139,14 +6146,14 @@ void cct_boot_rit_parse_optional_generic_type_args_386(cct_boot_sig_ParserState*
   __cct_label_94: ;
 }
 
-int cct_boot_rit_parse_type_param_exists_387(void* list, char* name)
+int cct_boot_rit_parse_type_param_exists_394(void* list, char* name)
 {
   long long i = 0;
-  long long n = cct_boot_rit_ast_node_list_len_209(list);
+  long long n = cct_boot_rit_ast_node_list_len_216(list);
   while (i < n)
   {
     {
-      cct_boot_sig_AstNode* param = cct_boot_rit_ast_node_list_get_210(list, i);
+      cct_boot_sig_AstNode* param = cct_boot_rit_ast_node_list_get_217(list, i);
       if (cct_boot_rit_compare_38((*param).name, name) == 0)
       {
         return 1;
@@ -6161,17 +6168,17 @@ int cct_boot_rit_parse_type_param_exists_387(void* list, char* name)
   return 0;
 }
 
-void cct_boot_rit_parse_optional_type_params_388(cct_boot_sig_ParserState* parser, cct_boot_sig_AstNode* owner, int allow_constraint)
+void cct_boot_rit_parse_optional_type_params_395(cct_boot_sig_ParserState* parser, cct_boot_sig_AstNode* owner, int allow_constraint)
 {
-  if (!cct_boot_rit_parser_match_327(parser, cct_boot_ord_TokenKind__TK_GENUS))
+  if (!cct_boot_rit_parser_match_334(parser, cct_boot_ord_TokenKind__TK_GENUS))
   {
     return;
   }
-  cct_boot_rit_parser_consume_331(parser, cct_boot_ord_TokenKind__TK_LPAREN, cct_boot_str_223);
-  if (cct_boot_rit_parser_check_326(parser, cct_boot_ord_TokenKind__TK_RPAREN))
+  cct_boot_rit_parser_consume_338(parser, cct_boot_ord_TokenKind__TK_LPAREN, cct_boot_str_223);
+  if (cct_boot_rit_parser_check_333(parser, cct_boot_ord_TokenKind__TK_RPAREN))
   {
-    cct_boot_rit_parser_error_at_current_329(parser, cct_boot_str_300);
-    cct_boot_rit_parser_advance_325(parser);
+    cct_boot_rit_parser_error_at_current_336(parser, cct_boot_str_300);
+    cct_boot_rit_parser_advance_332(parser);
     return;
   }
   while (1)
@@ -6179,44 +6186,44 @@ void cct_boot_rit_parse_optional_type_params_388(cct_boot_sig_ParserState* parse
     {
       long long line = (*parser).current.line;
       long long column = (*parser).current.column;
-      if (!cct_boot_rit_parser_check_326(parser, cct_boot_ord_TokenKind__TK_IDENTIFIER))
+      if (!cct_boot_rit_parser_check_333(parser, cct_boot_ord_TokenKind__TK_IDENTIFIER))
       {
-        cct_boot_rit_parser_error_at_current_329(parser, cct_boot_str_301);
+        cct_boot_rit_parser_error_at_current_336(parser, cct_boot_str_301);
         return;
       }
-      cct_boot_rit_parser_advance_325(parser);
+      cct_boot_rit_parser_advance_332(parser);
       char* name = cct_boot_rit_verbum_dup_40((*parser).previous.lexeme);
-      cct_boot_sig_AstNode* param = cct_boot_rit_ast_make_type_param_no_constraint_261(name, line, column);
-      if (cct_boot_rit_parser_match_327(parser, cct_boot_ord_TokenKind__TK_PACTUM))
+      cct_boot_sig_AstNode* param = cct_boot_rit_ast_make_type_param_no_constraint_268(name, line, column);
+      if (cct_boot_rit_parser_match_334(parser, cct_boot_ord_TokenKind__TK_PACTUM))
       {
         if (!allow_constraint)
         {
-          cct_boot_rit_parser_error_at_previous_330(parser, cct_boot_str_302);
+          cct_boot_rit_parser_error_at_previous_337(parser, cct_boot_str_302);
         }
-        if (!cct_boot_rit_parser_check_326(parser, cct_boot_ord_TokenKind__TK_IDENTIFIER))
+        if (!cct_boot_rit_parser_check_333(parser, cct_boot_ord_TokenKind__TK_IDENTIFIER))
         {
-          cct_boot_rit_parser_error_at_current_329(parser, cct_boot_str_303);
+          cct_boot_rit_parser_error_at_current_336(parser, cct_boot_str_303);
         }
         else
         {
-          cct_boot_rit_parser_advance_325(parser);
-          cct_boot_rit_ast_node_free_301(param);
-          param = cct_boot_rit_ast_make_type_param_262(name, cct_boot_rit_ast_make_type_233((*parser).previous.lexeme, (*parser).previous.line, (*parser).previous.column), line, column);
+          cct_boot_rit_parser_advance_332(parser);
+          cct_boot_rit_ast_node_free_308(param);
+          param = cct_boot_rit_ast_make_type_param_269(name, cct_boot_rit_ast_make_type_240((*parser).previous.lexeme, (*parser).previous.line, (*parser).previous.column), line, column);
         }
       }
-      if (cct_boot_rit_parse_type_param_exists_387((*owner).type_params, name))
+      if (cct_boot_rit_parse_type_param_exists_394((*owner).type_params, name))
       {
-        cct_boot_rit_parser_error_at_current_329(parser, cct_boot_str_304);
-        cct_boot_rit_ast_node_free_301(param);
+        cct_boot_rit_parser_error_at_current_336(parser, cct_boot_str_304);
+        cct_boot_rit_ast_node_free_308(param);
       }
       else
       {
-        cct_boot_rit_ast_append_type_param_223(owner, param);
+        cct_boot_rit_ast_append_type_param_230(owner, param);
       }
       free((void*)(name));
-      if (!cct_boot_rit_parser_match_327(parser, cct_boot_ord_TokenKind__TK_COMMA))
+      if (!cct_boot_rit_parser_match_334(parser, cct_boot_ord_TokenKind__TK_COMMA))
       {
-        cct_boot_rit_parser_consume_331(parser, cct_boot_ord_TokenKind__TK_RPAREN, cct_boot_str_305);
+        cct_boot_rit_parser_consume_338(parser, cct_boot_ord_TokenKind__TK_RPAREN, cct_boot_str_305);
         return;
       }
     }
@@ -6227,9 +6234,9 @@ void cct_boot_rit_parse_optional_type_params_388(cct_boot_sig_ParserState* parse
   __cct_label_98: ;
 }
 
-void cct_boot_rit_parse_param_list_389(cct_boot_sig_ParserState* parser, cct_boot_sig_AstNode* rituale)
+void cct_boot_rit_parse_param_list_396(cct_boot_sig_ParserState* parser, cct_boot_sig_AstNode* rituale)
 {
-  if (cct_boot_rit_parser_check_326(parser, cct_boot_ord_TokenKind__TK_RPAREN))
+  if (cct_boot_rit_parser_check_333(parser, cct_boot_ord_TokenKind__TK_RPAREN))
   {
     return;
   }
@@ -6238,15 +6245,15 @@ void cct_boot_rit_parse_param_list_389(cct_boot_sig_ParserState* parser, cct_boo
     {
       long long line = (*parser).current.line;
       long long column = (*parser).current.column;
-      cct_boot_sig_AstNode* type_expr = cct_boot_rit_parse_type_385(parser);
-      if (!cct_boot_rit_parser_check_326(parser, cct_boot_ord_TokenKind__TK_IDENTIFIER))
+      cct_boot_sig_AstNode* type_expr = cct_boot_rit_parse_type_392(parser);
+      if (!cct_boot_rit_parser_check_333(parser, cct_boot_ord_TokenKind__TK_IDENTIFIER))
       {
-        cct_boot_rit_parser_error_at_current_329(parser, cct_boot_str_306);
+        cct_boot_rit_parser_error_at_current_336(parser, cct_boot_str_306);
         return;
       }
-      cct_boot_rit_parser_advance_325(parser);
-      cct_boot_rit_ast_append_param_225(rituale, cct_boot_rit_ast_make_param_260((*parser).previous.lexeme, type_expr, line, column));
-      if (!cct_boot_rit_parser_match_327(parser, cct_boot_ord_TokenKind__TK_COMMA))
+      cct_boot_rit_parser_advance_332(parser);
+      cct_boot_rit_ast_append_param_232(rituale, cct_boot_rit_ast_make_param_267((*parser).previous.lexeme, type_expr, line, column));
+      if (!cct_boot_rit_parser_match_334(parser, cct_boot_ord_TokenKind__TK_COMMA))
       {
         return;
       }
@@ -6258,17 +6265,17 @@ void cct_boot_rit_parse_param_list_389(cct_boot_sig_ParserState* parser, cct_boo
   __cct_label_100: ;
 }
 
-cct_boot_sig_AstNode* cct_boot_rit_parse_import_declaration_390(cct_boot_sig_ParserState* parser)
+cct_boot_sig_AstNode* cct_boot_rit_parse_import_declaration_397(cct_boot_sig_ParserState* parser)
 {
   long long line = (*parser).current.line;
   long long column = (*parser).current.column;
-  cct_boot_rit_parser_consume_331(parser, cct_boot_ord_TokenKind__TK_ADVOCARE, cct_boot_str_307);
-  if (!cct_boot_rit_parser_check_326(parser, cct_boot_ord_TokenKind__TK_STRING))
+  cct_boot_rit_parser_consume_338(parser, cct_boot_ord_TokenKind__TK_ADVOCARE, cct_boot_str_307);
+  if (!cct_boot_rit_parser_check_333(parser, cct_boot_ord_TokenKind__TK_STRING))
   {
-    cct_boot_rit_parser_error_at_current_329(parser, cct_boot_str_308);
-    return cct_boot_rit_ast_make_import_232(cct_boot_str_222, line, column);
+    cct_boot_rit_parser_error_at_current_336(parser, cct_boot_str_308);
+    return cct_boot_rit_ast_make_import_239(cct_boot_str_222, line, column);
   }
-  cct_boot_rit_parser_advance_325(parser);
+  cct_boot_rit_parser_advance_332(parser);
   char* raw = (*parser).previous.lexeme;
   char* path = raw;
   int owns_path = 0;
@@ -6277,25 +6284,25 @@ cct_boot_sig_AstNode* cct_boot_rit_parse_import_declaration_390(cct_boot_sig_Par
     path = cct_boot_rit_substring_39(raw, 1, (cct_boot_rit_len_30(raw) - 1));
     owns_path = 1;
   }
-  cct_boot_sig_AstNode* node = cct_boot_rit_ast_make_import_232(path, line, column);
+  cct_boot_sig_AstNode* node = cct_boot_rit_ast_make_import_239(path, line, column);
   if (owns_path)
   {
     free((void*)(path));
   }
-  cct_boot_rit_parser_match_327(parser, cct_boot_ord_TokenKind__TK_SEMICOLON);
+  cct_boot_rit_parser_match_334(parser, cct_boot_ord_TokenKind__TK_SEMICOLON);
   return node;
 }
 
-cct_boot_sig_AstNode* cct_boot_rit_parse_rituale_body_until_explicit_391(cct_boot_sig_ParserState* parser)
+cct_boot_sig_AstNode* cct_boot_rit_parse_rituale_body_until_explicit_398(cct_boot_sig_ParserState* parser)
 {
-  cct_boot_sig_AstNode* block = cct_boot_rit_ast_make_block_258((*parser).current.line, (*parser).current.column);
-  while ((!cct_boot_rit_parser_check_326(parser, cct_boot_ord_TokenKind__TK_EOF)) && (!cct_boot_rit_parser_check_326(parser, cct_boot_ord_TokenKind__TK_EXPLICIT)))
+  cct_boot_sig_AstNode* block = cct_boot_rit_ast_make_block_265((*parser).current.line, (*parser).current.column);
+  while ((!cct_boot_rit_parser_check_333(parser, cct_boot_ord_TokenKind__TK_EOF)) && (!cct_boot_rit_parser_check_333(parser, cct_boot_ord_TokenKind__TK_EXPLICIT)))
   {
     {
-      cct_boot_rit_ast_append_statement_231(block, cct_boot_rit_parse_statement_383(parser));
+      cct_boot_rit_ast_append_statement_238(block, cct_boot_rit_parse_statement_390(parser));
       if ((*parser).panic_mode)
       {
-        cct_boot_rit_parser_synchronize_statement_334(parser);
+        cct_boot_rit_parser_synchronize_statement_341(parser);
       }
     }
     if (0) goto __cct_label_103;
@@ -6303,161 +6310,161 @@ cct_boot_sig_AstNode* cct_boot_rit_parse_rituale_body_until_explicit_391(cct_boo
   }
   if (0) goto __cct_label_102;
   __cct_label_102: ;
-  cct_boot_rit_parser_consume_331(parser, cct_boot_ord_TokenKind__TK_EXPLICIT, cct_boot_str_309);
-  cct_boot_rit_parser_consume_331(parser, cct_boot_ord_TokenKind__TK_RITUALE, cct_boot_str_310);
+  cct_boot_rit_parser_consume_338(parser, cct_boot_ord_TokenKind__TK_EXPLICIT, cct_boot_str_309);
+  cct_boot_rit_parser_consume_338(parser, cct_boot_ord_TokenKind__TK_RITUALE, cct_boot_str_310);
   return block;
 }
 
-cct_boot_sig_AstNode* cct_boot_rit_parse_rituale_signature_only_392(cct_boot_sig_ParserState* parser, char* name, long long line, long long column)
+cct_boot_sig_AstNode* cct_boot_rit_parse_rituale_signature_only_399(cct_boot_sig_ParserState* parser, char* name, long long line, long long column)
 {
-  cct_boot_sig_AstNode* rituale = cct_boot_rit_ast_make_rituale_decl_267(name, line, column);
-  if (cct_boot_rit_parser_check_326(parser, cct_boot_ord_TokenKind__TK_GENUS))
+  cct_boot_sig_AstNode* rituale = cct_boot_rit_ast_make_rituale_decl_274(name, line, column);
+  if (cct_boot_rit_parser_check_333(parser, cct_boot_ord_TokenKind__TK_GENUS))
   {
-    cct_boot_rit_parser_error_at_current_329(parser, cct_boot_str_311);
-    cct_boot_rit_parse_optional_type_params_388(parser, rituale, 0);
+    cct_boot_rit_parser_error_at_current_336(parser, cct_boot_str_311);
+    cct_boot_rit_parse_optional_type_params_395(parser, rituale, 0);
   }
-  cct_boot_rit_parser_consume_331(parser, cct_boot_ord_TokenKind__TK_LPAREN, cct_boot_str_312);
-  cct_boot_rit_parse_param_list_389(parser, rituale);
-  cct_boot_rit_parser_consume_331(parser, cct_boot_ord_TokenKind__TK_RPAREN, cct_boot_str_313);
-  if (cct_boot_rit_parser_match_327(parser, cct_boot_ord_TokenKind__TK_REDDE))
+  cct_boot_rit_parser_consume_338(parser, cct_boot_ord_TokenKind__TK_LPAREN, cct_boot_str_312);
+  cct_boot_rit_parse_param_list_396(parser, rituale);
+  cct_boot_rit_parser_consume_338(parser, cct_boot_ord_TokenKind__TK_RPAREN, cct_boot_str_313);
+  if (cct_boot_rit_parser_match_334(parser, cct_boot_ord_TokenKind__TK_REDDE))
   {
-    (*rituale).return_type = cct_boot_rit_parse_type_385(parser);
+    (*rituale).return_type = cct_boot_rit_parse_type_392(parser);
     (*rituale).has_return_type = 1;
   }
-  cct_boot_rit_parser_match_327(parser, cct_boot_ord_TokenKind__TK_SEMICOLON);
+  cct_boot_rit_parser_match_334(parser, cct_boot_ord_TokenKind__TK_SEMICOLON);
   return rituale;
 }
 
-cct_boot_sig_AstNode* cct_boot_rit_parse_rituale_declaration_393(cct_boot_sig_ParserState* parser)
+cct_boot_sig_AstNode* cct_boot_rit_parse_rituale_declaration_400(cct_boot_sig_ParserState* parser)
 {
   long long line = (*parser).current.line;
   long long column = (*parser).current.column;
-  cct_boot_rit_parser_consume_331(parser, cct_boot_ord_TokenKind__TK_RITUALE, cct_boot_str_314);
-  if (!cct_boot_rit_parser_check_326(parser, cct_boot_ord_TokenKind__TK_IDENTIFIER))
+  cct_boot_rit_parser_consume_338(parser, cct_boot_ord_TokenKind__TK_RITUALE, cct_boot_str_314);
+  if (!cct_boot_rit_parser_check_333(parser, cct_boot_ord_TokenKind__TK_IDENTIFIER))
   {
-    cct_boot_rit_parser_error_at_current_329(parser, cct_boot_str_315);
-    return cct_boot_rit_ast_make_rituale_266(cct_boot_str_222, cct_boot_rit_ast_make_type_233(cct_boot_str_60, line, column), cct_boot_rit_ast_make_block_258(line, column), line, column);
+    cct_boot_rit_parser_error_at_current_336(parser, cct_boot_str_315);
+    return cct_boot_rit_ast_make_rituale_273(cct_boot_str_222, cct_boot_rit_ast_make_type_240(cct_boot_str_60, line, column), cct_boot_rit_ast_make_block_265(line, column), line, column);
   }
-  cct_boot_rit_parser_advance_325(parser);
-  cct_boot_sig_AstNode* rituale = cct_boot_rit_ast_make_rituale_decl_267((*parser).previous.lexeme, line, column);
-  cct_boot_rit_parse_optional_type_params_388(parser, rituale, 1);
-  cct_boot_rit_parser_consume_331(parser, cct_boot_ord_TokenKind__TK_LPAREN, cct_boot_str_312);
-  cct_boot_rit_parse_param_list_389(parser, rituale);
-  cct_boot_rit_parser_consume_331(parser, cct_boot_ord_TokenKind__TK_RPAREN, cct_boot_str_313);
-  if (cct_boot_rit_parser_match_327(parser, cct_boot_ord_TokenKind__TK_REDDE))
+  cct_boot_rit_parser_advance_332(parser);
+  cct_boot_sig_AstNode* rituale = cct_boot_rit_ast_make_rituale_decl_274((*parser).previous.lexeme, line, column);
+  cct_boot_rit_parse_optional_type_params_395(parser, rituale, 1);
+  cct_boot_rit_parser_consume_338(parser, cct_boot_ord_TokenKind__TK_LPAREN, cct_boot_str_312);
+  cct_boot_rit_parse_param_list_396(parser, rituale);
+  cct_boot_rit_parser_consume_338(parser, cct_boot_ord_TokenKind__TK_RPAREN, cct_boot_str_313);
+  if (cct_boot_rit_parser_match_334(parser, cct_boot_ord_TokenKind__TK_REDDE))
   {
-    (*rituale).return_type = cct_boot_rit_parse_type_385(parser);
+    (*rituale).return_type = cct_boot_rit_parse_type_392(parser);
     (*rituale).has_return_type = 1;
   }
-  if (cct_boot_rit_parser_match_327(parser, cct_boot_ord_TokenKind__TK_SEMICOLON))
+  if (cct_boot_rit_parser_match_334(parser, cct_boot_ord_TokenKind__TK_SEMICOLON))
   {
     return rituale;
   }
-  if (cct_boot_rit_parser_check_326(parser, cct_boot_ord_TokenKind__TK_LBRACE))
+  if (cct_boot_rit_parser_check_333(parser, cct_boot_ord_TokenKind__TK_LBRACE))
   {
-    (*rituale).body = cct_boot_rit_parse_block_362(parser);
+    (*rituale).body = cct_boot_rit_parse_block_369(parser);
   }
   else
   {
-    (*rituale).body = cct_boot_rit_parse_rituale_body_until_explicit_391(parser);
+    (*rituale).body = cct_boot_rit_parse_rituale_body_until_explicit_398(parser);
   }
   (*rituale).has_body = 1;
   return rituale;
 }
 
-cct_boot_sig_AstNode* cct_boot_rit_parse_sigillum_declaration_394(cct_boot_sig_ParserState* parser)
+cct_boot_sig_AstNode* cct_boot_rit_parse_sigillum_declaration_401(cct_boot_sig_ParserState* parser)
 {
   long long line = (*parser).current.line;
   long long column = (*parser).current.column;
-  cct_boot_rit_parser_consume_331(parser, cct_boot_ord_TokenKind__TK_SIGILLUM, cct_boot_str_316);
-  if (!cct_boot_rit_parser_check_326(parser, cct_boot_ord_TokenKind__TK_IDENTIFIER))
+  cct_boot_rit_parser_consume_338(parser, cct_boot_ord_TokenKind__TK_SIGILLUM, cct_boot_str_316);
+  if (!cct_boot_rit_parser_check_333(parser, cct_boot_ord_TokenKind__TK_IDENTIFIER))
   {
-    cct_boot_rit_parser_error_at_current_329(parser, cct_boot_str_317);
-    return cct_boot_rit_ast_make_sigillum_268(cct_boot_str_222, line, column);
+    cct_boot_rit_parser_error_at_current_336(parser, cct_boot_str_317);
+    return cct_boot_rit_ast_make_sigillum_275(cct_boot_str_222, line, column);
   }
-  cct_boot_rit_parser_advance_325(parser);
-  cct_boot_sig_AstNode* sig = cct_boot_rit_ast_make_sigillum_268((*parser).previous.lexeme, line, column);
-  cct_boot_rit_parse_optional_type_params_388(parser, sig, 0);
-  while ((!cct_boot_rit_parser_check_326(parser, cct_boot_ord_TokenKind__TK_EOF)) && (!cct_boot_rit_parser_check_326(parser, cct_boot_ord_TokenKind__TK_FIN)))
+  cct_boot_rit_parser_advance_332(parser);
+  cct_boot_sig_AstNode* sig = cct_boot_rit_ast_make_sigillum_275((*parser).previous.lexeme, line, column);
+  cct_boot_rit_parse_optional_type_params_395(parser, sig, 0);
+  while ((!cct_boot_rit_parser_check_333(parser, cct_boot_ord_TokenKind__TK_EOF)) && (!cct_boot_rit_parser_check_333(parser, cct_boot_ord_TokenKind__TK_FIN)))
   {
     {
       long long field_line = (*parser).current.line;
       long long field_column = (*parser).current.column;
-      if (!cct_boot_rit_parser_check_326(parser, cct_boot_ord_TokenKind__TK_IDENTIFIER))
+      if (!cct_boot_rit_parser_check_333(parser, cct_boot_ord_TokenKind__TK_IDENTIFIER))
       {
-        cct_boot_rit_parser_error_at_current_329(parser, cct_boot_str_318);
+        cct_boot_rit_parser_error_at_current_336(parser, cct_boot_str_318);
         return sig;
       }
-      cct_boot_rit_parser_advance_325(parser);
+      cct_boot_rit_parser_advance_332(parser);
       char* field_name = cct_boot_rit_verbum_dup_40((*parser).previous.lexeme);
-      cct_boot_rit_parser_consume_331(parser, cct_boot_ord_TokenKind__TK_COLON, cct_boot_str_319);
-      cct_boot_sig_AstNode* field = cct_boot_rit_ast_make_field_263(field_name, cct_boot_rit_parse_type_385(parser), field_line, field_column);
+      cct_boot_rit_parser_consume_338(parser, cct_boot_ord_TokenKind__TK_COLON, cct_boot_str_319);
+      cct_boot_sig_AstNode* field = cct_boot_rit_ast_make_field_270(field_name, cct_boot_rit_parse_type_392(parser), field_line, field_column);
       free((void*)(field_name));
-      cct_boot_rit_ast_append_field_226(sig, field);
-      cct_boot_rit_parser_match_327(parser, cct_boot_ord_TokenKind__TK_SEMICOLON);
+      cct_boot_rit_ast_append_field_233(sig, field);
+      cct_boot_rit_parser_match_334(parser, cct_boot_ord_TokenKind__TK_SEMICOLON);
     }
     if (0) goto __cct_label_105;
     __cct_label_105: ;
   }
   if (0) goto __cct_label_104;
   __cct_label_104: ;
-  cct_boot_rit_parser_consume_331(parser, cct_boot_ord_TokenKind__TK_FIN, cct_boot_str_320);
-  cct_boot_rit_parser_consume_331(parser, cct_boot_ord_TokenKind__TK_SIGILLUM, cct_boot_str_321);
+  cct_boot_rit_parser_consume_338(parser, cct_boot_ord_TokenKind__TK_FIN, cct_boot_str_320);
+  cct_boot_rit_parser_consume_338(parser, cct_boot_ord_TokenKind__TK_SIGILLUM, cct_boot_str_321);
   return sig;
 }
 
-cct_boot_sig_AstNode* cct_boot_rit_parse_ordo_payload_field_395(cct_boot_sig_ParserState* parser)
+cct_boot_sig_AstNode* cct_boot_rit_parse_ordo_payload_field_402(cct_boot_sig_ParserState* parser)
 {
   long long line = (*parser).current.line;
   long long column = (*parser).current.column;
-  cct_boot_sig_AstNode* type_expr = cct_boot_rit_parse_type_385(parser);
-  if (!cct_boot_rit_parser_check_326(parser, cct_boot_ord_TokenKind__TK_IDENTIFIER))
+  cct_boot_sig_AstNode* type_expr = cct_boot_rit_parse_type_392(parser);
+  if (!cct_boot_rit_parser_check_333(parser, cct_boot_ord_TokenKind__TK_IDENTIFIER))
   {
-    cct_boot_rit_parser_error_at_current_329(parser, cct_boot_str_322);
-    return cct_boot_rit_ast_make_field_263(cct_boot_str_222, type_expr, line, column);
+    cct_boot_rit_parser_error_at_current_336(parser, cct_boot_str_322);
+    return cct_boot_rit_ast_make_field_270(cct_boot_str_222, type_expr, line, column);
   }
-  cct_boot_rit_parser_advance_325(parser);
+  cct_boot_rit_parser_advance_332(parser);
   char* field_name = cct_boot_rit_verbum_dup_40((*parser).previous.lexeme);
-  cct_boot_sig_AstNode* field = cct_boot_rit_ast_make_field_263(field_name, type_expr, line, column);
+  cct_boot_sig_AstNode* field = cct_boot_rit_ast_make_field_270(field_name, type_expr, line, column);
   free((void*)(field_name));
   return field;
 }
 
-cct_boot_sig_AstNode* cct_boot_rit_parse_ordo_declaration_396(cct_boot_sig_ParserState* parser)
+cct_boot_sig_AstNode* cct_boot_rit_parse_ordo_declaration_403(cct_boot_sig_ParserState* parser)
 {
   long long line = (*parser).current.line;
   long long column = (*parser).current.column;
-  cct_boot_rit_parser_consume_331(parser, cct_boot_ord_TokenKind__TK_ORDO, cct_boot_str_323);
-  if (!cct_boot_rit_parser_check_326(parser, cct_boot_ord_TokenKind__TK_IDENTIFIER))
+  cct_boot_rit_parser_consume_338(parser, cct_boot_ord_TokenKind__TK_ORDO, cct_boot_str_323);
+  if (!cct_boot_rit_parser_check_333(parser, cct_boot_ord_TokenKind__TK_IDENTIFIER))
   {
-    cct_boot_rit_parser_error_at_current_329(parser, cct_boot_str_324);
-    return cct_boot_rit_ast_make_ordo_269(cct_boot_str_222, line, column);
+    cct_boot_rit_parser_error_at_current_336(parser, cct_boot_str_324);
+    return cct_boot_rit_ast_make_ordo_276(cct_boot_str_222, line, column);
   }
-  cct_boot_rit_parser_advance_325(parser);
-  cct_boot_sig_AstNode* ord = cct_boot_rit_ast_make_ordo_269((*parser).previous.lexeme, line, column);
-  while ((!cct_boot_rit_parser_check_326(parser, cct_boot_ord_TokenKind__TK_EOF)) && (!cct_boot_rit_parser_check_326(parser, cct_boot_ord_TokenKind__TK_FIN)))
+  cct_boot_rit_parser_advance_332(parser);
+  cct_boot_sig_AstNode* ord = cct_boot_rit_ast_make_ordo_276((*parser).previous.lexeme, line, column);
+  while ((!cct_boot_rit_parser_check_333(parser, cct_boot_ord_TokenKind__TK_EOF)) && (!cct_boot_rit_parser_check_333(parser, cct_boot_ord_TokenKind__TK_FIN)))
   {
     {
       long long item_line = (*parser).current.line;
       long long item_column = (*parser).current.column;
-      if (!cct_boot_rit_parser_check_326(parser, cct_boot_ord_TokenKind__TK_IDENTIFIER))
+      if (!cct_boot_rit_parser_check_333(parser, cct_boot_ord_TokenKind__TK_IDENTIFIER))
       {
-        cct_boot_rit_parser_error_at_current_329(parser, cct_boot_str_325);
+        cct_boot_rit_parser_error_at_current_336(parser, cct_boot_str_325);
         return ord;
       }
-      cct_boot_rit_parser_advance_325(parser);
+      cct_boot_rit_parser_advance_332(parser);
       char* item_name = cct_boot_rit_verbum_dup_40((*parser).previous.lexeme);
-      cct_boot_sig_AstNode* item = cct_boot_rit_ast_make_enum_item_no_value_265(item_name, item_line, item_column);
-      if (cct_boot_rit_parser_match_327(parser, cct_boot_ord_TokenKind__TK_LPAREN))
+      cct_boot_sig_AstNode* item = cct_boot_rit_ast_make_enum_item_no_value_272(item_name, item_line, item_column);
+      if (cct_boot_rit_parser_match_334(parser, cct_boot_ord_TokenKind__TK_LPAREN))
       {
-        if (!cct_boot_rit_parser_check_326(parser, cct_boot_ord_TokenKind__TK_RPAREN))
+        if (!cct_boot_rit_parser_check_333(parser, cct_boot_ord_TokenKind__TK_RPAREN))
         {
           int reading_fields = 1;
           while (reading_fields)
           {
             {
-              cct_boot_rit_ast_append_field_226(item, cct_boot_rit_parse_ordo_payload_field_395(parser));
-              if (!cct_boot_rit_parser_match_327(parser, cct_boot_ord_TokenKind__TK_COMMA))
+              cct_boot_rit_ast_append_field_233(item, cct_boot_rit_parse_ordo_payload_field_402(parser));
+              if (!cct_boot_rit_parser_match_334(parser, cct_boot_ord_TokenKind__TK_COMMA))
               {
                 reading_fields = 0;
               }
@@ -6468,62 +6475,62 @@ cct_boot_sig_AstNode* cct_boot_rit_parse_ordo_declaration_396(cct_boot_sig_Parse
           if (0) goto __cct_label_108;
           __cct_label_108: ;
         }
-        cct_boot_rit_parser_consume_331(parser, cct_boot_ord_TokenKind__TK_RPAREN, cct_boot_str_326);
+        cct_boot_rit_parser_consume_338(parser, cct_boot_ord_TokenKind__TK_RPAREN, cct_boot_str_326);
       }
-      if (cct_boot_rit_parser_match_327(parser, cct_boot_ord_TokenKind__TK_EQ))
+      if (cct_boot_rit_parser_match_334(parser, cct_boot_ord_TokenKind__TK_EQ))
       {
-        if (cct_boot_rit_ast_node_list_len_209((*item).fields) > 0)
+        if (cct_boot_rit_ast_node_list_len_216((*item).fields) > 0)
         {
-          cct_boot_rit_parser_error_at_previous_330(parser, cct_boot_str_327);
+          cct_boot_rit_parser_error_at_previous_337(parser, cct_boot_str_327);
           free((void*)(item_name));
-          cct_boot_rit_ast_node_free_301(item);
+          cct_boot_rit_ast_node_free_308(item);
           return ord;
         }
-        if (!cct_boot_rit_parser_check_326(parser, cct_boot_ord_TokenKind__TK_INTEGER))
+        if (!cct_boot_rit_parser_check_333(parser, cct_boot_ord_TokenKind__TK_INTEGER))
         {
-          cct_boot_rit_parser_error_at_current_329(parser, cct_boot_str_328);
+          cct_boot_rit_parser_error_at_current_336(parser, cct_boot_str_328);
           free((void*)(item_name));
-          cct_boot_rit_ast_node_free_301(item);
+          cct_boot_rit_ast_node_free_308(item);
           return ord;
         }
-        cct_boot_rit_parser_advance_325(parser);
-        (*item).right = cct_boot_rit_ast_make_literal_int_237((*parser).previous.lexeme, (*parser).previous.line, (*parser).previous.column);
+        cct_boot_rit_parser_advance_332(parser);
+        (*item).right = cct_boot_rit_ast_make_literal_int_244((*parser).previous.lexeme, (*parser).previous.line, (*parser).previous.column);
         (*item).has_right = 1;
       }
-      cct_boot_rit_ast_append_item_227(ord, item);
+      cct_boot_rit_ast_append_item_234(ord, item);
       free((void*)(item_name));
-      cct_boot_rit_parser_match_327(parser, cct_boot_ord_TokenKind__TK_COMMA);
-      cct_boot_rit_parser_match_327(parser, cct_boot_ord_TokenKind__TK_SEMICOLON);
+      cct_boot_rit_parser_match_334(parser, cct_boot_ord_TokenKind__TK_COMMA);
+      cct_boot_rit_parser_match_334(parser, cct_boot_ord_TokenKind__TK_SEMICOLON);
     }
     if (0) goto __cct_label_107;
     __cct_label_107: ;
   }
   if (0) goto __cct_label_106;
   __cct_label_106: ;
-  cct_boot_rit_parser_consume_331(parser, cct_boot_ord_TokenKind__TK_FIN, cct_boot_str_329);
-  cct_boot_rit_parser_consume_331(parser, cct_boot_ord_TokenKind__TK_ORDO, cct_boot_str_330);
+  cct_boot_rit_parser_consume_338(parser, cct_boot_ord_TokenKind__TK_FIN, cct_boot_str_329);
+  cct_boot_rit_parser_consume_338(parser, cct_boot_ord_TokenKind__TK_ORDO, cct_boot_str_330);
   return ord;
 }
 
-cct_boot_sig_AstNode* cct_boot_rit_parse_codex_declaration_397(cct_boot_sig_ParserState* parser)
+cct_boot_sig_AstNode* cct_boot_rit_parse_codex_declaration_404(cct_boot_sig_ParserState* parser)
 {
   long long line = (*parser).current.line;
   long long column = (*parser).current.column;
-  cct_boot_rit_parser_consume_331(parser, cct_boot_ord_TokenKind__TK_CODEX, cct_boot_str_331);
-  if (!cct_boot_rit_parser_check_326(parser, cct_boot_ord_TokenKind__TK_IDENTIFIER))
+  cct_boot_rit_parser_consume_338(parser, cct_boot_ord_TokenKind__TK_CODEX, cct_boot_str_331);
+  if (!cct_boot_rit_parser_check_333(parser, cct_boot_ord_TokenKind__TK_IDENTIFIER))
   {
-    cct_boot_rit_parser_error_at_current_329(parser, cct_boot_str_332);
-    return cct_boot_rit_ast_make_codex_270(cct_boot_str_222, line, column);
+    cct_boot_rit_parser_error_at_current_336(parser, cct_boot_str_332);
+    return cct_boot_rit_ast_make_codex_277(cct_boot_str_222, line, column);
   }
-  cct_boot_rit_parser_advance_325(parser);
-  cct_boot_sig_AstNode* codex = cct_boot_rit_ast_make_codex_270((*parser).previous.lexeme, line, column);
-  while ((!cct_boot_rit_parser_check_326(parser, cct_boot_ord_TokenKind__TK_EOF)) && (!cct_boot_rit_parser_check_326(parser, cct_boot_ord_TokenKind__TK_FIN)))
+  cct_boot_rit_parser_advance_332(parser);
+  cct_boot_sig_AstNode* codex = cct_boot_rit_ast_make_codex_277((*parser).previous.lexeme, line, column);
+  while ((!cct_boot_rit_parser_check_333(parser, cct_boot_ord_TokenKind__TK_EOF)) && (!cct_boot_rit_parser_check_333(parser, cct_boot_ord_TokenKind__TK_FIN)))
   {
     {
-      cct_boot_rit_ast_append_declaration_229(codex, cct_boot_rit_parse_declaration_399(parser));
+      cct_boot_rit_ast_append_declaration_236(codex, cct_boot_rit_parse_declaration_406(parser));
       if ((*parser).panic_mode)
       {
-        cct_boot_rit_parser_synchronize_declaration_335(parser);
+        cct_boot_rit_parser_synchronize_declaration_342(parser);
       }
     }
     if (0) goto __cct_label_111;
@@ -6531,44 +6538,44 @@ cct_boot_sig_AstNode* cct_boot_rit_parse_codex_declaration_397(cct_boot_sig_Pars
   }
   if (0) goto __cct_label_110;
   __cct_label_110: ;
-  cct_boot_rit_parser_consume_331(parser, cct_boot_ord_TokenKind__TK_FIN, cct_boot_str_333);
-  cct_boot_rit_parser_consume_331(parser, cct_boot_ord_TokenKind__TK_CODEX, cct_boot_str_334);
+  cct_boot_rit_parser_consume_338(parser, cct_boot_ord_TokenKind__TK_FIN, cct_boot_str_333);
+  cct_boot_rit_parser_consume_338(parser, cct_boot_ord_TokenKind__TK_CODEX, cct_boot_str_334);
   return codex;
 }
 
-cct_boot_sig_AstNode* cct_boot_rit_parse_pactum_declaration_398(cct_boot_sig_ParserState* parser)
+cct_boot_sig_AstNode* cct_boot_rit_parse_pactum_declaration_405(cct_boot_sig_ParserState* parser)
 {
   long long line = (*parser).current.line;
   long long column = (*parser).current.column;
-  cct_boot_rit_parser_consume_331(parser, cct_boot_ord_TokenKind__TK_PACTUM, cct_boot_str_335);
-  if (!cct_boot_rit_parser_check_326(parser, cct_boot_ord_TokenKind__TK_IDENTIFIER))
+  cct_boot_rit_parser_consume_338(parser, cct_boot_ord_TokenKind__TK_PACTUM, cct_boot_str_335);
+  if (!cct_boot_rit_parser_check_333(parser, cct_boot_ord_TokenKind__TK_IDENTIFIER))
   {
-    cct_boot_rit_parser_error_at_current_329(parser, cct_boot_str_336);
-    return cct_boot_rit_ast_make_pactum_271(cct_boot_str_222, line, column);
+    cct_boot_rit_parser_error_at_current_336(parser, cct_boot_str_336);
+    return cct_boot_rit_ast_make_pactum_278(cct_boot_str_222, line, column);
   }
-  cct_boot_rit_parser_advance_325(parser);
-  cct_boot_sig_AstNode* pactum = cct_boot_rit_ast_make_pactum_271((*parser).previous.lexeme, line, column);
-  while ((!cct_boot_rit_parser_check_326(parser, cct_boot_ord_TokenKind__TK_EOF)) && (!cct_boot_rit_parser_check_326(parser, cct_boot_ord_TokenKind__TK_FIN)))
+  cct_boot_rit_parser_advance_332(parser);
+  cct_boot_sig_AstNode* pactum = cct_boot_rit_ast_make_pactum_278((*parser).previous.lexeme, line, column);
+  while ((!cct_boot_rit_parser_check_333(parser, cct_boot_ord_TokenKind__TK_EOF)) && (!cct_boot_rit_parser_check_333(parser, cct_boot_ord_TokenKind__TK_FIN)))
   {
     {
-      if (!cct_boot_rit_parser_match_327(parser, cct_boot_ord_TokenKind__TK_RITUALE))
+      if (!cct_boot_rit_parser_match_334(parser, cct_boot_ord_TokenKind__TK_RITUALE))
       {
-        cct_boot_rit_parser_error_at_current_329(parser, cct_boot_str_337);
-        cct_boot_rit_parser_synchronize_declaration_335(parser);
+        cct_boot_rit_parser_error_at_current_336(parser, cct_boot_str_337);
+        cct_boot_rit_parser_synchronize_declaration_342(parser);
       }
       else
       {
         long long sig_line = (*parser).previous.line;
         long long sig_column = (*parser).previous.column;
-        if (!cct_boot_rit_parser_check_326(parser, cct_boot_ord_TokenKind__TK_IDENTIFIER))
+        if (!cct_boot_rit_parser_check_333(parser, cct_boot_ord_TokenKind__TK_IDENTIFIER))
         {
-          cct_boot_rit_parser_error_at_current_329(parser, cct_boot_str_338);
-          cct_boot_rit_parser_synchronize_declaration_335(parser);
+          cct_boot_rit_parser_error_at_current_336(parser, cct_boot_str_338);
+          cct_boot_rit_parser_synchronize_declaration_342(parser);
         }
         else
         {
-          cct_boot_rit_parser_advance_325(parser);
-          cct_boot_rit_ast_append_signature_230(pactum, cct_boot_rit_parse_rituale_signature_only_392(parser, (*parser).previous.lexeme, sig_line, sig_column));
+          cct_boot_rit_parser_advance_332(parser);
+          cct_boot_rit_ast_append_signature_237(pactum, cct_boot_rit_parse_rituale_signature_only_399(parser, (*parser).previous.lexeme, sig_line, sig_column));
         }
       }
     }
@@ -6577,90 +6584,90 @@ cct_boot_sig_AstNode* cct_boot_rit_parse_pactum_declaration_398(cct_boot_sig_Par
   }
   if (0) goto __cct_label_112;
   __cct_label_112: ;
-  cct_boot_rit_parser_consume_331(parser, cct_boot_ord_TokenKind__TK_FIN, cct_boot_str_339);
-  cct_boot_rit_parser_consume_331(parser, cct_boot_ord_TokenKind__TK_PACTUM, cct_boot_str_340);
+  cct_boot_rit_parser_consume_338(parser, cct_boot_ord_TokenKind__TK_FIN, cct_boot_str_339);
+  cct_boot_rit_parser_consume_338(parser, cct_boot_ord_TokenKind__TK_PACTUM, cct_boot_str_340);
   return pactum;
 }
 
-cct_boot_sig_AstNode* cct_boot_rit_parse_declaration_399(cct_boot_sig_ParserState* parser)
+cct_boot_sig_AstNode* cct_boot_rit_parse_declaration_406(cct_boot_sig_ParserState* parser)
 {
-  if (cct_boot_rit_parser_check_326(parser, cct_boot_ord_TokenKind__TK_ADVOCARE))
+  if (cct_boot_rit_parser_check_333(parser, cct_boot_ord_TokenKind__TK_ADVOCARE))
   {
-    return cct_boot_rit_parse_import_declaration_390(parser);
+    return cct_boot_rit_parse_import_declaration_397(parser);
   }
-  if (cct_boot_rit_parser_check_326(parser, cct_boot_ord_TokenKind__TK_RITUALE))
+  if (cct_boot_rit_parser_check_333(parser, cct_boot_ord_TokenKind__TK_RITUALE))
   {
-    return cct_boot_rit_parse_rituale_declaration_393(parser);
+    return cct_boot_rit_parse_rituale_declaration_400(parser);
   }
-  if (cct_boot_rit_parser_check_326(parser, cct_boot_ord_TokenKind__TK_SIGILLUM))
+  if (cct_boot_rit_parser_check_333(parser, cct_boot_ord_TokenKind__TK_SIGILLUM))
   {
-    return cct_boot_rit_parse_sigillum_declaration_394(parser);
+    return cct_boot_rit_parse_sigillum_declaration_401(parser);
   }
-  if (cct_boot_rit_parser_check_326(parser, cct_boot_ord_TokenKind__TK_ORDO))
+  if (cct_boot_rit_parser_check_333(parser, cct_boot_ord_TokenKind__TK_ORDO))
   {
-    return cct_boot_rit_parse_ordo_declaration_396(parser);
+    return cct_boot_rit_parse_ordo_declaration_403(parser);
   }
-  if (cct_boot_rit_parser_check_326(parser, cct_boot_ord_TokenKind__TK_CODEX))
+  if (cct_boot_rit_parser_check_333(parser, cct_boot_ord_TokenKind__TK_CODEX))
   {
-    return cct_boot_rit_parse_codex_declaration_397(parser);
+    return cct_boot_rit_parse_codex_declaration_404(parser);
   }
-  if (cct_boot_rit_parser_check_326(parser, cct_boot_ord_TokenKind__TK_PACTUM))
+  if (cct_boot_rit_parser_check_333(parser, cct_boot_ord_TokenKind__TK_PACTUM))
   {
-    return cct_boot_rit_parse_pactum_declaration_398(parser);
+    return cct_boot_rit_parse_pactum_declaration_405(parser);
   }
-  cct_boot_rit_parser_error_at_current_329(parser, cct_boot_str_341);
-  cct_boot_rit_parser_advance_325(parser);
-  return cct_boot_rit_ast_make_import_232(cct_boot_str_222, (*parser).previous.line, (*parser).previous.column);
+  cct_boot_rit_parser_error_at_current_336(parser, cct_boot_str_341);
+  cct_boot_rit_parser_advance_332(parser);
+  return cct_boot_rit_ast_make_import_239(cct_boot_str_222, (*parser).previous.line, (*parser).previous.column);
 }
 
-cct_boot_sig_AstProgram* cct_boot_rit_parse_program_400(cct_boot_sig_ParserState* parser)
+cct_boot_sig_AstProgram* cct_boot_rit_parse_program_407(cct_boot_sig_ParserState* parser)
 {
-  cct_boot_sig_AstProgram* program = cct_boot_rit_ast_program_new_212();
-  cct_boot_rit_parser_consume_331(parser, cct_boot_ord_TokenKind__TK_INCIPIT, cct_boot_str_342);
-  if ((!cct_boot_rit_parser_check_326(parser, cct_boot_ord_TokenKind__TK_IDENTIFIER)) || (cct_boot_rit_compare_38((*parser).current.lexeme, cct_boot_str_343) != 0))
+  cct_boot_sig_AstProgram* program = cct_boot_rit_ast_program_new_219();
+  cct_boot_rit_parser_consume_338(parser, cct_boot_ord_TokenKind__TK_INCIPIT, cct_boot_str_342);
+  if ((!cct_boot_rit_parser_check_333(parser, cct_boot_ord_TokenKind__TK_IDENTIFIER)) || (cct_boot_rit_compare_38((*parser).current.lexeme, cct_boot_str_343) != 0))
   {
-    cct_boot_rit_parser_error_at_current_329(parser, cct_boot_str_344);
+    cct_boot_rit_parser_error_at_current_336(parser, cct_boot_str_344);
   }
   else
   {
-    cct_boot_rit_parser_advance_325(parser);
+    cct_boot_rit_parser_advance_332(parser);
   }
-  if (cct_boot_rit_parser_check_326(parser, cct_boot_ord_TokenKind__TK_STRING))
+  if (cct_boot_rit_parser_check_333(parser, cct_boot_ord_TokenKind__TK_STRING))
   {
-    cct_boot_rit_parser_advance_325(parser);
+    cct_boot_rit_parser_advance_332(parser);
     if (cct_boot_rit_len_30((*parser).previous.lexeme) >= 2)
     {
-      cct_boot_rit_ast_program_set_name_218(program, cct_boot_rit_substring_39((*parser).previous.lexeme, 1, (cct_boot_rit_len_30((*parser).previous.lexeme) - 1)));
+      cct_boot_rit_ast_program_set_name_225(program, cct_boot_rit_substring_39((*parser).previous.lexeme, 1, (cct_boot_rit_len_30((*parser).previous.lexeme) - 1)));
     }
     else
     {
-      cct_boot_rit_ast_program_set_name_218(program, cct_boot_str_345);
+      cct_boot_rit_ast_program_set_name_225(program, cct_boot_str_345);
     }
   }
   else
   {
-    cct_boot_rit_parser_error_at_current_329(parser, cct_boot_str_346);
-    cct_boot_rit_ast_program_set_name_218(program, cct_boot_str_222);
+    cct_boot_rit_parser_error_at_current_336(parser, cct_boot_str_346);
+    cct_boot_rit_ast_program_set_name_225(program, cct_boot_str_222);
   }
-  while (!cct_boot_rit_parser_check_326(parser, cct_boot_ord_TokenKind__TK_EOF))
+  while (!cct_boot_rit_parser_check_333(parser, cct_boot_ord_TokenKind__TK_EOF))
   {
     {
-      if (cct_boot_rit_parser_match_327(parser, cct_boot_ord_TokenKind__TK_EXPLICIT))
+      if (cct_boot_rit_parser_match_334(parser, cct_boot_ord_TokenKind__TK_EXPLICIT))
       {
-        if ((!cct_boot_rit_parser_check_326(parser, cct_boot_ord_TokenKind__TK_IDENTIFIER)) || (cct_boot_rit_compare_38((*parser).current.lexeme, cct_boot_str_343) != 0))
+        if ((!cct_boot_rit_parser_check_333(parser, cct_boot_ord_TokenKind__TK_IDENTIFIER)) || (cct_boot_rit_compare_38((*parser).current.lexeme, cct_boot_str_343) != 0))
         {
-          cct_boot_rit_parser_error_at_current_329(parser, cct_boot_str_347);
+          cct_boot_rit_parser_error_at_current_336(parser, cct_boot_str_347);
         }
         else
         {
-          cct_boot_rit_parser_advance_325(parser);
+          cct_boot_rit_parser_advance_332(parser);
         }
         return program;
       }
-      cct_boot_rit_ast_program_append_decl_219(program, cct_boot_rit_parse_declaration_399(parser));
+      cct_boot_rit_ast_program_append_decl_226(program, cct_boot_rit_parse_declaration_406(parser));
       if ((*parser).panic_mode)
       {
-        cct_boot_rit_parser_synchronize_declaration_335(parser);
+        cct_boot_rit_parser_synchronize_declaration_342(parser);
       }
     }
     if (0) goto __cct_label_115;
@@ -6671,108 +6678,108 @@ cct_boot_sig_AstProgram* cct_boot_rit_parse_program_400(cct_boot_sig_ParserState
   return program;
 }
 
-cct_boot_sig_AstProgram* cct_boot_rit_parser_parse_program_source_401(char* source, char* filename)
+cct_boot_sig_AstProgram* cct_boot_rit_parser_parse_program_source_408(char* source, char* filename)
 {
-  cct_boot_sig_LexerState lex = cct_boot_rit_lexer_init_304(source, filename);
-  cct_boot_sig_ParserState parser = cct_boot_rit_parser_init_323((&lex), filename);
-  cct_boot_sig_AstProgram* program = cct_boot_rit_parse_program_400((&parser));
-  cct_boot_rit_parser_dispose_324((&parser));
+  cct_boot_sig_LexerState lex = cct_boot_rit_lexer_init_311(source, filename);
+  cct_boot_sig_ParserState parser = cct_boot_rit_parser_init_330((&lex), filename);
+  cct_boot_sig_AstProgram* program = cct_boot_rit_parse_program_407((&parser));
+  cct_boot_rit_parser_dispose_331((&parser));
   return program;
 }
 
-char* cct_boot_rit_parser_dump_program_source_402(char* source, char* filename)
+char* cct_boot_rit_parser_dump_program_source_409(char* source, char* filename)
 {
-  cct_boot_sig_AstProgram* program = cct_boot_rit_parser_parse_program_source_401(source, filename);
-  char* dump = cct_boot_rit_ast_dump_program_299(program);
-  cct_boot_rit_ast_program_free_302(program);
+  cct_boot_sig_AstProgram* program = cct_boot_rit_parser_parse_program_source_408(source, filename);
+  char* dump = cct_boot_rit_ast_dump_program_306(program);
+  cct_boot_rit_ast_program_free_309(program);
   return dump;
 }
 
-void* cct_boot_rit_codegen_heap_alloc_403(long long bytes)
+void* cct_boot_rit_codegen_heap_alloc_410(long long bytes)
 {
-  return cct_boot_rit_alloc_165(bytes);
+  return cct_boot_rit_alloc_172(bytes);
 }
 
-void cct_boot_rit_codegen_heap_zero_404(void* ptr, long long bytes)
+void cct_boot_rit_codegen_heap_zero_411(void* ptr, long long bytes)
 {
-  cct_boot_rit_zero_170(ptr, bytes);
+  cct_boot_rit_zero_177(ptr, bytes);
   return;
 }
 
-void cct_boot_rit_codegen_heap_free_405(void* ptr)
+void cct_boot_rit_codegen_heap_free_412(void* ptr)
 {
-  cct_boot_rit_free_166(ptr);
+  cct_boot_rit_free_173(ptr);
   return;
 }
 
-cct_boot_sig_CodegenRitualeName* cct_boot_rit_codegen_context_record_at_406(cct_boot_sig_CodegenContext* ctx, long long idx)
+cct_boot_sig_CodegenRitualeName* cct_boot_rit_codegen_context_record_at_413(cct_boot_sig_CodegenContext* ctx, long long idx)
 {
-  return cct_boot_rit_fluxus_get_177((*ctx).rituale_names, idx);
+  return cct_boot_rit_fluxus_get_184((*ctx).rituale_names, idx);
 }
 
-cct_boot_sig_CodegenLocal* cct_boot_rit_codegen_context_local_at_407(cct_boot_sig_CodegenContext* ctx, long long idx)
+cct_boot_sig_CodegenLocal* cct_boot_rit_codegen_context_local_at_414(cct_boot_sig_CodegenContext* ctx, long long idx)
 {
-  return cct_boot_rit_fluxus_get_177((*ctx).local_names, idx);
+  return cct_boot_rit_fluxus_get_184((*ctx).local_names, idx);
 }
 
-cct_boot_sig_CodegenSigillum* cct_boot_rit_codegen_context_sigillum_at_408(cct_boot_sig_CodegenContext* ctx, long long idx)
+cct_boot_sig_CodegenSigillum* cct_boot_rit_codegen_context_sigillum_at_415(cct_boot_sig_CodegenContext* ctx, long long idx)
 {
-  return cct_boot_rit_fluxus_get_177((*ctx).sigillum_types, idx);
+  return cct_boot_rit_fluxus_get_184((*ctx).sigillum_types, idx);
 }
 
-cct_boot_sig_CodegenSigillumField* cct_boot_rit_codegen_context_sigillum_field_at_409(cct_boot_sig_CodegenSigillum* sigillum, long long idx)
+cct_boot_sig_CodegenSigillumField* cct_boot_rit_codegen_context_sigillum_field_at_416(cct_boot_sig_CodegenSigillum* sigillum, long long idx)
 {
-  return cct_boot_rit_fluxus_get_177((*sigillum).fields, idx);
+  return cct_boot_rit_fluxus_get_184((*sigillum).fields, idx);
 }
 
-cct_boot_sig_CodegenStringLiteral* cct_boot_rit_codegen_context_string_at_410(cct_boot_sig_CodegenContext* ctx, long long idx)
+cct_boot_sig_CodegenStringLiteral* cct_boot_rit_codegen_context_string_at_417(cct_boot_sig_CodegenContext* ctx, long long idx)
 {
-  return cct_boot_rit_fluxus_get_177((*ctx).string_literals, idx);
+  return cct_boot_rit_fluxus_get_184((*ctx).string_literals, idx);
 }
 
-cct_boot_sig_CodegenOrdo* cct_boot_rit_codegen_context_ordo_at_411(cct_boot_sig_CodegenContext* ctx, long long idx)
+cct_boot_sig_CodegenOrdo* cct_boot_rit_codegen_context_ordo_at_418(cct_boot_sig_CodegenContext* ctx, long long idx)
 {
-  return cct_boot_rit_fluxus_get_177((*ctx).ordo_types, idx);
+  return cct_boot_rit_fluxus_get_184((*ctx).ordo_types, idx);
 }
 
-cct_boot_sig_CodegenOrdoItem* cct_boot_rit_codegen_context_ordo_item_at_412(cct_boot_sig_CodegenOrdo* ordo, long long idx)
+cct_boot_sig_CodegenOrdoItem* cct_boot_rit_codegen_context_ordo_item_at_419(cct_boot_sig_CodegenOrdo* ordo, long long idx)
 {
-  return cct_boot_rit_fluxus_get_177((*ordo).items, idx);
+  return cct_boot_rit_fluxus_get_184((*ordo).items, idx);
 }
 
-cct_boot_sig_CodegenGenericSigillumTemplate* cct_boot_rit_codegen_context_generic_sigillum_template_at_413(cct_boot_sig_CodegenContext* ctx, long long idx)
+cct_boot_sig_CodegenGenericSigillumTemplate* cct_boot_rit_codegen_context_generic_sigillum_template_at_420(cct_boot_sig_CodegenContext* ctx, long long idx)
 {
-  return cct_boot_rit_fluxus_get_177((*ctx).generic_sigillum_templates, idx);
+  return cct_boot_rit_fluxus_get_184((*ctx).generic_sigillum_templates, idx);
 }
 
-cct_boot_sig_CodegenGenericSigillumInstance* cct_boot_rit_codegen_context_generic_sigillum_instance_at_414(cct_boot_sig_CodegenContext* ctx, long long idx)
+cct_boot_sig_CodegenGenericSigillumInstance* cct_boot_rit_codegen_context_generic_sigillum_instance_at_421(cct_boot_sig_CodegenContext* ctx, long long idx)
 {
-  return cct_boot_rit_fluxus_get_177((*ctx).generic_sigillum_instances, idx);
+  return cct_boot_rit_fluxus_get_184((*ctx).generic_sigillum_instances, idx);
 }
 
-cct_boot_sig_CodegenGenericRitualeTemplate* cct_boot_rit_codegen_context_generic_rituale_template_at_415(cct_boot_sig_CodegenContext* ctx, long long idx)
+cct_boot_sig_CodegenGenericRitualeTemplate* cct_boot_rit_codegen_context_generic_rituale_template_at_422(cct_boot_sig_CodegenContext* ctx, long long idx)
 {
-  return cct_boot_rit_fluxus_get_177((*ctx).generic_rituale_templates, idx);
+  return cct_boot_rit_fluxus_get_184((*ctx).generic_rituale_templates, idx);
 }
 
-cct_boot_sig_CodegenGenericRitualeInstance* cct_boot_rit_codegen_context_generic_rituale_instance_at_416(cct_boot_sig_CodegenContext* ctx, long long idx)
+cct_boot_sig_CodegenGenericRitualeInstance* cct_boot_rit_codegen_context_generic_rituale_instance_at_423(cct_boot_sig_CodegenContext* ctx, long long idx)
 {
-  return cct_boot_rit_fluxus_get_177((*ctx).generic_rituale_instances, idx);
+  return cct_boot_rit_fluxus_get_184((*ctx).generic_rituale_instances, idx);
 }
 
-cct_boot_sig_CodegenGenericBinding* cct_boot_rit_codegen_context_generic_binding_at_417(cct_boot_sig_CodegenContext* ctx, long long idx)
+cct_boot_sig_CodegenGenericBinding* cct_boot_rit_codegen_context_generic_binding_at_424(cct_boot_sig_CodegenContext* ctx, long long idx)
 {
-  return cct_boot_rit_fluxus_get_177((*ctx).generic_bindings, idx);
+  return cct_boot_rit_fluxus_get_184((*ctx).generic_bindings, idx);
 }
 
-void cct_boot_rit_codegen_context_free_records_418(cct_boot_sig_CodegenContext* ctx)
+void cct_boot_rit_codegen_context_free_records_425(cct_boot_sig_CodegenContext* ctx)
 {
   long long i = 0;
-  long long n = cct_boot_rit_fluxus_len_176((*ctx).rituale_names);
+  long long n = cct_boot_rit_fluxus_len_183((*ctx).rituale_names);
   while (i < n)
   {
     {
-      cct_boot_sig_CodegenRitualeName* record = cct_boot_rit_codegen_context_record_at_406(ctx, i);
+      cct_boot_sig_CodegenRitualeName* record = cct_boot_rit_codegen_context_record_at_413(ctx, i);
       if ((*record).owns_source_name)
       {
         free((void*)((*record).source_name));
@@ -6795,18 +6802,18 @@ void cct_boot_rit_codegen_context_free_records_418(cct_boot_sig_CodegenContext* 
   }
   if (0) goto __cct_label_116;
   __cct_label_116: ;
-  cct_boot_rit_fluxus_clear_178((*ctx).rituale_names);
+  cct_boot_rit_fluxus_clear_185((*ctx).rituale_names);
   return;
 }
 
-void cct_boot_rit_codegen_context_free_locals_419(cct_boot_sig_CodegenContext* ctx)
+void cct_boot_rit_codegen_context_free_locals_426(cct_boot_sig_CodegenContext* ctx)
 {
   long long i = 0;
-  long long n = cct_boot_rit_fluxus_len_176((*ctx).local_names);
+  long long n = cct_boot_rit_fluxus_len_183((*ctx).local_names);
   while (i < n)
   {
     {
-      cct_boot_sig_CodegenLocal* local = cct_boot_rit_codegen_context_local_at_407(ctx, i);
+      cct_boot_sig_CodegenLocal* local = cct_boot_rit_codegen_context_local_at_414(ctx, i);
       if ((*local).owns_source_name)
       {
         free((void*)((*local).source_name));
@@ -6829,18 +6836,18 @@ void cct_boot_rit_codegen_context_free_locals_419(cct_boot_sig_CodegenContext* c
   }
   if (0) goto __cct_label_118;
   __cct_label_118: ;
-  cct_boot_rit_fluxus_clear_178((*ctx).local_names);
-  cct_boot_rit_fluxus_clear_178((*ctx).local_scope_marks);
+  cct_boot_rit_fluxus_clear_185((*ctx).local_names);
+  cct_boot_rit_fluxus_clear_185((*ctx).local_scope_marks);
   return;
 }
 
-void cct_boot_rit_codegen_context_free_loop_labels_420(cct_boot_sig_CodegenContext* ctx)
+void cct_boot_rit_codegen_context_free_loop_labels_427(cct_boot_sig_CodegenContext* ctx)
 {
-  while (cct_boot_rit_fluxus_len_176((*ctx).loop_break_labels) > 0)
+  while (cct_boot_rit_fluxus_len_183((*ctx).loop_break_labels) > 0)
   {
     {
       char* label = cct_boot_str_102;
-      cct_boot_rit_fluxus_pop_175((*ctx).loop_break_labels, (&label));
+      cct_boot_rit_fluxus_pop_182((*ctx).loop_break_labels, (&label));
       free((void*)(label));
     }
     if (0) goto __cct_label_121;
@@ -6848,11 +6855,11 @@ void cct_boot_rit_codegen_context_free_loop_labels_420(cct_boot_sig_CodegenConte
   }
   if (0) goto __cct_label_120;
   __cct_label_120: ;
-  while (cct_boot_rit_fluxus_len_176((*ctx).loop_continue_labels) > 0)
+  while (cct_boot_rit_fluxus_len_183((*ctx).loop_continue_labels) > 0)
   {
     {
       char* label = cct_boot_str_102;
-      cct_boot_rit_fluxus_pop_175((*ctx).loop_continue_labels, (&label));
+      cct_boot_rit_fluxus_pop_182((*ctx).loop_continue_labels, (&label));
       free((void*)(label));
     }
     if (0) goto __cct_label_123;
@@ -6863,20 +6870,20 @@ void cct_boot_rit_codegen_context_free_loop_labels_420(cct_boot_sig_CodegenConte
   return;
 }
 
-void cct_boot_rit_codegen_context_free_sigillum_types_421(cct_boot_sig_CodegenContext* ctx)
+void cct_boot_rit_codegen_context_free_sigillum_types_428(cct_boot_sig_CodegenContext* ctx)
 {
   long long i = 0;
-  long long n = cct_boot_rit_fluxus_len_176((*ctx).sigillum_types);
+  long long n = cct_boot_rit_fluxus_len_183((*ctx).sigillum_types);
   while (i < n)
   {
     {
-      cct_boot_sig_CodegenSigillum* sigillum = cct_boot_rit_codegen_context_sigillum_at_408(ctx, i);
+      cct_boot_sig_CodegenSigillum* sigillum = cct_boot_rit_codegen_context_sigillum_at_415(ctx, i);
       long long field_idx = 0;
-      long long field_n = cct_boot_rit_fluxus_len_176((*sigillum).fields);
+      long long field_n = cct_boot_rit_fluxus_len_183((*sigillum).fields);
       while (field_idx < field_n)
       {
         {
-          cct_boot_sig_CodegenSigillumField* field = cct_boot_rit_codegen_context_sigillum_field_at_409(sigillum, field_idx);
+          cct_boot_sig_CodegenSigillumField* field = cct_boot_rit_codegen_context_sigillum_field_at_416(sigillum, field_idx);
           if ((*field).owns_field_name)
           {
             free((void*)((*field).field_name));
@@ -6894,7 +6901,7 @@ void cct_boot_rit_codegen_context_free_sigillum_types_421(cct_boot_sig_CodegenCo
       }
       if (0) goto __cct_label_126;
       __cct_label_126: ;
-      cct_boot_rit_fluxus_free_173((*sigillum).fields);
+      cct_boot_rit_fluxus_free_180((*sigillum).fields);
       if ((*sigillum).owns_source_name)
       {
         free((void*)((*sigillum).source_name));
@@ -6912,18 +6919,18 @@ void cct_boot_rit_codegen_context_free_sigillum_types_421(cct_boot_sig_CodegenCo
   }
   if (0) goto __cct_label_124;
   __cct_label_124: ;
-  cct_boot_rit_fluxus_clear_178((*ctx).sigillum_types);
+  cct_boot_rit_fluxus_clear_185((*ctx).sigillum_types);
   return;
 }
 
-void cct_boot_rit_codegen_context_free_string_literals_422(cct_boot_sig_CodegenContext* ctx)
+void cct_boot_rit_codegen_context_free_string_literals_429(cct_boot_sig_CodegenContext* ctx)
 {
   long long i = 0;
-  long long n = cct_boot_rit_fluxus_len_176((*ctx).string_literals);
+  long long n = cct_boot_rit_fluxus_len_183((*ctx).string_literals);
   while (i < n)
   {
     {
-      cct_boot_sig_CodegenStringLiteral* item = cct_boot_rit_codegen_context_string_at_410(ctx, i);
+      cct_boot_sig_CodegenStringLiteral* item = cct_boot_rit_codegen_context_string_at_417(ctx, i);
       if ((*item).owns_raw_text)
       {
         free((void*)((*item).raw_text));
@@ -6941,24 +6948,24 @@ void cct_boot_rit_codegen_context_free_string_literals_422(cct_boot_sig_CodegenC
   }
   if (0) goto __cct_label_128;
   __cct_label_128: ;
-  cct_boot_rit_fluxus_clear_178((*ctx).string_literals);
+  cct_boot_rit_fluxus_clear_185((*ctx).string_literals);
   return;
 }
 
-void cct_boot_rit_codegen_context_free_ordo_types_423(cct_boot_sig_CodegenContext* ctx)
+void cct_boot_rit_codegen_context_free_ordo_types_430(cct_boot_sig_CodegenContext* ctx)
 {
   long long i = 0;
-  long long n = cct_boot_rit_fluxus_len_176((*ctx).ordo_types);
+  long long n = cct_boot_rit_fluxus_len_183((*ctx).ordo_types);
   while (i < n)
   {
     {
-      cct_boot_sig_CodegenOrdo* ordo = cct_boot_rit_codegen_context_ordo_at_411(ctx, i);
+      cct_boot_sig_CodegenOrdo* ordo = cct_boot_rit_codegen_context_ordo_at_418(ctx, i);
       long long item_idx = 0;
-      long long item_n = cct_boot_rit_fluxus_len_176((*ordo).items);
+      long long item_n = cct_boot_rit_fluxus_len_183((*ordo).items);
       while (item_idx < item_n)
       {
         {
-          cct_boot_sig_CodegenOrdoItem* item = cct_boot_rit_codegen_context_ordo_item_at_412(ordo, item_idx);
+          cct_boot_sig_CodegenOrdoItem* item = cct_boot_rit_codegen_context_ordo_item_at_419(ordo, item_idx);
           if ((*item).owns_source_name)
           {
             free((void*)((*item).source_name));
@@ -6981,7 +6988,7 @@ void cct_boot_rit_codegen_context_free_ordo_types_423(cct_boot_sig_CodegenContex
       }
       if (0) goto __cct_label_132;
       __cct_label_132: ;
-      cct_boot_rit_fluxus_free_173((*ordo).items);
+      cct_boot_rit_fluxus_free_180((*ordo).items);
       if ((*ordo).owns_source_name)
       {
         free((void*)((*ordo).source_name));
@@ -6999,18 +7006,18 @@ void cct_boot_rit_codegen_context_free_ordo_types_423(cct_boot_sig_CodegenContex
   }
   if (0) goto __cct_label_130;
   __cct_label_130: ;
-  cct_boot_rit_fluxus_clear_178((*ctx).ordo_types);
+  cct_boot_rit_fluxus_clear_185((*ctx).ordo_types);
   return;
 }
 
-void cct_boot_rit_codegen_context_free_generic_sigillum_templates_424(cct_boot_sig_CodegenContext* ctx)
+void cct_boot_rit_codegen_context_free_generic_sigillum_templates_431(cct_boot_sig_CodegenContext* ctx)
 {
   long long i = 0;
-  long long n = cct_boot_rit_fluxus_len_176((*ctx).generic_sigillum_templates);
+  long long n = cct_boot_rit_fluxus_len_183((*ctx).generic_sigillum_templates);
   while (i < n)
   {
     {
-      cct_boot_sig_CodegenGenericSigillumTemplate* item = cct_boot_rit_codegen_context_generic_sigillum_template_at_413(ctx, i);
+      cct_boot_sig_CodegenGenericSigillumTemplate* item = cct_boot_rit_codegen_context_generic_sigillum_template_at_420(ctx, i);
       if ((*item).owns_source_name)
       {
         free((void*)((*item).source_name));
@@ -7023,18 +7030,18 @@ void cct_boot_rit_codegen_context_free_generic_sigillum_templates_424(cct_boot_s
   }
   if (0) goto __cct_label_134;
   __cct_label_134: ;
-  cct_boot_rit_fluxus_clear_178((*ctx).generic_sigillum_templates);
+  cct_boot_rit_fluxus_clear_185((*ctx).generic_sigillum_templates);
   return;
 }
 
-void cct_boot_rit_codegen_context_free_generic_sigillum_instances_425(cct_boot_sig_CodegenContext* ctx)
+void cct_boot_rit_codegen_context_free_generic_sigillum_instances_432(cct_boot_sig_CodegenContext* ctx)
 {
   long long i = 0;
-  long long n = cct_boot_rit_fluxus_len_176((*ctx).generic_sigillum_instances);
+  long long n = cct_boot_rit_fluxus_len_183((*ctx).generic_sigillum_instances);
   while (i < n)
   {
     {
-      cct_boot_sig_CodegenGenericSigillumInstance* item = cct_boot_rit_codegen_context_generic_sigillum_instance_at_414(ctx, i);
+      cct_boot_sig_CodegenGenericSigillumInstance* item = cct_boot_rit_codegen_context_generic_sigillum_instance_at_421(ctx, i);
       if ((*item).owns_instance_key)
       {
         free((void*)((*item).instance_key));
@@ -7052,18 +7059,18 @@ void cct_boot_rit_codegen_context_free_generic_sigillum_instances_425(cct_boot_s
   }
   if (0) goto __cct_label_136;
   __cct_label_136: ;
-  cct_boot_rit_fluxus_clear_178((*ctx).generic_sigillum_instances);
+  cct_boot_rit_fluxus_clear_185((*ctx).generic_sigillum_instances);
   return;
 }
 
-void cct_boot_rit_codegen_context_free_generic_rituale_templates_426(cct_boot_sig_CodegenContext* ctx)
+void cct_boot_rit_codegen_context_free_generic_rituale_templates_433(cct_boot_sig_CodegenContext* ctx)
 {
   long long i = 0;
-  long long n = cct_boot_rit_fluxus_len_176((*ctx).generic_rituale_templates);
+  long long n = cct_boot_rit_fluxus_len_183((*ctx).generic_rituale_templates);
   while (i < n)
   {
     {
-      cct_boot_sig_CodegenGenericRitualeTemplate* item = cct_boot_rit_codegen_context_generic_rituale_template_at_415(ctx, i);
+      cct_boot_sig_CodegenGenericRitualeTemplate* item = cct_boot_rit_codegen_context_generic_rituale_template_at_422(ctx, i);
       if ((*item).owns_source_name)
       {
         free((void*)((*item).source_name));
@@ -7076,18 +7083,18 @@ void cct_boot_rit_codegen_context_free_generic_rituale_templates_426(cct_boot_si
   }
   if (0) goto __cct_label_138;
   __cct_label_138: ;
-  cct_boot_rit_fluxus_clear_178((*ctx).generic_rituale_templates);
+  cct_boot_rit_fluxus_clear_185((*ctx).generic_rituale_templates);
   return;
 }
 
-void cct_boot_rit_codegen_context_free_generic_rituale_instances_427(cct_boot_sig_CodegenContext* ctx)
+void cct_boot_rit_codegen_context_free_generic_rituale_instances_434(cct_boot_sig_CodegenContext* ctx)
 {
   long long i = 0;
-  long long n = cct_boot_rit_fluxus_len_176((*ctx).generic_rituale_instances);
+  long long n = cct_boot_rit_fluxus_len_183((*ctx).generic_rituale_instances);
   while (i < n)
   {
     {
-      cct_boot_sig_CodegenGenericRitualeInstance* item = cct_boot_rit_codegen_context_generic_rituale_instance_at_416(ctx, i);
+      cct_boot_sig_CodegenGenericRitualeInstance* item = cct_boot_rit_codegen_context_generic_rituale_instance_at_423(ctx, i);
       if ((*item).owns_instance_key)
       {
         free((void*)((*item).instance_key));
@@ -7110,18 +7117,18 @@ void cct_boot_rit_codegen_context_free_generic_rituale_instances_427(cct_boot_si
   }
   if (0) goto __cct_label_140;
   __cct_label_140: ;
-  cct_boot_rit_fluxus_clear_178((*ctx).generic_rituale_instances);
+  cct_boot_rit_fluxus_clear_185((*ctx).generic_rituale_instances);
   return;
 }
 
-void cct_boot_rit_codegen_context_free_generic_bindings_428(cct_boot_sig_CodegenContext* ctx)
+void cct_boot_rit_codegen_context_free_generic_bindings_435(cct_boot_sig_CodegenContext* ctx)
 {
   long long i = 0;
-  long long n = cct_boot_rit_fluxus_len_176((*ctx).generic_bindings);
+  long long n = cct_boot_rit_fluxus_len_183((*ctx).generic_bindings);
   while (i < n)
   {
     {
-      cct_boot_sig_CodegenGenericBinding* item = cct_boot_rit_codegen_context_generic_binding_at_417(ctx, i);
+      cct_boot_sig_CodegenGenericBinding* item = cct_boot_rit_codegen_context_generic_binding_at_424(ctx, i);
       if ((*item).owns_param_name)
       {
         free((void*)((*item).param_name));
@@ -7134,50 +7141,50 @@ void cct_boot_rit_codegen_context_free_generic_bindings_428(cct_boot_sig_Codegen
   }
   if (0) goto __cct_label_142;
   __cct_label_142: ;
-  cct_boot_rit_fluxus_clear_178((*ctx).generic_bindings);
-  cct_boot_rit_fluxus_clear_178((*ctx).generic_binding_marks);
+  cct_boot_rit_fluxus_clear_185((*ctx).generic_bindings);
+  cct_boot_rit_fluxus_clear_185((*ctx).generic_binding_marks);
   return;
 }
 
-cct_boot_sig_CodegenContext* cct_boot_rit_codegen_context_new_429(char* filename)
+cct_boot_sig_CodegenContext* cct_boot_rit_codegen_context_new_436(char* filename)
 {
-  void* raw = cct_boot_rit_codegen_heap_alloc_403(((long long)sizeof(cct_boot_sig_CodegenContext)));
-  cct_boot_rit_codegen_heap_zero_404(raw, ((long long)sizeof(cct_boot_sig_CodegenContext)));
+  void* raw = cct_boot_rit_codegen_heap_alloc_410(((long long)sizeof(cct_boot_sig_CodegenContext)));
+  cct_boot_rit_codegen_heap_zero_411(raw, ((long long)sizeof(cct_boot_sig_CodegenContext)));
   cct_boot_sig_CodegenContext* ctx;
   ctx = raw;
   (*ctx).filename = cct_boot_rit_verbum_dup_40(filename);
   (*ctx).owns_filename = 1;
-  (*ctx).writer = cct_boot_rit_writer_init_85();
-  (*ctx).rituale_names = cct_boot_rit_fluxus_init_172(((long long)sizeof(cct_boot_sig_CodegenRitualeName)));
-  (*ctx).local_names = cct_boot_rit_fluxus_init_172(((long long)sizeof(cct_boot_sig_CodegenLocal)));
-  (*ctx).local_scope_marks = cct_boot_rit_fluxus_init_172(((long long)sizeof(long long)));
-  (*ctx).loop_break_labels = cct_boot_rit_fluxus_init_172(((long long)sizeof(char*)));
-  (*ctx).loop_continue_labels = cct_boot_rit_fluxus_init_172(((long long)sizeof(char*)));
-  (*ctx).sigillum_types = cct_boot_rit_fluxus_init_172(((long long)sizeof(cct_boot_sig_CodegenSigillum)));
-  (*ctx).ordo_types = cct_boot_rit_fluxus_init_172(((long long)sizeof(cct_boot_sig_CodegenOrdo)));
-  (*ctx).string_literals = cct_boot_rit_fluxus_init_172(((long long)sizeof(cct_boot_sig_CodegenStringLiteral)));
-  (*ctx).generic_sigillum_templates = cct_boot_rit_fluxus_init_172(((long long)sizeof(cct_boot_sig_CodegenGenericSigillumTemplate)));
-  (*ctx).generic_sigillum_instances = cct_boot_rit_fluxus_init_172(((long long)sizeof(cct_boot_sig_CodegenGenericSigillumInstance)));
-  (*ctx).generic_rituale_templates = cct_boot_rit_fluxus_init_172(((long long)sizeof(cct_boot_sig_CodegenGenericRitualeTemplate)));
-  (*ctx).generic_rituale_instances = cct_boot_rit_fluxus_init_172(((long long)sizeof(cct_boot_sig_CodegenGenericRitualeInstance)));
-  (*ctx).generic_bindings = cct_boot_rit_fluxus_init_172(((long long)sizeof(cct_boot_sig_CodegenGenericBinding)));
-  (*ctx).generic_binding_marks = cct_boot_rit_fluxus_init_172(((long long)sizeof(long long)));
+  (*ctx).writer = cct_boot_rit_writer_init_92();
+  (*ctx).rituale_names = cct_boot_rit_fluxus_init_179(((long long)sizeof(cct_boot_sig_CodegenRitualeName)));
+  (*ctx).local_names = cct_boot_rit_fluxus_init_179(((long long)sizeof(cct_boot_sig_CodegenLocal)));
+  (*ctx).local_scope_marks = cct_boot_rit_fluxus_init_179(((long long)sizeof(long long)));
+  (*ctx).loop_break_labels = cct_boot_rit_fluxus_init_179(((long long)sizeof(char*)));
+  (*ctx).loop_continue_labels = cct_boot_rit_fluxus_init_179(((long long)sizeof(char*)));
+  (*ctx).sigillum_types = cct_boot_rit_fluxus_init_179(((long long)sizeof(cct_boot_sig_CodegenSigillum)));
+  (*ctx).ordo_types = cct_boot_rit_fluxus_init_179(((long long)sizeof(cct_boot_sig_CodegenOrdo)));
+  (*ctx).string_literals = cct_boot_rit_fluxus_init_179(((long long)sizeof(cct_boot_sig_CodegenStringLiteral)));
+  (*ctx).generic_sigillum_templates = cct_boot_rit_fluxus_init_179(((long long)sizeof(cct_boot_sig_CodegenGenericSigillumTemplate)));
+  (*ctx).generic_sigillum_instances = cct_boot_rit_fluxus_init_179(((long long)sizeof(cct_boot_sig_CodegenGenericSigillumInstance)));
+  (*ctx).generic_rituale_templates = cct_boot_rit_fluxus_init_179(((long long)sizeof(cct_boot_sig_CodegenGenericRitualeTemplate)));
+  (*ctx).generic_rituale_instances = cct_boot_rit_fluxus_init_179(((long long)sizeof(cct_boot_sig_CodegenGenericRitualeInstance)));
+  (*ctx).generic_bindings = cct_boot_rit_fluxus_init_179(((long long)sizeof(cct_boot_sig_CodegenGenericBinding)));
+  (*ctx).generic_binding_marks = cct_boot_rit_fluxus_init_179(((long long)sizeof(long long)));
   (*ctx).current_return_type = cct_boot_rit_verbum_dup_40(cct_boot_str_60);
   (*ctx).owns_current_return_type = 1;
   return ctx;
 }
 
-void cct_boot_rit_codegen_context_reset_output_430(cct_boot_sig_CodegenContext* ctx)
+void cct_boot_rit_codegen_context_reset_output_437(cct_boot_sig_CodegenContext* ctx)
 {
-  cct_boot_rit_writer_free_94((*ctx).writer);
-  (*ctx).writer = cct_boot_rit_writer_init_85();
+  cct_boot_rit_writer_free_101((*ctx).writer);
+  (*ctx).writer = cct_boot_rit_writer_init_92();
   (*ctx).indent_level = 0;
   return;
 }
 
-void cct_boot_rit_codegen_context_reset_431(cct_boot_sig_CodegenContext* ctx)
+void cct_boot_rit_codegen_context_reset_438(cct_boot_sig_CodegenContext* ctx)
 {
-  cct_boot_rit_codegen_context_reset_output_430(ctx);
+  cct_boot_rit_codegen_context_reset_output_437(ctx);
   (*ctx).next_temp_id = 0;
   (*ctx).next_label_id = 0;
   (*ctx).had_error = 0;
@@ -7189,17 +7196,17 @@ void cct_boot_rit_codegen_context_reset_431(cct_boot_sig_CodegenContext* ctx)
   }
   (*ctx).last_error_line = 0;
   (*ctx).last_error_column = 0;
-  cct_boot_rit_codegen_context_free_records_418(ctx);
-  cct_boot_rit_codegen_context_free_locals_419(ctx);
-  cct_boot_rit_codegen_context_free_loop_labels_420(ctx);
-  cct_boot_rit_codegen_context_free_sigillum_types_421(ctx);
-  cct_boot_rit_codegen_context_free_ordo_types_423(ctx);
-  cct_boot_rit_codegen_context_free_string_literals_422(ctx);
-  cct_boot_rit_codegen_context_free_generic_sigillum_templates_424(ctx);
-  cct_boot_rit_codegen_context_free_generic_sigillum_instances_425(ctx);
-  cct_boot_rit_codegen_context_free_generic_rituale_templates_426(ctx);
-  cct_boot_rit_codegen_context_free_generic_rituale_instances_427(ctx);
-  cct_boot_rit_codegen_context_free_generic_bindings_428(ctx);
+  cct_boot_rit_codegen_context_free_records_425(ctx);
+  cct_boot_rit_codegen_context_free_locals_426(ctx);
+  cct_boot_rit_codegen_context_free_loop_labels_427(ctx);
+  cct_boot_rit_codegen_context_free_sigillum_types_428(ctx);
+  cct_boot_rit_codegen_context_free_ordo_types_430(ctx);
+  cct_boot_rit_codegen_context_free_string_literals_429(ctx);
+  cct_boot_rit_codegen_context_free_generic_sigillum_templates_431(ctx);
+  cct_boot_rit_codegen_context_free_generic_sigillum_instances_432(ctx);
+  cct_boot_rit_codegen_context_free_generic_rituale_templates_433(ctx);
+  cct_boot_rit_codegen_context_free_generic_rituale_instances_434(ctx);
+  cct_boot_rit_codegen_context_free_generic_bindings_435(ctx);
   if ((*ctx).owns_current_return_type)
   {
     free((void*)((*ctx).current_return_type));
@@ -7219,7 +7226,7 @@ void cct_boot_rit_codegen_context_reset_431(cct_boot_sig_CodegenContext* ctx)
   return;
 }
 
-void cct_boot_rit_codegen_context_free_432(cct_boot_sig_CodegenContext* ctx)
+void cct_boot_rit_codegen_context_free_439(cct_boot_sig_CodegenContext* ctx)
 {
   if ((*ctx).owns_filename)
   {
@@ -7229,41 +7236,41 @@ void cct_boot_rit_codegen_context_free_432(cct_boot_sig_CodegenContext* ctx)
   {
     free((void*)((*ctx).last_error_message));
   }
-  cct_boot_rit_codegen_context_free_records_418(ctx);
-  cct_boot_rit_codegen_context_free_locals_419(ctx);
-  cct_boot_rit_codegen_context_free_loop_labels_420(ctx);
-  cct_boot_rit_codegen_context_free_sigillum_types_421(ctx);
-  cct_boot_rit_codegen_context_free_ordo_types_423(ctx);
-  cct_boot_rit_codegen_context_free_string_literals_422(ctx);
-  cct_boot_rit_codegen_context_free_generic_sigillum_templates_424(ctx);
-  cct_boot_rit_codegen_context_free_generic_sigillum_instances_425(ctx);
-  cct_boot_rit_codegen_context_free_generic_rituale_templates_426(ctx);
-  cct_boot_rit_codegen_context_free_generic_rituale_instances_427(ctx);
-  cct_boot_rit_codegen_context_free_generic_bindings_428(ctx);
-  cct_boot_rit_fluxus_free_173((*ctx).rituale_names);
-  cct_boot_rit_fluxus_free_173((*ctx).local_names);
-  cct_boot_rit_fluxus_free_173((*ctx).local_scope_marks);
-  cct_boot_rit_fluxus_free_173((*ctx).loop_break_labels);
-  cct_boot_rit_fluxus_free_173((*ctx).loop_continue_labels);
-  cct_boot_rit_fluxus_free_173((*ctx).sigillum_types);
-  cct_boot_rit_fluxus_free_173((*ctx).ordo_types);
-  cct_boot_rit_fluxus_free_173((*ctx).string_literals);
-  cct_boot_rit_fluxus_free_173((*ctx).generic_sigillum_templates);
-  cct_boot_rit_fluxus_free_173((*ctx).generic_sigillum_instances);
-  cct_boot_rit_fluxus_free_173((*ctx).generic_rituale_templates);
-  cct_boot_rit_fluxus_free_173((*ctx).generic_rituale_instances);
-  cct_boot_rit_fluxus_free_173((*ctx).generic_bindings);
-  cct_boot_rit_fluxus_free_173((*ctx).generic_binding_marks);
+  cct_boot_rit_codegen_context_free_records_425(ctx);
+  cct_boot_rit_codegen_context_free_locals_426(ctx);
+  cct_boot_rit_codegen_context_free_loop_labels_427(ctx);
+  cct_boot_rit_codegen_context_free_sigillum_types_428(ctx);
+  cct_boot_rit_codegen_context_free_ordo_types_430(ctx);
+  cct_boot_rit_codegen_context_free_string_literals_429(ctx);
+  cct_boot_rit_codegen_context_free_generic_sigillum_templates_431(ctx);
+  cct_boot_rit_codegen_context_free_generic_sigillum_instances_432(ctx);
+  cct_boot_rit_codegen_context_free_generic_rituale_templates_433(ctx);
+  cct_boot_rit_codegen_context_free_generic_rituale_instances_434(ctx);
+  cct_boot_rit_codegen_context_free_generic_bindings_435(ctx);
+  cct_boot_rit_fluxus_free_180((*ctx).rituale_names);
+  cct_boot_rit_fluxus_free_180((*ctx).local_names);
+  cct_boot_rit_fluxus_free_180((*ctx).local_scope_marks);
+  cct_boot_rit_fluxus_free_180((*ctx).loop_break_labels);
+  cct_boot_rit_fluxus_free_180((*ctx).loop_continue_labels);
+  cct_boot_rit_fluxus_free_180((*ctx).sigillum_types);
+  cct_boot_rit_fluxus_free_180((*ctx).ordo_types);
+  cct_boot_rit_fluxus_free_180((*ctx).string_literals);
+  cct_boot_rit_fluxus_free_180((*ctx).generic_sigillum_templates);
+  cct_boot_rit_fluxus_free_180((*ctx).generic_sigillum_instances);
+  cct_boot_rit_fluxus_free_180((*ctx).generic_rituale_templates);
+  cct_boot_rit_fluxus_free_180((*ctx).generic_rituale_instances);
+  cct_boot_rit_fluxus_free_180((*ctx).generic_bindings);
+  cct_boot_rit_fluxus_free_180((*ctx).generic_binding_marks);
   if ((*ctx).owns_current_return_type)
   {
     free((void*)((*ctx).current_return_type));
   }
-  cct_boot_rit_writer_free_94((*ctx).writer);
-  cct_boot_rit_codegen_heap_free_405(ctx);
+  cct_boot_rit_writer_free_101((*ctx).writer);
+  cct_boot_rit_codegen_heap_free_412(ctx);
   return;
 }
 
-void cct_boot_rit_codegen_report_error_433(cct_boot_sig_CodegenContext* ctx, long long line, long long column, char* message)
+void cct_boot_rit_codegen_report_error_440(cct_boot_sig_CodegenContext* ctx, long long line, long long column, char* message)
 {
   (*ctx).had_error = 1;
   (*ctx).error_count = ((*ctx).error_count + 1);
@@ -7278,29 +7285,29 @@ void cct_boot_rit_codegen_report_error_433(cct_boot_sig_CodegenContext* ctx, lon
   return;
 }
 
-int cct_boot_rit_codegen_had_error_434(cct_boot_sig_CodegenContext* ctx)
+int cct_boot_rit_codegen_had_error_441(cct_boot_sig_CodegenContext* ctx)
 {
   return (*ctx).had_error;
 }
 
-char* cct_boot_rit_codegen_output_435(cct_boot_sig_CodegenContext* ctx)
+char* cct_boot_rit_codegen_output_442(cct_boot_sig_CodegenContext* ctx)
 {
-  return cct_boot_rit_writer_to_verbum_93((*ctx).writer);
+  return cct_boot_rit_writer_to_verbum_100((*ctx).writer);
 }
 
-long long cct_boot_rit_codegen_registered_rituale_count_436(cct_boot_sig_CodegenContext* ctx)
+long long cct_boot_rit_codegen_registered_rituale_count_443(cct_boot_sig_CodegenContext* ctx)
 {
-  return cct_boot_rit_fluxus_len_176((*ctx).rituale_names);
+  return cct_boot_rit_fluxus_len_183((*ctx).rituale_names);
 }
 
-char* cct_boot_rit_codegen_lookup_rituale_c_name_437(cct_boot_sig_CodegenContext* ctx, char* source_name)
+char* cct_boot_rit_codegen_lookup_rituale_c_name_444(cct_boot_sig_CodegenContext* ctx, char* source_name)
 {
   long long i = 0;
-  long long n = cct_boot_rit_fluxus_len_176((*ctx).rituale_names);
+  long long n = cct_boot_rit_fluxus_len_183((*ctx).rituale_names);
   while (i < n)
   {
     {
-      cct_boot_sig_CodegenRitualeName* record = cct_boot_rit_codegen_context_record_at_406(ctx, i);
+      cct_boot_sig_CodegenRitualeName* record = cct_boot_rit_codegen_context_record_at_413(ctx, i);
       if (cct_boot_rit_compare_38((*record).source_name, source_name) == 0)
       {
         return (*record).c_name;
@@ -7315,9 +7322,9 @@ char* cct_boot_rit_codegen_lookup_rituale_c_name_437(cct_boot_sig_CodegenContext
   return cct_boot_str_102;
 }
 
-char* cct_boot_rit_codegen_register_rituale_c_name_438(cct_boot_sig_CodegenContext* ctx, char* source_name, char* c_name, char* return_type_name)
+char* cct_boot_rit_codegen_register_rituale_c_name_445(cct_boot_sig_CodegenContext* ctx, char* source_name, char* c_name, char* return_type_name)
 {
-  char* existing = cct_boot_rit_codegen_lookup_rituale_c_name_437(ctx, source_name);
+  char* existing = cct_boot_rit_codegen_lookup_rituale_c_name_444(ctx, source_name);
   if (cct_boot_rit_compare_38(existing, cct_boot_str_102) != 0)
   {
     return existing;
@@ -7329,18 +7336,18 @@ char* cct_boot_rit_codegen_register_rituale_c_name_438(cct_boot_sig_CodegenConte
   record.owns_c_name = 1;
   record.return_type_name = cct_boot_rit_verbum_dup_40(return_type_name);
   record.owns_return_type_name = 1;
-  cct_boot_rit_fluxus_push_174((*ctx).rituale_names, (&record));
-  return cct_boot_rit_codegen_lookup_rituale_c_name_437(ctx, source_name);
+  cct_boot_rit_fluxus_push_181((*ctx).rituale_names, (&record));
+  return cct_boot_rit_codegen_lookup_rituale_c_name_444(ctx, source_name);
 }
 
-char* cct_boot_rit_codegen_lookup_rituale_return_type_439(cct_boot_sig_CodegenContext* ctx, char* source_name)
+char* cct_boot_rit_codegen_lookup_rituale_return_type_446(cct_boot_sig_CodegenContext* ctx, char* source_name)
 {
   long long i = 0;
-  long long n = cct_boot_rit_fluxus_len_176((*ctx).rituale_names);
+  long long n = cct_boot_rit_fluxus_len_183((*ctx).rituale_names);
   while (i < n)
   {
     {
-      cct_boot_sig_CodegenRitualeName* record = cct_boot_rit_codegen_context_record_at_406(ctx, i);
+      cct_boot_sig_CodegenRitualeName* record = cct_boot_rit_codegen_context_record_at_413(ctx, i);
       if (cct_boot_rit_compare_38((*record).source_name, source_name) == 0)
       {
         return (*record).return_type_name;
@@ -7355,7 +7362,7 @@ char* cct_boot_rit_codegen_lookup_rituale_return_type_439(cct_boot_sig_CodegenCo
   return cct_boot_str_102;
 }
 
-void cct_boot_rit_codegen_set_current_return_type_440(cct_boot_sig_CodegenContext* ctx, char* type_name)
+void cct_boot_rit_codegen_set_current_return_type_447(cct_boot_sig_CodegenContext* ctx, char* type_name)
 {
   if ((*ctx).owns_current_return_type)
   {
@@ -7366,26 +7373,26 @@ void cct_boot_rit_codegen_set_current_return_type_440(cct_boot_sig_CodegenContex
   return;
 }
 
-void cct_boot_rit_codegen_push_local_scope_441(cct_boot_sig_CodegenContext* ctx)
+void cct_boot_rit_codegen_push_local_scope_448(cct_boot_sig_CodegenContext* ctx)
 {
-  long long mark = cct_boot_rit_fluxus_len_176((*ctx).local_names);
-  cct_boot_rit_fluxus_push_174((*ctx).local_scope_marks, (&mark));
+  long long mark = cct_boot_rit_fluxus_len_183((*ctx).local_names);
+  cct_boot_rit_fluxus_push_181((*ctx).local_scope_marks, (&mark));
   return;
 }
 
-void cct_boot_rit_codegen_pop_local_scope_442(cct_boot_sig_CodegenContext* ctx)
+void cct_boot_rit_codegen_pop_local_scope_449(cct_boot_sig_CodegenContext* ctx)
 {
-  if (cct_boot_rit_fluxus_len_176((*ctx).local_scope_marks) == 0)
+  if (cct_boot_rit_fluxus_len_183((*ctx).local_scope_marks) == 0)
   {
     return;
   }
   long long mark = 0;
-  cct_boot_rit_fluxus_pop_175((*ctx).local_scope_marks, (&mark));
-  while (cct_boot_rit_fluxus_len_176((*ctx).local_names) > mark)
+  cct_boot_rit_fluxus_pop_182((*ctx).local_scope_marks, (&mark));
+  while (cct_boot_rit_fluxus_len_183((*ctx).local_names) > mark)
   {
     {
-      long long idx = (cct_boot_rit_fluxus_len_176((*ctx).local_names) - 1);
-      cct_boot_sig_CodegenLocal* local = cct_boot_rit_codegen_context_local_at_407(ctx, idx);
+      long long idx = (cct_boot_rit_fluxus_len_183((*ctx).local_names) - 1);
+      cct_boot_sig_CodegenLocal* local = cct_boot_rit_codegen_context_local_at_414(ctx, idx);
       if ((*local).owns_source_name)
       {
         free((void*)((*local).source_name));
@@ -7406,7 +7413,7 @@ void cct_boot_rit_codegen_pop_local_scope_442(cct_boot_sig_CodegenContext* ctx)
       {
         free((void*)((*local).iter_value_type_text));
       }
-      cct_boot_rit_fluxus_remove_183((*ctx).local_names, idx);
+      cct_boot_rit_fluxus_remove_190((*ctx).local_names, idx);
     }
     if (0) goto __cct_label_149;
     __cct_label_149: ;
@@ -7416,13 +7423,13 @@ void cct_boot_rit_codegen_pop_local_scope_442(cct_boot_sig_CodegenContext* ctx)
   return;
 }
 
-char* cct_boot_rit_codegen_lookup_local_c_name_443(cct_boot_sig_CodegenContext* ctx, char* source_name)
+char* cct_boot_rit_codegen_lookup_local_c_name_450(cct_boot_sig_CodegenContext* ctx, char* source_name)
 {
-  long long i = (cct_boot_rit_fluxus_len_176((*ctx).local_names) - 1);
+  long long i = (cct_boot_rit_fluxus_len_183((*ctx).local_names) - 1);
   while (i >= 0)
   {
     {
-      cct_boot_sig_CodegenLocal* local = cct_boot_rit_codegen_context_local_at_407(ctx, i);
+      cct_boot_sig_CodegenLocal* local = cct_boot_rit_codegen_context_local_at_414(ctx, i);
       if (cct_boot_rit_compare_38((*local).source_name, source_name) == 0)
       {
         return (*local).c_name;
@@ -7437,7 +7444,7 @@ char* cct_boot_rit_codegen_lookup_local_c_name_443(cct_boot_sig_CodegenContext* 
   return cct_boot_str_102;
 }
 
-char* cct_boot_rit_codegen_define_local_444(cct_boot_sig_CodegenContext* ctx, char* source_name, char* c_name, char* type_name)
+char* cct_boot_rit_codegen_define_local_451(cct_boot_sig_CodegenContext* ctx, char* source_name, char* c_name, char* type_name)
 {
   cct_boot_sig_CodegenLocal local;
   local.source_name = cct_boot_rit_verbum_dup_40(source_name);
@@ -7451,17 +7458,17 @@ char* cct_boot_rit_codegen_define_local_444(cct_boot_sig_CodegenContext* ctx, ch
   local.owns_iter_item_type_text = 0;
   local.iter_value_type_text = cct_boot_str_102;
   local.owns_iter_value_type_text = 0;
-  cct_boot_rit_fluxus_push_174((*ctx).local_names, (&local));
-  return cct_boot_rit_codegen_lookup_local_c_name_443(ctx, source_name);
+  cct_boot_rit_fluxus_push_181((*ctx).local_names, (&local));
+  return cct_boot_rit_codegen_lookup_local_c_name_450(ctx, source_name);
 }
 
-char* cct_boot_rit_codegen_lookup_local_type_name_445(cct_boot_sig_CodegenContext* ctx, char* source_name)
+char* cct_boot_rit_codegen_lookup_local_type_name_452(cct_boot_sig_CodegenContext* ctx, char* source_name)
 {
-  long long i = (cct_boot_rit_fluxus_len_176((*ctx).local_names) - 1);
+  long long i = (cct_boot_rit_fluxus_len_183((*ctx).local_names) - 1);
   while (i >= 0)
   {
     {
-      cct_boot_sig_CodegenLocal* local = cct_boot_rit_codegen_context_local_at_407(ctx, i);
+      cct_boot_sig_CodegenLocal* local = cct_boot_rit_codegen_context_local_at_414(ctx, i);
       if (cct_boot_rit_compare_38((*local).source_name, source_name) == 0)
       {
         return (*local).type_name;
@@ -7476,13 +7483,13 @@ char* cct_boot_rit_codegen_lookup_local_type_name_445(cct_boot_sig_CodegenContex
   return cct_boot_str_102;
 }
 
-void cct_boot_rit_codegen_set_local_iter_info_446(cct_boot_sig_CodegenContext* ctx, char* source_name, long long kind, char* item_type_text, char* value_type_text)
+void cct_boot_rit_codegen_set_local_iter_info_453(cct_boot_sig_CodegenContext* ctx, char* source_name, long long kind, char* item_type_text, char* value_type_text)
 {
-  long long i = (cct_boot_rit_fluxus_len_176((*ctx).local_names) - 1);
+  long long i = (cct_boot_rit_fluxus_len_183((*ctx).local_names) - 1);
   while (i >= 0)
   {
     {
-      cct_boot_sig_CodegenLocal* local = cct_boot_rit_codegen_context_local_at_407(ctx, i);
+      cct_boot_sig_CodegenLocal* local = cct_boot_rit_codegen_context_local_at_414(ctx, i);
       if (cct_boot_rit_compare_38((*local).source_name, source_name) == 0)
       {
         (*local).iter_collection_kind = kind;
@@ -7510,13 +7517,13 @@ void cct_boot_rit_codegen_set_local_iter_info_446(cct_boot_sig_CodegenContext* c
   return;
 }
 
-long long cct_boot_rit_codegen_lookup_local_iter_kind_447(cct_boot_sig_CodegenContext* ctx, char* source_name)
+long long cct_boot_rit_codegen_lookup_local_iter_kind_454(cct_boot_sig_CodegenContext* ctx, char* source_name)
 {
-  long long i = (cct_boot_rit_fluxus_len_176((*ctx).local_names) - 1);
+  long long i = (cct_boot_rit_fluxus_len_183((*ctx).local_names) - 1);
   while (i >= 0)
   {
     {
-      cct_boot_sig_CodegenLocal* local = cct_boot_rit_codegen_context_local_at_407(ctx, i);
+      cct_boot_sig_CodegenLocal* local = cct_boot_rit_codegen_context_local_at_414(ctx, i);
       if (cct_boot_rit_compare_38((*local).source_name, source_name) == 0)
       {
         return (*local).iter_collection_kind;
@@ -7531,13 +7538,13 @@ long long cct_boot_rit_codegen_lookup_local_iter_kind_447(cct_boot_sig_CodegenCo
   return 0;
 }
 
-char* cct_boot_rit_codegen_lookup_local_iter_item_type_text_448(cct_boot_sig_CodegenContext* ctx, char* source_name)
+char* cct_boot_rit_codegen_lookup_local_iter_item_type_text_455(cct_boot_sig_CodegenContext* ctx, char* source_name)
 {
-  long long i = (cct_boot_rit_fluxus_len_176((*ctx).local_names) - 1);
+  long long i = (cct_boot_rit_fluxus_len_183((*ctx).local_names) - 1);
   while (i >= 0)
   {
     {
-      cct_boot_sig_CodegenLocal* local = cct_boot_rit_codegen_context_local_at_407(ctx, i);
+      cct_boot_sig_CodegenLocal* local = cct_boot_rit_codegen_context_local_at_414(ctx, i);
       if (cct_boot_rit_compare_38((*local).source_name, source_name) == 0)
       {
         return (*local).iter_item_type_text;
@@ -7552,13 +7559,13 @@ char* cct_boot_rit_codegen_lookup_local_iter_item_type_text_448(cct_boot_sig_Cod
   return cct_boot_str_102;
 }
 
-char* cct_boot_rit_codegen_lookup_local_iter_value_type_text_449(cct_boot_sig_CodegenContext* ctx, char* source_name)
+char* cct_boot_rit_codegen_lookup_local_iter_value_type_text_456(cct_boot_sig_CodegenContext* ctx, char* source_name)
 {
-  long long i = (cct_boot_rit_fluxus_len_176((*ctx).local_names) - 1);
+  long long i = (cct_boot_rit_fluxus_len_183((*ctx).local_names) - 1);
   while (i >= 0)
   {
     {
-      cct_boot_sig_CodegenLocal* local = cct_boot_rit_codegen_context_local_at_407(ctx, i);
+      cct_boot_sig_CodegenLocal* local = cct_boot_rit_codegen_context_local_at_414(ctx, i);
       if (cct_boot_rit_compare_38((*local).source_name, source_name) == 0)
       {
         return (*local).iter_value_type_text;
@@ -7573,19 +7580,19 @@ char* cct_boot_rit_codegen_lookup_local_iter_value_type_text_449(cct_boot_sig_Co
   return cct_boot_str_102;
 }
 
-long long cct_boot_rit_codegen_registered_string_count_450(cct_boot_sig_CodegenContext* ctx)
+long long cct_boot_rit_codegen_registered_string_count_457(cct_boot_sig_CodegenContext* ctx)
 {
-  return cct_boot_rit_fluxus_len_176((*ctx).string_literals);
+  return cct_boot_rit_fluxus_len_183((*ctx).string_literals);
 }
 
-char* cct_boot_rit_codegen_lookup_string_symbol_451(cct_boot_sig_CodegenContext* ctx, char* raw_text)
+char* cct_boot_rit_codegen_lookup_string_symbol_458(cct_boot_sig_CodegenContext* ctx, char* raw_text)
 {
   long long i = 0;
-  long long n = cct_boot_rit_fluxus_len_176((*ctx).string_literals);
+  long long n = cct_boot_rit_fluxus_len_183((*ctx).string_literals);
   while (i < n)
   {
     {
-      cct_boot_sig_CodegenStringLiteral* item = cct_boot_rit_codegen_context_string_at_410(ctx, i);
+      cct_boot_sig_CodegenStringLiteral* item = cct_boot_rit_codegen_context_string_at_417(ctx, i);
       if (cct_boot_rit_compare_38((*item).raw_text, raw_text) == 0)
       {
         return (*item).symbol_name;
@@ -7600,9 +7607,9 @@ char* cct_boot_rit_codegen_lookup_string_symbol_451(cct_boot_sig_CodegenContext*
   return cct_boot_str_102;
 }
 
-char* cct_boot_rit_codegen_register_string_symbol_452(cct_boot_sig_CodegenContext* ctx, char* raw_text, char* symbol_name)
+char* cct_boot_rit_codegen_register_string_symbol_459(cct_boot_sig_CodegenContext* ctx, char* raw_text, char* symbol_name)
 {
-  char* existing = cct_boot_rit_codegen_lookup_string_symbol_451(ctx, raw_text);
+  char* existing = cct_boot_rit_codegen_lookup_string_symbol_458(ctx, raw_text);
   if (cct_boot_rit_compare_38(existing, cct_boot_str_102) != 0)
   {
     return existing;
@@ -7612,23 +7619,23 @@ char* cct_boot_rit_codegen_register_string_symbol_452(cct_boot_sig_CodegenContex
   item.owns_raw_text = 1;
   item.symbol_name = cct_boot_rit_verbum_dup_40(symbol_name);
   item.owns_symbol_name = 1;
-  cct_boot_rit_fluxus_push_174((*ctx).string_literals, (&item));
-  return cct_boot_rit_codegen_lookup_string_symbol_451(ctx, raw_text);
+  cct_boot_rit_fluxus_push_181((*ctx).string_literals, (&item));
+  return cct_boot_rit_codegen_lookup_string_symbol_458(ctx, raw_text);
 }
 
-long long cct_boot_rit_codegen_registered_sigillum_count_453(cct_boot_sig_CodegenContext* ctx)
+long long cct_boot_rit_codegen_registered_sigillum_count_460(cct_boot_sig_CodegenContext* ctx)
 {
-  return cct_boot_rit_fluxus_len_176((*ctx).sigillum_types);
+  return cct_boot_rit_fluxus_len_183((*ctx).sigillum_types);
 }
 
-char* cct_boot_rit_codegen_lookup_sigillum_c_name_454(cct_boot_sig_CodegenContext* ctx, char* source_name)
+char* cct_boot_rit_codegen_lookup_sigillum_c_name_461(cct_boot_sig_CodegenContext* ctx, char* source_name)
 {
   long long i = 0;
-  long long n = cct_boot_rit_fluxus_len_176((*ctx).sigillum_types);
+  long long n = cct_boot_rit_fluxus_len_183((*ctx).sigillum_types);
   while (i < n)
   {
     {
-      cct_boot_sig_CodegenSigillum* sigillum = cct_boot_rit_codegen_context_sigillum_at_408(ctx, i);
+      cct_boot_sig_CodegenSigillum* sigillum = cct_boot_rit_codegen_context_sigillum_at_415(ctx, i);
       if (cct_boot_rit_compare_38((*sigillum).source_name, source_name) == 0)
       {
         return (*sigillum).c_name;
@@ -7643,14 +7650,14 @@ char* cct_boot_rit_codegen_lookup_sigillum_c_name_454(cct_boot_sig_CodegenContex
   return cct_boot_str_102;
 }
 
-long long cct_boot_rit_codegen_find_sigillum_index_455(cct_boot_sig_CodegenContext* ctx, char* source_name)
+long long cct_boot_rit_codegen_find_sigillum_index_462(cct_boot_sig_CodegenContext* ctx, char* source_name)
 {
   long long i = 0;
-  long long n = cct_boot_rit_fluxus_len_176((*ctx).sigillum_types);
+  long long n = cct_boot_rit_fluxus_len_183((*ctx).sigillum_types);
   while (i < n)
   {
     {
-      cct_boot_sig_CodegenSigillum* sigillum = cct_boot_rit_codegen_context_sigillum_at_408(ctx, i);
+      cct_boot_sig_CodegenSigillum* sigillum = cct_boot_rit_codegen_context_sigillum_at_415(ctx, i);
       if (cct_boot_rit_compare_38((*sigillum).source_name, source_name) == 0)
       {
         return i;
@@ -7665,9 +7672,9 @@ long long cct_boot_rit_codegen_find_sigillum_index_455(cct_boot_sig_CodegenConte
   return (-1);
 }
 
-char* cct_boot_rit_codegen_register_sigillum_456(cct_boot_sig_CodegenContext* ctx, char* source_name, char* c_name)
+char* cct_boot_rit_codegen_register_sigillum_463(cct_boot_sig_CodegenContext* ctx, char* source_name, char* c_name)
 {
-  char* existing = cct_boot_rit_codegen_lookup_sigillum_c_name_454(ctx, source_name);
+  char* existing = cct_boot_rit_codegen_lookup_sigillum_c_name_461(ctx, source_name);
   if (cct_boot_rit_compare_38(existing, cct_boot_str_102) != 0)
   {
     return existing;
@@ -7677,42 +7684,42 @@ char* cct_boot_rit_codegen_register_sigillum_456(cct_boot_sig_CodegenContext* ct
   sigillum.owns_source_name = 1;
   sigillum.c_name = cct_boot_rit_verbum_dup_40(c_name);
   sigillum.owns_c_name = 1;
-  sigillum.fields = cct_boot_rit_fluxus_init_172(((long long)sizeof(cct_boot_sig_CodegenSigillumField)));
-  cct_boot_rit_fluxus_push_174((*ctx).sigillum_types, (&sigillum));
-  return cct_boot_rit_codegen_lookup_sigillum_c_name_454(ctx, source_name);
+  sigillum.fields = cct_boot_rit_fluxus_init_179(((long long)sizeof(cct_boot_sig_CodegenSigillumField)));
+  cct_boot_rit_fluxus_push_181((*ctx).sigillum_types, (&sigillum));
+  return cct_boot_rit_codegen_lookup_sigillum_c_name_461(ctx, source_name);
 }
 
-void cct_boot_rit_codegen_sigillum_append_field_457(cct_boot_sig_CodegenContext* ctx, char* sigillum_name, char* field_name, char* type_name)
+void cct_boot_rit_codegen_sigillum_append_field_464(cct_boot_sig_CodegenContext* ctx, char* sigillum_name, char* field_name, char* type_name)
 {
-  long long sigillum_idx = cct_boot_rit_codegen_find_sigillum_index_455(ctx, sigillum_name);
+  long long sigillum_idx = cct_boot_rit_codegen_find_sigillum_index_462(ctx, sigillum_name);
   if (sigillum_idx < 0)
   {
     return;
   }
-  cct_boot_sig_CodegenSigillum* sigillum = cct_boot_rit_codegen_context_sigillum_at_408(ctx, sigillum_idx);
+  cct_boot_sig_CodegenSigillum* sigillum = cct_boot_rit_codegen_context_sigillum_at_415(ctx, sigillum_idx);
   cct_boot_sig_CodegenSigillumField field;
   field.field_name = cct_boot_rit_verbum_dup_40(field_name);
   field.owns_field_name = 1;
   field.type_name = cct_boot_rit_verbum_dup_40(type_name);
   field.owns_type_name = 1;
-  cct_boot_rit_fluxus_push_174((*sigillum).fields, (&field));
+  cct_boot_rit_fluxus_push_181((*sigillum).fields, (&field));
   return;
 }
 
-char* cct_boot_rit_codegen_lookup_sigillum_field_type_458(cct_boot_sig_CodegenContext* ctx, char* sigillum_name, char* field_name)
+char* cct_boot_rit_codegen_lookup_sigillum_field_type_465(cct_boot_sig_CodegenContext* ctx, char* sigillum_name, char* field_name)
 {
-  long long sigillum_idx = cct_boot_rit_codegen_find_sigillum_index_455(ctx, sigillum_name);
+  long long sigillum_idx = cct_boot_rit_codegen_find_sigillum_index_462(ctx, sigillum_name);
   if (sigillum_idx < 0)
   {
     return cct_boot_str_102;
   }
-  cct_boot_sig_CodegenSigillum* sigillum = cct_boot_rit_codegen_context_sigillum_at_408(ctx, sigillum_idx);
+  cct_boot_sig_CodegenSigillum* sigillum = cct_boot_rit_codegen_context_sigillum_at_415(ctx, sigillum_idx);
   long long i = 0;
-  long long n = cct_boot_rit_fluxus_len_176((*sigillum).fields);
+  long long n = cct_boot_rit_fluxus_len_183((*sigillum).fields);
   while (i < n)
   {
     {
-      cct_boot_sig_CodegenSigillumField* field = cct_boot_rit_codegen_context_sigillum_field_at_409(sigillum, i);
+      cct_boot_sig_CodegenSigillumField* field = cct_boot_rit_codegen_context_sigillum_field_at_416(sigillum, i);
       if (cct_boot_rit_compare_38((*field).field_name, field_name) == 0)
       {
         return (*field).type_name;
@@ -7727,19 +7734,19 @@ char* cct_boot_rit_codegen_lookup_sigillum_field_type_458(cct_boot_sig_CodegenCo
   return cct_boot_str_102;
 }
 
-long long cct_boot_rit_codegen_registered_ordo_count_459(cct_boot_sig_CodegenContext* ctx)
+long long cct_boot_rit_codegen_registered_ordo_count_466(cct_boot_sig_CodegenContext* ctx)
 {
-  return cct_boot_rit_fluxus_len_176((*ctx).ordo_types);
+  return cct_boot_rit_fluxus_len_183((*ctx).ordo_types);
 }
 
-char* cct_boot_rit_codegen_lookup_ordo_c_name_460(cct_boot_sig_CodegenContext* ctx, char* source_name)
+char* cct_boot_rit_codegen_lookup_ordo_c_name_467(cct_boot_sig_CodegenContext* ctx, char* source_name)
 {
   long long i = 0;
-  long long n = cct_boot_rit_fluxus_len_176((*ctx).ordo_types);
+  long long n = cct_boot_rit_fluxus_len_183((*ctx).ordo_types);
   while (i < n)
   {
     {
-      cct_boot_sig_CodegenOrdo* ordo = cct_boot_rit_codegen_context_ordo_at_411(ctx, i);
+      cct_boot_sig_CodegenOrdo* ordo = cct_boot_rit_codegen_context_ordo_at_418(ctx, i);
       if (cct_boot_rit_compare_38((*ordo).source_name, source_name) == 0)
       {
         return (*ordo).c_name;
@@ -7754,14 +7761,14 @@ char* cct_boot_rit_codegen_lookup_ordo_c_name_460(cct_boot_sig_CodegenContext* c
   return cct_boot_str_102;
 }
 
-long long cct_boot_rit_codegen_find_ordo_index_461(cct_boot_sig_CodegenContext* ctx, char* source_name)
+long long cct_boot_rit_codegen_find_ordo_index_468(cct_boot_sig_CodegenContext* ctx, char* source_name)
 {
   long long i = 0;
-  long long n = cct_boot_rit_fluxus_len_176((*ctx).ordo_types);
+  long long n = cct_boot_rit_fluxus_len_183((*ctx).ordo_types);
   while (i < n)
   {
     {
-      cct_boot_sig_CodegenOrdo* ordo = cct_boot_rit_codegen_context_ordo_at_411(ctx, i);
+      cct_boot_sig_CodegenOrdo* ordo = cct_boot_rit_codegen_context_ordo_at_418(ctx, i);
       if (cct_boot_rit_compare_38((*ordo).source_name, source_name) == 0)
       {
         return i;
@@ -7776,9 +7783,9 @@ long long cct_boot_rit_codegen_find_ordo_index_461(cct_boot_sig_CodegenContext* 
   return (-1);
 }
 
-char* cct_boot_rit_codegen_register_ordo_462(cct_boot_sig_CodegenContext* ctx, char* source_name, char* c_name)
+char* cct_boot_rit_codegen_register_ordo_469(cct_boot_sig_CodegenContext* ctx, char* source_name, char* c_name)
 {
-  char* existing = cct_boot_rit_codegen_lookup_ordo_c_name_460(ctx, source_name);
+  char* existing = cct_boot_rit_codegen_lookup_ordo_c_name_467(ctx, source_name);
   if (cct_boot_rit_compare_38(existing, cct_boot_str_102) != 0)
   {
     return existing;
@@ -7790,25 +7797,25 @@ char* cct_boot_rit_codegen_register_ordo_462(cct_boot_sig_CodegenContext* ctx, c
   ordo.owns_c_name = 1;
   ordo.has_payload = 0;
   ordo.has_decl_node = 0;
-  ordo.items = cct_boot_rit_fluxus_init_172(((long long)sizeof(cct_boot_sig_CodegenOrdoItem)));
-  cct_boot_rit_fluxus_push_174((*ctx).ordo_types, (&ordo));
-  return cct_boot_rit_codegen_lookup_ordo_c_name_460(ctx, source_name);
+  ordo.items = cct_boot_rit_fluxus_init_179(((long long)sizeof(cct_boot_sig_CodegenOrdoItem)));
+  cct_boot_rit_fluxus_push_181((*ctx).ordo_types, (&ordo));
+  return cct_boot_rit_codegen_lookup_ordo_c_name_467(ctx, source_name);
 }
 
-void cct_boot_rit_codegen_ordo_append_item_463(cct_boot_sig_CodegenContext* ctx, char* ordo_name, char* item_name, char* c_name)
+void cct_boot_rit_codegen_ordo_append_item_470(cct_boot_sig_CodegenContext* ctx, char* ordo_name, char* item_name, char* c_name)
 {
-  cct_boot_rit_codegen_ordo_append_item_with_arity_464(ctx, ordo_name, item_name, c_name, 0);
+  cct_boot_rit_codegen_ordo_append_item_with_arity_471(ctx, ordo_name, item_name, c_name, 0);
   return;
 }
 
-void cct_boot_rit_codegen_ordo_append_item_with_arity_464(cct_boot_sig_CodegenContext* ctx, char* ordo_name, char* item_name, char* c_name, long long payload_arity)
+void cct_boot_rit_codegen_ordo_append_item_with_arity_471(cct_boot_sig_CodegenContext* ctx, char* ordo_name, char* item_name, char* c_name, long long payload_arity)
 {
-  long long ordo_idx = cct_boot_rit_codegen_find_ordo_index_461(ctx, ordo_name);
+  long long ordo_idx = cct_boot_rit_codegen_find_ordo_index_468(ctx, ordo_name);
   if (ordo_idx < 0)
   {
     return;
   }
-  cct_boot_sig_CodegenOrdo* ordo = cct_boot_rit_codegen_context_ordo_at_411(ctx, ordo_idx);
+  cct_boot_sig_CodegenOrdo* ordo = cct_boot_rit_codegen_context_ordo_at_418(ctx, ordo_idx);
   cct_boot_sig_CodegenOrdoItem item;
   item.source_name = cct_boot_rit_verbum_dup_40(item_name);
   item.owns_source_name = 1;
@@ -7817,48 +7824,48 @@ void cct_boot_rit_codegen_ordo_append_item_with_arity_464(cct_boot_sig_CodegenCo
   item.owner_name = cct_boot_rit_verbum_dup_40(ordo_name);
   item.owns_owner_name = 1;
   item.payload_arity = payload_arity;
-  cct_boot_rit_fluxus_push_174((*ordo).items, (&item));
+  cct_boot_rit_fluxus_push_181((*ordo).items, (&item));
   return;
 }
 
-void cct_boot_rit_codegen_mark_ordo_has_payload_465(cct_boot_sig_CodegenContext* ctx, char* ordo_name)
+void cct_boot_rit_codegen_mark_ordo_has_payload_472(cct_boot_sig_CodegenContext* ctx, char* ordo_name)
 {
-  long long ordo_idx = cct_boot_rit_codegen_find_ordo_index_461(ctx, ordo_name);
+  long long ordo_idx = cct_boot_rit_codegen_find_ordo_index_468(ctx, ordo_name);
   if (ordo_idx < 0)
   {
     return;
   }
-  cct_boot_sig_CodegenOrdo* ordo = cct_boot_rit_codegen_context_ordo_at_411(ctx, ordo_idx);
+  cct_boot_sig_CodegenOrdo* ordo = cct_boot_rit_codegen_context_ordo_at_418(ctx, ordo_idx);
   (*ordo).has_payload = 1;
   return;
 }
 
-int cct_boot_rit_codegen_ordo_has_payload_466(cct_boot_sig_CodegenContext* ctx, char* ordo_name)
+int cct_boot_rit_codegen_ordo_has_payload_473(cct_boot_sig_CodegenContext* ctx, char* ordo_name)
 {
-  long long ordo_idx = cct_boot_rit_codegen_find_ordo_index_461(ctx, ordo_name);
+  long long ordo_idx = cct_boot_rit_codegen_find_ordo_index_468(ctx, ordo_name);
   if (ordo_idx < 0)
   {
     return 0;
   }
-  cct_boot_sig_CodegenOrdo* ordo = cct_boot_rit_codegen_context_ordo_at_411(ctx, ordo_idx);
+  cct_boot_sig_CodegenOrdo* ordo = cct_boot_rit_codegen_context_ordo_at_418(ctx, ordo_idx);
   return (*ordo).has_payload;
 }
 
-long long cct_boot_rit_codegen_count_ordo_item_matches_467(cct_boot_sig_CodegenContext* ctx, char* item_name)
+long long cct_boot_rit_codegen_count_ordo_item_matches_474(cct_boot_sig_CodegenContext* ctx, char* item_name)
 {
   long long i = 0;
   long long hits = 0;
-  long long n = cct_boot_rit_fluxus_len_176((*ctx).ordo_types);
+  long long n = cct_boot_rit_fluxus_len_183((*ctx).ordo_types);
   while (i < n)
   {
     {
-      cct_boot_sig_CodegenOrdo* ordo = cct_boot_rit_codegen_context_ordo_at_411(ctx, i);
+      cct_boot_sig_CodegenOrdo* ordo = cct_boot_rit_codegen_context_ordo_at_418(ctx, i);
       long long item_idx = 0;
-      long long item_n = cct_boot_rit_fluxus_len_176((*ordo).items);
+      long long item_n = cct_boot_rit_fluxus_len_183((*ordo).items);
       while (item_idx < item_n)
       {
         {
-          cct_boot_sig_CodegenOrdoItem* item = cct_boot_rit_codegen_context_ordo_item_at_412(ordo, item_idx);
+          cct_boot_sig_CodegenOrdoItem* item = cct_boot_rit_codegen_context_ordo_item_at_419(ordo, item_idx);
           if (cct_boot_rit_compare_38((*item).source_name, item_name) == 0)
           {
             hits = (hits + 1);
@@ -7880,20 +7887,20 @@ long long cct_boot_rit_codegen_count_ordo_item_matches_467(cct_boot_sig_CodegenC
   return hits;
 }
 
-char* cct_boot_rit_codegen_lookup_ordo_item_c_name_468(cct_boot_sig_CodegenContext* ctx, char* item_name)
+char* cct_boot_rit_codegen_lookup_ordo_item_c_name_475(cct_boot_sig_CodegenContext* ctx, char* item_name)
 {
   long long i = 0;
-  long long n = cct_boot_rit_fluxus_len_176((*ctx).ordo_types);
+  long long n = cct_boot_rit_fluxus_len_183((*ctx).ordo_types);
   while (i < n)
   {
     {
-      cct_boot_sig_CodegenOrdo* ordo = cct_boot_rit_codegen_context_ordo_at_411(ctx, i);
+      cct_boot_sig_CodegenOrdo* ordo = cct_boot_rit_codegen_context_ordo_at_418(ctx, i);
       long long item_idx = 0;
-      long long item_n = cct_boot_rit_fluxus_len_176((*ordo).items);
+      long long item_n = cct_boot_rit_fluxus_len_183((*ordo).items);
       while (item_idx < item_n)
       {
         {
-          cct_boot_sig_CodegenOrdoItem* item = cct_boot_rit_codegen_context_ordo_item_at_412(ordo, item_idx);
+          cct_boot_sig_CodegenOrdoItem* item = cct_boot_rit_codegen_context_ordo_item_at_419(ordo, item_idx);
           if (cct_boot_rit_compare_38((*item).source_name, item_name) == 0)
           {
             return (*item).c_name;
@@ -7915,20 +7922,20 @@ char* cct_boot_rit_codegen_lookup_ordo_item_c_name_468(cct_boot_sig_CodegenConte
   return cct_boot_str_102;
 }
 
-char* cct_boot_rit_codegen_lookup_ordo_item_owner_name_469(cct_boot_sig_CodegenContext* ctx, char* item_name)
+char* cct_boot_rit_codegen_lookup_ordo_item_owner_name_476(cct_boot_sig_CodegenContext* ctx, char* item_name)
 {
   long long i = 0;
-  long long n = cct_boot_rit_fluxus_len_176((*ctx).ordo_types);
+  long long n = cct_boot_rit_fluxus_len_183((*ctx).ordo_types);
   while (i < n)
   {
     {
-      cct_boot_sig_CodegenOrdo* ordo = cct_boot_rit_codegen_context_ordo_at_411(ctx, i);
+      cct_boot_sig_CodegenOrdo* ordo = cct_boot_rit_codegen_context_ordo_at_418(ctx, i);
       long long item_idx = 0;
-      long long item_n = cct_boot_rit_fluxus_len_176((*ordo).items);
+      long long item_n = cct_boot_rit_fluxus_len_183((*ordo).items);
       while (item_idx < item_n)
       {
         {
-          cct_boot_sig_CodegenOrdoItem* item = cct_boot_rit_codegen_context_ordo_item_at_412(ordo, item_idx);
+          cct_boot_sig_CodegenOrdoItem* item = cct_boot_rit_codegen_context_ordo_item_at_419(ordo, item_idx);
           if (cct_boot_rit_compare_38((*item).source_name, item_name) == 0)
           {
             return (*item).owner_name;
@@ -7950,20 +7957,20 @@ char* cct_boot_rit_codegen_lookup_ordo_item_owner_name_469(cct_boot_sig_CodegenC
   return cct_boot_str_102;
 }
 
-long long cct_boot_rit_codegen_lookup_ordo_item_payload_arity_470(cct_boot_sig_CodegenContext* ctx, char* item_name)
+long long cct_boot_rit_codegen_lookup_ordo_item_payload_arity_477(cct_boot_sig_CodegenContext* ctx, char* item_name)
 {
   long long i = 0;
-  long long n = cct_boot_rit_fluxus_len_176((*ctx).ordo_types);
+  long long n = cct_boot_rit_fluxus_len_183((*ctx).ordo_types);
   while (i < n)
   {
     {
-      cct_boot_sig_CodegenOrdo* ordo = cct_boot_rit_codegen_context_ordo_at_411(ctx, i);
+      cct_boot_sig_CodegenOrdo* ordo = cct_boot_rit_codegen_context_ordo_at_418(ctx, i);
       long long item_idx = 0;
-      long long item_n = cct_boot_rit_fluxus_len_176((*ordo).items);
+      long long item_n = cct_boot_rit_fluxus_len_183((*ordo).items);
       while (item_idx < item_n)
       {
         {
-          cct_boot_sig_CodegenOrdoItem* item = cct_boot_rit_codegen_context_ordo_item_at_412(ordo, item_idx);
+          cct_boot_sig_CodegenOrdoItem* item = cct_boot_rit_codegen_context_ordo_item_at_419(ordo, item_idx);
           if (cct_boot_rit_compare_38((*item).source_name, item_name) == 0)
           {
             return (*item).payload_arity;
@@ -7985,77 +7992,77 @@ long long cct_boot_rit_codegen_lookup_ordo_item_payload_arity_470(cct_boot_sig_C
   return (-1);
 }
 
-void cct_boot_rit_codegen_require_stdio_471(cct_boot_sig_CodegenContext* ctx)
+void cct_boot_rit_codegen_require_stdio_478(cct_boot_sig_CodegenContext* ctx)
 {
   (*ctx).needs_stdio = 1;
   return;
 }
 
-void cct_boot_rit_codegen_require_stdlib_472(cct_boot_sig_CodegenContext* ctx)
+void cct_boot_rit_codegen_require_stdlib_479(cct_boot_sig_CodegenContext* ctx)
 {
   (*ctx).needs_stdlib = 1;
   return;
 }
 
-void cct_boot_rit_codegen_require_args_runtime_473(cct_boot_sig_CodegenContext* ctx)
+void cct_boot_rit_codegen_require_args_runtime_480(cct_boot_sig_CodegenContext* ctx)
 {
   (*ctx).needs_args_runtime = 1;
   return;
 }
 
-void cct_boot_rit_codegen_require_fs_runtime_474(cct_boot_sig_CodegenContext* ctx)
+void cct_boot_rit_codegen_require_fs_runtime_481(cct_boot_sig_CodegenContext* ctx)
 {
   (*ctx).needs_fs_runtime = 1;
   return;
 }
 
-void cct_boot_rit_codegen_require_scribe_runtime_475(cct_boot_sig_CodegenContext* ctx)
+void cct_boot_rit_codegen_require_scribe_runtime_482(cct_boot_sig_CodegenContext* ctx)
 {
   (*ctx).needs_scribe_runtime = 1;
-  cct_boot_rit_codegen_require_stdio_471(ctx);
+  cct_boot_rit_codegen_require_stdio_478(ctx);
   return;
 }
 
-void cct_boot_rit_codegen_require_fail_helper_476(cct_boot_sig_CodegenContext* ctx)
+void cct_boot_rit_codegen_require_fail_helper_483(cct_boot_sig_CodegenContext* ctx)
 {
   (*ctx).needs_fail_helper = 1;
-  cct_boot_rit_codegen_require_stdio_471(ctx);
-  cct_boot_rit_codegen_require_stdlib_472(ctx);
+  cct_boot_rit_codegen_require_stdio_478(ctx);
+  cct_boot_rit_codegen_require_stdlib_479(ctx);
   return;
 }
 
-void cct_boot_rit_codegen_require_failure_runtime_477(cct_boot_sig_CodegenContext* ctx)
+void cct_boot_rit_codegen_require_failure_runtime_484(cct_boot_sig_CodegenContext* ctx)
 {
   (*ctx).needs_failure_runtime = 1;
-  cct_boot_rit_codegen_require_fail_helper_476(ctx);
+  cct_boot_rit_codegen_require_fail_helper_483(ctx);
   return;
 }
 
-void cct_boot_rit_codegen_require_math_runtime_478(cct_boot_sig_CodegenContext* ctx)
+void cct_boot_rit_codegen_require_math_runtime_485(cct_boot_sig_CodegenContext* ctx)
 {
   (*ctx).needs_math_runtime = 1;
   return;
 }
 
-void cct_boot_rit_codegen_require_time_runtime_479(cct_boot_sig_CodegenContext* ctx)
+void cct_boot_rit_codegen_require_time_runtime_486(cct_boot_sig_CodegenContext* ctx)
 {
   (*ctx).needs_time_runtime = 1;
   return;
 }
 
-long long cct_boot_rit_codegen_registered_generic_sigillum_template_count_480(cct_boot_sig_CodegenContext* ctx)
+long long cct_boot_rit_codegen_registered_generic_sigillum_template_count_487(cct_boot_sig_CodegenContext* ctx)
 {
-  return cct_boot_rit_fluxus_len_176((*ctx).generic_sigillum_templates);
+  return cct_boot_rit_fluxus_len_183((*ctx).generic_sigillum_templates);
 }
 
-long long cct_boot_rit_codegen_find_generic_sigillum_template_index_481(cct_boot_sig_CodegenContext* ctx, char* source_name)
+long long cct_boot_rit_codegen_find_generic_sigillum_template_index_488(cct_boot_sig_CodegenContext* ctx, char* source_name)
 {
   long long i = 0;
-  long long n = cct_boot_rit_fluxus_len_176((*ctx).generic_sigillum_templates);
+  long long n = cct_boot_rit_fluxus_len_183((*ctx).generic_sigillum_templates);
   while (i < n)
   {
     {
-      cct_boot_sig_CodegenGenericSigillumTemplate* item = cct_boot_rit_codegen_context_generic_sigillum_template_at_413(ctx, i);
+      cct_boot_sig_CodegenGenericSigillumTemplate* item = cct_boot_rit_codegen_context_generic_sigillum_template_at_420(ctx, i);
       if (cct_boot_rit_compare_38((*item).source_name, source_name) == 0)
       {
         return i;
@@ -8070,9 +8077,9 @@ long long cct_boot_rit_codegen_find_generic_sigillum_template_index_481(cct_boot
   return (-1);
 }
 
-void cct_boot_rit_codegen_register_generic_sigillum_template_482(cct_boot_sig_CodegenContext* ctx, char* source_name, cct_boot_sig_AstNode* decl_node, long long arity)
+void cct_boot_rit_codegen_register_generic_sigillum_template_489(cct_boot_sig_CodegenContext* ctx, char* source_name, cct_boot_sig_AstNode* decl_node, long long arity)
 {
-  if (cct_boot_rit_codegen_find_generic_sigillum_template_index_481(ctx, source_name) >= 0)
+  if (cct_boot_rit_codegen_find_generic_sigillum_template_index_488(ctx, source_name) >= 0)
   {
     return;
   }
@@ -8081,30 +8088,30 @@ void cct_boot_rit_codegen_register_generic_sigillum_template_482(cct_boot_sig_Co
   item.owns_source_name = 1;
   item.decl_node = decl_node;
   item.arity = arity;
-  cct_boot_rit_fluxus_push_174((*ctx).generic_sigillum_templates, (&item));
+  cct_boot_rit_fluxus_push_181((*ctx).generic_sigillum_templates, (&item));
   return;
 }
 
-cct_boot_sig_AstNode* cct_boot_rit_codegen_lookup_generic_sigillum_template_483(cct_boot_sig_CodegenContext* ctx, char* source_name)
+cct_boot_sig_AstNode* cct_boot_rit_codegen_lookup_generic_sigillum_template_490(cct_boot_sig_CodegenContext* ctx, char* source_name)
 {
-  long long idx = cct_boot_rit_codegen_find_generic_sigillum_template_index_481(ctx, source_name);
-  cct_boot_sig_CodegenGenericSigillumTemplate* item = cct_boot_rit_codegen_context_generic_sigillum_template_at_413(ctx, idx);
+  long long idx = cct_boot_rit_codegen_find_generic_sigillum_template_index_488(ctx, source_name);
+  cct_boot_sig_CodegenGenericSigillumTemplate* item = cct_boot_rit_codegen_context_generic_sigillum_template_at_420(ctx, idx);
   return (*item).decl_node;
 }
 
-long long cct_boot_rit_codegen_registered_generic_sigillum_instance_count_484(cct_boot_sig_CodegenContext* ctx)
+long long cct_boot_rit_codegen_registered_generic_sigillum_instance_count_491(cct_boot_sig_CodegenContext* ctx)
 {
-  return cct_boot_rit_fluxus_len_176((*ctx).generic_sigillum_instances);
+  return cct_boot_rit_fluxus_len_183((*ctx).generic_sigillum_instances);
 }
 
-long long cct_boot_rit_codegen_find_generic_sigillum_instance_index_485(cct_boot_sig_CodegenContext* ctx, char* instance_key)
+long long cct_boot_rit_codegen_find_generic_sigillum_instance_index_492(cct_boot_sig_CodegenContext* ctx, char* instance_key)
 {
   long long i = 0;
-  long long n = cct_boot_rit_fluxus_len_176((*ctx).generic_sigillum_instances);
+  long long n = cct_boot_rit_fluxus_len_183((*ctx).generic_sigillum_instances);
   while (i < n)
   {
     {
-      cct_boot_sig_CodegenGenericSigillumInstance* item = cct_boot_rit_codegen_context_generic_sigillum_instance_at_414(ctx, i);
+      cct_boot_sig_CodegenGenericSigillumInstance* item = cct_boot_rit_codegen_context_generic_sigillum_instance_at_421(ctx, i);
       if (cct_boot_rit_compare_38((*item).instance_key, instance_key) == 0)
       {
         return i;
@@ -8119,12 +8126,12 @@ long long cct_boot_rit_codegen_find_generic_sigillum_instance_index_485(cct_boot
   return (-1);
 }
 
-char* cct_boot_rit_codegen_register_generic_sigillum_instance_486(cct_boot_sig_CodegenContext* ctx, char* instance_key, char* c_name, cct_boot_sig_AstNode* template_decl, void* type_args)
+char* cct_boot_rit_codegen_register_generic_sigillum_instance_493(cct_boot_sig_CodegenContext* ctx, char* instance_key, char* c_name, cct_boot_sig_AstNode* template_decl, void* type_args)
 {
-  long long idx = cct_boot_rit_codegen_find_generic_sigillum_instance_index_485(ctx, instance_key);
+  long long idx = cct_boot_rit_codegen_find_generic_sigillum_instance_index_492(ctx, instance_key);
   if (idx >= 0)
   {
-    cct_boot_sig_CodegenGenericSigillumInstance* existing = cct_boot_rit_codegen_context_generic_sigillum_instance_at_414(ctx, idx);
+    cct_boot_sig_CodegenGenericSigillumInstance* existing = cct_boot_rit_codegen_context_generic_sigillum_instance_at_421(ctx, idx);
     return (*existing).c_name;
   }
   cct_boot_sig_CodegenGenericSigillumInstance item;
@@ -8134,23 +8141,23 @@ char* cct_boot_rit_codegen_register_generic_sigillum_instance_486(cct_boot_sig_C
   item.owns_c_name = 1;
   item.template_decl = template_decl;
   item.type_args = type_args;
-  cct_boot_rit_fluxus_push_174((*ctx).generic_sigillum_instances, (&item));
+  cct_boot_rit_fluxus_push_181((*ctx).generic_sigillum_instances, (&item));
   return c_name;
 }
 
-long long cct_boot_rit_codegen_registered_generic_rituale_template_count_487(cct_boot_sig_CodegenContext* ctx)
+long long cct_boot_rit_codegen_registered_generic_rituale_template_count_494(cct_boot_sig_CodegenContext* ctx)
 {
-  return cct_boot_rit_fluxus_len_176((*ctx).generic_rituale_templates);
+  return cct_boot_rit_fluxus_len_183((*ctx).generic_rituale_templates);
 }
 
-long long cct_boot_rit_codegen_find_generic_rituale_template_index_488(cct_boot_sig_CodegenContext* ctx, char* source_name)
+long long cct_boot_rit_codegen_find_generic_rituale_template_index_495(cct_boot_sig_CodegenContext* ctx, char* source_name)
 {
   long long i = 0;
-  long long n = cct_boot_rit_fluxus_len_176((*ctx).generic_rituale_templates);
+  long long n = cct_boot_rit_fluxus_len_183((*ctx).generic_rituale_templates);
   while (i < n)
   {
     {
-      cct_boot_sig_CodegenGenericRitualeTemplate* item = cct_boot_rit_codegen_context_generic_rituale_template_at_415(ctx, i);
+      cct_boot_sig_CodegenGenericRitualeTemplate* item = cct_boot_rit_codegen_context_generic_rituale_template_at_422(ctx, i);
       if (cct_boot_rit_compare_38((*item).source_name, source_name) == 0)
       {
         return i;
@@ -8165,9 +8172,9 @@ long long cct_boot_rit_codegen_find_generic_rituale_template_index_488(cct_boot_
   return (-1);
 }
 
-void cct_boot_rit_codegen_register_generic_rituale_template_489(cct_boot_sig_CodegenContext* ctx, char* source_name, cct_boot_sig_AstNode* decl_node, long long arity)
+void cct_boot_rit_codegen_register_generic_rituale_template_496(cct_boot_sig_CodegenContext* ctx, char* source_name, cct_boot_sig_AstNode* decl_node, long long arity)
 {
-  if (cct_boot_rit_codegen_find_generic_rituale_template_index_488(ctx, source_name) >= 0)
+  if (cct_boot_rit_codegen_find_generic_rituale_template_index_495(ctx, source_name) >= 0)
   {
     return;
   }
@@ -8176,30 +8183,30 @@ void cct_boot_rit_codegen_register_generic_rituale_template_489(cct_boot_sig_Cod
   item.owns_source_name = 1;
   item.decl_node = decl_node;
   item.arity = arity;
-  cct_boot_rit_fluxus_push_174((*ctx).generic_rituale_templates, (&item));
+  cct_boot_rit_fluxus_push_181((*ctx).generic_rituale_templates, (&item));
   return;
 }
 
-cct_boot_sig_AstNode* cct_boot_rit_codegen_lookup_generic_rituale_template_490(cct_boot_sig_CodegenContext* ctx, char* source_name)
+cct_boot_sig_AstNode* cct_boot_rit_codegen_lookup_generic_rituale_template_497(cct_boot_sig_CodegenContext* ctx, char* source_name)
 {
-  long long idx = cct_boot_rit_codegen_find_generic_rituale_template_index_488(ctx, source_name);
-  cct_boot_sig_CodegenGenericRitualeTemplate* item = cct_boot_rit_codegen_context_generic_rituale_template_at_415(ctx, idx);
+  long long idx = cct_boot_rit_codegen_find_generic_rituale_template_index_495(ctx, source_name);
+  cct_boot_sig_CodegenGenericRitualeTemplate* item = cct_boot_rit_codegen_context_generic_rituale_template_at_422(ctx, idx);
   return (*item).decl_node;
 }
 
-long long cct_boot_rit_codegen_registered_generic_rituale_instance_count_491(cct_boot_sig_CodegenContext* ctx)
+long long cct_boot_rit_codegen_registered_generic_rituale_instance_count_498(cct_boot_sig_CodegenContext* ctx)
 {
-  return cct_boot_rit_fluxus_len_176((*ctx).generic_rituale_instances);
+  return cct_boot_rit_fluxus_len_183((*ctx).generic_rituale_instances);
 }
 
-long long cct_boot_rit_codegen_find_generic_rituale_instance_index_492(cct_boot_sig_CodegenContext* ctx, char* instance_key)
+long long cct_boot_rit_codegen_find_generic_rituale_instance_index_499(cct_boot_sig_CodegenContext* ctx, char* instance_key)
 {
   long long i = 0;
-  long long n = cct_boot_rit_fluxus_len_176((*ctx).generic_rituale_instances);
+  long long n = cct_boot_rit_fluxus_len_183((*ctx).generic_rituale_instances);
   while (i < n)
   {
     {
-      cct_boot_sig_CodegenGenericRitualeInstance* item = cct_boot_rit_codegen_context_generic_rituale_instance_at_416(ctx, i);
+      cct_boot_sig_CodegenGenericRitualeInstance* item = cct_boot_rit_codegen_context_generic_rituale_instance_at_423(ctx, i);
       if (cct_boot_rit_compare_38((*item).instance_key, instance_key) == 0)
       {
         return i;
@@ -8214,12 +8221,12 @@ long long cct_boot_rit_codegen_find_generic_rituale_instance_index_492(cct_boot_
   return (-1);
 }
 
-char* cct_boot_rit_codegen_register_generic_rituale_instance_493(cct_boot_sig_CodegenContext* ctx, char* instance_key, char* c_name, char* return_type_name, cct_boot_sig_AstNode* template_decl, void* type_args)
+char* cct_boot_rit_codegen_register_generic_rituale_instance_500(cct_boot_sig_CodegenContext* ctx, char* instance_key, char* c_name, char* return_type_name, cct_boot_sig_AstNode* template_decl, void* type_args)
 {
-  long long idx = cct_boot_rit_codegen_find_generic_rituale_instance_index_492(ctx, instance_key);
+  long long idx = cct_boot_rit_codegen_find_generic_rituale_instance_index_499(ctx, instance_key);
   if (idx >= 0)
   {
-    cct_boot_sig_CodegenGenericRitualeInstance* existing = cct_boot_rit_codegen_context_generic_rituale_instance_at_416(ctx, idx);
+    cct_boot_sig_CodegenGenericRitualeInstance* existing = cct_boot_rit_codegen_context_generic_rituale_instance_at_423(ctx, idx);
     return (*existing).c_name;
   }
   cct_boot_sig_CodegenGenericRitualeInstance item;
@@ -8231,35 +8238,35 @@ char* cct_boot_rit_codegen_register_generic_rituale_instance_493(cct_boot_sig_Co
   item.owns_return_type_name = 1;
   item.template_decl = template_decl;
   item.type_args = type_args;
-  cct_boot_rit_fluxus_push_174((*ctx).generic_rituale_instances, (&item));
+  cct_boot_rit_fluxus_push_181((*ctx).generic_rituale_instances, (&item));
   return c_name;
 }
 
-void cct_boot_rit_codegen_push_generic_binding_scope_494(cct_boot_sig_CodegenContext* ctx)
+void cct_boot_rit_codegen_push_generic_binding_scope_501(cct_boot_sig_CodegenContext* ctx)
 {
-  long long mark = cct_boot_rit_fluxus_len_176((*ctx).generic_bindings);
-  cct_boot_rit_fluxus_push_174((*ctx).generic_binding_marks, (&mark));
+  long long mark = cct_boot_rit_fluxus_len_183((*ctx).generic_bindings);
+  cct_boot_rit_fluxus_push_181((*ctx).generic_binding_marks, (&mark));
   return;
 }
 
-void cct_boot_rit_codegen_pop_generic_binding_scope_495(cct_boot_sig_CodegenContext* ctx)
+void cct_boot_rit_codegen_pop_generic_binding_scope_502(cct_boot_sig_CodegenContext* ctx)
 {
-  if (cct_boot_rit_fluxus_len_176((*ctx).generic_binding_marks) == 0)
+  if (cct_boot_rit_fluxus_len_183((*ctx).generic_binding_marks) == 0)
   {
     return;
   }
   long long mark = 0;
-  cct_boot_rit_fluxus_pop_175((*ctx).generic_binding_marks, (&mark));
-  while (cct_boot_rit_fluxus_len_176((*ctx).generic_bindings) > mark)
+  cct_boot_rit_fluxus_pop_182((*ctx).generic_binding_marks, (&mark));
+  while (cct_boot_rit_fluxus_len_183((*ctx).generic_bindings) > mark)
   {
     {
-      long long idx = (cct_boot_rit_fluxus_len_176((*ctx).generic_bindings) - 1);
-      cct_boot_sig_CodegenGenericBinding* item = cct_boot_rit_codegen_context_generic_binding_at_417(ctx, idx);
+      long long idx = (cct_boot_rit_fluxus_len_183((*ctx).generic_bindings) - 1);
+      cct_boot_sig_CodegenGenericBinding* item = cct_boot_rit_codegen_context_generic_binding_at_424(ctx, idx);
       if ((*item).owns_param_name)
       {
         free((void*)((*item).param_name));
       }
-      cct_boot_rit_fluxus_remove_183((*ctx).generic_bindings, idx);
+      cct_boot_rit_fluxus_remove_190((*ctx).generic_bindings, idx);
     }
     if (0) goto __cct_label_199;
     __cct_label_199: ;
@@ -8269,23 +8276,23 @@ void cct_boot_rit_codegen_pop_generic_binding_scope_495(cct_boot_sig_CodegenCont
   return;
 }
 
-void cct_boot_rit_codegen_define_generic_binding_496(cct_boot_sig_CodegenContext* ctx, char* param_name, cct_boot_sig_AstNode* type_expr)
+void cct_boot_rit_codegen_define_generic_binding_503(cct_boot_sig_CodegenContext* ctx, char* param_name, cct_boot_sig_AstNode* type_expr)
 {
   cct_boot_sig_CodegenGenericBinding item;
   item.param_name = cct_boot_rit_verbum_dup_40(param_name);
   item.owns_param_name = 1;
   item.type_expr = type_expr;
-  cct_boot_rit_fluxus_push_174((*ctx).generic_bindings, (&item));
+  cct_boot_rit_fluxus_push_181((*ctx).generic_bindings, (&item));
   return;
 }
 
-long long cct_boot_rit_codegen_find_generic_binding_index_497(cct_boot_sig_CodegenContext* ctx, char* param_name)
+long long cct_boot_rit_codegen_find_generic_binding_index_504(cct_boot_sig_CodegenContext* ctx, char* param_name)
 {
-  long long i = (cct_boot_rit_fluxus_len_176((*ctx).generic_bindings) - 1);
+  long long i = (cct_boot_rit_fluxus_len_183((*ctx).generic_bindings) - 1);
   while (i >= 0)
   {
     {
-      cct_boot_sig_CodegenGenericBinding* item = cct_boot_rit_codegen_context_generic_binding_at_417(ctx, i);
+      cct_boot_sig_CodegenGenericBinding* item = cct_boot_rit_codegen_context_generic_binding_at_424(ctx, i);
       if (cct_boot_rit_compare_38((*item).param_name, param_name) == 0)
       {
         return i;
@@ -8300,108 +8307,108 @@ long long cct_boot_rit_codegen_find_generic_binding_index_497(cct_boot_sig_Codeg
   return (-1);
 }
 
-cct_boot_sig_AstNode* cct_boot_rit_codegen_lookup_generic_binding_498(cct_boot_sig_CodegenContext* ctx, char* param_name)
+cct_boot_sig_AstNode* cct_boot_rit_codegen_lookup_generic_binding_505(cct_boot_sig_CodegenContext* ctx, char* param_name)
 {
-  long long idx = cct_boot_rit_codegen_find_generic_binding_index_497(ctx, param_name);
-  cct_boot_sig_CodegenGenericBinding* item = cct_boot_rit_codegen_context_generic_binding_at_417(ctx, idx);
+  long long idx = cct_boot_rit_codegen_find_generic_binding_index_504(ctx, param_name);
+  cct_boot_sig_CodegenGenericBinding* item = cct_boot_rit_codegen_context_generic_binding_at_424(ctx, idx);
   return (*item).type_expr;
 }
 
-void cct_boot_rit_codegen_emit_499(cct_boot_sig_CodegenContext* ctx, char* text)
+void cct_boot_rit_codegen_emit_506(cct_boot_sig_CodegenContext* ctx, char* text)
 {
-  cct_boot_rit_writer_write_88((*ctx).writer, text);
+  cct_boot_rit_writer_write_95((*ctx).writer, text);
   return;
 }
 
-void cct_boot_rit_codegen_emit_line_500(cct_boot_sig_CodegenContext* ctx, char* text)
+void cct_boot_rit_codegen_emit_line_507(cct_boot_sig_CodegenContext* ctx, char* text)
 {
-  cct_boot_rit_writer_writeln_89((*ctx).writer, text);
+  cct_boot_rit_writer_writeln_96((*ctx).writer, text);
   return;
 }
 
-void cct_boot_rit_codegen_emit_blank_line_501(cct_boot_sig_CodegenContext* ctx)
+void cct_boot_rit_codegen_emit_blank_line_508(cct_boot_sig_CodegenContext* ctx)
 {
-  cct_boot_rit_writer_writeln_89((*ctx).writer, cct_boot_str_102);
+  cct_boot_rit_writer_writeln_96((*ctx).writer, cct_boot_str_102);
   return;
 }
 
-void cct_boot_rit_codegen_indent_502(cct_boot_sig_CodegenContext* ctx)
+void cct_boot_rit_codegen_indent_509(cct_boot_sig_CodegenContext* ctx)
 {
-  cct_boot_rit_writer_indent_86((*ctx).writer);
+  cct_boot_rit_writer_indent_93((*ctx).writer);
   (*ctx).indent_level = ((*ctx).indent_level + 1);
   return;
 }
 
-void cct_boot_rit_codegen_dedent_503(cct_boot_sig_CodegenContext* ctx)
+void cct_boot_rit_codegen_dedent_510(cct_boot_sig_CodegenContext* ctx)
 {
   if ((*ctx).indent_level > 0)
   {
-    cct_boot_rit_writer_dedent_87((*ctx).writer);
+    cct_boot_rit_writer_dedent_94((*ctx).writer);
     (*ctx).indent_level = ((*ctx).indent_level - 1);
   }
   return;
 }
 
-void cct_boot_rit_codegen_emit_block_open_504(cct_boot_sig_CodegenContext* ctx)
+void cct_boot_rit_codegen_emit_block_open_511(cct_boot_sig_CodegenContext* ctx)
 {
-  cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_348);
-  cct_boot_rit_codegen_indent_502(ctx);
+  cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_348);
+  cct_boot_rit_codegen_indent_509(ctx);
   return;
 }
 
-void cct_boot_rit_codegen_emit_block_close_505(cct_boot_sig_CodegenContext* ctx)
+void cct_boot_rit_codegen_emit_block_close_512(cct_boot_sig_CodegenContext* ctx)
 {
-  cct_boot_rit_codegen_dedent_503(ctx);
-  cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_349);
+  cct_boot_rit_codegen_dedent_510(ctx);
+  cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_349);
   return;
 }
 
-char* cct_boot_rit_codegen_make_counter_name_506(char* prefix, long long id)
+char* cct_boot_rit_codegen_make_counter_name_513(char* prefix, long long id)
 {
-  char* left = cct_boot_rit_concat_37(prefix, cct_boot_rit_stringify_int_95(id));
+  char* left = cct_boot_rit_concat_37(prefix, cct_boot_rit_stringify_int_102(id));
   return left;
 }
 
-char* cct_boot_rit_codegen_next_temp_name_507(cct_boot_sig_CodegenContext* ctx)
+char* cct_boot_rit_codegen_next_temp_name_514(cct_boot_sig_CodegenContext* ctx)
 {
   long long id = (*ctx).next_temp_id;
   (*ctx).next_temp_id = (id + 1);
-  return cct_boot_rit_codegen_make_counter_name_506(cct_boot_str_350, id);
+  return cct_boot_rit_codegen_make_counter_name_513(cct_boot_str_350, id);
 }
 
-char* cct_boot_rit_codegen_next_label_name_508(cct_boot_sig_CodegenContext* ctx)
+char* cct_boot_rit_codegen_next_label_name_515(cct_boot_sig_CodegenContext* ctx)
 {
   long long id = (*ctx).next_label_id;
   (*ctx).next_label_id = (id + 1);
-  return cct_boot_rit_codegen_make_counter_name_506(cct_boot_str_351, id);
+  return cct_boot_rit_codegen_make_counter_name_513(cct_boot_str_351, id);
 }
 
-char* cct_boot_rit_codegen_make_rituale_c_name_509(cct_boot_sig_CodegenContext* ctx, char* rituale_name)
+char* cct_boot_rit_codegen_make_rituale_c_name_516(cct_boot_sig_CodegenContext* ctx, char* rituale_name)
 {
   char* prefix = cct_boot_rit_concat_37(cct_boot_str_352, rituale_name);
-  char* suffix = cct_boot_rit_codegen_make_counter_name_506(cct_boot_str_353, cct_boot_rit_codegen_registered_rituale_count_436(ctx));
+  char* suffix = cct_boot_rit_codegen_make_counter_name_513(cct_boot_str_353, cct_boot_rit_codegen_registered_rituale_count_443(ctx));
   char* c_name = cct_boot_rit_concat_37(prefix, suffix);
   return c_name;
 }
 
-char* cct_boot_rit_codegen_rituale_c_name_510(cct_boot_sig_CodegenContext* ctx, char* rituale_name)
+char* cct_boot_rit_codegen_rituale_c_name_517(cct_boot_sig_CodegenContext* ctx, char* rituale_name)
 {
-  char* existing = cct_boot_rit_codegen_lookup_rituale_c_name_437(ctx, rituale_name);
+  char* existing = cct_boot_rit_codegen_lookup_rituale_c_name_444(ctx, rituale_name);
   if (cct_boot_rit_compare_38(existing, cct_boot_str_102) != 0)
   {
     return existing;
   }
-  char* c_name = cct_boot_rit_codegen_make_rituale_c_name_509(ctx, rituale_name);
-  return cct_boot_rit_codegen_register_rituale_c_name_438(ctx, rituale_name, c_name, cct_boot_str_60);
+  char* c_name = cct_boot_rit_codegen_make_rituale_c_name_516(ctx, rituale_name);
+  return cct_boot_rit_codegen_register_rituale_c_name_445(ctx, rituale_name, c_name, cct_boot_str_60);
 }
 
-char* cct_boot_rit_codegen_normalize_string_literal_511(char* raw_text)
+char* cct_boot_rit_codegen_normalize_string_literal_518(char* raw_text)
 {
   long long n = cct_boot_rit_len_30(raw_text);
   char quote = 34;
   if (((n >= 2) && (cct_boot_rit_char_at_44(raw_text, 0) == quote)) && (cct_boot_rit_char_at_44(raw_text, (n - 1)) == quote))
   {
-    void* b = cct_boot_rit_builder_init_75();
+    void* b = cct_boot_rit_builder_init_82();
     long long i = 1;
     while (i < (n - 1))
     {
@@ -8412,40 +8419,40 @@ char* cct_boot_rit_codegen_normalize_string_literal_511(char* raw_text)
           char next = cct_boot_rit_char_at_44(raw_text, (i + 1));
           if (next == 34)
           {
-            cct_boot_rit_builder_append_char_77(b, 34);
+            cct_boot_rit_builder_append_char_84(b, 34);
             i = (i + 2);
           }
           else
           {
             if (next == 92)
             {
-              cct_boot_rit_builder_append_char_77(b, 92);
+              cct_boot_rit_builder_append_char_84(b, 92);
               i = (i + 2);
             }
             else
             {
               if (next == 110)
               {
-                cct_boot_rit_builder_append_char_77(b, 10);
+                cct_boot_rit_builder_append_char_84(b, 10);
                 i = (i + 2);
               }
               else
               {
                 if (next == 116)
                 {
-                  cct_boot_rit_builder_append_char_77(b, 9);
+                  cct_boot_rit_builder_append_char_84(b, 9);
                   i = (i + 2);
                 }
                 else
                 {
                   if (next == 114)
                   {
-                    cct_boot_rit_builder_append_char_77(b, 13);
+                    cct_boot_rit_builder_append_char_84(b, 13);
                     i = (i + 2);
                   }
                   else
                   {
-                    cct_boot_rit_builder_append_char_77(b, next);
+                    cct_boot_rit_builder_append_char_84(b, next);
                     i = (i + 2);
                   }
                 }
@@ -8455,7 +8462,7 @@ char* cct_boot_rit_codegen_normalize_string_literal_511(char* raw_text)
         }
         else
         {
-          cct_boot_rit_builder_append_char_77(b, ch);
+          cct_boot_rit_builder_append_char_84(b, ch);
           i = (i + 1);
         }
       }
@@ -8464,29 +8471,29 @@ char* cct_boot_rit_codegen_normalize_string_literal_511(char* raw_text)
     }
     if (0) goto __cct_label_202;
     __cct_label_202: ;
-    char* out = cct_boot_rit_builder_to_verbum_81(b);
-    cct_boot_rit_builder_free_84(b);
+    char* out = cct_boot_rit_builder_to_verbum_88(b);
+    cct_boot_rit_builder_free_91(b);
     return out;
   }
   return cct_boot_rit_verbum_dup_40(raw_text);
 }
 
-char* cct_boot_rit_codegen_string_symbol_512(cct_boot_sig_CodegenContext* ctx, char* raw_text)
+char* cct_boot_rit_codegen_string_symbol_519(cct_boot_sig_CodegenContext* ctx, char* raw_text)
 {
-  char* normalized = cct_boot_rit_codegen_normalize_string_literal_511(raw_text);
-  char* existing = cct_boot_rit_codegen_lookup_string_symbol_451(ctx, normalized);
+  char* normalized = cct_boot_rit_codegen_normalize_string_literal_518(raw_text);
+  char* existing = cct_boot_rit_codegen_lookup_string_symbol_458(ctx, normalized);
   if (cct_boot_rit_compare_38(existing, cct_boot_str_102) != 0)
   {
     free((void*)(normalized));
     return existing;
   }
-  char* symbol = cct_boot_rit_concat_37(cct_boot_str_354, cct_boot_rit_stringify_int_95(cct_boot_rit_codegen_registered_string_count_450(ctx)));
-  char* out = cct_boot_rit_codegen_register_string_symbol_452(ctx, normalized, symbol);
+  char* symbol = cct_boot_rit_concat_37(cct_boot_str_354, cct_boot_rit_stringify_int_102(cct_boot_rit_codegen_registered_string_count_457(ctx)));
+  char* out = cct_boot_rit_codegen_register_string_symbol_459(ctx, normalized, symbol);
   free((void*)(normalized));
   return out;
 }
 
-char* cct_boot_rit_codegen_basic_c_type_513(char* type_name)
+char* cct_boot_rit_codegen_basic_c_type_520(char* type_name)
 {
   if (cct_boot_rit_compare_38(type_name, cct_boot_str_51) == 0)
   {
@@ -8527,27 +8534,27 @@ char* cct_boot_rit_codegen_basic_c_type_513(char* type_name)
   return cct_boot_str_102;
 }
 
-int cct_boot_rit_codegen_generic_is_builtin_type_name_514(char* type_name)
+int cct_boot_rit_codegen_generic_is_builtin_type_name_521(char* type_name)
 {
   return ((((((((((cct_boot_rit_compare_38(type_name, cct_boot_str_51) == 0) || (cct_boot_rit_compare_38(type_name, cct_boot_str_52) == 0)) || (cct_boot_rit_compare_38(type_name, cct_boot_str_53) == 0)) || (cct_boot_rit_compare_38(type_name, cct_boot_str_54) == 0)) || (cct_boot_rit_compare_38(type_name, cct_boot_str_55) == 0)) || (cct_boot_rit_compare_38(type_name, cct_boot_str_56) == 0)) || (cct_boot_rit_compare_38(type_name, cct_boot_str_58) == 0)) || (cct_boot_rit_compare_38(type_name, cct_boot_str_57) == 0)) || (cct_boot_rit_compare_38(type_name, cct_boot_str_60) == 0)) || (cct_boot_rit_compare_38(type_name, cct_boot_str_41) == 0));
 }
 
-char* cct_boot_rit_codegen_generic_type_identity_515(cct_boot_sig_CodegenContext* ctx, cct_boot_sig_AstNode* type_expr)
+char* cct_boot_rit_codegen_generic_type_identity_522(cct_boot_sig_CodegenContext* ctx, cct_boot_sig_AstNode* type_expr)
 {
   if ((*type_expr).is_pointer)
   {
     char* elem_identity = cct_boot_str_102;
-    long long bound_ptr_idx = cct_boot_rit_codegen_find_generic_binding_index_497(ctx, (*type_expr).type_name);
+    long long bound_ptr_idx = cct_boot_rit_codegen_find_generic_binding_index_504(ctx, (*type_expr).type_name);
     if (bound_ptr_idx >= 0)
     {
-      cct_boot_sig_AstNode* bound_ptr = cct_boot_rit_codegen_lookup_generic_binding_498(ctx, (*type_expr).type_name);
-      elem_identity = cct_boot_rit_codegen_generic_type_identity_515(ctx, bound_ptr);
+      cct_boot_sig_AstNode* bound_ptr = cct_boot_rit_codegen_lookup_generic_binding_505(ctx, (*type_expr).type_name);
+      elem_identity = cct_boot_rit_codegen_generic_type_identity_522(ctx, bound_ptr);
     }
     else
     {
-      if (cct_boot_rit_ast_node_list_len_209((*type_expr).generic_args) > 0)
+      if (cct_boot_rit_ast_node_list_len_216((*type_expr).generic_args) > 0)
       {
-        elem_identity = cct_boot_rit_codegen_generic_type_identity_named_519(ctx, (*type_expr).type_name, (*type_expr).generic_args, (*type_expr).line, (*type_expr).column);
+        elem_identity = cct_boot_rit_codegen_generic_type_identity_named_526(ctx, (*type_expr).type_name, (*type_expr).generic_args, (*type_expr).line, (*type_expr).column);
       }
       else
       {
@@ -8562,18 +8569,18 @@ char* cct_boot_rit_codegen_generic_type_identity_515(cct_boot_sig_CodegenContext
   }
   if ((*type_expr).is_array)
   {
-    long long bound_array_idx = cct_boot_rit_codegen_find_generic_binding_index_497(ctx, (*type_expr).type_name);
+    long long bound_array_idx = cct_boot_rit_codegen_find_generic_binding_index_504(ctx, (*type_expr).type_name);
     char* elem_identity = cct_boot_str_102;
     if (bound_array_idx >= 0)
     {
-      cct_boot_sig_AstNode* bound_array = cct_boot_rit_codegen_lookup_generic_binding_498(ctx, (*type_expr).type_name);
-      elem_identity = cct_boot_rit_codegen_generic_type_identity_515(ctx, bound_array);
+      cct_boot_sig_AstNode* bound_array = cct_boot_rit_codegen_lookup_generic_binding_505(ctx, (*type_expr).type_name);
+      elem_identity = cct_boot_rit_codegen_generic_type_identity_522(ctx, bound_array);
     }
     else
     {
-      if (cct_boot_rit_ast_node_list_len_209((*type_expr).generic_args) > 0)
+      if (cct_boot_rit_ast_node_list_len_216((*type_expr).generic_args) > 0)
       {
-        elem_identity = cct_boot_rit_codegen_generic_type_identity_named_519(ctx, (*type_expr).type_name, (*type_expr).generic_args, (*type_expr).line, (*type_expr).column);
+        elem_identity = cct_boot_rit_codegen_generic_type_identity_named_526(ctx, (*type_expr).type_name, (*type_expr).generic_args, (*type_expr).line, (*type_expr).column);
       }
       else
       {
@@ -8582,7 +8589,7 @@ char* cct_boot_rit_codegen_generic_type_identity_515(cct_boot_sig_CodegenContext
     }
     char* prefix = cct_boot_rit_concat_37(cct_boot_str_364, elem_identity);
     char* middle = cct_boot_rit_concat_37(prefix, cct_boot_str_365);
-    char* size_text = cct_boot_rit_stringify_int_95((*type_expr).array_size);
+    char* size_text = cct_boot_rit_stringify_int_102((*type_expr).array_size);
     char* body = cct_boot_rit_concat_37(middle, size_text);
     char* out = cct_boot_rit_concat_37(body, cct_boot_str_113);
     free((void*)(elem_identity));
@@ -8592,22 +8599,22 @@ char* cct_boot_rit_codegen_generic_type_identity_515(cct_boot_sig_CodegenContext
     free((void*)(body));
     return out;
   }
-  long long bound_idx = cct_boot_rit_codegen_find_generic_binding_index_497(ctx, (*type_expr).type_name);
+  long long bound_idx = cct_boot_rit_codegen_find_generic_binding_index_504(ctx, (*type_expr).type_name);
   if (bound_idx >= 0)
   {
-    cct_boot_sig_AstNode* bound = cct_boot_rit_codegen_lookup_generic_binding_498(ctx, (*type_expr).type_name);
-    return cct_boot_rit_codegen_generic_type_identity_515(ctx, bound);
+    cct_boot_sig_AstNode* bound = cct_boot_rit_codegen_lookup_generic_binding_505(ctx, (*type_expr).type_name);
+    return cct_boot_rit_codegen_generic_type_identity_522(ctx, bound);
   }
-  if (cct_boot_rit_ast_node_list_len_209((*type_expr).generic_args) > 0)
+  if (cct_boot_rit_ast_node_list_len_216((*type_expr).generic_args) > 0)
   {
-    return cct_boot_rit_codegen_generic_type_identity_named_519(ctx, (*type_expr).type_name, (*type_expr).generic_args, (*type_expr).line, (*type_expr).column);
+    return cct_boot_rit_codegen_generic_type_identity_named_526(ctx, (*type_expr).type_name, (*type_expr).generic_args, (*type_expr).line, (*type_expr).column);
   }
   return cct_boot_rit_verbum_dup_40((*type_expr).type_name);
 }
 
-char* cct_boot_rit_codegen_generic_sanitize_identifier_516(char* raw)
+char* cct_boot_rit_codegen_generic_sanitize_identifier_523(char* raw)
 {
-  void* b = cct_boot_rit_builder_init_75();
+  void* b = cct_boot_rit_builder_init_82();
   long long i = 0;
   long long n = cct_boot_rit_len_30(raw);
   while (i < n)
@@ -8616,23 +8623,23 @@ char* cct_boot_rit_codegen_generic_sanitize_identifier_516(char* raw)
       char ch = cct_boot_rit_char_at_44(raw, i);
       if ((ch >= 48) && (ch <= 57))
       {
-        cct_boot_rit_builder_append_char_77(b, ch);
+        cct_boot_rit_builder_append_char_84(b, ch);
       }
       else
       {
         if ((ch >= 65) && (ch <= 90))
         {
-          cct_boot_rit_builder_append_char_77(b, ch);
+          cct_boot_rit_builder_append_char_84(b, ch);
         }
         else
         {
           if ((ch >= 97) && (ch <= 122))
           {
-            cct_boot_rit_builder_append_char_77(b, ch);
+            cct_boot_rit_builder_append_char_84(b, ch);
           }
           else
           {
-            cct_boot_rit_builder_append_char_77(b, 95);
+            cct_boot_rit_builder_append_char_84(b, 95);
           }
         }
       }
@@ -8643,27 +8650,27 @@ char* cct_boot_rit_codegen_generic_sanitize_identifier_516(char* raw)
   }
   if (0) goto __cct_label_204;
   __cct_label_204: ;
-  char* out = cct_boot_rit_builder_to_verbum_81(b);
-  cct_boot_rit_builder_free_84(b);
+  char* out = cct_boot_rit_builder_to_verbum_88(b);
+  cct_boot_rit_builder_free_91(b);
   return out;
 }
 
-char* cct_boot_rit_codegen_generic_type_arg_suffix_517(cct_boot_sig_CodegenContext* ctx, void* type_args)
+char* cct_boot_rit_codegen_generic_type_arg_suffix_524(cct_boot_sig_CodegenContext* ctx, void* type_args)
 {
-  void* b = cct_boot_rit_builder_init_75();
+  void* b = cct_boot_rit_builder_init_82();
   long long i = 0;
-  long long n = cct_boot_rit_ast_node_list_len_209(type_args);
+  long long n = cct_boot_rit_ast_node_list_len_216(type_args);
   while (i < n)
   {
     {
-      cct_boot_sig_AstNode* arg = cct_boot_rit_ast_node_list_get_210(type_args, i);
-      char* identity = cct_boot_rit_codegen_generic_type_identity_515(ctx, arg);
-      char* safe = cct_boot_rit_codegen_generic_sanitize_identifier_516(identity);
+      cct_boot_sig_AstNode* arg = cct_boot_rit_ast_node_list_get_217(type_args, i);
+      char* identity = cct_boot_rit_codegen_generic_type_identity_522(ctx, arg);
+      char* safe = cct_boot_rit_codegen_generic_sanitize_identifier_523(identity);
       if (i > 0)
       {
-        cct_boot_rit_builder_append_76(b, cct_boot_str_366);
+        cct_boot_rit_builder_append_83(b, cct_boot_str_366);
       }
-      cct_boot_rit_builder_append_76(b, safe);
+      cct_boot_rit_builder_append_83(b, safe);
       free((void*)(identity));
       free((void*)(safe));
       i = (i + 1);
@@ -8673,12 +8680,12 @@ char* cct_boot_rit_codegen_generic_type_arg_suffix_517(cct_boot_sig_CodegenConte
   }
   if (0) goto __cct_label_206;
   __cct_label_206: ;
-  char* out = cct_boot_rit_builder_to_verbum_81(b);
-  cct_boot_rit_builder_free_84(b);
+  char* out = cct_boot_rit_builder_to_verbum_88(b);
+  cct_boot_rit_builder_free_91(b);
   return out;
 }
 
-char* cct_boot_rit_codegen_generic_instance_key_518(char* source_name, char* suffix)
+char* cct_boot_rit_codegen_generic_instance_key_525(char* source_name, char* suffix)
 {
   char* left = cct_boot_rit_concat_37(source_name, cct_boot_str_367);
   char* right = cct_boot_rit_concat_37(left, suffix);
@@ -8688,46 +8695,46 @@ char* cct_boot_rit_codegen_generic_instance_key_518(char* source_name, char* suf
   return out;
 }
 
-char* cct_boot_rit_codegen_generic_type_identity_named_519(cct_boot_sig_CodegenContext* ctx, char* type_name, void* type_args, long long line, long long column)
+char* cct_boot_rit_codegen_generic_type_identity_named_526(cct_boot_sig_CodegenContext* ctx, char* type_name, void* type_args, long long line, long long column)
 {
-  if (cct_boot_rit_codegen_generic_is_builtin_type_name_514(type_name))
+  if (cct_boot_rit_codegen_generic_is_builtin_type_name_521(type_name))
   {
-    cct_boot_rit_codegen_report_error_433(ctx, line, column, cct_boot_str_369);
+    cct_boot_rit_codegen_report_error_440(ctx, line, column, cct_boot_str_369);
     return cct_boot_rit_verbum_dup_40(cct_boot_str_102);
   }
-  char* suffix = cct_boot_rit_codegen_generic_type_arg_suffix_517(ctx, type_args);
-  char* out = cct_boot_rit_codegen_generic_instance_key_518(type_name, suffix);
+  char* suffix = cct_boot_rit_codegen_generic_type_arg_suffix_524(ctx, type_args);
+  char* out = cct_boot_rit_codegen_generic_instance_key_525(type_name, suffix);
   free((void*)(suffix));
   return out;
 }
 
-char* cct_boot_rit_codegen_generic_make_sigillum_c_name_520(cct_boot_sig_CodegenContext* ctx, char* source_name, void* type_args)
+char* cct_boot_rit_codegen_generic_make_sigillum_c_name_527(cct_boot_sig_CodegenContext* ctx, char* source_name, void* type_args)
 {
-  char* suffix = cct_boot_rit_codegen_generic_type_arg_suffix_517(ctx, type_args);
+  char* suffix = cct_boot_rit_codegen_generic_type_arg_suffix_524(ctx, type_args);
   char* out = cct_boot_rit_concat_37(cct_boot_rit_concat_37(cct_boot_str_370, source_name), cct_boot_rit_concat_37(cct_boot_str_366, suffix));
   free((void*)(suffix));
   return out;
 }
 
-char* cct_boot_rit_codegen_generic_make_rituale_c_name_521(cct_boot_sig_CodegenContext* ctx, char* source_name, void* type_args)
+char* cct_boot_rit_codegen_generic_make_rituale_c_name_528(cct_boot_sig_CodegenContext* ctx, char* source_name, void* type_args)
 {
-  char* suffix = cct_boot_rit_codegen_generic_type_arg_suffix_517(ctx, type_args);
+  char* suffix = cct_boot_rit_codegen_generic_type_arg_suffix_524(ctx, type_args);
   char* out = cct_boot_rit_concat_37(cct_boot_rit_concat_37(cct_boot_str_352, source_name), cct_boot_rit_concat_37(cct_boot_str_366, suffix));
   free((void*)(suffix));
   return out;
 }
 
-void cct_boot_rit_codegen_generic_bind_template_args_522(cct_boot_sig_CodegenContext* ctx, cct_boot_sig_AstNode* template_decl, void* type_args)
+void cct_boot_rit_codegen_generic_bind_template_args_529(cct_boot_sig_CodegenContext* ctx, cct_boot_sig_AstNode* template_decl, void* type_args)
 {
-  cct_boot_rit_codegen_push_generic_binding_scope_494(ctx);
+  cct_boot_rit_codegen_push_generic_binding_scope_501(ctx);
   long long i = 0;
-  long long n = cct_boot_rit_ast_node_list_len_209((*template_decl).type_params);
+  long long n = cct_boot_rit_ast_node_list_len_216((*template_decl).type_params);
   while (i < n)
   {
     {
-      cct_boot_sig_AstNode* param = cct_boot_rit_ast_node_list_get_210((*template_decl).type_params, i);
-      cct_boot_sig_AstNode* arg = cct_boot_rit_ast_node_list_get_210(type_args, i);
-      cct_boot_rit_codegen_define_generic_binding_496(ctx, (*param).name, arg);
+      cct_boot_sig_AstNode* param = cct_boot_rit_ast_node_list_get_217((*template_decl).type_params, i);
+      cct_boot_sig_AstNode* arg = cct_boot_rit_ast_node_list_get_217(type_args, i);
+      cct_boot_rit_codegen_define_generic_binding_503(ctx, (*param).name, arg);
       i = (i + 1);
     }
     if (0) goto __cct_label_209;
@@ -8738,41 +8745,41 @@ void cct_boot_rit_codegen_generic_bind_template_args_522(cct_boot_sig_CodegenCon
   return;
 }
 
-void cct_boot_rit_codegen_generic_unbind_template_args_523(cct_boot_sig_CodegenContext* ctx)
+void cct_boot_rit_codegen_generic_unbind_template_args_530(cct_boot_sig_CodegenContext* ctx)
 {
-  cct_boot_rit_codegen_pop_generic_binding_scope_495(ctx);
+  cct_boot_rit_codegen_pop_generic_binding_scope_502(ctx);
   return;
 }
 
-void cct_boot_rit_codegen_generic_scan_type_use_524(cct_boot_sig_CodegenContext* ctx, cct_boot_sig_AstNode* type_expr)
+void cct_boot_rit_codegen_generic_scan_type_use_531(cct_boot_sig_CodegenContext* ctx, cct_boot_sig_AstNode* type_expr)
 {
-  long long bound_idx = cct_boot_rit_codegen_find_generic_binding_index_497(ctx, (*type_expr).type_name);
+  long long bound_idx = cct_boot_rit_codegen_find_generic_binding_index_504(ctx, (*type_expr).type_name);
   if (bound_idx >= 0)
   {
-    cct_boot_sig_AstNode* bound = cct_boot_rit_codegen_lookup_generic_binding_498(ctx, (*type_expr).type_name);
-    cct_boot_rit_codegen_generic_scan_type_use_524(ctx, bound);
+    cct_boot_sig_AstNode* bound = cct_boot_rit_codegen_lookup_generic_binding_505(ctx, (*type_expr).type_name);
+    cct_boot_rit_codegen_generic_scan_type_use_531(ctx, bound);
     return;
   }
-  if (cct_boot_rit_ast_node_list_len_209((*type_expr).generic_args) > 0)
+  if (cct_boot_rit_ast_node_list_len_216((*type_expr).generic_args) > 0)
   {
-    cct_boot_rit_codegen_generic_ensure_sigillum_instance_530(ctx, (*type_expr).type_name, (*type_expr).generic_args, type_expr);
+    cct_boot_rit_codegen_generic_ensure_sigillum_instance_537(ctx, (*type_expr).type_name, (*type_expr).generic_args, type_expr);
   }
   return;
 }
 
-void cct_boot_rit_codegen_generic_scan_expr_use_525(cct_boot_sig_CodegenContext* ctx, cct_boot_sig_AstNode* expr)
+void cct_boot_rit_codegen_generic_scan_expr_use_532(cct_boot_sig_CodegenContext* ctx, cct_boot_sig_AstNode* expr)
 {
   if ((*expr).kind == cct_boot_ord_AstKind__AST_MOLDE)
   {
     long long part_i = 0;
-    long long part_n = cct_boot_rit_ast_node_list_len_209((*expr).children);
+    long long part_n = cct_boot_rit_ast_node_list_len_216((*expr).children);
     while (part_i < part_n)
     {
       {
-        cct_boot_sig_AstNode* part = cct_boot_rit_ast_node_list_get_210((*expr).children, part_i);
+        cct_boot_sig_AstNode* part = cct_boot_rit_ast_node_list_get_217((*expr).children, part_i);
         if ((*part).kind != cct_boot_ord_AstKind__AST_LITERAL_STRING)
         {
-          cct_boot_rit_codegen_generic_scan_expr_use_525(ctx, part);
+          cct_boot_rit_codegen_generic_scan_expr_use_532(ctx, part);
         }
         part_i = (part_i + 1);
       }
@@ -8785,13 +8792,13 @@ void cct_boot_rit_codegen_generic_scan_expr_use_525(cct_boot_sig_CodegenContext*
   }
   if ((*expr).kind == cct_boot_ord_AstKind__AST_CALL)
   {
-    cct_boot_rit_codegen_generic_scan_expr_use_525(ctx, (*expr).callee);
+    cct_boot_rit_codegen_generic_scan_expr_use_532(ctx, (*expr).callee);
     long long arg_i = 0;
-    long long arg_n = cct_boot_rit_ast_node_list_len_209((*expr).arguments);
+    long long arg_n = cct_boot_rit_ast_node_list_len_216((*expr).arguments);
     while (arg_i < arg_n)
     {
       {
-        cct_boot_rit_codegen_generic_scan_expr_use_525(ctx, cct_boot_rit_ast_node_list_get_210((*expr).arguments, arg_i));
+        cct_boot_rit_codegen_generic_scan_expr_use_532(ctx, cct_boot_rit_ast_node_list_get_217((*expr).arguments, arg_i));
         arg_i = (arg_i + 1);
       }
       if (0) goto __cct_label_213;
@@ -8799,13 +8806,13 @@ void cct_boot_rit_codegen_generic_scan_expr_use_525(cct_boot_sig_CodegenContext*
     }
     if (0) goto __cct_label_212;
     __cct_label_212: ;
-    if (((*(*expr).callee).kind == cct_boot_ord_AstKind__AST_IDENTIFIER) && (cct_boot_rit_ast_node_list_len_209((*(*expr).callee).generic_args) > 0))
+    if (((*(*expr).callee).kind == cct_boot_ord_AstKind__AST_IDENTIFIER) && (cct_boot_rit_ast_node_list_len_216((*(*expr).callee).generic_args) > 0))
     {
       if (cct_boot_rit_compare_38((*(*expr).callee).name, cct_boot_str_371) == 0)
       {
         return;
       }
-      cct_boot_rit_codegen_generic_ensure_rituale_instance_532(ctx, (*(*expr).callee).name, (*(*expr).callee).generic_args, expr);
+      cct_boot_rit_codegen_generic_ensure_rituale_instance_539(ctx, (*(*expr).callee).name, (*(*expr).callee).generic_args, expr);
     }
     return;
   }
@@ -8813,7 +8820,7 @@ void cct_boot_rit_codegen_generic_scan_expr_use_525(cct_boot_sig_CodegenContext*
   {
     if ((*expr).has_type_expr)
     {
-      cct_boot_rit_codegen_generic_scan_type_use_524(ctx, (*expr).type_expr);
+      cct_boot_rit_codegen_generic_scan_type_use_531(ctx, (*expr).type_expr);
     }
     return;
   }
@@ -8821,27 +8828,27 @@ void cct_boot_rit_codegen_generic_scan_expr_use_525(cct_boot_sig_CodegenContext*
   {
     if ((*expr).has_left)
     {
-      cct_boot_rit_codegen_generic_scan_expr_use_525(ctx, (*expr).left);
+      cct_boot_rit_codegen_generic_scan_expr_use_532(ctx, (*expr).left);
     }
     if ((*expr).has_right)
     {
-      cct_boot_rit_codegen_generic_scan_expr_use_525(ctx, (*expr).right);
+      cct_boot_rit_codegen_generic_scan_expr_use_532(ctx, (*expr).right);
     }
     return;
   }
   return;
 }
 
-void cct_boot_rit_codegen_generic_scan_stmt_use_526(cct_boot_sig_CodegenContext* ctx, cct_boot_sig_AstNode* stmt)
+void cct_boot_rit_codegen_generic_scan_stmt_use_533(cct_boot_sig_CodegenContext* ctx, cct_boot_sig_AstNode* stmt)
 {
   if ((*stmt).kind == cct_boot_ord_AstKind__AST_BLOCK)
   {
     long long i = 0;
-    long long n = cct_boot_rit_ast_node_list_len_209((*stmt).statements);
+    long long n = cct_boot_rit_ast_node_list_len_216((*stmt).statements);
     while (i < n)
     {
       {
-        cct_boot_rit_codegen_generic_scan_stmt_use_526(ctx, cct_boot_rit_ast_node_list_get_210((*stmt).statements, i));
+        cct_boot_rit_codegen_generic_scan_stmt_use_533(ctx, cct_boot_rit_ast_node_list_get_217((*stmt).statements, i));
         i = (i + 1);
       }
       if (0) goto __cct_label_215;
@@ -8853,10 +8860,10 @@ void cct_boot_rit_codegen_generic_scan_stmt_use_526(cct_boot_sig_CodegenContext*
   }
   if ((*stmt).kind == cct_boot_ord_AstKind__AST_EVOCA)
   {
-    cct_boot_rit_codegen_generic_scan_type_use_524(ctx, (*stmt).type_expr);
+    cct_boot_rit_codegen_generic_scan_type_use_531(ctx, (*stmt).type_expr);
     if ((*stmt).has_right)
     {
-      cct_boot_rit_codegen_generic_scan_expr_use_525(ctx, (*stmt).right);
+      cct_boot_rit_codegen_generic_scan_expr_use_532(ctx, (*stmt).right);
     }
     return;
   }
@@ -8864,11 +8871,11 @@ void cct_boot_rit_codegen_generic_scan_stmt_use_526(cct_boot_sig_CodegenContext*
   {
     if ((*stmt).has_left)
     {
-      cct_boot_rit_codegen_generic_scan_expr_use_525(ctx, (*stmt).left);
+      cct_boot_rit_codegen_generic_scan_expr_use_532(ctx, (*stmt).left);
     }
     if ((*stmt).has_right)
     {
-      cct_boot_rit_codegen_generic_scan_expr_use_525(ctx, (*stmt).right);
+      cct_boot_rit_codegen_generic_scan_expr_use_532(ctx, (*stmt).right);
     }
     return;
   }
@@ -8876,7 +8883,7 @@ void cct_boot_rit_codegen_generic_scan_stmt_use_526(cct_boot_sig_CodegenContext*
   {
     if ((*stmt).has_left)
     {
-      cct_boot_rit_codegen_generic_scan_expr_use_525(ctx, (*stmt).left);
+      cct_boot_rit_codegen_generic_scan_expr_use_532(ctx, (*stmt).left);
     }
     return;
   }
@@ -8884,23 +8891,23 @@ void cct_boot_rit_codegen_generic_scan_stmt_use_526(cct_boot_sig_CodegenContext*
   {
     if ((*stmt).has_condition)
     {
-      cct_boot_rit_codegen_generic_scan_expr_use_525(ctx, (*stmt).condition);
+      cct_boot_rit_codegen_generic_scan_expr_use_532(ctx, (*stmt).condition);
     }
     if ((*stmt).has_body)
     {
-      cct_boot_rit_codegen_generic_scan_stmt_use_526(ctx, (*stmt).body);
+      cct_boot_rit_codegen_generic_scan_stmt_use_533(ctx, (*stmt).body);
     }
     if ((*stmt).has_else_branch)
     {
-      cct_boot_rit_codegen_generic_scan_stmt_use_526(ctx, (*stmt).else_branch);
+      cct_boot_rit_codegen_generic_scan_stmt_use_533(ctx, (*stmt).else_branch);
     }
     long long case_i = 0;
-    long long case_n = cct_boot_rit_ast_node_list_len_209((*stmt).cases);
+    long long case_n = cct_boot_rit_ast_node_list_len_216((*stmt).cases);
     while (case_i < case_n)
     {
       {
-        cct_boot_sig_AstNode* case_node = cct_boot_rit_ast_node_list_get_210((*stmt).cases, case_i);
-        cct_boot_rit_codegen_generic_scan_stmt_use_526(ctx, (*case_node).body);
+        cct_boot_sig_AstNode* case_node = cct_boot_rit_ast_node_list_get_217((*stmt).cases, case_i);
+        cct_boot_rit_codegen_generic_scan_stmt_use_533(ctx, (*case_node).body);
         case_i = (case_i + 1);
       }
       if (0) goto __cct_label_217;
@@ -8914,11 +8921,11 @@ void cct_boot_rit_codegen_generic_scan_stmt_use_526(cct_boot_sig_CodegenContext*
   {
     if ((*stmt).has_body)
     {
-      cct_boot_rit_codegen_generic_scan_stmt_use_526(ctx, (*stmt).body);
+      cct_boot_rit_codegen_generic_scan_stmt_use_533(ctx, (*stmt).body);
     }
     if ((*stmt).has_condition)
     {
-      cct_boot_rit_codegen_generic_scan_expr_use_525(ctx, (*stmt).condition);
+      cct_boot_rit_codegen_generic_scan_expr_use_532(ctx, (*stmt).condition);
     }
     return;
   }
@@ -8926,19 +8933,19 @@ void cct_boot_rit_codegen_generic_scan_stmt_use_526(cct_boot_sig_CodegenContext*
   {
     if ((*stmt).has_left)
     {
-      cct_boot_rit_codegen_generic_scan_expr_use_525(ctx, (*stmt).left);
+      cct_boot_rit_codegen_generic_scan_expr_use_532(ctx, (*stmt).left);
     }
     if ((*stmt).has_right)
     {
-      cct_boot_rit_codegen_generic_scan_expr_use_525(ctx, (*stmt).right);
+      cct_boot_rit_codegen_generic_scan_expr_use_532(ctx, (*stmt).right);
     }
     if ((*stmt).has_condition)
     {
-      cct_boot_rit_codegen_generic_scan_expr_use_525(ctx, (*stmt).condition);
+      cct_boot_rit_codegen_generic_scan_expr_use_532(ctx, (*stmt).condition);
     }
     if ((*stmt).has_body)
     {
-      cct_boot_rit_codegen_generic_scan_stmt_use_526(ctx, (*stmt).body);
+      cct_boot_rit_codegen_generic_scan_stmt_use_533(ctx, (*stmt).body);
     }
     return;
   }
@@ -8946,43 +8953,43 @@ void cct_boot_rit_codegen_generic_scan_stmt_use_526(cct_boot_sig_CodegenContext*
   {
     if ((*stmt).has_left)
     {
-      cct_boot_rit_codegen_generic_scan_expr_use_525(ctx, (*stmt).left);
+      cct_boot_rit_codegen_generic_scan_expr_use_532(ctx, (*stmt).left);
     }
     if ((*stmt).has_body)
     {
-      cct_boot_rit_codegen_generic_scan_stmt_use_526(ctx, (*stmt).body);
+      cct_boot_rit_codegen_generic_scan_stmt_use_533(ctx, (*stmt).body);
     }
     return;
   }
   if ((*stmt).kind == cct_boot_ord_AstKind__AST_TEMPTA)
   {
-    cct_boot_rit_codegen_generic_scan_stmt_use_526(ctx, (*stmt).try_block);
-    cct_boot_rit_codegen_generic_scan_type_use_524(ctx, (*stmt).cape_type);
-    cct_boot_rit_codegen_generic_scan_stmt_use_526(ctx, (*stmt).cape_block);
+    cct_boot_rit_codegen_generic_scan_stmt_use_533(ctx, (*stmt).try_block);
+    cct_boot_rit_codegen_generic_scan_type_use_531(ctx, (*stmt).cape_type);
+    cct_boot_rit_codegen_generic_scan_stmt_use_533(ctx, (*stmt).cape_block);
     if ((*stmt).has_semper_block)
     {
-      cct_boot_rit_codegen_generic_scan_stmt_use_526(ctx, (*stmt).semper_block);
+      cct_boot_rit_codegen_generic_scan_stmt_use_533(ctx, (*stmt).semper_block);
     }
     return;
   }
   return;
 }
 
-void cct_boot_rit_codegen_generic_scan_decl_use_527(cct_boot_sig_CodegenContext* ctx, cct_boot_sig_AstNode* decl)
+void cct_boot_rit_codegen_generic_scan_decl_use_534(cct_boot_sig_CodegenContext* ctx, cct_boot_sig_AstNode* decl)
 {
   if ((*decl).kind == cct_boot_ord_AstKind__AST_SIGILLUM)
   {
-    if (cct_boot_rit_ast_node_list_len_209((*decl).type_params) > 0)
+    if (cct_boot_rit_ast_node_list_len_216((*decl).type_params) > 0)
     {
       return;
     }
     long long field_i = 0;
-    long long field_n = cct_boot_rit_ast_node_list_len_209((*decl).fields);
+    long long field_n = cct_boot_rit_ast_node_list_len_216((*decl).fields);
     while (field_i < field_n)
     {
       {
-        cct_boot_sig_AstNode* field = cct_boot_rit_ast_node_list_get_210((*decl).fields, field_i);
-        cct_boot_rit_codegen_generic_scan_type_use_524(ctx, (*field).type_expr);
+        cct_boot_sig_AstNode* field = cct_boot_rit_ast_node_list_get_217((*decl).fields, field_i);
+        cct_boot_rit_codegen_generic_scan_type_use_531(ctx, (*field).type_expr);
         field_i = (field_i + 1);
       }
       if (0) goto __cct_label_219;
@@ -8994,17 +9001,17 @@ void cct_boot_rit_codegen_generic_scan_decl_use_527(cct_boot_sig_CodegenContext*
   }
   if ((*decl).kind == cct_boot_ord_AstKind__AST_RITUALE)
   {
-    if (cct_boot_rit_ast_node_list_len_209((*decl).type_params) > 0)
+    if (cct_boot_rit_ast_node_list_len_216((*decl).type_params) > 0)
     {
       return;
     }
     long long i = 0;
-    long long n = cct_boot_rit_ast_node_list_len_209((*decl).params);
+    long long n = cct_boot_rit_ast_node_list_len_216((*decl).params);
     while (i < n)
     {
       {
-        cct_boot_sig_AstNode* param = cct_boot_rit_ast_node_list_get_210((*decl).params, i);
-        cct_boot_rit_codegen_generic_scan_type_use_524(ctx, (*param).type_expr);
+        cct_boot_sig_AstNode* param = cct_boot_rit_ast_node_list_get_217((*decl).params, i);
+        cct_boot_rit_codegen_generic_scan_type_use_531(ctx, (*param).type_expr);
         i = (i + 1);
       }
       if (0) goto __cct_label_221;
@@ -9014,32 +9021,32 @@ void cct_boot_rit_codegen_generic_scan_decl_use_527(cct_boot_sig_CodegenContext*
     __cct_label_220: ;
     if ((*decl).has_return_type)
     {
-      cct_boot_rit_codegen_generic_scan_type_use_524(ctx, (*decl).return_type);
+      cct_boot_rit_codegen_generic_scan_type_use_531(ctx, (*decl).return_type);
     }
     if ((*decl).has_body)
     {
-      cct_boot_rit_codegen_generic_scan_stmt_use_526(ctx, (*decl).body);
+      cct_boot_rit_codegen_generic_scan_stmt_use_533(ctx, (*decl).body);
     }
     return;
   }
   return;
 }
 
-void cct_boot_rit_codegen_generic_collect_instance_closure_528(cct_boot_sig_CodegenContext* ctx)
+void cct_boot_rit_codegen_generic_collect_instance_closure_535(cct_boot_sig_CodegenContext* ctx)
 {
   long long i = 0;
-  while (i < cct_boot_rit_codegen_registered_generic_rituale_instance_count_491(ctx))
+  while (i < cct_boot_rit_codegen_registered_generic_rituale_instance_count_498(ctx))
   {
     {
-      cct_boot_sig_CodegenGenericRitualeInstance* inst = cct_boot_rit_codegen_context_generic_rituale_instance_at_416(ctx, i);
-      cct_boot_rit_codegen_generic_bind_template_args_522(ctx, (*inst).template_decl, (*inst).type_args);
+      cct_boot_sig_CodegenGenericRitualeInstance* inst = cct_boot_rit_codegen_context_generic_rituale_instance_at_423(ctx, i);
+      cct_boot_rit_codegen_generic_bind_template_args_529(ctx, (*inst).template_decl, (*inst).type_args);
       long long param_i = 0;
-      long long param_n = cct_boot_rit_ast_node_list_len_209((*(*inst).template_decl).params);
+      long long param_n = cct_boot_rit_ast_node_list_len_216((*(*inst).template_decl).params);
       while (param_i < param_n)
       {
         {
-          cct_boot_sig_AstNode* param = cct_boot_rit_ast_node_list_get_210((*(*inst).template_decl).params, param_i);
-          cct_boot_rit_codegen_generic_scan_type_use_524(ctx, (*param).type_expr);
+          cct_boot_sig_AstNode* param = cct_boot_rit_ast_node_list_get_217((*(*inst).template_decl).params, param_i);
+          cct_boot_rit_codegen_generic_scan_type_use_531(ctx, (*param).type_expr);
           param_i = (param_i + 1);
         }
         if (0) goto __cct_label_225;
@@ -9049,13 +9056,13 @@ void cct_boot_rit_codegen_generic_collect_instance_closure_528(cct_boot_sig_Code
       __cct_label_224: ;
       if ((*(*inst).template_decl).has_return_type)
       {
-        cct_boot_rit_codegen_generic_scan_type_use_524(ctx, (*(*inst).template_decl).return_type);
+        cct_boot_rit_codegen_generic_scan_type_use_531(ctx, (*(*inst).template_decl).return_type);
       }
       if ((*(*inst).template_decl).has_body)
       {
-        cct_boot_rit_codegen_generic_scan_stmt_use_526(ctx, (*(*inst).template_decl).body);
+        cct_boot_rit_codegen_generic_scan_stmt_use_533(ctx, (*(*inst).template_decl).body);
       }
-      cct_boot_rit_codegen_generic_unbind_template_args_523(ctx);
+      cct_boot_rit_codegen_generic_unbind_template_args_530(ctx);
       i = (i + 1);
     }
     if (0) goto __cct_label_223;
@@ -9066,14 +9073,14 @@ void cct_boot_rit_codegen_generic_collect_instance_closure_528(cct_boot_sig_Code
   return;
 }
 
-void cct_boot_rit_codegen_generic_collect_program_uses_529(cct_boot_sig_CodegenContext* ctx, cct_boot_sig_AstProgram* program)
+void cct_boot_rit_codegen_generic_collect_program_uses_536(cct_boot_sig_CodegenContext* ctx, cct_boot_sig_AstProgram* program)
 {
   long long i = 0;
-  long long n = cct_boot_rit_ast_node_list_len_209((*program).declarations);
+  long long n = cct_boot_rit_ast_node_list_len_216((*program).declarations);
   while (i < n)
   {
     {
-      cct_boot_rit_codegen_generic_scan_decl_use_527(ctx, cct_boot_rit_ast_node_list_get_210((*program).declarations, i));
+      cct_boot_rit_codegen_generic_scan_decl_use_534(ctx, cct_boot_rit_ast_node_list_get_217((*program).declarations, i));
       i = (i + 1);
     }
     if (0) goto __cct_label_227;
@@ -9081,48 +9088,48 @@ void cct_boot_rit_codegen_generic_collect_program_uses_529(cct_boot_sig_CodegenC
   }
   if (0) goto __cct_label_226;
   __cct_label_226: ;
-  cct_boot_rit_codegen_generic_collect_instance_closure_528(ctx);
+  cct_boot_rit_codegen_generic_collect_instance_closure_535(ctx);
   return;
 }
 
-char* cct_boot_rit_codegen_generic_ensure_sigillum_instance_530(cct_boot_sig_CodegenContext* ctx, char* source_name, void* type_args, cct_boot_sig_AstNode* at)
+char* cct_boot_rit_codegen_generic_ensure_sigillum_instance_537(cct_boot_sig_CodegenContext* ctx, char* source_name, void* type_args, cct_boot_sig_AstNode* at)
 {
-  long long templ_idx = cct_boot_rit_codegen_find_generic_sigillum_template_index_481(ctx, source_name);
+  long long templ_idx = cct_boot_rit_codegen_find_generic_sigillum_template_index_488(ctx, source_name);
   if (templ_idx < 0)
   {
-    cct_boot_rit_codegen_report_error_433(ctx, (*at).line, (*at).column, cct_boot_str_372);
+    cct_boot_rit_codegen_report_error_440(ctx, (*at).line, (*at).column, cct_boot_str_372);
     return cct_boot_str_102;
   }
-  cct_boot_sig_AstNode* templ = cct_boot_rit_codegen_lookup_generic_sigillum_template_483(ctx, source_name);
-  long long expected = cct_boot_rit_ast_node_list_len_209((*templ).type_params);
-  long long actual = cct_boot_rit_ast_node_list_len_209(type_args);
+  cct_boot_sig_AstNode* templ = cct_boot_rit_codegen_lookup_generic_sigillum_template_490(ctx, source_name);
+  long long expected = cct_boot_rit_ast_node_list_len_216((*templ).type_params);
+  long long actual = cct_boot_rit_ast_node_list_len_216(type_args);
   if (expected != actual)
   {
-    cct_boot_rit_codegen_report_error_433(ctx, (*at).line, (*at).column, cct_boot_str_373);
+    cct_boot_rit_codegen_report_error_440(ctx, (*at).line, (*at).column, cct_boot_str_373);
     return cct_boot_str_102;
   }
-  char* suffix = cct_boot_rit_codegen_generic_type_arg_suffix_517(ctx, type_args);
-  char* instance_key = cct_boot_rit_codegen_generic_instance_key_518(source_name, suffix);
-  char* existing = cct_boot_rit_codegen_lookup_sigillum_c_name_454(ctx, instance_key);
+  char* suffix = cct_boot_rit_codegen_generic_type_arg_suffix_524(ctx, type_args);
+  char* instance_key = cct_boot_rit_codegen_generic_instance_key_525(source_name, suffix);
+  char* existing = cct_boot_rit_codegen_lookup_sigillum_c_name_461(ctx, instance_key);
   if (cct_boot_rit_compare_38(existing, cct_boot_str_102) != 0)
   {
     free((void*)(suffix));
     free((void*)(instance_key));
     return existing;
   }
-  char* c_name = cct_boot_rit_codegen_generic_make_sigillum_c_name_520(ctx, source_name, type_args);
-  cct_boot_rit_codegen_register_sigillum_456(ctx, instance_key, c_name);
-  cct_boot_rit_codegen_register_generic_sigillum_instance_486(ctx, instance_key, c_name, templ, type_args);
-  cct_boot_rit_codegen_generic_bind_template_args_522(ctx, templ, type_args);
+  char* c_name = cct_boot_rit_codegen_generic_make_sigillum_c_name_527(ctx, source_name, type_args);
+  cct_boot_rit_codegen_register_sigillum_463(ctx, instance_key, c_name);
+  cct_boot_rit_codegen_register_generic_sigillum_instance_493(ctx, instance_key, c_name, templ, type_args);
+  cct_boot_rit_codegen_generic_bind_template_args_529(ctx, templ, type_args);
   long long field_i = 0;
-  long long field_n = cct_boot_rit_ast_node_list_len_209((*templ).fields);
+  long long field_n = cct_boot_rit_ast_node_list_len_216((*templ).fields);
   while (field_i < field_n)
   {
     {
-      cct_boot_sig_AstNode* field = cct_boot_rit_ast_node_list_get_210((*templ).fields, field_i);
-      char* field_identity = cct_boot_rit_codegen_generic_type_identity_515(ctx, (*field).type_expr);
-      cct_boot_rit_codegen_sigillum_append_field_457(ctx, instance_key, (*field).name, field_identity);
-      cct_boot_rit_codegen_generic_scan_type_use_524(ctx, (*field).type_expr);
+      cct_boot_sig_AstNode* field = cct_boot_rit_ast_node_list_get_217((*templ).fields, field_i);
+      char* field_identity = cct_boot_rit_codegen_generic_type_identity_522(ctx, (*field).type_expr);
+      cct_boot_rit_codegen_sigillum_append_field_464(ctx, instance_key, (*field).name, field_identity);
+      cct_boot_rit_codegen_generic_scan_type_use_531(ctx, (*field).type_expr);
       free((void*)(field_identity));
       field_i = (field_i + 1);
     }
@@ -9131,58 +9138,58 @@ char* cct_boot_rit_codegen_generic_ensure_sigillum_instance_530(cct_boot_sig_Cod
   }
   if (0) goto __cct_label_228;
   __cct_label_228: ;
-  cct_boot_rit_codegen_generic_unbind_template_args_523(ctx);
+  cct_boot_rit_codegen_generic_unbind_template_args_530(ctx);
   free((void*)(suffix));
   free((void*)(instance_key));
   return c_name;
 }
 
-char* cct_boot_rit_codegen_generic_rituale_return_identity_531(cct_boot_sig_CodegenContext* ctx, cct_boot_sig_AstNode* templ)
+char* cct_boot_rit_codegen_generic_rituale_return_identity_538(cct_boot_sig_CodegenContext* ctx, cct_boot_sig_AstNode* templ)
 {
   if (!(*templ).has_return_type)
   {
     return cct_boot_rit_verbum_dup_40(cct_boot_str_60);
   }
-  return cct_boot_rit_codegen_generic_type_identity_515(ctx, (*templ).return_type);
+  return cct_boot_rit_codegen_generic_type_identity_522(ctx, (*templ).return_type);
 }
 
-char* cct_boot_rit_codegen_generic_ensure_rituale_instance_532(cct_boot_sig_CodegenContext* ctx, char* source_name, void* type_args, cct_boot_sig_AstNode* at)
+char* cct_boot_rit_codegen_generic_ensure_rituale_instance_539(cct_boot_sig_CodegenContext* ctx, char* source_name, void* type_args, cct_boot_sig_AstNode* at)
 {
-  long long templ_idx = cct_boot_rit_codegen_find_generic_rituale_template_index_488(ctx, source_name);
+  long long templ_idx = cct_boot_rit_codegen_find_generic_rituale_template_index_495(ctx, source_name);
   if (templ_idx < 0)
   {
-    cct_boot_rit_codegen_report_error_433(ctx, (*at).line, (*at).column, cct_boot_str_374);
+    cct_boot_rit_codegen_report_error_440(ctx, (*at).line, (*at).column, cct_boot_str_374);
     return cct_boot_str_102;
   }
-  cct_boot_sig_AstNode* templ = cct_boot_rit_codegen_lookup_generic_rituale_template_490(ctx, source_name);
-  long long expected = cct_boot_rit_ast_node_list_len_209((*templ).type_params);
-  long long actual = cct_boot_rit_ast_node_list_len_209(type_args);
+  cct_boot_sig_AstNode* templ = cct_boot_rit_codegen_lookup_generic_rituale_template_497(ctx, source_name);
+  long long expected = cct_boot_rit_ast_node_list_len_216((*templ).type_params);
+  long long actual = cct_boot_rit_ast_node_list_len_216(type_args);
   if (expected != actual)
   {
-    cct_boot_rit_codegen_report_error_433(ctx, (*at).line, (*at).column, cct_boot_str_375);
+    cct_boot_rit_codegen_report_error_440(ctx, (*at).line, (*at).column, cct_boot_str_375);
     return cct_boot_str_102;
   }
-  char* suffix = cct_boot_rit_codegen_generic_type_arg_suffix_517(ctx, type_args);
-  char* instance_key = cct_boot_rit_codegen_generic_instance_key_518(source_name, suffix);
-  char* existing = cct_boot_rit_codegen_lookup_rituale_c_name_437(ctx, instance_key);
+  char* suffix = cct_boot_rit_codegen_generic_type_arg_suffix_524(ctx, type_args);
+  char* instance_key = cct_boot_rit_codegen_generic_instance_key_525(source_name, suffix);
+  char* existing = cct_boot_rit_codegen_lookup_rituale_c_name_444(ctx, instance_key);
   if (cct_boot_rit_compare_38(existing, cct_boot_str_102) != 0)
   {
     free((void*)(suffix));
     free((void*)(instance_key));
     return existing;
   }
-  char* c_name = cct_boot_rit_codegen_generic_make_rituale_c_name_521(ctx, source_name, type_args);
-  cct_boot_rit_codegen_generic_bind_template_args_522(ctx, templ, type_args);
-  char* return_identity = cct_boot_rit_codegen_generic_rituale_return_identity_531(ctx, templ);
-  cct_boot_rit_codegen_register_rituale_c_name_438(ctx, instance_key, c_name, return_identity);
-  cct_boot_rit_codegen_register_generic_rituale_instance_493(ctx, instance_key, c_name, return_identity, templ, type_args);
+  char* c_name = cct_boot_rit_codegen_generic_make_rituale_c_name_528(ctx, source_name, type_args);
+  cct_boot_rit_codegen_generic_bind_template_args_529(ctx, templ, type_args);
+  char* return_identity = cct_boot_rit_codegen_generic_rituale_return_identity_538(ctx, templ);
+  cct_boot_rit_codegen_register_rituale_c_name_445(ctx, instance_key, c_name, return_identity);
+  cct_boot_rit_codegen_register_generic_rituale_instance_500(ctx, instance_key, c_name, return_identity, templ, type_args);
   long long param_i = 0;
-  long long param_n = cct_boot_rit_ast_node_list_len_209((*templ).params);
+  long long param_n = cct_boot_rit_ast_node_list_len_216((*templ).params);
   while (param_i < param_n)
   {
     {
-      cct_boot_sig_AstNode* param = cct_boot_rit_ast_node_list_get_210((*templ).params, param_i);
-      cct_boot_rit_codegen_generic_scan_type_use_524(ctx, (*param).type_expr);
+      cct_boot_sig_AstNode* param = cct_boot_rit_ast_node_list_get_217((*templ).params, param_i);
+      cct_boot_rit_codegen_generic_scan_type_use_531(ctx, (*param).type_expr);
       param_i = (param_i + 1);
     }
     if (0) goto __cct_label_231;
@@ -9192,20 +9199,20 @@ char* cct_boot_rit_codegen_generic_ensure_rituale_instance_532(cct_boot_sig_Code
   __cct_label_230: ;
   if ((*templ).has_return_type)
   {
-    cct_boot_rit_codegen_generic_scan_type_use_524(ctx, (*templ).return_type);
+    cct_boot_rit_codegen_generic_scan_type_use_531(ctx, (*templ).return_type);
   }
   if ((*templ).has_body)
   {
-    cct_boot_rit_codegen_generic_scan_stmt_use_526(ctx, (*templ).body);
+    cct_boot_rit_codegen_generic_scan_stmt_use_533(ctx, (*templ).body);
   }
-  cct_boot_rit_codegen_generic_unbind_template_args_523(ctx);
+  cct_boot_rit_codegen_generic_unbind_template_args_530(ctx);
   free((void*)(return_identity));
   free((void*)(suffix));
   free((void*)(instance_key));
   return c_name;
 }
 
-char* cct_boot_rit_codegen_basic_c_type_name_533(cct_boot_sig_CodegenContext* ctx, char* type_name, long long line, long long column)
+char* cct_boot_rit_codegen_basic_c_type_name_540(cct_boot_sig_CodegenContext* ctx, char* type_name, long long line, long long column)
 {
   if (cct_boot_rit_compare_38(type_name, cct_boot_str_51) == 0)
   {
@@ -9250,55 +9257,55 @@ char* cct_boot_rit_codegen_basic_c_type_name_533(cct_boot_sig_CodegenContext* ct
   return cct_boot_str_102;
 }
 
-char* cct_boot_rit_codegen_named_c_type_name_534(cct_boot_sig_CodegenContext* ctx, char* type_name, long long line, long long column)
+char* cct_boot_rit_codegen_named_c_type_name_541(cct_boot_sig_CodegenContext* ctx, char* type_name, long long line, long long column)
 {
-  long long bound_idx = cct_boot_rit_codegen_find_generic_binding_index_497(ctx, type_name);
+  long long bound_idx = cct_boot_rit_codegen_find_generic_binding_index_504(ctx, type_name);
   if (bound_idx >= 0)
   {
-    cct_boot_sig_AstNode* bound = cct_boot_rit_codegen_lookup_generic_binding_498(ctx, type_name);
-    return cct_boot_rit_codegen_type_text_535(ctx, bound);
+    cct_boot_sig_AstNode* bound = cct_boot_rit_codegen_lookup_generic_binding_505(ctx, type_name);
+    return cct_boot_rit_codegen_type_text_542(ctx, bound);
   }
-  char* basic = cct_boot_rit_codegen_basic_c_type_name_533(ctx, type_name, 0, 0);
+  char* basic = cct_boot_rit_codegen_basic_c_type_name_540(ctx, type_name, 0, 0);
   if (cct_boot_rit_compare_38(basic, cct_boot_str_102) != 0)
   {
     return basic;
   }
-  char* sigillum_name = cct_boot_rit_codegen_lookup_sigillum_c_name_454(ctx, type_name);
+  char* sigillum_name = cct_boot_rit_codegen_lookup_sigillum_c_name_461(ctx, type_name);
   if (cct_boot_rit_compare_38(sigillum_name, cct_boot_str_102) != 0)
   {
     return sigillum_name;
   }
-  char* ordo_name = cct_boot_rit_codegen_lookup_ordo_c_name_460(ctx, type_name);
+  char* ordo_name = cct_boot_rit_codegen_lookup_ordo_c_name_467(ctx, type_name);
   if (cct_boot_rit_compare_38(ordo_name, cct_boot_str_102) != 0)
   {
     return ordo_name;
   }
-  cct_boot_rit_codegen_report_error_433(ctx, line, column, cct_boot_str_376);
+  cct_boot_rit_codegen_report_error_440(ctx, line, column, cct_boot_str_376);
   return cct_boot_str_102;
 }
 
-char* cct_boot_rit_codegen_type_text_535(cct_boot_sig_CodegenContext* ctx, cct_boot_sig_AstNode* type_expr)
+char* cct_boot_rit_codegen_type_text_542(cct_boot_sig_CodegenContext* ctx, cct_boot_sig_AstNode* type_expr)
 {
   if ((*type_expr).is_pointer)
   {
-    long long bound_ptr_idx = cct_boot_rit_codegen_find_generic_binding_index_497(ctx, (*type_expr).type_name);
+    long long bound_ptr_idx = cct_boot_rit_codegen_find_generic_binding_index_504(ctx, (*type_expr).type_name);
     char* base = cct_boot_str_102;
     if (bound_ptr_idx >= 0)
     {
-      cct_boot_sig_AstNode* bound_ptr = cct_boot_rit_codegen_lookup_generic_binding_498(ctx, (*type_expr).type_name);
-      base = cct_boot_rit_codegen_type_text_535(ctx, bound_ptr);
+      cct_boot_sig_AstNode* bound_ptr = cct_boot_rit_codegen_lookup_generic_binding_505(ctx, (*type_expr).type_name);
+      base = cct_boot_rit_codegen_type_text_542(ctx, bound_ptr);
     }
     else
     {
-      if (cct_boot_rit_ast_node_list_len_209((*type_expr).generic_args) > 0)
+      if (cct_boot_rit_ast_node_list_len_216((*type_expr).generic_args) > 0)
       {
-        char* identity_ptr = cct_boot_rit_codegen_generic_type_identity_named_519(ctx, (*type_expr).type_name, (*type_expr).generic_args, (*type_expr).line, (*type_expr).column);
-        base = cct_boot_rit_codegen_named_c_type_name_534(ctx, identity_ptr, (*type_expr).line, (*type_expr).column);
+        char* identity_ptr = cct_boot_rit_codegen_generic_type_identity_named_526(ctx, (*type_expr).type_name, (*type_expr).generic_args, (*type_expr).line, (*type_expr).column);
+        base = cct_boot_rit_codegen_named_c_type_name_541(ctx, identity_ptr, (*type_expr).line, (*type_expr).column);
         free((void*)(identity_ptr));
       }
       else
       {
-        base = cct_boot_rit_codegen_named_c_type_name_534(ctx, (*type_expr).type_name, (*type_expr).line, (*type_expr).column);
+        base = cct_boot_rit_codegen_named_c_type_name_541(ctx, (*type_expr).type_name, (*type_expr).line, (*type_expr).column);
       }
     }
     if (cct_boot_rit_compare_38(base, cct_boot_str_102) == 0)
@@ -9309,77 +9316,77 @@ char* cct_boot_rit_codegen_type_text_535(cct_boot_sig_CodegenContext* ctx, cct_b
   }
   if ((*type_expr).is_array)
   {
-    long long bound_array_idx = cct_boot_rit_codegen_find_generic_binding_index_497(ctx, (*type_expr).type_name);
+    long long bound_array_idx = cct_boot_rit_codegen_find_generic_binding_index_504(ctx, (*type_expr).type_name);
     char* base = cct_boot_str_102;
     if (bound_array_idx >= 0)
     {
-      cct_boot_sig_AstNode* bound_array = cct_boot_rit_codegen_lookup_generic_binding_498(ctx, (*type_expr).type_name);
-      base = cct_boot_rit_codegen_type_text_535(ctx, bound_array);
+      cct_boot_sig_AstNode* bound_array = cct_boot_rit_codegen_lookup_generic_binding_505(ctx, (*type_expr).type_name);
+      base = cct_boot_rit_codegen_type_text_542(ctx, bound_array);
     }
     else
     {
-      if (cct_boot_rit_ast_node_list_len_209((*type_expr).generic_args) > 0)
+      if (cct_boot_rit_ast_node_list_len_216((*type_expr).generic_args) > 0)
       {
-        char* identity_array = cct_boot_rit_codegen_generic_type_identity_named_519(ctx, (*type_expr).type_name, (*type_expr).generic_args, (*type_expr).line, (*type_expr).column);
-        base = cct_boot_rit_codegen_named_c_type_name_534(ctx, identity_array, (*type_expr).line, (*type_expr).column);
+        char* identity_array = cct_boot_rit_codegen_generic_type_identity_named_526(ctx, (*type_expr).type_name, (*type_expr).generic_args, (*type_expr).line, (*type_expr).column);
+        base = cct_boot_rit_codegen_named_c_type_name_541(ctx, identity_array, (*type_expr).line, (*type_expr).column);
         free((void*)(identity_array));
       }
       else
       {
-        base = cct_boot_rit_codegen_named_c_type_name_534(ctx, (*type_expr).type_name, (*type_expr).line, (*type_expr).column);
+        base = cct_boot_rit_codegen_named_c_type_name_541(ctx, (*type_expr).type_name, (*type_expr).line, (*type_expr).column);
       }
     }
     if (cct_boot_rit_compare_38(base, cct_boot_str_102) == 0)
     {
       return cct_boot_str_102;
     }
-    char* suffix = cct_boot_rit_concat_37(cct_boot_str_112, cct_boot_rit_concat_37(cct_boot_rit_stringify_int_95((*type_expr).array_size), cct_boot_str_113));
+    char* suffix = cct_boot_rit_concat_37(cct_boot_str_112, cct_boot_rit_concat_37(cct_boot_rit_stringify_int_102((*type_expr).array_size), cct_boot_str_113));
     return cct_boot_rit_concat_37(base, suffix);
   }
-  if (cct_boot_rit_ast_node_list_len_209((*type_expr).generic_args) > 0)
+  if (cct_boot_rit_ast_node_list_len_216((*type_expr).generic_args) > 0)
   {
-    char* identity = cct_boot_rit_codegen_generic_type_identity_named_519(ctx, (*type_expr).type_name, (*type_expr).generic_args, (*type_expr).line, (*type_expr).column);
-    char* out = cct_boot_rit_codegen_named_c_type_name_534(ctx, identity, (*type_expr).line, (*type_expr).column);
+    char* identity = cct_boot_rit_codegen_generic_type_identity_named_526(ctx, (*type_expr).type_name, (*type_expr).generic_args, (*type_expr).line, (*type_expr).column);
+    char* out = cct_boot_rit_codegen_named_c_type_name_541(ctx, identity, (*type_expr).line, (*type_expr).column);
     free((void*)(identity));
     return out;
   }
   if (!(*type_expr).has_type_expr)
   {
-    return cct_boot_rit_codegen_named_c_type_name_534(ctx, (*type_expr).type_name, (*type_expr).line, (*type_expr).column);
+    return cct_boot_rit_codegen_named_c_type_name_541(ctx, (*type_expr).type_name, (*type_expr).line, (*type_expr).column);
   }
-  cct_boot_rit_codegen_report_error_433(ctx, (*type_expr).line, (*type_expr).column, cct_boot_str_378);
+  cct_boot_rit_codegen_report_error_440(ctx, (*type_expr).line, (*type_expr).column, cct_boot_str_378);
   return cct_boot_str_102;
 }
 
-char* cct_boot_rit_codegen_make_ordo_c_name_536(char* source_name)
+char* cct_boot_rit_codegen_make_ordo_c_name_543(char* source_name)
 {
   return cct_boot_rit_concat_37(cct_boot_str_379, source_name);
 }
 
-char* cct_boot_rit_codegen_make_ordo_tag_c_name_537(char* ordo_name, char* item_name)
+char* cct_boot_rit_codegen_make_ordo_tag_c_name_544(char* ordo_name, char* item_name)
 {
   return cct_boot_rit_concat_37(cct_boot_rit_concat_37(cct_boot_str_380, ordo_name), cct_boot_rit_concat_37(cct_boot_str_366, item_name));
 }
 
-char* cct_boot_rit_codegen_make_ordo_item_c_name_538(char* ordo_name, char* item_name)
+char* cct_boot_rit_codegen_make_ordo_item_c_name_545(char* ordo_name, char* item_name)
 {
-  return cct_boot_rit_concat_37(cct_boot_rit_codegen_make_ordo_c_name_536(ordo_name), cct_boot_rit_concat_37(cct_boot_str_366, item_name));
+  return cct_boot_rit_concat_37(cct_boot_rit_codegen_make_ordo_c_name_543(ordo_name), cct_boot_rit_concat_37(cct_boot_str_366, item_name));
 }
 
-long long cct_boot_rit_codegen_ordo_item_payload_arity_539(cct_boot_sig_AstNode* item)
+long long cct_boot_rit_codegen_ordo_item_payload_arity_546(cct_boot_sig_AstNode* item)
 {
-  return cct_boot_rit_ast_node_list_len_209((*item).fields);
+  return cct_boot_rit_ast_node_list_len_216((*item).fields);
 }
 
-int cct_boot_rit_codegen_ordo_decl_has_payload_540(cct_boot_sig_AstNode* decl)
+int cct_boot_rit_codegen_ordo_decl_has_payload_547(cct_boot_sig_AstNode* decl)
 {
   long long i = 0;
-  long long n = cct_boot_rit_ast_node_list_len_209((*decl).items);
+  long long n = cct_boot_rit_ast_node_list_len_216((*decl).items);
   while (i < n)
   {
     {
-      cct_boot_sig_AstNode* item = cct_boot_rit_ast_node_list_get_210((*decl).items, i);
-      if (cct_boot_rit_codegen_ordo_item_payload_arity_539(item) > 0)
+      cct_boot_sig_AstNode* item = cct_boot_rit_ast_node_list_get_217((*decl).items, i);
+      if (cct_boot_rit_codegen_ordo_item_payload_arity_546(item) > 0)
       {
         return 1;
       }
@@ -9393,35 +9400,35 @@ int cct_boot_rit_codegen_ordo_decl_has_payload_540(cct_boot_sig_AstNode* decl)
   return 0;
 }
 
-void cct_boot_rit_codegen_register_ordo_decl_541(cct_boot_sig_CodegenContext* ctx, cct_boot_sig_AstNode* decl)
+void cct_boot_rit_codegen_register_ordo_decl_548(cct_boot_sig_CodegenContext* ctx, cct_boot_sig_AstNode* decl)
 {
-  int has_payload = cct_boot_rit_codegen_ordo_decl_has_payload_540(decl);
-  char* c_name = cct_boot_rit_codegen_make_ordo_c_name_536((*decl).name);
+  int has_payload = cct_boot_rit_codegen_ordo_decl_has_payload_547(decl);
+  char* c_name = cct_boot_rit_codegen_make_ordo_c_name_543((*decl).name);
   long long ordo_idx;
   cct_boot_sig_CodegenOrdo* ordo;
-  cct_boot_rit_codegen_register_ordo_462(ctx, (*decl).name, c_name);
-  ordo_idx = cct_boot_rit_codegen_find_ordo_index_461(ctx, (*decl).name);
-  ordo = cct_boot_rit_codegen_context_ordo_at_411(ctx, ordo_idx);
+  cct_boot_rit_codegen_register_ordo_469(ctx, (*decl).name, c_name);
+  ordo_idx = cct_boot_rit_codegen_find_ordo_index_468(ctx, (*decl).name);
+  ordo = cct_boot_rit_codegen_context_ordo_at_418(ctx, ordo_idx);
   (*ordo).decl_node = decl;
   (*ordo).has_decl_node = 1;
   if (has_payload)
   {
-    cct_boot_rit_codegen_mark_ordo_has_payload_465(ctx, (*decl).name);
+    cct_boot_rit_codegen_mark_ordo_has_payload_472(ctx, (*decl).name);
   }
   long long i = 0;
-  long long n = cct_boot_rit_ast_node_list_len_209((*decl).items);
+  long long n = cct_boot_rit_ast_node_list_len_216((*decl).items);
   while (i < n)
   {
     {
-      cct_boot_sig_AstNode* item = cct_boot_rit_ast_node_list_get_210((*decl).items, i);
-      long long payload_arity = cct_boot_rit_codegen_ordo_item_payload_arity_539(item);
+      cct_boot_sig_AstNode* item = cct_boot_rit_ast_node_list_get_217((*decl).items, i);
+      long long payload_arity = cct_boot_rit_codegen_ordo_item_payload_arity_546(item);
       if (has_payload)
       {
-        cct_boot_rit_codegen_ordo_append_item_with_arity_464(ctx, (*decl).name, (*item).name, cct_boot_rit_codegen_make_ordo_tag_c_name_537((*decl).name, (*item).name), payload_arity);
+        cct_boot_rit_codegen_ordo_append_item_with_arity_471(ctx, (*decl).name, (*item).name, cct_boot_rit_codegen_make_ordo_tag_c_name_544((*decl).name, (*item).name), payload_arity);
       }
       else
       {
-        cct_boot_rit_codegen_ordo_append_item_with_arity_464(ctx, (*decl).name, (*item).name, cct_boot_rit_codegen_make_ordo_item_c_name_538((*decl).name, (*item).name), payload_arity);
+        cct_boot_rit_codegen_ordo_append_item_with_arity_471(ctx, (*decl).name, (*item).name, cct_boot_rit_codegen_make_ordo_item_c_name_545((*decl).name, (*item).name), payload_arity);
       }
       i = (i + 1);
     }
@@ -9433,32 +9440,32 @@ void cct_boot_rit_codegen_register_ordo_decl_541(cct_boot_sig_CodegenContext* ct
   return;
 }
 
-void cct_boot_rit_codegen_emit_ordo_simple_definition_542(cct_boot_sig_CodegenContext* ctx, cct_boot_sig_AstNode* decl)
+void cct_boot_rit_codegen_emit_ordo_simple_definition_549(cct_boot_sig_CodegenContext* ctx, cct_boot_sig_AstNode* decl)
 {
-  char* c_name = cct_boot_rit_codegen_lookup_ordo_c_name_460(ctx, (*decl).name);
-  cct_boot_rit_codegen_emit_499(ctx, cct_boot_str_381);
-  cct_boot_rit_codegen_emit_499(ctx, c_name);
-  cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_102);
-  cct_boot_rit_codegen_emit_block_open_504(ctx);
+  char* c_name = cct_boot_rit_codegen_lookup_ordo_c_name_467(ctx, (*decl).name);
+  cct_boot_rit_codegen_emit_506(ctx, cct_boot_str_381);
+  cct_boot_rit_codegen_emit_506(ctx, c_name);
+  cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_102);
+  cct_boot_rit_codegen_emit_block_open_511(ctx);
   long long i = 0;
-  long long n = cct_boot_rit_ast_node_list_len_209((*decl).items);
+  long long n = cct_boot_rit_ast_node_list_len_216((*decl).items);
   while (i < n)
   {
     {
-      cct_boot_sig_AstNode* item = cct_boot_rit_ast_node_list_get_210((*decl).items, i);
-      cct_boot_rit_codegen_emit_499(ctx, cct_boot_rit_codegen_lookup_ordo_item_c_name_468(ctx, (*item).name));
+      cct_boot_sig_AstNode* item = cct_boot_rit_ast_node_list_get_217((*decl).items, i);
+      cct_boot_rit_codegen_emit_506(ctx, cct_boot_rit_codegen_lookup_ordo_item_c_name_475(ctx, (*item).name));
       if ((*item).has_right)
       {
-        cct_boot_rit_codegen_emit_499(ctx, cct_boot_str_382);
-        cct_boot_rit_codegen_emit_499(ctx, (*(*item).right).value_text);
+        cct_boot_rit_codegen_emit_506(ctx, cct_boot_str_382);
+        cct_boot_rit_codegen_emit_506(ctx, (*(*item).right).value_text);
       }
       if ((i + 1) < n)
       {
-        cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_383);
+        cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_383);
       }
       else
       {
-        cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_102);
+        cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_102);
       }
       i = (i + 1);
     }
@@ -9467,37 +9474,37 @@ void cct_boot_rit_codegen_emit_ordo_simple_definition_542(cct_boot_sig_CodegenCo
   }
   if (0) goto __cct_label_236;
   __cct_label_236: ;
-  cct_boot_rit_codegen_dedent_503(ctx);
-  cct_boot_rit_codegen_emit_499(ctx, cct_boot_str_384);
-  cct_boot_rit_codegen_emit_499(ctx, c_name);
-  cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_385);
+  cct_boot_rit_codegen_dedent_510(ctx);
+  cct_boot_rit_codegen_emit_506(ctx, cct_boot_str_384);
+  cct_boot_rit_codegen_emit_506(ctx, c_name);
+  cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_385);
   return;
 }
 
-void cct_boot_rit_codegen_emit_ordo_payload_definition_543(cct_boot_sig_CodegenContext* ctx, cct_boot_sig_AstNode* decl)
+void cct_boot_rit_codegen_emit_ordo_payload_definition_550(cct_boot_sig_CodegenContext* ctx, cct_boot_sig_AstNode* decl)
 {
-  char* c_name = cct_boot_rit_codegen_lookup_ordo_c_name_460(ctx, (*decl).name);
-  cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_386);
-  cct_boot_rit_codegen_emit_block_open_504(ctx);
+  char* c_name = cct_boot_rit_codegen_lookup_ordo_c_name_467(ctx, (*decl).name);
+  cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_386);
+  cct_boot_rit_codegen_emit_block_open_511(ctx);
   long long i = 0;
-  long long n = cct_boot_rit_ast_node_list_len_209((*decl).items);
+  long long n = cct_boot_rit_ast_node_list_len_216((*decl).items);
   while (i < n)
   {
     {
-      cct_boot_sig_AstNode* item = cct_boot_rit_ast_node_list_get_210((*decl).items, i);
-      cct_boot_rit_codegen_emit_499(ctx, cct_boot_rit_codegen_lookup_ordo_item_c_name_468(ctx, (*item).name));
+      cct_boot_sig_AstNode* item = cct_boot_rit_ast_node_list_get_217((*decl).items, i);
+      cct_boot_rit_codegen_emit_506(ctx, cct_boot_rit_codegen_lookup_ordo_item_c_name_475(ctx, (*item).name));
       if ((*item).has_right)
       {
-        cct_boot_rit_codegen_emit_499(ctx, cct_boot_str_382);
-        cct_boot_rit_codegen_emit_499(ctx, (*(*item).right).value_text);
+        cct_boot_rit_codegen_emit_506(ctx, cct_boot_str_382);
+        cct_boot_rit_codegen_emit_506(ctx, (*(*item).right).value_text);
       }
       if ((i + 1) < n)
       {
-        cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_383);
+        cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_383);
       }
       else
       {
-        cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_102);
+        cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_102);
       }
       i = (i + 1);
     }
@@ -9506,40 +9513,40 @@ void cct_boot_rit_codegen_emit_ordo_payload_definition_543(cct_boot_sig_CodegenC
   }
   if (0) goto __cct_label_238;
   __cct_label_238: ;
-  cct_boot_rit_codegen_dedent_503(ctx);
-  cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_387);
-  cct_boot_rit_codegen_emit_blank_line_501(ctx);
-  cct_boot_rit_codegen_emit_499(ctx, cct_boot_str_388);
-  cct_boot_rit_codegen_emit_499(ctx, c_name);
-  cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_102);
-  cct_boot_rit_codegen_emit_block_open_504(ctx);
-  cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_389);
-  cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_390);
-  cct_boot_rit_codegen_emit_block_open_504(ctx);
+  cct_boot_rit_codegen_dedent_510(ctx);
+  cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_387);
+  cct_boot_rit_codegen_emit_blank_line_508(ctx);
+  cct_boot_rit_codegen_emit_506(ctx, cct_boot_str_388);
+  cct_boot_rit_codegen_emit_506(ctx, c_name);
+  cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_102);
+  cct_boot_rit_codegen_emit_block_open_511(ctx);
+  cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_389);
+  cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_390);
+  cct_boot_rit_codegen_emit_block_open_511(ctx);
   i = 0;
   while (i < n)
   {
     {
-      cct_boot_sig_AstNode* item = cct_boot_rit_ast_node_list_get_210((*decl).items, i);
-      if (cct_boot_rit_codegen_ordo_item_payload_arity_539(item) > 0)
+      cct_boot_sig_AstNode* item = cct_boot_rit_ast_node_list_get_217((*decl).items, i);
+      if (cct_boot_rit_codegen_ordo_item_payload_arity_546(item) > 0)
       {
-        cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_391);
-        cct_boot_rit_codegen_emit_block_open_504(ctx);
+        cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_391);
+        cct_boot_rit_codegen_emit_block_open_511(ctx);
         long long field_idx = 0;
-        long long field_n = cct_boot_rit_ast_node_list_len_209((*item).fields);
+        long long field_n = cct_boot_rit_ast_node_list_len_216((*item).fields);
         while (field_idx < field_n)
         {
           {
-            cct_boot_sig_AstNode* field = cct_boot_rit_ast_node_list_get_210((*item).fields, field_idx);
-            char* field_type_text = cct_boot_rit_codegen_type_text_535(ctx, (*field).type_expr);
+            cct_boot_sig_AstNode* field = cct_boot_rit_ast_node_list_get_217((*item).fields, field_idx);
+            char* field_type_text = cct_boot_rit_codegen_type_text_542(ctx, (*field).type_expr);
             if (cct_boot_rit_compare_38(field_type_text, cct_boot_str_102) == 0)
             {
               return;
             }
-            cct_boot_rit_codegen_emit_499(ctx, field_type_text);
-            cct_boot_rit_codegen_emit_499(ctx, cct_boot_str_392);
-            cct_boot_rit_codegen_emit_499(ctx, (*field).name);
-            cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_385);
+            cct_boot_rit_codegen_emit_506(ctx, field_type_text);
+            cct_boot_rit_codegen_emit_506(ctx, cct_boot_str_392);
+            cct_boot_rit_codegen_emit_506(ctx, (*field).name);
+            cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_385);
             field_idx = (field_idx + 1);
           }
           if (0) goto __cct_label_243;
@@ -9547,10 +9554,10 @@ void cct_boot_rit_codegen_emit_ordo_payload_definition_543(cct_boot_sig_CodegenC
         }
         if (0) goto __cct_label_242;
         __cct_label_242: ;
-        cct_boot_rit_codegen_dedent_503(ctx);
-        cct_boot_rit_codegen_emit_499(ctx, cct_boot_str_384);
-        cct_boot_rit_codegen_emit_499(ctx, (*item).name);
-        cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_385);
+        cct_boot_rit_codegen_dedent_510(ctx);
+        cct_boot_rit_codegen_emit_506(ctx, cct_boot_str_384);
+        cct_boot_rit_codegen_emit_506(ctx, (*item).name);
+        cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_385);
       }
       i = (i + 1);
     }
@@ -9559,41 +9566,41 @@ void cct_boot_rit_codegen_emit_ordo_payload_definition_543(cct_boot_sig_CodegenC
   }
   if (0) goto __cct_label_240;
   __cct_label_240: ;
-  cct_boot_rit_codegen_dedent_503(ctx);
-  cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_393);
-  cct_boot_rit_codegen_dedent_503(ctx);
-  cct_boot_rit_codegen_emit_499(ctx, cct_boot_str_384);
-  cct_boot_rit_codegen_emit_499(ctx, c_name);
-  cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_385);
+  cct_boot_rit_codegen_dedent_510(ctx);
+  cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_393);
+  cct_boot_rit_codegen_dedent_510(ctx);
+  cct_boot_rit_codegen_emit_506(ctx, cct_boot_str_384);
+  cct_boot_rit_codegen_emit_506(ctx, c_name);
+  cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_385);
   return;
 }
 
-void cct_boot_rit_codegen_emit_ordo_definition_544(cct_boot_sig_CodegenContext* ctx, cct_boot_sig_AstNode* decl)
+void cct_boot_rit_codegen_emit_ordo_definition_551(cct_boot_sig_CodegenContext* ctx, cct_boot_sig_AstNode* decl)
 {
-  if (cct_boot_rit_codegen_ordo_decl_has_payload_540(decl))
+  if (cct_boot_rit_codegen_ordo_decl_has_payload_547(decl))
   {
-    cct_boot_rit_codegen_emit_ordo_payload_definition_543(ctx, decl);
+    cct_boot_rit_codegen_emit_ordo_payload_definition_550(ctx, decl);
   }
   else
   {
-    cct_boot_rit_codegen_emit_ordo_simple_definition_542(ctx, decl);
+    cct_boot_rit_codegen_emit_ordo_simple_definition_549(ctx, decl);
   }
   return;
 }
 
-void cct_boot_rit_codegen_emit_ordo_definitions_545(cct_boot_sig_CodegenContext* ctx, cct_boot_sig_AstProgram* program)
+void cct_boot_rit_codegen_emit_ordo_definitions_552(cct_boot_sig_CodegenContext* ctx, cct_boot_sig_AstProgram* program)
 {
   long long i = 0;
-  long long n = cct_boot_rit_ast_node_list_len_209((*program).declarations);
+  long long n = cct_boot_rit_ast_node_list_len_216((*program).declarations);
   int emitted_any = 0;
   while (i < n)
   {
     {
-      cct_boot_sig_AstNode* decl = cct_boot_rit_ast_node_list_get_210((*program).declarations, i);
+      cct_boot_sig_AstNode* decl = cct_boot_rit_ast_node_list_get_217((*program).declarations, i);
       if ((*decl).kind == cct_boot_ord_AstKind__AST_ORDO)
       {
-        cct_boot_rit_codegen_emit_ordo_definition_544(ctx, decl);
-        cct_boot_rit_codegen_emit_blank_line_501(ctx);
+        cct_boot_rit_codegen_emit_ordo_definition_551(ctx, decl);
+        cct_boot_rit_codegen_emit_blank_line_508(ctx);
         emitted_any = 1;
       }
       i = (i + 1);
@@ -9610,28 +9617,28 @@ void cct_boot_rit_codegen_emit_ordo_definitions_545(cct_boot_sig_CodegenContext*
   return;
 }
 
-char* cct_boot_rit_codegen_make_sigillum_c_name_546(char* source_name)
+char* cct_boot_rit_codegen_make_sigillum_c_name_553(char* source_name)
 {
   return cct_boot_rit_concat_37(cct_boot_str_370, source_name);
 }
 
-void cct_boot_rit_codegen_register_sigillum_decl_547(cct_boot_sig_CodegenContext* ctx, cct_boot_sig_AstNode* decl)
+void cct_boot_rit_codegen_register_sigillum_decl_554(cct_boot_sig_CodegenContext* ctx, cct_boot_sig_AstNode* decl)
 {
-  if (cct_boot_rit_ast_node_list_len_209((*decl).type_params) > 0)
+  if (cct_boot_rit_ast_node_list_len_216((*decl).type_params) > 0)
   {
-    cct_boot_rit_codegen_register_generic_sigillum_template_482(ctx, (*decl).name, decl, cct_boot_rit_ast_node_list_len_209((*decl).type_params));
+    cct_boot_rit_codegen_register_generic_sigillum_template_489(ctx, (*decl).name, decl, cct_boot_rit_ast_node_list_len_216((*decl).type_params));
     return;
   }
-  char* c_name = cct_boot_rit_codegen_make_sigillum_c_name_546((*decl).name);
-  cct_boot_rit_codegen_register_sigillum_456(ctx, (*decl).name, c_name);
+  char* c_name = cct_boot_rit_codegen_make_sigillum_c_name_553((*decl).name);
+  cct_boot_rit_codegen_register_sigillum_463(ctx, (*decl).name, c_name);
   long long i = 0;
-  long long n = cct_boot_rit_ast_node_list_len_209((*decl).fields);
+  long long n = cct_boot_rit_ast_node_list_len_216((*decl).fields);
   while (i < n)
   {
     {
-      cct_boot_sig_AstNode* field = cct_boot_rit_ast_node_list_get_210((*decl).fields, i);
-      char* field_identity = cct_boot_rit_codegen_generic_type_identity_515(ctx, (*field).type_expr);
-      cct_boot_rit_codegen_sigillum_append_field_457(ctx, (*decl).name, (*field).name, field_identity);
+      cct_boot_sig_AstNode* field = cct_boot_rit_ast_node_list_get_217((*decl).fields, i);
+      char* field_identity = cct_boot_rit_codegen_generic_type_identity_522(ctx, (*field).type_expr);
+      cct_boot_rit_codegen_sigillum_append_field_464(ctx, (*decl).name, (*field).name, field_identity);
       free((void*)(field_identity));
       i = (i + 1);
     }
@@ -9643,47 +9650,47 @@ void cct_boot_rit_codegen_register_sigillum_decl_547(cct_boot_sig_CodegenContext
   return;
 }
 
-void cct_boot_rit_codegen_register_rituale_decl_548(cct_boot_sig_CodegenContext* ctx, cct_boot_sig_AstNode* decl)
+void cct_boot_rit_codegen_register_rituale_decl_555(cct_boot_sig_CodegenContext* ctx, cct_boot_sig_AstNode* decl)
 {
-  if (cct_boot_rit_ast_node_list_len_209((*decl).type_params) > 0)
+  if (cct_boot_rit_ast_node_list_len_216((*decl).type_params) > 0)
   {
-    cct_boot_rit_codegen_register_generic_rituale_template_489(ctx, (*decl).name, decl, cct_boot_rit_ast_node_list_len_209((*decl).type_params));
+    cct_boot_rit_codegen_register_generic_rituale_template_496(ctx, (*decl).name, decl, cct_boot_rit_ast_node_list_len_216((*decl).type_params));
     return;
   }
-  char* existing = cct_boot_rit_codegen_lookup_rituale_c_name_437(ctx, (*decl).name);
+  char* existing = cct_boot_rit_codegen_lookup_rituale_c_name_444(ctx, (*decl).name);
   if (cct_boot_rit_compare_38(existing, cct_boot_str_102) != 0)
   {
     return;
   }
-  char* c_name = cct_boot_rit_codegen_make_rituale_c_name_509(ctx, (*decl).name);
+  char* c_name = cct_boot_rit_codegen_make_rituale_c_name_516(ctx, (*decl).name);
   char* return_type_name = cct_boot_str_60;
   if ((*decl).has_return_type)
   {
-    return_type_name = cct_boot_rit_codegen_generic_type_identity_515(ctx, (*decl).return_type);
+    return_type_name = cct_boot_rit_codegen_generic_type_identity_522(ctx, (*decl).return_type);
   }
-  cct_boot_rit_codegen_register_rituale_c_name_438(ctx, (*decl).name, c_name, return_type_name);
+  cct_boot_rit_codegen_register_rituale_c_name_445(ctx, (*decl).name, c_name, return_type_name);
   return;
 }
 
-void cct_boot_rit_codegen_register_program_shapes_549(cct_boot_sig_CodegenContext* ctx, cct_boot_sig_AstProgram* program)
+void cct_boot_rit_codegen_register_program_shapes_556(cct_boot_sig_CodegenContext* ctx, cct_boot_sig_AstProgram* program)
 {
   long long i = 0;
-  long long n = cct_boot_rit_ast_node_list_len_209((*program).declarations);
+  long long n = cct_boot_rit_ast_node_list_len_216((*program).declarations);
   while (i < n)
   {
     {
-      cct_boot_sig_AstNode* decl = cct_boot_rit_ast_node_list_get_210((*program).declarations, i);
+      cct_boot_sig_AstNode* decl = cct_boot_rit_ast_node_list_get_217((*program).declarations, i);
       if ((*decl).kind == cct_boot_ord_AstKind__AST_SIGILLUM)
       {
-        cct_boot_rit_codegen_register_sigillum_decl_547(ctx, decl);
+        cct_boot_rit_codegen_register_sigillum_decl_554(ctx, decl);
       }
       if ((*decl).kind == cct_boot_ord_AstKind__AST_ORDO)
       {
-        cct_boot_rit_codegen_register_ordo_decl_541(ctx, decl);
+        cct_boot_rit_codegen_register_ordo_decl_548(ctx, decl);
       }
       if ((*decl).kind == cct_boot_ord_AstKind__AST_RITUALE)
       {
-        cct_boot_rit_codegen_register_rituale_decl_548(ctx, decl);
+        cct_boot_rit_codegen_register_rituale_decl_555(ctx, decl);
       }
       i = (i + 1);
     }
@@ -9695,19 +9702,19 @@ void cct_boot_rit_codegen_register_program_shapes_549(cct_boot_sig_CodegenContex
   return;
 }
 
-void cct_boot_rit_codegen_emit_sigillum_forward_decls_550(cct_boot_sig_CodegenContext* ctx)
+void cct_boot_rit_codegen_emit_sigillum_forward_decls_557(cct_boot_sig_CodegenContext* ctx)
 {
   long long i = 0;
-  long long n = cct_boot_rit_codegen_registered_sigillum_count_453(ctx);
+  long long n = cct_boot_rit_codegen_registered_sigillum_count_460(ctx);
   while (i < n)
   {
     {
-      cct_boot_sig_CodegenSigillum* sigillum = cct_boot_rit_codegen_context_sigillum_at_408(ctx, i);
-      cct_boot_rit_codegen_emit_499(ctx, cct_boot_str_388);
-      cct_boot_rit_codegen_emit_499(ctx, (*sigillum).c_name);
-      cct_boot_rit_codegen_emit_499(ctx, cct_boot_str_392);
-      cct_boot_rit_codegen_emit_499(ctx, (*sigillum).c_name);
-      cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_385);
+      cct_boot_sig_CodegenSigillum* sigillum = cct_boot_rit_codegen_context_sigillum_at_415(ctx, i);
+      cct_boot_rit_codegen_emit_506(ctx, cct_boot_str_388);
+      cct_boot_rit_codegen_emit_506(ctx, (*sigillum).c_name);
+      cct_boot_rit_codegen_emit_506(ctx, cct_boot_str_392);
+      cct_boot_rit_codegen_emit_506(ctx, (*sigillum).c_name);
+      cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_385);
       i = (i + 1);
     }
     if (0) goto __cct_label_251;
@@ -9717,33 +9724,33 @@ void cct_boot_rit_codegen_emit_sigillum_forward_decls_550(cct_boot_sig_CodegenCo
   __cct_label_250: ;
   if (n > 0)
   {
-    cct_boot_rit_codegen_emit_blank_line_501(ctx);
+    cct_boot_rit_codegen_emit_blank_line_508(ctx);
   }
   return;
 }
 
-void cct_boot_rit_codegen_emit_sigillum_definition_551(cct_boot_sig_CodegenContext* ctx, cct_boot_sig_AstNode* decl)
+void cct_boot_rit_codegen_emit_sigillum_definition_558(cct_boot_sig_CodegenContext* ctx, cct_boot_sig_AstNode* decl)
 {
-  char* c_name = cct_boot_rit_codegen_lookup_sigillum_c_name_454(ctx, (*decl).name);
-  cct_boot_rit_codegen_emit_499(ctx, cct_boot_str_394);
-  cct_boot_rit_codegen_emit_499(ctx, c_name);
-  cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_102);
-  cct_boot_rit_codegen_emit_block_open_504(ctx);
+  char* c_name = cct_boot_rit_codegen_lookup_sigillum_c_name_461(ctx, (*decl).name);
+  cct_boot_rit_codegen_emit_506(ctx, cct_boot_str_394);
+  cct_boot_rit_codegen_emit_506(ctx, c_name);
+  cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_102);
+  cct_boot_rit_codegen_emit_block_open_511(ctx);
   long long i = 0;
-  long long n = cct_boot_rit_ast_node_list_len_209((*decl).fields);
+  long long n = cct_boot_rit_ast_node_list_len_216((*decl).fields);
   while (i < n)
   {
     {
-      cct_boot_sig_AstNode* field = cct_boot_rit_ast_node_list_get_210((*decl).fields, i);
-      char* field_type_text = cct_boot_rit_codegen_type_text_535(ctx, (*field).type_expr);
+      cct_boot_sig_AstNode* field = cct_boot_rit_ast_node_list_get_217((*decl).fields, i);
+      char* field_type_text = cct_boot_rit_codegen_type_text_542(ctx, (*field).type_expr);
       if (cct_boot_rit_compare_38(field_type_text, cct_boot_str_102) == 0)
       {
         return;
       }
-      cct_boot_rit_codegen_emit_499(ctx, field_type_text);
-      cct_boot_rit_codegen_emit_499(ctx, cct_boot_str_392);
-      cct_boot_rit_codegen_emit_499(ctx, (*field).name);
-      cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_385);
+      cct_boot_rit_codegen_emit_506(ctx, field_type_text);
+      cct_boot_rit_codegen_emit_506(ctx, cct_boot_str_392);
+      cct_boot_rit_codegen_emit_506(ctx, (*field).name);
+      cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_385);
       i = (i + 1);
     }
     if (0) goto __cct_label_253;
@@ -9751,34 +9758,34 @@ void cct_boot_rit_codegen_emit_sigillum_definition_551(cct_boot_sig_CodegenConte
   }
   if (0) goto __cct_label_252;
   __cct_label_252: ;
-  cct_boot_rit_codegen_dedent_503(ctx);
-  cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_387);
+  cct_boot_rit_codegen_dedent_510(ctx);
+  cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_387);
   return;
 }
 
-void cct_boot_rit_codegen_emit_generic_sigillum_instance_definition_552(cct_boot_sig_CodegenContext* ctx, cct_boot_sig_CodegenGenericSigillumInstance* inst)
+void cct_boot_rit_codegen_emit_generic_sigillum_instance_definition_559(cct_boot_sig_CodegenContext* ctx, cct_boot_sig_CodegenGenericSigillumInstance* inst)
 {
-  cct_boot_rit_codegen_generic_bind_template_args_522(ctx, (*inst).template_decl, (*inst).type_args);
-  cct_boot_rit_codegen_emit_499(ctx, cct_boot_str_394);
-  cct_boot_rit_codegen_emit_499(ctx, (*inst).c_name);
-  cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_102);
-  cct_boot_rit_codegen_emit_block_open_504(ctx);
+  cct_boot_rit_codegen_generic_bind_template_args_529(ctx, (*inst).template_decl, (*inst).type_args);
+  cct_boot_rit_codegen_emit_506(ctx, cct_boot_str_394);
+  cct_boot_rit_codegen_emit_506(ctx, (*inst).c_name);
+  cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_102);
+  cct_boot_rit_codegen_emit_block_open_511(ctx);
   long long i = 0;
-  long long n = cct_boot_rit_ast_node_list_len_209((*(*inst).template_decl).fields);
+  long long n = cct_boot_rit_ast_node_list_len_216((*(*inst).template_decl).fields);
   while (i < n)
   {
     {
-      cct_boot_sig_AstNode* field = cct_boot_rit_ast_node_list_get_210((*(*inst).template_decl).fields, i);
-      char* field_type_text = cct_boot_rit_codegen_type_text_535(ctx, (*field).type_expr);
+      cct_boot_sig_AstNode* field = cct_boot_rit_ast_node_list_get_217((*(*inst).template_decl).fields, i);
+      char* field_type_text = cct_boot_rit_codegen_type_text_542(ctx, (*field).type_expr);
       if (cct_boot_rit_compare_38(field_type_text, cct_boot_str_102) == 0)
       {
-        cct_boot_rit_codegen_generic_unbind_template_args_523(ctx);
+        cct_boot_rit_codegen_generic_unbind_template_args_530(ctx);
         return;
       }
-      cct_boot_rit_codegen_emit_499(ctx, field_type_text);
-      cct_boot_rit_codegen_emit_499(ctx, cct_boot_str_392);
-      cct_boot_rit_codegen_emit_499(ctx, (*field).name);
-      cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_385);
+      cct_boot_rit_codegen_emit_506(ctx, field_type_text);
+      cct_boot_rit_codegen_emit_506(ctx, cct_boot_str_392);
+      cct_boot_rit_codegen_emit_506(ctx, (*field).name);
+      cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_385);
       i = (i + 1);
     }
     if (0) goto __cct_label_255;
@@ -9786,25 +9793,25 @@ void cct_boot_rit_codegen_emit_generic_sigillum_instance_definition_552(cct_boot
   }
   if (0) goto __cct_label_254;
   __cct_label_254: ;
-  cct_boot_rit_codegen_dedent_503(ctx);
-  cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_387);
-  cct_boot_rit_codegen_generic_unbind_template_args_523(ctx);
+  cct_boot_rit_codegen_dedent_510(ctx);
+  cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_387);
+  cct_boot_rit_codegen_generic_unbind_template_args_530(ctx);
   return;
 }
 
-void cct_boot_rit_codegen_emit_sigillum_definitions_553(cct_boot_sig_CodegenContext* ctx, cct_boot_sig_AstProgram* program)
+void cct_boot_rit_codegen_emit_sigillum_definitions_560(cct_boot_sig_CodegenContext* ctx, cct_boot_sig_AstProgram* program)
 {
   long long i = 0;
-  long long n = cct_boot_rit_ast_node_list_len_209((*program).declarations);
+  long long n = cct_boot_rit_ast_node_list_len_216((*program).declarations);
   int emitted_any = 0;
   while (i < n)
   {
     {
-      cct_boot_sig_AstNode* decl = cct_boot_rit_ast_node_list_get_210((*program).declarations, i);
-      if (((*decl).kind == cct_boot_ord_AstKind__AST_SIGILLUM) && (cct_boot_rit_ast_node_list_len_209((*decl).type_params) == 0))
+      cct_boot_sig_AstNode* decl = cct_boot_rit_ast_node_list_get_217((*program).declarations, i);
+      if (((*decl).kind == cct_boot_ord_AstKind__AST_SIGILLUM) && (cct_boot_rit_ast_node_list_len_216((*decl).type_params) == 0))
       {
-        cct_boot_rit_codegen_emit_sigillum_definition_551(ctx, decl);
-        cct_boot_rit_codegen_emit_blank_line_501(ctx);
+        cct_boot_rit_codegen_emit_sigillum_definition_558(ctx, decl);
+        cct_boot_rit_codegen_emit_blank_line_508(ctx);
         emitted_any = 1;
       }
       i = (i + 1);
@@ -9817,12 +9824,12 @@ void cct_boot_rit_codegen_emit_sigillum_definitions_553(cct_boot_sig_CodegenCont
   if (emitted_any)
   {
     long long inst_i = 0;
-    long long inst_n = cct_boot_rit_codegen_registered_generic_sigillum_instance_count_484(ctx);
+    long long inst_n = cct_boot_rit_codegen_registered_generic_sigillum_instance_count_491(ctx);
     while (inst_i < inst_n)
     {
       {
-        cct_boot_rit_codegen_emit_generic_sigillum_instance_definition_552(ctx, cct_boot_rit_codegen_context_generic_sigillum_instance_at_414(ctx, inst_i));
-        cct_boot_rit_codegen_emit_blank_line_501(ctx);
+        cct_boot_rit_codegen_emit_generic_sigillum_instance_definition_559(ctx, cct_boot_rit_codegen_context_generic_sigillum_instance_at_421(ctx, inst_i));
+        cct_boot_rit_codegen_emit_blank_line_508(ctx);
         inst_i = (inst_i + 1);
       }
       if (0) goto __cct_label_259;
@@ -9833,12 +9840,12 @@ void cct_boot_rit_codegen_emit_sigillum_definitions_553(cct_boot_sig_CodegenCont
     return;
   }
   long long inst_i = 0;
-  long long inst_n = cct_boot_rit_codegen_registered_generic_sigillum_instance_count_484(ctx);
+  long long inst_n = cct_boot_rit_codegen_registered_generic_sigillum_instance_count_491(ctx);
   while (inst_i < inst_n)
   {
     {
-      cct_boot_rit_codegen_emit_generic_sigillum_instance_definition_552(ctx, cct_boot_rit_codegen_context_generic_sigillum_instance_at_414(ctx, inst_i));
-      cct_boot_rit_codegen_emit_blank_line_501(ctx);
+      cct_boot_rit_codegen_emit_generic_sigillum_instance_definition_559(ctx, cct_boot_rit_codegen_context_generic_sigillum_instance_at_421(ctx, inst_i));
+      cct_boot_rit_codegen_emit_blank_line_508(ctx);
       inst_i = (inst_i + 1);
     }
     if (0) goto __cct_label_261;
@@ -9849,7 +9856,7 @@ void cct_boot_rit_codegen_emit_sigillum_definitions_553(cct_boot_sig_CodegenCont
   return;
 }
 
-void cct_boot_rit_codegen_require_fmt_runtime_554(cct_boot_sig_CodegenContext* ctx)
+void cct_boot_rit_codegen_require_fmt_runtime_561(cct_boot_sig_CodegenContext* ctx)
 {
   (*ctx).needs_fmt_runtime = 1;
   (*ctx).needs_stdio = 1;
@@ -9858,15 +9865,15 @@ void cct_boot_rit_codegen_require_fmt_runtime_554(cct_boot_sig_CodegenContext* c
   return;
 }
 
-long long cct_boot_rit_codegen_forma_placeholder_count_555(cct_boot_sig_AstNode* expr)
+long long cct_boot_rit_codegen_forma_placeholder_count_562(cct_boot_sig_AstNode* expr)
 {
   long long count = 0;
   long long i = 0;
-  long long n = cct_boot_rit_ast_node_list_len_209((*expr).children);
+  long long n = cct_boot_rit_ast_node_list_len_216((*expr).children);
   while (i < n)
   {
     {
-      cct_boot_sig_AstNode* part = cct_boot_rit_ast_node_list_get_210((*expr).children, i);
+      cct_boot_sig_AstNode* part = cct_boot_rit_ast_node_list_get_217((*expr).children, i);
       if ((*part).kind != cct_boot_ord_AstKind__AST_LITERAL_STRING)
       {
         count = (count + 1);
@@ -9881,24 +9888,24 @@ long long cct_boot_rit_codegen_forma_placeholder_count_555(cct_boot_sig_AstNode*
   return count;
 }
 
-char* cct_boot_rit_codegen_forma_template_text_556(cct_boot_sig_AstNode* expr)
+char* cct_boot_rit_codegen_forma_template_text_563(cct_boot_sig_AstNode* expr)
 {
-  void* b = cct_boot_rit_builder_init_75();
+  void* b = cct_boot_rit_builder_init_82();
   long long i = 0;
-  long long n = cct_boot_rit_ast_node_list_len_209((*expr).children);
+  long long n = cct_boot_rit_ast_node_list_len_216((*expr).children);
   while (i < n)
   {
     {
-      cct_boot_sig_AstNode* part = cct_boot_rit_ast_node_list_get_210((*expr).children, i);
+      cct_boot_sig_AstNode* part = cct_boot_rit_ast_node_list_get_217((*expr).children, i);
       if ((*part).kind == cct_boot_ord_AstKind__AST_LITERAL_STRING)
       {
-        char* raw_text = cct_boot_rit_codegen_normalize_string_literal_511((*part).value_text);
-        cct_boot_rit_builder_append_76(b, raw_text);
+        char* raw_text = cct_boot_rit_codegen_normalize_string_literal_518((*part).value_text);
+        cct_boot_rit_builder_append_83(b, raw_text);
         free((void*)(raw_text));
       }
       else
       {
-        cct_boot_rit_builder_append_76(b, cct_boot_str_395);
+        cct_boot_rit_builder_append_83(b, cct_boot_str_395);
       }
       i = (i + 1);
     }
@@ -9907,12 +9914,12 @@ char* cct_boot_rit_codegen_forma_template_text_556(cct_boot_sig_AstNode* expr)
   }
   if (0) goto __cct_label_264;
   __cct_label_264: ;
-  char* out = cct_boot_rit_builder_to_verbum_81(b);
-  cct_boot_rit_builder_free_84(b);
+  char* out = cct_boot_rit_builder_to_verbum_88(b);
+  cct_boot_rit_builder_free_91(b);
   return out;
 }
 
-char* cct_boot_rit_codegen_unary_op_text_557(cct_boot_ord_TokenKind kind)
+char* cct_boot_rit_codegen_unary_op_text_564(cct_boot_ord_TokenKind kind)
 {
   if (kind == cct_boot_ord_TokenKind__TK_PLUS)
   {
@@ -9937,7 +9944,7 @@ char* cct_boot_rit_codegen_unary_op_text_557(cct_boot_ord_TokenKind kind)
   return cct_boot_str_102;
 }
 
-char* cct_boot_rit_codegen_pointer_element_identity_558(char* pointer_identity)
+char* cct_boot_rit_codegen_pointer_element_identity_565(char* pointer_identity)
 {
   if (!cct_boot_rit_starts_with_47(pointer_identity, cct_boot_str_363))
   {
@@ -9955,7 +9962,7 @@ char* cct_boot_rit_codegen_pointer_element_identity_558(char* pointer_identity)
   return cct_boot_rit_substring_39(pointer_identity, 9, (n - 1));
 }
 
-char* cct_boot_rit_codegen_binary_op_text_559(cct_boot_ord_TokenKind kind)
+char* cct_boot_rit_codegen_binary_op_text_566(cct_boot_ord_TokenKind kind)
 {
   if (kind == cct_boot_ord_TokenKind__TK_PLUS)
   {
@@ -10012,27 +10019,27 @@ char* cct_boot_rit_codegen_binary_op_text_559(cct_boot_ord_TokenKind kind)
   return cct_boot_str_102;
 }
 
-void cct_boot_rit_codegen_forma_emit_argument_560(cct_boot_sig_CodegenContext* ctx, cct_boot_sig_AstNode* part)
+void cct_boot_rit_codegen_forma_emit_argument_567(cct_boot_sig_CodegenContext* ctx, cct_boot_sig_AstNode* part)
 {
-  char* type_name = cct_boot_rit_codegen_expr_type_name_562(ctx, part);
+  char* type_name = cct_boot_rit_codegen_expr_type_name_569(ctx, part);
   char* fmt_spec = (*part).fmt_spec;
   int has_fmt = (cct_boot_rit_compare_38(fmt_spec, cct_boot_str_102) != 0);
   if (cct_boot_rit_compare_38(type_name, cct_boot_str_57) == 0)
   {
     if (has_fmt)
     {
-      char* fmt_symbol = cct_boot_rit_codegen_string_symbol_512(ctx, fmt_spec);
-      cct_boot_rit_codegen_emit_499(ctx, cct_boot_str_407);
-      cct_boot_rit_codegen_emit_expr_567(ctx, part);
-      cct_boot_rit_codegen_emit_499(ctx, cct_boot_str_408);
-      cct_boot_rit_codegen_emit_499(ctx, fmt_symbol);
-      cct_boot_rit_codegen_emit_499(ctx, cct_boot_str_107);
+      char* fmt_symbol = cct_boot_rit_codegen_string_symbol_519(ctx, fmt_spec);
+      cct_boot_rit_codegen_emit_506(ctx, cct_boot_str_407);
+      cct_boot_rit_codegen_emit_expr_574(ctx, part);
+      cct_boot_rit_codegen_emit_506(ctx, cct_boot_str_408);
+      cct_boot_rit_codegen_emit_506(ctx, fmt_symbol);
+      cct_boot_rit_codegen_emit_506(ctx, cct_boot_str_107);
     }
     else
     {
-      cct_boot_rit_codegen_emit_499(ctx, cct_boot_str_409);
-      cct_boot_rit_codegen_emit_expr_567(ctx, part);
-      cct_boot_rit_codegen_emit_499(ctx, cct_boot_str_410);
+      cct_boot_rit_codegen_emit_506(ctx, cct_boot_str_409);
+      cct_boot_rit_codegen_emit_expr_574(ctx, part);
+      cct_boot_rit_codegen_emit_506(ctx, cct_boot_str_410);
     }
     return;
   }
@@ -10042,25 +10049,25 @@ void cct_boot_rit_codegen_forma_emit_argument_560(cct_boot_sig_CodegenContext* c
     {
       long long fmt_n = cct_boot_rit_len_30(fmt_spec);
       char conv = cct_boot_rit_char_at_44(fmt_spec, (fmt_n - 1));
-      char* fmt_symbol = cct_boot_rit_codegen_string_symbol_512(ctx, fmt_spec);
+      char* fmt_symbol = cct_boot_rit_codegen_string_symbol_519(ctx, fmt_spec);
       if (((conv == 117) || (conv == 120)) || (conv == 88))
       {
-        cct_boot_rit_codegen_emit_499(ctx, cct_boot_str_411);
+        cct_boot_rit_codegen_emit_506(ctx, cct_boot_str_411);
       }
       else
       {
-        cct_boot_rit_codegen_emit_499(ctx, cct_boot_str_412);
+        cct_boot_rit_codegen_emit_506(ctx, cct_boot_str_412);
       }
-      cct_boot_rit_codegen_emit_expr_567(ctx, part);
-      cct_boot_rit_codegen_emit_499(ctx, cct_boot_str_408);
-      cct_boot_rit_codegen_emit_499(ctx, fmt_symbol);
-      cct_boot_rit_codegen_emit_499(ctx, cct_boot_str_107);
+      cct_boot_rit_codegen_emit_expr_574(ctx, part);
+      cct_boot_rit_codegen_emit_506(ctx, cct_boot_str_408);
+      cct_boot_rit_codegen_emit_506(ctx, fmt_symbol);
+      cct_boot_rit_codegen_emit_506(ctx, cct_boot_str_107);
     }
     else
     {
-      cct_boot_rit_codegen_emit_499(ctx, cct_boot_str_413);
-      cct_boot_rit_codegen_emit_expr_567(ctx, part);
-      cct_boot_rit_codegen_emit_499(ctx, cct_boot_str_410);
+      cct_boot_rit_codegen_emit_506(ctx, cct_boot_str_413);
+      cct_boot_rit_codegen_emit_expr_574(ctx, part);
+      cct_boot_rit_codegen_emit_506(ctx, cct_boot_str_410);
     }
     return;
   }
@@ -10068,18 +10075,18 @@ void cct_boot_rit_codegen_forma_emit_argument_560(cct_boot_sig_CodegenContext* c
   {
     if (has_fmt)
     {
-      char* fmt_symbol = cct_boot_rit_codegen_string_symbol_512(ctx, fmt_spec);
-      cct_boot_rit_codegen_emit_499(ctx, cct_boot_str_414);
-      cct_boot_rit_codegen_emit_expr_567(ctx, part);
-      cct_boot_rit_codegen_emit_499(ctx, cct_boot_str_408);
-      cct_boot_rit_codegen_emit_499(ctx, fmt_symbol);
-      cct_boot_rit_codegen_emit_499(ctx, cct_boot_str_107);
+      char* fmt_symbol = cct_boot_rit_codegen_string_symbol_519(ctx, fmt_spec);
+      cct_boot_rit_codegen_emit_506(ctx, cct_boot_str_414);
+      cct_boot_rit_codegen_emit_expr_574(ctx, part);
+      cct_boot_rit_codegen_emit_506(ctx, cct_boot_str_408);
+      cct_boot_rit_codegen_emit_506(ctx, fmt_symbol);
+      cct_boot_rit_codegen_emit_506(ctx, cct_boot_str_107);
     }
     else
     {
-      cct_boot_rit_codegen_emit_499(ctx, cct_boot_str_415);
-      cct_boot_rit_codegen_emit_expr_567(ctx, part);
-      cct_boot_rit_codegen_emit_499(ctx, cct_boot_str_410);
+      cct_boot_rit_codegen_emit_506(ctx, cct_boot_str_415);
+      cct_boot_rit_codegen_emit_expr_574(ctx, part);
+      cct_boot_rit_codegen_emit_506(ctx, cct_boot_str_410);
     }
     return;
   }
@@ -10087,39 +10094,39 @@ void cct_boot_rit_codegen_forma_emit_argument_560(cct_boot_sig_CodegenContext* c
   {
     if (has_fmt)
     {
-      cct_boot_rit_codegen_report_error_433(ctx, (*part).line, (*part).column, cct_boot_str_416);
+      cct_boot_rit_codegen_report_error_440(ctx, (*part).line, (*part).column, cct_boot_str_416);
       return;
     }
-    cct_boot_rit_codegen_emit_499(ctx, cct_boot_str_417);
-    cct_boot_rit_codegen_emit_expr_567(ctx, part);
-    cct_boot_rit_codegen_emit_499(ctx, cct_boot_str_410);
+    cct_boot_rit_codegen_emit_506(ctx, cct_boot_str_417);
+    cct_boot_rit_codegen_emit_expr_574(ctx, part);
+    cct_boot_rit_codegen_emit_506(ctx, cct_boot_str_410);
     return;
   }
-  cct_boot_rit_codegen_report_error_433(ctx, (*part).line, (*part).column, cct_boot_str_418);
+  cct_boot_rit_codegen_report_error_440(ctx, (*part).line, (*part).column, cct_boot_str_418);
   return;
 }
 
-void cct_boot_rit_codegen_emit_forma_expr_561(cct_boot_sig_CodegenContext* ctx, cct_boot_sig_AstNode* expr)
+void cct_boot_rit_codegen_emit_forma_expr_568(cct_boot_sig_CodegenContext* ctx, cct_boot_sig_AstNode* expr)
 {
-  cct_boot_rit_codegen_require_fmt_runtime_554(ctx);
-  cct_boot_rit_codegen_emit_499(ctx, cct_boot_str_419);
+  cct_boot_rit_codegen_require_fmt_runtime_561(ctx);
+  cct_boot_rit_codegen_emit_506(ctx, cct_boot_str_419);
   long long i = 0;
-  long long n = cct_boot_rit_ast_node_list_len_209((*expr).children);
+  long long n = cct_boot_rit_ast_node_list_len_216((*expr).children);
   while (i < n)
   {
     {
-      cct_boot_sig_AstNode* part = cct_boot_rit_ast_node_list_get_210((*expr).children, i);
+      cct_boot_sig_AstNode* part = cct_boot_rit_ast_node_list_get_217((*expr).children, i);
       if ((*part).kind == cct_boot_ord_AstKind__AST_LITERAL_STRING)
       {
-        char* literal_symbol = cct_boot_rit_codegen_string_symbol_512(ctx, (*part).value_text);
-        cct_boot_rit_codegen_emit_499(ctx, cct_boot_str_420);
-        cct_boot_rit_codegen_emit_499(ctx, literal_symbol);
-        cct_boot_rit_codegen_emit_499(ctx, cct_boot_str_421);
+        char* literal_symbol = cct_boot_rit_codegen_string_symbol_519(ctx, (*part).value_text);
+        cct_boot_rit_codegen_emit_506(ctx, cct_boot_str_420);
+        cct_boot_rit_codegen_emit_506(ctx, literal_symbol);
+        cct_boot_rit_codegen_emit_506(ctx, cct_boot_str_421);
       }
       else
       {
-        cct_boot_rit_codegen_forma_emit_argument_560(ctx, part);
-        cct_boot_rit_codegen_emit_499(ctx, cct_boot_str_422);
+        cct_boot_rit_codegen_forma_emit_argument_567(ctx, part);
+        cct_boot_rit_codegen_emit_506(ctx, cct_boot_str_422);
       }
       i = (i + 1);
     }
@@ -10128,11 +10135,11 @@ void cct_boot_rit_codegen_emit_forma_expr_561(cct_boot_sig_CodegenContext* ctx, 
   }
   if (0) goto __cct_label_266;
   __cct_label_266: ;
-  cct_boot_rit_codegen_emit_499(ctx, cct_boot_str_423);
+  cct_boot_rit_codegen_emit_506(ctx, cct_boot_str_423);
   return;
 }
 
-char* cct_boot_rit_codegen_expr_type_name_562(cct_boot_sig_CodegenContext* ctx, cct_boot_sig_AstNode* expr)
+char* cct_boot_rit_codegen_expr_type_name_569(cct_boot_sig_CodegenContext* ctx, cct_boot_sig_AstNode* expr)
 {
   if ((*expr).kind == cct_boot_ord_AstKind__AST_MOLDE)
   {
@@ -10164,20 +10171,20 @@ char* cct_boot_rit_codegen_expr_type_name_562(cct_boot_sig_CodegenContext* ctx, 
   }
   if ((*expr).kind == cct_boot_ord_AstKind__AST_IDENTIFIER)
   {
-    char* local_type_name = cct_boot_rit_codegen_lookup_local_type_name_445(ctx, (*expr).name);
+    char* local_type_name = cct_boot_rit_codegen_lookup_local_type_name_452(ctx, (*expr).name);
     if (cct_boot_rit_compare_38(local_type_name, cct_boot_str_102) != 0)
     {
       return local_type_name;
     }
-    long long item_matches = cct_boot_rit_codegen_count_ordo_item_matches_467(ctx, (*expr).name);
+    long long item_matches = cct_boot_rit_codegen_count_ordo_item_matches_474(ctx, (*expr).name);
     if (item_matches > 1)
     {
-      cct_boot_rit_codegen_report_error_433(ctx, (*expr).line, (*expr).column, cct_boot_str_424);
+      cct_boot_rit_codegen_report_error_440(ctx, (*expr).line, (*expr).column, cct_boot_str_424);
       return cct_boot_str_102;
     }
     if (item_matches == 1)
     {
-      return cct_boot_rit_codegen_lookup_ordo_item_owner_name_469(ctx, (*expr).name);
+      return cct_boot_rit_codegen_lookup_ordo_item_owner_name_476(ctx, (*expr).name);
     }
     return cct_boot_str_102;
   }
@@ -10185,62 +10192,62 @@ char* cct_boot_rit_codegen_expr_type_name_562(cct_boot_sig_CodegenContext* ctx, 
   {
     if (cct_boot_rit_compare_38((*(*expr).callee).name, cct_boot_str_371) == 0)
     {
-      if (cct_boot_rit_ast_node_list_len_209((*(*expr).callee).generic_args) == 1)
+      if (cct_boot_rit_ast_node_list_len_216((*(*expr).callee).generic_args) == 1)
       {
-        cct_boot_sig_AstNode* target_type_expr = cct_boot_rit_ast_node_list_get_210((*(*expr).callee).generic_args, 0);
-        return cct_boot_rit_codegen_generic_type_identity_515(ctx, target_type_expr);
+        cct_boot_sig_AstNode* target_type_expr = cct_boot_rit_ast_node_list_get_217((*(*expr).callee).generic_args, 0);
+        return cct_boot_rit_codegen_generic_type_identity_522(ctx, target_type_expr);
       }
       return cct_boot_str_102;
     }
-    if (cct_boot_rit_ast_node_list_len_209((*(*expr).callee).generic_args) > 0)
+    if (cct_boot_rit_ast_node_list_len_216((*(*expr).callee).generic_args) > 0)
     {
-      char* key = cct_boot_rit_codegen_generic_type_identity_named_519(ctx, (*(*expr).callee).name, (*(*expr).callee).generic_args, (*expr).line, (*expr).column);
-      char* out = cct_boot_rit_codegen_lookup_rituale_return_type_439(ctx, key);
+      char* key = cct_boot_rit_codegen_generic_type_identity_named_526(ctx, (*(*expr).callee).name, (*(*expr).callee).generic_args, (*expr).line, (*expr).column);
+      char* out = cct_boot_rit_codegen_lookup_rituale_return_type_446(ctx, key);
       free((void*)(key));
       return out;
     }
-    return cct_boot_rit_codegen_lookup_rituale_return_type_439(ctx, (*(*expr).callee).name);
+    return cct_boot_rit_codegen_lookup_rituale_return_type_446(ctx, (*(*expr).callee).name);
   }
   if ((*expr).kind == cct_boot_ord_AstKind__AST_FIELD_ACCESS)
   {
-    char* object_type_name = cct_boot_rit_codegen_expr_type_name_562(ctx, (*expr).left);
+    char* object_type_name = cct_boot_rit_codegen_expr_type_name_569(ctx, (*expr).left);
     if (cct_boot_rit_compare_38(object_type_name, cct_boot_str_102) == 0)
     {
       if ((*(*expr).left).kind == cct_boot_ord_AstKind__AST_UNARY_OP)
       {
-        cct_boot_rit_codegen_report_error_433(ctx, (*expr).line, (*expr).column, cct_boot_str_425);
+        cct_boot_rit_codegen_report_error_440(ctx, (*expr).line, (*expr).column, cct_boot_str_425);
       }
       else
       {
         if ((*(*expr).left).kind == cct_boot_ord_AstKind__AST_IDENTIFIER)
         {
-          cct_boot_rit_codegen_report_error_433(ctx, (*expr).line, (*expr).column, cct_boot_str_426);
+          cct_boot_rit_codegen_report_error_440(ctx, (*expr).line, (*expr).column, cct_boot_str_426);
         }
         else
         {
           if ((*(*expr).left).kind == cct_boot_ord_AstKind__AST_FIELD_ACCESS)
           {
-            cct_boot_rit_codegen_report_error_433(ctx, (*expr).line, (*expr).column, cct_boot_str_427);
+            cct_boot_rit_codegen_report_error_440(ctx, (*expr).line, (*expr).column, cct_boot_str_427);
           }
           else
           {
             if ((*(*expr).left).kind == cct_boot_ord_AstKind__AST_CALL)
             {
-              cct_boot_rit_codegen_report_error_433(ctx, (*expr).line, (*expr).column, cct_boot_str_428);
+              cct_boot_rit_codegen_report_error_440(ctx, (*expr).line, (*expr).column, cct_boot_str_428);
             }
             else
             {
-              cct_boot_rit_codegen_report_error_433(ctx, (*expr).line, (*expr).column, cct_boot_str_429);
+              cct_boot_rit_codegen_report_error_440(ctx, (*expr).line, (*expr).column, cct_boot_str_429);
             }
           }
         }
       }
       return cct_boot_str_102;
     }
-    char* field_type_name = cct_boot_rit_codegen_lookup_sigillum_field_type_458(ctx, object_type_name, (*expr).name);
+    char* field_type_name = cct_boot_rit_codegen_lookup_sigillum_field_type_465(ctx, object_type_name, (*expr).name);
     if (cct_boot_rit_compare_38(field_type_name, cct_boot_str_102) == 0)
     {
-      cct_boot_rit_codegen_report_error_433(ctx, (*expr).line, (*expr).column, cct_boot_str_430);
+      cct_boot_rit_codegen_report_error_440(ctx, (*expr).line, (*expr).column, cct_boot_str_430);
       return cct_boot_str_102;
     }
     return field_type_name;
@@ -10249,7 +10256,7 @@ char* cct_boot_rit_codegen_expr_type_name_562(cct_boot_sig_CodegenContext* ctx, 
   {
     if ((*expr).operator_kind == cct_boot_ord_TokenKind__TK_SPECULUM)
     {
-      char* target_type_name = cct_boot_rit_codegen_expr_type_name_562(ctx, (*expr).left);
+      char* target_type_name = cct_boot_rit_codegen_expr_type_name_569(ctx, (*expr).left);
       if (cct_boot_rit_compare_38(target_type_name, cct_boot_str_102) == 0)
       {
         return cct_boot_str_102;
@@ -10258,14 +10265,14 @@ char* cct_boot_rit_codegen_expr_type_name_562(cct_boot_sig_CodegenContext* ctx, 
     }
     if ((*expr).operator_kind == cct_boot_ord_TokenKind__TK_STAR)
     {
-      char* pointed = cct_boot_rit_codegen_expr_type_name_562(ctx, (*expr).left);
-      return cct_boot_rit_codegen_pointer_element_identity_558(pointed);
+      char* pointed = cct_boot_rit_codegen_expr_type_name_569(ctx, (*expr).left);
+      return cct_boot_rit_codegen_pointer_element_identity_565(pointed);
     }
     if ((*expr).operator_kind == cct_boot_ord_TokenKind__TK_NON)
     {
       return cct_boot_str_58;
     }
-    return cct_boot_rit_codegen_expr_type_name_562(ctx, (*expr).left);
+    return cct_boot_rit_codegen_expr_type_name_569(ctx, (*expr).left);
   }
   if ((*expr).kind == cct_boot_ord_AstKind__AST_BINARY_OP)
   {
@@ -10273,8 +10280,8 @@ char* cct_boot_rit_codegen_expr_type_name_562(cct_boot_sig_CodegenContext* ctx, 
     {
       return cct_boot_str_58;
     }
-    char* left_type_name = cct_boot_rit_codegen_expr_type_name_562(ctx, (*expr).left);
-    char* right_type_name = cct_boot_rit_codegen_expr_type_name_562(ctx, (*expr).right);
+    char* left_type_name = cct_boot_rit_codegen_expr_type_name_569(ctx, (*expr).left);
+    char* right_type_name = cct_boot_rit_codegen_expr_type_name_569(ctx, (*expr).right);
     if ((((cct_boot_rit_compare_38(left_type_name, cct_boot_str_55) == 0) || (cct_boot_rit_compare_38(left_type_name, cct_boot_str_56) == 0)) || (cct_boot_rit_compare_38(right_type_name, cct_boot_str_55) == 0)) || (cct_boot_rit_compare_38(right_type_name, cct_boot_str_56) == 0))
     {
       return cct_boot_str_55;
@@ -10284,138 +10291,138 @@ char* cct_boot_rit_codegen_expr_type_name_562(cct_boot_sig_CodegenContext* ctx, 
   return cct_boot_str_102;
 }
 
-void cct_boot_rit_codegen_emit_lvalue_563(cct_boot_sig_CodegenContext* ctx, cct_boot_sig_AstNode* expr)
+void cct_boot_rit_codegen_emit_lvalue_570(cct_boot_sig_CodegenContext* ctx, cct_boot_sig_AstNode* expr)
 {
   if ((*expr).kind == cct_boot_ord_AstKind__AST_IDENTIFIER)
   {
-    char* local_name = cct_boot_rit_codegen_lookup_local_c_name_443(ctx, (*expr).name);
+    char* local_name = cct_boot_rit_codegen_lookup_local_c_name_450(ctx, (*expr).name);
     if (cct_boot_rit_compare_38(local_name, cct_boot_str_102) != 0)
     {
-      cct_boot_rit_codegen_emit_499(ctx, local_name);
+      cct_boot_rit_codegen_emit_506(ctx, local_name);
     }
     else
     {
-      long long item_matches = cct_boot_rit_codegen_count_ordo_item_matches_467(ctx, (*expr).name);
+      long long item_matches = cct_boot_rit_codegen_count_ordo_item_matches_474(ctx, (*expr).name);
       if (item_matches > 1)
       {
-        cct_boot_rit_codegen_report_error_433(ctx, (*expr).line, (*expr).column, cct_boot_str_424);
+        cct_boot_rit_codegen_report_error_440(ctx, (*expr).line, (*expr).column, cct_boot_str_424);
         return;
       }
       if (item_matches == 1)
       {
-        cct_boot_rit_codegen_emit_499(ctx, cct_boot_rit_codegen_lookup_ordo_item_c_name_468(ctx, (*expr).name));
+        cct_boot_rit_codegen_emit_506(ctx, cct_boot_rit_codegen_lookup_ordo_item_c_name_475(ctx, (*expr).name));
       }
       else
       {
-        cct_boot_rit_codegen_emit_499(ctx, (*expr).name);
+        cct_boot_rit_codegen_emit_506(ctx, (*expr).name);
       }
     }
     return;
   }
   if ((*expr).kind == cct_boot_ord_AstKind__AST_FIELD_ACCESS)
   {
-    char* object_type_name = cct_boot_rit_codegen_expr_type_name_562(ctx, (*expr).left);
+    char* object_type_name = cct_boot_rit_codegen_expr_type_name_569(ctx, (*expr).left);
     if (cct_boot_rit_compare_38(object_type_name, cct_boot_str_102) == 0)
     {
       return;
     }
-    if (cct_boot_rit_compare_38(cct_boot_rit_codegen_lookup_sigillum_field_type_458(ctx, object_type_name, (*expr).name), cct_boot_str_102) == 0)
+    if (cct_boot_rit_compare_38(cct_boot_rit_codegen_lookup_sigillum_field_type_465(ctx, object_type_name, (*expr).name), cct_boot_str_102) == 0)
     {
-      cct_boot_rit_codegen_report_error_433(ctx, (*expr).line, (*expr).column, cct_boot_str_430);
+      cct_boot_rit_codegen_report_error_440(ctx, (*expr).line, (*expr).column, cct_boot_str_430);
       return;
     }
-    cct_boot_rit_codegen_emit_lvalue_563(ctx, (*expr).left);
-    cct_boot_rit_codegen_emit_499(ctx, cct_boot_str_431);
-    cct_boot_rit_codegen_emit_499(ctx, (*expr).name);
+    cct_boot_rit_codegen_emit_lvalue_570(ctx, (*expr).left);
+    cct_boot_rit_codegen_emit_506(ctx, cct_boot_str_431);
+    cct_boot_rit_codegen_emit_506(ctx, (*expr).name);
     return;
   }
   if ((*expr).kind == cct_boot_ord_AstKind__AST_INDEX_ACCESS)
   {
-    cct_boot_rit_codegen_emit_lvalue_563(ctx, (*expr).left);
-    cct_boot_rit_codegen_emit_499(ctx, cct_boot_str_112);
-    cct_boot_rit_codegen_emit_expr_567(ctx, (*expr).right);
-    cct_boot_rit_codegen_emit_499(ctx, cct_boot_str_113);
+    cct_boot_rit_codegen_emit_lvalue_570(ctx, (*expr).left);
+    cct_boot_rit_codegen_emit_506(ctx, cct_boot_str_112);
+    cct_boot_rit_codegen_emit_expr_574(ctx, (*expr).right);
+    cct_boot_rit_codegen_emit_506(ctx, cct_boot_str_113);
     return;
   }
   if (((*expr).kind == cct_boot_ord_AstKind__AST_UNARY_OP) && ((*expr).operator_kind == cct_boot_ord_TokenKind__TK_STAR))
   {
-    cct_boot_rit_codegen_emit_499(ctx, cct_boot_str_432);
-    cct_boot_rit_codegen_emit_expr_567(ctx, (*expr).left);
-    cct_boot_rit_codegen_emit_499(ctx, cct_boot_str_107);
+    cct_boot_rit_codegen_emit_506(ctx, cct_boot_str_432);
+    cct_boot_rit_codegen_emit_expr_574(ctx, (*expr).left);
+    cct_boot_rit_codegen_emit_506(ctx, cct_boot_str_107);
     return;
   }
-  cct_boot_rit_codegen_report_error_433(ctx, (*expr).line, (*expr).column, cct_boot_str_433);
+  cct_boot_rit_codegen_report_error_440(ctx, (*expr).line, (*expr).column, cct_boot_str_433);
   return;
 }
 
-void cct_boot_rit_codegen_emit_call_expr_564(cct_boot_sig_CodegenContext* ctx, cct_boot_sig_AstNode* expr)
+void cct_boot_rit_codegen_emit_call_expr_571(cct_boot_sig_CodegenContext* ctx, cct_boot_sig_AstNode* expr)
 {
   if ((*(*expr).callee).kind != cct_boot_ord_AstKind__AST_IDENTIFIER)
   {
-    cct_boot_rit_codegen_report_error_433(ctx, (*expr).line, (*expr).column, cct_boot_str_434);
+    cct_boot_rit_codegen_report_error_440(ctx, (*expr).line, (*expr).column, cct_boot_str_434);
     return;
   }
   if (cct_boot_rit_compare_38((*(*expr).callee).name, cct_boot_str_371) == 0)
   {
-    if (cct_boot_rit_ast_node_list_len_209((*(*expr).callee).generic_args) != 1)
+    if (cct_boot_rit_ast_node_list_len_216((*(*expr).callee).generic_args) != 1)
     {
-      cct_boot_rit_codegen_report_error_433(ctx, (*expr).line, (*expr).column, cct_boot_str_435);
+      cct_boot_rit_codegen_report_error_440(ctx, (*expr).line, (*expr).column, cct_boot_str_435);
       return;
     }
-    if (cct_boot_rit_ast_node_list_len_209((*expr).arguments) != 1)
+    if (cct_boot_rit_ast_node_list_len_216((*expr).arguments) != 1)
     {
-      cct_boot_rit_codegen_report_error_433(ctx, (*expr).line, (*expr).column, cct_boot_str_436);
+      cct_boot_rit_codegen_report_error_440(ctx, (*expr).line, (*expr).column, cct_boot_str_436);
       return;
     }
-    cct_boot_sig_AstNode* target_type_expr = cct_boot_rit_ast_node_list_get_210((*(*expr).callee).generic_args, 0);
-    char* target_type_text = cct_boot_rit_codegen_type_text_535(ctx, target_type_expr);
+    cct_boot_sig_AstNode* target_type_expr = cct_boot_rit_ast_node_list_get_217((*(*expr).callee).generic_args, 0);
+    char* target_type_text = cct_boot_rit_codegen_type_text_542(ctx, target_type_expr);
     if (cct_boot_rit_compare_38(target_type_text, cct_boot_str_102) == 0)
     {
       return;
     }
-    cct_boot_rit_codegen_emit_499(ctx, cct_boot_str_437);
-    cct_boot_rit_codegen_emit_499(ctx, target_type_text);
-    cct_boot_rit_codegen_emit_499(ctx, cct_boot_str_438);
-    cct_boot_rit_codegen_emit_expr_567(ctx, cct_boot_rit_ast_node_list_get_210((*expr).arguments, 0));
-    cct_boot_rit_codegen_emit_499(ctx, cct_boot_str_410);
+    cct_boot_rit_codegen_emit_506(ctx, cct_boot_str_437);
+    cct_boot_rit_codegen_emit_506(ctx, target_type_text);
+    cct_boot_rit_codegen_emit_506(ctx, cct_boot_str_438);
+    cct_boot_rit_codegen_emit_expr_574(ctx, cct_boot_rit_ast_node_list_get_217((*expr).arguments, 0));
+    cct_boot_rit_codegen_emit_506(ctx, cct_boot_str_410);
     return;
   }
-  long long item_matches = cct_boot_rit_codegen_count_ordo_item_matches_467(ctx, (*(*expr).callee).name);
+  long long item_matches = cct_boot_rit_codegen_count_ordo_item_matches_474(ctx, (*(*expr).callee).name);
   if (item_matches > 1)
   {
-    cct_boot_rit_codegen_report_error_433(ctx, (*expr).line, (*expr).column, cct_boot_str_424);
+    cct_boot_rit_codegen_report_error_440(ctx, (*expr).line, (*expr).column, cct_boot_str_424);
     return;
   }
   if (item_matches == 1)
   {
-    char* owner_name = cct_boot_rit_codegen_lookup_ordo_item_owner_name_469(ctx, (*(*expr).callee).name);
-    if (cct_boot_rit_codegen_ordo_has_payload_466(ctx, owner_name))
+    char* owner_name = cct_boot_rit_codegen_lookup_ordo_item_owner_name_476(ctx, (*(*expr).callee).name);
+    if (cct_boot_rit_codegen_ordo_has_payload_473(ctx, owner_name))
     {
-      long long expected_arity = cct_boot_rit_codegen_lookup_ordo_item_payload_arity_470(ctx, (*(*expr).callee).name);
-      long long actual_arity = cct_boot_rit_ast_node_list_len_209((*expr).arguments);
+      long long expected_arity = cct_boot_rit_codegen_lookup_ordo_item_payload_arity_477(ctx, (*(*expr).callee).name);
+      long long actual_arity = cct_boot_rit_ast_node_list_len_216((*expr).arguments);
       if (expected_arity != actual_arity)
       {
-        cct_boot_rit_codegen_report_error_433(ctx, (*expr).line, (*expr).column, cct_boot_str_439);
+        cct_boot_rit_codegen_report_error_440(ctx, (*expr).line, (*expr).column, cct_boot_str_439);
         return;
       }
-      cct_boot_rit_codegen_emit_499(ctx, cct_boot_str_437);
-      cct_boot_rit_codegen_emit_499(ctx, cct_boot_rit_codegen_lookup_ordo_c_name_460(ctx, owner_name));
-      cct_boot_rit_codegen_emit_499(ctx, cct_boot_str_440);
-      cct_boot_rit_codegen_emit_499(ctx, cct_boot_rit_codegen_lookup_ordo_item_c_name_468(ctx, (*(*expr).callee).name));
+      cct_boot_rit_codegen_emit_506(ctx, cct_boot_str_437);
+      cct_boot_rit_codegen_emit_506(ctx, cct_boot_rit_codegen_lookup_ordo_c_name_467(ctx, owner_name));
+      cct_boot_rit_codegen_emit_506(ctx, cct_boot_str_440);
+      cct_boot_rit_codegen_emit_506(ctx, cct_boot_rit_codegen_lookup_ordo_item_c_name_475(ctx, (*(*expr).callee).name));
       if (expected_arity > 0)
       {
-        cct_boot_rit_codegen_emit_499(ctx, cct_boot_str_441);
-        cct_boot_rit_codegen_emit_499(ctx, (*(*expr).callee).name);
-        cct_boot_rit_codegen_emit_499(ctx, cct_boot_str_442);
+        cct_boot_rit_codegen_emit_506(ctx, cct_boot_str_441);
+        cct_boot_rit_codegen_emit_506(ctx, (*(*expr).callee).name);
+        cct_boot_rit_codegen_emit_506(ctx, cct_boot_str_442);
         long long i = 0;
         while (i < actual_arity)
         {
           {
             if (i > 0)
             {
-              cct_boot_rit_codegen_emit_499(ctx, cct_boot_str_111);
+              cct_boot_rit_codegen_emit_506(ctx, cct_boot_str_111);
             }
-            cct_boot_rit_codegen_emit_expr_567(ctx, cct_boot_rit_ast_node_list_get_210((*expr).arguments, i));
+            cct_boot_rit_codegen_emit_expr_574(ctx, cct_boot_rit_ast_node_list_get_217((*expr).arguments, i));
             i = (i + 1);
           }
           if (0) goto __cct_label_269;
@@ -10423,37 +10430,37 @@ void cct_boot_rit_codegen_emit_call_expr_564(cct_boot_sig_CodegenContext* ctx, c
         }
         if (0) goto __cct_label_268;
         __cct_label_268: ;
-        cct_boot_rit_codegen_emit_499(ctx, cct_boot_str_443);
+        cct_boot_rit_codegen_emit_506(ctx, cct_boot_str_443);
       }
-      cct_boot_rit_codegen_emit_499(ctx, cct_boot_str_444);
+      cct_boot_rit_codegen_emit_506(ctx, cct_boot_str_444);
       return;
     }
   }
-  if (cct_boot_rit_ast_node_list_len_209((*(*expr).callee).generic_args) > 0)
+  if (cct_boot_rit_ast_node_list_len_216((*(*expr).callee).generic_args) > 0)
   {
-    char* materialized = cct_boot_rit_codegen_generic_ensure_rituale_instance_532(ctx, (*(*expr).callee).name, (*(*expr).callee).generic_args, expr);
+    char* materialized = cct_boot_rit_codegen_generic_ensure_rituale_instance_539(ctx, (*(*expr).callee).name, (*(*expr).callee).generic_args, expr);
     if (cct_boot_rit_compare_38(materialized, cct_boot_str_102) == 0)
     {
       return;
     }
-    cct_boot_rit_codegen_emit_499(ctx, materialized);
+    cct_boot_rit_codegen_emit_506(ctx, materialized);
   }
   else
   {
-    cct_boot_rit_codegen_emit_499(ctx, cct_boot_rit_codegen_rituale_c_name_510(ctx, (*(*expr).callee).name));
+    cct_boot_rit_codegen_emit_506(ctx, cct_boot_rit_codegen_rituale_c_name_517(ctx, (*(*expr).callee).name));
   }
-  cct_boot_rit_codegen_emit_499(ctx, cct_boot_str_445);
+  cct_boot_rit_codegen_emit_506(ctx, cct_boot_str_445);
   long long i = 0;
-  long long n = cct_boot_rit_ast_node_list_len_209((*expr).arguments);
+  long long n = cct_boot_rit_ast_node_list_len_216((*expr).arguments);
   while (i < n)
   {
     {
-      cct_boot_sig_AstNode* arg = cct_boot_rit_ast_node_list_get_210((*expr).arguments, i);
+      cct_boot_sig_AstNode* arg = cct_boot_rit_ast_node_list_get_217((*expr).arguments, i);
       if (i > 0)
       {
-        cct_boot_rit_codegen_emit_499(ctx, cct_boot_str_111);
+        cct_boot_rit_codegen_emit_506(ctx, cct_boot_str_111);
       }
-      cct_boot_rit_codegen_emit_expr_567(ctx, arg);
+      cct_boot_rit_codegen_emit_expr_574(ctx, arg);
       i = (i + 1);
     }
     if (0) goto __cct_label_271;
@@ -10461,74 +10468,74 @@ void cct_boot_rit_codegen_emit_call_expr_564(cct_boot_sig_CodegenContext* ctx, c
   }
   if (0) goto __cct_label_270;
   __cct_label_270: ;
-  cct_boot_rit_codegen_emit_499(ctx, cct_boot_str_107);
+  cct_boot_rit_codegen_emit_506(ctx, cct_boot_str_107);
   return;
 }
 
-void cct_boot_rit_codegen_emit_obsecro_call_expr_565(cct_boot_sig_CodegenContext* ctx, cct_boot_sig_AstNode* expr)
+void cct_boot_rit_codegen_emit_obsecro_call_expr_572(cct_boot_sig_CodegenContext* ctx, cct_boot_sig_AstNode* expr)
 {
   if ((*(*expr).callee).kind != cct_boot_ord_AstKind__AST_IDENTIFIER)
   {
-    cct_boot_rit_codegen_report_error_433(ctx, (*expr).line, (*expr).column, cct_boot_str_446);
+    cct_boot_rit_codegen_report_error_440(ctx, (*expr).line, (*expr).column, cct_boot_str_446);
     return;
   }
   if (cct_boot_rit_compare_38((*(*expr).callee).name, cct_boot_str_447) == 0)
   {
-    cct_boot_rit_codegen_require_stdlib_472(ctx);
-    cct_boot_rit_codegen_emit_499(ctx, cct_boot_str_448);
-    cct_boot_rit_codegen_emit_expr_567(ctx, cct_boot_rit_ast_node_list_get_210((*expr).arguments, 0));
-    cct_boot_rit_codegen_emit_499(ctx, cct_boot_str_449);
+    cct_boot_rit_codegen_require_stdlib_479(ctx);
+    cct_boot_rit_codegen_emit_506(ctx, cct_boot_str_448);
+    cct_boot_rit_codegen_emit_expr_574(ctx, cct_boot_rit_ast_node_list_get_217((*expr).arguments, 0));
+    cct_boot_rit_codegen_emit_506(ctx, cct_boot_str_449);
     return;
   }
   if (cct_boot_rit_compare_38((*(*expr).callee).name, cct_boot_str_450) == 0)
   {
-    cct_boot_rit_codegen_require_time_runtime_479(ctx);
-    cct_boot_rit_codegen_emit_499(ctx, cct_boot_str_451);
+    cct_boot_rit_codegen_require_time_runtime_486(ctx);
+    cct_boot_rit_codegen_emit_506(ctx, cct_boot_str_451);
     return;
   }
   if (cct_boot_rit_compare_38((*(*expr).callee).name, cct_boot_str_452) == 0)
   {
-    cct_boot_rit_codegen_require_stdlib_472(ctx);
-    cct_boot_rit_codegen_require_stdio_471(ctx);
+    cct_boot_rit_codegen_require_stdlib_479(ctx);
+    cct_boot_rit_codegen_require_stdio_478(ctx);
   }
   if (cct_boot_rit_compare_38((*(*expr).callee).name, cct_boot_str_453) == 0)
   {
-    cct_boot_rit_codegen_require_stdlib_472(ctx);
+    cct_boot_rit_codegen_require_stdlib_479(ctx);
   }
   if (((cct_boot_rit_starts_with_47((*(*expr).callee).name, cct_boot_str_454) || cct_boot_rit_starts_with_47((*(*expr).callee).name, cct_boot_str_455)) || cct_boot_rit_starts_with_47((*(*expr).callee).name, cct_boot_str_456)) || cct_boot_rit_starts_with_47((*(*expr).callee).name, cct_boot_str_457))
   {
-    cct_boot_rit_codegen_require_stdlib_472(ctx);
+    cct_boot_rit_codegen_require_stdlib_479(ctx);
   }
   if (cct_boot_rit_compare_38((*(*expr).callee).name, cct_boot_str_458) == 0)
   {
-    cct_boot_rit_codegen_require_fs_runtime_474(ctx);
+    cct_boot_rit_codegen_require_fs_runtime_481(ctx);
   }
   if (cct_boot_rit_compare_38((*(*expr).callee).name, cct_boot_str_459) == 0)
   {
-    cct_boot_rit_codegen_require_fs_runtime_474(ctx);
+    cct_boot_rit_codegen_require_fs_runtime_481(ctx);
   }
   if (cct_boot_rit_compare_38((*(*expr).callee).name, cct_boot_str_460) == 0)
   {
-    cct_boot_rit_codegen_require_fs_runtime_474(ctx);
+    cct_boot_rit_codegen_require_fs_runtime_481(ctx);
   }
   if (cct_boot_rit_compare_38((*(*expr).callee).name, cct_boot_str_461) == 0)
   {
-    cct_boot_rit_codegen_require_fs_runtime_474(ctx);
+    cct_boot_rit_codegen_require_fs_runtime_481(ctx);
   }
-  cct_boot_rit_codegen_emit_499(ctx, cct_boot_str_462);
-  cct_boot_rit_codegen_emit_499(ctx, (*(*expr).callee).name);
-  cct_boot_rit_codegen_emit_499(ctx, cct_boot_str_445);
+  cct_boot_rit_codegen_emit_506(ctx, cct_boot_str_462);
+  cct_boot_rit_codegen_emit_506(ctx, (*(*expr).callee).name);
+  cct_boot_rit_codegen_emit_506(ctx, cct_boot_str_445);
   long long i = 0;
-  long long n = cct_boot_rit_ast_node_list_len_209((*expr).arguments);
+  long long n = cct_boot_rit_ast_node_list_len_216((*expr).arguments);
   while (i < n)
   {
     {
-      cct_boot_sig_AstNode* arg = cct_boot_rit_ast_node_list_get_210((*expr).arguments, i);
+      cct_boot_sig_AstNode* arg = cct_boot_rit_ast_node_list_get_217((*expr).arguments, i);
       if (i > 0)
       {
-        cct_boot_rit_codegen_emit_499(ctx, cct_boot_str_111);
+        cct_boot_rit_codegen_emit_506(ctx, cct_boot_str_111);
       }
-      cct_boot_rit_codegen_emit_expr_567(ctx, arg);
+      cct_boot_rit_codegen_emit_expr_574(ctx, arg);
       i = (i + 1);
     }
     if (0) goto __cct_label_273;
@@ -10536,170 +10543,170 @@ void cct_boot_rit_codegen_emit_obsecro_call_expr_565(cct_boot_sig_CodegenContext
   }
   if (0) goto __cct_label_272;
   __cct_label_272: ;
-  cct_boot_rit_codegen_emit_499(ctx, cct_boot_str_107);
+  cct_boot_rit_codegen_emit_506(ctx, cct_boot_str_107);
   return;
 }
 
-void cct_boot_rit_codegen_emit_condition_expr_566(cct_boot_sig_CodegenContext* ctx, cct_boot_sig_AstNode* expr)
+void cct_boot_rit_codegen_emit_condition_expr_573(cct_boot_sig_CodegenContext* ctx, cct_boot_sig_AstNode* expr)
 {
   if ((*expr).kind == cct_boot_ord_AstKind__AST_BINARY_OP)
   {
     if ((*expr).operator_kind == cct_boot_ord_TokenKind__TK_STAR_STAR)
     {
-      cct_boot_rit_codegen_require_math_runtime_478(ctx);
-      cct_boot_rit_codegen_emit_499(ctx, cct_boot_str_463);
-      cct_boot_rit_codegen_emit_expr_567(ctx, (*expr).left);
-      cct_boot_rit_codegen_emit_499(ctx, cct_boot_str_464);
-      cct_boot_rit_codegen_emit_expr_567(ctx, (*expr).right);
-      cct_boot_rit_codegen_emit_499(ctx, cct_boot_str_449);
+      cct_boot_rit_codegen_require_math_runtime_485(ctx);
+      cct_boot_rit_codegen_emit_506(ctx, cct_boot_str_463);
+      cct_boot_rit_codegen_emit_expr_574(ctx, (*expr).left);
+      cct_boot_rit_codegen_emit_506(ctx, cct_boot_str_464);
+      cct_boot_rit_codegen_emit_expr_574(ctx, (*expr).right);
+      cct_boot_rit_codegen_emit_506(ctx, cct_boot_str_449);
       return;
     }
-    char* op_text = cct_boot_rit_codegen_binary_op_text_559((*expr).operator_kind);
+    char* op_text = cct_boot_rit_codegen_binary_op_text_566((*expr).operator_kind);
     if (cct_boot_rit_compare_38(op_text, cct_boot_str_102) == 0)
     {
-      cct_boot_rit_codegen_report_error_433(ctx, (*expr).line, (*expr).column, cct_boot_str_465);
+      cct_boot_rit_codegen_report_error_440(ctx, (*expr).line, (*expr).column, cct_boot_str_465);
       return;
     }
-    cct_boot_rit_codegen_emit_expr_567(ctx, (*expr).left);
-    cct_boot_rit_codegen_emit_499(ctx, cct_boot_str_392);
-    cct_boot_rit_codegen_emit_499(ctx, op_text);
-    cct_boot_rit_codegen_emit_499(ctx, cct_boot_str_392);
-    cct_boot_rit_codegen_emit_expr_567(ctx, (*expr).right);
+    cct_boot_rit_codegen_emit_expr_574(ctx, (*expr).left);
+    cct_boot_rit_codegen_emit_506(ctx, cct_boot_str_392);
+    cct_boot_rit_codegen_emit_506(ctx, op_text);
+    cct_boot_rit_codegen_emit_506(ctx, cct_boot_str_392);
+    cct_boot_rit_codegen_emit_expr_574(ctx, (*expr).right);
     return;
   }
   if ((*expr).kind == cct_boot_ord_AstKind__AST_UNARY_OP)
   {
-    char* op_text = cct_boot_rit_codegen_unary_op_text_557((*expr).operator_kind);
+    char* op_text = cct_boot_rit_codegen_unary_op_text_564((*expr).operator_kind);
     if (cct_boot_rit_compare_38(op_text, cct_boot_str_102) == 0)
     {
-      cct_boot_rit_codegen_report_error_433(ctx, (*expr).line, (*expr).column, cct_boot_str_466);
+      cct_boot_rit_codegen_report_error_440(ctx, (*expr).line, (*expr).column, cct_boot_str_466);
       return;
     }
-    cct_boot_rit_codegen_emit_499(ctx, op_text);
-    cct_boot_rit_codegen_emit_expr_567(ctx, (*expr).left);
+    cct_boot_rit_codegen_emit_506(ctx, op_text);
+    cct_boot_rit_codegen_emit_expr_574(ctx, (*expr).left);
     return;
   }
-  cct_boot_rit_codegen_emit_expr_567(ctx, expr);
+  cct_boot_rit_codegen_emit_expr_574(ctx, expr);
   return;
 }
 
-void cct_boot_rit_codegen_emit_expr_567(cct_boot_sig_CodegenContext* ctx, cct_boot_sig_AstNode* expr)
+void cct_boot_rit_codegen_emit_expr_574(cct_boot_sig_CodegenContext* ctx, cct_boot_sig_AstNode* expr)
 {
   if ((*expr).kind == cct_boot_ord_AstKind__AST_MOLDE)
   {
-    cct_boot_rit_codegen_emit_forma_expr_561(ctx, expr);
+    cct_boot_rit_codegen_emit_forma_expr_568(ctx, expr);
     return;
   }
   if ((*expr).kind == cct_boot_ord_AstKind__AST_MENSURA)
   {
-    char* type_text = cct_boot_rit_codegen_type_text_535(ctx, (*expr).type_expr);
+    char* type_text = cct_boot_rit_codegen_type_text_542(ctx, (*expr).type_expr);
     if (cct_boot_rit_compare_38(type_text, cct_boot_str_102) == 0)
     {
       return;
     }
-    cct_boot_rit_codegen_emit_499(ctx, cct_boot_str_467);
-    cct_boot_rit_codegen_emit_499(ctx, type_text);
-    cct_boot_rit_codegen_emit_499(ctx, cct_boot_str_410);
+    cct_boot_rit_codegen_emit_506(ctx, cct_boot_str_467);
+    cct_boot_rit_codegen_emit_506(ctx, type_text);
+    cct_boot_rit_codegen_emit_506(ctx, cct_boot_str_410);
     return;
   }
   if (((*expr).kind == cct_boot_ord_AstKind__AST_LITERAL_INT) || ((*expr).kind == cct_boot_ord_AstKind__AST_LITERAL_REAL))
   {
-    cct_boot_rit_codegen_emit_499(ctx, (*expr).value_text);
+    cct_boot_rit_codegen_emit_506(ctx, (*expr).value_text);
     return;
   }
   if ((*expr).kind == cct_boot_ord_AstKind__AST_LITERAL_BOOL)
   {
     if ((*expr).bool_value)
     {
-      cct_boot_rit_codegen_emit_499(ctx, cct_boot_str_468);
+      cct_boot_rit_codegen_emit_506(ctx, cct_boot_str_468);
     }
     else
     {
-      cct_boot_rit_codegen_emit_499(ctx, cct_boot_str_259);
+      cct_boot_rit_codegen_emit_506(ctx, cct_boot_str_259);
     }
     return;
   }
   if ((*expr).kind == cct_boot_ord_AstKind__AST_LITERAL_STRING)
   {
-    cct_boot_rit_codegen_emit_499(ctx, cct_boot_rit_codegen_string_symbol_512(ctx, (*expr).value_text));
+    cct_boot_rit_codegen_emit_506(ctx, cct_boot_rit_codegen_string_symbol_519(ctx, (*expr).value_text));
     return;
   }
   if ((*expr).kind == cct_boot_ord_AstKind__AST_LITERAL_NIHIL)
   {
-    cct_boot_rit_codegen_emit_499(ctx, cct_boot_str_469);
+    cct_boot_rit_codegen_emit_506(ctx, cct_boot_str_469);
     return;
   }
   if ((*expr).kind == cct_boot_ord_AstKind__AST_IDENTIFIER)
   {
-    char* local_name = cct_boot_rit_codegen_lookup_local_c_name_443(ctx, (*expr).name);
+    char* local_name = cct_boot_rit_codegen_lookup_local_c_name_450(ctx, (*expr).name);
     if (cct_boot_rit_compare_38(local_name, cct_boot_str_102) != 0)
     {
-      cct_boot_rit_codegen_emit_499(ctx, local_name);
+      cct_boot_rit_codegen_emit_506(ctx, local_name);
     }
     else
     {
-      long long item_matches = cct_boot_rit_codegen_count_ordo_item_matches_467(ctx, (*expr).name);
+      long long item_matches = cct_boot_rit_codegen_count_ordo_item_matches_474(ctx, (*expr).name);
       if (item_matches > 1)
       {
-        cct_boot_rit_codegen_report_error_433(ctx, (*expr).line, (*expr).column, cct_boot_str_424);
+        cct_boot_rit_codegen_report_error_440(ctx, (*expr).line, (*expr).column, cct_boot_str_424);
         return;
       }
       if (item_matches == 1)
       {
-        char* owner_name = cct_boot_rit_codegen_lookup_ordo_item_owner_name_469(ctx, (*expr).name);
-        if (cct_boot_rit_codegen_ordo_has_payload_466(ctx, owner_name))
+        char* owner_name = cct_boot_rit_codegen_lookup_ordo_item_owner_name_476(ctx, (*expr).name);
+        if (cct_boot_rit_codegen_ordo_has_payload_473(ctx, owner_name))
         {
-          if (cct_boot_rit_codegen_lookup_ordo_item_payload_arity_470(ctx, (*expr).name) > 0)
+          if (cct_boot_rit_codegen_lookup_ordo_item_payload_arity_477(ctx, (*expr).name) > 0)
           {
-            cct_boot_rit_codegen_report_error_433(ctx, (*expr).line, (*expr).column, cct_boot_str_470);
+            cct_boot_rit_codegen_report_error_440(ctx, (*expr).line, (*expr).column, cct_boot_str_470);
             return;
           }
-          cct_boot_rit_codegen_emit_499(ctx, cct_boot_str_437);
-          cct_boot_rit_codegen_emit_499(ctx, cct_boot_rit_codegen_lookup_ordo_c_name_460(ctx, owner_name));
-          cct_boot_rit_codegen_emit_499(ctx, cct_boot_str_440);
-          cct_boot_rit_codegen_emit_499(ctx, cct_boot_rit_codegen_lookup_ordo_item_c_name_468(ctx, (*expr).name));
-          cct_boot_rit_codegen_emit_499(ctx, cct_boot_str_444);
+          cct_boot_rit_codegen_emit_506(ctx, cct_boot_str_437);
+          cct_boot_rit_codegen_emit_506(ctx, cct_boot_rit_codegen_lookup_ordo_c_name_467(ctx, owner_name));
+          cct_boot_rit_codegen_emit_506(ctx, cct_boot_str_440);
+          cct_boot_rit_codegen_emit_506(ctx, cct_boot_rit_codegen_lookup_ordo_item_c_name_475(ctx, (*expr).name));
+          cct_boot_rit_codegen_emit_506(ctx, cct_boot_str_444);
         }
         else
         {
-          cct_boot_rit_codegen_emit_499(ctx, cct_boot_rit_codegen_lookup_ordo_item_c_name_468(ctx, (*expr).name));
+          cct_boot_rit_codegen_emit_506(ctx, cct_boot_rit_codegen_lookup_ordo_item_c_name_475(ctx, (*expr).name));
         }
       }
       else
       {
-        cct_boot_rit_codegen_emit_499(ctx, (*expr).name);
+        cct_boot_rit_codegen_emit_506(ctx, (*expr).name);
       }
     }
     return;
   }
   if ((*expr).kind == cct_boot_ord_AstKind__AST_UNARY_OP)
   {
-    char* op_text = cct_boot_rit_codegen_unary_op_text_557((*expr).operator_kind);
+    char* op_text = cct_boot_rit_codegen_unary_op_text_564((*expr).operator_kind);
     if (cct_boot_rit_compare_38(op_text, cct_boot_str_102) == 0)
     {
-      cct_boot_rit_codegen_report_error_433(ctx, (*expr).line, (*expr).column, cct_boot_str_466);
+      cct_boot_rit_codegen_report_error_440(ctx, (*expr).line, (*expr).column, cct_boot_str_466);
       return;
     }
     if ((*expr).operator_kind == cct_boot_ord_TokenKind__TK_STAR)
     {
-      cct_boot_rit_codegen_emit_499(ctx, cct_boot_str_432);
-      cct_boot_rit_codegen_emit_expr_567(ctx, (*expr).left);
-      cct_boot_rit_codegen_emit_499(ctx, cct_boot_str_107);
+      cct_boot_rit_codegen_emit_506(ctx, cct_boot_str_432);
+      cct_boot_rit_codegen_emit_expr_574(ctx, (*expr).left);
+      cct_boot_rit_codegen_emit_506(ctx, cct_boot_str_107);
     }
     else
     {
       if ((*expr).operator_kind == cct_boot_ord_TokenKind__TK_SPECULUM)
       {
-        cct_boot_rit_codegen_emit_499(ctx, cct_boot_str_471);
-        cct_boot_rit_codegen_emit_lvalue_563(ctx, (*expr).left);
-        cct_boot_rit_codegen_emit_499(ctx, cct_boot_str_107);
+        cct_boot_rit_codegen_emit_506(ctx, cct_boot_str_471);
+        cct_boot_rit_codegen_emit_lvalue_570(ctx, (*expr).left);
+        cct_boot_rit_codegen_emit_506(ctx, cct_boot_str_107);
       }
       else
       {
-        cct_boot_rit_codegen_emit_499(ctx, cct_boot_str_445);
-        cct_boot_rit_codegen_emit_499(ctx, op_text);
-        cct_boot_rit_codegen_emit_expr_567(ctx, (*expr).left);
-        cct_boot_rit_codegen_emit_499(ctx, cct_boot_str_107);
+        cct_boot_rit_codegen_emit_506(ctx, cct_boot_str_445);
+        cct_boot_rit_codegen_emit_506(ctx, op_text);
+        cct_boot_rit_codegen_emit_expr_574(ctx, (*expr).left);
+        cct_boot_rit_codegen_emit_506(ctx, cct_boot_str_107);
       }
     }
     return;
@@ -10708,86 +10715,86 @@ void cct_boot_rit_codegen_emit_expr_567(cct_boot_sig_CodegenContext* ctx, cct_bo
   {
     if ((*expr).operator_kind == cct_boot_ord_TokenKind__TK_STAR_STAR)
     {
-      cct_boot_rit_codegen_require_math_runtime_478(ctx);
-      cct_boot_rit_codegen_emit_499(ctx, cct_boot_str_463);
-      cct_boot_rit_codegen_emit_expr_567(ctx, (*expr).left);
-      cct_boot_rit_codegen_emit_499(ctx, cct_boot_str_464);
-      cct_boot_rit_codegen_emit_expr_567(ctx, (*expr).right);
-      cct_boot_rit_codegen_emit_499(ctx, cct_boot_str_449);
+      cct_boot_rit_codegen_require_math_runtime_485(ctx);
+      cct_boot_rit_codegen_emit_506(ctx, cct_boot_str_463);
+      cct_boot_rit_codegen_emit_expr_574(ctx, (*expr).left);
+      cct_boot_rit_codegen_emit_506(ctx, cct_boot_str_464);
+      cct_boot_rit_codegen_emit_expr_574(ctx, (*expr).right);
+      cct_boot_rit_codegen_emit_506(ctx, cct_boot_str_449);
       return;
     }
-    char* op_text = cct_boot_rit_codegen_binary_op_text_559((*expr).operator_kind);
+    char* op_text = cct_boot_rit_codegen_binary_op_text_566((*expr).operator_kind);
     if (cct_boot_rit_compare_38(op_text, cct_boot_str_102) == 0)
     {
-      cct_boot_rit_codegen_report_error_433(ctx, (*expr).line, (*expr).column, cct_boot_str_465);
+      cct_boot_rit_codegen_report_error_440(ctx, (*expr).line, (*expr).column, cct_boot_str_465);
       return;
     }
-    cct_boot_rit_codegen_emit_499(ctx, cct_boot_str_445);
-    cct_boot_rit_codegen_emit_expr_567(ctx, (*expr).left);
-    cct_boot_rit_codegen_emit_499(ctx, cct_boot_str_392);
-    cct_boot_rit_codegen_emit_499(ctx, op_text);
-    cct_boot_rit_codegen_emit_499(ctx, cct_boot_str_392);
-    cct_boot_rit_codegen_emit_expr_567(ctx, (*expr).right);
-    cct_boot_rit_codegen_emit_499(ctx, cct_boot_str_107);
+    cct_boot_rit_codegen_emit_506(ctx, cct_boot_str_445);
+    cct_boot_rit_codegen_emit_expr_574(ctx, (*expr).left);
+    cct_boot_rit_codegen_emit_506(ctx, cct_boot_str_392);
+    cct_boot_rit_codegen_emit_506(ctx, op_text);
+    cct_boot_rit_codegen_emit_506(ctx, cct_boot_str_392);
+    cct_boot_rit_codegen_emit_expr_574(ctx, (*expr).right);
+    cct_boot_rit_codegen_emit_506(ctx, cct_boot_str_107);
     return;
   }
   if ((*expr).kind == cct_boot_ord_AstKind__AST_CALL)
   {
-    cct_boot_rit_codegen_emit_call_expr_564(ctx, expr);
+    cct_boot_rit_codegen_emit_call_expr_571(ctx, expr);
     return;
   }
   if ((*expr).kind == cct_boot_ord_AstKind__AST_OBSECRO_CALL)
   {
-    cct_boot_rit_codegen_emit_obsecro_call_expr_565(ctx, expr);
+    cct_boot_rit_codegen_emit_obsecro_call_expr_572(ctx, expr);
     return;
   }
   if (((*expr).kind == cct_boot_ord_AstKind__AST_FIELD_ACCESS) || ((*expr).kind == cct_boot_ord_AstKind__AST_INDEX_ACCESS))
   {
-    cct_boot_rit_codegen_emit_lvalue_563(ctx, expr);
+    cct_boot_rit_codegen_emit_lvalue_570(ctx, expr);
     return;
   }
-  cct_boot_rit_codegen_report_error_433(ctx, (*expr).line, (*expr).column, cct_boot_str_472);
+  cct_boot_rit_codegen_report_error_440(ctx, (*expr).line, (*expr).column, cct_boot_str_472);
   return;
 }
 
-char* cct_boot_rit_codegen_elige_subject_type_name_568(cct_boot_sig_CodegenContext* ctx, cct_boot_sig_AstNode* stmt)
+char* cct_boot_rit_codegen_elige_subject_type_name_575(cct_boot_sig_CodegenContext* ctx, cct_boot_sig_AstNode* stmt)
 {
-  return cct_boot_rit_codegen_expr_type_name_562(ctx, (*stmt).condition);
+  return cct_boot_rit_codegen_expr_type_name_569(ctx, (*stmt).condition);
 }
 
-void cct_boot_rit_codegen_elige_emit_subject_temp_569(cct_boot_sig_CodegenContext* ctx, char* temp_name, char* subject_type_name, cct_boot_sig_AstNode* expr)
+void cct_boot_rit_codegen_elige_emit_subject_temp_576(cct_boot_sig_CodegenContext* ctx, char* temp_name, char* subject_type_name, cct_boot_sig_AstNode* expr)
 {
-  char* type_text = cct_boot_rit_codegen_named_c_type_name_534(ctx, subject_type_name, (*expr).line, (*expr).column);
+  char* type_text = cct_boot_rit_codegen_named_c_type_name_541(ctx, subject_type_name, (*expr).line, (*expr).column);
   if (cct_boot_rit_compare_38(type_text, cct_boot_str_102) == 0)
   {
     return;
   }
-  cct_boot_rit_codegen_emit_499(ctx, type_text);
-  cct_boot_rit_codegen_emit_499(ctx, cct_boot_str_392);
-  cct_boot_rit_codegen_emit_499(ctx, temp_name);
-  cct_boot_rit_codegen_emit_499(ctx, cct_boot_str_382);
-  cct_boot_rit_codegen_emit_expr_567(ctx, expr);
-  cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_385);
+  cct_boot_rit_codegen_emit_506(ctx, type_text);
+  cct_boot_rit_codegen_emit_506(ctx, cct_boot_str_392);
+  cct_boot_rit_codegen_emit_506(ctx, temp_name);
+  cct_boot_rit_codegen_emit_506(ctx, cct_boot_str_382);
+  cct_boot_rit_codegen_emit_expr_574(ctx, expr);
+  cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_385);
   return;
 }
 
-void cct_boot_rit_codegen_elige_emit_string_condition_570(cct_boot_sig_CodegenContext* ctx, char* subject_name, cct_boot_sig_AstNode* case_node)
+void cct_boot_rit_codegen_elige_emit_string_condition_577(cct_boot_sig_CodegenContext* ctx, char* subject_name, cct_boot_sig_AstNode* case_node)
 {
-  cct_boot_rit_codegen_require_stdlib_472(ctx);
+  cct_boot_rit_codegen_require_stdlib_479(ctx);
   long long i = 0;
-  long long n = cct_boot_rit_ast_node_list_len_209((*case_node).children);
+  long long n = cct_boot_rit_ast_node_list_len_216((*case_node).children);
   while (i < n)
   {
     {
       if (i > 0)
       {
-        cct_boot_rit_codegen_emit_499(ctx, cct_boot_str_473);
+        cct_boot_rit_codegen_emit_506(ctx, cct_boot_str_473);
       }
-      cct_boot_rit_codegen_emit_499(ctx, cct_boot_str_474);
-      cct_boot_rit_codegen_emit_499(ctx, subject_name);
-      cct_boot_rit_codegen_emit_499(ctx, cct_boot_str_111);
-      cct_boot_rit_codegen_emit_expr_567(ctx, cct_boot_rit_ast_node_list_get_210((*case_node).children, i));
-      cct_boot_rit_codegen_emit_499(ctx, cct_boot_str_475);
+      cct_boot_rit_codegen_emit_506(ctx, cct_boot_str_474);
+      cct_boot_rit_codegen_emit_506(ctx, subject_name);
+      cct_boot_rit_codegen_emit_506(ctx, cct_boot_str_111);
+      cct_boot_rit_codegen_emit_expr_574(ctx, cct_boot_rit_ast_node_list_get_217((*case_node).children, i));
+      cct_boot_rit_codegen_emit_506(ctx, cct_boot_str_475);
       i = (i + 1);
     }
     if (0) goto __cct_label_275;
@@ -10798,16 +10805,16 @@ void cct_boot_rit_codegen_elige_emit_string_condition_570(cct_boot_sig_CodegenCo
   return;
 }
 
-void cct_boot_rit_codegen_elige_emit_scalar_case_labels_571(cct_boot_sig_CodegenContext* ctx, cct_boot_sig_AstNode* case_node)
+void cct_boot_rit_codegen_elige_emit_scalar_case_labels_578(cct_boot_sig_CodegenContext* ctx, cct_boot_sig_AstNode* case_node)
 {
   long long i = 0;
-  long long n = cct_boot_rit_ast_node_list_len_209((*case_node).children);
+  long long n = cct_boot_rit_ast_node_list_len_216((*case_node).children);
   while (i < n)
   {
     {
-      cct_boot_rit_codegen_emit_499(ctx, cct_boot_str_476);
-      cct_boot_rit_codegen_emit_expr_567(ctx, cct_boot_rit_ast_node_list_get_210((*case_node).children, i));
-      cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_477);
+      cct_boot_rit_codegen_emit_506(ctx, cct_boot_str_476);
+      cct_boot_rit_codegen_emit_expr_574(ctx, cct_boot_rit_ast_node_list_get_217((*case_node).children, i));
+      cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_477);
       i = (i + 1);
     }
     if (0) goto __cct_label_277;
@@ -10818,17 +10825,17 @@ void cct_boot_rit_codegen_elige_emit_scalar_case_labels_571(cct_boot_sig_Codegen
   return;
 }
 
-void cct_boot_rit_codegen_elige_emit_simple_ordo_case_labels_572(cct_boot_sig_CodegenContext* ctx, cct_boot_sig_AstNode* case_node)
+void cct_boot_rit_codegen_elige_emit_simple_ordo_case_labels_579(cct_boot_sig_CodegenContext* ctx, cct_boot_sig_AstNode* case_node)
 {
   long long lit_idx = 0;
-  long long lit_n = cct_boot_rit_ast_node_list_len_209((*case_node).children);
+  long long lit_n = cct_boot_rit_ast_node_list_len_216((*case_node).children);
   while (lit_idx < lit_n)
   {
     {
-      cct_boot_sig_AstNode* literal = cct_boot_rit_ast_node_list_get_210((*case_node).children, lit_idx);
-      cct_boot_rit_codegen_emit_499(ctx, cct_boot_str_476);
-      cct_boot_rit_codegen_emit_499(ctx, cct_boot_rit_codegen_lookup_ordo_item_c_name_468(ctx, (*literal).name));
-      cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_477);
+      cct_boot_sig_AstNode* literal = cct_boot_rit_ast_node_list_get_217((*case_node).children, lit_idx);
+      cct_boot_rit_codegen_emit_506(ctx, cct_boot_str_476);
+      cct_boot_rit_codegen_emit_506(ctx, cct_boot_rit_codegen_lookup_ordo_item_c_name_475(ctx, (*literal).name));
+      cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_477);
       lit_idx = (lit_idx + 1);
     }
     if (0) goto __cct_label_279;
@@ -10839,59 +10846,59 @@ void cct_boot_rit_codegen_elige_emit_simple_ordo_case_labels_572(cct_boot_sig_Co
   return;
 }
 
-long long cct_boot_rit_codegen_elige_case_bindings_len_573(cct_boot_sig_AstNode* case_node)
+long long cct_boot_rit_codegen_elige_case_bindings_len_580(cct_boot_sig_AstNode* case_node)
 {
-  return cct_boot_rit_ast_node_list_len_209((*case_node).bindings);
+  return cct_boot_rit_ast_node_list_len_216((*case_node).bindings);
 }
 
-long long cct_boot_rit_codegen_elige_case_literals_len_574(cct_boot_sig_AstNode* case_node)
+long long cct_boot_rit_codegen_elige_case_literals_len_581(cct_boot_sig_AstNode* case_node)
 {
-  return cct_boot_rit_ast_node_list_len_209((*case_node).children);
+  return cct_boot_rit_ast_node_list_len_216((*case_node).children);
 }
 
-cct_boot_sig_AstNode* cct_boot_rit_codegen_elige_case_first_literal_575(cct_boot_sig_AstNode* case_node)
+cct_boot_sig_AstNode* cct_boot_rit_codegen_elige_case_first_literal_582(cct_boot_sig_AstNode* case_node)
 {
-  return cct_boot_rit_ast_node_list_get_210((*case_node).children, 0);
+  return cct_boot_rit_ast_node_list_get_217((*case_node).children, 0);
 }
 
-void cct_boot_rit_codegen_elige_emit_payload_bindings_576(cct_boot_sig_CodegenContext* ctx, char* subject_name, char* owner_name, cct_boot_sig_AstNode* case_node)
+void cct_boot_rit_codegen_elige_emit_payload_bindings_583(cct_boot_sig_CodegenContext* ctx, char* subject_name, char* owner_name, cct_boot_sig_AstNode* case_node)
 {
-  long long bind_n = cct_boot_rit_codegen_elige_case_bindings_len_573(case_node);
+  long long bind_n = cct_boot_rit_codegen_elige_case_bindings_len_580(case_node);
   if (bind_n <= 0)
   {
     return;
   }
-  if (cct_boot_rit_codegen_elige_case_literals_len_574(case_node) != 1)
+  if (cct_boot_rit_codegen_elige_case_literals_len_581(case_node) != 1)
   {
-    cct_boot_rit_codegen_report_error_433(ctx, (*case_node).line, (*case_node).column, cct_boot_str_478);
+    cct_boot_rit_codegen_report_error_440(ctx, (*case_node).line, (*case_node).column, cct_boot_str_478);
     return;
   }
-  cct_boot_sig_AstNode* literal = cct_boot_rit_codegen_elige_case_first_literal_575(case_node);
-  long long ordo_idx = cct_boot_rit_codegen_find_ordo_index_461(ctx, owner_name);
+  cct_boot_sig_AstNode* literal = cct_boot_rit_codegen_elige_case_first_literal_582(case_node);
+  long long ordo_idx = cct_boot_rit_codegen_find_ordo_index_468(ctx, owner_name);
   if (ordo_idx < 0)
   {
-    cct_boot_rit_codegen_report_error_433(ctx, (*case_node).line, (*case_node).column, cct_boot_str_479);
+    cct_boot_rit_codegen_report_error_440(ctx, (*case_node).line, (*case_node).column, cct_boot_str_479);
     return;
   }
-  cct_boot_sig_CodegenOrdo* ordo = cct_boot_rit_codegen_context_ordo_at_411(ctx, ordo_idx);
+  cct_boot_sig_CodegenOrdo* ordo = cct_boot_rit_codegen_context_ordo_at_418(ctx, ordo_idx);
   if (!(*ordo).has_decl_node)
   {
-    cct_boot_rit_codegen_report_error_433(ctx, (*case_node).line, (*case_node).column, cct_boot_str_480);
+    cct_boot_rit_codegen_report_error_440(ctx, (*case_node).line, (*case_node).column, cct_boot_str_480);
     return;
   }
-  long long item_n = cct_boot_rit_ast_node_list_len_209((*(*ordo).decl_node).items);
+  long long item_n = cct_boot_rit_ast_node_list_len_216((*(*ordo).decl_node).items);
   if (item_n <= 0)
   {
-    cct_boot_rit_codegen_report_error_433(ctx, (*case_node).line, (*case_node).column, cct_boot_str_481);
+    cct_boot_rit_codegen_report_error_440(ctx, (*case_node).line, (*case_node).column, cct_boot_str_481);
     return;
   }
-  cct_boot_sig_AstNode* item_node = cct_boot_rit_ast_node_list_get_210((*(*ordo).decl_node).items, 0);
+  cct_boot_sig_AstNode* item_node = cct_boot_rit_ast_node_list_get_217((*(*ordo).decl_node).items, 0);
   int found_item = 0;
   long long item_idx = 0;
   while (item_idx < item_n)
   {
     {
-      cct_boot_sig_AstNode* candidate = cct_boot_rit_ast_node_list_get_210((*(*ordo).decl_node).items, item_idx);
+      cct_boot_sig_AstNode* candidate = cct_boot_rit_ast_node_list_get_217((*(*ordo).decl_node).items, item_idx);
       if (cct_boot_rit_compare_38((*candidate).name, (*literal).name) == 0)
       {
         item_node = candidate;
@@ -10910,37 +10917,37 @@ void cct_boot_rit_codegen_elige_emit_payload_bindings_576(cct_boot_sig_CodegenCo
   __cct_label_280: ;
   if (!found_item)
   {
-    cct_boot_rit_codegen_report_error_433(ctx, (*case_node).line, (*case_node).column, cct_boot_str_482);
+    cct_boot_rit_codegen_report_error_440(ctx, (*case_node).line, (*case_node).column, cct_boot_str_482);
     return;
   }
-  if (cct_boot_rit_ast_node_list_len_209((*item_node).fields) != bind_n)
+  if (cct_boot_rit_ast_node_list_len_216((*item_node).fields) != bind_n)
   {
-    cct_boot_rit_codegen_report_error_433(ctx, (*case_node).line, (*case_node).column, cct_boot_str_483);
+    cct_boot_rit_codegen_report_error_440(ctx, (*case_node).line, (*case_node).column, cct_boot_str_483);
     return;
   }
-  cct_boot_rit_codegen_push_local_scope_441(ctx);
+  cct_boot_rit_codegen_push_local_scope_448(ctx);
   long long bind_idx = 0;
   while (bind_idx < bind_n)
   {
     {
-      cct_boot_sig_AstNode* binding = cct_boot_rit_ast_node_list_get_210((*case_node).bindings, bind_idx);
-      cct_boot_sig_AstNode* field = cct_boot_rit_ast_node_list_get_210((*item_node).fields, bind_idx);
-      char* type_text = cct_boot_rit_codegen_type_text_535(ctx, (*field).type_expr);
+      cct_boot_sig_AstNode* binding = cct_boot_rit_ast_node_list_get_217((*case_node).bindings, bind_idx);
+      cct_boot_sig_AstNode* field = cct_boot_rit_ast_node_list_get_217((*item_node).fields, bind_idx);
+      char* type_text = cct_boot_rit_codegen_type_text_542(ctx, (*field).type_expr);
       if (cct_boot_rit_compare_38(type_text, cct_boot_str_102) == 0)
       {
         return;
       }
-      char* local_name = cct_boot_rit_codegen_define_local_444(ctx, (*binding).name, (*binding).name, (*(*field).type_expr).type_name);
-      cct_boot_rit_codegen_emit_499(ctx, type_text);
-      cct_boot_rit_codegen_emit_499(ctx, cct_boot_str_392);
-      cct_boot_rit_codegen_emit_499(ctx, local_name);
-      cct_boot_rit_codegen_emit_499(ctx, cct_boot_str_382);
-      cct_boot_rit_codegen_emit_499(ctx, subject_name);
-      cct_boot_rit_codegen_emit_499(ctx, cct_boot_str_484);
-      cct_boot_rit_codegen_emit_499(ctx, (*item_node).name);
-      cct_boot_rit_codegen_emit_499(ctx, cct_boot_str_431);
-      cct_boot_rit_codegen_emit_499(ctx, (*field).name);
-      cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_385);
+      char* local_name = cct_boot_rit_codegen_define_local_451(ctx, (*binding).name, (*binding).name, (*(*field).type_expr).type_name);
+      cct_boot_rit_codegen_emit_506(ctx, type_text);
+      cct_boot_rit_codegen_emit_506(ctx, cct_boot_str_392);
+      cct_boot_rit_codegen_emit_506(ctx, local_name);
+      cct_boot_rit_codegen_emit_506(ctx, cct_boot_str_382);
+      cct_boot_rit_codegen_emit_506(ctx, subject_name);
+      cct_boot_rit_codegen_emit_506(ctx, cct_boot_str_484);
+      cct_boot_rit_codegen_emit_506(ctx, (*item_node).name);
+      cct_boot_rit_codegen_emit_506(ctx, cct_boot_str_431);
+      cct_boot_rit_codegen_emit_506(ctx, (*field).name);
+      cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_385);
       bind_idx = (bind_idx + 1);
     }
     if (0) goto __cct_label_283;
@@ -10951,74 +10958,74 @@ void cct_boot_rit_codegen_elige_emit_payload_bindings_576(cct_boot_sig_CodegenCo
   return;
 }
 
-void cct_boot_rit_codegen_elige_finish_payload_case_scope_577(cct_boot_sig_CodegenContext* ctx, cct_boot_sig_AstNode* case_node)
+void cct_boot_rit_codegen_elige_finish_payload_case_scope_584(cct_boot_sig_CodegenContext* ctx, cct_boot_sig_AstNode* case_node)
 {
-  if (cct_boot_rit_codegen_elige_case_bindings_len_573(case_node) > 0)
+  if (cct_boot_rit_codegen_elige_case_bindings_len_580(case_node) > 0)
   {
-    cct_boot_rit_codegen_pop_local_scope_442(ctx);
+    cct_boot_rit_codegen_pop_local_scope_449(ctx);
   }
   return;
 }
 
-int cct_boot_rit_codegen_failure_supported_cape_type_578(char* type_name)
+int cct_boot_rit_codegen_failure_supported_cape_type_585(char* type_name)
 {
   return ((cct_boot_rit_compare_38(type_name, cct_boot_str_41) == 0) || (cct_boot_rit_compare_38(type_name, cct_boot_str_57) == 0));
 }
 
-void cct_boot_rit_codegen_flow_push_loop_579(cct_boot_sig_CodegenContext* ctx, char* break_label, char* continue_label)
+void cct_boot_rit_codegen_flow_push_loop_586(cct_boot_sig_CodegenContext* ctx, char* break_label, char* continue_label)
 {
   char* owned_break = cct_boot_rit_verbum_dup_40(break_label);
   char* owned_continue = cct_boot_rit_verbum_dup_40(continue_label);
-  cct_boot_rit_fluxus_push_174((*ctx).loop_break_labels, (&owned_break));
-  cct_boot_rit_fluxus_push_174((*ctx).loop_continue_labels, (&owned_continue));
+  cct_boot_rit_fluxus_push_181((*ctx).loop_break_labels, (&owned_break));
+  cct_boot_rit_fluxus_push_181((*ctx).loop_continue_labels, (&owned_continue));
   return;
 }
 
-void cct_boot_rit_codegen_flow_pop_loop_580(cct_boot_sig_CodegenContext* ctx)
+void cct_boot_rit_codegen_flow_pop_loop_587(cct_boot_sig_CodegenContext* ctx)
 {
-  if (cct_boot_rit_fluxus_len_176((*ctx).loop_break_labels) == 0)
+  if (cct_boot_rit_fluxus_len_183((*ctx).loop_break_labels) == 0)
   {
     return;
   }
   char* break_label = cct_boot_str_102;
   char* continue_label = cct_boot_str_102;
-  cct_boot_rit_fluxus_pop_175((*ctx).loop_break_labels, (&break_label));
-  cct_boot_rit_fluxus_pop_175((*ctx).loop_continue_labels, (&continue_label));
+  cct_boot_rit_fluxus_pop_182((*ctx).loop_break_labels, (&break_label));
+  cct_boot_rit_fluxus_pop_182((*ctx).loop_continue_labels, (&continue_label));
   free((void*)(break_label));
   free((void*)(continue_label));
   return;
 }
 
-char* cct_boot_rit_codegen_flow_current_break_label_581(cct_boot_sig_CodegenContext* ctx)
+char* cct_boot_rit_codegen_flow_current_break_label_588(cct_boot_sig_CodegenContext* ctx)
 {
-  if (cct_boot_rit_fluxus_len_176((*ctx).loop_break_labels) == 0)
+  if (cct_boot_rit_fluxus_len_183((*ctx).loop_break_labels) == 0)
   {
     return cct_boot_str_102;
   }
   char* label = cct_boot_str_102;
-  cct_boot_rit_fluxus_pop_175((*ctx).loop_break_labels, (&label));
-  cct_boot_rit_fluxus_push_174((*ctx).loop_break_labels, (&label));
+  cct_boot_rit_fluxus_pop_182((*ctx).loop_break_labels, (&label));
+  cct_boot_rit_fluxus_push_181((*ctx).loop_break_labels, (&label));
   return label;
 }
 
-char* cct_boot_rit_codegen_flow_current_continue_label_582(cct_boot_sig_CodegenContext* ctx)
+char* cct_boot_rit_codegen_flow_current_continue_label_589(cct_boot_sig_CodegenContext* ctx)
 {
-  if (cct_boot_rit_fluxus_len_176((*ctx).loop_continue_labels) == 0)
+  if (cct_boot_rit_fluxus_len_183((*ctx).loop_continue_labels) == 0)
   {
     return cct_boot_str_102;
   }
   char* label = cct_boot_str_102;
-  cct_boot_rit_fluxus_pop_175((*ctx).loop_continue_labels, (&label));
-  cct_boot_rit_fluxus_push_174((*ctx).loop_continue_labels, (&label));
+  cct_boot_rit_fluxus_pop_182((*ctx).loop_continue_labels, (&label));
+  cct_boot_rit_fluxus_push_181((*ctx).loop_continue_labels, (&label));
   return label;
 }
 
-char* cct_boot_rit_codegen_stmt_type_text_583(cct_boot_sig_CodegenContext* ctx, cct_boot_sig_AstNode* type_expr)
+char* cct_boot_rit_codegen_stmt_type_text_590(cct_boot_sig_CodegenContext* ctx, cct_boot_sig_AstNode* type_expr)
 {
-  return cct_boot_rit_codegen_type_text_535(ctx, type_expr);
+  return cct_boot_rit_codegen_type_text_542(ctx, type_expr);
 }
 
-long long cct_boot_rit_codegen_series_identity_size_584(char* identity)
+long long cct_boot_rit_codegen_series_identity_size_591(char* identity)
 {
   if (!cct_boot_rit_starts_with_47(identity, cct_boot_str_364))
   {
@@ -11046,7 +11053,7 @@ long long cct_boot_rit_codegen_series_identity_size_584(char* identity)
   return value;
 }
 
-char* cct_boot_rit_codegen_series_identity_element_585(char* identity)
+char* cct_boot_rit_codegen_series_identity_element_592(char* identity)
 {
   if (!cct_boot_rit_starts_with_47(identity, cct_boot_str_364))
   {
@@ -11071,7 +11078,7 @@ char* cct_boot_rit_codegen_series_identity_element_585(char* identity)
   return cct_boot_rit_substring_39(identity, (i + 2), n);
 }
 
-char* cct_boot_rit_codegen_iter_identity_to_c_type_586(cct_boot_sig_CodegenContext* ctx, char* identity)
+char* cct_boot_rit_codegen_iter_identity_to_c_type_593(cct_boot_sig_CodegenContext* ctx, char* identity)
 {
   if (((((cct_boot_rit_compare_38(identity, cct_boot_str_51) == 0) || (cct_boot_rit_compare_38(identity, cct_boot_str_52) == 0)) || (cct_boot_rit_compare_38(identity, cct_boot_str_53) == 0)) || (cct_boot_rit_compare_38(identity, cct_boot_str_54) == 0)) || (cct_boot_rit_compare_38(identity, cct_boot_str_58) == 0))
   {
@@ -11091,13 +11098,13 @@ char* cct_boot_rit_codegen_iter_identity_to_c_type_586(cct_boot_sig_CodegenConte
   }
   if (cct_boot_rit_starts_with_47(identity, cct_boot_str_363))
   {
-    char* elem_identity = cct_boot_rit_codegen_pointer_element_identity_558(identity);
+    char* elem_identity = cct_boot_rit_codegen_pointer_element_identity_565(identity);
     if (cct_boot_rit_compare_38(elem_identity, cct_boot_str_60) == 0)
     {
       free((void*)(elem_identity));
       return cct_boot_str_486;
     }
-    char* elem_c = cct_boot_rit_codegen_iter_identity_to_c_type_586(ctx, elem_identity);
+    char* elem_c = cct_boot_rit_codegen_iter_identity_to_c_type_593(ctx, elem_identity);
     free((void*)(elem_identity));
     if (cct_boot_rit_compare_38(elem_c, cct_boot_str_102) == 0)
     {
@@ -11105,12 +11112,12 @@ char* cct_boot_rit_codegen_iter_identity_to_c_type_586(cct_boot_sig_CodegenConte
     }
     return cct_boot_rit_concat_37(elem_c, cct_boot_str_377);
   }
-  char* sigillum_name = cct_boot_rit_codegen_lookup_sigillum_c_name_454(ctx, identity);
+  char* sigillum_name = cct_boot_rit_codegen_lookup_sigillum_c_name_461(ctx, identity);
   if (cct_boot_rit_compare_38(sigillum_name, cct_boot_str_102) != 0)
   {
     return sigillum_name;
   }
-  char* ordo_name = cct_boot_rit_codegen_lookup_ordo_c_name_460(ctx, identity);
+  char* ordo_name = cct_boot_rit_codegen_lookup_ordo_c_name_467(ctx, identity);
   if (cct_boot_rit_compare_38(ordo_name, cct_boot_str_102) != 0)
   {
     return ordo_name;
@@ -11118,7 +11125,7 @@ char* cct_boot_rit_codegen_iter_identity_to_c_type_586(cct_boot_sig_CodegenConte
   return cct_boot_str_102;
 }
 
-void cct_boot_rit_codegen_capture_iter_local_info_587(cct_boot_sig_CodegenContext* ctx, cct_boot_sig_AstNode* stmt, char* local_identity)
+void cct_boot_rit_codegen_capture_iter_local_info_594(cct_boot_sig_CodegenContext* ctx, cct_boot_sig_AstNode* stmt, char* local_identity)
 {
   long long iter_kind = 0;
   char* item_identity = cct_boot_str_102;
@@ -11128,7 +11135,7 @@ void cct_boot_rit_codegen_capture_iter_local_info_587(cct_boot_sig_CodegenContex
     if ((*(*stmt).type_expr).is_array && (*(*stmt).type_expr).has_type_expr)
     {
       iter_kind = 2;
-      item_identity = cct_boot_rit_codegen_generic_type_identity_515(ctx, (*(*stmt).type_expr).type_expr);
+      item_identity = cct_boot_rit_codegen_generic_type_identity_522(ctx, (*(*stmt).type_expr).type_expr);
     }
   }
   if (iter_kind == 0)
@@ -11144,100 +11151,100 @@ void cct_boot_rit_codegen_capture_iter_local_info_587(cct_boot_sig_CodegenContex
     char* callee_name = (*(*(*stmt).right).callee).name;
     if ((cct_boot_rit_compare_38(callee_name, cct_boot_str_488) == 0) || (cct_boot_rit_compare_38(callee_name, cct_boot_str_489) == 0))
     {
-      if (cct_boot_rit_ast_node_list_len_209((*(*(*stmt).right).callee).generic_args) == 2)
+      if (cct_boot_rit_ast_node_list_len_216((*(*(*stmt).right).callee).generic_args) == 2)
       {
         iter_kind = 3;
-        item_identity = cct_boot_rit_codegen_generic_type_identity_515(ctx, cct_boot_rit_ast_node_list_get_210((*(*(*stmt).right).callee).generic_args, 0));
-        value_identity = cct_boot_rit_codegen_generic_type_identity_515(ctx, cct_boot_rit_ast_node_list_get_210((*(*(*stmt).right).callee).generic_args, 1));
+        item_identity = cct_boot_rit_codegen_generic_type_identity_522(ctx, cct_boot_rit_ast_node_list_get_217((*(*(*stmt).right).callee).generic_args, 0));
+        value_identity = cct_boot_rit_codegen_generic_type_identity_522(ctx, cct_boot_rit_ast_node_list_get_217((*(*(*stmt).right).callee).generic_args, 1));
       }
     }
     if ((cct_boot_rit_compare_38(callee_name, cct_boot_str_490) == 0) || (cct_boot_rit_compare_38(callee_name, cct_boot_str_491) == 0))
     {
-      if (cct_boot_rit_ast_node_list_len_209((*(*(*stmt).right).callee).generic_args) == 1)
+      if (cct_boot_rit_ast_node_list_len_216((*(*(*stmt).right).callee).generic_args) == 1)
       {
         iter_kind = 4;
-        item_identity = cct_boot_rit_codegen_generic_type_identity_515(ctx, cct_boot_rit_ast_node_list_get_210((*(*(*stmt).right).callee).generic_args, 0));
+        item_identity = cct_boot_rit_codegen_generic_type_identity_522(ctx, cct_boot_rit_ast_node_list_get_217((*(*(*stmt).right).callee).generic_args, 0));
         value_identity = cct_boot_str_102;
       }
     }
   }
   if (iter_kind != 0)
   {
-    cct_boot_rit_codegen_set_local_iter_info_446(ctx, (*stmt).name, iter_kind, item_identity, value_identity);
+    cct_boot_rit_codegen_set_local_iter_info_453(ctx, (*stmt).name, iter_kind, item_identity, value_identity);
   }
   return;
 }
 
-void cct_boot_rit_codegen_emit_iterum_binding_decl_588(cct_boot_sig_CodegenContext* ctx, char* binding_name, char* identity)
+void cct_boot_rit_codegen_emit_iterum_binding_decl_595(cct_boot_sig_CodegenContext* ctx, char* binding_name, char* identity)
 {
-  char* c_type = cct_boot_rit_codegen_iter_identity_to_c_type_586(ctx, identity);
+  char* c_type = cct_boot_rit_codegen_iter_identity_to_c_type_593(ctx, identity);
   if (cct_boot_rit_compare_38(c_type, cct_boot_str_102) == 0)
   {
-    cct_boot_rit_codegen_report_error_433(ctx, 0, 0, cct_boot_str_492);
+    cct_boot_rit_codegen_report_error_440(ctx, 0, 0, cct_boot_str_492);
     return;
   }
-  cct_boot_rit_codegen_emit_499(ctx, c_type);
-  cct_boot_rit_codegen_emit_499(ctx, cct_boot_str_392);
-  cct_boot_rit_codegen_emit_499(ctx, binding_name);
+  cct_boot_rit_codegen_emit_506(ctx, c_type);
+  cct_boot_rit_codegen_emit_506(ctx, cct_boot_str_392);
+  cct_boot_rit_codegen_emit_506(ctx, binding_name);
   if ((cct_boot_rit_compare_38(identity, cct_boot_str_57) == 0) || cct_boot_rit_starts_with_47(identity, cct_boot_str_363))
   {
-    cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_493);
+    cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_493);
   }
   else
   {
     if (cct_boot_rit_compare_38(identity, cct_boot_str_55) == 0)
     {
-      cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_494);
+      cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_494);
     }
     else
     {
       if (cct_boot_rit_compare_38(identity, cct_boot_str_56) == 0)
       {
-        cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_495);
+        cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_495);
       }
       else
       {
-        cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_496);
+        cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_496);
       }
     }
   }
   return;
 }
 
-void cct_boot_rit_codegen_emit_iterum_assign_from_ptr_589(cct_boot_sig_CodegenContext* ctx, char* binding_name, char* identity, char* ptr_name)
+void cct_boot_rit_codegen_emit_iterum_assign_from_ptr_596(cct_boot_sig_CodegenContext* ctx, char* binding_name, char* identity, char* ptr_name)
 {
-  char* c_type = cct_boot_rit_codegen_iter_identity_to_c_type_586(ctx, identity);
+  char* c_type = cct_boot_rit_codegen_iter_identity_to_c_type_593(ctx, identity);
   if (cct_boot_rit_compare_38(c_type, cct_boot_str_102) == 0)
   {
-    cct_boot_rit_codegen_report_error_433(ctx, 0, 0, cct_boot_str_497);
+    cct_boot_rit_codegen_report_error_440(ctx, 0, 0, cct_boot_str_497);
     return;
   }
-  cct_boot_rit_codegen_emit_499(ctx, binding_name);
-  cct_boot_rit_codegen_emit_499(ctx, cct_boot_str_498);
-  cct_boot_rit_codegen_emit_499(ctx, c_type);
-  cct_boot_rit_codegen_emit_499(ctx, cct_boot_str_499);
-  cct_boot_rit_codegen_emit_499(ctx, ptr_name);
-  cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_500);
+  cct_boot_rit_codegen_emit_506(ctx, binding_name);
+  cct_boot_rit_codegen_emit_506(ctx, cct_boot_str_498);
+  cct_boot_rit_codegen_emit_506(ctx, c_type);
+  cct_boot_rit_codegen_emit_506(ctx, cct_boot_str_499);
+  cct_boot_rit_codegen_emit_506(ctx, ptr_name);
+  cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_500);
   return;
 }
 
-void cct_boot_rit_codegen_emit_iterum_stmt_590(cct_boot_sig_CodegenContext* ctx, cct_boot_sig_AstNode* stmt)
+void cct_boot_rit_codegen_emit_iterum_stmt_597(cct_boot_sig_CodegenContext* ctx, cct_boot_sig_AstNode* stmt)
 {
   char* item_identity = cct_boot_str_51;
   char* value_identity = cct_boot_str_102;
   long long iter_kind = 0;
   if ((*(*stmt).left).kind == cct_boot_ord_AstKind__AST_IDENTIFIER)
   {
-    iter_kind = cct_boot_rit_codegen_lookup_local_iter_kind_447(ctx, (*(*stmt).left).name);
-    item_identity = cct_boot_rit_codegen_lookup_local_iter_item_type_text_448(ctx, (*(*stmt).left).name);
-    value_identity = cct_boot_rit_codegen_lookup_local_iter_value_type_text_449(ctx, (*(*stmt).left).name);
+    iter_kind = cct_boot_rit_codegen_lookup_local_iter_kind_454(ctx, (*(*stmt).left).name);
+    item_identity = cct_boot_rit_codegen_lookup_local_iter_item_type_text_455(ctx, (*(*stmt).left).name);
+    value_identity = cct_boot_rit_codegen_lookup_local_iter_value_type_text_456(ctx, (*(*stmt).left).name);
     if (iter_kind == 0)
     {
-      char* collection_identity = cct_boot_rit_codegen_lookup_local_type_name_445(ctx, (*(*stmt).left).name);
+      char* collection_identity = cct_boot_rit_codegen_lookup_local_type_name_452(ctx, (*(*stmt).left).name);
       if (cct_boot_rit_starts_with_47(collection_identity, cct_boot_str_364))
       {
         iter_kind = 2;
-        item_identity = cct_boot_rit_codegen_series_identity_element_585(collection_identity);
+        item_identity = cct_boot_rit_codegen_series_identity_element_592(collection_identity);
       }
       else
       {
@@ -11249,165 +11256,165 @@ void cct_boot_rit_codegen_emit_iterum_stmt_590(cct_boot_sig_CodegenContext* ctx,
       }
     }
   }
-  if ((iter_kind == 0) && (cct_boot_rit_compare_38(cct_boot_rit_codegen_expr_type_name_562(ctx, (*stmt).left), cct_boot_str_487) == 0))
+  if ((iter_kind == 0) && (cct_boot_rit_compare_38(cct_boot_rit_codegen_expr_type_name_569(ctx, (*stmt).left), cct_boot_str_487) == 0))
   {
     iter_kind = 1;
     item_identity = cct_boot_str_51;
   }
   if (iter_kind == 0)
   {
-    cct_boot_rit_codegen_report_error_433(ctx, (*stmt).line, (*stmt).column, cct_boot_str_501);
+    cct_boot_rit_codegen_report_error_440(ctx, (*stmt).line, (*stmt).column, cct_boot_str_501);
     return;
   }
-  char* break_label = cct_boot_rit_codegen_next_label_name_508(ctx);
-  char* continue_label = cct_boot_rit_codegen_next_label_name_508(ctx);
-  char* idx_name = cct_boot_rit_codegen_next_temp_name_507(ctx);
-  char* len_name = cct_boot_rit_codegen_next_temp_name_507(ctx);
-  char* collection_name = cct_boot_rit_codegen_next_temp_name_507(ctx);
-  char* ptr_name = cct_boot_rit_codegen_next_temp_name_507(ctx);
-  char* iter_name = cct_boot_rit_codegen_next_temp_name_507(ctx);
-  char* value_ptr_name = cct_boot_rit_codegen_next_temp_name_507(ctx);
-  cct_boot_rit_codegen_emit_block_open_504(ctx);
-  cct_boot_rit_codegen_push_local_scope_441(ctx);
-  cct_boot_rit_codegen_define_local_444(ctx, (*stmt).name, (*stmt).name, item_identity);
-  cct_boot_rit_codegen_emit_iterum_binding_decl_588(ctx, (*stmt).name, item_identity);
+  char* break_label = cct_boot_rit_codegen_next_label_name_515(ctx);
+  char* continue_label = cct_boot_rit_codegen_next_label_name_515(ctx);
+  char* idx_name = cct_boot_rit_codegen_next_temp_name_514(ctx);
+  char* len_name = cct_boot_rit_codegen_next_temp_name_514(ctx);
+  char* collection_name = cct_boot_rit_codegen_next_temp_name_514(ctx);
+  char* ptr_name = cct_boot_rit_codegen_next_temp_name_514(ctx);
+  char* iter_name = cct_boot_rit_codegen_next_temp_name_514(ctx);
+  char* value_ptr_name = cct_boot_rit_codegen_next_temp_name_514(ctx);
+  cct_boot_rit_codegen_emit_block_open_511(ctx);
+  cct_boot_rit_codegen_push_local_scope_448(ctx);
+  cct_boot_rit_codegen_define_local_451(ctx, (*stmt).name, (*stmt).name, item_identity);
+  cct_boot_rit_codegen_emit_iterum_binding_decl_595(ctx, (*stmt).name, item_identity);
   if (iter_kind == 3)
   {
-    cct_boot_rit_codegen_define_local_444(ctx, (*stmt).aux_name, (*stmt).aux_name, value_identity);
-    cct_boot_rit_codegen_emit_iterum_binding_decl_588(ctx, (*stmt).aux_name, value_identity);
+    cct_boot_rit_codegen_define_local_451(ctx, (*stmt).aux_name, (*stmt).aux_name, value_identity);
+    cct_boot_rit_codegen_emit_iterum_binding_decl_595(ctx, (*stmt).aux_name, value_identity);
   }
-  cct_boot_rit_codegen_flow_push_loop_579(ctx, break_label, continue_label);
+  cct_boot_rit_codegen_flow_push_loop_586(ctx, break_label, continue_label);
   if (iter_kind == 2)
   {
-    char* collection_identity = cct_boot_rit_codegen_lookup_local_type_name_445(ctx, (*(*stmt).left).name);
-    long long array_size = cct_boot_rit_codegen_series_identity_size_584(collection_identity);
-    cct_boot_rit_codegen_emit_499(ctx, cct_boot_str_502);
-    cct_boot_rit_codegen_emit_499(ctx, idx_name);
-    cct_boot_rit_codegen_emit_499(ctx, cct_boot_str_503);
-    cct_boot_rit_codegen_emit_499(ctx, idx_name);
-    cct_boot_rit_codegen_emit_499(ctx, cct_boot_str_504);
-    cct_boot_rit_codegen_emit_499(ctx, cct_boot_rit_stringify_int_95(array_size));
-    cct_boot_rit_codegen_emit_499(ctx, cct_boot_str_422);
-    cct_boot_rit_codegen_emit_499(ctx, idx_name);
-    cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_505);
-    cct_boot_rit_codegen_emit_block_open_504(ctx);
-    cct_boot_rit_codegen_emit_499(ctx, (*stmt).name);
-    cct_boot_rit_codegen_emit_499(ctx, cct_boot_str_382);
-    cct_boot_rit_codegen_emit_expr_567(ctx, (*stmt).left);
-    cct_boot_rit_codegen_emit_499(ctx, cct_boot_str_112);
-    cct_boot_rit_codegen_emit_499(ctx, idx_name);
-    cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_506);
+    char* collection_identity = cct_boot_rit_codegen_lookup_local_type_name_452(ctx, (*(*stmt).left).name);
+    long long array_size = cct_boot_rit_codegen_series_identity_size_591(collection_identity);
+    cct_boot_rit_codegen_emit_506(ctx, cct_boot_str_502);
+    cct_boot_rit_codegen_emit_506(ctx, idx_name);
+    cct_boot_rit_codegen_emit_506(ctx, cct_boot_str_503);
+    cct_boot_rit_codegen_emit_506(ctx, idx_name);
+    cct_boot_rit_codegen_emit_506(ctx, cct_boot_str_504);
+    cct_boot_rit_codegen_emit_506(ctx, cct_boot_rit_stringify_int_102(array_size));
+    cct_boot_rit_codegen_emit_506(ctx, cct_boot_str_422);
+    cct_boot_rit_codegen_emit_506(ctx, idx_name);
+    cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_505);
+    cct_boot_rit_codegen_emit_block_open_511(ctx);
+    cct_boot_rit_codegen_emit_506(ctx, (*stmt).name);
+    cct_boot_rit_codegen_emit_506(ctx, cct_boot_str_382);
+    cct_boot_rit_codegen_emit_expr_574(ctx, (*stmt).left);
+    cct_boot_rit_codegen_emit_506(ctx, cct_boot_str_112);
+    cct_boot_rit_codegen_emit_506(ctx, idx_name);
+    cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_506);
   }
   if (iter_kind == 1)
   {
-    cct_boot_rit_codegen_emit_499(ctx, cct_boot_str_486);
-    cct_boot_rit_codegen_emit_499(ctx, collection_name);
-    cct_boot_rit_codegen_emit_499(ctx, cct_boot_str_382);
-    cct_boot_rit_codegen_emit_expr_567(ctx, (*stmt).left);
-    cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_385);
-    cct_boot_rit_codegen_emit_499(ctx, cct_boot_str_507);
-    cct_boot_rit_codegen_emit_499(ctx, len_name);
-    cct_boot_rit_codegen_emit_499(ctx, cct_boot_str_508);
-    cct_boot_rit_codegen_emit_499(ctx, collection_name);
-    cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_500);
-    cct_boot_rit_codegen_emit_499(ctx, cct_boot_str_502);
-    cct_boot_rit_codegen_emit_499(ctx, idx_name);
-    cct_boot_rit_codegen_emit_499(ctx, cct_boot_str_503);
-    cct_boot_rit_codegen_emit_499(ctx, idx_name);
-    cct_boot_rit_codegen_emit_499(ctx, cct_boot_str_504);
-    cct_boot_rit_codegen_emit_499(ctx, len_name);
-    cct_boot_rit_codegen_emit_499(ctx, cct_boot_str_422);
-    cct_boot_rit_codegen_emit_499(ctx, idx_name);
-    cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_505);
-    cct_boot_rit_codegen_emit_block_open_504(ctx);
-    cct_boot_rit_codegen_emit_499(ctx, cct_boot_str_486);
-    cct_boot_rit_codegen_emit_499(ctx, ptr_name);
-    cct_boot_rit_codegen_emit_499(ctx, cct_boot_str_509);
-    cct_boot_rit_codegen_emit_499(ctx, collection_name);
-    cct_boot_rit_codegen_emit_499(ctx, cct_boot_str_111);
-    cct_boot_rit_codegen_emit_499(ctx, idx_name);
-    cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_500);
-    cct_boot_rit_codegen_emit_iterum_assign_from_ptr_589(ctx, (*stmt).name, item_identity, ptr_name);
+    cct_boot_rit_codegen_emit_506(ctx, cct_boot_str_486);
+    cct_boot_rit_codegen_emit_506(ctx, collection_name);
+    cct_boot_rit_codegen_emit_506(ctx, cct_boot_str_382);
+    cct_boot_rit_codegen_emit_expr_574(ctx, (*stmt).left);
+    cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_385);
+    cct_boot_rit_codegen_emit_506(ctx, cct_boot_str_507);
+    cct_boot_rit_codegen_emit_506(ctx, len_name);
+    cct_boot_rit_codegen_emit_506(ctx, cct_boot_str_508);
+    cct_boot_rit_codegen_emit_506(ctx, collection_name);
+    cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_500);
+    cct_boot_rit_codegen_emit_506(ctx, cct_boot_str_502);
+    cct_boot_rit_codegen_emit_506(ctx, idx_name);
+    cct_boot_rit_codegen_emit_506(ctx, cct_boot_str_503);
+    cct_boot_rit_codegen_emit_506(ctx, idx_name);
+    cct_boot_rit_codegen_emit_506(ctx, cct_boot_str_504);
+    cct_boot_rit_codegen_emit_506(ctx, len_name);
+    cct_boot_rit_codegen_emit_506(ctx, cct_boot_str_422);
+    cct_boot_rit_codegen_emit_506(ctx, idx_name);
+    cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_505);
+    cct_boot_rit_codegen_emit_block_open_511(ctx);
+    cct_boot_rit_codegen_emit_506(ctx, cct_boot_str_486);
+    cct_boot_rit_codegen_emit_506(ctx, ptr_name);
+    cct_boot_rit_codegen_emit_506(ctx, cct_boot_str_509);
+    cct_boot_rit_codegen_emit_506(ctx, collection_name);
+    cct_boot_rit_codegen_emit_506(ctx, cct_boot_str_111);
+    cct_boot_rit_codegen_emit_506(ctx, idx_name);
+    cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_500);
+    cct_boot_rit_codegen_emit_iterum_assign_from_ptr_596(ctx, (*stmt).name, item_identity, ptr_name);
   }
   if (iter_kind == 3)
   {
-    cct_boot_rit_codegen_require_stdlib_472(ctx);
-    cct_boot_rit_codegen_emit_499(ctx, cct_boot_str_486);
-    cct_boot_rit_codegen_emit_499(ctx, collection_name);
-    cct_boot_rit_codegen_emit_499(ctx, cct_boot_str_382);
-    cct_boot_rit_codegen_emit_expr_567(ctx, (*stmt).left);
-    cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_385);
-    cct_boot_rit_codegen_emit_499(ctx, cct_boot_str_486);
-    cct_boot_rit_codegen_emit_499(ctx, iter_name);
-    cct_boot_rit_codegen_emit_499(ctx, cct_boot_str_510);
-    cct_boot_rit_codegen_emit_499(ctx, collection_name);
-    cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_500);
-    cct_boot_rit_codegen_emit_499(ctx, cct_boot_str_486);
-    cct_boot_rit_codegen_emit_499(ctx, ptr_name);
-    cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_493);
-    cct_boot_rit_codegen_emit_499(ctx, cct_boot_str_486);
-    cct_boot_rit_codegen_emit_499(ctx, value_ptr_name);
-    cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_493);
-    cct_boot_rit_codegen_emit_499(ctx, cct_boot_str_511);
-    cct_boot_rit_codegen_emit_499(ctx, iter_name);
-    cct_boot_rit_codegen_emit_499(ctx, cct_boot_str_512);
-    cct_boot_rit_codegen_emit_499(ctx, ptr_name);
-    cct_boot_rit_codegen_emit_499(ctx, cct_boot_str_512);
-    cct_boot_rit_codegen_emit_499(ctx, value_ptr_name);
-    cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_410);
-    cct_boot_rit_codegen_emit_block_open_504(ctx);
-    cct_boot_rit_codegen_emit_iterum_assign_from_ptr_589(ctx, (*stmt).name, item_identity, ptr_name);
-    cct_boot_rit_codegen_emit_iterum_assign_from_ptr_589(ctx, (*stmt).aux_name, value_identity, value_ptr_name);
+    cct_boot_rit_codegen_require_stdlib_479(ctx);
+    cct_boot_rit_codegen_emit_506(ctx, cct_boot_str_486);
+    cct_boot_rit_codegen_emit_506(ctx, collection_name);
+    cct_boot_rit_codegen_emit_506(ctx, cct_boot_str_382);
+    cct_boot_rit_codegen_emit_expr_574(ctx, (*stmt).left);
+    cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_385);
+    cct_boot_rit_codegen_emit_506(ctx, cct_boot_str_486);
+    cct_boot_rit_codegen_emit_506(ctx, iter_name);
+    cct_boot_rit_codegen_emit_506(ctx, cct_boot_str_510);
+    cct_boot_rit_codegen_emit_506(ctx, collection_name);
+    cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_500);
+    cct_boot_rit_codegen_emit_506(ctx, cct_boot_str_486);
+    cct_boot_rit_codegen_emit_506(ctx, ptr_name);
+    cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_493);
+    cct_boot_rit_codegen_emit_506(ctx, cct_boot_str_486);
+    cct_boot_rit_codegen_emit_506(ctx, value_ptr_name);
+    cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_493);
+    cct_boot_rit_codegen_emit_506(ctx, cct_boot_str_511);
+    cct_boot_rit_codegen_emit_506(ctx, iter_name);
+    cct_boot_rit_codegen_emit_506(ctx, cct_boot_str_512);
+    cct_boot_rit_codegen_emit_506(ctx, ptr_name);
+    cct_boot_rit_codegen_emit_506(ctx, cct_boot_str_512);
+    cct_boot_rit_codegen_emit_506(ctx, value_ptr_name);
+    cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_410);
+    cct_boot_rit_codegen_emit_block_open_511(ctx);
+    cct_boot_rit_codegen_emit_iterum_assign_from_ptr_596(ctx, (*stmt).name, item_identity, ptr_name);
+    cct_boot_rit_codegen_emit_iterum_assign_from_ptr_596(ctx, (*stmt).aux_name, value_identity, value_ptr_name);
   }
   if (iter_kind == 4)
   {
-    cct_boot_rit_codegen_require_stdlib_472(ctx);
-    cct_boot_rit_codegen_emit_499(ctx, cct_boot_str_486);
-    cct_boot_rit_codegen_emit_499(ctx, collection_name);
-    cct_boot_rit_codegen_emit_499(ctx, cct_boot_str_382);
-    cct_boot_rit_codegen_emit_expr_567(ctx, (*stmt).left);
-    cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_385);
-    cct_boot_rit_codegen_emit_499(ctx, cct_boot_str_486);
-    cct_boot_rit_codegen_emit_499(ctx, iter_name);
-    cct_boot_rit_codegen_emit_499(ctx, cct_boot_str_513);
-    cct_boot_rit_codegen_emit_499(ctx, collection_name);
-    cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_500);
-    cct_boot_rit_codegen_emit_499(ctx, cct_boot_str_486);
-    cct_boot_rit_codegen_emit_499(ctx, ptr_name);
-    cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_493);
-    cct_boot_rit_codegen_emit_499(ctx, cct_boot_str_514);
-    cct_boot_rit_codegen_emit_499(ctx, iter_name);
-    cct_boot_rit_codegen_emit_499(ctx, cct_boot_str_512);
-    cct_boot_rit_codegen_emit_499(ctx, ptr_name);
-    cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_410);
-    cct_boot_rit_codegen_emit_block_open_504(ctx);
-    cct_boot_rit_codegen_emit_iterum_assign_from_ptr_589(ctx, (*stmt).name, item_identity, ptr_name);
+    cct_boot_rit_codegen_require_stdlib_479(ctx);
+    cct_boot_rit_codegen_emit_506(ctx, cct_boot_str_486);
+    cct_boot_rit_codegen_emit_506(ctx, collection_name);
+    cct_boot_rit_codegen_emit_506(ctx, cct_boot_str_382);
+    cct_boot_rit_codegen_emit_expr_574(ctx, (*stmt).left);
+    cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_385);
+    cct_boot_rit_codegen_emit_506(ctx, cct_boot_str_486);
+    cct_boot_rit_codegen_emit_506(ctx, iter_name);
+    cct_boot_rit_codegen_emit_506(ctx, cct_boot_str_513);
+    cct_boot_rit_codegen_emit_506(ctx, collection_name);
+    cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_500);
+    cct_boot_rit_codegen_emit_506(ctx, cct_boot_str_486);
+    cct_boot_rit_codegen_emit_506(ctx, ptr_name);
+    cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_493);
+    cct_boot_rit_codegen_emit_506(ctx, cct_boot_str_514);
+    cct_boot_rit_codegen_emit_506(ctx, iter_name);
+    cct_boot_rit_codegen_emit_506(ctx, cct_boot_str_512);
+    cct_boot_rit_codegen_emit_506(ctx, ptr_name);
+    cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_410);
+    cct_boot_rit_codegen_emit_block_open_511(ctx);
+    cct_boot_rit_codegen_emit_iterum_assign_from_ptr_596(ctx, (*stmt).name, item_identity, ptr_name);
   }
-  cct_boot_rit_codegen_emit_stmt_597(ctx, (*stmt).body);
-  cct_boot_rit_codegen_emit_499(ctx, continue_label);
-  cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_515);
-  cct_boot_rit_codegen_emit_block_close_505(ctx);
+  cct_boot_rit_codegen_emit_stmt_604(ctx, (*stmt).body);
+  cct_boot_rit_codegen_emit_506(ctx, continue_label);
+  cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_515);
+  cct_boot_rit_codegen_emit_block_close_512(ctx);
   if (iter_kind == 3)
   {
-    cct_boot_rit_codegen_emit_499(ctx, cct_boot_str_516);
-    cct_boot_rit_codegen_emit_499(ctx, iter_name);
-    cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_500);
+    cct_boot_rit_codegen_emit_506(ctx, cct_boot_str_516);
+    cct_boot_rit_codegen_emit_506(ctx, iter_name);
+    cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_500);
   }
   if (iter_kind == 4)
   {
-    cct_boot_rit_codegen_emit_499(ctx, cct_boot_str_517);
-    cct_boot_rit_codegen_emit_499(ctx, iter_name);
-    cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_500);
+    cct_boot_rit_codegen_emit_506(ctx, cct_boot_str_517);
+    cct_boot_rit_codegen_emit_506(ctx, iter_name);
+    cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_500);
   }
-  cct_boot_rit_codegen_flow_pop_loop_580(ctx);
-  cct_boot_rit_codegen_emit_499(ctx, break_label);
-  cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_515);
-  cct_boot_rit_codegen_pop_local_scope_442(ctx);
-  cct_boot_rit_codegen_emit_block_close_505(ctx);
+  cct_boot_rit_codegen_flow_pop_loop_587(ctx);
+  cct_boot_rit_codegen_emit_506(ctx, break_label);
+  cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_515);
+  cct_boot_rit_codegen_pop_local_scope_449(ctx);
+  cct_boot_rit_codegen_emit_block_close_512(ctx);
   return;
 }
 
-int cct_boot_rit_codegen_stmt_is_switch_subject_591(cct_boot_sig_CodegenContext* ctx, char* type_name)
+int cct_boot_rit_codegen_stmt_is_switch_subject_598(cct_boot_sig_CodegenContext* ctx, char* type_name)
 {
   if (cct_boot_rit_compare_38(type_name, cct_boot_str_51) == 0)
   {
@@ -11429,158 +11436,158 @@ int cct_boot_rit_codegen_stmt_is_switch_subject_591(cct_boot_sig_CodegenContext*
   {
     return 1;
   }
-  if (cct_boot_rit_compare_38(cct_boot_rit_codegen_lookup_ordo_c_name_460(ctx, type_name), cct_boot_str_102) != 0)
+  if (cct_boot_rit_compare_38(cct_boot_rit_codegen_lookup_ordo_c_name_467(ctx, type_name), cct_boot_str_102) != 0)
   {
     return 1;
   }
   return 0;
 }
 
-void cct_boot_rit_codegen_emit_stmt_as_block_592(cct_boot_sig_CodegenContext* ctx, cct_boot_sig_AstNode* stmt)
+void cct_boot_rit_codegen_emit_stmt_as_block_599(cct_boot_sig_CodegenContext* ctx, cct_boot_sig_AstNode* stmt)
 {
   if ((*stmt).kind == cct_boot_ord_AstKind__AST_BLOCK)
   {
-    cct_boot_rit_codegen_emit_stmt_597(ctx, stmt);
+    cct_boot_rit_codegen_emit_stmt_604(ctx, stmt);
     return;
   }
-  cct_boot_rit_codegen_emit_block_open_504(ctx);
-  cct_boot_rit_codegen_emit_stmt_597(ctx, stmt);
-  cct_boot_rit_codegen_emit_block_close_505(ctx);
+  cct_boot_rit_codegen_emit_block_open_511(ctx);
+  cct_boot_rit_codegen_emit_stmt_604(ctx, stmt);
+  cct_boot_rit_codegen_emit_block_close_512(ctx);
   return;
 }
 
-void cct_boot_rit_codegen_emit_iace_stmt_593(cct_boot_sig_CodegenContext* ctx, cct_boot_sig_AstNode* stmt)
+void cct_boot_rit_codegen_emit_iace_stmt_600(cct_boot_sig_CodegenContext* ctx, cct_boot_sig_AstNode* stmt)
 {
-  cct_boot_rit_codegen_require_failure_runtime_477(ctx);
-  cct_boot_rit_codegen_emit_499(ctx, cct_boot_str_518);
-  cct_boot_rit_codegen_emit_expr_567(ctx, (*stmt).left);
-  cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_500);
+  cct_boot_rit_codegen_require_failure_runtime_484(ctx);
+  cct_boot_rit_codegen_emit_506(ctx, cct_boot_str_518);
+  cct_boot_rit_codegen_emit_expr_574(ctx, (*stmt).left);
+  cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_500);
   return;
 }
 
-void cct_boot_rit_codegen_emit_tempta_stmt_594(cct_boot_sig_CodegenContext* ctx, cct_boot_sig_AstNode* stmt)
+void cct_boot_rit_codegen_emit_tempta_stmt_601(cct_boot_sig_CodegenContext* ctx, cct_boot_sig_AstNode* stmt)
 {
-  char* cape_type_text = cct_boot_rit_codegen_type_text_535(ctx, (*stmt).cape_type);
-  char* cape_identity = cct_boot_rit_codegen_generic_type_identity_515(ctx, (*stmt).cape_type);
-  if (!cct_boot_rit_codegen_failure_supported_cape_type_578(cape_identity))
+  char* cape_type_text = cct_boot_rit_codegen_type_text_542(ctx, (*stmt).cape_type);
+  char* cape_identity = cct_boot_rit_codegen_generic_type_identity_522(ctx, (*stmt).cape_type);
+  if (!cct_boot_rit_codegen_failure_supported_cape_type_585(cape_identity))
   {
-    cct_boot_rit_codegen_report_error_433(ctx, (*stmt).line, (*stmt).column, cct_boot_str_519);
+    cct_boot_rit_codegen_report_error_440(ctx, (*stmt).line, (*stmt).column, cct_boot_str_519);
     free((void*)(cape_identity));
     return;
   }
-  cct_boot_rit_codegen_require_failure_runtime_477(ctx);
-  char* jmp_name = cct_boot_rit_codegen_next_temp_name_507(ctx);
-  char* prev_try_name = cct_boot_rit_codegen_next_temp_name_507(ctx);
-  char* prev_err_name = cct_boot_rit_codegen_next_temp_name_507(ctx);
-  cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_520);
-  cct_boot_rit_codegen_emit_block_open_504(ctx);
-  cct_boot_rit_codegen_emit_499(ctx, cct_boot_str_521);
-  cct_boot_rit_codegen_emit_499(ctx, jmp_name);
-  cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_385);
-  cct_boot_rit_codegen_emit_499(ctx, cct_boot_str_522);
-  cct_boot_rit_codegen_emit_499(ctx, prev_try_name);
-  cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_523);
-  cct_boot_rit_codegen_emit_499(ctx, cct_boot_str_524);
-  cct_boot_rit_codegen_emit_499(ctx, prev_err_name);
-  cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_525);
-  cct_boot_rit_codegen_emit_499(ctx, cct_boot_str_526);
-  cct_boot_rit_codegen_emit_499(ctx, jmp_name);
-  cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_385);
-  cct_boot_rit_codegen_emit_499(ctx, cct_boot_str_527);
-  cct_boot_rit_codegen_emit_499(ctx, jmp_name);
-  cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_528);
-  cct_boot_rit_codegen_emit_block_open_504(ctx);
-  cct_boot_rit_codegen_emit_stmt_597(ctx, (*stmt).try_block);
-  cct_boot_rit_codegen_emit_499(ctx, cct_boot_str_529);
-  cct_boot_rit_codegen_emit_499(ctx, prev_try_name);
-  cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_385);
-  cct_boot_rit_codegen_emit_499(ctx, cct_boot_str_530);
-  cct_boot_rit_codegen_emit_499(ctx, prev_err_name);
-  cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_385);
-  cct_boot_rit_codegen_emit_block_close_505(ctx);
-  cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_531);
-  cct_boot_rit_codegen_emit_block_open_504(ctx);
-  cct_boot_rit_codegen_emit_499(ctx, cct_boot_str_529);
-  cct_boot_rit_codegen_emit_499(ctx, prev_try_name);
-  cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_385);
-  cct_boot_rit_codegen_push_local_scope_441(ctx);
-  cct_boot_rit_codegen_define_local_444(ctx, (*stmt).name, (*stmt).name, cape_identity);
-  cct_boot_rit_codegen_emit_499(ctx, cape_type_text);
-  cct_boot_rit_codegen_emit_499(ctx, cct_boot_str_392);
-  cct_boot_rit_codegen_emit_499(ctx, (*stmt).name);
-  cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_532);
-  cct_boot_rit_codegen_emit_499(ctx, cct_boot_str_533);
-  cct_boot_rit_codegen_emit_499(ctx, (*stmt).name);
-  cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_385);
-  cct_boot_rit_codegen_emit_stmt_597(ctx, (*stmt).cape_block);
-  cct_boot_rit_codegen_pop_local_scope_442(ctx);
-  cct_boot_rit_codegen_emit_499(ctx, cct_boot_str_530);
-  cct_boot_rit_codegen_emit_499(ctx, prev_err_name);
-  cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_385);
-  cct_boot_rit_codegen_emit_block_close_505(ctx);
+  cct_boot_rit_codegen_require_failure_runtime_484(ctx);
+  char* jmp_name = cct_boot_rit_codegen_next_temp_name_514(ctx);
+  char* prev_try_name = cct_boot_rit_codegen_next_temp_name_514(ctx);
+  char* prev_err_name = cct_boot_rit_codegen_next_temp_name_514(ctx);
+  cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_520);
+  cct_boot_rit_codegen_emit_block_open_511(ctx);
+  cct_boot_rit_codegen_emit_506(ctx, cct_boot_str_521);
+  cct_boot_rit_codegen_emit_506(ctx, jmp_name);
+  cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_385);
+  cct_boot_rit_codegen_emit_506(ctx, cct_boot_str_522);
+  cct_boot_rit_codegen_emit_506(ctx, prev_try_name);
+  cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_523);
+  cct_boot_rit_codegen_emit_506(ctx, cct_boot_str_524);
+  cct_boot_rit_codegen_emit_506(ctx, prev_err_name);
+  cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_525);
+  cct_boot_rit_codegen_emit_506(ctx, cct_boot_str_526);
+  cct_boot_rit_codegen_emit_506(ctx, jmp_name);
+  cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_385);
+  cct_boot_rit_codegen_emit_506(ctx, cct_boot_str_527);
+  cct_boot_rit_codegen_emit_506(ctx, jmp_name);
+  cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_528);
+  cct_boot_rit_codegen_emit_block_open_511(ctx);
+  cct_boot_rit_codegen_emit_stmt_604(ctx, (*stmt).try_block);
+  cct_boot_rit_codegen_emit_506(ctx, cct_boot_str_529);
+  cct_boot_rit_codegen_emit_506(ctx, prev_try_name);
+  cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_385);
+  cct_boot_rit_codegen_emit_506(ctx, cct_boot_str_530);
+  cct_boot_rit_codegen_emit_506(ctx, prev_err_name);
+  cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_385);
+  cct_boot_rit_codegen_emit_block_close_512(ctx);
+  cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_531);
+  cct_boot_rit_codegen_emit_block_open_511(ctx);
+  cct_boot_rit_codegen_emit_506(ctx, cct_boot_str_529);
+  cct_boot_rit_codegen_emit_506(ctx, prev_try_name);
+  cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_385);
+  cct_boot_rit_codegen_push_local_scope_448(ctx);
+  cct_boot_rit_codegen_define_local_451(ctx, (*stmt).name, (*stmt).name, cape_identity);
+  cct_boot_rit_codegen_emit_506(ctx, cape_type_text);
+  cct_boot_rit_codegen_emit_506(ctx, cct_boot_str_392);
+  cct_boot_rit_codegen_emit_506(ctx, (*stmt).name);
+  cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_532);
+  cct_boot_rit_codegen_emit_506(ctx, cct_boot_str_533);
+  cct_boot_rit_codegen_emit_506(ctx, (*stmt).name);
+  cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_385);
+  cct_boot_rit_codegen_emit_stmt_604(ctx, (*stmt).cape_block);
+  cct_boot_rit_codegen_pop_local_scope_449(ctx);
+  cct_boot_rit_codegen_emit_506(ctx, cct_boot_str_530);
+  cct_boot_rit_codegen_emit_506(ctx, prev_err_name);
+  cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_385);
+  cct_boot_rit_codegen_emit_block_close_512(ctx);
   if ((*stmt).has_semper_block)
   {
-    cct_boot_rit_codegen_emit_stmt_597(ctx, (*stmt).semper_block);
+    cct_boot_rit_codegen_emit_stmt_604(ctx, (*stmt).semper_block);
   }
-  cct_boot_rit_codegen_emit_block_close_505(ctx);
-  cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_534);
+  cct_boot_rit_codegen_emit_block_close_512(ctx);
+  cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_534);
   free((void*)(cape_identity));
   return;
 }
 
-void cct_boot_rit_codegen_emit_obsecro_scribe_stmt_595(cct_boot_sig_CodegenContext* ctx, cct_boot_sig_AstNode* expr)
+void cct_boot_rit_codegen_emit_obsecro_scribe_stmt_602(cct_boot_sig_CodegenContext* ctx, cct_boot_sig_AstNode* expr)
 {
   if (((*(*expr).callee).kind != cct_boot_ord_AstKind__AST_IDENTIFIER) || (cct_boot_rit_compare_38((*(*expr).callee).name, cct_boot_str_535) != 0))
   {
-    cct_boot_rit_codegen_report_error_433(ctx, (*expr).line, (*expr).column, cct_boot_str_536);
+    cct_boot_rit_codegen_report_error_440(ctx, (*expr).line, (*expr).column, cct_boot_str_536);
     return;
   }
-  long long n = cct_boot_rit_ast_node_list_len_209((*expr).arguments);
+  long long n = cct_boot_rit_ast_node_list_len_216((*expr).arguments);
   if (n < 1)
   {
-    cct_boot_rit_codegen_report_error_433(ctx, (*expr).line, (*expr).column, cct_boot_str_537);
+    cct_boot_rit_codegen_report_error_440(ctx, (*expr).line, (*expr).column, cct_boot_str_537);
     return;
   }
-  cct_boot_rit_codegen_require_scribe_runtime_475(ctx);
+  cct_boot_rit_codegen_require_scribe_runtime_482(ctx);
   long long i = 0;
   while (i < n)
   {
     {
-      cct_boot_sig_AstNode* arg = cct_boot_rit_ast_node_list_get_210((*expr).arguments, i);
-      char* type_name = cct_boot_rit_codegen_expr_type_name_562(ctx, arg);
+      cct_boot_sig_AstNode* arg = cct_boot_rit_ast_node_list_get_217((*expr).arguments, i);
+      char* type_name = cct_boot_rit_codegen_expr_type_name_569(ctx, arg);
       if ((cct_boot_rit_compare_38(type_name, cct_boot_str_57) == 0) || (cct_boot_rit_compare_38(type_name, cct_boot_str_41) == 0))
       {
-        cct_boot_rit_codegen_emit_499(ctx, cct_boot_str_538);
-        cct_boot_rit_codegen_emit_expr_567(ctx, arg);
-        cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_500);
+        cct_boot_rit_codegen_emit_506(ctx, cct_boot_str_538);
+        cct_boot_rit_codegen_emit_expr_574(ctx, arg);
+        cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_500);
       }
       else
       {
-        if (((((cct_boot_rit_compare_38(type_name, cct_boot_str_51) == 0) || (cct_boot_rit_compare_38(type_name, cct_boot_str_52) == 0)) || (cct_boot_rit_compare_38(type_name, cct_boot_str_53) == 0)) || (cct_boot_rit_compare_38(type_name, cct_boot_str_54) == 0)) || ((cct_boot_rit_compare_38(cct_boot_rit_codegen_lookup_ordo_c_name_460(ctx, type_name), cct_boot_str_102) != 0) && (!cct_boot_rit_codegen_ordo_has_payload_466(ctx, type_name))))
+        if (((((cct_boot_rit_compare_38(type_name, cct_boot_str_51) == 0) || (cct_boot_rit_compare_38(type_name, cct_boot_str_52) == 0)) || (cct_boot_rit_compare_38(type_name, cct_boot_str_53) == 0)) || (cct_boot_rit_compare_38(type_name, cct_boot_str_54) == 0)) || ((cct_boot_rit_compare_38(cct_boot_rit_codegen_lookup_ordo_c_name_467(ctx, type_name), cct_boot_str_102) != 0) && (!cct_boot_rit_codegen_ordo_has_payload_473(ctx, type_name))))
         {
-          cct_boot_rit_codegen_emit_499(ctx, cct_boot_str_539);
-          cct_boot_rit_codegen_emit_expr_567(ctx, arg);
-          cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_540);
+          cct_boot_rit_codegen_emit_506(ctx, cct_boot_str_539);
+          cct_boot_rit_codegen_emit_expr_574(ctx, arg);
+          cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_540);
         }
         else
         {
           if ((cct_boot_rit_compare_38(type_name, cct_boot_str_55) == 0) || (cct_boot_rit_compare_38(type_name, cct_boot_str_56) == 0))
           {
-            cct_boot_rit_codegen_emit_499(ctx, cct_boot_str_541);
-            cct_boot_rit_codegen_emit_expr_567(ctx, arg);
-            cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_540);
+            cct_boot_rit_codegen_emit_506(ctx, cct_boot_str_541);
+            cct_boot_rit_codegen_emit_expr_574(ctx, arg);
+            cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_540);
           }
           else
           {
             if (cct_boot_rit_compare_38(type_name, cct_boot_str_58) == 0)
             {
-              cct_boot_rit_codegen_emit_499(ctx, cct_boot_str_542);
-              cct_boot_rit_codegen_emit_expr_567(ctx, arg);
-              cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_540);
+              cct_boot_rit_codegen_emit_506(ctx, cct_boot_str_542);
+              cct_boot_rit_codegen_emit_expr_574(ctx, arg);
+              cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_540);
             }
             else
             {
-              cct_boot_rit_codegen_report_error_433(ctx, (*arg).line, (*arg).column, cct_boot_str_543);
+              cct_boot_rit_codegen_report_error_440(ctx, (*arg).line, (*arg).column, cct_boot_str_543);
               return;
             }
           }
@@ -11596,53 +11603,53 @@ void cct_boot_rit_codegen_emit_obsecro_scribe_stmt_595(cct_boot_sig_CodegenConte
   return;
 }
 
-void cct_boot_rit_codegen_emit_obsecro_libera_stmt_596(cct_boot_sig_CodegenContext* ctx, cct_boot_sig_AstNode* expr)
+void cct_boot_rit_codegen_emit_obsecro_libera_stmt_603(cct_boot_sig_CodegenContext* ctx, cct_boot_sig_AstNode* expr)
 {
   if (((*(*expr).callee).kind != cct_boot_ord_AstKind__AST_IDENTIFIER) || (cct_boot_rit_compare_38((*(*expr).callee).name, cct_boot_str_544) != 0))
   {
-    cct_boot_rit_codegen_report_error_433(ctx, (*expr).line, (*expr).column, cct_boot_str_545);
+    cct_boot_rit_codegen_report_error_440(ctx, (*expr).line, (*expr).column, cct_boot_str_545);
     return;
   }
-  if (cct_boot_rit_ast_node_list_len_209((*expr).arguments) != 1)
+  if (cct_boot_rit_ast_node_list_len_216((*expr).arguments) != 1)
   {
-    cct_boot_rit_codegen_report_error_433(ctx, (*expr).line, (*expr).column, cct_boot_str_546);
+    cct_boot_rit_codegen_report_error_440(ctx, (*expr).line, (*expr).column, cct_boot_str_546);
     return;
   }
-  cct_boot_rit_codegen_require_stdlib_472(ctx);
-  cct_boot_rit_codegen_emit_499(ctx, cct_boot_str_547);
-  cct_boot_rit_codegen_emit_expr_567(ctx, cct_boot_rit_ast_node_list_get_210((*expr).arguments, 0));
-  cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_540);
+  cct_boot_rit_codegen_require_stdlib_479(ctx);
+  cct_boot_rit_codegen_emit_506(ctx, cct_boot_str_547);
+  cct_boot_rit_codegen_emit_expr_574(ctx, cct_boot_rit_ast_node_list_get_217((*expr).arguments, 0));
+  cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_540);
   return;
 }
 
-void cct_boot_rit_codegen_emit_stmt_597(cct_boot_sig_CodegenContext* ctx, cct_boot_sig_AstNode* stmt)
+void cct_boot_rit_codegen_emit_stmt_604(cct_boot_sig_CodegenContext* ctx, cct_boot_sig_AstNode* stmt)
 {
   if ((*stmt).kind == cct_boot_ord_AstKind__AST_EXPR_STMT)
   {
     if ((((*(*stmt).left).kind == cct_boot_ord_AstKind__AST_OBSECRO_CALL) && ((*(*(*stmt).left).callee).kind == cct_boot_ord_AstKind__AST_IDENTIFIER)) && (cct_boot_rit_compare_38((*(*(*stmt).left).callee).name, cct_boot_str_535) == 0))
     {
-      cct_boot_rit_codegen_emit_obsecro_scribe_stmt_595(ctx, (*stmt).left);
+      cct_boot_rit_codegen_emit_obsecro_scribe_stmt_602(ctx, (*stmt).left);
       return;
     }
     if ((((*(*stmt).left).kind == cct_boot_ord_AstKind__AST_OBSECRO_CALL) && ((*(*(*stmt).left).callee).kind == cct_boot_ord_AstKind__AST_IDENTIFIER)) && (cct_boot_rit_compare_38((*(*(*stmt).left).callee).name, cct_boot_str_544) == 0))
     {
-      cct_boot_rit_codegen_emit_obsecro_libera_stmt_596(ctx, (*stmt).left);
+      cct_boot_rit_codegen_emit_obsecro_libera_stmt_603(ctx, (*stmt).left);
       return;
     }
-    cct_boot_rit_codegen_emit_expr_567(ctx, (*stmt).left);
-    cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_385);
+    cct_boot_rit_codegen_emit_expr_574(ctx, (*stmt).left);
+    cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_385);
     return;
   }
   if ((*stmt).kind == cct_boot_ord_AstKind__AST_BLOCK)
   {
-    cct_boot_rit_codegen_push_local_scope_441(ctx);
-    cct_boot_rit_codegen_emit_block_open_504(ctx);
+    cct_boot_rit_codegen_push_local_scope_448(ctx);
+    cct_boot_rit_codegen_emit_block_open_511(ctx);
     long long i = 0;
-    long long n = cct_boot_rit_ast_node_list_len_209((*stmt).statements);
+    long long n = cct_boot_rit_ast_node_list_len_216((*stmt).statements);
     while (i < n)
     {
       {
-        cct_boot_rit_codegen_emit_stmt_597(ctx, cct_boot_rit_ast_node_list_get_210((*stmt).statements, i));
+        cct_boot_rit_codegen_emit_stmt_604(ctx, cct_boot_rit_ast_node_list_get_217((*stmt).statements, i));
         i = (i + 1);
       }
       if (0) goto __cct_label_291;
@@ -11650,20 +11657,20 @@ void cct_boot_rit_codegen_emit_stmt_597(cct_boot_sig_CodegenContext* ctx, cct_bo
     }
     if (0) goto __cct_label_290;
     __cct_label_290: ;
-    cct_boot_rit_codegen_emit_block_close_505(ctx);
-    cct_boot_rit_codegen_pop_local_scope_442(ctx);
+    cct_boot_rit_codegen_emit_block_close_512(ctx);
+    cct_boot_rit_codegen_pop_local_scope_449(ctx);
     return;
   }
   if ((*stmt).kind == cct_boot_ord_AstKind__AST_EVOCA)
   {
-    char* type_text = cct_boot_rit_codegen_stmt_type_text_583(ctx, (*stmt).type_expr);
+    char* type_text = cct_boot_rit_codegen_stmt_type_text_590(ctx, (*stmt).type_expr);
     if (cct_boot_rit_compare_38(type_text, cct_boot_str_102) == 0)
     {
       return;
     }
-    char* local_type_identity = cct_boot_rit_codegen_generic_type_identity_515(ctx, (*stmt).type_expr);
-    char* local_name = cct_boot_rit_codegen_define_local_444(ctx, (*stmt).name, (*stmt).name, local_type_identity);
-    cct_boot_rit_codegen_capture_iter_local_info_587(ctx, stmt, local_type_identity);
+    char* local_type_identity = cct_boot_rit_codegen_generic_type_identity_522(ctx, (*stmt).type_expr);
+    char* local_name = cct_boot_rit_codegen_define_local_451(ctx, (*stmt).name, (*stmt).name, local_type_identity);
+    cct_boot_rit_codegen_capture_iter_local_info_594(ctx, stmt, local_type_identity);
     free((void*)(local_type_identity));
     if ((*stmt).has_type_expr && (*(*stmt).type_expr).is_array)
     {
@@ -11675,10 +11682,10 @@ void cct_boot_rit_codegen_emit_stmt_597(cct_boot_sig_CodegenContext* ctx, cct_bo
         array_prefix = cct_boot_rit_substring_39(type_text, 0, bracket_idx);
         array_suffix = cct_boot_rit_substring_39(type_text, bracket_idx, cct_boot_rit_len_30(type_text));
       }
-      cct_boot_rit_codegen_emit_499(ctx, array_prefix);
-      cct_boot_rit_codegen_emit_499(ctx, cct_boot_str_392);
-      cct_boot_rit_codegen_emit_499(ctx, local_name);
-      cct_boot_rit_codegen_emit_499(ctx, array_suffix);
+      cct_boot_rit_codegen_emit_506(ctx, array_prefix);
+      cct_boot_rit_codegen_emit_506(ctx, cct_boot_str_392);
+      cct_boot_rit_codegen_emit_506(ctx, local_name);
+      cct_boot_rit_codegen_emit_506(ctx, array_suffix);
       if (bracket_idx >= 0)
       {
         free((void*)(array_prefix));
@@ -11687,241 +11694,241 @@ void cct_boot_rit_codegen_emit_stmt_597(cct_boot_sig_CodegenContext* ctx, cct_bo
     }
     else
     {
-      cct_boot_rit_codegen_emit_499(ctx, type_text);
-      cct_boot_rit_codegen_emit_499(ctx, cct_boot_str_392);
-      cct_boot_rit_codegen_emit_499(ctx, local_name);
+      cct_boot_rit_codegen_emit_506(ctx, type_text);
+      cct_boot_rit_codegen_emit_506(ctx, cct_boot_str_392);
+      cct_boot_rit_codegen_emit_506(ctx, local_name);
     }
     if ((*stmt).has_right)
     {
-      cct_boot_rit_codegen_emit_499(ctx, cct_boot_str_382);
-      cct_boot_rit_codegen_emit_expr_567(ctx, (*stmt).right);
+      cct_boot_rit_codegen_emit_506(ctx, cct_boot_str_382);
+      cct_boot_rit_codegen_emit_expr_574(ctx, (*stmt).right);
     }
-    cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_385);
+    cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_385);
     return;
   }
   if ((*stmt).kind == cct_boot_ord_AstKind__AST_VINCIRE)
   {
-    cct_boot_rit_codegen_emit_lvalue_563(ctx, (*stmt).left);
-    cct_boot_rit_codegen_emit_499(ctx, cct_boot_str_382);
-    cct_boot_rit_codegen_emit_expr_567(ctx, (*stmt).right);
-    cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_385);
+    cct_boot_rit_codegen_emit_lvalue_570(ctx, (*stmt).left);
+    cct_boot_rit_codegen_emit_506(ctx, cct_boot_str_382);
+    cct_boot_rit_codegen_emit_expr_574(ctx, (*stmt).right);
+    cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_385);
     return;
   }
   if (((*stmt).kind == cct_boot_ord_AstKind__AST_REDDE) && (*stmt).has_left)
   {
     if (cct_boot_rit_compare_38((*ctx).current_return_type, cct_boot_str_60) == 0)
     {
-      cct_boot_rit_codegen_report_error_433(ctx, (*stmt).line, (*stmt).column, cct_boot_str_548);
+      cct_boot_rit_codegen_report_error_440(ctx, (*stmt).line, (*stmt).column, cct_boot_str_548);
       return;
     }
-    cct_boot_rit_codegen_emit_499(ctx, cct_boot_str_549);
-    cct_boot_rit_codegen_emit_expr_567(ctx, (*stmt).left);
-    cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_385);
+    cct_boot_rit_codegen_emit_506(ctx, cct_boot_str_549);
+    cct_boot_rit_codegen_emit_expr_574(ctx, (*stmt).left);
+    cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_385);
     return;
   }
   if (((*stmt).kind == cct_boot_ord_AstKind__AST_REDDE) && (!(*stmt).has_left))
   {
     if (cct_boot_rit_compare_38((*ctx).current_return_type, cct_boot_str_60) != 0)
     {
-      cct_boot_rit_codegen_report_error_433(ctx, (*stmt).line, (*stmt).column, cct_boot_str_550);
+      cct_boot_rit_codegen_report_error_440(ctx, (*stmt).line, (*stmt).column, cct_boot_str_550);
       return;
     }
-    cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_551);
+    cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_551);
     return;
   }
   if ((*stmt).kind == cct_boot_ord_AstKind__AST_ANUR)
   {
     if (!(*stmt).has_left)
     {
-      cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_552);
+      cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_552);
       return;
     }
-    cct_boot_rit_codegen_emit_499(ctx, cct_boot_str_553);
-    cct_boot_rit_codegen_emit_expr_567(ctx, (*stmt).left);
-    cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_540);
+    cct_boot_rit_codegen_emit_506(ctx, cct_boot_str_553);
+    cct_boot_rit_codegen_emit_expr_574(ctx, (*stmt).left);
+    cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_540);
     return;
   }
   if ((*stmt).kind == cct_boot_ord_AstKind__AST_DIMITTE)
   {
-    cct_boot_rit_codegen_emit_499(ctx, cct_boot_str_547);
-    cct_boot_rit_codegen_emit_lvalue_563(ctx, (*stmt).left);
-    cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_540);
+    cct_boot_rit_codegen_emit_506(ctx, cct_boot_str_547);
+    cct_boot_rit_codegen_emit_lvalue_570(ctx, (*stmt).left);
+    cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_540);
     return;
   }
   if ((*stmt).kind == cct_boot_ord_AstKind__AST_SI)
   {
-    cct_boot_rit_codegen_emit_499(ctx, cct_boot_str_554);
-    cct_boot_rit_codegen_emit_condition_expr_566(ctx, (*stmt).condition);
-    cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_107);
-    cct_boot_rit_codegen_emit_stmt_as_block_592(ctx, (*stmt).body);
+    cct_boot_rit_codegen_emit_506(ctx, cct_boot_str_554);
+    cct_boot_rit_codegen_emit_condition_expr_573(ctx, (*stmt).condition);
+    cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_107);
+    cct_boot_rit_codegen_emit_stmt_as_block_599(ctx, (*stmt).body);
     if ((*stmt).has_else_branch)
     {
-      cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_531);
-      cct_boot_rit_codegen_emit_stmt_as_block_592(ctx, (*stmt).else_branch);
+      cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_531);
+      cct_boot_rit_codegen_emit_stmt_as_block_599(ctx, (*stmt).else_branch);
     }
     return;
   }
   if ((*stmt).kind == cct_boot_ord_AstKind__AST_DUM)
   {
-    char* break_label = cct_boot_rit_codegen_next_label_name_508(ctx);
-    char* continue_label = cct_boot_rit_codegen_next_label_name_508(ctx);
-    cct_boot_rit_codegen_flow_push_loop_579(ctx, break_label, continue_label);
-    cct_boot_rit_codegen_emit_499(ctx, cct_boot_str_555);
-    cct_boot_rit_codegen_emit_condition_expr_566(ctx, (*stmt).condition);
-    cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_107);
-    cct_boot_rit_codegen_emit_block_open_504(ctx);
-    cct_boot_rit_codegen_emit_stmt_597(ctx, (*stmt).body);
-    cct_boot_rit_codegen_emit_499(ctx, cct_boot_str_556);
-    cct_boot_rit_codegen_emit_499(ctx, continue_label);
-    cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_385);
-    cct_boot_rit_codegen_emit_499(ctx, continue_label);
-    cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_515);
-    cct_boot_rit_codegen_emit_block_close_505(ctx);
-    cct_boot_rit_codegen_flow_pop_loop_580(ctx);
-    cct_boot_rit_codegen_emit_499(ctx, cct_boot_str_556);
-    cct_boot_rit_codegen_emit_499(ctx, break_label);
-    cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_385);
-    cct_boot_rit_codegen_emit_499(ctx, break_label);
-    cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_515);
+    char* break_label = cct_boot_rit_codegen_next_label_name_515(ctx);
+    char* continue_label = cct_boot_rit_codegen_next_label_name_515(ctx);
+    cct_boot_rit_codegen_flow_push_loop_586(ctx, break_label, continue_label);
+    cct_boot_rit_codegen_emit_506(ctx, cct_boot_str_555);
+    cct_boot_rit_codegen_emit_condition_expr_573(ctx, (*stmt).condition);
+    cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_107);
+    cct_boot_rit_codegen_emit_block_open_511(ctx);
+    cct_boot_rit_codegen_emit_stmt_604(ctx, (*stmt).body);
+    cct_boot_rit_codegen_emit_506(ctx, cct_boot_str_556);
+    cct_boot_rit_codegen_emit_506(ctx, continue_label);
+    cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_385);
+    cct_boot_rit_codegen_emit_506(ctx, continue_label);
+    cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_515);
+    cct_boot_rit_codegen_emit_block_close_512(ctx);
+    cct_boot_rit_codegen_flow_pop_loop_587(ctx);
+    cct_boot_rit_codegen_emit_506(ctx, cct_boot_str_556);
+    cct_boot_rit_codegen_emit_506(ctx, break_label);
+    cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_385);
+    cct_boot_rit_codegen_emit_506(ctx, break_label);
+    cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_515);
     free((void*)(break_label));
     free((void*)(continue_label));
     return;
   }
   if ((*stmt).kind == cct_boot_ord_AstKind__AST_DONEC)
   {
-    char* break_label = cct_boot_rit_codegen_next_label_name_508(ctx);
-    char* continue_label = cct_boot_rit_codegen_next_label_name_508(ctx);
-    cct_boot_rit_codegen_flow_push_loop_579(ctx, break_label, continue_label);
-    cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_520);
-    cct_boot_rit_codegen_emit_block_open_504(ctx);
-    cct_boot_rit_codegen_emit_stmt_597(ctx, (*stmt).body);
-    cct_boot_rit_codegen_emit_499(ctx, continue_label);
-    cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_515);
-    cct_boot_rit_codegen_emit_block_close_505(ctx);
-    cct_boot_rit_codegen_flow_pop_loop_580(ctx);
-    cct_boot_rit_codegen_emit_499(ctx, cct_boot_str_555);
+    char* break_label = cct_boot_rit_codegen_next_label_name_515(ctx);
+    char* continue_label = cct_boot_rit_codegen_next_label_name_515(ctx);
+    cct_boot_rit_codegen_flow_push_loop_586(ctx, break_label, continue_label);
+    cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_520);
+    cct_boot_rit_codegen_emit_block_open_511(ctx);
+    cct_boot_rit_codegen_emit_stmt_604(ctx, (*stmt).body);
+    cct_boot_rit_codegen_emit_506(ctx, continue_label);
+    cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_515);
+    cct_boot_rit_codegen_emit_block_close_512(ctx);
+    cct_boot_rit_codegen_flow_pop_loop_587(ctx);
+    cct_boot_rit_codegen_emit_506(ctx, cct_boot_str_555);
     if ((*stmt).has_condition)
     {
-      cct_boot_rit_codegen_emit_condition_expr_566(ctx, (*stmt).condition);
+      cct_boot_rit_codegen_emit_condition_expr_573(ctx, (*stmt).condition);
     }
     else
     {
-      cct_boot_rit_codegen_emit_499(ctx, cct_boot_str_468);
+      cct_boot_rit_codegen_emit_506(ctx, cct_boot_str_468);
     }
-    cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_500);
-    cct_boot_rit_codegen_emit_499(ctx, break_label);
-    cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_515);
+    cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_500);
+    cct_boot_rit_codegen_emit_506(ctx, break_label);
+    cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_515);
     free((void*)(break_label));
     free((void*)(continue_label));
     return;
   }
   if ((*stmt).kind == cct_boot_ord_AstKind__AST_REPETE)
   {
-    char* start_name = cct_boot_rit_codegen_next_temp_name_507(ctx);
-    char* end_name = cct_boot_rit_codegen_next_temp_name_507(ctx);
-    char* step_name = cct_boot_rit_codegen_next_temp_name_507(ctx);
-    char* break_label = cct_boot_rit_codegen_next_label_name_508(ctx);
-    char* continue_label = cct_boot_rit_codegen_next_label_name_508(ctx);
-    cct_boot_rit_codegen_emit_block_open_504(ctx);
-    cct_boot_rit_codegen_push_local_scope_441(ctx);
-    cct_boot_rit_codegen_define_local_444(ctx, (*stmt).name, (*stmt).name, cct_boot_str_51);
-    cct_boot_rit_codegen_emit_499(ctx, cct_boot_str_507);
-    cct_boot_rit_codegen_emit_499(ctx, start_name);
-    cct_boot_rit_codegen_emit_499(ctx, cct_boot_str_382);
-    cct_boot_rit_codegen_emit_expr_567(ctx, (*stmt).left);
-    cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_385);
-    cct_boot_rit_codegen_emit_499(ctx, cct_boot_str_507);
-    cct_boot_rit_codegen_emit_499(ctx, end_name);
-    cct_boot_rit_codegen_emit_499(ctx, cct_boot_str_382);
-    cct_boot_rit_codegen_emit_expr_567(ctx, (*stmt).right);
-    cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_385);
-    cct_boot_rit_codegen_emit_499(ctx, cct_boot_str_507);
-    cct_boot_rit_codegen_emit_499(ctx, step_name);
-    cct_boot_rit_codegen_emit_499(ctx, cct_boot_str_382);
+    char* start_name = cct_boot_rit_codegen_next_temp_name_514(ctx);
+    char* end_name = cct_boot_rit_codegen_next_temp_name_514(ctx);
+    char* step_name = cct_boot_rit_codegen_next_temp_name_514(ctx);
+    char* break_label = cct_boot_rit_codegen_next_label_name_515(ctx);
+    char* continue_label = cct_boot_rit_codegen_next_label_name_515(ctx);
+    cct_boot_rit_codegen_emit_block_open_511(ctx);
+    cct_boot_rit_codegen_push_local_scope_448(ctx);
+    cct_boot_rit_codegen_define_local_451(ctx, (*stmt).name, (*stmt).name, cct_boot_str_51);
+    cct_boot_rit_codegen_emit_506(ctx, cct_boot_str_507);
+    cct_boot_rit_codegen_emit_506(ctx, start_name);
+    cct_boot_rit_codegen_emit_506(ctx, cct_boot_str_382);
+    cct_boot_rit_codegen_emit_expr_574(ctx, (*stmt).left);
+    cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_385);
+    cct_boot_rit_codegen_emit_506(ctx, cct_boot_str_507);
+    cct_boot_rit_codegen_emit_506(ctx, end_name);
+    cct_boot_rit_codegen_emit_506(ctx, cct_boot_str_382);
+    cct_boot_rit_codegen_emit_expr_574(ctx, (*stmt).right);
+    cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_385);
+    cct_boot_rit_codegen_emit_506(ctx, cct_boot_str_507);
+    cct_boot_rit_codegen_emit_506(ctx, step_name);
+    cct_boot_rit_codegen_emit_506(ctx, cct_boot_str_382);
     if ((*stmt).has_condition)
     {
-      cct_boot_rit_codegen_emit_expr_567(ctx, (*stmt).condition);
+      cct_boot_rit_codegen_emit_expr_574(ctx, (*stmt).condition);
     }
     else
     {
-      cct_boot_rit_codegen_emit_499(ctx, cct_boot_str_468);
+      cct_boot_rit_codegen_emit_506(ctx, cct_boot_str_468);
     }
-    cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_385);
-    cct_boot_rit_codegen_emit_499(ctx, cct_boot_str_554);
-    cct_boot_rit_codegen_emit_499(ctx, step_name);
-    cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_557);
-    cct_boot_rit_codegen_flow_push_loop_579(ctx, break_label, continue_label);
-    cct_boot_rit_codegen_emit_499(ctx, cct_boot_str_502);
-    cct_boot_rit_codegen_emit_499(ctx, (*stmt).name);
-    cct_boot_rit_codegen_emit_499(ctx, cct_boot_str_382);
-    cct_boot_rit_codegen_emit_499(ctx, start_name);
-    cct_boot_rit_codegen_emit_499(ctx, cct_boot_str_558);
-    cct_boot_rit_codegen_emit_499(ctx, step_name);
-    cct_boot_rit_codegen_emit_499(ctx, cct_boot_str_559);
-    cct_boot_rit_codegen_emit_499(ctx, (*stmt).name);
-    cct_boot_rit_codegen_emit_499(ctx, cct_boot_str_560);
-    cct_boot_rit_codegen_emit_499(ctx, end_name);
-    cct_boot_rit_codegen_emit_499(ctx, cct_boot_str_561);
-    cct_boot_rit_codegen_emit_499(ctx, (*stmt).name);
-    cct_boot_rit_codegen_emit_499(ctx, cct_boot_str_562);
-    cct_boot_rit_codegen_emit_499(ctx, end_name);
-    cct_boot_rit_codegen_emit_499(ctx, cct_boot_str_563);
-    cct_boot_rit_codegen_emit_499(ctx, (*stmt).name);
-    cct_boot_rit_codegen_emit_499(ctx, cct_boot_str_564);
-    cct_boot_rit_codegen_emit_499(ctx, step_name);
-    cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_107);
-    cct_boot_rit_codegen_emit_block_open_504(ctx);
-    cct_boot_rit_codegen_emit_stmt_597(ctx, (*stmt).body);
-    cct_boot_rit_codegen_emit_499(ctx, continue_label);
-    cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_515);
-    cct_boot_rit_codegen_emit_block_close_505(ctx);
-    cct_boot_rit_codegen_flow_pop_loop_580(ctx);
-    cct_boot_rit_codegen_emit_499(ctx, break_label);
-    cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_515);
-    cct_boot_rit_codegen_pop_local_scope_442(ctx);
-    cct_boot_rit_codegen_emit_block_close_505(ctx);
+    cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_385);
+    cct_boot_rit_codegen_emit_506(ctx, cct_boot_str_554);
+    cct_boot_rit_codegen_emit_506(ctx, step_name);
+    cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_557);
+    cct_boot_rit_codegen_flow_push_loop_586(ctx, break_label, continue_label);
+    cct_boot_rit_codegen_emit_506(ctx, cct_boot_str_502);
+    cct_boot_rit_codegen_emit_506(ctx, (*stmt).name);
+    cct_boot_rit_codegen_emit_506(ctx, cct_boot_str_382);
+    cct_boot_rit_codegen_emit_506(ctx, start_name);
+    cct_boot_rit_codegen_emit_506(ctx, cct_boot_str_558);
+    cct_boot_rit_codegen_emit_506(ctx, step_name);
+    cct_boot_rit_codegen_emit_506(ctx, cct_boot_str_559);
+    cct_boot_rit_codegen_emit_506(ctx, (*stmt).name);
+    cct_boot_rit_codegen_emit_506(ctx, cct_boot_str_560);
+    cct_boot_rit_codegen_emit_506(ctx, end_name);
+    cct_boot_rit_codegen_emit_506(ctx, cct_boot_str_561);
+    cct_boot_rit_codegen_emit_506(ctx, (*stmt).name);
+    cct_boot_rit_codegen_emit_506(ctx, cct_boot_str_562);
+    cct_boot_rit_codegen_emit_506(ctx, end_name);
+    cct_boot_rit_codegen_emit_506(ctx, cct_boot_str_563);
+    cct_boot_rit_codegen_emit_506(ctx, (*stmt).name);
+    cct_boot_rit_codegen_emit_506(ctx, cct_boot_str_564);
+    cct_boot_rit_codegen_emit_506(ctx, step_name);
+    cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_107);
+    cct_boot_rit_codegen_emit_block_open_511(ctx);
+    cct_boot_rit_codegen_emit_stmt_604(ctx, (*stmt).body);
+    cct_boot_rit_codegen_emit_506(ctx, continue_label);
+    cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_515);
+    cct_boot_rit_codegen_emit_block_close_512(ctx);
+    cct_boot_rit_codegen_flow_pop_loop_587(ctx);
+    cct_boot_rit_codegen_emit_506(ctx, break_label);
+    cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_515);
+    cct_boot_rit_codegen_pop_local_scope_449(ctx);
+    cct_boot_rit_codegen_emit_block_close_512(ctx);
     return;
   }
   if ((*stmt).kind == cct_boot_ord_AstKind__AST_ITERUM)
   {
-    cct_boot_rit_codegen_emit_iterum_stmt_590(ctx, stmt);
+    cct_boot_rit_codegen_emit_iterum_stmt_597(ctx, stmt);
     return;
   }
   if ((*stmt).kind == cct_boot_ord_AstKind__AST_FRANGE)
   {
-    char* break_label = cct_boot_rit_codegen_flow_current_break_label_581(ctx);
+    char* break_label = cct_boot_rit_codegen_flow_current_break_label_588(ctx);
     if (cct_boot_rit_compare_38(break_label, cct_boot_str_102) == 0)
     {
-      cct_boot_rit_codegen_report_error_433(ctx, (*stmt).line, (*stmt).column, cct_boot_str_565);
+      cct_boot_rit_codegen_report_error_440(ctx, (*stmt).line, (*stmt).column, cct_boot_str_565);
       return;
     }
-    cct_boot_rit_codegen_emit_499(ctx, cct_boot_str_566);
-    cct_boot_rit_codegen_emit_499(ctx, break_label);
-    cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_385);
+    cct_boot_rit_codegen_emit_506(ctx, cct_boot_str_566);
+    cct_boot_rit_codegen_emit_506(ctx, break_label);
+    cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_385);
     return;
   }
   if ((*stmt).kind == cct_boot_ord_AstKind__AST_RECEDE)
   {
-    char* continue_label = cct_boot_rit_codegen_flow_current_continue_label_582(ctx);
+    char* continue_label = cct_boot_rit_codegen_flow_current_continue_label_589(ctx);
     if (cct_boot_rit_compare_38(continue_label, cct_boot_str_102) == 0)
     {
-      cct_boot_rit_codegen_report_error_433(ctx, (*stmt).line, (*stmt).column, cct_boot_str_567);
+      cct_boot_rit_codegen_report_error_440(ctx, (*stmt).line, (*stmt).column, cct_boot_str_567);
       return;
     }
-    cct_boot_rit_codegen_emit_499(ctx, cct_boot_str_566);
-    cct_boot_rit_codegen_emit_499(ctx, continue_label);
-    cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_385);
+    cct_boot_rit_codegen_emit_506(ctx, cct_boot_str_566);
+    cct_boot_rit_codegen_emit_506(ctx, continue_label);
+    cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_385);
     return;
   }
   if ((*stmt).kind == cct_boot_ord_AstKind__AST_QUANDO)
   {
-    char* subject_type_name = cct_boot_rit_codegen_elige_subject_type_name_568(ctx, stmt);
+    char* subject_type_name = cct_boot_rit_codegen_elige_subject_type_name_575(ctx, stmt);
     if (cct_boot_rit_compare_38(subject_type_name, cct_boot_str_102) == 0)
     {
       return;
     }
-    char* subject_name = cct_boot_rit_codegen_next_temp_name_507(ctx);
-    cct_boot_rit_codegen_elige_emit_subject_temp_569(ctx, subject_name, subject_type_name, (*stmt).condition);
+    char* subject_name = cct_boot_rit_codegen_next_temp_name_514(ctx);
+    cct_boot_rit_codegen_elige_emit_subject_temp_576(ctx, subject_name, subject_type_name, (*stmt).condition);
     if ((*ctx).had_error)
     {
       return;
@@ -11929,22 +11936,22 @@ void cct_boot_rit_codegen_emit_stmt_597(cct_boot_sig_CodegenContext* ctx, cct_bo
     if (cct_boot_rit_compare_38(subject_type_name, cct_boot_str_57) == 0)
     {
       long long case_idx = 0;
-      long long case_n = cct_boot_rit_ast_node_list_len_209((*stmt).cases);
+      long long case_n = cct_boot_rit_ast_node_list_len_216((*stmt).cases);
       while (case_idx < case_n)
       {
         {
-          cct_boot_sig_AstNode* case_node = cct_boot_rit_ast_node_list_get_210((*stmt).cases, case_idx);
+          cct_boot_sig_AstNode* case_node = cct_boot_rit_ast_node_list_get_217((*stmt).cases, case_idx);
           if (case_idx == 0)
           {
-            cct_boot_rit_codegen_emit_499(ctx, cct_boot_str_554);
+            cct_boot_rit_codegen_emit_506(ctx, cct_boot_str_554);
           }
           else
           {
-            cct_boot_rit_codegen_emit_499(ctx, cct_boot_str_568);
+            cct_boot_rit_codegen_emit_506(ctx, cct_boot_str_568);
           }
-          cct_boot_rit_codegen_elige_emit_string_condition_570(ctx, subject_name, case_node);
-          cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_107);
-          cct_boot_rit_codegen_emit_stmt_as_block_592(ctx, (*case_node).body);
+          cct_boot_rit_codegen_elige_emit_string_condition_577(ctx, subject_name, case_node);
+          cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_107);
+          cct_boot_rit_codegen_emit_stmt_as_block_599(ctx, (*case_node).body);
           case_idx = (case_idx + 1);
         }
         if (0) goto __cct_label_293;
@@ -11954,64 +11961,64 @@ void cct_boot_rit_codegen_emit_stmt_597(cct_boot_sig_CodegenContext* ctx, cct_bo
       __cct_label_292: ;
       if ((*stmt).has_else_branch)
       {
-        cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_531);
-        cct_boot_rit_codegen_emit_stmt_as_block_592(ctx, (*stmt).else_branch);
+        cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_531);
+        cct_boot_rit_codegen_emit_stmt_as_block_599(ctx, (*stmt).else_branch);
       }
       return;
     }
-    if (!cct_boot_rit_codegen_stmt_is_switch_subject_591(ctx, subject_type_name))
+    if (!cct_boot_rit_codegen_stmt_is_switch_subject_598(ctx, subject_type_name))
     {
-      cct_boot_rit_codegen_report_error_433(ctx, (*stmt).line, (*stmt).column, cct_boot_str_569);
+      cct_boot_rit_codegen_report_error_440(ctx, (*stmt).line, (*stmt).column, cct_boot_str_569);
       return;
     }
-    int subject_is_ordo = (cct_boot_rit_compare_38(cct_boot_rit_codegen_lookup_ordo_c_name_460(ctx, subject_type_name), cct_boot_str_102) != 0);
+    int subject_is_ordo = (cct_boot_rit_compare_38(cct_boot_rit_codegen_lookup_ordo_c_name_467(ctx, subject_type_name), cct_boot_str_102) != 0);
     int subject_has_payload = 0;
     if (subject_is_ordo)
     {
-      subject_has_payload = cct_boot_rit_codegen_ordo_has_payload_466(ctx, subject_type_name);
+      subject_has_payload = cct_boot_rit_codegen_ordo_has_payload_473(ctx, subject_type_name);
     }
-    cct_boot_rit_codegen_emit_499(ctx, cct_boot_str_570);
+    cct_boot_rit_codegen_emit_506(ctx, cct_boot_str_570);
     if (subject_has_payload)
     {
-      cct_boot_rit_codegen_emit_499(ctx, subject_name);
-      cct_boot_rit_codegen_emit_499(ctx, cct_boot_str_571);
+      cct_boot_rit_codegen_emit_506(ctx, subject_name);
+      cct_boot_rit_codegen_emit_506(ctx, cct_boot_str_571);
     }
     else
     {
-      cct_boot_rit_codegen_emit_499(ctx, subject_name);
+      cct_boot_rit_codegen_emit_506(ctx, subject_name);
     }
-    cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_107);
-    cct_boot_rit_codegen_emit_block_open_504(ctx);
+    cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_107);
+    cct_boot_rit_codegen_emit_block_open_511(ctx);
     long long case_idx = 0;
-    long long case_n = cct_boot_rit_ast_node_list_len_209((*stmt).cases);
+    long long case_n = cct_boot_rit_ast_node_list_len_216((*stmt).cases);
     while (case_idx < case_n)
     {
       {
-        cct_boot_sig_AstNode* case_node = cct_boot_rit_ast_node_list_get_210((*stmt).cases, case_idx);
+        cct_boot_sig_AstNode* case_node = cct_boot_rit_ast_node_list_get_217((*stmt).cases, case_idx);
         if (subject_is_ordo)
         {
-          cct_boot_rit_codegen_elige_emit_simple_ordo_case_labels_572(ctx, case_node);
+          cct_boot_rit_codegen_elige_emit_simple_ordo_case_labels_579(ctx, case_node);
         }
         else
         {
-          cct_boot_rit_codegen_elige_emit_scalar_case_labels_571(ctx, case_node);
+          cct_boot_rit_codegen_elige_emit_scalar_case_labels_578(ctx, case_node);
         }
-        if (subject_has_payload && (cct_boot_rit_codegen_elige_case_bindings_len_573(case_node) > 0))
+        if (subject_has_payload && (cct_boot_rit_codegen_elige_case_bindings_len_580(case_node) > 0))
         {
-          cct_boot_rit_codegen_emit_block_open_504(ctx);
-          cct_boot_rit_codegen_elige_emit_payload_bindings_576(ctx, subject_name, subject_type_name, case_node);
+          cct_boot_rit_codegen_emit_block_open_511(ctx);
+          cct_boot_rit_codegen_elige_emit_payload_bindings_583(ctx, subject_name, subject_type_name, case_node);
           if (!(*ctx).had_error)
           {
-            cct_boot_rit_codegen_emit_stmt_597(ctx, (*case_node).body);
-            cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_572);
+            cct_boot_rit_codegen_emit_stmt_604(ctx, (*case_node).body);
+            cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_572);
           }
-          cct_boot_rit_codegen_elige_finish_payload_case_scope_577(ctx, case_node);
-          cct_boot_rit_codegen_emit_block_close_505(ctx);
+          cct_boot_rit_codegen_elige_finish_payload_case_scope_584(ctx, case_node);
+          cct_boot_rit_codegen_emit_block_close_512(ctx);
         }
         else
         {
-          cct_boot_rit_codegen_emit_stmt_597(ctx, (*case_node).body);
-          cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_572);
+          cct_boot_rit_codegen_emit_stmt_604(ctx, (*case_node).body);
+          cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_572);
         }
         case_idx = (case_idx + 1);
       }
@@ -12022,57 +12029,57 @@ void cct_boot_rit_codegen_emit_stmt_597(cct_boot_sig_CodegenContext* ctx, cct_bo
     __cct_label_294: ;
     if ((*stmt).has_else_branch)
     {
-      cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_573);
-      cct_boot_rit_codegen_emit_stmt_597(ctx, (*stmt).else_branch);
-      cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_572);
+      cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_573);
+      cct_boot_rit_codegen_emit_stmt_604(ctx, (*stmt).else_branch);
+      cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_572);
     }
-    cct_boot_rit_codegen_emit_block_close_505(ctx);
+    cct_boot_rit_codegen_emit_block_close_512(ctx);
     return;
   }
   if ((*stmt).kind == cct_boot_ord_AstKind__AST_IACE)
   {
-    cct_boot_rit_codegen_emit_iace_stmt_593(ctx, stmt);
+    cct_boot_rit_codegen_emit_iace_stmt_600(ctx, stmt);
     return;
   }
   if ((*stmt).kind == cct_boot_ord_AstKind__AST_TEMPTA)
   {
-    cct_boot_rit_codegen_emit_tempta_stmt_594(ctx, stmt);
+    cct_boot_rit_codegen_emit_tempta_stmt_601(ctx, stmt);
     return;
   }
-  cct_boot_rit_codegen_report_error_433(ctx, (*stmt).line, (*stmt).column, cct_boot_str_574);
+  cct_boot_rit_codegen_report_error_440(ctx, (*stmt).line, (*stmt).column, cct_boot_str_574);
   return;
 }
 
-char* cct_boot_rit_codegen_decl_type_text_598(cct_boot_sig_CodegenContext* ctx, cct_boot_sig_AstNode* type_expr)
+char* cct_boot_rit_codegen_decl_type_text_605(cct_boot_sig_CodegenContext* ctx, cct_boot_sig_AstNode* type_expr)
 {
-  return cct_boot_rit_codegen_type_text_535(ctx, type_expr);
+  return cct_boot_rit_codegen_type_text_542(ctx, type_expr);
 }
 
-void cct_boot_rit_codegen_emit_param_list_599(cct_boot_sig_CodegenContext* ctx, cct_boot_sig_AstNode* rituale_decl)
+void cct_boot_rit_codegen_emit_param_list_606(cct_boot_sig_CodegenContext* ctx, cct_boot_sig_AstNode* rituale_decl)
 {
   long long i = 0;
-  long long n = cct_boot_rit_ast_node_list_len_209((*rituale_decl).params);
+  long long n = cct_boot_rit_ast_node_list_len_216((*rituale_decl).params);
   if (n == 0)
   {
-    cct_boot_rit_codegen_emit_499(ctx, cct_boot_str_362);
+    cct_boot_rit_codegen_emit_506(ctx, cct_boot_str_362);
     return;
   }
   while (i < n)
   {
     {
-      cct_boot_sig_AstNode* param = cct_boot_rit_ast_node_list_get_210((*rituale_decl).params, i);
-      char* type_text = cct_boot_rit_codegen_decl_type_text_598(ctx, (*param).type_expr);
+      cct_boot_sig_AstNode* param = cct_boot_rit_ast_node_list_get_217((*rituale_decl).params, i);
+      char* type_text = cct_boot_rit_codegen_decl_type_text_605(ctx, (*param).type_expr);
       if (cct_boot_rit_compare_38(type_text, cct_boot_str_102) == 0)
       {
         return;
       }
       if (i > 0)
       {
-        cct_boot_rit_codegen_emit_499(ctx, cct_boot_str_111);
+        cct_boot_rit_codegen_emit_506(ctx, cct_boot_str_111);
       }
-      cct_boot_rit_codegen_emit_499(ctx, type_text);
-      cct_boot_rit_codegen_emit_499(ctx, cct_boot_str_392);
-      cct_boot_rit_codegen_emit_499(ctx, (*param).name);
+      cct_boot_rit_codegen_emit_506(ctx, type_text);
+      cct_boot_rit_codegen_emit_506(ctx, cct_boot_str_392);
+      cct_boot_rit_codegen_emit_506(ctx, (*param).name);
       i = (i + 1);
     }
     if (0) goto __cct_label_297;
@@ -12082,70 +12089,70 @@ void cct_boot_rit_codegen_emit_param_list_599(cct_boot_sig_CodegenContext* ctx, 
   __cct_label_296: ;
 }
 
-void cct_boot_rit_codegen_emit_rituale_signature_600(cct_boot_sig_CodegenContext* ctx, cct_boot_sig_AstNode* rituale_decl)
+void cct_boot_rit_codegen_emit_rituale_signature_607(cct_boot_sig_CodegenContext* ctx, cct_boot_sig_AstNode* rituale_decl)
 {
   char* return_text = cct_boot_str_362;
   if ((*rituale_decl).has_return_type)
   {
-    return_text = cct_boot_rit_codegen_decl_type_text_598(ctx, (*rituale_decl).return_type);
+    return_text = cct_boot_rit_codegen_decl_type_text_605(ctx, (*rituale_decl).return_type);
   }
   if (cct_boot_rit_compare_38(return_text, cct_boot_str_102) == 0)
   {
     return;
   }
-  cct_boot_rit_codegen_emit_499(ctx, return_text);
-  cct_boot_rit_codegen_emit_499(ctx, cct_boot_str_392);
-  cct_boot_rit_codegen_emit_499(ctx, cct_boot_rit_codegen_rituale_c_name_510(ctx, (*rituale_decl).name));
-  cct_boot_rit_codegen_emit_499(ctx, cct_boot_str_445);
-  cct_boot_rit_codegen_emit_param_list_599(ctx, rituale_decl);
-  cct_boot_rit_codegen_emit_499(ctx, cct_boot_str_107);
+  cct_boot_rit_codegen_emit_506(ctx, return_text);
+  cct_boot_rit_codegen_emit_506(ctx, cct_boot_str_392);
+  cct_boot_rit_codegen_emit_506(ctx, cct_boot_rit_codegen_rituale_c_name_517(ctx, (*rituale_decl).name));
+  cct_boot_rit_codegen_emit_506(ctx, cct_boot_str_445);
+  cct_boot_rit_codegen_emit_param_list_606(ctx, rituale_decl);
+  cct_boot_rit_codegen_emit_506(ctx, cct_boot_str_107);
 }
 
-void cct_boot_rit_codegen_emit_rituale_signature_instance_601(cct_boot_sig_CodegenContext* ctx, cct_boot_sig_AstNode* rituale_decl, char* c_name)
+void cct_boot_rit_codegen_emit_rituale_signature_instance_608(cct_boot_sig_CodegenContext* ctx, cct_boot_sig_AstNode* rituale_decl, char* c_name)
 {
   char* return_text = cct_boot_str_362;
   if ((*rituale_decl).has_return_type)
   {
-    return_text = cct_boot_rit_codegen_decl_type_text_598(ctx, (*rituale_decl).return_type);
+    return_text = cct_boot_rit_codegen_decl_type_text_605(ctx, (*rituale_decl).return_type);
   }
   if (cct_boot_rit_compare_38(return_text, cct_boot_str_102) == 0)
   {
     return;
   }
-  cct_boot_rit_codegen_emit_499(ctx, return_text);
-  cct_boot_rit_codegen_emit_499(ctx, cct_boot_str_392);
-  cct_boot_rit_codegen_emit_499(ctx, c_name);
-  cct_boot_rit_codegen_emit_499(ctx, cct_boot_str_445);
-  cct_boot_rit_codegen_emit_param_list_599(ctx, rituale_decl);
-  cct_boot_rit_codegen_emit_499(ctx, cct_boot_str_107);
+  cct_boot_rit_codegen_emit_506(ctx, return_text);
+  cct_boot_rit_codegen_emit_506(ctx, cct_boot_str_392);
+  cct_boot_rit_codegen_emit_506(ctx, c_name);
+  cct_boot_rit_codegen_emit_506(ctx, cct_boot_str_445);
+  cct_boot_rit_codegen_emit_param_list_606(ctx, rituale_decl);
+  cct_boot_rit_codegen_emit_506(ctx, cct_boot_str_107);
 }
 
-void cct_boot_rit_codegen_emit_rituale_prototype_602(cct_boot_sig_CodegenContext* ctx, cct_boot_sig_AstNode* rituale_decl)
+void cct_boot_rit_codegen_emit_rituale_prototype_609(cct_boot_sig_CodegenContext* ctx, cct_boot_sig_AstNode* rituale_decl)
 {
-  cct_boot_rit_codegen_emit_rituale_signature_600(ctx, rituale_decl);
-  cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_385);
+  cct_boot_rit_codegen_emit_rituale_signature_607(ctx, rituale_decl);
+  cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_385);
   return;
 }
 
-void cct_boot_rit_codegen_emit_rituale_prototype_instance_603(cct_boot_sig_CodegenContext* ctx, cct_boot_sig_CodegenGenericRitualeInstance* inst)
+void cct_boot_rit_codegen_emit_rituale_prototype_instance_610(cct_boot_sig_CodegenContext* ctx, cct_boot_sig_CodegenGenericRitualeInstance* inst)
 {
-  cct_boot_rit_codegen_generic_bind_template_args_522(ctx, (*inst).template_decl, (*inst).type_args);
-  cct_boot_rit_codegen_emit_rituale_signature_instance_601(ctx, (*inst).template_decl, (*inst).c_name);
-  cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_385);
-  cct_boot_rit_codegen_generic_unbind_template_args_523(ctx);
+  cct_boot_rit_codegen_generic_bind_template_args_529(ctx, (*inst).template_decl, (*inst).type_args);
+  cct_boot_rit_codegen_emit_rituale_signature_instance_608(ctx, (*inst).template_decl, (*inst).c_name);
+  cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_385);
+  cct_boot_rit_codegen_generic_unbind_template_args_530(ctx);
   return;
 }
 
-void cct_boot_rit_codegen_bind_rituale_params_604(cct_boot_sig_CodegenContext* ctx, cct_boot_sig_AstNode* rituale_decl)
+void cct_boot_rit_codegen_bind_rituale_params_611(cct_boot_sig_CodegenContext* ctx, cct_boot_sig_AstNode* rituale_decl)
 {
   long long i = 0;
-  long long n = cct_boot_rit_ast_node_list_len_209((*rituale_decl).params);
+  long long n = cct_boot_rit_ast_node_list_len_216((*rituale_decl).params);
   while (i < n)
   {
     {
-      cct_boot_sig_AstNode* param = cct_boot_rit_ast_node_list_get_210((*rituale_decl).params, i);
-      char* param_identity = cct_boot_rit_codegen_generic_type_identity_515(ctx, (*param).type_expr);
-      cct_boot_rit_codegen_define_local_444(ctx, (*param).name, (*param).name, param_identity);
+      cct_boot_sig_AstNode* param = cct_boot_rit_ast_node_list_get_217((*rituale_decl).params, i);
+      char* param_identity = cct_boot_rit_codegen_generic_type_identity_522(ctx, (*param).type_expr);
+      cct_boot_rit_codegen_define_local_451(ctx, (*param).name, (*param).name, param_identity);
       free((void*)(param_identity));
       i = (i + 1);
     }
@@ -12157,72 +12164,72 @@ void cct_boot_rit_codegen_bind_rituale_params_604(cct_boot_sig_CodegenContext* c
   return;
 }
 
-void cct_boot_rit_codegen_emit_rituale_definition_605(cct_boot_sig_CodegenContext* ctx, cct_boot_sig_AstNode* rituale_decl)
+void cct_boot_rit_codegen_emit_rituale_definition_612(cct_boot_sig_CodegenContext* ctx, cct_boot_sig_AstNode* rituale_decl)
 {
-  cct_boot_rit_codegen_emit_rituale_signature_600(ctx, rituale_decl);
-  cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_102);
+  cct_boot_rit_codegen_emit_rituale_signature_607(ctx, rituale_decl);
+  cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_102);
   if ((*rituale_decl).has_return_type)
   {
-    char* return_identity = cct_boot_rit_codegen_generic_type_identity_515(ctx, (*rituale_decl).return_type);
-    cct_boot_rit_codegen_set_current_return_type_440(ctx, return_identity);
+    char* return_identity = cct_boot_rit_codegen_generic_type_identity_522(ctx, (*rituale_decl).return_type);
+    cct_boot_rit_codegen_set_current_return_type_447(ctx, return_identity);
     free((void*)(return_identity));
   }
   else
   {
-    cct_boot_rit_codegen_set_current_return_type_440(ctx, cct_boot_str_60);
+    cct_boot_rit_codegen_set_current_return_type_447(ctx, cct_boot_str_60);
   }
-  cct_boot_rit_codegen_push_local_scope_441(ctx);
-  cct_boot_rit_codegen_bind_rituale_params_604(ctx, rituale_decl);
-  cct_boot_rit_codegen_emit_stmt_597(ctx, (*rituale_decl).body);
-  cct_boot_rit_codegen_pop_local_scope_442(ctx);
+  cct_boot_rit_codegen_push_local_scope_448(ctx);
+  cct_boot_rit_codegen_bind_rituale_params_611(ctx, rituale_decl);
+  cct_boot_rit_codegen_emit_stmt_604(ctx, (*rituale_decl).body);
+  cct_boot_rit_codegen_pop_local_scope_449(ctx);
   return;
 }
 
-void cct_boot_rit_codegen_emit_rituale_definition_instance_606(cct_boot_sig_CodegenContext* ctx, cct_boot_sig_CodegenGenericRitualeInstance* inst)
+void cct_boot_rit_codegen_emit_rituale_definition_instance_613(cct_boot_sig_CodegenContext* ctx, cct_boot_sig_CodegenGenericRitualeInstance* inst)
 {
-  cct_boot_rit_codegen_generic_bind_template_args_522(ctx, (*inst).template_decl, (*inst).type_args);
-  cct_boot_rit_codegen_emit_rituale_signature_instance_601(ctx, (*inst).template_decl, (*inst).c_name);
-  cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_102);
+  cct_boot_rit_codegen_generic_bind_template_args_529(ctx, (*inst).template_decl, (*inst).type_args);
+  cct_boot_rit_codegen_emit_rituale_signature_instance_608(ctx, (*inst).template_decl, (*inst).c_name);
+  cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_102);
   if ((*(*inst).template_decl).has_return_type)
   {
-    char* ret_identity = cct_boot_rit_codegen_generic_type_identity_515(ctx, (*(*inst).template_decl).return_type);
-    cct_boot_rit_codegen_set_current_return_type_440(ctx, ret_identity);
+    char* ret_identity = cct_boot_rit_codegen_generic_type_identity_522(ctx, (*(*inst).template_decl).return_type);
+    cct_boot_rit_codegen_set_current_return_type_447(ctx, ret_identity);
     free((void*)(ret_identity));
   }
   else
   {
-    cct_boot_rit_codegen_set_current_return_type_440(ctx, cct_boot_str_60);
+    cct_boot_rit_codegen_set_current_return_type_447(ctx, cct_boot_str_60);
   }
-  cct_boot_rit_codegen_push_local_scope_441(ctx);
-  cct_boot_rit_codegen_bind_rituale_params_604(ctx, (*inst).template_decl);
-  cct_boot_rit_codegen_emit_stmt_597(ctx, (*(*inst).template_decl).body);
-  cct_boot_rit_codegen_pop_local_scope_442(ctx);
-  cct_boot_rit_codegen_generic_unbind_template_args_523(ctx);
+  cct_boot_rit_codegen_push_local_scope_448(ctx);
+  cct_boot_rit_codegen_bind_rituale_params_611(ctx, (*inst).template_decl);
+  cct_boot_rit_codegen_emit_stmt_604(ctx, (*(*inst).template_decl).body);
+  cct_boot_rit_codegen_pop_local_scope_449(ctx);
+  cct_boot_rit_codegen_generic_unbind_template_args_530(ctx);
   return;
 }
 
-void cct_boot_rit_codegen_emit_program_body_607(cct_boot_sig_CodegenContext* ctx, cct_boot_sig_AstProgram* program)
+void cct_boot_rit_codegen_emit_program_body_614(cct_boot_sig_CodegenContext* ctx, cct_boot_sig_AstProgram* program)
 {
-  cct_boot_rit_codegen_register_program_shapes_549(ctx, program);
-  cct_boot_rit_codegen_generic_collect_program_uses_529(ctx, program);
-  cct_boot_rit_codegen_emit_sigillum_forward_decls_550(ctx);
-  cct_boot_rit_codegen_emit_ordo_definitions_545(ctx, program);
-  cct_boot_rit_codegen_emit_sigillum_definitions_553(ctx, program);
+  cct_boot_rit_codegen_register_program_shapes_556(ctx, program);
+  cct_boot_rit_codegen_generic_collect_program_uses_536(ctx, program);
+  cct_boot_rit_codegen_emit_sigillum_forward_decls_557(ctx);
+  cct_boot_rit_codegen_emit_ordo_definitions_552(ctx, program);
+  cct_boot_rit_codegen_emit_sigillum_definitions_560(ctx, program);
   long long i = 0;
-  long long n = cct_boot_rit_ast_node_list_len_209((*program).declarations);
+  long long n = cct_boot_rit_ast_node_list_len_216((*program).declarations);
   int emitted_prototypes = 0;
   while (i < n)
   {
     {
-      cct_boot_sig_AstNode* decl = cct_boot_rit_ast_node_list_get_210((*program).declarations, i);
-      if (((*decl).kind == cct_boot_ord_AstKind__AST_RITUALE) && (cct_boot_rit_ast_node_list_len_209((*decl).type_params) == 0))
+      cct_boot_sig_AstNode* decl = cct_boot_rit_ast_node_list_get_217((*program).declarations, i);
+      if (((*decl).kind == cct_boot_ord_AstKind__AST_RITUALE) && (cct_boot_rit_ast_node_list_len_216((*decl).type_params) == 0))
       {
-        cct_boot_rit_codegen_emit_rituale_prototype_602(ctx, decl);
+        cct_boot_rit_codegen_emit_rituale_prototype_609(ctx, decl);
         emitted_prototypes = 1;
       }
       if (((((*decl).kind != cct_boot_ord_AstKind__AST_RITUALE) && ((*decl).kind != cct_boot_ord_AstKind__AST_IMPORT)) && ((*decl).kind != cct_boot_ord_AstKind__AST_SIGILLUM)) && ((*decl).kind != cct_boot_ord_AstKind__AST_ORDO))
       {
-        cct_boot_rit_codegen_report_error_433(ctx, (*decl).line, (*decl).column, cct_boot_str_575);
+        cct_boot_rit_codegen_report_error_440(ctx, (*decl).line, (*decl).column, cct_boot_str_575);
         return;
       }
       i = (i + 1);
@@ -12233,11 +12240,11 @@ void cct_boot_rit_codegen_emit_program_body_607(cct_boot_sig_CodegenContext* ctx
   if (0) goto __cct_label_300;
   __cct_label_300: ;
   i = 0;
-  n = cct_boot_rit_codegen_registered_generic_rituale_instance_count_491(ctx);
+  n = cct_boot_rit_codegen_registered_generic_rituale_instance_count_498(ctx);
   while (i < n)
   {
     {
-      cct_boot_rit_codegen_emit_rituale_prototype_instance_603(ctx, cct_boot_rit_codegen_context_generic_rituale_instance_at_416(ctx, i));
+      cct_boot_rit_codegen_emit_rituale_prototype_instance_610(ctx, cct_boot_rit_codegen_context_generic_rituale_instance_at_423(ctx, i));
       emitted_prototypes = 1;
       i = (i + 1);
     }
@@ -12248,20 +12255,20 @@ void cct_boot_rit_codegen_emit_program_body_607(cct_boot_sig_CodegenContext* ctx
   __cct_label_302: ;
   if (emitted_prototypes)
   {
-    cct_boot_rit_codegen_emit_blank_line_501(ctx);
+    cct_boot_rit_codegen_emit_blank_line_508(ctx);
   }
   i = 0;
-  n = cct_boot_rit_ast_node_list_len_209((*program).declarations);
+  n = cct_boot_rit_ast_node_list_len_216((*program).declarations);
   while (i < n)
   {
     {
-      cct_boot_sig_AstNode* decl = cct_boot_rit_ast_node_list_get_210((*program).declarations, i);
-      if ((((*decl).kind == cct_boot_ord_AstKind__AST_RITUALE) && (cct_boot_rit_ast_node_list_len_209((*decl).type_params) == 0)) && (*decl).has_body)
+      cct_boot_sig_AstNode* decl = cct_boot_rit_ast_node_list_get_217((*program).declarations, i);
+      if ((((*decl).kind == cct_boot_ord_AstKind__AST_RITUALE) && (cct_boot_rit_ast_node_list_len_216((*decl).type_params) == 0)) && (*decl).has_body)
       {
-        cct_boot_rit_codegen_emit_rituale_definition_605(ctx, decl);
+        cct_boot_rit_codegen_emit_rituale_definition_612(ctx, decl);
         if ((i + 1) < n)
         {
-          cct_boot_rit_codegen_emit_blank_line_501(ctx);
+          cct_boot_rit_codegen_emit_blank_line_508(ctx);
         }
       }
       i = (i + 1);
@@ -12272,14 +12279,14 @@ void cct_boot_rit_codegen_emit_program_body_607(cct_boot_sig_CodegenContext* ctx
   if (0) goto __cct_label_304;
   __cct_label_304: ;
   i = 0;
-  n = cct_boot_rit_codegen_registered_generic_rituale_instance_count_491(ctx);
+  n = cct_boot_rit_codegen_registered_generic_rituale_instance_count_498(ctx);
   while (i < n)
   {
     {
-      cct_boot_rit_codegen_emit_rituale_definition_instance_606(ctx, cct_boot_rit_codegen_context_generic_rituale_instance_at_416(ctx, i));
+      cct_boot_rit_codegen_emit_rituale_definition_instance_613(ctx, cct_boot_rit_codegen_context_generic_rituale_instance_at_423(ctx, i));
       if ((i + 1) < n)
       {
-        cct_boot_rit_codegen_emit_blank_line_501(ctx);
+        cct_boot_rit_codegen_emit_blank_line_508(ctx);
       }
       i = (i + 1);
     }
@@ -12291,28 +12298,28 @@ void cct_boot_rit_codegen_emit_program_body_607(cct_boot_sig_CodegenContext* ctx
   return;
 }
 
-void cct_boot_rit_codegen_emit_program_608(cct_boot_sig_CodegenContext* ctx, cct_boot_sig_AstProgram* program)
+void cct_boot_rit_codegen_emit_program_615(cct_boot_sig_CodegenContext* ctx, cct_boot_sig_AstProgram* program)
 {
-  cct_boot_rit_codegen_context_reset_431(ctx);
-  cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_576);
-  cct_boot_rit_codegen_emit_blank_line_501(ctx);
-  cct_boot_rit_codegen_emit_program_body_607(ctx, program);
+  cct_boot_rit_codegen_context_reset_438(ctx);
+  cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_576);
+  cct_boot_rit_codegen_emit_blank_line_508(ctx);
+  cct_boot_rit_codegen_emit_program_body_614(ctx, program);
   return;
 }
 
-char* cct_boot_rit_codegen_generate_program_609(cct_boot_sig_AstProgram* program, char* filename)
+char* cct_boot_rit_codegen_generate_program_616(cct_boot_sig_AstProgram* program, char* filename)
 {
-  cct_boot_sig_CodegenContext* ctx = cct_boot_rit_codegen_context_new_429(filename);
-  cct_boot_rit_codegen_emit_program_608(ctx, program);
-  char* out = cct_boot_rit_codegen_output_435(ctx);
-  cct_boot_rit_codegen_context_free_432(ctx);
+  cct_boot_sig_CodegenContext* ctx = cct_boot_rit_codegen_context_new_436(filename);
+  cct_boot_rit_codegen_emit_program_615(ctx, program);
+  char* out = cct_boot_rit_codegen_output_442(ctx);
+  cct_boot_rit_codegen_context_free_439(ctx);
   return out;
 }
 
-char* cct_boot_rit_codegen_runtime_escape_c_string_610(char* raw)
+char* cct_boot_rit_codegen_runtime_escape_c_string_617(char* raw)
 {
-  void* b = cct_boot_rit_builder_init_75();
-  cct_boot_rit_builder_append_char_77(b, 34);
+  void* b = cct_boot_rit_builder_init_82();
+  cct_boot_rit_builder_append_char_84(b, 34);
   long long i = 0;
   long long n = cct_boot_rit_len_30(raw);
   while (i < n)
@@ -12321,35 +12328,35 @@ char* cct_boot_rit_codegen_runtime_escape_c_string_610(char* raw)
       char ch = cct_boot_rit_char_at_44(raw, i);
       if (ch == 34)
       {
-        cct_boot_rit_builder_append_76(b, cct_boot_str_577);
+        cct_boot_rit_builder_append_83(b, cct_boot_str_577);
       }
       else
       {
         if (ch == 92)
         {
-          cct_boot_rit_builder_append_76(b, cct_boot_str_578);
+          cct_boot_rit_builder_append_83(b, cct_boot_str_578);
         }
         else
         {
           if (ch == 10)
           {
-            cct_boot_rit_builder_append_76(b, cct_boot_str_579);
+            cct_boot_rit_builder_append_83(b, cct_boot_str_579);
           }
           else
           {
             if (ch == 13)
             {
-              cct_boot_rit_builder_append_76(b, cct_boot_str_580);
+              cct_boot_rit_builder_append_83(b, cct_boot_str_580);
             }
             else
             {
               if (ch == 9)
               {
-                cct_boot_rit_builder_append_76(b, cct_boot_str_581);
+                cct_boot_rit_builder_append_83(b, cct_boot_str_581);
               }
               else
               {
-                cct_boot_rit_builder_append_char_77(b, ch);
+                cct_boot_rit_builder_append_char_84(b, ch);
               }
             }
           }
@@ -12362,534 +12369,534 @@ char* cct_boot_rit_codegen_runtime_escape_c_string_610(char* raw)
   }
   if (0) goto __cct_label_308;
   __cct_label_308: ;
-  cct_boot_rit_builder_append_char_77(b, 34);
-  char* out = cct_boot_rit_builder_to_verbum_81(b);
-  cct_boot_rit_builder_free_84(b);
+  cct_boot_rit_builder_append_char_84(b, 34);
+  char* out = cct_boot_rit_builder_to_verbum_88(b);
+  cct_boot_rit_builder_free_91(b);
   return out;
 }
 
-char* cct_boot_rit_codegen_runtime_string_symbol_611(cct_boot_sig_CodegenContext* ctx, char* raw_text)
+char* cct_boot_rit_codegen_runtime_string_symbol_618(cct_boot_sig_CodegenContext* ctx, char* raw_text)
 {
-  char* existing = cct_boot_rit_codegen_lookup_string_symbol_451(ctx, raw_text);
+  char* existing = cct_boot_rit_codegen_lookup_string_symbol_458(ctx, raw_text);
   if (cct_boot_rit_compare_38(existing, cct_boot_str_102) != 0)
   {
     return existing;
   }
-  char* symbol = cct_boot_rit_concat_37(cct_boot_str_354, cct_boot_rit_stringify_int_95(cct_boot_rit_codegen_registered_string_count_450(ctx)));
-  return cct_boot_rit_codegen_register_string_symbol_452(ctx, raw_text, symbol);
+  char* symbol = cct_boot_rit_concat_37(cct_boot_str_354, cct_boot_rit_stringify_int_102(cct_boot_rit_codegen_registered_string_count_457(ctx)));
+  return cct_boot_rit_codegen_register_string_symbol_459(ctx, raw_text, symbol);
 }
 
-void cct_boot_rit_codegen_runtime_emit_includes_612(cct_boot_sig_CodegenContext* ctx)
+void cct_boot_rit_codegen_runtime_emit_includes_619(cct_boot_sig_CodegenContext* ctx)
 {
   int emitted_any = 0;
   if ((*ctx).needs_stdlib)
   {
-    cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_582);
-    cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_583);
-    cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_584);
-    cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_585);
-    cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_586);
-    cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_587);
-    cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_588);
-    cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_589);
-    cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_590);
-    cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_591);
-    cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_592);
-    cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_593);
-    cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_594);
-    cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_595);
-    cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_596);
-    cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_597);
-    cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_598);
-    cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_599);
-    cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_600);
-    cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_601);
-    cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_602);
-    cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_603);
-    cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_604);
-    cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_605);
-    cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_606);
-    cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_607);
-    cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_608);
-    cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_609);
-    cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_610);
-    cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_611);
-    cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_612);
-    cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_613);
-    cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_614);
-    cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_615);
-    cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_616);
-    cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_617);
-    cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_618);
-    cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_619);
-    cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_620);
-    cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_621);
-    cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_622);
-    cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_623);
-    cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_624);
-    cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_625);
-    cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_626);
-    cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_627);
-    cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_628);
-    cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_629);
-    cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_630);
-    cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_631);
-    cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_632);
-    cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_633);
-    cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_634);
-    cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_635);
-    cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_636);
-    cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_637);
-    cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_638);
+    cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_582);
+    cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_583);
+    cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_584);
+    cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_585);
+    cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_586);
+    cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_587);
+    cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_588);
+    cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_589);
+    cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_590);
+    cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_591);
+    cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_592);
+    cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_593);
+    cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_594);
+    cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_595);
+    cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_596);
+    cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_597);
+    cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_598);
+    cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_599);
+    cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_600);
+    cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_601);
+    cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_602);
+    cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_603);
+    cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_604);
+    cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_605);
+    cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_606);
+    cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_607);
+    cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_608);
+    cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_609);
+    cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_610);
+    cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_611);
+    cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_612);
+    cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_613);
+    cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_614);
+    cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_615);
+    cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_616);
+    cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_617);
+    cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_618);
+    cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_619);
+    cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_620);
+    cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_621);
+    cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_622);
+    cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_623);
+    cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_624);
+    cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_625);
+    cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_626);
+    cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_627);
+    cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_628);
+    cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_629);
+    cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_630);
+    cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_631);
+    cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_632);
+    cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_633);
+    cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_634);
+    cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_635);
+    cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_636);
+    cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_637);
+    cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_638);
     emitted_any = 1;
   }
   if ((*ctx).needs_args_runtime)
   {
-    cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_639);
+    cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_639);
     emitted_any = 1;
   }
   if ((*ctx).needs_failure_runtime)
   {
-    cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_640);
+    cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_640);
     emitted_any = 1;
   }
   if ((*ctx).needs_stdio)
   {
-    cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_641);
+    cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_641);
     emitted_any = 1;
   }
   if ((*ctx).needs_math_runtime)
   {
-    cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_642);
+    cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_642);
     emitted_any = 1;
   }
   if ((*ctx).needs_time_runtime)
   {
-    cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_643);
-    cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_644);
+    cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_643);
+    cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_644);
     emitted_any = 1;
   }
   if ((*ctx).needs_fs_runtime)
   {
-    cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_645);
-    cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_646);
-    cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_647);
-    cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_648);
+    cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_645);
+    cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_646);
+    cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_647);
+    cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_648);
     emitted_any = 1;
   }
   if (emitted_any)
   {
-    cct_boot_rit_codegen_emit_blank_line_501(ctx);
+    cct_boot_rit_codegen_emit_blank_line_508(ctx);
   }
   return;
 }
 
-void cct_boot_rit_codegen_runtime_emit_failure_runtime_613(cct_boot_sig_CodegenContext* ctx)
+void cct_boot_rit_codegen_runtime_emit_failure_runtime_620(cct_boot_sig_CodegenContext* ctx)
 {
   if (!(*ctx).needs_failure_runtime)
   {
     return;
   }
-  cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_649);
-  cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_650);
-  cct_boot_rit_codegen_emit_blank_line_501(ctx);
-  cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_651);
-  cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_652);
-  cct_boot_rit_codegen_emit_block_open_504(ctx);
-  cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_653);
-  cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_654);
-  cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_655);
-  cct_boot_rit_codegen_emit_block_close_505(ctx);
-  cct_boot_rit_codegen_emit_blank_line_501(ctx);
+  cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_649);
+  cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_650);
+  cct_boot_rit_codegen_emit_blank_line_508(ctx);
+  cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_651);
+  cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_652);
+  cct_boot_rit_codegen_emit_block_open_511(ctx);
+  cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_653);
+  cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_654);
+  cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_655);
+  cct_boot_rit_codegen_emit_block_close_512(ctx);
+  cct_boot_rit_codegen_emit_blank_line_508(ctx);
   return;
 }
 
-void cct_boot_rit_codegen_runtime_emit_fmt_runtime_614(cct_boot_sig_CodegenContext* ctx)
+void cct_boot_rit_codegen_runtime_emit_fmt_runtime_621(cct_boot_sig_CodegenContext* ctx)
 {
   if (!(*ctx).needs_fmt_runtime)
   {
     return;
   }
-  cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_656);
-  cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_657);
-  cct_boot_rit_codegen_emit_block_open_504(ctx);
-  cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_658);
-  cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_659);
-  cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_660);
-  cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_661);
-  cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_662);
-  cct_boot_rit_codegen_emit_block_close_505(ctx);
-  cct_boot_rit_codegen_emit_blank_line_501(ctx);
-  cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_663);
-  cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_664);
-  cct_boot_rit_codegen_emit_block_open_504(ctx);
-  cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_665);
-  cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_666);
-  cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_667);
-  cct_boot_rit_codegen_emit_block_close_505(ctx);
-  cct_boot_rit_codegen_emit_blank_line_501(ctx);
-  cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_668);
-  cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_669);
-  cct_boot_rit_codegen_emit_block_open_504(ctx);
-  cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_670);
-  cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_671);
-  cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_667);
-  cct_boot_rit_codegen_emit_block_close_505(ctx);
-  cct_boot_rit_codegen_emit_blank_line_501(ctx);
-  cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_672);
-  cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_673);
-  cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_674);
-  cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_675);
-  cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_676);
-  cct_boot_rit_codegen_emit_blank_line_501(ctx);
-  cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_677);
-  cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_678);
-  cct_boot_rit_codegen_emit_block_open_504(ctx);
-  cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_679);
-  cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_680);
-  cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_681);
-  cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_682);
-  cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_683);
-  cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_684);
-  cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_685);
-  cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_686);
-  cct_boot_rit_codegen_emit_block_close_505(ctx);
-  cct_boot_rit_codegen_emit_blank_line_501(ctx);
-  cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_687);
-  cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_688);
-  cct_boot_rit_codegen_emit_block_open_504(ctx);
-  cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_689);
-  cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_690);
-  cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_691);
-  cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_692);
-  cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_693);
-  cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_694);
-  cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_695);
-  cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_696);
-  cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_349);
-  cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_697);
-  cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_698);
-  cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_699);
-  cct_boot_rit_codegen_emit_block_close_505(ctx);
-  cct_boot_rit_codegen_emit_blank_line_501(ctx);
-  cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_700);
-  cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_701);
-  cct_boot_rit_codegen_emit_block_open_504(ctx);
-  cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_702);
-  cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_703);
-  cct_boot_rit_codegen_emit_block_close_505(ctx);
-  cct_boot_rit_codegen_emit_blank_line_501(ctx);
-  cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_704);
-  cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_705);
-  cct_boot_rit_codegen_emit_block_open_504(ctx);
-  cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_706);
-  cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_707);
-  cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_708);
-  cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_709);
-  cct_boot_rit_codegen_emit_block_close_505(ctx);
-  cct_boot_rit_codegen_emit_blank_line_501(ctx);
-  cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_710);
-  cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_711);
-  cct_boot_rit_codegen_emit_block_open_504(ctx);
-  cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_706);
-  cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_712);
-  cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_713);
-  cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_709);
-  cct_boot_rit_codegen_emit_block_close_505(ctx);
-  cct_boot_rit_codegen_emit_blank_line_501(ctx);
-  cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_714);
-  cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_715);
-  cct_boot_rit_codegen_emit_block_open_504(ctx);
-  cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_716);
-  cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_717);
-  cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_718);
-  cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_709);
-  cct_boot_rit_codegen_emit_block_close_505(ctx);
-  cct_boot_rit_codegen_emit_blank_line_501(ctx);
-  cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_719);
-  cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_720);
-  cct_boot_rit_codegen_emit_block_open_504(ctx);
-  cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_721);
-  cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_722);
-  cct_boot_rit_codegen_emit_block_close_505(ctx);
-  cct_boot_rit_codegen_emit_blank_line_501(ctx);
-  cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_723);
-  cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_724);
-  cct_boot_rit_codegen_emit_block_open_504(ctx);
-  cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_725);
-  cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_726);
-  cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_727);
-  cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_728);
-  cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_729);
-  cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_730);
-  cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_731);
-  cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_732);
-  cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_733);
-  cct_boot_rit_codegen_emit_block_close_505(ctx);
-  cct_boot_rit_codegen_emit_blank_line_501(ctx);
-  cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_734);
-  cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_735);
-  cct_boot_rit_codegen_emit_block_open_504(ctx);
-  cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_736);
-  cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_737);
-  cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_738);
-  cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_739);
-  cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_740);
-  cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_741);
-  cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_742);
-  cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_743);
-  cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_744);
-  cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_745);
-  cct_boot_rit_codegen_emit_block_close_505(ctx);
-  cct_boot_rit_codegen_emit_blank_line_501(ctx);
-  cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_746);
-  cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_747);
-  cct_boot_rit_codegen_emit_block_open_504(ctx);
-  cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_736);
-  cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_737);
-  cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_738);
-  cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_748);
-  cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_740);
-  cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_749);
-  cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_742);
-  cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_750);
-  cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_744);
-  cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_745);
-  cct_boot_rit_codegen_emit_block_close_505(ctx);
-  cct_boot_rit_codegen_emit_blank_line_501(ctx);
-  cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_751);
-  cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_752);
-  cct_boot_rit_codegen_emit_block_open_504(ctx);
-  cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_736);
-  cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_753);
-  cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_738);
-  cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_754);
-  cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_740);
-  cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_755);
-  cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_742);
-  cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_756);
-  cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_744);
-  cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_745);
-  cct_boot_rit_codegen_emit_block_close_505(ctx);
-  cct_boot_rit_codegen_emit_blank_line_501(ctx);
-  cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_757);
-  cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_758);
-  cct_boot_rit_codegen_emit_block_open_504(ctx);
-  cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_759);
-  cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_760);
-  cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_761);
-  cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_762);
-  cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_763);
-  cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_764);
-  cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_765);
-  cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_766);
-  cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_349);
-  cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_767);
-  cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_768);
-  cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_769);
-  cct_boot_rit_codegen_emit_block_close_505(ctx);
-  cct_boot_rit_codegen_emit_blank_line_501(ctx);
-  cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_770);
-  cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_771);
-  cct_boot_rit_codegen_emit_block_open_504(ctx);
-  cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_772);
-  cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_773);
-  cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_774);
-  cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_349);
-  cct_boot_rit_codegen_emit_block_close_505(ctx);
-  cct_boot_rit_codegen_emit_blank_line_501(ctx);
-  cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_775);
-  cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_776);
-  cct_boot_rit_codegen_emit_block_open_504(ctx);
-  cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_702);
-  cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_777);
-  cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_778);
-  cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_779);
-  cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_780);
-  cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_781);
-  cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_782);
-  cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_783);
-  cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_784);
-  cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_551);
-  cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_349);
-  cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_736);
-  cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_753);
-  cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_785);
-  cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_786);
-  cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_740);
-  cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_787);
-  cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_788);
-  cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_789);
-  cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_744);
-  cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_745);
-  cct_boot_rit_codegen_emit_block_close_505(ctx);
-  cct_boot_rit_codegen_emit_blank_line_501(ctx);
-  cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_790);
-  cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_791);
-  cct_boot_rit_codegen_emit_block_open_504(ctx);
-  cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_792);
-  cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_793);
-  cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_794);
-  cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_795);
-  cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_796);
-  cct_boot_rit_codegen_emit_block_close_505(ctx);
-  cct_boot_rit_codegen_emit_blank_line_501(ctx);
-  cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_797);
-  cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_798);
-  cct_boot_rit_codegen_emit_block_open_504(ctx);
-  cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_799);
-  cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_800);
-  cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_801);
-  cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_802);
-  cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_803);
-  cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_804);
-  cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_660);
-  cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_805);
-  cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_806);
-  cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_807);
-  cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_662);
-  cct_boot_rit_codegen_emit_block_close_505(ctx);
-  cct_boot_rit_codegen_emit_blank_line_501(ctx);
-  cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_808);
-  cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_809);
-  cct_boot_rit_codegen_emit_block_open_504(ctx);
-  cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_810);
-  cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_811);
-  cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_812);
-  cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_662);
-  cct_boot_rit_codegen_emit_block_close_505(ctx);
-  cct_boot_rit_codegen_emit_blank_line_501(ctx);
-  cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_813);
-  cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_814);
-  cct_boot_rit_codegen_emit_block_open_504(ctx);
-  cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_815);
-  cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_816);
-  cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_812);
-  cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_662);
-  cct_boot_rit_codegen_emit_block_close_505(ctx);
-  cct_boot_rit_codegen_emit_blank_line_501(ctx);
-  cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_817);
-  cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_818);
-  cct_boot_rit_codegen_emit_block_open_504(ctx);
-  cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_819);
-  cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_820);
-  cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_812);
-  cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_662);
-  cct_boot_rit_codegen_emit_block_close_505(ctx);
-  cct_boot_rit_codegen_emit_blank_line_501(ctx);
+  cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_656);
+  cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_657);
+  cct_boot_rit_codegen_emit_block_open_511(ctx);
+  cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_658);
+  cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_659);
+  cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_660);
+  cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_661);
+  cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_662);
+  cct_boot_rit_codegen_emit_block_close_512(ctx);
+  cct_boot_rit_codegen_emit_blank_line_508(ctx);
+  cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_663);
+  cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_664);
+  cct_boot_rit_codegen_emit_block_open_511(ctx);
+  cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_665);
+  cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_666);
+  cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_667);
+  cct_boot_rit_codegen_emit_block_close_512(ctx);
+  cct_boot_rit_codegen_emit_blank_line_508(ctx);
+  cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_668);
+  cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_669);
+  cct_boot_rit_codegen_emit_block_open_511(ctx);
+  cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_670);
+  cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_671);
+  cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_667);
+  cct_boot_rit_codegen_emit_block_close_512(ctx);
+  cct_boot_rit_codegen_emit_blank_line_508(ctx);
+  cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_672);
+  cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_673);
+  cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_674);
+  cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_675);
+  cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_676);
+  cct_boot_rit_codegen_emit_blank_line_508(ctx);
+  cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_677);
+  cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_678);
+  cct_boot_rit_codegen_emit_block_open_511(ctx);
+  cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_679);
+  cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_680);
+  cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_681);
+  cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_682);
+  cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_683);
+  cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_684);
+  cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_685);
+  cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_686);
+  cct_boot_rit_codegen_emit_block_close_512(ctx);
+  cct_boot_rit_codegen_emit_blank_line_508(ctx);
+  cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_687);
+  cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_688);
+  cct_boot_rit_codegen_emit_block_open_511(ctx);
+  cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_689);
+  cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_690);
+  cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_691);
+  cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_692);
+  cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_693);
+  cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_694);
+  cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_695);
+  cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_696);
+  cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_349);
+  cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_697);
+  cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_698);
+  cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_699);
+  cct_boot_rit_codegen_emit_block_close_512(ctx);
+  cct_boot_rit_codegen_emit_blank_line_508(ctx);
+  cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_700);
+  cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_701);
+  cct_boot_rit_codegen_emit_block_open_511(ctx);
+  cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_702);
+  cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_703);
+  cct_boot_rit_codegen_emit_block_close_512(ctx);
+  cct_boot_rit_codegen_emit_blank_line_508(ctx);
+  cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_704);
+  cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_705);
+  cct_boot_rit_codegen_emit_block_open_511(ctx);
+  cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_706);
+  cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_707);
+  cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_708);
+  cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_709);
+  cct_boot_rit_codegen_emit_block_close_512(ctx);
+  cct_boot_rit_codegen_emit_blank_line_508(ctx);
+  cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_710);
+  cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_711);
+  cct_boot_rit_codegen_emit_block_open_511(ctx);
+  cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_706);
+  cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_712);
+  cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_713);
+  cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_709);
+  cct_boot_rit_codegen_emit_block_close_512(ctx);
+  cct_boot_rit_codegen_emit_blank_line_508(ctx);
+  cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_714);
+  cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_715);
+  cct_boot_rit_codegen_emit_block_open_511(ctx);
+  cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_716);
+  cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_717);
+  cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_718);
+  cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_709);
+  cct_boot_rit_codegen_emit_block_close_512(ctx);
+  cct_boot_rit_codegen_emit_blank_line_508(ctx);
+  cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_719);
+  cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_720);
+  cct_boot_rit_codegen_emit_block_open_511(ctx);
+  cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_721);
+  cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_722);
+  cct_boot_rit_codegen_emit_block_close_512(ctx);
+  cct_boot_rit_codegen_emit_blank_line_508(ctx);
+  cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_723);
+  cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_724);
+  cct_boot_rit_codegen_emit_block_open_511(ctx);
+  cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_725);
+  cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_726);
+  cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_727);
+  cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_728);
+  cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_729);
+  cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_730);
+  cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_731);
+  cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_732);
+  cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_733);
+  cct_boot_rit_codegen_emit_block_close_512(ctx);
+  cct_boot_rit_codegen_emit_blank_line_508(ctx);
+  cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_734);
+  cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_735);
+  cct_boot_rit_codegen_emit_block_open_511(ctx);
+  cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_736);
+  cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_737);
+  cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_738);
+  cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_739);
+  cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_740);
+  cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_741);
+  cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_742);
+  cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_743);
+  cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_744);
+  cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_745);
+  cct_boot_rit_codegen_emit_block_close_512(ctx);
+  cct_boot_rit_codegen_emit_blank_line_508(ctx);
+  cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_746);
+  cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_747);
+  cct_boot_rit_codegen_emit_block_open_511(ctx);
+  cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_736);
+  cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_737);
+  cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_738);
+  cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_748);
+  cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_740);
+  cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_749);
+  cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_742);
+  cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_750);
+  cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_744);
+  cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_745);
+  cct_boot_rit_codegen_emit_block_close_512(ctx);
+  cct_boot_rit_codegen_emit_blank_line_508(ctx);
+  cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_751);
+  cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_752);
+  cct_boot_rit_codegen_emit_block_open_511(ctx);
+  cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_736);
+  cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_753);
+  cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_738);
+  cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_754);
+  cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_740);
+  cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_755);
+  cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_742);
+  cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_756);
+  cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_744);
+  cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_745);
+  cct_boot_rit_codegen_emit_block_close_512(ctx);
+  cct_boot_rit_codegen_emit_blank_line_508(ctx);
+  cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_757);
+  cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_758);
+  cct_boot_rit_codegen_emit_block_open_511(ctx);
+  cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_759);
+  cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_760);
+  cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_761);
+  cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_762);
+  cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_763);
+  cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_764);
+  cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_765);
+  cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_766);
+  cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_349);
+  cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_767);
+  cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_768);
+  cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_769);
+  cct_boot_rit_codegen_emit_block_close_512(ctx);
+  cct_boot_rit_codegen_emit_blank_line_508(ctx);
+  cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_770);
+  cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_771);
+  cct_boot_rit_codegen_emit_block_open_511(ctx);
+  cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_772);
+  cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_773);
+  cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_774);
+  cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_349);
+  cct_boot_rit_codegen_emit_block_close_512(ctx);
+  cct_boot_rit_codegen_emit_blank_line_508(ctx);
+  cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_775);
+  cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_776);
+  cct_boot_rit_codegen_emit_block_open_511(ctx);
+  cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_702);
+  cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_777);
+  cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_778);
+  cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_779);
+  cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_780);
+  cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_781);
+  cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_782);
+  cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_783);
+  cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_784);
+  cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_551);
+  cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_349);
+  cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_736);
+  cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_753);
+  cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_785);
+  cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_786);
+  cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_740);
+  cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_787);
+  cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_788);
+  cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_789);
+  cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_744);
+  cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_745);
+  cct_boot_rit_codegen_emit_block_close_512(ctx);
+  cct_boot_rit_codegen_emit_blank_line_508(ctx);
+  cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_790);
+  cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_791);
+  cct_boot_rit_codegen_emit_block_open_511(ctx);
+  cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_792);
+  cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_793);
+  cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_794);
+  cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_795);
+  cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_796);
+  cct_boot_rit_codegen_emit_block_close_512(ctx);
+  cct_boot_rit_codegen_emit_blank_line_508(ctx);
+  cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_797);
+  cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_798);
+  cct_boot_rit_codegen_emit_block_open_511(ctx);
+  cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_799);
+  cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_800);
+  cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_801);
+  cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_802);
+  cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_803);
+  cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_804);
+  cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_660);
+  cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_805);
+  cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_806);
+  cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_807);
+  cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_662);
+  cct_boot_rit_codegen_emit_block_close_512(ctx);
+  cct_boot_rit_codegen_emit_blank_line_508(ctx);
+  cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_808);
+  cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_809);
+  cct_boot_rit_codegen_emit_block_open_511(ctx);
+  cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_810);
+  cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_811);
+  cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_812);
+  cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_662);
+  cct_boot_rit_codegen_emit_block_close_512(ctx);
+  cct_boot_rit_codegen_emit_blank_line_508(ctx);
+  cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_813);
+  cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_814);
+  cct_boot_rit_codegen_emit_block_open_511(ctx);
+  cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_815);
+  cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_816);
+  cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_812);
+  cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_662);
+  cct_boot_rit_codegen_emit_block_close_512(ctx);
+  cct_boot_rit_codegen_emit_blank_line_508(ctx);
+  cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_817);
+  cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_818);
+  cct_boot_rit_codegen_emit_block_open_511(ctx);
+  cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_819);
+  cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_820);
+  cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_812);
+  cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_662);
+  cct_boot_rit_codegen_emit_block_close_512(ctx);
+  cct_boot_rit_codegen_emit_blank_line_508(ctx);
   return;
 }
 
-void cct_boot_rit_codegen_runtime_emit_time_runtime_615(cct_boot_sig_CodegenContext* ctx)
+void cct_boot_rit_codegen_runtime_emit_time_runtime_622(cct_boot_sig_CodegenContext* ctx)
 {
   if (!(*ctx).needs_time_runtime)
   {
     return;
   }
-  cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_821);
-  cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_822);
-  cct_boot_rit_codegen_emit_block_open_504(ctx);
-  cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_823);
-  cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_824);
-  cct_boot_rit_codegen_emit_block_close_505(ctx);
-  cct_boot_rit_codegen_emit_blank_line_501(ctx);
+  cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_821);
+  cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_822);
+  cct_boot_rit_codegen_emit_block_open_511(ctx);
+  cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_823);
+  cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_824);
+  cct_boot_rit_codegen_emit_block_close_512(ctx);
+  cct_boot_rit_codegen_emit_blank_line_508(ctx);
   return;
 }
 
-void cct_boot_rit_codegen_runtime_emit_fail_helper_616(cct_boot_sig_CodegenContext* ctx)
+void cct_boot_rit_codegen_runtime_emit_fail_helper_623(cct_boot_sig_CodegenContext* ctx)
 {
   if (!(*ctx).needs_fail_helper)
   {
     return;
   }
-  cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_825);
-  cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_826);
-  cct_boot_rit_codegen_emit_block_open_504(ctx);
-  cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_827);
-  cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_828);
-  cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_829);
-  cct_boot_rit_codegen_emit_block_close_505(ctx);
-  cct_boot_rit_codegen_emit_blank_line_501(ctx);
+  cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_825);
+  cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_826);
+  cct_boot_rit_codegen_emit_block_open_511(ctx);
+  cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_827);
+  cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_828);
+  cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_829);
+  cct_boot_rit_codegen_emit_block_close_512(ctx);
+  cct_boot_rit_codegen_emit_blank_line_508(ctx);
   return;
 }
 
-void cct_boot_rit_codegen_runtime_emit_scribe_runtime_617(cct_boot_sig_CodegenContext* ctx)
+void cct_boot_rit_codegen_runtime_emit_scribe_runtime_624(cct_boot_sig_CodegenContext* ctx)
 {
   if (!(*ctx).needs_scribe_runtime)
   {
     return;
   }
-  cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_830);
-  cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_831);
-  cct_boot_rit_codegen_emit_block_open_504(ctx);
-  cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_832);
-  cct_boot_rit_codegen_emit_block_close_505(ctx);
-  cct_boot_rit_codegen_emit_blank_line_501(ctx);
-  cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_833);
-  cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_834);
-  cct_boot_rit_codegen_emit_block_open_504(ctx);
-  cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_835);
-  cct_boot_rit_codegen_emit_block_close_505(ctx);
-  cct_boot_rit_codegen_emit_blank_line_501(ctx);
-  cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_836);
-  cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_837);
-  cct_boot_rit_codegen_emit_block_open_504(ctx);
-  cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_838);
-  cct_boot_rit_codegen_emit_block_close_505(ctx);
-  cct_boot_rit_codegen_emit_blank_line_501(ctx);
-  cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_839);
-  cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_840);
-  cct_boot_rit_codegen_emit_block_open_504(ctx);
-  cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_841);
-  cct_boot_rit_codegen_emit_block_close_505(ctx);
-  cct_boot_rit_codegen_emit_blank_line_501(ctx);
+  cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_830);
+  cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_831);
+  cct_boot_rit_codegen_emit_block_open_511(ctx);
+  cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_832);
+  cct_boot_rit_codegen_emit_block_close_512(ctx);
+  cct_boot_rit_codegen_emit_blank_line_508(ctx);
+  cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_833);
+  cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_834);
+  cct_boot_rit_codegen_emit_block_open_511(ctx);
+  cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_835);
+  cct_boot_rit_codegen_emit_block_close_512(ctx);
+  cct_boot_rit_codegen_emit_blank_line_508(ctx);
+  cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_836);
+  cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_837);
+  cct_boot_rit_codegen_emit_block_open_511(ctx);
+  cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_838);
+  cct_boot_rit_codegen_emit_block_close_512(ctx);
+  cct_boot_rit_codegen_emit_blank_line_508(ctx);
+  cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_839);
+  cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_840);
+  cct_boot_rit_codegen_emit_block_open_511(ctx);
+  cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_841);
+  cct_boot_rit_codegen_emit_block_close_512(ctx);
+  cct_boot_rit_codegen_emit_blank_line_508(ctx);
   return;
 }
 
-void cct_boot_rit_codegen_runtime_emit_verbum_runtime_618(cct_boot_sig_CodegenContext* ctx)
+void cct_boot_rit_codegen_runtime_emit_verbum_runtime_625(cct_boot_sig_CodegenContext* ctx)
 {
   if ((!(*ctx).needs_stdlib) || (!(*ctx).needs_stdio))
   {
     return;
   }
-  cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_842);
-  cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_843);
-  cct_boot_rit_codegen_emit_block_open_504(ctx);
-  cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_702);
-  cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_844);
-  cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_845);
-  cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_846);
-  cct_boot_rit_codegen_emit_block_close_505(ctx);
-  cct_boot_rit_codegen_emit_blank_line_501(ctx);
+  cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_842);
+  cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_843);
+  cct_boot_rit_codegen_emit_block_open_511(ctx);
+  cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_702);
+  cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_844);
+  cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_845);
+  cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_846);
+  cct_boot_rit_codegen_emit_block_close_512(ctx);
+  cct_boot_rit_codegen_emit_blank_line_508(ctx);
   return;
 }
 
-void cct_boot_rit_codegen_runtime_emit_bytes_runtime_619(cct_boot_sig_CodegenContext* ctx)
+void cct_boot_rit_codegen_runtime_emit_bytes_runtime_626(cct_boot_sig_CodegenContext* ctx)
 {
   if (!(*ctx).needs_stdlib)
   {
     return;
   }
-  cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_672);
-  cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_847);
-  cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_848);
-  cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_849);
-  cct_boot_rit_codegen_emit_blank_line_501(ctx);
-  cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_638);
-  cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_850);
-  cct_boot_rit_codegen_emit_block_open_504(ctx);
-  cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_851);
-  cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_852);
-  cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_853);
-  cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_854);
-  cct_boot_rit_codegen_emit_block_close_505(ctx);
-  cct_boot_rit_codegen_emit_blank_line_501(ctx);
+  cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_672);
+  cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_847);
+  cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_848);
+  cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_849);
+  cct_boot_rit_codegen_emit_blank_line_508(ctx);
+  cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_638);
+  cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_850);
+  cct_boot_rit_codegen_emit_block_open_511(ctx);
+  cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_851);
+  cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_852);
+  cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_853);
+  cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_854);
+  cct_boot_rit_codegen_emit_block_close_512(ctx);
+  cct_boot_rit_codegen_emit_blank_line_508(ctx);
   return;
 }
 
-void cct_boot_rit_codegen_runtime_emit_string_pool_620(cct_boot_sig_CodegenContext* ctx)
+void cct_boot_rit_codegen_runtime_emit_string_pool_627(cct_boot_sig_CodegenContext* ctx)
 {
-  long long n = cct_boot_rit_codegen_registered_string_count_450(ctx);
+  long long n = cct_boot_rit_codegen_registered_string_count_457(ctx);
   if (n == 0)
   {
     return;
@@ -12898,13 +12905,13 @@ void cct_boot_rit_codegen_runtime_emit_string_pool_620(cct_boot_sig_CodegenConte
   while (i < n)
   {
     {
-      cct_boot_sig_CodegenStringLiteral* item = cct_boot_rit_codegen_context_string_at_410(ctx, i);
-      char* quoted = cct_boot_rit_codegen_runtime_escape_c_string_610((*item).raw_text);
-      cct_boot_rit_codegen_emit_499(ctx, cct_boot_str_855);
-      cct_boot_rit_codegen_emit_499(ctx, (*item).symbol_name);
-      cct_boot_rit_codegen_emit_499(ctx, cct_boot_str_856);
-      cct_boot_rit_codegen_emit_499(ctx, quoted);
-      cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_385);
+      cct_boot_sig_CodegenStringLiteral* item = cct_boot_rit_codegen_context_string_at_417(ctx, i);
+      char* quoted = cct_boot_rit_codegen_runtime_escape_c_string_617((*item).raw_text);
+      cct_boot_rit_codegen_emit_506(ctx, cct_boot_str_855);
+      cct_boot_rit_codegen_emit_506(ctx, (*item).symbol_name);
+      cct_boot_rit_codegen_emit_506(ctx, cct_boot_str_856);
+      cct_boot_rit_codegen_emit_506(ctx, quoted);
+      cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_385);
       free((void*)(quoted));
       i = (i + 1);
     }
@@ -12913,18 +12920,18 @@ void cct_boot_rit_codegen_runtime_emit_string_pool_620(cct_boot_sig_CodegenConte
   }
   if (0) goto __cct_label_310;
   __cct_label_310: ;
-  cct_boot_rit_codegen_emit_blank_line_501(ctx);
+  cct_boot_rit_codegen_emit_blank_line_508(ctx);
   return;
 }
 
-long long cct_boot_rit_codegen_runtime_find_entry_main_index_621(cct_boot_sig_AstProgram* program)
+long long cct_boot_rit_codegen_runtime_find_entry_main_index_628(cct_boot_sig_AstProgram* program)
 {
   long long i = 0;
-  long long n = cct_boot_rit_ast_node_list_len_209((*program).declarations);
+  long long n = cct_boot_rit_ast_node_list_len_216((*program).declarations);
   while (i < n)
   {
     {
-      cct_boot_sig_AstNode* decl = cct_boot_rit_ast_node_list_get_210((*program).declarations, i);
+      cct_boot_sig_AstNode* decl = cct_boot_rit_ast_node_list_get_217((*program).declarations, i);
       if (((*decl).kind == cct_boot_ord_AstKind__AST_RITUALE) && (cct_boot_rit_compare_38((*decl).name, cct_boot_str_857) == 0))
       {
         return i;
@@ -12939,14 +12946,14 @@ long long cct_boot_rit_codegen_runtime_find_entry_main_index_621(cct_boot_sig_As
   return (-1);
 }
 
-int cct_boot_rit_codegen_runtime_program_needs_args_init_622(cct_boot_sig_AstProgram* program)
+int cct_boot_rit_codegen_runtime_program_needs_args_init_629(cct_boot_sig_AstProgram* program)
 {
   long long i = 0;
-  long long n = cct_boot_rit_ast_node_list_len_209((*program).declarations);
+  long long n = cct_boot_rit_ast_node_list_len_216((*program).declarations);
   while (i < n)
   {
     {
-      cct_boot_sig_AstNode* decl = cct_boot_rit_ast_node_list_get_210((*program).declarations, i);
+      cct_boot_sig_AstNode* decl = cct_boot_rit_ast_node_list_get_217((*program).declarations, i);
       if ((*decl).kind == cct_boot_ord_AstKind__AST_RITUALE)
       {
         if ((cct_boot_rit_compare_38((*decl).name, cct_boot_str_858) == 0) || (cct_boot_rit_compare_38((*decl).name, cct_boot_str_859) == 0))
@@ -12964,112 +12971,112 @@ int cct_boot_rit_codegen_runtime_program_needs_args_init_622(cct_boot_sig_AstPro
   return 0;
 }
 
-void cct_boot_rit_codegen_runtime_detect_body_dependencies_623(cct_boot_sig_CodegenContext* ctx, char* body)
+void cct_boot_rit_codegen_runtime_detect_body_dependencies_630(cct_boot_sig_CodegenContext* ctx, char* body)
 {
   if (cct_boot_rit_contains_46(body, cct_boot_str_860))
   {
-    cct_boot_rit_codegen_require_stdlib_472(ctx);
+    cct_boot_rit_codegen_require_stdlib_479(ctx);
   }
   if (cct_boot_rit_contains_46(body, cct_boot_str_861))
   {
-    cct_boot_rit_codegen_require_stdlib_472(ctx);
+    cct_boot_rit_codegen_require_stdlib_479(ctx);
   }
   if (cct_boot_rit_contains_46(body, cct_boot_str_474))
   {
-    cct_boot_rit_codegen_require_stdlib_472(ctx);
+    cct_boot_rit_codegen_require_stdlib_479(ctx);
   }
   if (cct_boot_rit_contains_46(body, cct_boot_str_862))
   {
-    cct_boot_rit_codegen_require_stdlib_472(ctx);
+    cct_boot_rit_codegen_require_stdlib_479(ctx);
   }
   if (cct_boot_rit_contains_46(body, cct_boot_str_863))
   {
-    cct_boot_rit_codegen_require_stdlib_472(ctx);
+    cct_boot_rit_codegen_require_stdlib_479(ctx);
   }
   if (cct_boot_rit_contains_46(body, cct_boot_str_864))
   {
-    cct_boot_rit_codegen_require_stdlib_472(ctx);
+    cct_boot_rit_codegen_require_stdlib_479(ctx);
   }
   return;
 }
 
-void cct_boot_rit_codegen_runtime_emit_host_main_624(cct_boot_sig_CodegenContext* ctx, cct_boot_sig_AstProgram* program)
+void cct_boot_rit_codegen_runtime_emit_host_main_631(cct_boot_sig_CodegenContext* ctx, cct_boot_sig_AstProgram* program)
 {
-  long long entry_idx = cct_boot_rit_codegen_runtime_find_entry_main_index_621(program);
+  long long entry_idx = cct_boot_rit_codegen_runtime_find_entry_main_index_628(program);
   if ((*ctx).needs_args_runtime)
   {
-    cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_865);
+    cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_865);
   }
   else
   {
-    cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_866);
+    cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_866);
   }
-  cct_boot_rit_codegen_emit_block_open_504(ctx);
+  cct_boot_rit_codegen_emit_block_open_511(ctx);
   if ((*ctx).needs_args_runtime)
   {
-    cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_867);
+    cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_867);
   }
   if (entry_idx < 0)
   {
-    cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_868);
-    cct_boot_rit_codegen_emit_block_close_505(ctx);
+    cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_868);
+    cct_boot_rit_codegen_emit_block_close_512(ctx);
     return;
   }
-  cct_boot_sig_AstNode* entry = cct_boot_rit_ast_node_list_get_210((*program).declarations, entry_idx);
+  cct_boot_sig_AstNode* entry = cct_boot_rit_ast_node_list_get_217((*program).declarations, entry_idx);
   if ((*entry).has_return_type && (cct_boot_rit_compare_38((*(*entry).return_type).type_name, cct_boot_str_60) == 0))
   {
-    cct_boot_rit_codegen_emit_499(ctx, cct_boot_rit_codegen_rituale_c_name_510(ctx, cct_boot_str_857));
-    cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_869);
-    cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_868);
+    cct_boot_rit_codegen_emit_506(ctx, cct_boot_rit_codegen_rituale_c_name_517(ctx, cct_boot_str_857));
+    cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_869);
+    cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_868);
   }
   else
   {
-    cct_boot_rit_codegen_emit_499(ctx, cct_boot_str_870);
-    cct_boot_rit_codegen_emit_499(ctx, cct_boot_rit_codegen_rituale_c_name_510(ctx, cct_boot_str_857));
-    cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_869);
+    cct_boot_rit_codegen_emit_506(ctx, cct_boot_str_870);
+    cct_boot_rit_codegen_emit_506(ctx, cct_boot_rit_codegen_rituale_c_name_517(ctx, cct_boot_str_857));
+    cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_869);
   }
-  cct_boot_rit_codegen_emit_block_close_505(ctx);
+  cct_boot_rit_codegen_emit_block_close_512(ctx);
   return;
 }
 
-char* cct_boot_rit_codegen_generate_translation_unit_with_context_625(cct_boot_sig_CodegenContext* ctx, cct_boot_sig_AstProgram* program)
+char* cct_boot_rit_codegen_generate_translation_unit_with_context_632(cct_boot_sig_CodegenContext* ctx, cct_boot_sig_AstProgram* program)
 {
-  cct_boot_rit_codegen_emit_program_body_607(ctx, program);
-  if (cct_boot_rit_codegen_runtime_program_needs_args_init_622(program))
+  cct_boot_rit_codegen_emit_program_body_614(ctx, program);
+  if (cct_boot_rit_codegen_runtime_program_needs_args_init_629(program))
   {
-    cct_boot_rit_codegen_require_args_runtime_473(ctx);
+    cct_boot_rit_codegen_require_args_runtime_480(ctx);
   }
-  char* body = cct_boot_rit_codegen_output_435(ctx);
-  cct_boot_rit_codegen_runtime_detect_body_dependencies_623(ctx, body);
-  cct_boot_rit_codegen_context_reset_output_430(ctx);
-  cct_boot_rit_codegen_emit_line_500(ctx, cct_boot_str_576);
-  cct_boot_rit_codegen_emit_blank_line_501(ctx);
-  cct_boot_rit_codegen_runtime_emit_includes_612(ctx);
-  cct_boot_rit_codegen_runtime_emit_fail_helper_616(ctx);
-  cct_boot_rit_codegen_runtime_emit_scribe_runtime_617(ctx);
-  cct_boot_rit_codegen_runtime_emit_verbum_runtime_618(ctx);
-  cct_boot_rit_codegen_runtime_emit_bytes_runtime_619(ctx);
-  cct_boot_rit_codegen_runtime_emit_failure_runtime_613(ctx);
-  cct_boot_rit_codegen_runtime_emit_fmt_runtime_614(ctx);
-  cct_boot_rit_codegen_runtime_emit_time_runtime_615(ctx);
-  cct_boot_rit_codegen_runtime_emit_string_pool_620(ctx);
-  cct_boot_rit_codegen_emit_499(ctx, body);
+  char* body = cct_boot_rit_codegen_output_442(ctx);
+  cct_boot_rit_codegen_runtime_detect_body_dependencies_630(ctx, body);
+  cct_boot_rit_codegen_context_reset_output_437(ctx);
+  cct_boot_rit_codegen_emit_line_507(ctx, cct_boot_str_576);
+  cct_boot_rit_codegen_emit_blank_line_508(ctx);
+  cct_boot_rit_codegen_runtime_emit_includes_619(ctx);
+  cct_boot_rit_codegen_runtime_emit_fail_helper_623(ctx);
+  cct_boot_rit_codegen_runtime_emit_scribe_runtime_624(ctx);
+  cct_boot_rit_codegen_runtime_emit_verbum_runtime_625(ctx);
+  cct_boot_rit_codegen_runtime_emit_bytes_runtime_626(ctx);
+  cct_boot_rit_codegen_runtime_emit_failure_runtime_620(ctx);
+  cct_boot_rit_codegen_runtime_emit_fmt_runtime_621(ctx);
+  cct_boot_rit_codegen_runtime_emit_time_runtime_622(ctx);
+  cct_boot_rit_codegen_runtime_emit_string_pool_627(ctx);
+  cct_boot_rit_codegen_emit_506(ctx, body);
   free((void*)(body));
-  cct_boot_rit_codegen_emit_blank_line_501(ctx);
-  cct_boot_rit_codegen_runtime_emit_host_main_624(ctx, program);
-  return cct_boot_rit_codegen_output_435(ctx);
+  cct_boot_rit_codegen_emit_blank_line_508(ctx);
+  cct_boot_rit_codegen_runtime_emit_host_main_631(ctx, program);
+  return cct_boot_rit_codegen_output_442(ctx);
 }
 
-char* cct_boot_rit_codegen_generate_translation_unit_626(cct_boot_sig_AstProgram* program, char* filename)
+char* cct_boot_rit_codegen_generate_translation_unit_633(cct_boot_sig_AstProgram* program, char* filename)
 {
-  cct_boot_sig_CodegenContext* ctx = cct_boot_rit_codegen_context_new_429(filename);
-  cct_boot_rit_codegen_context_reset_431(ctx);
-  char* out = cct_boot_rit_codegen_generate_translation_unit_with_context_625(ctx, program);
-  cct_boot_rit_codegen_context_free_432(ctx);
+  cct_boot_sig_CodegenContext* ctx = cct_boot_rit_codegen_context_new_436(filename);
+  cct_boot_rit_codegen_context_reset_438(ctx);
+  char* out = cct_boot_rit_codegen_generate_translation_unit_with_context_632(ctx, program);
+  cct_boot_rit_codegen_context_free_439(ctx);
   return out;
 }
 
-long long cct_boot_rit_main_627(void)
+long long cct_boot_rit_main_634(void)
 {
   if (cct_boot_rit_argc_1() < 2)
   {
@@ -13078,27 +13085,27 @@ long long cct_boot_rit_main_627(void)
   }
   char* filename = cct_boot_rit_arg_2(1);
   char* source = cct_rt_fs_read_all(filename);
-  cct_boot_sig_AstProgram* program = cct_boot_rit_parser_parse_program_source_401(source, filename);
-  cct_boot_sig_CodegenContext* ctx = cct_boot_rit_codegen_context_new_429(filename);
-  cct_boot_rit_codegen_context_reset_431(ctx);
-  char* out = cct_boot_rit_codegen_generate_translation_unit_with_context_625(ctx, program);
-  if (cct_boot_rit_codegen_had_error_434(ctx))
+  cct_boot_sig_AstProgram* program = cct_boot_rit_parser_parse_program_source_408(source, filename);
+  cct_boot_sig_CodegenContext* ctx = cct_boot_rit_codegen_context_new_436(filename);
+  cct_boot_rit_codegen_context_reset_438(ctx);
+  char* out = cct_boot_rit_codegen_generate_translation_unit_with_context_632(ctx, program);
+  if (cct_boot_rit_codegen_had_error_441(ctx))
   {
-    cct_boot_rit_eprintln_6(cct_boot_rit_concat_37(cct_boot_rit_concat_37(cct_boot_rit_concat_37(cct_boot_str_872, (*ctx).last_error_message), cct_boot_str_873), cct_boot_rit_concat_37(cct_boot_rit_stringify_int_95((*ctx).last_error_line), cct_boot_rit_concat_37(cct_boot_str_477, cct_boot_rit_stringify_int_95((*ctx).last_error_column)))));
+    cct_boot_rit_eprintln_6(cct_boot_rit_concat_37(cct_boot_rit_concat_37(cct_boot_rit_concat_37(cct_boot_str_872, (*ctx).last_error_message), cct_boot_str_873), cct_boot_rit_concat_37(cct_boot_rit_stringify_int_102((*ctx).last_error_line), cct_boot_rit_concat_37(cct_boot_str_477, cct_boot_rit_stringify_int_102((*ctx).last_error_column)))));
     free((void*)(out));
-    cct_boot_rit_codegen_context_free_432(ctx);
-    cct_boot_rit_ast_program_free_302(program);
+    cct_boot_rit_codegen_context_free_439(ctx);
+    cct_boot_rit_ast_program_free_309(program);
     return 1;
   }
   cct_boot_rit_print_3(out);
   free((void*)(out));
-  cct_boot_rit_codegen_context_free_432(ctx);
-  cct_boot_rit_ast_program_free_302(program);
+  cct_boot_rit_codegen_context_free_439(ctx);
+  cct_boot_rit_ast_program_free_309(program);
   return 0;
 }
 
 int main(int argc, char **argv)
 {
   cct_rt_args_init(argc, argv);
-  return (int)cct_boot_rit_main_627();
+  return (int)cct_boot_rit_main_634();
 }

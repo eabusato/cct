@@ -165,6 +165,12 @@ RITUALE compiler_is_source_backed_cct_import(VERBUM import_path) REDDE VERUM
   SI CONIURA compare(import_path, "cct/text_lang.cct") == 0
     REDDE VERUM
   FIN SI
+  SI CONIURA compare(import_path, "cct/lexer_util.cct") == 0 VEL CONIURA compare(import_path, "cct/slug.cct") == 0
+    REDDE VERUM
+  FIN SI
+  SI CONIURA compare(import_path, "cct/uuid.cct") == 0
+    REDDE VERUM
+  FIN SI
   SI CONIURA compare(import_path, "cct/alg.cct") == 0 VEL CONIURA compare(import_path, "cct/collection_ops.cct") == 0
     REDDE VERUM
   FIN SI

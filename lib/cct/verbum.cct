@@ -7,6 +7,8 @@
 
 INCIPIT grimoire "verbum"
 
+ADVOCARE "cct/char.cct"
+
 RITUALE len(VERBUM s) REDDE REX
   REDDE OBSECRO verbum_len(s)
 EXPLICIT RITUALE
@@ -245,6 +247,95 @@ EXPLICIT RITUALE
 
 RITUALE words(VERBUM s) REDDE SPECULUM NIHIL
   REDDE OBSECRO verbum_words(s)
+EXPLICIT RITUALE
+
+RITUALE verbum_length(VERBUM s) REDDE REX
+  REDDE CONIURA len(s)
+EXPLICIT RITUALE
+
+RITUALE verbum_find_from(VERBUM s, VERBUM sub, REX offset) REDDE REX
+  REDDE CONIURA find_from(s, sub, offset)
+EXPLICIT RITUALE
+
+RITUALE verbum_split_regex(VERBUM s, SPECULUM NIHIL regex_handle) REDDE SPECULUM NIHIL
+  REDDE OBSECRO regex_builtin_split(regex_handle, s)
+EXPLICIT RITUALE
+
+RITUALE verbum_trim_chars(VERBUM s, VERBUM chars) REDDE VERBUM
+  EVOCA REX start AD 0
+  EVOCA REX finish AD CONIURA len(s)
+
+  DUM start < finish
+    SI CONIURA find(chars, CONIURA from_char(CONIURA char_at(s, start))) == -1
+      FRANGE
+    FIN SI
+    VINCIRE start AD start + 1
+  FIN DUM
+
+  DUM finish > start
+    SI CONIURA find(chars, CONIURA from_char(CONIURA char_at(s, finish - 1))) == -1
+      FRANGE
+    FIN SI
+    VINCIRE finish AD finish - 1
+  FIN DUM
+
+  REDDE CONIURA substring(s, start, finish)
+EXPLICIT RITUALE
+
+RITUALE verbum_pad_left_text(VERBUM s, REX width, VERBUM fill) REDDE VERBUM
+  EVOCA REX slen AD CONIURA len(s)
+  SI slen >= width VEL CONIURA len(fill) == 0
+    REDDE s
+  FIN SI
+
+  EVOCA REX missing AD width - slen
+  EVOCA VERBUM out AD ""
+
+  DUM CONIURA len(out) < missing
+    VINCIRE out AD CONIURA concat(out, fill)
+  FIN DUM
+
+  SI CONIURA len(out) > missing
+    VINCIRE out AD CONIURA substring(out, CONIURA len(out) - missing, CONIURA len(out))
+  FIN SI
+
+  REDDE CONIURA concat(out, s)
+EXPLICIT RITUALE
+
+RITUALE verbum_pad_right_text(VERBUM s, REX width, VERBUM fill) REDDE VERBUM
+  EVOCA REX slen AD CONIURA len(s)
+  SI slen >= width VEL CONIURA len(fill) == 0
+    REDDE s
+  FIN SI
+
+  EVOCA REX missing AD width - slen
+  EVOCA VERBUM out AD ""
+
+  DUM CONIURA len(out) < missing
+    VINCIRE out AD CONIURA concat(out, fill)
+  FIN DUM
+
+  SI CONIURA len(out) > missing
+    VINCIRE out AD CONIURA substring(out, 0, missing)
+  FIN SI
+
+  REDDE CONIURA concat(s, out)
+EXPLICIT RITUALE
+
+RITUALE verbum_ascii_only(VERBUM s) REDDE VERBUM
+  EVOCA REX i AD 0
+  EVOCA REX n AD CONIURA len(s)
+  EVOCA VERBUM out AD ""
+
+  DUM i < n
+    EVOCA MILES c AD CONIURA char_at(s, i)
+    SI c >= 32 ET c <= 126
+      VINCIRE out AD CONIURA concat(out, CONIURA from_char(c))
+    FIN SI
+    VINCIRE i AD i + 1
+  FIN DUM
+
+  REDDE out
 EXPLICIT RITUALE
 
 EXPLICIT grimoire
