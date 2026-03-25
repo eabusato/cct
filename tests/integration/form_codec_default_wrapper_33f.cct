@@ -1,0 +1,35 @@
+INCIPIT grimoire "form_codec_default_wrapper_33f"
+
+ADVOCARE "cct/form_codec.cct"
+ADVOCARE "cct/map.cct"
+ADVOCARE "cct/option.cct"
+ADVOCARE "cct/verbum.cct"
+
+RITUALE main() REDDE REX
+  EVOCA SPECULUM NIHIL params AD CONIURA map_init GENUS(VERBUM, VERBUM)()
+  CONIURA map_insert GENUS(VERBUM, VERBUM)(params, "nome", "Apolo Jose")
+  CONIURA map_insert GENUS(VERBUM, VERBUM)(params, "classe", "DOG")
+
+  EVOCA VERBUM built AD CONIURA query_string_build(params)
+  EVOCA SPECULUM NIHIL parsed AD CONIURA query_string_parse(CONIURA concat("https://x.test", built))
+  EVOCA SPECULUM NIHIL nome_opt AD CONIURA form_get(parsed, "nome")
+  EVOCA SPECULUM NIHIL pair_map AD CONIURA form_decode("media%3D10=ok")
+  EVOCA SPECULUM NIHIL media_opt AD CONIURA form_get(pair_map, "media=10")
+
+  SI CONIURA option_is_none GENUS(VERBUM)(nome_opt)
+    REDDE 1
+  FIN SI
+  SI CONIURA compare(CONIURA option_unwrap GENUS(VERBUM)(nome_opt), "Apolo Jose") != 0
+    REDDE 1
+  FIN SI
+  SI CONIURA option_is_none GENUS(VERBUM)(media_opt)
+    REDDE 1
+  FIN SI
+  SI CONIURA compare(CONIURA option_unwrap GENUS(VERBUM)(media_opt), "ok") != 0
+    REDDE 1
+  FIN SI
+
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

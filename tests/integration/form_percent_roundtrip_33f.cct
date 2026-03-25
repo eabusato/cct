@@ -1,0 +1,27 @@
+INCIPIT grimoire "form_percent_roundtrip_33f"
+
+ADVOCARE "cct/form_codec.cct"
+ADVOCARE "cct/map.cct"
+ADVOCARE "cct/option.cct"
+ADVOCARE "cct/verbum.cct"
+
+RITUALE main() REDDE REX
+  EVOCA VERBUM encoded AD CONIURA percent_encode("a b/c?")
+  SI CONIURA compare(encoded, "a%20b%2Fc%3F") != 0
+    REDDE 1
+  FIN SI
+
+  EVOCA SPECULUM NIHIL decoded_map AD CONIURA form_decode("valor=a+b%2Fc%3F")
+  EVOCA SPECULUM NIHIL valor_opt AD CONIURA form_get(decoded_map, "valor")
+  SI CONIURA option_is_none GENUS(VERBUM)(valor_opt)
+    REDDE 1
+  FIN SI
+
+  SI CONIURA compare(CONIURA option_unwrap GENUS(VERBUM)(valor_opt), "a b/c?") != 0
+    REDDE 1
+  FIN SI
+
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

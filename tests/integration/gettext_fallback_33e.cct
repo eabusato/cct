@@ -1,0 +1,14 @@
+INCIPIT grimoire "gettext_fallback_33e"
+
+ADVOCARE "cct/gettext.cct"
+ADVOCARE "cct/verbum.cct"
+
+RITUALE main() REDDE REX
+  EVOCA Catalog cat AD CONIURA gettext_catalog_new("en")
+  SI CONIURA compare(CONIURA gettext_translate(cat, "unknown_key"), "unknown_key") != 0
+    REDDE 1
+  FIN SI
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

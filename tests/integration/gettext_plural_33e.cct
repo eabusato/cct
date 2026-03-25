@@ -1,0 +1,19 @@
+INCIPIT grimoire "gettext_plural_33e"
+
+ADVOCARE "cct/gettext.cct"
+ADVOCARE "cct/verbum.cct"
+
+RITUALE main() REDDE REX
+  EVOCA Catalog cat AD CONIURA gettext_catalog_new("pt_BR")
+  CONIURA gettext_add_plural(SPECULUM cat, "item", "items", "item", "itens")
+
+  SI CONIURA compare(CONIURA gettext_translate_plural(cat, "item", "items", 1), "item") != 0
+    REDDE 1
+  FIN SI
+  SI CONIURA compare(CONIURA gettext_translate_plural(cat, "item", "items", 2), "itens") != 0
+    REDDE 1
+  FIN SI
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

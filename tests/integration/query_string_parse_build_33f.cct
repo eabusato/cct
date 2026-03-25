@@ -1,0 +1,41 @@
+INCIPIT grimoire "query_string_parse_build_33f"
+
+ADVOCARE "cct/form_codec.cct"
+ADVOCARE "cct/map.cct"
+ADVOCARE "cct/option.cct"
+ADVOCARE "cct/verbum.cct"
+
+RITUALE main() REDDE REX
+  EVOCA SPECULUM NIHIL parsed AD CONIURA query_string_parse("https://desviados.net/feed?tag=texto&pagina=2#topo")
+  EVOCA SPECULUM NIHIL tag_opt AD CONIURA form_get(parsed, "tag")
+  EVOCA SPECULUM NIHIL pagina_opt AD CONIURA form_get(parsed, "pagina")
+
+  SI CONIURA option_is_none GENUS(VERBUM)(tag_opt) VEL CONIURA option_is_none GENUS(VERBUM)(pagina_opt)
+    REDDE 1
+  FIN SI
+  SI CONIURA compare(CONIURA option_unwrap GENUS(VERBUM)(tag_opt), "texto") != 0
+    REDDE 1
+  FIN SI
+  SI CONIURA compare(CONIURA option_unwrap GENUS(VERBUM)(pagina_opt), "2") != 0
+    REDDE 1
+  FIN SI
+
+  EVOCA SPECULUM NIHIL params AD CONIURA map_init GENUS(VERBUM, VERBUM)()
+  CONIURA map_insert GENUS(VERBUM, VERBUM)(params, "tag", "texto livre")
+  CONIURA map_insert GENUS(VERBUM, VERBUM)(params, "pagina", "2")
+  EVOCA VERBUM built AD CONIURA query_string_build(params)
+
+  SI NON CONIURA starts_with(built, "?")
+    REDDE 1
+  FIN SI
+  SI NON CONIURA contains(built, "tag=texto%20livre")
+    REDDE 1
+  FIN SI
+  SI NON CONIURA contains(built, "pagina=2")
+    REDDE 1
+  FIN SI
+
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

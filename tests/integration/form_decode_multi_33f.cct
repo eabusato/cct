@@ -1,0 +1,34 @@
+INCIPIT grimoire "form_decode_multi_33f"
+
+ADVOCARE "cct/form_codec.cct"
+ADVOCARE "cct/fluxus.cct"
+ADVOCARE "cct/map.cct"
+ADVOCARE "cct/option.cct"
+ADVOCARE "cct/verbum.cct"
+
+RITUALE main() REDDE REX
+  EVOCA SPECULUM NIHIL decoded AD CONIURA form_decode_multi("tag=um&tag=dois&tag=tres&classe=A")
+  EVOCA SPECULUM NIHIL tag_opt AD CONIURA form_get_multi(decoded, "tag")
+  EVOCA SPECULUM NIHIL classe_opt AD CONIURA form_get_multi(decoded, "classe")
+
+  SI CONIURA option_is_none GENUS(FormValues)(tag_opt) VEL CONIURA option_is_none GENUS(FormValues)(classe_opt)
+    REDDE 1
+  FIN SI
+
+  EVOCA FormValues tags_values AD CONIURA option_unwrap GENUS(FormValues)(tag_opt)
+  EVOCA FormValues classe_values AD CONIURA option_unwrap GENUS(FormValues)(classe_opt)
+
+  SI CONIURA fluxus_len(tags_values.items) != 3
+    REDDE 1
+  FIN SI
+  SI CONIURA compare(CONIURA join(tags_values.items, ","), "um,dois,tres") != 0
+    REDDE 1
+  FIN SI
+  SI CONIURA compare(CONIURA join(classe_values.items, ","), "A") != 0
+    REDDE 1
+  FIN SI
+
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

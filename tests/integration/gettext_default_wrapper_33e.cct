@@ -1,0 +1,29 @@
+INCIPIT grimoire "gettext_default_wrapper_33e"
+
+ADVOCARE "cct/fs.cct"
+ADVOCARE "cct/gettext.cct"
+ADVOCARE "cct/result.cct"
+ADVOCARE "cct/verbum.cct"
+
+RITUALE main() REDDE REX
+  EVOCA VERBUM dir AD "tests/.tmp/gettext_33e"
+  EVOCA VERBUM path AD "tests/.tmp/gettext_33e/default.po"
+  EVOCA VERBUM content AD "msgid \"home\"\n"
+  VINCIRE content AD CONIURA concat(content, "msgstr \"inicio\"\n")
+  VINCIRE content AD CONIURA concat(content, "\n")
+  CONIURA mkdir_all(dir)
+  CONIURA write_all(path, content)
+
+  EVOCA SPECULUM NIHIL loaded AD CONIURA gettext_load_catalog(path, "pt_BR")
+  SI CONIURA result_is_err GENUS(Catalog, VERBUM)(loaded)
+    REDDE 1
+  FIN SI
+  EVOCA Catalog cat AD CONIURA result_unwrap GENUS(Catalog, VERBUM)(loaded)
+  CONIURA gettext_set_default_catalog(cat)
+  SI CONIURA compare(CONIURA t("home"), "inicio") != 0
+    REDDE 1
+  FIN SI
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

@@ -1,0 +1,43 @@
+INCIPIT grimoire "form_decode_encode_33f"
+
+ADVOCARE "cct/form_codec.cct"
+ADVOCARE "cct/map.cct"
+ADVOCARE "cct/option.cct"
+ADVOCARE "cct/verbum.cct"
+
+RITUALE main() REDDE REX
+  EVOCA SPECULUM NIHIL decoded AD CONIURA form_decode("nome=Erick+Busato&classe=A&media=9.5")
+  EVOCA SPECULUM NIHIL nome_opt AD CONIURA form_get(decoded, "nome")
+  EVOCA SPECULUM NIHIL classe_opt AD CONIURA form_get(decoded, "classe")
+  EVOCA SPECULUM NIHIL media_opt AD CONIURA form_get(decoded, "media")
+
+  SI CONIURA option_is_none GENUS(VERBUM)(nome_opt) VEL CONIURA option_is_none GENUS(VERBUM)(classe_opt) VEL CONIURA option_is_none GENUS(VERBUM)(media_opt)
+    REDDE 1
+  FIN SI
+
+  SI CONIURA compare(CONIURA option_unwrap GENUS(VERBUM)(nome_opt), "Erick Busato") != 0
+    REDDE 1
+  FIN SI
+  SI CONIURA compare(CONIURA option_unwrap GENUS(VERBUM)(classe_opt), "A") != 0
+    REDDE 1
+  FIN SI
+  SI CONIURA compare(CONIURA option_unwrap GENUS(VERBUM)(media_opt), "9.5") != 0
+    REDDE 1
+  FIN SI
+
+  EVOCA SPECULUM NIHIL encoded_map AD CONIURA map_init GENUS(VERBUM, VERBUM)()
+  CONIURA map_insert GENUS(VERBUM, VERBUM)(encoded_map, "nome", "Erick Busato")
+  CONIURA map_insert GENUS(VERBUM, VERBUM)(encoded_map, "classe", "A")
+  EVOCA VERBUM encoded AD CONIURA form_encode(encoded_map)
+
+  SI NON CONIURA contains(encoded, "nome=Erick%20Busato")
+    REDDE 1
+  FIN SI
+  SI NON CONIURA contains(encoded, "classe=A")
+    REDDE 1
+  FIN SI
+
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire
