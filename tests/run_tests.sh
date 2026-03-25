@@ -9880,6 +9880,130 @@ else
 fi
 fi
 
+if cct_phase_block_enabled "33E"; then
+echo ""
+echo "========================================"
+echo "FASE 33E: cct/gettext"
+echo "========================================"
+mkdir -p "$CCT_TMP_DIR/phase33e"
+
+# Test 1860: basic translate
+echo "Test 1860: cct/gettext traduz mensagens basicas"
+BASE_1860="$CCT_TMP_DIR/phase33e/test_1860_gettext_basic"
+if [ "$RC_31_READY" -eq 0 ] && cct_phase32_copy_compile_and_run "$PHASE31_SELFHOST_WRAPPER" "tests/integration/gettext_basic_33e.cct" "$BASE_1860" 0; then
+    test_pass "cct/gettext traduz mensagens basicas"
+else
+    test_fail "cct/gettext regrediu traducao basica"
+fi
+
+# Test 1861: fallback
+echo "Test 1861: cct/gettext preserva fallback para chave original"
+BASE_1861="$CCT_TMP_DIR/phase33e/test_1861_gettext_fallback"
+if [ "$RC_31_READY" -eq 0 ] && cct_phase32_copy_compile_and_run "$PHASE31_SELFHOST_WRAPPER" "tests/integration/gettext_fallback_33e.cct" "$BASE_1861" 0; then
+    test_pass "cct/gettext preserva fallback para chave original"
+else
+    test_fail "cct/gettext regrediu fallback"
+fi
+
+# Test 1862: plural
+echo "Test 1862: cct/gettext traduz plurais canonicos"
+BASE_1862="$CCT_TMP_DIR/phase33e/test_1862_gettext_plural"
+if [ "$RC_31_READY" -eq 0 ] && cct_phase32_copy_compile_and_run "$PHASE31_SELFHOST_WRAPPER" "tests/integration/gettext_plural_33e.cct" "$BASE_1862" 0; then
+    test_pass "cct/gettext traduz plurais canonicos"
+else
+    test_fail "cct/gettext regrediu plural"
+fi
+
+# Test 1863: po load
+echo "Test 1863: cct/gettext carrega catalogo .po simples"
+BASE_1863="$CCT_TMP_DIR/phase33e/test_1863_gettext_po_load"
+if [ "$RC_31_READY" -eq 0 ] && cct_phase32_copy_compile_and_run "$PHASE31_SELFHOST_WRAPPER" "tests/integration/gettext_po_load_33e.cct" "$BASE_1863" 0; then
+    test_pass "cct/gettext carrega catalogo .po simples"
+else
+    test_fail "cct/gettext regrediu carga de .po simples"
+fi
+
+# Test 1864: po plural + default
+echo "Test 1864: cct/gettext carrega plural e helper default"
+BASE_1864="$CCT_TMP_DIR/phase33e/test_1864_gettext_po_plural_default"
+if [ "$RC_31_READY" -eq 0 ] && cct_phase32_copy_compile_and_run "$PHASE31_SELFHOST_WRAPPER" "tests/integration/gettext_po_plural_default_33e.cct" "$BASE_1864" 0; then
+    test_pass "cct/gettext carrega plural e helper default"
+else
+    test_fail "cct/gettext regrediu plural/default"
+fi
+
+# Test 1865: default wrapper / promoted compiler
+echo "Test 1865: ./cct promovido executa gettext source-backed"
+BASE_1865="$CCT_TMP_DIR/phase33e/test_1865_default_wrapper_gettext"
+if [ "$RC_31_READY" -eq 0 ] && make bootstrap-promote >"$PHASE31_LOG_DIR/test_1865.stdout.log" 2>"$PHASE31_LOG_DIR/test_1865.stderr.log" && cct_phase32_copy_compile_and_run "$PHASE31_DEFAULT_WRAPPER" "tests/integration/gettext_default_wrapper_33e.cct" "$BASE_1865" 0; then
+    test_pass "./cct promovido executa gettext source-backed"
+else
+    test_fail "./cct promovido nao executou gettext source-backed"
+fi
+fi
+
+if cct_phase_block_enabled "33F"; then
+echo ""
+echo "========================================"
+echo "FASE 33F: cct/form_codec"
+echo "========================================"
+mkdir -p "$CCT_TMP_DIR/phase33f"
+
+# Test 1866: percent roundtrip
+echo "Test 1866: cct/form_codec preserva percent encode/decode"
+BASE_1866="$CCT_TMP_DIR/phase33f/test_1866_percent_roundtrip"
+if [ "$RC_31_READY" -eq 0 ] && cct_phase32_copy_compile_and_run "$PHASE31_SELFHOST_WRAPPER" "tests/integration/form_percent_roundtrip_33f.cct" "$BASE_1866" 0; then
+    test_pass "cct/form_codec preserva percent encode/decode"
+else
+    test_fail "cct/form_codec regrediu percent encode/decode"
+fi
+
+# Test 1867: invalid percent
+echo "Test 1867: cct/form_codec rejeita percent invalido"
+BASE_1867="$CCT_TMP_DIR/phase33f/test_1867_percent_invalid"
+if [ "$RC_31_READY" -eq 0 ] && cct_phase32_copy_compile_and_run "$PHASE31_SELFHOST_WRAPPER" "tests/integration/form_percent_invalid_33f.cct" "$BASE_1867" 0; then
+    test_pass "cct/form_codec rejeita percent invalido"
+else
+    test_fail "cct/form_codec regrediu rejeicao de percent invalido"
+fi
+
+# Test 1868: decode/encode form
+echo "Test 1868: cct/form_codec decodifica e codifica formularios"
+BASE_1868="$CCT_TMP_DIR/phase33f/test_1868_form_decode_encode"
+if [ "$RC_31_READY" -eq 0 ] && cct_phase32_copy_compile_and_run "$PHASE31_SELFHOST_WRAPPER" "tests/integration/form_decode_encode_33f.cct" "$BASE_1868" 0; then
+    test_pass "cct/form_codec decodifica e codifica formularios"
+else
+    test_fail "cct/form_codec regrediu decode/encode de formularios"
+fi
+
+# Test 1869: multi decode
+echo "Test 1869: cct/form_codec preserva multi-valores"
+BASE_1869="$CCT_TMP_DIR/phase33f/test_1869_form_decode_multi"
+if [ "$RC_31_READY" -eq 0 ] && cct_phase32_copy_compile_and_run "$PHASE31_SELFHOST_WRAPPER" "tests/integration/form_decode_multi_33f.cct" "$BASE_1869" 0; then
+    test_pass "cct/form_codec preserva multi-valores"
+else
+    test_fail "cct/form_codec regrediu multi-valores"
+fi
+
+# Test 1870: query string
+echo "Test 1870: cct/form_codec preserva query strings"
+BASE_1870="$CCT_TMP_DIR/phase33f/test_1870_query_string"
+if [ "$RC_31_READY" -eq 0 ] && cct_phase32_copy_compile_and_run "$PHASE31_SELFHOST_WRAPPER" "tests/integration/query_string_parse_build_33f.cct" "$BASE_1870" 0; then
+    test_pass "cct/form_codec preserva query strings"
+else
+    test_fail "cct/form_codec regrediu query strings"
+fi
+
+# Test 1871: default wrapper / promoted compiler
+echo "Test 1871: ./cct promovido executa form_codec source-backed"
+BASE_1871="$CCT_TMP_DIR/phase33f/test_1871_default_wrapper_form_codec"
+if [ "$RC_31_READY" -eq 0 ] && make bootstrap-promote >"$PHASE31_LOG_DIR/test_1871.stdout.log" 2>"$PHASE31_LOG_DIR/test_1871.stderr.log" && cct_phase32_copy_compile_and_run "$PHASE31_DEFAULT_WRAPPER" "tests/integration/form_codec_default_wrapper_33f.cct" "$BASE_1871" 0; then
+    test_pass "./cct promovido executa form_codec source-backed"
+else
+    test_fail "./cct promovido nao executou form_codec source-backed"
+fi
+fi
+
 fi
 echo "Test Results:"
 echo -e "  ${GREEN}Passed:${NC} $TESTS_PASSED" >&3

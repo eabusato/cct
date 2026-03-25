@@ -111,6 +111,208 @@ static long long cct_rt_bytes_get(void *ptr, long long i)
   return (long long)b->data[(size_t)i];
 }
 
+typedef struct cct_rt_gettext_message_entry { char *key; char *value; struct cct_rt_gettext_message_entry *next; } cct_rt_gettext_message_entry_t;
+typedef struct cct_rt_gettext_plural_entry { char *singular_key; char *plural_key; char *singular_value; char *plural_value; struct cct_rt_gettext_plural_entry *next; } cct_rt_gettext_plural_entry_t;
+typedef struct cct_rt_gettext_catalog { char *locale; cct_rt_gettext_message_entry_t *messages; cct_rt_gettext_plural_entry_t *plurals; } cct_rt_gettext_catalog_t;
+static cct_rt_gettext_catalog_t *cct_rt_gettext_default_catalog = NULL;
+static char cct_rt_gettext_last_error[256] = "";
+
+static char *cct_rt_gettext_dup(const char *src) __attribute__((unused));
+static char *cct_rt_gettext_dup(const char *src)
+{
+  const char *text = src ? src : "";
+  size_t n = strlen(text);
+  char *out = (char*)malloc(n + 1);
+  if (!out) abort();
+  memcpy(out, text, n + 1);
+  return out;
+}
+
+static void cct_rt_gettext_set_error(const char *msg) __attribute__((unused));
+static void cct_rt_gettext_set_error(const char *msg)
+{
+  const char *text = (msg && *msg) ? msg : "gettext error";
+  snprintf(cct_rt_gettext_last_error, sizeof(cct_rt_gettext_last_error), "%s", text);
+}
+
+static const char *cct_rt_gettext_catalog_last_error(void) __attribute__((unused));
+static const char *cct_rt_gettext_catalog_last_error(void)
+{
+  return cct_rt_gettext_last_error[0] ? cct_rt_gettext_last_error : "gettext error";
+}
+
+static cct_rt_gettext_message_entry_t *cct_rt_gettext_find_message(cct_rt_gettext_catalog_t *cat, const char *key) __attribute__((unused));
+static cct_rt_gettext_message_entry_t *cct_rt_gettext_find_message(cct_rt_gettext_catalog_t *cat, const char *key)
+{
+  const char *needle = key ? key : "";
+  cct_rt_gettext_message_entry_t *entry = cat ? cat->messages : NULL;
+  while (entry) { if (strcmp(entry->key, needle) == 0) return entry; entry = entry->next; }
+  return NULL;
+}
+
+static cct_rt_gettext_plural_entry_t *cct_rt_gettext_find_plural(cct_rt_gettext_catalog_t *cat, const char *singular) __attribute__((unused));
+static cct_rt_gettext_plural_entry_t *cct_rt_gettext_find_plural(cct_rt_gettext_catalog_t *cat, const char *singular)
+{
+  const char *needle = singular ? singular : "";
+  cct_rt_gettext_plural_entry_t *entry = cat ? cat->plurals : NULL;
+  while (entry) { if (strcmp(entry->singular_key, needle) == 0) return entry; entry = entry->next; }
+  return NULL;
+}
+
+static long long cct_rt_gettext_catalog_new(const char *locale) __attribute__((unused));
+static long long cct_rt_gettext_catalog_new(const char *locale)
+{
+  cct_rt_gettext_catalog_t *cat = (cct_rt_gettext_catalog_t*)malloc(sizeof(cct_rt_gettext_catalog_t));
+  if (!cat) abort();
+  cat->locale = cct_rt_gettext_dup(locale);
+  cat->messages = NULL;
+  cat->plurals = NULL;
+  cct_rt_gettext_last_error[0] = '\0';
+  return (long long)(size_t)cat;
+}
+
+static long long cct_rt_gettext_catalog_add(long long handle, const char *key, const char *value) __attribute__((unused));
+static long long cct_rt_gettext_catalog_add(long long handle, const char *key, const char *value)
+{
+  cct_rt_gettext_catalog_t *cat = (cct_rt_gettext_catalog_t*)(size_t)handle;
+  if (!cat) { cct_rt_gettext_set_error("catalogo gettext invalido"); return 0LL; }
+  cct_rt_gettext_message_entry_t *entry = cct_rt_gettext_find_message(cat, key);
+  if (entry) { entry->value = cct_rt_gettext_dup(value); return 1LL; }
+  entry = (cct_rt_gettext_message_entry_t*)malloc(sizeof(cct_rt_gettext_message_entry_t));
+  if (!entry) abort();
+  entry->key = cct_rt_gettext_dup(key);
+  entry->value = cct_rt_gettext_dup(value);
+  entry->next = cat->messages;
+  cat->messages = entry;
+  return 1LL;
+}
+
+static long long cct_rt_gettext_catalog_add_plural(long long handle, const char *singular, const char *plural, const char *translated_singular, const char *translated_plural) __attribute__((unused));
+static long long cct_rt_gettext_catalog_add_plural(long long handle, const char *singular, const char *plural, const char *translated_singular, const char *translated_plural)
+{
+  cct_rt_gettext_catalog_t *cat = (cct_rt_gettext_catalog_t*)(size_t)handle;
+  if (!cat) { cct_rt_gettext_set_error("catalogo gettext invalido"); return 0LL; }
+  cct_rt_gettext_plural_entry_t *entry = cct_rt_gettext_find_plural(cat, singular);
+  if (!entry) { entry = (cct_rt_gettext_plural_entry_t*)malloc(sizeof(cct_rt_gettext_plural_entry_t)); if (!entry) abort(); entry->next = cat->plurals; cat->plurals = entry; }
+  entry->singular_key = cct_rt_gettext_dup(singular);
+  entry->plural_key = cct_rt_gettext_dup(plural);
+  entry->singular_value = cct_rt_gettext_dup(translated_singular);
+  entry->plural_value = cct_rt_gettext_dup(translated_plural);
+  cct_rt_gettext_catalog_add(handle, singular, translated_singular);
+  cct_rt_gettext_catalog_add(handle, plural, translated_plural);
+  return 1LL;
+}
+
+static const char *cct_rt_gettext_translate(long long handle, const char *key) __attribute__((unused));
+static const char *cct_rt_gettext_translate(long long handle, const char *key)
+{
+  cct_rt_gettext_catalog_t *cat = (cct_rt_gettext_catalog_t*)(size_t)handle;
+  const char *needle = key ? key : "";
+  if (!cat) return needle;
+  cct_rt_gettext_message_entry_t *entry = cct_rt_gettext_find_message(cat, needle);
+  return (entry && entry->value) ? entry->value : needle;
+}
+
+static const char *cct_rt_gettext_translate_plural(long long handle, const char *singular, const char *plural, long long n) __attribute__((unused));
+static const char *cct_rt_gettext_translate_plural(long long handle, const char *singular, const char *plural, long long n)
+{
+  cct_rt_gettext_catalog_t *cat = (cct_rt_gettext_catalog_t*)(size_t)handle;
+  if (cat) { cct_rt_gettext_plural_entry_t *entry = cct_rt_gettext_find_plural(cat, singular); if (entry) return (n == 1LL) ? entry->singular_value : entry->plural_value; }
+  return (n == 1LL) ? cct_rt_gettext_translate(handle, singular) : cct_rt_gettext_translate(handle, plural);
+}
+
+static const char *cct_rt_gettext_skip_ws(const char *s) __attribute__((unused));
+static const char *cct_rt_gettext_skip_ws(const char *s)
+{
+  while (*s == ' ' || *s == '\t') s++;
+  return s;
+}
+
+static int cct_rt_gettext_starts_with(const char *s, const char *prefix) __attribute__((unused));
+static int cct_rt_gettext_starts_with(const char *s, const char *prefix)
+{
+  size_t n = strlen(prefix);
+  return strncmp(s, prefix, n) == 0;
+}
+
+static char *cct_rt_gettext_append(char *base, const char *suffix) __attribute__((unused));
+static char *cct_rt_gettext_append(char *base, const char *suffix)
+{
+  const char *left = base ? base : "";
+  const char *right = suffix ? suffix : "";
+  size_t a = strlen(left);
+  size_t b = strlen(right);
+  char *out = (char*)malloc(a + b + 1);
+  if (!out) abort();
+  memcpy(out, left, a);
+  memcpy(out + a, right, b + 1);
+  return out;
+}
+
+static char *cct_rt_gettext_extract_quoted(const char *line) __attribute__((unused));
+static char *cct_rt_gettext_extract_quoted(const char *line)
+{
+  const char *start = strchr(line, '"');
+  if (!start) return cct_rt_gettext_dup("");
+  start += 1;
+  char *out = (char*)malloc(strlen(start) + 1);
+  size_t out_len = 0;
+  if (!out) abort();
+  while (*start && *start != '"') { if (*start == '\\' && start[1]) { char esc = start[1]; if (esc == 'n') out[out_len++] = '\n'; else if (esc == 't') out[out_len++] = '\t'; else out[out_len++] = esc; start += 2; } else { out[out_len++] = *start; start += 1; } }
+  out[out_len] = '\0';
+  return out;
+}
+
+static void cct_rt_gettext_commit_entry(cct_rt_gettext_catalog_t *cat, const char *msgid, const char *msgid_plural, const char *msgstr0, const char *msgstr1) __attribute__((unused));
+static void cct_rt_gettext_commit_entry(cct_rt_gettext_catalog_t *cat, const char *msgid, const char *msgid_plural, const char *msgstr0, const char *msgstr1)
+{
+  if (!cat || !msgid || !*msgid) return;
+  if (msgid_plural && *msgid_plural) { cct_rt_gettext_catalog_add_plural((long long)(size_t)cat, msgid, msgid_plural, (msgstr0 && *msgstr0) ? msgstr0 : msgid, (msgstr1 && *msgstr1) ? msgstr1 : msgid_plural); return; }
+  if (msgstr0 && *msgstr0) cct_rt_gettext_catalog_add((long long)(size_t)cat, msgid, msgstr0);
+}
+
+static long long cct_rt_gettext_catalog_load(const char *path, const char *locale) __attribute__((unused));
+static long long cct_rt_gettext_catalog_load(const char *path, const char *locale)
+{
+  FILE *fp = fopen(path ? path : "", "rb");
+  if (!fp) { cct_rt_gettext_set_error("catalogo inexistente"); return 0LL; }
+  cct_rt_gettext_catalog_t *cat = (cct_rt_gettext_catalog_t*)(size_t)cct_rt_gettext_catalog_new(locale);
+  char line[4096];
+  char *msgid = cct_rt_gettext_dup("");
+  char *msgid_plural = cct_rt_gettext_dup("");
+  char *msgstr0 = cct_rt_gettext_dup("");
+  char *msgstr1 = cct_rt_gettext_dup("");
+  int mode = 0;
+  while (fgets(line, sizeof(line), fp)) { size_t len = strlen(line); while (len > 0 && (line[len - 1] == '\n' || line[len - 1] == '\r')) line[--len] = '\0'; const char *trimmed = cct_rt_gettext_skip_ws(line); if (*trimmed == '\0') { cct_rt_gettext_commit_entry(cat, msgid, msgid_plural, msgstr0, msgstr1); msgid = cct_rt_gettext_dup(""); msgid_plural = cct_rt_gettext_dup(""); msgstr0 = cct_rt_gettext_dup(""); msgstr1 = cct_rt_gettext_dup(""); mode = 0; continue; } if (*trimmed == '#') continue; if (cct_rt_gettext_starts_with(trimmed, "msgid_plural ")) { msgid_plural = cct_rt_gettext_extract_quoted(trimmed); mode = 2; continue; } if (cct_rt_gettext_starts_with(trimmed, "msgid ")) { cct_rt_gettext_commit_entry(cat, msgid, msgid_plural, msgstr0, msgstr1); msgid = cct_rt_gettext_extract_quoted(trimmed); msgid_plural = cct_rt_gettext_dup(""); msgstr0 = cct_rt_gettext_dup(""); msgstr1 = cct_rt_gettext_dup(""); mode = 1; continue; } if (cct_rt_gettext_starts_with(trimmed, "msgstr[0] ")) { msgstr0 = cct_rt_gettext_extract_quoted(trimmed); mode = 3; continue; } if (cct_rt_gettext_starts_with(trimmed, "msgstr[1] ")) { msgstr1 = cct_rt_gettext_extract_quoted(trimmed); mode = 4; continue; } if (cct_rt_gettext_starts_with(trimmed, "msgstr ")) { msgstr0 = cct_rt_gettext_extract_quoted(trimmed); mode = 3; continue; } if (*trimmed == '"') { char *cont = cct_rt_gettext_extract_quoted(trimmed); if (mode == 1) msgid = cct_rt_gettext_append(msgid, cont); else if (mode == 2) msgid_plural = cct_rt_gettext_append(msgid_plural, cont); else if (mode == 3) msgstr0 = cct_rt_gettext_append(msgstr0, cont); else if (mode == 4) msgstr1 = cct_rt_gettext_append(msgstr1, cont); } }
+  fclose(fp);
+  cct_rt_gettext_commit_entry(cat, msgid, msgid_plural, msgstr0, msgstr1);
+  cct_rt_gettext_last_error[0] = '\0';
+  return (long long)(size_t)cat;
+}
+
+static long long cct_rt_gettext_default_set(long long handle) __attribute__((unused));
+static long long cct_rt_gettext_default_set(long long handle)
+{
+  cct_rt_gettext_default_catalog = (cct_rt_gettext_catalog_t*)(size_t)handle;
+  return 1LL;
+}
+
+static const char *cct_rt_gettext_default_translate(const char *key) __attribute__((unused));
+static const char *cct_rt_gettext_default_translate(const char *key)
+{
+  return cct_rt_gettext_translate((long long)(size_t)cct_rt_gettext_default_catalog, key);
+}
+
+static long long cct_rt_gettext_builtin_catalog_new(const char *locale) { return cct_rt_gettext_catalog_new(locale); }
+static long long cct_rt_gettext_builtin_catalog_add(long long handle, const char *key, const char *value) { return cct_rt_gettext_catalog_add(handle, key, value); }
+static long long cct_rt_gettext_builtin_catalog_add_plural(long long handle, const char *singular, const char *plural, const char *translated_singular, const char *translated_plural) { return cct_rt_gettext_catalog_add_plural(handle, singular, plural, translated_singular, translated_plural); }
+static long long cct_rt_gettext_builtin_catalog_load(const char *path, const char *locale) { return cct_rt_gettext_catalog_load(path, locale); }
+static const char *cct_rt_gettext_builtin_catalog_last_error(void) { return cct_rt_gettext_catalog_last_error(); }
+static const char *cct_rt_gettext_builtin_translate(long long handle, const char *key) { return cct_rt_gettext_translate(handle, key); }
+static const char *cct_rt_gettext_builtin_translate_plural(long long handle, const char *singular, const char *plural, long long n) { return cct_rt_gettext_translate_plural(handle, singular, plural, n); }
+static long long cct_rt_gettext_builtin_default_set(long long handle) { return cct_rt_gettext_default_set(handle); }
+static const char *cct_rt_gettext_builtin_default_translate(const char *key) { return cct_rt_gettext_default_translate(key); }
+
 static char cct_boot_str_0[] = "EOF";
 static char cct_boot_str_1[] = "INVALID";
 static char cct_boot_str_2[] = "IDENTIFIER";
@@ -576,92 +778,104 @@ static char cct_boot_str_461[] = "set_difference";
 static char cct_boot_str_462[] = "set_symmetric_difference";
 static char cct_boot_str_463[] = "set_is_subset";
 static char cct_boot_str_464[] = "set_equals";
-static char cct_boot_str_465[] = "scribe";
-static char cct_boot_str_466[] = "MOLDE: especificador de formato invalido: ";
-static char cct_boot_str_467[] = "MOLDE: especificador '";
-static char cct_boot_str_468[] = "' requer tipo inteiro";
-static char cct_boot_str_469[] = "' requer tipo real";
-static char cct_boot_str_470[] = "MOLDE: especificador 's' requer tipo VERBUM";
-static char cct_boot_str_471[] = "MOLDE: alinhamento requer tipo VERBUM";
-static char cct_boot_str_472[] = "OBSECRO target must be builtin identifier";
-static char cct_boot_str_473[] = "OBSECRO scribe requires at least one argument in bootstrap subset";
-static char cct_boot_str_474[] = "OBSECRO scribe supports VERBUM, FRACTUM, integer, real, and VERUM arguments in bootstrap subset";
-static char cct_boot_str_475[] = "OBSECRO pete expects one size argument";
-static char cct_boot_str_476[] = "OBSECRO pete expects integer size argument";
-static char cct_boot_str_477[] = "OBSECRO libera expects one pointer argument";
-static char cct_boot_str_478[] = "OBSECRO libera expects pointer/VERBUM/FRACTUM argument";
-static char cct_boot_str_479[] = "OBSECRO verbum_char_at expects VERBUM and integer index";
-static char cct_boot_str_480[] = "OBSECRO verbum_char_at expects first argument as VERBUM";
-static char cct_boot_str_481[] = "OBSECRO verbum_char_at expects integer index";
-static char cct_boot_str_482[] = "unsupported OBSECRO builtin in bootstrap subset";
-static char cct_boot_str_483[] = "OBSECRO builtin arity mismatch";
-static char cct_boot_str_484[] = "OBSECRO option_some expects pointer value argument";
-static char cct_boot_str_485[] = "OBSECRO option_some expects integer type size argument";
-static char cct_boot_str_486[] = "OBSECRO bytes_get expects bytes pointer as first argument";
-static char cct_boot_str_487[] = "OBSECRO bytes_get expects integer index as second argument";
-static char cct_boot_str_488[] = "OBSECRO option_none expects integer type size argument";
-static char cct_boot_str_489[] = "OBSECRO builtin expects pointer argument";
-static char cct_boot_str_490[] = "OBSECRO builtin expects pointer value as first argument";
-static char cct_boot_str_491[] = "OBSECRO builtin expects VERBUM message as second argument";
-static char cct_boot_str_492[] = "OBSECRO result builtin expects pointer payload as first argument";
-static char cct_boot_str_493[] = "OBSECRO result builtin expects integer type sizes";
-static char cct_boot_str_494[] = "OBSECRO map_init expects integer key/value size arguments";
-static char cct_boot_str_495[] = "OBSECRO map builtin expects pointer argument";
-static char cct_boot_str_496[] = "OBSECRO map builtin expects pointer container argument";
-static char cct_boot_str_497[] = "OBSECRO map builtin expects pointer payload argument";
-static char cct_boot_str_498[] = "OBSECRO map_insert expects pointer value argument";
-static char cct_boot_str_499[] = "OBSECRO map_reserve expects integer size argument";
-static char cct_boot_str_500[] = "OBSECRO map builtin expects integer element-size argument";
-static char cct_boot_str_501[] = "OBSECRO set_init expects integer size argument";
-static char cct_boot_str_502[] = "OBSECRO set builtin expects pointer argument";
-static char cct_boot_str_503[] = "OBSECRO set builtin expects pointer payload argument";
-static char cct_boot_str_504[] = "OBSECRO set builtin expects integer size argument";
-static char cct_boot_str_505[] = "OBSECRO set builtin expects pointer set argument";
-static char cct_boot_str_506[] = "OBSECRO set builtin expects integer item-size argument";
-static char cct_boot_str_507[] = "OBSECRO fs builtin expects VERBUM arguments in bootstrap subset";
-static char cct_boot_str_508[] = "FORMA interpolation type outside bootstrap subset";
-static char cct_boot_str_509[] = "unary operator requires numeric operand";
-static char cct_boot_str_510[] = "logical NON requires VERUM operand";
-static char cct_boot_str_511[] = "unsupported unary operator";
-static char cct_boot_str_512[] = "binary operator requires numeric operands";
-static char cct_boot_str_513[] = "comparison requires compatible operands";
-static char cct_boot_str_514[] = "logical operator requires VERUM operands";
-static char cct_boot_str_515[] = "unsupported binary operator";
-static char cct_boot_str_516[] = "assignment type mismatch";
-static char cct_boot_str_517[] = "unsupported expression node";
-static char cct_boot_str_518[] = "REDDE outside rituale context";
-static char cct_boot_str_519[] = "current semantic context is not rituale";
-static char cct_boot_str_520[] = " condition must be VERUM";
-static char cct_boot_str_521[] = "expected AST_BLOCK during semantic analysis";
-static char cct_boot_str_522[] = "initializer type mismatch";
-static char cct_boot_str_523[] = "REDDE requires value for non-NIHIL rituale";
-static char cct_boot_str_524[] = "return type mismatch";
-static char cct_boot_str_525[] = "ANUR argument must be integer";
-static char cct_boot_str_526[] = "IACE requires FRACTUM/VERBUM value";
-static char cct_boot_str_527[] = "DIMITTE requires pointer/VERBUM lvalue";
-static char cct_boot_str_528[] = "FRANGE outside loop context";
-static char cct_boot_str_529[] = "RECEDE outside loop context";
-static char cct_boot_str_530[] = "REPETE start value must be integer";
-static char cct_boot_str_531[] = "REPETE end value must be integer";
-static char cct_boot_str_532[] = "REPETE GRADUS value must be integer";
-static char cct_boot_str_533[] = "ITERUM requires FLUXUS or SERIES (and now map/set)";
-static char cct_boot_str_534[] = "ITERUM sobre map requer 2 variaveis (chave, valor)";
-static char cct_boot_str_535[] = "ITERUM sobre set requer 1 variavel (elemento)";
-static char cct_boot_str_536[] = "ITERUM sobre FLUXUS/SERIES requer 1 variavel";
-static char cct_boot_str_537[] = "ITERUM com 2 variaveis so e suportado para map";
-static char cct_boot_str_538[] = "ELIGE OR-cases with payload bindings are unsupported";
-static char cct_boot_str_539[] = "ELIGE bindings require ORDO variant identifier";
-static char cct_boot_str_540[] = "ELIGE bindings require ORDO subject";
-static char cct_boot_str_541[] = "ELIGE payload variant has no payload; remove bindings";
-static char cct_boot_str_542[] = "ELIGE payload binding arity mismatch";
-static char cct_boot_str_543[] = "ELIGE references unknown ORDO variant";
-static char cct_boot_str_544[] = "ELIGE case requires compatible literal";
-static char cct_boot_str_545[] = "unsupported statement node";
-static char cct_boot_str_546[] = "rituale symbol is missing declaration node";
-static char cct_boot_str_547[] = "Uso: cct_semantic_bootstrap <arquivo.cct>";
-static char cct_boot_str_548[] = "ERR ";
-static char cct_boot_str_549[] = " ";
-static char cct_boot_str_550[] = "OK\n";
+static char cct_boot_str_465[] = "gettext_builtin_catalog_new";
+static char cct_boot_str_466[] = "gettext_builtin_default_set";
+static char cct_boot_str_467[] = "gettext_builtin_default_translate";
+static char cct_boot_str_468[] = "gettext_builtin_catalog_last_error";
+static char cct_boot_str_469[] = "gettext_builtin_catalog_load";
+static char cct_boot_str_470[] = "gettext_builtin_translate";
+static char cct_boot_str_471[] = "gettext_builtin_catalog_add";
+static char cct_boot_str_472[] = "gettext_builtin_translate_plural";
+static char cct_boot_str_473[] = "gettext_builtin_catalog_add_plural";
+static char cct_boot_str_474[] = "scribe";
+static char cct_boot_str_475[] = "MOLDE: especificador de formato invalido: ";
+static char cct_boot_str_476[] = "MOLDE: especificador '";
+static char cct_boot_str_477[] = "' requer tipo inteiro";
+static char cct_boot_str_478[] = "' requer tipo real";
+static char cct_boot_str_479[] = "MOLDE: especificador 's' requer tipo VERBUM";
+static char cct_boot_str_480[] = "MOLDE: alinhamento requer tipo VERBUM";
+static char cct_boot_str_481[] = "OBSECRO target must be builtin identifier";
+static char cct_boot_str_482[] = "OBSECRO scribe requires at least one argument in bootstrap subset";
+static char cct_boot_str_483[] = "OBSECRO scribe supports VERBUM, FRACTUM, integer, real, and VERUM arguments in bootstrap subset";
+static char cct_boot_str_484[] = "OBSECRO pete expects one size argument";
+static char cct_boot_str_485[] = "OBSECRO pete expects integer size argument";
+static char cct_boot_str_486[] = "OBSECRO libera expects one pointer argument";
+static char cct_boot_str_487[] = "OBSECRO libera expects pointer/VERBUM/FRACTUM argument";
+static char cct_boot_str_488[] = "OBSECRO verbum_char_at expects VERBUM and integer index";
+static char cct_boot_str_489[] = "OBSECRO verbum_char_at expects first argument as VERBUM";
+static char cct_boot_str_490[] = "OBSECRO verbum_char_at expects integer index";
+static char cct_boot_str_491[] = "unsupported OBSECRO builtin in bootstrap subset";
+static char cct_boot_str_492[] = "OBSECRO builtin arity mismatch";
+static char cct_boot_str_493[] = "OBSECRO option_some expects pointer value argument";
+static char cct_boot_str_494[] = "OBSECRO option_some expects integer type size argument";
+static char cct_boot_str_495[] = "OBSECRO bytes_get expects bytes pointer as first argument";
+static char cct_boot_str_496[] = "OBSECRO bytes_get expects integer index as second argument";
+static char cct_boot_str_497[] = "OBSECRO option_none expects integer type size argument";
+static char cct_boot_str_498[] = "OBSECRO gettext builtin expects VERBUM nesse argumento";
+static char cct_boot_str_499[] = "OBSECRO gettext builtin expects handle inteiro como primeiro argumento";
+static char cct_boot_str_500[] = "OBSECRO gettext_builtin_translate_plural expects integer count";
+static char cct_boot_str_501[] = "OBSECRO builtin expects pointer argument";
+static char cct_boot_str_502[] = "OBSECRO builtin expects pointer value as first argument";
+static char cct_boot_str_503[] = "OBSECRO builtin expects VERBUM message as second argument";
+static char cct_boot_str_504[] = "OBSECRO result builtin expects pointer payload as first argument";
+static char cct_boot_str_505[] = "OBSECRO result builtin expects integer type sizes";
+static char cct_boot_str_506[] = "OBSECRO map_init expects integer key/value size arguments";
+static char cct_boot_str_507[] = "OBSECRO map builtin expects pointer argument";
+static char cct_boot_str_508[] = "OBSECRO map builtin expects pointer container argument";
+static char cct_boot_str_509[] = "OBSECRO map builtin expects pointer payload argument";
+static char cct_boot_str_510[] = "OBSECRO map_insert expects pointer value argument";
+static char cct_boot_str_511[] = "OBSECRO map_reserve expects integer size argument";
+static char cct_boot_str_512[] = "OBSECRO map builtin expects integer element-size argument";
+static char cct_boot_str_513[] = "OBSECRO set_init expects integer size argument";
+static char cct_boot_str_514[] = "OBSECRO set builtin expects pointer argument";
+static char cct_boot_str_515[] = "OBSECRO set builtin expects pointer payload argument";
+static char cct_boot_str_516[] = "OBSECRO set builtin expects integer size argument";
+static char cct_boot_str_517[] = "OBSECRO set builtin expects pointer set argument";
+static char cct_boot_str_518[] = "OBSECRO set builtin expects integer item-size argument";
+static char cct_boot_str_519[] = "OBSECRO fs builtin expects VERBUM arguments in bootstrap subset";
+static char cct_boot_str_520[] = "FORMA interpolation type outside bootstrap subset";
+static char cct_boot_str_521[] = "unary operator requires numeric operand";
+static char cct_boot_str_522[] = "logical NON requires VERUM operand";
+static char cct_boot_str_523[] = "unsupported unary operator";
+static char cct_boot_str_524[] = "binary operator requires numeric operands";
+static char cct_boot_str_525[] = "comparison requires compatible operands";
+static char cct_boot_str_526[] = "logical operator requires VERUM operands";
+static char cct_boot_str_527[] = "unsupported binary operator";
+static char cct_boot_str_528[] = "assignment type mismatch";
+static char cct_boot_str_529[] = "unsupported expression node";
+static char cct_boot_str_530[] = "REDDE outside rituale context";
+static char cct_boot_str_531[] = "current semantic context is not rituale";
+static char cct_boot_str_532[] = " condition must be VERUM";
+static char cct_boot_str_533[] = "expected AST_BLOCK during semantic analysis";
+static char cct_boot_str_534[] = "initializer type mismatch";
+static char cct_boot_str_535[] = "REDDE requires value for non-NIHIL rituale";
+static char cct_boot_str_536[] = "return type mismatch";
+static char cct_boot_str_537[] = "ANUR argument must be integer";
+static char cct_boot_str_538[] = "IACE requires FRACTUM/VERBUM value";
+static char cct_boot_str_539[] = "DIMITTE requires pointer/VERBUM lvalue";
+static char cct_boot_str_540[] = "FRANGE outside loop context";
+static char cct_boot_str_541[] = "RECEDE outside loop context";
+static char cct_boot_str_542[] = "REPETE start value must be integer";
+static char cct_boot_str_543[] = "REPETE end value must be integer";
+static char cct_boot_str_544[] = "REPETE GRADUS value must be integer";
+static char cct_boot_str_545[] = "ITERUM requires FLUXUS or SERIES (and now map/set)";
+static char cct_boot_str_546[] = "ITERUM sobre map requer 2 variaveis (chave, valor)";
+static char cct_boot_str_547[] = "ITERUM sobre set requer 1 variavel (elemento)";
+static char cct_boot_str_548[] = "ITERUM sobre FLUXUS/SERIES requer 1 variavel";
+static char cct_boot_str_549[] = "ITERUM com 2 variaveis so e suportado para map";
+static char cct_boot_str_550[] = "ELIGE OR-cases with payload bindings are unsupported";
+static char cct_boot_str_551[] = "ELIGE bindings require ORDO variant identifier";
+static char cct_boot_str_552[] = "ELIGE bindings require ORDO subject";
+static char cct_boot_str_553[] = "ELIGE payload variant has no payload; remove bindings";
+static char cct_boot_str_554[] = "ELIGE payload binding arity mismatch";
+static char cct_boot_str_555[] = "ELIGE references unknown ORDO variant";
+static char cct_boot_str_556[] = "ELIGE case requires compatible literal";
+static char cct_boot_str_557[] = "unsupported statement node";
+static char cct_boot_str_558[] = "rituale symbol is missing declaration node";
+static char cct_boot_str_559[] = "Uso: cct_semantic_bootstrap <arquivo.cct>";
+static char cct_boot_str_560[] = "ERR ";
+static char cct_boot_str_561[] = " ";
+static char cct_boot_str_562[] = "OK\n";
 
 typedef struct cct_boot_sig_SourceLocation cct_boot_sig_SourceLocation;
 typedef struct cct_boot_sig_AstNode cct_boot_sig_AstNode;
@@ -8472,12 +8686,36 @@ long long cct_boot_rit_semantic_obsecro_expected_arity_494(char* builtin_name)
   {
     return 3;
   }
+  if (((cct_boot_rit_compare_38(builtin_name, cct_boot_str_465) == 0) || (cct_boot_rit_compare_38(builtin_name, cct_boot_str_466) == 0)) || (cct_boot_rit_compare_38(builtin_name, cct_boot_str_467) == 0))
+  {
+    return 1;
+  }
+  if (cct_boot_rit_compare_38(builtin_name, cct_boot_str_468) == 0)
+  {
+    return 0;
+  }
+  if ((cct_boot_rit_compare_38(builtin_name, cct_boot_str_469) == 0) || (cct_boot_rit_compare_38(builtin_name, cct_boot_str_470) == 0))
+  {
+    return 2;
+  }
+  if (cct_boot_rit_compare_38(builtin_name, cct_boot_str_471) == 0)
+  {
+    return 3;
+  }
+  if (cct_boot_rit_compare_38(builtin_name, cct_boot_str_472) == 0)
+  {
+    return 4;
+  }
+  if (cct_boot_rit_compare_38(builtin_name, cct_boot_str_473) == 0)
+  {
+    return 5;
+  }
   return (-1);
 }
 
 long long cct_boot_rit_semantic_obsecro_return_type_id_495(cct_boot_sig_SemanticContext* ctx, char* builtin_name)
 {
-  if (cct_boot_rit_compare_38(builtin_name, cct_boot_str_465) == 0)
+  if (cct_boot_rit_compare_38(builtin_name, cct_boot_str_474) == 0)
   {
     return (*ctx).type_nihil;
   }
@@ -8576,6 +8814,18 @@ long long cct_boot_rit_semantic_obsecro_return_type_id_495(cct_boot_sig_Semantic
   if (((cct_boot_rit_compare_38(builtin_name, cct_boot_str_448) == 0) || (cct_boot_rit_compare_38(builtin_name, cct_boot_str_451) == 0)) || (cct_boot_rit_compare_38(builtin_name, cct_boot_str_458) == 0))
   {
     return (*ctx).type_nihil;
+  }
+  if ((cct_boot_rit_compare_38(builtin_name, cct_boot_str_465) == 0) || (cct_boot_rit_compare_38(builtin_name, cct_boot_str_469) == 0))
+  {
+    return (*ctx).type_rex;
+  }
+  if (((cct_boot_rit_compare_38(builtin_name, cct_boot_str_471) == 0) || (cct_boot_rit_compare_38(builtin_name, cct_boot_str_473) == 0)) || (cct_boot_rit_compare_38(builtin_name, cct_boot_str_466) == 0))
+  {
+    return (*ctx).type_verum;
+  }
+  if ((((cct_boot_rit_compare_38(builtin_name, cct_boot_str_468) == 0) || (cct_boot_rit_compare_38(builtin_name, cct_boot_str_470) == 0)) || (cct_boot_rit_compare_38(builtin_name, cct_boot_str_472) == 0)) || (cct_boot_rit_compare_38(builtin_name, cct_boot_str_467) == 0))
+  {
+    return (*ctx).type_verbum;
   }
   return (*ctx).type_error;
 }
@@ -8775,27 +9025,27 @@ void cct_boot_rit_semantic_validate_molde_fmt_spec_500(cct_boot_sig_SemanticCont
   long long fmt_kind = cct_boot_rit_semantic_classify_molde_fmt_spec_499((*part).fmt_spec);
   if (fmt_kind == 0)
   {
-    cct_boot_rit_semantic_report_error_436(ctx, (*part).line, (*part).column, cct_boot_rit_concat_37(cct_boot_str_466, (*part).fmt_spec));
+    cct_boot_rit_semantic_report_error_436(ctx, (*part).line, (*part).column, cct_boot_rit_concat_37(cct_boot_str_475, (*part).fmt_spec));
     return;
   }
   if ((fmt_kind == 1) && (!cct_boot_rit_semantic_type_is_integer_422(ctx, part_type_id)))
   {
-    cct_boot_rit_semantic_report_error_436(ctx, (*part).line, (*part).column, cct_boot_rit_concat_37(cct_boot_str_467, cct_boot_rit_concat_37((*part).fmt_spec, cct_boot_str_468)));
+    cct_boot_rit_semantic_report_error_436(ctx, (*part).line, (*part).column, cct_boot_rit_concat_37(cct_boot_str_476, cct_boot_rit_concat_37((*part).fmt_spec, cct_boot_str_477)));
     return;
   }
   if ((fmt_kind == 2) && (!cct_boot_rit_semantic_type_is_real_423(ctx, part_type_id)))
   {
-    cct_boot_rit_semantic_report_error_436(ctx, (*part).line, (*part).column, cct_boot_rit_concat_37(cct_boot_str_467, cct_boot_rit_concat_37((*part).fmt_spec, cct_boot_str_469)));
+    cct_boot_rit_semantic_report_error_436(ctx, (*part).line, (*part).column, cct_boot_rit_concat_37(cct_boot_str_476, cct_boot_rit_concat_37((*part).fmt_spec, cct_boot_str_478)));
     return;
   }
   if ((fmt_kind == 3) && (part_type_id != (*ctx).type_verbum))
   {
-    cct_boot_rit_semantic_report_error_436(ctx, (*part).line, (*part).column, cct_boot_str_470);
+    cct_boot_rit_semantic_report_error_436(ctx, (*part).line, (*part).column, cct_boot_str_479);
     return;
   }
   if ((fmt_kind == 4) && (part_type_id != (*ctx).type_verbum))
   {
-    cct_boot_rit_semantic_report_error_436(ctx, (*part).line, (*part).column, cct_boot_str_471);
+    cct_boot_rit_semantic_report_error_436(ctx, (*part).line, (*part).column, cct_boot_str_480);
   }
   return;
 }
@@ -8804,16 +9054,16 @@ long long cct_boot_rit_semantic_analyze_obsecro_call_501(cct_boot_sig_SemanticCo
 {
   if ((*(*expr).callee).kind != cct_boot_ord_AstKind__AST_IDENTIFIER)
   {
-    cct_boot_rit_semantic_report_error_436(ctx, (*expr).line, (*expr).column, cct_boot_str_472);
+    cct_boot_rit_semantic_report_error_436(ctx, (*expr).line, (*expr).column, cct_boot_str_481);
     return (*ctx).type_error;
   }
   char* builtin_name = (*(*expr).callee).name;
-  if (cct_boot_rit_compare_38(builtin_name, cct_boot_str_465) == 0)
+  if (cct_boot_rit_compare_38(builtin_name, cct_boot_str_474) == 0)
   {
     long long actual_scribe = cct_boot_rit_ast_node_list_len_216((*expr).arguments);
     if (actual_scribe < 1)
     {
-      cct_boot_rit_semantic_report_error_436(ctx, (*expr).line, (*expr).column, cct_boot_str_473);
+      cct_boot_rit_semantic_report_error_436(ctx, (*expr).line, (*expr).column, cct_boot_str_482);
       return (*ctx).type_error;
     }
     long long si = 0;
@@ -8828,7 +9078,7 @@ long long cct_boot_rit_semantic_analyze_obsecro_call_501(cct_boot_sig_SemanticCo
         }
         if ((((((!cct_boot_rit_semantic_type_is_integer_422(ctx, arg_type_id)) && (!cct_boot_rit_semantic_type_is_real_423(ctx, arg_type_id))) && (!cct_boot_rit_semantic_type_is_simple_ordo_498(ctx, arg_type_id))) && (arg_type_id != (*ctx).type_verum)) && (arg_type_id != (*ctx).type_verbum)) && (arg_type_id != (*ctx).type_fractum))
         {
-          cct_boot_rit_semantic_report_error_436(ctx, (*arg).line, (*arg).column, cct_boot_str_474);
+          cct_boot_rit_semantic_report_error_436(ctx, (*arg).line, (*arg).column, cct_boot_str_483);
           return (*ctx).type_error;
         }
         si = (si + 1);
@@ -8844,14 +9094,14 @@ long long cct_boot_rit_semantic_analyze_obsecro_call_501(cct_boot_sig_SemanticCo
   {
     if (cct_boot_rit_ast_node_list_len_216((*expr).arguments) != 1)
     {
-      cct_boot_rit_semantic_report_error_436(ctx, (*expr).line, (*expr).column, cct_boot_str_475);
+      cct_boot_rit_semantic_report_error_436(ctx, (*expr).line, (*expr).column, cct_boot_str_484);
       return (*ctx).type_error;
     }
     cct_boot_sig_AstNode* size_arg = cct_boot_rit_ast_node_list_get_217((*expr).arguments, 0);
     long long size_type_id = cct_boot_rit_semantic_analyze_expr_503(ctx, size_arg);
     if (!cct_boot_rit_semantic_type_is_integer_422(ctx, size_type_id))
     {
-      cct_boot_rit_semantic_report_error_436(ctx, (*size_arg).line, (*size_arg).column, cct_boot_str_476);
+      cct_boot_rit_semantic_report_error_436(ctx, (*size_arg).line, (*size_arg).column, cct_boot_str_485);
       return (*ctx).type_error;
     }
     return cct_boot_rit_semantic_type_make_pointer_427(ctx, (*ctx).type_nihil);
@@ -8860,7 +9110,7 @@ long long cct_boot_rit_semantic_analyze_obsecro_call_501(cct_boot_sig_SemanticCo
   {
     if (cct_boot_rit_ast_node_list_len_216((*expr).arguments) != 1)
     {
-      cct_boot_rit_semantic_report_error_436(ctx, (*expr).line, (*expr).column, cct_boot_str_477);
+      cct_boot_rit_semantic_report_error_436(ctx, (*expr).line, (*expr).column, cct_boot_str_486);
       return (*ctx).type_error;
     }
     cct_boot_sig_AstNode* ptr_arg = cct_boot_rit_ast_node_list_get_217((*expr).arguments, 0);
@@ -8868,7 +9118,7 @@ long long cct_boot_rit_semantic_analyze_obsecro_call_501(cct_boot_sig_SemanticCo
     cct_boot_sig_SemanticType* ptr_type = cct_boot_rit_semantic_type_at_416(ctx, ptr_type_id);
     if ((((*ptr_type).kind != cct_boot_ord_SemanticTypeKind__SEM_TYPE_POINTER) && (ptr_type_id != (*ctx).type_verbum)) && (ptr_type_id != (*ctx).type_fractum))
     {
-      cct_boot_rit_semantic_report_error_436(ctx, (*ptr_arg).line, (*ptr_arg).column, cct_boot_str_478);
+      cct_boot_rit_semantic_report_error_436(ctx, (*ptr_arg).line, (*ptr_arg).column, cct_boot_str_487);
       return (*ctx).type_error;
     }
     return (*ctx).type_nihil;
@@ -8877,7 +9127,7 @@ long long cct_boot_rit_semantic_analyze_obsecro_call_501(cct_boot_sig_SemanticCo
   {
     if (cct_boot_rit_ast_node_list_len_216((*expr).arguments) != 2)
     {
-      cct_boot_rit_semantic_report_error_436(ctx, (*expr).line, (*expr).column, cct_boot_str_479);
+      cct_boot_rit_semantic_report_error_436(ctx, (*expr).line, (*expr).column, cct_boot_str_488);
       return (*ctx).type_error;
     }
     cct_boot_sig_AstNode* text_arg = cct_boot_rit_ast_node_list_get_217((*expr).arguments, 0);
@@ -8886,12 +9136,12 @@ long long cct_boot_rit_semantic_analyze_obsecro_call_501(cct_boot_sig_SemanticCo
     long long index_type_id = cct_boot_rit_semantic_analyze_expr_503(ctx, index_arg);
     if (text_type_id != (*ctx).type_verbum)
     {
-      cct_boot_rit_semantic_report_error_436(ctx, (*text_arg).line, (*text_arg).column, cct_boot_str_480);
+      cct_boot_rit_semantic_report_error_436(ctx, (*text_arg).line, (*text_arg).column, cct_boot_str_489);
       return (*ctx).type_error;
     }
     if (!cct_boot_rit_semantic_type_is_integer_422(ctx, index_type_id))
     {
-      cct_boot_rit_semantic_report_error_436(ctx, (*index_arg).line, (*index_arg).column, cct_boot_str_481);
+      cct_boot_rit_semantic_report_error_436(ctx, (*index_arg).line, (*index_arg).column, cct_boot_str_490);
       return (*ctx).type_error;
     }
     return (*ctx).type_miles;
@@ -8900,12 +9150,12 @@ long long cct_boot_rit_semantic_analyze_obsecro_call_501(cct_boot_sig_SemanticCo
   long long actual = cct_boot_rit_ast_node_list_len_216((*expr).arguments);
   if (expected < 0)
   {
-    cct_boot_rit_semantic_report_error_436(ctx, (*expr).line, (*expr).column, cct_boot_str_482);
+    cct_boot_rit_semantic_report_error_436(ctx, (*expr).line, (*expr).column, cct_boot_str_491);
     return (*ctx).type_error;
   }
   if (expected != actual)
   {
-    cct_boot_rit_semantic_report_error_436(ctx, (*expr).line, (*expr).column, cct_boot_str_483);
+    cct_boot_rit_semantic_report_error_436(ctx, (*expr).line, (*expr).column, cct_boot_str_492);
     return (*ctx).type_error;
   }
   long long i = 0;
@@ -8922,95 +9172,16 @@ long long cct_boot_rit_semantic_analyze_obsecro_call_501(cct_boot_sig_SemanticCo
       {
         if ((i == 0) && (!cct_boot_rit_semantic_obsecro_type_is_pointerish_496(ctx, arg_type_id)))
         {
-          cct_boot_rit_semantic_report_error_436(ctx, (*arg).line, (*arg).column, cct_boot_str_484);
+          cct_boot_rit_semantic_report_error_436(ctx, (*arg).line, (*arg).column, cct_boot_str_493);
           return (*ctx).type_error;
         }
         if ((i == 1) && (!cct_boot_rit_semantic_obsecro_type_is_integerish_497(ctx, arg_type_id)))
         {
-          cct_boot_rit_semantic_report_error_436(ctx, (*arg).line, (*arg).column, cct_boot_str_485);
+          cct_boot_rit_semantic_report_error_436(ctx, (*arg).line, (*arg).column, cct_boot_str_494);
           return (*ctx).type_error;
         }
       }
       if (cct_boot_rit_compare_38(builtin_name, cct_boot_str_416) == 0)
-      {
-        if ((i == 0) && (!cct_boot_rit_semantic_obsecro_type_is_pointerish_496(ctx, arg_type_id)))
-        {
-          cct_boot_rit_semantic_report_error_436(ctx, (*arg).line, (*arg).column, cct_boot_str_486);
-          return (*ctx).type_error;
-        }
-        if ((i == 1) && (!cct_boot_rit_semantic_obsecro_type_is_integerish_497(ctx, arg_type_id)))
-        {
-          cct_boot_rit_semantic_report_error_436(ctx, (*arg).line, (*arg).column, cct_boot_str_487);
-          return (*ctx).type_error;
-        }
-      }
-      if (((cct_boot_rit_compare_38(builtin_name, cct_boot_str_418) == 0) && (i == 0)) && (!cct_boot_rit_semantic_obsecro_type_is_integerish_497(ctx, arg_type_id)))
-      {
-        cct_boot_rit_semantic_report_error_436(ctx, (*arg).line, (*arg).column, cct_boot_str_488);
-        return (*ctx).type_error;
-      }
-      if (((((((((((cct_boot_rit_compare_38(builtin_name, cct_boot_str_419) == 0) || (cct_boot_rit_compare_38(builtin_name, cct_boot_str_420) == 0)) || (cct_boot_rit_compare_38(builtin_name, cct_boot_str_421) == 0)) || (cct_boot_rit_compare_38(builtin_name, cct_boot_str_422) == 0)) || (cct_boot_rit_compare_38(builtin_name, cct_boot_str_426) == 0)) || (cct_boot_rit_compare_38(builtin_name, cct_boot_str_427) == 0)) || (cct_boot_rit_compare_38(builtin_name, cct_boot_str_428) == 0)) || (cct_boot_rit_compare_38(builtin_name, cct_boot_str_429) == 0)) || (cct_boot_rit_compare_38(builtin_name, cct_boot_str_430) == 0)) && (i == 0)) && (!cct_boot_rit_semantic_obsecro_type_is_pointerish_496(ctx, arg_type_id)))
-      {
-        cct_boot_rit_semantic_report_error_436(ctx, (*arg).line, (*arg).column, cct_boot_str_489);
-        return (*ctx).type_error;
-      }
-      if ((cct_boot_rit_compare_38(builtin_name, cct_boot_str_423) == 0) || (cct_boot_rit_compare_38(builtin_name, cct_boot_str_431) == 0))
-      {
-        if ((i == 0) && (!cct_boot_rit_semantic_obsecro_type_is_pointerish_496(ctx, arg_type_id)))
-        {
-          cct_boot_rit_semantic_report_error_436(ctx, (*arg).line, (*arg).column, cct_boot_str_490);
-          return (*ctx).type_error;
-        }
-        if ((i == 1) && (arg_type_id != (*ctx).type_verbum))
-        {
-          cct_boot_rit_semantic_report_error_436(ctx, (*arg).line, (*arg).column, cct_boot_str_491);
-          return (*ctx).type_error;
-        }
-      }
-      if ((cct_boot_rit_compare_38(builtin_name, cct_boot_str_424) == 0) || (cct_boot_rit_compare_38(builtin_name, cct_boot_str_425) == 0))
-      {
-        if ((i == 0) && (!cct_boot_rit_semantic_obsecro_type_is_pointerish_496(ctx, arg_type_id)))
-        {
-          cct_boot_rit_semantic_report_error_436(ctx, (*arg).line, (*arg).column, cct_boot_str_492);
-          return (*ctx).type_error;
-        }
-        if ((i > 0) && (!cct_boot_rit_semantic_obsecro_type_is_integerish_497(ctx, arg_type_id)))
-        {
-          cct_boot_rit_semantic_report_error_436(ctx, (*arg).line, (*arg).column, cct_boot_str_493);
-          return (*ctx).type_error;
-        }
-      }
-      if ((cct_boot_rit_compare_38(builtin_name, cct_boot_str_432) == 0) && (!cct_boot_rit_semantic_obsecro_type_is_integerish_497(ctx, arg_type_id)))
-      {
-        cct_boot_rit_semantic_report_error_436(ctx, (*arg).line, (*arg).column, cct_boot_str_494);
-        return (*ctx).type_error;
-      }
-      if ((((((((cct_boot_rit_compare_38(builtin_name, cct_boot_str_433) == 0) || (cct_boot_rit_compare_38(builtin_name, cct_boot_str_434) == 0)) || (cct_boot_rit_compare_38(builtin_name, cct_boot_str_435) == 0)) || (cct_boot_rit_compare_38(builtin_name, cct_boot_str_436) == 0)) || (cct_boot_rit_compare_38(builtin_name, cct_boot_str_437) == 0)) || (cct_boot_rit_compare_38(builtin_name, cct_boot_str_438) == 0)) && (i == 0)) && (!cct_boot_rit_semantic_obsecro_type_is_pointerish_496(ctx, arg_type_id)))
-      {
-        cct_boot_rit_semantic_report_error_436(ctx, (*arg).line, (*arg).column, cct_boot_str_495);
-        return (*ctx).type_error;
-      }
-      if ((((((((cct_boot_rit_compare_38(builtin_name, cct_boot_str_439) == 0) || (cct_boot_rit_compare_38(builtin_name, cct_boot_str_440) == 0)) || (cct_boot_rit_compare_38(builtin_name, cct_boot_str_441) == 0)) || (cct_boot_rit_compare_38(builtin_name, cct_boot_str_442) == 0)) || (cct_boot_rit_compare_38(builtin_name, cct_boot_str_443) == 0)) || (cct_boot_rit_compare_38(builtin_name, cct_boot_str_446) == 0)) && (i == 0)) && (!cct_boot_rit_semantic_obsecro_type_is_pointerish_496(ctx, arg_type_id)))
-      {
-        cct_boot_rit_semantic_report_error_436(ctx, (*arg).line, (*arg).column, cct_boot_str_496);
-        return (*ctx).type_error;
-      }
-      if (((((((cct_boot_rit_compare_38(builtin_name, cct_boot_str_439) == 0) || (cct_boot_rit_compare_38(builtin_name, cct_boot_str_440) == 0)) || (cct_boot_rit_compare_38(builtin_name, cct_boot_str_441) == 0)) || (cct_boot_rit_compare_38(builtin_name, cct_boot_str_442) == 0)) || (cct_boot_rit_compare_38(builtin_name, cct_boot_str_446) == 0)) && (i == 1)) && (!cct_boot_rit_semantic_obsecro_type_is_pointerish_496(ctx, arg_type_id)))
-      {
-        cct_boot_rit_semantic_report_error_436(ctx, (*arg).line, (*arg).column, cct_boot_str_497);
-        return (*ctx).type_error;
-      }
-      if (((cct_boot_rit_compare_38(builtin_name, cct_boot_str_439) == 0) && (i == 2)) && (!cct_boot_rit_semantic_obsecro_type_is_pointerish_496(ctx, arg_type_id)))
-      {
-        cct_boot_rit_semantic_report_error_436(ctx, (*arg).line, (*arg).column, cct_boot_str_498);
-        return (*ctx).type_error;
-      }
-      if (((cct_boot_rit_compare_38(builtin_name, cct_boot_str_443) == 0) && (i == 1)) && (!cct_boot_rit_semantic_obsecro_type_is_integerish_497(ctx, arg_type_id)))
-      {
-        cct_boot_rit_semantic_report_error_436(ctx, (*arg).line, (*arg).column, cct_boot_str_499);
-        return (*ctx).type_error;
-      }
-      if ((cct_boot_rit_compare_38(builtin_name, cct_boot_str_444) == 0) || (cct_boot_rit_compare_38(builtin_name, cct_boot_str_445) == 0))
       {
         if ((i == 0) && (!cct_boot_rit_semantic_obsecro_type_is_pointerish_496(ctx, arg_type_id)))
         {
@@ -9019,35 +9190,132 @@ long long cct_boot_rit_semantic_analyze_obsecro_call_501(cct_boot_sig_SemanticCo
         }
         if ((i == 1) && (!cct_boot_rit_semantic_obsecro_type_is_integerish_497(ctx, arg_type_id)))
         {
-          cct_boot_rit_semantic_report_error_436(ctx, (*arg).line, (*arg).column, cct_boot_str_500);
+          cct_boot_rit_semantic_report_error_436(ctx, (*arg).line, (*arg).column, cct_boot_str_496);
           return (*ctx).type_error;
         }
       }
-      if (((cct_boot_rit_compare_38(builtin_name, cct_boot_str_447) == 0) && (i == 0)) && (!cct_boot_rit_semantic_obsecro_type_is_integerish_497(ctx, arg_type_id)))
+      if (((cct_boot_rit_compare_38(builtin_name, cct_boot_str_418) == 0) && (i == 0)) && (!cct_boot_rit_semantic_obsecro_type_is_integerish_497(ctx, arg_type_id)))
+      {
+        cct_boot_rit_semantic_report_error_436(ctx, (*arg).line, (*arg).column, cct_boot_str_497);
+        return (*ctx).type_error;
+      }
+      if ((((((((cct_boot_rit_compare_38(builtin_name, cct_boot_str_465) == 0) && (i == 0)) || ((cct_boot_rit_compare_38(builtin_name, cct_boot_str_469) == 0) && ((i == 0) || (i == 1)))) || ((cct_boot_rit_compare_38(builtin_name, cct_boot_str_471) == 0) && ((i == 1) || (i == 2)))) || ((cct_boot_rit_compare_38(builtin_name, cct_boot_str_473) == 0) && (i >= 1))) || ((cct_boot_rit_compare_38(builtin_name, cct_boot_str_470) == 0) && (i == 1))) || ((cct_boot_rit_compare_38(builtin_name, cct_boot_str_472) == 0) && ((i == 1) || (i == 2)))) || ((cct_boot_rit_compare_38(builtin_name, cct_boot_str_467) == 0) && (i == 0)))
+      {
+        if (arg_type_id != (*ctx).type_verbum)
+        {
+          cct_boot_rit_semantic_report_error_436(ctx, (*arg).line, (*arg).column, cct_boot_str_498);
+          return (*ctx).type_error;
+        }
+      }
+      if (((((((cct_boot_rit_compare_38(builtin_name, cct_boot_str_471) == 0) || (cct_boot_rit_compare_38(builtin_name, cct_boot_str_473) == 0)) || (cct_boot_rit_compare_38(builtin_name, cct_boot_str_470) == 0)) || (cct_boot_rit_compare_38(builtin_name, cct_boot_str_472) == 0)) || (cct_boot_rit_compare_38(builtin_name, cct_boot_str_466) == 0)) && (i == 0)) && (!cct_boot_rit_semantic_type_is_integer_422(ctx, arg_type_id)))
+      {
+        cct_boot_rit_semantic_report_error_436(ctx, (*arg).line, (*arg).column, cct_boot_str_499);
+        return (*ctx).type_error;
+      }
+      if (((cct_boot_rit_compare_38(builtin_name, cct_boot_str_472) == 0) && (i == 3)) && (!cct_boot_rit_semantic_type_is_integer_422(ctx, arg_type_id)))
+      {
+        cct_boot_rit_semantic_report_error_436(ctx, (*arg).line, (*arg).column, cct_boot_str_500);
+        return (*ctx).type_error;
+      }
+      if (((((((((((cct_boot_rit_compare_38(builtin_name, cct_boot_str_419) == 0) || (cct_boot_rit_compare_38(builtin_name, cct_boot_str_420) == 0)) || (cct_boot_rit_compare_38(builtin_name, cct_boot_str_421) == 0)) || (cct_boot_rit_compare_38(builtin_name, cct_boot_str_422) == 0)) || (cct_boot_rit_compare_38(builtin_name, cct_boot_str_426) == 0)) || (cct_boot_rit_compare_38(builtin_name, cct_boot_str_427) == 0)) || (cct_boot_rit_compare_38(builtin_name, cct_boot_str_428) == 0)) || (cct_boot_rit_compare_38(builtin_name, cct_boot_str_429) == 0)) || (cct_boot_rit_compare_38(builtin_name, cct_boot_str_430) == 0)) && (i == 0)) && (!cct_boot_rit_semantic_obsecro_type_is_pointerish_496(ctx, arg_type_id)))
       {
         cct_boot_rit_semantic_report_error_436(ctx, (*arg).line, (*arg).column, cct_boot_str_501);
         return (*ctx).type_error;
       }
-      if (((((((cct_boot_rit_compare_38(builtin_name, cct_boot_str_448) == 0) || (cct_boot_rit_compare_38(builtin_name, cct_boot_str_449) == 0)) || (cct_boot_rit_compare_38(builtin_name, cct_boot_str_450) == 0)) || (cct_boot_rit_compare_38(builtin_name, cct_boot_str_451) == 0)) || (cct_boot_rit_compare_38(builtin_name, cct_boot_str_452) == 0)) && (i == 0)) && (!cct_boot_rit_semantic_obsecro_type_is_pointerish_496(ctx, arg_type_id)))
-      {
-        cct_boot_rit_semantic_report_error_436(ctx, (*arg).line, (*arg).column, cct_boot_str_502);
-        return (*ctx).type_error;
-      }
-      if ((((((cct_boot_rit_compare_38(builtin_name, cct_boot_str_453) == 0) || (cct_boot_rit_compare_38(builtin_name, cct_boot_str_454) == 0)) || (cct_boot_rit_compare_38(builtin_name, cct_boot_str_455) == 0)) || (cct_boot_rit_compare_38(builtin_name, cct_boot_str_456) == 0)) || (cct_boot_rit_compare_38(builtin_name, cct_boot_str_457) == 0)) || (cct_boot_rit_compare_38(builtin_name, cct_boot_str_458) == 0))
+      if ((cct_boot_rit_compare_38(builtin_name, cct_boot_str_423) == 0) || (cct_boot_rit_compare_38(builtin_name, cct_boot_str_431) == 0))
       {
         if ((i == 0) && (!cct_boot_rit_semantic_obsecro_type_is_pointerish_496(ctx, arg_type_id)))
         {
           cct_boot_rit_semantic_report_error_436(ctx, (*arg).line, (*arg).column, cct_boot_str_502);
           return (*ctx).type_error;
         }
-        if (((i == 1) && (((cct_boot_rit_compare_38(builtin_name, cct_boot_str_453) == 0) || (cct_boot_rit_compare_38(builtin_name, cct_boot_str_454) == 0)) || (cct_boot_rit_compare_38(builtin_name, cct_boot_str_455) == 0))) && (!cct_boot_rit_semantic_obsecro_type_is_pointerish_496(ctx, arg_type_id)))
+        if ((i == 1) && (arg_type_id != (*ctx).type_verbum))
         {
           cct_boot_rit_semantic_report_error_436(ctx, (*arg).line, (*arg).column, cct_boot_str_503);
           return (*ctx).type_error;
         }
-        if (((i == 1) && (((cct_boot_rit_compare_38(builtin_name, cct_boot_str_456) == 0) || (cct_boot_rit_compare_38(builtin_name, cct_boot_str_457) == 0)) || (cct_boot_rit_compare_38(builtin_name, cct_boot_str_458) == 0))) && (!cct_boot_rit_semantic_obsecro_type_is_integerish_497(ctx, arg_type_id)))
+      }
+      if ((cct_boot_rit_compare_38(builtin_name, cct_boot_str_424) == 0) || (cct_boot_rit_compare_38(builtin_name, cct_boot_str_425) == 0))
+      {
+        if ((i == 0) && (!cct_boot_rit_semantic_obsecro_type_is_pointerish_496(ctx, arg_type_id)))
         {
           cct_boot_rit_semantic_report_error_436(ctx, (*arg).line, (*arg).column, cct_boot_str_504);
+          return (*ctx).type_error;
+        }
+        if ((i > 0) && (!cct_boot_rit_semantic_obsecro_type_is_integerish_497(ctx, arg_type_id)))
+        {
+          cct_boot_rit_semantic_report_error_436(ctx, (*arg).line, (*arg).column, cct_boot_str_505);
+          return (*ctx).type_error;
+        }
+      }
+      if ((cct_boot_rit_compare_38(builtin_name, cct_boot_str_432) == 0) && (!cct_boot_rit_semantic_obsecro_type_is_integerish_497(ctx, arg_type_id)))
+      {
+        cct_boot_rit_semantic_report_error_436(ctx, (*arg).line, (*arg).column, cct_boot_str_506);
+        return (*ctx).type_error;
+      }
+      if ((((((((cct_boot_rit_compare_38(builtin_name, cct_boot_str_433) == 0) || (cct_boot_rit_compare_38(builtin_name, cct_boot_str_434) == 0)) || (cct_boot_rit_compare_38(builtin_name, cct_boot_str_435) == 0)) || (cct_boot_rit_compare_38(builtin_name, cct_boot_str_436) == 0)) || (cct_boot_rit_compare_38(builtin_name, cct_boot_str_437) == 0)) || (cct_boot_rit_compare_38(builtin_name, cct_boot_str_438) == 0)) && (i == 0)) && (!cct_boot_rit_semantic_obsecro_type_is_pointerish_496(ctx, arg_type_id)))
+      {
+        cct_boot_rit_semantic_report_error_436(ctx, (*arg).line, (*arg).column, cct_boot_str_507);
+        return (*ctx).type_error;
+      }
+      if ((((((((cct_boot_rit_compare_38(builtin_name, cct_boot_str_439) == 0) || (cct_boot_rit_compare_38(builtin_name, cct_boot_str_440) == 0)) || (cct_boot_rit_compare_38(builtin_name, cct_boot_str_441) == 0)) || (cct_boot_rit_compare_38(builtin_name, cct_boot_str_442) == 0)) || (cct_boot_rit_compare_38(builtin_name, cct_boot_str_443) == 0)) || (cct_boot_rit_compare_38(builtin_name, cct_boot_str_446) == 0)) && (i == 0)) && (!cct_boot_rit_semantic_obsecro_type_is_pointerish_496(ctx, arg_type_id)))
+      {
+        cct_boot_rit_semantic_report_error_436(ctx, (*arg).line, (*arg).column, cct_boot_str_508);
+        return (*ctx).type_error;
+      }
+      if (((((((cct_boot_rit_compare_38(builtin_name, cct_boot_str_439) == 0) || (cct_boot_rit_compare_38(builtin_name, cct_boot_str_440) == 0)) || (cct_boot_rit_compare_38(builtin_name, cct_boot_str_441) == 0)) || (cct_boot_rit_compare_38(builtin_name, cct_boot_str_442) == 0)) || (cct_boot_rit_compare_38(builtin_name, cct_boot_str_446) == 0)) && (i == 1)) && (!cct_boot_rit_semantic_obsecro_type_is_pointerish_496(ctx, arg_type_id)))
+      {
+        cct_boot_rit_semantic_report_error_436(ctx, (*arg).line, (*arg).column, cct_boot_str_509);
+        return (*ctx).type_error;
+      }
+      if (((cct_boot_rit_compare_38(builtin_name, cct_boot_str_439) == 0) && (i == 2)) && (!cct_boot_rit_semantic_obsecro_type_is_pointerish_496(ctx, arg_type_id)))
+      {
+        cct_boot_rit_semantic_report_error_436(ctx, (*arg).line, (*arg).column, cct_boot_str_510);
+        return (*ctx).type_error;
+      }
+      if (((cct_boot_rit_compare_38(builtin_name, cct_boot_str_443) == 0) && (i == 1)) && (!cct_boot_rit_semantic_obsecro_type_is_integerish_497(ctx, arg_type_id)))
+      {
+        cct_boot_rit_semantic_report_error_436(ctx, (*arg).line, (*arg).column, cct_boot_str_511);
+        return (*ctx).type_error;
+      }
+      if ((cct_boot_rit_compare_38(builtin_name, cct_boot_str_444) == 0) || (cct_boot_rit_compare_38(builtin_name, cct_boot_str_445) == 0))
+      {
+        if ((i == 0) && (!cct_boot_rit_semantic_obsecro_type_is_pointerish_496(ctx, arg_type_id)))
+        {
+          cct_boot_rit_semantic_report_error_436(ctx, (*arg).line, (*arg).column, cct_boot_str_507);
+          return (*ctx).type_error;
+        }
+        if ((i == 1) && (!cct_boot_rit_semantic_obsecro_type_is_integerish_497(ctx, arg_type_id)))
+        {
+          cct_boot_rit_semantic_report_error_436(ctx, (*arg).line, (*arg).column, cct_boot_str_512);
+          return (*ctx).type_error;
+        }
+      }
+      if (((cct_boot_rit_compare_38(builtin_name, cct_boot_str_447) == 0) && (i == 0)) && (!cct_boot_rit_semantic_obsecro_type_is_integerish_497(ctx, arg_type_id)))
+      {
+        cct_boot_rit_semantic_report_error_436(ctx, (*arg).line, (*arg).column, cct_boot_str_513);
+        return (*ctx).type_error;
+      }
+      if (((((((cct_boot_rit_compare_38(builtin_name, cct_boot_str_448) == 0) || (cct_boot_rit_compare_38(builtin_name, cct_boot_str_449) == 0)) || (cct_boot_rit_compare_38(builtin_name, cct_boot_str_450) == 0)) || (cct_boot_rit_compare_38(builtin_name, cct_boot_str_451) == 0)) || (cct_boot_rit_compare_38(builtin_name, cct_boot_str_452) == 0)) && (i == 0)) && (!cct_boot_rit_semantic_obsecro_type_is_pointerish_496(ctx, arg_type_id)))
+      {
+        cct_boot_rit_semantic_report_error_436(ctx, (*arg).line, (*arg).column, cct_boot_str_514);
+        return (*ctx).type_error;
+      }
+      if ((((((cct_boot_rit_compare_38(builtin_name, cct_boot_str_453) == 0) || (cct_boot_rit_compare_38(builtin_name, cct_boot_str_454) == 0)) || (cct_boot_rit_compare_38(builtin_name, cct_boot_str_455) == 0)) || (cct_boot_rit_compare_38(builtin_name, cct_boot_str_456) == 0)) || (cct_boot_rit_compare_38(builtin_name, cct_boot_str_457) == 0)) || (cct_boot_rit_compare_38(builtin_name, cct_boot_str_458) == 0))
+      {
+        if ((i == 0) && (!cct_boot_rit_semantic_obsecro_type_is_pointerish_496(ctx, arg_type_id)))
+        {
+          cct_boot_rit_semantic_report_error_436(ctx, (*arg).line, (*arg).column, cct_boot_str_514);
+          return (*ctx).type_error;
+        }
+        if (((i == 1) && (((cct_boot_rit_compare_38(builtin_name, cct_boot_str_453) == 0) || (cct_boot_rit_compare_38(builtin_name, cct_boot_str_454) == 0)) || (cct_boot_rit_compare_38(builtin_name, cct_boot_str_455) == 0))) && (!cct_boot_rit_semantic_obsecro_type_is_pointerish_496(ctx, arg_type_id)))
+        {
+          cct_boot_rit_semantic_report_error_436(ctx, (*arg).line, (*arg).column, cct_boot_str_515);
+          return (*ctx).type_error;
+        }
+        if (((i == 1) && (((cct_boot_rit_compare_38(builtin_name, cct_boot_str_456) == 0) || (cct_boot_rit_compare_38(builtin_name, cct_boot_str_457) == 0)) || (cct_boot_rit_compare_38(builtin_name, cct_boot_str_458) == 0))) && (!cct_boot_rit_semantic_obsecro_type_is_integerish_497(ctx, arg_type_id)))
+        {
+          cct_boot_rit_semantic_report_error_436(ctx, (*arg).line, (*arg).column, cct_boot_str_516);
           return (*ctx).type_error;
         }
       }
@@ -9055,12 +9323,12 @@ long long cct_boot_rit_semantic_analyze_obsecro_call_501(cct_boot_sig_SemanticCo
       {
         if (((i == 0) || (i == 1)) && (!cct_boot_rit_semantic_obsecro_type_is_pointerish_496(ctx, arg_type_id)))
         {
-          cct_boot_rit_semantic_report_error_436(ctx, (*arg).line, (*arg).column, cct_boot_str_505);
+          cct_boot_rit_semantic_report_error_436(ctx, (*arg).line, (*arg).column, cct_boot_str_517);
           return (*ctx).type_error;
         }
         if ((i == 2) && (!cct_boot_rit_semantic_obsecro_type_is_integerish_497(ctx, arg_type_id)))
         {
-          cct_boot_rit_semantic_report_error_436(ctx, (*arg).line, (*arg).column, cct_boot_str_506);
+          cct_boot_rit_semantic_report_error_436(ctx, (*arg).line, (*arg).column, cct_boot_str_518);
           return (*ctx).type_error;
         }
       }
@@ -9068,7 +9336,7 @@ long long cct_boot_rit_semantic_analyze_obsecro_call_501(cct_boot_sig_SemanticCo
       {
         if (!cct_boot_rit_semantic_type_compatible_assign_429(ctx, (*ctx).type_verbum, arg_type_id))
         {
-          cct_boot_rit_semantic_report_error_436(ctx, (*arg).line, (*arg).column, cct_boot_str_507);
+          cct_boot_rit_semantic_report_error_436(ctx, (*arg).line, (*arg).column, cct_boot_str_519);
           return (*ctx).type_error;
         }
       }
@@ -9095,7 +9363,7 @@ long long cct_boot_rit_semantic_analyze_molde_502(cct_boot_sig_SemanticContext* 
         long long part_type_id = cct_boot_rit_semantic_analyze_expr_503(ctx, part);
         if ((((!cct_boot_rit_semantic_type_is_integer_422(ctx, part_type_id)) && (!cct_boot_rit_semantic_type_is_real_423(ctx, part_type_id))) && (part_type_id != (*ctx).type_verum)) && (part_type_id != (*ctx).type_verbum))
         {
-          cct_boot_rit_semantic_report_error_436(ctx, (*part).line, (*part).column, cct_boot_str_508);
+          cct_boot_rit_semantic_report_error_436(ctx, (*part).line, (*part).column, cct_boot_str_520);
           return (*ctx).type_error;
         }
         cct_boot_rit_semantic_validate_molde_fmt_spec_500(ctx, part, part_type_id);
@@ -9174,7 +9442,7 @@ long long cct_boot_rit_semantic_analyze_expr_503(cct_boot_sig_SemanticContext* c
     {
       if (!cct_boot_rit_semantic_type_is_numeric_424(ctx, operand_type_id))
       {
-        cct_boot_rit_semantic_report_error_436(ctx, (*expr).line, (*expr).column, cct_boot_str_509);
+        cct_boot_rit_semantic_report_error_436(ctx, (*expr).line, (*expr).column, cct_boot_str_521);
         return (*ctx).type_error;
       }
       return operand_type_id;
@@ -9183,12 +9451,12 @@ long long cct_boot_rit_semantic_analyze_expr_503(cct_boot_sig_SemanticContext* c
     {
       if (operand_type_id != (*ctx).type_verum)
       {
-        cct_boot_rit_semantic_report_error_436(ctx, (*expr).line, (*expr).column, cct_boot_str_510);
+        cct_boot_rit_semantic_report_error_436(ctx, (*expr).line, (*expr).column, cct_boot_str_522);
         return (*ctx).type_error;
       }
       return (*ctx).type_verum;
     }
-    cct_boot_rit_semantic_report_error_436(ctx, (*expr).line, (*expr).column, cct_boot_str_511);
+    cct_boot_rit_semantic_report_error_436(ctx, (*expr).line, (*expr).column, cct_boot_str_523);
     return (*ctx).type_error;
   }
   if ((*expr).kind == cct_boot_ord_AstKind__AST_BINARY_OP)
@@ -9199,7 +9467,7 @@ long long cct_boot_rit_semantic_analyze_expr_503(cct_boot_sig_SemanticContext* c
     {
       if ((!cct_boot_rit_semantic_type_is_numeric_424(ctx, left_type_id)) || (!cct_boot_rit_semantic_type_is_numeric_424(ctx, right_type_id)))
       {
-        cct_boot_rit_semantic_report_error_436(ctx, (*expr).line, (*expr).column, cct_boot_str_512);
+        cct_boot_rit_semantic_report_error_436(ctx, (*expr).line, (*expr).column, cct_boot_str_524);
         return (*ctx).type_error;
       }
       if (cct_boot_rit_semantic_type_is_real_423(ctx, left_type_id) || cct_boot_rit_semantic_type_is_real_423(ctx, right_type_id))
@@ -9212,7 +9480,7 @@ long long cct_boot_rit_semantic_analyze_expr_503(cct_boot_sig_SemanticContext* c
     {
       if ((!cct_boot_rit_semantic_type_compatible_assign_429(ctx, left_type_id, right_type_id)) && (!cct_boot_rit_semantic_type_compatible_assign_429(ctx, right_type_id, left_type_id)))
       {
-        cct_boot_rit_semantic_report_error_436(ctx, (*expr).line, (*expr).column, cct_boot_str_513);
+        cct_boot_rit_semantic_report_error_436(ctx, (*expr).line, (*expr).column, cct_boot_str_525);
         return (*ctx).type_error;
       }
       return (*ctx).type_verum;
@@ -9221,12 +9489,12 @@ long long cct_boot_rit_semantic_analyze_expr_503(cct_boot_sig_SemanticContext* c
     {
       if ((left_type_id != (*ctx).type_verum) || (right_type_id != (*ctx).type_verum))
       {
-        cct_boot_rit_semantic_report_error_436(ctx, (*expr).line, (*expr).column, cct_boot_str_514);
+        cct_boot_rit_semantic_report_error_436(ctx, (*expr).line, (*expr).column, cct_boot_str_526);
         return (*ctx).type_error;
       }
       return (*ctx).type_verum;
     }
-    cct_boot_rit_semantic_report_error_436(ctx, (*expr).line, (*expr).column, cct_boot_str_515);
+    cct_boot_rit_semantic_report_error_436(ctx, (*expr).line, (*expr).column, cct_boot_str_527);
     return (*ctx).type_error;
   }
   if ((*expr).kind == cct_boot_ord_AstKind__AST_CALL)
@@ -9256,12 +9524,12 @@ long long cct_boot_rit_semantic_analyze_expr_503(cct_boot_sig_SemanticContext* c
     long long value_type_id = cct_boot_rit_semantic_analyze_expr_503(ctx, (*expr).right);
     if (!cct_boot_rit_semantic_type_compatible_assign_429(ctx, target_type_id, value_type_id))
     {
-      cct_boot_rit_semantic_report_error_436(ctx, (*expr).line, (*expr).column, cct_boot_str_516);
+      cct_boot_rit_semantic_report_error_436(ctx, (*expr).line, (*expr).column, cct_boot_str_528);
       return (*ctx).type_error;
     }
     return target_type_id;
   }
-  cct_boot_rit_semantic_report_error_436(ctx, (*expr).line, (*expr).column, cct_boot_str_517);
+  cct_boot_rit_semantic_report_error_436(ctx, (*expr).line, (*expr).column, cct_boot_str_529);
   return (*ctx).type_error;
 }
 
@@ -9269,13 +9537,13 @@ long long cct_boot_rit_semantic_current_rituale_return_type_504(cct_boot_sig_Sem
 {
   if ((*ctx).current_rituale_id == cct_boot_rit_semantic_invalid_id_413())
   {
-    cct_boot_rit_semantic_report_error_436(ctx, line, column, cct_boot_str_518);
+    cct_boot_rit_semantic_report_error_436(ctx, line, column, cct_boot_str_530);
     return (*ctx).type_error;
   }
   cct_boot_sig_SemanticSymbol* sym = cct_boot_rit_semantic_symbol_at_415(ctx, (*ctx).current_rituale_id);
   if ((*sym).kind != cct_boot_ord_SemanticSymbolKind__SEM_SYMBOL_RITUALE)
   {
-    cct_boot_rit_semantic_report_error_436(ctx, line, column, cct_boot_str_519);
+    cct_boot_rit_semantic_report_error_436(ctx, line, column, cct_boot_str_531);
     return (*ctx).type_error;
   }
   return (*sym).payload_type_id;
@@ -9290,7 +9558,7 @@ void cct_boot_rit_semantic_analyze_condition_505(cct_boot_sig_SemanticContext* c
   }
   if (type_id != (*ctx).type_verum)
   {
-    cct_boot_rit_semantic_report_error_436(ctx, (*expr).line, (*expr).column, cct_boot_rit_concat_37(label, cct_boot_str_520));
+    cct_boot_rit_semantic_report_error_436(ctx, (*expr).line, (*expr).column, cct_boot_rit_concat_37(label, cct_boot_str_532));
   }
   return;
 }
@@ -9299,7 +9567,7 @@ void cct_boot_rit_semantic_analyze_block_506(cct_boot_sig_SemanticContext* ctx, 
 {
   if ((*block).kind != cct_boot_ord_AstKind__AST_BLOCK)
   {
-    cct_boot_rit_semantic_report_error_436(ctx, (*block).line, (*block).column, cct_boot_str_521);
+    cct_boot_rit_semantic_report_error_436(ctx, (*block).line, (*block).column, cct_boot_str_533);
     return;
   }
   if (create_scope)
@@ -9344,7 +9612,7 @@ void cct_boot_rit_semantic_analyze_evoca_stmt_507(cct_boot_sig_SemanticContext* 
   }
   if ((*stmt).has_right && (!cct_boot_rit_semantic_type_compatible_assign_429(ctx, declared_type_id, init_type_id)))
   {
-    cct_boot_rit_semantic_report_error_436(ctx, (*stmt).line, (*stmt).column, cct_boot_str_522);
+    cct_boot_rit_semantic_report_error_436(ctx, (*stmt).line, (*stmt).column, cct_boot_str_534);
   }
   return;
 }
@@ -9360,14 +9628,14 @@ void cct_boot_rit_semantic_analyze_redde_stmt_508(cct_boot_sig_SemanticContext* 
   {
     if (return_type_id != (*ctx).type_nihil)
     {
-      cct_boot_rit_semantic_report_error_436(ctx, (*stmt).line, (*stmt).column, cct_boot_str_523);
+      cct_boot_rit_semantic_report_error_436(ctx, (*stmt).line, (*stmt).column, cct_boot_str_535);
     }
     return;
   }
   long long value_type_id = cct_boot_rit_semantic_analyze_expr_503(ctx, (*stmt).left);
   if (!cct_boot_rit_semantic_type_compatible_assign_429(ctx, return_type_id, value_type_id))
   {
-    cct_boot_rit_semantic_report_error_436(ctx, (*stmt).line, (*stmt).column, cct_boot_str_524);
+    cct_boot_rit_semantic_report_error_436(ctx, (*stmt).line, (*stmt).column, cct_boot_str_536);
   }
   return;
 }
@@ -9385,7 +9653,7 @@ void cct_boot_rit_semantic_analyze_anur_stmt_509(cct_boot_sig_SemanticContext* c
   }
   if (!cct_boot_rit_semantic_type_is_integer_422(ctx, value_type_id))
   {
-    cct_boot_rit_semantic_report_error_436(ctx, (*stmt).line, (*stmt).column, cct_boot_str_525);
+    cct_boot_rit_semantic_report_error_436(ctx, (*stmt).line, (*stmt).column, cct_boot_str_537);
   }
   return;
 }
@@ -9395,7 +9663,7 @@ void cct_boot_rit_semantic_analyze_iace_stmt_510(cct_boot_sig_SemanticContext* c
   long long value_type_id = cct_boot_rit_semantic_analyze_expr_503(ctx, (*stmt).left);
   if ((value_type_id != (*ctx).type_fractum) && (value_type_id != (*ctx).type_verbum))
   {
-    cct_boot_rit_semantic_report_error_436(ctx, (*stmt).line, (*stmt).column, cct_boot_str_526);
+    cct_boot_rit_semantic_report_error_436(ctx, (*stmt).line, (*stmt).column, cct_boot_str_538);
   }
   return;
 }
@@ -9404,7 +9672,7 @@ void cct_boot_rit_semantic_analyze_dimitte_stmt_511(cct_boot_sig_SemanticContext
 {
   if (!(*stmt).has_left)
   {
-    cct_boot_rit_semantic_report_error_436(ctx, (*stmt).line, (*stmt).column, cct_boot_str_527);
+    cct_boot_rit_semantic_report_error_436(ctx, (*stmt).line, (*stmt).column, cct_boot_str_539);
     return;
   }
   long long target_type_id = cct_boot_rit_semantic_analyze_lvalue_492(ctx, (*stmt).left);
@@ -9415,7 +9683,7 @@ void cct_boot_rit_semantic_analyze_dimitte_stmt_511(cct_boot_sig_SemanticContext
   cct_boot_sig_SemanticType* target_type = cct_boot_rit_semantic_type_at_416(ctx, target_type_id);
   if ((((*target_type).kind != cct_boot_ord_SemanticTypeKind__SEM_TYPE_POINTER) && (target_type_id != (*ctx).type_verbum)) && (target_type_id != (*ctx).type_fractum))
   {
-    cct_boot_rit_semantic_report_error_436(ctx, (*stmt).line, (*stmt).column, cct_boot_str_527);
+    cct_boot_rit_semantic_report_error_436(ctx, (*stmt).line, (*stmt).column, cct_boot_str_539);
   }
   return;
 }
@@ -9424,7 +9692,7 @@ void cct_boot_rit_semantic_analyze_frange_stmt_512(cct_boot_sig_SemanticContext*
 {
   if ((*ctx).loop_depth == 0)
   {
-    cct_boot_rit_semantic_report_error_436(ctx, (*stmt).line, (*stmt).column, cct_boot_str_528);
+    cct_boot_rit_semantic_report_error_436(ctx, (*stmt).line, (*stmt).column, cct_boot_str_540);
   }
   return;
 }
@@ -9433,7 +9701,7 @@ void cct_boot_rit_semantic_analyze_recede_stmt_513(cct_boot_sig_SemanticContext*
 {
   if ((*ctx).loop_depth == 0)
   {
-    cct_boot_rit_semantic_report_error_436(ctx, (*stmt).line, (*stmt).column, cct_boot_str_529);
+    cct_boot_rit_semantic_report_error_436(ctx, (*stmt).line, (*stmt).column, cct_boot_str_541);
   }
   return;
 }
@@ -9449,15 +9717,15 @@ void cct_boot_rit_semantic_analyze_repete_stmt_514(cct_boot_sig_SemanticContext*
   }
   if ((start_type_id != (*ctx).type_error) && (!cct_boot_rit_semantic_type_is_integer_422(ctx, start_type_id)))
   {
-    cct_boot_rit_semantic_report_error_436(ctx, (*(*stmt).left).line, (*(*stmt).left).column, cct_boot_str_530);
+    cct_boot_rit_semantic_report_error_436(ctx, (*(*stmt).left).line, (*(*stmt).left).column, cct_boot_str_542);
   }
   if ((end_type_id != (*ctx).type_error) && (!cct_boot_rit_semantic_type_is_integer_422(ctx, end_type_id)))
   {
-    cct_boot_rit_semantic_report_error_436(ctx, (*(*stmt).right).line, (*(*stmt).right).column, cct_boot_str_531);
+    cct_boot_rit_semantic_report_error_436(ctx, (*(*stmt).right).line, (*(*stmt).right).column, cct_boot_str_543);
   }
   if ((step_type_id != (*ctx).type_error) && (!cct_boot_rit_semantic_type_is_integer_422(ctx, step_type_id)))
   {
-    cct_boot_rit_semantic_report_error_436(ctx, (*stmt).line, (*stmt).column, cct_boot_str_532);
+    cct_boot_rit_semantic_report_error_436(ctx, (*stmt).line, (*stmt).column, cct_boot_str_544);
   }
   cct_boot_rit_semantic_block_enter_488(ctx);
   cct_boot_rit_semantic_define_435(ctx, cct_boot_ord_SemanticSymbolKind__SEM_SYMBOL_VARIABLE, (*stmt).name, (*ctx).type_rex, (*stmt).line, (*stmt).column);
@@ -9500,6 +9768,17 @@ long long cct_boot_rit_semantic_iterum_infer_from_call_516(cct_boot_sig_Semantic
     cct_boot_sig_AstNode* item_type_expr = cct_boot_rit_ast_node_list_get_217((*(*expr).callee).generic_args, 0);
     (*item_type_id) = cct_boot_rit_semantic_resolve_type_node_470(ctx, item_type_expr);
     return 4;
+  }
+  if (((cct_boot_rit_compare_38(callee_name, cct_boot_str_444) == 0) || (cct_boot_rit_compare_38(callee_name, cct_boot_str_445) == 0)) && (cct_boot_rit_ast_node_list_len_216((*(*expr).callee).generic_args) == 2))
+  {
+    long long idx = 0;
+    if (cct_boot_rit_compare_38(callee_name, cct_boot_str_445) == 0)
+    {
+      idx = 1;
+    }
+    cct_boot_sig_AstNode* item_type_expr = cct_boot_rit_ast_node_list_get_217((*(*expr).callee).generic_args, idx);
+    (*item_type_id) = cct_boot_rit_semantic_resolve_type_node_470(ctx, item_type_expr);
+    return 1;
   }
   return 0;
 }
@@ -9568,7 +9847,11 @@ void cct_boot_rit_semantic_analyze_iterum_stmt_518(cct_boot_sig_SemanticContext*
     if (((*collection_type).kind == cct_boot_ord_SemanticTypeKind__SEM_TYPE_POINTER) && ((*collection_type).element_type_id == (*ctx).type_nihil))
     {
       is_fluxus_iter = 1;
-      if (inferred_kind == 0)
+      if ((inferred_kind == 1) && (value_type_id != (*ctx).type_error))
+      {
+        item_type_id = value_type_id;
+      }
+      else
       {
         item_type_id = (*ctx).type_rex;
       }
@@ -9577,7 +9860,7 @@ void cct_boot_rit_semantic_analyze_iterum_stmt_518(cct_boot_sig_SemanticContext*
     {
       if (((!is_map_iter) && (!is_set_iter)) && (collection_type_id != (*ctx).type_error))
       {
-        cct_boot_rit_semantic_report_error_436(ctx, (*(*stmt).left).line, (*(*stmt).left).column, cct_boot_str_533);
+        cct_boot_rit_semantic_report_error_436(ctx, (*(*stmt).left).line, (*(*stmt).left).column, cct_boot_str_545);
         return;
       }
     }
@@ -9586,7 +9869,7 @@ void cct_boot_rit_semantic_analyze_iterum_stmt_518(cct_boot_sig_SemanticContext*
   {
     if (cct_boot_rit_compare_38((*stmt).aux_name, cct_boot_str_102) == 0)
     {
-      cct_boot_rit_semantic_report_error_436(ctx, (*stmt).line, (*stmt).column, cct_boot_str_534);
+      cct_boot_rit_semantic_report_error_436(ctx, (*stmt).line, (*stmt).column, cct_boot_str_546);
       return;
     }
   }
@@ -9596,17 +9879,17 @@ void cct_boot_rit_semantic_analyze_iterum_stmt_518(cct_boot_sig_SemanticContext*
     {
       if (is_set_iter)
       {
-        cct_boot_rit_semantic_report_error_436(ctx, (*stmt).line, (*stmt).column, cct_boot_str_535);
+        cct_boot_rit_semantic_report_error_436(ctx, (*stmt).line, (*stmt).column, cct_boot_str_547);
       }
       else
       {
         if (is_fluxus_iter || is_series_iter)
         {
-          cct_boot_rit_semantic_report_error_436(ctx, (*stmt).line, (*stmt).column, cct_boot_str_536);
+          cct_boot_rit_semantic_report_error_436(ctx, (*stmt).line, (*stmt).column, cct_boot_str_548);
         }
         else
         {
-          cct_boot_rit_semantic_report_error_436(ctx, (*stmt).line, (*stmt).column, cct_boot_str_537);
+          cct_boot_rit_semantic_report_error_436(ctx, (*stmt).line, (*stmt).column, cct_boot_str_549);
         }
       }
       return;
@@ -9629,25 +9912,25 @@ long long cct_boot_rit_semantic_elige_case_binding_type_519(cct_boot_sig_Semanti
 {
   if (cct_boot_rit_ast_node_list_len_216((*case_node).children) != 1)
   {
-    cct_boot_rit_semantic_report_error_436(ctx, (*case_node).line, (*case_node).column, cct_boot_str_538);
+    cct_boot_rit_semantic_report_error_436(ctx, (*case_node).line, (*case_node).column, cct_boot_str_550);
     return (*ctx).type_error;
   }
   cct_boot_sig_AstNode* literal_node = cct_boot_rit_ast_node_list_get_217((*case_node).children, 0);
   if ((*literal_node).kind != cct_boot_ord_AstKind__AST_IDENTIFIER)
   {
-    cct_boot_rit_semantic_report_error_436(ctx, (*literal_node).line, (*literal_node).column, cct_boot_str_539);
+    cct_boot_rit_semantic_report_error_436(ctx, (*literal_node).line, (*literal_node).column, cct_boot_str_551);
     return (*ctx).type_error;
   }
   cct_boot_sig_SemanticType* subject_type = cct_boot_rit_semantic_type_at_416(ctx, subject_type_id);
   if ((((*subject_type).kind != cct_boot_ord_SemanticTypeKind__SEM_TYPE_NAMED) && ((*subject_type).kind != cct_boot_ord_SemanticTypeKind__SEM_TYPE_INSTANCE)) || ((*subject_type).named_symbol_id == cct_boot_rit_semantic_invalid_id_413()))
   {
-    cct_boot_rit_semantic_report_error_436(ctx, (*literal_node).line, (*literal_node).column, cct_boot_str_540);
+    cct_boot_rit_semantic_report_error_436(ctx, (*literal_node).line, (*literal_node).column, cct_boot_str_552);
     return (*ctx).type_error;
   }
   cct_boot_sig_SemanticSymbol* type_sym = cct_boot_rit_semantic_symbol_at_415(ctx, (*subject_type).named_symbol_id);
   if ((!(*type_sym).has_decl_node) || ((*(*type_sym).decl_node).kind != cct_boot_ord_AstKind__AST_ORDO))
   {
-    cct_boot_rit_semantic_report_error_436(ctx, (*literal_node).line, (*literal_node).column, cct_boot_str_540);
+    cct_boot_rit_semantic_report_error_436(ctx, (*literal_node).line, (*literal_node).column, cct_boot_str_552);
     return (*ctx).type_error;
   }
   long long variant_i = 0;
@@ -9662,12 +9945,12 @@ long long cct_boot_rit_semantic_elige_case_binding_type_519(cct_boot_sig_Semanti
         long long binding_n = cct_boot_rit_ast_node_list_len_216((*case_node).bindings);
         if ((field_n == 0) && (binding_n > 0))
         {
-          cct_boot_rit_semantic_report_error_436(ctx, (*literal_node).line, (*literal_node).column, cct_boot_str_541);
+          cct_boot_rit_semantic_report_error_436(ctx, (*literal_node).line, (*literal_node).column, cct_boot_str_553);
           return (*ctx).type_error;
         }
         if (binding_n != field_n)
         {
-          cct_boot_rit_semantic_report_error_436(ctx, (*literal_node).line, (*literal_node).column, cct_boot_str_542);
+          cct_boot_rit_semantic_report_error_436(ctx, (*literal_node).line, (*literal_node).column, cct_boot_str_554);
           return (*ctx).type_error;
         }
         cct_boot_sig_AstNode* field_node = cct_boot_rit_ast_node_list_get_217((*variant_node).fields, binding_index);
@@ -9687,7 +9970,7 @@ long long cct_boot_rit_semantic_elige_case_binding_type_519(cct_boot_sig_Semanti
   }
   if (0) goto __cct_label_216;
   __cct_label_216: ;
-  cct_boot_rit_semantic_report_error_436(ctx, (*literal_node).line, (*literal_node).column, cct_boot_str_543);
+  cct_boot_rit_semantic_report_error_436(ctx, (*literal_node).line, (*literal_node).column, cct_boot_str_555);
   return (*ctx).type_error;
 }
 
@@ -9702,7 +9985,7 @@ void cct_boot_rit_semantic_analyze_elige_case_520(cct_boot_sig_SemanticContext* 
       long long literal_type_id = cct_boot_rit_semantic_analyze_expr_503(ctx, literal_node);
       if ((!cct_boot_rit_semantic_type_compatible_assign_429(ctx, subject_type_id, literal_type_id)) && (!cct_boot_rit_semantic_type_compatible_assign_429(ctx, literal_type_id, subject_type_id)))
       {
-        cct_boot_rit_semantic_report_error_436(ctx, (*literal_node).line, (*literal_node).column, cct_boot_str_544);
+        cct_boot_rit_semantic_report_error_436(ctx, (*literal_node).line, (*literal_node).column, cct_boot_str_556);
       }
       i = (i + 1);
     }
@@ -9866,7 +10149,7 @@ void cct_boot_rit_semantic_analyze_stmt_523(cct_boot_sig_SemanticContext* ctx, c
     cct_boot_rit_semantic_analyze_tempta_stmt_522(ctx, stmt);
     return;
   }
-  cct_boot_rit_semantic_report_error_436(ctx, (*stmt).line, (*stmt).column, cct_boot_str_545);
+  cct_boot_rit_semantic_report_error_436(ctx, (*stmt).line, (*stmt).column, cct_boot_str_557);
   return;
 }
 
@@ -9895,7 +10178,7 @@ void cct_boot_rit_semantic_validate_rituale_decl_525(cct_boot_sig_SemanticContex
   cct_boot_sig_SemanticSymbol* sym = cct_boot_rit_semantic_symbol_at_415(ctx, rituale_sym_id);
   if ((!(*sym).has_decl_node) || ((*(*sym).decl_node).kind != cct_boot_ord_AstKind__AST_RITUALE))
   {
-    cct_boot_rit_semantic_report_error_436(ctx, (*sym).line, (*sym).column, cct_boot_str_546);
+    cct_boot_rit_semantic_report_error_436(ctx, (*sym).line, (*sym).column, cct_boot_str_558);
     return;
   }
   cct_boot_sig_AstNode* rituale_decl = (*sym).decl_node;
@@ -9958,7 +10241,7 @@ long long cct_boot_rit_main_528(void)
 {
   if (cct_boot_rit_argc_1() < 2)
   {
-    cct_boot_rit_eprintln_6(cct_boot_str_547);
+    cct_boot_rit_eprintln_6(cct_boot_str_559);
     return 64;
   }
   char* filename = cct_boot_rit_arg_2(1);
@@ -9968,18 +10251,18 @@ long long cct_boot_rit_main_528(void)
   cct_boot_rit_semantic_validate_program_527(ctx, program);
   if (cct_boot_rit_semantic_had_error_441(ctx))
   {
-    cct_rt_scribe_str(cct_boot_str_548);
+    cct_rt_scribe_str(cct_boot_str_560);
     cct_rt_scribe_int((long long)((*ctx).last_error_line));
     cct_rt_scribe_str(cct_boot_str_364);
     cct_rt_scribe_int((long long)((*ctx).last_error_column));
-    cct_rt_scribe_str(cct_boot_str_549);
+    cct_rt_scribe_str(cct_boot_str_561);
     cct_rt_scribe_str((*ctx).last_error_message);
     cct_rt_scribe_str(cct_boot_str_104);
     cct_boot_rit_semantic_context_free_443(ctx);
     cct_boot_rit_ast_program_free_309(program);
     return 1;
   }
-  cct_rt_scribe_str(cct_boot_str_550);
+  cct_rt_scribe_str(cct_boot_str_562);
   cct_boot_rit_semantic_context_free_443(ctx);
   cct_boot_rit_ast_program_free_309(program);
   return 0;

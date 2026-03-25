@@ -479,6 +479,10 @@ RITUALE codegen_emit_obsecro_call_expr(SPECULUM CodegenContext ctx, SPECULUM Ast
   SI CONIURA compare((*(*expr).callee).name, "bytes_get") == 0
     CONIURA codegen_require_stdlib(ctx)
   FIN SI
+  SI CONIURA starts_with((*(*expr).callee).name, "gettext_builtin_")
+    CONIURA codegen_require_stdlib(ctx)
+    CONIURA codegen_require_stdio(ctx)
+  FIN SI
   SI CONIURA starts_with((*(*expr).callee).name, "option_") VEL CONIURA starts_with((*(*expr).callee).name, "result_") VEL CONIURA starts_with((*(*expr).callee).name, "map_") VEL CONIURA starts_with((*(*expr).callee).name, "set_")
     CONIURA codegen_require_stdlib(ctx)
   FIN SI

@@ -219,6 +219,15 @@ RITUALE semantic_iterum_infer_from_call(SPECULUM SemanticContext ctx, SPECULUM A
     VINCIRE *item_type_id AD CONIURA semantic_resolve_type_node(ctx, item_type_expr)
     REDDE 4
   FIN SI
+  SI (CONIURA compare(callee_name, "map_keys") == 0 VEL CONIURA compare(callee_name, "map_values") == 0) ET CONIURA ast_node_list_len((*(*expr).callee).generic_args) == 2
+    EVOCA REX idx AD 0
+    SI CONIURA compare(callee_name, "map_values") == 0
+      VINCIRE idx AD 1
+    FIN SI
+    EVOCA SPECULUM AstNode item_type_expr AD CONIURA ast_node_list_get((*(*expr).callee).generic_args, idx)
+    VINCIRE *item_type_id AD CONIURA semantic_resolve_type_node(ctx, item_type_expr)
+    REDDE 1
+  FIN SI
   REDDE 0
 EXPLICIT RITUALE
 
@@ -273,7 +282,9 @@ RITUALE semantic_analyze_iterum_stmt(SPECULUM SemanticContext ctx, SPECULUM AstN
   ALITER
     SI (*collection_type).kind == SEM_TYPE_POINTER ET (*collection_type).element_type_id == (*ctx).type_nihil
       VINCIRE is_fluxus_iter AD VERUM
-      SI inferred_kind == 0
+      SI inferred_kind == 1 ET value_type_id != (*ctx).type_error
+        VINCIRE item_type_id AD value_type_id
+      ALITER
         VINCIRE item_type_id AD (*ctx).type_rex
       FIN SI
     ALITER

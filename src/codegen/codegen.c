@@ -396,6 +396,16 @@ static bool cg_extract_iter_collection_from_coniura(
         return true;
     }
 
+    if ((strcmp(name, "map_keys") == 0 || strcmp(name, "map_values") == 0) &&
+        type_args && type_args->count >= 2) {
+        if (kind_out) *kind_out = CCT_CODEGEN_ITER_COLLECTION_FLUXUS;
+        if (key_ast_type_out) *key_ast_type_out = NULL;
+        if (value_ast_type_out) {
+            *value_ast_type_out = strcmp(name, "map_keys") == 0 ? type_args->types[0] : type_args->types[1];
+        }
+        return true;
+    }
+
     return false;
 }
 
@@ -3727,6 +3737,229 @@ static bool cg_emit_obsecro_expr(FILE *out, cct_codegen_t *cg, const cct_ast_nod
         }
         fputs(")", out);
         if (out_kind) *out_kind = CCT_CODEGEN_VALUE_BOOL;
+        return true;
+    }
+
+    if (strcmp(name, "gettext_builtin_catalog_new") == 0) {
+        if (argc != 1) {
+            cg_report_node(cg, expr, "OBSECRO gettext_builtin_catalog_new expects exactly (locale) in FASE 33E");
+            return false;
+        }
+        cct_codegen_value_kind_t k0 = CCT_CODEGEN_VALUE_UNKNOWN;
+        fputs("cct_rt_gettext_catalog_new(", out);
+        if (!cg_emit_expr(out, cg, args->nodes[0], &k0)) return false;
+        if (k0 != CCT_CODEGEN_VALUE_STRING) {
+            cg_report_node(cg, args->nodes[0], "OBSECRO gettext_builtin_catalog_new requires VERBUM locale argument in FASE 33E");
+            return false;
+        }
+        fputs(")", out);
+        if (out_kind) *out_kind = CCT_CODEGEN_VALUE_INT;
+        return true;
+    }
+
+    if (strcmp(name, "gettext_builtin_catalog_add") == 0) {
+        if (argc != 3) {
+            cg_report_node(cg, expr, "OBSECRO gettext_builtin_catalog_add expects exactly (catalog, key, value) in FASE 33E");
+            return false;
+        }
+        cct_codegen_value_kind_t k0 = CCT_CODEGEN_VALUE_UNKNOWN;
+        cct_codegen_value_kind_t k1 = CCT_CODEGEN_VALUE_UNKNOWN;
+        cct_codegen_value_kind_t k2 = CCT_CODEGEN_VALUE_UNKNOWN;
+        fputs("cct_rt_gettext_catalog_add((long long)(", out);
+        if (!cg_emit_expr(out, cg, args->nodes[0], &k0)) return false;
+        if (!(k0 == CCT_CODEGEN_VALUE_INT || k0 == CCT_CODEGEN_VALUE_BOOL)) {
+            cg_report_node(cg, args->nodes[0], "OBSECRO gettext_builtin_catalog_add requires catalog handle as first argument in FASE 33E");
+            return false;
+        }
+        fputs("), ", out);
+        if (!cg_emit_expr(out, cg, args->nodes[1], &k1)) return false;
+        if (k1 != CCT_CODEGEN_VALUE_STRING) {
+            cg_report_node(cg, args->nodes[1], "OBSECRO gettext_builtin_catalog_add requires VERBUM key as second argument in FASE 33E");
+            return false;
+        }
+        fputs(", ", out);
+        if (!cg_emit_expr(out, cg, args->nodes[2], &k2)) return false;
+        if (k2 != CCT_CODEGEN_VALUE_STRING) {
+            cg_report_node(cg, args->nodes[2], "OBSECRO gettext_builtin_catalog_add requires VERBUM value as third argument in FASE 33E");
+            return false;
+        }
+        fputs(")", out);
+        if (out_kind) *out_kind = CCT_CODEGEN_VALUE_BOOL;
+        return true;
+    }
+
+    if (strcmp(name, "gettext_builtin_catalog_add_plural") == 0) {
+        if (argc != 5) {
+            cg_report_node(cg, expr, "OBSECRO gettext_builtin_catalog_add_plural expects exactly (catalog, singular, plural, translated_singular, translated_plural) in FASE 33E");
+            return false;
+        }
+        cct_codegen_value_kind_t k0 = CCT_CODEGEN_VALUE_UNKNOWN;
+        cct_codegen_value_kind_t k1 = CCT_CODEGEN_VALUE_UNKNOWN;
+        cct_codegen_value_kind_t k2 = CCT_CODEGEN_VALUE_UNKNOWN;
+        cct_codegen_value_kind_t k3 = CCT_CODEGEN_VALUE_UNKNOWN;
+        cct_codegen_value_kind_t k4 = CCT_CODEGEN_VALUE_UNKNOWN;
+        fputs("cct_rt_gettext_catalog_add_plural((long long)(", out);
+        if (!cg_emit_expr(out, cg, args->nodes[0], &k0)) return false;
+        if (!(k0 == CCT_CODEGEN_VALUE_INT || k0 == CCT_CODEGEN_VALUE_BOOL)) {
+            cg_report_node(cg, args->nodes[0], "OBSECRO gettext_builtin_catalog_add_plural requires catalog handle as first argument in FASE 33E");
+            return false;
+        }
+        fputs("), ", out);
+        if (!cg_emit_expr(out, cg, args->nodes[1], &k1)) return false;
+        if (k1 != CCT_CODEGEN_VALUE_STRING) {
+            cg_report_node(cg, args->nodes[1], "OBSECRO gettext_builtin_catalog_add_plural requires VERBUM singular key as second argument in FASE 33E");
+            return false;
+        }
+        fputs(", ", out);
+        if (!cg_emit_expr(out, cg, args->nodes[2], &k2)) return false;
+        if (k2 != CCT_CODEGEN_VALUE_STRING) {
+            cg_report_node(cg, args->nodes[2], "OBSECRO gettext_builtin_catalog_add_plural requires VERBUM plural key as third argument in FASE 33E");
+            return false;
+        }
+        fputs(", ", out);
+        if (!cg_emit_expr(out, cg, args->nodes[3], &k3)) return false;
+        if (k3 != CCT_CODEGEN_VALUE_STRING) {
+            cg_report_node(cg, args->nodes[3], "OBSECRO gettext_builtin_catalog_add_plural requires VERBUM translated singular as fourth argument in FASE 33E");
+            return false;
+        }
+        fputs(", ", out);
+        if (!cg_emit_expr(out, cg, args->nodes[4], &k4)) return false;
+        if (k4 != CCT_CODEGEN_VALUE_STRING) {
+            cg_report_node(cg, args->nodes[4], "OBSECRO gettext_builtin_catalog_add_plural requires VERBUM translated plural as fifth argument in FASE 33E");
+            return false;
+        }
+        fputs(")", out);
+        if (out_kind) *out_kind = CCT_CODEGEN_VALUE_BOOL;
+        return true;
+    }
+
+    if (strcmp(name, "gettext_builtin_catalog_load") == 0) {
+        if (argc != 2) {
+            cg_report_node(cg, expr, "OBSECRO gettext_builtin_catalog_load expects exactly (path, locale) in FASE 33E");
+            return false;
+        }
+        cct_codegen_value_kind_t k0 = CCT_CODEGEN_VALUE_UNKNOWN;
+        cct_codegen_value_kind_t k1 = CCT_CODEGEN_VALUE_UNKNOWN;
+        fputs("cct_rt_gettext_catalog_load(", out);
+        if (!cg_emit_expr(out, cg, args->nodes[0], &k0)) return false;
+        if (k0 != CCT_CODEGEN_VALUE_STRING) {
+            cg_report_node(cg, args->nodes[0], "OBSECRO gettext_builtin_catalog_load requires VERBUM path as first argument in FASE 33E");
+            return false;
+        }
+        fputs(", ", out);
+        if (!cg_emit_expr(out, cg, args->nodes[1], &k1)) return false;
+        if (k1 != CCT_CODEGEN_VALUE_STRING) {
+            cg_report_node(cg, args->nodes[1], "OBSECRO gettext_builtin_catalog_load requires VERBUM locale as second argument in FASE 33E");
+            return false;
+        }
+        fputs(")", out);
+        if (out_kind) *out_kind = CCT_CODEGEN_VALUE_INT;
+        return true;
+    }
+
+    if (strcmp(name, "gettext_builtin_catalog_last_error") == 0) {
+        if (argc != 0) {
+            cg_report_node(cg, expr, "OBSECRO gettext_builtin_catalog_last_error expects no arguments in FASE 33E");
+            return false;
+        }
+        fputs("cct_rt_gettext_catalog_last_error()", out);
+        if (out_kind) *out_kind = CCT_CODEGEN_VALUE_STRING;
+        return true;
+    }
+
+    if (strcmp(name, "gettext_builtin_translate") == 0) {
+        if (argc != 2) {
+            cg_report_node(cg, expr, "OBSECRO gettext_builtin_translate expects exactly (catalog, key) in FASE 33E");
+            return false;
+        }
+        cct_codegen_value_kind_t k0 = CCT_CODEGEN_VALUE_UNKNOWN;
+        cct_codegen_value_kind_t k1 = CCT_CODEGEN_VALUE_UNKNOWN;
+        fputs("cct_rt_gettext_translate((long long)(", out);
+        if (!cg_emit_expr(out, cg, args->nodes[0], &k0)) return false;
+        if (!(k0 == CCT_CODEGEN_VALUE_INT || k0 == CCT_CODEGEN_VALUE_BOOL)) {
+            cg_report_node(cg, args->nodes[0], "OBSECRO gettext_builtin_translate requires catalog handle as first argument in FASE 33E");
+            return false;
+        }
+        fputs("), ", out);
+        if (!cg_emit_expr(out, cg, args->nodes[1], &k1)) return false;
+        if (k1 != CCT_CODEGEN_VALUE_STRING) {
+            cg_report_node(cg, args->nodes[1], "OBSECRO gettext_builtin_translate requires VERBUM key as second argument in FASE 33E");
+            return false;
+        }
+        fputs(")", out);
+        if (out_kind) *out_kind = CCT_CODEGEN_VALUE_STRING;
+        return true;
+    }
+
+    if (strcmp(name, "gettext_builtin_translate_plural") == 0) {
+        if (argc != 4) {
+            cg_report_node(cg, expr, "OBSECRO gettext_builtin_translate_plural expects exactly (catalog, singular, plural, count) in FASE 33E");
+            return false;
+        }
+        cct_codegen_value_kind_t k0 = CCT_CODEGEN_VALUE_UNKNOWN;
+        cct_codegen_value_kind_t k1 = CCT_CODEGEN_VALUE_UNKNOWN;
+        cct_codegen_value_kind_t k2 = CCT_CODEGEN_VALUE_UNKNOWN;
+        cct_codegen_value_kind_t k3 = CCT_CODEGEN_VALUE_UNKNOWN;
+        fputs("cct_rt_gettext_translate_plural((long long)(", out);
+        if (!cg_emit_expr(out, cg, args->nodes[0], &k0)) return false;
+        if (!(k0 == CCT_CODEGEN_VALUE_INT || k0 == CCT_CODEGEN_VALUE_BOOL)) {
+            cg_report_node(cg, args->nodes[0], "OBSECRO gettext_builtin_translate_plural requires catalog handle as first argument in FASE 33E");
+            return false;
+        }
+        fputs("), ", out);
+        if (!cg_emit_expr(out, cg, args->nodes[1], &k1)) return false;
+        if (k1 != CCT_CODEGEN_VALUE_STRING) {
+            cg_report_node(cg, args->nodes[1], "OBSECRO gettext_builtin_translate_plural requires VERBUM singular as second argument in FASE 33E");
+            return false;
+        }
+        fputs(", ", out);
+        if (!cg_emit_expr(out, cg, args->nodes[2], &k2)) return false;
+        if (k2 != CCT_CODEGEN_VALUE_STRING) {
+            cg_report_node(cg, args->nodes[2], "OBSECRO gettext_builtin_translate_plural requires VERBUM plural as third argument in FASE 33E");
+            return false;
+        }
+        fputs(", ", out);
+        if (!cg_emit_expr(out, cg, args->nodes[3], &k3)) return false;
+        if (!(k3 == CCT_CODEGEN_VALUE_INT || k3 == CCT_CODEGEN_VALUE_BOOL)) {
+            cg_report_node(cg, args->nodes[3], "OBSECRO gettext_builtin_translate_plural requires integer count as fourth argument in FASE 33E");
+            return false;
+        }
+        fputs(")", out);
+        if (out_kind) *out_kind = CCT_CODEGEN_VALUE_STRING;
+        return true;
+    }
+
+    if (strcmp(name, "gettext_builtin_default_set") == 0) {
+        if (argc != 1) {
+            cg_report_node(cg, expr, "OBSECRO gettext_builtin_default_set expects exactly (catalog) in FASE 33E");
+            return false;
+        }
+        cct_codegen_value_kind_t k0 = CCT_CODEGEN_VALUE_UNKNOWN;
+        fputs("cct_rt_gettext_default_set((long long)(", out);
+        if (!cg_emit_expr(out, cg, args->nodes[0], &k0)) return false;
+        if (!(k0 == CCT_CODEGEN_VALUE_INT || k0 == CCT_CODEGEN_VALUE_BOOL)) {
+            cg_report_node(cg, args->nodes[0], "OBSECRO gettext_builtin_default_set requires catalog handle as first argument in FASE 33E");
+            return false;
+        }
+        fputs("))", out);
+        if (out_kind) *out_kind = CCT_CODEGEN_VALUE_BOOL;
+        return true;
+    }
+
+    if (strcmp(name, "gettext_builtin_default_translate") == 0) {
+        if (argc != 1) {
+            cg_report_node(cg, expr, "OBSECRO gettext_builtin_default_translate expects exactly (key) in FASE 33E");
+            return false;
+        }
+        cct_codegen_value_kind_t k0 = CCT_CODEGEN_VALUE_UNKNOWN;
+        fputs("cct_rt_gettext_default_translate(", out);
+        if (!cg_emit_expr(out, cg, args->nodes[0], &k0)) return false;
+        if (k0 != CCT_CODEGEN_VALUE_STRING) {
+            cg_report_node(cg, args->nodes[0], "OBSECRO gettext_builtin_default_translate requires VERBUM key argument in FASE 33E");
+            return false;
+        }
+        fputs(")", out);
+        if (out_kind) *out_kind = CCT_CODEGEN_VALUE_STRING;
         return true;
     }
 
@@ -8715,7 +8948,15 @@ static bool cg_emit_iterum_stmt(FILE *out, cct_codegen_t *cg, const cct_ast_node
             goto fail;
         }
     } else {
-        item_kind = CCT_CODEGEN_LOCAL_INT;
+        item_ast_type = map_value_ast_type;
+        if (item_ast_type) {
+            if (!cg_iterum_binding_kind_from_ast_type(cg, item_ast_type, &item_kind)) {
+                cg_report_node(cg, stmt, "ITERUM FLUXUS element type is outside executable subset in FASE 19D.1");
+                goto fail;
+            }
+        } else {
+            item_kind = CCT_CODEGEN_LOCAL_INT;
+        }
     }
 
     if (!cg_define_local(cg, stmt->as.iterum.item_name, item_kind, item_ast_type, stmt)) goto fail;

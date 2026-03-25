@@ -347,6 +347,24 @@ RITUALE semantic_obsecro_expected_arity(VERBUM builtin_name) REDDE REX
   SI CONIURA compare(builtin_name, "set_union") == 0 VEL CONIURA compare(builtin_name, "set_intersection") == 0 VEL CONIURA compare(builtin_name, "set_difference") == 0 VEL CONIURA compare(builtin_name, "set_symmetric_difference") == 0 VEL CONIURA compare(builtin_name, "set_is_subset") == 0 VEL CONIURA compare(builtin_name, "set_equals") == 0
     REDDE 3
   FIN SI
+  SI CONIURA compare(builtin_name, "gettext_builtin_catalog_new") == 0 VEL CONIURA compare(builtin_name, "gettext_builtin_default_set") == 0 VEL CONIURA compare(builtin_name, "gettext_builtin_default_translate") == 0
+    REDDE 1
+  FIN SI
+  SI CONIURA compare(builtin_name, "gettext_builtin_catalog_last_error") == 0
+    REDDE 0
+  FIN SI
+  SI CONIURA compare(builtin_name, "gettext_builtin_catalog_load") == 0 VEL CONIURA compare(builtin_name, "gettext_builtin_translate") == 0
+    REDDE 2
+  FIN SI
+  SI CONIURA compare(builtin_name, "gettext_builtin_catalog_add") == 0
+    REDDE 3
+  FIN SI
+  SI CONIURA compare(builtin_name, "gettext_builtin_translate_plural") == 0
+    REDDE 4
+  FIN SI
+  SI CONIURA compare(builtin_name, "gettext_builtin_catalog_add_plural") == 0
+    REDDE 5
+  FIN SI
   REDDE -1
 EXPLICIT RITUALE
 
@@ -425,6 +443,15 @@ RITUALE semantic_obsecro_return_type_id(SPECULUM SemanticContext ctx, VERBUM bui
   FIN SI
   SI CONIURA compare(builtin_name, "set_free") == 0 VEL CONIURA compare(builtin_name, "set_clear") == 0 VEL CONIURA compare(builtin_name, "set_reserve") == 0
     REDDE (*ctx).type_nihil
+  FIN SI
+  SI CONIURA compare(builtin_name, "gettext_builtin_catalog_new") == 0 VEL CONIURA compare(builtin_name, "gettext_builtin_catalog_load") == 0
+    REDDE (*ctx).type_rex
+  FIN SI
+  SI CONIURA compare(builtin_name, "gettext_builtin_catalog_add") == 0 VEL CONIURA compare(builtin_name, "gettext_builtin_catalog_add_plural") == 0 VEL CONIURA compare(builtin_name, "gettext_builtin_default_set") == 0
+    REDDE (*ctx).type_verum
+  FIN SI
+  SI CONIURA compare(builtin_name, "gettext_builtin_catalog_last_error") == 0 VEL CONIURA compare(builtin_name, "gettext_builtin_translate") == 0 VEL CONIURA compare(builtin_name, "gettext_builtin_translate_plural") == 0 VEL CONIURA compare(builtin_name, "gettext_builtin_default_translate") == 0
+    REDDE (*ctx).type_verbum
   FIN SI
   REDDE (*ctx).type_error
 EXPLICIT RITUALE
@@ -695,6 +722,20 @@ RITUALE semantic_analyze_obsecro_call(SPECULUM SemanticContext ctx, SPECULUM Ast
     FIN SI
     SI CONIURA compare(builtin_name, "option_none") == 0 ET i == 0 ET NON CONIURA semantic_obsecro_type_is_integerish(ctx, arg_type_id)
       CONIURA semantic_report_error(ctx, (*arg).line, (*arg).column, "OBSECRO option_none expects integer type size argument")
+      REDDE (*ctx).type_error
+    FIN SI
+    SI (CONIURA compare(builtin_name, "gettext_builtin_catalog_new") == 0 ET i == 0) VEL (CONIURA compare(builtin_name, "gettext_builtin_catalog_load") == 0 ET (i == 0 VEL i == 1)) VEL (CONIURA compare(builtin_name, "gettext_builtin_catalog_add") == 0 ET (i == 1 VEL i == 2)) VEL (CONIURA compare(builtin_name, "gettext_builtin_catalog_add_plural") == 0 ET i >= 1) VEL (CONIURA compare(builtin_name, "gettext_builtin_translate") == 0 ET i == 1) VEL (CONIURA compare(builtin_name, "gettext_builtin_translate_plural") == 0 ET (i == 1 VEL i == 2)) VEL (CONIURA compare(builtin_name, "gettext_builtin_default_translate") == 0 ET i == 0)
+      SI arg_type_id != (*ctx).type_verbum
+        CONIURA semantic_report_error(ctx, (*arg).line, (*arg).column, "OBSECRO gettext builtin expects VERBUM nesse argumento")
+        REDDE (*ctx).type_error
+      FIN SI
+    FIN SI
+    SI (CONIURA compare(builtin_name, "gettext_builtin_catalog_add") == 0 VEL CONIURA compare(builtin_name, "gettext_builtin_catalog_add_plural") == 0 VEL CONIURA compare(builtin_name, "gettext_builtin_translate") == 0 VEL CONIURA compare(builtin_name, "gettext_builtin_translate_plural") == 0 VEL CONIURA compare(builtin_name, "gettext_builtin_default_set") == 0) ET i == 0 ET NON CONIURA semantic_type_is_integer(ctx, arg_type_id)
+      CONIURA semantic_report_error(ctx, (*arg).line, (*arg).column, "OBSECRO gettext builtin expects handle inteiro como primeiro argumento")
+      REDDE (*ctx).type_error
+    FIN SI
+    SI CONIURA compare(builtin_name, "gettext_builtin_translate_plural") == 0 ET i == 3 ET NON CONIURA semantic_type_is_integer(ctx, arg_type_id)
+      CONIURA semantic_report_error(ctx, (*arg).line, (*arg).column, "OBSECRO gettext_builtin_translate_plural expects integer count")
       REDDE (*ctx).type_error
     FIN SI
     SI (CONIURA compare(builtin_name, "option_is_some") == 0 VEL CONIURA compare(builtin_name, "option_is_none") == 0 VEL CONIURA compare(builtin_name, "option_unwrap_ptr") == 0 VEL CONIURA compare(builtin_name, "option_free") == 0 VEL CONIURA compare(builtin_name, "result_is_ok") == 0 VEL CONIURA compare(builtin_name, "result_is_err") == 0 VEL CONIURA compare(builtin_name, "result_unwrap_ptr") == 0 VEL CONIURA compare(builtin_name, "result_unwrap_err_ptr") == 0 VEL CONIURA compare(builtin_name, "result_free") == 0) ET i == 0 ET NON CONIURA semantic_obsecro_type_is_pointerish(ctx, arg_type_id)

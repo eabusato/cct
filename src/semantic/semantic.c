@@ -1805,6 +1805,15 @@ static const cct_sem_builtin_spec_t* sem_find_builtin(cct_semantic_analyzer_t *s
         specs[379].name = "image_builtin_get_format"; specs[379].min_args = 1; specs[379].variadic = false;
         specs[380].name = "image_builtin_last_error"; specs[380].min_args = 0; specs[380].variadic = false;
         specs[381].name = "fluxus_contains_verbum"; specs[381].min_args = 2; specs[381].variadic = false;
+        specs[382].name = "gettext_builtin_catalog_new"; specs[382].min_args = 1; specs[382].variadic = false;
+        specs[383].name = "gettext_builtin_catalog_add"; specs[383].min_args = 3; specs[383].variadic = false;
+        specs[384].name = "gettext_builtin_catalog_add_plural"; specs[384].min_args = 5; specs[384].variadic = false;
+        specs[385].name = "gettext_builtin_catalog_load"; specs[385].min_args = 2; specs[385].variadic = false;
+        specs[386].name = "gettext_builtin_catalog_last_error"; specs[386].min_args = 0; specs[386].variadic = false;
+        specs[387].name = "gettext_builtin_translate"; specs[387].min_args = 2; specs[387].variadic = false;
+        specs[388].name = "gettext_builtin_translate_plural"; specs[388].min_args = 4; specs[388].variadic = false;
+        specs[389].name = "gettext_builtin_default_set"; specs[389].min_args = 1; specs[389].variadic = false;
+        specs[390].name = "gettext_builtin_default_translate"; specs[390].min_args = 1; specs[390].variadic = false;
         initialized = true;
     }
 
@@ -2190,6 +2199,15 @@ static const cct_sem_builtin_spec_t* sem_find_builtin(cct_semantic_analyzer_t *s
     specs[379].return_type = &sem->type_rex;
     specs[380].return_type = &sem->type_verbum;
     specs[381].return_type = &sem->type_verum;
+    specs[382].return_type = &sem->type_rex;
+    specs[383].return_type = &sem->type_verum;
+    specs[384].return_type = &sem->type_verum;
+    specs[385].return_type = &sem->type_rex;
+    specs[386].return_type = &sem->type_verbum;
+    specs[387].return_type = &sem->type_verbum;
+    specs[388].return_type = &sem->type_verbum;
+    specs[389].return_type = &sem->type_verum;
+    specs[390].return_type = &sem->type_verbum;
 
     for (size_t i = 0; i < sizeof(specs) / sizeof(specs[0]); i++) {
         if (!specs[i].name) continue;
@@ -2355,6 +2373,18 @@ static bool sem_extract_iter_collection_from_coniura(
         if (kind_out) *kind_out = CCT_SEM_ITER_COLLECTION_FLUXUS;
         if (key_type_out) *key_type_out = NULL;
         if (value_type_out) *value_type_out = NULL;
+        return true;
+    }
+
+    if ((strcmp(name, "map_keys") == 0 || strcmp(name, "map_values") == 0) &&
+        type_args && type_args->count >= 2) {
+        if (kind_out) *kind_out = CCT_SEM_ITER_COLLECTION_FLUXUS;
+        if (key_type_out) *key_type_out = NULL;
+        if (value_type_out) {
+            const cct_ast_type_t *elem_ast =
+                strcmp(name, "map_keys") == 0 ? type_args->types[0] : type_args->types[1];
+            *value_type_out = sem_resolve_ast_type(sem, elem_ast, expr->line, expr->column);
+        }
         return true;
     }
 
@@ -3619,6 +3649,48 @@ static cct_sem_type_t* sem_analyze_builtin_obsecro(
             !(arg_type && (arg_type->kind == CCT_SEM_TYPE_VERBUM || sem_is_error_type(arg_type)))) {
             sem_report_nodef(sem, expr->as.obsecro.arguments->nodes[i],
                              "OBSECRO fluxus_contains_verbum expects VERBUM candidate as second argument");
+        }
+        if ((strcmp(name, "gettext_builtin_default_translate") == 0 ||
+             strcmp(name, "gettext_builtin_catalog_new") == 0 ||
+             strcmp(name, "gettext_builtin_catalog_load") == 0 ||
+             strcmp(name, "gettext_builtin_catalog_last_error") == 0) &&
+            (strcmp(name, "gettext_builtin_catalog_last_error") != 0) &&
+            (i == 0 || (strcmp(name, "gettext_builtin_catalog_load") == 0 && i == 1)) &&
+            !(arg_type && (arg_type->kind == CCT_SEM_TYPE_VERBUM || sem_is_error_type(arg_type)))) {
+            sem_report_nodef(sem, expr->as.obsecro.arguments->nodes[i],
+                             "OBSECRO %s expects VERBUM arguments", name);
+        }
+        if ((strcmp(name, "gettext_builtin_catalog_add") == 0 ||
+             strcmp(name, "gettext_builtin_catalog_add_plural") == 0 ||
+             strcmp(name, "gettext_builtin_translate") == 0 ||
+             strcmp(name, "gettext_builtin_translate_plural") == 0 ||
+             strcmp(name, "gettext_builtin_default_set") == 0) &&
+            i == 0 &&
+            !(sem_is_integer_type(arg_type) || sem_is_error_type(arg_type))) {
+            sem_report_nodef(sem, expr->as.obsecro.arguments->nodes[i],
+                             "OBSECRO %s expects integer handle as first argument", name);
+        }
+        if ((strcmp(name, "gettext_builtin_catalog_add") == 0 && (i == 1 || i == 2)) ||
+            (strcmp(name, "gettext_builtin_catalog_add_plural") == 0 && i >= 1 && i <= 4) ||
+            (strcmp(name, "gettext_builtin_translate") == 0 && i == 1) ||
+            (strcmp(name, "gettext_builtin_translate_plural") == 0 && (i == 1 || i == 2)) ||
+            (strcmp(name, "gettext_builtin_default_translate") == 0 && i == 0)) {
+            if (!(arg_type && (arg_type->kind == CCT_SEM_TYPE_VERBUM || sem_is_error_type(arg_type)))) {
+                sem_report_nodef(sem, expr->as.obsecro.arguments->nodes[i],
+                                 "OBSECRO %s expects VERBUM arguments", name);
+            }
+        }
+        if (strcmp(name, "gettext_builtin_translate_plural") == 0 &&
+            i == 3 &&
+            !(sem_is_integer_type(arg_type) || sem_is_error_type(arg_type))) {
+            sem_report_nodef(sem, expr->as.obsecro.arguments->nodes[i],
+                             "OBSECRO gettext_builtin_translate_plural expects integer count argument");
+        }
+        if (strcmp(name, "gettext_builtin_catalog_load") == 0 &&
+            i == 1 &&
+            !(arg_type && (arg_type->kind == CCT_SEM_TYPE_VERBUM || sem_is_error_type(arg_type)))) {
+            sem_report_nodef(sem, expr->as.obsecro.arguments->nodes[i],
+                             "OBSECRO gettext_builtin_catalog_load expects VERBUM locale argument");
         }
         if ((strcmp(name, "image_builtin_load") == 0 || strcmp(name, "image_builtin_last_error") == 0) &&
             i == 0 &&
@@ -5195,8 +5267,12 @@ static void sem_analyze_stmt(cct_semantic_analyzer_t *sem, const cct_ast_node_t 
                     sem_report_node(sem, stmt->as.iterum.collection,
                                     "FLUXUS não suportado em perfil freestanding (heap indisponível)");
                 }
-                /* FASE 12D.3 baseline: opaque FLUXUS iteration item defaults to REX. */
-                item_t = &sem->type_rex;
+                if (inferred_kind == CCT_SEM_ITER_COLLECTION_FLUXUS && inferred_value_t) {
+                    item_t = inferred_value_t;
+                } else {
+                    /* FASE 12D.3 baseline: opaque FLUXUS iteration item defaults to REX. */
+                    item_t = &sem->type_rex;
+                }
             } else if (!sem_is_error_type(collection_t)) {
                 sem_report_nodef(
                     sem,

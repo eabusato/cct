@@ -126,6 +126,15 @@ RITUALE codegen_capture_iter_local_info(SPECULUM CodegenContext ctx, SPECULUM As
         VINCIRE value_identity AD ""
       FIN SI
     FIN SI
+    SI (CONIURA compare(callee_name, "map_keys") == 0 VEL CONIURA compare(callee_name, "map_values") == 0) ET CONIURA ast_node_list_len((*(*(*stmt).right).callee).generic_args) == 2
+      EVOCA REX idx AD 0
+      SI CONIURA compare(callee_name, "map_values") == 0
+        VINCIRE idx AD 1
+      FIN SI
+      VINCIRE iter_kind AD 1
+      VINCIRE item_identity AD CONIURA codegen_generic_type_identity(ctx, CONIURA ast_node_list_get((*(*(*stmt).right).callee).generic_args, idx))
+      VINCIRE value_identity AD ""
+    FIN SI
   FIN SI
   SI iter_kind != 0
     CONIURA codegen_set_local_iter_info(ctx, (*stmt).name, iter_kind, item_identity, value_identity)
@@ -199,6 +208,19 @@ RITUALE codegen_emit_iterum_stmt(SPECULUM CodegenContext ctx, SPECULUM AstNode s
   SI iter_kind == 0 ET CONIURA compare(CONIURA codegen_expr_type_name(ctx, (*stmt).left), "SPECULUM(NIHIL)") == 0
     VINCIRE iter_kind AD 1
     VINCIRE item_identity AD "REX"
+  FIN SI
+
+  SI iter_kind == 0 ET (*(*stmt).left).kind == AST_CALL ET (*(*(*stmt).left).callee).kind == AST_IDENTIFIER
+    EVOCA VERBUM callee_name AD (*(*(*stmt).left).callee).name
+    SI (CONIURA compare(callee_name, "map_keys") == 0 VEL CONIURA compare(callee_name, "map_values") == 0) ET CONIURA ast_node_list_len((*(*(*stmt).left).callee).generic_args) == 2
+      EVOCA REX idx AD 0
+      SI CONIURA compare(callee_name, "map_values") == 0
+        VINCIRE idx AD 1
+      FIN SI
+      VINCIRE iter_kind AD 1
+      VINCIRE item_identity AD CONIURA codegen_generic_type_identity(ctx, CONIURA ast_node_list_get((*(*(*stmt).left).callee).generic_args, idx))
+      VINCIRE value_identity AD ""
+    FIN SI
   FIN SI
 
   SI iter_kind == 0
