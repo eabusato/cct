@@ -1,0 +1,330 @@
+-- CCT — Clavicula Turing
+-- Standard Library Module: log
+--
+-- FASE 34A: Structured logging baseline
+
+INCIPIT grimoire "log"
+
+ADVOCARE "cct/date.cct"
+ADVOCARE "cct/fs.cct"
+ADVOCARE "cct/io.cct"
+ADVOCARE "cct/result.cct"
+ADVOCARE "cct/verbum.cct"
+ADVOCARE "cct/verbum_builder.cct"
+
+ORDO LogLevel
+  TRACE
+  DEBUG
+  INFO
+  WARN
+  ERROR
+  FATAL
+FIN ORDO
+
+ORDO LogSinkKind
+  LOG_STDERR
+  LOG_FILE
+  LOG_CUSTOM
+FIN ORDO
+
+SIGILLUM Logger
+  module_name: VERBUM
+  level: LogLevel
+  sink_kind: LogSinkKind
+  sink_file_path: VERBUM
+  rate_limiter_enabled: VERUM
+  rate_max_per_second: REX
+  rate_burst: REX
+  rate_window_start_unix: REX
+  rate_count: REX
+  rate_dropped: REX
+FIN SIGILLUM
+
+SIGILLUM LogError
+  mensagem: VERBUM
+FIN SIGILLUM
+
+RITUALE LogErrorMsg(VERBUM mensagem) REDDE LogError
+  EVOCA LogError err
+  VINCIRE err.mensagem AD mensagem
+  REDDE err
+EXPLICIT RITUALE
+
+RITUALE log_fields_empty() REDDE VERBUM
+  REDDE "{}"
+EXPLICIT RITUALE
+
+RITUALE log_ok() REDDE SPECULUM NIHIL
+  REDDE CONIURA Ok GENUS(REX, LogError)(0)
+EXPLICIT RITUALE
+
+RITUALE log_err(VERBUM mensagem) REDDE SPECULUM NIHIL
+  EVOCA LogError err AD CONIURA LogErrorMsg(mensagem)
+  REDDE CONIURA Err GENUS(REX, LogError)(err)
+EXPLICIT RITUALE
+
+RITUALE log_new(VERBUM module_name, LogLevel level) REDDE Logger
+  EVOCA Logger logger
+  VINCIRE logger.module_name AD module_name
+  VINCIRE logger.level AD level
+  VINCIRE logger.sink_kind AD LOG_STDERR
+  VINCIRE logger.sink_file_path AD ""
+  VINCIRE logger.rate_limiter_enabled AD FALSUM
+  VINCIRE logger.rate_max_per_second AD 0
+  VINCIRE logger.rate_burst AD 0
+  VINCIRE logger.rate_window_start_unix AD 0
+  VINCIRE logger.rate_count AD 0
+  VINCIRE logger.rate_dropped AD 0
+  REDDE logger
+EXPLICIT RITUALE
+
+RITUALE log_set_sink_stderr(SPECULUM Logger logger) REDDE NIHIL
+  VINCIRE (*logger).sink_kind AD LOG_STDERR
+  VINCIRE (*logger).sink_file_path AD ""
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE log_set_sink_file(SPECULUM Logger logger, VERBUM path) REDDE SPECULUM NIHIL
+  SI CONIURA len(path) == 0
+    REDDE CONIURA log_err("caminho de log invalido")
+  FIN SI
+  SI NON CONIURA exists(path)
+    CONIURA write_all(path, "")
+  FIN SI
+  VINCIRE (*logger).sink_kind AD LOG_FILE
+  VINCIRE (*logger).sink_file_path AD path
+  REDDE CONIURA log_ok()
+EXPLICIT RITUALE
+
+RITUALE log_set_sink_custom(SPECULUM Logger logger) REDDE NIHIL
+  VINCIRE (*logger).sink_kind AD LOG_CUSTOM
+  VINCIRE (*logger).sink_file_path AD ""
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE log_set_rate_limit(SPECULUM Logger logger, REX max_per_second, REX burst) REDDE NIHIL
+  VINCIRE (*logger).rate_limiter_enabled AD VERUM
+  VINCIRE (*logger).rate_max_per_second AD max_per_second
+  VINCIRE (*logger).rate_burst AD burst
+  VINCIRE (*logger).rate_window_start_unix AD 0
+  VINCIRE (*logger).rate_count AD 0
+  VINCIRE (*logger).rate_dropped AD 0
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE log_level_rank(LogLevel level) REDDE REX
+  ELIGE level
+    CASUS TRACE:
+      REDDE 0
+    CASUS DEBUG:
+      REDDE 1
+    CASUS INFO:
+      REDDE 2
+    CASUS WARN:
+      REDDE 3
+    CASUS ERROR:
+      REDDE 4
+    ALIOQUIN:
+      REDDE 5
+  FIN ELIGE
+EXPLICIT RITUALE
+
+RITUALE log_level_to_string(LogLevel level) REDDE VERBUM
+  ELIGE level
+    CASUS TRACE:
+      REDDE "TRACE"
+    CASUS DEBUG:
+      REDDE "DEBUG"
+    CASUS INFO:
+      REDDE "INFO"
+    CASUS WARN:
+      REDDE "WARN"
+    CASUS ERROR:
+      REDDE "ERROR"
+    ALIOQUIN:
+      REDDE "FATAL"
+  FIN ELIGE
+EXPLICIT RITUALE
+
+RITUALE log_level_code_from_string(VERBUM level) REDDE REX
+  EVOCA VERBUM lower AD CONIURA to_lower(level)
+  SI CONIURA compare(lower, "trace") == 0
+    REDDE 0
+  FIN SI
+  SI CONIURA compare(lower, "debug") == 0
+    REDDE 1
+  FIN SI
+  SI CONIURA compare(lower, "info") == 0
+    REDDE 2
+  FIN SI
+  SI CONIURA compare(lower, "warn") == 0 VEL CONIURA compare(lower, "warning") == 0
+    REDDE 3
+  FIN SI
+  SI CONIURA compare(lower, "error") == 0
+    REDDE 4
+  FIN SI
+  SI CONIURA compare(lower, "fatal") == 0
+    REDDE 5
+  FIN SI
+  REDDE -1
+EXPLICIT RITUALE
+
+RITUALE log_level_is_valid(VERBUM level) REDDE VERUM
+  REDDE CONIURA log_level_code_from_string(level) >= 0
+EXPLICIT RITUALE
+
+RITUALE log_level_from_code(REX code) REDDE LogLevel
+  SI code <= 0
+    REDDE TRACE
+  FIN SI
+  SI code == 1
+    REDDE DEBUG
+  FIN SI
+  SI code == 2
+    REDDE INFO
+  FIN SI
+  SI code == 3
+    REDDE WARN
+  FIN SI
+  SI code == 4
+    REDDE ERROR
+  FIN SI
+  REDDE FATAL
+EXPLICIT RITUALE
+
+RITUALE log_level_from_string(VERBUM level) REDDE SPECULUM NIHIL
+  EVOCA REX code AD CONIURA log_level_code_from_string(level)
+  SI code >= 0
+    REDDE CONIURA Ok GENUS(LogLevel, LogError)(CONIURA log_level_from_code(code))
+  FIN SI
+  EVOCA LogError err AD CONIURA LogErrorMsg("nivel de log invalido")
+  REDDE CONIURA Err GENUS(LogLevel, LogError)(err)
+EXPLICIT RITUALE
+
+RITUALE log_should_emit(Logger logger, LogLevel level) REDDE VERUM
+  REDDE CONIURA log_level_rank(level) >= CONIURA log_level_rank(logger.level)
+EXPLICIT RITUALE
+
+RITUALE log_check_rate_limit(SPECULUM Logger logger) REDDE VERUM
+  SI NON (*logger).rate_limiter_enabled
+    REDDE VERUM
+  FIN SI
+
+  EVOCA REX now_unix AD CONIURA datetime_to_unix(CONIURA datetime_now())
+  SI now_unix != (*logger).rate_window_start_unix
+    VINCIRE (*logger).rate_window_start_unix AD now_unix
+    VINCIRE (*logger).rate_count AD 0
+  FIN SI
+
+  SI (*logger).rate_count < ((*logger).rate_max_per_second + (*logger).rate_burst)
+    VINCIRE (*logger).rate_count AD (*logger).rate_count + 1
+    REDDE VERUM
+  FIN SI
+
+  VINCIRE (*logger).rate_dropped AD (*logger).rate_dropped + 1
+  REDDE FALSUM
+EXPLICIT RITUALE
+
+RITUALE log_format_text_line(VERBUM timestamp, LogLevel level, VERBUM module_name, VERBUM message, VERBUM fields_json) REDDE VERBUM
+  EVOCA SPECULUM NIHIL b AD CONIURA builder_init()
+  CONIURA builder_append(b, timestamp)
+  CONIURA builder_append(b, " [")
+  CONIURA builder_append(b, CONIURA log_level_to_string(level))
+  CONIURA builder_append(b, "] ")
+  CONIURA builder_append(b, module_name)
+  CONIURA builder_append(b, ": ")
+  CONIURA builder_append(b, message)
+  SI CONIURA compare(fields_json, "") != 0 ET CONIURA compare(fields_json, "{}") != 0
+    CONIURA builder_append(b, " ")
+    CONIURA builder_append(b, fields_json)
+  FIN SI
+  EVOCA VERBUM out AD CONIURA builder_to_verbum(b)
+  CONIURA builder_free(b)
+  REDDE out
+EXPLICIT RITUALE
+
+RITUALE log_format_json_line(VERBUM timestamp, LogLevel level, VERBUM module_name, VERBUM message, VERBUM fields_json) REDDE VERBUM
+  EVOCA SPECULUM NIHIL b AD CONIURA builder_init()
+  CONIURA builder_append(b, "{\"timestamp\":\"")
+  CONIURA builder_append(b, timestamp)
+  CONIURA builder_append(b, "\",\"level\":\"")
+  CONIURA builder_append(b, CONIURA log_level_to_string(level))
+  CONIURA builder_append(b, "\",\"module\":\"")
+  CONIURA builder_append(b, module_name)
+  CONIURA builder_append(b, "\",\"message\":\"")
+  CONIURA builder_append(b, message)
+  CONIURA builder_append(b, "\",\"fields\":")
+  SI CONIURA len(fields_json) == 0
+    CONIURA builder_append(b, "{}")
+  ALITER
+    CONIURA builder_append(b, fields_json)
+  FIN SI
+  CONIURA builder_append(b, "}")
+  EVOCA VERBUM out AD CONIURA builder_to_verbum(b)
+  CONIURA builder_free(b)
+  REDDE out
+EXPLICIT RITUALE
+
+RITUALE log_format_text(Logger logger, VERBUM message, VERBUM fields_json) REDDE VERBUM
+  EVOCA VERBUM ts AD CONIURA datetime_format(CONIURA datetime_now(), "%Y-%m-%dT%H:%M:%S%z")
+  REDDE CONIURA log_format_text_line(ts, logger.level, logger.module_name, message, fields_json)
+EXPLICIT RITUALE
+
+RITUALE log_format_json(Logger logger, VERBUM message, VERBUM fields_json) REDDE VERBUM
+  EVOCA VERBUM ts AD CONIURA datetime_format(CONIURA datetime_now(), "%Y-%m-%dT%H:%M:%S%z")
+  REDDE CONIURA log_format_json_line(ts, logger.level, logger.module_name, message, fields_json)
+EXPLICIT RITUALE
+
+RITUALE log_emit(SPECULUM Logger logger, LogLevel level, VERBUM message, VERBUM fields_json) REDDE NIHIL
+  SI NON CONIURA log_should_emit(*logger, level)
+    REDDE
+  FIN SI
+  SI NON CONIURA log_check_rate_limit(logger)
+    REDDE
+  FIN SI
+
+  EVOCA VERBUM ts AD CONIURA datetime_format(CONIURA datetime_now(), "%Y-%m-%dT%H:%M:%S%z")
+  EVOCA VERBUM line AD CONIURA log_format_text_line(ts, level, (*logger).module_name, message, fields_json)
+
+  ELIGE (*logger).sink_kind
+    CASUS LOG_STDERR:
+      CONIURA eprintln(line)
+    CASUS LOG_FILE:
+      CONIURA append_all((*logger).sink_file_path, CONIURA concat(line, "\n"))
+    CASUS LOG_CUSTOM:
+      CONIURA eprintln(line)
+  FIN ELIGE
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE log_trace(SPECULUM Logger logger, VERBUM message, VERBUM fields_json) REDDE NIHIL
+  CONIURA log_emit(logger, TRACE, message, fields_json)
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE log_debug(SPECULUM Logger logger, VERBUM message, VERBUM fields_json) REDDE NIHIL
+  CONIURA log_emit(logger, DEBUG, message, fields_json)
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE log_info(SPECULUM Logger logger, VERBUM message, VERBUM fields_json) REDDE NIHIL
+  CONIURA log_emit(logger, INFO, message, fields_json)
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE log_warn(SPECULUM Logger logger, VERBUM message, VERBUM fields_json) REDDE NIHIL
+  CONIURA log_emit(logger, WARN, message, fields_json)
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE log_error(SPECULUM Logger logger, VERBUM message, VERBUM fields_json) REDDE NIHIL
+  CONIURA log_emit(logger, ERROR, message, fields_json)
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE log_fatal(SPECULUM Logger logger, VERBUM message, VERBUM fields_json) REDDE NIHIL
+  CONIURA log_emit(logger, FATAL, message, fields_json)
+  REDDE
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

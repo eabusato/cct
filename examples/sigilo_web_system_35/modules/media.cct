@@ -1,0 +1,17 @@
+INCIPIT grimoire "sigilo_web_media_35"
+
+-- @route route_id=media.upload method=POST path=/media/upload handler=media_upload group=/media middleware=auth,trace
+RITUALE media_upload() REDDE REX
+  REDDE 31
+EXPLICIT RITUALE
+
+-- @route route_id=media.thumb method=GET path=/media/:id/thumb handler=media_thumb group=/media middleware=trace
+RITUALE media_thumb() REDDE REX
+  REDDE 32
+EXPLICIT RITUALE
+
+RITUALE media_recent() REDDE REX
+  REDDE 33
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

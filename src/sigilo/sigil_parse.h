@@ -61,6 +61,21 @@ typedef struct {
 } cct_sigil_kv_t;
 
 typedef struct {
+    char *route_id;
+    char *method;
+    char *path;
+    char *route_name;
+    char *handler;
+    char *module;
+    char *group;
+    char *middleware;
+    char *path_params;
+    char *route_hash;
+    char *source_origin;
+    u32 section_index;
+} cct_sigil_web_route_t;
+
+typedef struct {
     char *input_path;
     cct_sigil_parse_mode_t mode;
 
@@ -73,6 +88,18 @@ typedef struct {
     bool has_diff_fingerprint_context;
     bool has_module_structural_summary;
     bool has_compatibility_hints;
+    bool has_web_routes;
+    bool has_manifest_provenance;
+    char *web_topology_hash;
+    char *manifest_format;
+    char *manifest_producer;
+    char *manifest_project;
+    u64 web_route_count;
+    u64 web_group_count;
+    u64 web_middleware_count;
+    cct_sigil_web_route_t *web_routes;
+    size_t web_routes_count;
+    size_t web_routes_capacity;
 
     cct_sigil_kv_t *entries;
     size_t entry_count;

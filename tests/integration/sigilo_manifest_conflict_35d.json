@@ -1,0 +1,1 @@
+{"format":"cct.sigilo.manifest.v1","producer":"civitas.routes","project":"desviados","routes":[{"route_id":"api.users.list","method":"GET","path":"/api/users/conflict","route_name":"api.users.list","handler":"users_list","module":"tests/integration/sigilo_routes_basic_35a.cct","group":"/api","middleware":["auth"]}]}

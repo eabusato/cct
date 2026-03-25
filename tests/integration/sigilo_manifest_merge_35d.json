@@ -1,0 +1,1 @@
+{"format":"cct.sigilo.manifest.v1","producer":"civitas.routes","project":"desviados","routes":[{"route_id":"api.posts.show","method":"GET","path":"/api/posts/:slug","route_name":"api.posts.show","handler":"posts_show","module":"tests/integration/sigilo_routes_partial_35d.cct","group":"/api","middleware":["auth","trace"],"path_params":"slug"}]}

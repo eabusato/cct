@@ -235,6 +235,98 @@ static void sv_validate_consistency(
     }
 }
 
+static bool sv_route_method_ok(const char *method) {
+    return method &&
+           (strcmp(method, "GET") == 0 ||
+            strcmp(method, "POST") == 0 ||
+            strcmp(method, "PUT") == 0 ||
+            strcmp(method, "PATCH") == 0 ||
+            strcmp(method, "DELETE") == 0 ||
+            strcmp(method, "HEAD") == 0 ||
+            strcmp(method, "OPTIONS") == 0 ||
+            strcmp(method, "ANY") == 0 ||
+            strcmp(method, "CUSTOM") == 0 ||
+            strcmp(method, "UNKNOWN") == 0);
+}
+
+static void sv_validate_web_routes(
+    const cct_sigil_document_t *doc,
+    cct_sigil_parse_mode_t mode,
+    cct_sigil_validation_result_t *out
+) {
+    if (!doc || !doc->has_web_routes) return;
+    cct_sigil_diag_level_t lvl = sv_mode_is_strict_contract(mode) ? CCT_SIGIL_DIAG_ERROR : CCT_SIGIL_DIAG_WARNING;
+
+    if (doc->web_topology_hash && doc->web_topology_hash[0] != '\0' && !sv_is_hash_hex_16(doc->web_topology_hash)) {
+        (void)sv_push_issue(out,
+                            lvl,
+                            CCT_SIGIL_PARSE_TYPE,
+                            0,
+                            0,
+                            "invalid web_topology_hash (action: regenerate sigilo with deterministic 16-hex web hash)");
+    }
+
+    if (doc->web_route_count != 0 && doc->web_route_count != (u64)doc->web_routes_count) {
+        (void)sv_push_issue(out,
+                            lvl,
+                            CCT_SIGIL_PARSE_TYPE,
+                            0,
+                            0,
+                            "route_count in [web_routes] does not match number of [web_route.N] sections (action: regenerate artifact)");
+    }
+
+    for (size_t i = 0; i < doc->web_routes_count; i++) {
+        const cct_sigil_web_route_t *route = &doc->web_routes[i];
+        const u32 line = 0;
+        if (!route->route_id || route->route_id[0] == '\0') {
+            (void)sv_push_issue(out, lvl, CCT_SIGIL_PARSE_MISSING_REQUIRED, line, 1,
+                                "web route missing route_id (action: set route_id on every [web_route.N])");
+        }
+        if (!route->method || route->method[0] == '\0') {
+            (void)sv_push_issue(out, lvl, CCT_SIGIL_PARSE_MISSING_REQUIRED, line, 1,
+                                "web route missing method (action: set HTTP method on every [web_route.N])");
+        } else if (!sv_route_method_ok(route->method)) {
+            (void)sv_push_issue(out, lvl, CCT_SIGIL_PARSE_TYPE, line, 1,
+                                "web route has invalid method (action: use GET|POST|PUT|PATCH|DELETE|HEAD|OPTIONS|ANY|CUSTOM|UNKNOWN)");
+        }
+        if (!route->path || route->path[0] == '\0') {
+            (void)sv_push_issue(out, lvl, CCT_SIGIL_PARSE_MISSING_REQUIRED, line, 1,
+                                "web route missing path (action: set absolute path on every [web_route.N])");
+        } else if (route->path[0] != '/') {
+            (void)sv_push_issue(out, lvl, CCT_SIGIL_PARSE_TYPE, line, 1,
+                                "web route path must start with '/' (action: normalize route path)");
+        }
+        if (!route->handler || route->handler[0] == '\0') {
+            (void)sv_push_issue(out, lvl, CCT_SIGIL_PARSE_MISSING_REQUIRED, line, 1,
+                                "web route missing handler (action: set handler on every [web_route.N])");
+        }
+        if (!route->module || route->module[0] == '\0') {
+            (void)sv_push_issue(out, lvl, CCT_SIGIL_PARSE_MISSING_REQUIRED, line, 1,
+                                "web route missing module (action: set module on every [web_route.N])");
+        }
+        if (!route->route_hash || !sv_is_hash_hex_16(route->route_hash)) {
+            (void)sv_push_issue(out, lvl, CCT_SIGIL_PARSE_MISSING_REQUIRED, line, 1,
+                                "web route missing valid route_hash (action: regenerate route sigil metadata)");
+        }
+        if (route->source_origin && route->source_origin[0] != '\0' &&
+            strcmp(route->source_origin, "native") != 0 &&
+            strcmp(route->source_origin, "manifest") != 0 &&
+            strcmp(route->source_origin, "merged") != 0) {
+            (void)sv_push_issue(out, lvl, CCT_SIGIL_PARSE_TYPE, line, 1,
+                                "web route source_origin invalid (action: use native|manifest|merged)");
+        }
+
+        for (size_t j = i + 1; j < doc->web_routes_count; j++) {
+            const cct_sigil_web_route_t *other = &doc->web_routes[j];
+            if (route->route_id && other->route_id && route->route_id[0] != '\0' &&
+                strcmp(route->route_id, other->route_id) == 0) {
+                (void)sv_push_issue(out, lvl, CCT_SIGIL_PARSE_DUPLICATE_KEY, line, 1,
+                                    "duplicate web route route_id (action: keep route_id unique)");
+            }
+        }
+    }
+}
+
 bool cct_sigil_validate_collect(
     const cct_sigil_document_t *doc,
     cct_sigil_parse_mode_t mode,
@@ -256,7 +348,11 @@ bool cct_sigil_validate_collect(
     sv_validate_numeric_key_if_present(doc, mode, out_result, "", "exported_symbol_count");
     sv_validate_numeric_key_if_present(doc, mode, out_result, "", "internal_symbol_count");
     sv_validate_numeric_key_if_present(doc, mode, out_result, "module_structural_summary", "module_count");
+    sv_validate_numeric_key_if_present(doc, mode, out_result, "web_routes", "route_count");
+    sv_validate_numeric_key_if_present(doc, mode, out_result, "web_routes", "group_count");
+    sv_validate_numeric_key_if_present(doc, mode, out_result, "web_routes", "middleware_count");
 
     sv_validate_consistency(doc, mode, out_result);
+    sv_validate_web_routes(doc, mode, out_result);
     return true;
 }

@@ -1,0 +1,223 @@
+-- CCT — Clavicula Turing
+-- Standard Library Module: uuid
+--
+-- FASE 33C: UUID v4/v7 source-backed baseline
+
+INCIPIT grimoire "uuid"
+
+ADVOCARE "cct/bytes.cct"
+ADVOCARE "cct/crypto.cct"
+ADVOCARE "cct/date.cct"
+ADVOCARE "cct/result.cct"
+ADVOCARE "cct/verbum.cct"
+
+SIGILLUM UUID
+  bytes: SPECULUM NIHIL
+FIN SIGILLUM
+
+SIGILLUM UUIDError
+  message: VERBUM
+FIN SIGILLUM
+
+RITUALE uuid_error(VERBUM message) REDDE UUIDError
+  EVOCA UUIDError err
+  VINCIRE err.message AD message
+  REDDE err
+EXPLICIT RITUALE
+
+RITUALE uuid_copy_bytes(SPECULUM NIHIL source) REDDE SPECULUM NIHIL
+  EVOCA REX n AD CONIURA bytes_len(source)
+  EVOCA SPECULUM NIHIL out AD CONIURA bytes_new(n)
+  EVOCA REX i AD 0
+  DUM i < n
+    CONIURA bytes_set(out, i, CONIURA bytes_get(source, i))
+    VINCIRE i AD i + 1
+  FIN DUM
+  REDDE out
+EXPLICIT RITUALE
+
+RITUALE uuid_hex_digit(REX value) REDDE MILES
+  SI value < 10
+    REDDE cast GENUS(MILES)(48 + value)
+  FIN SI
+  REDDE cast GENUS(MILES)(87 + value)
+EXPLICIT RITUALE
+
+RITUALE uuid_hex_value(MILES c) REDDE REX
+  SI c >= 48 ET c <= 57
+    REDDE cast GENUS(REX)(c) - 48
+  FIN SI
+  SI c >= 65 ET c <= 70
+    REDDE cast GENUS(REX)(c) - 55
+  FIN SI
+  SI c >= 97 ET c <= 102
+    REDDE cast GENUS(REX)(c) - 87
+  FIN SI
+  REDDE -1
+EXPLICIT RITUALE
+
+RITUALE uuid_byte_to_hex(MILES raw) REDDE VERBUM
+  EVOCA REX value AD cast GENUS(REX)(raw)
+  SI value < 0
+    VINCIRE value AD value + 256
+  FIN SI
+  EVOCA REX hi AD value / 16
+  EVOCA REX lo AD value - (hi * 16)
+  EVOCA VERBUM out AD ""
+  VINCIRE out AD CONIURA concat(out, CONIURA from_char(CONIURA uuid_hex_digit(hi)))
+  VINCIRE out AD CONIURA concat(out, CONIURA from_char(CONIURA uuid_hex_digit(lo)))
+  REDDE out
+EXPLICIT RITUALE
+
+RITUALE uuid_append_hex(VERBUM out, MILES raw) REDDE VERBUM
+  REDDE CONIURA concat(out, CONIURA uuid_byte_to_hex(raw))
+EXPLICIT RITUALE
+
+RITUALE uuid_make_from_bytes(SPECULUM NIHIL raw) REDDE UUID
+  EVOCA UUID id
+  VINCIRE id.bytes AD raw
+  REDDE id
+EXPLICIT RITUALE
+
+RITUALE uuid_low_nibble(REX value) REDDE REX
+  REDDE value - ((value / 16) * 16)
+EXPLICIT RITUALE
+
+RITUALE uuid_low_6_bits(REX value) REDDE REX
+  REDDE value - ((value / 64) * 64)
+EXPLICIT RITUALE
+
+RITUALE uuid_byte_at_int(REX value, REX divisor) REDDE MILES
+  EVOCA REX part AD value / divisor
+  EVOCA REX low AD part - ((part / 256) * 256)
+  REDDE cast GENUS(MILES)(low)
+EXPLICIT RITUALE
+
+RITUALE uuid_v4() REDDE UUID
+  EVOCA SPECULUM NIHIL raw AD CONIURA csprng_bytes(16)
+  EVOCA REX byte6 AD cast GENUS(REX)(CONIURA bytes_get(raw, 6))
+  EVOCA REX byte8 AD cast GENUS(REX)(CONIURA bytes_get(raw, 8))
+
+  SI byte6 < 0
+    VINCIRE byte6 AD byte6 + 256
+  FIN SI
+  SI byte8 < 0
+    VINCIRE byte8 AD byte8 + 256
+  FIN SI
+
+  CONIURA bytes_set(raw, 6, cast GENUS(MILES)(CONIURA uuid_low_nibble(byte6) + 64))
+  CONIURA bytes_set(raw, 8, cast GENUS(MILES)(CONIURA uuid_low_6_bits(byte8) + 128))
+
+  REDDE CONIURA uuid_make_from_bytes(raw)
+EXPLICIT RITUALE
+
+RITUALE uuid_v7() REDDE UUID
+  EVOCA DateTime now AD CONIURA datetime_now()
+  EVOCA REX unix_ms AD CONIURA datetime_to_unix(now) * 1000
+  EVOCA SPECULUM NIHIL raw AD CONIURA bytes_new(16)
+  EVOCA SPECULUM NIHIL tail AD CONIURA csprng_bytes(10)
+  EVOCA REX byte6 AD 0
+  EVOCA REX byte8 AD 0
+
+  CONIURA bytes_set(raw, 0, CONIURA uuid_byte_at_int(unix_ms, 1099511627776))
+  CONIURA bytes_set(raw, 1, CONIURA uuid_byte_at_int(unix_ms, 4294967296))
+  CONIURA bytes_set(raw, 2, CONIURA uuid_byte_at_int(unix_ms, 16777216))
+  CONIURA bytes_set(raw, 3, CONIURA uuid_byte_at_int(unix_ms, 65536))
+  CONIURA bytes_set(raw, 4, CONIURA uuid_byte_at_int(unix_ms, 256))
+  CONIURA bytes_set(raw, 5, CONIURA uuid_byte_at_int(unix_ms, 1))
+
+  VINCIRE byte6 AD cast GENUS(REX)(CONIURA bytes_get(tail, 0))
+  VINCIRE byte8 AD cast GENUS(REX)(CONIURA bytes_get(tail, 2))
+  SI byte6 < 0
+    VINCIRE byte6 AD byte6 + 256
+  FIN SI
+  SI byte8 < 0
+    VINCIRE byte8 AD byte8 + 256
+  FIN SI
+
+  CONIURA bytes_set(raw, 6, cast GENUS(MILES)(CONIURA uuid_low_nibble(byte6) + 112))
+  CONIURA bytes_set(raw, 7, CONIURA bytes_get(tail, 1))
+  CONIURA bytes_set(raw, 8, cast GENUS(MILES)(CONIURA uuid_low_6_bits(byte8) + 128))
+  CONIURA bytes_set(raw, 9, CONIURA bytes_get(tail, 3))
+  CONIURA bytes_set(raw, 10, CONIURA bytes_get(tail, 4))
+  CONIURA bytes_set(raw, 11, CONIURA bytes_get(tail, 5))
+  CONIURA bytes_set(raw, 12, CONIURA bytes_get(tail, 6))
+  CONIURA bytes_set(raw, 13, CONIURA bytes_get(tail, 7))
+  CONIURA bytes_set(raw, 14, CONIURA bytes_get(tail, 8))
+  CONIURA bytes_set(raw, 15, CONIURA bytes_get(tail, 9))
+
+  REDDE CONIURA uuid_make_from_bytes(raw)
+EXPLICIT RITUALE
+
+RITUALE uuid_to_string(UUID id) REDDE VERBUM
+  EVOCA VERBUM out AD ""
+  EVOCA REX i AD 0
+  DUM i < 16
+    VINCIRE out AD CONIURA uuid_append_hex(out, CONIURA bytes_get(id.bytes, i))
+    SI i == 3 VEL i == 5 VEL i == 7 VEL i == 9
+      VINCIRE out AD CONIURA concat(out, "-")
+    FIN SI
+    VINCIRE i AD i + 1
+  FIN DUM
+  REDDE out
+EXPLICIT RITUALE
+
+RITUALE uuid_to_bytes(UUID id) REDDE SPECULUM NIHIL
+  REDDE CONIURA uuid_copy_bytes(id.bytes)
+EXPLICIT RITUALE
+
+RITUALE uuid_from_bytes(SPECULUM NIHIL raw) REDDE SPECULUM NIHIL
+  SI CONIURA bytes_len(raw) != 16
+    REDDE CONIURA Err GENUS(UUID, UUIDError)(CONIURA uuid_error("uuid exige exatamente 16 bytes"))
+  FIN SI
+  REDDE CONIURA Ok GENUS(UUID, UUIDError)(CONIURA uuid_make_from_bytes(CONIURA uuid_copy_bytes(raw)))
+EXPLICIT RITUALE
+
+RITUALE uuid_equals(UUID a, UUID b) REDDE VERUM
+  EVOCA REX i AD 0
+  DUM i < 16
+    SI CONIURA bytes_get(a.bytes, i) != CONIURA bytes_get(b.bytes, i)
+      REDDE FALSUM
+    FIN SI
+    VINCIRE i AD i + 1
+  FIN DUM
+  REDDE VERUM
+EXPLICIT RITUALE
+
+RITUALE uuid_parse(VERBUM texto) REDDE SPECULUM NIHIL
+  EVOCA VERBUM clean AD ""
+  EVOCA REX n AD CONIURA len(texto)
+  EVOCA REX i AD 0
+  DUM i < n
+    EVOCA MILES c AD CONIURA char_at(texto, i)
+    SI c != 45
+      VINCIRE clean AD CONIURA concat(clean, CONIURA from_char(c))
+    FIN SI
+    VINCIRE i AD i + 1
+  FIN DUM
+
+  SI CONIURA len(clean) != 32
+    REDDE CONIURA Err GENUS(UUID, UUIDError)(CONIURA uuid_error("uuid invalido: tamanho"))
+  FIN SI
+
+  EVOCA SPECULUM NIHIL raw AD CONIURA bytes_new(16)
+  VINCIRE i AD 0
+  DUM i < 16
+    EVOCA REX hi AD CONIURA uuid_hex_value(CONIURA char_at(clean, i * 2))
+    EVOCA REX lo AD CONIURA uuid_hex_value(CONIURA char_at(clean, i * 2 + 1))
+    SI hi < 0 VEL lo < 0
+      REDDE CONIURA Err GENUS(UUID, UUIDError)(CONIURA uuid_error("uuid invalido: caracteres hex"))
+    FIN SI
+    CONIURA bytes_set(raw, i, cast GENUS(MILES)(hi * 16 + lo))
+    VINCIRE i AD i + 1
+  FIN DUM
+
+  REDDE CONIURA Ok GENUS(UUID, UUIDError)(CONIURA uuid_make_from_bytes(raw))
+EXPLICIT RITUALE
+
+RITUALE uuid_validate(VERBUM texto) REDDE VERUM
+  EVOCA SPECULUM NIHIL parsed AD CONIURA uuid_parse(texto)
+  REDDE CONIURA result_is_ok GENUS(UUID, UUIDError)(parsed)
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

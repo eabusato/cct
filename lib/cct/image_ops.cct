@@ -1,0 +1,229 @@
+-- CCT — Clavicula Turing
+-- Standard Library Module: image_ops
+--
+-- FASE 32I: Host image operations via ffmpeg/ffprobe
+
+INCIPIT grimoire "image_ops"
+
+ADVOCARE "cct/verbum.cct"
+
+ORDO ImageFormat
+  ImgJPEG,
+  ImgPNG,
+  ImgGIF,
+  ImgBMP,
+  ImgWebP,
+  ImgUnknown
+FIN ORDO
+
+ORDO ResizeMode
+  Nearest,
+  Bilinear,
+  Bicubic,
+  Lanczos
+FIN ORDO
+
+SIGILLUM Image
+  handle: SPECULUM NIHIL
+  width: REX
+  height: REX
+  channels: REX
+  formato: ImageFormat
+FIN SIGILLUM
+
+SIGILLUM SaveOptions
+  quality: REX
+FIN SIGILLUM
+
+SIGILLUM ImageDimensions
+  width: REX
+  height: REX
+FIN SIGILLUM
+
+RITUALE image_default_save_options() REDDE SaveOptions
+  EVOCA SaveOptions opts
+  VINCIRE opts.quality AD 90
+  REDDE opts
+EXPLICIT RITUALE
+
+RITUALE image_dimensions_zero() REDDE ImageDimensions
+  EVOCA ImageDimensions dims
+  VINCIRE dims.width AD 0
+  VINCIRE dims.height AD 0
+  REDDE dims
+EXPLICIT RITUALE
+
+RITUALE image_invalid() REDDE Image
+  EVOCA Image img
+  EVOCA SPECULUM NIHIL none
+  VINCIRE img.handle AD none
+  VINCIRE img.width AD 0
+  VINCIRE img.height AD 0
+  VINCIRE img.channels AD 0
+  VINCIRE img.formato AD ImgUnknown
+  REDDE img
+EXPLICIT RITUALE
+
+RITUALE image_last_error() REDDE VERBUM
+  REDDE OBSECRO image_builtin_last_error()
+EXPLICIT RITUALE
+
+RITUALE image_is_valid(Image img) REDDE VERUM
+  REDDE img.width > 0 ET img.height > 0
+EXPLICIT RITUALE
+
+RITUALE image_format_from_int(REX valor) REDDE ImageFormat
+  SI valor == 0
+    REDDE ImgJPEG
+  FIN SI
+  SI valor == 1
+    REDDE ImgPNG
+  FIN SI
+  SI valor == 2
+    REDDE ImgGIF
+  FIN SI
+  SI valor == 3
+    REDDE ImgBMP
+  FIN SI
+  SI valor == 4
+    REDDE ImgWebP
+  FIN SI
+  REDDE ImgUnknown
+EXPLICIT RITUALE
+
+RITUALE image_format_to_int(ImageFormat formato) REDDE REX
+  ELIGE formato
+    CASUS ImgJPEG:
+      REDDE 0
+    CASUS ImgPNG:
+      REDDE 1
+    CASUS ImgGIF:
+      REDDE 2
+    CASUS ImgBMP:
+      REDDE 3
+    CASUS ImgWebP:
+      REDDE 4
+    ALIOQUIN:
+      REDDE 5
+  FIN ELIGE
+EXPLICIT RITUALE
+
+RITUALE image_format_to_string(ImageFormat formato) REDDE VERBUM
+  ELIGE formato
+    CASUS ImgJPEG:
+      REDDE "jpeg"
+    CASUS ImgPNG:
+      REDDE "png"
+    CASUS ImgGIF:
+      REDDE "gif"
+    CASUS ImgBMP:
+      REDDE "bmp"
+    CASUS ImgWebP:
+      REDDE "webp"
+    ALIOQUIN:
+      REDDE "unknown"
+  FIN ELIGE
+EXPLICIT RITUALE
+
+RITUALE image_format_from_path(VERBUM caminho) REDDE ImageFormat
+  EVOCA VERBUM lowered AD CONIURA to_lower(caminho)
+  SI CONIURA ends_with(lowered, ".jpg") VEL CONIURA ends_with(lowered, ".jpeg")
+    REDDE ImgJPEG
+  FIN SI
+  SI CONIURA ends_with(lowered, ".png")
+    REDDE ImgPNG
+  FIN SI
+  SI CONIURA ends_with(lowered, ".gif")
+    REDDE ImgGIF
+  FIN SI
+  SI CONIURA ends_with(lowered, ".bmp")
+    REDDE ImgBMP
+  FIN SI
+  SI CONIURA ends_with(lowered, ".webp")
+    REDDE ImgWebP
+  FIN SI
+  REDDE ImgUnknown
+EXPLICIT RITUALE
+
+RITUALE image_make_from_handle(SPECULUM NIHIL handle, ImageFormat formato) REDDE Image
+  EVOCA Image img
+  VINCIRE img.handle AD handle
+  VINCIRE img.width AD OBSECRO image_builtin_get_width(handle)
+  VINCIRE img.height AD OBSECRO image_builtin_get_height(handle)
+  VINCIRE img.channels AD OBSECRO image_builtin_get_channels(handle)
+  VINCIRE img.formato AD formato
+  REDDE img
+EXPLICIT RITUALE
+
+RITUALE resize_mode_to_int(ResizeMode mode) REDDE REX
+  ELIGE mode
+    CASUS Nearest:
+      REDDE 0
+    CASUS Bilinear:
+      REDDE 1
+    CASUS Bicubic:
+      REDDE 2
+    CASUS Lanczos:
+      REDDE 3
+  FIN ELIGE
+EXPLICIT RITUALE
+
+RITUALE image_load(VERBUM caminho) REDDE Image
+  EVOCA SPECULUM NIHIL handle AD OBSECRO image_builtin_load(caminho)
+  REDDE CONIURA image_make_from_handle(handle, CONIURA image_format_from_path(caminho))
+EXPLICIT RITUALE
+
+RITUALE image_free(Image img) REDDE NIHIL
+  OBSECRO image_builtin_free(img.handle)
+EXPLICIT RITUALE
+
+RITUALE image_save(Image img, VERBUM caminho, SaveOptions opts) REDDE VERUM
+  SI NON CONIURA image_is_valid(img)
+    REDDE FALSUM
+  FIN SI
+  REDDE OBSECRO image_builtin_save(img.handle, caminho, opts.quality) != 0
+EXPLICIT RITUALE
+
+RITUALE image_resize(Image img, REX novo_width, REX novo_height, ResizeMode mode) REDDE Image
+  SI NON CONIURA image_is_valid(img)
+    REDDE CONIURA image_invalid()
+  FIN SI
+  EVOCA SPECULUM NIHIL handle AD OBSECRO image_builtin_resize(img.handle, novo_width, novo_height, CONIURA resize_mode_to_int(mode))
+  REDDE CONIURA image_make_from_handle(handle, img.formato)
+EXPLICIT RITUALE
+
+RITUALE image_crop(Image img, REX x, REX y, REX width, REX height) REDDE Image
+  SI NON CONIURA image_is_valid(img)
+    REDDE CONIURA image_invalid()
+  FIN SI
+  EVOCA SPECULUM NIHIL handle AD OBSECRO image_builtin_crop(img.handle, x, y, width, height)
+  REDDE CONIURA image_make_from_handle(handle, img.formato)
+EXPLICIT RITUALE
+
+RITUALE image_rotate(Image img, REX angulo) REDDE Image
+  SI NON CONIURA image_is_valid(img)
+    REDDE CONIURA image_invalid()
+  FIN SI
+  EVOCA SPECULUM NIHIL handle AD OBSECRO image_builtin_rotate(img.handle, angulo)
+  REDDE CONIURA image_make_from_handle(handle, img.formato)
+EXPLICIT RITUALE
+
+RITUALE image_convert_format(Image img, ImageFormat novo_formato) REDDE Image
+  SI NON CONIURA image_is_valid(img)
+    REDDE CONIURA image_invalid()
+  FIN SI
+  EVOCA SPECULUM NIHIL handle AD OBSECRO image_builtin_convert(img.handle, CONIURA image_format_to_int(novo_formato))
+  REDDE CONIURA image_make_from_handle(handle, novo_formato)
+EXPLICIT RITUALE
+
+RITUALE image_get_dimensions(Image img) REDDE ImageDimensions
+  SI NON CONIURA image_is_valid(img)
+    REDDE CONIURA image_dimensions_zero()
+  FIN SI
+  EVOCA ImageDimensions dims
+  VINCIRE dims.width AD img.width
+  VINCIRE dims.height AD img.height
+  REDDE dims
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

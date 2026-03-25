@@ -1,0 +1,70 @@
+-- CCT — Clavicula Turing
+-- Standard Library Module: crypto
+--
+-- FASE 32A: Canonical crypto baseline
+--
+-- Copyright (c) Erick Andrade Busato. Todos os direitos reservados.
+
+INCIPIT grimoire "crypto"
+
+ADVOCARE "cct/bytes.cct"
+ADVOCARE "cct/fmt.cct"
+ADVOCARE "cct/verbum.cct"
+
+RITUALE sha256(VERBUM texto) REDDE VERBUM
+  REDDE OBSECRO crypto_sha256_text(texto)
+EXPLICIT RITUALE
+
+RITUALE sha256_bytes(SPECULUM NIHIL buffer, REX tamanho) REDDE VERBUM
+  REDDE OBSECRO crypto_sha256_bytes(buffer, tamanho)
+EXPLICIT RITUALE
+
+RITUALE sha512(VERBUM texto) REDDE VERBUM
+  REDDE OBSECRO crypto_sha512_text(texto)
+EXPLICIT RITUALE
+
+RITUALE sha512_bytes(SPECULUM NIHIL buffer, REX tamanho) REDDE VERBUM
+  REDDE OBSECRO crypto_sha512_bytes(buffer, tamanho)
+EXPLICIT RITUALE
+
+RITUALE hmac_sha256(VERBUM chave, VERBUM mensagem) REDDE VERBUM
+  REDDE OBSECRO crypto_hmac_sha256(chave, mensagem)
+EXPLICIT RITUALE
+
+RITUALE hmac_sha512(VERBUM chave, VERBUM mensagem) REDDE VERBUM
+  REDDE OBSECRO crypto_hmac_sha512(chave, mensagem)
+EXPLICIT RITUALE
+
+RITUALE pbkdf2_sha256(VERBUM senha, VERBUM salt, REX iteracoes, REX tamanho_chave) REDDE VERBUM
+  REDDE OBSECRO crypto_pbkdf2_sha256(senha, salt, iteracoes, tamanho_chave)
+EXPLICIT RITUALE
+
+RITUALE csprng_bytes(REX quantidade) REDDE SPECULUM NIHIL
+  REDDE OBSECRO crypto_csprng_bytes(quantidade)
+EXPLICIT RITUALE
+
+RITUALE constant_time_compare(VERBUM a, VERBUM b) REDDE VERUM
+  REDDE OBSECRO crypto_constant_time_compare(a, b)
+EXPLICIT RITUALE
+
+RITUALE bytes_to_hex(SPECULUM NIHIL bytes) REDDE VERBUM
+  EVOCA VERBUM out AD ""
+  EVOCA REX i AD 0
+  EVOCA REX n AD CONIURA bytes_len(bytes)
+  DUM i < n
+    EVOCA MILES raw AD CONIURA bytes_get(bytes, i)
+    EVOCA REX value AD cast GENUS(REX)(raw)
+    SI value < 0
+      VINCIRE value AD value + 256
+    FIN SI
+    EVOCA VERBUM piece AD CONIURA strip_prefix(OBSECRO fmt_stringify_int_hex(value), "0x")
+    SI CONIURA len(piece) < 2
+      VINCIRE piece AD CONIURA pad_left(piece, 2, 48)
+    FIN SI
+    VINCIRE out AD CONIURA concat(out, piece)
+    VINCIRE i AD i + 1
+  FIN DUM
+  REDDE out
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

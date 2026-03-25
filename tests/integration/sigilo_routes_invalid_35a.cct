@@ -1,0 +1,12 @@
+INCIPIT grimoire "sigilo_routes_invalid_35a"
+
+-- @route route_id=broken.route method=GET handler=broken_handler group=/broken middleware=none
+RITUALE broken_handler() REDDE REX
+  REDDE 0
+EXPLICIT RITUALE
+
+RITUALE main() REDDE REX
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

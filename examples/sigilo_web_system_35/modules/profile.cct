@@ -1,0 +1,17 @@
+INCIPIT grimoire "sigilo_web_profile_35"
+
+-- @route route_id=profile.show method=GET path=/perfil handler=profile_show group=/perfil middleware=auth,trace
+RITUALE profile_show() REDDE REX
+  REDDE 41
+EXPLICIT RITUALE
+
+-- @route route_id=profile.avatar method=POST path=/perfil/avatar handler=profile_avatar group=/perfil middleware=auth,trace
+RITUALE profile_avatar() REDDE REX
+  REDDE 42
+EXPLICIT RITUALE
+
+RITUALE profile_load() REDDE REX
+  REDDE 43
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

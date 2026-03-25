@@ -1,0 +1,22 @@
+INCIPIT grimoire "sigilo_routes_order_35a"
+
+-- @route route_id=admin.dashboard method=GET path=/admin/dashboard handler=admin_dashboard group=/admin middleware=auth
+RITUALE admin_dashboard() REDDE REX
+  REDDE 10
+EXPLICIT RITUALE
+
+-- @route route_id=api.zeta method=GET path=/api/zeta handler=api_zeta group=/api middleware=trace
+RITUALE api_zeta() REDDE REX
+  REDDE 20
+EXPLICIT RITUALE
+
+-- @route route_id=api.alpha method=GET path=/api/alpha handler=api_alpha group=/api middleware=trace
+RITUALE api_alpha() REDDE REX
+  REDDE 30
+EXPLICIT RITUALE
+
+RITUALE main() REDDE REX
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

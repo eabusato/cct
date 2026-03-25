@@ -1,0 +1,367 @@
+-- CCT — Clavicula Turing
+-- Standard Library Module: filetype
+--
+-- FASE 32G: Magic-byte filetype detection baseline
+
+INCIPIT grimoire "filetype"
+
+ADVOCARE "cct/verbum.cct"
+
+ORDO FileType
+  Unknown,
+  JPEG,
+  PNG,
+  GIF,
+  BMP,
+  WebP,
+  MP4,
+  WebM,
+  AVI,
+  MP3,
+  OGG,
+  WAV,
+  PDF,
+  ZIP,
+  Text
+FIN ORDO
+
+RITUALE filetype_detect(VERBUM caminho) REDDE FileType
+  SI NON (OBSECRO fs_exists(caminho))
+    REDDE Unknown
+  FIN SI
+  EVOCA VERBUM text AD OBSECRO fs_read_all(caminho)
+  EVOCA REX len AD CONIURA len(text)
+  SI len < 2
+    REDDE Unknown
+  FIN SI
+
+  SI len >= 3 ET CONIURA text_byte(text, 0) == 255 ET CONIURA text_byte(text, 1) == 216 ET CONIURA text_byte(text, 2) == 255
+    REDDE JPEG
+  FIN SI
+  SI len >= 8 ET CONIURA text_byte(text, 0) == 137 ET CONIURA text_byte(text, 1) == 80 ET CONIURA text_byte(text, 2) == 78 ET CONIURA text_byte(text, 3) == 71 ET CONIURA text_byte(text, 4) == 13 ET CONIURA text_byte(text, 5) == 10 ET CONIURA text_byte(text, 6) == 26 ET CONIURA text_byte(text, 7) == 10
+    REDDE PNG
+  FIN SI
+  SI CONIURA text_byte(text, 0) == 66 ET CONIURA text_byte(text, 1) == 77
+    REDDE BMP
+  FIN SI
+  SI CONIURA text_has(text, 0, "GIF8")
+    REDDE GIF
+  FIN SI
+  SI len >= 12 ET CONIURA text_has(text, 0, "RIFF") ET CONIURA text_has(text, 8, "WEBP")
+    REDDE WebP
+  FIN SI
+  SI len >= 12 ET CONIURA text_has(text, 4, "ftyp")
+    REDDE MP4
+  FIN SI
+  SI len >= 12 ET CONIURA text_has(text, 0, "RIFF") ET CONIURA text_has(text, 8, "AVI ")
+    REDDE AVI
+  FIN SI
+  SI len >= 3 ET CONIURA text_has(text, 0, "ID3")
+    REDDE MP3
+  FIN SI
+  SI len >= 4 ET CONIURA text_has(text, 0, "OggS")
+    REDDE OGG
+  FIN SI
+  SI len >= 12 ET CONIURA text_has(text, 0, "RIFF") ET CONIURA text_has(text, 8, "WAVE")
+    REDDE WAV
+  FIN SI
+  SI len >= 4 ET CONIURA text_has(text, 0, "%PDF")
+    REDDE PDF
+  FIN SI
+  SI len >= 4 ET CONIURA text_byte(text, 0) == 80 ET CONIURA text_byte(text, 1) == 75 ET (CONIURA text_byte(text, 2) == 3 VEL CONIURA text_byte(text, 2) == 5 VEL CONIURA text_byte(text, 2) == 7) ET (CONIURA text_byte(text, 3) == 4 VEL CONIURA text_byte(text, 3) == 6 VEL CONIURA text_byte(text, 3) == 8)
+    REDDE ZIP
+  FIN SI
+  SI CONIURA looks_text(text)
+    REDDE Text
+  FIN SI
+  REDDE Unknown
+EXPLICIT RITUALE
+
+RITUALE filetype_detect_bytes(SPECULUM NIHIL buffer, REX tamanho) REDDE FileType
+  SI tamanho < 2
+    REDDE Unknown
+  FIN SI
+
+  SI tamanho >= 3 ET CONIURA buffer_byte(buffer, 0) == 255 ET CONIURA buffer_byte(buffer, 1) == 216 ET CONIURA buffer_byte(buffer, 2) == 255
+    REDDE JPEG
+  FIN SI
+  SI tamanho >= 8 ET CONIURA buffer_byte(buffer, 0) == 137 ET CONIURA buffer_byte(buffer, 1) == 80 ET CONIURA buffer_byte(buffer, 2) == 78 ET CONIURA buffer_byte(buffer, 3) == 71 ET CONIURA buffer_byte(buffer, 4) == 13 ET CONIURA buffer_byte(buffer, 5) == 10 ET CONIURA buffer_byte(buffer, 6) == 26 ET CONIURA buffer_byte(buffer, 7) == 10
+    REDDE PNG
+  FIN SI
+  SI CONIURA buffer_has(buffer, tamanho, 0, "GIF8")
+    REDDE GIF
+  FIN SI
+  SI CONIURA buffer_byte(buffer, 0) == 66 ET CONIURA buffer_byte(buffer, 1) == 77
+    REDDE BMP
+  FIN SI
+  SI tamanho >= 12 ET CONIURA buffer_has(buffer, tamanho, 0, "RIFF") ET CONIURA buffer_has(buffer, tamanho, 8, "WEBP")
+    REDDE WebP
+  FIN SI
+  SI tamanho >= 12 ET CONIURA buffer_has(buffer, tamanho, 4, "ftyp")
+    REDDE MP4
+  FIN SI
+  SI tamanho >= 4 ET CONIURA buffer_byte(buffer, 0) == 26 ET CONIURA buffer_byte(buffer, 1) == 69 ET CONIURA buffer_byte(buffer, 2) == 223 ET CONIURA buffer_byte(buffer, 3) == 163
+    REDDE WebM
+  FIN SI
+  SI tamanho >= 12 ET CONIURA buffer_has(buffer, tamanho, 0, "RIFF") ET CONIURA buffer_has(buffer, tamanho, 8, "AVI ")
+    REDDE AVI
+  FIN SI
+  SI (tamanho >= 3 ET CONIURA buffer_has(buffer, tamanho, 0, "ID3")) VEL (tamanho >= 2 ET CONIURA buffer_byte(buffer, 0) == 255 ET CONIURA buffer_byte(buffer, 1) >= 224)
+    REDDE MP3
+  FIN SI
+  SI tamanho >= 4 ET CONIURA buffer_has(buffer, tamanho, 0, "OggS")
+    REDDE OGG
+  FIN SI
+  SI tamanho >= 12 ET CONIURA buffer_has(buffer, tamanho, 0, "RIFF") ET CONIURA buffer_has(buffer, tamanho, 8, "WAVE")
+    REDDE WAV
+  FIN SI
+  SI tamanho >= 4 ET CONIURA buffer_has(buffer, tamanho, 0, "%PDF")
+    REDDE PDF
+  FIN SI
+  SI tamanho >= 4 ET CONIURA buffer_byte(buffer, 0) == 80 ET CONIURA buffer_byte(buffer, 1) == 75 ET (CONIURA buffer_byte(buffer, 2) == 3 VEL CONIURA buffer_byte(buffer, 2) == 5 VEL CONIURA buffer_byte(buffer, 2) == 7) ET (CONIURA buffer_byte(buffer, 3) == 4 VEL CONIURA buffer_byte(buffer, 3) == 6 VEL CONIURA buffer_byte(buffer, 3) == 8)
+    REDDE ZIP
+  FIN SI
+  SI CONIURA looks_text_bytes(buffer, tamanho)
+    REDDE Text
+  FIN SI
+  REDDE Unknown
+EXPLICIT RITUALE
+
+RITUALE buffer_byte(SPECULUM NIHIL buffer, REX index) REDDE REX
+  EVOCA REX raw AD cast GENUS(REX)(OBSECRO bytes_get(buffer, index))
+  SI raw < 0
+    REDDE raw + 256
+  FIN SI
+  REDDE raw
+EXPLICIT RITUALE
+
+RITUALE text_byte(VERBUM text, REX index) REDDE REX
+  EVOCA REX raw AD cast GENUS(REX)(CONIURA char_at(text, index))
+  SI raw < 0
+    REDDE raw + 256
+  FIN SI
+  REDDE raw
+EXPLICIT RITUALE
+
+RITUALE buffer_has(SPECULUM NIHIL buffer, REX tamanho, REX offset, VERBUM expected) REDDE VERUM
+  EVOCA REX n AD CONIURA len(expected)
+  SI offset + n > tamanho
+    REDDE FALSUM
+  FIN SI
+  EVOCA REX i AD 0
+  DUM i < n
+    SI CONIURA buffer_byte(buffer, offset + i) != CONIURA text_byte(expected, i)
+      REDDE FALSUM
+    FIN SI
+    VINCIRE i AD i + 1
+  FIN DUM
+  REDDE VERUM
+EXPLICIT RITUALE
+
+RITUALE text_has(VERBUM text, REX offset, VERBUM expected) REDDE VERUM
+  EVOCA REX n AD CONIURA len(expected)
+  SI offset + n > CONIURA len(text)
+    REDDE FALSUM
+  FIN SI
+  EVOCA REX i AD 0
+  DUM i < n
+    SI CONIURA text_byte(text, offset + i) != CONIURA text_byte(expected, i)
+      REDDE FALSUM
+    FIN SI
+    VINCIRE i AD i + 1
+  FIN DUM
+  REDDE VERUM
+EXPLICIT RITUALE
+
+RITUALE looks_text_bytes(SPECULUM NIHIL buffer, REX tamanho) REDDE VERUM
+  SI tamanho <= 0
+    REDDE FALSUM
+  FIN SI
+  EVOCA REX i AD 0
+  DUM i < tamanho
+    EVOCA REX b AD CONIURA buffer_byte(buffer, i)
+    SI b == 0
+      REDDE FALSUM
+    FIN SI
+    SI NON (b == 9 VEL b == 10 VEL b == 13 VEL (b >= 32 ET b <= 126) VEL b >= 128)
+      REDDE FALSUM
+    FIN SI
+    VINCIRE i AD i + 1
+  FIN DUM
+  REDDE VERUM
+EXPLICIT RITUALE
+
+RITUALE looks_text(VERBUM text) REDDE VERUM
+  EVOCA REX n AD CONIURA len(text)
+  SI n <= 0
+    REDDE FALSUM
+  FIN SI
+  EVOCA REX i AD 0
+  DUM i < n
+    EVOCA REX b AD CONIURA text_byte(text, i)
+    SI b == 0
+      REDDE FALSUM
+    FIN SI
+    SI NON (b == 9 VEL b == 10 VEL b == 13 VEL (b >= 32 ET b <= 126) VEL b >= 128)
+      REDDE FALSUM
+    FIN SI
+    VINCIRE i AD i + 1
+  FIN DUM
+  REDDE VERUM
+EXPLICIT RITUALE
+
+RITUALE filetype_to_string(FileType ft) REDDE VERBUM
+  ELIGE ft
+    CASUS JPEG:
+      REDDE "jpeg"
+    CASUS PNG:
+      REDDE "png"
+    CASUS GIF:
+      REDDE "gif"
+    CASUS BMP:
+      REDDE "bmp"
+    CASUS WebP:
+      REDDE "webp"
+    CASUS MP4:
+      REDDE "mp4"
+    CASUS WebM:
+      REDDE "webm"
+    CASUS AVI:
+      REDDE "avi"
+    CASUS MP3:
+      REDDE "mp3"
+    CASUS OGG:
+      REDDE "ogg"
+    CASUS WAV:
+      REDDE "wav"
+    CASUS PDF:
+      REDDE "pdf"
+    CASUS ZIP:
+      REDDE "zip"
+    CASUS Text:
+      REDDE "text"
+    ALIOQUIN:
+      REDDE "unknown"
+  FIN ELIGE
+EXPLICIT RITUALE
+
+RITUALE filetype_extension(FileType ft) REDDE VERBUM
+  ELIGE ft
+    CASUS JPEG:
+      REDDE ".jpg"
+    CASUS PNG:
+      REDDE ".png"
+    CASUS GIF:
+      REDDE ".gif"
+    CASUS BMP:
+      REDDE ".bmp"
+    CASUS WebP:
+      REDDE ".webp"
+    CASUS MP4:
+      REDDE ".mp4"
+    CASUS WebM:
+      REDDE ".webm"
+    CASUS AVI:
+      REDDE ".avi"
+    CASUS MP3:
+      REDDE ".mp3"
+    CASUS OGG:
+      REDDE ".ogg"
+    CASUS WAV:
+      REDDE ".wav"
+    CASUS PDF:
+      REDDE ".pdf"
+    CASUS ZIP:
+      REDDE ".zip"
+    CASUS Text:
+      REDDE ".txt"
+    ALIOQUIN:
+      REDDE ".bin"
+  FIN ELIGE
+EXPLICIT RITUALE
+
+RITUALE filetype_mime(FileType ft) REDDE VERBUM
+  ELIGE ft
+    CASUS JPEG:
+      REDDE "image/jpeg"
+    CASUS PNG:
+      REDDE "image/png"
+    CASUS GIF:
+      REDDE "image/gif"
+    CASUS BMP:
+      REDDE "image/bmp"
+    CASUS WebP:
+      REDDE "image/webp"
+    CASUS MP4:
+      REDDE "video/mp4"
+    CASUS WebM:
+      REDDE "video/webm"
+    CASUS AVI:
+      REDDE "video/x-msvideo"
+    CASUS MP3:
+      REDDE "audio/mpeg"
+    CASUS OGG:
+      REDDE "audio/ogg"
+    CASUS WAV:
+      REDDE "audio/wav"
+    CASUS PDF:
+      REDDE "application/pdf"
+    CASUS ZIP:
+      REDDE "application/zip"
+    CASUS Text:
+      REDDE "text/plain"
+    ALIOQUIN:
+      REDDE "application/octet-stream"
+  FIN ELIGE
+EXPLICIT RITUALE
+
+RITUALE filetype_is_image(FileType ft) REDDE VERUM
+  ELIGE ft
+    CASUS JPEG:
+    CASUS PNG:
+    CASUS GIF:
+    CASUS BMP:
+    CASUS WebP:
+      REDDE VERUM
+    ALIOQUIN:
+      REDDE FALSUM
+  FIN ELIGE
+EXPLICIT RITUALE
+
+RITUALE filetype_is_video(FileType ft) REDDE VERUM
+  ELIGE ft
+    CASUS MP4:
+    CASUS WebM:
+    CASUS AVI:
+      REDDE VERUM
+    ALIOQUIN:
+      REDDE FALSUM
+  FIN ELIGE
+EXPLICIT RITUALE
+
+RITUALE filetype_is_audio(FileType ft) REDDE VERUM
+  ELIGE ft
+    CASUS MP3:
+    CASUS OGG:
+    CASUS WAV:
+      REDDE VERUM
+    ALIOQUIN:
+      REDDE FALSUM
+  FIN ELIGE
+EXPLICIT RITUALE
+
+RITUALE filetype_is_document(FileType ft) REDDE VERUM
+  ELIGE ft
+    CASUS PDF:
+    CASUS ZIP:
+      REDDE VERUM
+    ALIOQUIN:
+      REDDE FALSUM
+  FIN ELIGE
+EXPLICIT RITUALE
+
+RITUALE filetype_is_text(FileType ft) REDDE VERUM
+  REDDE ft == Text
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

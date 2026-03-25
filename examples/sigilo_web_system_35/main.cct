@@ -1,0 +1,36 @@
+INCIPIT grimoire "sigilo_web_system_35"
+
+ADVOCARE "modules/auth.cct"
+ADVOCARE "modules/posts.cct"
+ADVOCARE "modules/media.cct"
+ADVOCARE "modules/profile.cct"
+
+-- @route route_id=site.home method=GET path=/ handler=home_page group=/ middleware=trace
+RITUALE home_page() REDDE REX
+  EVOCA REX sessio AD CONIURA auth_session_open()
+  EVOCA REX destaques AD CONIURA posts_featured()
+  EVOCA REX acervo AD CONIURA media_recent()
+  ANUR sessio
+  ANUR destaques
+  ANUR acervo
+  REDDE 1
+EXPLICIT RITUALE
+
+-- @route route_id=site.dashboard method=GET path=/dashboard handler=dashboard group=/ middleware=auth,trace
+RITUALE dashboard() REDDE REX
+  EVOCA REX usuario AD CONIURA profile_load()
+  EVOCA REX marcadores AD CONIURA posts_saved_count()
+  ANUR usuario
+  ANUR marcadores
+  REDDE 2
+EXPLICIT RITUALE
+
+RITUALE main() REDDE REX
+  EVOCA REX a AD CONIURA home_page()
+  EVOCA REX b AD CONIURA dashboard()
+  ANUR a
+  ANUR b
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

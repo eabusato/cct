@@ -124,12 +124,7 @@ artifacts/
 .idea/
 .vscode/
 
-# Root compiler/wrapper binaries
-cct
-cct.bin
-cct-host
-cct-selfhost
-cct_lexer_bootstrap
+
 
 # Generated test/example temp trees
 tests/.tmp*/

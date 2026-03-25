@@ -1,0 +1,98 @@
+-- CCT — Clavicula Turing
+-- Standard Library Module: fs_watch
+--
+-- FASE 34E: Filesystem watch baseline
+
+INCIPIT grimoire "fs_watch"
+
+ADVOCARE "cct/fs.cct"
+ADVOCARE "cct/verbum.cct"
+
+ORDO FsWatchEventKind
+  WATCH_NONE
+  WATCH_CREATE
+  WATCH_MODIFY
+  WATCH_REMOVE
+FIN ORDO
+
+SIGILLUM FsWatch
+  path: VERBUM
+  last_exists: VERUM
+  last_modified: REX
+  active: VERUM
+FIN SIGILLUM
+
+SIGILLUM FsWatchEvent
+  kind: FsWatchEventKind
+  path: VERBUM
+FIN SIGILLUM
+
+RITUALE fs_watch_make_event(FsWatchEventKind kind, VERBUM path) REDDE FsWatchEvent
+  EVOCA FsWatchEvent event
+  VINCIRE event.kind AD kind
+  VINCIRE event.path AD path
+  REDDE event
+EXPLICIT RITUALE
+
+RITUALE fs_watch_open(VERBUM path) REDDE FsWatch
+  EVOCA FsWatch watch
+  VINCIRE watch.path AD path
+  VINCIRE watch.last_exists AD CONIURA exists(path)
+  VINCIRE watch.last_modified AD 0
+  VINCIRE watch.active AD VERUM
+  SI watch.last_exists
+    VINCIRE watch.last_modified AD CONIURA modified_time(path)
+  FIN SI
+  REDDE watch
+EXPLICIT RITUALE
+
+RITUALE fs_watch_close(SPECULUM FsWatch watch) REDDE NIHIL
+  VINCIRE (*watch).active AD FALSUM
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE fs_watch_is_active(FsWatch watch) REDDE VERUM
+  REDDE watch.active
+EXPLICIT RITUALE
+
+RITUALE fs_watch_poll(SPECULUM FsWatch watch) REDDE FsWatchEvent
+  EVOCA VERUM current_exists AD CONIURA exists((*watch).path)
+  EVOCA REX current_modified AD 0
+  SI current_exists
+    VINCIRE current_modified AD CONIURA modified_time((*watch).path)
+  FIN SI
+
+  SI NON (*watch).last_exists ET current_exists
+    VINCIRE (*watch).last_exists AD VERUM
+    VINCIRE (*watch).last_modified AD current_modified
+    REDDE CONIURA fs_watch_make_event(WATCH_CREATE, (*watch).path)
+  FIN SI
+
+  SI (*watch).last_exists ET NON current_exists
+    VINCIRE (*watch).last_exists AD FALSUM
+    VINCIRE (*watch).last_modified AD 0
+    REDDE CONIURA fs_watch_make_event(WATCH_REMOVE, (*watch).path)
+  FIN SI
+
+  SI (*watch).last_exists ET current_exists ET current_modified != (*watch).last_modified
+    VINCIRE (*watch).last_modified AD current_modified
+    REDDE CONIURA fs_watch_make_event(WATCH_MODIFY, (*watch).path)
+  FIN SI
+
+  REDDE CONIURA fs_watch_make_event(WATCH_NONE, (*watch).path)
+EXPLICIT RITUALE
+
+RITUALE fs_watch_kind_to_string(FsWatchEventKind kind) REDDE VERBUM
+  ELIGE kind
+    CASUS WATCH_CREATE:
+      REDDE "create"
+    CASUS WATCH_MODIFY:
+      REDDE "modify"
+    CASUS WATCH_REMOVE:
+      REDDE "remove"
+    ALIOQUIN:
+      REDDE "none"
+  FIN ELIGE
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

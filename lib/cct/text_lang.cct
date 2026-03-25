@@ -1,0 +1,391 @@
+-- CCT — Clavicula Turing
+-- Standard Library Module: text_lang
+--
+-- FASE 32J: Lightweight language detection heuristics
+
+INCIPIT grimoire "text_lang"
+
+ADVOCARE "cct/fluxus.cct"
+ADVOCARE "cct/verbum.cct"
+
+ORDO Language
+  PT,
+  EN,
+  ES,
+  FR,
+  DEU,
+  IT,
+  RU,
+  JA,
+  ZH,
+  AR,
+  Unknown
+FIN ORDO
+
+SIGILLUM LangDetection
+  idioma: Language
+  confianca: UMBRA
+FIN SIGILLUM
+
+RITUALE text_byte(VERBUM texto, REX index) REDDE REX
+  EVOCA REX raw AD cast GENUS(REX)(CONIURA char_at(texto, index))
+  SI raw < 0
+    REDDE raw + 256
+  FIN SI
+  REDDE raw
+EXPLICIT RITUALE
+
+RITUALE lang_detection(Language idioma, UMBRA confianca) REDDE LangDetection
+  EVOCA LangDetection det
+  VINCIRE det.idioma AD idioma
+  VINCIRE det.confianca AD confianca
+  REDDE det
+EXPLICIT RITUALE
+
+RITUALE lang_unknown() REDDE LangDetection
+  REDDE CONIURA lang_detection(Unknown, 0.0)
+EXPLICIT RITUALE
+
+RITUALE lang_candidates_all() REDDE SPECULUM NIHIL
+  EVOCA SPECULUM NIHIL flux AD CONIURA fluxus_init(MENSURA(Language))
+  EVOCA Language pt AD PT
+  EVOCA Language en AD EN
+  EVOCA Language es AD ES
+  EVOCA Language fr AD FR
+  EVOCA Language de AD DEU
+  EVOCA Language it AD IT
+  EVOCA Language ru AD RU
+  EVOCA Language ja AD JA
+  EVOCA Language zh AD ZH
+  EVOCA Language ar AD AR
+  CONIURA fluxus_push(flux, SPECULUM pt)
+  CONIURA fluxus_push(flux, SPECULUM en)
+  CONIURA fluxus_push(flux, SPECULUM es)
+  CONIURA fluxus_push(flux, SPECULUM fr)
+  CONIURA fluxus_push(flux, SPECULUM de)
+  CONIURA fluxus_push(flux, SPECULUM it)
+  CONIURA fluxus_push(flux, SPECULUM ru)
+  CONIURA fluxus_push(flux, SPECULUM ja)
+  CONIURA fluxus_push(flux, SPECULUM zh)
+  CONIURA fluxus_push(flux, SPECULUM ar)
+  REDDE flux
+EXPLICIT RITUALE
+
+RITUALE contains_utf8_prefix(VERBUM texto, REX prefix0, REX prefix1) REDDE VERUM
+  EVOCA REX i AD 0
+  EVOCA REX n AD CONIURA len(texto)
+  DUM i + 1 < n
+    SI CONIURA text_byte(texto, i) == prefix0 ET CONIURA text_byte(texto, i + 1) == prefix1
+      REDDE VERUM
+    FIN SI
+    VINCIRE i AD i + 1
+  FIN DUM
+  REDDE FALSUM
+EXPLICIT RITUALE
+
+RITUALE contains_cyrillic(VERBUM texto) REDDE VERUM
+  EVOCA REX i AD 0
+  EVOCA REX n AD CONIURA len(texto)
+  DUM i + 1 < n
+    EVOCA REX b0 AD CONIURA text_byte(texto, i)
+    EVOCA REX b1 AD CONIURA text_byte(texto, i + 1)
+    SI (b0 == 208 VEL b0 == 209) ET b1 >= 128 ET b1 <= 191
+      REDDE VERUM
+    FIN SI
+    VINCIRE i AD i + 1
+  FIN DUM
+  REDDE FALSUM
+EXPLICIT RITUALE
+
+RITUALE contains_arabic(VERBUM texto) REDDE VERUM
+  EVOCA REX i AD 0
+  EVOCA REX n AD CONIURA len(texto)
+  DUM i + 1 < n
+    EVOCA REX b0 AD CONIURA text_byte(texto, i)
+    EVOCA REX b1 AD CONIURA text_byte(texto, i + 1)
+    SI (b0 == 216 VEL b0 == 217) ET b1 >= 128 ET b1 <= 191
+      REDDE VERUM
+    FIN SI
+    VINCIRE i AD i + 1
+  FIN DUM
+  REDDE FALSUM
+EXPLICIT RITUALE
+
+RITUALE contains_japanese(VERBUM texto) REDDE VERUM
+  EVOCA REX i AD 0
+  EVOCA REX n AD CONIURA len(texto)
+  DUM i + 2 < n
+    EVOCA REX b0 AD CONIURA text_byte(texto, i)
+    EVOCA REX b1 AD CONIURA text_byte(texto, i + 1)
+    SI b0 == 227 ET (b1 == 129 VEL b1 == 130)
+      REDDE VERUM
+    FIN SI
+    VINCIRE i AD i + 1
+  FIN DUM
+  REDDE FALSUM
+EXPLICIT RITUALE
+
+RITUALE contains_cjk(VERBUM texto) REDDE VERUM
+  EVOCA REX i AD 0
+  EVOCA REX n AD CONIURA len(texto)
+  DUM i + 2 < n
+    EVOCA REX b0 AD CONIURA text_byte(texto, i)
+    SI b0 >= 228 ET b0 <= 233
+      REDDE VERUM
+    FIN SI
+    VINCIRE i AD i + 1
+  FIN DUM
+  REDDE FALSUM
+EXPLICIT RITUALE
+
+RITUALE count_hits(VERBUM texto, VERBUM termo) REDDE UMBRA
+  EVOCA REX hits AD CONIURA count_occurrences(texto, termo)
+  REDDE cast GENUS(UMBRA)(hits) * 0.12
+EXPLICIT RITUALE
+
+RITUALE latin_word_score(VERBUM texto, Language lang) REDDE UMBRA
+  EVOCA UMBRA score AD 0.0
+  ELIGE lang
+    CASUS PT:
+      VINCIRE score AD score + CONIURA count_hits(texto, " nao ")
+      VINCIRE score AD score + CONIURA count_hits(texto, " voce ")
+      VINCIRE score AD score + CONIURA count_hits(texto, " uma ")
+      VINCIRE score AD score + CONIURA count_hits(texto, " para ")
+      VINCIRE score AD score + CONIURA count_hits(texto, " com ")
+      VINCIRE score AD score + CONIURA count_hits(texto, " dos ")
+      VINCIRE score AD score + CONIURA count_hits(texto, " das ")
+    CASUS EN:
+      VINCIRE score AD score + CONIURA count_hits(texto, " the ")
+      VINCIRE score AD score + CONIURA count_hits(texto, " and ")
+      VINCIRE score AD score + CONIURA count_hits(texto, " you ")
+      VINCIRE score AD score + CONIURA count_hits(texto, " with ")
+      VINCIRE score AD score + CONIURA count_hits(texto, " this ")
+      VINCIRE score AD score + CONIURA count_hits(texto, " that ")
+      VINCIRE score AD score + CONIURA count_hits(texto, " from ")
+    CASUS ES:
+      VINCIRE score AD score + CONIURA count_hits(texto, " una ")
+      VINCIRE score AD score + CONIURA count_hits(texto, " para ")
+      VINCIRE score AD score + CONIURA count_hits(texto, " los ")
+      VINCIRE score AD score + CONIURA count_hits(texto, " las ")
+      VINCIRE score AD score + CONIURA count_hits(texto, " del ")
+      VINCIRE score AD score + CONIURA count_hits(texto, " como ")
+      VINCIRE score AD score + CONIURA count_hits(texto, " pero ")
+    CASUS FR:
+      VINCIRE score AD score + CONIURA count_hits(texto, " une ")
+      VINCIRE score AD score + CONIURA count_hits(texto, " avec ")
+      VINCIRE score AD score + CONIURA count_hits(texto, " pour ")
+      VINCIRE score AD score + CONIURA count_hits(texto, " les ")
+      VINCIRE score AD score + CONIURA count_hits(texto, " des ")
+      VINCIRE score AD score + CONIURA count_hits(texto, " dans ")
+      VINCIRE score AD score + CONIURA count_hits(texto, " sur ")
+    CASUS DEU:
+      VINCIRE score AD score + CONIURA count_hits(texto, " und ")
+      VINCIRE score AD score + CONIURA count_hits(texto, " der ")
+      VINCIRE score AD score + CONIURA count_hits(texto, " die ")
+      VINCIRE score AD score + CONIURA count_hits(texto, " nicht ")
+      VINCIRE score AD score + CONIURA count_hits(texto, " mit ")
+      VINCIRE score AD score + CONIURA count_hits(texto, " das ")
+      VINCIRE score AD score + CONIURA count_hits(texto, " ist ")
+    CASUS IT:
+      VINCIRE score AD score + CONIURA count_hits(texto, " che ")
+      VINCIRE score AD score + CONIURA count_hits(texto, " una ")
+      VINCIRE score AD score + CONIURA count_hits(texto, " con ")
+      VINCIRE score AD score + CONIURA count_hits(texto, " per ")
+      VINCIRE score AD score + CONIURA count_hits(texto, " non ")
+      VINCIRE score AD score + CONIURA count_hits(texto, " sono ")
+      VINCIRE score AD score + CONIURA count_hits(texto, " nel ")
+    ALIOQUIN:
+      NIHIL
+  FIN ELIGE
+  REDDE score
+EXPLICIT RITUALE
+
+RITUALE language_score(VERBUM texto, Language lang) REDDE UMBRA
+  EVOCA UMBRA score AD 0.0
+  SI lang == RU
+    SI CONIURA contains(texto, "рус") VEL CONIURA contains(texto, "язык") VEL CONIURA contains_cyrillic(texto)
+      REDDE 0.95
+    FIN SI
+    REDDE 0.0
+  FIN SI
+  SI lang == AR
+    SI CONIURA contains(texto, "عربي") VEL CONIURA contains(texto, "اللغة") VEL CONIURA contains_arabic(texto)
+      REDDE 0.95
+    FIN SI
+    REDDE 0.0
+  FIN SI
+  SI lang == JA
+    SI CONIURA contains(texto, "これは") VEL CONIURA contains(texto, "ひら") VEL CONIURA contains_japanese(texto)
+      REDDE 0.95
+    FIN SI
+    SI CONIURA contains_cjk(texto)
+      REDDE 0.30
+    FIN SI
+    REDDE 0.0
+  FIN SI
+  SI lang == ZH
+    SI CONIURA contains(texto, "中文") VEL CONIURA contains(texto, "语言")
+      REDDE 0.90
+    FIN SI
+    SI CONIURA contains(texto, "これは") VEL CONIURA contains(texto, "ひら")
+      REDDE 0.20
+    FIN SI
+    SI CONIURA contains_cjk(texto)
+      REDDE 0.90
+    FIN SI
+    REDDE 0.0
+  FIN SI
+
+  VINCIRE score AD CONIURA latin_word_score(texto, lang)
+  SI lang == PT ET CONIURA contains(texto, " que ")
+    VINCIRE score AD score + 0.08
+  FIN SI
+  SI lang == EN ET CONIURA contains(texto, " is ")
+    VINCIRE score AD score + 0.08
+  FIN SI
+  SI lang == ES ET CONIURA contains(texto, " que ")
+    VINCIRE score AD score + 0.07
+  FIN SI
+  SI lang == FR ET CONIURA contains(texto, " est ")
+    VINCIRE score AD score + 0.07
+  FIN SI
+  SI lang == DEU ET CONIURA contains(texto, " ein ")
+    VINCIRE score AD score + 0.07
+  FIN SI
+  SI lang == IT ET CONIURA contains(texto, " questo ")
+    VINCIRE score AD score + 0.07
+  FIN SI
+  REDDE score
+EXPLICIT RITUALE
+
+RITUALE lang_detect(VERBUM texto) REDDE LangDetection
+  EVOCA SPECULUM NIHIL candidatos AD CONIURA lang_candidates_all()
+  EVOCA LangDetection det AD CONIURA lang_detect_from(texto, candidatos)
+  CONIURA fluxus_free(candidatos)
+  REDDE det
+EXPLICIT RITUALE
+
+RITUALE lang_detect_from(VERBUM texto, SPECULUM NIHIL candidatos) REDDE LangDetection
+  EVOCA VERBUM raw AD CONIURA trim(CONIURA to_lower(texto))
+  SI CONIURA len(raw) < 6
+    REDDE CONIURA lang_unknown()
+  FIN SI
+
+  EVOCA VERBUM normalized AD CONIURA concat(CONIURA concat(" ", raw), " ")
+  EVOCA REX total AD CONIURA fluxus_len(candidatos)
+  SI total == 0
+    REDDE CONIURA lang_unknown()
+  FIN SI
+
+  EVOCA Language best_lang AD Unknown
+  EVOCA UMBRA best_score AD 0.0
+  EVOCA UMBRA second_score AD 0.0
+  EVOCA REX i AD 0
+  DUM i < total
+    EVOCA SPECULUM Language ptr AD CONIURA fluxus_get(candidatos, i)
+    EVOCA Language lang AD *ptr
+    EVOCA UMBRA score AD CONIURA language_score(normalized, lang)
+    SI score > best_score
+      VINCIRE second_score AD best_score
+      VINCIRE best_score AD score
+      VINCIRE best_lang AD lang
+    ALITER
+      SI score > second_score
+        VINCIRE second_score AD score
+      FIN SI
+    FIN SI
+    VINCIRE i AD i + 1
+  FIN DUM
+
+  SI best_score < 0.10
+    REDDE CONIURA lang_unknown()
+  FIN SI
+
+  EVOCA UMBRA confianca AD best_score
+  SI best_score > second_score
+    VINCIRE confianca AD best_score - (second_score * 0.35)
+  FIN SI
+  SI confianca > 1.0
+    VINCIRE confianca AD 1.0
+  FIN SI
+  SI confianca < 0.0
+    VINCIRE confianca AD 0.0
+  FIN SI
+  REDDE CONIURA lang_detection(best_lang, confianca)
+EXPLICIT RITUALE
+
+RITUALE lang_is(VERBUM texto, Language esperado, UMBRA confianca_minima) REDDE VERUM
+  EVOCA LangDetection det AD CONIURA lang_detect(texto)
+  SI det.idioma != esperado
+    REDDE FALSUM
+  FIN SI
+  REDDE det.confianca >= confianca_minima
+EXPLICIT RITUALE
+
+RITUALE lang_to_string(Language lang) REDDE VERBUM
+  ELIGE lang
+    CASUS PT:
+      REDDE "pt"
+    CASUS EN:
+      REDDE "en"
+    CASUS ES:
+      REDDE "es"
+    CASUS FR:
+      REDDE "fr"
+    CASUS DEU:
+      REDDE "de"
+    CASUS IT:
+      REDDE "it"
+    CASUS RU:
+      REDDE "ru"
+    CASUS JA:
+      REDDE "ja"
+    CASUS ZH:
+      REDDE "zh"
+    CASUS AR:
+      REDDE "ar"
+    ALIOQUIN:
+      REDDE "unknown"
+  FIN ELIGE
+EXPLICIT RITUALE
+
+RITUALE lang_from_string(VERBUM codigo) REDDE Language
+  EVOCA VERBUM lowered AD CONIURA to_lower(codigo)
+  SI CONIURA compare(lowered, "pt") == 0
+    REDDE PT
+  FIN SI
+  SI CONIURA compare(lowered, "en") == 0
+    REDDE EN
+  FIN SI
+  SI CONIURA compare(lowered, "es") == 0
+    REDDE ES
+  FIN SI
+  SI CONIURA compare(lowered, "fr") == 0
+    REDDE FR
+  FIN SI
+  SI CONIURA compare(lowered, "de") == 0
+    REDDE DEU
+  FIN SI
+  SI CONIURA compare(lowered, "it") == 0
+    REDDE IT
+  FIN SI
+  SI CONIURA compare(lowered, "ru") == 0
+    REDDE RU
+  FIN SI
+  SI CONIURA compare(lowered, "ja") == 0
+    REDDE JA
+  FIN SI
+  SI CONIURA compare(lowered, "zh") == 0
+    REDDE ZH
+  FIN SI
+  SI CONIURA compare(lowered, "ar") == 0
+    REDDE AR
+  FIN SI
+  REDDE Unknown
+EXPLICIT RITUALE
+
+RITUALE lang_to_iso639(Language lang) REDDE VERBUM
+  REDDE CONIURA lang_to_string(lang)
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

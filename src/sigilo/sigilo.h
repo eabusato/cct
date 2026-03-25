@@ -47,7 +47,8 @@ typedef struct {
     bool emit_meta;
     bool emit_titles;
     bool emit_data_attrs;
-    const char *style_name; /* "network" (default), "seal", "scriptum" */
+    const char *style_name; /* "network" (default), "seal", "scriptum", "routes" */
+    const char *manifest_path; /* FASE 35D: optional external manifest path */
 } cct_sigilo_t;
 
 void cct_sigilo_init(cct_sigilo_t *sg, const char *filename);

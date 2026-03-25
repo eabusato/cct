@@ -1,0 +1,122 @@
+INCIPIT grimoire "sigilo_rotas_constelacao_35"
+
+-- @route route_id=site.home method=GET path=/ handler=site_home group=/ middleware=none
+RITUALE site_home() REDDE REX
+  REDDE 1
+EXPLICIT RITUALE
+
+-- @route route_id=site.manifesto method=GET path=/manifesto handler=site_manifesto group=/ middleware=trace
+RITUALE site_manifesto() REDDE REX
+  REDDE 2
+EXPLICIT RITUALE
+
+-- @route route_id=auth.login.view method=GET path=/entrar handler=auth_login_view group=/auth middleware=guest,trace
+RITUALE auth_login_view() REDDE REX
+  REDDE 3
+EXPLICIT RITUALE
+
+-- @route route_id=auth.login.submit method=POST path=/entrar handler=auth_login_submit group=/auth middleware=csrf,trace
+RITUALE auth_login_submit() REDDE REX
+  REDDE 4
+EXPLICIT RITUALE
+
+-- @route route_id=auth.logout method=POST path=/sair handler=auth_logout group=/auth middleware=auth,csrf
+RITUALE auth_logout() REDDE REX
+  REDDE 5
+EXPLICIT RITUALE
+
+-- @route route_id=perfil.show method=GET path=/perfil/:slug handler=perfil_show group=/perfil middleware=auth,trace
+RITUALE perfil_show() REDDE REX
+  REDDE 6
+EXPLICIT RITUALE
+
+-- @route route_id=perfil.media method=GET path=/perfil/:slug/midia handler=perfil_media group=/perfil middleware=auth,trace
+RITUALE perfil_media() REDDE REX
+  REDDE 7
+EXPLICIT RITUALE
+
+-- @route route_id=contos.feed method=GET path=/contos handler=contos_feed group=/contos middleware=trace
+RITUALE contos_feed() REDDE REX
+  REDDE 8
+EXPLICIT RITUALE
+
+-- @route route_id=contos.show method=GET path=/contos/:slug handler=contos_show group=/contos middleware=trace
+RITUALE contos_show() REDDE REX
+  REDDE 9
+EXPLICIT RITUALE
+
+-- @route route_id=contos.create method=POST path=/contos handler=contos_create group=/contos middleware=auth,csrf,moderation
+RITUALE contos_create() REDDE REX
+  REDDE 10
+EXPLICIT RITUALE
+
+-- @route route_id=contos.react method=POST path=/contos/:slug/reagir handler=contos_react group=/contos middleware=auth,csrf
+RITUALE contos_react() REDDE REX
+  REDDE 11
+EXPLICIT RITUALE
+
+-- @route route_id=media.upload.image method=POST path=/media/imagens handler=media_upload_image group=/media middleware=auth,csrf,quota
+RITUALE media_upload_image() REDDE REX
+  REDDE 12
+EXPLICIT RITUALE
+
+-- @route route_id=media.upload.video method=POST path=/media/videos handler=media_upload_video group=/media middleware=auth,csrf,quota,transcode
+RITUALE media_upload_video() REDDE REX
+  REDDE 13
+EXPLICIT RITUALE
+
+-- @route route_id=media.thumb method=GET path=/media/thumb/:id handler=media_thumb group=/media middleware=trace,cache
+RITUALE media_thumb() REDDE REX
+  REDDE 14
+EXPLICIT RITUALE
+
+-- @route route_id=chat.rooms method=GET path=/chat/salas handler=chat_rooms group=/chat middleware=auth,trace
+RITUALE chat_rooms() REDDE REX
+  REDDE 15
+EXPLICIT RITUALE
+
+-- @route route_id=chat.room.show method=GET path=/chat/salas/:id handler=chat_room_show group=/chat middleware=auth,trace
+RITUALE chat_room_show() REDDE REX
+  REDDE 16
+EXPLICIT RITUALE
+
+-- @route route_id=chat.room.post method=POST path=/chat/salas/:id/mensagens handler=chat_room_post group=/chat middleware=auth,csrf,rate
+RITUALE chat_room_post() REDDE REX
+  REDDE 17
+EXPLICIT RITUALE
+
+-- @route route_id=api.contos.search method=GET path=/api/contos/busca handler=api_contos_search group=/api middleware=api,trace,cache
+RITUALE api_contos_search() REDDE REX
+  REDDE 18
+EXPLICIT RITUALE
+
+-- @route route_id=api.media.inspect method=GET path=/api/media/:id handler=api_media_inspect group=/api middleware=api,auth,trace
+RITUALE api_media_inspect() REDDE REX
+  REDDE 19
+EXPLICIT RITUALE
+
+-- @route route_id=api.metrics.ingest method=POST path=/api/metrics handler=api_metrics_ingest group=/api middleware=api,signature,rate
+RITUALE api_metrics_ingest() REDDE REX
+  REDDE 20
+EXPLICIT RITUALE
+
+-- @route route_id=admin.dashboard method=GET path=/admin handler=admin_dashboard group=/admin middleware=staff,trace
+RITUALE admin_dashboard() REDDE REX
+  REDDE 21
+EXPLICIT RITUALE
+
+-- @route route_id=admin.reports.queue method=GET path=/admin/denuncias handler=admin_reports_queue group=/admin middleware=staff,moderation,trace
+RITUALE admin_reports_queue() REDDE REX
+  REDDE 22
+EXPLICIT RITUALE
+
+-- @route route_id=admin.media.approve method=POST path=/admin/media/:id/aprovar handler=admin_media_approve group=/admin middleware=staff,csrf,moderation
+RITUALE admin_media_approve() REDDE REX
+  REDDE 23
+EXPLICIT RITUALE
+
+RITUALE main() REDDE REX
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

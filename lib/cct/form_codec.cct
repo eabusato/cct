@@ -1,0 +1,280 @@
+-- CCT — Clavicula Turing
+-- Standard Library Module: form_codec
+--
+-- FASE 33F: application/x-www-form-urlencoded and query-string helpers
+
+INCIPIT grimoire "form_codec"
+
+ADVOCARE "cct/encoding.cct"
+ADVOCARE "cct/fluxus.cct"
+ADVOCARE "cct/map.cct"
+ADVOCARE "cct/option.cct"
+ADVOCARE "cct/result.cct"
+ADVOCARE "cct/verbum.cct"
+
+SIGILLUM FormPair
+  chave: VERBUM
+  valor: VERBUM
+FIN SIGILLUM
+
+SIGILLUM FormValues
+  items: SPECULUM NIHIL
+FIN SIGILLUM
+
+RITUALE percent_encode(VERBUM texto) REDDE VERBUM
+  REDDE CONIURA url_encode(texto)
+EXPLICIT RITUALE
+
+RITUALE percent_decode(VERBUM encoded) REDDE SPECULUM NIHIL
+  EVOCA REX n AD CONIURA len(encoded)
+  EVOCA REX i AD 0
+  EVOCA VERBUM out AD ""
+
+  DUM i < n
+    EVOCA MILES c AD CONIURA char_at(encoded, i)
+    SI c == 37
+      SI i + 2 >= n
+        REDDE CONIURA Err GENUS(VERBUM, VERBUM)("percent encoding incompleto")
+      FIN SI
+
+      EVOCA REX hi AD CONIURA hex_value_char(CONIURA char_at(encoded, i + 1))
+      EVOCA REX lo AD CONIURA hex_value_char(CONIURA char_at(encoded, i + 2))
+      SI hi < 0 VEL lo < 0
+        REDDE CONIURA Err GENUS(VERBUM, VERBUM)("percent encoding invalido")
+      FIN SI
+
+      VINCIRE out AD CONIURA concat(out, CONIURA from_char(cast GENUS(MILES)(hi * 16 + lo)))
+      VINCIRE i AD i + 3
+      RECEDE
+    FIN SI
+
+    SI c == 43
+      VINCIRE out AD CONIURA concat(out, " ")
+      VINCIRE i AD i + 1
+      RECEDE
+    FIN SI
+
+    VINCIRE out AD CONIURA concat(out, CONIURA from_char(c))
+    VINCIRE i AD i + 1
+  FIN DUM
+
+  REDDE CONIURA Ok GENUS(VERBUM, VERBUM)(out)
+EXPLICIT RITUALE
+
+RITUALE percent_decode_or_raw(VERBUM texto) REDDE VERBUM
+  EVOCA REX n AD CONIURA len(texto)
+  EVOCA REX i AD 0
+  EVOCA VERBUM out AD ""
+
+  DUM i < n
+    EVOCA MILES c AD CONIURA char_at(texto, i)
+    SI c == 37
+      SI i + 2 >= n
+        REDDE texto
+      FIN SI
+
+      EVOCA REX hi AD CONIURA hex_value_char(CONIURA char_at(texto, i + 1))
+      EVOCA REX lo AD CONIURA hex_value_char(CONIURA char_at(texto, i + 2))
+      SI hi < 0 VEL lo < 0
+        REDDE texto
+      FIN SI
+
+      VINCIRE out AD CONIURA concat(out, CONIURA from_char(cast GENUS(MILES)(hi * 16 + lo)))
+      VINCIRE i AD i + 3
+      RECEDE
+    FIN SI
+
+    SI c == 43
+      VINCIRE out AD CONIURA concat(out, " ")
+      VINCIRE i AD i + 1
+      RECEDE
+    FIN SI
+
+    VINCIRE out AD CONIURA concat(out, CONIURA from_char(c))
+    VINCIRE i AD i + 1
+  FIN DUM
+
+  REDDE out
+EXPLICIT RITUALE
+
+RITUALE hex_value_char(MILES c) REDDE REX
+  SI c >= 48 ET c <= 57
+    REDDE c - 48
+  FIN SI
+  SI c >= 65 ET c <= 70
+    REDDE c - 55
+  FIN SI
+  SI c >= 97 ET c <= 102
+    REDDE c - 87
+  FIN SI
+  REDDE -1
+EXPLICIT RITUALE
+
+RITUALE form_decode_pair(VERBUM pair) REDDE FormPair
+  EVOCA REX eq AD CONIURA find(pair, "=")
+  SI eq == -1
+    EVOCA FormPair out
+    VINCIRE out.chave AD CONIURA percent_decode_or_raw(pair)
+    VINCIRE out.valor AD ""
+    REDDE out
+  FIN SI
+
+  EVOCA VERBUM chave AD CONIURA substring(pair, 0, eq)
+  EVOCA VERBUM valor AD CONIURA substring(pair, eq + 1, CONIURA len(pair))
+  EVOCA FormPair out
+  VINCIRE out.chave AD CONIURA percent_decode_or_raw(chave)
+  VINCIRE out.valor AD CONIURA percent_decode_or_raw(valor)
+  REDDE out
+EXPLICIT RITUALE
+
+RITUALE form_next_pair(VERBUM encoded) REDDE FormPair
+  REDDE CONIURA form_decode_pair(encoded)
+EXPLICIT RITUALE
+
+RITUALE form_decode(VERBUM encoded) REDDE SPECULUM NIHIL
+  EVOCA SPECULUM NIHIL result AD CONIURA map_init GENUS(VERBUM, VERBUM)()
+  EVOCA VERBUM rest AD encoded
+
+  DUM CONIURA len(rest) != 0
+    EVOCA REX amp AD CONIURA find(rest, "&")
+    EVOCA VERBUM pair AD ""
+    SI amp == -1
+      VINCIRE pair AD rest
+      VINCIRE rest AD ""
+    ALITER
+      VINCIRE pair AD CONIURA substring(rest, 0, amp)
+      VINCIRE rest AD CONIURA substring(rest, amp + 1, CONIURA len(rest))
+    FIN SI
+
+    SI CONIURA len(pair) == 0
+      RECEDE
+    FIN SI
+
+    EVOCA FormPair decoded AD CONIURA form_next_pair(pair)
+    EVOCA VERBUM chave_dec AD decoded.chave
+    EVOCA VERBUM valor_dec AD decoded.valor
+    CONIURA map_insert GENUS(VERBUM, VERBUM)(result, chave_dec, valor_dec)
+  FIN DUM
+
+  REDDE result
+EXPLICIT RITUALE
+
+RITUALE form_decode_multi(VERBUM encoded) REDDE SPECULUM NIHIL
+  EVOCA SPECULUM NIHIL result AD CONIURA map_init GENUS(VERBUM, FormValues)()
+  EVOCA VERBUM rest AD encoded
+
+  DUM CONIURA len(rest) != 0
+    EVOCA REX amp AD CONIURA find(rest, "&")
+    EVOCA VERBUM pair AD ""
+    SI amp == -1
+      VINCIRE pair AD rest
+      VINCIRE rest AD ""
+    ALITER
+      VINCIRE pair AD CONIURA substring(rest, 0, amp)
+      VINCIRE rest AD CONIURA substring(rest, amp + 1, CONIURA len(rest))
+    FIN SI
+
+    SI CONIURA len(pair) == 0
+      RECEDE
+    FIN SI
+
+    EVOCA FormPair decoded AD CONIURA form_next_pair(pair)
+    EVOCA VERBUM chave_dec AD decoded.chave
+    EVOCA VERBUM valor_dec AD decoded.valor
+    EVOCA SPECULUM NIHIL existing_opt AD CONIURA form_get_multi(result, chave_dec)
+    SI CONIURA option_is_some GENUS(FormValues)(existing_opt)
+      EVOCA FormValues values AD CONIURA option_unwrap GENUS(FormValues)(existing_opt)
+      CONIURA fluxus_push(values.items, SPECULUM valor_dec)
+    ALITER
+      EVOCA FormValues values
+      VINCIRE values.items AD CONIURA fluxus_init(MENSURA(VERBUM))
+      CONIURA fluxus_push(values.items, SPECULUM valor_dec)
+      CONIURA map_insert GENUS(VERBUM, FormValues)(result, chave_dec, values)
+    FIN SI
+  FIN DUM
+
+  REDDE result
+EXPLICIT RITUALE
+
+RITUALE form_encode(SPECULUM NIHIL dados) REDDE VERBUM
+  EVOCA VERBUM out AD ""
+  EVOCA VERUM first AD VERUM
+  EVOCA SPECULUM NIHIL keys AD CONIURA map_keys GENUS(VERBUM, VERBUM)(dados)
+  EVOCA REX i AD 0
+  EVOCA REX n AD CONIURA fluxus_len(keys)
+
+  DUM i < n
+    EVOCA SPECULUM VERBUM chave_ptr AD CONIURA fluxus_get(keys, i)
+    EVOCA VERBUM chave AD *chave_ptr
+    EVOCA VERBUM valor AD CONIURA map_get_or_default GENUS(VERBUM, VERBUM)(dados, chave, "")
+    SI NON first
+      VINCIRE out AD CONIURA concat(out, "&")
+    FIN SI
+    VINCIRE out AD CONIURA concat(out, CONIURA percent_encode(chave))
+    VINCIRE out AD CONIURA concat(out, "=")
+    VINCIRE out AD CONIURA concat(out, CONIURA percent_encode(valor))
+    VINCIRE first AD FALSUM
+    VINCIRE i AD i + 1
+  FIN DUM
+
+  REDDE out
+EXPLICIT RITUALE
+
+RITUALE query_string_parse(VERBUM url) REDDE SPECULUM NIHIL
+  EVOCA REX q AD CONIURA find(url, "?")
+  SI q == -1
+    REDDE CONIURA map_init GENUS(VERBUM, VERBUM)()
+  FIN SI
+
+  EVOCA VERBUM query AD CONIURA substring(url, q + 1, CONIURA len(url))
+  EVOCA REX hash AD CONIURA find(query, "#")
+  SI hash != -1
+    VINCIRE query AD CONIURA substring(query, 0, hash)
+  FIN SI
+
+  REDDE CONIURA form_decode(query)
+EXPLICIT RITUALE
+
+RITUALE query_string_build(SPECULUM NIHIL params) REDDE VERBUM
+  EVOCA VERBUM encoded AD CONIURA form_encode(params)
+  SI CONIURA len(encoded) == 0
+    REDDE ""
+  FIN SI
+  REDDE CONIURA concat("?", encoded)
+EXPLICIT RITUALE
+
+RITUALE form_get(SPECULUM NIHIL dados, VERBUM chave) REDDE SPECULUM NIHIL
+  EVOCA SPECULUM NIHIL keys AD CONIURA map_keys GENUS(VERBUM, VERBUM)(dados)
+  EVOCA REX i AD 0
+  EVOCA REX n AD CONIURA fluxus_len(keys)
+
+  DUM i < n
+    EVOCA SPECULUM VERBUM key_ptr AD CONIURA fluxus_get(keys, i)
+    EVOCA VERBUM current AD *key_ptr
+    SI CONIURA compare(current, chave) == 0
+      REDDE CONIURA map_get GENUS(VERBUM, VERBUM)(dados, current)
+    FIN SI
+    VINCIRE i AD i + 1
+  FIN DUM
+
+  REDDE CONIURA None GENUS(VERBUM)()
+EXPLICIT RITUALE
+
+RITUALE form_get_multi(SPECULUM NIHIL dados, VERBUM chave) REDDE SPECULUM NIHIL
+  EVOCA SPECULUM NIHIL keys AD CONIURA map_keys GENUS(VERBUM, FormValues)(dados)
+  EVOCA REX i AD 0
+  EVOCA REX n AD CONIURA fluxus_len(keys)
+
+  DUM i < n
+    EVOCA SPECULUM VERBUM key_ptr AD CONIURA fluxus_get(keys, i)
+    EVOCA VERBUM current AD *key_ptr
+    SI CONIURA compare(current, chave) == 0
+      REDDE CONIURA map_get GENUS(VERBUM, FormValues)(dados, current)
+    FIN SI
+    VINCIRE i AD i + 1
+  FIN DUM
+
+  REDDE CONIURA None GENUS(FormValues)()
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

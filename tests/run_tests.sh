@@ -10355,6 +10355,307 @@ else
 fi
 fi
 
+if cct_phase_block_enabled "35A"; then
+echo ""
+echo "========================================"
+echo "FASE 35A: sigilo web_routes"
+echo "========================================"
+cct_phase31_prepare >/dev/null 2>&1
+mkdir -p "$CCT_TMP_DIR/phase35a"
+
+echo "Test 1909: sigilo emite bloco web_routes"
+BASE_1909="$CCT_TMP_DIR/phase35a/test_1909_routes_basic"
+SIGIL_1909="${BASE_1909}.sigil"
+if [ "$RC_31_READY" -eq 0 ] && "$PHASE31_HOST_WRAPPER" --sigilo-only --sigilo-out "$BASE_1909" "tests/integration/sigilo_routes_basic_35a.cct" >"$PHASE31_LOG_DIR/test_1909.stdout.log" 2>"$PHASE31_LOG_DIR/test_1909.stderr.log" && \
+   rg -q '^\[web_routes\]$' "$SIGIL_1909" && \
+   rg -q '^route_count = 2$' "$SIGIL_1909" && \
+   rg -q '^route_id = api.users.list$' "$SIGIL_1909" && \
+   rg -q '^route_hash = [0-9a-f]{16}$' "$SIGIL_1909"; then
+    test_pass "sigilo emite bloco web_routes"
+else
+    test_fail "sigilo nao emitiu bloco web_routes corretamente"
+fi
+
+echo "Test 1910: sigilo inspect estruturado resume web routes"
+BASE_1910="$CCT_TMP_DIR/phase35a/test_1910_routes_inspect"
+SIGIL_1910="${BASE_1910}.sigil"
+OUT_1910="$PHASE31_LOG_DIR/test_1910.inspect.log"
+if [ "$RC_31_READY" -eq 0 ] && "$PHASE31_HOST_WRAPPER" --sigilo-only --sigilo-out "$BASE_1910" "tests/integration/sigilo_routes_basic_35a.cct" >/dev/null 2>&1 && \
+   "$PHASE31_HOST_WRAPPER" sigilo inspect "$SIGIL_1910" --format structured --summary >"$OUT_1910" 2>"$PHASE31_LOG_DIR/test_1910.stderr.log" && \
+   rg -q '^web_route_count = 2$' "$OUT_1910" && \
+   rg -q '^web_topology_hash = [0-9a-f]{16}$' "$OUT_1910"; then
+    test_pass "sigilo inspect estruturado resume web routes"
+else
+    test_fail "sigilo inspect estruturado nao resumiu web routes"
+fi
+
+echo "Test 1911: sigilo validate estrito aceita web routes validas"
+BASE_1911="$CCT_TMP_DIR/phase35a/test_1911_routes_validate"
+SIGIL_1911="${BASE_1911}.sigil"
+if [ "$RC_31_READY" -eq 0 ] && "$PHASE31_HOST_WRAPPER" --sigilo-only --sigilo-out "$BASE_1911" "tests/integration/sigilo_routes_basic_35a.cct" >/dev/null 2>&1 && \
+   "$PHASE31_HOST_WRAPPER" sigilo validate "$SIGIL_1911" --strict --summary >"$PHASE31_LOG_DIR/test_1911.stdout.log" 2>"$PHASE31_LOG_DIR/test_1911.stderr.log"; then
+    test_pass "sigilo validate estrito aceita web routes validas"
+else
+    test_fail "sigilo validate estrito rejeitou web routes validas"
+fi
+
+echo "Test 1912: sigilo validate estrito rejeita rota sem path"
+BASE_1912="$CCT_TMP_DIR/phase35a/test_1912_routes_invalid"
+SIGIL_1912="${BASE_1912}.sigil"
+if [ "$RC_31_READY" -eq 0 ] && "$PHASE31_HOST_WRAPPER" --sigilo-only --sigilo-out "$BASE_1912" "tests/integration/sigilo_routes_invalid_35a.cct" >"$PHASE31_LOG_DIR/test_1912.gen.stdout.log" 2>"$PHASE31_LOG_DIR/test_1912.gen.stderr.log" && \
+   ! "$PHASE31_HOST_WRAPPER" sigilo validate "$SIGIL_1912" --strict --summary >"$PHASE31_LOG_DIR/test_1912.stdout.log" 2>"$PHASE31_LOG_DIR/test_1912.stderr.log"; then
+    test_pass "sigilo validate estrito rejeita rota sem path"
+else
+    test_fail "sigilo validate estrito nao rejeitou rota sem path"
+fi
+
+echo "Test 1913: sigilo ordena web routes de forma deterministica"
+BASE_1913="$CCT_TMP_DIR/phase35a/test_1913_routes_order"
+SIGIL_1913="${BASE_1913}.sigil"
+if [ "$RC_31_READY" -eq 0 ] && "$PHASE31_HOST_WRAPPER" --sigilo-only --sigilo-out "$BASE_1913" "tests/integration/sigilo_routes_order_35a.cct" >"$PHASE31_LOG_DIR/test_1913.stdout.log" 2>"$PHASE31_LOG_DIR/test_1913.stderr.log" && \
+   awk 'BEGIN{ok=0} /^\[web_route\.0\]$/{state=1;next} state==1 && /^route_id = admin.dashboard$/{a=1} /^\[web_route\.1\]$/{state=2;next} state==2 && /^route_id = api.alpha$/{b=1} /^\[web_route\.2\]$/{state=3;next} state==3 && /^route_id = api.zeta$/{c=1} END{exit !((a+0)==1 && (b+0)==1 && (c+0)==1)}' "$SIGIL_1913"; then
+    test_pass "sigilo ordena web routes de forma deterministica"
+else
+    test_fail "sigilo nao ordenou web routes de forma deterministica"
+fi
+
+echo "Test 1914: ./cct promovido preserva emissao web_routes"
+BASE_1914="$CCT_TMP_DIR/phase35a/test_1914_routes_default_wrapper"
+SIGIL_1914="${BASE_1914}.sigil"
+if [ "$RC_31_READY" -eq 0 ] && make bootstrap-promote >"$PHASE31_LOG_DIR/test_1914.stdout.log" 2>"$PHASE31_LOG_DIR/test_1914.stderr.log" && \
+   "$PHASE31_DEFAULT_WRAPPER" --sigilo-only --sigilo-out "$BASE_1914" "tests/integration/sigilo_routes_basic_35a.cct" >/dev/null 2>&1 && \
+   rg -q '^route_count = 2$' "$SIGIL_1914"; then
+    test_pass "./cct promovido preserva emissao web_routes"
+else
+    test_fail "./cct promovido nao preservou emissao web_routes"
+fi
+fi
+
+if cct_phase_block_enabled "35B"; then
+echo ""
+echo "========================================"
+echo "FASE 35B: sigilo style routes"
+echo "========================================"
+cct_phase31_prepare >/dev/null 2>&1
+mkdir -p "$CCT_TMP_DIR/phase35b"
+
+echo "Test 1915: sigilo style routes gera SVG navegavel"
+BASE_1915="$CCT_TMP_DIR/phase35b/test_1915_routes_svg"
+SVG_1915="${BASE_1915}.svg"
+if [ "$RC_31_READY" -eq 0 ] && "$PHASE31_HOST_WRAPPER" --sigilo-only --sigilo-style routes --sigilo-out "$BASE_1915" "tests/integration/sigilo_routes_basic_35a.cct" >"$PHASE31_LOG_DIR/test_1915.stdout.log" 2>"$PHASE31_LOG_DIR/test_1915.stderr.log" && \
+   rg -q 'id="route_cluster_api"' "$SVG_1915" && \
+   rg -q 'data-route-id="api.users.list"' "$SVG_1915" && \
+   rg -q 'class="route-method-get"' "$SVG_1915"; then
+    test_pass "sigilo style routes gera SVG navegavel"
+else
+    test_fail "sigilo style routes nao gerou SVG navegavel"
+fi
+
+echo "Test 1916: sigilo style routes preserva visual_style no meta"
+BASE_1916="$CCT_TMP_DIR/phase35b/test_1916_routes_meta"
+SIGIL_1916="${BASE_1916}.sigil"
+if [ "$RC_31_READY" -eq 0 ] && "$PHASE31_HOST_WRAPPER" --sigilo-only --sigilo-style routes --sigilo-out "$BASE_1916" "tests/integration/sigilo_routes_basic_35a.cct" >/dev/null 2>&1 && \
+   rg -q '^visual_style = routes$' "$SIGIL_1916"; then
+    test_pass "sigilo style routes preserva visual_style no meta"
+else
+    test_fail "sigilo style routes nao preservou visual_style no meta"
+fi
+
+echo "Test 1917: sigilo style routes agrupa por grupos distintos"
+BASE_1917="$CCT_TMP_DIR/phase35b/test_1917_routes_groups"
+SVG_1917="${BASE_1917}.svg"
+if [ "$RC_31_READY" -eq 0 ] && "$PHASE31_HOST_WRAPPER" --sigilo-only --sigilo-style routes --sigilo-out "$BASE_1917" "tests/integration/sigilo_routes_order_35a.cct" >"$PHASE31_LOG_DIR/test_1917.stdout.log" 2>"$PHASE31_LOG_DIR/test_1917.stderr.log" && \
+   rg -q 'id="route_cluster_admin"' "$SVG_1917" && \
+   rg -q 'id="route_cluster_api"' "$SVG_1917"; then
+    test_pass "sigilo style routes agrupa por grupos distintos"
+else
+    test_fail "sigilo style routes nao agrupou por grupos distintos"
+fi
+
+echo "Test 1918: sigilo style routes emite hover rico"
+BASE_1918="$CCT_TMP_DIR/phase35b/test_1918_routes_hover"
+SVG_1918="${BASE_1918}.svg"
+if [ "$RC_31_READY" -eq 0 ] && "$PHASE31_HOST_WRAPPER" --sigilo-only --sigilo-style routes --sigilo-out "$BASE_1918" "tests/integration/sigilo_routes_basic_35a.cct" >/dev/null 2>&1 && \
+   rg -q 'GET /api/users' "$SVG_1918" && \
+   rg -q 'handler=users_list' "$SVG_1918" && \
+   rg -q 'middleware=auth,trace' "$SVG_1918"; then
+    test_pass "sigilo style routes emite hover rico"
+else
+    test_fail "sigilo style routes nao emitiu hover rico"
+fi
+
+echo "Test 1919: sigilo style routes falha sem web_routes"
+BASE_1919="$CCT_TMP_DIR/phase35b/test_1919_routes_empty"
+if [ "$RC_31_READY" -eq 0 ] && ! "$PHASE31_HOST_WRAPPER" --sigilo-only --sigilo-style routes --sigilo-out "$BASE_1919" "tests/integration/sigilo_minimal.cct" >"$PHASE31_LOG_DIR/test_1919.stdout.log" 2>"$PHASE31_LOG_DIR/test_1919.stderr.log"; then
+    test_pass "sigilo style routes falha sem web_routes"
+else
+    test_fail "sigilo style routes nao falhou sem web_routes"
+fi
+
+echo "Test 1920: ./cct promovido preserva style routes"
+BASE_1920="$CCT_TMP_DIR/phase35b/test_1920_routes_default_wrapper"
+SVG_1920="${BASE_1920}.svg"
+if [ "$RC_31_READY" -eq 0 ] && make bootstrap-promote >"$PHASE31_LOG_DIR/test_1920.stdout.log" 2>"$PHASE31_LOG_DIR/test_1920.stderr.log" && \
+   "$PHASE31_DEFAULT_WRAPPER" --sigilo-only --sigilo-style routes --sigilo-out "$BASE_1920" "tests/integration/sigilo_routes_basic_35a.cct" >/dev/null 2>&1 && \
+   rg -q 'id="route_cluster_api"' "$SVG_1920"; then
+    test_pass "./cct promovido preserva style routes"
+else
+    test_fail "./cct promovido nao preservou style routes"
+fi
+fi
+
+if cct_phase_block_enabled "35C"; then
+echo ""
+echo "========================================"
+echo "FASE 35C: sigilo trace tooling"
+echo "========================================"
+cct_phase31_prepare >/dev/null 2>&1
+mkdir -p "$CCT_TMP_DIR/phase35c"
+
+echo "Test 1921: sigilo trace view resume trace valido"
+OUT_1921="$PHASE31_LOG_DIR/test_1921.trace_view.log"
+if [ "$RC_31_READY" -eq 0 ] && "$PHASE31_HOST_WRAPPER" sigilo trace view "tests/integration/sigilo_trace_basic_35c.ctrace" --summary >"$OUT_1921" 2>"$PHASE31_LOG_DIR/test_1921.stderr.log" && \
+   rg -q '^trace trace-35c spans=4 total=14ms' "$OUT_1921"; then
+    test_pass "sigilo trace view resume trace valido"
+else
+    test_fail "sigilo trace view nao resumiu trace valido"
+fi
+
+echo "Test 1922: sigilo trace view imprime arvore"
+OUT_1922="$PHASE31_LOG_DIR/test_1922.trace_tree.log"
+if [ "$RC_31_READY" -eq 0 ] && "$PHASE31_HOST_WRAPPER" sigilo trace view "tests/integration/sigilo_trace_basic_35c.ctrace" >"$OUT_1922" 2>"$PHASE31_LOG_DIR/test_1922.stderr.log" && \
+   rg -q 'request \(14ms\)' "$OUT_1922" && \
+   rg -q 'middleware.auth \(2ms\)' "$OUT_1922" && \
+   rg -q 'db.query \(3ms\)' "$OUT_1922"; then
+    test_pass "sigilo trace view imprime arvore"
+else
+    test_fail "sigilo trace view nao imprimiu arvore"
+fi
+
+echo "Test 1923: sigilo trace strict rejeita ctrace invalido"
+if [ "$RC_31_READY" -eq 0 ] && ! "$PHASE31_HOST_WRAPPER" sigilo trace view "tests/integration/sigilo_trace_invalid_35c.ctrace" --strict --summary >"$PHASE31_LOG_DIR/test_1923.stdout.log" 2>"$PHASE31_LOG_DIR/test_1923.stderr.log"; then
+    test_pass "sigilo trace strict rejeita ctrace invalido"
+else
+    test_fail "sigilo trace strict nao rejeitou ctrace invalido"
+fi
+
+echo "Test 1924: sigilo trace exporta svg simples"
+SVG_1924="$CCT_TMP_DIR/phase35c/test_1924_trace.svg"
+if [ "$RC_31_READY" -eq 0 ] && "$PHASE31_HOST_WRAPPER" sigilo trace export "tests/integration/sigilo_trace_basic_35c.ctrace" --output "$SVG_1924" --format svg >"$PHASE31_LOG_DIR/test_1924.stdout.log" 2>"$PHASE31_LOG_DIR/test_1924.stderr.log" && \
+   rg -q 'trace trace-35c' "$SVG_1924" && \
+   rg -q 'handler.users_list \(6ms\)' "$SVG_1924" && \
+   ! rg -q 'nan' "$SVG_1924"; then
+    test_pass "sigilo trace exporta svg simples"
+else
+    test_fail "sigilo trace nao exportou svg simples"
+fi
+
+echo "Test 1925: sigilo trace exporta overlay com sigil de rotas"
+BASE_1925="$CCT_TMP_DIR/phase35c/test_1925_overlay"
+SIGIL_1925="${BASE_1925}.sigil"
+SVG_1925="$CCT_TMP_DIR/phase35c/test_1925_trace_overlay.svg"
+if [ "$RC_31_READY" -eq 0 ] && "$PHASE31_HOST_WRAPPER" --sigilo-only --sigilo-out "$BASE_1925" "tests/integration/sigilo_routes_basic_35a.cct" >/dev/null 2>&1 && \
+   "$PHASE31_HOST_WRAPPER" sigilo trace export "tests/integration/sigilo_trace_basic_35c.ctrace" --sigil "$SIGIL_1925" --output "$SVG_1925" --format svg >"$PHASE31_LOG_DIR/test_1925.stdout.log" 2>"$PHASE31_LOG_DIR/test_1925.stderr.log" && \
+   rg -q 'route api.users.list → GET /api/users' "$SVG_1925" && \
+   rg -q 'data-route-id="api.users.list"' "$SVG_1925"; then
+    test_pass "sigilo trace exporta overlay com sigil de rotas"
+else
+    test_fail "sigilo trace nao exportou overlay com sigil de rotas"
+fi
+
+echo "Test 1926: ./cct promovido executa sigilo trace tooling"
+SVG_1926="$CCT_TMP_DIR/phase35c/test_1926_trace_default.svg"
+if [ "$RC_31_READY" -eq 0 ] && make bootstrap-promote >"$PHASE31_LOG_DIR/test_1926.stdout.log" 2>"$PHASE31_LOG_DIR/test_1926.stderr.log" && \
+   "$PHASE31_DEFAULT_WRAPPER" sigilo trace export "tests/integration/sigilo_trace_basic_35c.ctrace" --output "$SVG_1926" --format svg >/dev/null 2>&1 && \
+   rg -q 'db.query \(3ms\)' "$SVG_1926" && \
+   ! rg -q 'nan' "$SVG_1926"; then
+    test_pass "./cct promovido executa sigilo trace tooling"
+else
+    test_fail "./cct promovido nao executou sigilo trace tooling"
+fi
+fi
+
+if cct_phase_block_enabled "35D"; then
+echo ""
+echo "========================================"
+echo "FASE 35D: sigilo manifest merge"
+echo "========================================"
+cct_phase31_prepare >/dev/null 2>&1
+mkdir -p "$CCT_TMP_DIR/phase35d"
+
+echo "Test 1927: sigilo injeta rotas a partir de manifesto externo"
+BASE_1927="$CCT_TMP_DIR/phase35d/test_1927_manifest_only"
+SIGIL_1927="${BASE_1927}.sigil"
+if [ "$RC_31_READY" -eq 0 ] && "$PHASE31_HOST_WRAPPER" --sigilo-only --sigilo-manifest "tests/integration/sigilo_manifest_only_35d.json" --sigilo-out "$BASE_1927" "tests/integration/sigilo_minimal.cct" >"$PHASE31_LOG_DIR/test_1927.stdout.log" 2>"$PHASE31_LOG_DIR/test_1927.stderr.log" && \
+   rg -q '^\[web_routes\]$' "$SIGIL_1927" && \
+   rg -q '^route_count = 1$' "$SIGIL_1927" && \
+   rg -q '^source = manifest$' "$SIGIL_1927" && \
+   rg -q '^route_id = site.home$' "$SIGIL_1927"; then
+    test_pass "sigilo injeta rotas a partir de manifesto externo"
+else
+    test_fail "sigilo nao injetou rotas a partir de manifesto externo"
+fi
+
+echo "Test 1928: sigilo preserva provenance do manifesto"
+BASE_1928="$CCT_TMP_DIR/phase35d/test_1928_manifest_provenance"
+SIGIL_1928="${BASE_1928}.sigil"
+OUT_1928="$PHASE31_LOG_DIR/test_1928.inspect.log"
+if [ "$RC_31_READY" -eq 0 ] && "$PHASE31_HOST_WRAPPER" --sigilo-only --sigilo-manifest "tests/integration/sigilo_manifest_only_35d.json" --sigilo-out "$BASE_1928" "tests/integration/sigilo_minimal.cct" >/dev/null 2>&1 && \
+   rg -q '^\[manifest_provenance\]$' "$SIGIL_1928" && \
+   "$PHASE31_HOST_WRAPPER" sigilo inspect "$SIGIL_1928" --format structured --summary >"$OUT_1928" 2>"$PHASE31_LOG_DIR/test_1928.stderr.log" && \
+   rg -q '^manifest_format = cct.sigilo.manifest.v1$' "$OUT_1928" && \
+   rg -q '^manifest_producer = civitas.routes$' "$OUT_1928" && \
+   rg -q '^manifest_project = desviados$' "$OUT_1928"; then
+    test_pass "sigilo preserva provenance do manifesto"
+else
+    test_fail "sigilo nao preservou provenance do manifesto"
+fi
+
+echo "Test 1929: sigilo faz merge de manifesto com rotas nativas incompletas"
+BASE_1929="$CCT_TMP_DIR/phase35d/test_1929_manifest_merge"
+SIGIL_1929="${BASE_1929}.sigil"
+if [ "$RC_31_READY" -eq 0 ] && "$PHASE31_HOST_WRAPPER" --sigilo-only --sigilo-manifest "tests/integration/sigilo_manifest_merge_35d.json" --sigilo-out "$BASE_1929" "tests/integration/sigilo_routes_partial_35d.cct" >"$PHASE31_LOG_DIR/test_1929.stdout.log" 2>"$PHASE31_LOG_DIR/test_1929.stderr.log" && \
+   rg -q '^source = merged$' "$SIGIL_1929" && \
+   rg -q '^route_name = api.posts.show$' "$SIGIL_1929" && \
+   rg -q '^middleware = auth,trace$' "$SIGIL_1929" && \
+   rg -q '^source_origin = merged$' "$SIGIL_1929"; then
+    test_pass "sigilo faz merge de manifesto com rotas nativas incompletas"
+else
+    test_fail "sigilo nao fez merge de manifesto com rotas nativas incompletas"
+fi
+
+echo "Test 1930: sigilo rejeita conflito estrutural entre manifesto e fonte"
+BASE_1930="$CCT_TMP_DIR/phase35d/test_1930_manifest_conflict"
+if [ "$RC_31_READY" -eq 0 ] && ! "$PHASE31_HOST_WRAPPER" --sigilo-only --sigilo-manifest "tests/integration/sigilo_manifest_conflict_35d.json" --sigilo-out "$BASE_1930" "tests/integration/sigilo_routes_basic_35a.cct" >"$PHASE31_LOG_DIR/test_1930.stdout.log" 2>"$PHASE31_LOG_DIR/test_1930.stderr.log" && \
+   rg -q "manifest conflict for route_id 'api.users.list': path mismatch" "$PHASE31_LOG_DIR/test_1930.stderr.log"; then
+    test_pass "sigilo rejeita conflito estrutural entre manifesto e fonte"
+else
+    test_fail "sigilo nao rejeitou conflito estrutural entre manifesto e fonte"
+fi
+
+echo "Test 1931: sigilo validate estrito aceita artefato com manifesto"
+BASE_1931="$CCT_TMP_DIR/phase35d/test_1931_manifest_validate"
+SIGIL_1931="${BASE_1931}.sigil"
+if [ "$RC_31_READY" -eq 0 ] && "$PHASE31_HOST_WRAPPER" --sigilo-only --sigilo-manifest "tests/integration/sigilo_manifest_merge_35d.json" --sigilo-out "$BASE_1931" "tests/integration/sigilo_routes_partial_35d.cct" >"$PHASE31_LOG_DIR/test_1931.gen.stdout.log" 2>"$PHASE31_LOG_DIR/test_1931.gen.stderr.log" && \
+   "$PHASE31_HOST_WRAPPER" sigilo validate "$SIGIL_1931" --strict --summary >"$PHASE31_LOG_DIR/test_1931.stdout.log" 2>"$PHASE31_LOG_DIR/test_1931.stderr.log"; then
+    test_pass "sigilo validate estrito aceita artefato com manifesto"
+else
+    test_fail "sigilo validate estrito rejeitou artefato com manifesto"
+fi
+
+echo "Test 1932: ./cct promovido preserva merge de manifesto"
+BASE_1932="$CCT_TMP_DIR/phase35d/test_1932_manifest_default_wrapper"
+SIGIL_1932="${BASE_1932}.sigil"
+if [ "$RC_31_READY" -eq 0 ] && make bootstrap-promote >"$PHASE31_LOG_DIR/test_1932.stdout.log" 2>"$PHASE31_LOG_DIR/test_1932.stderr.log" && \
+   "$PHASE31_DEFAULT_WRAPPER" --sigilo-only --sigilo-manifest "tests/integration/sigilo_manifest_only_35d.json" --sigilo-out "$BASE_1932" "tests/integration/sigilo_minimal.cct" >/dev/null 2>&1 && \
+   rg -q '^manifest_producer = civitas.routes$' "$SIGIL_1932" && \
+   rg -q '^source = manifest$' "$SIGIL_1932"; then
+    test_pass "./cct promovido preserva merge de manifesto"
+else
+    test_fail "./cct promovido nao preservou merge de manifesto"
+fi
+fi
+
 echo "Test Results:"
 echo -e "  ${GREEN}Passed:${NC} $TESTS_PASSED" >&3
 echo -e "  ${RED}Failed:${NC} $TESTS_FAILED" >&3

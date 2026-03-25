@@ -1,0 +1,446 @@
+-- CCT — Clavicula Turing
+-- Standard Library Module: encoding
+--
+-- FASE 32B: Canonical encoding baseline
+--
+-- Copyright (c) Erick Andrade Busato. Todos os direitos reservados.
+
+INCIPIT grimoire "encoding"
+
+ADVOCARE "cct/option.cct"
+ADVOCARE "cct/verbum.cct"
+
+RITUALE base64_encode(VERBUM dados) REDDE VERBUM
+  REDDE CONIURA base64_encode_table(dados, CONIURA base64_table(), VERUM)
+EXPLICIT RITUALE
+
+RITUALE base64_decode(VERBUM codificado) REDDE SPECULUM NIHIL
+  REDDE CONIURA base64_decode_table(codificado, CONIURA base64_table())
+EXPLICIT RITUALE
+
+RITUALE base64url_encode(VERBUM dados) REDDE VERBUM
+  REDDE CONIURA base64_encode_table(dados, CONIURA base64url_table(), FALSUM)
+EXPLICIT RITUALE
+
+RITUALE base64url_decode(VERBUM codificado) REDDE SPECULUM NIHIL
+  REDDE CONIURA base64_decode_table(codificado, CONIURA base64url_table())
+EXPLICIT RITUALE
+
+RITUALE hex_encode(VERBUM dados) REDDE VERBUM
+  EVOCA REX n AD CONIURA len(dados)
+  SI n == 0
+    REDDE ""
+  FIN SI
+
+  EVOCA VERBUM out AD ""
+  EVOCA REX i AD 0
+  DUM i < n
+    EVOCA REX value AD CONIURA verbum_byte_value(dados, i)
+    EVOCA REX hi AD CONIURA quotient(value, 16)
+    EVOCA REX lo AD CONIURA modulo(value, 16)
+    VINCIRE out AD CONIURA append_char(out, CONIURA hex_digit_lower(hi))
+    VINCIRE out AD CONIURA append_char(out, CONIURA hex_digit_lower(lo))
+    VINCIRE i AD i + 1
+  FIN DUM
+
+  REDDE out
+EXPLICIT RITUALE
+
+RITUALE hex_decode(VERBUM codificado) REDDE SPECULUM NIHIL
+  EVOCA REX n AD CONIURA len(codificado)
+  SI n == 0
+    REDDE CONIURA Some GENUS(VERBUM)("")
+  FIN SI
+
+  SI CONIURA modulo(n, 2) != 0
+    REDDE CONIURA None GENUS(VERBUM)()
+  FIN SI
+
+  EVOCA VERBUM out AD ""
+  EVOCA REX i AD 0
+  DUM i < n
+    EVOCA SPECULUM NIHIL hi_opt AD CONIURA hex_digit_value(CONIURA char_at(codificado, i))
+    EVOCA SPECULUM NIHIL lo_opt AD CONIURA hex_digit_value(CONIURA char_at(codificado, i + 1))
+    SI CONIURA option_is_none GENUS(REX)(hi_opt) VEL CONIURA option_is_none GENUS(REX)(lo_opt)
+      REDDE CONIURA None GENUS(VERBUM)()
+    FIN SI
+
+    EVOCA REX hi AD CONIURA option_unwrap GENUS(REX)(hi_opt)
+    EVOCA REX lo AD CONIURA option_unwrap GENUS(REX)(lo_opt)
+    EVOCA REX value AD hi * 16 + lo
+    VINCIRE out AD CONIURA append_char(out, cast GENUS(MILES)(value))
+    VINCIRE i AD i + 2
+  FIN DUM
+
+  REDDE CONIURA Some GENUS(VERBUM)(out)
+EXPLICIT RITUALE
+
+RITUALE url_encode(VERBUM texto) REDDE VERBUM
+  EVOCA REX n AD CONIURA len(texto)
+  SI n == 0
+    REDDE ""
+  FIN SI
+
+  EVOCA VERBUM out AD ""
+  EVOCA REX i AD 0
+  DUM i < n
+    EVOCA MILES c AD CONIURA char_at(texto, i)
+    EVOCA REX value AD CONIURA byte_value(c)
+    SI CONIURA is_url_unreserved(value)
+      VINCIRE out AD CONIURA append_char(out, c)
+    ALITER
+      EVOCA REX hi AD CONIURA quotient(value, 16)
+      EVOCA REX lo AD CONIURA modulo(value, 16)
+      VINCIRE out AD CONIURA append_char(out, 37)
+      VINCIRE out AD CONIURA append_char(out, CONIURA hex_digit_upper(hi))
+      VINCIRE out AD CONIURA append_char(out, CONIURA hex_digit_upper(lo))
+    FIN SI
+    VINCIRE i AD i + 1
+  FIN DUM
+
+  REDDE out
+EXPLICIT RITUALE
+
+RITUALE url_decode(VERBUM codificado) REDDE SPECULUM NIHIL
+  EVOCA REX n AD CONIURA len(codificado)
+  SI n == 0
+    REDDE CONIURA Some GENUS(VERBUM)("")
+  FIN SI
+
+  EVOCA VERBUM out AD ""
+  EVOCA REX i AD 0
+  DUM i < n
+    EVOCA MILES c AD CONIURA char_at(codificado, i)
+    SI c == 37
+      SI i + 2 >= n
+        REDDE CONIURA None GENUS(VERBUM)()
+      FIN SI
+
+      EVOCA SPECULUM NIHIL hi_opt AD CONIURA hex_digit_value(CONIURA char_at(codificado, i + 1))
+      EVOCA SPECULUM NIHIL lo_opt AD CONIURA hex_digit_value(CONIURA char_at(codificado, i + 2))
+      SI CONIURA option_is_none GENUS(REX)(hi_opt) VEL CONIURA option_is_none GENUS(REX)(lo_opt)
+        REDDE CONIURA None GENUS(VERBUM)()
+      FIN SI
+
+      EVOCA REX hi AD CONIURA option_unwrap GENUS(REX)(hi_opt)
+      EVOCA REX lo AD CONIURA option_unwrap GENUS(REX)(lo_opt)
+      EVOCA REX value AD hi * 16 + lo
+      VINCIRE out AD CONIURA append_char(out, cast GENUS(MILES)(value))
+      VINCIRE i AD i + 3
+    ALITER
+      VINCIRE out AD CONIURA append_char(out, c)
+      VINCIRE i AD i + 1
+    FIN SI
+  FIN DUM
+
+  REDDE CONIURA Some GENUS(VERBUM)(out)
+EXPLICIT RITUALE
+
+RITUALE html_encode(VERBUM texto) REDDE VERBUM
+  EVOCA REX n AD CONIURA len(texto)
+  SI n == 0
+    REDDE ""
+  FIN SI
+
+  EVOCA VERBUM out AD ""
+  EVOCA REX i AD 0
+  DUM i < n
+    EVOCA MILES c AD CONIURA char_at(texto, i)
+    SI c == 38
+      VINCIRE out AD CONIURA concat(out, "&amp;")
+    ALITER
+      SI c == 60
+        VINCIRE out AD CONIURA concat(out, "&lt;")
+      ALITER
+        SI c == 62
+          VINCIRE out AD CONIURA concat(out, "&gt;")
+        ALITER
+          SI c == 34
+            VINCIRE out AD CONIURA concat(out, "&quot;")
+          ALITER
+            SI c == 39
+              VINCIRE out AD CONIURA concat(out, "&#39;")
+            ALITER
+              VINCIRE out AD CONIURA append_char(out, c)
+            FIN SI
+          FIN SI
+        FIN SI
+      FIN SI
+    FIN SI
+    VINCIRE i AD i + 1
+  FIN DUM
+
+  REDDE out
+EXPLICIT RITUALE
+
+RITUALE html_decode(VERBUM codificado) REDDE VERBUM
+  EVOCA VERBUM out AD codificado
+  VINCIRE out AD CONIURA replace_all(out, "&quot;", "\"")
+  VINCIRE out AD CONIURA replace_all(out, "&#39;", "'")
+  VINCIRE out AD CONIURA replace_all(out, "&lt;", "<")
+  VINCIRE out AD CONIURA replace_all(out, "&gt;", ">")
+  VINCIRE out AD CONIURA replace_all(out, "&amp;", "&")
+  REDDE out
+EXPLICIT RITUALE
+
+RITUALE base64_table() REDDE VERBUM
+  REDDE "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/"
+EXPLICIT RITUALE
+
+RITUALE base64url_table() REDDE VERBUM
+  REDDE "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_"
+EXPLICIT RITUALE
+
+RITUALE base64_encode_table(VERBUM dados, VERBUM tabela, VERUM usar_padding) REDDE VERBUM
+  EVOCA REX n AD CONIURA len(dados)
+  SI n == 0
+    REDDE ""
+  FIN SI
+
+  EVOCA VERBUM out AD ""
+  EVOCA REX i AD 0
+  DUM i < n
+    EVOCA REX b1 AD CONIURA verbum_byte_value(dados, i)
+    EVOCA REX b2 AD 0
+    EVOCA REX b3 AD 0
+    EVOCA REX bloco AD 1
+
+    SI i + 1 < n
+      VINCIRE b2 AD CONIURA verbum_byte_value(dados, i + 1)
+      VINCIRE bloco AD 2
+    FIN SI
+
+    SI i + 2 < n
+      VINCIRE b3 AD CONIURA verbum_byte_value(dados, i + 2)
+      VINCIRE bloco AD 3
+    FIN SI
+
+    EVOCA REX idx1 AD CONIURA quotient(b1, 4)
+    EVOCA REX idx2 AD CONIURA modulo(b1, 4) * 16 + CONIURA quotient(b2, 16)
+    EVOCA REX idx3 AD CONIURA modulo(b2, 16) * 4 + CONIURA quotient(b3, 64)
+    EVOCA REX idx4 AD CONIURA modulo(b3, 64)
+
+    VINCIRE out AD CONIURA append_char(out, CONIURA char_at(tabela, idx1))
+    VINCIRE out AD CONIURA append_char(out, CONIURA char_at(tabela, idx2))
+
+    SI bloco >= 2
+      VINCIRE out AD CONIURA append_char(out, CONIURA char_at(tabela, idx3))
+    ALITER
+      SI usar_padding
+        VINCIRE out AD CONIURA append_char(out, 61)
+      FIN SI
+    FIN SI
+
+    SI bloco >= 3
+      VINCIRE out AD CONIURA append_char(out, CONIURA char_at(tabela, idx4))
+    ALITER
+      SI usar_padding
+        VINCIRE out AD CONIURA append_char(out, 61)
+      FIN SI
+    FIN SI
+
+    VINCIRE i AD i + 3
+  FIN DUM
+
+  REDDE out
+EXPLICIT RITUALE
+
+RITUALE base64_decode_table(VERBUM codificado, VERBUM tabela) REDDE SPECULUM NIHIL
+  EVOCA SPECULUM NIHIL normalized_opt AD CONIURA normalize_base64_input(codificado)
+  SI CONIURA option_is_none GENUS(VERBUM)(normalized_opt)
+    REDDE CONIURA None GENUS(VERBUM)()
+  FIN SI
+
+  EVOCA VERBUM texto AD CONIURA option_unwrap GENUS(VERBUM)(normalized_opt)
+  EVOCA REX n AD CONIURA len(texto)
+  SI n == 0
+    REDDE CONIURA Some GENUS(VERBUM)("")
+  FIN SI
+
+  EVOCA VERBUM out AD ""
+  EVOCA REX i AD 0
+  DUM i < n
+    EVOCA REX rem AD n - i
+    SI rem == 1
+      REDDE CONIURA None GENUS(VERBUM)()
+    FIN SI
+
+    EVOCA SPECULUM NIHIL idx1_opt AD CONIURA base64_index(CONIURA char_at(texto, i), tabela)
+    EVOCA SPECULUM NIHIL idx2_opt AD CONIURA base64_index(CONIURA char_at(texto, i + 1), tabela)
+    SI CONIURA option_is_none GENUS(REX)(idx1_opt) VEL CONIURA option_is_none GENUS(REX)(idx2_opt)
+      REDDE CONIURA None GENUS(VERBUM)()
+    FIN SI
+
+    EVOCA REX v1 AD CONIURA option_unwrap GENUS(REX)(idx1_opt)
+    EVOCA REX v2 AD CONIURA option_unwrap GENUS(REX)(idx2_opt)
+    EVOCA REX byte1 AD v1 * 4 + CONIURA quotient(v2, 16)
+    VINCIRE out AD CONIURA append_char(out, cast GENUS(MILES)(byte1))
+
+    SI rem >= 3
+      EVOCA SPECULUM NIHIL idx3_opt AD CONIURA base64_index(CONIURA char_at(texto, i + 2), tabela)
+      SI CONIURA option_is_none GENUS(REX)(idx3_opt)
+        REDDE CONIURA None GENUS(VERBUM)()
+      FIN SI
+
+      EVOCA REX v3 AD CONIURA option_unwrap GENUS(REX)(idx3_opt)
+      EVOCA REX byte2 AD CONIURA modulo(v2, 16) * 16 + CONIURA quotient(v3, 4)
+      VINCIRE out AD CONIURA append_char(out, cast GENUS(MILES)(byte2))
+
+      SI rem >= 4
+        EVOCA SPECULUM NIHIL idx4_opt AD CONIURA base64_index(CONIURA char_at(texto, i + 3), tabela)
+        SI CONIURA option_is_none GENUS(REX)(idx4_opt)
+          REDDE CONIURA None GENUS(VERBUM)()
+        FIN SI
+
+        EVOCA REX v4 AD CONIURA option_unwrap GENUS(REX)(idx4_opt)
+        EVOCA REX byte3 AD CONIURA modulo(v3, 4) * 64 + v4
+        VINCIRE out AD CONIURA append_char(out, cast GENUS(MILES)(byte3))
+      FIN SI
+    FIN SI
+
+    VINCIRE i AD i + 4
+  FIN DUM
+
+  REDDE CONIURA Some GENUS(VERBUM)(out)
+EXPLICIT RITUALE
+
+RITUALE normalize_base64_input(VERBUM codificado) REDDE SPECULUM NIHIL
+  EVOCA REX n AD CONIURA len(codificado)
+  SI n == 0
+    REDDE CONIURA Some GENUS(VERBUM)("")
+  FIN SI
+
+  EVOCA REX first_pad AD -1
+  EVOCA REX i AD 0
+  DUM i < n
+    EVOCA MILES c AD CONIURA char_at(codificado, i)
+    SI c == 61
+      SI first_pad == -1
+        VINCIRE first_pad AD i
+      FIN SI
+    ALITER
+      SI first_pad != -1
+        REDDE CONIURA None GENUS(VERBUM)()
+      FIN SI
+    FIN SI
+    VINCIRE i AD i + 1
+  FIN DUM
+
+  EVOCA REX pad_count AD 0
+  SI first_pad != -1
+    VINCIRE pad_count AD n - first_pad
+  FIN SI
+
+  SI pad_count > 2
+    REDDE CONIURA None GENUS(VERBUM)()
+  FIN SI
+
+  SI pad_count > 0 ET CONIURA modulo(n, 4) != 0
+    REDDE CONIURA None GENUS(VERBUM)()
+  FIN SI
+
+  EVOCA REX clean_len AD n - pad_count
+  SI CONIURA modulo(clean_len, 4) == 1
+    REDDE CONIURA None GENUS(VERBUM)()
+  FIN SI
+
+  SI pad_count == 1 ET CONIURA modulo(clean_len, 4) != 3
+    REDDE CONIURA None GENUS(VERBUM)()
+  FIN SI
+
+  SI pad_count == 2 ET CONIURA modulo(clean_len, 4) != 2
+    REDDE CONIURA None GENUS(VERBUM)()
+  FIN SI
+
+  REDDE CONIURA Some GENUS(VERBUM)(CONIURA substring(codificado, 0, clean_len))
+EXPLICIT RITUALE
+
+RITUALE base64_index(MILES c, VERBUM tabela) REDDE SPECULUM NIHIL
+  EVOCA REX i AD 0
+  DUM i < 64
+    SI CONIURA char_at(tabela, i) == c
+      REDDE CONIURA Some GENUS(REX)(i)
+    FIN SI
+    VINCIRE i AD i + 1
+  FIN DUM
+  REDDE CONIURA None GENUS(REX)()
+EXPLICIT RITUALE
+
+RITUALE hex_digit_value(MILES c) REDDE SPECULUM NIHIL
+  SI c >= 48 ET c <= 57
+    REDDE CONIURA Some GENUS(REX)(cast GENUS(REX)(c - 48))
+  FIN SI
+  SI c >= 97 ET c <= 102
+    REDDE CONIURA Some GENUS(REX)(cast GENUS(REX)(c - 97 + 10))
+  FIN SI
+  SI c >= 65 ET c <= 70
+    REDDE CONIURA Some GENUS(REX)(cast GENUS(REX)(c - 65 + 10))
+  FIN SI
+  REDDE CONIURA None GENUS(REX)()
+EXPLICIT RITUALE
+
+RITUALE hex_digit_lower(REX value) REDDE MILES
+  SI value < 10
+    REDDE cast GENUS(MILES)(48 + value)
+  FIN SI
+  REDDE cast GENUS(MILES)(97 + value - 10)
+EXPLICIT RITUALE
+
+RITUALE hex_digit_upper(REX value) REDDE MILES
+  SI value < 10
+    REDDE cast GENUS(MILES)(48 + value)
+  FIN SI
+  REDDE cast GENUS(MILES)(65 + value - 10)
+EXPLICIT RITUALE
+
+RITUALE is_url_unreserved(REX c) REDDE VERUM
+  SI c >= 65 ET c <= 90
+    REDDE VERUM
+  FIN SI
+  SI c >= 97 ET c <= 122
+    REDDE VERUM
+  FIN SI
+  SI c >= 48 ET c <= 57
+    REDDE VERUM
+  FIN SI
+  SI c == 45 VEL c == 95 VEL c == 46 VEL c == 126
+    REDDE VERUM
+  FIN SI
+  REDDE FALSUM
+EXPLICIT RITUALE
+
+RITUALE verbum_byte_value(VERBUM s, REX idx) REDDE REX
+  REDDE CONIURA byte_value(CONIURA char_at(s, idx))
+EXPLICIT RITUALE
+
+RITUALE byte_value(MILES c) REDDE REX
+  EVOCA REX value AD cast GENUS(REX)(c)
+  SI value < 0
+    VINCIRE value AD value + 256
+  FIN SI
+  REDDE value
+EXPLICIT RITUALE
+
+RITUALE append_char(VERBUM acc, MILES c) REDDE VERBUM
+  REDDE CONIURA concat(acc, CONIURA from_char(c))
+EXPLICIT RITUALE
+
+RITUALE modulo(REX value, REX divisor) REDDE REX
+  EVOCA REX remainder AD value
+  DUM remainder >= divisor
+    VINCIRE remainder AD remainder - divisor
+  FIN DUM
+  REDDE remainder
+EXPLICIT RITUALE
+
+RITUALE quotient(REX value, REX divisor) REDDE REX
+  EVOCA REX q AD 0
+  EVOCA REX remainder AD value
+  DUM remainder >= divisor
+    VINCIRE remainder AD remainder - divisor
+    VINCIRE q AD q + 1
+  FIN DUM
+  REDDE q
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

@@ -20,7 +20,8 @@ static bool cli_is_valid_sigilo_style(const char *style) {
     return style &&
            (strcmp(style, "network") == 0 ||
             strcmp(style, "seal") == 0 ||
-            strcmp(style, "scriptum") == 0);
+            strcmp(style, "scriptum") == 0 ||
+            strcmp(style, "routes") == 0);
 }
 
 static bool cli_parse_sigilo_mode(const char *mode, cct_sigilo_mode_t *out_mode) {
@@ -84,10 +85,11 @@ void cct_cli_show_help(void) {
     printf("  --entry <rituale>           Freestanding entry ritual symbol (FASE 16B.4)\n");
     printf("  --emit-asm                  Emit freestanding assembly (.cgen.s) (FASE 16C.1)\n");
     printf("  --sigilo-only <file.cct>    Generate sigilo artifacts only (FASE 5+)\n");
-    printf("  --sigilo-style <style>      Sigilo style: network|seal|scriptum (FASE 6A)\n");
+    printf("  --sigilo-style <style>      Sigilo style: network|seal|scriptum|routes (FASE 35B)\n");
     printf("  --sigilo-mode <mode>        Multi-module sigilo emission: essencial|completo\n");
     printf("                              (aliases kept: essential|complete) (FASE 9E)\n");
     printf("  --sigilo-out <basepath>     Output base for sigilo artifacts (FASE 6A)\n");
+    printf("  --sigilo-manifest <path>    Merge external sigilo manifest during generation (FASE 35D)\n");
     printf("  --sigilo-no-meta            Skip .sigil metadata emission (FASE 6A)\n");
     printf("  --sigilo-no-svg             Skip .svg emission (FASE 6A)\n");
     printf("  --sigilo-no-titles          Disable SVG <title> instrumentation (FASE 14T)\n");
@@ -167,6 +169,7 @@ cct_error_code_t cct_cli_parse(int argc, char **argv, cct_cli_args_t *args) {
     args->entry_rituale = NULL;
     args->sigilo_style = "network";
     args->sigilo_out_base = NULL;
+    args->sigilo_manifest_path = NULL;
     args->sigilo_mode = CCT_SIGILO_MODE_ESSENTIAL;
     args->sigilo_emit_svg = true;
     args->sigilo_emit_meta = true;
@@ -344,13 +347,13 @@ cct_error_code_t cct_cli_parse(int argc, char **argv, cct_cli_args_t *args) {
         if (strcmp(cur, "--sigilo-style") == 0) {
             if (i + 1 >= normalized_argc) {
                 cct_error_printf(CCT_ERROR_MISSING_ARGUMENT,
-                                "--sigilo-style requires a style name (network|seal|scriptum)");
+                                "--sigilo-style requires a style name (network|seal|scriptum|routes)");
                 return CCT_ERROR_MISSING_ARGUMENT;
             }
             args->sigilo_style = normalized_argv[++i];
             if (!cli_is_valid_sigilo_style(args->sigilo_style)) {
                 cct_error_printf(CCT_ERROR_INVALID_ARGUMENT,
-                                "Invalid sigilo style: %s (expected network|seal|scriptum)",
+                                "Invalid sigilo style: %s (expected network|seal|scriptum|routes)",
                                 args->sigilo_style);
                 return CCT_ERROR_INVALID_ARGUMENT;
             }
@@ -380,6 +383,15 @@ cct_error_code_t cct_cli_parse(int argc, char **argv, cct_cli_args_t *args) {
             }
             args->sigilo_out_base = normalized_argv[++i];
             args->output_file = args->sigilo_out_base;
+            continue;
+        }
+        if (strcmp(cur, "--sigilo-manifest") == 0) {
+            if (i + 1 >= normalized_argc) {
+                cct_error_printf(CCT_ERROR_MISSING_ARGUMENT,
+                                "--sigilo-manifest requires a manifest path");
+                return CCT_ERROR_MISSING_ARGUMENT;
+            }
+            args->sigilo_manifest_path = normalized_argv[++i];
             continue;
         }
         if (strcmp(cur, "--sigilo-no-meta") == 0) {

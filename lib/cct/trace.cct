@@ -1,0 +1,440 @@
+-- CCT — Clavicula Turing
+-- Standard Library Module: trace
+--
+-- FASE 34B: Trace baseline
+
+INCIPIT grimoire "trace"
+
+ADVOCARE "cct/fluxus.cct"
+ADVOCARE "cct/fmt.cct"
+ADVOCARE "cct/fs.cct"
+ADVOCARE "cct/json.cct"
+ADVOCARE "cct/option.cct"
+ADVOCARE "cct/parse.cct"
+ADVOCARE "cct/result.cct"
+ADVOCARE "cct/uuid.cct"
+ADVOCARE "cct/date.cct"
+ADVOCARE "cct/verbum.cct"
+ADVOCARE "cct/verbum_builder.cct"
+
+SIGILLUM Span
+  span_id: VERBUM
+  trace_id: VERBUM
+  parent_id: VERBUM
+  name: VERBUM
+  start_time_ms: REX
+  end_time_ms: REX
+  attributes_json: VERBUM
+FIN SIGILLUM
+
+SIGILLUM Trace
+  trace_id: VERBUM
+  spans: SPECULUM NIHIL
+FIN SIGILLUM
+
+SIGILLUM TraceError
+  mensagem: VERBUM
+FIN SIGILLUM
+
+RITUALE TraceErrorMsg(VERBUM mensagem) REDDE TraceError
+  EVOCA TraceError err
+  VINCIRE err.mensagem AD mensagem
+  REDDE err
+EXPLICIT RITUALE
+
+RITUALE trace_ok_rex() REDDE SPECULUM NIHIL
+  REDDE CONIURA Ok GENUS(REX, TraceError)(0)
+EXPLICIT RITUALE
+
+RITUALE trace_err_rex(VERBUM mensagem) REDDE SPECULUM NIHIL
+  REDDE CONIURA Err GENUS(REX, TraceError)(CONIURA TraceErrorMsg(mensagem))
+EXPLICIT RITUALE
+
+RITUALE trace_err_trace(VERBUM mensagem) REDDE SPECULUM NIHIL
+  REDDE CONIURA Err GENUS(Trace, TraceError)(CONIURA TraceErrorMsg(mensagem))
+EXPLICIT RITUALE
+
+RITUALE trace_json_escape(VERBUM texto) REDDE VERBUM
+  EVOCA SPECULUM NIHIL b AD CONIURA builder_init()
+  EVOCA REX i AD 0
+  EVOCA REX n AD CONIURA len(texto)
+  DUM i < n
+    EVOCA MILES c AD CONIURA char_at(texto, i)
+    SI c == 34
+      CONIURA builder_append(b, "\\\"")
+    ALITER
+      SI c == 92
+        CONIURA builder_append(b, "\\\\")
+      ALITER
+        SI c == 10
+          CONIURA builder_append(b, "\\n")
+        ALITER
+          SI c == 13
+            CONIURA builder_append(b, "\\r")
+          ALITER
+            SI c == 9
+              CONIURA builder_append(b, "\\t")
+            ALITER
+              CONIURA builder_append(b, CONIURA from_char(c))
+            FIN SI
+          FIN SI
+        FIN SI
+      FIN SI
+    FIN SI
+    VINCIRE i AD i + 1
+  FIN DUM
+  EVOCA VERBUM out AD CONIURA builder_to_verbum(b)
+  CONIURA builder_free(b)
+  REDDE out
+EXPLICIT RITUALE
+
+RITUALE trace_now_ms() REDDE REX
+  REDDE CONIURA datetime_to_unix(CONIURA datetime_now()) * 1000
+EXPLICIT RITUALE
+
+RITUALE trace_new_span(VERBUM trace_id, VERBUM parent_id, VERBUM name) REDDE Span
+  EVOCA UUID raw_id AD CONIURA uuid_v4()
+  EVOCA Span span
+  VINCIRE span.span_id AD CONIURA uuid_to_string(raw_id)
+  VINCIRE span.trace_id AD trace_id
+  VINCIRE span.parent_id AD parent_id
+  VINCIRE span.name AD name
+  VINCIRE span.start_time_ms AD CONIURA trace_now_ms()
+  VINCIRE span.end_time_ms AD 0
+  VINCIRE span.attributes_json AD "{}"
+  REDDE span
+EXPLICIT RITUALE
+
+RITUALE trace_new() REDDE Trace
+  EVOCA UUID raw_id AD CONIURA uuid_v4()
+  REDDE CONIURA trace_new_with_id(CONIURA uuid_to_string(raw_id))
+EXPLICIT RITUALE
+
+RITUALE trace_new_with_id(VERBUM trace_id) REDDE Trace
+  EVOCA Trace trace
+  VINCIRE trace.trace_id AD trace_id
+  VINCIRE trace.spans AD CONIURA fluxus_init(MENSURA(Span))
+  REDDE trace
+EXPLICIT RITUALE
+
+RITUALE trace_free(SPECULUM Trace trace) REDDE NIHIL
+  CONIURA fluxus_free((*trace).spans)
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE trace_get_id(Trace trace) REDDE VERBUM
+  REDDE trace.trace_id
+EXPLICIT RITUALE
+
+RITUALE trace_span_count(Trace trace) REDDE REX
+  REDDE CONIURA fluxus_len(trace.spans)
+EXPLICIT RITUALE
+
+RITUALE trace_get_span(Trace trace, REX idx) REDDE Span
+  EVOCA SPECULUM Span ptr AD CONIURA fluxus_get(trace.spans, idx)
+  REDDE *ptr
+EXPLICIT RITUALE
+
+RITUALE trace_find_span_index(SPECULUM Trace trace, VERBUM span_id) REDDE REX
+  EVOCA REX i AD 0
+  EVOCA REX n AD CONIURA fluxus_len((*trace).spans)
+  DUM i < n
+    EVOCA SPECULUM Span current AD CONIURA fluxus_get((*trace).spans, i)
+    SI CONIURA compare((*current).span_id, span_id) == 0
+      REDDE i
+    FIN SI
+    VINCIRE i AD i + 1
+  FIN DUM
+  REDDE -1
+EXPLICIT RITUALE
+
+RITUALE trace_root_span_count(Trace trace) REDDE REX
+  EVOCA REX total AD 0
+  EVOCA REX i AD 0
+  EVOCA REX n AD CONIURA fluxus_len(trace.spans)
+  DUM i < n
+    EVOCA SPECULUM Span current AD CONIURA fluxus_get(trace.spans, i)
+    SI CONIURA len((*current).parent_id) == 0
+      VINCIRE total AD total + 1
+    FIN SI
+    VINCIRE i AD i + 1
+  FIN DUM
+  REDDE total
+EXPLICIT RITUALE
+
+RITUALE trace_child_span_count(Trace trace, VERBUM parent_id) REDDE REX
+  EVOCA REX total AD 0
+  EVOCA REX i AD 0
+  EVOCA REX n AD CONIURA fluxus_len(trace.spans)
+  DUM i < n
+    EVOCA SPECULUM Span current AD CONIURA fluxus_get(trace.spans, i)
+    SI CONIURA compare((*current).parent_id, parent_id) == 0
+      VINCIRE total AD total + 1
+    FIN SI
+    VINCIRE i AD i + 1
+  FIN DUM
+  REDDE total
+EXPLICIT RITUALE
+
+RITUALE span_start(SPECULUM Trace trace, VERBUM name) REDDE VERBUM
+  EVOCA Span span AD CONIURA trace_new_span((*trace).trace_id, "", name)
+  CONIURA fluxus_push((*trace).spans, SPECULUM span)
+  REDDE span.span_id
+EXPLICIT RITUALE
+
+RITUALE span_start_child(SPECULUM Trace trace, VERBUM parent_id, VERBUM name) REDDE VERBUM
+  EVOCA Span span AD CONIURA trace_new_span((*trace).trace_id, parent_id, name)
+  CONIURA fluxus_push((*trace).spans, SPECULUM span)
+  REDDE span.span_id
+EXPLICIT RITUALE
+
+RITUALE span_end(SPECULUM Trace trace, VERBUM span_id) REDDE NIHIL
+  EVOCA REX idx AD CONIURA trace_find_span_index(trace, span_id)
+  SI idx >= 0
+    EVOCA SPECULUM Span span AD CONIURA fluxus_get((*trace).spans, idx)
+    VINCIRE (*span).end_time_ms AD CONIURA trace_now_ms()
+  FIN SI
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE span_duration_ms(SPECULUM Trace trace, VERBUM span_id) REDDE REX
+  EVOCA REX idx AD CONIURA trace_find_span_index(trace, span_id)
+  SI idx < 0
+    REDDE 0
+  FIN SI
+  EVOCA SPECULUM Span span AD CONIURA fluxus_get((*trace).spans, idx)
+  SI (*span).end_time_ms <= (*span).start_time_ms
+    REDDE 0
+  FIN SI
+  REDDE (*span).end_time_ms - (*span).start_time_ms
+EXPLICIT RITUALE
+
+RITUALE span_set_attribute(SPECULUM Trace trace, VERBUM span_id, VERBUM key, VERBUM value) REDDE NIHIL
+  EVOCA REX idx AD CONIURA trace_find_span_index(trace, span_id)
+  SI idx < 0
+    REDDE
+  FIN SI
+  EVOCA SPECULUM Span span AD CONIURA fluxus_get((*trace).spans, idx)
+  EVOCA VERBUM escaped_key AD CONIURA trace_json_escape(key)
+  EVOCA VERBUM escaped_value AD CONIURA trace_json_escape(value)
+  EVOCA VERBUM pair AD CONIURA concat("\"", escaped_key)
+  VINCIRE pair AD CONIURA concat(pair, "\":\"")
+  VINCIRE pair AD CONIURA concat(pair, escaped_value)
+  VINCIRE pair AD CONIURA concat(pair, "\"")
+  SI CONIURA compare((*span).attributes_json, "{}") == 0
+    VINCIRE (*span).attributes_json AD CONIURA concat("{", pair)
+    VINCIRE (*span).attributes_json AD CONIURA concat((*span).attributes_json, "}")
+    REDDE
+  FIN SI
+  EVOCA REX n AD CONIURA len((*span).attributes_json)
+  EVOCA VERBUM prefix AD CONIURA substring((*span).attributes_json, 0, n - 1)
+  VINCIRE prefix AD CONIURA concat(prefix, ",")
+  VINCIRE prefix AD CONIURA concat(prefix, pair)
+  VINCIRE prefix AD CONIURA concat(prefix, "}")
+  VINCIRE (*span).attributes_json AD prefix
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE span_to_json_line(Span span) REDDE VERBUM
+  EVOCA SPECULUM NIHIL b AD CONIURA builder_init()
+  CONIURA builder_append(b, "{\"trace_id\":\"")
+  CONIURA builder_append(b, CONIURA trace_json_escape(span.trace_id))
+  CONIURA builder_append(b, "\",\"span_id\":\"")
+  CONIURA builder_append(b, CONIURA trace_json_escape(span.span_id))
+  CONIURA builder_append(b, "\",\"parent_id\":\"")
+  CONIURA builder_append(b, CONIURA trace_json_escape(span.parent_id))
+  CONIURA builder_append(b, "\",\"name\":\"")
+  CONIURA builder_append(b, CONIURA trace_json_escape(span.name))
+  CONIURA builder_append(b, "\",\"start_time_ms\":")
+  CONIURA builder_append(b, CONIURA stringify_int(span.start_time_ms))
+  CONIURA builder_append(b, ",\"end_time_ms\":")
+  CONIURA builder_append(b, CONIURA stringify_int(span.end_time_ms))
+  CONIURA builder_append(b, ",\"duration_ms\":")
+  SI span.end_time_ms > span.start_time_ms
+    CONIURA builder_append(b, CONIURA stringify_int(span.end_time_ms - span.start_time_ms))
+  ALITER
+    CONIURA builder_append(b, "0")
+  FIN SI
+  CONIURA builder_append(b, ",\"attributes\":")
+  CONIURA builder_append(b, span.attributes_json)
+  CONIURA builder_append(b, "}")
+  EVOCA VERBUM out AD CONIURA builder_to_verbum(b)
+  CONIURA builder_free(b)
+  REDDE out
+EXPLICIT RITUALE
+
+RITUALE trace_to_json_lines(Trace trace) REDDE VERBUM
+  EVOCA VERBUM out AD ""
+  EVOCA REX i AD 0
+  EVOCA REX n AD CONIURA fluxus_len(trace.spans)
+  DUM i < n
+    EVOCA SPECULUM Span span AD CONIURA fluxus_get(trace.spans, i)
+    SI i > 0
+      VINCIRE out AD CONIURA concat(out, "\n")
+    FIN SI
+    VINCIRE out AD CONIURA concat(out, CONIURA span_to_json_line(*span))
+    VINCIRE i AD i + 1
+  FIN DUM
+  REDDE out
+EXPLICIT RITUALE
+
+RITUALE trace_write_file(Trace trace, VERBUM path) REDDE SPECULUM NIHIL
+  SI CONIURA len(path) == 0
+    REDDE CONIURA trace_err_rex("caminho invalido")
+  FIN SI
+  CONIURA write_all(path, CONIURA trace_to_json_lines(trace))
+  REDDE CONIURA trace_ok_rex()
+EXPLICIT RITUALE
+
+RITUALE trace_parse_json_field_string(Json obj, VERBUM key) REDDE VERBUM
+  EVOCA REX i AD 0
+  EVOCA REX n AD CONIURA json_obj_len(obj)
+  DUM i < n
+    SI CONIURA compare(CONIURA json_obj_key_at(obj, i), key) == 0
+      EVOCA Json value AD CONIURA json_obj_value_at(obj, i)
+      QUANDO value
+        CASO JsonStr(valor):
+          REDDE valor
+        CASO JsonNull:
+          REDDE ""
+        CASO JsonBool(valor):
+          SI valor
+            REDDE "true"
+          FIN SI
+          REDDE "false"
+        CASO JsonNum(valor):
+          REDDE CONIURA stringify_int(cast GENUS(REX)(valor))
+        CASO JsonArr(handle):
+          REDDE "[]"
+        CASO JsonObj(handle):
+          REDDE "{}"
+      FIN QUANDO
+    FIN SI
+    VINCIRE i AD i + 1
+  FIN DUM
+  REDDE ""
+EXPLICIT RITUALE
+
+RITUALE trace_parse_json_field_int(Json obj, VERBUM key) REDDE REX
+  EVOCA REX i AD 0
+  EVOCA REX n AD CONIURA json_obj_len(obj)
+  DUM i < n
+    SI CONIURA compare(CONIURA json_obj_key_at(obj, i), key) == 0
+      EVOCA Json value AD CONIURA json_obj_value_at(obj, i)
+      QUANDO value
+        CASO JsonNum(valor):
+          REDDE cast GENUS(REX)(valor)
+        CASO JsonStr(valor):
+          EVOCA SPECULUM NIHIL parsed AD CONIURA try_int(valor)
+          SI CONIURA option_is_some GENUS(REX)(parsed)
+            REDDE CONIURA option_unwrap GENUS(REX)(parsed)
+          FIN SI
+          REDDE 0
+        CASO JsonNull:
+          REDDE 0
+        CASO JsonBool(valor):
+          SI valor
+            REDDE 1
+          FIN SI
+          REDDE 0
+        CASO JsonArr(handle):
+          REDDE 0
+        CASO JsonObj(handle):
+          REDDE 0
+      FIN QUANDO
+    FIN SI
+    VINCIRE i AD i + 1
+  FIN DUM
+  REDDE 0
+EXPLICIT RITUALE
+
+RITUALE trace_parse_json_field_object_text(Json obj, VERBUM key) REDDE VERBUM
+  EVOCA REX i AD 0
+  EVOCA REX n AD CONIURA json_obj_len(obj)
+  DUM i < n
+    SI CONIURA compare(CONIURA json_obj_key_at(obj, i), key) == 0
+      EVOCA Json value AD CONIURA json_obj_value_at(obj, i)
+      SI CONIURA json_is_obj(value)
+        REDDE CONIURA json_stringify(value)
+      FIN SI
+      REDDE "{}"
+    FIN SI
+    VINCIRE i AD i + 1
+  FIN DUM
+  REDDE "{}"
+EXPLICIT RITUALE
+
+RITUALE trace_parse_json_line_into(SPECULUM Trace trace, VERBUM line) REDDE SPECULUM NIHIL
+  EVOCA VERBUM clean AD CONIURA trim(line)
+  SI CONIURA len(clean) == 0
+    REDDE CONIURA trace_ok_rex()
+  FIN SI
+  SI CONIURA char_at(clean, 0) != 123
+    REDDE CONIURA trace_err_rex("linha de trace invalida")
+  FIN SI
+
+  EVOCA Json obj AD CONIURA json_parse(clean)
+  SI NON CONIURA json_is_obj(obj)
+    REDDE CONIURA trace_err_rex("linha de trace invalida")
+  FIN SI
+
+  EVOCA Span span
+  VINCIRE span.trace_id AD CONIURA trace_parse_json_field_string(obj, "trace_id")
+  VINCIRE span.span_id AD CONIURA trace_parse_json_field_string(obj, "span_id")
+  VINCIRE span.parent_id AD CONIURA trace_parse_json_field_string(obj, "parent_id")
+  VINCIRE span.name AD CONIURA trace_parse_json_field_string(obj, "name")
+  VINCIRE span.start_time_ms AD CONIURA trace_parse_json_field_int(obj, "start_time_ms")
+  VINCIRE span.end_time_ms AD CONIURA trace_parse_json_field_int(obj, "end_time_ms")
+  VINCIRE span.attributes_json AD CONIURA trace_parse_json_field_object_text(obj, "attributes")
+  SI CONIURA len((*trace).trace_id) == 0
+    VINCIRE (*trace).trace_id AD span.trace_id
+  FIN SI
+  CONIURA fluxus_push((*trace).spans, SPECULUM span)
+  REDDE CONIURA trace_ok_rex()
+EXPLICIT RITUALE
+
+RITUALE trace_parse_json_lines(VERBUM json_lines) REDDE SPECULUM NIHIL
+  EVOCA Trace trace AD CONIURA trace_new_with_id("")
+  EVOCA SPECULUM NIHIL line_builder AD CONIURA builder_init()
+  EVOCA REX i AD 0
+  EVOCA REX n AD CONIURA len(json_lines)
+  DUM i < n
+    EVOCA MILES c AD CONIURA char_at(json_lines, i)
+    SI c == 10
+      EVOCA VERBUM line AD CONIURA builder_to_verbum(line_builder)
+      EVOCA SPECULUM NIHIL step AD CONIURA trace_parse_json_line_into(SPECULUM trace, line)
+      SI CONIURA result_is_err GENUS(REX, TraceError)(step)
+        EVOCA TraceError err AD CONIURA result_unwrap_err GENUS(REX, TraceError)(step)
+        CONIURA builder_free(line_builder)
+        CONIURA trace_free(SPECULUM trace)
+        REDDE CONIURA trace_err_trace(err.mensagem)
+      FIN SI
+      CONIURA builder_free(line_builder)
+      VINCIRE line_builder AD CONIURA builder_init()
+    ALITER
+      SI c != 13
+        CONIURA builder_append(line_builder, CONIURA from_char(c))
+      FIN SI
+    FIN SI
+    VINCIRE i AD i + 1
+  FIN DUM
+
+  EVOCA VERBUM last_line AD CONIURA builder_to_verbum(line_builder)
+  EVOCA SPECULUM NIHIL last_step AD CONIURA trace_parse_json_line_into(SPECULUM trace, last_line)
+  CONIURA builder_free(line_builder)
+  SI CONIURA result_is_err GENUS(REX, TraceError)(last_step)
+    EVOCA TraceError err AD CONIURA result_unwrap_err GENUS(REX, TraceError)(last_step)
+    CONIURA trace_free(SPECULUM trace)
+    REDDE CONIURA trace_err_trace(err.mensagem)
+  FIN SI
+  REDDE CONIURA Ok GENUS(Trace, TraceError)(trace)
+EXPLICIT RITUALE
+
+RITUALE trace_read_file(VERBUM path) REDDE SPECULUM NIHIL
+  SI NON CONIURA exists(path)
+    REDDE CONIURA trace_err_trace("arquivo de trace nao encontrado")
+  FIN SI
+  REDDE CONIURA trace_parse_json_lines(CONIURA read_all(path))
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

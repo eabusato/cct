@@ -1,0 +1,201 @@
+-- CCT — Clavicula Turing
+-- Standard Library Module: lexer_util
+--
+-- FASE 33B: Generic scanner utilities for parsers
+
+INCIPIT grimoire "lexer_util"
+
+ADVOCARE "cct/char.cct"
+ADVOCARE "cct/option.cct"
+ADVOCARE "cct/result.cct"
+ADVOCARE "cct/verbum.cct"
+
+SIGILLUM Scanner
+  input: VERBUM
+  position: REX
+  line: REX
+  column: REX
+FIN SIGILLUM
+
+SIGILLUM ScanError
+  message: VERBUM
+  line: REX
+  column: REX
+FIN SIGILLUM
+
+SIGILLUM ScannerMark
+  position: REX
+  line: REX
+  column: REX
+FIN SIGILLUM
+
+ORDO ScannerClass
+  Whitespace
+  Digit
+  Alpha
+  Alnum
+  Identifier
+  Hex
+FIN ORDO
+
+RITUALE scanner_new(VERBUM input) REDDE Scanner
+  EVOCA Scanner s
+  VINCIRE s.input AD input
+  VINCIRE s.position AD 0
+  VINCIRE s.line AD 1
+  VINCIRE s.column AD 1
+  REDDE s
+EXPLICIT RITUALE
+
+RITUALE scanner_is_eof(SPECULUM Scanner s) REDDE VERUM
+  REDDE (*s).position >= CONIURA len((*s).input)
+EXPLICIT RITUALE
+
+RITUALE scanner_peek(SPECULUM Scanner s) REDDE SPECULUM NIHIL
+  SI CONIURA scanner_is_eof(s)
+    REDDE CONIURA None GENUS(MILES)()
+  FIN SI
+  REDDE CONIURA Some GENUS(MILES)(CONIURA char_at((*s).input, (*s).position))
+EXPLICIT RITUALE
+
+RITUALE scanner_peek_n(SPECULUM Scanner s, REX n) REDDE VERBUM
+  EVOCA REX end_pos AD (*s).position + n
+  EVOCA REX total AD CONIURA len((*s).input)
+  SI end_pos > total
+    VINCIRE end_pos AD total
+  FIN SI
+  REDDE CONIURA substring((*s).input, (*s).position, end_pos)
+EXPLICIT RITUALE
+
+RITUALE scanner_consume(SPECULUM Scanner s) REDDE SPECULUM NIHIL
+  EVOCA SPECULUM NIHIL current AD CONIURA scanner_peek(s)
+  SI CONIURA option_is_none GENUS(MILES)(current)
+    REDDE current
+  FIN SI
+
+  EVOCA MILES c AD CONIURA option_unwrap GENUS(MILES)(current)
+  VINCIRE (*s).position AD (*s).position + 1
+
+  SI c == 10
+    VINCIRE (*s).line AD (*s).line + 1
+    VINCIRE (*s).column AD 1
+  ALITER
+    VINCIRE (*s).column AD (*s).column + 1
+  FIN SI
+
+  REDDE current
+EXPLICIT RITUALE
+
+RITUALE scanner_consume_n(SPECULUM Scanner s, REX n) REDDE VERBUM
+  EVOCA VERBUM out AD ""
+  EVOCA REX i AD 0
+  DUM i < n
+    EVOCA SPECULUM NIHIL current AD CONIURA scanner_consume(s)
+    SI CONIURA option_is_none GENUS(MILES)(current)
+      FRANGE
+    FIN SI
+    VINCIRE out AD CONIURA concat(out, CONIURA from_char(CONIURA option_unwrap GENUS(MILES)(current)))
+    VINCIRE i AD i + 1
+  FIN DUM
+  REDDE out
+EXPLICIT RITUALE
+
+RITUALE scanner_match_class(MILES c, ScannerClass class) REDDE VERUM
+  ELIGE class
+    CASUS Whitespace:
+      REDDE CONIURA char_is_whitespace(c)
+    CASUS Digit:
+      REDDE CONIURA char_is_digit(c)
+    CASUS Alpha:
+      REDDE CONIURA char_is_alpha(c)
+    CASUS Alnum:
+      REDDE CONIURA char_is_alnum(c)
+    CASUS Identifier:
+      REDDE CONIURA char_is_alnum(c) VEL c == 95
+    CASUS Hex:
+      REDDE (c >= 48 ET c <= 57) VEL (c >= 65 ET c <= 70) VEL (c >= 97 ET c <= 102)
+  FIN ELIGE
+  REDDE FALSUM
+EXPLICIT RITUALE
+
+RITUALE scanner_consume_while_class(SPECULUM Scanner s, ScannerClass class) REDDE VERBUM
+  EVOCA VERBUM out AD ""
+  DUM VERUM
+    EVOCA SPECULUM NIHIL current AD CONIURA scanner_peek(s)
+    SI CONIURA option_is_none GENUS(MILES)(current)
+      FRANGE
+    FIN SI
+
+    EVOCA MILES c AD CONIURA option_unwrap GENUS(MILES)(current)
+    SI NON CONIURA scanner_match_class(c, class)
+      FRANGE
+    FIN SI
+
+    VINCIRE out AD CONIURA concat(out, CONIURA from_char(c))
+    CONIURA scanner_consume(s)
+  FIN DUM
+  REDDE out
+EXPLICIT RITUALE
+
+RITUALE scanner_skip_while_class(SPECULUM Scanner s, ScannerClass class) REDDE NIHIL
+  CONIURA scanner_consume_while_class(s, class)
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE scanner_skip_whitespace(SPECULUM Scanner s) REDDE NIHIL
+  CONIURA scanner_skip_while_class(s, Whitespace)
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE scanner_error_at(SPECULUM Scanner s, VERBUM message) REDDE ScanError
+  EVOCA ScanError err
+  VINCIRE err.message AD message
+  VINCIRE err.line AD (*s).line
+  VINCIRE err.column AD (*s).column
+  REDDE err
+EXPLICIT RITUALE
+
+RITUALE scanner_expect(SPECULUM Scanner s, VERBUM expected) REDDE SPECULUM NIHIL
+  EVOCA VERBUM got AD CONIURA scanner_peek_n(s, CONIURA len(expected))
+  SI CONIURA compare(got, expected) != 0
+    REDDE CONIURA Err GENUS(REX, ScanError)(CONIURA scanner_error_at(s, "expected text mismatch"))
+  FIN SI
+  CONIURA scanner_consume_n(s, CONIURA len(expected))
+  REDDE CONIURA Ok GENUS(REX, ScanError)(1)
+EXPLICIT RITUALE
+
+RITUALE scanner_expect_char(SPECULUM Scanner s, MILES expected) REDDE SPECULUM NIHIL
+  EVOCA SPECULUM NIHIL current AD CONIURA scanner_peek(s)
+  SI CONIURA option_is_none GENUS(MILES)(current)
+    REDDE CONIURA Err GENUS(REX, ScanError)(CONIURA scanner_error_at(s, "unexpected eof"))
+  FIN SI
+
+  EVOCA MILES c AD CONIURA option_unwrap GENUS(MILES)(current)
+  SI c != expected
+    REDDE CONIURA Err GENUS(REX, ScanError)(CONIURA scanner_error_at(s, "expected char mismatch"))
+  FIN SI
+
+  CONIURA scanner_consume(s)
+  REDDE CONIURA Ok GENUS(REX, ScanError)(1)
+EXPLICIT RITUALE
+
+RITUALE scanner_remaining(SPECULUM Scanner s) REDDE VERBUM
+  REDDE CONIURA substring((*s).input, (*s).position, CONIURA len((*s).input))
+EXPLICIT RITUALE
+
+RITUALE scanner_save_position(SPECULUM Scanner s) REDDE ScannerMark
+  EVOCA ScannerMark mark
+  VINCIRE mark.position AD (*s).position
+  VINCIRE mark.line AD (*s).line
+  VINCIRE mark.column AD (*s).column
+  REDDE mark
+EXPLICIT RITUALE
+
+RITUALE scanner_restore_position(SPECULUM Scanner s, ScannerMark mark) REDDE NIHIL
+  VINCIRE (*s).position AD mark.position
+  VINCIRE (*s).line AD mark.line
+  VINCIRE (*s).column AD mark.column
+  REDDE
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

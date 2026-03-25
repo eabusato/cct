@@ -1,0 +1,455 @@
+-- CCT — Clavicula Turing
+-- Standard Library Module: date
+--
+-- FASE 32D: Date and DateTime baseline
+
+INCIPIT grimoire "date"
+
+ADVOCARE "cct/fmt.cct"
+ADVOCARE "cct/option.cct"
+ADVOCARE "cct/parse.cct"
+ADVOCARE "cct/result.cct"
+ADVOCARE "cct/verbum.cct"
+
+SIGILLUM Date
+  ano: REX
+  mes: REX
+  dia: REX
+FIN SIGILLUM
+
+SIGILLUM DateTime
+  ano: REX
+  mes: REX
+  dia: REX
+  hora: REX
+  minuto: REX
+  segundo: REX
+  offset_utc: REX
+FIN SIGILLUM
+
+SIGILLUM DateError
+  mensagem: VERBUM
+FIN SIGILLUM
+
+RITUALE DateErrorMsg(VERBUM mensagem) REDDE DateError
+  EVOCA DateError err
+  VINCIRE err.mensagem AD mensagem
+  REDDE err
+EXPLICIT RITUALE
+
+RITUALE date_fail(VERBUM mensagem) REDDE SPECULUM NIHIL
+  EVOCA DateError err AD CONIURA DateErrorMsg(mensagem)
+  REDDE CONIURA Err GENUS(Date, DateError)(err)
+EXPLICIT RITUALE
+
+RITUALE datetime_fail(VERBUM mensagem) REDDE SPECULUM NIHIL
+  EVOCA DateError err AD CONIURA DateErrorMsg(mensagem)
+  REDDE CONIURA Err GENUS(DateTime, DateError)(err)
+EXPLICIT RITUALE
+
+RITUALE date_make(REX ano, REX mes, REX dia) REDDE Date
+  EVOCA Date d
+  VINCIRE d.ano AD ano
+  VINCIRE d.mes AD mes
+  VINCIRE d.dia AD dia
+  REDDE d
+EXPLICIT RITUALE
+
+RITUALE datetime_make(REX ano, REX mes, REX dia, REX hora, REX minuto, REX segundo, REX offset_utc) REDDE DateTime
+  EVOCA DateTime dt
+  VINCIRE dt.ano AD ano
+  VINCIRE dt.mes AD mes
+  VINCIRE dt.dia AD dia
+  VINCIRE dt.hora AD hora
+  VINCIRE dt.minuto AD minuto
+  VINCIRE dt.segundo AD segundo
+  VINCIRE dt.offset_utc AD offset_utc
+  REDDE dt
+EXPLICIT RITUALE
+
+RITUALE abs_int(REX valor) REDDE REX
+  SI valor < 0
+    REDDE 0 - valor
+  FIN SI
+  REDDE valor
+EXPLICIT RITUALE
+
+RITUALE min_int(REX a, REX b) REDDE REX
+  SI a < b
+    REDDE a
+  FIN SI
+  REDDE b
+EXPLICIT RITUALE
+
+RITUALE is_divisible(REX valor, REX divisor) REDDE VERUM
+  EVOCA REX q AD valor / divisor
+  REDDE valor - (q * divisor) == 0
+EXPLICIT RITUALE
+
+RITUALE is_leap_year(REX ano) REDDE VERUM
+  SI NON CONIURA is_divisible(ano, 4)
+    REDDE FALSUM
+  FIN SI
+  SI NON CONIURA is_divisible(ano, 100)
+    REDDE VERUM
+  FIN SI
+  REDDE CONIURA is_divisible(ano, 400)
+EXPLICIT RITUALE
+
+RITUALE days_in_year(REX ano) REDDE REX
+  SI CONIURA is_leap_year(ano)
+    REDDE 366
+  FIN SI
+  REDDE 365
+EXPLICIT RITUALE
+
+RITUALE days_in_month(REX ano, REX mes) REDDE REX
+  SI mes == 1 VEL mes == 3 VEL mes == 5 VEL mes == 7 VEL mes == 8 VEL mes == 10 VEL mes == 12
+    REDDE 31
+  FIN SI
+  SI mes == 4 VEL mes == 6 VEL mes == 9 VEL mes == 11
+    REDDE 30
+  FIN SI
+  SI mes == 2
+    SI CONIURA is_leap_year(ano)
+      REDDE 29
+    FIN SI
+    REDDE 28
+  FIN SI
+  REDDE 0
+EXPLICIT RITUALE
+
+RITUALE parse_slice_int(VERBUM texto, REX inicio, REX fim) REDDE SPECULUM NIHIL
+  EVOCA VERBUM parte AD CONIURA substring(texto, inicio, fim)
+  REDDE CONIURA try_int(parte)
+EXPLICIT RITUALE
+
+RITUALE pad_2(REX valor) REDDE VERBUM
+  REDDE CONIURA pad_left(CONIURA stringify_int(valor), 2, 48)
+EXPLICIT RITUALE
+
+RITUALE pad_4(REX valor) REDDE VERBUM
+  REDDE CONIURA pad_left(CONIURA stringify_int(valor), 4, 48)
+EXPLICIT RITUALE
+
+RITUALE offset_format(REX offset_utc) REDDE VERBUM
+  EVOCA VERBUM sinal AD "+"
+  EVOCA REX bruto AD offset_utc
+  SI bruto < 0
+    VINCIRE sinal AD "-"
+  FIN SI
+  EVOCA REX total AD CONIURA abs_int(bruto)
+  EVOCA REX horas AD total / 60
+  EVOCA REX minutos AD total - (horas * 60)
+  EVOCA VERBUM out AD CONIURA concat(sinal, CONIURA pad_2(horas))
+  VINCIRE out AD CONIURA concat(out, CONIURA pad_2(minutos))
+  REDDE out
+EXPLICIT RITUALE
+
+RITUALE date_new(REX ano, REX mes, REX dia) REDDE SPECULUM NIHIL
+  SI mes < 1 VEL mes > 12
+    REDDE CONIURA date_fail("mes invalido")
+  FIN SI
+  SI dia < 1
+    REDDE CONIURA date_fail("dia invalido")
+  FIN SI
+
+  EVOCA REX limite AD CONIURA days_in_month(ano, mes)
+  SI dia > limite
+    REDDE CONIURA date_fail("dia invalido para o mes")
+  FIN SI
+
+  EVOCA Date d AD CONIURA date_make(ano, mes, dia)
+  REDDE CONIURA Ok GENUS(Date, DateError)(d)
+EXPLICIT RITUALE
+
+RITUALE datetime_new(REX ano, REX mes, REX dia, REX hora, REX minuto, REX segundo, REX offset_utc) REDDE SPECULUM NIHIL
+  EVOCA SPECULUM NIHIL date_result AD CONIURA date_new(ano, mes, dia)
+  SI CONIURA result_is_err GENUS(Date, DateError)(date_result)
+    EVOCA DateError err AD CONIURA result_unwrap_err GENUS(Date, DateError)(date_result)
+    REDDE CONIURA datetime_fail(err.mensagem)
+  FIN SI
+
+  SI hora < 0 VEL hora > 23
+    REDDE CONIURA datetime_fail("hora invalida")
+  FIN SI
+  SI minuto < 0 VEL minuto > 59
+    REDDE CONIURA datetime_fail("minuto invalido")
+  FIN SI
+  SI segundo < 0 VEL segundo > 59
+    REDDE CONIURA datetime_fail("segundo invalido")
+  FIN SI
+  SI offset_utc < -720 VEL offset_utc > 840
+    REDDE CONIURA datetime_fail("offset utc invalido")
+  FIN SI
+
+  EVOCA DateTime dt AD CONIURA datetime_make(ano, mes, dia, hora, minuto, segundo, offset_utc)
+  REDDE CONIURA Ok GENUS(DateTime, DateError)(dt)
+EXPLICIT RITUALE
+
+RITUALE date_parse(VERBUM iso) REDDE SPECULUM NIHIL
+  SI CONIURA len(iso) != 10
+    REDDE CONIURA date_fail("formato invalido")
+  FIN SI
+  SI CONIURA char_at(iso, 4) != 45 VEL CONIURA char_at(iso, 7) != 45
+    REDDE CONIURA date_fail("formato invalido")
+  FIN SI
+
+  EVOCA SPECULUM NIHIL ano_opt AD CONIURA parse_slice_int(iso, 0, 4)
+  EVOCA SPECULUM NIHIL mes_opt AD CONIURA parse_slice_int(iso, 5, 7)
+  EVOCA SPECULUM NIHIL dia_opt AD CONIURA parse_slice_int(iso, 8, 10)
+
+  SI CONIURA option_is_none GENUS(REX)(ano_opt) VEL CONIURA option_is_none GENUS(REX)(mes_opt) VEL CONIURA option_is_none GENUS(REX)(dia_opt)
+    REDDE CONIURA date_fail("componentes invalidos")
+  FIN SI
+
+  EVOCA REX ano AD CONIURA option_unwrap GENUS(REX)(ano_opt)
+  EVOCA REX mes AD CONIURA option_unwrap GENUS(REX)(mes_opt)
+  EVOCA REX dia AD CONIURA option_unwrap GENUS(REX)(dia_opt)
+  REDDE CONIURA date_new(ano, mes, dia)
+EXPLICIT RITUALE
+
+RITUALE datetime_parse(VERBUM iso) REDDE SPECULUM NIHIL
+  EVOCA REX n AD CONIURA len(iso)
+  SI n != 20 ET n != 25
+    REDDE CONIURA datetime_fail("formato invalido")
+  FIN SI
+  SI CONIURA char_at(iso, 10) != 84 VEL CONIURA char_at(iso, 13) != 58 VEL CONIURA char_at(iso, 16) != 58
+    REDDE CONIURA datetime_fail("formato invalido")
+  FIN SI
+
+  EVOCA VERBUM date_text AD CONIURA substring(iso, 0, 10)
+  EVOCA SPECULUM NIHIL date_result AD CONIURA date_parse(date_text)
+  SI CONIURA result_is_err GENUS(Date, DateError)(date_result)
+    EVOCA DateError err AD CONIURA result_unwrap_err GENUS(Date, DateError)(date_result)
+    REDDE CONIURA datetime_fail(err.mensagem)
+  FIN SI
+
+  EVOCA SPECULUM NIHIL hora_opt AD CONIURA parse_slice_int(iso, 11, 13)
+  EVOCA SPECULUM NIHIL minuto_opt AD CONIURA parse_slice_int(iso, 14, 16)
+  EVOCA SPECULUM NIHIL segundo_opt AD CONIURA parse_slice_int(iso, 17, 19)
+  SI CONIURA option_is_none GENUS(REX)(hora_opt) VEL CONIURA option_is_none GENUS(REX)(minuto_opt) VEL CONIURA option_is_none GENUS(REX)(segundo_opt)
+    REDDE CONIURA datetime_fail("hora invalida")
+  FIN SI
+
+  EVOCA Date d AD CONIURA result_unwrap GENUS(Date, DateError)(date_result)
+  EVOCA REX hora AD CONIURA option_unwrap GENUS(REX)(hora_opt)
+  EVOCA REX minuto AD CONIURA option_unwrap GENUS(REX)(minuto_opt)
+  EVOCA REX segundo AD CONIURA option_unwrap GENUS(REX)(segundo_opt)
+  EVOCA REX offset AD 0
+
+  SI n == 20
+    SI CONIURA char_at(iso, 19) != 90
+      REDDE CONIURA datetime_fail("timezone invalido")
+    FIN SI
+  FIN SI
+
+  SI n == 25
+    SI CONIURA char_at(iso, 22) != 58
+      REDDE CONIURA datetime_fail("timezone invalido")
+    FIN SI
+    EVOCA MILES sinal_char AD CONIURA char_at(iso, 19)
+    SI sinal_char != 43 ET sinal_char != 45
+      REDDE CONIURA datetime_fail("timezone invalido")
+    FIN SI
+    EVOCA SPECULUM NIHIL off_h_opt AD CONIURA parse_slice_int(iso, 20, 22)
+    EVOCA SPECULUM NIHIL off_m_opt AD CONIURA parse_slice_int(iso, 23, 25)
+    SI CONIURA option_is_none GENUS(REX)(off_h_opt) VEL CONIURA option_is_none GENUS(REX)(off_m_opt)
+      REDDE CONIURA datetime_fail("timezone invalido")
+    FIN SI
+    EVOCA REX off_h AD CONIURA option_unwrap GENUS(REX)(off_h_opt)
+    EVOCA REX off_m AD CONIURA option_unwrap GENUS(REX)(off_m_opt)
+    SI off_h > 14 VEL off_m > 59
+      REDDE CONIURA datetime_fail("timezone invalido")
+    FIN SI
+    VINCIRE offset AD off_h * 60 + off_m
+    SI sinal_char == 45
+      VINCIRE offset AD 0 - offset
+    FIN SI
+  FIN SI
+
+  REDDE CONIURA datetime_new(d.ano, d.mes, d.dia, hora, minuto, segundo, offset)
+EXPLICIT RITUALE
+
+RITUALE date_format(Date d, VERBUM formato) REDDE VERBUM
+  EVOCA VERBUM out AD formato
+  VINCIRE out AD CONIURA replace_all(out, "%Y", CONIURA pad_4(d.ano))
+  VINCIRE out AD CONIURA replace_all(out, "%m", CONIURA pad_2(d.mes))
+  VINCIRE out AD CONIURA replace_all(out, "%d", CONIURA pad_2(d.dia))
+  REDDE out
+EXPLICIT RITUALE
+
+RITUALE datetime_format(DateTime dt, VERBUM formato) REDDE VERBUM
+  EVOCA VERBUM out AD formato
+  VINCIRE out AD CONIURA replace_all(out, "%Y", CONIURA pad_4(dt.ano))
+  VINCIRE out AD CONIURA replace_all(out, "%m", CONIURA pad_2(dt.mes))
+  VINCIRE out AD CONIURA replace_all(out, "%d", CONIURA pad_2(dt.dia))
+  VINCIRE out AD CONIURA replace_all(out, "%H", CONIURA pad_2(dt.hora))
+  VINCIRE out AD CONIURA replace_all(out, "%M", CONIURA pad_2(dt.minuto))
+  VINCIRE out AD CONIURA replace_all(out, "%S", CONIURA pad_2(dt.segundo))
+  VINCIRE out AD CONIURA replace_all(out, "%z", CONIURA offset_format(dt.offset_utc))
+  REDDE out
+EXPLICIT RITUALE
+
+RITUALE date_days_since_epoch(Date d) REDDE REX
+  EVOCA REX dias AD 0
+  EVOCA REX ano_cursor AD 1970
+
+  SI d.ano >= 1970
+    DUM ano_cursor < d.ano
+      VINCIRE dias AD dias + CONIURA days_in_year(ano_cursor)
+      VINCIRE ano_cursor AD ano_cursor + 1
+    FIN DUM
+  ALITER
+    VINCIRE ano_cursor AD 1969
+    DUM ano_cursor >= d.ano
+      VINCIRE dias AD dias - CONIURA days_in_year(ano_cursor)
+      VINCIRE ano_cursor AD ano_cursor - 1
+    FIN DUM
+  FIN SI
+
+  EVOCA REX mes_cursor AD 1
+  DUM mes_cursor < d.mes
+    VINCIRE dias AD dias + CONIURA days_in_month(d.ano, mes_cursor)
+    VINCIRE mes_cursor AD mes_cursor + 1
+  FIN DUM
+
+  REDDE dias + d.dia - 1
+EXPLICIT RITUALE
+
+RITUALE date_from_epoch_days(REX dias) REDDE Date
+  EVOCA REX ano AD 1970
+  EVOCA REX resto AD dias
+
+  SI resto >= 0
+    DUM resto >= CONIURA days_in_year(ano)
+      VINCIRE resto AD resto - CONIURA days_in_year(ano)
+      VINCIRE ano AD ano + 1
+    FIN DUM
+  ALITER
+    DUM resto < 0
+      VINCIRE ano AD ano - 1
+      VINCIRE resto AD resto + CONIURA days_in_year(ano)
+    FIN DUM
+  FIN SI
+
+  EVOCA REX mes AD 1
+  DUM resto >= CONIURA days_in_month(ano, mes)
+    VINCIRE resto AD resto - CONIURA days_in_month(ano, mes)
+    VINCIRE mes AD mes + 1
+  FIN DUM
+
+  REDDE CONIURA date_make(ano, mes, resto + 1)
+EXPLICIT RITUALE
+
+RITUALE date_add_days(Date d, REX dias) REDDE Date
+  EVOCA REX total AD CONIURA date_days_since_epoch(d)
+  REDDE CONIURA date_from_epoch_days(total + dias)
+EXPLICIT RITUALE
+
+RITUALE date_add_months(Date d, REX meses) REDDE Date
+  EVOCA REX ano AD d.ano
+  EVOCA REX mes AD d.mes + meses
+
+  DUM mes > 12
+    VINCIRE mes AD mes - 12
+    VINCIRE ano AD ano + 1
+  FIN DUM
+  DUM mes < 1
+    VINCIRE mes AD mes + 12
+    VINCIRE ano AD ano - 1
+  FIN DUM
+
+  EVOCA REX dia AD CONIURA min_int(d.dia, CONIURA days_in_month(ano, mes))
+  REDDE CONIURA date_make(ano, mes, dia)
+EXPLICIT RITUALE
+
+RITUALE date_diff_days(Date a, Date b) REDDE REX
+  REDDE CONIURA date_days_since_epoch(a) - CONIURA date_days_since_epoch(b)
+EXPLICIT RITUALE
+
+RITUALE date_compare(Date a, Date b) REDDE REX
+  SI a.ano < b.ano
+    REDDE -1
+  FIN SI
+  SI a.ano > b.ano
+    REDDE 1
+  FIN SI
+  SI a.mes < b.mes
+    REDDE -1
+  FIN SI
+  SI a.mes > b.mes
+    REDDE 1
+  FIN SI
+  SI a.dia < b.dia
+    REDDE -1
+  FIN SI
+  SI a.dia > b.dia
+    REDDE 1
+  FIN SI
+  REDDE 0
+EXPLICIT RITUALE
+
+RITUALE datetime_to_unix(DateTime dt) REDDE REX
+  EVOCA Date d AD CONIURA date_make(dt.ano, dt.mes, dt.dia)
+  EVOCA REX dias AD CONIURA date_days_since_epoch(d)
+  EVOCA REX segundos AD dias * 86400
+  VINCIRE segundos AD segundos + dt.hora * 3600
+  VINCIRE segundos AD segundos + dt.minuto * 60
+  VINCIRE segundos AD segundos + dt.segundo
+  REDDE segundos - dt.offset_utc * 60
+EXPLICIT RITUALE
+
+RITUALE datetime_from_unix(REX timestamp) REDDE DateTime
+  EVOCA REX dias AD timestamp / 86400
+  EVOCA REX segundos_no_dia AD timestamp - dias * 86400
+
+  SI segundos_no_dia < 0
+    VINCIRE dias AD dias - 1
+    VINCIRE segundos_no_dia AD segundos_no_dia + 86400
+  FIN SI
+
+  EVOCA Date d AD CONIURA date_from_epoch_days(dias)
+  EVOCA REX hora AD segundos_no_dia / 3600
+  EVOCA REX resto_hora AD segundos_no_dia - hora * 3600
+  EVOCA REX minuto AD resto_hora / 60
+  EVOCA REX segundo AD resto_hora - minuto * 60
+
+  REDDE CONIURA datetime_make(d.ano, d.mes, d.dia, hora, minuto, segundo, 0)
+EXPLICIT RITUALE
+
+RITUALE datetime_add_seconds(DateTime dt, REX segundos) REDDE DateTime
+  EVOCA REX novo_utc AD CONIURA datetime_to_unix(dt) + segundos
+  EVOCA REX local_ts AD novo_utc + dt.offset_utc * 60
+  EVOCA DateTime out AD CONIURA datetime_from_unix(local_ts)
+  VINCIRE out.offset_utc AD dt.offset_utc
+  REDDE out
+EXPLICIT RITUALE
+
+RITUALE datetime_diff_seconds(DateTime a, DateTime b) REDDE REX
+  REDDE CONIURA datetime_to_unix(a) - CONIURA datetime_to_unix(b)
+EXPLICIT RITUALE
+
+RITUALE datetime_compare(DateTime a, DateTime b) REDDE REX
+  EVOCA REX ua AD CONIURA datetime_to_unix(a)
+  EVOCA REX ub AD CONIURA datetime_to_unix(b)
+  SI ua < ub
+    REDDE -1
+  FIN SI
+  SI ua > ub
+    REDDE 1
+  FIN SI
+  REDDE 0
+EXPLICIT RITUALE
+
+RITUALE datetime_now() REDDE DateTime
+  EVOCA REX timestamp AD OBSECRO date_now_unix()
+  REDDE CONIURA datetime_from_unix(timestamp)
+EXPLICIT RITUALE
+
+RITUALE date_today() REDDE Date
+  EVOCA DateTime dt AD CONIURA datetime_now()
+  REDDE CONIURA date_make(dt.ano, dt.mes, dt.dia)
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

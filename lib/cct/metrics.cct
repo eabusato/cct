@@ -1,0 +1,320 @@
+-- CCT — Clavicula Turing
+-- Standard Library Module: metrics
+--
+-- FASE 34C: Metrics baseline
+
+INCIPIT grimoire "metrics"
+
+ADVOCARE "cct/fmt.cct"
+ADVOCARE "cct/fluxus.cct"
+ADVOCARE "cct/verbum.cct"
+ADVOCARE "cct/verbum_builder.cct"
+
+SIGILLUM Counter
+  name: VERBUM
+  value: REX
+FIN SIGILLUM
+
+SIGILLUM Gauge
+  name: VERBUM
+  value: UMBRA
+FIN SIGILLUM
+
+SIGILLUM Histogram
+  name: VERBUM
+  buckets: SPECULUM NIHIL
+  counts: SPECULUM NIHIL
+  sum: UMBRA
+  count: REX
+FIN SIGILLUM
+
+SIGILLUM MetricsRegistry
+  counters: SPECULUM NIHIL
+  gauges: SPECULUM NIHIL
+  histograms: SPECULUM NIHIL
+FIN SIGILLUM
+
+RITUALE metrics_registry_new() REDDE MetricsRegistry
+  EVOCA MetricsRegistry reg
+  VINCIRE reg.counters AD CONIURA fluxus_init(MENSURA(Counter))
+  VINCIRE reg.gauges AD CONIURA fluxus_init(MENSURA(Gauge))
+  VINCIRE reg.histograms AD CONIURA fluxus_init(MENSURA(Histogram))
+  REDDE reg
+EXPLICIT RITUALE
+
+RITUALE metrics_registry_free(SPECULUM MetricsRegistry reg) REDDE NIHIL
+  EVOCA REX i AD 0
+  EVOCA REX n AD CONIURA fluxus_len((*reg).histograms)
+  DUM i < n
+    EVOCA SPECULUM Histogram h AD CONIURA fluxus_get((*reg).histograms, i)
+    CONIURA fluxus_free((*h).buckets)
+    CONIURA fluxus_free((*h).counts)
+    VINCIRE i AD i + 1
+  FIN DUM
+  CONIURA fluxus_free((*reg).counters)
+  CONIURA fluxus_free((*reg).gauges)
+  CONIURA fluxus_free((*reg).histograms)
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE metrics_registry_add_counter(SPECULUM MetricsRegistry reg, Counter counter) REDDE NIHIL
+  CONIURA fluxus_push((*reg).counters, SPECULUM counter)
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE metrics_registry_add_gauge(SPECULUM MetricsRegistry reg, Gauge gauge) REDDE NIHIL
+  CONIURA fluxus_push((*reg).gauges, SPECULUM gauge)
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE metrics_registry_add_histogram(SPECULUM MetricsRegistry reg, Histogram histogram) REDDE NIHIL
+  CONIURA fluxus_push((*reg).histograms, SPECULUM histogram)
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE counter_new(VERBUM name) REDDE Counter
+  EVOCA Counter counter
+  VINCIRE counter.name AD name
+  VINCIRE counter.value AD 0
+  REDDE counter
+EXPLICIT RITUALE
+
+RITUALE counter_inc(SPECULUM Counter counter) REDDE NIHIL
+  VINCIRE (*counter).value AD (*counter).value + 1
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE counter_add(SPECULUM Counter counter, REX amount) REDDE NIHIL
+  SI amount > 0
+    VINCIRE (*counter).value AD (*counter).value + amount
+  FIN SI
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE counter_get(Counter counter) REDDE REX
+  REDDE counter.value
+EXPLICIT RITUALE
+
+RITUALE gauge_new(VERBUM name) REDDE Gauge
+  EVOCA Gauge gauge
+  VINCIRE gauge.name AD name
+  VINCIRE gauge.value AD 0.0
+  REDDE gauge
+EXPLICIT RITUALE
+
+RITUALE gauge_set(SPECULUM Gauge gauge, UMBRA value) REDDE NIHIL
+  VINCIRE (*gauge).value AD value
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE gauge_inc(SPECULUM Gauge gauge) REDDE NIHIL
+  VINCIRE (*gauge).value AD (*gauge).value + 1.0
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE gauge_dec(SPECULUM Gauge gauge) REDDE NIHIL
+  VINCIRE (*gauge).value AD (*gauge).value - 1.0
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE gauge_add(SPECULUM Gauge gauge, UMBRA delta) REDDE NIHIL
+  VINCIRE (*gauge).value AD (*gauge).value + delta
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE gauge_get(Gauge gauge) REDDE UMBRA
+  REDDE gauge.value
+EXPLICIT RITUALE
+
+RITUALE histogram_new(VERBUM name, SPECULUM NIHIL bucket_limits) REDDE Histogram
+  EVOCA Histogram hist
+  EVOCA SPECULUM NIHIL buckets_copy AD CONIURA fluxus_copy GENUS(UMBRA)(bucket_limits)
+  EVOCA SPECULUM NIHIL counts AD CONIURA fluxus_init(MENSURA(REX))
+  EVOCA REX i AD 0
+  EVOCA REX n AD CONIURA fluxus_len(buckets_copy)
+  DUM i < n
+    EVOCA REX zero AD 0
+    CONIURA fluxus_push(counts, SPECULUM zero)
+    VINCIRE i AD i + 1
+  FIN DUM
+  EVOCA REX overflow_zero AD 0
+  CONIURA fluxus_push(counts, SPECULUM overflow_zero)
+
+  VINCIRE hist.name AD name
+  VINCIRE hist.buckets AD buckets_copy
+  VINCIRE hist.counts AD counts
+  VINCIRE hist.sum AD 0.0
+  VINCIRE hist.count AD 0
+  REDDE hist
+EXPLICIT RITUALE
+
+RITUALE histogram_free(SPECULUM Histogram hist) REDDE NIHIL
+  CONIURA fluxus_free((*hist).buckets)
+  CONIURA fluxus_free((*hist).counts)
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE histogram_bucket_count(Histogram hist) REDDE REX
+  REDDE CONIURA fluxus_len(hist.buckets)
+EXPLICIT RITUALE
+
+RITUALE histogram_count_at(Histogram hist, REX idx) REDDE REX
+  EVOCA SPECULUM REX ptr AD CONIURA fluxus_get(hist.counts, idx)
+  REDDE *ptr
+EXPLICIT RITUALE
+
+RITUALE histogram_observe(SPECULUM Histogram hist, UMBRA value) REDDE NIHIL
+  EVOCA REX i AD 0
+  EVOCA REX n AD CONIURA fluxus_len((*hist).buckets)
+  VINCIRE (*hist).sum AD (*hist).sum + value
+  VINCIRE (*hist).count AD (*hist).count + 1
+  DUM i < n
+    EVOCA SPECULUM UMBRA bucket AD CONIURA fluxus_get((*hist).buckets, i)
+    SI value <= *bucket
+      EVOCA SPECULUM REX count_ptr AD CONIURA fluxus_get((*hist).counts, i)
+      VINCIRE (*count_ptr) AD (*count_ptr) + 1
+      REDDE
+    FIN SI
+    VINCIRE i AD i + 1
+  FIN DUM
+  EVOCA SPECULUM REX overflow_ptr AD CONIURA fluxus_get((*hist).counts, n)
+  VINCIRE (*overflow_ptr) AD (*overflow_ptr) + 1
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE histogram_get_count(Histogram hist) REDDE REX
+  REDDE hist.count
+EXPLICIT RITUALE
+
+RITUALE histogram_get_sum(Histogram hist) REDDE UMBRA
+  REDDE hist.sum
+EXPLICIT RITUALE
+
+RITUALE metrics_export_text(MetricsRegistry reg) REDDE VERBUM
+  EVOCA SPECULUM NIHIL b AD CONIURA builder_init()
+  EVOCA REX i AD 0
+  EVOCA REX n AD CONIURA fluxus_len(reg.counters)
+  DUM i < n
+    EVOCA SPECULUM Counter counter AD CONIURA fluxus_get(reg.counters, i)
+    CONIURA builder_append(b, "# TYPE ")
+    CONIURA builder_append(b, (*counter).name)
+    CONIURA builder_append(b, " counter\n")
+    CONIURA builder_append(b, (*counter).name)
+    CONIURA builder_append(b, " ")
+    CONIURA builder_append(b, CONIURA stringify_int((*counter).value))
+    CONIURA builder_append(b, "\n")
+    VINCIRE i AD i + 1
+  FIN DUM
+
+  VINCIRE i AD 0
+  VINCIRE n AD CONIURA fluxus_len(reg.gauges)
+  DUM i < n
+    EVOCA SPECULUM Gauge gauge AD CONIURA fluxus_get(reg.gauges, i)
+    CONIURA builder_append(b, "# TYPE ")
+    CONIURA builder_append(b, (*gauge).name)
+    CONIURA builder_append(b, " gauge\n")
+    CONIURA builder_append(b, (*gauge).name)
+    CONIURA builder_append(b, " ")
+    CONIURA builder_append(b, CONIURA stringify_real((*gauge).value))
+    CONIURA builder_append(b, "\n")
+    VINCIRE i AD i + 1
+  FIN DUM
+
+  VINCIRE i AD 0
+  VINCIRE n AD CONIURA fluxus_len(reg.histograms)
+  DUM i < n
+    EVOCA SPECULUM Histogram hist AD CONIURA fluxus_get(reg.histograms, i)
+    EVOCA REX j AD 0
+    EVOCA REX bucket_n AD CONIURA fluxus_len((*hist).buckets)
+    CONIURA builder_append(b, "# TYPE ")
+    CONIURA builder_append(b, (*hist).name)
+    CONIURA builder_append(b, " histogram\n")
+    DUM j < bucket_n
+      EVOCA SPECULUM UMBRA limit AD CONIURA fluxus_get((*hist).buckets, j)
+      EVOCA SPECULUM REX count_ptr AD CONIURA fluxus_get((*hist).counts, j)
+      CONIURA builder_append(b, (*hist).name)
+      CONIURA builder_append(b, "_bucket{le=\"")
+      CONIURA builder_append(b, CONIURA stringify_real(*limit))
+      CONIURA builder_append(b, "\"} ")
+      CONIURA builder_append(b, CONIURA stringify_int(*count_ptr))
+      CONIURA builder_append(b, "\n")
+      VINCIRE j AD j + 1
+    FIN DUM
+    EVOCA SPECULUM REX overflow_ptr AD CONIURA fluxus_get((*hist).counts, bucket_n)
+    CONIURA builder_append(b, (*hist).name)
+    CONIURA builder_append(b, "_bucket{le=\"+Inf\"} ")
+    CONIURA builder_append(b, CONIURA stringify_int(*overflow_ptr))
+    CONIURA builder_append(b, "\n")
+    CONIURA builder_append(b, (*hist).name)
+    CONIURA builder_append(b, "_sum ")
+    CONIURA builder_append(b, CONIURA stringify_real((*hist).sum))
+    CONIURA builder_append(b, "\n")
+    CONIURA builder_append(b, (*hist).name)
+    CONIURA builder_append(b, "_count ")
+    CONIURA builder_append(b, CONIURA stringify_int((*hist).count))
+    CONIURA builder_append(b, "\n")
+    VINCIRE i AD i + 1
+  FIN DUM
+
+  EVOCA VERBUM out AD CONIURA builder_to_verbum(b)
+  CONIURA builder_free(b)
+  REDDE out
+EXPLICIT RITUALE
+
+RITUALE metrics_export_json(MetricsRegistry reg) REDDE VERBUM
+  EVOCA SPECULUM NIHIL b AD CONIURA builder_init()
+  EVOCA REX i AD 0
+  EVOCA REX n AD CONIURA fluxus_len(reg.counters)
+  CONIURA builder_append(b, "{\"counters\":{")
+  DUM i < n
+    EVOCA SPECULUM Counter counter AD CONIURA fluxus_get(reg.counters, i)
+    SI i > 0
+      CONIURA builder_append(b, ",")
+    FIN SI
+    CONIURA builder_append(b, "\"")
+    CONIURA builder_append(b, (*counter).name)
+    CONIURA builder_append(b, "\":")
+    CONIURA builder_append(b, CONIURA stringify_int((*counter).value))
+    VINCIRE i AD i + 1
+  FIN DUM
+  CONIURA builder_append(b, "},\"gauges\":{")
+
+  VINCIRE i AD 0
+  VINCIRE n AD CONIURA fluxus_len(reg.gauges)
+  DUM i < n
+    EVOCA SPECULUM Gauge gauge AD CONIURA fluxus_get(reg.gauges, i)
+    SI i > 0
+      CONIURA builder_append(b, ",")
+    FIN SI
+    CONIURA builder_append(b, "\"")
+    CONIURA builder_append(b, (*gauge).name)
+    CONIURA builder_append(b, "\":")
+    CONIURA builder_append(b, CONIURA stringify_real((*gauge).value))
+    VINCIRE i AD i + 1
+  FIN DUM
+  CONIURA builder_append(b, "},\"histograms\":{")
+
+  VINCIRE i AD 0
+  VINCIRE n AD CONIURA fluxus_len(reg.histograms)
+  DUM i < n
+    EVOCA SPECULUM Histogram hist AD CONIURA fluxus_get(reg.histograms, i)
+    SI i > 0
+      CONIURA builder_append(b, ",")
+    FIN SI
+    CONIURA builder_append(b, "\"")
+    CONIURA builder_append(b, (*hist).name)
+    CONIURA builder_append(b, "\":{\"count\":")
+    CONIURA builder_append(b, CONIURA stringify_int((*hist).count))
+    CONIURA builder_append(b, ",\"sum\":")
+    CONIURA builder_append(b, CONIURA stringify_real((*hist).sum))
+    CONIURA builder_append(b, "}")
+    VINCIRE i AD i + 1
+  FIN DUM
+  CONIURA builder_append(b, "}}")
+
+  EVOCA VERBUM out AD CONIURA builder_to_verbum(b)
+  CONIURA builder_free(b)
+  REDDE out
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

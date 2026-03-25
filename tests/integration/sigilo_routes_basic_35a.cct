@@ -1,0 +1,17 @@
+INCIPIT grimoire "sigilo_routes_basic_35a"
+
+-- @route route_id=api.users.list method=GET path=/api/users handler=users_list group=/api middleware=auth,trace
+RITUALE users_list() REDDE REX
+  REDDE 1
+EXPLICIT RITUALE
+
+-- @route route_id=api.users.detail method=GET path=/api/users/:id handler=users_detail group=/api middleware=auth,trace
+RITUALE users_detail() REDDE REX
+  REDDE 2
+EXPLICIT RITUALE
+
+RITUALE main() REDDE REX
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

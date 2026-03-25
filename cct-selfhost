@@ -1,0 +1,4 @@
+#!/bin/sh
+SCRIPT_DIR="$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)"
+export CCT_WRAPPER_MODE=selfhost
+exec "$SCRIPT_DIR/scripts/cct_wrapper.sh" "$@"

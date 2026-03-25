@@ -83,6 +83,27 @@ typedef struct {
     bool available;
 } sg_source_buffer_t;
 
+typedef enum {
+    SG_ROUTE_SOURCE_NATIVE = 0,
+    SG_ROUTE_SOURCE_MANIFEST,
+    SG_ROUTE_SOURCE_MERGED
+} sg_route_source_t;
+
+typedef struct {
+    char *route_id;
+    char *method;
+    char *path;
+    char *route_name;
+    char *handler;
+    char *module_path;
+    char *group_name;
+    char *middleware;
+    char *path_params;
+    sg_route_source_t source;
+    u64 route_hash;
+    char route_hash_hex[17];
+} sg_web_route_t;
+
 typedef struct {
     const cct_ast_program_t *program;
     const char *program_name;
@@ -179,17 +200,75 @@ typedef struct {
     size_t generic_inst_key_count;
     size_t generic_inst_key_capacity;
 
+    sg_web_route_t *web_routes;
+    u32 web_route_count;
+    u32 web_route_capacity;
+    u32 web_group_count;
+    u32 web_middleware_count;
+    u64 web_hash;
+    char web_hash_hex[17];
+    char *manifest_format;
+    char *manifest_producer;
+    char *manifest_project;
+
     u64 hash;
 } cct_sigilo_model_t;
 
 typedef enum {
     SG_STYLE_NETWORK = 0,
     SG_STYLE_SEAL,
-    SG_STYLE_SCRIPTUM
+    SG_STYLE_SCRIPTUM,
+    SG_STYLE_ROUTES
 } sg_visual_style_t;
+
+typedef struct {
+    const char *group_name;
+    u32 start;
+    u32 count;
+    double angle;
+    double gx;
+    double gy;
+    double orbit_r;
+    double label_x;
+    double label_y;
+    char *slug;
+    char *label;
+} sg_route_group_layout_t;
 
 static bool g_sg_render_emit_titles = true;
 static bool g_sg_render_emit_data_attrs = true;
+
+static void sg_svg_emit_core_layers(
+    FILE *f,
+    const cct_sigilo_model_t *m,
+    const cct_sigilo_t *sg,
+    bool include_signature
+);
+static char* sg_display_path(const char *path);
+static void sg_bounds_include_point(double *min_x, double *min_y, double *max_x, double *max_y, double x, double y);
+static void sg_bounds_include_circle(double *min_x, double *min_y, double *max_x, double *max_y, double x, double y, double r);
+static void sg_finalize_canvas_bounds(
+    double default_min_x,
+    double default_min_y,
+    double default_max_x,
+    double default_max_y,
+    double actual_min_x,
+    double actual_min_y,
+    double actual_max_x,
+    double actual_max_y,
+    double pad,
+    double *out_min_x,
+    double *out_min_y,
+    double *out_max_x,
+    double *out_max_y
+);
+static u32 sg_route_path_segment_count(const char *path);
+static u32 sg_route_path_param_count(const char *path);
+static u32 sg_route_path_prefix_segments(const char *a, const char *b);
+static u32 sg_route_choose_group_root(const sg_web_route_t *routes, u32 start, u32 count);
+static u32 sg_route_choose_parent(const sg_web_route_t *routes, u32 start, u32 count, u32 child_rel_idx, u32 root_rel_idx);
+static u32 sg_route_choose_group_root_ptrs(const sg_web_route_t *const *routes, u32 start, u32 count);
+static u32 sg_route_choose_parent_ptrs(const sg_web_route_t *const *routes, u32 start, u32 count, u32 child_rel_idx, u32 root_rel_idx);
 
 /* ============================== helpers ============================== */
 
@@ -202,6 +281,210 @@ static void* sg_calloc(size_t n, size_t s) {
     return p;
 }
 
+static void sg_bounds_include_point(double *min_x, double *min_y, double *max_x, double *max_y, double x, double y) {
+    if (x < *min_x) *min_x = x;
+    if (y < *min_y) *min_y = y;
+    if (x > *max_x) *max_x = x;
+    if (y > *max_y) *max_y = y;
+}
+
+static void sg_bounds_include_circle(double *min_x, double *min_y, double *max_x, double *max_y, double x, double y, double r) {
+    sg_bounds_include_point(min_x, min_y, max_x, max_y, x - r, y - r);
+    sg_bounds_include_point(min_x, min_y, max_x, max_y, x + r, y + r);
+}
+
+static void sg_finalize_canvas_bounds(
+    double default_min_x,
+    double default_min_y,
+    double default_max_x,
+    double default_max_y,
+    double actual_min_x,
+    double actual_min_y,
+    double actual_max_x,
+    double actual_max_y,
+    double pad,
+    double *out_min_x,
+    double *out_min_y,
+    double *out_max_x,
+    double *out_max_y
+) {
+    bool has_actual = actual_min_x <= actual_max_x && actual_min_y <= actual_max_y;
+    bool overflow = false;
+    double min_x = default_min_x;
+    double min_y = default_min_y;
+    double max_x = default_max_x;
+    double max_y = default_max_y;
+
+    if (has_actual) {
+        overflow = actual_min_x < default_min_x || actual_min_y < default_min_y ||
+                   actual_max_x > default_max_x || actual_max_y > default_max_y;
+        if (overflow) {
+            min_x = (actual_min_x < default_min_x) ? (actual_min_x - pad) : default_min_x;
+            min_y = (actual_min_y < default_min_y) ? (actual_min_y - pad) : default_min_y;
+            max_x = (actual_max_x > default_max_x) ? (actual_max_x + pad) : default_max_x;
+            max_y = (actual_max_y > default_max_y) ? (actual_max_y + pad) : default_max_y;
+        }
+    }
+
+    if (out_min_x) *out_min_x = min_x;
+    if (out_min_y) *out_min_y = min_y;
+    if (out_max_x) *out_max_x = max_x;
+    if (out_max_y) *out_max_y = max_y;
+}
+
+static u32 sg_route_path_segment_count(const char *path) {
+    u32 count = 0;
+    bool in_segment = false;
+    if (!path) return 0;
+    for (const char *p = path; *p; p++) {
+        if (*p == '/') {
+            in_segment = false;
+            continue;
+        }
+        if (!in_segment) {
+            count++;
+            in_segment = true;
+        }
+    }
+    return count;
+}
+
+static u32 sg_route_path_param_count(const char *path) {
+    u32 count = 0;
+    bool at_segment_start = true;
+    if (!path) return 0;
+    for (const char *p = path; *p; p++) {
+        if (*p == '/') {
+            at_segment_start = true;
+            continue;
+        }
+        if (at_segment_start && *p == ':') count++;
+        at_segment_start = false;
+    }
+    return count;
+}
+
+static u32 sg_route_path_prefix_segments(const char *a, const char *b) {
+    const char *pa = a ? a : "";
+    const char *pb = b ? b : "";
+    u32 matches = 0;
+    while (*pa == '/') pa++;
+    while (*pb == '/') pb++;
+    while (*pa && *pb) {
+        const char *sa = pa;
+        const char *sb = pb;
+        while (*pa && *pa != '/') pa++;
+        while (*pb && *pb != '/') pb++;
+        if ((pa - sa) != (pb - sb) || strncmp(sa, sb, (size_t)(pa - sa)) != 0) break;
+        matches++;
+        while (*pa == '/') pa++;
+        while (*pb == '/') pb++;
+    }
+    return matches;
+}
+
+static u32 sg_route_choose_group_root(const sg_web_route_t *routes, u32 start, u32 count) {
+    u32 best = 0;
+    u32 best_segments = UINT32_MAX;
+    u32 best_params = UINT32_MAX;
+    size_t best_len = SIZE_MAX;
+    bool best_get = false;
+    for (u32 i = 0; i < count; i++) {
+        const sg_web_route_t *route = &routes[start + i];
+        const char *path = route->path ? route->path : "";
+        u32 segs = sg_route_path_segment_count(path);
+        u32 params = sg_route_path_param_count(path);
+        size_t len = strlen(path);
+        bool is_get = route->method && strcmp(route->method, "GET") == 0;
+        if (segs < best_segments ||
+            (segs == best_segments && params < best_params) ||
+            (segs == best_segments && params == best_params && is_get && !best_get) ||
+            (segs == best_segments && params == best_params && is_get == best_get && len < best_len)) {
+            best = i;
+            best_segments = segs;
+            best_params = params;
+            best_len = len;
+            best_get = is_get;
+        }
+    }
+    return best;
+}
+
+static u32 sg_route_choose_parent(const sg_web_route_t *routes, u32 start, u32 count, u32 child_rel_idx, u32 root_rel_idx) {
+    const sg_web_route_t *child = &routes[start + child_rel_idx];
+    u32 child_segments = sg_route_path_segment_count(child->path);
+    u32 best = root_rel_idx;
+    u32 best_prefix = 0;
+    u32 best_segments = 0;
+    for (u32 i = 0; i < count; i++) {
+        const sg_web_route_t *candidate = &routes[start + i];
+        u32 segs;
+        u32 prefix;
+        if (i == child_rel_idx) continue;
+        segs = sg_route_path_segment_count(candidate->path);
+        if (segs >= child_segments) continue;
+        prefix = sg_route_path_prefix_segments(candidate->path, child->path);
+        if (prefix == 0) continue;
+        if (prefix > best_prefix || (prefix == best_prefix && segs > best_segments)) {
+            best = i;
+            best_prefix = prefix;
+            best_segments = segs;
+        }
+    }
+    return best;
+}
+
+static u32 sg_route_choose_group_root_ptrs(const sg_web_route_t *const *routes, u32 start, u32 count) {
+    u32 best = 0;
+    u32 best_segments = UINT32_MAX;
+    u32 best_params = UINT32_MAX;
+    size_t best_len = SIZE_MAX;
+    bool best_get = false;
+    for (u32 i = 0; i < count; i++) {
+        const sg_web_route_t *route = routes[start + i];
+        const char *path = (route && route->path) ? route->path : "";
+        u32 segs = sg_route_path_segment_count(path);
+        u32 params = sg_route_path_param_count(path);
+        size_t len = strlen(path);
+        bool is_get = route && route->method && strcmp(route->method, "GET") == 0;
+        if (segs < best_segments ||
+            (segs == best_segments && params < best_params) ||
+            (segs == best_segments && params == best_params && is_get && !best_get) ||
+            (segs == best_segments && params == best_params && is_get == best_get && len < best_len)) {
+            best = i;
+            best_segments = segs;
+            best_params = params;
+            best_len = len;
+            best_get = is_get;
+        }
+    }
+    return best;
+}
+
+static u32 sg_route_choose_parent_ptrs(const sg_web_route_t *const *routes, u32 start, u32 count, u32 child_rel_idx, u32 root_rel_idx) {
+    const sg_web_route_t *child = routes[start + child_rel_idx];
+    u32 child_segments = sg_route_path_segment_count(child ? child->path : "");
+    u32 best = root_rel_idx;
+    u32 best_prefix = 0;
+    u32 best_segments = 0;
+    for (u32 i = 0; i < count; i++) {
+        const sg_web_route_t *candidate = routes[start + i];
+        u32 segs;
+        u32 prefix;
+        if (i == child_rel_idx) continue;
+        segs = sg_route_path_segment_count(candidate ? candidate->path : "");
+        if (segs >= child_segments) continue;
+        prefix = sg_route_path_prefix_segments(candidate ? candidate->path : "", child ? child->path : "");
+        if (prefix == 0) continue;
+        if (prefix > best_prefix || (prefix == best_prefix && segs > best_segments)) {
+            best = i;
+            best_prefix = prefix;
+            best_segments = segs;
+        }
+    }
+    return best;
+}
+
 static char* sg_strdup(const char *s) {
     if (!s) return NULL;
     char *p = strdup(s);
@@ -210,6 +493,17 @@ static char* sg_strdup(const char *s) {
         exit(CCT_ERROR_OUT_OF_MEMORY);
     }
     return p;
+}
+
+static char* sg_strdup_range(const char *start, const char *end) {
+    size_t len;
+    char *out;
+    if (!start || !end || end < start) return NULL;
+    len = (size_t)(end - start);
+    out = (char*)sg_calloc(1, len + 1);
+    if (len > 0) memcpy(out, start, len);
+    out[len] = '\0';
+    return out;
 }
 
 static char* sg_strdup_printf(const char *fmt, ...) {
@@ -617,6 +911,7 @@ static sg_visual_style_t sg_style_from_name(const char *name) {
     if (!name || strcmp(name, "network") == 0) return SG_STYLE_NETWORK;
     if (strcmp(name, "seal") == 0) return SG_STYLE_SEAL;
     if (strcmp(name, "scriptum") == 0) return SG_STYLE_SCRIPTUM;
+    if (strcmp(name, "routes") == 0) return SG_STYLE_ROUTES;
     return SG_STYLE_NETWORK;
 }
 
@@ -624,8 +919,19 @@ static const char* sg_style_name(sg_visual_style_t style) {
     switch (style) {
         case SG_STYLE_SEAL: return "seal";
         case SG_STYLE_SCRIPTUM: return "scriptum";
+        case SG_STYLE_ROUTES: return "routes";
         case SG_STYLE_NETWORK:
         default: return "network";
+    }
+}
+
+static const char* sg_route_source_name(sg_route_source_t source) {
+    switch (source) {
+        case SG_ROUTE_SOURCE_MANIFEST: return "manifest";
+        case SG_ROUTE_SOURCE_MERGED: return "merged";
+        case SG_ROUTE_SOURCE_NATIVE:
+        default:
+            return "native";
     }
 }
 
@@ -738,6 +1044,170 @@ static void sg_hex_u64(u64 v, char out[17]) {
     out[16] = '\0';
 }
 
+static void sg_route_free(sg_web_route_t *route) {
+    if (!route) return;
+    free(route->route_id);
+    free(route->method);
+    free(route->path);
+    free(route->route_name);
+    free(route->handler);
+    free(route->module_path);
+    free(route->group_name);
+    free(route->middleware);
+    free(route->path_params);
+    memset(route, 0, sizeof(*route));
+}
+
+static void sg_route_assign(char **slot, const char *value) {
+    if (!slot) return;
+    free(*slot);
+    *slot = sg_strdup(value ? value : "");
+}
+
+static char* sg_trim_copy(const char *s) {
+    return sg_trimmed_copy(s ? s : "", s ? strlen(s) : 0);
+}
+
+static bool sg_path_param_segment(const char *segment) {
+    return segment && segment[0] == ':' && segment[1] != '\0';
+}
+
+static char* sg_compute_path_params(const char *path) {
+    if (!path || path[0] == '\0') return sg_strdup("none");
+    char *copy = sg_strdup(path);
+    char *save = NULL;
+    char *tok = strtok_r(copy, "/", &save);
+    char buf[256];
+    buf[0] = '\0';
+    while (tok) {
+        if (sg_path_param_segment(tok)) {
+            if (buf[0] != '\0') strncat(buf, ",", sizeof(buf) - strlen(buf) - 1);
+            strncat(buf, tok + 1, sizeof(buf) - strlen(buf) - 1);
+        }
+        tok = strtok_r(NULL, "/", &save);
+    }
+    free(copy);
+    if (buf[0] == '\0') return sg_strdup("none");
+    return sg_strdup(buf);
+}
+
+static char* sg_slugify_simple(const char *text) {
+    char buf[256];
+    size_t j = 0;
+    if (!text) return sg_strdup("route");
+    for (size_t i = 0; text[i] != '\0' && j + 1 < sizeof(buf); i++) {
+        char c = text[i];
+        bool alpha = (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z');
+        bool digit = (c >= '0' && c <= '9');
+        if (alpha) {
+            buf[j++] = (char)((c >= 'A' && c <= 'Z') ? (c - 'A' + 'a') : c);
+        } else if (digit) {
+            buf[j++] = c;
+        } else if (j > 0 && buf[j - 1] != '_') {
+            buf[j++] = '_';
+        }
+    }
+    while (j > 0 && buf[j - 1] == '_') j--;
+    buf[j] = '\0';
+    if (buf[0] == '\0') return sg_strdup("route");
+    return sg_strdup(buf);
+}
+
+static char* sg_compute_route_id(const char *method, const char *path, const char *handler) {
+    char *path_slug = sg_slugify_simple(path);
+    char *handler_slug = sg_slugify_simple(handler);
+    char *out = sg_strdup_printf("%s_%s_%s",
+                                 method && method[0] ? method : "GET",
+                                 path_slug ? path_slug : "route",
+                                 handler_slug ? handler_slug : "handler");
+    free(path_slug);
+    free(handler_slug);
+    return out;
+}
+
+static sg_web_route_t* sg_route_push(cct_sigilo_model_t *m) {
+    if (!m) return NULL;
+    if (m->web_route_count >= m->web_route_capacity) {
+        u32 next = m->web_route_capacity == 0 ? 4 : (m->web_route_capacity * 2);
+        sg_web_route_t *grown = (sg_web_route_t*)realloc(m->web_routes, next * sizeof(*grown));
+        if (!grown) return NULL;
+        memset(grown + m->web_route_capacity, 0, (next - m->web_route_capacity) * sizeof(*grown));
+        m->web_routes = grown;
+        m->web_route_capacity = next;
+    }
+    sg_web_route_t *route = &m->web_routes[m->web_route_count++];
+    memset(route, 0, sizeof(*route));
+    route->source = SG_ROUTE_SOURCE_NATIVE;
+    return route;
+}
+
+static int sg_route_cmp(const void *a, const void *b) {
+    const sg_web_route_t *ra = (const sg_web_route_t*)a;
+    const sg_web_route_t *rb = (const sg_web_route_t*)b;
+    int cmp = strcmp(ra->group_name ? ra->group_name : "", rb->group_name ? rb->group_name : "");
+    if (cmp != 0) return cmp;
+    cmp = strcmp(ra->path ? ra->path : "", rb->path ? rb->path : "");
+    if (cmp != 0) return cmp;
+    cmp = strcmp(ra->method ? ra->method : "", rb->method ? rb->method : "");
+    if (cmp != 0) return cmp;
+    cmp = strcmp(ra->handler ? ra->handler : "", rb->handler ? rb->handler : "");
+    if (cmp != 0) return cmp;
+    return strcmp(ra->module_path ? ra->module_path : "", rb->module_path ? rb->module_path : "");
+}
+
+static void sg_finalize_web_routes(cct_sigilo_model_t *m) {
+    if (!m || m->web_route_count == 0) return;
+    qsort(m->web_routes, m->web_route_count, sizeof(*m->web_routes), sg_route_cmp);
+    m->web_group_count = 0;
+    m->web_middleware_count = 0;
+    u64 web_hash = 1469598103934665603ULL;
+    for (u32 i = 0; i < m->web_route_count; i++) {
+        sg_web_route_t *route = &m->web_routes[i];
+        u64 route_hash = 1469598103934665603ULL;
+        if (!route->route_id || route->route_id[0] == '\0') route->route_id = sg_compute_route_id(route->method, route->path, route->handler);
+        if (!route->path_params || route->path_params[0] == '\0') route->path_params = sg_compute_path_params(route->path);
+        if (i == 0 || strcmp(route->group_name ? route->group_name : "", m->web_routes[i - 1].group_name ? m->web_routes[i - 1].group_name : "") != 0) {
+            m->web_group_count++;
+        }
+        if (route->middleware && route->middleware[0] != '\0' && strcmp(route->middleware, "none") != 0) {
+            char *copy = sg_strdup(route->middleware);
+            char *save = NULL;
+            char *tok = strtok_r(copy, ",", &save);
+            while (tok) {
+                char *trim = sg_trim_copy(tok);
+                if (trim && trim[0] != '\0') m->web_middleware_count++;
+                free(trim);
+                tok = strtok_r(NULL, ",", &save);
+            }
+            free(copy);
+        }
+        const char *parts[9] = {
+            route->route_id, route->method, route->path, route->handler,
+            route->module_path, route->group_name, route->middleware,
+            route->path_params, sg_route_source_name(route->source)
+        };
+        for (size_t k = 0; k < 9; k++) {
+            const char *s = parts[k] ? parts[k] : "";
+            while (*s) {
+                route_hash ^= (u64)(unsigned char)(*s++);
+                route_hash *= 1099511628211ULL;
+            }
+            route_hash ^= 0;
+            route_hash *= 1099511628211ULL;
+        }
+        route->route_hash = route_hash;
+        sg_hex_u64(route_hash, route->route_hash_hex);
+        for (const char *hs = route->route_hash_hex; *hs; hs++) {
+            web_hash ^= (u64)(unsigned char)(*hs);
+            web_hash *= 1099511628211ULL;
+        }
+        web_hash ^= 0;
+        web_hash *= 1099511628211ULL;
+    }
+    m->web_hash = web_hash;
+    sg_hex_u64(web_hash, m->web_hash_hex);
+}
+
 static double sg_hash_unit(const cct_sigilo_model_t *m, u32 salt) {
     u64 x = m->hash ^ (0x9e3779b97f4a7c15ULL * (u64)(salt + 1));
     x ^= x >> 33;
@@ -749,6 +1219,337 @@ static double sg_hash_unit(const cct_sigilo_model_t *m, u32 salt) {
 static void sg_point_on_circle(double cx, double cy, double r, double angle, double *x, double *y) {
     *x = cx + cos(angle) * r;
     *y = cy + sin(angle) * r;
+}
+
+static char* sg_default_group_for_path(const char *path) {
+    if (!path || path[0] != '/') return sg_strdup("root");
+    const char *second = strchr(path + 1, '/');
+    if (!second) return sg_strdup(path[1] ? path : "root");
+    size_t len = (size_t)(second - path);
+    char *out = (char*)sg_calloc(1, len + 1);
+    memcpy(out, path, len);
+    out[len] = '\0';
+    return out;
+}
+
+static void sg_route_apply_token(sg_web_route_t *route, const char *token, const char *source_path) {
+    const char *eq;
+    char *key;
+    char *value;
+    if (!route || !token || token[0] == '\0') return;
+    eq = strchr(token, '=');
+    if (!eq) return;
+    key = sg_trimmed_copy(token, (size_t)(eq - token));
+    value = sg_strdup(eq + 1);
+    if (!key || !value) {
+        free(key);
+        free(value);
+        return;
+    }
+    if (strcmp(key, "route_id") == 0) sg_route_assign(&route->route_id, value);
+    else if (strcmp(key, "method") == 0) sg_route_assign(&route->method, value);
+    else if (strcmp(key, "path") == 0) sg_route_assign(&route->path, value);
+    else if (strcmp(key, "route_name") == 0) sg_route_assign(&route->route_name, value);
+    else if (strcmp(key, "handler") == 0) sg_route_assign(&route->handler, value);
+    else if (strcmp(key, "module") == 0) sg_route_assign(&route->module_path, value);
+    else if (strcmp(key, "group") == 0) sg_route_assign(&route->group_name, value);
+    else if (strcmp(key, "middleware") == 0) sg_route_assign(&route->middleware, value);
+    else if (strcmp(key, "path_params") == 0) sg_route_assign(&route->path_params, value);
+    else if (strcmp(key, "source") == 0 || strcmp(key, "source_origin") == 0) {
+        if (strcmp(value, "manifest") == 0) route->source = SG_ROUTE_SOURCE_MANIFEST;
+        else if (strcmp(value, "merged") == 0) route->source = SG_ROUTE_SOURCE_MERGED;
+        else route->source = SG_ROUTE_SOURCE_NATIVE;
+    } else if (strcmp(key, "module_path") == 0 && (!route->module_path || route->module_path[0] == '\0')) {
+        sg_route_assign(&route->module_path, value);
+    } else if (strcmp(key, "input") == 0 && (!route->module_path || route->module_path[0] == '\0')) {
+        sg_route_assign(&route->module_path, value);
+    }
+    if ((!route->module_path || route->module_path[0] == '\0') && source_path && source_path[0] != '\0') {
+        sg_route_assign(&route->module_path, source_path);
+    }
+    free(key);
+    free(value);
+}
+
+static void sg_parse_web_routes_from_source(cct_sigilo_model_t *m, const char *source_path) {
+    if (!m || !m->source.available || !m->source.text) return;
+    char *copy = sg_strdup(m->source.text);
+    char *save = NULL;
+    char *line = strtok_r(copy, "\n", &save);
+    while (line) {
+        char *trim = sg_trim_copy(line);
+        const char *payload = NULL;
+        if (strncmp(trim, "--", 2) == 0) payload = trim + 2;
+        else if (trim[0] == '#') payload = trim + 1;
+        if (payload) {
+            while (*payload == ' ' || *payload == '\t') payload++;
+            if (strncmp(payload, "@route", 6) == 0 && (payload[6] == '\0' || payload[6] == ' ' || payload[6] == '\t')) {
+                sg_web_route_t *route = sg_route_push(m);
+                if (route) {
+                    route->source = SG_ROUTE_SOURCE_NATIVE;
+                    sg_route_assign(&route->method, "GET");
+                    sg_route_assign(&route->middleware, "none");
+                    if (source_path && source_path[0] != '\0') sg_route_assign(&route->module_path, source_path);
+                    char *tokens = sg_strdup(payload + 6);
+                    char *tok_save = NULL;
+                    char *tok = strtok_r(tokens, " \t", &tok_save);
+                    while (tok) {
+                        sg_route_apply_token(route, tok, source_path);
+                        tok = strtok_r(NULL, " \t", &tok_save);
+                    }
+                    free(tokens);
+                    if ((!route->group_name || route->group_name[0] == '\0') && route->path && route->path[0] == '/') {
+                        route->group_name = sg_default_group_for_path(route->path);
+                    }
+                    if ((!route->path_params || route->path_params[0] == '\0') && route->path && route->path[0] == '/') {
+                        route->path_params = sg_compute_path_params(route->path);
+                    }
+                    if (!route->route_id || route->route_id[0] == '\0') {
+                        route->route_id = sg_compute_route_id(route->method, route->path, route->handler);
+                    }
+                }
+            }
+        }
+        free(trim);
+        line = strtok_r(NULL, "\n", &save);
+    }
+    free(copy);
+}
+
+static const char* sg_json_find_key(const char *json, const char *key) {
+    static char pattern[128];
+    snprintf(pattern, sizeof(pattern), "\"%s\":", key ? key : "");
+    const char *p = strstr(json ? json : "", pattern);
+    return p ? p + strlen(pattern) : NULL;
+}
+
+static char* sg_json_extract_string(const char *json, const char *key) {
+    const char *p = sg_json_find_key(json, key);
+    if (!p || *p != '"') return NULL;
+    p++;
+    const char *start = p;
+    while (*p) {
+        if (*p == '\\' && p[1] != '\0') {
+            p += 2;
+            continue;
+        }
+        if (*p == '"') break;
+        p++;
+    }
+    if (*p != '"') return NULL;
+    return sg_strdup_range(start, p);
+}
+
+static char* sg_json_extract_array_text(const char *json, const char *key) {
+    const char *p = sg_json_find_key(json, key);
+    if (!p || *p != '[') return NULL;
+    const char *start = p;
+    int depth = 0;
+    bool in_string = false;
+    while (*p) {
+        if (*p == '"' && (p == start || p[-1] != '\\')) in_string = !in_string;
+        else if (!in_string) {
+            if (*p == '[') depth++;
+            else if (*p == ']') {
+                depth--;
+                if (depth == 0) {
+                    p++;
+                    return sg_strdup_range(start, p);
+                }
+            }
+        }
+        p++;
+    }
+    return NULL;
+}
+
+static char* sg_manifest_array_to_csv(const char *array_text) {
+    if (!array_text || array_text[0] != '[') return sg_strdup("none");
+    char *out = sg_strdup("");
+    const char *p = array_text + 1;
+    while (*p && *p != ']') {
+        while (*p == ' ' || *p == '\t' || *p == ',') p++;
+        if (*p != '"') break;
+        p++;
+        const char *start = p;
+        while (*p && *p != '"') {
+            if (*p == '\\' && p[1] != '\0') p += 2;
+            else p++;
+        }
+        if (*p != '"') break;
+        char *item = sg_strdup_range(start, p);
+        char *next = NULL;
+        if (out[0] == '\0') next = sg_strdup(item ? item : "");
+        else next = sg_strdup_printf("%s,%s", out, item ? item : "");
+        free(out);
+        out = next;
+        free(item);
+        p++;
+        while (*p && *p != ',' && *p != ']') p++;
+        if (*p == ',') p++;
+    }
+    if (!out || out[0] == '\0') {
+        free(out);
+        return sg_strdup("none");
+    }
+    return out;
+}
+
+static char* sg_manifest_first_segment(const char *text, char open_ch, char close_ch, const char **out_next) {
+    const char *p = text;
+    while (*p && *p != open_ch) p++;
+    if (*p != open_ch) return NULL;
+    const char *start = p;
+    int depth = 0;
+    bool in_string = false;
+    while (*p) {
+        if (*p == '"' && (p == start || p[-1] != '\\')) in_string = !in_string;
+        else if (!in_string) {
+            if (*p == open_ch) depth++;
+            else if (*p == close_ch) {
+                depth--;
+                if (depth == 0) {
+                    p++;
+                    if (out_next) *out_next = p;
+                    return sg_strdup_range(start, p);
+                }
+            }
+        }
+        p++;
+    }
+    return NULL;
+}
+
+static bool sg_merge_manifest_route(cct_sigilo_t *sg, cct_sigilo_model_t *m, sg_web_route_t *manifest_route) {
+    if (!m || !manifest_route) return false;
+    sg_web_route_t *existing = NULL;
+    if (manifest_route->route_id) {
+        for (u32 i = 0; i < m->web_route_count; i++) {
+            if (m->web_routes[i].route_id && strcmp(m->web_routes[i].route_id, manifest_route->route_id) == 0) {
+                existing = &m->web_routes[i];
+                break;
+            }
+        }
+    }
+    if (!existing) {
+        sg_web_route_t *route = sg_route_push(m);
+        if (!route) return false;
+        *route = *manifest_route;
+        memset(manifest_route, 0, sizeof(*manifest_route));
+        route->source = SG_ROUTE_SOURCE_MANIFEST;
+        return true;
+    }
+
+    if (existing->path && manifest_route->path && existing->path[0] && manifest_route->path[0] &&
+        strcmp(existing->path, manifest_route->path) != 0) {
+        sg_reportf(sg, 0, 0, "manifest conflict for route_id '%s': path mismatch", manifest_route->route_id);
+        return false;
+    }
+    if (existing->method && manifest_route->method && existing->method[0] && manifest_route->method[0] &&
+        strcmp(existing->method, manifest_route->method) != 0) {
+        sg_reportf(sg, 0, 0, "manifest conflict for route_id '%s': method mismatch", manifest_route->route_id);
+        return false;
+    }
+    if (existing->handler && manifest_route->handler && existing->handler[0] && manifest_route->handler[0] &&
+        strcmp(existing->handler, manifest_route->handler) != 0) {
+        sg_reportf(sg, 0, 0, "manifest conflict for route_id '%s': handler mismatch", manifest_route->route_id);
+        return false;
+    }
+
+    if ((!existing->route_name || existing->route_name[0] == '\0') && manifest_route->route_name) existing->route_name = manifest_route->route_name, manifest_route->route_name = NULL;
+    if ((!existing->group_name || existing->group_name[0] == '\0') && manifest_route->group_name) existing->group_name = manifest_route->group_name, manifest_route->group_name = NULL;
+    if ((!existing->middleware || strcmp(existing->middleware, "none") == 0 || existing->middleware[0] == '\0') && manifest_route->middleware) existing->middleware = manifest_route->middleware, manifest_route->middleware = NULL;
+    if ((!existing->path_params || strcmp(existing->path_params, "none") == 0 || existing->path_params[0] == '\0') && manifest_route->path_params) existing->path_params = manifest_route->path_params, manifest_route->path_params = NULL;
+    if ((!existing->module_path || existing->module_path[0] == '\0') && manifest_route->module_path) existing->module_path = manifest_route->module_path, manifest_route->module_path = NULL;
+    existing->source = SG_ROUTE_SOURCE_MERGED;
+    return true;
+}
+
+static bool sg_parse_manifest_routes(cct_sigilo_t *sg, cct_sigilo_model_t *m) {
+    if (!sg || !m || !sg->manifest_path || sg->manifest_path[0] == '\0') return true;
+    char *json = NULL;
+    size_t len = 0;
+    if (!sg_load_file(sg->manifest_path, &json, &len)) {
+        sg_reportf(sg, 0, 0, "could not read sigilo manifest: %s", sg->manifest_path);
+        return false;
+    }
+    (void)len;
+    m->manifest_format = sg_json_extract_string(json, "format");
+    m->manifest_producer = sg_json_extract_string(json, "producer");
+    m->manifest_project = sg_json_extract_string(json, "project");
+    if (!m->manifest_format || strcmp(m->manifest_format, "cct.sigilo.manifest.v1") != 0) {
+        free(json);
+        sg_reportf(sg, 0, 0, "invalid sigilo manifest format (expected cct.sigilo.manifest.v1)");
+        return false;
+    }
+    if (!m->manifest_producer || m->manifest_producer[0] == '\0') {
+        free(json);
+        sg_reportf(sg, 0, 0, "sigilo manifest missing producer");
+        return false;
+    }
+    char *routes_array = sg_json_extract_array_text(json, "routes");
+    free(json);
+    if (!routes_array) return true;
+    const char *cursor = routes_array;
+    while (true) {
+        char *obj = sg_manifest_first_segment(cursor, '{', '}', &cursor);
+        if (!obj) break;
+        sg_web_route_t route;
+        memset(&route, 0, sizeof(route));
+        route.source = SG_ROUTE_SOURCE_MANIFEST;
+        route.route_id = sg_json_extract_string(obj, "route_id");
+        route.method = sg_json_extract_string(obj, "method");
+        route.path = sg_json_extract_string(obj, "path");
+        route.route_name = sg_json_extract_string(obj, "route_name");
+        route.handler = sg_json_extract_string(obj, "handler");
+        route.module_path = sg_json_extract_string(obj, "module");
+        route.group_name = sg_json_extract_string(obj, "group");
+        route.path_params = sg_json_extract_string(obj, "path_params");
+        char *middleware_array = sg_json_extract_array_text(obj, "middleware");
+        route.middleware = middleware_array ? sg_manifest_array_to_csv(middleware_array) : sg_strdup("none");
+        free(middleware_array);
+        if ((!route.group_name || route.group_name[0] == '\0') && route.path && route.path[0] == '/') route.group_name = sg_default_group_for_path(route.path);
+        if ((!route.path_params || route.path_params[0] == '\0') && route.path && route.path[0] == '/') route.path_params = sg_compute_path_params(route.path);
+        if ((!route.route_id || route.route_id[0] == '\0') && route.method && route.path && route.handler) route.route_id = sg_compute_route_id(route.method, route.path, route.handler);
+        if (!sg_merge_manifest_route(sg, m, &route)) {
+            sg_route_free(&route);
+            free(obj);
+            free(routes_array);
+            return false;
+        }
+        sg_route_free(&route);
+        free(obj);
+    }
+    free(routes_array);
+    return true;
+}
+
+static const char* sg_route_source_aggregate(const cct_sigilo_model_t *m) {
+    bool saw_native = false;
+    bool saw_manifest = false;
+    bool saw_merged = false;
+
+    if (!m || m->web_route_count == 0) return "native";
+
+    for (u32 i = 0; i < m->web_route_count; i++) {
+        switch (m->web_routes[i].source) {
+            case SG_ROUTE_SOURCE_MANIFEST:
+                saw_manifest = true;
+                break;
+            case SG_ROUTE_SOURCE_MERGED:
+                saw_merged = true;
+                break;
+            case SG_ROUTE_SOURCE_NATIVE:
+            default:
+                saw_native = true;
+                break;
+        }
+    }
+
+    if (saw_merged) return "merged";
+    if (saw_manifest && saw_native) return "merged";
+    if (saw_manifest) return "manifest";
+    return "native";
 }
 
 /* =========================== model extraction ======================== */
@@ -1371,6 +2172,11 @@ static bool sg_extract_model(
     }
 
     if (m->entry_idx < 0 && m->ritual_count > 0) m->entry_idx = 0;
+    sg_parse_web_routes_from_source(m, source_path);
+    if (!sg_parse_manifest_routes(sg, m)) {
+        return false;
+    }
+    sg_finalize_web_routes(m);
     sg_hex_u64(m->hash, sg->semantic_hash_hex);
     sg->semantic_hash = m->hash;
     sg->ritual_count = m->ritual_count;
@@ -1397,6 +2203,15 @@ static void sg_free_model(cct_sigilo_model_t *m) {
     free(m->rituals);
     free(m->edges);
     free(m->generic_inst_keys);
+    if (m->web_routes) {
+        for (u32 i = 0; i < m->web_route_count; i++) {
+            sg_route_free(&m->web_routes[i]);
+        }
+    }
+    free(m->web_routes);
+    free(m->manifest_format);
+    free(m->manifest_producer);
+    free(m->manifest_project);
     memset(m, 0, sizeof(*m));
 }
 
@@ -2629,17 +3444,478 @@ static void sg_svg_layer_hash_signature(FILE *f, const cct_sigilo_model_t *m, co
     fprintf(f, "  </g>\n");
 }
 
+static const char* sg_route_method_class(const char *method) {
+    if (!method) return "route-method-custom";
+    if (strcmp(method, "GET") == 0) return "route-method-get";
+    if (strcmp(method, "POST") == 0) return "route-method-post";
+    if (strcmp(method, "PUT") == 0) return "route-method-put";
+    if (strcmp(method, "PATCH") == 0) return "route-method-patch";
+    if (strcmp(method, "DELETE") == 0) return "route-method-delete";
+    if (strcmp(method, "HEAD") == 0) return "route-method-head";
+    if (strcmp(method, "OPTIONS") == 0) return "route-method-options";
+    return "route-method-custom";
+}
+
+static double sg_web_hash_unit(const cct_sigilo_model_t *m, u32 salt) {
+    u64 seed = (m && m->web_hash != 0) ? m->web_hash : (m ? m->hash : 0x9e3779b97f4a7c15ULL);
+    u64 x = seed ^ (0x517cc1b727220a95ULL * (u64)(salt + 1));
+    x ^= x >> 33;
+    x *= 0xff51afd7ed558ccdULL;
+    x ^= x >> 33;
+    return (double)(x & 0xFFFFFFULL) / (double)0x1000000ULL;
+}
+
+static double sg_route_hash_unit(const sg_web_route_t *route, u32 salt) {
+    u64 seed = (route && route->route_hash != 0) ? route->route_hash : 0x7f4a7c15517cc1b7ULL;
+    u64 x = seed ^ (0x9e3779b97f4a7c15ULL * (u64)(salt + 1));
+    x ^= x >> 33;
+    x *= 0xff51afd7ed558ccdULL;
+    x ^= x >> 33;
+    return (double)(x & 0xFFFFFFULL) / (double)0x1000000ULL;
+}
+
+static void sg_svg_emit_arc(FILE *f, const char *cls, double x, double y, double r, double a0, double a1) {
+    double sx = x + cos(a0) * r;
+    double sy = y + sin(a0) * r;
+    double ex = x + cos(a1) * r;
+    double ey = y + sin(a1) * r;
+    double span = fabs(a1 - a0);
+    int large_arc = span > CCT_SIGILO_PI ? 1 : 0;
+    int sweep = a1 >= a0 ? 1 : 0;
+    fprintf(f,
+            "<path class=\"%s\" d=\"M %.2f %.2f A %.2f %.2f 0 %d %d %.2f %.2f\"/>",
+            cls, sx, sy, r, r, large_arc, sweep, ex, ey);
+}
+
+static void sg_svg_emit_route_micro_sigil(
+    FILE *f,
+    const sg_web_route_t *route,
+    double x,
+    double y,
+    double node_r,
+    double tilt
+) {
+    const char *method_class = sg_route_method_class(route ? route->method : NULL);
+    double shell_r = node_r * (0.90 + sg_route_hash_unit(route, 1) * 0.10);
+    double mid_r = node_r * (0.58 + sg_route_hash_unit(route, 2) * 0.12);
+    double core_r = node_r * (0.24 + sg_route_hash_unit(route, 3) * 0.09);
+    u32 spoke_count = 2u + (u32)(sg_route_hash_unit(route, 4) * 2.0);
+    u32 arc_count = 1u + (u32)(sg_route_hash_unit(route, 6) * 2.0);
+    double chord_a = tilt + (sg_route_hash_unit(route, 7) - 0.5) * 0.72;
+    double core_dx = (sg_route_hash_unit(route, 8) - 0.5) * node_r * 0.16;
+    double core_dy = (sg_route_hash_unit(route, 9) - 0.5) * node_r * 0.16;
+
+    fprintf(f, "<circle class=\"route-shell\" cx=\"%.2f\" cy=\"%.2f\" r=\"%.2f\"/>", x, y, shell_r);
+    sg_svg_emit_arc(
+        f,
+        "route-mid",
+        x,
+        y,
+        mid_r,
+        tilt - (0.78 + sg_route_hash_unit(route, 10) * 0.46),
+        tilt + (0.78 + sg_route_hash_unit(route, 11) * 0.46)
+    );
+
+    for (u32 ai = 0; ai < arc_count; ai++) {
+        double a0 = tilt + sg_route_hash_unit(route, 20 + ai) * (2.0 * CCT_SIGILO_PI);
+        double span = 0.42 + sg_route_hash_unit(route, 30 + ai) * 0.86;
+        double rr = shell_r * (0.78 + sg_route_hash_unit(route, 40 + ai) * 0.16);
+        sg_svg_emit_arc(f, "route-arc", x, y, rr, a0, a0 + span);
+    }
+
+    for (u32 si = 0; si < spoke_count; si++) {
+        double a = tilt + ((2.0 * CCT_SIGILO_PI) * (double)si / (double)spoke_count);
+        a += (sg_route_hash_unit(route, 60 + si) - 0.5) * 0.18;
+        double sx = x + core_dx + cos(a) * (core_r * 1.05);
+        double sy = y + core_dy + sin(a) * (core_r * 1.05);
+        double ex = x + cos(a) * (shell_r - 2.4 - sg_route_hash_unit(route, 70 + si) * 2.6);
+        double ey = y + sin(a) * (shell_r - 2.4 - sg_route_hash_unit(route, 80 + si) * 2.6);
+        fprintf(f, "<path class=\"route-spoke\" d=\"M %.2f %.2f Q %.2f %.2f %.2f %.2f\"/>",
+                sx, sy,
+                x + cos(a + CCT_SIGILO_PI * 0.5) * (node_r * 0.10),
+                y + sin(a + CCT_SIGILO_PI * 0.5) * (node_r * 0.10),
+                ex, ey);
+    }
+
+    fprintf(f,
+            "<path class=\"route-chord\" d=\"M %.2f %.2f Q %.2f %.2f %.2f %.2f\"/>",
+            x + cos(chord_a) * (mid_r + 1.5),
+            y + sin(chord_a) * (mid_r + 1.5),
+            x + core_dx,
+            y + core_dy,
+            x + cos(chord_a + CCT_SIGILO_PI * (0.66 + sg_route_hash_unit(route, 90) * 0.20)) * (mid_r + 0.8),
+            y + sin(chord_a + CCT_SIGILO_PI * (0.66 + sg_route_hash_unit(route, 90) * 0.20)) * (mid_r + 0.8));
+
+    fprintf(f, "<circle class=\"route-core\" cx=\"%.2f\" cy=\"%.2f\" r=\"%.2f\"/>", x + core_dx, y + core_dy, core_r);
+    fprintf(f,
+            "<path class=\"route-glyph\" d=\"M %.2f %.2f L %.2f %.2f L %.2f %.2f Z\"/>",
+            x + core_dx + cos(tilt) * (core_r + 1.2),
+            y + core_dy + sin(tilt) * (core_r + 1.2),
+            x + core_dx + cos(tilt + CCT_SIGILO_PI * (0.72 + sg_route_hash_unit(route, 140) * 0.12)) * (core_r + 0.8),
+            y + core_dy + sin(tilt + CCT_SIGILO_PI * (0.72 + sg_route_hash_unit(route, 140) * 0.12)) * (core_r + 0.8),
+            x + core_dx + cos(tilt - CCT_SIGILO_PI * (0.72 + sg_route_hash_unit(route, 141) * 0.12)) * (core_r + 0.8),
+            y + core_dy + sin(tilt - CCT_SIGILO_PI * (0.72 + sg_route_hash_unit(route, 141) * 0.12)) * (core_r + 0.8));
+    fprintf(f, "<circle class=\"route-method-seed\" cx=\"%.2f\" cy=\"%.2f\" r=\"%.2f\"/>",
+            x + core_dx + cos(tilt + CCT_SIGILO_PI * 0.5) * (core_r + 1.4),
+            y + core_dy + sin(tilt + CCT_SIGILO_PI * 0.5) * (core_r + 1.4),
+            1.0 + sg_route_hash_unit(route, 150) * 0.9);
+    fprintf(f, "<circle class=\"%s\" cx=\"%.2f\" cy=\"%.2f\" r=\"0\"/>",
+            method_class, x + core_dx, y + core_dy);
+}
+
+static bool sg_write_routes_svg(cct_sigilo_t *sg, const cct_sigilo_model_t *m) {
+    FILE *f = fopen(sg->svg_path, "wb");
+    if (!f) {
+        sg_reportf(sg, 0, 0, "could not write route sigilo SVG: %s", sg->svg_path);
+        return false;
+    }
+    const double width = 1100.0;
+    const double height = 900.0;
+    const double cx = width * 0.5;
+    const double cy = height * 0.5 + 32.0;
+    const double group_ring = 324.0;
+    double view_min_x = 0.0;
+    double view_min_y = 0.0;
+    double view_max_x = width;
+    double view_max_y = height;
+    double actual_min_x = 1e18;
+    double actual_min_y = 1e18;
+    double actual_max_x = -1e18;
+    double actual_max_y = -1e18;
+    double view_pad = 54.0;
+    sg_route_group_layout_t *groups = NULL;
+    double *route_x = NULL;
+    double *route_y = NULL;
+    double *route_r = NULL;
+    double *route_tilt = NULL;
+    u32 group_index = 0;
+
+    if (m->web_group_count == 0 || m->web_route_count == 0) {
+        fclose(f);
+        sg_reportf(sg, 0, 0, "route sigilo requires at least one web route");
+        return false;
+    }
+
+    groups = (sg_route_group_layout_t*)calloc(m->web_group_count, sizeof(*groups));
+    route_x = (double*)calloc(m->web_route_count, sizeof(*route_x));
+    route_y = (double*)calloc(m->web_route_count, sizeof(*route_y));
+    route_r = (double*)calloc(m->web_route_count, sizeof(*route_r));
+    route_tilt = (double*)calloc(m->web_route_count, sizeof(*route_tilt));
+    if (!groups || !route_x || !route_y || !route_r || !route_tilt) {
+        fclose(f);
+        free(groups);
+        free(route_x);
+        free(route_y);
+        free(route_r);
+        free(route_tilt);
+        sg_reportf(sg, 0, 0, "out of memory while generating route sigilo");
+        return false;
+    }
+
+    for (u32 i = 0; i < m->web_route_count; ) {
+        const char *group = (m->web_routes[i].group_name && m->web_routes[i].group_name[0] != '\0')
+            ? m->web_routes[i].group_name : "root";
+        u32 start = i;
+        while (i < m->web_route_count) {
+            const char *cur = (m->web_routes[i].group_name && m->web_routes[i].group_name[0] != '\0')
+                ? m->web_routes[i].group_name : "root";
+            if (strcmp(cur, group) != 0) break;
+            i++;
+        }
+        groups[group_index].group_name = group;
+        groups[group_index].start = start;
+        groups[group_index].count = i - start;
+        groups[group_index].angle = (-CCT_SIGILO_PI * 0.5) + ((double)group_index * (2.0 * CCT_SIGILO_PI) / (double)m->web_group_count);
+        groups[group_index].angle += (sg_web_hash_unit(m, 3300 + group_index) - 0.5) * 0.18;
+        {
+            double radial = group_ring + (sg_web_hash_unit(m, 3350 + group_index) - 0.5) * 26.0;
+            groups[group_index].gx = cx + cos(groups[group_index].angle) * radial;
+            groups[group_index].gy = cy + sin(groups[group_index].angle) * radial;
+            groups[group_index].orbit_r = 42.0 + (double)groups[group_index].count * 12.0 + (sg_web_hash_unit(m, 3400 + group_index) - 0.5) * 8.0;
+            groups[group_index].label_x = groups[group_index].gx + cos(groups[group_index].angle) * (groups[group_index].orbit_r + 28.0);
+            groups[group_index].label_y = groups[group_index].gy + sin(groups[group_index].angle) * (groups[group_index].orbit_r + 28.0);
+            groups[group_index].slug = sg_slugify_simple(group);
+            groups[group_index].label = sg_escape_xml_text(group);
+        }
+        for (u32 j = start; j < i; j++) {
+            const sg_web_route_t *route = &m->web_routes[j];
+            u32 slot = j - start;
+            double tangent = groups[group_index].angle + CCT_SIGILO_PI * 0.5;
+            double spread = (groups[group_index].count <= 1)
+                ? 0.0
+                : sg_clamp(1.12 + (double)groups[group_index].count * 0.16, 0.90, 2.10);
+            double local = (groups[group_index].count <= 1)
+                ? tangent
+                : (tangent - (spread * 0.5) + ((double)slot * spread / (double)(groups[group_index].count - 1)));
+            double rr = groups[group_index].orbit_r * (0.66 + sg_route_hash_unit(route, 200) * 0.30);
+            double drift = 8.0 + sg_route_hash_unit(route, 204) * 10.0;
+            local += (sg_route_hash_unit(route, 201) - 0.5) * 0.26;
+            route_x[j] = groups[group_index].gx + cos(local) * rr + cos(groups[group_index].angle) * drift;
+            route_y[j] = groups[group_index].gy + sin(local) * rr + sin(groups[group_index].angle) * drift;
+            route_r[j] = 12.0 + sg_route_hash_unit(route, 202) * 8.0;
+            route_tilt[j] = local + (sg_route_hash_unit(route, 203) - 0.5) * 0.9;
+        }
+        {
+            double needed_r = 30.0;
+            for (u32 j = start; j < i; j++) {
+                double dx = route_x[j] - groups[group_index].gx;
+                double dy = route_y[j] - groups[group_index].gy;
+                double reach = sqrt(dx * dx + dy * dy) + route_r[j] + 12.0;
+                if (reach > needed_r) needed_r = reach;
+            }
+            groups[group_index].orbit_r = needed_r;
+            groups[group_index].label_x = groups[group_index].gx + cos(groups[group_index].angle) * (groups[group_index].orbit_r + 28.0);
+            groups[group_index].label_y = groups[group_index].gy + sin(groups[group_index].angle) * (groups[group_index].orbit_r + 28.0);
+        }
+        group_index++;
+    }
+
+    sg_bounds_include_circle(&actual_min_x, &actual_min_y, &actual_max_x, &actual_max_y, cx, cy, 8.0);
+    sg_bounds_include_point(&actual_min_x, &actual_min_y, &actual_max_x, &actual_max_y, 24.0, 18.0);
+    sg_bounds_include_point(&actual_min_x, &actual_min_y, &actual_max_x, &actual_max_y, 420.0, 68.0);
+    for (u32 gi = 0; gi < m->web_group_count; gi++) {
+        sg_bounds_include_circle(&actual_min_x, &actual_min_y, &actual_max_x, &actual_max_y,
+                                 groups[gi].gx, groups[gi].gy, groups[gi].orbit_r + 12.0);
+        sg_bounds_include_point(&actual_min_x, &actual_min_y, &actual_max_x, &actual_max_y,
+                                groups[gi].label_x - 80.0, groups[gi].label_y - 18.0);
+        sg_bounds_include_point(&actual_min_x, &actual_min_y, &actual_max_x, &actual_max_y,
+                                groups[gi].label_x + 80.0, groups[gi].label_y + 18.0);
+    }
+    for (u32 j = 0; j < m->web_route_count; j++) {
+        double rr = route_r[j] + 16.0;
+        sg_bounds_include_circle(&actual_min_x, &actual_min_y, &actual_max_x, &actual_max_y,
+                                 route_x[j], route_y[j], rr);
+    }
+    sg_finalize_canvas_bounds(
+        0.0, 0.0, width, height,
+        actual_min_x, actual_min_y, actual_max_x, actual_max_y,
+        view_pad,
+        &view_min_x, &view_min_y, &view_max_x, &view_max_y);
+
+    fprintf(f, "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n");
+    fprintf(f,
+            "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"%.2f %.2f %.2f %.2f\" width=\"%.0f\" height=\"%.0f\" role=\"img\" aria-label=\"CCT route sigilo\">\n",
+            view_min_x, view_min_y, view_max_x - view_min_x, view_max_y - view_min_y,
+            ceil(view_max_x - view_min_x), ceil(view_max_y - view_min_y));
+    if (g_sg_render_emit_data_attrs) {
+        fprintf(f, "  <desc>Deterministic route topology sigil for a CCT artifact.</desc>\n");
+    }
+    fprintf(f,
+            "  <defs>\n"
+            "    <style><![CDATA[\n"
+            "      .bg { fill: #f6f2e7; }\n"
+            "      .title { fill: #231a14; font: 600 20px monospace; }\n"
+            "      .subtitle { fill: #5b5148; font: 11px monospace; }\n"
+            "      .route-center { fill: #3b3027; stroke: #f6f2e7; stroke-width: 1.2; }\n"
+            "      .group-link { fill: none; stroke: #8a7662; stroke-width: 1.05; opacity: 0.54; }\n"
+            "      .cluster-orbit { fill: none; stroke: #c6b59f; stroke-width: 1.0; opacity: 0.90; }\n"
+            "      .cluster-thread { fill: none; stroke: #d2c2ad; stroke-width: 0.9; opacity: 0.78; }\n"
+            "      .cluster-label { fill: #2a221c; font: 600 11px monospace; opacity: 0.88; }\n"
+            "      .cluster-summary { fill: #66584a; font: 9px monospace; opacity: 0.74; }\n"
+            "      .route-link { fill: none; stroke: #7a6a59; stroke-width: 1.0; opacity: 0.68; }\n"
+            "      .route-weave { fill: none; stroke: #8c7865; stroke-width: 0.95; opacity: 0.58; }\n"
+            "      .route-shell { fill: rgba(255,252,246,0.72); stroke: #5a4b3f; stroke-width: 1.08; }\n"
+            "      .route-mid { fill: none; stroke: #b7a690; stroke-width: 0.95; opacity: 0.78; }\n"
+            "      .route-core { fill: #f7efe3; stroke: #57483b; stroke-width: 1.0; }\n"
+            "      .route-arc { fill: none; stroke: #7a6957; stroke-width: 0.95; opacity: 0.88; stroke-linecap: round; }\n"
+            "      .route-spoke { fill: none; stroke: #978573; stroke-width: 0.9; opacity: 0.82; stroke-linecap: round; }\n"
+            "      .route-chord { fill: none; stroke: #51453b; stroke-width: 0.9; opacity: 0.74; stroke-linecap: round; }\n"
+            "      .route-glyph { fill: none; stroke: #efe6d9; stroke-width: 1.05; stroke-linejoin: round; }\n"
+            "      .sigil-orn { fill: none; stroke: #b7a690; stroke-width: 0.9; opacity: 0.66; }\n"
+            "      .route-method-get { fill: #6b5a4b; }\n"
+            "      .route-method-post { fill: #6b5a4b; }\n"
+            "      .route-method-put { fill: #6b5a4b; }\n"
+            "      .route-method-patch { fill: #6b5a4b; }\n"
+            "      .route-method-delete { fill: #6b5a4b; }\n"
+            "      .route-method-head { fill: #6b5a4b; }\n"
+            "      .route-method-options { fill: #6b5a4b; }\n"
+            "      .route-method-custom { fill: #6b5a4b; }\n"
+            "      .route-method-seed { stroke: #f7efe2; stroke-width: 0.85; }\n"
+            "      .hash { fill: #231a14; font: 10px monospace; }\n"
+            "      .route-wrap { cursor: help; }\n"
+            "      .route-wrap:hover > .route-shell, .route-wrap:hover > .route-mid, .route-wrap:hover > .route-core { stroke: #1f1712; opacity: 1; }\n"
+            "      .route-wrap:hover > .route-link { stroke: #3c2f25; opacity: .92; }\n"
+    "    ]]></style>\n"
+            "  </defs>\n");
+    fprintf(f, "  <rect class=\"bg\" x=\"%.2f\" y=\"%.2f\" width=\"%.2f\" height=\"%.2f\"/>\n",
+            view_min_x, view_min_y, view_max_x - view_min_x, view_max_y - view_min_y);
+    fprintf(f, "  <text class=\"title\" x=\"30\" y=\"36\">sigilo routes</text>\n");
+    fprintf(f, "  <text class=\"subtitle\" x=\"30\" y=\"56\">program=%s routes=%u groups=%u web_hash=%s</text>\n",
+            m->program_name ? m->program_name : "anonymous",
+            m->web_route_count,
+            m->web_group_count,
+            m->web_hash_hex);
+
+    fprintf(f, "  <g id=\"route_center\">\n");
+    if (g_sg_render_emit_titles) {
+        sg_svg_emit_title(f, "route center\norigin point for the route topology", 4);
+    }
+    fprintf(f, "    <circle class=\"route-center\" cx=\"%.2f\" cy=\"%.2f\" r=\"4.8\"/>\n", cx, cy);
+    fprintf(f, "  </g>\n");
+
+    fprintf(f, "  <g id=\"route_group_links\">\n");
+    for (u32 gi = 0; gi < m->web_group_count; gi++) {
+        double a = groups[gi].angle;
+        double bend = (sg_web_hash_unit(m, 3600 + gi) - 0.5) * 24.0;
+        if (g_sg_render_emit_titles) {
+            char *group_tip = sg_prepare_tooltip_text(sg_strdup_printf(
+                "center -> group\ngroup=%s\nroutes=%u",
+                groups[gi].group_name ? groups[gi].group_name : "root",
+                groups[gi].count));
+            fprintf(f, "    <g class=\"route-group-wrap\">\n");
+            sg_svg_emit_title(f, group_tip, 6);
+            free(group_tip);
+        }
+        fprintf(f, "    <path class=\"group-link\" d=\"M %.2f %.2f Q %.2f %.2f %.2f %.2f\"/>\n",
+                cx,
+                cy,
+                (cx + groups[gi].gx) * 0.5 + cos(a + CCT_SIGILO_PI * 0.5) * bend,
+                (cy + groups[gi].gy) * 0.5 + sin(a + CCT_SIGILO_PI * 0.5) * bend,
+                groups[gi].gx, groups[gi].gy);
+        if (g_sg_render_emit_titles) {
+            fprintf(f, "    </g>\n");
+        }
+    }
+    fprintf(f, "  </g>\n");
+
+    for (u32 gi = 0; gi < m->web_group_count; gi++) {
+        fprintf(f, "  <g id=\"route_cluster_%s\" class=\"route-cluster\">\n", groups[gi].slug ? groups[gi].slug : "group");
+        if (g_sg_render_emit_titles) {
+            char *cluster_tip = sg_prepare_tooltip_text(sg_strdup_printf(
+                "route group\ngroup=%s\nroutes=%u",
+                groups[gi].group_name ? groups[gi].group_name : "root",
+                groups[gi].count));
+            sg_svg_emit_title(f, cluster_tip, 4);
+            free(cluster_tip);
+        }
+        fprintf(f, "    <circle class=\"cluster-orbit\" cx=\"%.2f\" cy=\"%.2f\" r=\"%.2f\"/>\n",
+                groups[gi].gx, groups[gi].gy, groups[gi].orbit_r);
+        fprintf(f, "    <text class=\"cluster-label\" x=\"%.2f\" y=\"%.2f\" text-anchor=\"middle\">%s</text>\n",
+                groups[gi].label_x, groups[gi].label_y - 3.0, groups[gi].label ? groups[gi].label : groups[gi].group_name);
+        fprintf(f, "    <text class=\"cluster-summary\" x=\"%.2f\" y=\"%.2f\" text-anchor=\"middle\">routes=%u</text>\n",
+                groups[gi].label_x, groups[gi].label_y + 10.0, groups[gi].count);
+        if (groups[gi].count > 0) {
+            u32 root_rel = sg_route_choose_group_root(m->web_routes, groups[gi].start, groups[gi].count);
+            u32 anchor = groups[gi].start + root_rel;
+            if (g_sg_render_emit_titles) {
+                char *anchor_tip = sg_prepare_tooltip_text(sg_strdup_printf(
+                    "group anchor\ngroup=%s\nanchor=%s",
+                    groups[gi].group_name ? groups[gi].group_name : "root",
+                    m->web_routes[anchor].route_id ? m->web_routes[anchor].route_id : ""));
+                fprintf(f, "    <g class=\"route-weave-wrap\">\n");
+                sg_svg_emit_title(f, anchor_tip, 6);
+                free(anchor_tip);
+            }
+            fprintf(f, "    <path class=\"route-link\" d=\"M %.2f %.2f Q %.2f %.2f %.2f %.2f\"/>\n",
+                    groups[gi].gx, groups[gi].gy,
+                    (groups[gi].gx + route_x[anchor]) * 0.5 + cos(route_tilt[anchor] + CCT_SIGILO_PI * 0.5) * 18.0,
+                    (groups[gi].gy + route_y[anchor]) * 0.5 + sin(route_tilt[anchor] + CCT_SIGILO_PI * 0.5) * 18.0,
+                    route_x[anchor], route_y[anchor]);
+            if (g_sg_render_emit_titles) {
+                fprintf(f, "    </g>\n");
+            }
+            for (u32 rel = 0; rel < groups[gi].count; rel++) {
+                u32 j = groups[gi].start + rel;
+                if (rel == root_rel) continue;
+                {
+                    u32 parent_rel = sg_route_choose_parent(m->web_routes, groups[gi].start, groups[gi].count, rel, root_rel);
+                    u32 parent = groups[gi].start + parent_rel;
+                    double mx = (route_x[parent] + route_x[j]) * 0.5 + cos(route_tilt[parent] + route_tilt[j]) * 14.0;
+                    double my = (route_y[parent] + route_y[j]) * 0.5 + sin(route_tilt[parent] + route_tilt[j]) * 14.0;
+                    if (g_sg_render_emit_titles) {
+                        char *weave_tip = sg_prepare_tooltip_text(sg_strdup_printf(
+                            "route hierarchy\n%s -> %s\ngroup=%s",
+                            m->web_routes[parent].route_id ? m->web_routes[parent].route_id : "",
+                            m->web_routes[j].route_id ? m->web_routes[j].route_id : "",
+                            groups[gi].group_name ? groups[gi].group_name : "root"));
+                        fprintf(f, "    <g class=\"route-weave-wrap\">\n");
+                        sg_svg_emit_title(f, weave_tip, 6);
+                        free(weave_tip);
+                    }
+                    fprintf(f, "    <path class=\"route-weave\" d=\"M %.2f %.2f Q %.2f %.2f %.2f %.2f\"/>\n",
+                            route_x[parent], route_y[parent], mx, my, route_x[j], route_y[j]);
+                    if (g_sg_render_emit_titles) {
+                        fprintf(f, "    </g>\n");
+                    }
+                }
+            }
+        }
+        for (u32 j = groups[gi].start; j < groups[gi].start + groups[gi].count; j++) {
+            const sg_web_route_t *route = &m->web_routes[j];
+            const char *method = route->method ? route->method : "GET";
+            const char *path = route->path ? route->path : "";
+            const char *handler = route->handler ? route->handler : "";
+            const char *module_path = route->module_path ? route->module_path : "";
+            const char *middleware = (route->middleware && route->middleware[0] != '\0') ? route->middleware : "none";
+            char *route_slug = sg_slugify_simple(route->route_id ? route->route_id : path);
+            char *module_display = sg_display_path(module_path);
+            char *tooltip_raw = sg_strdup_printf("%s %s\nhandler=%s\nmodule=%s\nmiddleware=%s\nroute_id=%s\nsource=%s\nroute_hash=%s",
+                                                 method, path, handler, module_display ? module_display : module_path, middleware,
+                                                 route->route_id ? route->route_id : "",
+                                                 sg_route_source_name(route->source),
+                                                 route->route_hash_hex);
+            char *tooltip = sg_prepare_tooltip_text(tooltip_raw);
+            free(tooltip_raw);
+            fprintf(f, "    <g id=\"route_node_%s\" class=\"route-wrap\"", route_slug ? route_slug : "route");
+            if (g_sg_render_emit_data_attrs) {
+                sg_svg_emit_attr_str(f, "data-route-id", route->route_id ? route->route_id : "");
+                sg_svg_emit_attr_str(f, "data-method", method);
+                sg_svg_emit_attr_str(f, "data-path", path);
+                sg_svg_emit_attr_str(f, "data-handler", handler);
+                sg_svg_emit_attr_str(f, "data-module", module_display ? module_display : module_path);
+                sg_svg_emit_attr_str(f, "data-group", groups[gi].group_name ? groups[gi].group_name : "root");
+                sg_svg_emit_attr_str(f, "data-middleware-chain", middleware);
+                sg_svg_emit_attr_str(f, "data-source-origin", sg_route_source_name(route->source));
+                sg_svg_emit_attr_str(f, "data-path-params", route->path_params ? route->path_params : "none");
+                sg_svg_emit_attr_str(f, "data-route-hash", route->route_hash_hex);
+            }
+            fprintf(f, ">\n");
+            sg_svg_emit_route_micro_sigil(f, route, route_x[j], route_y[j], route_r[j], route_tilt[j]);
+            if (g_sg_render_emit_titles && tooltip && tooltip[0] != '\0') {
+                sg_svg_emit_title(f, tooltip, 6);
+            }
+            fprintf(f, "    </g>\n");
+            free(route_slug);
+            free(module_display);
+            free(tooltip);
+        }
+        fprintf(f, "  </g>\n");
+    }
+
+    fprintf(f, "  <text class=\"hash\" x=\"1070\" y=\"876\" text-anchor=\"end\">%s</text>\n", m->web_hash_hex);
+    fputs("</svg>\n", f);
+    fclose(f);
+    for (u32 gi = 0; gi < m->web_group_count; gi++) {
+        free(groups[gi].slug);
+        free(groups[gi].label);
+    }
+    free(groups);
+    free(route_x);
+    free(route_y);
+    free(route_r);
+    free(route_tilt);
+    return true;
+}
+
 static bool sg_write_svg(cct_sigilo_t *sg, const cct_sigilo_model_t *m) {
+    sg_visual_style_t style = sg_style_from_name(sg->style_name);
+    g_sg_render_emit_titles = sg ? sg->emit_titles : true;
+    g_sg_render_emit_data_attrs = sg ? sg->emit_data_attrs : true;
+    if (style == SG_STYLE_ROUTES) {
+        if (m->web_route_count == 0) {
+            sg_reportf(sg, 0, 0, "sigilo style 'routes' requires web route metadata");
+            return false;
+        }
+        return sg_write_routes_svg(sg, m);
+    }
+
     FILE *f = fopen(sg->svg_path, "wb");
     if (!f) {
         sg_reportf(sg, 0, 0, "could not write sigilo SVG: %s", sg->svg_path);
         return false;
     }
 
-    sg_visual_style_t style = sg_style_from_name(sg->style_name);
     cct_sigilo_geom_t geom;
-    g_sg_render_emit_titles = sg ? sg->emit_titles : true;
-    g_sg_render_emit_data_attrs = sg ? sg->emit_data_attrs : true;
     sg_build_geom(m, &geom);
 
     sg_svg_header(f, style);
@@ -2757,6 +4033,7 @@ static bool sg_write_meta(cct_sigilo_t *sg, const cct_sigilo_model_t *m) {
     }
 
     fprintf(f, "format = cct.sigil.v1\n");
+    fprintf(f, "sigilo_scope = local\n");
     fprintf(f, "visual_engine = sigillum_v2_1\n");
     fprintf(f, "visual_style = %s\n", sg->style_name ? sg->style_name : "network");
     fprintf(f, "compiler_version = %s\n", CCT_VERSION_STRING);
@@ -2980,6 +4257,43 @@ static bool sg_write_meta(cct_sigilo_t *sg, const cct_sigilo_model_t *m) {
     fprintf(f, "diff_policy = analytical_blocks_review_required_except_compatibility_hints\n");
     fprintf(f, "deterministic_serialization = stable_section_order\n");
 
+    if (m->web_route_count > 0) {
+        fprintf(f, "\n[web_routes]\n");
+        fprintf(f, "route_count = %u\n", m->web_route_count);
+        fprintf(f, "group_count = %u\n", m->web_group_count);
+        fprintf(f, "middleware_count = %u\n", m->web_middleware_count);
+        fprintf(f, "source = %s\n", sg_route_source_aggregate(m));
+        fprintf(f, "web_topology_hash = %s\n", m->web_hash_hex);
+        for (u32 i = 0; i < m->web_route_count; i++) {
+            const sg_web_route_t *route = &m->web_routes[i];
+            fprintf(f, "\n[web_route.%u]\n", i);
+            fprintf(f, "route_id = %s\n", route->route_id ? route->route_id : "");
+            fprintf(f, "method = %s\n", route->method ? route->method : "");
+            fprintf(f, "path = %s\n", route->path ? route->path : "");
+            if (route->route_name && route->route_name[0] != '\0') fprintf(f, "route_name = %s\n", route->route_name);
+            fprintf(f, "handler = %s\n", route->handler ? route->handler : "");
+            fprintf(f, "module = %s\n", route->module_path ? route->module_path : "");
+            fprintf(f, "group = %s\n", (route->group_name && route->group_name[0] != '\0') ? route->group_name : "root");
+            fprintf(f, "middleware = %s\n", (route->middleware && route->middleware[0] != '\0') ? route->middleware : "none");
+            fprintf(f, "path_params = %s\n", (route->path_params && route->path_params[0] != '\0') ? route->path_params : "none");
+            fprintf(f, "route_hash = %s\n", route->route_hash_hex);
+            fprintf(f, "source_origin = %s\n", sg_route_source_name(route->source));
+        }
+    }
+
+    if (m->manifest_format || m->manifest_producer || m->manifest_project) {
+        fprintf(f, "\n[manifest_provenance]\n");
+        if (m->manifest_format && m->manifest_format[0] != '\0') {
+            fprintf(f, "manifest_format = %s\n", m->manifest_format);
+        }
+        if (m->manifest_producer && m->manifest_producer[0] != '\0') {
+            fprintf(f, "manifest_producer = %s\n", m->manifest_producer);
+        }
+        if (m->manifest_project && m->manifest_project[0] != '\0') {
+            fprintf(f, "manifest_project = %s\n", m->manifest_project);
+        }
+    }
+
     fprintf(f, "\n[layout]\n");
     fprintf(f, "primary_axis_deg = %.3f\n", primary_axis_deg);
     fprintf(f, "canvas_center = %.1f,%.1f\n", CCT_SIGILO_CENTER_X, CCT_SIGILO_CENTER_Y);
@@ -3062,6 +4376,7 @@ void cct_sigilo_init(cct_sigilo_t *sg, const char *filename) {
     sg->emit_titles = true;
     sg->emit_data_attrs = true;
     sg->style_name = "network";
+    sg->manifest_path = NULL;
     sg->module_count = 1;
     sg->import_edge_count = 0;
     sg->cross_module_call_count = 0;
@@ -3093,7 +4408,8 @@ bool cct_sigilo_set_style(cct_sigilo_t *sg, const char *style_name) {
     if (!sg || !style_name) return false;
     if (strcmp(style_name, "network") != 0 &&
         strcmp(style_name, "seal") != 0 &&
-        strcmp(style_name, "scriptum") != 0) {
+        strcmp(style_name, "scriptum") != 0 &&
+        strcmp(style_name, "routes") != 0) {
         return false;
     }
     sg->style_name = sg_style_name(sg_style_from_name(style_name));
@@ -3246,6 +4562,21 @@ static const char* sg_system_module_label(const char *path) {
     return slash ? (slash + 1) : path;
 }
 
+static char* sg_display_path(const char *path) {
+    const char *pwd;
+    size_t pwd_len;
+    if (!path || !path[0]) return sg_strdup("unknown");
+    pwd = getenv("PWD");
+    if (pwd && pwd[0]) {
+        pwd_len = strlen(pwd);
+        if (strncmp(path, pwd, pwd_len) == 0 && (path[pwd_len] == '/' || path[pwd_len] == '\0')) {
+            if (path[pwd_len] == '\0') return sg_strdup(".");
+            return sg_strdup(path + pwd_len + 1);
+        }
+    }
+    return sg_strdup(path);
+}
+
 static u32 sg_system_module_import_count(
     u32 module_idx,
     const u32 *import_from_indices,
@@ -3262,12 +4593,16 @@ static u32 sg_system_module_import_count(
 }
 
 static char* sg_build_system_module_tooltip(const cct_sigilo_system_node_t *n) {
+    char *display_path;
     if (!n) return NULL;
-    return sg_prepare_tooltip_text(sg_strdup_printf(
+    display_path = sg_display_path(n->path);
+    char *tooltip = sg_prepare_tooltip_text(sg_strdup_printf(
         "module\n%s\nrituals: %u\nimports: %u",
-        (n->path && n->path[0]) ? n->path : "<module>",
+        display_path ? display_path : "<module>",
         n->ritual_count,
         n->import_count));
+    free(display_path);
+    return tooltip;
 }
 
 static char* sg_build_system_import_edge_tooltip(const char *from_path, const char *to_path) {
@@ -3435,6 +4770,20 @@ static bool sg_write_system_svg(
     cct_sigilo_system_node_t *nodes = NULL;
     u32 *depths = NULL;
     u32 max_depth = 0;
+    const sg_web_route_t **system_web_routes = NULL;
+    u32 *system_web_route_module_idx = NULL;
+    sg_route_group_layout_t *system_web_groups = NULL;
+    double *system_web_route_x = NULL;
+    double *system_web_route_y = NULL;
+    double *system_web_route_r = NULL;
+    double *system_web_route_tilt = NULL;
+    u32 system_web_route_count = 0;
+    u32 system_web_group_count = 0;
+    double view_min_x = 0.0;
+    double view_min_y = 0.0;
+    double view_max_x = 1200.0;
+    double view_max_y = 1200.0;
+    double view_pad = 56.0;
     if (module_count > 0) {
         nodes = (cct_sigilo_system_node_t*)calloc(module_count, sizeof(*nodes));
         depths = (u32*)calloc(module_count, sizeof(*depths));
@@ -3453,12 +4802,203 @@ static bool sg_write_system_svg(
         nodes[i].ritual_count = module_models ? module_models[i].ritual_count : 0;
         nodes[i].import_count = sg_system_module_import_count(i, import_from_indices, import_to_indices, import_edge_count);
         nodes[i].tooltip_text = sg_build_system_module_tooltip(&nodes[i]);
+        if (module_models) system_web_route_count += module_models[i].web_route_count;
+    }
+
+    if (system_web_route_count > 0) {
+        system_web_routes = (const sg_web_route_t**)calloc(system_web_route_count, sizeof(*system_web_routes));
+        system_web_route_module_idx = (u32*)calloc(system_web_route_count, sizeof(*system_web_route_module_idx));
+        system_web_route_x = (double*)calloc(system_web_route_count, sizeof(*system_web_route_x));
+        system_web_route_y = (double*)calloc(system_web_route_count, sizeof(*system_web_route_y));
+        system_web_route_r = (double*)calloc(system_web_route_count, sizeof(*system_web_route_r));
+        system_web_route_tilt = (double*)calloc(system_web_route_count, sizeof(*system_web_route_tilt));
+        if (!system_web_routes || !system_web_route_module_idx || !system_web_route_x || !system_web_route_y ||
+            !system_web_route_r || !system_web_route_tilt) {
+            fclose(f);
+            free(nodes);
+            free(depths);
+            free(system_web_routes);
+            free(system_web_route_module_idx);
+            free(system_web_route_x);
+            free(system_web_route_y);
+            free(system_web_route_r);
+            free(system_web_route_tilt);
+            sg_reportf(sg, 0, 0, "out of memory while composing web overlay in system sigilo");
+            return false;
+        }
+
+        {
+            u32 cursor = 0;
+            for (u32 i = 0; i < module_count; i++) {
+                for (u32 j = 0; module_models && j < module_models[i].web_route_count; j++) {
+                    system_web_routes[cursor] = &module_models[i].web_routes[j];
+                    system_web_route_module_idx[cursor] = i;
+                    cursor++;
+                }
+            }
+        }
+
+        system_web_groups = (sg_route_group_layout_t*)calloc(system_web_route_count, sizeof(*system_web_groups));
+        if (!system_web_groups) {
+            fclose(f);
+            free(nodes);
+            free(depths);
+            free(system_web_routes);
+            free(system_web_route_module_idx);
+            free(system_web_route_x);
+            free(system_web_route_y);
+            free(system_web_route_r);
+            free(system_web_route_tilt);
+            sg_reportf(sg, 0, 0, "out of memory while grouping web overlay routes");
+            return false;
+        }
+
+        for (u32 i = 0; i < system_web_route_count; i++) {
+            const char *group = (system_web_routes[i]->group_name && system_web_routes[i]->group_name[0] != '\0')
+                ? system_web_routes[i]->group_name : "root";
+            bool found = false;
+            for (u32 g = 0; g < system_web_group_count; g++) {
+                if (strcmp(system_web_groups[g].group_name, group) == 0) {
+                    system_web_groups[g].count++;
+                    found = true;
+                    break;
+                }
+            }
+            if (!found) {
+                system_web_groups[system_web_group_count].group_name = group;
+                system_web_groups[system_web_group_count].start = i;
+                system_web_groups[system_web_group_count].count = 1;
+                system_web_groups[system_web_group_count].slug = sg_slugify_simple(group);
+                system_web_groups[system_web_group_count].label = sg_escape_xml_text(group);
+                system_web_group_count++;
+            }
+        }
+
+        {
+            double wcx = 600.0;
+            double wcy = 600.0;
+            double web_ring = 486.0;
+            u32 *group_seen = (u32*)calloc(system_web_group_count ? system_web_group_count : 1, sizeof(*group_seen));
+            if (!group_seen) {
+                fclose(f);
+                free(nodes);
+                free(depths);
+                free(system_web_routes);
+                free(system_web_route_module_idx);
+                free(system_web_route_x);
+                free(system_web_route_y);
+                free(system_web_route_r);
+                free(system_web_route_tilt);
+                for (u32 g = 0; g < system_web_group_count; g++) {
+                    free(system_web_groups[g].slug);
+                    free(system_web_groups[g].label);
+                }
+                free(system_web_groups);
+                sg_reportf(sg, 0, 0, "out of memory while placing system web routes");
+                return false;
+            }
+
+            for (u32 g = 0; g < system_web_group_count; g++) {
+                double a = (-CCT_SIGILO_PI * 0.5) + ((double)g * (2.0 * CCT_SIGILO_PI) / (double)system_web_group_count);
+                a += (sg->semantic_hash_hex[g % 16] % 7) * 0.012;
+                system_web_groups[g].angle = a;
+                system_web_groups[g].gx = wcx + cos(a) * web_ring;
+                system_web_groups[g].gy = wcy + sin(a) * web_ring;
+                system_web_groups[g].orbit_r = 34.0 + (double)system_web_groups[g].count * 9.0;
+                system_web_groups[g].label_x = system_web_groups[g].gx + cos(a) * (system_web_groups[g].orbit_r + 24.0);
+                system_web_groups[g].label_y = system_web_groups[g].gy + sin(a) * (system_web_groups[g].orbit_r + 24.0);
+            }
+
+            for (u32 i = 0; i < system_web_route_count; i++) {
+                const char *group = (system_web_routes[i]->group_name && system_web_routes[i]->group_name[0] != '\0')
+                    ? system_web_routes[i]->group_name : "root";
+                u32 group_idx = 0;
+                for (; group_idx < system_web_group_count; group_idx++) {
+                    if (strcmp(system_web_groups[group_idx].group_name, group) == 0) break;
+                }
+                if (group_idx == system_web_group_count) group_idx = 0;
+                {
+                    u32 slot = group_seen[group_idx]++;
+                    u32 count = system_web_groups[group_idx].count;
+                    double tangent = system_web_groups[group_idx].angle + CCT_SIGILO_PI * 0.5;
+                    double spread = (count <= 1) ? 0.0 : sg_clamp(1.12 + (double)count * 0.16, 0.90, 2.10);
+                    double local = (count <= 1)
+                        ? tangent
+                        : (tangent - (spread * 0.5) + ((double)slot * spread / (double)(count - 1)));
+                    double rr = system_web_groups[group_idx].orbit_r * (0.66 + sg_route_hash_unit(system_web_routes[i], 500 + i) * 0.30);
+                    double drift = 8.0 + sg_route_hash_unit(system_web_routes[i], 600 + i) * 10.0;
+                    local += (sg_route_hash_unit(system_web_routes[i], 700 + i) - 0.5) * 0.26;
+                    system_web_route_x[i] = system_web_groups[group_idx].gx + cos(local) * rr + cos(system_web_groups[group_idx].angle) * drift;
+                    system_web_route_y[i] = system_web_groups[group_idx].gy + sin(local) * rr + sin(system_web_groups[group_idx].angle) * drift;
+                    system_web_route_r[i] = 10.0 + sg_route_hash_unit(system_web_routes[i], 800 + i) * 7.0;
+                    system_web_route_tilt[i] = local + (sg_route_hash_unit(system_web_routes[i], 900 + i) - 0.5) * 0.9;
+                }
+            }
+            for (u32 g = 0; g < system_web_group_count; g++) {
+                double needed_r = 26.0;
+                for (u32 i = 0; i < system_web_route_count; i++) {
+                    const char *group = (system_web_routes[i]->group_name && system_web_routes[i]->group_name[0] != '\0')
+                        ? system_web_routes[i]->group_name : "root";
+                    if (strcmp(group, system_web_groups[g].group_name) != 0) continue;
+                    {
+                        double dx = system_web_route_x[i] - system_web_groups[g].gx;
+                        double dy = system_web_route_y[i] - system_web_groups[g].gy;
+                        double reach = sqrt(dx * dx + dy * dy) + system_web_route_r[i] + 10.0;
+                        if (reach > needed_r) needed_r = reach;
+                    }
+                }
+                system_web_groups[g].orbit_r = needed_r;
+                system_web_groups[g].label_x = system_web_groups[g].gx + cos(system_web_groups[g].angle) * (system_web_groups[g].orbit_r + 24.0);
+                system_web_groups[g].label_y = system_web_groups[g].gy + sin(system_web_groups[g].angle) * (system_web_groups[g].orbit_r + 24.0);
+            }
+            free(group_seen);
+        }
+    }
+
+    {
+        double actual_min_x = 1e18;
+        double actual_min_y = 1e18;
+        double actual_max_x = -1e18;
+        double actual_max_y = -1e18;
+        sg_bounds_include_circle(&actual_min_x, &actual_min_y, &actual_max_x, &actual_max_y, 600.0, 600.0, 558.0);
+        sg_bounds_include_point(&actual_min_x, &actual_min_y, &actual_max_x, &actual_max_y, 18.0, 18.0);
+        sg_bounds_include_point(&actual_min_x, &actual_min_y, &actual_max_x, &actual_max_y, 520.0, 72.0);
+        for (u32 i = 0; i < module_count; i++) {
+            sg_bounds_include_circle(&actual_min_x, &actual_min_y, &actual_max_x, &actual_max_y, nodes[i].x, nodes[i].y, nodes[i].r + 4.0);
+            sg_bounds_include_point(&actual_min_x, &actual_min_y, &actual_max_x, &actual_max_y,
+                                    nodes[i].x - 96.0, nodes[i].y + nodes[i].r + 10.0);
+            sg_bounds_include_point(&actual_min_x, &actual_min_y, &actual_max_x, &actual_max_y,
+                                    nodes[i].x + 96.0, nodes[i].y + nodes[i].r + 34.0);
+        }
+        for (u32 g = 0; g < system_web_group_count; g++) {
+            sg_bounds_include_circle(&actual_min_x, &actual_min_y, &actual_max_x, &actual_max_y,
+                                     system_web_groups[g].gx, system_web_groups[g].gy, system_web_groups[g].orbit_r + 12.0);
+            sg_bounds_include_point(&actual_min_x, &actual_min_y, &actual_max_x, &actual_max_y,
+                                    system_web_groups[g].label_x - 78.0, system_web_groups[g].label_y - 16.0);
+            sg_bounds_include_point(&actual_min_x, &actual_min_y, &actual_max_x, &actual_max_y,
+                                    system_web_groups[g].label_x + 78.0, system_web_groups[g].label_y + 16.0);
+        }
+        for (u32 i = 0; i < system_web_route_count; i++) {
+            sg_bounds_include_circle(&actual_min_x, &actual_min_y, &actual_max_x, &actual_max_y,
+                                     system_web_route_x[i], system_web_route_y[i], system_web_route_r[i] + 14.0);
+        }
+        sg_finalize_canvas_bounds(
+            0.0, 0.0, 1200.0, 1200.0,
+            actual_min_x, actual_min_y, actual_max_x, actual_max_y,
+            view_pad,
+            &view_min_x, &view_min_y, &view_max_x, &view_max_y);
     }
 
     if ((sg && sg->emit_titles) || (sg && sg->emit_data_attrs)) {
-        fprintf(f, "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"1200\" height=\"1200\" viewBox=\"0 0 1200 1200\" role=\"img\" aria-label=\"CCT system sigilo\">\n");
+        fprintf(f,
+                "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"%.0f\" height=\"%.0f\" viewBox=\"%.2f %.2f %.2f %.2f\" role=\"img\" aria-label=\"CCT system sigilo\">\n",
+                ceil(view_max_x - view_min_x), ceil(view_max_y - view_min_y),
+                view_min_x, view_min_y, view_max_x - view_min_x, view_max_y - view_min_y);
     } else {
-        fprintf(f, "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"1200\" height=\"1200\" viewBox=\"0 0 1200 1200\">\n");
+        fprintf(f,
+                "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"%.0f\" height=\"%.0f\" viewBox=\"%.2f %.2f %.2f %.2f\">\n",
+                ceil(view_max_x - view_min_x), ceil(view_max_y - view_min_y),
+                view_min_x, view_min_y, view_max_x - view_min_x, view_max_y - view_min_y);
     }
     if (sg && sg->emit_data_attrs) {
         fprintf(f, "  <desc>Deterministic sigil-of-sigils for a CCT module closure.</desc>\n");
@@ -3488,6 +5028,19 @@ static bool sg_write_system_svg(
     fprintf(f, "      .orn { stroke: #64748b; stroke-width: 0.9; fill: none; opacity: 0.55; }\n");
     fprintf(f, "      .hash { fill: #111827; font: 9px monospace; letter-spacing: 0.5px; }\n");
     fprintf(f, "      .label { fill: #0f172a; font: 8px monospace; opacity: 0.68; }\n");
+    fprintf(f, "      .web-shell { fill: rgba(255,252,246,0.80); stroke: #5a4b3f; stroke-width: 1.0; }\n");
+    fprintf(f, "      .web-chamber { fill: none; stroke: #8b7763; stroke-width: 1.2; opacity: 0.82; }\n");
+    fprintf(f, "      .web-thread { fill: none; stroke: #8d7a68; stroke-width: 0.95; opacity: 0.58; }\n");
+    fprintf(f, "      .web-group-arc { fill: none; stroke: #c5b59f; stroke-width: 0.95; opacity: 0.86; }\n");
+    fprintf(f, "      .web-link { fill: none; stroke: #7b6a59; stroke-width: 0.92; opacity: 0.62; }\n");
+    fprintf(f, "      .route-shell { fill: rgba(255,252,246,0.72); stroke: #5a4b3f; stroke-width: 0.95; }\n");
+    fprintf(f, "      .route-mid { fill: none; stroke: #b7a690; stroke-width: 0.82; opacity: 0.76; }\n");
+    fprintf(f, "      .route-arc { fill: none; stroke: #7a6957; stroke-width: 0.82; opacity: 0.82; stroke-linecap: round; }\n");
+    fprintf(f, "      .route-spoke { fill: none; stroke: #978573; stroke-width: 0.78; opacity: 0.76; stroke-linecap: round; }\n");
+    fprintf(f, "      .route-core { fill: #f7efe3; stroke: #57483b; stroke-width: 0.82; }\n");
+    fprintf(f, "      .route-chord { fill: none; stroke: #51453b; stroke-width: 0.76; opacity: 0.70; stroke-linecap: round; }\n");
+    fprintf(f, "      .route-glyph { fill: none; stroke: #efe6d9; stroke-width: 0.9; stroke-linejoin: round; }\n");
+    fprintf(f, "      .route-method-seed { fill: #6b5a4b; stroke: #f7efe2; stroke-width: 0.7; }\n");
     if (sg && sg->emit_titles) {
         fprintf(f, "      .node-wrap, .edge-wrap, .system-node-wrap, .system-edge-wrap { cursor: help; }\n");
         fprintf(f, "      .node-wrap:hover > circle, .system-node-wrap:hover > circle { opacity: 0.96; }\n");
@@ -3498,7 +5051,8 @@ static bool sg_write_system_svg(
         fprintf(f, "    <clipPath id=\"module_clip_%03u\"><circle cx=\"256\" cy=\"256\" r=\"246\"/></clipPath>\n", i);
     }
     fprintf(f, "  </defs>\n");
-    fprintf(f, "  <rect class=\"bg\" width=\"1200\" height=\"1200\"/>\n");
+    fprintf(f, "  <rect class=\"bg\" x=\"%.2f\" y=\"%.2f\" width=\"%.2f\" height=\"%.2f\"/>\n",
+            view_min_x, view_min_y, view_max_x - view_min_x, view_max_y - view_min_y);
     fprintf(f, "  <g id=\"macro_foundation\">\n");
     fprintf(f, "    <circle class=\"macro-ring\" cx=\"600\" cy=\"600\" r=\"558\"/>\n");
     for (u32 d = 1; d <= max_depth; d++) {
@@ -3577,6 +5131,197 @@ static bool sg_write_system_svg(
     }
     fprintf(f, "  </g>\n");
 
+    if (system_web_route_count > 0) {
+        double wcx = 600.0;
+        double wcy = 600.0;
+        double web_chamber_r = 486.0;
+        fprintf(f, "  <g id=\"system_web_overlay\">\n");
+        if (sg && sg->emit_titles) {
+            sg_svg_emit_title(f, "web overlay\nintegrated route sigils on the outermost ring of the system composition", 4);
+        }
+        fprintf(f, "    <circle class=\"web-chamber\" cx=\"%.3f\" cy=\"%.3f\" r=\"%.3f\"/>\n", wcx, wcy, web_chamber_r);
+        fprintf(f, "    <circle class=\"web-chamber\" cx=\"%.3f\" cy=\"%.3f\" r=\"%.3f\"/>\n", wcx, wcy, web_chamber_r - 22.0);
+        sg_svg_emit_arc(f, "web-thread", wcx, wcy, web_chamber_r - 8.0, -2.64, -0.84);
+        fputs("\n", f);
+        sg_svg_emit_arc(f, "web-thread", wcx, wcy, web_chamber_r - 18.0, 0.40, 2.52);
+        fputs("\n", f);
+        for (u32 g = 0; g < system_web_group_count; g++) {
+            u32 owner = 0;
+            bool owner_found = false;
+            u32 anchor_idx = 0;
+            bool anchor_found = false;
+            u32 root_rel = 0;
+            for (u32 i = 0; i < system_web_route_count; i++) {
+                const char *group = (system_web_routes[i]->group_name && system_web_routes[i]->group_name[0] != '\0')
+                    ? system_web_routes[i]->group_name : "root";
+                if (strcmp(group, system_web_groups[g].group_name) != 0) continue;
+                if (!owner_found) {
+                    owner = system_web_route_module_idx[i];
+                    owner_found = true;
+                }
+                anchor_idx = i;
+                anchor_found = true;
+            }
+            if (anchor_found) {
+                u32 start_idx = anchor_idx;
+                while (start_idx > 0) {
+                    const char *prev_group = (system_web_routes[start_idx - 1]->group_name && system_web_routes[start_idx - 1]->group_name[0] != '\0')
+                        ? system_web_routes[start_idx - 1]->group_name : "root";
+                    if (strcmp(prev_group, system_web_groups[g].group_name) != 0) break;
+                    start_idx--;
+                }
+                root_rel = sg_route_choose_group_root_ptrs(system_web_routes, start_idx, system_web_groups[g].count);
+                anchor_idx = start_idx + root_rel;
+            }
+            if (sg && sg->emit_titles) {
+                char *group_tip = sg_prepare_tooltip_text(sg_strdup_printf(
+                    "system web group\ngroup=%s\nroutes=%u",
+                    system_web_groups[g].group_name ? system_web_groups[g].group_name : "root",
+                    system_web_groups[g].count));
+                fprintf(f, "    <g class=\"system-edge-wrap\">\n");
+                sg_svg_emit_title(f, group_tip, 6);
+                free(group_tip);
+            }
+            fprintf(f, "    <circle class=\"web-group-arc\" cx=\"%.3f\" cy=\"%.3f\" r=\"%.3f\"/>\n",
+                    system_web_groups[g].gx, system_web_groups[g].gy, system_web_groups[g].orbit_r);
+            fprintf(f, "    <text class=\"module-hash\" x=\"%.3f\" y=\"%.3f\" text-anchor=\"middle\">%s</text>\n",
+                    system_web_groups[g].label_x, system_web_groups[g].label_y,
+                    system_web_groups[g].label ? system_web_groups[g].label : system_web_groups[g].group_name);
+            if (sg && sg->emit_titles) {
+                fprintf(f, "    </g>\n");
+            }
+            if (owner_found && owner < module_count) {
+                if (sg && sg->emit_titles) {
+                    char *bind_tip = sg_prepare_tooltip_text(sg_strdup_printf(
+                        "module binding\nmodule=%s\ngroup=%s",
+                        sg_system_module_label(nodes[owner].path),
+                        system_web_groups[g].group_name ? system_web_groups[g].group_name : "root"));
+                    fprintf(f, "    <g class=\"system-edge-wrap\">\n");
+                    sg_svg_emit_title(f, bind_tip, 6);
+                    free(bind_tip);
+                }
+                fprintf(f, "    <path class=\"web-thread\" d=\"M %.3f %.3f Q %.3f %.3f %.3f %.3f\"/>\n",
+                        nodes[owner].x, nodes[owner].y,
+                        (nodes[owner].x + system_web_groups[g].gx) * 0.5 + cos(system_web_groups[g].angle + CCT_SIGILO_PI * 0.5) * 44.0,
+                        (nodes[owner].y + system_web_groups[g].gy) * 0.5 + sin(system_web_groups[g].angle + CCT_SIGILO_PI * 0.5) * 34.0,
+                        system_web_groups[g].gx,
+                        system_web_groups[g].gy);
+                if (sg && sg->emit_titles) {
+                    fprintf(f, "    </g>\n");
+                }
+            } else {
+                if (sg && sg->emit_titles) {
+                    char *bind_tip = sg_prepare_tooltip_text(sg_strdup_printf(
+                        "outer binding\ngroup=%s",
+                        system_web_groups[g].group_name ? system_web_groups[g].group_name : "root"));
+                    fprintf(f, "    <g class=\"system-edge-wrap\">\n");
+                    sg_svg_emit_title(f, bind_tip, 6);
+                    free(bind_tip);
+                }
+                fprintf(f, "    <path class=\"web-thread\" d=\"M %.3f %.3f Q %.3f %.3f %.3f %.3f\"/>\n",
+                        wcx + cos(system_web_groups[g].angle) * (web_chamber_r - 20.0),
+                        wcy + sin(system_web_groups[g].angle) * (web_chamber_r - 20.0),
+                        (wcx + system_web_groups[g].gx) * 0.5 + cos(system_web_groups[g].angle + CCT_SIGILO_PI * 0.5) * 30.0,
+                        (wcy + system_web_groups[g].gy) * 0.5 + sin(system_web_groups[g].angle + CCT_SIGILO_PI * 0.5) * 30.0,
+                        system_web_groups[g].gx,
+                        system_web_groups[g].gy);
+                if (sg && sg->emit_titles) {
+                    fprintf(f, "    </g>\n");
+                }
+            }
+            if (anchor_found) {
+                if (sg && sg->emit_titles) {
+                    char *anchor_tip = sg_prepare_tooltip_text(sg_strdup_printf(
+                        "group anchor\ngroup=%s\nanchor=%s",
+                        system_web_groups[g].group_name ? system_web_groups[g].group_name : "root",
+                        system_web_routes[anchor_idx]->route_id ? system_web_routes[anchor_idx]->route_id : ""));
+                    fprintf(f, "    <g class=\"system-edge-wrap\">\n");
+                    sg_svg_emit_title(f, anchor_tip, 6);
+                    free(anchor_tip);
+                }
+                fprintf(f, "    <path class=\"web-link\" d=\"M %.3f %.3f Q %.3f %.3f %.3f %.3f\"/>\n",
+                        system_web_groups[g].gx, system_web_groups[g].gy,
+                        (system_web_groups[g].gx + system_web_route_x[anchor_idx]) * 0.5 + cos(system_web_route_tilt[anchor_idx]) * 18.0,
+                        (system_web_groups[g].gy + system_web_route_y[anchor_idx]) * 0.5 + sin(system_web_route_tilt[anchor_idx]) * 18.0,
+                        system_web_route_x[anchor_idx], system_web_route_y[anchor_idx]);
+                if (sg && sg->emit_titles) {
+                    fprintf(f, "    </g>\n");
+                }
+            }
+        }
+        for (u32 g = 0; g < system_web_group_count; g++) {
+            u32 start_idx = UINT32_MAX;
+            for (u32 i = 0; i < system_web_route_count; i++) {
+                const char *group = (system_web_routes[i]->group_name && system_web_routes[i]->group_name[0] != '\0')
+                    ? system_web_routes[i]->group_name : "root";
+                if (strcmp(group, system_web_groups[g].group_name) != 0) continue;
+                if (start_idx == UINT32_MAX) start_idx = i;
+            }
+            if (start_idx == UINT32_MAX) continue;
+            {
+                u32 root_rel = sg_route_choose_group_root_ptrs(system_web_routes, start_idx, system_web_groups[g].count);
+                for (u32 rel = 0; rel < system_web_groups[g].count; rel++) {
+                    u32 i = start_idx + rel;
+                    if (rel == root_rel) continue;
+                    {
+                        u32 parent_rel = sg_route_choose_parent_ptrs(system_web_routes, start_idx, system_web_groups[g].count, rel, root_rel);
+                        u32 parent = start_idx + parent_rel;
+                        if (sg && sg->emit_titles) {
+                            char *weave_tip = sg_prepare_tooltip_text(sg_strdup_printf(
+                                "system web hierarchy\n%s -> %s\ngroup=%s",
+                                system_web_routes[parent]->route_id ? system_web_routes[parent]->route_id : "",
+                                system_web_routes[i]->route_id ? system_web_routes[i]->route_id : "",
+                                system_web_groups[g].group_name ? system_web_groups[g].group_name : "root"));
+                            fprintf(f, "    <g class=\"system-edge-wrap\">\n");
+                            sg_svg_emit_title(f, weave_tip, 6);
+                            free(weave_tip);
+                        }
+                        fprintf(f, "    <path class=\"web-link\" d=\"M %.3f %.3f Q %.3f %.3f %.3f %.3f\"/>\n",
+                                system_web_route_x[parent], system_web_route_y[parent],
+                                (system_web_route_x[parent] + system_web_route_x[i]) * 0.5 + cos(system_web_route_tilt[parent] + system_web_route_tilt[i]) * 16.0,
+                                (system_web_route_y[parent] + system_web_route_y[i]) * 0.5 + sin(system_web_route_tilt[parent] + system_web_route_tilt[i]) * 16.0,
+                                system_web_route_x[i], system_web_route_y[i]);
+                        if (sg && sg->emit_titles) {
+                            fprintf(f, "    </g>\n");
+                        }
+                    }
+                }
+            }
+        }
+        for (u32 i = 0; i < system_web_route_count; i++) {
+            const sg_web_route_t *route = system_web_routes[i];
+            const char *method = route->method ? route->method : "GET";
+            const char *path = route->path ? route->path : "";
+            const char *handler = route->handler ? route->handler : "";
+            const char *module_path = route->module_path ? route->module_path : "";
+            const char *middleware = (route->middleware && route->middleware[0] != '\0') ? route->middleware : "none";
+            char *route_slug = sg_slugify_simple(route->route_id ? route->route_id : path);
+            char *module_display = sg_display_path(module_path);
+            char *tooltip_raw = sg_strdup_printf("%s %s\nhandler=%s\nmodule=%s\nmiddleware=%s\nroute_id=%s\nroute_hash=%s",
+                                                 method, path, handler, module_display ? module_display : module_path, middleware,
+                                                 route->route_id ? route->route_id : "",
+                                                 route->route_hash_hex);
+            char *tooltip = sg_prepare_tooltip_text(tooltip_raw);
+            free(tooltip_raw);
+            fprintf(f, "    <g id=\"system_route_%s\" class=\"system-node-wrap\"", route_slug ? route_slug : "route");
+            if (sg && sg->emit_data_attrs) {
+                sg_svg_emit_attr_str(f, "data-route-id", route->route_id ? route->route_id : "");
+                sg_svg_emit_attr_str(f, "data-method", method);
+                sg_svg_emit_attr_str(f, "data-path", path);
+                sg_svg_emit_attr_str(f, "data-module", module_display ? module_display : module_path);
+                sg_svg_emit_attr_str(f, "data-group", route->group_name ? route->group_name : "root");
+            }
+            fprintf(f, ">\n");
+            sg_svg_emit_route_micro_sigil(f, route, system_web_route_x[i], system_web_route_y[i], system_web_route_r[i], system_web_route_tilt[i]);
+            if (sg && sg->emit_titles) sg_svg_emit_title(f, tooltip, 6);
+            fprintf(f, "    </g>\n");
+            free(route_slug);
+            free(module_display);
+            free(tooltip);
+        }
+        fprintf(f, "  </g>\n");
+    }
+
     fprintf(f, "  <text class=\"module-label\" x=\"24\" y=\"30\" font-size=\"14\">CCT system sigilo (sigil-of-sigils) • %s</text>\n", sg->semantic_hash_hex);
     fprintf(f, "  <text class=\"module-hash\" x=\"24\" y=\"50\" font-size=\"10\">entry=%s • modules=%u • imports=%u • calls=%u • type_refs=%u</text>\n",
             entry_path ? entry_path : "unknown",
@@ -3590,6 +5335,17 @@ static bool sg_write_system_svg(
     for (u32 i = 0; i < module_count; i++) {
         free(nodes[i].tooltip_text);
     }
+    for (u32 g = 0; g < system_web_group_count; g++) {
+        free(system_web_groups[g].slug);
+        free(system_web_groups[g].label);
+    }
+    free(system_web_groups);
+    free(system_web_routes);
+    free(system_web_route_module_idx);
+    free(system_web_route_x);
+    free(system_web_route_y);
+    free(system_web_route_r);
+    free(system_web_route_tilt);
     free(nodes);
     free(depths);
     return true;

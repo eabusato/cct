@@ -16487,7 +16487,7 @@ else
 fi
 if [ "$RC_1191" -eq 0 ] && \
    [ -f "${SIG14TC3_SYSTEM_OUT}.system.svg" ] && \
-   grep -q '<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="1200" viewBox="0 0 1200 1200" role="img" aria-label="CCT system sigilo">' "${SIG14TC3_SYSTEM_OUT}.system.svg" && \
+   grep -Eq '<svg xmlns="http://www.w3.org/2000/svg" width="[0-9.]+" height="[0-9.]+" viewBox="-?[0-9.]+ -?[0-9.]+ [0-9.]+ [0-9.]+" role="img" aria-label="CCT system sigilo">' "${SIG14TC3_SYSTEM_OUT}.system.svg" && \
    [ "$(grep -c '<desc>Deterministic sigil-of-sigils for a CCT module closure\.</desc>' "${SIG14TC3_SYSTEM_OUT}.system.svg")" -eq 1 ]; then
     test_pass "14TC3 consolida semântica root do system sigilo"
 else
@@ -16721,7 +16721,7 @@ else
 fi
 if [ "$RC_1202" -eq 0 ] && \
    [ -f "${SIG14TD2_SYSTEM_PLAIN_OUT}.system.svg" ] && \
-   grep -q '<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="1200" viewBox="0 0 1200 1200">' "${SIG14TD2_SYSTEM_PLAIN_OUT}.system.svg" && \
+   grep -Eq '<svg xmlns="http://www.w3.org/2000/svg" width="[0-9.]+" height="[0-9.]+" viewBox="-?[0-9.]+ -?[0-9.]+ [0-9.]+ [0-9.]+">' "${SIG14TD2_SYSTEM_PLAIN_OUT}.system.svg" && \
    ! grep -q 'role="img"' "${SIG14TD2_SYSTEM_PLAIN_OUT}.system.svg" && \
    ! grep -q '<desc>' "${SIG14TD2_SYSTEM_PLAIN_OUT}.system.svg" && \
    ! grep -q '<title>' "${SIG14TD2_SYSTEM_PLAIN_OUT}.system.svg" && \

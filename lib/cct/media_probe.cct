@@ -1,0 +1,332 @@
+-- CCT — Clavicula Turing
+-- Standard Library Module: media_probe
+--
+-- FASE 32H: Media metadata extraction via ffprobe
+
+INCIPIT grimoire "media_probe"
+
+ADVOCARE "cct/fmt.cct"
+ADVOCARE "cct/fs.cct"
+ADVOCARE "cct/json.cct"
+ADVOCARE "cct/parse.cct"
+ADVOCARE "cct/process.cct"
+ADVOCARE "cct/verbum.cct"
+
+ORDO StreamType
+  Video,
+  Audio,
+  Subtitle,
+  Data,
+  Unknown
+FIN ORDO
+
+SIGILLUM MediaProbe
+  valido: VERUM
+  erro: VERBUM
+  formato: VERBUM
+  video_codec: VERBUM
+  audio_codec: VERBUM
+  tamanho_bytes: REX
+  duracao: UMBRA
+  tem_video: VERUM
+  tem_audio: VERUM
+  video_width: REX
+  video_height: REX
+  video_fps: UMBRA
+  video_bitrate: REX
+  video_duration: UMBRA
+  audio_sample_rate: REX
+  audio_channels: REX
+  audio_bitrate: REX
+  audio_duration: UMBRA
+  streams_total: REX
+  video_streams: REX
+  audio_streams: REX
+  subtitle_streams: REX
+  data_streams: REX
+FIN SIGILLUM
+
+RITUALE stream_type_to_string(StreamType tipo) REDDE VERBUM
+  ELIGE tipo
+    CASUS Video:
+      REDDE "video"
+    CASUS Audio:
+      REDDE "audio"
+    CASUS Subtitle:
+      REDDE "subtitle"
+    CASUS Data:
+      REDDE "data"
+    ALIOQUIN:
+      REDDE "unknown"
+  FIN ELIGE
+EXPLICIT RITUALE
+
+RITUALE media_probe(VERBUM caminho) REDDE MediaProbe
+  SI NON (OBSECRO fs_exists(caminho))
+    EVOCA MediaProbe out AD CONIURA media_probe_default(caminho)
+    VINCIRE out.erro AD CONIURA concat("arquivo inexistente: ", caminho)
+    REDDE out
+  FIN SI
+
+  EVOCA VERBUM saida AD CONIURA run_capture(CONIURA media_probe_command(caminho))
+  SI CONIURA len(CONIURA trim(saida)) == 0
+    EVOCA MediaProbe out AD CONIURA media_probe_default(caminho)
+    VINCIRE out.erro AD "ffprobe retornou saida vazia"
+    REDDE out
+  FIN SI
+
+  TEMPTA
+    EVOCA Json root AD CONIURA json_parse(saida)
+    SI NON CONIURA json_is_obj(root)
+      EVOCA MediaProbe out AD CONIURA media_probe_default(caminho)
+      VINCIRE out.erro AD "ffprobe nao retornou objeto JSON"
+      REDDE out
+    FIN SI
+
+    EVOCA MediaProbe probe AD CONIURA media_probe_default(caminho)
+
+    SI CONIURA json_has_key(root, "format")
+      EVOCA Json format_obj AD CONIURA json_get_key(root, "format")
+    SI CONIURA json_is_obj(format_obj)
+        VINCIRE probe.formato AD CONIURA media_json_string_or(format_obj, "format_name", probe.formato)
+        VINCIRE probe.tamanho_bytes AD CONIURA media_json_int_or(format_obj, "size", probe.tamanho_bytes)
+        VINCIRE probe.duracao AD CONIURA media_json_real_or(format_obj, "duration", probe.duracao)
+      FIN SI
+    FIN SI
+
+    SI CONIURA json_has_key(root, "streams")
+      EVOCA Json streams AD CONIURA json_get_key(root, "streams")
+      SI CONIURA json_is_arr(streams)
+        EVOCA REX i AD 0
+        EVOCA REX n AD CONIURA json_arr_len(streams)
+        DUM i < n
+          EVOCA Json item AD CONIURA json_arr_get(streams, i)
+          SI CONIURA json_is_obj(item)
+          VINCIRE probe.streams_total AD probe.streams_total + 1
+          EVOCA StreamType tipo_stream AD Unknown
+          VINCIRE tipo_stream AD CONIURA stream_type_from_string(CONIURA media_json_string_or(item, "codec_type", ""))
+
+            SI tipo_stream == Video
+              VINCIRE probe.video_streams AD probe.video_streams + 1
+            FIN SI
+            SI tipo_stream == Audio
+              VINCIRE probe.audio_streams AD probe.audio_streams + 1
+            FIN SI
+            SI tipo_stream == Subtitle
+              VINCIRE probe.subtitle_streams AD probe.subtitle_streams + 1
+            FIN SI
+            SI tipo_stream == Data
+              VINCIRE probe.data_streams AD probe.data_streams + 1
+            FIN SI
+
+            SI tipo_stream == Video ET NON probe.tem_video
+            VINCIRE probe.tem_video AD VERUM
+              VINCIRE probe.video_codec AD CONIURA media_json_string_or(item, "codec_name", probe.video_codec)
+              VINCIRE probe.video_width AD CONIURA media_json_int_or(item, "width", probe.video_width)
+              VINCIRE probe.video_height AD CONIURA media_json_int_or(item, "height", probe.video_height)
+              VINCIRE probe.video_bitrate AD CONIURA media_json_int_or(item, "bit_rate", probe.video_bitrate)
+              VINCIRE probe.video_duration AD CONIURA media_json_real_or(item, "duration", probe.duracao)
+              VINCIRE probe.video_fps AD CONIURA parse_ratio_or_zero(CONIURA media_json_string_or(item, "avg_frame_rate", "0/0"))
+            FIN SI
+            SI tipo_stream == Audio ET NON probe.tem_audio
+              VINCIRE probe.tem_audio AD VERUM
+              VINCIRE probe.audio_codec AD CONIURA media_json_string_or(item, "codec_name", probe.audio_codec)
+              VINCIRE probe.audio_sample_rate AD CONIURA media_json_int_or(item, "sample_rate", probe.audio_sample_rate)
+              VINCIRE probe.audio_channels AD CONIURA media_json_int_or(item, "channels", probe.audio_channels)
+              VINCIRE probe.audio_bitrate AD CONIURA media_json_int_or(item, "bit_rate", probe.audio_bitrate)
+              VINCIRE probe.audio_duration AD CONIURA media_json_real_or(item, "duration", probe.duracao)
+            FIN SI
+          FIN SI
+          VINCIRE i AD i + 1
+        FIN DUM
+      FIN SI
+    FIN SI
+
+    SI probe.streams_total == 0 ET CONIURA compare(probe.formato, "unknown") == 0
+      VINCIRE probe.valido AD FALSUM
+      VINCIRE probe.erro AD "ffprobe nao encontrou streams de midia"
+      REDDE probe
+    FIN SI
+
+    VINCIRE probe.valido AD VERUM
+    VINCIRE probe.erro AD ""
+    REDDE probe
+  CAPE FRACTUM erro
+    EVOCA MediaProbe out AD CONIURA media_probe_default(caminho)
+    VINCIRE out.erro AD CONIURA concat("ffprobe invalido: ", OBSECRO fractum_to_verbum(erro))
+    REDDE out
+  FIN TEMPTA
+
+  EVOCA MediaProbe fallback AD CONIURA media_probe_default(caminho)
+  VINCIRE fallback.erro AD "ffprobe invalido"
+  REDDE fallback
+EXPLICIT RITUALE
+
+RITUALE media_has_video(MediaProbe probe) REDDE VERUM
+  REDDE probe.tem_video
+EXPLICIT RITUALE
+
+RITUALE media_has_audio(MediaProbe probe) REDDE VERUM
+  REDDE probe.tem_audio
+EXPLICIT RITUALE
+
+RITUALE media_get_resolution(MediaProbe probe) REDDE VERBUM
+  SI NON CONIURA media_has_video(probe)
+    REDDE ""
+  FIN SI
+  SI probe.video_width <= 0 VEL probe.video_height <= 0
+    REDDE ""
+  FIN SI
+  REDDE CONIURA format_2("{}x{}", CONIURA stringify_int(probe.video_width), CONIURA stringify_int(probe.video_height))
+EXPLICIT RITUALE
+
+RITUALE media_get_duration_str(MediaProbe probe) REDDE VERBUM
+  EVOCA REX total_ms AD cast GENUS(REX)(probe.duracao * 1000.0)
+  EVOCA REX total_s AD total_ms / 1000
+  EVOCA REX horas AD total_s / 3600
+  EVOCA REX minutos AD (total_s % 3600) / 60
+  EVOCA REX segundos AD total_s % 60
+
+  SI horas > 0
+    REDDE CONIURA format_3(
+      "{}:{}:{}",
+      CONIURA stringify_int(horas),
+      CONIURA stringify_int_padded(minutos, 2, 48),
+      CONIURA stringify_int_padded(segundos, 2, 48)
+    )
+  FIN SI
+
+  REDDE CONIURA format_2(
+    "{}:{}",
+    CONIURA stringify_int_padded(minutos, 2, 48),
+    CONIURA stringify_int_padded(segundos, 2, 48)
+  )
+EXPLICIT RITUALE
+
+RITUALE media_probe_default(VERBUM caminho) REDDE MediaProbe
+  EVOCA MediaProbe probe
+  VINCIRE probe.valido AD FALSUM
+  VINCIRE probe.erro AD ""
+  VINCIRE probe.formato AD "unknown"
+  VINCIRE probe.video_codec AD "unknown"
+  VINCIRE probe.audio_codec AD "unknown"
+  SI OBSECRO fs_exists(caminho)
+    VINCIRE probe.tamanho_bytes AD OBSECRO fs_size(caminho)
+  ALITER
+    VINCIRE probe.tamanho_bytes AD 0
+  FIN SI
+  VINCIRE probe.duracao AD 0.0
+  VINCIRE probe.tem_video AD FALSUM
+  VINCIRE probe.tem_audio AD FALSUM
+  VINCIRE probe.video_width AD 0
+  VINCIRE probe.video_height AD 0
+  VINCIRE probe.video_fps AD 0.0
+  VINCIRE probe.video_bitrate AD 0
+  VINCIRE probe.video_duration AD 0.0
+  VINCIRE probe.audio_sample_rate AD 0
+  VINCIRE probe.audio_channels AD 0
+  VINCIRE probe.audio_bitrate AD 0
+  VINCIRE probe.audio_duration AD 0.0
+  VINCIRE probe.streams_total AD 0
+  VINCIRE probe.video_streams AD 0
+  VINCIRE probe.audio_streams AD 0
+  VINCIRE probe.subtitle_streams AD 0
+  VINCIRE probe.data_streams AD 0
+  REDDE probe
+EXPLICIT RITUALE
+
+RITUALE media_json_string_or(Json obj, VERBUM chave, VERBUM padrao) REDDE VERBUM
+  SI NON CONIURA json_has_key(obj, chave)
+    REDDE padrao
+  FIN SI
+  EVOCA Json raw AD CONIURA json_get_key(obj, chave)
+  SI CONIURA json_is_str(raw)
+    REDDE CONIURA json_expect_str(raw)
+  FIN SI
+  REDDE padrao
+EXPLICIT RITUALE
+
+RITUALE media_json_int_or(Json obj, VERBUM chave, REX padrao) REDDE REX
+  SI NON CONIURA json_has_key(obj, chave)
+    REDDE padrao
+  FIN SI
+  EVOCA Json raw AD CONIURA json_get_key(obj, chave)
+  SI CONIURA json_is_num(raw)
+    REDDE cast GENUS(REX)(CONIURA json_expect_num(raw))
+  FIN SI
+  SI CONIURA json_is_str(raw)
+    EVOCA VERBUM text AD CONIURA json_expect_str(raw)
+    SI CONIURA is_int(text)
+      REDDE CONIURA parse_int(text)
+    FIN SI
+  FIN SI
+  REDDE padrao
+EXPLICIT RITUALE
+
+RITUALE media_json_real_or(Json obj, VERBUM chave, UMBRA padrao) REDDE UMBRA
+  SI NON CONIURA json_has_key(obj, chave)
+    REDDE padrao
+  FIN SI
+  EVOCA Json raw AD CONIURA json_get_key(obj, chave)
+  SI CONIURA json_is_num(raw)
+    REDDE CONIURA json_expect_num(raw)
+  FIN SI
+  SI CONIURA json_is_str(raw)
+    EVOCA VERBUM text AD CONIURA json_expect_str(raw)
+    SI CONIURA is_real(text)
+      REDDE CONIURA parse_real(text)
+    FIN SI
+  FIN SI
+  REDDE padrao
+EXPLICIT RITUALE
+
+RITUALE stream_type_from_string(VERBUM raw) REDDE StreamType
+  SI CONIURA compare(raw, "video") == 0
+    REDDE Video
+  FIN SI
+  SI CONIURA compare(raw, "audio") == 0
+    REDDE Audio
+  FIN SI
+  SI CONIURA compare(raw, "subtitle") == 0
+    REDDE Subtitle
+  FIN SI
+  SI CONIURA compare(raw, "data") == 0
+    REDDE Data
+  FIN SI
+  REDDE Unknown
+EXPLICIT RITUALE
+
+RITUALE parse_ratio_or_zero(VERBUM raw) REDDE UMBRA
+  EVOCA REX slash AD CONIURA find(raw, "/")
+  SI slash < 0
+    SI CONIURA is_real(raw)
+      REDDE CONIURA parse_real(raw)
+    FIN SI
+    REDDE 0.0
+  FIN SI
+
+  EVOCA VERBUM left AD CONIURA substring(raw, 0, slash)
+  EVOCA VERBUM right AD CONIURA substring(raw, slash + 1, CONIURA len(raw))
+  SI NON CONIURA is_real(left) VEL NON CONIURA is_real(right)
+    REDDE 0.0
+  FIN SI
+  EVOCA UMBRA den AD CONIURA parse_real(right)
+  SI den == 0.0
+    REDDE 0.0
+  FIN SI
+  REDDE CONIURA parse_real(left) / den
+EXPLICIT RITUALE
+
+RITUALE media_probe_command(VERBUM caminho) REDDE VERBUM
+  EVOCA VERBUM escaped AD CONIURA replace_all(caminho, "\\", "\\\\")
+  VINCIRE escaped AD CONIURA replace_all(escaped, "\"", "\\\"")
+  REDDE CONIURA concat(
+    CONIURA concat(
+      "ffprobe -v quiet -print_format json -show_format -show_streams \"",
+      escaped
+    ),
+    "\" 2>&1"
+  )
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

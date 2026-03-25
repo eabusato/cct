@@ -1,0 +1,26 @@
+INCIPIT grimoire "sigilo_web_posts_35"
+
+-- @route route_id=posts.list method=GET path=/posts handler=posts_list group=/posts middleware=trace
+RITUALE posts_list() REDDE REX
+  REDDE 21
+EXPLICIT RITUALE
+
+-- @route route_id=posts.show method=GET path=/posts/:slug handler=posts_show group=/posts middleware=trace
+RITUALE posts_show() REDDE REX
+  REDDE 22
+EXPLICIT RITUALE
+
+-- @route route_id=posts.save method=POST path=/posts/:slug/save handler=posts_save group=/posts middleware=auth,trace
+RITUALE posts_save() REDDE REX
+  REDDE 23
+EXPLICIT RITUALE
+
+RITUALE posts_featured() REDDE REX
+  REDDE 24
+EXPLICIT RITUALE
+
+RITUALE posts_saved_count() REDDE REX
+  REDDE 25
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

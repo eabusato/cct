@@ -43,6 +43,7 @@ typedef struct {
     const char *entry_rituale;      /* FASE 16B.4: explicit freestanding entry ritual name */
     const char *sigilo_style;
     const char *sigilo_out_base;
+    const char *sigilo_manifest_path;
     cct_sigilo_mode_t sigilo_mode;
     bool sigilo_emit_svg;
     bool sigilo_emit_meta;

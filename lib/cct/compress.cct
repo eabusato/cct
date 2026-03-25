@@ -1,0 +1,62 @@
+-- CCT — Clavicula Turing
+-- Standard Library Module: compress
+--
+-- FASE 32F: gzip compression baseline
+
+INCIPIT grimoire "compress"
+
+ADVOCARE "cct/bytes.cct"
+ADVOCARE "cct/fluxus.cct"
+ADVOCARE "cct/verbum.cct"
+
+SIGILLUM CompressError
+  mensagem: VERBUM
+FIN SIGILLUM
+
+RITUALE compress_last_error() REDDE VERBUM
+  REDDE OBSECRO compress_builtin_last_error()
+EXPLICIT RITUALE
+
+RITUALE gzip_compress(VERBUM dados) REDDE VERBUM
+  EVOCA VERBUM comprimido AD OBSECRO compress_builtin_gzip_compress_text(dados)
+  REDDE comprimido
+EXPLICIT RITUALE
+
+RITUALE gzip_decompress(VERBUM comprimido) REDDE VERBUM
+  EVOCA VERBUM texto AD OBSECRO compress_builtin_gzip_decompress_text(comprimido)
+  REDDE texto
+EXPLICIT RITUALE
+
+RITUALE gzip_compress_bytes(SPECULUM NIHIL buffer, REX tamanho) REDDE VERBUM
+  EVOCA VERBUM comprimido AD OBSECRO compress_builtin_gzip_compress_bytes(buffer, tamanho)
+  REDDE comprimido
+EXPLICIT RITUALE
+
+RITUALE gzip_decompress_buffer(VERBUM comprimido) REDDE SPECULUM NIHIL
+  EVOCA SPECULUM NIHIL buffer AD OBSECRO compress_builtin_gzip_decompress_bytes(comprimido)
+  EVOCA VERBUM err AD OBSECRO compress_builtin_last_error()
+  SI CONIURA len(err) > 0
+    REDDE CONIURA bytes_new(0)
+  FIN SI
+  REDDE buffer
+EXPLICIT RITUALE
+
+RITUALE gzip_decompress_bytes(VERBUM comprimido) REDDE SPECULUM NIHIL
+  EVOCA SPECULUM NIHIL buffer AD CONIURA gzip_decompress_buffer(comprimido)
+  EVOCA VERBUM err AD CONIURA compress_last_error()
+  SI CONIURA len(err) > 0
+    REDDE CONIURA fluxus_init(MENSURA(MILES))
+  FIN SI
+  EVOCA SPECULUM NIHIL flux AD CONIURA fluxus_init(MENSURA(MILES))
+  EVOCA REX n AD CONIURA bytes_len(buffer)
+  EVOCA REX i AD 0
+  DUM i < n
+    EVOCA MILES item AD CONIURA bytes_get(buffer, i)
+    CONIURA fluxus_push(flux, SPECULUM item)
+    VINCIRE i AD i + 1
+  FIN DUM
+  CONIURA bytes_free(buffer)
+  REDDE flux
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

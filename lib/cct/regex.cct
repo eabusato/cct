@@ -1,0 +1,144 @@
+-- CCT — Clavicula Turing
+-- Standard Library Module: regex
+--
+-- FASE 32C: Canonical regex baseline
+
+INCIPIT grimoire "regex"
+
+ADVOCARE "cct/fluxus.cct"
+ADVOCARE "cct/option.cct"
+ADVOCARE "cct/result.cct"
+ADVOCARE "cct/verbum.cct"
+
+SIGILLUM Regex
+  handle: SPECULUM NIHIL
+FIN SIGILLUM
+
+RITUALE regex_flag_case_insensitive() REDDE REX
+  REDDE 1
+EXPLICIT RITUALE
+
+RITUALE regex_flag_multiline() REDDE REX
+  REDDE 2
+EXPLICIT RITUALE
+
+RITUALE regex_flag_dotall() REDDE REX
+  REDDE 4
+EXPLICIT RITUALE
+
+RITUALE regex_compile(VERBUM padrao) REDDE SPECULUM NIHIL
+  REDDE CONIURA regex_compile_flags(padrao, 0)
+EXPLICIT RITUALE
+
+RITUALE regex_compile_flags(VERBUM padrao, REX flags) REDDE SPECULUM NIHIL
+  EVOCA SPECULUM NIHIL handle AD OBSECRO regex_builtin_compile(padrao, flags)
+  EVOCA VERBUM err AD OBSECRO regex_builtin_last_error()
+  SI CONIURA len(err) > 0
+    REDDE CONIURA Err GENUS(Regex, VERBUM)(err)
+  FIN SI
+  EVOCA Regex r
+  VINCIRE r.handle AD handle
+  REDDE CONIURA Ok GENUS(Regex, VERBUM)(r)
+EXPLICIT RITUALE
+
+RITUALE regex_match(Regex r, VERBUM texto) REDDE VERUM
+  REDDE OBSECRO regex_builtin_match(r.handle, texto)
+EXPLICIT RITUALE
+
+RITUALE regex_search(Regex r, VERBUM texto) REDDE SPECULUM NIHIL
+  EVOCA VERBUM found AD CONIURA regex_search_text(r, texto)
+  SI CONIURA len(found) == 0
+    REDDE CONIURA None GENUS(VERBUM)()
+  FIN SI
+  REDDE CONIURA Some GENUS(VERBUM)(found)
+EXPLICIT RITUALE
+
+RITUALE regex_find_all(Regex r, VERBUM texto) REDDE SPECULUM NIHIL
+  REDDE OBSECRO regex_builtin_find_all(r.handle, texto)
+EXPLICIT RITUALE
+
+RITUALE regex_replace(Regex r, VERBUM texto, VERBUM substituicao) REDDE VERBUM
+  REDDE OBSECRO regex_builtin_replace(r.handle, texto, substituicao, 0)
+EXPLICIT RITUALE
+
+RITUALE regex_replace_all(Regex r, VERBUM texto, VERBUM substituicao) REDDE VERBUM
+  REDDE OBSECRO regex_builtin_replace(r.handle, texto, substituicao, 1)
+EXPLICIT RITUALE
+
+RITUALE regex_search_text(Regex r, VERBUM texto) REDDE VERBUM
+  REDDE OBSECRO regex_builtin_search(r.handle, texto)
+EXPLICIT RITUALE
+
+RITUALE regex_split(Regex r, VERBUM texto) REDDE SPECULUM NIHIL
+  REDDE OBSECRO regex_builtin_split(r.handle, texto)
+EXPLICIT RITUALE
+
+RITUALE regex_find_all_joined(Regex r, VERBUM texto, VERBUM sep) REDDE VERBUM
+  EVOCA SPECULUM NIHIL items AD CONIURA regex_find_all(r, texto)
+  EVOCA VERBUM out AD CONIURA join(items, sep)
+  CONIURA fluxus_free(items)
+  REDDE out
+EXPLICIT RITUALE
+
+RITUALE regex_split_joined(Regex r, VERBUM texto, VERBUM sep) REDDE VERBUM
+  EVOCA SPECULUM NIHIL items AD CONIURA regex_split(r, texto)
+  EVOCA VERBUM out AD CONIURA join(items, sep)
+  CONIURA fluxus_free(items)
+  REDDE out
+EXPLICIT RITUALE
+
+RITUALE regex_free(Regex r) REDDE NIHIL
+  OBSECRO regex_builtin_free(r.handle)
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE regex_is_match(VERBUM padrao, VERBUM texto) REDDE VERUM
+  EVOCA SPECULUM NIHIL compiled AD CONIURA regex_compile(padrao)
+  SI CONIURA result_is_err GENUS(Regex, VERBUM)(compiled)
+    REDDE FALSUM
+  FIN SI
+  EVOCA Regex rx AD CONIURA result_unwrap GENUS(Regex, VERBUM)(compiled)
+  EVOCA VERUM ok AD CONIURA regex_match(rx, texto)
+  CONIURA regex_free(rx)
+  REDDE ok
+EXPLICIT RITUALE
+
+RITUALE regex_quick_search(VERBUM padrao, VERBUM texto) REDDE SPECULUM NIHIL
+  EVOCA SPECULUM NIHIL compiled AD CONIURA regex_compile(padrao)
+  SI CONIURA result_is_err GENUS(Regex, VERBUM)(compiled)
+    REDDE CONIURA None GENUS(VERBUM)()
+  FIN SI
+  EVOCA Regex rx AD CONIURA result_unwrap GENUS(Regex, VERBUM)(compiled)
+  EVOCA SPECULUM NIHIL found AD CONIURA regex_search(rx, texto)
+  CONIURA regex_free(rx)
+  REDDE found
+EXPLICIT RITUALE
+
+RITUALE regex_quick_search_text(VERBUM padrao, VERBUM texto) REDDE VERBUM
+  EVOCA SPECULUM NIHIL compiled AD CONIURA regex_compile(padrao)
+  SI CONIURA result_is_err GENUS(Regex, VERBUM)(compiled)
+    REDDE ""
+  FIN SI
+  EVOCA Regex rx AD CONIURA result_unwrap GENUS(Regex, VERBUM)(compiled)
+  EVOCA VERBUM found AD CONIURA regex_search_text(rx, texto)
+  CONIURA regex_free(rx)
+  REDDE found
+EXPLICIT RITUALE
+
+RITUALE regex_is_email(VERBUM email) REDDE VERUM
+  REDDE CONIURA regex_is_match("^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$", email)
+EXPLICIT RITUALE
+
+RITUALE regex_is_url(VERBUM url) REDDE VERUM
+  REDDE CONIURA regex_is_match("^https?://[A-Za-z0-9.-]+(:[0-9]+)?(/.*)?$", url)
+EXPLICIT RITUALE
+
+RITUALE regex_is_integer(VERBUM texto) REDDE VERUM
+  REDDE CONIURA regex_is_match("^-?[0-9]+$", texto)
+EXPLICIT RITUALE
+
+RITUALE regex_is_real(VERBUM texto) REDDE VERUM
+  REDDE CONIURA regex_is_match("^-?[0-9]+(\\.[0-9]+)?$", texto)
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

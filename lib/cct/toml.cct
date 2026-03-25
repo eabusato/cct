@@ -1,0 +1,282 @@
+-- CCT — Clavicula Turing
+-- Standard Library Module: toml
+--
+-- FASE 32E: TOML parser/stringifier baseline
+
+INCIPIT grimoire "toml"
+
+ADVOCARE "cct/date.cct"
+ADVOCARE "cct/option.cct"
+ADVOCARE "cct/parse.cct"
+ADVOCARE "cct/verbum.cct"
+
+SIGILLUM TomlDocument
+  handle: REX
+FIN SIGILLUM
+
+SIGILLUM TomlError
+  mensagem: VERBUM
+FIN SIGILLUM
+
+ORDO TomlValue
+  StringValue(VERBUM valor),
+  IntegerValue(REX valor),
+  RealValue(UMBRA valor),
+  BooleanValue(VERUM valor),
+  DateValue(VERBUM valor_iso),
+  DateTimeValue(VERBUM valor_iso),
+  ArrayValue(REX tamanho),
+  TableValue(VERBUM chave)
+FIN ORDO
+
+RITUALE TomlErrorMsg(VERBUM mensagem) REDDE TomlError
+  EVOCA TomlError err
+  VINCIRE err.mensagem AD mensagem
+  REDDE err
+EXPLICIT RITUALE
+
+RITUALE toml_make_document(REX handle) REDDE TomlDocument
+  EVOCA TomlDocument doc
+  VINCIRE doc.handle AD handle
+  REDDE doc
+EXPLICIT RITUALE
+
+RITUALE toml_invalid_document() REDDE TomlDocument
+  REDDE CONIURA toml_make_document(0)
+EXPLICIT RITUALE
+
+RITUALE toml_last_error() REDDE VERBUM
+  REDDE OBSECRO toml_builtin_last_error()
+EXPLICIT RITUALE
+
+RITUALE toml_is_valid(TomlDocument doc) REDDE VERUM
+  REDDE doc.handle != 0
+EXPLICIT RITUALE
+
+RITUALE toml_kind_string() REDDE REX
+  REDDE 1
+EXPLICIT RITUALE
+
+RITUALE toml_kind_integer() REDDE REX
+  REDDE 2
+EXPLICIT RITUALE
+
+RITUALE toml_kind_real() REDDE REX
+  REDDE 3
+EXPLICIT RITUALE
+
+RITUALE toml_kind_boolean() REDDE REX
+  REDDE 4
+EXPLICIT RITUALE
+
+RITUALE toml_kind_date() REDDE REX
+  REDDE 5
+EXPLICIT RITUALE
+
+RITUALE toml_kind_datetime() REDDE REX
+  REDDE 6
+EXPLICIT RITUALE
+
+RITUALE toml_kind_array_string() REDDE REX
+  REDDE 7
+EXPLICIT RITUALE
+
+RITUALE toml_kind_array_integer() REDDE REX
+  REDDE 8
+EXPLICIT RITUALE
+
+RITUALE toml_kind_array_real() REDDE REX
+  REDDE 9
+EXPLICIT RITUALE
+
+RITUALE toml_kind_array_boolean() REDDE REX
+  REDDE 10
+EXPLICIT RITUALE
+
+RITUALE toml_kind_table() REDDE REX
+  REDDE 13
+EXPLICIT RITUALE
+
+RITUALE toml_parse(VERBUM conteudo) REDDE TomlDocument
+  EVOCA REX handle AD OBSECRO toml_builtin_parse(conteudo)
+  EVOCA VERBUM err AD OBSECRO toml_builtin_last_error()
+  SI CONIURA len(err) > 0
+    REDDE CONIURA toml_invalid_document()
+  FIN SI
+  REDDE CONIURA toml_make_document(handle)
+EXPLICIT RITUALE
+
+RITUALE toml_parse_file(VERBUM caminho) REDDE TomlDocument
+  EVOCA REX handle AD OBSECRO toml_builtin_parse_file(caminho)
+  EVOCA VERBUM err AD OBSECRO toml_builtin_last_error()
+  SI CONIURA len(err) > 0
+    REDDE CONIURA toml_invalid_document()
+  FIN SI
+  REDDE CONIURA toml_make_document(handle)
+EXPLICIT RITUALE
+
+RITUALE toml_has(TomlDocument doc, VERBUM chave) REDDE VERUM
+  REDDE OBSECRO toml_builtin_type(doc.handle, chave) != 0
+EXPLICIT RITUALE
+
+RITUALE toml_get_string(TomlDocument doc, VERBUM chave) REDDE VERBUM
+  SI OBSECRO toml_builtin_type(doc.handle, chave) != CONIURA toml_kind_string()
+    REDDE ""
+  FIN SI
+  REDDE OBSECRO toml_builtin_get_string(doc.handle, chave)
+EXPLICIT RITUALE
+
+RITUALE toml_get_int(TomlDocument doc, VERBUM chave) REDDE SPECULUM NIHIL
+  SI OBSECRO toml_builtin_type(doc.handle, chave) != CONIURA toml_kind_integer()
+    REDDE CONIURA None GENUS(REX)()
+  FIN SI
+  REDDE CONIURA Some GENUS(REX)(OBSECRO toml_builtin_get_int(doc.handle, chave))
+EXPLICIT RITUALE
+
+RITUALE toml_get_real(TomlDocument doc, VERBUM chave) REDDE SPECULUM NIHIL
+  SI OBSECRO toml_builtin_type(doc.handle, chave) != CONIURA toml_kind_real()
+    REDDE CONIURA None GENUS(UMBRA)()
+  FIN SI
+  REDDE CONIURA Some GENUS(UMBRA)(OBSECRO toml_builtin_get_real(doc.handle, chave))
+EXPLICIT RITUALE
+
+RITUALE toml_get_bool(TomlDocument doc, VERBUM chave) REDDE SPECULUM NIHIL
+  SI OBSECRO toml_builtin_type(doc.handle, chave) != CONIURA toml_kind_boolean()
+    REDDE CONIURA None GENUS(VERUM)()
+  FIN SI
+  REDDE CONIURA Some GENUS(VERUM)(OBSECRO toml_builtin_get_bool(doc.handle, chave))
+EXPLICIT RITUALE
+
+RITUALE toml_get_date(TomlDocument doc, VERBUM chave) REDDE Date
+  EVOCA Date zero
+  VINCIRE zero.ano AD 0
+  VINCIRE zero.mes AD 0
+  VINCIRE zero.dia AD 0
+  SI OBSECRO toml_builtin_type(doc.handle, chave) != CONIURA toml_kind_date()
+    REDDE zero
+  FIN SI
+  EVOCA VERBUM iso AD OBSECRO toml_builtin_get_string(doc.handle, chave)
+  SI CONIURA len(iso) != 10
+    REDDE zero
+  FIN SI
+  SI CONIURA char_at(iso, 4) != 45 VEL CONIURA char_at(iso, 7) != 45
+    REDDE zero
+  FIN SI
+  EVOCA Date valor
+  VINCIRE valor.ano AD CONIURA parse_int(CONIURA substring(iso, 0, 4))
+  VINCIRE valor.mes AD CONIURA parse_int(CONIURA substring(iso, 5, 7))
+  VINCIRE valor.dia AD CONIURA parse_int(CONIURA substring(iso, 8, 10))
+  REDDE valor
+EXPLICIT RITUALE
+
+RITUALE toml_get_datetime(TomlDocument doc, VERBUM chave) REDDE DateTime
+  EVOCA DateTime zero
+  VINCIRE zero.ano AD 0
+  VINCIRE zero.mes AD 0
+  VINCIRE zero.dia AD 0
+  VINCIRE zero.hora AD 0
+  VINCIRE zero.minuto AD 0
+  VINCIRE zero.segundo AD 0
+  VINCIRE zero.offset_utc AD 0
+  SI OBSECRO toml_builtin_type(doc.handle, chave) != CONIURA toml_kind_datetime()
+    REDDE zero
+  FIN SI
+  EVOCA VERBUM iso AD OBSECRO toml_builtin_get_string(doc.handle, chave)
+  EVOCA REX n AD CONIURA len(iso)
+  SI n != 20 ET n != 25
+    REDDE zero
+  FIN SI
+  SI CONIURA char_at(iso, 4) != 45 VEL CONIURA char_at(iso, 7) != 45 VEL CONIURA char_at(iso, 10) != 84 VEL CONIURA char_at(iso, 13) != 58 VEL CONIURA char_at(iso, 16) != 58
+    REDDE zero
+  FIN SI
+  EVOCA DateTime valor
+  VINCIRE valor.ano AD CONIURA parse_int(CONIURA substring(iso, 0, 4))
+  VINCIRE valor.mes AD CONIURA parse_int(CONIURA substring(iso, 5, 7))
+  VINCIRE valor.dia AD CONIURA parse_int(CONIURA substring(iso, 8, 10))
+  VINCIRE valor.hora AD CONIURA parse_int(CONIURA substring(iso, 11, 13))
+  VINCIRE valor.minuto AD CONIURA parse_int(CONIURA substring(iso, 14, 16))
+  VINCIRE valor.segundo AD CONIURA parse_int(CONIURA substring(iso, 17, 19))
+  VINCIRE valor.offset_utc AD 0
+  SI n == 20
+    SI CONIURA char_at(iso, 19) != 90
+      REDDE zero
+    FIN SI
+  FIN SI
+  SI n == 25
+    SI CONIURA char_at(iso, 22) != 58
+      REDDE zero
+    FIN SI
+    EVOCA REX off_h AD CONIURA parse_int(CONIURA substring(iso, 20, 22))
+    EVOCA REX off_m AD CONIURA parse_int(CONIURA substring(iso, 23, 25))
+    VINCIRE valor.offset_utc AD off_h * 60 + off_m
+    SI CONIURA char_at(iso, 19) == 45
+      VINCIRE valor.offset_utc AD 0 - valor.offset_utc
+    FIN SI
+  FIN SI
+  REDDE valor
+EXPLICIT RITUALE
+
+RITUALE toml_get_table(TomlDocument doc, VERBUM chave) REDDE TomlDocument
+  SI OBSECRO toml_builtin_type(doc.handle, chave) != CONIURA toml_kind_table()
+    REDDE CONIURA toml_invalid_document()
+  FIN SI
+  REDDE CONIURA toml_make_document(OBSECRO toml_builtin_get_subdoc(doc.handle, chave))
+EXPLICIT RITUALE
+
+RITUALE toml_array_len(TomlDocument doc, VERBUM chave) REDDE SPECULUM NIHIL
+  EVOCA REX kind AD OBSECRO toml_builtin_type(doc.handle, chave)
+  SI kind < CONIURA toml_kind_array_string() VEL kind > CONIURA toml_kind_array_boolean()
+    REDDE CONIURA None GENUS(REX)()
+  FIN SI
+  REDDE CONIURA Some GENUS(REX)(OBSECRO toml_builtin_array_len(doc.handle, chave))
+EXPLICIT RITUALE
+
+RITUALE toml_array_get_string(TomlDocument doc, VERBUM chave, REX indice) REDDE VERBUM
+  SI OBSECRO toml_builtin_type(doc.handle, chave) != CONIURA toml_kind_array_string()
+    REDDE ""
+  FIN SI
+  SI indice < 0 VEL indice >= OBSECRO toml_builtin_array_len(doc.handle, chave)
+    REDDE ""
+  FIN SI
+  REDDE OBSECRO toml_builtin_array_item_string(doc.handle, chave, indice)
+EXPLICIT RITUALE
+
+RITUALE toml_array_get_int(TomlDocument doc, VERBUM chave, REX indice) REDDE SPECULUM NIHIL
+  SI OBSECRO toml_builtin_type(doc.handle, chave) != CONIURA toml_kind_array_integer()
+    REDDE CONIURA None GENUS(REX)()
+  FIN SI
+  SI indice < 0 VEL indice >= OBSECRO toml_builtin_array_len(doc.handle, chave)
+    REDDE CONIURA None GENUS(REX)()
+  FIN SI
+  REDDE CONIURA Some GENUS(REX)(OBSECRO toml_builtin_array_item_int(doc.handle, chave, indice))
+EXPLICIT RITUALE
+
+RITUALE toml_array_get_real(TomlDocument doc, VERBUM chave, REX indice) REDDE SPECULUM NIHIL
+  SI OBSECRO toml_builtin_type(doc.handle, chave) != CONIURA toml_kind_array_real()
+    REDDE CONIURA None GENUS(UMBRA)()
+  FIN SI
+  SI indice < 0 VEL indice >= OBSECRO toml_builtin_array_len(doc.handle, chave)
+    REDDE CONIURA None GENUS(UMBRA)()
+  FIN SI
+  REDDE CONIURA Some GENUS(UMBRA)(OBSECRO toml_builtin_array_item_real(doc.handle, chave, indice))
+EXPLICIT RITUALE
+
+RITUALE toml_array_get_bool(TomlDocument doc, VERBUM chave, REX indice) REDDE SPECULUM NIHIL
+  SI OBSECRO toml_builtin_type(doc.handle, chave) != CONIURA toml_kind_array_boolean()
+    REDDE CONIURA None GENUS(VERUM)()
+  FIN SI
+  SI indice < 0 VEL indice >= OBSECRO toml_builtin_array_len(doc.handle, chave)
+    REDDE CONIURA None GENUS(VERUM)()
+  FIN SI
+  REDDE CONIURA Some GENUS(VERUM)(OBSECRO toml_builtin_array_item_bool(doc.handle, chave, indice))
+EXPLICIT RITUALE
+
+RITUALE toml_expand_env(TomlDocument doc) REDDE TomlDocument
+  REDDE CONIURA toml_make_document(OBSECRO toml_builtin_expand_env(doc.handle))
+EXPLICIT RITUALE
+
+RITUALE toml_stringify(TomlDocument doc) REDDE VERBUM
+  REDDE OBSECRO toml_builtin_stringify(doc.handle)
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

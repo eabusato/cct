@@ -1,0 +1,1 @@
+{"format":"cct.sigilo.manifest.v1","producer":"civitas.routes","project":"desviados","routes":[{"route_id":"site.home","method":"GET","path":"/","route_name":"site.home","handler":"main","module":"tests/integration/sigilo_minimal.cct","group":"/","middleware":["trace"]}]}

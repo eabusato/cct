@@ -1,0 +1,153 @@
+-- CCT — Clavicula Turing
+-- Standard Library Module: signal
+--
+-- FASE 34D: Signal baseline
+
+INCIPIT grimoire "signal"
+
+ADVOCARE "cct/result.cct"
+ADVOCARE "cct/verbum.cct"
+
+ORDO SignalKind
+  SIGNAL_UNKNOWN
+  SIGNAL_SIGTERM
+  SIGNAL_SIGINT
+  SIGNAL_SIGHUP
+FIN ORDO
+
+SIGILLUM SignalEvent
+  kind: SignalKind
+  unix_ms: REX
+  sequence: REX
+  requests_shutdown: VERUM
+FIN SIGILLUM
+
+SIGILLUM SignalError
+  mensagem: VERBUM
+FIN SIGILLUM
+
+RITUALE SignalErrorMsg(VERBUM mensagem) REDDE SignalError
+  EVOCA SignalError err
+  VINCIRE err.mensagem AD mensagem
+  REDDE err
+EXPLICIT RITUALE
+
+RITUALE signal_ok() REDDE SPECULUM NIHIL
+  REDDE CONIURA Ok GENUS(REX, SignalError)(0)
+EXPLICIT RITUALE
+
+RITUALE signal_err(VERBUM mensagem) REDDE SPECULUM NIHIL
+  REDDE CONIURA Err GENUS(REX, SignalError)(CONIURA SignalErrorMsg(mensagem))
+EXPLICIT RITUALE
+
+RITUALE signal_is_supported() REDDE VERUM
+  REDDE OBSECRO signal_builtin_is_supported() != 0
+EXPLICIT RITUALE
+
+RITUALE signal_kind_from_code(REX code) REDDE SignalKind
+  SI code == 1
+    REDDE SIGNAL_SIGTERM
+  FIN SI
+  SI code == 2
+    REDDE SIGNAL_SIGINT
+  FIN SI
+  SI code == 3
+    REDDE SIGNAL_SIGHUP
+  FIN SI
+  REDDE SIGNAL_UNKNOWN
+EXPLICIT RITUALE
+
+RITUALE signal_kind_to_code(SignalKind kind) REDDE REX
+  ELIGE kind
+    CASUS SIGNAL_SIGTERM:
+      REDDE 1
+    CASUS SIGNAL_SIGINT:
+      REDDE 2
+    CASUS SIGNAL_SIGHUP:
+      REDDE 3
+    ALIOQUIN:
+      REDDE 0
+  FIN ELIGE
+EXPLICIT RITUALE
+
+RITUALE signal_kind_to_string(SignalKind kind) REDDE VERBUM
+  ELIGE kind
+    CASUS SIGNAL_SIGTERM:
+      REDDE "SIGTERM"
+    CASUS SIGNAL_SIGINT:
+      REDDE "SIGINT"
+    CASUS SIGNAL_SIGHUP:
+      REDDE "SIGHUP"
+    ALIOQUIN:
+      REDDE "UNKNOWN"
+  FIN ELIGE
+EXPLICIT RITUALE
+
+RITUALE signal_install_default_handlers() REDDE SPECULUM NIHIL
+  SI NON CONIURA signal_is_supported()
+    REDDE CONIURA signal_err("signal runtime nao suportado")
+  FIN SI
+  SI OBSECRO signal_builtin_install() == 0
+    REDDE CONIURA signal_err("falha ao instalar handlers de sinal")
+  FIN SI
+  REDDE CONIURA signal_ok()
+EXPLICIT RITUALE
+
+RITUALE signal_make_event(REX kind_code, REX unix_ms, REX sequence) REDDE SignalEvent
+  EVOCA SignalEvent event
+  VINCIRE event.kind AD CONIURA signal_kind_from_code(kind_code)
+  VINCIRE event.unix_ms AD unix_ms
+  VINCIRE event.sequence AD sequence
+  VINCIRE event.requests_shutdown AD event.kind == SIGNAL_SIGTERM VEL event.kind == SIGNAL_SIGINT
+  REDDE event
+EXPLICIT RITUALE
+
+RITUALE signal_last_event() REDDE SignalEvent
+  REDDE CONIURA signal_make_event(
+    OBSECRO signal_builtin_last_kind(),
+    OBSECRO signal_builtin_last_unix_ms(),
+    OBSECRO signal_builtin_last_sequence()
+  )
+EXPLICIT RITUALE
+
+RITUALE signal_has_event() REDDE VERUM
+  REDDE OBSECRO signal_builtin_last_kind() != 0
+EXPLICIT RITUALE
+
+RITUALE signal_poll() REDDE SignalEvent
+  EVOCA SignalEvent event AD CONIURA signal_last_event()
+  SI event.kind != SIGNAL_UNKNOWN
+    CONIURA signal_clear_last_event()
+  FIN SI
+  REDDE event
+EXPLICIT RITUALE
+
+RITUALE signal_clear_last_event() REDDE NIHIL
+  OBSECRO signal_builtin_clear()
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE signal_check_shutdown() REDDE VERUM
+  REDDE OBSECRO signal_builtin_check_shutdown() != 0
+EXPLICIT RITUALE
+
+RITUALE signal_received_sigterm() REDDE VERUM
+  REDDE OBSECRO signal_builtin_received_sigterm() != 0
+EXPLICIT RITUALE
+
+RITUALE signal_received_sigint() REDDE VERUM
+  REDDE OBSECRO signal_builtin_received_sigint() != 0
+EXPLICIT RITUALE
+
+RITUALE signal_received_sighup() REDDE VERUM
+  REDDE OBSECRO signal_builtin_received_sighup() != 0
+EXPLICIT RITUALE
+
+RITUALE signal_raise_self(SignalKind kind) REDDE NIHIL
+  SI kind != SIGNAL_UNKNOWN
+    OBSECRO signal_builtin_raise_self(CONIURA signal_kind_to_code(kind))
+  FIN SI
+  REDDE
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

@@ -108,6 +108,97 @@ static bool sp_lookup_duplicate_key(const cct_sigil_document_t *doc, const char 
     return false;
 }
 
+static bool sp_parse_u64(const char *value, u64 *out) {
+    if (!value || !out || value[0] == '\0') return false;
+    u64 acc = 0;
+    for (size_t i = 0; value[i] != '\0'; i++) {
+        char c = value[i];
+        if (c < '0' || c > '9') return false;
+        acc = (acc * 10ULL) + (u64)(c - '0');
+    }
+    *out = acc;
+    return true;
+}
+
+static cct_sigil_web_route_t* sp_ensure_web_route(cct_sigil_document_t *doc, u32 section_index) {
+    if (!doc) return NULL;
+    for (size_t i = 0; i < doc->web_routes_count; i++) {
+        if (doc->web_routes[i].section_index == section_index) return &doc->web_routes[i];
+    }
+    if (doc->web_routes_count >= doc->web_routes_capacity) {
+        size_t next = doc->web_routes_capacity == 0 ? 4 : doc->web_routes_capacity * 2;
+        cct_sigil_web_route_t *grown = (cct_sigil_web_route_t*)realloc(doc->web_routes, next * sizeof(*grown));
+        if (!grown) return NULL;
+        memset(grown + doc->web_routes_capacity, 0, (next - doc->web_routes_capacity) * sizeof(*grown));
+        doc->web_routes = grown;
+        doc->web_routes_capacity = next;
+    }
+    cct_sigil_web_route_t *route = &doc->web_routes[doc->web_routes_count++];
+    memset(route, 0, sizeof(*route));
+    route->section_index = section_index;
+    return route;
+}
+
+static void sp_assign_dup(char **slot, const char *value) {
+    if (!slot) return;
+    free(*slot);
+    *slot = sp_strdup(value ? value : "");
+}
+
+static void sp_capture_extended_fields(cct_sigil_document_t *doc) {
+    if (!doc) return;
+    for (size_t i = 0; i < doc->entry_count; i++) {
+        const cct_sigil_kv_t *kv = &doc->entries[i];
+        const char *section = kv->section ? kv->section : "";
+        const char *key = kv->key ? kv->key : "";
+        const char *value = kv->value ? kv->value : "";
+
+        if (strcmp(section, "web_routes") == 0) {
+            doc->has_web_routes = true;
+            if (strcmp(key, "route_count") == 0) {
+                (void)sp_parse_u64(value, &doc->web_route_count);
+            } else if (strcmp(key, "group_count") == 0) {
+                (void)sp_parse_u64(value, &doc->web_group_count);
+            } else if (strcmp(key, "middleware_count") == 0) {
+                (void)sp_parse_u64(value, &doc->web_middleware_count);
+            } else if (strcmp(key, "web_topology_hash") == 0) {
+                sp_assign_dup(&doc->web_topology_hash, value);
+            }
+            continue;
+        }
+
+        if (strcmp(section, "manifest_provenance") == 0) {
+            doc->has_manifest_provenance = true;
+            if (strcmp(key, "manifest_format") == 0) {
+                sp_assign_dup(&doc->manifest_format, value);
+            } else if (strcmp(key, "manifest_producer") == 0) {
+                sp_assign_dup(&doc->manifest_producer, value);
+            } else if (strcmp(key, "manifest_project") == 0) {
+                sp_assign_dup(&doc->manifest_project, value);
+            }
+            continue;
+        }
+
+        if (strncmp(section, "web_route.", 10) == 0) {
+            u64 idx64 = 0;
+            if (!sp_parse_u64(section + 10, &idx64)) continue;
+            cct_sigil_web_route_t *route = sp_ensure_web_route(doc, (u32)idx64);
+            if (!route) continue;
+            if (strcmp(key, "route_id") == 0) sp_assign_dup(&route->route_id, value);
+            else if (strcmp(key, "method") == 0) sp_assign_dup(&route->method, value);
+            else if (strcmp(key, "path") == 0) sp_assign_dup(&route->path, value);
+            else if (strcmp(key, "route_name") == 0) sp_assign_dup(&route->route_name, value);
+            else if (strcmp(key, "handler") == 0) sp_assign_dup(&route->handler, value);
+            else if (strcmp(key, "module") == 0) sp_assign_dup(&route->module, value);
+            else if (strcmp(key, "group") == 0) sp_assign_dup(&route->group, value);
+            else if (strcmp(key, "middleware") == 0) sp_assign_dup(&route->middleware, value);
+            else if (strcmp(key, "path_params") == 0) sp_assign_dup(&route->path_params, value);
+            else if (strcmp(key, "route_hash") == 0) sp_assign_dup(&route->route_hash, value);
+            else if (strcmp(key, "source_origin") == 0) sp_assign_dup(&route->source_origin, value);
+        }
+    }
+}
+
 static void sp_capture_known_section(cct_sigil_document_t *doc, const char *section) {
     if (!doc || !section) return;
     if (strcmp(section, "analysis_summary") == 0) {
@@ -300,6 +391,7 @@ bool cct_sigil_parse_file(
 
     free(section);
     free(buf);
+    sp_capture_extended_fields(out_doc);
     if (!ok) return false;
     return cct_sigil_validate(out_doc, mode);
 }
@@ -343,6 +435,10 @@ void cct_sigil_document_dispose(cct_sigil_document_t *doc) {
     free(doc->visual_engine);
     free(doc->semantic_hash);
     free(doc->system_hash);
+    free(doc->web_topology_hash);
+    free(doc->manifest_format);
+    free(doc->manifest_producer);
+    free(doc->manifest_project);
 
     for (size_t i = 0; i < doc->entry_count; i++) {
         free(doc->entries[i].section);
@@ -350,6 +446,21 @@ void cct_sigil_document_dispose(cct_sigil_document_t *doc) {
         free(doc->entries[i].value);
     }
     free(doc->entries);
+
+    for (size_t i = 0; i < doc->web_routes_count; i++) {
+        free(doc->web_routes[i].route_id);
+        free(doc->web_routes[i].method);
+        free(doc->web_routes[i].path);
+        free(doc->web_routes[i].route_name);
+        free(doc->web_routes[i].handler);
+        free(doc->web_routes[i].module);
+        free(doc->web_routes[i].group);
+        free(doc->web_routes[i].middleware);
+        free(doc->web_routes[i].path_params);
+        free(doc->web_routes[i].route_hash);
+        free(doc->web_routes[i].source_origin);
+    }
+    free(doc->web_routes);
 
     for (size_t i = 0; i < doc->diagnostics.count; i++) {
         free(doc->diagnostics.items[i].message);

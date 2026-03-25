@@ -1,0 +1,83 @@
+-- CCT — Clavicula Turing
+-- Standard Library Module: gettext
+--
+-- FASE 33E: PO catalog loading and translation helpers
+
+INCIPIT grimoire "gettext"
+
+ADVOCARE "cct/result.cct"
+ADVOCARE "cct/verbum.cct"
+
+SIGILLUM Catalog
+  locale: VERBUM
+  handle: REX
+FIN SIGILLUM
+
+RITUALE gettext_catalog_new(VERBUM locale) REDDE Catalog
+  EVOCA Catalog cat
+  VINCIRE cat.locale AD locale
+  VINCIRE cat.handle AD OBSECRO gettext_builtin_catalog_new(locale)
+  REDDE cat
+EXPLICIT RITUALE
+
+RITUALE gettext_add_message(SPECULUM Catalog cat, VERBUM chave, VERBUM traducao) REDDE NIHIL
+  EVOCA VERUM stored AD OBSECRO gettext_builtin_catalog_add((*cat).handle, chave, traducao)
+  SI stored
+    REDDE
+  FIN SI
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE gettext_add_plural(
+  SPECULUM Catalog cat,
+  VERBUM singular,
+  VERBUM plural,
+  VERBUM traducao_singular,
+  VERBUM traducao_plural
+) REDDE NIHIL
+  EVOCA VERUM stored AD OBSECRO gettext_builtin_catalog_add_plural(
+    (*cat).handle,
+    singular,
+    plural,
+    traducao_singular,
+    traducao_plural
+  )
+  SI stored
+    REDDE
+  FIN SI
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE gettext_load_catalog(VERBUM caminho, VERBUM locale) REDDE SPECULUM NIHIL
+  EVOCA REX handle AD OBSECRO gettext_builtin_catalog_load(caminho, locale)
+  SI handle == 0
+    REDDE CONIURA Err GENUS(Catalog, VERBUM)(OBSECRO gettext_builtin_catalog_last_error())
+  FIN SI
+
+  EVOCA Catalog cat
+  VINCIRE cat.locale AD locale
+  VINCIRE cat.handle AD handle
+  REDDE CONIURA Ok GENUS(Catalog, VERBUM)(cat)
+EXPLICIT RITUALE
+
+RITUALE gettext_translate(Catalog cat, VERBUM chave) REDDE VERBUM
+  REDDE OBSECRO gettext_builtin_translate(cat.handle, chave)
+EXPLICIT RITUALE
+
+RITUALE gettext_translate_plural(Catalog cat, VERBUM singular, VERBUM plural, REX n) REDDE VERBUM
+  REDDE OBSECRO gettext_builtin_translate_plural(cat.handle, singular, plural, n)
+EXPLICIT RITUALE
+
+RITUALE gettext_set_default_catalog(Catalog cat) REDDE NIHIL
+  EVOCA VERUM configured AD OBSECRO gettext_builtin_default_set(cat.handle)
+  SI configured
+    REDDE
+  FIN SI
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE t(VERBUM chave) REDDE VERBUM
+  REDDE OBSECRO gettext_builtin_default_translate(chave)
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

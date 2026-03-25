@@ -1,0 +1,151 @@
+-- CCT — Clavicula Turing
+-- Standard Library Module: slug
+--
+-- FASE 33D: URL slug normalization baseline
+
+INCIPIT grimoire "slug"
+
+ADVOCARE "cct/char.cct"
+ADVOCARE "cct/fmt.cct"
+ADVOCARE "cct/verbum.cct"
+
+RITUALE slug_ascii_alnum(MILES c) REDDE VERUM
+  REDDE (c >= 97 ET c <= 122) VEL (c >= 48 ET c <= 57)
+EXPLICIT RITUALE
+
+RITUALE slug_normalize_latin(VERBUM texto) REDDE VERBUM
+  EVOCA VERBUM out AD texto
+
+  VINCIRE out AD CONIURA replace_all(out, "á", "a")
+  VINCIRE out AD CONIURA replace_all(out, "à", "a")
+  VINCIRE out AD CONIURA replace_all(out, "ã", "a")
+  VINCIRE out AD CONIURA replace_all(out, "â", "a")
+  VINCIRE out AD CONIURA replace_all(out, "ä", "a")
+  VINCIRE out AD CONIURA replace_all(out, "Á", "A")
+  VINCIRE out AD CONIURA replace_all(out, "À", "A")
+  VINCIRE out AD CONIURA replace_all(out, "Ã", "A")
+  VINCIRE out AD CONIURA replace_all(out, "Â", "A")
+  VINCIRE out AD CONIURA replace_all(out, "Ä", "A")
+
+  VINCIRE out AD CONIURA replace_all(out, "é", "e")
+  VINCIRE out AD CONIURA replace_all(out, "è", "e")
+  VINCIRE out AD CONIURA replace_all(out, "ê", "e")
+  VINCIRE out AD CONIURA replace_all(out, "ë", "e")
+  VINCIRE out AD CONIURA replace_all(out, "É", "E")
+  VINCIRE out AD CONIURA replace_all(out, "È", "E")
+  VINCIRE out AD CONIURA replace_all(out, "Ê", "E")
+  VINCIRE out AD CONIURA replace_all(out, "Ë", "E")
+
+  VINCIRE out AD CONIURA replace_all(out, "í", "i")
+  VINCIRE out AD CONIURA replace_all(out, "ì", "i")
+  VINCIRE out AD CONIURA replace_all(out, "î", "i")
+  VINCIRE out AD CONIURA replace_all(out, "ï", "i")
+  VINCIRE out AD CONIURA replace_all(out, "Í", "I")
+  VINCIRE out AD CONIURA replace_all(out, "Ì", "I")
+  VINCIRE out AD CONIURA replace_all(out, "Î", "I")
+  VINCIRE out AD CONIURA replace_all(out, "Ï", "I")
+
+  VINCIRE out AD CONIURA replace_all(out, "ó", "o")
+  VINCIRE out AD CONIURA replace_all(out, "ò", "o")
+  VINCIRE out AD CONIURA replace_all(out, "õ", "o")
+  VINCIRE out AD CONIURA replace_all(out, "ô", "o")
+  VINCIRE out AD CONIURA replace_all(out, "ö", "o")
+  VINCIRE out AD CONIURA replace_all(out, "Ó", "O")
+  VINCIRE out AD CONIURA replace_all(out, "Ò", "O")
+  VINCIRE out AD CONIURA replace_all(out, "Õ", "O")
+  VINCIRE out AD CONIURA replace_all(out, "Ô", "O")
+  VINCIRE out AD CONIURA replace_all(out, "Ö", "O")
+
+  VINCIRE out AD CONIURA replace_all(out, "ú", "u")
+  VINCIRE out AD CONIURA replace_all(out, "ù", "u")
+  VINCIRE out AD CONIURA replace_all(out, "û", "u")
+  VINCIRE out AD CONIURA replace_all(out, "ü", "u")
+  VINCIRE out AD CONIURA replace_all(out, "Ú", "U")
+  VINCIRE out AD CONIURA replace_all(out, "Ù", "U")
+  VINCIRE out AD CONIURA replace_all(out, "Û", "U")
+  VINCIRE out AD CONIURA replace_all(out, "Ü", "U")
+
+  VINCIRE out AD CONIURA replace_all(out, "ç", "c")
+  VINCIRE out AD CONIURA replace_all(out, "Ç", "C")
+  VINCIRE out AD CONIURA replace_all(out, "ñ", "n")
+  VINCIRE out AD CONIURA replace_all(out, "Ñ", "N")
+  VINCIRE out AD CONIURA replace_all(out, "ý", "y")
+  VINCIRE out AD CONIURA replace_all(out, "ÿ", "y")
+  VINCIRE out AD CONIURA replace_all(out, "Ý", "Y")
+
+  REDDE out
+EXPLICIT RITUALE
+
+RITUALE slug_from_text(VERBUM texto) REDDE VERBUM
+  EVOCA VERBUM lower AD CONIURA to_lower(texto)
+  EVOCA VERBUM out AD ""
+  EVOCA REX i AD 0
+  EVOCA REX n AD CONIURA len(lower)
+  EVOCA VERUM last_dash AD FALSUM
+
+  DUM i < n
+    EVOCA MILES c AD CONIURA char_at(lower, i)
+    SI CONIURA slug_ascii_alnum(c)
+      VINCIRE out AD CONIURA concat(out, CONIURA from_char(c))
+      VINCIRE last_dash AD FALSUM
+    ALITER
+      SI NON last_dash
+        VINCIRE out AD CONIURA concat(out, "-")
+        VINCIRE last_dash AD VERUM
+      FIN SI
+    FIN SI
+    VINCIRE i AD i + 1
+  FIN DUM
+
+  REDDE CONIURA trim_char(out, 45)
+EXPLICIT RITUALE
+
+RITUALE slug_from_text_latin(VERBUM texto) REDDE VERBUM
+  REDDE CONIURA slug_from_text(CONIURA slug_normalize_latin(texto))
+EXPLICIT RITUALE
+
+RITUALE slug_exists(VERBUM slug, SPECULUM NIHIL existentes) REDDE VERUM
+  REDDE OBSECRO fluxus_contains_verbum(existentes, slug)
+EXPLICIT RITUALE
+
+RITUALE slug_ensure_unique(VERBUM slug, SPECULUM NIHIL existentes) REDDE VERBUM
+  SI NON CONIURA slug_exists(slug, existentes)
+    REDDE slug
+  FIN SI
+
+  EVOCA REX suffix AD 2
+  DUM suffix < 1000000
+    EVOCA VERBUM candidate AD CONIURA concat(slug, "-")
+    VINCIRE candidate AD CONIURA concat(candidate, CONIURA stringify_int(suffix))
+    SI NON CONIURA slug_exists(candidate, existentes)
+      REDDE candidate
+    FIN SI
+    VINCIRE suffix AD suffix + 1
+  FIN DUM
+
+  REDDE slug
+EXPLICIT RITUALE
+
+RITUALE slug_is_valid(VERBUM slug) REDDE VERUM
+  EVOCA REX n AD CONIURA len(slug)
+  EVOCA REX i AD 0
+
+  SI n == 0
+    REDDE FALSUM
+  FIN SI
+  SI CONIURA char_at(slug, 0) == 45 VEL CONIURA char_at(slug, n - 1) == 45
+    REDDE FALSUM
+  FIN SI
+
+  DUM i < n
+    EVOCA MILES c AD CONIURA char_at(slug, i)
+    SI NON CONIURA slug_ascii_alnum(c) ET c != 45
+      REDDE FALSUM
+    FIN SI
+    VINCIRE i AD i + 1
+  FIN DUM
+
+  REDDE VERUM
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

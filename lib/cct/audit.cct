@@ -1,0 +1,285 @@
+-- CCT — Clavicula Turing
+-- Standard Library Module: audit
+--
+-- FASE 34F: Audit trail baseline
+
+INCIPIT grimoire "audit"
+
+ADVOCARE "cct/date.cct"
+ADVOCARE "cct/fmt.cct"
+ADVOCARE "cct/fs.cct"
+ADVOCARE "cct/hash.cct"
+ADVOCARE "cct/result.cct"
+ADVOCARE "cct/uuid.cct"
+ADVOCARE "cct/verbum.cct"
+ADVOCARE "cct/verbum_builder.cct"
+
+ORDO AuditResult
+  AUDIT_SUCCESS
+  AUDIT_FAILURE
+  AUDIT_UNKNOWN
+FIN ORDO
+
+SIGILLUM AuditOptions
+  flush_each_write: VERUM
+  enable_hash_chain: VERUM
+  strict_required_fields: VERUM
+FIN SIGILLUM
+
+SIGILLUM AuditActor
+  actor_type: VERBUM
+  actor_id: VERBUM
+  actor_label: VERBUM
+FIN SIGILLUM
+
+SIGILLUM AuditTarget
+  target_type: VERBUM
+  target_id: VERBUM
+  target_label: VERBUM
+FIN SIGILLUM
+
+SIGILLUM AuditEvent
+  event_id: VERBUM
+  occurred_at_iso: VERBUM
+  actor: AuditActor
+  action: VERBUM
+  target: AuditTarget
+  result: AuditResult
+  reason: VERBUM
+  request_id: VERBUM
+  metadata_json: VERBUM
+  previous_hash: VERBUM
+  event_hash: VERBUM
+FIN SIGILLUM
+
+SIGILLUM AuditLogger
+  path: VERBUM
+  options: AuditOptions
+  last_hash: VERBUM
+FIN SIGILLUM
+
+SIGILLUM AuditError
+  mensagem: VERBUM
+FIN SIGILLUM
+
+RITUALE AuditErrorMsg(VERBUM mensagem) REDDE AuditError
+  EVOCA AuditError err
+  VINCIRE err.mensagem AD mensagem
+  REDDE err
+EXPLICIT RITUALE
+
+RITUALE audit_ok() REDDE SPECULUM NIHIL
+  REDDE CONIURA Ok GENUS(REX, AuditError)(0)
+EXPLICIT RITUALE
+
+RITUALE audit_err(VERBUM mensagem) REDDE SPECULUM NIHIL
+  REDDE CONIURA Err GENUS(REX, AuditError)(CONIURA AuditErrorMsg(mensagem))
+EXPLICIT RITUALE
+
+RITUALE audit_options_default() REDDE AuditOptions
+  EVOCA AuditOptions options
+  VINCIRE options.flush_each_write AD VERUM
+  VINCIRE options.enable_hash_chain AD FALSUM
+  VINCIRE options.strict_required_fields AD VERUM
+  REDDE options
+EXPLICIT RITUALE
+
+RITUALE audit_actor_make(VERBUM actor_type, VERBUM actor_id, VERBUM actor_label) REDDE AuditActor
+  EVOCA AuditActor actor
+  VINCIRE actor.actor_type AD actor_type
+  VINCIRE actor.actor_id AD actor_id
+  VINCIRE actor.actor_label AD actor_label
+  REDDE actor
+EXPLICIT RITUALE
+
+RITUALE audit_target_make(VERBUM target_type, VERBUM target_id, VERBUM target_label) REDDE AuditTarget
+  EVOCA AuditTarget target
+  VINCIRE target.target_type AD target_type
+  VINCIRE target.target_id AD target_id
+  VINCIRE target.target_label AD target_label
+  REDDE target
+EXPLICIT RITUALE
+
+RITUALE audit_result_to_string(AuditResult result) REDDE VERBUM
+  ELIGE result
+    CASUS AUDIT_SUCCESS:
+      REDDE "success"
+    CASUS AUDIT_FAILURE:
+      REDDE "failure"
+    ALIOQUIN:
+      REDDE "unknown"
+  FIN ELIGE
+EXPLICIT RITUALE
+
+RITUALE audit_escape(VERBUM texto) REDDE VERBUM
+  EVOCA SPECULUM NIHIL b AD CONIURA builder_init()
+  EVOCA REX i AD 0
+  EVOCA REX n AD CONIURA len(texto)
+  DUM i < n
+    EVOCA MILES c AD CONIURA char_at(texto, i)
+    SI c == 34
+      CONIURA builder_append(b, "\\\"")
+    ALITER
+      SI c == 92
+        CONIURA builder_append(b, "\\\\")
+      ALITER
+        SI c == 10
+          CONIURA builder_append(b, "\\n")
+        ALITER
+          CONIURA builder_append(b, CONIURA from_char(c))
+        FIN SI
+      FIN SI
+    FIN SI
+    VINCIRE i AD i + 1
+  FIN DUM
+  EVOCA VERBUM out AD CONIURA builder_to_verbum(b)
+  CONIURA builder_free(b)
+  REDDE out
+EXPLICIT RITUALE
+
+RITUALE audit_now_iso() REDDE VERBUM
+  REDDE CONIURA datetime_format(CONIURA datetime_now(), "%Y-%m-%dT%H:%M:%S%z")
+EXPLICIT RITUALE
+
+RITUALE audit_logger_open(VERBUM path, AuditOptions options) REDDE AuditLogger
+  EVOCA AuditLogger logger
+  VINCIRE logger.path AD path
+  VINCIRE logger.options AD options
+  VINCIRE logger.last_hash AD ""
+  SI NON CONIURA exists(path)
+    CONIURA write_all(path, "")
+  FIN SI
+  REDDE logger
+EXPLICIT RITUALE
+
+RITUALE audit_event_new(AuditActor actor, VERBUM action, AuditTarget target, AuditResult result, VERBUM reason, VERBUM request_id, VERBUM metadata_json) REDDE AuditEvent
+  EVOCA UUID raw_id AD CONIURA uuid_v7()
+  EVOCA AuditEvent event
+  VINCIRE event.event_id AD CONIURA uuid_to_string(raw_id)
+  VINCIRE event.occurred_at_iso AD CONIURA audit_now_iso()
+  VINCIRE event.actor AD actor
+  VINCIRE event.action AD action
+  VINCIRE event.target AD target
+  VINCIRE event.result AD result
+  VINCIRE event.reason AD reason
+  VINCIRE event.request_id AD request_id
+  VINCIRE event.metadata_json AD metadata_json
+  VINCIRE event.previous_hash AD ""
+  VINCIRE event.event_hash AD ""
+  REDDE event
+EXPLICIT RITUALE
+
+RITUALE audit_validate_event(AuditLogger logger, AuditEvent event) REDDE SPECULUM NIHIL
+  SI NON logger.options.strict_required_fields
+    REDDE CONIURA audit_ok()
+  FIN SI
+  SI CONIURA len(event.action) == 0
+    REDDE CONIURA audit_err("audit action obrigatoria")
+  FIN SI
+  SI CONIURA len(event.actor.actor_type) == 0
+    REDDE CONIURA audit_err("audit actor_type obrigatorio")
+  FIN SI
+  SI CONIURA len(event.target.target_type) == 0
+    REDDE CONIURA audit_err("audit target_type obrigatorio")
+  FIN SI
+  REDDE CONIURA audit_ok()
+EXPLICIT RITUALE
+
+RITUALE audit_hash_seed(AuditEvent event) REDDE VERBUM
+  EVOCA VERBUM seed AD event.event_id
+  VINCIRE seed AD CONIURA concat(seed, "|")
+  VINCIRE seed AD CONIURA concat(seed, event.occurred_at_iso)
+  VINCIRE seed AD CONIURA concat(seed, "|")
+  VINCIRE seed AD CONIURA concat(seed, event.actor.actor_type)
+  VINCIRE seed AD CONIURA concat(seed, "|")
+  VINCIRE seed AD CONIURA concat(seed, event.actor.actor_id)
+  VINCIRE seed AD CONIURA concat(seed, "|")
+  VINCIRE seed AD CONIURA concat(seed, event.action)
+  VINCIRE seed AD CONIURA concat(seed, "|")
+  VINCIRE seed AD CONIURA concat(seed, event.target.target_type)
+  VINCIRE seed AD CONIURA concat(seed, "|")
+  VINCIRE seed AD CONIURA concat(seed, event.target.target_id)
+  VINCIRE seed AD CONIURA concat(seed, "|")
+  VINCIRE seed AD CONIURA concat(seed, CONIURA audit_result_to_string(event.result))
+  VINCIRE seed AD CONIURA concat(seed, "|")
+  VINCIRE seed AD CONIURA concat(seed, event.reason)
+  VINCIRE seed AD CONIURA concat(seed, "|")
+  VINCIRE seed AD CONIURA concat(seed, event.request_id)
+  VINCIRE seed AD CONIURA concat(seed, "|")
+  VINCIRE seed AD CONIURA concat(seed, event.metadata_json)
+  VINCIRE seed AD CONIURA concat(seed, "|")
+  VINCIRE seed AD CONIURA concat(seed, event.previous_hash)
+  REDDE seed
+EXPLICIT RITUALE
+
+RITUALE audit_apply_hash_chain(SPECULUM AuditLogger logger, SPECULUM AuditEvent event) REDDE NIHIL
+  SI NON (*logger).options.enable_hash_chain
+    REDDE
+  FIN SI
+  VINCIRE (*event).previous_hash AD (*logger).last_hash
+  VINCIRE (*event).event_hash AD CONIURA stringify_int(CONIURA crc32(CONIURA audit_hash_seed(*event)))
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE audit_format_event(AuditEvent event) REDDE VERBUM
+  EVOCA SPECULUM NIHIL b AD CONIURA builder_init()
+  CONIURA builder_append(b, "{\"event_id\":\"")
+  CONIURA builder_append(b, CONIURA audit_escape(event.event_id))
+  CONIURA builder_append(b, "\",\"occurred_at_iso\":\"")
+  CONIURA builder_append(b, CONIURA audit_escape(event.occurred_at_iso))
+  CONIURA builder_append(b, "\",\"actor\":{\"actor_type\":\"")
+  CONIURA builder_append(b, CONIURA audit_escape(event.actor.actor_type))
+  CONIURA builder_append(b, "\",\"actor_id\":\"")
+  CONIURA builder_append(b, CONIURA audit_escape(event.actor.actor_id))
+  CONIURA builder_append(b, "\",\"actor_label\":\"")
+  CONIURA builder_append(b, CONIURA audit_escape(event.actor.actor_label))
+  CONIURA builder_append(b, "\"},\"action\":\"")
+  CONIURA builder_append(b, CONIURA audit_escape(event.action))
+  CONIURA builder_append(b, "\",\"target\":{\"target_type\":\"")
+  CONIURA builder_append(b, CONIURA audit_escape(event.target.target_type))
+  CONIURA builder_append(b, "\",\"target_id\":\"")
+  CONIURA builder_append(b, CONIURA audit_escape(event.target.target_id))
+  CONIURA builder_append(b, "\",\"target_label\":\"")
+  CONIURA builder_append(b, CONIURA audit_escape(event.target.target_label))
+  CONIURA builder_append(b, "\"},\"result\":\"")
+  CONIURA builder_append(b, CONIURA audit_result_to_string(event.result))
+  CONIURA builder_append(b, "\",\"reason\":\"")
+  CONIURA builder_append(b, CONIURA audit_escape(event.reason))
+  CONIURA builder_append(b, "\",\"request_id\":\"")
+  CONIURA builder_append(b, CONIURA audit_escape(event.request_id))
+  CONIURA builder_append(b, "\",\"metadata\":")
+  SI CONIURA len(event.metadata_json) == 0
+    CONIURA builder_append(b, "{}")
+  ALITER
+    CONIURA builder_append(b, event.metadata_json)
+  FIN SI
+  CONIURA builder_append(b, ",\"previous_hash\":\"")
+  CONIURA builder_append(b, CONIURA audit_escape(event.previous_hash))
+  CONIURA builder_append(b, "\",\"event_hash\":\"")
+  CONIURA builder_append(b, CONIURA audit_escape(event.event_hash))
+  CONIURA builder_append(b, "\"}")
+  EVOCA VERBUM out AD CONIURA builder_to_verbum(b)
+  CONIURA builder_free(b)
+  REDDE out
+EXPLICIT RITUALE
+
+RITUALE audit_append_event(SPECULUM AuditLogger logger, AuditEvent event) REDDE SPECULUM NIHIL
+  EVOCA SPECULUM NIHIL valid AD CONIURA audit_validate_event(*logger, event)
+  SI CONIURA result_is_err GENUS(REX, AuditError)(valid)
+    REDDE valid
+  FIN SI
+  CONIURA audit_apply_hash_chain(logger, SPECULUM event)
+  EVOCA VERBUM line AD CONIURA audit_format_event(event)
+  VINCIRE line AD CONIURA concat(line, "\n")
+  CONIURA append_all((*logger).path, line)
+  SI (*logger).options.enable_hash_chain
+    VINCIRE (*logger).last_hash AD event.event_hash
+  FIN SI
+  REDDE CONIURA audit_ok()
+EXPLICIT RITUALE
+
+RITUALE audit_last_hash(AuditLogger logger) REDDE VERBUM
+  REDDE logger.last_hash
+EXPLICIT RITUALE
+
+EXPLICIT grimoire
