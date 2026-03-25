@@ -47,6 +47,7 @@ typedef struct {
     bool uses_compress;             /* link gzip bridge only when generated code needs it */
     bool uses_filetype;             /* link filetype bridge only when generated code needs it */
     bool uses_image_ops;            /* link image bridge only when generated code needs it */
+    bool uses_signal;               /* link signal bridge only when generated code needs it */
     cct_profile_t profile;          /* FASE 16A.2: compilation profile */
     const char *entry_rituale_name; /* FASE 16B.4: explicit freestanding entry ritual */
 

@@ -31,6 +31,7 @@ typedef struct {
     bool emit_compress_helpers;
     bool emit_filetype_helpers;
     bool emit_image_ops_helpers;
+    bool emit_signal_helpers;
     bool emit_verbum_helpers;
     bool emit_fmt_helpers;
     bool emit_db_helpers;
@@ -49,5 +50,6 @@ bool cct_runtime_emit_toml_helpers(FILE *out);
 bool cct_runtime_emit_compress_helpers(FILE *out);
 bool cct_runtime_emit_filetype_helpers(FILE *out);
 bool cct_runtime_emit_image_ops_helpers(FILE *out);
+bool cct_runtime_emit_signal_helpers(FILE *out);
 
 #endif /* CCT_RUNTIME_H */

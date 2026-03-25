@@ -297,6 +297,7 @@ bool cct_cg_emit_generated_c_prelude(FILE *out, const cct_codegen_t *cg) {
     rt_cfg.emit_compress_helpers = cg->uses_compress;
     rt_cfg.emit_filetype_helpers = cg->uses_filetype;
     rt_cfg.emit_image_ops_helpers = cg->uses_image_ops;
+    rt_cfg.emit_signal_helpers = cg->uses_signal;
     if (!cct_runtime_emit_c_helpers(out, &rt_cfg)) return false;
     return true;
 }

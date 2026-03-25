@@ -3740,6 +3740,62 @@ static bool cg_emit_obsecro_expr(FILE *out, cct_codegen_t *cg, const cct_ast_nod
         return true;
     }
 
+    if (strcmp(name, "signal_builtin_is_supported") == 0 ||
+        strcmp(name, "signal_builtin_install") == 0 ||
+        strcmp(name, "signal_builtin_last_kind") == 0 ||
+        strcmp(name, "signal_builtin_last_sequence") == 0 ||
+        strcmp(name, "signal_builtin_last_unix_ms") == 0 ||
+        strcmp(name, "signal_builtin_check_shutdown") == 0 ||
+        strcmp(name, "signal_builtin_received_sigterm") == 0 ||
+        strcmp(name, "signal_builtin_received_sigint") == 0 ||
+        strcmp(name, "signal_builtin_received_sighup") == 0) {
+        if (argc != 0) {
+            cg_report_nodef(cg, expr, "OBSECRO %s expects no arguments in FASE 34D", name);
+            return false;
+        }
+        cg->uses_signal = true;
+        if (strcmp(name, "signal_builtin_is_supported") == 0) fputs("cct_rt_signal_is_supported()", out);
+        else if (strcmp(name, "signal_builtin_install") == 0) fputs("cct_rt_signal_install()", out);
+        else if (strcmp(name, "signal_builtin_last_kind") == 0) fputs("cct_rt_signal_last_kind()", out);
+        else if (strcmp(name, "signal_builtin_last_sequence") == 0) fputs("cct_rt_signal_last_sequence()", out);
+        else if (strcmp(name, "signal_builtin_last_unix_ms") == 0) fputs("cct_rt_signal_last_unix_ms()", out);
+        else if (strcmp(name, "signal_builtin_check_shutdown") == 0) fputs("cct_rt_signal_check_shutdown()", out);
+        else if (strcmp(name, "signal_builtin_received_sigterm") == 0) fputs("cct_rt_signal_received_sigterm()", out);
+        else if (strcmp(name, "signal_builtin_received_sigint") == 0) fputs("cct_rt_signal_received_sigint()", out);
+        else fputs("cct_rt_signal_received_sighup()", out);
+        if (out_kind) *out_kind = CCT_CODEGEN_VALUE_INT;
+        return true;
+    }
+
+    if (strcmp(name, "signal_builtin_clear") == 0) {
+        if (argc != 0) {
+            cg_report_node(cg, expr, "OBSECRO signal_builtin_clear expects no arguments in FASE 34D");
+            return false;
+        }
+        cg->uses_signal = true;
+        fputs("cct_rt_signal_clear()", out);
+        if (out_kind) *out_kind = CCT_CODEGEN_VALUE_NIHIL;
+        return true;
+    }
+
+    if (strcmp(name, "signal_builtin_raise_self") == 0) {
+        if (argc != 1) {
+            cg_report_node(cg, expr, "OBSECRO signal_builtin_raise_self expects exactly one integer code in FASE 34D");
+            return false;
+        }
+        cct_codegen_value_kind_t k0 = CCT_CODEGEN_VALUE_UNKNOWN;
+        cg->uses_signal = true;
+        fputs("cct_rt_signal_raise_self(", out);
+        if (!cg_emit_expr(out, cg, args->nodes[0], &k0)) return false;
+        if (!(k0 == CCT_CODEGEN_VALUE_INT || k0 == CCT_CODEGEN_VALUE_BOOL)) {
+            cg_report_node(cg, args->nodes[0], "OBSECRO signal_builtin_raise_self requires integer code argument in FASE 34D");
+            return false;
+        }
+        fputs(")", out);
+        if (out_kind) *out_kind = CCT_CODEGEN_VALUE_INT;
+        return true;
+    }
+
     if (strcmp(name, "gettext_builtin_catalog_new") == 0) {
         if (argc != 1) {
             cg_report_node(cg, expr, "OBSECRO gettext_builtin_catalog_new expects exactly (locale) in FASE 33E");
@@ -8205,6 +8261,37 @@ static bool cg_emit_scribe_stmt(FILE *out, cct_codegen_t *cg, const cct_ast_node
         return true;
     }
 
+    if (strcmp(obsecro_node->as.obsecro.name, "signal_builtin_clear") == 0) {
+        cct_ast_node_list_t *args = obsecro_node->as.obsecro.arguments;
+        if (args && args->count != 0) {
+            cg_report_node(cg, obsecro_node, "OBSECRO signal_builtin_clear expects no arguments in FASE 34D");
+            return false;
+        }
+        cg->uses_signal = true;
+        cg_emit_indent(out, indent);
+        fputs("cct_rt_signal_clear();\n", out);
+        return true;
+    }
+
+    if (strcmp(obsecro_node->as.obsecro.name, "signal_builtin_raise_self") == 0) {
+        cct_ast_node_list_t *args = obsecro_node->as.obsecro.arguments;
+        if (!args || args->count != 1) {
+            cg_report_node(cg, obsecro_node, "OBSECRO signal_builtin_raise_self expects exactly one integer code in FASE 34D");
+            return false;
+        }
+        cct_codegen_value_kind_t kind = CCT_CODEGEN_VALUE_UNKNOWN;
+        cg->uses_signal = true;
+        cg_emit_indent(out, indent);
+        fputs("cct_rt_signal_raise_self(", out);
+        if (!cg_emit_expr(out, cg, args->nodes[0], &kind)) return false;
+        if (!(kind == CCT_CODEGEN_VALUE_INT || kind == CCT_CODEGEN_VALUE_BOOL)) {
+            cg_report_node(cg, args->nodes[0], "OBSECRO signal_builtin_raise_self requires integer code argument");
+            return false;
+        }
+        fputs(");\n", out);
+        return true;
+    }
+
     if (strcmp(obsecro_node->as.obsecro.name, "bytes_set") == 0) {
         cct_ast_node_list_t *args = obsecro_node->as.obsecro.arguments;
         if (!args || args->count != 3) {
@@ -10134,6 +10221,20 @@ static bool cg_precollect_strings_from_expr(cct_codegen_t *cg, const cct_ast_nod
                 cg->uses_image_ops = true;
             }
             if (expr->as.obsecro.name &&
+                (strcmp(expr->as.obsecro.name, "signal_builtin_is_supported") == 0 ||
+                 strcmp(expr->as.obsecro.name, "signal_builtin_install") == 0 ||
+                 strcmp(expr->as.obsecro.name, "signal_builtin_last_kind") == 0 ||
+                 strcmp(expr->as.obsecro.name, "signal_builtin_last_sequence") == 0 ||
+                 strcmp(expr->as.obsecro.name, "signal_builtin_last_unix_ms") == 0 ||
+                 strcmp(expr->as.obsecro.name, "signal_builtin_clear") == 0 ||
+                 strcmp(expr->as.obsecro.name, "signal_builtin_check_shutdown") == 0 ||
+                 strcmp(expr->as.obsecro.name, "signal_builtin_received_sigterm") == 0 ||
+                 strcmp(expr->as.obsecro.name, "signal_builtin_received_sigint") == 0 ||
+                 strcmp(expr->as.obsecro.name, "signal_builtin_received_sighup") == 0 ||
+                 strcmp(expr->as.obsecro.name, "signal_builtin_raise_self") == 0)) {
+                cg->uses_signal = true;
+            }
+            if (expr->as.obsecro.name &&
                 (strcmp(expr->as.obsecro.name, "db_open") == 0 ||
                  strcmp(expr->as.obsecro.name, "db_close") == 0 ||
                  strcmp(expr->as.obsecro.name, "db_exec") == 0 ||
@@ -10853,6 +10954,7 @@ void cct_codegen_init(cct_codegen_t *cg, const char *filename) {
     cg->uses_compress = false;
     cg->uses_filetype = false;
     cg->uses_image_ops = false;
+    cg->uses_signal = false;
 #ifdef _WIN32
     cg->host_cc = "gcc";
 #else

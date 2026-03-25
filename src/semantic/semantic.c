@@ -1418,7 +1418,7 @@ static cct_sem_type_t* sem_resolve_ast_type(cct_semantic_analyzer_t *sem, const 
  * ======================================================================== */
 
 static const cct_sem_builtin_spec_t* sem_find_builtin(cct_semantic_analyzer_t *sem, const char *name) {
-    static cct_sem_builtin_spec_t specs[400];
+static cct_sem_builtin_spec_t specs[404];
     static bool initialized = false;
 
     if (!initialized) {
@@ -1814,6 +1814,17 @@ static const cct_sem_builtin_spec_t* sem_find_builtin(cct_semantic_analyzer_t *s
         specs[388].name = "gettext_builtin_translate_plural"; specs[388].min_args = 4; specs[388].variadic = false;
         specs[389].name = "gettext_builtin_default_set"; specs[389].min_args = 1; specs[389].variadic = false;
         specs[390].name = "gettext_builtin_default_translate"; specs[390].min_args = 1; specs[390].variadic = false;
+        specs[391].name = "signal_builtin_is_supported"; specs[391].min_args = 0; specs[391].variadic = false;
+        specs[392].name = "signal_builtin_install"; specs[392].min_args = 0; specs[392].variadic = false;
+        specs[393].name = "signal_builtin_last_kind"; specs[393].min_args = 0; specs[393].variadic = false;
+        specs[394].name = "signal_builtin_last_sequence"; specs[394].min_args = 0; specs[394].variadic = false;
+        specs[395].name = "signal_builtin_last_unix_ms"; specs[395].min_args = 0; specs[395].variadic = false;
+        specs[396].name = "signal_builtin_clear"; specs[396].min_args = 0; specs[396].variadic = false;
+        specs[397].name = "signal_builtin_check_shutdown"; specs[397].min_args = 0; specs[397].variadic = false;
+        specs[398].name = "signal_builtin_received_sigterm"; specs[398].min_args = 0; specs[398].variadic = false;
+        specs[399].name = "signal_builtin_received_sigint"; specs[399].min_args = 0; specs[399].variadic = false;
+        specs[400].name = "signal_builtin_received_sighup"; specs[400].min_args = 0; specs[400].variadic = false;
+        specs[401].name = "signal_builtin_raise_self"; specs[401].min_args = 1; specs[401].variadic = false;
         initialized = true;
     }
 
@@ -2208,6 +2219,17 @@ static const cct_sem_builtin_spec_t* sem_find_builtin(cct_semantic_analyzer_t *s
     specs[388].return_type = &sem->type_verbum;
     specs[389].return_type = &sem->type_verum;
     specs[390].return_type = &sem->type_verbum;
+    specs[391].return_type = &sem->type_rex;
+    specs[392].return_type = &sem->type_rex;
+    specs[393].return_type = &sem->type_rex;
+    specs[394].return_type = &sem->type_rex;
+    specs[395].return_type = &sem->type_rex;
+    specs[396].return_type = &sem->type_nihil;
+    specs[397].return_type = &sem->type_rex;
+    specs[398].return_type = &sem->type_rex;
+    specs[399].return_type = &sem->type_rex;
+    specs[400].return_type = &sem->type_rex;
+    specs[401].return_type = &sem->type_rex;
 
     for (size_t i = 0; i < sizeof(specs) / sizeof(specs[0]); i++) {
         if (!specs[i].name) continue;

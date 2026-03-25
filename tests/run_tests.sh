@@ -10005,6 +10005,356 @@ fi
 fi
 
 fi
+if cct_phase_block_enabled "34A"; then
+echo ""
+echo "========================================"
+echo "FASE 34A: cct/log"
+echo "========================================"
+cct_phase31_prepare >/dev/null 2>&1
+mkdir -p "$CCT_TMP_DIR/phase34a"
+
+echo "Test 1872: cct/log converte niveis canonicamente"
+BASE_1872="$CCT_TMP_DIR/phase34a/test_1872_log_levels"
+if [ "$RC_31_READY" -eq 0 ] && cct_phase32_copy_compile_and_run "$PHASE31_HOST_WRAPPER" "tests/integration/log_levels_34a.cct" "$BASE_1872" 0; then
+    test_pass "cct/log converte niveis canonicamente"
+else
+    test_fail "cct/log regrediu conversao de niveis"
+fi
+
+echo "Test 1873: cct/log formata linha texto"
+BASE_1873="$CCT_TMP_DIR/phase34a/test_1873_log_format_text"
+if [ "$RC_31_READY" -eq 0 ] && cct_phase32_copy_compile_and_run "$PHASE31_HOST_WRAPPER" "tests/integration/log_format_text_34a.cct" "$BASE_1873" 0; then
+    test_pass "cct/log formata linha texto"
+else
+    test_fail "cct/log regrediu formatacao texto"
+fi
+
+echo "Test 1874: cct/log formata linha json"
+BASE_1874="$CCT_TMP_DIR/phase34a/test_1874_log_format_json"
+if [ "$RC_31_READY" -eq 0 ] && cct_phase32_copy_compile_and_run "$PHASE31_HOST_WRAPPER" "tests/integration/log_format_json_34a.cct" "$BASE_1874" 0; then
+    test_pass "cct/log formata linha json"
+else
+    test_fail "cct/log regrediu formatacao json"
+fi
+
+echo "Test 1875: cct/log grava sink em arquivo"
+BASE_1875="$CCT_TMP_DIR/phase34a/test_1875_log_file_sink"
+if [ "$RC_31_READY" -eq 0 ] && cct_phase32_copy_compile_and_run "$PHASE31_HOST_WRAPPER" "tests/integration/log_file_sink_34a.cct" "$BASE_1875" 0; then
+    test_pass "cct/log grava sink em arquivo"
+else
+    test_fail "cct/log regrediu sink em arquivo"
+fi
+
+echo "Test 1876: cct/log respeita threshold"
+BASE_1876="$CCT_TMP_DIR/phase34a/test_1876_log_threshold"
+if [ "$RC_31_READY" -eq 0 ] && cct_phase32_copy_compile_and_run "$PHASE31_HOST_WRAPPER" "tests/integration/log_threshold_34a.cct" "$BASE_1876" 0; then
+    test_pass "cct/log respeita threshold"
+else
+    test_fail "cct/log regrediu threshold"
+fi
+
+echo "Test 1877: cct/log aplica rate limit"
+BASE_1877="$CCT_TMP_DIR/phase34a/test_1877_log_rate_limit"
+if [ "$RC_31_READY" -eq 0 ] && cct_phase32_copy_compile_and_run "$PHASE31_HOST_WRAPPER" "tests/integration/log_rate_limit_34a.cct" "$BASE_1877" 0; then
+    test_pass "cct/log aplica rate limit"
+else
+    test_fail "cct/log regrediu rate limit"
+fi
+
+echo "Test 1878: ./cct promovido executa log source-backed"
+BASE_1878="$CCT_TMP_DIR/phase34a/test_1878_default_wrapper_log"
+if [ "$RC_31_READY" -eq 0 ] && make bootstrap-promote >"$PHASE31_LOG_DIR/test_1878.stdout.log" 2>"$PHASE31_LOG_DIR/test_1878.stderr.log" && cct_phase32_copy_compile_and_run "$PHASE31_DEFAULT_WRAPPER" "tests/integration/log_default_wrapper_34a.cct" "$BASE_1878" 0; then
+    test_pass "./cct promovido executa log source-backed"
+else
+    test_fail "./cct promovido nao executou log source-backed"
+fi
+fi
+
+if cct_phase_block_enabled "34B"; then
+echo ""
+echo "========================================"
+echo "FASE 34B: cct/trace"
+echo "========================================"
+cct_phase31_prepare >/dev/null 2>&1
+mkdir -p "$CCT_TMP_DIR/phase34b"
+
+echo "Test 1879: cct/trace inicia e finaliza spans"
+BASE_1879="$CCT_TMP_DIR/phase34b/test_1879_trace_lifecycle"
+if [ "$RC_31_READY" -eq 0 ] && cct_phase32_copy_compile_and_run "$PHASE31_HOST_WRAPPER" "tests/integration/trace_lifecycle_34b.cct" "$BASE_1879" 0; then
+    test_pass "cct/trace inicia e finaliza spans"
+else
+    test_fail "cct/trace regrediu ciclo de vida de spans"
+fi
+
+echo "Test 1880: cct/trace relaciona spans filhos"
+BASE_1880="$CCT_TMP_DIR/phase34b/test_1880_trace_child_spans"
+if [ "$RC_31_READY" -eq 0 ] && cct_phase32_copy_compile_and_run "$PHASE31_HOST_WRAPPER" "tests/integration/trace_child_spans_34b.cct" "$BASE_1880" 0; then
+    test_pass "cct/trace relaciona spans filhos"
+else
+    test_fail "cct/trace regrediu hierarquia de spans"
+fi
+
+echo "Test 1881: cct/trace serializa atributos em json lines"
+BASE_1881="$CCT_TMP_DIR/phase34b/test_1881_trace_attributes_json"
+if [ "$RC_31_READY" -eq 0 ] && cct_phase32_copy_compile_and_run "$PHASE31_HOST_WRAPPER" "tests/integration/trace_attributes_json_34b.cct" "$BASE_1881" 0; then
+    test_pass "cct/trace serializa atributos em json lines"
+else
+    test_fail "cct/trace regrediu serializacao de atributos"
+fi
+
+echo "Test 1882: cct/trace escreve e relê arquivo ctrace"
+BASE_1882="$CCT_TMP_DIR/phase34b/test_1882_trace_write_read"
+if [ "$RC_31_READY" -eq 0 ] && cct_phase32_copy_compile_and_run "$PHASE31_HOST_WRAPPER" "tests/integration/trace_write_read_34b.cct" "$BASE_1882" 0; then
+    test_pass "cct/trace escreve e relê arquivo ctrace"
+else
+    test_fail "cct/trace regrediu roundtrip de arquivo"
+fi
+
+echo "Test 1883: cct/trace rejeita json lines invalido"
+BASE_1883="$CCT_TMP_DIR/phase34b/test_1883_trace_parse_invalid"
+if [ "$RC_31_READY" -eq 0 ] && cct_phase32_copy_compile_and_run "$PHASE31_HOST_WRAPPER" "tests/integration/trace_parse_invalid_34b.cct" "$BASE_1883" 0; then
+    test_pass "cct/trace rejeita json lines invalido"
+else
+    test_fail "cct/trace nao rejeitou json lines invalido"
+fi
+
+echo "Test 1884: ./cct promovido executa trace source-backed"
+BASE_1884="$CCT_TMP_DIR/phase34b/test_1884_trace_default_wrapper"
+if [ "$RC_31_READY" -eq 0 ] && make bootstrap-promote >"$PHASE31_LOG_DIR/test_1884.stdout.log" 2>"$PHASE31_LOG_DIR/test_1884.stderr.log" && cct_phase32_copy_compile_and_run "$PHASE31_DEFAULT_WRAPPER" "tests/integration/trace_default_wrapper_34b.cct" "$BASE_1884" 0; then
+    test_pass "./cct promovido executa trace source-backed"
+else
+    test_fail "./cct promovido nao executou trace source-backed"
+fi
+fi
+
+if cct_phase_block_enabled "34C"; then
+echo ""
+echo "========================================"
+echo "FASE 34C: cct/metrics"
+echo "========================================"
+cct_phase31_prepare >/dev/null 2>&1
+mkdir -p "$CCT_TMP_DIR/phase34c"
+
+echo "Test 1885: cct/metrics counter baseline"
+BASE_1885="$CCT_TMP_DIR/phase34c/test_1885_metrics_counter"
+if [ "$RC_31_READY" -eq 0 ] && cct_phase32_copy_compile_and_run "$PHASE31_HOST_WRAPPER" "tests/integration/metrics_counter_34c.cct" "$BASE_1885" 0; then
+    test_pass "cct/metrics counter baseline"
+else
+    test_fail "cct/metrics regrediu counter"
+fi
+
+echo "Test 1886: cct/metrics gauge baseline"
+BASE_1886="$CCT_TMP_DIR/phase34c/test_1886_metrics_gauge"
+if [ "$RC_31_READY" -eq 0 ] && cct_phase32_copy_compile_and_run "$PHASE31_HOST_WRAPPER" "tests/integration/metrics_gauge_34c.cct" "$BASE_1886" 0; then
+    test_pass "cct/metrics gauge baseline"
+else
+    test_fail "cct/metrics regrediu gauge"
+fi
+
+echo "Test 1887: cct/metrics histogram baseline"
+BASE_1887="$CCT_TMP_DIR/phase34c/test_1887_metrics_histogram"
+if [ "$RC_31_READY" -eq 0 ] && cct_phase32_copy_compile_and_run "$PHASE31_HOST_WRAPPER" "tests/integration/metrics_histogram_34c.cct" "$BASE_1887" 0; then
+    test_pass "cct/metrics histogram baseline"
+else
+    test_fail "cct/metrics regrediu histogram"
+fi
+
+echo "Test 1888: cct/metrics exporta texto"
+BASE_1888="$CCT_TMP_DIR/phase34c/test_1888_metrics_export_text"
+if [ "$RC_31_READY" -eq 0 ] && cct_phase32_copy_compile_and_run "$PHASE31_HOST_WRAPPER" "tests/integration/metrics_export_text_34c.cct" "$BASE_1888" 0; then
+    test_pass "cct/metrics exporta texto"
+else
+    test_fail "cct/metrics regrediu export texto"
+fi
+
+echo "Test 1889: cct/metrics exporta json"
+BASE_1889="$CCT_TMP_DIR/phase34c/test_1889_metrics_export_json"
+if [ "$RC_31_READY" -eq 0 ] && cct_phase32_copy_compile_and_run "$PHASE31_HOST_WRAPPER" "tests/integration/metrics_export_json_34c.cct" "$BASE_1889" 0; then
+    test_pass "cct/metrics exporta json"
+else
+    test_fail "cct/metrics regrediu export json"
+fi
+
+echo "Test 1890: ./cct promovido executa metrics source-backed"
+BASE_1890="$CCT_TMP_DIR/phase34c/test_1890_metrics_default_wrapper"
+if [ "$RC_31_READY" -eq 0 ] && make bootstrap-promote >"$PHASE31_LOG_DIR/test_1890.stdout.log" 2>"$PHASE31_LOG_DIR/test_1890.stderr.log" && cct_phase32_copy_compile_and_run "$PHASE31_DEFAULT_WRAPPER" "tests/integration/metrics_default_wrapper_34c.cct" "$BASE_1890" 0; then
+    test_pass "./cct promovido executa metrics source-backed"
+else
+    test_fail "./cct promovido nao executou metrics source-backed"
+fi
+fi
+
+if cct_phase_block_enabled "34D"; then
+echo ""
+echo "========================================"
+echo "FASE 34D: cct/signal"
+echo "========================================"
+cct_phase31_prepare >/dev/null 2>&1
+mkdir -p "$CCT_TMP_DIR/phase34d"
+
+echo "Test 1891: cct/signal instala handlers"
+BASE_1891="$CCT_TMP_DIR/phase34d/test_1891_signal_supported"
+if [ "$RC_31_READY" -eq 0 ] && cct_phase32_copy_compile_and_run "$PHASE31_HOST_WRAPPER" "tests/integration/signal_supported_34d.cct" "$BASE_1891" 0; then
+    test_pass "cct/signal instala handlers"
+else
+    test_fail "cct/signal falhou ao instalar handlers"
+fi
+
+echo "Test 1892: cct/signal converte kinds"
+BASE_1892="$CCT_TMP_DIR/phase34d/test_1892_signal_kind_map"
+if [ "$RC_31_READY" -eq 0 ] && cct_phase32_copy_compile_and_run "$PHASE31_HOST_WRAPPER" "tests/integration/signal_kind_map_34d.cct" "$BASE_1892" 0; then
+    test_pass "cct/signal converte kinds"
+else
+    test_fail "cct/signal regrediu mapeamento de kinds"
+fi
+
+echo "Test 1893: cct/signal observa sighup sem shutdown"
+BASE_1893="$CCT_TMP_DIR/phase34d/test_1893_signal_sighup"
+if [ "$RC_31_READY" -eq 0 ] && cct_phase32_copy_compile_and_run "$PHASE31_HOST_WRAPPER" "tests/integration/signal_sighup_34d.cct" "$BASE_1893" 0; then
+    test_pass "cct/signal observa sighup sem shutdown"
+else
+    test_fail "cct/signal regrediu tratamento de sighup"
+fi
+
+echo "Test 1894: cct/signal marca shutdown em sigterm"
+BASE_1894="$CCT_TMP_DIR/phase34d/test_1894_signal_sigterm_shutdown"
+if [ "$RC_31_READY" -eq 0 ] && cct_phase32_copy_compile_and_run "$PHASE31_HOST_WRAPPER" "tests/integration/signal_sigterm_shutdown_34d.cct" "$BASE_1894" 0; then
+    test_pass "cct/signal marca shutdown em sigterm"
+else
+    test_fail "cct/signal regrediu shutdown por sigterm"
+fi
+
+echo "Test 1895: cct/signal limpa ultimo evento"
+BASE_1895="$CCT_TMP_DIR/phase34d/test_1895_signal_clear_last"
+if [ "$RC_31_READY" -eq 0 ] && cct_phase32_copy_compile_and_run "$PHASE31_HOST_WRAPPER" "tests/integration/signal_clear_last_34d.cct" "$BASE_1895" 0; then
+    test_pass "cct/signal limpa ultimo evento"
+else
+    test_fail "cct/signal regrediu limpeza de ultimo evento"
+fi
+
+echo "Test 1896: ./cct promovido executa signal source-backed"
+BASE_1896="$CCT_TMP_DIR/phase34d/test_1896_signal_default_wrapper"
+if [ "$RC_31_READY" -eq 0 ] && make bootstrap-promote >"$PHASE31_LOG_DIR/test_1896.stdout.log" 2>"$PHASE31_LOG_DIR/test_1896.stderr.log" && cct_phase32_copy_compile_and_run "$PHASE31_DEFAULT_WRAPPER" "tests/integration/signal_default_wrapper_34d.cct" "$BASE_1896" 0; then
+    test_pass "./cct promovido executa signal source-backed"
+else
+    test_fail "./cct promovido nao executou signal source-backed"
+fi
+fi
+
+if cct_phase_block_enabled "34E"; then
+echo ""
+echo "========================================"
+echo "FASE 34E: cct/fs_watch"
+echo "========================================"
+cct_phase31_prepare >/dev/null 2>&1
+mkdir -p "$CCT_TMP_DIR/phase34e"
+
+echo "Test 1897: cct/fs_watch retorna none sem mudanca"
+BASE_1897="$CCT_TMP_DIR/phase34e/test_1897_fs_watch_no_event"
+if [ "$RC_31_READY" -eq 0 ] && cct_phase32_copy_compile_and_run "$PHASE31_HOST_WRAPPER" "tests/integration/fs_watch_no_event_34e.cct" "$BASE_1897" 0; then
+    test_pass "cct/fs_watch retorna none sem mudanca"
+else
+    test_fail "cct/fs_watch regrediu evento none"
+fi
+
+echo "Test 1898: cct/fs_watch detecta create"
+BASE_1898="$CCT_TMP_DIR/phase34e/test_1898_fs_watch_create"
+if [ "$RC_31_READY" -eq 0 ] && cct_phase32_copy_compile_and_run "$PHASE31_HOST_WRAPPER" "tests/integration/fs_watch_create_34e.cct" "$BASE_1898" 0; then
+    test_pass "cct/fs_watch detecta create"
+else
+    test_fail "cct/fs_watch regrediu create"
+fi
+
+echo "Test 1899: cct/fs_watch detecta modify"
+BASE_1899="$CCT_TMP_DIR/phase34e/test_1899_fs_watch_modify"
+if [ "$RC_31_READY" -eq 0 ] && cct_phase32_copy_compile_and_run "$PHASE31_HOST_WRAPPER" "tests/integration/fs_watch_modify_34e.cct" "$BASE_1899" 0; then
+    test_pass "cct/fs_watch detecta modify"
+else
+    test_fail "cct/fs_watch regrediu modify"
+fi
+
+echo "Test 1900: cct/fs_watch detecta remove"
+BASE_1900="$CCT_TMP_DIR/phase34e/test_1900_fs_watch_remove"
+if [ "$RC_31_READY" -eq 0 ] && cct_phase32_copy_compile_and_run "$PHASE31_HOST_WRAPPER" "tests/integration/fs_watch_remove_34e.cct" "$BASE_1900" 0; then
+    test_pass "cct/fs_watch detecta remove"
+else
+    test_fail "cct/fs_watch regrediu remove"
+fi
+
+echo "Test 1901: cct/fs_watch converte kinds"
+BASE_1901="$CCT_TMP_DIR/phase34e/test_1901_fs_watch_kind_map"
+if [ "$RC_31_READY" -eq 0 ] && cct_phase32_copy_compile_and_run "$PHASE31_HOST_WRAPPER" "tests/integration/fs_watch_kind_map_34e.cct" "$BASE_1901" 0; then
+    test_pass "cct/fs_watch converte kinds"
+else
+    test_fail "cct/fs_watch regrediu mapeamento de kinds"
+fi
+
+echo "Test 1902: ./cct promovido executa fs_watch source-backed"
+BASE_1902="$CCT_TMP_DIR/phase34e/test_1902_fs_watch_default_wrapper"
+if [ "$RC_31_READY" -eq 0 ] && make bootstrap-promote >"$PHASE31_LOG_DIR/test_1902.stdout.log" 2>"$PHASE31_LOG_DIR/test_1902.stderr.log" && cct_phase32_copy_compile_and_run "$PHASE31_DEFAULT_WRAPPER" "tests/integration/fs_watch_default_wrapper_34e.cct" "$BASE_1902" 0; then
+    test_pass "./cct promovido executa fs_watch source-backed"
+else
+    test_fail "./cct promovido nao executou fs_watch source-backed"
+fi
+fi
+
+if cct_phase_block_enabled "34F"; then
+echo ""
+echo "========================================"
+echo "FASE 34F: cct/audit"
+echo "========================================"
+cct_phase31_prepare >/dev/null 2>&1
+mkdir -p "$CCT_TMP_DIR/phase34f"
+
+echo "Test 1903: cct/audit formata evento"
+BASE_1903="$CCT_TMP_DIR/phase34f/test_1903_audit_format"
+if [ "$RC_31_READY" -eq 0 ] && cct_phase32_copy_compile_and_run "$PHASE31_HOST_WRAPPER" "tests/integration/audit_format_34f.cct" "$BASE_1903" 0; then
+    test_pass "cct/audit formata evento"
+else
+    test_fail "cct/audit regrediu formatacao"
+fi
+
+echo "Test 1904: cct/audit grava append-only em arquivo"
+BASE_1904="$CCT_TMP_DIR/phase34f/test_1904_audit_append_file"
+if [ "$RC_31_READY" -eq 0 ] && cct_phase32_copy_compile_and_run "$PHASE31_HOST_WRAPPER" "tests/integration/audit_append_file_34f.cct" "$BASE_1904" 0; then
+    test_pass "cct/audit grava append-only em arquivo"
+else
+    test_fail "cct/audit regrediu escrita append-only"
+fi
+
+echo "Test 1905: cct/audit encadeia hashes"
+BASE_1905="$CCT_TMP_DIR/phase34f/test_1905_audit_hash_chain"
+if [ "$RC_31_READY" -eq 0 ] && cct_phase32_copy_compile_and_run "$PHASE31_HOST_WRAPPER" "tests/integration/audit_hash_chain_34f.cct" "$BASE_1905" 0; then
+    test_pass "cct/audit encadeia hashes"
+else
+    test_fail "cct/audit regrediu hash chain"
+fi
+
+echo "Test 1906: cct/audit valida campos obrigatorios"
+BASE_1906="$CCT_TMP_DIR/phase34f/test_1906_audit_strict_validation"
+if [ "$RC_31_READY" -eq 0 ] && cct_phase32_copy_compile_and_run "$PHASE31_HOST_WRAPPER" "tests/integration/audit_strict_validation_34f.cct" "$BASE_1906" 0; then
+    test_pass "cct/audit valida campos obrigatorios"
+else
+    test_fail "cct/audit regrediu validacao obrigatoria"
+fi
+
+echo "Test 1907: cct/audit converte resultado"
+BASE_1907="$CCT_TMP_DIR/phase34f/test_1907_audit_result_map"
+if [ "$RC_31_READY" -eq 0 ] && cct_phase32_copy_compile_and_run "$PHASE31_HOST_WRAPPER" "tests/integration/audit_result_map_34f.cct" "$BASE_1907" 0; then
+    test_pass "cct/audit converte resultado"
+else
+    test_fail "cct/audit regrediu mapeamento de resultado"
+fi
+
+echo "Test 1908: ./cct promovido executa audit source-backed"
+BASE_1908="$CCT_TMP_DIR/phase34f/test_1908_audit_default_wrapper"
+if [ "$RC_31_READY" -eq 0 ] && make bootstrap-promote >"$PHASE31_LOG_DIR/test_1908.stdout.log" 2>"$PHASE31_LOG_DIR/test_1908.stderr.log" && cct_phase32_copy_compile_and_run "$PHASE31_DEFAULT_WRAPPER" "tests/integration/audit_default_wrapper_34f.cct" "$BASE_1908" 0; then
+    test_pass "./cct promovido executa audit source-backed"
+else
+    test_fail "./cct promovido nao executou audit source-backed"
+fi
+fi
+
 echo "Test Results:"
 echo -e "  ${GREEN}Passed:${NC} $TESTS_PASSED" >&3
 echo -e "  ${RED}Failed:${NC} $TESTS_FAILED" >&3

@@ -121,6 +121,7 @@ SRCS = \
 	$(SRC_DIR)/runtime/runtime_compress.c \
 	$(SRC_DIR)/runtime/runtime_filetype.c \
 	$(SRC_DIR)/runtime/runtime_image_ops.c \
+	$(SRC_DIR)/runtime/runtime_signal.c \
 	$(SRC_DIR)/runtime/runtime_math.c \
 	$(SRC_DIR)/module/module.c \
 	$(SRC_DIR)/sigilo/sigilo.c \
