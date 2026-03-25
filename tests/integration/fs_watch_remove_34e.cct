@@ -1,0 +1,18 @@
+INCIPIT grimoire "fs_watch_remove_34e"
+
+ADVOCARE "cct/fs.cct"
+ADVOCARE "cct/fs_watch.cct"
+
+RITUALE main() REDDE REX
+  EVOCA VERBUM path AD "tests/.tmp/fs_watch_remove_34e.txt"
+  CONIURA write_all(path, "gone")
+  EVOCA FsWatch watch AD CONIURA fs_watch_open(path)
+  CONIURA delete_file(path)
+  EVOCA FsWatchEvent event AD CONIURA fs_watch_poll(SPECULUM watch)
+  SI event.kind != WATCH_REMOVE
+    REDDE 1
+  FIN SI
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

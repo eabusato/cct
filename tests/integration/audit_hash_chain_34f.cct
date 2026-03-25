@@ -1,0 +1,31 @@
+INCIPIT grimoire "audit_hash_chain_34f"
+
+ADVOCARE "cct/audit.cct"
+ADVOCARE "cct/result.cct"
+ADVOCARE "cct/verbum.cct"
+
+RITUALE main() REDDE REX
+  EVOCA AuditOptions options AD CONIURA audit_options_default()
+  VINCIRE options.enable_hash_chain AD VERUM
+  EVOCA AuditLogger logger AD CONIURA audit_logger_open("tests/.tmp/audit_hash_chain_34f.jsonl", options)
+  EVOCA AuditActor actor AD CONIURA audit_actor_make("user", "7", "Bob")
+  EVOCA AuditTarget target AD CONIURA audit_target_make("media", "8", "img")
+  EVOCA AuditEvent first AD CONIURA audit_event_new(actor, "upload", target, AUDIT_SUCCESS, "", "req-a", "{}")
+  EVOCA AuditEvent second AD CONIURA audit_event_new(actor, "approve", target, AUDIT_SUCCESS, "", "req-b", "{}")
+  SI CONIURA result_is_err GENUS(REX, AuditError)(CONIURA audit_append_event(SPECULUM logger, first))
+    REDDE 1
+  FIN SI
+  EVOCA VERBUM first_hash AD CONIURA audit_last_hash(logger)
+  SI CONIURA len(first_hash) == 0
+    REDDE 2
+  FIN SI
+  SI CONIURA result_is_err GENUS(REX, AuditError)(CONIURA audit_append_event(SPECULUM logger, second))
+    REDDE 3
+  FIN SI
+  SI CONIURA compare(CONIURA audit_last_hash(logger), first_hash) == 0
+    REDDE 4
+  FIN SI
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

@@ -1,0 +1,39 @@
+INCIPIT grimoire "metrics_histogram_34c"
+
+ADVOCARE "cct/fluxus.cct"
+ADVOCARE "cct/metrics.cct"
+
+RITUALE main() REDDE REX
+  EVOCA SPECULUM NIHIL buckets AD CONIURA fluxus_init(MENSURA(UMBRA))
+  EVOCA UMBRA b0 AD 1.0
+  EVOCA UMBRA b1 AD 5.0
+  CONIURA fluxus_push(buckets, SPECULUM b0)
+  CONIURA fluxus_push(buckets, SPECULUM b1)
+
+  EVOCA Histogram h AD CONIURA histogram_new("latency", buckets)
+  CONIURA histogram_observe(SPECULUM h, 0.5)
+  CONIURA histogram_observe(SPECULUM h, 3.0)
+  CONIURA histogram_observe(SPECULUM h, 9.0)
+
+  SI CONIURA histogram_get_count(h) != 3
+    CONIURA histogram_free(SPECULUM h)
+    CONIURA fluxus_free(buckets)
+    REDDE 1
+  FIN SI
+  SI CONIURA histogram_count_at(h, 0) != 1 VEL CONIURA histogram_count_at(h, 1) != 1 VEL CONIURA histogram_count_at(h, 2) != 1
+    CONIURA histogram_free(SPECULUM h)
+    CONIURA fluxus_free(buckets)
+    REDDE 2
+  FIN SI
+  SI CONIURA histogram_get_sum(h) < 12.49 VEL CONIURA histogram_get_sum(h) > 12.51
+    CONIURA histogram_free(SPECULUM h)
+    CONIURA fluxus_free(buckets)
+    REDDE 3
+  FIN SI
+
+  CONIURA histogram_free(SPECULUM h)
+  CONIURA fluxus_free(buckets)
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

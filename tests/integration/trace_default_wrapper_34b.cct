@@ -1,0 +1,39 @@
+INCIPIT grimoire "trace_default_wrapper_34b"
+
+ADVOCARE "cct/fs.cct"
+ADVOCARE "cct/result.cct"
+ADVOCARE "cct/trace.cct"
+ADVOCARE "cct/verbum.cct"
+
+RITUALE main() REDDE REX
+  EVOCA VERBUM path AD "tests/.tmp/trace_default_wrapper_34b.ctrace"
+  SI CONIURA exists(path)
+    CONIURA delete_file(path)
+  FIN SI
+
+  EVOCA Trace trace AD CONIURA trace_new_with_id("trace-wrapper")
+  EVOCA VERBUM span_id AD CONIURA span_start(SPECULUM trace, "wrapper")
+  CONIURA span_set_attribute(SPECULUM trace, span_id, "via", "default")
+  CONIURA span_end(SPECULUM trace, span_id)
+
+  EVOCA SPECULUM NIHIL write_res AD CONIURA trace_write_file(trace, path)
+  SI CONIURA result_is_err GENUS(REX, TraceError)(write_res)
+    CONIURA trace_free(SPECULUM trace)
+    REDDE 1
+  FIN SI
+
+  EVOCA VERBUM out AD CONIURA read_all(path)
+  SI NON CONIURA contains(out, "\"trace_id\":\"trace-wrapper\"")
+    CONIURA trace_free(SPECULUM trace)
+    REDDE 2
+  FIN SI
+  SI NON CONIURA contains(out, "\"via\":\"default\"")
+    CONIURA trace_free(SPECULUM trace)
+    REDDE 3
+  FIN SI
+
+  CONIURA trace_free(SPECULUM trace)
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

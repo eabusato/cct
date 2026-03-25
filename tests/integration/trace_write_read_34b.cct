@@ -1,0 +1,48 @@
+INCIPIT grimoire "trace_write_read_34b"
+
+ADVOCARE "cct/fs.cct"
+ADVOCARE "cct/result.cct"
+ADVOCARE "cct/trace.cct"
+ADVOCARE "cct/verbum.cct"
+
+RITUALE main() REDDE REX
+  EVOCA VERBUM path AD "tests/.tmp/trace_write_read_34b.ctrace"
+  SI CONIURA exists(path)
+    CONIURA delete_file(path)
+  FIN SI
+
+  EVOCA Trace trace AD CONIURA trace_new_with_id("trace-file")
+  EVOCA VERBUM span_id AD CONIURA span_start(SPECULUM trace, "disk")
+  CONIURA span_set_attribute(SPECULUM trace, span_id, "kind", "file")
+  CONIURA span_end(SPECULUM trace, span_id)
+
+  EVOCA SPECULUM NIHIL write_res AD CONIURA trace_write_file(trace, path)
+  SI CONIURA result_is_err GENUS(REX, TraceError)(write_res)
+    CONIURA trace_free(SPECULUM trace)
+    REDDE 1
+  FIN SI
+
+  EVOCA SPECULUM NIHIL read_res AD CONIURA trace_read_file(path)
+  SI CONIURA result_is_err GENUS(Trace, TraceError)(read_res)
+    CONIURA trace_free(SPECULUM trace)
+    REDDE 2
+  FIN SI
+
+  EVOCA Trace parsed AD CONIURA result_unwrap GENUS(Trace, TraceError)(read_res)
+  SI CONIURA compare(CONIURA trace_get_id(parsed), "trace-file") != 0
+    CONIURA trace_free(SPECULUM trace)
+    CONIURA trace_free(SPECULUM parsed)
+    REDDE 3
+  FIN SI
+  SI CONIURA trace_span_count(parsed) != 1
+    CONIURA trace_free(SPECULUM trace)
+    CONIURA trace_free(SPECULUM parsed)
+    REDDE 4
+  FIN SI
+
+  CONIURA trace_free(SPECULUM trace)
+  CONIURA trace_free(SPECULUM parsed)
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

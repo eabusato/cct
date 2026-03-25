@@ -1,0 +1,16 @@
+INCIPIT grimoire "audit_result_map_34f"
+
+ADVOCARE "cct/audit.cct"
+ADVOCARE "cct/verbum.cct"
+
+RITUALE main() REDDE REX
+  SI CONIURA compare(CONIURA audit_result_to_string(AUDIT_SUCCESS), "success") != 0
+    REDDE 1
+  FIN SI
+  SI CONIURA compare(CONIURA audit_result_to_string(AUDIT_FAILURE), "failure") != 0
+    REDDE 2
+  FIN SI
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

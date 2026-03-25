@@ -1,0 +1,29 @@
+INCIPIT grimoire "trace_lifecycle_34b"
+
+ADVOCARE "cct/trace.cct"
+ADVOCARE "cct/verbum.cct"
+
+RITUALE main() REDDE REX
+  EVOCA Trace trace AD CONIURA trace_new()
+  EVOCA VERBUM span_id AD CONIURA span_start(SPECULUM trace, "request")
+  CONIURA span_end(SPECULUM trace, span_id)
+
+  SI CONIURA trace_span_count(trace) != 1
+    REDDE 1
+  FIN SI
+
+  EVOCA Span span AD CONIURA trace_get_span(trace, 0)
+  SI CONIURA compare(span.name, "request") != 0
+    CONIURA trace_free(SPECULUM trace)
+    REDDE 3
+  FIN SI
+  SI span.end_time_ms < span.start_time_ms
+    CONIURA trace_free(SPECULUM trace)
+    REDDE 4
+  FIN SI
+
+  CONIURA trace_free(SPECULUM trace)
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

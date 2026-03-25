@@ -1,0 +1,31 @@
+INCIPIT grimoire "trace_attributes_json_34b"
+
+ADVOCARE "cct/trace.cct"
+ADVOCARE "cct/verbum.cct"
+
+RITUALE main() REDDE REX
+  EVOCA Trace trace AD CONIURA trace_new_with_id("trace-attr")
+  EVOCA VERBUM span_id AD CONIURA span_start(SPECULUM trace, "serialize")
+  CONIURA span_set_attribute(SPECULUM trace, span_id, "method", "GET")
+  CONIURA span_set_attribute(SPECULUM trace, span_id, "route", "/home")
+  CONIURA span_end(SPECULUM trace, span_id)
+
+  EVOCA VERBUM text AD CONIURA trace_to_json_lines(trace)
+  SI NON CONIURA contains(text, "\"trace_id\":\"trace-attr\"")
+    CONIURA trace_free(SPECULUM trace)
+    REDDE 1
+  FIN SI
+  SI NON CONIURA contains(text, "\"method\":\"GET\"")
+    CONIURA trace_free(SPECULUM trace)
+    REDDE 2
+  FIN SI
+  SI NON CONIURA contains(text, "\"route\":\"/home\"")
+    CONIURA trace_free(SPECULUM trace)
+    REDDE 3
+  FIN SI
+
+  CONIURA trace_free(SPECULUM trace)
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

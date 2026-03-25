@@ -1,0 +1,16 @@
+INCIPIT grimoire "metrics_counter_34c"
+
+ADVOCARE "cct/metrics.cct"
+
+RITUALE main() REDDE REX
+  EVOCA Counter c AD CONIURA counter_new("requests_total")
+  CONIURA counter_inc(SPECULUM c)
+  CONIURA counter_add(SPECULUM c, 5)
+  CONIURA counter_add(SPECULUM c, -3)
+  SI CONIURA counter_get(c) != 6
+    REDDE 1
+  FIN SI
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

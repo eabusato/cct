@@ -1,0 +1,14 @@
+INCIPIT grimoire "trace_parse_invalid_34b"
+
+ADVOCARE "cct/result.cct"
+ADVOCARE "cct/trace.cct"
+
+RITUALE main() REDDE REX
+  EVOCA SPECULUM NIHIL parsed AD CONIURA trace_parse_json_lines("not-json")
+  SI NON CONIURA result_is_err GENUS(Trace, TraceError)(parsed)
+    REDDE 1
+  FIN SI
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

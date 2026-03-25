@@ -1,0 +1,19 @@
+INCIPIT grimoire "audit_strict_validation_34f"
+
+ADVOCARE "cct/audit.cct"
+ADVOCARE "cct/result.cct"
+
+RITUALE main() REDDE REX
+  EVOCA AuditOptions options AD CONIURA audit_options_default()
+  EVOCA AuditLogger logger AD CONIURA audit_logger_open("tests/.tmp/audit_strict_validation_34f.jsonl", options)
+  EVOCA AuditActor actor AD CONIURA audit_actor_make("", "7", "Bob")
+  EVOCA AuditTarget target AD CONIURA audit_target_make("media", "8", "img")
+  EVOCA AuditEvent event AD CONIURA audit_event_new(actor, "", target, AUDIT_SUCCESS, "", "req-x", "{}")
+  EVOCA SPECULUM NIHIL res AD CONIURA audit_append_event(SPECULUM logger, event)
+  SI NON CONIURA result_is_err GENUS(REX, AuditError)(res)
+    REDDE 1
+  FIN SI
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

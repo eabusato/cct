@@ -1,0 +1,29 @@
+INCIPIT grimoire "audit_default_wrapper_34f"
+
+ADVOCARE "cct/audit.cct"
+ADVOCARE "cct/fs.cct"
+ADVOCARE "cct/result.cct"
+ADVOCARE "cct/verbum.cct"
+
+RITUALE main() REDDE REX
+  EVOCA VERBUM path AD "tests/.tmp/audit_default_wrapper_34f.jsonl"
+  SI CONIURA exists(path)
+    CONIURA delete_file(path)
+  FIN SI
+  EVOCA AuditOptions options AD CONIURA audit_options_default()
+  EVOCA AuditLogger logger AD CONIURA audit_logger_open(path, options)
+  EVOCA AuditActor actor AD CONIURA audit_actor_make("svc", "10", "daemon")
+  EVOCA AuditTarget target AD CONIURA audit_target_make("job", "11", "sync")
+  EVOCA AuditEvent event AD CONIURA audit_event_new(actor, "run", target, AUDIT_SUCCESS, "", "req-z", "{}")
+  SI CONIURA result_is_err GENUS(REX, AuditError)(CONIURA audit_append_event(SPECULUM logger, event))
+    REDDE 1
+  FIN SI
+  EVOCA VERBUM out AD CONIURA read_all(path)
+  CONIURA delete_file(path)
+  SI NON CONIURA contains(out, "\"action\":\"run\"")
+    REDDE 2
+  FIN SI
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

@@ -1,0 +1,41 @@
+INCIPIT grimoire "metrics_default_wrapper_34c"
+
+ADVOCARE "cct/fluxus.cct"
+ADVOCARE "cct/metrics.cct"
+ADVOCARE "cct/verbum.cct"
+
+RITUALE main() REDDE REX
+  EVOCA MetricsRegistry reg AD CONIURA metrics_registry_new()
+  EVOCA Counter c AD CONIURA counter_new("wrapper_jobs")
+  EVOCA Gauge g AD CONIURA gauge_new("wrapper_workers")
+  EVOCA SPECULUM NIHIL buckets AD CONIURA fluxus_init(MENSURA(UMBRA))
+  EVOCA UMBRA b0 AD 1.0
+  CONIURA fluxus_push(buckets, SPECULUM b0)
+  EVOCA Histogram h AD CONIURA histogram_new("wrapper_hist", buckets)
+
+  CONIURA counter_inc(SPECULUM c)
+  CONIURA gauge_set(SPECULUM g, 2.0)
+  CONIURA histogram_observe(SPECULUM h, 0.5)
+
+  CONIURA metrics_registry_add_counter(SPECULUM reg, c)
+  CONIURA metrics_registry_add_gauge(SPECULUM reg, g)
+  CONIURA metrics_registry_add_histogram(SPECULUM reg, h)
+
+  EVOCA VERBUM out AD CONIURA metrics_export_json(reg)
+  SI NON CONIURA contains(out, "\"wrapper_jobs\":1")
+    CONIURA metrics_registry_free(SPECULUM reg)
+    CONIURA fluxus_free(buckets)
+    REDDE 1
+  FIN SI
+  SI NON CONIURA contains(out, "\"wrapper_workers\":2")
+    CONIURA metrics_registry_free(SPECULUM reg)
+    CONIURA fluxus_free(buckets)
+    REDDE 2
+  FIN SI
+
+  CONIURA metrics_registry_free(SPECULUM reg)
+  CONIURA fluxus_free(buckets)
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

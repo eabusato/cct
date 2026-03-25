@@ -1,0 +1,28 @@
+INCIPIT grimoire "_probe_result_ordo_34a"
+ADVOCARE "cct/result.cct"
+ORDO Level
+  A
+  B
+FIN ORDO
+SIGILLUM ErrX
+  mensagem: VERBUM
+FIN SIGILLUM
+RITUALE parse(VERBUM s) REDDE SPECULUM NIHIL
+  SI CONIURA compare(s, "a") == 0
+    REDDE CONIURA Ok GENUS(Level, ErrX)(A)
+  FIN SI
+  EVOCA ErrX err
+  VINCIRE err.mensagem AD "x"
+  REDDE CONIURA Err GENUS(Level, ErrX)(err)
+EXPLICIT RITUALE
+RITUALE main() REDDE REX
+  EVOCA SPECULUM NIHIL r AD CONIURA parse("a")
+  SI CONIURA result_is_err GENUS(Level, ErrX)(r)
+    REDDE 1
+  FIN SI
+  SI CONIURA result_unwrap GENUS(Level, ErrX)(r) != A
+    REDDE 2
+  FIN SI
+  REDDE 0
+EXPLICIT RITUALE
+EXPLICIT grimoire

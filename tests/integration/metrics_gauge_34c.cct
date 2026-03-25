@@ -1,0 +1,17 @@
+INCIPIT grimoire "metrics_gauge_34c"
+
+ADVOCARE "cct/metrics.cct"
+
+RITUALE main() REDDE REX
+  EVOCA Gauge g AD CONIURA gauge_new("workers")
+  CONIURA gauge_set(SPECULUM g, 2.5)
+  CONIURA gauge_inc(SPECULUM g)
+  CONIURA gauge_dec(SPECULUM g)
+  CONIURA gauge_add(SPECULUM g, 0.5)
+  SI CONIURA gauge_get(g) < 2.99 VEL CONIURA gauge_get(g) > 3.01
+    REDDE 1
+  FIN SI
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

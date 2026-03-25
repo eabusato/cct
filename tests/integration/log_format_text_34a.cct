@@ -1,0 +1,31 @@
+INCIPIT grimoire "log_format_text_34a"
+
+ADVOCARE "cct/log.cct"
+ADVOCARE "cct/verbum.cct"
+
+RITUALE main() REDDE REX
+  EVOCA VERBUM line AD CONIURA log_format_text_line(
+    "2026-03-25T12:00:00+0000",
+    INFO,
+    "http.server",
+    "request accepted",
+    "{\"method\":\"GET\"}"
+  )
+
+  SI NON CONIURA contains(line, "2026-03-25T12:00:00+0000")
+    REDDE 1
+  FIN SI
+  SI NON CONIURA contains(line, "[INFO]")
+    REDDE 2
+  FIN SI
+  SI NON CONIURA contains(line, "http.server: request accepted")
+    REDDE 3
+  FIN SI
+  SI NON CONIURA contains(line, "{\"method\":\"GET\"}")
+    REDDE 4
+  FIN SI
+
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

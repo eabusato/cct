@@ -1,0 +1,46 @@
+INCIPIT grimoire "metrics_export_json_34c"
+
+ADVOCARE "cct/fluxus.cct"
+ADVOCARE "cct/metrics.cct"
+ADVOCARE "cct/verbum.cct"
+
+RITUALE main() REDDE REX
+  EVOCA MetricsRegistry reg AD CONIURA metrics_registry_new()
+  EVOCA Counter c AD CONIURA counter_new("jobs_total")
+  EVOCA Gauge g AD CONIURA gauge_new("queue_depth")
+  EVOCA SPECULUM NIHIL buckets AD CONIURA fluxus_init(MENSURA(UMBRA))
+  EVOCA UMBRA b0 AD 2.0
+  CONIURA fluxus_push(buckets, SPECULUM b0)
+  EVOCA Histogram h AD CONIURA histogram_new("job_time", buckets)
+
+  CONIURA counter_add(SPECULUM c, 11)
+  CONIURA gauge_set(SPECULUM g, 4.0)
+  CONIURA histogram_observe(SPECULUM h, 1.5)
+
+  CONIURA metrics_registry_add_counter(SPECULUM reg, c)
+  CONIURA metrics_registry_add_gauge(SPECULUM reg, g)
+  CONIURA metrics_registry_add_histogram(SPECULUM reg, h)
+
+  EVOCA VERBUM out AD CONIURA metrics_export_json(reg)
+  SI NON CONIURA contains(out, "\"jobs_total\":11")
+    CONIURA metrics_registry_free(SPECULUM reg)
+    CONIURA fluxus_free(buckets)
+    REDDE 1
+  FIN SI
+  SI NON CONIURA contains(out, "\"queue_depth\":4")
+    CONIURA metrics_registry_free(SPECULUM reg)
+    CONIURA fluxus_free(buckets)
+    REDDE 2
+  FIN SI
+  SI NON CONIURA contains(out, "\"job_time\":{\"count\":1")
+    CONIURA metrics_registry_free(SPECULUM reg)
+    CONIURA fluxus_free(buckets)
+    REDDE 3
+  FIN SI
+
+  CONIURA metrics_registry_free(SPECULUM reg)
+  CONIURA fluxus_free(buckets)
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

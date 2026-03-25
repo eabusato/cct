@@ -1,0 +1,28 @@
+INCIPIT grimoire "signal_clear_last_34d"
+
+ADVOCARE "cct/result.cct"
+ADVOCARE "cct/signal.cct"
+
+RITUALE main() REDDE REX
+  EVOCA SPECULUM NIHIL installed AD CONIURA signal_install_default_handlers()
+  SI CONIURA result_is_err GENUS(REX, SignalError)(installed)
+    REDDE 1
+  FIN SI
+
+  CONIURA signal_raise_self(SIGNAL_SIGINT)
+  EVOCA SignalEvent first AD CONIURA signal_last_event()
+  SI first.kind != SIGNAL_SIGINT
+    REDDE 2
+  FIN SI
+  CONIURA signal_clear_last_event()
+  EVOCA SignalEvent second AD CONIURA signal_last_event()
+  SI second.kind != SIGNAL_UNKNOWN
+    REDDE 3
+  FIN SI
+  SI NON CONIURA signal_received_sigint()
+    REDDE 4
+  FIN SI
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

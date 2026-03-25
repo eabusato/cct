@@ -1,0 +1,46 @@
+INCIPIT grimoire "metrics_export_text_34c"
+
+ADVOCARE "cct/fluxus.cct"
+ADVOCARE "cct/metrics.cct"
+ADVOCARE "cct/verbum.cct"
+
+RITUALE main() REDDE REX
+  EVOCA MetricsRegistry reg AD CONIURA metrics_registry_new()
+  EVOCA Counter c AD CONIURA counter_new("requests_total")
+  EVOCA Gauge g AD CONIURA gauge_new("workers")
+  EVOCA SPECULUM NIHIL buckets AD CONIURA fluxus_init(MENSURA(UMBRA))
+  EVOCA UMBRA b0 AD 1.0
+  CONIURA fluxus_push(buckets, SPECULUM b0)
+  EVOCA Histogram h AD CONIURA histogram_new("latency", buckets)
+
+  CONIURA counter_add(SPECULUM c, 7)
+  CONIURA gauge_set(SPECULUM g, 3.0)
+  CONIURA histogram_observe(SPECULUM h, 0.8)
+
+  CONIURA metrics_registry_add_counter(SPECULUM reg, c)
+  CONIURA metrics_registry_add_gauge(SPECULUM reg, g)
+  CONIURA metrics_registry_add_histogram(SPECULUM reg, h)
+
+  EVOCA VERBUM out AD CONIURA metrics_export_text(reg)
+  SI NON CONIURA contains(out, "requests_total 7")
+    CONIURA metrics_registry_free(SPECULUM reg)
+    CONIURA fluxus_free(buckets)
+    REDDE 1
+  FIN SI
+  SI NON CONIURA contains(out, "workers 3")
+    CONIURA metrics_registry_free(SPECULUM reg)
+    CONIURA fluxus_free(buckets)
+    REDDE 2
+  FIN SI
+  SI NON CONIURA contains(out, "latency_bucket")
+    CONIURA metrics_registry_free(SPECULUM reg)
+    CONIURA fluxus_free(buckets)
+    REDDE 3
+  FIN SI
+
+  CONIURA metrics_registry_free(SPECULUM reg)
+  CONIURA fluxus_free(buckets)
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

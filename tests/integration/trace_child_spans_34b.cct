@@ -1,0 +1,35 @@
+INCIPIT grimoire "trace_child_spans_34b"
+
+ADVOCARE "cct/trace.cct"
+ADVOCARE "cct/verbum.cct"
+
+RITUALE main() REDDE REX
+  EVOCA Trace trace AD CONIURA trace_new()
+  EVOCA VERBUM root_id AD CONIURA span_start(SPECULUM trace, "root")
+  EVOCA VERBUM child_id AD CONIURA span_start_child(SPECULUM trace, root_id, "child")
+
+  SI CONIURA trace_root_span_count(trace) != 1
+    CONIURA trace_free(SPECULUM trace)
+    REDDE 1
+  FIN SI
+  SI CONIURA trace_child_span_count(trace, root_id) != 1
+    CONIURA trace_free(SPECULUM trace)
+    REDDE 2
+  FIN SI
+
+  EVOCA REX child_idx AD CONIURA trace_find_span_index(SPECULUM trace, child_id)
+  SI child_idx < 0
+    CONIURA trace_free(SPECULUM trace)
+    REDDE 3
+  FIN SI
+  EVOCA Span child AD CONIURA trace_get_span(trace, child_idx)
+  SI CONIURA compare(child.parent_id, root_id) != 0
+    CONIURA trace_free(SPECULUM trace)
+    REDDE 4
+  FIN SI
+
+  CONIURA trace_free(SPECULUM trace)
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

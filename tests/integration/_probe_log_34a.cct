@@ -1,0 +1,12 @@
+INCIPIT grimoire "_probe_log_34a"
+ADVOCARE "cct/log.cct"
+ADVOCARE "cct/map.cct"
+ADVOCARE "cct/verbum.cct"
+RITUALE main() REDDE REX
+  EVOCA Logger logger AD CONIURA log_new("probe", INFO)
+  EVOCA SPECULUM NIHIL fields AD CONIURA map_init GENUS(VERBUM, VERBUM)()
+  CONIURA map_insert GENUS(VERBUM, VERBUM)(fields, "x", "1")
+  CONIURA log_info(SPECULUM logger, "ok", fields)
+  REDDE 0
+EXPLICIT RITUALE
+EXPLICIT grimoire

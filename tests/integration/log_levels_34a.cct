@@ -1,0 +1,28 @@
+INCIPIT grimoire "log_levels_34a"
+
+ADVOCARE "cct/log.cct"
+ADVOCARE "cct/verbum.cct"
+
+RITUALE main() REDDE REX
+  SI CONIURA compare(CONIURA log_level_to_string(TRACE), "TRACE") != 0
+    REDDE 1
+  FIN SI
+  SI CONIURA compare(CONIURA log_level_to_string(ERROR), "ERROR") != 0
+    REDDE 1
+  FIN SI
+
+  SI CONIURA log_level_code_from_string("warn") != 3
+    REDDE 2
+  FIN SI
+  SI CONIURA log_level_from_code(3) != WARN
+    REDDE 3
+  FIN SI
+
+  SI CONIURA log_level_is_valid("zzz")
+    REDDE 4
+  FIN SI
+
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

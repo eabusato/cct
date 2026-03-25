@@ -1,0 +1,33 @@
+INCIPIT grimoire "log_default_wrapper_34a"
+
+ADVOCARE "cct/fs.cct"
+ADVOCARE "cct/log.cct"
+ADVOCARE "cct/result.cct"
+ADVOCARE "cct/verbum.cct"
+
+RITUALE main() REDDE REX
+  EVOCA VERBUM path AD "tests/.tmp/log_default_wrapper_34a.log"
+  SI CONIURA exists(path)
+    CONIURA delete_file(path)
+  FIN SI
+
+  EVOCA Logger logger AD CONIURA log_new("wrapper", DEBUG)
+  EVOCA SPECULUM NIHIL res AD CONIURA log_set_sink_file(SPECULUM logger, path)
+  SI CONIURA result_is_err GENUS(REX, LogError)(res)
+    REDDE 1
+  FIN SI
+
+  CONIURA log_debug(SPECULUM logger, "through wrapper", "{\"ok\":true}")
+
+  EVOCA VERBUM txt AD CONIURA read_all(path)
+  SI NON CONIURA contains(txt, "through wrapper")
+    REDDE 2
+  FIN SI
+  SI NON CONIURA contains(txt, "wrapper")
+    REDDE 3
+  FIN SI
+
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

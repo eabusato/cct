@@ -1,0 +1,17 @@
+INCIPIT grimoire "signal_supported_34d"
+
+ADVOCARE "cct/result.cct"
+ADVOCARE "cct/signal.cct"
+
+RITUALE main() REDDE REX
+  SI NON CONIURA signal_is_supported()
+    REDDE 1
+  FIN SI
+  EVOCA SPECULUM NIHIL installed AD CONIURA signal_install_default_handlers()
+  SI CONIURA result_is_err GENUS(REX, SignalError)(installed)
+    REDDE 2
+  FIN SI
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

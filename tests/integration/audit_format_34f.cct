@@ -1,0 +1,20 @@
+INCIPIT grimoire "audit_format_34f"
+
+ADVOCARE "cct/audit.cct"
+ADVOCARE "cct/verbum.cct"
+
+RITUALE main() REDDE REX
+  EVOCA AuditActor actor AD CONIURA audit_actor_make("user", "42", "Alice")
+  EVOCA AuditTarget target AD CONIURA audit_target_make("text", "99", "Post")
+  EVOCA AuditEvent event AD CONIURA audit_event_new(actor, "publish", target, AUDIT_SUCCESS, "", "req-1", "{\"ok\":true}")
+  EVOCA VERBUM line AD CONIURA audit_format_event(event)
+  SI NON CONIURA contains(line, "\"action\":\"publish\"")
+    REDDE 1
+  FIN SI
+  SI NON CONIURA contains(line, "\"actor_type\":\"user\"")
+    REDDE 2
+  FIN SI
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

@@ -1,0 +1,20 @@
+INCIPIT grimoire "signal_default_wrapper_34d"
+
+ADVOCARE "cct/result.cct"
+ADVOCARE "cct/signal.cct"
+
+RITUALE main() REDDE REX
+  EVOCA SPECULUM NIHIL installed AD CONIURA signal_install_default_handlers()
+  SI CONIURA result_is_err GENUS(REX, SignalError)(installed)
+    REDDE 1
+  FIN SI
+  CONIURA signal_clear_last_event()
+  CONIURA signal_raise_self(SIGNAL_SIGHUP)
+  EVOCA SignalEvent event AD CONIURA signal_poll()
+  SI event.kind != SIGNAL_SIGHUP
+    REDDE 2
+  FIN SI
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

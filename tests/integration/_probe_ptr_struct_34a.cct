@@ -1,0 +1,20 @@
+INCIPIT grimoire "_probe_ptr_struct_34a"
+SIGILLUM Foo
+  name: VERBUM
+  count: REX
+FIN SIGILLUM
+RITUALE bump(SPECULUM Foo f) REDDE NIHIL
+  VINCIRE (*f).count AD (*f).count + 1
+  REDDE
+EXPLICIT RITUALE
+RITUALE main() REDDE REX
+  EVOCA Foo foo
+  VINCIRE foo.name AD "x"
+  VINCIRE foo.count AD 1
+  CONIURA bump(SPECULUM foo)
+  SI foo.count != 2
+    REDDE 1
+  FIN SI
+  REDDE 0
+EXPLICIT RITUALE
+EXPLICIT grimoire

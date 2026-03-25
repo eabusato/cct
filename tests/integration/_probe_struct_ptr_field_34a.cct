@@ -1,0 +1,13 @@
+INCIPIT grimoire "_probe_struct_ptr_field_34a"
+SIGILLUM Foo
+  handle: SPECULUM NIHIL
+  name: VERBUM
+FIN SIGILLUM
+RITUALE main() REDDE REX
+  EVOCA Foo foo
+  EVOCA SPECULUM NIHIL p
+  VINCIRE foo.handle AD p
+  VINCIRE foo.name AD "x"
+  REDDE 0
+EXPLICIT RITUALE
+EXPLICIT grimoire

@@ -1,0 +1,34 @@
+INCIPIT grimoire "log_threshold_34a"
+
+ADVOCARE "cct/fs.cct"
+ADVOCARE "cct/log.cct"
+ADVOCARE "cct/result.cct"
+ADVOCARE "cct/verbum.cct"
+
+RITUALE main() REDDE REX
+  EVOCA VERBUM path AD "tests/.tmp/log_threshold_34a.log"
+  SI CONIURA exists(path)
+    CONIURA delete_file(path)
+  FIN SI
+
+  EVOCA Logger logger AD CONIURA log_new("api", WARN)
+  EVOCA SPECULUM NIHIL res AD CONIURA log_set_sink_file(SPECULUM logger, path)
+  SI CONIURA result_is_err GENUS(REX, LogError)(res)
+    REDDE 1
+  FIN SI
+
+  CONIURA log_info(SPECULUM logger, "ignore me", "{}")
+  CONIURA log_warn(SPECULUM logger, "warn me", "{}")
+
+  EVOCA VERBUM txt AD CONIURA read_all(path)
+  SI CONIURA contains(txt, "ignore me")
+    REDDE 2
+  FIN SI
+  SI NON CONIURA contains(txt, "warn me")
+    REDDE 3
+  FIN SI
+
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

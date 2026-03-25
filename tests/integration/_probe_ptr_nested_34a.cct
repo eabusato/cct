@@ -1,0 +1,29 @@
+INCIPIT grimoire "_probe_ptr_nested_34a"
+ORDO Kind
+  A
+  B
+FIN ORDO
+SIGILLUM Bar
+  v: REX
+FIN SIGILLUM
+SIGILLUM Foo
+  name: VERBUM
+  kind: Kind
+  bar: Bar
+FIN SIGILLUM
+RITUALE bump(SPECULUM Foo f) REDDE NIHIL
+  VINCIRE (*f).bar.v AD (*f).bar.v + 1
+  REDDE
+EXPLICIT RITUALE
+RITUALE main() REDDE REX
+  EVOCA Foo foo
+  VINCIRE foo.name AD "x"
+  VINCIRE foo.kind AD A
+  VINCIRE foo.bar.v AD 1
+  CONIURA bump(SPECULUM foo)
+  SI foo.bar.v != 2
+    REDDE 1
+  FIN SI
+  REDDE 0
+EXPLICIT RITUALE
+EXPLICIT grimoire
