@@ -1,0 +1,12 @@
+INCIPIT grimoire "regex_freestanding_reject_32c"
+
+ADVOCARE "cct/regex.cct"
+
+RITUALE main() REDDE REX
+  SI CONIURA regex_is_match("abc", "abc")
+    REDDE 0
+  FIN SI
+  REDDE 1
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

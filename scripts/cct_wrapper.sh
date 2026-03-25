@@ -177,6 +177,38 @@ print_compile_artifacts() {
   echo "Intermediate C: $c_file"
 }
 
+crypto_cflags() {
+  if [ -n "${CCT_CRYPTO_CFLAGS:-}" ]; then
+    printf '%s' "$CCT_CRYPTO_CFLAGS"
+    return 0
+  fi
+  pkg-config --cflags openssl 2>/dev/null || true
+}
+
+crypto_ldflags() {
+  if [ -n "${CCT_CRYPTO_LDFLAGS:-}" ]; then
+    printf '%s' "$CCT_CRYPTO_LDFLAGS"
+    return 0
+  fi
+  pkg-config --libs openssl 2>/dev/null || printf '%s' '-lssl -lcrypto'
+}
+
+zlib_cflags() {
+  if [ -n "${CCT_ZLIB_CFLAGS:-}" ]; then
+    printf '%s' "$CCT_ZLIB_CFLAGS"
+    return 0
+  fi
+  pkg-config --cflags zlib 2>/dev/null || true
+}
+
+zlib_ldflags() {
+  if [ -n "${CCT_ZLIB_LDFLAGS:-}" ]; then
+    printf '%s' "$CCT_ZLIB_LDFLAGS"
+    return 0
+  fi
+  pkg-config --libs zlib 2>/dev/null || printf '%s' '-lz'
+}
+
 compile_via_selfhost() {
   [ "$#" -ge 1 ] || {
     echo "Usage: cct-selfhost <input.cct> [output]" >&2
@@ -214,7 +246,11 @@ compile_via_selfhost() {
   }
 
   cc_bin="${CC:-gcc}"
-  "$cc_bin" -O2 -o "$output" "$c_file" "$PHASE30_SUPPORT" "$ROOT_DIR/src/runtime/fs_runtime.c" -lsqlite3 || {
+  crypto_cflags_value="$(crypto_cflags)"
+  crypto_ldflags_value="$(crypto_ldflags)"
+  zlib_cflags_value="$(zlib_cflags)"
+  zlib_ldflags_value="$(zlib_ldflags)"
+  "$cc_bin" -O2 $crypto_cflags_value $zlib_cflags_value -o "$output" "$c_file" "$PHASE30_SUPPORT" "$ROOT_DIR/src/runtime/fs_runtime.c" -lsqlite3 $crypto_ldflags_value $zlib_ldflags_value || {
     echo "error: C compilation failed" >&2
     exit 1
   }
@@ -246,6 +282,30 @@ should_dispatch_compile_to_host() {
   esac
 
   [ -f "$input" ] || return 0
+  if grep -Eq 'ADVOCARE[[:space:]]+"cct/crypto\.cct"' "$input"; then
+    return 0
+  fi
+  if grep -Eq 'ADVOCARE[[:space:]]+"cct/regex\.cct"' "$input"; then
+    return 0
+  fi
+  if grep -Eq 'ADVOCARE[[:space:]]+"cct/date\.cct"' "$input"; then
+    return 0
+  fi
+  if grep -Eq 'ADVOCARE[[:space:]]+"cct/toml\.cct"' "$input"; then
+    return 0
+  fi
+  if grep -Eq 'ADVOCARE[[:space:]]+"cct/compress\.cct"' "$input"; then
+    return 0
+  fi
+  if grep -Eq 'ADVOCARE[[:space:]]+"cct/filetype\.cct"' "$input"; then
+    return 0
+  fi
+  if grep -Eq 'ADVOCARE[[:space:]]+"cct/media_probe\.cct"' "$input"; then
+    return 0
+  fi
+  if grep -Eq 'ADVOCARE[[:space:]]+"cct/image_ops\.cct"' "$input"; then
+    return 0
+  fi
   return 1
 }
 
@@ -326,6 +386,9 @@ dispatch_selfhost() {
       if [ "$#" -ne 2 ]; then
         print_selfhost_usage --check
         exit 64
+      fi
+      if should_dispatch_compile_to_host "$2"; then
+        dispatch_host "$@"
       fi
       ensure_bootstrap_artifact bootstrap-selfhost-semantic "$PHASE30_SEMANTIC"
       exec "$PHASE30_SEMANTIC" "$2"

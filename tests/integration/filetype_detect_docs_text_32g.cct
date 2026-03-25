@@ -1,0 +1,59 @@
+INCIPIT grimoire "filetype_detect_docs_text_32g"
+
+ADVOCARE "cct/bytes.cct"
+ADVOCARE "cct/filetype.cct"
+ADVOCARE "cct/verbum.cct"
+
+RITUALE matches(FileType ft, VERBUM expected) REDDE VERUM
+  REDDE CONIURA compare(CONIURA filetype_to_string(ft), expected) == 0
+EXPLICIT RITUALE
+
+RITUALE main() REDDE REX
+  EVOCA SPECULUM NIHIL pdf AD CONIURA bytes_new(5)
+  OBSECRO bytes_set(pdf, 0, 37)
+  OBSECRO bytes_set(pdf, 1, 80)
+  OBSECRO bytes_set(pdf, 2, 68)
+  OBSECRO bytes_set(pdf, 3, 70)
+  OBSECRO bytes_set(pdf, 4, 45)
+  SI NON CONIURA matches(CONIURA filetype_detect_bytes(pdf, CONIURA bytes_len(pdf)), "pdf")
+    REDDE 1
+  FIN SI
+
+  EVOCA SPECULUM NIHIL zip AD CONIURA bytes_new(4)
+  OBSECRO bytes_set(zip, 0, 80)
+  OBSECRO bytes_set(zip, 1, 75)
+  OBSECRO bytes_set(zip, 2, 3)
+  OBSECRO bytes_set(zip, 3, 4)
+  SI NON CONIURA matches(CONIURA filetype_detect_bytes(zip, CONIURA bytes_len(zip)), "zip")
+    REDDE 2
+  FIN SI
+
+  EVOCA SPECULUM NIHIL text AD CONIURA bytes_new(11)
+  OBSECRO bytes_set(text, 0, 104)
+  OBSECRO bytes_set(text, 1, 101)
+  OBSECRO bytes_set(text, 2, 108)
+  OBSECRO bytes_set(text, 3, 108)
+  OBSECRO bytes_set(text, 4, 111)
+  OBSECRO bytes_set(text, 5, 32)
+  OBSECRO bytes_set(text, 6, 119)
+  OBSECRO bytes_set(text, 7, 111)
+  OBSECRO bytes_set(text, 8, 114)
+  OBSECRO bytes_set(text, 9, 108)
+  OBSECRO bytes_set(text, 10, 100)
+  SI NON CONIURA matches(CONIURA filetype_detect_bytes(text, CONIURA bytes_len(text)), "text")
+    REDDE 3
+  FIN SI
+
+  EVOCA SPECULUM NIHIL unknown AD CONIURA bytes_new(4)
+  OBSECRO bytes_set(unknown, 0, 0)
+  OBSECRO bytes_set(unknown, 1, 1)
+  OBSECRO bytes_set(unknown, 2, 2)
+  OBSECRO bytes_set(unknown, 3, 3)
+  SI NON CONIURA matches(CONIURA filetype_detect_bytes(unknown, CONIURA bytes_len(unknown)), "unknown")
+    REDDE 4
+  FIN SI
+
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

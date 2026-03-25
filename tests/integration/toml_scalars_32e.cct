@@ -1,0 +1,45 @@
+INCIPIT grimoire "toml_scalars_32e"
+
+ADVOCARE "cct/option.cct"
+ADVOCARE "cct/toml.cct"
+ADVOCARE "cct/verbum.cct"
+
+RITUALE main() REDDE REX
+  EVOCA VERBUM src AD "title = \"Civitas\"\nworkers = 4\nenabled = true\nratio = 1.5\n"
+  EVOCA TomlDocument doc AD CONIURA toml_parse(src)
+  SI NON CONIURA toml_is_valid(doc)
+    REDDE 1
+  FIN SI
+  EVOCA VERBUM title AD CONIURA toml_get_string(doc, "title")
+  EVOCA SPECULUM NIHIL workers_opt AD CONIURA toml_get_int(doc, "workers")
+  EVOCA SPECULUM NIHIL enabled_opt AD CONIURA toml_get_bool(doc, "enabled")
+  EVOCA SPECULUM NIHIL ratio_opt AD CONIURA toml_get_real(doc, "ratio")
+
+  SI CONIURA len(title) == 0 VEL CONIURA option_is_none GENUS(REX)(workers_opt) VEL CONIURA option_is_none GENUS(VERUM)(enabled_opt) VEL CONIURA option_is_none GENUS(UMBRA)(ratio_opt)
+    REDDE 2
+  FIN SI
+
+  SI CONIURA compare(title, "Civitas") != 0
+    REDDE 3
+  FIN SI
+  SI CONIURA option_unwrap GENUS(REX)(workers_opt) != 4
+    REDDE 4
+  FIN SI
+  SI NON CONIURA option_unwrap GENUS(VERUM)(enabled_opt)
+    REDDE 5
+  FIN SI
+  SI CONIURA option_unwrap GENUS(UMBRA)(ratio_opt) < 1.49 VEL CONIURA option_unwrap GENUS(UMBRA)(ratio_opt) > 1.51
+    REDDE 6
+  FIN SI
+
+  SI NON CONIURA toml_has(doc, "workers")
+    REDDE 7
+  FIN SI
+  SI CONIURA toml_has(doc, "missing")
+    REDDE 8
+  FIN SI
+
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

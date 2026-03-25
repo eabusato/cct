@@ -115,6 +115,12 @@ SRCS = \
 	$(SRC_DIR)/codegen/codegen_contract.c \
 	$(SRC_DIR)/codegen/codegen_runtime_bridge.c \
 	$(SRC_DIR)/runtime/runtime.c \
+	$(SRC_DIR)/runtime/runtime_crypto.c \
+	$(SRC_DIR)/runtime/runtime_regex.c \
+	$(SRC_DIR)/runtime/runtime_toml.c \
+	$(SRC_DIR)/runtime/runtime_compress.c \
+	$(SRC_DIR)/runtime/runtime_filetype.c \
+	$(SRC_DIR)/runtime/runtime_image_ops.c \
 	$(SRC_DIR)/runtime/runtime_math.c \
 	$(SRC_DIR)/module/module.c \
 	$(SRC_DIR)/sigilo/sigilo.c \
@@ -362,13 +368,13 @@ cct_lexer_bootstrap: $(HOST_TARGET) $(CCT_HOST_WRAPPER) \
 	@echo "Build complete: cct_lexer_bootstrap"
 
 $(BOOTSTRAP_PHASE29_OUT) $(BOOTSTRAP_STAGE0_DIR) $(BOOTSTRAP_STAGE1_DIR) $(BOOTSTRAP_STAGE2_DIR) $(BOOTSTRAP_STAGE_DIFF_DIR) $(BOOTSTRAP_STAGE_BENCH_DIR) $(BOOTSTRAP_STAGE_LOGS_DIR) $(BOOTSTRAP_SUPPORT_DIR):
-	@mkdir -p "$@"
+	@mkdir -p "$(BOOTSTRAP_PHASE29_OUT)" "$(BOOTSTRAP_STAGE0_DIR)" "$(BOOTSTRAP_STAGE1_DIR)" "$(BOOTSTRAP_STAGE2_DIR)" "$(BOOTSTRAP_STAGE_DIFF_DIR)" "$(BOOTSTRAP_STAGE_BENCH_DIR)" "$(BOOTSTRAP_STAGE_LOGS_DIR)" "$(BOOTSTRAP_SUPPORT_DIR)"
 
 $(BOOTSTRAP_PHASE30_OUT) $(BOOTSTRAP_PHASE30_BIN_DIR) $(BOOTSTRAP_PHASE30_TOOLS_DIR) $(BOOTSTRAP_PHASE30_LOGS_DIR) $(BOOTSTRAP_PHASE30_MANIFESTS_DIR) $(BOOTSTRAP_PHASE30_RUN_DIR) $(BOOTSTRAP_PHASE30_COMPAT_DIR):
-	@mkdir -p "$@"
+	@mkdir -p "$(BOOTSTRAP_PHASE30_OUT)" "$(BOOTSTRAP_PHASE30_BIN_DIR)" "$(BOOTSTRAP_PHASE30_TOOLS_DIR)" "$(BOOTSTRAP_PHASE30_LOGS_DIR)" "$(BOOTSTRAP_PHASE30_MANIFESTS_DIR)" "$(BOOTSTRAP_PHASE30_RUN_DIR)" "$(BOOTSTRAP_PHASE30_COMPAT_DIR)"
 
 $(BOOTSTRAP_PHASE31_OUT) $(BOOTSTRAP_PHASE31_BIN_DIR) $(BOOTSTRAP_PHASE31_TOOLS_DIR) $(BOOTSTRAP_PHASE31_STATE_DIR) $(BOOTSTRAP_PHASE31_LOGS_DIR) $(BOOTSTRAP_PHASE31_MANIFESTS_DIR) $(BOOTSTRAP_PHASE31_PERSIST_DIR):
-	@mkdir -p "$@"
+	@mkdir -p "$(BOOTSTRAP_PHASE31_OUT)" "$(BOOTSTRAP_PHASE31_BIN_DIR)" "$(BOOTSTRAP_PHASE31_TOOLS_DIR)" "$(BOOTSTRAP_PHASE31_STATE_DIR)" "$(BOOTSTRAP_PHASE31_LOGS_DIR)" "$(BOOTSTRAP_PHASE31_MANIFESTS_DIR)" "$(BOOTSTRAP_PHASE31_PERSIST_DIR)"
 
 bootstrap-support: $(HOST_TARGET) $(CCT_HOST_WRAPPER) $(BOOTSTRAP_SUPPORT_SRC) | $(BOOTSTRAP_SUPPORT_DIR) $(BOOTSTRAP_STAGE_LOGS_DIR)
 	@echo "[29A] Building selfhost support objects..."
@@ -559,6 +565,12 @@ bootstrap-selfhost-stdlib-matrix: bootstrap-selfhost-ready | $(BOOTSTRAP_PHASE30
 		'module.path=SUPPORTED:prelude+support' \
 		'module.fluxus=SUPPORTED:prelude+support' \
 		'module.parse=SUPPORTED:prelude+support' \
+		'module.crypto=HOST_ONLY:wrapper-dispatch' \
+		'module.encoding=SUPPORTED:source-backed-selfhost' \
+		'module.regex=HOST_ONLY:wrapper-dispatch' \
+		'module.date=HOST_ONLY:wrapper-dispatch' \
+		'module.toml=HOST_ONLY:wrapper-dispatch' \
+		'module.compress=HOST_ONLY:wrapper-dispatch' \
 		'module.config=PENDING:not-exported-in-selfhost-prelude' \
 		'module.json=PENDING:not-exported-in-selfhost-prelude' \
 		'module.db_sqlite=PENDING:not-exported-in-selfhost-prelude' \
@@ -858,6 +870,16 @@ else
   SHA256 = $(shell command -v shasum >/dev/null 2>&1 && echo "shasum -a 256" || echo "sha256sum")
   PLATFORM = $(shell echo $(UNAME_S) | tr '[:upper:]' '[:lower:]')-$(UNAME_M)
 endif
+
+# Crypto toolchain flags (FASE 32A)
+CRYPTO_CFLAGS ?= $(shell pkg-config --cflags openssl 2>/dev/null || echo "")
+CRYPTO_LDFLAGS ?= $(shell pkg-config --libs openssl 2>/dev/null || echo "-lssl -lcrypto")
+CRYPTO_CFLAGS_STRIP := $(strip $(CRYPTO_CFLAGS))
+CRYPTO_LDFLAGS_STRIP := $(strip $(CRYPTO_LDFLAGS))
+CFLAGS += $(CRYPTO_CFLAGS_STRIP)
+LDFLAGS += $(CRYPTO_LDFLAGS_STRIP)
+BOOTSTRAP_STAGE_CFLAGS += $(CRYPTO_CFLAGS_STRIP)
+BOOTSTRAP_STAGE_LDFLAGS += $(CRYPTO_LDFLAGS_STRIP)
 
 RELEASE_NAME = cct-v$(VERSION)-$(PLATFORM)
 ifeq ($(IS_WINDOWS),1)

@@ -1,0 +1,9 @@
+INCIPIT grimoire "media_probe_freestanding_reject_32h"
+
+ADVOCARE "cct/media_probe.cct"
+
+RITUALE main() REDDE REX
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

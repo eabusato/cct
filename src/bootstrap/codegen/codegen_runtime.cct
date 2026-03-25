@@ -123,6 +123,7 @@ RITUALE codegen_runtime_emit_includes(SPECULUM CodegenContext ctx) REDDE NIHIL
     CONIURA codegen_emit_line(ctx, "void *cct_rt_set_iter_begin(void *set_ptr);")
     CONIURA codegen_emit_line(ctx, "long long cct_rt_set_iter_next(void *iter_ptr, void **item_out);")
     CONIURA codegen_emit_line(ctx, "void cct_rt_set_iter_end(void *iter_ptr);")
+    CONIURA codegen_emit_line(ctx, "static long long cct_rt_bytes_get(void *ptr, long long i) __attribute__((unused));")
     VINCIRE emitted_any AD VERUM
   FIN SI
   SI (*ctx).needs_args_runtime
@@ -139,6 +140,11 @@ RITUALE codegen_runtime_emit_includes(SPECULUM CodegenContext ctx) REDDE NIHIL
   FIN SI
   SI (*ctx).needs_math_runtime
     CONIURA codegen_emit_line(ctx, "#include <math.h>")
+    VINCIRE emitted_any AD VERUM
+  FIN SI
+  SI (*ctx).needs_time_runtime
+    CONIURA codegen_emit_line(ctx, "#include <time.h>")
+    CONIURA codegen_emit_line(ctx, "long long cct_rt_time_now_ms(void);")
     VINCIRE emitted_any AD VERUM
   FIN SI
   SI (*ctx).needs_fs_runtime
@@ -470,6 +476,21 @@ RITUALE codegen_runtime_emit_fmt_runtime(SPECULUM CodegenContext ctx) REDDE NIHI
   REDDE
 EXPLICIT RITUALE
 
+RITUALE codegen_runtime_emit_time_runtime(SPECULUM CodegenContext ctx) REDDE NIHIL
+  SI NON (*ctx).needs_time_runtime
+    REDDE
+  FIN SI
+
+  CONIURA codegen_emit_line(ctx, "static long long cct_rt_time_now_ms(void) __attribute__((unused));")
+  CONIURA codegen_emit_line(ctx, "static long long cct_rt_time_now_ms(void)")
+  CONIURA codegen_emit_block_open(ctx)
+  CONIURA codegen_emit_line(ctx, "time_t now = time(NULL);")
+  CONIURA codegen_emit_line(ctx, "return ((long long)now) * 1000LL;")
+  CONIURA codegen_emit_block_close(ctx)
+  CONIURA codegen_emit_blank_line(ctx)
+  REDDE
+EXPLICIT RITUALE
+
 RITUALE codegen_runtime_emit_fail_helper(SPECULUM CodegenContext ctx) REDDE NIHIL
   SI NON (*ctx).needs_fail_helper
     REDDE
@@ -533,6 +554,29 @@ RITUALE codegen_runtime_emit_verbum_runtime(SPECULUM CodegenContext ctx) REDDE N
   CONIURA codegen_emit_line(ctx, "size_t n = strlen(src);")
   CONIURA codegen_emit_line(ctx, "if (i < 0 || (size_t)i >= n) { fputs(\"verbum char_at index out of bounds\\n\", stderr); exit(1); }")
   CONIURA codegen_emit_line(ctx, "return (long long)(unsigned char)src[(size_t)i];")
+  CONIURA codegen_emit_block_close(ctx)
+  CONIURA codegen_emit_blank_line(ctx)
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE codegen_runtime_emit_bytes_runtime(SPECULUM CodegenContext ctx) REDDE NIHIL
+  SI NON (*ctx).needs_stdlib
+    REDDE
+  FIN SI
+
+  CONIURA codegen_emit_line(ctx, "typedef struct {")
+  CONIURA codegen_emit_line(ctx, "unsigned char *data;")
+  CONIURA codegen_emit_line(ctx, "long long len;")
+  CONIURA codegen_emit_line(ctx, "} cct_boot_bytes_t;")
+  CONIURA codegen_emit_blank_line(ctx)
+
+  CONIURA codegen_emit_line(ctx, "static long long cct_rt_bytes_get(void *ptr, long long i) __attribute__((unused));")
+  CONIURA codegen_emit_line(ctx, "static long long cct_rt_bytes_get(void *ptr, long long i)")
+  CONIURA codegen_emit_block_open(ctx)
+  CONIURA codegen_emit_line(ctx, "cct_boot_bytes_t *b = (cct_boot_bytes_t*)ptr;")
+  CONIURA codegen_emit_line(ctx, "if (!b) abort();")
+  CONIURA codegen_emit_line(ctx, "if (i < 0 || i >= b->len) abort();")
+  CONIURA codegen_emit_line(ctx, "return (long long)b->data[(size_t)i];")
   CONIURA codegen_emit_block_close(ctx)
   CONIURA codegen_emit_blank_line(ctx)
   REDDE
@@ -656,8 +700,10 @@ RITUALE codegen_generate_translation_unit_with_context(SPECULUM CodegenContext c
   CONIURA codegen_runtime_emit_fail_helper(ctx)
   CONIURA codegen_runtime_emit_scribe_runtime(ctx)
   CONIURA codegen_runtime_emit_verbum_runtime(ctx)
+  CONIURA codegen_runtime_emit_bytes_runtime(ctx)
   CONIURA codegen_runtime_emit_failure_runtime(ctx)
   CONIURA codegen_runtime_emit_fmt_runtime(ctx)
+  CONIURA codegen_runtime_emit_time_runtime(ctx)
   CONIURA codegen_runtime_emit_string_pool(ctx)
   CONIURA codegen_emit(ctx, body)
   DIMITTE body

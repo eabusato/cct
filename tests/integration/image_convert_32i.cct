@@ -1,0 +1,41 @@
+INCIPIT grimoire "image_convert_32i"
+
+ADVOCARE "cct/image_ops.cct"
+
+RITUALE main() REDDE REX
+  EVOCA Image img AD CONIURA image_load("tests/integration/phase32i_assets/sample_32i.png")
+  EVOCA Image converted AD CONIURA image_convert_format(img, ImgWebP)
+  EVOCA SaveOptions opts AD CONIURA image_default_save_options()
+  SI NON CONIURA image_is_valid(converted)
+    CONIURA image_free(img)
+    REDDE 1
+  FIN SI
+  SI converted.formato != ImgWebP
+    CONIURA image_free(converted)
+    CONIURA image_free(img)
+    REDDE 2
+  FIN SI
+  SI NON CONIURA image_save(converted, "tests/.tmp/phase32i_outputs/converted_32i.webp", opts)
+    CONIURA image_free(converted)
+    CONIURA image_free(img)
+    REDDE 3
+  FIN SI
+  EVOCA Image reloaded AD CONIURA image_load("tests/.tmp/phase32i_outputs/converted_32i.webp")
+  SI NON CONIURA image_is_valid(reloaded)
+    CONIURA image_free(converted)
+    CONIURA image_free(img)
+    REDDE 4
+  FIN SI
+  SI reloaded.formato != ImgWebP
+    CONIURA image_free(reloaded)
+    CONIURA image_free(converted)
+    CONIURA image_free(img)
+    REDDE 5
+  FIN SI
+  CONIURA image_free(reloaded)
+  CONIURA image_free(converted)
+  CONIURA image_free(img)
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

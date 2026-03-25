@@ -1,0 +1,29 @@
+INCIPIT grimoire "date_format_add_days_32d"
+
+ADVOCARE "cct/date.cct"
+ADVOCARE "cct/result.cct"
+ADVOCARE "cct/verbum.cct"
+
+RITUALE main() REDDE REX
+  EVOCA SPECULUM NIHIL parsed_result AD CONIURA date_parse("2024-02-27")
+  SI CONIURA result_is_err GENUS(Date, DateError)(parsed_result)
+    REDDE 1
+  FIN SI
+
+  EVOCA Date parsed AD CONIURA result_unwrap GENUS(Date, DateError)(parsed_result)
+  EVOCA Date advanced AD CONIURA date_add_days(parsed, 2)
+  EVOCA VERBUM text AD CONIURA date_format(advanced, "%Y-%m-%d")
+
+  SI CONIURA compare(text, "2024-02-29") != 0
+    REDDE 2
+  FIN SI
+
+  EVOCA Date year_roll AD CONIURA date_add_days(advanced, 306)
+  SI CONIURA compare(CONIURA date_format(year_roll, "%Y-%m-%d"), "2024-12-31") != 0
+    REDDE 3
+  FIN SI
+
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

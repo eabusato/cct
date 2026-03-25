@@ -198,6 +198,110 @@ static const char* mod_stdlib_import_hint_for_symbol(const char *name) {
         strcmp(name, "series_all") == 0) {
         return "add ADVOCARE \"cct/collection_ops.cct\" in the module header";
     }
+    if (strcmp(name, "sha256") == 0 ||
+        strcmp(name, "sha256_bytes") == 0 ||
+        strcmp(name, "sha512") == 0 ||
+        strcmp(name, "sha512_bytes") == 0 ||
+        strcmp(name, "hmac_sha256") == 0 ||
+        strcmp(name, "hmac_sha512") == 0 ||
+        strcmp(name, "pbkdf2_sha256") == 0 ||
+        strcmp(name, "csprng_bytes") == 0 ||
+        strcmp(name, "constant_time_compare") == 0 ||
+        strcmp(name, "bytes_to_hex") == 0) {
+        return "add ADVOCARE \"cct/crypto.cct\" in the module header";
+    }
+    if (strcmp(name, "regex_compile") == 0 ||
+        strcmp(name, "regex_compile_flags") == 0 ||
+        strcmp(name, "regex_match") == 0 ||
+        strcmp(name, "regex_search") == 0 ||
+        strcmp(name, "regex_find_all") == 0 ||
+        strcmp(name, "regex_replace") == 0 ||
+        strcmp(name, "regex_replace_all") == 0 ||
+        strcmp(name, "regex_split") == 0 ||
+        strcmp(name, "regex_free") == 0 ||
+        strcmp(name, "regex_is_match") == 0 ||
+        strcmp(name, "regex_quick_search") == 0 ||
+        strcmp(name, "regex_is_email") == 0 ||
+        strcmp(name, "regex_is_url") == 0 ||
+        strcmp(name, "regex_is_integer") == 0 ||
+        strcmp(name, "regex_is_real") == 0 ||
+        strcmp(name, "regex_flag_case_insensitive") == 0 ||
+        strcmp(name, "regex_flag_multiline") == 0 ||
+        strcmp(name, "regex_flag_dotall") == 0) {
+        return "add ADVOCARE \"cct/regex.cct\" in the module header";
+    }
+    if (strcmp(name, "date_new") == 0 ||
+        strcmp(name, "date_parse") == 0 ||
+        strcmp(name, "date_format") == 0 ||
+        strcmp(name, "date_add_days") == 0 ||
+        strcmp(name, "date_add_months") == 0 ||
+        strcmp(name, "date_diff_days") == 0 ||
+        strcmp(name, "date_compare") == 0 ||
+        strcmp(name, "datetime_new") == 0 ||
+        strcmp(name, "datetime_parse") == 0 ||
+        strcmp(name, "datetime_format") == 0 ||
+        strcmp(name, "datetime_to_unix") == 0 ||
+        strcmp(name, "datetime_from_unix") == 0 ||
+        strcmp(name, "datetime_add_seconds") == 0 ||
+        strcmp(name, "datetime_diff_seconds") == 0 ||
+        strcmp(name, "datetime_compare") == 0 ||
+        strcmp(name, "datetime_now") == 0 ||
+        strcmp(name, "date_today") == 0) {
+        return "add ADVOCARE \"cct/date.cct\" in the module header";
+    }
+    if (strcmp(name, "toml_parse") == 0 ||
+        strcmp(name, "toml_parse_file") == 0 ||
+        strcmp(name, "toml_has") == 0 ||
+        strcmp(name, "toml_get_string") == 0 ||
+        strcmp(name, "toml_get_int") == 0 ||
+        strcmp(name, "toml_get_real") == 0 ||
+        strcmp(name, "toml_get_bool") == 0 ||
+        strcmp(name, "toml_get_date") == 0 ||
+        strcmp(name, "toml_get_datetime") == 0 ||
+        strcmp(name, "toml_get_table") == 0 ||
+        strcmp(name, "toml_array_len") == 0 ||
+        strcmp(name, "toml_array_get_string") == 0 ||
+        strcmp(name, "toml_array_get_int") == 0 ||
+        strcmp(name, "toml_array_get_real") == 0 ||
+        strcmp(name, "toml_array_get_bool") == 0 ||
+        strcmp(name, "toml_expand_env") == 0 ||
+        strcmp(name, "toml_stringify") == 0 ||
+        strcmp(name, "toml_get_value") == 0) {
+        return "add ADVOCARE \"cct/toml.cct\" in the module header";
+    }
+    if (strcmp(name, "gzip_compress") == 0 ||
+        strcmp(name, "gzip_decompress") == 0 ||
+        strcmp(name, "gzip_compress_bytes") == 0 ||
+        strcmp(name, "gzip_decompress_bytes") == 0) {
+        return "add ADVOCARE \"cct/compress.cct\" in the module header";
+    }
+    if (strcmp(name, "media_probe") == 0 ||
+        strcmp(name, "media_has_video") == 0 ||
+        strcmp(name, "media_has_audio") == 0 ||
+        strcmp(name, "media_get_resolution") == 0 ||
+        strcmp(name, "media_get_duration_str") == 0) {
+        return "add ADVOCARE \"cct/media_probe.cct\" in the module header";
+    }
+    if (strcmp(name, "image_load") == 0 ||
+        strcmp(name, "image_free") == 0 ||
+        strcmp(name, "image_save") == 0 ||
+        strcmp(name, "image_resize") == 0 ||
+        strcmp(name, "image_crop") == 0 ||
+        strcmp(name, "image_rotate") == 0 ||
+        strcmp(name, "image_convert_format") == 0 ||
+        strcmp(name, "image_get_dimensions") == 0 ||
+        strcmp(name, "image_is_valid") == 0 ||
+        strcmp(name, "image_last_error") == 0) {
+        return "add ADVOCARE \"cct/image_ops.cct\" in the module header";
+    }
+    if (strcmp(name, "lang_detect") == 0 ||
+        strcmp(name, "lang_detect_from") == 0 ||
+        strcmp(name, "lang_is") == 0 ||
+        strcmp(name, "lang_to_string") == 0 ||
+        strcmp(name, "lang_from_string") == 0 ||
+        strcmp(name, "lang_to_iso639") == 0) {
+        return "add ADVOCARE \"cct/text_lang.cct\" in the module header";
+    }
     return NULL;
 }
 
@@ -258,6 +362,14 @@ static bool mod_is_freestanding_forbidden_import(const char *raw_import, char *o
         "cct/map",
         "cct/set",
         "cct/random",
+        "cct/crypto",
+        "cct/regex",
+        "cct/date",
+        "cct/toml",
+        "cct/compress",
+        "cct/filetype",
+        "cct/media_probe",
+        "cct/image_ops",
     };
 
     for (size_t i = 0; i < sizeof(forbidden) / sizeof(forbidden[0]); i++) {

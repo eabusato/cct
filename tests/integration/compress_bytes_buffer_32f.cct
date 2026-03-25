@@ -1,0 +1,35 @@
+INCIPIT grimoire "compress_bytes_buffer_32f"
+
+ADVOCARE "cct/bytes.cct"
+ADVOCARE "cct/compress.cct"
+ADVOCARE "cct/verbum.cct"
+
+RITUALE main() REDDE REX
+  EVOCA SPECULUM NIHIL src AD CONIURA bytes_new(4)
+  OBSECRO bytes_set(src, 0, 65)
+  OBSECRO bytes_set(src, 1, 66)
+  OBSECRO bytes_set(src, 2, 67)
+  OBSECRO bytes_set(src, 3, 68)
+
+  EVOCA VERBUM zipped AD CONIURA gzip_compress_bytes(src, 4)
+  SI CONIURA len(CONIURA compress_last_error()) > 0 VEL CONIURA len(zipped) == 0
+    REDDE 1
+  FIN SI
+
+  EVOCA SPECULUM NIHIL out AD CONIURA gzip_decompress_buffer(zipped)
+  SI CONIURA len(CONIURA compress_last_error()) > 0
+    REDDE 2
+  FIN SI
+  SI CONIURA bytes_len(out) != 4
+    REDDE 3
+  FIN SI
+  SI CONIURA bytes_get(out, 0) != 65 VEL CONIURA bytes_get(out, 1) != 66 VEL CONIURA bytes_get(out, 2) != 67 VEL CONIURA bytes_get(out, 3) != 68
+    REDDE 4
+  FIN SI
+
+  CONIURA bytes_free(src)
+  CONIURA bytes_free(out)
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

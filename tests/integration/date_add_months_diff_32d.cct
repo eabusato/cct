@@ -1,0 +1,33 @@
+INCIPIT grimoire "date_add_months_diff_32d"
+
+ADVOCARE "cct/date.cct"
+ADVOCARE "cct/result.cct"
+ADVOCARE "cct/verbum.cct"
+
+RITUALE main() REDDE REX
+  EVOCA SPECULUM NIHIL start_result AD CONIURA date_parse("2024-01-31")
+  SI CONIURA result_is_err GENUS(Date, DateError)(start_result)
+    REDDE 1
+  FIN SI
+
+  EVOCA Date start AD CONIURA result_unwrap GENUS(Date, DateError)(start_result)
+  EVOCA Date feb AD CONIURA date_add_months(start, 1)
+  EVOCA Date prev AD CONIURA date_add_months(feb, -1)
+
+  SI CONIURA compare(CONIURA date_format(feb, "%Y-%m-%d"), "2024-02-29") != 0
+    REDDE 2
+  FIN SI
+  SI CONIURA compare(CONIURA date_format(prev, "%Y-%m-%d"), "2024-01-29") != 0
+    REDDE 3
+  FIN SI
+  SI CONIURA date_diff_days(feb, start) != 29
+    REDDE 4
+  FIN SI
+  SI CONIURA date_compare(start, feb) != -1
+    REDDE 5
+  FIN SI
+
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

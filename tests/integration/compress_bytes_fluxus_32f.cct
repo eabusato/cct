@@ -1,0 +1,38 @@
+INCIPIT grimoire "compress_bytes_fluxus_32f"
+
+ADVOCARE "cct/bytes.cct"
+ADVOCARE "cct/compress.cct"
+ADVOCARE "cct/fluxus.cct"
+ADVOCARE "cct/verbum.cct"
+
+RITUALE main() REDDE REX
+  EVOCA SPECULUM NIHIL src AD CONIURA bytes_new(3)
+  OBSECRO bytes_set(src, 0, 120)
+  OBSECRO bytes_set(src, 1, 121)
+  OBSECRO bytes_set(src, 2, 122)
+
+  EVOCA VERBUM zipped AD CONIURA gzip_compress_bytes(src, 3)
+  SI CONIURA len(CONIURA compress_last_error()) > 0
+    REDDE 1
+  FIN SI
+
+  EVOCA SPECULUM NIHIL flux AD CONIURA gzip_decompress_bytes(zipped)
+  SI CONIURA len(CONIURA compress_last_error()) > 0
+    REDDE 2
+  FIN SI
+  SI CONIURA fluxus_len(flux) != 3
+    REDDE 3
+  FIN SI
+
+  EVOCA SPECULUM MILES p0 AD CONIURA fluxus_get(flux, 0)
+  EVOCA SPECULUM MILES p1 AD CONIURA fluxus_get(flux, 1)
+  EVOCA SPECULUM MILES p2 AD CONIURA fluxus_get(flux, 2)
+  SI *p0 != 120 VEL *p1 != 121 VEL *p2 != 122
+    REDDE 4
+  FIN SI
+
+  CONIURA bytes_free(src)
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

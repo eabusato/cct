@@ -1,0 +1,13 @@
+INCIPIT grimoire "text_lang_default_wrapper_32j"
+
+ADVOCARE "cct/text_lang.cct"
+
+RITUALE main() REDDE REX
+  EVOCA LangDetection det AD CONIURA lang_detect("Este e um texto em portugues com uma frase simples para detectar o idioma no wrapper padrao.")
+  SI det.idioma != PT
+    REDDE 1
+  FIN SI
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

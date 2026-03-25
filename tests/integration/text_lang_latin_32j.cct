@@ -1,0 +1,25 @@
+INCIPIT grimoire "text_lang_latin_32j"
+
+ADVOCARE "cct/text_lang.cct"
+
+RITUALE main() REDDE REX
+  EVOCA LangDetection es AD CONIURA lang_detect("Esta es una frase en espanol con palabras como una, para, los y pero.")
+  EVOCA LangDetection fr AD CONIURA lang_detect("Ceci est une phrase en francais avec des mots pour les tests dans le systeme.")
+  EVOCA LangDetection de AD CONIURA lang_detect("Das ist ein deutscher text und die worte sind klar mit der sprache.")
+  EVOCA LangDetection it AD CONIURA lang_detect("Questo e un testo italiano con una frase semplice e parole come che e sono.")
+  SI es.idioma != ES
+    REDDE 1
+  FIN SI
+  SI fr.idioma != FR
+    REDDE 2
+  FIN SI
+  SI de.idioma != DEU
+    REDDE 3
+  FIN SI
+  SI it.idioma != IT
+    REDDE 4
+  FIN SI
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

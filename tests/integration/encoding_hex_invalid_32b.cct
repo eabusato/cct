@@ -1,0 +1,18 @@
+INCIPIT grimoire "encoding_hex_invalid_32b"
+
+ADVOCARE "cct/encoding.cct"
+ADVOCARE "cct/option.cct"
+
+RITUALE main() REDDE REX
+  EVOCA SPECULUM NIHIL odd_opt AD CONIURA hex_decode("abc")
+  EVOCA SPECULUM NIHIL bad_opt AD CONIURA hex_decode("7x")
+  SI NON CONIURA option_is_none GENUS(VERBUM)(odd_opt)
+    REDDE 1
+  FIN SI
+  SI NON CONIURA option_is_none GENUS(VERBUM)(bad_opt)
+    REDDE 1
+  FIN SI
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

@@ -1,0 +1,46 @@
+INCIPIT grimoire "toml_arrays_32e"
+
+ADVOCARE "cct/option.cct"
+ADVOCARE "cct/toml.cct"
+ADVOCARE "cct/verbum.cct"
+
+RITUALE main() REDDE REX
+  EVOCA VERBUM src AD "names = [\"ana\", \"bob\"]\nids = [1, 2, 3]\nweights = [1.25, 2.5]\nflags = [true, false]\n"
+  EVOCA TomlDocument doc AD CONIURA toml_parse(src)
+  SI NON CONIURA toml_is_valid(doc)
+    REDDE 1
+  FIN SI
+  EVOCA SPECULUM NIHIL names_len_opt AD CONIURA toml_array_len(doc, "names")
+  EVOCA SPECULUM NIHIL ids_len_opt AD CONIURA toml_array_len(doc, "ids")
+  SI CONIURA option_is_none GENUS(REX)(names_len_opt) VEL CONIURA option_is_none GENUS(REX)(ids_len_opt)
+    REDDE 2
+  FIN SI
+  SI CONIURA option_unwrap GENUS(REX)(names_len_opt) != 2 VEL CONIURA option_unwrap GENUS(REX)(ids_len_opt) != 3
+    REDDE 3
+  FIN SI
+
+  EVOCA VERBUM first_name AD CONIURA toml_array_get_string(doc, "names", 0)
+  EVOCA SPECULUM NIHIL last_id_opt AD CONIURA toml_array_get_int(doc, "ids", 2)
+  EVOCA SPECULUM NIHIL weight_opt AD CONIURA toml_array_get_real(doc, "weights", 1)
+  EVOCA SPECULUM NIHIL flag_opt AD CONIURA toml_array_get_bool(doc, "flags", 0)
+  SI CONIURA len(first_name) == 0 VEL CONIURA option_is_none GENUS(REX)(last_id_opt) VEL CONIURA option_is_none GENUS(UMBRA)(weight_opt) VEL CONIURA option_is_none GENUS(VERUM)(flag_opt)
+    REDDE 4
+  FIN SI
+
+  SI CONIURA compare(first_name, "ana") != 0
+    REDDE 5
+  FIN SI
+  SI CONIURA option_unwrap GENUS(REX)(last_id_opt) != 3
+    REDDE 6
+  FIN SI
+  SI CONIURA option_unwrap GENUS(UMBRA)(weight_opt) < 2.49 VEL CONIURA option_unwrap GENUS(UMBRA)(weight_opt) > 2.51
+    REDDE 7
+  FIN SI
+  SI NON CONIURA option_unwrap GENUS(VERUM)(flag_opt)
+    REDDE 8
+  FIN SI
+
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

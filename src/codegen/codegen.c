@@ -2536,7 +2536,12 @@ static bool cg_emit_obsecro_expr(FILE *out, cct_codegen_t *cg, const cct_ast_nod
             return false;
         }
         cct_codegen_value_kind_t k = CCT_CODEGEN_VALUE_UNKNOWN;
-        fprintf(out, "cct_rt_%s(", name);
+        fputs(strcmp(name, "verbum_to_upper") == 0 ? "cct_rt_verbum_to_upper(" :
+              strcmp(name, "verbum_to_lower") == 0 ? "cct_rt_verbum_to_lower(" :
+              strcmp(name, "verbum_trim_left") == 0 ? "cct_rt_verbum_trim_left(" :
+              strcmp(name, "verbum_trim_right") == 0 ? "cct_rt_verbum_trim_right(" :
+              strcmp(name, "verbum_reverse") == 0 ? "cct_rt_verbum_reverse(" :
+              "cct_rt_verbum_is_ascii(", out);
         if (!cg_emit_expr(out, cg, args->nodes[0], &k)) return false;
         if (k != CCT_CODEGEN_VALUE_STRING) {
             cg_report_nodef(cg, args->nodes[0], "OBSECRO %s requires VERBUM argument", name);
@@ -2921,6 +2926,16 @@ static bool cg_emit_obsecro_expr(FILE *out, cct_codegen_t *cg, const cct_ast_nod
         return true;
     }
 
+    if (strcmp(name, "date_now_unix") == 0) {
+        if (argc != 0) {
+            cg_report_node(cg, expr, "OBSECRO date_now_unix expects exactly zero arguments in FASE 32D");
+            return false;
+        }
+        fputs("cct_rt_date_now_unix()", out);
+        if (out_kind) *out_kind = CCT_CODEGEN_VALUE_INT;
+        return true;
+    }
+
     if (strcmp(name, "bytes_new") == 0) {
         if (argc != 1) {
             cg_report_node(cg, expr, "OBSECRO bytes_new expects exactly one integer size argument in FASE 17D.3");
@@ -3053,6 +3068,763 @@ static bool cg_emit_obsecro_expr(FILE *out, cct_codegen_t *cg, const cct_ast_nod
         }
         fputs("))", out);
         if (out_kind) *out_kind = CCT_CODEGEN_VALUE_POINTER;
+        return true;
+    }
+
+    if (strcmp(name, "crypto_sha256_text") == 0) {
+        if (argc != 1) {
+            cg_report_node(cg, expr, "OBSECRO crypto_sha256_text expects exactly one VERBUM argument in FASE 32A");
+            return false;
+        }
+        cct_codegen_value_kind_t k = CCT_CODEGEN_VALUE_UNKNOWN;
+        cg->uses_crypto = true;
+        fputs("cct_rt_crypto_sha256_text(", out);
+        if (!cg_emit_expr(out, cg, args->nodes[0], &k)) return false;
+        if (k != CCT_CODEGEN_VALUE_STRING) {
+            cg_report_node(cg, args->nodes[0], "OBSECRO crypto_sha256_text requires VERBUM argument in FASE 32A");
+            return false;
+        }
+        fputs(")", out);
+        if (out_kind) *out_kind = CCT_CODEGEN_VALUE_STRING;
+        return true;
+    }
+
+    if (strcmp(name, "crypto_sha256_bytes") == 0) {
+        if (argc != 2) {
+            cg_report_node(cg, expr, "OBSECRO crypto_sha256_bytes expects exactly (bytes, len) in FASE 32A");
+            return false;
+        }
+        cct_codegen_value_kind_t k0 = CCT_CODEGEN_VALUE_UNKNOWN;
+        cct_codegen_value_kind_t k1 = CCT_CODEGEN_VALUE_UNKNOWN;
+        cg->uses_crypto = true;
+        fputs("cct_rt_crypto_sha256_bytes((void*)(", out);
+        if (!cg_emit_expr(out, cg, args->nodes[0], &k0)) return false;
+        if (k0 != CCT_CODEGEN_VALUE_POINTER) {
+            cg_report_node(cg, args->nodes[0], "OBSECRO crypto_sha256_bytes requires bytes pointer as first argument in FASE 32A");
+            return false;
+        }
+        fputs("), ", out);
+        if (!cg_emit_expr(out, cg, args->nodes[1], &k1)) return false;
+        if (!(k1 == CCT_CODEGEN_VALUE_INT || k1 == CCT_CODEGEN_VALUE_BOOL)) {
+            cg_report_node(cg, args->nodes[1], "OBSECRO crypto_sha256_bytes requires integer len as second argument in FASE 32A");
+            return false;
+        }
+        fputs(")", out);
+        if (out_kind) *out_kind = CCT_CODEGEN_VALUE_STRING;
+        return true;
+    }
+
+    if (strcmp(name, "crypto_sha512_text") == 0) {
+        if (argc != 1) {
+            cg_report_node(cg, expr, "OBSECRO crypto_sha512_text expects exactly one VERBUM argument in FASE 32A");
+            return false;
+        }
+        cct_codegen_value_kind_t k = CCT_CODEGEN_VALUE_UNKNOWN;
+        cg->uses_crypto = true;
+        fputs("cct_rt_crypto_sha512_text(", out);
+        if (!cg_emit_expr(out, cg, args->nodes[0], &k)) return false;
+        if (k != CCT_CODEGEN_VALUE_STRING) {
+            cg_report_node(cg, args->nodes[0], "OBSECRO crypto_sha512_text requires VERBUM argument in FASE 32A");
+            return false;
+        }
+        fputs(")", out);
+        if (out_kind) *out_kind = CCT_CODEGEN_VALUE_STRING;
+        return true;
+    }
+
+    if (strcmp(name, "crypto_sha512_bytes") == 0) {
+        if (argc != 2) {
+            cg_report_node(cg, expr, "OBSECRO crypto_sha512_bytes expects exactly (bytes, len) in FASE 32A");
+            return false;
+        }
+        cct_codegen_value_kind_t k0 = CCT_CODEGEN_VALUE_UNKNOWN;
+        cct_codegen_value_kind_t k1 = CCT_CODEGEN_VALUE_UNKNOWN;
+        cg->uses_crypto = true;
+        fputs("cct_rt_crypto_sha512_bytes((void*)(", out);
+        if (!cg_emit_expr(out, cg, args->nodes[0], &k0)) return false;
+        if (k0 != CCT_CODEGEN_VALUE_POINTER) {
+            cg_report_node(cg, args->nodes[0], "OBSECRO crypto_sha512_bytes requires bytes pointer as first argument in FASE 32A");
+            return false;
+        }
+        fputs("), ", out);
+        if (!cg_emit_expr(out, cg, args->nodes[1], &k1)) return false;
+        if (!(k1 == CCT_CODEGEN_VALUE_INT || k1 == CCT_CODEGEN_VALUE_BOOL)) {
+            cg_report_node(cg, args->nodes[1], "OBSECRO crypto_sha512_bytes requires integer len as second argument in FASE 32A");
+            return false;
+        }
+        fputs(")", out);
+        if (out_kind) *out_kind = CCT_CODEGEN_VALUE_STRING;
+        return true;
+    }
+
+    if (strcmp(name, "crypto_hmac_sha256") == 0 || strcmp(name, "crypto_hmac_sha512") == 0) {
+        if (argc != 2) {
+            cg_report_nodef(cg, expr, "OBSECRO %s expects exactly (key, message) in FASE 32A", name);
+            return false;
+        }
+        cct_codegen_value_kind_t k0 = CCT_CODEGEN_VALUE_UNKNOWN;
+        cct_codegen_value_kind_t k1 = CCT_CODEGEN_VALUE_UNKNOWN;
+        cg->uses_crypto = true;
+        fprintf(out, "cct_rt_%s(", name);
+        if (!cg_emit_expr(out, cg, args->nodes[0], &k0)) return false;
+        if (k0 != CCT_CODEGEN_VALUE_STRING) {
+            cg_report_nodef(cg, args->nodes[0], "OBSECRO %s requires VERBUM key as first argument in FASE 32A", name);
+            return false;
+        }
+        fputs(", ", out);
+        if (!cg_emit_expr(out, cg, args->nodes[1], &k1)) return false;
+        if (k1 != CCT_CODEGEN_VALUE_STRING) {
+            cg_report_nodef(cg, args->nodes[1], "OBSECRO %s requires VERBUM message as second argument in FASE 32A", name);
+            return false;
+        }
+        fputs(")", out);
+        if (out_kind) *out_kind = CCT_CODEGEN_VALUE_STRING;
+        return true;
+    }
+
+    if (strcmp(name, "crypto_pbkdf2_sha256") == 0) {
+        if (argc != 4) {
+            cg_report_node(cg, expr, "OBSECRO crypto_pbkdf2_sha256 expects exactly (password, salt, iterations, key_length) in FASE 32A");
+            return false;
+        }
+        cct_codegen_value_kind_t k0 = CCT_CODEGEN_VALUE_UNKNOWN;
+        cct_codegen_value_kind_t k1 = CCT_CODEGEN_VALUE_UNKNOWN;
+        cct_codegen_value_kind_t k2 = CCT_CODEGEN_VALUE_UNKNOWN;
+        cct_codegen_value_kind_t k3 = CCT_CODEGEN_VALUE_UNKNOWN;
+        cg->uses_crypto = true;
+        fputs("cct_rt_crypto_pbkdf2_sha256(", out);
+        if (!cg_emit_expr(out, cg, args->nodes[0], &k0)) return false;
+        if (k0 != CCT_CODEGEN_VALUE_STRING) {
+            cg_report_node(cg, args->nodes[0], "OBSECRO crypto_pbkdf2_sha256 requires VERBUM password as first argument in FASE 32A");
+            return false;
+        }
+        fputs(", ", out);
+        if (!cg_emit_expr(out, cg, args->nodes[1], &k1)) return false;
+        if (k1 != CCT_CODEGEN_VALUE_STRING) {
+            cg_report_node(cg, args->nodes[1], "OBSECRO crypto_pbkdf2_sha256 requires VERBUM salt as second argument in FASE 32A");
+            return false;
+        }
+        fputs(", ", out);
+        if (!cg_emit_expr(out, cg, args->nodes[2], &k2)) return false;
+        if (!(k2 == CCT_CODEGEN_VALUE_INT || k2 == CCT_CODEGEN_VALUE_BOOL)) {
+            cg_report_node(cg, args->nodes[2], "OBSECRO crypto_pbkdf2_sha256 requires integer iterations as third argument in FASE 32A");
+            return false;
+        }
+        fputs(", ", out);
+        if (!cg_emit_expr(out, cg, args->nodes[3], &k3)) return false;
+        if (!(k3 == CCT_CODEGEN_VALUE_INT || k3 == CCT_CODEGEN_VALUE_BOOL)) {
+            cg_report_node(cg, args->nodes[3], "OBSECRO crypto_pbkdf2_sha256 requires integer key_length as fourth argument in FASE 32A");
+            return false;
+        }
+        fputs(")", out);
+        if (out_kind) *out_kind = CCT_CODEGEN_VALUE_STRING;
+        return true;
+    }
+
+    if (strcmp(name, "crypto_csprng_bytes") == 0) {
+        if (argc != 1) {
+            cg_report_node(cg, expr, "OBSECRO crypto_csprng_bytes expects exactly one integer count argument in FASE 32A");
+            return false;
+        }
+        cct_codegen_value_kind_t k = CCT_CODEGEN_VALUE_UNKNOWN;
+        cg->uses_crypto = true;
+        fputs("((void*)cct_rt_crypto_csprng_bytes(", out);
+        if (!cg_emit_expr(out, cg, args->nodes[0], &k)) return false;
+        if (!(k == CCT_CODEGEN_VALUE_INT || k == CCT_CODEGEN_VALUE_BOOL)) {
+            cg_report_node(cg, args->nodes[0], "OBSECRO crypto_csprng_bytes requires integer count argument in FASE 32A");
+            return false;
+        }
+        fputs("))", out);
+        if (out_kind) *out_kind = CCT_CODEGEN_VALUE_POINTER;
+        return true;
+    }
+
+    if (strcmp(name, "crypto_constant_time_compare") == 0) {
+        if (argc != 2) {
+            cg_report_node(cg, expr, "OBSECRO crypto_constant_time_compare expects exactly (a, b) in FASE 32A");
+            return false;
+        }
+        cct_codegen_value_kind_t k0 = CCT_CODEGEN_VALUE_UNKNOWN;
+        cct_codegen_value_kind_t k1 = CCT_CODEGEN_VALUE_UNKNOWN;
+        cg->uses_crypto = true;
+        fputs("cct_rt_crypto_constant_time_compare(", out);
+        if (!cg_emit_expr(out, cg, args->nodes[0], &k0)) return false;
+        if (k0 != CCT_CODEGEN_VALUE_STRING) {
+            cg_report_node(cg, args->nodes[0], "OBSECRO crypto_constant_time_compare requires VERBUM a as first argument in FASE 32A");
+            return false;
+        }
+        fputs(", ", out);
+        if (!cg_emit_expr(out, cg, args->nodes[1], &k1)) return false;
+        if (k1 != CCT_CODEGEN_VALUE_STRING) {
+            cg_report_node(cg, args->nodes[1], "OBSECRO crypto_constant_time_compare requires VERBUM b as second argument in FASE 32A");
+            return false;
+        }
+        fputs(")", out);
+        if (out_kind) *out_kind = CCT_CODEGEN_VALUE_BOOL;
+        return true;
+    }
+
+    if (strcmp(name, "regex_builtin_compile") == 0) {
+        if (argc != 2) {
+            cg_report_node(cg, expr, "OBSECRO regex_builtin_compile expects exactly (pattern, flags) in FASE 32C");
+            return false;
+        }
+        cct_codegen_value_kind_t k0 = CCT_CODEGEN_VALUE_UNKNOWN;
+        cct_codegen_value_kind_t k1 = CCT_CODEGEN_VALUE_UNKNOWN;
+        cg->uses_regex = true;
+        fputs("((void*)cct_rt_regex_compile(", out);
+        if (!cg_emit_expr(out, cg, args->nodes[0], &k0)) return false;
+        if (k0 != CCT_CODEGEN_VALUE_STRING) {
+            cg_report_node(cg, args->nodes[0], "OBSECRO regex_builtin_compile requires VERBUM pattern as first argument in FASE 32C");
+            return false;
+        }
+        fputs(", ", out);
+        if (!cg_emit_expr(out, cg, args->nodes[1], &k1)) return false;
+        if (!(k1 == CCT_CODEGEN_VALUE_INT || k1 == CCT_CODEGEN_VALUE_BOOL)) {
+            cg_report_node(cg, args->nodes[1], "OBSECRO regex_builtin_compile requires integer flags as second argument in FASE 32C");
+            return false;
+        }
+        fputs("))", out);
+        if (out_kind) *out_kind = CCT_CODEGEN_VALUE_POINTER;
+        return true;
+    }
+
+    if (strcmp(name, "regex_builtin_match") == 0) {
+        if (argc != 2) {
+            cg_report_node(cg, expr, "OBSECRO regex_builtin_match expects exactly (handle, text) in FASE 32C");
+            return false;
+        }
+        cct_codegen_value_kind_t k0 = CCT_CODEGEN_VALUE_UNKNOWN;
+        cct_codegen_value_kind_t k1 = CCT_CODEGEN_VALUE_UNKNOWN;
+        cg->uses_regex = true;
+        fputs("cct_rt_regex_match((void*)(", out);
+        if (!cg_emit_expr(out, cg, args->nodes[0], &k0)) return false;
+        if (k0 != CCT_CODEGEN_VALUE_POINTER) {
+            cg_report_node(cg, args->nodes[0], "OBSECRO regex_builtin_match requires regex handle pointer as first argument in FASE 32C");
+            return false;
+        }
+        fputs("), ", out);
+        if (!cg_emit_expr(out, cg, args->nodes[1], &k1)) return false;
+        if (k1 != CCT_CODEGEN_VALUE_STRING) {
+            cg_report_node(cg, args->nodes[1], "OBSECRO regex_builtin_match requires VERBUM text as second argument in FASE 32C");
+            return false;
+        }
+        fputs(")", out);
+        if (out_kind) *out_kind = CCT_CODEGEN_VALUE_BOOL;
+        return true;
+    }
+
+    if (strcmp(name, "regex_builtin_search") == 0) {
+        if (argc != 2) {
+            cg_report_node(cg, expr, "OBSECRO regex_builtin_search expects exactly (handle, text) in FASE 32C");
+            return false;
+        }
+        cct_codegen_value_kind_t k0 = CCT_CODEGEN_VALUE_UNKNOWN;
+        cct_codegen_value_kind_t k1 = CCT_CODEGEN_VALUE_UNKNOWN;
+        cg->uses_regex = true;
+        fputs("cct_rt_regex_search((void*)(", out);
+        if (!cg_emit_expr(out, cg, args->nodes[0], &k0)) return false;
+        if (k0 != CCT_CODEGEN_VALUE_POINTER) {
+            cg_report_node(cg, args->nodes[0], "OBSECRO regex_builtin_search requires regex handle pointer as first argument in FASE 32C");
+            return false;
+        }
+        fputs("), ", out);
+        if (!cg_emit_expr(out, cg, args->nodes[1], &k1)) return false;
+        if (k1 != CCT_CODEGEN_VALUE_STRING) {
+            cg_report_node(cg, args->nodes[1], "OBSECRO regex_builtin_search requires VERBUM text as second argument in FASE 32C");
+            return false;
+        }
+        fputs(")", out);
+        if (out_kind) *out_kind = CCT_CODEGEN_VALUE_STRING;
+        return true;
+    }
+
+    if (strcmp(name, "regex_builtin_find_all") == 0) {
+        if (argc != 2) {
+            cg_report_node(cg, expr, "OBSECRO regex_builtin_find_all expects exactly (handle, text) in FASE 32C");
+            return false;
+        }
+        cct_codegen_value_kind_t k0 = CCT_CODEGEN_VALUE_UNKNOWN;
+        cct_codegen_value_kind_t k1 = CCT_CODEGEN_VALUE_UNKNOWN;
+        cg->uses_regex = true;
+        fputs("((void*)cct_rt_regex_find_all((void*)(", out);
+        if (!cg_emit_expr(out, cg, args->nodes[0], &k0)) return false;
+        if (k0 != CCT_CODEGEN_VALUE_POINTER) {
+            cg_report_node(cg, args->nodes[0], "OBSECRO regex_builtin_find_all requires regex handle pointer as first argument in FASE 32C");
+            return false;
+        }
+        fputs("), ", out);
+        if (!cg_emit_expr(out, cg, args->nodes[1], &k1)) return false;
+        if (k1 != CCT_CODEGEN_VALUE_STRING) {
+            cg_report_node(cg, args->nodes[1], "OBSECRO regex_builtin_find_all requires VERBUM text as second argument in FASE 32C");
+            return false;
+        }
+        fputs("))", out);
+        if (out_kind) *out_kind = CCT_CODEGEN_VALUE_POINTER;
+        return true;
+    }
+
+    if (strcmp(name, "regex_builtin_replace") == 0) {
+        if (argc != 4) {
+            cg_report_node(cg, expr, "OBSECRO regex_builtin_replace expects exactly (handle, text, replacement, all) in FASE 32C");
+            return false;
+        }
+        cct_codegen_value_kind_t k0 = CCT_CODEGEN_VALUE_UNKNOWN;
+        cct_codegen_value_kind_t k1 = CCT_CODEGEN_VALUE_UNKNOWN;
+        cct_codegen_value_kind_t k2 = CCT_CODEGEN_VALUE_UNKNOWN;
+        cct_codegen_value_kind_t k3 = CCT_CODEGEN_VALUE_UNKNOWN;
+        cg->uses_regex = true;
+        fputs("cct_rt_regex_replace((void*)(", out);
+        if (!cg_emit_expr(out, cg, args->nodes[0], &k0)) return false;
+        if (k0 != CCT_CODEGEN_VALUE_POINTER) {
+            cg_report_node(cg, args->nodes[0], "OBSECRO regex_builtin_replace requires regex handle pointer as first argument in FASE 32C");
+            return false;
+        }
+        fputs("), ", out);
+        if (!cg_emit_expr(out, cg, args->nodes[1], &k1)) return false;
+        if (k1 != CCT_CODEGEN_VALUE_STRING) {
+            cg_report_node(cg, args->nodes[1], "OBSECRO regex_builtin_replace requires VERBUM text as second argument in FASE 32C");
+            return false;
+        }
+        fputs(", ", out);
+        if (!cg_emit_expr(out, cg, args->nodes[2], &k2)) return false;
+        if (k2 != CCT_CODEGEN_VALUE_STRING) {
+            cg_report_node(cg, args->nodes[2], "OBSECRO regex_builtin_replace requires VERBUM replacement as third argument in FASE 32C");
+            return false;
+        }
+        fputs(", ", out);
+        if (!cg_emit_expr(out, cg, args->nodes[3], &k3)) return false;
+        if (!(k3 == CCT_CODEGEN_VALUE_INT || k3 == CCT_CODEGEN_VALUE_BOOL)) {
+            cg_report_node(cg, args->nodes[3], "OBSECRO regex_builtin_replace requires integer all flag as fourth argument in FASE 32C");
+            return false;
+        }
+        fputs(")", out);
+        if (out_kind) *out_kind = CCT_CODEGEN_VALUE_STRING;
+        return true;
+    }
+
+    if (strcmp(name, "regex_builtin_split") == 0) {
+        if (argc != 2) {
+            cg_report_node(cg, expr, "OBSECRO regex_builtin_split expects exactly (handle, text) in FASE 32C");
+            return false;
+        }
+        cct_codegen_value_kind_t k0 = CCT_CODEGEN_VALUE_UNKNOWN;
+        cct_codegen_value_kind_t k1 = CCT_CODEGEN_VALUE_UNKNOWN;
+        cg->uses_regex = true;
+        fputs("((void*)cct_rt_regex_split((void*)(", out);
+        if (!cg_emit_expr(out, cg, args->nodes[0], &k0)) return false;
+        if (k0 != CCT_CODEGEN_VALUE_POINTER) {
+            cg_report_node(cg, args->nodes[0], "OBSECRO regex_builtin_split requires regex handle pointer as first argument in FASE 32C");
+            return false;
+        }
+        fputs("), ", out);
+        if (!cg_emit_expr(out, cg, args->nodes[1], &k1)) return false;
+        if (k1 != CCT_CODEGEN_VALUE_STRING) {
+            cg_report_node(cg, args->nodes[1], "OBSECRO regex_builtin_split requires VERBUM text as second argument in FASE 32C");
+            return false;
+        }
+        fputs("))", out);
+        if (out_kind) *out_kind = CCT_CODEGEN_VALUE_POINTER;
+        return true;
+    }
+
+    if (strcmp(name, "regex_builtin_last_error") == 0) {
+        if (argc != 0) {
+            cg_report_node(cg, expr, "OBSECRO regex_builtin_last_error expects no arguments in FASE 32C");
+            return false;
+        }
+        cg->uses_regex = true;
+        fputs("cct_rt_regex_last_error()", out);
+        if (out_kind) *out_kind = CCT_CODEGEN_VALUE_STRING;
+        return true;
+    }
+
+    if (strcmp(name, "toml_builtin_parse") == 0 || strcmp(name, "toml_builtin_parse_file") == 0) {
+        if (argc != 1) {
+            cg_report_nodef(cg, expr, "OBSECRO %s expects exactly one VERBUM argument in FASE 32E", name);
+            return false;
+        }
+        cct_codegen_value_kind_t k0 = CCT_CODEGEN_VALUE_UNKNOWN;
+        cg->uses_toml = true;
+        fputs(strcmp(name, "toml_builtin_parse") == 0 ? "cct_rt_toml_parse(" : "cct_rt_toml_parse_file(", out);
+        if (!cg_emit_expr(out, cg, args->nodes[0], &k0)) return false;
+        if (k0 != CCT_CODEGEN_VALUE_STRING) {
+            cg_report_nodef(cg, args->nodes[0], "OBSECRO %s requires VERBUM argument in FASE 32E", name);
+            return false;
+        }
+        fputs(")", out);
+        if (out_kind) *out_kind = CCT_CODEGEN_VALUE_INT;
+        return true;
+    }
+
+    if (strcmp(name, "toml_builtin_last_error") == 0) {
+        if (argc != 0) {
+            cg_report_node(cg, expr, "OBSECRO toml_builtin_last_error expects no arguments in FASE 32E");
+            return false;
+        }
+        cg->uses_toml = true;
+        fputs("cct_rt_toml_last_error()", out);
+        if (out_kind) *out_kind = CCT_CODEGEN_VALUE_STRING;
+        return true;
+    }
+
+    if (strcmp(name, "toml_builtin_type") == 0 ||
+        strcmp(name, "toml_builtin_get_string") == 0 ||
+        strcmp(name, "toml_builtin_get_int") == 0 ||
+        strcmp(name, "toml_builtin_get_real") == 0 ||
+        strcmp(name, "toml_builtin_get_bool") == 0 ||
+        strcmp(name, "toml_builtin_get_subdoc") == 0 ||
+        strcmp(name, "toml_builtin_array_len") == 0) {
+        if (argc != 2) {
+            cg_report_nodef(cg, expr, "OBSECRO %s expects exactly (doc, key) in FASE 32E", name);
+            return false;
+        }
+        cct_codegen_value_kind_t k0 = CCT_CODEGEN_VALUE_UNKNOWN;
+        cct_codegen_value_kind_t k1 = CCT_CODEGEN_VALUE_UNKNOWN;
+        cg->uses_toml = true;
+        fprintf(out, "%s(", strcmp(name, "toml_builtin_get_subdoc") == 0 ? "cct_rt_toml_get_subdoc" :
+                                           strcmp(name, "toml_builtin_type") == 0 ? "cct_rt_toml_type" :
+                                           strcmp(name, "toml_builtin_get_string") == 0 ? "cct_rt_toml_get_string" :
+                                           strcmp(name, "toml_builtin_get_int") == 0 ? "cct_rt_toml_get_int" :
+                                           strcmp(name, "toml_builtin_get_real") == 0 ? "cct_rt_toml_get_real" :
+                                           strcmp(name, "toml_builtin_get_bool") == 0 ? "cct_rt_toml_get_bool" :
+                                           "cct_rt_toml_array_len");
+        if (!cg_emit_expr(out, cg, args->nodes[0], &k0)) return false;
+        if (!(k0 == CCT_CODEGEN_VALUE_INT || k0 == CCT_CODEGEN_VALUE_BOOL)) {
+            cg_report_nodef(cg, args->nodes[0], "OBSECRO %s requires document handle integer as first argument in FASE 32E", name);
+            return false;
+        }
+        fputs(", ", out);
+        if (!cg_emit_expr(out, cg, args->nodes[1], &k1)) return false;
+        if (k1 != CCT_CODEGEN_VALUE_STRING) {
+            cg_report_nodef(cg, args->nodes[1], "OBSECRO %s requires VERBUM key as second argument in FASE 32E", name);
+            return false;
+        }
+        fputs(")", out);
+        if (out_kind) {
+            if (strcmp(name, "toml_builtin_get_subdoc") == 0) *out_kind = CCT_CODEGEN_VALUE_INT;
+            else if (strcmp(name, "toml_builtin_get_real") == 0) *out_kind = CCT_CODEGEN_VALUE_REAL;
+            else if (strcmp(name, "toml_builtin_get_bool") == 0) *out_kind = CCT_CODEGEN_VALUE_BOOL;
+            else if (strcmp(name, "toml_builtin_get_string") == 0) *out_kind = CCT_CODEGEN_VALUE_STRING;
+            else *out_kind = CCT_CODEGEN_VALUE_INT;
+        }
+        return true;
+    }
+
+    if (strcmp(name, "toml_builtin_array_item_string") == 0 ||
+        strcmp(name, "toml_builtin_array_item_int") == 0 ||
+        strcmp(name, "toml_builtin_array_item_real") == 0 ||
+        strcmp(name, "toml_builtin_array_item_bool") == 0) {
+        if (argc != 3) {
+            cg_report_nodef(cg, expr, "OBSECRO %s expects exactly (doc, key, index) in FASE 32E", name);
+            return false;
+        }
+        cct_codegen_value_kind_t k0 = CCT_CODEGEN_VALUE_UNKNOWN;
+        cct_codegen_value_kind_t k1 = CCT_CODEGEN_VALUE_UNKNOWN;
+        cct_codegen_value_kind_t k2 = CCT_CODEGEN_VALUE_UNKNOWN;
+        cg->uses_toml = true;
+        fprintf(out, "%s(", strcmp(name, "toml_builtin_array_item_string") == 0 ? "cct_rt_toml_array_item_string" :
+                                           strcmp(name, "toml_builtin_array_item_int") == 0 ? "cct_rt_toml_array_item_int" :
+                                           strcmp(name, "toml_builtin_array_item_real") == 0 ? "cct_rt_toml_array_item_real" :
+                                           "cct_rt_toml_array_item_bool");
+        if (!cg_emit_expr(out, cg, args->nodes[0], &k0)) return false;
+        if (!(k0 == CCT_CODEGEN_VALUE_INT || k0 == CCT_CODEGEN_VALUE_BOOL)) {
+            cg_report_nodef(cg, args->nodes[0], "OBSECRO %s requires document handle integer as first argument in FASE 32E", name);
+            return false;
+        }
+        fputs(", ", out);
+        if (!cg_emit_expr(out, cg, args->nodes[1], &k1)) return false;
+        if (k1 != CCT_CODEGEN_VALUE_STRING) {
+            cg_report_nodef(cg, args->nodes[1], "OBSECRO %s requires VERBUM key as second argument in FASE 32E", name);
+            return false;
+        }
+        fputs(", ", out);
+        if (!cg_emit_expr(out, cg, args->nodes[2], &k2)) return false;
+        if (!(k2 == CCT_CODEGEN_VALUE_INT || k2 == CCT_CODEGEN_VALUE_BOOL)) {
+            cg_report_nodef(cg, args->nodes[2], "OBSECRO %s requires integer index as third argument in FASE 32E", name);
+            return false;
+        }
+        fputs(")", out);
+        if (out_kind) {
+            if (strcmp(name, "toml_builtin_array_item_string") == 0) *out_kind = CCT_CODEGEN_VALUE_STRING;
+            else if (strcmp(name, "toml_builtin_array_item_real") == 0) *out_kind = CCT_CODEGEN_VALUE_REAL;
+            else if (strcmp(name, "toml_builtin_array_item_bool") == 0) *out_kind = CCT_CODEGEN_VALUE_BOOL;
+            else *out_kind = CCT_CODEGEN_VALUE_INT;
+        }
+        return true;
+    }
+
+    if (strcmp(name, "toml_builtin_expand_env") == 0) {
+        if (argc != 1) {
+            cg_report_node(cg, expr, "OBSECRO toml_builtin_expand_env expects exactly one doc handle in FASE 32E");
+            return false;
+        }
+        cct_codegen_value_kind_t k0 = CCT_CODEGEN_VALUE_UNKNOWN;
+        cg->uses_toml = true;
+        fputs("cct_rt_toml_expand_env(", out);
+        if (!cg_emit_expr(out, cg, args->nodes[0], &k0)) return false;
+        if (!(k0 == CCT_CODEGEN_VALUE_INT || k0 == CCT_CODEGEN_VALUE_BOOL)) {
+            cg_report_node(cg, args->nodes[0], "OBSECRO toml_builtin_expand_env requires doc handle integer argument in FASE 32E");
+            return false;
+        }
+        fputs(")", out);
+        if (out_kind) *out_kind = CCT_CODEGEN_VALUE_INT;
+        return true;
+    }
+
+    if (strcmp(name, "toml_builtin_stringify") == 0) {
+        if (argc != 1) {
+            cg_report_node(cg, expr, "OBSECRO toml_builtin_stringify expects exactly one doc handle in FASE 32E");
+            return false;
+        }
+        cct_codegen_value_kind_t k0 = CCT_CODEGEN_VALUE_UNKNOWN;
+        cg->uses_toml = true;
+        fputs("cct_rt_toml_stringify(", out);
+        if (!cg_emit_expr(out, cg, args->nodes[0], &k0)) return false;
+        if (!(k0 == CCT_CODEGEN_VALUE_INT || k0 == CCT_CODEGEN_VALUE_BOOL)) {
+            cg_report_node(cg, args->nodes[0], "OBSECRO toml_builtin_stringify requires doc handle integer argument in FASE 32E");
+            return false;
+        }
+        fputs(")", out);
+        if (out_kind) *out_kind = CCT_CODEGEN_VALUE_STRING;
+        return true;
+    }
+
+    if (strcmp(name, "compress_builtin_gzip_compress_text") == 0 ||
+        strcmp(name, "compress_builtin_gzip_decompress_text") == 0) {
+        if (argc != 1) {
+            cg_report_nodef(cg, expr, "OBSECRO %s expects exactly one VERBUM argument in FASE 32F", name);
+            return false;
+        }
+        cct_codegen_value_kind_t k0 = CCT_CODEGEN_VALUE_UNKNOWN;
+        cg->uses_compress = true;
+        fprintf(out, "%s(", strcmp(name, "compress_builtin_gzip_compress_text") == 0 ? "cct_rt_gzip_compress_text" : "cct_rt_gzip_decompress_text");
+        if (!cg_emit_expr(out, cg, args->nodes[0], &k0)) return false;
+        if (k0 != CCT_CODEGEN_VALUE_STRING) {
+            cg_report_nodef(cg, args->nodes[0], "OBSECRO %s requires VERBUM argument in FASE 32F", name);
+            return false;
+        }
+        fputs(")", out);
+        if (out_kind) *out_kind = CCT_CODEGEN_VALUE_STRING;
+        return true;
+    }
+
+    if (strcmp(name, "compress_builtin_gzip_compress_bytes") == 0) {
+        if (argc != 2) {
+            cg_report_node(cg, expr, "OBSECRO compress_builtin_gzip_compress_bytes expects exactly (bytes, len) in FASE 32F");
+            return false;
+        }
+        cct_codegen_value_kind_t k0 = CCT_CODEGEN_VALUE_UNKNOWN;
+        cct_codegen_value_kind_t k1 = CCT_CODEGEN_VALUE_UNKNOWN;
+        cg->uses_compress = true;
+        fputs("cct_rt_gzip_compress_bytes((void*)(", out);
+        if (!cg_emit_expr(out, cg, args->nodes[0], &k0)) return false;
+        if (k0 != CCT_CODEGEN_VALUE_POINTER) {
+            cg_report_node(cg, args->nodes[0], "OBSECRO compress_builtin_gzip_compress_bytes requires bytes pointer as first argument in FASE 32F");
+            return false;
+        }
+        fputs("), ", out);
+        if (!cg_emit_expr(out, cg, args->nodes[1], &k1)) return false;
+        if (!(k1 == CCT_CODEGEN_VALUE_INT || k1 == CCT_CODEGEN_VALUE_BOOL)) {
+            cg_report_node(cg, args->nodes[1], "OBSECRO compress_builtin_gzip_compress_bytes requires integer length as second argument in FASE 32F");
+            return false;
+        }
+        fputs(")", out);
+        if (out_kind) *out_kind = CCT_CODEGEN_VALUE_STRING;
+        return true;
+    }
+
+    if (strcmp(name, "compress_builtin_gzip_decompress_bytes") == 0) {
+        if (argc != 1) {
+            cg_report_node(cg, expr, "OBSECRO compress_builtin_gzip_decompress_bytes expects exactly one VERBUM argument in FASE 32F");
+            return false;
+        }
+        cct_codegen_value_kind_t k0 = CCT_CODEGEN_VALUE_UNKNOWN;
+        cg->uses_compress = true;
+        fputs("((void*)cct_rt_gzip_decompress_bytes(", out);
+        if (!cg_emit_expr(out, cg, args->nodes[0], &k0)) return false;
+        if (k0 != CCT_CODEGEN_VALUE_STRING) {
+            cg_report_node(cg, args->nodes[0], "OBSECRO compress_builtin_gzip_decompress_bytes requires VERBUM argument in FASE 32F");
+            return false;
+        }
+        fputs("))", out);
+        if (out_kind) *out_kind = CCT_CODEGEN_VALUE_POINTER;
+        return true;
+    }
+
+    if (strcmp(name, "compress_builtin_last_error") == 0) {
+        if (argc != 0) {
+            cg_report_node(cg, expr, "OBSECRO compress_builtin_last_error expects no arguments in FASE 32F");
+            return false;
+        }
+        cg->uses_compress = true;
+        fputs("cct_rt_compress_last_error()", out);
+        if (out_kind) *out_kind = CCT_CODEGEN_VALUE_STRING;
+        return true;
+    }
+
+    if (strcmp(name, "filetype_builtin_detect_path") == 0) {
+        if (argc != 1) {
+            cg_report_node(cg, expr, "OBSECRO filetype_builtin_detect_path expects exactly one VERBUM argument in FASE 32G");
+            return false;
+        }
+        cct_codegen_value_kind_t k0 = CCT_CODEGEN_VALUE_UNKNOWN;
+        cg->uses_filetype = true;
+        fputs("cct_rt_filetype_detect_path(", out);
+        if (!cg_emit_expr(out, cg, args->nodes[0], &k0)) return false;
+        if (k0 != CCT_CODEGEN_VALUE_STRING) {
+            cg_report_node(cg, args->nodes[0], "OBSECRO filetype_builtin_detect_path requires VERBUM argument in FASE 32G");
+            return false;
+        }
+        fputs(")", out);
+        if (out_kind) *out_kind = CCT_CODEGEN_VALUE_INT;
+        return true;
+    }
+
+    if (strcmp(name, "filetype_builtin_detect_bytes") == 0) {
+        if (argc != 2) {
+            cg_report_node(cg, expr, "OBSECRO filetype_builtin_detect_bytes expects exactly (bytes, len) in FASE 32G");
+            return false;
+        }
+        cct_codegen_value_kind_t k0 = CCT_CODEGEN_VALUE_UNKNOWN;
+        cct_codegen_value_kind_t k1 = CCT_CODEGEN_VALUE_UNKNOWN;
+        cg->uses_filetype = true;
+        fputs("cct_rt_filetype_detect_bytes((void*)(", out);
+        if (!cg_emit_expr(out, cg, args->nodes[0], &k0)) return false;
+        if (k0 != CCT_CODEGEN_VALUE_POINTER) {
+            cg_report_node(cg, args->nodes[0], "OBSECRO filetype_builtin_detect_bytes requires bytes pointer as first argument in FASE 32G");
+            return false;
+        }
+        fputs("), ", out);
+        if (!cg_emit_expr(out, cg, args->nodes[1], &k1)) return false;
+        if (!(k1 == CCT_CODEGEN_VALUE_INT || k1 == CCT_CODEGEN_VALUE_BOOL)) {
+            cg_report_node(cg, args->nodes[1], "OBSECRO filetype_builtin_detect_bytes requires integer length as second argument in FASE 32G");
+            return false;
+        }
+        fputs(")", out);
+        if (out_kind) *out_kind = CCT_CODEGEN_VALUE_INT;
+        return true;
+    }
+
+    if (strcmp(name, "image_builtin_load") == 0) {
+        if (argc != 1) {
+            cg_report_node(cg, expr, "OBSECRO image_builtin_load expects exactly one VERBUM path argument in FASE 32I");
+            return false;
+        }
+        cct_codegen_value_kind_t k0 = CCT_CODEGEN_VALUE_UNKNOWN;
+        cg->uses_image_ops = true;
+        fputs("((void*)cct_rt_image_load(", out);
+        if (!cg_emit_expr(out, cg, args->nodes[0], &k0)) return false;
+        if (k0 != CCT_CODEGEN_VALUE_STRING) {
+            cg_report_node(cg, args->nodes[0], "OBSECRO image_builtin_load requires VERBUM path argument in FASE 32I");
+            return false;
+        }
+        fputs("))", out);
+        if (out_kind) *out_kind = CCT_CODEGEN_VALUE_POINTER;
+        return true;
+    }
+
+    if (strcmp(name, "image_builtin_free") == 0 ||
+        strcmp(name, "image_builtin_get_width") == 0 ||
+        strcmp(name, "image_builtin_get_height") == 0 ||
+        strcmp(name, "image_builtin_get_channels") == 0 ||
+        strcmp(name, "image_builtin_get_format") == 0) {
+        if (argc != 1) {
+            cg_report_node(cg, expr, "OBSECRO image builtin expects exactly one handle argument in FASE 32I");
+            return false;
+        }
+        cct_codegen_value_kind_t k0 = CCT_CODEGEN_VALUE_UNKNOWN;
+        cg->uses_image_ops = true;
+        fprintf(out, "%s(", strcmp(name, "image_builtin_free") == 0 ? "cct_rt_image_free" :
+                         strcmp(name, "image_builtin_get_width") == 0 ? "cct_rt_image_get_width" :
+                         strcmp(name, "image_builtin_get_height") == 0 ? "cct_rt_image_get_height" :
+                         strcmp(name, "image_builtin_get_channels") == 0 ? "cct_rt_image_get_channels" :
+                         "cct_rt_image_get_format");
+        if (!cg_emit_expr(out, cg, args->nodes[0], &k0)) return false;
+        if (k0 != CCT_CODEGEN_VALUE_POINTER) {
+            cg_report_node(cg, args->nodes[0], "OBSECRO image builtin requires image handle pointer argument in FASE 32I");
+            return false;
+        }
+        fputs(")", out);
+        if (out_kind) {
+            *out_kind = strcmp(name, "image_builtin_free") == 0 ? CCT_CODEGEN_VALUE_UNKNOWN : CCT_CODEGEN_VALUE_INT;
+        }
+        return true;
+    }
+
+    if (strcmp(name, "image_builtin_save") == 0) {
+        if (argc != 3) {
+            cg_report_node(cg, expr, "OBSECRO image_builtin_save expects exactly (handle, path, quality) in FASE 32I");
+            return false;
+        }
+        cct_codegen_value_kind_t k0 = CCT_CODEGEN_VALUE_UNKNOWN;
+        cct_codegen_value_kind_t k1 = CCT_CODEGEN_VALUE_UNKNOWN;
+        cct_codegen_value_kind_t k2 = CCT_CODEGEN_VALUE_UNKNOWN;
+        cg->uses_image_ops = true;
+        fputs("cct_rt_image_save(", out);
+        if (!cg_emit_expr(out, cg, args->nodes[0], &k0)) return false;
+        if (k0 != CCT_CODEGEN_VALUE_POINTER) {
+            cg_report_node(cg, args->nodes[0], "OBSECRO image_builtin_save requires image handle pointer as first argument in FASE 32I");
+            return false;
+        }
+        fputs(", ", out);
+        if (!cg_emit_expr(out, cg, args->nodes[1], &k1)) return false;
+        if (k1 != CCT_CODEGEN_VALUE_STRING) {
+            cg_report_node(cg, args->nodes[1], "OBSECRO image_builtin_save requires VERBUM path as second argument in FASE 32I");
+            return false;
+        }
+        fputs(", ", out);
+        if (!cg_emit_expr(out, cg, args->nodes[2], &k2)) return false;
+        if (!(k2 == CCT_CODEGEN_VALUE_INT || k2 == CCT_CODEGEN_VALUE_BOOL)) {
+            cg_report_node(cg, args->nodes[2], "OBSECRO image_builtin_save requires integer quality as third argument in FASE 32I");
+            return false;
+        }
+        fputs(")", out);
+        if (out_kind) *out_kind = CCT_CODEGEN_VALUE_INT;
+        return true;
+    }
+
+    if (strcmp(name, "image_builtin_resize") == 0 ||
+        strcmp(name, "image_builtin_crop") == 0 ||
+        strcmp(name, "image_builtin_rotate") == 0 ||
+        strcmp(name, "image_builtin_convert") == 0) {
+        size_t expected = strcmp(name, "image_builtin_crop") == 0 ? 5u :
+                          strcmp(name, "image_builtin_resize") == 0 ? 4u : 2u;
+        if (argc != expected) {
+            cg_report_node(cg, expr, "OBSECRO image transform builtin received unexpected arity in FASE 32I");
+            return false;
+        }
+        cg->uses_image_ops = true;
+        fprintf(out, "((void*)%s(", strcmp(name, "image_builtin_resize") == 0 ? "cct_rt_image_resize" :
+                                   strcmp(name, "image_builtin_crop") == 0 ? "cct_rt_image_crop" :
+                                   strcmp(name, "image_builtin_rotate") == 0 ? "cct_rt_image_rotate" :
+                                   "cct_rt_image_convert");
+        for (u32 i = 0; i < argc; i++) {
+            cct_codegen_value_kind_t k = CCT_CODEGEN_VALUE_UNKNOWN;
+            if (i > 0) fputs(", ", out);
+            if (!cg_emit_expr(out, cg, args->nodes[i], &k)) return false;
+            if (i == 0 && k != CCT_CODEGEN_VALUE_POINTER) {
+                cg_report_node(cg, args->nodes[i], "OBSECRO image transform builtin requires image handle pointer as first argument in FASE 32I");
+                return false;
+            }
+            if (i > 0 && !(k == CCT_CODEGEN_VALUE_INT || k == CCT_CODEGEN_VALUE_BOOL)) {
+                cg_report_node(cg, args->nodes[i], "OBSECRO image transform builtin requires integer scalar arguments after the handle in FASE 32I");
+                return false;
+            }
+        }
+        fputs("))", out);
+        if (out_kind) *out_kind = CCT_CODEGEN_VALUE_POINTER;
+        return true;
+    }
+
+    if (strcmp(name, "image_builtin_last_error") == 0) {
+        if (argc != 0) {
+            cg_report_node(cg, expr, "OBSECRO image_builtin_last_error expects no arguments in FASE 32I");
+            return false;
+        }
+        cg->uses_image_ops = true;
+        fputs("cct_rt_image_last_error()", out);
+        if (out_kind) *out_kind = CCT_CODEGEN_VALUE_STRING;
         return true;
     }
 
@@ -7246,6 +8018,44 @@ static bool cg_emit_scribe_stmt(FILE *out, cct_codegen_t *cg, const cct_ast_node
         return true;
     }
 
+    if (strcmp(obsecro_node->as.obsecro.name, "regex_builtin_free") == 0) {
+        cct_ast_node_list_t *args = obsecro_node->as.obsecro.arguments;
+        if (!args || args->count != 1) {
+            cg_report_node(cg, obsecro_node, "OBSECRO regex_builtin_free requires exactly one regex handle pointer in FASE 32C");
+            return false;
+        }
+        cct_codegen_value_kind_t k0 = CCT_CODEGEN_VALUE_UNKNOWN;
+        cg->uses_regex = true;
+        cg_emit_indent(out, indent);
+        fputs("cct_rt_regex_free((void*)(", out);
+        if (!cg_emit_expr(out, cg, args->nodes[0], &k0)) return false;
+        if (k0 != CCT_CODEGEN_VALUE_POINTER) {
+            cg_report_node(cg, args->nodes[0], "OBSECRO regex_builtin_free requires regex handle pointer argument in FASE 32C");
+            return false;
+        }
+        fputs("));\n", out);
+        return true;
+    }
+
+    if (strcmp(obsecro_node->as.obsecro.name, "image_builtin_free") == 0) {
+        cct_ast_node_list_t *args = obsecro_node->as.obsecro.arguments;
+        if (!args || args->count != 1) {
+            cg_report_node(cg, obsecro_node, "OBSECRO image_builtin_free requires exactly one image handle pointer in FASE 32I");
+            return false;
+        }
+        cct_codegen_value_kind_t k0 = CCT_CODEGEN_VALUE_UNKNOWN;
+        cg->uses_image_ops = true;
+        cg_emit_indent(out, indent);
+        fputs("cct_rt_image_free(", out);
+        if (!cg_emit_expr(out, cg, args->nodes[0], &k0)) return false;
+        if (k0 != CCT_CODEGEN_VALUE_POINTER) {
+            cg_report_node(cg, args->nodes[0], "OBSECRO image_builtin_free requires image handle pointer argument in FASE 32I");
+            return false;
+        }
+        fputs(");\n", out);
+        return true;
+    }
+
     if (strcmp(obsecro_node->as.obsecro.name, "scan_free") == 0) {
         cct_ast_node_list_t *args = obsecro_node->as.obsecro.arguments;
         if (!args || args->count != 1) {
@@ -7383,7 +8193,7 @@ static bool cg_emit_scribe_stmt(FILE *out, cct_codegen_t *cg, const cct_ast_node
     }
 
     if (strcmp(obsecro_node->as.obsecro.name, "scribe") != 0) {
-        cg_report_nodef(cg, obsecro_node, "OBSECRO %s codegen is not supported in current executable subset (supported stmt builtins: scribe, libera, mem_free, mem_copy, mem_set, mem_zero, kernel_halt, kernel_outb, kernel_memcpy, kernel_memset, fluxus_free, fluxus_push, fluxus_pop, fluxus_clear, fluxus_reserve, fluxus_set, fluxus_remove, fluxus_insert, fluxus_reverse, fluxus_sort_int, fluxus_sort_verbum, alg_sort_verbum, json_arr_handle_push, json_obj_handle_push, sock_connect, sock_bind, sock_listen, sock_close, sock_set_timeout_ms, db_exec, db_close, rows_close, stmt_bind_text, stmt_bind_int, stmt_bind_real, stmt_reset, stmt_finalize, db_begin, db_commit, db_rollback, map_free, map_insert, map_clear, map_reserve, map_merge, set_free, set_clear, set_reserve, io_print, io_println, io_print_int, io_print_real, io_print_char, io_eprint, io_eprintln, io_eprint_int, io_eprint_real, io_flush, io_flush_err, fs_write_all, fs_append_all, fs_mkdir, fs_mkdir_all, fs_delete_file, fs_delete_dir, fs_rename, fs_copy, fs_move, fs_chmod, fs_truncate, fs_symlink, random_seed, time_sleep_ms, bytes_set, bytes_free, option_free, result_free, scan_free, builder_append, builder_append_char, builder_clear, builder_free, writer_indent, writer_dedent, writer_write, writer_writeln, writer_free)",
+        cg_report_nodef(cg, obsecro_node, "OBSECRO %s codegen is not supported in current executable subset (supported stmt builtins: scribe, libera, mem_free, mem_copy, mem_set, mem_zero, kernel_halt, kernel_outb, kernel_memcpy, kernel_memset, fluxus_free, fluxus_push, fluxus_pop, fluxus_clear, fluxus_reserve, fluxus_set, fluxus_remove, fluxus_insert, fluxus_reverse, fluxus_sort_int, fluxus_sort_verbum, alg_sort_verbum, json_arr_handle_push, json_obj_handle_push, sock_connect, sock_bind, sock_listen, sock_close, sock_set_timeout_ms, db_exec, db_close, rows_close, stmt_bind_text, stmt_bind_int, stmt_bind_real, stmt_reset, stmt_finalize, db_begin, db_commit, db_rollback, map_free, map_insert, map_clear, map_reserve, map_merge, set_free, set_clear, set_reserve, io_print, io_println, io_print_int, io_print_real, io_print_char, io_eprint, io_eprintln, io_eprint_int, io_eprint_real, io_flush, io_flush_err, fs_write_all, fs_append_all, fs_mkdir, fs_mkdir_all, fs_delete_file, fs_delete_dir, fs_rename, fs_copy, fs_move, fs_chmod, fs_truncate, fs_symlink, random_seed, time_sleep_ms, bytes_set, bytes_free, option_free, result_free, regex_builtin_free, image_builtin_free, scan_free, builder_append, builder_append_char, builder_clear, builder_free, writer_indent, writer_dedent, writer_write, writer_writeln, writer_free)",
                         obsecro_node->as.obsecro.name);
         return false;
     }
@@ -8990,6 +9800,75 @@ static bool cg_precollect_strings_from_expr(cct_codegen_t *cg, const cct_ast_nod
             return true;
         case AST_OBSECRO:
             if (expr->as.obsecro.name &&
+                (strcmp(expr->as.obsecro.name, "crypto_sha256_text") == 0 ||
+                 strcmp(expr->as.obsecro.name, "crypto_sha256_bytes") == 0 ||
+                 strcmp(expr->as.obsecro.name, "crypto_sha512_text") == 0 ||
+                 strcmp(expr->as.obsecro.name, "crypto_sha512_bytes") == 0 ||
+                 strcmp(expr->as.obsecro.name, "crypto_hmac_sha256") == 0 ||
+                 strcmp(expr->as.obsecro.name, "crypto_hmac_sha512") == 0 ||
+                 strcmp(expr->as.obsecro.name, "crypto_pbkdf2_sha256") == 0 ||
+                 strcmp(expr->as.obsecro.name, "crypto_csprng_bytes") == 0 ||
+                 strcmp(expr->as.obsecro.name, "crypto_constant_time_compare") == 0)) {
+                cg->uses_crypto = true;
+            }
+            if (expr->as.obsecro.name &&
+                (strcmp(expr->as.obsecro.name, "regex_builtin_compile") == 0 ||
+                 strcmp(expr->as.obsecro.name, "regex_builtin_match") == 0 ||
+                 strcmp(expr->as.obsecro.name, "regex_builtin_search") == 0 ||
+                 strcmp(expr->as.obsecro.name, "regex_builtin_find_all") == 0 ||
+                 strcmp(expr->as.obsecro.name, "regex_builtin_replace") == 0 ||
+                 strcmp(expr->as.obsecro.name, "regex_builtin_split") == 0 ||
+                 strcmp(expr->as.obsecro.name, "regex_builtin_last_error") == 0)) {
+                cg->uses_regex = true;
+            }
+            if (expr->as.obsecro.name &&
+                (strcmp(expr->as.obsecro.name, "toml_builtin_parse") == 0 ||
+                 strcmp(expr->as.obsecro.name, "toml_builtin_parse_file") == 0 ||
+                 strcmp(expr->as.obsecro.name, "toml_builtin_last_error") == 0 ||
+                 strcmp(expr->as.obsecro.name, "toml_builtin_type") == 0 ||
+                 strcmp(expr->as.obsecro.name, "toml_builtin_get_string") == 0 ||
+                 strcmp(expr->as.obsecro.name, "toml_builtin_get_int") == 0 ||
+                 strcmp(expr->as.obsecro.name, "toml_builtin_get_real") == 0 ||
+                 strcmp(expr->as.obsecro.name, "toml_builtin_get_bool") == 0 ||
+                 strcmp(expr->as.obsecro.name, "toml_builtin_get_subdoc") == 0 ||
+                 strcmp(expr->as.obsecro.name, "toml_builtin_array_len") == 0 ||
+                 strcmp(expr->as.obsecro.name, "toml_builtin_array_item_string") == 0 ||
+                 strcmp(expr->as.obsecro.name, "toml_builtin_array_item_int") == 0 ||
+                 strcmp(expr->as.obsecro.name, "toml_builtin_array_item_real") == 0 ||
+                 strcmp(expr->as.obsecro.name, "toml_builtin_array_item_bool") == 0 ||
+                 strcmp(expr->as.obsecro.name, "toml_builtin_expand_env") == 0 ||
+                 strcmp(expr->as.obsecro.name, "toml_builtin_stringify") == 0)) {
+                cg->uses_toml = true;
+            }
+            if (expr->as.obsecro.name &&
+                (strcmp(expr->as.obsecro.name, "compress_builtin_gzip_compress_text") == 0 ||
+                 strcmp(expr->as.obsecro.name, "compress_builtin_gzip_compress_bytes") == 0 ||
+                 strcmp(expr->as.obsecro.name, "compress_builtin_gzip_decompress_text") == 0 ||
+                 strcmp(expr->as.obsecro.name, "compress_builtin_gzip_decompress_bytes") == 0 ||
+                 strcmp(expr->as.obsecro.name, "compress_builtin_last_error") == 0)) {
+                cg->uses_compress = true;
+            }
+            if (expr->as.obsecro.name &&
+                (strcmp(expr->as.obsecro.name, "filetype_builtin_detect_path") == 0 ||
+                 strcmp(expr->as.obsecro.name, "filetype_builtin_detect_bytes") == 0)) {
+                cg->uses_filetype = true;
+            }
+            if (expr->as.obsecro.name &&
+                (strcmp(expr->as.obsecro.name, "image_builtin_load") == 0 ||
+                 strcmp(expr->as.obsecro.name, "image_builtin_free") == 0 ||
+                 strcmp(expr->as.obsecro.name, "image_builtin_save") == 0 ||
+                 strcmp(expr->as.obsecro.name, "image_builtin_resize") == 0 ||
+                 strcmp(expr->as.obsecro.name, "image_builtin_crop") == 0 ||
+                 strcmp(expr->as.obsecro.name, "image_builtin_rotate") == 0 ||
+                 strcmp(expr->as.obsecro.name, "image_builtin_convert") == 0 ||
+                 strcmp(expr->as.obsecro.name, "image_builtin_get_width") == 0 ||
+                 strcmp(expr->as.obsecro.name, "image_builtin_get_height") == 0 ||
+                 strcmp(expr->as.obsecro.name, "image_builtin_get_channels") == 0 ||
+                 strcmp(expr->as.obsecro.name, "image_builtin_get_format") == 0 ||
+                 strcmp(expr->as.obsecro.name, "image_builtin_last_error") == 0)) {
+                cg->uses_image_ops = true;
+            }
+            if (expr->as.obsecro.name &&
                 (strcmp(expr->as.obsecro.name, "db_open") == 0 ||
                  strcmp(expr->as.obsecro.name, "db_close") == 0 ||
                  strcmp(expr->as.obsecro.name, "db_exec") == 0 ||
@@ -9568,8 +10447,12 @@ static void cg_win32_prepend_cc_dir_to_path(const char *cc) {
 
 static void cg_host_link_flags(const cct_codegen_t *cg, char *buffer, size_t buffer_size) {
     const char *extra_ldflags = getenv("CCT_HOST_LDFLAGS");
+    const char *crypto_env_ldflags = getenv("CCT_CRYPTO_LDFLAGS");
+    const char *compress_env_ldflags = getenv("CCT_ZLIB_LDFLAGS");
 #ifdef _WIN32
     const char *default_ldflags = "";
+    const char *crypto_pkg_config = "";
+    const char *compress_pkg_config = "";
 #else
     /*
      * Generated host executables embed runtime helpers that call libm
@@ -9578,15 +10461,56 @@ static void cg_host_link_flags(const cct_codegen_t *cg, char *buffer, size_t buf
      * toolchain-specific defaults.
      */
     const char *default_ldflags = "-lm";
+    const char *crypto_pkg_config =
+        " $(pkg-config --libs openssl 2>/dev/null || printf '%s' '-lssl -lcrypto')";
+    const char *compress_pkg_config =
+        " $(pkg-config --libs zlib 2>/dev/null || printf '%s' '-lz')";
 #endif
     const char *sqlite_ldflags = (cg && cg->uses_sqlite) ? "-lsqlite3" : "";
+    const char *crypto_ldflags = "";
+    const char *compress_ldflags = "";
+    if (cg && cg->uses_crypto) {
+        crypto_ldflags = (crypto_env_ldflags && crypto_env_ldflags[0]) ? crypto_env_ldflags : crypto_pkg_config;
+    }
+    if (cg && cg->uses_compress) {
+        compress_ldflags = (compress_env_ldflags && compress_env_ldflags[0]) ? compress_env_ldflags : compress_pkg_config;
+    }
 
     if (!buffer || buffer_size == 0) return;
 
     buffer[0] = '\0';
     if (default_ldflags[0]) snprintf(buffer + strlen(buffer), buffer_size - strlen(buffer), " %s", default_ldflags);
     if (sqlite_ldflags[0]) snprintf(buffer + strlen(buffer), buffer_size - strlen(buffer), " %s", sqlite_ldflags);
+    if (crypto_ldflags[0]) snprintf(buffer + strlen(buffer), buffer_size - strlen(buffer), " %s", crypto_ldflags);
+    if (compress_ldflags[0]) snprintf(buffer + strlen(buffer), buffer_size - strlen(buffer), " %s", compress_ldflags);
     if (extra_ldflags && extra_ldflags[0]) snprintf(buffer + strlen(buffer), buffer_size - strlen(buffer), " %s", extra_ldflags);
+}
+
+static void cg_host_compile_flags(const cct_codegen_t *cg, char *buffer, size_t buffer_size) {
+    const char *extra_cflags = getenv("CCT_HOST_CFLAGS");
+    const char *crypto_env_cflags = getenv("CCT_CRYPTO_CFLAGS");
+    const char *compress_env_cflags = getenv("CCT_ZLIB_CFLAGS");
+#ifdef _WIN32
+    const char *crypto_pkg_config = "";
+    const char *compress_pkg_config = "";
+#else
+    const char *crypto_pkg_config = " $(pkg-config --cflags openssl 2>/dev/null)";
+    const char *compress_pkg_config = " $(pkg-config --cflags zlib 2>/dev/null)";
+#endif
+    const char *crypto_cflags = "";
+    const char *compress_cflags = "";
+    if (cg && cg->uses_crypto) {
+        crypto_cflags = (crypto_env_cflags && crypto_env_cflags[0]) ? crypto_env_cflags : crypto_pkg_config;
+    }
+    if (cg && cg->uses_compress) {
+        compress_cflags = (compress_env_cflags && compress_env_cflags[0]) ? compress_env_cflags : compress_pkg_config;
+    }
+
+    if (!buffer || buffer_size == 0) return;
+    buffer[0] = '\0';
+    if (crypto_cflags[0]) snprintf(buffer + strlen(buffer), buffer_size - strlen(buffer), " %s", crypto_cflags);
+    if (compress_cflags[0]) snprintf(buffer + strlen(buffer), buffer_size - strlen(buffer), " %s", compress_cflags);
+    if (extra_cflags && extra_cflags[0]) snprintf(buffer + strlen(buffer), buffer_size - strlen(buffer), " %s", extra_cflags);
 }
 
 static bool cg_run_host_compiler(cct_codegen_t *cg) {
@@ -9601,33 +10525,35 @@ static bool cg_run_host_compiler(cct_codegen_t *cg) {
     cg_win32_prepend_cc_dir_to_path(cc);
 #endif
     char command[4096];
+    char host_compile_flags[1024];
     char host_link_flags[1024];
+    cg_host_compile_flags(cg, host_compile_flags, sizeof(host_compile_flags));
     cg_host_link_flags(cg, host_link_flags, sizeof(host_link_flags));
     if (cg->profile == CCT_PROFILE_FREESTANDING && cg_has_explicit_freestanding_entry(cg)) {
         snprintf(command, sizeof(command),
 #ifdef _WIN32
-                 "%s -std=c11 -O2 -c -o \"%s\" \"%s\"",
+                 "%s -std=c11 -O2%s -c -o \"%s\" \"%s\"",
 #else
-                 "%s -std=c11 -O2 -fwrapv -c -o \"%s\" \"%s\"",
+                 "%s -std=c11 -O2 -fwrapv%s -c -o \"%s\" \"%s\"",
 #endif
-                 cc, cg->output_executable_path, cg->intermediate_c_path);
+                 cc, host_compile_flags, cg->output_executable_path, cg->intermediate_c_path);
     } else if (cg->profile == CCT_PROFILE_FREESTANDING) {
         snprintf(command, sizeof(command),
 #ifdef _WIN32
-                 "%s -std=c11 -O2 -static -o \"%s\" \"%s\" \"%s\"%s",
+                 "%s -std=c11 -O2%s -static -o \"%s\" \"%s\" \"%s\"%s",
 #else
-                 "%s -std=c11 -O2 -fwrapv -o \"%s\" \"%s\" \"%s\"%s",
+                 "%s -std=c11 -O2 -fwrapv%s -o \"%s\" \"%s\" \"%s\"%s",
 #endif
-                 cc, cg->output_executable_path, cg->intermediate_c_path, CCT_FREESTANDING_RT_SOURCE,
-                 host_link_flags);
+                 cc, host_compile_flags, cg->output_executable_path, cg->intermediate_c_path,
+                 CCT_FREESTANDING_RT_SOURCE, host_link_flags);
     } else {
         snprintf(command, sizeof(command),
 #ifdef _WIN32
-                 "%s -std=c11 -O2 -static -o \"%s\" \"%s\"%s",
+                 "%s -std=c11 -O2%s -static -o \"%s\" \"%s\"%s",
 #else
-                 "%s -std=c11 -O2 -fwrapv -o \"%s\" \"%s\"%s",
+                 "%s -std=c11 -O2 -fwrapv%s -o \"%s\" \"%s\"%s",
 #endif
-                 cc, cg->output_executable_path, cg->intermediate_c_path, host_link_flags);
+                 cc, host_compile_flags, cg->output_executable_path, cg->intermediate_c_path, host_link_flags);
     }
 
     int rc = system(command);
@@ -9656,6 +10582,12 @@ void cct_codegen_init(cct_codegen_t *cg, const char *filename) {
     cg->filename = filename;
     cg->backend_kind = CCT_CODEGEN_BACKEND_C_HOST;
     cg->uses_sqlite = false;
+    cg->uses_crypto = false;
+    cg->uses_regex = false;
+    cg->uses_toml = false;
+    cg->uses_compress = false;
+    cg->uses_filetype = false;
+    cg->uses_image_ops = false;
 #ifdef _WIN32
     cg->host_cc = "gcc";
 #else

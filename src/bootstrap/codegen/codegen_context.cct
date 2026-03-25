@@ -157,6 +157,7 @@ SIGILLUM CodegenContext
   needs_failure_runtime: VERUM
   needs_fmt_runtime: VERUM
   needs_math_runtime: VERUM
+  needs_time_runtime: VERUM
 FIN SIGILLUM
 
 RITUALE codegen_heap_alloc(REX bytes) REDDE SPECULUM NIHIL
@@ -535,6 +536,7 @@ RITUALE codegen_context_reset(SPECULUM CodegenContext ctx) REDDE NIHIL
   VINCIRE (*ctx).needs_failure_runtime AD FALSUM
   VINCIRE (*ctx).needs_fmt_runtime AD FALSUM
   VINCIRE (*ctx).needs_math_runtime AD FALSUM
+  VINCIRE (*ctx).needs_time_runtime AD FALSUM
   REDDE
 EXPLICIT RITUALE
 
@@ -1115,6 +1117,11 @@ EXPLICIT RITUALE
 
 RITUALE codegen_require_math_runtime(SPECULUM CodegenContext ctx) REDDE NIHIL
   VINCIRE (*ctx).needs_math_runtime AD VERUM
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE codegen_require_time_runtime(SPECULUM CodegenContext ctx) REDDE NIHIL
+  VINCIRE (*ctx).needs_time_runtime AD VERUM
   REDDE
 EXPLICIT RITUALE
 

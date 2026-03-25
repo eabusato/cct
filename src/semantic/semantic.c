@@ -1418,7 +1418,7 @@ static cct_sem_type_t* sem_resolve_ast_type(cct_semantic_analyzer_t *sem, const 
  * ======================================================================== */
 
 static const cct_sem_builtin_spec_t* sem_find_builtin(cct_semantic_analyzer_t *sem, const char *name) {
-    static cct_sem_builtin_spec_t specs[328];
+    static cct_sem_builtin_spec_t specs[400];
     static bool initialized = false;
 
     if (!initialized) {
@@ -1751,6 +1751,59 @@ static const cct_sem_builtin_spec_t* sem_find_builtin(cct_semantic_analyzer_t *s
         specs[325].name = "db_rollback"; specs[325].min_args = 1; specs[325].variadic = false;
         specs[326].name = "db_scalar_int"; specs[326].min_args = 2; specs[326].variadic = false;
         specs[327].name = "db_scalar_text"; specs[327].min_args = 2; specs[327].variadic = false;
+        specs[328].name = "crypto_sha256_text"; specs[328].min_args = 1; specs[328].variadic = false;
+        specs[329].name = "crypto_sha256_bytes"; specs[329].min_args = 2; specs[329].variadic = false;
+        specs[330].name = "crypto_sha512_text"; specs[330].min_args = 1; specs[330].variadic = false;
+        specs[331].name = "crypto_sha512_bytes"; specs[331].min_args = 2; specs[331].variadic = false;
+        specs[332].name = "crypto_hmac_sha256"; specs[332].min_args = 2; specs[332].variadic = false;
+        specs[333].name = "crypto_hmac_sha512"; specs[333].min_args = 2; specs[333].variadic = false;
+        specs[334].name = "crypto_pbkdf2_sha256"; specs[334].min_args = 4; specs[334].variadic = false;
+        specs[335].name = "crypto_csprng_bytes"; specs[335].min_args = 1; specs[335].variadic = false;
+        specs[336].name = "crypto_constant_time_compare"; specs[336].min_args = 2; specs[336].variadic = false;
+        specs[337].name = "regex_builtin_compile"; specs[337].min_args = 2; specs[337].variadic = false;
+        specs[338].name = "regex_builtin_match"; specs[338].min_args = 2; specs[338].variadic = false;
+        specs[339].name = "regex_builtin_search"; specs[339].min_args = 2; specs[339].variadic = false;
+        specs[340].name = "regex_builtin_find_all"; specs[340].min_args = 2; specs[340].variadic = false;
+        specs[341].name = "regex_builtin_replace"; specs[341].min_args = 4; specs[341].variadic = false;
+        specs[342].name = "regex_builtin_split"; specs[342].min_args = 2; specs[342].variadic = false;
+        specs[343].name = "regex_builtin_free"; specs[343].min_args = 1; specs[343].variadic = false;
+        specs[344].name = "regex_builtin_last_error"; specs[344].min_args = 0; specs[344].variadic = false;
+        specs[345].name = "date_now_unix"; specs[345].min_args = 0; specs[345].variadic = false;
+        specs[346].name = "toml_builtin_parse"; specs[346].min_args = 1; specs[346].variadic = false;
+        specs[347].name = "toml_builtin_parse_file"; specs[347].min_args = 1; specs[347].variadic = false;
+        specs[348].name = "toml_builtin_last_error"; specs[348].min_args = 0; specs[348].variadic = false;
+        specs[349].name = "toml_builtin_type"; specs[349].min_args = 2; specs[349].variadic = false;
+        specs[350].name = "toml_builtin_get_string"; specs[350].min_args = 2; specs[350].variadic = false;
+        specs[351].name = "toml_builtin_get_int"; specs[351].min_args = 2; specs[351].variadic = false;
+        specs[352].name = "toml_builtin_get_real"; specs[352].min_args = 2; specs[352].variadic = false;
+        specs[353].name = "toml_builtin_get_bool"; specs[353].min_args = 2; specs[353].variadic = false;
+        specs[354].name = "toml_builtin_get_subdoc"; specs[354].min_args = 2; specs[354].variadic = false;
+        specs[355].name = "toml_builtin_array_len"; specs[355].min_args = 2; specs[355].variadic = false;
+        specs[356].name = "toml_builtin_array_item_string"; specs[356].min_args = 3; specs[356].variadic = false;
+        specs[357].name = "toml_builtin_array_item_int"; specs[357].min_args = 3; specs[357].variadic = false;
+        specs[358].name = "toml_builtin_array_item_real"; specs[358].min_args = 3; specs[358].variadic = false;
+        specs[359].name = "toml_builtin_array_item_bool"; specs[359].min_args = 3; specs[359].variadic = false;
+        specs[360].name = "toml_builtin_expand_env"; specs[360].min_args = 1; specs[360].variadic = false;
+        specs[361].name = "toml_builtin_stringify"; specs[361].min_args = 1; specs[361].variadic = false;
+        specs[362].name = "compress_builtin_gzip_compress_text"; specs[362].min_args = 1; specs[362].variadic = false;
+        specs[363].name = "compress_builtin_gzip_compress_bytes"; specs[363].min_args = 2; specs[363].variadic = false;
+        specs[364].name = "compress_builtin_gzip_decompress_text"; specs[364].min_args = 1; specs[364].variadic = false;
+        specs[365].name = "compress_builtin_gzip_decompress_bytes"; specs[365].min_args = 1; specs[365].variadic = false;
+        specs[366].name = "compress_builtin_last_error"; specs[366].min_args = 0; specs[366].variadic = false;
+        specs[367].name = "filetype_builtin_detect_path"; specs[367].min_args = 1; specs[367].variadic = false;
+        specs[368].name = "filetype_builtin_detect_bytes"; specs[368].min_args = 2; specs[368].variadic = false;
+        specs[369].name = "image_builtin_load"; specs[369].min_args = 1; specs[369].variadic = false;
+        specs[370].name = "image_builtin_free"; specs[370].min_args = 1; specs[370].variadic = false;
+        specs[371].name = "image_builtin_save"; specs[371].min_args = 3; specs[371].variadic = false;
+        specs[372].name = "image_builtin_resize"; specs[372].min_args = 4; specs[372].variadic = false;
+        specs[373].name = "image_builtin_crop"; specs[373].min_args = 5; specs[373].variadic = false;
+        specs[374].name = "image_builtin_rotate"; specs[374].min_args = 2; specs[374].variadic = false;
+        specs[375].name = "image_builtin_convert"; specs[375].min_args = 2; specs[375].variadic = false;
+        specs[376].name = "image_builtin_get_width"; specs[376].min_args = 1; specs[376].variadic = false;
+        specs[377].name = "image_builtin_get_height"; specs[377].min_args = 1; specs[377].variadic = false;
+        specs[378].name = "image_builtin_get_channels"; specs[378].min_args = 1; specs[378].variadic = false;
+        specs[379].name = "image_builtin_get_format"; specs[379].min_args = 1; specs[379].variadic = false;
+        specs[380].name = "image_builtin_last_error"; specs[380].min_args = 0; specs[380].variadic = false;
         initialized = true;
     }
 
@@ -2082,6 +2135,59 @@ static const cct_sem_builtin_spec_t* sem_find_builtin(cct_semantic_analyzer_t *s
     specs[325].return_type = &sem->type_nihil;
     specs[326].return_type = &sem->type_rex;
     specs[327].return_type = &sem->type_verbum;
+    specs[328].return_type = &sem->type_verbum;
+    specs[329].return_type = &sem->type_verbum;
+    specs[330].return_type = &sem->type_verbum;
+    specs[331].return_type = &sem->type_verbum;
+    specs[332].return_type = &sem->type_verbum;
+    specs[333].return_type = &sem->type_verbum;
+    specs[334].return_type = &sem->type_verbum;
+    specs[335].return_type = sem_make_pointer_type(sem, &sem->type_nihil);
+    specs[336].return_type = &sem->type_verum;
+    specs[337].return_type = sem_make_pointer_type(sem, &sem->type_nihil);
+    specs[338].return_type = &sem->type_verum;
+    specs[339].return_type = &sem->type_verbum;
+    specs[340].return_type = sem_make_pointer_type(sem, &sem->type_nihil);
+    specs[341].return_type = &sem->type_verbum;
+    specs[342].return_type = sem_make_pointer_type(sem, &sem->type_nihil);
+    specs[343].return_type = &sem->type_nihil;
+    specs[344].return_type = &sem->type_verbum;
+    specs[345].return_type = &sem->type_rex;
+    specs[346].return_type = &sem->type_rex;
+    specs[347].return_type = &sem->type_rex;
+    specs[348].return_type = &sem->type_verbum;
+    specs[349].return_type = &sem->type_rex;
+    specs[350].return_type = &sem->type_verbum;
+    specs[351].return_type = &sem->type_rex;
+    specs[352].return_type = &sem->type_umbra;
+    specs[353].return_type = &sem->type_verum;
+    specs[354].return_type = &sem->type_rex;
+    specs[355].return_type = &sem->type_rex;
+    specs[356].return_type = &sem->type_verbum;
+    specs[357].return_type = &sem->type_rex;
+    specs[358].return_type = &sem->type_umbra;
+    specs[359].return_type = &sem->type_verum;
+    specs[360].return_type = &sem->type_rex;
+    specs[361].return_type = &sem->type_verbum;
+    specs[362].return_type = &sem->type_verbum;
+    specs[363].return_type = &sem->type_verbum;
+    specs[364].return_type = &sem->type_verbum;
+    specs[365].return_type = sem_make_pointer_type(sem, &sem->type_nihil);
+    specs[366].return_type = &sem->type_verbum;
+    specs[367].return_type = &sem->type_rex;
+    specs[368].return_type = &sem->type_rex;
+    specs[369].return_type = sem_make_pointer_type(sem, &sem->type_nihil);
+    specs[370].return_type = &sem->type_nihil;
+    specs[371].return_type = &sem->type_rex;
+    specs[372].return_type = sem_make_pointer_type(sem, &sem->type_nihil);
+    specs[373].return_type = sem_make_pointer_type(sem, &sem->type_nihil);
+    specs[374].return_type = sem_make_pointer_type(sem, &sem->type_nihil);
+    specs[375].return_type = sem_make_pointer_type(sem, &sem->type_nihil);
+    specs[376].return_type = &sem->type_rex;
+    specs[377].return_type = &sem->type_rex;
+    specs[378].return_type = &sem->type_rex;
+    specs[379].return_type = &sem->type_rex;
+    specs[380].return_type = &sem->type_verbum;
 
     for (size_t i = 0; i < sizeof(specs) / sizeof(specs[0]); i++) {
         if (!specs[i].name) continue;
@@ -3306,11 +3412,249 @@ static cct_sem_type_t* sem_analyze_builtin_obsecro(
              strcmp(name, "process_run") == 0 || strcmp(name, "process_run_capture") == 0 ||
              strcmp(name, "process_run_with_input") == 0 || strcmp(name, "process_run_env") == 0 ||
              strcmp(name, "process_run_timeout") == 0 ||
-             strcmp(name, "hash_crc32") == 0 || strcmp(name, "hash_murmur3") == 0) &&
+             strcmp(name, "hash_crc32") == 0 || strcmp(name, "hash_murmur3") == 0 ||
+             strcmp(name, "crypto_sha256_text") == 0 || strcmp(name, "crypto_sha512_text") == 0) &&
             i == 0 &&
             !(arg_type && (arg_type->kind == CCT_SEM_TYPE_VERBUM || sem_is_error_type(arg_type)))) {
             sem_report_nodef(sem, expr->as.obsecro.arguments->nodes[i],
                              "OBSECRO %s expects VERBUM argument", name);
+        }
+        if ((strcmp(name, "crypto_sha256_bytes") == 0 || strcmp(name, "crypto_sha512_bytes") == 0) && i == 0 &&
+            !(arg_type && (arg_type->kind == CCT_SEM_TYPE_POINTER || sem_is_error_type(arg_type)))) {
+            sem_report_nodef(sem, expr->as.obsecro.arguments->nodes[i],
+                             "OBSECRO %s expects bytes pointer as first argument", name);
+        }
+        if ((strcmp(name, "crypto_sha256_bytes") == 0 || strcmp(name, "crypto_sha512_bytes") == 0) && i == 1 &&
+            !(sem_is_integer_type(arg_type) || sem_is_error_type(arg_type))) {
+            sem_report_nodef(sem, expr->as.obsecro.arguments->nodes[i],
+                             "OBSECRO %s expects integer length as second argument", name);
+        }
+        if ((strcmp(name, "crypto_hmac_sha256") == 0 || strcmp(name, "crypto_hmac_sha512") == 0 ||
+             strcmp(name, "crypto_constant_time_compare") == 0) &&
+            !(arg_type && (arg_type->kind == CCT_SEM_TYPE_VERBUM || sem_is_error_type(arg_type)))) {
+            sem_report_nodef(sem, expr->as.obsecro.arguments->nodes[i],
+                             "OBSECRO %s expects VERBUM arguments", name);
+        }
+        if (strcmp(name, "crypto_pbkdf2_sha256") == 0) {
+            if ((i == 0 || i == 1) &&
+                !(arg_type && (arg_type->kind == CCT_SEM_TYPE_VERBUM || sem_is_error_type(arg_type)))) {
+                sem_report_nodef(sem, expr->as.obsecro.arguments->nodes[i],
+                                 "OBSECRO crypto_pbkdf2_sha256 expects VERBUM password/salt arguments");
+            }
+            if ((i == 2 || i == 3) &&
+                !(sem_is_integer_type(arg_type) || sem_is_error_type(arg_type))) {
+                sem_report_nodef(sem, expr->as.obsecro.arguments->nodes[i],
+                                 "OBSECRO crypto_pbkdf2_sha256 expects integer iterations/key_length");
+            }
+        }
+        if (strcmp(name, "crypto_csprng_bytes") == 0 && i == 0 &&
+            !(sem_is_integer_type(arg_type) || sem_is_error_type(arg_type))) {
+            sem_report_nodef(sem, expr->as.obsecro.arguments->nodes[i],
+                             "OBSECRO crypto_csprng_bytes expects integer count argument");
+        }
+        if (strcmp(name, "regex_builtin_compile") == 0) {
+            if (i == 0 &&
+                !(arg_type && (arg_type->kind == CCT_SEM_TYPE_VERBUM || sem_is_error_type(arg_type)))) {
+                sem_report_nodef(sem, expr->as.obsecro.arguments->nodes[i],
+                                 "OBSECRO regex_builtin_compile expects VERBUM pattern as first argument");
+            }
+            if (i == 1 &&
+                !(sem_is_integer_type(arg_type) || sem_is_error_type(arg_type))) {
+                sem_report_nodef(sem, expr->as.obsecro.arguments->nodes[i],
+                                 "OBSECRO regex_builtin_compile expects integer flags as second argument");
+            }
+        }
+        if ((strcmp(name, "regex_builtin_match") == 0 ||
+             strcmp(name, "regex_builtin_search") == 0 ||
+             strcmp(name, "regex_builtin_find_all") == 0 ||
+             strcmp(name, "regex_builtin_split") == 0) &&
+            i == 0 &&
+            !(arg_type && (arg_type->kind == CCT_SEM_TYPE_POINTER || sem_is_error_type(arg_type)))) {
+            sem_report_nodef(sem, expr->as.obsecro.arguments->nodes[i],
+                             "OBSECRO %s expects regex handle pointer as first argument", name);
+        }
+        if ((strcmp(name, "regex_builtin_match") == 0 ||
+             strcmp(name, "regex_builtin_search") == 0 ||
+             strcmp(name, "regex_builtin_find_all") == 0 ||
+             strcmp(name, "regex_builtin_split") == 0) &&
+            i == 1 &&
+            !(arg_type && (arg_type->kind == CCT_SEM_TYPE_VERBUM || sem_is_error_type(arg_type)))) {
+            sem_report_nodef(sem, expr->as.obsecro.arguments->nodes[i],
+                             "OBSECRO %s expects VERBUM text as second argument", name);
+        }
+        if (strcmp(name, "regex_builtin_replace") == 0) {
+            if (i == 0 &&
+                !(arg_type && (arg_type->kind == CCT_SEM_TYPE_POINTER || sem_is_error_type(arg_type)))) {
+                sem_report_nodef(sem, expr->as.obsecro.arguments->nodes[i],
+                                 "OBSECRO regex_builtin_replace expects regex handle pointer as first argument");
+            }
+            if ((i == 1 || i == 2) &&
+                !(arg_type && (arg_type->kind == CCT_SEM_TYPE_VERBUM || sem_is_error_type(arg_type)))) {
+                sem_report_nodef(sem, expr->as.obsecro.arguments->nodes[i],
+                                 "OBSECRO regex_builtin_replace expects VERBUM text/replacement arguments");
+            }
+            if (i == 3 &&
+                !(sem_is_integer_type(arg_type) || sem_is_error_type(arg_type))) {
+                sem_report_nodef(sem, expr->as.obsecro.arguments->nodes[i],
+                                 "OBSECRO regex_builtin_replace expects integer all flag as fourth argument");
+            }
+        }
+        if (strcmp(name, "regex_builtin_free") == 0 && i == 0 &&
+            !(arg_type && (arg_type->kind == CCT_SEM_TYPE_POINTER || sem_is_error_type(arg_type)))) {
+            sem_report_nodef(sem, expr->as.obsecro.arguments->nodes[i],
+                             "OBSECRO regex_builtin_free expects regex handle pointer argument");
+        }
+        if ((strcmp(name, "toml_builtin_parse") == 0 ||
+             strcmp(name, "toml_builtin_parse_file") == 0 ||
+             strcmp(name, "compress_builtin_gzip_compress_text") == 0 ||
+             strcmp(name, "compress_builtin_gzip_decompress_text") == 0 ||
+             strcmp(name, "compress_builtin_gzip_decompress_bytes") == 0) &&
+            i == 0 &&
+            !(arg_type && (arg_type->kind == CCT_SEM_TYPE_VERBUM || sem_is_error_type(arg_type)))) {
+            sem_report_nodef(sem, expr->as.obsecro.arguments->nodes[i],
+                             "OBSECRO %s expects VERBUM argument", name);
+        }
+        if ((strcmp(name, "toml_builtin_type") == 0 ||
+             strcmp(name, "toml_builtin_get_string") == 0 ||
+             strcmp(name, "toml_builtin_get_int") == 0 ||
+             strcmp(name, "toml_builtin_get_real") == 0 ||
+             strcmp(name, "toml_builtin_get_bool") == 0 ||
+             strcmp(name, "toml_builtin_get_subdoc") == 0 ||
+             strcmp(name, "toml_builtin_array_len") == 0) &&
+            i == 0 &&
+            !(sem_is_integer_type(arg_type) || sem_is_error_type(arg_type))) {
+            sem_report_nodef(sem, expr->as.obsecro.arguments->nodes[i],
+                             "OBSECRO %s expects document handle integer as first argument", name);
+        }
+        if ((strcmp(name, "toml_builtin_type") == 0 ||
+             strcmp(name, "toml_builtin_get_string") == 0 ||
+             strcmp(name, "toml_builtin_get_int") == 0 ||
+             strcmp(name, "toml_builtin_get_real") == 0 ||
+             strcmp(name, "toml_builtin_get_bool") == 0 ||
+             strcmp(name, "toml_builtin_get_subdoc") == 0 ||
+             strcmp(name, "toml_builtin_array_len") == 0) &&
+            i == 1 &&
+            !(arg_type && (arg_type->kind == CCT_SEM_TYPE_VERBUM || sem_is_error_type(arg_type)))) {
+            sem_report_nodef(sem, expr->as.obsecro.arguments->nodes[i],
+                             "OBSECRO %s expects VERBUM key as second argument", name);
+        }
+        if ((strcmp(name, "toml_builtin_array_item_string") == 0 ||
+             strcmp(name, "toml_builtin_array_item_int") == 0 ||
+             strcmp(name, "toml_builtin_array_item_real") == 0 ||
+             strcmp(name, "toml_builtin_array_item_bool") == 0) &&
+            i == 0 &&
+            !(sem_is_integer_type(arg_type) || sem_is_error_type(arg_type))) {
+            sem_report_nodef(sem, expr->as.obsecro.arguments->nodes[i],
+                             "OBSECRO %s expects document handle integer as first argument", name);
+        }
+        if ((strcmp(name, "toml_builtin_array_item_string") == 0 ||
+             strcmp(name, "toml_builtin_array_item_int") == 0 ||
+             strcmp(name, "toml_builtin_array_item_real") == 0 ||
+             strcmp(name, "toml_builtin_array_item_bool") == 0) &&
+            i == 1 &&
+            !(arg_type && (arg_type->kind == CCT_SEM_TYPE_VERBUM || sem_is_error_type(arg_type)))) {
+            sem_report_nodef(sem, expr->as.obsecro.arguments->nodes[i],
+                             "OBSECRO %s expects VERBUM key as second argument", name);
+        }
+        if (strcmp(name, "compress_builtin_gzip_compress_bytes") == 0 &&
+            i == 0 &&
+            !(arg_type && (arg_type->kind == CCT_SEM_TYPE_POINTER || sem_is_error_type(arg_type)))) {
+            sem_report_nodef(sem, expr->as.obsecro.arguments->nodes[i],
+                             "OBSECRO compress_builtin_gzip_compress_bytes expects bytes pointer as first argument");
+        }
+        if ((strcmp(name, "toml_builtin_array_item_string") == 0 ||
+             strcmp(name, "toml_builtin_array_item_int") == 0 ||
+             strcmp(name, "toml_builtin_array_item_real") == 0 ||
+             strcmp(name, "toml_builtin_array_item_bool") == 0) &&
+            i == 2 &&
+            !(sem_is_integer_type(arg_type) || sem_is_error_type(arg_type))) {
+            sem_report_nodef(sem, expr->as.obsecro.arguments->nodes[i],
+                             "OBSECRO %s expects integer index as third argument", name);
+        }
+        if (strcmp(name, "toml_builtin_expand_env") == 0 &&
+            i == 0 &&
+            !(sem_is_integer_type(arg_type) || sem_is_error_type(arg_type))) {
+            sem_report_nodef(sem, expr->as.obsecro.arguments->nodes[i],
+                             "OBSECRO toml_builtin_expand_env expects document handle integer argument");
+        }
+        if (strcmp(name, "toml_builtin_stringify") == 0 &&
+            i == 0 &&
+            !(sem_is_integer_type(arg_type) || sem_is_error_type(arg_type))) {
+            sem_report_nodef(sem, expr->as.obsecro.arguments->nodes[i],
+                             "OBSECRO toml_builtin_stringify expects document handle integer argument");
+        }
+        if (strcmp(name, "compress_builtin_gzip_compress_bytes") == 0 && i == 1 &&
+            !(sem_is_integer_type(arg_type) || sem_is_error_type(arg_type))) {
+            sem_report_nodef(sem, expr->as.obsecro.arguments->nodes[i],
+                             "OBSECRO compress_builtin_gzip_compress_bytes expects integer length as second argument");
+        }
+        if (strcmp(name, "filetype_builtin_detect_path") == 0 &&
+            i == 0 &&
+            !(arg_type && (arg_type->kind == CCT_SEM_TYPE_VERBUM || sem_is_error_type(arg_type)))) {
+            sem_report_nodef(sem, expr->as.obsecro.arguments->nodes[i],
+                             "OBSECRO filetype_builtin_detect_path expects VERBUM path argument");
+        }
+        if (strcmp(name, "filetype_builtin_detect_bytes") == 0 &&
+            i == 0 &&
+            !(arg_type && (arg_type->kind == CCT_SEM_TYPE_POINTER || sem_is_error_type(arg_type)))) {
+            sem_report_nodef(sem, expr->as.obsecro.arguments->nodes[i],
+                             "OBSECRO filetype_builtin_detect_bytes expects bytes pointer as first argument");
+        }
+        if (strcmp(name, "filetype_builtin_detect_bytes") == 0 &&
+            i == 1 &&
+            !(sem_is_integer_type(arg_type) || sem_is_error_type(arg_type))) {
+            sem_report_nodef(sem, expr->as.obsecro.arguments->nodes[i],
+                             "OBSECRO filetype_builtin_detect_bytes expects integer length as second argument");
+        }
+        if ((strcmp(name, "image_builtin_load") == 0 || strcmp(name, "image_builtin_last_error") == 0) &&
+            i == 0 &&
+            !(arg_type && (arg_type->kind == CCT_SEM_TYPE_VERBUM || sem_is_error_type(arg_type)))) {
+            sem_report_nodef(sem, expr->as.obsecro.arguments->nodes[i],
+                             "OBSECRO %s expects VERBUM path argument", name);
+        }
+        if ((strcmp(name, "image_builtin_free") == 0 ||
+             strcmp(name, "image_builtin_get_width") == 0 ||
+             strcmp(name, "image_builtin_get_height") == 0 ||
+             strcmp(name, "image_builtin_get_channels") == 0 ||
+             strcmp(name, "image_builtin_get_format") == 0) &&
+            i == 0 &&
+            !(arg_type && (arg_type->kind == CCT_SEM_TYPE_POINTER || sem_is_error_type(arg_type)))) {
+            sem_report_nodef(sem, expr->as.obsecro.arguments->nodes[i],
+                             "OBSECRO %s expects image handle pointer argument", name);
+        }
+        if (strcmp(name, "image_builtin_save") == 0) {
+            if (i == 0 &&
+                !(arg_type && (arg_type->kind == CCT_SEM_TYPE_POINTER || sem_is_error_type(arg_type)))) {
+                sem_report_nodef(sem, expr->as.obsecro.arguments->nodes[i],
+                                 "OBSECRO image_builtin_save expects image handle pointer as first argument");
+            }
+            if (i == 1 &&
+                !(arg_type && (arg_type->kind == CCT_SEM_TYPE_VERBUM || sem_is_error_type(arg_type)))) {
+                sem_report_nodef(sem, expr->as.obsecro.arguments->nodes[i],
+                                 "OBSECRO image_builtin_save expects VERBUM path as second argument");
+            }
+            if (i == 2 && !(sem_is_integer_type(arg_type) || sem_is_error_type(arg_type))) {
+                sem_report_nodef(sem, expr->as.obsecro.arguments->nodes[i],
+                                 "OBSECRO image_builtin_save expects integer quality as third argument");
+            }
+        }
+        if ((strcmp(name, "image_builtin_resize") == 0 ||
+             strcmp(name, "image_builtin_crop") == 0 ||
+             strcmp(name, "image_builtin_rotate") == 0 ||
+             strcmp(name, "image_builtin_convert") == 0) &&
+            i == 0 &&
+            !(arg_type && (arg_type->kind == CCT_SEM_TYPE_POINTER || sem_is_error_type(arg_type)))) {
+            sem_report_nodef(sem, expr->as.obsecro.arguments->nodes[i],
+                             "OBSECRO %s expects image handle pointer as first argument", name);
+        }
+        if ((strcmp(name, "image_builtin_resize") == 0 ||
+             strcmp(name, "image_builtin_crop") == 0 ||
+             strcmp(name, "image_builtin_rotate") == 0 ||
+             strcmp(name, "image_builtin_convert") == 0) &&
+            i > 0 &&
+            !(sem_is_integer_type(arg_type) || sem_is_error_type(arg_type))) {
+            sem_report_nodef(sem, expr->as.obsecro.arguments->nodes[i],
+                             "OBSECRO %s expects integer scalar arguments after the image handle", name);
         }
         if ((strcmp(name, "io_print_int") == 0 || strcmp(name, "io_eprint_int") == 0 ||
              strcmp(name, "io_print_char") == 0) &&

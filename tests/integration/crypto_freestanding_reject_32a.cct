@@ -1,0 +1,12 @@
+INCIPIT grimoire "crypto_freestanding_reject_32a"
+
+ADVOCARE "cct/crypto.cct"
+
+RITUALE main() REDDE REX
+  SI CONIURA constant_time_compare("a", "a")
+    REDDE 0
+  FIN SI
+  REDDE 1
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

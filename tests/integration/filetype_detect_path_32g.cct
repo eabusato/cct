@@ -1,0 +1,19 @@
+INCIPIT grimoire "filetype_detect_path_32g"
+
+ADVOCARE "cct/filetype.cct"
+ADVOCARE "cct/verbum.cct"
+
+RITUALE main() REDDE REX
+  SI CONIURA compare(CONIURA filetype_to_string(CONIURA filetype_detect("tests/integration/phase32g_assets/fake_pdf_32g.bin")), "pdf") != 0
+    REDDE 1
+  FIN SI
+  SI CONIURA compare(CONIURA filetype_to_string(CONIURA filetype_detect("tests/integration/phase32g_assets/fake_mp4_32g.bin")), "mp4") != 0
+    REDDE 2
+  FIN SI
+  SI CONIURA compare(CONIURA filetype_to_string(CONIURA filetype_detect("tests/integration/phase32g_assets/plain_text_32g.txt")), "text") != 0
+    REDDE 3
+  FIN SI
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

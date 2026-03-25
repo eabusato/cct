@@ -1,0 +1,20 @@
+INCIPIT grimoire "text_lang_pt_en_32j"
+
+ADVOCARE "cct/text_lang.cct"
+
+RITUALE main() REDDE REX
+  EVOCA LangDetection pt AD CONIURA lang_detect("Este e um texto em portugues com uma frase simples para detectar o idioma.")
+  EVOCA LangDetection en AD CONIURA lang_detect("This is a simple english sentence with enough words to detect the language.")
+  SI pt.idioma != PT
+    REDDE 1
+  FIN SI
+  SI en.idioma != EN
+    REDDE 2
+  FIN SI
+  SI pt.confianca <= 0.2 VEL en.confianca <= 0.2
+    REDDE 3
+  FIN SI
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

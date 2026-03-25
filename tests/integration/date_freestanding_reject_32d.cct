@@ -1,0 +1,13 @@
+INCIPIT grimoire "date_freestanding_reject_32d"
+
+ADVOCARE "cct/date.cct"
+
+RITUALE main() REDDE REX
+  EVOCA Date d AD CONIURA date_today()
+  SI d.ano > 0
+    REDDE 0
+  FIN SI
+  REDDE 1
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

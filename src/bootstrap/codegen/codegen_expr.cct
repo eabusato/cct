@@ -467,9 +467,17 @@ RITUALE codegen_emit_obsecro_call_expr(SPECULUM CodegenContext ctx, SPECULUM Ast
     CONIURA codegen_emit(ctx, ")))")
     REDDE
   FIN SI
+  SI CONIURA compare((*(*expr).callee).name, "time_now_ms") == 0
+    CONIURA codegen_require_time_runtime(ctx)
+    CONIURA codegen_emit(ctx, "cct_rt_time_now_ms()")
+    REDDE
+  FIN SI
   SI CONIURA compare((*(*expr).callee).name, "verbum_char_at") == 0
     CONIURA codegen_require_stdlib(ctx)
     CONIURA codegen_require_stdio(ctx)
+  FIN SI
+  SI CONIURA compare((*(*expr).callee).name, "bytes_get") == 0
+    CONIURA codegen_require_stdlib(ctx)
   FIN SI
   SI CONIURA starts_with((*(*expr).callee).name, "option_") VEL CONIURA starts_with((*(*expr).callee).name, "result_") VEL CONIURA starts_with((*(*expr).callee).name, "map_") VEL CONIURA starts_with((*(*expr).callee).name, "set_")
     CONIURA codegen_require_stdlib(ctx)

@@ -1,0 +1,13 @@
+INCIPIT grimoire "filetype_freestanding_reject_32g"
+
+ADVOCARE "cct/filetype.cct"
+
+RITUALE main() REDDE REX
+  EVOCA FileType ft AD CONIURA filetype_detect("x")
+  SI ft == Unknown
+    REDDE 0
+  FIN SI
+  REDDE 1
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

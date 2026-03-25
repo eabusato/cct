@@ -1,0 +1,34 @@
+INCIPIT grimoire "regex_split_32c"
+
+ADVOCARE "cct/fluxus.cct"
+ADVOCARE "cct/regex.cct"
+ADVOCARE "cct/result.cct"
+ADVOCARE "cct/verbum.cct"
+
+RITUALE main() REDDE REX
+  EVOCA SPECULUM NIHIL compiled AD CONIURA regex_compile("[,;]+")
+  SI CONIURA result_is_err GENUS(Regex, VERBUM)(compiled)
+    REDDE 1
+  FIN SI
+
+  EVOCA Regex rx AD CONIURA result_unwrap GENUS(Regex, VERBUM)(compiled)
+  EVOCA SPECULUM NIHIL parts AD CONIURA regex_split(rx, "A,B;CAT")
+  EVOCA REX n AD CONIURA fluxus_len(parts)
+  EVOCA VERBUM joined AD CONIURA regex_split_joined(rx, "A,B;CAT", "|")
+  CONIURA regex_free(rx)
+
+  SI n != 3
+    CONIURA fluxus_free(parts)
+    REDDE 2
+  FIN SI
+
+  CONIURA fluxus_free(parts)
+
+  SI CONIURA compare(joined, "A|B|CAT") != 0
+    REDDE 3
+  FIN SI
+
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

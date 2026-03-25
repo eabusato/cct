@@ -23,6 +23,12 @@ void cct_runtime_codegen_config_defaults(cct_runtime_codegen_config_t *cfg) {
     cfg->emit_random_helpers = true;
     cfg->emit_process_helpers = true;
     cfg->emit_hash_helpers = true;
+    cfg->emit_crypto_helpers = false;
+    cfg->emit_regex_helpers = false;
+    cfg->emit_toml_helpers = false;
+    cfg->emit_compress_helpers = false;
+    cfg->emit_filetype_helpers = false;
+    cfg->emit_image_ops_helpers = false;
     cfg->emit_verbum_helpers = true;
     cfg->emit_fmt_helpers = true;
     cfg->emit_db_helpers = false;
@@ -91,6 +97,12 @@ bool cct_runtime_emit_c_helpers(FILE *out, const cct_runtime_codegen_config_t *c
 
         fputs("static long long cct_rt_time_now_ms(void) {\n", out);
         fputs("    return cct_rt_time_now_ns() / 1000000LL;\n", out);
+        fputs("}\n\n", out);
+
+        fputs("static long long cct_rt_date_now_unix(void) {\n", out);
+        fputs("    time_t now = time(NULL);\n", out);
+        fputs("    if (now == (time_t)-1) cct_rt_fail(\"date now_unix failed\");\n", out);
+        fputs("    return (long long)now;\n", out);
         fputs("}\n\n", out);
 
         fputs("static void cct_rt_time_sleep_ms(long long ms) {\n", out);
@@ -4576,6 +4588,25 @@ bool cct_runtime_emit_c_helpers(FILE *out, const cct_runtime_codegen_config_t *c
         fputs("    cct_rt_rows_close(rows);\n", out);
         fputs("    return value;\n", out);
         fputs("}\n\n", out);
+    }
+
+    if (cfg->emit_crypto_helpers) {
+        if (!cct_runtime_emit_crypto_helpers(out)) return false;
+    }
+    if (cfg->emit_regex_helpers) {
+        if (!cct_runtime_emit_regex_helpers(out)) return false;
+    }
+    if (cfg->emit_toml_helpers) {
+        if (!cct_runtime_emit_toml_helpers(out)) return false;
+    }
+    if (cfg->emit_compress_helpers) {
+        if (!cct_runtime_emit_compress_helpers(out)) return false;
+    }
+    if (cfg->emit_filetype_helpers) {
+        if (!cct_runtime_emit_filetype_helpers(out)) return false;
+    }
+    if (cfg->emit_image_ops_helpers) {
+        if (!cct_runtime_emit_image_ops_helpers(out)) return false;
     }
 
     fputs("/* ===== End CCT Runtime Helpers ===== */\n\n", out);

@@ -41,6 +41,12 @@ typedef struct {
     const char *host_cc;            /* defaults to "cc" */
     bool keep_intermediate;         /* preserve generated .c file */
     bool uses_sqlite;               /* link sqlite bridge only when generated code needs it */
+    bool uses_crypto;               /* link crypto bridge only when generated code needs it */
+    bool uses_regex;                /* link regex bridge only when generated code needs it */
+    bool uses_toml;                 /* link TOML bridge only when generated code needs it */
+    bool uses_compress;             /* link gzip bridge only when generated code needs it */
+    bool uses_filetype;             /* link filetype bridge only when generated code needs it */
+    bool uses_image_ops;            /* link image bridge only when generated code needs it */
     cct_profile_t profile;          /* FASE 16A.2: compilation profile */
     const char *entry_rituale_name; /* FASE 16B.4: explicit freestanding entry ritual */
 

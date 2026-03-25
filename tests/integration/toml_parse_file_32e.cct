@@ -1,0 +1,31 @@
+INCIPIT grimoire "toml_parse_file_32e"
+
+ADVOCARE "cct/option.cct"
+ADVOCARE "cct/toml.cct"
+ADVOCARE "cct/verbum.cct"
+
+RITUALE main() REDDE REX
+  EVOCA TomlDocument doc AD CONIURA toml_parse_file("tests/integration/toml_parse_file_32e.toml")
+  SI NON CONIURA toml_is_valid(doc)
+    REDDE 1
+  FIN SI
+  EVOCA TomlDocument app AD CONIURA toml_get_table(doc, "app")
+  SI NON CONIURA toml_is_valid(app)
+    REDDE 2
+  FIN SI
+  EVOCA VERBUM name AD CONIURA toml_get_string(app, "name")
+  EVOCA SPECULUM NIHIL port_opt AD CONIURA toml_get_int(app, "port")
+  SI CONIURA len(name) == 0 VEL CONIURA option_is_none GENUS(REX)(port_opt)
+    REDDE 3
+  FIN SI
+  SI CONIURA compare(name, "desviados") != 0
+    REDDE 4
+  FIN SI
+  SI CONIURA option_unwrap GENUS(REX)(port_opt) != 8081
+    REDDE 5
+  FIN SI
+
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

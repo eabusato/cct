@@ -1,0 +1,29 @@
+INCIPIT grimoire "media_probe_streams_32h"
+
+ADVOCARE "cct/media_probe.cct"
+ADVOCARE "cct/verbum.cct"
+
+RITUALE main() REDDE REX
+  EVOCA MediaProbe probe AD CONIURA media_probe("tests/integration/phase32h_assets/sample_32h.mp4")
+  SI NON probe.valido
+    REDDE 1
+  FIN SI
+  SI probe.streams_total != 2
+    REDDE 2
+  FIN SI
+  SI probe.video_streams != 1
+    REDDE 3
+  FIN SI
+  SI probe.audio_streams != 1
+    REDDE 4
+  FIN SI
+  SI probe.video_duration < 0.9 VEL probe.audio_duration < 0.9
+    REDDE 5
+  FIN SI
+  SI CONIURA compare(probe.video_codec, "h264") != 0
+    REDDE 6
+  FIN SI
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

@@ -1,0 +1,35 @@
+INCIPIT grimoire "regex_match_flags_32c"
+
+ADVOCARE "cct/regex.cct"
+ADVOCARE "cct/result.cct"
+ADVOCARE "cct/verbum.cct"
+
+RITUALE main() REDDE REX
+  EVOCA REX flags AD CONIURA regex_flag_case_insensitive() + CONIURA regex_flag_multiline() + CONIURA regex_flag_dotall()
+  EVOCA SPECULUM NIHIL compiled AD CONIURA regex_compile_flags("^linha$", flags)
+  SI CONIURA result_is_err GENUS(Regex, VERBUM)(compiled)
+    REDDE 1
+  FIN SI
+
+  EVOCA Regex rx AD CONIURA result_unwrap GENUS(Regex, VERBUM)(compiled)
+  EVOCA VERUM first AD CONIURA regex_match(rx, "LINHA")
+  EVOCA VERUM second AD CONIURA regex_is_match("^linha$", "LINHA")
+  EVOCA VERUM third AD CONIURA regex_is_match("^[A-Z]+$", "CCT")
+  CONIURA regex_free(rx)
+
+  SI NON first
+    REDDE 2
+  FIN SI
+
+  SI second
+    REDDE 3
+  FIN SI
+
+  SI NON third
+    REDDE 4
+  FIN SI
+
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

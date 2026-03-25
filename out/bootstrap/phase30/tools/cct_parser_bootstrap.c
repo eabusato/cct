@@ -56,11 +56,26 @@ long long cct_rt_set_capacity(void *set_ptr);
 void *cct_rt_set_iter_begin(void *set_ptr);
 long long cct_rt_set_iter_next(void *iter_ptr, void **item_out);
 void cct_rt_set_iter_end(void *iter_ptr);
+static long long cct_rt_bytes_get(void *ptr, long long i) __attribute__((unused));
 void cct_rt_args_init(int argc, char **argv);
 char* cct_rt_fs_read_all(const char *path);
 void cct_rt_fs_write_all(const char *path, const char *content);
 long long cct_rt_fs_exists(const char *path);
 void cct_rt_fs_mkdir_all(const char *path);
+
+typedef struct {
+unsigned char *data;
+long long len;
+} cct_boot_bytes_t;
+
+static long long cct_rt_bytes_get(void *ptr, long long i) __attribute__((unused));
+static long long cct_rt_bytes_get(void *ptr, long long i)
+{
+  cct_boot_bytes_t *b = (cct_boot_bytes_t*)ptr;
+  if (!b) abort();
+  if (i < 0 || i >= b->len) abort();
+  return (long long)b->data[(size_t)i];
+}
 
 static char cct_boot_str_0[] = "EOF";
 static char cct_boot_str_1[] = "INVALID";

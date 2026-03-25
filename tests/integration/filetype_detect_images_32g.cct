@@ -1,0 +1,77 @@
+INCIPIT grimoire "filetype_detect_images_32g"
+
+ADVOCARE "cct/bytes.cct"
+ADVOCARE "cct/filetype.cct"
+ADVOCARE "cct/verbum.cct"
+
+RITUALE expect_type(VERBUM label, FileType actual, VERBUM expected) REDDE REX
+  SI CONIURA compare(CONIURA filetype_to_string(actual), expected) != 0
+    REDDE 1
+  FIN SI
+  REDDE 0
+EXPLICIT RITUALE
+
+RITUALE main() REDDE REX
+  EVOCA SPECULUM NIHIL jpeg AD CONIURA bytes_new(4)
+  OBSECRO bytes_set(jpeg, 0, 255)
+  OBSECRO bytes_set(jpeg, 1, 216)
+  OBSECRO bytes_set(jpeg, 2, 255)
+  OBSECRO bytes_set(jpeg, 3, 224)
+  SI CONIURA expect_type("jpeg", CONIURA filetype_detect_bytes(jpeg, CONIURA bytes_len(jpeg)), "jpeg") != 0
+    REDDE 1
+  FIN SI
+
+  EVOCA SPECULUM NIHIL png AD CONIURA bytes_new(8)
+  OBSECRO bytes_set(png, 0, 137)
+  OBSECRO bytes_set(png, 1, 80)
+  OBSECRO bytes_set(png, 2, 78)
+  OBSECRO bytes_set(png, 3, 71)
+  OBSECRO bytes_set(png, 4, 13)
+  OBSECRO bytes_set(png, 5, 10)
+  OBSECRO bytes_set(png, 6, 26)
+  OBSECRO bytes_set(png, 7, 10)
+  SI CONIURA expect_type("png", CONIURA filetype_detect_bytes(png, CONIURA bytes_len(png)), "png") != 0
+    REDDE 2
+  FIN SI
+
+  EVOCA SPECULUM NIHIL gif AD CONIURA bytes_new(6)
+  OBSECRO bytes_set(gif, 0, 71)
+  OBSECRO bytes_set(gif, 1, 73)
+  OBSECRO bytes_set(gif, 2, 70)
+  OBSECRO bytes_set(gif, 3, 56)
+  OBSECRO bytes_set(gif, 4, 57)
+  OBSECRO bytes_set(gif, 5, 97)
+  SI CONIURA expect_type("gif", CONIURA filetype_detect_bytes(gif, CONIURA bytes_len(gif)), "gif") != 0
+    REDDE 3
+  FIN SI
+
+  EVOCA SPECULUM NIHIL bmp AD CONIURA bytes_new(4)
+  OBSECRO bytes_set(bmp, 0, 66)
+  OBSECRO bytes_set(bmp, 1, 77)
+  OBSECRO bytes_set(bmp, 2, 0)
+  OBSECRO bytes_set(bmp, 3, 0)
+  SI CONIURA expect_type("bmp", CONIURA filetype_detect_bytes(bmp, CONIURA bytes_len(bmp)), "bmp") != 0
+    REDDE 4
+  FIN SI
+
+  EVOCA SPECULUM NIHIL webp AD CONIURA bytes_new(12)
+  OBSECRO bytes_set(webp, 0, 82)
+  OBSECRO bytes_set(webp, 1, 73)
+  OBSECRO bytes_set(webp, 2, 70)
+  OBSECRO bytes_set(webp, 3, 70)
+  OBSECRO bytes_set(webp, 4, 49)
+  OBSECRO bytes_set(webp, 5, 50)
+  OBSECRO bytes_set(webp, 6, 51)
+  OBSECRO bytes_set(webp, 7, 52)
+  OBSECRO bytes_set(webp, 8, 87)
+  OBSECRO bytes_set(webp, 9, 69)
+  OBSECRO bytes_set(webp, 10, 66)
+  OBSECRO bytes_set(webp, 11, 80)
+  SI CONIURA expect_type("webp", CONIURA filetype_detect_bytes(webp, CONIURA bytes_len(webp)), "webp") != 0
+    REDDE 5
+  FIN SI
+
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

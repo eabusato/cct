@@ -1,0 +1,29 @@
+INCIPIT grimoire "media_probe_audio_32h"
+
+ADVOCARE "cct/media_probe.cct"
+ADVOCARE "cct/verbum.cct"
+
+RITUALE main() REDDE REX
+  EVOCA MediaProbe probe AD CONIURA media_probe("tests/integration/phase32h_assets/sample_32h.wav")
+  SI NON probe.valido
+    REDDE 1
+  FIN SI
+  SI CONIURA media_has_video(probe)
+    REDDE 2
+  FIN SI
+  SI NON CONIURA media_has_audio(probe)
+    REDDE 3
+  FIN SI
+  SI CONIURA compare(probe.formato, "wav") != 0
+    REDDE 4
+  FIN SI
+  SI probe.audio_sample_rate != 22050
+    REDDE 5
+  FIN SI
+  SI probe.audio_channels != 1
+    REDDE 6
+  FIN SI
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

@@ -278,6 +278,9 @@ RITUALE semantic_obsecro_expected_arity(VERBUM builtin_name) REDDE REX
   SI CONIURA compare(builtin_name, "verbum_char_at") == 0
     REDDE 2
   FIN SI
+  SI CONIURA compare(builtin_name, "time_now_ms") == 0
+    REDDE 0
+  FIN SI
   SI CONIURA compare(builtin_name, "fs_read_all") == 0
     REDDE 1
   FIN SI
@@ -289,6 +292,9 @@ RITUALE semantic_obsecro_expected_arity(VERBUM builtin_name) REDDE REX
   FIN SI
   SI CONIURA compare(builtin_name, "fs_mkdir_all") == 0
     REDDE 1
+  FIN SI
+  SI CONIURA compare(builtin_name, "bytes_get") == 0
+    REDDE 2
   FIN SI
   SI CONIURA compare(builtin_name, "option_some") == 0
     REDDE 2
@@ -357,6 +363,9 @@ RITUALE semantic_obsecro_return_type_id(SPECULUM SemanticContext ctx, VERBUM bui
   SI CONIURA compare(builtin_name, "verbum_char_at") == 0
     REDDE (*ctx).type_miles
   FIN SI
+  SI CONIURA compare(builtin_name, "time_now_ms") == 0
+    REDDE (*ctx).type_rex
+  FIN SI
   SI CONIURA compare(builtin_name, "fs_read_all") == 0
     REDDE (*ctx).type_verbum
   FIN SI
@@ -365,6 +374,9 @@ RITUALE semantic_obsecro_return_type_id(SPECULUM SemanticContext ctx, VERBUM bui
   FIN SI
   SI CONIURA compare(builtin_name, "fs_write_all") == 0 VEL CONIURA compare(builtin_name, "fs_mkdir_all") == 0
     REDDE (*ctx).type_nihil
+  FIN SI
+  SI CONIURA compare(builtin_name, "bytes_get") == 0
+    REDDE (*ctx).type_miles
   FIN SI
   SI CONIURA compare(builtin_name, "option_some") == 0 VEL CONIURA compare(builtin_name, "option_none") == 0
     REDDE CONIURA semantic_type_make_pointer(ctx, (*ctx).type_nihil)
@@ -668,6 +680,16 @@ RITUALE semantic_analyze_obsecro_call(SPECULUM SemanticContext ctx, SPECULUM Ast
       FIN SI
       SI i == 1 ET NON CONIURA semantic_obsecro_type_is_integerish(ctx, arg_type_id)
         CONIURA semantic_report_error(ctx, (*arg).line, (*arg).column, "OBSECRO option_some expects integer type size argument")
+        REDDE (*ctx).type_error
+      FIN SI
+    FIN SI
+    SI CONIURA compare(builtin_name, "bytes_get") == 0
+      SI i == 0 ET NON CONIURA semantic_obsecro_type_is_pointerish(ctx, arg_type_id)
+        CONIURA semantic_report_error(ctx, (*arg).line, (*arg).column, "OBSECRO bytes_get expects bytes pointer as first argument")
+        REDDE (*ctx).type_error
+      FIN SI
+      SI i == 1 ET NON CONIURA semantic_obsecro_type_is_integerish(ctx, arg_type_id)
+        CONIURA semantic_report_error(ctx, (*arg).line, (*arg).column, "OBSECRO bytes_get expects integer index as second argument")
         REDDE (*ctx).type_error
       FIN SI
     FIN SI

@@ -1,0 +1,24 @@
+INCIPIT grimoire "compress_roundtrip_text_32f"
+
+ADVOCARE "cct/compress.cct"
+ADVOCARE "cct/verbum.cct"
+
+RITUALE main() REDDE REX
+  EVOCA VERBUM original AD "Desviados civitas civitas civitas.\nLinha 2 com acento nao.\n"
+  EVOCA VERBUM zipped AD CONIURA gzip_compress(original)
+  SI CONIURA len(CONIURA compress_last_error()) > 0 VEL CONIURA len(zipped) == 0
+    REDDE 1
+  FIN SI
+
+  EVOCA VERBUM plain AD CONIURA gzip_decompress(zipped)
+  SI CONIURA len(CONIURA compress_last_error()) > 0
+    REDDE 2
+  FIN SI
+  SI CONIURA compare(plain, original) != 0
+    REDDE 3
+  FIN SI
+
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

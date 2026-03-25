@@ -1,0 +1,18 @@
+INCIPIT grimoire "encoding_base64_invalid_32b"
+
+ADVOCARE "cct/encoding.cct"
+ADVOCARE "cct/option.cct"
+
+RITUALE main() REDDE REX
+  EVOCA SPECULUM NIHIL bad_len AD CONIURA base64_decode("abcde")
+  EVOCA SPECULUM NIHIL bad_pad AD CONIURA base64_decode("ab=c")
+  SI NON CONIURA option_is_none GENUS(VERBUM)(bad_len)
+    REDDE 1
+  FIN SI
+  SI NON CONIURA option_is_none GENUS(VERBUM)(bad_pad)
+    REDDE 1
+  FIN SI
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

@@ -1,0 +1,26 @@
+INCIPIT grimoire "encoding_hex_roundtrip_32b"
+
+ADVOCARE "cct/encoding.cct"
+ADVOCARE "cct/option.cct"
+ADVOCARE "cct/verbum.cct"
+
+RITUALE main() REDDE REX
+  EVOCA VERBUM encoded AD CONIURA hex_encode("test")
+  EVOCA SPECULUM NIHIL decoded_opt AD CONIURA hex_decode(encoded)
+  EVOCA SPECULUM NIHIL upper_opt AD CONIURA hex_decode("74657374")
+  SI CONIURA compare(encoded, "74657374") != 0
+    REDDE 1
+  FIN SI
+  SI NON CONIURA option_is_some GENUS(VERBUM)(decoded_opt) VEL NON CONIURA option_is_some GENUS(VERBUM)(upper_opt)
+    REDDE 1
+  FIN SI
+  SI CONIURA compare(CONIURA option_unwrap GENUS(VERBUM)(decoded_opt), "test") != 0
+    REDDE 1
+  FIN SI
+  SI CONIURA compare(CONIURA option_unwrap GENUS(VERBUM)(upper_opt), "test") != 0
+    REDDE 1
+  FIN SI
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

@@ -1,0 +1,17 @@
+INCIPIT grimoire "text_lang_unknown_32j"
+
+ADVOCARE "cct/text_lang.cct"
+
+RITUALE main() REDDE REX
+  EVOCA LangDetection det_short AD CONIURA lang_detect("abc")
+  EVOCA LangDetection gibberish AD CONIURA lang_detect("zzz qqq xxx yyy vvv kkk")
+  SI det_short.idioma != Unknown
+    REDDE 1
+  FIN SI
+  SI gibberish.idioma != Unknown
+    REDDE 2
+  FIN SI
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

@@ -1,0 +1,29 @@
+INCIPIT grimoire "datetime_format_add_diff_32d"
+
+ADVOCARE "cct/date.cct"
+ADVOCARE "cct/result.cct"
+ADVOCARE "cct/verbum.cct"
+
+RITUALE main() REDDE REX
+  EVOCA SPECULUM NIHIL base_result AD CONIURA datetime_new(2024, 12, 31, 23, 59, 30, -180)
+  SI CONIURA result_is_err GENUS(DateTime, DateError)(base_result)
+    REDDE 1
+  FIN SI
+
+  EVOCA DateTime base AD CONIURA result_unwrap GENUS(DateTime, DateError)(base_result)
+  EVOCA DateTime shifted AD CONIURA datetime_add_seconds(base, 90)
+
+  SI CONIURA compare(CONIURA datetime_format(shifted, "%Y-%m-%d %H:%M:%S %z"), "2025-01-01 00:01:00 -0300") != 0
+    REDDE 2
+  FIN SI
+  SI CONIURA datetime_diff_seconds(shifted, base) != 90
+    REDDE 3
+  FIN SI
+  SI CONIURA datetime_compare(shifted, base) != 1
+    REDDE 4
+  FIN SI
+
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

@@ -1,0 +1,34 @@
+INCIPIT grimoire "filetype_helpers_32g"
+
+ADVOCARE "cct/filetype.cct"
+ADVOCARE "cct/verbum.cct"
+
+RITUALE main() REDDE REX
+  SI CONIURA compare(CONIURA filetype_extension(JPEG), ".jpg") != 0
+    REDDE 1
+  FIN SI
+  SI CONIURA compare(CONIURA filetype_mime(PNG), "image/png") != 0
+    REDDE 2
+  FIN SI
+  SI NON CONIURA filetype_is_image(WebP)
+    REDDE 3
+  FIN SI
+  SI NON CONIURA filetype_is_video(MP4)
+    REDDE 4
+  FIN SI
+  SI NON CONIURA filetype_is_audio(MP3)
+    REDDE 5
+  FIN SI
+  SI NON CONIURA filetype_is_document(PDF)
+    REDDE 6
+  FIN SI
+  SI NON CONIURA filetype_is_text(Text)
+    REDDE 7
+  FIN SI
+  SI CONIURA compare(CONIURA filetype_to_string(Unknown), "unknown") != 0
+    REDDE 8
+  FIN SI
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

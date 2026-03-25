@@ -1,0 +1,13 @@
+INCIPIT grimoire "toml_freestanding_reject_32e"
+
+ADVOCARE "cct/toml.cct"
+
+RITUALE main() REDDE REX
+  EVOCA TomlDocument parsed AD CONIURA toml_parse("title = \"x\"\n")
+  SI CONIURA toml_is_valid(parsed)
+    REDDE 0
+  FIN SI
+  REDDE 1
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

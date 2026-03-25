@@ -1,0 +1,31 @@
+INCIPIT grimoire "media_probe_image_32h"
+
+ADVOCARE "cct/media_probe.cct"
+ADVOCARE "cct/verbum.cct"
+
+RITUALE main() REDDE REX
+  EVOCA MediaProbe probe AD CONIURA media_probe("tests/integration/phase32h_assets/sample_32h.png")
+  SI NON probe.valido
+    REDDE 1
+  FIN SI
+  SI NON CONIURA media_has_video(probe)
+    REDDE 2
+  FIN SI
+  SI CONIURA media_has_audio(probe)
+    REDDE 3
+  FIN SI
+
+  EVOCA VERBUM resolution AD CONIURA media_get_resolution(probe)
+  SI CONIURA compare(resolution, "") == 0
+    REDDE 4
+  FIN SI
+  SI CONIURA compare(resolution, "40x30") != 0
+    REDDE 5
+  FIN SI
+  SI NON CONIURA contains(probe.formato, "png")
+    REDDE 6
+  FIN SI
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

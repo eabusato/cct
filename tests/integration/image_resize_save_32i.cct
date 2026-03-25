@@ -1,0 +1,35 @@
+INCIPIT grimoire "image_resize_save_32i"
+
+ADVOCARE "cct/filetype.cct"
+ADVOCARE "cct/image_ops.cct"
+
+RITUALE main() REDDE REX
+  EVOCA Image img AD CONIURA image_load("tests/integration/phase32i_assets/sample_32i.jpg")
+  EVOCA Image resized AD CONIURA image_resize(img, 24, 18, Lanczos)
+  EVOCA SaveOptions opts AD CONIURA image_default_save_options()
+  SI NON CONIURA image_is_valid(resized)
+    CONIURA image_free(img)
+    REDDE 1
+  FIN SI
+  SI resized.width != 24 VEL resized.height != 18
+    CONIURA image_free(resized)
+    CONIURA image_free(img)
+    REDDE 2
+  FIN SI
+  VINCIRE opts.quality AD 92
+  SI NON CONIURA image_save(resized, "tests/.tmp/phase32i_outputs/resized_32i.png", opts)
+    CONIURA image_free(resized)
+    CONIURA image_free(img)
+    REDDE 3
+  FIN SI
+  SI CONIURA filetype_detect("tests/.tmp/phase32i_outputs/resized_32i.png") != PNG
+    CONIURA image_free(resized)
+    CONIURA image_free(img)
+    REDDE 4
+  FIN SI
+  CONIURA image_free(resized)
+  CONIURA image_free(img)
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

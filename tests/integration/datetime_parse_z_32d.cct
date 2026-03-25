@@ -1,0 +1,29 @@
+INCIPIT grimoire "datetime_parse_z_32d"
+
+ADVOCARE "cct/date.cct"
+ADVOCARE "cct/result.cct"
+ADVOCARE "cct/verbum.cct"
+
+RITUALE main() REDDE REX
+  EVOCA SPECULUM NIHIL parsed_result AD CONIURA datetime_parse("2024-03-24T15:30:00Z")
+  SI CONIURA result_is_err GENUS(DateTime, DateError)(parsed_result)
+    REDDE 1
+  FIN SI
+
+  EVOCA DateTime dt AD CONIURA result_unwrap GENUS(DateTime, DateError)(parsed_result)
+  SI dt.offset_utc != 0
+    REDDE 2
+  FIN SI
+  SI CONIURA compare(CONIURA datetime_format(dt, "%Y-%m-%d %H:%M:%S %z"), "2024-03-24 15:30:00 +0000") != 0
+    REDDE 3
+  FIN SI
+
+  EVOCA SPECULUM NIHIL bad_result AD CONIURA datetime_parse("2024-03-24T15:30:00X")
+  SI NON CONIURA result_is_err GENUS(DateTime, DateError)(bad_result)
+    REDDE 4
+  FIN SI
+
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

@@ -1,0 +1,25 @@
+INCIPIT grimoire "text_lang_scripts_32j"
+
+ADVOCARE "cct/text_lang.cct"
+
+RITUALE main() REDDE REX
+  EVOCA LangDetection ru AD CONIURA lang_detect("Это русский текст для проверки языка и определения.")
+  EVOCA LangDetection ja AD CONIURA lang_detect("これは日本語の文章です。ひらがなも入っています。")
+  EVOCA LangDetection zh AD CONIURA lang_detect("这是中文内容，用于检测语言和文本类型。")
+  EVOCA LangDetection ar AD CONIURA lang_detect("هذا نص عربي لاختبار اللغة وكشف نوع النص.")
+  SI ru.idioma != RU
+    REDDE 1
+  FIN SI
+  SI ja.idioma != JA
+    REDDE 2
+  FIN SI
+  SI zh.idioma != ZH
+    REDDE 3
+  FIN SI
+  SI ar.idioma != AR
+    REDDE 4
+  FIN SI
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

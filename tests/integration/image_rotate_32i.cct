@@ -1,0 +1,22 @@
+INCIPIT grimoire "image_rotate_32i"
+
+ADVOCARE "cct/image_ops.cct"
+
+RITUALE main() REDDE REX
+  EVOCA Image img AD CONIURA image_load("tests/integration/phase32i_assets/sample_32i.png")
+  EVOCA Image rotated AD CONIURA image_rotate(img, 90)
+  SI NON CONIURA image_is_valid(rotated)
+    CONIURA image_free(img)
+    REDDE 1
+  FIN SI
+  SI rotated.width != 36 VEL rotated.height != 48
+    CONIURA image_free(rotated)
+    CONIURA image_free(img)
+    REDDE 2
+  FIN SI
+  CONIURA image_free(rotated)
+  CONIURA image_free(img)
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

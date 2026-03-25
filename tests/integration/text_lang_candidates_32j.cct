@@ -1,0 +1,25 @@
+INCIPIT grimoire "text_lang_candidates_32j"
+
+ADVOCARE "cct/fluxus.cct"
+ADVOCARE "cct/text_lang.cct"
+
+RITUALE main() REDDE REX
+  EVOCA SPECULUM NIHIL candidatos AD CONIURA fluxus_init(MENSURA(Language))
+  EVOCA Language en AD EN
+  EVOCA Language pt AD PT
+  CONIURA fluxus_push(candidatos, SPECULUM en)
+  CONIURA fluxus_push(candidatos, SPECULUM pt)
+
+  EVOCA LangDetection det AD CONIURA lang_detect_from("This english text should stay inside the filtered candidate set.", candidatos)
+  CONIURA fluxus_free(candidatos)
+
+  SI det.idioma != EN
+    REDDE 1
+  FIN SI
+  SI det.confianca <= 0.2
+    REDDE 2
+  FIN SI
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

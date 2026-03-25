@@ -1,0 +1,10 @@
+INCIPIT grimoire "crypto_sha256_text_32a"
+
+ADVOCARE "cct/crypto.cct"
+
+RITUALE main() REDDE REX
+  OBSECRO scribe(CONIURA sha256("abc"), "\n")
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

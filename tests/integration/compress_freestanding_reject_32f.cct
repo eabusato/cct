@@ -1,0 +1,14 @@
+INCIPIT grimoire "compress_freestanding_reject_32f"
+
+ADVOCARE "cct/compress.cct"
+ADVOCARE "cct/verbum.cct"
+
+RITUALE main() REDDE REX
+  EVOCA VERBUM zipped AD CONIURA gzip_compress("x")
+  SI CONIURA len(zipped) > 0
+    REDDE 0
+  FIN SI
+  REDDE 1
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

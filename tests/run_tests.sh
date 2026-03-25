@@ -434,16 +434,30 @@ cct_phase29_prepare() {
 cct_phase29_host_compile() {
     local c_file="$1"
     local out_bin="$2"
+    local crypto_cflags
+    local crypto_ldflags
+    if [ -n "${CCT_CRYPTO_CFLAGS:-}" ]; then
+        crypto_cflags="$CCT_CRYPTO_CFLAGS"
+    else
+        crypto_cflags="$(pkg-config --cflags openssl 2>/dev/null || true)"
+    fi
+    if [ -n "${CCT_CRYPTO_LDFLAGS:-}" ]; then
+        crypto_ldflags="$CCT_CRYPTO_LDFLAGS"
+    else
+        crypto_ldflags="$(pkg-config --libs openssl 2>/dev/null || printf '%s' '-lssl -lcrypto')"
+    fi
     cc \
         -Wall -Wextra -Werror \
         -Wno-unused-label -Wno-unused-function -Wno-unused-const-variable -Wno-unused-parameter \
         -std=c11 -O2 -g0 \
         -D_POSIX_C_SOURCE=200809L -D_XOPEN_SOURCE=700 \
+        $crypto_cflags \
         -o "$out_bin" \
         "$c_file" \
         "$PHASE29_SUPPORT_OBJ" \
         src/runtime/fs_runtime.c \
-        -lm -lsqlite3
+        -lm -lsqlite3 \
+        $crypto_ldflags
 }
 
 cct_phase29_emit_compile_run() {
@@ -543,6 +557,20 @@ cct_phase31_compile_and_run() {
     "$out_bin" >"$out_bin.run.out" 2>"$out_bin.run.err"
     local rc=$?
     [ "$rc" -eq "$expected_rc" ] || return 12
+    return 0
+}
+
+cct_phase32_copy_compile_and_run() {
+    local compiler_bin="$1"
+    local src="$2"
+    local out_base="$3"
+    local expected_rc="$4"
+
+    cp "$src" "$out_base.cct" || return 11
+    "$compiler_bin" "$out_base.cct" >"$out_base.compile.out" 2>"$out_base.compile.err" || return 12
+    "$out_base" >"$out_base.run.out" 2>"$out_base.run.err"
+    local rc=$?
+    [ "$rc" -eq "$expected_rc" ] || return 13
     return 0
 }
 
@@ -8419,7 +8447,7 @@ test_pass "public_docs_status_text_assertion_1723 desabilitado"
 fi
 
 fi
-if cct_phase_block_enabled "31"; then
+if cct_phase_block_enabled "31" || cct_requested_phase_block "32" "$CCT_TEST_PHASES_NORMALIZED"; then
 echo ""
 echo "========================================"
 echo "FASE 31: Self-Hosted Compiler Promotion"
@@ -8753,6 +8781,842 @@ if [ "$RC_1754" -eq 42 ]; then
     test_pass "./cct promovido executa workflow de projeto"
 else
     test_fail "./cct promovido nao executou workflow de projeto"
+fi
+fi
+
+if cct_phase_block_enabled "32A"; then
+echo ""
+echo "========================================"
+echo "FASE 32A: cct/crypto Baseline"
+echo "========================================"
+echo ""
+
+cct_phase31_prepare >/dev/null 2>&1
+mkdir -p "$CCT_TMP_DIR/phase32a"
+
+# Test 1755: SHA-256 text hash
+echo "Test 1755: cct/crypto sha256 sobre VERBUM"
+BASE_1755="$CCT_TMP_DIR/phase32a/test_1755_sha256_text"
+if [ "$RC_31_READY" -eq 0 ] && cct_phase32_copy_compile_and_run "$PHASE31_HOST_WRAPPER" "tests/integration/crypto_sha256_text_32a.cct" "$BASE_1755" 0 && grep -q '^ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad$' "$BASE_1755.run.out"; then
+    test_pass "cct/crypto sha256 sobre VERBUM"
+else
+    test_fail "cct/crypto sha256 sobre VERBUM regrediu"
+fi
+
+# Test 1756: SHA-256 bytes hash
+echo "Test 1756: cct/crypto sha256_bytes sobre buffer canonico"
+BASE_1756="$CCT_TMP_DIR/phase32a/test_1756_sha256_bytes"
+if [ "$RC_31_READY" -eq 0 ] && cct_phase32_copy_compile_and_run "$PHASE31_HOST_WRAPPER" "tests/integration/crypto_sha256_bytes_32a.cct" "$BASE_1756" 0 && grep -q '^ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad$' "$BASE_1756.run.out"; then
+    test_pass "cct/crypto sha256_bytes sobre buffer canonico"
+else
+    test_fail "cct/crypto sha256_bytes regrediu"
+fi
+
+# Test 1757: SHA-512 text hash
+echo "Test 1757: cct/crypto sha512 sobre VERBUM"
+BASE_1757="$CCT_TMP_DIR/phase32a/test_1757_sha512_text"
+if [ "$RC_31_READY" -eq 0 ] && cct_phase32_copy_compile_and_run "$PHASE31_HOST_WRAPPER" "tests/integration/crypto_sha512_text_32a.cct" "$BASE_1757" 0 && grep -q '^ddaf35a193617abacc417349ae20413112e6fa4e89a97ea20a9eeee64b55d39a2192992a274fc1a836ba3c23a3feebbd454d4423643ce80e2a9ac94fa54ca49f$' "$BASE_1757.run.out"; then
+    test_pass "cct/crypto sha512 sobre VERBUM"
+else
+    test_fail "cct/crypto sha512 sobre VERBUM regrediu"
+fi
+
+# Test 1758: HMAC-SHA256
+echo "Test 1758: cct/crypto hmac_sha256 gera MAC canonico"
+BASE_1758="$CCT_TMP_DIR/phase32a/test_1758_hmac_sha256"
+if [ "$RC_31_READY" -eq 0 ] && cct_phase32_copy_compile_and_run "$PHASE31_HOST_WRAPPER" "tests/integration/crypto_hmac_sha256_32a.cct" "$BASE_1758" 0 && grep -q '^79fed46c713c93a3a35fd705660ae0ad9ea56ce9b20228ddc2915b8ce337b12a$' "$BASE_1758.run.out"; then
+    test_pass "cct/crypto hmac_sha256 gera MAC canonico"
+else
+    test_fail "cct/crypto hmac_sha256 regrediu"
+fi
+
+# Test 1759: PBKDF2-SHA256
+echo "Test 1759: cct/crypto pbkdf2_sha256 deriva vetor conhecido"
+BASE_1759="$CCT_TMP_DIR/phase32a/test_1759_pbkdf2"
+if [ "$RC_31_READY" -eq 0 ] && cct_phase32_copy_compile_and_run "$PHASE31_HOST_WRAPPER" "tests/integration/crypto_pbkdf2_sha256_32a.cct" "$BASE_1759" 0 && grep -q '^1dca85c83002f3175c55356d2879701b0dcb6fd1316b71ed40259befa83b906a$' "$BASE_1759.run.out"; then
+    test_pass "cct/crypto pbkdf2_sha256 deriva vetor conhecido"
+else
+    test_fail "cct/crypto pbkdf2_sha256 regrediu"
+fi
+
+# Test 1760: CSPRNG + constant-time compare
+echo "Test 1760: cct/crypto csprng_bytes e constant_time_compare preservam contrato"
+BASE_1760="$CCT_TMP_DIR/phase32a/test_1760_csprng_compare"
+if [ "$RC_31_READY" -eq 0 ] && cct_phase32_copy_compile_and_run "$PHASE31_HOST_WRAPPER" "tests/integration/crypto_csprng_compare_32a.cct" "$BASE_1760" 0 && grep -q 'n=32 hex=64 same=verum diff=falsum' "$BASE_1760.run.out" && grep -q '^ok$' "$BASE_1760.run.out"; then
+    test_pass "cct/crypto csprng_bytes e constant_time_compare preservam contrato"
+else
+    test_fail "cct/crypto csprng_bytes/constant_time_compare regrediram"
+fi
+
+# Test 1761: freestanding rejection
+echo "Test 1761: cct/crypto e rejeitado em freestanding"
+if [ "$RC_31_READY" -eq 0 ] && ! "$PHASE31_HOST_WRAPPER" --profile freestanding --check "tests/integration/crypto_freestanding_reject_32a.cct" >"$CCT_TMP_DIR/phase32a/test_1761.out" 2>&1 && grep -q "módulo 'cct/crypto' não disponível em perfil freestanding" "$CCT_TMP_DIR/phase32a/test_1761.out"; then
+    test_pass "cct/crypto e rejeitado em freestanding"
+else
+    test_fail "cct/crypto nao manteve a fronteira host-only em freestanding"
+fi
+
+# Test 1762: default wrapper dispatches crypto compile through host path
+echo "Test 1762: ./cct promovido despacha crypto host-only sem quebrar o fluxo"
+BASE_1762="$CCT_TMP_DIR/phase32a/test_1762_default_wrapper_crypto"
+if [ "$RC_31_READY" -eq 0 ] && make bootstrap-promote >"$PHASE31_LOG_DIR/test_1762.stdout.log" 2>"$PHASE31_LOG_DIR/test_1762.stderr.log" && cct_phase32_copy_compile_and_run "$PHASE31_DEFAULT_WRAPPER" "tests/integration/crypto_sha256_text_32a.cct" "$BASE_1762" 0 && grep -q '^ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad$' "$BASE_1762.run.out"; then
+    test_pass "./cct promovido despacha crypto host-only sem quebrar o fluxo"
+else
+    test_fail "./cct promovido nao despachou crypto host-only corretamente"
+fi
+fi
+
+if cct_phase_block_enabled "32B"; then
+echo ""
+echo "========================================"
+echo "FASE 32B: cct/encoding"
+echo "========================================"
+echo ""
+
+cct_phase31_prepare >/dev/null 2>&1
+mkdir -p "$CCT_TMP_DIR/phase32b"
+
+# Test 1763: base64 encode/decode
+echo "Test 1763: cct/encoding base64 round-trip canonico"
+BASE_1763="$CCT_TMP_DIR/phase32b/test_1763_base64_roundtrip"
+if [ "$RC_31_READY" -eq 0 ] && cct_phase32_copy_compile_and_run "$PHASE31_SELFHOST_WRAPPER" "tests/integration/encoding_base64_roundtrip_32b.cct" "$BASE_1763" 0; then
+    test_pass "cct/encoding base64 round-trip canonico"
+else
+    test_fail "cct/encoding base64 round-trip regrediu"
+fi
+
+# Test 1764: base64 invalid inputs
+echo "Test 1764: cct/encoding base64 invalido retorna None"
+BASE_1764="$CCT_TMP_DIR/phase32b/test_1764_base64_invalid"
+if [ "$RC_31_READY" -eq 0 ] && cct_phase32_copy_compile_and_run "$PHASE31_SELFHOST_WRAPPER" "tests/integration/encoding_base64_invalid_32b.cct" "$BASE_1764" 0; then
+    test_pass "cct/encoding base64 invalido retorna None"
+else
+    test_fail "cct/encoding base64 invalido nao retornou None"
+fi
+
+# Test 1765: base64url encode/decode
+echo "Test 1765: cct/encoding base64url preserva alfabeto URL-safe"
+BASE_1765="$CCT_TMP_DIR/phase32b/test_1765_base64url_roundtrip"
+if [ "$RC_31_READY" -eq 0 ] && cct_phase32_copy_compile_and_run "$PHASE31_SELFHOST_WRAPPER" "tests/integration/encoding_base64url_roundtrip_32b.cct" "$BASE_1765" 0; then
+    test_pass "cct/encoding base64url preserva alfabeto URL-safe"
+else
+    test_fail "cct/encoding base64url regrediu"
+fi
+
+# Test 1766: hex encode/decode
+echo "Test 1766: cct/encoding hex round-trip canonico"
+BASE_1766="$CCT_TMP_DIR/phase32b/test_1766_hex_roundtrip"
+if [ "$RC_31_READY" -eq 0 ] && cct_phase32_copy_compile_and_run "$PHASE31_SELFHOST_WRAPPER" "tests/integration/encoding_hex_roundtrip_32b.cct" "$BASE_1766" 0; then
+    test_pass "cct/encoding hex round-trip canonico"
+else
+    test_fail "cct/encoding hex round-trip regrediu"
+fi
+
+# Test 1767: hex invalid inputs
+echo "Test 1767: cct/encoding hex invalido retorna None"
+BASE_1767="$CCT_TMP_DIR/phase32b/test_1767_hex_invalid"
+if [ "$RC_31_READY" -eq 0 ] && cct_phase32_copy_compile_and_run "$PHASE31_SELFHOST_WRAPPER" "tests/integration/encoding_hex_invalid_32b.cct" "$BASE_1767" 0; then
+    test_pass "cct/encoding hex invalido retorna None"
+else
+    test_fail "cct/encoding hex invalido nao retornou None"
+fi
+
+# Test 1768: URL percent-encoding
+echo "Test 1768: cct/encoding url_encode/url_decode preserva RFC 3986"
+BASE_1768="$CCT_TMP_DIR/phase32b/test_1768_url_roundtrip"
+if [ "$RC_31_READY" -eq 0 ] && cct_phase32_copy_compile_and_run "$PHASE31_SELFHOST_WRAPPER" "tests/integration/encoding_url_roundtrip_32b.cct" "$BASE_1768" 0; then
+    test_pass "cct/encoding url_encode/url_decode preserva RFC 3986"
+else
+    test_fail "cct/encoding url_encode/url_decode regrediu"
+fi
+
+# Test 1769: URL invalid inputs
+echo "Test 1769: cct/encoding url_decode invalido retorna None"
+BASE_1769="$CCT_TMP_DIR/phase32b/test_1769_url_invalid"
+if [ "$RC_31_READY" -eq 0 ] && cct_phase32_copy_compile_and_run "$PHASE31_SELFHOST_WRAPPER" "tests/integration/encoding_url_invalid_32b.cct" "$BASE_1769" 0; then
+    test_pass "cct/encoding url_decode invalido retorna None"
+else
+    test_fail "cct/encoding url_decode invalido nao retornou None"
+fi
+
+# Test 1770: HTML entities encode/decode
+echo "Test 1770: cct/encoding html_encode/html_decode preserva entidades basicas"
+BASE_1770="$CCT_TMP_DIR/phase32b/test_1770_html_entities"
+if [ "$RC_31_READY" -eq 0 ] && cct_phase32_copy_compile_and_run "$PHASE31_SELFHOST_WRAPPER" "tests/integration/encoding_html_entities_32b.cct" "$BASE_1770" 0; then
+    test_pass "cct/encoding html_encode/html_decode preserva entidades basicas"
+else
+    test_fail "cct/encoding html_encode/html_decode regrediu"
+fi
+fi
+
+if cct_phase_block_enabled "32C"; then
+echo ""
+echo "========================================"
+echo "FASE 32C: cct/regex"
+echo "========================================"
+echo ""
+
+cct_phase31_prepare >/dev/null 2>&1
+mkdir -p "$CCT_TMP_DIR/phase32c"
+
+# Test 1771: compile success + error path
+echo "Test 1771: cct/regex compila padrao valido e reporta erro em padrao invalido"
+BASE_1771="$CCT_TMP_DIR/phase32c/test_1771_compile"
+if [ "$RC_31_READY" -eq 0 ] && cct_phase32_copy_compile_and_run "$PHASE31_HOST_WRAPPER" "tests/integration/regex_compile_32c.cct" "$BASE_1771" 0; then
+    test_pass "cct/regex compila padrao valido e reporta erro em padrao invalido"
+else
+    test_fail "cct/regex compile/error path regrediu"
+fi
+
+# Test 1772: flags baseline
+echo "Test 1772: cct/regex flags preservam match canonico"
+BASE_1772="$CCT_TMP_DIR/phase32c/test_1772_flags"
+if [ "$RC_31_READY" -eq 0 ] && cct_phase32_copy_compile_and_run "$PHASE31_HOST_WRAPPER" "tests/integration/regex_match_flags_32c.cct" "$BASE_1772" 0; then
+    test_pass "cct/regex flags preservam match canonico"
+else
+    test_fail "cct/regex flags regrediram"
+fi
+
+# Test 1773: search helpers
+echo "Test 1773: cct/regex search e quick_search retornam Option correta"
+BASE_1773="$CCT_TMP_DIR/phase32c/test_1773_search"
+if [ "$RC_31_READY" -eq 0 ] && cct_phase32_copy_compile_and_run "$PHASE31_HOST_WRAPPER" "tests/integration/regex_search_32c.cct" "$BASE_1773" 0; then
+    test_pass "cct/regex search e quick_search retornam Option correta"
+else
+    test_fail "cct/regex search/quick_search regrediram"
+fi
+
+# Test 1774: find_all
+echo "Test 1774: cct/regex find_all coleta todas as ocorrencias"
+BASE_1774="$CCT_TMP_DIR/phase32c/test_1774_find_all"
+if [ "$RC_31_READY" -eq 0 ] && cct_phase32_copy_compile_and_run "$PHASE31_HOST_WRAPPER" "tests/integration/regex_find_all_32c.cct" "$BASE_1774" 0; then
+    test_pass "cct/regex find_all coleta todas as ocorrencias"
+else
+    test_fail "cct/regex find_all regrediu"
+fi
+
+# Test 1775: replace/replace_all
+echo "Test 1775: cct/regex replace e replace_all preservam contrato"
+BASE_1775="$CCT_TMP_DIR/phase32c/test_1775_replace"
+if [ "$RC_31_READY" -eq 0 ] && cct_phase32_copy_compile_and_run "$PHASE31_HOST_WRAPPER" "tests/integration/regex_replace_32c.cct" "$BASE_1775" 0; then
+    test_pass "cct/regex replace e replace_all preservam contrato"
+else
+    test_fail "cct/regex replace/replace_all regrediram"
+fi
+
+# Test 1776: split
+echo "Test 1776: cct/regex split retorna tokens canonicos"
+BASE_1776="$CCT_TMP_DIR/phase32c/test_1776_split"
+if [ "$RC_31_READY" -eq 0 ] && cct_phase32_copy_compile_and_run "$PHASE31_HOST_WRAPPER" "tests/integration/regex_split_32c.cct" "$BASE_1776" 0; then
+    test_pass "cct/regex split retorna tokens canonicos"
+else
+    test_fail "cct/regex split regrediu"
+fi
+
+# Test 1777: helpers
+echo "Test 1777: cct/regex helpers validam email url integer e real"
+BASE_1777="$CCT_TMP_DIR/phase32c/test_1777_helpers"
+if [ "$RC_31_READY" -eq 0 ] && cct_phase32_copy_compile_and_run "$PHASE31_HOST_WRAPPER" "tests/integration/regex_helpers_32c.cct" "$BASE_1777" 0; then
+    test_pass "cct/regex helpers validam email url integer e real"
+else
+    test_fail "cct/regex helpers regrediram"
+fi
+
+# Test 1778: freestanding rejection
+echo "Test 1778: cct/regex e rejeitado em freestanding"
+if [ "$RC_31_READY" -eq 0 ] && ! "$PHASE31_HOST_WRAPPER" --profile freestanding --check "tests/integration/regex_freestanding_reject_32c.cct" >"$CCT_TMP_DIR/phase32c/test_1778.out" 2>&1 && grep -q "módulo 'cct/regex' não disponível em perfil freestanding" "$CCT_TMP_DIR/phase32c/test_1778.out"; then
+    test_pass "cct/regex e rejeitado em freestanding"
+else
+    test_fail "cct/regex nao manteve a fronteira host-only em freestanding"
+fi
+
+# Test 1779: default wrapper dispatches regex compile through host path
+echo "Test 1779: ./cct promovido despacha regex host-only sem quebrar o fluxo"
+BASE_1779="$CCT_TMP_DIR/phase32c/test_1779_default_wrapper_regex"
+if [ "$RC_31_READY" -eq 0 ] && make bootstrap-promote >"$PHASE31_LOG_DIR/test_1779.stdout.log" 2>"$PHASE31_LOG_DIR/test_1779.stderr.log" && cct_phase32_copy_compile_and_run "$PHASE31_DEFAULT_WRAPPER" "tests/integration/regex_helpers_32c.cct" "$BASE_1779" 0; then
+    test_pass "./cct promovido despacha regex host-only sem quebrar o fluxo"
+else
+    test_fail "./cct promovido nao despachou regex host-only corretamente"
+fi
+fi
+
+if cct_phase_block_enabled "32D"; then
+echo ""
+echo "========================================"
+echo "FASE 32D: cct/date"
+echo "========================================"
+echo ""
+
+cct_phase31_prepare >/dev/null 2>&1
+mkdir -p "$CCT_TMP_DIR/phase32d"
+
+# Test 1780: date_new/date_parse validation
+echo "Test 1780: cct/date valida criacao e parse de Date"
+BASE_1780="$CCT_TMP_DIR/phase32d/test_1780_date_new_parse"
+if [ "$RC_31_READY" -eq 0 ] && cct_phase32_copy_compile_and_run "$PHASE31_HOST_WRAPPER" "tests/integration/date_new_parse_32d.cct" "$BASE_1780" 0; then
+    test_pass "cct/date valida criacao e parse de Date"
+else
+    test_fail "cct/date date_new/date_parse regrediu"
+fi
+
+# Test 1781: date_format + add_days
+echo "Test 1781: cct/date formata e soma dias preservando ano bissexto"
+BASE_1781="$CCT_TMP_DIR/phase32d/test_1781_date_format_add_days"
+if [ "$RC_31_READY" -eq 0 ] && cct_phase32_copy_compile_and_run "$PHASE31_HOST_WRAPPER" "tests/integration/date_format_add_days_32d.cct" "$BASE_1781" 0; then
+    test_pass "cct/date formata e soma dias preservando ano bissexto"
+else
+    test_fail "cct/date date_format/date_add_days regrediu"
+fi
+
+# Test 1782: add_months + diff_days + compare
+echo "Test 1782: cct/date add_months diff_days e compare preservam contrato"
+BASE_1782="$CCT_TMP_DIR/phase32d/test_1782_date_add_months_diff"
+if [ "$RC_31_READY" -eq 0 ] && cct_phase32_copy_compile_and_run "$PHASE31_HOST_WRAPPER" "tests/integration/date_add_months_diff_32d.cct" "$BASE_1782" 0; then
+    test_pass "cct/date add_months diff_days e compare preservam contrato"
+else
+    test_fail "cct/date add_months/diff_days/compare regrediram"
+fi
+
+# Test 1783: datetime parse Z
+echo "Test 1783: cct/date parse de datetime em UTC preserva formato"
+BASE_1783="$CCT_TMP_DIR/phase32d/test_1783_datetime_parse_z"
+if [ "$RC_31_READY" -eq 0 ] && cct_phase32_copy_compile_and_run "$PHASE31_HOST_WRAPPER" "tests/integration/datetime_parse_z_32d.cct" "$BASE_1783" 0; then
+    test_pass "cct/date parse de datetime em UTC preserva formato"
+else
+    test_fail "cct/date datetime_parse em UTC regrediu"
+fi
+
+# Test 1784: offset parsing + unix equivalence
+echo "Test 1784: cct/date normaliza offset fixo para timestamp Unix"
+BASE_1784="$CCT_TMP_DIR/phase32d/test_1784_datetime_offset_unix"
+if [ "$RC_31_READY" -eq 0 ] && cct_phase32_copy_compile_and_run "$PHASE31_HOST_WRAPPER" "tests/integration/datetime_parse_offset_unix_32d.cct" "$BASE_1784" 0; then
+    test_pass "cct/date normaliza offset fixo para timestamp Unix"
+else
+    test_fail "cct/date parse de offset/timestamp Unix regrediu"
+fi
+
+# Test 1785: add_seconds + diff_seconds + format
+echo "Test 1785: cct/date soma segundos e cruza virada do ano"
+BASE_1785="$CCT_TMP_DIR/phase32d/test_1785_datetime_add_diff"
+if [ "$RC_31_READY" -eq 0 ] && cct_phase32_copy_compile_and_run "$PHASE31_HOST_WRAPPER" "tests/integration/datetime_format_add_diff_32d.cct" "$BASE_1785" 0; then
+    test_pass "cct/date soma segundos e cruza virada do ano"
+else
+    test_fail "cct/date datetime_add_seconds/diff_seconds regrediram"
+fi
+
+# Test 1786: now/today helpers
+echo "Test 1786: cct/date datetime_now e date_today retornam valores plausiveis"
+BASE_1786="$CCT_TMP_DIR/phase32d/test_1786_datetime_now_today"
+if [ "$RC_31_READY" -eq 0 ] && cct_phase32_copy_compile_and_run "$PHASE31_HOST_WRAPPER" "tests/integration/datetime_now_today_32d.cct" "$BASE_1786" 0; then
+    test_pass "cct/date datetime_now e date_today retornam valores plausiveis"
+else
+    test_fail "cct/date datetime_now/date_today regrediram"
+fi
+
+# Test 1787: freestanding rejection
+echo "Test 1787: cct/date e rejeitado em freestanding"
+if [ "$RC_31_READY" -eq 0 ] && ! "$PHASE31_HOST_WRAPPER" --profile freestanding --check "tests/integration/date_freestanding_reject_32d.cct" >"$CCT_TMP_DIR/phase32d/test_1787.out" 2>&1 && grep -q "módulo 'cct/date' não disponível em perfil freestanding" "$CCT_TMP_DIR/phase32d/test_1787.out"; then
+    test_pass "cct/date e rejeitado em freestanding"
+else
+    test_fail "cct/date nao manteve a fronteira host-only em freestanding"
+fi
+
+# Test 1788: default wrapper dispatches date compile through host path
+echo "Test 1788: ./cct promovido despacha date host-only sem quebrar o fluxo"
+BASE_1788="$CCT_TMP_DIR/phase32d/test_1788_default_wrapper_date"
+if [ "$RC_31_READY" -eq 0 ] && make bootstrap-promote >"$PHASE31_LOG_DIR/test_1788.stdout.log" 2>"$PHASE31_LOG_DIR/test_1788.stderr.log" && cct_phase32_copy_compile_and_run "$PHASE31_DEFAULT_WRAPPER" "tests/integration/datetime_parse_z_32d.cct" "$BASE_1788" 0; then
+    test_pass "./cct promovido despacha date host-only sem quebrar o fluxo"
+else
+    test_fail "./cct promovido nao despachou date host-only corretamente"
+fi
+fi
+
+if cct_phase_block_enabled "32E"; then
+echo ""
+echo "========================================"
+echo "FASE 32E: cct/toml"
+echo "========================================"
+echo ""
+
+cct_phase31_prepare >/dev/null 2>&1
+mkdir -p "$CCT_TMP_DIR/phase32e"
+
+# Test 1789: scalar parsing
+echo "Test 1789: cct/toml parseia escalares e expõe tipos corretamente"
+BASE_1789="$CCT_TMP_DIR/phase32e/test_1789_toml_scalars"
+if [ "$RC_31_READY" -eq 0 ] && cct_phase32_copy_compile_and_run "$PHASE31_HOST_WRAPPER" "tests/integration/toml_scalars_32e.cct" "$BASE_1789" 0; then
+    test_pass "cct/toml parseia escalares e expoe tipos corretamente"
+else
+    test_fail "cct/toml regrediu parse de escalares"
+fi
+
+# Test 1790: tables
+echo "Test 1790: cct/toml resolve tabelas e subdocumentos"
+BASE_1790="$CCT_TMP_DIR/phase32e/test_1790_toml_tables"
+if [ "$RC_31_READY" -eq 0 ] && cct_phase32_copy_compile_and_run "$PHASE31_HOST_WRAPPER" "tests/integration/toml_tables_32e.cct" "$BASE_1790" 0; then
+    test_pass "cct/toml resolve tabelas e subdocumentos"
+else
+    test_fail "cct/toml regrediu tabelas/subdocumentos"
+fi
+
+# Test 1791: arrays
+echo "Test 1791: cct/toml valida arrays homogeneos"
+BASE_1791="$CCT_TMP_DIR/phase32e/test_1791_toml_arrays"
+if [ "$RC_31_READY" -eq 0 ] && cct_phase32_copy_compile_and_run "$PHASE31_HOST_WRAPPER" "tests/integration/toml_arrays_32e.cct" "$BASE_1791" 0; then
+    test_pass "cct/toml valida arrays homogeneos"
+else
+    test_fail "cct/toml regrediu arrays homogeneos"
+fi
+
+# Test 1792: multiline strings + dates
+echo "Test 1792: cct/toml suporta strings multi-linha e datas ISO"
+BASE_1792="$CCT_TMP_DIR/phase32e/test_1792_toml_multiline_dates"
+if [ "$RC_31_READY" -eq 0 ] && cct_phase32_copy_compile_and_run "$PHASE31_HOST_WRAPPER" "tests/integration/toml_multiline_dates_32e.cct" "$BASE_1792" 0; then
+    test_pass "cct/toml suporta strings multi-linha e datas ISO"
+else
+    test_fail "cct/toml regrediu strings multi-linha/datas ISO"
+fi
+
+# Test 1793: env expansion + stringify
+echo "Test 1793: cct/toml expande ambiente e stringify preserva estrutura"
+BASE_1793="$CCT_TMP_DIR/phase32e/test_1793_toml_expand_env_stringify"
+if [ "$RC_31_READY" -eq 0 ] && cct_phase32_copy_compile_and_run "$PHASE31_HOST_WRAPPER" "tests/integration/toml_expand_env_stringify_32e.cct" "$BASE_1793" 0; then
+    test_pass "cct/toml expande ambiente e stringify preserva estrutura"
+else
+    test_fail "cct/toml regrediu expand_env/stringify"
+fi
+
+# Test 1794: parse file
+echo "Test 1794: cct/toml parseia arquivo de configuracao no projeto"
+BASE_1794="$CCT_TMP_DIR/phase32e/test_1794_toml_parse_file"
+if [ "$RC_31_READY" -eq 0 ] && cct_phase32_copy_compile_and_run "$PHASE31_HOST_WRAPPER" "tests/integration/toml_parse_file_32e.cct" "$BASE_1794" 0; then
+    test_pass "cct/toml parseia arquivo de configuracao no projeto"
+else
+    test_fail "cct/toml regrediu parse_file"
+fi
+
+# Test 1795: freestanding rejection
+echo "Test 1795: cct/toml e rejeitado em freestanding"
+if [ "$RC_31_READY" -eq 0 ] && ! "$PHASE31_HOST_WRAPPER" --profile freestanding --check "tests/integration/toml_freestanding_reject_32e.cct" >"$CCT_TMP_DIR/phase32e/test_1795.out" 2>&1 && grep -q "módulo 'cct/toml' não disponível em perfil freestanding" "$CCT_TMP_DIR/phase32e/test_1795.out"; then
+    test_pass "cct/toml e rejeitado em freestanding"
+else
+    test_fail "cct/toml nao manteve a fronteira host-only em freestanding"
+fi
+
+# Test 1796: default wrapper dispatches toml compile through host path
+echo "Test 1796: ./cct promovido despacha toml host-only sem quebrar o fluxo"
+BASE_1796="$CCT_TMP_DIR/phase32e/test_1796_default_wrapper_toml"
+if [ "$RC_31_READY" -eq 0 ] && make bootstrap-promote >"$PHASE31_LOG_DIR/test_1796.stdout.log" 2>"$PHASE31_LOG_DIR/test_1796.stderr.log" && cct_phase32_copy_compile_and_run "$PHASE31_DEFAULT_WRAPPER" "tests/integration/toml_scalars_32e.cct" "$BASE_1796" 0; then
+    test_pass "./cct promovido despacha toml host-only sem quebrar o fluxo"
+else
+    test_fail "./cct promovido nao despachou toml host-only corretamente"
+fi
+fi
+
+if cct_phase_block_enabled "32F"; then
+echo ""
+echo "========================================"
+echo "FASE 32F: cct/compress"
+echo "========================================"
+echo ""
+
+cct_phase31_prepare >/dev/null 2>&1
+mkdir -p "$CCT_TMP_DIR/phase32f"
+
+# Test 1797: text round-trip
+echo "Test 1797: cct/compress preserva round-trip de VERBUM"
+BASE_1797="$CCT_TMP_DIR/phase32f/test_1797_compress_roundtrip_text"
+if [ "$RC_31_READY" -eq 0 ] && cct_phase32_copy_compile_and_run "$PHASE31_HOST_WRAPPER" "tests/integration/compress_roundtrip_text_32f.cct" "$BASE_1797" 0; then
+    test_pass "cct/compress preserva round-trip de VERBUM"
+else
+    test_fail "cct/compress regrediu round-trip de VERBUM"
+fi
+
+# Test 1798: empty text
+echo "Test 1798: cct/compress preserva payload vazio"
+BASE_1798="$CCT_TMP_DIR/phase32f/test_1798_compress_empty_text"
+if [ "$RC_31_READY" -eq 0 ] && cct_phase32_copy_compile_and_run "$PHASE31_HOST_WRAPPER" "tests/integration/compress_empty_text_32f.cct" "$BASE_1798" 0; then
+    test_pass "cct/compress preserva payload vazio"
+else
+    test_fail "cct/compress regrediu payload vazio"
+fi
+
+# Test 1799: bytes buffer round-trip
+echo "Test 1799: cct/compress preserva round-trip de bytes em buffer"
+BASE_1799="$CCT_TMP_DIR/phase32f/test_1799_compress_bytes_buffer"
+if [ "$RC_31_READY" -eq 0 ] && cct_phase32_copy_compile_and_run "$PHASE31_HOST_WRAPPER" "tests/integration/compress_bytes_buffer_32f.cct" "$BASE_1799" 0; then
+    test_pass "cct/compress preserva round-trip de bytes em buffer"
+else
+    test_fail "cct/compress regrediu round-trip de bytes em buffer"
+fi
+
+# Test 1800: bytes -> fluxus
+echo "Test 1800: cct/compress materializa bytes descomprimidos em fluxus"
+BASE_1800="$CCT_TMP_DIR/phase32f/test_1800_compress_bytes_fluxus"
+if [ "$RC_31_READY" -eq 0 ] && cct_phase32_copy_compile_and_run "$PHASE31_HOST_WRAPPER" "tests/integration/compress_bytes_fluxus_32f.cct" "$BASE_1800" 0; then
+    test_pass "cct/compress materializa bytes descomprimidos em fluxus"
+else
+    test_fail "cct/compress regrediu decompress para fluxus"
+fi
+
+# Test 1801: invalid hex
+echo "Test 1801: cct/compress reporta erro claro para hex invalido"
+BASE_1801="$CCT_TMP_DIR/phase32f/test_1801_compress_invalid_hex"
+if [ "$RC_31_READY" -eq 0 ] && cct_phase32_copy_compile_and_run "$PHASE31_HOST_WRAPPER" "tests/integration/compress_invalid_hex_32f.cct" "$BASE_1801" 0; then
+    test_pass "cct/compress reporta erro claro para hex invalido"
+else
+    test_fail "cct/compress nao tratou hex invalido corretamente"
+fi
+
+# Test 1802: invalid gzip payload
+echo "Test 1802: cct/compress reporta erro claro para payload nao-gzip"
+BASE_1802="$CCT_TMP_DIR/phase32f/test_1802_compress_invalid_gzip"
+if [ "$RC_31_READY" -eq 0 ] && cct_phase32_copy_compile_and_run "$PHASE31_HOST_WRAPPER" "tests/integration/compress_invalid_gzip_32f.cct" "$BASE_1802" 0; then
+    test_pass "cct/compress reporta erro claro para payload nao-gzip"
+else
+    test_fail "cct/compress nao tratou payload nao-gzip corretamente"
+fi
+
+# Test 1803: freestanding rejection
+echo "Test 1803: cct/compress e rejeitado em freestanding"
+if [ "$RC_31_READY" -eq 0 ] && ! "$PHASE31_HOST_WRAPPER" --profile freestanding --check "tests/integration/compress_freestanding_reject_32f.cct" >"$CCT_TMP_DIR/phase32f/test_1803.out" 2>&1 && grep -q "módulo 'cct/compress' não disponível em perfil freestanding" "$CCT_TMP_DIR/phase32f/test_1803.out"; then
+    test_pass "cct/compress e rejeitado em freestanding"
+else
+    test_fail "cct/compress nao manteve a fronteira host-only em freestanding"
+fi
+
+# Test 1804: default wrapper dispatches compress compile through host path
+echo "Test 1804: ./cct promovido despacha compress host-only sem quebrar o fluxo"
+BASE_1804="$CCT_TMP_DIR/phase32f/test_1804_default_wrapper_compress"
+if [ "$RC_31_READY" -eq 0 ] && make bootstrap-promote >"$PHASE31_LOG_DIR/test_1804.stdout.log" 2>"$PHASE31_LOG_DIR/test_1804.stderr.log" && cct_phase32_copy_compile_and_run "$PHASE31_DEFAULT_WRAPPER" "tests/integration/compress_roundtrip_text_32f.cct" "$BASE_1804" 0; then
+    test_pass "./cct promovido despacha compress host-only sem quebrar o fluxo"
+else
+    test_fail "./cct promovido nao despachou compress host-only corretamente"
+fi
+fi
+
+if cct_phase_block_enabled "32G"; then
+echo ""
+echo "========================================"
+echo "FASE 32G: cct/filetype"
+echo "========================================"
+echo ""
+
+cct_phase31_prepare >/dev/null 2>&1
+mkdir -p "$CCT_TMP_DIR/phase32g"
+mkdir -p "tests/integration/phase32g_assets"
+printf '%%PDF-1.7\nphase32g\n' >"tests/integration/phase32g_assets/fake_pdf_32g.bin"
+printf '0000ftypisomphase32g' >"tests/integration/phase32g_assets/fake_mp4_32g.bin"
+printf 'texto simples da fase 32g\n' >"tests/integration/phase32g_assets/plain_text_32g.txt"
+
+# Test 1805: image signatures
+echo "Test 1805: cct/filetype detecta assinaturas de imagem"
+BASE_1805="$CCT_TMP_DIR/phase32g/test_1805_filetype_images"
+if [ "$RC_31_READY" -eq 0 ] && cct_phase32_copy_compile_and_run "$PHASE31_HOST_WRAPPER" "tests/integration/filetype_detect_images_32g.cct" "$BASE_1805" 0; then
+    test_pass "cct/filetype detecta assinaturas de imagem"
+else
+    test_fail "cct/filetype regrediu assinaturas de imagem"
+fi
+
+# Test 1806: media signatures
+echo "Test 1806: cct/filetype detecta assinaturas de audio e video"
+BASE_1806="$CCT_TMP_DIR/phase32g/test_1806_filetype_media"
+if [ "$RC_31_READY" -eq 0 ] && cct_phase32_copy_compile_and_run "$PHASE31_HOST_WRAPPER" "tests/integration/filetype_detect_media_32g.cct" "$BASE_1806" 0; then
+    test_pass "cct/filetype detecta assinaturas de audio e video"
+else
+    test_fail "cct/filetype regrediu assinaturas de audio/video"
+fi
+
+# Test 1807: documents/text/unknown
+echo "Test 1807: cct/filetype detecta documento, texto e unknown"
+BASE_1807="$CCT_TMP_DIR/phase32g/test_1807_filetype_docs_text"
+if [ "$RC_31_READY" -eq 0 ] && cct_phase32_copy_compile_and_run "$PHASE31_HOST_WRAPPER" "tests/integration/filetype_detect_docs_text_32g.cct" "$BASE_1807" 0; then
+    test_pass "cct/filetype detecta documento, texto e unknown"
+else
+    test_fail "cct/filetype regrediu documento/texto/unknown"
+fi
+
+# Test 1808: helpers
+echo "Test 1808: cct/filetype helpers preservam extensao mime e categorias"
+BASE_1808="$CCT_TMP_DIR/phase32g/test_1808_filetype_helpers"
+if [ "$RC_31_READY" -eq 0 ] && cct_phase32_copy_compile_and_run "$PHASE31_HOST_WRAPPER" "tests/integration/filetype_helpers_32g.cct" "$BASE_1808" 0; then
+    test_pass "cct/filetype helpers preservam extensao mime e categorias"
+else
+    test_fail "cct/filetype helpers regrediram"
+fi
+
+# Test 1809: detect from project files
+echo "Test 1809: cct/filetype detecta arquivos do projeto por magic bytes"
+BASE_1809="$CCT_TMP_DIR/phase32g/test_1809_filetype_paths"
+if [ "$RC_31_READY" -eq 0 ] && cct_phase32_copy_compile_and_run "$PHASE31_HOST_WRAPPER" "tests/integration/filetype_detect_path_32g.cct" "$BASE_1809" 0; then
+    test_pass "cct/filetype detecta arquivos do projeto por magic bytes"
+else
+    test_fail "cct/filetype regrediu deteccao por caminho"
+fi
+
+# Test 1810: missing/short unknown
+echo "Test 1810: cct/filetype retorna unknown para casos insuficientes"
+BASE_1810="$CCT_TMP_DIR/phase32g/test_1810_filetype_unknown"
+if [ "$RC_31_READY" -eq 0 ] && cct_phase32_copy_compile_and_run "$PHASE31_HOST_WRAPPER" "tests/integration/filetype_unknown_32g.cct" "$BASE_1810" 0; then
+    test_pass "cct/filetype retorna unknown para casos insuficientes"
+else
+    test_fail "cct/filetype nao tratou casos insuficientes corretamente"
+fi
+
+# Test 1811: freestanding rejection
+echo "Test 1811: cct/filetype e rejeitado em freestanding"
+if [ "$RC_31_READY" -eq 0 ] && ! "$PHASE31_HOST_WRAPPER" --profile freestanding --check "tests/integration/filetype_freestanding_reject_32g.cct" >"$CCT_TMP_DIR/phase32g/test_1811.out" 2>&1 && grep -Eq "módulo '(cct/filetype|cct/fs|cct/bytes)' não disponível em perfil freestanding" "$CCT_TMP_DIR/phase32g/test_1811.out"; then
+    test_pass "cct/filetype e rejeitado em freestanding"
+else
+    test_fail "cct/filetype nao manteve a fronteira host-only em freestanding"
+fi
+
+# Test 1812: default wrapper dispatch
+echo "Test 1812: ./cct promovido despacha filetype host-only sem quebrar o fluxo"
+BASE_1812="$CCT_TMP_DIR/phase32g/test_1812_default_wrapper_filetype"
+if [ "$RC_31_READY" -eq 0 ] && make bootstrap-promote >"$PHASE31_LOG_DIR/test_1812.stdout.log" 2>"$PHASE31_LOG_DIR/test_1812.stderr.log" && cct_phase32_copy_compile_and_run "$PHASE31_DEFAULT_WRAPPER" "tests/integration/filetype_helpers_32g.cct" "$BASE_1812" 0; then
+    test_pass "./cct promovido despacha filetype host-only sem quebrar o fluxo"
+else
+    test_fail "./cct promovido nao despachou filetype host-only corretamente"
+fi
+fi
+
+if cct_phase_block_enabled "32H"; then
+echo ""
+echo "========================================"
+echo "FASE 32H: cct/media_probe"
+echo "========================================"
+mkdir -p "$CCT_TMP_DIR/phase32h"
+mkdir -p tests/integration/phase32h_assets
+printf 'nao sou media fase 32h\n' >"tests/integration/phase32h_assets/not_media_32h.txt"
+ffmpeg -y -f lavfi -i testsrc=size=128x96:rate=24 -f lavfi -i sine=frequency=440:sample_rate=44100 -t 1 -pix_fmt yuv420p -shortest "tests/integration/phase32h_assets/sample_32h.mp4" >"$CCT_TMP_DIR/phase32h_ffmpeg_video.out" 2>"$CCT_TMP_DIR/phase32h_ffmpeg_video.err"
+ffmpeg -y -f lavfi -i sine=frequency=880:sample_rate=22050 -t 1 "tests/integration/phase32h_assets/sample_32h.wav" >"$CCT_TMP_DIR/phase32h_ffmpeg_audio.out" 2>"$CCT_TMP_DIR/phase32h_ffmpeg_audio.err"
+ffmpeg -y -f lavfi -i color=c=red:size=40x30 -frames:v 1 "tests/integration/phase32h_assets/sample_32h.png" >"$CCT_TMP_DIR/phase32h_ffmpeg_image.out" 2>"$CCT_TMP_DIR/phase32h_ffmpeg_image.err"
+
+# Test 1813: video probe
+echo "Test 1813: cct/media_probe extrai metadados de video"
+BASE_1813="$CCT_TMP_DIR/phase32h/test_1813_media_probe_video"
+if [ "$RC_31_READY" -eq 0 ] && cct_phase32_copy_compile_and_run "$PHASE31_HOST_WRAPPER" "tests/integration/media_probe_video_32h.cct" "$BASE_1813" 0; then
+    test_pass "cct/media_probe extrai metadados de video"
+else
+    test_fail "cct/media_probe regrediu probe de video"
+fi
+
+# Test 1814: audio probe
+echo "Test 1814: cct/media_probe extrai metadados de audio"
+BASE_1814="$CCT_TMP_DIR/phase32h/test_1814_media_probe_audio"
+if [ "$RC_31_READY" -eq 0 ] && cct_phase32_copy_compile_and_run "$PHASE31_HOST_WRAPPER" "tests/integration/media_probe_audio_32h.cct" "$BASE_1814" 0; then
+    test_pass "cct/media_probe extrai metadados de audio"
+else
+    test_fail "cct/media_probe regrediu probe de audio"
+fi
+
+# Test 1815: image probe
+echo "Test 1815: cct/media_probe extrai metadados de imagem"
+BASE_1815="$CCT_TMP_DIR/phase32h/test_1815_media_probe_image"
+if [ "$RC_31_READY" -eq 0 ] && cct_phase32_copy_compile_and_run "$PHASE31_HOST_WRAPPER" "tests/integration/media_probe_image_32h.cct" "$BASE_1815" 0; then
+    test_pass "cct/media_probe extrai metadados de imagem"
+else
+    test_fail "cct/media_probe regrediu probe de imagem"
+fi
+
+# Test 1816: streams
+echo "Test 1816: cct/media_probe materializa streams canonicos"
+BASE_1816="$CCT_TMP_DIR/phase32h/test_1816_media_probe_streams"
+if [ "$RC_31_READY" -eq 0 ] && cct_phase32_copy_compile_and_run "$PHASE31_HOST_WRAPPER" "tests/integration/media_probe_streams_32h.cct" "$BASE_1816" 0; then
+    test_pass "cct/media_probe materializa streams canonicos"
+else
+    test_fail "cct/media_probe regrediu streams canonicos"
+fi
+
+# Test 1817: helpers
+echo "Test 1817: cct/media_probe helpers preservam contrato"
+BASE_1817="$CCT_TMP_DIR/phase32h/test_1817_media_probe_helpers"
+if [ "$RC_31_READY" -eq 0 ] && cct_phase32_copy_compile_and_run "$PHASE31_HOST_WRAPPER" "tests/integration/media_probe_helpers_32h.cct" "$BASE_1817" 0; then
+    test_pass "cct/media_probe helpers preservam contrato"
+else
+    test_fail "cct/media_probe regrediu helpers"
+fi
+
+# Test 1818: invalid input
+echo "Test 1818: cct/media_probe falha claramente para entradas invalidas"
+BASE_1818="$CCT_TMP_DIR/phase32h/test_1818_media_probe_invalid"
+if [ "$RC_31_READY" -eq 0 ] && cct_phase32_copy_compile_and_run "$PHASE31_HOST_WRAPPER" "tests/integration/media_probe_invalid_32h.cct" "$BASE_1818" 0; then
+    test_pass "cct/media_probe falha claramente para entradas invalidas"
+else
+    test_fail "cct/media_probe nao tratou entradas invalidas corretamente"
+fi
+
+# Test 1819: freestanding rejection
+echo "Test 1819: cct/media_probe e rejeitado em freestanding"
+if [ "$RC_31_READY" -eq 0 ] && ! "$PHASE31_HOST_WRAPPER" --profile freestanding --check "tests/integration/media_probe_freestanding_reject_32h.cct" >"$CCT_TMP_DIR/phase32h/test_1819.out" 2>&1 && grep -Eq "módulo '(cct/media_probe|cct/process|cct/fs|cct/json)' não disponível em perfil freestanding" "$CCT_TMP_DIR/phase32h/test_1819.out"; then
+    test_pass "cct/media_probe e rejeitado em freestanding"
+else
+    test_fail "cct/media_probe nao manteve a fronteira host-only em freestanding"
+fi
+
+# Test 1820: host wrapper dispatch
+echo "Test 1820: wrapper host despacha media_probe host-only sem quebrar o fluxo"
+BASE_1820="$CCT_TMP_DIR/phase32h/test_1820_default_wrapper_media_probe"
+if [ "$RC_31_READY" -eq 0 ] && cct_phase32_copy_compile_and_run "$PHASE31_HOST_WRAPPER" "tests/integration/media_probe_default_wrapper_32h.cct" "$BASE_1820" 0; then
+    test_pass "wrapper host despacha media_probe host-only sem quebrar o fluxo"
+else
+    test_fail "wrapper host nao despachou media_probe host-only corretamente"
+fi
+fi
+
+if cct_phase_block_enabled "32I"; then
+echo ""
+echo "========================================"
+echo "FASE 32I: cct/image_ops"
+echo "========================================"
+mkdir -p "$CCT_TMP_DIR/phase32i"
+mkdir -p tests/integration/phase32i_assets
+mkdir -p tests/.tmp/phase32i_outputs
+ffmpeg -y -f lavfi -i testsrc=size=48x36:rate=1 -frames:v 1 "tests/integration/phase32i_assets/sample_32i.png" >"$CCT_TMP_DIR/phase32i_ffmpeg_png.out" 2>"$CCT_TMP_DIR/phase32i_ffmpeg_png.err"
+ffmpeg -y -f lavfi -i testsrc=size=48x36:rate=1 -frames:v 1 "tests/integration/phase32i_assets/sample_32i.jpg" >"$CCT_TMP_DIR/phase32i_ffmpeg_jpg.out" 2>"$CCT_TMP_DIR/phase32i_ffmpeg_jpg.err"
+ffmpeg -y -f lavfi -i testsrc=size=48x36:rate=1 -frames:v 1 "tests/integration/phase32i_assets/sample_32i.gif" >"$CCT_TMP_DIR/phase32i_ffmpeg_gif.out" 2>"$CCT_TMP_DIR/phase32i_ffmpeg_gif.err"
+
+# Test 1821: load dimensions
+echo "Test 1821: cct/image_ops carrega imagem e extrai dimensoes"
+BASE_1821="$CCT_TMP_DIR/phase32i/test_1821_image_load_dimensions"
+if [ "$RC_31_READY" -eq 0 ] && cct_phase32_copy_compile_and_run "$PHASE31_HOST_WRAPPER" "tests/integration/image_load_dimensions_32i.cct" "$BASE_1821" 0; then
+    test_pass "cct/image_ops carrega imagem e extrai dimensoes"
+else
+    test_fail "cct/image_ops regrediu carregamento de imagem"
+fi
+
+# Test 1822: resize and save
+echo "Test 1822: cct/image_ops redimensiona e salva imagem"
+BASE_1822="$CCT_TMP_DIR/phase32i/test_1822_image_resize_save"
+if [ "$RC_31_READY" -eq 0 ] && cct_phase32_copy_compile_and_run "$PHASE31_HOST_WRAPPER" "tests/integration/image_resize_save_32i.cct" "$BASE_1822" 0; then
+    test_pass "cct/image_ops redimensiona e salva imagem"
+else
+    test_fail "cct/image_ops regrediu resize/save"
+fi
+
+# Test 1823: crop
+echo "Test 1823: cct/image_ops recorta imagem"
+BASE_1823="$CCT_TMP_DIR/phase32i/test_1823_image_crop"
+if [ "$RC_31_READY" -eq 0 ] && cct_phase32_copy_compile_and_run "$PHASE31_HOST_WRAPPER" "tests/integration/image_crop_32i.cct" "$BASE_1823" 0; then
+    test_pass "cct/image_ops recorta imagem"
+else
+    test_fail "cct/image_ops regrediu crop"
+fi
+
+# Test 1824: rotate
+echo "Test 1824: cct/image_ops rotaciona imagem"
+BASE_1824="$CCT_TMP_DIR/phase32i/test_1824_image_rotate"
+if [ "$RC_31_READY" -eq 0 ] && cct_phase32_copy_compile_and_run "$PHASE31_HOST_WRAPPER" "tests/integration/image_rotate_32i.cct" "$BASE_1824" 0; then
+    test_pass "cct/image_ops rotaciona imagem"
+else
+    test_fail "cct/image_ops regrediu rotate"
+fi
+
+# Test 1825: convert
+echo "Test 1825: cct/image_ops converte formato"
+BASE_1825="$CCT_TMP_DIR/phase32i/test_1825_image_convert"
+if [ "$RC_31_READY" -eq 0 ] && cct_phase32_copy_compile_and_run "$PHASE31_HOST_WRAPPER" "tests/integration/image_convert_32i.cct" "$BASE_1825" 0; then
+    test_pass "cct/image_ops converte formato"
+else
+    test_fail "cct/image_ops regrediu convert"
+fi
+
+# Test 1826: invalid input
+echo "Test 1826: cct/image_ops falha claramente para entradas invalidas"
+BASE_1826="$CCT_TMP_DIR/phase32i/test_1826_image_invalid"
+if [ "$RC_31_READY" -eq 0 ] && cct_phase32_copy_compile_and_run "$PHASE31_HOST_WRAPPER" "tests/integration/image_invalid_32i.cct" "$BASE_1826" 0; then
+    test_pass "cct/image_ops falha claramente para entradas invalidas"
+else
+    test_fail "cct/image_ops nao tratou entradas invalidas corretamente"
+fi
+
+# Test 1827: freestanding rejection
+echo "Test 1827: cct/image_ops e rejeitado em freestanding"
+if [ "$RC_31_READY" -eq 0 ] && ! "$PHASE31_HOST_WRAPPER" --profile freestanding --check "tests/integration/image_freestanding_reject_32i.cct" >"$CCT_TMP_DIR/phase32i/test_1827.out" 2>&1 && grep -Eq "módulo '(cct/image_ops|cct/process|cct/fs)' não disponível em perfil freestanding" "$CCT_TMP_DIR/phase32i/test_1827.out"; then
+    test_pass "cct/image_ops e rejeitado em freestanding"
+else
+    test_fail "cct/image_ops nao manteve a fronteira host-only em freestanding"
+fi
+
+# Test 1828: host wrapper dispatch
+echo "Test 1828: wrapper host despacha image_ops host-only sem quebrar o fluxo"
+BASE_1828="$CCT_TMP_DIR/phase32i/test_1828_image_host_wrapper"
+if [ "$RC_31_READY" -eq 0 ] && cct_phase32_copy_compile_and_run "$PHASE31_HOST_WRAPPER" "tests/integration/image_host_wrapper_32i.cct" "$BASE_1828" 0; then
+    test_pass "wrapper host despacha image_ops host-only sem quebrar o fluxo"
+else
+    test_fail "wrapper host nao despachou image_ops host-only corretamente"
+fi
+fi
+
+if cct_phase_block_enabled "32J"; then
+echo ""
+echo "========================================"
+echo "FASE 32J: cct/text_lang"
+echo "========================================"
+mkdir -p "$CCT_TMP_DIR/phase32j"
+
+# Test 1829: pt/en
+echo "Test 1829: cct/text_lang detecta portugues e ingles"
+BASE_1829="$CCT_TMP_DIR/phase32j/test_1829_text_lang_pt_en"
+if [ "$RC_31_READY" -eq 0 ] && cct_phase32_copy_compile_and_run "$PHASE31_SELFHOST_WRAPPER" "tests/integration/text_lang_pt_en_32j.cct" "$BASE_1829" 0; then
+    test_pass "cct/text_lang detecta portugues e ingles"
+else
+    test_fail "cct/text_lang regrediu deteccao pt/en"
+fi
+
+# Test 1830: latin family
+echo "Test 1830: cct/text_lang detecta idiomas latinos principais"
+BASE_1830="$CCT_TMP_DIR/phase32j/test_1830_text_lang_latin"
+if [ "$RC_31_READY" -eq 0 ] && cct_phase32_copy_compile_and_run "$PHASE31_SELFHOST_WRAPPER" "tests/integration/text_lang_latin_32j.cct" "$BASE_1830" 0; then
+    test_pass "cct/text_lang detecta idiomas latinos principais"
+else
+    test_fail "cct/text_lang regrediu deteccao latina"
+fi
+
+# Test 1831: script languages
+echo "Test 1831: cct/text_lang detecta idiomas por escrita"
+BASE_1831="$CCT_TMP_DIR/phase32j/test_1831_text_lang_scripts"
+if [ "$RC_31_READY" -eq 0 ] && cct_phase32_copy_compile_and_run "$PHASE31_SELFHOST_WRAPPER" "tests/integration/text_lang_scripts_32j.cct" "$BASE_1831" 0; then
+    test_pass "cct/text_lang detecta idiomas por escrita"
+else
+    test_fail "cct/text_lang regrediu deteccao por escrita"
+fi
+
+# Test 1832: filtered candidates
+echo "Test 1832: cct/text_lang respeita candidatos filtrados"
+BASE_1832="$CCT_TMP_DIR/phase32j/test_1832_text_lang_candidates"
+if [ "$RC_31_READY" -eq 0 ] && cct_phase32_copy_compile_and_run "$PHASE31_SELFHOST_WRAPPER" "tests/integration/text_lang_candidates_32j.cct" "$BASE_1832" 0; then
+    test_pass "cct/text_lang respeita candidatos filtrados"
+else
+    test_fail "cct/text_lang regrediu candidatos filtrados"
+fi
+
+# Test 1833: helpers
+echo "Test 1833: cct/text_lang preserva helpers canonicos"
+BASE_1833="$CCT_TMP_DIR/phase32j/test_1833_text_lang_helpers"
+if [ "$RC_31_READY" -eq 0 ] && cct_phase32_copy_compile_and_run "$PHASE31_SELFHOST_WRAPPER" "tests/integration/text_lang_helpers_32j.cct" "$BASE_1833" 0; then
+    test_pass "cct/text_lang preserva helpers canonicos"
+else
+    test_fail "cct/text_lang regrediu helpers"
+fi
+
+# Test 1834: unknown / short
+echo "Test 1834: cct/text_lang devolve unknown para texto insuficiente"
+BASE_1834="$CCT_TMP_DIR/phase32j/test_1834_text_lang_unknown"
+if [ "$RC_31_READY" -eq 0 ] && cct_phase32_copy_compile_and_run "$PHASE31_SELFHOST_WRAPPER" "tests/integration/text_lang_unknown_32j.cct" "$BASE_1834" 0; then
+    test_pass "cct/text_lang devolve unknown para texto insuficiente"
+else
+    test_fail "cct/text_lang regrediu fallback unknown"
+fi
+
+# Test 1835: default wrapper / promoted compiler
+echo "Test 1835: ./cct promovido executa text_lang source-backed"
+BASE_1835="$CCT_TMP_DIR/phase32j/test_1835_default_wrapper_text_lang"
+if [ "$RC_31_READY" -eq 0 ] && make bootstrap-promote >"$PHASE31_LOG_DIR/test_1835.stdout.log" 2>"$PHASE31_LOG_DIR/test_1835.stderr.log" && cct_phase32_copy_compile_and_run "$PHASE31_DEFAULT_WRAPPER" "tests/integration/text_lang_default_wrapper_32j.cct" "$BASE_1835" 0; then
+    test_pass "./cct promovido executa text_lang source-backed"
+else
+    test_fail "./cct promovido nao executou text_lang source-backed corretamente"
 fi
 fi
 

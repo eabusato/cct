@@ -1,0 +1,28 @@
+INCIPIT grimoire "regex_replace_32c"
+
+ADVOCARE "cct/regex.cct"
+ADVOCARE "cct/result.cct"
+ADVOCARE "cct/verbum.cct"
+
+RITUALE main() REDDE REX
+  EVOCA SPECULUM NIHIL compiled AD CONIURA regex_compile("[0-9]+")
+  SI CONIURA result_is_err GENUS(Regex, VERBUM)(compiled)
+    REDDE 1
+  FIN SI
+
+  EVOCA Regex rx AD CONIURA result_unwrap GENUS(Regex, VERBUM)(compiled)
+  EVOCA VERBUM once AD CONIURA regex_replace(rx, "alunos=10 turmas=3", "#")
+  EVOCA VERBUM all AD CONIURA regex_replace_all(rx, "alunos=10 turmas=3", "#")
+  CONIURA regex_free(rx)
+
+  SI CONIURA compare(once, "alunos=# turmas=3") != 0
+    REDDE 2
+  FIN SI
+  SI CONIURA compare(all, "alunos=# turmas=#") != 0
+    REDDE 3
+  FIN SI
+
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

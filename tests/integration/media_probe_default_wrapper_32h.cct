@@ -1,0 +1,17 @@
+INCIPIT grimoire "media_probe_default_wrapper_32h"
+
+ADVOCARE "cct/media_probe.cct"
+ADVOCARE "cct/verbum.cct"
+
+RITUALE main() REDDE REX
+  EVOCA MediaProbe probe AD CONIURA media_probe("tests/integration/phase32h_assets/sample_32h.wav")
+  SI NON probe.valido
+    REDDE 1
+  FIN SI
+  SI CONIURA compare(CONIURA media_get_duration_str(probe), "00:01") != 0
+    REDDE 2
+  FIN SI
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

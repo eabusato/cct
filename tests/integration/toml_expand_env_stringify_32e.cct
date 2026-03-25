@@ -1,0 +1,40 @@
+INCIPIT grimoire "toml_expand_env_stringify_32e"
+
+ADVOCARE "cct/env.cct"
+ADVOCARE "cct/option.cct"
+ADVOCARE "cct/toml.cct"
+ADVOCARE "cct/verbum.cct"
+
+RITUALE main() REDDE REX
+  EVOCA VERBUM src AD "media_root = \"${HOME}/media\"\n[server]\nhost = \"localhost\"\n"
+  EVOCA TomlDocument parsed AD CONIURA toml_parse(src)
+  SI NON CONIURA toml_is_valid(parsed)
+    REDDE 1
+  FIN SI
+
+  EVOCA TomlDocument expanded AD CONIURA toml_expand_env(parsed)
+  EVOCA VERBUM media AD CONIURA toml_get_string(expanded, "media_root")
+  SI CONIURA len(media) == 0
+    REDDE 2
+  FIN SI
+
+  EVOCA VERBUM home AD CONIURA getenv("HOME")
+  SI NON CONIURA starts_with(media, home)
+    REDDE 3
+  FIN SI
+
+  EVOCA VERBUM rendered AD CONIURA toml_stringify(expanded)
+  SI NON CONIURA contains(rendered, "media_root = ")
+    REDDE 4
+  FIN SI
+  SI NON CONIURA contains(rendered, "[server]")
+    REDDE 5
+  FIN SI
+  SI NON CONIURA contains(rendered, "host = \"localhost\"")
+    REDDE 6
+  FIN SI
+
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

@@ -1,0 +1,30 @@
+INCIPIT grimoire "crypto_csprng_compare_32a"
+
+ADVOCARE "cct/bytes.cct"
+ADVOCARE "cct/crypto.cct"
+ADVOCARE "cct/verbum.cct"
+
+RITUALE main() REDDE REX
+  EVOCA SPECULUM NIHIL b AD CONIURA csprng_bytes(32)
+  EVOCA REX n AD CONIURA bytes_len(b)
+  EVOCA VERBUM hex AD CONIURA bytes_to_hex(b)
+  EVOCA VERUM same AD CONIURA constant_time_compare("token-seguro", "token-seguro")
+  EVOCA VERUM different AD CONIURA constant_time_compare("token-seguro", "token-inseguro")
+  OBSECRO scribe(MOLDE "n={n} hex={CONIURA len(hex)} same={same} diff={different}\n")
+  CONIURA bytes_free(b)
+
+  SI n == 32
+    SI CONIURA len(hex) == 64
+      SI same
+        SI NON different
+          OBSECRO scribe("ok\n")
+          REDDE 0
+        FIN SI
+      FIN SI
+    FIN SI
+  FIN SI
+
+  REDDE 1
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

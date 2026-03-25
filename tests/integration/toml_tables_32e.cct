@@ -1,0 +1,39 @@
+INCIPIT grimoire "toml_tables_32e"
+
+ADVOCARE "cct/option.cct"
+ADVOCARE "cct/toml.cct"
+ADVOCARE "cct/verbum.cct"
+
+RITUALE main() REDDE REX
+  EVOCA VERBUM src AD "[server]\nhost = \"localhost\"\nport = 8080\n[server.ssl]\nenabled = true\n"
+  EVOCA TomlDocument doc AD CONIURA toml_parse(src)
+  SI NON CONIURA toml_is_valid(doc)
+    REDDE 1
+  FIN SI
+  EVOCA TomlDocument server AD CONIURA toml_get_table(doc, "server")
+  SI NON CONIURA toml_is_valid(server)
+    REDDE 2
+  FIN SI
+  EVOCA VERBUM host AD CONIURA toml_get_string(server, "host")
+  EVOCA SPECULUM NIHIL port_opt AD CONIURA toml_get_int(server, "port")
+  EVOCA TomlDocument ssl AD CONIURA toml_get_table(server, "ssl")
+  SI CONIURA len(host) == 0 VEL CONIURA option_is_none GENUS(REX)(port_opt) VEL NON CONIURA toml_is_valid(ssl)
+    REDDE 3
+  FIN SI
+
+  SI CONIURA compare(host, "localhost") != 0
+    REDDE 4
+  FIN SI
+  SI CONIURA option_unwrap GENUS(REX)(port_opt) != 8080
+    REDDE 5
+  FIN SI
+
+  EVOCA SPECULUM NIHIL enabled_opt AD CONIURA toml_get_bool(ssl, "enabled")
+  SI CONIURA option_is_none GENUS(VERUM)(enabled_opt) VEL NON CONIURA option_unwrap GENUS(VERUM)(enabled_opt)
+    REDDE 6
+  FIN SI
+
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

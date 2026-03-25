@@ -25,6 +25,12 @@ typedef struct {
     bool emit_random_helpers;
     bool emit_process_helpers;
     bool emit_hash_helpers;
+    bool emit_crypto_helpers;
+    bool emit_regex_helpers;
+    bool emit_toml_helpers;
+    bool emit_compress_helpers;
+    bool emit_filetype_helpers;
+    bool emit_image_ops_helpers;
     bool emit_verbum_helpers;
     bool emit_fmt_helpers;
     bool emit_db_helpers;
@@ -37,5 +43,11 @@ void cct_runtime_codegen_config_defaults(cct_runtime_codegen_config_t *cfg);
  * Returns false only for invalid arguments.
  */
 bool cct_runtime_emit_c_helpers(FILE *out, const cct_runtime_codegen_config_t *cfg);
+bool cct_runtime_emit_crypto_helpers(FILE *out);
+bool cct_runtime_emit_regex_helpers(FILE *out);
+bool cct_runtime_emit_toml_helpers(FILE *out);
+bool cct_runtime_emit_compress_helpers(FILE *out);
+bool cct_runtime_emit_filetype_helpers(FILE *out);
+bool cct_runtime_emit_image_ops_helpers(FILE *out);
 
 #endif /* CCT_RUNTIME_H */

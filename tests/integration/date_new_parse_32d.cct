@@ -1,0 +1,31 @@
+INCIPIT grimoire "date_new_parse_32d"
+
+ADVOCARE "cct/date.cct"
+ADVOCARE "cct/result.cct"
+ADVOCARE "cct/verbum.cct"
+
+RITUALE main() REDDE REX
+  EVOCA SPECULUM NIHIL ok_result AD CONIURA date_new(2024, 2, 29)
+  SI CONIURA result_is_err GENUS(Date, DateError)(ok_result)
+    REDDE 1
+  FIN SI
+
+  EVOCA Date ok_date AD CONIURA result_unwrap GENUS(Date, DateError)(ok_result)
+  SI ok_date.ano != 2024 VEL ok_date.mes != 2 VEL ok_date.dia != 29
+    REDDE 2
+  FIN SI
+
+  EVOCA SPECULUM NIHIL bad_result AD CONIURA date_parse("2023-02-29")
+  SI NON CONIURA result_is_err GENUS(Date, DateError)(bad_result)
+    REDDE 3
+  FIN SI
+
+  EVOCA DateError err AD CONIURA result_unwrap_err GENUS(Date, DateError)(bad_result)
+  SI CONIURA compare(err.mensagem, "dia invalido para o mes") != 0
+    REDDE 4
+  FIN SI
+
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

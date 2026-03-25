@@ -1,0 +1,22 @@
+INCIPIT grimoire "text_lang_helpers_32j"
+
+ADVOCARE "cct/text_lang.cct"
+ADVOCARE "cct/verbum.cct"
+
+RITUALE main() REDDE REX
+  SI CONIURA compare(CONIURA lang_to_string(PT), "pt") != 0
+    REDDE 1
+  FIN SI
+  SI CONIURA lang_from_string("EN") != EN
+    REDDE 2
+  FIN SI
+  SI CONIURA compare(CONIURA lang_to_iso639(JA), "ja") != 0
+    REDDE 3
+  FIN SI
+  SI NON (CONIURA lang_is("This is a text with enough english words for detection.", EN, 0.2))
+    REDDE 4
+  FIN SI
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

@@ -1,0 +1,28 @@
+INCIPIT grimoire "datetime_now_today_32d"
+
+ADVOCARE "cct/date.cct"
+ADVOCARE "cct/result.cct"
+
+RITUALE main() REDDE REX
+  EVOCA DateTime agora AD CONIURA datetime_now()
+  EVOCA Date hoje AD CONIURA date_today()
+
+  SI agora.ano < 2024 VEL agora.mes < 1 VEL agora.mes > 12 VEL agora.dia < 1 VEL agora.dia > 31
+    REDDE 1
+  FIN SI
+
+  EVOCA SPECULUM NIHIL from_now_result AD CONIURA date_new(agora.ano, agora.mes, agora.dia)
+  SI CONIURA result_is_err GENUS(Date, DateError)(from_now_result)
+    REDDE 2
+  FIN SI
+
+  EVOCA Date from_now AD CONIURA result_unwrap GENUS(Date, DateError)(from_now_result)
+  EVOCA REX delta AD CONIURA date_diff_days(hoje, from_now)
+  SI delta < -1 VEL delta > 1
+    REDDE 3
+  FIN SI
+
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

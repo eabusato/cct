@@ -205,6 +205,18 @@ bool cct_cg_emit_generated_c_prelude(FILE *out, const cct_codegen_t *cg) {
     if (cg->uses_sqlite) {
         fputs("#include <sqlite3.h>\n\n", out);
     }
+    if (cg->uses_crypto) {
+        fputs("#include <openssl/sha.h>\n", out);
+        fputs("#include <openssl/hmac.h>\n", out);
+        fputs("#include <openssl/evp.h>\n", out);
+        fputs("#include <openssl/rand.h>\n\n", out);
+    }
+    if (cg->uses_regex) {
+        fputs("#include <regex.h>\n\n", out);
+    }
+    if (cg->uses_compress) {
+        fputs("#include <zlib.h>\n\n", out);
+    }
     fputs("#ifdef _WIN32\n", out);
     fputs("#include <direct.h>\n", out);
     fputs("#include <io.h>\n", out);
@@ -279,6 +291,12 @@ bool cct_cg_emit_generated_c_prelude(FILE *out, const cct_codegen_t *cg) {
     cct_runtime_codegen_config_t rt_cfg;
     cct_runtime_codegen_config_defaults(&rt_cfg);
     rt_cfg.emit_db_helpers = cg->uses_sqlite;
+    rt_cfg.emit_crypto_helpers = cg->uses_crypto;
+    rt_cfg.emit_regex_helpers = cg->uses_regex;
+    rt_cfg.emit_toml_helpers = cg->uses_toml;
+    rt_cfg.emit_compress_helpers = cg->uses_compress;
+    rt_cfg.emit_filetype_helpers = cg->uses_filetype;
+    rt_cfg.emit_image_ops_helpers = cg->uses_image_ops;
     if (!cct_runtime_emit_c_helpers(out, &rt_cfg)) return false;
     return true;
 }

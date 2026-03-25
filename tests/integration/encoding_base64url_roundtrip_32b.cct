@@ -1,0 +1,26 @@
+INCIPIT grimoire "encoding_base64url_roundtrip_32b"
+
+ADVOCARE "cct/encoding.cct"
+ADVOCARE "cct/option.cct"
+ADVOCARE "cct/verbum.cct"
+
+RITUALE main() REDDE REX
+  EVOCA VERBUM original AD "test+data/here"
+  EVOCA VERBUM encoded AD CONIURA base64url_encode(original)
+  EVOCA SPECULUM NIHIL decoded_opt AD CONIURA base64url_decode(encoded)
+  SI NON CONIURA option_is_some GENUS(VERBUM)(decoded_opt)
+    REDDE 1
+  FIN SI
+
+  EVOCA VERBUM decoded AD CONIURA option_unwrap GENUS(VERBUM)(decoded_opt)
+  SI CONIURA compare(decoded, original) != 0
+    REDDE 1
+  FIN SI
+  SI CONIURA contains(encoded, "+") VEL CONIURA contains(encoded, "/") VEL CONIURA contains(encoded, "=")
+    REDDE 1
+  FIN SI
+
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

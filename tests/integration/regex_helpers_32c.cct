@@ -1,0 +1,27 @@
+INCIPIT grimoire "regex_helpers_32c"
+
+ADVOCARE "cct/regex.cct"
+
+RITUALE main() REDDE REX
+  SI NON CONIURA regex_is_email("erick@desviados.net")
+    REDDE 1
+  FIN SI
+  SI NON CONIURA regex_is_url("https://desviados.net/contos/1")
+    REDDE 2
+  FIN SI
+  SI NON CONIURA regex_is_integer("-42")
+    REDDE 3
+  FIN SI
+  SI NON CONIURA regex_is_real("9.75")
+    REDDE 4
+  FIN SI
+  SI CONIURA regex_is_email("sem-arroba")
+    REDDE 5
+  FIN SI
+  SI CONIURA regex_is_real("9,75")
+    REDDE 6
+  FIN SI
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

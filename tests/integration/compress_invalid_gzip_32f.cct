@@ -1,0 +1,18 @@
+INCIPIT grimoire "compress_invalid_gzip_32f"
+
+ADVOCARE "cct/compress.cct"
+ADVOCARE "cct/verbum.cct"
+
+RITUALE main() REDDE REX
+  EVOCA VERBUM plain AD CONIURA gzip_decompress("00010203")
+  EVOCA VERBUM err AD CONIURA compress_last_error()
+  SI CONIURA len(plain) != 0
+    REDDE 1
+  FIN SI
+  SI NON CONIURA contains(err, "descompressao falhou")
+    REDDE 2
+  FIN SI
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

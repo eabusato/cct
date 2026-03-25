@@ -1,0 +1,30 @@
+INCIPIT grimoire "image_invalid_32i"
+
+ADVOCARE "cct/image_ops.cct"
+ADVOCARE "cct/verbum.cct"
+
+RITUALE main() REDDE REX
+  EVOCA Image missing AD CONIURA image_load("tests/integration/phase32i_assets/inexistente_32i.png")
+  SI CONIURA image_is_valid(missing)
+    REDDE 1
+  FIN SI
+  SI CONIURA len(CONIURA image_last_error()) == 0
+    REDDE 2
+  FIN SI
+
+  EVOCA Image img AD CONIURA image_load("tests/integration/phase32i_assets/sample_32i.png")
+  EVOCA Image broken AD CONIURA image_rotate(img, 45)
+  SI CONIURA image_is_valid(broken)
+    CONIURA image_free(img)
+    REDDE 3
+  FIN SI
+  SI CONIURA len(CONIURA image_last_error()) == 0
+    CONIURA image_free(img)
+    REDDE 4
+  FIN SI
+
+  CONIURA image_free(img)
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

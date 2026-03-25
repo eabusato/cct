@@ -1,0 +1,13 @@
+INCIPIT grimoire "image_freestanding_reject_32i"
+
+ADVOCARE "cct/image_ops.cct"
+
+RITUALE main() REDDE REX
+  EVOCA Image img AD CONIURA image_load("tests/integration/phase32i_assets/sample_32i.png")
+  SI CONIURA image_is_valid(img)
+    CONIURA image_free(img)
+  FIN SI
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

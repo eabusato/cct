@@ -1,0 +1,84 @@
+INCIPIT grimoire "filetype_detect_media_32g"
+
+ADVOCARE "cct/bytes.cct"
+ADVOCARE "cct/filetype.cct"
+ADVOCARE "cct/verbum.cct"
+
+RITUALE expect_type(FileType actual, VERBUM expected) REDDE VERUM
+  REDDE CONIURA compare(CONIURA filetype_to_string(actual), expected) == 0
+EXPLICIT RITUALE
+
+RITUALE main() REDDE REX
+  EVOCA SPECULUM NIHIL mp4 AD CONIURA bytes_new(12)
+  OBSECRO bytes_set(mp4, 0, 48)
+  OBSECRO bytes_set(mp4, 1, 48)
+  OBSECRO bytes_set(mp4, 2, 48)
+  OBSECRO bytes_set(mp4, 3, 48)
+  OBSECRO bytes_set(mp4, 4, 102)
+  OBSECRO bytes_set(mp4, 5, 116)
+  OBSECRO bytes_set(mp4, 6, 121)
+  OBSECRO bytes_set(mp4, 7, 112)
+  OBSECRO bytes_set(mp4, 8, 105)
+  OBSECRO bytes_set(mp4, 9, 115)
+  OBSECRO bytes_set(mp4, 10, 111)
+  OBSECRO bytes_set(mp4, 11, 109)
+  SI NON CONIURA expect_type(CONIURA filetype_detect_bytes(mp4, CONIURA bytes_len(mp4)), "mp4")
+    REDDE 1
+  FIN SI
+
+  EVOCA SPECULUM NIHIL webm AD CONIURA bytes_new(4)
+  OBSECRO bytes_set(webm, 0, 26)
+  OBSECRO bytes_set(webm, 1, 69)
+  OBSECRO bytes_set(webm, 2, 223)
+  OBSECRO bytes_set(webm, 3, 163)
+  SI NON CONIURA expect_type(CONIURA filetype_detect_bytes(webm, CONIURA bytes_len(webm)), "webm")
+    REDDE 2
+  FIN SI
+
+  EVOCA SPECULUM NIHIL avi AD CONIURA bytes_new(12)
+  OBSECRO bytes_set(avi, 0, 82)
+  OBSECRO bytes_set(avi, 1, 73)
+  OBSECRO bytes_set(avi, 2, 70)
+  OBSECRO bytes_set(avi, 3, 70)
+  OBSECRO bytes_set(avi, 8, 65)
+  OBSECRO bytes_set(avi, 9, 86)
+  OBSECRO bytes_set(avi, 10, 73)
+  OBSECRO bytes_set(avi, 11, 32)
+  SI NON CONIURA expect_type(CONIURA filetype_detect_bytes(avi, CONIURA bytes_len(avi)), "avi")
+    REDDE 3
+  FIN SI
+
+  EVOCA SPECULUM NIHIL mp3 AD CONIURA bytes_new(3)
+  OBSECRO bytes_set(mp3, 0, 73)
+  OBSECRO bytes_set(mp3, 1, 68)
+  OBSECRO bytes_set(mp3, 2, 51)
+  SI NON CONIURA expect_type(CONIURA filetype_detect_bytes(mp3, CONIURA bytes_len(mp3)), "mp3")
+    REDDE 4
+  FIN SI
+
+  EVOCA SPECULUM NIHIL ogg AD CONIURA bytes_new(4)
+  OBSECRO bytes_set(ogg, 0, 79)
+  OBSECRO bytes_set(ogg, 1, 103)
+  OBSECRO bytes_set(ogg, 2, 103)
+  OBSECRO bytes_set(ogg, 3, 83)
+  SI NON CONIURA expect_type(CONIURA filetype_detect_bytes(ogg, CONIURA bytes_len(ogg)), "ogg")
+    REDDE 5
+  FIN SI
+
+  EVOCA SPECULUM NIHIL wav AD CONIURA bytes_new(12)
+  OBSECRO bytes_set(wav, 0, 82)
+  OBSECRO bytes_set(wav, 1, 73)
+  OBSECRO bytes_set(wav, 2, 70)
+  OBSECRO bytes_set(wav, 3, 70)
+  OBSECRO bytes_set(wav, 8, 87)
+  OBSECRO bytes_set(wav, 9, 65)
+  OBSECRO bytes_set(wav, 10, 86)
+  OBSECRO bytes_set(wav, 11, 69)
+  SI NON CONIURA expect_type(CONIURA filetype_detect_bytes(wav, CONIURA bytes_len(wav)), "wav")
+    REDDE 6
+  FIN SI
+
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

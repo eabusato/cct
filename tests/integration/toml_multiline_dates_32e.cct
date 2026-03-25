@@ -1,0 +1,35 @@
+INCIPIT grimoire "toml_multiline_dates_32e"
+
+ADVOCARE "cct/date.cct"
+ADVOCARE "cct/option.cct"
+ADVOCARE "cct/toml.cct"
+ADVOCARE "cct/verbum.cct"
+
+RITUALE main() REDDE REX
+  EVOCA VERBUM src AD "message = \"\"\"linha 1\nlinha 2\"\"\"\nreleased_on = 2026-03-24\nreleased_at = 2026-03-24T18:30:00Z\n"
+  EVOCA TomlDocument doc AD CONIURA toml_parse(src)
+  SI NON CONIURA toml_is_valid(doc)
+    REDDE 1
+  FIN SI
+  EVOCA VERBUM msg AD CONIURA toml_get_string(doc, "message")
+  SI CONIURA len(msg) == 0
+    REDDE 2
+  FIN SI
+
+  SI CONIURA compare(msg, "linha 1\nlinha 2") != 0
+    REDDE 3
+  FIN SI
+
+  EVOCA Date released_on AD CONIURA toml_get_date(doc, "released_on")
+  EVOCA DateTime released_at AD CONIURA toml_get_datetime(doc, "released_at")
+  SI released_on.ano != 2026 VEL released_on.mes != 3 VEL released_on.dia != 24
+    REDDE 4
+  FIN SI
+  SI released_at.hora != 18 VEL released_at.minuto != 30 VEL released_at.offset_utc != 0
+    REDDE 5
+  FIN SI
+
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

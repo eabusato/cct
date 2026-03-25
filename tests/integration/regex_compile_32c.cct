@@ -1,0 +1,28 @@
+INCIPIT grimoire "regex_compile_32c"
+
+ADVOCARE "cct/regex.cct"
+ADVOCARE "cct/result.cct"
+ADVOCARE "cct/verbum.cct"
+
+RITUALE main() REDDE REX
+  EVOCA SPECULUM NIHIL ok_result AD CONIURA regex_compile("^[A-Z][a-z]+$")
+  SI CONIURA result_is_err GENUS(Regex, VERBUM)(ok_result)
+    REDDE 1
+  FIN SI
+
+  EVOCA Regex ok_rx AD CONIURA result_unwrap GENUS(Regex, VERBUM)(ok_result)
+  SI NON CONIURA regex_match(ok_rx, "Erick")
+    CONIURA regex_free(ok_rx)
+    REDDE 2
+  FIN SI
+  CONIURA regex_free(ok_rx)
+
+  EVOCA SPECULUM NIHIL err_result AD CONIURA regex_compile("[abc")
+  SI NON CONIURA result_is_err GENUS(Regex, VERBUM)(err_result)
+    REDDE 3
+  FIN SI
+
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

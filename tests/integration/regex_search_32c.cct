@@ -1,0 +1,43 @@
+INCIPIT grimoire "regex_search_32c"
+
+ADVOCARE "cct/option.cct"
+ADVOCARE "cct/regex.cct"
+ADVOCARE "cct/result.cct"
+ADVOCARE "cct/verbum.cct"
+
+RITUALE main() REDDE REX
+  EVOCA SPECULUM NIHIL compiled AD CONIURA regex_compile("Er[a-z]+")
+  SI CONIURA result_is_err GENUS(Regex, VERBUM)(compiled)
+    REDDE 1
+  FIN SI
+
+  EVOCA Regex rx AD CONIURA result_unwrap GENUS(Regex, VERBUM)(compiled)
+  EVOCA SPECULUM NIHIL found AD CONIURA regex_search(rx, "Luke Ermenegildo Busato")
+  EVOCA SPECULUM NIHIL missing AD CONIURA regex_search(rx, "Pandora Maria Busato")
+  EVOCA VERBUM found_text AD CONIURA regex_search_text(rx, "Luke Ermenegildo Busato")
+  CONIURA regex_free(rx)
+
+  SI CONIURA option_is_none GENUS(VERBUM)(found)
+    REDDE 2
+  FIN SI
+  SI NON CONIURA option_is_none GENUS(VERBUM)(missing)
+    REDDE 3
+  FIN SI
+
+  SI CONIURA compare(found_text, "Ermenegildo") != 0
+    REDDE 4
+  FIN SI
+
+  EVOCA SPECULUM NIHIL quick AD CONIURA regex_quick_search("CAT", "classe=CAT")
+  EVOCA VERBUM quick_text AD CONIURA regex_quick_search_text("CAT", "classe=CAT")
+  SI CONIURA option_is_none GENUS(VERBUM)(quick)
+    REDDE 5
+  FIN SI
+  SI CONIURA compare(quick_text, "CAT") != 0
+    REDDE 6
+  FIN SI
+
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

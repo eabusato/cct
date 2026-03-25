@@ -1,0 +1,24 @@
+INCIPIT grimoire "media_probe_invalid_32h"
+
+ADVOCARE "cct/media_probe.cct"
+ADVOCARE "cct/verbum.cct"
+
+RITUALE main() REDDE REX
+  EVOCA MediaProbe missing AD CONIURA media_probe("tests/integration/phase32h_assets/inexistente_32h.mp4")
+  SI missing.valido
+    REDDE 1
+  FIN SI
+
+  EVOCA MediaProbe invalid AD CONIURA media_probe("tests/integration/phase32h_assets/not_media_32h.txt")
+  SI invalid.valido
+    REDDE 2
+  FIN SI
+
+  SI CONIURA len(invalid.erro) == 0
+    REDDE 3
+  FIN SI
+
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

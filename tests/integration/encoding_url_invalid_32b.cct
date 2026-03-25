@@ -1,0 +1,18 @@
+INCIPIT grimoire "encoding_url_invalid_32b"
+
+ADVOCARE "cct/encoding.cct"
+ADVOCARE "cct/option.cct"
+
+RITUALE main() REDDE REX
+  EVOCA SPECULUM NIHIL tail_opt AD CONIURA url_decode("%")
+  EVOCA SPECULUM NIHIL bad_opt AD CONIURA url_decode("%G0")
+  SI NON CONIURA option_is_none GENUS(VERBUM)(tail_opt)
+    REDDE 1
+  FIN SI
+  SI NON CONIURA option_is_none GENUS(VERBUM)(bad_opt)
+    REDDE 1
+  FIN SI
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

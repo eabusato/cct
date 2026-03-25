@@ -1,0 +1,19 @@
+INCIPIT grimoire "filetype_unknown_32g"
+
+ADVOCARE "cct/bytes.cct"
+ADVOCARE "cct/filetype.cct"
+ADVOCARE "cct/verbum.cct"
+
+RITUALE main() REDDE REX
+  EVOCA SPECULUM NIHIL short_buf AD CONIURA bytes_new(1)
+  OBSECRO bytes_set(short_buf, 0, 65)
+  SI CONIURA compare(CONIURA filetype_to_string(CONIURA filetype_detect_bytes(short_buf, CONIURA bytes_len(short_buf))), "unknown") != 0
+    REDDE 1
+  FIN SI
+  SI CONIURA compare(CONIURA filetype_to_string(CONIURA filetype_detect("tests/integration/phase32g_assets/missing_32g.bin")), "unknown") != 0
+    REDDE 2
+  FIN SI
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

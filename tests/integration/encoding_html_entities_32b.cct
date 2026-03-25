@@ -1,0 +1,19 @@
+INCIPIT grimoire "encoding_html_entities_32b"
+
+ADVOCARE "cct/encoding.cct"
+ADVOCARE "cct/verbum.cct"
+
+RITUALE main() REDDE REX
+  EVOCA VERBUM original AD "<script>alert('XSS') & \"ok\"</script>"
+  EVOCA VERBUM encoded AD CONIURA html_encode(original)
+  EVOCA VERBUM decoded AD CONIURA html_decode(encoded)
+  SI CONIURA compare(encoded, "&lt;script&gt;alert(&#39;XSS&#39;) &amp; &quot;ok&quot;&lt;/script&gt;") != 0
+    REDDE 1
+  FIN SI
+  SI CONIURA compare(decoded, original) != 0
+    REDDE 1
+  FIN SI
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire
