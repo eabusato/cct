@@ -1,0 +1,13 @@
+INCIPIT grimoire "slug_default_wrapper_33d"
+
+ADVOCARE "cct/slug.cct"
+ADVOCARE "cct/verbum.cct"
+
+RITUALE main() REDDE REX
+  SI CONIURA compare(CONIURA slug_from_text_latin("Página Inicial"), "pagina-inicial") != 0
+    REDDE 1
+  FIN SI
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

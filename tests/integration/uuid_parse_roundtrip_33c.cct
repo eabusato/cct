@@ -1,0 +1,26 @@
+INCIPIT grimoire "uuid_parse_roundtrip_33c"
+
+ADVOCARE "cct/result.cct"
+ADVOCARE "cct/uuid.cct"
+ADVOCARE "cct/verbum.cct"
+
+RITUALE main() REDDE REX
+  EVOCA VERBUM source AD "018f1e42-7b8c-7abc-8def-0123456789ab"
+  EVOCA SPECULUM NIHIL parsed_result AD CONIURA uuid_parse(source)
+  SI CONIURA result_is_err GENUS(UUID, UUIDError)(parsed_result)
+    REDDE 1
+  FIN SI
+
+  EVOCA UUID parsed AD CONIURA result_unwrap GENUS(UUID, UUIDError)(parsed_result)
+  SI CONIURA compare(CONIURA uuid_to_string(parsed), source) != 0
+    REDDE 1
+  FIN SI
+
+  SI NON CONIURA uuid_validate(source)
+    REDDE 1
+  FIN SI
+
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

@@ -1,0 +1,16 @@
+INCIPIT grimoire "slug_symbols_33d"
+
+ADVOCARE "cct/slug.cct"
+ADVOCARE "cct/verbum.cct"
+
+RITUALE main() REDDE REX
+  SI CONIURA compare(CONIURA slug_from_text("  My Product (2024) !!! "), "my-product-2024") != 0
+    REDDE 1
+  FIN SI
+  SI CONIURA compare(CONIURA slug_from_text("---A__B***C---"), "a-b-c") != 0
+    REDDE 1
+  FIN SI
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

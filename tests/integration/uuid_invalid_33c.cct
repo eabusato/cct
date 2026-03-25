@@ -1,0 +1,31 @@
+INCIPIT grimoire "uuid_invalid_33c"
+
+ADVOCARE "cct/bytes.cct"
+ADVOCARE "cct/result.cct"
+ADVOCARE "cct/uuid.cct"
+
+RITUALE main() REDDE REX
+  EVOCA SPECULUM NIHIL bad_text AD CONIURA uuid_parse("not-a-uuid")
+  SI NON CONIURA result_is_err GENUS(UUID, UUIDError)(bad_text)
+    REDDE 1
+  FIN SI
+
+  EVOCA SPECULUM NIHIL bad_hex AD CONIURA uuid_parse("018f1e42-7b8c-7abc-8def-0123456789zz")
+  SI NON CONIURA result_is_err GENUS(UUID, UUIDError)(bad_hex)
+    REDDE 1
+  FIN SI
+
+  EVOCA SPECULUM NIHIL short_bytes AD CONIURA bytes_new(15)
+  EVOCA SPECULUM NIHIL bad_bytes AD CONIURA uuid_from_bytes(short_bytes)
+  SI NON CONIURA result_is_err GENUS(UUID, UUIDError)(bad_bytes)
+    REDDE 1
+  FIN SI
+
+  SI CONIURA uuid_validate("018f1e42-7b8c-7abc-8def-0123456789zz")
+    REDDE 1
+  FIN SI
+
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

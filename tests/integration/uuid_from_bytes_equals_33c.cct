@@ -1,0 +1,42 @@
+INCIPIT grimoire "uuid_from_bytes_equals_33c"
+
+ADVOCARE "cct/bytes.cct"
+ADVOCARE "cct/result.cct"
+ADVOCARE "cct/uuid.cct"
+
+RITUALE main() REDDE REX
+  EVOCA SPECULUM NIHIL raw AD CONIURA bytes_new(16)
+  EVOCA REX i AD 0
+  DUM i < 16
+    CONIURA bytes_set(raw, i, cast GENUS(MILES)(i))
+    VINCIRE i AD i + 1
+  FIN DUM
+
+  EVOCA SPECULUM NIHIL made_result AD CONIURA uuid_from_bytes(raw)
+  SI CONIURA result_is_err GENUS(UUID, UUIDError)(made_result)
+    REDDE 1
+  FIN SI
+
+  EVOCA UUID id AD CONIURA result_unwrap GENUS(UUID, UUIDError)(made_result)
+  EVOCA SPECULUM NIHIL copy AD CONIURA uuid_to_bytes(id)
+  SI CONIURA bytes_len(copy) != 16
+    REDDE 1
+  FIN SI
+  SI CONIURA bytes_get(copy, 0) != 0 VEL CONIURA bytes_get(copy, 15) != 15
+    REDDE 1
+  FIN SI
+
+  EVOCA SPECULUM NIHIL parsed_result AD CONIURA uuid_parse(CONIURA uuid_to_string(id))
+  SI CONIURA result_is_err GENUS(UUID, UUIDError)(parsed_result)
+    REDDE 1
+  FIN SI
+
+  EVOCA UUID reparsed AD CONIURA result_unwrap GENUS(UUID, UUIDError)(parsed_result)
+  SI NON CONIURA uuid_equals(id, reparsed)
+    REDDE 1
+  FIN SI
+
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

@@ -1,0 +1,25 @@
+INCIPIT grimoire "slug_unique_33d"
+
+ADVOCARE "cct/fluxus.cct"
+ADVOCARE "cct/slug.cct"
+ADVOCARE "cct/verbum.cct"
+
+RITUALE main() REDDE REX
+  EVOCA SPECULUM NIHIL existing AD CONIURA fluxus_init(MENSURA(VERBUM))
+  EVOCA VERBUM a AD "titulo"
+  EVOCA VERBUM b AD "titulo-2"
+  EVOCA VERBUM c AD "titulo-3"
+  CONIURA fluxus_push(existing, SPECULUM a)
+  CONIURA fluxus_push(existing, SPECULUM b)
+  CONIURA fluxus_push(existing, SPECULUM c)
+
+  SI CONIURA compare(CONIURA slug_ensure_unique("titulo", existing), "titulo-4") != 0
+    REDDE 1
+  FIN SI
+  SI CONIURA compare(CONIURA slug_ensure_unique("livre", existing), "livre") != 0
+    REDDE 1
+  FIN SI
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

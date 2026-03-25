@@ -3706,6 +3706,30 @@ static bool cg_emit_obsecro_expr(FILE *out, cct_codegen_t *cg, const cct_ast_nod
         return true;
     }
 
+    if (strcmp(name, "fluxus_contains_verbum") == 0) {
+        if (argc != 2) {
+            cg_report_node(cg, expr, "OBSECRO fluxus_contains_verbum expects exactly (flux, value) in FASE 33D");
+            return false;
+        }
+        cct_codegen_value_kind_t k0 = CCT_CODEGEN_VALUE_UNKNOWN;
+        cct_codegen_value_kind_t k1 = CCT_CODEGEN_VALUE_UNKNOWN;
+        fputs("cct_rt_fluxus_contains_verbum((void*)(", out);
+        if (!cg_emit_expr(out, cg, args->nodes[0], &k0)) return false;
+        if (k0 != CCT_CODEGEN_VALUE_POINTER) {
+            cg_report_node(cg, args->nodes[0], "OBSECRO fluxus_contains_verbum requires fluxus pointer as first argument in FASE 33D");
+            return false;
+        }
+        fputs("), ", out);
+        if (!cg_emit_expr(out, cg, args->nodes[1], &k1)) return false;
+        if (k1 != CCT_CODEGEN_VALUE_STRING) {
+            cg_report_node(cg, args->nodes[1], "OBSECRO fluxus_contains_verbum requires VERBUM value as second argument in FASE 33D");
+            return false;
+        }
+        fputs(")", out);
+        if (out_kind) *out_kind = CCT_CODEGEN_VALUE_BOOL;
+        return true;
+    }
+
     if (strcmp(name, "image_builtin_load") == 0) {
         if (argc != 1) {
             cg_report_node(cg, expr, "OBSECRO image_builtin_load expects exactly one VERBUM path argument in FASE 32I");

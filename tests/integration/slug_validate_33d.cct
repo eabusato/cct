@@ -1,0 +1,24 @@
+INCIPIT grimoire "slug_validate_33d"
+
+ADVOCARE "cct/slug.cct"
+
+RITUALE main() REDDE REX
+  SI NON CONIURA slug_is_valid("titulo-2024")
+    REDDE 1
+  FIN SI
+  SI CONIURA slug_is_valid("")
+    REDDE 1
+  FIN SI
+  SI CONIURA slug_is_valid("-invalido")
+    REDDE 1
+  FIN SI
+  SI CONIURA slug_is_valid("invalido-")
+    REDDE 1
+  FIN SI
+  SI CONIURA slug_is_valid("invalido!")
+    REDDE 1
+  FIN SI
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

@@ -1,0 +1,15 @@
+INCIPIT grimoire "uuid_default_wrapper_33c"
+
+ADVOCARE "cct/uuid.cct"
+ADVOCARE "cct/verbum.cct"
+
+RITUALE main() REDDE REX
+  EVOCA UUID id AD CONIURA uuid_v4()
+  EVOCA VERBUM text AD CONIURA uuid_to_string(id)
+  SI NON CONIURA uuid_validate(text)
+    REDDE 1
+  FIN SI
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

@@ -1,0 +1,27 @@
+INCIPIT grimoire "uuid_v4_format_33c"
+
+ADVOCARE "cct/uuid.cct"
+ADVOCARE "cct/verbum.cct"
+
+RITUALE main() REDDE REX
+  EVOCA UUID id AD CONIURA uuid_v4()
+  EVOCA VERBUM text AD CONIURA uuid_to_string(id)
+
+  SI CONIURA len(text) != 36
+    REDDE 1
+  FIN SI
+  SI CONIURA char_at(text, 8) != 45 VEL CONIURA char_at(text, 13) != 45 VEL CONIURA char_at(text, 18) != 45 VEL CONIURA char_at(text, 23) != 45
+    REDDE 1
+  FIN SI
+  SI CONIURA char_at(text, 14) != 52
+    REDDE 1
+  FIN SI
+  EVOCA MILES variant AD CONIURA char_at(text, 19)
+  SI variant != 56 ET variant != 57 ET variant != 97 ET variant != 98
+    REDDE 1
+  FIN SI
+
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

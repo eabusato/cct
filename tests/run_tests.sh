@@ -9756,6 +9756,130 @@ else
 fi
 fi
 
+if cct_phase_block_enabled "33C"; then
+echo ""
+echo "========================================"
+echo "FASE 33C: cct/uuid"
+echo "========================================"
+mkdir -p "$CCT_TMP_DIR/phase33c"
+
+# Test 1848: uuid v4 format
+echo "Test 1848: cct/uuid gera UUID v4 valido"
+BASE_1848="$CCT_TMP_DIR/phase33c/test_1848_uuid_v4"
+if [ "$RC_31_READY" -eq 0 ] && cct_phase32_copy_compile_and_run "$PHASE31_HOST_WRAPPER" "tests/integration/uuid_v4_format_33c.cct" "$BASE_1848" 0; then
+    test_pass "cct/uuid gera UUID v4 valido"
+else
+    test_fail "cct/uuid regrediu UUID v4"
+fi
+
+# Test 1849: uuid v7 format
+echo "Test 1849: cct/uuid gera UUID v7 valido"
+BASE_1849="$CCT_TMP_DIR/phase33c/test_1849_uuid_v7"
+if [ "$RC_31_READY" -eq 0 ] && cct_phase32_copy_compile_and_run "$PHASE31_HOST_WRAPPER" "tests/integration/uuid_v7_format_33c.cct" "$BASE_1849" 0; then
+    test_pass "cct/uuid gera UUID v7 valido"
+else
+    test_fail "cct/uuid regrediu UUID v7"
+fi
+
+# Test 1850: parse roundtrip
+echo "Test 1850: cct/uuid preserva parse e stringify"
+BASE_1850="$CCT_TMP_DIR/phase33c/test_1850_uuid_parse"
+if [ "$RC_31_READY" -eq 0 ] && cct_phase32_copy_compile_and_run "$PHASE31_HOST_WRAPPER" "tests/integration/uuid_parse_roundtrip_33c.cct" "$BASE_1850" 0; then
+    test_pass "cct/uuid preserva parse e stringify"
+else
+    test_fail "cct/uuid regrediu parse/stringify"
+fi
+
+# Test 1851: bytes conversion
+echo "Test 1851: cct/uuid preserva conversao de bytes"
+BASE_1851="$CCT_TMP_DIR/phase33c/test_1851_uuid_bytes"
+if [ "$RC_31_READY" -eq 0 ] && cct_phase32_copy_compile_and_run "$PHASE31_HOST_WRAPPER" "tests/integration/uuid_from_bytes_equals_33c.cct" "$BASE_1851" 0; then
+    test_pass "cct/uuid preserva conversao de bytes"
+else
+    test_fail "cct/uuid regrediu conversao de bytes"
+fi
+
+# Test 1852: invalid input
+echo "Test 1852: cct/uuid rejeita entradas invalidas"
+BASE_1852="$CCT_TMP_DIR/phase33c/test_1852_uuid_invalid"
+if [ "$RC_31_READY" -eq 0 ] && cct_phase32_copy_compile_and_run "$PHASE31_HOST_WRAPPER" "tests/integration/uuid_invalid_33c.cct" "$BASE_1852" 0; then
+    test_pass "cct/uuid rejeita entradas invalidas"
+else
+    test_fail "cct/uuid regrediu validacao"
+fi
+
+# Test 1853: default wrapper / promoted compiler
+echo "Test 1853: ./cct promovido executa uuid source-backed"
+BASE_1853="$CCT_TMP_DIR/phase33c/test_1853_default_wrapper_uuid"
+if [ "$RC_31_READY" -eq 0 ] && make bootstrap-promote >"$PHASE31_LOG_DIR/test_1853.stdout.log" 2>"$PHASE31_LOG_DIR/test_1853.stderr.log" && cct_phase32_copy_compile_and_run "$PHASE31_DEFAULT_WRAPPER" "tests/integration/uuid_default_wrapper_33c.cct" "$BASE_1853" 0; then
+    test_pass "./cct promovido executa uuid source-backed"
+else
+    test_fail "./cct promovido nao executou uuid source-backed"
+fi
+fi
+
+if cct_phase_block_enabled "33D"; then
+echo ""
+echo "========================================"
+echo "FASE 33D: cct/slug"
+echo "========================================"
+mkdir -p "$CCT_TMP_DIR/phase33d"
+
+# Test 1854: basic slugify
+echo "Test 1854: cct/slug preserva slugify basico"
+BASE_1854="$CCT_TMP_DIR/phase33d/test_1854_slug_basic"
+if [ "$RC_31_READY" -eq 0 ] && cct_phase32_copy_compile_and_run "$PHASE31_HOST_WRAPPER" "tests/integration/slug_basic_33d.cct" "$BASE_1854" 0; then
+    test_pass "cct/slug preserva slugify basico"
+else
+    test_fail "cct/slug regrediu slugify basico"
+fi
+
+# Test 1855: symbols collapse
+echo "Test 1855: cct/slug colapsa separadores e simbolos"
+BASE_1855="$CCT_TMP_DIR/phase33d/test_1855_slug_symbols"
+if [ "$RC_31_READY" -eq 0 ] && cct_phase32_copy_compile_and_run "$PHASE31_HOST_WRAPPER" "tests/integration/slug_symbols_33d.cct" "$BASE_1855" 0; then
+    test_pass "cct/slug colapsa separadores e simbolos"
+else
+    test_fail "cct/slug regrediu colapso de separadores"
+fi
+
+# Test 1856: latin transliteration
+echo "Test 1856: cct/slug translitera Latin basico"
+BASE_1856="$CCT_TMP_DIR/phase33d/test_1856_slug_latin"
+if [ "$RC_31_READY" -eq 0 ] && cct_phase32_copy_compile_and_run "$PHASE31_HOST_WRAPPER" "tests/integration/slug_latin_33d.cct" "$BASE_1856" 0; then
+    test_pass "cct/slug translitera Latin basico"
+else
+    test_fail "cct/slug regrediu transliteracao Latin"
+fi
+
+# Test 1857: uniqueness
+echo "Test 1857: cct/slug garante unicidade incremental"
+BASE_1857="$CCT_TMP_DIR/phase33d/test_1857_slug_unique"
+if [ "$RC_31_READY" -eq 0 ] && cct_phase32_copy_compile_and_run "$PHASE31_HOST_WRAPPER" "tests/integration/slug_unique_33d.cct" "$BASE_1857" 0; then
+    test_pass "cct/slug garante unicidade incremental"
+else
+    test_fail "cct/slug regrediu unicidade incremental"
+fi
+
+# Test 1858: validation
+echo "Test 1858: cct/slug valida formato canonico"
+BASE_1858="$CCT_TMP_DIR/phase33d/test_1858_slug_validate"
+if [ "$RC_31_READY" -eq 0 ] && cct_phase32_copy_compile_and_run "$PHASE31_HOST_WRAPPER" "tests/integration/slug_validate_33d.cct" "$BASE_1858" 0; then
+    test_pass "cct/slug valida formato canonico"
+else
+    test_fail "cct/slug regrediu validacao"
+fi
+
+# Test 1859: default wrapper / promoted compiler
+echo "Test 1859: ./cct promovido executa slug source-backed"
+BASE_1859="$CCT_TMP_DIR/phase33d/test_1859_default_wrapper_slug"
+if [ "$RC_31_READY" -eq 0 ] && make bootstrap-promote >"$PHASE31_LOG_DIR/test_1859.stdout.log" 2>"$PHASE31_LOG_DIR/test_1859.stderr.log" && cct_phase32_copy_compile_and_run "$PHASE31_DEFAULT_WRAPPER" "tests/integration/slug_default_wrapper_33d.cct" "$BASE_1859" 0; then
+    test_pass "./cct promovido executa slug source-backed"
+else
+    test_fail "./cct promovido nao executou slug source-backed"
+fi
+fi
+
 fi
 echo "Test Results:"
 echo -e "  ${GREEN}Passed:${NC} $TESTS_PASSED" >&3

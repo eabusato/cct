@@ -1,0 +1,16 @@
+INCIPIT grimoire "slug_latin_33d"
+
+ADVOCARE "cct/slug.cct"
+ADVOCARE "cct/verbum.cct"
+
+RITUALE main() REDDE REX
+  SI CONIURA compare(CONIURA slug_from_text_latin("Olá São João"), "ola-sao-joao") != 0
+    REDDE 1
+  FIN SI
+  SI CONIURA compare(CONIURA slug_from_text_latin("Ção Ñ"), "cao-n") != 0
+    REDDE 1
+  FIN SI
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

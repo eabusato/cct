@@ -392,6 +392,19 @@ bool cct_runtime_emit_c_helpers(FILE *out, const cct_runtime_codegen_config_t *c
             fputs("    return 0LL;\n", out);
             fputs("}\n\n", out);
 
+            fputs("static long long cct_rt_fluxus_contains_verbum(void *flux_ptr, const char *value) {\n", out);
+            fputs("    cct_rt_fluxus_require(flux_ptr, \"fluxus contains_verbum received null instance\");\n", out);
+            fputs("    cct_rt_fluxus_t *flux = (cct_rt_fluxus_t*)flux_ptr;\n", out);
+            fputs("    if (flux->elem_size != (long long)sizeof(char*)) cct_rt_fail(\"fluxus contains_verbum requer elem_size == sizeof(char*)\");\n", out);
+            fputs("    const char *needle = value ? value : \"\";\n", out);
+            fputs("    for (long long i = 0; i < flux->len; i++) {\n", out);
+            fputs("        char **slot = (char**)(((unsigned char*)flux->data) + ((size_t)i * sizeof(char*)));\n", out);
+            fputs("        const char *item = (slot && *slot) ? *slot : \"\";\n", out);
+            fputs("        if (strcmp(item, needle) == 0) return 1LL;\n", out);
+            fputs("    }\n", out);
+            fputs("    return 0LL;\n", out);
+            fputs("}\n\n", out);
+
             fputs("static void cct_rt_fluxus_reverse(void *flux_ptr) {\n", out);
             fputs("    cct_rt_fluxus_require(flux_ptr, \"fluxus reverse received null instance\");\n", out);
             fputs("    cct_rt_fluxus_t *flux = (cct_rt_fluxus_t*)flux_ptr;\n", out);

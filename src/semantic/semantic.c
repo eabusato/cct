@@ -1804,6 +1804,7 @@ static const cct_sem_builtin_spec_t* sem_find_builtin(cct_semantic_analyzer_t *s
         specs[378].name = "image_builtin_get_channels"; specs[378].min_args = 1; specs[378].variadic = false;
         specs[379].name = "image_builtin_get_format"; specs[379].min_args = 1; specs[379].variadic = false;
         specs[380].name = "image_builtin_last_error"; specs[380].min_args = 0; specs[380].variadic = false;
+        specs[381].name = "fluxus_contains_verbum"; specs[381].min_args = 2; specs[381].variadic = false;
         initialized = true;
     }
 
@@ -2188,6 +2189,7 @@ static const cct_sem_builtin_spec_t* sem_find_builtin(cct_semantic_analyzer_t *s
     specs[378].return_type = &sem->type_rex;
     specs[379].return_type = &sem->type_rex;
     specs[380].return_type = &sem->type_verbum;
+    specs[381].return_type = &sem->type_verum;
 
     for (size_t i = 0; i < sizeof(specs) / sizeof(specs[0]); i++) {
         if (!specs[i].name) continue;
@@ -3605,6 +3607,18 @@ static cct_sem_type_t* sem_analyze_builtin_obsecro(
             !(sem_is_integer_type(arg_type) || sem_is_error_type(arg_type))) {
             sem_report_nodef(sem, expr->as.obsecro.arguments->nodes[i],
                              "OBSECRO filetype_builtin_detect_bytes expects integer length as second argument");
+        }
+        if (strcmp(name, "fluxus_contains_verbum") == 0 &&
+            i == 0 &&
+            !(arg_type && (arg_type->kind == CCT_SEM_TYPE_POINTER || sem_is_error_type(arg_type)))) {
+            sem_report_nodef(sem, expr->as.obsecro.arguments->nodes[i],
+                             "OBSECRO fluxus_contains_verbum expects fluxus handle pointer as first argument");
+        }
+        if (strcmp(name, "fluxus_contains_verbum") == 0 &&
+            i == 1 &&
+            !(arg_type && (arg_type->kind == CCT_SEM_TYPE_VERBUM || sem_is_error_type(arg_type)))) {
+            sem_report_nodef(sem, expr->as.obsecro.arguments->nodes[i],
+                             "OBSECRO fluxus_contains_verbum expects VERBUM candidate as second argument");
         }
         if ((strcmp(name, "image_builtin_load") == 0 || strcmp(name, "image_builtin_last_error") == 0) &&
             i == 0 &&

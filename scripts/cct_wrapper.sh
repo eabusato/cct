@@ -306,6 +306,12 @@ should_dispatch_compile_to_host() {
   if grep -Eq 'ADVOCARE[[:space:]]+"cct/image_ops\.cct"' "$input"; then
     return 0
   fi
+  if grep -Eq 'ADVOCARE[[:space:]]+"cct/uuid\.cct"' "$input"; then
+    return 0
+  fi
+  if grep -Eq 'ADVOCARE[[:space:]]+"cct/slug\.cct"' "$input"; then
+    return 0
+  fi
   return 1
 }
 
