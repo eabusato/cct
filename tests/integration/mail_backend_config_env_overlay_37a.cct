@@ -1,0 +1,56 @@
+INCIPIT grimoire "mail_backend_config_env_overlay_37a"
+
+ADVOCARE "cct/config.cct"
+ADVOCARE "cct/mail.cct"
+ADVOCARE "cct/verbum.cct"
+
+RITUALE mail_auth_from_text(VERBUM raw) REDDE MailAuthKind
+  EVOCA VERBUM auth AD CONIURA to_lower(CONIURA trim(raw))
+  SI CONIURA compare(auth, "plain") == 0
+    REDDE MAIL_AUTH_PLAIN
+  FIN SI
+  SI CONIURA compare(auth, "none") == 0
+    REDDE MAIL_AUTH_NONE
+  FIN SI
+  SI CONIURA compare(auth, "xoauth2") == 0
+    REDDE MAIL_AUTH_XOAUTH2
+  FIN SI
+  REDDE MAIL_AUTH_LOGIN
+EXPLICIT RITUALE
+
+RITUALE main() REDDE REX
+  EVOCA VERBUM src AD "[mail]"
+  VINCIRE src AD CONIURA concat(src, "\nbackend=smtp")
+  VINCIRE src AD CONIURA concat(src, "\nhost=smtp.base.local")
+  VINCIRE src AD CONIURA concat(src, "\nport=25")
+  VINCIRE src AD CONIURA concat(src, "\nauth=plain")
+  VINCIRE src AD CONIURA concat(src, "\nstarttls=false")
+
+  EVOCA SPECULUM NIHIL cfg AD CONIURA config_parse_ini(src)
+  CONIURA config_apply_env_prefix(cfg, "APP")
+
+  EVOCA MailBackendOptions options AD CONIURA mail_backend_smtp(
+    CONIURA config_get_or(cfg, "mail", "host", ""),
+    CONIURA config_get_int(cfg, "mail", "port"),
+    CONIURA config_get_or(cfg, "mail", "username", ""),
+    CONIURA config_get_or(cfg, "mail", "password", ""),
+    CONIURA mail_auth_from_text(CONIURA config_get_or(cfg, "mail", "auth", "login")),
+    CONIURA config_get_bool(cfg, "mail", "starttls")
+  )
+
+  SI CONIURA compare(options.host, "smtp.override.local") != 0
+    REDDE 1
+  FIN SI
+  SI options.port != 2525
+    REDDE 2
+  FIN SI
+  SI options.auth_kind != MAIL_AUTH_LOGIN
+    REDDE 3
+  FIN SI
+  SI options.use_starttls == FALSUM
+    REDDE 4
+  FIN SI
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

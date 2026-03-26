@@ -1,0 +1,60 @@
+INCIPIT grimoire "mail_backend_config_smtp_37a"
+
+ADVOCARE "cct/config.cct"
+ADVOCARE "cct/mail.cct"
+ADVOCARE "cct/verbum.cct"
+
+RITUALE mail_auth_from_text(VERBUM raw) REDDE MailAuthKind
+  EVOCA VERBUM auth AD CONIURA to_lower(CONIURA trim(raw))
+  SI CONIURA compare(auth, "plain") == 0
+    REDDE MAIL_AUTH_PLAIN
+  FIN SI
+  SI CONIURA compare(auth, "none") == 0
+    REDDE MAIL_AUTH_NONE
+  FIN SI
+  SI CONIURA compare(auth, "xoauth2") == 0
+    REDDE MAIL_AUTH_XOAUTH2
+  FIN SI
+  REDDE MAIL_AUTH_LOGIN
+EXPLICIT RITUALE
+
+RITUALE main() REDDE REX
+  EVOCA VERBUM src AD "[mail]"
+  VINCIRE src AD CONIURA concat(src, "\nbackend=smtp")
+  VINCIRE src AD CONIURA concat(src, "\nhost=smtp.example.com")
+  VINCIRE src AD CONIURA concat(src, "\nport=465")
+  VINCIRE src AD CONIURA concat(src, "\nusername=mailer@example.com")
+  VINCIRE src AD CONIURA concat(src, "\npassword=secret")
+  VINCIRE src AD CONIURA concat(src, "\nauth=xoauth2")
+  VINCIRE src AD CONIURA concat(src, "\nsmtps=true")
+
+  EVOCA SPECULUM NIHIL cfg AD CONIURA config_parse_ini(src)
+  EVOCA MailBackendOptions options AD CONIURA mail_backend_smtp(
+    CONIURA config_get_or(cfg, "mail", "host", ""),
+    CONIURA config_get_int(cfg, "mail", "port"),
+    CONIURA config_get_or(cfg, "mail", "username", ""),
+    CONIURA config_get_or(cfg, "mail", "password", ""),
+    CONIURA mail_auth_from_text(CONIURA config_get_or(cfg, "mail", "auth", "login")),
+    FALSUM
+  )
+  VINCIRE options.use_smtps AD CONIURA config_get_bool(cfg, "mail", "smtps")
+
+  SI options.kind != MAIL_BACKEND_SMTP
+    REDDE 1
+  FIN SI
+  SI CONIURA compare(options.host, "smtp.example.com") != 0
+    REDDE 2
+  FIN SI
+  SI options.port != 465
+    REDDE 3
+  FIN SI
+  SI options.auth_kind != MAIL_AUTH_XOAUTH2
+    REDDE 4
+  FIN SI
+  SI options.use_smtps == FALSUM
+    REDDE 5
+  FIN SI
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

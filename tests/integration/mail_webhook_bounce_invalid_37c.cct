@@ -1,0 +1,31 @@
+INCIPIT grimoire "mail_webhook_bounce_invalid_37c"
+
+ADVOCARE "cct/fluxus.cct"
+ADVOCARE "cct/mail_webhook.cct"
+ADVOCARE "cct/result.cct"
+ADVOCARE "cct/verbum.cct"
+
+RITUALE main() REDDE REX
+  EVOCA VERBUM payload AD "{\"event\":\"bounced\",\"message_id\":\"<xyz@cct.mail>\",\"recipient\":\"bad@example.com\",\"reason\":\"550 user unknown\",\"timestamp\":1700000001}"
+  EVOCA SPECULUM NIHIL parsed AD CONIURA mail_webhook_parse("generic", payload)
+  SI CONIURA result_is_err GENUS(MailWebhookEventBatch, VERBUM)(parsed)
+    REDDE 1
+  FIN SI
+  EVOCA MailWebhookEventBatch batch AD CONIURA result_unwrap GENUS(MailWebhookEventBatch, VERBUM)(parsed)
+  EVOCA SPECULUM MailWebhookEvent event_ptr AD CONIURA fluxus_get(batch.events, 0)
+  SI (*event_ptr).event_kind != MAIL_WEBHOOK_BOUNCED
+    REDDE 2
+  FIN SI
+  SI CONIURA compare((*event_ptr).reason, "550 user unknown") != 0
+    REDDE 3
+  FIN SI
+  SI NON CONIURA result_is_err GENUS(MailWebhookEventBatch, VERBUM)(CONIURA mail_webhook_parse("generic", ""))
+    REDDE 4
+  FIN SI
+  SI NON CONIURA result_is_err GENUS(MailWebhookEventBatch, VERBUM)(CONIURA mail_webhook_parse("generic", "nao-e-json"))
+    REDDE 5
+  FIN SI
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

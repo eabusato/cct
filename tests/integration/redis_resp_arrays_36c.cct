@@ -1,0 +1,39 @@
+INCIPIT grimoire "redis_resp_arrays_36c"
+
+ADVOCARE "cct/redis.cct"
+ADVOCARE "cct/verbum.cct"
+
+RITUALE main() REDDE REX
+  EVOCA VERBUM crlf AD CONIURA redis_crlf()
+  EVOCA VERBUM raw AD "*3"
+  VINCIRE raw AD CONIURA concat(raw, crlf)
+  VINCIRE raw AD CONIURA concat(raw, "$3")
+  VINCIRE raw AD CONIURA concat(raw, crlf)
+  VINCIRE raw AD CONIURA concat(raw, "foo")
+  VINCIRE raw AD CONIURA concat(raw, crlf)
+  VINCIRE raw AD CONIURA concat(raw, ":7")
+  VINCIRE raw AD CONIURA concat(raw, crlf)
+  VINCIRE raw AD CONIURA concat(raw, "$-1")
+  VINCIRE raw AD CONIURA concat(raw, crlf)
+
+  EVOCA RedisValue value AD CONIURA redis_resp_parse(raw)
+  SI value.kind != REDIS_ARRAY VEL CONIURA redis_array_len(value) != 3
+    REDDE 1
+  FIN SI
+
+  SI CONIURA compare(CONIURA redis_value_to_text(CONIURA redis_array_get(value, 0)), "foo") != 0
+    REDDE 2
+  FIN SI
+  EVOCA RedisValue second AD CONIURA redis_array_get(value, 1)
+  SI second.int_value != 7
+    REDDE 3
+  FIN SI
+  EVOCA RedisValue third AD CONIURA redis_array_get(value, 2)
+  SI third.kind != REDIS_NULL
+    REDDE 4
+  FIN SI
+
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

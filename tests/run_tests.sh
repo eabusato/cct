@@ -574,6 +574,36 @@ cct_phase32_copy_compile_and_run() {
     return 0
 }
 
+cct_phase32_copy_compile_and_run_args() {
+    local compiler_bin="$1"
+    local src="$2"
+    local out_base="$3"
+    local expected_rc="$4"
+    shift 4
+
+    cp "$src" "$out_base.cct" || return 11
+    "$compiler_bin" "$out_base.cct" >"$out_base.compile.out" 2>"$out_base.compile.err" || return 12
+    "$out_base" "$@" >"$out_base.run.out" 2>"$out_base.run.err"
+    local rc=$?
+    [ "$rc" -eq "$expected_rc" ] || return 13
+    return 0
+}
+
+cct_phase32_copy_compile_and_run_env() {
+    local compiler_bin="$1"
+    local src="$2"
+    local out_base="$3"
+    local expected_rc="$4"
+    shift 4
+
+    cp "$src" "$out_base.cct" || return 11
+    "$compiler_bin" "$out_base.cct" >"$out_base.compile.out" 2>"$out_base.compile.err" || return 12
+    env "$@" "$out_base" >"$out_base.run.out" 2>"$out_base.run.err"
+    local rc=$?
+    [ "$rc" -eq "$expected_rc" ] || return 13
+    return 0
+}
+
 resolve_doc_path() {
     local rel="$1"
     if [ -f "$rel" ]; then
@@ -10653,6 +10683,603 @@ if [ "$RC_31_READY" -eq 0 ] && make bootstrap-promote >"$PHASE31_LOG_DIR/test_19
     test_pass "./cct promovido preserva merge de manifesto"
 else
     test_fail "./cct promovido nao preservou merge de manifesto"
+fi
+fi
+
+if cct_phase_block_enabled "36A"; then
+echo ""
+echo "========================================"
+echo "FASE 36A: cct/db_postgres"
+echo "========================================"
+cct_phase31_prepare >/dev/null 2>&1
+mkdir -p "$CCT_TMP_DIR/phase36a"
+
+# Test 1933: SQL render
+echo "Test 1933: cct/db_postgres renderiza SQL parametrizado"
+BASE_1933="$CCT_TMP_DIR/phase36a/test_1933_sql_render"
+if [ "$RC_31_READY" -eq 0 ] && cct_phase32_copy_compile_and_run "$PHASE31_HOST_WRAPPER" "tests/integration/db_postgres_sql_render_36a.cct" "$BASE_1933" 0; then
+    test_pass "cct/db_postgres renderiza SQL parametrizado"
+else
+    test_fail "cct/db_postgres regrediu renderizacao SQL"
+fi
+
+# Test 1934: quoting and value typing
+echo "Test 1934: cct/db_postgres quoting e tipos SQL preservam contrato"
+BASE_1934="$CCT_TMP_DIR/phase36a/test_1934_quote_types"
+if [ "$RC_31_READY" -eq 0 ] && cct_phase32_copy_compile_and_run "$PHASE31_HOST_WRAPPER" "tests/integration/db_postgres_quote_types_36a.cct" "$BASE_1934" 0; then
+    test_pass "cct/db_postgres quoting e tipos SQL preservam contrato"
+else
+    test_fail "cct/db_postgres regrediu quoting/tipos SQL"
+fi
+
+# Test 1935: prepared statement binding
+echo "Test 1935: cct/db_postgres bindings de statement preservam SQL final"
+BASE_1935="$CCT_TMP_DIR/phase36a/test_1935_stmt_bind"
+if [ "$RC_31_READY" -eq 0 ] && cct_phase32_copy_compile_and_run "$PHASE31_HOST_WRAPPER" "tests/integration/db_postgres_stmt_bind_36a.cct" "$BASE_1935" 0; then
+    test_pass "cct/db_postgres bindings de statement preservam SQL final"
+else
+    test_fail "cct/db_postgres regrediu bindings de statement"
+fi
+
+# Test 1936: closed connection helpers
+echo "Test 1936: cct/db_postgres protege helpers em conexao fechada"
+BASE_1936="$CCT_TMP_DIR/phase36a/test_1936_closed_helpers"
+if [ "$RC_31_READY" -eq 0 ] && cct_phase32_copy_compile_and_run "$PHASE31_HOST_WRAPPER" "tests/integration/db_postgres_closed_helpers_36a.cct" "$BASE_1936" 0; then
+    test_pass "cct/db_postgres protege helpers em conexao fechada"
+else
+    test_fail "cct/db_postgres regrediu helpers em conexao fechada"
+fi
+
+# Test 1937: closed statement exec
+echo "Test 1937: cct/db_postgres rejeita execucao de statement fechado"
+BASE_1937="$CCT_TMP_DIR/phase36a/test_1937_stmt_closed"
+if [ "$RC_31_READY" -eq 0 ] && cct_phase32_copy_compile_and_run "$PHASE31_HOST_WRAPPER" "tests/integration/db_postgres_stmt_closed_36a.cct" "$BASE_1937" 0; then
+    test_pass "cct/db_postgres rejeita execucao de statement fechado"
+else
+    test_fail "cct/db_postgres nao rejeitou statement fechado"
+fi
+
+# Test 1938: freestanding reject
+echo "Test 1938: cct/db_postgres rejeita perfil freestanding"
+if [ "$RC_31_READY" -eq 0 ] && ! "$PHASE31_HOST_WRAPPER" --profile freestanding --check "tests/integration/db_postgres_freestanding_reject_36a.cct" >"$CCT_TMP_DIR/phase36a/test_1938.out" 2>&1 && \
+   rg -q "módulo 'cct/db_postgres' não disponível em perfil freestanding" "$CCT_TMP_DIR/phase36a/test_1938.out"; then
+    test_pass "cct/db_postgres rejeita perfil freestanding"
+else
+    test_fail "cct/db_postgres nao rejeitou perfil freestanding"
+fi
+fi
+
+if cct_phase_block_enabled "36B"; then
+echo ""
+echo "========================================"
+echo "FASE 36B: cct/db_postgres_search"
+echo "========================================"
+cct_phase31_prepare >/dev/null 2>&1
+mkdir -p "$CCT_TMP_DIR/phase36b"
+
+echo "Test 1939: cct/db_postgres_search valida configuracoes canonicas"
+BASE_1939="$CCT_TMP_DIR/phase36b/test_1939_config"
+if [ "$RC_31_READY" -eq 0 ] && cct_phase32_copy_compile_and_run "$PHASE31_HOST_WRAPPER" "tests/integration/db_postgres_search_config_36b.cct" "$BASE_1939" 0; then
+    test_pass "cct/db_postgres_search valida configuracoes canonicas"
+else
+    test_fail "cct/db_postgres_search regrediu configuracoes"
+fi
+
+echo "Test 1940: cct/db_postgres_search gera documento vetorial ponderado"
+BASE_1940="$CCT_TMP_DIR/phase36b/test_1940_document"
+if [ "$RC_31_READY" -eq 0 ] && cct_phase32_copy_compile_and_run "$PHASE31_HOST_WRAPPER" "tests/integration/db_postgres_search_document_36b.cct" "$BASE_1940" 0; then
+    test_pass "cct/db_postgres_search gera documento vetorial ponderado"
+else
+    test_fail "cct/db_postgres_search regrediu documento vetorial"
+fi
+
+echo "Test 1941: cct/db_postgres_search gera query match e rank canonicos"
+BASE_1941="$CCT_TMP_DIR/phase36b/test_1941_query_rank"
+if [ "$RC_31_READY" -eq 0 ] && cct_phase32_copy_compile_and_run "$PHASE31_HOST_WRAPPER" "tests/integration/db_postgres_search_query_rank_36b.cct" "$BASE_1941" 0; then
+    test_pass "cct/db_postgres_search gera query match e rank canonicos"
+else
+    test_fail "cct/db_postgres_search regrediu query/match/rank"
+fi
+
+echo "Test 1942: cct/db_postgres_search gera headline e DDL de indice"
+BASE_1942="$CCT_TMP_DIR/phase36b/test_1942_headline_index"
+if [ "$RC_31_READY" -eq 0 ] && cct_phase32_copy_compile_and_run "$PHASE31_HOST_WRAPPER" "tests/integration/db_postgres_search_headline_index_36b.cct" "$BASE_1942" 0; then
+    test_pass "cct/db_postgres_search gera headline e DDL de indice"
+else
+    test_fail "cct/db_postgres_search regrediu headline/DDL"
+fi
+
+echo "Test 1943: cct/db_postgres_search valida documento invalido"
+BASE_1943="$CCT_TMP_DIR/phase36b/test_1943_validation"
+if [ "$RC_31_READY" -eq 0 ] && cct_phase32_copy_compile_and_run "$PHASE31_HOST_WRAPPER" "tests/integration/db_postgres_search_validation_36b.cct" "$BASE_1943" 0; then
+    test_pass "cct/db_postgres_search valida documento invalido"
+else
+    test_fail "cct/db_postgres_search nao validou documento invalido"
+fi
+
+echo "Test 1944: cct/db_postgres_search rejeita perfil freestanding"
+if [ "$RC_31_READY" -eq 0 ] && ! "$PHASE31_HOST_WRAPPER" --profile freestanding --check "tests/integration/db_postgres_search_freestanding_reject_36b.cct" >"$CCT_TMP_DIR/phase36b/test_1944.out" 2>&1 && \
+   rg -q "módulo 'cct/db_postgres_search' não disponível em perfil freestanding" "$CCT_TMP_DIR/phase36b/test_1944.out"; then
+    test_pass "cct/db_postgres_search rejeita perfil freestanding"
+else
+    test_fail "cct/db_postgres_search nao rejeitou perfil freestanding"
+fi
+fi
+
+if cct_phase_block_enabled "36C"; then
+echo ""
+echo "========================================"
+echo "FASE 36C: cct/redis"
+echo "========================================"
+cct_phase31_prepare >/dev/null 2>&1
+mkdir -p "$CCT_TMP_DIR/phase36c"
+
+echo "Test 1945: cct/redis faz parse de DSN canonica"
+BASE_1945="$CCT_TMP_DIR/phase36c/test_1945_dsn"
+if [ "$RC_31_READY" -eq 0 ] && cct_phase32_copy_compile_and_run "$PHASE31_HOST_WRAPPER" "tests/integration/redis_dsn_parse_36c.cct" "$BASE_1945" 0; then
+    test_pass "cct/redis faz parse de DSN canonica"
+else
+    test_fail "cct/redis regrediu parse de DSN"
+fi
+
+echo "Test 1946: cct/redis parseia respostas RESP escalares"
+BASE_1946="$CCT_TMP_DIR/phase36c/test_1946_resp_scalars"
+if [ "$RC_31_READY" -eq 0 ] && cct_phase32_copy_compile_and_run "$PHASE31_HOST_WRAPPER" "tests/integration/redis_resp_scalars_36c.cct" "$BASE_1946" 0; then
+    test_pass "cct/redis parseia respostas RESP escalares"
+else
+    test_fail "cct/redis regrediu parse RESP escalar"
+fi
+
+echo "Test 1947: cct/redis parseia arrays RESP"
+BASE_1947="$CCT_TMP_DIR/phase36c/test_1947_resp_arrays"
+if [ "$RC_31_READY" -eq 0 ] && cct_phase32_copy_compile_and_run "$PHASE31_HOST_WRAPPER" "tests/integration/redis_resp_arrays_36c.cct" "$BASE_1947" 0; then
+    test_pass "cct/redis parseia arrays RESP"
+else
+    test_fail "cct/redis regrediu parse RESP de arrays"
+fi
+
+echo "Test 1948: cct/redis serializa wire protocol canonicamente"
+BASE_1948="$CCT_TMP_DIR/phase36c/test_1948_wire"
+if [ "$RC_31_READY" -eq 0 ] && cct_phase32_copy_compile_and_run "$PHASE31_HOST_WRAPPER" "tests/integration/redis_wire_builders_36c.cct" "$BASE_1948" 0; then
+    test_pass "cct/redis serializa wire protocol canonicamente"
+else
+    test_fail "cct/redis regrediu serializacao RESP"
+fi
+
+echo "Test 1949: cct/redis wrappers e erros de conexao fechada preservam contrato"
+BASE_1949="$CCT_TMP_DIR/phase36c/test_1949_wrappers_closed"
+if [ "$RC_31_READY" -eq 0 ] && cct_phase32_copy_compile_and_run "$PHASE31_HOST_WRAPPER" "tests/integration/redis_wrappers_closed_36c.cct" "$BASE_1949" 0; then
+    test_pass "cct/redis wrappers e erros de conexao fechada preservam contrato"
+else
+    test_fail "cct/redis regrediu wrappers/erros de conexao fechada"
+fi
+
+echo "Test 1950: cct/redis rejeita perfil freestanding"
+if [ "$RC_31_READY" -eq 0 ] && ! "$PHASE31_HOST_WRAPPER" --profile freestanding --check "tests/integration/redis_freestanding_reject_36c.cct" >"$CCT_TMP_DIR/phase36c/test_1950.out" 2>&1 && \
+   rg -q "módulo 'cct/redis' não disponível em perfil freestanding" "$CCT_TMP_DIR/phase36c/test_1950.out"; then
+    test_pass "cct/redis rejeita perfil freestanding"
+else
+    test_fail "cct/redis nao rejeitou perfil freestanding"
+fi
+fi
+
+if cct_phase_block_enabled "36D"; then
+echo ""
+echo "========================================"
+echo "FASE 36D: cct/db_postgres_lock"
+echo "========================================"
+cct_phase31_prepare >/dev/null 2>&1
+mkdir -p "$CCT_TMP_DIR/phase36d"
+
+echo "Test 1951: cct/db_postgres_lock materializa chaves canonicas"
+BASE_1951="$CCT_TMP_DIR/phase36d/test_1951_keys"
+if [ "$RC_31_READY" -eq 0 ] && cct_phase32_copy_compile_and_run "$PHASE31_HOST_WRAPPER" "tests/integration/db_postgres_lock_keys_36d.cct" "$BASE_1951" 0; then
+    test_pass "cct/db_postgres_lock materializa chaves canonicas"
+else
+    test_fail "cct/db_postgres_lock regrediu materializacao de chaves"
+fi
+
+echo "Test 1952: cct/db_postgres_lock gera SQL canonico"
+BASE_1952="$CCT_TMP_DIR/phase36d/test_1952_sql"
+if [ "$RC_31_READY" -eq 0 ] && cct_phase32_copy_compile_and_run "$PHASE31_HOST_WRAPPER" "tests/integration/db_postgres_lock_sql_36d.cct" "$BASE_1952" 0; then
+    test_pass "cct/db_postgres_lock gera SQL canonico"
+else
+    test_fail "cct/db_postgres_lock regrediu SQL canonico"
+fi
+
+echo "Test 1953: cct/db_postgres_lock materializa attempts e handles"
+BASE_1953="$CCT_TMP_DIR/phase36d/test_1953_attempt"
+if [ "$RC_31_READY" -eq 0 ] && cct_phase32_copy_compile_and_run "$PHASE31_HOST_WRAPPER" "tests/integration/db_postgres_lock_attempt_36d.cct" "$BASE_1953" 0; then
+    test_pass "cct/db_postgres_lock materializa attempts e handles"
+else
+    test_fail "cct/db_postgres_lock regrediu attempts/handles"
+fi
+
+echo "Test 1954: cct/db_postgres_lock propaga erro em conexao fechada"
+BASE_1954="$CCT_TMP_DIR/phase36d/test_1954_closed_db"
+if [ "$RC_31_READY" -eq 0 ] && cct_phase32_copy_compile_and_run "$PHASE31_HOST_WRAPPER" "tests/integration/db_postgres_lock_closed_db_36d.cct" "$BASE_1954" 0; then
+    test_pass "cct/db_postgres_lock propaga erro em conexao fechada"
+else
+    test_fail "cct/db_postgres_lock nao propagou erro em conexao fechada"
+fi
+
+echo "Test 1955: cct/db_postgres_lock preserva unlock e with_lock explicitos"
+BASE_1955="$CCT_TMP_DIR/phase36d/test_1955_unlock_with"
+if [ "$RC_31_READY" -eq 0 ] && cct_phase32_copy_compile_and_run "$PHASE31_HOST_WRAPPER" "tests/integration/db_postgres_lock_unlock_with_36d.cct" "$BASE_1955" 0; then
+    test_pass "cct/db_postgres_lock preserva unlock e with_lock explicitos"
+else
+    test_fail "cct/db_postgres_lock regrediu unlock/with_lock"
+fi
+
+echo "Test 1956: cct/db_postgres_lock rejeita perfil freestanding"
+if [ "$RC_31_READY" -eq 0 ] && ! "$PHASE31_HOST_WRAPPER" --profile freestanding --check "tests/integration/db_postgres_lock_freestanding_reject_36d.cct" >"$CCT_TMP_DIR/phase36d/test_1956.out" 2>&1 && \
+   rg -q "módulo 'cct/db_postgres_lock' não disponível em perfil freestanding" "$CCT_TMP_DIR/phase36d/test_1956.out"; then
+    test_pass "cct/db_postgres_lock rejeita perfil freestanding"
+else
+    test_fail "cct/db_postgres_lock nao rejeitou perfil freestanding"
+fi
+fi
+
+if cct_phase_block_enabled "37A"; then
+echo ""
+echo "========================================"
+echo "FASE 37A: cct/mail"
+echo "========================================"
+cct_phase31_prepare >/dev/null 2>&1
+mkdir -p "$CCT_TMP_DIR/phase37a"
+
+echo "Test 1957: cct/mail preserva backend memory e outbox"
+BASE_1957="$CCT_TMP_DIR/phase37a/test_1957_memory"
+if [ "$RC_31_READY" -eq 0 ] && cct_phase32_copy_compile_and_run "$PHASE31_HOST_WRAPPER" "tests/integration/mail_memory_backend_37a.cct" "$BASE_1957" 0; then
+    test_pass "cct/mail preserva backend memory e outbox"
+else
+    test_fail "cct/mail regrediu backend memory"
+fi
+
+echo "Test 1958: cct/mail renderiza MIME text/plain canonicamente"
+BASE_1958="$CCT_TMP_DIR/phase37a/test_1958_text_only"
+if [ "$RC_31_READY" -eq 0 ] && cct_phase32_copy_compile_and_run "$PHASE31_HOST_WRAPPER" "tests/integration/mail_mime_text_only_37a.cct" "$BASE_1958" 0; then
+    test_pass "cct/mail renderiza MIME text/plain canonicamente"
+else
+    test_fail "cct/mail regrediu MIME text/plain"
+fi
+
+echo "Test 1958A: cct/mail formata Date em RFC 5322"
+BASE_1958A="$CCT_TMP_DIR/phase37a/test_1958A_headers_rfc"
+if [ "$RC_31_READY" -eq 0 ] && cct_phase32_copy_compile_and_run "$PHASE31_HOST_WRAPPER" "tests/integration/mail_headers_rfc_37a.cct" "$BASE_1958A" 0; then
+    test_pass "cct/mail formata Date em RFC 5322"
+else
+    test_fail "cct/mail regrediu Date RFC 5322"
+fi
+
+echo "Test 1958B: cct/mail gera Message-ID com dominio do remetente"
+BASE_1958B="$CCT_TMP_DIR/phase37a/test_1958B_message_id_domain"
+if [ "$RC_31_READY" -eq 0 ] && cct_phase32_copy_compile_and_run "$PHASE31_HOST_WRAPPER" "tests/integration/mail_message_id_domain_37a.cct" "$BASE_1958B" 0; then
+    test_pass "cct/mail gera Message-ID com dominio do remetente"
+else
+    test_fail "cct/mail regrediu dominio do Message-ID"
+fi
+
+echo "Test 1958C: cct/mail carrega backend SMTP por env"
+BASE_1958C="$CCT_TMP_DIR/phase37a/test_1958C_env_smtp"
+if [ "$RC_31_READY" -eq 0 ] && cct_phase32_copy_compile_and_run_env "$PHASE31_HOST_WRAPPER" "tests/integration/mail_backend_env_smtp_37a.cct" "$BASE_1958C" 0 \
+   APP_MAIL_BACKEND=smtp \
+   APP_MAIL_SMTP_HOST=smtp.zoho.com \
+   APP_MAIL_SMTP_PORT=587 \
+   APP_MAIL_SMTP_USERNAME=user@zoho.test \
+   APP_MAIL_SMTP_PASSWORD=secret \
+   APP_MAIL_SMTP_AUTH=login \
+   APP_MAIL_SMTP_STARTTLS=true; then
+    test_pass "cct/mail carrega backend SMTP por env"
+else
+    test_fail "cct/mail nao carregou backend SMTP por env"
+fi
+
+echo "Test 1958D: cct/mail carrega backend file por env"
+BASE_1958D="$CCT_TMP_DIR/phase37a/test_1958D_env_file"
+if [ "$RC_31_READY" -eq 0 ] && cct_phase32_copy_compile_and_run_env "$PHASE31_HOST_WRAPPER" "tests/integration/mail_backend_env_file_37a.cct" "$BASE_1958D" 0 \
+   APP_MAIL_BACKEND=file \
+   APP_MAIL_FILE_OUT_DIR=tests/.tmp/mail_env_file_out; then
+    test_pass "cct/mail carrega backend file por env"
+else
+    test_fail "cct/mail nao carregou backend file por env"
+fi
+
+echo "Test 1959: cct/mail renderiza multipart com anexo e sem vazar BCC"
+BASE_1959="$CCT_TMP_DIR/phase37a/test_1959_multipart"
+if [ "$RC_31_READY" -eq 0 ] && cct_phase32_copy_compile_and_run "$PHASE31_HOST_WRAPPER" "tests/integration/mail_mime_multipart_37a.cct" "$BASE_1959" 0; then
+    test_pass "cct/mail renderiza multipart com anexo e sem vazar BCC"
+else
+    test_fail "cct/mail regrediu multipart ou vazou BCC"
+fi
+
+echo "Test 1959A: cct/mail codifica Subject nao ASCII em RFC 2047"
+BASE_1959A="$CCT_TMP_DIR/phase37a/test_1959A_subject_rfc2047"
+if [ "$RC_31_READY" -eq 0 ] && cct_phase32_copy_compile_and_run "$PHASE31_HOST_WRAPPER" "tests/integration/mail_subject_rfc2047_37a.cct" "$BASE_1959A" 0; then
+    test_pass "cct/mail codifica Subject nao ASCII em RFC 2047"
+else
+    test_fail "cct/mail regrediu Subject RFC 2047"
+fi
+
+echo "Test 1959B: cct/mail suporta inline attachment e wrap base64"
+BASE_1959B="$CCT_TMP_DIR/phase37a/test_1959B_inline_wrap"
+if [ "$RC_31_READY" -eq 0 ] && cct_phase32_copy_compile_and_run "$PHASE31_HOST_WRAPPER" "tests/integration/mail_inline_attachment_37a.cct" "$BASE_1959B" 0; then
+    test_pass "cct/mail suporta inline attachment e wrap base64"
+else
+    test_fail "cct/mail regrediu inline attachment ou wrap base64"
+fi
+
+echo "Test 1959C: cct/mail carrega backend SMTP por config"
+BASE_1959C="$CCT_TMP_DIR/phase37a/test_1959C_config_smtp"
+if [ "$RC_31_READY" -eq 0 ] && cct_phase32_copy_compile_and_run "$PHASE31_HOST_WRAPPER" "tests/integration/mail_backend_config_smtp_37a.cct" "$BASE_1959C" 0; then
+    test_pass "cct/mail carrega backend SMTP por config"
+else
+    test_fail "cct/mail nao carregou backend SMTP por config"
+fi
+
+echo "Test 1959D: cct/mail respeita overlay env sobre config"
+BASE_1959D="$CCT_TMP_DIR/phase37a/test_1959D_config_env_overlay"
+if [ "$RC_31_READY" -eq 0 ] && cct_phase32_copy_compile_and_run_env "$PHASE31_HOST_WRAPPER" "tests/integration/mail_backend_config_env_overlay_37a.cct" "$BASE_1959D" 0 \
+   APP_MAIL_HOST=smtp.override.local \
+   APP_MAIL_PORT=2525 \
+   APP_MAIL_AUTH=login \
+   APP_MAIL_STARTTLS=true; then
+    test_pass "cct/mail respeita overlay env sobre config"
+else
+    test_fail "cct/mail nao respeitou overlay env sobre config"
+fi
+
+echo "Test 1959E: cct/mail rejeita configuracao invalida"
+BASE_1959E="$CCT_TMP_DIR/phase37a/test_1959E_config_invalid"
+if [ "$RC_31_READY" -eq 0 ] && cct_phase32_copy_compile_and_run "$PHASE31_HOST_WRAPPER" "tests/integration/mail_backend_config_invalid_37a.cct" "$BASE_1959E" 0; then
+    test_pass "cct/mail rejeita configuracao invalida"
+else
+    test_fail "cct/mail nao rejeitou configuracao invalida"
+fi
+
+echo "Test 1960: cct/mail valida mensagens obrigatorias"
+BASE_1960="$CCT_TMP_DIR/phase37a/test_1960_validate"
+if [ "$RC_31_READY" -eq 0 ] && cct_phase32_copy_compile_and_run "$PHASE31_HOST_WRAPPER" "tests/integration/mail_validate_37a.cct" "$BASE_1960" 0; then
+    test_pass "cct/mail valida mensagens obrigatorias"
+else
+    test_fail "cct/mail nao validou mensagens obrigatorias"
+fi
+
+echo "Test 1961: cct/mail grava .eml no backend file"
+BASE_1961="$CCT_TMP_DIR/phase37a/test_1961_file"
+FILE_OUT_1961="$ROOT_DIR/tests/.tmp/phase37a_file_out"
+rm -rf "$FILE_OUT_1961"
+mkdir -p "$FILE_OUT_1961"
+if [ "$RC_31_READY" -eq 0 ] && cct_phase32_copy_compile_and_run "$PHASE31_HOST_WRAPPER" "tests/integration/mail_file_backend_37a.cct" "$BASE_1961" 0 && \
+   find "$FILE_OUT_1961" -name '*.eml' | head -n 1 >"$BASE_1961.mail_path" && \
+   [ -s "$BASE_1961.mail_path" ] && \
+   rg -q 'Subject: File backend' "$(cat "$BASE_1961.mail_path")" && \
+   rg -q 'written to disk' "$(cat "$BASE_1961.mail_path")"; then
+    test_pass "cct/mail grava .eml no backend file"
+else
+    test_fail "cct/mail nao gravou .eml no backend file"
+fi
+
+echo "Test 1962: cct/mail envia via SMTP autenticado no runtime host"
+BASE_1962="$CCT_TMP_DIR/phase37a/test_1962_smtp"
+SMTP_OUT_1962="$CCT_TMP_DIR/phase37a/fake_smtp_out"
+SMTP_PORT_FILE_1962="$CCT_TMP_DIR/phase37a/fake_smtp_port.txt"
+SMTP_PID_1962=""
+rm -rf "$SMTP_OUT_1962"
+mkdir -p "$SMTP_OUT_1962"
+rm -f "$SMTP_PORT_FILE_1962"
+python3 "$ROOT_DIR/tests/support/fake_smtp_37a.py" --port-file "$SMTP_PORT_FILE_1962" --out-dir "$SMTP_OUT_1962" >"$BASE_1962.server.out" 2>"$BASE_1962.server.err" &
+SMTP_PID_1962=$!
+for _ in 1 2 3 4 5 6 7 8 9 10; do
+    [ -s "$SMTP_PORT_FILE_1962" ] && break
+    sleep 0.2
+done
+SMTP_OK_1962=0
+if [ -s "$SMTP_PORT_FILE_1962" ]; then
+    SMTP_PORT_1962="$(cat "$SMTP_PORT_FILE_1962")"
+    if [ "$RC_31_READY" -eq 0 ] && cct_phase32_copy_compile_and_run_args "$PHASE31_HOST_WRAPPER" "tests/integration/mail_smtp_login_37a.cct" "$BASE_1962" 0 "$SMTP_PORT_1962" && \
+       wait "$SMTP_PID_1962" && \
+       rg -q '^mailer$' "$SMTP_OUT_1962/auth.txt" && \
+       rg -q '^secret$' "$SMTP_OUT_1962/auth.txt" && \
+       rg -q '^noreply@app.test$' "$SMTP_OUT_1962/mail_from.txt" && \
+       rg -q '^user@app.test$' "$SMTP_OUT_1962/rcpts.txt" && \
+       rg -q '^copy@app.test$' "$SMTP_OUT_1962/rcpts.txt" && \
+       rg -q '^hidden@app.test$' "$SMTP_OUT_1962/rcpts.txt" && \
+       rg -q 'Subject: SMTP runtime' "$SMTP_OUT_1962/data.eml" && \
+       rg -q 'X-CCT-Test: phase37a' "$SMTP_OUT_1962/data.eml" && \
+       ! rg -q '^Bcc:' "$SMTP_OUT_1962/data.eml"; then
+        SMTP_OK_1962=1
+    fi
+fi
+if [ "$SMTP_OK_1962" -eq 1 ]; then
+    test_pass "cct/mail envia via SMTP autenticado no runtime host"
+else
+    test_fail "cct/mail nao enviou via SMTP autenticado no runtime host"
+    if [ -n "$SMTP_PID_1962" ] && kill -0 "$SMTP_PID_1962" >/dev/null 2>&1; then
+        kill "$SMTP_PID_1962" >/dev/null 2>&1 || true
+        wait "$SMTP_PID_1962" >/dev/null 2>&1 || true
+    fi
+fi
+
+echo "Test 1962A: cct/mail envia via SMTP XOAUTH2 no runtime host"
+BASE_1962A="$CCT_TMP_DIR/phase37a/test_1962A_smtp_xoauth2"
+SMTP_OUT_1962A="$CCT_TMP_DIR/phase37a/fake_smtp_out_xoauth2"
+SMTP_PORT_FILE_1962A="$CCT_TMP_DIR/phase37a/fake_smtp_port_xoauth2.txt"
+SMTP_PID_1962A=""
+rm -rf "$SMTP_OUT_1962A"
+mkdir -p "$SMTP_OUT_1962A"
+rm -f "$SMTP_PORT_FILE_1962A"
+python3 "$ROOT_DIR/tests/support/fake_smtp_37a.py" --port-file "$SMTP_PORT_FILE_1962A" --out-dir "$SMTP_OUT_1962A" >"$BASE_1962A.server.out" 2>"$BASE_1962A.server.err" &
+SMTP_PID_1962A=$!
+for _ in 1 2 3 4 5 6 7 8 9 10; do
+    [ -s "$SMTP_PORT_FILE_1962A" ] && break
+    sleep 0.2
+done
+SMTP_OK_1962A=0
+if [ -s "$SMTP_PORT_FILE_1962A" ]; then
+    SMTP_PORT_1962A="$(cat "$SMTP_PORT_FILE_1962A")"
+    if [ "$RC_31_READY" -eq 0 ] && cct_phase32_copy_compile_and_run_args "$PHASE31_HOST_WRAPPER" "tests/integration/mail_smtp_xoauth2_37a.cct" "$BASE_1962A" 0 "$SMTP_PORT_1962A" && \
+       wait "$SMTP_PID_1962A" && \
+       rg -q '^oauth-user@app.test$' "$SMTP_OUT_1962A/auth.txt" && \
+       rg -q '^oauth-token$' "$SMTP_OUT_1962A/auth.txt" && \
+       rg -q '^noreply@app.test$' "$SMTP_OUT_1962A/mail_from.txt" && \
+       rg -q '^user@app.test$' "$SMTP_OUT_1962A/rcpts.txt" && \
+       rg -q 'Subject: SMTP XOAUTH2' "$SMTP_OUT_1962A/data.eml"; then
+        SMTP_OK_1962A=1
+    fi
+fi
+if [ "$SMTP_OK_1962A" -eq 1 ]; then
+    test_pass "cct/mail envia via SMTP XOAUTH2 no runtime host"
+else
+    test_fail "cct/mail nao enviou via SMTP XOAUTH2 no runtime host"
+    if [ -n "$SMTP_PID_1962A" ] && kill -0 "$SMTP_PID_1962A" >/dev/null 2>&1; then
+        kill "$SMTP_PID_1962A" >/dev/null 2>&1 || true
+        wait "$SMTP_PID_1962A" >/dev/null 2>&1 || true
+    fi
+fi
+
+echo "Test 1963: cct/mail rejeita perfil freestanding"
+if [ "$RC_31_READY" -eq 0 ] && ! "$PHASE31_HOST_WRAPPER" --profile freestanding --check "tests/integration/mail_freestanding_reject_37a.cct" >"$CCT_TMP_DIR/phase37a/test_1963.out" 2>&1 && \
+   rg -q "módulo 'cct/mail' não disponível em perfil freestanding" "$CCT_TMP_DIR/phase37a/test_1963.out"; then
+    test_pass "cct/mail rejeita perfil freestanding"
+else
+    test_fail "cct/mail nao rejeitou perfil freestanding"
+fi
+fi
+
+if cct_phase_block_enabled "37B"; then
+echo ""
+echo "========================================"
+echo "FASE 37B: cct/mail_spool"
+echo "========================================"
+cct_phase31_prepare >/dev/null 2>&1
+mkdir -p "$CCT_TMP_DIR/phase37b"
+
+echo "Test 1964: cct/mail_spool persiste e recarrega item canonico"
+BASE_1964="$CCT_TMP_DIR/phase37b/test_1964_enqueue_get"
+rm -rf "$ROOT_DIR/tests/.tmp/phase37b_enqueue_get"
+if [ "$RC_31_READY" -eq 0 ] && cct_phase32_copy_compile_and_run "$PHASE31_HOST_WRAPPER" "tests/integration/mail_spool_enqueue_get_37b.cct" "$BASE_1964" 0; then
+    test_pass "cct/mail_spool persiste e recarrega item canonico"
+else
+    test_fail "cct/mail_spool regrediu enqueue/get"
+fi
+
+echo "Test 1965: cct/mail_spool lista apenas pendentes elegiveis"
+BASE_1965="$CCT_TMP_DIR/phase37b/test_1965_list_pending"
+rm -rf "$ROOT_DIR/tests/.tmp/phase37b_list_pending"
+if [ "$RC_31_READY" -eq 0 ] && cct_phase32_copy_compile_and_run "$PHASE31_HOST_WRAPPER" "tests/integration/mail_spool_list_pending_37b.cct" "$BASE_1965" 0; then
+    test_pass "cct/mail_spool lista apenas pendentes elegiveis"
+else
+    test_fail "cct/mail_spool regrediu filtro de pendentes"
+fi
+
+echo "Test 1966: cct/mail_spool materializa transicoes sent/dead"
+BASE_1966="$CCT_TMP_DIR/phase37b/test_1966_mark_states"
+rm -rf "$ROOT_DIR/tests/.tmp/phase37b_mark_states"
+if [ "$RC_31_READY" -eq 0 ] && cct_phase32_copy_compile_and_run "$PHASE31_HOST_WRAPPER" "tests/integration/mail_spool_mark_states_37b.cct" "$BASE_1966" 0; then
+    test_pass "cct/mail_spool materializa transicoes sent/dead"
+else
+    test_fail "cct/mail_spool regrediu transicoes sent/dead"
+fi
+
+echo "Test 1967: cct/mail_spool aplica retry/backoff e DEAD"
+BASE_1967="$CCT_TMP_DIR/phase37b/test_1967_retry_dead"
+rm -rf "$ROOT_DIR/tests/.tmp/phase37b_retry_dead"
+if [ "$RC_31_READY" -eq 0 ] && cct_phase32_copy_compile_and_run "$PHASE31_HOST_WRAPPER" "tests/integration/mail_spool_retry_dead_37b.cct" "$BASE_1967" 0; then
+    test_pass "cct/mail_spool aplica retry/backoff e DEAD"
+else
+    test_fail "cct/mail_spool regrediu retry/backoff"
+fi
+
+echo "Test 1968: cct/mail_spool drena lote com backend memory"
+BASE_1968="$CCT_TMP_DIR/phase37b/test_1968_drain_memory"
+rm -rf "$ROOT_DIR/tests/.tmp/phase37b_drain_memory"
+if [ "$RC_31_READY" -eq 0 ] && cct_phase32_copy_compile_and_run "$PHASE31_HOST_WRAPPER" "tests/integration/mail_spool_drain_memory_37b.cct" "$BASE_1968" 0; then
+    test_pass "cct/mail_spool drena lote com backend memory"
+else
+    test_fail "cct/mail_spool regrediu drain com backend memory"
+fi
+
+echo "Test 1969: cct/mail_spool remove item persistido"
+BASE_1969="$CCT_TMP_DIR/phase37b/test_1969_delete"
+rm -rf "$ROOT_DIR/tests/.tmp/phase37b_delete"
+if [ "$RC_31_READY" -eq 0 ] && cct_phase32_copy_compile_and_run "$PHASE31_HOST_WRAPPER" "tests/integration/mail_spool_delete_37b.cct" "$BASE_1969" 0; then
+    test_pass "cct/mail_spool remove item persistido"
+else
+    test_fail "cct/mail_spool regrediu delete"
+fi
+
+echo "Test 1970: cct/mail_spool rejeita perfil freestanding"
+if [ "$RC_31_READY" -eq 0 ] && ! "$PHASE31_HOST_WRAPPER" --profile freestanding --check "tests/integration/mail_spool_freestanding_reject_37b.cct" >"$CCT_TMP_DIR/phase37b/test_1970.out" 2>&1 && \
+   rg -q "módulo 'cct/mail_spool' não disponível em perfil freestanding" "$CCT_TMP_DIR/phase37b/test_1970.out"; then
+    test_pass "cct/mail_spool rejeita perfil freestanding"
+else
+    test_fail "cct/mail_spool nao rejeitou perfil freestanding"
+fi
+fi
+
+if cct_phase_block_enabled "37C"; then
+echo ""
+echo "========================================"
+echo "FASE 37C: cct/mail_webhook"
+echo "========================================"
+cct_phase31_prepare >/dev/null 2>&1
+mkdir -p "$CCT_TMP_DIR/phase37c"
+
+echo "Test 1971: cct/mail_webhook normaliza delivery generico"
+BASE_1971="$CCT_TMP_DIR/phase37c/test_1971_delivered"
+if [ "$RC_31_READY" -eq 0 ] && cct_phase32_copy_compile_and_run "$PHASE31_HOST_WRAPPER" "tests/integration/mail_webhook_delivered_37c.cct" "$BASE_1971" 0; then
+    test_pass "cct/mail_webhook normaliza delivery generico"
+else
+    test_fail "cct/mail_webhook regrediu delivery generico"
+fi
+
+echo "Test 1972: cct/mail_webhook trata bounce e payload invalido"
+BASE_1972="$CCT_TMP_DIR/phase37c/test_1972_bounce_invalid"
+if [ "$RC_31_READY" -eq 0 ] && cct_phase32_copy_compile_and_run "$PHASE31_HOST_WRAPPER" "tests/integration/mail_webhook_bounce_invalid_37c.cct" "$BASE_1972" 0; then
+    test_pass "cct/mail_webhook trata bounce e payload invalido"
+else
+    test_fail "cct/mail_webhook regrediu bounce ou payload invalido"
+fi
+
+echo "Test 1973: cct/mail_webhook parseia lote sendgrid"
+BASE_1973="$CCT_TMP_DIR/phase37c/test_1973_sendgrid"
+if [ "$RC_31_READY" -eq 0 ] && cct_phase32_copy_compile_and_run "$PHASE31_HOST_WRAPPER" "tests/integration/mail_webhook_sendgrid_37c.cct" "$BASE_1973" 0; then
+    test_pass "cct/mail_webhook parseia lote sendgrid"
+else
+    test_fail "cct/mail_webhook regrediu sendgrid"
+fi
+
+echo "Test 1974: cct/mail_webhook extrai envelope mailgun"
+BASE_1974="$CCT_TMP_DIR/phase37c/test_1974_mailgun"
+if [ "$RC_31_READY" -eq 0 ] && cct_phase32_copy_compile_and_run "$PHASE31_HOST_WRAPPER" "tests/integration/mail_webhook_mailgun_37c.cct" "$BASE_1974" 0; then
+    test_pass "cct/mail_webhook extrai envelope mailgun"
+else
+    test_fail "cct/mail_webhook regrediu envelope mailgun"
+fi
+
+echo "Test 1975: cct/mail_webhook parseia headers com folding"
+BASE_1975="$CCT_TMP_DIR/phase37c/test_1975_headers"
+if [ "$RC_31_READY" -eq 0 ] && cct_phase32_copy_compile_and_run "$PHASE31_HOST_WRAPPER" "tests/integration/mail_headers_parse_37c.cct" "$BASE_1975" 0; then
+    test_pass "cct/mail_webhook parseia headers com folding"
+else
+    test_fail "cct/mail_webhook regrediu parse de headers"
+fi
+
+echo "Test 1976: cct/mail_webhook identifica parts MIME"
+BASE_1976="$CCT_TMP_DIR/phase37c/test_1976_mime"
+if [ "$RC_31_READY" -eq 0 ] && cct_phase32_copy_compile_and_run "$PHASE31_HOST_WRAPPER" "tests/integration/mail_mime_scan_37c.cct" "$BASE_1976" 0; then
+    test_pass "cct/mail_webhook identifica parts MIME"
+else
+    test_fail "cct/mail_webhook regrediu scan MIME"
+fi
+
+echo "Test 1977: cct/mail_webhook rejeita perfil freestanding"
+if [ "$RC_31_READY" -eq 0 ] && ! "$PHASE31_HOST_WRAPPER" --profile freestanding --check "tests/integration/mail_webhook_freestanding_reject_37c.cct" >"$CCT_TMP_DIR/phase37c/test_1977.out" 2>&1 && \
+   rg -q "módulo 'cct/mail_webhook' não disponível em perfil freestanding" "$CCT_TMP_DIR/phase37c/test_1977.out"; then
+    test_pass "cct/mail_webhook rejeita perfil freestanding"
+else
+    test_fail "cct/mail_webhook nao rejeitou perfil freestanding"
 fi
 fi
 

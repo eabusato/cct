@@ -1,0 +1,482 @@
+-- CCT — Clavicula Turing
+-- Standard Library Module: db_postgres
+--
+-- FASE 36A: PostgreSQL operational client
+
+INCIPIT grimoire "db_postgres"
+
+ADVOCARE "cct/fluxus.cct"
+ADVOCARE "cct/fmt.cct"
+ADVOCARE "cct/parse.cct"
+ADVOCARE "cct/result.cct"
+ADVOCARE "cct/verbum.cct"
+
+SIGILLUM Db
+  conn: SPECULUM NIHIL
+  last_error: VERBUM
+  open: VERUM
+FIN SIGILLUM
+
+SIGILLUM Stmt
+  conn: SPECULUM NIHIL
+  name: VERBUM
+  sql: VERBUM
+  bindings: SPECULUM NIHIL
+  closed: VERUM
+FIN SIGILLUM
+
+SIGILLUM Rows
+  handle: SPECULUM NIHIL
+  current_row: REX
+  row_count: REX
+  column_count: REX
+  open: VERUM
+FIN SIGILLUM
+
+SIGILLUM PgNotification
+  channel: VERBUM
+  payload: VERBUM
+FIN SIGILLUM
+
+ORDO DbType
+  DB_TYPE_NULL
+  DB_TYPE_INT
+  DB_TYPE_REAL
+  DB_TYPE_TEXT
+  DB_TYPE_BLOB
+  DB_TYPE_BOOL
+  DB_TYPE_UUID
+  DB_TYPE_JSON
+  DB_TYPE_TIMESTAMP
+FIN ORDO
+
+SIGILLUM DbValue
+  type: DbType
+  int_value: REX
+  real_value: UMBRA
+  text_value: VERBUM
+  blob_value: SPECULUM NIHIL
+  bool_value: VERUM
+FIN SIGILLUM
+
+RITUALE db_value_null() REDDE DbValue
+  EVOCA DbValue value
+  VINCIRE value.type AD DB_TYPE_NULL
+  VINCIRE value.int_value AD 0
+  VINCIRE value.real_value AD 0.0
+  VINCIRE value.text_value AD ""
+  VINCIRE value.bool_value AD FALSUM
+  REDDE value
+EXPLICIT RITUALE
+
+RITUALE db_value_int(REX n) REDDE DbValue
+  EVOCA DbValue value AD CONIURA db_value_null()
+  VINCIRE value.type AD DB_TYPE_INT
+  VINCIRE value.int_value AD n
+  REDDE value
+EXPLICIT RITUALE
+
+RITUALE db_value_real(UMBRA x) REDDE DbValue
+  EVOCA DbValue value AD CONIURA db_value_null()
+  VINCIRE value.type AD DB_TYPE_REAL
+  VINCIRE value.real_value AD x
+  REDDE value
+EXPLICIT RITUALE
+
+RITUALE db_value_text(VERBUM s) REDDE DbValue
+  EVOCA DbValue value AD CONIURA db_value_null()
+  VINCIRE value.type AD DB_TYPE_TEXT
+  VINCIRE value.text_value AD s
+  REDDE value
+EXPLICIT RITUALE
+
+RITUALE db_value_bool(VERUM b) REDDE DbValue
+  EVOCA DbValue value AD CONIURA db_value_null()
+  VINCIRE value.type AD DB_TYPE_BOOL
+  VINCIRE value.bool_value AD b
+  REDDE value
+EXPLICIT RITUALE
+
+RITUALE db_value_uuid(VERBUM s) REDDE DbValue
+  EVOCA DbValue value AD CONIURA db_value_text(s)
+  VINCIRE value.type AD DB_TYPE_UUID
+  REDDE value
+EXPLICIT RITUALE
+
+RITUALE db_value_json(VERBUM s) REDDE DbValue
+  EVOCA DbValue value AD CONIURA db_value_text(s)
+  VINCIRE value.type AD DB_TYPE_JSON
+  REDDE value
+EXPLICIT RITUALE
+
+RITUALE db_empty_params() REDDE SPECULUM NIHIL
+  REDDE CONIURA fluxus_init(MENSURA(DbValue))
+EXPLICIT RITUALE
+
+RITUALE db_ok_unit() REDDE SPECULUM NIHIL
+  REDDE CONIURA Ok GENUS(REX, VERBUM)(0)
+EXPLICIT RITUALE
+
+RITUALE db_err_unit(VERBUM mensagem) REDDE SPECULUM NIHIL
+  REDDE CONIURA Err GENUS(REX, VERBUM)(mensagem)
+EXPLICIT RITUALE
+
+RITUALE db_quote_literal(VERBUM texto) REDDE VERBUM
+  EVOCA VERBUM escaped AD CONIURA replace_all(texto, "'", "''")
+  EVOCA VERBUM out AD CONIURA concat("'", escaped)
+  REDDE CONIURA concat(out, "'")
+EXPLICIT RITUALE
+
+RITUALE db_quote_ident(VERBUM texto) REDDE VERBUM
+  EVOCA VERBUM escaped AD CONIURA replace_all(texto, "\"", "\"\"")
+  EVOCA VERBUM out AD CONIURA concat("\"", escaped)
+  REDDE CONIURA concat(out, "\"")
+EXPLICIT RITUALE
+
+RITUALE db_value_sql(DbValue value) REDDE VERBUM
+  ELIGE value.type
+    CASUS DB_TYPE_NULL:
+      REDDE "NULL"
+    CASUS DB_TYPE_INT:
+      REDDE CONIURA stringify_int(value.int_value)
+    CASUS DB_TYPE_REAL:
+      REDDE CONIURA stringify_real(value.real_value)
+    CASUS DB_TYPE_BOOL:
+      SI value.bool_value
+        REDDE "TRUE"
+      FIN SI
+      REDDE "FALSE"
+    CASUS DB_TYPE_UUID:
+      REDDE CONIURA concat(CONIURA db_quote_literal(value.text_value), "::uuid")
+    CASUS DB_TYPE_JSON:
+      REDDE CONIURA concat(CONIURA db_quote_literal(value.text_value), "::jsonb")
+    CASUS DB_TYPE_TIMESTAMP:
+      REDDE CONIURA concat(CONIURA db_quote_literal(value.text_value), "::timestamptz")
+    CASUS DB_TYPE_BLOB:
+      REDDE "NULL"
+    ALIOQUIN:
+      REDDE CONIURA db_quote_literal(value.text_value)
+  FIN ELIGE
+EXPLICIT RITUALE
+
+RITUALE db_render_sql(VERBUM sql, SPECULUM NIHIL params) REDDE VERBUM
+  EVOCA VERBUM out AD sql
+  EVOCA REX i AD CONIURA fluxus_len(params)
+  DUM i > 0
+    EVOCA SPECULUM DbValue value AD CONIURA fluxus_get(params, i - 1)
+    EVOCA VERBUM placeholder AD CONIURA concat("$", CONIURA stringify_int(i))
+    VINCIRE out AD CONIURA replace_all(out, placeholder, CONIURA db_value_sql(*value))
+    VINCIRE i AD i - 1
+  FIN DUM
+  REDDE out
+EXPLICIT RITUALE
+
+RITUALE db_exec_conn(SPECULUM NIHIL conn, VERUM open, VERBUM sql, SPECULUM NIHIL params) REDDE SPECULUM NIHIL
+  SI NON open
+    REDDE CONIURA db_err_unit("postgres conexao fechada")
+  FIN SI
+  EVOCA VERBUM rendered AD CONIURA db_render_sql(sql, params)
+  OBSECRO pg_builtin_exec(conn, rendered)
+  EVOCA VERBUM err AD OBSECRO pg_builtin_last_error(conn)
+  SI CONIURA len(err) > 0
+    REDDE CONIURA db_err_unit(err)
+  FIN SI
+  REDDE CONIURA db_ok_unit()
+EXPLICIT RITUALE
+
+RITUALE db_query_conn(SPECULUM NIHIL conn, VERUM open, VERBUM sql, SPECULUM NIHIL params) REDDE SPECULUM NIHIL
+  SI NON open
+    REDDE CONIURA Err GENUS(Rows, VERBUM)("postgres conexao fechada")
+  FIN SI
+  EVOCA VERBUM rendered AD CONIURA db_render_sql(sql, params)
+  EVOCA SPECULUM NIHIL handle AD OBSECRO pg_builtin_query(conn, rendered)
+  EVOCA VERBUM err AD OBSECRO pg_builtin_last_error(conn)
+  SI CONIURA len(err) > 0
+    OBSECRO pg_builtin_rows_close(handle)
+    REDDE CONIURA Err GENUS(Rows, VERBUM)(err)
+  FIN SI
+  EVOCA Rows rows
+  VINCIRE rows.handle AD handle
+  VINCIRE rows.current_row AD -1
+  VINCIRE rows.row_count AD OBSECRO pg_builtin_rows_count(handle)
+  VINCIRE rows.column_count AD OBSECRO pg_builtin_rows_columns(handle)
+  VINCIRE rows.open AD VERUM
+  REDDE CONIURA Ok GENUS(Rows, VERBUM)(rows)
+EXPLICIT RITUALE
+
+RITUALE db_open(VERBUM connection_string) REDDE SPECULUM NIHIL
+  EVOCA SPECULUM NIHIL handle AD OBSECRO pg_builtin_open(connection_string)
+  SI NON OBSECRO pg_builtin_is_open(handle)
+    EVOCA VERBUM err AD OBSECRO pg_builtin_last_error(handle)
+    OBSECRO pg_builtin_close(handle)
+    REDDE CONIURA Err GENUS(Db, VERBUM)(err)
+  FIN SI
+  EVOCA Db db
+  VINCIRE db.conn AD handle
+  VINCIRE db.last_error AD ""
+  VINCIRE db.open AD VERUM
+  REDDE CONIURA Ok GENUS(Db, VERBUM)(db)
+EXPLICIT RITUALE
+
+RITUALE db_close(SPECULUM Db db) REDDE NIHIL
+  SI (*db).open
+    OBSECRO pg_builtin_close((*db).conn)
+    VINCIRE (*db).open AD FALSUM
+  FIN SI
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE db_is_open(Db db) REDDE VERUM
+  SI NON db.open
+    REDDE FALSUM
+  FIN SI
+  REDDE OBSECRO pg_builtin_is_open(db.conn)
+EXPLICIT RITUALE
+
+RITUALE db_last_error(Db db) REDDE VERBUM
+  SI NON db.open
+    REDDE db.last_error
+  FIN SI
+  REDDE OBSECRO pg_builtin_last_error(db.conn)
+EXPLICIT RITUALE
+
+RITUALE db_exec(Db db, VERBUM sql, SPECULUM NIHIL params) REDDE SPECULUM NIHIL
+  REDDE CONIURA db_exec_conn(db.conn, db.open, sql, params)
+EXPLICIT RITUALE
+
+RITUALE db_query(Db db, VERBUM sql, SPECULUM NIHIL params) REDDE SPECULUM NIHIL
+  REDDE CONIURA db_query_conn(db.conn, db.open, sql, params)
+EXPLICIT RITUALE
+
+RITUALE db_prepare(Db db, VERBUM name, VERBUM sql) REDDE SPECULUM NIHIL
+  SI NON CONIURA db_is_open(db)
+    REDDE CONIURA Err GENUS(Stmt, VERBUM)("postgres conexao fechada")
+  FIN SI
+  EVOCA Stmt stmt
+  VINCIRE stmt.conn AD db.conn
+  VINCIRE stmt.name AD name
+  VINCIRE stmt.sql AD sql
+  VINCIRE stmt.bindings AD CONIURA db_empty_params()
+  VINCIRE stmt.closed AD FALSUM
+  REDDE CONIURA Ok GENUS(Stmt, VERBUM)(stmt)
+EXPLICIT RITUALE
+
+RITUALE stmt_ensure_slot(SPECULUM Stmt stmt, REX index) REDDE NIHIL
+  DUM CONIURA fluxus_len((*stmt).bindings) < index
+    EVOCA DbValue value AD CONIURA db_value_null()
+    CONIURA fluxus_push((*stmt).bindings, SPECULUM value)
+  FIN DUM
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE stmt_bind_value(SPECULUM Stmt stmt, REX index, DbValue value) REDDE NIHIL
+  SI index < 1
+    REDDE
+  FIN SI
+  CONIURA stmt_ensure_slot(stmt, index)
+  CONIURA fluxus_set((*stmt).bindings, index - 1, SPECULUM value)
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE stmt_bind_int(SPECULUM Stmt stmt, REX index, REX value) REDDE NIHIL
+  CONIURA stmt_bind_value(stmt, index, CONIURA db_value_int(value))
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE stmt_bind_text(SPECULUM Stmt stmt, REX index, VERBUM value) REDDE NIHIL
+  CONIURA stmt_bind_value(stmt, index, CONIURA db_value_text(value))
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE stmt_bind_null(SPECULUM Stmt stmt, REX index) REDDE NIHIL
+  CONIURA stmt_bind_value(stmt, index, CONIURA db_value_null())
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE stmt_bind_uuid(SPECULUM Stmt stmt, REX index, VERBUM uuid) REDDE NIHIL
+  CONIURA stmt_bind_value(stmt, index, CONIURA db_value_uuid(uuid))
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE stmt_bind_json(SPECULUM Stmt stmt, REX index, VERBUM json) REDDE NIHIL
+  CONIURA stmt_bind_value(stmt, index, CONIURA db_value_json(json))
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE stmt_sql(Stmt stmt) REDDE VERBUM
+  REDDE CONIURA db_render_sql(stmt.sql, stmt.bindings)
+EXPLICIT RITUALE
+
+RITUALE stmt_exec(Stmt stmt) REDDE SPECULUM NIHIL
+  SI stmt.closed
+    REDDE CONIURA db_err_unit("postgres statement fechado")
+  FIN SI
+  REDDE CONIURA db_exec_conn(stmt.conn, VERUM, stmt.sql, stmt.bindings)
+EXPLICIT RITUALE
+
+RITUALE stmt_query(Stmt stmt) REDDE SPECULUM NIHIL
+  SI stmt.closed
+    REDDE CONIURA Err GENUS(Rows, VERBUM)("postgres statement fechado")
+  FIN SI
+  REDDE CONIURA db_query_conn(stmt.conn, VERUM, stmt.sql, stmt.bindings)
+EXPLICIT RITUALE
+
+RITUALE stmt_reset(SPECULUM Stmt stmt) REDDE NIHIL
+  SI (*stmt).closed
+    REDDE
+  FIN SI
+  CONIURA fluxus_clear((*stmt).bindings)
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE stmt_close(SPECULUM Stmt stmt) REDDE NIHIL
+  SI NON (*stmt).closed
+    CONIURA fluxus_free((*stmt).bindings)
+    VINCIRE (*stmt).bindings AD CONIURA db_empty_params()
+    VINCIRE (*stmt).closed AD VERUM
+  FIN SI
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE rows_next(SPECULUM Rows rows) REDDE VERUM
+  SI NON (*rows).open
+    REDDE FALSUM
+  FIN SI
+  SI NON OBSECRO pg_builtin_rows_next((*rows).handle)
+    REDDE FALSUM
+  FIN SI
+  VINCIRE (*rows).current_row AD (*rows).current_row + 1
+  REDDE VERUM
+EXPLICIT RITUALE
+
+RITUALE rows_get_text(Rows rows, REX col_index) REDDE VERBUM
+  REDDE OBSECRO pg_builtin_rows_get_text(rows.handle, col_index)
+EXPLICIT RITUALE
+
+RITUALE rows_get_int(Rows rows, REX col_index) REDDE REX
+  SI CONIURA rows_is_null(rows, col_index)
+    REDDE 0
+  FIN SI
+  REDDE CONIURA parse_int(CONIURA rows_get_text(rows, col_index))
+EXPLICIT RITUALE
+
+RITUALE rows_get_real(Rows rows, REX col_index) REDDE UMBRA
+  SI CONIURA rows_is_null(rows, col_index)
+    REDDE 0.0
+  FIN SI
+  REDDE CONIURA parse_real(CONIURA rows_get_text(rows, col_index))
+EXPLICIT RITUALE
+
+RITUALE rows_get_bool(Rows rows, REX col_index) REDDE VERUM
+  EVOCA VERBUM value AD CONIURA rows_get_text(rows, col_index)
+  REDDE CONIURA compare(value, "t") == 0 VEL CONIURA compare(value, "true") == 0 VEL CONIURA compare(value, "1") == 0
+EXPLICIT RITUALE
+
+RITUALE rows_get_uuid(Rows rows, REX col_index) REDDE VERBUM
+  REDDE CONIURA rows_get_text(rows, col_index)
+EXPLICIT RITUALE
+
+RITUALE rows_get_json(Rows rows, REX col_index) REDDE VERBUM
+  REDDE CONIURA rows_get_text(rows, col_index)
+EXPLICIT RITUALE
+
+RITUALE rows_is_null(Rows rows, REX col_index) REDDE VERUM
+  SI NON rows.open
+    REDDE VERUM
+  FIN SI
+  REDDE OBSECRO pg_builtin_rows_is_null(rows.handle, col_index)
+EXPLICIT RITUALE
+
+RITUALE rows_close(SPECULUM Rows rows) REDDE NIHIL
+  SI (*rows).open
+    OBSECRO pg_builtin_rows_close((*rows).handle)
+    VINCIRE (*rows).open AD FALSUM
+  FIN SI
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE db_begin(Db db) REDDE SPECULUM NIHIL
+  EVOCA SPECULUM NIHIL params AD CONIURA db_empty_params()
+  EVOCA SPECULUM NIHIL result AD CONIURA db_exec(db, "BEGIN", params)
+  CONIURA fluxus_free(params)
+  REDDE result
+EXPLICIT RITUALE
+
+RITUALE db_commit(Db db) REDDE SPECULUM NIHIL
+  EVOCA SPECULUM NIHIL params AD CONIURA db_empty_params()
+  EVOCA SPECULUM NIHIL result AD CONIURA db_exec(db, "COMMIT", params)
+  CONIURA fluxus_free(params)
+  REDDE result
+EXPLICIT RITUALE
+
+RITUALE db_rollback(Db db) REDDE SPECULUM NIHIL
+  EVOCA SPECULUM NIHIL params AD CONIURA db_empty_params()
+  EVOCA SPECULUM NIHIL result AD CONIURA db_exec(db, "ROLLBACK", params)
+  CONIURA fluxus_free(params)
+  REDDE result
+EXPLICIT RITUALE
+
+RITUALE db_savepoint(Db db, VERBUM name) REDDE SPECULUM NIHIL
+  EVOCA SPECULUM NIHIL params AD CONIURA db_empty_params()
+  EVOCA SPECULUM NIHIL result AD CONIURA db_exec(db, CONIURA concat("SAVEPOINT ", CONIURA db_quote_ident(name)), params)
+  CONIURA fluxus_free(params)
+  REDDE result
+EXPLICIT RITUALE
+
+RITUALE db_rollback_to(Db db, VERBUM name) REDDE SPECULUM NIHIL
+  EVOCA SPECULUM NIHIL params AD CONIURA db_empty_params()
+  EVOCA SPECULUM NIHIL result AD CONIURA db_exec(db, CONIURA concat("ROLLBACK TO SAVEPOINT ", CONIURA db_quote_ident(name)), params)
+  CONIURA fluxus_free(params)
+  REDDE result
+EXPLICIT RITUALE
+
+RITUALE db_release_savepoint(Db db, VERBUM name) REDDE SPECULUM NIHIL
+  EVOCA SPECULUM NIHIL params AD CONIURA db_empty_params()
+  EVOCA SPECULUM NIHIL result AD CONIURA db_exec(db, CONIURA concat("RELEASE SAVEPOINT ", CONIURA db_quote_ident(name)), params)
+  CONIURA fluxus_free(params)
+  REDDE result
+EXPLICIT RITUALE
+
+RITUALE db_listen(Db db, VERBUM channel) REDDE SPECULUM NIHIL
+  EVOCA SPECULUM NIHIL params AD CONIURA db_empty_params()
+  EVOCA SPECULUM NIHIL result AD CONIURA db_exec(db, CONIURA concat("LISTEN ", CONIURA db_quote_ident(channel)), params)
+  CONIURA fluxus_free(params)
+  REDDE result
+EXPLICIT RITUALE
+
+RITUALE db_unlisten(Db db, VERBUM channel) REDDE SPECULUM NIHIL
+  EVOCA SPECULUM NIHIL params AD CONIURA db_empty_params()
+  EVOCA SPECULUM NIHIL result AD CONIURA db_exec(db, CONIURA concat("UNLISTEN ", CONIURA db_quote_ident(channel)), params)
+  CONIURA fluxus_free(params)
+  REDDE result
+EXPLICIT RITUALE
+
+RITUALE db_notify(Db db, VERBUM channel, VERBUM payload) REDDE SPECULUM NIHIL
+  EVOCA VERBUM sql AD "SELECT pg_notify("
+  VINCIRE sql AD CONIURA concat(sql, CONIURA db_quote_literal(channel))
+  VINCIRE sql AD CONIURA concat(sql, ", ")
+  VINCIRE sql AD CONIURA concat(sql, CONIURA db_quote_literal(payload))
+  VINCIRE sql AD CONIURA concat(sql, ")")
+  EVOCA SPECULUM NIHIL params AD CONIURA db_empty_params()
+  EVOCA SPECULUM NIHIL result AD CONIURA db_exec(db, sql, params)
+  CONIURA fluxus_free(params)
+  REDDE result
+EXPLICIT RITUALE
+
+RITUALE db_poll_notifications(Db db, REX timeout_ms) REDDE SPECULUM NIHIL
+  EVOCA SPECULUM NIHIL out AD CONIURA fluxus_init(MENSURA(PgNotification))
+  SI NON CONIURA db_is_open(db)
+    REDDE out
+  FIN SI
+  EVOCA VERBUM channel AD OBSECRO pg_builtin_poll_channel(db.conn, timeout_ms)
+  SI CONIURA len(channel) == 0
+    REDDE out
+  FIN SI
+  EVOCA PgNotification notification
+  VINCIRE notification.channel AD channel
+  VINCIRE notification.payload AD OBSECRO pg_builtin_poll_payload(db.conn)
+  CONIURA fluxus_push(out, SPECULUM notification)
+  REDDE out
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

@@ -1,0 +1,32 @@
+INCIPIT grimoire "db_postgres_lock_unlock_with_36d"
+
+ADVOCARE "cct/db_postgres.cct"
+ADVOCARE "cct/db_postgres_lock.cct"
+ADVOCARE "cct/result.cct"
+
+RITUALE main() REDDE REX
+  EVOCA Db db
+  VINCIRE db.last_error AD "postgres fechado"
+  VINCIRE db.open AD FALSUM
+
+  EVOCA PgLockHandle handle AD CONIURA pg_lock_handle_make(CONIURA pg_lock_key_string("jobs:cleanup"), PG_LOCK_SCOPE_SESSION, FALSUM)
+  EVOCA SPECULUM NIHIL unlock_res AD CONIURA pg_unlock(db, handle)
+  SI NON CONIURA result_is_err GENUS(VERUM, VERBUM)(unlock_res)
+    REDDE 1
+  FIN SI
+
+  EVOCA REX sentinel AD 77
+  EVOCA SPECULUM NIHIL with_res AD CONIURA pg_with_lock(db, CONIURA pg_lock_key_i64(77), SPECULUM sentinel)
+  SI NON CONIURA result_is_err GENUS(REX, VERBUM)(with_res)
+    REDDE 2
+  FIN SI
+
+  EVOCA SPECULUM NIHIL with_job_res AD CONIURA pg_with_job_lock(db, "jobs", "cleanup", SPECULUM sentinel)
+  SI NON CONIURA result_is_err GENUS(REX, VERBUM)(with_job_res)
+    REDDE 3
+  FIN SI
+
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

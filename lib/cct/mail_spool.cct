@@ -1,0 +1,664 @@
+-- CCT — Clavicula Turing
+-- Standard Library Module: mail_spool
+--
+-- FASE 37B: Operational mail spool
+
+INCIPIT grimoire "mail_spool"
+
+ADVOCARE "cct/bytes.cct"
+ADVOCARE "cct/date.cct"
+ADVOCARE "cct/fluxus.cct"
+ADVOCARE "cct/fs.cct"
+ADVOCARE "cct/json.cct"
+ADVOCARE "cct/mail.cct"
+ADVOCARE "cct/path.cct"
+ADVOCARE "cct/result.cct"
+ADVOCARE "cct/uuid.cct"
+ADVOCARE "cct/verbum.cct"
+
+ORDO MailSpoolStatus
+  MAIL_SPOOL_PENDING
+  MAIL_SPOOL_SENDING
+  MAIL_SPOOL_SENT
+  MAIL_SPOOL_FAILED
+  MAIL_SPOOL_DEAD
+FIN ORDO
+
+SIGILLUM MailSpoolOptions
+  root_dir: VERBUM
+  max_attempts: REX
+  base_retry_seconds: REX
+FIN SIGILLUM
+
+SIGILLUM MailSpoolItem
+  spool_id: VERBUM
+  message: MailMessage
+  status: MailSpoolStatus
+  attempt_count: REX
+  created_at_unix: REX
+  updated_at_unix: REX
+  next_attempt_at_unix: REX
+  last_error: VERBUM
+FIN SIGILLUM
+
+SIGILLUM MailSpool
+  options: MailSpoolOptions
+FIN SIGILLUM
+
+SIGILLUM MailSpoolDrainResult
+  scanned: REX
+  attempted: REX
+  sent: REX
+  failed: REX
+  dead: REX
+FIN SIGILLUM
+
+RITUALE mail_spool_message_copy_into(SPECULUM MailMessage dest, MailMessage src) REDDE NIHIL
+  VINCIRE (*dest).from AD src.from
+  VINCIRE (*dest).to AD src.to
+  VINCIRE (*dest).cc AD src.cc
+  VINCIRE (*dest).bcc AD src.bcc
+  VINCIRE (*dest).reply_to AD src.reply_to
+  VINCIRE (*dest).subject AD src.subject
+  VINCIRE (*dest).text_body AD src.text_body
+  VINCIRE (*dest).html_body AD src.html_body
+  VINCIRE (*dest).headers AD src.headers
+  VINCIRE (*dest).attachments AD src.attachments
+  VINCIRE (*dest).message_id AD src.message_id
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE mail_spool_ok_unit() REDDE SPECULUM NIHIL
+  REDDE CONIURA Ok GENUS(REX, VERBUM)(0)
+EXPLICIT RITUALE
+
+RITUALE mail_spool_err_unit(VERBUM message) REDDE SPECULUM NIHIL
+  REDDE CONIURA Err GENUS(REX, VERBUM)(message)
+EXPLICIT RITUALE
+
+RITUALE mail_spool_status_to_string(MailSpoolStatus status) REDDE VERBUM
+  ELIGE status
+    CASUS MAIL_SPOOL_SENDING:
+      REDDE "sending"
+    CASUS MAIL_SPOOL_SENT:
+      REDDE "sent"
+    CASUS MAIL_SPOOL_FAILED:
+      REDDE "failed"
+    CASUS MAIL_SPOOL_DEAD:
+      REDDE "dead"
+    ALIOQUIN:
+      REDDE "pending"
+  FIN ELIGE
+EXPLICIT RITUALE
+
+RITUALE mail_spool_status_from_string(VERBUM value) REDDE MailSpoolStatus
+  SI CONIURA compare(value, "sending") == 0
+    REDDE MAIL_SPOOL_SENDING
+  FIN SI
+  SI CONIURA compare(value, "sent") == 0
+    REDDE MAIL_SPOOL_SENT
+  FIN SI
+  SI CONIURA compare(value, "failed") == 0
+    REDDE MAIL_SPOOL_FAILED
+  FIN SI
+  SI CONIURA compare(value, "dead") == 0
+    REDDE MAIL_SPOOL_DEAD
+  FIN SI
+  REDDE MAIL_SPOOL_PENDING
+EXPLICIT RITUALE
+
+RITUALE mail_spool_default_options() REDDE MailSpoolOptions
+  EVOCA MailSpoolOptions options
+  VINCIRE options.root_dir AD ""
+  VINCIRE options.max_attempts AD 3
+  VINCIRE options.base_retry_seconds AD 30
+  REDDE options
+EXPLICIT RITUALE
+
+RITUALE mail_spool_options_normalize(MailSpoolOptions options) REDDE MailSpoolOptions
+  EVOCA MailSpoolOptions out AD options
+  SI out.max_attempts <= 0
+    VINCIRE out.max_attempts AD 3
+  FIN SI
+  SI out.base_retry_seconds <= 0
+    VINCIRE out.base_retry_seconds AD 30
+  FIN SI
+  REDDE out
+EXPLICIT RITUALE
+
+RITUALE mail_spool_now_unix() REDDE REX
+  REDDE CONIURA datetime_to_unix(CONIURA datetime_now())
+EXPLICIT RITUALE
+
+RITUALE mail_spool_item_path(MailSpool spool, VERBUM spool_id) REDDE VERBUM
+  REDDE CONIURA path_join(spool.options.root_dir, CONIURA concat(spool_id, ".json"))
+EXPLICIT RITUALE
+
+RITUALE mail_spool_index_path(MailSpool spool) REDDE VERBUM
+  REDDE CONIURA path_join(spool.options.root_dir, "_index.json")
+EXPLICIT RITUALE
+
+RITUALE mail_spool_backoff(REX attempt_count, REX base_seconds) REDDE REX
+  EVOCA REX delay AD base_seconds
+  EVOCA REX i AD 1
+  DUM i < attempt_count
+    VINCIRE delay AD delay * 2
+    SI delay > 3600
+      REDDE 3600
+    FIN SI
+    VINCIRE i AD i + 1
+  FIN DUM
+  REDDE delay
+EXPLICIT RITUALE
+
+RITUALE mail_spool_status_is_retryable(MailSpoolStatus status) REDDE VERUM
+  SI status == MAIL_SPOOL_PENDING VEL status == MAIL_SPOOL_FAILED
+    REDDE VERUM
+  FIN SI
+  REDDE FALSUM
+EXPLICIT RITUALE
+
+RITUALE mail_spool_address_to_json(MailAddress address) REDDE Json
+  EVOCA Json out AD CONIURA json_obj()
+  CONIURA json_obj_push(out, "email", CONIURA json_str(address.email))
+  CONIURA json_obj_push(out, "display_name", CONIURA json_str(address.display_name))
+  REDDE out
+EXPLICIT RITUALE
+
+RITUALE mail_spool_address_from_json(Json raw) REDDE MailAddress
+  EVOCA MailAddress address AD CONIURA mail_address("", "")
+  SI CONIURA json_is_obj(raw)
+    VINCIRE address.email AD CONIURA json_expect_str(CONIURA json_get_key(raw, "email"))
+    SI CONIURA json_has_key(raw, "display_name")
+      VINCIRE address.display_name AD CONIURA json_expect_str(CONIURA json_get_key(raw, "display_name"))
+    FIN SI
+  FIN SI
+  REDDE address
+EXPLICIT RITUALE
+
+RITUALE mail_spool_addresses_to_json(SPECULUM NIHIL addresses) REDDE Json
+  EVOCA Json out AD CONIURA json_arr()
+  EVOCA REX i AD 0
+  DUM i < CONIURA fluxus_len(addresses)
+    EVOCA SPECULUM MailAddress address_ptr AD CONIURA fluxus_get(addresses, i)
+    CONIURA json_arr_push(out, CONIURA mail_spool_address_to_json(*address_ptr))
+    VINCIRE i AD i + 1
+  FIN DUM
+  REDDE out
+EXPLICIT RITUALE
+
+RITUALE mail_spool_addresses_from_json(Json raw) REDDE SPECULUM NIHIL
+  EVOCA SPECULUM NIHIL out AD CONIURA mail_empty_addresses()
+  EVOCA REX i AD 0
+  SI NON CONIURA json_is_arr(raw)
+    REDDE out
+  FIN SI
+  DUM i < CONIURA json_arr_len(raw)
+    EVOCA MailAddress address AD CONIURA mail_spool_address_from_json(CONIURA json_arr_get(raw, i))
+    CONIURA fluxus_push(out, SPECULUM address)
+    VINCIRE i AD i + 1
+  FIN DUM
+  REDDE out
+EXPLICIT RITUALE
+
+RITUALE mail_spool_header_to_json(MailHeader header) REDDE Json
+  EVOCA Json out AD CONIURA json_obj()
+  CONIURA json_obj_push(out, "name", CONIURA json_str(header.name))
+  CONIURA json_obj_push(out, "value", CONIURA json_str(header.value))
+  REDDE out
+EXPLICIT RITUALE
+
+RITUALE mail_spool_headers_to_json(SPECULUM NIHIL headers) REDDE Json
+  EVOCA Json out AD CONIURA json_arr()
+  EVOCA REX i AD 0
+  DUM i < CONIURA fluxus_len(headers)
+    EVOCA SPECULUM MailHeader header_ptr AD CONIURA fluxus_get(headers, i)
+    CONIURA json_arr_push(out, CONIURA mail_spool_header_to_json(*header_ptr))
+    VINCIRE i AD i + 1
+  FIN DUM
+  REDDE out
+EXPLICIT RITUALE
+
+RITUALE mail_spool_headers_from_json(Json raw) REDDE SPECULUM NIHIL
+  EVOCA SPECULUM NIHIL out AD CONIURA mail_empty_headers()
+  EVOCA REX i AD 0
+  SI NON CONIURA json_is_arr(raw)
+    REDDE out
+  FIN SI
+  DUM i < CONIURA json_arr_len(raw)
+    EVOCA Json item AD CONIURA json_arr_get(raw, i)
+    EVOCA MailHeader header
+    VINCIRE header.name AD CONIURA json_expect_str(CONIURA json_get_key(item, "name"))
+    VINCIRE header.value AD CONIURA json_expect_str(CONIURA json_get_key(item, "value"))
+    CONIURA fluxus_push(out, SPECULUM header)
+    VINCIRE i AD i + 1
+  FIN DUM
+  REDDE out
+EXPLICIT RITUALE
+
+RITUALE mail_spool_bytes_to_json(SPECULUM NIHIL data) REDDE Json
+  EVOCA Json out AD CONIURA json_arr()
+  EVOCA REX i AD 0
+  DUM i < CONIURA bytes_len(data)
+    CONIURA json_arr_push(out, CONIURA json_num(cast GENUS(UMBRA)(CONIURA bytes_get(data, i))))
+    VINCIRE i AD i + 1
+  FIN DUM
+  REDDE out
+EXPLICIT RITUALE
+
+RITUALE mail_spool_bytes_from_json(Json raw) REDDE SPECULUM NIHIL
+  SI NON CONIURA json_is_arr(raw)
+    REDDE CONIURA bytes_new(0)
+  FIN SI
+  EVOCA REX size AD CONIURA json_arr_len(raw)
+  EVOCA SPECULUM NIHIL out AD CONIURA bytes_new(size)
+  EVOCA REX i AD 0
+  DUM i < size
+    CONIURA bytes_set(out, i, cast GENUS(REX)(CONIURA json_expect_num(CONIURA json_arr_get(raw, i))))
+    VINCIRE i AD i + 1
+  FIN DUM
+  REDDE out
+EXPLICIT RITUALE
+
+RITUALE mail_spool_attachment_to_json(MailAttachment attachment) REDDE Json
+  EVOCA Json out AD CONIURA json_obj()
+  CONIURA json_obj_push(out, "filename", CONIURA json_str(attachment.filename))
+  CONIURA json_obj_push(out, "content_type", CONIURA json_str(attachment.content_type))
+  CONIURA json_obj_push(out, "data", CONIURA mail_spool_bytes_to_json(attachment.data))
+  CONIURA json_obj_push(out, "is_inline", CONIURA json_bool(attachment.is_inline))
+  CONIURA json_obj_push(out, "content_id", CONIURA json_str(attachment.content_id))
+  REDDE out
+EXPLICIT RITUALE
+
+RITUALE mail_spool_attachments_to_json(SPECULUM NIHIL attachments) REDDE Json
+  EVOCA Json out AD CONIURA json_arr()
+  EVOCA REX i AD 0
+  DUM i < CONIURA fluxus_len(attachments)
+    EVOCA SPECULUM MailAttachment attachment_ptr AD CONIURA fluxus_get(attachments, i)
+    CONIURA json_arr_push(out, CONIURA mail_spool_attachment_to_json(*attachment_ptr))
+    VINCIRE i AD i + 1
+  FIN DUM
+  REDDE out
+EXPLICIT RITUALE
+
+RITUALE mail_spool_attachments_from_json(Json raw) REDDE SPECULUM NIHIL
+  EVOCA SPECULUM NIHIL out AD CONIURA mail_empty_attachments()
+  EVOCA REX i AD 0
+  SI NON CONIURA json_is_arr(raw)
+    REDDE out
+  FIN SI
+  DUM i < CONIURA json_arr_len(raw)
+    EVOCA Json item AD CONIURA json_arr_get(raw, i)
+    EVOCA MailAttachment attachment
+    VINCIRE attachment.filename AD CONIURA json_expect_str(CONIURA json_get_key(item, "filename"))
+    VINCIRE attachment.content_type AD CONIURA json_expect_str(CONIURA json_get_key(item, "content_type"))
+    VINCIRE attachment.data AD CONIURA mail_spool_bytes_from_json(CONIURA json_get_key(item, "data"))
+    VINCIRE attachment.is_inline AD FALSUM
+    SI CONIURA json_has_key(item, "is_inline")
+      VINCIRE attachment.is_inline AD CONIURA json_expect_bool(CONIURA json_get_key(item, "is_inline"))
+    FIN SI
+    VINCIRE attachment.content_id AD ""
+    SI CONIURA json_has_key(item, "content_id")
+      VINCIRE attachment.content_id AD CONIURA json_expect_str(CONIURA json_get_key(item, "content_id"))
+    FIN SI
+    CONIURA fluxus_push(out, SPECULUM attachment)
+    VINCIRE i AD i + 1
+  FIN DUM
+  REDDE out
+EXPLICIT RITUALE
+
+RITUALE mail_spool_message_to_json(MailMessage message) REDDE Json
+  EVOCA MailMessage materialized AD CONIURA mail_message_new()
+  CONIURA mail_spool_message_copy_into(SPECULUM materialized, message)
+  CONIURA mail_message_ensure_message_id(SPECULUM materialized)
+  EVOCA Json out AD CONIURA json_obj()
+  CONIURA json_obj_push(out, "message_id", CONIURA json_str(materialized.message_id))
+  CONIURA json_obj_push(out, "from", CONIURA mail_spool_address_to_json(materialized.from))
+  CONIURA json_obj_push(out, "to", CONIURA mail_spool_addresses_to_json(materialized.to))
+  CONIURA json_obj_push(out, "cc", CONIURA mail_spool_addresses_to_json(materialized.cc))
+  CONIURA json_obj_push(out, "bcc", CONIURA mail_spool_addresses_to_json(materialized.bcc))
+  CONIURA json_obj_push(out, "reply_to", CONIURA mail_spool_addresses_to_json(materialized.reply_to))
+  CONIURA json_obj_push(out, "subject", CONIURA json_str(materialized.subject))
+  CONIURA json_obj_push(out, "text_body", CONIURA json_str(materialized.text_body))
+  CONIURA json_obj_push(out, "html_body", CONIURA json_str(materialized.html_body))
+  CONIURA json_obj_push(out, "headers", CONIURA mail_spool_headers_to_json(materialized.headers))
+  CONIURA json_obj_push(out, "attachments", CONIURA mail_spool_attachments_to_json(materialized.attachments))
+  CONIURA json_obj_push(out, "mime", CONIURA json_str(CONIURA mail_message_render_mime(materialized)))
+  REDDE out
+EXPLICIT RITUALE
+
+RITUALE mail_spool_message_from_json(Json raw) REDDE MailMessage
+  EVOCA MailMessage message AD CONIURA mail_message_new()
+  SI NON CONIURA json_is_obj(raw)
+    REDDE message
+  FIN SI
+  VINCIRE message.message_id AD CONIURA json_expect_str(CONIURA json_get_key(raw, "message_id"))
+  VINCIRE message.from AD CONIURA mail_spool_address_from_json(CONIURA json_get_key(raw, "from"))
+  VINCIRE message.to AD CONIURA mail_spool_addresses_from_json(CONIURA json_get_key(raw, "to"))
+  VINCIRE message.cc AD CONIURA mail_spool_addresses_from_json(CONIURA json_get_key(raw, "cc"))
+  VINCIRE message.bcc AD CONIURA mail_spool_addresses_from_json(CONIURA json_get_key(raw, "bcc"))
+  VINCIRE message.reply_to AD CONIURA mail_spool_addresses_from_json(CONIURA json_get_key(raw, "reply_to"))
+  VINCIRE message.subject AD CONIURA json_expect_str(CONIURA json_get_key(raw, "subject"))
+  VINCIRE message.text_body AD CONIURA json_expect_str(CONIURA json_get_key(raw, "text_body"))
+  VINCIRE message.html_body AD CONIURA json_expect_str(CONIURA json_get_key(raw, "html_body"))
+  VINCIRE message.headers AD CONIURA mail_spool_headers_from_json(CONIURA json_get_key(raw, "headers"))
+  VINCIRE message.attachments AD CONIURA mail_spool_attachments_from_json(CONIURA json_get_key(raw, "attachments"))
+  REDDE message
+EXPLICIT RITUALE
+
+RITUALE mail_spool_item_to_json(MailSpoolItem item) REDDE Json
+  EVOCA Json out AD CONIURA json_obj()
+  CONIURA json_obj_push(out, "spool_id", CONIURA json_str(item.spool_id))
+  CONIURA json_obj_push(out, "status", CONIURA json_str(CONIURA mail_spool_status_to_string(item.status)))
+  CONIURA json_obj_push(out, "attempt_count", CONIURA json_num(cast GENUS(UMBRA)(item.attempt_count)))
+  CONIURA json_obj_push(out, "created_at_unix", CONIURA json_num(cast GENUS(UMBRA)(item.created_at_unix)))
+  CONIURA json_obj_push(out, "updated_at_unix", CONIURA json_num(cast GENUS(UMBRA)(item.updated_at_unix)))
+  CONIURA json_obj_push(out, "next_attempt_at_unix", CONIURA json_num(cast GENUS(UMBRA)(item.next_attempt_at_unix)))
+  CONIURA json_obj_push(out, "last_error", CONIURA json_str(item.last_error))
+  CONIURA json_obj_push(out, "message", CONIURA mail_spool_message_to_json(item.message))
+  REDDE out
+EXPLICIT RITUALE
+
+RITUALE mail_spool_item_from_json(Json raw) REDDE MailSpoolItem
+  EVOCA MailSpoolItem item
+  VINCIRE item.spool_id AD CONIURA json_expect_str(CONIURA json_get_key(raw, "spool_id"))
+  VINCIRE item.status AD CONIURA mail_spool_status_from_string(CONIURA json_expect_str(CONIURA json_get_key(raw, "status")))
+  VINCIRE item.attempt_count AD cast GENUS(REX)(CONIURA json_expect_num(CONIURA json_get_key(raw, "attempt_count")))
+  VINCIRE item.created_at_unix AD cast GENUS(REX)(CONIURA json_expect_num(CONIURA json_get_key(raw, "created_at_unix")))
+  VINCIRE item.updated_at_unix AD cast GENUS(REX)(CONIURA json_expect_num(CONIURA json_get_key(raw, "updated_at_unix")))
+  VINCIRE item.next_attempt_at_unix AD cast GENUS(REX)(CONIURA json_expect_num(CONIURA json_get_key(raw, "next_attempt_at_unix")))
+  VINCIRE item.last_error AD CONIURA json_expect_str(CONIURA json_get_key(raw, "last_error"))
+  EVOCA MailMessage parsed_message AD CONIURA mail_spool_message_from_json(CONIURA json_get_key(raw, "message"))
+  VINCIRE item.message.from AD parsed_message.from
+  VINCIRE item.message.to AD parsed_message.to
+  VINCIRE item.message.cc AD parsed_message.cc
+  VINCIRE item.message.bcc AD parsed_message.bcc
+  VINCIRE item.message.reply_to AD parsed_message.reply_to
+  VINCIRE item.message.subject AD parsed_message.subject
+  VINCIRE item.message.text_body AD parsed_message.text_body
+  VINCIRE item.message.html_body AD parsed_message.html_body
+  VINCIRE item.message.headers AD parsed_message.headers
+  VINCIRE item.message.attachments AD parsed_message.attachments
+  VINCIRE item.message.message_id AD parsed_message.message_id
+  REDDE item
+EXPLICIT RITUALE
+
+RITUALE mail_spool_item_write(MailSpool spool, MailSpoolItem item) REDDE SPECULUM NIHIL
+  TEMPTA
+    CONIURA json_write_file(CONIURA mail_spool_item_to_json(item), CONIURA mail_spool_item_path(spool, item.spool_id))
+    REDDE CONIURA mail_spool_ok_unit()
+  CAPE FRACTUM error
+    REDDE CONIURA mail_spool_err_unit(OBSECRO fractum_to_verbum(error))
+  FIN TEMPTA
+  REDDE CONIURA mail_spool_err_unit("falha ao persistir spool")
+EXPLICIT RITUALE
+
+RITUALE mail_spool_index_read(MailSpool spool) REDDE Json
+  EVOCA VERBUM index_path AD CONIURA mail_spool_index_path(spool)
+  SI NON CONIURA exists(index_path)
+    REDDE CONIURA json_arr()
+  FIN SI
+  TEMPTA
+    EVOCA Json raw AD CONIURA json_parse_file(index_path)
+    SI CONIURA json_is_arr(raw)
+      REDDE raw
+    FIN SI
+  CAPE FRACTUM error
+  FIN TEMPTA
+  REDDE CONIURA json_arr()
+EXPLICIT RITUALE
+
+RITUALE mail_spool_index_write(MailSpool spool, Json index_json) REDDE SPECULUM NIHIL
+  TEMPTA
+    CONIURA json_write_file(index_json, CONIURA mail_spool_index_path(spool))
+    REDDE CONIURA mail_spool_ok_unit()
+  CAPE FRACTUM error
+    REDDE CONIURA mail_spool_err_unit(OBSECRO fractum_to_verbum(error))
+  FIN TEMPTA
+  REDDE CONIURA mail_spool_err_unit("falha ao escrever indice do spool")
+EXPLICIT RITUALE
+
+RITUALE mail_spool_index_add(MailSpool spool, VERBUM spool_id) REDDE SPECULUM NIHIL
+  EVOCA Json index_json AD CONIURA mail_spool_index_read(spool)
+  EVOCA REX i AD 0
+  DUM i < CONIURA json_arr_len(index_json)
+    SI CONIURA compare(CONIURA json_expect_str(CONIURA json_arr_get(index_json, i)), spool_id) == 0
+      REDDE CONIURA mail_spool_ok_unit()
+    FIN SI
+    VINCIRE i AD i + 1
+  FIN DUM
+  CONIURA json_arr_push(index_json, CONIURA json_str(spool_id))
+  REDDE CONIURA mail_spool_index_write(spool, index_json)
+EXPLICIT RITUALE
+
+RITUALE mail_spool_index_remove(MailSpool spool, VERBUM spool_id) REDDE SPECULUM NIHIL
+  EVOCA Json existing AD CONIURA mail_spool_index_read(spool)
+  EVOCA Json filtered AD CONIURA json_arr()
+  EVOCA REX i AD 0
+  DUM i < CONIURA json_arr_len(existing)
+    EVOCA VERBUM current AD CONIURA json_expect_str(CONIURA json_arr_get(existing, i))
+    SI CONIURA compare(current, spool_id) != 0
+      CONIURA json_arr_push(filtered, CONIURA json_str(current))
+    FIN SI
+    VINCIRE i AD i + 1
+  FIN DUM
+  REDDE CONIURA mail_spool_index_write(spool, filtered)
+EXPLICIT RITUALE
+
+RITUALE mail_spool_update_state(MailSpool spool, MailSpoolItem item) REDDE SPECULUM NIHIL
+  VINCIRE item.updated_at_unix AD CONIURA mail_spool_now_unix()
+  REDDE CONIURA mail_spool_item_write(spool, item)
+EXPLICIT RITUALE
+
+RITUALE mail_spool_drain_result_new() REDDE MailSpoolDrainResult
+  EVOCA MailSpoolDrainResult result
+  VINCIRE result.scanned AD 0
+  VINCIRE result.attempted AD 0
+  VINCIRE result.sent AD 0
+  VINCIRE result.failed AD 0
+  VINCIRE result.dead AD 0
+  REDDE result
+EXPLICIT RITUALE
+
+RITUALE mail_spool_open(MailSpoolOptions options) REDDE SPECULUM NIHIL
+  EVOCA MailSpoolOptions normalized AD CONIURA mail_spool_options_normalize(options)
+  SI CONIURA len(normalized.root_dir) == 0
+    REDDE CONIURA Err GENUS(MailSpool, VERBUM)("root_dir do spool nao pode ser vazio")
+  FIN SI
+  TEMPTA
+    CONIURA mkdir_all(normalized.root_dir)
+  CAPE FRACTUM error
+    REDDE CONIURA Err GENUS(MailSpool, VERBUM)(OBSECRO fractum_to_verbum(error))
+  FIN TEMPTA
+  EVOCA MailSpool spool
+  VINCIRE spool.options AD normalized
+  SI NON CONIURA exists(CONIURA mail_spool_index_path(spool))
+    EVOCA SPECULUM NIHIL index_result AD CONIURA mail_spool_index_write(spool, CONIURA json_arr())
+    SI CONIURA result_is_err GENUS(REX, VERBUM)(index_result)
+      REDDE CONIURA Err GENUS(MailSpool, VERBUM)("falha ao inicializar indice do spool")
+    FIN SI
+  FIN SI
+  REDDE CONIURA Ok GENUS(MailSpool, VERBUM)(spool)
+EXPLICIT RITUALE
+
+RITUALE mail_spool_enqueue(MailSpool spool, MailMessage message) REDDE SPECULUM NIHIL
+  EVOCA MailMessage queued AD CONIURA mail_message_new()
+  CONIURA mail_spool_message_copy_into(SPECULUM queued, message)
+  EVOCA VERBUM validation_error AD CONIURA mail_message_validation_error(queued)
+  SI CONIURA len(validation_error) > 0
+    REDDE CONIURA Err GENUS(MailSpoolItem, VERBUM)(validation_error)
+  FIN SI
+  CONIURA mail_message_ensure_message_id(SPECULUM queued)
+  EVOCA UUID uid AD CONIURA uuid_v4()
+  EVOCA VERBUM spool_id AD CONIURA uuid_to_string(uid)
+  EVOCA REX now_unix AD CONIURA mail_spool_now_unix()
+  EVOCA MailSpoolItem item
+  VINCIRE item.spool_id AD spool_id
+  VINCIRE item.message.from AD queued.from
+  VINCIRE item.message.to AD queued.to
+  VINCIRE item.message.cc AD queued.cc
+  VINCIRE item.message.bcc AD queued.bcc
+  VINCIRE item.message.reply_to AD queued.reply_to
+  VINCIRE item.message.subject AD queued.subject
+  VINCIRE item.message.text_body AD queued.text_body
+  VINCIRE item.message.html_body AD queued.html_body
+  VINCIRE item.message.headers AD queued.headers
+  VINCIRE item.message.attachments AD queued.attachments
+  VINCIRE item.message.message_id AD queued.message_id
+  VINCIRE item.status AD MAIL_SPOOL_PENDING
+  VINCIRE item.attempt_count AD 0
+  VINCIRE item.created_at_unix AD now_unix
+  VINCIRE item.updated_at_unix AD now_unix
+  VINCIRE item.next_attempt_at_unix AD now_unix
+  VINCIRE item.last_error AD ""
+  EVOCA SPECULUM NIHIL write_result AD CONIURA mail_spool_item_write(spool, item)
+  SI CONIURA result_is_err GENUS(REX, VERBUM)(write_result)
+    REDDE CONIURA Err GENUS(MailSpoolItem, VERBUM)("falha ao persistir item do spool")
+  FIN SI
+  EVOCA SPECULUM NIHIL index_result AD CONIURA mail_spool_index_add(spool, spool_id)
+  SI CONIURA result_is_err GENUS(REX, VERBUM)(index_result)
+    REDDE CONIURA Err GENUS(MailSpoolItem, VERBUM)("falha ao atualizar indice do spool")
+  FIN SI
+  REDDE CONIURA Ok GENUS(MailSpoolItem, VERBUM)(item)
+EXPLICIT RITUALE
+
+RITUALE mail_spool_get(MailSpool spool, VERBUM spool_id) REDDE SPECULUM NIHIL
+  EVOCA VERBUM filepath AD CONIURA mail_spool_item_path(spool, spool_id)
+  SI NON CONIURA exists(filepath)
+    REDDE CONIURA Err GENUS(MailSpoolItem, VERBUM)("item de spool nao encontrado")
+  FIN SI
+  TEMPTA
+    EVOCA Json raw AD CONIURA json_parse_file(filepath)
+    EVOCA MailSpoolItem item AD CONIURA mail_spool_item_from_json(raw)
+    REDDE CONIURA Ok GENUS(MailSpoolItem, VERBUM)(item)
+  CAPE FRACTUM error
+    REDDE CONIURA Err GENUS(MailSpoolItem, VERBUM)(OBSECRO fractum_to_verbum(error))
+  FIN TEMPTA
+  REDDE CONIURA Err GENUS(MailSpoolItem, VERBUM)("item de spool corrompido")
+EXPLICIT RITUALE
+
+RITUALE mail_spool_list_pending(MailSpool spool, REX limit) REDDE SPECULUM NIHIL
+  EVOCA SPECULUM NIHIL out AD CONIURA fluxus_init(MENSURA(MailSpoolItem))
+  EVOCA REX now_unix AD CONIURA mail_spool_now_unix()
+  EVOCA Json index_json AD CONIURA mail_spool_index_read(spool)
+  EVOCA REX i AD 0
+  DUM i < CONIURA json_arr_len(index_json)
+    SI NON (limit > 0 ET CONIURA fluxus_len(out) >= limit)
+      EVOCA VERBUM spool_id AD CONIURA json_expect_str(CONIURA json_arr_get(index_json, i))
+      EVOCA SPECULUM NIHIL item_result AD CONIURA mail_spool_get(spool, spool_id)
+      SI NON CONIURA result_is_err GENUS(MailSpoolItem, VERBUM)(item_result)
+        EVOCA MailSpoolItem item AD CONIURA result_unwrap GENUS(MailSpoolItem, VERBUM)(item_result)
+        SI CONIURA mail_spool_status_is_retryable(item.status) ET item.next_attempt_at_unix <= now_unix
+          CONIURA fluxus_push(out, SPECULUM item)
+        FIN SI
+      FIN SI
+    FIN SI
+    VINCIRE i AD i + 1
+  FIN DUM
+  REDDE out
+EXPLICIT RITUALE
+
+RITUALE mail_spool_mark_sent(MailSpool spool, VERBUM spool_id) REDDE SPECULUM NIHIL
+  EVOCA SPECULUM NIHIL item_result AD CONIURA mail_spool_get(spool, spool_id)
+  SI CONIURA result_is_err GENUS(MailSpoolItem, VERBUM)(item_result)
+    REDDE CONIURA Err GENUS(REX, VERBUM)("item de spool nao encontrado")
+  FIN SI
+  EVOCA MailSpoolItem item AD CONIURA result_unwrap GENUS(MailSpoolItem, VERBUM)(item_result)
+  VINCIRE item.status AD MAIL_SPOOL_SENT
+  VINCIRE item.last_error AD ""
+  VINCIRE item.next_attempt_at_unix AD item.updated_at_unix
+  REDDE CONIURA mail_spool_update_state(spool, item)
+EXPLICIT RITUALE
+
+RITUALE mail_spool_mark_failed(MailSpool spool, VERBUM spool_id, VERBUM error_message) REDDE SPECULUM NIHIL
+  EVOCA SPECULUM NIHIL item_result AD CONIURA mail_spool_get(spool, spool_id)
+  SI CONIURA result_is_err GENUS(MailSpoolItem, VERBUM)(item_result)
+    REDDE CONIURA Err GENUS(REX, VERBUM)("item de spool nao encontrado")
+  FIN SI
+  EVOCA MailSpoolItem item AD CONIURA result_unwrap GENUS(MailSpoolItem, VERBUM)(item_result)
+  EVOCA REX attempts AD item.attempt_count + 1
+  EVOCA REX now_unix AD CONIURA mail_spool_now_unix()
+  VINCIRE item.attempt_count AD attempts
+  VINCIRE item.last_error AD error_message
+  VINCIRE item.updated_at_unix AD now_unix
+  SI attempts >= spool.options.max_attempts
+    VINCIRE item.status AD MAIL_SPOOL_DEAD
+    VINCIRE item.next_attempt_at_unix AD now_unix
+  ALITER
+    VINCIRE item.status AD MAIL_SPOOL_FAILED
+    VINCIRE item.next_attempt_at_unix AD now_unix + CONIURA mail_spool_backoff(attempts, spool.options.base_retry_seconds)
+  FIN SI
+  REDDE CONIURA mail_spool_item_write(spool, item)
+EXPLICIT RITUALE
+
+RITUALE mail_spool_mark_dead(MailSpool spool, VERBUM spool_id, VERBUM error_message) REDDE SPECULUM NIHIL
+  EVOCA SPECULUM NIHIL item_result AD CONIURA mail_spool_get(spool, spool_id)
+  SI CONIURA result_is_err GENUS(MailSpoolItem, VERBUM)(item_result)
+    REDDE CONIURA Err GENUS(REX, VERBUM)("item de spool nao encontrado")
+  FIN SI
+  EVOCA MailSpoolItem item AD CONIURA result_unwrap GENUS(MailSpoolItem, VERBUM)(item_result)
+  VINCIRE item.status AD MAIL_SPOOL_DEAD
+  VINCIRE item.last_error AD error_message
+  VINCIRE item.next_attempt_at_unix AD CONIURA mail_spool_now_unix()
+  REDDE CONIURA mail_spool_update_state(spool, item)
+EXPLICIT RITUALE
+
+RITUALE mail_spool_delete(MailSpool spool, VERBUM spool_id) REDDE SPECULUM NIHIL
+  EVOCA VERBUM filepath AD CONIURA mail_spool_item_path(spool, spool_id)
+  SI NON CONIURA exists(filepath)
+    REDDE CONIURA Err GENUS(REX, VERBUM)("item de spool nao encontrado")
+  FIN SI
+  TEMPTA
+    CONIURA delete_file(filepath)
+    REDDE CONIURA mail_spool_index_remove(spool, spool_id)
+  CAPE FRACTUM error
+    REDDE CONIURA mail_spool_err_unit(OBSECRO fractum_to_verbum(error))
+  FIN TEMPTA
+  REDDE CONIURA mail_spool_err_unit("falha ao remover item do spool")
+EXPLICIT RITUALE
+
+RITUALE mail_spool_mark_sending(MailSpool spool, MailSpoolItem item) REDDE SPECULUM NIHIL
+  VINCIRE item.status AD MAIL_SPOOL_SENDING
+  REDDE CONIURA mail_spool_update_state(spool, item)
+EXPLICIT RITUALE
+
+RITUALE mail_spool_drain(MailSpool spool, SPECULUM MailClient client, REX batch_size) REDDE SPECULUM NIHIL
+  EVOCA SPECULUM NIHIL pending AD CONIURA mail_spool_list_pending(spool, batch_size)
+  EVOCA MailSpoolDrainResult result AD CONIURA mail_spool_drain_result_new()
+  VINCIRE result.scanned AD CONIURA fluxus_len(pending)
+  EVOCA REX i AD 0
+  DUM i < CONIURA fluxus_len(pending)
+    EVOCA SPECULUM MailSpoolItem item_ptr AD CONIURA fluxus_get(pending, i)
+    EVOCA MailSpoolItem item AD *item_ptr
+    VINCIRE result.attempted AD result.attempted + 1
+    EVOCA SPECULUM NIHIL sending_result AD CONIURA mail_spool_mark_sending(spool, item)
+    SI CONIURA result_is_err GENUS(REX, VERBUM)(sending_result)
+      REDDE CONIURA Err GENUS(MailSpoolDrainResult, VERBUM)("falha ao marcar item como sending")
+    FIN SI
+    EVOCA SPECULUM NIHIL send_result AD CONIURA mail_send(client, item.message)
+    SI CONIURA result_is_err GENUS(MailSendResult, VERBUM)(send_result)
+      EVOCA VERBUM error_message AD (*client).last_error
+      SI CONIURA len(error_message) == 0
+        VINCIRE error_message AD "falha ao enviar email do spool"
+      FIN SI
+      CONIURA mail_spool_mark_failed(spool, item.spool_id, error_message)
+      EVOCA SPECULUM NIHIL refreshed_result AD CONIURA mail_spool_get(spool, item.spool_id)
+      SI CONIURA result_is_err GENUS(MailSpoolItem, VERBUM)(refreshed_result)
+        REDDE CONIURA Err GENUS(MailSpoolDrainResult, VERBUM)("falha ao recarregar item do spool")
+      FIN SI
+      EVOCA MailSpoolItem refreshed AD CONIURA result_unwrap GENUS(MailSpoolItem, VERBUM)(refreshed_result)
+      SI refreshed.status == MAIL_SPOOL_DEAD
+        VINCIRE result.dead AD result.dead + 1
+      ALITER
+        VINCIRE result.failed AD result.failed + 1
+      FIN SI
+    ALITER
+      CONIURA mail_spool_mark_sent(spool, item.spool_id)
+      VINCIRE result.sent AD result.sent + 1
+    FIN SI
+    VINCIRE i AD i + 1
+  FIN DUM
+  REDDE CONIURA Ok GENUS(MailSpoolDrainResult, VERBUM)(result)
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

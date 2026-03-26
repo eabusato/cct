@@ -1,0 +1,855 @@
+-- CCT — Clavicula Turing
+-- Standard Library Module: mail
+--
+-- FASE 37A: Canonical mail composition and delivery
+
+INCIPIT grimoire "mail"
+
+ADVOCARE "cct/bytes.cct"
+ADVOCARE "cct/date.cct"
+ADVOCARE "cct/fluxus.cct"
+ADVOCARE "cct/fs.cct"
+ADVOCARE "cct/path.cct"
+ADVOCARE "cct/result.cct"
+ADVOCARE "cct/verbum.cct"
+ADVOCARE "cct/verbum_builder.cct"
+ADVOCARE "cct/uuid.cct"
+
+ORDO MailBackendKind
+  MAIL_BACKEND_SMTP
+  MAIL_BACKEND_FILE
+  MAIL_BACKEND_MEMORY
+FIN ORDO
+
+ORDO MailAuthKind
+  MAIL_AUTH_NONE
+  MAIL_AUTH_PLAIN
+  MAIL_AUTH_LOGIN
+  MAIL_AUTH_XOAUTH2
+FIN ORDO
+
+SIGILLUM MailAddress
+  email: VERBUM
+  display_name: VERBUM
+FIN SIGILLUM
+
+SIGILLUM MailHeader
+  name: VERBUM
+  value: VERBUM
+FIN SIGILLUM
+
+SIGILLUM MailAttachment
+  filename: VERBUM
+  content_type: VERBUM
+  data: SPECULUM NIHIL
+  is_inline: VERUM
+  content_id: VERBUM
+FIN SIGILLUM
+
+SIGILLUM MailMessage
+  from: MailAddress
+  to: SPECULUM NIHIL
+  cc: SPECULUM NIHIL
+  bcc: SPECULUM NIHIL
+  reply_to: SPECULUM NIHIL
+  subject: VERBUM
+  text_body: VERBUM
+  html_body: VERBUM
+  headers: SPECULUM NIHIL
+  attachments: SPECULUM NIHIL
+  message_id: VERBUM
+FIN SIGILLUM
+
+SIGILLUM MailBackendOptions
+  kind: MailBackendKind
+  host: VERBUM
+  port: REX
+  username: VERBUM
+  password: VERBUM
+  auth_kind: MailAuthKind
+  use_starttls: VERUM
+  use_smtps: VERUM
+  file_out_dir: VERBUM
+FIN SIGILLUM
+
+SIGILLUM MailSendResult
+  ok: VERUM
+  message_id: VERBUM
+  error_message: VERBUM
+FIN SIGILLUM
+
+SIGILLUM MailClient
+  options: MailBackendOptions
+  memory_outbox: SPECULUM NIHIL
+  last_error: VERBUM
+  is_open: VERUM
+FIN SIGILLUM
+
+RITUALE mail_ok_unit() REDDE SPECULUM NIHIL
+  REDDE CONIURA Ok GENUS(REX, VERBUM)(0)
+EXPLICIT RITUALE
+
+RITUALE mail_err_unit(VERBUM message) REDDE SPECULUM NIHIL
+  REDDE CONIURA Err GENUS(REX, VERBUM)(message)
+EXPLICIT RITUALE
+
+RITUALE mail_empty_addresses() REDDE SPECULUM NIHIL
+  REDDE CONIURA fluxus_init(MENSURA(MailAddress))
+EXPLICIT RITUALE
+
+RITUALE mail_empty_headers() REDDE SPECULUM NIHIL
+  REDDE CONIURA fluxus_init(MENSURA(MailHeader))
+EXPLICIT RITUALE
+
+RITUALE mail_empty_attachments() REDDE SPECULUM NIHIL
+  REDDE CONIURA fluxus_init(MENSURA(MailAttachment))
+EXPLICIT RITUALE
+
+RITUALE mail_address(VERBUM email, VERBUM display_name) REDDE MailAddress
+  EVOCA MailAddress addr
+  VINCIRE addr.email AD email
+  VINCIRE addr.display_name AD display_name
+  REDDE addr
+EXPLICIT RITUALE
+
+RITUALE mail_address_format(MailAddress addr) REDDE VERBUM
+  SI CONIURA len(addr.display_name) == 0
+    REDDE addr.email
+  FIN SI
+  EVOCA VERBUM out AD addr.display_name
+  VINCIRE out AD CONIURA concat(out, " <")
+  VINCIRE out AD CONIURA concat(out, addr.email)
+  VINCIRE out AD CONIURA concat(out, ">")
+  REDDE out
+EXPLICIT RITUALE
+
+RITUALE mail_message_new() REDDE MailMessage
+  EVOCA MailMessage msg
+  EVOCA MailAddress empty_addr AD CONIURA mail_address("", "")
+  VINCIRE msg.from AD empty_addr
+  VINCIRE msg.to AD CONIURA mail_empty_addresses()
+  VINCIRE msg.cc AD CONIURA mail_empty_addresses()
+  VINCIRE msg.bcc AD CONIURA mail_empty_addresses()
+  VINCIRE msg.reply_to AD CONIURA mail_empty_addresses()
+  VINCIRE msg.subject AD ""
+  VINCIRE msg.text_body AD ""
+  VINCIRE msg.html_body AD ""
+  VINCIRE msg.headers AD CONIURA mail_empty_headers()
+  VINCIRE msg.attachments AD CONIURA mail_empty_attachments()
+  VINCIRE msg.message_id AD ""
+  REDDE msg
+EXPLICIT RITUALE
+
+RITUALE mail_message_set_from(SPECULUM MailMessage msg, MailAddress addr) REDDE NIHIL
+  VINCIRE (*msg).from AD addr
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE mail_message_add_to(SPECULUM MailMessage msg, MailAddress addr) REDDE NIHIL
+  CONIURA fluxus_push((*msg).to, SPECULUM addr)
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE mail_message_add_cc(SPECULUM MailMessage msg, MailAddress addr) REDDE NIHIL
+  CONIURA fluxus_push((*msg).cc, SPECULUM addr)
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE mail_message_add_bcc(SPECULUM MailMessage msg, MailAddress addr) REDDE NIHIL
+  CONIURA fluxus_push((*msg).bcc, SPECULUM addr)
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE mail_message_add_reply_to(SPECULUM MailMessage msg, MailAddress addr) REDDE NIHIL
+  CONIURA fluxus_push((*msg).reply_to, SPECULUM addr)
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE mail_message_set_subject(SPECULUM MailMessage msg, VERBUM subject) REDDE NIHIL
+  VINCIRE (*msg).subject AD subject
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE mail_message_set_text(SPECULUM MailMessage msg, VERBUM body) REDDE NIHIL
+  VINCIRE (*msg).text_body AD body
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE mail_message_set_html(SPECULUM MailMessage msg, VERBUM body) REDDE NIHIL
+  VINCIRE (*msg).html_body AD body
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE mail_message_add_header(SPECULUM MailMessage msg, VERBUM name, VERBUM value) REDDE NIHIL
+  EVOCA MailHeader header
+  VINCIRE header.name AD name
+  VINCIRE header.value AD value
+  CONIURA fluxus_push((*msg).headers, SPECULUM header)
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE mail_message_add_attachment(SPECULUM MailMessage msg, VERBUM filename, VERBUM content_type, SPECULUM NIHIL data) REDDE NIHIL
+  EVOCA MailAttachment att
+  VINCIRE att.filename AD filename
+  VINCIRE att.content_type AD content_type
+  VINCIRE att.data AD data
+  VINCIRE att.is_inline AD FALSUM
+  VINCIRE att.content_id AD ""
+  CONIURA fluxus_push((*msg).attachments, SPECULUM att)
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE mail_message_add_inline_attachment(SPECULUM MailMessage msg, VERBUM filename, VERBUM content_type, SPECULUM NIHIL data, VERBUM content_id) REDDE NIHIL
+  EVOCA MailAttachment att
+  VINCIRE att.filename AD filename
+  VINCIRE att.content_type AD content_type
+  VINCIRE att.data AD data
+  VINCIRE att.is_inline AD VERUM
+  VINCIRE att.content_id AD content_id
+  CONIURA fluxus_push((*msg).attachments, SPECULUM att)
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE mail_sender_domain(VERBUM email) REDDE VERBUM
+  EVOCA REX at_pos AD CONIURA find(email, "@")
+  SI at_pos == -1
+    REDDE "local.invalid"
+  FIN SI
+  EVOCA VERBUM domain AD CONIURA trim(CONIURA substring(email, at_pos + 1, CONIURA len(email)))
+  SI CONIURA len(domain) == 0
+    REDDE "local.invalid"
+  FIN SI
+  REDDE CONIURA to_lower(domain)
+EXPLICIT RITUALE
+
+RITUALE mail_message_build_message_id(MailMessage msg) REDDE VERBUM
+  SI CONIURA len(msg.message_id) > 0
+    REDDE msg.message_id
+  FIN SI
+  EVOCA UUID uid AD CONIURA uuid_v4()
+  EVOCA VERBUM text AD CONIURA uuid_to_string(uid)
+  EVOCA VERBUM mid AD "<"
+  VINCIRE mid AD CONIURA concat(mid, text)
+  VINCIRE mid AD CONIURA concat(mid, "@")
+  VINCIRE mid AD CONIURA concat(mid, CONIURA mail_sender_domain(msg.from.email))
+  VINCIRE mid AD CONIURA concat(mid, ">")
+  REDDE mid
+EXPLICIT RITUALE
+
+RITUALE mail_message_ensure_message_id(SPECULUM MailMessage msg) REDDE VERBUM
+  SI CONIURA len((*msg).message_id) > 0
+    REDDE (*msg).message_id
+  FIN SI
+  EVOCA VERBUM mid AD CONIURA mail_message_build_message_id(*msg)
+  VINCIRE (*msg).message_id AD mid
+  REDDE mid
+EXPLICIT RITUALE
+
+RITUALE mail_message_recipient_count(MailMessage msg) REDDE REX
+  REDDE CONIURA fluxus_len(msg.to) + CONIURA fluxus_len(msg.cc) + CONIURA fluxus_len(msg.bcc)
+EXPLICIT RITUALE
+
+RITUALE mail_message_validation_error(MailMessage msg) REDDE VERBUM
+  SI CONIURA len(msg.from.email) == 0
+    REDDE "from ausente"
+  FIN SI
+  SI CONIURA mail_message_recipient_count(msg) == 0
+    REDDE "nenhum destinatario"
+  FIN SI
+  SI CONIURA len(msg.subject) == 0
+    REDDE "subject ausente"
+  FIN SI
+  SI CONIURA len(msg.text_body) == 0 ET CONIURA len(msg.html_body) == 0
+    REDDE "corpo ausente"
+  FIN SI
+  REDDE ""
+EXPLICIT RITUALE
+
+RITUALE mail_message_validate(MailMessage msg) REDDE SPECULUM NIHIL
+  EVOCA VERBUM err AD CONIURA mail_message_validation_error(msg)
+  SI CONIURA len(err) > 0
+    REDDE CONIURA mail_err_unit(err)
+  FIN SI
+  REDDE CONIURA mail_ok_unit()
+EXPLICIT RITUALE
+
+RITUALE mail_mime_boundary() REDDE VERBUM
+  EVOCA UUID uid AD CONIURA uuid_v4()
+  EVOCA VERBUM out AD "=_cct_"
+  VINCIRE out AD CONIURA concat(out, CONIURA uuid_to_string(uid))
+  REDDE out
+EXPLICIT RITUALE
+
+RITUALE mail_addresses_join(SPECULUM NIHIL addrs) REDDE VERBUM
+  EVOCA REX i AD 0
+  EVOCA REX n AD CONIURA fluxus_len(addrs)
+  EVOCA VERBUM out AD ""
+  DUM i < n
+    EVOCA SPECULUM MailAddress addr_ptr AD CONIURA fluxus_get(addrs, i)
+    SI i > 0
+      VINCIRE out AD CONIURA concat(out, ", ")
+    FIN SI
+    VINCIRE out AD CONIURA concat(out, CONIURA mail_address_format(*addr_ptr))
+    VINCIRE i AD i + 1
+  FIN DUM
+  REDDE out
+EXPLICIT RITUALE
+
+RITUALE mail_append_header(SPECULUM NIHIL b, VERBUM name, VERBUM value) REDDE NIHIL
+  CONIURA builder_append(b, name)
+  CONIURA builder_append(b, ": ")
+  CONIURA builder_append(b, value)
+  CONIURA builder_append(b, "\n")
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE mail_bytes_to_verbum(SPECULUM NIHIL data) REDDE VERBUM
+  EVOCA VERBUM out AD ""
+  EVOCA REX i AD 0
+  EVOCA REX n AD CONIURA bytes_len(data)
+  DUM i < n
+    VINCIRE out AD CONIURA concat(out, CONIURA from_char(CONIURA bytes_get(data, i)))
+    VINCIRE i AD i + 1
+  FIN DUM
+  REDDE out
+EXPLICIT RITUALE
+
+RITUALE mail_base64_char(REX value) REDDE VERBUM
+  SI value < 26
+    REDDE CONIURA from_char(65 + value)
+  FIN SI
+  SI value < 52
+    REDDE CONIURA from_char(97 + (value - 26))
+  FIN SI
+  SI value < 62
+    REDDE CONIURA from_char(48 + (value - 52))
+  FIN SI
+  SI value == 62
+    REDDE "+"
+  FIN SI
+  REDDE "/"
+EXPLICIT RITUALE
+
+RITUALE mail_base64_encode_bytes(SPECULUM NIHIL data) REDDE VERBUM
+  EVOCA SPECULUM NIHIL b AD CONIURA builder_init()
+  EVOCA REX total AD CONIURA bytes_len(data)
+  EVOCA REX i AD 0
+  EVOCA REX column AD 0
+  DUM i < total
+    EVOCA REX b0 AD cast GENUS(REX)(CONIURA bytes_get(data, i))
+    EVOCA REX b1 AD 0
+    EVOCA REX b2 AD 0
+    EVOCA VERUM has_b1 AD i + 1 < total
+    EVOCA VERUM has_b2 AD i + 2 < total
+    SI has_b1
+      VINCIRE b1 AD cast GENUS(REX)(CONIURA bytes_get(data, i + 1))
+    FIN SI
+    SI has_b2
+      VINCIRE b2 AD cast GENUS(REX)(CONIURA bytes_get(data, i + 2))
+    FIN SI
+    EVOCA REX n0 AD b0 / 4
+    EVOCA REX n1 AD ((b0 % 4) * 16) + (b1 / 16)
+    EVOCA REX n2 AD ((b1 % 16) * 4) + (b2 / 64)
+    EVOCA REX n3 AD b2 % 64
+    CONIURA builder_append(b, CONIURA mail_base64_char(n0))
+    VINCIRE column AD column + 1
+    CONIURA builder_append(b, CONIURA mail_base64_char(n1))
+    VINCIRE column AD column + 1
+    SI has_b1
+      CONIURA builder_append(b, CONIURA mail_base64_char(n2))
+    ALITER
+      CONIURA builder_append(b, "=")
+    FIN SI
+    VINCIRE column AD column + 1
+    SI has_b2
+      CONIURA builder_append(b, CONIURA mail_base64_char(n3))
+    ALITER
+      CONIURA builder_append(b, "=")
+    FIN SI
+    VINCIRE column AD column + 1
+    SI column >= 76 ET i + 3 < total
+      CONIURA builder_append(b, "\n")
+      VINCIRE column AD 0
+    FIN SI
+    VINCIRE i AD i + 3
+  FIN DUM
+  EVOCA VERBUM out AD CONIURA builder_to_verbum(b)
+  CONIURA builder_free(b)
+  REDDE out
+EXPLICIT RITUALE
+
+RITUALE mail_base64_encode_verbum_raw(VERBUM text) REDDE VERBUM
+  EVOCA REX n AD CONIURA len(text)
+  EVOCA SPECULUM NIHIL raw AD CONIURA bytes_new(n)
+  EVOCA REX i AD 0
+  DUM i < n
+    CONIURA bytes_set(raw, i, CONIURA char_at(text, i))
+    VINCIRE i AD i + 1
+  FIN DUM
+  EVOCA SPECULUM NIHIL b AD CONIURA builder_init()
+  EVOCA REX total AD CONIURA bytes_len(raw)
+  VINCIRE i AD 0
+  DUM i < total
+    EVOCA REX b0 AD cast GENUS(REX)(CONIURA bytes_get(raw, i))
+    EVOCA REX b1 AD 0
+    EVOCA REX b2 AD 0
+    EVOCA VERUM has_b1 AD i + 1 < total
+    EVOCA VERUM has_b2 AD i + 2 < total
+    SI has_b1
+      VINCIRE b1 AD cast GENUS(REX)(CONIURA bytes_get(raw, i + 1))
+    FIN SI
+    SI has_b2
+      VINCIRE b2 AD cast GENUS(REX)(CONIURA bytes_get(raw, i + 2))
+    FIN SI
+    EVOCA REX n0 AD b0 / 4
+    EVOCA REX n1 AD ((b0 % 4) * 16) + (b1 / 16)
+    EVOCA REX n2 AD ((b1 % 16) * 4) + (b2 / 64)
+    EVOCA REX n3 AD b2 % 64
+    CONIURA builder_append(b, CONIURA mail_base64_char(n0))
+    CONIURA builder_append(b, CONIURA mail_base64_char(n1))
+    SI has_b1
+      CONIURA builder_append(b, CONIURA mail_base64_char(n2))
+    ALITER
+      CONIURA builder_append(b, "=")
+    FIN SI
+    SI has_b2
+      CONIURA builder_append(b, CONIURA mail_base64_char(n3))
+    ALITER
+      CONIURA builder_append(b, "=")
+    FIN SI
+    VINCIRE i AD i + 3
+  FIN DUM
+  EVOCA VERBUM out AD CONIURA builder_to_verbum(b)
+  CONIURA builder_free(b)
+  CONIURA bytes_free(raw)
+  REDDE out
+EXPLICIT RITUALE
+
+RITUALE mail_rfc2047_header_value(VERBUM text) REDDE VERBUM
+  SI CONIURA is_ascii(text)
+    REDDE text
+  FIN SI
+  EVOCA VERBUM encoded AD "=?UTF-8?B?"
+  VINCIRE encoded AD CONIURA concat(encoded, CONIURA mail_base64_encode_verbum_raw(text))
+  VINCIRE encoded AD CONIURA concat(encoded, "?=")
+  REDDE encoded
+EXPLICIT RITUALE
+
+RITUALE mail_weekday_name(REX weekday) REDDE VERBUM
+  ELIGE weekday
+    CASUS 0:
+      REDDE "Sun"
+    CASUS 1:
+      REDDE "Mon"
+    CASUS 2:
+      REDDE "Tue"
+    CASUS 3:
+      REDDE "Wed"
+    CASUS 4:
+      REDDE "Thu"
+    CASUS 5:
+      REDDE "Fri"
+    ALIOQUIN:
+      REDDE "Sat"
+  FIN ELIGE
+EXPLICIT RITUALE
+
+RITUALE mail_month_name(REX month) REDDE VERBUM
+  ELIGE month
+    CASUS 1:
+      REDDE "Jan"
+    CASUS 2:
+      REDDE "Feb"
+    CASUS 3:
+      REDDE "Mar"
+    CASUS 4:
+      REDDE "Apr"
+    CASUS 5:
+      REDDE "May"
+    CASUS 6:
+      REDDE "Jun"
+    CASUS 7:
+      REDDE "Jul"
+    CASUS 8:
+      REDDE "Aug"
+    CASUS 9:
+      REDDE "Sep"
+    CASUS 10:
+      REDDE "Oct"
+    CASUS 11:
+      REDDE "Nov"
+    ALIOQUIN:
+      REDDE "Dec"
+  FIN ELIGE
+EXPLICIT RITUALE
+
+RITUALE mail_datetime_rfc5322(DateTime dt) REDDE VERBUM
+  EVOCA Date d AD CONIURA date_make(dt.ano, dt.mes, dt.dia)
+  EVOCA REX days_since_epoch AD CONIURA date_days_since_epoch(d)
+  EVOCA REX weekday AD (days_since_epoch + 4) % 7
+  SI weekday < 0
+    VINCIRE weekday AD weekday + 7
+  FIN SI
+  EVOCA VERBUM out AD CONIURA mail_weekday_name(weekday)
+  VINCIRE out AD CONIURA concat(out, ", ")
+  VINCIRE out AD CONIURA concat(out, CONIURA pad_2(dt.dia))
+  VINCIRE out AD CONIURA concat(out, " ")
+  VINCIRE out AD CONIURA concat(out, CONIURA mail_month_name(dt.mes))
+  VINCIRE out AD CONIURA concat(out, " ")
+  VINCIRE out AD CONIURA concat(out, CONIURA pad_4(dt.ano))
+  VINCIRE out AD CONIURA concat(out, " ")
+  VINCIRE out AD CONIURA concat(out, CONIURA pad_2(dt.hora))
+  VINCIRE out AD CONIURA concat(out, ":")
+  VINCIRE out AD CONIURA concat(out, CONIURA pad_2(dt.minuto))
+  VINCIRE out AD CONIURA concat(out, ":")
+  VINCIRE out AD CONIURA concat(out, CONIURA pad_2(dt.segundo))
+  VINCIRE out AD CONIURA concat(out, " ")
+  VINCIRE out AD CONIURA concat(out, CONIURA datetime_format(dt, "%z"))
+  REDDE out
+EXPLICIT RITUALE
+
+RITUALE mail_attachment_content_id(MailAttachment att) REDDE VERBUM
+  EVOCA VERBUM out AD CONIURA trim(att.content_id)
+  VINCIRE out AD CONIURA trim_char(out, 60)
+  VINCIRE out AD CONIURA trim_char(out, 62)
+  REDDE out
+EXPLICIT RITUALE
+
+RITUALE mail_attachment_content_type(MailAttachment att) REDDE VERBUM
+  SI CONIURA len(att.content_type) == 0
+    REDDE "application/octet-stream"
+  FIN SI
+  REDDE att.content_type
+EXPLICIT RITUALE
+
+RITUALE mail_attachment_filename(MailAttachment att) REDDE VERBUM
+  SI CONIURA len(att.filename) == 0
+    REDDE "attachment.bin"
+  FIN SI
+  REDDE att.filename
+EXPLICIT RITUALE
+
+RITUALE mail_render_text_part(SPECULUM NIHIL b, VERBUM body) REDDE NIHIL
+  CONIURA builder_append(b, "Content-Type: text/plain; charset=UTF-8\n\n")
+  CONIURA builder_append(b, body)
+  CONIURA builder_append(b, "\n")
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE mail_render_html_part(SPECULUM NIHIL b, VERBUM body) REDDE NIHIL
+  CONIURA builder_append(b, "Content-Type: text/html; charset=UTF-8\n\n")
+  CONIURA builder_append(b, body)
+  CONIURA builder_append(b, "\n")
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE mail_render_alternative(SPECULUM NIHIL b, MailMessage msg, VERBUM boundary) REDDE NIHIL
+  CONIURA builder_append(b, "Content-Type: multipart/alternative; boundary=\"")
+  CONIURA builder_append(b, boundary)
+  CONIURA builder_append(b, "\"\n\n")
+  CONIURA builder_append(b, "--")
+  CONIURA builder_append(b, boundary)
+  CONIURA builder_append(b, "\n")
+  CONIURA mail_render_text_part(b, msg.text_body)
+  CONIURA builder_append(b, "--")
+  CONIURA builder_append(b, boundary)
+  CONIURA builder_append(b, "\n")
+  CONIURA mail_render_html_part(b, msg.html_body)
+  CONIURA builder_append(b, "--")
+  CONIURA builder_append(b, boundary)
+  CONIURA builder_append(b, "--\n")
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE mail_render_attachment(SPECULUM NIHIL b, MailAttachment att, VERBUM boundary) REDDE NIHIL
+  EVOCA VERBUM disposition AD "attachment"
+  SI att.is_inline
+    VINCIRE disposition AD "inline"
+  FIN SI
+  EVOCA VERBUM encoded AD CONIURA mail_base64_encode_bytes(att.data)
+  EVOCA VERBUM content_id AD CONIURA mail_attachment_content_id(att)
+  CONIURA builder_append(b, "--")
+  CONIURA builder_append(b, boundary)
+  CONIURA builder_append(b, "\nContent-Type: ")
+  CONIURA builder_append(b, CONIURA mail_attachment_content_type(att))
+  CONIURA builder_append(b, "\nContent-Transfer-Encoding: base64\nContent-Disposition: ")
+  CONIURA builder_append(b, disposition)
+  CONIURA builder_append(b, "; filename=\"")
+  CONIURA builder_append(b, CONIURA mail_attachment_filename(att))
+  CONIURA builder_append(b, "\"\n")
+  SI CONIURA len(content_id) > 0
+    CONIURA builder_append(b, "Content-ID: <")
+    CONIURA builder_append(b, content_id)
+    CONIURA builder_append(b, ">\n")
+  FIN SI
+  CONIURA builder_append(b, "\n")
+  CONIURA builder_append(b, encoded)
+  CONIURA builder_append(b, "\n")
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE mail_message_render_mime(MailMessage msg) REDDE VERBUM
+  EVOCA SPECULUM NIHIL b AD CONIURA builder_init()
+  EVOCA DateTime now AD CONIURA datetime_now()
+  EVOCA VERBUM mid AD CONIURA mail_message_build_message_id(msg)
+  EVOCA VERUM has_text AD CONIURA len(msg.text_body) > 0
+  EVOCA VERUM has_html AD CONIURA len(msg.html_body) > 0
+  EVOCA VERUM has_att AD CONIURA fluxus_len(msg.attachments) > 0
+  EVOCA REX i AD 0
+
+  CONIURA mail_append_header(b, "MIME-Version", "1.0")
+  CONIURA mail_append_header(b, "Date", CONIURA mail_datetime_rfc5322(now))
+  CONIURA mail_append_header(b, "Message-ID", mid)
+  CONIURA mail_append_header(b, "From", CONIURA mail_address_format(msg.from))
+  SI CONIURA fluxus_len(msg.to) > 0
+    CONIURA mail_append_header(b, "To", CONIURA mail_addresses_join(msg.to))
+  FIN SI
+  SI CONIURA fluxus_len(msg.cc) > 0
+    CONIURA mail_append_header(b, "Cc", CONIURA mail_addresses_join(msg.cc))
+  FIN SI
+  SI CONIURA fluxus_len(msg.reply_to) > 0
+    CONIURA mail_append_header(b, "Reply-To", CONIURA mail_addresses_join(msg.reply_to))
+  FIN SI
+  CONIURA mail_append_header(b, "Subject", CONIURA mail_rfc2047_header_value(msg.subject))
+
+  DUM i < CONIURA fluxus_len(msg.headers)
+    EVOCA SPECULUM MailHeader header_ptr AD CONIURA fluxus_get(msg.headers, i)
+    CONIURA mail_append_header(b, (*header_ptr).name, (*header_ptr).value)
+    VINCIRE i AD i + 1
+  FIN DUM
+
+  SI has_att
+    EVOCA VERBUM outer_boundary AD CONIURA mail_mime_boundary()
+    CONIURA builder_append(b, "Content-Type: multipart/mixed; boundary=\"")
+    CONIURA builder_append(b, outer_boundary)
+    CONIURA builder_append(b, "\"\n\n")
+    CONIURA builder_append(b, "--")
+    CONIURA builder_append(b, outer_boundary)
+    CONIURA builder_append(b, "\n")
+    SI has_text ET has_html
+      EVOCA VERBUM alt_boundary AD CONIURA mail_mime_boundary()
+      CONIURA mail_render_alternative(b, msg, alt_boundary)
+    ALITER
+      SI has_html
+        CONIURA mail_render_html_part(b, msg.html_body)
+      ALITER
+        CONIURA mail_render_text_part(b, msg.text_body)
+      FIN SI
+    FIN SI
+
+    VINCIRE i AD 0
+    DUM i < CONIURA fluxus_len(msg.attachments)
+      EVOCA SPECULUM MailAttachment att_ptr AD CONIURA fluxus_get(msg.attachments, i)
+      CONIURA mail_render_attachment(b, *att_ptr, outer_boundary)
+      VINCIRE i AD i + 1
+    FIN DUM
+
+    CONIURA builder_append(b, "--")
+    CONIURA builder_append(b, outer_boundary)
+    CONIURA builder_append(b, "--\n")
+  ALITER
+    SI has_text ET has_html
+      EVOCA VERBUM alt_boundary AD CONIURA mail_mime_boundary()
+      CONIURA mail_render_alternative(b, msg, alt_boundary)
+    ALITER
+      SI has_html
+        CONIURA mail_render_html_part(b, msg.html_body)
+      ALITER
+        CONIURA mail_render_text_part(b, msg.text_body)
+      FIN SI
+    FIN SI
+  FIN SI
+
+  EVOCA VERBUM out AD CONIURA builder_to_verbum(b)
+  CONIURA builder_free(b)
+  REDDE out
+EXPLICIT RITUALE
+
+RITUALE mail_backend_smtp(VERBUM host, REX port, VERBUM username, VERBUM password, MailAuthKind auth, VERUM starttls) REDDE MailBackendOptions
+  EVOCA MailBackendOptions options
+  VINCIRE options.kind AD MAIL_BACKEND_SMTP
+  VINCIRE options.host AD host
+  VINCIRE options.port AD port
+  VINCIRE options.username AD username
+  VINCIRE options.password AD password
+  VINCIRE options.auth_kind AD auth
+  VINCIRE options.use_starttls AD starttls
+  VINCIRE options.use_smtps AD FALSUM
+  VINCIRE options.file_out_dir AD ""
+  REDDE options
+EXPLICIT RITUALE
+
+RITUALE mail_backend_file(VERBUM out_dir) REDDE MailBackendOptions
+  EVOCA MailBackendOptions options
+  VINCIRE options.kind AD MAIL_BACKEND_FILE
+  VINCIRE options.host AD ""
+  VINCIRE options.port AD 0
+  VINCIRE options.username AD ""
+  VINCIRE options.password AD ""
+  VINCIRE options.auth_kind AD MAIL_AUTH_NONE
+  VINCIRE options.use_starttls AD FALSUM
+  VINCIRE options.use_smtps AD FALSUM
+  VINCIRE options.file_out_dir AD out_dir
+  REDDE options
+EXPLICIT RITUALE
+
+RITUALE mail_backend_memory() REDDE MailBackendOptions
+  EVOCA MailBackendOptions options
+  VINCIRE options.kind AD MAIL_BACKEND_MEMORY
+  VINCIRE options.host AD ""
+  VINCIRE options.port AD 0
+  VINCIRE options.username AD ""
+  VINCIRE options.password AD ""
+  VINCIRE options.auth_kind AD MAIL_AUTH_NONE
+  VINCIRE options.use_starttls AD FALSUM
+  VINCIRE options.use_smtps AD FALSUM
+  VINCIRE options.file_out_dir AD ""
+  REDDE options
+EXPLICIT RITUALE
+
+RITUALE mail_client_open(MailBackendOptions options) REDDE SPECULUM NIHIL
+  EVOCA MailClient client
+  VINCIRE client.options AD options
+  VINCIRE client.memory_outbox AD CONIURA fluxus_init(MENSURA(MailMessage))
+  VINCIRE client.last_error AD ""
+  VINCIRE client.is_open AD VERUM
+  SI options.kind == MAIL_BACKEND_FILE ET CONIURA len(options.file_out_dir) > 0
+    CONIURA mkdir_all(options.file_out_dir)
+  FIN SI
+  REDDE CONIURA Ok GENUS(MailClient, VERBUM)(client)
+EXPLICIT RITUALE
+
+RITUALE mail_client_close(SPECULUM MailClient client) REDDE NIHIL
+  VINCIRE (*client).is_open AD FALSUM
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE mail_send_result_ok(VERBUM message_id) REDDE MailSendResult
+  EVOCA MailSendResult result
+  VINCIRE result.ok AD VERUM
+  VINCIRE result.message_id AD message_id
+  VINCIRE result.error_message AD ""
+  REDDE result
+EXPLICIT RITUALE
+
+RITUALE mail_message_sanitized_id(VERBUM message_id) REDDE VERBUM
+  EVOCA VERBUM out AD CONIURA replace_all(message_id, "<", "")
+  VINCIRE out AD CONIURA replace_all(out, ">", "")
+  VINCIRE out AD CONIURA replace_all(out, "@", "_")
+  VINCIRE out AD CONIURA replace_all(out, "/", "_")
+  VINCIRE out AD CONIURA replace_all(out, "\\", "_")
+  VINCIRE out AD CONIURA replace_all(out, ":", "_")
+  SI CONIURA len(out) == 0
+    REDDE "mail"
+  FIN SI
+  REDDE out
+EXPLICIT RITUALE
+
+RITUALE mail_send_file(SPECULUM MailClient client, MailMessage msg) REDDE SPECULUM NIHIL
+  EVOCA VERBUM mime AD CONIURA mail_message_render_mime(msg)
+  EVOCA VERBUM filename AD CONIURA mail_message_sanitized_id(msg.message_id)
+  VINCIRE filename AD CONIURA concat(filename, ".eml")
+  EVOCA VERBUM filepath AD CONIURA path_join((*client).options.file_out_dir, filename)
+  CONIURA write_all(filepath, mime)
+  REDDE CONIURA Ok GENUS(MailSendResult, VERBUM)(CONIURA mail_send_result_ok(msg.message_id))
+EXPLICIT RITUALE
+
+RITUALE mail_send_memory(SPECULUM MailClient client, MailMessage msg) REDDE SPECULUM NIHIL
+  CONIURA fluxus_push((*client).memory_outbox, SPECULUM msg)
+  REDDE CONIURA Ok GENUS(MailSendResult, VERBUM)(CONIURA mail_send_result_ok(msg.message_id))
+EXPLICIT RITUALE
+
+RITUALE mail_append_recipient_lines(SPECULUM NIHIL b, SPECULUM NIHIL addrs) REDDE NIHIL
+  EVOCA REX i AD 0
+  DUM i < CONIURA fluxus_len(addrs)
+    EVOCA SPECULUM MailAddress addr_ptr AD CONIURA fluxus_get(addrs, i)
+    CONIURA builder_append(b, (*addr_ptr).email)
+    CONIURA builder_append(b, "\n")
+    VINCIRE i AD i + 1
+  FIN DUM
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE mail_message_recipient_lines(MailMessage msg) REDDE VERBUM
+  EVOCA SPECULUM NIHIL b AD CONIURA builder_init()
+  CONIURA mail_append_recipient_lines(b, msg.to)
+  CONIURA mail_append_recipient_lines(b, msg.cc)
+  CONIURA mail_append_recipient_lines(b, msg.bcc)
+  EVOCA VERBUM out AD CONIURA builder_to_verbum(b)
+  CONIURA builder_free(b)
+  REDDE out
+EXPLICIT RITUALE
+
+RITUALE mail_auth_kind_value(MailAuthKind auth) REDDE REX
+  ELIGE auth
+    CASUS MAIL_AUTH_PLAIN:
+      REDDE 1
+    CASUS MAIL_AUTH_LOGIN:
+      REDDE 2
+    CASUS MAIL_AUTH_XOAUTH2:
+      REDDE 3
+    ALIOQUIN:
+      REDDE 0
+  FIN ELIGE
+EXPLICIT RITUALE
+
+RITUALE mail_send_smtp(SPECULUM MailClient client, MailMessage msg) REDDE SPECULUM NIHIL
+  EVOCA VERBUM recipients AD CONIURA mail_message_recipient_lines(msg)
+  EVOCA VERBUM mime AD CONIURA mail_message_render_mime(msg)
+  EVOCA REX auth_kind_value AD CONIURA mail_auth_kind_value((*client).options.auth_kind)
+  EVOCA VERBUM error_message AD OBSECRO mail_builtin_smtp_send(
+    (*client).options.host,
+    (*client).options.port,
+    (*client).options.username,
+    (*client).options.password,
+    auth_kind_value,
+    (*client).options.use_starttls,
+    (*client).options.use_smtps,
+    msg.from.email,
+    recipients,
+    mime
+  )
+  SI CONIURA len(error_message) > 0
+    VINCIRE (*client).last_error AD error_message
+    REDDE CONIURA Err GENUS(MailSendResult, VERBUM)(error_message)
+  FIN SI
+  VINCIRE (*client).last_error AD ""
+  REDDE CONIURA Ok GENUS(MailSendResult, VERBUM)(CONIURA mail_send_result_ok(msg.message_id))
+EXPLICIT RITUALE
+
+RITUALE mail_send(SPECULUM MailClient client, MailMessage msg) REDDE SPECULUM NIHIL
+  EVOCA MailMessage prepared AD msg
+  EVOCA VERBUM validation_error AD ""
+  SI NON (*client).is_open
+    VINCIRE (*client).last_error AD "mail client fechado"
+    REDDE CONIURA Err GENUS(MailSendResult, VERBUM)((*client).last_error)
+  FIN SI
+  CONIURA mail_message_ensure_message_id(SPECULUM prepared)
+  VINCIRE validation_error AD CONIURA mail_message_validation_error(prepared)
+  SI CONIURA len(validation_error) > 0
+    VINCIRE (*client).last_error AD validation_error
+    REDDE CONIURA Err GENUS(MailSendResult, VERBUM)(validation_error)
+  FIN SI
+  ELIGE (*client).options.kind
+    CASUS MAIL_BACKEND_FILE:
+      REDDE CONIURA mail_send_file(client, prepared)
+    CASUS MAIL_BACKEND_MEMORY:
+      REDDE CONIURA mail_send_memory(client, prepared)
+    ALIOQUIN:
+      REDDE CONIURA mail_send_smtp(client, prepared)
+  FIN ELIGE
+EXPLICIT RITUALE
+
+RITUALE mail_memory_count(MailClient client) REDDE REX
+  REDDE CONIURA fluxus_len(client.memory_outbox)
+EXPLICIT RITUALE
+
+RITUALE mail_memory_get(MailClient client, REX index) REDDE SPECULUM NIHIL
+  SI index < 0 VEL index >= CONIURA fluxus_len(client.memory_outbox)
+    REDDE CONIURA Err GENUS(MailMessage, VERBUM)("indice fora do range")
+  FIN SI
+  EVOCA SPECULUM MailMessage msg_ptr AD CONIURA fluxus_get(client.memory_outbox, index)
+  REDDE CONIURA Ok GENUS(MailMessage, VERBUM)(*msg_ptr)
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

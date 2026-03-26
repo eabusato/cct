@@ -1,0 +1,30 @@
+INCIPIT grimoire "db_postgres_lock_attempt_36d"
+
+ADVOCARE "cct/db_postgres_lock.cct"
+ADVOCARE "cct/verbum.cct"
+
+RITUALE main() REDDE REX
+  EVOCA PgLockKey key AD CONIURA pg_lock_key_named("cron", "daily-rollup")
+  EVOCA PgLockAttempt acquired AD CONIURA pg_lock_attempt_make(key, PG_LOCK_SCOPE_SESSION, VERUM)
+  SI NON acquired.acquired VEL NON acquired.handle.acquired
+    REDDE 1
+  FIN SI
+  SI acquired.handle.scope != PG_LOCK_SCOPE_SESSION
+    REDDE 2
+  FIN SI
+  SI CONIURA compare(acquired.handle.key.raw_name, "cron:daily-rollup") != 0
+    REDDE 3
+  FIN SI
+
+  EVOCA PgLockAttempt free AD CONIURA pg_lock_attempt_make(key, PG_LOCK_SCOPE_TRANSACTION, FALSUM)
+  SI free.acquired VEL free.handle.acquired
+    REDDE 4
+  FIN SI
+  SI free.handle.scope != PG_LOCK_SCOPE_TRANSACTION
+    REDDE 5
+  FIN SI
+
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

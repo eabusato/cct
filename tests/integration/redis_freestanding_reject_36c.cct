@@ -1,0 +1,13 @@
+INCIPIT grimoire "redis_freestanding_reject_36c"
+
+ADVOCARE "cct/redis.cct"
+
+RITUALE main() REDDE REX
+  EVOCA RedisOptions opts AD CONIURA redis_default_options()
+  SI opts.port == 6379
+    REDDE 0
+  FIN SI
+  REDDE 1
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

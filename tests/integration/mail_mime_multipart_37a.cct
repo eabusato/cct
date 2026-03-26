@@ -1,0 +1,42 @@
+INCIPIT grimoire "mail_mime_multipart_37a"
+
+ADVOCARE "cct/bytes.cct"
+ADVOCARE "cct/mail.cct"
+ADVOCARE "cct/verbum.cct"
+
+RITUALE main() REDDE REX
+  EVOCA MailMessage msg AD CONIURA mail_message_new()
+  EVOCA SPECULUM NIHIL data AD CONIURA bytes_new(2)
+  CONIURA bytes_set(data, 0, 72)
+  CONIURA bytes_set(data, 1, 105)
+
+  CONIURA mail_message_set_from(SPECULUM msg, CONIURA mail_address("a@b.com", ""))
+  CONIURA mail_message_add_to(SPECULUM msg, CONIURA mail_address("visible@b.com", ""))
+  CONIURA mail_message_add_bcc(SPECULUM msg, CONIURA mail_address("hidden@b.com", ""))
+  CONIURA mail_message_set_subject(SPECULUM msg, "Multipart")
+  CONIURA mail_message_set_text(SPECULUM msg, "Text body")
+  CONIURA mail_message_set_html(SPECULUM msg, "<p>HTML body</p>")
+  CONIURA mail_message_add_attachment(SPECULUM msg, "note.txt", "text/plain", data)
+  CONIURA mail_message_ensure_message_id(SPECULUM msg)
+
+  EVOCA VERBUM mime AD CONIURA mail_message_render_mime(msg)
+  SI CONIURA contains(mime, "multipart/mixed") == FALSUM
+    REDDE 1
+  FIN SI
+  SI CONIURA contains(mime, "multipart/alternative") == FALSUM
+    REDDE 2
+  FIN SI
+  SI CONIURA contains(mime, "Content-Transfer-Encoding: base64") == FALSUM
+    REDDE 3
+  FIN SI
+  SI CONIURA contains(mime, "SGk=") == FALSUM
+    REDDE 4
+  FIN SI
+  SI CONIURA contains(mime, "Bcc:") == VERUM
+    REDDE 5
+  FIN SI
+
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

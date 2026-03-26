@@ -1,0 +1,47 @@
+INCIPIT grimoire "db_postgres_lock_closed_db_36d"
+
+ADVOCARE "cct/db_postgres.cct"
+ADVOCARE "cct/db_postgres_lock.cct"
+ADVOCARE "cct/result.cct"
+
+RITUALE main() REDDE REX
+  EVOCA Db db
+  VINCIRE db.last_error AD "postgres fechado"
+  VINCIRE db.open AD FALSUM
+
+  EVOCA PgLockKey key AD CONIURA pg_lock_key_pair(5, 9)
+
+  EVOCA SPECULUM NIHIL lock_res AD CONIURA pg_lock(db, key)
+  SI NON CONIURA result_is_err GENUS(PgLockHandle, VERBUM)(lock_res)
+    REDDE 1
+  FIN SI
+
+  EVOCA SPECULUM NIHIL try_res AD CONIURA pg_try_lock(db, key)
+  SI NON CONIURA result_is_err GENUS(PgLockAttempt, VERBUM)(try_res)
+    REDDE 2
+  FIN SI
+
+  EVOCA SPECULUM NIHIL xact_res AD CONIURA pg_xact_lock(db, key)
+  SI NON CONIURA result_is_err GENUS(PgLockHandle, VERBUM)(xact_res)
+    REDDE 3
+  FIN SI
+
+  EVOCA SPECULUM NIHIL try_xact_res AD CONIURA pg_try_xact_lock(db, key)
+  SI NON CONIURA result_is_err GENUS(PgLockAttempt, VERBUM)(try_xact_res)
+    REDDE 4
+  FIN SI
+
+  EVOCA SPECULUM NIHIL job_res AD CONIURA pg_lock_job(db, "jobs", "reindex")
+  SI NON CONIURA result_is_err GENUS(PgLockHandle, VERBUM)(job_res)
+    REDDE 5
+  FIN SI
+
+  EVOCA SPECULUM NIHIL try_job_res AD CONIURA pg_try_lock_job(db, "jobs", "reindex")
+  SI NON CONIURA result_is_err GENUS(PgLockAttempt, VERBUM)(try_job_res)
+    REDDE 6
+  FIN SI
+
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

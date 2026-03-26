@@ -1,0 +1,9 @@
+INCIPIT grimoire "db_postgres_lock_freestanding_reject_36d"
+
+ADVOCARE "cct/db_postgres_lock.cct"
+
+RITUALE main() REDDE REX
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

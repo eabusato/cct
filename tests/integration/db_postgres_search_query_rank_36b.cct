@@ -1,0 +1,37 @@
+INCIPIT grimoire "db_postgres_search_query_rank_36b"
+
+ADVOCARE "cct/db_postgres_search.cct"
+ADVOCARE "cct/fluxus.cct"
+ADVOCARE "cct/verbum.cct"
+
+RITUALE main() REDDE REX
+  EVOCA PgSearchConfig config AD CONIURA pg_search_config_simple()
+  EVOCA SPECULUM NIHIL fields AD CONIURA fluxus_init(MENSURA(PgSearchField))
+  EVOCA PgSearchField field AD CONIURA pg_search_field("posts.body")
+  CONIURA fluxus_push(fields, SPECULUM field)
+
+  EVOCA PgSearchDocument doc
+  VINCIRE doc.config AD config
+  VINCIRE doc.fields AD fields
+
+  EVOCA PgSearchQuery query AD CONIURA pg_search_query_web(config, "cct redis")
+  SI CONIURA compare(CONIURA pg_search_query_sql(query), "websearch_to_tsquery('simple', 'cct redis')") != 0
+    CONIURA fluxus_free(fields)
+    REDDE 1
+  FIN SI
+
+  SI CONIURA compare(CONIURA pg_search_match_sql(doc, query), "to_tsvector('simple', coalesce(posts.body, '')) @@ websearch_to_tsquery('simple', 'cct redis')") != 0
+    CONIURA fluxus_free(fields)
+    REDDE 2
+  FIN SI
+
+  SI CONIURA compare(CONIURA pg_search_rank_sql(doc, query, SEARCH_RANK_COVER_DENSITY), "ts_rank_cd(to_tsvector('simple', coalesce(posts.body, '')), websearch_to_tsquery('simple', 'cct redis'))") != 0
+    CONIURA fluxus_free(fields)
+    REDDE 3
+  FIN SI
+
+  CONIURA fluxus_free(fields)
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

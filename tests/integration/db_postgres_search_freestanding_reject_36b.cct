@@ -1,0 +1,13 @@
+INCIPIT grimoire "db_postgres_search_freestanding_reject_36b"
+
+ADVOCARE "cct/db_postgres_search.cct"
+
+RITUALE main() REDDE REX
+  EVOCA PgSearchConfig config AD CONIURA pg_search_config_simple()
+  SI CONIURA len(CONIURA pg_search_config_name(config)) > 0
+    REDDE 0
+  FIN SI
+  REDDE 1
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

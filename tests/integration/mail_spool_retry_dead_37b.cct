@@ -1,0 +1,48 @@
+INCIPIT grimoire "mail_spool_retry_dead_37b"
+
+ADVOCARE "cct/mail.cct"
+ADVOCARE "cct/mail_spool.cct"
+ADVOCARE "cct/result.cct"
+
+RITUALE main() REDDE REX
+  EVOCA VERBUM spool_dir AD "tests/.tmp/phase37b_retry_dead"
+
+  EVOCA MailSpoolOptions options AD CONIURA mail_spool_default_options()
+  VINCIRE options.root_dir AD spool_dir
+  VINCIRE options.max_attempts AD 2
+  VINCIRE options.base_retry_seconds AD 10
+
+  EVOCA MailSpool spool AD CONIURA result_unwrap GENUS(MailSpool, VERBUM)(CONIURA mail_spool_open(options))
+  EVOCA MailMessage message AD CONIURA mail_message_new()
+  CONIURA mail_message_set_from(SPECULUM message, CONIURA mail_address("sender@app.test", ""))
+  CONIURA mail_message_add_to(SPECULUM message, CONIURA mail_address("dest@app.test", ""))
+  CONIURA mail_message_set_subject(SPECULUM message, "Retry")
+  CONIURA mail_message_set_text(SPECULUM message, "Body")
+
+  EVOCA MailSpoolItem item AD CONIURA result_unwrap GENUS(MailSpoolItem, VERBUM)(CONIURA mail_spool_enqueue(spool, message))
+  CONIURA mail_spool_mark_failed(spool, item.spool_id, "timeout 1")
+
+  EVOCA MailSpoolItem after_first AD CONIURA result_unwrap GENUS(MailSpoolItem, VERBUM)(CONIURA mail_spool_get(spool, item.spool_id))
+  SI after_first.status != MAIL_SPOOL_FAILED
+    REDDE 1
+  FIN SI
+  SI after_first.attempt_count != 1
+    REDDE 2
+  FIN SI
+  SI after_first.next_attempt_at_unix <= after_first.updated_at_unix
+    REDDE 3
+  FIN SI
+
+  CONIURA mail_spool_mark_failed(spool, item.spool_id, "timeout 2")
+  EVOCA MailSpoolItem after_second AD CONIURA result_unwrap GENUS(MailSpoolItem, VERBUM)(CONIURA mail_spool_get(spool, item.spool_id))
+  SI after_second.status != MAIL_SPOOL_DEAD
+    REDDE 4
+  FIN SI
+  SI after_second.attempt_count != 2
+    REDDE 5
+  FIN SI
+
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

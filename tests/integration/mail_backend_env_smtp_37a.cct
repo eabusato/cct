@@ -1,0 +1,66 @@
+INCIPIT grimoire "mail_backend_env_smtp_37a"
+
+ADVOCARE "cct/env.cct"
+ADVOCARE "cct/mail.cct"
+ADVOCARE "cct/option.cct"
+ADVOCARE "cct/parse.cct"
+ADVOCARE "cct/verbum.cct"
+
+RITUALE mail_auth_from_text(VERBUM raw) REDDE MailAuthKind
+  EVOCA VERBUM auth AD CONIURA to_lower(CONIURA trim(raw))
+  SI CONIURA compare(auth, "plain") == 0
+    REDDE MAIL_AUTH_PLAIN
+  FIN SI
+  SI CONIURA compare(auth, "none") == 0
+    REDDE MAIL_AUTH_NONE
+  FIN SI
+  SI CONIURA compare(auth, "xoauth2") == 0
+    REDDE MAIL_AUTH_XOAUTH2
+  FIN SI
+  REDDE MAIL_AUTH_LOGIN
+EXPLICIT RITUALE
+
+RITUALE main() REDDE REX
+  EVOCA VERBUM backend AD CONIURA to_lower(CONIURA trim(CONIURA getenv("APP_MAIL_BACKEND")))
+  SI CONIURA compare(backend, "smtp") != 0
+    REDDE 1
+  FIN SI
+
+  EVOCA SPECULUM NIHIL port_opt AD CONIURA try_int(CONIURA getenv("APP_MAIL_SMTP_PORT"))
+  SI NON CONIURA option_is_some GENUS(REX)(port_opt)
+    REDDE 2
+  FIN SI
+
+  EVOCA SPECULUM NIHIL starttls_opt AD CONIURA try_bool(CONIURA to_lower(CONIURA trim(CONIURA getenv("APP_MAIL_SMTP_STARTTLS"))))
+  SI NON CONIURA option_is_some GENUS(VERUM)(starttls_opt)
+    REDDE 3
+  FIN SI
+
+  EVOCA MailBackendOptions options AD CONIURA mail_backend_smtp(
+    CONIURA getenv("APP_MAIL_SMTP_HOST"),
+    CONIURA option_unwrap GENUS(REX)(port_opt),
+    CONIURA getenv("APP_MAIL_SMTP_USERNAME"),
+    CONIURA getenv("APP_MAIL_SMTP_PASSWORD"),
+    CONIURA mail_auth_from_text(CONIURA getenv("APP_MAIL_SMTP_AUTH")),
+    CONIURA option_unwrap GENUS(VERUM)(starttls_opt)
+  )
+
+  SI options.kind != MAIL_BACKEND_SMTP
+    REDDE 4
+  FIN SI
+  SI CONIURA compare(options.host, "smtp.zoho.com") != 0
+    REDDE 5
+  FIN SI
+  SI options.port != 587
+    REDDE 6
+  FIN SI
+  SI options.auth_kind != MAIL_AUTH_LOGIN
+    REDDE 7
+  FIN SI
+  SI options.use_starttls == FALSUM
+    REDDE 8
+  FIN SI
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

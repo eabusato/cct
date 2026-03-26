@@ -1418,7 +1418,7 @@ static cct_sem_type_t* sem_resolve_ast_type(cct_semantic_analyzer_t *sem, const 
  * ======================================================================== */
 
 static const cct_sem_builtin_spec_t* sem_find_builtin(cct_semantic_analyzer_t *sem, const char *name) {
-static cct_sem_builtin_spec_t specs[404];
+static cct_sem_builtin_spec_t specs[417];
     static bool initialized = false;
 
     if (!initialized) {
@@ -1825,6 +1825,21 @@ static cct_sem_builtin_spec_t specs[404];
         specs[399].name = "signal_builtin_received_sigint"; specs[399].min_args = 0; specs[399].variadic = false;
         specs[400].name = "signal_builtin_received_sighup"; specs[400].min_args = 0; specs[400].variadic = false;
         specs[401].name = "signal_builtin_raise_self"; specs[401].min_args = 1; specs[401].variadic = false;
+        specs[402].name = "pg_builtin_open"; specs[402].min_args = 1; specs[402].variadic = false;
+        specs[403].name = "pg_builtin_close"; specs[403].min_args = 1; specs[403].variadic = false;
+        specs[404].name = "pg_builtin_is_open"; specs[404].min_args = 1; specs[404].variadic = false;
+        specs[405].name = "pg_builtin_last_error"; specs[405].min_args = 1; specs[405].variadic = false;
+        specs[406].name = "pg_builtin_exec"; specs[406].min_args = 2; specs[406].variadic = false;
+        specs[407].name = "pg_builtin_query"; specs[407].min_args = 2; specs[407].variadic = false;
+        specs[408].name = "pg_builtin_rows_count"; specs[408].min_args = 1; specs[408].variadic = false;
+        specs[409].name = "pg_builtin_rows_columns"; specs[409].min_args = 1; specs[409].variadic = false;
+        specs[410].name = "pg_builtin_rows_next"; specs[410].min_args = 1; specs[410].variadic = false;
+        specs[411].name = "pg_builtin_rows_get_text"; specs[411].min_args = 2; specs[411].variadic = false;
+        specs[412].name = "pg_builtin_rows_is_null"; specs[412].min_args = 2; specs[412].variadic = false;
+        specs[413].name = "pg_builtin_rows_close"; specs[413].min_args = 1; specs[413].variadic = false;
+        specs[414].name = "pg_builtin_poll_channel"; specs[414].min_args = 2; specs[414].variadic = false;
+        specs[415].name = "pg_builtin_poll_payload"; specs[415].min_args = 1; specs[415].variadic = false;
+        specs[416].name = "mail_builtin_smtp_send"; specs[416].min_args = 10; specs[416].variadic = false;
         initialized = true;
     }
 
@@ -2230,6 +2245,21 @@ static cct_sem_builtin_spec_t specs[404];
     specs[399].return_type = &sem->type_rex;
     specs[400].return_type = &sem->type_rex;
     specs[401].return_type = &sem->type_rex;
+    specs[402].return_type = sem_make_pointer_type(sem, &sem->type_nihil);
+    specs[403].return_type = &sem->type_nihil;
+    specs[404].return_type = &sem->type_verum;
+    specs[405].return_type = &sem->type_verbum;
+    specs[406].return_type = &sem->type_nihil;
+    specs[407].return_type = sem_make_pointer_type(sem, &sem->type_nihil);
+    specs[408].return_type = &sem->type_rex;
+    specs[409].return_type = &sem->type_rex;
+    specs[410].return_type = &sem->type_verum;
+    specs[411].return_type = &sem->type_verbum;
+    specs[412].return_type = &sem->type_verum;
+    specs[413].return_type = &sem->type_nihil;
+    specs[414].return_type = &sem->type_verbum;
+    specs[415].return_type = &sem->type_verbum;
+    specs[416].return_type = &sem->type_verbum;
 
     for (size_t i = 0; i < sizeof(specs) / sizeof(specs[0]); i++) {
         if (!specs[i].name) continue;
@@ -2316,6 +2346,8 @@ static const char* sem_forbidden_module_for_obsecro_in_freestanding(const char *
     if (sem_str_has_prefix(name, "hash_")) return "cct/hash";
     if (sem_str_has_prefix(name, "json_")) return "cct/json";
     if (sem_str_has_prefix(name, "sock_") || sem_str_has_prefix(name, "socket_")) return "cct/socket";
+    if (sem_str_has_prefix(name, "pg_builtin_")) return "cct/db_postgres";
+    if (sem_str_has_prefix(name, "mail_builtin_")) return "cct/mail";
 
     return NULL;
 }
@@ -3349,6 +3381,60 @@ static cct_sem_type_t* sem_analyze_builtin_obsecro(
             !(arg_type && (arg_type->kind == CCT_SEM_TYPE_VERBUM || sem_is_error_type(arg_type)))) {
             sem_report_nodef(sem, expr->as.obsecro.arguments->nodes[i],
                              "OBSECRO %s expects VERBUM sql as second argument", name);
+        }
+        if ((strcmp(name, "pg_builtin_open") == 0) &&
+            i == 0 &&
+            !(arg_type && (arg_type->kind == CCT_SEM_TYPE_VERBUM || sem_is_error_type(arg_type)))) {
+            sem_report_nodef(sem, expr->as.obsecro.arguments->nodes[i],
+                             "OBSECRO pg_builtin_open expects VERBUM conninfo argument");
+        }
+        if ((strcmp(name, "pg_builtin_close") == 0 || strcmp(name, "pg_builtin_is_open") == 0 ||
+             strcmp(name, "pg_builtin_last_error") == 0 || strcmp(name, "pg_builtin_exec") == 0 ||
+             strcmp(name, "pg_builtin_query") == 0 || strcmp(name, "pg_builtin_poll_channel") == 0 ||
+             strcmp(name, "pg_builtin_poll_payload") == 0) &&
+            i == 0 &&
+            !(arg_type && (arg_type->kind == CCT_SEM_TYPE_POINTER || sem_is_error_type(arg_type)))) {
+            sem_report_nodef(sem, expr->as.obsecro.arguments->nodes[i],
+                             "OBSECRO %s expects db pointer as first argument", name);
+        }
+        if ((strcmp(name, "pg_builtin_rows_count") == 0 || strcmp(name, "pg_builtin_rows_columns") == 0 ||
+             strcmp(name, "pg_builtin_rows_next") == 0 || strcmp(name, "pg_builtin_rows_get_text") == 0 ||
+             strcmp(name, "pg_builtin_rows_is_null") == 0 || strcmp(name, "pg_builtin_rows_close") == 0) &&
+            i == 0 &&
+            !(arg_type && (arg_type->kind == CCT_SEM_TYPE_POINTER || sem_is_error_type(arg_type)))) {
+            sem_report_nodef(sem, expr->as.obsecro.arguments->nodes[i],
+                             "OBSECRO %s expects rows pointer as first argument", name);
+        }
+        if ((strcmp(name, "pg_builtin_exec") == 0 || strcmp(name, "pg_builtin_query") == 0) &&
+            i == 1 &&
+            !(arg_type && (arg_type->kind == CCT_SEM_TYPE_VERBUM || sem_is_error_type(arg_type)))) {
+            sem_report_nodef(sem, expr->as.obsecro.arguments->nodes[i],
+                             "OBSECRO %s expects VERBUM sql as second argument", name);
+        }
+        if ((strcmp(name, "pg_builtin_rows_get_text") == 0 || strcmp(name, "pg_builtin_rows_is_null") == 0 ||
+             strcmp(name, "pg_builtin_poll_channel") == 0) &&
+            i == 1 &&
+            !(sem_is_integer_type(arg_type) || sem_is_error_type(arg_type))) {
+            sem_report_nodef(sem, expr->as.obsecro.arguments->nodes[i],
+                             "OBSECRO %s expects integer argument", name);
+        }
+        if ((strcmp(name, "mail_builtin_smtp_send") == 0) &&
+            (i == 0 || i == 2 || i == 3 || i == 7 || i == 8 || i == 9) &&
+            !(arg_type && (arg_type->kind == CCT_SEM_TYPE_VERBUM || sem_is_error_type(arg_type)))) {
+            sem_report_nodef(sem, expr->as.obsecro.arguments->nodes[i],
+                             "OBSECRO mail_builtin_smtp_send expects VERBUM argument at position %zu", i + 1);
+        }
+        if ((strcmp(name, "mail_builtin_smtp_send") == 0) &&
+            (i == 1 || i == 4) &&
+            !(sem_is_integer_type(arg_type) || sem_is_error_type(arg_type))) {
+            sem_report_nodef(sem, expr->as.obsecro.arguments->nodes[i],
+                             "OBSECRO mail_builtin_smtp_send expects integer argument at position %zu", i + 1);
+        }
+        if ((strcmp(name, "mail_builtin_smtp_send") == 0) &&
+            (i == 5 || i == 6) &&
+            !(arg_type && (arg_type->kind == CCT_SEM_TYPE_VERUM || sem_is_error_type(arg_type)))) {
+            sem_report_nodef(sem, expr->as.obsecro.arguments->nodes[i],
+                             "OBSECRO mail_builtin_smtp_send expects VERUM argument at position %zu", i + 1);
         }
         if ((strcmp(name, "rows_get_text") == 0 ||
              strcmp(name, "rows_get_int") == 0 ||

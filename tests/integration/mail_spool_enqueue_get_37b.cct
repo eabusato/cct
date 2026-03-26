@@ -1,0 +1,76 @@
+INCIPIT grimoire "mail_spool_enqueue_get_37b"
+
+ADVOCARE "cct/bytes.cct"
+ADVOCARE "cct/fs.cct"
+ADVOCARE "cct/fluxus.cct"
+ADVOCARE "cct/mail.cct"
+ADVOCARE "cct/mail_spool.cct"
+ADVOCARE "cct/result.cct"
+ADVOCARE "cct/verbum.cct"
+
+RITUALE main() REDDE REX
+  EVOCA VERBUM spool_dir AD "tests/.tmp/phase37b_enqueue_get"
+
+  EVOCA MailSpoolOptions options AD CONIURA mail_spool_default_options()
+  VINCIRE options.root_dir AD spool_dir
+  VINCIRE options.max_attempts AD 4
+  VINCIRE options.base_retry_seconds AD 5
+
+  EVOCA SPECULUM NIHIL open_result AD CONIURA mail_spool_open(options)
+  SI CONIURA result_is_err GENUS(MailSpool, VERBUM)(open_result)
+    REDDE 1
+  FIN SI
+  EVOCA MailSpool spool AD CONIURA result_unwrap GENUS(MailSpool, VERBUM)(open_result)
+
+  EVOCA MailMessage message AD CONIURA mail_message_new()
+  EVOCA SPECULUM NIHIL bytes AD CONIURA bytes_new(2)
+  CONIURA bytes_set(bytes, 0, 72)
+  CONIURA bytes_set(bytes, 1, 105)
+  CONIURA mail_message_set_from(SPECULUM message, CONIURA mail_address("sender@app.test", "Sender"))
+  CONIURA mail_message_add_to(SPECULUM message, CONIURA mail_address("dest@app.test", "Dest"))
+  CONIURA mail_message_add_cc(SPECULUM message, CONIURA mail_address("copy@app.test", "Copy"))
+  CONIURA mail_message_set_subject(SPECULUM message, "Spool enqueue")
+  CONIURA mail_message_set_text(SPECULUM message, "Body text")
+  CONIURA mail_message_add_header(SPECULUM message, "X-Phase", "37B")
+  CONIURA mail_message_add_attachment(SPECULUM message, "note.txt", "text/plain", bytes)
+
+  EVOCA SPECULUM NIHIL enqueue_result AD CONIURA mail_spool_enqueue(spool, message)
+  SI CONIURA result_is_err GENUS(MailSpoolItem, VERBUM)(enqueue_result)
+    REDDE 2
+  FIN SI
+  EVOCA MailSpoolItem item AD CONIURA result_unwrap GENUS(MailSpoolItem, VERBUM)(enqueue_result)
+  SI CONIURA len(item.spool_id) == 0 VEL item.status != MAIL_SPOOL_PENDING
+    REDDE 3
+  FIN SI
+
+  EVOCA VERBUM item_path AD CONIURA mail_spool_item_path(spool, item.spool_id)
+  SI NON CONIURA exists(item_path)
+    REDDE 4
+  FIN SI
+  EVOCA VERBUM raw_json AD CONIURA read_all(item_path)
+  SI CONIURA contains(raw_json, "\"status\":\"pending\"") == FALSUM
+    REDDE 5
+  FIN SI
+  SI CONIURA contains(raw_json, "\"mime\":") == FALSUM
+    REDDE 6
+  FIN SI
+
+  EVOCA SPECULUM NIHIL get_result AD CONIURA mail_spool_get(spool, item.spool_id)
+  SI CONIURA result_is_err GENUS(MailSpoolItem, VERBUM)(get_result)
+    REDDE 7
+  FIN SI
+  EVOCA MailSpoolItem loaded AD CONIURA result_unwrap GENUS(MailSpoolItem, VERBUM)(get_result)
+  SI CONIURA compare(loaded.message.subject, "Spool enqueue") != 0
+    REDDE 8
+  FIN SI
+  SI CONIURA fluxus_len(loaded.message.to) != 1 VEL CONIURA fluxus_len(loaded.message.cc) != 1
+    REDDE 9
+  FIN SI
+  SI CONIURA fluxus_len(loaded.message.headers) != 1 VEL CONIURA fluxus_len(loaded.message.attachments) != 1
+    REDDE 10
+  FIN SI
+
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

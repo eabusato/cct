@@ -1,0 +1,24 @@
+INCIPIT grimoire "mail_subject_rfc2047_37a"
+
+ADVOCARE "cct/mail.cct"
+ADVOCARE "cct/verbum.cct"
+
+RITUALE main() REDDE REX
+  EVOCA MailMessage msg AD CONIURA mail_message_new()
+  CONIURA mail_message_set_from(SPECULUM msg, CONIURA mail_address("noreply@example.com", ""))
+  CONIURA mail_message_add_to(SPECULUM msg, CONIURA mail_address("dest@example.com", ""))
+  CONIURA mail_message_set_subject(SPECULUM msg, "Redefinicao de senha ")
+  CONIURA mail_message_set_subject(SPECULUM msg, CONIURA concat(msg.subject, "ação"))
+  CONIURA mail_message_set_text(SPECULUM msg, "body")
+
+  EVOCA VERBUM mime AD CONIURA mail_message_render_mime(msg)
+  SI CONIURA contains(mime, "Subject: =?UTF-8?B?") == FALSUM
+    REDDE 1
+  FIN SI
+  SI CONIURA contains(mime, "Subject: Redefinicao de senha ação") == VERUM
+    REDDE 2
+  FIN SI
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

@@ -1,0 +1,45 @@
+INCIPIT grimoire "mail_spool_list_pending_37b"
+
+ADVOCARE "cct/fluxus.cct"
+ADVOCARE "cct/mail.cct"
+ADVOCARE "cct/mail_spool.cct"
+ADVOCARE "cct/result.cct"
+ADVOCARE "cct/verbum.cct"
+
+RITUALE make_message(VERBUM subject) REDDE MailMessage
+  EVOCA MailMessage message AD CONIURA mail_message_new()
+  CONIURA mail_message_set_from(SPECULUM message, CONIURA mail_address("sender@app.test", ""))
+  CONIURA mail_message_add_to(SPECULUM message, CONIURA mail_address("dest@app.test", ""))
+  CONIURA mail_message_set_subject(SPECULUM message, subject)
+  CONIURA mail_message_set_text(SPECULUM message, "Body")
+  REDDE message
+EXPLICIT RITUALE
+
+RITUALE main() REDDE REX
+  EVOCA VERBUM spool_dir AD "tests/.tmp/phase37b_list_pending"
+
+  EVOCA MailSpoolOptions options AD CONIURA mail_spool_default_options()
+  VINCIRE options.root_dir AD spool_dir
+  VINCIRE options.base_retry_seconds AD 30
+
+  EVOCA MailSpool spool AD CONIURA result_unwrap GENUS(MailSpool, VERBUM)(CONIURA mail_spool_open(options))
+  EVOCA MailSpoolItem pending_item AD CONIURA result_unwrap GENUS(MailSpoolItem, VERBUM)(CONIURA mail_spool_enqueue(spool, CONIURA make_message("Pending")))
+  EVOCA MailSpoolItem retry_item AD CONIURA result_unwrap GENUS(MailSpoolItem, VERBUM)(CONIURA mail_spool_enqueue(spool, CONIURA make_message("Retry later")))
+  EVOCA MailSpoolItem sent_item AD CONIURA result_unwrap GENUS(MailSpoolItem, VERBUM)(CONIURA mail_spool_enqueue(spool, CONIURA make_message("Sent")))
+
+  CONIURA mail_spool_mark_failed(spool, retry_item.spool_id, "temporary failure")
+  CONIURA mail_spool_mark_sent(spool, sent_item.spool_id)
+
+  EVOCA SPECULUM NIHIL pending AD CONIURA mail_spool_list_pending(spool, 10)
+  SI CONIURA fluxus_len(pending) != 1
+    REDDE 1
+  FIN SI
+  EVOCA SPECULUM MailSpoolItem only_ptr AD CONIURA fluxus_get(pending, 0)
+  SI CONIURA compare((*only_ptr).spool_id, pending_item.spool_id) != 0
+    REDDE 2
+  FIN SI
+
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

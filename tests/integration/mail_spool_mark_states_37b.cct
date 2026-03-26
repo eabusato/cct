@@ -1,0 +1,46 @@
+INCIPIT grimoire "mail_spool_mark_states_37b"
+
+ADVOCARE "cct/mail.cct"
+ADVOCARE "cct/mail_spool.cct"
+ADVOCARE "cct/result.cct"
+ADVOCARE "cct/verbum.cct"
+
+RITUALE make_message(VERBUM subject) REDDE MailMessage
+  EVOCA MailMessage message AD CONIURA mail_message_new()
+  CONIURA mail_message_set_from(SPECULUM message, CONIURA mail_address("sender@app.test", ""))
+  CONIURA mail_message_add_to(SPECULUM message, CONIURA mail_address("dest@app.test", ""))
+  CONIURA mail_message_set_subject(SPECULUM message, subject)
+  CONIURA mail_message_set_text(SPECULUM message, "Body")
+  REDDE message
+EXPLICIT RITUALE
+
+RITUALE main() REDDE REX
+  EVOCA VERBUM spool_dir AD "tests/.tmp/phase37b_mark_states"
+
+  EVOCA MailSpoolOptions options AD CONIURA mail_spool_default_options()
+  VINCIRE options.root_dir AD spool_dir
+
+  EVOCA MailSpool spool AD CONIURA result_unwrap GENUS(MailSpool, VERBUM)(CONIURA mail_spool_open(options))
+  EVOCA MailSpoolItem sent_item AD CONIURA result_unwrap GENUS(MailSpoolItem, VERBUM)(CONIURA mail_spool_enqueue(spool, CONIURA make_message("Sent state")))
+  EVOCA MailSpoolItem dead_item AD CONIURA result_unwrap GENUS(MailSpoolItem, VERBUM)(CONIURA mail_spool_enqueue(spool, CONIURA make_message("Dead state")))
+
+  CONIURA mail_spool_mark_sent(spool, sent_item.spool_id)
+  CONIURA mail_spool_mark_dead(spool, dead_item.spool_id, "fatal failure")
+
+  EVOCA MailSpoolItem sent_loaded AD CONIURA result_unwrap GENUS(MailSpoolItem, VERBUM)(CONIURA mail_spool_get(spool, sent_item.spool_id))
+  EVOCA MailSpoolItem dead_loaded AD CONIURA result_unwrap GENUS(MailSpoolItem, VERBUM)(CONIURA mail_spool_get(spool, dead_item.spool_id))
+
+  SI sent_loaded.status != MAIL_SPOOL_SENT
+    REDDE 1
+  FIN SI
+  SI dead_loaded.status != MAIL_SPOOL_DEAD
+    REDDE 2
+  FIN SI
+  SI CONIURA compare(dead_loaded.last_error, "fatal failure") != 0
+    REDDE 3
+  FIN SI
+
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

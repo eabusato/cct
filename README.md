@@ -89,9 +89,10 @@ CCT documentation is organized by audience and purpose. Choose your reading path
 2. [Bibliotheca Canonica](docs/bibliotheca_canonica.md) - Standard library guide
 3. [FLUXUS Usage](docs/fluxus_usage.md) - Dynamic vectors in depth
 4. [Build System](docs/build_system.md) - Project workflow
-5. [Self-Hosting Guide](docs/self_hosting.md) - Bootstrap, promotion, and operational modes
-6. Explore `examples/showcase_stdlib_*.cct` for real-world patterns
-7. Explore `examples/*_20f2.cct` for JSON/network/HTTP/config/SQLite flows
+5. [Mail Configuration Guide](docs/mail_configuration.md) - How CCT applications should configure SMTP/file/memory backends
+6. [Self-Hosting Guide](docs/self_hosting.md) - Bootstrap, promotion, and operational modes
+7. Explore `examples/showcase_stdlib_*.cct` for real-world patterns
+8. Explore `examples/*_20f2.cct` for JSON/network/HTTP/config/SQLite flows
 
 **Estimated time**: 4-6 hours
 
@@ -154,6 +155,7 @@ Tooling and guides:
 - `docs/build_system.md`
 - `docs/project_conventions.md`
 - `docs/testing.md`
+- `docs/mail_configuration.md`
 - `docs/self_hosting.md`
 - `docs/fluxus_usage.md`
 - `docs/linter.md`

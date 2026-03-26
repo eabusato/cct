@@ -1,0 +1,45 @@
+INCIPIT grimoire "redis_resp_scalars_36c"
+
+ADVOCARE "cct/redis.cct"
+ADVOCARE "cct/verbum.cct"
+
+RITUALE main() REDDE REX
+  EVOCA VERBUM crlf AD CONIURA redis_crlf()
+
+  EVOCA VERBUM ok_raw AD CONIURA concat("+PONG", crlf)
+  EVOCA RedisValue ok_value AD CONIURA redis_resp_parse(ok_raw)
+  SI ok_value.kind != REDIS_STRING VEL CONIURA compare(ok_value.string_value, "PONG") != 0
+    REDDE 1
+  FIN SI
+
+  EVOCA VERBUM int_raw AD CONIURA concat(":12", crlf)
+  EVOCA RedisValue int_value AD CONIURA redis_resp_parse(int_raw)
+  SI int_value.kind != REDIS_INT VEL int_value.int_value != 12
+    REDDE 2
+  FIN SI
+
+  EVOCA VERBUM bulk_raw AD "$5"
+  VINCIRE bulk_raw AD CONIURA concat(bulk_raw, crlf)
+  VINCIRE bulk_raw AD CONIURA concat(bulk_raw, "hello")
+  VINCIRE bulk_raw AD CONIURA concat(bulk_raw, crlf)
+  EVOCA RedisValue bulk_value AD CONIURA redis_resp_parse(bulk_raw)
+  SI bulk_value.kind != REDIS_STRING VEL CONIURA compare(bulk_value.string_value, "hello") != 0
+    REDDE 3
+  FIN SI
+
+  EVOCA VERBUM null_raw AD CONIURA concat("$-1", crlf)
+  EVOCA RedisValue null_value AD CONIURA redis_resp_parse(null_raw)
+  SI null_value.kind != REDIS_NULL
+    REDDE 4
+  FIN SI
+
+  EVOCA VERBUM err_raw AD CONIURA concat("-NOAUTH", crlf)
+  EVOCA RedisValue err_value AD CONIURA redis_resp_parse(err_raw)
+  SI err_value.kind != REDIS_ERROR VEL CONIURA compare(err_value.string_value, "NOAUTH") != 0
+    REDDE 5
+  FIN SI
+
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

@@ -1,0 +1,31 @@
+INCIPIT grimoire "db_postgres_search_config_36b"
+
+ADVOCARE "cct/db_postgres_search.cct"
+ADVOCARE "cct/result.cct"
+ADVOCARE "cct/verbum.cct"
+
+RITUALE main() REDDE REX
+  EVOCA PgSearchConfig simple AD CONIURA pg_search_config_simple()
+  SI CONIURA compare(CONIURA pg_search_config_name(simple), "simple") != 0
+    REDDE 1
+  FIN SI
+
+  EVOCA SPECULUM NIHIL lang_res AD CONIURA pg_search_config_language("portuguese")
+  SI NON CONIURA result_is_ok GENUS(PgSearchConfig, VERBUM)(lang_res)
+    REDDE 2
+  FIN SI
+
+  EVOCA SPECULUM NIHIL custom_res AD CONIURA pg_search_config_custom("catalog_pt")
+  SI NON CONIURA result_is_ok GENUS(PgSearchConfig, VERBUM)(custom_res)
+    REDDE 3
+  FIN SI
+
+  EVOCA SPECULUM NIHIL bad_res AD CONIURA pg_search_config_language("pt-BR")
+  SI NON CONIURA result_is_err GENUS(PgSearchConfig, VERBUM)(bad_res)
+    REDDE 4
+  FIN SI
+
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

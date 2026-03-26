@@ -1,0 +1,47 @@
+INCIPIT grimoire "mail_memory_backend_37a"
+
+ADVOCARE "cct/mail.cct"
+ADVOCARE "cct/result.cct"
+ADVOCARE "cct/verbum.cct"
+
+RITUALE main() REDDE REX
+  EVOCA MailBackendOptions options AD CONIURA mail_backend_memory()
+  EVOCA SPECULUM NIHIL opened AD CONIURA mail_client_open(options)
+  SI CONIURA result_is_err GENUS(MailClient, VERBUM)(opened)
+    REDDE 1
+  FIN SI
+
+  EVOCA MailClient client AD CONIURA result_unwrap GENUS(MailClient, VERBUM)(opened)
+  EVOCA MailMessage msg AD CONIURA mail_message_new()
+  EVOCA MailAddress sender AD CONIURA mail_address("sender@example.com", "Sender")
+  EVOCA MailAddress rcpt AD CONIURA mail_address("dest@example.com", "")
+  CONIURA mail_message_set_from(SPECULUM msg, sender)
+  CONIURA mail_message_add_to(SPECULUM msg, rcpt)
+  CONIURA mail_message_set_subject(SPECULUM msg, "Memory backend")
+  CONIURA mail_message_set_text(SPECULUM msg, "hello memory")
+
+  EVOCA SPECULUM NIHIL sent AD CONIURA mail_send(SPECULUM client, msg)
+  SI CONIURA result_is_err GENUS(MailSendResult, VERBUM)(sent)
+    REDDE 2
+  FIN SI
+  SI CONIURA mail_memory_count(client) != 1
+    REDDE 3
+  FIN SI
+
+  EVOCA SPECULUM NIHIL got AD CONIURA mail_memory_get(client, 0)
+  SI CONIURA result_is_err GENUS(MailMessage, VERBUM)(got)
+    REDDE 4
+  FIN SI
+
+  EVOCA MailMessage stored AD CONIURA result_unwrap GENUS(MailMessage, VERBUM)(got)
+  SI CONIURA compare(stored.subject, "Memory backend") != 0
+    REDDE 5
+  FIN SI
+  SI CONIURA compare(stored.text_body, "hello memory") != 0
+    REDDE 6
+  FIN SI
+
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

@@ -1,0 +1,9 @@
+INCIPIT grimoire "mail_spool_freestanding_reject_37b"
+
+ADVOCARE "cct/mail_spool.cct"
+
+RITUALE main() REDDE REX
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

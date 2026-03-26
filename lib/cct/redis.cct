@@ -1,0 +1,814 @@
+-- CCT — Clavicula Turing
+-- Standard Library Module: redis
+--
+-- FASE 36C: Redis operational client
+
+INCIPIT grimoire "redis"
+
+ADVOCARE "cct/fmt.cct"
+ADVOCARE "cct/parse.cct"
+ADVOCARE "cct/result.cct"
+ADVOCARE "cct/socket.cct"
+ADVOCARE "cct/verbum.cct"
+
+SIGILLUM Redis
+  handle: SPECULUM NIHIL
+  last_error: VERBUM
+  read_timeout_ms: REX
+  open: VERUM
+FIN SIGILLUM
+
+SIGILLUM RedisOptions
+  host: VERBUM
+  port: REX
+  password: VERBUM
+  db_index: REX
+  connect_timeout_ms: REX
+  read_timeout_ms: REX
+FIN SIGILLUM
+
+ORDO RedisValueKind
+  REDIS_NULL
+  REDIS_STRING
+  REDIS_INT
+  REDIS_ARRAY
+  REDIS_ERROR
+FIN ORDO
+
+SIGILLUM RedisValue
+  kind: RedisValueKind
+  string_value: VERBUM
+  int_value: REX
+FIN SIGILLUM
+
+SIGILLUM RedisMessage
+  channel: VERBUM
+  pattern: VERBUM
+  payload: VERBUM
+FIN SIGILLUM
+
+SIGILLUM RedisMaybeText
+  found: VERUM
+  value: VERBUM
+FIN SIGILLUM
+
+SIGILLUM RedisMaybeMessage
+  found: VERUM
+  message: RedisMessage
+FIN SIGILLUM
+
+SIGILLUM RedisRawReply
+  payload: VERBUM
+FIN SIGILLUM
+
+SIGILLUM RedisTextList
+  encoded: VERBUM
+  count: REX
+FIN SIGILLUM
+
+SIGILLUM RedisPair
+  key: VERBUM
+  value: VERBUM
+FIN SIGILLUM
+
+SIGILLUM RedisPairList
+  encoded: VERBUM
+  count: REX
+FIN SIGILLUM
+
+SIGILLUM RedisParseChunk
+  kind: RedisValueKind
+  string_value: VERBUM
+  int_value: REX
+  next_index: REX
+FIN SIGILLUM
+
+RITUALE redis_crlf() REDDE VERBUM
+  EVOCA VERBUM out AD CONIURA from_char(13)
+  REDDE CONIURA concat(out, CONIURA from_char(10))
+EXPLICIT RITUALE
+
+RITUALE redis_ok_unit() REDDE SPECULUM NIHIL
+  REDDE CONIURA Ok GENUS(REX, VERBUM)(0)
+EXPLICIT RITUALE
+
+RITUALE redis_err_unit(VERBUM mensagem) REDDE SPECULUM NIHIL
+  REDDE CONIURA Err GENUS(REX, VERBUM)(mensagem)
+EXPLICIT RITUALE
+
+RITUALE redis_value_make(RedisValueKind kind, VERBUM string_value, REX int_value) REDDE RedisValue
+  EVOCA RedisValue value
+  VINCIRE value.kind AD kind
+  VINCIRE value.string_value AD string_value
+  VINCIRE value.int_value AD int_value
+  REDDE value
+EXPLICIT RITUALE
+
+RITUALE redis_value_null() REDDE RedisValue
+  REDDE CONIURA redis_value_make(REDIS_NULL, "", 0)
+EXPLICIT RITUALE
+
+RITUALE redis_value_string(VERBUM s) REDDE RedisValue
+  REDDE CONIURA redis_value_make(REDIS_STRING, s, 0)
+EXPLICIT RITUALE
+
+RITUALE redis_value_int(REX n) REDDE RedisValue
+  REDDE CONIURA redis_value_make(REDIS_INT, "", n)
+EXPLICIT RITUALE
+
+RITUALE redis_value_error(VERBUM s) REDDE RedisValue
+  REDDE CONIURA redis_value_make(REDIS_ERROR, s, 0)
+EXPLICIT RITUALE
+
+RITUALE redis_value_array(VERBUM encoded, REX count) REDDE RedisValue
+  REDDE CONIURA redis_value_make(REDIS_ARRAY, encoded, count)
+EXPLICIT RITUALE
+
+RITUALE redis_maybe_text_none() REDDE RedisMaybeText
+  EVOCA RedisMaybeText out
+  VINCIRE out.found AD FALSUM
+  VINCIRE out.value AD ""
+  REDDE out
+EXPLICIT RITUALE
+
+RITUALE redis_maybe_text_some(VERBUM value) REDDE RedisMaybeText
+  EVOCA RedisMaybeText out
+  VINCIRE out.found AD VERUM
+  VINCIRE out.value AD value
+  REDDE out
+EXPLICIT RITUALE
+
+RITUALE redis_maybe_message_none() REDDE RedisMaybeMessage
+  EVOCA RedisMaybeMessage out
+  EVOCA RedisMessage message
+  VINCIRE message.channel AD ""
+  VINCIRE message.pattern AD ""
+  VINCIRE message.payload AD ""
+  VINCIRE out.found AD FALSUM
+  VINCIRE out.message AD message
+  REDDE out
+EXPLICIT RITUALE
+
+RITUALE redis_maybe_message_some(RedisMessage message) REDDE RedisMaybeMessage
+  EVOCA RedisMaybeMessage out
+  VINCIRE out.found AD VERUM
+  VINCIRE out.message AD message
+  REDDE out
+EXPLICIT RITUALE
+
+RITUALE redis_raw_reply(VERBUM payload) REDDE RedisRawReply
+  EVOCA RedisRawReply out
+  VINCIRE out.payload AD payload
+  REDDE out
+EXPLICIT RITUALE
+
+RITUALE redis_text_list_empty() REDDE RedisTextList
+  EVOCA RedisTextList out
+  VINCIRE out.encoded AD ""
+  VINCIRE out.count AD 0
+  REDDE out
+EXPLICIT RITUALE
+
+RITUALE redis_pair_list_empty() REDDE RedisPairList
+  EVOCA RedisPairList out
+  VINCIRE out.encoded AD ""
+  VINCIRE out.count AD 0
+  REDDE out
+EXPLICIT RITUALE
+
+RITUALE redis_chunk_to_value(RedisParseChunk chunk) REDDE RedisValue
+  REDDE CONIURA redis_value_make(chunk.kind, chunk.string_value, chunk.int_value)
+EXPLICIT RITUALE
+
+RITUALE redis_default_options() REDDE RedisOptions
+  EVOCA RedisOptions options
+  VINCIRE options.host AD "127.0.0.1"
+  VINCIRE options.port AD 6379
+  VINCIRE options.password AD ""
+  VINCIRE options.db_index AD 0
+  VINCIRE options.connect_timeout_ms AD 1000
+  VINCIRE options.read_timeout_ms AD 1000
+  REDDE options
+EXPLICIT RITUALE
+
+RITUALE redis_parse_dsn_fill(VERBUM dsn, SPECULUM RedisOptions out) REDDE VERBUM
+  SI NON CONIURA starts_with(dsn, "redis://")
+    REDDE "DSN Redis deve iniciar com redis://"
+  FIN SI
+  VINCIRE (*out) AD CONIURA redis_default_options()
+  EVOCA VERBUM tail AD CONIURA strip_prefix(dsn, "redis://")
+  EVOCA REX slash AD CONIURA find(tail, "/")
+  EVOCA VERBUM host_part AD tail
+  EVOCA VERBUM db_part AD ""
+  SI slash != -1
+    VINCIRE host_part AD CONIURA substring(tail, 0, slash)
+    VINCIRE db_part AD CONIURA substring(tail, slash + 1, CONIURA len(tail))
+  FIN SI
+  EVOCA REX at AD CONIURA find(host_part, "@")
+  EVOCA VERBUM host_port AD host_part
+  SI at != -1
+    EVOCA VERBUM auth AD CONIURA substring(host_part, 0, at)
+    VINCIRE host_port AD CONIURA substring(host_part, at + 1, CONIURA len(host_part))
+    SI CONIURA starts_with(auth, ":")
+      VINCIRE (*out).password AD CONIURA substring(auth, 1, CONIURA len(auth))
+    FIN SI
+  FIN SI
+  EVOCA REX colon AD CONIURA find(host_port, ":")
+  SI colon == -1
+    VINCIRE (*out).host AD host_port
+  ALITER
+    VINCIRE (*out).host AD CONIURA substring(host_port, 0, colon)
+    VINCIRE (*out).port AD CONIURA parse_int(CONIURA substring(host_port, colon + 1, CONIURA len(host_port)))
+  FIN SI
+  SI CONIURA len((*out).host) == 0
+    REDDE "Host Redis invalido"
+  FIN SI
+  SI CONIURA len(db_part) > 0
+    VINCIRE (*out).db_index AD CONIURA parse_int(db_part)
+  FIN SI
+  REDDE ""
+EXPLICIT RITUALE
+
+RITUALE redis_parse_dsn(VERBUM dsn) REDDE SPECULUM NIHIL
+  EVOCA RedisOptions options
+  EVOCA VERBUM err AD CONIURA redis_parse_dsn_fill(dsn, SPECULUM options)
+  SI CONIURA len(err) > 0
+    REDDE CONIURA Err GENUS(RedisOptions, VERBUM)(err)
+  FIN SI
+  REDDE CONIURA Ok GENUS(RedisOptions, VERBUM)(options)
+EXPLICIT RITUALE
+
+RITUALE redis_is_open(Redis redis) REDDE VERUM
+  REDDE redis.open
+EXPLICIT RITUALE
+
+RITUALE redis_last_error(Redis redis) REDDE VERBUM
+  REDDE redis.last_error
+EXPLICIT RITUALE
+
+RITUALE redis_argv_1(VERBUM a) REDDE VERBUM
+  EVOCA VERBUM crlf AD CONIURA redis_crlf()
+  EVOCA VERBUM out AD "*1"
+  VINCIRE out AD CONIURA concat(out, crlf)
+  VINCIRE out AD CONIURA concat(out, "$")
+  VINCIRE out AD CONIURA concat(out, CONIURA stringify_int(CONIURA len(a)))
+  VINCIRE out AD CONIURA concat(out, crlf)
+  VINCIRE out AD CONIURA concat(out, a)
+  VINCIRE out AD CONIURA concat(out, crlf)
+  REDDE out
+EXPLICIT RITUALE
+
+RITUALE redis_argv_2(VERBUM a, VERBUM b) REDDE VERBUM
+  EVOCA VERBUM crlf AD CONIURA redis_crlf()
+  EVOCA VERBUM out AD "*2"
+  VINCIRE out AD CONIURA concat(out, crlf)
+  VINCIRE out AD CONIURA concat(out, "$")
+  VINCIRE out AD CONIURA concat(out, CONIURA stringify_int(CONIURA len(a)))
+  VINCIRE out AD CONIURA concat(out, crlf)
+  VINCIRE out AD CONIURA concat(out, a)
+  VINCIRE out AD CONIURA concat(out, crlf)
+  VINCIRE out AD CONIURA concat(out, "$")
+  VINCIRE out AD CONIURA concat(out, CONIURA stringify_int(CONIURA len(b)))
+  VINCIRE out AD CONIURA concat(out, crlf)
+  VINCIRE out AD CONIURA concat(out, b)
+  VINCIRE out AD CONIURA concat(out, crlf)
+  REDDE out
+EXPLICIT RITUALE
+
+RITUALE redis_argv_3(VERBUM a, VERBUM b, VERBUM c) REDDE VERBUM
+  EVOCA VERBUM out AD CONIURA redis_argv_2(a, b)
+  EVOCA VERBUM crlf AD CONIURA redis_crlf()
+  VINCIRE out AD CONIURA concat("*3", CONIURA substring(out, 2, CONIURA len(out)))
+  VINCIRE out AD CONIURA concat(out, "$")
+  VINCIRE out AD CONIURA concat(out, CONIURA stringify_int(CONIURA len(c)))
+  VINCIRE out AD CONIURA concat(out, crlf)
+  VINCIRE out AD CONIURA concat(out, c)
+  VINCIRE out AD CONIURA concat(out, crlf)
+  REDDE out
+EXPLICIT RITUALE
+
+RITUALE redis_argv_4(VERBUM a, VERBUM b, VERBUM c, VERBUM d) REDDE VERBUM
+  EVOCA VERBUM out AD CONIURA redis_argv_3(a, b, c)
+  EVOCA VERBUM crlf AD CONIURA redis_crlf()
+  VINCIRE out AD CONIURA concat("*4", CONIURA substring(out, 2, CONIURA len(out)))
+  VINCIRE out AD CONIURA concat(out, "$")
+  VINCIRE out AD CONIURA concat(out, CONIURA stringify_int(CONIURA len(d)))
+  VINCIRE out AD CONIURA concat(out, crlf)
+  VINCIRE out AD CONIURA concat(out, d)
+  VINCIRE out AD CONIURA concat(out, crlf)
+  REDDE out
+EXPLICIT RITUALE
+
+RITUALE redis_find_crlf(VERBUM raw, REX start) REDDE REX
+  EVOCA REX i AD start
+  EVOCA REX n AD CONIURA len(raw)
+  DUM i + 1 < n
+    SI CONIURA char_at(raw, i) == 13 ET CONIURA char_at(raw, i + 1) == 10
+      REDDE i
+    FIN SI
+    VINCIRE i AD i + 1
+  FIN DUM
+  REDDE -1
+EXPLICIT RITUALE
+
+RITUALE redis_parse_at(VERBUM raw, REX start) REDDE RedisParseChunk
+  EVOCA RedisParseChunk chunk
+  VINCIRE chunk.kind AD REDIS_ERROR
+  VINCIRE chunk.string_value AD "RESP invalido"
+  VINCIRE chunk.int_value AD 0
+  VINCIRE chunk.next_index AD CONIURA len(raw)
+  SI start >= CONIURA len(raw)
+    REDDE chunk
+  FIN SI
+  EVOCA MILES prefix AD CONIURA char_at(raw, start)
+  EVOCA REX line_end AD CONIURA redis_find_crlf(raw, start)
+  SI line_end == -1
+    REDDE chunk
+  FIN SI
+  SI prefix == 43
+    VINCIRE chunk.kind AD REDIS_STRING
+    VINCIRE chunk.string_value AD CONIURA substring(raw, start + 1, line_end)
+    VINCIRE chunk.next_index AD line_end + 2
+    REDDE chunk
+  FIN SI
+  SI prefix == 45
+    VINCIRE chunk.kind AD REDIS_ERROR
+    VINCIRE chunk.string_value AD CONIURA substring(raw, start + 1, line_end)
+    VINCIRE chunk.next_index AD line_end + 2
+    REDDE chunk
+  FIN SI
+  SI prefix == 58
+    VINCIRE chunk.kind AD REDIS_INT
+    VINCIRE chunk.int_value AD CONIURA parse_int(CONIURA substring(raw, start + 1, line_end))
+    VINCIRE chunk.next_index AD line_end + 2
+    REDDE chunk
+  FIN SI
+  SI prefix == 36
+    EVOCA REX payload_len AD CONIURA parse_int(CONIURA substring(raw, start + 1, line_end))
+    SI payload_len < 0
+      VINCIRE chunk.kind AD REDIS_NULL
+      VINCIRE chunk.string_value AD ""
+      VINCIRE chunk.int_value AD 0
+      VINCIRE chunk.next_index AD line_end + 2
+      REDDE chunk
+    FIN SI
+    EVOCA REX payload_start AD line_end + 2
+    EVOCA REX payload_end AD payload_start + payload_len
+    VINCIRE chunk.kind AD REDIS_STRING
+    VINCIRE chunk.string_value AD CONIURA substring(raw, payload_start, payload_end)
+    VINCIRE chunk.next_index AD payload_end + 2
+    REDDE chunk
+  FIN SI
+  SI prefix == 42
+    EVOCA REX count AD CONIURA parse_int(CONIURA substring(raw, start + 1, line_end))
+    SI count < 0
+      VINCIRE chunk.kind AD REDIS_NULL
+      VINCIRE chunk.string_value AD ""
+      VINCIRE chunk.int_value AD 0
+      VINCIRE chunk.next_index AD line_end + 2
+      REDDE chunk
+    FIN SI
+    EVOCA REX cursor AD line_end + 2
+    EVOCA REX i AD 0
+    DUM i < count
+      EVOCA RedisParseChunk inner AD CONIURA redis_parse_at(raw, cursor)
+      VINCIRE cursor AD inner.next_index
+      VINCIRE i AD i + 1
+    FIN DUM
+    VINCIRE chunk.kind AD REDIS_ARRAY
+    VINCIRE chunk.string_value AD CONIURA substring(raw, line_end + 2, cursor)
+    VINCIRE chunk.int_value AD count
+    VINCIRE chunk.next_index AD cursor
+    REDDE chunk
+  FIN SI
+  REDDE chunk
+EXPLICIT RITUALE
+
+RITUALE redis_resp_parse(VERBUM raw) REDDE RedisValue
+  EVOCA RedisParseChunk chunk AD CONIURA redis_parse_at(raw, 0)
+  REDDE CONIURA redis_chunk_to_value(chunk)
+EXPLICIT RITUALE
+
+RITUALE redis_array_len(RedisValue value) REDDE REX
+  SI value.kind != REDIS_ARRAY
+    REDDE 0
+  FIN SI
+  REDDE value.int_value
+EXPLICIT RITUALE
+
+RITUALE redis_array_get(RedisValue value, REX index) REDDE RedisValue
+  SI value.kind != REDIS_ARRAY
+    REDDE CONIURA redis_value_null()
+  FIN SI
+  SI index < 0 VEL index >= value.int_value
+    REDDE CONIURA redis_value_null()
+  FIN SI
+  EVOCA REX cursor AD 0
+  EVOCA REX i AD 0
+  DUM i <= index
+    EVOCA RedisParseChunk chunk AD CONIURA redis_parse_at(value.string_value, cursor)
+    SI i == index
+      REDDE CONIURA redis_chunk_to_value(chunk)
+    FIN SI
+    VINCIRE cursor AD chunk.next_index
+    VINCIRE i AD i + 1
+  FIN DUM
+  REDDE CONIURA redis_value_null()
+EXPLICIT RITUALE
+
+RITUALE redis_value_to_text(RedisValue value) REDDE VERBUM
+  SI value.kind == REDIS_STRING VEL value.kind == REDIS_ERROR
+    REDDE value.string_value
+  FIN SI
+  SI value.kind == REDIS_INT
+    REDDE CONIURA stringify_int(value.int_value)
+  FIN SI
+  REDDE ""
+EXPLICIT RITUALE
+
+RITUALE redis_recv_raw_fill(Redis redis, REX timeout_ms, SPECULUM RedisRawReply out) REDDE VERBUM
+  CONIURA sock_set_timeout_ms(redis.handle, timeout_ms)
+  EVOCA VERBUM raw AD CONIURA sock_recv(redis.handle, 65536)
+  CONIURA sock_set_timeout_ms(redis.handle, redis.read_timeout_ms)
+  EVOCA VERBUM err AD CONIURA sock_last_error()
+  SI CONIURA len(raw) == 0
+    SI CONIURA len(err) > 0
+      REDDE err
+    FIN SI
+    VINCIRE (*out) AD CONIURA redis_raw_reply("")
+    REDDE ""
+  FIN SI
+  VINCIRE (*out) AD CONIURA redis_raw_reply(raw)
+  REDDE ""
+EXPLICIT RITUALE
+
+RITUALE redis_send_wire_fill(Redis redis, VERBUM wire, SPECULUM RedisRawReply out) REDDE VERBUM
+  SI NON redis.open
+    REDDE "Redis fechado"
+  FIN SI
+  SI CONIURA sock_send(redis.handle, wire) != CONIURA len(wire)
+    REDDE CONIURA sock_last_error()
+  FIN SI
+  EVOCA VERBUM recv_err AD CONIURA redis_recv_raw_fill(redis, redis.read_timeout_ms, out)
+  SI CONIURA len(recv_err) > 0
+    REDDE recv_err
+  FIN SI
+  EVOCA VERBUM raw AD (*out).payload
+  SI CONIURA len(raw) == 0
+    REDDE ""
+  FIN SI
+  EVOCA RedisValue value AD CONIURA redis_resp_parse(raw)
+  SI value.kind == REDIS_ERROR
+    REDDE value.string_value
+  FIN SI
+  REDDE ""
+EXPLICIT RITUALE
+
+RITUALE redis_simple_ok_wire(Redis redis, VERBUM wire) REDDE SPECULUM NIHIL
+  EVOCA RedisRawReply raw_reply
+  EVOCA VERBUM err AD CONIURA redis_send_wire_fill(redis, wire, SPECULUM raw_reply)
+  SI CONIURA len(err) > 0
+    REDDE CONIURA redis_err_unit(err)
+  FIN SI
+  REDDE CONIURA redis_ok_unit()
+EXPLICIT RITUALE
+
+RITUALE redis_connect_with_options(RedisOptions options) REDDE SPECULUM NIHIL
+  EVOCA SPECULUM NIHIL sock AD CONIURA socket_tcp()
+  CONIURA sock_connect(sock, options.host, options.port)
+  SI CONIURA len(CONIURA sock_last_error()) > 0
+    CONIURA sock_close(sock)
+    REDDE CONIURA Err GENUS(Redis, VERBUM)(CONIURA sock_last_error())
+  FIN SI
+  CONIURA sock_set_timeout_ms(sock, options.read_timeout_ms)
+  EVOCA Redis redis
+  VINCIRE redis.handle AD sock
+  VINCIRE redis.last_error AD ""
+  VINCIRE redis.read_timeout_ms AD options.read_timeout_ms
+  VINCIRE redis.open AD VERUM
+  SI CONIURA len(options.password) > 0
+    EVOCA RedisRawReply auth_reply
+    EVOCA VERBUM auth_err AD CONIURA redis_send_wire_fill(redis, CONIURA redis_argv_2("AUTH", options.password), SPECULUM auth_reply)
+    SI CONIURA len(auth_err) > 0
+      CONIURA sock_close(sock)
+      REDDE CONIURA Err GENUS(Redis, VERBUM)(auth_err)
+    FIN SI
+  FIN SI
+  SI options.db_index != 0
+    EVOCA RedisRawReply sel_reply
+    EVOCA VERBUM sel_err AD CONIURA redis_send_wire_fill(redis, CONIURA redis_argv_2("SELECT", CONIURA stringify_int(options.db_index)), SPECULUM sel_reply)
+    SI CONIURA len(sel_err) > 0
+      CONIURA sock_close(sock)
+      REDDE CONIURA Err GENUS(Redis, VERBUM)(sel_err)
+    FIN SI
+  FIN SI
+  REDDE CONIURA Ok GENUS(Redis, VERBUM)(redis)
+EXPLICIT RITUALE
+
+RITUALE redis_connect(VERBUM dsn) REDDE SPECULUM NIHIL
+  EVOCA RedisOptions options
+  EVOCA VERBUM err AD CONIURA redis_parse_dsn_fill(dsn, SPECULUM options)
+  SI CONIURA len(err) > 0
+    REDDE CONIURA Err GENUS(Redis, VERBUM)(err)
+  FIN SI
+  REDDE CONIURA redis_connect_with_options(options)
+EXPLICIT RITUALE
+
+RITUALE redis_close(SPECULUM Redis redis) REDDE NIHIL
+  SI (*redis).open
+    CONIURA sock_close((*redis).handle)
+    VINCIRE (*redis).open AD FALSUM
+  FIN SI
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE redis_get(Redis redis, VERBUM key) REDDE SPECULUM NIHIL
+  EVOCA RedisRawReply raw_reply
+  EVOCA VERBUM err AD CONIURA redis_send_wire_fill(redis, CONIURA redis_argv_2("GET", key), SPECULUM raw_reply)
+  SI CONIURA len(err) > 0
+    REDDE CONIURA Err GENUS(RedisMaybeText, VERBUM)(err)
+  FIN SI
+  EVOCA RedisValue value AD CONIURA redis_resp_parse(raw_reply.payload)
+  SI value.kind == REDIS_NULL
+    REDDE CONIURA Ok GENUS(RedisMaybeText, VERBUM)(CONIURA redis_maybe_text_none())
+  FIN SI
+  REDDE CONIURA Ok GENUS(RedisMaybeText, VERBUM)(CONIURA redis_maybe_text_some(CONIURA redis_value_to_text(value)))
+EXPLICIT RITUALE
+
+RITUALE redis_set(Redis redis, VERBUM key, VERBUM value) REDDE SPECULUM NIHIL
+  REDDE CONIURA redis_simple_ok_wire(redis, CONIURA redis_argv_3("SET", key, value))
+EXPLICIT RITUALE
+
+RITUALE redis_setex(Redis redis, VERBUM key, REX ttl_seconds, VERBUM value) REDDE SPECULUM NIHIL
+  REDDE CONIURA redis_simple_ok_wire(redis, CONIURA redis_argv_4("SETEX", key, CONIURA stringify_int(ttl_seconds), value))
+EXPLICIT RITUALE
+
+RITUALE redis_del(Redis redis, VERBUM key) REDDE SPECULUM NIHIL
+  EVOCA RedisRawReply raw_reply
+  EVOCA VERBUM err AD CONIURA redis_send_wire_fill(redis, CONIURA redis_argv_2("DEL", key), SPECULUM raw_reply)
+  SI CONIURA len(err) > 0
+    REDDE CONIURA Err GENUS(REX, VERBUM)(err)
+  FIN SI
+  EVOCA RedisValue reply_value AD CONIURA redis_resp_parse(raw_reply.payload)
+  REDDE CONIURA Ok GENUS(REX, VERBUM)(reply_value.int_value)
+EXPLICIT RITUALE
+
+RITUALE redis_exists(Redis redis, VERBUM key) REDDE SPECULUM NIHIL
+  EVOCA RedisRawReply raw_reply
+  EVOCA VERBUM err AD CONIURA redis_send_wire_fill(redis, CONIURA redis_argv_2("EXISTS", key), SPECULUM raw_reply)
+  SI CONIURA len(err) > 0
+    REDDE CONIURA Err GENUS(VERUM, VERBUM)(err)
+  FIN SI
+  EVOCA RedisValue reply_value AD CONIURA redis_resp_parse(raw_reply.payload)
+  REDDE CONIURA Ok GENUS(VERUM, VERBUM)(reply_value.int_value > 0)
+EXPLICIT RITUALE
+
+RITUALE redis_expire(Redis redis, VERBUM key, REX ttl_seconds) REDDE SPECULUM NIHIL
+  EVOCA RedisRawReply raw_reply
+  EVOCA VERBUM err AD CONIURA redis_send_wire_fill(redis, CONIURA redis_argv_3("EXPIRE", key, CONIURA stringify_int(ttl_seconds)), SPECULUM raw_reply)
+  SI CONIURA len(err) > 0
+    REDDE CONIURA Err GENUS(VERUM, VERBUM)(err)
+  FIN SI
+  EVOCA RedisValue value AD CONIURA redis_resp_parse(raw_reply.payload)
+  REDDE CONIURA Ok GENUS(VERUM, VERBUM)(value.int_value > 0)
+EXPLICIT RITUALE
+
+RITUALE redis_ttl(Redis redis, VERBUM key) REDDE SPECULUM NIHIL
+  EVOCA RedisRawReply raw_reply
+  EVOCA VERBUM err AD CONIURA redis_send_wire_fill(redis, CONIURA redis_argv_2("TTL", key), SPECULUM raw_reply)
+  SI CONIURA len(err) > 0
+    REDDE CONIURA Err GENUS(REX, VERBUM)(err)
+  FIN SI
+  EVOCA RedisValue reply_value AD CONIURA redis_resp_parse(raw_reply.payload)
+  REDDE CONIURA Ok GENUS(REX, VERBUM)(reply_value.int_value)
+EXPLICIT RITUALE
+
+RITUALE redis_incr(Redis redis, VERBUM key) REDDE SPECULUM NIHIL
+  EVOCA RedisRawReply raw_reply
+  EVOCA VERBUM err AD CONIURA redis_send_wire_fill(redis, CONIURA redis_argv_2("INCR", key), SPECULUM raw_reply)
+  SI CONIURA len(err) > 0
+    REDDE CONIURA Err GENUS(REX, VERBUM)(err)
+  FIN SI
+  EVOCA RedisValue reply_value AD CONIURA redis_resp_parse(raw_reply.payload)
+  REDDE CONIURA Ok GENUS(REX, VERBUM)(reply_value.int_value)
+EXPLICIT RITUALE
+
+RITUALE redis_hset(Redis redis, VERBUM key, VERBUM field, VERBUM value) REDDE SPECULUM NIHIL
+  EVOCA RedisRawReply raw_reply
+  EVOCA VERBUM err AD CONIURA redis_send_wire_fill(redis, CONIURA redis_argv_4("HSET", key, field, value), SPECULUM raw_reply)
+  SI CONIURA len(err) > 0
+    REDDE CONIURA Err GENUS(VERUM, VERBUM)(err)
+  FIN SI
+  EVOCA RedisValue reply_value AD CONIURA redis_resp_parse(raw_reply.payload)
+  REDDE CONIURA Ok GENUS(VERUM, VERBUM)(reply_value.int_value > 0)
+EXPLICIT RITUALE
+
+RITUALE redis_hget(Redis redis, VERBUM key, VERBUM field) REDDE SPECULUM NIHIL
+  EVOCA RedisRawReply raw_reply
+  EVOCA VERBUM err AD CONIURA redis_send_wire_fill(redis, CONIURA redis_argv_3("HGET", key, field), SPECULUM raw_reply)
+  SI CONIURA len(err) > 0
+    REDDE CONIURA Err GENUS(RedisMaybeText, VERBUM)(err)
+  FIN SI
+  EVOCA RedisValue value AD CONIURA redis_resp_parse(raw_reply.payload)
+  SI value.kind == REDIS_NULL
+    REDDE CONIURA Ok GENUS(RedisMaybeText, VERBUM)(CONIURA redis_maybe_text_none())
+  FIN SI
+  REDDE CONIURA Ok GENUS(RedisMaybeText, VERBUM)(CONIURA redis_maybe_text_some(CONIURA redis_value_to_text(value)))
+EXPLICIT RITUALE
+
+RITUALE redis_hdel(Redis redis, VERBUM key, VERBUM field) REDDE SPECULUM NIHIL
+  EVOCA RedisRawReply raw_reply
+  EVOCA VERBUM err AD CONIURA redis_send_wire_fill(redis, CONIURA redis_argv_3("HDEL", key, field), SPECULUM raw_reply)
+  SI CONIURA len(err) > 0
+    REDDE CONIURA Err GENUS(REX, VERBUM)(err)
+  FIN SI
+  EVOCA RedisValue reply_value AD CONIURA redis_resp_parse(raw_reply.payload)
+  REDDE CONIURA Ok GENUS(REX, VERBUM)(reply_value.int_value)
+EXPLICIT RITUALE
+
+RITUALE redis_hgetall(Redis redis, VERBUM key) REDDE SPECULUM NIHIL
+  EVOCA RedisRawReply raw_reply
+  EVOCA VERBUM err AD CONIURA redis_send_wire_fill(redis, CONIURA redis_argv_2("HGETALL", key), SPECULUM raw_reply)
+  SI CONIURA len(err) > 0
+    REDDE CONIURA Err GENUS(RedisPairList, VERBUM)(err)
+  FIN SI
+  EVOCA RedisValue value AD CONIURA redis_resp_parse(raw_reply.payload)
+  EVOCA RedisPairList out AD CONIURA redis_pair_list_empty()
+  SI value.kind == REDIS_ARRAY
+    VINCIRE out.encoded AD value.string_value
+    VINCIRE out.count AD value.int_value / 2
+  FIN SI
+  REDDE CONIURA Ok GENUS(RedisPairList, VERBUM)(out)
+EXPLICIT RITUALE
+
+RITUALE redis_lpush(Redis redis, VERBUM key, VERBUM value) REDDE SPECULUM NIHIL
+  EVOCA RedisRawReply raw_reply
+  EVOCA VERBUM err AD CONIURA redis_send_wire_fill(redis, CONIURA redis_argv_3("LPUSH", key, value), SPECULUM raw_reply)
+  SI CONIURA len(err) > 0
+    REDDE CONIURA Err GENUS(REX, VERBUM)(err)
+  FIN SI
+  EVOCA RedisValue reply_value AD CONIURA redis_resp_parse(raw_reply.payload)
+  REDDE CONIURA Ok GENUS(REX, VERBUM)(reply_value.int_value)
+EXPLICIT RITUALE
+
+RITUALE redis_rpush(Redis redis, VERBUM key, VERBUM value) REDDE SPECULUM NIHIL
+  EVOCA RedisRawReply raw_reply
+  EVOCA VERBUM err AD CONIURA redis_send_wire_fill(redis, CONIURA redis_argv_3("RPUSH", key, value), SPECULUM raw_reply)
+  SI CONIURA len(err) > 0
+    REDDE CONIURA Err GENUS(REX, VERBUM)(err)
+  FIN SI
+  EVOCA RedisValue reply_value AD CONIURA redis_resp_parse(raw_reply.payload)
+  REDDE CONIURA Ok GENUS(REX, VERBUM)(reply_value.int_value)
+EXPLICIT RITUALE
+
+RITUALE redis_lpop(Redis redis, VERBUM key) REDDE SPECULUM NIHIL
+  EVOCA RedisRawReply raw_reply
+  EVOCA VERBUM err AD CONIURA redis_send_wire_fill(redis, CONIURA redis_argv_2("LPOP", key), SPECULUM raw_reply)
+  SI CONIURA len(err) > 0
+    REDDE CONIURA Err GENUS(RedisMaybeText, VERBUM)(err)
+  FIN SI
+  EVOCA RedisValue value AD CONIURA redis_resp_parse(raw_reply.payload)
+  SI value.kind == REDIS_NULL
+    REDDE CONIURA Ok GENUS(RedisMaybeText, VERBUM)(CONIURA redis_maybe_text_none())
+  FIN SI
+  REDDE CONIURA Ok GENUS(RedisMaybeText, VERBUM)(CONIURA redis_maybe_text_some(CONIURA redis_value_to_text(value)))
+EXPLICIT RITUALE
+
+RITUALE redis_rpop(Redis redis, VERBUM key) REDDE SPECULUM NIHIL
+  EVOCA RedisRawReply raw_reply
+  EVOCA VERBUM err AD CONIURA redis_send_wire_fill(redis, CONIURA redis_argv_2("RPOP", key), SPECULUM raw_reply)
+  SI CONIURA len(err) > 0
+    REDDE CONIURA Err GENUS(RedisMaybeText, VERBUM)(err)
+  FIN SI
+  EVOCA RedisValue value AD CONIURA redis_resp_parse(raw_reply.payload)
+  SI value.kind == REDIS_NULL
+    REDDE CONIURA Ok GENUS(RedisMaybeText, VERBUM)(CONIURA redis_maybe_text_none())
+  FIN SI
+  REDDE CONIURA Ok GENUS(RedisMaybeText, VERBUM)(CONIURA redis_maybe_text_some(CONIURA redis_value_to_text(value)))
+EXPLICIT RITUALE
+
+RITUALE redis_llen(Redis redis, VERBUM key) REDDE SPECULUM NIHIL
+  EVOCA RedisRawReply raw_reply
+  EVOCA VERBUM err AD CONIURA redis_send_wire_fill(redis, CONIURA redis_argv_2("LLEN", key), SPECULUM raw_reply)
+  SI CONIURA len(err) > 0
+    REDDE CONIURA Err GENUS(REX, VERBUM)(err)
+  FIN SI
+  EVOCA RedisValue value AD CONIURA redis_resp_parse(raw_reply.payload)
+  REDDE CONIURA Ok GENUS(REX, VERBUM)(value.int_value)
+EXPLICIT RITUALE
+
+RITUALE redis_sadd(Redis redis, VERBUM key, VERBUM value) REDDE SPECULUM NIHIL
+  EVOCA RedisRawReply raw_reply
+  EVOCA VERBUM err AD CONIURA redis_send_wire_fill(redis, CONIURA redis_argv_3("SADD", key, value), SPECULUM raw_reply)
+  SI CONIURA len(err) > 0
+    REDDE CONIURA Err GENUS(VERUM, VERBUM)(err)
+  FIN SI
+  EVOCA RedisValue reply_value AD CONIURA redis_resp_parse(raw_reply.payload)
+  REDDE CONIURA Ok GENUS(VERUM, VERBUM)(reply_value.int_value > 0)
+EXPLICIT RITUALE
+
+RITUALE redis_srem(Redis redis, VERBUM key, VERBUM value) REDDE SPECULUM NIHIL
+  EVOCA RedisRawReply raw_reply
+  EVOCA VERBUM err AD CONIURA redis_send_wire_fill(redis, CONIURA redis_argv_3("SREM", key, value), SPECULUM raw_reply)
+  SI CONIURA len(err) > 0
+    REDDE CONIURA Err GENUS(VERUM, VERBUM)(err)
+  FIN SI
+  EVOCA RedisValue reply_value AD CONIURA redis_resp_parse(raw_reply.payload)
+  REDDE CONIURA Ok GENUS(VERUM, VERBUM)(reply_value.int_value > 0)
+EXPLICIT RITUALE
+
+RITUALE redis_smembers(Redis redis, VERBUM key) REDDE SPECULUM NIHIL
+  EVOCA RedisRawReply raw_reply
+  EVOCA VERBUM err AD CONIURA redis_send_wire_fill(redis, CONIURA redis_argv_2("SMEMBERS", key), SPECULUM raw_reply)
+  SI CONIURA len(err) > 0
+    REDDE CONIURA Err GENUS(RedisTextList, VERBUM)(err)
+  FIN SI
+  EVOCA RedisValue value AD CONIURA redis_resp_parse(raw_reply.payload)
+  EVOCA RedisTextList out AD CONIURA redis_text_list_empty()
+  SI value.kind == REDIS_ARRAY
+    VINCIRE out.encoded AD value.string_value
+    VINCIRE out.count AD value.int_value
+  FIN SI
+  REDDE CONIURA Ok GENUS(RedisTextList, VERBUM)(out)
+EXPLICIT RITUALE
+
+RITUALE redis_publish(Redis redis, VERBUM channel, VERBUM payload) REDDE SPECULUM NIHIL
+  EVOCA RedisRawReply raw_reply
+  EVOCA VERBUM err AD CONIURA redis_send_wire_fill(redis, CONIURA redis_argv_3("PUBLISH", channel, payload), SPECULUM raw_reply)
+  SI CONIURA len(err) > 0
+    REDDE CONIURA Err GENUS(REX, VERBUM)(err)
+  FIN SI
+  EVOCA RedisValue value AD CONIURA redis_resp_parse(raw_reply.payload)
+  REDDE CONIURA Ok GENUS(REX, VERBUM)(value.int_value)
+EXPLICIT RITUALE
+
+RITUALE redis_subscribe(Redis redis, VERBUM channel) REDDE SPECULUM NIHIL
+  REDDE CONIURA redis_simple_ok_wire(redis, CONIURA redis_argv_2("SUBSCRIBE", channel))
+EXPLICIT RITUALE
+
+RITUALE redis_psubscribe(Redis redis, VERBUM pattern) REDDE SPECULUM NIHIL
+  REDDE CONIURA redis_simple_ok_wire(redis, CONIURA redis_argv_2("PSUBSCRIBE", pattern))
+EXPLICIT RITUALE
+
+RITUALE redis_unsubscribe(Redis redis, VERBUM channel) REDDE SPECULUM NIHIL
+  REDDE CONIURA redis_simple_ok_wire(redis, CONIURA redis_argv_2("UNSUBSCRIBE", channel))
+EXPLICIT RITUALE
+
+RITUALE redis_poll_message(Redis redis, REX timeout_ms) REDDE SPECULUM NIHIL
+  SI NON redis.open
+    REDDE CONIURA Err GENUS(RedisMaybeMessage, VERBUM)("Redis fechado")
+  FIN SI
+  EVOCA RedisRawReply raw_reply
+  EVOCA VERBUM err AD CONIURA redis_recv_raw_fill(redis, timeout_ms, SPECULUM raw_reply)
+  SI CONIURA len(err) > 0
+    REDDE CONIURA Err GENUS(RedisMaybeMessage, VERBUM)(err)
+  FIN SI
+  EVOCA VERBUM raw AD raw_reply.payload
+  SI CONIURA len(raw) == 0
+    REDDE CONIURA Ok GENUS(RedisMaybeMessage, VERBUM)(CONIURA redis_maybe_message_none())
+  FIN SI
+  EVOCA RedisValue value AD CONIURA redis_resp_parse(raw)
+  SI value.kind != REDIS_ARRAY
+    REDDE CONIURA Ok GENUS(RedisMaybeMessage, VERBUM)(CONIURA redis_maybe_message_none())
+  FIN SI
+  EVOCA VERBUM kind AD CONIURA redis_value_to_text(CONIURA redis_array_get(value, 0))
+  EVOCA RedisMessage message
+  VINCIRE message.channel AD ""
+  VINCIRE message.pattern AD ""
+  VINCIRE message.payload AD ""
+  SI CONIURA compare(kind, "message") == 0 ET CONIURA redis_array_len(value) >= 3
+    VINCIRE message.channel AD CONIURA redis_value_to_text(CONIURA redis_array_get(value, 1))
+    VINCIRE message.payload AD CONIURA redis_value_to_text(CONIURA redis_array_get(value, 2))
+    REDDE CONIURA Ok GENUS(RedisMaybeMessage, VERBUM)(CONIURA redis_maybe_message_some(message))
+  FIN SI
+  SI CONIURA compare(kind, "pmessage") == 0 ET CONIURA redis_array_len(value) >= 4
+    VINCIRE message.pattern AD CONIURA redis_value_to_text(CONIURA redis_array_get(value, 1))
+    VINCIRE message.channel AD CONIURA redis_value_to_text(CONIURA redis_array_get(value, 2))
+    VINCIRE message.payload AD CONIURA redis_value_to_text(CONIURA redis_array_get(value, 3))
+    REDDE CONIURA Ok GENUS(RedisMaybeMessage, VERBUM)(CONIURA redis_maybe_message_some(message))
+  FIN SI
+  REDDE CONIURA Ok GENUS(RedisMaybeMessage, VERBUM)(CONIURA redis_maybe_message_none())
+EXPLICIT RITUALE
+
+RITUALE redis_text_list_len(RedisTextList list) REDDE REX
+  REDDE list.count
+EXPLICIT RITUALE
+
+RITUALE redis_text_list_get(RedisTextList list, REX index) REDDE VERBUM
+  EVOCA RedisValue array_value AD CONIURA redis_value_array(list.encoded, list.count)
+  REDDE CONIURA redis_value_to_text(CONIURA redis_array_get(array_value, index))
+EXPLICIT RITUALE
+
+RITUALE redis_pair_list_len(RedisPairList list) REDDE REX
+  REDDE list.count
+EXPLICIT RITUALE
+
+RITUALE redis_pair_list_get(RedisPairList list, REX index) REDDE RedisPair
+  EVOCA RedisValue array_value AD CONIURA redis_value_array(list.encoded, list.count * 2)
+  EVOCA RedisPair pair
+  VINCIRE pair.key AD CONIURA redis_value_to_text(CONIURA redis_array_get(array_value, index * 2))
+  VINCIRE pair.value AD CONIURA redis_value_to_text(CONIURA redis_array_get(array_value, index * 2 + 1))
+  REDDE pair
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

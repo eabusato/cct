@@ -1,0 +1,13 @@
+INCIPIT grimoire "db_postgres_freestanding_reject_36a"
+
+ADVOCARE "cct/db_postgres.cct"
+
+RITUALE main() REDDE REX
+  EVOCA VERBUM q AD CONIURA db_quote_literal("abc")
+  SI CONIURA len(q) > 0
+    REDDE 0
+  FIN SI
+  REDDE 1
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

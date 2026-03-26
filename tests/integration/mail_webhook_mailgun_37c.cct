@@ -1,0 +1,28 @@
+INCIPIT grimoire "mail_webhook_mailgun_37c"
+
+ADVOCARE "cct/fluxus.cct"
+ADVOCARE "cct/mail_webhook.cct"
+ADVOCARE "cct/result.cct"
+ADVOCARE "cct/verbum.cct"
+
+RITUALE main() REDDE REX
+  EVOCA VERBUM payload AD "{\"event-data\":{\"event\":\"failed\",\"message-id\":\"<mg123@mailgun>\",\"recipient\":\"user@example.com\",\"timestamp\":1700000030,\"delivery-status\":{\"message\":\"Mailbox unavailable\"}}}"
+  EVOCA SPECULUM NIHIL parsed AD CONIURA mail_webhook_parse("mailgun", payload)
+  SI CONIURA result_is_err GENUS(MailWebhookEventBatch, VERBUM)(parsed)
+    REDDE 1
+  FIN SI
+  EVOCA MailWebhookEventBatch batch AD CONIURA result_unwrap GENUS(MailWebhookEventBatch, VERBUM)(parsed)
+  EVOCA SPECULUM MailWebhookEvent event_ptr AD CONIURA fluxus_get(batch.events, 0)
+  SI (*event_ptr).event_kind != MAIL_WEBHOOK_UNKNOWN
+    REDDE 2
+  FIN SI
+  SI CONIURA compare((*event_ptr).message_id, "<mg123@mailgun>") != 0
+    REDDE 3
+  FIN SI
+  SI CONIURA compare((*event_ptr).reason, "Mailbox unavailable") != 0
+    REDDE 4
+  FIN SI
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

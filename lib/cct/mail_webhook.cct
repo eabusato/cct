@@ -1,0 +1,518 @@
+-- CCT — Clavicula Turing
+-- Standard Library Module: mail_webhook
+--
+-- FASE 37C: Mail webhook parsing and MIME/header scanning
+
+INCIPIT grimoire "mail_webhook"
+
+ADVOCARE "cct/fluxus.cct"
+ADVOCARE "cct/json.cct"
+ADVOCARE "cct/result.cct"
+ADVOCARE "cct/verbum.cct"
+
+ORDO MailWebhookEventKind
+  MAIL_WEBHOOK_DELIVERED
+  MAIL_WEBHOOK_BOUNCED
+  MAIL_WEBHOOK_DEFERRED
+  MAIL_WEBHOOK_COMPLAINT
+  MAIL_WEBHOOK_OPENED
+  MAIL_WEBHOOK_CLICKED
+  MAIL_WEBHOOK_RECEIVED
+  MAIL_WEBHOOK_UNKNOWN
+FIN ORDO
+
+SIGILLUM MailWebhookEvent
+  event_kind: MailWebhookEventKind
+  provider_name: VERBUM
+  message_id: VERBUM
+  recipient: VERBUM
+  occurred_at_unix: REX
+  status_text: VERBUM
+  reason: VERBUM
+  raw_json: VERBUM
+FIN SIGILLUM
+
+SIGILLUM MailParsedHeader
+  name: VERBUM
+  value: VERBUM
+FIN SIGILLUM
+
+SIGILLUM MailMimePartInfo
+  content_type: VERBUM
+  filename: VERBUM
+  content_disposition: VERBUM
+  content_id: VERBUM
+FIN SIGILLUM
+
+SIGILLUM MailWebhookEventBatch
+  events: SPECULUM NIHIL
+FIN SIGILLUM
+
+SIGILLUM MailParsedHeaderBatch
+  headers: SPECULUM NIHIL
+FIN SIGILLUM
+
+SIGILLUM MailMimePartBatch
+  parts: SPECULUM NIHIL
+FIN SIGILLUM
+
+SIGILLUM MailWebhookLineSlice
+  line: VERBUM
+  next_pos: REX
+  eof: VERUM
+FIN SIGILLUM
+
+RITUALE mail_webhook_event_kind_name(MailWebhookEventKind kind) REDDE VERBUM
+  ELIGE kind
+    CASUS MAIL_WEBHOOK_DELIVERED:
+      REDDE "delivered"
+    CASUS MAIL_WEBHOOK_BOUNCED:
+      REDDE "bounced"
+    CASUS MAIL_WEBHOOK_DEFERRED:
+      REDDE "deferred"
+    CASUS MAIL_WEBHOOK_COMPLAINT:
+      REDDE "complaint"
+    CASUS MAIL_WEBHOOK_OPENED:
+      REDDE "opened"
+    CASUS MAIL_WEBHOOK_CLICKED:
+      REDDE "clicked"
+    CASUS MAIL_WEBHOOK_RECEIVED:
+      REDDE "received"
+    ALIOQUIN:
+      REDDE "unknown"
+  FIN ELIGE
+EXPLICIT RITUALE
+
+RITUALE mail_webhook_event_kind_from_string(VERBUM text) REDDE MailWebhookEventKind
+  EVOCA VERBUM lowered AD CONIURA to_lower(text)
+  SI CONIURA compare(lowered, "delivered") == 0 VEL CONIURA compare(lowered, "delivery") == 0
+    REDDE MAIL_WEBHOOK_DELIVERED
+  FIN SI
+  SI CONIURA compare(lowered, "bounce") == 0 VEL CONIURA compare(lowered, "bounced") == 0 VEL CONIURA compare(lowered, "hard_bounce") == 0 VEL CONIURA compare(lowered, "soft_bounce") == 0
+    REDDE MAIL_WEBHOOK_BOUNCED
+  FIN SI
+  SI CONIURA compare(lowered, "deferred") == 0 VEL CONIURA compare(lowered, "defer") == 0
+    REDDE MAIL_WEBHOOK_DEFERRED
+  FIN SI
+  SI CONIURA compare(lowered, "complaint") == 0 VEL CONIURA compare(lowered, "spam_complaint") == 0 VEL CONIURA compare(lowered, "spamreport") == 0
+    REDDE MAIL_WEBHOOK_COMPLAINT
+  FIN SI
+  SI CONIURA compare(lowered, "open") == 0 VEL CONIURA compare(lowered, "opened") == 0
+    REDDE MAIL_WEBHOOK_OPENED
+  FIN SI
+  SI CONIURA compare(lowered, "click") == 0 VEL CONIURA compare(lowered, "clicked") == 0
+    REDDE MAIL_WEBHOOK_CLICKED
+  FIN SI
+  SI CONIURA compare(lowered, "received") == 0 VEL CONIURA compare(lowered, "inbound") == 0
+    REDDE MAIL_WEBHOOK_RECEIVED
+  FIN SI
+  REDDE MAIL_WEBHOOK_UNKNOWN
+EXPLICIT RITUALE
+
+RITUALE mail_webhook_event_batch_new() REDDE MailWebhookEventBatch
+  EVOCA MailWebhookEventBatch batch
+  VINCIRE batch.events AD CONIURA fluxus_init(MENSURA(MailWebhookEvent))
+  REDDE batch
+EXPLICIT RITUALE
+
+RITUALE mail_parsed_header_batch_new() REDDE MailParsedHeaderBatch
+  EVOCA MailParsedHeaderBatch batch
+  VINCIRE batch.headers AD CONIURA fluxus_init(MENSURA(MailParsedHeader))
+  REDDE batch
+EXPLICIT RITUALE
+
+RITUALE mail_mime_part_batch_new() REDDE MailMimePartBatch
+  EVOCA MailMimePartBatch batch
+  VINCIRE batch.parts AD CONIURA fluxus_init(MENSURA(MailMimePartInfo))
+  REDDE batch
+EXPLICIT RITUALE
+
+RITUALE mail_webhook_event_new(VERBUM provider_name, VERBUM raw_json) REDDE MailWebhookEvent
+  EVOCA MailWebhookEvent event
+  VINCIRE event.event_kind AD MAIL_WEBHOOK_UNKNOWN
+  VINCIRE event.provider_name AD provider_name
+  VINCIRE event.message_id AD ""
+  VINCIRE event.recipient AD ""
+  VINCIRE event.occurred_at_unix AD 0
+  VINCIRE event.status_text AD ""
+  VINCIRE event.reason AD ""
+  VINCIRE event.raw_json AD raw_json
+  REDDE event
+EXPLICIT RITUALE
+
+RITUALE mail_webhook_push_event(SPECULUM MailWebhookEventBatch batch, MailWebhookEvent event) REDDE NIHIL
+  CONIURA fluxus_push((*batch).events, SPECULUM event)
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE mail_headers_push(SPECULUM MailParsedHeaderBatch batch, MailParsedHeader header) REDDE NIHIL
+  CONIURA fluxus_push((*batch).headers, SPECULUM header)
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE mail_mime_push_part(SPECULUM MailMimePartBatch batch, MailMimePartInfo part) REDDE NIHIL
+  CONIURA fluxus_push((*batch).parts, SPECULUM part)
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE mail_webhook_json_str(Json root, VERBUM key) REDDE VERBUM
+  SI NON CONIURA json_is_obj(root)
+    REDDE ""
+  FIN SI
+  SI NON CONIURA json_has_key(root, key)
+    REDDE ""
+  FIN SI
+  EVOCA Json raw AD CONIURA json_get_key(root, key)
+  SI NON CONIURA json_is_str(raw)
+    REDDE ""
+  FIN SI
+  REDDE CONIURA json_expect_str(raw)
+EXPLICIT RITUALE
+
+RITUALE mail_webhook_json_int(Json root, VERBUM key) REDDE REX
+  SI NON CONIURA json_is_obj(root)
+    REDDE 0
+  FIN SI
+  SI NON CONIURA json_has_key(root, key)
+    REDDE 0
+  FIN SI
+  EVOCA Json raw AD CONIURA json_get_key(root, key)
+  SI NON CONIURA json_is_num(raw)
+    REDDE 0
+  FIN SI
+  REDDE cast GENUS(REX)(CONIURA json_expect_num(raw))
+EXPLICIT RITUALE
+
+RITUALE mail_webhook_json_nested_str(Json root, VERBUM parent_key, VERBUM child_key) REDDE VERBUM
+  SI NON CONIURA json_is_obj(root)
+    REDDE ""
+  FIN SI
+  SI NON CONIURA json_has_key(root, parent_key)
+    REDDE ""
+  FIN SI
+  EVOCA Json parent AD CONIURA json_get_key(root, parent_key)
+  REDDE CONIURA mail_webhook_json_str(parent, child_key)
+EXPLICIT RITUALE
+
+RITUALE mail_webhook_parse_generic_item(Json item, VERBUM provider_name, VERBUM raw_json) REDDE MailWebhookEvent
+  EVOCA MailWebhookEvent event AD CONIURA mail_webhook_event_new(provider_name, raw_json)
+  VINCIRE event.status_text AD CONIURA mail_webhook_json_str(item, "event")
+  VINCIRE event.event_kind AD CONIURA mail_webhook_event_kind_from_string(event.status_text)
+  VINCIRE event.message_id AD CONIURA mail_webhook_json_str(item, "message_id")
+  VINCIRE event.recipient AD CONIURA mail_webhook_json_str(item, "recipient")
+  VINCIRE event.occurred_at_unix AD CONIURA mail_webhook_json_int(item, "timestamp")
+  VINCIRE event.reason AD CONIURA mail_webhook_json_str(item, "reason")
+  SI CONIURA len(event.status_text) == 0
+    VINCIRE event.status_text AD CONIURA mail_webhook_event_kind_name(event.event_kind)
+  FIN SI
+  REDDE event
+EXPLICIT RITUALE
+
+RITUALE mail_webhook_parse_sendgrid_item(Json item, VERBUM raw_json) REDDE MailWebhookEvent
+  EVOCA MailWebhookEvent event AD CONIURA mail_webhook_event_new("sendgrid", raw_json)
+  VINCIRE event.status_text AD CONIURA mail_webhook_json_str(item, "event")
+  VINCIRE event.event_kind AD CONIURA mail_webhook_event_kind_from_string(event.status_text)
+  VINCIRE event.message_id AD CONIURA mail_webhook_json_str(item, "smtp-id")
+  VINCIRE event.recipient AD CONIURA mail_webhook_json_str(item, "email")
+  VINCIRE event.occurred_at_unix AD CONIURA mail_webhook_json_int(item, "timestamp")
+  VINCIRE event.reason AD CONIURA mail_webhook_json_str(item, "reason")
+  REDDE event
+EXPLICIT RITUALE
+
+RITUALE mail_webhook_parse_mailgun_item(Json root, VERBUM raw_json) REDDE MailWebhookEvent
+  EVOCA Json data AD root
+  SI CONIURA json_is_obj(root) ET CONIURA json_has_key(root, "event-data")
+    VINCIRE data AD CONIURA json_get_key(root, "event-data")
+  FIN SI
+  EVOCA MailWebhookEvent event AD CONIURA mail_webhook_event_new("mailgun", raw_json)
+  VINCIRE event.status_text AD CONIURA mail_webhook_json_str(data, "event")
+  VINCIRE event.event_kind AD CONIURA mail_webhook_event_kind_from_string(event.status_text)
+  VINCIRE event.message_id AD CONIURA mail_webhook_json_str(data, "message-id")
+  VINCIRE event.recipient AD CONIURA mail_webhook_json_str(data, "recipient")
+  VINCIRE event.occurred_at_unix AD CONIURA mail_webhook_json_int(data, "timestamp")
+  VINCIRE event.reason AD CONIURA mail_webhook_json_nested_str(data, "delivery-status", "message")
+  REDDE event
+EXPLICIT RITUALE
+
+RITUALE mail_webhook_parse_postmark_item(Json root, VERBUM raw_json) REDDE MailWebhookEvent
+  EVOCA MailWebhookEvent event AD CONIURA mail_webhook_event_new("postmark", raw_json)
+  VINCIRE event.status_text AD CONIURA mail_webhook_json_str(root, "RecordType")
+  VINCIRE event.event_kind AD CONIURA mail_webhook_event_kind_from_string(event.status_text)
+  VINCIRE event.message_id AD CONIURA mail_webhook_json_str(root, "MessageID")
+  VINCIRE event.recipient AD CONIURA mail_webhook_json_str(root, "Recipient")
+  VINCIRE event.reason AD CONIURA mail_webhook_json_str(root, "Description")
+  VINCIRE event.occurred_at_unix AD CONIURA mail_webhook_json_int(root, "OccurredAtUnix")
+  REDDE event
+EXPLICIT RITUALE
+
+RITUALE mail_webhook_parse(VERBUM provider_name, VERBUM payload_json) REDDE SPECULUM NIHIL
+  SI CONIURA len(payload_json) == 0
+    REDDE CONIURA Err GENUS(MailWebhookEventBatch, VERBUM)("payload vazio")
+  FIN SI
+  TEMPTA
+    EVOCA Json root AD CONIURA json_parse(payload_json)
+    EVOCA MailWebhookEventBatch batch AD CONIURA mail_webhook_event_batch_new()
+    EVOCA VERBUM provider AD CONIURA to_lower(provider_name)
+    EVOCA REX i AD 0
+    SI CONIURA compare(provider, "sendgrid") == 0 ET CONIURA json_is_arr(root)
+      DUM i < CONIURA json_arr_len(root)
+        CONIURA mail_webhook_push_event(SPECULUM batch, CONIURA mail_webhook_parse_sendgrid_item(CONIURA json_arr_get(root, i), CONIURA json_stringify(CONIURA json_arr_get(root, i))))
+        VINCIRE i AD i + 1
+      FIN DUM
+      REDDE CONIURA Ok GENUS(MailWebhookEventBatch, VERBUM)(batch)
+    FIN SI
+    SI CONIURA compare(provider, "sendgrid") == 0
+      CONIURA mail_webhook_push_event(SPECULUM batch, CONIURA mail_webhook_parse_sendgrid_item(root, payload_json))
+      REDDE CONIURA Ok GENUS(MailWebhookEventBatch, VERBUM)(batch)
+    FIN SI
+    SI CONIURA compare(provider, "mailgun") == 0
+      CONIURA mail_webhook_push_event(SPECULUM batch, CONIURA mail_webhook_parse_mailgun_item(root, payload_json))
+      REDDE CONIURA Ok GENUS(MailWebhookEventBatch, VERBUM)(batch)
+    FIN SI
+    SI CONIURA compare(provider, "postmark") == 0
+      CONIURA mail_webhook_push_event(SPECULUM batch, CONIURA mail_webhook_parse_postmark_item(root, payload_json))
+      REDDE CONIURA Ok GENUS(MailWebhookEventBatch, VERBUM)(batch)
+    FIN SI
+    SI CONIURA json_is_arr(root)
+      DUM i < CONIURA json_arr_len(root)
+        CONIURA mail_webhook_push_event(SPECULUM batch, CONIURA mail_webhook_parse_generic_item(CONIURA json_arr_get(root, i), provider, CONIURA json_stringify(CONIURA json_arr_get(root, i))))
+        VINCIRE i AD i + 1
+      FIN DUM
+    ALITER
+      CONIURA mail_webhook_push_event(SPECULUM batch, CONIURA mail_webhook_parse_generic_item(root, provider, payload_json))
+    FIN SI
+    REDDE CONIURA Ok GENUS(MailWebhookEventBatch, VERBUM)(batch)
+  CAPE FRACTUM error
+    REDDE CONIURA Err GENUS(MailWebhookEventBatch, VERBUM)(OBSECRO fractum_to_verbum(error))
+  FIN TEMPTA
+  REDDE CONIURA Err GENUS(MailWebhookEventBatch, VERBUM)("payload invalido")
+EXPLICIT RITUALE
+
+RITUALE mail_webhook_line_slice(VERBUM text, REX start) REDDE MailWebhookLineSlice
+  EVOCA MailWebhookLineSlice slice
+  EVOCA REX total AD CONIURA len(text)
+  EVOCA VERBUM lf AD CONIURA from_char(10)
+  SI start >= total
+    VINCIRE slice.line AD ""
+    VINCIRE slice.next_pos AD total
+    VINCIRE slice.eof AD VERUM
+    REDDE slice
+  FIN SI
+  EVOCA REX end_pos AD CONIURA find_from(text, lf, start)
+  SI end_pos == -1
+    VINCIRE slice.line AD CONIURA trim_char(CONIURA substring(text, start, total), 13)
+    VINCIRE slice.next_pos AD total
+    VINCIRE slice.eof AD VERUM
+    REDDE slice
+  FIN SI
+  VINCIRE slice.line AD CONIURA trim_char(CONIURA substring(text, start, end_pos), 13)
+  VINCIRE slice.next_pos AD end_pos + 1
+  VINCIRE slice.eof AD FALSUM
+  REDDE slice
+EXPLICIT RITUALE
+
+RITUALE mail_webhook_normalize_newlines(VERBUM text) REDDE VERBUM
+  EVOCA VERBUM out AD ""
+  EVOCA REX i AD 0
+  EVOCA REX total AD CONIURA len(text)
+  EVOCA VERBUM lf AD CONIURA from_char(10)
+  DUM i < total
+    EVOCA MILES c AD CONIURA char_at(text, i)
+    SI c == 13
+      VINCIRE out AD CONIURA concat(out, lf)
+      SI i + 1 < total ET CONIURA char_at(text, i + 1) == 10
+        VINCIRE i AD i + 2
+      ALITER
+        VINCIRE i AD i + 1
+      FIN SI
+    ALITER
+      VINCIRE out AD CONIURA concat(out, CONIURA from_char(c))
+      VINCIRE i AD i + 1
+    FIN SI
+  FIN DUM
+  REDDE out
+EXPLICIT RITUALE
+
+RITUALE mail_headers_parse(VERBUM raw_headers) REDDE SPECULUM NIHIL
+  EVOCA MailParsedHeaderBatch batch AD CONIURA mail_parsed_header_batch_new()
+  EVOCA VERBUM current_name AD ""
+  EVOCA VERBUM current_value AD ""
+  EVOCA REX pos AD 0
+  EVOCA REX total AD CONIURA len(raw_headers)
+  EVOCA VERBUM tab AD CONIURA from_char(9)
+  EVOCA REX colon_pos AD -1
+  DUM pos <= total
+    EVOCA MailWebhookLineSlice slice AD CONIURA mail_webhook_line_slice(raw_headers, pos)
+    EVOCA VERBUM line AD slice.line
+    VINCIRE pos AD slice.next_pos
+    SI CONIURA len(CONIURA trim(line)) == 0
+      SI CONIURA len(current_name) > 0
+        EVOCA MailParsedHeader header
+        VINCIRE header.name AD current_name
+        VINCIRE header.value AD CONIURA trim(current_value)
+        CONIURA mail_headers_push(SPECULUM batch, header)
+      FIN SI
+      REDDE CONIURA Ok GENUS(MailParsedHeaderBatch, VERBUM)(batch)
+    FIN SI
+    SI CONIURA starts_with(line, " ") VEL CONIURA starts_with(line, tab)
+      VINCIRE current_value AD CONIURA concat(current_value, " ")
+      VINCIRE current_value AD CONIURA concat(current_value, CONIURA trim(line))
+    FIN SI
+    SI NON CONIURA starts_with(line, " ") ET NON CONIURA starts_with(line, tab)
+      SI CONIURA len(current_name) > 0
+        EVOCA MailParsedHeader previous
+        VINCIRE previous.name AD current_name
+        VINCIRE previous.value AD CONIURA trim(current_value)
+        CONIURA mail_headers_push(SPECULUM batch, previous)
+      FIN SI
+      VINCIRE colon_pos AD CONIURA find(line, ":")
+      SI colon_pos >= 0
+        VINCIRE current_name AD CONIURA trim(CONIURA substring(line, 0, colon_pos))
+        VINCIRE current_value AD CONIURA substring(line, colon_pos + 1, CONIURA len(line))
+      ALITER
+        VINCIRE current_name AD ""
+        VINCIRE current_value AD ""
+      FIN SI
+    FIN SI
+    SI slice.eof
+      SI CONIURA len(current_name) > 0
+        EVOCA MailParsedHeader final_header
+        VINCIRE final_header.name AD current_name
+        VINCIRE final_header.value AD CONIURA trim(current_value)
+        CONIURA mail_headers_push(SPECULUM batch, final_header)
+      FIN SI
+      REDDE CONIURA Ok GENUS(MailParsedHeaderBatch, VERBUM)(batch)
+    FIN SI
+  FIN DUM
+  REDDE CONIURA Ok GENUS(MailParsedHeaderBatch, VERBUM)(batch)
+EXPLICIT RITUALE
+
+RITUALE mail_headers_get(SPECULUM NIHIL headers, VERBUM name) REDDE VERBUM
+  EVOCA VERBUM lowered AD CONIURA to_lower(name)
+  EVOCA REX i AD 0
+  DUM i < CONIURA fluxus_len(headers)
+    EVOCA SPECULUM MailParsedHeader header_ptr AD CONIURA fluxus_get(headers, i)
+    SI CONIURA compare(CONIURA to_lower((*header_ptr).name), lowered) == 0
+      REDDE (*header_ptr).value
+    FIN SI
+    VINCIRE i AD i + 1
+  FIN DUM
+  REDDE ""
+EXPLICIT RITUALE
+
+RITUALE mail_webhook_extract_boundary(VERBUM content_type) REDDE VERBUM
+  EVOCA REX pos AD CONIURA find(CONIURA to_lower(content_type), "boundary=")
+  SI pos == -1
+    REDDE ""
+  FIN SI
+  EVOCA VERBUM raw AD CONIURA substring(content_type, pos + 9, CONIURA len(content_type))
+  VINCIRE raw AD CONIURA trim(raw)
+  SI CONIURA starts_with(raw, "\"")
+    VINCIRE raw AD CONIURA strip_prefix(raw, "\"")
+    VINCIRE raw AD CONIURA strip_suffix(raw, "\"")
+  FIN SI
+  EVOCA REX semi AD CONIURA find(raw, ";")
+  SI semi >= 0
+    VINCIRE raw AD CONIURA substring(raw, 0, semi)
+  FIN SI
+  REDDE CONIURA trim(raw)
+EXPLICIT RITUALE
+
+RITUALE mail_webhook_extract_param(VERBUM header_value, VERBUM param_name) REDDE VERBUM
+  EVOCA VERBUM marker AD CONIURA concat(param_name, "=")
+  EVOCA REX pos AD CONIURA find(CONIURA to_lower(header_value), CONIURA to_lower(marker))
+  SI pos == -1
+    REDDE ""
+  FIN SI
+  EVOCA VERBUM raw AD CONIURA substring(header_value, pos + CONIURA len(marker), CONIURA len(header_value))
+  VINCIRE raw AD CONIURA trim(raw)
+  SI CONIURA starts_with(raw, "\"")
+    VINCIRE raw AD CONIURA strip_prefix(raw, "\"")
+    VINCIRE raw AD CONIURA strip_suffix(raw, "\"")
+  FIN SI
+  EVOCA REX semi AD CONIURA find(raw, ";")
+  SI semi >= 0
+    VINCIRE raw AD CONIURA substring(raw, 0, semi)
+  FIN SI
+  REDDE CONIURA trim(raw)
+EXPLICIT RITUALE
+
+RITUALE mail_mime_default_part(VERBUM raw_message) REDDE MailMimePartInfo
+  EVOCA MailMimePartInfo part
+  EVOCA SPECULUM NIHIL parsed AD CONIURA mail_headers_parse(raw_message)
+  VINCIRE part.content_type AD "text/plain"
+  VINCIRE part.filename AD ""
+  VINCIRE part.content_disposition AD ""
+  VINCIRE part.content_id AD ""
+  SI NON CONIURA result_is_err GENUS(MailParsedHeaderBatch, VERBUM)(parsed)
+    EVOCA MailParsedHeaderBatch headers AD CONIURA result_unwrap GENUS(MailParsedHeaderBatch, VERBUM)(parsed)
+    EVOCA VERBUM content_type AD CONIURA mail_headers_get(headers.headers, "Content-Type")
+    SI CONIURA len(content_type) > 0
+      VINCIRE part.content_type AD content_type
+    FIN SI
+  FIN SI
+  REDDE part
+EXPLICIT RITUALE
+
+RITUALE mail_mime_scan(VERBUM raw_message) REDDE SPECULUM NIHIL
+  EVOCA MailMimePartBatch batch AD CONIURA mail_mime_part_batch_new()
+  EVOCA VERBUM normalized AD CONIURA mail_webhook_normalize_newlines(raw_message)
+  EVOCA VERBUM lf AD CONIURA from_char(10)
+  EVOCA VERBUM marker_sep AD CONIURA concat(lf, lf)
+  EVOCA SPECULUM NIHIL header_result AD CONIURA mail_headers_parse(normalized)
+  SI CONIURA result_is_err GENUS(MailParsedHeaderBatch, VERBUM)(header_result)
+    REDDE CONIURA Err GENUS(MailMimePartBatch, VERBUM)("headers MIME invalidos")
+  FIN SI
+  EVOCA MailParsedHeaderBatch headers AD CONIURA result_unwrap GENUS(MailParsedHeaderBatch, VERBUM)(header_result)
+  EVOCA VERBUM content_type AD CONIURA mail_headers_get(headers.headers, "Content-Type")
+  EVOCA VERBUM boundary AD CONIURA mail_webhook_extract_boundary(content_type)
+  SI CONIURA len(boundary) == 0
+    CONIURA mail_mime_push_part(SPECULUM batch, CONIURA mail_mime_default_part(normalized))
+    REDDE CONIURA Ok GENUS(MailMimePartBatch, VERBUM)(batch)
+  FIN SI
+  EVOCA VERBUM marker AD CONIURA concat("--", boundary)
+  EVOCA REX search_pos AD CONIURA find(normalized, marker)
+  EVOCA REX part_start AD 0
+  EVOCA REX next_marker AD -1
+  EVOCA REX part_end AD 0
+  EVOCA REX sep_pos AD -1
+  EVOCA VERBUM segment AD ""
+  EVOCA VERBUM part_headers_raw AD ""
+  EVOCA SPECULUM NIHIL part_headers_result AD CONIURA mail_headers_parse("")
+  DUM search_pos >= 0
+    VINCIRE part_start AD search_pos + CONIURA len(marker)
+    SI part_start + 1 < CONIURA len(normalized) ET CONIURA compare(CONIURA substring(normalized, part_start, part_start + 2), "--") == 0
+      REDDE CONIURA Ok GENUS(MailMimePartBatch, VERBUM)(batch)
+    FIN SI
+    SI part_start < CONIURA len(normalized) ET CONIURA compare(CONIURA substring(normalized, part_start, part_start + 1), lf) == 0
+      VINCIRE part_start AD part_start + 1
+    FIN SI
+    VINCIRE next_marker AD CONIURA find_from(normalized, marker, part_start)
+    VINCIRE part_end AD CONIURA len(normalized)
+    SI next_marker >= 0
+      VINCIRE part_end AD next_marker
+    FIN SI
+    VINCIRE segment AD CONIURA substring(normalized, part_start, part_end)
+    VINCIRE sep_pos AD CONIURA find(segment, marker_sep)
+    SI sep_pos >= 0
+      VINCIRE part_headers_raw AD CONIURA substring(segment, 0, sep_pos)
+      VINCIRE part_headers_result AD CONIURA mail_headers_parse(part_headers_raw)
+      SI NON CONIURA result_is_err GENUS(MailParsedHeaderBatch, VERBUM)(part_headers_result)
+        EVOCA MailParsedHeaderBatch part_headers AD CONIURA result_unwrap GENUS(MailParsedHeaderBatch, VERBUM)(part_headers_result)
+        EVOCA MailMimePartInfo part
+        VINCIRE part.content_type AD CONIURA mail_headers_get(part_headers.headers, "Content-Type")
+        VINCIRE part.content_disposition AD CONIURA mail_headers_get(part_headers.headers, "Content-Disposition")
+        VINCIRE part.content_id AD CONIURA mail_headers_get(part_headers.headers, "Content-ID")
+        VINCIRE part.filename AD CONIURA mail_webhook_extract_param(part.content_disposition, "filename")
+        SI CONIURA len(part.filename) == 0
+          VINCIRE part.filename AD CONIURA mail_webhook_extract_param(part.content_type, "name")
+        FIN SI
+        CONIURA mail_mime_push_part(SPECULUM batch, part)
+      FIN SI
+    FIN SI
+    VINCIRE search_pos AD next_marker
+  FIN DUM
+  REDDE CONIURA Ok GENUS(MailMimePartBatch, VERBUM)(batch)
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

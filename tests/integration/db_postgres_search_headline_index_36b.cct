@@ -1,0 +1,39 @@
+INCIPIT grimoire "db_postgres_search_headline_index_36b"
+
+ADVOCARE "cct/db_postgres_search.cct"
+ADVOCARE "cct/fluxus.cct"
+ADVOCARE "cct/verbum.cct"
+
+RITUALE main() REDDE REX
+  EVOCA PgSearchConfig config AD CONIURA pg_search_config_simple()
+  EVOCA SPECULUM NIHIL fields AD CONIURA fluxus_init(MENSURA(PgSearchField))
+  EVOCA PgSearchField title AD CONIURA pg_search_field_weighted("posts.title", "A")
+  CONIURA fluxus_push(fields, SPECULUM title)
+
+  EVOCA PgSearchDocument doc
+  VINCIRE doc.config AD config
+  VINCIRE doc.fields AD fields
+
+  EVOCA PgSearchQuery query AD CONIURA pg_search_query_phrase(config, "postgres lock")
+  EVOCA PgSearchHeadlineOptions opts AD CONIURA pg_search_headline_options_default()
+  VINCIRE opts.highlight_all AD VERUM
+
+  EVOCA VERBUM headline AD CONIURA pg_search_headline_sql(config, "posts.body", query, opts)
+  EVOCA VERBUM index_sql AD CONIURA pg_search_create_index_sql("idx_posts_search", "posts", SEARCH_INDEX_GIN, doc)
+  EVOCA VERBUM drop_sql AD CONIURA pg_search_drop_index_sql("idx_posts_search")
+  CONIURA fluxus_free(fields)
+
+  SI CONIURA compare(headline, "ts_headline('simple', posts.body, phraseto_tsquery('simple', 'postgres lock'), 'StartSel=<b>, StopSel=</b>, MaxWords=35, MinWords=15, ShortWord=3, HighlightAll=TRUE')") != 0
+    REDDE 1
+  FIN SI
+  SI CONIURA compare(index_sql, "CREATE INDEX idx_posts_search ON posts USING GIN (setweight(to_tsvector('simple', coalesce(posts.title, '')), 'A'))") != 0
+    REDDE 2
+  FIN SI
+  SI CONIURA compare(drop_sql, "DROP INDEX IF EXISTS idx_posts_search") != 0
+    REDDE 3
+  FIN SI
+
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

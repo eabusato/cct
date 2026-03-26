@@ -1,0 +1,43 @@
+INCIPIT grimoire "mail_validate_37a"
+
+ADVOCARE "cct/mail.cct"
+ADVOCARE "cct/result.cct"
+
+RITUALE main() REDDE REX
+  EVOCA MailMessage m1 AD CONIURA mail_message_new()
+  CONIURA mail_message_add_to(SPECULUM m1, CONIURA mail_address("a@b.com", ""))
+  CONIURA mail_message_set_subject(SPECULUM m1, "X")
+  CONIURA mail_message_set_text(SPECULUM m1, "X")
+  SI CONIURA result_is_ok GENUS(REX, VERBUM)(CONIURA mail_message_validate(m1))
+    REDDE 1
+  FIN SI
+
+  EVOCA MailMessage m2 AD CONIURA mail_message_new()
+  CONIURA mail_message_set_from(SPECULUM m2, CONIURA mail_address("a@b.com", ""))
+  CONIURA mail_message_set_subject(SPECULUM m2, "X")
+  CONIURA mail_message_set_text(SPECULUM m2, "X")
+  SI CONIURA result_is_ok GENUS(REX, VERBUM)(CONIURA mail_message_validate(m2))
+    REDDE 2
+  FIN SI
+
+  EVOCA MailMessage m3 AD CONIURA mail_message_new()
+  CONIURA mail_message_set_from(SPECULUM m3, CONIURA mail_address("a@b.com", ""))
+  CONIURA mail_message_add_to(SPECULUM m3, CONIURA mail_address("b@c.com", ""))
+  CONIURA mail_message_set_subject(SPECULUM m3, "X")
+  SI CONIURA result_is_ok GENUS(REX, VERBUM)(CONIURA mail_message_validate(m3))
+    REDDE 3
+  FIN SI
+
+  EVOCA MailMessage m4 AD CONIURA mail_message_new()
+  CONIURA mail_message_set_from(SPECULUM m4, CONIURA mail_address("a@b.com", ""))
+  CONIURA mail_message_add_to(SPECULUM m4, CONIURA mail_address("b@c.com", ""))
+  CONIURA mail_message_set_subject(SPECULUM m4, "Valid")
+  CONIURA mail_message_set_text(SPECULUM m4, "Body")
+  SI CONIURA result_is_err GENUS(REX, VERBUM)(CONIURA mail_message_validate(m4))
+    REDDE 4
+  FIN SI
+
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

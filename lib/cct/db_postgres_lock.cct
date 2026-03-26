@@ -1,0 +1,211 @@
+-- CCT — Clavicula Turing
+-- Standard Library Module: db_postgres_lock
+--
+-- FASE 36D: PostgreSQL advisory lock helpers
+
+INCIPIT grimoire "db_postgres_lock"
+
+ADVOCARE "cct/db_postgres.cct"
+ADVOCARE "cct/fluxus.cct"
+ADVOCARE "cct/fmt.cct"
+ADVOCARE "cct/hash.cct"
+ADVOCARE "cct/option.cct"
+ADVOCARE "cct/result.cct"
+ADVOCARE "cct/verbum.cct"
+
+ORDO PgLockScope
+  PG_LOCK_SCOPE_SESSION
+  PG_LOCK_SCOPE_TRANSACTION
+FIN ORDO
+
+SIGILLUM PgLockKey
+  key_hi: REX
+  key_lo: REX
+  has_pair: VERUM
+  raw_name: VERBUM
+FIN SIGILLUM
+
+SIGILLUM PgLockHandle
+  key: PgLockKey
+  scope: PgLockScope
+  acquired: VERUM
+FIN SIGILLUM
+
+SIGILLUM PgLockAttempt
+  acquired: VERUM
+  handle: PgLockHandle
+FIN SIGILLUM
+
+RITUALE pg_lock_key_i64(REX value) REDDE PgLockKey
+  EVOCA PgLockKey key
+  VINCIRE key.key_hi AD 0
+  VINCIRE key.key_lo AD value
+  VINCIRE key.has_pair AD FALSUM
+  VINCIRE key.raw_name AD ""
+  REDDE key
+EXPLICIT RITUALE
+
+RITUALE pg_lock_key_pair(REX key1, REX key2) REDDE PgLockKey
+  EVOCA PgLockKey key
+  VINCIRE key.key_hi AD key1
+  VINCIRE key.key_lo AD key2
+  VINCIRE key.has_pair AD VERUM
+  VINCIRE key.raw_name AD ""
+  REDDE key
+EXPLICIT RITUALE
+
+RITUALE pg_lock_key_string(VERBUM full_name) REDDE PgLockKey
+  EVOCA PgLockKey key AD CONIURA pg_lock_key_i64(CONIURA fnv1a(full_name))
+  VINCIRE key.raw_name AD full_name
+  REDDE key
+EXPLICIT RITUALE
+
+RITUALE pg_lock_key_named(VERBUM namespace_name, VERBUM resource_name) REDDE PgLockKey
+  EVOCA VERBUM raw AD CONIURA concat(namespace_name, ":")
+  VINCIRE raw AD CONIURA concat(raw, resource_name)
+  EVOCA PgLockKey key AD CONIURA pg_lock_key_pair(CONIURA fnv1a(namespace_name), CONIURA fnv1a(resource_name))
+  VINCIRE key.raw_name AD raw
+  REDDE key
+EXPLICIT RITUALE
+
+RITUALE pg_lock_handle_make(PgLockKey key, PgLockScope scope, VERUM acquired) REDDE PgLockHandle
+  EVOCA PgLockHandle handle
+  VINCIRE handle.key AD key
+  VINCIRE handle.scope AD scope
+  VINCIRE handle.acquired AD acquired
+  REDDE handle
+EXPLICIT RITUALE
+
+RITUALE pg_lock_attempt_make(PgLockKey key, PgLockScope scope, VERUM acquired) REDDE PgLockAttempt
+  EVOCA PgLockAttempt attempt
+  VINCIRE attempt.acquired AD acquired
+  VINCIRE attempt.handle AD CONIURA pg_lock_handle_make(key, scope, acquired)
+  REDDE attempt
+EXPLICIT RITUALE
+
+RITUALE pg_lock_sql_call(VERBUM fn_name, PgLockKey key) REDDE VERBUM
+  EVOCA VERBUM out AD CONIURA concat("SELECT ", fn_name)
+  VINCIRE out AD CONIURA concat(out, "(")
+  SI key.has_pair
+    VINCIRE out AD CONIURA concat(out, CONIURA stringify_int(key.key_hi))
+    VINCIRE out AD CONIURA concat(out, ", ")
+    VINCIRE out AD CONIURA concat(out, CONIURA stringify_int(key.key_lo))
+  ALITER
+    VINCIRE out AD CONIURA concat(out, CONIURA stringify_int(key.key_lo))
+  FIN SI
+  VINCIRE out AD CONIURA concat(out, ")")
+  REDDE out
+EXPLICIT RITUALE
+
+RITUALE pg_lock_sql(PgLockKey key) REDDE VERBUM
+  REDDE CONIURA pg_lock_sql_call("pg_advisory_lock", key)
+EXPLICIT RITUALE
+
+RITUALE pg_try_lock_sql(PgLockKey key) REDDE VERBUM
+  REDDE CONIURA pg_lock_sql_call("pg_try_advisory_lock", key)
+EXPLICIT RITUALE
+
+RITUALE pg_unlock_sql(PgLockKey key) REDDE VERBUM
+  REDDE CONIURA pg_lock_sql_call("pg_advisory_unlock", key)
+EXPLICIT RITUALE
+
+RITUALE pg_xact_lock_sql(PgLockKey key) REDDE VERBUM
+  REDDE CONIURA pg_lock_sql_call("pg_advisory_xact_lock", key)
+EXPLICIT RITUALE
+
+RITUALE pg_try_xact_lock_sql(PgLockKey key) REDDE VERBUM
+  REDDE CONIURA pg_lock_sql_call("pg_try_advisory_xact_lock", key)
+EXPLICIT RITUALE
+
+RITUALE pg_lock_no_params() REDDE SPECULUM NIHIL
+  REDDE CONIURA fluxus_init(MENSURA(DbValue))
+EXPLICIT RITUALE
+
+RITUALE pg_lock_read_bool(Db db, VERBUM sql) REDDE SPECULUM NIHIL
+  EVOCA SPECULUM NIHIL params AD CONIURA pg_lock_no_params()
+  EVOCA SPECULUM NIHIL query_result AD CONIURA db_query(db, sql, params)
+  CONIURA fluxus_free(params)
+  SI CONIURA result_is_err GENUS(Rows, VERBUM)(query_result)
+    REDDE CONIURA Err GENUS(VERUM, VERBUM)(CONIURA db_last_error(db))
+  FIN SI
+  EVOCA Rows rows AD CONIURA result_unwrap GENUS(Rows, VERBUM)(query_result)
+  EVOCA VERUM value AD FALSUM
+  SI CONIURA rows_next(SPECULUM rows)
+    VINCIRE value AD CONIURA rows_get_bool(rows, 0)
+  FIN SI
+  CONIURA rows_close(SPECULUM rows)
+  REDDE CONIURA Ok GENUS(VERUM, VERBUM)(value)
+EXPLICIT RITUALE
+
+RITUALE pg_lock(Db db, PgLockKey key) REDDE SPECULUM NIHIL
+  EVOCA SPECULUM NIHIL params AD CONIURA pg_lock_no_params()
+  EVOCA SPECULUM NIHIL exec_result AD CONIURA db_exec(db, CONIURA pg_lock_sql(key), params)
+  CONIURA fluxus_free(params)
+  SI CONIURA result_is_err GENUS(REX, VERBUM)(exec_result)
+    REDDE CONIURA Err GENUS(PgLockHandle, VERBUM)(CONIURA db_last_error(db))
+  FIN SI
+  EVOCA PgLockHandle handle AD CONIURA pg_lock_handle_make(key, PG_LOCK_SCOPE_SESSION, VERUM)
+  REDDE CONIURA Ok GENUS(PgLockHandle, VERBUM)(handle)
+EXPLICIT RITUALE
+
+RITUALE pg_try_lock(Db db, PgLockKey key) REDDE SPECULUM NIHIL
+  EVOCA SPECULUM NIHIL bool_result AD CONIURA pg_lock_read_bool(db, CONIURA pg_try_lock_sql(key))
+  SI CONIURA result_is_err GENUS(VERUM, VERBUM)(bool_result)
+    REDDE CONIURA Err GENUS(PgLockAttempt, VERBUM)(CONIURA db_last_error(db))
+  FIN SI
+  SI CONIURA result_unwrap GENUS(VERUM, VERBUM)(bool_result)
+    EVOCA PgLockAttempt attempt AD CONIURA pg_lock_attempt_make(key, PG_LOCK_SCOPE_SESSION, VERUM)
+    REDDE CONIURA Ok GENUS(PgLockAttempt, VERBUM)(attempt)
+  FIN SI
+  EVOCA PgLockAttempt attempt AD CONIURA pg_lock_attempt_make(key, PG_LOCK_SCOPE_SESSION, FALSUM)
+  REDDE CONIURA Ok GENUS(PgLockAttempt, VERBUM)(attempt)
+EXPLICIT RITUALE
+
+RITUALE pg_unlock(Db db, PgLockHandle handle) REDDE SPECULUM NIHIL
+  SI NON handle.acquired
+    REDDE CONIURA Err GENUS(VERUM, VERBUM)("Handle de lock nao adquirido")
+  FIN SI
+  REDDE CONIURA pg_lock_read_bool(db, CONIURA pg_unlock_sql(handle.key))
+EXPLICIT RITUALE
+
+RITUALE pg_xact_lock(Db db, PgLockKey key) REDDE SPECULUM NIHIL
+  EVOCA SPECULUM NIHIL params AD CONIURA pg_lock_no_params()
+  EVOCA SPECULUM NIHIL exec_result AD CONIURA db_exec(db, CONIURA pg_xact_lock_sql(key), params)
+  CONIURA fluxus_free(params)
+  SI CONIURA result_is_err GENUS(REX, VERBUM)(exec_result)
+    REDDE CONIURA Err GENUS(PgLockHandle, VERBUM)(CONIURA db_last_error(db))
+  FIN SI
+  EVOCA PgLockHandle handle AD CONIURA pg_lock_handle_make(key, PG_LOCK_SCOPE_TRANSACTION, VERUM)
+  REDDE CONIURA Ok GENUS(PgLockHandle, VERBUM)(handle)
+EXPLICIT RITUALE
+
+RITUALE pg_try_xact_lock(Db db, PgLockKey key) REDDE SPECULUM NIHIL
+  EVOCA SPECULUM NIHIL bool_result AD CONIURA pg_lock_read_bool(db, CONIURA pg_try_xact_lock_sql(key))
+  SI CONIURA result_is_err GENUS(VERUM, VERBUM)(bool_result)
+    REDDE CONIURA Err GENUS(PgLockAttempt, VERBUM)(CONIURA db_last_error(db))
+  FIN SI
+  SI CONIURA result_unwrap GENUS(VERUM, VERBUM)(bool_result)
+    EVOCA PgLockAttempt attempt AD CONIURA pg_lock_attempt_make(key, PG_LOCK_SCOPE_TRANSACTION, VERUM)
+    REDDE CONIURA Ok GENUS(PgLockAttempt, VERBUM)(attempt)
+  FIN SI
+  EVOCA PgLockAttempt attempt AD CONIURA pg_lock_attempt_make(key, PG_LOCK_SCOPE_TRANSACTION, FALSUM)
+  REDDE CONIURA Ok GENUS(PgLockAttempt, VERBUM)(attempt)
+EXPLICIT RITUALE
+
+RITUALE pg_lock_job(Db db, VERBUM job_name, VERBUM resource_name) REDDE SPECULUM NIHIL
+  REDDE CONIURA pg_lock(db, CONIURA pg_lock_key_named(job_name, resource_name))
+EXPLICIT RITUALE
+
+RITUALE pg_try_lock_job(Db db, VERBUM job_name, VERBUM resource_name) REDDE SPECULUM NIHIL
+  REDDE CONIURA pg_try_lock(db, CONIURA pg_lock_key_named(job_name, resource_name))
+EXPLICIT RITUALE
+
+RITUALE pg_with_lock(Db db, PgLockKey key, SPECULUM NIHIL body) REDDE SPECULUM NIHIL
+  REDDE CONIURA Err GENUS(REX, VERBUM)("pg_with_lock ainda nao suporta callback direto; use pg_lock/pg_unlock explicitamente")
+EXPLICIT RITUALE
+
+RITUALE pg_with_job_lock(Db db, VERBUM job_name, VERBUM resource_name, SPECULUM NIHIL body) REDDE SPECULUM NIHIL
+  REDDE CONIURA Err GENUS(REX, VERBUM)("pg_with_job_lock ainda nao suporta callback direto; use pg_try_lock_job explicitamente")
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

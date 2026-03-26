@@ -1,0 +1,29 @@
+INCIPIT grimoire "db_postgres_stmt_bind_36a"
+
+ADVOCARE "cct/db_postgres.cct"
+ADVOCARE "cct/verbum.cct"
+
+RITUALE main() REDDE REX
+  EVOCA Stmt stmt
+  VINCIRE stmt.name AD "insere"
+  VINCIRE stmt.sql AD "INSERT INTO t VALUES ($1, $2, $3, $4)"
+  VINCIRE stmt.bindings AD CONIURA db_empty_params()
+  VINCIRE stmt.closed AD FALSUM
+  CONIURA stmt_bind_int(SPECULUM stmt, 1, 42)
+  CONIURA stmt_bind_text(SPECULUM stmt, 2, "neo")
+  CONIURA stmt_bind_json(SPECULUM stmt, 3, "{\"x\":1}")
+  CONIURA stmt_bind_null(SPECULUM stmt, 4)
+  SI CONIURA compare(CONIURA stmt_sql(stmt), "INSERT INTO t VALUES (42, 'neo', '{\"x\":1}'::jsonb, NULL)") != 0
+    CONIURA stmt_close(SPECULUM stmt)
+    REDDE 1
+  FIN SI
+  CONIURA stmt_reset(SPECULUM stmt)
+  SI CONIURA compare(CONIURA stmt_sql(stmt), "INSERT INTO t VALUES ($1, $2, $3, $4)") != 0
+    CONIURA stmt_close(SPECULUM stmt)
+    REDDE 2
+  FIN SI
+  CONIURA stmt_close(SPECULUM stmt)
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

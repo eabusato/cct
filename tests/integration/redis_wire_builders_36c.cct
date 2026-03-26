@@ -1,0 +1,34 @@
+INCIPIT grimoire "redis_wire_builders_36c"
+
+ADVOCARE "cct/redis.cct"
+ADVOCARE "cct/verbum.cct"
+
+RITUALE main() REDDE REX
+  EVOCA VERBUM crlf AD CONIURA redis_crlf()
+  EVOCA VERBUM expected2 AD "*2"
+  VINCIRE expected2 AD CONIURA concat(expected2, crlf)
+  VINCIRE expected2 AD CONIURA concat(expected2, "$3")
+  VINCIRE expected2 AD CONIURA concat(expected2, crlf)
+  VINCIRE expected2 AD CONIURA concat(expected2, "GET")
+  VINCIRE expected2 AD CONIURA concat(expected2, crlf)
+  VINCIRE expected2 AD CONIURA concat(expected2, "$3")
+  VINCIRE expected2 AD CONIURA concat(expected2, crlf)
+  VINCIRE expected2 AD CONIURA concat(expected2, "key")
+  VINCIRE expected2 AD CONIURA concat(expected2, crlf)
+
+  SI CONIURA compare(CONIURA redis_argv_2("GET", "key"), expected2) != 0
+    REDDE 1
+  FIN SI
+
+  EVOCA VERBUM wire4 AD CONIURA redis_argv_4("SETEX", "alpha", "60", "beta")
+  SI CONIURA starts_with(wire4, "*4") == FALSUM
+    REDDE 2
+  FIN SI
+  SI CONIURA find(wire4, "SETEX") == -1 VEL CONIURA find(wire4, "alpha") == -1 VEL CONIURA find(wire4, "beta") == -1
+    REDDE 3
+  FIN SI
+
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

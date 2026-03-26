@@ -1,0 +1,322 @@
+-- CCT — Clavicula Turing
+-- Standard Library Module: db_postgres_search
+--
+-- FASE 36B: PostgreSQL full-text search helpers
+
+INCIPIT grimoire "db_postgres_search"
+
+ADVOCARE "cct/fluxus.cct"
+ADVOCARE "cct/fmt.cct"
+ADVOCARE "cct/result.cct"
+ADVOCARE "cct/verbum.cct"
+
+ORDO PgSearchConfigKind
+  SEARCH_CONFIG_SIMPLE
+  SEARCH_CONFIG_LANGUAGE
+  SEARCH_CONFIG_CUSTOM
+FIN ORDO
+
+ORDO PgSearchQueryMode
+  SEARCH_QUERY_PLAIN
+  SEARCH_QUERY_PHRASE
+  SEARCH_QUERY_WEB
+  SEARCH_QUERY_RAW
+FIN ORDO
+
+ORDO PgSearchRankMode
+  SEARCH_RANK_DEFAULT
+  SEARCH_RANK_COVER_DENSITY
+FIN ORDO
+
+ORDO PgSearchIndexKind
+  SEARCH_INDEX_GIN
+  SEARCH_INDEX_GIST
+FIN ORDO
+
+SIGILLUM PgSearchConfig
+  kind: PgSearchConfigKind
+  name: VERBUM
+FIN SIGILLUM
+
+SIGILLUM PgSearchField
+  expression_sql: VERBUM
+  weight: VERBUM
+FIN SIGILLUM
+
+SIGILLUM PgSearchDocument
+  config: PgSearchConfig
+  fields: SPECULUM NIHIL
+FIN SIGILLUM
+
+SIGILLUM PgSearchQuery
+  config: PgSearchConfig
+  mode: PgSearchQueryMode
+  input: VERBUM
+FIN SIGILLUM
+
+SIGILLUM PgSearchHeadlineOptions
+  start_sel: VERBUM
+  stop_sel: VERBUM
+  max_words: REX
+  min_words: REX
+  short_word: REX
+  highlight_all: VERUM
+FIN SIGILLUM
+
+RITUALE pg_search_ok_config(PgSearchConfig config) REDDE SPECULUM NIHIL
+  REDDE CONIURA Ok GENUS(PgSearchConfig, VERBUM)(config)
+EXPLICIT RITUALE
+
+RITUALE pg_search_ok_document(PgSearchDocument document) REDDE SPECULUM NIHIL
+  REDDE CONIURA Ok GENUS(PgSearchDocument, VERBUM)(document)
+EXPLICIT RITUALE
+
+RITUALE pg_search_quote(VERBUM texto) REDDE VERBUM
+  EVOCA VERBUM escaped AD CONIURA replace_all(texto, "'", "''")
+  EVOCA VERBUM out AD CONIURA concat("'", escaped)
+  REDDE CONIURA concat(out, "'")
+EXPLICIT RITUALE
+
+RITUALE pg_search_valid_name(VERBUM name) REDDE VERUM
+  EVOCA REX i AD 0
+  EVOCA REX n AD CONIURA len(name)
+  SI n == 0
+    REDDE FALSUM
+  FIN SI
+  DUM i < n
+    EVOCA MILES c AD CONIURA char_at(name, i)
+    SI NON ((c >= 97 ET c <= 122) VEL (c >= 65 ET c <= 90) VEL (c >= 48 ET c <= 57) VEL c == 95)
+      REDDE FALSUM
+    FIN SI
+    VINCIRE i AD i + 1
+  FIN DUM
+  REDDE VERUM
+EXPLICIT RITUALE
+
+RITUALE pg_search_weight_valid(VERBUM weight) REDDE VERUM
+  REDDE CONIURA compare(weight, "A") == 0 VEL CONIURA compare(weight, "B") == 0 VEL CONIURA compare(weight, "C") == 0 VEL CONIURA compare(weight, "D") == 0
+EXPLICIT RITUALE
+
+RITUALE pg_search_config_simple() REDDE PgSearchConfig
+  EVOCA PgSearchConfig config
+  VINCIRE config.kind AD SEARCH_CONFIG_SIMPLE
+  VINCIRE config.name AD "simple"
+  REDDE config
+EXPLICIT RITUALE
+
+RITUALE pg_search_config_language(VERBUM language) REDDE SPECULUM NIHIL
+  SI NON CONIURA pg_search_valid_name(language)
+    REDDE CONIURA Err GENUS(PgSearchConfig, VERBUM)("Idioma PostgreSQL invalido")
+  FIN SI
+  EVOCA PgSearchConfig config
+  VINCIRE config.kind AD SEARCH_CONFIG_LANGUAGE
+  VINCIRE config.name AD language
+  REDDE CONIURA pg_search_ok_config(config)
+EXPLICIT RITUALE
+
+RITUALE pg_search_config_custom(VERBUM name) REDDE SPECULUM NIHIL
+  SI NON CONIURA pg_search_valid_name(name)
+    REDDE CONIURA Err GENUS(PgSearchConfig, VERBUM)("Configuracao custom invalida")
+  FIN SI
+  EVOCA PgSearchConfig config
+  VINCIRE config.kind AD SEARCH_CONFIG_CUSTOM
+  VINCIRE config.name AD name
+  REDDE CONIURA pg_search_ok_config(config)
+EXPLICIT RITUALE
+
+RITUALE pg_search_config_name(PgSearchConfig config) REDDE VERBUM
+  REDDE config.name
+EXPLICIT RITUALE
+
+RITUALE pg_search_field(VERBUM expression_sql) REDDE PgSearchField
+  EVOCA PgSearchField field
+  VINCIRE field.expression_sql AD expression_sql
+  VINCIRE field.weight AD ""
+  REDDE field
+EXPLICIT RITUALE
+
+RITUALE pg_search_field_weighted(VERBUM expression_sql, VERBUM weight) REDDE PgSearchField
+  EVOCA PgSearchField field AD CONIURA pg_search_field(expression_sql)
+  SI CONIURA pg_search_weight_valid(weight)
+    VINCIRE field.weight AD weight
+  FIN SI
+  REDDE field
+EXPLICIT RITUALE
+
+RITUALE pg_search_document(PgSearchConfig config, SPECULUM NIHIL fields) REDDE SPECULUM NIHIL
+  SI CONIURA fluxus_len(fields) == 0
+    REDDE CONIURA Err GENUS(PgSearchDocument, VERBUM)("Documento de busca exige ao menos um campo")
+  FIN SI
+  EVOCA REX i AD 0
+  EVOCA REX n AD CONIURA fluxus_len(fields)
+  DUM i < n
+    EVOCA SPECULUM PgSearchField field AD CONIURA fluxus_get(fields, i)
+    SI CONIURA len((*field).expression_sql) == 0
+      REDDE CONIURA Err GENUS(PgSearchDocument, VERBUM)("Campo de busca exige SQL nao vazio")
+    FIN SI
+    VINCIRE i AD i + 1
+  FIN DUM
+  EVOCA PgSearchDocument document
+  VINCIRE document.config AD config
+  VINCIRE document.fields AD fields
+  REDDE CONIURA pg_search_ok_document(document)
+EXPLICIT RITUALE
+
+RITUALE pg_search_document_field_sql(PgSearchConfig config, PgSearchField field) REDDE VERBUM
+  EVOCA VERBUM base AD "to_tsvector("
+  VINCIRE base AD CONIURA concat(base, CONIURA pg_search_quote(CONIURA pg_search_config_name(config)))
+  VINCIRE base AD CONIURA concat(base, ", coalesce(")
+  VINCIRE base AD CONIURA concat(base, field.expression_sql)
+  VINCIRE base AD CONIURA concat(base, ", ''))")
+  SI CONIURA len(field.weight) == 0
+    REDDE base
+  FIN SI
+  EVOCA VERBUM weighted AD "setweight("
+  VINCIRE weighted AD CONIURA concat(weighted, base)
+  VINCIRE weighted AD CONIURA concat(weighted, ", ")
+  VINCIRE weighted AD CONIURA concat(weighted, CONIURA pg_search_quote(field.weight))
+  VINCIRE weighted AD CONIURA concat(weighted, ")")
+  REDDE weighted
+EXPLICIT RITUALE
+
+RITUALE pg_search_document_sql(PgSearchDocument document) REDDE VERBUM
+  EVOCA REX i AD 0
+  EVOCA REX n AD CONIURA fluxus_len(document.fields)
+  EVOCA VERBUM out AD ""
+  DUM i < n
+    EVOCA SPECULUM PgSearchField field AD CONIURA fluxus_get(document.fields, i)
+    SI i > 0
+      VINCIRE out AD CONIURA concat(out, " || ")
+    FIN SI
+    VINCIRE out AD CONIURA concat(out, CONIURA pg_search_document_field_sql(document.config, *field))
+    VINCIRE i AD i + 1
+  FIN DUM
+  REDDE out
+EXPLICIT RITUALE
+
+RITUALE pg_search_query_make(PgSearchConfig config, PgSearchQueryMode mode, VERBUM input) REDDE PgSearchQuery
+  EVOCA PgSearchQuery query
+  VINCIRE query.config AD config
+  VINCIRE query.mode AD mode
+  VINCIRE query.input AD input
+  REDDE query
+EXPLICIT RITUALE
+
+RITUALE pg_search_query_plain(PgSearchConfig config, VERBUM input) REDDE PgSearchQuery
+  REDDE CONIURA pg_search_query_make(config, SEARCH_QUERY_PLAIN, input)
+EXPLICIT RITUALE
+
+RITUALE pg_search_query_phrase(PgSearchConfig config, VERBUM input) REDDE PgSearchQuery
+  REDDE CONIURA pg_search_query_make(config, SEARCH_QUERY_PHRASE, input)
+EXPLICIT RITUALE
+
+RITUALE pg_search_query_web(PgSearchConfig config, VERBUM input) REDDE PgSearchQuery
+  REDDE CONIURA pg_search_query_make(config, SEARCH_QUERY_WEB, input)
+EXPLICIT RITUALE
+
+RITUALE pg_search_query_raw(PgSearchConfig config, VERBUM input) REDDE PgSearchQuery
+  REDDE CONIURA pg_search_query_make(config, SEARCH_QUERY_RAW, input)
+EXPLICIT RITUALE
+
+RITUALE pg_search_query_sql(PgSearchQuery query) REDDE VERBUM
+  EVOCA VERBUM fn AD "plainto_tsquery"
+  ELIGE query.mode
+    CASUS SEARCH_QUERY_PHRASE:
+      VINCIRE fn AD "phraseto_tsquery"
+    CASUS SEARCH_QUERY_WEB:
+      VINCIRE fn AD "websearch_to_tsquery"
+    CASUS SEARCH_QUERY_RAW:
+      VINCIRE fn AD "to_tsquery"
+    ALIOQUIN:
+      VINCIRE fn AD "plainto_tsquery"
+  FIN ELIGE
+  EVOCA VERBUM out AD CONIURA concat(fn, "(")
+  VINCIRE out AD CONIURA concat(out, CONIURA pg_search_quote(CONIURA pg_search_config_name(query.config)))
+  VINCIRE out AD CONIURA concat(out, ", ")
+  VINCIRE out AD CONIURA concat(out, CONIURA pg_search_quote(query.input))
+  VINCIRE out AD CONIURA concat(out, ")")
+  REDDE out
+EXPLICIT RITUALE
+
+RITUALE pg_search_match_sql(PgSearchDocument document, PgSearchQuery query) REDDE VERBUM
+  EVOCA VERBUM out AD CONIURA pg_search_document_sql(document)
+  VINCIRE out AD CONIURA concat(out, " @@ ")
+  VINCIRE out AD CONIURA concat(out, CONIURA pg_search_query_sql(query))
+  REDDE out
+EXPLICIT RITUALE
+
+RITUALE pg_search_rank_sql(PgSearchDocument document, PgSearchQuery query, PgSearchRankMode mode) REDDE VERBUM
+  EVOCA VERBUM fn AD "ts_rank"
+  SI mode == SEARCH_RANK_COVER_DENSITY
+    VINCIRE fn AD "ts_rank_cd"
+  FIN SI
+  EVOCA VERBUM out AD CONIURA concat(fn, "(")
+  VINCIRE out AD CONIURA concat(out, CONIURA pg_search_document_sql(document))
+  VINCIRE out AD CONIURA concat(out, ", ")
+  VINCIRE out AD CONIURA concat(out, CONIURA pg_search_query_sql(query))
+  VINCIRE out AD CONIURA concat(out, ")")
+  REDDE out
+EXPLICIT RITUALE
+
+RITUALE pg_search_headline_options_default() REDDE PgSearchHeadlineOptions
+  EVOCA PgSearchHeadlineOptions options
+  VINCIRE options.start_sel AD "<b>"
+  VINCIRE options.stop_sel AD "</b>"
+  VINCIRE options.max_words AD 35
+  VINCIRE options.min_words AD 15
+  VINCIRE options.short_word AD 3
+  VINCIRE options.highlight_all AD FALSUM
+  REDDE options
+EXPLICIT RITUALE
+
+RITUALE pg_search_headline_sql(PgSearchConfig config, VERBUM source_sql, PgSearchQuery query, PgSearchHeadlineOptions options) REDDE VERBUM
+  EVOCA VERBUM opt AD "StartSel="
+  VINCIRE opt AD CONIURA concat(opt, options.start_sel)
+  VINCIRE opt AD CONIURA concat(opt, ", StopSel=")
+  VINCIRE opt AD CONIURA concat(opt, options.stop_sel)
+  VINCIRE opt AD CONIURA concat(opt, ", MaxWords=")
+  VINCIRE opt AD CONIURA concat(opt, CONIURA stringify_int(options.max_words))
+  VINCIRE opt AD CONIURA concat(opt, ", MinWords=")
+  VINCIRE opt AD CONIURA concat(opt, CONIURA stringify_int(options.min_words))
+  VINCIRE opt AD CONIURA concat(opt, ", ShortWord=")
+  VINCIRE opt AD CONIURA concat(opt, CONIURA stringify_int(options.short_word))
+  VINCIRE opt AD CONIURA concat(opt, ", HighlightAll=")
+  SI options.highlight_all
+    VINCIRE opt AD CONIURA concat(opt, "TRUE")
+  ALITER
+    VINCIRE opt AD CONIURA concat(opt, "FALSE")
+  FIN SI
+  EVOCA VERBUM out AD "ts_headline("
+  VINCIRE out AD CONIURA concat(out, CONIURA pg_search_quote(CONIURA pg_search_config_name(config)))
+  VINCIRE out AD CONIURA concat(out, ", ")
+  VINCIRE out AD CONIURA concat(out, source_sql)
+  VINCIRE out AD CONIURA concat(out, ", ")
+  VINCIRE out AD CONIURA concat(out, CONIURA pg_search_query_sql(query))
+  VINCIRE out AD CONIURA concat(out, ", ")
+  VINCIRE out AD CONIURA concat(out, CONIURA pg_search_quote(opt))
+  VINCIRE out AD CONIURA concat(out, ")")
+  REDDE out
+EXPLICIT RITUALE
+
+RITUALE pg_search_create_index_sql(VERBUM index_name, VERBUM table_name, PgSearchIndexKind kind, PgSearchDocument document) REDDE VERBUM
+  EVOCA VERBUM using_name AD "GIN"
+  SI kind == SEARCH_INDEX_GIST
+    VINCIRE using_name AD "GIST"
+  FIN SI
+  EVOCA VERBUM out AD "CREATE INDEX "
+  VINCIRE out AD CONIURA concat(out, index_name)
+  VINCIRE out AD CONIURA concat(out, " ON ")
+  VINCIRE out AD CONIURA concat(out, table_name)
+  VINCIRE out AD CONIURA concat(out, " USING ")
+  VINCIRE out AD CONIURA concat(out, using_name)
+  VINCIRE out AD CONIURA concat(out, " (")
+  VINCIRE out AD CONIURA concat(out, CONIURA pg_search_document_sql(document))
+  VINCIRE out AD CONIURA concat(out, ")")
+  REDDE out
+EXPLICIT RITUALE
+
+RITUALE pg_search_drop_index_sql(VERBUM index_name) REDDE VERBUM
+  REDDE CONIURA concat("DROP INDEX IF EXISTS ", index_name)
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

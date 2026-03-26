@@ -1,0 +1,20 @@
+INCIPIT grimoire "mail_headers_rfc_37a"
+
+ADVOCARE "cct/date.cct"
+ADVOCARE "cct/mail.cct"
+ADVOCARE "cct/result.cct"
+ADVOCARE "cct/verbum.cct"
+
+RITUALE main() REDDE REX
+  EVOCA SPECULUM NIHIL parsed AD CONIURA datetime_parse("2026-03-26T10:30:00Z")
+  SI CONIURA result_is_err GENUS(DateTime, DateError)(parsed)
+    REDDE 1
+  FIN SI
+  EVOCA DateTime dt AD CONIURA result_unwrap GENUS(DateTime, DateError)(parsed)
+  SI CONIURA compare(CONIURA mail_datetime_rfc5322(dt), "Thu, 26 Mar 2026 10:30:00 +0000") != 0
+    REDDE 2
+  FIN SI
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

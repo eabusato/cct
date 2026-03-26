@@ -4141,6 +4141,192 @@ static bool cg_emit_obsecro_expr(FILE *out, cct_codegen_t *cg, const cct_ast_nod
         return true;
     }
 
+    if (strcmp(name, "mail_builtin_smtp_send") == 0) {
+        cct_codegen_value_kind_t kinds[10];
+        if (argc != 10) {
+            cg_report_node(cg, expr, "OBSECRO mail_builtin_smtp_send expects exactly 10 arguments in FASE 37A");
+            return false;
+        }
+        memset(kinds, 0, sizeof(kinds));
+        cg->uses_mail = true;
+        cg->uses_crypto = true;
+        fputs("cct_rt_mail_smtp_send(", out);
+        for (size_t i = 0; i < 10; i++) {
+            if (i > 0) fputs(", ", out);
+            if (!cg_emit_expr(out, cg, args->nodes[i], &kinds[i])) return false;
+        }
+        if (kinds[0] != CCT_CODEGEN_VALUE_STRING || kinds[1] != CCT_CODEGEN_VALUE_INT ||
+            kinds[2] != CCT_CODEGEN_VALUE_STRING || kinds[3] != CCT_CODEGEN_VALUE_STRING ||
+            !(kinds[4] == CCT_CODEGEN_VALUE_INT || kinds[4] == CCT_CODEGEN_VALUE_BOOL) ||
+            kinds[5] != CCT_CODEGEN_VALUE_BOOL || kinds[6] != CCT_CODEGEN_VALUE_BOOL ||
+            kinds[7] != CCT_CODEGEN_VALUE_STRING || kinds[8] != CCT_CODEGEN_VALUE_STRING ||
+            kinds[9] != CCT_CODEGEN_VALUE_STRING) {
+            cg_report_node(cg, expr, "OBSECRO mail_builtin_smtp_send recebeu tipos invalidos em FASE 37A");
+            return false;
+        }
+        fputs(")", out);
+        if (out_kind) *out_kind = CCT_CODEGEN_VALUE_STRING;
+        return true;
+    }
+
+    if (strcmp(name, "pg_builtin_open") == 0) {
+        if (argc != 1) {
+            cg_report_node(cg, expr, "OBSECRO pg_builtin_open expects exactly one VERBUM conninfo argument in FASE 36A");
+            return false;
+        }
+        cct_codegen_value_kind_t k = CCT_CODEGEN_VALUE_UNKNOWN;
+        cg->uses_postgres = true;
+        fputs("((void*)cct_rt_pg_db_open(", out);
+        if (!cg_emit_expr(out, cg, args->nodes[0], &k)) return false;
+        if (k != CCT_CODEGEN_VALUE_STRING) {
+            cg_report_node(cg, args->nodes[0], "OBSECRO pg_builtin_open requires VERBUM conninfo argument in FASE 36A");
+            return false;
+        }
+        fputs("))", out);
+        if (out_kind) *out_kind = CCT_CODEGEN_VALUE_POINTER;
+        return true;
+    }
+
+    if (strcmp(name, "pg_builtin_is_open") == 0 || strcmp(name, "pg_builtin_last_error") == 0 ||
+        strcmp(name, "pg_builtin_query") == 0 || strcmp(name, "pg_builtin_rows_count") == 0 ||
+        strcmp(name, "pg_builtin_rows_columns") == 0 || strcmp(name, "pg_builtin_rows_next") == 0 ||
+        strcmp(name, "pg_builtin_rows_get_text") == 0 || strcmp(name, "pg_builtin_rows_is_null") == 0 ||
+        strcmp(name, "pg_builtin_poll_channel") == 0 || strcmp(name, "pg_builtin_poll_payload") == 0) {
+        cg->uses_postgres = true;
+        if (strcmp(name, "pg_builtin_is_open") == 0 || strcmp(name, "pg_builtin_last_error") == 0 ||
+            strcmp(name, "pg_builtin_rows_count") == 0 || strcmp(name, "pg_builtin_rows_columns") == 0 ||
+            strcmp(name, "pg_builtin_rows_next") == 0 || strcmp(name, "pg_builtin_poll_payload") == 0) {
+            if (argc != 1) {
+                cg_report_nodef(cg, expr, "OBSECRO %s expects exactly one pointer argument in FASE 36A", name);
+                return false;
+            }
+        }
+        if (strcmp(name, "pg_builtin_query") == 0 || strcmp(name, "pg_builtin_poll_channel") == 0 ||
+            strcmp(name, "pg_builtin_rows_get_text") == 0 || strcmp(name, "pg_builtin_rows_is_null") == 0) {
+            if (argc != 2) {
+                cg_report_nodef(cg, expr, "OBSECRO %s expects exactly two arguments in FASE 36A", name);
+                return false;
+            }
+        }
+        if (strcmp(name, "pg_builtin_is_open") == 0) {
+            cct_codegen_value_kind_t k = CCT_CODEGEN_VALUE_UNKNOWN;
+            fputs("(cct_rt_pg_db_is_open((void*)(", out);
+            if (!cg_emit_expr(out, cg, args->nodes[0], &k)) return false;
+            if (k != CCT_CODEGEN_VALUE_POINTER) {
+                cg_report_node(cg, args->nodes[0], "OBSECRO pg_builtin_is_open requires db pointer in FASE 36A");
+                return false;
+            }
+            fputs(")))", out);
+            if (out_kind) *out_kind = CCT_CODEGEN_VALUE_BOOL;
+            return true;
+        }
+        if (strcmp(name, "pg_builtin_last_error") == 0) {
+            cct_codegen_value_kind_t k = CCT_CODEGEN_VALUE_UNKNOWN;
+            fputs("cct_rt_pg_db_last_error((void*)(", out);
+            if (!cg_emit_expr(out, cg, args->nodes[0], &k)) return false;
+            if (k != CCT_CODEGEN_VALUE_POINTER) {
+                cg_report_node(cg, args->nodes[0], "OBSECRO pg_builtin_last_error requires db pointer in FASE 36A");
+                return false;
+            }
+            fputs("))", out);
+            if (out_kind) *out_kind = CCT_CODEGEN_VALUE_STRING;
+            return true;
+        }
+        if (strcmp(name, "pg_builtin_query") == 0) {
+            cct_codegen_value_kind_t k0 = CCT_CODEGEN_VALUE_UNKNOWN;
+            cct_codegen_value_kind_t k1 = CCT_CODEGEN_VALUE_UNKNOWN;
+            fputs("((void*)cct_rt_pg_db_query((void*)(", out);
+            if (!cg_emit_expr(out, cg, args->nodes[0], &k0)) return false;
+            if (k0 != CCT_CODEGEN_VALUE_POINTER) {
+                cg_report_node(cg, args->nodes[0], "OBSECRO pg_builtin_query requires db pointer in FASE 36A");
+                return false;
+            }
+            fputs("), ", out);
+            if (!cg_emit_expr(out, cg, args->nodes[1], &k1)) return false;
+            if (k1 != CCT_CODEGEN_VALUE_STRING) {
+                cg_report_node(cg, args->nodes[1], "OBSECRO pg_builtin_query requires VERBUM sql in FASE 36A");
+                return false;
+            }
+            fputs("))", out);
+            if (out_kind) *out_kind = CCT_CODEGEN_VALUE_POINTER;
+            return true;
+        }
+        if (strcmp(name, "pg_builtin_rows_count") == 0 || strcmp(name, "pg_builtin_rows_columns") == 0) {
+            cct_codegen_value_kind_t k = CCT_CODEGEN_VALUE_UNKNOWN;
+            fprintf(out, "%s((void*)(", strcmp(name, "pg_builtin_rows_count") == 0 ? "cct_rt_pg_rows_count" : "cct_rt_pg_rows_columns");
+            if (!cg_emit_expr(out, cg, args->nodes[0], &k)) return false;
+            if (k != CCT_CODEGEN_VALUE_POINTER) {
+                cg_report_nodef(cg, args->nodes[0], "OBSECRO %s requires rows pointer in FASE 36A", name);
+                return false;
+            }
+            fputs("))", out);
+            if (out_kind) *out_kind = CCT_CODEGEN_VALUE_INT;
+            return true;
+        }
+        if (strcmp(name, "pg_builtin_rows_next") == 0) {
+            cct_codegen_value_kind_t k = CCT_CODEGEN_VALUE_UNKNOWN;
+            fputs("(cct_rt_pg_rows_next((void*)(", out);
+            if (!cg_emit_expr(out, cg, args->nodes[0], &k)) return false;
+            if (k != CCT_CODEGEN_VALUE_POINTER) {
+                cg_report_node(cg, args->nodes[0], "OBSECRO pg_builtin_rows_next requires rows pointer in FASE 36A");
+                return false;
+            }
+            fputs(")))", out);
+            if (out_kind) *out_kind = CCT_CODEGEN_VALUE_BOOL;
+            return true;
+        }
+        if (strcmp(name, "pg_builtin_rows_get_text") == 0 || strcmp(name, "pg_builtin_rows_is_null") == 0) {
+            cct_codegen_value_kind_t k0 = CCT_CODEGEN_VALUE_UNKNOWN;
+            cct_codegen_value_kind_t k1 = CCT_CODEGEN_VALUE_UNKNOWN;
+            fprintf(out, "%s((void*)(", strcmp(name, "pg_builtin_rows_get_text") == 0 ? "cct_rt_pg_rows_get_text" : "cct_rt_pg_rows_is_null");
+            if (!cg_emit_expr(out, cg, args->nodes[0], &k0)) return false;
+            if (k0 != CCT_CODEGEN_VALUE_POINTER) {
+                cg_report_nodef(cg, args->nodes[0], "OBSECRO %s requires rows pointer in FASE 36A", name);
+                return false;
+            }
+            fputs("), (long long)(", out);
+            if (!cg_emit_expr(out, cg, args->nodes[1], &k1)) return false;
+            if (!(k1 == CCT_CODEGEN_VALUE_INT || k1 == CCT_CODEGEN_VALUE_BOOL)) {
+                cg_report_nodef(cg, args->nodes[1], "OBSECRO %s requires integer column in FASE 36A", name);
+                return false;
+            }
+            fputs("))", out);
+            if (out_kind) *out_kind = strcmp(name, "pg_builtin_rows_get_text") == 0 ? CCT_CODEGEN_VALUE_STRING : CCT_CODEGEN_VALUE_BOOL;
+            return true;
+        }
+        if (strcmp(name, "pg_builtin_poll_channel") == 0) {
+            cct_codegen_value_kind_t k0 = CCT_CODEGEN_VALUE_UNKNOWN;
+            cct_codegen_value_kind_t k1 = CCT_CODEGEN_VALUE_UNKNOWN;
+            fputs("cct_rt_pg_db_poll_channel((void*)(", out);
+            if (!cg_emit_expr(out, cg, args->nodes[0], &k0)) return false;
+            if (k0 != CCT_CODEGEN_VALUE_POINTER) {
+                cg_report_node(cg, args->nodes[0], "OBSECRO pg_builtin_poll_channel requires db pointer in FASE 36A");
+                return false;
+            }
+            fputs("), (long long)(", out);
+            if (!cg_emit_expr(out, cg, args->nodes[1], &k1)) return false;
+            if (!(k1 == CCT_CODEGEN_VALUE_INT || k1 == CCT_CODEGEN_VALUE_BOOL)) {
+                cg_report_node(cg, args->nodes[1], "OBSECRO pg_builtin_poll_channel requires integer timeout in FASE 36A");
+                return false;
+            }
+            fputs("))", out);
+            if (out_kind) *out_kind = CCT_CODEGEN_VALUE_STRING;
+            return true;
+        }
+        if (strcmp(name, "pg_builtin_poll_payload") == 0) {
+            cct_codegen_value_kind_t k = CCT_CODEGEN_VALUE_UNKNOWN;
+            fputs("cct_rt_pg_db_poll_payload((void*)(", out);
+            if (!cg_emit_expr(out, cg, args->nodes[0], &k)) return false;
+            if (k != CCT_CODEGEN_VALUE_POINTER) {
+                cg_report_node(cg, args->nodes[0], "OBSECRO pg_builtin_poll_payload requires db pointer in FASE 36A");
+                return false;
+            }
+            fputs("))", out);
+            if (out_kind) *out_kind = CCT_CODEGEN_VALUE_STRING;
+            return true;
+        }
+    }
+
     if (strcmp(name, "db_open") == 0) {
         if (argc != 1) {
             cg_report_node(cg, expr, "OBSECRO db_open expects exactly one VERBUM path argument in FASE 20E.1");
@@ -7553,6 +7739,53 @@ static bool cg_emit_scribe_stmt(FILE *out, cct_codegen_t *cg, const cct_ast_node
         return true;
     }
 
+    if (strcmp(obsecro_node->as.obsecro.name, "pg_builtin_close") == 0 ||
+        strcmp(obsecro_node->as.obsecro.name, "pg_builtin_rows_close") == 0) {
+        const char *name = obsecro_node->as.obsecro.name;
+        cct_ast_node_list_t *args = obsecro_node->as.obsecro.arguments;
+        if (!args || args->count != 1) {
+            cg_report_nodef(cg, obsecro_node, "OBSECRO %s requires exactly one pointer argument in FASE 36A", name);
+            return false;
+        }
+        cct_codegen_value_kind_t k = CCT_CODEGEN_VALUE_UNKNOWN;
+        cg->uses_postgres = true;
+        cg_emit_indent(out, indent);
+        fprintf(out, "%s((void*)(", strcmp(name, "pg_builtin_close") == 0 ? "cct_rt_pg_db_close" : "cct_rt_pg_rows_close");
+        if (!cg_emit_expr(out, cg, args->nodes[0], &k)) return false;
+        if (k != CCT_CODEGEN_VALUE_POINTER) {
+            cg_report_nodef(cg, args->nodes[0], "OBSECRO %s requires pointer argument in FASE 36A", name);
+            return false;
+        }
+        fputs("));\n", out);
+        return true;
+    }
+
+    if (strcmp(obsecro_node->as.obsecro.name, "pg_builtin_exec") == 0) {
+        cct_ast_node_list_t *args = obsecro_node->as.obsecro.arguments;
+        if (!args || args->count != 2) {
+            cg_report_node(cg, obsecro_node, "OBSECRO pg_builtin_exec requires exactly (db, sql) in FASE 36A");
+            return false;
+        }
+        cct_codegen_value_kind_t k0 = CCT_CODEGEN_VALUE_UNKNOWN;
+        cct_codegen_value_kind_t k1 = CCT_CODEGEN_VALUE_UNKNOWN;
+        cg->uses_postgres = true;
+        cg_emit_indent(out, indent);
+        fputs("cct_rt_pg_db_exec((void*)(", out);
+        if (!cg_emit_expr(out, cg, args->nodes[0], &k0)) return false;
+        if (k0 != CCT_CODEGEN_VALUE_POINTER) {
+            cg_report_node(cg, args->nodes[0], "OBSECRO pg_builtin_exec requires db pointer in FASE 36A");
+            return false;
+        }
+        fputs("), ", out);
+        if (!cg_emit_expr(out, cg, args->nodes[1], &k1)) return false;
+        if (k1 != CCT_CODEGEN_VALUE_STRING) {
+            cg_report_node(cg, args->nodes[1], "OBSECRO pg_builtin_exec requires VERBUM sql in FASE 36A");
+            return false;
+        }
+        fputs(");\n", out);
+        return true;
+    }
+
     if (strcmp(obsecro_node->as.obsecro.name, "db_close") == 0) {
         cct_ast_node_list_t *args = obsecro_node->as.obsecro.arguments;
         if (!args || args->count != 1) {
@@ -10259,6 +10492,28 @@ static bool cg_precollect_strings_from_expr(cct_codegen_t *cg, const cct_ast_nod
                  strcmp(expr->as.obsecro.name, "db_scalar_text") == 0)) {
                 cg->uses_sqlite = true;
             }
+            if (expr->as.obsecro.name &&
+                strcmp(expr->as.obsecro.name, "mail_builtin_smtp_send") == 0) {
+                cg->uses_mail = true;
+                cg->uses_crypto = true;
+            }
+            if (expr->as.obsecro.name &&
+                (strcmp(expr->as.obsecro.name, "pg_builtin_open") == 0 ||
+                 strcmp(expr->as.obsecro.name, "pg_builtin_close") == 0 ||
+                 strcmp(expr->as.obsecro.name, "pg_builtin_is_open") == 0 ||
+                 strcmp(expr->as.obsecro.name, "pg_builtin_last_error") == 0 ||
+                 strcmp(expr->as.obsecro.name, "pg_builtin_exec") == 0 ||
+                 strcmp(expr->as.obsecro.name, "pg_builtin_query") == 0 ||
+                 strcmp(expr->as.obsecro.name, "pg_builtin_rows_count") == 0 ||
+                 strcmp(expr->as.obsecro.name, "pg_builtin_rows_columns") == 0 ||
+                 strcmp(expr->as.obsecro.name, "pg_builtin_rows_next") == 0 ||
+                 strcmp(expr->as.obsecro.name, "pg_builtin_rows_get_text") == 0 ||
+                 strcmp(expr->as.obsecro.name, "pg_builtin_rows_is_null") == 0 ||
+                 strcmp(expr->as.obsecro.name, "pg_builtin_rows_close") == 0 ||
+                 strcmp(expr->as.obsecro.name, "pg_builtin_poll_channel") == 0 ||
+                 strcmp(expr->as.obsecro.name, "pg_builtin_poll_payload") == 0)) {
+                cg->uses_postgres = true;
+            }
             if (expr->as.obsecro.arguments) {
                 for (size_t i = 0; i < expr->as.obsecro.arguments->count; i++) {
                     if (!cg_precollect_strings_from_expr(cg, expr->as.obsecro.arguments->nodes[i])) return false;
@@ -10831,10 +11086,16 @@ static void cg_host_link_flags(const cct_codegen_t *cg, char *buffer, size_t buf
         " $(pkg-config --libs openssl 2>/dev/null || printf '%s' '-lssl -lcrypto')";
     const char *compress_pkg_config =
         " $(pkg-config --libs zlib 2>/dev/null || printf '%s' '-lz')";
+#ifdef __APPLE__
+    const char *postgres_ldflags_default = "";
+#else
+    const char *postgres_ldflags_default = "-ldl";
+#endif
 #endif
     const char *sqlite_ldflags = (cg && cg->uses_sqlite) ? "-lsqlite3" : "";
     const char *crypto_ldflags = "";
     const char *compress_ldflags = "";
+    const char *postgres_ldflags = (cg && cg->uses_postgres) ? postgres_ldflags_default : "";
     if (cg && cg->uses_crypto) {
         crypto_ldflags = (crypto_env_ldflags && crypto_env_ldflags[0]) ? crypto_env_ldflags : crypto_pkg_config;
     }
@@ -10849,6 +11110,7 @@ static void cg_host_link_flags(const cct_codegen_t *cg, char *buffer, size_t buf
     if (sqlite_ldflags[0]) snprintf(buffer + strlen(buffer), buffer_size - strlen(buffer), " %s", sqlite_ldflags);
     if (crypto_ldflags[0]) snprintf(buffer + strlen(buffer), buffer_size - strlen(buffer), " %s", crypto_ldflags);
     if (compress_ldflags[0]) snprintf(buffer + strlen(buffer), buffer_size - strlen(buffer), " %s", compress_ldflags);
+    if (postgres_ldflags[0]) snprintf(buffer + strlen(buffer), buffer_size - strlen(buffer), " %s", postgres_ldflags);
     if (extra_ldflags && extra_ldflags[0]) snprintf(buffer + strlen(buffer), buffer_size - strlen(buffer), " %s", extra_ldflags);
 }
 
@@ -10955,6 +11217,8 @@ void cct_codegen_init(cct_codegen_t *cg, const char *filename) {
     cg->uses_filetype = false;
     cg->uses_image_ops = false;
     cg->uses_signal = false;
+    cg->uses_postgres = false;
+    cg->uses_mail = false;
 #ifdef _WIN32
     cg->host_cc = "gcc";
 #else

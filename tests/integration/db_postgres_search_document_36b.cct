@@ -1,0 +1,35 @@
+INCIPIT grimoire "db_postgres_search_document_36b"
+
+ADVOCARE "cct/db_postgres_search.cct"
+ADVOCARE "cct/fluxus.cct"
+ADVOCARE "cct/result.cct"
+ADVOCARE "cct/verbum.cct"
+
+RITUALE main() REDDE REX
+  EVOCA PgSearchConfig config AD CONIURA pg_search_config_simple()
+  EVOCA SPECULUM NIHIL fields AD CONIURA fluxus_init(MENSURA(PgSearchField))
+  EVOCA PgSearchField title AD CONIURA pg_search_field_weighted("posts.title", "A")
+  EVOCA PgSearchField body AD CONIURA pg_search_field("posts.body")
+  CONIURA fluxus_push(fields, SPECULUM title)
+  CONIURA fluxus_push(fields, SPECULUM body)
+
+  EVOCA SPECULUM NIHIL ok_res AD CONIURA pg_search_document(config, fields)
+  SI NON CONIURA result_is_ok GENUS(PgSearchDocument, VERBUM)(ok_res)
+    CONIURA fluxus_free(fields)
+    REDDE 1
+  FIN SI
+
+  EVOCA PgSearchDocument doc
+  VINCIRE doc.config AD config
+  VINCIRE doc.fields AD fields
+  EVOCA VERBUM sql AD CONIURA pg_search_document_sql(doc)
+  CONIURA fluxus_free(fields)
+
+  SI CONIURA compare(sql, "setweight(to_tsvector('simple', coalesce(posts.title, '')), 'A') || to_tsvector('simple', coalesce(posts.body, ''))") != 0
+    REDDE 2
+  FIN SI
+
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

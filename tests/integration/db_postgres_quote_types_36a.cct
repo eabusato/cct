@@ -1,0 +1,27 @@
+INCIPIT grimoire "db_postgres_quote_types_36a"
+
+ADVOCARE "cct/db_postgres.cct"
+ADVOCARE "cct/verbum.cct"
+
+RITUALE main() REDDE REX
+  SI CONIURA compare(CONIURA db_quote_literal("a'b"), "'a''b'") != 0
+    REDDE 1
+  FIN SI
+  SI CONIURA compare(CONIURA db_quote_ident("Mix\"ed"), "\"Mix\"\"ed\"") != 0
+    REDDE 2
+  FIN SI
+  SI CONIURA compare(CONIURA db_value_sql(CONIURA db_value_bool(FALSUM)), "FALSE") != 0
+    REDDE 3
+  FIN SI
+  SI CONIURA compare(CONIURA db_value_sql(CONIURA db_value_null()), "NULL") != 0
+    REDDE 4
+  FIN SI
+  EVOCA DbValue ts AD CONIURA db_value_text("2026-03-26T12:30:00Z")
+  VINCIRE ts.type AD DB_TYPE_TIMESTAMP
+  SI CONIURA compare(CONIURA db_value_sql(ts), "'2026-03-26T12:30:00Z'::timestamptz") != 0
+    REDDE 5
+  FIN SI
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

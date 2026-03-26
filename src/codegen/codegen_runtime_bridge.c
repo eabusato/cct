@@ -211,11 +211,21 @@ bool cct_cg_emit_generated_c_prelude(FILE *out, const cct_codegen_t *cg) {
         fputs("#include <openssl/evp.h>\n", out);
         fputs("#include <openssl/rand.h>\n\n", out);
     }
+    if (cg->uses_mail) {
+        fputs("#include <openssl/ssl.h>\n", out);
+        fputs("#include <openssl/err.h>\n\n", out);
+    }
     if (cg->uses_regex) {
         fputs("#include <regex.h>\n\n", out);
     }
     if (cg->uses_compress) {
         fputs("#include <zlib.h>\n\n", out);
+    }
+    if (cg->uses_postgres) {
+        fputs("#include <sys/select.h>\n", out);
+        fputs("#ifndef _WIN32\n", out);
+        fputs("#include <dlfcn.h>\n", out);
+        fputs("#endif\n\n", out);
     }
     fputs("#ifdef _WIN32\n", out);
     fputs("#include <direct.h>\n", out);
@@ -298,6 +308,8 @@ bool cct_cg_emit_generated_c_prelude(FILE *out, const cct_codegen_t *cg) {
     rt_cfg.emit_filetype_helpers = cg->uses_filetype;
     rt_cfg.emit_image_ops_helpers = cg->uses_image_ops;
     rt_cfg.emit_signal_helpers = cg->uses_signal;
+    rt_cfg.emit_postgres_helpers = cg->uses_postgres;
+    rt_cfg.emit_mail_helpers = cg->uses_mail;
     if (!cct_runtime_emit_c_helpers(out, &rt_cfg)) return false;
     return true;
 }

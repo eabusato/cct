@@ -1,0 +1,43 @@
+INCIPIT grimoire "mail_headers_parse_37c"
+
+ADVOCARE "cct/fluxus.cct"
+ADVOCARE "cct/mail_webhook.cct"
+ADVOCARE "cct/result.cct"
+ADVOCARE "cct/verbum.cct"
+
+RITUALE main() REDDE REX
+  EVOCA VERBUM crlf AD CONIURA concat(CONIURA from_char(13), CONIURA from_char(10))
+  EVOCA VERBUM raw AD "From: Remetente <a@b.com>"
+  VINCIRE raw AD CONIURA concat(raw, crlf)
+  VINCIRE raw AD CONIURA concat(raw, "To: dest@c.com")
+  VINCIRE raw AD CONIURA concat(raw, crlf)
+  VINCIRE raw AD CONIURA concat(raw, "Subject: Teste de Header")
+  VINCIRE raw AD CONIURA concat(raw, crlf)
+  VINCIRE raw AD CONIURA concat(raw, "X-Long: parte 1")
+  VINCIRE raw AD CONIURA concat(raw, crlf)
+  VINCIRE raw AD CONIURA concat(raw, " parte 2")
+  VINCIRE raw AD CONIURA concat(raw, crlf)
+  VINCIRE raw AD CONIURA concat(raw, "Message-ID: <mid123@cct.mail>")
+  VINCIRE raw AD CONIURA concat(raw, crlf)
+  VINCIRE raw AD CONIURA concat(raw, crlf)
+  EVOCA SPECULUM NIHIL parsed AD CONIURA mail_headers_parse(raw)
+  SI CONIURA result_is_err GENUS(MailParsedHeaderBatch, VERBUM)(parsed)
+    REDDE 1
+  FIN SI
+  EVOCA MailParsedHeaderBatch batch AD CONIURA result_unwrap GENUS(MailParsedHeaderBatch, VERBUM)(parsed)
+  SI CONIURA fluxus_len(batch.headers) != 5
+    REDDE 2
+  FIN SI
+  SI CONIURA compare(CONIURA mail_headers_get(batch.headers, "subject"), "Teste de Header") != 0
+    REDDE 3
+  FIN SI
+  SI CONIURA compare(CONIURA mail_headers_get(batch.headers, "message-id"), "<mid123@cct.mail>") != 0
+    REDDE 4
+  FIN SI
+  SI CONIURA compare(CONIURA mail_headers_get(batch.headers, "x-long"), "parte 1 parte 2") != 0
+    REDDE 5
+  FIN SI
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

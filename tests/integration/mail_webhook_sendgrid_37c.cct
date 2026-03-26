@@ -1,0 +1,32 @@
+INCIPIT grimoire "mail_webhook_sendgrid_37c"
+
+ADVOCARE "cct/fluxus.cct"
+ADVOCARE "cct/mail_webhook.cct"
+ADVOCARE "cct/result.cct"
+ADVOCARE "cct/verbum.cct"
+
+RITUALE main() REDDE REX
+  EVOCA VERBUM payload AD "[{\"event\":\"delivered\",\"smtp-id\":\"<sg123@sendgrid.net>\",\"email\":\"dest@example.com\",\"timestamp\":1700000010},{\"event\":\"open\",\"smtp-id\":\"<sg456@sendgrid.net>\",\"email\":\"dest2@example.com\",\"timestamp\":1700000020}]"
+  EVOCA SPECULUM NIHIL parsed AD CONIURA mail_webhook_parse("sendgrid", payload)
+  SI CONIURA result_is_err GENUS(MailWebhookEventBatch, VERBUM)(parsed)
+    REDDE 1
+  FIN SI
+  EVOCA MailWebhookEventBatch batch AD CONIURA result_unwrap GENUS(MailWebhookEventBatch, VERBUM)(parsed)
+  SI CONIURA fluxus_len(batch.events) != 2
+    REDDE 2
+  FIN SI
+  EVOCA SPECULUM MailWebhookEvent first_ptr AD CONIURA fluxus_get(batch.events, 0)
+  EVOCA SPECULUM MailWebhookEvent second_ptr AD CONIURA fluxus_get(batch.events, 1)
+  SI (*first_ptr).event_kind != MAIL_WEBHOOK_DELIVERED
+    REDDE 3
+  FIN SI
+  SI CONIURA compare((*first_ptr).message_id, "<sg123@sendgrid.net>") != 0
+    REDDE 4
+  FIN SI
+  SI (*second_ptr).event_kind != MAIL_WEBHOOK_OPENED
+    REDDE 5
+  FIN SI
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

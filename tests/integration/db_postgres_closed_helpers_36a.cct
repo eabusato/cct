@@ -1,0 +1,44 @@
+INCIPIT grimoire "db_postgres_closed_helpers_36a"
+
+ADVOCARE "cct/db_postgres.cct"
+ADVOCARE "cct/result.cct"
+
+RITUALE main() REDDE REX
+  EVOCA Db db
+  VINCIRE db.last_error AD "closed"
+  VINCIRE db.open AD FALSUM
+
+  EVOCA SPECULUM NIHIL begin_res AD CONIURA db_begin(db)
+  SI NON CONIURA result_is_err GENUS(REX, VERBUM)(begin_res)
+    REDDE 1
+  FIN SI
+
+  EVOCA SPECULUM NIHIL notify_res AD CONIURA db_notify(db, "jobs", "payload")
+  SI NON CONIURA result_is_err GENUS(REX, VERBUM)(notify_res)
+    REDDE 2
+  FIN SI
+
+  EVOCA SPECULUM NIHIL listen_res AD CONIURA db_listen(db, "jobs")
+  SI NON CONIURA result_is_err GENUS(REX, VERBUM)(listen_res)
+    REDDE 3
+  FIN SI
+
+  EVOCA Rows rows
+  VINCIRE rows.current_row AD -1
+  VINCIRE rows.row_count AD 0
+  VINCIRE rows.column_count AD 0
+  VINCIRE rows.open AD FALSUM
+  SI CONIURA rows_next(SPECULUM rows)
+    REDDE 4
+  FIN SI
+  SI CONIURA rows_get_int(rows, 0) != 0
+    REDDE 5
+  FIN SI
+  SI NON CONIURA rows_is_null(rows, 0)
+    REDDE 6
+  FIN SI
+
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

@@ -1,0 +1,28 @@
+INCIPIT grimoire "db_postgres_search_validation_36b"
+
+ADVOCARE "cct/db_postgres_search.cct"
+ADVOCARE "cct/fluxus.cct"
+ADVOCARE "cct/result.cct"
+
+RITUALE main() REDDE REX
+  EVOCA PgSearchConfig config AD CONIURA pg_search_config_simple()
+  EVOCA SPECULUM NIHIL empty_fields AD CONIURA fluxus_init(MENSURA(PgSearchField))
+  EVOCA SPECULUM NIHIL empty_res AD CONIURA pg_search_document(config, empty_fields)
+  CONIURA fluxus_free(empty_fields)
+  SI NON CONIURA result_is_err GENUS(PgSearchDocument, VERBUM)(empty_res)
+    REDDE 1
+  FIN SI
+
+  EVOCA SPECULUM NIHIL bad_fields AD CONIURA fluxus_init(MENSURA(PgSearchField))
+  EVOCA PgSearchField invalid AD CONIURA pg_search_field("")
+  CONIURA fluxus_push(bad_fields, SPECULUM invalid)
+  EVOCA SPECULUM NIHIL bad_res AD CONIURA pg_search_document(config, bad_fields)
+  CONIURA fluxus_free(bad_fields)
+  SI NON CONIURA result_is_err GENUS(PgSearchDocument, VERBUM)(bad_res)
+    REDDE 2
+  FIN SI
+
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

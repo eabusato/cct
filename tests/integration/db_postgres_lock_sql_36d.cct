@@ -1,0 +1,32 @@
+INCIPIT grimoire "db_postgres_lock_sql_36d"
+
+ADVOCARE "cct/db_postgres_lock.cct"
+ADVOCARE "cct/verbum.cct"
+
+RITUALE main() REDDE REX
+  EVOCA PgLockKey direct AD CONIURA pg_lock_key_i64(99)
+  SI CONIURA compare(CONIURA pg_lock_sql(direct), "SELECT pg_advisory_lock(99)") != 0
+    REDDE 1
+  FIN SI
+  SI CONIURA compare(CONIURA pg_try_lock_sql(direct), "SELECT pg_try_advisory_lock(99)") != 0
+    REDDE 2
+  FIN SI
+
+  EVOCA PgLockKey pair AD CONIURA pg_lock_key_pair(11, 22)
+  SI CONIURA compare(CONIURA pg_lock_sql(pair), "SELECT pg_advisory_lock(11, 22)") != 0
+    REDDE 3
+  FIN SI
+  SI CONIURA compare(CONIURA pg_unlock_sql(pair), "SELECT pg_advisory_unlock(11, 22)") != 0
+    REDDE 4
+  FIN SI
+  SI CONIURA compare(CONIURA pg_xact_lock_sql(pair), "SELECT pg_advisory_xact_lock(11, 22)") != 0
+    REDDE 5
+  FIN SI
+  SI CONIURA compare(CONIURA pg_try_xact_lock_sql(pair), "SELECT pg_try_advisory_xact_lock(11, 22)") != 0
+    REDDE 6
+  FIN SI
+
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

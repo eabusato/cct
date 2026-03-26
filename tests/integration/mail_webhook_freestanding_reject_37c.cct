@@ -1,0 +1,9 @@
+INCIPIT grimoire "mail_webhook_freestanding_reject_37c"
+
+ADVOCARE "cct/mail_webhook.cct"
+
+RITUALE main() REDDE REX
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

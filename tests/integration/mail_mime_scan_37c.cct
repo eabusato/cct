@@ -1,0 +1,57 @@
+INCIPIT grimoire "mail_mime_scan_37c"
+
+ADVOCARE "cct/fluxus.cct"
+ADVOCARE "cct/mail_webhook.cct"
+ADVOCARE "cct/result.cct"
+ADVOCARE "cct/verbum.cct"
+
+RITUALE main() REDDE REX
+  EVOCA VERBUM crlf AD CONIURA concat(CONIURA from_char(13), CONIURA from_char(10))
+  EVOCA VERBUM raw AD "MIME-Version: 1.0"
+  VINCIRE raw AD CONIURA concat(raw, crlf)
+  VINCIRE raw AD CONIURA concat(raw, "Content-Type: multipart/mixed; boundary=\"abc123\"")
+  VINCIRE raw AD CONIURA concat(raw, crlf)
+  VINCIRE raw AD CONIURA concat(raw, crlf)
+  VINCIRE raw AD CONIURA concat(raw, "--abc123")
+  VINCIRE raw AD CONIURA concat(raw, crlf)
+  VINCIRE raw AD CONIURA concat(raw, "Content-Type: text/plain; charset=UTF-8")
+  VINCIRE raw AD CONIURA concat(raw, crlf)
+  VINCIRE raw AD CONIURA concat(raw, crlf)
+  VINCIRE raw AD CONIURA concat(raw, "hello")
+  VINCIRE raw AD CONIURA concat(raw, crlf)
+  VINCIRE raw AD CONIURA concat(raw, "--abc123")
+  VINCIRE raw AD CONIURA concat(raw, crlf)
+  VINCIRE raw AD CONIURA concat(raw, "Content-Type: text/plain; name=\"note.txt\"")
+  VINCIRE raw AD CONIURA concat(raw, crlf)
+  VINCIRE raw AD CONIURA concat(raw, "Content-Disposition: attachment; filename=\"note.txt\"")
+  VINCIRE raw AD CONIURA concat(raw, crlf)
+  VINCIRE raw AD CONIURA concat(raw, "Content-ID: <cid-note>")
+  VINCIRE raw AD CONIURA concat(raw, crlf)
+  VINCIRE raw AD CONIURA concat(raw, crlf)
+  VINCIRE raw AD CONIURA concat(raw, "attachment body")
+  VINCIRE raw AD CONIURA concat(raw, crlf)
+  VINCIRE raw AD CONIURA concat(raw, "--abc123--")
+  VINCIRE raw AD CONIURA concat(raw, crlf)
+  EVOCA SPECULUM NIHIL scanned AD CONIURA mail_mime_scan(raw)
+  SI CONIURA result_is_err GENUS(MailMimePartBatch, VERBUM)(scanned)
+    REDDE 1
+  FIN SI
+  EVOCA MailMimePartBatch batch AD CONIURA result_unwrap GENUS(MailMimePartBatch, VERBUM)(scanned)
+  SI CONIURA fluxus_len(batch.parts) != 2
+    REDDE 2
+  FIN SI
+  EVOCA SPECULUM MailMimePartInfo first_ptr AD CONIURA fluxus_get(batch.parts, 0)
+  EVOCA SPECULUM MailMimePartInfo second_ptr AD CONIURA fluxus_get(batch.parts, 1)
+  SI CONIURA contains((*first_ptr).content_type, "text/plain") == FALSUM
+    REDDE 3
+  FIN SI
+  SI CONIURA compare((*second_ptr).filename, "note.txt") != 0
+    REDDE 4
+  FIN SI
+  SI CONIURA compare((*second_ptr).content_id, "<cid-note>") != 0
+    REDDE 5
+  FIN SI
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

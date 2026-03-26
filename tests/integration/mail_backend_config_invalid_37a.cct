@@ -1,0 +1,49 @@
+INCIPIT grimoire "mail_backend_config_invalid_37a"
+
+ADVOCARE "cct/config.cct"
+ADVOCARE "cct/option.cct"
+ADVOCARE "cct/parse.cct"
+ADVOCARE "cct/verbum.cct"
+
+RITUALE mail_auth_is_valid(VERBUM raw) REDDE VERUM
+  EVOCA VERBUM auth AD CONIURA to_lower(CONIURA trim(raw))
+  SI CONIURA compare(auth, "login") == 0
+    REDDE VERUM
+  FIN SI
+  SI CONIURA compare(auth, "plain") == 0
+    REDDE VERUM
+  FIN SI
+  SI CONIURA compare(auth, "none") == 0
+    REDDE VERUM
+  FIN SI
+  SI CONIURA compare(auth, "xoauth2") == 0
+    REDDE VERUM
+  FIN SI
+  REDDE FALSUM
+EXPLICIT RITUALE
+
+RITUALE main() REDDE REX
+  EVOCA VERBUM src AD "[mail]"
+  VINCIRE src AD CONIURA concat(src, "\nbackend=smtp")
+  VINCIRE src AD CONIURA concat(src, "\nhost=smtp.example.com")
+  VINCIRE src AD CONIURA concat(src, "\nport=abc")
+
+  EVOCA SPECULUM NIHIL cfg AD CONIURA config_parse_ini(src)
+  EVOCA SPECULUM NIHIL bad_port AD CONIURA try_int(CONIURA config_get_or(cfg, "mail", "port", ""))
+  SI CONIURA option_is_some GENUS(REX)(bad_port)
+    REDDE 1
+  FIN SI
+
+  VINCIRE src AD "[mail]"
+  VINCIRE src AD CONIURA concat(src, "\nbackend=smtp")
+  VINCIRE src AD CONIURA concat(src, "\nhost=smtp.example.com")
+  VINCIRE src AD CONIURA concat(src, "\nauth=oauth9")
+  VINCIRE cfg AD CONIURA config_parse_ini(src)
+  SI CONIURA mail_auth_is_valid(CONIURA config_get_or(cfg, "mail", "auth", "login"))
+    REDDE 2
+  FIN SI
+
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

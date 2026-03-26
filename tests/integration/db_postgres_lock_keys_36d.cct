@@ -1,0 +1,37 @@
+INCIPIT grimoire "db_postgres_lock_keys_36d"
+
+ADVOCARE "cct/db_postgres_lock.cct"
+ADVOCARE "cct/hash.cct"
+ADVOCARE "cct/verbum.cct"
+
+RITUALE main() REDDE REX
+  EVOCA PgLockKey direct AD CONIURA pg_lock_key_i64(77)
+  SI direct.has_pair VEL direct.key_lo != 77 VEL direct.key_hi != 0
+    REDDE 1
+  FIN SI
+
+  EVOCA PgLockKey pair AD CONIURA pg_lock_key_pair(11, 22)
+  SI NON pair.has_pair VEL pair.key_hi != 11 VEL pair.key_lo != 22
+    REDDE 2
+  FIN SI
+
+  EVOCA PgLockKey by_string AD CONIURA pg_lock_key_string("jobs:reindex")
+  SI by_string.has_pair VEL CONIURA compare(by_string.raw_name, "jobs:reindex") != 0
+    REDDE 3
+  FIN SI
+  SI by_string.key_lo != CONIURA fnv1a("jobs:reindex")
+    REDDE 4
+  FIN SI
+
+  EVOCA PgLockKey named AD CONIURA pg_lock_key_named("jobs", "video:77")
+  SI NON named.has_pair VEL CONIURA compare(named.raw_name, "jobs:video:77") != 0
+    REDDE 5
+  FIN SI
+  SI named.key_hi != CONIURA fnv1a("jobs") VEL named.key_lo != CONIURA fnv1a("video:77")
+    REDDE 6
+  FIN SI
+
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

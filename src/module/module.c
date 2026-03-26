@@ -370,6 +370,13 @@ static bool mod_is_freestanding_forbidden_import(const char *raw_import, char *o
         "cct/filetype",
         "cct/media_probe",
         "cct/image_ops",
+        "cct/db_postgres",
+        "cct/db_postgres_search",
+        "cct/redis",
+        "cct/db_postgres_lock",
+        "cct/mail",
+        "cct/mail_spool",
+        "cct/mail_webhook",
     };
 
     for (size_t i = 0; i < sizeof(forbidden) / sizeof(forbidden[0]); i++) {

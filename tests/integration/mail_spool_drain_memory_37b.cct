@@ -1,0 +1,58 @@
+INCIPIT grimoire "mail_spool_drain_memory_37b"
+
+ADVOCARE "cct/fmt.cct"
+ADVOCARE "cct/verbum.cct"
+ADVOCARE "cct/mail.cct"
+ADVOCARE "cct/mail_spool.cct"
+ADVOCARE "cct/result.cct"
+
+RITUALE build_message(REX index) REDDE MailMessage
+  EVOCA MailMessage message AD CONIURA mail_message_new()
+  CONIURA mail_message_set_from(SPECULUM message, CONIURA mail_address("sender@app.test", ""))
+  CONIURA mail_message_add_to(SPECULUM message, CONIURA mail_address("dest@app.test", ""))
+  CONIURA mail_message_set_subject(SPECULUM message, CONIURA concat("Drain ", CONIURA stringify_int(index)))
+  CONIURA mail_message_set_text(SPECULUM message, "Drain body")
+  REDDE message
+EXPLICIT RITUALE
+
+RITUALE main() REDDE REX
+  EVOCA VERBUM spool_dir AD "tests/.tmp/phase37b_drain_memory"
+
+  EVOCA MailSpoolOptions options AD CONIURA mail_spool_default_options()
+  VINCIRE options.root_dir AD spool_dir
+
+  EVOCA MailSpool spool AD CONIURA result_unwrap GENUS(MailSpool, VERBUM)(CONIURA mail_spool_open(options))
+  CONIURA mail_spool_enqueue(spool, CONIURA build_message(1))
+  CONIURA mail_spool_enqueue(spool, CONIURA build_message(2))
+  CONIURA mail_spool_enqueue(spool, CONIURA build_message(3))
+
+  EVOCA MailBackendOptions backend AD CONIURA mail_backend_memory()
+  EVOCA MailClient client AD CONIURA result_unwrap GENUS(MailClient, VERBUM)(CONIURA mail_client_open(backend))
+  EVOCA SPECULUM NIHIL drain_result AD CONIURA mail_spool_drain(spool, SPECULUM client, 2)
+  SI CONIURA result_is_err GENUS(MailSpoolDrainResult, VERBUM)(drain_result)
+    REDDE 1
+  FIN SI
+  EVOCA MailSpoolDrainResult drained AD CONIURA result_unwrap GENUS(MailSpoolDrainResult, VERBUM)(drain_result)
+  SI drained.scanned != 2 VEL drained.sent != 2
+    REDDE 2
+  FIN SI
+  SI CONIURA mail_memory_count(client) != 2
+    REDDE 3
+  FIN SI
+
+  EVOCA SPECULUM NIHIL rest_result AD CONIURA mail_spool_drain(spool, SPECULUM client, 10)
+  SI CONIURA result_is_err GENUS(MailSpoolDrainResult, VERBUM)(rest_result)
+    REDDE 4
+  FIN SI
+  EVOCA MailSpoolDrainResult rest AD CONIURA result_unwrap GENUS(MailSpoolDrainResult, VERBUM)(rest_result)
+  SI rest.scanned != 1 VEL rest.sent != 1
+    REDDE 5
+  FIN SI
+  SI CONIURA mail_memory_count(client) != 3
+    REDDE 6
+  FIN SI
+
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

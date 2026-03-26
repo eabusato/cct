@@ -1,0 +1,23 @@
+INCIPIT grimoire "mail_backend_env_file_37a"
+
+ADVOCARE "cct/env.cct"
+ADVOCARE "cct/mail.cct"
+ADVOCARE "cct/verbum.cct"
+
+RITUALE main() REDDE REX
+  EVOCA VERBUM backend AD CONIURA to_lower(CONIURA trim(CONIURA getenv("APP_MAIL_BACKEND")))
+  SI CONIURA compare(backend, "file") != 0
+    REDDE 1
+  FIN SI
+
+  EVOCA MailBackendOptions options AD CONIURA mail_backend_file(CONIURA getenv("APP_MAIL_FILE_OUT_DIR"))
+  SI options.kind != MAIL_BACKEND_FILE
+    REDDE 2
+  FIN SI
+  SI CONIURA compare(options.file_out_dir, "tests/.tmp/mail_env_file_out") != 0
+    REDDE 3
+  FIN SI
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

@@ -1,0 +1,28 @@
+INCIPIT grimoire "mail_message_id_domain_37a"
+
+ADVOCARE "cct/mail.cct"
+ADVOCARE "cct/verbum.cct"
+
+RITUALE main() REDDE REX
+  EVOCA MailMessage msg AD CONIURA mail_message_new()
+  CONIURA mail_message_set_from(SPECULUM msg, CONIURA mail_address("noreply@example.com", ""))
+  CONIURA mail_message_add_to(SPECULUM msg, CONIURA mail_address("dest@example.com", ""))
+  CONIURA mail_message_set_subject(SPECULUM msg, "Message ID domain")
+  CONIURA mail_message_set_text(SPECULUM msg, "body")
+
+  EVOCA VERBUM mid AD CONIURA mail_message_ensure_message_id(SPECULUM msg)
+  SI CONIURA contains(mid, "@example.com>") == FALSUM
+    REDDE 1
+  FIN SI
+
+  EVOCA VERBUM mime AD CONIURA mail_message_render_mime(msg)
+  EVOCA VERBUM expected AD "Message-ID: "
+  VINCIRE expected AD CONIURA concat(expected, mid)
+  SI CONIURA contains(mime, expected) == FALSUM
+    REDDE 2
+  FIN SI
+
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

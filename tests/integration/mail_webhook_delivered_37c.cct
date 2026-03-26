@@ -1,0 +1,31 @@
+INCIPIT grimoire "mail_webhook_delivered_37c"
+
+ADVOCARE "cct/fluxus.cct"
+ADVOCARE "cct/mail_webhook.cct"
+ADVOCARE "cct/result.cct"
+ADVOCARE "cct/verbum.cct"
+
+RITUALE main() REDDE REX
+  EVOCA VERBUM payload AD "{\"event\":\"delivered\",\"message_id\":\"<abc123@cct.mail>\",\"recipient\":\"user@example.com\",\"timestamp\":1700000000}"
+  EVOCA SPECULUM NIHIL parsed AD CONIURA mail_webhook_parse("generic", payload)
+  SI CONIURA result_is_err GENUS(MailWebhookEventBatch, VERBUM)(parsed)
+    REDDE 1
+  FIN SI
+  EVOCA MailWebhookEventBatch batch AD CONIURA result_unwrap GENUS(MailWebhookEventBatch, VERBUM)(parsed)
+  SI CONIURA fluxus_len(batch.events) != 1
+    REDDE 2
+  FIN SI
+  EVOCA SPECULUM MailWebhookEvent event_ptr AD CONIURA fluxus_get(batch.events, 0)
+  SI (*event_ptr).event_kind != MAIL_WEBHOOK_DELIVERED
+    REDDE 3
+  FIN SI
+  SI CONIURA compare((*event_ptr).message_id, "<abc123@cct.mail>") != 0
+    REDDE 4
+  FIN SI
+  SI CONIURA compare(CONIURA mail_webhook_event_kind_name((*event_ptr).event_kind), "delivered") != 0
+    REDDE 5
+  FIN SI
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

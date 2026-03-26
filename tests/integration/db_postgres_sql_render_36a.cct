@@ -1,0 +1,27 @@
+INCIPIT grimoire "db_postgres_sql_render_36a"
+
+ADVOCARE "cct/db_postgres.cct"
+ADVOCARE "cct/fluxus.cct"
+ADVOCARE "cct/verbum.cct"
+
+RITUALE main() REDDE REX
+  EVOCA SPECULUM NIHIL params AD CONIURA db_empty_params()
+  EVOCA DbValue v1 AD CONIURA db_value_int(7)
+  EVOCA DbValue v2 AD CONIURA db_value_text("O'Reilly")
+  EVOCA DbValue v3 AD CONIURA db_value_bool(VERUM)
+  EVOCA DbValue v4 AD CONIURA db_value_uuid("123e4567-e89b-12d3-a456-426614174000")
+  EVOCA DbValue v5 AD CONIURA db_value_json("{\"ok\":true}")
+  CONIURA fluxus_push(params, SPECULUM v1)
+  CONIURA fluxus_push(params, SPECULUM v2)
+  CONIURA fluxus_push(params, SPECULUM v3)
+  CONIURA fluxus_push(params, SPECULUM v4)
+  CONIURA fluxus_push(params, SPECULUM v5)
+  EVOCA VERBUM sql AD CONIURA db_render_sql("SELECT $1, $2, $3, $4, $5", params)
+  CONIURA fluxus_free(params)
+  SI CONIURA compare(sql, "SELECT 7, 'O''Reilly', TRUE, '123e4567-e89b-12d3-a456-426614174000'::uuid, '{\"ok\":true}'::jsonb") != 0
+    REDDE 1
+  FIN SI
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

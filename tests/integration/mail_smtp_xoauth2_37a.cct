@@ -1,0 +1,35 @@
+INCIPIT grimoire "mail_smtp_xoauth2_37a"
+
+ADVOCARE "cct/args.cct"
+ADVOCARE "cct/mail.cct"
+ADVOCARE "cct/parse.cct"
+ADVOCARE "cct/result.cct"
+
+RITUALE main() REDDE REX
+  SI CONIURA argc() < 2
+    REDDE 1
+  FIN SI
+
+  EVOCA REX port AD CONIURA parse_int(CONIURA arg(1))
+  EVOCA MailBackendOptions options AD CONIURA mail_backend_smtp("127.0.0.1", port, "oauth-user@app.test", "oauth-token", MAIL_AUTH_XOAUTH2, FALSUM)
+  EVOCA SPECULUM NIHIL opened AD CONIURA mail_client_open(options)
+  SI CONIURA result_is_err GENUS(MailClient, VERBUM)(opened)
+    REDDE 2
+  FIN SI
+
+  EVOCA MailClient client AD CONIURA result_unwrap GENUS(MailClient, VERBUM)(opened)
+  EVOCA MailMessage msg AD CONIURA mail_message_new()
+  CONIURA mail_message_set_from(SPECULUM msg, CONIURA mail_address("noreply@app.test", "App"))
+  CONIURA mail_message_add_to(SPECULUM msg, CONIURA mail_address("user@app.test", "User"))
+  CONIURA mail_message_set_subject(SPECULUM msg, "SMTP XOAUTH2")
+  CONIURA mail_message_set_text(SPECULUM msg, "smtp xoauth2 body")
+
+  EVOCA SPECULUM NIHIL sent AD CONIURA mail_send(SPECULUM client, msg)
+  SI CONIURA result_is_err GENUS(MailSendResult, VERBUM)(sent)
+    REDDE 3
+  FIN SI
+
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

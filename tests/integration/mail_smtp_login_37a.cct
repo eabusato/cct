@@ -1,0 +1,38 @@
+INCIPIT grimoire "mail_smtp_login_37a"
+
+ADVOCARE "cct/args.cct"
+ADVOCARE "cct/mail.cct"
+ADVOCARE "cct/parse.cct"
+ADVOCARE "cct/result.cct"
+
+RITUALE main() REDDE REX
+  SI CONIURA argc() < 2
+    REDDE 1
+  FIN SI
+
+  EVOCA REX port AD CONIURA parse_int(CONIURA arg(1))
+  EVOCA MailBackendOptions options AD CONIURA mail_backend_smtp("127.0.0.1", port, "mailer", "secret", MAIL_AUTH_LOGIN, FALSUM)
+  EVOCA SPECULUM NIHIL opened AD CONIURA mail_client_open(options)
+  SI CONIURA result_is_err GENUS(MailClient, VERBUM)(opened)
+    REDDE 2
+  FIN SI
+
+  EVOCA MailClient client AD CONIURA result_unwrap GENUS(MailClient, VERBUM)(opened)
+  EVOCA MailMessage msg AD CONIURA mail_message_new()
+  CONIURA mail_message_set_from(SPECULUM msg, CONIURA mail_address("noreply@app.test", "App"))
+  CONIURA mail_message_add_to(SPECULUM msg, CONIURA mail_address("user@app.test", "User"))
+  CONIURA mail_message_add_cc(SPECULUM msg, CONIURA mail_address("copy@app.test", "Copy"))
+  CONIURA mail_message_add_bcc(SPECULUM msg, CONIURA mail_address("hidden@app.test", "Hidden"))
+  CONIURA mail_message_set_subject(SPECULUM msg, "SMTP runtime")
+  CONIURA mail_message_set_text(SPECULUM msg, "smtp body")
+  CONIURA mail_message_add_header(SPECULUM msg, "X-CCT-Test", "phase37a")
+
+  EVOCA SPECULUM NIHIL sent AD CONIURA mail_send(SPECULUM client, msg)
+  SI CONIURA result_is_err GENUS(MailSendResult, VERBUM)(sent)
+    REDDE 3
+  FIN SI
+
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

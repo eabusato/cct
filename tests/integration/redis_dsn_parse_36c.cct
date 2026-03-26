@@ -1,0 +1,34 @@
+INCIPIT grimoire "redis_dsn_parse_36c"
+
+ADVOCARE "cct/redis.cct"
+ADVOCARE "cct/result.cct"
+ADVOCARE "cct/verbum.cct"
+
+RITUALE main() REDDE REX
+  EVOCA SPECULUM NIHIL parsed AD CONIURA redis_parse_dsn("redis://:secret@cache.local:6390/3")
+  SI NON CONIURA result_is_ok GENUS(RedisOptions, VERBUM)(parsed)
+    REDDE 1
+  FIN SI
+  EVOCA RedisOptions opts AD CONIURA result_unwrap GENUS(RedisOptions, VERBUM)(parsed)
+  SI CONIURA compare(opts.host, "cache.local") != 0
+    REDDE 2
+  FIN SI
+  SI opts.port != 6390
+    REDDE 3
+  FIN SI
+  SI CONIURA compare(opts.password, "secret") != 0
+    REDDE 4
+  FIN SI
+  SI opts.db_index != 3
+    REDDE 5
+  FIN SI
+
+  EVOCA SPECULUM NIHIL bad AD CONIURA redis_parse_dsn("http://cache.local")
+  SI NON CONIURA result_is_err GENUS(RedisOptions, VERBUM)(bad)
+    REDDE 6
+  FIN SI
+
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

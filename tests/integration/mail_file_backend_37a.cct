@@ -1,0 +1,28 @@
+INCIPIT grimoire "mail_file_backend_37a"
+
+ADVOCARE "cct/mail.cct"
+ADVOCARE "cct/result.cct"
+
+RITUALE main() REDDE REX
+  EVOCA MailBackendOptions options AD CONIURA mail_backend_file("tests/.tmp/phase37a_file_out")
+  EVOCA SPECULUM NIHIL opened AD CONIURA mail_client_open(options)
+  SI CONIURA result_is_err GENUS(MailClient, VERBUM)(opened)
+    REDDE 1
+  FIN SI
+
+  EVOCA MailClient client AD CONIURA result_unwrap GENUS(MailClient, VERBUM)(opened)
+  EVOCA MailMessage msg AD CONIURA mail_message_new()
+  CONIURA mail_message_set_from(SPECULUM msg, CONIURA mail_address("file@example.com", "File Sender"))
+  CONIURA mail_message_add_to(SPECULUM msg, CONIURA mail_address("dest@example.com", ""))
+  CONIURA mail_message_set_subject(SPECULUM msg, "File backend")
+  CONIURA mail_message_set_text(SPECULUM msg, "written to disk")
+
+  EVOCA SPECULUM NIHIL sent AD CONIURA mail_send(SPECULUM client, msg)
+  SI CONIURA result_is_err GENUS(MailSendResult, VERBUM)(sent)
+    REDDE 2
+  FIN SI
+
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

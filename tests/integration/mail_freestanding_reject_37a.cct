@@ -1,0 +1,13 @@
+INCIPIT grimoire "mail_freestanding_reject_37a"
+
+ADVOCARE "cct/mail.cct"
+
+RITUALE main() REDDE REX
+  EVOCA MailBackendOptions options AD CONIURA mail_backend_memory()
+  SI options.kind == MAIL_BACKEND_MEMORY
+    REDDE 0
+  FIN SI
+  REDDE 1
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

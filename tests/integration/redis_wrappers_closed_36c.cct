@@ -1,0 +1,77 @@
+INCIPIT grimoire "redis_wrappers_closed_36c"
+
+ADVOCARE "cct/redis.cct"
+ADVOCARE "cct/result.cct"
+ADVOCARE "cct/verbum.cct"
+
+RITUALE main() REDDE REX
+  EVOCA VERBUM crlf AD CONIURA redis_crlf()
+  EVOCA VERBUM members_raw AD "*2"
+  VINCIRE members_raw AD CONIURA concat(members_raw, crlf)
+  VINCIRE members_raw AD CONIURA concat(members_raw, "$1")
+  VINCIRE members_raw AD CONIURA concat(members_raw, crlf)
+  VINCIRE members_raw AD CONIURA concat(members_raw, "a")
+  VINCIRE members_raw AD CONIURA concat(members_raw, crlf)
+  VINCIRE members_raw AD CONIURA concat(members_raw, "$1")
+  VINCIRE members_raw AD CONIURA concat(members_raw, crlf)
+  VINCIRE members_raw AD CONIURA concat(members_raw, "b")
+  VINCIRE members_raw AD CONIURA concat(members_raw, crlf)
+
+  EVOCA RedisTextList texts AD CONIURA redis_text_list_empty()
+  EVOCA RedisValue members_value AD CONIURA redis_resp_parse(members_raw)
+  VINCIRE texts.encoded AD members_value.string_value
+  VINCIRE texts.count AD 2
+  SI CONIURA redis_text_list_len(texts) != 2
+    REDDE 1
+  FIN SI
+  SI CONIURA compare(CONIURA redis_text_list_get(texts, 1), "b") != 0
+    REDDE 2
+  FIN SI
+
+  EVOCA VERBUM pairs_raw AD "*4"
+  VINCIRE pairs_raw AD CONIURA concat(pairs_raw, crlf)
+  VINCIRE pairs_raw AD CONIURA concat(pairs_raw, "$2")
+  VINCIRE pairs_raw AD CONIURA concat(pairs_raw, crlf)
+  VINCIRE pairs_raw AD CONIURA concat(pairs_raw, "id")
+  VINCIRE pairs_raw AD CONIURA concat(pairs_raw, crlf)
+  VINCIRE pairs_raw AD CONIURA concat(pairs_raw, "$1")
+  VINCIRE pairs_raw AD CONIURA concat(pairs_raw, crlf)
+  VINCIRE pairs_raw AD CONIURA concat(pairs_raw, "7")
+  VINCIRE pairs_raw AD CONIURA concat(pairs_raw, crlf)
+  VINCIRE pairs_raw AD CONIURA concat(pairs_raw, "$4")
+  VINCIRE pairs_raw AD CONIURA concat(pairs_raw, crlf)
+  VINCIRE pairs_raw AD CONIURA concat(pairs_raw, "role")
+  VINCIRE pairs_raw AD CONIURA concat(pairs_raw, crlf)
+  VINCIRE pairs_raw AD CONIURA concat(pairs_raw, "$5")
+  VINCIRE pairs_raw AD CONIURA concat(pairs_raw, crlf)
+  VINCIRE pairs_raw AD CONIURA concat(pairs_raw, "admin")
+  VINCIRE pairs_raw AD CONIURA concat(pairs_raw, crlf)
+
+  EVOCA RedisPairList pairs AD CONIURA redis_pair_list_empty()
+  EVOCA RedisValue pairs_value AD CONIURA redis_resp_parse(pairs_raw)
+  VINCIRE pairs.encoded AD pairs_value.string_value
+  VINCIRE pairs.count AD 2
+  EVOCA RedisPair p1 AD CONIURA redis_pair_list_get(pairs, 1)
+  SI CONIURA compare(p1.key, "role") != 0 VEL CONIURA compare(p1.value, "admin") != 0
+    REDDE 3
+  FIN SI
+
+  EVOCA Redis redis
+  VINCIRE redis.last_error AD ""
+  VINCIRE redis.read_timeout_ms AD 1000
+  VINCIRE redis.open AD FALSUM
+
+  EVOCA SPECULUM NIHIL get_res AD CONIURA redis_get(redis, "x")
+  SI NON CONIURA result_is_err GENUS(RedisMaybeText, VERBUM)(get_res)
+    REDDE 4
+  FIN SI
+
+  EVOCA SPECULUM NIHIL poll_res AD CONIURA redis_poll_message(redis, 5)
+  SI NON CONIURA result_is_err GENUS(RedisMaybeMessage, VERBUM)(poll_res)
+    REDDE 5
+  FIN SI
+
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire
