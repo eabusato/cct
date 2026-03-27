@@ -21,6 +21,8 @@ CCT is a compiled, ritual-themed programming language with deterministic sigil g
 
 **Current status: FASE 40 completed** (security/cryptography, advanced text and parsing, logging and runtime diagnostics, Sigilo Vivo foundations, operational database, transactional mail, runtime instrumentation, trace visualization, and media bridges and packaging are now closed on the validated baseline).
 
+**Platform validation note:** the current implementation has not yet been validated on Linux. Development to date have been built on macOS. Previous release v0.19 includes Linux binaries.
+
 Implemented phases: **0 -> 40**, plus the interstitial **FASE 14T** closure.
 
 **Phase-reference convention:** phase labels found in file/module headers, local markers, or help text may refer to the phase in which that specific component was introduced or stabilized. They are historical markers and do not necessarily represent the current global project status shown above.
