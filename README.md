@@ -11,6 +11,12 @@ CCT is a compiled, ritual-themed programming language with deterministic sigil g
   <p><sub>Open the SVG in a browser and hover the circles and lines: sigilo components now reveal ritual names, statement kinds, call edges, and source context through native SVG tooltips.</sub></p>
 </div>
 
+<div align="center">
+  <img src="examples/sigilo_creator_platform_39/creator_release_pipeline_39_step.svg" alt="CCT Trace Visualization — Creator Platform Step Mode" width="700"/>
+  <p><em>Step-by-step execution trace from the creator-platform example — open in a browser and drag the scrubber</em></p>
+  <p><sub>FASE 39: live trace correlation overlaid on the route sigil. Each span is color-coded by operational category (SQL, cache, storage, transcode, mail, auth…). Drag the knob at the bottom to advance one span at a time — nodes light up as active, completed spans dim, timeline lanes update in sync.</sub></p>
+</div>
+
 ## Status
 
 **Current status: FASE 39 completed** (security/cryptography, advanced text and parsing, logging and runtime diagnostics, Sigilo Vivo foundations, operational database, transactional mail, runtime instrumentation, and trace visualization are now closed on the validated baseline).
