@@ -11425,6 +11425,177 @@ else
 fi
 fi
 
+if cct_phase_block_enabled "39A"; then
+echo ""
+echo "========================================"
+echo "FASE 39A: sigilo trace render"
+echo "========================================"
+cct_phase31_prepare >/dev/null 2>&1
+mkdir -p "$CCT_TMP_DIR/phase39a"
+
+TRACE39A_SIGIL_BASE="$CCT_TMP_DIR/phase39a/routes_fixture"
+TRACE39A_SIGIL="${TRACE39A_SIGIL_BASE}.sigil"
+TRACE39A_SIGIL_READY=1
+if [ "$RC_31_READY" -eq 0 ] && "$PHASE31_HOST_WRAPPER" --sigilo-only --sigilo-out "$TRACE39A_SIGIL_BASE" "tests/integration/sigilo_routes_basic_35a.cct" >"$PHASE31_LOG_DIR/test_1990_sigilo.stdout.log" 2>"$PHASE31_LOG_DIR/test_1990_sigilo.stderr.log"; then
+    TRACE39A_SIGIL_READY=0
+fi
+
+echo "Test 1991: sigilo trace render estatico gera svg com timeline"
+SVG_1991="$CCT_TMP_DIR/phase39a/test_1991_static.svg"
+if [ "$TRACE39A_SIGIL_READY" -eq 0 ] && "$PHASE31_HOST_WRAPPER" sigilo trace render --static --trace "tests/integration/sigilo_trace_nested_39a.ctrace" --sigil "$TRACE39A_SIGIL" --out "$SVG_1991" >"$PHASE31_LOG_DIR/test_1991.stdout.log" 2>"$PHASE31_LOG_DIR/test_1991.stderr.log" && \
+   rg -q 'trace-39a-nested' "$SVG_1991" && \
+   rg -q 'id="span-r1"' "$SVG_1991" && \
+   rg -q 'id="timeline"' "$SVG_1991" && \
+   rg -q 'class="timeline-entry"' "$SVG_1991" && \
+   rg -q 'class="timeline-row"' "$SVG_1991" && \
+   rg -q 'request.users \(28ms\)' "$SVG_1991" && \
+   ! rg -q '\bnan\b|\binf\b' "$SVG_1991"; then
+    test_pass "sigilo trace render estatico gera svg com timeline"
+else
+    test_fail "sigilo trace render estatico nao gerou svg com timeline"
+fi
+
+echo "Test 1992: sigilo trace render preserva profundidade e foco de rota"
+SVG_1992="$CCT_TMP_DIR/phase39a/test_1992_focus.svg"
+if [ "$TRACE39A_SIGIL_READY" -eq 0 ] && "$PHASE31_HOST_WRAPPER" sigilo trace render --static --trace "tests/integration/sigilo_trace_nested_39a.ctrace" --sigil "$TRACE39A_SIGIL" --focus-route api.users.list --out "$SVG_1992" >"$PHASE31_LOG_DIR/test_1992.stdout.log" 2>"$PHASE31_LOG_DIR/test_1992.stderr.log" && \
+   rg -q 'data-depth="2"' "$SVG_1992" && \
+   rg -q 'data-module="tests/integration/sigilo_routes_basic_35a.cct"' "$SVG_1992" && \
+   rg -q 'data-route-id="api.users.list"' "$SVG_1992" && \
+   rg -q 'focus-ring' "$SVG_1992" && \
+   rg -q 'route api.users.list → GET /api/users' "$SVG_1992"; then
+    test_pass "sigilo trace render preserva profundidade e foco de rota"
+else
+    test_fail "sigilo trace render nao preservou profundidade e foco de rota"
+fi
+
+echo "Test 1993: sigilo trace render animado emite delays e keyframes"
+SVG_1993="$CCT_TMP_DIR/phase39a/test_1993_animated.svg"
+if [ "$TRACE39A_SIGIL_READY" -eq 0 ] && "$PHASE31_HOST_WRAPPER" sigilo trace render --animated --trace "tests/integration/sigilo_trace_nested_39a.ctrace" --sigil "$TRACE39A_SIGIL" --out "$SVG_1993" >"$PHASE31_LOG_DIR/test_1993.stdout.log" 2>"$PHASE31_LOG_DIR/test_1993.stderr.log" && \
+   rg -q 'animateMotion' "$SVG_1993" && \
+   rg -q 'attributeName="stroke-dashoffset"' "$SVG_1993" && \
+   rg -q 'attributeName="opacity"' "$SVG_1993" && \
+   rg -q 'animate attributeName="width"' "$SVG_1993"; then
+    test_pass "sigilo trace render animado emite delays e keyframes"
+else
+    test_fail "sigilo trace render animado nao emitiu delays e keyframes"
+fi
+
+echo "Test 1994: sigilo trace render step destaca spans pendentes"
+SVG_1994="$CCT_TMP_DIR/phase39a/test_1994_step.svg"
+if [ "$TRACE39A_SIGIL_READY" -eq 0 ] && "$PHASE31_HOST_WRAPPER" sigilo trace render --step 1 --trace "tests/integration/sigilo_trace_nested_39a.ctrace" --sigil "$TRACE39A_SIGIL" --out "$SVG_1994" >"$PHASE31_LOG_DIR/test_1994.stdout.log" 2>"$PHASE31_LOG_DIR/test_1994.stderr.log" && \
+   rg -q 'id="step-scrubber"' "$SVG_1994" && \
+   rg -q 'data-step-role="node"' "$SVG_1994" && \
+   rg -q 'drag or click the rail' "$SVG_1994" && \
+   rg -q 'span-node-pending' "$SVG_1994" && \
+   rg -q 'timeline-bar-pending' "$SVG_1994"; then
+    test_pass "sigilo trace render step destaca spans pendentes"
+else
+    test_fail "sigilo trace render step nao destacou spans pendentes"
+fi
+
+echo "Test 1995: sigilo trace compare gera diff lado a lado"
+SVG_1995="$CCT_TMP_DIR/phase39a/test_1995_compare.svg"
+if [ "$TRACE39A_SIGIL_READY" -eq 0 ] && "$PHASE31_HOST_WRAPPER" sigilo trace compare "tests/integration/sigilo_trace_compare_before_39a.ctrace" "tests/integration/sigilo_trace_compare_after_39a.ctrace" --sigil "$TRACE39A_SIGIL" --out "$SVG_1995" >"$PHASE31_LOG_DIR/test_1995.stdout.log" 2>"$PHASE31_LOG_DIR/test_1995.stderr.log" && \
+   rg -q 'trace-39a-before' "$SVG_1995" && \
+   rg -q 'trace-39a-after' "$SVG_1995" && \
+   rg -q 'compare delta=-18ms' "$SVG_1995" && \
+   rg -q 'compare-divider' "$SVG_1995"; then
+    test_pass "sigilo trace compare gera diff lado a lado"
+else
+    test_fail "sigilo trace compare nao gerou diff lado a lado"
+fi
+
+echo "Test 1996: sigilo trace render mantem fallback sem timeline"
+SVG_1996="$CCT_TMP_DIR/phase39a/test_1996_unmapped.svg"
+if [ "$RC_31_READY" -eq 0 ] && "$PHASE31_HOST_WRAPPER" sigilo trace render --static --hide-timeline --trace "tests/integration/sigilo_trace_unmapped_39a.ctrace" --out "$SVG_1996" >"$PHASE31_LOG_DIR/test_1996.stdout.log" 2>"$PHASE31_LOG_DIR/test_1996.stderr.log" && \
+   rg -q 'trace-39a-unmapped' "$SVG_1996" && \
+   rg -q 'data-category="generic"' "$SVG_1996" && \
+   ! rg -q 'id="timeline"' "$SVG_1996"; then
+    test_pass "sigilo trace render mantem fallback sem timeline"
+else
+    test_fail "sigilo trace render nao manteve fallback sem timeline"
+fi
+fi
+
+if cct_phase_block_enabled "39B"; then
+echo ""
+echo "========================================"
+echo "FASE 39B: sigilo trace overlays"
+echo "========================================"
+cct_phase31_prepare >/dev/null 2>&1
+mkdir -p "$CCT_TMP_DIR/phase39b"
+
+echo "Test 1997: sigilo trace filtra categoria explicita por overlay"
+SVG_1997="$CCT_TMP_DIR/phase39b/test_1997_filter_email.svg"
+if [ "$RC_31_READY" -eq 0 ] && "$PHASE31_HOST_WRAPPER" sigilo trace render --static --filter-kind email --trace "tests/integration/sigilo_trace_overlay_explicit_39b.ctrace" --out "$SVG_1997" >"$PHASE31_LOG_DIR/test_1997.stdout.log" 2>"$PHASE31_LOG_DIR/test_1997.stderr.log" && \
+   rg -q 'cat-email' "$SVG_1997" && \
+   rg -q 'data-category="email"' "$SVG_1997" && \
+   ! rg -q 'data-category="sql"' "$SVG_1997"; then
+    test_pass "sigilo trace filtra categoria explicita por overlay"
+else
+    test_fail "sigilo trace nao filtrou categoria explicita por overlay"
+fi
+
+echo "Test 1998: sigilo trace resolve heuristicas operacionais"
+SVG_1998="$CCT_TMP_DIR/phase39b/test_1998_heuristic.svg"
+if [ "$RC_31_READY" -eq 0 ] && "$PHASE31_HOST_WRAPPER" sigilo trace render --static --trace "tests/integration/sigilo_trace_overlay_heuristic_39b.ctrace" --out "$SVG_1998" >"$PHASE31_LOG_DIR/test_1998.stdout.log" 2>"$PHASE31_LOG_DIR/test_1998.stderr.log" && \
+   rg -q 'id="span-h1".*data-category="sql"' "$SVG_1998" && \
+   rg -q 'id="span-h2".*data-category="cache".*data-subcategory="miss"' "$SVG_1998" && \
+   rg -q 'id="span-h3".*data-category="task"' "$SVG_1998" && \
+   rg -q 'id="span-h4".*data-category="generic"' "$SVG_1998"; then
+    test_pass "sigilo trace resolve heuristicas operacionais"
+else
+    test_fail "sigilo trace nao resolveu heuristicas operacionais"
+fi
+
+echo "Test 1999: sigilo trace emite classes svg e legenda por categoria"
+SVG_1999="$CCT_TMP_DIR/phase39b/test_1999_svg_classes.svg"
+if [ "$RC_31_READY" -eq 0 ] && "$PHASE31_HOST_WRAPPER" sigilo trace render --static --trace "tests/integration/sigilo_trace_overlay_explicit_39b.ctrace" --out "$SVG_1999" >"$PHASE31_LOG_DIR/test_1999.stdout.log" 2>"$PHASE31_LOG_DIR/test_1999.stderr.log" && \
+   rg -q 'cat-sql' "$SVG_1999" && \
+   rg -q 'cat-cache' "$SVG_1999" && \
+   rg -q 'cat-storage' "$SVG_1999" && \
+   rg -q 'cat-task' "$SVG_1999" && \
+   rg -q 'id="legend"' "$SVG_1999"; then
+    test_pass "sigilo trace emite classes svg e legenda por categoria"
+else
+    test_fail "sigilo trace nao emitiu classes svg e legenda por categoria"
+fi
+
+echo "Test 2000: sigilo trace marca sql lento sem contaminar rapido"
+SVG_2000="$CCT_TMP_DIR/phase39b/test_2000_slow.svg"
+if [ "$RC_31_READY" -eq 0 ] && "$PHASE31_HOST_WRAPPER" sigilo trace render --static --trace "tests/integration/sigilo_trace_overlay_slow_39b.ctrace" --out "$SVG_2000" >"$PHASE31_LOG_DIR/test_2000.stdout.log" 2>"$PHASE31_LOG_DIR/test_2000.stderr.log" && \
+   rg -q 'id="span-s1".*cat-sql slow.*data-slow="1"' "$SVG_2000" && \
+   rg -q 'id="span-s2".*cat-sql' "$SVG_2000" && \
+   ! rg -q 'id="span-s2".*data-slow="1"' "$SVG_2000"; then
+    test_pass "sigilo trace marca sql lento sem contaminar rapido"
+else
+    test_fail "sigilo trace nao marcou sql lento sem contaminar rapido"
+fi
+
+echo "Test 2001: sigilo trace marca span de erro e legenda error"
+SVG_2001="$CCT_TMP_DIR/phase39b/test_2001_error.svg"
+if [ "$RC_31_READY" -eq 0 ] && "$PHASE31_HOST_WRAPPER" sigilo trace render --static --trace "tests/integration/sigilo_trace_overlay_error_39b.ctrace" --out "$SVG_2001" >"$PHASE31_LOG_DIR/test_2001.stdout.log" 2>"$PHASE31_LOG_DIR/test_2001.stderr.log" && \
+   rg -q 'id="span-x1".*cat-sql.*error.*data-error="1"' "$SVG_2001" && \
+   rg -q '>Error<' "$SVG_2001"; then
+    test_pass "sigilo trace marca span de erro e legenda error"
+else
+    test_fail "sigilo trace nao marcou span de erro e legenda error"
+fi
+
+echo "Test 2002: sigilo trace preserva legenda coerente"
+SVG_2002="$CCT_TMP_DIR/phase39b/test_2002_legend.svg"
+if [ "$RC_31_READY" -eq 0 ] && "$PHASE31_HOST_WRAPPER" sigilo trace render --static --trace "tests/integration/sigilo_trace_overlay_legend_39b.ctrace" --out "$SVG_2002" >"$PHASE31_LOG_DIR/test_2002.stdout.log" 2>"$PHASE31_LOG_DIR/test_2002.stderr.log" && \
+   rg -q '>SQL<' "$SVG_2002" && \
+   rg -q '>Cache<' "$SVG_2002" && \
+   ! rg -q '>Storage<' "$SVG_2002" && \
+   ! rg -q '>Task<' "$SVG_2002" && \
+   ! rg -q '>Email<' "$SVG_2002"; then
+    test_pass "sigilo trace preserva legenda coerente"
+else
+    test_fail "sigilo trace nao preservou legenda coerente"
+fi
+fi
+
 echo "Test Results:"
 echo -e "  ${GREEN}Passed:${NC} $TESTS_PASSED" >&3
 echo -e "  ${RED}Failed:${NC} $TESTS_FAILED" >&3

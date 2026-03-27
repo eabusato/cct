@@ -1,0 +1,4 @@
+{"trace_id":"trace-39b-heuristic","span_id":"h1","parent_id":"","name":"select:users","start_time_ms":6000,"end_time_ms":6012,"duration_ms":12,"attributes":{}}
+{"trace_id":"trace-39b-heuristic","span_id":"h2","parent_id":"h1","name":"get:user:42","start_time_ms":6001,"end_time_ms":6003,"duration_ms":2,"attributes":{"cache.result":"miss"}}
+{"trace_id":"trace-39b-heuristic","span_id":"h3","parent_id":"h1","name":"task:send_digest","start_time_ms":6004,"end_time_ms":6010,"duration_ms":6,"attributes":{}}
+{"trace_id":"trace-39b-heuristic","span_id":"h4","parent_id":"h1","name":"unknown_operation","start_time_ms":6005,"end_time_ms":6006,"duration_ms":1,"attributes":{}}

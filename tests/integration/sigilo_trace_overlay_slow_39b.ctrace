@@ -1,0 +1,2 @@
+{"trace_id":"trace-39b-slow","span_id":"s1","parent_id":"","name":"select:users","start_time_ms":7000,"end_time_ms":7250,"duration_ms":250,"attributes":{"category":"sql"}}
+{"trace_id":"trace-39b-slow","span_id":"s2","parent_id":"s1","name":"select:users_fast","start_time_ms":7005,"end_time_ms":7055,"duration_ms":50,"attributes":{"category":"sql"}}

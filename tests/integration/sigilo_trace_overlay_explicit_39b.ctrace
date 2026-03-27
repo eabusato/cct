@@ -1,0 +1,5 @@
+{"trace_id":"trace-39b-explicit","span_id":"e1","parent_id":"","name":"sql.root","start_time_ms":5000,"end_time_ms":5080,"duration_ms":80,"attributes":{"category":"sql","query":"users.select"}}
+{"trace_id":"trace-39b-explicit","span_id":"e2","parent_id":"e1","name":"cache.child","start_time_ms":5005,"end_time_ms":5025,"duration_ms":20,"attributes":{"category":"cache","cache.result":"hit"}}
+{"trace_id":"trace-39b-explicit","span_id":"e3","parent_id":"e1","name":"storage.child","start_time_ms":5030,"end_time_ms":5060,"duration_ms":30,"attributes":{"category":"storage"}}
+{"trace_id":"trace-39b-explicit","span_id":"e4","parent_id":"e1","name":"task.child","start_time_ms":5061,"end_time_ms":5072,"duration_ms":11,"attributes":{"category":"task"}}
+{"trace_id":"trace-39b-explicit","span_id":"e5","parent_id":"e1","name":"email.child","start_time_ms":5073,"end_time_ms":5078,"duration_ms":5,"attributes":{"category":"email"}}

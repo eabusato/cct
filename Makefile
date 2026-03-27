@@ -131,6 +131,8 @@ SRCS = \
 	$(SRC_DIR)/sigilo/sigil_parse.c \
 	$(SRC_DIR)/sigilo/sigil_validate.c \
 	$(SRC_DIR)/sigilo/sigil_diff.c \
+	$(SRC_DIR)/sigilo/trace_render.c \
+	$(SRC_DIR)/sigilo/trace_overlay.c \
 	$(SRC_DIR)/formatter/formatter.c \
 	$(SRC_DIR)/lint/lint.c \
 	$(SRC_DIR)/project/project.c \
@@ -164,6 +166,8 @@ DEPS = \
 	$(SRC_DIR)/sigilo/sigil_parse.h \
 	$(SRC_DIR)/sigilo/sigil_validate.h \
 	$(SRC_DIR)/sigilo/sigil_diff.h \
+	$(SRC_DIR)/sigilo/trace_render.h \
+	$(SRC_DIR)/sigilo/trace_overlay.h \
 	$(SRC_DIR)/formatter/formatter.h \
 	$(SRC_DIR)/lint/lint.h \
 	$(SRC_DIR)/project/project.h \
