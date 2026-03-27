@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512" role="img" aria-label="CCT local sigilo">
+  <desc>Deterministic semantic sigil for a single CCT module.</desc>
+  <defs>
+    <style><![CDATA[
+      .bg { fill: #f5f0e4; }
+      .base { stroke: #2a221c; stroke-width: 1.60; fill: none; opacity: 0.78; }
+      .primary { stroke: #241913; stroke-width: 2.80; fill: none; stroke-linecap: round; stroke-linejoin: round; }
+      .call { stroke: #5b2a22; stroke-width: 2.0; fill: none; stroke-linecap: round; opacity: 0.9; }
+      .branch { stroke: #6b342d; stroke-width: 1.6; fill: none; stroke-linecap: round; }
+      .loop { stroke: #2d5f5a; stroke-width: 1.6; fill: none; stroke-linecap: round; }
+      .bind { stroke: #73493d; stroke-width: 1.4; fill: none; stroke-linecap: round; }
+      .term { stroke: #201814; stroke-width: 1.7; fill: none; stroke-linecap: round; }
+      .node-main { fill: #fffaf1; stroke: #201814; stroke-width: 2.0; }
+      .node-entry { fill: #efe6d4; stroke: #201814; stroke-width: 2.4; }
+      .node-aux { fill: #f6efe0; stroke: #4f4339; stroke-width: 1.3; }
+      .node-loop { fill: #edf3f1; stroke: #2d5f5a; stroke-width: 1.4; }
+      .node-term { fill: #f3e7e3; stroke: #5a2a23; stroke-width: 1.4; }
+      .orn { stroke: #355d58; stroke-width: 1.0; fill: none; opacity: 0.55; }
+      .hash { fill: #1f1a17; font: 10px monospace; letter-spacing: 0.8px; }
+      .label { fill: #1f1a17; font: 8px monospace; opacity: 0.7; }
+      .node-wrap, .edge-wrap { cursor: help; }
+      .node-wrap:hover > circle { opacity: 0.96; }
+      .edge-wrap:hover > path, .edge-wrap:hover > line { opacity: 1.0; }
+    ]]></style>
+  </defs>
+  <rect class="bg" x="0" y="0" width="512" height="512"/>
+  <g id="foundation">
+    <circle class="base" cx="256" cy="256" r="226"/>
+  </g>
+  <g id="primary_path">
+  </g>
+  <g id="call_links">
+  </g>
+  <g id="branches">
+  </g>
+  <g id="loops">
+  </g>
+  <g id="bindings">
+  </g>
+  <g id="terminals">
+    <g class="edge-wrap">
+    <path class="term" d="M 243.28 377.01 Q 246.06 348.61 241.18 320.48" stroke-width="1.65" opacity="0.90"/>
+      <title>edge: return
+main -&gt; main
+weight: 2
+
+path:
+main -&gt; main</title>
+    </g>
+  </g>
+  <g id="nodes">
+    <g class="node-wrap">
+      <circle class="node-entry" cx="243.28" cy="377.01" r="7.95" data-kind="rituale" data-ritual="main" data-line="5" data-col="1" data-depth="2" data-stmt="RITUALE" data-loops="0" data-calls="1" data-entry="true"/>
+      <title>RITUALE main
+stmt: 1
+depth: 2
+loops: 0
+calls: 1
+source:
+RITUALE main() REDDE REX</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="241.18" cy="320.48" r="3.60" data-kind="term" data-ritual="main" data-line="6" data-col="3" data-depth="2" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: main
+depth: 2
+line: 6
+
+source:
+REDDE CONIURA mod_valor()</title>
+    </g>
+  </g>
+  <g id="ornaments">
+    <circle class="orn" cx="453.59" cy="298.29" r="0.90"/>
+    <circle class="orn" cx="245.34" cy="456.65" r="1.90"/>
+    <circle class="orn" cx="52.94" cy="213.54" r="2.90"/>
+    <circle class="orn" cx="286.86" cy="46.63" r="0.90"/>
+  </g>
+  <g id="signature">
+    <text class="hash" x="256" y="496" text-anchor="middle">5b4cb1776b341eef</text>
+    <text class="label" x="256" y="18" text-anchor="middle">network • sigillum v2.1 • 1 rituale(s) • 1 stmt • depth 2</text>
+  </g>
+</svg>

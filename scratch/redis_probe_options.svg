@@ -1,0 +1,234 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512" role="img" aria-label="CCT local sigilo">
+  <desc>Deterministic semantic sigil for a single CCT module.</desc>
+  <defs>
+    <style><![CDATA[
+      .bg { fill: #f5f0e4; }
+      .base { stroke: #2a221c; stroke-width: 1.60; fill: none; opacity: 0.78; }
+      .primary { stroke: #241913; stroke-width: 2.80; fill: none; stroke-linecap: round; stroke-linejoin: round; }
+      .call { stroke: #5b2a22; stroke-width: 2.0; fill: none; stroke-linecap: round; opacity: 0.9; }
+      .branch { stroke: #6b342d; stroke-width: 1.6; fill: none; stroke-linecap: round; }
+      .loop { stroke: #2d5f5a; stroke-width: 1.6; fill: none; stroke-linecap: round; }
+      .bind { stroke: #73493d; stroke-width: 1.4; fill: none; stroke-linecap: round; }
+      .term { stroke: #201814; stroke-width: 1.7; fill: none; stroke-linecap: round; }
+      .node-main { fill: #fffaf1; stroke: #201814; stroke-width: 2.0; }
+      .node-entry { fill: #efe6d4; stroke: #201814; stroke-width: 2.4; }
+      .node-aux { fill: #f6efe0; stroke: #4f4339; stroke-width: 1.3; }
+      .node-loop { fill: #edf3f1; stroke: #2d5f5a; stroke-width: 1.4; }
+      .node-term { fill: #f3e7e3; stroke: #5a2a23; stroke-width: 1.4; }
+      .orn { stroke: #355d58; stroke-width: 1.0; fill: none; opacity: 0.55; }
+      .hash { fill: #1f1a17; font: 10px monospace; letter-spacing: 0.8px; }
+      .label { fill: #1f1a17; font: 8px monospace; opacity: 0.7; }
+      .node-wrap, .edge-wrap { cursor: help; }
+      .node-wrap:hover > circle { opacity: 0.96; }
+      .edge-wrap:hover > path, .edge-wrap:hover > line { opacity: 1.0; }
+    ]]></style>
+  </defs>
+  <rect class="bg" x="0" y="0" width="512" height="512"/>
+  <g id="foundation">
+    <circle class="base" cx="256" cy="256" r="226"/>
+  </g>
+  <g id="primary_path">
+    <g class="edge-wrap">
+    <path class="primary" d="M 422.94 235.33 Q 257.47 238.33 96.67 277.51" stroke-width="3.20" opacity="0.96"/>
+      <title>edge: primary
+main -&gt; redis_parse_dsn
+weight: 1
+
+path:
+main -&gt; redis_parse_dsn</title>
+    </g>
+  </g>
+  <g id="call_links">
+    <g class="edge-wrap">
+    <path class="call" d="M 422.94 235.33 Q 255.80 225.44 96.67 277.51" stroke-width="2.15" opacity="0.74" data-kind="call" data-from="main" data-to="redis_parse_dsn" data-weight="1" data-self-loop="false"/>
+      <title>edge: call
+main -&gt; redis_parse_dsn
+calls: 1
+
+path:
+main -&gt; redis_parse_dsn</title>
+    </g>
+  </g>
+  <g id="branches">
+    <g class="edge-wrap">
+    <path class="branch" d="M 422.94 235.33 Q 407.99 215.66 383.28 216.06" stroke-width="1.95" opacity="0.85"/>
+      <title>edge: branch
+main -&gt; main
+weight: 3
+
+path:
+main -&gt; main</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="branch" d="M 244.45 244.85 Q 168.35 251.18 96.67 277.51" stroke-width="1.70" opacity="0.85"/>
+      <title>edge: branch
+main -&gt; redis_parse_dsn
+weight: 2
+
+path:
+main -&gt; redis_parse_dsn</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="branch" d="M 244.45 244.85 Q 334.29 251.24 422.94 235.33" stroke-width="2.10" opacity="0.85"/>
+      <title>edge: branch
+main -&gt; main
+weight: 8
+
+path:
+main -&gt; main</title>
+    </g>
+  </g>
+  <g id="loops">
+  </g>
+  <g id="bindings">
+    <g class="edge-wrap">
+    <path class="bind" d="M 96.67 277.51 Q 109.74 277.20 122.43 274.04" stroke-width="1.76" opacity="0.85"/>
+    <line class="bind" x1="101.29" y1="272.85" x2="102.36" y2="280.78" opacity="0.75"/>
+    <line class="bind" x1="103.73" y1="271.52" x2="105.07" y2="281.43" opacity="0.75"/>
+    <line class="bind" x1="106.44" y1="272.16" x2="107.51" y2="280.09" opacity="0.75"/>
+    <line class="bind" x1="108.88" y1="270.82" x2="110.22" y2="280.73" opacity="0.75"/>
+    <line class="bind" x1="111.59" y1="271.46" x2="112.66" y2="279.39" opacity="0.75"/>
+    <line class="bind" x1="114.03" y1="270.12" x2="115.37" y2="280.03" opacity="0.75"/>
+    <line class="bind" x1="128.10" y1="275.50" x2="133.91" y2="276.99" opacity="0.58"/>
+    <line class="bind" x1="125.51" y1="279.01" x2="130.24" y2="286.67" opacity="0.58"/>
+    <line class="bind" x1="118.31" y1="278.19" x2="114.09" y2="282.45" opacity="0.58"/>
+    <line class="bind" x1="117.55" y1="270.81" x2="110.04" y2="265.85" opacity="0.58"/>
+    <line class="bind" x1="124.12" y1="268.43" x2="125.85" y2="262.69" opacity="0.58"/>
+      <title>edge: bind
+redis_parse_dsn -&gt; redis_parse_dsn
+weight: 7
+
+path:
+redis_parse_dsn -&gt; redis_parse_dsn</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="bind" d="M 422.94 235.33 Q 409.29 230.82 397.14 238.53" stroke-width="1.36" opacity="0.85"/>
+    <line class="bind" x1="418.27" y1="239.94" x2="417.29" y2="232.00" opacity="0.75"/>
+    <line class="bind" x1="415.82" y1="241.26" x2="414.59" y2="231.33" opacity="0.75"/>
+    <line class="bind" x1="402.18" y1="239.29" x2="408.12" y2="240.18" opacity="0.58"/>
+    <line class="bind" x1="392.04" y1="238.58" x2="383.04" y2="238.67" opacity="0.58"/>
+      <title>edge: bind
+main -&gt; main
+weight: 2
+
+path:
+main -&gt; main</title>
+    </g>
+  </g>
+  <g id="terminals">
+    <g class="edge-wrap">
+    <path class="term" d="M 96.67 277.51 Q 124.93 280.17 153.23 277.95" stroke-width="1.65" opacity="0.90"/>
+      <title>edge: return
+redis_parse_dsn -&gt; redis_parse_dsn
+weight: 2
+
+path:
+redis_parse_dsn -&gt; redis_parse_dsn</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="term" d="M 422.94 235.33 Q 393.77 235.84 368.35 250.15" stroke-width="1.90" opacity="0.90"/>
+      <title>edge: return
+main -&gt; main
+weight: 4
+
+path:
+main -&gt; main</title>
+    </g>
+  </g>
+  <g id="nodes">
+    <g class="node-wrap">
+      <circle class="node-main" cx="96.67" cy="277.51" r="7.00" data-kind="rituale" data-ritual="redis_parse_dsn" data-line="15" data-col="1" data-depth="3" data-stmt="RITUALE" data-loops="0" data-calls="1"/>
+      <title>RITUALE redis_parse_dsn
+stmt: 8
+depth: 3
+loops: 0
+calls: 1
+source:
+RITUALE redis_parse_dsn(VERBUM dsn) REDDE SPECULUM NIHIL</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="122.43" cy="274.04" r="3.85" data-kind="bind" data-ritual="redis_parse_dsn" data-line="16" data-col="3" data-depth="3" data-stmt="EVOCA"/>
+      <title>stmt: EVOCA
+rituale: redis_parse_dsn
+depth: 3
+line: 16
+
+source:
+EVOCA RedisOptions options</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="153.23" cy="277.95" r="3.60" data-kind="term" data-ritual="redis_parse_dsn" data-line="23" data-col="3" data-depth="3" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: redis_parse_dsn
+depth: 3
+line: 23
+
+source:
+REDDE CONIURA Ok GENUS(RedisOptions, VERBUM)(options)</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-entry" cx="422.94" cy="235.33" r="8.85" data-kind="rituale" data-ritual="main" data-line="26" data-col="1" data-depth="5" data-stmt="RITUALE" data-loops="0" data-calls="4" data-entry="true"/>
+      <title>RITUALE main
+stmt: 7
+depth: 5
+loops: 0
+calls: 4
+source:
+RITUALE main() REDDE REX</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="383.28" cy="216.06" r="5.80" data-kind="branch" data-ritual="main" data-line="28" data-col="3" data-depth="5" data-stmt="SI"/>
+      <title>stmt: SI
+rituale: main
+depth: 5
+line: 28
+
+source:
+SI NON CONIURA result_is_ok GENUS(RedisOptions, VERBUM)(parsed)</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="397.14" cy="238.53" r="3.10" data-kind="bind" data-ritual="main" data-line="27" data-col="3" data-depth="5" data-stmt="EVOCA"/>
+      <title>stmt: EVOCA
+rituale: main
+depth: 5
+line: 27
+
+source:
+EVOCA SPECULUM NIHIL parsed AD CONIURA redis_parse_dsn("x")</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="368.35" cy="250.15" r="4.40" data-kind="term" data-ritual="main" data-line="29" data-col="5" data-depth="5" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: main
+depth: 5
+line: 29
+
+source:
+REDDE 1</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="244.45" cy="244.85" r="3.80" data-kind="bind" data-ritual="main" data-line="27" data-col="3" data-depth="5" data-stmt="EVOCA"/>
+      <title>stmt: EVOCA
+rituale: main
+depth: 5
+line: 27
+
+source:
+EVOCA SPECULUM NIHIL parsed AD CONIURA redis_parse_dsn("x")</title>
+    </g>
+  </g>
+  <g id="ornaments">
+    <circle class="orn" cx="454.58" cy="285.27" r="0.90"/>
+    <circle class="orn" cx="363.87" cy="428.00" r="1.90"/>
+    <circle class="orn" cx="215.66" cy="455.86" r="2.90"/>
+    <circle class="orn" cx="58.23" cy="312.47" r="0.90"/>
+    <circle class="orn" cx="66.26" cy="161.70" r="1.90"/>
+    <circle class="orn" cx="179.75" cy="59.98" r="2.90"/>
+    <circle class="orn" cx="410.55" cy="114.76" r="0.90"/>
+  </g>
+  <g id="signature">
+    <text class="hash" x="256" y="496" text-anchor="middle">953f6024a49cacf8</text>
+    <text class="label" x="256" y="18" text-anchor="middle">network • sigillum v2.1 • 2 rituale(s) • 15 stmt • depth 5</text>
+  </g>
+</svg>

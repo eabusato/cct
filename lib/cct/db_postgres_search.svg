@@ -1,0 +1,2228 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512" role="img" aria-label="CCT local sigilo">
+  <desc>Deterministic semantic sigil for a single CCT module.</desc>
+  <defs>
+    <style><![CDATA[
+      .bg { fill: #f5f0e4; }
+      .base { stroke: #2a221c; stroke-width: 1.60; fill: none; opacity: 0.78; }
+      .primary { stroke: #241913; stroke-width: 2.80; fill: none; stroke-linecap: round; stroke-linejoin: round; }
+      .call { stroke: #5b2a22; stroke-width: 2.0; fill: none; stroke-linecap: round; opacity: 0.9; }
+      .branch { stroke: #6b342d; stroke-width: 1.6; fill: none; stroke-linecap: round; }
+      .loop { stroke: #2d5f5a; stroke-width: 1.6; fill: none; stroke-linecap: round; }
+      .bind { stroke: #73493d; stroke-width: 1.4; fill: none; stroke-linecap: round; }
+      .term { stroke: #201814; stroke-width: 1.7; fill: none; stroke-linecap: round; }
+      .node-main { fill: #fffaf1; stroke: #201814; stroke-width: 2.0; }
+      .node-entry { fill: #efe6d4; stroke: #201814; stroke-width: 2.4; }
+      .node-aux { fill: #f6efe0; stroke: #4f4339; stroke-width: 1.3; }
+      .node-loop { fill: #edf3f1; stroke: #2d5f5a; stroke-width: 1.4; }
+      .node-term { fill: #f3e7e3; stroke: #5a2a23; stroke-width: 1.4; }
+      .orn { stroke: #355d58; stroke-width: 1.0; fill: none; opacity: 0.55; }
+      .hash { fill: #1f1a17; font: 10px monospace; letter-spacing: 0.8px; }
+      .label { fill: #1f1a17; font: 8px monospace; opacity: 0.7; }
+      .node-wrap, .edge-wrap { cursor: help; }
+      .node-wrap:hover > circle { opacity: 0.96; }
+      .edge-wrap:hover > path, .edge-wrap:hover > line { opacity: 1.0; }
+    ]]></style>
+  </defs>
+  <rect class="bg" x="0" y="0" width="512" height="512"/>
+  <g id="foundation">
+    <circle class="base" cx="256" cy="256" r="226"/>
+    <ellipse class="base" cx="256" cy="256" rx="198" ry="180.99" opacity="0.32"/>
+  </g>
+  <g id="primary_path">
+    <g class="edge-wrap">
+    <path class="primary" d="M 284.31 106.73 Q 298.47 135.30 317.34 109.59" stroke-width="2.60" opacity="0.96"/>
+      <title>edge: primary
+pg_search_ok_config -&gt; pg_search_ok_document
+weight: 1
+
+path:
+pg_search_ok_config -&gt; pg_search_ok_document</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="primary" d="M 317.34 109.59 Q 314.30 136.75 333.75 117.57" stroke-width="2.60" opacity="0.96"/>
+      <title>edge: primary
+pg_search_ok_document -&gt; pg_search_quote
+weight: 1
+
+path:
+pg_search_ok_document -&gt; pg_search_quote</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="primary" d="M 333.75 117.57 Q 346.91 146.66 371.36 126.11" stroke-width="2.60" opacity="0.96"/>
+      <title>edge: primary
+pg_search_quote -&gt; pg_search_valid_name
+weight: 1
+
+path:
+pg_search_quote -&gt; pg_search_valid_name</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="primary" d="M 371.36 126.11 Q 362.84 160.19 397.91 162.19" stroke-width="2.60" opacity="0.96"/>
+      <title>edge: primary
+pg_search_valid_name -&gt; pg_search_weight_valid
+weight: 1
+
+path:
+pg_search_valid_name -&gt; pg_search_weight_valid</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="primary" d="M 397.91 162.19 Q 381.51 183.60 408.34 186.33" stroke-width="2.60" opacity="0.96"/>
+      <title>edge: primary
+pg_search_weight_valid -&gt; pg_search_config_simple
+weight: 1
+
+path:
+pg_search_weight_valid -&gt; pg_search_config_simple</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="primary" d="M 408.34 186.33 Q 400.66 217.87 432.52 211.62" stroke-width="2.60" opacity="0.96"/>
+      <title>edge: primary
+pg_search_config_simple -&gt; pg_search_config_language
+weight: 1
+
+path:
+pg_search_config_simple -&gt; pg_search_config_language</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="primary" d="M 432.52 211.62 Q 406.47 239.67 436.73 263.12" stroke-width="2.60" opacity="0.96"/>
+      <title>edge: primary
+pg_search_config_language -&gt; pg_search_config_custom
+weight: 1
+
+path:
+pg_search_config_language -&gt; pg_search_config_custom</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="primary" d="M 436.73 263.12 Q 412.02 257.94 430.79 274.83" stroke-width="2.60" opacity="0.96"/>
+      <title>edge: primary
+pg_search_config_custom -&gt; pg_search_config_name
+weight: 1
+
+path:
+pg_search_config_custom -&gt; pg_search_config_name</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="primary" d="M 430.79 274.83 Q 398.29 272.46 418.11 298.33" stroke-width="2.60" opacity="0.96"/>
+      <title>edge: primary
+pg_search_config_name -&gt; pg_search_field
+weight: 1
+
+path:
+pg_search_config_name -&gt; pg_search_field</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="primary" d="M 418.11 298.33 Q 414.52 322.63 420.42 298.79" stroke-width="2.60" opacity="0.96"/>
+      <title>edge: primary
+pg_search_field -&gt; pg_search_field_weighted
+weight: 1
+
+path:
+pg_search_field -&gt; pg_search_field_weighted</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="primary" d="M 420.42 298.79 Q 386.37 317.34 407.05 350.15" stroke-width="2.60" opacity="0.96"/>
+      <title>edge: primary
+pg_search_field_weighted -&gt; pg_search_document
+weight: 1
+
+path:
+pg_search_field_weighted -&gt; pg_search_document</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="primary" d="M 407.05 350.15 Q 363.30 352.15 353.24 394.77" stroke-width="2.60" opacity="0.96"/>
+      <title>edge: primary
+pg_search_document -&gt; pg_search_document_field_sql
+weight: 1
+
+path:
+pg_search_document -&gt; pg_search_document_field_sql</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="primary" d="M 353.24 394.77 Q 296.34 381.90 250.76 418.31" stroke-width="2.60" opacity="0.96"/>
+      <title>edge: primary
+pg_search_document_field_sql -&gt; pg_search_document_sql
+weight: 1
+
+path:
+pg_search_document_field_sql -&gt; pg_search_document_sql</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="primary" d="M 250.76 418.31 Q 247.90 387.21 224.88 408.31" stroke-width="2.60" opacity="0.96"/>
+      <title>edge: primary
+pg_search_document_sql -&gt; pg_search_query_make
+weight: 1
+
+path:
+pg_search_document_sql -&gt; pg_search_query_make</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="primary" d="M 224.88 408.31 Q 220.51 378.22 195.92 396.09" stroke-width="2.60" opacity="0.96"/>
+      <title>edge: primary
+pg_search_query_make -&gt; pg_search_query_plain
+weight: 1
+
+path:
+pg_search_query_make -&gt; pg_search_query_plain</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="primary" d="M 195.92 396.09 Q 205.85 372.30 191.46 393.69" stroke-width="2.60" opacity="0.96"/>
+      <title>edge: primary
+pg_search_query_plain -&gt; pg_search_query_phrase
+weight: 1
+
+path:
+pg_search_query_plain -&gt; pg_search_query_phrase</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="primary" d="M 191.46 393.69 Q 180.04 371.55 170.56 394.59" stroke-width="2.60" opacity="0.96"/>
+      <title>edge: primary
+pg_search_query_phrase -&gt; pg_search_query_web
+weight: 1
+
+path:
+pg_search_query_phrase -&gt; pg_search_query_web</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="primary" d="M 170.56 394.59 Q 166.59 358.27 132.00 370.00" stroke-width="2.60" opacity="0.96"/>
+      <title>edge: primary
+pg_search_query_web -&gt; pg_search_query_raw
+weight: 1
+
+path:
+pg_search_query_web -&gt; pg_search_query_raw</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="primary" d="M 132.00 370.00 Q 139.82 338.81 111.91 354.77" stroke-width="2.60" opacity="0.96"/>
+      <title>edge: primary
+pg_search_query_raw -&gt; pg_search_query_sql
+weight: 1
+
+path:
+pg_search_query_raw -&gt; pg_search_query_sql</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="primary" d="M 111.91 354.77 Q 128.48 328.14 98.15 320.16" stroke-width="2.60" opacity="0.96"/>
+      <title>edge: primary
+pg_search_query_sql -&gt; pg_search_match_sql
+weight: 1
+
+path:
+pg_search_query_sql -&gt; pg_search_match_sql</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="primary" d="M 98.15 320.16 Q 107.15 283.12 70.53 272.56" stroke-width="2.60" opacity="0.96"/>
+      <title>edge: primary
+pg_search_match_sql -&gt; pg_search_rank_sql
+weight: 1
+
+path:
+pg_search_match_sql -&gt; pg_search_rank_sql</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="primary" d="M 70.53 272.56 Q 98.71 256.52 80.37 229.79" stroke-width="2.60" opacity="0.96"/>
+      <title>edge: primary
+pg_search_rank_sql -&gt; pg_search_headline_options_default
+weight: 1
+
+path:
+pg_search_rank_sql -&gt; pg_search_headline_options_default</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="primary" d="M 80.37 229.79 Q 121.49 200.10 114.00 149.93" stroke-width="2.60" opacity="0.96"/>
+      <title>edge: primary
+pg_search_headline_options_default -&gt; pg_search_headline_sql
+weight: 1
+
+path:
+pg_search_headline_options_default -&gt; pg_search_headline_sql</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="primary" d="M 114.00 149.93 Q 176.06 153.54 213.04 103.57" stroke-width="2.60" opacity="0.96"/>
+      <title>edge: primary
+pg_search_headline_sql -&gt; pg_search_create_index_sql
+weight: 1
+
+path:
+pg_search_headline_sql -&gt; pg_search_create_index_sql</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="primary" d="M 213.04 103.57 Q 235.62 133.87 262.56 107.38" stroke-width="2.60" opacity="0.96"/>
+      <title>edge: primary
+pg_search_create_index_sql -&gt; pg_search_drop_index_sql
+weight: 1
+
+path:
+pg_search_create_index_sql -&gt; pg_search_drop_index_sql</title>
+    </g>
+  </g>
+  <g id="call_links">
+    <g class="edge-wrap">
+    <path class="call" d="M 432.52 211.62 Q 426.30 151.43 371.36 126.11" stroke-width="2.15" opacity="0.74" data-kind="call" data-from="pg_search_config_language" data-to="pg_search_valid_name" data-weight="1" data-self-loop="false"/>
+      <title>edge: call
+pg_search_config_language -&gt; pg_search_valid_name
+calls: 1
+
+path:
+pg_search_config_language -&gt; pg_search_valid_name</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="call" d="M 432.52 211.62 Q 374.90 135.88 284.31 106.73" stroke-width="2.15" opacity="0.74" data-kind="call" data-from="pg_search_config_language" data-to="pg_search_ok_config" data-weight="1" data-self-loop="false"/>
+      <title>edge: call
+pg_search_config_language -&gt; pg_search_ok_config
+calls: 1
+
+path:
+pg_search_config_language -&gt; pg_search_ok_config</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="call" d="M 436.73 263.12 Q 432.35 181.11 371.36 126.11" stroke-width="2.15" opacity="0.74" data-kind="call" data-from="pg_search_config_custom" data-to="pg_search_valid_name" data-weight="1" data-self-loop="false"/>
+      <title>edge: call
+pg_search_config_custom -&gt; pg_search_valid_name
+calls: 1
+
+path:
+pg_search_config_custom -&gt; pg_search_valid_name</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="call" d="M 436.73 263.12 Q 383.94 162.09 284.31 106.73" stroke-width="2.15" opacity="0.74" data-kind="call" data-from="pg_search_config_custom" data-to="pg_search_ok_config" data-weight="1" data-self-loop="false"/>
+      <title>edge: call
+pg_search_config_custom -&gt; pg_search_ok_config
+calls: 1
+
+path:
+pg_search_config_custom -&gt; pg_search_ok_config</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="call" d="M 420.42 298.79 Q 425.47 267.07 418.11 298.33" stroke-width="2.15" opacity="0.74" data-kind="call" data-from="pg_search_field_weighted" data-to="pg_search_field" data-weight="1" data-self-loop="false"/>
+      <title>edge: call
+pg_search_field_weighted -&gt; pg_search_field
+calls: 1
+
+path:
+pg_search_field_weighted -&gt; pg_search_field</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="call" d="M 420.42 298.79 Q 443.60 224.81 397.91 162.19" stroke-width="2.15" opacity="0.74" data-kind="call" data-from="pg_search_field_weighted" data-to="pg_search_weight_valid" data-weight="1" data-self-loop="false"/>
+      <title>edge: call
+pg_search_field_weighted -&gt; pg_search_weight_valid
+calls: 1
+
+path:
+pg_search_field_weighted -&gt; pg_search_weight_valid</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="call" d="M 407.05 350.15 Q 392.03 218.74 317.34 109.59" stroke-width="2.15" opacity="0.74" data-kind="call" data-from="pg_search_document" data-to="pg_search_ok_document" data-weight="1" data-self-loop="false"/>
+      <title>edge: call
+pg_search_document -&gt; pg_search_ok_document
+calls: 1
+
+path:
+pg_search_document -&gt; pg_search_ok_document</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="call" d="M 353.24 394.77 Q 379.29 253.65 333.75 117.57" stroke-width="2.50" opacity="0.80" data-kind="call" data-from="pg_search_document_field_sql" data-to="pg_search_quote" data-weight="2" data-self-loop="false"/>
+      <title>edge: call
+pg_search_document_field_sql -&gt; pg_search_quote
+calls: 2
+
+path:
+pg_search_document_field_sql -&gt; pg_search_quote</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="call" d="M 353.24 394.77 Q 420.90 353.48 430.79 274.83" stroke-width="2.15" opacity="0.74" data-kind="call" data-from="pg_search_document_field_sql" data-to="pg_search_config_name" data-weight="1" data-self-loop="false"/>
+      <title>edge: call
+pg_search_document_field_sql -&gt; pg_search_config_name
+calls: 1
+
+path:
+pg_search_document_field_sql -&gt; pg_search_config_name</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="call" d="M 250.76 418.31 Q 308.36 434.26 353.24 394.77" stroke-width="2.15" opacity="0.74" data-kind="call" data-from="pg_search_document_sql" data-to="pg_search_document_field_sql" data-weight="1" data-self-loop="false"/>
+      <title>edge: call
+pg_search_document_sql -&gt; pg_search_document_field_sql
+calls: 1
+
+path:
+pg_search_document_sql -&gt; pg_search_document_field_sql</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="call" d="M 195.92 396.09 Q 199.76 427.41 224.88 408.31" stroke-width="2.15" opacity="0.74" data-kind="call" data-from="pg_search_query_plain" data-to="pg_search_query_make" data-weight="1" data-self-loop="false"/>
+      <title>edge: call
+pg_search_query_plain -&gt; pg_search_query_make
+calls: 1
+
+path:
+pg_search_query_plain -&gt; pg_search_query_make</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="call" d="M 191.46 393.69 Q 196.20 428.36 224.88 408.31" stroke-width="2.15" opacity="0.74" data-kind="call" data-from="pg_search_query_phrase" data-to="pg_search_query_make" data-weight="1" data-self-loop="false"/>
+      <title>edge: call
+pg_search_query_phrase -&gt; pg_search_query_make
+calls: 1
+
+path:
+pg_search_query_phrase -&gt; pg_search_query_make</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="call" d="M 170.56 394.59 Q 190.31 430.78 224.88 408.31" stroke-width="2.15" opacity="0.74" data-kind="call" data-from="pg_search_query_web" data-to="pg_search_query_make" data-weight="1" data-self-loop="false"/>
+      <title>edge: call
+pg_search_query_web -&gt; pg_search_query_make
+calls: 1
+
+path:
+pg_search_query_web -&gt; pg_search_query_make</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="call" d="M 132.00 370.00 Q 165.85 419.68 224.88 408.31" stroke-width="2.15" opacity="0.74" data-kind="call" data-from="pg_search_query_raw" data-to="pg_search_query_make" data-weight="1" data-self-loop="false"/>
+      <title>edge: call
+pg_search_query_raw -&gt; pg_search_query_make
+calls: 1
+
+path:
+pg_search_query_raw -&gt; pg_search_query_make</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="call" d="M 111.91 354.77 Q 250.48 262.03 333.75 117.57" stroke-width="2.50" opacity="0.80" data-kind="call" data-from="pg_search_query_sql" data-to="pg_search_quote" data-weight="2" data-self-loop="false"/>
+      <title>edge: call
+pg_search_query_sql -&gt; pg_search_quote
+calls: 2
+
+path:
+pg_search_query_sql -&gt; pg_search_quote</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="call" d="M 111.91 354.77 Q 279.38 346.84 430.79 274.83" stroke-width="2.15" opacity="0.74" data-kind="call" data-from="pg_search_query_sql" data-to="pg_search_config_name" data-weight="1" data-self-loop="false"/>
+      <title>edge: call
+pg_search_query_sql -&gt; pg_search_config_name
+calls: 1
+
+path:
+pg_search_query_sql -&gt; pg_search_config_name</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="call" d="M 98.15 320.16 Q 157.52 395.57 250.76 418.31" stroke-width="2.15" opacity="0.74" data-kind="call" data-from="pg_search_match_sql" data-to="pg_search_document_sql" data-weight="1" data-self-loop="false"/>
+      <title>edge: call
+pg_search_match_sql -&gt; pg_search_document_sql
+calls: 1
+
+path:
+pg_search_match_sql -&gt; pg_search_document_sql</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="call" d="M 98.15 320.16 Q 75.10 349.36 111.91 354.77" stroke-width="2.15" opacity="0.74" data-kind="call" data-from="pg_search_match_sql" data-to="pg_search_query_sql" data-weight="1" data-self-loop="false"/>
+      <title>edge: call
+pg_search_match_sql -&gt; pg_search_query_sql
+calls: 1
+
+path:
+pg_search_match_sql -&gt; pg_search_query_sql</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="call" d="M 70.53 272.56 Q 143.32 366.86 250.76 418.31" stroke-width="2.15" opacity="0.74" data-kind="call" data-from="pg_search_rank_sql" data-to="pg_search_document_sql" data-weight="1" data-self-loop="false"/>
+      <title>edge: call
+pg_search_rank_sql -&gt; pg_search_document_sql
+calls: 1
+
+path:
+pg_search_rank_sql -&gt; pg_search_document_sql</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="call" d="M 70.53 272.56 Q 65.50 326.61 111.91 354.77" stroke-width="2.15" opacity="0.74" data-kind="call" data-from="pg_search_rank_sql" data-to="pg_search_query_sql" data-weight="1" data-self-loop="false"/>
+      <title>edge: call
+pg_search_rank_sql -&gt; pg_search_query_sql
+calls: 1
+
+path:
+pg_search_rank_sql -&gt; pg_search_query_sql</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="call" d="M 114.00 149.93 Q 228.92 168.00 333.75 117.57" stroke-width="2.50" opacity="0.80" data-kind="call" data-from="pg_search_headline_sql" data-to="pg_search_quote" data-weight="2" data-self-loop="false"/>
+      <title>edge: call
+pg_search_headline_sql -&gt; pg_search_quote
+calls: 2
+
+path:
+pg_search_headline_sql -&gt; pg_search_quote</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="call" d="M 114.00 149.93 Q 261.20 240.77 430.79 274.83" stroke-width="2.15" opacity="0.74" data-kind="call" data-from="pg_search_headline_sql" data-to="pg_search_config_name" data-weight="1" data-self-loop="false"/>
+      <title>edge: call
+pg_search_headline_sql -&gt; pg_search_config_name
+calls: 1
+
+path:
+pg_search_headline_sql -&gt; pg_search_config_name</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="call" d="M 114.00 149.93 Q 85.49 252.07 111.91 354.77" stroke-width="2.15" opacity="0.74" data-kind="call" data-from="pg_search_headline_sql" data-to="pg_search_query_sql" data-weight="1" data-self-loop="false"/>
+      <title>edge: call
+pg_search_headline_sql -&gt; pg_search_query_sql
+calls: 1
+
+path:
+pg_search_headline_sql -&gt; pg_search_query_sql</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="call" d="M 213.04 103.57 Q 198.81 264.91 250.76 418.31" stroke-width="2.15" opacity="0.74" data-kind="call" data-from="pg_search_create_index_sql" data-to="pg_search_document_sql" data-weight="1" data-self-loop="false"/>
+      <title>edge: call
+pg_search_create_index_sql -&gt; pg_search_document_sql
+calls: 1
+
+path:
+pg_search_create_index_sql -&gt; pg_search_document_sql</title>
+    </g>
+  </g>
+  <g id="branches">
+    <g class="edge-wrap">
+    <path class="branch" d="M 371.36 126.11 Q 359.75 146.65 364.73 169.71" stroke-width="1.95" opacity="0.85"/>
+      <title>edge: branch
+pg_search_valid_name -&gt; pg_search_valid_name
+weight: 3
+
+path:
+pg_search_valid_name -&gt; pg_search_valid_name</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="branch" d="M 432.52 211.62 Q 410.91 221.04 403.94 243.55" stroke-width="1.70" opacity="0.85"/>
+      <title>edge: branch
+pg_search_config_language -&gt; pg_search_config_language
+weight: 2
+
+path:
+pg_search_config_language -&gt; pg_search_config_language</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="branch" d="M 436.73 263.12 Q 411.35 262.84 400.31 285.70" stroke-width="1.70" opacity="0.85"/>
+      <title>edge: branch
+pg_search_config_custom -&gt; pg_search_config_custom
+weight: 2
+
+path:
+pg_search_config_custom -&gt; pg_search_config_custom</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="branch" d="M 420.42 298.79 Q 396.45 295.25 380.02 313.07" stroke-width="1.70" opacity="0.85"/>
+      <title>edge: branch
+pg_search_field_weighted -&gt; pg_search_field_weighted
+weight: 2
+
+path:
+pg_search_field_weighted -&gt; pg_search_field_weighted</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="branch" d="M 407.05 350.15 Q 384.81 339.79 362.95 350.94" stroke-width="1.95" opacity="0.85"/>
+      <title>edge: branch
+pg_search_document -&gt; pg_search_document
+weight: 3
+
+path:
+pg_search_document -&gt; pg_search_document</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="branch" d="M 353.24 394.77 Q 337.84 375.07 313.22 379.48" stroke-width="1.70" opacity="0.85"/>
+      <title>edge: branch
+pg_search_document_field_sql -&gt; pg_search_document_field_sql
+weight: 2
+
+path:
+pg_search_document_field_sql -&gt; pg_search_document_field_sql</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="branch" d="M 250.76 418.31 Q 270.43 406.10 275.89 383.60" stroke-width="1.70" opacity="0.85"/>
+      <title>edge: branch
+pg_search_document_sql -&gt; pg_search_document_sql
+weight: 2
+
+path:
+pg_search_document_sql -&gt; pg_search_document_sql</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="branch" d="M 70.53 272.56 Q 84.29 291.95 108.03 293.30" stroke-width="1.70" opacity="0.85"/>
+      <title>edge: branch
+pg_search_rank_sql -&gt; pg_search_rank_sql
+weight: 2
+
+path:
+pg_search_rank_sql -&gt; pg_search_rank_sql</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="branch" d="M 114.00 149.93 Q 135.02 159.06 156.80 151.95" stroke-width="1.70" opacity="0.85"/>
+      <title>edge: branch
+pg_search_headline_sql -&gt; pg_search_headline_sql
+weight: 2
+
+path:
+pg_search_headline_sql -&gt; pg_search_headline_sql</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="branch" d="M 156.80 151.95 Q 127.61 163.41 108.07 187.94" stroke-width="1.70" opacity="0.85"/>
+      <title>edge: branch
+pg_search_headline_sql -&gt; pg_search_headline_sql
+weight: 2
+
+path:
+pg_search_headline_sql -&gt; pg_search_headline_sql</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="branch" d="M 108.07 187.94 Q 119.07 170.19 114.00 149.93" stroke-width="1.45" opacity="0.85"/>
+      <title>edge: branch
+pg_search_headline_sql -&gt; pg_search_headline_sql
+weight: 1
+
+path:
+pg_search_headline_sql -&gt; pg_search_headline_sql</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="branch" d="M 213.04 103.57 Q 195.92 120.47 199.57 144.25" stroke-width="1.70" opacity="0.85"/>
+      <title>edge: branch
+pg_search_create_index_sql -&gt; pg_search_create_index_sql
+weight: 2
+
+path:
+pg_search_create_index_sql -&gt; pg_search_create_index_sql</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="branch" d="M 244.96 250.88 Q 272.51 180.95 284.31 106.73" stroke-width="1.70" opacity="0.85"/>
+      <title>edge: branch
+pg_search_ok_config -&gt; pg_search_ok_config
+weight: 2
+
+path:
+pg_search_ok_config -&gt; pg_search_ok_config</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="branch" d="M 244.96 250.88 Q 291.15 185.36 317.34 109.59" stroke-width="1.70" opacity="0.85"/>
+      <title>edge: branch
+pg_search_ok_config -&gt; pg_search_ok_document
+weight: 2
+
+path:
+pg_search_ok_config -&gt; pg_search_ok_document</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="branch" d="M 244.96 250.88 Q 295.00 187.98 333.75 117.57" stroke-width="2.10" opacity="0.85"/>
+      <title>edge: branch
+pg_search_ok_config -&gt; pg_search_quote
+weight: 4
+
+path:
+pg_search_ok_config -&gt; pg_search_quote</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="branch" d="M 244.96 250.88 Q 315.73 196.17 371.36 126.11" stroke-width="2.10" opacity="0.85"/>
+      <title>edge: branch
+pg_search_ok_config -&gt; pg_search_valid_name
+weight: 6
+
+path:
+pg_search_ok_config -&gt; pg_search_valid_name</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="branch" d="M 244.96 250.88 Q 326.55 215.35 397.91 162.19" stroke-width="2.10" opacity="0.85"/>
+      <title>edge: branch
+pg_search_ok_config -&gt; pg_search_weight_valid
+weight: 5
+
+path:
+pg_search_ok_config -&gt; pg_search_weight_valid</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="branch" d="M 244.96 250.88 Q 341.60 244.95 432.52 211.62" stroke-width="2.10" opacity="0.85"/>
+      <title>edge: branch
+pg_search_ok_config -&gt; pg_search_config_language
+weight: 5
+
+path:
+pg_search_ok_config -&gt; pg_search_config_language</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="branch" d="M 244.96 250.88 Q 340.07 269.08 436.73 263.12" stroke-width="2.10" opacity="0.85"/>
+      <title>edge: branch
+pg_search_ok_config -&gt; pg_search_config_custom
+weight: 5
+
+path:
+pg_search_ok_config -&gt; pg_search_config_custom</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="branch" d="M 244.96 250.88 Q 330.54 282.70 420.42 298.79" stroke-width="2.10" opacity="0.85"/>
+      <title>edge: branch
+pg_search_ok_config -&gt; pg_search_field_weighted
+weight: 4
+
+path:
+pg_search_ok_config -&gt; pg_search_field_weighted</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="branch" d="M 244.96 250.88 Q 320.86 308.92 407.05 350.15" stroke-width="2.10" opacity="0.85"/>
+      <title>edge: branch
+pg_search_ok_config -&gt; pg_search_document
+weight: 11
+
+path:
+pg_search_ok_config -&gt; pg_search_document</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="branch" d="M 244.96 250.88 Q 290.35 329.41 353.24 394.77" stroke-width="2.10" opacity="0.85"/>
+      <title>edge: branch
+pg_search_ok_config -&gt; pg_search_document_field_sql
+weight: 14
+
+path:
+pg_search_ok_config -&gt; pg_search_document_field_sql</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="branch" d="M 244.96 250.88 Q 237.34 334.96 250.76 418.31" stroke-width="2.10" opacity="0.85"/>
+      <title>edge: branch
+pg_search_ok_config -&gt; pg_search_document_sql
+weight: 8
+
+path:
+pg_search_ok_config -&gt; pg_search_document_sql</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="branch" d="M 244.96 250.88 Q 208.46 319.44 195.92 396.09" stroke-width="1.70" opacity="0.85"/>
+      <title>edge: branch
+pg_search_ok_config -&gt; pg_search_query_plain
+weight: 2
+
+path:
+pg_search_ok_config -&gt; pg_search_query_plain</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="branch" d="M 244.96 250.88 Q 211.05 319.61 191.46 393.69" stroke-width="1.70" opacity="0.85"/>
+      <title>edge: branch
+pg_search_ok_config -&gt; pg_search_query_phrase
+weight: 2
+
+path:
+pg_search_ok_config -&gt; pg_search_query_phrase</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="branch" d="M 244.96 250.88 Q 199.65 318.53 170.56 394.59" stroke-width="1.70" opacity="0.85"/>
+      <title>edge: branch
+pg_search_ok_config -&gt; pg_search_query_web
+weight: 2
+
+path:
+pg_search_ok_config -&gt; pg_search_query_web</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="branch" d="M 244.96 250.88 Q 183.32 305.55 132.00 370.00" stroke-width="1.70" opacity="0.85"/>
+      <title>edge: branch
+pg_search_ok_config -&gt; pg_search_query_raw
+weight: 2
+
+path:
+pg_search_ok_config -&gt; pg_search_query_raw</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="branch" d="M 244.96 250.88 Q 173.15 296.06 111.91 354.77" stroke-width="2.10" opacity="0.85"/>
+      <title>edge: branch
+pg_search_ok_config -&gt; pg_search_query_sql
+weight: 9
+
+path:
+pg_search_ok_config -&gt; pg_search_query_sql</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="branch" d="M 244.96 250.88 Q 168.69 279.46 98.15 320.16" stroke-width="2.10" opacity="0.85"/>
+      <title>edge: branch
+pg_search_ok_config -&gt; pg_search_match_sql
+weight: 5
+
+path:
+pg_search_ok_config -&gt; pg_search_match_sql</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="branch" d="M 244.96 250.88 Q 156.08 248.31 70.53 272.56" stroke-width="2.10" opacity="0.85"/>
+      <title>edge: branch
+pg_search_ok_config -&gt; pg_search_rank_sql
+weight: 9
+
+path:
+pg_search_ok_config -&gt; pg_search_rank_sql</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="branch" d="M 244.96 250.88 Q 187.91 189.47 114.00 149.93" stroke-width="2.10" opacity="0.85"/>
+      <title>edge: branch
+pg_search_ok_config -&gt; pg_search_headline_sql
+weight: 29
+
+path:
+pg_search_ok_config -&gt; pg_search_headline_sql</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="branch" d="M 244.96 250.88 Q 238.81 175.10 213.04 103.57" stroke-width="2.10" opacity="0.85"/>
+      <title>edge: branch
+pg_search_ok_config -&gt; pg_search_create_index_sql
+weight: 11
+
+path:
+pg_search_ok_config -&gt; pg_search_create_index_sql</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="branch" d="M 244.96 250.88 Q 265.40 180.56 262.56 107.38" stroke-width="1.70" opacity="0.85"/>
+      <title>edge: branch
+pg_search_ok_config -&gt; pg_search_drop_index_sql
+weight: 2
+
+path:
+pg_search_ok_config -&gt; pg_search_drop_index_sql</title>
+    </g>
+  </g>
+  <g id="loops">
+    <g class="edge-wrap">
+    <path class="loop" d="M 371.36 126.11 Q 389.68 132.82 408.23 126.76" stroke-width="1.55" opacity="0.88"/>
+      <title>edge: loop
+pg_search_valid_name -&gt; pg_search_valid_name
+weight: 2
+
+path:
+pg_search_valid_name -&gt; pg_search_valid_name</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="loop" d="M 411.99 126.76 C 447.27 110.28 451.17 132.11 435.56 121.20 C 419.94 132.11 423.85 110.28 405.41 128.26"/>
+      <title>edge: loop
+pg_search_valid_name -&gt; pg_search_valid_name
+weight: 2
+
+path:
+pg_search_valid_name -&gt; pg_search_valid_name</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="loop" d="M 407.05 350.15 Q 401.17 369.70 412.61 386.60" stroke-width="1.55" opacity="0.88"/>
+      <title>edge: loop
+pg_search_document -&gt; pg_search_document
+weight: 2
+
+path:
+pg_search_document -&gt; pg_search_document</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="loop" d="M 416.37 386.60 C 449.71 385.44 453.62 407.26 438.00 396.35 C 422.39 407.26 426.29 385.44 409.79 388.10"/>
+      <title>edge: loop
+pg_search_document -&gt; pg_search_document
+weight: 2
+
+path:
+pg_search_document -&gt; pg_search_document</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="loop" d="M 250.76 418.31 Q 259.79 435.75 277.97 443.20" stroke-width="1.55" opacity="0.88"/>
+      <title>edge: loop
+pg_search_document_sql -&gt; pg_search_document_sql
+weight: 2
+
+path:
+pg_search_document_sql -&gt; pg_search_document_sql</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="loop" d="M 281.73 443.20 C 317.00 426.69 320.90 448.51 305.28 437.60 C 289.67 448.51 293.57 426.69 275.15 444.70"/>
+      <title>edge: loop
+pg_search_document_sql -&gt; pg_search_document_sql
+weight: 2
+
+path:
+pg_search_document_sql -&gt; pg_search_document_sql</title>
+    </g>
+  </g>
+  <g id="bindings">
+    <g class="edge-wrap">
+    <path class="bind" d="M 333.75 117.57 Q 321.40 125.54 321.02 140.24" stroke-width="1.36" opacity="0.85"/>
+    <line class="bind" x1="334.70" y1="124.06" x2="327.72" y2="120.14" opacity="0.75"/>
+    <line class="bind" x1="334.29" y1="126.82" x2="325.58" y2="121.92" opacity="0.75"/>
+    <line class="bind" x1="325.98" y1="139.03" x2="331.81" y2="137.61" opacity="0.58"/>
+    <line class="bind" x1="315.92" y1="140.28" x2="306.92" y2="140.36" opacity="0.58"/>
+      <title>edge: bind
+pg_search_quote -&gt; pg_search_quote
+weight: 2
+
+path:
+pg_search_quote -&gt; pg_search_quote</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="bind" d="M 371.36 126.11 Q 360.19 133.58 354.09 145.55" stroke-width="1.52" opacity="0.85"/>
+    <line class="bind" x1="370.89" y1="132.66" x2="364.91" y2="127.34" opacity="0.75"/>
+    <line class="bind" x1="369.91" y1="135.26" x2="362.44" y2="128.62" opacity="0.75"/>
+    <line class="bind" x1="367.44" y1="136.54" x2="361.46" y2="131.23" opacity="0.75"/>
+    <line class="bind" x1="366.46" y1="139.15" x2="358.98" y2="132.51" opacity="0.75"/>
+    <line class="bind" x1="359.42" y1="144.67" x2="365.34" y2="143.69" opacity="0.58"/>
+    <line class="bind" x1="354.56" y1="150.93" x2="355.34" y2="159.90" opacity="0.58"/>
+    <line class="bind" x1="348.73" y1="144.94" x2="342.76" y2="144.25" opacity="0.58"/>
+    <line class="bind" x1="352.52" y1="140.38" x2="349.92" y2="131.77" opacity="0.58"/>
+      <title>edge: bind
+pg_search_valid_name -&gt; pg_search_valid_name
+weight: 4
+
+path:
+pg_search_valid_name -&gt; pg_search_valid_name</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="bind" d="M 408.34 186.33 Q 395.52 189.57 384.69 197.15" stroke-width="1.44" opacity="0.85"/>
+    <line class="bind" x1="405.27" y1="192.13" x2="401.95" y2="184.86" opacity="0.75"/>
+    <line class="bind" x1="403.32" y1="194.12" x2="399.17" y2="185.03" opacity="0.75"/>
+    <line class="bind" x1="400.54" y1="194.30" x2="397.22" y2="187.02" opacity="0.75"/>
+    <line class="bind" x1="389.94" y1="196.96" x2="395.94" y2="196.74" opacity="0.58"/>
+    <line class="bind" x1="383.33" y1="202.22" x2="380.98" y2="210.90" opacity="0.58"/>
+    <line class="bind" x1="381.99" y1="192.65" x2="378.89" y2="187.51" opacity="0.58"/>
+      <title>edge: bind
+pg_search_config_simple -&gt; pg_search_config_simple
+weight: 3
+
+path:
+pg_search_config_simple -&gt; pg_search_config_simple</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="bind" d="M 432.52 211.62 Q 418.73 210.11 407.30 217.96" stroke-width="1.44" opacity="0.85"/>
+    <line class="bind" x1="428.45" y1="216.76" x2="426.50" y2="209.01" opacity="0.75"/>
+    <line class="bind" x1="426.17" y1="218.37" x2="423.73" y2="208.67" opacity="0.75"/>
+    <line class="bind" x1="423.41" y1="218.03" x2="421.45" y2="210.27" opacity="0.75"/>
+    <line class="bind" x1="412.50" y1="217.21" x2="418.44" y2="216.35" opacity="0.58"/>
+    <line class="bind" x1="405.24" y1="222.78" x2="401.70" y2="231.06" opacity="0.58"/>
+    <line class="bind" x1="405.58" y1="213.00" x2="403.62" y2="207.32" opacity="0.58"/>
+      <title>edge: bind
+pg_search_config_language -&gt; pg_search_config_language
+weight: 3
+
+path:
+pg_search_config_language -&gt; pg_search_config_language</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="bind" d="M 436.73 263.12 Q 424.08 254.00 410.75 262.10" stroke-width="1.44" opacity="0.85"/>
+    <line class="bind" x1="431.38" y1="266.91" x2="431.69" y2="258.92" opacity="0.75"/>
+    <line class="bind" x1="428.74" y1="267.81" x2="429.13" y2="257.82" opacity="0.75"/>
+    <line class="bind" x1="426.18" y1="266.71" x2="426.50" y2="258.71" opacity="0.75"/>
+    <line class="bind" x1="415.78" y1="263.61" x2="421.52" y2="265.34" opacity="0.58"/>
+    <line class="bind" x1="407.75" y1="266.40" x2="402.60" y2="273.78" opacity="0.58"/>
+    <line class="bind" x1="407.28" y1="258.16" x2="403.30" y2="253.66" opacity="0.58"/>
+      <title>edge: bind
+pg_search_config_custom -&gt; pg_search_config_custom
+weight: 3
+
+path:
+pg_search_config_custom -&gt; pg_search_config_custom</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="bind" d="M 418.11 298.33 Q 407.23 288.51 392.95 291.76" stroke-width="1.44" opacity="0.85"/>
+    <line class="bind" x1="412.06" y1="300.89" x2="414.09" y2="293.15" opacity="0.75"/>
+    <line class="bind" x1="409.30" y1="301.20" x2="411.82" y2="291.52" opacity="0.75"/>
+    <line class="bind" x1="407.03" y1="299.57" x2="409.05" y2="291.83" opacity="0.75"/>
+    <line class="bind" x1="398.05" y1="290.51" x2="403.88" y2="289.08" opacity="0.58"/>
+    <line class="bind" x1="390.85" y1="296.57" x2="387.25" y2="304.82" opacity="0.58"/>
+    <line class="bind" x1="391.20" y1="286.81" x2="389.21" y2="281.15" opacity="0.58"/>
+      <title>edge: bind
+pg_search_field -&gt; pg_search_field
+weight: 3
+
+path:
+pg_search_field -&gt; pg_search_field</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="bind" d="M 420.42 298.79 Q 409.43 289.39 395.26 292.24" stroke-width="1.36" opacity="0.85"/>
+    <line class="bind" x1="414.38" y1="301.35" x2="416.40" y2="293.61" opacity="0.75"/>
+    <line class="bind" x1="411.61" y1="301.66" x2="414.13" y2="291.98" opacity="0.75"/>
+    <line class="bind" x1="400.16" y1="293.64" x2="405.93" y2="295.30" opacity="0.58"/>
+    <line class="bind" x1="390.19" y1="292.81" x2="381.25" y2="293.81" opacity="0.58"/>
+      <title>edge: bind
+pg_search_field_weighted -&gt; pg_search_field_weighted
+weight: 2
+
+path:
+pg_search_field_weighted -&gt; pg_search_field_weighted</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="bind" d="M 407.05 350.15 Q 399.06 338.38 384.98 336.39" stroke-width="1.76" opacity="0.85"/>
+    <line class="bind" x1="400.52" y1="350.79" x2="404.75" y2="344.00" opacity="0.75"/>
+    <line class="bind" x1="397.79" y1="350.26" x2="403.08" y2="341.78" opacity="0.75"/>
+    <line class="bind" x1="396.11" y1="348.04" x2="400.34" y2="341.25" opacity="0.75"/>
+    <line class="bind" x1="393.37" y1="347.51" x2="398.66" y2="339.03" opacity="0.75"/>
+    <line class="bind" x1="391.70" y1="345.29" x2="395.93" y2="338.50" opacity="0.75"/>
+    <line class="bind" x1="388.96" y1="344.76" x2="394.25" y2="336.28" opacity="0.75"/>
+    <line class="bind" x1="390.65" y1="337.86" x2="396.45" y2="339.37" opacity="0.58"/>
+    <line class="bind" x1="385.94" y1="342.16" x2="387.42" y2="351.04" opacity="0.58"/>
+    <line class="bind" x1="379.50" y1="338.43" x2="373.88" y2="340.52" opacity="0.58"/>
+    <line class="bind" x1="381.24" y1="331.90" x2="375.48" y2="324.98" opacity="0.58"/>
+    <line class="bind" x1="386.95" y1="330.88" x2="388.96" y2="325.23" opacity="0.58"/>
+      <title>edge: bind
+pg_search_document -&gt; pg_search_document
+weight: 7
+
+path:
+pg_search_document -&gt; pg_search_document</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="bind" d="M 353.24 394.77 Q 352.26 379.59 338.32 373.48" stroke-width="1.80" opacity="0.85"/>
+    <line class="bind" x1="346.98" y1="392.81" x2="353.54" y2="388.22" opacity="0.75"/>
+    <line class="bind" x1="344.67" y1="391.26" x2="352.86" y2="385.52" opacity="0.75"/>
+    <line class="bind" x1="344.00" y1="388.55" x2="350.55" y2="383.96" opacity="0.75"/>
+    <line class="bind" x1="341.69" y1="387.00" x2="349.88" y2="381.26" opacity="0.75"/>
+    <line class="bind" x1="341.02" y1="384.29" x2="347.57" y2="379.70" opacity="0.75"/>
+    <line class="bind" x1="338.71" y1="382.74" x2="346.90" y2="377.00" opacity="0.75"/>
+    <line class="bind" x1="344.54" y1="374.52" x2="350.46" y2="375.51" opacity="0.58"/>
+    <line class="bind" x1="341.75" y1="378.77" x2="346.64" y2="386.32" opacity="0.58"/>
+    <line class="bind" x1="333.14" y1="377.07" x2="328.21" y2="380.48" opacity="0.58"/>
+    <line class="bind" x1="333.49" y1="369.44" x2="326.58" y2="363.68" opacity="0.58"/>
+    <line class="bind" x1="340.49" y1="367.57" x2="342.56" y2="361.94" opacity="0.58"/>
+      <title>edge: bind
+pg_search_document_field_sql -&gt; pg_search_document_field_sql
+weight: 10
+
+path:
+pg_search_document_field_sql -&gt; pg_search_document_field_sql</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="bind" d="M 250.76 418.31 Q 254.95 405.44 251.60 392.32" stroke-width="1.76" opacity="0.85"/>
+    <line class="bind" x1="246.93" y1="412.98" x2="254.92" y2="413.24" opacity="0.75"/>
+    <line class="bind" x1="246.01" y1="410.35" x2="256.01" y2="410.67" opacity="0.75"/>
+    <line class="bind" x1="247.09" y1="407.78" x2="255.09" y2="408.04" opacity="0.75"/>
+    <line class="bind" x1="246.18" y1="405.15" x2="256.17" y2="405.48" opacity="0.75"/>
+    <line class="bind" x1="247.26" y1="402.59" x2="255.26" y2="402.85" opacity="0.75"/>
+    <line class="bind" x1="246.35" y1="399.96" x2="256.34" y2="400.28" opacity="0.75"/>
+    <line class="bind" x1="257.37" y1="393.28" x2="263.29" y2="394.26" opacity="0.58"/>
+    <line class="bind" x1="254.18" y1="397.57" x2="258.15" y2="405.65" opacity="0.58"/>
+    <line class="bind" x1="246.57" y1="395.32" x2="241.42" y2="398.39" opacity="0.58"/>
+    <line class="bind" x1="246.82" y1="388.94" x2="239.48" y2="383.73" opacity="0.58"/>
+    <line class="bind" x1="254.15" y1="387.06" x2="256.77" y2="381.66" opacity="0.58"/>
+      <title>edge: bind
+pg_search_document_sql -&gt; pg_search_document_sql
+weight: 7
+
+path:
+pg_search_document_sql -&gt; pg_search_document_sql</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="bind" d="M 224.88 408.31 Q 234.55 397.02 230.09 382.84" stroke-width="1.52" opacity="0.85"/>
+    <line class="bind" x1="222.00" y1="402.41" x2="229.84" y2="404.02" opacity="0.75"/>
+    <line class="bind" x1="221.54" y1="399.67" x2="231.34" y2="401.67" opacity="0.75"/>
+    <line class="bind" x1="223.04" y1="397.32" x2="230.88" y2="398.92" opacity="0.75"/>
+    <line class="bind" x1="222.59" y1="394.57" x2="232.38" y2="396.57" opacity="0.75"/>
+    <line class="bind" x1="235.42" y1="382.02" x2="241.35" y2="381.11" opacity="0.58"/>
+    <line class="bind" x1="231.14" y1="388.13" x2="232.90" y2="396.96" opacity="0.58"/>
+    <line class="bind" x1="224.83" y1="381.58" x2="219.00" y2="380.18" opacity="0.58"/>
+    <line class="bind" x1="230.27" y1="377.44" x2="230.59" y2="368.44" opacity="0.58"/>
+      <title>edge: bind
+pg_search_query_make -&gt; pg_search_query_make
+weight: 4
+
+path:
+pg_search_query_make -&gt; pg_search_query_make</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="bind" d="M 111.91 354.77 Q 123.28 348.37 133.35 340.07" stroke-width="1.68" opacity="0.85"/>
+    <line class="bind" x1="113.93" y1="348.53" x2="118.46" y2="355.13" opacity="0.75"/>
+    <line class="bind" x1="115.51" y1="346.23" x2="121.17" y2="354.48" opacity="0.75"/>
+    <line class="bind" x1="118.22" y1="345.59" x2="122.74" y2="352.19" opacity="0.75"/>
+    <line class="bind" x1="119.80" y1="343.29" x2="125.45" y2="351.54" opacity="0.75"/>
+    <line class="bind" x1="122.51" y1="342.65" x2="127.03" y2="349.25" opacity="0.75"/>
+    <line class="bind" x1="124.09" y1="340.35" x2="129.74" y2="348.60" opacity="0.75"/>
+    <line class="bind" x1="139.04" y1="340.43" x2="145.03" y2="340.82" opacity="0.58"/>
+    <line class="bind" x1="133.75" y1="345.75" x2="134.38" y2="354.73" opacity="0.58"/>
+    <line class="bind" x1="128.33" y1="342.76" x2="123.04" y2="345.59" opacity="0.58"/>
+    <line class="bind" x1="129.56" y1="335.81" x2="123.57" y2="329.09" opacity="0.58"/>
+    <line class="bind" x1="133.73" y1="334.38" x2="134.12" y2="328.39" opacity="0.58"/>
+      <title>edge: bind
+pg_search_query_sql -&gt; pg_search_query_sql
+weight: 6
+
+path:
+pg_search_query_sql -&gt; pg_search_query_sql</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="bind" d="M 98.15 320.16 Q 111.75 319.08 122.24 310.37" stroke-width="1.44" opacity="0.85"/>
+    <line class="bind" x1="101.46" y1="314.50" x2="104.47" y2="321.91" opacity="0.75"/>
+    <line class="bind" x1="103.49" y1="312.59" x2="107.26" y2="321.85" opacity="0.75"/>
+    <line class="bind" x1="106.28" y1="312.54" x2="109.29" y2="319.95" opacity="0.75"/>
+    <line class="bind" x1="127.42" y1="309.53" x2="133.34" y2="308.58" opacity="0.58"/>
+    <line class="bind" x1="118.84" y1="314.37" x2="113.01" y2="321.23" opacity="0.58"/>
+    <line class="bind" x1="119.12" y1="306.14" x2="115.56" y2="301.32" opacity="0.58"/>
+      <title>edge: bind
+pg_search_match_sql -&gt; pg_search_match_sql
+weight: 3
+
+path:
+pg_search_match_sql -&gt; pg_search_match_sql</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="bind" d="M 70.53 272.56 Q 83.95 276.68 96.43 270.24" stroke-width="1.76" opacity="0.85"/>
+    <line class="bind" x1="75.36" y1="268.11" x2="76.07" y2="276.08" opacity="0.75"/>
+    <line class="bind" x1="77.86" y1="266.88" x2="78.75" y2="276.84" opacity="0.75"/>
+    <line class="bind" x1="80.54" y1="267.65" x2="81.25" y2="275.62" opacity="0.75"/>
+    <line class="bind" x1="83.04" y1="266.42" x2="83.93" y2="276.38" opacity="0.75"/>
+    <line class="bind" x1="85.72" y1="267.18" x2="86.43" y2="275.15" opacity="0.75"/>
+    <line class="bind" x1="88.22" y1="265.96" x2="89.11" y2="275.92" opacity="0.75"/>
+    <line class="bind" x1="102.26" y1="269.71" x2="108.23" y2="269.17" opacity="0.58"/>
+    <line class="bind" x1="99.42" y1="275.27" x2="104.02" y2="283.01" opacity="0.58"/>
+    <line class="bind" x1="92.07" y1="274.15" x2="87.61" y2="278.15" opacity="0.58"/>
+    <line class="bind" x1="91.40" y1="267.27" x2="83.65" y2="262.68" opacity="0.58"/>
+    <line class="bind" x1="98.07" y1="264.63" x2="99.74" y2="258.87" opacity="0.58"/>
+      <title>edge: bind
+pg_search_rank_sql -&gt; pg_search_rank_sql
+weight: 7
+
+path:
+pg_search_rank_sql -&gt; pg_search_rank_sql</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="bind" d="M 80.37 229.79 Q 92.43 237.09 106.09 233.63" stroke-width="1.76" opacity="0.85"/>
+    <line class="bind" x1="86.11" y1="226.60" x2="84.93" y2="234.52" opacity="0.75"/>
+    <line class="bind" x1="88.83" y1="226.00" x2="87.35" y2="235.89" opacity="0.75"/>
+    <line class="bind" x1="91.25" y1="227.37" x2="90.07" y2="235.28" opacity="0.75"/>
+    <line class="bind" x1="93.97" y1="226.76" x2="92.49" y2="236.66" opacity="0.75"/>
+    <line class="bind" x1="96.39" y1="228.14" x2="95.21" y2="236.05" opacity="0.75"/>
+    <line class="bind" x1="99.11" y1="227.53" x2="97.64" y2="237.42" opacity="0.75"/>
+    <line class="bind" x1="111.84" y1="232.57" x2="117.74" y2="231.49" opacity="0.58"/>
+    <line class="bind" x1="108.21" y1="239.08" x2="111.48" y2="247.46" opacity="0.58"/>
+    <line class="bind" x1="101.44" y1="237.18" x2="96.67" y2="240.82" opacity="0.58"/>
+    <line class="bind" x1="101.46" y1="230.04" x2="94.35" y2="224.53" opacity="0.58"/>
+    <line class="bind" x1="108.82" y1="228.46" x2="111.63" y2="223.15" opacity="0.58"/>
+      <title>edge: bind
+pg_search_headline_options_default -&gt; pg_search_headline_options_default
+weight: 7
+
+path:
+pg_search_headline_options_default -&gt; pg_search_headline_options_default</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="bind" d="M 114.00 149.93 Q 122.54 160.22 134.83 165.49" stroke-width="1.80" opacity="0.85"/>
+    <line class="bind" x1="120.56" y1="149.84" x2="115.77" y2="156.25" opacity="0.75"/>
+    <line class="bind" x1="123.24" y1="150.59" x2="117.26" y2="158.61" opacity="0.75"/>
+    <line class="bind" x1="124.72" y1="152.95" x2="119.94" y2="159.36" opacity="0.75"/>
+    <line class="bind" x1="127.41" y1="153.71" x2="121.42" y2="161.72" opacity="0.75"/>
+    <line class="bind" x1="128.89" y1="156.06" x2="124.10" y2="162.47" opacity="0.75"/>
+    <line class="bind" x1="131.57" y1="156.82" x2="125.59" y2="164.83" opacity="0.75"/>
+    <line class="bind" x1="141.34" y1="163.52" x2="147.08" y2="161.77" opacity="0.58"/>
+    <line class="bind" x1="137.76" y1="171.63" x2="141.64" y2="179.75" opacity="0.58"/>
+    <line class="bind" x1="128.81" y1="168.65" x2="123.50" y2="171.44" opacity="0.58"/>
+    <line class="bind" x1="129.77" y1="160.95" x2="123.07" y2="154.94" opacity="0.58"/>
+    <line class="bind" x1="135.05" y1="158.69" x2="135.25" y2="152.70" opacity="0.58"/>
+      <title>edge: bind
+pg_search_headline_sql -&gt; pg_search_headline_sql
+weight: 22
+
+path:
+pg_search_headline_sql -&gt; pg_search_headline_sql</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="bind" d="M 213.04 103.57 Q 210.85 117.69 220.09 128.60" stroke-width="1.80" opacity="0.85"/>
+    <line class="bind" x1="218.30" y1="107.49" x2="210.60" y2="109.66" opacity="0.75"/>
+    <line class="bind" x1="219.97" y1="109.72" x2="210.34" y2="112.43" opacity="0.75"/>
+    <line class="bind" x1="219.71" y1="112.50" x2="212.01" y2="114.67" opacity="0.75"/>
+    <line class="bind" x1="221.38" y1="114.73" x2="211.75" y2="117.44" opacity="0.75"/>
+    <line class="bind" x1="221.12" y1="117.50" x2="213.42" y2="119.67" opacity="0.75"/>
+    <line class="bind" x1="222.79" y1="119.73" x2="213.16" y2="122.45" opacity="0.75"/>
+    <line class="bind" x1="226.32" y1="126.93" x2="232.12" y2="125.38" opacity="0.58"/>
+    <line class="bind" x1="221.24" y1="134.94" x2="222.84" y2="143.80" opacity="0.58"/>
+    <line class="bind" x1="214.13" y1="131.07" x2="208.59" y2="133.36" opacity="0.58"/>
+    <line class="bind" x1="214.96" y1="124.68" x2="207.81" y2="119.23" opacity="0.58"/>
+    <line class="bind" x1="221.90" y1="122.41" x2="223.59" y2="116.65" opacity="0.58"/>
+      <title>edge: bind
+pg_search_create_index_sql -&gt; pg_search_create_index_sql
+weight: 11
+
+path:
+pg_search_create_index_sql -&gt; pg_search_create_index_sql</title>
+    </g>
+  </g>
+  <g id="terminals">
+    <g class="edge-wrap">
+    <path class="term" d="M 284.31 106.73 Q 278.86 134.79 281.73 163.24" stroke-width="1.65" opacity="0.90"/>
+      <title>edge: return
+pg_search_ok_config -&gt; pg_search_ok_config
+weight: 2
+
+path:
+pg_search_ok_config -&gt; pg_search_ok_config</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="term" d="M 317.34 109.59 Q 298.70 131.40 288.32 158.15" stroke-width="1.65" opacity="0.90"/>
+      <title>edge: return
+pg_search_ok_document -&gt; pg_search_ok_document
+weight: 2
+
+path:
+pg_search_ok_document -&gt; pg_search_ok_document</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="term" d="M 333.75 117.57 Q 316.20 141.10 313.31 170.31" stroke-width="1.65" opacity="0.90"/>
+      <title>edge: return
+pg_search_quote -&gt; pg_search_quote
+weight: 2
+
+path:
+pg_search_quote -&gt; pg_search_quote</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="term" d="M 371.36 126.11 Q 346.94 141.04 328.19 162.67" stroke-width="1.90" opacity="0.90"/>
+      <title>edge: return
+pg_search_valid_name -&gt; pg_search_valid_name
+weight: 4
+
+path:
+pg_search_valid_name -&gt; pg_search_valid_name</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="term" d="M 397.91 162.19 Q 372.47 176.14 355.60 199.74" stroke-width="1.65" opacity="0.90"/>
+      <title>edge: return
+pg_search_weight_valid -&gt; pg_search_weight_valid
+weight: 2
+
+path:
+pg_search_weight_valid -&gt; pg_search_weight_valid</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="term" d="M 408.34 186.33 Q 380.25 191.09 354.08 202.35" stroke-width="1.65" opacity="0.90"/>
+      <title>edge: return
+pg_search_config_simple -&gt; pg_search_config_simple
+weight: 2
+
+path:
+pg_search_config_simple -&gt; pg_search_config_simple</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="term" d="M 432.52 211.62 Q 403.78 208.78 376.26 217.51" stroke-width="1.80" opacity="0.90"/>
+      <title>edge: return
+pg_search_config_language -&gt; pg_search_config_language
+weight: 3
+
+path:
+pg_search_config_language -&gt; pg_search_config_language</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="term" d="M 436.73 263.12 Q 410.64 248.56 381.09 252.92" stroke-width="1.80" opacity="0.90"/>
+      <title>edge: return
+pg_search_config_custom -&gt; pg_search_config_custom
+weight: 3
+
+path:
+pg_search_config_custom -&gt; pg_search_config_custom</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="term" d="M 430.79 274.83 Q 404.11 264.97 375.97 260.88" stroke-width="1.65" opacity="0.90"/>
+      <title>edge: return
+pg_search_config_name -&gt; pg_search_config_name
+weight: 2
+
+path:
+pg_search_config_name -&gt; pg_search_config_name</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="term" d="M 418.11 298.33 Q 395.03 280.24 365.94 276.44" stroke-width="1.65" opacity="0.90"/>
+      <title>edge: return
+pg_search_field -&gt; pg_search_field
+weight: 2
+
+path:
+pg_search_field -&gt; pg_search_field</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="term" d="M 420.42 298.79 Q 397.16 281.11 368.24 276.94" stroke-width="1.65" opacity="0.90"/>
+      <title>edge: return
+pg_search_field_weighted -&gt; pg_search_field_weighted
+weight: 2
+
+path:
+pg_search_field_weighted -&gt; pg_search_field_weighted</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="term" d="M 407.05 350.15 Q 389.75 326.77 363.76 313.74" stroke-width="1.90" opacity="0.90"/>
+      <title>edge: return
+pg_search_document -&gt; pg_search_document
+weight: 4
+
+path:
+pg_search_document -&gt; pg_search_document</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="term" d="M 353.24 394.77 Q 348.39 365.52 327.66 344.32" stroke-width="1.80" opacity="0.90"/>
+      <title>edge: return
+pg_search_document_field_sql -&gt; pg_search_document_field_sql
+weight: 3
+
+path:
+pg_search_document_field_sql -&gt; pg_search_document_field_sql</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="term" d="M 250.76 418.31 Q 252.41 389.67 244.57 362.08" stroke-width="1.65" opacity="0.90"/>
+      <title>edge: return
+pg_search_document_sql -&gt; pg_search_document_sql
+weight: 2
+
+path:
+pg_search_document_sql -&gt; pg_search_document_sql</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="term" d="M 224.88 408.31 Q 234.76 380.57 228.25 351.84" stroke-width="1.65" opacity="0.90"/>
+      <title>edge: return
+pg_search_query_make -&gt; pg_search_query_make
+weight: 2
+
+path:
+pg_search_query_make -&gt; pg_search_query_make</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="term" d="M 195.92 396.09 Q 217.55 376.15 225.34 347.78" stroke-width="1.65" opacity="0.90"/>
+      <title>edge: return
+pg_search_query_plain -&gt; pg_search_query_plain
+weight: 2
+
+path:
+pg_search_query_plain -&gt; pg_search_query_plain</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="term" d="M 191.46 393.69 Q 202.54 367.50 207.98 339.59" stroke-width="1.65" opacity="0.90"/>
+      <title>edge: return
+pg_search_query_phrase -&gt; pg_search_query_phrase
+weight: 2
+
+path:
+pg_search_query_phrase -&gt; pg_search_query_phrase</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="term" d="M 170.56 394.59 Q 191.96 375.60 206.76 351.12" stroke-width="1.65" opacity="0.90"/>
+      <title>edge: return
+pg_search_query_web -&gt; pg_search_query_web
+weight: 2
+
+path:
+pg_search_query_web -&gt; pg_search_query_web</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="term" d="M 132.00 370.00 Q 158.14 358.10 178.64 337.99" stroke-width="1.65" opacity="0.90"/>
+      <title>edge: return
+pg_search_query_raw -&gt; pg_search_query_raw
+weight: 2
+
+path:
+pg_search_query_raw -&gt; pg_search_query_raw</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="term" d="M 111.91 354.77 Q 134.19 337.22 153.57 316.51" stroke-width="1.65" opacity="0.90"/>
+      <title>edge: return
+pg_search_query_sql -&gt; pg_search_query_sql
+weight: 2
+
+path:
+pg_search_query_sql -&gt; pg_search_query_sql</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="term" d="M 98.15 320.16 Q 126.83 318.29 153.04 306.48" stroke-width="1.65" opacity="0.90"/>
+      <title>edge: return
+pg_search_match_sql -&gt; pg_search_match_sql
+weight: 2
+
+path:
+pg_search_match_sql -&gt; pg_search_match_sql</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="term" d="M 70.53 272.56 Q 99.51 272.22 125.60 259.61" stroke-width="1.65" opacity="0.90"/>
+      <title>edge: return
+pg_search_rank_sql -&gt; pg_search_rank_sql
+weight: 2
+
+path:
+pg_search_rank_sql -&gt; pg_search_rank_sql</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="term" d="M 80.37 229.79 Q 105.63 244.05 134.58 245.97" stroke-width="1.65" opacity="0.90"/>
+      <title>edge: return
+pg_search_headline_options_default -&gt; pg_search_headline_options_default
+weight: 2
+
+path:
+pg_search_headline_options_default -&gt; pg_search_headline_options_default</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="term" d="M 114.00 149.93 Q 131.12 172.82 154.08 189.85" stroke-width="1.65" opacity="0.90"/>
+      <title>edge: return
+pg_search_headline_sql -&gt; pg_search_headline_sql
+weight: 2
+
+path:
+pg_search_headline_sql -&gt; pg_search_headline_sql</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="term" d="M 213.04 103.57 Q 218.14 132.24 235.93 155.30" stroke-width="1.65" opacity="0.90"/>
+      <title>edge: return
+pg_search_create_index_sql -&gt; pg_search_create_index_sql
+weight: 2
+
+path:
+pg_search_create_index_sql -&gt; pg_search_create_index_sql</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="term" d="M 262.56 107.38 Q 262.26 135.82 268.08 163.67" stroke-width="1.65" opacity="0.90"/>
+      <title>edge: return
+pg_search_drop_index_sql -&gt; pg_search_drop_index_sql
+weight: 2
+
+path:
+pg_search_drop_index_sql -&gt; pg_search_drop_index_sql</title>
+    </g>
+  </g>
+  <g id="nodes">
+    <g class="node-wrap">
+      <circle class="node-main" cx="284.31" cy="106.73" r="5.95" data-kind="rituale" data-ritual="pg_search_ok_config" data-line="66" data-col="1" data-depth="3" data-stmt="RITUALE" data-loops="0" data-calls="1"/>
+      <title>RITUALE pg_search_ok_config
+stmt: 1
+depth: 3
+loops: 0
+calls: 1
+source:
+RITUALE pg_search_ok_config(PgSearchConfig config) REDDE SPECULUM NIHIL</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="281.73" cy="163.24" r="3.60" data-kind="term" data-ritual="pg_search_ok_config" data-line="67" data-col="3" data-depth="3" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: pg_search_ok_config
+depth: 3
+line: 67
+
+source:
+REDDE CONIURA Ok GENUS(PgSearchConfig, VERBUM)(config)</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-main" cx="317.34" cy="109.59" r="5.95" data-kind="rituale" data-ritual="pg_search_ok_document" data-line="70" data-col="1" data-depth="3" data-stmt="RITUALE" data-loops="0" data-calls="1"/>
+      <title>RITUALE pg_search_ok_document
+stmt: 1
+depth: 3
+loops: 0
+calls: 1
+source:
+RITUALE pg_search_ok_document(PgSearchDocument document) REDDE SPECULUM NIHIL</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="288.32" cy="158.15" r="3.60" data-kind="term" data-ritual="pg_search_ok_document" data-line="71" data-col="3" data-depth="3" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: pg_search_ok_document
+depth: 3
+line: 71
+
+source:
+REDDE CONIURA Ok GENUS(PgSearchDocument, VERBUM)(document)</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-main" cx="333.75" cy="117.57" r="6.25" data-kind="rituale" data-ritual="pg_search_quote" data-line="74" data-col="1" data-depth="3" data-stmt="RITUALE" data-loops="0" data-calls="3"/>
+      <title>RITUALE pg_search_quote
+stmt: 3
+depth: 3
+loops: 0
+calls: 3
+source:
+RITUALE pg_search_quote(VERBUM texto) REDDE VERBUM</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="321.02" cy="140.24" r="3.10" data-kind="bind" data-ritual="pg_search_quote" data-line="75" data-col="3" data-depth="3" data-stmt="EVOCA"/>
+      <title>stmt: EVOCA
+rituale: pg_search_quote
+depth: 3
+line: 75
+
+source:
+EVOCA VERBUM escaped AD CONIURA replace_all(texto, "'", "''")</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="313.31" cy="170.31" r="3.60" data-kind="term" data-ritual="pg_search_quote" data-line="77" data-col="3" data-depth="3" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: pg_search_quote
+depth: 3
+line: 77
+
+source:
+REDDE CONIURA concat(out, "'")</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-main" cx="371.36" cy="126.11" r="7.30" data-kind="rituale" data-ritual="pg_search_valid_name" data-line="80" data-col="1" data-depth="10" data-stmt="RITUALE" data-loops="1" data-calls="2"/>
+      <title>RITUALE pg_search_valid_name
+stmt: 10
+depth: 10
+loops: 1
+calls: 2
+source:
+RITUALE pg_search_valid_name(VERBUM name) REDDE VERUM</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="364.73" cy="169.71" r="5.80" data-kind="branch" data-ritual="pg_search_valid_name" data-line="83" data-col="3" data-depth="10" data-stmt="SI"/>
+      <title>stmt: SI
+rituale: pg_search_valid_name
+depth: 10
+line: 83
+
+source:
+SI n == 0</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-loop" cx="408.23" cy="126.76" r="4.70" data-kind="loop" data-ritual="pg_search_valid_name" data-line="86" data-col="3" data-depth="10" data-stmt="DUM"/>
+      <title>stmt: DUM
+rituale: pg_search_valid_name
+depth: 10
+line: 86
+
+source:
+DUM i &lt; n</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="354.09" cy="145.55" r="3.40" data-kind="bind" data-ritual="pg_search_valid_name" data-line="81" data-col="3" data-depth="10" data-stmt="EVOCA"/>
+      <title>stmt: EVOCA
+rituale: pg_search_valid_name
+depth: 10
+line: 81
+
+source:
+EVOCA REX i AD 0</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="328.19" cy="162.67" r="4.40" data-kind="term" data-ritual="pg_search_valid_name" data-line="84" data-col="5" data-depth="10" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: pg_search_valid_name
+depth: 10
+line: 84
+
+source:
+REDDE FALSUM</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-main" cx="397.91" cy="162.19" r="5.95" data-kind="rituale" data-ritual="pg_search_weight_valid" data-line="96" data-col="1" data-depth="7" data-stmt="RITUALE" data-loops="0" data-calls="4"/>
+      <title>RITUALE pg_search_weight_valid
+stmt: 1
+depth: 7
+loops: 0
+calls: 4
+source:
+RITUALE pg_search_weight_valid(VERBUM weight) REDDE VERUM</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="355.60" cy="199.74" r="3.60" data-kind="term" data-ritual="pg_search_weight_valid" data-line="97" data-col="3" data-depth="7" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: pg_search_weight_valid
+depth: 7
+line: 97
+
+source:
+REDDE CONIURA compare(weight, "A") == 0 VEL CONIURA compare(weight, "B") == 0 VEL CONIURA com...</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-main" cx="408.34" cy="186.33" r="6.40" data-kind="rituale" data-ritual="pg_search_config_simple" data-line="100" data-col="1" data-depth="3" data-stmt="RITUALE" data-loops="0" data-calls="0"/>
+      <title>RITUALE pg_search_config_simple
+stmt: 4
+depth: 3
+loops: 0
+calls: 0
+source:
+RITUALE pg_search_config_simple() REDDE PgSearchConfig</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="384.69" cy="197.15" r="3.25" data-kind="bind" data-ritual="pg_search_config_simple" data-line="101" data-col="3" data-depth="3" data-stmt="EVOCA"/>
+      <title>stmt: EVOCA
+rituale: pg_search_config_simple
+depth: 3
+line: 101
+
+source:
+EVOCA PgSearchConfig config</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="354.08" cy="202.35" r="3.60" data-kind="term" data-ritual="pg_search_config_simple" data-line="104" data-col="3" data-depth="3" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: pg_search_config_simple
+depth: 3
+line: 104
+
+source:
+REDDE config</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-main" cx="432.52" cy="211.62" r="6.70" data-kind="rituale" data-ritual="pg_search_config_language" data-line="107" data-col="1" data-depth="5" data-stmt="RITUALE" data-loops="0" data-calls="3"/>
+      <title>RITUALE pg_search_config_language
+stmt: 6
+depth: 5
+loops: 0
+calls: 3
+source:
+RITUALE pg_search_config_language(VERBUM language) REDDE SPECULUM NIHIL</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="403.94" cy="243.55" r="4.80" data-kind="branch" data-ritual="pg_search_config_language" data-line="108" data-col="3" data-depth="5" data-stmt="SI"/>
+      <title>stmt: SI
+rituale: pg_search_config_language
+depth: 5
+line: 108
+
+source:
+SI NON CONIURA pg_search_valid_name(language)</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="407.30" cy="217.96" r="3.25" data-kind="bind" data-ritual="pg_search_config_language" data-line="111" data-col="3" data-depth="5" data-stmt="EVOCA"/>
+      <title>stmt: EVOCA
+rituale: pg_search_config_language
+depth: 5
+line: 111
+
+source:
+EVOCA PgSearchConfig config</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="376.26" cy="217.51" r="4.00" data-kind="term" data-ritual="pg_search_config_language" data-line="109" data-col="5" data-depth="5" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: pg_search_config_language
+depth: 5
+line: 109
+
+source:
+REDDE CONIURA Err GENUS(PgSearchConfig, VERBUM)("Idioma PostgreSQL invalido")</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-main" cx="436.73" cy="263.12" r="6.70" data-kind="rituale" data-ritual="pg_search_config_custom" data-line="117" data-col="1" data-depth="5" data-stmt="RITUALE" data-loops="0" data-calls="3"/>
+      <title>RITUALE pg_search_config_custom
+stmt: 6
+depth: 5
+loops: 0
+calls: 3
+source:
+RITUALE pg_search_config_custom(VERBUM name) REDDE SPECULUM NIHIL</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="400.31" cy="285.70" r="4.80" data-kind="branch" data-ritual="pg_search_config_custom" data-line="118" data-col="3" data-depth="5" data-stmt="SI"/>
+      <title>stmt: SI
+rituale: pg_search_config_custom
+depth: 5
+line: 118
+
+source:
+SI NON CONIURA pg_search_valid_name(name)</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="410.75" cy="262.10" r="3.25" data-kind="bind" data-ritual="pg_search_config_custom" data-line="121" data-col="3" data-depth="5" data-stmt="EVOCA"/>
+      <title>stmt: EVOCA
+rituale: pg_search_config_custom
+depth: 5
+line: 121
+
+source:
+EVOCA PgSearchConfig config</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="381.09" cy="252.92" r="4.00" data-kind="term" data-ritual="pg_search_config_custom" data-line="119" data-col="5" data-depth="5" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: pg_search_config_custom
+depth: 5
+line: 119
+
+source:
+REDDE CONIURA Err GENUS(PgSearchConfig, VERBUM)("Configuracao custom invalida")</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-main" cx="430.79" cy="274.83" r="5.95" data-kind="rituale" data-ritual="pg_search_config_name" data-line="127" data-col="1" data-depth="3" data-stmt="RITUALE" data-loops="0" data-calls="0"/>
+      <title>RITUALE pg_search_config_name
+stmt: 1
+depth: 3
+loops: 0
+calls: 0
+source:
+RITUALE pg_search_config_name(PgSearchConfig config) REDDE VERBUM</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="375.97" cy="260.88" r="3.60" data-kind="term" data-ritual="pg_search_config_name" data-line="128" data-col="3" data-depth="3" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: pg_search_config_name
+depth: 3
+line: 128
+
+source:
+REDDE config.name</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-main" cx="418.11" cy="298.33" r="6.40" data-kind="rituale" data-ritual="pg_search_field" data-line="131" data-col="1" data-depth="3" data-stmt="RITUALE" data-loops="0" data-calls="0"/>
+      <title>RITUALE pg_search_field
+stmt: 4
+depth: 3
+loops: 0
+calls: 0
+source:
+RITUALE pg_search_field(VERBUM expression_sql) REDDE PgSearchField</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="392.95" cy="291.76" r="3.25" data-kind="bind" data-ritual="pg_search_field" data-line="132" data-col="3" data-depth="3" data-stmt="EVOCA"/>
+      <title>stmt: EVOCA
+rituale: pg_search_field
+depth: 3
+line: 132
+
+source:
+EVOCA PgSearchField field</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="365.94" cy="276.44" r="3.60" data-kind="term" data-ritual="pg_search_field" data-line="135" data-col="3" data-depth="3" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: pg_search_field
+depth: 3
+line: 135
+
+source:
+REDDE field</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-main" cx="420.42" cy="298.79" r="6.40" data-kind="rituale" data-ritual="pg_search_field_weighted" data-line="138" data-col="1" data-depth="5" data-stmt="RITUALE" data-loops="0" data-calls="2"/>
+      <title>RITUALE pg_search_field_weighted
+stmt: 4
+depth: 5
+loops: 0
+calls: 2
+source:
+RITUALE pg_search_field_weighted(VERBUM expression_sql, VERBUM weight) REDDE PgSearchField</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="380.02" cy="313.07" r="4.80" data-kind="branch" data-ritual="pg_search_field_weighted" data-line="140" data-col="3" data-depth="5" data-stmt="SI"/>
+      <title>stmt: SI
+rituale: pg_search_field_weighted
+depth: 5
+line: 140
+
+source:
+SI CONIURA pg_search_weight_valid(weight)</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="395.26" cy="292.24" r="3.10" data-kind="bind" data-ritual="pg_search_field_weighted" data-line="139" data-col="3" data-depth="5" data-stmt="EVOCA"/>
+      <title>stmt: EVOCA
+rituale: pg_search_field_weighted
+depth: 5
+line: 139
+
+source:
+EVOCA PgSearchField field AD CONIURA pg_search_field(expression_sql)</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="368.24" cy="276.94" r="3.60" data-kind="term" data-ritual="pg_search_field_weighted" data-line="143" data-col="3" data-depth="5" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: pg_search_field_weighted
+depth: 5
+line: 143
+
+source:
+REDDE field</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-main" cx="407.05" cy="350.15" r="7.75" data-kind="rituale" data-ritual="pg_search_document" data-line="146" data-col="1" data-depth="8" data-stmt="RITUALE" data-loops="1" data-calls="7"/>
+      <title>RITUALE pg_search_document
+stmt: 13
+depth: 8
+loops: 1
+calls: 7
+source:
+RITUALE pg_search_document(PgSearchConfig config, SPECULUM NIHIL fields) REDDE SPECULUM NIHIL</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="362.95" cy="350.94" r="5.80" data-kind="branch" data-ritual="pg_search_document" data-line="147" data-col="3" data-depth="8" data-stmt="SI"/>
+      <title>stmt: SI
+rituale: pg_search_document
+depth: 8
+line: 147
+
+source:
+SI CONIURA fluxus_len(fields) == 0</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-loop" cx="412.61" cy="386.60" r="4.70" data-kind="loop" data-ritual="pg_search_document" data-line="152" data-col="3" data-depth="8" data-stmt="DUM"/>
+      <title>stmt: DUM
+rituale: pg_search_document
+depth: 8
+line: 152
+
+source:
+DUM i &lt; n</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="384.98" cy="336.39" r="3.85" data-kind="bind" data-ritual="pg_search_document" data-line="150" data-col="3" data-depth="8" data-stmt="EVOCA"/>
+      <title>stmt: EVOCA
+rituale: pg_search_document
+depth: 8
+line: 150
+
+source:
+EVOCA REX i AD 0</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="363.76" cy="313.74" r="4.40" data-kind="term" data-ritual="pg_search_document" data-line="148" data-col="5" data-depth="8" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: pg_search_document
+depth: 8
+line: 148
+
+source:
+REDDE CONIURA Err GENUS(PgSearchDocument, VERBUM)("Documento de busca exige ao menos um campo")</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-main" cx="353.24" cy="394.77" r="7.75" data-kind="rituale" data-ritual="pg_search_document_field_sql" data-line="165" data-col="1" data-depth="5" data-stmt="RITUALE" data-loops="0" data-calls="12"/>
+      <title>RITUALE pg_search_document_field_sql
+stmt: 13
+depth: 5
+loops: 0
+calls: 12
+source:
+RITUALE pg_search_document_field_sql(PgSearchConfig config, PgSearchField field) REDDE VERBUM</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="313.22" cy="379.48" r="4.80" data-kind="branch" data-ritual="pg_search_document_field_sql" data-line="171" data-col="3" data-depth="5" data-stmt="SI"/>
+      <title>stmt: SI
+rituale: pg_search_document_field_sql
+depth: 5
+line: 171
+
+source:
+SI CONIURA len(field.weight) == 0</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="338.32" cy="373.48" r="4.30" data-kind="bind" data-ritual="pg_search_document_field_sql" data-line="166" data-col="3" data-depth="5" data-stmt="EVOCA"/>
+      <title>stmt: EVOCA
+rituale: pg_search_document_field_sql
+depth: 5
+line: 166
+
+source:
+EVOCA VERBUM base AD "to_tsvector("</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="327.66" cy="344.32" r="4.00" data-kind="term" data-ritual="pg_search_document_field_sql" data-line="172" data-col="5" data-depth="5" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: pg_search_document_field_sql
+depth: 5
+line: 172
+
+source:
+REDDE base</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-main" cx="250.76" cy="418.31" r="7.30" data-kind="rituale" data-ritual="pg_search_document_sql" data-line="182" data-col="1" data-depth="7" data-stmt="RITUALE" data-loops="1" data-calls="5"/>
+      <title>RITUALE pg_search_document_sql
+stmt: 10
+depth: 7
+loops: 1
+calls: 5
+source:
+RITUALE pg_search_document_sql(PgSearchDocument document) REDDE VERBUM</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="275.89" cy="383.60" r="4.80" data-kind="branch" data-ritual="pg_search_document_sql" data-line="188" data-col="5" data-depth="7" data-stmt="SI"/>
+      <title>stmt: SI
+rituale: pg_search_document_sql
+depth: 7
+line: 188
+
+source:
+SI i &gt; 0</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-loop" cx="277.97" cy="443.20" r="4.70" data-kind="loop" data-ritual="pg_search_document_sql" data-line="186" data-col="3" data-depth="7" data-stmt="DUM"/>
+      <title>stmt: DUM
+rituale: pg_search_document_sql
+depth: 7
+line: 186
+
+source:
+DUM i &lt; n</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="251.60" cy="392.32" r="3.85" data-kind="bind" data-ritual="pg_search_document_sql" data-line="183" data-col="3" data-depth="7" data-stmt="EVOCA"/>
+      <title>stmt: EVOCA
+rituale: pg_search_document_sql
+depth: 7
+line: 183
+
+source:
+EVOCA REX i AD 0</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="244.57" cy="362.08" r="3.60" data-kind="term" data-ritual="pg_search_document_sql" data-line="194" data-col="3" data-depth="7" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: pg_search_document_sql
+depth: 7
+line: 194
+
+source:
+REDDE out</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-main" cx="224.88" cy="408.31" r="6.55" data-kind="rituale" data-ritual="pg_search_query_make" data-line="197" data-col="1" data-depth="3" data-stmt="RITUALE" data-loops="0" data-calls="0"/>
+      <title>RITUALE pg_search_query_make
+stmt: 5
+depth: 3
+loops: 0
+calls: 0
+source:
+RITUALE pg_search_query_make(PgSearchConfig config, PgSearchQueryMode mode, VERBUM input) RED...</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="230.09" cy="382.84" r="3.40" data-kind="bind" data-ritual="pg_search_query_make" data-line="198" data-col="3" data-depth="3" data-stmt="EVOCA"/>
+      <title>stmt: EVOCA
+rituale: pg_search_query_make
+depth: 3
+line: 198
+
+source:
+EVOCA PgSearchQuery query</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="228.25" cy="351.84" r="3.60" data-kind="term" data-ritual="pg_search_query_make" data-line="202" data-col="3" data-depth="3" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: pg_search_query_make
+depth: 3
+line: 202
+
+source:
+REDDE query</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-main" cx="195.92" cy="396.09" r="5.95" data-kind="rituale" data-ritual="pg_search_query_plain" data-line="205" data-col="1" data-depth="3" data-stmt="RITUALE" data-loops="0" data-calls="1"/>
+      <title>RITUALE pg_search_query_plain
+stmt: 1
+depth: 3
+loops: 0
+calls: 1
+source:
+RITUALE pg_search_query_plain(PgSearchConfig config, VERBUM input) REDDE PgSearchQuery</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="225.34" cy="347.78" r="3.60" data-kind="term" data-ritual="pg_search_query_plain" data-line="206" data-col="3" data-depth="3" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: pg_search_query_plain
+depth: 3
+line: 206
+
+source:
+REDDE CONIURA pg_search_query_make(config, SEARCH_QUERY_PLAIN, input)</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-main" cx="191.46" cy="393.69" r="5.95" data-kind="rituale" data-ritual="pg_search_query_phrase" data-line="209" data-col="1" data-depth="3" data-stmt="RITUALE" data-loops="0" data-calls="1"/>
+      <title>RITUALE pg_search_query_phrase
+stmt: 1
+depth: 3
+loops: 0
+calls: 1
+source:
+RITUALE pg_search_query_phrase(PgSearchConfig config, VERBUM input) REDDE PgSearchQuery</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="207.98" cy="339.59" r="3.60" data-kind="term" data-ritual="pg_search_query_phrase" data-line="210" data-col="3" data-depth="3" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: pg_search_query_phrase
+depth: 3
+line: 210
+
+source:
+REDDE CONIURA pg_search_query_make(config, SEARCH_QUERY_PHRASE, input)</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-main" cx="170.56" cy="394.59" r="5.95" data-kind="rituale" data-ritual="pg_search_query_web" data-line="213" data-col="1" data-depth="3" data-stmt="RITUALE" data-loops="0" data-calls="1"/>
+      <title>RITUALE pg_search_query_web
+stmt: 1
+depth: 3
+loops: 0
+calls: 1
+source:
+RITUALE pg_search_query_web(PgSearchConfig config, VERBUM input) REDDE PgSearchQuery</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="206.76" cy="351.12" r="3.60" data-kind="term" data-ritual="pg_search_query_web" data-line="214" data-col="3" data-depth="3" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: pg_search_query_web
+depth: 3
+line: 214
+
+source:
+REDDE CONIURA pg_search_query_make(config, SEARCH_QUERY_WEB, input)</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-main" cx="132.00" cy="370.00" r="5.95" data-kind="rituale" data-ritual="pg_search_query_raw" data-line="217" data-col="1" data-depth="3" data-stmt="RITUALE" data-loops="0" data-calls="1"/>
+      <title>RITUALE pg_search_query_raw
+stmt: 1
+depth: 3
+loops: 0
+calls: 1
+source:
+RITUALE pg_search_query_raw(PgSearchConfig config, VERBUM input) REDDE PgSearchQuery</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="178.64" cy="337.99" r="3.60" data-kind="term" data-ritual="pg_search_query_raw" data-line="218" data-col="3" data-depth="3" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: pg_search_query_raw
+depth: 3
+line: 218
+
+source:
+REDDE CONIURA pg_search_query_make(config, SEARCH_QUERY_RAW, input)</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-main" cx="111.91" cy="354.77" r="7.00" data-kind="rituale" data-ritual="pg_search_query_sql" data-line="221" data-col="1" data-depth="6" data-stmt="RITUALE" data-loops="0" data-calls="8"/>
+      <title>RITUALE pg_search_query_sql
+stmt: 8
+depth: 6
+loops: 0
+calls: 8
+source:
+RITUALE pg_search_query_sql(PgSearchQuery query) REDDE VERBUM</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="133.35" cy="340.07" r="3.70" data-kind="bind" data-ritual="pg_search_query_sql" data-line="222" data-col="3" data-depth="6" data-stmt="EVOCA"/>
+      <title>stmt: EVOCA
+rituale: pg_search_query_sql
+depth: 6
+line: 222
+
+source:
+EVOCA VERBUM fn AD "plainto_tsquery"</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="153.57" cy="316.51" r="3.60" data-kind="term" data-ritual="pg_search_query_sql" data-line="238" data-col="3" data-depth="6" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: pg_search_query_sql
+depth: 6
+line: 238
+
+source:
+REDDE out</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-main" cx="98.15" cy="320.16" r="6.40" data-kind="rituale" data-ritual="pg_search_match_sql" data-line="241" data-col="1" data-depth="4" data-stmt="RITUALE" data-loops="0" data-calls="4"/>
+      <title>RITUALE pg_search_match_sql
+stmt: 4
+depth: 4
+loops: 0
+calls: 4
+source:
+RITUALE pg_search_match_sql(PgSearchDocument document, PgSearchQuery query) REDDE VERBUM</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="122.24" cy="310.37" r="3.25" data-kind="bind" data-ritual="pg_search_match_sql" data-line="242" data-col="3" data-depth="4" data-stmt="EVOCA"/>
+      <title>stmt: EVOCA
+rituale: pg_search_match_sql
+depth: 4
+line: 242
+
+source:
+EVOCA VERBUM out AD CONIURA pg_search_document_sql(document)</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="153.04" cy="306.48" r="3.60" data-kind="term" data-ritual="pg_search_match_sql" data-line="245" data-col="3" data-depth="4" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: pg_search_match_sql
+depth: 4
+line: 245
+
+source:
+REDDE out</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-main" cx="70.53" cy="272.56" r="7.15" data-kind="rituale" data-ritual="pg_search_rank_sql" data-line="248" data-col="1" data-depth="4" data-stmt="RITUALE" data-loops="0" data-calls="7"/>
+      <title>RITUALE pg_search_rank_sql
+stmt: 9
+depth: 4
+loops: 0
+calls: 7
+source:
+RITUALE pg_search_rank_sql(PgSearchDocument document, PgSearchQuery query, PgSearchRankMode m...</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="108.03" cy="293.30" r="4.80" data-kind="branch" data-ritual="pg_search_rank_sql" data-line="250" data-col="3" data-depth="4" data-stmt="SI"/>
+      <title>stmt: SI
+rituale: pg_search_rank_sql
+depth: 4
+line: 250
+
+source:
+SI mode == SEARCH_RANK_COVER_DENSITY</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="96.43" cy="270.24" r="3.85" data-kind="bind" data-ritual="pg_search_rank_sql" data-line="249" data-col="3" data-depth="4" data-stmt="EVOCA"/>
+      <title>stmt: EVOCA
+rituale: pg_search_rank_sql
+depth: 4
+line: 249
+
+source:
+EVOCA VERBUM fn AD "ts_rank"</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="125.60" cy="259.61" r="3.60" data-kind="term" data-ritual="pg_search_rank_sql" data-line="258" data-col="3" data-depth="4" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: pg_search_rank_sql
+depth: 4
+line: 258
+
+source:
+REDDE out</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-main" cx="80.37" cy="229.79" r="7.00" data-kind="rituale" data-ritual="pg_search_headline_options_default" data-line="261" data-col="1" data-depth="3" data-stmt="RITUALE" data-loops="0" data-calls="0"/>
+      <title>RITUALE pg_search_headline_options_default
+stmt: 8
+depth: 3
+loops: 0
+calls: 0
+source:
+RITUALE pg_search_headline_options_default() REDDE PgSearchHeadlineOptions</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="106.09" cy="233.63" r="3.85" data-kind="bind" data-ritual="pg_search_headline_options_default" data-line="262" data-col="3" data-depth="3" data-stmt="EVOCA"/>
+      <title>stmt: EVOCA
+rituale: pg_search_headline_options_default
+depth: 3
+line: 262
+
+source:
+EVOCA PgSearchHeadlineOptions options</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="134.58" cy="245.97" r="3.60" data-kind="term" data-ritual="pg_search_headline_options_default" data-line="269" data-col="3" data-depth="3" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: pg_search_headline_options_default
+depth: 3
+line: 269
+
+source:
+REDDE options</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-main" cx="114.00" cy="149.93" r="9.40" data-kind="rituale" data-ritual="pg_search_headline_sql" data-line="272" data-col="1" data-depth="5" data-stmt="RITUALE" data-loops="0" data-calls="27"/>
+      <title>RITUALE pg_search_headline_sql
+stmt: 24
+depth: 5
+loops: 0
+calls: 27
+source:
+RITUALE pg_search_headline_sql(PgSearchConfig config, VERBUM source_sql, PgSearchQuery query,...</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="156.80" cy="151.95" r="4.80" data-kind="branch" data-ritual="pg_search_headline_sql" data-line="284" data-col="3" data-depth="5" data-stmt="SI"/>
+      <title>stmt: SI
+rituale: pg_search_headline_sql
+depth: 5
+line: 284
+
+source:
+SI options.highlight_all</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="108.07" cy="187.94" r="4.20" data-kind="branch" data-ritual="pg_search_headline_sql" data-line="287" data-col="5" data-depth="5" data-stmt="ALITER"/>
+      <title>stmt: ALITER
+rituale: pg_search_headline_sql
+depth: 5
+line: 287
+
+source:
+VINCIRE opt AD CONIURA concat(opt, "FALSE")</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="134.83" cy="165.49" r="4.80" data-kind="bind" data-ritual="pg_search_headline_sql" data-line="273" data-col="3" data-depth="5" data-stmt="EVOCA"/>
+      <title>stmt: EVOCA
+rituale: pg_search_headline_sql
+depth: 5
+line: 273
+
+source:
+EVOCA VERBUM opt AD "StartSel="</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="154.08" cy="189.85" r="3.60" data-kind="term" data-ritual="pg_search_headline_sql" data-line="298" data-col="3" data-depth="5" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: pg_search_headline_sql
+depth: 5
+line: 298
+
+source:
+REDDE out</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-main" cx="213.04" cy="103.57" r="7.75" data-kind="rituale" data-ritual="pg_search_create_index_sql" data-line="301" data-col="1" data-depth="4" data-stmt="RITUALE" data-loops="0" data-calls="9"/>
+      <title>RITUALE pg_search_create_index_sql
+stmt: 13
+depth: 4
+loops: 0
+calls: 9
+source:
+RITUALE pg_search_create_index_sql(VERBUM index_name, VERBUM table_name, PgSearchIndexKind ki...</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="199.57" cy="144.25" r="4.80" data-kind="branch" data-ritual="pg_search_create_index_sql" data-line="303" data-col="3" data-depth="4" data-stmt="SI"/>
+      <title>stmt: SI
+rituale: pg_search_create_index_sql
+depth: 4
+line: 303
+
+source:
+SI kind == SEARCH_INDEX_GIST</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="220.09" cy="128.60" r="4.45" data-kind="bind" data-ritual="pg_search_create_index_sql" data-line="302" data-col="3" data-depth="4" data-stmt="EVOCA"/>
+      <title>stmt: EVOCA
+rituale: pg_search_create_index_sql
+depth: 4
+line: 302
+
+source:
+EVOCA VERBUM using_name AD "GIN"</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="235.93" cy="155.30" r="3.60" data-kind="term" data-ritual="pg_search_create_index_sql" data-line="315" data-col="3" data-depth="4" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: pg_search_create_index_sql
+depth: 4
+line: 315
+
+source:
+REDDE out</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-main" cx="262.56" cy="107.38" r="5.95" data-kind="rituale" data-ritual="pg_search_drop_index_sql" data-line="318" data-col="1" data-depth="3" data-stmt="RITUALE" data-loops="0" data-calls="1"/>
+      <title>RITUALE pg_search_drop_index_sql
+stmt: 1
+depth: 3
+loops: 0
+calls: 1
+source:
+RITUALE pg_search_drop_index_sql(VERBUM index_name) REDDE VERBUM</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="268.08" cy="163.67" r="3.60" data-kind="term" data-ritual="pg_search_drop_index_sql" data-line="319" data-col="3" data-depth="3" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: pg_search_drop_index_sql
+depth: 3
+line: 319
+
+source:
+REDDE CONIURA concat("DROP INDEX IF EXISTS ", index_name)</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="244.96" cy="250.88" r="5.00" data-kind="bind" data-ritual="pg_search_ok_config" data-depth="3" data-stmt="EVOCA"/>
+      <title>stmt: EVOCA
+rituale: pg_search_ok_config
+depth: 3
+line: 0
+
+source:
+stmt: EVOCA
+rituale: pg_search_ok_config</title>
+    </g>
+  </g>
+  <g id="ornaments">
+    <circle class="orn" cx="454.51" cy="218.53" r="0.90"/>
+    <circle class="orn" cx="457.29" cy="309.60" r="1.90"/>
+    <circle class="orn" cx="365.67" cy="426.06" r="2.90"/>
+    <circle class="orn" cx="264.00" cy="455.06" r="0.90"/>
+    <circle class="orn" cx="241.75" cy="457.16" r="1.90"/>
+    <circle class="orn" cx="115.93" cy="401.82" r="2.90"/>
+    <circle class="orn" cx="59.90" cy="329.56" r="0.90"/>
+    <circle class="orn" cx="55.78" cy="243.05" r="1.90"/>
+    <circle class="orn" cx="73.46" cy="169.61" r="2.90"/>
+    <circle class="orn" cx="128.45" cy="90.25" r="0.90"/>
+    <circle class="orn" cx="193.58" cy="67.87" r="1.90"/>
+    <circle class="orn" cx="321.42" cy="65.47" r="2.90"/>
+    <circle class="orn" cx="372.77" cy="80.94" r="0.90"/>
+    <circle class="orn" cx="424.62" cy="131.92" r="1.90"/>
+  </g>
+  <g id="signature">
+    <text class="hash" x="256" y="496" text-anchor="middle">3dba2d6bca015a1e</text>
+    <text class="label" x="256" y="18" text-anchor="middle">network • sigillum v2.1 • 26 rituale(s) • 153 stmt • depth 10</text>
+  </g>
+</svg>

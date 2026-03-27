@@ -1,0 +1,25 @@
+INCIPIT grimoire "trace_capture_stop_disables_38a"
+
+ADVOCARE "cct/instrument.cct"
+ADVOCARE "cct/trace_capture.cct"
+
+RITUALE main() REDDE REX
+  EVOCA TraceCaptureSession session AD CONIURA trace_capture_start_in("tests/.tmp/trace_capture_stop_disables_38a", "capture-stop", INSTR_MODE_FULL)
+  EVOCA REX req AD CONIURA instrument_http_span("GET", "/health")
+  CONIURA instrument_span_end(req)
+
+  SI CONIURA trace_capture_stop(SPECULUM session) != 1
+    REDDE 1
+  FIN SI
+  SI CONIURA instrument_is_enabled()
+    REDDE 2
+  FIN SI
+
+  CONIURA instrument_event("http", "after-stop")
+  SI CONIURA trace_capture_snapshot(SPECULUM session) != 0
+    REDDE 3
+  FIN SI
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

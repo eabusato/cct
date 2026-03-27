@@ -1,0 +1,324 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512" role="img" aria-label="CCT local sigilo">
+  <desc>Deterministic semantic sigil for a single CCT module.</desc>
+  <defs>
+    <style><![CDATA[
+      .bg { fill: #f5f0e4; }
+      .base { stroke: #2a221c; stroke-width: 1.60; fill: none; opacity: 0.78; }
+      .primary { stroke: #241913; stroke-width: 2.80; fill: none; stroke-linecap: round; stroke-linejoin: round; }
+      .call { stroke: #5b2a22; stroke-width: 2.0; fill: none; stroke-linecap: round; opacity: 0.9; }
+      .branch { stroke: #6b342d; stroke-width: 1.6; fill: none; stroke-linecap: round; }
+      .loop { stroke: #2d5f5a; stroke-width: 1.6; fill: none; stroke-linecap: round; }
+      .bind { stroke: #73493d; stroke-width: 1.4; fill: none; stroke-linecap: round; }
+      .term { stroke: #201814; stroke-width: 1.7; fill: none; stroke-linecap: round; }
+      .node-main { fill: #fffaf1; stroke: #201814; stroke-width: 2.0; }
+      .node-entry { fill: #efe6d4; stroke: #201814; stroke-width: 2.4; }
+      .node-aux { fill: #f6efe0; stroke: #4f4339; stroke-width: 1.3; }
+      .node-loop { fill: #edf3f1; stroke: #2d5f5a; stroke-width: 1.4; }
+      .node-term { fill: #f3e7e3; stroke: #5a2a23; stroke-width: 1.4; }
+      .orn { stroke: #355d58; stroke-width: 1.0; fill: none; opacity: 0.55; }
+      .hash { fill: #1f1a17; font: 10px monospace; letter-spacing: 0.8px; }
+      .label { fill: #1f1a17; font: 8px monospace; opacity: 0.7; }
+      .node-wrap, .edge-wrap { cursor: help; }
+      .node-wrap:hover > circle { opacity: 0.96; }
+      .edge-wrap:hover > path, .edge-wrap:hover > line { opacity: 1.0; }
+    ]]></style>
+  </defs>
+  <rect class="bg" x="0" y="0" width="512" height="512"/>
+  <g id="foundation">
+    <circle class="base" cx="256" cy="256" r="226"/>
+    <ellipse class="base" cx="256" cy="256" rx="198" ry="180.70" opacity="0.32"/>
+  </g>
+  <g id="primary_path">
+    <g class="edge-wrap">
+    <path class="primary" d="M 300.41 109.10 Q 304.05 248.91 343.54 383.09" stroke-width="3.20" opacity="0.96"/>
+      <title>edge: primary
+main -&gt; expect_ok
+weight: 1
+
+path:
+main -&gt; expect_ok</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="primary" d="M 343.54 383.09 Q 253.95 368.42 165.13 387.18" stroke-width="2.60" opacity="0.96"/>
+      <title>edge: primary
+expect_ok -&gt; expect_err
+weight: 1
+
+path:
+expect_ok -&gt; expect_err</title>
+    </g>
+  </g>
+  <g id="call_links">
+    <g class="edge-wrap">
+    <path class="call" d="M 300.41 109.10 Q 283.31 252.18 343.54 383.09" stroke-width="2.85" opacity="0.86" data-kind="call" data-from="main" data-to="expect_ok" data-weight="3" data-self-loop="false"/>
+      <title>edge: call
+main -&gt; expect_ok
+calls: 3
+
+path:
+main -&gt; expect_ok</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="call" d="M 300.41 109.10 Q 198.39 231.41 165.13 387.18" stroke-width="2.50" opacity="0.80" data-kind="call" data-from="main" data-to="expect_err" data-weight="2" data-self-loop="false"/>
+      <title>edge: call
+main -&gt; expect_err
+calls: 2
+
+path:
+main -&gt; expect_err</title>
+    </g>
+  </g>
+  <g id="branches">
+    <g class="edge-wrap">
+    <path class="branch" d="M 165.13 387.18 Q 188.20 387.41 205.07 371.66" stroke-width="1.70" opacity="0.85"/>
+      <title>edge: branch
+expect_err -&gt; expect_err
+weight: 2
+
+path:
+expect_err -&gt; expect_err</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="branch" d="M 300.41 109.10 Q 273.28 120.00 263.69 147.62" stroke-width="2.10" opacity="0.85"/>
+      <title>edge: branch
+main -&gt; main
+weight: 10
+
+path:
+main -&gt; main</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="branch" d="M 243.41 262.07 Q 287.20 327.77 343.54 383.09" stroke-width="1.95" opacity="0.85"/>
+      <title>edge: branch
+main -&gt; expect_ok
+weight: 3
+
+path:
+main -&gt; expect_ok</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="branch" d="M 243.41 262.07 Q 193.90 318.14 165.13 387.18" stroke-width="2.10" opacity="0.85"/>
+      <title>edge: branch
+main -&gt; expect_err
+weight: 7
+
+path:
+main -&gt; expect_err</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="branch" d="M 243.41 262.07 Q 283.27 189.81 300.41 109.10" stroke-width="2.10" opacity="0.85"/>
+      <title>edge: branch
+main -&gt; main
+weight: 28
+
+path:
+main -&gt; main</title>
+    </g>
+  </g>
+  <g id="loops">
+  </g>
+  <g id="bindings">
+    <g class="edge-wrap">
+    <path class="bind" d="M 343.54 383.09 Q 337.70 371.32 328.79 361.67" stroke-width="1.28" opacity="0.85"/>
+    <line class="bind" x1="337.29" y1="381.07" x2="343.88" y2="376.53" opacity="0.75"/>
+    <line class="bind" x1="333.68" y1="362.43" x2="339.61" y2="363.34" opacity="0.58"/>
+      <title>edge: bind
+expect_ok -&gt; expect_ok
+weight: 1
+
+path:
+expect_ok -&gt; expect_ok</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="bind" d="M 165.13 387.18 Q 175.47 378.53 179.93 365.80" stroke-width="1.28" opacity="0.85"/>
+    <line class="bind" x1="164.80" y1="380.62" x2="171.38" y2="385.18" opacity="0.75"/>
+    <line class="bind" x1="184.83" y1="365.10" x2="190.77" y2="364.24" opacity="0.58"/>
+      <title>edge: bind
+expect_err -&gt; expect_err
+weight: 1
+
+path:
+expect_err -&gt; expect_err</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="bind" d="M 300.41 109.10 Q 289.84 119.48 292.89 133.99" stroke-width="1.28" opacity="0.85"/>
+    <line class="bind" x1="302.74" y1="115.23" x2="295.08" y2="112.92" opacity="0.75"/>
+    <line class="bind" x1="297.76" y1="133.08" x2="303.66" y2="131.99" opacity="0.58"/>
+      <title>edge: bind
+main -&gt; main
+weight: 1
+
+path:
+main -&gt; main</title>
+    </g>
+  </g>
+  <g id="terminals">
+    <g class="edge-wrap">
+    <path class="term" d="M 343.54 383.09 Q 333.52 356.48 318.36 332.43" stroke-width="1.65" opacity="0.90"/>
+      <title>edge: return
+expect_ok -&gt; expect_ok
+weight: 2
+
+path:
+expect_ok -&gt; expect_ok</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="term" d="M 165.13 387.18 Q 181.87 363.93 190.44 336.59" stroke-width="1.80" opacity="0.90"/>
+      <title>edge: return
+expect_err -&gt; expect_err
+weight: 3
+
+path:
+expect_err -&gt; expect_err</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="term" d="M 300.41 109.10 Q 288.11 135.83 291.86 165.02" stroke-width="1.90" opacity="0.90"/>
+      <title>edge: return
+main -&gt; main
+weight: 11
+
+path:
+main -&gt; main</title>
+    </g>
+  </g>
+  <g id="nodes">
+    <g class="node-wrap">
+      <circle class="node-main" cx="343.54" cy="383.09" r="6.25" data-kind="rituale" data-ritual="expect_ok" data-line="9" data-col="1" data-depth="3" data-stmt="RITUALE" data-loops="0" data-calls="2"/>
+      <title>RITUALE expect_ok
+stmt: 3
+depth: 3
+loops: 0
+calls: 2
+source:
+RITUALE expect_ok(SPECULUM NIHIL res) REDDE VERUM</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="328.79" cy="361.67" r="2.95" data-kind="bind" data-ritual="expect_ok" data-line="10" data-col="3" data-depth="3" data-stmt="EVOCA"/>
+      <title>stmt: EVOCA
+rituale: expect_ok
+depth: 3
+line: 10
+
+source:
+EVOCA VERUM ok AD CONIURA result_is_ok GENUS(VERBUM, VERBUM)(res)</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="318.36" cy="332.43" r="3.60" data-kind="term" data-ritual="expect_ok" data-line="12" data-col="3" data-depth="3" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: expect_ok
+depth: 3
+line: 12
+
+source:
+REDDE ok</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-main" cx="165.13" cy="387.18" r="6.70" data-kind="rituale" data-ritual="expect_err" data-line="15" data-col="1" data-depth="5" data-stmt="RITUALE" data-loops="0" data-calls="5"/>
+      <title>RITUALE expect_err
+stmt: 6
+depth: 5
+loops: 0
+calls: 5
+source:
+RITUALE expect_err(SPECULUM NIHIL res, VERBUM expected) REDDE VERUM</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="205.07" cy="371.66" r="4.80" data-kind="branch" data-ritual="expect_err" data-line="16" data-col="3" data-depth="5" data-stmt="SI"/>
+      <title>stmt: SI
+rituale: expect_err
+depth: 5
+line: 16
+
+source:
+SI NON CONIURA result_is_err GENUS(VERBUM, VERBUM)(res)</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="179.93" cy="365.80" r="2.95" data-kind="bind" data-ritual="expect_err" data-line="20" data-col="3" data-depth="5" data-stmt="EVOCA"/>
+      <title>stmt: EVOCA
+rituale: expect_err
+depth: 5
+line: 20
+
+source:
+EVOCA VERBUM msg AD CONIURA result_unwrap_err GENUS(VERBUM, VERBUM)(res)</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="190.44" cy="336.59" r="4.00" data-kind="term" data-ritual="expect_err" data-line="18" data-col="5" data-depth="5" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: expect_err
+depth: 5
+line: 18
+
+source:
+REDDE FALSUM</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-entry" cx="300.41" cy="109.10" r="11.10" data-kind="rituale" data-ritual="main" data-line="25" data-col="1" data-depth="5" data-stmt="RITUALE" data-loops="0" data-calls="17" data-entry="true"/>
+      <title>RITUALE main
+stmt: 22
+depth: 5
+loops: 0
+calls: 17
+source:
+RITUALE main() REDDE REX</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="263.69" cy="147.62" r="5.80" data-kind="branch" data-ritual="main" data-line="29" data-col="3" data-depth="5" data-stmt="SI"/>
+      <title>stmt: SI
+rituale: main
+depth: 5
+line: 29
+
+source:
+SI NON CONIURA expect_ok(CONIURA app_cadastrar(db, " Ana Souza ", " 9A ", "8.5"))</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="292.89" cy="133.99" r="2.95" data-kind="bind" data-ritual="main" data-line="26" data-col="3" data-depth="5" data-stmt="EVOCA"/>
+      <title>stmt: EVOCA
+rituale: main
+depth: 5
+line: 26
+
+source:
+EVOCA SPECULUM NIHIL db AD CONIURA db_open(":memory:")</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="291.86" cy="165.02" r="4.60" data-kind="term" data-ritual="main" data-line="30" data-col="5" data-depth="5" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: main
+depth: 5
+line: 30
+
+source:
+REDDE 1</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="243.41" cy="262.07" r="5.00" data-kind="bind" data-ritual="main" data-line="26" data-col="3" data-depth="5" data-stmt="EVOCA"/>
+      <title>stmt: EVOCA
+rituale: main
+depth: 5
+line: 26
+
+source:
+EVOCA SPECULUM NIHIL db AD CONIURA db_open(":memory:")</title>
+    </g>
+  </g>
+  <g id="ornaments">
+    <circle class="orn" cx="461.54" cy="294.43" r="0.90"/>
+    <circle class="orn" cx="411.52" cy="388.80" r="1.90"/>
+    <circle class="orn" cx="331.51" cy="451.82" r="2.90"/>
+    <circle class="orn" cx="264.49" cy="455.35" r="0.90"/>
+    <circle class="orn" cx="94.17" cy="390.63" r="1.90"/>
+    <circle class="orn" cx="50.90" cy="278.69" r="2.90"/>
+    <circle class="orn" cx="70.46" cy="167.07" r="0.90"/>
+    <circle class="orn" cx="133.90" cy="87.20" r="1.90"/>
+    <circle class="orn" cx="258.20" cy="47.03" r="2.90"/>
+    <circle class="orn" cx="343.64" cy="66.61" r="0.90"/>
+    <circle class="orn" cx="441.57" cy="168.79" r="1.90"/>
+  </g>
+  <g id="signature">
+    <text class="hash" x="256" y="496" text-anchor="middle">2bf428b2dbd5d578</text>
+    <text class="label" x="256" y="18" text-anchor="middle">network • sigillum v2.1 • 3 rituale(s) • 31 stmt • depth 5</text>
+  </g>
+</svg>

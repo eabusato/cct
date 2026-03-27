@@ -4193,7 +4193,8 @@ static bool cg_emit_obsecro_expr(FILE *out, cct_codegen_t *cg, const cct_ast_nod
             strcmp(name, "instr_builtin_is_enabled") == 0 ||
             strcmp(name, "instr_builtin_mode") == 0 ||
             strcmp(name, "instr_builtin_buffer_count") == 0 ||
-            strcmp(name, "instr_builtin_buffer_clear") == 0) {
+            strcmp(name, "instr_builtin_buffer_clear") == 0 ||
+            strcmp(name, "instr_builtin_buffer_discard_closed") == 0) {
             if (argc != 0) {
                 cg_report_nodef(cg, expr, "OBSECRO %s expects no arguments in FASE 38A", name);
                 return false;
@@ -4210,6 +4211,9 @@ static bool cg_emit_obsecro_expr(FILE *out, cct_codegen_t *cg, const cct_ast_nod
             } else if (strcmp(name, "instr_builtin_buffer_count") == 0) {
                 fputs("cct_rt_instr_buffer_count()", out);
                 if (out_kind) *out_kind = CCT_CODEGEN_VALUE_INT;
+            } else if (strcmp(name, "instr_builtin_buffer_discard_closed") == 0) {
+                fputs("cct_rt_instr_buffer_discard_closed()", out);
+                if (out_kind) *out_kind = CCT_CODEGEN_VALUE_NIHIL;
             } else {
                 fputs("cct_rt_instr_buffer_clear()", out);
                 if (out_kind) *out_kind = CCT_CODEGEN_VALUE_NIHIL;
@@ -8941,7 +8945,8 @@ static bool cg_emit_scribe_stmt(FILE *out, cct_codegen_t *cg, const cct_ast_node
         cg->uses_instrument = true;
 
         if (strcmp(name, "instr_builtin_disable") == 0 ||
-            strcmp(name, "instr_builtin_buffer_clear") == 0) {
+            strcmp(name, "instr_builtin_buffer_clear") == 0 ||
+            strcmp(name, "instr_builtin_buffer_discard_closed") == 0) {
             if (args && args->count != 0) {
                 cg_report_nodef(cg, obsecro_node, "OBSECRO %s expects no arguments in FASE 38A", name);
                 return false;
@@ -8950,6 +8955,8 @@ static bool cg_emit_scribe_stmt(FILE *out, cct_codegen_t *cg, const cct_ast_node
             fprintf(out, "%s();\n",
                     strcmp(name, "instr_builtin_disable") == 0
                         ? "cct_rt_instr_disable"
+                        : strcmp(name, "instr_builtin_buffer_discard_closed") == 0
+                            ? "cct_rt_instr_buffer_discard_closed"
                         : "cct_rt_instr_buffer_clear");
             return true;
         }
@@ -9032,7 +9039,7 @@ static bool cg_emit_scribe_stmt(FILE *out, cct_codegen_t *cg, const cct_ast_node
     }
 
     if (strcmp(obsecro_node->as.obsecro.name, "scribe") != 0) {
-        cg_report_nodef(cg, obsecro_node, "OBSECRO %s codegen is not supported in current executable subset (supported stmt builtins: scribe, libera, mem_free, mem_copy, mem_set, mem_zero, kernel_halt, kernel_outb, kernel_memcpy, kernel_memset, fluxus_free, fluxus_push, fluxus_pop, fluxus_clear, fluxus_reserve, fluxus_set, fluxus_remove, fluxus_insert, fluxus_reverse, fluxus_sort_int, fluxus_sort_verbum, alg_sort_verbum, json_arr_handle_push, json_obj_handle_push, sock_connect, sock_bind, sock_listen, sock_close, sock_set_timeout_ms, db_exec, db_close, rows_close, stmt_bind_text, stmt_bind_int, stmt_bind_real, stmt_reset, stmt_finalize, db_begin, db_commit, db_rollback, map_free, map_insert, map_clear, map_reserve, map_merge, set_free, set_clear, set_reserve, io_print, io_println, io_print_int, io_print_real, io_print_char, io_eprint, io_eprintln, io_eprint_int, io_eprint_real, io_flush, io_flush_err, fs_write_all, fs_append_all, fs_mkdir, fs_mkdir_all, fs_delete_file, fs_delete_dir, fs_rename, fs_copy, fs_move, fs_chmod, fs_truncate, fs_symlink, random_seed, time_sleep_ms, bytes_set, bytes_free, option_free, result_free, regex_builtin_free, image_builtin_free, scan_free, builder_append, builder_append_char, builder_clear, builder_free, writer_indent, writer_dedent, writer_write, writer_writeln, writer_free, instr_builtin_enable, instr_builtin_disable, instr_builtin_span_end, instr_builtin_span_attr, instr_builtin_event, instr_builtin_buffer_clear)",
+        cg_report_nodef(cg, obsecro_node, "OBSECRO %s codegen is not supported in current executable subset (supported stmt builtins: scribe, libera, mem_free, mem_copy, mem_set, mem_zero, kernel_halt, kernel_outb, kernel_memcpy, kernel_memset, fluxus_free, fluxus_push, fluxus_pop, fluxus_clear, fluxus_reserve, fluxus_set, fluxus_remove, fluxus_insert, fluxus_reverse, fluxus_sort_int, fluxus_sort_verbum, alg_sort_verbum, json_arr_handle_push, json_obj_handle_push, sock_connect, sock_bind, sock_listen, sock_close, sock_set_timeout_ms, db_exec, db_close, rows_close, stmt_bind_text, stmt_bind_int, stmt_bind_real, stmt_reset, stmt_finalize, db_begin, db_commit, db_rollback, map_free, map_insert, map_clear, map_reserve, map_merge, set_free, set_clear, set_reserve, io_print, io_println, io_print_int, io_print_real, io_print_char, io_eprint, io_eprintln, io_eprint_int, io_eprint_real, io_flush, io_flush_err, fs_write_all, fs_append_all, fs_mkdir, fs_mkdir_all, fs_delete_file, fs_delete_dir, fs_rename, fs_copy, fs_move, fs_chmod, fs_truncate, fs_symlink, random_seed, time_sleep_ms, bytes_set, bytes_free, option_free, result_free, regex_builtin_free, image_builtin_free, scan_free, builder_append, builder_append_char, builder_clear, builder_free, writer_indent, writer_dedent, writer_write, writer_writeln, writer_free, instr_builtin_enable, instr_builtin_disable, instr_builtin_span_end, instr_builtin_span_attr, instr_builtin_event, instr_builtin_buffer_clear, instr_builtin_buffer_discard_closed)",
                         obsecro_node->as.obsecro.name);
         return false;
     }

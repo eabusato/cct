@@ -1,0 +1,1227 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512" role="img" aria-label="CCT local sigilo">
+  <desc>Deterministic semantic sigil for a single CCT module.</desc>
+  <defs>
+    <style><![CDATA[
+      .bg { fill: #f5f0e4; }
+      .base { stroke: #2a221c; stroke-width: 1.60; fill: none; opacity: 0.78; }
+      .primary { stroke: #241913; stroke-width: 2.80; fill: none; stroke-linecap: round; stroke-linejoin: round; }
+      .call { stroke: #5b2a22; stroke-width: 2.0; fill: none; stroke-linecap: round; opacity: 0.9; }
+      .branch { stroke: #6b342d; stroke-width: 1.6; fill: none; stroke-linecap: round; }
+      .loop { stroke: #2d5f5a; stroke-width: 1.6; fill: none; stroke-linecap: round; }
+      .bind { stroke: #73493d; stroke-width: 1.4; fill: none; stroke-linecap: round; }
+      .term { stroke: #201814; stroke-width: 1.7; fill: none; stroke-linecap: round; }
+      .node-main { fill: #fffaf1; stroke: #201814; stroke-width: 2.0; }
+      .node-entry { fill: #efe6d4; stroke: #201814; stroke-width: 2.4; }
+      .node-aux { fill: #f6efe0; stroke: #4f4339; stroke-width: 1.3; }
+      .node-loop { fill: #edf3f1; stroke: #2d5f5a; stroke-width: 1.4; }
+      .node-term { fill: #f3e7e3; stroke: #5a2a23; stroke-width: 1.4; }
+      .orn { stroke: #355d58; stroke-width: 1.0; fill: none; opacity: 0.55; }
+      .hash { fill: #1f1a17; font: 10px monospace; letter-spacing: 0.8px; }
+      .label { fill: #1f1a17; font: 8px monospace; opacity: 0.7; }
+      .node-wrap, .edge-wrap { cursor: help; }
+      .node-wrap:hover > circle { opacity: 0.96; }
+      .edge-wrap:hover > path, .edge-wrap:hover > line { opacity: 1.0; }
+    ]]></style>
+  </defs>
+  <rect class="bg" x="0" y="0" width="512" height="512"/>
+  <g id="foundation">
+    <circle class="base" cx="256" cy="256" r="226"/>
+    <ellipse class="base" cx="256" cy="256" rx="198" ry="181.00" opacity="0.32"/>
+  </g>
+  <g id="primary_path">
+    <g class="edge-wrap">
+    <path class="primary" d="M 336.31 112.49 Q 350.82 158.31 398.84 156.15" stroke-width="2.60" opacity="0.96"/>
+      <title>edge: primary
+codegen_runtime_escape_c_string -&gt; codegen_runtime_string_symbol
+weight: 1
+
+path:
+codegen_runtime_escape_c_string -&gt; codegen_runtime_string_symbol</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="primary" d="M 398.84 156.15 Q 395.67 193.96 433.18 199.64" stroke-width="2.60" opacity="0.96"/>
+      <title>edge: primary
+codegen_runtime_string_symbol -&gt; codegen_runtime_emit_includes
+weight: 1
+
+path:
+codegen_runtime_string_symbol -&gt; codegen_runtime_emit_includes</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="primary" d="M 433.18 199.64 Q 418.67 238.76 457.37 254.36" stroke-width="2.60" opacity="0.96"/>
+      <title>edge: primary
+codegen_runtime_emit_includes -&gt; codegen_runtime_emit_failure_runtime
+weight: 1
+
+path:
+codegen_runtime_emit_includes -&gt; codegen_runtime_emit_failure_runtime</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="primary" d="M 457.37 254.36 Q 365.91 311.97 318.51 409.12" stroke-width="2.60" opacity="0.96"/>
+      <title>edge: primary
+codegen_runtime_emit_failure_runtime -&gt; codegen_runtime_emit_fmt_runtime
+weight: 1
+
+path:
+codegen_runtime_emit_failure_runtime -&gt; codegen_runtime_emit_fmt_runtime</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="primary" d="M 318.51 409.12 Q 239.25 368.53 151.15 381.43" stroke-width="2.60" opacity="0.96"/>
+      <title>edge: primary
+codegen_runtime_emit_fmt_runtime -&gt; codegen_runtime_emit_fail_helper
+weight: 1
+
+path:
+codegen_runtime_emit_fmt_runtime -&gt; codegen_runtime_emit_fail_helper</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="primary" d="M 151.15 381.43 Q 130.56 330.21 75.67 324.42" stroke-width="2.60" opacity="0.96"/>
+      <title>edge: primary
+codegen_runtime_emit_fail_helper -&gt; codegen_runtime_emit_scribe_runtime
+weight: 1
+
+path:
+codegen_runtime_emit_fail_helper -&gt; codegen_runtime_emit_scribe_runtime</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="primary" d="M 75.67 324.42 Q 97.57 284.89 68.66 250.15" stroke-width="2.60" opacity="0.96"/>
+      <title>edge: primary
+codegen_runtime_emit_scribe_runtime -&gt; codegen_runtime_emit_string_pool
+weight: 1
+
+path:
+codegen_runtime_emit_scribe_runtime -&gt; codegen_runtime_emit_string_pool</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="primary" d="M 68.66 250.15 Q 101.98 227.86 84.92 191.59" stroke-width="2.60" opacity="0.96"/>
+      <title>edge: primary
+codegen_runtime_emit_string_pool -&gt; codegen_runtime_find_entry_main_index
+weight: 1
+
+path:
+codegen_runtime_emit_string_pool -&gt; codegen_runtime_find_entry_main_index</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="primary" d="M 84.92 191.59 Q 122.59 180.49 111.97 142.67" stroke-width="2.60" opacity="0.96"/>
+      <title>edge: primary
+codegen_runtime_find_entry_main_index -&gt; codegen_runtime_emit_host_main
+weight: 1
+
+path:
+codegen_runtime_find_entry_main_index -&gt; codegen_runtime_emit_host_main</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="primary" d="M 111.97 142.67 Q 171.27 148.49 215.08 108.11" stroke-width="2.60" opacity="0.96"/>
+      <title>edge: primary
+codegen_runtime_emit_host_main -&gt; codegen_generate_translation_unit_with_context
+weight: 1
+
+path:
+codegen_runtime_emit_host_main -&gt; codegen_generate_translation_unit_with_context</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="primary" d="M 215.08 108.11 Q 245.75 137.16 278.76 110.81" stroke-width="2.60" opacity="0.96"/>
+      <title>edge: primary
+codegen_generate_translation_unit_with_context -&gt; codegen_generate_translation_unit
+weight: 1
+
+path:
+codegen_generate_translation_unit_with_context -&gt; codegen_generate_translation_unit</title>
+    </g>
+  </g>
+  <g id="call_links">
+    <g class="edge-wrap">
+    <path class="call" d="M 68.66 250.15 Q 218.41 212.29 336.31 112.49" stroke-width="2.15" opacity="0.74" data-kind="call" data-from="codegen_runtime_emit_string_pool" data-to="codegen_runtime_escape_c_string" data-weight="1" data-self-loop="false"/>
+      <title>edge: call
+codegen_runtime_emit_string_pool -&gt; codegen_runtime_escape_c_string
+calls: 1
+
+path:
+codegen_runtime_emit_string_pool -&gt; codegen_runtime_escape_c_string</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="call" d="M 111.97 142.67 Q 74.79 154.05 84.92 191.59" stroke-width="2.15" opacity="0.74" data-kind="call" data-from="codegen_runtime_emit_host_main" data-to="codegen_runtime_find_entry_main_index" data-weight="1" data-self-loop="false"/>
+      <title>edge: call
+codegen_runtime_emit_host_main -&gt; codegen_runtime_find_entry_main_index
+calls: 1
+
+path:
+codegen_runtime_emit_host_main -&gt; codegen_runtime_find_entry_main_index</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="call" d="M 215.08 108.11 Q 312.29 182.09 433.18 199.64" stroke-width="2.15" opacity="0.74" data-kind="call" data-from="codegen_generate_translation_unit_with_context" data-to="codegen_runtime_emit_includes" data-weight="1" data-self-loop="false"/>
+      <title>edge: call
+codegen_generate_translation_unit_with_context -&gt; codegen_runtime_emit_includes
+calls: 1
+
+path:
+codegen_generate_translation_unit_with_context -&gt; codegen_runtime_emit_includes</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="call" d="M 215.08 108.11 Q 155.53 238.32 151.15 381.43" stroke-width="2.15" opacity="0.74" data-kind="call" data-from="codegen_generate_translation_unit_with_context" data-to="codegen_runtime_emit_fail_helper" data-weight="1" data-self-loop="false"/>
+      <title>edge: call
+codegen_generate_translation_unit_with_context -&gt; codegen_runtime_emit_fail_helper
+calls: 1
+
+path:
+codegen_generate_translation_unit_with_context -&gt; codegen_runtime_emit_fail_helper</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="call" d="M 215.08 108.11 Q 118.90 199.21 75.67 324.42" stroke-width="2.15" opacity="0.74" data-kind="call" data-from="codegen_generate_translation_unit_with_context" data-to="codegen_runtime_emit_scribe_runtime" data-weight="1" data-self-loop="false"/>
+      <title>edge: call
+codegen_generate_translation_unit_with_context -&gt; codegen_runtime_emit_scribe_runtime
+calls: 1
+
+path:
+codegen_generate_translation_unit_with_context -&gt; codegen_runtime_emit_scribe_runtime</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="call" d="M 215.08 108.11 Q 320.52 207.26 457.37 254.36" stroke-width="2.15" opacity="0.74" data-kind="call" data-from="codegen_generate_translation_unit_with_context" data-to="codegen_runtime_emit_failure_runtime" data-weight="1" data-self-loop="false"/>
+      <title>edge: call
+codegen_generate_translation_unit_with_context -&gt; codegen_runtime_emit_failure_runtime
+calls: 1
+
+path:
+codegen_generate_translation_unit_with_context -&gt; codegen_runtime_emit_failure_runtime</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="call" d="M 215.08 108.11 Q 236.45 269.04 318.51 409.12" stroke-width="2.15" opacity="0.74" data-kind="call" data-from="codegen_generate_translation_unit_with_context" data-to="codegen_runtime_emit_fmt_runtime" data-weight="1" data-self-loop="false"/>
+      <title>edge: call
+codegen_generate_translation_unit_with_context -&gt; codegen_runtime_emit_fmt_runtime
+calls: 1
+
+path:
+codegen_generate_translation_unit_with_context -&gt; codegen_runtime_emit_fmt_runtime</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="call" d="M 215.08 108.11 Q 118.51 155.05 68.66 250.15" stroke-width="2.15" opacity="0.74" data-kind="call" data-from="codegen_generate_translation_unit_with_context" data-to="codegen_runtime_emit_string_pool" data-weight="1" data-self-loop="false"/>
+      <title>edge: call
+codegen_generate_translation_unit_with_context -&gt; codegen_runtime_emit_string_pool
+calls: 1
+
+path:
+codegen_generate_translation_unit_with_context -&gt; codegen_runtime_emit_string_pool</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="call" d="M 215.08 108.11 Q 153.63 95.86 111.97 142.67" stroke-width="2.15" opacity="0.74" data-kind="call" data-from="codegen_generate_translation_unit_with_context" data-to="codegen_runtime_emit_host_main" data-weight="1" data-self-loop="false"/>
+      <title>edge: call
+codegen_generate_translation_unit_with_context -&gt; codegen_runtime_emit_host_main
+calls: 1
+
+path:
+codegen_generate_translation_unit_with_context -&gt; codegen_runtime_emit_host_main</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="call" d="M 278.76 110.81 Q 248.10 81.61 215.08 108.11" stroke-width="2.15" opacity="0.74" data-kind="call" data-from="codegen_generate_translation_unit" data-to="codegen_generate_translation_unit_with_context" data-weight="1" data-self-loop="false"/>
+      <title>edge: call
+codegen_generate_translation_unit -&gt; codegen_generate_translation_unit_with_context
+calls: 1
+
+path:
+codegen_generate_translation_unit -&gt; codegen_generate_translation_unit_with_context</title>
+    </g>
+  </g>
+  <g id="branches">
+    <g class="edge-wrap">
+    <path class="branch" d="M 336.31 112.49 Q 328.07 136.58 336.99 160.42" stroke-width="2.10" opacity="0.85"/>
+      <title>edge: branch
+codegen_runtime_escape_c_string -&gt; codegen_runtime_escape_c_string
+weight: 6
+
+path:
+codegen_runtime_escape_c_string -&gt; codegen_runtime_escape_c_string</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="branch" d="M 336.99 160.42 Q 324.11 130.64 297.85 111.59" stroke-width="2.10" opacity="0.85"/>
+      <title>edge: branch
+codegen_runtime_escape_c_string -&gt; codegen_runtime_escape_c_string
+weight: 6
+
+path:
+codegen_runtime_escape_c_string -&gt; codegen_runtime_escape_c_string</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="branch" d="M 297.85 111.59 Q 316.88 120.62 336.31 112.49" stroke-width="1.45" opacity="0.85"/>
+      <title>edge: branch
+codegen_runtime_escape_c_string -&gt; codegen_runtime_escape_c_string
+weight: 1
+
+path:
+codegen_runtime_escape_c_string -&gt; codegen_runtime_escape_c_string</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="branch" d="M 398.84 156.15 Q 380.25 171.96 383.50 196.16" stroke-width="1.70" opacity="0.85"/>
+      <title>edge: branch
+codegen_runtime_string_symbol -&gt; codegen_runtime_string_symbol
+weight: 2
+
+path:
+codegen_runtime_string_symbol -&gt; codegen_runtime_string_symbol</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="branch" d="M 433.18 199.64 Q 414.30 212.67 405.20 233.72" stroke-width="1.95" opacity="0.85"/>
+      <title>edge: branch
+codegen_runtime_emit_includes -&gt; codegen_runtime_emit_includes
+weight: 3
+
+path:
+codegen_runtime_emit_includes -&gt; codegen_runtime_emit_includes</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="branch" d="M 457.37 254.36 Q 432.00 255.28 422.07 278.64" stroke-width="1.70" opacity="0.85"/>
+      <title>edge: branch
+codegen_runtime_emit_failure_runtime -&gt; codegen_runtime_emit_failure_runtime
+weight: 2
+
+path:
+codegen_runtime_emit_failure_runtime -&gt; codegen_runtime_emit_failure_runtime</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="branch" d="M 318.51 409.12 Q 308.09 386.13 282.87 385.32" stroke-width="1.70" opacity="0.85"/>
+      <title>edge: branch
+codegen_runtime_emit_fmt_runtime -&gt; codegen_runtime_emit_fmt_runtime
+weight: 2
+
+path:
+codegen_runtime_emit_fmt_runtime -&gt; codegen_runtime_emit_fmt_runtime</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="branch" d="M 151.15 381.43 Q 173.93 383.15 192.33 369.59" stroke-width="1.70" opacity="0.85"/>
+      <title>edge: branch
+codegen_runtime_emit_fail_helper -&gt; codegen_runtime_emit_fail_helper
+weight: 2
+
+path:
+codegen_runtime_emit_fail_helper -&gt; codegen_runtime_emit_fail_helper</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="branch" d="M 75.67 324.42 Q 93.73 341.17 117.38 334.27" stroke-width="1.70" opacity="0.85"/>
+      <title>edge: branch
+codegen_runtime_emit_scribe_runtime -&gt; codegen_runtime_emit_scribe_runtime
+weight: 2
+
+path:
+codegen_runtime_emit_scribe_runtime -&gt; codegen_runtime_emit_scribe_runtime</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="branch" d="M 68.66 250.15 Q 92.61 247.95 104.89 227.27" stroke-width="1.70" opacity="0.85"/>
+      <title>edge: branch
+codegen_runtime_emit_string_pool -&gt; codegen_runtime_emit_string_pool
+weight: 2
+
+path:
+codegen_runtime_emit_string_pool -&gt; codegen_runtime_emit_string_pool</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="branch" d="M 84.92 191.59 Q 108.54 198.26 126.60 181.64" stroke-width="1.70" opacity="0.85"/>
+      <title>edge: branch
+codegen_runtime_find_entry_main_index -&gt; codegen_runtime_find_entry_main_index
+weight: 2
+
+path:
+codegen_runtime_find_entry_main_index -&gt; codegen_runtime_find_entry_main_index</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="branch" d="M 111.97 142.67 Q 133.11 153.65 155.89 146.69" stroke-width="1.95" opacity="0.85"/>
+      <title>edge: branch
+codegen_runtime_emit_host_main -&gt; codegen_runtime_emit_host_main
+weight: 3
+
+path:
+codegen_runtime_emit_host_main -&gt; codegen_runtime_emit_host_main</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="branch" d="M 155.89 146.69 Q 125.50 156.11 105.09 180.53" stroke-width="1.70" opacity="0.85"/>
+      <title>edge: branch
+codegen_runtime_emit_host_main -&gt; codegen_runtime_emit_host_main
+weight: 2
+
+path:
+codegen_runtime_emit_host_main -&gt; codegen_runtime_emit_host_main</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="branch" d="M 105.09 180.53 Q 117.39 163.21 111.97 142.67" stroke-width="1.45" opacity="0.85"/>
+      <title>edge: branch
+codegen_runtime_emit_host_main -&gt; codegen_runtime_emit_host_main
+weight: 1
+
+path:
+codegen_runtime_emit_host_main -&gt; codegen_runtime_emit_host_main</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="branch" d="M 269.25 260.32 Q 310.59 189.95 336.31 112.49" stroke-width="2.10" opacity="0.85"/>
+      <title>edge: branch
+codegen_runtime_escape_c_string -&gt; codegen_runtime_escape_c_string
+weight: 20
+
+path:
+codegen_runtime_escape_c_string -&gt; codegen_runtime_escape_c_string</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="branch" d="M 269.25 260.32 Q 342.36 218.57 398.84 156.15" stroke-width="2.10" opacity="0.85"/>
+      <title>edge: branch
+codegen_runtime_escape_c_string -&gt; codegen_runtime_string_symbol
+weight: 8
+
+path:
+codegen_runtime_escape_c_string -&gt; codegen_runtime_string_symbol</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="branch" d="M 269.25 260.32 Q 354.64 239.23 433.18 199.64" stroke-width="2.10" opacity="0.85"/>
+      <title>edge: branch
+codegen_runtime_escape_c_string -&gt; codegen_runtime_emit_includes
+weight: 13
+
+path:
+codegen_runtime_escape_c_string -&gt; codegen_runtime_emit_includes</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="branch" d="M 269.25 260.32 Q 363.70 269.46 457.37 254.36" stroke-width="2.10" opacity="0.85"/>
+      <title>edge: branch
+codegen_runtime_escape_c_string -&gt; codegen_runtime_emit_failure_runtime
+weight: 13
+
+path:
+codegen_runtime_escape_c_string -&gt; codegen_runtime_emit_failure_runtime</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="branch" d="M 269.25 260.32 Q 280.74 339.07 318.51 409.12" stroke-width="2.10" opacity="0.85"/>
+      <title>edge: branch
+codegen_runtime_escape_c_string -&gt; codegen_runtime_emit_fmt_runtime
+weight: 71
+
+path:
+codegen_runtime_escape_c_string -&gt; codegen_runtime_emit_fmt_runtime</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="branch" d="M 269.25 260.32 Q 204.16 314.99 151.15 381.43" stroke-width="2.10" opacity="0.85"/>
+      <title>edge: branch
+codegen_runtime_escape_c_string -&gt; codegen_runtime_emit_fail_helper
+weight: 9
+
+path:
+codegen_runtime_escape_c_string -&gt; codegen_runtime_emit_fail_helper</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="branch" d="M 269.25 260.32 Q 168.35 279.95 75.67 324.42" stroke-width="2.10" opacity="0.85"/>
+      <title>edge: branch
+codegen_runtime_escape_c_string -&gt; codegen_runtime_emit_scribe_runtime
+weight: 22
+
+path:
+codegen_runtime_escape_c_string -&gt; codegen_runtime_emit_scribe_runtime</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="branch" d="M 269.25 260.32 Q 169.61 242.35 68.66 250.15" stroke-width="2.10" opacity="0.85"/>
+      <title>edge: branch
+codegen_runtime_escape_c_string -&gt; codegen_runtime_emit_string_pool
+weight: 12
+
+path:
+codegen_runtime_escape_c_string -&gt; codegen_runtime_emit_string_pool</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="branch" d="M 269.25 260.32 Q 181.62 213.80 84.92 191.59" stroke-width="2.10" opacity="0.85"/>
+      <title>edge: branch
+codegen_runtime_escape_c_string -&gt; codegen_runtime_find_entry_main_index
+weight: 6
+
+path:
+codegen_runtime_escape_c_string -&gt; codegen_runtime_find_entry_main_index</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="branch" d="M 269.25 260.32 Q 198.69 190.70 111.97 142.67" stroke-width="2.10" opacity="0.85"/>
+      <title>edge: branch
+codegen_runtime_escape_c_string -&gt; codegen_runtime_emit_host_main
+weight: 18
+
+path:
+codegen_runtime_escape_c_string -&gt; codegen_runtime_emit_host_main</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="branch" d="M 269.25 260.32 Q 250.37 181.30 215.08 108.11" stroke-width="2.10" opacity="0.85"/>
+      <title>edge: branch
+codegen_runtime_escape_c_string -&gt; codegen_generate_translation_unit_with_context
+weight: 16
+
+path:
+codegen_runtime_escape_c_string -&gt; codegen_generate_translation_unit_with_context</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="branch" d="M 269.25 260.32 Q 286.97 186.39 278.76 110.81" stroke-width="2.10" opacity="0.85"/>
+      <title>edge: branch
+codegen_runtime_escape_c_string -&gt; codegen_generate_translation_unit
+weight: 5
+
+path:
+codegen_runtime_escape_c_string -&gt; codegen_generate_translation_unit</title>
+    </g>
+  </g>
+  <g id="loops">
+    <g class="edge-wrap">
+    <path class="loop" d="M 336.31 112.49 Q 355.68 115.30 372.46 105.22" stroke-width="1.55" opacity="0.88"/>
+      <title>edge: loop
+codegen_runtime_escape_c_string -&gt; codegen_runtime_escape_c_string
+weight: 2
+
+path:
+codegen_runtime_escape_c_string -&gt; codegen_runtime_escape_c_string</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="loop" d="M 376.22 105.22 C 411.63 99.47 415.54 121.29 399.92 110.38 C 384.31 121.29 388.21 99.47 369.64 106.72"/>
+      <title>edge: loop
+codegen_runtime_escape_c_string -&gt; codegen_runtime_escape_c_string
+weight: 2
+
+path:
+codegen_runtime_escape_c_string -&gt; codegen_runtime_escape_c_string</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="loop" d="M 68.66 250.15 Q 64.06 230.19 45.55 221.42" stroke-width="1.55" opacity="0.88"/>
+      <title>edge: loop
+codegen_runtime_emit_string_pool -&gt; codegen_runtime_emit_string_pool
+weight: 2
+
+path:
+codegen_runtime_emit_string_pool -&gt; codegen_runtime_emit_string_pool</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="loop" d="M 49.31 221.42 C 84.86 205.85 88.76 227.67 73.15 216.76 C 57.53 227.67 61.43 205.85 42.73 222.92"/>
+      <title>edge: loop
+codegen_runtime_emit_string_pool -&gt; codegen_runtime_emit_string_pool
+weight: 2
+
+path:
+codegen_runtime_emit_string_pool -&gt; codegen_runtime_emit_string_pool</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="loop" d="M 84.92 191.59 Q 87.99 170.85 72.32 156.93" stroke-width="1.55" opacity="0.88"/>
+      <title>edge: loop
+codegen_runtime_find_entry_main_index -&gt; codegen_runtime_find_entry_main_index
+weight: 2
+
+path:
+codegen_runtime_find_entry_main_index -&gt; codegen_runtime_find_entry_main_index</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="loop" d="M 76.08 156.93 C 112.01 148.95 115.91 170.77 100.30 159.86 C 84.68 170.77 88.58 148.95 69.50 158.43"/>
+      <title>edge: loop
+codegen_runtime_find_entry_main_index -&gt; codegen_runtime_find_entry_main_index
+weight: 2
+
+path:
+codegen_runtime_find_entry_main_index -&gt; codegen_runtime_find_entry_main_index</title>
+    </g>
+  </g>
+  <g id="bindings">
+    <g class="edge-wrap">
+    <path class="bind" d="M 336.31 112.49 Q 326.84 122.09 323.61 135.18" stroke-width="1.68" opacity="0.85"/>
+    <line class="bind" x1="337.26" y1="118.98" x2="330.28" y2="115.07" opacity="0.75"/>
+    <line class="bind" x1="336.86" y1="121.74" x2="328.14" y2="116.85" opacity="0.75"/>
+    <line class="bind" x1="334.72" y1="123.52" x2="327.74" y2="119.61" opacity="0.75"/>
+    <line class="bind" x1="334.33" y1="126.27" x2="325.60" y2="121.39" opacity="0.75"/>
+    <line class="bind" x1="332.18" y1="128.05" x2="325.20" y2="124.15" opacity="0.75"/>
+    <line class="bind" x1="331.79" y1="130.81" x2="323.06" y2="125.93" opacity="0.75"/>
+    <line class="bind" x1="329.27" y1="134.48" x2="335.22" y2="133.74" opacity="0.58"/>
+    <line class="bind" x1="326.60" y1="140.03" x2="331.30" y2="147.70" opacity="0.58"/>
+    <line class="bind" x1="318.32" y1="137.30" x2="312.75" y2="139.53" opacity="0.58"/>
+    <line class="bind" x1="319.29" y1="131.47" x2="312.45" y2="125.61" opacity="0.58"/>
+    <line class="bind" x1="326.33" y1="130.17" x2="329.20" y2="124.89" opacity="0.58"/>
+      <title>edge: bind
+codegen_runtime_escape_c_string -&gt; codegen_runtime_escape_c_string
+weight: 6
+
+path:
+codegen_runtime_escape_c_string -&gt; codegen_runtime_escape_c_string</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="bind" d="M 398.84 156.15 Q 384.35 158.11 377.53 171.04" stroke-width="1.36" opacity="0.85"/>
+    <line class="bind" x1="396.87" y1="162.40" x2="392.29" y2="155.85" opacity="0.75"/>
+    <line class="bind" x1="395.31" y1="164.71" x2="389.58" y2="156.52" opacity="0.75"/>
+    <line class="bind" x1="382.63" y1="171.11" x2="388.63" y2="171.19" opacity="0.58"/>
+    <line class="bind" x1="372.64" y1="169.59" x2="364.02" y2="167.03" opacity="0.58"/>
+      <title>edge: bind
+codegen_runtime_string_symbol -&gt; codegen_runtime_string_symbol
+weight: 2
+
+path:
+codegen_runtime_string_symbol -&gt; codegen_runtime_string_symbol</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="bind" d="M 68.66 250.15 Q 81.47 256.49 94.65 250.96" stroke-width="1.60" opacity="0.85"/>
+    <line class="bind" x1="73.98" y1="246.32" x2="73.73" y2="254.31" opacity="0.75"/>
+    <line class="bind" x1="76.61" y1="245.40" x2="76.30" y2="255.39" opacity="0.75"/>
+    <line class="bind" x1="79.18" y1="246.48" x2="78.93" y2="254.48" opacity="0.75"/>
+    <line class="bind" x1="81.81" y1="245.56" x2="81.50" y2="255.56" opacity="0.75"/>
+    <line class="bind" x1="84.38" y1="246.64" x2="84.13" y2="254.64" opacity="0.75"/>
+    <line class="bind" x1="100.18" y1="251.36" x2="106.17" y2="251.80" opacity="0.58"/>
+    <line class="bind" x1="97.39" y1="255.79" x2="101.85" y2="263.61" opacity="0.58"/>
+    <line class="bind" x1="89.53" y1="253.12" x2="84.00" y2="255.44" opacity="0.58"/>
+    <line class="bind" x1="90.41" y1="247.37" x2="83.55" y2="241.56" opacity="0.58"/>
+    <line class="bind" x1="97.04" y1="245.96" x2="99.62" y2="240.54" opacity="0.58"/>
+      <title>edge: bind
+codegen_runtime_emit_string_pool -&gt; codegen_runtime_emit_string_pool
+weight: 5
+
+path:
+codegen_runtime_emit_string_pool -&gt; codegen_runtime_emit_string_pool</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="bind" d="M 84.92 191.59 Q 94.63 202.70 109.25 200.75" stroke-width="1.52" opacity="0.85"/>
+    <line class="bind" x1="91.19" y1="189.68" x2="88.37" y2="197.17" opacity="0.75"/>
+    <line class="bind" x1="93.98" y1="189.66" x2="90.45" y2="199.02" opacity="0.75"/>
+    <line class="bind" x1="96.06" y1="191.51" x2="93.24" y2="199.00" opacity="0.75"/>
+    <line class="bind" x1="98.84" y1="191.49" x2="95.32" y2="200.85" opacity="0.75"/>
+    <line class="bind" x1="114.64" y1="201.02" x2="120.63" y2="201.33" opacity="0.58"/>
+    <line class="bind" x1="110.52" y1="206.00" x2="112.63" y2="214.75" opacity="0.58"/>
+    <line class="bind" x1="104.05" y1="199.30" x2="98.27" y2="197.69" opacity="0.58"/>
+    <line class="bind" x1="107.72" y1="195.57" x2="105.18" y2="186.94" opacity="0.58"/>
+      <title>edge: bind
+codegen_runtime_find_entry_main_index -&gt; codegen_runtime_find_entry_main_index
+weight: 4
+
+path:
+codegen_runtime_find_entry_main_index -&gt; codegen_runtime_find_entry_main_index</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="bind" d="M 111.97 142.67 Q 119.71 153.86 132.41 158.75" stroke-width="1.36" opacity="0.85"/>
+    <line class="bind" x1="118.53" y1="142.75" x2="113.59" y2="149.03" opacity="0.75"/>
+    <line class="bind" x1="121.19" y1="143.57" x2="115.01" y2="151.43" opacity="0.75"/>
+    <line class="bind" x1="137.45" y1="157.97" x2="143.37" y2="157.05" opacity="0.58"/>
+    <line class="bind" x1="127.48" y1="157.43" x2="118.79" y2="155.11" opacity="0.58"/>
+      <title>edge: bind
+codegen_runtime_emit_host_main -&gt; codegen_runtime_emit_host_main
+weight: 2
+
+path:
+codegen_runtime_emit_host_main -&gt; codegen_runtime_emit_host_main</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="bind" d="M 215.08 108.11 Q 212.59 122.29 222.01 133.17" stroke-width="1.28" opacity="0.85"/>
+    <line class="bind" x1="220.32" y1="112.06" x2="212.61" y2="114.19" opacity="0.75"/>
+    <line class="bind" x1="226.87" y1="134.14" x2="232.75" y2="135.31" opacity="0.58"/>
+      <title>edge: bind
+codegen_generate_translation_unit_with_context -&gt; codegen_generate_translation_unit_with_context
+weight: 1
+
+path:
+codegen_generate_translation_unit_with_context -&gt; codegen_generate_translation_unit_with_context</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="bind" d="M 278.76 110.81 Q 268.11 122.30 274.73 136.50" stroke-width="1.36" opacity="0.85"/>
+    <line class="bind" x1="281.91" y1="116.57" x2="274.00" y2="115.33" opacity="0.75"/>
+    <line class="bind" x1="282.49" y1="119.29" x2="272.61" y2="117.75" opacity="0.75"/>
+    <line class="bind" x1="279.76" y1="135.63" x2="285.67" y2="134.61" opacity="0.58"/>
+    <line class="bind" x1="269.80" y1="135.22" x2="261.09" y2="132.96" opacity="0.58"/>
+      <title>edge: bind
+codegen_generate_translation_unit -&gt; codegen_generate_translation_unit
+weight: 2
+
+path:
+codegen_generate_translation_unit -&gt; codegen_generate_translation_unit</title>
+    </g>
+  </g>
+  <g id="terminals">
+    <g class="edge-wrap">
+    <path class="term" d="M 336.31 112.49 Q 315.51 132.19 301.98 157.45" stroke-width="1.65" opacity="0.90"/>
+      <title>edge: return
+codegen_runtime_escape_c_string -&gt; codegen_runtime_escape_c_string
+weight: 2
+
+path:
+codegen_runtime_escape_c_string -&gt; codegen_runtime_escape_c_string</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="term" d="M 398.84 156.15 Q 370.13 162.04 348.36 181.67" stroke-width="1.80" opacity="0.90"/>
+      <title>edge: return
+codegen_runtime_string_symbol -&gt; codegen_runtime_string_symbol
+weight: 3
+
+path:
+codegen_runtime_string_symbol -&gt; codegen_runtime_string_symbol</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="term" d="M 433.18 199.64 Q 404.90 202.02 377.39 208.99" stroke-width="1.65" opacity="0.90"/>
+      <title>edge: return
+codegen_runtime_emit_includes -&gt; codegen_runtime_emit_includes
+weight: 2
+
+path:
+codegen_runtime_emit_includes -&gt; codegen_runtime_emit_includes</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="term" d="M 457.37 254.36 Q 430.62 241.05 401.31 246.81" stroke-width="1.80" opacity="0.90"/>
+      <title>edge: return
+codegen_runtime_emit_failure_runtime -&gt; codegen_runtime_emit_failure_runtime
+weight: 3
+
+path:
+codegen_runtime_emit_failure_runtime -&gt; codegen_runtime_emit_failure_runtime</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="term" d="M 318.51 409.12 Q 320.68 379.41 304.75 354.25" stroke-width="1.80" opacity="0.90"/>
+      <title>edge: return
+codegen_runtime_emit_fmt_runtime -&gt; codegen_runtime_emit_fmt_runtime
+weight: 3
+
+path:
+codegen_runtime_emit_fmt_runtime -&gt; codegen_runtime_emit_fmt_runtime</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="term" d="M 151.15 381.43 Q 169.40 359.46 180.92 333.33" stroke-width="1.80" opacity="0.90"/>
+      <title>edge: return
+codegen_runtime_emit_fail_helper -&gt; codegen_runtime_emit_fail_helper
+weight: 3
+
+path:
+codegen_runtime_emit_fail_helper -&gt; codegen_runtime_emit_fail_helper</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="term" d="M 75.67 324.42 Q 104.37 317.89 125.19 297.08" stroke-width="1.80" opacity="0.90"/>
+      <title>edge: return
+codegen_runtime_emit_scribe_runtime -&gt; codegen_runtime_emit_scribe_runtime
+weight: 3
+
+path:
+codegen_runtime_emit_scribe_runtime -&gt; codegen_runtime_emit_scribe_runtime</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="term" d="M 68.66 250.15 Q 95.33 261.85 124.38 259.90" stroke-width="1.80" opacity="0.90"/>
+      <title>edge: return
+codegen_runtime_emit_string_pool -&gt; codegen_runtime_emit_string_pool
+weight: 3
+
+path:
+codegen_runtime_emit_string_pool -&gt; codegen_runtime_emit_string_pool</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="term" d="M 84.92 191.59 Q 105.88 212.19 134.51 218.81" stroke-width="1.80" opacity="0.90"/>
+      <title>edge: return
+codegen_runtime_find_entry_main_index -&gt; codegen_runtime_find_entry_main_index
+weight: 3
+
+path:
+codegen_runtime_find_entry_main_index -&gt; codegen_runtime_find_entry_main_index</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="term" d="M 111.97 142.67 Q 127.88 166.59 151.04 183.59" stroke-width="1.80" opacity="0.90"/>
+      <title>edge: return
+codegen_runtime_emit_host_main -&gt; codegen_runtime_emit_host_main
+weight: 3
+
+path:
+codegen_runtime_emit_host_main -&gt; codegen_runtime_emit_host_main</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="term" d="M 215.08 108.11 Q 211.57 137.08 222.30 164.22" stroke-width="1.65" opacity="0.90"/>
+      <title>edge: return
+codegen_generate_translation_unit_with_context -&gt; codegen_generate_translation_unit_with_context
+weight: 2
+
+path:
+codegen_generate_translation_unit_with_context -&gt; codegen_generate_translation_unit_with_context</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="term" d="M 278.76 110.81 Q 268.63 138.96 277.99 167.38" stroke-width="1.65" opacity="0.90"/>
+      <title>edge: return
+codegen_generate_translation_unit -&gt; codegen_generate_translation_unit
+weight: 2
+
+path:
+codegen_generate_translation_unit -&gt; codegen_generate_translation_unit</title>
+    </g>
+  </g>
+  <g id="nodes">
+    <g class="node-wrap">
+      <circle class="node-main" cx="336.31" cy="112.49" r="9.10" data-kind="rituale" data-ritual="codegen_runtime_escape_c_string" data-line="12" data-col="1" data-depth="15" data-stmt="RITUALE" data-loops="1" data-calls="13"/>
+      <title>RITUALE codegen_runtime_escape_c_string
+stmt: 22
+depth: 15
+loops: 1
+calls: 13
+source:
+RITUALE codegen_runtime_escape_c_string(VERBUM raw) REDDE VERBUM</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="336.99" cy="160.42" r="5.80" data-kind="branch" data-ritual="codegen_runtime_escape_c_string" data-line="20" data-col="5" data-depth="15" data-stmt="SI"/>
+      <title>stmt: SI
+rituale: codegen_runtime_escape_c_string
+depth: 15
+line: 20
+
+source:
+SI ch == 34</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="297.85" cy="111.59" r="5.20" data-kind="branch" data-ritual="codegen_runtime_escape_c_string" data-line="20" data-col="5" data-depth="15" data-stmt="ALITER"/>
+      <title>stmt: ALITER
+rituale: codegen_runtime_escape_c_string
+depth: 15
+line: 20
+
+source:
+SI ch == 34</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-loop" cx="372.46" cy="105.22" r="4.70" data-kind="loop" data-ritual="codegen_runtime_escape_c_string" data-line="18" data-col="3" data-depth="15" data-stmt="DUM"/>
+      <title>stmt: DUM
+rituale: codegen_runtime_escape_c_string
+depth: 15
+line: 18
+
+source:
+DUM i &lt; n</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="323.61" cy="135.18" r="3.70" data-kind="bind" data-ritual="codegen_runtime_escape_c_string" data-line="13" data-col="3" data-depth="15" data-stmt="EVOCA"/>
+      <title>stmt: EVOCA
+rituale: codegen_runtime_escape_c_string
+depth: 15
+line: 13
+
+source:
+EVOCA SPECULUM NIHIL b AD CONIURA builder_init()</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="301.98" cy="157.45" r="3.60" data-kind="term" data-ritual="codegen_runtime_escape_c_string" data-line="47" data-col="3" data-depth="15" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: codegen_runtime_escape_c_string
+depth: 15
+line: 47
+
+source:
+REDDE out</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-main" cx="398.84" cy="156.15" r="6.55" data-kind="rituale" data-ritual="codegen_runtime_string_symbol" data-line="50" data-col="1" data-depth="5" data-stmt="RITUALE" data-loops="0" data-calls="6"/>
+      <title>RITUALE codegen_runtime_string_symbol
+stmt: 5
+depth: 5
+loops: 0
+calls: 6
+source:
+RITUALE codegen_runtime_string_symbol(SPECULUM CodegenContext ctx, VERBUM raw_text) REDDE VERBUM</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="383.50" cy="196.16" r="4.80" data-kind="branch" data-ritual="codegen_runtime_string_symbol" data-line="52" data-col="3" data-depth="5" data-stmt="SI"/>
+      <title>stmt: SI
+rituale: codegen_runtime_string_symbol
+depth: 5
+line: 52
+
+source:
+SI CONIURA compare(existing, "") != 0</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="377.53" cy="171.04" r="3.10" data-kind="bind" data-ritual="codegen_runtime_string_symbol" data-line="51" data-col="3" data-depth="5" data-stmt="EVOCA"/>
+      <title>stmt: EVOCA
+rituale: codegen_runtime_string_symbol
+depth: 5
+line: 51
+
+source:
+EVOCA VERBUM existing AD CONIURA codegen_lookup_string_symbol(ctx, raw_text)</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="348.36" cy="181.67" r="4.00" data-kind="term" data-ritual="codegen_runtime_string_symbol" data-line="53" data-col="5" data-depth="5" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: codegen_runtime_string_symbol
+depth: 5
+line: 53
+
+source:
+REDDE existing</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-main" cx="433.18" cy="199.64" r="7.75" data-kind="rituale" data-ritual="codegen_runtime_emit_includes" data-line="60" data-col="1" data-depth="5" data-stmt="RITUALE" data-loops="0" data-calls="10"/>
+      <title>RITUALE codegen_runtime_emit_includes
+stmt: 13
+depth: 5
+loops: 0
+calls: 10
+source:
+RITUALE codegen_runtime_emit_includes(SPECULUM CodegenContext ctx) REDDE NIHIL</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="405.20" cy="233.72" r="5.80" data-kind="branch" data-ritual="codegen_runtime_emit_includes" data-line="64" data-col="3" data-depth="5" data-stmt="SI"/>
+      <title>stmt: SI
+rituale: codegen_runtime_emit_includes
+depth: 5
+line: 64
+
+source:
+SI (*ctx).needs_failure_runtime</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="377.39" cy="208.99" r="3.60" data-kind="term" data-ritual="codegen_runtime_emit_includes" data-line="75" data-col="3" data-depth="5" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: codegen_runtime_emit_includes
+depth: 5
+line: 75
+
+source:
+REDDE</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-main" cx="457.37" cy="254.36" r="7.90" data-kind="rituale" data-ritual="codegen_runtime_emit_failure_runtime" data-line="78" data-col="1" data-depth="5" data-stmt="RITUALE" data-loops="0" data-calls="11"/>
+      <title>RITUALE codegen_runtime_emit_failure_runtime
+stmt: 14
+depth: 5
+loops: 0
+calls: 11
+source:
+RITUALE codegen_runtime_emit_failure_runtime(SPECULUM CodegenContext ctx) REDDE NIHIL</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="422.07" cy="278.64" r="4.80" data-kind="branch" data-ritual="codegen_runtime_emit_failure_runtime" data-line="79" data-col="3" data-depth="5" data-stmt="SI"/>
+      <title>stmt: SI
+rituale: codegen_runtime_emit_failure_runtime
+depth: 5
+line: 79
+
+source:
+SI NON (*ctx).needs_failure_runtime</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="401.31" cy="246.81" r="4.00" data-kind="term" data-ritual="codegen_runtime_emit_failure_runtime" data-line="80" data-col="5" data-depth="5" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: codegen_runtime_emit_failure_runtime
+depth: 5
+line: 80
+
+source:
+REDDE</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-main" cx="318.51" cy="409.12" r="10.80" data-kind="rituale" data-ritual="codegen_runtime_emit_fmt_runtime" data-line="97" data-col="1" data-depth="5" data-stmt="RITUALE" data-loops="0" data-calls="69"/>
+      <title>RITUALE codegen_runtime_emit_fmt_runtime
+stmt: 72
+depth: 5
+loops: 0
+calls: 69
+source:
+RITUALE codegen_runtime_emit_fmt_runtime(SPECULUM CodegenContext ctx) REDDE NIHIL</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="282.87" cy="385.32" r="4.80" data-kind="branch" data-ritual="codegen_runtime_emit_fmt_runtime" data-line="98" data-col="3" data-depth="5" data-stmt="SI"/>
+      <title>stmt: SI
+rituale: codegen_runtime_emit_fmt_runtime
+depth: 5
+line: 98
+
+source:
+SI NON (*ctx).needs_fmt_runtime</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="304.75" cy="354.25" r="4.00" data-kind="term" data-ritual="codegen_runtime_emit_fmt_runtime" data-line="99" data-col="5" data-depth="5" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: codegen_runtime_emit_fmt_runtime
+depth: 5
+line: 99
+
+source:
+REDDE</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-main" cx="151.15" cy="381.43" r="7.30" data-kind="rituale" data-ritual="codegen_runtime_emit_fail_helper" data-line="180" data-col="1" data-depth="5" data-stmt="RITUALE" data-loops="0" data-calls="7"/>
+      <title>RITUALE codegen_runtime_emit_fail_helper
+stmt: 10
+depth: 5
+loops: 0
+calls: 7
+source:
+RITUALE codegen_runtime_emit_fail_helper(SPECULUM CodegenContext ctx) REDDE NIHIL</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="192.33" cy="369.59" r="4.80" data-kind="branch" data-ritual="codegen_runtime_emit_fail_helper" data-line="181" data-col="3" data-depth="5" data-stmt="SI"/>
+      <title>stmt: SI
+rituale: codegen_runtime_emit_fail_helper
+depth: 5
+line: 181
+
+source:
+SI NON (*ctx).needs_fail_helper</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="180.92" cy="333.33" r="4.00" data-kind="term" data-ritual="codegen_runtime_emit_fail_helper" data-line="182" data-col="5" data-depth="5" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: codegen_runtime_emit_fail_helper
+depth: 5
+line: 182
+
+source:
+REDDE</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-main" cx="75.67" cy="324.42" r="9.25" data-kind="rituale" data-ritual="codegen_runtime_emit_scribe_runtime" data-line="195" data-col="1" data-depth="5" data-stmt="RITUALE" data-loops="0" data-calls="20"/>
+      <title>RITUALE codegen_runtime_emit_scribe_runtime
+stmt: 23
+depth: 5
+loops: 0
+calls: 20
+source:
+RITUALE codegen_runtime_emit_scribe_runtime(SPECULUM CodegenContext ctx) REDDE NIHIL</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="117.38" cy="334.27" r="4.80" data-kind="branch" data-ritual="codegen_runtime_emit_scribe_runtime" data-line="196" data-col="3" data-depth="5" data-stmt="SI"/>
+      <title>stmt: SI
+rituale: codegen_runtime_emit_scribe_runtime
+depth: 5
+line: 196
+
+source:
+SI NON (*ctx).needs_stdio</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="125.19" cy="297.08" r="4.00" data-kind="term" data-ritual="codegen_runtime_emit_scribe_runtime" data-line="197" data-col="5" data-depth="5" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: codegen_runtime_emit_scribe_runtime
+depth: 5
+line: 197
+
+source:
+REDDE</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-main" cx="68.66" cy="250.15" r="8.20" data-kind="rituale" data-ritual="codegen_runtime_emit_string_pool" data-line="226" data-col="1" data-depth="7" data-stmt="RITUALE" data-loops="1" data-calls="9"/>
+      <title>RITUALE codegen_runtime_emit_string_pool
+stmt: 16
+depth: 7
+loops: 1
+calls: 9
+source:
+RITUALE codegen_runtime_emit_string_pool(SPECULUM CodegenContext ctx) REDDE NIHIL</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="104.89" cy="227.27" r="4.80" data-kind="branch" data-ritual="codegen_runtime_emit_string_pool" data-line="228" data-col="3" data-depth="7" data-stmt="SI"/>
+      <title>stmt: SI
+rituale: codegen_runtime_emit_string_pool
+depth: 7
+line: 228
+
+source:
+SI n == 0</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-loop" cx="45.55" cy="221.42" r="4.70" data-kind="loop" data-ritual="codegen_runtime_emit_string_pool" data-line="233" data-col="3" data-depth="7" data-stmt="DUM"/>
+      <title>stmt: DUM
+rituale: codegen_runtime_emit_string_pool
+depth: 7
+line: 233
+
+source:
+DUM i &lt; n</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="94.65" cy="250.96" r="3.55" data-kind="bind" data-ritual="codegen_runtime_emit_string_pool" data-line="227" data-col="3" data-depth="7" data-stmt="EVOCA"/>
+      <title>stmt: EVOCA
+rituale: codegen_runtime_emit_string_pool
+depth: 7
+line: 227
+
+source:
+EVOCA REX n AD CONIURA codegen_registered_string_count(ctx)</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="124.38" cy="259.90" r="4.00" data-kind="term" data-ritual="codegen_runtime_emit_string_pool" data-line="229" data-col="5" data-depth="7" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: codegen_runtime_emit_string_pool
+depth: 7
+line: 229
+
+source:
+REDDE</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-main" cx="84.92" cy="191.59" r="7.00" data-kind="rituale" data-ritual="codegen_runtime_find_entry_main_index" data-line="248" data-col="1" data-depth="9" data-stmt="RITUALE" data-loops="1" data-calls="3"/>
+      <title>RITUALE codegen_runtime_find_entry_main_index
+stmt: 8
+depth: 9
+loops: 1
+calls: 3
+source:
+RITUALE codegen_runtime_find_entry_main_index(SPECULUM AstProgram program) REDDE REX</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="126.60" cy="181.64" r="4.80" data-kind="branch" data-ritual="codegen_runtime_find_entry_main_index" data-line="253" data-col="5" data-depth="9" data-stmt="SI"/>
+      <title>stmt: SI
+rituale: codegen_runtime_find_entry_main_index
+depth: 9
+line: 253
+
+source:
+SI (*decl).kind == AST_RITUALE ET CONIURA compare((*decl).name, "main") == 0</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-loop" cx="72.32" cy="156.93" r="4.70" data-kind="loop" data-ritual="codegen_runtime_find_entry_main_index" data-line="251" data-col="3" data-depth="9" data-stmt="DUM"/>
+      <title>stmt: DUM
+rituale: codegen_runtime_find_entry_main_index
+depth: 9
+line: 251
+
+source:
+DUM i &lt; n</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="109.25" cy="200.75" r="3.40" data-kind="bind" data-ritual="codegen_runtime_find_entry_main_index" data-line="249" data-col="3" data-depth="9" data-stmt="EVOCA"/>
+      <title>stmt: EVOCA
+rituale: codegen_runtime_find_entry_main_index
+depth: 9
+line: 249
+
+source:
+EVOCA REX i AD 0</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="134.51" cy="218.81" r="4.00" data-kind="term" data-ritual="codegen_runtime_find_entry_main_index" data-line="254" data-col="7" data-depth="9" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: codegen_runtime_find_entry_main_index
+depth: 9
+line: 254
+
+source:
+REDDE i</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-main" cx="111.97" cy="142.67" r="8.20" data-kind="rituale" data-ritual="codegen_runtime_emit_host_main" data-line="261" data-col="1" data-depth="9" data-stmt="RITUALE" data-loops="0" data-calls="15"/>
+      <title>RITUALE codegen_runtime_emit_host_main
+stmt: 16
+depth: 9
+loops: 0
+calls: 15
+source:
+RITUALE codegen_runtime_emit_host_main(SPECULUM CodegenContext ctx, SPECULUM AstProgram progr...</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="155.89" cy="146.69" r="5.80" data-kind="branch" data-ritual="codegen_runtime_emit_host_main" data-line="263" data-col="3" data-depth="9" data-stmt="SI"/>
+      <title>stmt: SI
+rituale: codegen_runtime_emit_host_main
+depth: 9
+line: 263
+
+source:
+SI entry_idx &lt; 0</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="105.09" cy="180.53" r="4.20" data-kind="branch" data-ritual="codegen_runtime_emit_host_main" data-line="276" data-col="5" data-depth="9" data-stmt="ALITER"/>
+      <title>stmt: ALITER
+rituale: codegen_runtime_emit_host_main
+depth: 9
+line: 276
+
+source:
+CONIURA codegen_emit(ctx, "return (int)")</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="132.41" cy="158.75" r="3.10" data-kind="bind" data-ritual="codegen_runtime_emit_host_main" data-line="262" data-col="3" data-depth="9" data-stmt="EVOCA"/>
+      <title>stmt: EVOCA
+rituale: codegen_runtime_emit_host_main
+depth: 9
+line: 262
+
+source:
+EVOCA REX entry_idx AD CONIURA codegen_runtime_find_entry_main_index(program)</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="151.04" cy="183.59" r="4.00" data-kind="term" data-ritual="codegen_runtime_emit_host_main" data-line="264" data-col="5" data-depth="9" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: codegen_runtime_emit_host_main
+depth: 9
+line: 264
+
+source:
+REDDE</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-main" cx="215.08" cy="108.11" r="8.20" data-kind="rituale" data-ritual="codegen_generate_translation_unit_with_context" data-line="284" data-col="1" data-depth="3" data-stmt="RITUALE" data-loops="0" data-calls="15"/>
+      <title>RITUALE codegen_generate_translation_unit_with_context
+stmt: 16
+depth: 3
+loops: 0
+calls: 15
+source:
+RITUALE codegen_generate_translation_unit_with_context(SPECULUM CodegenContext ctx, SPECULUM ...</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="222.01" cy="133.17" r="2.95" data-kind="bind" data-ritual="codegen_generate_translation_unit_with_context" data-line="286" data-col="3" data-depth="3" data-stmt="EVOCA"/>
+      <title>stmt: EVOCA
+rituale: codegen_generate_translation_unit_with_context
+depth: 3
+line: 286
+
+source:
+EVOCA VERBUM body AD CONIURA codegen_output(ctx)</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="222.30" cy="164.22" r="3.60" data-kind="term" data-ritual="codegen_generate_translation_unit_with_context" data-line="301" data-col="3" data-depth="3" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: codegen_generate_translation_unit_with_context
+depth: 3
+line: 301
+
+source:
+REDDE CONIURA codegen_output(ctx)</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-main" cx="278.76" cy="110.81" r="6.55" data-kind="rituale" data-ritual="codegen_generate_translation_unit" data-line="304" data-col="1" data-depth="3" data-stmt="RITUALE" data-loops="0" data-calls="4"/>
+      <title>RITUALE codegen_generate_translation_unit
+stmt: 5
+depth: 3
+loops: 0
+calls: 4
+source:
+RITUALE codegen_generate_translation_unit(SPECULUM AstProgram program, VERBUM filename) REDDE...</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="274.73" cy="136.50" r="3.10" data-kind="bind" data-ritual="codegen_generate_translation_unit" data-line="305" data-col="3" data-depth="3" data-stmt="EVOCA"/>
+      <title>stmt: EVOCA
+rituale: codegen_generate_translation_unit
+depth: 3
+line: 305
+
+source:
+EVOCA SPECULUM CodegenContext ctx AD CONIURA codegen_context_new(filename)</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="277.99" cy="167.38" r="3.60" data-kind="term" data-ritual="codegen_generate_translation_unit" data-line="309" data-col="3" data-depth="3" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: codegen_generate_translation_unit
+depth: 3
+line: 309
+
+source:
+REDDE out</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="269.25" cy="260.32" r="5.00" data-kind="bind" data-ritual="codegen_runtime_escape_c_string" data-line="13" data-col="3" data-depth="15" data-stmt="EVOCA"/>
+      <title>stmt: EVOCA
+rituale: codegen_runtime_escape_c_string
+depth: 15
+line: 13
+
+source:
+EVOCA SPECULUM NIHIL b AD CONIURA builder_init()</title>
+    </g>
+  </g>
+  <g id="ornaments">
+    <circle class="orn" cx="454.03" cy="267.00" r="0.90"/>
+    <circle class="orn" cx="435.57" cy="357.06" r="1.90"/>
+    <circle class="orn" cx="369.64" cy="424.13" r="2.90"/>
+    <circle class="orn" cx="260.47" cy="464.89" r="0.90"/>
+    <circle class="orn" cx="170.41" cy="443.05" r="1.90"/>
+    <circle class="orn" cx="93.37" cy="391.79" r="2.90"/>
+    <circle class="orn" cx="65.38" cy="345.19" r="0.90"/>
+    <circle class="orn" cx="56.28" cy="256.28" r="1.90"/>
+    <circle class="orn" cx="63.73" cy="174.28" r="2.90"/>
+    <circle class="orn" cx="128.65" cy="97.12" r="0.90"/>
+    <circle class="orn" cx="171.33" cy="75.56" r="1.90"/>
+    <circle class="orn" cx="307.10" cy="62.44" r="2.90"/>
+    <circle class="orn" cx="374.33" cy="85.55" r="0.90"/>
+    <circle class="orn" cx="451.26" cy="190.82" r="1.90"/>
+  </g>
+  <g id="signature">
+    <text class="hash" x="256" y="496" text-anchor="middle">a335608961112215</text>
+    <text class="label" x="256" y="18" text-anchor="middle">network • sigillum v2.1 • 12 rituale(s) • 220 stmt • depth 15</text>
+  </g>
+</svg>

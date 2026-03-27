@@ -56,7 +56,58 @@ typedef struct {
     int max_depth;
 } trace_render_bounds_t;
 
+typedef struct {
+    char *route_id;
+    char *group;
+    char *module_path;
+    char *handler;
+    double x;
+    double y;
+} trace_render_svg_route_anchor_t;
+
+typedef struct {
+    char *module_path;
+    double cx;
+    double cy;
+    double r;
+    double scale;
+} trace_render_svg_module_anchor_t;
+
+typedef struct {
+    char *group;
+    double x;
+    double y;
+    int count;
+} trace_render_svg_group_anchor_t;
+
+typedef struct {
+    char *module_path;
+    char *ritual;
+    double x;
+    double y;
+} trace_render_svg_ritual_anchor_t;
+
+typedef struct {
+    char *svg_prefix;
+    double width;
+    double height;
+    int ready;
+    trace_render_svg_route_anchor_t *routes;
+    int route_count;
+    int route_capacity;
+    trace_render_svg_module_anchor_t *modules;
+    int module_count;
+    int module_capacity;
+    trace_render_svg_group_anchor_t *groups;
+    int group_count;
+    int group_capacity;
+    trace_render_svg_ritual_anchor_t *rituals;
+    int ritual_count;
+    int ritual_capacity;
+} trace_render_svg_backdrop_t;
+
 static bool trace_render_matches_filter(const TraceRenderInput *input, const TraceRenderSpan *span);
+static const cct_sigil_web_route_t *trace_render_find_route_by_id(const cct_sigil_document_t *doc, const char *route_id);
 
 static char *trace_render_read_file(const char *path) {
     FILE *file = NULL;
@@ -92,6 +143,29 @@ static char *trace_render_read_file(const char *path) {
     return buffer;
 }
 
+static void trace_render_svg_backdrop_dispose(trace_render_svg_backdrop_t *backdrop) {
+    int i = 0;
+    if (!backdrop) return;
+    free(backdrop->svg_prefix);
+    for (i = 0; i < backdrop->route_count; i++) {
+        free(backdrop->routes[i].route_id);
+        free(backdrop->routes[i].group);
+        free(backdrop->routes[i].module_path);
+        free(backdrop->routes[i].handler);
+    }
+    free(backdrop->routes);
+    for (i = 0; i < backdrop->module_count; i++) free(backdrop->modules[i].module_path);
+    free(backdrop->modules);
+    for (i = 0; i < backdrop->group_count; i++) free(backdrop->groups[i].group);
+    free(backdrop->groups);
+    for (i = 0; i < backdrop->ritual_count; i++) {
+        free(backdrop->rituals[i].module_path);
+        free(backdrop->rituals[i].ritual);
+    }
+    free(backdrop->rituals);
+    memset(backdrop, 0, sizeof(*backdrop));
+}
+
 static char *trace_render_strdup_range(const char *start, const char *end) {
     size_t len = 0;
     char *out = NULL;
@@ -108,6 +182,479 @@ static char *trace_render_strdup_trimmed(const char *start, const char *end) {
     while (start && end && start < end && isspace((unsigned char)*start)) start++;
     while (start && end && end > start && isspace((unsigned char)end[-1])) end--;
     return trace_render_strdup_range(start, end);
+}
+
+static char *trace_render_replace_suffix(const char *path, const char *old_suffix, const char *new_suffix) {
+    size_t path_len = 0;
+    size_t old_len = 0;
+    size_t new_len = 0;
+    char *out = NULL;
+    if (!path || !old_suffix || !new_suffix) return NULL;
+    path_len = strlen(path);
+    old_len = strlen(old_suffix);
+    new_len = strlen(new_suffix);
+    if (path_len < old_len || strcmp(path + path_len - old_len, old_suffix) != 0) return NULL;
+    out = (char*)malloc(path_len - old_len + new_len + 1u);
+    if (!out) return NULL;
+    memcpy(out, path, path_len - old_len);
+    memcpy(out + path_len - old_len, new_suffix, new_len);
+    out[path_len - old_len + new_len] = '\0';
+    return out;
+}
+
+static char *trace_render_extract_attr_range(const char *start, const char *end, const char *attr) {
+    char pattern[96];
+    const char *p = NULL;
+    size_t n = 0;
+    if (!start || !end || !attr || end <= start) return NULL;
+    snprintf(pattern, sizeof(pattern), "%s=\"", attr);
+    p = start;
+    n = strlen(pattern);
+    while (p && p < end) {
+        p = strstr(p, pattern);
+        if (!p || p >= end) return NULL;
+        if (p + (ptrdiff_t)n >= end) return NULL;
+        p += n;
+        {
+            const char *q = strchr(p, '"');
+            if (!q || q > end) return NULL;
+            return trace_render_strdup_range(p, q);
+        }
+    }
+    return NULL;
+}
+
+static bool trace_render_push_group_anchor(trace_render_svg_backdrop_t *backdrop,
+                                           const char *group,
+                                           double x,
+                                           double y) {
+    trace_render_svg_group_anchor_t *grown = NULL;
+    int next = 0;
+    int i = 0;
+    if (!backdrop || !group || group[0] == '\0') return false;
+    for (i = 0; i < backdrop->group_count; i++) {
+        if (strcmp(backdrop->groups[i].group, group) == 0) {
+            double count = (double)backdrop->groups[i].count;
+            backdrop->groups[i].x = ((backdrop->groups[i].x * count) + x) / (count + 1.0);
+            backdrop->groups[i].y = ((backdrop->groups[i].y * count) + y) / (count + 1.0);
+            backdrop->groups[i].count += 1;
+            return true;
+        }
+    }
+    if (backdrop->group_count >= backdrop->group_capacity) {
+        next = backdrop->group_capacity == 0 ? 8 : backdrop->group_capacity * 2;
+        grown = (trace_render_svg_group_anchor_t*)realloc(backdrop->groups, (size_t)next * sizeof(*grown));
+        if (!grown) return false;
+        backdrop->groups = grown;
+        backdrop->group_capacity = next;
+    }
+    backdrop->groups[backdrop->group_count].group = strdup(group);
+    if (!backdrop->groups[backdrop->group_count].group) return false;
+    backdrop->groups[backdrop->group_count].x = x;
+    backdrop->groups[backdrop->group_count].y = y;
+    backdrop->groups[backdrop->group_count].count = 1;
+    backdrop->group_count++;
+    return true;
+}
+
+static bool trace_render_push_route_anchor(trace_render_svg_backdrop_t *backdrop,
+                                           const char *route_id,
+                                           const char *group,
+                                           const char *module_path,
+                                           const char *handler,
+                                           double x,
+                                           double y) {
+    trace_render_svg_route_anchor_t *grown = NULL;
+    int next = 0;
+    if (!backdrop || !route_id) return false;
+    if (backdrop->route_count >= backdrop->route_capacity) {
+        next = backdrop->route_capacity == 0 ? 8 : backdrop->route_capacity * 2;
+        grown = (trace_render_svg_route_anchor_t*)realloc(backdrop->routes, (size_t)next * sizeof(*grown));
+        if (!grown) return false;
+        backdrop->routes = grown;
+        backdrop->route_capacity = next;
+    }
+    backdrop->routes[backdrop->route_count].route_id = strdup(route_id);
+    if (!backdrop->routes[backdrop->route_count].route_id) return false;
+    backdrop->routes[backdrop->route_count].group = group ? strdup(group) : NULL;
+    backdrop->routes[backdrop->route_count].module_path = module_path ? strdup(module_path) : NULL;
+    backdrop->routes[backdrop->route_count].handler = handler ? strdup(handler) : NULL;
+    backdrop->routes[backdrop->route_count].x = x;
+    backdrop->routes[backdrop->route_count].y = y;
+    backdrop->route_count++;
+    if (group && group[0] != '\0') (void)trace_render_push_group_anchor(backdrop, group, x, y);
+    return true;
+}
+
+static bool trace_render_push_module_anchor(trace_render_svg_backdrop_t *backdrop,
+                                            const char *module_path,
+                                            double cx,
+                                            double cy,
+                                            double r,
+                                            double scale) {
+    trace_render_svg_module_anchor_t *grown = NULL;
+    int next = 0;
+    if (!backdrop || !module_path) return false;
+    if (backdrop->module_count >= backdrop->module_capacity) {
+        next = backdrop->module_capacity == 0 ? 8 : backdrop->module_capacity * 2;
+        grown = (trace_render_svg_module_anchor_t*)realloc(backdrop->modules, (size_t)next * sizeof(*grown));
+        if (!grown) return false;
+        backdrop->modules = grown;
+        backdrop->module_capacity = next;
+    }
+    backdrop->modules[backdrop->module_count].module_path = strdup(module_path);
+    if (!backdrop->modules[backdrop->module_count].module_path) return false;
+    backdrop->modules[backdrop->module_count].cx = cx;
+    backdrop->modules[backdrop->module_count].cy = cy;
+    backdrop->modules[backdrop->module_count].r = r;
+    backdrop->modules[backdrop->module_count].scale = scale;
+    backdrop->module_count++;
+    return true;
+}
+
+static const trace_render_svg_route_anchor_t *trace_render_backdrop_route(const trace_render_svg_backdrop_t *backdrop,
+                                                                          const char *route_id) {
+    int i = 0;
+    if (!backdrop || !route_id) return NULL;
+    for (i = 0; i < backdrop->route_count; i++) {
+        if (strcmp(backdrop->routes[i].route_id, route_id) == 0) return &backdrop->routes[i];
+    }
+    return NULL;
+}
+
+static const trace_render_svg_module_anchor_t *trace_render_backdrop_module(const trace_render_svg_backdrop_t *backdrop,
+                                                                            const char *module_path) {
+    int i = 0;
+    if (!backdrop || !module_path) return NULL;
+    for (i = 0; i < backdrop->module_count; i++) {
+        if (strcmp(backdrop->modules[i].module_path, module_path) == 0) return &backdrop->modules[i];
+    }
+    return NULL;
+}
+
+static const trace_render_svg_group_anchor_t *trace_render_backdrop_group(const trace_render_svg_backdrop_t *backdrop,
+                                                                          const char *group) {
+    int i = 0;
+    if (!backdrop || !group) return NULL;
+    for (i = 0; i < backdrop->group_count; i++) {
+        if (strcmp(backdrop->groups[i].group, group) == 0) return &backdrop->groups[i];
+    }
+    return NULL;
+}
+
+static bool trace_render_backdrop_group_centroid(const trace_render_svg_backdrop_t *backdrop,
+                                                 const char *group,
+                                                 double *out_x,
+                                                 double *out_y) {
+    double sum_x = 0.0;
+    double sum_y = 0.0;
+    int count = 0;
+    int i = 0;
+    if (!backdrop || !group || !out_x || !out_y) return false;
+    for (i = 0; i < backdrop->route_count; i++) {
+        if (!backdrop->routes[i].group || strcmp(backdrop->routes[i].group, group) != 0) continue;
+        sum_x += backdrop->routes[i].x;
+        sum_y += backdrop->routes[i].y;
+        count++;
+    }
+    if (count == 0) return false;
+    *out_x = sum_x / (double)count;
+    *out_y = sum_y / (double)count;
+    return true;
+}
+
+static bool trace_render_group_centroid_for_doc(const trace_render_svg_backdrop_t *backdrop,
+                                                const cct_sigil_document_t *doc,
+                                                const char *group,
+                                                double *out_x,
+                                                double *out_y) {
+    double sum_x = 0.0;
+    double sum_y = 0.0;
+    size_t count = 0;
+    size_t i = 0;
+    if (!backdrop || !doc || !group || !out_x || !out_y) return false;
+    for (i = 0; i < doc->web_routes_count; i++) {
+        const cct_sigil_web_route_t *route = &doc->web_routes[i];
+        const trace_render_svg_route_anchor_t *route_anchor = NULL;
+        if (!route->group || strcmp(route->group, group) != 0) continue;
+        route_anchor = trace_render_backdrop_route(backdrop, route->route_id);
+        if (!route_anchor) continue;
+        sum_x += route_anchor->x;
+        sum_y += route_anchor->y;
+        count++;
+    }
+    if (count == 0) return false;
+    *out_x = sum_x / (double)count;
+    *out_y = sum_y / (double)count;
+    return true;
+}
+
+static bool trace_render_route_prefix_centroid(const trace_render_svg_backdrop_t *backdrop,
+                                               const char *prefix,
+                                               double *out_x,
+                                               double *out_y) {
+    double sum_x = 0.0;
+    double sum_y = 0.0;
+    int count = 0;
+    int i = 0;
+    size_t prefix_len = 0;
+    if (!backdrop || !prefix || !out_x || !out_y) return false;
+    prefix_len = strlen(prefix);
+    for (i = 0; i < backdrop->route_count; i++) {
+        if (!backdrop->routes[i].route_id) continue;
+        if (strncmp(backdrop->routes[i].route_id, prefix, prefix_len) != 0) continue;
+        sum_x += backdrop->routes[i].x;
+        sum_y += backdrop->routes[i].y;
+        count++;
+    }
+    if (count == 0) return false;
+    *out_x = sum_x / (double)count;
+    *out_y = sum_y / (double)count;
+    return true;
+}
+
+static bool trace_render_push_ritual_anchor(trace_render_svg_backdrop_t *backdrop,
+                                            const char *module_path,
+                                            const char *ritual,
+                                            double x,
+                                            double y) {
+    trace_render_svg_ritual_anchor_t *grown = NULL;
+    int next = 0;
+    if (!backdrop || !module_path || !ritual) return false;
+    if (backdrop->ritual_count >= backdrop->ritual_capacity) {
+        next = backdrop->ritual_capacity == 0 ? 16 : backdrop->ritual_capacity * 2;
+        grown = (trace_render_svg_ritual_anchor_t*)realloc(backdrop->rituals, (size_t)next * sizeof(*grown));
+        if (!grown) return false;
+        backdrop->rituals = grown;
+        backdrop->ritual_capacity = next;
+    }
+    backdrop->rituals[backdrop->ritual_count].module_path = strdup(module_path);
+    if (!backdrop->rituals[backdrop->ritual_count].module_path) return false;
+    backdrop->rituals[backdrop->ritual_count].ritual = strdup(ritual);
+    if (!backdrop->rituals[backdrop->ritual_count].ritual) return false;
+    backdrop->rituals[backdrop->ritual_count].x = x;
+    backdrop->rituals[backdrop->ritual_count].y = y;
+    backdrop->ritual_count++;
+    return true;
+}
+
+static const trace_render_svg_ritual_anchor_t *trace_render_backdrop_ritual(const trace_render_svg_backdrop_t *backdrop,
+                                                                             const char *module_path,
+                                                                             const char *ritual) {
+    int i = 0;
+    if (!backdrop || !module_path || !ritual) return NULL;
+    for (i = 0; i < backdrop->ritual_count; i++) {
+        if (strcmp(backdrop->rituals[i].module_path, module_path) == 0 &&
+            strcmp(backdrop->rituals[i].ritual, ritual) == 0) return &backdrop->rituals[i];
+    }
+    return NULL;
+}
+
+static const char *trace_render_sigil_entry(const cct_sigil_document_t *doc, const char *section, const char *key) {
+    size_t i = 0;
+    if (!doc || !key) return NULL;
+    for (i = 0; i < doc->entry_count; i++) {
+        const cct_sigil_kv_t *kv = &doc->entries[i];
+        const char *kv_section = kv->section ? kv->section : "";
+        if (strcmp(kv_section, section ? section : "") == 0 && strcmp(kv->key ? kv->key : "", key) == 0) return kv->value;
+    }
+    return NULL;
+}
+
+static bool trace_render_parse_viewbox(const char *svg, double *out_w, double *out_h) {
+    const char *root = NULL;
+    const char *root_end = NULL;
+    char *viewbox = NULL;
+    double min_x = 0.0;
+    double min_y = 0.0;
+    double w = 0.0;
+    double h = 0.0;
+    if (!svg || !out_w || !out_h) return false;
+    root = strstr(svg, "<svg");
+    if (!root) return false;
+    root_end = strchr(root, '>');
+    if (!root_end) return false;
+    viewbox = trace_render_extract_attr_range(root, root_end, "viewBox");
+    if (!viewbox) return false;
+    if (sscanf(viewbox, "%lf %lf %lf %lf", &min_x, &min_y, &w, &h) != 4) {
+        free(viewbox);
+        return false;
+    }
+    free(viewbox);
+    *out_w = w;
+    *out_h = h;
+    return true;
+}
+
+static bool trace_render_capture_svg_prefix(const char *svg, trace_render_svg_backdrop_t *backdrop) {
+    const char *close = NULL;
+    if (!svg || !backdrop) return false;
+    close = strstr(svg, "</svg>");
+    if (close) {
+        const char *next = close;
+        while ((next = strstr(next + 1, "</svg>")) != NULL) close = next;
+    }
+    if (!close) return false;
+    backdrop->svg_prefix = trace_render_strdup_range(svg, close);
+    return backdrop->svg_prefix != NULL;
+}
+
+static bool trace_render_parse_route_anchors(const char *svg,
+                                             const cct_sigil_document_t *doc,
+                                             trace_render_svg_backdrop_t *backdrop) {
+    const char *p = svg;
+    if (!svg || !backdrop) return false;
+    while ((p = strstr(p, "<g id=\"system_route_")) != NULL) {
+        const char *tag_end = strchr(p, '>');
+        const char *group_end = tag_end ? strstr(tag_end, "</g>") : NULL;
+        char *route_id = NULL;
+        const char *anchor = NULL;
+        char *cx_text = NULL;
+        char *cy_text = NULL;
+        double x = 0.0;
+        double y = 0.0;
+        if (!tag_end || !group_end) break;
+        route_id = trace_render_extract_attr_range(p, tag_end, "data-route-id");
+        if (!route_id) {
+            p = group_end + 4;
+            continue;
+        }
+        anchor = strstr(tag_end, "class=\"route-core\"");
+        if (!anchor || anchor >= group_end) anchor = strstr(tag_end, "class=\"route-shell\"");
+        if (anchor && anchor < group_end) {
+            const char *anchor_end = strchr(anchor, '>');
+            if (anchor_end && anchor_end < group_end) {
+                cx_text = trace_render_extract_attr_range(anchor, anchor_end, "cx");
+                cy_text = trace_render_extract_attr_range(anchor, anchor_end, "cy");
+            }
+        }
+        if (cx_text && cy_text) {
+            const cct_sigil_web_route_t *route = doc ? trace_render_find_route_by_id(doc, route_id) : NULL;
+            x = atof(cx_text);
+            y = atof(cy_text);
+            (void)trace_render_push_route_anchor(backdrop,
+                                                 route_id,
+                                                 route ? route->group : NULL,
+                                                 route ? route->module : NULL,
+                                                 route ? route->handler : NULL,
+                                                 x,
+                                                 y);
+        }
+        free(route_id);
+        free(cx_text);
+        free(cy_text);
+        p = group_end + 4;
+    }
+    return backdrop->route_count > 0;
+}
+
+static bool trace_render_parse_module_anchors(const char *svg,
+                                              const cct_sigil_document_t *doc,
+                                              trace_render_svg_backdrop_t *backdrop) {
+    const char *p = svg;
+    if (!svg || !doc || !backdrop) return false;
+    while ((p = strstr(p, "<g id=\"module_sigil_")) != NULL) {
+        const char *tag_end = strchr(p, '>');
+        char *id_text = NULL;
+        char *transform = NULL;
+        const char *module_path = NULL;
+        int index = 0;
+        double tx = 0.0;
+        double ty = 0.0;
+        double scale = 1.0;
+        if (!tag_end) break;
+        id_text = trace_render_extract_attr_range(p, tag_end, "id");
+        transform = trace_render_extract_attr_range(p, tag_end, "transform");
+        if (!id_text || !transform) {
+            free(id_text);
+            free(transform);
+            p = tag_end + 1;
+            continue;
+        }
+        if (sscanf(id_text, "module_sigil_%d", &index) != 1 ||
+            sscanf(transform, "translate(%lf %lf) scale(%lf)", &tx, &ty, &scale) != 3) {
+            free(id_text);
+            free(transform);
+            p = tag_end + 1;
+            continue;
+        }
+        {
+            char key[32];
+            snprintf(key, sizeof(key), "%d", index);
+            module_path = trace_render_sigil_entry(doc, "modules", key);
+            if (module_path) {
+                double cx = tx + scale * 256.0;
+                double cy = ty + scale * 256.0;
+                double r = scale * 256.0;
+                const char *region = tag_end + 1;
+                const char *region_end = strstr(region, "<g class=\"system-node-wrap\">");
+                const char *next_module = strstr(region, "<g id=\"module_sigil_");
+                (void)trace_render_push_module_anchor(backdrop, module_path, cx, cy, r, scale);
+                if (next_module && (!region_end || next_module < region_end)) region_end = next_module;
+                if (!region_end) region_end = svg + strlen(svg);
+                while (region && region < region_end) {
+                    const char *circle = strstr(region, "<circle");
+                    const char *circle_end = NULL;
+                    char *ritual = NULL;
+                    char *kind = NULL;
+                    char *cx_text = NULL;
+                    char *cy_text = NULL;
+                    if (!circle || circle >= region_end) break;
+                    circle_end = strchr(circle, '>');
+                    if (!circle_end || circle_end >= region_end) break;
+                    ritual = trace_render_extract_attr_range(circle, circle_end, "data-ritual");
+                    kind = trace_render_extract_attr_range(circle, circle_end, "data-kind");
+                    if (ritual && kind && strcmp(kind, "rituale") == 0) {
+                        cx_text = trace_render_extract_attr_range(circle, circle_end, "cx");
+                        cy_text = trace_render_extract_attr_range(circle, circle_end, "cy");
+                        if (cx_text && cy_text) {
+                            double ritual_x = tx + scale * atof(cx_text);
+                            double ritual_y = ty + scale * atof(cy_text);
+                            (void)trace_render_push_ritual_anchor(backdrop, module_path, ritual, ritual_x, ritual_y);
+                        }
+                    }
+                    free(ritual);
+                    free(kind);
+                    free(cx_text);
+                    free(cy_text);
+                    region = circle_end + 1;
+                }
+            }
+        }
+        free(id_text);
+        free(transform);
+        p = tag_end + 1;
+    }
+    return backdrop->module_count > 0;
+}
+
+static bool trace_render_load_svg_backdrop(const char *sigil_path,
+                                           const cct_sigil_document_t *doc,
+                                           trace_render_svg_backdrop_t *backdrop) {
+    char *svg_path = NULL;
+    char *svg_text = NULL;
+    if (!sigil_path || !doc || !backdrop) return false;
+    memset(backdrop, 0, sizeof(*backdrop));
+    svg_path = trace_render_replace_suffix(sigil_path, ".sigil", ".svg");
+    if (!svg_path) return false;
+    svg_text = trace_render_read_file(svg_path);
+    free(svg_path);
+    if (!svg_text) return false;
+    if (!trace_render_parse_viewbox(svg_text, &backdrop->width, &backdrop->height) ||
+        !trace_render_capture_svg_prefix(svg_text, backdrop)) {
+        free(svg_text);
+        trace_render_svg_backdrop_dispose(backdrop);
+        return false;
+    }
+    (void)trace_render_parse_route_anchors(svg_text, doc, backdrop);
+    (void)trace_render_parse_module_anchors(svg_text, doc, backdrop);
+    backdrop->ready = backdrop->route_count > 0 || backdrop->module_count > 0;
+    free(svg_text);
+    if (!backdrop->ready) {
+        trace_render_svg_backdrop_dispose(backdrop);
+        return false;
+    }
+    return true;
 }
 
 static const char *trace_render_find_key(const char *json, const char *key) {
@@ -778,10 +1325,74 @@ static void trace_render_free_slots(char **keys, int count) {
     for (i = 0; i < count; i++) free(keys[i]);
 }
 
+static const char *trace_render_span_middleware_name(const TraceRenderSpan *span) {
+    const char *value = NULL;
+    if (!span) return NULL;
+    value = trace_render_attr_value(span, "middleware");
+    if (value && value[0] != '\0') return value;
+    if (span->name && strncmp(span->name, "middleware.", 11) == 0 && span->name[11] != '\0') return span->name + 11;
+    return NULL;
+}
+
+static const char *trace_render_span_handler_name(const TraceRenderSpan *span,
+                                                  const cct_sigil_web_route_t *route) {
+    if (span && span->handler && span->handler[0] != '\0') return span->handler;
+    if (route && route->handler && route->handler[0] != '\0') return route->handler;
+    if (span && span->name && strncmp(span->name, "handler.", 8) == 0 && span->name[8] != '\0') return span->name + 8;
+    return NULL;
+}
+
+static bool trace_render_path_matches_module_name(const char *module_path, const char *name) {
+    char suffix[96];
+    size_t path_len = 0;
+    size_t suffix_len = 0;
+    if (!module_path || !name || name[0] == '\0') return false;
+    snprintf(suffix, sizeof(suffix), "/%s.cct", name);
+    path_len = strlen(module_path);
+    suffix_len = strlen(suffix);
+    return path_len >= suffix_len && strcmp(module_path + path_len - suffix_len, suffix) == 0;
+}
+
+static const trace_render_svg_module_anchor_t *trace_render_backdrop_module_by_name(const trace_render_svg_backdrop_t *backdrop,
+                                                                                     const char *name) {
+    int i = 0;
+    if (!backdrop || !name) return NULL;
+    for (i = 0; i < backdrop->module_count; i++) {
+        if (trace_render_path_matches_module_name(backdrop->modules[i].module_path, name)) return &backdrop->modules[i];
+    }
+    return NULL;
+}
+
+static bool trace_render_backdrop_ritual_prefix_centroid(const trace_render_svg_backdrop_t *backdrop,
+                                                         const char *module_path,
+                                                         const char *prefix,
+                                                         double *out_x,
+                                                         double *out_y) {
+    double sum_x = 0.0;
+    double sum_y = 0.0;
+    int count = 0;
+    int i = 0;
+    size_t prefix_len = 0;
+    if (!backdrop || !module_path || !prefix || !out_x || !out_y) return false;
+    prefix_len = strlen(prefix);
+    for (i = 0; i < backdrop->ritual_count; i++) {
+        if (strcmp(backdrop->rituals[i].module_path, module_path) != 0) continue;
+        if (strncmp(backdrop->rituals[i].ritual, prefix, prefix_len) != 0) continue;
+        sum_x += backdrop->rituals[i].x;
+        sum_y += backdrop->rituals[i].y;
+        count++;
+    }
+    if (count == 0) return false;
+    *out_x = sum_x / (double)count;
+    *out_y = sum_y / (double)count;
+    return true;
+}
+
 static void trace_render_assign_positions(const TraceRenderTrace *trace,
                                           const TraceRenderInput *input,
                                           const trace_render_panel_t *panel,
                                           const cct_sigil_document_t *sigil_doc,
+                                          const trace_render_svg_backdrop_t *backdrop,
                                           trace_render_route_hit_t *hits,
                                           int hit_count,
                                           trace_render_node_t *nodes) {
@@ -795,14 +1406,34 @@ static void trace_render_assign_positions(const TraceRenderTrace *trace,
     memset(module_slots, 0, sizeof(module_slots));
     memset(category_slots, 0, sizeof(category_slots));
     for (i = 0; i < hit_count; i++) {
-        double x0 = panel->panel_x + 150.0;
-        double x1 = panel->panel_x + panel->panel_w - 150.0;
-        double t = hit_count == 1 ? 0.5 : (double)i / (double)(hit_count - 1);
-        hits[i].x = x0 + (x1 - x0) * t;
-        hits[i].y = panel->panel_y + 110.0 + (trace_render_hash_unit(seed, 740u + (u32)i) - 0.5) * 10.0;
+        const trace_render_svg_route_anchor_t *route_anchor =
+            (backdrop && hits[i].route) ? trace_render_backdrop_route(backdrop, hits[i].route->route_id) : NULL;
+        if (route_anchor) {
+            hits[i].x = route_anchor->x;
+            hits[i].y = route_anchor->y;
+        } else {
+            double x0 = panel->panel_x + 150.0;
+            double x1 = panel->panel_x + panel->panel_w - 150.0;
+            double t = hit_count == 1 ? 0.5 : (double)i / (double)(hit_count - 1);
+            hits[i].x = x0 + (x1 - x0) * t;
+            hits[i].y = panel->panel_y + 110.0 + (trace_render_hash_unit(seed, 740u + (u32)i) - 0.5) * 10.0;
+        }
     }
     for (i = 0; i < trace->span_count; i++) {
         const TraceRenderSpan *span = &trace->spans[i];
+        const cct_sigil_web_route_t *route_meta =
+            (sigil_doc && span->route_id) ? trace_render_find_route_by_id(sigil_doc, span->route_id) : NULL;
+        const trace_render_svg_module_anchor_t *module_anchor =
+            (backdrop && span->module_path) ? trace_render_backdrop_module(backdrop, span->module_path) : NULL;
+        const trace_render_svg_route_anchor_t *route_anchor =
+            (backdrop && span->route_id) ? trace_render_backdrop_route(backdrop, span->route_id) : NULL;
+        const trace_render_svg_group_anchor_t *group_anchor = NULL;
+        const trace_render_svg_ritual_anchor_t *ritual_anchor = NULL;
+        const char *middleware_name = trace_render_span_middleware_name(span);
+        const char *handler_name = trace_render_span_handler_name(span, route_meta);
+        double group_anchor_x = 0.0;
+        double group_anchor_y = 0.0;
+        int have_group_anchor = 0;
         double target_x = panel->cx;
         double target_y = panel->cy;
         double x = 0.0;
@@ -817,14 +1448,78 @@ static void trace_render_assign_positions(const TraceRenderTrace *trace,
         nodes[i].visible = trace_render_matches_filter(input, span) ? 1 : 0;
         if (!nodes[i].visible) continue;
         nodes[i].active = 1;
+        if (!module_anchor && route_meta && route_meta->module && backdrop) {
+            module_anchor = trace_render_backdrop_module(backdrop, route_meta->module);
+        }
+        if (backdrop && module_anchor && handler_name) {
+            ritual_anchor = trace_render_backdrop_ritual(backdrop, module_anchor->module_path, handler_name);
+        }
+        if (backdrop && middleware_name && middleware_name[0] != '\0') {
+            char middleware_group[128];
+            char middleware_prefix[128];
+            snprintf(middleware_prefix, sizeof(middleware_prefix), "%s.", middleware_name);
+            if (trace_render_route_prefix_centroid(backdrop, middleware_prefix, &group_anchor_x, &group_anchor_y)) {
+                have_group_anchor = 1;
+            }
+            if (middleware_name[0] == '/') {
+                group_anchor = trace_render_backdrop_group(backdrop, middleware_name);
+                if (!group_anchor &&
+                    (trace_render_group_centroid_for_doc(backdrop, sigil_doc, middleware_name, &group_anchor_x, &group_anchor_y) ||
+                     trace_render_backdrop_group_centroid(backdrop, middleware_name, &group_anchor_x, &group_anchor_y))) {
+                    have_group_anchor = 1;
+                }
+            } else {
+                snprintf(middleware_group, sizeof(middleware_group), "/%s", middleware_name);
+                group_anchor = trace_render_backdrop_group(backdrop, middleware_group);
+                if (!group_anchor &&
+                    (trace_render_group_centroid_for_doc(backdrop, sigil_doc, middleware_group, &group_anchor_x, &group_anchor_y) ||
+                     trace_render_backdrop_group_centroid(backdrop, middleware_group, &group_anchor_x, &group_anchor_y))) {
+                    have_group_anchor = 1;
+                }
+            }
+            if (!group_anchor && route_meta && route_meta->group) {
+                group_anchor = trace_render_backdrop_group(backdrop, route_meta->group);
+                if (!group_anchor &&
+                    (trace_render_group_centroid_for_doc(backdrop, sigil_doc, route_meta->group, &group_anchor_x, &group_anchor_y) ||
+                     trace_render_backdrop_group_centroid(backdrop, route_meta->group, &group_anchor_x, &group_anchor_y))) {
+                    have_group_anchor = 1;
+                }
+            }
+            if (!group_anchor && backdrop) {
+                const trace_render_svg_module_anchor_t *middleware_module =
+                    trace_render_backdrop_module_by_name(backdrop, middleware_name);
+                if (middleware_module) {
+                    if (trace_render_backdrop_ritual_prefix_centroid(backdrop,
+                                                                     middleware_module->module_path,
+                                                                     middleware_name,
+                                                                     &group_anchor_x,
+                                                                     &group_anchor_y)) {
+                        have_group_anchor = 1;
+                    } else {
+                        target_x = middleware_module->cx;
+                        target_y = middleware_module->cy;
+                    }
+                }
+            }
+        }
         if (span->depth == 0) {
-            nodes[i].x = panel->cx;
-            nodes[i].y = panel->cy;
-            nodes[i].r = 16.0;
+            nodes[i].x = route_anchor ? route_anchor->x : panel->cx;
+            nodes[i].y = route_anchor ? route_anchor->y : panel->cy;
+            nodes[i].r = route_anchor ? 8.8 : 16.0;
+            if (route_anchor) nodes[i].mapped_route = 1;
             continue;
         }
         route_idx = trace_render_route_index(hits, hit_count, span->route_id);
-        if (route_idx >= 0) {
+        if (ritual_anchor) {
+            target_x = ritual_anchor->x;
+            target_y = ritual_anchor->y;
+        } else if (group_anchor || have_group_anchor) {
+            target_x = group_anchor ? group_anchor->x : group_anchor_x;
+            target_y = group_anchor ? group_anchor->y : group_anchor_y;
+        } else if (module_anchor) {
+            target_x = module_anchor->cx;
+            target_y = module_anchor->cy;
+        } else if (route_idx >= 0) {
             target_x = hits[route_idx].x;
             target_y = hits[route_idx].y;
             nodes[i].mapped_route = 1;
@@ -847,7 +1542,35 @@ static void trace_render_assign_positions(const TraceRenderTrace *trace,
                 sibling_count++;
             }
         }
-        if (span->parent_index >= 0 && nodes[span->parent_index].visible) {
+        if (ritual_anchor) {
+            x = ritual_anchor->x;
+            y = ritual_anchor->y;
+        } else if ((group_anchor || have_group_anchor) && category && strcmp(category, "middleware") == 0) {
+            x = group_anchor ? group_anchor->x : group_anchor_x;
+            y = group_anchor ? group_anchor->y : group_anchor_y;
+        } else if (module_anchor && (span->depth == 1 || (category && strcmp(category, "handler") == 0))) {
+            x = module_anchor->cx;
+            y = module_anchor->cy;
+        } else if (module_anchor && span->depth >= 2) {
+            double orbit = module_anchor->r * 0.42;
+            double orbit_center_x = module_anchor->cx;
+            double orbit_center_y = module_anchor->cy;
+            double slot = sibling_count <= 1 ? 0.0 : ((double)sibling_slot - ((double)(sibling_count - 1) * 0.5));
+            double angle = -TRACE_RENDER_PI * 0.35 + slot * 0.55 + trace_render_hash_unit(seed, 980u + (u32)i) * 0.35;
+            if (orbit > 86.0) orbit = 86.0;
+            if (span->parent_index >= 0 &&
+                nodes[span->parent_index].visible &&
+                trace->spans[span->parent_index].module_path &&
+                span->module_path &&
+                strcmp(trace->spans[span->parent_index].module_path, span->module_path) == 0) {
+                orbit_center_x = nodes[span->parent_index].x;
+                orbit_center_y = nodes[span->parent_index].y;
+                orbit = 30.0 + (double)(sibling_count > 0 ? sibling_count : 1) * 4.0;
+                if (orbit > 54.0) orbit = 54.0;
+            }
+            x = orbit_center_x + cos(angle) * orbit;
+            y = orbit_center_y + sin(angle) * orbit * 0.78;
+        } else if (span->parent_index >= 0 && nodes[span->parent_index].visible) {
             double parent_x = nodes[span->parent_index].x;
             double parent_y = nodes[span->parent_index].y;
             double spread = sibling_count <= 1 ? 0.0 : ((double)sibling_slot - ((double)(sibling_count - 1) * 0.5));
@@ -871,8 +1594,10 @@ static void trace_render_assign_positions(const TraceRenderTrace *trace,
             x = panel->cx + (target_x - panel->cx) * t;
             y = panel->cy + (target_y - panel->cy) * t;
         }
-        x += (trace_render_hash_unit(seed, 900u + (u32)i) - 0.5) * 6.0;
-        y += (trace_render_hash_unit(seed, 960u + (u32)i) - 0.5) * 6.0;
+        if (!ritual_anchor && !((group_anchor || have_group_anchor) && category && strcmp(category, "middleware") == 0)) {
+            x += (trace_render_hash_unit(seed, 900u + (u32)i) - 0.5) * 6.0;
+            y += (trace_render_hash_unit(seed, 960u + (u32)i) - 0.5) * 6.0;
+        }
         if (x < panel->panel_x + 72.0) x = panel->panel_x + 72.0;
         if (x > panel->panel_x + panel->panel_w - 72.0) x = panel->panel_x + panel->panel_w - 72.0;
         if (y < panel->panel_y + 92.0) y = panel->panel_y + 92.0;
@@ -883,7 +1608,8 @@ static void trace_render_assign_positions(const TraceRenderTrace *trace,
         }
         nodes[i].x = x;
         nodes[i].y = y;
-        nodes[i].r = 10.0 + trace_render_hash_unit(seed, 1024u + (u32)i) * 4.0;
+        nodes[i].r = module_anchor ? 7.2 + trace_render_hash_unit(seed, 1024u + (u32)i) * 3.4
+                                   : 10.0 + trace_render_hash_unit(seed, 1024u + (u32)i) * 4.0;
         if (sigil_doc && span->route_id && trace_render_find_route_by_id(sigil_doc, span->route_id)) nodes[i].mapped_route = 1;
     }
     trace_render_free_slots(module_slots, module_count);
@@ -1026,6 +1752,9 @@ static void trace_render_emit_style(FILE *out, int animated) {
             ".step-knob{fill:#1e4f78;stroke:#fffaf2;stroke-width:1.2;cursor:grab}"
             ".step-knob.dragging{cursor:grabbing}"
             ".step-label{fill:#5a5046;font:10px monospace}"
+            ".trace-caption-box{fill:rgba(255,250,242,0.92);stroke:#d6cabc;stroke-width:.9}"
+            ".trace-caption-title{fill:#211812;font:600 14px monospace}"
+            ".trace-caption-subtitle{fill:#5a5046;font:10px monospace}"
             ".focus-ring{fill:none;stroke:#35648c;stroke-width:1.2;stroke-dasharray:4 2}"
             "]]></style>\n");
     fprintf(out, "<style><![CDATA[");
@@ -1055,6 +1784,21 @@ static void trace_render_emit_panel_frame(FILE *out, const trace_render_panel_t 
             panel->cx + 21.0, panel->cy,
             panel->cx, panel->cy + 24.0,
             panel->cx - 21.0, panel->cy);
+}
+
+static void trace_render_emit_caption(FILE *out, const trace_render_panel_t *panel, const char *title, const char *subtitle) {
+    if (!out || !panel) return;
+    fprintf(out, "<g id=\"trace_caption\">");
+    fprintf(out, "<rect class=\"trace-caption-box\" x=\"%.2f\" y=\"%.2f\" width=\"338\" height=\"46\" rx=\"10\"/>",
+            panel->panel_x + 18.0, panel->panel_y + 18.0);
+    fprintf(out, "<text class=\"trace-caption-title\" x=\"%.2f\" y=\"%.2f\">",
+            panel->panel_x + 30.0, panel->panel_y + 36.0);
+    trace_render_svg_escape(out, title ? title : "trace");
+    fprintf(out, "</text>");
+    fprintf(out, "<text class=\"trace-caption-subtitle\" x=\"%.2f\" y=\"%.2f\">",
+            panel->panel_x + 30.0, panel->panel_y + 50.0);
+    trace_render_svg_escape(out, subtitle ? subtitle : "");
+    fprintf(out, "</text></g>\n");
 }
 
 static void trace_render_emit_timeline_internal(const TraceRenderTrace *trace,
@@ -1280,6 +2024,9 @@ static void trace_render_emit_links(FILE *out,
                 double arrival = trace_render_anim_span_start(trace, &bounds, span);
                 double duration = trace_render_anim_link_duration(0.0, arrival);
                 double dash = trace_render_path_length_hint(hits[route_idx].x, hits[route_idx].y, nodes[i].x, nodes[i].y);
+                double dx = hits[route_idx].x - nodes[i].x;
+                double dy = hits[route_idx].y - nodes[i].y;
+                if ((dx * dx + dy * dy) < 4.0) continue;
                 trace_overlay_compute_meta(span, &meta);
                 trace_render_build_overlay_classes(active_class, sizeof(active_class), "route-flow", &meta);
                 trace_render_build_overlay_classes(pending_class, sizeof(pending_class), "route-flow span-node-pending", &meta);
@@ -1410,6 +2157,7 @@ static int trace_render_panel(FILE *out,
                               const char *panel_title,
                               const char *panel_subtitle) {
     cct_sigil_document_t sigil_doc;
+    trace_render_svg_backdrop_t backdrop;
     bool has_sigil = false;
     trace_render_route_hit_t *hits = NULL;
     int hit_count = 0;
@@ -1419,48 +2167,59 @@ static int trace_render_panel(FILE *out,
     int active_limit = -1;
     int i = 0;
     memset(&sigil_doc, 0, sizeof(sigil_doc));
+    memset(&backdrop, 0, sizeof(backdrop));
     if (!out || !trace || !panel) return -1;
     if (input && input->sigil_path && input->sigil_path[0] != '\0') {
         has_sigil = cct_sigil_parse_file(input->sigil_path, CCT_SIGIL_PARSE_MODE_CURRENT_DEFAULT, &sigil_doc) &&
                     !cct_sigil_document_has_errors(&sigil_doc);
+        if (has_sigil) (void)trace_render_load_svg_backdrop(input->sigil_path, &sigil_doc, &backdrop);
     }
     active_limit = trace_render_active_count(trace, input);
     nodes = (trace_render_node_t*)calloc((size_t)(trace->span_count > 0 ? trace->span_count : 1), sizeof(*nodes));
     if (!nodes) {
+        trace_render_svg_backdrop_dispose(&backdrop);
         if (has_sigil) cct_sigil_document_dispose(&sigil_doc);
         return -1;
     }
     hit_count = trace_render_collect_routes(trace, input, has_sigil ? &sigil_doc : NULL, &hits);
     if (hit_count < 0) {
         free(nodes);
+        trace_render_svg_backdrop_dispose(&backdrop);
         if (has_sigil) cct_sigil_document_dispose(&sigil_doc);
         return -1;
     }
-    trace_render_assign_positions(trace, input, panel, has_sigil ? &sigil_doc : NULL, hits, hit_count, nodes);
+    trace_render_assign_positions(trace, input, panel, has_sigil ? &sigil_doc : NULL, backdrop.ready ? &backdrop : NULL, hits, hit_count, nodes);
     legend_count = trace_render_collect_active_categories(trace, input, legend_cats, (int)(sizeof(legend_cats) / sizeof(legend_cats[0])));
-    trace_render_emit_panel_frame(out, panel, panel_title, panel_subtitle);
-    fprintf(out, "<g id=\"trace_ornaments\">\n");
-    for (i = 0; i < 12; i++) {
-        u64 seed = trace_render_compute_hash(trace);
-        double a = (2.0 * TRACE_RENDER_PI) * (double)i / 12.0;
-        double rr = panel->panel_w * 0.34 + (trace_render_hash_unit(seed, 580u + (u32)i) - 0.5) * 22.0;
-        double ox = panel->cx + cos(a) * rr;
-        double oy = panel->cy + sin(a) * rr;
-        fprintf(out, "<circle class=\"trace-orn\" cx=\"%.2f\" cy=\"%.2f\" r=\"%.2f\"/>\n",
-                ox, oy, 1.2 + trace_render_hash_unit(seed, 620u + (u32)i) * 2.0);
+    if (backdrop.ready) {
+        trace_render_emit_caption(out, panel, panel_title, panel_subtitle);
+    } else {
+        trace_render_emit_panel_frame(out, panel, panel_title, panel_subtitle);
+        fprintf(out, "<g id=\"trace_ornaments\">\n");
+        for (i = 0; i < 12; i++) {
+            u64 seed = trace_render_compute_hash(trace);
+            double a = (2.0 * TRACE_RENDER_PI) * (double)i / 12.0;
+            double rr = panel->panel_w * 0.34 + (trace_render_hash_unit(seed, 580u + (u32)i) - 0.5) * 22.0;
+            double ox = panel->cx + cos(a) * rr;
+            double oy = panel->cy + sin(a) * rr;
+            fprintf(out, "<circle class=\"trace-orn\" cx=\"%.2f\" cy=\"%.2f\" r=\"%.2f\"/>\n",
+                    ox, oy, 1.2 + trace_render_hash_unit(seed, 620u + (u32)i) * 2.0);
+        }
+        fprintf(out, "</g>\n");
+        trace_render_emit_route_hits(out, hits, hit_count, input);
     }
-    fprintf(out, "</g>\n");
-    trace_render_emit_route_hits(out, hits, hit_count, input);
     trace_render_emit_links(out, trace, input, hits, hit_count, nodes, active_limit);
     trace_render_emit_nodes(out, trace, input, nodes, active_limit);
     if (legend_count > 0) {
-        fprintf(out, "<g transform=\"translate(%.2f %.2f)\">", panel->panel_x + panel->panel_w - 150.0, panel->panel_y + 72.0);
+        fprintf(out, "<g transform=\"translate(%.2f %.2f)\">",
+                panel->panel_x + panel->panel_w - 150.0,
+                backdrop.ready ? panel->panel_y + 78.0 : panel->panel_y + 72.0);
         trace_overlay_emit_legend(legend_cats, legend_count, out);
         fprintf(out, "</g>\n");
     }
     if (!(input && input->hide_timeline)) trace_render_emit_timeline_internal(trace, input, panel, out, active_limit);
     free(hits);
     free(nodes);
+    trace_render_svg_backdrop_dispose(&backdrop);
     if (has_sigil) cct_sigil_document_dispose(&sigil_doc);
     return 0;
 }
@@ -1504,16 +2263,33 @@ static void trace_render_emit_step_script(FILE *out, int step_count, int current
 
 int trace_render_single(TraceRenderInput *input, FILE *out) {
     trace_render_panel_t panel;
+    cct_sigil_document_t sigil_doc;
+    trace_render_svg_backdrop_t backdrop;
     char subtitle[256];
     char title[256];
     u64 hash = 0;
     int *indices = NULL;
     int count = 0;
     if (!input || !out || input->trace_a.span_count <= 0) return -1;
-    trace_render_panel_defaults(&panel, 12.0, 12.0, 936.0, 696.0);
-    if (input->mode == TRACE_RENDER_STEP && !input->hide_timeline) {
-        panel.timeline_y -= 26.0;
-        panel.timeline_h += 26.0;
+    memset(&sigil_doc, 0, sizeof(sigil_doc));
+    memset(&backdrop, 0, sizeof(backdrop));
+    if (input->sigil_path && cct_sigil_parse_file(input->sigil_path, CCT_SIGIL_PARSE_MODE_CURRENT_DEFAULT, &sigil_doc) &&
+        !cct_sigil_document_has_errors(&sigil_doc)) {
+        (void)trace_render_load_svg_backdrop(input->sigil_path, &sigil_doc, &backdrop);
+    }
+    if (backdrop.ready) {
+        trace_render_panel_defaults(&panel, 0.0, 0.0, backdrop.width, backdrop.height);
+        panel.timeline_x = 22.0;
+        panel.timeline_w = backdrop.width > 520.0 ? 440.0 : (backdrop.width - 44.0);
+        if (panel.timeline_w < 300.0) panel.timeline_w = backdrop.width - 44.0;
+        panel.timeline_h = input->mode == TRACE_RENDER_STEP ? 118.0 : 92.0;
+        panel.timeline_y = backdrop.height - panel.timeline_h - 22.0;
+    } else {
+        trace_render_panel_defaults(&panel, 12.0, 12.0, 936.0, 696.0);
+        if (input->mode == TRACE_RENDER_STEP && !input->hide_timeline) {
+            panel.timeline_y -= 26.0;
+            panel.timeline_h += 26.0;
+        }
     }
     hash = trace_render_compute_hash(&input->trace_a);
     snprintf(title, sizeof(title), "trace %s", input->trace_a.trace_id ? input->trace_a.trace_id : "trace");
@@ -1522,13 +2298,19 @@ int trace_render_single(TraceRenderInput *input, FILE *out) {
              input->trace_a.total_us,
              input->mode == TRACE_RENDER_STEP ? "step" : (input->animated ? "animated" : "static"),
              (unsigned long long)hash);
-    fprintf(out, "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n");
-    fprintf(out, "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 960 720\" width=\"960\" height=\"720\" role=\"img\" aria-label=\"CCT trace render\">\n");
+    if (backdrop.ready && backdrop.svg_prefix) {
+        fprintf(out, "%s", backdrop.svg_prefix);
+    } else {
+        fprintf(out, "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n");
+        fprintf(out, "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 960 720\" width=\"960\" height=\"720\" role=\"img\" aria-label=\"CCT trace render\">\n");
+        fprintf(out, "<rect class=\"bg\" x=\"0\" y=\"0\" width=\"960\" height=\"720\"/>\n");
+    }
     trace_render_emit_style(out, input->animated);
-    fprintf(out, "<rect class=\"bg\" x=\"0\" y=\"0\" width=\"960\" height=\"720\"/>\n");
     if (trace_render_panel(out, &input->trace_a, input, &panel,
                            title,
                            subtitle) != 0) {
+        trace_render_svg_backdrop_dispose(&backdrop);
+        cct_sigil_document_dispose(&sigil_doc);
         fputs("</svg>\n", out);
         return -1;
     }
@@ -1537,8 +2319,10 @@ int trace_render_single(TraceRenderInput *input, FILE *out) {
         free(indices);
         if (count > 0) trace_render_emit_step_script(out, count, input->step_index);
     }
-    fprintf(out, "<text class=\"hash\" x=\"930\" y=\"704\" text-anchor=\"end\">%016llx</text>\n", (unsigned long long)hash);
+    if (!backdrop.ready) fprintf(out, "<text class=\"hash\" x=\"930\" y=\"704\" text-anchor=\"end\">%016llx</text>\n", (unsigned long long)hash);
     fputs("</svg>\n", out);
+    trace_render_svg_backdrop_dispose(&backdrop);
+    cct_sigil_document_dispose(&sigil_doc);
     return 0;
 }
 

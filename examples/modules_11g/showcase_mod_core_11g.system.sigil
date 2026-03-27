@@ -1,0 +1,57 @@
+format = cct.sigil.v1
+sigilo_scope = system
+visual_style = network
+system_hash = 2a9285aed3f688d2
+module_count = 3
+entry_module = showcase_mod_core_11g.cct
+import_edges = 2
+cross_module_calls = 6
+cross_module_type_refs = 0
+exported_symbol_count = 16
+internal_symbol_count = 0
+module_density = 0.666667
+system_topology_class = tree
+module_visibility_model = public_default_arcanum_internal
+module_resolution_status = ok
+composition_mode = sigil_of_sigils_inline
+generic_instantiation_count = 0
+generic_rituale_instantiation_count = 0
+generic_sigillum_instantiation_count = 0
+generic_instantiation_dedup_count = 0
+generic_constraint_count = 0
+generic_constrained_param_count = 0
+generic_constraint_violation_count = 0
+pactum_constraint_resolution_status = ok
+generic_monomorphization_status = ok
+pactum_decl_count = 0
+pactum_signature_count = 0
+sigillum_pactum_conformance_count = 0
+pactum_conformance_status = ok
+option_ops_count = 0
+result_ops_count = 0
+map_ops_count = 0
+set_ops_count = 0
+collection_ops_count = 0
+iterum_count = 0
+option_module_used = false
+result_module_used = false
+map_module_used = false
+set_module_used = false
+collection_ops_module_used = false
+phase10_subset_final = true
+phase10_final_status = consolidated
+phase10_typing_contract = genus_explicit_monomorphization+pactum_explicit_conformance+constraint_single_contract_rituale_only
+
+[modules]
+0 = /Users/eabusato/dev/cct/examples/modules_11g/showcase_mod_core_11g.cct
+1 = /Users/eabusato/dev/cct/lib/cct/fmt.cct
+2 = /Users/eabusato/dev/cct/lib/cct/verbum.cct
+
+[module_sigils]
+0 = /Users/eabusato/dev/cct/examples/modules_11g/showcase_mod_core_11g.cct | 55c8371fea480b10
+1 = /Users/eabusato/dev/cct/lib/cct/fmt.cct | 2f31d815af1101af
+2 = /Users/eabusato/dev/cct/lib/cct/verbum.cct | 9cba595261cb82e3
+
+[import_edges]
+0 = /Users/eabusato/dev/cct/examples/modules_11g/showcase_mod_core_11g.cct -> /Users/eabusato/dev/cct/lib/cct/fmt.cct
+1 = /Users/eabusato/dev/cct/lib/cct/fmt.cct -> /Users/eabusato/dev/cct/lib/cct/verbum.cct

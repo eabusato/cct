@@ -1,0 +1,773 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512" role="img" aria-label="CCT local sigilo">
+  <desc>Deterministic semantic sigil for a single CCT module.</desc>
+  <defs>
+    <style><![CDATA[
+      .bg { fill: #f5f0e4; }
+      .base { stroke: #2a221c; stroke-width: 1.60; fill: none; opacity: 0.78; }
+      .primary { stroke: #241913; stroke-width: 2.80; fill: none; stroke-linecap: round; stroke-linejoin: round; }
+      .call { stroke: #5b2a22; stroke-width: 2.0; fill: none; stroke-linecap: round; opacity: 0.9; }
+      .branch { stroke: #6b342d; stroke-width: 1.6; fill: none; stroke-linecap: round; }
+      .loop { stroke: #2d5f5a; stroke-width: 1.6; fill: none; stroke-linecap: round; }
+      .bind { stroke: #73493d; stroke-width: 1.4; fill: none; stroke-linecap: round; }
+      .term { stroke: #201814; stroke-width: 1.7; fill: none; stroke-linecap: round; }
+      .node-main { fill: #fffaf1; stroke: #201814; stroke-width: 2.0; }
+      .node-entry { fill: #efe6d4; stroke: #201814; stroke-width: 2.4; }
+      .node-aux { fill: #f6efe0; stroke: #4f4339; stroke-width: 1.3; }
+      .node-loop { fill: #edf3f1; stroke: #2d5f5a; stroke-width: 1.4; }
+      .node-term { fill: #f3e7e3; stroke: #5a2a23; stroke-width: 1.4; }
+      .orn { stroke: #355d58; stroke-width: 1.0; fill: none; opacity: 0.55; }
+      .hash { fill: #1f1a17; font: 10px monospace; letter-spacing: 0.8px; }
+      .label { fill: #1f1a17; font: 8px monospace; opacity: 0.7; }
+      .node-wrap, .edge-wrap { cursor: help; }
+      .node-wrap:hover > circle { opacity: 0.96; }
+      .edge-wrap:hover > path, .edge-wrap:hover > line { opacity: 1.0; }
+    ]]></style>
+  </defs>
+  <rect class="bg" x="0" y="0" width="512" height="512"/>
+  <g id="foundation">
+    <circle class="base" cx="256" cy="256" r="226"/>
+    <ellipse class="base" cx="256" cy="256" rx="198" ry="186.57" opacity="0.32"/>
+  </g>
+  <g id="primary_path">
+    <g class="edge-wrap">
+    <path class="primary" d="M 303.27 108.13 Q 322.59 135.02 347.41 113.12" stroke-width="2.60" opacity="0.96"/>
+      <title>edge: primary
+codegen_stmt_type_text -&gt; codegen_stmt_is_switch_subject
+weight: 1
+
+path:
+codegen_stmt_type_text -&gt; codegen_stmt_is_switch_subject</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="primary" d="M 347.41 113.12 Q 348.88 143.32 372.95 125.01" stroke-width="2.60" opacity="0.96"/>
+      <title>edge: primary
+codegen_stmt_is_switch_subject -&gt; codegen_emit_stmt_as_block
+weight: 1
+
+path:
+codegen_stmt_is_switch_subject -&gt; codegen_emit_stmt_as_block</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="primary" d="M 372.95 125.01 Q 356.64 154.34 390.08 157.09" stroke-width="2.60" opacity="0.96"/>
+      <title>edge: primary
+codegen_emit_stmt_as_block -&gt; codegen_emit_iace_stmt
+weight: 1
+
+path:
+codegen_emit_stmt_as_block -&gt; codegen_emit_iace_stmt</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="primary" d="M 390.08 157.09 Q 404.79 225.93 459.77 269.87" stroke-width="2.60" opacity="0.96"/>
+      <title>edge: primary
+codegen_emit_iace_stmt -&gt; codegen_emit_tempta_stmt
+weight: 1
+
+path:
+codegen_emit_iace_stmt -&gt; codegen_emit_tempta_stmt</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="primary" d="M 459.77 269.87 Q 392.13 319.27 360.56 396.85" stroke-width="2.60" opacity="0.96"/>
+      <title>edge: primary
+codegen_emit_tempta_stmt -&gt; codegen_emit_obsecro_scribe_stmt
+weight: 1
+
+path:
+codegen_emit_tempta_stmt -&gt; codegen_emit_obsecro_scribe_stmt</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="primary" d="M 360.56 396.85 Q 216.81 302.92 50.32 260.91" stroke-width="2.60" opacity="0.96"/>
+      <title>edge: primary
+codegen_emit_obsecro_scribe_stmt -&gt; codegen_emit_stmt
+weight: 1
+
+path:
+codegen_emit_obsecro_scribe_stmt -&gt; codegen_emit_stmt</title>
+    </g>
+  </g>
+  <g id="call_links">
+    <g class="edge-wrap">
+    <path class="call" d="M 372.95 125.01 Q 198.34 161.41 50.32 260.91" stroke-width="2.50" opacity="0.80" data-kind="call" data-from="codegen_emit_stmt_as_block" data-to="codegen_emit_stmt" data-weight="2" data-self-loop="false"/>
+      <title>edge: call
+codegen_emit_stmt_as_block -&gt; codegen_emit_stmt
+calls: 2
+
+path:
+codegen_emit_stmt_as_block -&gt; codegen_emit_stmt</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="call" d="M 459.77 269.87 Q 256.03 220.55 50.32 260.91" stroke-width="2.85" opacity="0.86" data-kind="call" data-from="codegen_emit_tempta_stmt" data-to="codegen_emit_stmt" data-weight="3" data-self-loop="false"/>
+      <title>edge: call
+codegen_emit_tempta_stmt -&gt; codegen_emit_stmt
+calls: 3
+
+path:
+codegen_emit_tempta_stmt -&gt; codegen_emit_stmt</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="call" d="M 50.32 260.91 Q 191.63 360.39 360.56 396.85" stroke-width="2.15" opacity="0.74" data-kind="call" data-from="codegen_emit_stmt" data-to="codegen_emit_obsecro_scribe_stmt" data-weight="1" data-self-loop="false"/>
+      <title>edge: call
+codegen_emit_stmt -&gt; codegen_emit_obsecro_scribe_stmt
+calls: 1
+
+path:
+codegen_emit_stmt -&gt; codegen_emit_obsecro_scribe_stmt</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="call" d="M 58.96 260.91 C 135.30 233.28 144.09 283.58 108.95 258.43 C 73.81 283.58 82.60 233.28 43.84 262.41" data-kind="call" data-from="codegen_emit_stmt" data-to="codegen_emit_stmt" data-weight="5" data-self-loop="true"/>
+      <title>edge: call
+codegen_emit_stmt -&gt; codegen_emit_stmt
+calls: 5
+
+path:
+codegen_emit_stmt -&gt; codegen_emit_stmt</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="call" d="M 50.32 260.91 Q 192.33 210.24 303.27 108.13" stroke-width="2.15" opacity="0.74" data-kind="call" data-from="codegen_emit_stmt" data-to="codegen_stmt_type_text" data-weight="1" data-self-loop="false"/>
+      <title>edge: call
+codegen_emit_stmt -&gt; codegen_stmt_type_text
+calls: 1
+
+path:
+codegen_emit_stmt -&gt; codegen_stmt_type_text</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="call" d="M 50.32 260.91 Q 230.53 237.82 372.95 125.01" stroke-width="3.00" opacity="0.90" data-kind="call" data-from="codegen_emit_stmt" data-to="codegen_emit_stmt_as_block" data-weight="4" data-self-loop="false"/>
+      <title>edge: call
+codegen_emit_stmt -&gt; codegen_emit_stmt_as_block
+calls: 4
+
+path:
+codegen_emit_stmt -&gt; codegen_emit_stmt_as_block</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="call" d="M 50.32 260.91 Q 210.95 211.31 347.41 113.12" stroke-width="2.15" opacity="0.74" data-kind="call" data-from="codegen_emit_stmt" data-to="codegen_stmt_is_switch_subject" data-weight="1" data-self-loop="false"/>
+      <title>edge: call
+codegen_emit_stmt -&gt; codegen_stmt_is_switch_subject
+calls: 1
+
+path:
+codegen_emit_stmt -&gt; codegen_stmt_is_switch_subject</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="call" d="M 50.32 260.91 Q 229.44 239.24 390.08 157.09" stroke-width="2.15" opacity="0.74" data-kind="call" data-from="codegen_emit_stmt" data-to="codegen_emit_iace_stmt" data-weight="1" data-self-loop="false"/>
+      <title>edge: call
+codegen_emit_stmt -&gt; codegen_emit_iace_stmt
+calls: 1
+
+path:
+codegen_emit_stmt -&gt; codegen_emit_iace_stmt</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="call" d="M 50.32 260.91 Q 254.45 292.52 459.77 269.87" stroke-width="2.15" opacity="0.74" data-kind="call" data-from="codegen_emit_stmt" data-to="codegen_emit_tempta_stmt" data-weight="1" data-self-loop="false"/>
+      <title>edge: call
+codegen_emit_stmt -&gt; codegen_emit_tempta_stmt
+calls: 1
+
+path:
+codegen_emit_stmt -&gt; codegen_emit_tempta_stmt</title>
+    </g>
+  </g>
+  <g id="branches">
+    <g class="edge-wrap">
+    <path class="branch" d="M 347.41 113.12 Q 320.60 115.21 304.02 136.41" stroke-width="2.10" opacity="0.85"/>
+      <title>edge: branch
+codegen_stmt_is_switch_subject -&gt; codegen_stmt_is_switch_subject
+weight: 7
+
+path:
+codegen_stmt_is_switch_subject -&gt; codegen_stmt_is_switch_subject</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="branch" d="M 372.95 125.01 Q 348.98 117.63 331.40 135.51" stroke-width="1.70" opacity="0.85"/>
+      <title>edge: branch
+codegen_emit_stmt_as_block -&gt; codegen_emit_stmt_as_block
+weight: 2
+
+path:
+codegen_emit_stmt_as_block -&gt; codegen_emit_stmt_as_block</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="branch" d="M 459.77 269.87 Q 436.01 272.50 421.23 291.30" stroke-width="1.95" opacity="0.85"/>
+      <title>edge: branch
+codegen_emit_tempta_stmt -&gt; codegen_emit_tempta_stmt
+weight: 3
+
+path:
+codegen_emit_tempta_stmt -&gt; codegen_emit_tempta_stmt</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="branch" d="M 360.56 396.85 Q 343.16 375.52 315.66 376.63" stroke-width="2.10" opacity="0.85"/>
+      <title>edge: branch
+codegen_emit_obsecro_scribe_stmt -&gt; codegen_emit_obsecro_scribe_stmt
+weight: 7
+
+path:
+codegen_emit_obsecro_scribe_stmt -&gt; codegen_emit_obsecro_scribe_stmt</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="branch" d="M 315.66 376.63 Q 349.22 381.37 377.13 362.14" stroke-width="2.10" opacity="0.85"/>
+      <title>edge: branch
+codegen_emit_obsecro_scribe_stmt -&gt; codegen_emit_obsecro_scribe_stmt
+weight: 5
+
+path:
+codegen_emit_obsecro_scribe_stmt -&gt; codegen_emit_obsecro_scribe_stmt</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="branch" d="M 377.13 362.14 Q 357.73 374.19 360.56 396.85" stroke-width="1.45" opacity="0.85"/>
+      <title>edge: branch
+codegen_emit_obsecro_scribe_stmt -&gt; codegen_emit_obsecro_scribe_stmt
+weight: 1
+
+path:
+codegen_emit_obsecro_scribe_stmt -&gt; codegen_emit_obsecro_scribe_stmt</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="branch" d="M 50.32 260.91 Q 94.72 255.06 134.72 234.89" stroke-width="2.10" opacity="0.85"/>
+      <title>edge: branch
+codegen_emit_stmt -&gt; codegen_emit_stmt
+weight: 35
+
+path:
+codegen_emit_stmt -&gt; codegen_emit_stmt</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="branch" d="M 134.72 234.89 Q 96.88 259.14 69.12 294.47" stroke-width="2.10" opacity="0.85"/>
+      <title>edge: branch
+codegen_emit_stmt -&gt; codegen_emit_stmt
+weight: 5
+
+path:
+codegen_emit_stmt -&gt; codegen_emit_stmt</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="branch" d="M 69.12 294.47 Q 66.25 274.03 50.32 260.91" stroke-width="1.45" opacity="0.85"/>
+      <title>edge: branch
+codegen_emit_stmt -&gt; codegen_emit_stmt
+weight: 1
+
+path:
+codegen_emit_stmt -&gt; codegen_emit_stmt</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="branch" d="M 267.25 257.56 Q 296.53 185.56 303.27 108.13" stroke-width="1.70" opacity="0.85"/>
+      <title>edge: branch
+codegen_stmt_type_text -&gt; codegen_stmt_type_text
+weight: 2
+
+path:
+codegen_stmt_type_text -&gt; codegen_stmt_type_text</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="branch" d="M 267.25 257.56 Q 314.81 189.49 347.41 113.12" stroke-width="2.10" opacity="0.85"/>
+      <title>edge: branch
+codegen_stmt_type_text -&gt; codegen_stmt_is_switch_subject
+weight: 14
+
+path:
+codegen_stmt_type_text -&gt; codegen_stmt_is_switch_subject</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="branch" d="M 267.25 257.56 Q 326.55 196.43 372.95 125.01" stroke-width="2.10" opacity="0.85"/>
+      <title>edge: branch
+codegen_stmt_type_text -&gt; codegen_emit_stmt_as_block
+weight: 6
+
+path:
+codegen_stmt_type_text -&gt; codegen_emit_stmt_as_block</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="branch" d="M 267.25 257.56 Q 333.04 212.68 390.08 157.09" stroke-width="2.10" opacity="0.85"/>
+      <title>edge: branch
+codegen_stmt_type_text -&gt; codegen_emit_iace_stmt
+weight: 5
+
+path:
+codegen_stmt_type_text -&gt; codegen_emit_iace_stmt</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="branch" d="M 267.25 257.56 Q 362.79 274.94 459.77 269.87" stroke-width="2.10" opacity="0.85"/>
+      <title>edge: branch
+codegen_stmt_type_text -&gt; codegen_emit_tempta_stmt
+weight: 60
+
+path:
+codegen_stmt_type_text -&gt; codegen_emit_tempta_stmt</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="branch" d="M 267.25 257.56 Q 303.78 333.98 360.56 396.85" stroke-width="2.10" opacity="0.85"/>
+      <title>edge: branch
+codegen_stmt_type_text -&gt; codegen_emit_obsecro_scribe_stmt
+weight: 36
+
+path:
+codegen_stmt_type_text -&gt; codegen_emit_obsecro_scribe_stmt</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="branch" d="M 267.25 257.56 Q 158.68 252.80 50.32 260.91" stroke-width="2.10" opacity="0.85"/>
+      <title>edge: branch
+codegen_stmt_type_text -&gt; codegen_emit_stmt
+weight: 157
+
+path:
+codegen_stmt_type_text -&gt; codegen_emit_stmt</title>
+    </g>
+  </g>
+  <g id="loops">
+    <g class="edge-wrap">
+    <path class="loop" d="M 360.56 396.85 Q 346.41 412.55 352.38 432.81" stroke-width="1.55" opacity="0.88"/>
+      <title>edge: loop
+codegen_emit_obsecro_scribe_stmt -&gt; codegen_emit_obsecro_scribe_stmt
+weight: 2
+
+path:
+codegen_emit_obsecro_scribe_stmt -&gt; codegen_emit_obsecro_scribe_stmt</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="loop" d="M 356.14 432.81 C 392.27 420.70 396.17 442.53 380.56 431.61 C 364.94 442.53 368.85 420.70 349.56 434.31"/>
+      <title>edge: loop
+codegen_emit_obsecro_scribe_stmt -&gt; codegen_emit_obsecro_scribe_stmt
+weight: 2
+
+path:
+codegen_emit_obsecro_scribe_stmt -&gt; codegen_emit_obsecro_scribe_stmt</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="loop" d="M 50.32 260.91 Q 42.07 243.53 25.65 233.49" stroke-width="1.80" opacity="0.88"/>
+      <title>edge: loop
+codegen_emit_stmt -&gt; codegen_emit_stmt
+weight: 4
+
+path:
+codegen_emit_stmt -&gt; codegen_emit_stmt</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="loop" d="M 30.45 233.49 C 67.48 211.07 71.80 235.39 54.52 223.23 C 37.24 235.39 41.56 211.07 22.05 234.99"/>
+      <title>edge: loop
+codegen_emit_stmt -&gt; codegen_emit_stmt
+weight: 4
+
+path:
+codegen_emit_stmt -&gt; codegen_emit_stmt</title>
+    </g>
+  </g>
+  <g id="bindings">
+    <g class="edge-wrap">
+    <path class="bind" d="M 459.77 269.87 Q 447.09 264.75 433.83 268.10" stroke-width="1.60" opacity="0.85"/>
+    <line class="bind" x1="454.32" y1="273.50" x2="454.86" y2="265.52" opacity="0.75"/>
+    <line class="bind" x1="451.65" y1="274.33" x2="452.33" y2="264.35" opacity="0.75"/>
+    <line class="bind" x1="449.13" y1="273.15" x2="449.67" y2="265.17" opacity="0.75"/>
+    <line class="bind" x1="446.47" y1="273.97" x2="447.14" y2="264.00" opacity="0.75"/>
+    <line class="bind" x1="443.94" y1="272.80" x2="444.48" y2="264.82" opacity="0.75"/>
+    <line class="bind" x1="439.26" y1="266.95" x2="445.13" y2="265.71" opacity="0.58"/>
+    <line class="bind" x1="436.22" y1="273.11" x2="440.08" y2="281.24" opacity="0.58"/>
+    <line class="bind" x1="428.85" y1="270.55" x2="423.47" y2="273.19" opacity="0.58"/>
+    <line class="bind" x1="429.08" y1="265.23" x2="421.38" y2="260.59" opacity="0.58"/>
+    <line class="bind" x1="434.98" y1="262.67" x2="436.22" y2="256.80" opacity="0.58"/>
+      <title>edge: bind
+codegen_emit_tempta_stmt -&gt; codegen_emit_tempta_stmt
+weight: 5
+
+path:
+codegen_emit_tempta_stmt -&gt; codegen_emit_tempta_stmt</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="bind" d="M 360.56 396.85 Q 358.68 382.06 345.06 375.98" stroke-width="1.60" opacity="0.85"/>
+    <line class="bind" x1="354.24" y1="395.06" x2="360.67" y2="390.29" opacity="0.75"/>
+    <line class="bind" x1="351.89" y1="393.57" x2="359.92" y2="387.61" opacity="0.75"/>
+    <line class="bind" x1="351.15" y1="390.89" x2="357.57" y2="386.12" opacity="0.75"/>
+    <line class="bind" x1="348.79" y1="389.40" x2="356.82" y2="383.43" opacity="0.75"/>
+    <line class="bind" x1="348.05" y1="386.71" x2="354.47" y2="381.94" opacity="0.75"/>
+    <line class="bind" x1="350.60" y1="375.63" x2="356.59" y2="375.26" opacity="0.58"/>
+    <line class="bind" x1="347.43" y1="381.00" x2="351.27" y2="389.13" opacity="0.58"/>
+    <line class="bind" x1="340.62" y1="379.31" x2="335.82" y2="382.91" opacity="0.58"/>
+    <line class="bind" x1="340.22" y1="373.25" x2="332.38" y2="368.84" opacity="0.58"/>
+    <line class="bind" x1="346.53" y1="370.63" x2="348.13" y2="364.84" opacity="0.58"/>
+      <title>edge: bind
+codegen_emit_obsecro_scribe_stmt -&gt; codegen_emit_obsecro_scribe_stmt
+weight: 5
+
+path:
+codegen_emit_obsecro_scribe_stmt -&gt; codegen_emit_obsecro_scribe_stmt</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="bind" d="M 50.32 260.91 Q 63.37 263.09 76.31 260.29" stroke-width="1.80" opacity="0.85"/>
+    <line class="bind" x1="55.42" y1="256.79" x2="55.61" y2="264.79" opacity="0.75"/>
+    <line class="bind" x1="57.99" y1="255.73" x2="58.23" y2="265.72" opacity="0.75"/>
+    <line class="bind" x1="60.62" y1="256.66" x2="60.81" y2="264.66" opacity="0.75"/>
+    <line class="bind" x1="63.19" y1="255.60" x2="63.43" y2="265.60" opacity="0.75"/>
+    <line class="bind" x1="65.82" y1="256.54" x2="66.01" y2="264.54" opacity="0.75"/>
+    <line class="bind" x1="68.39" y1="255.48" x2="68.63" y2="265.48" opacity="0.75"/>
+    <line class="bind" x1="83.09" y1="260.85" x2="89.06" y2="261.34" opacity="0.58"/>
+    <line class="bind" x1="78.86" y1="266.59" x2="82.25" y2="274.93" opacity="0.58"/>
+    <line class="bind" x1="71.29" y1="264.88" x2="66.86" y2="268.93" opacity="0.58"/>
+    <line class="bind" x1="70.82" y1="256.28" x2="63.55" y2="250.98" opacity="0.58"/>
+    <line class="bind" x1="77.14" y1="253.54" x2="77.88" y2="247.59" opacity="0.58"/>
+      <title>edge: bind
+codegen_emit_stmt -&gt; codegen_emit_stmt
+weight: 23
+
+path:
+codegen_emit_stmt -&gt; codegen_emit_stmt</title>
+    </g>
+  </g>
+  <g id="terminals">
+    <g class="edge-wrap">
+    <path class="term" d="M 303.27 108.13 Q 284.10 130.27 278.60 159.04" stroke-width="1.65" opacity="0.90"/>
+      <title>edge: return
+codegen_stmt_type_text -&gt; codegen_stmt_type_text
+weight: 2
+
+path:
+codegen_stmt_type_text -&gt; codegen_stmt_type_text</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="term" d="M 347.41 113.12 Q 329.47 136.03 323.97 164.60" stroke-width="1.90" opacity="0.90"/>
+      <title>edge: return
+codegen_stmt_is_switch_subject -&gt; codegen_stmt_is_switch_subject
+weight: 8
+
+path:
+codegen_stmt_is_switch_subject -&gt; codegen_stmt_is_switch_subject</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="term" d="M 372.95 125.01 Q 349.76 143.56 341.62 172.11" stroke-width="1.80" opacity="0.90"/>
+      <title>edge: return
+codegen_emit_stmt_as_block -&gt; codegen_emit_stmt_as_block
+weight: 3
+
+path:
+codegen_emit_stmt_as_block -&gt; codegen_emit_stmt_as_block</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="term" d="M 390.08 157.09 Q 366.29 173.24 349.76 196.77" stroke-width="1.65" opacity="0.90"/>
+      <title>edge: return
+codegen_emit_iace_stmt -&gt; codegen_emit_iace_stmt
+weight: 2
+
+path:
+codegen_emit_iace_stmt -&gt; codegen_emit_iace_stmt</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="term" d="M 459.77 269.87 Q 433.20 258.85 404.45 258.08" stroke-width="1.80" opacity="0.90"/>
+      <title>edge: return
+codegen_emit_tempta_stmt -&gt; codegen_emit_tempta_stmt
+weight: 3
+
+path:
+codegen_emit_tempta_stmt -&gt; codegen_emit_tempta_stmt</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="term" d="M 360.56 396.85 Q 354.39 368.03 333.60 347.12" stroke-width="1.90" opacity="0.90"/>
+      <title>edge: return
+codegen_emit_obsecro_scribe_stmt -&gt; codegen_emit_obsecro_scribe_stmt
+weight: 5
+
+path:
+codegen_emit_obsecro_scribe_stmt -&gt; codegen_emit_obsecro_scribe_stmt</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="term" d="M 50.32 260.91 Q 77.99 267.71 106.49 267.57" stroke-width="1.90" opacity="0.90"/>
+      <title>edge: return
+codegen_emit_stmt -&gt; codegen_emit_stmt
+weight: 26
+
+path:
+codegen_emit_stmt -&gt; codegen_emit_stmt</title>
+    </g>
+  </g>
+  <g id="nodes">
+    <g class="node-wrap">
+      <circle class="node-main" cx="303.27" cy="108.13" r="5.95" data-kind="rituale" data-ritual="codegen_stmt_type_text" data-line="16" data-col="1" data-depth="3" data-stmt="RITUALE" data-loops="0" data-calls="1"/>
+      <title>RITUALE codegen_stmt_type_text
+stmt: 1
+depth: 3
+loops: 0
+calls: 1
+source:
+RITUALE codegen_stmt_type_text(SPECULUM CodegenContext ctx, SPECULUM AstNode type_expr) REDDE...</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="278.60" cy="159.04" r="3.60" data-kind="term" data-ritual="codegen_stmt_type_text" data-line="17" data-col="3" data-depth="3" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: codegen_stmt_type_text
+depth: 3
+line: 17
+
+source:
+REDDE CONIURA codegen_type_text(ctx, type_expr)</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-main" cx="347.41" cy="113.12" r="7.75" data-kind="rituale" data-ritual="codegen_stmt_is_switch_subject" data-line="20" data-col="1" data-depth="5" data-stmt="RITUALE" data-loops="0" data-calls="7"/>
+      <title>RITUALE codegen_stmt_is_switch_subject
+stmt: 13
+depth: 5
+loops: 0
+calls: 7
+source:
+RITUALE codegen_stmt_is_switch_subject(SPECULUM CodegenContext ctx, VERBUM type_name) REDDE V...</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="304.02" cy="136.41" r="5.80" data-kind="branch" data-ritual="codegen_stmt_is_switch_subject" data-line="21" data-col="3" data-depth="5" data-stmt="SI"/>
+      <title>stmt: SI
+rituale: codegen_stmt_is_switch_subject
+depth: 5
+line: 21
+
+source:
+SI CONIURA compare(type_name, "REX") == 0</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="323.97" cy="164.60" r="4.60" data-kind="term" data-ritual="codegen_stmt_is_switch_subject" data-line="22" data-col="5" data-depth="5" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: codegen_stmt_is_switch_subject
+depth: 5
+line: 22
+
+source:
+REDDE VERUM</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-main" cx="372.95" cy="125.01" r="6.85" data-kind="rituale" data-ritual="codegen_emit_stmt_as_block" data-line="42" data-col="1" data-depth="5" data-stmt="RITUALE" data-loops="0" data-calls="4"/>
+      <title>RITUALE codegen_emit_stmt_as_block
+stmt: 7
+depth: 5
+loops: 0
+calls: 4
+source:
+RITUALE codegen_emit_stmt_as_block(SPECULUM CodegenContext ctx, SPECULUM AstNode stmt) REDDE ...</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="331.40" cy="135.51" r="4.80" data-kind="branch" data-ritual="codegen_emit_stmt_as_block" data-line="43" data-col="3" data-depth="5" data-stmt="SI"/>
+      <title>stmt: SI
+rituale: codegen_emit_stmt_as_block
+depth: 5
+line: 43
+
+source:
+SI (*stmt).kind == AST_BLOCK</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="341.62" cy="172.11" r="4.00" data-kind="term" data-ritual="codegen_emit_stmt_as_block" data-line="45" data-col="5" data-depth="5" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: codegen_emit_stmt_as_block
+depth: 5
+line: 45
+
+source:
+REDDE</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-main" cx="390.08" cy="157.09" r="6.55" data-kind="rituale" data-ritual="codegen_emit_iace_stmt" data-line="54" data-col="1" data-depth="5" data-stmt="RITUALE" data-loops="0" data-calls="4"/>
+      <title>RITUALE codegen_emit_iace_stmt
+stmt: 5
+depth: 5
+loops: 0
+calls: 4
+source:
+RITUALE codegen_emit_iace_stmt(SPECULUM CodegenContext ctx, SPECULUM AstNode stmt) REDDE NIHIL</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="349.76" cy="196.77" r="3.60" data-kind="term" data-ritual="codegen_emit_iace_stmt" data-line="59" data-col="3" data-depth="5" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: codegen_emit_iace_stmt
+depth: 5
+line: 59
+
+source:
+REDDE</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-main" cx="459.77" cy="269.87" r="10.80" data-kind="rituale" data-ritual="codegen_emit_tempta_stmt" data-line="62" data-col="1" data-depth="7" data-stmt="RITUALE" data-loops="0" data-calls="57"/>
+      <title>RITUALE codegen_emit_tempta_stmt
+stmt: 62
+depth: 7
+loops: 0
+calls: 57
+source:
+RITUALE codegen_emit_tempta_stmt(SPECULUM CodegenContext ctx, SPECULUM AstNode stmt) REDDE NIHIL</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="421.23" cy="291.30" r="5.80" data-kind="branch" data-ritual="codegen_emit_tempta_stmt" data-line="65" data-col="3" data-depth="7" data-stmt="SI"/>
+      <title>stmt: SI
+rituale: codegen_emit_tempta_stmt
+depth: 7
+line: 65
+
+source:
+SI NON CONIURA codegen_failure_supported_cape_type(cape_identity)</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="433.83" cy="268.10" r="3.55" data-kind="bind" data-ritual="codegen_emit_tempta_stmt" data-line="63" data-col="3" data-depth="7" data-stmt="EVOCA"/>
+      <title>stmt: EVOCA
+rituale: codegen_emit_tempta_stmt
+depth: 7
+line: 63
+
+source:
+EVOCA VERBUM cape_type_text AD CONIURA codegen_type_text(ctx, (*stmt).cape_type)</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="404.45" cy="258.08" r="4.00" data-kind="term" data-ritual="codegen_emit_tempta_stmt" data-line="68" data-col="5" data-depth="7" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: codegen_emit_tempta_stmt
+depth: 7
+line: 68
+
+source:
+REDDE</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-main" cx="360.56" cy="396.85" r="10.60" data-kind="rituale" data-ritual="codegen_emit_obsecro_scribe_stmt" data-line="134" data-col="1" data-depth="15" data-stmt="RITUALE" data-loops="1" data-calls="28"/>
+      <title>RITUALE codegen_emit_obsecro_scribe_stmt
+stmt: 32
+depth: 15
+loops: 1
+calls: 28
+source:
+RITUALE codegen_emit_obsecro_scribe_stmt(SPECULUM CodegenContext ctx, SPECULUM AstNode expr) ...</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="315.66" cy="376.63" r="5.80" data-kind="branch" data-ritual="codegen_emit_obsecro_scribe_stmt" data-line="135" data-col="3" data-depth="15" data-stmt="SI"/>
+      <title>stmt: SI
+rituale: codegen_emit_obsecro_scribe_stmt
+depth: 15
+line: 135
+
+source:
+SI (*(*expr).callee).kind != AST_IDENTIFIER VEL CONIURA compare((*(*expr).callee).name, "scri...</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="377.13" cy="362.14" r="5.20" data-kind="branch" data-ritual="codegen_emit_obsecro_scribe_stmt" data-line="153" data-col="5" data-depth="15" data-stmt="ALITER"/>
+      <title>stmt: ALITER
+rituale: codegen_emit_obsecro_scribe_stmt
+depth: 15
+line: 153
+
+source:
+SI CONIURA compare(type_name, "VERBUM") == 0</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-loop" cx="352.38" cy="432.81" r="4.70" data-kind="loop" data-ritual="codegen_emit_obsecro_scribe_stmt" data-line="149" data-col="3" data-depth="15" data-stmt="DUM"/>
+      <title>stmt: DUM
+rituale: codegen_emit_obsecro_scribe_stmt
+depth: 15
+line: 149
+
+source:
+DUM i &lt; n</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="345.06" cy="375.98" r="3.55" data-kind="bind" data-ritual="codegen_emit_obsecro_scribe_stmt" data-line="140" data-col="3" data-depth="15" data-stmt="EVOCA"/>
+      <title>stmt: EVOCA
+rituale: codegen_emit_obsecro_scribe_stmt
+depth: 15
+line: 140
+
+source:
+EVOCA REX n AD CONIURA ast_node_list_len((*expr).arguments)</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="333.60" cy="347.12" r="4.60" data-kind="term" data-ritual="codegen_emit_obsecro_scribe_stmt" data-line="137" data-col="5" data-depth="15" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: codegen_emit_obsecro_scribe_stmt
+depth: 15
+line: 137
+
+source:
+REDDE</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-main" cx="50.32" cy="260.91" r="10.80" data-kind="rituale" data-ritual="codegen_emit_stmt" data-line="185" data-col="1" data-depth="13" data-stmt="RITUALE" data-loops="3" data-calls="119"/>
+      <title>RITUALE codegen_emit_stmt
+stmt: 179
+depth: 13
+loops: 3
+calls: 119
+source:
+RITUALE codegen_emit_stmt(SPECULUM CodegenContext ctx, SPECULUM AstNode stmt) REDDE NIHIL</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="134.72" cy="234.89" r="5.80" data-kind="branch" data-ritual="codegen_emit_stmt" data-line="186" data-col="3" data-depth="13" data-stmt="SI"/>
+      <title>stmt: SI
+rituale: codegen_emit_stmt
+depth: 13
+line: 186
+
+source:
+SI (*stmt).kind == AST_EXPR_STMT</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="69.12" cy="294.47" r="5.20" data-kind="branch" data-ritual="codegen_emit_stmt" data-line="346" data-col="11" data-depth="13" data-stmt="ALITER"/>
+      <title>stmt: ALITER
+rituale: codegen_emit_stmt
+depth: 13
+line: 346
+
+source:
+CONIURA codegen_emit(ctx, "else if (")</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-loop" cx="25.65" cy="233.49" r="6.00" data-kind="loop" data-ritual="codegen_emit_stmt" data-line="201" data-col="5" data-depth="13" data-stmt="DUM"/>
+      <title>stmt: DUM
+rituale: codegen_emit_stmt
+depth: 13
+line: 201
+
+source:
+DUM i &lt; n</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="76.31" cy="260.29" r="4.80" data-kind="bind" data-ritual="codegen_emit_stmt" data-line="199" data-col="5" data-depth="13" data-stmt="EVOCA"/>
+      <title>stmt: EVOCA
+rituale: codegen_emit_stmt
+depth: 13
+line: 199
+
+source:
+EVOCA REX i AD 0</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="106.49" cy="267.57" r="4.60" data-kind="term" data-ritual="codegen_emit_stmt" data-line="189" data-col="7" data-depth="13" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: codegen_emit_stmt
+depth: 13
+line: 189
+
+source:
+REDDE</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="267.25" cy="257.56" r="5.00" data-kind="bind" data-ritual="codegen_stmt_type_text" data-depth="3" data-stmt="EVOCA"/>
+      <title>stmt: EVOCA
+rituale: codegen_stmt_type_text
+depth: 3
+line: 0
+
+source:
+stmt: EVOCA
+rituale: codegen_stmt_type_text</title>
+    </g>
+  </g>
+  <g id="ornaments">
+    <circle class="orn" cx="463.60" cy="239.31" r="0.90"/>
+    <circle class="orn" cx="455.78" cy="324.64" r="1.90"/>
+    <circle class="orn" cx="393.24" cy="411.69" r="2.90"/>
+    <circle class="orn" cx="292.24" cy="464.32" r="0.90"/>
+    <circle class="orn" cx="239.76" cy="462.28" r="1.90"/>
+    <circle class="orn" cx="135.20" cy="419.57" r="2.90"/>
+    <circle class="orn" cx="75.20" cy="346.95" r="0.90"/>
+    <circle class="orn" cx="51.96" cy="276.29" r="1.90"/>
+    <circle class="orn" cx="61.60" cy="206.75" r="2.90"/>
+    <circle class="orn" cx="143.75" cy="91.52" r="0.90"/>
+    <circle class="orn" cx="231.63" cy="52.61" r="1.90"/>
+    <circle class="orn" cx="338.99" cy="72.67" r="2.90"/>
+    <circle class="orn" cx="398.27" cy="104.80" r="0.90"/>
+    <circle class="orn" cx="458.21" cy="206.19" r="1.90"/>
+  </g>
+  <g id="signature">
+    <text class="hash" x="256" y="496" text-anchor="middle">a16e9d75c631d38c</text>
+    <text class="label" x="256" y="18" text-anchor="middle">network • sigillum v2.1 • 7 rituale(s) • 299 stmt • depth 15</text>
+  </g>
+</svg>

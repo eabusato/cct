@@ -1,0 +1,28 @@
+INCIPIT grimoire "trace_capture_pending_root_38a"
+
+ADVOCARE "cct/instrument.cct"
+ADVOCARE "cct/trace_capture.cct"
+
+RITUALE main() REDDE REX
+  EVOCA TraceCaptureSession session AD CONIURA trace_capture_start_in("tests/.tmp/trace_capture_pending_root_38a", "capture-pending", INSTR_MODE_FULL)
+  EVOCA REX req AD CONIURA instrument_http_span("POST", "/tasks")
+  EVOCA REX child AD CONIURA instrument_db_span("select", "tasks")
+  CONIURA instrument_span_end(child)
+
+  SI CONIURA trace_capture_snapshot(SPECULUM session) != 0
+    CONIURA instrument_span_end(req)
+    CONIURA trace_capture_stop(SPECULUM session)
+    REDDE 1
+  FIN SI
+
+  CONIURA instrument_span_end(req)
+  SI CONIURA trace_capture_snapshot(SPECULUM session) != 1
+    CONIURA trace_capture_stop(SPECULUM session)
+    REDDE 2
+  FIN SI
+
+  CONIURA trace_capture_stop(SPECULUM session)
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

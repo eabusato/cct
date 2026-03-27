@@ -1,0 +1,763 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512" role="img" aria-label="CCT local sigilo">
+  <desc>Deterministic semantic sigil for a single CCT module.</desc>
+  <defs>
+    <style><![CDATA[
+      .bg { fill: #f5f0e4; }
+      .base { stroke: #2a221c; stroke-width: 1.60; fill: none; opacity: 0.78; }
+      .primary { stroke: #241913; stroke-width: 2.80; fill: none; stroke-linecap: round; stroke-linejoin: round; }
+      .call { stroke: #5b2a22; stroke-width: 2.0; fill: none; stroke-linecap: round; opacity: 0.9; }
+      .branch { stroke: #6b342d; stroke-width: 1.6; fill: none; stroke-linecap: round; }
+      .loop { stroke: #2d5f5a; stroke-width: 1.6; fill: none; stroke-linecap: round; }
+      .bind { stroke: #73493d; stroke-width: 1.4; fill: none; stroke-linecap: round; }
+      .term { stroke: #201814; stroke-width: 1.7; fill: none; stroke-linecap: round; }
+      .node-main { fill: #fffaf1; stroke: #201814; stroke-width: 2.0; }
+      .node-entry { fill: #efe6d4; stroke: #201814; stroke-width: 2.4; }
+      .node-aux { fill: #f6efe0; stroke: #4f4339; stroke-width: 1.3; }
+      .node-loop { fill: #edf3f1; stroke: #2d5f5a; stroke-width: 1.4; }
+      .node-term { fill: #f3e7e3; stroke: #5a2a23; stroke-width: 1.4; }
+      .orn { stroke: #355d58; stroke-width: 1.0; fill: none; opacity: 0.55; }
+      .hash { fill: #1f1a17; font: 10px monospace; letter-spacing: 0.8px; }
+      .label { fill: #1f1a17; font: 8px monospace; opacity: 0.7; }
+      .node-wrap, .edge-wrap { cursor: help; }
+      .node-wrap:hover > circle { opacity: 0.96; }
+      .edge-wrap:hover > path, .edge-wrap:hover > line { opacity: 1.0; }
+    ]]></style>
+  </defs>
+  <rect class="bg" x="0" y="0" width="512" height="512"/>
+  <g id="foundation">
+    <circle class="base" cx="256" cy="256" r="226"/>
+    <ellipse class="base" cx="256" cy="256" rx="198" ry="185.84" opacity="0.32"/>
+  </g>
+  <g id="primary_path">
+    <g class="edge-wrap">
+    <path class="primary" d="M 120.12 140.13 Q 281.48 208.81 455.89 227.10" stroke-width="3.20" opacity="0.96"/>
+      <title>edge: primary
+main -&gt; normalizar_numero
+weight: 1
+
+path:
+main -&gt; normalizar_numero</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="primary" d="M 455.89 227.10 Q 406.67 274.24 408.27 342.38" stroke-width="2.60" opacity="0.96"/>
+      <title>edge: primary
+normalizar_numero -&gt; parse_numero
+weight: 1
+
+path:
+normalizar_numero -&gt; parse_numero</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="primary" d="M 408.27 342.38 Q 377.91 345.01 387.86 373.81" stroke-width="2.60" opacity="0.96"/>
+      <title>edge: primary
+parse_numero -&gt; achar_operador_duplo
+weight: 1
+
+path:
+parse_numero -&gt; achar_operador_duplo</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="primary" d="M 387.86 373.81 Q 313.91 373.40 254.25 417.10" stroke-width="2.60" opacity="0.96"/>
+      <title>edge: primary
+achar_operador_duplo -&gt; achar_operador_simples
+weight: 1
+
+path:
+achar_operador_duplo -&gt; achar_operador_simples</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="primary" d="M 254.25 417.10 Q 226.72 377.66 179.19 385.10" stroke-width="2.60" opacity="0.96"/>
+      <title>edge: primary
+achar_operador_simples -&gt; calcular
+weight: 1
+
+path:
+achar_operador_simples -&gt; calcular</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="primary" d="M 179.19 385.10 Q 164.85 366.94 178.03 385.96" stroke-width="2.60" opacity="0.96"/>
+      <title>edge: primary
+calcular -&gt; calcular_unario
+weight: 1
+
+path:
+calcular -&gt; calcular_unario</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="primary" d="M 178.03 385.96 Q 174.69 356.56 149.32 371.79" stroke-width="2.60" opacity="0.96"/>
+      <title>edge: primary
+calcular_unario -&gt; imprimir
+weight: 1
+
+path:
+calcular_unario -&gt; imprimir</title>
+    </g>
+  </g>
+  <g id="call_links">
+    <g class="edge-wrap">
+    <path class="call" d="M 408.27 342.38 Q 462.94 297.49 455.89 227.10" stroke-width="2.15" opacity="0.74" data-kind="call" data-from="parse_numero" data-to="normalizar_numero" data-weight="1" data-self-loop="false"/>
+      <title>edge: call
+parse_numero -&gt; normalizar_numero
+calls: 1
+
+path:
+parse_numero -&gt; normalizar_numero</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="call" d="M 120.12 140.13 Q 238.66 277.63 408.27 342.38" stroke-width="3.00" opacity="0.90" data-kind="call" data-from="main" data-to="parse_numero" data-weight="5" data-self-loop="false"/>
+      <title>edge: call
+main -&gt; parse_numero
+calls: 5
+
+path:
+main -&gt; parse_numero</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="call" d="M 120.12 140.13 Q 234.32 279.51 387.86 373.81" stroke-width="2.15" opacity="0.74" data-kind="call" data-from="main" data-to="achar_operador_duplo" data-weight="1" data-self-loop="false"/>
+      <title>edge: call
+main -&gt; achar_operador_duplo
+calls: 1
+
+path:
+main -&gt; achar_operador_duplo</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="call" d="M 120.12 140.13 Q 143.85 299.60 254.25 417.10" stroke-width="3.00" opacity="0.90" data-kind="call" data-from="main" data-to="achar_operador_simples" data-weight="4" data-self-loop="false"/>
+      <title>edge: call
+main -&gt; achar_operador_simples
+calls: 4
+
+path:
+main -&gt; achar_operador_simples</title>
+    </g>
+  </g>
+  <g id="branches">
+    <g class="edge-wrap">
+    <path class="branch" d="M 455.89 227.10 Q 436.77 210.38 411.39 209.28" stroke-width="2.10" opacity="0.85"/>
+      <title>edge: branch
+normalizar_numero -&gt; normalizar_numero
+weight: 6
+
+path:
+normalizar_numero -&gt; normalizar_numero</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="branch" d="M 387.86 373.81 Q 391.77 349.04 375.14 330.26" stroke-width="2.10" opacity="0.85"/>
+      <title>edge: branch
+achar_operador_duplo -&gt; achar_operador_duplo
+weight: 4
+
+path:
+achar_operador_duplo -&gt; achar_operador_duplo</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="branch" d="M 254.25 417.10 Q 273.92 399.10 278.73 372.87" stroke-width="2.10" opacity="0.85"/>
+      <title>edge: branch
+achar_operador_simples -&gt; achar_operador_simples
+weight: 8
+
+path:
+achar_operador_simples -&gt; achar_operador_simples</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="branch" d="M 278.73 372.87 Q 246.14 378.03 220.45 398.73" stroke-width="1.95" opacity="0.85"/>
+      <title>edge: branch
+achar_operador_simples -&gt; achar_operador_simples
+weight: 3
+
+path:
+achar_operador_simples -&gt; achar_operador_simples</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="branch" d="M 220.45 398.73 Q 233.29 415.38 254.25 417.10" stroke-width="1.45" opacity="0.85"/>
+      <title>edge: branch
+achar_operador_simples -&gt; achar_operador_simples
+weight: 1
+
+path:
+achar_operador_simples -&gt; achar_operador_simples</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="branch" d="M 120.12 140.13 Q 144.04 160.87 175.26 155.61" stroke-width="2.10" opacity="0.85"/>
+      <title>edge: branch
+main -&gt; main
+weight: 13
+
+path:
+main -&gt; main</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="branch" d="M 175.26 155.61 Q 139.07 153.89 111.75 177.68" stroke-width="2.10" opacity="0.85"/>
+      <title>edge: branch
+main -&gt; main
+weight: 6
+
+path:
+main -&gt; main</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="branch" d="M 111.75 177.68 Q 129.12 161.84 120.12 140.13" stroke-width="1.45" opacity="0.85"/>
+      <title>edge: branch
+main -&gt; main
+weight: 1
+
+path:
+main -&gt; main</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="branch" d="M 257.36 255.92 Q 358.07 251.44 455.89 227.10" stroke-width="2.10" opacity="0.85"/>
+      <title>edge: branch
+main -&gt; normalizar_numero
+weight: 17
+
+path:
+main -&gt; normalizar_numero</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="branch" d="M 257.36 255.92 Q 329.61 304.74 408.27 342.38" stroke-width="1.95" opacity="0.85"/>
+      <title>edge: branch
+main -&gt; parse_numero
+weight: 3
+
+path:
+main -&gt; parse_numero</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="branch" d="M 257.36 255.92 Q 316.64 321.48 387.86 373.81" stroke-width="2.10" opacity="0.85"/>
+      <title>edge: branch
+main -&gt; achar_operador_duplo
+weight: 8
+
+path:
+main -&gt; achar_operador_duplo</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="branch" d="M 257.36 255.92 Q 243.66 336.28 254.25 417.10" stroke-width="2.10" opacity="0.85"/>
+      <title>edge: branch
+main -&gt; achar_operador_simples
+weight: 13
+
+path:
+main -&gt; achar_operador_simples</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="branch" d="M 257.36 255.92 Q 197.45 187.70 120.12 140.13" stroke-width="2.10" opacity="0.85"/>
+      <title>edge: branch
+main -&gt; main
+weight: 77
+
+path:
+main -&gt; main</title>
+    </g>
+  </g>
+  <g id="loops">
+    <g class="edge-wrap">
+    <path class="loop" d="M 455.89 227.10 Q 471.19 214.96 475.64 195.95" stroke-width="1.70" opacity="0.88"/>
+      <title>edge: loop
+normalizar_numero -&gt; normalizar_numero
+weight: 3
+
+path:
+normalizar_numero -&gt; normalizar_numero</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="loop" d="M 479.96 195.95 C 516.45 192.09 520.58 215.26 504.06 203.67 C 487.55 215.26 491.68 192.09 472.40 197.45"/>
+      <title>edge: loop
+normalizar_numero -&gt; normalizar_numero
+weight: 3
+
+path:
+normalizar_numero -&gt; normalizar_numero</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="loop" d="M 387.86 373.81 Q 407.29 379.98 424.42 368.92" stroke-width="1.55" opacity="0.88"/>
+      <title>edge: loop
+achar_operador_duplo -&gt; achar_operador_duplo
+weight: 2
+
+path:
+achar_operador_duplo -&gt; achar_operador_duplo</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="loop" d="M 428.18 368.92 C 460.54 369.22 464.44 391.04 448.83 380.13 C 433.21 391.04 437.11 369.22 421.60 370.42"/>
+      <title>edge: loop
+achar_operador_duplo -&gt; achar_operador_duplo
+weight: 2
+
+path:
+achar_operador_duplo -&gt; achar_operador_duplo</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="loop" d="M 254.25 417.10 Q 263.83 434.14 281.98 441.41" stroke-width="1.55" opacity="0.88"/>
+      <title>edge: loop
+achar_operador_simples -&gt; achar_operador_simples
+weight: 2
+
+path:
+achar_operador_simples -&gt; achar_operador_simples</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="loop" d="M 285.74 441.41 C 321.45 426.46 325.36 448.29 309.74 437.37 C 294.12 448.29 298.03 426.46 279.16 442.91"/>
+      <title>edge: loop
+achar_operador_simples -&gt; achar_operador_simples
+weight: 2
+
+path:
+achar_operador_simples -&gt; achar_operador_simples</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="loop" d="M 120.12 140.13 Q 131.57 121.66 120.02 103.25" stroke-width="1.55" opacity="0.88"/>
+      <title>edge: loop
+main -&gt; main
+weight: 2
+
+path:
+main -&gt; main</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="loop" d="M 123.78 103.25 C 159.75 89.67 163.66 111.49 148.04 100.58 C 132.42 111.49 136.33 89.67 117.20 104.75"/>
+      <title>edge: loop
+main -&gt; main
+weight: 2
+
+path:
+main -&gt; main</title>
+    </g>
+  </g>
+  <g id="bindings">
+    <g class="edge-wrap">
+    <path class="bind" d="M 455.89 227.10 Q 442.54 225.58 430.16 230.82" stroke-width="1.80" opacity="0.85"/>
+    <line class="bind" x1="451.32" y1="231.80" x2="450.17" y2="223.88" opacity="0.75"/>
+    <line class="bind" x1="448.89" y1="233.16" x2="447.46" y2="223.26" opacity="0.75"/>
+    <line class="bind" x1="446.17" y1="232.54" x2="445.03" y2="224.63" opacity="0.75"/>
+    <line class="bind" x1="443.74" y1="233.90" x2="442.31" y2="224.01" opacity="0.75"/>
+    <line class="bind" x1="441.03" y1="233.29" x2="439.88" y2="225.37" opacity="0.75"/>
+    <line class="bind" x1="438.60" y1="234.65" x2="437.17" y2="224.75" opacity="0.75"/>
+    <line class="bind" x1="436.56" y1="232.44" x2="442.37" y2="233.92" opacity="0.58"/>
+    <line class="bind" x1="433.34" y1="236.60" x2="437.67" y2="244.49" opacity="0.58"/>
+    <line class="bind" x1="423.98" y1="233.12" x2="418.35" y2="235.21" opacity="0.58"/>
+    <line class="bind" x1="425.92" y1="225.76" x2="420.14" y2="218.86" opacity="0.58"/>
+    <line class="bind" x1="431.55" y1="224.36" x2="432.81" y2="218.50" opacity="0.58"/>
+      <title>edge: bind
+normalizar_numero -&gt; normalizar_numero
+weight: 12
+
+path:
+normalizar_numero -&gt; normalizar_numero</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="bind" d="M 408.27 342.38 Q 399.64 331.25 385.65 329.55" stroke-width="1.36" opacity="0.85"/>
+    <line class="bind" x1="401.77" y1="343.29" x2="405.72" y2="336.33" opacity="0.75"/>
+    <line class="bind" x1="399.01" y1="342.88" x2="403.95" y2="334.18" opacity="0.75"/>
+    <line class="bind" x1="390.69" y1="328.75" x2="396.61" y2="327.81" opacity="0.58"/>
+    <line class="bind" x1="380.62" y1="328.74" x2="371.73" y2="327.31" opacity="0.58"/>
+      <title>edge: bind
+parse_numero -&gt; parse_numero
+weight: 2
+
+path:
+parse_numero -&gt; parse_numero</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="bind" d="M 387.86 373.81 Q 381.96 360.90 368.48 356.49" stroke-width="1.76" opacity="0.85"/>
+    <line class="bind" x1="381.32" y1="373.33" x2="386.65" y2="367.36" opacity="0.75"/>
+    <line class="bind" x1="378.72" y1="372.34" x2="385.38" y2="364.88" opacity="0.75"/>
+    <line class="bind" x1="377.44" y1="369.86" x2="382.77" y2="363.90" opacity="0.75"/>
+    <line class="bind" x1="374.84" y1="368.88" x2="381.50" y2="361.42" opacity="0.75"/>
+    <line class="bind" x1="373.57" y1="366.40" x2="378.90" y2="360.43" opacity="0.75"/>
+    <line class="bind" x1="370.96" y1="365.41" x2="377.62" y2="357.95" opacity="0.75"/>
+    <line class="bind" x1="374.33" y1="356.50" x2="380.33" y2="356.51" opacity="0.58"/>
+    <line class="bind" x1="370.52" y1="361.97" x2="373.67" y2="370.40" opacity="0.58"/>
+    <line class="bind" x1="363.45" y1="359.48" x2="358.30" y2="362.55" opacity="0.58"/>
+    <line class="bind" x1="363.46" y1="353.47" x2="355.75" y2="348.84" opacity="0.58"/>
+    <line class="bind" x1="368.97" y1="350.66" x2="369.49" y2="344.68" opacity="0.58"/>
+      <title>edge: bind
+achar_operador_duplo -&gt; achar_operador_duplo
+weight: 7
+
+path:
+achar_operador_duplo -&gt; achar_operador_duplo</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="bind" d="M 254.25 417.10 Q 257.89 404.14 254.53 391.10" stroke-width="1.76" opacity="0.85"/>
+    <line class="bind" x1="250.30" y1="411.86" x2="258.30" y2="411.95" opacity="0.75"/>
+    <line class="bind" x1="249.33" y1="409.25" x2="259.33" y2="409.36" opacity="0.75"/>
+    <line class="bind" x1="250.36" y1="406.66" x2="258.36" y2="406.75" opacity="0.75"/>
+    <line class="bind" x1="249.39" y1="404.05" x2="259.39" y2="404.16" opacity="0.75"/>
+    <line class="bind" x1="250.42" y1="401.46" x2="258.42" y2="401.55" opacity="0.75"/>
+    <line class="bind" x1="249.45" y1="398.85" x2="259.44" y2="398.96" opacity="0.75"/>
+    <line class="bind" x1="260.36" y1="391.57" x2="266.34" y2="392.05" opacity="0.58"/>
+    <line class="bind" x1="257.81" y1="395.95" x2="262.86" y2="403.40" opacity="0.58"/>
+    <line class="bind" x1="249.86" y1="394.63" x2="245.08" y2="398.25" opacity="0.58"/>
+    <line class="bind" x1="250.71" y1="386.68" x2="244.82" y2="379.87" opacity="0.58"/>
+    <line class="bind" x1="254.72" y1="385.26" x2="254.92" y2="379.26" opacity="0.58"/>
+      <title>edge: bind
+achar_operador_simples -&gt; achar_operador_simples
+weight: 7
+
+path:
+achar_operador_simples -&gt; achar_operador_simples</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="bind" d="M 120.12 140.13 Q 124.49 155.03 139.90 157.00" stroke-width="1.80" opacity="0.85"/>
+    <line class="bind" x1="126.67" y1="140.46" x2="121.48" y2="146.55" opacity="0.75"/>
+    <line class="bind" x1="129.30" y1="141.38" x2="122.81" y2="148.99" opacity="0.75"/>
+    <line class="bind" x1="130.62" y1="143.83" x2="125.43" y2="149.92" opacity="0.75"/>
+    <line class="bind" x1="133.25" y1="144.76" x2="126.76" y2="152.37" opacity="0.75"/>
+    <line class="bind" x1="134.58" y1="147.21" x2="129.39" y2="153.29" opacity="0.75"/>
+    <line class="bind" x1="137.21" y1="148.13" x2="130.72" y2="155.74" opacity="0.75"/>
+    <line class="bind" x1="146.56" y1="158.37" x2="152.44" y2="159.58" opacity="0.58"/>
+    <line class="bind" x1="143.18" y1="162.96" x2="147.52" y2="170.84" opacity="0.58"/>
+    <line class="bind" x1="135.06" y1="161.77" x2="130.79" y2="165.99" opacity="0.58"/>
+    <line class="bind" x1="134.49" y1="152.88" x2="127.33" y2="147.42" opacity="0.58"/>
+    <line class="bind" x1="141.45" y1="150.38" x2="142.82" y2="144.54" opacity="0.58"/>
+      <title>edge: bind
+main -&gt; main
+weight: 43
+
+path:
+main -&gt; main</title>
+    </g>
+  </g>
+  <g id="terminals">
+    <g class="edge-wrap">
+    <path class="term" d="M 455.89 227.10 Q 427.51 230.82 401.61 243.03" stroke-width="1.65" opacity="0.90"/>
+      <title>edge: return
+normalizar_numero -&gt; normalizar_numero
+weight: 2
+
+path:
+normalizar_numero -&gt; normalizar_numero</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="term" d="M 408.27 342.38 Q 389.82 320.00 363.51 307.79" stroke-width="1.80" opacity="0.90"/>
+      <title>edge: return
+parse_numero -&gt; parse_numero
+weight: 3
+
+path:
+parse_numero -&gt; parse_numero</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="term" d="M 387.86 373.81 Q 368.03 352.56 340.77 342.46" stroke-width="1.80" opacity="0.90"/>
+      <title>edge: return
+achar_operador_duplo -&gt; achar_operador_duplo
+weight: 3
+
+path:
+achar_operador_duplo -&gt; achar_operador_duplo</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="term" d="M 254.25 417.10 Q 255.01 388.47 246.86 361.02" stroke-width="1.90" opacity="0.90"/>
+      <title>edge: return
+achar_operador_simples -&gt; achar_operador_simples
+weight: 5
+
+path:
+achar_operador_simples -&gt; achar_operador_simples</title>
+    </g>
+  </g>
+  <g id="nodes">
+    <g class="node-wrap">
+      <circle class="node-main" cx="455.89" cy="227.10" r="9.25" data-kind="rituale" data-ritual="normalizar_numero" data-line="19" data-col="1" data-depth="11" data-stmt="RITUALE" data-loops="2" data-calls="9"/>
+      <title>RITUALE normalizar_numero
+stmt: 23
+depth: 11
+loops: 2
+calls: 9
+source:
+RITUALE normalizar_numero(VERBUM txt) REDDE VERBUM</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="411.39" cy="209.28" r="5.80" data-kind="branch" data-ritual="normalizar_numero" data-line="30" data-col="7" data-depth="11" data-stmt="SI"/>
+      <title>stmt: SI
+rituale: normalizar_numero
+depth: 11
+line: 30
+
+source:
+SI c == 40</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-loop" cx="475.64" cy="195.95" r="5.40" data-kind="loop" data-ritual="normalizar_numero" data-line="22" data-col="3" data-depth="11" data-stmt="DUM"/>
+      <title>stmt: DUM
+rituale: normalizar_numero
+depth: 11
+line: 22
+
+source:
+DUM CONIURA len(atual) &gt;= 2 ET CONIURA char_at(atual, 0) == 40 ET CONIURA char_at(atual, CONI...</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="430.16" cy="230.82" r="4.60" data-kind="bind" data-ritual="normalizar_numero" data-line="20" data-col="3" data-depth="11" data-stmt="EVOCA"/>
+      <title>stmt: EVOCA
+rituale: normalizar_numero
+depth: 11
+line: 20
+
+source:
+EVOCA VERBUM atual AD CONIURA trim(txt)</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="401.61" cy="243.03" r="3.60" data-kind="term" data-ritual="normalizar_numero" data-line="54" data-col="3" data-depth="11" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: normalizar_numero
+depth: 11
+line: 54
+
+source:
+REDDE atual</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-main" cx="408.27" cy="342.38" r="6.55" data-kind="rituale" data-ritual="parse_numero" data-line="57" data-col="1" data-depth="5" data-stmt="RITUALE" data-loops="0" data-calls="2"/>
+      <title>RITUALE parse_numero
+stmt: 5
+depth: 5
+loops: 0
+calls: 2
+source:
+RITUALE parse_numero(VERBUM txt) REDDE Resultado</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="385.65" cy="329.55" r="3.10" data-kind="bind" data-ritual="parse_numero" data-line="58" data-col="3" data-depth="5" data-stmt="EVOCA"/>
+      <title>stmt: EVOCA
+rituale: parse_numero
+depth: 5
+line: 58
+
+source:
+EVOCA VERBUM limpo AD CONIURA normalizar_numero(txt)</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="363.51" cy="307.79" r="4.00" data-kind="term" data-ritual="parse_numero" data-line="61" data-col="5" data-depth="5" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: parse_numero
+depth: 5
+line: 61
+
+source:
+REDDE Ok(valor)</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-main" cx="387.86" cy="373.81" r="7.75" data-kind="rituale" data-ritual="achar_operador_duplo" data-line="67" data-col="1" data-depth="8" data-stmt="RITUALE" data-loops="1" data-calls="3"/>
+      <title>RITUALE achar_operador_duplo
+stmt: 13
+depth: 8
+loops: 1
+calls: 3
+source:
+RITUALE achar_operador_duplo(VERBUM s, MILES a, MILES b) REDDE REX</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="375.14" cy="330.26" r="5.80" data-kind="branch" data-ritual="achar_operador_duplo" data-line="74" data-col="5" data-depth="8" data-stmt="SI"/>
+      <title>stmt: SI
+rituale: achar_operador_duplo
+depth: 8
+line: 74
+
+source:
+SI c == 40</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-loop" cx="424.42" cy="368.92" r="4.70" data-kind="loop" data-ritual="achar_operador_duplo" data-line="72" data-col="3" data-depth="8" data-stmt="DUM"/>
+      <title>stmt: DUM
+rituale: achar_operador_duplo
+depth: 8
+line: 72
+
+source:
+DUM i + 1 &lt; n</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="368.48" cy="356.49" r="3.85" data-kind="bind" data-ritual="achar_operador_duplo" data-line="68" data-col="3" data-depth="8" data-stmt="EVOCA"/>
+      <title>stmt: EVOCA
+rituale: achar_operador_duplo
+depth: 8
+line: 68
+
+source:
+EVOCA REX i AD 0</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="340.77" cy="342.46" r="4.00" data-kind="term" data-ritual="achar_operador_duplo" data-line="81" data-col="7" data-depth="8" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: achar_operador_duplo
+depth: 8
+line: 81
+
+source:
+REDDE i</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-main" cx="254.25" cy="417.10" r="8.65" data-kind="rituale" data-ritual="achar_operador_simples" data-line="89" data-col="1" data-depth="15" data-stmt="RITUALE" data-loops="1" data-calls="4"/>
+      <title>RITUALE achar_operador_simples
+stmt: 19
+depth: 15
+loops: 1
+calls: 4
+source:
+RITUALE achar_operador_simples(VERBUM s, MILES alvo) REDDE REX</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="278.73" cy="372.87" r="5.80" data-kind="branch" data-ritual="achar_operador_simples" data-line="96" data-col="5" data-depth="15" data-stmt="SI"/>
+      <title>stmt: SI
+rituale: achar_operador_simples
+depth: 15
+line: 96
+
+source:
+SI c == 40</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="220.45" cy="398.73" r="5.20" data-kind="branch" data-ritual="achar_operador_simples" data-line="104" data-col="7" data-depth="15" data-stmt="ALITER"/>
+      <title>stmt: ALITER
+rituale: achar_operador_simples
+depth: 15
+line: 104
+
+source:
+SI alvo == 43 VEL alvo == 45</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-loop" cx="281.98" cy="441.41" r="4.70" data-kind="loop" data-ritual="achar_operador_simples" data-line="94" data-col="3" data-depth="15" data-stmt="DUM"/>
+      <title>stmt: DUM
+rituale: achar_operador_simples
+depth: 15
+line: 94
+
+source:
+DUM i &lt; n</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="254.53" cy="391.10" r="3.85" data-kind="bind" data-ritual="achar_operador_simples" data-line="90" data-col="3" data-depth="15" data-stmt="EVOCA"/>
+      <title>stmt: EVOCA
+rituale: achar_operador_simples
+depth: 15
+line: 90
+
+source:
+EVOCA REX i AD 0</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="246.86" cy="361.02" r="4.60" data-kind="term" data-ritual="achar_operador_simples" data-line="106" data-col="11" data-depth="15" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: achar_operador_simples
+depth: 15
+line: 106
+
+source:
+REDDE i</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-main" cx="179.19" cy="385.10" r="5.95" data-kind="rituale" data-ritual="calcular" data-line="124" data-col="1" data-depth="1" data-stmt="RITUALE" data-loops="0" data-calls="0"/>
+      <title>RITUALE calcular
+stmt: 1
+depth: 1
+loops: 0
+calls: 0
+source:
+RITUALE calcular(UMBRA a, VERBUM op, UMBRA b) REDDE Resultado</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-main" cx="178.03" cy="385.96" r="5.95" data-kind="rituale" data-ritual="calcular_unario" data-line="154" data-col="1" data-depth="1" data-stmt="RITUALE" data-loops="0" data-calls="0"/>
+      <title>RITUALE calcular_unario
+stmt: 1
+depth: 1
+loops: 0
+calls: 0
+source:
+RITUALE calcular_unario(VERBUM op, UMBRA x) REDDE Resultado</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-main" cx="149.32" cy="371.79" r="5.95" data-kind="rituale" data-ritual="imprimir" data-line="168" data-col="1" data-depth="1" data-stmt="RITUALE" data-loops="0" data-calls="0"/>
+      <title>RITUALE imprimir
+stmt: 1
+depth: 1
+loops: 0
+calls: 0
+source:
+RITUALE imprimir(Resultado r) REDDE NIHIL</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-entry" cx="120.12" cy="140.13" r="12.80" data-kind="rituale" data-ritual="main" data-line="177" data-col="1" data-depth="16" data-stmt="RITUALE" data-loops="1" data-calls="62" data-entry="true"/>
+      <title>RITUALE main
+stmt: 86
+depth: 16
+loops: 1
+calls: 62
+source:
+RITUALE main() REDDE NIHIL</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="175.26" cy="155.61" r="5.80" data-kind="branch" data-ritual="main" data-line="195" data-col="5" data-depth="16" data-stmt="SI"/>
+      <title>stmt: SI
+rituale: main
+depth: 16
+line: 195
+
+source:
+SI CONIURA len(linha) == 0</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="111.75" cy="177.68" r="5.20" data-kind="branch" data-ritual="main" data-line="244" data-col="7" data-depth="16" data-stmt="ALITER"/>
+      <title>stmt: ALITER
+rituale: main
+depth: 16
+line: 244
+
+source:
+SI ppow != -1</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-loop" cx="120.02" cy="103.25" r="4.70" data-kind="loop" data-ritual="main" data-line="193" data-col="3" data-depth="16" data-stmt="DUM"/>
+      <title>stmt: DUM
+rituale: main
+depth: 16
+line: 193
+
+source:
+DUM VERUM</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="139.90" cy="157.00" r="4.80" data-kind="bind" data-ritual="main" data-line="194" data-col="5" data-depth="16" data-stmt="EVOCA"/>
+      <title>stmt: EVOCA
+rituale: main
+depth: 16
+line: 194
+
+source:
+EVOCA VERBUM linha AD CONIURA trim(CONIURA read_line_prompt("&gt; "))</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="257.36" cy="255.92" r="5.00" data-kind="bind" data-ritual="main" data-line="194" data-col="5" data-depth="16" data-stmt="EVOCA"/>
+      <title>stmt: EVOCA
+rituale: main
+depth: 16
+line: 194
+
+source:
+EVOCA VERBUM linha AD CONIURA trim(CONIURA read_line_prompt("&gt; "))</title>
+    </g>
+  </g>
+  <g id="ornaments">
+    <circle class="orn" cx="454.47" cy="263.80" r="0.90"/>
+    <circle class="orn" cx="424.52" cy="373.78" r="1.90"/>
+    <circle class="orn" cx="374.61" cy="416.28" r="2.90"/>
+    <circle class="orn" cx="307.23" cy="448.86" r="0.90"/>
+    <circle class="orn" cx="215.76" cy="458.07" r="1.90"/>
+    <circle class="orn" cx="141.41" cy="428.93" r="2.90"/>
+    <circle class="orn" cx="63.20" cy="307.88" r="0.90"/>
+    <circle class="orn" cx="51.39" cy="227.80" r="1.90"/>
+    <circle class="orn" cx="56.50" cy="195.79" r="2.90"/>
+    <circle class="orn" cx="119.28" cy="110.47" r="0.90"/>
+    <circle class="orn" cx="167.85" cy="63.51" r="1.90"/>
+    <circle class="orn" cx="306.62" cy="52.29" r="2.90"/>
+    <circle class="orn" cx="352.96" cy="75.49" r="0.90"/>
+    <circle class="orn" cx="420.84" cy="137.26" r="1.90"/>
+  </g>
+  <g id="signature">
+    <text class="hash" x="256" y="496" text-anchor="middle">8c253a3a664c86ae</text>
+    <text class="label" x="256" y="18" text-anchor="middle">network • sigillum v2.1 • 8 rituale(s) • 149 stmt • depth 16</text>
+  </g>
+</svg>

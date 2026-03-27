@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <defs>
+    <style><![CDATA[
+      .bg { fill: #f5f0e4; }
+      .base { stroke: #2a221c; stroke-width: 1.60; fill: none; opacity: 0.78; }
+      .primary { stroke: #241913; stroke-width: 2.80; fill: none; stroke-linecap: round; stroke-linejoin: round; }
+      .call { stroke: #5b2a22; stroke-width: 2.0; fill: none; stroke-linecap: round; opacity: 0.9; }
+      .branch { stroke: #6b342d; stroke-width: 1.6; fill: none; stroke-linecap: round; }
+      .loop { stroke: #2d5f5a; stroke-width: 1.6; fill: none; stroke-linecap: round; }
+      .bind { stroke: #73493d; stroke-width: 1.4; fill: none; stroke-linecap: round; }
+      .term { stroke: #201814; stroke-width: 1.7; fill: none; stroke-linecap: round; }
+      .node-main { fill: #fffaf1; stroke: #201814; stroke-width: 2.0; }
+      .node-entry { fill: #efe6d4; stroke: #201814; stroke-width: 2.4; }
+      .node-aux { fill: #f6efe0; stroke: #4f4339; stroke-width: 1.3; }
+      .node-loop { fill: #edf3f1; stroke: #2d5f5a; stroke-width: 1.4; }
+      .node-term { fill: #f3e7e3; stroke: #5a2a23; stroke-width: 1.4; }
+      .orn { stroke: #355d58; stroke-width: 1.0; fill: none; opacity: 0.55; }
+      .hash { fill: #1f1a17; font: 10px monospace; letter-spacing: 0.8px; }
+      .label { fill: #1f1a17; font: 8px monospace; opacity: 0.7; }
+    ]]></style>
+  </defs>
+  <rect class="bg" x="0" y="0" width="512" height="512"/>
+  <g id="foundation">
+    <circle class="base" cx="256" cy="256" r="226"/>
+    <ellipse class="base" cx="256" cy="256" rx="198" ry="187.28" opacity="0.32"/>
+  </g>
+  <g id="primary_path">
+    <path class="primary" d="M 86.82 176.69 Q 246.99 250.89 420.63 282.66" stroke-width="3.20" opacity="0.96"/>
+    <path class="primary" d="M 420.63 282.66 Q 398.66 304.35 417.39 328.89" stroke-width="2.60" opacity="0.96"/>
+    <path class="primary" d="M 417.39 328.89 Q 387.46 323.73 387.18 354.10" stroke-width="2.60" opacity="0.96"/>
+  </g>
+  <g id="call_links">
+    <path class="call" d="M 86.82 176.69 Q 239.13 275.67 420.63 282.66" stroke-width="3.00" opacity="0.90"/>
+    <path class="call" d="M 86.82 176.69 Q 230.62 299.46 417.39 328.89" stroke-width="3.00" opacity="0.90"/>
+    <path class="call" d="M 86.82 176.69 Q 213.31 305.49 387.18 354.10" stroke-width="3.00" opacity="0.90"/>
+  </g>
+  <g id="branches">
+    <path class="branch" d="M 86.82 176.69 Q 109.73 184.40 129.16 170.03" stroke-width="1.70" opacity="0.85"/>
+    <path class="branch" d="M 244.77 246.52 Q 325.32 299.78 417.39 328.89" stroke-width="1.95" opacity="0.85"/>
+    <path class="branch" d="M 244.77 246.52 Q 170.32 201.38 86.82 176.69" stroke-width="2.10" opacity="0.85"/>
+  </g>
+  <g id="loops">
+  </g>
+  <g id="bindings">
+    <path class="bind" d="M 417.39 328.89 Q 405.99 322.56 393.70 318.19" stroke-width="1.36" opacity="0.85"/>
+    <line class="bind" x1="411.01" y1="330.39" x2="414.30" y2="323.10" opacity="0.75"/>
+    <line class="bind" x1="408.23" y1="330.23" x2="412.34" y2="321.12" opacity="0.75"/>
+    <line class="bind" x1="398.80" y1="318.07" x2="404.79" y2="317.93" opacity="0.58"/>
+    <line class="bind" x1="388.67" y1="319.04" x2="379.80" y2="320.55" opacity="0.58"/>
+    <path class="bind" d="M 86.82 176.69 Q 95.97 187.80 110.37 187.72" stroke-width="1.80" opacity="0.85"/>
+    <line class="bind" x1="93.23" y1="175.27" x2="89.84" y2="182.52" opacity="0.75"/>
+    <line class="bind" x1="96.01" y1="175.47" x2="91.76" y2="184.53" opacity="0.75"/>
+    <line class="bind" x1="97.94" y1="177.48" x2="94.54" y2="184.72" opacity="0.75"/>
+    <line class="bind" x1="100.72" y1="177.68" x2="96.47" y2="186.73" opacity="0.75"/>
+    <line class="bind" x1="102.65" y1="179.69" x2="99.25" y2="186.93" opacity="0.75"/>
+    <line class="bind" x1="105.43" y1="179.89" x2="101.18" y2="188.94" opacity="0.75"/>
+    <line class="bind" x1="117.08" y1="186.67" x2="123.01" y2="185.73" opacity="0.58"/>
+    <line class="bind" x1="110.65" y1="194.52" x2="111.03" y2="203.51" opacity="0.58"/>
+    <line class="bind" x1="105.29" y1="192.25" x2="100.81" y2="196.24" opacity="0.58"/>
+    <line class="bind" x1="105.83" y1="182.66" x2="99.82" y2="175.96" opacity="0.58"/>
+    <line class="bind" x1="114.09" y1="182.04" x2="117.38" y2="177.02" opacity="0.58"/>
+  </g>
+  <g id="terminals">
+    <path class="term" d="M 86.82 176.69 Q 106.54 198.20 134.13 207.70" stroke-width="1.65" opacity="0.90"/>
+  </g>
+  <g id="nodes">
+    <circle class="node-main" cx="420.63" cy="282.66" r="5.95"/>
+    <circle class="node-main" cx="417.39" cy="328.89" r="6.25"/>
+    <circle class="node-aux" cx="393.70" cy="318.19" r="3.10"/>
+    <circle class="node-main" cx="387.18" cy="354.10" r="5.95"/>
+    <circle class="node-entry" cx="86.82" cy="176.69" r="12.80"/>
+    <circle class="node-aux" cx="129.16" cy="170.03" r="4.80"/>
+    <circle class="node-aux" cx="110.37" cy="187.72" r="4.80"/>
+    <circle class="node-term" cx="134.13" cy="207.70" r="3.60"/>
+    <circle class="node-aux" cx="244.77" cy="246.52" r="5.00"/>
+  </g>
+  <g id="ornaments">
+    <circle class="orn" cx="464.48" cy="287.84" r="0.90"/>
+    <circle class="orn" cx="429.31" cy="368.53" r="1.90"/>
+    <circle class="orn" cx="382.30" cy="414.79" r="2.90"/>
+    <circle class="orn" cx="341.62" cy="436.00" r="0.90"/>
+    <circle class="orn" cx="187.41" cy="455.82" r="1.90"/>
+    <circle class="orn" cx="106.89" cy="393.03" r="2.90"/>
+    <circle class="orn" cx="71.39" cy="332.82" r="0.90"/>
+    <circle class="orn" cx="53.60" cy="272.93" r="1.90"/>
+    <circle class="orn" cx="56.95" cy="198.46" r="2.90"/>
+    <circle class="orn" cx="104.73" cy="112.45" r="0.90"/>
+    <circle class="orn" cx="248.83" cy="49.54" r="1.90"/>
+    <circle class="orn" cx="312.04" cy="58.88" r="2.90"/>
+    <circle class="orn" cx="372.63" cy="87.52" r="0.90"/>
+    <circle class="orn" cx="421.00" cy="135.37" r="1.90"/>
+  </g>
+  <g id="signature">
+    <text class="hash" x="256" y="496" text-anchor="middle">cd9faa2bca99b754</text>
+    <text class="label" x="256" y="18" text-anchor="middle">network • sigillum v2.1 • 4 rituale(s) • 85 stmt • depth 6</text>
+  </g>
+</svg>

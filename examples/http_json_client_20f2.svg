@@ -1,0 +1,286 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512" role="img" aria-label="CCT local sigilo">
+  <desc>Deterministic semantic sigil for a single CCT module.</desc>
+  <defs>
+    <style><![CDATA[
+      .bg { fill: #f5f0e4; }
+      .base { stroke: #2a221c; stroke-width: 1.60; fill: none; opacity: 0.78; }
+      .primary { stroke: #241913; stroke-width: 2.80; fill: none; stroke-linecap: round; stroke-linejoin: round; }
+      .call { stroke: #5b2a22; stroke-width: 2.0; fill: none; stroke-linecap: round; opacity: 0.9; }
+      .branch { stroke: #6b342d; stroke-width: 1.6; fill: none; stroke-linecap: round; }
+      .loop { stroke: #2d5f5a; stroke-width: 1.6; fill: none; stroke-linecap: round; }
+      .bind { stroke: #73493d; stroke-width: 1.4; fill: none; stroke-linecap: round; }
+      .term { stroke: #201814; stroke-width: 1.7; fill: none; stroke-linecap: round; }
+      .node-main { fill: #fffaf1; stroke: #201814; stroke-width: 2.0; }
+      .node-entry { fill: #efe6d4; stroke: #201814; stroke-width: 2.4; }
+      .node-aux { fill: #f6efe0; stroke: #4f4339; stroke-width: 1.3; }
+      .node-loop { fill: #edf3f1; stroke: #2d5f5a; stroke-width: 1.4; }
+      .node-term { fill: #f3e7e3; stroke: #5a2a23; stroke-width: 1.4; }
+      .orn { stroke: #355d58; stroke-width: 1.0; fill: none; opacity: 0.55; }
+      .hash { fill: #1f1a17; font: 10px monospace; letter-spacing: 0.8px; }
+      .label { fill: #1f1a17; font: 8px monospace; opacity: 0.7; }
+      .node-wrap, .edge-wrap { cursor: help; }
+      .node-wrap:hover > circle { opacity: 0.96; }
+      .edge-wrap:hover > path, .edge-wrap:hover > line { opacity: 1.0; }
+    ]]></style>
+  </defs>
+  <rect class="bg" x="0" y="0" width="512" height="512"/>
+  <g id="foundation">
+    <circle class="base" cx="256" cy="256" r="226"/>
+    <ellipse class="base" cx="256" cy="256" rx="198" ry="186.22" opacity="0.32"/>
+  </g>
+  <g id="primary_path">
+    <g class="edge-wrap">
+    <path class="primary" d="M 427.08 173.17 Q 258.11 244.15 107.82 349.03" stroke-width="3.20" opacity="0.96"/>
+      <title>edge: primary
+main -&gt; wait_for_file
+weight: 1
+
+path:
+main -&gt; wait_for_file</title>
+    </g>
+  </g>
+  <g id="call_links">
+    <g class="edge-wrap">
+    <path class="call" d="M 427.08 173.17 Q 251.84 232.77 107.82 349.03" stroke-width="2.15" opacity="0.74" data-kind="call" data-from="main" data-to="wait_for_file" data-weight="1" data-self-loop="false"/>
+      <title>edge: call
+main -&gt; wait_for_file
+calls: 1
+
+path:
+main -&gt; wait_for_file</title>
+    </g>
+  </g>
+  <g id="branches">
+    <g class="edge-wrap">
+    <path class="branch" d="M 107.82 349.03 Q 128.93 358.62 150.65 350.48" stroke-width="1.70" opacity="0.85"/>
+      <title>edge: branch
+wait_for_file -&gt; wait_for_file
+weight: 2
+
+path:
+wait_for_file -&gt; wait_for_file</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="branch" d="M 427.08 173.17 Q 405.27 163.76 381.97 168.35" stroke-width="2.10" opacity="0.85"/>
+      <title>edge: branch
+main -&gt; main
+weight: 4
+
+path:
+main -&gt; main</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="branch" d="M 261.45 256.23 Q 178.77 292.92 107.82 349.03" stroke-width="2.10" opacity="0.85"/>
+      <title>edge: branch
+main -&gt; wait_for_file
+weight: 6
+
+path:
+main -&gt; wait_for_file</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="branch" d="M 261.45 256.23 Q 347.42 220.99 427.08 173.17" stroke-width="2.10" opacity="0.85"/>
+      <title>edge: branch
+main -&gt; main
+weight: 27
+
+path:
+main -&gt; main</title>
+    </g>
+  </g>
+  <g id="loops">
+    <g class="edge-wrap">
+    <path class="loop" d="M 107.82 349.03 Q 98.31 366.26 102.38 385.51" stroke-width="1.55" opacity="0.88"/>
+      <title>edge: loop
+wait_for_file -&gt; wait_for_file
+weight: 2
+
+path:
+wait_for_file -&gt; wait_for_file</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="loop" d="M 106.14 385.51 C 140.96 367.77 144.87 389.59 129.25 378.68 C 113.63 389.59 117.54 367.77 99.56 387.01"/>
+      <title>edge: loop
+wait_for_file -&gt; wait_for_file
+weight: 2
+
+path:
+wait_for_file -&gt; wait_for_file</title>
+    </g>
+  </g>
+  <g id="bindings">
+    <g class="edge-wrap">
+    <path class="bind" d="M 107.82 349.03 Q 120.88 345.40 129.84 335.21" stroke-width="1.36" opacity="0.85"/>
+    <line class="bind" x1="110.10" y1="342.88" x2="114.35" y2="349.66" opacity="0.75"/>
+    <line class="bind" x1="111.77" y1="340.65" x2="117.08" y2="349.12" opacity="0.75"/>
+    <line class="bind" x1="134.78" y1="336.45" x2="140.60" y2="337.91" opacity="0.58"/>
+    <line class="bind" x1="124.82" y1="334.29" x2="115.97" y2="332.68" opacity="0.58"/>
+      <title>edge: bind
+wait_for_file -&gt; wait_for_file
+weight: 2
+
+path:
+wait_for_file -&gt; wait_for_file</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="bind" d="M 427.08 173.17 Q 414.49 177.00 403.67 184.50" stroke-width="1.76" opacity="0.85"/>
+    <line class="bind" x1="424.14" y1="179.04" x2="420.65" y2="171.84" opacity="0.75"/>
+    <line class="bind" x1="422.23" y1="181.07" x2="417.88" y2="172.07" opacity="0.75"/>
+    <line class="bind" x1="419.46" y1="181.30" x2="415.97" y2="174.10" opacity="0.75"/>
+    <line class="bind" x1="417.55" y1="183.34" x2="413.20" y2="174.33" opacity="0.75"/>
+    <line class="bind" x1="414.78" y1="183.57" x2="411.29" y2="176.37" opacity="0.75"/>
+    <line class="bind" x1="412.87" y1="185.60" x2="408.52" y2="176.60" opacity="0.75"/>
+    <line class="bind" x1="409.50" y1="185.05" x2="415.47" y2="185.61" opacity="0.58"/>
+    <line class="bind" x1="405.44" y1="190.08" x2="408.17" y2="198.65" opacity="0.58"/>
+    <line class="bind" x1="398.61" y1="187.42" x2="393.41" y2="190.42" opacity="0.58"/>
+    <line class="bind" x1="399.09" y1="180.87" x2="392.03" y2="175.28" opacity="0.58"/>
+    <line class="bind" x1="405.39" y1="178.91" x2="407.15" y2="173.17" opacity="0.58"/>
+      <title>edge: bind
+main -&gt; main
+weight: 7
+
+path:
+main -&gt; main</title>
+    </g>
+  </g>
+  <g id="terminals">
+    <g class="edge-wrap">
+    <path class="term" d="M 107.82 349.03 Q 132.55 334.47 150.99 312.48" stroke-width="1.80" opacity="0.90"/>
+      <title>edge: return
+wait_for_file -&gt; wait_for_file
+weight: 3
+
+path:
+wait_for_file -&gt; wait_for_file</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="term" d="M 427.08 173.17 Q 401.92 186.46 380.16 204.77" stroke-width="1.90" opacity="0.90"/>
+      <title>edge: return
+main -&gt; main
+weight: 6
+
+path:
+main -&gt; main</title>
+    </g>
+  </g>
+  <g id="nodes">
+    <g class="node-wrap">
+      <circle class="node-main" cx="107.82" cy="349.03" r="6.85" data-kind="rituale" data-ritual="wait_for_file" data-line="11" data-col="1" data-depth="6" data-stmt="RITUALE" data-loops="1" data-calls="3"/>
+      <title>RITUALE wait_for_file
+stmt: 7
+depth: 6
+loops: 1
+calls: 3
+source:
+RITUALE wait_for_file(VERBUM path, REX timeout_ms) REDDE VERUM</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="150.65" cy="350.48" r="4.80" data-kind="branch" data-ritual="wait_for_file" data-line="14" data-col="5" data-depth="6" data-stmt="SI"/>
+      <title>stmt: SI
+rituale: wait_for_file
+depth: 6
+line: 14
+
+source:
+SI CONIURA exists(path)</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-loop" cx="102.38" cy="385.51" r="4.70" data-kind="loop" data-ritual="wait_for_file" data-line="13" data-col="3" data-depth="6" data-stmt="DUM"/>
+      <title>stmt: DUM
+rituale: wait_for_file
+depth: 6
+line: 13
+
+source:
+DUM elapsed &lt; timeout_ms</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="129.84" cy="335.21" r="3.10" data-kind="bind" data-ritual="wait_for_file" data-line="12" data-col="3" data-depth="6" data-stmt="EVOCA"/>
+      <title>stmt: EVOCA
+rituale: wait_for_file
+depth: 6
+line: 12
+
+source:
+EVOCA REX elapsed AD 0</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="150.99" cy="312.48" r="4.00" data-kind="term" data-ritual="wait_for_file" data-line="15" data-col="7" data-depth="6" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: wait_for_file
+depth: 6
+line: 15
+
+source:
+REDDE VERUM</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-entry" cx="427.08" cy="173.17" r="11.10" data-kind="rituale" data-ritual="main" data-line="23" data-col="1" data-depth="7" data-stmt="RITUALE" data-loops="0" data-calls="22" data-entry="true"/>
+      <title>RITUALE main
+stmt: 22
+depth: 7
+loops: 0
+calls: 22
+source:
+RITUALE main() REDDE REX</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="381.97" cy="168.35" r="5.80" data-kind="branch" data-ritual="main" data-line="25" data-col="3" data-depth="7" data-stmt="SI"/>
+      <title>stmt: SI
+rituale: main
+depth: 7
+line: 25
+
+source:
+SI NON CONIURA wait_for_file(ready, 2000)</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="403.67" cy="184.50" r="3.85" data-kind="bind" data-ritual="main" data-line="24" data-col="3" data-depth="7" data-stmt="EVOCA"/>
+      <title>stmt: EVOCA
+rituale: main
+depth: 7
+line: 24
+
+source:
+EVOCA VERBUM ready AD "examples/.tmp/http_simple_server_20f2.ready"</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="380.16" cy="204.77" r="4.60" data-kind="term" data-ritual="main" data-line="27" data-col="5" data-depth="7" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: main
+depth: 7
+line: 27
+
+source:
+REDDE 0</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="261.45" cy="256.23" r="5.00" data-kind="bind" data-ritual="main" data-line="24" data-col="3" data-depth="7" data-stmt="EVOCA"/>
+      <title>stmt: EVOCA
+rituale: main
+depth: 7
+line: 24
+
+source:
+EVOCA VERBUM ready AD "examples/.tmp/http_simple_server_20f2.ready"</title>
+    </g>
+  </g>
+  <g id="ornaments">
+    <circle class="orn" cx="462.90" cy="293.80" r="0.90"/>
+    <circle class="orn" cx="434.38" cy="343.42" r="1.90"/>
+    <circle class="orn" cx="298.56" cy="449.62" r="2.90"/>
+    <circle class="orn" cx="212.54" cy="449.45" r="0.90"/>
+    <circle class="orn" cx="134.84" cy="417.82" r="1.90"/>
+    <circle class="orn" cx="58.07" cy="273.56" r="2.90"/>
+    <circle class="orn" cx="55.15" cy="193.81" r="0.90"/>
+    <circle class="orn" cx="158.72" cy="78.16" r="1.90"/>
+    <circle class="orn" cx="224.45" cy="59.79" r="2.90"/>
+    <circle class="orn" cx="311.33" cy="56.97" r="0.90"/>
+    <circle class="orn" cx="444.44" cy="176.30" r="1.90"/>
+  </g>
+  <g id="signature">
+    <text class="hash" x="256" y="496" text-anchor="middle">ebec7c0ff72da2f7</text>
+    <text class="label" x="256" y="18" text-anchor="middle">network • sigillum v2.1 • 2 rituale(s) • 29 stmt • depth 7</text>
+  </g>
+</svg>

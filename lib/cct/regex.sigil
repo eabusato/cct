@@ -1,0 +1,298 @@
+format = cct.sigil.v1
+visual_engine = sigillum_v2_1
+visual_style = network
+compiler_version = 0.19.0
+program_name = regex
+semantic_hash = 55a32f42558e1144
+layout_seed = 55a32f42558e1144:network
+module_mode = composed
+module_count = 5
+import_edge_count = 4
+entry_module = lib/cct/regex.cct
+cross_module_call_count = 17
+cross_module_type_ref_count = 0
+module_resolution_status = ok
+stdlib_module_count = 4
+stdlib_modules_used = verbum,fluxus,option,result
+verbum_module_used = true
+fmt_module_used = false
+series_module_used = false
+fluxus_module_used = true
+mem_module_used = false
+io_module_used = false
+fs_module_used = false
+path_module_used = false
+math_module_used = false
+random_module_used = false
+parse_module_used = false
+cmp_module_used = false
+alg_module_used = false
+option_module_used = true
+result_module_used = true
+map_module_used = false
+set_module_used = false
+collection_ops_module_used = false
+visibility_model = public_default_arcanum_internal
+public_symbol_count = 101
+internal_symbol_count = 0
+
+[metrics]
+ritual_count = 22
+entry_ritual_index = 0
+entry_ritual_name = regex_flag_case_insensitive
+total_statements = 56
+total_expressions = 131
+max_nesting = 5
+avg_nesting = 2.033
+loops_total = 0
+conditionals_total = 5
+calls_total = 34
+obsecro_total = 9
+returns_total = 27
+anur_total = 0
+sigillum_decl_total = 1
+ordo_decl_total = 0
+generic_decl_count = 0
+generic_param_count = 0
+generic_rituale_count = 0
+generic_sigillum_count = 0
+generic_instantiation_count = 11
+generic_rituale_instantiation_count = 11
+generic_sigillum_instantiation_count = 0
+generic_instantiation_dedup_count = 6
+generic_constraint_count = 0
+generic_constrained_param_count = 0
+generic_constraint_violation_count = 0
+pactum_constraint_resolution_status = ok
+generic_monomorphization_status = ok
+pactum_decl_count = 0
+pactum_signature_count = 0
+sigillum_pactum_conformance_count = 0
+pactum_conformance_status = ok
+multi_ritual = true
+complexity_class = dense
+
+[counts]
+evoca = 17
+vincire = 1
+si = 5
+aliter = 0
+dum = 0
+donec = 0
+repete = 0
+iterum = 0
+iterum_count = 0
+coniura = 34
+obsecro = 9
+redde = 27
+anur = 0
+field_access = 8
+index_access = 0
+series_type_use = 0
+speculum_type_use = 8
+sigillum_decl = 1
+sigillum_composite_field = 0
+ordo_decl = 0
+type_umbra = 0
+type_flamma = 0
+address_of = 0
+deref = 0
+alloc = 0
+free = 0
+dimitte = 0
+fluxus_ops_count = 2
+verbum_ops_count = 2
+fmt_ops_count = 0
+series_ops_count = 0
+mem_ops_count = 0
+io_ops_count = 0
+fs_ops_count = 0
+fluxus_init_count = 0
+fluxus_push_count = 0
+fluxus_pop_count = 0
+fluxus_instances_count = 0
+path_ops_count = 0
+math_ops_count = 0
+random_ops_count = 0
+parse_ops_count = 0
+cmp_ops_count = 0
+alg_ops_count = 0
+option_ops_count = 3
+result_ops_count = 8
+map_ops_count = 0
+set_ops_count = 0
+collection_ops_count = 0
+pactum_decl = 0
+pactum_signature = 0
+sigillum_pactum_conformance = 0
+generic_constraint = 0
+generic_constrained_param = 0
+generic_constraint_violation = 0
+tempta = 0
+cape = 0
+semper = 0
+iace = 0
+
+[topology]
+node_count = 64
+edge_count = 92
+primary_path_nodes = 22
+ritual_poles = 22
+aux_nodes = 42
+self_call_count = 0
+loop_presence = false
+conditional_presence = true
+call_presence = true
+density_ratio = 0.875
+field_access_presence = true
+index_access_presence = false
+memory_presence = false
+speculum_presence = true
+dynamic_indexable_memory_presence = false
+indirect_structural_flow_presence = true
+failure_construct_presence = false
+tempta_presence = false
+cape_presence = false
+semper_presence = false
+iace_presence = false
+failure_call_propagation_presence = false
+failure_call_propagation_count = 0
+iace_across_coniura_presence = false
+tempta_call_capture_presence = false
+failure_cleanup_presence = false
+failure_cleanup_memory_presence = false
+runtime_failure_bridge_presence = false
+phase7_subset_final = true
+phase7_discard_policy = manual_explicit(obsecro_libera,dimitte)
+phase8_subset_final = true
+phase8_failure_policy = fractum_simple_opaco(payload=verbum);tempta_cape_semper_subset
+phase8_runtime_fail_policy = partial_bridge_documented(integrated=null_pointer_checks_in_instrumented_failure_paths;others=direct_abort)
+phase10_subset_final = true
+phase10_final_status = consolidated
+phase10_typing_contract = genus_explicit_monomorphization+pactum_explicit_conformance+constraint_single_contract_rituale_only
+
+[analysis_summary]
+scope = local
+schema_phase = 13C2
+analysis_profile = analytical_v1
+complexity_class = dense
+control_flow_pressure = 5
+failure_surface = none
+stdlib_surface = 4
+generic_surface = 11
+determinism_guarantee = stable
+
+[diff_fingerprint_context]
+scope_anchor = local
+hash_anchor = 55a32f42558e1144
+fingerprint_basis = structural_metrics+topology+hash_anchor
+serialization_profile = analytical_v1
+volatility = none
+module_anchor_count = 5
+entry_anchor = lib/cct/regex.cct
+
+[module_structural_summary]
+module_count = 5
+module_mode = composed
+import_edge_count = 4
+cross_module_call_count = 17
+cross_module_type_ref_count = 0
+ritual_count = 22
+public_symbol_count = 101
+internal_symbol_count = 0
+module_resolution_status = ok
+
+[compatibility_hints]
+schema_contract = cct.sigil.v1
+unknown_field_policy = warning_non_fatal
+deprecated_alias = sigilo_style->visual_engine
+consumer_mode_tolerant = ignore_unknown_additive_fields
+consumer_mode_strict = enforce_required_fields_and_hash_by_scope
+diff_policy = analytical_blocks_review_required_except_compatibility_hints
+deterministic_serialization = stable_section_order
+
+[layout]
+primary_axis_deg = 18.403
+canvas_center = 256.0,256.0
+containment_radius = 226.0
+style_influence = stroke/curvature/distribution/ornamentation
+
+[visual_grammar]
+style = network inscription / ritual seal (FASE 6A)
+style_selected = network
+foundation = minimal containment circle (+ optional light secondary ring)
+layers = foundation,primary_path,call_links,branches,loops,bindings,terminals,nodes,ornaments,signature
+macro_layout = ritual nodes + structural links + primary path
+rituale = primary node / pole in network
+coniura = dominant inter-ritual link (self-call => local loop)
+si = real bifurcation node + branch split
+aliter = alternate branch / compensatory reconnection
+dum = recurrence loop glyph (pre-test)
+donec = post_test loop glyph (loop + tail)
+repete = serial pulse chain / cadence marks
+series = indexed sequence pattern (metadata/hash influence, v2.1 visual modulation)
+speculum = pointer/reference construct (metadata/hash/topology influence, visual refinement deferred)
+address_of = reference acquisition mark (structural/hash influence)
+deref = bound access incision mark (structural/hash influence)
+memory_alloc_free = pete/libera/dimitte contribute memory-presence metrics/hash
+failure_propagation = TEMPTA/CAPE/IACE + CONIURA propagation tracked primarily via metadata/topology counts (FASE 8B)
+semper = guaranteed cleanup/finally block tracked in metadata/hash (FASE 8C; visual refinement deferred)
+failure_phase8_final = metadata reflects consolidated subset semantics through FASE 8D (IACE/TEMPTA/CAPE/SEMPER + propagation + partial runtime bridge)
+dynamic_indexable_memory = alloc/free + index_access + speculum/deref combination contributes topology metadata/hash (FASE 7C)
+field_access = bound branch tap / field rune mark (metadata/hash influence)
+indirect_structural_flow = field_access + speculum/deref combination contributes structural metadata/hash (FASE 7C)
+phase7_final = metadata reflects consolidated subset semantics through FASE 7D (no visual engine redesign)
+tempta_cape_iace = failure-control constructs contribute metadata/hash in FASE 8A (visual refinement deferred)
+sigillum = named vessel/struct declaration contributes topology metadata
+sigillum_composition = nested SIGILLUM field composition contributes structural metadata/hash
+ordo = ordinal taxonomy declaration contributes topology metadata
+evoca = emergence from binding node
+vincire = visible binding bars / lock marks
+obsecro = emissive rays (secondary)
+redde = convergent terminal path
+anur = terminal cut/notch
+hash_role = secondary modulation (jitter/curvature/thickness/signature)
+style_role = visual weighting/curvature/distribution without changing structural semantics
+
+[rituales]
+0 = regex_flag_case_insensitive | entry=false | stmt=1 | depth=2 | calls=0 | loops=0
+1 = regex_flag_multiline | entry=false | stmt=1 | depth=2 | calls=0 | loops=0
+2 = regex_flag_dotall | entry=false | stmt=1 | depth=2 | calls=0 | loops=0
+3 = regex_compile | entry=false | stmt=1 | depth=3 | calls=1 | loops=0
+4 = regex_compile_flags | entry=false | stmt=7 | depth=5 | calls=3 | loops=0
+5 = regex_match | entry=false | stmt=1 | depth=4 | calls=0 | loops=0
+6 = regex_search | entry=false | stmt=4 | depth=4 | calls=4 | loops=0
+7 = regex_find_all | entry=false | stmt=1 | depth=4 | calls=0 | loops=0
+8 = regex_replace | entry=false | stmt=1 | depth=4 | calls=0 | loops=0
+9 = regex_replace_all | entry=false | stmt=1 | depth=4 | calls=0 | loops=0
+10 = regex_search_text | entry=false | stmt=1 | depth=4 | calls=0 | loops=0
+11 = regex_split | entry=false | stmt=1 | depth=4 | calls=0 | loops=0
+12 = regex_find_all_joined | entry=false | stmt=4 | depth=3 | calls=3 | loops=0
+13 = regex_split_joined | entry=false | stmt=4 | depth=3 | calls=3 | loops=0
+14 = regex_free | entry=false | stmt=2 | depth=4 | calls=0 | loops=0
+15 = regex_is_match | entry=false | stmt=7 | depth=4 | calls=5 | loops=0
+16 = regex_quick_search | entry=false | stmt=7 | depth=4 | calls=6 | loops=0
+17 = regex_quick_search_text | entry=false | stmt=7 | depth=4 | calls=5 | loops=0
+18 = regex_is_email | entry=false | stmt=1 | depth=3 | calls=1 | loops=0
+19 = regex_is_url | entry=false | stmt=1 | depth=3 | calls=1 | loops=0
+20 = regex_is_integer | entry=false | stmt=1 | depth=3 | calls=1 | loops=0
+21 = regex_is_real | entry=false | stmt=1 | depth=3 | calls=1 | loops=0
+
+[call_edges]
+regex_compile -> regex_compile_flags : 1
+regex_search -> regex_search_text : 1
+regex_find_all_joined -> regex_find_all : 1
+regex_split_joined -> regex_split : 1
+regex_is_match -> regex_compile : 1
+regex_is_match -> regex_match : 1
+regex_is_match -> regex_free : 1
+regex_quick_search -> regex_compile : 1
+regex_quick_search -> regex_search : 1
+regex_quick_search -> regex_free : 1
+regex_quick_search_text -> regex_compile : 1
+regex_quick_search_text -> regex_search_text : 1
+regex_quick_search_text -> regex_free : 1
+regex_is_email -> regex_is_match : 1
+regex_is_url -> regex_is_match : 1
+regex_is_integer -> regex_is_match : 1
+regex_is_real -> regex_is_match : 1

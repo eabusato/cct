@@ -1,0 +1,128 @@
+format = cct.sigil.v1
+sigilo_scope = system
+visual_style = network
+system_hash = cfeb0dd1970a8c01
+module_count = 12
+entry_module = /Users/eabusato/dev/cct/examples/phase30_data_app/tests/smoke.test.cct
+import_edges = 17
+cross_module_calls = 59
+cross_module_type_refs = 0
+exported_symbol_count = 182
+internal_symbol_count = 0
+module_density = 1.416667
+system_topology_class = mesh_dense
+module_visibility_model = public_default_arcanum_internal
+module_resolution_status = ok
+composition_mode = sigil_of_sigils_inline
+generic_instantiation_count = 1
+generic_rituale_instantiation_count = 1
+generic_sigillum_instantiation_count = 0
+generic_instantiation_dedup_count = 1
+generic_constraint_count = 0
+generic_constrained_param_count = 0
+generic_constraint_violation_count = 0
+pactum_constraint_resolution_status = ok
+generic_monomorphization_status = ok
+pactum_decl_count = 0
+pactum_signature_count = 0
+sigillum_pactum_conformance_count = 0
+pactum_conformance_status = ok
+option_ops_count = 9
+result_ops_count = 0
+map_ops_count = 0
+set_ops_count = 0
+collection_ops_count = 0
+iterum_count = 0
+option_module_used = true
+result_module_used = false
+map_module_used = false
+set_module_used = false
+collection_ops_module_used = false
+phase10_subset_final = true
+phase10_final_status = consolidated
+phase10_typing_contract = genus_explicit_monomorphization+pactum_explicit_conformance+constraint_single_contract_rituale_only
+
+[analysis_summary]
+scope = system
+schema_phase = 13C2
+analysis_profile = analytical_v1
+system_topology_class = mesh_dense
+module_density = 1.416667
+cross_module_flow = 59
+generic_surface = 1
+determinism_guarantee = stable
+
+[diff_fingerprint_context]
+scope_anchor = system
+hash_anchor = cfeb0dd1970a8c01
+fingerprint_basis = module_map+import_edges+system_hash_anchor
+serialization_profile = analytical_v1
+volatility = none
+module_anchor_count = 12
+entry_anchor = /Users/eabusato/dev/cct/examples/phase30_data_app/tests/smoke.test.cct
+
+[module_structural_summary]
+module_count = 12
+import_edges = 17
+cross_module_calls = 59
+cross_module_type_refs = 0
+module_resolution_status = ok
+exported_symbol_count = 182
+internal_symbol_count = 0
+composition_mode = sigil_of_sigils_inline
+
+[compatibility_hints]
+schema_contract = cct.sigil.v1
+unknown_field_policy = warning_non_fatal
+deprecated_alias = sigilo_style->visual_engine
+consumer_mode_tolerant = ignore_unknown_additive_fields
+consumer_mode_strict = enforce_required_fields_and_hash_by_scope
+diff_policy = analytical_blocks_review_required_except_compatibility_hints
+deterministic_serialization = stable_section_order
+
+[modules]
+0 = /Users/eabusato/dev/cct/examples/phase30_data_app/tests/smoke.test.cct
+1 = /Users/eabusato/dev/cct/examples/phase30_data_app/lib/data_app.cct
+2 = /Users/eabusato/dev/cct/lib/cct/csv.cct
+3 = /Users/eabusato/dev/cct/lib/cct/fluxus.cct
+4 = /Users/eabusato/dev/cct/lib/cct/parse.cct
+5 = /Users/eabusato/dev/cct/lib/cct/verbum.cct
+6 = /Users/eabusato/dev/cct/lib/cct/char.cct
+7 = /Users/eabusato/dev/cct/lib/cct/option.cct
+8 = /Users/eabusato/dev/cct/lib/cct/db_sqlite.cct
+9 = /Users/eabusato/dev/cct/lib/cct/fs.cct
+10 = /Users/eabusato/dev/cct/lib/cct/orm_lite.cct
+11 = /Users/eabusato/dev/cct/lib/cct/fmt.cct
+
+[module_sigils]
+0 = /Users/eabusato/dev/cct/examples/phase30_data_app/tests/smoke.test.cct | b27fb97a76a998cf
+1 = /Users/eabusato/dev/cct/examples/phase30_data_app/lib/data_app.cct | 1d5804bc8b4eb07a
+2 = /Users/eabusato/dev/cct/lib/cct/csv.cct | f54fdb5a36832116
+3 = /Users/eabusato/dev/cct/lib/cct/fluxus.cct | bdc18a455d0744f5
+4 = /Users/eabusato/dev/cct/lib/cct/parse.cct | bc6cf225c231e3a0
+5 = /Users/eabusato/dev/cct/lib/cct/verbum.cct | 963d74e1a8a9f741
+6 = /Users/eabusato/dev/cct/lib/cct/char.cct | a20627ed62c71ce1
+7 = /Users/eabusato/dev/cct/lib/cct/option.cct | 67ec7c62091c64c5
+8 = /Users/eabusato/dev/cct/lib/cct/db_sqlite.cct | b00357ad183ee854
+9 = /Users/eabusato/dev/cct/lib/cct/fs.cct | 3e45228e77c0f971
+10 = /Users/eabusato/dev/cct/lib/cct/orm_lite.cct | 9737cd0bca36f9fb
+11 = /Users/eabusato/dev/cct/lib/cct/fmt.cct | 790273b45a960d77
+
+[import_edges]
+0 = /Users/eabusato/dev/cct/examples/phase30_data_app/tests/smoke.test.cct -> /Users/eabusato/dev/cct/examples/phase30_data_app/lib/data_app.cct
+1 = /Users/eabusato/dev/cct/examples/phase30_data_app/lib/data_app.cct -> /Users/eabusato/dev/cct/lib/cct/csv.cct
+2 = /Users/eabusato/dev/cct/examples/phase30_data_app/lib/data_app.cct -> /Users/eabusato/dev/cct/lib/cct/db_sqlite.cct
+3 = /Users/eabusato/dev/cct/examples/phase30_data_app/lib/data_app.cct -> /Users/eabusato/dev/cct/lib/cct/fluxus.cct
+4 = /Users/eabusato/dev/cct/examples/phase30_data_app/lib/data_app.cct -> /Users/eabusato/dev/cct/lib/cct/fs.cct
+5 = /Users/eabusato/dev/cct/examples/phase30_data_app/lib/data_app.cct -> /Users/eabusato/dev/cct/lib/cct/orm_lite.cct
+6 = /Users/eabusato/dev/cct/examples/phase30_data_app/lib/data_app.cct -> /Users/eabusato/dev/cct/lib/cct/verbum.cct
+7 = /Users/eabusato/dev/cct/lib/cct/csv.cct -> /Users/eabusato/dev/cct/lib/cct/fluxus.cct
+8 = /Users/eabusato/dev/cct/lib/cct/csv.cct -> /Users/eabusato/dev/cct/lib/cct/parse.cct
+9 = /Users/eabusato/dev/cct/lib/cct/csv.cct -> /Users/eabusato/dev/cct/lib/cct/verbum.cct
+10 = /Users/eabusato/dev/cct/lib/cct/parse.cct -> /Users/eabusato/dev/cct/lib/cct/verbum.cct
+11 = /Users/eabusato/dev/cct/lib/cct/parse.cct -> /Users/eabusato/dev/cct/lib/cct/option.cct
+12 = /Users/eabusato/dev/cct/lib/cct/verbum.cct -> /Users/eabusato/dev/cct/lib/cct/char.cct
+13 = /Users/eabusato/dev/cct/lib/cct/orm_lite.cct -> /Users/eabusato/dev/cct/lib/cct/db_sqlite.cct
+14 = /Users/eabusato/dev/cct/lib/cct/orm_lite.cct -> /Users/eabusato/dev/cct/lib/cct/fmt.cct
+15 = /Users/eabusato/dev/cct/lib/cct/orm_lite.cct -> /Users/eabusato/dev/cct/lib/cct/verbum.cct
+16 = /Users/eabusato/dev/cct/lib/cct/fmt.cct -> /Users/eabusato/dev/cct/lib/cct/verbum.cct

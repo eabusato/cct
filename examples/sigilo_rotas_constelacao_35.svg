@@ -1,0 +1,508 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-54.00 -54.00 1208.00 1079.86" width="1208" height="1080" role="img" aria-label="CCT route sigilo">
+  <desc>Deterministic route topology sigil for a CCT artifact.</desc>
+  <defs>
+    <style><![CDATA[
+      .bg { fill: #f6f2e7; }
+      .title { fill: #231a14; font: 600 20px monospace; }
+      .subtitle { fill: #5b5148; font: 11px monospace; }
+      .route-center { fill: #3b3027; stroke: #f6f2e7; stroke-width: 1.2; }
+      .group-link { fill: none; stroke: #8a7662; stroke-width: 1.05; opacity: 0.54; }
+      .cluster-orbit { fill: none; stroke: #c6b59f; stroke-width: 1.0; opacity: 0.90; }
+      .cluster-thread { fill: none; stroke: #d2c2ad; stroke-width: 0.9; opacity: 0.78; }
+      .cluster-label { fill: #2a221c; font: 600 11px monospace; opacity: 0.88; }
+      .cluster-summary { fill: #66584a; font: 9px monospace; opacity: 0.74; }
+      .route-link { fill: none; stroke: #7a6a59; stroke-width: 1.0; opacity: 0.68; }
+      .route-weave { fill: none; stroke: #8c7865; stroke-width: 0.95; opacity: 0.58; }
+      .route-shell { fill: rgba(255,252,246,0.72); stroke: #5a4b3f; stroke-width: 1.08; }
+      .route-mid { fill: none; stroke: #b7a690; stroke-width: 0.95; opacity: 0.78; }
+      .route-core { fill: #f7efe3; stroke: #57483b; stroke-width: 1.0; }
+      .route-arc { fill: none; stroke: #7a6957; stroke-width: 0.95; opacity: 0.88; stroke-linecap: round; }
+      .route-spoke { fill: none; stroke: #978573; stroke-width: 0.9; opacity: 0.82; stroke-linecap: round; }
+      .route-chord { fill: none; stroke: #51453b; stroke-width: 0.9; opacity: 0.74; stroke-linecap: round; }
+      .route-glyph { fill: none; stroke: #efe6d9; stroke-width: 1.05; stroke-linejoin: round; }
+      .sigil-orn { fill: none; stroke: #b7a690; stroke-width: 0.9; opacity: 0.66; }
+      .route-method-get { fill: #6b5a4b; }
+      .route-method-post { fill: #6b5a4b; }
+      .route-method-put { fill: #6b5a4b; }
+      .route-method-patch { fill: #6b5a4b; }
+      .route-method-delete { fill: #6b5a4b; }
+      .route-method-head { fill: #6b5a4b; }
+      .route-method-options { fill: #6b5a4b; }
+      .route-method-custom { fill: #6b5a4b; }
+      .route-method-seed { stroke: #f7efe2; stroke-width: 0.85; }
+      .hash { fill: #231a14; font: 10px monospace; }
+      .route-wrap { cursor: help; }
+      .route-wrap:hover > .route-shell, .route-wrap:hover > .route-mid, .route-wrap:hover > .route-core { stroke: #1f1712; opacity: 1; }
+      .route-wrap:hover > .route-link { stroke: #3c2f25; opacity: .92; }
+    ]]></style>
+  </defs>
+  <rect class="bg" x="-54.00" y="-54.00" width="1208.00" height="1079.86"/>
+  <text class="title" x="30" y="36">sigilo routes</text>
+  <text class="subtitle" x="30" y="56">program=sigilo_rotas_constelacao_35 routes=23 groups=8 web_hash=9d5ba7b2613f5102</text>
+  <g id="route_center">
+    <title>route center
+origin point for the route topology</title>
+    <circle class="route-center" cx="550.00" cy="482.00" r="4.8"/>
+  </g>
+  <g id="route_group_links">
+    <g class="route-group-wrap">
+      <title>center -&gt; group
+group=/
+routes=2</title>
+    <path class="group-link" d="M 550.00 482.00 Q 548.87 321.15 546.84 160.31"/>
+    </g>
+    <g class="route-group-wrap">
+      <title>center -&gt; group
+group=/admin
+routes=3</title>
+    <path class="group-link" d="M 550.00 482.00 Q 666.78 361.11 787.81 244.48"/>
+    </g>
+    <g class="route-group-wrap">
+      <title>center -&gt; group
+group=/api
+routes=3</title>
+    <path class="group-link" d="M 550.00 482.00 Q 712.23 487.65 874.31 496.64"/>
+    </g>
+    <g class="route-group-wrap">
+      <title>center -&gt; group
+group=/auth
+routes=3</title>
+    <path class="group-link" d="M 550.00 482.00 Q 654.04 610.38 766.08 731.84"/>
+    </g>
+    <g class="route-group-wrap">
+      <title>center -&gt; group
+group=/chat
+routes=3</title>
+    <path class="group-link" d="M 550.00 482.00 Q 527.69 648.59 520.46 816.52"/>
+    </g>
+    <g class="route-group-wrap">
+      <title>center -&gt; group
+group=/contos
+routes=4</title>
+    <path class="group-link" d="M 550.00 482.00 Q 434.60 604.21 319.41 726.61"/>
+    </g>
+    <g class="route-group-wrap">
+      <title>center -&gt; group
+group=/media
+routes=3</title>
+    <path class="group-link" d="M 550.00 482.00 Q 382.84 484.15 215.66 484.04"/>
+    </g>
+    <g class="route-group-wrap">
+      <title>center -&gt; group
+group=/perfil
+routes=2</title>
+    <path class="group-link" d="M 550.00 482.00 Q 429.40 366.85 321.11 240.05"/>
+    </g>
+  </g>
+  <g id="route_cluster_route" class="route-cluster">
+    <title>route group
+group=/
+routes=2</title>
+    <circle class="cluster-orbit" cx="546.84" cy="160.31" r="94.72"/>
+    <text class="cluster-label" x="545.64" y="34.59" text-anchor="middle">/</text>
+    <text class="cluster-summary" x="545.64" y="47.59" text-anchor="middle">routes=2</text>
+    <g class="route-weave-wrap">
+      <title>group anchor
+group=/
+anchor=site.home</title>
+    <path class="route-link" d="M 546.84 160.31 Q 583.46 149.11 592.20 115.13"/>
+    </g>
+    <g class="route-weave-wrap">
+      <title>route hierarchy
+site.home -&gt; site.manifesto
+group=/</title>
+    <path class="route-weave" d="M 592.20 115.13 Q 603.50 142.21 590.32 182.87"/>
+    </g>
+    <g id="route_node_site_home" class="route-wrap" data-route-id="site.home" data-method="GET" data-path="/" data-handler="site_home" data-module="examples/sigilo_rotas_constelacao_35.cct" data-group="/" data-middleware-chain="none" data-source-origin="native" data-path-params="none" data-route-hash="03e62c702b4bd106">
+<circle class="route-shell" cx="592.20" cy="115.13" r="17.13"/><path class="route-mid" d="M 588.99 104.28 A 11.32 11.32 0 0 1 603.06 118.33"/><path class="route-arc" d="M 577.62 115.08 A 14.59 14.59 0 0 1 580.75 106.10"/><path class="route-arc" d="M 601.86 103.68 A 14.98 14.98 0 0 1 606.32 110.12"/><path class="route-spoke" d="M 596.05 111.13 Q 593.75 116.19 600.52 103.09"/><path class="route-spoke" d="M 594.90 121.58 Q 590.47 115.83 597.47 126.77"/><path class="route-spoke" d="M 586.74 115.42 Q 592.40 113.27 578.36 113.81"/><path class="route-chord" d="M 599.90 104.88 Q 592.67 116.04 593.86 127.14"/><circle class="route-core" cx="592.67" cy="116.04" r="5.68"/><path class="route-glyph" d="M 597.03 110.72 L 592.63 122.52 L 586.34 117.40 Z"/><circle class="route-method-seed" cx="598.16" cy="120.52" r="1.08"/><circle class="route-method-get" cx="592.67" cy="116.04" r="0"/>      <title>GET /
+handler=site_home
+module=examples/sigilo_rotas_constelacao_35.cct
+middleware=none
+route_id=site.home
+source=native
+route_hash=03e62c702b4bd106</title>
+    </g>
+    <g id="route_node_site_manifesto" class="route-wrap" data-route-id="site.manifesto" data-method="GET" data-path="/manifesto" data-handler="site_manifesto" data-module="examples/sigilo_rotas_constelacao_35.cct" data-group="/" data-middleware-chain="trace" data-source-origin="native" data-path-params="none" data-route-hash="b0b23ea018da2e2f">
+<circle class="route-shell" cx="590.32" cy="182.87" r="16.23"/><path class="route-mid" d="M 598.69 177.61 A 9.89 9.89 0 0 1 593.63 192.19"/><path class="route-arc" d="M 598.72 194.61 A 14.44 14.44 0 0 1 582.90 195.26"/><path class="route-arc" d="M 577.94 189.32 A 13.96 13.96 0 0 1 576.36 182.46"/><path class="route-spoke" d="M 595.42 185.97 Q 589.60 184.41 601.40 188.66"/><path class="route-spoke" d="M 585.90 182.28 Q 590.83 181.24 578.97 179.04"/><path class="route-chord" d="M 601.41 185.46 Q 590.78 183.82 579.97 185.55"/><circle class="route-core" cx="590.78" cy="183.82" r="4.87"/><path class="route-glyph" d="M 596.42 186.06 L 585.35 185.46 L 588.60 178.58 Z"/><circle class="route-method-seed" cx="588.46" cy="189.64" r="1.12"/><circle class="route-method-get" cx="590.78" cy="183.82" r="0"/>      <title>GET /manifesto
+handler=site_manifesto
+module=examples/sigilo_rotas_constelacao_35.cct
+middleware=trace
+route_id=site.manifesto
+source=native
+route_hash=b0b23ea018da2e2f</title>
+    </g>
+  </g>
+  <g id="route_cluster_admin" class="route-cluster">
+    <title>route group
+group=/admin
+routes=3</title>
+    <circle class="cluster-orbit" cx="787.81" cy="244.48" r="107.13"/>
+    <text class="cluster-label" x="883.42" y="145.98" text-anchor="middle">/admin</text>
+    <text class="cluster-summary" x="883.42" y="158.98" text-anchor="middle">routes=3</text>
+    <g class="route-weave-wrap">
+      <title>group anchor
+group=/admin
+anchor=admin.dashboard</title>
+    <path class="route-link" d="M 787.81 244.48 Q 827.29 252.57 867.53 224.68"/>
+    </g>
+    <g class="route-weave-wrap">
+      <title>route hierarchy
+admin.dashboard -&gt; admin.reports.queue
+group=/admin</title>
+    <path class="route-weave" d="M 867.53 224.68 Q 868.67 260.94 849.94 277.48"/>
+    </g>
+    <g class="route-weave-wrap">
+      <title>route hierarchy
+admin.reports.queue -&gt; admin.media.approve
+group=/admin</title>
+    <path class="route-weave" d="M 849.94 277.48 Q 809.84 302.84 789.52 308.39"/>
+    </g>
+    <g id="route_node_admin_dashboard" class="route-wrap" data-route-id="admin.dashboard" data-method="GET" data-path="/admin" data-handler="admin_dashboard" data-module="examples/sigilo_rotas_constelacao_35.cct" data-group="/admin" data-middleware-chain="staff,trace" data-source-origin="native" data-path-params="none" data-route-hash="91c48bcdf28642e9">
+<circle class="route-shell" cx="867.53" cy="224.68" r="11.98"/><path class="route-mid" d="M 870.67 217.21 A 8.10 8.10 0 0 1 871.24 231.88"/><path class="route-arc" d="M 860.47 231.27 A 9.66 9.66 0 0 1 857.94 225.85"/><path class="route-arc" d="M 876.98 219.02 A 11.01 11.01 0 0 1 877.74 228.79"/><path class="route-spoke" d="M 870.23 224.90 Q 867.39 225.97 875.27 225.69"/><path class="route-spoke" d="M 864.78 227.43 Q 866.45 223.95 862.29 232.61"/><path class="route-spoke" d="M 865.03 221.46 Q 868.66 224.04 864.06 217.72"/><path class="route-chord" d="M 876.70 227.53 Q 866.74 224.52 860.11 229.59"/><circle class="route-core" cx="866.74" cy="224.52" r="3.34"/><path class="route-glyph" d="M 871.29 224.62 L 863.81 227.45 L 863.22 222.33 Z"/><circle class="route-method-seed" cx="866.64" cy="229.27" r="1.61"/><circle class="route-method-get" cx="866.74" cy="224.52" r="0"/>      <title>GET /admin
+handler=admin_dashboard
+module=examples/sigilo_rotas_constelacao_35.cct
+middleware=staff,trace
+route_id=admin.dashboard
+source=native
+route_hash=91c48bcdf28642e9</title>
+    </g>
+    <g id="route_node_admin_reports_queue" class="route-wrap" data-route-id="admin.reports.queue" data-method="GET" data-path="/admin/denuncias" data-handler="admin_reports_queue" data-module="examples/sigilo_rotas_constelacao_35.cct" data-group="/admin" data-middleware-chain="staff,moderation,trace" data-source-origin="native" data-path-params="none" data-route-hash="d560cf8edc18575d">
+<circle class="route-shell" cx="849.94" cy="277.48" r="14.68"/><path class="route-mid" d="M 859.90 276.54 A 10.00 10.00 0 0 1 850.03 287.48"/><path class="route-arc" d="M 838.98 282.15 A 11.91 11.91 0 0 1 840.70 269.95"/><path class="route-spoke" d="M 851.78 279.78 Q 848.84 278.48 856.68 284.82"/><path class="route-spoke" d="M 846.68 274.15 Q 851.05 276.48 842.92 269.18"/><path class="route-chord" d="M 859.48 283.90 Q 849.23 276.97 839.35 279.57"/><circle class="route-core" cx="849.23" cy="276.97" r="3.62"/><path class="route-glyph" d="M 852.72 280.29 L 844.92 275.99 L 848.99 272.55 Z"/><circle class="route-method-seed" cx="845.77" cy="280.60" r="1.15"/><circle class="route-method-get" cx="849.23" cy="276.97" r="0"/>      <title>GET /admin/denuncias
+handler=admin_reports_queue
+module=examples/sigilo_rotas_constelacao_35.cct
+middleware=staff,moderation,trace
+route_id=admin.reports.queue
+source=native
+route_hash=d560cf8edc18575d</title>
+    </g>
+    <g id="route_node_admin_media_approve" class="route-wrap" data-route-id="admin.media.approve" data-method="POST" data-path="/admin/media/:id/aprovar" data-handler="admin_media_approve" data-module="examples/sigilo_rotas_constelacao_35.cct" data-group="/admin" data-middleware-chain="staff,csrf,moderation" data-source-origin="native" data-path-params="id" data-route-hash="d487b854dc8c498b">
+<circle class="route-shell" cx="789.52" cy="308.39" r="18.24"/><path class="route-mid" d="M 799.06 315.71 A 12.03 12.03 0 0 1 778.32 312.79"/><path class="route-arc" d="M 797.59 296.36 A 14.48 14.48 0 0 1 803.57 304.87"/><path class="route-spoke" d="M 789.98 313.71 Q 787.54 308.33 789.13 321.85"/><path class="route-spoke" d="M 790.25 303.55 Q 791.50 308.43 789.89 294.83"/><path class="route-chord" d="M 792.24 321.64 Q 790.13 308.63 778.45 301.89"/><circle class="route-core" cx="790.13" cy="308.63" r="4.84"/><path class="route-glyph" d="M 789.99 314.67 L 786.92 304.00 L 794.48 305.05 Z"/><circle class="route-method-seed" cx="783.89" cy="308.48" r="1.00"/><circle class="route-method-post" cx="790.13" cy="308.63" r="0"/>      <title>POST /admin/media/:id/aprovar
+handler=admin_media_approve
+module=examples/sigilo_rotas_constelacao_35.cct
+middleware=staff,csrf,moderation
+route_id=admin.media.approve
+source=native
+route_hash=d487b854dc8c498b</title>
+    </g>
+  </g>
+  <g id="route_cluster_api" class="route-cluster">
+    <title>route group
+group=/api
+routes=3</title>
+    <circle class="cluster-orbit" cx="874.31" cy="496.64" r="104.50"/>
+    <text class="cluster-label" x="1006.68" y="499.62" text-anchor="middle">/api</text>
+    <text class="cluster-summary" x="1006.68" y="512.62" text-anchor="middle">routes=3</text>
+    <g class="route-weave-wrap">
+      <title>group anchor
+group=/api
+anchor=api.metrics.ingest</title>
+    <path class="route-link" d="M 874.31 496.64 Q 847.78 503.33 838.60 541.55"/>
+    </g>
+    <g class="route-weave-wrap">
+      <title>route hierarchy
+api.metrics.ingest -&gt; api.contos.search
+group=/api</title>
+    <path class="route-weave" d="M 838.60 541.55 Q 873.17 537.28 933.33 544.37"/>
+    </g>
+    <g class="route-weave-wrap">
+      <title>route hierarchy
+api.metrics.ingest -&gt; api.media.inspect
+group=/api</title>
+    <path class="route-weave" d="M 838.60 541.55 Q 861.23 536.68 891.29 558.81"/>
+    </g>
+    <g id="route_node_api_contos_search" class="route-wrap" data-route-id="api.contos.search" data-method="GET" data-path="/api/contos/busca" data-handler="api_contos_search" data-module="examples/sigilo_rotas_constelacao_35.cct" data-group="/api" data-middleware-chain="api,trace,cache" data-source-origin="native" data-path-params="none" data-route-hash="d94c994e415412d0">
+<circle class="route-shell" cx="933.33" cy="544.37" r="15.38"/><path class="route-mid" d="M 944.49 542.16 A 11.37 11.37 0 0 1 931.52 555.60"/><path class="route-arc" d="M 938.33 532.09 A 13.26 13.26 0 0 1 946.43 542.29"/><path class="route-arc" d="M 935.46 530.55 A 13.99 13.99 0 0 1 946.30 539.13"/><path class="route-spoke" d="M 935.09 548.04 Q 932.06 545.43 940.17 553.04"/><path class="route-spoke" d="M 928.13 545.10 Q 933.20 542.72 922.95 545.36"/><path class="route-spoke" d="M 934.10 540.87 Q 934.85 545.05 938.12 534.20"/><path class="route-chord" d="M 944.07 551.48 Q 932.37 544.77 921.16 544.60"/><circle class="route-core" cx="932.37" cy="544.77" r="4.06"/><path class="route-glyph" d="M 935.55 548.95 L 927.56 544.13 L 933.18 539.98 Z"/><circle class="route-method-seed" cx="928.03" cy="548.07" r="1.53"/><circle class="route-method-get" cx="932.37" cy="544.77" r="0"/>      <title>GET /api/contos/busca
+handler=api_contos_search
+module=examples/sigilo_rotas_constelacao_35.cct
+middleware=api,trace,cache
+route_id=api.contos.search
+source=native
+route_hash=d94c994e415412d0</title>
+    </g>
+    <g id="route_node_api_media_inspect" class="route-wrap" data-route-id="api.media.inspect" data-method="GET" data-path="/api/media/:id" data-handler="api_media_inspect" data-module="examples/sigilo_rotas_constelacao_35.cct" data-group="/api" data-middleware-chain="api,auth,trace" data-source-origin="native" data-path-params="id" data-route-hash="1a7def6932ebe1b0">
+<circle class="route-shell" cx="891.29" cy="558.81" r="12.07"/><path class="route-mid" d="M 897.58 564.46 A 8.46 8.46 0 0 1 883.23 561.38"/><path class="route-arc" d="M 885.82 548.89 A 11.33 11.33 0 0 1 891.39 547.48"/><path class="route-spoke" d="M 890.53 562.24 Q 890.08 558.61 889.93 567.35"/><path class="route-spoke" d="M 891.75 555.76 Q 892.48 559.07 893.27 551.47"/><path class="route-chord" d="M 887.18 567.88 Q 891.06 558.98 887.48 550.36"/><circle class="route-core" cx="891.06" cy="558.98" r="3.14"/><path class="route-glyph" d="M 890.05 563.21 L 889.90 555.21 L 894.48 557.02 Z"/><circle class="route-method-seed" cx="886.64" cy="557.93" r="1.26"/><circle class="route-method-get" cx="891.06" cy="558.98" r="0"/>      <title>GET /api/media/:id
+handler=api_media_inspect
+module=examples/sigilo_rotas_constelacao_35.cct
+middleware=api,auth,trace
+route_id=api.media.inspect
+source=native
+route_hash=1a7def6932ebe1b0</title>
+    </g>
+    <g id="route_node_api_metrics_ingest" class="route-wrap" data-route-id="api.metrics.ingest" data-method="POST" data-path="/api/metrics" data-handler="api_metrics_ingest" data-module="examples/sigilo_rotas_constelacao_35.cct" data-group="/api" data-middleware-chain="api,signature,rate" data-source-origin="native" data-path-params="none" data-route-hash="641cb323705384d7">
+<circle class="route-shell" cx="838.60" cy="541.55" r="13.57"/><path class="route-mid" d="M 839.34 550.05 A 8.53 8.53 0 0 1 830.53 538.82"/><path class="route-arc" d="M 826.86 539.36 A 11.95 11.95 0 0 1 830.04 533.21"/><path class="route-arc" d="M 848.80 537.85 A 10.85 10.85 0 0 1 848.85 545.12"/><path class="route-spoke" d="M 833.31 544.20 Q 837.98 540.31 830.14 546.47"/><path class="route-spoke" d="M 838.09 537.26 Q 839.99 541.69 839.66 530.83"/><path class="route-spoke" d="M 841.83 544.31 Q 837.94 542.78 846.74 545.62"/><path class="route-chord" d="M 831.21 548.33 Q 837.60 542.04 837.88 532.25"/><circle class="route-core" cx="837.60" cy="542.04" r="4.58"/><path class="route-glyph" d="M 832.54 544.82 L 839.95 537.20 L 842.96 542.35 Z"/><circle class="route-method-seed" cx="834.71" cy="536.80" r="1.17"/><circle class="route-method-post" cx="837.60" cy="542.04" r="0"/>      <title>POST /api/metrics
+handler=api_metrics_ingest
+module=examples/sigilo_rotas_constelacao_35.cct
+middleware=api,signature,rate
+route_id=api.metrics.ingest
+source=native
+route_hash=641cb323705384d7</title>
+    </g>
+  </g>
+  <g id="route_cluster_auth" class="route-cluster">
+    <title>route group
+group=/auth
+routes=3</title>
+    <circle class="cluster-orbit" cx="766.08" cy="731.84" r="102.55"/>
+    <text class="cluster-label" x="851.48" y="827.58" text-anchor="middle">/auth</text>
+    <text class="cluster-summary" x="851.48" y="840.58" text-anchor="middle">routes=3</text>
+    <g class="route-weave-wrap">
+      <title>group anchor
+group=/auth
+anchor=auth.login.view</title>
+    <path class="route-link" d="M 766.08 731.84 Q 753.42 774.92 775.68 809.27"/>
+    </g>
+    <g class="route-weave-wrap">
+      <title>route hierarchy
+auth.login.view -&gt; auth.login.submit
+group=/auth</title>
+    <path class="route-weave" d="M 775.68 809.27 Q 735.55 793.07 720.19 789.92"/>
+    </g>
+    <g class="route-weave-wrap">
+      <title>route hierarchy
+auth.login.view -&gt; auth.logout
+group=/auth</title>
+    <path class="route-weave" d="M 775.68 809.27 Q 747.03 757.52 719.79 733.73"/>
+    </g>
+    <g id="route_node_auth_login_view" class="route-wrap" data-route-id="auth.login.view" data-method="GET" data-path="/entrar" data-handler="auth_login_view" data-module="examples/sigilo_rotas_constelacao_35.cct" data-group="/auth" data-middleware-chain="guest,trace" data-source-origin="native" data-path-params="none" data-route-hash="705bdb1aa55820da">
+<circle class="route-shell" cx="775.68" cy="809.27" r="11.28"/><path class="route-mid" d="M 782.91 810.52 A 7.34 7.34 0 0 1 771.87 815.54"/><path class="route-arc" d="M 767.33 804.79 A 9.48 9.48 0 0 1 777.10 799.90"/><path class="route-arc" d="M 765.63 809.70 A 10.05 10.05 0 0 1 770.49 800.66"/><path class="route-spoke" d="M 776.95 812.37 Q 774.48 809.64 778.00 816.72"/><path class="route-spoke" d="M 772.96 808.12 Q 776.13 808.10 768.89 806.74"/><path class="route-spoke" d="M 778.38 807.09 Q 776.52 810.19 781.44 804.98"/><path class="route-chord" d="M 780.26 816.83 Q 775.99 809.28 768.26 805.93"/><circle class="route-core" cx="775.99" cy="809.28" r="3.09"/><path class="route-glyph" d="M 777.03 813.44 L 772.67 807.26 L 777.85 805.87 Z"/><circle class="route-method-seed" cx="771.64" cy="810.37" r="1.33"/><circle class="route-method-get" cx="775.99" cy="809.28" r="0"/>      <title>GET /entrar
+handler=auth_login_view
+module=examples/sigilo_rotas_constelacao_35.cct
+middleware=guest,trace
+route_id=auth.login.view
+source=native
+route_hash=705bdb1aa55820da</title>
+    </g>
+    <g id="route_node_auth_login_submit" class="route-wrap" data-route-id="auth.login.submit" data-method="POST" data-path="/entrar" data-handler="auth_login_submit" data-module="examples/sigilo_rotas_constelacao_35.cct" data-group="/auth" data-middleware-chain="csrf,trace" data-source-origin="native" data-path-params="none" data-route-hash="ce6bdb2e2cfd50fe">
+<circle class="route-shell" cx="720.19" cy="789.92" r="13.47"/><path class="route-mid" d="M 724.18 797.78 A 8.82 8.82 0 0 1 711.51 788.39"/><path class="route-arc" d="M 731.36 790.98 A 11.22 11.22 0 0 1 727.51 798.42"/><path class="route-spoke" d="M 716.33 793.46 Q 719.19 788.91 714.10 796.68"/><path class="route-spoke" d="M 718.22 785.61 Q 721.55 789.48 716.95 780.74"/><path class="route-spoke" d="M 724.34 790.95 Q 719.94 791.32 728.58 791.68"/><path class="route-chord" d="M 712.38 796.65 Q 719.68 790.11 722.19 780.51"/><circle class="route-core" cx="719.68" cy="790.11" r="4.51"/><path class="route-glyph" d="M 715.87 794.37 L 720.63 784.89 L 724.98 789.91 Z"/><circle class="route-method-seed" cx="715.28" cy="786.18" r="1.27"/><circle class="route-method-post" cx="719.68" cy="790.11" r="0"/>      <title>POST /entrar
+handler=auth_login_submit
+module=examples/sigilo_rotas_constelacao_35.cct
+middleware=csrf,trace
+route_id=auth.login.submit
+source=native
+route_hash=ce6bdb2e2cfd50fe</title>
+    </g>
+    <g id="route_node_auth_logout" class="route-wrap" data-route-id="auth.logout" data-method="POST" data-path="/sair" data-handler="auth_logout" data-module="examples/sigilo_rotas_constelacao_35.cct" data-group="/auth" data-middleware-chain="auth,csrf" data-source-origin="native" data-path-params="none" data-route-hash="a3dea18aa25f2ca7">
+<circle class="route-shell" cx="719.79" cy="733.73" r="16.37"/><path class="route-mid" d="M 713.31 741.80 A 10.35 10.35 0 0 1 716.46 723.94"/><path class="route-arc" d="M 723.85 719.92 A 14.40 14.40 0 0 1 733.97 731.19"/><path class="route-spoke" d="M 714.46 734.01 Q 719.99 732.10 707.62 732.17"/><path class="route-spoke" d="M 723.10 730.44 Q 721.09 734.75 728.09 724.46"/><path class="route-spoke" d="M 721.50 739.76 Q 718.24 734.26 724.10 746.82"/><path class="route-chord" d="M 707.99 734.83 Q 719.79 734.67 727.65 725.82"/><circle class="route-core" cx="719.79" cy="734.67" r="5.12"/><path class="route-glyph" d="M 713.59 733.44 L 725.39 732.78 L 722.69 739.82 Z"/><circle class="route-method-seed" cx="721.05" cy="728.27" r="1.76"/><circle class="route-method-post" cx="719.79" cy="734.67" r="0"/>      <title>POST /sair
+handler=auth_logout
+module=examples/sigilo_rotas_constelacao_35.cct
+middleware=auth,csrf
+route_id=auth.logout
+source=native
+route_hash=a3dea18aa25f2ca7</title>
+    </g>
+  </g>
+  <g id="route_cluster_chat" class="route-cluster">
+    <title>route group
+group=/chat
+routes=3</title>
+    <circle class="cluster-orbit" cx="520.46" cy="816.52" r="109.88"/>
+    <text class="cluster-label" x="508.34" y="950.86" text-anchor="middle">/chat</text>
+    <text class="cluster-summary" x="508.34" y="963.86" text-anchor="middle">routes=3</text>
+    <g class="route-weave-wrap">
+      <title>group anchor
+group=/chat
+anchor=chat.rooms</title>
+    <path class="route-link" d="M 520.46 816.52 Q 477.60 840.08 468.55 875.98"/>
+    </g>
+    <g class="route-weave-wrap">
+      <title>route hierarchy
+chat.rooms -&gt; chat.room.show
+group=/chat</title>
+    <path class="route-weave" d="M 468.55 875.98 Q 476.19 842.66 462.99 828.05"/>
+    </g>
+    <g class="route-weave-wrap">
+      <title>route hierarchy
+chat.room.show -&gt; chat.room.post
+group=/chat</title>
+    <path class="route-weave" d="M 462.99 828.05 Q 477.39 820.32 487.26 784.95"/>
+    </g>
+    <g id="route_node_chat_rooms" class="route-wrap" data-route-id="chat.rooms" data-method="GET" data-path="/chat/salas" data-handler="chat_rooms" data-module="examples/sigilo_rotas_constelacao_35.cct" data-group="/chat" data-middleware-chain="auth,trace" data-source-origin="native" data-path-params="none" data-route-hash="9a7b4af8ae3fec3a">
+<circle class="route-shell" cx="468.55" cy="875.98" r="17.69"/><path class="route-mid" d="M 476.31 885.89 A 12.58 12.58 0 0 1 456.44 879.36"/><path class="route-arc" d="M 455.23 866.25 A 16.50 16.50 0 0 1 471.68 859.78"/><path class="route-arc" d="M 458.99 865.66 A 14.07 14.07 0 0 1 464.24 862.58"/><path class="route-spoke" d="M 467.03 879.99 Q 466.76 875.38 464.40 888.46"/><path class="route-spoke" d="M 470.53 870.23 Q 470.32 876.66 473.22 863.64"/><path class="route-chord" d="M 465.32 889.68 Q 468.68 875.08 459.48 866.15"/><circle class="route-core" cx="468.68" cy="875.08" r="4.94"/><path class="route-glyph" d="M 466.58 880.84 L 466.11 869.95 L 473.17 871.50 Z"/><circle class="route-method-seed" cx="462.73" cy="872.91" r="1.17"/><circle class="route-method-get" cx="468.68" cy="875.08" r="0"/>      <title>GET /chat/salas
+handler=chat_rooms
+module=examples/sigilo_rotas_constelacao_35.cct
+middleware=auth,trace
+route_id=chat.rooms
+source=native
+route_hash=9a7b4af8ae3fec3a</title>
+    </g>
+    <g id="route_node_chat_room_show" class="route-wrap" data-route-id="chat.room.show" data-method="GET" data-path="/chat/salas/:id" data-handler="chat_room_show" data-module="examples/sigilo_rotas_constelacao_35.cct" data-group="/chat" data-middleware-chain="auth,trace" data-source-origin="native" data-path-params="id" data-route-hash="99519cbb21c7a8a8">
+<circle class="route-shell" cx="462.99" cy="828.05" r="13.52"/><path class="route-mid" d="M 454.51 832.25 A 9.46 9.46 0 0 1 463.29 818.59"/><path class="route-arc" d="M 472.74 835.73 A 12.41 12.41 0 0 1 468.71 839.06"/><path class="route-arc" d="M 466.36 838.93 A 11.39 11.39 0 0 1 453.80 834.78"/><path class="route-spoke" d="M 459.73 826.15 Q 463.55 826.77 453.32 824.20"/><path class="route-spoke" d="M 467.90 825.57 Q 463.73 829.23 472.28 823.02"/><path class="route-spoke" d="M 464.20 832.63 Q 461.59 828.12 463.45 839.13"/><path class="route-chord" d="M 452.80 824.00 Q 463.97 828.01 473.22 827.30"/><circle class="route-core" cx="463.97" cy="828.01" r="4.41"/><path class="route-glyph" d="M 459.02 825.37 L 469.07 826.97 L 466.65 832.48 Z"/><circle class="route-method-seed" cx="466.70" cy="822.89" r="1.09"/><circle class="route-method-get" cx="463.97" cy="828.01" r="0"/>      <title>GET /chat/salas/:id
+handler=chat_room_show
+module=examples/sigilo_rotas_constelacao_35.cct
+middleware=auth,trace
+route_id=chat.room.show
+source=native
+route_hash=99519cbb21c7a8a8</title>
+    </g>
+    <g id="route_node_chat_room_post" class="route-wrap" data-route-id="chat.room.post" data-method="POST" data-path="/chat/salas/:id/mensagens" data-handler="chat_room_post" data-module="examples/sigilo_rotas_constelacao_35.cct" data-group="/chat" data-middleware-chain="auth,csrf,rate" data-source-origin="native" data-path-params="id" data-route-hash="bd9d46626b04e6ff">
+<circle class="route-shell" cx="487.26" cy="784.95" r="15.81"/><path class="route-mid" d="M 477.37 784.97 A 9.89 9.89 0 0 1 491.05 775.82"/><path class="route-arc" d="M 487.07 771.67 A 13.29 13.29 0 0 1 496.66 775.55"/><path class="route-spoke" d="M 483.80 781.28 Q 488.58 783.97 480.27 774.36"/><path class="route-spoke" d="M 489.94 789.90 Q 485.90 785.87 494.49 795.06"/><path class="route-chord" d="M 480.68 775.66 Q 486.98 785.51 497.89 786.12"/><circle class="route-core" cx="486.98" cy="785.51" r="5.04"/><path class="route-glyph" d="M 483.19 780.55 L 492.72 786.61 L 487.79 791.30 Z"/><circle class="route-method-seed" cx="492.10" cy="781.60" r="1.22"/><circle class="route-method-post" cx="486.98" cy="785.51" r="0"/>      <title>POST /chat/salas/:id/mensagens
+handler=chat_room_post
+module=examples/sigilo_rotas_constelacao_35.cct
+middleware=auth,csrf,rate
+route_id=chat.room.post
+source=native
+route_hash=bd9d46626b04e6ff</title>
+    </g>
+  </g>
+  <g id="route_cluster_contos" class="route-cluster">
+    <title>route group
+group=/contos
+routes=4</title>
+    <circle class="cluster-orbit" cx="319.41" cy="726.61" r="104.81"/>
+    <text class="cluster-label" x="228.31" y="820.24" text-anchor="middle">/contos</text>
+    <text class="cluster-summary" x="228.31" y="833.24" text-anchor="middle">routes=4</text>
+    <g class="route-weave-wrap">
+      <title>group anchor
+group=/contos
+anchor=contos.feed</title>
+    <path class="route-link" d="M 319.41 726.61 Q 286.06 716.28 248.75 741.73"/>
+    </g>
+    <g class="route-weave-wrap">
+      <title>route hierarchy
+contos.feed -&gt; contos.create
+group=/contos</title>
+    <path class="route-weave" d="M 248.75 741.73 Q 260.44 729.05 244.72 710.67"/>
+    </g>
+    <g class="route-weave-wrap">
+      <title>route hierarchy
+contos.feed -&gt; contos.show
+group=/contos</title>
+    <path class="route-weave" d="M 248.75 741.73 Q 264.05 716.45 278.56 663.19"/>
+    </g>
+    <g class="route-weave-wrap">
+      <title>route hierarchy
+contos.show -&gt; contos.react
+group=/contos</title>
+    <path class="route-weave" d="M 278.56 663.19 Q 286.03 665.73 320.78 674.58"/>
+    </g>
+    <g id="route_node_contos_feed" class="route-wrap" data-route-id="contos.feed" data-method="GET" data-path="/contos" data-handler="contos_feed" data-module="examples/sigilo_rotas_constelacao_35.cct" data-group="/contos" data-middleware-chain="trace" data-source-origin="native" data-path-params="none" data-route-hash="8a583f95dd294fbd">
+<circle class="route-shell" cx="248.75" cy="741.73" r="12.34"/><path class="route-mid" d="M 242.44 747.46 A 8.53 8.53 0 0 1 243.70 734.86"/><path class="route-arc" d="M 253.99 750.58 A 10.29 10.29 0 0 1 245.45 751.47"/><path class="route-spoke" d="M 244.79 740.65 Q 248.97 740.38 239.55 740.43"/><path class="route-spoke" d="M 252.02 738.07 Q 249.78 742.63 254.36 735.66"/><path class="route-spoke" d="M 251.12 745.25 Q 247.54 742.35 252.34 750.07"/><path class="route-chord" d="M 238.73 741.34 Q 249.12 741.35 255.66 735.45"/><circle class="route-core" cx="249.12" cy="741.35" r="4.17"/><path class="route-glyph" d="M 243.78 740.76 L 253.29 738.64 L 253.03 744.42 Z"/><circle class="route-method-seed" cx="249.73" cy="735.81" r="1.67"/><circle class="route-method-get" cx="249.12" cy="741.35" r="0"/>      <title>GET /contos
+handler=contos_feed
+module=examples/sigilo_rotas_constelacao_35.cct
+middleware=trace
+route_id=contos.feed
+source=native
+route_hash=8a583f95dd294fbd</title>
+    </g>
+    <g id="route_node_contos_create" class="route-wrap" data-route-id="contos.create" data-method="POST" data-path="/contos" data-handler="contos_create" data-module="examples/sigilo_rotas_constelacao_35.cct" data-group="/contos" data-middleware-chain="auth,csrf,moderation" data-source-origin="native" data-path-params="none" data-route-hash="6652fa68c8deb2b4">
+<circle class="route-shell" cx="244.72" cy="710.67" r="15.78"/><path class="route-mid" d="M 238.56 718.94 A 10.32 10.32 0 0 1 239.05 702.05"/><path class="route-arc" d="M 231.44 714.95 A 13.96 13.96 0 0 1 236.11 699.69"/><path class="route-spoke" d="M 239.47 710.73 Q 244.96 709.04 231.90 708.94"/><path class="route-spoke" d="M 246.14 707.55 Q 246.14 711.51 250.80 700.57"/><path class="route-spoke" d="M 245.94 715.29 Q 243.27 711.44 250.76 721.13"/><path class="route-chord" d="M 233.91 705.90 Q 243.87 711.37 255.53 708.05"/><circle class="route-core" cx="243.87" cy="711.37" r="4.23"/><path class="route-glyph" d="M 238.46 710.85 L 248.41 709.21 L 247.24 715.10 Z"/><circle class="route-method-seed" cx="244.40" cy="705.76" r="1.54"/><circle class="route-method-post" cx="243.87" cy="711.37" r="0"/>      <title>POST /contos
+handler=contos_create
+module=examples/sigilo_rotas_constelacao_35.cct
+middleware=auth,csrf,moderation
+route_id=contos.create
+source=native
+route_hash=6652fa68c8deb2b4</title>
+    </g>
+    <g id="route_node_contos_show" class="route-wrap" data-route-id="contos.show" data-method="GET" data-path="/contos/:slug" data-handler="contos_show" data-module="examples/sigilo_rotas_constelacao_35.cct" data-group="/contos" data-middleware-chain="trace" data-source-origin="native" data-path-params="slug" data-route-hash="4fc2076f3ce41416">
+<circle class="route-shell" cx="278.56" cy="663.19" r="11.47"/><path class="route-mid" d="M 271.32 661.12 A 7.53 7.53 0 0 1 284.92 659.17"/><path class="route-arc" d="M 280.20 672.96 A 9.91 9.91 0 0 1 271.04 669.65"/><path class="route-spoke" d="M 277.52 658.81 Q 279.82 663.09 277.98 656.30"/><path class="route-spoke" d="M 278.48 667.14 Q 277.30 663.38 279.56 670.57"/><path class="route-chord" d="M 276.74 654.35 Q 277.84 662.99 285.36 667.99"/><circle class="route-core" cx="277.84" cy="662.99" r="3.99"/><path class="route-glyph" d="M 277.13 657.85 L 281.87 665.59 L 274.89 666.77 Z"/><circle class="route-method-seed" cx="283.19" cy="662.25" r="1.07"/><circle class="route-method-get" cx="277.84" cy="662.99" r="0"/>      <title>GET /contos/:slug
+handler=contos_show
+module=examples/sigilo_rotas_constelacao_35.cct
+middleware=trace
+route_id=contos.show
+source=native
+route_hash=4fc2076f3ce41416</title>
+    </g>
+    <g id="route_node_contos_react" class="route-wrap" data-route-id="contos.react" data-method="POST" data-path="/contos/:slug/reagir" data-handler="contos_react" data-module="examples/sigilo_rotas_constelacao_35.cct" data-group="/contos" data-middleware-chain="auth,csrf" data-source-origin="native" data-path-params="slug" data-route-hash="bd631eb8e59a4bae">
+<circle class="route-shell" cx="320.78" cy="674.58" r="13.64"/><path class="route-mid" d="M 317.04 666.50 A 8.90 8.90 0 0 1 329.65 673.80"/><path class="route-arc" d="M 330.57 669.47 A 11.05 11.05 0 0 1 330.16 680.41"/><path class="route-spoke" d="M 321.13 671.31 Q 322.21 675.00 323.25 664.98"/><path class="route-spoke" d="M 318.37 679.30 Q 319.39 674.03 317.00 684.03"/><path class="route-chord" d="M 327.63 666.75 Q 319.93 675.36 320.90 684.28"/><circle class="route-core" cx="319.93" cy="675.36" r="4.03"/><path class="route-glyph" d="M 321.79 670.48 L 322.21 679.61 L 316.02 678.20 Z"/><circle class="route-method-seed" cx="325.00" cy="677.30" r="1.33"/><circle class="route-method-post" cx="319.93" cy="675.36" r="0"/>      <title>POST /contos/:slug/reagir
+handler=contos_react
+module=examples/sigilo_rotas_constelacao_35.cct
+middleware=auth,csrf
+route_id=contos.react
+source=native
+route_hash=bd631eb8e59a4bae</title>
+    </g>
+  </g>
+  <g id="route_cluster_media" class="route-cluster">
+    <title>route group
+group=/media
+routes=3</title>
+    <circle class="cluster-orbit" cx="215.66" cy="484.04" r="102.10"/>
+    <text class="cluster-label" x="85.56" y="481.84" text-anchor="middle">/media</text>
+    <text class="cluster-summary" x="85.56" y="494.84" text-anchor="middle">routes=3</text>
+    <g class="route-weave-wrap">
+      <title>group anchor
+group=/media
+anchor=media.upload.video</title>
+    <path class="route-link" d="M 215.66 484.04 Q 246.07 468.51 248.28 430.60"/>
+    </g>
+    <g class="route-weave-wrap">
+      <title>route hierarchy
+media.upload.video -&gt; media.upload.image
+group=/media</title>
+    <path class="route-weave" d="M 248.28 430.60 Q 191.08 435.49 161.56 436.23"/>
+    </g>
+    <g class="route-weave-wrap">
+      <title>route hierarchy
+media.upload.image -&gt; media.thumb
+group=/media</title>
+    <path class="route-weave" d="M 161.56 436.23 Q 167.30 429.05 198.80 410.92"/>
+    </g>
+    <g id="route_node_media_upload_image" class="route-wrap" data-route-id="media.upload.image" data-method="POST" data-path="/media/imagens" data-handler="media_upload_image" data-module="examples/sigilo_rotas_constelacao_35.cct" data-group="/media" data-middleware-chain="auth,csrf,quota" data-source-origin="native" data-path-params="none" data-route-hash="939832ab4471e03c">
+<circle class="route-shell" cx="161.56" cy="436.23" r="13.32"/><path class="route-mid" d="M 153.40 436.64 A 8.18 8.18 0 0 1 163.19 428.21"/><path class="route-arc" d="M 165.44 426.07 A 10.87 10.87 0 0 1 171.94 432.98"/><path class="route-arc" d="M 154.08 428.04 A 11.09 11.09 0 0 1 164.63 425.57"/><path class="route-spoke" d="M 159.28 434.38 Q 162.40 435.17 153.71 430.70"/><path class="route-spoke" d="M 165.08 439.77 Q 160.57 437.14 168.40 443.51"/><path class="route-chord" d="M 153.74 430.53 Q 162.39 436.84 170.15 433.61"/><circle class="route-core" cx="162.39" cy="436.84" r="3.78"/><path class="route-glyph" d="M 158.75 433.44 L 166.97 436.99 L 163.58 441.27 Z"/><circle class="route-method-seed" cx="165.93" cy="433.05" r="1.66"/><circle class="route-method-post" cx="162.39" cy="436.84" r="0"/>      <title>POST /media/imagens
+handler=media_upload_image
+module=examples/sigilo_rotas_constelacao_35.cct
+middleware=auth,csrf,quota
+route_id=media.upload.image
+source=native
+route_hash=939832ab4471e03c</title>
+    </g>
+    <g id="route_node_media_thumb" class="route-wrap" data-route-id="media.thumb" data-method="GET" data-path="/media/thumb/:id" data-handler="media_thumb" data-module="examples/sigilo_rotas_constelacao_35.cct" data-group="/media" data-middleware-chain="trace,cache" data-source-origin="native" data-path-params="id" data-route-hash="521d4adf6af09ed9">
+<circle class="route-shell" cx="198.80" cy="410.92" r="14.69"/><path class="route-mid" d="M 191.41 403.53 A 10.46 10.46 0 0 1 209.26 411.14"/><path class="route-arc" d="M 211.37 408.38 A 12.82 12.82 0 0 1 208.47 419.34"/><path class="route-arc" d="M 207.67 402.12 A 12.50 12.50 0 0 1 211.19 412.57"/><path class="route-spoke" d="M 200.31 405.39 Q 200.16 411.58 203.10 400.52"/><path class="route-spoke" d="M 201.36 413.58 Q 197.65 411.90 205.72 418.85"/><path class="route-spoke" d="M 193.31 410.70 Q 198.53 409.44 188.57 413.03"/><path class="route-chord" d="M 201.55 399.29 Q 198.16 409.83 205.01 420.32"/><circle class="route-core" cx="198.16" cy="409.83" r="4.69"/><path class="route-glyph" d="M 200.56 404.44 L 200.42 414.84 L 193.65 412.96 Z"/><circle class="route-method-seed" cx="203.73" cy="412.30" r="1.68"/><circle class="route-method-get" cx="198.16" cy="409.83" r="0"/>      <title>GET /media/thumb/:id
+handler=media_thumb
+module=examples/sigilo_rotas_constelacao_35.cct
+middleware=trace,cache
+route_id=media.thumb
+source=native
+route_hash=521d4adf6af09ed9</title>
+    </g>
+    <g id="route_node_media_upload_video" class="route-wrap" data-route-id="media.upload.video" data-method="POST" data-path="/media/videos" data-handler="media_upload_video" data-module="examples/sigilo_rotas_constelacao_35.cct" data-group="/media" data-middleware-chain="auth,csrf,quota,transcode" data-source-origin="native" data-path-params="none" data-route-hash="13ae8c39e8d7bd7d">
+<circle class="route-shell" cx="248.28" cy="430.60" r="19.64"/><path class="route-mid" d="M 243.54 417.70 A 13.75 13.75 0 0 1 262.01 429.82"/><path class="route-arc" d="M 260.49 441.37 A 16.28 16.28 0 0 1 249.23 446.85"/><path class="route-spoke" d="M 251.14 427.45 Q 249.77 431.90 258.24 418.35"/><path class="route-spoke" d="M 243.83 435.50 Q 246.85 429.24 236.57 441.61"/><path class="route-chord" d="M 257.51 418.46 Q 247.56 431.55 250.09 445.03"/><circle class="route-core" cx="247.56" cy="431.55" r="5.18"/><path class="route-glyph" d="M 251.53 426.55 L 247.56 437.53 L 241.97 433.68 Z"/><circle class="route-method-seed" cx="252.72" cy="435.64" r="1.61"/><circle class="route-method-post" cx="247.56" cy="431.55" r="0"/>      <title>POST /media/videos
+handler=media_upload_video
+module=examples/sigilo_rotas_constelacao_35.cct
+middleware=auth,csrf,quota,transcode
+route_id=media.upload.video
+source=native
+route_hash=13ae8c39e8d7bd7d</title>
+    </g>
+  </g>
+  <g id="route_cluster_perfil" class="route-cluster">
+    <title>route group
+group=/perfil
+routes=2</title>
+    <circle class="cluster-orbit" cx="321.11" cy="240.05" r="90.47"/>
+    <text class="cluster-label" x="239.69" y="150.99" text-anchor="middle">/perfil</text>
+    <text class="cluster-summary" x="239.69" y="163.99" text-anchor="middle">routes=2</text>
+    <g class="route-weave-wrap">
+      <title>group anchor
+group=/perfil
+anchor=perfil.show</title>
+    <path class="route-link" d="M 321.11 240.05 Q 336.41 216.25 319.89 175.62"/>
+    </g>
+    <g class="route-weave-wrap">
+      <title>route hierarchy
+perfil.show -&gt; perfil.media
+group=/perfil</title>
+    <path class="route-weave" d="M 319.89 175.62 Q 348.20 193.39 366.61 237.34"/>
+    </g>
+    <g id="route_node_perfil_show" class="route-wrap" data-route-id="perfil.show" data-method="GET" data-path="/perfil/:slug" data-handler="perfil_show" data-module="examples/sigilo_rotas_constelacao_35.cct" data-group="/perfil" data-middleware-chain="auth,trace" data-source-origin="native" data-path-params="slug" data-route-hash="bfdbabfadad23d52">
+<circle class="route-shell" cx="319.89" cy="175.62" r="13.47"/><path class="route-mid" d="M 316.54 167.40 A 8.88 8.88 0 0 1 328.48 173.39"/><path class="route-arc" d="M 324.15 165.08 A 11.37 11.37 0 0 1 331.21 176.63"/><path class="route-spoke" d="M 321.43 171.63 Q 321.10 176.33 325.00 167.49"/><path class="route-spoke" d="M 321.69 179.47 Q 318.72 176.41 325.20 184.02"/><path class="route-spoke" d="M 314.46 175.94 Q 319.79 174.22 309.87 176.22"/><path class="route-chord" d="M 327.44 168.51 Q 319.09 175.63 318.84 185.24"/><circle class="route-core" cx="319.09" cy="175.63" r="4.42"/><path class="route-glyph" d="M 321.71 170.66 L 319.36 180.83 L 313.99 176.73 Z"/><circle class="route-method-seed" cx="324.23" cy="178.34" r="1.02"/><circle class="route-method-get" cx="319.09" cy="175.63" r="0"/>      <title>GET /perfil/:slug
+handler=perfil_show
+module=examples/sigilo_rotas_constelacao_35.cct
+middleware=auth,trace
+route_id=perfil.show
+source=native
+route_hash=bfdbabfadad23d52</title>
+    </g>
+    <g id="route_node_perfil_media" class="route-wrap" data-route-id="perfil.media" data-method="GET" data-path="/perfil/:slug/midia" data-handler="perfil_media" data-module="examples/sigilo_rotas_constelacao_35.cct" data-group="/perfil" data-middleware-chain="auth,trace" data-source-origin="native" data-path-params="slug" data-route-hash="ca7cfbae247bf451">
+<circle class="route-shell" cx="366.61" cy="237.34" r="13.07"/><path class="route-mid" d="M 371.69 229.93 A 8.99 8.99 0 0 1 370.89 245.25"/><path class="route-arc" d="M 369.96 247.16 A 10.37 10.37 0 0 1 362.04 246.65"/><path class="route-arc" d="M 377.89 238.73 A 11.36 11.36 0 0 1 373.37 246.48"/><path class="route-spoke" d="M 371.90 237.50 Q 366.76 238.71 376.05 236.48"/><path class="route-spoke" d="M 362.67 238.69 Q 366.41 235.98 357.93 238.91"/><path class="route-chord" d="M 376.97 238.98 Q 367.27 237.99 358.94 243.42"/><circle class="route-core" cx="367.27" cy="237.99" r="4.44"/><path class="route-glyph" d="M 372.86 237.29 L 363.06 241.11 L 363.06 234.88 Z"/><circle class="route-method-seed" cx="368.00" cy="243.78" r="1.45"/><circle class="route-method-get" cx="367.27" cy="237.99" r="0"/>      <title>GET /perfil/:slug/midia
+handler=perfil_media
+module=examples/sigilo_rotas_constelacao_35.cct
+middleware=auth,trace
+route_id=perfil.media
+source=native
+route_hash=ca7cfbae247bf451</title>
+    </g>
+  </g>
+  <text class="hash" x="1070" y="876" text-anchor="end">9d5ba7b2613f5102</text>
+</svg>

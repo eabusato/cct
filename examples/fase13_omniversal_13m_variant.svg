@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <defs>
+    <style><![CDATA[
+      .bg { fill: #f5f0e4; }
+      .base { stroke: #2a221c; stroke-width: 1.60; fill: none; opacity: 0.78; }
+      .primary { stroke: #241913; stroke-width: 2.80; fill: none; stroke-linecap: round; stroke-linejoin: round; }
+      .call { stroke: #5b2a22; stroke-width: 2.0; fill: none; stroke-linecap: round; opacity: 0.9; }
+      .branch { stroke: #6b342d; stroke-width: 1.6; fill: none; stroke-linecap: round; }
+      .loop { stroke: #2d5f5a; stroke-width: 1.6; fill: none; stroke-linecap: round; }
+      .bind { stroke: #73493d; stroke-width: 1.4; fill: none; stroke-linecap: round; }
+      .term { stroke: #201814; stroke-width: 1.7; fill: none; stroke-linecap: round; }
+      .node-main { fill: #fffaf1; stroke: #201814; stroke-width: 2.0; }
+      .node-entry { fill: #efe6d4; stroke: #201814; stroke-width: 2.4; }
+      .node-aux { fill: #f6efe0; stroke: #4f4339; stroke-width: 1.3; }
+      .node-loop { fill: #edf3f1; stroke: #2d5f5a; stroke-width: 1.4; }
+      .node-term { fill: #f3e7e3; stroke: #5a2a23; stroke-width: 1.4; }
+      .orn { stroke: #355d58; stroke-width: 1.0; fill: none; opacity: 0.55; }
+      .hash { fill: #1f1a17; font: 10px monospace; letter-spacing: 0.8px; }
+      .label { fill: #1f1a17; font: 8px monospace; opacity: 0.7; }
+    ]]></style>
+  </defs>
+  <rect class="bg" x="0" y="0" width="512" height="512"/>
+  <g id="foundation">
+    <circle class="base" cx="256" cy="256" r="226"/>
+    <ellipse class="base" cx="256" cy="256" rx="198" ry="186.96" opacity="0.32"/>
+  </g>
+  <g id="primary_path">
+    <path class="primary" d="M 306.82 114.43 Q 333.16 228.10 398.13 325.03" stroke-width="3.20" opacity="0.96"/>
+    <path class="primary" d="M 398.13 325.03 Q 313.23 345.56 249.22 405.00" stroke-width="2.60" opacity="0.96"/>
+    <path class="primary" d="M 249.22 405.00 Q 182.34 331.78 92.70 289.39" stroke-width="2.60" opacity="0.96"/>
+  </g>
+  <g id="call_links">
+    <path class="call" d="M 306.82 114.43 Q 324.90 231.68 398.13 325.03" stroke-width="2.15" opacity="0.74"/>
+    <path class="call" d="M 306.82 114.43 Q 245.10 253.19 249.22 405.00" stroke-width="2.15" opacity="0.74"/>
+    <path class="call" d="M 306.82 114.43 Q 181.53 179.59 92.70 289.39" stroke-width="2.15" opacity="0.74"/>
+  </g>
+  <g id="branches">
+    <path class="branch" d="M 249.22 405.00 Q 270.46 394.10 274.81 370.62" stroke-width="1.70" opacity="0.85"/>
+    <path class="branch" d="M 274.81 370.62 Q 242.86 367.83 216.08 385.47" stroke-width="1.70" opacity="0.85"/>
+    <path class="branch" d="M 216.08 385.47 Q 227.30 404.31 249.22 405.00" stroke-width="1.45" opacity="0.85"/>
+    <path class="branch" d="M 92.70 289.39 Q 112.51 278.80 122.67 258.76" stroke-width="1.70" opacity="0.85"/>
+    <path class="branch" d="M 306.82 114.43 Q 285.82 122.02 272.24 139.73" stroke-width="1.70" opacity="0.85"/>
+    <path class="branch" d="M 261.10 254.17 Q 242.64 328.60 249.22 405.00" stroke-width="1.70" opacity="0.85"/>
+    <path class="branch" d="M 261.10 254.17 Q 175.30 264.13 92.70 289.39" stroke-width="1.70" opacity="0.85"/>
+    <path class="branch" d="M 261.10 254.17 Q 289.92 186.25 306.82 114.43" stroke-width="2.10" opacity="0.85"/>
+  </g>
+  <g id="loops">
+    <path class="loop" d="M 306.82 114.43 Q 301.41 96.29 288.57 82.38" stroke-width="1.55" opacity="0.88"/>
+    <path class="loop" d="M 292.33 82.38 C 326.23 62.67 330.13 84.50 314.51 73.58 C 298.90 84.50 302.80 62.67 285.75 83.88"/>
+    <path class="loop" d="M 306.82 114.43 Q 318.27 95.16 321.68 73.01" stroke-width="1.55" opacity="0.88"/>
+  </g>
+  <g id="bindings">
+    <path class="bind" d="M 398.13 325.03 Q 390.14 311.72 374.74 313.67" stroke-width="1.44" opacity="0.85"/>
+    <line class="bind" x1="391.70" y1="326.36" x2="395.20" y2="319.16" opacity="0.75"/>
+    <line class="bind" x1="388.93" y1="326.12" x2="393.30" y2="317.13" opacity="0.75"/>
+    <line class="bind" x1="387.02" y1="324.09" x2="390.52" y2="316.89" opacity="0.75"/>
+    <line class="bind" x1="379.85" y1="314.89" x2="385.69" y2="316.27" opacity="0.58"/>
+    <line class="bind" x1="371.21" y1="317.56" x2="365.17" y2="324.23" opacity="0.58"/>
+    <line class="bind" x1="371.05" y1="309.94" x2="366.83" y2="305.67" opacity="0.58"/>
+    <path class="bind" d="M 249.22 405.00 Q 255.34 392.26 250.40 379.02" stroke-width="1.68" opacity="0.85"/>
+    <line class="bind" x1="245.46" y1="399.62" x2="253.45" y2="399.98" opacity="0.75"/>
+    <line class="bind" x1="244.58" y1="396.98" x2="254.57" y2="397.43" opacity="0.75"/>
+    <line class="bind" x1="245.70" y1="394.42" x2="253.69" y2="394.79" opacity="0.75"/>
+    <line class="bind" x1="244.82" y1="391.78" x2="254.81" y2="392.24" opacity="0.75"/>
+    <line class="bind" x1="245.94" y1="389.23" x2="253.93" y2="389.59" opacity="0.75"/>
+    <line class="bind" x1="245.05" y1="386.59" x2="255.04" y2="387.04" opacity="0.75"/>
+    <line class="bind" x1="256.01" y1="377.98" x2="261.91" y2="376.89" opacity="0.58"/>
+    <line class="bind" x1="252.57" y1="384.29" x2="255.99" y2="392.62" opacity="0.58"/>
+    <line class="bind" x1="245.48" y1="381.89" x2="240.30" y2="384.92" opacity="0.58"/>
+    <line class="bind" x1="246.24" y1="375.13" x2="239.67" y2="368.97" opacity="0.58"/>
+    <line class="bind" x1="253.06" y1="373.98" x2="255.86" y2="368.67" opacity="0.58"/>
+    <path class="bind" d="M 92.70 289.39 Q 105.79 288.51 118.17 284.18" stroke-width="1.36" opacity="0.85"/>
+    <line class="bind" x1="96.99" y1="284.43" x2="98.59" y2="292.26" opacity="0.75"/>
+    <line class="bind" x1="99.34" y1="282.92" x2="101.34" y2="292.72" opacity="0.75"/>
+    <line class="bind" x1="123.23" y1="283.52" x2="129.18" y2="282.74" opacity="0.58"/>
+    <line class="bind" x1="113.21" y1="282.97" x2="104.47" y2="280.85" opacity="0.58"/>
+    <path class="bind" d="M 306.82 114.43 Q 301.23 126.23 298.03 138.90" stroke-width="1.80" opacity="0.85"/>
+    <line class="bind" x1="308.83" y1="120.67" x2="301.30" y2="117.97" opacity="0.75"/>
+    <line class="bind" x1="308.89" y1="123.46" x2="299.48" y2="120.08" opacity="0.75"/>
+    <line class="bind" x1="307.07" y1="125.57" x2="299.54" y2="122.86" opacity="0.75"/>
+    <line class="bind" x1="307.13" y1="128.35" x2="297.72" y2="124.97" opacity="0.75"/>
+    <line class="bind" x1="305.31" y1="130.46" x2="297.78" y2="127.76" opacity="0.75"/>
+    <line class="bind" x1="305.38" y1="133.25" x2="295.96" y2="129.87" opacity="0.75"/>
+    <line class="bind" x1="304.80" y1="139.62" x2="310.76" y2="140.26" opacity="0.58"/>
+    <line class="bind" x1="299.02" y1="145.63" x2="300.33" y2="154.53" opacity="0.58"/>
+    <line class="bind" x1="293.25" y1="143.73" x2="289.02" y2="147.99" opacity="0.58"/>
+    <line class="bind" x1="292.76" y1="134.61" x2="285.77" y2="128.93" opacity="0.58"/>
+    <line class="bind" x1="301.10" y1="132.83" x2="303.81" y2="127.47" opacity="0.58"/>
+  </g>
+  <g id="terminals">
+    <path class="term" d="M 398.13 325.03 Q 380.00 301.34 351.25 293.37" stroke-width="1.65" opacity="0.90"/>
+    <path class="term" d="M 92.70 289.39 Q 121.10 290.45 149.16 286.01" stroke-width="1.90" opacity="0.90"/>
+    <path class="term" d="M 306.82 114.43 Q 298.90 141.68 295.43 169.84" stroke-width="1.80" opacity="0.90"/>
+  </g>
+  <g id="nodes">
+    <circle class="node-main" cx="398.13" cy="325.03" r="6.40"/>
+    <circle class="node-aux" cx="374.74" cy="313.67" r="3.25"/>
+    <circle class="node-term" cx="351.25" cy="293.37" r="3.60"/>
+    <circle class="node-main" cx="249.22" cy="405.00" r="6.85"/>
+    <circle class="node-aux" cx="274.81" cy="370.62" r="4.80"/>
+    <circle class="node-aux" cx="216.08" cy="385.47" r="4.20"/>
+    <circle class="node-aux" cx="250.40" cy="379.02" r="3.70"/>
+    <circle class="node-main" cx="92.70" cy="289.39" r="7.00"/>
+    <circle class="node-aux" cx="122.67" cy="258.76" r="4.80"/>
+    <circle class="node-aux" cx="118.17" cy="284.18" r="3.10"/>
+    <circle class="node-term" cx="149.16" cy="286.01" r="4.40"/>
+    <circle class="node-entry" cx="306.82" cy="114.43" r="11.55"/>
+    <circle class="node-aux" cx="272.24" cy="139.73" r="4.80"/>
+    <circle class="node-loop" cx="288.57" cy="82.38" r="4.70"/>
+    <circle class="node-loop" cx="321.68" cy="73.01" r="3.60"/>
+    <circle class="node-loop" cx="316.08" cy="75.11" r="1.25" opacity="0.9"/>
+    <circle class="node-loop" cx="321.68" cy="70.91" r="1.25" opacity="0.9"/>
+    <line class="loop" x1="316.08" y1="75.11" x2="321.68" y2="70.91" opacity="0.75"/>
+    <circle class="node-loop" cx="327.28" cy="75.11" r="1.25" opacity="0.9"/>
+    <line class="loop" x1="321.68" y1="70.91" x2="327.28" y2="75.11" opacity="0.75"/>
+    <circle class="node-aux" cx="298.03" cy="138.90" r="4.80"/>
+    <circle class="node-term" cx="295.43" cy="169.84" r="4.00"/>
+    <circle class="node-aux" cx="261.10" cy="254.17" r="3.56"/>
+  </g>
+  <g id="ornaments">
+    <circle class="orn" cx="466.90" cy="248.88" r="0.90"/>
+    <circle class="orn" cx="419.07" cy="383.93" r="1.90"/>
+    <circle class="orn" cx="375.00" cy="431.08" r="2.90"/>
+    <circle class="orn" cx="293.03" cy="450.98" r="0.90"/>
+    <circle class="orn" cx="192.33" cy="451.25" r="1.90"/>
+    <circle class="orn" cx="144.83" cy="425.65" r="2.90"/>
+    <circle class="orn" cx="59.74" cy="308.32" r="0.90"/>
+    <circle class="orn" cx="53.70" cy="254.29" r="1.90"/>
+    <circle class="orn" cx="62.10" cy="194.15" r="2.90"/>
+    <circle class="orn" cx="100.77" cy="112.70" r="0.90"/>
+    <circle class="orn" cx="249.62" cy="50.00" r="1.90"/>
+    <circle class="orn" cx="314.93" cy="63.53" r="2.90"/>
+    <circle class="orn" cx="415.18" cy="126.68" r="0.90"/>
+    <circle class="orn" cx="413.87" cy="133.73" r="1.90"/>
+  </g>
+  <g id="signature">
+    <text class="hash" x="256" y="496" text-anchor="middle">23535566d7b019ac</text>
+    <text class="label" x="256" y="18" text-anchor="middle">network • sigillum v2.1 • 4 rituale(s) • 44 stmt • depth 7</text>
+  </g>
+</svg>

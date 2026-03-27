@@ -1,0 +1,270 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512" role="img" aria-label="CCT local sigilo">
+  <desc>Deterministic semantic sigil for a single CCT module.</desc>
+  <defs>
+    <style><![CDATA[
+      .bg { fill: #f5f0e4; }
+      .base { stroke: #2a221c; stroke-width: 1.60; fill: none; opacity: 0.78; }
+      .primary { stroke: #241913; stroke-width: 2.80; fill: none; stroke-linecap: round; stroke-linejoin: round; }
+      .call { stroke: #5b2a22; stroke-width: 2.0; fill: none; stroke-linecap: round; opacity: 0.9; }
+      .branch { stroke: #6b342d; stroke-width: 1.6; fill: none; stroke-linecap: round; }
+      .loop { stroke: #2d5f5a; stroke-width: 1.6; fill: none; stroke-linecap: round; }
+      .bind { stroke: #73493d; stroke-width: 1.4; fill: none; stroke-linecap: round; }
+      .term { stroke: #201814; stroke-width: 1.7; fill: none; stroke-linecap: round; }
+      .node-main { fill: #fffaf1; stroke: #201814; stroke-width: 2.0; }
+      .node-entry { fill: #efe6d4; stroke: #201814; stroke-width: 2.4; }
+      .node-aux { fill: #f6efe0; stroke: #4f4339; stroke-width: 1.3; }
+      .node-loop { fill: #edf3f1; stroke: #2d5f5a; stroke-width: 1.4; }
+      .node-term { fill: #f3e7e3; stroke: #5a2a23; stroke-width: 1.4; }
+      .orn { stroke: #355d58; stroke-width: 1.0; fill: none; opacity: 0.55; }
+      .hash { fill: #1f1a17; font: 10px monospace; letter-spacing: 0.8px; }
+      .label { fill: #1f1a17; font: 8px monospace; opacity: 0.7; }
+      .node-wrap, .edge-wrap { cursor: help; }
+      .node-wrap:hover > circle { opacity: 0.96; }
+      .edge-wrap:hover > path, .edge-wrap:hover > line { opacity: 1.0; }
+    ]]></style>
+  </defs>
+  <rect class="bg" x="0" y="0" width="512" height="512"/>
+  <g id="foundation">
+    <circle class="base" cx="256" cy="256" r="226"/>
+    <ellipse class="base" cx="256" cy="256" rx="198" ry="182.95" opacity="0.32"/>
+  </g>
+  <g id="primary_path">
+    <g class="edge-wrap">
+    <path class="primary" d="M 399.34 143.77 Q 245.02 237.79 113.58 361.80" stroke-width="3.20" opacity="0.96"/>
+      <title>edge: primary
+main -&gt; bind_demo_port
+weight: 1
+
+path:
+main -&gt; bind_demo_port</title>
+    </g>
+  </g>
+  <g id="call_links">
+    <g class="edge-wrap">
+    <path class="call" d="M 119.06 361.80 C 167.81 356.56 173.55 389.00 150.59 372.78 C 127.63 389.00 133.37 356.56 109.47 363.30" data-kind="call" data-from="bind_demo_port" data-to="bind_demo_port" data-weight="1" data-self-loop="true"/>
+      <title>edge: call
+bind_demo_port -&gt; bind_demo_port
+calls: 1
+
+path:
+bind_demo_port -&gt; bind_demo_port</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="call" d="M 399.34 143.77 Q 237.13 227.45 113.58 361.80" stroke-width="2.15" opacity="0.74" data-kind="call" data-from="main" data-to="bind_demo_port" data-weight="1" data-self-loop="false"/>
+      <title>edge: call
+main -&gt; bind_demo_port
+calls: 1
+
+path:
+main -&gt; bind_demo_port</title>
+    </g>
+  </g>
+  <g id="branches">
+    <g class="edge-wrap">
+    <path class="branch" d="M 113.58 361.80 Q 132.84 345.85 127.77 321.37" stroke-width="1.70" opacity="0.85"/>
+      <title>edge: branch
+bind_demo_port -&gt; bind_demo_port
+weight: 2
+
+path:
+bind_demo_port -&gt; bind_demo_port</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="branch" d="M 399.34 143.77 Q 376.04 139.17 354.23 148.60" stroke-width="2.10" opacity="0.85"/>
+      <title>edge: branch
+main -&gt; main
+weight: 4
+
+path:
+main -&gt; main</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="branch" d="M 260.33 262.46 Q 180.86 303.14 113.58 361.80" stroke-width="2.10" opacity="0.85"/>
+      <title>edge: branch
+main -&gt; bind_demo_port
+weight: 5
+
+path:
+main -&gt; bind_demo_port</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="branch" d="M 260.33 262.46 Q 334.41 208.48 399.34 143.77" stroke-width="2.10" opacity="0.85"/>
+      <title>edge: branch
+main -&gt; main
+weight: 29
+
+path:
+main -&gt; main</title>
+    </g>
+  </g>
+  <g id="loops">
+  </g>
+  <g id="bindings">
+    <g class="edge-wrap">
+    <path class="bind" d="M 113.58 361.80 Q 128.72 360.38 134.45 346.30" stroke-width="1.36" opacity="0.85"/>
+    <line class="bind" x1="115.37" y1="355.49" x2="120.14" y2="361.91" opacity="0.75"/>
+    <line class="bind" x1="116.86" y1="353.14" x2="122.82" y2="361.16" opacity="0.75"/>
+    <line class="bind" x1="139.48" y1="345.45" x2="145.40" y2="344.46" opacity="0.58"/>
+    <line class="bind" x1="129.38" y1="346.88" x2="120.44" y2="347.90" opacity="0.58"/>
+      <title>edge: bind
+bind_demo_port -&gt; bind_demo_port
+weight: 2
+
+path:
+bind_demo_port -&gt; bind_demo_port</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="bind" d="M 399.34 143.77 Q 387.84 150.17 378.87 159.79" stroke-width="1.80" opacity="0.85"/>
+    <line class="bind" x1="397.71" y1="150.12" x2="392.78" y2="143.82" opacity="0.75"/>
+    <line class="bind" x1="396.28" y1="152.51" x2="390.12" y2="144.64" opacity="0.75"/>
+    <line class="bind" x1="393.62" y1="153.33" x2="388.69" y2="147.03" opacity="0.75"/>
+    <line class="bind" x1="392.19" y1="155.72" x2="386.02" y2="147.84" opacity="0.75"/>
+    <line class="bind" x1="389.52" y1="156.53" x2="384.59" y2="150.23" opacity="0.75"/>
+    <line class="bind" x1="388.09" y1="158.92" x2="381.93" y2="151.05" opacity="0.75"/>
+    <line class="bind" x1="385.06" y1="160.94" x2="390.96" y2="162.04" opacity="0.58"/>
+    <line class="bind" x1="380.85" y1="165.78" x2="383.67" y2="174.32" opacity="0.58"/>
+    <line class="bind" x1="373.56" y1="163.18" x2="368.50" y2="166.41" opacity="0.58"/>
+    <line class="bind" x1="373.58" y1="156.38" x2="366.02" y2="151.49" opacity="0.58"/>
+    <line class="bind" x1="380.86" y1="153.82" x2="382.76" y2="148.13" opacity="0.58"/>
+      <title>edge: bind
+main -&gt; main
+weight: 10
+
+path:
+main -&gt; main</title>
+    </g>
+  </g>
+  <g id="terminals">
+    <g class="edge-wrap">
+    <path class="term" d="M 113.58 361.80 Q 142.68 356.13 163.30 334.83" stroke-width="1.80" opacity="0.90"/>
+      <title>edge: return
+bind_demo_port -&gt; bind_demo_port
+weight: 3
+
+path:
+bind_demo_port -&gt; bind_demo_port</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="term" d="M 399.34 143.77 Q 377.56 162.07 360.18 184.59" stroke-width="1.90" opacity="0.90"/>
+      <title>edge: return
+main -&gt; main
+weight: 5
+
+path:
+main -&gt; main</title>
+    </g>
+  </g>
+  <g id="nodes">
+    <g class="node-wrap">
+      <circle class="node-main" cx="113.58" cy="361.80" r="6.85" data-kind="rituale" data-ritual="bind_demo_port" data-line="9" data-col="1" data-depth="8" data-stmt="RITUALE" data-loops="0" data-calls="3"/>
+      <title>RITUALE bind_demo_port
+stmt: 7
+depth: 8
+loops: 0
+calls: 3
+source:
+RITUALE bind_demo_port(REX port) REDDE SPECULUM NIHIL</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="127.77" cy="321.37" r="4.80" data-kind="branch" data-ritual="bind_demo_port" data-line="14" data-col="5" data-depth="8" data-stmt="SI"/>
+      <title>stmt: SI
+rituale: bind_demo_port
+depth: 8
+line: 14
+
+source:
+SI CONIURA compare(msg, "sock_bind falhou") == 0 ET port &lt; 22325</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="134.45" cy="346.30" r="3.10" data-kind="bind" data-ritual="bind_demo_port" data-line="13" data-col="5" data-depth="8" data-stmt="EVOCA"/>
+      <title>stmt: EVOCA
+rituale: bind_demo_port
+depth: 8
+line: 13
+
+source:
+EVOCA VERBUM msg AD OBSECRO fractum_to_verbum(erro)</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="163.30" cy="334.83" r="4.00" data-kind="term" data-ritual="bind_demo_port" data-line="11" data-col="5" data-depth="8" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: bind_demo_port
+depth: 8
+line: 11
+
+source:
+REDDE CONIURA udp_bind("127.0.0.1", port)</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-entry" cx="399.34" cy="143.77" r="12.75" data-kind="rituale" data-ritual="main" data-line="22" data-col="1" data-depth="8" data-stmt="RITUALE" data-loops="0" data-calls="24" data-entry="true"/>
+      <title>RITUALE main
+stmt: 33
+depth: 8
+loops: 0
+calls: 24
+source:
+RITUALE main() REDDE REX</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="354.23" cy="148.60" r="5.80" data-kind="branch" data-ritual="main" data-line="27" data-col="5" data-depth="8" data-stmt="SI"/>
+      <title>stmt: SI
+rituale: main
+depth: 8
+line: 27
+
+source:
+SI NON CONIURA option_is_some GENUS(NetAddr)(addr_opt)</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="378.87" cy="159.79" r="4.30" data-kind="bind" data-ritual="main" data-line="24" data-col="5" data-depth="8" data-stmt="EVOCA"/>
+      <title>stmt: EVOCA
+rituale: main
+depth: 8
+line: 24
+
+source:
+EVOCA SPECULUM NIHIL receiver AD CONIURA bind_demo_port(22321)</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="360.18" cy="184.59" r="4.60" data-kind="term" data-ritual="main" data-line="48" data-col="7" data-depth="8" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: main
+depth: 8
+line: 48
+
+source:
+REDDE 1</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="260.33" cy="262.46" r="5.00" data-kind="bind" data-ritual="main" data-line="24" data-col="5" data-depth="8" data-stmt="EVOCA"/>
+      <title>stmt: EVOCA
+rituale: main
+depth: 8
+line: 24
+
+source:
+EVOCA SPECULUM NIHIL receiver AD CONIURA bind_demo_port(22321)</title>
+    </g>
+  </g>
+  <g id="ornaments">
+    <circle class="orn" cx="453.52" cy="289.59" r="0.90"/>
+    <circle class="orn" cx="419.20" cy="369.68" r="1.90"/>
+    <circle class="orn" cx="379.87" cy="424.30" r="2.90"/>
+    <circle class="orn" cx="272.44" cy="465.56" r="0.90"/>
+    <circle class="orn" cx="234.70" cy="456.98" r="1.90"/>
+    <circle class="orn" cx="92.82" cy="390.32" r="2.90"/>
+    <circle class="orn" cx="68.77" cy="324.42" r="0.90"/>
+    <circle class="orn" cx="48.11" cy="290.36" r="1.90"/>
+    <circle class="orn" cx="61.78" cy="197.44" r="2.90"/>
+    <circle class="orn" cx="148.71" cy="81.66" r="0.90"/>
+    <circle class="orn" cx="180.77" cy="64.10" r="1.90"/>
+    <circle class="orn" cx="261.63" cy="54.58" r="2.90"/>
+    <circle class="orn" cx="406.47" cy="110.10" r="0.90"/>
+    <circle class="orn" cx="458.53" cy="197.41" r="1.90"/>
+  </g>
+  <g id="signature">
+    <text class="hash" x="256" y="496" text-anchor="middle">094dfee6b9fcd1a5</text>
+    <text class="label" x="256" y="18" text-anchor="middle">network • sigillum v2.1 • 2 rituale(s) • 40 stmt • depth 8</text>
+  </g>
+</svg>

@@ -1,0 +1,824 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512" role="img" aria-label="CCT local sigilo">
+  <desc>Deterministic semantic sigil for a single CCT module.</desc>
+  <defs>
+    <style><![CDATA[
+      .bg { fill: #f5f0e4; }
+      .base { stroke: #2a221c; stroke-width: 1.60; fill: none; opacity: 0.78; }
+      .primary { stroke: #241913; stroke-width: 2.80; fill: none; stroke-linecap: round; stroke-linejoin: round; }
+      .call { stroke: #5b2a22; stroke-width: 2.0; fill: none; stroke-linecap: round; opacity: 0.9; }
+      .branch { stroke: #6b342d; stroke-width: 1.6; fill: none; stroke-linecap: round; }
+      .loop { stroke: #2d5f5a; stroke-width: 1.6; fill: none; stroke-linecap: round; }
+      .bind { stroke: #73493d; stroke-width: 1.4; fill: none; stroke-linecap: round; }
+      .term { stroke: #201814; stroke-width: 1.7; fill: none; stroke-linecap: round; }
+      .node-main { fill: #fffaf1; stroke: #201814; stroke-width: 2.0; }
+      .node-entry { fill: #efe6d4; stroke: #201814; stroke-width: 2.4; }
+      .node-aux { fill: #f6efe0; stroke: #4f4339; stroke-width: 1.3; }
+      .node-loop { fill: #edf3f1; stroke: #2d5f5a; stroke-width: 1.4; }
+      .node-term { fill: #f3e7e3; stroke: #5a2a23; stroke-width: 1.4; }
+      .orn { stroke: #355d58; stroke-width: 1.0; fill: none; opacity: 0.55; }
+      .hash { fill: #1f1a17; font: 10px monospace; letter-spacing: 0.8px; }
+      .label { fill: #1f1a17; font: 8px monospace; opacity: 0.7; }
+      .node-wrap, .edge-wrap { cursor: help; }
+      .node-wrap:hover > circle { opacity: 0.96; }
+      .edge-wrap:hover > path, .edge-wrap:hover > line { opacity: 1.0; }
+    ]]></style>
+  </defs>
+  <rect class="bg" x="0" y="0" width="512" height="512"/>
+  <g id="foundation">
+    <circle class="base" cx="256" cy="256" r="226"/>
+    <ellipse class="base" cx="256" cy="256" rx="198" ry="183.59" opacity="0.32"/>
+  </g>
+  <g id="primary_path">
+    <g class="edge-wrap">
+    <path class="primary" d="M 314.86 134.10 Q 323.05 170.32 359.38 162.59" stroke-width="2.60" opacity="0.96"/>
+      <title>edge: primary
+fluxus_map -&gt; fluxus_filter
+weight: 1
+
+path:
+fluxus_map -&gt; fluxus_filter</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="primary" d="M 359.38 162.59 Q 370.91 217.50 422.05 240.63" stroke-width="2.60" opacity="0.96"/>
+      <title>edge: primary
+fluxus_filter -&gt; fluxus_fold
+weight: 1
+
+path:
+fluxus_filter -&gt; fluxus_fold</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="primary" d="M 422.05 240.63 Q 384.52 274.02 399.44 321.99" stroke-width="2.60" opacity="0.96"/>
+      <title>edge: primary
+fluxus_fold -&gt; fluxus_find
+weight: 1
+
+path:
+fluxus_fold -&gt; fluxus_find</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="primary" d="M 399.44 321.99 Q 351.52 322.97 331.12 366.35" stroke-width="2.60" opacity="0.96"/>
+      <title>edge: primary
+fluxus_find -&gt; fluxus_any
+weight: 1
+
+path:
+fluxus_find -&gt; fluxus_any</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="primary" d="M 331.12 366.35 Q 298.92 351.10 281.26 382.05" stroke-width="2.60" opacity="0.96"/>
+      <title>edge: primary
+fluxus_any -&gt; fluxus_all
+weight: 1
+
+path:
+fluxus_any -&gt; fluxus_all</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="primary" d="M 281.26 382.05 Q 243.46 354.63 205.00 381.12" stroke-width="2.60" opacity="0.96"/>
+      <title>edge: primary
+fluxus_all -&gt; series_map
+weight: 1
+
+path:
+fluxus_all -&gt; series_map</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="primary" d="M 205.00 381.12 Q 184.89 342.45 142.00 350.27" stroke-width="2.60" opacity="0.96"/>
+      <title>edge: primary
+series_map -&gt; series_filter
+weight: 1
+
+path:
+series_map -&gt; series_filter</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="primary" d="M 142.00 350.27 Q 146.06 298.75 100.09 275.12" stroke-width="2.60" opacity="0.96"/>
+      <title>edge: primary
+series_filter -&gt; series_reduce
+weight: 1
+
+path:
+series_filter -&gt; series_reduce</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="primary" d="M 100.09 275.12 Q 141.02 234.34 129.22 177.77" stroke-width="2.60" opacity="0.96"/>
+      <title>edge: primary
+series_reduce -&gt; series_find
+weight: 1
+
+path:
+series_reduce -&gt; series_find</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="primary" d="M 129.22 177.77 Q 173.75 182.55 187.06 139.79" stroke-width="2.60" opacity="0.96"/>
+      <title>edge: primary
+series_find -&gt; series_any
+weight: 1
+
+path:
+series_find -&gt; series_any</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="primary" d="M 187.06 139.79 Q 217.45 155.21 233.12 124.96" stroke-width="2.60" opacity="0.96"/>
+      <title>edge: primary
+series_any -&gt; series_all
+weight: 1
+
+path:
+series_any -&gt; series_all</title>
+    </g>
+  </g>
+  <g id="call_links">
+  </g>
+  <g id="branches">
+    <g class="edge-wrap">
+    <path class="branch" d="M 271.67 249.79 Q 304.99 196.32 314.86 134.10" stroke-width="1.45" opacity="0.85"/>
+      <title>edge: branch
+fluxus_map -&gt; fluxus_map
+weight: 1
+
+path:
+fluxus_map -&gt; fluxus_map</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="branch" d="M 271.67 249.79 Q 347.62 257.61 422.05 240.63" stroke-width="1.70" opacity="0.85"/>
+      <title>edge: branch
+fluxus_map -&gt; fluxus_fold
+weight: 2
+
+path:
+fluxus_map -&gt; fluxus_fold</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="branch" d="M 271.67 249.79 Q 184.72 254.60 100.09 275.12" stroke-width="1.70" opacity="0.85"/>
+      <title>edge: branch
+fluxus_map -&gt; series_reduce
+weight: 2
+
+path:
+fluxus_map -&gt; series_reduce</title>
+    </g>
+  </g>
+  <g id="loops">
+  </g>
+  <g id="bindings">
+    <g class="edge-wrap">
+    <path class="bind" d="M 314.86 134.10 Q 302.44 142.53 303.56 157.51" stroke-width="1.28" opacity="0.85"/>
+    <line class="bind" x1="316.20" y1="140.52" x2="309.00" y2="137.04" opacity="0.75"/>
+    <line class="bind" x1="308.43" y1="156.62" x2="314.33" y2="155.55" opacity="0.58"/>
+      <title>edge: bind
+fluxus_map -&gt; fluxus_map
+weight: 1
+
+path:
+fluxus_map -&gt; fluxus_map</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="bind" d="M 359.38 162.59 Q 344.34 165.34 340.08 180.02" stroke-width="1.28" opacity="0.85"/>
+    <line class="bind" x1="358.20" y1="169.04" x2="352.84" y2="163.10" opacity="0.75"/>
+    <line class="bind" x1="345.00" y1="179.44" x2="350.96" y2="178.74" opacity="0.58"/>
+      <title>edge: bind
+fluxus_filter -&gt; fluxus_filter
+weight: 1
+
+path:
+fluxus_filter -&gt; fluxus_filter</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="bind" d="M 422.05 240.63 Q 408.79 238.41 396.16 243.03" stroke-width="1.60" opacity="0.85"/>
+    <line class="bind" x1="417.24" y1="245.09" x2="416.50" y2="237.13" opacity="0.75"/>
+    <line class="bind" x1="414.74" y1="246.33" x2="413.82" y2="236.37" opacity="0.75"/>
+    <line class="bind" x1="412.06" y1="245.57" x2="411.32" y2="237.60" opacity="0.75"/>
+    <line class="bind" x1="409.56" y1="246.81" x2="408.64" y2="236.85" opacity="0.75"/>
+    <line class="bind" x1="406.88" y1="246.05" x2="406.14" y2="238.08" opacity="0.75"/>
+    <line class="bind" x1="401.69" y1="243.48" x2="407.67" y2="243.97" opacity="0.58"/>
+    <line class="bind" x1="397.97" y1="248.27" x2="400.90" y2="256.78" opacity="0.58"/>
+    <line class="bind" x1="390.94" y1="244.92" x2="385.30" y2="246.96" opacity="0.58"/>
+    <line class="bind" x1="392.28" y1="239.05" x2="386.00" y2="232.61" opacity="0.58"/>
+    <line class="bind" x1="397.72" y1="237.70" x2="399.40" y2="231.94" opacity="0.58"/>
+      <title>edge: bind
+fluxus_fold -&gt; fluxus_fold
+weight: 5
+
+path:
+fluxus_fold -&gt; fluxus_fold</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="bind" d="M 399.44 321.99 Q 388.75 314.11 375.82 311.12" stroke-width="1.28" opacity="0.85"/>
+    <line class="bind" x1="393.04" y1="323.45" x2="396.38" y2="316.18" opacity="0.75"/>
+    <line class="bind" x1="380.74" y1="310.64" x2="386.71" y2="310.05" opacity="0.58"/>
+      <title>edge: bind
+fluxus_find -&gt; fluxus_find
+weight: 1
+
+path:
+fluxus_find -&gt; fluxus_find</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="bind" d="M 331.12 366.35 Q 327.99 352.75 316.49 344.85" stroke-width="1.28" opacity="0.85"/>
+    <line class="bind" x1="324.89" y1="364.30" x2="331.50" y2="359.80" opacity="0.75"/>
+    <line class="bind" x1="321.42" y1="345.28" x2="327.40" y2="345.81" opacity="0.58"/>
+      <title>edge: bind
+fluxus_any -&gt; fluxus_any
+weight: 1
+
+path:
+fluxus_any -&gt; fluxus_any</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="bind" d="M 281.26 382.05 Q 282.88 368.47 276.15 356.56" stroke-width="1.28" opacity="0.85"/>
+    <line class="bind" x1="276.32" y1="377.74" x2="284.16" y2="376.17" opacity="0.75"/>
+    <line class="bind" x1="281.10" y1="356.81" x2="287.09" y2="357.12" opacity="0.58"/>
+      <title>edge: bind
+fluxus_all -&gt; fluxus_all
+weight: 1
+
+path:
+fluxus_all -&gt; fluxus_all</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="bind" d="M 205.00 381.12 Q 215.29 371.28 214.81 357.05" stroke-width="1.28" opacity="0.85"/>
+    <line class="bind" x1="203.26" y1="374.80" x2="210.67" y2="377.82" opacity="0.75"/>
+    <line class="bind" x1="219.75" y1="357.44" x2="225.73" y2="357.91" opacity="0.58"/>
+      <title>edge: bind
+series_map -&gt; series_map
+weight: 1
+
+path:
+series_map -&gt; series_map</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="bind" d="M 142.00 350.27 Q 155.00 345.59 162.04 333.70" stroke-width="1.28" opacity="0.85"/>
+    <line class="bind" x1="143.46" y1="343.88" x2="148.56" y2="350.04" opacity="0.75"/>
+    <line class="bind" x1="166.99" y1="333.73" x2="172.99" y2="333.77" opacity="0.58"/>
+      <title>edge: bind
+series_filter -&gt; series_filter
+weight: 1
+
+path:
+series_filter -&gt; series_filter</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="bind" d="M 100.09 275.12 Q 113.66 278.97 125.90 271.95" stroke-width="1.60" opacity="0.85"/>
+    <line class="bind" x1="104.76" y1="270.51" x2="105.74" y2="278.45" opacity="0.75"/>
+    <line class="bind" x1="107.22" y1="269.20" x2="108.44" y2="279.13" opacity="0.75"/>
+    <line class="bind" x1="109.93" y1="269.88" x2="110.90" y2="277.82" opacity="0.75"/>
+    <line class="bind" x1="112.39" y1="268.57" x2="113.60" y2="278.50" opacity="0.75"/>
+    <line class="bind" x1="115.09" y1="269.25" x2="116.06" y2="277.19" opacity="0.75"/>
+    <line class="bind" x1="131.40" y1="272.66" x2="137.35" y2="273.43" opacity="0.58"/>
+    <line class="bind" x1="127.60" y1="277.23" x2="130.36" y2="285.80" opacity="0.58"/>
+    <line class="bind" x1="121.54" y1="275.39" x2="116.84" y2="279.12" opacity="0.58"/>
+    <line class="bind" x1="121.87" y1="268.14" x2="115.33" y2="261.95" opacity="0.58"/>
+    <line class="bind" x1="128.22" y1="266.91" x2="130.73" y2="261.46" opacity="0.58"/>
+      <title>edge: bind
+series_reduce -&gt; series_reduce
+weight: 5
+
+path:
+series_reduce -&gt; series_reduce</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="bind" d="M 129.22 177.77 Q 138.05 188.22 151.35 191.43" stroke-width="1.28" opacity="0.85"/>
+    <line class="bind" x1="135.75" y1="177.10" x2="131.55" y2="183.91" opacity="0.75"/>
+    <line class="bind" x1="156.24" y1="192.20" x2="162.16" y2="193.13" opacity="0.58"/>
+      <title>edge: bind
+series_find -&gt; series_find
+weight: 1
+
+path:
+series_find -&gt; series_find</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="bind" d="M 187.06 139.79 Q 186.29 155.36 200.33 162.15" stroke-width="1.28" opacity="0.85"/>
+    <line class="bind" x1="193.16" y1="142.22" x2="186.27" y2="146.30" opacity="0.75"/>
+    <line class="bind" x1="205.21" y1="162.95" x2="211.13" y2="163.91" opacity="0.58"/>
+      <title>edge: bind
+series_any -&gt; series_any
+weight: 1
+
+path:
+series_any -&gt; series_any</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="bind" d="M 233.12 124.96 Q 234.16 137.97 237.60 150.57" stroke-width="1.28" opacity="0.85"/>
+    <line class="bind" x1="237.96" y1="129.39" x2="230.08" y2="130.77" opacity="0.75"/>
+    <line class="bind" x1="242.52" y1="151.02" x2="248.50" y2="151.58" opacity="0.58"/>
+      <title>edge: bind
+series_all -&gt; series_all
+weight: 1
+
+path:
+series_all -&gt; series_all</title>
+    </g>
+  </g>
+  <g id="terminals">
+    <g class="edge-wrap">
+    <path class="term" d="M 314.86 134.10 Q 298.17 158.47 297.72 188.00" stroke-width="1.65" opacity="0.90"/>
+      <title>edge: return
+fluxus_map -&gt; fluxus_map
+weight: 2
+
+path:
+fluxus_map -&gt; fluxus_map</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="term" d="M 359.38 162.59 Q 330.87 170.90 312.46 194.20" stroke-width="1.65" opacity="0.90"/>
+      <title>edge: return
+fluxus_filter -&gt; fluxus_filter
+weight: 2
+
+path:
+fluxus_filter -&gt; fluxus_filter</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="term" d="M 422.05 240.63 Q 393.51 242.88 367.02 253.76" stroke-width="1.65" opacity="0.90"/>
+      <title>edge: return
+fluxus_fold -&gt; fluxus_fold
+weight: 2
+
+path:
+fluxus_fold -&gt; fluxus_fold</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="term" d="M 399.44 321.99 Q 373.38 310.38 345.22 305.85" stroke-width="1.65" opacity="0.90"/>
+      <title>edge: return
+fluxus_find -&gt; fluxus_find
+weight: 2
+
+path:
+fluxus_find -&gt; fluxus_find</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="term" d="M 331.12 366.35 Q 316.53 341.37 293.00 324.56" stroke-width="1.65" opacity="0.90"/>
+      <title>edge: return
+fluxus_any -&gt; fluxus_any
+weight: 2
+
+path:
+fluxus_any -&gt; fluxus_any</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="term" d="M 281.26 382.05 Q 276.79 353.63 262.42 328.72" stroke-width="1.65" opacity="0.90"/>
+      <title>edge: return
+fluxus_all -&gt; fluxus_all
+weight: 2
+
+path:
+fluxus_all -&gt; fluxus_all</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="term" d="M 205.00 381.12 Q 225.15 360.14 233.55 332.29" stroke-width="1.65" opacity="0.90"/>
+      <title>edge: return
+series_map -&gt; series_map
+weight: 2
+
+path:
+series_map -&gt; series_map</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="term" d="M 142.00 350.27 Q 169.09 340.35 190.25 320.75" stroke-width="1.65" opacity="0.90"/>
+      <title>edge: return
+series_filter -&gt; series_filter
+weight: 2
+
+path:
+series_filter -&gt; series_filter</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="term" d="M 100.09 275.12 Q 129.08 273.99 154.70 260.36" stroke-width="1.65" opacity="0.90"/>
+      <title>edge: return
+series_reduce -&gt; series_reduce
+weight: 2
+
+path:
+series_reduce -&gt; series_reduce</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="term" d="M 129.22 177.77 Q 153.05 193.88 181.08 200.37" stroke-width="1.65" opacity="0.90"/>
+      <title>edge: return
+series_find -&gt; series_find
+weight: 2
+
+path:
+series_find -&gt; series_find</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="term" d="M 187.06 139.79 Q 189.04 169.59 208.75 192.03" stroke-width="1.65" opacity="0.90"/>
+      <title>edge: return
+series_any -&gt; series_any
+weight: 2
+
+path:
+series_any -&gt; series_any</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="term" d="M 233.12 124.96 Q 231.78 153.29 234.87 181.50" stroke-width="1.65" opacity="0.90"/>
+      <title>edge: return
+series_all -&gt; series_all
+weight: 2
+
+path:
+series_all -&gt; series_all</title>
+    </g>
+  </g>
+  <g id="nodes">
+    <g class="node-wrap">
+      <circle class="node-main" cx="314.86" cy="134.10" r="5.95" data-kind="rituale" data-ritual="fluxus_map" data-line="12" data-col="1" data-depth="3" data-stmt="RITUALE" data-loops="0" data-calls="0"/>
+      <title>RITUALE fluxus_map
+stmt: 1
+depth: 3
+loops: 0
+calls: 0
+source:
+RITUALE fluxus_map GENUS(T, R)(SPECULUM NIHIL flux, SPECULUM NIHIL fn) REDDE SPECULUM NIHIL</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="303.56" cy="157.51" r="2.95" data-kind="bind" data-ritual="fluxus_map" data-depth="3" data-stmt="EVOCA"/>
+      <title>stmt: EVOCA
+rituale: fluxus_map
+depth: 3
+line: 0
+
+source:
+stmt: EVOCA
+rituale: fluxus_map</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="297.72" cy="188.00" r="3.60" data-kind="term" data-ritual="fluxus_map" data-line="13" data-col="3" data-depth="3" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: fluxus_map
+depth: 3
+line: 13
+
+source:
+REDDE OBSECRO collection_fluxus_map(flux, MENSURA(T), MENSURA(R), fn)</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-main" cx="359.38" cy="162.59" r="5.95" data-kind="rituale" data-ritual="fluxus_filter" data-line="16" data-col="1" data-depth="3" data-stmt="RITUALE" data-loops="0" data-calls="0"/>
+      <title>RITUALE fluxus_filter
+stmt: 1
+depth: 3
+loops: 0
+calls: 0
+source:
+RITUALE fluxus_filter GENUS(T)(SPECULUM NIHIL flux, SPECULUM NIHIL predicate) REDDE SPECULUM ...</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="340.08" cy="180.02" r="2.95" data-kind="bind" data-ritual="fluxus_filter" data-depth="3" data-stmt="EVOCA"/>
+      <title>stmt: EVOCA
+rituale: fluxus_filter
+depth: 3
+line: 0
+
+source:
+stmt: EVOCA
+rituale: fluxus_filter</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="312.46" cy="194.20" r="3.60" data-kind="term" data-ritual="fluxus_filter" data-line="17" data-col="3" data-depth="3" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: fluxus_filter
+depth: 3
+line: 17
+
+source:
+REDDE OBSECRO collection_fluxus_filter(flux, MENSURA(T), predicate)</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-main" cx="422.05" cy="240.63" r="6.70" data-kind="rituale" data-ritual="fluxus_fold" data-line="20" data-col="1" data-depth="4" data-stmt="RITUALE" data-loops="0" data-calls="1"/>
+      <title>RITUALE fluxus_fold
+stmt: 6
+depth: 4
+loops: 0
+calls: 1
+source:
+RITUALE fluxus_fold GENUS(T, Acc)(SPECULUM NIHIL flux, Acc initial, SPECULUM NIHIL fn) REDDE Acc</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="396.16" cy="243.03" r="3.55" data-kind="bind" data-ritual="fluxus_fold" data-line="21" data-col="3" data-depth="4" data-stmt="EVOCA"/>
+      <title>stmt: EVOCA
+rituale: fluxus_fold
+depth: 4
+line: 21
+
+source:
+EVOCA SPECULUM NIHIL acc_ptr AD OBSECRO collection_fluxus_fold(flux, MENSURA(T), SPECULUM ini...</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="367.02" cy="253.76" r="3.60" data-kind="term" data-ritual="fluxus_fold" data-line="26" data-col="3" data-depth="4" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: fluxus_fold
+depth: 4
+line: 26
+
+source:
+REDDE acc</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-main" cx="399.44" cy="321.99" r="5.95" data-kind="rituale" data-ritual="fluxus_find" data-line="29" data-col="1" data-depth="3" data-stmt="RITUALE" data-loops="0" data-calls="0"/>
+      <title>RITUALE fluxus_find
+stmt: 1
+depth: 3
+loops: 0
+calls: 0
+source:
+RITUALE fluxus_find GENUS(T)(SPECULUM NIHIL flux, SPECULUM NIHIL predicate) REDDE SPECULUM NIHIL</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="375.82" cy="311.12" r="2.95" data-kind="bind" data-ritual="fluxus_find" data-depth="3" data-stmt="EVOCA"/>
+      <title>stmt: EVOCA
+rituale: fluxus_find
+depth: 3
+line: 0
+
+source:
+stmt: EVOCA
+rituale: fluxus_find</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="345.22" cy="305.85" r="3.60" data-kind="term" data-ritual="fluxus_find" data-line="30" data-col="3" data-depth="3" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: fluxus_find
+depth: 3
+line: 30
+
+source:
+REDDE OBSECRO collection_fluxus_find(flux, MENSURA(T), predicate)</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-main" cx="331.12" cy="366.35" r="5.95" data-kind="rituale" data-ritual="fluxus_any" data-line="33" data-col="1" data-depth="3" data-stmt="RITUALE" data-loops="0" data-calls="0"/>
+      <title>RITUALE fluxus_any
+stmt: 1
+depth: 3
+loops: 0
+calls: 0
+source:
+RITUALE fluxus_any GENUS(T)(SPECULUM NIHIL flux, SPECULUM NIHIL predicate) REDDE VERUM</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="316.49" cy="344.85" r="2.95" data-kind="bind" data-ritual="fluxus_any" data-depth="3" data-stmt="EVOCA"/>
+      <title>stmt: EVOCA
+rituale: fluxus_any
+depth: 3
+line: 0
+
+source:
+stmt: EVOCA
+rituale: fluxus_any</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="293.00" cy="324.56" r="3.60" data-kind="term" data-ritual="fluxus_any" data-line="34" data-col="3" data-depth="3" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: fluxus_any
+depth: 3
+line: 34
+
+source:
+REDDE OBSECRO collection_fluxus_any(flux, MENSURA(T), predicate)</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-main" cx="281.26" cy="382.05" r="5.95" data-kind="rituale" data-ritual="fluxus_all" data-line="37" data-col="1" data-depth="3" data-stmt="RITUALE" data-loops="0" data-calls="0"/>
+      <title>RITUALE fluxus_all
+stmt: 1
+depth: 3
+loops: 0
+calls: 0
+source:
+RITUALE fluxus_all GENUS(T)(SPECULUM NIHIL flux, SPECULUM NIHIL predicate) REDDE VERUM</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="276.15" cy="356.56" r="2.95" data-kind="bind" data-ritual="fluxus_all" data-depth="3" data-stmt="EVOCA"/>
+      <title>stmt: EVOCA
+rituale: fluxus_all
+depth: 3
+line: 0
+
+source:
+stmt: EVOCA
+rituale: fluxus_all</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="262.42" cy="328.72" r="3.60" data-kind="term" data-ritual="fluxus_all" data-line="38" data-col="3" data-depth="3" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: fluxus_all
+depth: 3
+line: 38
+
+source:
+REDDE OBSECRO collection_fluxus_all(flux, MENSURA(T), predicate)</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-main" cx="205.00" cy="381.12" r="5.95" data-kind="rituale" data-ritual="series_map" data-line="41" data-col="1" data-depth="3" data-stmt="RITUALE" data-loops="0" data-calls="0"/>
+      <title>RITUALE series_map
+stmt: 1
+depth: 3
+loops: 0
+calls: 0
+source:
+RITUALE series_map GENUS(T, R)(SPECULUM NIHIL arr, REX len, SPECULUM NIHIL fn) REDDE SPECULUM...</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="214.81" cy="357.05" r="2.95" data-kind="bind" data-ritual="series_map" data-depth="3" data-stmt="EVOCA"/>
+      <title>stmt: EVOCA
+rituale: series_map
+depth: 3
+line: 0
+
+source:
+stmt: EVOCA
+rituale: series_map</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="233.55" cy="332.29" r="3.60" data-kind="term" data-ritual="series_map" data-line="42" data-col="3" data-depth="3" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: series_map
+depth: 3
+line: 42
+
+source:
+REDDE OBSECRO collection_series_map(arr, len, MENSURA(T), MENSURA(R), fn)</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-main" cx="142.00" cy="350.27" r="5.95" data-kind="rituale" data-ritual="series_filter" data-line="45" data-col="1" data-depth="3" data-stmt="RITUALE" data-loops="0" data-calls="0"/>
+      <title>RITUALE series_filter
+stmt: 1
+depth: 3
+loops: 0
+calls: 0
+source:
+RITUALE series_filter GENUS(T)(SPECULUM NIHIL arr, REX len, SPECULUM NIHIL predicate) REDDE S...</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="162.04" cy="333.70" r="2.95" data-kind="bind" data-ritual="series_filter" data-depth="3" data-stmt="EVOCA"/>
+      <title>stmt: EVOCA
+rituale: series_filter
+depth: 3
+line: 0
+
+source:
+stmt: EVOCA
+rituale: series_filter</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="190.25" cy="320.75" r="3.60" data-kind="term" data-ritual="series_filter" data-line="46" data-col="3" data-depth="3" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: series_filter
+depth: 3
+line: 46
+
+source:
+REDDE OBSECRO collection_series_filter(arr, len, MENSURA(T), predicate)</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-main" cx="100.09" cy="275.12" r="6.70" data-kind="rituale" data-ritual="series_reduce" data-line="49" data-col="1" data-depth="4" data-stmt="RITUALE" data-loops="0" data-calls="1"/>
+      <title>RITUALE series_reduce
+stmt: 6
+depth: 4
+loops: 0
+calls: 1
+source:
+RITUALE series_reduce GENUS(T, Acc)(SPECULUM NIHIL arr, REX len, Acc initial, SPECULUM NIHIL ...</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="125.90" cy="271.95" r="3.55" data-kind="bind" data-ritual="series_reduce" data-line="50" data-col="3" data-depth="4" data-stmt="EVOCA"/>
+      <title>stmt: EVOCA
+rituale: series_reduce
+depth: 4
+line: 50
+
+source:
+EVOCA SPECULUM NIHIL acc_ptr AD OBSECRO collection_series_reduce(arr, len, MENSURA(T), SPECUL...</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="154.70" cy="260.36" r="3.60" data-kind="term" data-ritual="series_reduce" data-line="55" data-col="3" data-depth="4" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: series_reduce
+depth: 4
+line: 55
+
+source:
+REDDE acc</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-main" cx="129.22" cy="177.77" r="5.95" data-kind="rituale" data-ritual="series_find" data-line="58" data-col="1" data-depth="3" data-stmt="RITUALE" data-loops="0" data-calls="0"/>
+      <title>RITUALE series_find
+stmt: 1
+depth: 3
+loops: 0
+calls: 0
+source:
+RITUALE series_find GENUS(T)(SPECULUM NIHIL arr, REX len, SPECULUM NIHIL predicate) REDDE SPE...</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="151.35" cy="191.43" r="2.95" data-kind="bind" data-ritual="series_find" data-depth="3" data-stmt="EVOCA"/>
+      <title>stmt: EVOCA
+rituale: series_find
+depth: 3
+line: 0
+
+source:
+stmt: EVOCA
+rituale: series_find</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="181.08" cy="200.37" r="3.60" data-kind="term" data-ritual="series_find" data-line="59" data-col="3" data-depth="3" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: series_find
+depth: 3
+line: 59
+
+source:
+REDDE OBSECRO collection_series_find(arr, len, MENSURA(T), predicate)</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-main" cx="187.06" cy="139.79" r="5.95" data-kind="rituale" data-ritual="series_any" data-line="62" data-col="1" data-depth="3" data-stmt="RITUALE" data-loops="0" data-calls="0"/>
+      <title>RITUALE series_any
+stmt: 1
+depth: 3
+loops: 0
+calls: 0
+source:
+RITUALE series_any GENUS(T)(SPECULUM NIHIL arr, REX len, SPECULUM NIHIL predicate) REDDE VERUM</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="200.33" cy="162.15" r="2.95" data-kind="bind" data-ritual="series_any" data-depth="3" data-stmt="EVOCA"/>
+      <title>stmt: EVOCA
+rituale: series_any
+depth: 3
+line: 0
+
+source:
+stmt: EVOCA
+rituale: series_any</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="208.75" cy="192.03" r="3.60" data-kind="term" data-ritual="series_any" data-line="63" data-col="3" data-depth="3" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: series_any
+depth: 3
+line: 63
+
+source:
+REDDE OBSECRO collection_series_any(arr, len, MENSURA(T), predicate)</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-main" cx="233.12" cy="124.96" r="5.95" data-kind="rituale" data-ritual="series_all" data-line="66" data-col="1" data-depth="3" data-stmt="RITUALE" data-loops="0" data-calls="0"/>
+      <title>RITUALE series_all
+stmt: 1
+depth: 3
+loops: 0
+calls: 0
+source:
+RITUALE series_all GENUS(T)(SPECULUM NIHIL arr, REX len, SPECULUM NIHIL predicate) REDDE VERUM</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="237.60" cy="150.57" r="2.95" data-kind="bind" data-ritual="series_all" data-depth="3" data-stmt="EVOCA"/>
+      <title>stmt: EVOCA
+rituale: series_all
+depth: 3
+line: 0
+
+source:
+stmt: EVOCA
+rituale: series_all</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="234.87" cy="181.50" r="3.60" data-kind="term" data-ritual="series_all" data-line="67" data-col="3" data-depth="3" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: series_all
+depth: 3
+line: 67
+
+source:
+REDDE OBSECRO collection_series_all(arr, len, MENSURA(T), predicate)</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="271.67" cy="249.79" r="3.44" data-kind="bind" data-ritual="fluxus_map" data-depth="3" data-stmt="EVOCA"/>
+      <title>stmt: EVOCA
+rituale: fluxus_map
+depth: 3
+line: 0
+
+source:
+stmt: EVOCA
+rituale: fluxus_map</title>
+    </g>
+  </g>
+  <g id="ornaments">
+    <circle class="orn" cx="458.58" cy="287.96" r="0.90"/>
+    <circle class="orn" cx="432.87" cy="364.42" r="1.90"/>
+    <circle class="orn" cx="252.23" cy="456.98" r="2.90"/>
+    <circle class="orn" cx="182.69" cy="441.19" r="0.90"/>
+    <circle class="orn" cx="76.75" cy="359.20" r="1.90"/>
+    <circle class="orn" cx="71.08" cy="175.03" r="2.90"/>
+    <circle class="orn" cx="184.51" cy="65.64" r="0.90"/>
+    <circle class="orn" cx="291.68" cy="50.18" r="1.90"/>
+    <circle class="orn" cx="428.59" cy="147.66" r="2.90"/>
+  </g>
+  <g id="signature">
+    <text class="hash" x="256" y="496" text-anchor="middle">ead246d886a0e4ec</text>
+    <text class="label" x="256" y="18" text-anchor="middle">network • sigillum v2.1 • 12 rituale(s) • 22 stmt • depth 4</text>
+  </g>
+</svg>

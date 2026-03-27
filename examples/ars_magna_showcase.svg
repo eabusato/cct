@@ -1,0 +1,591 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512" role="img" aria-label="CCT local sigilo">
+  <desc>Deterministic semantic sigil for a single CCT module.</desc>
+  <defs>
+    <style><![CDATA[
+      .bg { fill: #f5f0e4; }
+      .base { stroke: #2a221c; stroke-width: 1.60; fill: none; opacity: 0.78; }
+      .primary { stroke: #241913; stroke-width: 2.80; fill: none; stroke-linecap: round; stroke-linejoin: round; }
+      .call { stroke: #5b2a22; stroke-width: 2.0; fill: none; stroke-linecap: round; opacity: 0.9; }
+      .branch { stroke: #6b342d; stroke-width: 1.6; fill: none; stroke-linecap: round; }
+      .loop { stroke: #2d5f5a; stroke-width: 1.6; fill: none; stroke-linecap: round; }
+      .bind { stroke: #73493d; stroke-width: 1.4; fill: none; stroke-linecap: round; }
+      .term { stroke: #201814; stroke-width: 1.7; fill: none; stroke-linecap: round; }
+      .node-main { fill: #fffaf1; stroke: #201814; stroke-width: 2.0; }
+      .node-entry { fill: #efe6d4; stroke: #201814; stroke-width: 2.4; }
+      .node-aux { fill: #f6efe0; stroke: #4f4339; stroke-width: 1.3; }
+      .node-loop { fill: #edf3f1; stroke: #2d5f5a; stroke-width: 1.4; }
+      .node-term { fill: #f3e7e3; stroke: #5a2a23; stroke-width: 1.4; }
+      .orn { stroke: #355d58; stroke-width: 1.0; fill: none; opacity: 0.55; }
+      .hash { fill: #1f1a17; font: 10px monospace; letter-spacing: 0.8px; }
+      .label { fill: #1f1a17; font: 8px monospace; opacity: 0.7; }
+      .node-wrap, .edge-wrap { cursor: help; }
+      .node-wrap:hover > circle { opacity: 0.96; }
+      .edge-wrap:hover > path, .edge-wrap:hover > line { opacity: 1.0; }
+    ]]></style>
+  </defs>
+  <rect class="bg" x="0" y="0" width="512" height="512"/>
+  <g id="foundation">
+    <circle class="base" cx="256" cy="256" r="226"/>
+    <ellipse class="base" cx="256" cy="256" rx="198" ry="185.71" opacity="0.32"/>
+  </g>
+  <g id="primary_path">
+    <g class="edge-wrap">
+    <path class="primary" d="M 152.93 136.90 Q 275.76 195.39 411.22 207.93" stroke-width="3.20" opacity="0.96"/>
+      <title>edge: primary
+main -&gt; elevar
+weight: 1
+
+path:
+main -&gt; elevar</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="primary" d="M 411.22 207.93 Q 385.26 251.90 415.26 293.23" stroke-width="2.60" opacity="0.96"/>
+      <title>edge: primary
+elevar -&gt; incrementar_runa
+weight: 1
+
+path:
+elevar -&gt; incrementar_runa</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="primary" d="M 415.26 293.23 Q 378.65 313.25 385.51 354.41" stroke-width="2.60" opacity="0.96"/>
+      <title>edge: primary
+incrementar_runa -&gt; preparar_daemon
+weight: 1
+
+path:
+incrementar_runa -&gt; preparar_daemon</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="primary" d="M 385.51 354.41 Q 338.45 347.57 306.16 382.47" stroke-width="2.60" opacity="0.96"/>
+      <title>edge: primary
+preparar_daemon -&gt; sinal_perigo
+weight: 1
+
+path:
+preparar_daemon -&gt; sinal_perigo</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="primary" d="M 306.16 382.47 Q 261.33 362.82 228.11 398.77" stroke-width="2.60" opacity="0.96"/>
+      <title>edge: primary
+sinal_perigo -&gt; risco
+weight: 1
+
+path:
+sinal_perigo -&gt; risco</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="primary" d="M 228.11 398.77 Q 198.66 349.54 141.38 352.90" stroke-width="2.60" opacity="0.96"/>
+      <title>edge: primary
+risco -&gt; encerrar_ritual
+weight: 1
+
+path:
+risco -&gt; encerrar_ritual</title>
+    </g>
+  </g>
+  <g id="call_links">
+    <g class="edge-wrap">
+    <path class="call" d="M 228.11 398.77 Q 273.52 421.22 306.16 382.47" stroke-width="2.15" opacity="0.74" data-kind="call" data-from="risco" data-to="sinal_perigo" data-weight="1" data-self-loop="false"/>
+      <title>edge: call
+risco -&gt; sinal_perigo
+calls: 1
+
+path:
+risco -&gt; sinal_perigo</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="call" d="M 152.93 136.90 Q 247.36 269.02 385.51 354.41" stroke-width="2.15" opacity="0.74" data-kind="call" data-from="main" data-to="preparar_daemon" data-weight="1" data-self-loop="false"/>
+      <title>edge: call
+main -&gt; preparar_daemon
+calls: 1
+
+path:
+main -&gt; preparar_daemon</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="call" d="M 152.93 136.90 Q 274.43 200.21 411.22 207.93" stroke-width="2.15" opacity="0.74" data-kind="call" data-from="main" data-to="elevar" data-weight="1" data-self-loop="false"/>
+      <title>edge: call
+main -&gt; elevar
+calls: 1
+
+path:
+main -&gt; elevar</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="call" d="M 152.93 136.90 Q 267.32 243.21 415.26 293.23" stroke-width="2.15" opacity="0.74" data-kind="call" data-from="main" data-to="incrementar_runa" data-weight="1" data-self-loop="false"/>
+      <title>edge: call
+main -&gt; incrementar_runa
+calls: 1
+
+path:
+main -&gt; incrementar_runa</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="call" d="M 152.93 136.90 Q 157.78 277.23 228.11 398.77" stroke-width="2.50" opacity="0.80" data-kind="call" data-from="main" data-to="risco" data-weight="2" data-self-loop="false"/>
+      <title>edge: call
+main -&gt; risco
+calls: 2
+
+path:
+main -&gt; risco</title>
+    </g>
+  </g>
+  <g id="branches">
+    <g class="edge-wrap">
+    <path class="branch" d="M 228.11 398.77 Q 231.80 373.92 211.36 359.32" stroke-width="1.70" opacity="0.85"/>
+      <title>edge: branch
+risco -&gt; risco
+weight: 2
+
+path:
+risco -&gt; risco</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="branch" d="M 152.93 136.90 Q 171.71 151.31 195.29 149.17" stroke-width="1.95" opacity="0.85"/>
+      <title>edge: branch
+main -&gt; main
+weight: 3
+
+path:
+main -&gt; main</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="branch" d="M 195.29 149.17 Q 163.82 153.01 139.00 172.76" stroke-width="1.95" opacity="0.85"/>
+      <title>edge: branch
+main -&gt; main
+weight: 3
+
+path:
+main -&gt; main</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="branch" d="M 139.00 172.76 Q 154.00 157.95 152.93 136.90" stroke-width="1.45" opacity="0.85"/>
+      <title>edge: branch
+main -&gt; main
+weight: 1
+
+path:
+main -&gt; main</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="branch" d="M 261.04 250.32 Q 236.70 322.80 228.11 398.77" stroke-width="1.95" opacity="0.85"/>
+      <title>edge: branch
+main -&gt; risco
+weight: 3
+
+path:
+main -&gt; risco</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="branch" d="M 261.04 250.32 Q 213.23 187.66 152.93 136.90" stroke-width="2.10" opacity="0.85"/>
+      <title>edge: branch
+main -&gt; main
+weight: 12
+
+path:
+main -&gt; main</title>
+    </g>
+  </g>
+  <g id="loops">
+    <g class="edge-wrap">
+    <path class="loop" d="M 152.93 136.90 Q 162.21 119.64 158.40 100.43" stroke-width="1.55" opacity="0.88"/>
+      <title>edge: loop
+main -&gt; main
+weight: 2
+
+path:
+main -&gt; main</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="loop" d="M 162.16 100.43 C 193.65 101.84 197.56 123.66 181.94 112.75 C 166.32 123.66 170.23 101.84 155.58 101.93"/>
+      <title>edge: loop
+main -&gt; main
+weight: 2
+
+path:
+main -&gt; main</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="loop" d="M 152.93 136.90 Q 134.66 128.24 114.95 132.74" stroke-width="1.55" opacity="0.88"/>
+      <title>edge: loop
+main -&gt; main
+weight: 2
+
+path:
+main -&gt; main</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="loop" d="M 118.63 132.74 C 153.98 108.48 158.32 132.70 140.97 120.59 C 123.62 132.70 127.96 108.48 112.19 134.24"/>
+    <path class="loop" d="M 145.31 126.65 Q 161.57 134.22 172.41 124.38" opacity="0.85"/>
+      <title>edge: loop
+main -&gt; main
+weight: 2
+
+path:
+main -&gt; main</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="loop" d="M 152.93 136.90 Q 143.54 115.93 124.14 103.63" stroke-width="1.55" opacity="0.88"/>
+      <title>edge: loop
+main -&gt; main
+weight: 2
+
+path:
+main -&gt; main</title>
+    </g>
+  </g>
+  <g id="bindings">
+    <g class="edge-wrap">
+    <path class="bind" d="M 411.22 207.93 Q 396.97 205.87 386.38 215.62" stroke-width="1.28" opacity="0.85"/>
+    <line class="bind" x1="407.44" y1="213.29" x2="405.07" y2="205.65" opacity="0.75"/>
+    <line class="bind" x1="391.19" y1="216.81" x2="397.01" y2="218.26" opacity="0.58"/>
+      <title>edge: bind
+elevar -&gt; elevar
+weight: 1
+
+path:
+elevar -&gt; elevar</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="bind" d="M 415.26 293.23 Q 404.31 282.98 389.94 287.31" stroke-width="1.28" opacity="0.85"/>
+    <line class="bind" x1="409.29" y1="295.94" x2="411.11" y2="288.15" opacity="0.75"/>
+    <line class="bind" x1="394.88" y1="286.94" x2="400.86" y2="286.49" opacity="0.58"/>
+      <title>edge: bind
+incrementar_runa -&gt; incrementar_runa
+weight: 1
+
+path:
+incrementar_runa -&gt; incrementar_runa</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="bind" d="M 385.51 354.41 Q 379.98 340.19 364.80 338.68" stroke-width="1.52" opacity="0.85"/>
+    <line class="bind" x1="378.94" y1="354.45" x2="383.79" y2="348.08" opacity="0.75"/>
+    <line class="bind" x1="376.27" y1="353.67" x2="382.32" y2="345.71" opacity="0.75"/>
+    <line class="bind" x1="374.80" y1="351.30" x2="379.64" y2="344.93" opacity="0.75"/>
+    <line class="bind" x1="372.13" y1="350.52" x2="378.18" y2="342.56" opacity="0.75"/>
+    <line class="bind" x1="370.12" y1="337.74" x2="376.03" y2="336.70" opacity="0.58"/>
+    <line class="bind" x1="366.27" y1="343.88" x2="368.71" y2="352.54" opacity="0.58"/>
+    <line class="bind" x1="359.50" y1="339.68" x2="353.60" y2="340.80" opacity="0.58"/>
+    <line class="bind" x1="366.39" y1="333.52" x2="369.04" y2="324.92" opacity="0.58"/>
+      <title>edge: bind
+preparar_daemon -&gt; preparar_daemon
+weight: 4
+
+path:
+preparar_daemon -&gt; preparar_daemon</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="bind" d="M 228.11 398.77 Q 238.56 387.56 233.10 373.25" stroke-width="1.36" opacity="0.85"/>
+    <line class="bind" x1="225.18" y1="392.90" x2="233.03" y2="394.43" opacity="0.75"/>
+    <line class="bind" x1="224.70" y1="390.15" x2="234.51" y2="392.07" opacity="0.75"/>
+    <line class="bind" x1="238.02" y1="371.94" x2="243.82" y2="370.40" opacity="0.58"/>
+    <line class="bind" x1="228.14" y1="372.03" x2="219.41" y2="369.86" opacity="0.58"/>
+      <title>edge: bind
+risco -&gt; risco
+weight: 2
+
+path:
+risco -&gt; risco</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="bind" d="M 152.93 136.90 Q 158.70 149.10 169.95 156.56" stroke-width="1.80" opacity="0.85"/>
+    <line class="bind" x1="159.36" y1="138.21" x2="153.31" y2="143.45" opacity="0.75"/>
+    <line class="bind" x1="161.82" y1="139.52" x2="154.26" y2="146.07" opacity="0.75"/>
+    <line class="bind" x1="162.76" y1="142.15" x2="156.71" y2="147.38" opacity="0.75"/>
+    <line class="bind" x1="165.22" y1="143.46" x2="157.66" y2="150.00" opacity="0.75"/>
+    <line class="bind" x1="166.17" y1="146.08" x2="160.12" y2="151.31" opacity="0.75"/>
+    <line class="bind" x1="168.62" y1="147.39" x2="161.06" y2="153.93" opacity="0.75"/>
+    <line class="bind" x1="176.69" y1="157.41" x2="182.65" y2="158.16" opacity="0.58"/>
+    <line class="bind" x1="170.37" y1="163.35" x2="170.93" y2="172.33" opacity="0.58"/>
+    <line class="bind" x1="164.89" y1="161.10" x2="160.42" y2="165.11" opacity="0.58"/>
+    <line class="bind" x1="164.01" y1="153.24" x2="156.16" y2="148.84" opacity="0.58"/>
+    <line class="bind" x1="171.46" y1="149.93" x2="172.79" y2="144.08" opacity="0.58"/>
+      <title>edge: bind
+main -&gt; main
+weight: 46
+
+path:
+main -&gt; main</title>
+    </g>
+  </g>
+  <g id="terminals">
+    <g class="edge-wrap">
+    <path class="term" d="M 228.11 398.77 Q 246.01 375.05 246.70 345.34" stroke-width="1.80" opacity="0.90"/>
+      <title>edge: return
+risco -&gt; risco
+weight: 3
+
+path:
+risco -&gt; risco</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="term" d="M 141.38 352.90 Q 119.45 372.14 106.37 398.22" stroke-width="1.65" opacity="0.90"/>
+    <line class="term" x1="104.25" y1="407.83" x2="97.60" y2="402.69"/>
+    <line class="term" x1="100.99" y1="409.10" x2="97.19" y2="406.17" opacity="0.8"/>
+      <title>edge: term
+encerrar_ritual -&gt; encerrar_ritual
+weight: 2
+
+path:
+encerrar_ritual -&gt; encerrar_ritual</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="term" d="M 152.93 136.90 Q 164.34 163.19 183.53 184.48" stroke-width="1.65" opacity="0.90"/>
+      <title>edge: return
+main -&gt; main
+weight: 2
+
+path:
+main -&gt; main</title>
+    </g>
+  </g>
+  <g id="nodes">
+    <g class="node-wrap">
+      <circle class="node-main" cx="411.22" cy="207.93" r="5.95" data-kind="rituale" data-ritual="elevar" data-line="28" data-col="1" data-depth="4" data-stmt="RITUALE" data-loops="0" data-calls="0"/>
+      <title>RITUALE elevar
+stmt: 1
+depth: 4
+loops: 0
+calls: 0
+source:
+RITUALE elevar(SPECULUM REX alvo, REX quantum) REDDE NIHIL</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="386.38" cy="215.62" r="2.95" data-kind="bind" data-ritual="elevar" data-line="29" data-col="3" data-depth="4" data-stmt="VINCIRE"/>
+      <title>stmt: VINCIRE
+rituale: elevar
+depth: 4
+line: 29
+
+source:
+VINCIRE *alvo AD *alvo + quantum</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-main" cx="415.26" cy="293.23" r="5.95" data-kind="rituale" data-ritual="incrementar_runa" data-line="32" data-col="1" data-depth="4" data-stmt="RITUALE" data-loops="0" data-calls="0"/>
+      <title>RITUALE incrementar_runa
+stmt: 1
+depth: 4
+loops: 0
+calls: 0
+source:
+RITUALE incrementar_runa(SPECULUM REX r) REDDE NIHIL</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="389.94" cy="287.31" r="2.95" data-kind="bind" data-ritual="incrementar_runa" data-line="33" data-col="3" data-depth="4" data-stmt="VINCIRE"/>
+      <title>stmt: VINCIRE
+rituale: incrementar_runa
+depth: 4
+line: 33
+
+source:
+VINCIRE *r AD *r + 1</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-main" cx="385.51" cy="354.41" r="6.40" data-kind="rituale" data-ritual="preparar_daemon" data-line="36" data-col="1" data-depth="6" data-stmt="RITUALE" data-loops="0" data-calls="0"/>
+      <title>RITUALE preparar_daemon
+stmt: 4
+depth: 6
+loops: 0
+calls: 0
+source:
+RITUALE preparar_daemon(SPECULUM Daemon out, VERBUM nome, REX base, UMBRA foco) REDDE NIHIL</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="364.80" cy="338.68" r="3.40" data-kind="bind" data-ritual="preparar_daemon" data-line="37" data-col="3" data-depth="6" data-stmt="VINCIRE"/>
+      <title>stmt: VINCIRE
+rituale: preparar_daemon
+depth: 6
+line: 37
+
+source:
+VINCIRE (*out).nomen AD nome</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-main" cx="306.16" cy="382.47" r="5.95" data-kind="rituale" data-ritual="sinal_perigo" data-line="43" data-col="1" data-depth="2" data-stmt="RITUALE" data-loops="0" data-calls="0"/>
+      <title>RITUALE sinal_perigo
+stmt: 1
+depth: 2
+loops: 0
+calls: 0
+source:
+RITUALE sinal_perigo() REDDE NIHIL</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-main" cx="228.11" cy="398.77" r="7.00" data-kind="rituale" data-ritual="risco" data-line="47" data-col="1" data-depth="6" data-stmt="RITUALE" data-loops="0" data-calls="1"/>
+      <title>RITUALE risco
+stmt: 8
+depth: 6
+loops: 0
+calls: 1
+source:
+RITUALE risco(REX potestas) REDDE REX</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="211.36" cy="359.32" r="4.80" data-kind="branch" data-ritual="risco" data-line="49" data-col="5" data-depth="6" data-stmt="SI"/>
+      <title>stmt: SI
+rituale: risco
+depth: 6
+line: 49
+
+source:
+SI potestas &gt; 60</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="233.10" cy="373.25" r="3.10" data-kind="bind" data-ritual="risco" data-line="54" data-col="5" data-depth="6" data-stmt="OBSECRO"/>
+      <title>stmt: OBSECRO
+rituale: risco
+depth: 6
+line: 54
+
+source:
+OBSECRO scribe("[risco.cape] ", erro, "\n")</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="246.70" cy="345.34" r="4.00" data-kind="term" data-ritual="risco" data-line="52" data-col="5" data-depth="6" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: risco
+depth: 6
+line: 52
+
+source:
+REDDE potestas + 1</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-main" cx="141.38" cy="352.90" r="5.95" data-kind="rituale" data-ritual="encerrar_ritual" data-line="62" data-col="1" data-depth="2" data-stmt="RITUALE" data-loops="0" data-calls="0"/>
+      <title>RITUALE encerrar_ritual
+stmt: 1
+depth: 2
+loops: 0
+calls: 0
+source:
+RITUALE encerrar_ritual(REX codigo) REDDE NIHIL</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="106.37" cy="398.22" r="2.90" data-kind="term" data-ritual="encerrar_ritual" data-line="63" data-col="3" data-depth="2" data-stmt="ANUR"/>
+      <title>stmt: ANUR
+rituale: encerrar_ritual
+depth: 2
+line: 63
+
+source:
+ANUR codigo</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-entry" cx="152.93" cy="136.90" r="12.80" data-kind="rituale" data-ritual="main" data-line="66" data-col="1" data-depth="7" data-stmt="RITUALE" data-loops="3" data-calls="5" data-entry="true"/>
+      <title>RITUALE main
+stmt: 56
+depth: 7
+loops: 3
+calls: 5
+source:
+RITUALE main() REDDE REX</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="195.29" cy="149.17" r="5.80" data-kind="branch" data-ritual="main" data-line="134" data-col="3" data-depth="7" data-stmt="SI"/>
+      <title>stmt: SI
+rituale: main
+depth: 7
+line: 134
+
+source:
+SI estado == Ira</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="139.00" cy="172.76" r="5.20" data-kind="branch" data-ritual="main" data-line="137" data-col="5" data-depth="7" data-stmt="ALITER"/>
+      <title>stmt: ALITER
+rituale: main
+depth: 7
+line: 137
+
+source:
+VINCIRE energia AD energia + 1</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-loop" cx="158.40" cy="100.43" r="4.70" data-kind="loop" data-ritual="main" data-line="81" data-col="3" data-depth="7" data-stmt="DUM"/>
+      <title>stmt: DUM
+rituale: main
+depth: 7
+line: 81
+
+source:
+DUM j &lt; 4</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-loop" cx="114.95" cy="132.74" r="4.60" data-kind="loop" data-ritual="main" data-line="88" data-col="3" data-depth="7" data-stmt="DONEC"/>
+      <title>stmt: DONEC
+rituale: main
+depth: 7
+line: 88
+
+source:
+DONEC</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-loop" cx="124.14" cy="103.63" r="3.60" data-kind="loop" data-ritual="main" data-line="74" data-col="3" data-depth="7" data-stmt="REPETE"/>
+      <title>stmt: REPETE
+rituale: main
+depth: 7
+line: 74
+
+source:
+REPETE i DE 0 AD 3</title>
+    </g>
+    <circle class="node-loop" cx="118.54" cy="105.73" r="1.25" opacity="0.9"/>
+    <circle class="node-loop" cx="124.14" cy="101.53" r="1.25" opacity="0.9"/>
+    <line class="loop" x1="118.54" y1="105.73" x2="124.14" y2="101.53" opacity="0.75"/>
+    <circle class="node-loop" cx="129.74" cy="105.73" r="1.25" opacity="0.9"/>
+    <line class="loop" x1="124.14" y1="101.53" x2="129.74" y2="105.73" opacity="0.75"/>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="169.95" cy="156.56" r="4.80" data-kind="bind" data-ritual="main" data-line="67" data-col="3" data-depth="7" data-stmt="EVOCA"/>
+      <title>stmt: EVOCA
+rituale: main
+depth: 7
+line: 67
+
+source:
+EVOCA Daemon d</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="183.53" cy="184.48" r="3.60" data-kind="term" data-ritual="main" data-line="156" data-col="3" data-depth="7" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: main
+depth: 7
+line: 156
+
+source:
+REDDE energia</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="261.04" cy="250.32" r="3.92" data-kind="bind" data-ritual="main" data-line="67" data-col="3" data-depth="7" data-stmt="EVOCA"/>
+      <title>stmt: EVOCA
+rituale: main
+depth: 7
+line: 67
+
+source:
+EVOCA Daemon d</title>
+    </g>
+  </g>
+  <g id="ornaments">
+    <circle class="orn" cx="457.10" cy="286.70" r="0.90"/>
+    <circle class="orn" cx="447.76" cy="344.11" r="1.90"/>
+    <circle class="orn" cx="349.03" cy="432.51" r="2.90"/>
+    <circle class="orn" cx="335.79" cy="438.00" r="0.90"/>
+    <circle class="orn" cx="196.17" cy="455.14" r="1.90"/>
+    <circle class="orn" cx="117.72" cy="415.21" r="2.90"/>
+    <circle class="orn" cx="75.10" cy="347.20" r="0.90"/>
+    <circle class="orn" cx="56.91" cy="220.38" r="1.90"/>
+    <circle class="orn" cx="81.86" cy="151.89" r="2.90"/>
+    <circle class="orn" cx="161.69" cy="69.26" r="0.90"/>
+    <circle class="orn" cx="201.85" cy="63.94" r="1.90"/>
+    <circle class="orn" cx="339.58" cy="67.98" r="2.90"/>
+    <circle class="orn" cx="354.03" cy="75.39" r="0.90"/>
+    <circle class="orn" cx="415.52" cy="134.59" r="1.90"/>
+  </g>
+  <g id="signature">
+    <text class="hash" x="256" y="496" text-anchor="middle">3bbf2d73219d0ad2</text>
+    <text class="label" x="256" y="18" text-anchor="middle">network • sigillum v2.1 • 7 rituale(s) • 72 stmt • depth 7</text>
+  </g>
+</svg>

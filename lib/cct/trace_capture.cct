@@ -1,0 +1,241 @@
+-- CCT — Clavicula Turing
+-- Standard Library Module: trace_capture
+--
+-- Live trace capture over runtime instrumentation
+
+INCIPIT grimoire "trace_capture"
+
+ADVOCARE "cct/date.cct"
+ADVOCARE "cct/fmt.cct"
+ADVOCARE "cct/fluxus.cct"
+ADVOCARE "cct/fs.cct"
+ADVOCARE "cct/instrument.cct"
+ADVOCARE "cct/slug.cct"
+ADVOCARE "cct/trace.cct"
+ADVOCARE "cct/verbum.cct"
+
+SIGILLUM TraceCaptureSession
+  capture_id: VERBUM
+  root_dir: VERBUM
+  session_dir: VERBUM
+  mode: InstrumentMode
+  next_snapshot: REX
+  active: VERUM
+FIN SIGILLUM
+
+RITUALE trace_capture_default_id() REDDE VERBUM
+  REDDE CONIURA datetime_format(CONIURA datetime_now(), "%Y%m%d_%H%M%S")
+EXPLICIT RITUALE
+
+RITUALE trace_capture_join_path(VERBUM base, VERBUM leaf) REDDE VERBUM
+  SI CONIURA ends_with(base, "/")
+    REDDE CONIURA concat(base, leaf)
+  FIN SI
+  REDDE CONIURA concat(CONIURA concat(base, "/"), leaf)
+EXPLICIT RITUALE
+
+RITUALE trace_capture_snapshot_name(REX idx) REDDE VERBUM
+  REDDE CONIURA concat("snapshot-", CONIURA pad_left(CONIURA stringify_int(idx), 3, 48))
+EXPLICIT RITUALE
+
+RITUALE trace_capture_root_slug(VERBUM name) REDDE VERBUM
+  EVOCA VERBUM slug AD CONIURA slug_from_text_latin(name)
+  SI CONIURA len(slug) == 0
+    REDDE "request"
+  FIN SI
+  REDDE slug
+EXPLICIT RITUALE
+
+RITUALE trace_capture_file_name(REX ordinal, VERBUM root_name) REDDE VERBUM
+  EVOCA VERBUM out AD CONIURA concat("request-", CONIURA pad_left(CONIURA stringify_int(ordinal), 3, 48))
+  VINCIRE out AD CONIURA concat(out, "-")
+  VINCIRE out AD CONIURA concat(out, CONIURA trace_capture_root_slug(root_name))
+  VINCIRE out AD CONIURA concat(out, ".ctrace")
+  REDDE out
+EXPLICIT RITUALE
+
+RITUALE trace_capture_trace_id(VERBUM capture_id, REX snapshot_idx, REX ordinal, VERBUM root_name) REDDE VERBUM
+  EVOCA VERBUM out AD capture_id
+  VINCIRE out AD CONIURA concat(out, "-s")
+  VINCIRE out AD CONIURA concat(out, CONIURA pad_left(CONIURA stringify_int(snapshot_idx), 3, 48))
+  VINCIRE out AD CONIURA concat(out, "-r")
+  VINCIRE out AD CONIURA concat(out, CONIURA pad_left(CONIURA stringify_int(ordinal), 3, 48))
+  VINCIRE out AD CONIURA concat(out, "-")
+  VINCIRE out AD CONIURA concat(out, CONIURA trace_capture_root_slug(root_name))
+  REDDE out
+EXPLICIT RITUALE
+
+RITUALE trace_capture_find_runtime_index(SPECULUM NIHIL spans, REX span_id) REDDE REX
+  EVOCA REX i AD 0
+  EVOCA REX n AD CONIURA fluxus_len(spans)
+  DUM i < n
+    EVOCA SPECULUM InstrumentSpan span_ptr AD CONIURA fluxus_get(spans, i)
+    SI (*span_ptr).span_id == span_id
+      REDDE i
+    FIN SI
+    VINCIRE i AD i + 1
+  FIN DUM
+  REDDE -1
+EXPLICIT RITUALE
+
+RITUALE trace_capture_root_runtime_id(SPECULUM NIHIL spans, REX index) REDDE REX
+  EVOCA REX current AD index
+  EVOCA REX guard AD 0
+  DUM current >= 0 ET guard < 4096
+    EVOCA SPECULUM InstrumentSpan span_ptr AD CONIURA fluxus_get(spans, current)
+    SI (*span_ptr).parent_id == 0
+      REDDE (*span_ptr).span_id
+    FIN SI
+    VINCIRE current AD CONIURA trace_capture_find_runtime_index(spans, (*span_ptr).parent_id)
+    SI current < 0
+      REDDE 0
+    FIN SI
+    VINCIRE guard AD guard + 1
+  FIN DUM
+  REDDE 0
+EXPLICIT RITUALE
+
+RITUALE trace_capture_root_name(SPECULUM NIHIL spans, REX root_id) REDDE VERBUM
+  EVOCA REX idx AD CONIURA trace_capture_find_runtime_index(spans, root_id)
+  SI idx < 0
+    REDDE "request"
+  FIN SI
+  EVOCA SPECULUM InstrumentSpan span_ptr AD CONIURA fluxus_get(spans, idx)
+  REDDE (*span_ptr).name
+EXPLICIT RITUALE
+
+RITUALE trace_capture_has_root(SPECULUM NIHIL roots, REX root_id) REDDE VERUM
+  EVOCA REX i AD 0
+  EVOCA REX n AD CONIURA fluxus_len(roots)
+  DUM i < n
+    EVOCA SPECULUM REX root_ptr AD CONIURA fluxus_get(roots, i)
+    SI (*root_ptr) == root_id
+      REDDE VERUM
+    FIN SI
+    VINCIRE i AD i + 1
+  FIN DUM
+  REDDE FALSUM
+EXPLICIT RITUALE
+
+RITUALE trace_capture_collect_roots(SPECULUM NIHIL spans) REDDE SPECULUM NIHIL
+  EVOCA SPECULUM NIHIL roots AD CONIURA fluxus_init(MENSURA(REX))
+  EVOCA REX i AD 0
+  EVOCA REX n AD CONIURA fluxus_len(spans)
+  DUM i < n
+    EVOCA REX root_id AD CONIURA trace_capture_root_runtime_id(spans, i)
+    SI root_id > 0 ET NON CONIURA trace_capture_has_root(roots, root_id)
+      CONIURA fluxus_push(roots, SPECULUM root_id)
+    FIN SI
+    VINCIRE i AD i + 1
+  FIN DUM
+  REDDE roots
+EXPLICIT RITUALE
+
+RITUALE trace_capture_write_root_trace(
+  SPECULUM NIHIL spans,
+  REX root_id,
+  VERBUM trace_id,
+  VERBUM path
+) REDDE NIHIL
+  EVOCA Trace trace AD CONIURA trace_new_with_id(trace_id)
+  EVOCA REX i AD 0
+  EVOCA REX n AD CONIURA fluxus_len(spans)
+  DUM i < n
+    EVOCA SPECULUM InstrumentSpan runtime_span AD CONIURA fluxus_get(spans, i)
+    SI CONIURA trace_capture_root_runtime_id(spans, i) == root_id
+      EVOCA Span trace_span AD CONIURA instrument_trace_span_from_runtime(trace_id, *runtime_span)
+      CONIURA fluxus_push(trace.spans, SPECULUM trace_span)
+    FIN SI
+    VINCIRE i AD i + 1
+  FIN DUM
+  CONIURA trace_write_file(trace, path)
+  CONIURA trace_free(SPECULUM trace)
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE trace_capture_export_snapshot(
+  SPECULUM TraceCaptureSession session,
+  SPECULUM NIHIL spans
+) REDDE REX
+  EVOCA SPECULUM NIHIL roots AD CONIURA trace_capture_collect_roots(spans)
+  EVOCA REX total AD CONIURA fluxus_len(roots)
+  EVOCA REX ordinal AD 0
+  EVOCA VERBUM snapshot_dir AD ""
+  SI total == 0
+    CONIURA fluxus_free(roots)
+    REDDE 0
+  FIN SI
+
+  VINCIRE snapshot_dir AD CONIURA trace_capture_join_path((*session).session_dir, CONIURA trace_capture_snapshot_name((*session).next_snapshot))
+  CONIURA mkdir_all(snapshot_dir)
+
+  DUM ordinal < total
+    EVOCA SPECULUM REX root_ptr AD CONIURA fluxus_get(roots, ordinal)
+    EVOCA VERBUM root_name AD CONIURA trace_capture_root_name(spans, *root_ptr)
+    EVOCA VERBUM file_name AD CONIURA trace_capture_file_name(ordinal + 1, root_name)
+    EVOCA VERBUM file_path AD CONIURA trace_capture_join_path(snapshot_dir, file_name)
+    EVOCA VERBUM trace_id AD CONIURA trace_capture_trace_id((*session).capture_id, (*session).next_snapshot, ordinal + 1, root_name)
+    CONIURA trace_capture_write_root_trace(spans, *root_ptr, trace_id, file_path)
+    VINCIRE ordinal AD ordinal + 1
+  FIN DUM
+
+  CONIURA fluxus_free(roots)
+  VINCIRE (*session).next_snapshot AD (*session).next_snapshot + 1
+  REDDE total
+EXPLICIT RITUALE
+
+RITUALE trace_capture_start_in(VERBUM root_dir, VERBUM capture_id, InstrumentMode mode) REDDE TraceCaptureSession
+  EVOCA TraceCaptureSession session
+  EVOCA VERBUM id AD capture_id
+  SI CONIURA len(id) == 0
+    VINCIRE id AD CONIURA trace_capture_default_id()
+  FIN SI
+  VINCIRE session.capture_id AD id
+  VINCIRE session.root_dir AD root_dir
+  VINCIRE session.session_dir AD CONIURA trace_capture_join_path(root_dir, id)
+  VINCIRE session.mode AD mode
+  VINCIRE session.next_snapshot AD 1
+  VINCIRE session.active AD VERUM
+  CONIURA mkdir_all(root_dir)
+  CONIURA mkdir_all(session.session_dir)
+  CONIURA instrument_enable(mode)
+  CONIURA instrument_buffer_clear()
+  REDDE session
+EXPLICIT RITUALE
+
+RITUALE trace_capture_start(VERBUM root_dir) REDDE TraceCaptureSession
+  REDDE CONIURA trace_capture_start_in(root_dir, "", INSTR_MODE_FULL)
+EXPLICIT RITUALE
+
+RITUALE trace_capture_snapshot(SPECULUM TraceCaptureSession session) REDDE REX
+  EVOCA SPECULUM NIHIL spans
+  EVOCA REX exported AD 0
+  SI NON (*session).active
+    REDDE 0
+  FIN SI
+  VINCIRE spans AD CONIURA instrument_buffer_drain()
+  VINCIRE exported AD CONIURA trace_capture_export_snapshot(session, spans)
+  CONIURA instrument_spans_free(spans)
+  REDDE exported
+EXPLICIT RITUALE
+
+RITUALE trace_capture_flush(SPECULUM TraceCaptureSession session) REDDE REX
+  REDDE CONIURA trace_capture_snapshot(session)
+EXPLICIT RITUALE
+
+RITUALE trace_capture_stop(SPECULUM TraceCaptureSession session) REDDE REX
+  EVOCA REX exported AD CONIURA trace_capture_snapshot(session)
+  CONIURA instrument_disable()
+  VINCIRE (*session).active AD FALSUM
+  REDDE exported
+EXPLICIT RITUALE
+
+RITUALE trace_capture_is_active(TraceCaptureSession session) REDDE VERUM
+  REDDE session.active
+EXPLICIT RITUALE
+
+RITUALE trace_capture_dir(TraceCaptureSession session) REDDE VERBUM
+  REDDE session.session_dir
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

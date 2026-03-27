@@ -1,0 +1,48 @@
+INCIPIT grimoire "trace_capture_split_requests_38a"
+
+ADVOCARE "cct/fluxus.cct"
+ADVOCARE "cct/fs.cct"
+ADVOCARE "cct/instrument.cct"
+ADVOCARE "cct/trace_capture.cct"
+ADVOCARE "cct/verbum.cct"
+
+RITUALE trace_capture_read_dir(VERBUM dir) REDDE VERBUM
+  REDDE CONIURA concat(
+    CONIURA read_all(CONIURA concat(dir, "/request-001-get-posts.ctrace")),
+    CONIURA read_all(CONIURA concat(dir, "/request-002-post-media-upload.ctrace"))
+  )
+EXPLICIT RITUALE
+
+RITUALE main() REDDE REX
+  EVOCA TraceCaptureSession session AD CONIURA trace_capture_start_in("tests/.tmp/trace_capture_split_requests_38a", "capture-split", INSTR_MODE_FULL)
+  EVOCA REX req1 AD CONIURA instrument_http_span("GET", "/posts")
+  CONIURA instrument_span_attr(req1, "route_id", "posts.list")
+  CONIURA instrument_span_end(req1)
+  EVOCA REX req2 AD CONIURA instrument_http_span("POST", "/media/upload")
+  CONIURA instrument_span_attr(req2, "route_id", "media.upload")
+  CONIURA instrument_span_end(req2)
+
+  SI CONIURA trace_capture_snapshot(SPECULUM session) != 2
+    REDDE 1
+  FIN SI
+  CONIURA trace_capture_stop(SPECULUM session)
+
+  EVOCA VERBUM snapshot_dir AD CONIURA concat(CONIURA trace_capture_dir(session), "/snapshot-001")
+  EVOCA SPECULUM NIHIL files AD CONIURA list_dir(snapshot_dir)
+  SI CONIURA fluxus_len(files) != 2
+    CONIURA fluxus_free(files)
+    REDDE 2
+  FIN SI
+  CONIURA fluxus_free(files)
+
+  EVOCA VERBUM joined AD CONIURA trace_capture_read_dir(snapshot_dir)
+  SI NON CONIURA contains(joined, "\"name\":\"GET /posts\"")
+    REDDE 3
+  FIN SI
+  SI NON CONIURA contains(joined, "\"name\":\"POST /media/upload\"")
+    REDDE 4
+  FIN SI
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

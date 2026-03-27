@@ -1,0 +1,567 @@
+format = cct.sigil.v1
+sigilo_scope = local
+visual_engine = sigillum_v2_1
+visual_style = routes
+compiler_version = 0.19.0
+program_name = sigilo_rotas_constelacao_35
+semantic_hash = 618c5f1ec0fdf570
+layout_seed = 618c5f1ec0fdf570:routes
+module_mode = single
+module_count = 1
+import_edge_count = 0
+entry_module = examples/sigilo_rotas_constelacao_35.cct
+cross_module_call_count = 0
+cross_module_type_ref_count = 0
+module_resolution_status = ok
+stdlib_module_count = 0
+stdlib_modules_used = none
+verbum_module_used = false
+fmt_module_used = false
+series_module_used = false
+fluxus_module_used = false
+mem_module_used = false
+io_module_used = false
+fs_module_used = false
+path_module_used = false
+math_module_used = false
+random_module_used = false
+parse_module_used = false
+cmp_module_used = false
+alg_module_used = false
+option_module_used = false
+result_module_used = false
+map_module_used = false
+set_module_used = false
+collection_ops_module_used = false
+visibility_model = public_default_arcanum_internal
+public_symbol_count = 24
+internal_symbol_count = 0
+
+[metrics]
+ritual_count = 24
+entry_ritual_index = 23
+entry_ritual_name = main
+total_statements = 24
+total_expressions = 24
+max_nesting = 2
+avg_nesting = 1.000
+loops_total = 0
+conditionals_total = 0
+calls_total = 0
+obsecro_total = 0
+returns_total = 24
+anur_total = 0
+sigillum_decl_total = 0
+ordo_decl_total = 0
+generic_decl_count = 0
+generic_param_count = 0
+generic_rituale_count = 0
+generic_sigillum_count = 0
+generic_instantiation_count = 0
+generic_rituale_instantiation_count = 0
+generic_sigillum_instantiation_count = 0
+generic_instantiation_dedup_count = 0
+generic_constraint_count = 0
+generic_constrained_param_count = 0
+generic_constraint_violation_count = 0
+pactum_constraint_resolution_status = ok
+generic_monomorphization_status = ok
+pactum_decl_count = 0
+pactum_signature_count = 0
+sigillum_pactum_conformance_count = 0
+pactum_conformance_status = ok
+multi_ritual = true
+complexity_class = dense
+
+[counts]
+evoca = 0
+vincire = 0
+si = 0
+aliter = 0
+dum = 0
+donec = 0
+repete = 0
+iterum = 0
+iterum_count = 0
+coniura = 0
+obsecro = 0
+redde = 24
+anur = 0
+field_access = 0
+index_access = 0
+series_type_use = 0
+speculum_type_use = 0
+sigillum_decl = 0
+sigillum_composite_field = 0
+ordo_decl = 0
+type_umbra = 0
+type_flamma = 0
+address_of = 0
+deref = 0
+alloc = 0
+free = 0
+dimitte = 0
+fluxus_ops_count = 0
+verbum_ops_count = 0
+fmt_ops_count = 0
+series_ops_count = 0
+mem_ops_count = 0
+io_ops_count = 0
+fs_ops_count = 0
+fluxus_init_count = 0
+fluxus_push_count = 0
+fluxus_pop_count = 0
+fluxus_instances_count = 0
+path_ops_count = 0
+math_ops_count = 0
+random_ops_count = 0
+parse_ops_count = 0
+cmp_ops_count = 0
+alg_ops_count = 0
+option_ops_count = 0
+result_ops_count = 0
+map_ops_count = 0
+set_ops_count = 0
+collection_ops_count = 0
+pactum_decl = 0
+pactum_signature = 0
+sigillum_pactum_conformance = 0
+generic_constraint = 0
+generic_constrained_param = 0
+generic_constraint_violation = 0
+tempta = 0
+cape = 0
+semper = 0
+iace = 0
+
+[topology]
+node_count = 48
+edge_count = 47
+primary_path_nodes = 24
+ritual_poles = 24
+aux_nodes = 24
+self_call_count = 0
+loop_presence = false
+conditional_presence = false
+call_presence = false
+density_ratio = 0.500
+field_access_presence = false
+index_access_presence = false
+memory_presence = false
+speculum_presence = false
+dynamic_indexable_memory_presence = false
+indirect_structural_flow_presence = false
+failure_construct_presence = false
+tempta_presence = false
+cape_presence = false
+semper_presence = false
+iace_presence = false
+failure_call_propagation_presence = false
+failure_call_propagation_count = 0
+iace_across_coniura_presence = false
+tempta_call_capture_presence = false
+failure_cleanup_presence = false
+failure_cleanup_memory_presence = false
+runtime_failure_bridge_presence = false
+phase7_subset_final = true
+phase7_discard_policy = manual_explicit(obsecro_libera,dimitte)
+phase8_subset_final = true
+phase8_failure_policy = fractum_simple_opaco(payload=verbum);tempta_cape_semper_subset
+phase8_runtime_fail_policy = partial_bridge_documented(integrated=null_pointer_checks_in_instrumented_failure_paths;others=direct_abort)
+phase10_subset_final = true
+phase10_final_status = consolidated
+phase10_typing_contract = genus_explicit_monomorphization+pactum_explicit_conformance+constraint_single_contract_rituale_only
+
+[analysis_summary]
+scope = local
+schema_phase = 13C2
+analysis_profile = analytical_v1
+complexity_class = dense
+control_flow_pressure = 0
+failure_surface = none
+stdlib_surface = 0
+generic_surface = 0
+determinism_guarantee = stable
+
+[diff_fingerprint_context]
+scope_anchor = local
+hash_anchor = 618c5f1ec0fdf570
+fingerprint_basis = structural_metrics+topology+hash_anchor
+serialization_profile = analytical_v1
+volatility = none
+module_anchor_count = 1
+entry_anchor = examples/sigilo_rotas_constelacao_35.cct
+
+[module_structural_summary]
+module_count = 1
+module_mode = single
+import_edge_count = 0
+cross_module_call_count = 0
+cross_module_type_ref_count = 0
+ritual_count = 24
+public_symbol_count = 24
+internal_symbol_count = 0
+module_resolution_status = ok
+
+[compatibility_hints]
+schema_contract = cct.sigil.v1
+unknown_field_policy = warning_non_fatal
+deprecated_alias = sigilo_style->visual_engine
+consumer_mode_tolerant = ignore_unknown_additive_fields
+consumer_mode_strict = enforce_required_fields_and_hash_by_scope
+diff_policy = analytical_blocks_review_required_except_compatibility_hints
+deterministic_serialization = stable_section_order
+
+[web_routes]
+route_count = 23
+group_count = 8
+middleware_count = 51
+source = native
+web_topology_hash = 9d5ba7b2613f5102
+
+[web_route.0]
+route_id = site.home
+method = GET
+path = /
+handler = site_home
+module = examples/sigilo_rotas_constelacao_35.cct
+group = /
+middleware = none
+path_params = none
+route_hash = 03e62c702b4bd106
+source_origin = native
+
+[web_route.1]
+route_id = site.manifesto
+method = GET
+path = /manifesto
+handler = site_manifesto
+module = examples/sigilo_rotas_constelacao_35.cct
+group = /
+middleware = trace
+path_params = none
+route_hash = b0b23ea018da2e2f
+source_origin = native
+
+[web_route.2]
+route_id = admin.dashboard
+method = GET
+path = /admin
+handler = admin_dashboard
+module = examples/sigilo_rotas_constelacao_35.cct
+group = /admin
+middleware = staff,trace
+path_params = none
+route_hash = 91c48bcdf28642e9
+source_origin = native
+
+[web_route.3]
+route_id = admin.reports.queue
+method = GET
+path = /admin/denuncias
+handler = admin_reports_queue
+module = examples/sigilo_rotas_constelacao_35.cct
+group = /admin
+middleware = staff,moderation,trace
+path_params = none
+route_hash = d560cf8edc18575d
+source_origin = native
+
+[web_route.4]
+route_id = admin.media.approve
+method = POST
+path = /admin/media/:id/aprovar
+handler = admin_media_approve
+module = examples/sigilo_rotas_constelacao_35.cct
+group = /admin
+middleware = staff,csrf,moderation
+path_params = id
+route_hash = d487b854dc8c498b
+source_origin = native
+
+[web_route.5]
+route_id = api.contos.search
+method = GET
+path = /api/contos/busca
+handler = api_contos_search
+module = examples/sigilo_rotas_constelacao_35.cct
+group = /api
+middleware = api,trace,cache
+path_params = none
+route_hash = d94c994e415412d0
+source_origin = native
+
+[web_route.6]
+route_id = api.media.inspect
+method = GET
+path = /api/media/:id
+handler = api_media_inspect
+module = examples/sigilo_rotas_constelacao_35.cct
+group = /api
+middleware = api,auth,trace
+path_params = id
+route_hash = 1a7def6932ebe1b0
+source_origin = native
+
+[web_route.7]
+route_id = api.metrics.ingest
+method = POST
+path = /api/metrics
+handler = api_metrics_ingest
+module = examples/sigilo_rotas_constelacao_35.cct
+group = /api
+middleware = api,signature,rate
+path_params = none
+route_hash = 641cb323705384d7
+source_origin = native
+
+[web_route.8]
+route_id = auth.login.view
+method = GET
+path = /entrar
+handler = auth_login_view
+module = examples/sigilo_rotas_constelacao_35.cct
+group = /auth
+middleware = guest,trace
+path_params = none
+route_hash = 705bdb1aa55820da
+source_origin = native
+
+[web_route.9]
+route_id = auth.login.submit
+method = POST
+path = /entrar
+handler = auth_login_submit
+module = examples/sigilo_rotas_constelacao_35.cct
+group = /auth
+middleware = csrf,trace
+path_params = none
+route_hash = ce6bdb2e2cfd50fe
+source_origin = native
+
+[web_route.10]
+route_id = auth.logout
+method = POST
+path = /sair
+handler = auth_logout
+module = examples/sigilo_rotas_constelacao_35.cct
+group = /auth
+middleware = auth,csrf
+path_params = none
+route_hash = a3dea18aa25f2ca7
+source_origin = native
+
+[web_route.11]
+route_id = chat.rooms
+method = GET
+path = /chat/salas
+handler = chat_rooms
+module = examples/sigilo_rotas_constelacao_35.cct
+group = /chat
+middleware = auth,trace
+path_params = none
+route_hash = 9a7b4af8ae3fec3a
+source_origin = native
+
+[web_route.12]
+route_id = chat.room.show
+method = GET
+path = /chat/salas/:id
+handler = chat_room_show
+module = examples/sigilo_rotas_constelacao_35.cct
+group = /chat
+middleware = auth,trace
+path_params = id
+route_hash = 99519cbb21c7a8a8
+source_origin = native
+
+[web_route.13]
+route_id = chat.room.post
+method = POST
+path = /chat/salas/:id/mensagens
+handler = chat_room_post
+module = examples/sigilo_rotas_constelacao_35.cct
+group = /chat
+middleware = auth,csrf,rate
+path_params = id
+route_hash = bd9d46626b04e6ff
+source_origin = native
+
+[web_route.14]
+route_id = contos.feed
+method = GET
+path = /contos
+handler = contos_feed
+module = examples/sigilo_rotas_constelacao_35.cct
+group = /contos
+middleware = trace
+path_params = none
+route_hash = 8a583f95dd294fbd
+source_origin = native
+
+[web_route.15]
+route_id = contos.create
+method = POST
+path = /contos
+handler = contos_create
+module = examples/sigilo_rotas_constelacao_35.cct
+group = /contos
+middleware = auth,csrf,moderation
+path_params = none
+route_hash = 6652fa68c8deb2b4
+source_origin = native
+
+[web_route.16]
+route_id = contos.show
+method = GET
+path = /contos/:slug
+handler = contos_show
+module = examples/sigilo_rotas_constelacao_35.cct
+group = /contos
+middleware = trace
+path_params = slug
+route_hash = 4fc2076f3ce41416
+source_origin = native
+
+[web_route.17]
+route_id = contos.react
+method = POST
+path = /contos/:slug/reagir
+handler = contos_react
+module = examples/sigilo_rotas_constelacao_35.cct
+group = /contos
+middleware = auth,csrf
+path_params = slug
+route_hash = bd631eb8e59a4bae
+source_origin = native
+
+[web_route.18]
+route_id = media.upload.image
+method = POST
+path = /media/imagens
+handler = media_upload_image
+module = examples/sigilo_rotas_constelacao_35.cct
+group = /media
+middleware = auth,csrf,quota
+path_params = none
+route_hash = 939832ab4471e03c
+source_origin = native
+
+[web_route.19]
+route_id = media.thumb
+method = GET
+path = /media/thumb/:id
+handler = media_thumb
+module = examples/sigilo_rotas_constelacao_35.cct
+group = /media
+middleware = trace,cache
+path_params = id
+route_hash = 521d4adf6af09ed9
+source_origin = native
+
+[web_route.20]
+route_id = media.upload.video
+method = POST
+path = /media/videos
+handler = media_upload_video
+module = examples/sigilo_rotas_constelacao_35.cct
+group = /media
+middleware = auth,csrf,quota,transcode
+path_params = none
+route_hash = 13ae8c39e8d7bd7d
+source_origin = native
+
+[web_route.21]
+route_id = perfil.show
+method = GET
+path = /perfil/:slug
+handler = perfil_show
+module = examples/sigilo_rotas_constelacao_35.cct
+group = /perfil
+middleware = auth,trace
+path_params = slug
+route_hash = bfdbabfadad23d52
+source_origin = native
+
+[web_route.22]
+route_id = perfil.media
+method = GET
+path = /perfil/:slug/midia
+handler = perfil_media
+module = examples/sigilo_rotas_constelacao_35.cct
+group = /perfil
+middleware = auth,trace
+path_params = slug
+route_hash = ca7cfbae247bf451
+source_origin = native
+
+[layout]
+primary_axis_deg = 20.093
+canvas_center = 256.0,256.0
+containment_radius = 226.0
+style_influence = stroke/curvature/distribution/ornamentation
+
+[visual_grammar]
+style = network inscription / ritual seal (FASE 6A)
+style_selected = routes
+foundation = minimal containment circle (+ optional light secondary ring)
+layers = foundation,primary_path,call_links,branches,loops,bindings,terminals,nodes,ornaments,signature
+macro_layout = ritual nodes + structural links + primary path
+rituale = primary node / pole in network
+coniura = dominant inter-ritual link (self-call => local loop)
+si = real bifurcation node + branch split
+aliter = alternate branch / compensatory reconnection
+dum = recurrence loop glyph (pre-test)
+donec = post_test loop glyph (loop + tail)
+repete = serial pulse chain / cadence marks
+series = indexed sequence pattern (metadata/hash influence, v2.1 visual modulation)
+speculum = pointer/reference construct (metadata/hash/topology influence, visual refinement deferred)
+address_of = reference acquisition mark (structural/hash influence)
+deref = bound access incision mark (structural/hash influence)
+memory_alloc_free = pete/libera/dimitte contribute memory-presence metrics/hash
+failure_propagation = TEMPTA/CAPE/IACE + CONIURA propagation tracked primarily via metadata/topology counts (FASE 8B)
+semper = guaranteed cleanup/finally block tracked in metadata/hash (FASE 8C; visual refinement deferred)
+failure_phase8_final = metadata reflects consolidated subset semantics through FASE 8D (IACE/TEMPTA/CAPE/SEMPER + propagation + partial runtime bridge)
+dynamic_indexable_memory = alloc/free + index_access + speculum/deref combination contributes topology metadata/hash (FASE 7C)
+field_access = bound branch tap / field rune mark (metadata/hash influence)
+indirect_structural_flow = field_access + speculum/deref combination contributes structural metadata/hash (FASE 7C)
+phase7_final = metadata reflects consolidated subset semantics through FASE 7D (no visual engine redesign)
+tempta_cape_iace = failure-control constructs contribute metadata/hash in FASE 8A (visual refinement deferred)
+sigillum = named vessel/struct declaration contributes topology metadata
+sigillum_composition = nested SIGILLUM field composition contributes structural metadata/hash
+ordo = ordinal taxonomy declaration contributes topology metadata
+evoca = emergence from binding node
+vincire = visible binding bars / lock marks
+obsecro = emissive rays (secondary)
+redde = convergent terminal path
+anur = terminal cut/notch
+hash_role = secondary modulation (jitter/curvature/thickness/signature)
+style_role = visual weighting/curvature/distribution without changing structural semantics
+
+[rituales]
+0 = site_home | entry=false | stmt=1 | depth=2 | calls=0 | loops=0
+1 = site_manifesto | entry=false | stmt=1 | depth=2 | calls=0 | loops=0
+2 = auth_login_view | entry=false | stmt=1 | depth=2 | calls=0 | loops=0
+3 = auth_login_submit | entry=false | stmt=1 | depth=2 | calls=0 | loops=0
+4 = auth_logout | entry=false | stmt=1 | depth=2 | calls=0 | loops=0
+5 = perfil_show | entry=false | stmt=1 | depth=2 | calls=0 | loops=0
+6 = perfil_media | entry=false | stmt=1 | depth=2 | calls=0 | loops=0
+7 = contos_feed | entry=false | stmt=1 | depth=2 | calls=0 | loops=0
+8 = contos_show | entry=false | stmt=1 | depth=2 | calls=0 | loops=0
+9 = contos_create | entry=false | stmt=1 | depth=2 | calls=0 | loops=0
+10 = contos_react | entry=false | stmt=1 | depth=2 | calls=0 | loops=0
+11 = media_upload_image | entry=false | stmt=1 | depth=2 | calls=0 | loops=0
+12 = media_upload_video | entry=false | stmt=1 | depth=2 | calls=0 | loops=0
+13 = media_thumb | entry=false | stmt=1 | depth=2 | calls=0 | loops=0
+14 = chat_rooms | entry=false | stmt=1 | depth=2 | calls=0 | loops=0
+15 = chat_room_show | entry=false | stmt=1 | depth=2 | calls=0 | loops=0
+16 = chat_room_post | entry=false | stmt=1 | depth=2 | calls=0 | loops=0
+17 = api_contos_search | entry=false | stmt=1 | depth=2 | calls=0 | loops=0
+18 = api_media_inspect | entry=false | stmt=1 | depth=2 | calls=0 | loops=0
+19 = api_metrics_ingest | entry=false | stmt=1 | depth=2 | calls=0 | loops=0
+20 = admin_dashboard | entry=false | stmt=1 | depth=2 | calls=0 | loops=0
+21 = admin_reports_queue | entry=false | stmt=1 | depth=2 | calls=0 | loops=0
+22 = admin_media_approve | entry=false | stmt=1 | depth=2 | calls=0 | loops=0
+23 = main | entry=true | stmt=1 | depth=2 | calls=0 | loops=0
+
+[call_edges]

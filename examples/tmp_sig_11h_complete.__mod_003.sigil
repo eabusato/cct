@@ -1,0 +1,358 @@
+format = cct.sigil.v1
+sigilo_scope = local
+visual_engine = sigillum_v2_1
+visual_style = network
+compiler_version = 0.19.0
+program_name = verbum
+semantic_hash = 963d74e1a8a9f741
+layout_seed = 963d74e1a8a9f741:network
+module_mode = composed
+module_count = 8
+import_edge_count = 7
+entry_module = examples/collection_ops_12d2.cct
+cross_module_call_count = 18
+cross_module_type_ref_count = 0
+module_resolution_status = ok
+stdlib_module_count = 1
+stdlib_modules_used = verbum
+verbum_module_used = true
+fmt_module_used = false
+series_module_used = false
+fluxus_module_used = false
+mem_module_used = false
+io_module_used = false
+fs_module_used = false
+path_module_used = false
+math_module_used = false
+random_module_used = false
+parse_module_used = false
+cmp_module_used = false
+alg_module_used = false
+option_module_used = false
+result_module_used = false
+map_module_used = false
+set_module_used = false
+collection_ops_module_used = false
+visibility_model = public_default_arcanum_internal
+public_symbol_count = 144
+internal_symbol_count = 0
+
+[metrics]
+ritual_count = 46
+entry_ritual_index = 0
+entry_ritual_name = len
+total_statements = 148
+total_expressions = 469
+max_nesting = 9
+avg_nesting = 2.844
+loops_total = 11
+conditionals_total = 19
+calls_total = 74
+obsecro_total = 26
+returns_total = 58
+anur_total = 0
+sigillum_decl_total = 0
+ordo_decl_total = 0
+generic_decl_count = 0
+generic_param_count = 0
+generic_rituale_count = 0
+generic_sigillum_count = 0
+generic_instantiation_count = 1
+generic_rituale_instantiation_count = 1
+generic_sigillum_instantiation_count = 0
+generic_instantiation_dedup_count = 1
+generic_constraint_count = 0
+generic_constrained_param_count = 0
+generic_constraint_violation_count = 0
+pactum_constraint_resolution_status = ok
+generic_monomorphization_status = ok
+pactum_decl_count = 0
+pactum_signature_count = 0
+sigillum_pactum_conformance_count = 0
+pactum_conformance_status = ok
+multi_ritual = true
+complexity_class = looped
+
+[counts]
+evoca = 39
+vincire = 17
+si = 19
+aliter = 0
+dum = 11
+donec = 0
+repete = 0
+iterum = 0
+iterum_count = 0
+coniura = 74
+obsecro = 26
+redde = 58
+anur = 0
+field_access = 0
+index_access = 0
+series_type_use = 0
+speculum_type_use = 0
+sigillum_decl = 0
+sigillum_composite_field = 0
+ordo_decl = 0
+type_umbra = 0
+type_flamma = 0
+address_of = 0
+deref = 0
+alloc = 0
+free = 0
+dimitte = 0
+fluxus_ops_count = 0
+verbum_ops_count = 50
+fmt_ops_count = 0
+series_ops_count = 0
+mem_ops_count = 0
+io_ops_count = 0
+fs_ops_count = 0
+fluxus_init_count = 0
+fluxus_push_count = 0
+fluxus_pop_count = 0
+fluxus_instances_count = 0
+path_ops_count = 0
+math_ops_count = 0
+random_ops_count = 0
+parse_ops_count = 0
+cmp_ops_count = 0
+alg_ops_count = 0
+option_ops_count = 0
+result_ops_count = 0
+map_ops_count = 0
+set_ops_count = 0
+collection_ops_count = 0
+pactum_decl = 0
+pactum_signature = 0
+sigillum_pactum_conformance = 0
+generic_constraint = 0
+generic_constrained_param = 0
+generic_constraint_violation = 0
+tempta = 0
+cape = 0
+semper = 0
+iace = 2
+
+[topology]
+node_count = 155
+edge_count = 235
+primary_path_nodes = 46
+ritual_poles = 46
+aux_nodes = 109
+self_call_count = 0
+loop_presence = true
+conditional_presence = true
+call_presence = true
+density_ratio = 0.955
+field_access_presence = false
+index_access_presence = false
+memory_presence = false
+speculum_presence = false
+dynamic_indexable_memory_presence = false
+indirect_structural_flow_presence = false
+failure_construct_presence = true
+tempta_presence = false
+cape_presence = false
+semper_presence = false
+iace_presence = true
+failure_call_propagation_presence = false
+failure_call_propagation_count = 0
+iace_across_coniura_presence = true
+tempta_call_capture_presence = false
+failure_cleanup_presence = false
+failure_cleanup_memory_presence = false
+runtime_failure_bridge_presence = false
+phase7_subset_final = true
+phase7_discard_policy = manual_explicit(obsecro_libera,dimitte)
+phase8_subset_final = true
+phase8_failure_policy = fractum_simple_opaco(payload=verbum);tempta_cape_semper_subset
+phase8_runtime_fail_policy = partial_bridge_documented(integrated=null_pointer_checks_in_instrumented_failure_paths;others=direct_abort)
+phase10_subset_final = true
+phase10_final_status = consolidated
+phase10_typing_contract = genus_explicit_monomorphization+pactum_explicit_conformance+constraint_single_contract_rituale_only
+
+[analysis_summary]
+scope = local
+schema_phase = 13C2
+analysis_profile = analytical_v1
+complexity_class = looped
+control_flow_pressure = 30
+failure_surface = present
+stdlib_surface = 1
+generic_surface = 1
+determinism_guarantee = stable
+
+[diff_fingerprint_context]
+scope_anchor = local
+hash_anchor = 963d74e1a8a9f741
+fingerprint_basis = structural_metrics+topology+hash_anchor
+serialization_profile = analytical_v1
+volatility = none
+module_anchor_count = 8
+entry_anchor = examples/collection_ops_12d2.cct
+
+[module_structural_summary]
+module_count = 8
+module_mode = composed
+import_edge_count = 7
+cross_module_call_count = 18
+cross_module_type_ref_count = 0
+ritual_count = 46
+public_symbol_count = 144
+internal_symbol_count = 0
+module_resolution_status = ok
+
+[compatibility_hints]
+schema_contract = cct.sigil.v1
+unknown_field_policy = warning_non_fatal
+deprecated_alias = sigilo_style->visual_engine
+consumer_mode_tolerant = ignore_unknown_additive_fields
+consumer_mode_strict = enforce_required_fields_and_hash_by_scope
+diff_policy = analytical_blocks_review_required_except_compatibility_hints
+deterministic_serialization = stable_section_order
+
+[layout]
+primary_axis_deg = 73.115
+canvas_center = 256.0,256.0
+containment_radius = 226.0
+style_influence = stroke/curvature/distribution/ornamentation
+
+[visual_grammar]
+style = network inscription / ritual seal (FASE 6A)
+style_selected = network
+foundation = minimal containment circle (+ optional light secondary ring)
+layers = foundation,primary_path,call_links,branches,loops,bindings,terminals,nodes,ornaments,signature
+macro_layout = ritual nodes + structural links + primary path
+rituale = primary node / pole in network
+coniura = dominant inter-ritual link (self-call => local loop)
+si = real bifurcation node + branch split
+aliter = alternate branch / compensatory reconnection
+dum = recurrence loop glyph (pre-test)
+donec = post_test loop glyph (loop + tail)
+repete = serial pulse chain / cadence marks
+series = indexed sequence pattern (metadata/hash influence, v2.1 visual modulation)
+speculum = pointer/reference construct (metadata/hash/topology influence, visual refinement deferred)
+address_of = reference acquisition mark (structural/hash influence)
+deref = bound access incision mark (structural/hash influence)
+memory_alloc_free = pete/libera/dimitte contribute memory-presence metrics/hash
+failure_propagation = TEMPTA/CAPE/IACE + CONIURA propagation tracked primarily via metadata/topology counts (FASE 8B)
+semper = guaranteed cleanup/finally block tracked in metadata/hash (FASE 8C; visual refinement deferred)
+failure_phase8_final = metadata reflects consolidated subset semantics through FASE 8D (IACE/TEMPTA/CAPE/SEMPER + propagation + partial runtime bridge)
+dynamic_indexable_memory = alloc/free + index_access + speculum/deref combination contributes topology metadata/hash (FASE 7C)
+field_access = bound branch tap / field rune mark (metadata/hash influence)
+indirect_structural_flow = field_access + speculum/deref combination contributes structural metadata/hash (FASE 7C)
+phase7_final = metadata reflects consolidated subset semantics through FASE 7D (no visual engine redesign)
+tempta_cape_iace = failure-control constructs contribute metadata/hash in FASE 8A (visual refinement deferred)
+sigillum = named vessel/struct declaration contributes topology metadata
+sigillum_composition = nested SIGILLUM field composition contributes structural metadata/hash
+ordo = ordinal taxonomy declaration contributes topology metadata
+evoca = emergence from binding node
+vincire = visible binding bars / lock marks
+obsecro = emissive rays (secondary)
+redde = convergent terminal path
+anur = terminal cut/notch
+hash_role = secondary modulation (jitter/curvature/thickness/signature)
+style_role = visual weighting/curvature/distribution without changing structural semantics
+
+[rituales]
+0 = len | entry=false | stmt=1 | depth=3 | calls=0 | loops=0
+1 = concat | entry=false | stmt=1 | depth=3 | calls=0 | loops=0
+2 = compare | entry=false | stmt=1 | depth=3 | calls=0 | loops=0
+3 = substring | entry=false | stmt=1 | depth=3 | calls=0 | loops=0
+4 = verbum_dup | entry=false | stmt=1 | depth=4 | calls=2 | loops=0
+5 = verbum_hash_fnv1a | entry=false | stmt=8 | depth=6 | calls=3 | loops=1
+6 = trim | entry=false | stmt=1 | depth=3 | calls=0 | loops=0
+7 = find | entry=false | stmt=1 | depth=3 | calls=0 | loops=0
+8 = char_at | entry=false | stmt=1 | depth=3 | calls=0 | loops=0
+9 = from_char | entry=false | stmt=1 | depth=3 | calls=0 | loops=0
+10 = contains | entry=false | stmt=3 | depth=4 | calls=1 | loops=0
+11 = starts_with | entry=false | stmt=1 | depth=3 | calls=0 | loops=0
+12 = ends_with | entry=false | stmt=1 | depth=3 | calls=0 | loops=0
+13 = strip_prefix | entry=false | stmt=5 | depth=4 | calls=4 | loops=0
+14 = strip_suffix | entry=false | stmt=5 | depth=4 | calls=4 | loops=0
+15 = replace | entry=false | stmt=1 | depth=3 | calls=0 | loops=0
+16 = replace_all | entry=false | stmt=1 | depth=3 | calls=0 | loops=0
+17 = to_upper | entry=false | stmt=1 | depth=3 | calls=0 | loops=0
+18 = to_lower | entry=false | stmt=1 | depth=3 | calls=0 | loops=0
+19 = trim_left | entry=false | stmt=1 | depth=3 | calls=0 | loops=0
+20 = trim_right | entry=false | stmt=1 | depth=3 | calls=0 | loops=0
+21 = trim_char | entry=false | stmt=8 | depth=6 | calls=4 | loops=2
+22 = repeat | entry=false | stmt=10 | depth=5 | calls=1 | loops=1
+23 = pad_left | entry=false | stmt=5 | depth=4 | calls=4 | loops=0
+24 = pad_right | entry=false | stmt=5 | depth=4 | calls=4 | loops=0
+25 = center | entry=false | stmt=9 | depth=4 | calls=7 | loops=0
+26 = last_find | entry=false | stmt=1 | depth=3 | calls=0 | loops=0
+27 = find_from | entry=false | stmt=12 | depth=8 | calls=4 | loops=1
+28 = count_occurrences | entry=false | stmt=1 | depth=3 | calls=0 | loops=0
+29 = reverse | entry=false | stmt=1 | depth=3 | calls=0 | loops=0
+30 = is_empty | entry=false | stmt=1 | depth=4 | calls=1 | loops=0
+31 = equals_ignore_case | entry=false | stmt=1 | depth=5 | calls=3 | loops=0
+32 = slice | entry=false | stmt=1 | depth=3 | calls=0 | loops=0
+33 = is_ascii | entry=false | stmt=7 | depth=6 | calls=2 | loops=1
+34 = split | entry=false | stmt=1 | depth=3 | calls=0 | loops=0
+35 = split_char | entry=false | stmt=1 | depth=3 | calls=0 | loops=0
+36 = join | entry=false | stmt=1 | depth=3 | calls=0 | loops=0
+37 = lines | entry=false | stmt=1 | depth=3 | calls=0 | loops=0
+38 = words | entry=false | stmt=1 | depth=3 | calls=0 | loops=0
+39 = verbum_length | entry=false | stmt=1 | depth=3 | calls=1 | loops=0
+40 = verbum_find_from | entry=false | stmt=1 | depth=3 | calls=1 | loops=0
+41 = verbum_split_regex | entry=false | stmt=1 | depth=3 | calls=0 | loops=0
+42 = verbum_trim_chars | entry=false | stmt=11 | depth=9 | calls=8 | loops=2
+43 = verbum_pad_left_text | entry=false | stmt=10 | depth=7 | calls=9 | loops=1
+44 = verbum_pad_right_text | entry=false | stmt=10 | depth=5 | calls=7 | loops=1
+45 = verbum_ascii_only | entry=false | stmt=9 | depth=8 | calls=4 | loops=1
+
+[call_edges]
+verbum_dup -> substring : 1
+verbum_dup -> len : 1
+verbum_hash_fnv1a -> len : 1
+verbum_hash_fnv1a -> char_at : 1
+contains -> find : 1
+strip_prefix -> starts_with : 1
+strip_prefix -> len : 2
+strip_prefix -> substring : 1
+strip_suffix -> ends_with : 1
+strip_suffix -> len : 2
+strip_suffix -> substring : 1
+trim_char -> len : 1
+trim_char -> char_at : 2
+trim_char -> substring : 1
+repeat -> concat : 1
+pad_left -> len : 1
+pad_left -> repeat : 1
+pad_left -> from_char : 1
+pad_left -> concat : 1
+pad_right -> len : 1
+pad_right -> repeat : 1
+pad_right -> from_char : 1
+pad_right -> concat : 1
+center -> len : 1
+center -> repeat : 2
+center -> from_char : 2
+center -> concat : 2
+find_from -> len : 2
+find_from -> compare : 1
+find_from -> substring : 1
+is_empty -> len : 1
+equals_ignore_case -> compare : 1
+equals_ignore_case -> to_lower : 2
+is_ascii -> len : 1
+is_ascii -> char_at : 1
+verbum_length -> len : 1
+verbum_find_from -> find_from : 1
+verbum_trim_chars -> len : 1
+verbum_trim_chars -> find : 2
+verbum_trim_chars -> from_char : 2
+verbum_trim_chars -> char_at : 2
+verbum_trim_chars -> substring : 1
+verbum_pad_left_text -> len : 6
+verbum_pad_left_text -> concat : 2
+verbum_pad_left_text -> substring : 1
+verbum_pad_right_text -> len : 4
+verbum_pad_right_text -> concat : 2
+verbum_pad_right_text -> substring : 1
+verbum_ascii_only -> len : 1
+verbum_ascii_only -> char_at : 1
+verbum_ascii_only -> concat : 1
+verbum_ascii_only -> from_char : 1

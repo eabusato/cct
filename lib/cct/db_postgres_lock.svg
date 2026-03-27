@@ -1,0 +1,1853 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512" role="img" aria-label="CCT local sigilo">
+  <desc>Deterministic semantic sigil for a single CCT module.</desc>
+  <defs>
+    <style><![CDATA[
+      .bg { fill: #f5f0e4; }
+      .base { stroke: #2a221c; stroke-width: 1.60; fill: none; opacity: 0.78; }
+      .primary { stroke: #241913; stroke-width: 2.80; fill: none; stroke-linecap: round; stroke-linejoin: round; }
+      .call { stroke: #5b2a22; stroke-width: 2.0; fill: none; stroke-linecap: round; opacity: 0.9; }
+      .branch { stroke: #6b342d; stroke-width: 1.6; fill: none; stroke-linecap: round; }
+      .loop { stroke: #2d5f5a; stroke-width: 1.6; fill: none; stroke-linecap: round; }
+      .bind { stroke: #73493d; stroke-width: 1.4; fill: none; stroke-linecap: round; }
+      .term { stroke: #201814; stroke-width: 1.7; fill: none; stroke-linecap: round; }
+      .node-main { fill: #fffaf1; stroke: #201814; stroke-width: 2.0; }
+      .node-entry { fill: #efe6d4; stroke: #201814; stroke-width: 2.4; }
+      .node-aux { fill: #f6efe0; stroke: #4f4339; stroke-width: 1.3; }
+      .node-loop { fill: #edf3f1; stroke: #2d5f5a; stroke-width: 1.4; }
+      .node-term { fill: #f3e7e3; stroke: #5a2a23; stroke-width: 1.4; }
+      .orn { stroke: #355d58; stroke-width: 1.0; fill: none; opacity: 0.55; }
+      .hash { fill: #1f1a17; font: 10px monospace; letter-spacing: 0.8px; }
+      .label { fill: #1f1a17; font: 8px monospace; opacity: 0.7; }
+      .node-wrap, .edge-wrap { cursor: help; }
+      .node-wrap:hover > circle { opacity: 0.96; }
+      .edge-wrap:hover > path, .edge-wrap:hover > line { opacity: 1.0; }
+    ]]></style>
+  </defs>
+  <rect class="bg" x="0" y="0" width="512" height="512"/>
+  <g id="foundation">
+    <circle class="base" cx="256" cy="256" r="226"/>
+    <ellipse class="base" cx="256" cy="256" rx="198" ry="184.09" opacity="0.32"/>
+  </g>
+  <g id="primary_path">
+    <g class="edge-wrap">
+    <path class="primary" d="M 292.82 110.85 Q 305.14 143.47 329.41 118.43" stroke-width="2.60" opacity="0.96"/>
+      <title>edge: primary
+pg_lock_key_i64 -&gt; pg_lock_key_pair
+weight: 1
+
+path:
+pg_lock_key_i64 -&gt; pg_lock_key_pair</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="primary" d="M 329.41 118.43 Q 328.18 143.62 348.60 128.81" stroke-width="2.60" opacity="0.96"/>
+      <title>edge: primary
+pg_lock_key_pair -&gt; pg_lock_key_string
+weight: 1
+
+path:
+pg_lock_key_pair -&gt; pg_lock_key_string</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="primary" d="M 348.60 128.81 Q 354.34 165.59 390.14 155.39" stroke-width="2.60" opacity="0.96"/>
+      <title>edge: primary
+pg_lock_key_string -&gt; pg_lock_key_named
+weight: 1
+
+path:
+pg_lock_key_string -&gt; pg_lock_key_named</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="primary" d="M 390.14 155.39 Q 375.17 182.15 405.71 179.54" stroke-width="2.60" opacity="0.96"/>
+      <title>edge: primary
+pg_lock_key_named -&gt; pg_lock_handle_make
+weight: 1
+
+path:
+pg_lock_key_named -&gt; pg_lock_handle_make</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="primary" d="M 405.71 179.54 Q 395.93 206.08 424.03 209.35" stroke-width="2.60" opacity="0.96"/>
+      <title>edge: primary
+pg_lock_handle_make -&gt; pg_lock_attempt_make
+weight: 1
+
+path:
+pg_lock_handle_make -&gt; pg_lock_attempt_make</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="primary" d="M 424.03 209.35 Q 412.34 247.25 449.41 261.35" stroke-width="2.60" opacity="0.96"/>
+      <title>edge: primary
+pg_lock_attempt_make -&gt; pg_lock_sql_call
+weight: 1
+
+path:
+pg_lock_attempt_make -&gt; pg_lock_sql_call</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="primary" d="M 449.41 261.35 Q 418.02 281.13 427.91 316.89" stroke-width="2.60" opacity="0.96"/>
+      <title>edge: primary
+pg_lock_sql_call -&gt; pg_lock_sql
+weight: 1
+
+path:
+pg_lock_sql_call -&gt; pg_lock_sql</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="primary" d="M 427.91 316.89 Q 392.67 310.03 392.75 345.93" stroke-width="2.60" opacity="0.96"/>
+      <title>edge: primary
+pg_lock_sql -&gt; pg_try_lock_sql
+weight: 1
+
+path:
+pg_lock_sql -&gt; pg_try_lock_sql</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="primary" d="M 392.75 345.93 Q 389.38 323.74 386.80 346.03" stroke-width="2.60" opacity="0.96"/>
+      <title>edge: primary
+pg_try_lock_sql -&gt; pg_unlock_sql
+weight: 1
+
+path:
+pg_try_lock_sql -&gt; pg_unlock_sql</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="primary" d="M 386.80 346.03 Q 356.02 341.90 371.59 368.77" stroke-width="2.60" opacity="0.96"/>
+      <title>edge: primary
+pg_unlock_sql -&gt; pg_xact_lock_sql
+weight: 1
+
+path:
+pg_unlock_sql -&gt; pg_xact_lock_sql</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="primary" d="M 371.59 368.77 Q 344.32 351.71 341.13 383.72" stroke-width="2.60" opacity="0.96"/>
+      <title>edge: primary
+pg_xact_lock_sql -&gt; pg_try_xact_lock_sql
+weight: 1
+
+path:
+pg_xact_lock_sql -&gt; pg_try_xact_lock_sql</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="primary" d="M 341.13 383.72 Q 316.15 367.31 328.31 394.61" stroke-width="2.60" opacity="0.96"/>
+      <title>edge: primary
+pg_try_xact_lock_sql -&gt; pg_lock_no_params
+weight: 1
+
+path:
+pg_try_xact_lock_sql -&gt; pg_lock_no_params</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="primary" d="M 328.31 394.61 Q 290.01 375.80 257.43 403.35" stroke-width="2.60" opacity="0.96"/>
+      <title>edge: primary
+pg_lock_no_params -&gt; pg_lock_read_bool
+weight: 1
+
+path:
+pg_lock_no_params -&gt; pg_lock_read_bool</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="primary" d="M 257.43 403.35 Q 220.38 369.65 174.97 390.75" stroke-width="2.60" opacity="0.96"/>
+      <title>edge: primary
+pg_lock_read_bool -&gt; pg_lock
+weight: 1
+
+path:
+pg_lock_read_bool -&gt; pg_lock</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="primary" d="M 174.97 390.75 Q 145.17 338.53 86.56 325.10" stroke-width="2.60" opacity="0.96"/>
+      <title>edge: primary
+pg_lock -&gt; pg_try_lock
+weight: 1
+
+path:
+pg_lock -&gt; pg_try_lock</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="primary" d="M 86.56 325.10 Q 104.10 292.10 71.36 274.07" stroke-width="2.60" opacity="0.96"/>
+      <title>edge: primary
+pg_try_lock -&gt; pg_unlock
+weight: 1
+
+path:
+pg_try_lock -&gt; pg_unlock</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="primary" d="M 71.36 274.07 Q 101.30 245.88 81.01 210.10" stroke-width="2.60" opacity="0.96"/>
+      <title>edge: primary
+pg_unlock -&gt; pg_xact_lock
+weight: 1
+
+path:
+pg_unlock -&gt; pg_xact_lock</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="primary" d="M 81.01 210.10 Q 119.25 193.38 106.61 153.61" stroke-width="2.60" opacity="0.96"/>
+      <title>edge: primary
+pg_xact_lock -&gt; pg_try_xact_lock
+weight: 1
+
+path:
+pg_xact_lock -&gt; pg_try_xact_lock</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="primary" d="M 106.61 153.61 Q 151.39 162.13 173.95 122.52" stroke-width="2.60" opacity="0.96"/>
+      <title>edge: primary
+pg_try_xact_lock -&gt; pg_lock_job
+weight: 1
+
+path:
+pg_try_xact_lock -&gt; pg_lock_job</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="primary" d="M 173.95 122.52 Q 204.54 140.83 222.77 110.18" stroke-width="2.60" opacity="0.96"/>
+      <title>edge: primary
+pg_lock_job -&gt; pg_try_lock_job
+weight: 1
+
+path:
+pg_lock_job -&gt; pg_try_lock_job</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="primary" d="M 222.77 110.18 Q 230.19 138.86 243.33 112.31" stroke-width="2.60" opacity="0.96"/>
+      <title>edge: primary
+pg_try_lock_job -&gt; pg_with_lock
+weight: 1
+
+path:
+pg_try_lock_job -&gt; pg_with_lock</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="primary" d="M 243.33 112.31 Q 258.47 143.04 279.81 116.24" stroke-width="2.60" opacity="0.96"/>
+      <title>edge: primary
+pg_with_lock -&gt; pg_with_job_lock
+weight: 1
+
+path:
+pg_with_lock -&gt; pg_with_job_lock</title>
+    </g>
+  </g>
+  <g id="call_links">
+    <g class="edge-wrap">
+    <path class="call" d="M 348.60 128.81 Q 329.62 92.16 292.82 110.85" stroke-width="2.15" opacity="0.74" data-kind="call" data-from="pg_lock_key_string" data-to="pg_lock_key_i64" data-weight="1" data-self-loop="false"/>
+      <title>edge: call
+pg_lock_key_string -&gt; pg_lock_key_i64
+calls: 1
+
+path:
+pg_lock_key_string -&gt; pg_lock_key_i64</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="call" d="M 390.14 155.39 Q 377.71 107.45 329.41 118.43" stroke-width="2.15" opacity="0.74" data-kind="call" data-from="pg_lock_key_named" data-to="pg_lock_key_pair" data-weight="1" data-self-loop="false"/>
+      <title>edge: call
+pg_lock_key_named -&gt; pg_lock_key_pair
+calls: 1
+
+path:
+pg_lock_key_named -&gt; pg_lock_key_pair</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="call" d="M 424.03 209.35 Q 444.45 176.27 405.71 179.54" stroke-width="2.15" opacity="0.74" data-kind="call" data-from="pg_lock_attempt_make" data-to="pg_lock_handle_make" data-weight="1" data-self-loop="false"/>
+      <title>edge: call
+pg_lock_attempt_make -&gt; pg_lock_handle_make
+calls: 1
+
+path:
+pg_lock_attempt_make -&gt; pg_lock_handle_make</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="call" d="M 427.91 316.89 Q 469.27 300.97 449.41 261.35" stroke-width="2.15" opacity="0.74" data-kind="call" data-from="pg_lock_sql" data-to="pg_lock_sql_call" data-weight="1" data-self-loop="false"/>
+      <title>edge: call
+pg_lock_sql -&gt; pg_lock_sql_call
+calls: 1
+
+path:
+pg_lock_sql -&gt; pg_lock_sql_call</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="call" d="M 392.75 345.93 Q 445.50 319.99 449.41 261.35" stroke-width="2.15" opacity="0.74" data-kind="call" data-from="pg_try_lock_sql" data-to="pg_lock_sql_call" data-weight="1" data-self-loop="false"/>
+      <title>edge: call
+pg_try_lock_sql -&gt; pg_lock_sql_call
+calls: 1
+
+path:
+pg_try_lock_sql -&gt; pg_lock_sql_call</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="call" d="M 386.80 346.03 Q 441.21 320.77 449.41 261.35" stroke-width="2.15" opacity="0.74" data-kind="call" data-from="pg_unlock_sql" data-to="pg_lock_sql_call" data-weight="1" data-self-loop="false"/>
+      <title>edge: call
+pg_unlock_sql -&gt; pg_lock_sql_call
+calls: 1
+
+path:
+pg_unlock_sql -&gt; pg_lock_sql_call</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="call" d="M 371.59 368.77 Q 436.08 333.59 449.41 261.35" stroke-width="2.15" opacity="0.74" data-kind="call" data-from="pg_xact_lock_sql" data-to="pg_lock_sql_call" data-weight="1" data-self-loop="false"/>
+      <title>edge: call
+pg_xact_lock_sql -&gt; pg_lock_sql_call
+calls: 1
+
+path:
+pg_xact_lock_sql -&gt; pg_lock_sql_call</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="call" d="M 341.13 383.72 Q 416.96 341.73 449.41 261.35" stroke-width="2.15" opacity="0.74" data-kind="call" data-from="pg_try_xact_lock_sql" data-to="pg_lock_sql_call" data-weight="1" data-self-loop="false"/>
+      <title>edge: call
+pg_try_xact_lock_sql -&gt; pg_lock_sql_call
+calls: 1
+
+path:
+pg_try_xact_lock_sql -&gt; pg_lock_sql_call</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="call" d="M 257.43 403.35 Q 296.88 431.50 328.31 394.61" stroke-width="2.15" opacity="0.74" data-kind="call" data-from="pg_lock_read_bool" data-to="pg_lock_no_params" data-weight="1" data-self-loop="false"/>
+      <title>edge: call
+pg_lock_read_bool -&gt; pg_lock_no_params
+calls: 1
+
+path:
+pg_lock_read_bool -&gt; pg_lock_no_params</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="call" d="M 174.97 390.75 Q 250.90 421.83 328.31 394.61" stroke-width="2.15" opacity="0.74" data-kind="call" data-from="pg_lock" data-to="pg_lock_no_params" data-weight="1" data-self-loop="false"/>
+      <title>edge: call
+pg_lock -&gt; pg_lock_no_params
+calls: 1
+
+path:
+pg_lock -&gt; pg_lock_no_params</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="call" d="M 174.97 390.75 Q 310.40 384.52 427.91 316.89" stroke-width="2.15" opacity="0.74" data-kind="call" data-from="pg_lock" data-to="pg_lock_sql" data-weight="1" data-self-loop="false"/>
+      <title>edge: call
+pg_lock -&gt; pg_lock_sql
+calls: 1
+
+path:
+pg_lock -&gt; pg_lock_sql</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="call" d="M 174.97 390.75 Q 310.95 307.65 405.71 179.54" stroke-width="2.15" opacity="0.74" data-kind="call" data-from="pg_lock" data-to="pg_lock_handle_make" data-weight="1" data-self-loop="false"/>
+      <title>edge: call
+pg_lock -&gt; pg_lock_handle_make
+calls: 1
+
+path:
+pg_lock -&gt; pg_lock_handle_make</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="call" d="M 86.56 325.10 Q 158.98 392.64 257.43 403.35" stroke-width="2.15" opacity="0.74" data-kind="call" data-from="pg_try_lock" data-to="pg_lock_read_bool" data-weight="1" data-self-loop="false"/>
+      <title>edge: call
+pg_try_lock -&gt; pg_lock_read_bool
+calls: 1
+
+path:
+pg_try_lock -&gt; pg_lock_read_bool</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="call" d="M 86.56 325.10 Q 237.80 362.73 392.75 345.93" stroke-width="2.15" opacity="0.74" data-kind="call" data-from="pg_try_lock" data-to="pg_try_lock_sql" data-weight="1" data-self-loop="false"/>
+      <title>edge: call
+pg_try_lock -&gt; pg_try_lock_sql
+calls: 1
+
+path:
+pg_try_lock -&gt; pg_try_lock_sql</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="call" d="M 86.56 325.10 Q 267.82 303.74 424.03 209.35" stroke-width="2.50" opacity="0.80" data-kind="call" data-from="pg_try_lock" data-to="pg_lock_attempt_make" data-weight="2" data-self-loop="false"/>
+      <title>edge: call
+pg_try_lock -&gt; pg_lock_attempt_make
+calls: 2
+
+path:
+pg_try_lock -&gt; pg_lock_attempt_make</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="call" d="M 71.36 274.07 Q 145.54 365.85 257.43 403.35" stroke-width="2.15" opacity="0.74" data-kind="call" data-from="pg_unlock" data-to="pg_lock_read_bool" data-weight="1" data-self-loop="false"/>
+      <title>edge: call
+pg_unlock -&gt; pg_lock_read_bool
+calls: 1
+
+path:
+pg_unlock -&gt; pg_lock_read_bool</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="call" d="M 71.36 274.07 Q 222.52 338.81 386.80 346.03" stroke-width="2.15" opacity="0.74" data-kind="call" data-from="pg_unlock" data-to="pg_unlock_sql" data-weight="1" data-self-loop="false"/>
+      <title>edge: call
+pg_unlock -&gt; pg_unlock_sql
+calls: 1
+
+path:
+pg_unlock -&gt; pg_unlock_sql</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="call" d="M 81.01 210.10 Q 187.44 325.44 328.31 394.61" stroke-width="2.15" opacity="0.74" data-kind="call" data-from="pg_xact_lock" data-to="pg_lock_no_params" data-weight="1" data-self-loop="false"/>
+      <title>edge: call
+pg_xact_lock -&gt; pg_lock_no_params
+calls: 1
+
+path:
+pg_xact_lock -&gt; pg_lock_no_params</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="call" d="M 81.01 210.10 Q 213.14 313.54 371.59 368.77" stroke-width="2.15" opacity="0.74" data-kind="call" data-from="pg_xact_lock" data-to="pg_xact_lock_sql" data-weight="1" data-self-loop="false"/>
+      <title>edge: call
+pg_xact_lock -&gt; pg_xact_lock_sql
+calls: 1
+
+path:
+pg_xact_lock -&gt; pg_xact_lock_sql</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="call" d="M 81.01 210.10 Q 246.02 223.05 405.71 179.54" stroke-width="2.15" opacity="0.74" data-kind="call" data-from="pg_xact_lock" data-to="pg_lock_handle_make" data-weight="1" data-self-loop="false"/>
+      <title>edge: call
+pg_xact_lock -&gt; pg_lock_handle_make
+calls: 1
+
+path:
+pg_xact_lock -&gt; pg_lock_handle_make</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="call" d="M 106.61 153.61 Q 154.29 295.22 257.43 403.35" stroke-width="2.15" opacity="0.74" data-kind="call" data-from="pg_try_xact_lock" data-to="pg_lock_read_bool" data-weight="1" data-self-loop="false"/>
+      <title>edge: call
+pg_try_xact_lock -&gt; pg_lock_read_bool
+calls: 1
+
+path:
+pg_try_xact_lock -&gt; pg_lock_read_bool</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="call" d="M 106.61 153.61 Q 204.32 288.59 341.13 383.72" stroke-width="2.15" opacity="0.74" data-kind="call" data-from="pg_try_xact_lock" data-to="pg_try_xact_lock_sql" data-weight="1" data-self-loop="false"/>
+      <title>edge: call
+pg_try_xact_lock -&gt; pg_try_xact_lock_sql
+calls: 1
+
+path:
+pg_try_xact_lock -&gt; pg_try_xact_lock_sql</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="call" d="M 106.61 153.61 Q 259.59 214.10 424.03 209.35" stroke-width="2.50" opacity="0.80" data-kind="call" data-from="pg_try_xact_lock" data-to="pg_lock_attempt_make" data-weight="2" data-self-loop="false"/>
+      <title>edge: call
+pg_try_xact_lock -&gt; pg_lock_attempt_make
+calls: 2
+
+path:
+pg_try_xact_lock -&gt; pg_lock_attempt_make</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="call" d="M 173.95 122.52 Q 146.26 256.74 174.97 390.75" stroke-width="2.15" opacity="0.74" data-kind="call" data-from="pg_lock_job" data-to="pg_lock" data-weight="1" data-self-loop="false"/>
+      <title>edge: call
+pg_lock_job -&gt; pg_lock
+calls: 1
+
+path:
+pg_lock_job -&gt; pg_lock</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="call" d="M 173.95 122.52 Q 277.49 168.91 390.14 155.39" stroke-width="2.15" opacity="0.74" data-kind="call" data-from="pg_lock_job" data-to="pg_lock_key_named" data-weight="1" data-self-loop="false"/>
+      <title>edge: call
+pg_lock_job -&gt; pg_lock_key_named
+calls: 1
+
+path:
+pg_lock_job -&gt; pg_lock_key_named</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="call" d="M 222.77 110.18 Q 125.34 199.05 86.56 325.10" stroke-width="2.15" opacity="0.74" data-kind="call" data-from="pg_try_lock_job" data-to="pg_try_lock" data-weight="1" data-self-loop="false"/>
+      <title>edge: call
+pg_try_lock_job -&gt; pg_try_lock
+calls: 1
+
+path:
+pg_try_lock_job -&gt; pg_try_lock</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="call" d="M 222.77 110.18 Q 298.63 161.73 390.14 155.39" stroke-width="2.15" opacity="0.74" data-kind="call" data-from="pg_try_lock_job" data-to="pg_lock_key_named" data-weight="1" data-self-loop="false"/>
+      <title>edge: call
+pg_try_lock_job -&gt; pg_lock_key_named
+calls: 1
+
+path:
+pg_try_lock_job -&gt; pg_lock_key_named</title>
+    </g>
+  </g>
+  <g id="branches">
+    <g class="edge-wrap">
+    <path class="branch" d="M 449.41 261.35 Q 437.22 241.58 414.59 236.38" stroke-width="1.70" opacity="0.85"/>
+      <title>edge: branch
+pg_lock_sql_call -&gt; pg_lock_sql_call
+weight: 2
+
+path:
+pg_lock_sql_call -&gt; pg_lock_sql_call</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="branch" d="M 414.59 236.38 Q 413.88 267.96 430.48 294.84" stroke-width="1.70" opacity="0.85"/>
+      <title>edge: branch
+pg_lock_sql_call -&gt; pg_lock_sql_call
+weight: 2
+
+path:
+pg_lock_sql_call -&gt; pg_lock_sql_call</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="branch" d="M 430.48 294.84 Q 447.75 282.51 449.41 261.35" stroke-width="1.45" opacity="0.85"/>
+      <title>edge: branch
+pg_lock_sql_call -&gt; pg_lock_sql_call
+weight: 1
+
+path:
+pg_lock_sql_call -&gt; pg_lock_sql_call</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="branch" d="M 257.43 403.35 Q 256.07 377.80 233.07 366.58" stroke-width="1.95" opacity="0.85"/>
+      <title>edge: branch
+pg_lock_read_bool -&gt; pg_lock_read_bool
+weight: 3
+
+path:
+pg_lock_read_bool -&gt; pg_lock_read_bool</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="branch" d="M 174.97 390.75 Q 181.50 368.95 172.69 347.96" stroke-width="1.70" opacity="0.85"/>
+      <title>edge: branch
+pg_lock -&gt; pg_lock
+weight: 2
+
+path:
+pg_lock -&gt; pg_lock</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="branch" d="M 86.56 325.10 Q 109.90 314.48 111.76 288.91" stroke-width="1.95" opacity="0.85"/>
+      <title>edge: branch
+pg_try_lock -&gt; pg_try_lock
+weight: 3
+
+path:
+pg_try_lock -&gt; pg_try_lock</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="branch" d="M 71.36 274.07 Q 87.03 290.11 109.03 294.50" stroke-width="1.70" opacity="0.85"/>
+      <title>edge: branch
+pg_unlock -&gt; pg_unlock
+weight: 2
+
+path:
+pg_unlock -&gt; pg_unlock</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="branch" d="M 81.01 210.10 Q 85.23 234.90 109.26 242.33" stroke-width="1.70" opacity="0.85"/>
+      <title>edge: branch
+pg_xact_lock -&gt; pg_xact_lock
+weight: 2
+
+path:
+pg_xact_lock -&gt; pg_xact_lock</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="branch" d="M 106.61 153.61 Q 128.32 167.16 150.70 154.73" stroke-width="1.95" opacity="0.85"/>
+      <title>edge: branch
+pg_try_xact_lock -&gt; pg_try_xact_lock
+weight: 3
+
+path:
+pg_try_xact_lock -&gt; pg_try_xact_lock</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="branch" d="M 270.80 247.28 Q 292.27 180.75 292.82 110.85" stroke-width="1.45" opacity="0.85"/>
+      <title>edge: branch
+pg_lock_key_i64 -&gt; pg_lock_key_i64
+weight: 1
+
+path:
+pg_lock_key_i64 -&gt; pg_lock_key_i64</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="branch" d="M 270.80 247.28 Q 316.52 192.52 348.60 128.81" stroke-width="1.95" opacity="0.85"/>
+      <title>edge: branch
+pg_lock_key_i64 -&gt; pg_lock_key_string
+weight: 3
+
+path:
+pg_lock_key_i64 -&gt; pg_lock_key_string</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="branch" d="M 270.80 247.28 Q 336.90 209.68 390.14 155.39" stroke-width="2.10" opacity="0.85"/>
+      <title>edge: branch
+pg_lock_key_i64 -&gt; pg_lock_key_named
+weight: 6
+
+path:
+pg_lock_key_i64 -&gt; pg_lock_key_named</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="branch" d="M 270.80 247.28 Q 348.99 234.69 424.03 209.35" stroke-width="1.70" opacity="0.85"/>
+      <title>edge: branch
+pg_lock_key_i64 -&gt; pg_lock_attempt_make
+weight: 2
+
+path:
+pg_lock_key_i64 -&gt; pg_lock_attempt_make</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="branch" d="M 270.80 247.28 Q 359.51 261.93 449.41 261.35" stroke-width="2.10" opacity="0.85"/>
+      <title>edge: branch
+pg_lock_key_i64 -&gt; pg_lock_sql_call
+weight: 12
+
+path:
+pg_lock_key_i64 -&gt; pg_lock_sql_call</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="branch" d="M 270.80 247.28 Q 345.62 290.52 427.91 316.89" stroke-width="1.70" opacity="0.85"/>
+      <title>edge: branch
+pg_lock_key_i64 -&gt; pg_lock_sql
+weight: 2
+
+path:
+pg_lock_key_i64 -&gt; pg_lock_sql</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="branch" d="M 270.80 247.28 Q 324.74 305.31 392.75 345.93" stroke-width="1.70" opacity="0.85"/>
+      <title>edge: branch
+pg_lock_key_i64 -&gt; pg_try_lock_sql
+weight: 2
+
+path:
+pg_lock_key_i64 -&gt; pg_try_lock_sql</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="branch" d="M 270.80 247.28 Q 323.39 303.01 386.80 346.03" stroke-width="1.70" opacity="0.85"/>
+      <title>edge: branch
+pg_lock_key_i64 -&gt; pg_unlock_sql
+weight: 2
+
+path:
+pg_lock_key_i64 -&gt; pg_unlock_sql</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="branch" d="M 270.80 247.28 Q 312.15 315.53 371.59 368.77" stroke-width="1.70" opacity="0.85"/>
+      <title>edge: branch
+pg_lock_key_i64 -&gt; pg_xact_lock_sql
+weight: 2
+
+path:
+pg_lock_key_i64 -&gt; pg_xact_lock_sql</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="branch" d="M 270.80 247.28 Q 299.51 318.83 341.13 383.72" stroke-width="1.70" opacity="0.85"/>
+      <title>edge: branch
+pg_lock_key_i64 -&gt; pg_try_xact_lock_sql
+weight: 2
+
+path:
+pg_lock_key_i64 -&gt; pg_try_xact_lock_sql</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="branch" d="M 270.80 247.28 Q 293.58 323.28 328.31 394.61" stroke-width="1.70" opacity="0.85"/>
+      <title>edge: branch
+pg_lock_key_i64 -&gt; pg_lock_no_params
+weight: 2
+
+path:
+pg_lock_key_i64 -&gt; pg_lock_no_params</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="branch" d="M 270.80 247.28 Q 254.09 324.45 257.43 403.35" stroke-width="2.10" opacity="0.85"/>
+      <title>edge: branch
+pg_lock_key_i64 -&gt; pg_lock_read_bool
+weight: 14
+
+path:
+pg_lock_key_i64 -&gt; pg_lock_read_bool</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="branch" d="M 270.80 247.28 Q 214.06 313.12 174.97 390.75" stroke-width="2.10" opacity="0.85"/>
+      <title>edge: branch
+pg_lock_key_i64 -&gt; pg_lock
+weight: 11
+
+path:
+pg_lock_key_i64 -&gt; pg_lock</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="branch" d="M 270.80 247.28 Q 174.07 275.26 86.56 325.10" stroke-width="2.10" opacity="0.85"/>
+      <title>edge: branch
+pg_lock_key_i64 -&gt; pg_try_lock
+weight: 13
+
+path:
+pg_lock_key_i64 -&gt; pg_try_lock</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="branch" d="M 270.80 247.28 Q 170.25 254.53 71.36 274.07" stroke-width="2.10" opacity="0.85"/>
+      <title>edge: branch
+pg_lock_key_i64 -&gt; pg_unlock
+weight: 5
+
+path:
+pg_lock_key_i64 -&gt; pg_unlock</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="branch" d="M 270.80 247.28 Q 178.41 215.90 81.01 210.10" stroke-width="2.10" opacity="0.85"/>
+      <title>edge: branch
+pg_lock_key_i64 -&gt; pg_xact_lock
+weight: 11
+
+path:
+pg_lock_key_i64 -&gt; pg_xact_lock</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="branch" d="M 270.80 247.28 Q 193.69 191.70 106.61 153.61" stroke-width="2.10" opacity="0.85"/>
+      <title>edge: branch
+pg_lock_key_i64 -&gt; pg_try_xact_lock
+weight: 13
+
+path:
+pg_lock_key_i64 -&gt; pg_try_xact_lock</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="branch" d="M 270.80 247.28 Q 231.72 177.65 173.95 122.52" stroke-width="1.95" opacity="0.85"/>
+      <title>edge: branch
+pg_lock_key_i64 -&gt; pg_lock_job
+weight: 3
+
+path:
+pg_lock_key_i64 -&gt; pg_lock_job</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="branch" d="M 270.80 247.28 Q 259.73 174.19 222.77 110.18" stroke-width="1.95" opacity="0.85"/>
+      <title>edge: branch
+pg_lock_key_i64 -&gt; pg_try_lock_job
+weight: 3
+
+path:
+pg_lock_key_i64 -&gt; pg_try_lock_job</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="branch" d="M 270.80 247.28 Q 269.20 177.33 243.33 112.31" stroke-width="1.70" opacity="0.85"/>
+      <title>edge: branch
+pg_lock_key_i64 -&gt; pg_with_lock
+weight: 2
+
+path:
+pg_lock_key_i64 -&gt; pg_with_lock</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="branch" d="M 270.80 247.28 Q 285.18 182.44 279.81 116.24" stroke-width="1.70" opacity="0.85"/>
+      <title>edge: branch
+pg_lock_key_i64 -&gt; pg_with_job_lock
+weight: 2
+
+path:
+pg_lock_key_i64 -&gt; pg_with_job_lock</title>
+    </g>
+  </g>
+  <g id="loops">
+  </g>
+  <g id="bindings">
+    <g class="edge-wrap">
+    <path class="bind" d="M 292.82 110.85 Q 284.20 122.07 286.42 136.05" stroke-width="1.60" opacity="0.85"/>
+    <line class="bind" x1="295.41" y1="116.87" x2="287.66" y2="114.91" opacity="0.75"/>
+    <line class="bind" x1="295.74" y1="119.64" x2="286.05" y2="117.18" opacity="0.75"/>
+    <line class="bind" x1="294.14" y1="121.91" x2="286.38" y2="119.95" opacity="0.75"/>
+    <line class="bind" x1="294.47" y1="124.68" x2="284.77" y2="122.22" opacity="0.75"/>
+    <line class="bind" x1="292.86" y1="126.95" x2="285.10" y2="124.99" opacity="0.75"/>
+    <line class="bind" x1="291.88" y1="135.05" x2="297.78" y2="133.98" opacity="0.58"/>
+    <line class="bind" x1="287.15" y1="141.55" x2="288.32" y2="150.48" opacity="0.58"/>
+    <line class="bind" x1="282.62" y1="140.10" x2="278.52" y2="144.47" opacity="0.58"/>
+    <line class="bind" x1="282.39" y1="132.24" x2="275.85" y2="126.06" opacity="0.58"/>
+    <line class="bind" x1="286.63" y1="130.51" x2="286.85" y2="124.51" opacity="0.58"/>
+      <title>edge: bind
+pg_lock_key_i64 -&gt; pg_lock_key_i64
+weight: 5
+
+path:
+pg_lock_key_i64 -&gt; pg_lock_key_i64</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="bind" d="M 329.41 118.43 Q 315.64 125.82 317.17 141.37" stroke-width="1.60" opacity="0.85"/>
+    <line class="bind" x1="330.49" y1="124.90" x2="323.43" y2="121.13" opacity="0.75"/>
+    <line class="bind" x1="330.15" y1="127.66" x2="321.33" y2="122.96" opacity="0.75"/>
+    <line class="bind" x1="328.04" y1="129.49" x2="320.98" y2="125.72" opacity="0.75"/>
+    <line class="bind" x1="327.70" y1="132.25" x2="318.88" y2="127.54" opacity="0.75"/>
+    <line class="bind" x1="325.59" y1="134.07" x2="318.54" y2="130.31" opacity="0.75"/>
+    <line class="bind" x1="322.52" y1="139.91" x2="328.31" y2="138.33" opacity="0.58"/>
+    <line class="bind" x1="319.77" y1="146.27" x2="324.00" y2="154.21" opacity="0.58"/>
+    <line class="bind" x1="313.32" y1="145.37" x2="309.16" y2="149.69" opacity="0.58"/>
+    <line class="bind" x1="312.61" y1="138.20" x2="305.22" y2="133.07" opacity="0.58"/>
+    <line class="bind" x1="319.92" y1="136.55" x2="322.90" y2="131.34" opacity="0.58"/>
+      <title>edge: bind
+pg_lock_key_pair -&gt; pg_lock_key_pair
+weight: 5
+
+path:
+pg_lock_key_pair -&gt; pg_lock_key_pair</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="bind" d="M 348.60 128.81 Q 338.04 137.21 333.29 149.83" stroke-width="1.36" opacity="0.85"/>
+    <line class="bind" x1="348.77" y1="135.37" x2="342.30" y2="130.66" opacity="0.75"/>
+    <line class="bind" x1="348.05" y1="138.06" x2="339.96" y2="132.18" opacity="0.75"/>
+    <line class="bind" x1="338.29" y1="148.82" x2="344.17" y2="147.62" opacity="0.58"/>
+    <line class="bind" x1="328.33" y1="148.65" x2="319.58" y2="146.56" opacity="0.58"/>
+      <title>edge: bind
+pg_lock_key_string -&gt; pg_lock_key_string
+weight: 2
+
+path:
+pg_lock_key_string -&gt; pg_lock_key_string</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="bind" d="M 390.14 155.39 Q 375.82 157.97 369.34 170.99" stroke-width="1.52" opacity="0.85"/>
+    <line class="bind" x1="388.38" y1="161.71" x2="383.58" y2="155.31" opacity="0.75"/>
+    <line class="bind" x1="386.90" y1="164.07" x2="380.90" y2="156.07" opacity="0.75"/>
+    <line class="bind" x1="384.22" y1="164.83" x2="379.42" y2="158.43" opacity="0.75"/>
+    <line class="bind" x1="382.74" y1="167.19" x2="376.74" y2="159.19" opacity="0.75"/>
+    <line class="bind" x1="374.70" y1="171.64" x2="380.65" y2="172.36" opacity="0.58"/>
+    <line class="bind" x1="370.20" y1="176.32" x2="371.64" y2="185.21" opacity="0.58"/>
+    <line class="bind" x1="363.94" y1="170.82" x2="357.94" y2="170.63" opacity="0.58"/>
+    <line class="bind" x1="367.80" y1="165.82" x2="365.24" y2="157.19" opacity="0.58"/>
+      <title>edge: bind
+pg_lock_key_named -&gt; pg_lock_key_named
+weight: 4
+
+path:
+pg_lock_key_named -&gt; pg_lock_key_named</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="bind" d="M 405.71 179.54 Q 390.43 178.19 382.56 191.36" stroke-width="1.52" opacity="0.85"/>
+    <line class="bind" x1="402.90" y1="185.46" x2="399.26" y2="178.34" opacity="0.75"/>
+    <line class="bind" x1="401.04" y1="187.54" x2="396.49" y2="178.63" opacity="0.75"/>
+    <line class="bind" x1="398.27" y1="187.83" x2="394.63" y2="180.70" opacity="0.75"/>
+    <line class="bind" x1="396.41" y1="189.90" x2="391.86" y2="181.00" opacity="0.75"/>
+    <line class="bind" x1="387.91" y1="192.11" x2="393.85" y2="192.94" opacity="0.58"/>
+    <line class="bind" x1="381.48" y1="196.65" x2="379.69" y2="205.47" opacity="0.58"/>
+    <line class="bind" x1="377.20" y1="190.71" x2="371.24" y2="189.98" opacity="0.58"/>
+    <line class="bind" x1="382.76" y1="185.97" x2="383.10" y2="176.97" opacity="0.58"/>
+      <title>edge: bind
+pg_lock_handle_make -&gt; pg_lock_handle_make
+weight: 4
+
+path:
+pg_lock_handle_make -&gt; pg_lock_handle_make</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="bind" d="M 424.03 209.35 Q 410.72 210.01 398.97 216.31" stroke-width="1.44" opacity="0.85"/>
+    <line class="bind" x1="420.09" y1="214.60" x2="417.95" y2="206.89" opacity="0.75"/>
+    <line class="bind" x1="417.85" y1="216.26" x2="415.17" y2="206.62" opacity="0.75"/>
+    <line class="bind" x1="415.08" y1="215.99" x2="412.94" y2="208.28" opacity="0.75"/>
+    <line class="bind" x1="404.22" y1="216.36" x2="410.22" y2="216.43" opacity="0.58"/>
+    <line class="bind" x1="396.16" y1="220.74" x2="391.35" y2="228.34" opacity="0.58"/>
+    <line class="bind" x1="395.46" y1="212.40" x2="391.45" y2="207.94" opacity="0.58"/>
+      <title>edge: bind
+pg_lock_attempt_make -&gt; pg_lock_attempt_make
+weight: 3
+
+path:
+pg_lock_attempt_make -&gt; pg_lock_attempt_make</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="bind" d="M 449.41 261.35 Q 436.53 257.03 423.42 260.63" stroke-width="1.76" opacity="0.85"/>
+    <line class="bind" x1="444.10" y1="265.20" x2="444.32" y2="257.21" opacity="0.75"/>
+    <line class="bind" x1="441.48" y1="266.13" x2="441.75" y2="256.14" opacity="0.75"/>
+    <line class="bind" x1="438.90" y1="265.06" x2="439.13" y2="257.06" opacity="0.75"/>
+    <line class="bind" x1="436.28" y1="265.99" x2="436.55" y2="255.99" opacity="0.75"/>
+    <line class="bind" x1="433.71" y1="264.92" x2="433.93" y2="256.92" opacity="0.75"/>
+    <line class="bind" x1="431.08" y1="265.84" x2="431.36" y2="255.85" opacity="0.75"/>
+    <line class="bind" x1="429.27" y1="260.50" x2="435.27" y2="260.38" opacity="0.58"/>
+    <line class="bind" x1="426.36" y1="265.69" x2="430.89" y2="273.47" opacity="0.58"/>
+    <line class="bind" x1="418.64" y1="264.01" x2="413.74" y2="267.47" opacity="0.58"/>
+    <line class="bind" x1="417.92" y1="258.65" x2="409.45" y2="255.59" opacity="0.58"/>
+    <line class="bind" x1="425.15" y1="255.04" x2="426.93" y2="249.31" opacity="0.58"/>
+      <title>edge: bind
+pg_lock_sql_call -&gt; pg_lock_sql_call
+weight: 7
+
+path:
+pg_lock_sql_call -&gt; pg_lock_sql_call</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="bind" d="M 257.43 403.35 Q 265.28 390.27 257.18 377.35" stroke-width="1.60" opacity="0.85"/>
+    <line class="bind" x1="253.38" y1="398.19" x2="261.38" y2="398.11" opacity="0.75"/>
+    <line class="bind" x1="252.36" y1="395.60" x2="262.36" y2="395.50" opacity="0.75"/>
+    <line class="bind" x1="253.33" y1="392.99" x2="261.33" y2="392.91" opacity="0.75"/>
+    <line class="bind" x1="252.31" y1="390.40" x2="262.30" y2="390.30" opacity="0.75"/>
+    <line class="bind" x1="253.28" y1="387.79" x2="261.28" y2="387.71" opacity="0.75"/>
+    <line class="bind" x1="262.60" y1="376.18" x2="268.47" y2="374.92" opacity="0.58"/>
+    <line class="bind" x1="258.74" y1="382.67" x2="261.27" y2="391.31" opacity="0.58"/>
+    <line class="bind" x1="252.06" y1="379.48" x2="246.52" y2="381.79" opacity="0.58"/>
+    <line class="bind" x1="252.08" y1="375.16" x2="243.81" y2="371.60" opacity="0.58"/>
+    <line class="bind" x1="259.45" y1="372.28" x2="261.90" y2="366.81" opacity="0.58"/>
+      <title>edge: bind
+pg_lock_read_bool -&gt; pg_lock_read_bool
+weight: 5
+
+path:
+pg_lock_read_bool -&gt; pg_lock_read_bool</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="bind" d="M 174.97 390.75 Q 183.96 380.99 188.37 368.47" stroke-width="1.44" opacity="0.85"/>
+    <line class="bind" x1="174.22" y1="384.23" x2="181.07" y2="388.35" opacity="0.75"/>
+    <line class="bind" x1="174.70" y1="381.49" x2="183.27" y2="386.64" opacity="0.75"/>
+    <line class="bind" x1="176.90" y1="379.78" x2="183.75" y2="383.90" opacity="0.75"/>
+    <line class="bind" x1="193.61" y1="368.75" x2="199.60" y2="369.07" opacity="0.58"/>
+    <line class="bind" x1="186.84" y1="373.49" x2="184.23" y2="382.10" opacity="0.58"/>
+    <line class="bind" x1="187.02" y1="363.39" x2="185.48" y2="357.59" opacity="0.58"/>
+      <title>edge: bind
+pg_lock -&gt; pg_lock
+weight: 3
+
+path:
+pg_lock -&gt; pg_lock</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="bind" d="M 86.56 325.10 Q 101.65 327.68 110.64 315.28" stroke-width="1.44" opacity="0.85"/>
+    <line class="bind" x1="89.86" y1="319.43" x2="92.89" y2="326.84" opacity="0.75"/>
+    <line class="bind" x1="91.89" y1="317.53" x2="95.67" y2="326.79" opacity="0.75"/>
+    <line class="bind" x1="94.68" y1="317.47" x2="97.70" y2="324.88" opacity="0.75"/>
+    <line class="bind" x1="115.76" y1="314.12" x2="121.61" y2="312.79" opacity="0.58"/>
+    <line class="bind" x1="108.66" y1="320.15" x2="105.27" y2="328.48" opacity="0.58"/>
+    <line class="bind" x1="108.69" y1="310.41" x2="106.46" y2="304.84" opacity="0.58"/>
+      <title>edge: bind
+pg_try_lock -&gt; pg_try_lock
+weight: 3
+
+path:
+pg_try_lock -&gt; pg_try_lock</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="bind" d="M 81.01 210.10 Q 91.51 221.32 106.16 216.70" stroke-width="1.44" opacity="0.85"/>
+    <line class="bind" x1="87.06" y1="207.55" x2="85.03" y2="215.29" opacity="0.75"/>
+    <line class="bind" x1="89.83" y1="207.25" x2="87.29" y2="216.92" opacity="0.75"/>
+    <line class="bind" x1="92.09" y1="208.87" x2="90.06" y2="216.61" opacity="0.75"/>
+    <line class="bind" x1="111.40" y1="217.01" x2="117.39" y2="217.36" opacity="0.58"/>
+    <line class="bind" x1="103.09" y1="220.96" x2="97.82" y2="228.25" opacity="0.58"/>
+    <line class="bind" x1="102.59" y1="212.85" x2="98.52" y2="208.45" opacity="0.58"/>
+      <title>edge: bind
+pg_xact_lock -&gt; pg_xact_lock
+weight: 3
+
+path:
+pg_xact_lock -&gt; pg_xact_lock</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="bind" d="M 106.61 153.61 Q 112.81 167.55 128.05 168.31" stroke-width="1.44" opacity="0.85"/>
+    <line class="bind" x1="113.16" y1="153.25" x2="108.64" y2="159.85" opacity="0.75"/>
+    <line class="bind" x1="115.87" y1="153.90" x2="110.21" y2="162.14" opacity="0.75"/>
+    <line class="bind" x1="117.45" y1="156.19" x2="112.92" y2="162.79" opacity="0.75"/>
+    <line class="bind" x1="133.10" y1="166.84" x2="138.86" y2="165.17" opacity="0.58"/>
+    <line class="bind" x1="125.30" y1="172.78" x2="120.58" y2="180.44" opacity="0.58"/>
+    <line class="bind" x1="125.15" y1="163.93" x2="121.84" y2="158.93" opacity="0.58"/>
+      <title>edge: bind
+pg_try_xact_lock -&gt; pg_try_xact_lock
+weight: 3
+
+path:
+pg_try_xact_lock -&gt; pg_try_xact_lock</title>
+    </g>
+  </g>
+  <g id="terminals">
+    <g class="edge-wrap">
+    <path class="term" d="M 292.82 110.85 Q 283.25 138.27 286.80 167.10" stroke-width="1.65" opacity="0.90"/>
+      <title>edge: return
+pg_lock_key_i64 -&gt; pg_lock_key_i64
+weight: 2
+
+path:
+pg_lock_key_i64 -&gt; pg_lock_key_i64</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="term" d="M 329.41 118.43 Q 310.67 141.72 310.10 171.60" stroke-width="1.65" opacity="0.90"/>
+      <title>edge: return
+pg_lock_key_pair -&gt; pg_lock_key_pair
+weight: 2
+
+path:
+pg_lock_key_pair -&gt; pg_lock_key_pair</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="term" d="M 348.60 128.81 Q 331.29 151.65 322.10 178.79" stroke-width="1.65" opacity="0.90"/>
+      <title>edge: return
+pg_lock_key_string -&gt; pg_lock_key_string
+weight: 2
+
+path:
+pg_lock_key_string -&gt; pg_lock_key_string</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="term" d="M 390.14 155.39 Q 364.82 170.07 350.14 195.39" stroke-width="1.65" opacity="0.90"/>
+      <title>edge: return
+pg_lock_key_named -&gt; pg_lock_key_named
+weight: 2
+
+path:
+pg_lock_key_named -&gt; pg_lock_key_named</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="term" d="M 405.71 179.54 Q 375.99 180.05 352.20 197.88" stroke-width="1.65" opacity="0.90"/>
+      <title>edge: return
+pg_lock_handle_make -&gt; pg_lock_handle_make
+weight: 2
+
+path:
+pg_lock_handle_make -&gt; pg_lock_handle_make</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="term" d="M 424.03 209.35 Q 396.54 217.10 372.21 232.04" stroke-width="1.65" opacity="0.90"/>
+      <title>edge: return
+pg_lock_attempt_make -&gt; pg_lock_attempt_make
+weight: 2
+
+path:
+pg_lock_attempt_make -&gt; pg_lock_attempt_make</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="term" d="M 449.41 261.35 Q 420.75 259.64 393.21 267.80" stroke-width="1.65" opacity="0.90"/>
+      <title>edge: return
+pg_lock_sql_call -&gt; pg_lock_sql_call
+weight: 2
+
+path:
+pg_lock_sql_call -&gt; pg_lock_sql_call</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="term" d="M 427.91 316.89 Q 401.24 306.03 372.45 305.73" stroke-width="1.65" opacity="0.90"/>
+      <title>edge: return
+pg_lock_sql -&gt; pg_lock_sql
+weight: 2
+
+path:
+pg_lock_sql -&gt; pg_lock_sql</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="term" d="M 392.75 345.93 Q 368.69 330.62 341.57 321.84" stroke-width="1.65" opacity="0.90"/>
+      <title>edge: return
+pg_try_lock_sql -&gt; pg_try_lock_sql
+weight: 2
+
+path:
+pg_try_lock_sql -&gt; pg_try_lock_sql</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="term" d="M 386.80 346.03 Q 372.68 319.61 345.20 307.69" stroke-width="1.65" opacity="0.90"/>
+      <title>edge: return
+pg_unlock_sql -&gt; pg_unlock_sql
+weight: 2
+
+path:
+pg_unlock_sql -&gt; pg_unlock_sql</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="term" d="M 371.59 368.77 Q 357.15 344.19 337.09 323.94" stroke-width="1.65" opacity="0.90"/>
+      <title>edge: return
+pg_xact_lock_sql -&gt; pg_xact_lock_sql
+weight: 2
+
+path:
+pg_xact_lock_sql -&gt; pg_xact_lock_sql</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="term" d="M 341.13 383.72 Q 335.55 355.04 316.73 332.68" stroke-width="1.65" opacity="0.90"/>
+      <title>edge: return
+pg_try_xact_lock_sql -&gt; pg_try_xact_lock_sql
+weight: 2
+
+path:
+pg_try_xact_lock_sql -&gt; pg_try_xact_lock_sql</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="term" d="M 328.31 394.61 Q 318.45 366.87 295.31 348.66" stroke-width="1.65" opacity="0.90"/>
+      <title>edge: return
+pg_lock_no_params -&gt; pg_lock_no_params
+weight: 2
+
+path:
+pg_lock_no_params -&gt; pg_lock_no_params</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="term" d="M 257.43 403.35 Q 270.06 376.49 264.89 347.27" stroke-width="1.80" opacity="0.90"/>
+      <title>edge: return
+pg_lock_read_bool -&gt; pg_lock_read_bool
+weight: 3
+
+path:
+pg_lock_read_bool -&gt; pg_lock_read_bool</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="term" d="M 174.97 390.75 Q 195.68 371.14 210.68 346.88" stroke-width="1.80" opacity="0.90"/>
+      <title>edge: return
+pg_lock -&gt; pg_lock
+weight: 3
+
+path:
+pg_lock -&gt; pg_lock</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="term" d="M 86.56 325.10 Q 116.21 327.05 141.43 311.36" stroke-width="1.90" opacity="0.90"/>
+      <title>edge: return
+pg_try_lock -&gt; pg_try_lock
+weight: 4
+
+path:
+pg_try_lock -&gt; pg_try_lock</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="term" d="M 71.36 274.07 Q 99.46 269.91 126.31 260.65" stroke-width="1.80" opacity="0.90"/>
+      <title>edge: return
+pg_unlock -&gt; pg_unlock
+weight: 3
+
+path:
+pg_unlock -&gt; pg_unlock</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="term" d="M 81.01 210.10 Q 108.06 222.46 137.21 216.57" stroke-width="1.80" opacity="0.90"/>
+      <title>edge: return
+pg_xact_lock -&gt; pg_xact_lock
+weight: 3
+
+path:
+pg_xact_lock -&gt; pg_xact_lock</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="term" d="M 106.61 153.61 Q 121.36 179.36 148.28 191.87" stroke-width="1.90" opacity="0.90"/>
+      <title>edge: return
+pg_try_xact_lock -&gt; pg_try_xact_lock
+weight: 4
+
+path:
+pg_try_xact_lock -&gt; pg_try_xact_lock</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="term" d="M 173.95 122.52 Q 190.39 145.63 210.09 166.04" stroke-width="1.65" opacity="0.90"/>
+      <title>edge: return
+pg_lock_job -&gt; pg_lock_job
+weight: 2
+
+path:
+pg_lock_job -&gt; pg_lock_job</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="term" d="M 222.77 110.18 Q 215.67 139.15 227.41 166.56" stroke-width="1.65" opacity="0.90"/>
+      <title>edge: return
+pg_try_lock_job -&gt; pg_try_lock_job
+weight: 2
+
+path:
+pg_try_lock_job -&gt; pg_try_lock_job</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="term" d="M 243.33 112.31 Q 247.31 140.43 256.22 167.39" stroke-width="1.65" opacity="0.90"/>
+      <title>edge: return
+pg_with_lock -&gt; pg_with_lock
+weight: 2
+
+path:
+pg_with_lock -&gt; pg_with_lock</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="term" d="M 279.81 116.24 Q 270.13 144.27 278.29 172.78" stroke-width="1.65" opacity="0.90"/>
+      <title>edge: return
+pg_with_job_lock -&gt; pg_with_job_lock
+weight: 2
+
+path:
+pg_with_job_lock -&gt; pg_with_job_lock</title>
+    </g>
+  </g>
+  <g id="nodes">
+    <g class="node-wrap">
+      <circle class="node-main" cx="292.82" cy="110.85" r="6.70" data-kind="rituale" data-ritual="pg_lock_key_i64" data-line="39" data-col="1" data-depth="3" data-stmt="RITUALE" data-loops="0" data-calls="0"/>
+      <title>RITUALE pg_lock_key_i64
+stmt: 6
+depth: 3
+loops: 0
+calls: 0
+source:
+RITUALE pg_lock_key_i64(REX value) REDDE PgLockKey</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="286.42" cy="136.05" r="3.55" data-kind="bind" data-ritual="pg_lock_key_i64" data-line="40" data-col="3" data-depth="3" data-stmt="EVOCA"/>
+      <title>stmt: EVOCA
+rituale: pg_lock_key_i64
+depth: 3
+line: 40
+
+source:
+EVOCA PgLockKey key</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="286.80" cy="167.10" r="3.60" data-kind="term" data-ritual="pg_lock_key_i64" data-line="45" data-col="3" data-depth="3" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: pg_lock_key_i64
+depth: 3
+line: 45
+
+source:
+REDDE key</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-main" cx="329.41" cy="118.43" r="6.70" data-kind="rituale" data-ritual="pg_lock_key_pair" data-line="48" data-col="1" data-depth="3" data-stmt="RITUALE" data-loops="0" data-calls="0"/>
+      <title>RITUALE pg_lock_key_pair
+stmt: 6
+depth: 3
+loops: 0
+calls: 0
+source:
+RITUALE pg_lock_key_pair(REX key1, REX key2) REDDE PgLockKey</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="317.17" cy="141.37" r="3.55" data-kind="bind" data-ritual="pg_lock_key_pair" data-line="49" data-col="3" data-depth="3" data-stmt="EVOCA"/>
+      <title>stmt: EVOCA
+rituale: pg_lock_key_pair
+depth: 3
+line: 49
+
+source:
+EVOCA PgLockKey key</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="310.10" cy="171.60" r="3.60" data-kind="term" data-ritual="pg_lock_key_pair" data-line="54" data-col="3" data-depth="3" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: pg_lock_key_pair
+depth: 3
+line: 54
+
+source:
+REDDE key</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-main" cx="348.60" cy="128.81" r="6.25" data-kind="rituale" data-ritual="pg_lock_key_string" data-line="57" data-col="1" data-depth="4" data-stmt="RITUALE" data-loops="0" data-calls="2"/>
+      <title>RITUALE pg_lock_key_string
+stmt: 3
+depth: 4
+loops: 0
+calls: 2
+source:
+RITUALE pg_lock_key_string(VERBUM full_name) REDDE PgLockKey</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="333.29" cy="149.83" r="3.10" data-kind="bind" data-ritual="pg_lock_key_string" data-line="58" data-col="3" data-depth="4" data-stmt="EVOCA"/>
+      <title>stmt: EVOCA
+rituale: pg_lock_key_string
+depth: 4
+line: 58
+
+source:
+EVOCA PgLockKey key AD CONIURA pg_lock_key_i64(CONIURA fnv1a(full_name))</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="322.10" cy="178.79" r="3.60" data-kind="term" data-ritual="pg_lock_key_string" data-line="60" data-col="3" data-depth="4" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: pg_lock_key_string
+depth: 4
+line: 60
+
+source:
+REDDE key</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-main" cx="390.14" cy="155.39" r="6.55" data-kind="rituale" data-ritual="pg_lock_key_named" data-line="63" data-col="1" data-depth="4" data-stmt="RITUALE" data-loops="0" data-calls="5"/>
+      <title>RITUALE pg_lock_key_named
+stmt: 5
+depth: 4
+loops: 0
+calls: 5
+source:
+RITUALE pg_lock_key_named(VERBUM namespace_name, VERBUM resource_name) REDDE PgLockKey</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="369.34" cy="170.99" r="3.40" data-kind="bind" data-ritual="pg_lock_key_named" data-line="64" data-col="3" data-depth="4" data-stmt="EVOCA"/>
+      <title>stmt: EVOCA
+rituale: pg_lock_key_named
+depth: 4
+line: 64
+
+source:
+EVOCA VERBUM raw AD CONIURA concat(namespace_name, ":")</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="350.14" cy="195.39" r="3.60" data-kind="term" data-ritual="pg_lock_key_named" data-line="68" data-col="3" data-depth="4" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: pg_lock_key_named
+depth: 4
+line: 68
+
+source:
+REDDE key</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-main" cx="405.71" cy="179.54" r="6.55" data-kind="rituale" data-ritual="pg_lock_handle_make" data-line="71" data-col="1" data-depth="3" data-stmt="RITUALE" data-loops="0" data-calls="0"/>
+      <title>RITUALE pg_lock_handle_make
+stmt: 5
+depth: 3
+loops: 0
+calls: 0
+source:
+RITUALE pg_lock_handle_make(PgLockKey key, PgLockScope scope, VERUM acquired) REDDE PgLockHandle</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="382.56" cy="191.36" r="3.40" data-kind="bind" data-ritual="pg_lock_handle_make" data-line="72" data-col="3" data-depth="3" data-stmt="EVOCA"/>
+      <title>stmt: EVOCA
+rituale: pg_lock_handle_make
+depth: 3
+line: 72
+
+source:
+EVOCA PgLockHandle handle</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="352.20" cy="197.88" r="3.60" data-kind="term" data-ritual="pg_lock_handle_make" data-line="76" data-col="3" data-depth="3" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: pg_lock_handle_make
+depth: 3
+line: 76
+
+source:
+REDDE handle</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-main" cx="424.03" cy="209.35" r="6.40" data-kind="rituale" data-ritual="pg_lock_attempt_make" data-line="79" data-col="1" data-depth="3" data-stmt="RITUALE" data-loops="0" data-calls="1"/>
+      <title>RITUALE pg_lock_attempt_make
+stmt: 4
+depth: 3
+loops: 0
+calls: 1
+source:
+RITUALE pg_lock_attempt_make(PgLockKey key, PgLockScope scope, VERUM acquired) REDDE PgLockAt...</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="398.97" cy="216.31" r="3.25" data-kind="bind" data-ritual="pg_lock_attempt_make" data-line="80" data-col="3" data-depth="3" data-stmt="EVOCA"/>
+      <title>stmt: EVOCA
+rituale: pg_lock_attempt_make
+depth: 3
+line: 80
+
+source:
+EVOCA PgLockAttempt attempt</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="372.21" cy="232.04" r="3.60" data-kind="term" data-ritual="pg_lock_attempt_make" data-line="83" data-col="3" data-depth="3" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: pg_lock_attempt_make
+depth: 3
+line: 83
+
+source:
+REDDE attempt</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-main" cx="449.41" cy="261.35" r="7.15" data-kind="rituale" data-ritual="pg_lock_sql_call" data-line="86" data-col="1" data-depth="7" data-stmt="RITUALE" data-loops="0" data-calls="10"/>
+      <title>RITUALE pg_lock_sql_call
+stmt: 9
+depth: 7
+loops: 0
+calls: 10
+source:
+RITUALE pg_lock_sql_call(VERBUM fn_name, PgLockKey key) REDDE VERBUM</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="414.59" cy="236.38" r="4.80" data-kind="branch" data-ritual="pg_lock_sql_call" data-line="89" data-col="3" data-depth="7" data-stmt="SI"/>
+      <title>stmt: SI
+rituale: pg_lock_sql_call
+depth: 7
+line: 89
+
+source:
+SI key.has_pair</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="430.48" cy="294.84" r="4.20" data-kind="branch" data-ritual="pg_lock_sql_call" data-line="94" data-col="5" data-depth="7" data-stmt="ALITER"/>
+      <title>stmt: ALITER
+rituale: pg_lock_sql_call
+depth: 7
+line: 94
+
+source:
+VINCIRE out AD CONIURA concat(out, CONIURA stringify_int(key.key_lo))</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="423.42" cy="260.63" r="3.85" data-kind="bind" data-ritual="pg_lock_sql_call" data-line="87" data-col="3" data-depth="7" data-stmt="EVOCA"/>
+      <title>stmt: EVOCA
+rituale: pg_lock_sql_call
+depth: 7
+line: 87
+
+source:
+EVOCA VERBUM out AD CONIURA concat("SELECT ", fn_name)</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="393.21" cy="267.80" r="3.60" data-kind="term" data-ritual="pg_lock_sql_call" data-line="97" data-col="3" data-depth="7" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: pg_lock_sql_call
+depth: 7
+line: 97
+
+source:
+REDDE out</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-main" cx="427.91" cy="316.89" r="5.95" data-kind="rituale" data-ritual="pg_lock_sql" data-line="100" data-col="1" data-depth="3" data-stmt="RITUALE" data-loops="0" data-calls="1"/>
+      <title>RITUALE pg_lock_sql
+stmt: 1
+depth: 3
+loops: 0
+calls: 1
+source:
+RITUALE pg_lock_sql(PgLockKey key) REDDE VERBUM</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="372.45" cy="305.73" r="3.60" data-kind="term" data-ritual="pg_lock_sql" data-line="101" data-col="3" data-depth="3" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: pg_lock_sql
+depth: 3
+line: 101
+
+source:
+REDDE CONIURA pg_lock_sql_call("pg_advisory_lock", key)</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-main" cx="392.75" cy="345.93" r="5.95" data-kind="rituale" data-ritual="pg_try_lock_sql" data-line="104" data-col="1" data-depth="3" data-stmt="RITUALE" data-loops="0" data-calls="1"/>
+      <title>RITUALE pg_try_lock_sql
+stmt: 1
+depth: 3
+loops: 0
+calls: 1
+source:
+RITUALE pg_try_lock_sql(PgLockKey key) REDDE VERBUM</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="341.57" cy="321.84" r="3.60" data-kind="term" data-ritual="pg_try_lock_sql" data-line="105" data-col="3" data-depth="3" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: pg_try_lock_sql
+depth: 3
+line: 105
+
+source:
+REDDE CONIURA pg_lock_sql_call("pg_try_advisory_lock", key)</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-main" cx="386.80" cy="346.03" r="5.95" data-kind="rituale" data-ritual="pg_unlock_sql" data-line="108" data-col="1" data-depth="3" data-stmt="RITUALE" data-loops="0" data-calls="1"/>
+      <title>RITUALE pg_unlock_sql
+stmt: 1
+depth: 3
+loops: 0
+calls: 1
+source:
+RITUALE pg_unlock_sql(PgLockKey key) REDDE VERBUM</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="345.20" cy="307.69" r="3.60" data-kind="term" data-ritual="pg_unlock_sql" data-line="109" data-col="3" data-depth="3" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: pg_unlock_sql
+depth: 3
+line: 109
+
+source:
+REDDE CONIURA pg_lock_sql_call("pg_advisory_unlock", key)</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-main" cx="371.59" cy="368.77" r="5.95" data-kind="rituale" data-ritual="pg_xact_lock_sql" data-line="112" data-col="1" data-depth="3" data-stmt="RITUALE" data-loops="0" data-calls="1"/>
+      <title>RITUALE pg_xact_lock_sql
+stmt: 1
+depth: 3
+loops: 0
+calls: 1
+source:
+RITUALE pg_xact_lock_sql(PgLockKey key) REDDE VERBUM</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="337.09" cy="323.94" r="3.60" data-kind="term" data-ritual="pg_xact_lock_sql" data-line="113" data-col="3" data-depth="3" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: pg_xact_lock_sql
+depth: 3
+line: 113
+
+source:
+REDDE CONIURA pg_lock_sql_call("pg_advisory_xact_lock", key)</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-main" cx="341.13" cy="383.72" r="5.95" data-kind="rituale" data-ritual="pg_try_xact_lock_sql" data-line="116" data-col="1" data-depth="3" data-stmt="RITUALE" data-loops="0" data-calls="1"/>
+      <title>RITUALE pg_try_xact_lock_sql
+stmt: 1
+depth: 3
+loops: 0
+calls: 1
+source:
+RITUALE pg_try_xact_lock_sql(PgLockKey key) REDDE VERBUM</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="316.73" cy="332.68" r="3.60" data-kind="term" data-ritual="pg_try_xact_lock_sql" data-line="117" data-col="3" data-depth="3" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: pg_try_xact_lock_sql
+depth: 3
+line: 117
+
+source:
+REDDE CONIURA pg_lock_sql_call("pg_try_advisory_xact_lock", key)</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-main" cx="328.31" cy="394.61" r="5.95" data-kind="rituale" data-ritual="pg_lock_no_params" data-line="120" data-col="1" data-depth="3" data-stmt="RITUALE" data-loops="0" data-calls="1"/>
+      <title>RITUALE pg_lock_no_params
+stmt: 1
+depth: 3
+loops: 0
+calls: 1
+source:
+RITUALE pg_lock_no_params() REDDE SPECULUM NIHIL</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="295.31" cy="348.66" r="3.60" data-kind="term" data-ritual="pg_lock_no_params" data-line="121" data-col="3" data-depth="3" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: pg_lock_no_params
+depth: 3
+line: 121
+
+source:
+REDDE CONIURA fluxus_init(MENSURA(DbValue))</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-main" cx="257.43" cy="403.35" r="7.45" data-kind="rituale" data-ritual="pg_lock_read_bool" data-line="124" data-col="1" data-depth="6" data-stmt="RITUALE" data-loops="0" data-calls="11"/>
+      <title>RITUALE pg_lock_read_bool
+stmt: 11
+depth: 6
+loops: 0
+calls: 11
+source:
+RITUALE pg_lock_read_bool(Db db, VERBUM sql) REDDE SPECULUM NIHIL</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="233.07" cy="366.58" r="5.80" data-kind="branch" data-ritual="pg_lock_read_bool" data-line="128" data-col="3" data-depth="6" data-stmt="SI"/>
+      <title>stmt: SI
+rituale: pg_lock_read_bool
+depth: 6
+line: 128
+
+source:
+SI CONIURA result_is_err GENUS(Rows, VERBUM)(query_result)</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="257.18" cy="377.35" r="3.55" data-kind="bind" data-ritual="pg_lock_read_bool" data-line="125" data-col="3" data-depth="6" data-stmt="EVOCA"/>
+      <title>stmt: EVOCA
+rituale: pg_lock_read_bool
+depth: 6
+line: 125
+
+source:
+EVOCA SPECULUM NIHIL params AD CONIURA pg_lock_no_params()</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="264.89" cy="347.27" r="4.00" data-kind="term" data-ritual="pg_lock_read_bool" data-line="129" data-col="5" data-depth="6" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: pg_lock_read_bool
+depth: 6
+line: 129
+
+source:
+REDDE CONIURA Err GENUS(VERUM, VERBUM)(CONIURA db_last_error(db))</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-main" cx="174.97" cy="390.75" r="6.85" data-kind="rituale" data-ritual="pg_lock" data-line="140" data-col="1" data-depth="6" data-stmt="RITUALE" data-loops="0" data-calls="9"/>
+      <title>RITUALE pg_lock
+stmt: 7
+depth: 6
+loops: 0
+calls: 9
+source:
+RITUALE pg_lock(Db db, PgLockKey key) REDDE SPECULUM NIHIL</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="172.69" cy="347.96" r="4.80" data-kind="branch" data-ritual="pg_lock" data-line="144" data-col="3" data-depth="6" data-stmt="SI"/>
+      <title>stmt: SI
+rituale: pg_lock
+depth: 6
+line: 144
+
+source:
+SI CONIURA result_is_err GENUS(REX, VERBUM)(exec_result)</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="188.37" cy="368.47" r="3.25" data-kind="bind" data-ritual="pg_lock" data-line="141" data-col="3" data-depth="6" data-stmt="EVOCA"/>
+      <title>stmt: EVOCA
+rituale: pg_lock
+depth: 6
+line: 141
+
+source:
+EVOCA SPECULUM NIHIL params AD CONIURA pg_lock_no_params()</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="210.68" cy="346.88" r="4.00" data-kind="term" data-ritual="pg_lock" data-line="145" data-col="5" data-depth="6" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: pg_lock
+depth: 6
+line: 145
+
+source:
+REDDE CONIURA Err GENUS(PgLockHandle, VERBUM)(CONIURA db_last_error(db))</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-main" cx="86.56" cy="325.10" r="7.00" data-kind="rituale" data-ritual="pg_try_lock" data-line="151" data-col="1" data-depth="6" data-stmt="RITUALE" data-loops="0" data-calls="10"/>
+      <title>RITUALE pg_try_lock
+stmt: 8
+depth: 6
+loops: 0
+calls: 10
+source:
+RITUALE pg_try_lock(Db db, PgLockKey key) REDDE SPECULUM NIHIL</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="111.76" cy="288.91" r="5.80" data-kind="branch" data-ritual="pg_try_lock" data-line="153" data-col="3" data-depth="6" data-stmt="SI"/>
+      <title>stmt: SI
+rituale: pg_try_lock
+depth: 6
+line: 153
+
+source:
+SI CONIURA result_is_err GENUS(VERUM, VERBUM)(bool_result)</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="110.64" cy="315.28" r="3.25" data-kind="bind" data-ritual="pg_try_lock" data-line="152" data-col="3" data-depth="6" data-stmt="EVOCA"/>
+      <title>stmt: EVOCA
+rituale: pg_try_lock
+depth: 6
+line: 152
+
+source:
+EVOCA SPECULUM NIHIL bool_result AD CONIURA pg_lock_read_bool(db, CONIURA pg_try_lock_sql(key))</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="141.43" cy="311.36" r="4.40" data-kind="term" data-ritual="pg_try_lock" data-line="154" data-col="5" data-depth="6" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: pg_try_lock
+depth: 6
+line: 154
+
+source:
+REDDE CONIURA Err GENUS(PgLockAttempt, VERBUM)(CONIURA db_last_error(db))</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-main" cx="71.36" cy="274.07" r="6.25" data-kind="rituale" data-ritual="pg_unlock" data-line="164" data-col="1" data-depth="5" data-stmt="RITUALE" data-loops="0" data-calls="3"/>
+      <title>RITUALE pg_unlock
+stmt: 3
+depth: 5
+loops: 0
+calls: 3
+source:
+RITUALE pg_unlock(Db db, PgLockHandle handle) REDDE SPECULUM NIHIL</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="109.03" cy="294.50" r="4.80" data-kind="branch" data-ritual="pg_unlock" data-line="165" data-col="3" data-depth="5" data-stmt="SI"/>
+      <title>stmt: SI
+rituale: pg_unlock
+depth: 5
+line: 165
+
+source:
+SI NON handle.acquired</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="126.31" cy="260.65" r="4.00" data-kind="term" data-ritual="pg_unlock" data-line="166" data-col="5" data-depth="5" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: pg_unlock
+depth: 5
+line: 166
+
+source:
+REDDE CONIURA Err GENUS(VERUM, VERBUM)("Handle de lock nao adquirido")</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-main" cx="81.01" cy="210.10" r="6.85" data-kind="rituale" data-ritual="pg_xact_lock" data-line="171" data-col="1" data-depth="6" data-stmt="RITUALE" data-loops="0" data-calls="9"/>
+      <title>RITUALE pg_xact_lock
+stmt: 7
+depth: 6
+loops: 0
+calls: 9
+source:
+RITUALE pg_xact_lock(Db db, PgLockKey key) REDDE SPECULUM NIHIL</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="109.26" cy="242.33" r="4.80" data-kind="branch" data-ritual="pg_xact_lock" data-line="175" data-col="3" data-depth="6" data-stmt="SI"/>
+      <title>stmt: SI
+rituale: pg_xact_lock
+depth: 6
+line: 175
+
+source:
+SI CONIURA result_is_err GENUS(REX, VERBUM)(exec_result)</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="106.16" cy="216.70" r="3.25" data-kind="bind" data-ritual="pg_xact_lock" data-line="172" data-col="3" data-depth="6" data-stmt="EVOCA"/>
+      <title>stmt: EVOCA
+rituale: pg_xact_lock
+depth: 6
+line: 172
+
+source:
+EVOCA SPECULUM NIHIL params AD CONIURA pg_lock_no_params()</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="137.21" cy="216.57" r="4.00" data-kind="term" data-ritual="pg_xact_lock" data-line="176" data-col="5" data-depth="6" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: pg_xact_lock
+depth: 6
+line: 176
+
+source:
+REDDE CONIURA Err GENUS(PgLockHandle, VERBUM)(CONIURA db_last_error(db))</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-main" cx="106.61" cy="153.61" r="7.00" data-kind="rituale" data-ritual="pg_try_xact_lock" data-line="182" data-col="1" data-depth="6" data-stmt="RITUALE" data-loops="0" data-calls="10"/>
+      <title>RITUALE pg_try_xact_lock
+stmt: 8
+depth: 6
+loops: 0
+calls: 10
+source:
+RITUALE pg_try_xact_lock(Db db, PgLockKey key) REDDE SPECULUM NIHIL</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="150.70" cy="154.73" r="5.80" data-kind="branch" data-ritual="pg_try_xact_lock" data-line="184" data-col="3" data-depth="6" data-stmt="SI"/>
+      <title>stmt: SI
+rituale: pg_try_xact_lock
+depth: 6
+line: 184
+
+source:
+SI CONIURA result_is_err GENUS(VERUM, VERBUM)(bool_result)</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="128.05" cy="168.31" r="3.25" data-kind="bind" data-ritual="pg_try_xact_lock" data-line="183" data-col="3" data-depth="6" data-stmt="EVOCA"/>
+      <title>stmt: EVOCA
+rituale: pg_try_xact_lock
+depth: 6
+line: 183
+
+source:
+EVOCA SPECULUM NIHIL bool_result AD CONIURA pg_lock_read_bool(db, CONIURA pg_try_xact_lock_sq...</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="148.28" cy="191.87" r="4.40" data-kind="term" data-ritual="pg_try_xact_lock" data-line="185" data-col="5" data-depth="6" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: pg_try_xact_lock
+depth: 6
+line: 185
+
+source:
+REDDE CONIURA Err GENUS(PgLockAttempt, VERBUM)(CONIURA db_last_error(db))</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-main" cx="173.95" cy="122.52" r="5.95" data-kind="rituale" data-ritual="pg_lock_job" data-line="195" data-col="1" data-depth="4" data-stmt="RITUALE" data-loops="0" data-calls="2"/>
+      <title>RITUALE pg_lock_job
+stmt: 1
+depth: 4
+loops: 0
+calls: 2
+source:
+RITUALE pg_lock_job(Db db, VERBUM job_name, VERBUM resource_name) REDDE SPECULUM NIHIL</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="210.09" cy="166.04" r="3.60" data-kind="term" data-ritual="pg_lock_job" data-line="196" data-col="3" data-depth="4" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: pg_lock_job
+depth: 4
+line: 196
+
+source:
+REDDE CONIURA pg_lock(db, CONIURA pg_lock_key_named(job_name, resource_name))</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-main" cx="222.77" cy="110.18" r="5.95" data-kind="rituale" data-ritual="pg_try_lock_job" data-line="199" data-col="1" data-depth="4" data-stmt="RITUALE" data-loops="0" data-calls="2"/>
+      <title>RITUALE pg_try_lock_job
+stmt: 1
+depth: 4
+loops: 0
+calls: 2
+source:
+RITUALE pg_try_lock_job(Db db, VERBUM job_name, VERBUM resource_name) REDDE SPECULUM NIHIL</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="227.41" cy="166.56" r="3.60" data-kind="term" data-ritual="pg_try_lock_job" data-line="200" data-col="3" data-depth="4" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: pg_try_lock_job
+depth: 4
+line: 200
+
+source:
+REDDE CONIURA pg_try_lock(db, CONIURA pg_lock_key_named(job_name, resource_name))</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-main" cx="243.33" cy="112.31" r="5.95" data-kind="rituale" data-ritual="pg_with_lock" data-line="203" data-col="1" data-depth="3" data-stmt="RITUALE" data-loops="0" data-calls="1"/>
+      <title>RITUALE pg_with_lock
+stmt: 1
+depth: 3
+loops: 0
+calls: 1
+source:
+RITUALE pg_with_lock(Db db, PgLockKey key, SPECULUM NIHIL body) REDDE SPECULUM NIHIL</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="256.22" cy="167.39" r="3.60" data-kind="term" data-ritual="pg_with_lock" data-line="204" data-col="3" data-depth="3" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: pg_with_lock
+depth: 3
+line: 204
+
+source:
+REDDE CONIURA Err GENUS(REX, VERBUM)("pg_with_lock ainda nao suporta callback direto; use pg_...</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-main" cx="279.81" cy="116.24" r="5.95" data-kind="rituale" data-ritual="pg_with_job_lock" data-line="207" data-col="1" data-depth="3" data-stmt="RITUALE" data-loops="0" data-calls="1"/>
+      <title>RITUALE pg_with_job_lock
+stmt: 1
+depth: 3
+loops: 0
+calls: 1
+source:
+RITUALE pg_with_job_lock(Db db, VERBUM job_name, VERBUM resource_name, SPECULUM NIHIL body) R...</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="278.29" cy="172.78" r="3.60" data-kind="term" data-ritual="pg_with_job_lock" data-line="208" data-col="3" data-depth="3" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: pg_with_job_lock
+depth: 3
+line: 208
+
+source:
+REDDE CONIURA Err GENUS(REX, VERBUM)("pg_with_job_lock ainda nao suporta callback direto; use...</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="270.80" cy="247.28" r="5.00" data-kind="bind" data-ritual="pg_lock_key_i64" data-line="40" data-col="3" data-depth="3" data-stmt="EVOCA"/>
+      <title>stmt: EVOCA
+rituale: pg_lock_key_i64
+depth: 3
+line: 40
+
+source:
+EVOCA PgLockKey key</title>
+    </g>
+  </g>
+  <g id="ornaments">
+    <circle class="orn" cx="465.37" cy="233.60" r="0.90"/>
+    <circle class="orn" cx="446.17" cy="329.16" r="1.90"/>
+    <circle class="orn" cx="396.49" cy="398.56" r="2.90"/>
+    <circle class="orn" cx="310.08" cy="454.56" r="0.90"/>
+    <circle class="orn" cx="236.54" cy="459.57" r="1.90"/>
+    <circle class="orn" cx="157.43" cy="430.06" r="2.90"/>
+    <circle class="orn" cx="81.66" cy="364.44" r="0.90"/>
+    <circle class="orn" cx="57.96" cy="243.83" r="1.90"/>
+    <circle class="orn" cx="81.96" cy="148.27" r="2.90"/>
+    <circle class="orn" cx="117.14" cy="98.84" r="0.90"/>
+    <circle class="orn" cx="246.91" cy="56.48" r="1.90"/>
+    <circle class="orn" cx="292.47" cy="60.40" r="2.90"/>
+    <circle class="orn" cx="355.26" cy="81.59" r="0.90"/>
+    <circle class="orn" cx="445.99" cy="170.40" r="1.90"/>
+  </g>
+  <g id="signature">
+    <text class="hash" x="256" y="496" text-anchor="middle">5531c1024e79fdc2</text>
+    <text class="label" x="256" y="18" text-anchor="middle">network • sigillum v2.1 • 23 rituale(s) • 92 stmt • depth 7</text>
+  </g>
+</svg>

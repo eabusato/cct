@@ -1,0 +1,1110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512" role="img" aria-label="CCT local sigilo">
+  <desc>Deterministic semantic sigil for a single CCT module.</desc>
+  <defs>
+    <style><![CDATA[
+      .bg { fill: #f5f0e4; }
+      .base { stroke: #2a221c; stroke-width: 1.60; fill: none; opacity: 0.78; }
+      .primary { stroke: #241913; stroke-width: 2.80; fill: none; stroke-linecap: round; stroke-linejoin: round; }
+      .call { stroke: #5b2a22; stroke-width: 2.0; fill: none; stroke-linecap: round; opacity: 0.9; }
+      .branch { stroke: #6b342d; stroke-width: 1.6; fill: none; stroke-linecap: round; }
+      .loop { stroke: #2d5f5a; stroke-width: 1.6; fill: none; stroke-linecap: round; }
+      .bind { stroke: #73493d; stroke-width: 1.4; fill: none; stroke-linecap: round; }
+      .term { stroke: #201814; stroke-width: 1.7; fill: none; stroke-linecap: round; }
+      .node-main { fill: #fffaf1; stroke: #201814; stroke-width: 2.0; }
+      .node-entry { fill: #efe6d4; stroke: #201814; stroke-width: 2.4; }
+      .node-aux { fill: #f6efe0; stroke: #4f4339; stroke-width: 1.3; }
+      .node-loop { fill: #edf3f1; stroke: #2d5f5a; stroke-width: 1.4; }
+      .node-term { fill: #f3e7e3; stroke: #5a2a23; stroke-width: 1.4; }
+      .orn { stroke: #355d58; stroke-width: 1.0; fill: none; opacity: 0.55; }
+      .hash { fill: #1f1a17; font: 10px monospace; letter-spacing: 0.8px; }
+      .label { fill: #1f1a17; font: 8px monospace; opacity: 0.7; }
+      .node-wrap, .edge-wrap { cursor: help; }
+      .node-wrap:hover > circle { opacity: 0.96; }
+      .edge-wrap:hover > path, .edge-wrap:hover > line { opacity: 1.0; }
+    ]]></style>
+  </defs>
+  <rect class="bg" x="0" y="0" width="512" height="512"/>
+  <g id="foundation">
+    <circle class="base" cx="256" cy="256" r="226"/>
+    <ellipse class="base" cx="256" cy="256" rx="198" ry="182.80" opacity="0.32"/>
+  </g>
+  <g id="primary_path">
+    <g class="edge-wrap">
+    <path class="primary" d="M 333.91 99.61 Q 346.42 140.74 389.39 141.70" stroke-width="2.60" opacity="0.96"/>
+      <title>edge: primary
+semantic_find_field_type -&gt; semantic_analyze_identifier
+weight: 1
+
+path:
+semantic_find_field_type -&gt; semantic_analyze_identifier</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="primary" d="M 389.39 141.70 Q 401.38 184.99 445.63 192.74" stroke-width="2.60" opacity="0.96"/>
+      <title>edge: primary
+semantic_analyze_identifier -&gt; semantic_analyze_lvalue
+weight: 1
+
+path:
+semantic_analyze_identifier -&gt; semantic_analyze_lvalue</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="primary" d="M 445.63 192.74 Q 388.91 277.82 387.59 380.05" stroke-width="2.60" opacity="0.96"/>
+      <title>edge: primary
+semantic_analyze_lvalue -&gt; semantic_analyze_call
+weight: 1
+
+path:
+semantic_analyze_lvalue -&gt; semantic_analyze_call</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="primary" d="M 387.59 380.05 Q 285.28 364.19 188.43 400.77" stroke-width="2.60" opacity="0.96"/>
+      <title>edge: primary
+semantic_analyze_call -&gt; semantic_obsecro_expected_arity
+weight: 1
+
+path:
+semantic_analyze_call -&gt; semantic_obsecro_expected_arity</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="primary" d="M 188.43 400.77 Q 176.48 367.61 148.27 388.73" stroke-width="2.60" opacity="0.96"/>
+      <title>edge: primary
+semantic_obsecro_expected_arity -&gt; semantic_obsecro_return_type_id
+weight: 1
+
+path:
+semantic_obsecro_expected_arity -&gt; semantic_obsecro_return_type_id</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="primary" d="M 148.27 388.73 Q 142.10 344.62 97.61 342.58" stroke-width="2.60" opacity="0.96"/>
+      <title>edge: primary
+semantic_obsecro_return_type_id -&gt; semantic_analyze_obsecro_call
+weight: 1
+
+path:
+semantic_obsecro_return_type_id -&gt; semantic_analyze_obsecro_call</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="primary" d="M 97.61 342.58 Q 100.37 284.59 57.97 244.92" stroke-width="2.60" opacity="0.96"/>
+      <title>edge: primary
+semantic_analyze_obsecro_call -&gt; semantic_analyze_molde
+weight: 1
+
+path:
+semantic_analyze_obsecro_call -&gt; semantic_analyze_molde</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="primary" d="M 57.97 244.92 Q 125.32 195.16 153.53 116.32" stroke-width="2.60" opacity="0.96"/>
+      <title>edge: primary
+semantic_analyze_molde -&gt; semantic_analyze_expr
+weight: 1
+
+path:
+semantic_analyze_molde -&gt; semantic_analyze_expr</title>
+    </g>
+  </g>
+  <g id="call_links">
+    <g class="edge-wrap">
+    <path class="call" d="M 445.63 192.74 Q 436.87 145.89 389.39 141.70" stroke-width="2.15" opacity="0.74" data-kind="call" data-from="semantic_analyze_lvalue" data-to="semantic_analyze_identifier" data-weight="1" data-self-loop="false"/>
+      <title>edge: call
+semantic_analyze_lvalue -&gt; semantic_analyze_identifier
+calls: 1
+
+path:
+semantic_analyze_lvalue -&gt; semantic_analyze_identifier</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="call" d="M 445.63 192.74 Q 312.07 106.78 153.53 116.32" stroke-width="3.00" opacity="0.90" data-kind="call" data-from="semantic_analyze_lvalue" data-to="semantic_analyze_expr" data-weight="4" data-self-loop="false"/>
+      <title>edge: call
+semantic_analyze_lvalue -&gt; semantic_analyze_expr
+calls: 4
+
+path:
+semantic_analyze_lvalue -&gt; semantic_analyze_expr</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="call" d="M 445.63 192.74 Q 411.13 120.55 333.91 99.61" stroke-width="2.15" opacity="0.74" data-kind="call" data-from="semantic_analyze_lvalue" data-to="semantic_find_field_type" data-weight="1" data-self-loop="false"/>
+      <title>edge: call
+semantic_analyze_lvalue -&gt; semantic_find_field_type
+calls: 1
+
+path:
+semantic_analyze_lvalue -&gt; semantic_find_field_type</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="call" d="M 387.59 380.05 Q 299.86 222.19 153.53 116.32" stroke-width="2.50" opacity="0.80" data-kind="call" data-from="semantic_analyze_call" data-to="semantic_analyze_expr" data-weight="2" data-self-loop="false"/>
+      <title>edge: call
+semantic_analyze_call -&gt; semantic_analyze_expr
+calls: 2
+
+path:
+semantic_analyze_call -&gt; semantic_analyze_expr</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="call" d="M 97.61 342.58 Q 163.98 238.95 153.53 116.32" stroke-width="2.50" opacity="0.80" data-kind="call" data-from="semantic_analyze_obsecro_call" data-to="semantic_analyze_expr" data-weight="2" data-self-loop="false"/>
+      <title>edge: call
+semantic_analyze_obsecro_call -&gt; semantic_analyze_expr
+calls: 2
+
+path:
+semantic_analyze_obsecro_call -&gt; semantic_analyze_expr</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="call" d="M 97.61 342.58 Q 127.40 396.05 188.43 400.77" stroke-width="2.15" opacity="0.74" data-kind="call" data-from="semantic_analyze_obsecro_call" data-to="semantic_obsecro_expected_arity" data-weight="1" data-self-loop="false"/>
+      <title>edge: call
+semantic_analyze_obsecro_call -&gt; semantic_obsecro_expected_arity
+calls: 1
+
+path:
+semantic_analyze_obsecro_call -&gt; semantic_obsecro_expected_arity</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="call" d="M 97.61 342.58 Q 103.13 387.39 148.27 388.73" stroke-width="2.15" opacity="0.74" data-kind="call" data-from="semantic_analyze_obsecro_call" data-to="semantic_obsecro_return_type_id" data-weight="1" data-self-loop="false"/>
+      <title>edge: call
+semantic_analyze_obsecro_call -&gt; semantic_obsecro_return_type_id
+calls: 1
+
+path:
+semantic_analyze_obsecro_call -&gt; semantic_obsecro_return_type_id</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="call" d="M 57.97 244.92 Q 129.34 198.14 153.53 116.32" stroke-width="2.15" opacity="0.74" data-kind="call" data-from="semantic_analyze_molde" data-to="semantic_analyze_expr" data-weight="1" data-self-loop="false"/>
+      <title>edge: call
+semantic_analyze_molde -&gt; semantic_analyze_expr
+calls: 1
+
+path:
+semantic_analyze_molde -&gt; semantic_analyze_expr</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="call" d="M 153.53 116.32 Q 77.91 159.93 57.97 244.92" stroke-width="2.15" opacity="0.74" data-kind="call" data-from="semantic_analyze_expr" data-to="semantic_analyze_molde" data-weight="1" data-self-loop="false"/>
+      <title>edge: call
+semantic_analyze_expr -&gt; semantic_analyze_molde
+calls: 1
+
+path:
+semantic_analyze_expr -&gt; semantic_analyze_molde</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="call" d="M 153.53 116.32 Q 268.12 160.08 389.39 141.70" stroke-width="2.15" opacity="0.74" data-kind="call" data-from="semantic_analyze_expr" data-to="semantic_analyze_identifier" data-weight="1" data-self-loop="false"/>
+      <title>edge: call
+semantic_analyze_expr -&gt; semantic_analyze_identifier
+calls: 1
+
+path:
+semantic_analyze_expr -&gt; semantic_analyze_identifier</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="call" d="M 162.17 116.32 C 237.74 83.29 246.53 133.60 211.39 108.44 C 176.26 133.60 185.04 83.29 147.05 117.82" data-kind="call" data-from="semantic_analyze_expr" data-to="semantic_analyze_expr" data-weight="5" data-self-loop="true"/>
+      <title>edge: call
+semantic_analyze_expr -&gt; semantic_analyze_expr
+calls: 5
+
+path:
+semantic_analyze_expr -&gt; semantic_analyze_expr</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="call" d="M 153.53 116.32 Q 289.25 194.01 445.63 192.74" stroke-width="2.85" opacity="0.86" data-kind="call" data-from="semantic_analyze_expr" data-to="semantic_analyze_lvalue" data-weight="3" data-self-loop="false"/>
+      <title>edge: call
+semantic_analyze_expr -&gt; semantic_analyze_lvalue
+calls: 3
+
+path:
+semantic_analyze_expr -&gt; semantic_analyze_lvalue</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="call" d="M 153.53 116.32 Q 246.13 269.87 387.59 380.05" stroke-width="2.15" opacity="0.74" data-kind="call" data-from="semantic_analyze_expr" data-to="semantic_analyze_call" data-weight="1" data-self-loop="false"/>
+      <title>edge: call
+semantic_analyze_expr -&gt; semantic_analyze_call
+calls: 1
+
+path:
+semantic_analyze_expr -&gt; semantic_analyze_call</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="call" d="M 153.53 116.32 Q 99.04 222.90 97.61 342.58" stroke-width="2.15" opacity="0.74" data-kind="call" data-from="semantic_analyze_expr" data-to="semantic_analyze_obsecro_call" data-weight="1" data-self-loop="false"/>
+      <title>edge: call
+semantic_analyze_expr -&gt; semantic_analyze_obsecro_call
+calls: 1
+
+path:
+semantic_analyze_expr -&gt; semantic_analyze_obsecro_call</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="call" d="M 153.53 116.32 Q 246.58 138.84 333.91 99.61" stroke-width="2.15" opacity="0.74" data-kind="call" data-from="semantic_analyze_expr" data-to="semantic_find_field_type" data-weight="1" data-self-loop="false"/>
+      <title>edge: call
+semantic_analyze_expr -&gt; semantic_find_field_type
+calls: 1
+
+path:
+semantic_analyze_expr -&gt; semantic_find_field_type</title>
+    </g>
+  </g>
+  <g id="branches">
+    <g class="edge-wrap">
+    <path class="branch" d="M 333.91 99.61 Q 324.33 123.76 337.56 146.12" stroke-width="2.10" opacity="0.85"/>
+      <title>edge: branch
+semantic_find_field_type -&gt; semantic_find_field_type
+weight: 5
+
+path:
+semantic_find_field_type -&gt; semantic_find_field_type</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="branch" d="M 389.39 141.70 Q 369.81 158.91 376.91 184.00" stroke-width="1.95" opacity="0.85"/>
+      <title>edge: branch
+semantic_analyze_identifier -&gt; semantic_analyze_identifier
+weight: 3
+
+path:
+semantic_analyze_identifier -&gt; semantic_analyze_identifier</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="branch" d="M 445.63 192.74 Q 421.00 182.49 394.40 184.53" stroke-width="2.10" opacity="0.85"/>
+      <title>edge: branch
+semantic_analyze_lvalue -&gt; semantic_analyze_lvalue
+weight: 9
+
+path:
+semantic_analyze_lvalue -&gt; semantic_analyze_lvalue</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="branch" d="M 387.59 380.05 Q 360.96 360.06 327.83 356.70" stroke-width="2.10" opacity="0.85"/>
+      <title>edge: branch
+semantic_analyze_call -&gt; semantic_analyze_call
+weight: 18
+
+path:
+semantic_analyze_call -&gt; semantic_analyze_call</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="branch" d="M 188.43 400.77 Q 215.27 398.84 227.10 374.67" stroke-width="2.10" opacity="0.85"/>
+      <title>edge: branch
+semantic_obsecro_expected_arity -&gt; semantic_obsecro_expected_arity
+weight: 5
+
+path:
+semantic_obsecro_expected_arity -&gt; semantic_obsecro_expected_arity</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="branch" d="M 148.27 388.73 Q 174.33 392.16 192.11 372.80" stroke-width="2.10" opacity="0.85"/>
+      <title>edge: branch
+semantic_obsecro_return_type_id -&gt; semantic_obsecro_return_type_id
+weight: 5
+
+path:
+semantic_obsecro_return_type_id -&gt; semantic_obsecro_return_type_id</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="branch" d="M 97.61 342.58 Q 118.94 324.96 127.77 298.74" stroke-width="2.10" opacity="0.85"/>
+      <title>edge: branch
+semantic_analyze_obsecro_call -&gt; semantic_analyze_obsecro_call
+weight: 10
+
+path:
+semantic_analyze_obsecro_call -&gt; semantic_analyze_obsecro_call</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="branch" d="M 57.97 244.92 Q 81.33 241.34 96.26 223.02" stroke-width="1.95" opacity="0.85"/>
+      <title>edge: branch
+semantic_analyze_molde -&gt; semantic_analyze_molde
+weight: 3
+
+path:
+semantic_analyze_molde -&gt; semantic_analyze_molde</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="branch" d="M 153.53 116.32 Q 159.51 160.41 183.57 197.85" stroke-width="2.10" opacity="0.85"/>
+      <title>edge: branch
+semantic_analyze_expr -&gt; semantic_analyze_expr
+weight: 34
+
+path:
+semantic_analyze_expr -&gt; semantic_analyze_expr</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="branch" d="M 242.84 263.79 Q 298.38 187.25 333.91 99.61" stroke-width="2.10" opacity="0.85"/>
+      <title>edge: branch
+semantic_find_field_type -&gt; semantic_find_field_type
+weight: 21
+
+path:
+semantic_find_field_type -&gt; semantic_find_field_type</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="branch" d="M 242.84 263.79 Q 322.01 209.82 389.39 141.70" stroke-width="2.10" opacity="0.85"/>
+      <title>edge: branch
+semantic_find_field_type -&gt; semantic_analyze_identifier
+weight: 9
+
+path:
+semantic_find_field_type -&gt; semantic_analyze_identifier</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="branch" d="M 242.84 263.79 Q 346.72 235.36 445.63 192.74" stroke-width="2.10" opacity="0.85"/>
+      <title>edge: branch
+semantic_find_field_type -&gt; semantic_analyze_lvalue
+weight: 22
+
+path:
+semantic_find_field_type -&gt; semantic_analyze_lvalue</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="branch" d="M 242.84 263.79 Q 309.93 328.50 387.59 380.05" stroke-width="2.10" opacity="0.85"/>
+      <title>edge: branch
+semantic_find_field_type -&gt; semantic_analyze_call
+weight: 77
+
+path:
+semantic_find_field_type -&gt; semantic_analyze_call</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="branch" d="M 242.84 263.79 Q 208.79 329.56 188.43 400.77" stroke-width="2.10" opacity="0.85"/>
+      <title>edge: branch
+semantic_find_field_type -&gt; semantic_obsecro_expected_arity
+weight: 9
+
+path:
+semantic_find_field_type -&gt; semantic_obsecro_expected_arity</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="branch" d="M 242.84 263.79 Q 185.94 318.98 148.27 388.73" stroke-width="2.10" opacity="0.85"/>
+      <title>edge: branch
+semantic_find_field_type -&gt; semantic_obsecro_return_type_id
+weight: 10
+
+path:
+semantic_find_field_type -&gt; semantic_obsecro_return_type_id</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="branch" d="M 242.84 263.79 Q 166.08 295.54 97.61 342.58" stroke-width="2.10" opacity="0.85"/>
+      <title>edge: branch
+semantic_find_field_type -&gt; semantic_analyze_obsecro_call
+weight: 30
+
+path:
+semantic_find_field_type -&gt; semantic_analyze_obsecro_call</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="branch" d="M 242.84 263.79 Q 151.29 245.72 57.97 244.92" stroke-width="2.10" opacity="0.85"/>
+      <title>edge: branch
+semantic_find_field_type -&gt; semantic_analyze_molde
+weight: 10
+
+path:
+semantic_find_field_type -&gt; semantic_analyze_molde</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="branch" d="M 242.84 263.79 Q 210.14 182.82 153.53 116.32" stroke-width="2.10" opacity="0.85"/>
+      <title>edge: branch
+semantic_find_field_type -&gt; semantic_analyze_expr
+weight: 68
+
+path:
+semantic_find_field_type -&gt; semantic_analyze_expr</title>
+    </g>
+  </g>
+  <g id="loops">
+    <g class="edge-wrap">
+    <path class="loop" d="M 333.91 99.61 Q 354.10 104.27 369.68 90.62" stroke-width="1.55" opacity="0.88"/>
+      <title>edge: loop
+semantic_find_field_type -&gt; semantic_find_field_type
+weight: 2
+
+path:
+semantic_find_field_type -&gt; semantic_find_field_type</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="loop" d="M 373.44 90.62 C 407.90 87.36 411.80 109.18 396.19 98.27 C 380.57 109.18 384.48 87.36 366.86 92.12"/>
+      <title>edge: loop
+semantic_find_field_type -&gt; semantic_find_field_type
+weight: 2
+
+path:
+semantic_find_field_type -&gt; semantic_find_field_type</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="loop" d="M 387.59 380.05 Q 379.80 398.14 385.85 416.89" stroke-width="1.70" opacity="0.88"/>
+      <title>edge: loop
+semantic_analyze_call -&gt; semantic_analyze_call
+weight: 3
+
+path:
+semantic_analyze_call -&gt; semantic_analyze_call</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="loop" d="M 390.17 416.89 C 427.96 401.86 432.09 425.03 415.57 413.44 C 399.06 425.03 403.19 401.86 382.61 418.39"/>
+      <title>edge: loop
+semantic_analyze_call -&gt; semantic_analyze_call
+weight: 3
+
+path:
+semantic_analyze_call -&gt; semantic_analyze_call</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="loop" d="M 97.61 342.58 Q 82.34 330.83 63.12 329.52" stroke-width="1.70" opacity="0.88"/>
+      <title>edge: loop
+semantic_analyze_obsecro_call -&gt; semantic_analyze_obsecro_call
+weight: 3
+
+path:
+semantic_analyze_obsecro_call -&gt; semantic_analyze_obsecro_call</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="loop" d="M 67.44 329.52 C 102.96 308.26 107.09 331.42 90.58 319.84 C 74.06 331.42 78.19 308.26 59.88 331.02"/>
+      <title>edge: loop
+semantic_analyze_obsecro_call -&gt; semantic_analyze_obsecro_call
+weight: 3
+
+path:
+semantic_analyze_obsecro_call -&gt; semantic_analyze_obsecro_call</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="loop" d="M 57.97 244.92 Q 51.93 226.32 35.58 215.62" stroke-width="1.55" opacity="0.88"/>
+      <title>edge: loop
+semantic_analyze_molde -&gt; semantic_analyze_molde
+weight: 2
+
+path:
+semantic_analyze_molde -&gt; semantic_analyze_molde</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="loop" d="M 39.34 215.62 C 75.10 200.90 79.00 222.72 63.38 211.81 C 47.77 222.72 51.67 200.90 32.76 217.12"/>
+      <title>edge: loop
+semantic_analyze_molde -&gt; semantic_analyze_molde
+weight: 2
+
+path:
+semantic_analyze_molde -&gt; semantic_analyze_molde</title>
+    </g>
+  </g>
+  <g id="bindings">
+    <g class="edge-wrap">
+    <path class="bind" d="M 333.91 99.61 Q 322.35 108.38 322.32 122.89" stroke-width="1.80" opacity="0.85"/>
+    <line class="bind" x1="335.17" y1="106.05" x2="328.01" y2="102.48" opacity="0.75"/>
+    <line class="bind" x1="334.91" y1="108.82" x2="325.96" y2="104.37" opacity="0.75"/>
+    <line class="bind" x1="332.85" y1="110.71" x2="325.69" y2="107.14" opacity="0.75"/>
+    <line class="bind" x1="332.59" y1="113.48" x2="323.64" y2="109.02" opacity="0.75"/>
+    <line class="bind" x1="330.54" y1="115.36" x2="323.38" y2="111.79" opacity="0.75"/>
+    <line class="bind" x1="330.27" y1="118.13" x2="321.32" y2="113.67" opacity="0.75"/>
+    <line class="bind" x1="328.31" y1="122.59" x2="334.30" y2="122.29" opacity="0.58"/>
+    <line class="bind" x1="323.61" y1="128.74" x2="325.55" y2="137.53" opacity="0.58"/>
+    <line class="bind" x1="317.55" y1="126.52" x2="312.78" y2="130.16" opacity="0.58"/>
+    <line class="bind" x1="318.13" y1="118.59" x2="311.84" y2="112.15" opacity="0.58"/>
+    <line class="bind" x1="323.87" y1="117.09" x2="325.41" y2="111.29" opacity="0.58"/>
+      <title>edge: bind
+semantic_find_field_type -&gt; semantic_find_field_type
+weight: 8
+
+path:
+semantic_find_field_type -&gt; semantic_find_field_type</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="bind" d="M 389.39 141.70 Q 373.72 143.39 369.65 158.62" stroke-width="1.36" opacity="0.85"/>
+    <line class="bind" x1="388.04" y1="148.12" x2="382.84" y2="142.04" opacity="0.75"/>
+    <line class="bind" x1="386.72" y1="150.57" x2="380.21" y2="142.98" opacity="0.75"/>
+    <line class="bind" x1="374.64" y1="159.66" x2="380.51" y2="160.88" opacity="0.58"/>
+    <line class="bind" x1="364.66" y1="159.70" x2="355.87" y2="161.60" opacity="0.58"/>
+      <title>edge: bind
+semantic_analyze_identifier -&gt; semantic_analyze_identifier
+weight: 2
+
+path:
+semantic_analyze_identifier -&gt; semantic_analyze_identifier</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="bind" d="M 445.63 192.74 Q 432.91 195.70 420.97 200.97" stroke-width="1.68" opacity="0.85"/>
+    <line class="bind" x1="441.96" y1="198.18" x2="439.43" y2="190.60" opacity="0.75"/>
+    <line class="bind" x1="439.81" y1="199.96" x2="436.65" y2="190.47" opacity="0.75"/>
+    <line class="bind" x1="437.03" y1="199.83" x2="434.50" y2="192.24" opacity="0.75"/>
+    <line class="bind" x1="434.88" y1="201.60" x2="431.72" y2="192.11" opacity="0.75"/>
+    <line class="bind" x1="432.10" y1="201.48" x2="429.57" y2="193.89" opacity="0.75"/>
+    <line class="bind" x1="429.95" y1="203.25" x2="426.78" y2="193.76" opacity="0.75"/>
+    <line class="bind" x1="426.59" y1="201.88" x2="432.52" y2="202.84" opacity="0.58"/>
+    <line class="bind" x1="423.36" y1="206.14" x2="427.15" y2="214.31" opacity="0.58"/>
+    <line class="bind" x1="416.64" y1="204.68" x2="412.09" y2="208.59" opacity="0.58"/>
+    <line class="bind" x1="417.29" y1="196.61" x2="411.49" y2="189.73" opacity="0.58"/>
+    <line class="bind" x1="423.88" y1="196.07" x2="426.94" y2="190.91" opacity="0.58"/>
+      <title>edge: bind
+semantic_analyze_lvalue -&gt; semantic_analyze_lvalue
+weight: 6
+
+path:
+semantic_analyze_lvalue -&gt; semantic_analyze_lvalue</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="bind" d="M 387.59 380.05 Q 380.83 368.28 368.67 362.22" stroke-width="1.80" opacity="0.85"/>
+    <line class="bind" x1="381.06" y1="379.40" x2="386.55" y2="373.58" opacity="0.75"/>
+    <line class="bind" x1="378.49" y1="378.34" x2="385.35" y2="371.07" opacity="0.75"/>
+    <line class="bind" x1="377.28" y1="375.83" x2="382.77" y2="370.01" opacity="0.75"/>
+    <line class="bind" x1="374.70" y1="374.77" x2="381.56" y2="367.50" opacity="0.75"/>
+    <line class="bind" x1="373.50" y1="372.26" x2="378.98" y2="366.44" opacity="0.75"/>
+    <line class="bind" x1="370.92" y1="371.21" x2="377.78" y2="363.93" opacity="0.75"/>
+    <line class="bind" x1="375.42" y1="361.33" x2="381.36" y2="360.55" opacity="0.58"/>
+    <line class="bind" x1="371.56" y1="368.38" x2="375.37" y2="376.53" opacity="0.58"/>
+    <line class="bind" x1="363.66" y1="366.81" x2="359.24" y2="370.87" opacity="0.58"/>
+    <line class="bind" x1="364.21" y1="357.09" x2="358.30" y2="350.30" opacity="0.58"/>
+    <line class="bind" x1="369.83" y1="355.52" x2="370.84" y2="349.60" opacity="0.58"/>
+      <title>edge: bind
+semantic_analyze_call -&gt; semantic_analyze_call
+weight: 25
+
+path:
+semantic_analyze_call -&gt; semantic_analyze_call</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="bind" d="M 97.61 342.58 Q 110.25 338.61 120.42 330.11" stroke-width="1.80" opacity="0.85"/>
+    <line class="bind" x1="100.25" y1="336.58" x2="104.09" y2="343.60" opacity="0.75"/>
+    <line class="bind" x1="102.05" y1="334.45" x2="106.85" y2="343.23" opacity="0.75"/>
+    <line class="bind" x1="104.81" y1="334.08" x2="108.65" y2="341.10" opacity="0.75"/>
+    <line class="bind" x1="106.62" y1="331.96" x2="111.41" y2="340.73" opacity="0.75"/>
+    <line class="bind" x1="109.38" y1="331.59" x2="113.21" y2="338.61" opacity="0.75"/>
+    <line class="bind" x1="111.18" y1="329.46" x2="115.97" y2="338.24" opacity="0.75"/>
+    <line class="bind" x1="126.95" y1="331.10" x2="132.88" y2="332.01" opacity="0.58"/>
+    <line class="bind" x1="123.45" y1="335.97" x2="127.59" y2="343.97" opacity="0.58"/>
+    <line class="bind" x1="114.77" y1="333.52" x2="109.63" y2="336.61" opacity="0.58"/>
+    <line class="bind" x1="115.08" y1="326.23" x2="107.80" y2="320.94" opacity="0.58"/>
+    <line class="bind" x1="123.96" y1="324.54" x2="127.18" y2="319.48" opacity="0.58"/>
+      <title>edge: bind
+semantic_analyze_obsecro_call -&gt; semantic_analyze_obsecro_call
+weight: 12
+
+path:
+semantic_analyze_obsecro_call -&gt; semantic_analyze_obsecro_call</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="bind" d="M 57.97 244.92 Q 70.76 249.13 83.93 246.37" stroke-width="1.60" opacity="0.85"/>
+    <line class="bind" x1="63.39" y1="241.21" x2="62.94" y2="249.20" opacity="0.75"/>
+    <line class="bind" x1="66.04" y1="240.36" x2="65.48" y2="250.34" opacity="0.75"/>
+    <line class="bind" x1="68.58" y1="241.50" x2="68.13" y2="249.49" opacity="0.75"/>
+    <line class="bind" x1="71.23" y1="240.65" x2="70.68" y2="250.63" opacity="0.75"/>
+    <line class="bind" x1="73.77" y1="241.79" x2="73.33" y2="249.78" opacity="0.75"/>
+    <line class="bind" x1="89.47" y1="246.02" x2="95.46" y2="245.64" opacity="0.58"/>
+    <line class="bind" x1="86.05" y1="251.50" x2="89.47" y2="259.82" opacity="0.58"/>
+    <line class="bind" x1="79.48" y1="249.68" x2="74.67" y2="253.26" opacity="0.58"/>
+    <line class="bind" x1="78.94" y1="243.95" x2="70.84" y2="240.03" opacity="0.58"/>
+    <line class="bind" x1="85.68" y1="241.10" x2="87.58" y2="235.41" opacity="0.58"/>
+      <title>edge: bind
+semantic_analyze_molde -&gt; semantic_analyze_molde
+weight: 5
+
+path:
+semantic_analyze_molde -&gt; semantic_analyze_molde</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="bind" d="M 153.53 116.32 Q 157.49 129.54 168.91 137.29" stroke-width="1.80" opacity="0.85"/>
+    <line class="bind" x1="159.83" y1="118.15" x2="153.38" y2="122.88" opacity="0.75"/>
+    <line class="bind" x1="162.18" y1="119.66" x2="154.11" y2="125.57" opacity="0.75"/>
+    <line class="bind" x1="162.91" y1="122.34" x2="156.46" y2="127.08" opacity="0.75"/>
+    <line class="bind" x1="165.25" y1="123.85" x2="157.19" y2="129.76" opacity="0.75"/>
+    <line class="bind" x1="165.98" y1="126.54" x2="159.53" y2="131.27" opacity="0.75"/>
+    <line class="bind" x1="168.33" y1="128.04" x2="160.27" y2="133.96" opacity="0.75"/>
+    <line class="bind" x1="174.65" y1="135.54" x2="180.39" y2="133.80" opacity="0.58"/>
+    <line class="bind" x1="171.65" y1="142.63" x2="175.75" y2="150.64" opacity="0.58"/>
+    <line class="bind" x1="164.73" y1="141.59" x2="160.56" y2="145.90" opacity="0.58"/>
+    <line class="bind" x1="163.60" y1="134.49" x2="155.64" y2="130.29" opacity="0.58"/>
+    <line class="bind" x1="169.96" y1="131.38" x2="171.00" y2="125.47" opacity="0.58"/>
+      <title>edge: bind
+semantic_analyze_expr -&gt; semantic_analyze_expr
+weight: 8
+
+path:
+semantic_analyze_expr -&gt; semantic_analyze_expr</title>
+    </g>
+  </g>
+  <g id="terminals">
+    <g class="edge-wrap">
+    <path class="term" d="M 333.91 99.61 Q 311.73 118.67 301.78 146.17" stroke-width="1.90" opacity="0.90"/>
+      <title>edge: return
+semantic_find_field_type -&gt; semantic_find_field_type
+weight: 6
+
+path:
+semantic_find_field_type -&gt; semantic_find_field_type</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="term" d="M 389.39 141.70 Q 360.20 148.52 341.66 172.06" stroke-width="1.90" opacity="0.90"/>
+      <title>edge: return
+semantic_analyze_identifier -&gt; semantic_analyze_identifier
+weight: 4
+
+path:
+semantic_analyze_identifier -&gt; semantic_analyze_identifier</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="term" d="M 445.63 192.74 Q 419.34 203.41 395.04 218.05" stroke-width="1.90" opacity="0.90"/>
+      <title>edge: return
+semantic_analyze_lvalue -&gt; semantic_analyze_lvalue
+weight: 10
+
+path:
+semantic_analyze_lvalue -&gt; semantic_analyze_lvalue</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="term" d="M 387.59 380.05 Q 373.82 354.86 352.33 335.82" stroke-width="1.90" opacity="0.90"/>
+      <title>edge: return
+semantic_analyze_call -&gt; semantic_analyze_call
+weight: 17
+
+path:
+semantic_analyze_call -&gt; semantic_analyze_call</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="term" d="M 188.43 400.77 Q 205.65 376.44 204.87 346.64" stroke-width="1.90" opacity="0.90"/>
+      <title>edge: return
+semantic_obsecro_expected_arity -&gt; semantic_obsecro_expected_arity
+weight: 6
+
+path:
+semantic_obsecro_expected_arity -&gt; semantic_obsecro_expected_arity</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="term" d="M 148.27 388.73 Q 169.77 368.65 177.35 340.21" stroke-width="1.90" opacity="0.90"/>
+      <title>edge: return
+semantic_obsecro_return_type_id -&gt; semantic_obsecro_return_type_id
+weight: 6
+
+path:
+semantic_obsecro_return_type_id -&gt; semantic_obsecro_return_type_id</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="term" d="M 97.61 342.58 Q 125.35 336.02 150.58 322.74" stroke-width="1.90" opacity="0.90"/>
+      <title>edge: return
+semantic_analyze_obsecro_call -&gt; semantic_analyze_obsecro_call
+weight: 11
+
+path:
+semantic_analyze_obsecro_call -&gt; semantic_analyze_obsecro_call</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="term" d="M 57.97 244.92 Q 84.82 254.88 113.44 256.03" stroke-width="1.80" opacity="0.90"/>
+      <title>edge: return
+semantic_analyze_molde -&gt; semantic_analyze_molde
+weight: 3
+
+path:
+semantic_analyze_molde -&gt; semantic_analyze_molde</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="term" d="M 153.53 116.32 Q 169.30 140.47 193.11 156.74" stroke-width="1.90" opacity="0.90"/>
+      <title>edge: return
+semantic_analyze_expr -&gt; semantic_analyze_expr
+weight: 34
+
+path:
+semantic_analyze_expr -&gt; semantic_analyze_expr</title>
+    </g>
+  </g>
+  <g id="nodes">
+    <g class="node-wrap">
+      <circle class="node-main" cx="333.91" cy="99.61" r="9.10" data-kind="rituale" data-ritual="semantic_find_field_type" data-line="15" data-col="1" data-depth="11" data-stmt="RITUALE" data-loops="1" data-calls="15"/>
+      <title>RITUALE semantic_find_field_type
+stmt: 22
+depth: 11
+loops: 1
+calls: 15
+source:
+RITUALE semantic_find_field_type(SPECULUM SemanticContext ctx, REX object_type_id, VERBUM fie...</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="337.56" cy="146.12" r="5.80" data-kind="branch" data-ritual="semantic_find_field_type" data-line="17" data-col="3" data-depth="11" data-stmt="SI"/>
+      <title>stmt: SI
+rituale: semantic_find_field_type
+depth: 11
+line: 17
+
+source:
+SI ((*obj_type).kind != SEM_TYPE_NAMED ET (*obj_type).kind != SEM_TYPE_INSTANCE) VEL (*obj_ty...</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-loop" cx="369.68" cy="90.62" r="4.70" data-kind="loop" data-ritual="semantic_find_field_type" data-line="30" data-col="3" data-depth="11" data-stmt="DUM"/>
+      <title>stmt: DUM
+rituale: semantic_find_field_type
+depth: 11
+line: 30
+
+source:
+DUM i &lt; n</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="322.32" cy="122.89" r="4.00" data-kind="bind" data-ritual="semantic_find_field_type" data-line="16" data-col="3" data-depth="11" data-stmt="EVOCA"/>
+      <title>stmt: EVOCA
+rituale: semantic_find_field_type
+depth: 11
+line: 16
+
+source:
+EVOCA SPECULUM SemanticType obj_type AD CONIURA semantic_type_at(ctx, object_type_id)</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="301.78" cy="146.17" r="4.60" data-kind="term" data-ritual="semantic_find_field_type" data-line="19" data-col="5" data-depth="11" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: semantic_find_field_type
+depth: 11
+line: 19
+
+source:
+REDDE (*ctx).type_error</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-main" cx="389.39" cy="141.70" r="7.00" data-kind="rituale" data-ritual="semantic_analyze_identifier" data-line="48" data-col="1" data-depth="9" data-stmt="RITUALE" data-loops="0" data-calls="6"/>
+      <title>RITUALE semantic_analyze_identifier
+stmt: 8
+depth: 9
+loops: 0
+calls: 6
+source:
+RITUALE semantic_analyze_identifier(SPECULUM SemanticContext ctx, SPECULUM AstNode expr) REDD...</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="376.91" cy="184.00" r="5.80" data-kind="branch" data-ritual="semantic_analyze_identifier" data-line="50" data-col="3" data-depth="9" data-stmt="SI"/>
+      <title>stmt: SI
+rituale: semantic_analyze_identifier
+depth: 9
+line: 50
+
+source:
+SI sym_id == CONIURA semantic_invalid_id()</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="369.65" cy="158.62" r="3.10" data-kind="bind" data-ritual="semantic_analyze_identifier" data-line="49" data-col="3" data-depth="9" data-stmt="EVOCA"/>
+      <title>stmt: EVOCA
+rituale: semantic_analyze_identifier
+depth: 9
+line: 49
+
+source:
+EVOCA REX sym_id AD CONIURA semantic_lookup(ctx, (*expr).name)</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="341.66" cy="172.06" r="4.40" data-kind="term" data-ritual="semantic_analyze_identifier" data-line="52" data-col="5" data-depth="9" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: semantic_analyze_identifier
+depth: 9
+line: 52
+
+source:
+REDDE (*ctx).type_error</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-main" cx="445.63" cy="192.74" r="9.85" data-kind="rituale" data-ritual="semantic_analyze_lvalue" data-line="61" data-col="1" data-depth="11" data-stmt="RITUALE" data-loops="0" data-calls="13"/>
+      <title>RITUALE semantic_analyze_lvalue
+stmt: 27
+depth: 11
+loops: 0
+calls: 13
+source:
+RITUALE semantic_analyze_lvalue(SPECULUM SemanticContext ctx, SPECULUM AstNode expr) REDDE REX</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="394.40" cy="184.53" r="5.80" data-kind="branch" data-ritual="semantic_analyze_lvalue" data-line="62" data-col="3" data-depth="11" data-stmt="SI"/>
+      <title>stmt: SI
+rituale: semantic_analyze_lvalue
+depth: 11
+line: 62
+
+source:
+SI (*expr).kind == AST_IDENTIFIER</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="420.97" cy="200.97" r="3.70" data-kind="bind" data-ritual="semantic_analyze_lvalue" data-line="67" data-col="5" data-depth="11" data-stmt="EVOCA"/>
+      <title>stmt: EVOCA
+rituale: semantic_analyze_lvalue
+depth: 11
+line: 67
+
+source:
+EVOCA REX base_type_id AD CONIURA semantic_analyze_expr(ctx, (*expr).left)</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="395.04" cy="218.05" r="4.60" data-kind="term" data-ritual="semantic_analyze_lvalue" data-line="63" data-col="5" data-depth="11" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: semantic_analyze_lvalue
+depth: 11
+line: 63
+
+source:
+REDDE CONIURA semantic_analyze_identifier(ctx, expr)</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-main" cx="387.59" cy="380.05" r="10.80" data-kind="rituale" data-ritual="semantic_analyze_call" data-line="103" data-col="1" data-depth="11" data-stmt="RITUALE" data-loops="2" data-calls="57"/>
+      <title>RITUALE semantic_analyze_call
+stmt: 83
+depth: 11
+loops: 2
+calls: 57
+source:
+RITUALE semantic_analyze_call(SPECULUM SemanticContext ctx, SPECULUM AstNode expr) REDDE REX</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="327.83" cy="356.70" r="5.80" data-kind="branch" data-ritual="semantic_analyze_call" data-line="104" data-col="3" data-depth="11" data-stmt="SI"/>
+      <title>stmt: SI
+rituale: semantic_analyze_call
+depth: 11
+line: 104
+
+source:
+SI (*(*expr).callee).kind != AST_IDENTIFIER</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-loop" cx="385.85" cy="416.89" r="5.40" data-kind="loop" data-ritual="semantic_analyze_call" data-line="184" data-col="5" data-depth="11" data-stmt="DUM"/>
+      <title>stmt: DUM
+rituale: semantic_analyze_call
+depth: 11
+line: 184
+
+source:
+DUM seed_i &lt; seed_n</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="368.67" cy="362.22" r="4.80" data-kind="bind" data-ritual="semantic_analyze_call" data-line="119" data-col="5" data-depth="11" data-stmt="EVOCA"/>
+      <title>stmt: EVOCA
+rituale: semantic_analyze_call
+depth: 11
+line: 119
+
+source:
+EVOCA SPECULUM AstNode target_type_node AD CONIURA ast_node_list_get((*(*expr).callee).generi...</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="352.33" cy="335.82" r="4.60" data-kind="term" data-ritual="semantic_analyze_call" data-line="106" data-col="5" data-depth="11" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: semantic_analyze_call
+depth: 11
+line: 106
+
+source:
+REDDE (*ctx).type_error</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-main" cx="188.43" cy="400.77" r="7.15" data-kind="rituale" data-ritual="semantic_obsecro_expected_arity" data-line="217" data-col="1" data-depth="4" data-stmt="RITUALE" data-loops="0" data-calls="4"/>
+      <title>RITUALE semantic_obsecro_expected_arity
+stmt: 9
+depth: 4
+loops: 0
+calls: 4
+source:
+RITUALE semantic_obsecro_expected_arity(VERBUM builtin_name) REDDE REX</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="227.10" cy="374.67" r="5.80" data-kind="branch" data-ritual="semantic_obsecro_expected_arity" data-line="218" data-col="3" data-depth="4" data-stmt="SI"/>
+      <title>stmt: SI
+rituale: semantic_obsecro_expected_arity
+depth: 4
+line: 218
+
+source:
+SI CONIURA compare(builtin_name, "fs_read_all") == 0</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="204.87" cy="346.64" r="4.60" data-kind="term" data-ritual="semantic_obsecro_expected_arity" data-line="219" data-col="5" data-depth="4" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: semantic_obsecro_expected_arity
+depth: 4
+line: 219
+
+source:
+REDDE 1</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-main" cx="148.27" cy="388.73" r="7.15" data-kind="rituale" data-ritual="semantic_obsecro_return_type_id" data-line="233" data-col="1" data-depth="6" data-stmt="RITUALE" data-loops="0" data-calls="5"/>
+      <title>RITUALE semantic_obsecro_return_type_id
+stmt: 9
+depth: 6
+loops: 0
+calls: 5
+source:
+RITUALE semantic_obsecro_return_type_id(SPECULUM SemanticContext ctx, VERBUM builtin_name) RE...</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="192.11" cy="372.80" r="5.80" data-kind="branch" data-ritual="semantic_obsecro_return_type_id" data-line="234" data-col="3" data-depth="6" data-stmt="SI"/>
+      <title>stmt: SI
+rituale: semantic_obsecro_return_type_id
+depth: 6
+line: 234
+
+source:
+SI CONIURA compare(builtin_name, "scribe") == 0</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="177.35" cy="340.21" r="4.60" data-kind="term" data-ritual="semantic_obsecro_return_type_id" data-line="235" data-col="5" data-depth="6" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: semantic_obsecro_return_type_id
+depth: 6
+line: 235
+
+source:
+REDDE (*ctx).type_nihil</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-main" cx="97.61" cy="342.58" r="10.80" data-kind="rituale" data-ritual="semantic_analyze_obsecro_call" data-line="249" data-col="1" data-depth="11" data-stmt="RITUALE" data-loops="2" data-calls="18"/>
+      <title>RITUALE semantic_analyze_obsecro_call
+stmt: 39
+depth: 11
+loops: 2
+calls: 18
+source:
+RITUALE semantic_analyze_obsecro_call(SPECULUM SemanticContext ctx, SPECULUM AstNode expr) RE...</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="127.77" cy="298.74" r="5.80" data-kind="branch" data-ritual="semantic_analyze_obsecro_call" data-line="250" data-col="3" data-depth="11" data-stmt="SI"/>
+      <title>stmt: SI
+rituale: semantic_analyze_obsecro_call
+depth: 11
+line: 250
+
+source:
+SI (*(*expr).callee).kind != AST_IDENTIFIER</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-loop" cx="63.12" cy="329.52" r="5.40" data-kind="loop" data-ritual="semantic_analyze_obsecro_call" data-line="264" data-col="5" data-depth="11" data-stmt="DUM"/>
+      <title>stmt: DUM
+rituale: semantic_analyze_obsecro_call
+depth: 11
+line: 264
+
+source:
+DUM si &lt; actual_scribe</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="120.42" cy="330.11" r="4.60" data-kind="bind" data-ritual="semantic_analyze_obsecro_call" data-line="255" data-col="3" data-depth="11" data-stmt="EVOCA"/>
+      <title>stmt: EVOCA
+rituale: semantic_analyze_obsecro_call
+depth: 11
+line: 255
+
+source:
+EVOCA VERBUM builtin_name AD (*(*expr).callee).name</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="150.58" cy="322.74" r="4.60" data-kind="term" data-ritual="semantic_analyze_obsecro_call" data-line="252" data-col="5" data-depth="11" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: semantic_analyze_obsecro_call
+depth: 11
+line: 252
+
+source:
+REDDE (*ctx).type_error</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-main" cx="57.97" cy="244.92" r="7.45" data-kind="rituale" data-ritual="semantic_analyze_molde" data-line="308" data-col="1" data-depth="11" data-stmt="RITUALE" data-loops="1" data-calls="6"/>
+      <title>RITUALE semantic_analyze_molde
+stmt: 11
+depth: 11
+loops: 1
+calls: 6
+source:
+RITUALE semantic_analyze_molde(SPECULUM SemanticContext ctx, SPECULUM AstNode expr) REDDE REX</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="96.26" cy="223.02" r="5.80" data-kind="branch" data-ritual="semantic_analyze_molde" data-line="313" data-col="5" data-depth="11" data-stmt="SI"/>
+      <title>stmt: SI
+rituale: semantic_analyze_molde
+depth: 11
+line: 313
+
+source:
+SI (*part).kind != AST_LITERAL_STRING</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-loop" cx="35.58" cy="215.62" r="4.70" data-kind="loop" data-ritual="semantic_analyze_molde" data-line="311" data-col="3" data-depth="11" data-stmt="DUM"/>
+      <title>stmt: DUM
+rituale: semantic_analyze_molde
+depth: 11
+line: 311
+
+source:
+DUM i &lt; n</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="83.93" cy="246.37" r="3.55" data-kind="bind" data-ritual="semantic_analyze_molde" data-line="309" data-col="3" data-depth="11" data-stmt="EVOCA"/>
+      <title>stmt: EVOCA
+rituale: semantic_analyze_molde
+depth: 11
+line: 309
+
+source:
+EVOCA REX i AD 0</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="113.44" cy="256.03" r="4.00" data-kind="term" data-ritual="semantic_analyze_molde" data-line="317" data-col="9" data-depth="11" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: semantic_analyze_molde
+depth: 11
+line: 317
+
+source:
+REDDE (*ctx).type_error</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-main" cx="153.53" cy="116.32" r="10.80" data-kind="rituale" data-ritual="semantic_analyze_expr" data-line="325" data-col="1" data-depth="13" data-stmt="RITUALE" data-loops="0" data-calls="34"/>
+      <title>RITUALE semantic_analyze_expr
+stmt: 85
+depth: 13
+loops: 0
+calls: 34
+source:
+RITUALE semantic_analyze_expr(SPECULUM SemanticContext ctx, SPECULUM AstNode expr) REDDE REX</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="183.57" cy="197.85" r="5.80" data-kind="branch" data-ritual="semantic_analyze_expr" data-line="326" data-col="3" data-depth="13" data-stmt="SI"/>
+      <title>stmt: SI
+rituale: semantic_analyze_expr
+depth: 13
+line: 326
+
+source:
+SI (*expr).kind == AST_MOLDE</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="168.91" cy="137.29" r="4.00" data-kind="bind" data-ritual="semantic_analyze_expr" data-line="355" data-col="5" data-depth="13" data-stmt="EVOCA"/>
+      <title>stmt: EVOCA
+rituale: semantic_analyze_expr
+depth: 13
+line: 355
+
+source:
+EVOCA REX operand_type_id AD CONIURA semantic_analyze_expr(ctx, (*expr).left)</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="193.11" cy="156.74" r="4.60" data-kind="term" data-ritual="semantic_analyze_expr" data-line="327" data-col="5" data-depth="13" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: semantic_analyze_expr
+depth: 13
+line: 327
+
+source:
+REDDE CONIURA semantic_analyze_molde(ctx, expr)</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="242.84" cy="263.79" r="5.00" data-kind="bind" data-ritual="semantic_find_field_type" data-line="16" data-col="3" data-depth="11" data-stmt="EVOCA"/>
+      <title>stmt: EVOCA
+rituale: semantic_find_field_type
+depth: 11
+line: 16
+
+source:
+EVOCA SPECULUM SemanticType obj_type AD CONIURA semantic_type_at(ctx, object_type_id)</title>
+    </g>
+  </g>
+  <g id="ornaments">
+    <circle class="orn" cx="463.90" cy="226.08" r="0.90"/>
+    <circle class="orn" cx="434.86" cy="367.13" r="1.90"/>
+    <circle class="orn" cx="408.64" cy="397.29" r="2.90"/>
+    <circle class="orn" cx="320.03" cy="455.01" r="0.90"/>
+    <circle class="orn" cx="239.58" cy="463.88" r="1.90"/>
+    <circle class="orn" cx="167.34" cy="436.61" r="2.90"/>
+    <circle class="orn" cx="71.83" cy="350.52" r="0.90"/>
+    <circle class="orn" cx="52.84" cy="228.55" r="1.90"/>
+    <circle class="orn" cx="59.02" cy="180.68" r="2.90"/>
+    <circle class="orn" cx="144.65" cy="90.24" r="0.90"/>
+    <circle class="orn" cx="242.82" cy="44.45" r="1.90"/>
+    <circle class="orn" cx="338.04" cy="63.83" r="2.90"/>
+    <circle class="orn" cx="396.42" cy="110.98" r="0.90"/>
+    <circle class="orn" cx="454.49" cy="190.60" r="1.90"/>
+  </g>
+  <g id="signature">
+    <text class="hash" x="256" y="496" text-anchor="middle">0f342b81b211bbff</text>
+    <text class="label" x="256" y="18" text-anchor="middle">network • sigillum v2.1 • 9 rituale(s) • 293 stmt • depth 13</text>
+  </g>
+</svg>

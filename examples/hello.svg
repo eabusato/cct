@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512" role="img" aria-label="CCT local sigilo">
+  <desc>Deterministic semantic sigil for a single CCT module.</desc>
+  <defs>
+    <style><![CDATA[
+      .bg { fill: #f5f0e4; }
+      .base { stroke: #2a221c; stroke-width: 1.60; fill: none; opacity: 0.78; }
+      .primary { stroke: #241913; stroke-width: 2.80; fill: none; stroke-linecap: round; stroke-linejoin: round; }
+      .call { stroke: #5b2a22; stroke-width: 2.0; fill: none; stroke-linecap: round; opacity: 0.9; }
+      .branch { stroke: #6b342d; stroke-width: 1.6; fill: none; stroke-linecap: round; }
+      .loop { stroke: #2d5f5a; stroke-width: 1.6; fill: none; stroke-linecap: round; }
+      .bind { stroke: #73493d; stroke-width: 1.4; fill: none; stroke-linecap: round; }
+      .term { stroke: #201814; stroke-width: 1.7; fill: none; stroke-linecap: round; }
+      .node-main { fill: #fffaf1; stroke: #201814; stroke-width: 2.0; }
+      .node-entry { fill: #efe6d4; stroke: #201814; stroke-width: 2.4; }
+      .node-aux { fill: #f6efe0; stroke: #4f4339; stroke-width: 1.3; }
+      .node-loop { fill: #edf3f1; stroke: #2d5f5a; stroke-width: 1.4; }
+      .node-term { fill: #f3e7e3; stroke: #5a2a23; stroke-width: 1.4; }
+      .orn { stroke: #355d58; stroke-width: 1.0; fill: none; opacity: 0.55; }
+      .hash { fill: #1f1a17; font: 10px monospace; letter-spacing: 0.8px; }
+      .label { fill: #1f1a17; font: 8px monospace; opacity: 0.7; }
+      .node-wrap, .edge-wrap { cursor: help; }
+      .node-wrap:hover > circle { opacity: 0.96; }
+      .edge-wrap:hover > path, .edge-wrap:hover > line { opacity: 1.0; }
+    ]]></style>
+  </defs>
+  <rect class="bg" x="0" y="0" width="512" height="512"/>
+  <g id="foundation">
+    <circle class="base" cx="256" cy="256" r="226"/>
+  </g>
+  <g id="primary_path">
+  </g>
+  <g id="call_links">
+  </g>
+  <g id="branches">
+  </g>
+  <g id="loops">
+  </g>
+  <g id="bindings">
+    <g class="edge-wrap">
+    <path class="bind" d="M 230.66 381.15 Q 239.40 369.66 235.82 355.67" stroke-width="1.36" opacity="0.85"/>
+    <line class="bind" x1="227.77" y1="375.26" x2="235.61" y2="376.85" opacity="0.75"/>
+    <line class="bind" x1="227.30" y1="372.52" x2="237.11" y2="374.50" opacity="0.75"/>
+    <line class="bind" x1="240.85" y1="356.47" x2="246.78" y2="357.41" opacity="0.58"/>
+    <line class="bind" x1="230.72" y1="355.57" x2="221.72" y2="355.39" opacity="0.58"/>
+      <title>edge: bind
+principium -&gt; principium
+weight: 2
+
+path:
+principium -&gt; principium</title>
+    </g>
+  </g>
+  <g id="terminals">
+    <g class="edge-wrap">
+    <path class="term" d="M 230.66 381.15 Q 223.70 409.87 231.30 438.42" stroke-width="1.65" opacity="0.90"/>
+    <line class="term" x1="235.60" y1="447.27" x2="227.20" y2="447.37"/>
+    <line class="term" x1="233.84" y1="450.29" x2="229.04" y2="450.35" opacity="0.8"/>
+      <title>edge: term
+principium -&gt; principium
+weight: 2
+
+path:
+principium -&gt; principium</title>
+    </g>
+  </g>
+  <g id="nodes">
+    <g class="node-wrap">
+      <circle class="node-entry" cx="230.66" cy="381.15" r="8.25" data-kind="rituale" data-ritual="principium" data-line="9" data-col="1" data-depth="3" data-stmt="RITUALE" data-loops="0" data-calls="0" data-entry="true"/>
+      <title>RITUALE principium
+stmt: 3
+depth: 3
+loops: 0
+calls: 0
+source:
+RITUALE principium REDDE NIHIL</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="235.82" cy="355.67" r="3.10" data-kind="bind" data-ritual="principium" data-line="10" data-col="3" data-depth="3" data-stmt="OBSECRO"/>
+      <title>stmt: OBSECRO
+rituale: principium
+depth: 3
+line: 10
+
+source:
+OBSECRO scribe("Ave Mundi!\n")</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="231.30" cy="438.42" r="2.90" data-kind="term" data-ritual="principium" data-line="12" data-col="3" data-depth="3" data-stmt="ANUR"/>
+      <title>stmt: ANUR
+rituale: principium
+depth: 3
+line: 12
+
+source:
+ANUR 0</title>
+    </g>
+  </g>
+  <g id="ornaments">
+    <circle class="orn" cx="462.00" cy="226.65" r="0.90"/>
+    <circle class="orn" cx="225.48" cy="457.91" r="1.90"/>
+    <circle class="orn" cx="51.87" cy="297.70" r="2.90"/>
+    <circle class="orn" cx="290.83" cy="60.36" r="0.90"/>
+  </g>
+  <g id="signature">
+    <text class="hash" x="256" y="496" text-anchor="middle">0289887c13b4cfaf</text>
+    <text class="label" x="256" y="18" text-anchor="middle">network • sigillum v2.1 • 1 rituale(s) • 3 stmt • depth 3</text>
+  </g>
+</svg>

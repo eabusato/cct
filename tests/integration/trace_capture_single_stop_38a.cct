@@ -1,0 +1,41 @@
+INCIPIT grimoire "trace_capture_single_stop_38a"
+
+ADVOCARE "cct/fluxus.cct"
+ADVOCARE "cct/fs.cct"
+ADVOCARE "cct/instrument.cct"
+ADVOCARE "cct/trace_capture.cct"
+ADVOCARE "cct/verbum.cct"
+
+RITUALE main() REDDE REX
+  EVOCA TraceCaptureSession session AD CONIURA trace_capture_start_in("tests/.tmp/trace_capture_single_stop_38a", "capture-single", INSTR_MODE_FULL)
+  EVOCA REX req AD CONIURA instrument_http_span("GET", "/posts")
+  CONIURA instrument_span_attr(req, "route_id", "posts.list")
+  CONIURA instrument_span_end(req)
+
+  SI CONIURA trace_capture_stop(SPECULUM session) != 1
+    REDDE 1
+  FIN SI
+
+  EVOCA VERBUM snapshot_dir AD CONIURA concat(CONIURA trace_capture_dir(session), "/snapshot-001")
+  SI NON CONIURA is_dir(snapshot_dir)
+    REDDE 2
+  FIN SI
+
+  EVOCA SPECULUM NIHIL files AD CONIURA list_dir(snapshot_dir)
+  SI CONIURA fluxus_len(files) != 1
+    CONIURA fluxus_free(files)
+    REDDE 3
+  FIN SI
+  CONIURA fluxus_free(files)
+  EVOCA VERBUM content AD CONIURA read_all(CONIURA concat(snapshot_dir, "/request-001-get-posts.ctrace"))
+
+  SI NON CONIURA contains(content, "\"trace_id\":\"capture-single-s001-r001-get-posts\"")
+    REDDE 4
+  FIN SI
+  SI NON CONIURA contains(content, "\"name\":\"GET /posts\"")
+    REDDE 5
+  FIN SI
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

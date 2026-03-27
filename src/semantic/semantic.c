@@ -1418,7 +1418,7 @@ static cct_sem_type_t* sem_resolve_ast_type(cct_semantic_analyzer_t *sem, const 
  * ======================================================================== */
 
 static const cct_sem_builtin_spec_t* sem_find_builtin(cct_semantic_analyzer_t *sem, const char *name) {
-static cct_sem_builtin_spec_t specs[437];
+static cct_sem_builtin_spec_t specs[438];
     static bool initialized = false;
 
     if (!initialized) {
@@ -1860,6 +1860,7 @@ static cct_sem_builtin_spec_t specs[437];
         specs[434].name = "instr_builtin_buffer_attr_count"; specs[434].min_args = 1; specs[434].variadic = false;
         specs[435].name = "instr_builtin_buffer_attr_key"; specs[435].min_args = 2; specs[435].variadic = false;
         specs[436].name = "instr_builtin_buffer_attr_value"; specs[436].min_args = 2; specs[436].variadic = false;
+        specs[437].name = "instr_builtin_buffer_discard_closed"; specs[437].min_args = 0; specs[437].variadic = false;
         initialized = true;
     }
 
@@ -2300,6 +2301,7 @@ static cct_sem_builtin_spec_t specs[437];
     specs[434].return_type = &sem->type_rex;
     specs[435].return_type = &sem->type_verbum;
     specs[436].return_type = &sem->type_verbum;
+    specs[437].return_type = &sem->type_nihil;
 
     for (size_t i = 0; i < sizeof(specs) / sizeof(specs[0]); i++) {
         if (!specs[i].name) continue;

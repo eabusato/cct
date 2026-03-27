@@ -1,0 +1,213 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512" role="img" aria-label="CCT local sigilo">
+  <desc>Deterministic semantic sigil for a single CCT module.</desc>
+  <defs>
+    <style><![CDATA[
+      .bg { fill: #f5f0e4; }
+      .base { stroke: #2a221c; stroke-width: 1.60; fill: none; opacity: 0.78; }
+      .primary { stroke: #241913; stroke-width: 2.80; fill: none; stroke-linecap: round; stroke-linejoin: round; }
+      .call { stroke: #5b2a22; stroke-width: 2.0; fill: none; stroke-linecap: round; opacity: 0.9; }
+      .branch { stroke: #6b342d; stroke-width: 1.6; fill: none; stroke-linecap: round; }
+      .loop { stroke: #2d5f5a; stroke-width: 1.6; fill: none; stroke-linecap: round; }
+      .bind { stroke: #73493d; stroke-width: 1.4; fill: none; stroke-linecap: round; }
+      .term { stroke: #201814; stroke-width: 1.7; fill: none; stroke-linecap: round; }
+      .node-main { fill: #fffaf1; stroke: #201814; stroke-width: 2.0; }
+      .node-entry { fill: #efe6d4; stroke: #201814; stroke-width: 2.4; }
+      .node-aux { fill: #f6efe0; stroke: #4f4339; stroke-width: 1.3; }
+      .node-loop { fill: #edf3f1; stroke: #2d5f5a; stroke-width: 1.4; }
+      .node-term { fill: #f3e7e3; stroke: #5a2a23; stroke-width: 1.4; }
+      .orn { stroke: #355d58; stroke-width: 1.0; fill: none; opacity: 0.55; }
+      .hash { fill: #1f1a17; font: 10px monospace; letter-spacing: 0.8px; }
+      .label { fill: #1f1a17; font: 8px monospace; opacity: 0.7; }
+      .node-wrap, .edge-wrap { cursor: help; }
+      .node-wrap:hover > circle { opacity: 0.96; }
+      .edge-wrap:hover > path, .edge-wrap:hover > line { opacity: 1.0; }
+    ]]></style>
+  </defs>
+  <rect class="bg" x="0" y="0" width="512" height="512"/>
+  <g id="foundation">
+    <circle class="base" cx="256" cy="256" r="226"/>
+    <ellipse class="base" cx="256" cy="256" rx="198" ry="180.53" opacity="0.32"/>
+  </g>
+  <g id="primary_path">
+    <g class="edge-wrap">
+    <path class="primary" d="M 271.80 124.84 Q 282.51 253.35 331.79 372.52" stroke-width="3.20" opacity="0.96"/>
+      <title>edge: primary
+main -&gt; julgar
+weight: 1
+
+path:
+main -&gt; julgar</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="primary" d="M 331.79 372.52 Q 242.88 350.53 152.13 362.92" stroke-width="2.60" opacity="0.96"/>
+      <title>edge: primary
+julgar -&gt; emitir
+weight: 1
+
+path:
+julgar -&gt; emitir</title>
+    </g>
+  </g>
+  <g id="call_links">
+    <g class="edge-wrap">
+    <path class="call" d="M 271.80 124.84 Q 262.10 258.29 331.79 372.52" stroke-width="2.85" opacity="0.86" data-kind="call" data-from="main" data-to="julgar" data-weight="3" data-self-loop="false"/>
+      <title>edge: call
+main -&gt; julgar
+calls: 3
+
+path:
+main -&gt; julgar</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="call" d="M 271.80 124.84 Q 173.79 224.69 152.13 362.92" stroke-width="2.85" opacity="0.86" data-kind="call" data-from="main" data-to="emitir" data-weight="3" data-self-loop="false"/>
+      <title>edge: call
+main -&gt; emitir
+calls: 3
+
+path:
+main -&gt; emitir</title>
+    </g>
+  </g>
+  <g id="branches">
+    <g class="edge-wrap">
+    <path class="branch" d="M 241.71 251.09 Q 266.87 190.37 271.80 124.84" stroke-width="2.10" opacity="0.85"/>
+      <title>edge: branch
+main -&gt; main
+weight: 8
+
+path:
+main -&gt; main</title>
+    </g>
+  </g>
+  <g id="loops">
+  </g>
+  <g id="bindings">
+    <g class="edge-wrap">
+    <path class="bind" d="M 271.80 124.84 Q 264.89 137.10 268.69 150.65" stroke-width="1.80" opacity="0.85"/>
+    <line class="bind" x1="275.15" y1="130.48" x2="267.21" y2="129.52" opacity="0.75"/>
+    <line class="bind" x1="275.84" y1="133.18" x2="265.91" y2="131.98" opacity="0.75"/>
+    <line class="bind" x1="274.53" y1="135.64" x2="266.59" y2="134.68" opacity="0.75"/>
+    <line class="bind" x1="275.21" y1="138.34" x2="265.29" y2="137.14" opacity="0.75"/>
+    <line class="bind" x1="273.91" y1="140.80" x2="265.97" y2="139.85" opacity="0.75"/>
+    <line class="bind" x1="274.59" y1="143.50" x2="264.66" y2="142.31" opacity="0.75"/>
+    <line class="bind" x1="274.84" y1="150.41" x2="280.84" y2="150.18" opacity="0.58"/>
+    <line class="bind" x1="268.92" y1="156.79" x2="269.24" y2="165.79" opacity="0.58"/>
+    <line class="bind" x1="264.48" y1="155.13" x2="260.36" y2="159.49" opacity="0.58"/>
+    <line class="bind" x1="263.97" y1="146.71" x2="257.06" y2="140.95" opacity="0.58"/>
+    <line class="bind" x1="271.43" y1="145.14" x2="274.09" y2="139.76" opacity="0.58"/>
+      <title>edge: bind
+main -&gt; main
+weight: 9
+
+path:
+main -&gt; main</title>
+    </g>
+  </g>
+  <g id="terminals">
+    <g class="edge-wrap">
+    <path class="term" d="M 152.13 362.92 Q 172.65 342.87 185.42 317.18" stroke-width="1.65" opacity="0.90"/>
+      <title>edge: return
+emitir -&gt; emitir
+weight: 2
+
+path:
+emitir -&gt; emitir</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="term" d="M 271.80 124.84 Q 266.03 153.25 273.05 181.39" stroke-width="1.65" opacity="0.90"/>
+      <title>edge: return
+main -&gt; main
+weight: 2
+
+path:
+main -&gt; main</title>
+    </g>
+  </g>
+  <g id="nodes">
+    <g class="node-wrap">
+      <circle class="node-main" cx="331.79" cy="372.52" r="5.95" data-kind="rituale" data-ritual="julgar" data-line="16" data-col="1" data-depth="1" data-stmt="RITUALE" data-loops="0" data-calls="0"/>
+      <title>RITUALE julgar
+stmt: 1
+depth: 1
+loops: 0
+calls: 0
+source:
+RITUALE julgar(REX nivel, EstadoMistico estado) REDDE Veredito</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-main" cx="152.13" cy="362.92" r="6.10" data-kind="rituale" data-ritual="emitir" data-line="44" data-col="1" data-depth="1" data-stmt="RITUALE" data-loops="0" data-calls="0"/>
+      <title>RITUALE emitir
+stmt: 2
+depth: 1
+loops: 0
+calls: 0
+source:
+RITUALE emitir(Veredito v) REDDE NIHIL</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="185.42" cy="317.18" r="3.60" data-kind="term" data-ritual="emitir" data-line="53" data-col="3" data-depth="1" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: emitir
+depth: 1
+line: 53
+
+source:
+REDDE</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-entry" cx="271.80" cy="124.84" r="9.75" data-kind="rituale" data-ritual="main" data-line="56" data-col="1" data-depth="3" data-stmt="RITUALE" data-loops="0" data-calls="6" data-entry="true"/>
+      <title>RITUALE main
+stmt: 13
+depth: 3
+loops: 0
+calls: 6
+source:
+RITUALE main() REDDE NIHIL</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="268.69" cy="150.65" r="4.15" data-kind="bind" data-ritual="main" data-line="57" data-col="3" data-depth="3" data-stmt="EVOCA"/>
+      <title>stmt: EVOCA
+rituale: main
+depth: 3
+line: 57
+
+source:
+EVOCA EstadoMistico e1 AD Wiggle</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="273.05" cy="181.39" r="3.60" data-kind="term" data-ritual="main" data-line="74" data-col="3" data-depth="3" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: main
+depth: 3
+line: 74
+
+source:
+REDDE</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="241.71" cy="251.09" r="3.92" data-kind="bind" data-ritual="main" data-line="57" data-col="3" data-depth="3" data-stmt="EVOCA"/>
+      <title>stmt: EVOCA
+rituale: main
+depth: 3
+line: 57
+
+source:
+EVOCA EstadoMistico e1 AD Wiggle</title>
+    </g>
+  </g>
+  <g id="ornaments">
+    <circle class="orn" cx="457.80" cy="250.06" r="0.90"/>
+    <circle class="orn" cx="385.57" cy="414.34" r="1.90"/>
+    <circle class="orn" cx="247.34" cy="466.65" r="2.90"/>
+    <circle class="orn" cx="124.00" cy="411.54" r="0.90"/>
+    <circle class="orn" cx="50.72" cy="253.51" r="1.90"/>
+    <circle class="orn" cx="139.84" cy="95.49" r="2.90"/>
+    <circle class="orn" cx="295.35" cy="57.16" r="0.90"/>
+    <circle class="orn" cx="388.71" cy="107.07" r="1.90"/>
+  </g>
+  <g id="signature">
+    <text class="hash" x="256" y="496" text-anchor="middle">1659c753e461f44e</text>
+    <text class="label" x="256" y="18" text-anchor="middle">network • sigillum v2.1 • 3 rituale(s) • 16 stmt • depth 3</text>
+  </g>
+</svg>

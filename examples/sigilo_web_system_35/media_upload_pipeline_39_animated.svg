@@ -1,0 +1,1433 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1384" height="1258" viewBox="-82.39 -57.03 1383.09 1257.03" role="img" aria-label="CCT system sigilo">
+  <desc>Deterministic sigil-of-sigils for a CCT module closure.</desc>
+  <defs>
+    <style><![CDATA[
+      .bg { fill: #f7f1e5; }
+      .macro-ring { fill: none; stroke: #1f2937; stroke-width: 2.0; opacity: 0.32; }
+      .macro-import { stroke: #334155; stroke-width: 1.8; stroke-linecap: round; fill: none; opacity: 0.60; }
+      .macro-sem { stroke: #9a3412; stroke-width: 1.3; stroke-dasharray: 5 4; fill: none; opacity: 0.62; }
+      .module-frame { fill: none; stroke: #111827; stroke-width: 2.1; }
+      .module-entry-frame { fill: none; stroke: #0f766e; stroke-width: 3.0; }
+      .module-label { fill: #0f172a; font: 11px monospace; }
+      .module-hash { fill: #334155; font: 9px monospace; opacity: 0.8; }
+      .base { stroke: #1f1a17; stroke-width: 1.6; fill: none; opacity: 0.7; }
+      .primary { stroke: #111827; stroke-width: 2.4; fill: none; stroke-linecap: round; }
+      .call { stroke: #4b5563; stroke-width: 1.5; fill: none; stroke-linecap: round; opacity: 0.82; }
+      .branch { stroke: #6b7280; stroke-width: 1.2; fill: none; opacity: 0.8; }
+      .loop { stroke: #0f766e; stroke-width: 1.3; fill: none; opacity: 0.84; }
+      .bind { stroke: #6b7280; stroke-width: 1.05; fill: none; opacity: 0.84; }
+      .term { stroke: #7f1d1d; stroke-width: 1.45; fill: none; stroke-linecap: round; }
+      .node-main { fill: #f8fafc; stroke: #1f2937; stroke-width: 1.65; }
+      .node-entry { fill: #d1fae5; stroke: #0f766e; stroke-width: 1.95; }
+      .node-aux { fill: #f1f5f9; stroke: #475569; stroke-width: 1.15; }
+      .node-loop { fill: #ecfeff; stroke: #0f766e; stroke-width: 1.2; }
+      .node-term { fill: #fef2f2; stroke: #991b1b; stroke-width: 1.2; }
+      .orn { stroke: #64748b; stroke-width: 0.9; fill: none; opacity: 0.55; }
+      .hash { fill: #111827; font: 9px monospace; letter-spacing: 0.5px; }
+      .label { fill: #0f172a; font: 8px monospace; opacity: 0.68; }
+      .web-shell { fill: rgba(255,252,246,0.80); stroke: #5a4b3f; stroke-width: 1.0; }
+      .web-chamber { fill: none; stroke: #8b7763; stroke-width: 1.2; opacity: 0.82; }
+      .web-thread { fill: none; stroke: #8d7a68; stroke-width: 0.95; opacity: 0.58; }
+      .web-group-arc { fill: none; stroke: #c5b59f; stroke-width: 0.95; opacity: 0.86; }
+      .web-link { fill: none; stroke: #7b6a59; stroke-width: 0.92; opacity: 0.62; }
+      .route-shell { fill: rgba(255,252,246,0.72); stroke: #5a4b3f; stroke-width: 0.95; }
+      .route-mid { fill: none; stroke: #b7a690; stroke-width: 0.82; opacity: 0.76; }
+      .route-arc { fill: none; stroke: #7a6957; stroke-width: 0.82; opacity: 0.82; stroke-linecap: round; }
+      .route-spoke { fill: none; stroke: #978573; stroke-width: 0.78; opacity: 0.76; stroke-linecap: round; }
+      .route-core { fill: #f7efe3; stroke: #57483b; stroke-width: 0.82; }
+      .route-chord { fill: none; stroke: #51453b; stroke-width: 0.76; opacity: 0.70; stroke-linecap: round; }
+      .route-glyph { fill: none; stroke: #efe6d9; stroke-width: 0.9; stroke-linejoin: round; }
+      .route-method-seed { fill: #6b5a4b; stroke: #f7efe2; stroke-width: 0.7; }
+      .node-wrap, .edge-wrap, .system-node-wrap, .system-edge-wrap { cursor: help; }
+      .node-wrap:hover > circle, .system-node-wrap:hover > circle { opacity: 0.96; }
+      .edge-wrap:hover > path, .edge-wrap:hover > line, .system-edge-wrap:hover > line { opacity: 1.0; }
+    ]]></style>
+    <clipPath id="module_clip_000"><circle cx="256" cy="256" r="246"/></clipPath>
+    <clipPath id="module_clip_001"><circle cx="256" cy="256" r="246"/></clipPath>
+    <clipPath id="module_clip_002"><circle cx="256" cy="256" r="246"/></clipPath>
+    <clipPath id="module_clip_003"><circle cx="256" cy="256" r="246"/></clipPath>
+    <clipPath id="module_clip_004"><circle cx="256" cy="256" r="246"/></clipPath>
+  </defs>
+  <rect class="bg" x="-82.39" y="-57.03" width="1383.09" height="1257.03"/>
+  <g id="macro_foundation">
+    <circle class="macro-ring" cx="600" cy="600" r="558"/>
+    <circle class="macro-ring" cx="600" cy="600" r="220.00" opacity="0.22"/>
+  </g>
+  <g id="imports" class="macro-import">
+    <g class="system-edge-wrap">
+    <line x1="600.000" y1="600.000" x2="600.000" y2="380.000" />
+      <title>edge
+main.cct -&gt; auth.cct
+links: 1</title>
+    </g>
+    <g class="system-edge-wrap">
+    <line x1="600.000" y1="600.000" x2="820.000" y2="600.000" />
+      <title>edge
+main.cct -&gt; posts.cct
+links: 1</title>
+    </g>
+    <g class="system-edge-wrap">
+    <line x1="600.000" y1="600.000" x2="600.000" y2="820.000" />
+      <title>edge
+main.cct -&gt; media.cct
+links: 1</title>
+    </g>
+    <g class="system-edge-wrap">
+    <line x1="600.000" y1="600.000" x2="380.000" y2="600.000" />
+      <title>edge
+main.cct -&gt; profile.cct
+links: 1</title>
+    </g>
+  </g>
+  <g id="semantic_cross" class="macro-sem">
+    <g class="system-edge-wrap">
+    <line x1="600.000" y1="600.000" x2="600.000" y2="380.000" />
+      <title>edge
+main.cct -&gt; auth.cct
+calls: 5</title>
+    </g>
+    <g class="system-edge-wrap">
+    <line x1="600.000" y1="600.000" x2="820.000" y2="600.000" />
+      <title>edge
+main.cct -&gt; posts.cct
+calls: 5</title>
+    </g>
+    <g class="system-edge-wrap">
+    <line x1="600.000" y1="600.000" x2="600.000" y2="820.000" />
+      <title>edge
+main.cct -&gt; media.cct
+calls: 5</title>
+    </g>
+    <g class="system-edge-wrap">
+    <line x1="600.000" y1="600.000" x2="380.000" y2="600.000" />
+      <title>edge
+main.cct -&gt; profile.cct
+calls: 5</title>
+    </g>
+  </g>
+  <g id="module_sigils">
+    <g id="module_sigil_000" transform="translate(462.000 462.000) scale(0.53906250)">
+      <g clip-path="url(#module_clip_000)">
+  <g id="foundation">
+    <circle class="base" cx="256" cy="256" r="226"/>
+    <ellipse class="base" cx="256" cy="256" rx="198" ry="183.57" opacity="0.32"/>
+  </g>
+  <g id="primary_path">
+    <g class="edge-wrap">
+    <path class="primary" d="M 424.00 221.23 Q 296.30 283.81 195.58 384.18" stroke-width="3.20" opacity="0.96"/>
+      <title>edge: primary
+main -&gt; home_page
+weight: 1
+
+path:
+main -&gt; home_page</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="primary" d="M 195.58 384.18 Q 197.46 261.02 156.07 145.01" stroke-width="2.60" opacity="0.96"/>
+      <title>edge: primary
+home_page -&gt; dashboard
+weight: 1
+
+path:
+home_page -&gt; dashboard</title>
+    </g>
+  </g>
+  <g id="call_links">
+    <g class="edge-wrap">
+    <path class="call" d="M 424.00 221.23 Q 289.92 274.85 195.58 384.18" stroke-width="2.15" opacity="0.74" data-kind="call" data-from="main" data-to="home_page" data-weight="1" data-self-loop="false"/>
+      <title>edge: call
+main -&gt; home_page
+calls: 1
+
+path:
+main -&gt; home_page</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="call" d="M 424.00 221.23 Q 299.31 150.51 156.07 145.01" stroke-width="2.15" opacity="0.74" data-kind="call" data-from="main" data-to="dashboard" data-weight="1" data-self-loop="false"/>
+      <title>edge: call
+main -&gt; dashboard
+calls: 1
+
+path:
+main -&gt; dashboard</title>
+    </g>
+  </g>
+  <g id="branches">
+    <g class="edge-wrap">
+    <path class="branch" d="M 265.46 257.18 Q 218.94 314.31 195.58 384.18" stroke-width="2.10" opacity="0.85"/>
+      <title>edge: branch
+main -&gt; home_page
+weight: 4
+
+path:
+main -&gt; home_page</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="branch" d="M 265.46 257.18 Q 220.00 192.08 156.07 145.01" stroke-width="1.95" opacity="0.85"/>
+      <title>edge: branch
+main -&gt; dashboard
+weight: 3
+
+path:
+main -&gt; dashboard</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="branch" d="M 265.46 257.18 Q 346.30 246.14 424.00 221.23" stroke-width="2.10" opacity="0.85"/>
+      <title>edge: branch
+main -&gt; main
+weight: 4
+
+path:
+main -&gt; main</title>
+    </g>
+  </g>
+  <g id="loops">
+  </g>
+  <g id="bindings">
+    <g class="edge-wrap">
+    <path class="bind" d="M 195.58 384.18 Q 203.50 373.54 206.66 360.67" stroke-width="1.44" opacity="0.85"/>
+    <line class="bind" x1="194.18" y1="377.77" x2="201.41" y2="381.19" opacity="0.75"/>
+    <line class="bind" x1="194.38" y1="375.00" x2="203.43" y2="379.26" opacity="0.75"/>
+    <line class="bind" x1="196.39" y1="373.07" x2="203.63" y2="376.48" opacity="0.75"/>
+    <line class="bind" x1="211.91" y1="360.51" x2="217.91" y2="360.32" opacity="0.58"/>
+    <line class="bind" x1="205.32" y1="365.74" x2="203.00" y2="374.44" opacity="0.58"/>
+    <line class="bind" x1="203.94" y1="356.18" x2="200.82" y2="351.05" opacity="0.58"/>
+      <title>edge: bind
+home_page -&gt; home_page
+weight: 3
+
+path:
+home_page -&gt; home_page</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="bind" d="M 156.07 145.01 Q 158.66 160.17 173.46 164.33" stroke-width="1.36" opacity="0.85"/>
+    <line class="bind" x1="162.52" y1="146.20" x2="156.57" y2="151.55" opacity="0.75"/>
+    <line class="bind" x1="165.00" y1="147.46" x2="157.57" y2="154.15" opacity="0.75"/>
+    <line class="bind" x1="178.56" y1="164.49" x2="184.56" y2="164.67" opacity="0.58"/>
+    <line class="bind" x1="168.37" y1="164.60" x2="159.38" y2="165.07" opacity="0.58"/>
+      <title>edge: bind
+dashboard -&gt; dashboard
+weight: 2
+
+path:
+dashboard -&gt; dashboard</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="bind" d="M 424.00 221.23 Q 410.84 221.80 398.53 226.50" stroke-width="1.36" opacity="0.85"/>
+    <line class="bind" x1="419.71" y1="226.20" x2="418.09" y2="218.37" opacity="0.75"/>
+    <line class="bind" x1="417.37" y1="227.71" x2="415.34" y2="217.92" opacity="0.75"/>
+    <line class="bind" x1="403.63" y1="226.50" x2="409.63" y2="226.50" opacity="0.58"/>
+    <line class="bind" x1="393.52" y1="227.42" x2="384.67" y2="229.05" opacity="0.58"/>
+      <title>edge: bind
+main -&gt; main
+weight: 2
+
+path:
+main -&gt; main</title>
+    </g>
+  </g>
+  <g id="terminals">
+    <g class="edge-wrap">
+    <path class="term" d="M 195.58 384.18 Q 207.36 358.22 212.22 330.12" stroke-width="1.65" opacity="0.90"/>
+      <title>edge: return
+home_page -&gt; home_page
+weight: 2
+
+path:
+home_page -&gt; home_page</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="term" d="M 195.58 384.18 Q 185.54 411.25 182.56 439.95" stroke-width="1.90" opacity="0.90"/>
+    <line class="term" x1="184.62" y1="449.58" x2="176.44" y2="447.67"/>
+    <line class="term" x1="182.19" y1="452.09" x2="177.51" y2="451.00" opacity="0.8"/>
+      <title>edge: term
+home_page -&gt; home_page
+weight: 4
+
+path:
+home_page -&gt; home_page</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="term" d="M 156.07 145.01 Q 164.17 173.63 187.59 191.98" stroke-width="1.65" opacity="0.90"/>
+      <title>edge: return
+dashboard -&gt; dashboard
+weight: 2
+
+path:
+dashboard -&gt; dashboard</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="term" d="M 156.07 145.01 Q 149.79 115.59 127.52 95.36" stroke-width="1.80" opacity="0.90"/>
+    <line class="term" x1="119.44" y1="89.74" x2="126.72" y2="85.55"/>
+    <line class="term" x1="119.50" y1="86.24" x2="123.66" y2="83.85" opacity="0.8"/>
+      <title>edge: term
+dashboard -&gt; dashboard
+weight: 3
+
+path:
+dashboard -&gt; dashboard</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="term" d="M 424.00 221.23 Q 395.57 219.88 367.54 224.75" stroke-width="1.65" opacity="0.90"/>
+      <title>edge: return
+main -&gt; main
+weight: 2
+
+path:
+main -&gt; main</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="term" d="M 424.00 221.23 Q 452.61 224.55 481.27 221.63" stroke-width="1.80" opacity="0.90"/>
+    <line class="term" x1="490.19" y1="217.50" x2="490.14" y2="225.89"/>
+    <line class="term" x1="493.18" y1="219.32" x2="493.15" y2="224.12" opacity="0.8"/>
+      <title>edge: term
+main -&gt; main
+weight: 3
+
+path:
+main -&gt; main</title>
+    </g>
+  </g>
+  <g id="nodes">
+    <g class="node-wrap">
+      <circle class="node-main" cx="195.58" cy="384.18" r="6.85" data-kind="rituale" data-ritual="home_page" data-line="9" data-col="1" data-depth="2" data-stmt="RITUALE" data-loops="0" data-calls="3"/>
+      <title>RITUALE home_page
+stmt: 7
+depth: 2
+loops: 0
+calls: 3
+source:
+RITUALE home_page() REDDE REX</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="206.66" cy="360.67" r="3.25" data-kind="bind" data-ritual="home_page" data-line="10" data-col="3" data-depth="2" data-stmt="EVOCA"/>
+      <title>stmt: EVOCA
+rituale: home_page
+depth: 2
+line: 10
+
+source:
+EVOCA REX sessio AD CONIURA auth_session_open()</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="212.22" cy="330.12" r="3.60" data-kind="term" data-ritual="home_page" data-line="16" data-col="3" data-depth="2" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: home_page
+depth: 2
+line: 16
+
+source:
+REDDE 1</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="182.56" cy="439.95" r="2.90" data-kind="term" data-ritual="home_page" data-line="13" data-col="3" data-depth="2" data-stmt="ANUR"/>
+      <title>stmt: ANUR
+rituale: home_page
+depth: 2
+line: 13
+
+source:
+ANUR sessio</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-main" cx="156.07" cy="145.01" r="6.55" data-kind="rituale" data-ritual="dashboard" data-line="20" data-col="1" data-depth="2" data-stmt="RITUALE" data-loops="0" data-calls="2"/>
+      <title>RITUALE dashboard
+stmt: 5
+depth: 2
+loops: 0
+calls: 2
+source:
+RITUALE dashboard() REDDE REX</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="173.46" cy="164.33" r="3.10" data-kind="bind" data-ritual="dashboard" data-line="21" data-col="3" data-depth="2" data-stmt="EVOCA"/>
+      <title>stmt: EVOCA
+rituale: dashboard
+depth: 2
+line: 21
+
+source:
+EVOCA REX usuario AD CONIURA profile_load()</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="187.59" cy="191.98" r="3.60" data-kind="term" data-ritual="dashboard" data-line="25" data-col="3" data-depth="2" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: dashboard
+depth: 2
+line: 25
+
+source:
+REDDE 2</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="127.52" cy="95.36" r="2.90" data-kind="term" data-ritual="dashboard" data-line="23" data-col="3" data-depth="2" data-stmt="ANUR"/>
+      <title>stmt: ANUR
+rituale: dashboard
+depth: 2
+line: 23
+
+source:
+ANUR usuario</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-entry" cx="424.00" cy="221.23" r="8.55" data-kind="rituale" data-ritual="main" data-line="28" data-col="1" data-depth="2" data-stmt="RITUALE" data-loops="0" data-calls="2" data-entry="true"/>
+      <title>RITUALE main
+stmt: 5
+depth: 2
+loops: 0
+calls: 2
+source:
+RITUALE main() REDDE REX</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="398.53" cy="226.50" r="3.10" data-kind="bind" data-ritual="main" data-line="29" data-col="3" data-depth="2" data-stmt="EVOCA"/>
+      <title>stmt: EVOCA
+rituale: main
+depth: 2
+line: 29
+
+source:
+EVOCA REX a AD CONIURA home_page()</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="367.54" cy="224.75" r="3.60" data-kind="term" data-ritual="main" data-line="33" data-col="3" data-depth="2" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: main
+depth: 2
+line: 33
+
+source:
+REDDE 0</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="481.27" cy="221.63" r="2.90" data-kind="term" data-ritual="main" data-line="31" data-col="3" data-depth="2" data-stmt="ANUR"/>
+      <title>stmt: ANUR
+rituale: main
+depth: 2
+line: 31
+
+source:
+ANUR a</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="265.46" cy="257.18" r="4.04" data-kind="bind" data-ritual="main" data-line="29" data-col="3" data-depth="2" data-stmt="EVOCA"/>
+      <title>stmt: EVOCA
+rituale: main
+depth: 2
+line: 29
+
+source:
+EVOCA REX a AD CONIURA home_page()</title>
+    </g>
+  </g>
+  <g id="ornaments">
+    <circle class="orn" cx="464.59" cy="235.85" r="0.90"/>
+    <circle class="orn" cx="422.32" cy="381.42" r="1.90"/>
+    <circle class="orn" cx="250.65" cy="463.62" r="2.90"/>
+    <circle class="orn" cx="138.22" cy="426.86" r="0.90"/>
+    <circle class="orn" cx="46.23" cy="250.67" r="1.90"/>
+    <circle class="orn" cx="98.67" cy="131.77" r="2.90"/>
+    <circle class="orn" cx="246.22" cy="51.80" r="0.90"/>
+    <circle class="orn" cx="398.92" cy="116.92" r="1.90"/>
+  </g>
+      </g>
+    </g>
+    <g class="system-node-wrap">
+    <circle class="module-entry-frame" cx="600.000" cy="600.000" r="138.000"/>
+      <title>module
+examples/sigilo_web_system_35/main.cct
+rituals: 3
+imports: 4</title>
+    <text class="module-label" x="600.000" y="754.000" text-anchor="middle">main.cct</text>
+    <text class="module-hash" x="600.000" y="766.000" text-anchor="middle">c49a12f3f9e52f14</text>
+    </g>
+    <g id="module_sigil_001" transform="translate(496.000 276.000) scale(0.40625000)">
+      <g clip-path="url(#module_clip_001)">
+  <g id="foundation">
+    <circle class="base" cx="256" cy="256" r="226"/>
+  </g>
+  <g id="primary_path">
+    <g class="edge-wrap">
+    <path class="primary" d="M 398.78 221.32 Q 303.00 284.96 229.88 373.72" stroke-width="2.60" opacity="0.96"/>
+      <title>edge: primary
+auth_login -&gt; auth_logout
+weight: 1
+
+path:
+auth_login -&gt; auth_logout</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="primary" d="M 229.88 373.72 Q 198.48 270.02 133.80 183.10" stroke-width="2.60" opacity="0.96"/>
+      <title>edge: primary
+auth_logout -&gt; auth_session_open
+weight: 1
+
+path:
+auth_logout -&gt; auth_session_open</title>
+    </g>
+  </g>
+  <g id="call_links">
+  </g>
+  <g id="branches">
+  </g>
+  <g id="loops">
+  </g>
+  <g id="bindings">
+  </g>
+  <g id="terminals">
+    <g class="edge-wrap">
+    <path class="term" d="M 398.78 221.32 Q 370.19 219.45 342.48 226.76" stroke-width="1.65" opacity="0.90"/>
+      <title>edge: return
+auth_login -&gt; auth_login
+weight: 2
+
+path:
+auth_login -&gt; auth_login</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="term" d="M 229.88 373.72 Q 243.56 348.65 249.82 320.78" stroke-width="1.65" opacity="0.90"/>
+      <title>edge: return
+auth_logout -&gt; auth_logout
+weight: 2
+
+path:
+auth_logout -&gt; auth_logout</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="term" d="M 133.80 183.10 Q 157.05 200.83 185.99 204.92" stroke-width="1.65" opacity="0.90"/>
+      <title>edge: return
+auth_session_open -&gt; auth_session_open
+weight: 2
+
+path:
+auth_session_open -&gt; auth_session_open</title>
+    </g>
+  </g>
+  <g id="nodes">
+    <g class="node-wrap">
+      <circle class="node-main" cx="398.78" cy="221.32" r="5.95" data-kind="rituale" data-ritual="auth_login" data-line="4" data-col="1" data-depth="2" data-stmt="RITUALE" data-loops="0" data-calls="0"/>
+      <title>RITUALE auth_login
+stmt: 1
+depth: 2
+loops: 0
+calls: 0
+source:
+RITUALE auth_login() REDDE REX</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="342.48" cy="226.76" r="3.60" data-kind="term" data-ritual="auth_login" data-line="5" data-col="3" data-depth="2" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: auth_login
+depth: 2
+line: 5
+
+source:
+REDDE 11</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-main" cx="229.88" cy="373.72" r="5.95" data-kind="rituale" data-ritual="auth_logout" data-line="9" data-col="1" data-depth="2" data-stmt="RITUALE" data-loops="0" data-calls="0"/>
+      <title>RITUALE auth_logout
+stmt: 1
+depth: 2
+loops: 0
+calls: 0
+source:
+RITUALE auth_logout() REDDE REX</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="249.82" cy="320.78" r="3.60" data-kind="term" data-ritual="auth_logout" data-line="10" data-col="3" data-depth="2" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: auth_logout
+depth: 2
+line: 10
+
+source:
+REDDE 12</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-main" cx="133.80" cy="183.10" r="5.95" data-kind="rituale" data-ritual="auth_session_open" data-line="13" data-col="1" data-depth="2" data-stmt="RITUALE" data-loops="0" data-calls="0"/>
+      <title>RITUALE auth_session_open
+stmt: 1
+depth: 2
+loops: 0
+calls: 0
+source:
+RITUALE auth_session_open() REDDE REX</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="185.99" cy="204.92" r="3.60" data-kind="term" data-ritual="auth_session_open" data-line="14" data-col="3" data-depth="2" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: auth_session_open
+depth: 2
+line: 14
+
+source:
+REDDE 13</title>
+    </g>
+  </g>
+  <g id="ornaments">
+    <circle class="orn" cx="462.76" cy="239.65" r="0.90"/>
+    <circle class="orn" cx="272.00" cy="460.87" r="1.90"/>
+    <circle class="orn" cx="55.30" cy="216.13" r="2.90"/>
+    <circle class="orn" cx="233.67" cy="58.63" r="0.90"/>
+  </g>
+      </g>
+    </g>
+    <g class="system-node-wrap">
+    <circle class="module-frame" cx="600.000" cy="380.000" r="104.000"/>
+      <title>module
+examples/sigilo_web_system_35/modules/auth.cct
+rituals: 3
+imports: 0</title>
+    <text class="module-label" x="600.000" y="500.000" text-anchor="middle">auth.cct</text>
+    <text class="module-hash" x="600.000" y="512.000" text-anchor="middle">ab8405ac3fd97606</text>
+    </g>
+    <g id="module_sigil_002" transform="translate(716.000 496.000) scale(0.40625000)">
+      <g clip-path="url(#module_clip_002)">
+  <g id="foundation">
+    <circle class="base" cx="256" cy="256" r="226"/>
+    <ellipse class="base" cx="256" cy="256" rx="198" ry="182.70" opacity="0.32"/>
+  </g>
+  <g id="primary_path">
+    <g class="edge-wrap">
+    <path class="primary" d="M 353.36 159.12 Q 350.29 239.63 389.77 309.87" stroke-width="2.60" opacity="0.96"/>
+      <title>edge: primary
+posts_list -&gt; posts_show
+weight: 1
+
+path:
+posts_list -&gt; posts_show</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="primary" d="M 389.77 309.87 Q 300.33 325.73 230.57 383.90" stroke-width="2.60" opacity="0.96"/>
+      <title>edge: primary
+posts_show -&gt; posts_save
+weight: 1
+
+path:
+posts_show -&gt; posts_save</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="primary" d="M 230.57 383.90 Q 189.65 308.40 113.58 268.54" stroke-width="2.60" opacity="0.96"/>
+      <title>edge: primary
+posts_save -&gt; posts_featured
+weight: 1
+
+path:
+posts_save -&gt; posts_featured</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="primary" d="M 113.58 268.54 Q 166.29 223.26 177.43 154.67" stroke-width="2.60" opacity="0.96"/>
+      <title>edge: primary
+posts_featured -&gt; posts_saved_count
+weight: 1
+
+path:
+posts_featured -&gt; posts_saved_count</title>
+    </g>
+  </g>
+  <g id="call_links">
+  </g>
+  <g id="branches">
+  </g>
+  <g id="loops">
+  </g>
+  <g id="bindings">
+  </g>
+  <g id="terminals">
+    <g class="edge-wrap">
+    <path class="term" d="M 353.36 159.12 Q 333.68 179.71 319.30 204.29" stroke-width="1.65" opacity="0.90"/>
+      <title>edge: return
+posts_list -&gt; posts_list
+weight: 2
+
+path:
+posts_list -&gt; posts_list</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="term" d="M 389.77 309.87 Q 363.52 298.16 334.83 296.37" stroke-width="1.65" opacity="0.90"/>
+      <title>edge: return
+posts_show -&gt; posts_show
+weight: 2
+
+path:
+posts_show -&gt; posts_show</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="term" d="M 230.57 383.90 Q 249.09 360.43 249.34 330.54" stroke-width="1.65" opacity="0.90"/>
+      <title>edge: return
+posts_save -&gt; posts_save
+weight: 2
+
+path:
+posts_save -&gt; posts_save</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="term" d="M 113.58 268.54 Q 142.11 266.33 168.66 255.66" stroke-width="1.65" opacity="0.90"/>
+      <title>edge: return
+posts_featured -&gt; posts_featured
+weight: 2
+
+path:
+posts_featured -&gt; posts_featured</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="term" d="M 177.43 154.67 Q 189.56 180.31 205.42 203.83" stroke-width="1.65" opacity="0.90"/>
+      <title>edge: return
+posts_saved_count -&gt; posts_saved_count
+weight: 2
+
+path:
+posts_saved_count -&gt; posts_saved_count</title>
+    </g>
+  </g>
+  <g id="nodes">
+    <g class="node-wrap">
+      <circle class="node-main" cx="353.36" cy="159.12" r="5.95" data-kind="rituale" data-ritual="posts_list" data-line="4" data-col="1" data-depth="2" data-stmt="RITUALE" data-loops="0" data-calls="0"/>
+      <title>RITUALE posts_list
+stmt: 1
+depth: 2
+loops: 0
+calls: 0
+source:
+RITUALE posts_list() REDDE REX</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="319.30" cy="204.29" r="3.60" data-kind="term" data-ritual="posts_list" data-line="5" data-col="3" data-depth="2" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: posts_list
+depth: 2
+line: 5
+
+source:
+REDDE 21</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-main" cx="389.77" cy="309.87" r="5.95" data-kind="rituale" data-ritual="posts_show" data-line="9" data-col="1" data-depth="2" data-stmt="RITUALE" data-loops="0" data-calls="0"/>
+      <title>RITUALE posts_show
+stmt: 1
+depth: 2
+loops: 0
+calls: 0
+source:
+RITUALE posts_show() REDDE REX</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="334.83" cy="296.37" r="3.60" data-kind="term" data-ritual="posts_show" data-line="10" data-col="3" data-depth="2" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: posts_show
+depth: 2
+line: 10
+
+source:
+REDDE 22</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-main" cx="230.57" cy="383.90" r="5.95" data-kind="rituale" data-ritual="posts_save" data-line="14" data-col="1" data-depth="2" data-stmt="RITUALE" data-loops="0" data-calls="0"/>
+      <title>RITUALE posts_save
+stmt: 1
+depth: 2
+loops: 0
+calls: 0
+source:
+RITUALE posts_save() REDDE REX</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="249.34" cy="330.54" r="3.60" data-kind="term" data-ritual="posts_save" data-line="15" data-col="3" data-depth="2" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: posts_save
+depth: 2
+line: 15
+
+source:
+REDDE 23</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-main" cx="113.58" cy="268.54" r="5.95" data-kind="rituale" data-ritual="posts_featured" data-line="18" data-col="1" data-depth="2" data-stmt="RITUALE" data-loops="0" data-calls="0"/>
+      <title>RITUALE posts_featured
+stmt: 1
+depth: 2
+loops: 0
+calls: 0
+source:
+RITUALE posts_featured() REDDE REX</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="168.66" cy="255.66" r="3.60" data-kind="term" data-ritual="posts_featured" data-line="19" data-col="3" data-depth="2" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: posts_featured
+depth: 2
+line: 19
+
+source:
+REDDE 24</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-main" cx="177.43" cy="154.67" r="5.95" data-kind="rituale" data-ritual="posts_saved_count" data-line="22" data-col="1" data-depth="2" data-stmt="RITUALE" data-loops="0" data-calls="0"/>
+      <title>RITUALE posts_saved_count
+stmt: 1
+depth: 2
+loops: 0
+calls: 0
+source:
+RITUALE posts_saved_count() REDDE REX</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="205.42" cy="203.83" r="3.60" data-kind="term" data-ritual="posts_saved_count" data-line="23" data-col="3" data-depth="2" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: posts_saved_count
+depth: 2
+line: 23
+
+source:
+REDDE 25</title>
+    </g>
+  </g>
+  <g id="ornaments">
+    <circle class="orn" cx="459.59" cy="285.60" r="0.90"/>
+    <circle class="orn" cx="351.23" cy="443.60" r="1.90"/>
+    <circle class="orn" cx="80.98" cy="375.22" r="2.90"/>
+    <circle class="orn" cx="101.72" cy="126.36" r="0.90"/>
+    <circle class="orn" cx="295.70" cy="59.71" r="1.90"/>
+  </g>
+      </g>
+    </g>
+    <g class="system-node-wrap">
+    <circle class="module-frame" cx="820.000" cy="600.000" r="104.000"/>
+      <title>module
+examples/sigilo_web_system_35/modules/posts.cct
+rituals: 5
+imports: 0</title>
+    <text class="module-label" x="820.000" y="720.000" text-anchor="middle">posts.cct</text>
+    <text class="module-hash" x="820.000" y="732.000" text-anchor="middle">b4323880a68d5798</text>
+    </g>
+    <g id="module_sigil_003" transform="translate(496.000 716.000) scale(0.40625000)">
+      <g clip-path="url(#module_clip_003)">
+  <g id="foundation">
+    <circle class="base" cx="256" cy="256" r="226"/>
+  </g>
+  <g id="primary_path">
+    <g class="edge-wrap">
+    <path class="primary" d="M 400.90 214.80 Q 300.52 282.48 222.57 375.09" stroke-width="2.60" opacity="0.96"/>
+      <title>edge: primary
+media_upload -&gt; media_thumb
+weight: 1
+
+path:
+media_upload -&gt; media_thumb</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="primary" d="M 222.57 375.09 Q 199.56 268.40 133.80 181.29" stroke-width="2.60" opacity="0.96"/>
+      <title>edge: primary
+media_thumb -&gt; media_recent
+weight: 1
+
+path:
+media_thumb -&gt; media_recent</title>
+    </g>
+  </g>
+  <g id="call_links">
+  </g>
+  <g id="branches">
+  </g>
+  <g id="loops">
+  </g>
+  <g id="bindings">
+  </g>
+  <g id="terminals">
+    <g class="edge-wrap">
+    <path class="term" d="M 400.90 214.80 Q 372.49 220.53 349.22 237.81" stroke-width="1.65" opacity="0.90"/>
+      <title>edge: return
+media_upload -&gt; media_upload
+weight: 2
+
+path:
+media_upload -&gt; media_upload</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="term" d="M 222.57 375.09 Q 241.83 352.68 245.40 323.34" stroke-width="1.65" opacity="0.90"/>
+      <title>edge: return
+media_thumb -&gt; media_thumb
+weight: 2
+
+path:
+media_thumb -&gt; media_thumb</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="term" d="M 133.80 181.29 Q 153.40 201.97 177.40 217.32" stroke-width="1.65" opacity="0.90"/>
+      <title>edge: return
+media_recent -&gt; media_recent
+weight: 2
+
+path:
+media_recent -&gt; media_recent</title>
+    </g>
+  </g>
+  <g id="nodes">
+    <g class="node-wrap">
+      <circle class="node-main" cx="400.90" cy="214.80" r="5.95" data-kind="rituale" data-ritual="media_upload" data-line="4" data-col="1" data-depth="2" data-stmt="RITUALE" data-loops="0" data-calls="0"/>
+      <title>RITUALE media_upload
+stmt: 1
+depth: 2
+loops: 0
+calls: 0
+source:
+RITUALE media_upload() REDDE REX</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="349.22" cy="237.81" r="3.60" data-kind="term" data-ritual="media_upload" data-line="5" data-col="3" data-depth="2" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: media_upload
+depth: 2
+line: 5
+
+source:
+REDDE 31</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-main" cx="222.57" cy="375.09" r="5.95" data-kind="rituale" data-ritual="media_thumb" data-line="9" data-col="1" data-depth="2" data-stmt="RITUALE" data-loops="0" data-calls="0"/>
+      <title>RITUALE media_thumb
+stmt: 1
+depth: 2
+loops: 0
+calls: 0
+source:
+RITUALE media_thumb() REDDE REX</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="245.40" cy="323.34" r="3.60" data-kind="term" data-ritual="media_thumb" data-line="10" data-col="3" data-depth="2" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: media_thumb
+depth: 2
+line: 10
+
+source:
+REDDE 32</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-main" cx="133.80" cy="181.29" r="5.95" data-kind="rituale" data-ritual="media_recent" data-line="13" data-col="1" data-depth="2" data-stmt="RITUALE" data-loops="0" data-calls="0"/>
+      <title>RITUALE media_recent
+stmt: 1
+depth: 2
+loops: 0
+calls: 0
+source:
+RITUALE media_recent() REDDE REX</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="177.40" cy="217.32" r="3.60" data-kind="term" data-ritual="media_recent" data-line="14" data-col="3" data-depth="2" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: media_recent
+depth: 2
+line: 14
+
+source:
+REDDE 33</title>
+    </g>
+  </g>
+  <g id="ornaments">
+    <circle class="orn" cx="462.65" cy="292.76" r="0.90"/>
+    <circle class="orn" cx="268.58" cy="463.92" r="1.90"/>
+    <circle class="orn" cx="55.62" cy="230.95" r="2.90"/>
+    <circle class="orn" cx="226.54" cy="55.41" r="0.90"/>
+  </g>
+      </g>
+    </g>
+    <g class="system-node-wrap">
+    <circle class="module-frame" cx="600.000" cy="820.000" r="104.000"/>
+      <title>module
+examples/sigilo_web_system_35/modules/media.cct
+rituals: 3
+imports: 0</title>
+    <text class="module-label" x="600.000" y="940.000" text-anchor="middle">media.cct</text>
+    <text class="module-hash" x="600.000" y="952.000" text-anchor="middle">b24ba2585fb67858</text>
+    </g>
+    <g id="module_sigil_004" transform="translate(276.000 496.000) scale(0.40625000)">
+      <g clip-path="url(#module_clip_004)">
+  <g id="foundation">
+    <circle class="base" cx="256" cy="256" r="226"/>
+  </g>
+  <g id="primary_path">
+    <g class="edge-wrap">
+    <path class="primary" d="M 405.62 212.30 Q 300.92 277.38 225.52 374.91" stroke-width="2.60" opacity="0.96"/>
+      <title>edge: primary
+profile_show -&gt; profile_avatar
+weight: 1
+
+path:
+profile_show -&gt; profile_avatar</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="primary" d="M 225.52 374.91 Q 194.41 269.14 126.23 182.50" stroke-width="2.60" opacity="0.96"/>
+      <title>edge: primary
+profile_avatar -&gt; profile_load
+weight: 1
+
+path:
+profile_avatar -&gt; profile_load</title>
+    </g>
+  </g>
+  <g id="call_links">
+  </g>
+  <g id="branches">
+  </g>
+  <g id="loops">
+  </g>
+  <g id="bindings">
+  </g>
+  <g id="terminals">
+    <g class="edge-wrap">
+    <path class="term" d="M 405.62 212.30 Q 375.90 215.26 354.11 235.68" stroke-width="1.65" opacity="0.90"/>
+      <title>edge: return
+profile_show -&gt; profile_show
+weight: 2
+
+path:
+profile_show -&gt; profile_show</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="term" d="M 225.52 374.91 Q 234.25 347.42 231.68 318.68" stroke-width="1.65" opacity="0.90"/>
+      <title>edge: return
+profile_avatar -&gt; profile_avatar
+weight: 2
+
+path:
+profile_avatar -&gt; profile_avatar</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="term" d="M 126.23 182.50 Q 144.62 204.96 171.01 217.06" stroke-width="1.65" opacity="0.90"/>
+      <title>edge: return
+profile_load -&gt; profile_load
+weight: 2
+
+path:
+profile_load -&gt; profile_load</title>
+    </g>
+  </g>
+  <g id="nodes">
+    <g class="node-wrap">
+      <circle class="node-main" cx="405.62" cy="212.30" r="5.95" data-kind="rituale" data-ritual="profile_show" data-line="4" data-col="1" data-depth="2" data-stmt="RITUALE" data-loops="0" data-calls="0"/>
+      <title>RITUALE profile_show
+stmt: 1
+depth: 2
+loops: 0
+calls: 0
+source:
+RITUALE profile_show() REDDE REX</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="354.11" cy="235.68" r="3.60" data-kind="term" data-ritual="profile_show" data-line="5" data-col="3" data-depth="2" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: profile_show
+depth: 2
+line: 5
+
+source:
+REDDE 41</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-main" cx="225.52" cy="374.91" r="5.95" data-kind="rituale" data-ritual="profile_avatar" data-line="9" data-col="1" data-depth="2" data-stmt="RITUALE" data-loops="0" data-calls="0"/>
+      <title>RITUALE profile_avatar
+stmt: 1
+depth: 2
+loops: 0
+calls: 0
+source:
+RITUALE profile_avatar() REDDE REX</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="231.68" cy="318.68" r="3.60" data-kind="term" data-ritual="profile_avatar" data-line="10" data-col="3" data-depth="2" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: profile_avatar
+depth: 2
+line: 10
+
+source:
+REDDE 42</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-main" cx="126.23" cy="182.50" r="5.95" data-kind="rituale" data-ritual="profile_load" data-line="13" data-col="1" data-depth="2" data-stmt="RITUALE" data-loops="0" data-calls="0"/>
+      <title>RITUALE profile_load
+stmt: 1
+depth: 2
+loops: 0
+calls: 0
+source:
+RITUALE profile_load() REDDE REX</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="171.01" cy="217.06" r="3.60" data-kind="term" data-ritual="profile_load" data-line="14" data-col="3" data-depth="2" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: profile_load
+depth: 2
+line: 14
+
+source:
+REDDE 43</title>
+    </g>
+  </g>
+  <g id="ornaments">
+    <circle class="orn" cx="458.10" cy="294.61" r="0.90"/>
+    <circle class="orn" cx="211.20" cy="458.04" r="1.90"/>
+    <circle class="orn" cx="50.31" cy="211.92" r="2.90"/>
+    <circle class="orn" cx="284.32" cy="53.68" r="0.90"/>
+  </g>
+      </g>
+    </g>
+    <g class="system-node-wrap">
+    <circle class="module-frame" cx="380.000" cy="600.000" r="104.000"/>
+      <title>module
+examples/sigilo_web_system_35/modules/profile.cct
+rituals: 3
+imports: 0</title>
+    <text class="module-label" x="380.000" y="720.000" text-anchor="middle">profile.cct</text>
+    <text class="module-hash" x="380.000" y="732.000" text-anchor="middle">e0ee59e516c7927c</text>
+    </g>
+  </g>
+  <g id="system_web_overlay">
+    <title>web overlay
+integrated route sigils on the outermost ring of the system composition</title>
+    <circle class="web-chamber" cx="600.000" cy="600.000" r="486.000"/>
+    <circle class="web-chamber" cx="600.000" cy="600.000" r="464.000"/>
+<path class="web-thread" d="M 180.88 370.17 A 478.00 478.00 0 0 1 919.05 244.06"/>
+<path class="web-thread" d="M 1031.06 782.25 A 468.00 468.00 0 0 1 219.54 872.53"/>
+    <g class="system-edge-wrap">
+      <title>system web group
+group=/
+routes=2</title>
+    <circle class="web-group-arc" cx="600.000" cy="114.000" r="75.029"/>
+    <text class="module-hash" x="600.000" y="14.971" text-anchor="middle">/</text>
+    </g>
+    <g class="system-edge-wrap">
+      <title>module binding
+module=main.cct
+group=/</title>
+    <path class="web-thread" d="M 600.000 600.000 Q 644.000 357.000 600.000 114.000"/>
+    </g>
+    <g class="system-edge-wrap">
+      <title>group anchor
+group=/
+anchor=site.home</title>
+    <path class="web-link" d="M 600.000 114.000 Q 629.583 80.312 631.338 69.463"/>
+    </g>
+    <g class="system-edge-wrap">
+      <title>system web group
+group=/auth
+routes=2</title>
+    <circle class="web-group-arc" cx="1067.319" cy="466.551" r="79.351"/>
+    <text class="module-hash" x="1166.698" y="438.172" text-anchor="middle">/auth</text>
+    </g>
+    <g class="system-edge-wrap">
+      <title>module binding
+module=auth.cct
+group=/auth</title>
+    <path class="web-thread" d="M 600.000 380.000 Q 845.741 455.969 1067.319 466.551"/>
+    </g>
+    <g class="system-edge-wrap">
+      <title>group anchor
+group=/auth
+anchor=auth.login</title>
+    <path class="web-link" d="M 1067.319 466.551 Q 1106.033 488.265 1116.609 487.521"/>
+    </g>
+    <g class="system-edge-wrap">
+      <title>system web group
+group=/posts
+routes=3</title>
+    <circle class="web-group-arc" cx="880.925" cy="996.582" r="76.420"/>
+    <text class="module-hash" x="938.971" y="1078.526" text-anchor="middle">/posts</text>
+    </g>
+    <g class="system-edge-wrap">
+      <title>module binding
+module=posts.cct
+group=/posts</title>
+    <path class="web-thread" d="M 820.000 600.000 Q 814.558 817.944 880.925 996.582"/>
+    </g>
+    <g class="system-edge-wrap">
+      <title>group anchor
+group=/posts
+anchor=posts.list</title>
+    <path class="web-link" d="M 880.925 996.582 Q 883.201 1041.013 881.647 1049.648"/>
+    </g>
+    <g class="system-edge-wrap">
+      <title>system web group
+group=/media
+routes=2</title>
+    <circle class="web-group-arc" cx="291.274" cy="975.345" r="72.916"/>
+    <text class="module-hash" x="229.709" y="1050.195" text-anchor="middle">/media</text>
+    </g>
+    <g class="system-edge-wrap">
+      <title>module binding
+module=media.cct
+group=/media</title>
+    <path class="web-thread" d="M 600.000 820.000 Q 411.655 876.074 291.274 975.345"/>
+    </g>
+    <g class="system-edge-wrap">
+      <title>group anchor
+group=/media
+anchor=media.upload</title>
+    <path class="web-link" d="M 291.274 975.345 Q 274.276 944.304 274.147 945.065"/>
+    </g>
+    <g class="system-edge-wrap">
+      <title>system web group
+group=/perfil
+routes=2</title>
+    <circle class="web-group-arc" cx="143.491" cy="433.279" r="73.815"/>
+    <text class="module-hash" x="51.612" y="399.724" text-anchor="middle">/perfil</text>
+    </g>
+    <g class="system-edge-wrap">
+      <title>module binding
+module=profile.cct
+group=/perfil</title>
+    <path class="web-thread" d="M 380.000 600.000 Q 276.840 484.703 143.491 433.279"/>
+    </g>
+    <g class="system-edge-wrap">
+      <title>group anchor
+group=/perfil
+anchor=profile.show</title>
+    <path class="web-link" d="M 143.491 433.279 Q 130.584 394.271 120.621 391.142"/>
+    </g>
+    <g class="system-edge-wrap">
+      <title>system web hierarchy
+site.home -&gt; site.dashboard
+group=/</title>
+    <path class="web-link" d="M 631.338 69.463 Q 650.513 99.860 638.108 135.424"/>
+    </g>
+    <g class="system-edge-wrap">
+      <title>system web hierarchy
+auth.login -&gt; auth.logout
+group=/auth</title>
+    <path class="web-link" d="M 1116.609 487.521 Q 1081.645 500.731 1071.787 494.098"/>
+    </g>
+    <g class="system-edge-wrap">
+      <title>system web hierarchy
+posts.list -&gt; posts.show
+group=/posts</title>
+    <path class="web-link" d="M 881.647 1049.648 Q 860.746 1027.819 854.180 1034.599"/>
+    </g>
+    <g class="system-edge-wrap">
+      <title>system web hierarchy
+posts.show -&gt; posts.save
+group=/posts</title>
+    <path class="web-link" d="M 854.180 1034.599 Q 858.336 1013.358 831.523 1000.175"/>
+    </g>
+    <g class="system-edge-wrap">
+      <title>system web hierarchy
+media.upload -&gt; media.thumb
+group=/media</title>
+    <path class="web-link" d="M 274.147 945.065 Q 259.296 983.234 242.561 989.459"/>
+    </g>
+    <g class="system-edge-wrap">
+      <title>system web hierarchy
+profile.show -&gt; profile.avatar
+group=/perfil</title>
+    <path class="web-link" d="M 120.621 391.142 Q 130.509 391.166 163.036 413.805"/>
+    </g>
+    <g id="system_route_site_home" class="system-node-wrap" data-route-id="site.home" data-method="GET" data-path="/" data-module="examples/sigilo_web_system_35/main.cct" data-group="/">
+<circle class="route-shell" cx="631.34" cy="69.46" r="9.97"/><path class="route-mid" d="M 629.95 62.94 A 6.67 6.67 0 0 1 637.84 70.97"/><path class="route-arc" d="M 637.90 74.06 A 8.01 8.01 0 0 1 633.75 77.10"/><path class="route-arc" d="M 631.76 78.02 A 8.57 8.57 0 0 1 623.34 72.54"/><path class="route-spoke" d="M 634.39 66.53 Q 632.00 70.28 635.41 66.08"/><path class="route-spoke" d="M 629.05 70.92 Q 630.66 68.65 626.02 73.91"/><path class="route-chord" d="M 637.26 63.83 Q 631.70 68.70 629.48 76.70"/><circle class="route-core" cx="631.70" cy="68.70" r="3.29"/><path class="route-glyph" d="M 635.17 65.85 L 631.55 72.79 L 627.67 69.37 Z"/><circle class="route-method-seed" cx="634.68" cy="72.32" r="1.66"/><circle class="route-method-get" cx="631.70" cy="68.70" r="0"/>      <title>GET /
+handler=home_page
+module=examples/sigilo_web_system_35/main.cct
+middleware=trace
+route_id=site.home
+route_hash=bbaf15c4e9fcce01</title>
+    </g>
+    <g id="system_route_site_dashboard" class="system-node-wrap" data-route-id="site.dashboard" data-method="GET" data-path="/dashboard" data-module="examples/sigilo_web_system_35/main.cct" data-group="/">
+<circle class="route-shell" cx="638.11" cy="135.42" r="13.60"/><path class="route-mid" d="M 648.06 132.83 A 10.29 10.29 0 0 1 638.47 145.71"/><path class="route-arc" d="M 627.63 130.17 A 11.72 11.72 0 0 1 634.17 124.39"/><path class="route-spoke" d="M 642.94 137.72 Q 637.42 136.73 646.92 139.45"/><path class="route-spoke" d="M 635.12 133.06 Q 638.93 134.20 630.84 130.45"/><path class="route-chord" d="M 649.52 138.39 Q 638.90 135.61 627.90 139.75"/><circle class="route-core" cx="638.90" cy="135.61" r="4.34"/><path class="route-glyph" d="M 643.69 138.39 L 633.78 136.12 L 636.26 131.20 Z"/><circle class="route-method-seed" cx="636.02" cy="140.58" r="1.07"/><circle class="route-method-get" cx="638.90" cy="135.61" r="0"/>      <title>GET /dashboard
+handler=dashboard
+module=examples/sigilo_web_system_35/main.cct
+middleware=auth,trace
+route_id=site.dashboard
+route_hash=d652f840d2aea88b</title>
+    </g>
+    <g id="system_route_auth_login" class="system-node-wrap" data-route-id="auth.login" data-method="POST" data-path="/auth/login" data-module="examples/sigilo_web_system_35/modules/auth.cct" data-group="/auth">
+<circle class="route-shell" cx="1116.61" cy="487.52" r="15.65"/><path class="route-mid" d="M 1125.96 486.47 A 9.41 9.41 0 0 1 1114.35 496.66"/><path class="route-arc" d="M 1108.74 475.70 A 14.20 14.20 0 0 1 1120.82 473.96"/><path class="route-spoke" d="M 1119.41 489.50 Q 1115.63 488.76 1125.97 495.38"/><path class="route-spoke" d="M 1112.63 488.68 Q 1115.95 486.09 1105.84 492.79"/><path class="route-spoke" d="M 1116.85 483.05 Q 1118.17 487.75 1118.37 475.25"/><path class="route-chord" d="M 1123.17 496.24 Q 1116.27 487.01 1106.43 486.79"/><circle class="route-core" cx="1116.27" cy="487.01" r="3.81"/><path class="route-glyph" d="M 1120.19 490.14 L 1111.66 487.21 L 1115.24 482.51 Z"/><circle class="route-method-seed" cx="1113.02" cy="491.09" r="1.43"/><circle class="route-method-post" cx="1116.27" cy="487.01" r="0"/>      <title>POST /auth/login
+handler=auth_login
+module=examples/sigilo_web_system_35/modules/auth.cct
+middleware=trace
+route_id=auth.login
+route_hash=5c80963aa58dac44</title>
+    </g>
+    <g id="system_route_auth_logout" class="system-node-wrap" data-route-id="auth.logout" data-method="POST" data-path="/auth/logout" data-module="examples/sigilo_web_system_35/modules/auth.cct" data-group="/auth">
+<circle class="route-shell" cx="1071.79" cy="494.10" r="15.59"/><path class="route-mid" d="M 1077.59 502.59 A 10.29 10.29 0 0 1 1061.74 496.30"/><path class="route-arc" d="M 1083.94 494.71 A 12.17 12.17 0 0 1 1075.09 505.81"/><path class="route-spoke" d="M 1070.72 497.92 Q 1070.27 493.65 1068.65 504.91"/><path class="route-spoke" d="M 1072.76 489.33 Q 1073.34 494.38 1074.10 481.98"/><path class="route-chord" d="M 1072.37 505.87 Q 1071.97 493.68 1062.54 487.98"/><circle class="route-core" cx="1071.97" cy="493.68" r="4.21"/><path class="route-glyph" d="M 1070.74 498.95 L 1070.23 488.98 L 1075.79 490.44 Z"/><circle class="route-method-seed" cx="1066.50" cy="492.41" r="1.64"/><circle class="route-method-post" cx="1071.97" cy="493.68" r="0"/>      <title>POST /auth/logout
+handler=auth_logout
+module=examples/sigilo_web_system_35/modules/auth.cct
+middleware=auth,trace
+route_id=auth.logout
+route_hash=f30dee8ffd56e8c1</title>
+    </g>
+    <g id="system_route_posts_list" class="system-node-wrap" data-route-id="posts.list" data-method="GET" data-path="/posts" data-module="examples/sigilo_web_system_35/modules/posts.cct" data-group="/posts">
+<circle class="route-shell" cx="881.65" cy="1049.65" r="13.20"/><path class="route-mid" d="M 890.11 1052.70 A 9.00 9.00 0 0 1 874.93 1055.64"/><path class="route-arc" d="M 888.93 1041.45 A 10.97 10.97 0 0 1 892.25 1046.84"/><path class="route-spoke" d="M 881.61 1053.01 Q 880.32 1049.81 882.83 1059.10"/><path class="route-spoke" d="M 880.79 1044.81 Q 882.98 1049.54 880.92 1041.20"/><path class="route-chord" d="M 880.00 1060.02 Q 881.11 1048.92 878.34 1040.42"/><circle class="route-core" cx="881.11" cy="1048.92" r="3.92"/><path class="route-glyph" d="M 881.66 1054.01 L 878.25 1045.16 L 883.35 1044.76 Z"/><circle class="route-method-seed" cx="875.82" cy="1049.49" r="1.80"/><circle class="route-method-get" cx="881.11" cy="1048.92" r="0"/>      <title>GET /posts
+handler=posts_list
+module=examples/sigilo_web_system_35/modules/posts.cct
+middleware=trace
+route_id=posts.list
+route_hash=ed35b1910953b40b</title>
+    </g>
+    <g id="system_route_posts_show" class="system-node-wrap" data-route-id="posts.show" data-method="GET" data-path="/posts/:slug" data-module="examples/sigilo_web_system_35/modules/posts.cct" data-group="/posts">
+<circle class="route-shell" cx="854.18" cy="1034.60" r="11.18"/><path class="route-mid" d="M 853.39 1042.90 A 8.34 8.34 0 0 1 848.72 1028.29"/><path class="route-arc" d="M 857.92 1025.03 A 10.27 10.27 0 0 1 864.22 1032.40"/><path class="route-arc" d="M 854.38 1044.00 A 9.41 9.41 0 0 1 847.73 1041.45"/><path class="route-spoke" d="M 850.87 1036.52 Q 853.65 1033.49 846.55 1037.52"/><path class="route-spoke" d="M 857.86 1033.64 Q 854.59 1035.76 860.90 1032.13"/><path class="route-chord" d="M 844.44 1035.97 Q 854.29 1034.91 858.71 1026.66"/><circle class="route-core" cx="854.29" cy="1034.91" r="3.61"/><path class="route-glyph" d="M 849.79 1036.59 L 857.03 1031.46 L 858.46 1036.32 Z"/><circle class="route-method-seed" cx="852.54" cy="1030.22" r="1.84"/><circle class="route-method-get" cx="854.29" cy="1034.91" r="0"/>      <title>GET /posts/:slug
+handler=posts_show
+module=examples/sigilo_web_system_35/modules/posts.cct
+middleware=trace
+route_id=posts.show
+route_hash=3b968eeba33560f8</title>
+    </g>
+    <g id="system_route_posts_save" class="system-node-wrap" data-route-id="posts.save" data-method="POST" data-path="/posts/:slug/save" data-module="examples/sigilo_web_system_35/modules/posts.cct" data-group="/posts">
+<circle class="route-shell" cx="831.52" cy="1000.18" r="15.02"/><path class="route-mid" d="M 825.10 1007.81 A 9.98 9.98 0 0 1 828.42 990.69"/><path class="route-arc" d="M 819.79 1007.95 A 14.08 14.08 0 0 1 819.31 993.17"/><path class="route-spoke" d="M 826.37 999.04 Q 831.56 998.67 821.27 999.93"/><path class="route-spoke" d="M 832.83 995.93 Q 832.72 1001.09 837.78 991.58"/><path class="route-spoke" d="M 831.90 1002.86 Q 830.12 1000.74 835.53 1009.65"/><path class="route-chord" d="M 820.69 996.38 Q 830.40 999.13 839.74 993.20"/><circle class="route-core" cx="830.40" cy="999.13" r="3.83"/><path class="route-glyph" d="M 825.39 998.61 L 833.93 996.14 L 834.04 1001.99 Z"/><circle class="route-method-seed" cx="830.94" cy="993.93" r="1.33"/><circle class="route-method-post" cx="830.40" cy="999.13" r="0"/>      <title>POST /posts/:slug/save
+handler=posts_save
+module=examples/sigilo_web_system_35/modules/posts.cct
+middleware=auth,trace
+route_id=posts.save
+route_hash=ef76c78ae830f28a</title>
+    </g>
+    <g id="system_route_media_thumb" class="system-node-wrap" data-route-id="media.thumb" data-method="GET" data-path="/media/:id/thumb" data-module="examples/sigilo_web_system_35/modules/media.cct" data-group="/media">
+<circle class="route-shell" cx="242.56" cy="989.46" r="11.58"/><path class="route-mid" d="M 236.14 993.86 A 7.78 7.78 0 0 1 241.95 981.70"/><path class="route-arc" d="M 244.83 979.07 A 10.63 10.63 0 0 1 253.11 988.10"/><path class="route-arc" d="M 248.21 981.93 A 9.42 9.42 0 0 1 251.95 988.76"/><path class="route-spoke" d="M 238.51 987.35 Q 243.05 988.34 234.96 986.69"/><path class="route-spoke" d="M 245.57 990.88 Q 241.96 990.52 249.09 993.56"/><path class="route-chord" d="M 234.49 984.87 Q 242.13 988.94 249.99 985.16"/><circle class="route-core" cx="242.13" cy="988.94" r="3.77"/><path class="route-glyph" d="M 237.61 986.88 L 246.61 988.10 L 243.50 993.30 Z"/><circle class="route-method-seed" cx="244.27" cy="984.24" r="1.12"/><circle class="route-method-get" cx="242.13" cy="988.94" r="0"/>      <title>GET /media/:id/thumb
+handler=media_thumb
+module=examples/sigilo_web_system_35/modules/media.cct
+middleware=trace
+route_id=media.thumb
+route_hash=bd25533dd445e5d8</title>
+    </g>
+    <g id="system_route_media_upload" class="system-node-wrap" data-route-id="media.upload" data-method="POST" data-path="/media/upload" data-module="examples/sigilo_web_system_35/modules/media.cct" data-group="/media">
+<circle class="route-shell" cx="274.15" cy="945.06" r="11.97"/><path class="route-mid" d="M 266.16 944.07 A 8.05 8.05 0 0 1 277.36 937.68"/><path class="route-arc" d="M 270.67 953.99 A 9.58 9.58 0 0 1 264.59 944.40"/><path class="route-spoke" d="M 271.64 941.78 Q 275.23 944.42 269.43 937.07"/><path class="route-spoke" d="M 277.13 945.00 Q 274.11 946.33 283.00 945.30"/><path class="route-spoke" d="M 271.36 947.84 Q 273.13 944.32 269.98 950.70"/><path class="route-chord" d="M 269.36 936.80 Q 273.50 944.91 282.04 949.06"/><circle class="route-core" cx="273.50" cy="944.91" r="3.46"/><path class="route-glyph" d="M 271.32 940.79 L 277.67 945.78 L 272.06 948.92 Z"/><circle class="route-method-seed" cx="277.79" cy="942.63" r="1.40"/><circle class="route-method-post" cx="273.50" cy="944.91" r="0"/>      <title>POST /media/upload
+handler=media_upload
+module=examples/sigilo_web_system_35/modules/media.cct
+middleware=auth,trace
+route_id=media.upload
+route_hash=d2b384de042d01ea</title>
+    </g>
+    <g id="system_route_profile_show" class="system-node-wrap" data-route-id="profile.show" data-method="GET" data-path="/perfil" data-module="examples/sigilo_web_system_35/modules/profile.cct" data-group="/perfil">
+<circle class="route-shell" cx="120.62" cy="391.14" r="14.86"/><path class="route-mid" d="M 110.48 388.50 A 10.48 10.48 0 0 1 128.31 384.02"/><path class="route-arc" d="M 131.58 386.27 A 11.99 11.99 0 0 1 131.88 395.26"/><path class="route-arc" d="M 112.07 401.76 A 13.63 13.63 0 0 1 107.06 389.74"/><path class="route-spoke" d="M 120.66 385.24 Q 122.21 391.05 119.94 380.53"/><path class="route-spoke" d="M 121.20 395.63 Q 119.04 391.22 121.08 402.20"/><path class="route-chord" d="M 121.77 379.22 Q 120.95 390.44 126.92 400.50"/><circle class="route-core" cx="120.95" cy="390.44" r="4.95"/><path class="route-glyph" d="M 120.45 384.30 L 125.16 394.36 L 117.09 394.70 Z"/><circle class="route-method-seed" cx="127.29" cy="389.92" r="1.86"/><circle class="route-method-get" cx="120.95" cy="390.44" r="0"/>      <title>GET /perfil
+handler=profile_show
+module=examples/sigilo_web_system_35/modules/profile.cct
+middleware=auth,trace
+route_id=profile.show
+route_hash=c9a2fab88f9c8723</title>
+    </g>
+    <g id="system_route_profile_avatar" class="system-node-wrap" data-route-id="profile.avatar" data-method="POST" data-path="/perfil/avatar" data-module="examples/sigilo_web_system_35/modules/profile.cct" data-group="/perfil">
+<circle class="route-shell" cx="163.04" cy="413.81" r="12.93"/><path class="route-mid" d="M 161.20 405.22 A 8.78 8.78 0 0 1 170.80 417.89"/><path class="route-arc" d="M 156.51 405.77 A 10.35 10.35 0 0 1 164.44 403.55"/><path class="route-spoke" d="M 165.85 410.07 Q 163.94 414.91 169.34 408.40"/><path class="route-spoke" d="M 162.85 417.86 Q 161.62 414.02 164.40 423.90"/><path class="route-spoke" d="M 157.76 411.20 Q 163.61 412.50 153.51 410.60"/><path class="route-chord" d="M 170.35 406.59 Q 162.15 413.12 160.08 422.91"/><circle class="route-core" cx="162.15" cy="413.12" r="4.56"/><path class="route-glyph" d="M 166.54 409.39 L 161.35 418.42 L 156.84 413.88 Z"/><circle class="route-method-seed" cx="166.01" cy="417.66" r="1.07"/><circle class="route-method-post" cx="162.15" cy="413.12" r="0"/>      <title>POST /perfil/avatar
+handler=profile_avatar
+module=examples/sigilo_web_system_35/modules/profile.cct
+middleware=auth,trace
+route_id=profile.avatar
+route_hash=d6754c6c980b20d7</title>
+    </g>
+  </g>
+  <text class="module-label" x="24" y="30" font-size="14">CCT system sigilo (sigil-of-sigils) • b426e32a76129adb</text>
+  <text class="module-hash" x="24" y="50" font-size="10">entry=examples/sigilo_web_system_35/main.cct • modules=5 • imports=4 • calls=5 • type_refs=0</text>
+  <text class="module-hash" x="24" y="66" font-size="10">zoom: inline vector sub-sigils per module</text>
+<style><![CDATA[.bg{fill:#f6f0e6}.panel-bg{fill:#fbf8f2;stroke:#d4c9b9;stroke-width:1}.halo{fill:none;stroke:#dccfbf;stroke-width:1.1;opacity:.92}.halo-soft{fill:none;stroke:#ece2d5;stroke-width:.8;opacity:.78}.title{fill:#211812;font:600 18px monospace}.subtitle{fill:#5a5046;font:10px monospace}.hash{fill:#2a221c;font:10px monospace}.core{fill:#fffaf2;stroke:#786856;stroke-width:1.6}.core-mark{fill:none;stroke:#a39383;stroke-width:1.0;opacity:.95}.route-shell{fill:rgba(255,252,246,0.74);stroke:#5a4b3f;stroke-width:1.0}.route-mid{fill:none;stroke:#b9aa96;stroke-width:.9;opacity:.8}.route-arc{fill:none;stroke:#736252;stroke-width:.92;opacity:.86;stroke-linecap:round}.route-spoke{fill:none;stroke:#968471;stroke-width:.86;opacity:.8;stroke-linecap:round}.route-hit{fill:#5e4d3d}.span-link{fill:none;stroke:#776757;stroke-width:1.0;opacity:.72}.span-node{fill:#fbfaf6;stroke:#6c6256;stroke-width:1.0}.span-node-active{stroke:#3f6f9a;stroke-width:1.8}.span-node-pending{fill:#f2ede4;stroke:#b7a99a;opacity:.56}.span-node-hit{stroke:#5e4d3d;stroke-width:1.55}.span-core{fill:#efe5d6;stroke:#5e5143;stroke-width:1.1}.trace-orn{fill:none;stroke:#b9a895;stroke-width:.9;opacity:.62}.timeline-axis{fill:none;stroke:#8f8173;stroke-width:.8}.timeline-lane{fill:#f0e7da;stroke:#d5c8b5;stroke-width:.6}.timeline-row{fill:#f8f1e6;stroke:#dccfbe;stroke-width:.55}.timeline-bar{fill:#5f87af;opacity:.74}.timeline-bar-pending{fill:#d7ccbe;opacity:.52}.mapping-label{fill:#5a5046;font:10px monospace}.legend{fill:#40352c;font:10px monospace}.compare-divider{stroke:#d7cabb;stroke-width:1}.node-wrap,.edge-wrap,.timeline-entry{cursor:help}.timeline-entry:hover .timeline-bar,.timeline-entry:hover .timeline-bar-pending{opacity:.94;stroke:#2f261f;stroke-width:1.1}.node-wrap:hover .span-node,.node-wrap:hover .span-core{stroke:#2f261f;stroke-width:2.1}.route-flow{fill:none;stroke:#69584b;stroke-width:.95;opacity:.58}.step-marker{fill:#1e4f78}.step-rail{fill:none;stroke:#8f8173;stroke-width:1.2}.step-dot{fill:#efe4d4;stroke:#756657;stroke-width:1;cursor:pointer}.step-dot.active{fill:#1e4f78;stroke:#1e4f78}.step-knob{fill:#1e4f78;stroke:#fffaf2;stroke-width:1.2;cursor:grab}.step-knob.dragging{cursor:grabbing}.step-label{fill:#5a5046;font:10px monospace}.trace-caption-box{fill:rgba(255,250,242,0.92);stroke:#d6cabc;stroke-width:.9}.trace-caption-title{fill:#211812;font:600 14px monospace}.trace-caption-subtitle{fill:#5a5046;font:10px monospace}.focus-ring{fill:none;stroke:#35648c;stroke-width:1.2;stroke-dasharray:4 2}]]></style>
+<style><![CDATA[.legend-box{fill:#fffaf2;stroke:#d6cabc;stroke-width:.9}.legend-entry text{fill:#40352c;font:10px monospace}.legend-swatch{stroke-width:1}.slow{filter:drop-shadow(0 0 4px rgba(28,56,84,.18))}.error{stroke:#dc2626 !important;fill:#feecec !important}.pulse{filter:drop-shadow(0 0 3px rgba(28,56,84,.16))}.trace-packet{opacity:0;stroke:#fffaf2;stroke-width:1.1;filter:drop-shadow(0 0 3px rgba(28,56,84,.18))}.overlay-meta{font:10px monospace;fill:#5a5046}.cat-generic{stroke:#94a3b8}.timeline-bar.cat-generic{fill:#c4cfdb}.legend-swatch.cat-generic{fill:#eef2f6;stroke:#94a3b8}.trace-packet.cat-generic{fill:#94a3b8}.cat-handler{stroke:#4a90d9}.span-node.cat-handler,.span-core.cat-handler{stroke:#4a90d9;fill:#e9f3fd}.span-link.cat-handler,.route-flow.cat-handler{stroke:#4a90d9}.trace-packet.cat-handler{fill:#4a90d9}.timeline-bar.cat-handler,.legend-swatch.cat-handler{fill:#4a90d9;stroke:#4a90d9}.cat-middleware{stroke:#7bb3e8}.span-node.cat-middleware,.span-core.cat-middleware{stroke:#7bb3e8;fill:#edf7fd}.span-link.cat-middleware,.route-flow.cat-middleware{stroke:#7bb3e8}.trace-packet.cat-middleware{fill:#7bb3e8}.timeline-bar.cat-middleware,.legend-swatch.cat-middleware{fill:#7bb3e8;stroke:#7bb3e8}.span-link.cat-middleware,.route-flow.cat-middleware,.span-node.cat-middleware,.legend-swatch.cat-middleware{stroke-dasharray:4,2}.cat-sql{stroke:#2d9f5e}.span-node.cat-sql,.span-core.cat-sql{stroke:#2d9f5e;fill:#ebf8ef}.span-link.cat-sql,.route-flow.cat-sql{stroke:#2d9f5e}.trace-packet.cat-sql{fill:#2d9f5e}.timeline-bar.cat-sql,.legend-swatch.cat-sql{fill:#2d9f5e;stroke:#2d9f5e}.cat-sql{vector-effect:non-scaling-stroke}.cat-cache{stroke:#e07b39}.span-node.cat-cache,.span-core.cat-cache{stroke:#e07b39;fill:#fdf1e9}.span-link.cat-cache,.route-flow.cat-cache{stroke:#e07b39}.trace-packet.cat-cache{fill:#e07b39}.timeline-bar.cat-cache,.legend-swatch.cat-cache{fill:#e07b39;stroke:#e07b39}.cat-cache{vector-effect:non-scaling-stroke}.cat-storage{stroke:#8b5cf6}.span-node.cat-storage,.span-core.cat-storage{stroke:#8b5cf6;fill:#f2ebfe}.span-link.cat-storage,.route-flow.cat-storage{stroke:#8b5cf6}.trace-packet.cat-storage{fill:#8b5cf6}.timeline-bar.cat-storage,.legend-swatch.cat-storage{fill:#8b5cf6;stroke:#8b5cf6}.cat-transcode{stroke:#d946ef}.span-node.cat-transcode,.span-core.cat-transcode{stroke:#d946ef;fill:#fde9fe}.span-link.cat-transcode,.route-flow.cat-transcode{stroke:#d946ef}.trace-packet.cat-transcode{fill:#d946ef}.timeline-bar.cat-transcode,.legend-swatch.cat-transcode{fill:#d946ef;stroke:#d946ef}.span-link.cat-transcode,.route-flow.cat-transcode,.span-node.cat-transcode,.legend-swatch.cat-transcode{stroke-dasharray:6,2}.cat-email{stroke:#ca8a04}.span-node.cat-email,.span-core.cat-email{stroke:#ca8a04;fill:#fbf3db}.span-link.cat-email,.route-flow.cat-email{stroke:#ca8a04}.trace-packet.cat-email{fill:#ca8a04}.timeline-bar.cat-email,.legend-swatch.cat-email{fill:#ca8a04;stroke:#ca8a04}.cat-i18n{stroke:#06b6d4}.span-node.cat-i18n,.span-core.cat-i18n{stroke:#06b6d4;fill:#e4fbff}.span-link.cat-i18n,.route-flow.cat-i18n{stroke:#06b6d4}.trace-packet.cat-i18n{fill:#06b6d4}.timeline-bar.cat-i18n,.legend-swatch.cat-i18n{fill:#06b6d4;stroke:#06b6d4}.span-link.cat-i18n,.route-flow.cat-i18n,.span-node.cat-i18n,.legend-swatch.cat-i18n{stroke-dasharray:2,2}.cat-task{stroke:#6b7280}.span-node.cat-task,.span-core.cat-task{stroke:#6b7280;fill:#eef0f3}.span-link.cat-task,.route-flow.cat-task{stroke:#6b7280}.trace-packet.cat-task{fill:#6b7280}.timeline-bar.cat-task,.legend-swatch.cat-task{fill:#6b7280;stroke:#6b7280}.cat-error{stroke:#dc2626}.span-node.cat-error,.span-core.cat-error{stroke:#dc2626;fill:#feecec}.span-link.cat-error,.route-flow.cat-error{stroke:#dc2626}.trace-packet.cat-error{fill:#dc2626}.timeline-bar.cat-error,.legend-swatch.cat-error{fill:#dc2626;stroke:#dc2626}.cat-error{vector-effect:non-scaling-stroke}.cat-generic{stroke:#94a3b8}.span-node.cat-generic,.span-core.cat-generic{stroke:#94a3b8;fill:#eef2f6}.span-link.cat-generic,.route-flow.cat-generic{stroke:#94a3b8}.trace-packet.cat-generic{fill:#94a3b8}.timeline-bar.cat-generic,.legend-swatch.cat-generic{fill:#94a3b8;stroke:#94a3b8}]]></style>
+<g id="trace_caption"><rect class="trace-caption-box" x="18.00" y="18.00" width="338" height="46" rx="10"/><text class="trace-caption-title" x="30.00" y="36.00">trace sigilo-web-media-upload-39</text><text class="trace-caption-subtitle" x="30.00" y="50.00">spans=10 total=312ms mode=animated hash=b88cf64cf840abf6</text></g>
+<g id="trace_links">
+<path class="span-link cat-middleware" data-category="middleware" data-subcategory="middleware" d="M 273.50 944.91 Q 436.37 627.14 599.25 381.37" style="stroke-dasharray:650.91;stroke-dashoffset:650.91"><animate attributeName="stroke-dashoffset" from="650.91" to="0" begin="0.00s" dur="0.24s" fill="freeze"/></path>
+<circle class="trace-packet span-link cat-middleware" r="4.10"><animate attributeName="opacity" values="0;1;1;0" begin="0.00s" dur="0.24s" fill="freeze"/><animateMotion begin="0.00s" dur="0.24s" fill="freeze" path="M 273.50 944.91 Q 436.37 627.14 599.25 381.37"/></circle>
+<path class="span-link cat-middleware" data-category="middleware" data-subcategory="middleware" d="M 273.50 944.91 Q 243.03 692.23 212.55 511.54" style="stroke-dasharray:437.63;stroke-dashoffset:437.63"><animate attributeName="stroke-dashoffset" from="437.63" to="0" begin="0.00s" dur="0.24s" fill="freeze"/></path>
+<circle class="trace-packet span-link cat-middleware" r="4.10"><animate attributeName="opacity" values="0;1;1;0" begin="0.00s" dur="0.24s" fill="freeze"/><animateMotion begin="0.00s" dur="0.24s" fill="freeze" path="M 273.50 944.91 Q 243.03 692.23 212.55 511.54"/></circle>
+<path class="span-link cat-handler" data-category="handler" data-subcategory="handler" d="M 273.50 944.91 Q 569.43 690.01 865.36 507.11" style="stroke-dasharray:736.19;stroke-dashoffset:736.19"><animate attributeName="stroke-dashoffset" from="736.19" to="0" begin="0.00s" dur="0.29s" fill="freeze"/></path>
+<circle class="trace-packet span-link cat-handler" r="4.10"><animate attributeName="opacity" values="0;1;1;0" begin="0.00s" dur="0.29s" fill="freeze"/><animateMotion begin="0.00s" dur="0.29s" fill="freeze" path="M 273.50 944.91 Q 569.43 690.01 865.36 507.11"/></circle>
+<path class="span-link cat-storage" data-category="storage" data-subcategory="storage" d="M 865.36 507.11 Q 1002.87 350.47 1140.37 265.83" style="stroke-dasharray:365.85;stroke-dashoffset:365.85"><animate attributeName="stroke-dashoffset" from="365.85" to="0" begin="0.11s" dur="0.24s" fill="freeze"/></path>
+<circle class="trace-packet span-link cat-storage" r="4.10"><animate attributeName="opacity" values="0;1;1;0" begin="0.11s" dur="0.24s" fill="freeze"/><animateMotion begin="0.11s" dur="0.24s" fill="freeze" path="M 865.36 507.11 Q 1002.87 350.47 1140.37 265.83"/></circle>
+<path class="span-link cat-transcode" data-category="transcode" data-subcategory="transcode" d="M 865.36 507.11 Q 1007.81 354.97 1150.25 274.83" style="stroke-dasharray:367.58;stroke-dashoffset:367.58"><animate attributeName="stroke-dashoffset" from="367.58" to="0" begin="0.29s" dur="0.91s" fill="freeze"/></path>
+<circle class="trace-packet span-link cat-transcode" r="4.10"><animate attributeName="opacity" values="0;1;1;0" begin="0.29s" dur="0.91s" fill="freeze"/><animateMotion begin="0.29s" dur="0.91s" fill="freeze" path="M 865.36 507.11 Q 1007.81 354.97 1150.25 274.83"/></circle>
+<path class="span-link cat-sql pulse" data-category="sql" data-subcategory="query" d="M 865.36 507.11 Q 1014.91 358.77 1164.47 282.44" style="stroke-dasharray:374.08;stroke-dashoffset:374.08"><animate attributeName="stroke-dashoffset" from="374.08" to="0" begin="2.01s" dur="1.20s" fill="freeze"/></path>
+<circle class="trace-packet span-link cat-sql pulse" r="4.10"><animate attributeName="opacity" values="0;1;1;0" begin="2.01s" dur="1.20s" fill="freeze"/><animateMotion begin="2.01s" dur="1.20s" fill="freeze" path="M 865.36 507.11 Q 1014.91 358.77 1164.47 282.44"/></circle>
+<path class="span-link cat-task" data-category="task" data-subcategory="task" d="M 865.36 507.11 Q 1019.96 363.81 1174.56 292.51" style="stroke-dasharray:376.37;stroke-dashoffset:376.37"><animate attributeName="stroke-dashoffset" from="376.37" to="0" begin="2.84s" dur="1.20s" fill="freeze"/></path>
+<circle class="trace-packet span-link cat-task" r="4.10"><animate attributeName="opacity" values="0;1;1;0" begin="2.84s" dur="1.20s" fill="freeze"/><animateMotion begin="2.84s" dur="1.20s" fill="freeze" path="M 865.36 507.11 Q 1019.96 363.81 1174.56 292.51"/></circle>
+<path class="span-link cat-email" data-category="email" data-subcategory="send" d="M 865.36 507.11 Q 1028.66 366.90 1191.96 298.70" style="stroke-dasharray:387.43;stroke-dashoffset:387.43"><animate attributeName="stroke-dashoffset" from="387.43" to="0" begin="3.13s" dur="1.20s" fill="freeze"/></path>
+<circle class="trace-packet span-link cat-email" r="4.10"><animate attributeName="opacity" values="0;1;1;0" begin="3.13s" dur="1.20s" fill="freeze"/><animateMotion begin="3.13s" dur="1.20s" fill="freeze" path="M 865.36 507.11 Q 1028.66 366.90 1191.96 298.70"/></circle>
+<path class="span-link cat-cache pulse" data-category="cache" data-subcategory="cache" d="M 865.36 507.11 Q 1034.07 370.82 1202.79 306.53" style="stroke-dasharray:392.54;stroke-dashoffset:392.54"><animate attributeName="stroke-dashoffset" from="392.54" to="0" begin="3.38s" dur="1.20s" fill="freeze"/></path>
+<circle class="trace-packet span-link cat-cache pulse" r="4.10"><animate attributeName="opacity" values="0;1;1;0" begin="3.38s" dur="1.20s" fill="freeze"/><animateMotion begin="3.38s" dur="1.20s" fill="freeze" path="M 865.36 507.11 Q 1034.07 370.82 1202.79 306.53"/></circle>
+</g>
+<g id="trace_nodes">
+<g id="span-m1" class="node-wrap" data-depth="0" data-category="handler" data-subcategory="handler" data-route-id="media.upload"><circle class="span-core span-node-active cat-handler span-node-hit" data-category="handler" data-subcategory="handler" cx="273.50" cy="944.91" r="8.80" opacity="0.18"><animate attributeName="opacity" from="0.18" to="1" begin="0.00s" dur="0.18s" fill="freeze"/></circle><title>request.media_upload (312ms)
+route=media.upload
+{&quot;route_id&quot;:&quot;media.upload&quot;,&quot;http.method&quot;:&quot;POST&quot;,&quot;http.path&quot;:&quot;/media/upload&quot;,&quot;category&quot;:&quot;handler&quot;}</title></g>
+<g id="span-m2" class="node-wrap" data-depth="1" data-category="middleware" data-subcategory="middleware" data-module="examples/sigilo_web_system_35/modules/auth.cct"><circle class="span-node span-node-active cat-middleware" data-category="middleware" data-subcategory="middleware" cx="599.25" cy="381.37" r="12.41" opacity="0.18"><animate attributeName="opacity" from="0.18" to="1" begin="0.02s" dur="0.18s" fill="freeze"/></circle><title>middleware.auth (13ms)
+module=examples/sigilo_web_system_35/modules/auth.cct
+{&quot;middleware&quot;:&quot;auth&quot;,&quot;module&quot;:&quot;examples/sigilo_web_system_35/modules/auth.cct&quot;,&quot;handler&quot;:&quot;auth_login&quot;,&quot;category&quot;:&quot;middleware&quot;}</title></g>
+<g id="span-m3" class="node-wrap" data-depth="1" data-category="middleware" data-subcategory="middleware"><circle class="span-node span-node-active cat-middleware" data-category="middleware" data-subcategory="middleware" cx="212.55" cy="511.54" r="12.49" opacity="0.18"><animate attributeName="opacity" from="0.18" to="1" begin="0.22s" dur="0.18s" fill="freeze"/></circle><title>middleware.trace (4ms)
+{&quot;middleware&quot;:&quot;trace&quot;,&quot;category&quot;:&quot;middleware&quot;}</title></g>
+<g id="span-m4" class="node-wrap" data-depth="1" data-category="handler" data-subcategory="handler" data-route-id="media.upload" data-module="examples/sigilo_web_system_35/modules/media.cct"><circle class="span-node span-node-active cat-handler" data-category="handler" data-subcategory="handler" cx="865.36" cy="507.11" r="13.56" opacity="0.18"><animate attributeName="opacity" from="0.18" to="1" begin="0.29s" dur="0.18s" fill="freeze"/></circle><title>handler.media_upload (280ms)
+route=media.upload
+module=examples/sigilo_web_system_35/modules/media.cct
+{&quot;handler&quot;:&quot;media_upload&quot;,&quot;module&quot;:&quot;examples/sigilo_web_system_35/modules/media.cct&quot;,&quot;route_id&quot;:&quot;media.upload&quot;,&quot;category&quot;:&quot;handler&quot;}</title></g>
+<g id="span-m5" class="node-wrap" data-depth="2" data-category="storage" data-subcategory="storage" data-module="examples/sigilo_web_system_35/modules/media.cct"><circle class="span-node span-node-active cat-storage" data-category="storage" data-subcategory="storage" cx="1140.37" cy="265.83" r="11.39" opacity="0.18"><animate attributeName="opacity" from="0.18" to="1" begin="0.35s" dur="0.18s" fill="freeze"/></circle><title>storage.write.original (50ms)
+module=examples/sigilo_web_system_35/modules/media.cct
+{&quot;path&quot;:&quot;uploads/raw/upl-7842.mp4&quot;,&quot;module&quot;:&quot;examples/sigilo_web_system_35/modules/media.cct&quot;,&quot;category&quot;:&quot;storage&quot;}</title></g>
+<g id="span-m6" class="node-wrap" data-depth="2" data-category="transcode" data-subcategory="transcode" data-module="examples/sigilo_web_system_35/modules/media.cct"><circle class="span-node span-node-active cat-transcode" data-category="transcode" data-subcategory="transcode" cx="1150.25" cy="274.83" r="12.22" opacity="0.18"><animate attributeName="opacity" from="0.18" to="1" begin="1.20s" dur="0.18s" fill="freeze"/></circle><title>transcode.video_preview (123ms)
+module=examples/sigilo_web_system_35/modules/media.cct
+{&quot;preset&quot;:&quot;preview-720p&quot;,&quot;module&quot;:&quot;examples/sigilo_web_system_35/modules/media.cct&quot;,&quot;category&quot;:&quot;transcode&quot;}</title></g>
+<g id="span-m7" class="node-wrap" data-depth="2" data-category="sql" data-subcategory="query" data-module="examples/sigilo_web_system_35/modules/media.cct"><circle class="span-node span-node-active cat-sql pulse" data-category="sql" data-subcategory="query" cx="1164.47" cy="282.44" r="10.61" opacity="0.18"><animate attributeName="opacity" from="0.18" to="1" begin="3.21s" dur="0.18s" fill="freeze"/></circle><title>db.query.media_insert (50ms)
+module=examples/sigilo_web_system_35/modules/media.cct
+{&quot;query&quot;:&quot;media.insert&quot;,&quot;module&quot;:&quot;examples/sigilo_web_system_35/modules/media.cct&quot;,&quot;category&quot;:&quot;sql&quot;}</title></g>
+<g id="span-m8" class="node-wrap" data-depth="2" data-category="task" data-subcategory="task" data-module="examples/sigilo_web_system_35/modules/media.cct"><circle class="span-node span-node-active cat-task" data-category="task" data-subcategory="task" cx="1174.56" cy="292.51" r="12.77" opacity="0.18"><animate attributeName="opacity" from="0.18" to="1" begin="4.04s" dur="0.18s" fill="freeze"/></circle><title>task.enqueue.virus_scan (16ms)
+module=examples/sigilo_web_system_35/modules/media.cct
+{&quot;queue&quot;:&quot;virus-scan&quot;,&quot;module&quot;:&quot;examples/sigilo_web_system_35/modules/media.cct&quot;,&quot;category&quot;:&quot;task&quot;}</title></g>
+<g id="span-m9" class="node-wrap" data-depth="2" data-category="email" data-subcategory="send" data-module="examples/sigilo_web_system_35/modules/media.cct"><circle class="span-node span-node-active cat-email" data-category="email" data-subcategory="send" cx="1191.96" cy="298.70" r="10.39" opacity="0.18"><animate attributeName="opacity" from="0.18" to="1" begin="4.33s" dur="0.18s" fill="freeze"/></circle><title>email.send.creator_notice (14ms)
+module=examples/sigilo_web_system_35/modules/media.cct
+{&quot;template&quot;:&quot;media-uploaded&quot;,&quot;module&quot;:&quot;examples/sigilo_web_system_35/modules/media.cct&quot;,&quot;category&quot;:&quot;email&quot;}</title></g>
+<g id="span-m10" class="node-wrap" data-depth="2" data-category="cache" data-subcategory="cache" data-module="examples/sigilo_web_system_35/modules/media.cct"><circle class="span-node span-node-active cat-cache pulse" data-category="cache" data-subcategory="cache" cx="1202.79" cy="306.53" r="11.08" opacity="0.18"><animate attributeName="opacity" from="0.18" to="1" begin="4.58s" dur="0.18s" fill="freeze"/></circle><title>cache.invalidate.thumb (8ms)
+module=examples/sigilo_web_system_35/modules/media.cct
+{&quot;cache.key&quot;:&quot;thumb:upl-7842&quot;,&quot;module&quot;:&quot;examples/sigilo_web_system_35/modules/media.cct&quot;,&quot;category&quot;:&quot;cache&quot;}</title></g>
+</g>
+<g transform="translate(1233.09 78.00)"><g id="legend"><rect class="legend-box" x="0" y="0" width="126" height="144.00" rx="10"/><text class="legend" x="10" y="13">legend</text><g class="legend-entry" data-category="handler"><rect class="legend-swatch cat-handler" x="9" y="17.00" width="12" height="8" rx="2"/><text x="28" y="24.00">Handler</text></g><g class="legend-entry" data-category="middleware"><rect class="legend-swatch cat-middleware" x="9" y="32.00" width="12" height="8" rx="2"/><text x="28" y="39.00">Middleware</text></g><g class="legend-entry" data-category="storage"><rect class="legend-swatch cat-storage" x="9" y="47.00" width="12" height="8" rx="2"/><text x="28" y="54.00">Storage</text></g><g class="legend-entry" data-category="transcode"><rect class="legend-swatch cat-transcode" x="9" y="62.00" width="12" height="8" rx="2"/><text x="28" y="69.00">Transcode</text></g><g class="legend-entry" data-category="sql"><rect class="legend-swatch cat-sql" x="9" y="77.00" width="12" height="8" rx="2"/><text x="28" y="84.00">SQL</text></g><g class="legend-entry" data-category="task"><rect class="legend-swatch cat-task" x="9" y="92.00" width="12" height="8" rx="2"/><text x="28" y="99.00">Task</text></g><g class="legend-entry" data-category="email"><rect class="legend-swatch cat-email" x="9" y="107.00" width="12" height="8" rx="2"/><text x="28" y="114.00">Email</text></g><g class="legend-entry" data-category="cache"><rect class="legend-swatch cat-cache" x="9" y="122.00" width="12" height="8" rx="2"/><text x="28" y="129.00">Cache</text></g></g></g>
+<g id="timeline">
+<rect class="timeline-lane" x="22.00" y="1143.03" width="440.00" height="92.00" rx="12"/>
+<path class="timeline-axis" d="M 94.00 1223.03 L 452.00 1223.03"/>
+<text class="mapping-label" x="30.00" y="1166.36">depth 0</text>
+<rect class="timeline-row" x="94.00" y="1155.03" width="358.00" height="17.67" rx="7"/>
+<text class="mapping-label" x="30.00" y="1191.03">depth 1</text>
+<rect class="timeline-row" x="94.00" y="1179.70" width="358.00" height="17.67" rx="7"/>
+<text class="mapping-label" x="30.00" y="1215.70">depth 2</text>
+<rect class="timeline-row" x="94.00" y="1204.36" width="358.00" height="17.67" rx="7"/>
+<g id="timeline-span-m1" class="timeline-entry" data-category="handler" data-subcategory="handler"><rect class="timeline-bar cat-handler" data-category="handler" data-subcategory="handler" x="94.00" y="1157.03" height="14.67" rx="5" width="0"><animate attributeName="width" from="0" to="358.00" begin="0.00s" dur="5.00s" fill="freeze"/></rect><title>request.media_upload
+depth=0
+start=4000us
+end=4312us
+duration=312us</title></g>
+<g id="timeline-span-m2" class="timeline-entry" data-category="middleware" data-subcategory="middleware"><rect class="timeline-bar cat-middleware" data-category="middleware" data-subcategory="middleware" x="95.15" y="1181.70" height="14.67" rx="5" width="0"><animate attributeName="width" from="0" to="14.92" begin="0.02s" dur="0.21s" fill="freeze"/></rect><title>middleware.auth
+depth=1
+start=4001us
+end=4014us
+duration=13us</title></g>
+<g id="timeline-span-m3" class="timeline-entry" data-category="middleware" data-subcategory="middleware"><rect class="timeline-bar cat-middleware" data-category="middleware" data-subcategory="middleware" x="110.06" y="1181.70" height="14.67" rx="5" width="0"><animate attributeName="width" from="0" to="4.59" begin="0.22s" dur="0.20s" fill="freeze"/></rect><title>middleware.trace
+depth=1
+start=4014us
+end=4018us
+duration=4us</title></g>
+<g id="timeline-span-m4" class="timeline-entry" data-category="handler" data-subcategory="handler"><rect class="timeline-bar cat-handler" data-category="handler" data-subcategory="handler" x="114.65" y="1181.70" height="14.67" rx="5" width="0"><animate attributeName="width" from="0" to="321.28" begin="0.29s" dur="4.49s" fill="freeze"/></rect><title>handler.media_upload
+depth=1
+start=4018us
+end=4298us
+duration=280us</title></g>
+<g id="timeline-span-m5" class="timeline-entry" data-category="storage" data-subcategory="storage"><rect class="timeline-bar cat-storage" data-category="storage" data-subcategory="storage" x="119.24" y="1206.36" height="14.67" rx="5" width="0"><animate attributeName="width" from="0" to="57.37" begin="0.35s" dur="0.80s" fill="freeze"/></rect><title>storage.write.original
+depth=2
+start=4022us
+end=4072us
+duration=50us</title></g>
+<g id="timeline-span-m6" class="timeline-entry" data-category="transcode" data-subcategory="transcode"><rect class="timeline-bar cat-transcode" data-category="transcode" data-subcategory="transcode" x="180.06" y="1206.36" height="14.67" rx="5" width="0"><animate attributeName="width" from="0" to="141.13" begin="1.20s" dur="1.97s" fill="freeze"/></rect><title>transcode.video_preview
+depth=2
+start=4075us
+end=4198us
+duration=123us</title></g>
+<g id="timeline-span-m7" class="timeline-entry" data-category="sql" data-subcategory="query"><rect class="timeline-bar cat-sql pulse" data-category="sql" data-subcategory="query" x="323.49" y="1206.36" height="14.67" rx="5" width="0"><animate attributeName="width" from="0" to="57.37" begin="3.21s" dur="0.80s" fill="freeze"/></rect><title>db.query.media_insert
+depth=2
+start=4200us
+end=4250us
+duration=50us</title></g>
+<g id="timeline-span-m8" class="timeline-entry" data-category="task" data-subcategory="task"><rect class="timeline-bar cat-task" data-category="task" data-subcategory="task" x="383.15" y="1206.36" height="14.67" rx="5" width="0"><animate attributeName="width" from="0" to="18.36" begin="4.04s" dur="0.26s" fill="freeze"/></rect><title>task.enqueue.virus_scan
+depth=2
+start=4252us
+end=4268us
+duration=16us</title></g>
+<g id="timeline-span-m9" class="timeline-entry" data-category="email" data-subcategory="send"><rect class="timeline-bar cat-email" data-category="email" data-subcategory="send" x="403.81" y="1206.36" height="14.67" rx="5" width="0"><animate attributeName="width" from="0" to="16.06" begin="4.33s" dur="0.22s" fill="freeze"/></rect><title>email.send.creator_notice
+depth=2
+start=4270us
+end=4284us
+duration=14us</title></g>
+<g id="timeline-span-m10" class="timeline-entry" data-category="cache" data-subcategory="cache"><rect class="timeline-bar cat-cache pulse" data-category="cache" data-subcategory="cache" x="422.17" y="1206.36" height="14.67" rx="5" width="0"><animate attributeName="width" from="0" to="9.18" begin="4.58s" dur="0.20s" fill="freeze"/></rect><title>cache.invalidate.thumb
+depth=2
+start=4286us
+end=4294us
+duration=8us</title></g>
+</g>
+</svg>

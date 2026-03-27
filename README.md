@@ -13,9 +13,9 @@ CCT is a compiled, ritual-themed programming language with deterministic sigil g
 
 ## Status
 
-**Current status: FASE 31 completed** (bootstrap, multi-stage self-hosting, operational self-hosted workflows, and promotion of the self-hosted compiler to the default user-facing path are now closed on the validated baseline).
+**Current status: FASE 39 completed** (security/cryptography, advanced text and parsing, logging and runtime diagnostics, Sigilo Vivo foundations, operational database, transactional mail, runtime instrumentation, and trace visualization are now closed on the validated baseline).
 
-Implemented phases: **0 -> 31**, plus the interstitial **FASE 14T** closure.
+Implemented phases: **0 -> 39**, plus the interstitial **FASE 14T** closure.
 
 **Phase-reference convention:** phase labels found in file/module headers, local markers, or help text may refer to the phase in which that specific component was introduced or stabilized. They are historical markers and do not necessarily represent the current global project status shown above.
 
@@ -68,6 +68,14 @@ Highlights of the current baseline:
 - FASE 30 operational closure: self-hosted project workflows, mature `csv` / `https` / `orm_lite`, and final operational handoff
 - FASE 31 promotion closure: `./cct` is now the default wrapper, with `./cct-host` and `./cct-selfhost` exposed explicitly and `./cct --which-compiler` reporting the active mode
 - Aggregated whole-project validation now extends through promotion with `make test-all-0-31` and `make test-phase31-final`
+- FASE 32 security/media: `cct/crypto` (SHA-256/512, HMAC, PBKDF2, CSPRNG), `cct/encoding` (base64, hex, URL, HTML), `cct/regex`, `cct/date`/`cct/datetime`, `cct/toml`, `cct/compress` (gzip), `cct/filetype`, `cct/media_probe`, `cct/image_ops`, `cct/text_lang`
+- FASE 33 text and parsing: `cct/verbum` expansion (split/join, predicates, pad, repeat, regex-split), `cct/lexer_util`, `cct/uuid` (v4/v7), `cct/slug`, `cct/gettext`, `cct/form_codec`
+- FASE 34 observability: `cct/log` (structured, sinks, rate-limiting), `cct/trace` (spans, `.ctrace` format), `cct/metrics` (counter/gauge/histogram, Prometheus export), `cct/signal`, `cct/fs_watch`, `cct/audit`
+- FASE 35 Sigilo Vivo foundations: route structural metadata, web-focused navigable SVG, `.ctrace` viewer CLI (`cct sigilo trace view`), external framework manifests (`.system.sigil`)
+- FASE 36 operational database: `cct/db_postgres` (prepared statements, LISTEN/NOTIFY, JSONB/ARRAY/UUID), `cct/db_postgres_search` (FTS builders, GIN index), `cct/redis` (strings/hashes/lists/sets/pub-sub, raw RESP escape hatch), `cct/db_postgres_lock` (advisory locks, try-lock, lock-with)
+- FASE 37 transactional mail: `cct/mail` (SMTP with PLAIN/LOGIN/STARTTLS/SMTPS, file/memory backends), `cct/mail_spool` (persistent queue with exponential-backoff retry), `cct/mail_webhook` (delivery/bounce/complaint normalization for Mailgun/SendGrid)
+- FASE 38 runtime instrumentation: `cct/instrument` (span emission by category: DB/CACHE/STORAGE/MAIL/TASK/HTTP; off-by-default, zero overhead when inactive), `cct/context_local` (request/task-scoped key-value store for `request_id`, `trace_id`, `user_id`, `locale`, `route_id`)
+- FASE 39 trace visualization: animated SVG renderer overlaying `.ctrace` onto route sigil (timeline, step-by-step, comparison mode), operational category overlay system with stable color palette and exportable CSS (`cct sigilo trace render`, `cct sigilo trace compare`)
 
 ## Documentation
 
@@ -76,8 +84,8 @@ CCT documentation is organized by audience and purpose. Choose your reading path
 ### For New Users (Start Here)
 1. This README (you're reading it!)
 2. [Installation Guide](docs/install.md) - Setup and verification
-3. [Current Release Status Through FASE 31](docs/release/STATUS_0_31.md) - Current validated baseline at a glance
-4. [FASE 31 Release Notes](docs/release/FASE_31_RELEASE_NOTES.md) - Current compiler-promotion closure summary
+3. [Current Release Status Through FASE 31](docs/release/STATUS_0_31.md) - Compiler and bootstrap validated baseline at a glance
+4. [FASE 39 Release Notes](docs/release/FASE_39_RELEASE_NOTES.md) - Trace visualization closure summary
 5. [Spec - Sections 1-3, 12](docs/spec.md) - Basic syntax and examples
 6. [Project Conventions](docs/project_conventions.md) - Code organization
 7. [Examples Catalog](examples/README.md) - Runnable examples including the FASE 20 app stack
@@ -90,7 +98,8 @@ CCT documentation is organized by audience and purpose. Choose your reading path
 3. [FLUXUS Usage](docs/fluxus_usage.md) - Dynamic vectors in depth
 4. [Build System](docs/build_system.md) - Project workflow
 5. [Mail Configuration Guide](docs/mail_configuration.md) - How CCT applications should configure SMTP/file/memory backends
-6. [Self-Hosting Guide](docs/self_hosting.md) - Bootstrap, promotion, and operational modes
+6. [Trace Capture Guide](docs/trace_capture.md) - Live request capture windows and `.ctrace` export for Sigilo replay
+7. [Self-Hosting Guide](docs/self_hosting.md) - Bootstrap, promotion, and operational modes
 7. Explore `examples/showcase_stdlib_*.cct` for real-world patterns
 8. Explore `examples/*_20f2.cct` for JSON/network/HTTP/config/SQLite flows
 
@@ -108,6 +117,14 @@ CCT documentation is organized by audience and purpose. Choose your reading path
 2. [Roadmap](docs/roadmap.md) - Phase history and future plans
 3. [Release Status Through FASE 31](docs/release/STATUS_0_31.md) - Current cross-phase validation and release baseline
 4. [Release Documentation](docs/release/):
+   - [FASE 39 Release Notes](docs/release/FASE_39_RELEASE_NOTES.md) - Trace visualization closure summary
+   - [FASE 38 Release Notes](docs/release/FASE_38_RELEASE_NOTES.md) - Runtime instrumentation closure summary
+   - [FASE 37 Release Notes](docs/release/FASE_37_RELEASE_NOTES.md) - Transactional mail closure summary
+   - [FASE 36 Release Notes](docs/release/FASE_36_RELEASE_NOTES.md) - Operational database closure summary
+   - [FASE 35 Release Notes](docs/release/FASE_35_RELEASE_NOTES.md) - Sigilo Vivo foundations closure summary
+   - [FASE 34 Release Notes](docs/release/FASE_34_RELEASE_NOTES.md) - Logging and runtime diagnostics closure summary
+   - [FASE 33 Release Notes](docs/release/FASE_33_RELEASE_NOTES.md) - Advanced text and parsing closure summary
+   - [FASE 32 Release Notes](docs/release/FASE_32_RELEASE_NOTES.md) - Security, cryptography, and media closure summary
    - [FASE 31 Release Notes](docs/release/FASE_31_RELEASE_NOTES.md) - Self-hosted compiler promotion closure summary
    - [FASE 30 Release Notes](docs/release/FASE_30_RELEASE_NOTES.md) - Operational self-hosted platform closure summary
    - [FASE 29 Release Notes](docs/release/FASE_29_RELEASE_NOTES.md) - Self-host convergence and identity-validation summary
@@ -148,7 +165,7 @@ Primary docs:
 - `docs/bibliotheca_canonica.md`
 - `docs/release/STATUS_0_31.md` — current cross-phase release status index
 - `docs/release/STATUS_0_30.md` — historical pre-promotion release status snapshot
-- `docs/release/` — phase release-note archive through FASE 31
+- `docs/release/` — phase release-note archive through FASE 39
 
 Tooling and guides:
 - `docs/install.md`
@@ -169,9 +186,19 @@ Project and phase dossiers:
 
 ## Release Documentation Packages
 
-The current project baseline is **FASE 31 completed**. Historical and bootstrap-era release packages remain available for traceability, migration references, and operational handoff.
+The current project baseline is **FASE 39 completed**. Historical and bootstrap-era release packages remain available for traceability, migration references, and operational handoff.
 
-**Current-phase release documentation:**
+**Current-phase release documentation (32-39):**
+- `docs/release/FASE_39_RELEASE_NOTES.md` — trace visualization (animated SVG renderer, operational category overlays)
+- `docs/release/FASE_38_RELEASE_NOTES.md` — runtime instrumentation (`instrument`, `context_local`)
+- `docs/release/FASE_37_RELEASE_NOTES.md` — transactional mail (`mail`, `mail_spool`, `mail_webhook`)
+- `docs/release/FASE_36_RELEASE_NOTES.md` — operational database (`db_postgres`, `db_postgres_search`, `redis`, `db_postgres_lock`)
+- `docs/release/FASE_35_RELEASE_NOTES.md` — Sigilo Vivo foundations (route metadata, navigable SVG, `.ctrace` viewer, framework manifests)
+- `docs/release/FASE_34_RELEASE_NOTES.md` — logging and diagnostics (`log`, `trace`, `metrics`, `signal`, `fs_watch`, `audit`)
+- `docs/release/FASE_33_RELEASE_NOTES.md` — advanced text and parsing (`verbum` expansion, `lexer_util`, `uuid`, `slug`, `gettext`, `form_codec`)
+- `docs/release/FASE_32_RELEASE_NOTES.md` — security, cryptography, and media (10 modules)
+
+**Bootstrap and promotion release documentation (21-31):**
 - `docs/release/FASE_31_RELEASE_NOTES.md` — compiler-promotion and wrapper-mode closure summary
 - `docs/release/FASE_30_RELEASE_NOTES.md` — operational self-hosted platform closure summary
 - `docs/release/FASE_29_RELEASE_NOTES.md` — self-hosting convergence and stage-identity closure summary
@@ -203,10 +230,11 @@ The current project baseline is **FASE 31 completed**. Historical and bootstrap-
 - FASE 21-29 closed the bootstrap compiler stack through self-host convergence
 - FASE 30 closed the operational self-host platform baseline
 - FASE 31 closed promotion of the self-hosted compiler to the default path
-- `make test-all-0-31` is the authoritative whole-project validation path
+- FASE 32-39 closed the standard library expansion through security, text, observability, Sigilo Vivo, database, mail, instrumentation, and trace visualization
+- `make test-all-0-31` remains the authoritative whole-project validation path for the compiler and bootstrap layers
 - Zero silent-breaking-change policy remains active
 
-See `docs/roadmap.md`, `docs/spec.md`, and `docs/release/STATUS_0_31.md` for current-phase status and language-surface details.
+See `docs/roadmap.md`, `docs/spec.md`, and `docs/release/STATUS_0_31.md` for compiler baseline details.
 
 ## Phase Closure Summary (16-31)
 
@@ -237,6 +265,60 @@ See `docs/roadmap.md`, `docs/spec.md`, and `docs/release/STATUS_0_31.md` for cur
 - 21-28: bootstrap compiler foundations through advanced parser, semantic, and codegen closure
 - 29: stage0/stage1/stage2 self-host convergence and identity validation
 - 30: operational self-host workflows, mature application-library subset, and final operational handoff
+
+### FASE 32 (Security, Cryptography, and Media)
+- `cct/crypto`: SHA-256/512, HMAC-SHA256/512, PBKDF2, CSPRNG, constant-time comparison
+- `cct/encoding`: base64 (standard and URL-safe), hex, URL percent-encoding, HTML entities
+- `cct/regex`: compile, match, search, find-all, replace, split; flags: case-insensitive, multiline, dotall
+- `cct/date` / `cct/datetime`: ISO 8601 parsing, formatting, `add_days`/`add_months`, timezone, Unix timestamps
+- `cct/toml`: file/string parsing, table/array/scalar access, environment variable overlay
+- `cct/compress`: gzip compression and decompression via zlib
+- `cct/filetype`: magic-byte detection (image, video, audio, document, text)
+- `cct/media_probe`: codec, resolution, FPS, bitrate, duration via ffprobe
+- `cct/image_ops`: load, save, resize, crop, rotate, format conversion (JPEG/PNG/GIF/BMP/WebP)
+- `cct/text_lang`: automatic language detection for 10 languages via n-gram analysis
+
+### FASE 33 (Advanced Text and Parsing)
+- `cct/verbum` expansion: `split`/`join`, `starts_with`/`ends_with`/`contains`, `repeat`, `pad_left`/`pad_right`, `trim` variants, case conversion, regex split/replace
+- `cct/lexer_util`: generic scanner with position tracking, `consume`/`peek`/`skip_whitespace`, error reporting with source context
+- `cct/uuid`: UUID v4 (random), v7 (timestamp-ordered), parse, validate, string/byte conversion
+- `cct/slug`: accent normalization, lowercase, hyphen-separated; `slug_unique` with suffix guarantee
+- `cct/gettext`: translation catalogs by locale, singular/plural, fallback to default locale
+- `cct/form_codec`: `application/x-www-form-urlencoded` parse/encode, multi-value query strings, correct percent-encoding
+
+### FASE 34 (Logging and Runtime Diagnostics)
+- `cct/log`: levels DEBUG→CRITICAL, sinks (stderr/file/callback), JSON format, rate limiting, per-module level inheritance
+- `cct/trace`: `trace_open`/`trace_close`/`trace_attr`, automatic parent-child hierarchy, `.ctrace` JSON Lines serialization, `trace_read`/`trace_write`
+- `cct/metrics`: counter/gauge/histogram with labels, in-memory registry, Prometheus text export, JSON export
+- `cct/signal`: SIGTERM/SIGINT/SIGHUP capture, cooperative shutdown callbacks, `signal_poll`/`signal_wait_any`
+- `cct/fs_watch`: create/modify/remove/move events, debounce, inotify (Linux) / kqueue (macOS) / polling fallback
+- `cct/audit`: append-only JSON Lines with timestamp and sequence number, optional hash chaining, configurable flush policy
+
+### FASE 35 (Sigilo Vivo: Foundations)
+- Route structural metadata: `SigilRoute`, `SigilGroup`, `SigilMiddleware`, `SigilHandler` entities; additive serialization into `.sigil`
+- Web-focused navigable SVG: HTTP method badges, middleware chains, endpoint grouping; `cct sigilo routes list/show`
+- `.ctrace` format: JSON Lines one span per line, tolerant and strict parsers; `cct sigilo trace view` (terminal tree + flat timeline), `cct sigilo trace export` (SVG)
+- External framework manifests (`.system.sigil`): routes/middleware/pages/tasks without compiler coupling; `cct sigilo manifest validate/merge`
+
+### FASE 36 (Operational Database)
+- `cct/db_postgres`: `postgres_open`/`prepare`/`bind_*`/`step`/`column_*`/`finalize`/`close`; transactions; LISTEN/NOTIFY; JSONB/ARRAY/UUID types; API parity with `db_sqlite`
+- `cct/db_postgres_search`: FTS query/rank/headline builders (no string concatenation), `to_tsquery`/`ts_rank`/`ts_headline` SQL fragments, GIN index helpers
+- `cct/redis`: strings (TTL), hashes, lists, sets, pub/sub; `redis_raw` RESP escape hatch; DSN format `redis://[:pass@]host:port[/db]`
+- `cct/db_postgres_lock`: named advisory locks, blocking acquire/try-lock, session and transaction scope, `postgres_lock_with` closure pattern
+
+### FASE 37 (Transactional Mail)
+- `cct/mail`: message building (headers, attachments, inline, text+HTML multipart); SMTP backends PLAIN/LOGIN/STARTTLS/SMTPS; file backend (writes `.eml`); memory backend (`mail_memory_drain` for tests)
+- `cct/mail_spool`: PENDING→SENT/FAILED→DEAD state machine; JSON Lines persistence; exponential-backoff retry; `mail_spool_drain_memory`, `mail_spool_retry_dead`
+- `cct/mail_webhook`: normalized events (delivered/bounce/complaint/open/click) across Mailgun/SendGrid; `mail_headers_parse` (RFC 5322); `mail_mime_scan` (multipart boundary detection)
+
+### FASE 38 (Runtime Instrumentation)
+- `cct/instrument`: `instrument_open`/`close`/`attr`; categories CALL/DB/CACHE/MAIL/STORAGE/TASK/HTTP/CUSTOM; span_id 0 as no-op sentinel; off by default (`CCT_INSTRUMENT=1` or `instrument_set_mode("active")`); `instrument_flush` writes `.ctrace`
+- `cct/context_local`: `ctx_set`/`ctx_get`/`ctx_has`/`ctx_clear`/`ctx_reset`; well-known keys: `request_id`, `trace_id`, `user_id`, `locale`, `route_id`, `task_id`; integrates with `cct/log` and `cct/instrument` for automatic context annotation
+
+### FASE 39 (Trace Visualization)
+- Animated SVG renderer (`src/sigilo/trace_render.c`): renders `.ctrace` over route sigil; timeline per depth lane; CSS `@keyframes` animation; step-by-step mode; comparison mode with `data-delta-us`; unresolved spans in dedicated chamber
+- Operational category overlays (`src/sigilo/trace_overlay.c`): 11 categories (SQL/cache/storage/transcode/mail/i18n/task/HTTP/auth/error/unknown); stable color palette; heuristic name-prefix inference; `span-slow` marking (>2× median); exportable CSS and SVG legend
+- New CLI subcommands: `cct sigilo trace render`, `cct sigilo trace render --step N`, `cct sigilo trace compare`
 
 ### FASE 31 (Compiler Modes and Entrypoints)
 
@@ -494,7 +576,7 @@ FASE 13 release package (FASE 13D.4):
 FASE 13M addendum package (FASE 13M.B2):
 - details were consolidated into historical internal release records
 
-## Extended Validation Matrix (Post-FASE-30 / Post-FASE-31)
+## Extended Validation Matrix (Post-FASE-30 / Post-FASE-31 / Post-FASE-39)
 
 The historical `make test` path is no longer the only meaningful repository gate. CCT now maintains explicit validation layers:
 
@@ -512,7 +594,7 @@ make test-phase31-final
 ```
 
 Meaning:
-- `make test`: current default repository runner
+- `make test`: current default repository runner — includes FASE 32-39 integration tests
 - `make test-legacy-full`: frozen historical legacy suite for phases 0-20
 - `make test-legacy-rebased`: legacy 0-20 expectations rebased to the current compiler behavior
 - `make test-all-0-30`: authoritative aggregated validation across the pre-promotion operational baseline
@@ -520,10 +602,12 @@ Meaning:
 - `make test-bootstrap-selfhost`: multi-stage self-host convergence (`29`)
 - `make test-phase30-final`: operational self-hosted platform gate (`30`)
 - `make test-host-legacy`: explicit host-path regression coverage retained after promotion
-- `make test-all-0-31`: authoritative aggregated validation across all implemented phases including compiler promotion
+- `make test-all-0-31`: authoritative aggregated validation across the compiler and bootstrap layers (phases 0-31)
 - `make test-phase31-final`: compiler-promotion and wrapper-mode gate (`31`)
 
-For publication, release gating, or major refactors, `make test-all-0-31` is the correct whole-project validation entrypoint.
+FASE 32-39 integration tests run as part of `make test`. Modules requiring live backends (PostgreSQL, Redis, SMTP) skip gracefully when the corresponding environment variables are absent.
+
+For publication, release gating, or major refactors, run both `make test-all-0-31` (compiler/bootstrap gate) and `make test` (full suite including stdlib phases 32-39).
 
 ## Self-Hosted Operational Workflow (Current Baseline)
 
@@ -853,6 +937,26 @@ The application-library maturity work extended the canonical library with:
 
 These modules are documented in the language manual and are exercised by the phase-30 operational examples.
 
+The FASE 32-39 standard library expansion added:
+
+**Security and encodings:** `cct/crypto`, `cct/encoding`
+
+**Data formats:** `cct/regex`, `cct/date`, `cct/toml`, `cct/compress`, `cct/filetype`
+
+**Media:** `cct/media_probe`, `cct/image_ops`, `cct/text_lang`
+
+**Text and parsing:** `cct/verbum` (expansion), `cct/lexer_util`, `cct/uuid`, `cct/slug`, `cct/gettext`, `cct/form_codec`
+
+**Observability:** `cct/log`, `cct/trace`, `cct/metrics`, `cct/signal`, `cct/fs_watch`, `cct/audit`
+
+**Database:** `cct/db_postgres`, `cct/db_postgres_search`, `cct/redis`, `cct/db_postgres_lock`
+
+**Mail:** `cct/mail`, `cct/mail_spool`, `cct/mail_webhook`
+
+**Instrumentation:** `cct/instrument`, `cct/context_local`
+
+All FASE 32-39 modules are host-only. Freestanding use is rejected at compile time with a clear diagnostic. Modules requiring a live backend (PostgreSQL, Redis, SMTP) skip their integration tests when the relevant environment variables are absent (`DATABASE_URL`, `REDIS_URL`, `SMTP_HOST`).
+
 ## Canonical Showcases (Introduced in FASE 11G)
 
 Run canonical showcase programs:
@@ -904,12 +1008,16 @@ References:
 ## Repository Layout
 
 - `src/`: compiler implementation
-  - `lexer/`, `parser/`, `semantic/`, `codegen/`, `sigilo/`, `module/`, `runtime/`, `cli/`, `common/`
+  - `lexer/`, `parser/`, `semantic/`, `codegen/`, `module/`, `runtime/`, `cli/`, `common/`
+  - `sigilo/`: sigil generation, route metadata, trace renderer (`trace_render.c`, `trace_overlay.c`)
+  - `runtime/`: standard library C bridges including `runtime_postgres.c`, `runtime_mail.c`
+- `lib/cct/`: Bibliotheca Canonica — standard library CCT source files
 - `tests/`: integration and phase regression suite
 - `examples/`: language examples
 - `docs/`: specification, architecture, roadmap, release records, and operational guides
+- `docs/release/`: phase release notes through FASE 39
 - `docs/bootstrap/`: bootstrap handoff and promotion-specific dossiers
-- `FASE_*_CCT.md`: phase planning/execution documents
+- `md_out/FASE_*_CCT.md`: phase execution plans and implementation dossiers
 
 ## License
 

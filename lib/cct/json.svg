@@ -1,0 +1,716 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512" role="img" aria-label="CCT local sigilo">
+  <desc>Deterministic semantic sigil for a single CCT module.</desc>
+  <defs>
+    <style><![CDATA[
+      .bg { fill: #f5f0e4; }
+      .base { stroke: #2a221c; stroke-width: 1.60; fill: none; opacity: 0.78; }
+      .primary { stroke: #241913; stroke-width: 2.80; fill: none; stroke-linecap: round; stroke-linejoin: round; }
+      .call { stroke: #5b2a22; stroke-width: 2.0; fill: none; stroke-linecap: round; opacity: 0.9; }
+      .branch { stroke: #6b342d; stroke-width: 1.6; fill: none; stroke-linecap: round; }
+      .loop { stroke: #2d5f5a; stroke-width: 1.6; fill: none; stroke-linecap: round; }
+      .bind { stroke: #73493d; stroke-width: 1.4; fill: none; stroke-linecap: round; }
+      .term { stroke: #201814; stroke-width: 1.7; fill: none; stroke-linecap: round; }
+      .node-main { fill: #fffaf1; stroke: #201814; stroke-width: 2.0; }
+      .node-entry { fill: #efe6d4; stroke: #201814; stroke-width: 2.4; }
+      .node-aux { fill: #f6efe0; stroke: #4f4339; stroke-width: 1.3; }
+      .node-loop { fill: #edf3f1; stroke: #2d5f5a; stroke-width: 1.4; }
+      .node-term { fill: #f3e7e3; stroke: #5a2a23; stroke-width: 1.4; }
+      .orn { stroke: #355d58; stroke-width: 1.0; fill: none; opacity: 0.55; }
+      .hash { fill: #1f1a17; font: 10px monospace; letter-spacing: 0.8px; }
+      .label { fill: #1f1a17; font: 8px monospace; opacity: 0.7; }
+      .node-wrap, .edge-wrap { cursor: help; }
+      .node-wrap:hover > circle { opacity: 0.96; }
+      .edge-wrap:hover > path, .edge-wrap:hover > line { opacity: 1.0; }
+    ]]></style>
+  </defs>
+  <rect class="bg" x="0" y="0" width="512" height="512"/>
+  <g id="foundation">
+    <circle class="base" cx="256" cy="256" r="226"/>
+    <ellipse class="base" cx="256" cy="256" rx="198" ry="185.72" opacity="0.32"/>
+  </g>
+  <g id="primary_path">
+    <g class="edge-wrap">
+    <path class="primary" d="M 314.01 122.47 Q 337.52 164.82 385.93 166.63" stroke-width="2.60" opacity="0.96"/>
+      <title>edge: primary
+json_pair -&gt; json_null
+weight: 1
+
+path:
+json_pair -&gt; json_null</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="primary" d="M 385.93 166.63 Q 375.65 203.29 412.57 212.58" stroke-width="2.60" opacity="0.96"/>
+      <title>edge: primary
+json_null -&gt; json_bool
+weight: 1
+
+path:
+json_null -&gt; json_bool</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="primary" d="M 412.57 212.58 Q 388.84 242.99 422.47 261.89" stroke-width="2.60" opacity="0.96"/>
+      <title>edge: primary
+json_bool -&gt; json_num
+weight: 1
+
+path:
+json_bool -&gt; json_num</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="primary" d="M 422.47 261.89 Q 390.21 274.76 406.79 305.28" stroke-width="2.60" opacity="0.96"/>
+      <title>edge: primary
+json_num -&gt; json_str
+weight: 1
+
+path:
+json_num -&gt; json_str</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="primary" d="M 406.79 305.28 Q 370.56 304.91 377.77 340.43" stroke-width="2.60" opacity="0.96"/>
+      <title>edge: primary
+json_str -&gt; json_arr
+weight: 1
+
+path:
+json_str -&gt; json_arr</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="primary" d="M 377.77 340.43 Q 336.20 340.48 329.43 381.50" stroke-width="2.60" opacity="0.96"/>
+      <title>edge: primary
+json_arr -&gt; json_obj
+weight: 1
+
+path:
+json_arr -&gt; json_obj</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="primary" d="M 329.43 381.50 Q 299.21 353.92 268.95 381.45" stroke-width="2.60" opacity="0.96"/>
+      <title>edge: primary
+json_obj -&gt; json_kind
+weight: 1
+
+path:
+json_obj -&gt; json_kind</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="primary" d="M 268.95 381.45 Q 233.51 360.40 200.17 384.65" stroke-width="2.60" opacity="0.96"/>
+      <title>edge: primary
+json_kind -&gt; json_is_null
+weight: 1
+
+path:
+json_kind -&gt; json_is_null</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="primary" d="M 200.17 384.65 Q 175.67 338.72 124.02 345.13" stroke-width="2.60" opacity="0.96"/>
+      <title>edge: primary
+json_is_null -&gt; json_is_bool
+weight: 1
+
+path:
+json_is_null -&gt; json_is_bool</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="primary" d="M 124.02 345.13 Q 129.27 304.87 89.84 295.21" stroke-width="2.60" opacity="0.96"/>
+      <title>edge: primary
+json_is_bool -&gt; json_is_num
+weight: 1
+
+path:
+json_is_bool -&gt; json_is_num</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="primary" d="M 89.84 295.21 Q 118.51 251.81 98.77 203.69" stroke-width="2.60" opacity="0.96"/>
+      <title>edge: primary
+json_is_num -&gt; json_is_str
+weight: 1
+
+path:
+json_is_num -&gt; json_is_str</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="primary" d="M 98.77 203.69 Q 140.18 192.56 146.76 150.19" stroke-width="2.60" opacity="0.96"/>
+      <title>edge: primary
+json_is_str -&gt; json_is_arr
+weight: 1
+
+path:
+json_is_str -&gt; json_is_arr</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="primary" d="M 146.76 150.19 Q 199.38 159.07 233.59 118.13" stroke-width="2.60" opacity="0.96"/>
+      <title>edge: primary
+json_is_arr -&gt; json_is_obj
+weight: 1
+
+path:
+json_is_arr -&gt; json_is_obj</title>
+    </g>
+  </g>
+  <g id="call_links">
+    <g class="edge-wrap">
+    <path class="call" d="M 200.17 384.65 Q 236.15 417.32 268.95 381.45" stroke-width="2.15" opacity="0.74" data-kind="call" data-from="json_is_null" data-to="json_kind" data-weight="1" data-self-loop="false"/>
+      <title>edge: call
+json_is_null -&gt; json_kind
+calls: 1
+
+path:
+json_is_null -&gt; json_kind</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="call" d="M 124.02 345.13 Q 187.99 397.18 268.95 381.45" stroke-width="2.15" opacity="0.74" data-kind="call" data-from="json_is_bool" data-to="json_kind" data-weight="1" data-self-loop="false"/>
+      <title>edge: call
+json_is_bool -&gt; json_kind
+calls: 1
+
+path:
+json_is_bool -&gt; json_kind</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="call" d="M 89.84 295.21 Q 164.70 368.85 268.95 381.45" stroke-width="2.15" opacity="0.74" data-kind="call" data-from="json_is_num" data-to="json_kind" data-weight="1" data-self-loop="false"/>
+      <title>edge: call
+json_is_num -&gt; json_kind
+calls: 1
+
+path:
+json_is_num -&gt; json_kind</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="call" d="M 98.77 203.69 Q 159.52 315.87 268.95 381.45" stroke-width="2.15" opacity="0.74" data-kind="call" data-from="json_is_str" data-to="json_kind" data-weight="1" data-self-loop="false"/>
+      <title>edge: call
+json_is_str -&gt; json_kind
+calls: 1
+
+path:
+json_is_str -&gt; json_kind</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="call" d="M 146.76 150.19 Q 178.08 281.56 268.95 381.45" stroke-width="2.15" opacity="0.74" data-kind="call" data-from="json_is_arr" data-to="json_kind" data-weight="1" data-self-loop="false"/>
+      <title>edge: call
+json_is_arr -&gt; json_kind
+calls: 1
+
+path:
+json_is_arr -&gt; json_kind</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="call" d="M 233.59 118.13 Q 220.11 253.98 268.95 381.45" stroke-width="2.15" opacity="0.74" data-kind="call" data-from="json_is_obj" data-to="json_kind" data-weight="1" data-self-loop="false"/>
+      <title>edge: call
+json_is_obj -&gt; json_kind
+calls: 1
+
+path:
+json_is_obj -&gt; json_kind</title>
+    </g>
+  </g>
+  <g id="branches">
+    <g class="edge-wrap">
+    <path class="branch" d="M 246.56 255.70 Q 289.81 193.90 314.01 122.47" stroke-width="1.45" opacity="0.85"/>
+      <title>edge: branch
+json_pair -&gt; json_pair
+weight: 1
+
+path:
+json_pair -&gt; json_pair</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="branch" d="M 246.56 255.70 Q 212.36 316.21 200.17 384.65" stroke-width="1.70" opacity="0.85"/>
+      <title>edge: branch
+json_pair -&gt; json_is_null
+weight: 2
+
+path:
+json_pair -&gt; json_is_null</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="branch" d="M 246.56 255.70 Q 180.16 293.39 124.02 345.13" stroke-width="1.70" opacity="0.85"/>
+      <title>edge: branch
+json_pair -&gt; json_is_bool
+weight: 2
+
+path:
+json_pair -&gt; json_is_bool</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="branch" d="M 246.56 255.70 Q 166.39 268.28 89.84 295.21" stroke-width="1.70" opacity="0.85"/>
+      <title>edge: branch
+json_pair -&gt; json_is_num
+weight: 2
+
+path:
+json_pair -&gt; json_is_num</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="branch" d="M 246.56 255.70 Q 177.01 217.33 98.77 203.69" stroke-width="1.70" opacity="0.85"/>
+      <title>edge: branch
+json_pair -&gt; json_is_str
+weight: 2
+
+path:
+json_pair -&gt; json_is_str</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="branch" d="M 246.56 255.70 Q 201.05 198.79 146.76 150.19" stroke-width="1.70" opacity="0.85"/>
+      <title>edge: branch
+json_pair -&gt; json_is_arr
+weight: 2
+
+path:
+json_pair -&gt; json_is_arr</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="branch" d="M 246.56 255.70 Q 251.74 185.81 233.59 118.13" stroke-width="1.70" opacity="0.85"/>
+      <title>edge: branch
+json_pair -&gt; json_is_obj
+weight: 2
+
+path:
+json_pair -&gt; json_is_obj</title>
+    </g>
+  </g>
+  <g id="loops">
+  </g>
+  <g id="bindings">
+    <g class="edge-wrap">
+    <path class="bind" d="M 314.01 122.47 Q 303.63 132.13 303.65 146.31" stroke-width="1.44" opacity="0.85"/>
+    <line class="bind" x1="315.61" y1="128.83" x2="308.27" y2="125.64" opacity="0.75"/>
+    <line class="bind" x1="315.49" y1="131.61" x2="306.32" y2="127.63" opacity="0.75"/>
+    <line class="bind" x1="313.54" y1="133.60" x2="306.20" y2="130.41" opacity="0.75"/>
+    <line class="bind" x1="308.75" y1="145.07" x2="314.58" y2="143.64" opacity="0.58"/>
+    <line class="bind" x1="299.88" y1="149.96" x2="293.41" y2="156.22" opacity="0.58"/>
+    <line class="bind" x1="300.60" y1="142.04" x2="297.12" y2="137.15" opacity="0.58"/>
+      <title>edge: bind
+json_pair -&gt; json_pair
+weight: 3
+
+path:
+json_pair -&gt; json_pair</title>
+    </g>
+  </g>
+  <g id="terminals">
+    <g class="edge-wrap">
+    <path class="term" d="M 314.01 122.47 Q 300.09 147.98 299.03 177.02" stroke-width="1.65" opacity="0.90"/>
+      <title>edge: return
+json_pair -&gt; json_pair
+weight: 2
+
+path:
+json_pair -&gt; json_pair</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="term" d="M 385.93 166.63 Q 359.07 176.13 335.26 191.77" stroke-width="1.65" opacity="0.90"/>
+      <title>edge: return
+json_null -&gt; json_null
+weight: 2
+
+path:
+json_null -&gt; json_null</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="term" d="M 412.57 212.58 Q 383.93 211.62 356.47 219.83" stroke-width="1.65" opacity="0.90"/>
+      <title>edge: return
+json_bool -&gt; json_bool
+weight: 2
+
+path:
+json_bool -&gt; json_bool</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="term" d="M 422.47 261.89 Q 395.30 253.17 366.79 251.91" stroke-width="1.65" opacity="0.90"/>
+      <title>edge: return
+json_num -&gt; json_num
+weight: 2
+
+path:
+json_num -&gt; json_num</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="term" d="M 406.79 305.28 Q 382.44 290.71 356.05 280.28" stroke-width="1.65" opacity="0.90"/>
+      <title>edge: return
+json_str -&gt; json_str
+weight: 2
+
+path:
+json_str -&gt; json_str</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="term" d="M 377.77 340.43 Q 355.69 321.35 327.19 315.09" stroke-width="1.65" opacity="0.90"/>
+      <title>edge: return
+json_arr -&gt; json_arr
+weight: 2
+
+path:
+json_arr -&gt; json_arr</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="term" d="M 329.43 381.50 Q 323.63 353.32 308.06 329.13" stroke-width="1.65" opacity="0.90"/>
+      <title>edge: return
+json_obj -&gt; json_obj
+weight: 2
+
+path:
+json_obj -&gt; json_obj</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="term" d="M 200.17 384.65 Q 211.13 358.32 215.12 330.09" stroke-width="1.65" opacity="0.90"/>
+      <title>edge: return
+json_is_null -&gt; json_is_null
+weight: 2
+
+path:
+json_is_null -&gt; json_is_null</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="term" d="M 124.02 345.13 Q 150.34 334.58 174.90 320.42" stroke-width="1.65" opacity="0.90"/>
+      <title>edge: return
+json_is_bool -&gt; json_is_bool
+weight: 2
+
+path:
+json_is_bool -&gt; json_is_bool</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="term" d="M 89.84 295.21 Q 118.39 296.86 146.18 290.13" stroke-width="1.65" opacity="0.90"/>
+      <title>edge: return
+json_is_num -&gt; json_is_num
+weight: 2
+
+path:
+json_is_num -&gt; json_is_num</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="term" d="M 98.77 203.69 Q 125.10 217.00 154.43 213.78" stroke-width="1.65" opacity="0.90"/>
+      <title>edge: return
+json_is_str -&gt; json_is_str
+weight: 2
+
+path:
+json_is_str -&gt; json_is_str</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="term" d="M 146.76 150.19 Q 164.28 174.21 192.55 183.40" stroke-width="1.65" opacity="0.90"/>
+      <title>edge: return
+json_is_arr -&gt; json_is_arr
+weight: 2
+
+path:
+json_is_arr -&gt; json_is_arr</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="term" d="M 233.59 118.13 Q 237.45 146.56 250.47 172.12" stroke-width="1.65" opacity="0.90"/>
+      <title>edge: return
+json_is_obj -&gt; json_is_obj
+weight: 2
+
+path:
+json_is_obj -&gt; json_is_obj</title>
+    </g>
+  </g>
+  <g id="nodes">
+    <g class="node-wrap">
+      <circle class="node-main" cx="314.01" cy="122.47" r="6.40" data-kind="rituale" data-ritual="json_pair" data-line="23" data-col="1" data-depth="3" data-stmt="RITUALE" data-loops="0" data-calls="0"/>
+      <title>RITUALE json_pair
+stmt: 4
+depth: 3
+loops: 0
+calls: 0
+source:
+RITUALE json_pair(VERBUM chave, Json valor) REDDE JsonPair</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="303.65" cy="146.31" r="3.25" data-kind="bind" data-ritual="json_pair" data-line="24" data-col="3" data-depth="3" data-stmt="EVOCA"/>
+      <title>stmt: EVOCA
+rituale: json_pair
+depth: 3
+line: 24
+
+source:
+EVOCA JsonPair par</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="299.03" cy="177.02" r="3.60" data-kind="term" data-ritual="json_pair" data-line="27" data-col="3" data-depth="3" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: json_pair
+depth: 3
+line: 27
+
+source:
+REDDE par</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-main" cx="385.93" cy="166.63" r="5.95" data-kind="rituale" data-ritual="json_null" data-line="30" data-col="1" data-depth="2" data-stmt="RITUALE" data-loops="0" data-calls="0"/>
+      <title>RITUALE json_null
+stmt: 1
+depth: 2
+loops: 0
+calls: 0
+source:
+RITUALE json_null() REDDE Json</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="335.26" cy="191.77" r="3.60" data-kind="term" data-ritual="json_null" data-line="31" data-col="3" data-depth="2" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: json_null
+depth: 2
+line: 31
+
+source:
+REDDE JsonNull</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-main" cx="412.57" cy="212.58" r="5.95" data-kind="rituale" data-ritual="json_bool" data-line="34" data-col="1" data-depth="3" data-stmt="RITUALE" data-loops="0" data-calls="0"/>
+      <title>RITUALE json_bool
+stmt: 1
+depth: 3
+loops: 0
+calls: 0
+source:
+RITUALE json_bool(VERUM v) REDDE Json</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="356.47" cy="219.83" r="3.60" data-kind="term" data-ritual="json_bool" data-line="35" data-col="3" data-depth="3" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: json_bool
+depth: 3
+line: 35
+
+source:
+REDDE JsonBool(v)</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-main" cx="422.47" cy="261.89" r="5.95" data-kind="rituale" data-ritual="json_num" data-line="38" data-col="1" data-depth="3" data-stmt="RITUALE" data-loops="0" data-calls="0"/>
+      <title>RITUALE json_num
+stmt: 1
+depth: 3
+loops: 0
+calls: 0
+source:
+RITUALE json_num(UMBRA v) REDDE Json</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="366.79" cy="251.91" r="3.60" data-kind="term" data-ritual="json_num" data-line="39" data-col="3" data-depth="3" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: json_num
+depth: 3
+line: 39
+
+source:
+REDDE JsonNum(v)</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-main" cx="406.79" cy="305.28" r="5.95" data-kind="rituale" data-ritual="json_str" data-line="42" data-col="1" data-depth="3" data-stmt="RITUALE" data-loops="0" data-calls="0"/>
+      <title>RITUALE json_str
+stmt: 1
+depth: 3
+loops: 0
+calls: 0
+source:
+RITUALE json_str(VERBUM v) REDDE Json</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="356.05" cy="280.28" r="3.60" data-kind="term" data-ritual="json_str" data-line="43" data-col="3" data-depth="3" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: json_str
+depth: 3
+line: 43
+
+source:
+REDDE JsonStr(v)</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-main" cx="377.77" cy="340.43" r="5.95" data-kind="rituale" data-ritual="json_arr" data-line="46" data-col="1" data-depth="3" data-stmt="RITUALE" data-loops="0" data-calls="0"/>
+      <title>RITUALE json_arr
+stmt: 1
+depth: 3
+loops: 0
+calls: 0
+source:
+RITUALE json_arr() REDDE Json</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="327.19" cy="315.09" r="3.60" data-kind="term" data-ritual="json_arr" data-line="47" data-col="3" data-depth="3" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: json_arr
+depth: 3
+line: 47
+
+source:
+REDDE JsonArr(0)</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-main" cx="329.43" cy="381.50" r="5.95" data-kind="rituale" data-ritual="json_obj" data-line="50" data-col="1" data-depth="3" data-stmt="RITUALE" data-loops="0" data-calls="0"/>
+      <title>RITUALE json_obj
+stmt: 1
+depth: 3
+loops: 0
+calls: 0
+source:
+RITUALE json_obj() REDDE Json</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="308.06" cy="329.13" r="3.60" data-kind="term" data-ritual="json_obj" data-line="51" data-col="3" data-depth="3" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: json_obj
+depth: 3
+line: 51
+
+source:
+REDDE JsonObj(0)</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-main" cx="268.95" cy="381.45" r="5.95" data-kind="rituale" data-ritual="json_kind" data-line="54" data-col="1" data-depth="1" data-stmt="RITUALE" data-loops="0" data-calls="0"/>
+      <title>RITUALE json_kind
+stmt: 1
+depth: 1
+loops: 0
+calls: 0
+source:
+RITUALE json_kind(Json j) REDDE REX</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-main" cx="200.17" cy="384.65" r="5.95" data-kind="rituale" data-ritual="json_is_null" data-line="71" data-col="1" data-depth="4" data-stmt="RITUALE" data-loops="0" data-calls="1"/>
+      <title>RITUALE json_is_null
+stmt: 1
+depth: 4
+loops: 0
+calls: 1
+source:
+RITUALE json_is_null(Json j) REDDE VERUM</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="215.12" cy="330.09" r="3.60" data-kind="term" data-ritual="json_is_null" data-line="72" data-col="3" data-depth="4" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: json_is_null
+depth: 4
+line: 72
+
+source:
+REDDE CONIURA json_kind(j) == 0</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-main" cx="124.02" cy="345.13" r="5.95" data-kind="rituale" data-ritual="json_is_bool" data-line="75" data-col="1" data-depth="4" data-stmt="RITUALE" data-loops="0" data-calls="1"/>
+      <title>RITUALE json_is_bool
+stmt: 1
+depth: 4
+loops: 0
+calls: 1
+source:
+RITUALE json_is_bool(Json j) REDDE VERUM</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="174.90" cy="320.42" r="3.60" data-kind="term" data-ritual="json_is_bool" data-line="76" data-col="3" data-depth="4" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: json_is_bool
+depth: 4
+line: 76
+
+source:
+REDDE CONIURA json_kind(j) == 1</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-main" cx="89.84" cy="295.21" r="5.95" data-kind="rituale" data-ritual="json_is_num" data-line="79" data-col="1" data-depth="4" data-stmt="RITUALE" data-loops="0" data-calls="1"/>
+      <title>RITUALE json_is_num
+stmt: 1
+depth: 4
+loops: 0
+calls: 1
+source:
+RITUALE json_is_num(Json j) REDDE VERUM</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="146.18" cy="290.13" r="3.60" data-kind="term" data-ritual="json_is_num" data-line="80" data-col="3" data-depth="4" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: json_is_num
+depth: 4
+line: 80
+
+source:
+REDDE CONIURA json_kind(j) == 2</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-main" cx="98.77" cy="203.69" r="5.95" data-kind="rituale" data-ritual="json_is_str" data-line="83" data-col="1" data-depth="4" data-stmt="RITUALE" data-loops="0" data-calls="1"/>
+      <title>RITUALE json_is_str
+stmt: 1
+depth: 4
+loops: 0
+calls: 1
+source:
+RITUALE json_is_str(Json j) REDDE VERUM</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="154.43" cy="213.78" r="3.60" data-kind="term" data-ritual="json_is_str" data-line="84" data-col="3" data-depth="4" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: json_is_str
+depth: 4
+line: 84
+
+source:
+REDDE CONIURA json_kind(j) == 3</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-main" cx="146.76" cy="150.19" r="5.95" data-kind="rituale" data-ritual="json_is_arr" data-line="87" data-col="1" data-depth="4" data-stmt="RITUALE" data-loops="0" data-calls="1"/>
+      <title>RITUALE json_is_arr
+stmt: 1
+depth: 4
+loops: 0
+calls: 1
+source:
+RITUALE json_is_arr(Json j) REDDE VERUM</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="192.55" cy="183.40" r="3.60" data-kind="term" data-ritual="json_is_arr" data-line="88" data-col="3" data-depth="4" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: json_is_arr
+depth: 4
+line: 88
+
+source:
+REDDE CONIURA json_kind(j) == 4</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-main" cx="233.59" cy="118.13" r="5.95" data-kind="rituale" data-ritual="json_is_obj" data-line="91" data-col="1" data-depth="4" data-stmt="RITUALE" data-loops="0" data-calls="1"/>
+      <title>RITUALE json_is_obj
+stmt: 1
+depth: 4
+loops: 0
+calls: 1
+source:
+RITUALE json_is_obj(Json j) REDDE VERUM</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="250.47" cy="172.12" r="3.60" data-kind="term" data-ritual="json_is_obj" data-line="92" data-col="3" data-depth="4" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: json_is_obj
+depth: 4
+line: 92
+
+source:
+REDDE CONIURA json_kind(j) == 5</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="246.56" cy="255.70" r="3.92" data-kind="bind" data-ritual="json_pair" data-line="24" data-col="3" data-depth="3" data-stmt="EVOCA"/>
+      <title>stmt: EVOCA
+rituale: json_pair
+depth: 3
+line: 24
+
+source:
+EVOCA JsonPair par</title>
+    </g>
+  </g>
+  <g id="ornaments">
+    <circle class="orn" cx="454.84" cy="288.45" r="0.90"/>
+    <circle class="orn" cx="391.05" cy="418.24" r="1.90"/>
+    <circle class="orn" cx="237.27" cy="458.27" r="2.90"/>
+    <circle class="orn" cx="117.53" cy="408.22" r="0.90"/>
+    <circle class="orn" cx="48.35" cy="249.69" r="1.90"/>
+    <circle class="orn" cx="97.86" cy="131.13" r="2.90"/>
+    <circle class="orn" cx="236.98" cy="52.55" r="0.90"/>
+    <circle class="orn" cx="422.16" cy="140.48" r="1.90"/>
+  </g>
+  <g id="signature">
+    <text class="hash" x="256" y="496" text-anchor="middle">ce001808c2d48f5c</text>
+    <text class="label" x="256" y="18" text-anchor="middle">network • sigillum v2.1 • 14 rituale(s) • 17 stmt • depth 4</text>
+  </g>
+</svg>

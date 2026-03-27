@@ -1,0 +1,99 @@
+format = cct.sigil.v1
+sigilo_scope = system
+visual_style = network
+system_hash = 69a670b36585f7d6
+module_count = 4
+entry_module = /Users/eabusato/dev/cct/examples/fase12_final_showcase/src/main.cct
+import_edges = 4
+cross_module_calls = 10
+cross_module_type_refs = 0
+exported_symbol_count = 64
+internal_symbol_count = 0
+module_density = 1.000000
+system_topology_class = mesh_light
+module_visibility_model = public_default_arcanum_internal
+module_resolution_status = ok
+composition_mode = sigil_of_sigils_inline
+generic_instantiation_count = 5
+generic_rituale_instantiation_count = 5
+generic_sigillum_instantiation_count = 0
+generic_instantiation_dedup_count = 2
+generic_constraint_count = 0
+generic_constrained_param_count = 0
+generic_constraint_violation_count = 0
+pactum_constraint_resolution_status = ok
+generic_monomorphization_status = ok
+pactum_decl_count = 0
+pactum_signature_count = 0
+sigillum_pactum_conformance_count = 0
+pactum_conformance_status = ok
+option_ops_count = 0
+result_ops_count = 0
+map_ops_count = 0
+set_ops_count = 0
+collection_ops_count = 0
+iterum_count = 0
+option_module_used = false
+result_module_used = false
+map_module_used = false
+set_module_used = false
+collection_ops_module_used = false
+phase10_subset_final = true
+phase10_final_status = consolidated
+phase10_typing_contract = genus_explicit_monomorphization+pactum_explicit_conformance+constraint_single_contract_rituale_only
+
+[analysis_summary]
+scope = system
+schema_phase = 13C2
+analysis_profile = analytical_v1
+system_topology_class = mesh_light
+module_density = 1.000000
+cross_module_flow = 10
+generic_surface = 5
+determinism_guarantee = stable
+
+[diff_fingerprint_context]
+scope_anchor = system
+hash_anchor = 69a670b36585f7d6
+fingerprint_basis = module_map+import_edges+system_hash_anchor
+serialization_profile = analytical_v1
+volatility = none
+module_anchor_count = 4
+entry_anchor = /Users/eabusato/dev/cct/examples/fase12_final_showcase/src/main.cct
+
+[module_structural_summary]
+module_count = 4
+import_edges = 4
+cross_module_calls = 10
+cross_module_type_refs = 0
+module_resolution_status = ok
+exported_symbol_count = 64
+internal_symbol_count = 0
+composition_mode = sigil_of_sigils_inline
+
+[compatibility_hints]
+schema_contract = cct.sigil.v1
+unknown_field_policy = warning_non_fatal
+deprecated_alias = sigilo_style->visual_engine
+consumer_mode_tolerant = ignore_unknown_additive_fields
+consumer_mode_strict = enforce_required_fields_and_hash_by_scope
+diff_policy = analytical_blocks_review_required_except_compatibility_hints
+deterministic_serialization = stable_section_order
+
+[modules]
+0 = /Users/eabusato/dev/cct/examples/fase12_final_showcase/src/main.cct
+1 = /Users/eabusato/dev/cct/examples/fase12_final_showcase/lib/data.cct
+2 = /Users/eabusato/dev/cct/lib/cct/math.cct
+3 = /Users/eabusato/dev/cct/lib/cct/io.cct
+
+[module_sigils]
+0 = /Users/eabusato/dev/cct/examples/fase12_final_showcase/src/main.cct | c693d889547ba56f
+1 = /Users/eabusato/dev/cct/examples/fase12_final_showcase/lib/data.cct | ce0c4e72fef4d219
+2 = /Users/eabusato/dev/cct/lib/cct/math.cct | 8dc333acad94b547
+3 = /Users/eabusato/dev/cct/lib/cct/io.cct | 9699b47a9890d1fb
+
+[import_edges]
+0 = /Users/eabusato/dev/cct/examples/fase12_final_showcase/src/main.cct -> /Users/eabusato/dev/cct/examples/fase12_final_showcase/lib/data.cct
+1 = /Users/eabusato/dev/cct/examples/fase12_final_showcase/src/main.cct -> /Users/eabusato/dev/cct/lib/cct/io.cct
+2 = /Users/eabusato/dev/cct/examples/fase12_final_showcase/src/main.cct -> /Users/eabusato/dev/cct/lib/cct/math.cct
+3 = /Users/eabusato/dev/cct/examples/fase12_final_showcase/lib/data.cct -> /Users/eabusato/dev/cct/lib/cct/math.cct

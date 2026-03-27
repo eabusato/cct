@@ -1,0 +1,106 @@
+format = cct.sigil.v1
+sigilo_scope = system
+visual_style = network
+system_hash = 667a395ec8640a21
+module_count = 6
+entry_module = examples/ars_magna_omniversal/main.cct
+import_edges = 7
+cross_module_calls = 13
+cross_module_type_refs = 5
+exported_symbol_count = 19
+internal_symbol_count = 1
+module_density = 1.166667
+system_topology_class = mesh_light
+module_visibility_model = public_default_arcanum_internal
+module_resolution_status = ok
+composition_mode = sigil_of_sigils_inline
+generic_instantiation_count = 4
+generic_rituale_instantiation_count = 3
+generic_sigillum_instantiation_count = 1
+generic_instantiation_dedup_count = 4
+generic_constraint_count = 1
+generic_constrained_param_count = 1
+generic_constraint_violation_count = 0
+pactum_constraint_resolution_status = ok
+generic_monomorphization_status = ok
+pactum_decl_count = 1
+pactum_signature_count = 1
+sigillum_pactum_conformance_count = 1
+pactum_conformance_status = ok
+option_ops_count = 0
+result_ops_count = 0
+map_ops_count = 0
+set_ops_count = 0
+collection_ops_count = 0
+iterum_count = 0
+option_module_used = false
+result_module_used = false
+map_module_used = false
+set_module_used = false
+collection_ops_module_used = false
+phase10_subset_final = true
+phase10_final_status = consolidated
+phase10_typing_contract = genus_explicit_monomorphization+pactum_explicit_conformance+constraint_single_contract_rituale_only
+
+[analysis_summary]
+scope = system
+schema_phase = 13C2
+analysis_profile = analytical_v1
+system_topology_class = mesh_light
+module_density = 1.166667
+cross_module_flow = 18
+generic_surface = 5
+determinism_guarantee = stable
+
+[diff_fingerprint_context]
+scope_anchor = system
+hash_anchor = 667a395ec8640a21
+fingerprint_basis = module_map+import_edges+system_hash_anchor
+serialization_profile = analytical_v1
+volatility = none
+module_anchor_count = 6
+entry_anchor = examples/ars_magna_omniversal/main.cct
+
+[module_structural_summary]
+module_count = 6
+import_edges = 7
+cross_module_calls = 13
+cross_module_type_refs = 5
+module_resolution_status = ok
+exported_symbol_count = 19
+internal_symbol_count = 1
+composition_mode = sigil_of_sigils_inline
+
+[compatibility_hints]
+schema_contract = cct.sigil.v1
+unknown_field_policy = warning_non_fatal
+deprecated_alias = sigilo_style->visual_engine
+consumer_mode_tolerant = ignore_unknown_additive_fields
+consumer_mode_strict = enforce_required_fields_and_hash_by_scope
+diff_policy = analytical_blocks_review_required_except_compatibility_hints
+deterministic_serialization = stable_section_order
+
+[modules]
+0 = /Users/eabusato/dev/cct/examples/ars_magna_omniversal/main.cct
+1 = /Users/eabusato/dev/cct/examples/ars_magna_omniversal/modules/engine.cct
+2 = /Users/eabusato/dev/cct/examples/ars_magna_omniversal/modules/types_core.cct
+3 = /Users/eabusato/dev/cct/examples/ars_magna_omniversal/modules/generics.cct
+4 = /Users/eabusato/dev/cct/examples/ars_magna_omniversal/modules/memory_alchemy.cct
+5 = /Users/eabusato/dev/cct/examples/ars_magna_omniversal/modules/failure_rituals.cct
+
+[module_sigils]
+0 = /Users/eabusato/dev/cct/examples/ars_magna_omniversal/main.cct | 4623b6b1bcec4fb8
+1 = /Users/eabusato/dev/cct/examples/ars_magna_omniversal/modules/engine.cct | 6c5ff100d6111b7f
+2 = /Users/eabusato/dev/cct/examples/ars_magna_omniversal/modules/types_core.cct | 88b9ef27e5e262c5
+3 = /Users/eabusato/dev/cct/examples/ars_magna_omniversal/modules/generics.cct | cdc7a7fce50e2a9f
+4 = /Users/eabusato/dev/cct/examples/ars_magna_omniversal/modules/memory_alchemy.cct | 183b1d6cf27bfb06
+5 = /Users/eabusato/dev/cct/examples/ars_magna_omniversal/modules/failure_rituals.cct | 2ce71d9fd3e6981c
+
+[import_edges]
+0 = /Users/eabusato/dev/cct/examples/ars_magna_omniversal/main.cct -> /Users/eabusato/dev/cct/examples/ars_magna_omniversal/modules/engine.cct
+1 = /Users/eabusato/dev/cct/examples/ars_magna_omniversal/modules/engine.cct -> /Users/eabusato/dev/cct/examples/ars_magna_omniversal/modules/types_core.cct
+2 = /Users/eabusato/dev/cct/examples/ars_magna_omniversal/modules/engine.cct -> /Users/eabusato/dev/cct/examples/ars_magna_omniversal/modules/generics.cct
+3 = /Users/eabusato/dev/cct/examples/ars_magna_omniversal/modules/engine.cct -> /Users/eabusato/dev/cct/examples/ars_magna_omniversal/modules/memory_alchemy.cct
+4 = /Users/eabusato/dev/cct/examples/ars_magna_omniversal/modules/engine.cct -> /Users/eabusato/dev/cct/examples/ars_magna_omniversal/modules/failure_rituals.cct
+5 = /Users/eabusato/dev/cct/examples/ars_magna_omniversal/modules/generics.cct -> /Users/eabusato/dev/cct/examples/ars_magna_omniversal/modules/types_core.cct
+6 = /Users/eabusato/dev/cct/examples/ars_magna_omniversal/modules/memory_alchemy.cct -> /Users/eabusato/dev/cct/examples/ars_magna_omniversal/modules/types_core.cct

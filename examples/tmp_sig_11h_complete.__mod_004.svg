@@ -1,0 +1,596 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512" role="img" aria-label="CCT local sigilo">
+  <desc>Deterministic semantic sigil for a single CCT module.</desc>
+  <defs>
+    <style><![CDATA[
+      .bg { fill: #f5f0e4; }
+      .base { stroke: #2a221c; stroke-width: 1.60; fill: none; opacity: 0.78; }
+      .primary { stroke: #241913; stroke-width: 2.80; fill: none; stroke-linecap: round; stroke-linejoin: round; }
+      .call { stroke: #5b2a22; stroke-width: 2.0; fill: none; stroke-linecap: round; opacity: 0.9; }
+      .branch { stroke: #6b342d; stroke-width: 1.6; fill: none; stroke-linecap: round; }
+      .loop { stroke: #2d5f5a; stroke-width: 1.6; fill: none; stroke-linecap: round; }
+      .bind { stroke: #73493d; stroke-width: 1.4; fill: none; stroke-linecap: round; }
+      .term { stroke: #201814; stroke-width: 1.7; fill: none; stroke-linecap: round; }
+      .node-main { fill: #fffaf1; stroke: #201814; stroke-width: 2.0; }
+      .node-entry { fill: #efe6d4; stroke: #201814; stroke-width: 2.4; }
+      .node-aux { fill: #f6efe0; stroke: #4f4339; stroke-width: 1.3; }
+      .node-loop { fill: #edf3f1; stroke: #2d5f5a; stroke-width: 1.4; }
+      .node-term { fill: #f3e7e3; stroke: #5a2a23; stroke-width: 1.4; }
+      .orn { stroke: #355d58; stroke-width: 1.0; fill: none; opacity: 0.55; }
+      .hash { fill: #1f1a17; font: 10px monospace; letter-spacing: 0.8px; }
+      .label { fill: #1f1a17; font: 8px monospace; opacity: 0.7; }
+      .node-wrap, .edge-wrap { cursor: help; }
+      .node-wrap:hover > circle { opacity: 0.96; }
+      .edge-wrap:hover > path, .edge-wrap:hover > line { opacity: 1.0; }
+    ]]></style>
+  </defs>
+  <rect class="bg" x="0" y="0" width="512" height="512"/>
+  <g id="foundation">
+    <circle class="base" cx="256" cy="256" r="226"/>
+    <ellipse class="base" cx="256" cy="256" rx="198" ry="183.13" opacity="0.32"/>
+  </g>
+  <g id="primary_path">
+    <g class="edge-wrap">
+    <path class="primary" d="M 315.42 126.10 Q 338.42 169.83 386.87 160.12" stroke-width="2.60" opacity="0.96"/>
+      <title>edge: primary
+char_is_digit -&gt; char_is_alpha
+weight: 1
+
+path:
+char_is_digit -&gt; char_is_alpha</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="primary" d="M 386.87 160.12 Q 377.52 224.78 416.85 276.96" stroke-width="2.60" opacity="0.96"/>
+      <title>edge: primary
+char_is_alpha -&gt; char_is_alnum
+weight: 1
+
+path:
+char_is_alpha -&gt; char_is_alnum</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="primary" d="M 416.85 276.96 Q 373.18 299.77 378.04 348.81" stroke-width="2.60" opacity="0.96"/>
+      <title>edge: primary
+char_is_alnum -&gt; char_is_whitespace
+weight: 1
+
+path:
+char_is_alnum -&gt; char_is_whitespace</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="primary" d="M 378.04 348.81 Q 318.97 348.16 281.10 393.50" stroke-width="2.60" opacity="0.96"/>
+      <title>edge: primary
+char_is_whitespace -&gt; char_to_upper
+weight: 1
+
+path:
+char_is_whitespace -&gt; char_to_upper</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="primary" d="M 281.10 393.50 Q 235.37 358.16 182.70 381.96" stroke-width="2.60" opacity="0.96"/>
+      <title>edge: primary
+char_to_upper -&gt; char_to_lower
+weight: 1
+
+path:
+char_to_upper -&gt; char_to_lower</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="primary" d="M 182.70 381.96 Q 160.77 325.70 105.74 300.84" stroke-width="2.60" opacity="0.96"/>
+      <title>edge: primary
+char_to_lower -&gt; is_digit
+weight: 1
+
+path:
+char_to_lower -&gt; is_digit</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="primary" d="M 105.74 300.84 Q 122.35 256.16 91.53 219.79" stroke-width="2.60" opacity="0.96"/>
+      <title>edge: primary
+is_digit -&gt; is_alpha
+weight: 1
+
+path:
+is_digit -&gt; is_alpha</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="primary" d="M 91.53 219.79 Q 131.90 210.97 129.96 169.69" stroke-width="2.60" opacity="0.96"/>
+      <title>edge: primary
+is_alpha -&gt; is_alnum
+weight: 1
+
+path:
+is_alpha -&gt; is_alnum</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="primary" d="M 129.96 169.69 Q 194.98 167.29 234.75 115.80" stroke-width="2.60" opacity="0.96"/>
+      <title>edge: primary
+is_alnum -&gt; is_whitespace
+weight: 1
+
+path:
+is_alnum -&gt; is_whitespace</title>
+    </g>
+  </g>
+  <g id="call_links">
+    <g class="edge-wrap">
+    <path class="call" d="M 416.85 276.96 Q 435.13 210.00 386.87 160.12" stroke-width="2.15" opacity="0.74" data-kind="call" data-from="char_is_alnum" data-to="char_is_alpha" data-weight="1" data-self-loop="false"/>
+      <title>edge: call
+char_is_alnum -&gt; char_is_alpha
+calls: 1
+
+path:
+char_is_alnum -&gt; char_is_alpha</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="call" d="M 416.85 276.96 Q 392.39 183.88 315.42 126.10" stroke-width="2.15" opacity="0.74" data-kind="call" data-from="char_is_alnum" data-to="char_is_digit" data-weight="1" data-self-loop="false"/>
+      <title>edge: call
+char_is_alnum -&gt; char_is_digit
+calls: 1
+
+path:
+char_is_alnum -&gt; char_is_digit</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="call" d="M 105.74 300.84 Q 228.19 234.60 315.42 126.10" stroke-width="2.15" opacity="0.74" data-kind="call" data-from="is_digit" data-to="char_is_digit" data-weight="1" data-self-loop="false"/>
+      <title>edge: call
+is_digit -&gt; char_is_digit
+calls: 1
+
+path:
+is_digit -&gt; char_is_digit</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="call" d="M 129.96 169.69 Q 88.79 177.90 91.53 219.79" stroke-width="2.15" opacity="0.74" data-kind="call" data-from="is_alnum" data-to="is_alpha" data-weight="1" data-self-loop="false"/>
+      <title>edge: call
+is_alnum -&gt; is_alpha
+calls: 1
+
+path:
+is_alnum -&gt; is_alpha</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="call" d="M 129.96 169.69 Q 85.10 229.21 105.74 300.84" stroke-width="2.15" opacity="0.74" data-kind="call" data-from="is_alnum" data-to="is_digit" data-weight="1" data-self-loop="false"/>
+      <title>edge: call
+is_alnum -&gt; is_digit
+calls: 1
+
+path:
+is_alnum -&gt; is_digit</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="call" d="M 234.75 115.80 Q 278.53 249.44 378.04 348.81" stroke-width="2.15" opacity="0.74" data-kind="call" data-from="is_whitespace" data-to="char_is_whitespace" data-weight="1" data-self-loop="false"/>
+      <title>edge: call
+is_whitespace -&gt; char_is_whitespace
+calls: 1
+
+path:
+is_whitespace -&gt; char_is_whitespace</title>
+    </g>
+  </g>
+  <g id="branches">
+    <g class="edge-wrap">
+    <path class="branch" d="M 281.10 393.50 Q 301.38 379.01 298.34 354.27" stroke-width="1.70" opacity="0.85"/>
+      <title>edge: branch
+char_to_upper -&gt; char_to_upper
+weight: 2
+
+path:
+char_to_upper -&gt; char_to_upper</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="branch" d="M 182.70 381.96 Q 189.11 360.05 179.81 339.21" stroke-width="1.70" opacity="0.85"/>
+      <title>edge: branch
+char_to_lower -&gt; char_to_lower
+weight: 2
+
+path:
+char_to_lower -&gt; char_to_lower</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="branch" d="M 254.96 261.34 Q 292.27 196.89 315.42 126.10" stroke-width="1.45" opacity="0.85"/>
+      <title>edge: branch
+char_is_digit -&gt; char_is_digit
+weight: 1
+
+path:
+char_is_digit -&gt; char_is_digit</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="branch" d="M 254.96 261.34 Q 335.14 277.05 416.85 276.96" stroke-width="1.95" opacity="0.85"/>
+      <title>edge: branch
+char_is_digit -&gt; char_is_alnum
+weight: 3
+
+path:
+char_is_digit -&gt; char_is_alnum</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="branch" d="M 254.96 261.34 Q 256.40 329.72 281.10 393.50" stroke-width="1.70" opacity="0.85"/>
+      <title>edge: branch
+char_is_digit -&gt; char_to_upper
+weight: 2
+
+path:
+char_is_digit -&gt; char_to_upper</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="branch" d="M 254.96 261.34 Q 208.55 315.49 182.70 381.96" stroke-width="1.70" opacity="0.85"/>
+      <title>edge: branch
+char_is_digit -&gt; char_to_lower
+weight: 2
+
+path:
+char_is_digit -&gt; char_to_lower</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="branch" d="M 254.96 261.34 Q 178.61 274.54 105.74 300.84" stroke-width="1.70" opacity="0.85"/>
+      <title>edge: branch
+char_is_digit -&gt; is_digit
+weight: 2
+
+path:
+char_is_digit -&gt; is_digit</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="branch" d="M 254.96 261.34 Q 200.59 204.43 129.96 169.69" stroke-width="1.95" opacity="0.85"/>
+      <title>edge: branch
+char_is_digit -&gt; is_alnum
+weight: 3
+
+path:
+char_is_digit -&gt; is_alnum</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="branch" d="M 254.96 261.34 Q 252.22 187.55 234.75 115.80" stroke-width="1.70" opacity="0.85"/>
+      <title>edge: branch
+char_is_digit -&gt; is_whitespace
+weight: 2
+
+path:
+char_is_digit -&gt; is_whitespace</title>
+    </g>
+  </g>
+  <g id="loops">
+  </g>
+  <g id="bindings">
+  </g>
+  <g id="terminals">
+    <g class="edge-wrap">
+    <path class="term" d="M 315.42 126.10 Q 296.97 147.87 284.85 173.70" stroke-width="1.65" opacity="0.90"/>
+      <title>edge: return
+char_is_digit -&gt; char_is_digit
+weight: 2
+
+path:
+char_is_digit -&gt; char_is_digit</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="term" d="M 386.87 160.12 Q 362.10 175.24 346.42 199.67" stroke-width="1.65" opacity="0.90"/>
+      <title>edge: return
+char_is_alpha -&gt; char_is_alpha
+weight: 2
+
+path:
+char_is_alpha -&gt; char_is_alpha</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="term" d="M 416.85 276.96 Q 388.52 273.23 360.28 277.66" stroke-width="1.65" opacity="0.90"/>
+      <title>edge: return
+char_is_alnum -&gt; char_is_alnum
+weight: 2
+
+path:
+char_is_alnum -&gt; char_is_alnum</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="term" d="M 378.04 348.81 Q 357.86 326.91 328.62 321.28" stroke-width="1.65" opacity="0.90"/>
+      <title>edge: return
+char_is_whitespace -&gt; char_is_whitespace
+weight: 2
+
+path:
+char_is_whitespace -&gt; char_is_whitespace</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="term" d="M 281.10 393.50 Q 280.42 363.91 263.18 339.85" stroke-width="1.80" opacity="0.90"/>
+      <title>edge: return
+char_to_upper -&gt; char_to_upper
+weight: 3
+
+path:
+char_to_upper -&gt; char_to_upper</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="term" d="M 182.70 381.96 Q 203.28 362.17 217.78 337.58" stroke-width="1.80" opacity="0.90"/>
+      <title>edge: return
+char_to_lower -&gt; char_to_lower
+weight: 3
+
+path:
+char_to_lower -&gt; char_to_lower</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="term" d="M 105.74 300.84 Q 135.14 297.05 157.11 277.16" stroke-width="1.65" opacity="0.90"/>
+      <title>edge: return
+is_digit -&gt; is_digit
+weight: 2
+
+path:
+is_digit -&gt; is_digit</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="term" d="M 91.53 219.79 Q 119.02 231.39 147.94 224.02" stroke-width="1.65" opacity="0.90"/>
+      <title>edge: return
+is_alpha -&gt; is_alpha
+weight: 2
+
+path:
+is_alpha -&gt; is_alpha</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="term" d="M 129.96 169.69 Q 149.41 190.34 171.65 207.93" stroke-width="1.65" opacity="0.90"/>
+      <title>edge: return
+is_alnum -&gt; is_alnum
+weight: 2
+
+path:
+is_alnum -&gt; is_alnum</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="term" d="M 234.75 115.80 Q 232.48 144.11 235.23 172.37" stroke-width="1.65" opacity="0.90"/>
+      <title>edge: return
+is_whitespace -&gt; is_whitespace
+weight: 2
+
+path:
+is_whitespace -&gt; is_whitespace</title>
+    </g>
+  </g>
+  <g id="nodes">
+    <g class="node-wrap">
+      <circle class="node-main" cx="315.42" cy="126.10" r="5.95" data-kind="rituale" data-ritual="char_is_digit" data-line="11" data-col="1" data-depth="4" data-stmt="RITUALE" data-loops="0" data-calls="0"/>
+      <title>RITUALE char_is_digit
+stmt: 1
+depth: 4
+loops: 0
+calls: 0
+source:
+RITUALE char_is_digit(MILES c) REDDE VERUM</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="284.85" cy="173.70" r="3.60" data-kind="term" data-ritual="char_is_digit" data-line="12" data-col="3" data-depth="4" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: char_is_digit
+depth: 4
+line: 12
+
+source:
+REDDE c &gt;= 48 ET c &lt;= 57</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-main" cx="386.87" cy="160.12" r="5.95" data-kind="rituale" data-ritual="char_is_alpha" data-line="16" data-col="1" data-depth="6" data-stmt="RITUALE" data-loops="0" data-calls="0"/>
+      <title>RITUALE char_is_alpha
+stmt: 1
+depth: 6
+loops: 0
+calls: 0
+source:
+RITUALE char_is_alpha(MILES c) REDDE VERUM</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="346.42" cy="199.67" r="3.60" data-kind="term" data-ritual="char_is_alpha" data-line="17" data-col="3" data-depth="6" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: char_is_alpha
+depth: 6
+line: 17
+
+source:
+REDDE (c &gt;= 65 ET c &lt;= 90) VEL (c &gt;= 97 ET c &lt;= 122) VEL c == 95</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-main" cx="416.85" cy="276.96" r="5.95" data-kind="rituale" data-ritual="char_is_alnum" data-line="20" data-col="1" data-depth="4" data-stmt="RITUALE" data-loops="0" data-calls="2"/>
+      <title>RITUALE char_is_alnum
+stmt: 1
+depth: 4
+loops: 0
+calls: 2
+source:
+RITUALE char_is_alnum(MILES c) REDDE VERUM</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="360.28" cy="277.66" r="3.60" data-kind="term" data-ritual="char_is_alnum" data-line="21" data-col="3" data-depth="4" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: char_is_alnum
+depth: 4
+line: 21
+
+source:
+REDDE CONIURA char_is_alpha(c) VEL CONIURA char_is_digit(c)</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-main" cx="378.04" cy="348.81" r="5.95" data-kind="rituale" data-ritual="char_is_whitespace" data-line="24" data-col="1" data-depth="6" data-stmt="RITUALE" data-loops="0" data-calls="0"/>
+      <title>RITUALE char_is_whitespace
+stmt: 1
+depth: 6
+loops: 0
+calls: 0
+source:
+RITUALE char_is_whitespace(MILES c) REDDE VERUM</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="328.62" cy="321.28" r="3.60" data-kind="term" data-ritual="char_is_whitespace" data-line="25" data-col="3" data-depth="6" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: char_is_whitespace
+depth: 6
+line: 25
+
+source:
+REDDE c == 32 VEL c == 9 VEL c == 10 VEL c == 13</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-main" cx="281.10" cy="393.50" r="6.25" data-kind="rituale" data-ritual="char_to_upper" data-line="28" data-col="1" data-depth="5" data-stmt="RITUALE" data-loops="0" data-calls="0"/>
+      <title>RITUALE char_to_upper
+stmt: 3
+depth: 5
+loops: 0
+calls: 0
+source:
+RITUALE char_to_upper(MILES c) REDDE MILES</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="298.34" cy="354.27" r="4.80" data-kind="branch" data-ritual="char_to_upper" data-line="29" data-col="3" data-depth="5" data-stmt="SI"/>
+      <title>stmt: SI
+rituale: char_to_upper
+depth: 5
+line: 29
+
+source:
+SI c &gt;= 97 ET c &lt;= 122</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="263.18" cy="339.85" r="4.00" data-kind="term" data-ritual="char_to_upper" data-line="30" data-col="5" data-depth="5" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: char_to_upper
+depth: 5
+line: 30
+
+source:
+REDDE c - 32</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-main" cx="182.70" cy="381.96" r="6.25" data-kind="rituale" data-ritual="char_to_lower" data-line="35" data-col="1" data-depth="5" data-stmt="RITUALE" data-loops="0" data-calls="0"/>
+      <title>RITUALE char_to_lower
+stmt: 3
+depth: 5
+loops: 0
+calls: 0
+source:
+RITUALE char_to_lower(MILES c) REDDE MILES</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="179.81" cy="339.21" r="4.80" data-kind="branch" data-ritual="char_to_lower" data-line="36" data-col="3" data-depth="5" data-stmt="SI"/>
+      <title>stmt: SI
+rituale: char_to_lower
+depth: 5
+line: 36
+
+source:
+SI c &gt;= 65 ET c &lt;= 90</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="217.78" cy="337.58" r="4.00" data-kind="term" data-ritual="char_to_lower" data-line="37" data-col="5" data-depth="5" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: char_to_lower
+depth: 5
+line: 37
+
+source:
+REDDE c + 32</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-main" cx="105.74" cy="300.84" r="5.95" data-kind="rituale" data-ritual="is_digit" data-line="42" data-col="1" data-depth="3" data-stmt="RITUALE" data-loops="0" data-calls="1"/>
+      <title>RITUALE is_digit
+stmt: 1
+depth: 3
+loops: 0
+calls: 1
+source:
+RITUALE is_digit(MILES c) REDDE VERUM</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="157.11" cy="277.16" r="3.60" data-kind="term" data-ritual="is_digit" data-line="43" data-col="3" data-depth="3" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: is_digit
+depth: 3
+line: 43
+
+source:
+REDDE CONIURA char_is_digit(c)</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-main" cx="91.53" cy="219.79" r="5.95" data-kind="rituale" data-ritual="is_alpha" data-line="46" data-col="1" data-depth="5" data-stmt="RITUALE" data-loops="0" data-calls="0"/>
+      <title>RITUALE is_alpha
+stmt: 1
+depth: 5
+loops: 0
+calls: 0
+source:
+RITUALE is_alpha(MILES c) REDDE VERUM</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="147.94" cy="224.02" r="3.60" data-kind="term" data-ritual="is_alpha" data-line="47" data-col="3" data-depth="5" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: is_alpha
+depth: 5
+line: 47
+
+source:
+REDDE (c &gt;= 65 ET c &lt;= 90) VEL (c &gt;= 97 ET c &lt;= 122)</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-main" cx="129.96" cy="169.69" r="5.95" data-kind="rituale" data-ritual="is_alnum" data-line="50" data-col="1" data-depth="4" data-stmt="RITUALE" data-loops="0" data-calls="2"/>
+      <title>RITUALE is_alnum
+stmt: 1
+depth: 4
+loops: 0
+calls: 2
+source:
+RITUALE is_alnum(MILES c) REDDE VERUM</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="171.65" cy="207.93" r="3.60" data-kind="term" data-ritual="is_alnum" data-line="51" data-col="3" data-depth="4" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: is_alnum
+depth: 4
+line: 51
+
+source:
+REDDE CONIURA is_alpha(c) VEL CONIURA is_digit(c)</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-main" cx="234.75" cy="115.80" r="5.95" data-kind="rituale" data-ritual="is_whitespace" data-line="54" data-col="1" data-depth="3" data-stmt="RITUALE" data-loops="0" data-calls="1"/>
+      <title>RITUALE is_whitespace
+stmt: 1
+depth: 3
+loops: 0
+calls: 1
+source:
+RITUALE is_whitespace(MILES c) REDDE VERUM</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="235.23" cy="172.37" r="3.60" data-kind="term" data-ritual="is_whitespace" data-line="55" data-col="3" data-depth="3" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: is_whitespace
+depth: 3
+line: 55
+
+source:
+REDDE CONIURA char_is_whitespace(c)</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="254.96" cy="261.34" r="3.92" data-kind="bind" data-ritual="char_is_digit" data-depth="4" data-stmt="EVOCA"/>
+      <title>stmt: EVOCA
+rituale: char_is_digit
+depth: 4
+line: 0
+
+source:
+stmt: EVOCA
+rituale: char_is_digit</title>
+    </g>
+  </g>
+  <g id="ornaments">
+    <circle class="orn" cx="456.16" cy="217.84" r="0.90"/>
+    <circle class="orn" cx="373.80" cy="419.00" r="1.90"/>
+    <circle class="orn" cx="171.07" cy="445.57" r="2.90"/>
+    <circle class="orn" cx="59.39" cy="319.52" r="0.90"/>
+    <circle class="orn" cx="93.53" cy="137.71" r="1.90"/>
+    <circle class="orn" cx="167.97" cy="73.34" r="2.90"/>
+    <circle class="orn" cx="411.03" cy="125.82" r="0.90"/>
+  </g>
+  <g id="signature">
+    <text class="hash" x="256" y="496" text-anchor="middle">a20627ed62c71ce1</text>
+    <text class="label" x="256" y="18" text-anchor="middle">network • sigillum v2.1 • 10 rituale(s) • 14 stmt • depth 6</text>
+  </g>
+</svg>

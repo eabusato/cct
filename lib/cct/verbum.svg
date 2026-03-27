@@ -1,0 +1,3121 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512" role="img" aria-label="CCT local sigilo">
+  <desc>Deterministic semantic sigil for a single CCT module.</desc>
+  <defs>
+    <style><![CDATA[
+      .bg { fill: #f5f0e4; }
+      .base { stroke: #2a221c; stroke-width: 1.60; fill: none; opacity: 0.78; }
+      .primary { stroke: #241913; stroke-width: 2.80; fill: none; stroke-linecap: round; stroke-linejoin: round; }
+      .call { stroke: #5b2a22; stroke-width: 2.0; fill: none; stroke-linecap: round; opacity: 0.9; }
+      .branch { stroke: #6b342d; stroke-width: 1.6; fill: none; stroke-linecap: round; }
+      .loop { stroke: #2d5f5a; stroke-width: 1.6; fill: none; stroke-linecap: round; }
+      .bind { stroke: #73493d; stroke-width: 1.4; fill: none; stroke-linecap: round; }
+      .term { stroke: #201814; stroke-width: 1.7; fill: none; stroke-linecap: round; }
+      .node-main { fill: #fffaf1; stroke: #201814; stroke-width: 2.0; }
+      .node-entry { fill: #efe6d4; stroke: #201814; stroke-width: 2.4; }
+      .node-aux { fill: #f6efe0; stroke: #4f4339; stroke-width: 1.3; }
+      .node-loop { fill: #edf3f1; stroke: #2d5f5a; stroke-width: 1.4; }
+      .node-term { fill: #f3e7e3; stroke: #5a2a23; stroke-width: 1.4; }
+      .orn { stroke: #355d58; stroke-width: 1.0; fill: none; opacity: 0.55; }
+      .hash { fill: #1f1a17; font: 10px monospace; letter-spacing: 0.8px; }
+      .label { fill: #1f1a17; font: 8px monospace; opacity: 0.7; }
+      .node-wrap, .edge-wrap { cursor: help; }
+      .node-wrap:hover > circle { opacity: 0.96; }
+      .edge-wrap:hover > path, .edge-wrap:hover > line { opacity: 1.0; }
+    ]]></style>
+  </defs>
+  <rect class="bg" x="0" y="0" width="512" height="512"/>
+  <g id="foundation">
+    <circle class="base" cx="256" cy="256" r="226"/>
+    <ellipse class="base" cx="256" cy="256" rx="198" ry="181.71" opacity="0.32"/>
+  </g>
+  <g id="primary_path">
+    <g class="edge-wrap">
+    <path class="primary" d="M 299.92 98.95 Q 277.34 92.05 296.78 105.44" stroke-width="2.60" opacity="0.96"/>
+      <title>edge: primary
+len -&gt; concat
+weight: 1
+
+path:
+len -&gt; concat</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="primary" d="M 296.78 105.44 Q 295.12 134.94 312.22 110.85" stroke-width="2.60" opacity="0.96"/>
+      <title>edge: primary
+concat -&gt; compare
+weight: 1
+
+path:
+concat -&gt; compare</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="primary" d="M 312.22 110.85 Q 318.14 144.16 344.55 123.02" stroke-width="2.60" opacity="0.96"/>
+      <title>edge: primary
+compare -&gt; substring
+weight: 1
+
+path:
+compare -&gt; substring</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="primary" d="M 344.55 123.02 Q 344.35 154.18 364.55 130.46" stroke-width="2.60" opacity="0.96"/>
+      <title>edge: primary
+substring -&gt; verbum_dup
+weight: 1
+
+path:
+substring -&gt; verbum_dup</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="primary" d="M 364.55 130.46 Q 369.85 160.00 398.35 150.59" stroke-width="2.60" opacity="0.96"/>
+      <title>edge: primary
+verbum_dup -&gt; verbum_hash_fnv1a
+weight: 1
+
+path:
+verbum_dup -&gt; verbum_hash_fnv1a</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="primary" d="M 398.35 150.59 Q 385.88 181.86 418.10 191.65" stroke-width="2.60" opacity="0.96"/>
+      <title>edge: primary
+verbum_hash_fnv1a -&gt; trim
+weight: 1
+
+path:
+verbum_hash_fnv1a -&gt; trim</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="primary" d="M 418.10 191.65 Q 419.59 166.33 409.73 189.69" stroke-width="2.60" opacity="0.96"/>
+      <title>edge: primary
+trim -&gt; find
+weight: 1
+
+path:
+trim -&gt; find</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="primary" d="M 409.73 189.69 Q 387.01 205.08 414.43 206.00" stroke-width="2.60" opacity="0.96"/>
+      <title>edge: primary
+find -&gt; char_at
+weight: 1
+
+path:
+find -&gt; char_at</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="primary" d="M 414.43 206.00 Q 404.52 238.07 438.08 237.25" stroke-width="2.60" opacity="0.96"/>
+      <title>edge: primary
+char_at -&gt; from_char
+weight: 1
+
+path:
+char_at -&gt; from_char</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="primary" d="M 438.08 237.25 Q 410.45 235.61 427.26 257.59" stroke-width="2.60" opacity="0.96"/>
+      <title>edge: primary
+from_char -&gt; contains
+weight: 1
+
+path:
+from_char -&gt; contains</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="primary" d="M 427.26 257.59 Q 403.28 266.46 428.81 267.83" stroke-width="2.60" opacity="0.96"/>
+      <title>edge: primary
+contains -&gt; starts_with
+weight: 1
+
+path:
+contains -&gt; starts_with</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="primary" d="M 428.81 267.83 Q 417.96 289.31 436.90 274.47" stroke-width="2.60" opacity="0.96"/>
+      <title>edge: primary
+starts_with -&gt; ends_with
+weight: 1
+
+path:
+starts_with -&gt; ends_with</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="primary" d="M 436.90 274.47 Q 410.64 291.23 434.76 310.94" stroke-width="2.60" opacity="0.96"/>
+      <title>edge: primary
+ends_with -&gt; strip_prefix
+weight: 1
+
+path:
+ends_with -&gt; strip_prefix</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="primary" d="M 434.76 310.94 Q 394.88 317.65 400.84 357.65" stroke-width="2.60" opacity="0.96"/>
+      <title>edge: primary
+strip_prefix -&gt; strip_suffix
+weight: 1
+
+path:
+strip_prefix -&gt; strip_suffix</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="primary" d="M 400.84 357.65 Q 372.61 342.08 366.51 373.74" stroke-width="2.60" opacity="0.96"/>
+      <title>edge: primary
+strip_suffix -&gt; replace
+weight: 1
+
+path:
+strip_suffix -&gt; replace</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="primary" d="M 366.51 373.74 Q 343.88 365.87 357.46 385.61" stroke-width="2.60" opacity="0.96"/>
+      <title>edge: primary
+replace -&gt; replace_all
+weight: 1
+
+path:
+replace -&gt; replace_all</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="primary" d="M 357.46 385.61 Q 337.93 372.09 344.31 394.97" stroke-width="2.60" opacity="0.96"/>
+      <title>edge: primary
+replace_all -&gt; to_upper
+weight: 1
+
+path:
+replace_all -&gt; to_upper</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="primary" d="M 344.31 394.97 Q 356.07 374.14 337.38 389.07" stroke-width="2.60" opacity="0.96"/>
+      <title>edge: primary
+to_upper -&gt; to_lower
+weight: 1
+
+path:
+to_upper -&gt; to_lower</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="primary" d="M 337.38 389.07 Q 317.42 372.14 330.01 395.08" stroke-width="2.60" opacity="0.96"/>
+      <title>edge: primary
+to_lower -&gt; trim_left
+weight: 1
+
+path:
+to_lower -&gt; trim_left</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="primary" d="M 330.01 395.08 Q 300.45 377.94 300.76 412.11" stroke-width="2.60" opacity="0.96"/>
+      <title>edge: primary
+trim_left -&gt; trim_right
+weight: 1
+
+path:
+trim_left -&gt; trim_right</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="primary" d="M 300.76 412.11 Q 287.21 389.35 276.15 413.42" stroke-width="2.60" opacity="0.96"/>
+      <title>edge: primary
+trim_right -&gt; trim_char
+weight: 1
+
+path:
+trim_right -&gt; trim_char</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="primary" d="M 276.15 413.42 Q 243.14 390.90 214.54 418.80" stroke-width="2.60" opacity="0.96"/>
+      <title>edge: primary
+trim_char -&gt; repeat
+weight: 1
+
+path:
+trim_char -&gt; repeat</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="primary" d="M 214.54 418.80 Q 193.16 377.48 146.87 382.02" stroke-width="2.60" opacity="0.96"/>
+      <title>edge: primary
+repeat -&gt; pad_left
+weight: 1
+
+path:
+repeat -&gt; pad_left</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="primary" d="M 146.87 382.02 Q 153.40 355.70 132.01 372.38" stroke-width="2.60" opacity="0.96"/>
+      <title>edge: primary
+pad_left -&gt; pad_right
+weight: 1
+
+path:
+pad_left -&gt; pad_right</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="primary" d="M 132.01 372.38 Q 130.60 329.10 87.90 321.89" stroke-width="2.60" opacity="0.96"/>
+      <title>edge: primary
+pad_right -&gt; center
+weight: 1
+
+path:
+pad_right -&gt; center</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="primary" d="M 87.90 321.89 Q 117.48 300.05 88.52 277.39" stroke-width="2.60" opacity="0.96"/>
+      <title>edge: primary
+center -&gt; last_find
+weight: 1
+
+path:
+center -&gt; last_find</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="primary" d="M 88.52 277.39 Q 91.09 242.50 56.90 249.91" stroke-width="2.60" opacity="0.96"/>
+      <title>edge: primary
+last_find -&gt; find_from
+weight: 1
+
+path:
+last_find -&gt; find_from</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="primary" d="M 56.90 249.91 Q 92.61 253.22 83.52 218.53" stroke-width="2.60" opacity="0.96"/>
+      <title>edge: primary
+find_from -&gt; count_occurrences
+weight: 1
+
+path:
+find_from -&gt; count_occurrences</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="primary" d="M 83.52 218.53 Q 116.98 210.56 108.58 177.21" stroke-width="2.60" opacity="0.96"/>
+      <title>edge: primary
+count_occurrences -&gt; reverse
+weight: 1
+
+path:
+count_occurrences -&gt; reverse</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="primary" d="M 108.58 177.21 Q 90.46 162.15 101.42 183.01" stroke-width="2.60" opacity="0.96"/>
+      <title>edge: primary
+reverse -&gt; is_empty
+weight: 1
+
+path:
+reverse -&gt; is_empty</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="primary" d="M 101.42 183.01 Q 132.65 173.51 115.40 145.79" stroke-width="2.60" opacity="0.96"/>
+      <title>edge: primary
+is_empty -&gt; equals_ignore_case
+weight: 1
+
+path:
+is_empty -&gt; equals_ignore_case</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="primary" d="M 115.40 145.79 Q 141.98 161.32 147.72 131.08" stroke-width="2.60" opacity="0.96"/>
+      <title>edge: primary
+equals_ignore_case -&gt; slice
+weight: 1
+
+path:
+equals_ignore_case -&gt; slice</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="primary" d="M 147.72 131.08 Q 177.14 142.88 169.35 112.15" stroke-width="2.60" opacity="0.96"/>
+      <title>edge: primary
+slice -&gt; is_ascii
+weight: 1
+
+path:
+slice -&gt; is_ascii</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="primary" d="M 169.35 112.15 Q 187.74 131.73 196.45 106.33" stroke-width="2.60" opacity="0.96"/>
+      <title>edge: primary
+is_ascii -&gt; split
+weight: 1
+
+path:
+is_ascii -&gt; split</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="primary" d="M 196.45 106.33 Q 191.73 136.20 203.81 108.47" stroke-width="2.60" opacity="0.96"/>
+      <title>edge: primary
+split -&gt; split_char
+weight: 1
+
+path:
+split -&gt; split_char</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="primary" d="M 203.81 108.47 Q 223.52 134.37 231.75 102.88" stroke-width="2.60" opacity="0.96"/>
+      <title>edge: primary
+split_char -&gt; join
+weight: 1
+
+path:
+split_char -&gt; join</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="primary" d="M 231.75 102.88 Q 255.44 125.47 257.73 92.82" stroke-width="2.60" opacity="0.96"/>
+      <title>edge: primary
+join -&gt; lines
+weight: 1
+
+path:
+join -&gt; lines</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="primary" d="M 257.73 92.82 Q 259.70 118.57 274.58 97.45" stroke-width="2.60" opacity="0.96"/>
+      <title>edge: primary
+lines -&gt; words
+weight: 1
+
+path:
+lines -&gt; words</title>
+    </g>
+  </g>
+  <g id="call_links">
+    <g class="edge-wrap">
+    <path class="call" d="M 364.55 130.46 Q 364.61 99.68 344.55 123.02" stroke-width="2.15" opacity="0.74" data-kind="call" data-from="verbum_dup" data-to="substring" data-weight="1" data-self-loop="false"/>
+      <title>edge: call
+verbum_dup -&gt; substring
+calls: 1
+
+path:
+verbum_dup -&gt; substring</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="call" d="M 364.55 130.46 Q 344.80 88.94 299.92 98.95" stroke-width="2.15" opacity="0.74" data-kind="call" data-from="verbum_dup" data-to="len" data-weight="1" data-self-loop="false"/>
+      <title>edge: call
+verbum_dup -&gt; len
+calls: 1
+
+path:
+verbum_dup -&gt; len</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="call" d="M 398.35 150.59 Q 362.96 98.42 299.92 98.95" stroke-width="2.15" opacity="0.74" data-kind="call" data-from="verbum_hash_fnv1a" data-to="len" data-weight="1" data-self-loop="false"/>
+      <title>edge: call
+verbum_hash_fnv1a -&gt; len
+calls: 1
+
+path:
+verbum_hash_fnv1a -&gt; len</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="call" d="M 398.35 150.59 Q 375.09 187.37 414.43 206.00" stroke-width="2.15" opacity="0.74" data-kind="call" data-from="verbum_hash_fnv1a" data-to="char_at" data-weight="1" data-self-loop="false"/>
+      <title>edge: call
+verbum_hash_fnv1a -&gt; char_at
+calls: 1
+
+path:
+verbum_hash_fnv1a -&gt; char_at</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="call" d="M 427.26 257.59 Q 449.26 215.70 409.73 189.69" stroke-width="2.15" opacity="0.74" data-kind="call" data-from="contains" data-to="find" data-weight="1" data-self-loop="false"/>
+      <title>edge: call
+contains -&gt; find
+calls: 1
+
+path:
+contains -&gt; find</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="call" d="M 434.76 310.94 Q 460.65 285.40 428.81 267.83" stroke-width="2.15" opacity="0.74" data-kind="call" data-from="strip_prefix" data-to="starts_with" data-weight="1" data-self-loop="false"/>
+      <title>edge: call
+strip_prefix -&gt; starts_with
+calls: 1
+
+path:
+strip_prefix -&gt; starts_with</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="call" d="M 434.76 310.94 Q 400.67 183.75 299.92 98.95" stroke-width="2.50" opacity="0.80" data-kind="call" data-from="strip_prefix" data-to="len" data-weight="2" data-self-loop="false"/>
+      <title>edge: call
+strip_prefix -&gt; len
+calls: 2
+
+path:
+strip_prefix -&gt; len</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="call" d="M 434.76 310.94 Q 419.41 202.70 344.55 123.02" stroke-width="2.15" opacity="0.74" data-kind="call" data-from="strip_prefix" data-to="substring" data-weight="1" data-self-loop="false"/>
+      <title>edge: call
+strip_prefix -&gt; substring
+calls: 1
+
+path:
+strip_prefix -&gt; substring</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="call" d="M 400.84 357.65 Q 447.23 328.35 436.90 274.47" stroke-width="2.15" opacity="0.74" data-kind="call" data-from="strip_suffix" data-to="ends_with" data-weight="1" data-self-loop="false"/>
+      <title>edge: call
+strip_suffix -&gt; ends_with
+calls: 1
+
+path:
+strip_suffix -&gt; ends_with</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="call" d="M 400.84 357.65 Q 387.42 213.85 299.92 98.95" stroke-width="2.50" opacity="0.80" data-kind="call" data-from="strip_suffix" data-to="len" data-weight="2" data-self-loop="false"/>
+      <title>edge: call
+strip_suffix -&gt; len
+calls: 2
+
+path:
+strip_suffix -&gt; len</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="call" d="M 400.84 357.65 Q 400.88 233.58 344.55 123.02" stroke-width="2.15" opacity="0.74" data-kind="call" data-from="strip_suffix" data-to="substring" data-weight="1" data-self-loop="false"/>
+      <title>edge: call
+strip_suffix -&gt; substring
+calls: 1
+
+path:
+strip_suffix -&gt; substring</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="call" d="M 276.15 413.42 Q 322.15 258.76 299.92 98.95" stroke-width="2.15" opacity="0.74" data-kind="call" data-from="trim_char" data-to="len" data-weight="1" data-self-loop="false"/>
+      <title>edge: call
+trim_char -&gt; len
+calls: 1
+
+path:
+trim_char -&gt; len</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="call" d="M 276.15 413.42 Q 374.70 329.31 414.43 206.00" stroke-width="2.50" opacity="0.80" data-kind="call" data-from="trim_char" data-to="char_at" data-weight="2" data-self-loop="false"/>
+      <title>edge: call
+trim_char -&gt; char_at
+calls: 2
+
+path:
+trim_char -&gt; char_at</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="call" d="M 276.15 413.42 Q 342.82 275.87 344.55 123.02" stroke-width="2.15" opacity="0.74" data-kind="call" data-from="trim_char" data-to="substring" data-weight="1" data-self-loop="false"/>
+      <title>edge: call
+trim_char -&gt; substring
+calls: 1
+
+path:
+trim_char -&gt; substring</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="call" d="M 214.54 418.80 Q 285.18 269.87 296.78 105.44" stroke-width="2.15" opacity="0.74" data-kind="call" data-from="repeat" data-to="concat" data-weight="1" data-self-loop="false"/>
+      <title>edge: call
+repeat -&gt; concat
+calls: 1
+
+path:
+repeat -&gt; concat</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="call" d="M 146.87 382.02 Q 247.75 253.66 299.92 98.95" stroke-width="2.15" opacity="0.74" data-kind="call" data-from="pad_left" data-to="len" data-weight="1" data-self-loop="false"/>
+      <title>edge: call
+pad_left -&gt; len
+calls: 1
+
+path:
+pad_left -&gt; len</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="call" d="M 146.87 382.02 Q 165.86 427.73 214.54 418.80" stroke-width="2.15" opacity="0.74" data-kind="call" data-from="pad_left" data-to="repeat" data-weight="1" data-self-loop="false"/>
+      <title>edge: call
+pad_left -&gt; repeat
+calls: 1
+
+path:
+pad_left -&gt; repeat</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="call" d="M 146.87 382.02 Q 307.61 340.09 438.08 237.25" stroke-width="2.15" opacity="0.74" data-kind="call" data-from="pad_left" data-to="from_char" data-weight="1" data-self-loop="false"/>
+      <title>edge: call
+pad_left -&gt; from_char
+calls: 1
+
+path:
+pad_left -&gt; from_char</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="call" d="M 146.87 382.02 Q 247.51 257.65 296.78 105.44" stroke-width="2.15" opacity="0.74" data-kind="call" data-from="pad_left" data-to="concat" data-weight="1" data-self-loop="false"/>
+      <title>edge: call
+pad_left -&gt; concat
+calls: 1
+
+path:
+pad_left -&gt; concat</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="call" d="M 132.01 372.38 Q 240.80 250.92 299.92 98.95" stroke-width="2.15" opacity="0.74" data-kind="call" data-from="pad_right" data-to="len" data-weight="1" data-self-loop="false"/>
+      <title>edge: call
+pad_right -&gt; len
+calls: 1
+
+path:
+pad_right -&gt; len</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="call" d="M 132.01 372.38 Q 158.07 422.62 214.54 418.80" stroke-width="2.15" opacity="0.74" data-kind="call" data-from="pad_right" data-to="repeat" data-weight="1" data-self-loop="false"/>
+      <title>edge: call
+pad_right -&gt; repeat
+calls: 1
+
+path:
+pad_right -&gt; repeat</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="call" d="M 132.01 372.38 Q 297.56 333.16 438.08 237.25" stroke-width="2.15" opacity="0.74" data-kind="call" data-from="pad_right" data-to="from_char" data-weight="1" data-self-loop="false"/>
+      <title>edge: call
+pad_right -&gt; from_char
+calls: 1
+
+path:
+pad_right -&gt; from_char</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="call" d="M 132.01 372.38 Q 241.43 255.59 296.78 105.44" stroke-width="2.15" opacity="0.74" data-kind="call" data-from="pad_right" data-to="concat" data-weight="1" data-self-loop="false"/>
+      <title>edge: call
+pad_right -&gt; concat
+calls: 1
+
+path:
+pad_right -&gt; concat</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="call" d="M 87.90 321.89 Q 214.43 229.94 299.92 98.95" stroke-width="2.15" opacity="0.74" data-kind="call" data-from="center" data-to="len" data-weight="1" data-self-loop="false"/>
+      <title>edge: call
+center -&gt; len
+calls: 1
+
+path:
+center -&gt; len</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="call" d="M 87.90 321.89 Q 127.57 401.25 214.54 418.80" stroke-width="2.50" opacity="0.80" data-kind="call" data-from="center" data-to="repeat" data-weight="2" data-self-loop="false"/>
+      <title>edge: call
+center -&gt; repeat
+calls: 2
+
+path:
+center -&gt; repeat</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="call" d="M 87.90 321.89 Q 271.18 313.46 438.08 237.25" stroke-width="2.50" opacity="0.80" data-kind="call" data-from="center" data-to="from_char" data-weight="2" data-self-loop="false"/>
+      <title>edge: call
+center -&gt; from_char
+calls: 2
+
+path:
+center -&gt; from_char</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="call" d="M 87.90 321.89 Q 217.80 238.23 296.78 105.44" stroke-width="2.50" opacity="0.80" data-kind="call" data-from="center" data-to="concat" data-weight="2" data-self-loop="false"/>
+      <title>edge: call
+center -&gt; concat
+calls: 2
+
+path:
+center -&gt; concat</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="call" d="M 56.90 249.91 Q 197.50 205.17 299.92 98.95" stroke-width="2.50" opacity="0.80" data-kind="call" data-from="find_from" data-to="len" data-weight="2" data-self-loop="false"/>
+      <title>edge: call
+find_from -&gt; len
+calls: 2
+
+path:
+find_from -&gt; len</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="call" d="M 56.90 249.91 Q 200.60 209.83 312.22 110.85" stroke-width="2.15" opacity="0.74" data-kind="call" data-from="find_from" data-to="compare" data-weight="1" data-self-loop="false"/>
+      <title>edge: call
+find_from -&gt; compare
+calls: 1
+
+path:
+find_from -&gt; compare</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="call" d="M 56.90 249.91 Q 213.47 215.37 344.55 123.02" stroke-width="2.15" opacity="0.74" data-kind="call" data-from="find_from" data-to="substring" data-weight="1" data-self-loop="false"/>
+      <title>edge: call
+find_from -&gt; substring
+calls: 1
+
+path:
+find_from -&gt; substring</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="call" d="M 101.42 183.01 Q 212.66 169.28 299.92 98.95" stroke-width="2.15" opacity="0.74" data-kind="call" data-from="is_empty" data-to="len" data-weight="1" data-self-loop="false"/>
+      <title>edge: call
+is_empty -&gt; len
+calls: 1
+
+path:
+is_empty -&gt; len</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="call" d="M 115.40 145.79 Q 219.18 158.59 312.22 110.85" stroke-width="2.15" opacity="0.74" data-kind="call" data-from="equals_ignore_case" data-to="compare" data-weight="1" data-self-loop="false"/>
+      <title>edge: call
+equals_ignore_case -&gt; compare
+calls: 1
+
+path:
+equals_ignore_case -&gt; compare</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="call" d="M 115.40 145.79 Q 201.25 290.37 337.38 389.07" stroke-width="2.50" opacity="0.80" data-kind="call" data-from="equals_ignore_case" data-to="to_lower" data-weight="2" data-self-loop="false"/>
+      <title>edge: call
+equals_ignore_case -&gt; to_lower
+calls: 2
+
+path:
+equals_ignore_case -&gt; to_lower</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="call" d="M 169.35 112.15 Q 237.46 133.50 299.92 98.95" stroke-width="2.15" opacity="0.74" data-kind="call" data-from="is_ascii" data-to="len" data-weight="1" data-self-loop="false"/>
+      <title>edge: call
+is_ascii -&gt; len
+calls: 1
+
+path:
+is_ascii -&gt; len</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="call" d="M 169.35 112.15 Q 280.36 189.18 414.43 206.00" stroke-width="2.15" opacity="0.74" data-kind="call" data-from="is_ascii" data-to="char_at" data-weight="1" data-self-loop="false"/>
+      <title>edge: call
+is_ascii -&gt; char_at
+calls: 1
+
+path:
+is_ascii -&gt; char_at</title>
+    </g>
+  </g>
+  <g id="branches">
+    <g class="edge-wrap">
+    <path class="branch" d="M 427.26 257.59 Q 415.87 236.36 391.98 233.26" stroke-width="1.70" opacity="0.85"/>
+      <title>edge: branch
+contains -&gt; contains
+weight: 2
+
+path:
+contains -&gt; contains</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="branch" d="M 434.76 310.94 Q 430.63 286.76 407.88 277.57" stroke-width="1.70" opacity="0.85"/>
+      <title>edge: branch
+strip_prefix -&gt; strip_prefix
+weight: 2
+
+path:
+strip_prefix -&gt; strip_prefix</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="branch" d="M 400.84 357.65 Q 379.59 347.62 358.00 356.90" stroke-width="1.70" opacity="0.85"/>
+      <title>edge: branch
+strip_suffix -&gt; strip_suffix
+weight: 2
+
+path:
+strip_suffix -&gt; strip_suffix</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="branch" d="M 214.54 418.80 Q 238.95 412.72 246.93 388.87" stroke-width="1.95" opacity="0.85"/>
+      <title>edge: branch
+repeat -&gt; repeat
+weight: 3
+
+path:
+repeat -&gt; repeat</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="branch" d="M 146.87 382.02 Q 170.70 388.15 188.25 370.90" stroke-width="1.70" opacity="0.85"/>
+      <title>edge: branch
+pad_left -&gt; pad_left
+weight: 2
+
+path:
+pad_left -&gt; pad_left</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="branch" d="M 132.01 372.38 Q 147.06 353.82 141.47 330.59" stroke-width="1.70" opacity="0.85"/>
+      <title>edge: branch
+pad_right -&gt; pad_right
+weight: 2
+
+path:
+pad_right -&gt; pad_right</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="branch" d="M 87.90 321.89 Q 106.35 337.53 129.71 331.28" stroke-width="1.70" opacity="0.85"/>
+      <title>edge: branch
+center -&gt; center
+weight: 2
+
+path:
+center -&gt; center</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="branch" d="M 56.90 249.91 Q 71.91 268.28 94.65 275.07" stroke-width="2.10" opacity="0.85"/>
+      <title>edge: branch
+find_from -&gt; find_from
+weight: 4
+
+path:
+find_from -&gt; find_from</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="branch" d="M 169.35 112.15 Q 156.72 132.95 167.11 154.95" stroke-width="1.70" opacity="0.85"/>
+      <title>edge: branch
+is_ascii -&gt; is_ascii
+weight: 2
+
+path:
+is_ascii -&gt; is_ascii</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="branch" d="M 253.34 266.22 Q 289.25 186.10 299.92 98.95" stroke-width="1.45" opacity="0.85"/>
+      <title>edge: branch
+len -&gt; len
+weight: 1
+
+path:
+len -&gt; len</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="branch" d="M 253.34 266.22 Q 319.16 206.71 364.55 130.46" stroke-width="1.95" opacity="0.85"/>
+      <title>edge: branch
+len -&gt; verbum_dup
+weight: 3
+
+path:
+len -&gt; verbum_dup</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="branch" d="M 253.34 266.22 Q 333.35 217.81 398.35 150.59" stroke-width="2.10" opacity="0.85"/>
+      <title>edge: branch
+len -&gt; verbum_hash_fnv1a
+weight: 5
+
+path:
+len -&gt; verbum_hash_fnv1a</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="branch" d="M 253.34 266.22 Q 340.80 271.98 427.26 257.59" stroke-width="1.95" opacity="0.85"/>
+      <title>edge: branch
+len -&gt; contains
+weight: 3
+
+path:
+len -&gt; contains</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="branch" d="M 253.34 266.22 Q 340.75 301.97 434.76 310.94" stroke-width="2.10" opacity="0.85"/>
+      <title>edge: branch
+len -&gt; strip_prefix
+weight: 6
+
+path:
+len -&gt; strip_prefix</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="branch" d="M 253.34 266.22 Q 321.83 320.43 400.84 357.65" stroke-width="2.10" opacity="0.85"/>
+      <title>edge: branch
+len -&gt; strip_suffix
+weight: 6
+
+path:
+len -&gt; strip_suffix</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="branch" d="M 253.34 266.22 Q 258.00 340.86 276.15 413.42" stroke-width="2.10" opacity="0.85"/>
+      <title>edge: branch
+len -&gt; trim_char
+weight: 7
+
+path:
+len -&gt; trim_char</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="branch" d="M 253.34 266.22 Q 226.90 340.72 214.54 418.80" stroke-width="2.10" opacity="0.85"/>
+      <title>edge: branch
+len -&gt; repeat
+weight: 5
+
+path:
+len -&gt; repeat</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="branch" d="M 253.34 266.22 Q 191.10 315.84 146.87 382.02" stroke-width="2.10" opacity="0.85"/>
+      <title>edge: branch
+len -&gt; pad_left
+weight: 6
+
+path:
+len -&gt; pad_left</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="branch" d="M 253.34 266.22 Q 185.84 311.49 132.01 372.38" stroke-width="2.10" opacity="0.85"/>
+      <title>edge: branch
+len -&gt; pad_right
+weight: 6
+
+path:
+len -&gt; pad_right</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="branch" d="M 253.34 266.22 Q 167.87 285.88 87.90 321.89" stroke-width="2.10" opacity="0.85"/>
+      <title>edge: branch
+len -&gt; center
+weight: 9
+
+path:
+len -&gt; center</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="branch" d="M 253.34 266.22 Q 155.81 249.72 56.90 249.91" stroke-width="2.10" opacity="0.85"/>
+      <title>edge: branch
+len -&gt; find_from
+weight: 9
+
+path:
+len -&gt; find_from</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="branch" d="M 253.34 266.22 Q 183.12 214.13 101.42 183.01" stroke-width="1.70" opacity="0.85"/>
+      <title>edge: branch
+len -&gt; is_empty
+weight: 2
+
+path:
+len -&gt; is_empty</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="branch" d="M 253.34 266.22 Q 192.48 196.72 115.40 145.79" stroke-width="2.10" opacity="0.85"/>
+      <title>edge: branch
+len -&gt; equals_ignore_case
+weight: 4
+
+path:
+len -&gt; equals_ignore_case</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="branch" d="M 253.34 266.22 Q 221.33 183.74 169.35 112.15" stroke-width="2.10" opacity="0.85"/>
+      <title>edge: branch
+len -&gt; is_ascii
+weight: 5
+
+path:
+len -&gt; is_ascii</title>
+    </g>
+  </g>
+  <g id="loops">
+    <g class="edge-wrap">
+    <path class="loop" d="M 398.35 150.59 Q 413.95 165.09 434.30 158.80" stroke-width="1.55" opacity="0.88"/>
+      <title>edge: loop
+verbum_hash_fnv1a -&gt; verbum_hash_fnv1a
+weight: 2
+
+path:
+verbum_hash_fnv1a -&gt; verbum_hash_fnv1a</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="loop" d="M 438.06 158.80 C 473.90 151.31 477.81 173.13 462.19 162.22 C 446.58 173.13 450.48 151.31 431.48 160.30"/>
+      <title>edge: loop
+verbum_hash_fnv1a -&gt; verbum_hash_fnv1a
+weight: 2
+
+path:
+verbum_hash_fnv1a -&gt; verbum_hash_fnv1a</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="loop" d="M 276.15 413.42 Q 260.29 423.94 251.42 440.78" stroke-width="1.70" opacity="0.88"/>
+      <title>edge: loop
+trim_char -&gt; trim_char
+weight: 3
+
+path:
+trim_char -&gt; trim_char</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="loop" d="M 255.74 440.78 C 289.05 416.25 293.18 439.42 276.67 427.83 C 260.15 439.42 264.28 416.25 248.18 442.28"/>
+      <title>edge: loop
+trim_char -&gt; trim_char
+weight: 3
+
+path:
+trim_char -&gt; trim_char</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="loop" d="M 214.54 418.80 Q 216.88 439.69 235.75 448.97" stroke-width="1.55" opacity="0.88"/>
+      <title>edge: loop
+repeat -&gt; repeat
+weight: 2
+
+path:
+repeat -&gt; repeat</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="loop" d="M 239.51 448.97 C 275.57 440.03 279.47 461.86 263.86 450.94 C 248.24 461.86 252.15 440.03 232.93 450.47"/>
+      <title>edge: loop
+repeat -&gt; repeat
+weight: 2
+
+path:
+repeat -&gt; repeat</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="loop" d="M 56.90 249.91 Q 40.81 260.20 32.05 277.16" stroke-width="1.55" opacity="0.88"/>
+      <title>edge: loop
+find_from -&gt; find_from
+weight: 2
+
+path:
+find_from -&gt; find_from</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="loop" d="M 35.81 277.16 C 68.49 277.02 72.39 298.85 56.77 287.93 C 41.16 298.85 45.06 277.02 29.23 278.66"/>
+      <title>edge: loop
+find_from -&gt; find_from
+weight: 2
+
+path:
+find_from -&gt; find_from</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="loop" d="M 169.35 112.15 Q 152.75 99.70 132.99 106.04" stroke-width="1.55" opacity="0.88"/>
+      <title>edge: loop
+is_ascii -&gt; is_ascii
+weight: 2
+
+path:
+is_ascii -&gt; is_ascii</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="loop" d="M 136.75 106.04 C 168.67 83.34 172.57 105.17 156.96 94.25 C 141.34 105.17 145.25 83.34 130.17 107.54"/>
+      <title>edge: loop
+is_ascii -&gt; is_ascii
+weight: 2
+
+path:
+is_ascii -&gt; is_ascii</title>
+    </g>
+  </g>
+  <g id="bindings">
+    <g class="edge-wrap">
+    <path class="bind" d="M 299.92 98.95 Q 288.62 109.29 292.92 123.99" stroke-width="1.28" opacity="0.85"/>
+    <line class="bind" x1="302.37" y1="105.04" x2="294.67" y2="102.88" opacity="0.75"/>
+    <line class="bind" x1="297.84" y1="123.48" x2="303.81" y2="122.87" opacity="0.58"/>
+      <title>edge: bind
+len -&gt; len
+weight: 1
+
+path:
+len -&gt; len</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="bind" d="M 296.78 105.44 Q 290.30 117.15 289.99 130.54" stroke-width="1.28" opacity="0.85"/>
+    <line class="bind" x1="299.29" y1="111.51" x2="291.56" y2="109.42" opacity="0.75"/>
+    <line class="bind" x1="294.82" y1="129.45" x2="300.67" y2="128.14" opacity="0.58"/>
+      <title>edge: bind
+concat -&gt; concat
+weight: 1
+
+path:
+concat -&gt; concat</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="bind" d="M 312.22 110.85 Q 300.24 120.15 302.83 135.10" stroke-width="1.28" opacity="0.85"/>
+    <line class="bind" x1="314.07" y1="117.14" x2="306.61" y2="114.26" opacity="0.75"/>
+    <line class="bind" x1="307.77" y1="134.87" x2="313.77" y2="134.59" opacity="0.58"/>
+      <title>edge: bind
+compare -&gt; compare
+weight: 1
+
+path:
+compare -&gt; compare</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="bind" d="M 344.55 123.02 Q 332.12 130.37 330.14 144.66" stroke-width="1.28" opacity="0.85"/>
+    <line class="bind" x1="345.00" y1="129.57" x2="338.34" y2="125.13" opacity="0.75"/>
+    <line class="bind" x1="335.08" y1="144.42" x2="341.08" y2="144.12" opacity="0.58"/>
+      <title>edge: bind
+substring -&gt; substring
+weight: 1
+
+path:
+substring -&gt; substring</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="bind" d="M 398.35 150.59 Q 383.34 152.16 377.46 166.06" stroke-width="1.68" opacity="0.85"/>
+    <line class="bind" x1="396.56" y1="156.89" x2="391.79" y2="150.47" opacity="0.75"/>
+    <line class="bind" x1="395.06" y1="159.25" x2="389.11" y2="151.21" opacity="0.75"/>
+    <line class="bind" x1="392.38" y1="159.99" x2="387.62" y2="153.56" opacity="0.75"/>
+    <line class="bind" x1="390.88" y1="162.34" x2="384.93" y2="154.30" opacity="0.75"/>
+    <line class="bind" x1="388.20" y1="163.08" x2="383.44" y2="156.65" opacity="0.75"/>
+    <line class="bind" x1="386.70" y1="165.43" x2="380.75" y2="157.40" opacity="0.75"/>
+    <line class="bind" x1="382.91" y1="167.72" x2="388.65" y2="169.47" opacity="0.58"/>
+    <line class="bind" x1="379.49" y1="171.38" x2="382.71" y2="179.79" opacity="0.58"/>
+    <line class="bind" x1="372.49" y1="168.86" x2="367.27" y2="171.81" opacity="0.58"/>
+    <line class="bind" x1="373.00" y1="162.51" x2="365.96" y2="156.90" opacity="0.58"/>
+    <line class="bind" x1="379.06" y1="160.59" x2="380.74" y2="154.83" opacity="0.58"/>
+      <title>edge: bind
+verbum_hash_fnv1a -&gt; verbum_hash_fnv1a
+weight: 6
+
+path:
+verbum_hash_fnv1a -&gt; verbum_hash_fnv1a</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="bind" d="M 418.10 191.65 Q 405.14 194.22 393.94 201.24" stroke-width="1.28" opacity="0.85"/>
+    <line class="bind" x1="414.75" y1="197.28" x2="411.79" y2="189.85" opacity="0.75"/>
+    <line class="bind" x1="398.89" y1="201.31" x2="404.89" y2="201.39" opacity="0.58"/>
+      <title>edge: bind
+trim -&gt; trim
+weight: 1
+
+path:
+trim -&gt; trim</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="bind" d="M 409.73 189.69 Q 395.57 189.70 385.85 199.99" stroke-width="1.28" opacity="0.85"/>
+    <line class="bind" x1="406.54" y1="195.43" x2="403.37" y2="188.08" opacity="0.75"/>
+    <line class="bind" x1="390.80" y1="199.97" x2="396.80" y2="199.94" opacity="0.58"/>
+      <title>edge: bind
+find -&gt; find
+weight: 1
+
+path:
+find -&gt; find</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="bind" d="M 414.43 206.00 Q 400.94 206.47 389.63 213.83" stroke-width="1.28" opacity="0.85"/>
+    <line class="bind" x1="410.67" y1="211.38" x2="408.27" y2="203.75" opacity="0.75"/>
+    <line class="bind" x1="394.57" y1="214.15" x2="400.56" y2="214.53" opacity="0.58"/>
+      <title>edge: bind
+char_at -&gt; char_at
+weight: 1
+
+path:
+char_at -&gt; char_at</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="bind" d="M 438.08 237.25 Q 424.57 233.02 412.21 239.91" stroke-width="1.28" opacity="0.85"/>
+    <line class="bind" x1="433.31" y1="241.76" x2="432.49" y2="233.80" opacity="0.75"/>
+    <line class="bind" x1="417.10" y1="239.10" x2="423.01" y2="238.12" opacity="0.58"/>
+      <title>edge: bind
+from_char -&gt; from_char
+weight: 1
+
+path:
+from_char -&gt; from_char</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="bind" d="M 428.81 267.83 Q 416.43 258.38 402.87 266.05" stroke-width="1.28" opacity="0.85"/>
+    <line class="bind" x1="423.35" y1="271.46" x2="423.90" y2="263.48" opacity="0.75"/>
+    <line class="bind" x1="407.82" y1="266.15" x2="413.82" y2="266.26" opacity="0.58"/>
+      <title>edge: bind
+starts_with -&gt; starts_with
+weight: 1
+
+path:
+starts_with -&gt; starts_with</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="bind" d="M 436.90 274.47 Q 424.79 265.07 411.04 271.83" stroke-width="1.28" opacity="0.85"/>
+    <line class="bind" x1="431.32" y1="277.92" x2="432.14" y2="269.96" opacity="0.75"/>
+    <line class="bind" x1="415.98" y1="272.04" x2="421.98" y2="272.29" opacity="0.58"/>
+      <title>edge: bind
+ends_with -&gt; ends_with
+weight: 1
+
+path:
+ends_with -&gt; ends_with</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="bind" d="M 434.76 310.94 Q 424.38 300.47 409.91 303.30" stroke-width="1.36" opacity="0.85"/>
+    <line class="bind" x1="428.61" y1="313.24" x2="430.96" y2="305.59" opacity="0.75"/>
+    <line class="bind" x1="425.83" y1="313.43" x2="428.77" y2="303.87" opacity="0.75"/>
+    <line class="bind" x1="415.00" y1="303.02" x2="420.99" y2="302.68" opacity="0.58"/>
+    <line class="bind" x1="404.81" y1="303.26" x2="395.81" y2="303.19" opacity="0.58"/>
+      <title>edge: bind
+strip_prefix -&gt; strip_prefix
+weight: 2
+
+path:
+strip_prefix -&gt; strip_prefix</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="bind" d="M 400.84 357.65 Q 392.88 346.37 379.56 342.72" stroke-width="1.36" opacity="0.85"/>
+    <line class="bind" x1="394.29" y1="357.94" x2="398.88" y2="351.39" opacity="0.75"/>
+    <line class="bind" x1="391.59" y1="357.26" x2="397.33" y2="349.08" opacity="0.75"/>
+    <line class="bind" x1="384.49" y1="341.39" x2="390.28" y2="339.84" opacity="0.58"/>
+    <line class="bind" x1="374.63" y1="344.02" x2="365.93" y2="346.32" opacity="0.58"/>
+      <title>edge: bind
+strip_suffix -&gt; strip_suffix
+weight: 2
+
+path:
+strip_suffix -&gt; strip_suffix</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="bind" d="M 366.51 373.74 Q 359.37 362.61 348.72 354.78" stroke-width="1.28" opacity="0.85"/>
+    <line class="bind" x1="360.04" y1="372.68" x2="365.87" y2="367.21" opacity="0.75"/>
+    <line class="bind" x1="353.63" y1="355.43" x2="359.58" y2="356.21" opacity="0.58"/>
+      <title>edge: bind
+replace -&gt; replace
+weight: 1
+
+path:
+replace -&gt; replace</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="bind" d="M 357.46 385.61 Q 350.56 374.50 341.44 365.14" stroke-width="1.28" opacity="0.85"/>
+    <line class="bind" x1="351.11" y1="383.98" x2="357.41" y2="379.05" opacity="0.75"/>
+    <line class="bind" x1="346.18" y1="366.54" x2="351.93" y2="368.25" opacity="0.58"/>
+      <title>edge: bind
+replace_all -&gt; replace_all
+weight: 1
+
+path:
+replace_all -&gt; replace_all</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="bind" d="M 344.31 394.97 Q 341.33 381.46 330.37 373.02" stroke-width="1.28" opacity="0.85"/>
+    <line class="bind" x1="338.15" y1="392.72" x2="344.90" y2="388.43" opacity="0.75"/>
+    <line class="bind" x1="335.29" y1="372.56" x2="341.27" y2="372.01" opacity="0.58"/>
+      <title>edge: bind
+to_upper -&gt; to_upper
+weight: 1
+
+path:
+to_upper -&gt; to_upper</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="bind" d="M 337.38 389.07 Q 336.70 374.25 323.82 366.89" stroke-width="1.28" opacity="0.85"/>
+    <line class="bind" x1="331.26" y1="386.72" x2="338.08" y2="382.54" opacity="0.75"/>
+    <line class="bind" x1="328.64" y1="365.76" x2="334.48" y2="364.40" opacity="0.58"/>
+      <title>edge: bind
+to_lower -&gt; to_lower
+weight: 1
+
+path:
+to_lower -&gt; to_lower</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="bind" d="M 330.01 395.08 Q 330.63 380.03 317.80 372.13" stroke-width="1.28" opacity="0.85"/>
+    <line class="bind" x1="324.04" y1="392.37" x2="331.10" y2="388.61" opacity="0.75"/>
+    <line class="bind" x1="322.69" y1="371.41" x2="328.63" y2="370.53" opacity="0.58"/>
+      <title>edge: bind
+trim_left -&gt; trim_left
+weight: 1
+
+path:
+trim_left -&gt; trim_left</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="bind" d="M 300.76 412.11 Q 304.33 397.56 293.59 387.12" stroke-width="1.28" opacity="0.85"/>
+    <line class="bind" x1="295.48" y1="408.21" x2="303.17" y2="406.01" opacity="0.75"/>
+    <line class="bind" x1="298.39" y1="388.34" x2="304.20" y2="389.81" opacity="0.58"/>
+      <title>edge: bind
+trim_right -&gt; trim_right
+weight: 1
+
+path:
+trim_right -&gt; trim_right</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="bind" d="M 276.15 413.42 Q 276.19 400.31 272.85 387.63" stroke-width="1.60" opacity="0.85"/>
+    <line class="bind" x1="271.52" y1="408.77" x2="279.45" y2="407.75" opacity="0.75"/>
+    <line class="bind" x1="270.20" y1="406.31" x2="280.12" y2="405.05" opacity="0.75"/>
+    <line class="bind" x1="270.86" y1="403.61" x2="278.79" y2="402.59" opacity="0.75"/>
+    <line class="bind" x1="269.54" y1="401.16" x2="279.46" y2="399.89" opacity="0.75"/>
+    <line class="bind" x1="270.20" y1="398.45" x2="278.13" y2="397.44" opacity="0.75"/>
+    <line class="bind" x1="278.20" y1="389.10" x2="283.98" y2="390.69" opacity="0.58"/>
+    <line class="bind" x1="276.02" y1="392.18" x2="281.16" y2="399.57" opacity="0.58"/>
+    <line class="bind" x1="268.54" y1="391.12" x2="263.88" y2="394.90" opacity="0.58"/>
+    <line class="bind" x1="268.20" y1="384.58" x2="260.68" y2="379.65" opacity="0.58"/>
+    <line class="bind" x1="274.85" y1="382.45" x2="277.03" y2="376.86" opacity="0.58"/>
+      <title>edge: bind
+trim_char -&gt; trim_char
+weight: 5
+
+path:
+trim_char -&gt; trim_char</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="bind" d="M 214.54 418.80 Q 224.63 407.95 220.96 393.60" stroke-width="1.52" opacity="0.85"/>
+    <line class="bind" x1="211.95" y1="412.77" x2="219.70" y2="414.75" opacity="0.75"/>
+    <line class="bind" x1="211.62" y1="410.01" x2="221.31" y2="412.47" opacity="0.75"/>
+    <line class="bind" x1="213.23" y1="407.73" x2="220.98" y2="409.71" opacity="0.75"/>
+    <line class="bind" x1="212.90" y1="404.97" x2="222.59" y2="407.43" opacity="0.75"/>
+    <line class="bind" x1="226.19" y1="394.92" x2="232.01" y2="396.38" opacity="0.58"/>
+    <line class="bind" x1="221.47" y1="398.98" x2="222.32" y2="407.94" opacity="0.58"/>
+    <line class="bind" x1="215.56" y1="393.40" x2="209.56" y2="393.18" opacity="0.58"/>
+    <line class="bind" x1="222.31" y1="388.37" x2="224.56" y2="379.66" opacity="0.58"/>
+      <title>edge: bind
+repeat -&gt; repeat
+weight: 4
+
+path:
+repeat -&gt; repeat</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="bind" d="M 146.87 382.02 Q 160.75 376.85 163.89 362.37" stroke-width="1.36" opacity="0.85"/>
+    <line class="bind" x1="147.25" y1="375.47" x2="153.29" y2="380.71" opacity="0.75"/>
+    <line class="bind" x1="148.19" y1="372.85" x2="155.75" y2="379.40" opacity="0.75"/>
+    <line class="bind" x1="168.88" y1="361.32" x2="174.75" y2="360.09" opacity="0.58"/>
+    <line class="bind" x1="158.81" y1="361.92" x2="149.84" y2="361.13" opacity="0.58"/>
+      <title>edge: bind
+pad_left -&gt; pad_left
+weight: 2
+
+path:
+pad_left -&gt; pad_left</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="bind" d="M 132.01 372.38 Q 145.31 367.55 150.97 354.59" stroke-width="1.36" opacity="0.85"/>
+    <line class="bind" x1="133.07" y1="365.91" x2="138.54" y2="371.74" opacity="0.75"/>
+    <line class="bind" x1="134.28" y1="363.40" x2="141.12" y2="370.69" opacity="0.75"/>
+    <line class="bind" x1="155.97" y1="355.57" x2="161.86" y2="356.73" opacity="0.58"/>
+    <line class="bind" x1="146.03" y1="353.33" x2="137.30" y2="351.13" opacity="0.58"/>
+      <title>edge: bind
+pad_right -&gt; pad_right
+weight: 2
+
+path:
+pad_right -&gt; pad_right</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="bind" d="M 87.90 321.89 Q 102.27 322.94 112.11 312.40" stroke-width="1.68" opacity="0.85"/>
+    <line class="bind" x1="91.28" y1="316.27" x2="94.20" y2="323.72" opacity="0.75"/>
+    <line class="bind" x1="93.34" y1="314.39" x2="96.99" y2="323.70" opacity="0.75"/>
+    <line class="bind" x1="96.12" y1="314.37" x2="99.04" y2="321.82" opacity="0.75"/>
+    <line class="bind" x1="98.18" y1="312.49" x2="101.83" y2="321.80" opacity="0.75"/>
+    <line class="bind" x1="100.96" y1="312.47" x2="103.88" y2="319.92" opacity="0.75"/>
+    <line class="bind" x1="103.02" y1="310.59" x2="106.67" y2="319.90" opacity="0.75"/>
+    <line class="bind" x1="117.79" y1="311.97" x2="123.77" y2="311.51" opacity="0.58"/>
+    <line class="bind" x1="113.09" y1="318.02" x2="114.64" y2="326.88" opacity="0.58"/>
+    <line class="bind" x1="107.93" y1="316.28" x2="103.53" y2="320.36" opacity="0.58"/>
+    <line class="bind" x1="106.74" y1="310.49" x2="98.26" y2="307.47" opacity="0.58"/>
+    <line class="bind" x1="114.47" y1="307.21" x2="116.95" y2="301.75" opacity="0.58"/>
+      <title>edge: bind
+center -&gt; center
+weight: 6
+
+path:
+center -&gt; center</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="bind" d="M 88.52 277.39 Q 102.47 284.00 114.31 274.10" stroke-width="1.28" opacity="0.85"/>
+    <line class="bind" x1="93.17" y1="272.77" x2="94.18" y2="280.70" opacity="0.75"/>
+    <line class="bind" x1="119.26" y1="274.24" x2="125.25" y2="274.40" opacity="0.58"/>
+      <title>edge: bind
+last_find -&gt; last_find
+weight: 1
+
+path:
+last_find -&gt; last_find</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="bind" d="M 56.90 249.91 Q 69.83 252.26 82.88 250.70" stroke-width="1.52" opacity="0.85"/>
+    <line class="bind" x1="62.22" y1="246.07" x2="61.97" y2="254.07" opacity="0.75"/>
+    <line class="bind" x1="64.85" y1="245.15" x2="64.54" y2="255.14" opacity="0.75"/>
+    <line class="bind" x1="67.41" y1="246.23" x2="67.17" y2="254.22" opacity="0.75"/>
+    <line class="bind" x1="70.04" y1="245.31" x2="69.74" y2="255.30" opacity="0.75"/>
+    <line class="bind" x1="88.28" y1="250.66" x2="94.28" y2="250.61" opacity="0.58"/>
+    <line class="bind" x1="83.83" y1="256.02" x2="85.41" y2="264.88" opacity="0.58"/>
+    <line class="bind" x1="77.52" y1="250.11" x2="71.55" y2="249.44" opacity="0.58"/>
+    <line class="bind" x1="83.33" y1="245.32" x2="84.07" y2="236.35" opacity="0.58"/>
+      <title>edge: bind
+find_from -&gt; find_from
+weight: 4
+
+path:
+find_from -&gt; find_from</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="bind" d="M 83.52 218.53 Q 95.39 225.11 108.93 224.05" stroke-width="1.28" opacity="0.85"/>
+    <line class="bind" x1="89.45" y1="215.73" x2="87.75" y2="223.55" opacity="0.75"/>
+    <line class="bind" x1="113.84" y1="223.47" x2="119.80" y2="222.77" opacity="0.58"/>
+      <title>edge: bind
+count_occurrences -&gt; count_occurrences
+weight: 1
+
+path:
+count_occurrences -&gt; count_occurrences</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="bind" d="M 108.58 177.21 Q 118.11 186.95 131.51 189.46" stroke-width="1.28" opacity="0.85"/>
+    <line class="bind" x1="115.05" y1="176.13" x2="111.28" y2="183.19" opacity="0.75"/>
+    <line class="bind" x1="136.34" y1="190.53" x2="142.20" y2="191.83" opacity="0.58"/>
+      <title>edge: bind
+reverse -&gt; reverse
+weight: 1
+
+path:
+reverse -&gt; reverse</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="bind" d="M 147.72 131.08 Q 153.74 143.07 164.75 150.73" stroke-width="1.28" opacity="0.85"/>
+    <line class="bind" x1="154.15" y1="132.39" x2="148.10" y2="137.63" opacity="0.75"/>
+    <line class="bind" x1="169.61" y1="151.67" x2="175.50" y2="152.81" opacity="0.58"/>
+      <title>edge: bind
+slice -&gt; slice
+weight: 1
+
+path:
+slice -&gt; slice</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="bind" d="M 169.35 112.15 Q 170.47 126.66 182.77 134.42" stroke-width="1.44" opacity="0.85"/>
+    <line class="bind" x1="175.46" y1="114.54" x2="168.61" y2="118.67" opacity="0.75"/>
+    <line class="bind" x1="177.66" y1="116.25" x2="169.10" y2="121.41" opacity="0.75"/>
+    <line class="bind" x1="178.15" y1="119.00" x2="171.29" y2="123.13" opacity="0.75"/>
+    <line class="bind" x1="187.96" y1="135.25" x2="193.88" y2="136.19" opacity="0.58"/>
+    <line class="bind" x1="180.12" y1="138.96" x2="175.58" y2="146.73" opacity="0.58"/>
+    <line class="bind" x1="180.61" y1="129.64" x2="178.14" y2="124.17" opacity="0.58"/>
+      <title>edge: bind
+is_ascii -&gt; is_ascii
+weight: 3
+
+path:
+is_ascii -&gt; is_ascii</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="bind" d="M 196.45 106.33 Q 194.09 121.26 206.06 130.49" stroke-width="1.28" opacity="0.85"/>
+    <line class="bind" x1="202.08" y1="109.68" x2="194.65" y2="112.64" opacity="0.75"/>
+    <line class="bind" x1="210.89" y1="131.55" x2="216.75" y2="132.84" opacity="0.58"/>
+      <title>edge: bind
+split -&gt; split
+weight: 1
+
+path:
+split -&gt; split</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="bind" d="M 203.81 108.47 Q 202.69 122.66 212.48 132.98" stroke-width="1.28" opacity="0.85"/>
+    <line class="bind" x1="209.31" y1="112.04" x2="201.77" y2="114.71" opacity="0.75"/>
+    <line class="bind" x1="217.38" y1="132.30" x2="223.32" y2="131.47" opacity="0.58"/>
+      <title>edge: bind
+split_char -&gt; split_char
+weight: 1
+
+path:
+split_char -&gt; split_char</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="bind" d="M 231.75 102.88 Q 232.33 115.95 235.82 128.56" stroke-width="1.28" opacity="0.85"/>
+    <line class="bind" x1="236.52" y1="107.39" x2="228.62" y2="108.64" opacity="0.75"/>
+    <line class="bind" x1="240.71" y1="129.33" x2="246.64" y2="130.26" opacity="0.58"/>
+      <title>edge: bind
+join -&gt; join
+weight: 1
+
+path:
+join -&gt; join</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="bind" d="M 257.73 92.82 Q 254.26 105.78 257.45 118.81" stroke-width="1.28" opacity="0.85"/>
+    <line class="bind" x1="261.67" y1="98.06" x2="253.67" y2="97.97" opacity="0.75"/>
+    <line class="bind" x1="262.39" y1="119.12" x2="268.38" y2="119.49" opacity="0.58"/>
+      <title>edge: bind
+lines -&gt; lines
+weight: 1
+
+path:
+lines -&gt; lines</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="bind" d="M 274.58 97.45 Q 264.88 109.40 271.55 123.28" stroke-width="1.28" opacity="0.85"/>
+    <line class="bind" x1="277.94" y1="103.08" x2="270.00" y2="102.15" opacity="0.75"/>
+    <line class="bind" x1="276.41" y1="124.22" x2="282.30" y2="125.37" opacity="0.58"/>
+      <title>edge: bind
+words -&gt; words
+weight: 1
+
+path:
+words -&gt; words</title>
+    </g>
+  </g>
+  <g id="terminals">
+    <g class="edge-wrap">
+    <path class="term" d="M 299.92 98.95 Q 280.20 121.17 277.13 150.73" stroke-width="1.65" opacity="0.90"/>
+      <title>edge: return
+len -&gt; len
+weight: 2
+
+path:
+len -&gt; len</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="term" d="M 296.78 105.44 Q 289.16 133.00 289.86 161.59" stroke-width="1.65" opacity="0.90"/>
+      <title>edge: return
+concat -&gt; concat
+weight: 2
+
+path:
+concat -&gt; concat</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="term" d="M 312.22 110.85 Q 290.69 131.20 284.53 160.18" stroke-width="1.65" opacity="0.90"/>
+      <title>edge: return
+compare -&gt; compare
+weight: 2
+
+path:
+compare -&gt; compare</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="term" d="M 344.55 123.02 Q 320.28 139.26 306.85 165.20" stroke-width="1.65" opacity="0.90"/>
+      <title>edge: return
+substring -&gt; substring
+weight: 2
+
+path:
+substring -&gt; substring</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="term" d="M 364.55 130.46 Q 343.19 150.35 333.98 178.05" stroke-width="1.65" opacity="0.90"/>
+      <title>edge: return
+verbum_dup -&gt; verbum_dup
+weight: 2
+
+path:
+verbum_dup -&gt; verbum_dup</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="term" d="M 398.35 150.59 Q 369.35 156.41 348.59 177.48" stroke-width="1.65" opacity="0.90"/>
+      <title>edge: return
+verbum_hash_fnv1a -&gt; verbum_hash_fnv1a
+weight: 2
+
+path:
+verbum_hash_fnv1a -&gt; verbum_hash_fnv1a</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="term" d="M 418.10 191.65 Q 389.81 194.97 363.10 204.87" stroke-width="1.65" opacity="0.90"/>
+      <title>edge: return
+trim -&gt; trim
+weight: 2
+
+path:
+trim -&gt; trim</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="term" d="M 409.73 189.69 Q 382.16 198.83 361.47 219.22" stroke-width="1.65" opacity="0.90"/>
+      <title>edge: return
+find -&gt; find
+weight: 2
+
+path:
+find -&gt; find</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="term" d="M 414.43 206.00 Q 386.94 214.09 363.43 230.48" stroke-width="1.65" opacity="0.90"/>
+      <title>edge: return
+char_at -&gt; char_at
+weight: 2
+
+path:
+char_at -&gt; char_at</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="term" d="M 438.08 237.25 Q 409.04 237.70 383.19 250.94" stroke-width="1.65" opacity="0.90"/>
+      <title>edge: return
+from_char -&gt; from_char
+weight: 2
+
+path:
+from_char -&gt; from_char</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="term" d="M 427.26 257.59 Q 398.30 254.38 371.19 265.07" stroke-width="1.80" opacity="0.90"/>
+      <title>edge: return
+contains -&gt; contains
+weight: 3
+
+path:
+contains -&gt; contains</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="term" d="M 428.81 267.83 Q 399.90 260.35 372.39 271.98" stroke-width="1.65" opacity="0.90"/>
+      <title>edge: return
+starts_with -&gt; starts_with
+weight: 2
+
+path:
+starts_with -&gt; starts_with</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="term" d="M 436.90 274.47 Q 411.65 258.80 382.00 260.82" stroke-width="1.65" opacity="0.90"/>
+      <title>edge: return
+ends_with -&gt; ends_with
+weight: 2
+
+path:
+ends_with -&gt; ends_with</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="term" d="M 434.76 310.94 Q 408.06 298.68 378.88 302.14" stroke-width="1.80" opacity="0.90"/>
+      <title>edge: return
+strip_prefix -&gt; strip_prefix
+weight: 3
+
+path:
+strip_prefix -&gt; strip_prefix</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="term" d="M 400.84 357.65 Q 384.10 334.17 359.60 318.93" stroke-width="1.80" opacity="0.90"/>
+      <title>edge: return
+strip_suffix -&gt; strip_suffix
+weight: 3
+
+path:
+strip_suffix -&gt; strip_suffix</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="term" d="M 366.51 373.74 Q 353.06 348.63 334.02 327.43" stroke-width="1.65" opacity="0.90"/>
+      <title>edge: return
+replace -&gt; replace
+weight: 2
+
+path:
+replace -&gt; replace</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="term" d="M 357.46 385.61 Q 338.72 364.29 316.64 346.44" stroke-width="1.65" opacity="0.90"/>
+      <title>edge: return
+replace_all -&gt; replace_all
+weight: 2
+
+path:
+replace_all -&gt; replace_all</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="term" d="M 344.31 394.97 Q 330.27 369.75 307.52 351.99" stroke-width="1.65" opacity="0.90"/>
+      <title>edge: return
+to_upper -&gt; to_upper
+weight: 2
+
+path:
+to_upper -&gt; to_upper</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="term" d="M 337.38 389.07 Q 325.64 362.07 301.34 345.47" stroke-width="1.65" opacity="0.90"/>
+      <title>edge: return
+to_lower -&gt; to_lower
+weight: 2
+
+path:
+to_lower -&gt; to_lower</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="term" d="M 330.01 395.08 Q 328.50 365.55 310.77 341.89" stroke-width="1.65" opacity="0.90"/>
+      <title>edge: return
+trim_left -&gt; trim_left
+weight: 2
+
+path:
+trim_left -&gt; trim_left</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="term" d="M 300.76 412.11 Q 305.25 382.93 293.01 356.07" stroke-width="1.65" opacity="0.90"/>
+      <title>edge: return
+trim_right -&gt; trim_right
+weight: 2
+
+path:
+trim_right -&gt; trim_right</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="term" d="M 276.15 413.42 Q 279.26 385.18 276.97 356.85" stroke-width="1.65" opacity="0.90"/>
+      <title>edge: return
+trim_char -&gt; trim_char
+weight: 2
+
+path:
+trim_char -&gt; trim_char</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="term" d="M 214.54 418.80 Q 225.63 391.55 220.61 362.56" stroke-width="1.80" opacity="0.90"/>
+      <title>edge: return
+repeat -&gt; repeat
+weight: 3
+
+path:
+repeat -&gt; repeat</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="term" d="M 146.87 382.02 Q 168.99 362.62 177.48 334.45" stroke-width="1.80" opacity="0.90"/>
+      <title>edge: return
+pad_left -&gt; pad_left
+weight: 3
+
+path:
+pad_left -&gt; pad_left</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="term" d="M 132.01 372.38 Q 158.95 361.52 178.32 339.89" stroke-width="1.80" opacity="0.90"/>
+      <title>edge: return
+pad_right -&gt; pad_right
+weight: 3
+
+path:
+pad_right -&gt; pad_right</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="term" d="M 87.90 321.89 Q 116.07 314.23 137.12 294.00" stroke-width="1.80" opacity="0.90"/>
+      <title>edge: return
+center -&gt; center
+weight: 3
+
+path:
+center -&gt; center</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="term" d="M 88.52 277.39 Q 116.66 287.13 145.08 278.23" stroke-width="1.65" opacity="0.90"/>
+      <title>edge: return
+last_find -&gt; last_find
+weight: 2
+
+path:
+last_find -&gt; last_find</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="term" d="M 56.90 249.91 Q 85.33 249.70 113.12 243.62" stroke-width="1.90" opacity="0.90"/>
+      <title>edge: return
+find_from -&gt; find_from
+weight: 4
+
+path:
+find_from -&gt; find_from</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="term" d="M 83.52 218.53 Q 111.38 225.46 139.94 222.60" stroke-width="1.65" opacity="0.90"/>
+      <title>edge: return
+count_occurrences -&gt; count_occurrences
+weight: 2
+
+path:
+count_occurrences -&gt; count_occurrences</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="term" d="M 108.58 177.21 Q 133.42 191.67 161.74 196.55" stroke-width="1.65" opacity="0.90"/>
+      <title>edge: return
+reverse -&gt; reverse
+weight: 2
+
+path:
+reverse -&gt; reverse</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="term" d="M 101.42 183.01 Q 120.27 205.79 148.64 214.15" stroke-width="1.65" opacity="0.90"/>
+      <title>edge: return
+is_empty -&gt; is_empty
+weight: 2
+
+path:
+is_empty -&gt; is_empty</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="term" d="M 115.40 145.79 Q 137.98 163.26 164.41 174.04" stroke-width="1.65" opacity="0.90"/>
+      <title>edge: return
+equals_ignore_case -&gt; equals_ignore_case
+weight: 2
+
+path:
+equals_ignore_case -&gt; equals_ignore_case</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="term" d="M 147.72 131.08 Q 166.26 152.87 190.44 168.16" stroke-width="1.65" opacity="0.90"/>
+      <title>edge: return
+slice -&gt; slice
+weight: 2
+
+path:
+slice -&gt; slice</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="term" d="M 169.35 112.15 Q 181.39 138.83 205.10 155.99" stroke-width="1.80" opacity="0.90"/>
+      <title>edge: return
+is_ascii -&gt; is_ascii
+weight: 3
+
+path:
+is_ascii -&gt; is_ascii</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="term" d="M 196.45 106.33 Q 194.62 135.86 209.72 161.32" stroke-width="1.65" opacity="0.90"/>
+      <title>edge: return
+split -&gt; split
+weight: 2
+
+path:
+split -&gt; split</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="term" d="M 203.81 108.47 Q 210.90 136.68 230.03 158.60" stroke-width="1.65" opacity="0.90"/>
+      <title>edge: return
+split_char -&gt; split_char
+weight: 2
+
+path:
+split_char -&gt; split_char</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="term" d="M 231.75 102.88 Q 229.71 131.20 232.61 159.44" stroke-width="1.65" opacity="0.90"/>
+      <title>edge: return
+join -&gt; join
+weight: 2
+
+path:
+join -&gt; join</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="term" d="M 257.73 92.82 Q 249.15 120.11 249.13 148.73" stroke-width="1.65" opacity="0.90"/>
+      <title>edge: return
+lines -&gt; lines
+weight: 2
+
+path:
+lines -&gt; lines</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="term" d="M 274.58 97.45 Q 266.06 125.96 276.01 154.00" stroke-width="1.65" opacity="0.90"/>
+      <title>edge: return
+words -&gt; words
+weight: 2
+
+path:
+words -&gt; words</title>
+    </g>
+  </g>
+  <g id="nodes">
+    <g class="node-wrap">
+      <circle class="node-main" cx="299.92" cy="98.95" r="5.95" data-kind="rituale" data-ritual="len" data-line="3" data-col="1" data-depth="3" data-stmt="RITUALE" data-loops="0" data-calls="0"/>
+      <title>RITUALE len
+stmt: 1
+depth: 3
+loops: 0
+calls: 0
+source:
+RITUALE len(VERBUM s) REDDE REX</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="292.92" cy="123.99" r="2.95" data-kind="bind" data-ritual="len" data-depth="3" data-stmt="EVOCA"/>
+      <title>stmt: EVOCA
+rituale: len
+depth: 3
+line: 0
+
+source:
+stmt: EVOCA
+rituale: len</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="277.13" cy="150.73" r="3.60" data-kind="term" data-ritual="len" data-line="4" data-col="3" data-depth="3" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: len
+depth: 3
+line: 4
+
+source:
+REDDE OBSECRO verbum_len(s)</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-main" cx="296.78" cy="105.44" r="5.95" data-kind="rituale" data-ritual="concat" data-line="7" data-col="1" data-depth="3" data-stmt="RITUALE" data-loops="0" data-calls="0"/>
+      <title>RITUALE concat
+stmt: 1
+depth: 3
+loops: 0
+calls: 0
+source:
+RITUALE concat(VERBUM a, VERBUM b) REDDE VERBUM</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="289.99" cy="130.54" r="2.95" data-kind="bind" data-ritual="concat" data-depth="3" data-stmt="EVOCA"/>
+      <title>stmt: EVOCA
+rituale: concat
+depth: 3
+line: 0
+
+source:
+stmt: EVOCA
+rituale: concat</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="289.86" cy="161.59" r="3.60" data-kind="term" data-ritual="concat" data-line="8" data-col="3" data-depth="3" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: concat
+depth: 3
+line: 8
+
+source:
+REDDE OBSECRO verbum_concat(a, b)</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-main" cx="312.22" cy="110.85" r="5.95" data-kind="rituale" data-ritual="compare" data-line="11" data-col="1" data-depth="3" data-stmt="RITUALE" data-loops="0" data-calls="0"/>
+      <title>RITUALE compare
+stmt: 1
+depth: 3
+loops: 0
+calls: 0
+source:
+RITUALE compare(VERBUM a, VERBUM b) REDDE REX</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="302.83" cy="135.10" r="2.95" data-kind="bind" data-ritual="compare" data-depth="3" data-stmt="EVOCA"/>
+      <title>stmt: EVOCA
+rituale: compare
+depth: 3
+line: 0
+
+source:
+stmt: EVOCA
+rituale: compare</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="284.53" cy="160.18" r="3.60" data-kind="term" data-ritual="compare" data-line="12" data-col="3" data-depth="3" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: compare
+depth: 3
+line: 12
+
+source:
+REDDE OBSECRO verbum_compare(a, b)</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-main" cx="344.55" cy="123.02" r="5.95" data-kind="rituale" data-ritual="substring" data-line="15" data-col="1" data-depth="3" data-stmt="RITUALE" data-loops="0" data-calls="0"/>
+      <title>RITUALE substring
+stmt: 1
+depth: 3
+loops: 0
+calls: 0
+source:
+RITUALE substring(VERBUM s, REX inicio, REX fim) REDDE VERBUM</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="330.14" cy="144.66" r="2.95" data-kind="bind" data-ritual="substring" data-depth="3" data-stmt="EVOCA"/>
+      <title>stmt: EVOCA
+rituale: substring
+depth: 3
+line: 0
+
+source:
+stmt: EVOCA
+rituale: substring</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="306.85" cy="165.20" r="3.60" data-kind="term" data-ritual="substring" data-line="16" data-col="3" data-depth="3" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: substring
+depth: 3
+line: 16
+
+source:
+REDDE OBSECRO verbum_substring(s, inicio, fim)</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-main" cx="364.55" cy="130.46" r="5.95" data-kind="rituale" data-ritual="verbum_dup" data-line="19" data-col="1" data-depth="4" data-stmt="RITUALE" data-loops="0" data-calls="2"/>
+      <title>RITUALE verbum_dup
+stmt: 1
+depth: 4
+loops: 0
+calls: 2
+source:
+RITUALE verbum_dup(VERBUM s) REDDE VERBUM</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="333.98" cy="178.05" r="3.60" data-kind="term" data-ritual="verbum_dup" data-line="20" data-col="3" data-depth="4" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: verbum_dup
+depth: 4
+line: 20
+
+source:
+REDDE CONIURA substring(s, 0, CONIURA len(s))</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-main" cx="398.35" cy="150.59" r="7.00" data-kind="rituale" data-ritual="verbum_hash_fnv1a" data-line="23" data-col="1" data-depth="6" data-stmt="RITUALE" data-loops="1" data-calls="3"/>
+      <title>RITUALE verbum_hash_fnv1a
+stmt: 8
+depth: 6
+loops: 1
+calls: 3
+source:
+RITUALE verbum_hash_fnv1a(VERBUM s) REDDE DUX</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-loop" cx="434.30" cy="158.80" r="4.70" data-kind="loop" data-ritual="verbum_hash_fnv1a" data-line="27" data-col="3" data-depth="6" data-stmt="DUM"/>
+      <title>stmt: DUM
+rituale: verbum_hash_fnv1a
+depth: 6
+line: 27
+
+source:
+DUM i &lt; n</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="377.46" cy="166.06" r="3.70" data-kind="bind" data-ritual="verbum_hash_fnv1a" data-line="24" data-col="3" data-depth="6" data-stmt="EVOCA"/>
+      <title>stmt: EVOCA
+rituale: verbum_hash_fnv1a
+depth: 6
+line: 24
+
+source:
+EVOCA REX hash AD 2166136261</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="348.59" cy="177.48" r="3.60" data-kind="term" data-ritual="verbum_hash_fnv1a" data-line="32" data-col="3" data-depth="6" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: verbum_hash_fnv1a
+depth: 6
+line: 32
+
+source:
+REDDE cast GENUS(DUX)(hash)</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-main" cx="418.10" cy="191.65" r="5.95" data-kind="rituale" data-ritual="trim" data-line="35" data-col="1" data-depth="3" data-stmt="RITUALE" data-loops="0" data-calls="0"/>
+      <title>RITUALE trim
+stmt: 1
+depth: 3
+loops: 0
+calls: 0
+source:
+RITUALE trim(VERBUM s) REDDE VERBUM</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="393.94" cy="201.24" r="2.95" data-kind="bind" data-ritual="trim" data-depth="3" data-stmt="EVOCA"/>
+      <title>stmt: EVOCA
+rituale: trim
+depth: 3
+line: 0
+
+source:
+stmt: EVOCA
+rituale: trim</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="363.10" cy="204.87" r="3.60" data-kind="term" data-ritual="trim" data-line="36" data-col="3" data-depth="3" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: trim
+depth: 3
+line: 36
+
+source:
+REDDE OBSECRO verbum_trim(s)</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-main" cx="409.73" cy="189.69" r="5.95" data-kind="rituale" data-ritual="find" data-line="39" data-col="1" data-depth="3" data-stmt="RITUALE" data-loops="0" data-calls="0"/>
+      <title>RITUALE find
+stmt: 1
+depth: 3
+loops: 0
+calls: 0
+source:
+RITUALE find(VERBUM s, VERBUM sub) REDDE REX</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="385.85" cy="199.99" r="2.95" data-kind="bind" data-ritual="find" data-depth="3" data-stmt="EVOCA"/>
+      <title>stmt: EVOCA
+rituale: find
+depth: 3
+line: 0
+
+source:
+stmt: EVOCA
+rituale: find</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="361.47" cy="219.22" r="3.60" data-kind="term" data-ritual="find" data-line="40" data-col="3" data-depth="3" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: find
+depth: 3
+line: 40
+
+source:
+REDDE OBSECRO verbum_find(s, sub)</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-main" cx="414.43" cy="206.00" r="5.95" data-kind="rituale" data-ritual="char_at" data-line="43" data-col="1" data-depth="3" data-stmt="RITUALE" data-loops="0" data-calls="0"/>
+      <title>RITUALE char_at
+stmt: 1
+depth: 3
+loops: 0
+calls: 0
+source:
+RITUALE char_at(VERBUM s, REX i) REDDE MILES</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="389.63" cy="213.83" r="2.95" data-kind="bind" data-ritual="char_at" data-depth="3" data-stmt="EVOCA"/>
+      <title>stmt: EVOCA
+rituale: char_at
+depth: 3
+line: 0
+
+source:
+stmt: EVOCA
+rituale: char_at</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="363.43" cy="230.48" r="3.60" data-kind="term" data-ritual="char_at" data-line="44" data-col="3" data-depth="3" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: char_at
+depth: 3
+line: 44
+
+source:
+REDDE OBSECRO verbum_char_at(s, i)</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-main" cx="438.08" cy="237.25" r="5.95" data-kind="rituale" data-ritual="from_char" data-line="47" data-col="1" data-depth="3" data-stmt="RITUALE" data-loops="0" data-calls="0"/>
+      <title>RITUALE from_char
+stmt: 1
+depth: 3
+loops: 0
+calls: 0
+source:
+RITUALE from_char(MILES c) REDDE VERBUM</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="412.21" cy="239.91" r="2.95" data-kind="bind" data-ritual="from_char" data-depth="3" data-stmt="EVOCA"/>
+      <title>stmt: EVOCA
+rituale: from_char
+depth: 3
+line: 0
+
+source:
+stmt: EVOCA
+rituale: from_char</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="383.19" cy="250.94" r="3.60" data-kind="term" data-ritual="from_char" data-line="48" data-col="3" data-depth="3" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: from_char
+depth: 3
+line: 48
+
+source:
+REDDE OBSECRO verbum_from_char(c)</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-main" cx="427.26" cy="257.59" r="6.25" data-kind="rituale" data-ritual="contains" data-line="51" data-col="1" data-depth="4" data-stmt="RITUALE" data-loops="0" data-calls="1"/>
+      <title>RITUALE contains
+stmt: 3
+depth: 4
+loops: 0
+calls: 1
+source:
+RITUALE contains(VERBUM s, VERBUM sub) REDDE VERUM</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="391.98" cy="233.26" r="4.80" data-kind="branch" data-ritual="contains" data-line="52" data-col="3" data-depth="4" data-stmt="SI"/>
+      <title>stmt: SI
+rituale: contains
+depth: 4
+line: 52
+
+source:
+SI CONIURA find(s, sub) != -1</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="371.19" cy="265.07" r="4.00" data-kind="term" data-ritual="contains" data-line="53" data-col="5" data-depth="4" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: contains
+depth: 4
+line: 53
+
+source:
+REDDE VERUM</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-main" cx="428.81" cy="267.83" r="5.95" data-kind="rituale" data-ritual="starts_with" data-line="58" data-col="1" data-depth="3" data-stmt="RITUALE" data-loops="0" data-calls="0"/>
+      <title>RITUALE starts_with
+stmt: 1
+depth: 3
+loops: 0
+calls: 0
+source:
+RITUALE starts_with(VERBUM s, VERBUM prefix) REDDE VERUM</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="402.87" cy="266.05" r="2.95" data-kind="bind" data-ritual="starts_with" data-depth="3" data-stmt="EVOCA"/>
+      <title>stmt: EVOCA
+rituale: starts_with
+depth: 3
+line: 0
+
+source:
+stmt: EVOCA
+rituale: starts_with</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="372.39" cy="271.98" r="3.60" data-kind="term" data-ritual="starts_with" data-line="59" data-col="3" data-depth="3" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: starts_with
+depth: 3
+line: 59
+
+source:
+REDDE OBSECRO verbum_starts_with(s, prefix)</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-main" cx="436.90" cy="274.47" r="5.95" data-kind="rituale" data-ritual="ends_with" data-line="62" data-col="1" data-depth="3" data-stmt="RITUALE" data-loops="0" data-calls="0"/>
+      <title>RITUALE ends_with
+stmt: 1
+depth: 3
+loops: 0
+calls: 0
+source:
+RITUALE ends_with(VERBUM s, VERBUM suffix) REDDE VERUM</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="411.04" cy="271.83" r="2.95" data-kind="bind" data-ritual="ends_with" data-depth="3" data-stmt="EVOCA"/>
+      <title>stmt: EVOCA
+rituale: ends_with
+depth: 3
+line: 0
+
+source:
+stmt: EVOCA
+rituale: ends_with</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="382.00" cy="260.82" r="3.60" data-kind="term" data-ritual="ends_with" data-line="63" data-col="3" data-depth="3" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: ends_with
+depth: 3
+line: 63
+
+source:
+REDDE OBSECRO verbum_ends_with(s, suffix)</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-main" cx="434.76" cy="310.94" r="6.55" data-kind="rituale" data-ritual="strip_prefix" data-line="66" data-col="1" data-depth="4" data-stmt="RITUALE" data-loops="0" data-calls="4"/>
+      <title>RITUALE strip_prefix
+stmt: 5
+depth: 4
+loops: 0
+calls: 4
+source:
+RITUALE strip_prefix(VERBUM s, VERBUM prefix) REDDE VERBUM</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="407.88" cy="277.57" r="4.80" data-kind="branch" data-ritual="strip_prefix" data-line="67" data-col="3" data-depth="4" data-stmt="SI"/>
+      <title>stmt: SI
+rituale: strip_prefix
+depth: 4
+line: 67
+
+source:
+SI NON CONIURA starts_with(s, prefix)</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="409.91" cy="303.30" r="3.10" data-kind="bind" data-ritual="strip_prefix" data-line="70" data-col="3" data-depth="4" data-stmt="EVOCA"/>
+      <title>stmt: EVOCA
+rituale: strip_prefix
+depth: 4
+line: 70
+
+source:
+EVOCA REX plen AD CONIURA len(prefix)</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="378.88" cy="302.14" r="4.00" data-kind="term" data-ritual="strip_prefix" data-line="68" data-col="5" data-depth="4" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: strip_prefix
+depth: 4
+line: 68
+
+source:
+REDDE s</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-main" cx="400.84" cy="357.65" r="6.55" data-kind="rituale" data-ritual="strip_suffix" data-line="75" data-col="1" data-depth="4" data-stmt="RITUALE" data-loops="0" data-calls="4"/>
+      <title>RITUALE strip_suffix
+stmt: 5
+depth: 4
+loops: 0
+calls: 4
+source:
+RITUALE strip_suffix(VERBUM s, VERBUM suffix) REDDE VERBUM</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="358.00" cy="356.90" r="4.80" data-kind="branch" data-ritual="strip_suffix" data-line="76" data-col="3" data-depth="4" data-stmt="SI"/>
+      <title>stmt: SI
+rituale: strip_suffix
+depth: 4
+line: 76
+
+source:
+SI NON CONIURA ends_with(s, suffix)</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="379.56" cy="342.72" r="3.10" data-kind="bind" data-ritual="strip_suffix" data-line="79" data-col="3" data-depth="4" data-stmt="EVOCA"/>
+      <title>stmt: EVOCA
+rituale: strip_suffix
+depth: 4
+line: 79
+
+source:
+EVOCA REX slen AD CONIURA len(s)</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="359.60" cy="318.93" r="4.00" data-kind="term" data-ritual="strip_suffix" data-line="77" data-col="5" data-depth="4" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: strip_suffix
+depth: 4
+line: 77
+
+source:
+REDDE s</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-main" cx="366.51" cy="373.74" r="5.95" data-kind="rituale" data-ritual="replace" data-line="84" data-col="1" data-depth="3" data-stmt="RITUALE" data-loops="0" data-calls="0"/>
+      <title>RITUALE replace
+stmt: 1
+depth: 3
+loops: 0
+calls: 0
+source:
+RITUALE replace(VERBUM s, VERBUM de, VERBUM para) REDDE VERBUM</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="348.72" cy="354.78" r="2.95" data-kind="bind" data-ritual="replace" data-depth="3" data-stmt="EVOCA"/>
+      <title>stmt: EVOCA
+rituale: replace
+depth: 3
+line: 0
+
+source:
+stmt: EVOCA
+rituale: replace</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="334.02" cy="327.43" r="3.60" data-kind="term" data-ritual="replace" data-line="85" data-col="3" data-depth="3" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: replace
+depth: 3
+line: 85
+
+source:
+REDDE OBSECRO verbum_replace(s, de, para)</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-main" cx="357.46" cy="385.61" r="5.95" data-kind="rituale" data-ritual="replace_all" data-line="88" data-col="1" data-depth="3" data-stmt="RITUALE" data-loops="0" data-calls="0"/>
+      <title>RITUALE replace_all
+stmt: 1
+depth: 3
+loops: 0
+calls: 0
+source:
+RITUALE replace_all(VERBUM s, VERBUM de, VERBUM para) REDDE VERBUM</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="341.44" cy="365.14" r="2.95" data-kind="bind" data-ritual="replace_all" data-depth="3" data-stmt="EVOCA"/>
+      <title>stmt: EVOCA
+rituale: replace_all
+depth: 3
+line: 0
+
+source:
+stmt: EVOCA
+rituale: replace_all</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="316.64" cy="346.44" r="3.60" data-kind="term" data-ritual="replace_all" data-line="89" data-col="3" data-depth="3" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: replace_all
+depth: 3
+line: 89
+
+source:
+REDDE OBSECRO verbum_replace_all(s, de, para)</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-main" cx="344.31" cy="394.97" r="5.95" data-kind="rituale" data-ritual="to_upper" data-line="92" data-col="1" data-depth="3" data-stmt="RITUALE" data-loops="0" data-calls="0"/>
+      <title>RITUALE to_upper
+stmt: 1
+depth: 3
+loops: 0
+calls: 0
+source:
+RITUALE to_upper(VERBUM s) REDDE VERBUM</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="330.37" cy="373.02" r="2.95" data-kind="bind" data-ritual="to_upper" data-depth="3" data-stmt="EVOCA"/>
+      <title>stmt: EVOCA
+rituale: to_upper
+depth: 3
+line: 0
+
+source:
+stmt: EVOCA
+rituale: to_upper</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="307.52" cy="351.99" r="3.60" data-kind="term" data-ritual="to_upper" data-line="93" data-col="3" data-depth="3" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: to_upper
+depth: 3
+line: 93
+
+source:
+REDDE OBSECRO verbum_to_upper(s)</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-main" cx="337.38" cy="389.07" r="5.95" data-kind="rituale" data-ritual="to_lower" data-line="96" data-col="1" data-depth="3" data-stmt="RITUALE" data-loops="0" data-calls="0"/>
+      <title>RITUALE to_lower
+stmt: 1
+depth: 3
+loops: 0
+calls: 0
+source:
+RITUALE to_lower(VERBUM s) REDDE VERBUM</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="323.82" cy="366.89" r="2.95" data-kind="bind" data-ritual="to_lower" data-depth="3" data-stmt="EVOCA"/>
+      <title>stmt: EVOCA
+rituale: to_lower
+depth: 3
+line: 0
+
+source:
+stmt: EVOCA
+rituale: to_lower</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="301.34" cy="345.47" r="3.60" data-kind="term" data-ritual="to_lower" data-line="97" data-col="3" data-depth="3" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: to_lower
+depth: 3
+line: 97
+
+source:
+REDDE OBSECRO verbum_to_lower(s)</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-main" cx="330.01" cy="395.08" r="5.95" data-kind="rituale" data-ritual="trim_left" data-line="100" data-col="1" data-depth="3" data-stmt="RITUALE" data-loops="0" data-calls="0"/>
+      <title>RITUALE trim_left
+stmt: 1
+depth: 3
+loops: 0
+calls: 0
+source:
+RITUALE trim_left(VERBUM s) REDDE VERBUM</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="317.80" cy="372.13" r="2.95" data-kind="bind" data-ritual="trim_left" data-depth="3" data-stmt="EVOCA"/>
+      <title>stmt: EVOCA
+rituale: trim_left
+depth: 3
+line: 0
+
+source:
+stmt: EVOCA
+rituale: trim_left</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="310.77" cy="341.89" r="3.60" data-kind="term" data-ritual="trim_left" data-line="101" data-col="3" data-depth="3" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: trim_left
+depth: 3
+line: 101
+
+source:
+REDDE OBSECRO verbum_trim_left(s)</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-main" cx="300.76" cy="412.11" r="5.95" data-kind="rituale" data-ritual="trim_right" data-line="104" data-col="1" data-depth="3" data-stmt="RITUALE" data-loops="0" data-calls="0"/>
+      <title>RITUALE trim_right
+stmt: 1
+depth: 3
+loops: 0
+calls: 0
+source:
+RITUALE trim_right(VERBUM s) REDDE VERBUM</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="293.59" cy="387.12" r="2.95" data-kind="bind" data-ritual="trim_right" data-depth="3" data-stmt="EVOCA"/>
+      <title>stmt: EVOCA
+rituale: trim_right
+depth: 3
+line: 0
+
+source:
+stmt: EVOCA
+rituale: trim_right</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="293.01" cy="356.07" r="3.60" data-kind="term" data-ritual="trim_right" data-line="105" data-col="3" data-depth="3" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: trim_right
+depth: 3
+line: 105
+
+source:
+REDDE OBSECRO verbum_trim_right(s)</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-main" cx="276.15" cy="413.42" r="7.00" data-kind="rituale" data-ritual="trim_char" data-line="108" data-col="1" data-depth="6" data-stmt="RITUALE" data-loops="2" data-calls="4"/>
+      <title>RITUALE trim_char
+stmt: 8
+depth: 6
+loops: 2
+calls: 4
+source:
+RITUALE trim_char(VERBUM s, MILES c) REDDE VERBUM</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-loop" cx="251.42" cy="440.78" r="5.40" data-kind="loop" data-ritual="trim_char" data-line="112" data-col="3" data-depth="6" data-stmt="DUM"/>
+      <title>stmt: DUM
+rituale: trim_char
+depth: 6
+line: 112
+
+source:
+DUM ini &lt; n ET CONIURA char_at(s, ini) == c</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="272.85" cy="387.63" r="3.55" data-kind="bind" data-ritual="trim_char" data-line="109" data-col="3" data-depth="6" data-stmt="EVOCA"/>
+      <title>stmt: EVOCA
+rituale: trim_char
+depth: 6
+line: 109
+
+source:
+EVOCA REX n AD CONIURA len(s)</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="276.97" cy="356.85" r="3.60" data-kind="term" data-ritual="trim_char" data-line="118" data-col="3" data-depth="6" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: trim_char
+depth: 6
+line: 118
+
+source:
+REDDE CONIURA substring(s, ini, fim)</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-main" cx="214.54" cy="418.80" r="7.30" data-kind="rituale" data-ritual="repeat" data-line="121" data-col="1" data-depth="5" data-stmt="RITUALE" data-loops="1" data-calls="1"/>
+      <title>RITUALE repeat
+stmt: 10
+depth: 5
+loops: 1
+calls: 1
+source:
+RITUALE repeat(VERBUM s, REX n) REDDE VERBUM</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="246.93" cy="388.87" r="5.80" data-kind="branch" data-ritual="repeat" data-line="122" data-col="3" data-depth="5" data-stmt="SI"/>
+      <title>stmt: SI
+rituale: repeat
+depth: 5
+line: 122
+
+source:
+SI n &lt; 0</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-loop" cx="235.75" cy="448.97" r="4.70" data-kind="loop" data-ritual="repeat" data-line="130" data-col="3" data-depth="5" data-stmt="DUM"/>
+      <title>stmt: DUM
+rituale: repeat
+depth: 5
+line: 130
+
+source:
+DUM i &lt; n</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="220.96" cy="393.60" r="3.40" data-kind="bind" data-ritual="repeat" data-line="128" data-col="3" data-depth="5" data-stmt="EVOCA"/>
+      <title>stmt: EVOCA
+rituale: repeat
+depth: 5
+line: 128
+
+source:
+EVOCA VERBUM out AD ""</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="220.61" cy="362.56" r="4.00" data-kind="term" data-ritual="repeat" data-line="126" data-col="5" data-depth="5" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: repeat
+depth: 5
+line: 126
+
+source:
+REDDE ""</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-main" cx="146.87" cy="382.02" r="6.55" data-kind="rituale" data-ritual="pad_left" data-line="137" data-col="1" data-depth="4" data-stmt="RITUALE" data-loops="0" data-calls="4"/>
+      <title>RITUALE pad_left
+stmt: 5
+depth: 4
+loops: 0
+calls: 4
+source:
+RITUALE pad_left(VERBUM s, REX width, MILES fill) REDDE VERBUM</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="188.25" cy="370.90" r="4.80" data-kind="branch" data-ritual="pad_left" data-line="139" data-col="3" data-depth="4" data-stmt="SI"/>
+      <title>stmt: SI
+rituale: pad_left
+depth: 4
+line: 139
+
+source:
+SI slen &gt;= width</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="163.89" cy="362.37" r="3.10" data-kind="bind" data-ritual="pad_left" data-line="138" data-col="3" data-depth="4" data-stmt="EVOCA"/>
+      <title>stmt: EVOCA
+rituale: pad_left
+depth: 4
+line: 138
+
+source:
+EVOCA REX slen AD CONIURA len(s)</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="177.48" cy="334.45" r="4.00" data-kind="term" data-ritual="pad_left" data-line="140" data-col="5" data-depth="4" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: pad_left
+depth: 4
+line: 140
+
+source:
+REDDE s</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-main" cx="132.01" cy="372.38" r="6.55" data-kind="rituale" data-ritual="pad_right" data-line="146" data-col="1" data-depth="4" data-stmt="RITUALE" data-loops="0" data-calls="4"/>
+      <title>RITUALE pad_right
+stmt: 5
+depth: 4
+loops: 0
+calls: 4
+source:
+RITUALE pad_right(VERBUM s, REX width, MILES fill) REDDE VERBUM</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="141.47" cy="330.59" r="4.80" data-kind="branch" data-ritual="pad_right" data-line="148" data-col="3" data-depth="4" data-stmt="SI"/>
+      <title>stmt: SI
+rituale: pad_right
+depth: 4
+line: 148
+
+source:
+SI slen &gt;= width</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="150.97" cy="354.59" r="3.10" data-kind="bind" data-ritual="pad_right" data-line="147" data-col="3" data-depth="4" data-stmt="EVOCA"/>
+      <title>stmt: EVOCA
+rituale: pad_right
+depth: 4
+line: 147
+
+source:
+EVOCA REX slen AD CONIURA len(s)</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="178.32" cy="339.89" r="4.00" data-kind="term" data-ritual="pad_right" data-line="149" data-col="5" data-depth="4" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: pad_right
+depth: 4
+line: 149
+
+source:
+REDDE s</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-main" cx="87.90" cy="321.89" r="7.15" data-kind="rituale" data-ritual="center" data-line="155" data-col="1" data-depth="4" data-stmt="RITUALE" data-loops="0" data-calls="7"/>
+      <title>RITUALE center
+stmt: 9
+depth: 4
+loops: 0
+calls: 7
+source:
+RITUALE center(VERBUM s, REX width, MILES fill) REDDE VERBUM</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="129.71" cy="331.28" r="4.80" data-kind="branch" data-ritual="center" data-line="157" data-col="3" data-depth="4" data-stmt="SI"/>
+      <title>stmt: SI
+rituale: center
+depth: 4
+line: 157
+
+source:
+SI slen &gt;= width</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="112.11" cy="312.40" r="3.70" data-kind="bind" data-ritual="center" data-line="156" data-col="3" data-depth="4" data-stmt="EVOCA"/>
+      <title>stmt: EVOCA
+rituale: center
+depth: 4
+line: 156
+
+source:
+EVOCA REX slen AD CONIURA len(s)</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="137.12" cy="294.00" r="4.00" data-kind="term" data-ritual="center" data-line="158" data-col="5" data-depth="4" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: center
+depth: 4
+line: 158
+
+source:
+REDDE s</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-main" cx="88.52" cy="277.39" r="5.95" data-kind="rituale" data-ritual="last_find" data-line="168" data-col="1" data-depth="3" data-stmt="RITUALE" data-loops="0" data-calls="0"/>
+      <title>RITUALE last_find
+stmt: 1
+depth: 3
+loops: 0
+calls: 0
+source:
+RITUALE last_find(VERBUM s, VERBUM sub) REDDE REX</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="114.31" cy="274.10" r="2.95" data-kind="bind" data-ritual="last_find" data-depth="3" data-stmt="EVOCA"/>
+      <title>stmt: EVOCA
+rituale: last_find
+depth: 3
+line: 0
+
+source:
+stmt: EVOCA
+rituale: last_find</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="145.08" cy="278.23" r="3.60" data-kind="term" data-ritual="last_find" data-line="169" data-col="3" data-depth="3" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: last_find
+depth: 3
+line: 169
+
+source:
+REDDE OBSECRO verbum_last_find(s, sub)</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-main" cx="56.90" cy="249.91" r="7.60" data-kind="rituale" data-ritual="find_from" data-line="172" data-col="1" data-depth="8" data-stmt="RITUALE" data-loops="1" data-calls="4"/>
+      <title>RITUALE find_from
+stmt: 12
+depth: 8
+loops: 1
+calls: 4
+source:
+RITUALE find_from(VERBUM s, VERBUM sub, REX offset) REDDE REX</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="94.65" cy="275.07" r="5.80" data-kind="branch" data-ritual="find_from" data-line="174" data-col="3" data-depth="8" data-stmt="SI"/>
+      <title>stmt: SI
+rituale: find_from
+depth: 8
+line: 174
+
+source:
+SI offset &lt; 0 VEL offset &gt; slen</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-loop" cx="32.05" cy="277.16" r="4.70" data-kind="loop" data-ritual="find_from" data-line="182" data-col="3" data-depth="8" data-stmt="DUM"/>
+      <title>stmt: DUM
+rituale: find_from
+depth: 8
+line: 182
+
+source:
+DUM i + sublen &lt;= slen</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="82.88" cy="250.70" r="3.40" data-kind="bind" data-ritual="find_from" data-line="173" data-col="3" data-depth="8" data-stmt="EVOCA"/>
+      <title>stmt: EVOCA
+rituale: find_from
+depth: 8
+line: 173
+
+source:
+EVOCA REX slen AD CONIURA len(s)</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="113.12" cy="243.62" r="4.40" data-kind="term" data-ritual="find_from" data-line="179" data-col="5" data-depth="8" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: find_from
+depth: 8
+line: 179
+
+source:
+REDDE offset</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-main" cx="83.52" cy="218.53" r="5.95" data-kind="rituale" data-ritual="count_occurrences" data-line="191" data-col="1" data-depth="3" data-stmt="RITUALE" data-loops="0" data-calls="0"/>
+      <title>RITUALE count_occurrences
+stmt: 1
+depth: 3
+loops: 0
+calls: 0
+source:
+RITUALE count_occurrences(VERBUM s, VERBUM sub) REDDE REX</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="108.93" cy="224.05" r="2.95" data-kind="bind" data-ritual="count_occurrences" data-depth="3" data-stmt="EVOCA"/>
+      <title>stmt: EVOCA
+rituale: count_occurrences
+depth: 3
+line: 0
+
+source:
+stmt: EVOCA
+rituale: count_occurrences</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="139.94" cy="222.60" r="3.60" data-kind="term" data-ritual="count_occurrences" data-line="192" data-col="3" data-depth="3" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: count_occurrences
+depth: 3
+line: 192
+
+source:
+REDDE OBSECRO verbum_count_occurrences(s, sub)</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-main" cx="108.58" cy="177.21" r="5.95" data-kind="rituale" data-ritual="reverse" data-line="195" data-col="1" data-depth="3" data-stmt="RITUALE" data-loops="0" data-calls="0"/>
+      <title>RITUALE reverse
+stmt: 1
+depth: 3
+loops: 0
+calls: 0
+source:
+RITUALE reverse(VERBUM s) REDDE VERBUM</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="131.51" cy="189.46" r="2.95" data-kind="bind" data-ritual="reverse" data-depth="3" data-stmt="EVOCA"/>
+      <title>stmt: EVOCA
+rituale: reverse
+depth: 3
+line: 0
+
+source:
+stmt: EVOCA
+rituale: reverse</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="161.74" cy="196.55" r="3.60" data-kind="term" data-ritual="reverse" data-line="196" data-col="3" data-depth="3" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: reverse
+depth: 3
+line: 196
+
+source:
+REDDE OBSECRO verbum_reverse(s)</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-main" cx="101.42" cy="183.01" r="5.95" data-kind="rituale" data-ritual="is_empty" data-line="199" data-col="1" data-depth="4" data-stmt="RITUALE" data-loops="0" data-calls="1"/>
+      <title>RITUALE is_empty
+stmt: 1
+depth: 4
+loops: 0
+calls: 1
+source:
+RITUALE is_empty(VERBUM s) REDDE VERUM</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="148.64" cy="214.15" r="3.60" data-kind="term" data-ritual="is_empty" data-line="200" data-col="3" data-depth="4" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: is_empty
+depth: 4
+line: 200
+
+source:
+REDDE CONIURA len(s) == 0</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-main" cx="115.40" cy="145.79" r="5.95" data-kind="rituale" data-ritual="equals_ignore_case" data-line="203" data-col="1" data-depth="5" data-stmt="RITUALE" data-loops="0" data-calls="3"/>
+      <title>RITUALE equals_ignore_case
+stmt: 1
+depth: 5
+loops: 0
+calls: 3
+source:
+RITUALE equals_ignore_case(VERBUM a, VERBUM b) REDDE VERUM</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="164.41" cy="174.04" r="3.60" data-kind="term" data-ritual="equals_ignore_case" data-line="204" data-col="3" data-depth="5" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: equals_ignore_case
+depth: 5
+line: 204
+
+source:
+REDDE CONIURA compare(CONIURA to_lower(a), CONIURA to_lower(b)) == 0</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-main" cx="147.72" cy="131.08" r="5.95" data-kind="rituale" data-ritual="slice" data-line="207" data-col="1" data-depth="3" data-stmt="RITUALE" data-loops="0" data-calls="0"/>
+      <title>RITUALE slice
+stmt: 1
+depth: 3
+loops: 0
+calls: 0
+source:
+RITUALE slice(VERBUM s, REX inicio, REX comprimento) REDDE VERBUM</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="164.75" cy="150.73" r="2.95" data-kind="bind" data-ritual="slice" data-depth="3" data-stmt="EVOCA"/>
+      <title>stmt: EVOCA
+rituale: slice
+depth: 3
+line: 0
+
+source:
+stmt: EVOCA
+rituale: slice</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="190.44" cy="168.16" r="3.60" data-kind="term" data-ritual="slice" data-line="208" data-col="3" data-depth="3" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: slice
+depth: 3
+line: 208
+
+source:
+REDDE OBSECRO verbum_slice(s, inicio, comprimento)</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-main" cx="169.35" cy="112.15" r="6.85" data-kind="rituale" data-ritual="is_ascii" data-line="211" data-col="1" data-depth="6" data-stmt="RITUALE" data-loops="1" data-calls="2"/>
+      <title>RITUALE is_ascii
+stmt: 7
+depth: 6
+loops: 1
+calls: 2
+source:
+RITUALE is_ascii(VERBUM s) REDDE VERUM</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="167.11" cy="154.95" r="4.80" data-kind="branch" data-ritual="is_ascii" data-line="215" data-col="5" data-depth="6" data-stmt="SI"/>
+      <title>stmt: SI
+rituale: is_ascii
+depth: 6
+line: 215
+
+source:
+SI CONIURA char_at(s, i) &gt; 127</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-loop" cx="132.99" cy="106.04" r="4.70" data-kind="loop" data-ritual="is_ascii" data-line="214" data-col="3" data-depth="6" data-stmt="DUM"/>
+      <title>stmt: DUM
+rituale: is_ascii
+depth: 6
+line: 214
+
+source:
+DUM i &lt; n</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="182.77" cy="134.42" r="3.25" data-kind="bind" data-ritual="is_ascii" data-line="212" data-col="3" data-depth="6" data-stmt="EVOCA"/>
+      <title>stmt: EVOCA
+rituale: is_ascii
+depth: 6
+line: 212
+
+source:
+EVOCA REX i AD 0</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="205.10" cy="155.99" r="4.00" data-kind="term" data-ritual="is_ascii" data-line="216" data-col="7" data-depth="6" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: is_ascii
+depth: 6
+line: 216
+
+source:
+REDDE FALSUM</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-main" cx="196.45" cy="106.33" r="5.95" data-kind="rituale" data-ritual="split" data-line="223" data-col="1" data-depth="3" data-stmt="RITUALE" data-loops="0" data-calls="0"/>
+      <title>RITUALE split
+stmt: 1
+depth: 3
+loops: 0
+calls: 0
+source:
+RITUALE split(VERBUM s, VERBUM sep) REDDE SPECULUM NIHIL</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="206.06" cy="130.49" r="2.95" data-kind="bind" data-ritual="split" data-depth="3" data-stmt="EVOCA"/>
+      <title>stmt: EVOCA
+rituale: split
+depth: 3
+line: 0
+
+source:
+stmt: EVOCA
+rituale: split</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="209.72" cy="161.32" r="3.60" data-kind="term" data-ritual="split" data-line="224" data-col="3" data-depth="3" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: split
+depth: 3
+line: 224
+
+source:
+REDDE OBSECRO verbum_split(s, sep)</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-main" cx="203.81" cy="108.47" r="5.95" data-kind="rituale" data-ritual="split_char" data-line="227" data-col="1" data-depth="3" data-stmt="RITUALE" data-loops="0" data-calls="0"/>
+      <title>RITUALE split_char
+stmt: 1
+depth: 3
+loops: 0
+calls: 0
+source:
+RITUALE split_char(VERBUM s, MILES c) REDDE SPECULUM NIHIL</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="212.48" cy="132.98" r="2.95" data-kind="bind" data-ritual="split_char" data-depth="3" data-stmt="EVOCA"/>
+      <title>stmt: EVOCA
+rituale: split_char
+depth: 3
+line: 0
+
+source:
+stmt: EVOCA
+rituale: split_char</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="230.03" cy="158.60" r="3.60" data-kind="term" data-ritual="split_char" data-line="228" data-col="3" data-depth="3" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: split_char
+depth: 3
+line: 228
+
+source:
+REDDE OBSECRO verbum_split_char(s, c)</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-main" cx="231.75" cy="102.88" r="5.95" data-kind="rituale" data-ritual="join" data-line="231" data-col="1" data-depth="3" data-stmt="RITUALE" data-loops="0" data-calls="0"/>
+      <title>RITUALE join
+stmt: 1
+depth: 3
+loops: 0
+calls: 0
+source:
+RITUALE join(SPECULUM NIHIL parts, VERBUM sep) REDDE VERBUM</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="235.82" cy="128.56" r="2.95" data-kind="bind" data-ritual="join" data-depth="3" data-stmt="EVOCA"/>
+      <title>stmt: EVOCA
+rituale: join
+depth: 3
+line: 0
+
+source:
+stmt: EVOCA
+rituale: join</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="232.61" cy="159.44" r="3.60" data-kind="term" data-ritual="join" data-line="232" data-col="3" data-depth="3" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: join
+depth: 3
+line: 232
+
+source:
+REDDE OBSECRO verbum_join(parts, sep)</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-main" cx="257.73" cy="92.82" r="5.95" data-kind="rituale" data-ritual="lines" data-line="235" data-col="1" data-depth="3" data-stmt="RITUALE" data-loops="0" data-calls="0"/>
+      <title>RITUALE lines
+stmt: 1
+depth: 3
+loops: 0
+calls: 0
+source:
+RITUALE lines(VERBUM s) REDDE SPECULUM NIHIL</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="257.45" cy="118.81" r="2.95" data-kind="bind" data-ritual="lines" data-depth="3" data-stmt="EVOCA"/>
+      <title>stmt: EVOCA
+rituale: lines
+depth: 3
+line: 0
+
+source:
+stmt: EVOCA
+rituale: lines</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="249.13" cy="148.73" r="3.60" data-kind="term" data-ritual="lines" data-line="236" data-col="3" data-depth="3" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: lines
+depth: 3
+line: 236
+
+source:
+REDDE OBSECRO verbum_lines(s)</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-main" cx="274.58" cy="97.45" r="5.95" data-kind="rituale" data-ritual="words" data-line="239" data-col="1" data-depth="3" data-stmt="RITUALE" data-loops="0" data-calls="0"/>
+      <title>RITUALE words
+stmt: 1
+depth: 3
+loops: 0
+calls: 0
+source:
+RITUALE words(VERBUM s) REDDE SPECULUM NIHIL</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="271.55" cy="123.28" r="2.95" data-kind="bind" data-ritual="words" data-depth="3" data-stmt="EVOCA"/>
+      <title>stmt: EVOCA
+rituale: words
+depth: 3
+line: 0
+
+source:
+stmt: EVOCA
+rituale: words</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="276.01" cy="154.00" r="3.60" data-kind="term" data-ritual="words" data-line="240" data-col="3" data-depth="3" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: words
+depth: 3
+line: 240
+
+source:
+REDDE OBSECRO verbum_words(s)</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="253.34" cy="266.22" r="5.00" data-kind="bind" data-ritual="len" data-depth="3" data-stmt="EVOCA"/>
+      <title>stmt: EVOCA
+rituale: len
+depth: 3
+line: 0
+
+source:
+stmt: EVOCA
+rituale: len</title>
+    </g>
+  </g>
+  <g id="ornaments">
+    <circle class="orn" cx="458.39" cy="285.54" r="0.90"/>
+    <circle class="orn" cx="424.48" cy="376.00" r="1.90"/>
+    <circle class="orn" cx="349.87" cy="438.45" r="2.90"/>
+    <circle class="orn" cx="347.31" cy="445.40" r="0.90"/>
+    <circle class="orn" cx="206.46" cy="455.25" r="1.90"/>
+    <circle class="orn" cx="136.22" cy="423.02" r="2.90"/>
+    <circle class="orn" cx="64.87" cy="345.69" r="0.90"/>
+    <circle class="orn" cx="57.78" cy="289.35" r="1.90"/>
+    <circle class="orn" cx="90.64" cy="138.36" r="2.90"/>
+    <circle class="orn" cx="139.91" cy="91.98" r="0.90"/>
+    <circle class="orn" cx="206.94" cy="54.99" r="1.90"/>
+    <circle class="orn" cx="314.29" cy="56.11" r="2.90"/>
+    <circle class="orn" cx="382.46" cy="99.33" r="0.90"/>
+    <circle class="orn" cx="448.79" cy="200.63" r="1.90"/>
+  </g>
+  <g id="signature">
+    <text class="hash" x="256" y="496" text-anchor="middle">2bd5f945f8bfad68</text>
+    <text class="label" x="256" y="18" text-anchor="middle">network • sigillum v2.1 • 39 rituale(s) • 105 stmt • depth 8</text>
+  </g>
+</svg>

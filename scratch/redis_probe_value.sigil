@@ -1,0 +1,263 @@
+format = cct.sigil.v1
+sigilo_scope = local
+visual_engine = sigillum_v2_1
+visual_style = network
+compiler_version = 0.19.0
+program_name = redis_probe_value
+semantic_hash = 5ad1d9ea2909c5a7
+layout_seed = 5ad1d9ea2909c5a7:network
+module_mode = composed
+module_count = 3
+import_edge_count = 2
+entry_module = scratch/redis_probe_value.cct
+cross_module_call_count = 1
+cross_module_type_ref_count = 0
+module_resolution_status = ok
+stdlib_module_count = 1
+stdlib_modules_used = verbum
+verbum_module_used = true
+fmt_module_used = false
+series_module_used = false
+fluxus_module_used = false
+mem_module_used = false
+io_module_used = false
+fs_module_used = false
+path_module_used = false
+math_module_used = false
+random_module_used = false
+parse_module_used = false
+cmp_module_used = false
+alg_module_used = false
+option_module_used = false
+result_module_used = false
+map_module_used = false
+set_module_used = false
+collection_ops_module_used = false
+visibility_model = public_default_arcanum_internal
+public_symbol_count = 60
+internal_symbol_count = 0
+
+[metrics]
+ritual_count = 2
+entry_ritual_index = 1
+entry_ritual_name = main
+total_statements = 11
+total_expressions = 27
+max_nesting = 5
+avg_nesting = 2.286
+loops_total = 0
+conditionals_total = 2
+calls_total = 2
+obsecro_total = 0
+returns_total = 4
+anur_total = 0
+sigillum_decl_total = 1
+ordo_decl_total = 1
+generic_decl_count = 0
+generic_param_count = 0
+generic_rituale_count = 0
+generic_sigillum_count = 0
+generic_instantiation_count = 0
+generic_rituale_instantiation_count = 0
+generic_sigillum_instantiation_count = 0
+generic_instantiation_dedup_count = 0
+generic_constraint_count = 0
+generic_constrained_param_count = 0
+generic_constraint_violation_count = 0
+pactum_constraint_resolution_status = ok
+generic_monomorphization_status = ok
+pactum_decl_count = 0
+pactum_signature_count = 0
+sigillum_pactum_conformance_count = 0
+pactum_conformance_status = ok
+multi_ritual = true
+complexity_class = compound
+
+[counts]
+evoca = 2
+vincire = 3
+si = 2
+aliter = 0
+dum = 0
+donec = 0
+repete = 0
+iterum = 0
+iterum_count = 0
+coniura = 2
+obsecro = 0
+redde = 4
+anur = 0
+field_access = 5
+index_access = 0
+series_type_use = 0
+speculum_type_use = 0
+sigillum_decl = 1
+sigillum_composite_field = 0
+ordo_decl = 1
+type_umbra = 0
+type_flamma = 0
+address_of = 0
+deref = 0
+alloc = 0
+free = 0
+dimitte = 0
+fluxus_ops_count = 0
+verbum_ops_count = 1
+fmt_ops_count = 0
+series_ops_count = 0
+mem_ops_count = 0
+io_ops_count = 0
+fs_ops_count = 0
+fluxus_init_count = 0
+fluxus_push_count = 0
+fluxus_pop_count = 0
+fluxus_instances_count = 0
+path_ops_count = 0
+math_ops_count = 0
+random_ops_count = 0
+parse_ops_count = 0
+cmp_ops_count = 0
+alg_ops_count = 0
+option_ops_count = 0
+result_ops_count = 0
+map_ops_count = 0
+set_ops_count = 0
+collection_ops_count = 0
+pactum_decl = 0
+pactum_signature = 0
+sigillum_pactum_conformance = 0
+generic_constraint = 0
+generic_constrained_param = 0
+generic_constraint_violation = 0
+tempta = 0
+cape = 0
+semper = 0
+iace = 0
+
+[topology]
+node_count = 8
+edge_count = 8
+primary_path_nodes = 2
+ritual_poles = 2
+aux_nodes = 6
+self_call_count = 0
+loop_presence = false
+conditional_presence = true
+call_presence = true
+density_ratio = 1.375
+field_access_presence = true
+index_access_presence = false
+memory_presence = false
+speculum_presence = false
+dynamic_indexable_memory_presence = false
+indirect_structural_flow_presence = false
+failure_construct_presence = false
+tempta_presence = false
+cape_presence = false
+semper_presence = false
+iace_presence = false
+failure_call_propagation_presence = false
+failure_call_propagation_count = 0
+iace_across_coniura_presence = false
+tempta_call_capture_presence = false
+failure_cleanup_presence = false
+failure_cleanup_memory_presence = false
+runtime_failure_bridge_presence = false
+phase7_subset_final = true
+phase7_discard_policy = manual_explicit(obsecro_libera,dimitte)
+phase8_subset_final = true
+phase8_failure_policy = fractum_simple_opaco(payload=verbum);tempta_cape_semper_subset
+phase8_runtime_fail_policy = partial_bridge_documented(integrated=null_pointer_checks_in_instrumented_failure_paths;others=direct_abort)
+phase10_subset_final = true
+phase10_final_status = consolidated
+phase10_typing_contract = genus_explicit_monomorphization+pactum_explicit_conformance+constraint_single_contract_rituale_only
+
+[analysis_summary]
+scope = local
+schema_phase = 13C2
+analysis_profile = analytical_v1
+complexity_class = compound
+control_flow_pressure = 2
+failure_surface = none
+stdlib_surface = 1
+generic_surface = 0
+determinism_guarantee = stable
+
+[diff_fingerprint_context]
+scope_anchor = local
+hash_anchor = 5ad1d9ea2909c5a7
+fingerprint_basis = structural_metrics+topology+hash_anchor
+serialization_profile = analytical_v1
+volatility = none
+module_anchor_count = 3
+entry_anchor = scratch/redis_probe_value.cct
+
+[module_structural_summary]
+module_count = 3
+module_mode = composed
+import_edge_count = 2
+cross_module_call_count = 1
+cross_module_type_ref_count = 0
+ritual_count = 2
+public_symbol_count = 60
+internal_symbol_count = 0
+module_resolution_status = ok
+
+[compatibility_hints]
+schema_contract = cct.sigil.v1
+unknown_field_policy = warning_non_fatal
+deprecated_alias = sigilo_style->visual_engine
+consumer_mode_tolerant = ignore_unknown_additive_fields
+consumer_mode_strict = enforce_required_fields_and_hash_by_scope
+diff_policy = analytical_blocks_review_required_except_compatibility_hints
+deterministic_serialization = stable_section_order
+
+[layout]
+primary_axis_deg = 169.433
+canvas_center = 256.0,256.0
+containment_radius = 226.0
+style_influence = stroke/curvature/distribution/ornamentation
+
+[visual_grammar]
+style = network inscription / ritual seal (FASE 6A)
+style_selected = network
+foundation = minimal containment circle (+ optional light secondary ring)
+layers = foundation,primary_path,call_links,branches,loops,bindings,terminals,nodes,ornaments,signature
+macro_layout = ritual nodes + structural links + primary path
+rituale = primary node / pole in network
+coniura = dominant inter-ritual link (self-call => local loop)
+si = real bifurcation node + branch split
+aliter = alternate branch / compensatory reconnection
+dum = recurrence loop glyph (pre-test)
+donec = post_test loop glyph (loop + tail)
+repete = serial pulse chain / cadence marks
+series = indexed sequence pattern (metadata/hash influence, v2.1 visual modulation)
+speculum = pointer/reference construct (metadata/hash/topology influence, visual refinement deferred)
+address_of = reference acquisition mark (structural/hash influence)
+deref = bound access incision mark (structural/hash influence)
+memory_alloc_free = pete/libera/dimitte contribute memory-presence metrics/hash
+failure_propagation = TEMPTA/CAPE/IACE + CONIURA propagation tracked primarily via metadata/topology counts (FASE 8B)
+semper = guaranteed cleanup/finally block tracked in metadata/hash (FASE 8C; visual refinement deferred)
+failure_phase8_final = metadata reflects consolidated subset semantics through FASE 8D (IACE/TEMPTA/CAPE/SEMPER + propagation + partial runtime bridge)
+dynamic_indexable_memory = alloc/free + index_access + speculum/deref combination contributes topology metadata/hash (FASE 7C)
+field_access = bound branch tap / field rune mark (metadata/hash influence)
+indirect_structural_flow = field_access + speculum/deref combination contributes structural metadata/hash (FASE 7C)
+phase7_final = metadata reflects consolidated subset semantics through FASE 7D (no visual engine redesign)
+tempta_cape_iace = failure-control constructs contribute metadata/hash in FASE 8A (visual refinement deferred)
+sigillum = named vessel/struct declaration contributes topology metadata
+sigillum_composition = nested SIGILLUM field composition contributes structural metadata/hash
+ordo = ordinal taxonomy declaration contributes topology metadata
+evoca = emergence from binding node
+vincire = visible binding bars / lock marks
+obsecro = emissive rays (secondary)
+redde = convergent terminal path
+anur = terminal cut/notch
+hash_role = secondary modulation (jitter/curvature/thickness/signature)
+style_role = visual weighting/curvature/distribution without changing structural semantics
+
+[rituales]
+0 = redis_value_make | entry=false | stmt=5 | depth=3 | calls=0 | loops=0
+1 = main | entry=true | stmt=6 | depth=5 | calls=2 | loops=0
+
+[call_edges]
+main -> redis_value_make : 1

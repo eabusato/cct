@@ -11366,6 +11366,54 @@ if [ "$RC_31_READY" -eq 0 ] && ! "$PHASE31_HOST_WRAPPER" --profile freestanding 
 else
     test_fail "cct/instrument nao rejeitou perfil freestanding"
 fi
+
+echo "Test 2003: cct/trace_capture grava request unica ao parar captura"
+BASE_2003="$CCT_TMP_DIR/phase38a/test_2003_single_stop"
+if [ "$RC_31_READY" -eq 0 ] && cct_phase32_copy_compile_and_run "$PHASE31_HOST_WRAPPER" "tests/integration/trace_capture_single_stop_38a.cct" "$BASE_2003" 0; then
+    test_pass "cct/trace_capture grava request unica ao parar captura"
+else
+    test_fail "cct/trace_capture nao gravou request unica ao parar captura"
+fi
+
+echo "Test 2004: cct/trace_capture separa requests por arquivo"
+BASE_2004="$CCT_TMP_DIR/phase38a/test_2004_split_requests"
+if [ "$RC_31_READY" -eq 0 ] && cct_phase32_copy_compile_and_run "$PHASE31_HOST_WRAPPER" "tests/integration/trace_capture_split_requests_38a.cct" "$BASE_2004" 0; then
+    test_pass "cct/trace_capture separa requests por arquivo"
+else
+    test_fail "cct/trace_capture nao separou requests por arquivo"
+fi
+
+echo "Test 2005: cct/trace_capture isola snapshots por janela"
+BASE_2005="$CCT_TMP_DIR/phase38a/test_2005_snapshot_windows"
+if [ "$RC_31_READY" -eq 0 ] && cct_phase32_copy_compile_and_run "$PHASE31_HOST_WRAPPER" "tests/integration/trace_capture_snapshot_windows_38a.cct" "$BASE_2005" 0; then
+    test_pass "cct/trace_capture isola snapshots por janela"
+else
+    test_fail "cct/trace_capture nao isolou snapshots por janela"
+fi
+
+echo "Test 2006: cct/trace_capture ignora raiz ainda aberta"
+BASE_2006="$CCT_TMP_DIR/phase38a/test_2006_pending_root"
+if [ "$RC_31_READY" -eq 0 ] && cct_phase32_copy_compile_and_run "$PHASE31_HOST_WRAPPER" "tests/integration/trace_capture_pending_root_38a.cct" "$BASE_2006" 0; then
+    test_pass "cct/trace_capture ignora raiz ainda aberta"
+else
+    test_fail "cct/trace_capture nao ignorou raiz ainda aberta"
+fi
+
+echo "Test 2007: cct/trace_capture stop desliga instrumentacao"
+BASE_2007="$CCT_TMP_DIR/phase38a/test_2007_stop_disables"
+if [ "$RC_31_READY" -eq 0 ] && cct_phase32_copy_compile_and_run "$PHASE31_HOST_WRAPPER" "tests/integration/trace_capture_stop_disables_38a.cct" "$BASE_2007" 0; then
+    test_pass "cct/trace_capture stop desliga instrumentacao"
+else
+    test_fail "cct/trace_capture stop nao desligou instrumentacao"
+fi
+
+echo "Test 2008: cct/trace_capture preserva hierarquia no ctrace exportado"
+BASE_2008="$CCT_TMP_DIR/phase38a/test_2008_nested_preserve"
+if [ "$RC_31_READY" -eq 0 ] && cct_phase32_copy_compile_and_run "$PHASE31_HOST_WRAPPER" "tests/integration/trace_capture_nested_preserve_38a.cct" "$BASE_2008" 0; then
+    test_pass "cct/trace_capture preserva hierarquia no ctrace exportado"
+else
+    test_fail "cct/trace_capture nao preservou hierarquia no ctrace exportado"
+fi
 fi
 
 if cct_phase_block_enabled "38B"; then
@@ -11514,6 +11562,28 @@ if [ "$RC_31_READY" -eq 0 ] && "$PHASE31_HOST_WRAPPER" sigilo trace render --sta
     test_pass "sigilo trace render mantem fallback sem timeline"
 else
     test_fail "sigilo trace render nao manteve fallback sem timeline"
+fi
+
+echo "Test 2009: sigilo trace ancora raiz na rota real do system svg"
+TRACE39A_SYSTEM_BASE="$CCT_TMP_DIR/phase39a/system_example"
+TRACE39A_SYSTEM_SIGIL="${TRACE39A_SYSTEM_BASE}.system.sigil"
+SVG_2009="$CCT_TMP_DIR/phase39a/test_2009_system_overlay.svg"
+if [ "$RC_31_READY" -eq 0 ] && "$PHASE31_HOST_WRAPPER" --sigilo-only --sigilo-style routes --sigilo-out "$TRACE39A_SYSTEM_BASE" "examples/sigilo_web_system_35/main.cct" >"$PHASE31_LOG_DIR/test_2009_sigilo.stdout.log" 2>"$PHASE31_LOG_DIR/test_2009_sigilo.stderr.log" && \
+   "$PHASE31_HOST_WRAPPER" sigilo trace render --animated --trace "examples/sigilo_web_system_35/media_upload_pipeline_39.ctrace" --sigil "$TRACE39A_SYSTEM_SIGIL" --out "$SVG_2009" >"$PHASE31_LOG_DIR/test_2009.stdout.log" 2>"$PHASE31_LOG_DIR/test_2009.stderr.log" && \
+   rg -q 'id="span-m1".*cx="273\.50".*cy="944\.91"' "$SVG_2009"; then
+    test_pass "sigilo trace ancora raiz na rota real do system svg"
+else
+    test_fail "sigilo trace nao ancorou raiz na rota real do system svg"
+fi
+
+echo "Test 2010: sigilo trace ancora middleware e handler nos modulos corretos"
+SVG_2010="$CCT_TMP_DIR/phase39a/test_2010_system_clusters.svg"
+if [ "$RC_31_READY" -eq 0 ] && "$PHASE31_HOST_WRAPPER" sigilo trace render --animated --trace "examples/sigilo_web_system_35/media_upload_pipeline_39.ctrace" --sigil "$TRACE39A_SYSTEM_SIGIL" --out "$SVG_2010" >"$PHASE31_LOG_DIR/test_2010.stdout.log" 2>"$PHASE31_LOG_DIR/test_2010.stderr.log" && \
+   rg -q 'id="span-m2".*data-module="examples/sigilo_web_system_35/modules/auth\.cct".*cx="599\.[0-9]{2}".*cy="381\.[0-9]{2}"' "$SVG_2010" && \
+   rg -q 'id="span-m4".*data-module="examples/sigilo_web_system_35/modules/media\.cct".*cx="865\.[0-9]{2}".*cy="507\.[0-9]{2}"' "$SVG_2010"; then
+    test_pass "sigilo trace ancora middleware e handler nos modulos corretos"
+else
+    test_fail "sigilo trace nao ancorou middleware e handler nos modulos corretos"
 fi
 fi
 

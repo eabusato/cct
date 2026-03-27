@@ -1,0 +1,151 @@
+format = cct.sigil.v1
+sigilo_scope = system
+visual_style = network
+system_hash = 64fecf2f9e515761
+module_count = 16
+entry_module = examples/http_json_client_20f2.cct
+import_edges = 32
+cross_module_calls = 336
+cross_module_type_refs = 2
+exported_symbol_count = 324
+internal_symbol_count = 0
+module_density = 2.000000
+system_topology_class = mesh_dense
+module_visibility_model = public_default_arcanum_internal
+module_resolution_status = ok
+composition_mode = sigil_of_sigils_inline
+generic_instantiation_count = 29
+generic_rituale_instantiation_count = 29
+generic_sigillum_instantiation_count = 0
+generic_instantiation_dedup_count = 15
+generic_constraint_count = 0
+generic_constrained_param_count = 0
+generic_constraint_violation_count = 0
+pactum_constraint_resolution_status = ok
+generic_monomorphization_status = ok
+pactum_decl_count = 0
+pactum_signature_count = 0
+sigillum_pactum_conformance_count = 0
+pactum_conformance_status = ok
+option_ops_count = 32
+result_ops_count = 16
+map_ops_count = 0
+set_ops_count = 0
+collection_ops_count = 0
+iterum_count = 0
+option_module_used = true
+result_module_used = true
+map_module_used = false
+set_module_used = false
+collection_ops_module_used = false
+phase10_subset_final = true
+phase10_final_status = consolidated
+phase10_typing_contract = genus_explicit_monomorphization+pactum_explicit_conformance+constraint_single_contract_rituale_only
+
+[analysis_summary]
+scope = system
+schema_phase = 13C2
+analysis_profile = analytical_v1
+system_topology_class = mesh_dense
+module_density = 2.000000
+cross_module_flow = 338
+generic_surface = 29
+determinism_guarantee = stable
+
+[diff_fingerprint_context]
+scope_anchor = system
+hash_anchor = 64fecf2f9e515761
+fingerprint_basis = module_map+import_edges+system_hash_anchor
+serialization_profile = analytical_v1
+volatility = none
+module_anchor_count = 16
+entry_anchor = examples/http_json_client_20f2.cct
+
+[module_structural_summary]
+module_count = 16
+import_edges = 32
+cross_module_calls = 336
+cross_module_type_refs = 2
+module_resolution_status = ok
+exported_symbol_count = 324
+internal_symbol_count = 0
+composition_mode = sigil_of_sigils_inline
+
+[compatibility_hints]
+schema_contract = cct.sigil.v1
+unknown_field_policy = warning_non_fatal
+deprecated_alias = sigilo_style->visual_engine
+consumer_mode_tolerant = ignore_unknown_additive_fields
+consumer_mode_strict = enforce_required_fields_and_hash_by_scope
+diff_policy = analytical_blocks_review_required_except_compatibility_hints
+deterministic_serialization = stable_section_order
+
+[modules]
+0 = /Users/eabusato/dev/cct/examples/http_json_client_20f2.cct
+1 = /Users/eabusato/dev/cct/lib/cct/fs.cct
+2 = /Users/eabusato/dev/cct/lib/cct/http.cct
+3 = /Users/eabusato/dev/cct/lib/cct/json.cct
+4 = /Users/eabusato/dev/cct/lib/cct/fmt.cct
+5 = /Users/eabusato/dev/cct/lib/cct/verbum.cct
+6 = /Users/eabusato/dev/cct/lib/cct/fluxus.cct
+7 = /Users/eabusato/dev/cct/lib/cct/option.cct
+8 = /Users/eabusato/dev/cct/lib/cct/parse.cct
+9 = /Users/eabusato/dev/cct/lib/cct/result.cct
+10 = /Users/eabusato/dev/cct/lib/cct/verbum_builder.cct
+11 = /Users/eabusato/dev/cct/lib/cct/verbum_scan.cct
+12 = /Users/eabusato/dev/cct/lib/cct/net.cct
+13 = /Users/eabusato/dev/cct/lib/cct/socket.cct
+14 = /Users/eabusato/dev/cct/lib/cct/io.cct
+15 = /Users/eabusato/dev/cct/lib/cct/time.cct
+
+[module_sigils]
+0 = /Users/eabusato/dev/cct/examples/http_json_client_20f2.cct | ebec7c0ff72da2f7
+1 = /Users/eabusato/dev/cct/lib/cct/fs.cct | 3e45228e77c0f971
+2 = /Users/eabusato/dev/cct/lib/cct/http.cct | e6829f6f30fdc6be
+3 = /Users/eabusato/dev/cct/lib/cct/json.cct | 587d9b7bd83bc514
+4 = /Users/eabusato/dev/cct/lib/cct/fmt.cct | 790273b45a960d77
+5 = /Users/eabusato/dev/cct/lib/cct/verbum.cct | 81f12369ef7c139f
+6 = /Users/eabusato/dev/cct/lib/cct/fluxus.cct | bdc18a455d0744f5
+7 = /Users/eabusato/dev/cct/lib/cct/option.cct | 67ec7c62091c64c5
+8 = /Users/eabusato/dev/cct/lib/cct/parse.cct | bc6cf225c231e3a0
+9 = /Users/eabusato/dev/cct/lib/cct/result.cct | 9620f6a61bbeef14
+10 = /Users/eabusato/dev/cct/lib/cct/verbum_builder.cct | cc3543175acbdbf5
+11 = /Users/eabusato/dev/cct/lib/cct/verbum_scan.cct | ea40e6388e25d4c1
+12 = /Users/eabusato/dev/cct/lib/cct/net.cct | 13dd5f9e5657b44f
+13 = /Users/eabusato/dev/cct/lib/cct/socket.cct | e373dc3f113366bb
+14 = /Users/eabusato/dev/cct/lib/cct/io.cct | 9699b47a9890d1fb
+15 = /Users/eabusato/dev/cct/lib/cct/time.cct | 373ed3797d37f2b9
+
+[import_edges]
+0 = /Users/eabusato/dev/cct/examples/http_json_client_20f2.cct -> /Users/eabusato/dev/cct/lib/cct/fs.cct
+1 = /Users/eabusato/dev/cct/examples/http_json_client_20f2.cct -> /Users/eabusato/dev/cct/lib/cct/http.cct
+2 = /Users/eabusato/dev/cct/examples/http_json_client_20f2.cct -> /Users/eabusato/dev/cct/lib/cct/io.cct
+3 = /Users/eabusato/dev/cct/examples/http_json_client_20f2.cct -> /Users/eabusato/dev/cct/lib/cct/json.cct
+4 = /Users/eabusato/dev/cct/examples/http_json_client_20f2.cct -> /Users/eabusato/dev/cct/lib/cct/fmt.cct
+5 = /Users/eabusato/dev/cct/examples/http_json_client_20f2.cct -> /Users/eabusato/dev/cct/lib/cct/time.cct
+6 = /Users/eabusato/dev/cct/examples/http_json_client_20f2.cct -> /Users/eabusato/dev/cct/lib/cct/verbum.cct
+7 = /Users/eabusato/dev/cct/lib/cct/http.cct -> /Users/eabusato/dev/cct/lib/cct/json.cct
+8 = /Users/eabusato/dev/cct/lib/cct/http.cct -> /Users/eabusato/dev/cct/lib/cct/fluxus.cct
+9 = /Users/eabusato/dev/cct/lib/cct/http.cct -> /Users/eabusato/dev/cct/lib/cct/fmt.cct
+10 = /Users/eabusato/dev/cct/lib/cct/http.cct -> /Users/eabusato/dev/cct/lib/cct/net.cct
+11 = /Users/eabusato/dev/cct/lib/cct/http.cct -> /Users/eabusato/dev/cct/lib/cct/option.cct
+12 = /Users/eabusato/dev/cct/lib/cct/http.cct -> /Users/eabusato/dev/cct/lib/cct/parse.cct
+13 = /Users/eabusato/dev/cct/lib/cct/http.cct -> /Users/eabusato/dev/cct/lib/cct/socket.cct
+14 = /Users/eabusato/dev/cct/lib/cct/http.cct -> /Users/eabusato/dev/cct/lib/cct/verbum.cct
+15 = /Users/eabusato/dev/cct/lib/cct/json.cct -> /Users/eabusato/dev/cct/lib/cct/fs.cct
+16 = /Users/eabusato/dev/cct/lib/cct/json.cct -> /Users/eabusato/dev/cct/lib/cct/fmt.cct
+17 = /Users/eabusato/dev/cct/lib/cct/json.cct -> /Users/eabusato/dev/cct/lib/cct/fluxus.cct
+18 = /Users/eabusato/dev/cct/lib/cct/json.cct -> /Users/eabusato/dev/cct/lib/cct/option.cct
+19 = /Users/eabusato/dev/cct/lib/cct/json.cct -> /Users/eabusato/dev/cct/lib/cct/parse.cct
+20 = /Users/eabusato/dev/cct/lib/cct/json.cct -> /Users/eabusato/dev/cct/lib/cct/result.cct
+21 = /Users/eabusato/dev/cct/lib/cct/json.cct -> /Users/eabusato/dev/cct/lib/cct/verbum.cct
+22 = /Users/eabusato/dev/cct/lib/cct/json.cct -> /Users/eabusato/dev/cct/lib/cct/verbum_builder.cct
+23 = /Users/eabusato/dev/cct/lib/cct/json.cct -> /Users/eabusato/dev/cct/lib/cct/verbum_scan.cct
+24 = /Users/eabusato/dev/cct/lib/cct/fmt.cct -> /Users/eabusato/dev/cct/lib/cct/verbum.cct
+25 = /Users/eabusato/dev/cct/lib/cct/parse.cct -> /Users/eabusato/dev/cct/lib/cct/verbum.cct
+26 = /Users/eabusato/dev/cct/lib/cct/parse.cct -> /Users/eabusato/dev/cct/lib/cct/option.cct
+27 = /Users/eabusato/dev/cct/lib/cct/verbum_builder.cct -> /Users/eabusato/dev/cct/lib/cct/fmt.cct
+28 = /Users/eabusato/dev/cct/lib/cct/net.cct -> /Users/eabusato/dev/cct/lib/cct/option.cct
+29 = /Users/eabusato/dev/cct/lib/cct/net.cct -> /Users/eabusato/dev/cct/lib/cct/parse.cct
+30 = /Users/eabusato/dev/cct/lib/cct/net.cct -> /Users/eabusato/dev/cct/lib/cct/socket.cct
+31 = /Users/eabusato/dev/cct/lib/cct/net.cct -> /Users/eabusato/dev/cct/lib/cct/verbum.cct

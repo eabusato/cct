@@ -33,9 +33,6 @@ third_party/
 # Generated C files
 *.cgen.c
 
-# Sigil artifacts (generated)
-*.svg
-*.sigil
 
 # Exception: documentation images
 !docs/*.svg
@@ -105,6 +102,8 @@ md_out/
 /out/
 /out_27e_combo.bin.dSYM/
 /out_27e_string.bin.dSYM/
+tests/integration/*.svg
+tests/integration/*.sigil
 
 # ============================================================================
 # Additional Generated Artifacts and Local Worktrees
@@ -132,14 +131,7 @@ examples/.tmp/
 examples/**/.cct/
 examples/**/dist/
 
-# Generated compiler artifacts
-*.cgen.c
-*.cgen.s
-*.svg
-*.sigil
-*.log
-*.test
-*.bench
+
 
 # Release/debug artifacts
 *.tar.gz

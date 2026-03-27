@@ -1,0 +1,44 @@
+INCIPIT grimoire "trace_capture_snapshot_windows_38a"
+
+ADVOCARE "cct/fluxus.cct"
+ADVOCARE "cct/fs.cct"
+ADVOCARE "cct/instrument.cct"
+ADVOCARE "cct/trace_capture.cct"
+ADVOCARE "cct/verbum.cct"
+
+RITUALE trace_capture_dir_content(VERBUM dir) REDDE VERBUM
+  SI CONIURA contains(dir, "snapshot-001")
+    REDDE CONIURA read_all(CONIURA concat(dir, "/request-001-get-auth-login.ctrace"))
+  FIN SI
+  REDDE CONIURA read_all(CONIURA concat(dir, "/request-001-post-perfil-avatar.ctrace"))
+EXPLICIT RITUALE
+
+RITUALE main() REDDE REX
+  EVOCA TraceCaptureSession session AD CONIURA trace_capture_start_in("tests/.tmp/trace_capture_snapshot_windows_38a", "capture-window", INSTR_MODE_FULL)
+  EVOCA REX req1 AD CONIURA instrument_http_span("GET", "/auth/login")
+  CONIURA instrument_span_end(req1)
+  SI CONIURA trace_capture_snapshot(SPECULUM session) != 1
+    REDDE 1
+  FIN SI
+
+  EVOCA REX req2 AD CONIURA instrument_http_span("POST", "/perfil/avatar")
+  CONIURA instrument_span_end(req2)
+  SI CONIURA trace_capture_snapshot(SPECULUM session) != 1
+    REDDE 2
+  FIN SI
+  CONIURA trace_capture_stop(SPECULUM session)
+
+  EVOCA VERBUM dir1 AD CONIURA concat(CONIURA trace_capture_dir(session), "/snapshot-001")
+  EVOCA VERBUM dir2 AD CONIURA concat(CONIURA trace_capture_dir(session), "/snapshot-002")
+  EVOCA VERBUM content1 AD CONIURA trace_capture_dir_content(dir1)
+  EVOCA VERBUM content2 AD CONIURA trace_capture_dir_content(dir2)
+  SI NON CONIURA contains(content1, "/auth/login") VEL CONIURA contains(content1, "/perfil/avatar")
+    REDDE 3
+  FIN SI
+  SI NON CONIURA contains(content2, "/perfil/avatar") VEL CONIURA contains(content2, "/auth/login")
+    REDDE 4
+  FIN SI
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

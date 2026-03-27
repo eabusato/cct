@@ -1,0 +1,280 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512" role="img" aria-label="CCT local sigilo">
+  <desc>Deterministic semantic sigil for a single CCT module.</desc>
+  <defs>
+    <style><![CDATA[
+      .bg { fill: #f5f0e4; }
+      .base { stroke: #2a221c; stroke-width: 1.60; fill: none; opacity: 0.78; }
+      .primary { stroke: #241913; stroke-width: 2.80; fill: none; stroke-linecap: round; stroke-linejoin: round; }
+      .call { stroke: #5b2a22; stroke-width: 2.0; fill: none; stroke-linecap: round; opacity: 0.9; }
+      .branch { stroke: #6b342d; stroke-width: 1.6; fill: none; stroke-linecap: round; }
+      .loop { stroke: #2d5f5a; stroke-width: 1.6; fill: none; stroke-linecap: round; }
+      .bind { stroke: #73493d; stroke-width: 1.4; fill: none; stroke-linecap: round; }
+      .term { stroke: #201814; stroke-width: 1.7; fill: none; stroke-linecap: round; }
+      .node-main { fill: #fffaf1; stroke: #201814; stroke-width: 2.0; }
+      .node-entry { fill: #efe6d4; stroke: #201814; stroke-width: 2.4; }
+      .node-aux { fill: #f6efe0; stroke: #4f4339; stroke-width: 1.3; }
+      .node-loop { fill: #edf3f1; stroke: #2d5f5a; stroke-width: 1.4; }
+      .node-term { fill: #f3e7e3; stroke: #5a2a23; stroke-width: 1.4; }
+      .orn { stroke: #355d58; stroke-width: 1.0; fill: none; opacity: 0.55; }
+      .hash { fill: #1f1a17; font: 10px monospace; letter-spacing: 0.8px; }
+      .label { fill: #1f1a17; font: 8px monospace; opacity: 0.7; }
+      .node-wrap, .edge-wrap { cursor: help; }
+      .node-wrap:hover > circle { opacity: 0.96; }
+      .edge-wrap:hover > path, .edge-wrap:hover > line { opacity: 1.0; }
+    ]]></style>
+  </defs>
+  <rect class="bg" x="0" y="0" width="512" height="512"/>
+  <g id="foundation">
+    <circle class="base" cx="256" cy="256" r="226"/>
+    <ellipse class="base" cx="256" cy="256" rx="198" ry="180.90" opacity="0.32"/>
+  </g>
+  <g id="primary_path">
+    <g class="edge-wrap">
+    <path class="primary" d="M 203.37 106.24 Q 295.54 230.57 418.81 324.15" stroke-width="3.20" opacity="0.96"/>
+      <title>edge: primary
+main -&gt; quadrado
+weight: 1
+
+path:
+main -&gt; quadrado</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="primary" d="M 418.81 324.15 Q 346.08 343.13 301.43 403.61" stroke-width="2.60" opacity="0.96"/>
+      <title>edge: primary
+quadrado -&gt; eh_impar
+weight: 1
+
+path:
+quadrado -&gt; eh_impar</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="primary" d="M 301.43 403.61 Q 235.65 374.07 164.42 385.34" stroke-width="2.60" opacity="0.96"/>
+      <title>edge: primary
+eh_impar -&gt; somar
+weight: 1
+
+path:
+eh_impar -&gt; somar</title>
+    </g>
+  </g>
+  <g id="call_links">
+  </g>
+  <g id="branches">
+    <g class="edge-wrap">
+    <path class="branch" d="M 257.14 249.27 Q 239.29 174.36 203.37 106.24" stroke-width="2.10" opacity="0.85"/>
+      <title>edge: branch
+main -&gt; main
+weight: 14
+
+path:
+main -&gt; main</title>
+    </g>
+  </g>
+  <g id="loops">
+    <g class="edge-wrap">
+    <path class="loop" d="M 203.37 106.24 Q 219.23 94.11 221.83 74.32" stroke-width="1.55" opacity="0.88"/>
+      <title>edge: loop
+main -&gt; main
+weight: 2
+
+path:
+main -&gt; main</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="loop" d="M 225.59 74.32 C 257.00 75.83 260.90 97.65 245.29 86.74 C 229.67 97.65 233.57 75.83 219.01 75.82"/>
+      <title>edge: loop
+main -&gt; main
+weight: 2
+
+path:
+main -&gt; main</title>
+    </g>
+  </g>
+  <g id="bindings">
+    <g class="edge-wrap">
+    <path class="bind" d="M 203.37 106.24 Q 203.29 120.05 211.99 130.77" stroke-width="1.68" opacity="0.85"/>
+    <line class="bind" x1="208.87" y1="109.82" x2="201.32" y2="112.48" opacity="0.75"/>
+    <line class="bind" x1="210.67" y1="111.94" x2="201.24" y2="115.26" opacity="0.75"/>
+    <line class="bind" x1="210.59" y1="114.73" x2="203.05" y2="117.38" opacity="0.75"/>
+    <line class="bind" x1="212.40" y1="116.85" x2="202.96" y2="120.17" opacity="0.75"/>
+    <line class="bind" x1="212.32" y1="119.63" x2="204.77" y2="122.29" opacity="0.75"/>
+    <line class="bind" x1="214.12" y1="121.76" x2="204.69" y2="125.07" opacity="0.75"/>
+    <line class="bind" x1="217.68" y1="130.43" x2="223.67" y2="130.06" opacity="0.58"/>
+    <line class="bind" x1="213.82" y1="136.17" x2="216.72" y2="144.69" opacity="0.58"/>
+    <line class="bind" x1="207.58" y1="134.38" x2="202.93" y2="138.17" opacity="0.58"/>
+    <line class="bind" x1="206.72" y1="128.60" x2="198.40" y2="125.16" opacity="0.58"/>
+    <line class="bind" x1="212.52" y1="125.10" x2="213.08" y2="119.12" opacity="0.58"/>
+      <title>edge: bind
+main -&gt; main
+weight: 6
+
+path:
+main -&gt; main</title>
+    </g>
+  </g>
+  <g id="terminals">
+    <g class="edge-wrap">
+    <path class="term" d="M 418.81 324.15 Q 393.15 310.47 364.07 309.91" stroke-width="1.65" opacity="0.90"/>
+      <title>edge: return
+quadrado -&gt; quadrado
+weight: 2
+
+path:
+quadrado -&gt; quadrado</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="term" d="M 301.43 403.61 Q 301.44 374.97 292.60 347.73" stroke-width="1.65" opacity="0.90"/>
+      <title>edge: return
+eh_impar -&gt; eh_impar
+weight: 2
+
+path:
+eh_impar -&gt; eh_impar</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="term" d="M 164.42 385.34 Q 186.70 367.49 203.31 344.26" stroke-width="1.65" opacity="0.90"/>
+      <title>edge: return
+somar -&gt; somar
+weight: 2
+
+path:
+somar -&gt; somar</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="term" d="M 203.37 106.24 Q 203.34 135.09 214.39 161.73" stroke-width="1.65" opacity="0.90"/>
+      <title>edge: return
+main -&gt; main
+weight: 2
+
+path:
+main -&gt; main</title>
+    </g>
+  </g>
+  <g id="nodes">
+    <g class="node-wrap">
+      <circle class="node-main" cx="418.81" cy="324.15" r="5.95" data-kind="rituale" data-ritual="quadrado" data-line="8" data-col="1" data-depth="3" data-stmt="RITUALE" data-loops="0" data-calls="0"/>
+      <title>RITUALE quadrado
+stmt: 1
+depth: 3
+loops: 0
+calls: 0
+source:
+RITUALE quadrado(REX x) REDDE REX</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="364.07" cy="309.91" r="3.60" data-kind="term" data-ritual="quadrado" data-line="9" data-col="3" data-depth="3" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: quadrado
+depth: 3
+line: 9
+
+source:
+REDDE x * x</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-main" cx="301.43" cy="403.61" r="5.95" data-kind="rituale" data-ritual="eh_impar" data-line="12" data-col="1" data-depth="4" data-stmt="RITUALE" data-loops="0" data-calls="0"/>
+      <title>RITUALE eh_impar
+stmt: 1
+depth: 4
+loops: 0
+calls: 0
+source:
+RITUALE eh_impar(REX x) REDDE VERUM</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="292.60" cy="347.73" r="3.60" data-kind="term" data-ritual="eh_impar" data-line="13" data-col="3" data-depth="4" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: eh_impar
+depth: 4
+line: 13
+
+source:
+REDDE x % 2 == 1</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-main" cx="164.42" cy="385.34" r="5.95" data-kind="rituale" data-ritual="somar" data-line="16" data-col="1" data-depth="3" data-stmt="RITUALE" data-loops="0" data-calls="0"/>
+      <title>RITUALE somar
+stmt: 1
+depth: 3
+loops: 0
+calls: 0
+source:
+RITUALE somar(REX acc, REX x) REDDE REX</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="203.31" cy="344.26" r="3.60" data-kind="term" data-ritual="somar" data-line="17" data-col="3" data-depth="3" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: somar
+depth: 3
+line: 17
+
+source:
+REDDE acc + x</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-entry" cx="203.37" cy="106.24" r="9.90" data-kind="rituale" data-ritual="main" data-line="20" data-col="1" data-depth="6" data-stmt="RITUALE" data-loops="1" data-calls="11" data-entry="true"/>
+      <title>RITUALE main
+stmt: 14
+depth: 6
+loops: 1
+calls: 11
+source:
+RITUALE main() REDDE REX</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-loop" cx="221.83" cy="74.32" r="4.70" data-kind="loop" data-ritual="main" data-line="24" data-col="3" data-depth="6" data-stmt="DUM"/>
+      <title>stmt: DUM
+rituale: main
+depth: 6
+line: 24
+
+source:
+DUM i &lt;= 8</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="211.99" cy="130.77" r="3.70" data-kind="bind" data-ritual="main" data-line="21" data-col="3" data-depth="6" data-stmt="EVOCA"/>
+      <title>stmt: EVOCA
+rituale: main
+depth: 6
+line: 21
+
+source:
+EVOCA SPECULUM NIHIL nums AD CONIURA fluxus_init(MENSURA(REX))</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="214.39" cy="161.73" r="3.60" data-kind="term" data-ritual="main" data-line="40" data-col="3" data-depth="6" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: main
+depth: 6
+line: 40
+
+source:
+REDDE 0</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="257.14" cy="249.27" r="4.52" data-kind="bind" data-ritual="main" data-line="21" data-col="3" data-depth="6" data-stmt="EVOCA"/>
+      <title>stmt: EVOCA
+rituale: main
+depth: 6
+line: 21
+
+source:
+EVOCA SPECULUM NIHIL nums AD CONIURA fluxus_init(MENSURA(REX))</title>
+    </g>
+  </g>
+  <g id="ornaments">
+    <circle class="orn" cx="466.43" cy="234.79" r="0.90"/>
+    <circle class="orn" cx="375.13" cy="418.41" r="1.90"/>
+    <circle class="orn" cx="297.33" cy="451.08" r="2.90"/>
+    <circle class="orn" cx="83.02" cy="373.68" r="0.90"/>
+    <circle class="orn" cx="52.18" cy="298.57" r="1.90"/>
+    <circle class="orn" cx="118.08" cy="111.35" r="2.90"/>
+    <circle class="orn" cx="218.97" cy="55.64" r="0.90"/>
+    <circle class="orn" cx="371.41" cy="84.29" r="1.90"/>
+  </g>
+  <g id="signature">
+    <text class="hash" x="256" y="496" text-anchor="middle">ed4a1a98c6551ae4</text>
+    <text class="label" x="256" y="18" text-anchor="middle">network • sigillum v2.1 • 4 rituale(s) • 17 stmt • depth 6</text>
+  </g>
+</svg>

@@ -1,0 +1,4375 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512" role="img" aria-label="CCT local sigilo">
+  <desc>Deterministic semantic sigil for a single CCT module.</desc>
+  <defs>
+    <style><![CDATA[
+      .bg { fill: #f5f0e4; }
+      .base { stroke: #2a221c; stroke-width: 1.60; fill: none; opacity: 0.78; }
+      .primary { stroke: #241913; stroke-width: 2.80; fill: none; stroke-linecap: round; stroke-linejoin: round; }
+      .call { stroke: #5b2a22; stroke-width: 2.0; fill: none; stroke-linecap: round; opacity: 0.9; }
+      .branch { stroke: #6b342d; stroke-width: 1.6; fill: none; stroke-linecap: round; }
+      .loop { stroke: #2d5f5a; stroke-width: 1.6; fill: none; stroke-linecap: round; }
+      .bind { stroke: #73493d; stroke-width: 1.4; fill: none; stroke-linecap: round; }
+      .term { stroke: #201814; stroke-width: 1.7; fill: none; stroke-linecap: round; }
+      .node-main { fill: #fffaf1; stroke: #201814; stroke-width: 2.0; }
+      .node-entry { fill: #efe6d4; stroke: #201814; stroke-width: 2.4; }
+      .node-aux { fill: #f6efe0; stroke: #4f4339; stroke-width: 1.3; }
+      .node-loop { fill: #edf3f1; stroke: #2d5f5a; stroke-width: 1.4; }
+      .node-term { fill: #f3e7e3; stroke: #5a2a23; stroke-width: 1.4; }
+      .orn { stroke: #355d58; stroke-width: 1.0; fill: none; opacity: 0.55; }
+      .hash { fill: #1f1a17; font: 10px monospace; letter-spacing: 0.8px; }
+      .label { fill: #1f1a17; font: 8px monospace; opacity: 0.7; }
+      .node-wrap, .edge-wrap { cursor: help; }
+      .node-wrap:hover > circle { opacity: 0.96; }
+      .edge-wrap:hover > path, .edge-wrap:hover > line { opacity: 1.0; }
+    ]]></style>
+  </defs>
+  <rect class="bg" x="0" y="0" width="512" height="512"/>
+  <g id="foundation">
+    <circle class="base" cx="256" cy="256" r="226"/>
+    <ellipse class="base" cx="256" cy="256" rx="198" ry="183.85" opacity="0.32"/>
+  </g>
+  <g id="primary_path">
+    <g class="edge-wrap">
+    <path class="primary" d="M 302.36 116.25 Q 304.90 139.67 314.85 118.31" stroke-width="2.60" opacity="0.96"/>
+      <title>edge: primary
+read_all -&gt; write_all
+weight: 1
+
+path:
+read_all -&gt; write_all</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="primary" d="M 314.85 118.31 Q 316.30 142.22 318.89 118.41" stroke-width="2.60" opacity="0.96"/>
+      <title>edge: primary
+write_all -&gt; append_all
+weight: 1
+
+path:
+write_all -&gt; append_all</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="primary" d="M 318.89 118.41 Q 309.45 142.33 330.96 128.23" stroke-width="2.60" opacity="0.96"/>
+      <title>edge: primary
+append_all -&gt; mkdir
+weight: 1
+
+path:
+append_all -&gt; mkdir</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="primary" d="M 330.96 128.23 Q 331.20 155.80 342.47 130.64" stroke-width="2.60" opacity="0.96"/>
+      <title>edge: primary
+mkdir -&gt; mkdir_all
+weight: 1
+
+path:
+mkdir -&gt; mkdir_all</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="primary" d="M 342.47 130.64 Q 355.55 151.76 349.55 127.65" stroke-width="2.60" opacity="0.96"/>
+      <title>edge: primary
+mkdir_all -&gt; delete_file
+weight: 1
+
+path:
+mkdir_all -&gt; delete_file</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="primary" d="M 349.55 127.65 Q 331.22 148.28 357.91 141.27" stroke-width="2.60" opacity="0.96"/>
+      <title>edge: primary
+delete_file -&gt; delete_dir
+weight: 1
+
+path:
+delete_file -&gt; delete_dir</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="primary" d="M 357.91 141.27 Q 362.32 169.13 378.07 145.74" stroke-width="2.60" opacity="0.96"/>
+      <title>edge: primary
+delete_dir -&gt; is_file
+weight: 1
+
+path:
+delete_dir -&gt; is_file</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="primary" d="M 378.07 145.74 Q 365.34 173.96 392.93 159.91" stroke-width="2.60" opacity="0.96"/>
+      <title>edge: primary
+is_file -&gt; is_dir
+weight: 1
+
+path:
+is_file -&gt; is_dir</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="primary" d="M 392.93 159.91 Q 365.89 169.70 394.36 165.60" stroke-width="2.60" opacity="0.96"/>
+      <title>edge: primary
+is_dir -&gt; exists
+weight: 1
+
+path:
+is_dir -&gt; exists</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="primary" d="M 394.36 165.60 Q 390.57 192.35 410.19 173.78" stroke-width="2.60" opacity="0.96"/>
+      <title>edge: primary
+exists -&gt; size
+weight: 1
+
+path:
+exists -&gt; size</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="primary" d="M 410.19 173.78 Q 385.36 160.88 408.42 176.74" stroke-width="2.60" opacity="0.96"/>
+      <title>edge: primary
+size -&gt; read_lines
+weight: 1
+
+path:
+size -&gt; read_lines</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="primary" d="M 408.42 176.74 Q 387.65 199.80 418.62 201.76" stroke-width="2.60" opacity="0.96"/>
+      <title>edge: primary
+read_lines -&gt; parse_lines
+weight: 1
+
+path:
+read_lines -&gt; parse_lines</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="primary" d="M 418.62 201.76 Q 409.95 225.19 431.61 212.73" stroke-width="2.60" opacity="0.96"/>
+      <title>edge: primary
+parse_lines -&gt; parse_csv_line
+weight: 1
+
+path:
+parse_lines -&gt; parse_csv_line</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="primary" d="M 431.61 212.73 Q 410.68 225.09 434.71 228.69" stroke-width="2.60" opacity="0.96"/>
+      <title>edge: primary
+parse_csv_line -&gt; parse_csv_line_sep
+weight: 1
+
+path:
+parse_csv_line -&gt; parse_csv_line_sep</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="primary" d="M 434.71 228.69 Q 409.24 227.39 432.38 238.12" stroke-width="2.60" opacity="0.96"/>
+      <title>edge: primary
+parse_csv_line_sep -&gt; parse_int
+weight: 1
+
+path:
+parse_csv_line_sep -&gt; parse_int</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="primary" d="M 432.38 238.12 Q 405.24 231.68 424.32 252.03" stroke-width="2.60" opacity="0.96"/>
+      <title>edge: primary
+parse_int -&gt; parse_real
+weight: 1
+
+path:
+parse_int -&gt; parse_real</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="primary" d="M 424.32 252.03 Q 410.70 274.54 436.97 275.92" stroke-width="2.60" opacity="0.96"/>
+      <title>edge: primary
+parse_real -&gt; parse_bool
+weight: 1
+
+path:
+parse_real -&gt; parse_bool</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="primary" d="M 436.97 275.92 Q 413.60 269.69 427.89 289.20" stroke-width="2.60" opacity="0.96"/>
+      <title>edge: primary
+parse_bool -&gt; try_int
+weight: 1
+
+path:
+parse_bool -&gt; try_int</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="primary" d="M 427.89 289.20 Q 405.52 273.29 420.73 296.15" stroke-width="2.60" opacity="0.96"/>
+      <title>edge: primary
+try_int -&gt; try_real
+weight: 1
+
+path:
+try_int -&gt; try_real</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="primary" d="M 420.73 296.15 Q 390.57 297.13 404.70 323.79" stroke-width="2.60" opacity="0.96"/>
+      <title>edge: primary
+try_real -&gt; try_bool
+weight: 1
+
+path:
+try_real -&gt; try_bool</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="primary" d="M 404.70 323.79 Q 426.05 344.61 421.86 315.09" stroke-width="2.60" opacity="0.96"/>
+      <title>edge: primary
+try_bool -&gt; parse_int_hex
+weight: 1
+
+path:
+try_bool -&gt; parse_int_hex</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="primary" d="M 421.86 315.09 Q 398.79 294.71 406.41 324.53" stroke-width="2.60" opacity="0.96"/>
+      <title>edge: primary
+parse_int_hex -&gt; try_int_hex
+weight: 1
+
+path:
+parse_int_hex -&gt; try_int_hex</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="primary" d="M 406.41 324.53 Q 378.22 322.24 392.91 346.42" stroke-width="2.60" opacity="0.96"/>
+      <title>edge: primary
+try_int_hex -&gt; parse_int_radix
+weight: 1
+
+path:
+try_int_hex -&gt; parse_int_radix</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="primary" d="M 392.91 346.42 Q 380.34 323.14 378.88 349.55" stroke-width="2.60" opacity="0.96"/>
+      <title>edge: primary
+parse_int_radix -&gt; try_int_radix
+weight: 1
+
+path:
+parse_int_radix -&gt; try_int_radix</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="primary" d="M 378.88 349.55 Q 374.05 374.33 392.52 357.12" stroke-width="2.60" opacity="0.96"/>
+      <title>edge: primary
+try_int_radix -&gt; is_int
+weight: 1
+
+path:
+try_int_radix -&gt; is_int</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="primary" d="M 392.52 357.12 Q 371.96 333.81 371.75 364.89" stroke-width="2.60" opacity="0.96"/>
+      <title>edge: primary
+is_int -&gt; is_real
+weight: 1
+
+path:
+is_int -&gt; is_real</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="primary" d="M 371.75 364.89 Q 343.94 358.50 344.24 387.04" stroke-width="2.60" opacity="0.96"/>
+      <title>edge: primary
+is_real -&gt; run
+weight: 1
+
+path:
+is_real -&gt; run</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="primary" d="M 344.24 387.04 Q 361.54 369.03 339.55 380.86" stroke-width="2.60" opacity="0.96"/>
+      <title>edge: primary
+run -&gt; run_capture
+weight: 1
+
+path:
+run -&gt; run_capture</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="primary" d="M 339.55 380.86 Q 309.14 372.40 326.81 398.55" stroke-width="2.60" opacity="0.96"/>
+      <title>edge: primary
+run_capture -&gt; run_capture_err
+weight: 1
+
+path:
+run_capture -&gt; run_capture_err</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="primary" d="M 326.81 398.55 Q 313.55 370.89 298.91 397.84" stroke-width="2.60" opacity="0.96"/>
+      <title>edge: primary
+run_capture_err -&gt; run_with_input
+weight: 1
+
+path:
+run_capture_err -&gt; run_with_input</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="primary" d="M 298.91 397.84 Q 271.82 404.77 299.53 400.99" stroke-width="2.60" opacity="0.96"/>
+      <title>edge: primary
+run_with_input -&gt; run_env
+weight: 1
+
+path:
+run_with_input -&gt; run_env</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="primary" d="M 299.53 400.99 Q 285.50 375.60 284.78 404.60" stroke-width="2.60" opacity="0.96"/>
+      <title>edge: primary
+run_env -&gt; run_timeout
+weight: 1
+
+path:
+run_env -&gt; run_timeout</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="primary" d="M 284.78 404.60 Q 267.01 383.65 255.97 408.79" stroke-width="2.60" opacity="0.96"/>
+      <title>edge: primary
+run_timeout -&gt; getenv
+weight: 1
+
+path:
+run_timeout -&gt; getenv</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="primary" d="M 255.97 408.79 Q 267.54 380.21 243.34 399.32" stroke-width="2.60" opacity="0.96"/>
+      <title>edge: primary
+getenv -&gt; has_env
+weight: 1
+
+path:
+getenv -&gt; has_env</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="primary" d="M 243.34 399.32 Q 223.53 378.25 237.07 403.81" stroke-width="2.60" opacity="0.96"/>
+      <title>edge: primary
+has_env -&gt; cwd
+weight: 1
+
+path:
+has_env -&gt; cwd</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="primary" d="M 237.07 403.81 Q 221.53 421.43 239.41 406.19" stroke-width="2.60" opacity="0.96"/>
+      <title>edge: primary
+cwd -&gt; db_open
+weight: 1
+
+path:
+cwd -&gt; db_open</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="primary" d="M 239.41 406.19 Q 235.23 379.72 212.20 393.42" stroke-width="2.60" opacity="0.96"/>
+      <title>edge: primary
+db_open -&gt; db_close
+weight: 1
+
+path:
+db_open -&gt; db_close</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="primary" d="M 212.20 393.42 Q 208.83 367.58 197.86 391.22" stroke-width="2.60" opacity="0.96"/>
+      <title>edge: primary
+db_close -&gt; db_exec
+weight: 1
+
+path:
+db_close -&gt; db_exec</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="primary" d="M 197.86 391.22 Q 191.13 362.92 193.40 391.92" stroke-width="2.60" opacity="0.96"/>
+      <title>edge: primary
+db_exec -&gt; db_last_error
+weight: 1
+
+path:
+db_exec -&gt; db_last_error</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="primary" d="M 193.40 391.92 Q 183.34 371.56 184.35 394.25" stroke-width="2.60" opacity="0.96"/>
+      <title>edge: primary
+db_last_error -&gt; db_query
+weight: 1
+
+path:
+db_last_error -&gt; db_query</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="primary" d="M 184.35 394.25 Q 178.72 361.28 149.88 378.22" stroke-width="2.60" opacity="0.96"/>
+      <title>edge: primary
+db_query -&gt; rows_next
+weight: 1
+
+path:
+db_query -&gt; rows_next</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="primary" d="M 149.88 378.22 Q 149.83 404.80 157.23 379.27" stroke-width="2.60" opacity="0.96"/>
+      <title>edge: primary
+rows_next -&gt; rows_get_text
+weight: 1
+
+path:
+rows_next -&gt; rows_get_text</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="primary" d="M 157.23 379.27 Q 163.21 349.56 143.16 372.29" stroke-width="2.60" opacity="0.96"/>
+      <title>edge: primary
+rows_get_text -&gt; rows_get_int
+weight: 1
+
+path:
+rows_get_text -&gt; rows_get_int</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="primary" d="M 143.16 372.29 Q 159.40 355.07 136.66 361.64" stroke-width="2.60" opacity="0.96"/>
+      <title>edge: primary
+rows_get_int -&gt; rows_get_real
+weight: 1
+
+path:
+rows_get_int -&gt; rows_get_real</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="primary" d="M 136.66 361.64 Q 146.44 337.31 120.39 340.25" stroke-width="2.60" opacity="0.96"/>
+      <title>edge: primary
+rows_get_real -&gt; rows_close
+weight: 1
+
+path:
+rows_get_real -&gt; rows_close</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="primary" d="M 120.39 340.25 Q 109.35 318.28 104.93 342.46" stroke-width="2.60" opacity="0.96"/>
+      <title>edge: primary
+rows_close -&gt; db_prepare
+weight: 1
+
+path:
+rows_close -&gt; db_prepare</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="primary" d="M 104.93 342.46 Q 127.26 352.78 109.31 335.97" stroke-width="2.60" opacity="0.96"/>
+      <title>edge: primary
+db_prepare -&gt; stmt_bind_text
+weight: 1
+
+path:
+db_prepare -&gt; stmt_bind_text</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="primary" d="M 109.31 335.97 Q 124.62 311.35 95.68 309.51" stroke-width="2.60" opacity="0.96"/>
+      <title>edge: primary
+stmt_bind_text -&gt; stmt_bind_int
+weight: 1
+
+path:
+stmt_bind_text -&gt; stmt_bind_int</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="primary" d="M 95.68 309.51 Q 113.34 283.38 82.65 290.63" stroke-width="2.60" opacity="0.96"/>
+      <title>edge: primary
+stmt_bind_int -&gt; stmt_bind_real
+weight: 1
+
+path:
+stmt_bind_int -&gt; stmt_bind_real</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="primary" d="M 82.65 290.63 Q 74.19 315.22 97.05 302.84" stroke-width="2.60" opacity="0.96"/>
+      <title>edge: primary
+stmt_bind_real -&gt; stmt_step
+weight: 1
+
+path:
+stmt_bind_real -&gt; stmt_step</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="primary" d="M 97.05 302.84 Q 117.46 283.37 90.38 275.50" stroke-width="2.60" opacity="0.96"/>
+      <title>edge: primary
+stmt_step -&gt; stmt_reset
+weight: 1
+
+path:
+stmt_step -&gt; stmt_reset</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="primary" d="M 90.38 275.50 Q 107.15 254.30 82.05 264.33" stroke-width="2.60" opacity="0.96"/>
+      <title>edge: primary
+stmt_reset -&gt; stmt_finalize
+weight: 1
+
+path:
+stmt_reset -&gt; stmt_finalize</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="primary" d="M 82.05 264.33 Q 106.38 269.87 83.56 259.77" stroke-width="2.60" opacity="0.96"/>
+      <title>edge: primary
+stmt_finalize -&gt; db_begin
+weight: 1
+
+path:
+stmt_finalize -&gt; db_begin</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="primary" d="M 83.56 259.77 Q 107.30 242.56 78.33 247.08" stroke-width="2.60" opacity="0.96"/>
+      <title>edge: primary
+db_begin -&gt; db_commit
+weight: 1
+
+path:
+db_begin -&gt; db_commit</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="primary" d="M 78.33 247.08 Q 101.33 243.03 80.60 232.28" stroke-width="2.60" opacity="0.96"/>
+      <title>edge: primary
+db_commit -&gt; db_rollback
+weight: 1
+
+path:
+db_commit -&gt; db_rollback</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="primary" d="M 80.60 232.28 Q 77.46 261.38 90.33 235.10" stroke-width="2.60" opacity="0.96"/>
+      <title>edge: primary
+db_rollback -&gt; db_scalar_int
+weight: 1
+
+path:
+db_rollback -&gt; db_scalar_int</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="primary" d="M 90.33 235.10 Q 108.12 213.99 82.06 204.89" stroke-width="2.60" opacity="0.96"/>
+      <title>edge: primary
+db_scalar_int -&gt; db_scalar_text
+weight: 1
+
+path:
+db_scalar_int -&gt; db_scalar_text</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="primary" d="M 82.06 204.89 Q 81.02 230.50 96.87 210.36" stroke-width="2.60" opacity="0.96"/>
+      <title>edge: primary
+db_scalar_text -&gt; sqrt_real
+weight: 1
+
+path:
+db_scalar_text -&gt; sqrt_real</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="primary" d="M 96.87 210.36 Q 126.02 201.27 97.02 191.72" stroke-width="2.60" opacity="0.96"/>
+      <title>edge: primary
+sqrt_real -&gt; cbrt_real
+weight: 1
+
+path:
+sqrt_real -&gt; cbrt_real</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="primary" d="M 97.02 191.72 Q 119.53 199.28 106.49 179.44" stroke-width="2.60" opacity="0.96"/>
+      <title>edge: primary
+cbrt_real -&gt; pow_real
+weight: 1
+
+path:
+cbrt_real -&gt; pow_real</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="primary" d="M 106.49 179.44 Q 132.60 179.29 120.13 156.34" stroke-width="2.60" opacity="0.96"/>
+      <title>edge: primary
+pow_real -&gt; abs_real
+weight: 1
+
+path:
+pow_real -&gt; abs_real</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="primary" d="M 120.13 156.34 Q 144.80 167.05 129.56 144.90" stroke-width="2.60" opacity="0.96"/>
+      <title>edge: primary
+abs_real -&gt; floor_real
+weight: 1
+
+path:
+abs_real -&gt; floor_real</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="primary" d="M 129.56 144.90 Q 160.86 156.95 168.92 124.39" stroke-width="2.60" opacity="0.96"/>
+      <title>edge: primary
+floor_real -&gt; ceil_real
+weight: 1
+
+path:
+floor_real -&gt; ceil_real</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="primary" d="M 168.92 124.39 Q 195.64 144.35 203.72 111.99" stroke-width="2.60" opacity="0.96"/>
+      <title>edge: primary
+ceil_real -&gt; round_real
+weight: 1
+
+path:
+ceil_real -&gt; round_real</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="primary" d="M 203.72 111.99 Q 204.30 85.28 201.71 111.87" stroke-width="2.60" opacity="0.96"/>
+      <title>edge: primary
+round_real -&gt; sin_real
+weight: 1
+
+path:
+round_real -&gt; sin_real</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="primary" d="M 201.71 111.87 Q 219.89 138.19 242.40 115.46" stroke-width="2.60" opacity="0.96"/>
+      <title>edge: primary
+sin_real -&gt; cos_real
+weight: 1
+
+path:
+sin_real -&gt; cos_real</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="primary" d="M 242.40 115.46 Q 259.46 96.00 241.08 114.22" stroke-width="2.60" opacity="0.96"/>
+      <title>edge: primary
+cos_real -&gt; tan_real
+weight: 1
+
+path:
+cos_real -&gt; tan_real</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="primary" d="M 241.08 114.22 Q 259.68 134.62 258.20 107.05" stroke-width="2.60" opacity="0.96"/>
+      <title>edge: primary
+tan_real -&gt; log_real
+weight: 1
+
+path:
+tan_real -&gt; log_real</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="primary" d="M 258.20 107.05 Q 265.32 132.85 281.66 111.66" stroke-width="2.60" opacity="0.96"/>
+      <title>edge: primary
+log_real -&gt; exp_real
+weight: 1
+
+path:
+log_real -&gt; exp_real</title>
+    </g>
+  </g>
+  <g id="call_links">
+    <g class="edge-wrap">
+    <path class="call" d="M 408.42 176.74 Q 371.46 118.32 302.36 116.25" stroke-width="2.15" opacity="0.74" data-kind="call" data-from="read_lines" data-to="read_all" data-weight="1" data-self-loop="false"/>
+      <title>edge: call
+read_lines -&gt; read_all
+calls: 1
+
+path:
+read_lines -&gt; read_all</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="call" d="M 326.81 398.55 Q 359.11 408.37 339.55 380.86" stroke-width="2.15" opacity="0.74" data-kind="call" data-from="run_capture_err" data-to="run_capture" data-weight="1" data-self-loop="false"/>
+      <title>edge: call
+run_capture_err -&gt; run_capture
+calls: 1
+
+path:
+run_capture_err -&gt; run_capture</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="call" d="M 203.72 111.99 Q 155.37 103.04 129.56 144.90" stroke-width="2.15" opacity="0.74" data-kind="call" data-from="round_real" data-to="floor_real" data-weight="1" data-self-loop="false"/>
+      <title>edge: call
+round_real -&gt; floor_real
+calls: 1
+
+path:
+round_real -&gt; floor_real</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="call" d="M 203.72 111.99 Q 174.76 85.77 168.92 124.39" stroke-width="2.15" opacity="0.74" data-kind="call" data-from="round_real" data-to="ceil_real" data-weight="1" data-self-loop="false"/>
+      <title>edge: call
+round_real -&gt; ceil_real
+calls: 1
+
+path:
+round_real -&gt; ceil_real</title>
+    </g>
+  </g>
+  <g id="branches">
+    <g class="edge-wrap">
+    <path class="branch" d="M 436.97 275.92 Q 413.90 279.11 397.57 295.73" stroke-width="1.95" opacity="0.85"/>
+      <title>edge: branch
+parse_bool -&gt; parse_bool
+weight: 3
+
+path:
+parse_bool -&gt; parse_bool</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="branch" d="M 120.13 156.34 Q 116.81 180.28 134.56 196.69" stroke-width="1.70" opacity="0.85"/>
+      <title>edge: branch
+abs_real -&gt; abs_real
+weight: 2
+
+path:
+abs_real -&gt; abs_real</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="branch" d="M 129.56 144.90 Q 150.48 154.22 173.19 151.29" stroke-width="1.95" opacity="0.85"/>
+      <title>edge: branch
+floor_real -&gt; floor_real
+weight: 3
+
+path:
+floor_real -&gt; floor_real</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="branch" d="M 168.92 124.39 Q 186.26 139.79 209.35 142.01" stroke-width="1.95" opacity="0.85"/>
+      <title>edge: branch
+ceil_real -&gt; ceil_real
+weight: 3
+
+path:
+ceil_real -&gt; ceil_real</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="branch" d="M 203.72 111.99 Q 188.87 130.36 193.27 153.55" stroke-width="1.70" opacity="0.85"/>
+      <title>edge: branch
+round_real -&gt; round_real
+weight: 2
+
+path:
+round_real -&gt; round_real</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="branch" d="M 240.35 246.99 Q 278.47 184.99 302.36 116.25" stroke-width="1.45" opacity="0.85"/>
+      <title>edge: branch
+read_all -&gt; read_all
+weight: 1
+
+path:
+read_all -&gt; read_all</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="branch" d="M 240.35 246.99 Q 329.03 222.99 408.42 176.74" stroke-width="1.95" opacity="0.85"/>
+      <title>edge: branch
+read_all -&gt; read_lines
+weight: 3
+
+path:
+read_all -&gt; read_lines</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="branch" d="M 240.35 246.99 Q 332.24 235.24 418.62 201.76" stroke-width="1.70" opacity="0.85"/>
+      <title>edge: branch
+read_all -&gt; parse_lines
+weight: 2
+
+path:
+read_all -&gt; parse_lines</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="branch" d="M 240.35 246.99 Q 337.48 269.48 436.97 275.92" stroke-width="2.10" opacity="0.85"/>
+      <title>edge: branch
+read_all -&gt; parse_bool
+weight: 5
+
+path:
+read_all -&gt; parse_bool</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="branch" d="M 240.35 246.99 Q 274.47 327.96 326.81 398.55" stroke-width="2.10" opacity="0.85"/>
+      <title>edge: branch
+read_all -&gt; run_capture_err
+weight: 4
+
+path:
+read_all -&gt; run_capture_err</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="branch" d="M 240.35 246.99 Q 184.11 196.54 120.13 156.34" stroke-width="1.70" opacity="0.85"/>
+      <title>edge: branch
+read_all -&gt; abs_real
+weight: 2
+
+path:
+read_all -&gt; abs_real</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="branch" d="M 240.35 246.99 Q 190.45 189.98 129.56 144.90" stroke-width="2.10" opacity="0.85"/>
+      <title>edge: branch
+read_all -&gt; floor_real
+weight: 5
+
+path:
+read_all -&gt; floor_real</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="branch" d="M 240.35 246.99 Q 211.63 181.61 168.92 124.39" stroke-width="2.10" opacity="0.85"/>
+      <title>edge: branch
+read_all -&gt; ceil_real
+weight: 5
+
+path:
+read_all -&gt; ceil_real</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="branch" d="M 240.35 246.99 Q 233.78 176.30 203.72 111.99" stroke-width="2.10" opacity="0.85"/>
+      <title>edge: branch
+read_all -&gt; round_real
+weight: 4
+
+path:
+read_all -&gt; round_real</title>
+    </g>
+  </g>
+  <g id="loops">
+  </g>
+  <g id="bindings">
+    <g class="edge-wrap">
+    <path class="bind" d="M 302.36 116.25 Q 295.53 127.68 294.17 140.93" stroke-width="1.28" opacity="0.85"/>
+    <line class="bind" x1="304.52" y1="122.44" x2="296.92" y2="119.92" opacity="0.75"/>
+    <line class="bind" x1="299.09" y1="141.45" x2="305.06" y2="142.09" opacity="0.58"/>
+      <title>edge: bind
+read_all -&gt; read_all
+weight: 1
+
+path:
+read_all -&gt; read_all</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="bind" d="M 314.85 118.31 Q 302.63 127.23 304.63 142.22" stroke-width="1.28" opacity="0.85"/>
+    <line class="bind" x1="316.49" y1="124.67" x2="309.13" y2="121.52" opacity="0.75"/>
+    <line class="bind" x1="309.37" y1="143.65" x2="315.12" y2="145.37" opacity="0.58"/>
+      <title>edge: bind
+write_all -&gt; write_all
+weight: 1
+
+path:
+write_all -&gt; write_all</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="bind" d="M 318.89 118.41 Q 311.04 129.12 308.08 142.06" stroke-width="1.28" opacity="0.85"/>
+    <line class="bind" x1="320.37" y1="124.80" x2="313.09" y2="121.48" opacity="0.75"/>
+    <line class="bind" x1="313.02" y1="142.40" x2="319.01" y2="142.81" opacity="0.58"/>
+      <title>edge: bind
+append_all -&gt; append_all
+weight: 1
+
+path:
+append_all -&gt; append_all</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="bind" d="M 330.96 128.23 Q 323.50 138.93 317.80 150.66" stroke-width="1.28" opacity="0.85"/>
+    <line class="bind" x1="331.77" y1="134.74" x2="324.87" y2="130.69" opacity="0.75"/>
+    <line class="bind" x1="322.55" y1="149.25" x2="328.30" y2="147.54" opacity="0.58"/>
+      <title>edge: bind
+mkdir -&gt; mkdir
+weight: 1
+
+path:
+mkdir -&gt; mkdir</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="bind" d="M 342.47 130.64 Q 328.11 136.53 327.71 152.04" stroke-width="1.28" opacity="0.85"/>
+    <line class="bind" x1="342.81" y1="137.19" x2="336.22" y2="132.65" opacity="0.75"/>
+    <line class="bind" x1="332.63" y1="151.52" x2="338.60" y2="150.89" opacity="0.58"/>
+      <title>edge: bind
+mkdir_all -&gt; mkdir_all
+weight: 1
+
+path:
+mkdir_all -&gt; mkdir_all</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="bind" d="M 349.55 127.65 Q 336.24 134.03 334.24 148.66" stroke-width="1.28" opacity="0.85"/>
+    <line class="bind" x1="349.72" y1="134.21" x2="343.25" y2="129.50" opacity="0.75"/>
+    <line class="bind" x1="339.18" y1="148.43" x2="345.17" y2="148.15" opacity="0.58"/>
+      <title>edge: bind
+delete_file -&gt; delete_file
+weight: 1
+
+path:
+delete_file -&gt; delete_file</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="bind" d="M 357.91 141.27 Q 345.46 147.60 340.64 160.71" stroke-width="1.28" opacity="0.85"/>
+    <line class="bind" x1="357.45" y1="147.82" x2="351.47" y2="142.50" opacity="0.75"/>
+    <line class="bind" x1="345.42" y1="159.39" x2="351.20" y2="157.80" opacity="0.58"/>
+      <title>edge: bind
+delete_dir -&gt; delete_dir
+weight: 1
+
+path:
+delete_dir -&gt; delete_dir</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="bind" d="M 378.07 145.74 Q 365.46 151.17 358.77 163.16" stroke-width="1.28" opacity="0.85"/>
+    <line class="bind" x1="376.89" y1="152.19" x2="371.53" y2="146.25" opacity="0.75"/>
+    <line class="bind" x1="363.67" y1="162.45" x2="369.61" y2="161.57" opacity="0.58"/>
+      <title>edge: bind
+is_file -&gt; is_file
+weight: 1
+
+path:
+is_file -&gt; is_file</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="bind" d="M 392.93 159.91 Q 378.15 161.47 371.65 174.84" stroke-width="1.28" opacity="0.85"/>
+    <line class="bind" x1="390.97" y1="166.17" x2="386.38" y2="159.62" opacity="0.75"/>
+    <line class="bind" x1="376.55" y1="175.57" x2="382.48" y2="176.45" opacity="0.58"/>
+      <title>edge: bind
+is_dir -&gt; is_dir
+weight: 1
+
+path:
+is_dir -&gt; is_dir</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="bind" d="M 394.36 165.60 Q 381.59 169.83 372.59 179.82" stroke-width="1.28" opacity="0.85"/>
+    <line class="bind" x1="392.19" y1="171.79" x2="387.82" y2="165.10" opacity="0.75"/>
+    <line class="bind" x1="377.54" y1="179.60" x2="383.53" y2="179.32" opacity="0.58"/>
+      <title>edge: bind
+exists -&gt; exists
+weight: 1
+
+path:
+exists -&gt; exists</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="bind" d="M 410.19 173.78 Q 396.63 175.97 387.25 186.01" stroke-width="1.28" opacity="0.85"/>
+    <line class="bind" x1="407.49" y1="179.76" x2="403.72" y2="172.70" opacity="0.75"/>
+    <line class="bind" x1="392.04" y1="184.76" x2="397.84" y2="183.24" opacity="0.58"/>
+      <title>edge: bind
+size -&gt; size
+weight: 1
+
+path:
+size -&gt; size</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="bind" d="M 408.42 176.74 Q 395.57 180.21 385.35 188.73" stroke-width="1.28" opacity="0.85"/>
+    <line class="bind" x1="405.65" y1="182.69" x2="401.96" y2="175.59" opacity="0.75"/>
+    <line class="bind" x1="390.25" y1="189.47" x2="396.18" y2="190.36" opacity="0.58"/>
+      <title>edge: bind
+read_lines -&gt; read_lines
+weight: 1
+
+path:
+read_lines -&gt; read_lines</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="bind" d="M 431.61 212.73 Q 417.32 209.07 406.36 218.95" stroke-width="1.28" opacity="0.85"/>
+    <line class="bind" x1="427.52" y1="217.86" x2="425.60" y2="210.09" opacity="0.75"/>
+    <line class="bind" x1="411.31" y1="218.70" x2="417.30" y2="218.39" opacity="0.58"/>
+      <title>edge: bind
+parse_csv_line -&gt; parse_csv_line
+weight: 1
+
+path:
+parse_csv_line -&gt; parse_csv_line</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="bind" d="M 434.71 228.69 Q 420.60 222.40 409.01 232.62" stroke-width="1.28" opacity="0.85"/>
+    <line class="bind" x1="430.18" y1="233.43" x2="428.97" y2="225.52" opacity="0.75"/>
+    <line class="bind" x1="413.96" y1="232.65" x2="419.96" y2="232.69" opacity="0.58"/>
+      <title>edge: bind
+parse_csv_line_sep -&gt; parse_csv_line_sep
+weight: 1
+
+path:
+parse_csv_line_sep -&gt; parse_csv_line_sep</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="bind" d="M 432.38 238.12 Q 418.93 234.31 406.51 240.74" stroke-width="1.28" opacity="0.85"/>
+    <line class="bind" x1="427.61" y1="242.62" x2="426.80" y2="234.66" opacity="0.75"/>
+    <line class="bind" x1="411.40" y1="241.52" x2="417.33" y2="242.46" opacity="0.58"/>
+      <title>edge: bind
+parse_int -&gt; parse_int
+weight: 1
+
+path:
+parse_int -&gt; parse_int</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="bind" d="M 424.32 252.03 Q 411.17 245.79 398.33 252.64" stroke-width="1.28" opacity="0.85"/>
+    <line class="bind" x1="419.22" y1="256.15" x2="419.03" y2="248.15" opacity="0.75"/>
+    <line class="bind" x1="403.16" y1="251.58" x2="409.02" y2="250.30" opacity="0.58"/>
+      <title>edge: bind
+parse_real -&gt; parse_real
+weight: 1
+
+path:
+parse_real -&gt; parse_real</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="bind" d="M 427.89 289.20 Q 415.72 283.66 402.36 284.27" stroke-width="1.28" opacity="0.85"/>
+    <line class="bind" x1="422.03" y1="292.14" x2="423.55" y2="284.29" opacity="0.75"/>
+    <line class="bind" x1="407.17" y1="283.08" x2="412.99" y2="281.63" opacity="0.58"/>
+      <title>edge: bind
+try_int -&gt; try_int
+weight: 1
+
+path:
+try_int -&gt; try_int</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="bind" d="M 420.73 296.15 Q 408.99 289.43 395.47 289.99" stroke-width="1.28" opacity="0.85"/>
+    <line class="bind" x1="414.73" y1="298.80" x2="416.62" y2="291.03" opacity="0.75"/>
+    <line class="bind" x1="400.38" y1="289.38" x2="406.34" y2="288.64" opacity="0.58"/>
+      <title>edge: bind
+try_real -&gt; try_real
+weight: 1
+
+path:
+try_real -&gt; try_real</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="bind" d="M 404.70 323.79 Q 394.98 313.78 381.05 313.01" stroke-width="1.28" opacity="0.85"/>
+    <line class="bind" x1="398.31" y1="325.28" x2="401.63" y2="318.00" opacity="0.75"/>
+    <line class="bind" x1="386.00" y1="313.07" x2="392.00" y2="313.13" opacity="0.58"/>
+      <title>edge: bind
+try_bool -&gt; try_bool
+weight: 1
+
+path:
+try_bool -&gt; try_bool</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="bind" d="M 421.86 315.09 Q 411.46 305.56 397.37 306.36" stroke-width="1.28" opacity="0.85"/>
+    <line class="bind" x1="415.62" y1="317.11" x2="418.31" y2="309.57" opacity="0.75"/>
+    <line class="bind" x1="402.23" y1="307.30" x2="408.12" y2="308.44" opacity="0.58"/>
+      <title>edge: bind
+parse_int_hex -&gt; parse_int_hex
+weight: 1
+
+path:
+parse_int_hex -&gt; parse_int_hex</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="bind" d="M 406.41 324.53 Q 397.60 312.51 382.75 313.75" stroke-width="1.28" opacity="0.85"/>
+    <line class="bind" x1="400.02" y1="326.02" x2="403.34" y2="318.74" opacity="0.75"/>
+    <line class="bind" x1="387.70" y1="313.80" x2="393.70" y2="313.86" opacity="0.58"/>
+      <title>edge: bind
+try_int_hex -&gt; try_int_hex
+weight: 1
+
+path:
+try_int_hex -&gt; try_int_hex</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="bind" d="M 392.91 346.42 Q 384.71 335.24 371.21 332.09" stroke-width="1.28" opacity="0.85"/>
+    <line class="bind" x1="386.36" y1="346.89" x2="390.77" y2="340.21" opacity="0.75"/>
+    <line class="bind" x1="376.16" y1="332.08" x2="382.16" y2="332.08" opacity="0.58"/>
+      <title>edge: bind
+parse_int_radix -&gt; parse_int_radix
+weight: 1
+
+path:
+parse_int_radix -&gt; parse_int_radix</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="bind" d="M 378.88 349.55 Q 369.30 340.67 358.19 333.80" stroke-width="1.28" opacity="0.85"/>
+    <line class="bind" x1="372.32" y1="349.59" x2="377.17" y2="343.22" opacity="0.75"/>
+    <line class="bind" x1="363.07" y1="332.93" x2="368.97" y2="331.87" opacity="0.58"/>
+      <title>edge: bind
+try_int_radix -&gt; try_int_radix
+weight: 1
+
+path:
+try_int_radix -&gt; try_int_radix</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="bind" d="M 392.52 357.12 Q 386.98 342.75 371.62 341.64" stroke-width="1.28" opacity="0.85"/>
+    <line class="bind" x1="385.96" y1="357.24" x2="390.72" y2="350.81" opacity="0.75"/>
+    <line class="bind" x1="376.57" y1="341.43" x2="382.56" y2="341.18" opacity="0.58"/>
+      <title>edge: bind
+is_int -&gt; is_int
+weight: 1
+
+path:
+is_int -&gt; is_int</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="bind" d="M 371.75 364.89 Q 365.82 352.23 352.82 347.08" stroke-width="1.28" opacity="0.85"/>
+    <line class="bind" x1="365.23" y1="364.24" x2="370.71" y2="358.41" opacity="0.75"/>
+    <line class="bind" x1="357.76" y1="347.30" x2="363.76" y2="347.57" opacity="0.58"/>
+      <title>edge: bind
+is_real -&gt; is_real
+weight: 1
+
+path:
+is_real -&gt; is_real</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="bind" d="M 344.24 387.04 Q 342.00 372.88 329.72 365.47" stroke-width="1.28" opacity="0.85"/>
+    <line class="bind" x1="338.02" y1="384.96" x2="344.66" y2="380.49" opacity="0.75"/>
+    <line class="bind" x1="334.62" y1="366.18" x2="340.56" y2="367.04" opacity="0.58"/>
+      <title>edge: bind
+run -&gt; run
+weight: 1
+
+path:
+run -&gt; run</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="bind" d="M 339.55 380.86 Q 333.17 369.48 325.09 359.25" stroke-width="1.28" opacity="0.85"/>
+    <line class="bind" x1="333.33" y1="378.76" x2="339.98" y2="374.31" opacity="0.75"/>
+    <line class="bind" x1="330.02" y1="359.71" x2="335.99" y2="360.27" opacity="0.58"/>
+      <title>edge: bind
+run_capture -&gt; run_capture
+weight: 1
+
+path:
+run_capture -&gt; run_capture</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="bind" d="M 326.81 398.55 Q 323.68 385.59 315.24 375.27" stroke-width="1.28" opacity="0.85"/>
+    <line class="bind" x1="320.91" y1="395.67" x2="328.08" y2="392.11" opacity="0.75"/>
+    <line class="bind" x1="320.08" y1="376.31" x2="325.95" y2="377.57" opacity="0.58"/>
+      <title>edge: bind
+run_capture_err -&gt; run_capture_err
+weight: 1
+
+path:
+run_capture_err -&gt; run_capture_err</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="bind" d="M 298.91 397.84 Q 301.72 383.41 291.38 372.96" stroke-width="1.28" opacity="0.85"/>
+    <line class="bind" x1="293.58" y1="394.02" x2="301.23" y2="391.71" opacity="0.75"/>
+    <line class="bind" x1="296.33" y1="373.11" x2="302.33" y2="373.30" opacity="0.58"/>
+      <title>edge: bind
+run_with_input -&gt; run_with_input
+weight: 1
+
+path:
+run_with_input -&gt; run_with_input</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="bind" d="M 299.53 400.99 Q 299.50 387.43 292.05 376.09" stroke-width="1.28" opacity="0.85"/>
+    <line class="bind" x1="294.20" y1="397.16" x2="301.86" y2="394.86" opacity="0.75"/>
+    <line class="bind" x1="296.86" y1="377.28" x2="302.68" y2="378.71" opacity="0.58"/>
+      <title>edge: bind
+run_env -&gt; run_env
+weight: 1
+
+path:
+run_env -&gt; run_env</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="bind" d="M 284.78 404.60 Q 288.27 390.68 279.83 379.07" stroke-width="1.28" opacity="0.85"/>
+    <line class="bind" x1="279.86" y1="400.25" x2="287.71" y2="398.73" opacity="0.75"/>
+    <line class="bind" x1="284.62" y1="377.80" x2="290.41" y2="376.25" opacity="0.58"/>
+      <title>edge: bind
+run_timeout -&gt; run_timeout
+weight: 1
+
+path:
+run_timeout -&gt; run_timeout</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="bind" d="M 255.97 408.79 Q 259.27 395.79 255.97 382.79" stroke-width="1.28" opacity="0.85"/>
+    <line class="bind" x1="251.97" y1="403.59" x2="259.97" y2="403.59" opacity="0.75"/>
+    <line class="bind" x1="260.82" y1="383.78" x2="266.70" y2="384.98" opacity="0.58"/>
+      <title>edge: bind
+getenv -&gt; getenv
+weight: 1
+
+path:
+getenv -&gt; getenv</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="bind" d="M 243.34 399.32 Q 249.80 386.84 245.63 373.43" stroke-width="1.28" opacity="0.85"/>
+    <line class="bind" x1="239.81" y1="393.79" x2="247.78" y2="394.50" opacity="0.75"/>
+    <line class="bind" x1="250.45" y1="374.53" x2="256.30" y2="375.88" opacity="0.58"/>
+      <title>edge: bind
+has_env -&gt; has_env
+weight: 1
+
+path:
+has_env -&gt; has_env</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="bind" d="M 237.07 403.81 Q 247.34 392.02 240.38 378.02" stroke-width="1.28" opacity="0.85"/>
+    <line class="bind" x1="233.77" y1="398.14" x2="241.70" y2="399.16" opacity="0.75"/>
+    <line class="bind" x1="245.27" y1="378.76" x2="251.20" y2="379.67" opacity="0.58"/>
+      <title>edge: bind
+cwd -&gt; cwd
+weight: 1
+
+path:
+cwd -&gt; cwd</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="bind" d="M 239.41 406.19 Q 246.11 393.85 242.27 380.35" stroke-width="1.28" opacity="0.85"/>
+    <line class="bind" x1="236.01" y1="400.58" x2="243.96" y2="401.46" opacity="0.75"/>
+    <line class="bind" x1="247.21" y1="380.02" x2="253.19" y2="379.64" opacity="0.58"/>
+      <title>edge: bind
+db_open -&gt; db_open
+weight: 1
+
+path:
+db_open -&gt; db_open</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="bind" d="M 212.20 393.42 Q 220.02 382.27 220.10 368.65" stroke-width="1.28" opacity="0.85"/>
+    <line class="bind" x1="209.97" y1="387.26" x2="217.59" y2="389.68" opacity="0.75"/>
+    <line class="bind" x1="224.88" y1="369.94" x2="230.67" y2="371.49" opacity="0.58"/>
+      <title>edge: bind
+db_close -&gt; db_close
+weight: 1
+
+path:
+db_close -&gt; db_close</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="bind" d="M 197.86 391.22 Q 208.91 381.82 208.13 367.34" stroke-width="1.28" opacity="0.85"/>
+    <line class="bind" x1="196.24" y1="384.87" x2="203.59" y2="388.03" opacity="0.75"/>
+    <line class="bind" x1="213.03" y1="366.66" x2="218.98" y2="365.85" opacity="0.58"/>
+      <title>edge: bind
+db_exec -&gt; db_exec
+weight: 1
+
+path:
+db_exec -&gt; db_exec</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="bind" d="M 193.40 391.92 Q 206.71 383.74 204.28 368.31" stroke-width="1.28" opacity="0.85"/>
+    <line class="bind" x1="191.95" y1="385.53" x2="199.21" y2="388.87" opacity="0.75"/>
+    <line class="bind" x1="209.22" y1="367.97" x2="215.20" y2="367.57" opacity="0.58"/>
+      <title>edge: bind
+db_last_error -&gt; db_last_error
+weight: 1
+
+path:
+db_last_error -&gt; db_last_error</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="bind" d="M 184.35 394.25 Q 195.67 385.48 196.31 371.17" stroke-width="1.28" opacity="0.85"/>
+    <line class="bind" x1="183.19" y1="387.79" x2="190.29" y2="391.48" opacity="0.75"/>
+    <line class="bind" x1="201.18" y1="370.26" x2="207.07" y2="369.15" opacity="0.58"/>
+      <title>edge: bind
+db_query -&gt; db_query
+weight: 1
+
+path:
+db_query -&gt; db_query</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="bind" d="M 149.88 378.22 Q 164.04 373.30 166.92 358.59" stroke-width="1.28" opacity="0.85"/>
+    <line class="bind" x1="150.26" y1="371.67" x2="156.30" y2="376.92" opacity="0.75"/>
+    <line class="bind" x1="171.87" y1="358.48" x2="177.87" y2="358.35" opacity="0.58"/>
+      <title>edge: bind
+rows_next -&gt; rows_next
+weight: 1
+
+path:
+rows_next -&gt; rows_next</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="bind" d="M 157.23 379.27 Q 170.68 373.40 173.49 358.98" stroke-width="1.28" opacity="0.85"/>
+    <line class="bind" x1="157.36" y1="372.71" x2="163.60" y2="377.72" opacity="0.75"/>
+    <line class="bind" x1="178.40" y1="358.42" x2="184.37" y2="357.75" opacity="0.58"/>
+      <title>edge: bind
+rows_get_text -&gt; rows_get_text
+weight: 1
+
+path:
+rows_get_text -&gt; rows_get_text</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="bind" d="M 143.16 372.29 Q 153.79 364.49 161.27 353.63" stroke-width="1.28" opacity="0.85"/>
+    <line class="bind" x1="143.91" y1="365.77" x2="149.65" y2="371.34" opacity="0.75"/>
+    <line class="bind" x1="166.03" y1="352.29" x2="171.81" y2="350.67" opacity="0.58"/>
+      <title>edge: bind
+rows_get_int -&gt; rows_get_int
+weight: 1
+
+path:
+rows_get_int -&gt; rows_get_int</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="bind" d="M 136.66 361.64 Q 151.79 359.11 156.13 344.40" stroke-width="1.28" opacity="0.85"/>
+    <line class="bind" x1="137.91" y1="355.19" x2="143.21" y2="361.18" opacity="0.75"/>
+    <line class="bind" x1="161.01" y1="345.27" x2="166.91" y2="346.31" opacity="0.58"/>
+      <title>edge: bind
+rows_get_real -&gt; rows_get_real
+weight: 1
+
+path:
+rows_get_real -&gt; rows_get_real</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="bind" d="M 120.39 340.25 Q 134.11 337.69 142.48 326.53" stroke-width="1.28" opacity="0.85"/>
+    <line class="bind" x1="122.70" y1="334.11" x2="126.92" y2="340.90" opacity="0.75"/>
+    <line class="bind" x1="147.38" y1="325.87" x2="153.33" y2="325.08" opacity="0.58"/>
+      <title>edge: bind
+rows_close -&gt; rows_close
+weight: 1
+
+path:
+rows_close -&gt; rows_close</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="bind" d="M 104.93 342.46 Q 116.93 337.26 127.50 329.55" stroke-width="1.28" opacity="0.85"/>
+    <line class="bind" x1="107.46" y1="336.41" x2="111.43" y2="343.35" opacity="0.75"/>
+    <line class="bind" x1="132.40" y1="330.23" x2="138.34" y2="331.05" opacity="0.58"/>
+      <title>edge: bind
+db_prepare -&gt; db_prepare
+weight: 1
+
+path:
+db_prepare -&gt; db_prepare</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="bind" d="M 109.31 335.97 Q 124.99 337.58 132.13 323.53" stroke-width="1.28" opacity="0.85"/>
+    <line class="bind" x1="111.96" y1="329.97" x2="115.79" y2="336.99" opacity="0.75"/>
+    <line class="bind" x1="137.00" y1="322.63" x2="142.90" y2="321.55" opacity="0.58"/>
+      <title>edge: bind
+stmt_bind_text -&gt; stmt_bind_text
+weight: 1
+
+path:
+stmt_bind_text -&gt; stmt_bind_text</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="bind" d="M 95.68 309.51 Q 110.57 313.06 120.34 301.28" stroke-width="1.28" opacity="0.85"/>
+    <line class="bind" x1="99.35" y1="304.07" x2="101.88" y2="311.65" opacity="0.75"/>
+    <line class="bind" x1="125.13" y1="300.03" x2="130.94" y2="298.51" opacity="0.58"/>
+      <title>edge: bind
+stmt_bind_int -&gt; stmt_bind_int
+weight: 1
+
+path:
+stmt_bind_int -&gt; stmt_bind_int</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="bind" d="M 82.65 290.63 Q 96.27 292.45 108.14 285.54" stroke-width="1.28" opacity="0.85"/>
+    <line class="bind" x1="86.96" y1="285.69" x2="88.53" y2="293.54" opacity="0.75"/>
+    <line class="bind" x1="112.90" y1="286.92" x2="118.66" y2="288.59" opacity="0.58"/>
+      <title>edge: bind
+stmt_bind_real -&gt; stmt_bind_real
+weight: 1
+
+path:
+stmt_bind_real -&gt; stmt_bind_real</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="bind" d="M 97.05 302.84 Q 110.54 302.62 121.99 295.49" stroke-width="1.28" opacity="0.85"/>
+    <line class="bind" x1="100.91" y1="297.53" x2="103.17" y2="305.21" opacity="0.75"/>
+    <line class="bind" x1="126.94" y1="295.52" x2="132.94" y2="295.55" opacity="0.58"/>
+      <title>edge: bind
+stmt_step -&gt; stmt_step
+weight: 1
+
+path:
+stmt_step -&gt; stmt_step</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="bind" d="M 90.38 275.50 Q 103.72 277.64 116.20 272.46" stroke-width="1.28" opacity="0.85"/>
+    <line class="bind" x1="95.07" y1="270.92" x2="96.01" y2="278.87" opacity="0.75"/>
+    <line class="bind" x1="121.12" y1="271.96" x2="127.09" y2="271.34" opacity="0.58"/>
+      <title>edge: bind
+stmt_reset -&gt; stmt_reset
+weight: 1
+
+path:
+stmt_reset -&gt; stmt_reset</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="bind" d="M 82.05 264.33 Q 95.25 268.33 108.02 263.09" stroke-width="1.28" opacity="0.85"/>
+    <line class="bind" x1="87.05" y1="260.09" x2="87.43" y2="268.08" opacity="0.75"/>
+    <line class="bind" x1="112.92" y1="262.41" x2="118.86" y2="261.58" opacity="0.58"/>
+      <title>edge: bind
+stmt_finalize -&gt; stmt_finalize
+weight: 1
+
+path:
+stmt_finalize -&gt; stmt_finalize</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="bind" d="M 83.56 259.77 Q 96.58 260.61 109.55 259.20" stroke-width="1.28" opacity="0.85"/>
+    <line class="bind" x1="88.67" y1="255.65" x2="88.85" y2="263.65" opacity="0.75"/>
+    <line class="bind" x1="114.43" y1="258.33" x2="120.33" y2="257.27" opacity="0.58"/>
+      <title>edge: bind
+db_begin -&gt; db_begin
+weight: 1
+
+path:
+db_begin -&gt; db_begin</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="bind" d="M 78.33 247.08 Q 91.22 249.67 104.30 248.38" stroke-width="1.28" opacity="0.85"/>
+    <line class="bind" x1="83.73" y1="243.34" x2="83.32" y2="251.33" opacity="0.75"/>
+    <line class="bind" x1="109.14" y1="249.40" x2="115.01" y2="250.64" opacity="0.58"/>
+      <title>edge: bind
+db_commit -&gt; db_commit
+weight: 1
+
+path:
+db_commit -&gt; db_commit</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="bind" d="M 80.60 232.28 Q 92.80 239.06 106.36 235.77" stroke-width="1.28" opacity="0.85"/>
+    <line class="bind" x1="86.29" y1="229.02" x2="85.22" y2="236.94" opacity="0.75"/>
+    <line class="bind" x1="111.19" y1="234.64" x2="117.03" y2="233.28" opacity="0.58"/>
+      <title>edge: bind
+db_rollback -&gt; db_rollback
+weight: 1
+
+path:
+db_rollback -&gt; db_rollback</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="bind" d="M 90.33 235.10 Q 102.50 242.51 116.13 238.35" stroke-width="1.28" opacity="0.85"/>
+    <line class="bind" x1="95.99" y1="231.78" x2="94.99" y2="239.72" opacity="0.75"/>
+    <line class="bind" x1="121.07" y1="238.09" x2="127.06" y2="237.78" opacity="0.58"/>
+      <title>edge: bind
+db_scalar_int -&gt; db_scalar_int
+weight: 1
+
+path:
+db_scalar_int -&gt; db_scalar_int</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="bind" d="M 82.06 204.89 Q 94.14 209.89 107.00 212.22" stroke-width="1.28" opacity="0.85"/>
+    <line class="bind" x1="88.17" y1="202.52" x2="85.92" y2="210.20" opacity="0.75"/>
+    <line class="bind" x1="111.91" y1="211.57" x2="117.85" y2="210.77" opacity="0.58"/>
+      <title>edge: bind
+db_scalar_text -&gt; db_scalar_text
+weight: 1
+
+path:
+db_scalar_text -&gt; db_scalar_text</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="bind" d="M 96.87 210.36 Q 107.99 218.75 121.86 217.53" stroke-width="1.28" opacity="0.85"/>
+    <line class="bind" x1="102.97" y1="207.95" x2="100.76" y2="215.64" opacity="0.75"/>
+    <line class="bind" x1="126.79" y1="217.96" x2="132.77" y2="218.48" opacity="0.58"/>
+      <title>edge: bind
+sqrt_real -&gt; sqrt_real
+weight: 1
+
+path:
+sqrt_real -&gt; sqrt_real</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="bind" d="M 97.02 191.72 Q 108.51 197.98 121.12 201.46" stroke-width="1.28" opacity="0.85"/>
+    <line class="bind" x1="103.34" y1="189.96" x2="100.34" y2="197.37" opacity="0.75"/>
+    <line class="bind" x1="126.00" y1="200.60" x2="131.90" y2="199.55" opacity="0.58"/>
+      <title>edge: bind
+cbrt_real -&gt; cbrt_real
+weight: 1
+
+path:
+cbrt_real -&gt; cbrt_real</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="bind" d="M 106.49 179.44 Q 115.32 190.72 129.63 191.29" stroke-width="1.28" opacity="0.85"/>
+    <line class="bind" x1="112.94" y1="178.25" x2="109.30" y2="185.37" opacity="0.75"/>
+    <line class="bind" x1="134.45" y1="192.42" x2="140.29" y2="193.79" opacity="0.58"/>
+      <title>edge: bind
+pow_real -&gt; pow_real
+weight: 1
+
+path:
+pow_real -&gt; pow_real</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="bind" d="M 129.56 144.90 Q 138.54 154.37 149.09 162.06" stroke-width="1.36" opacity="0.85"/>
+    <line class="bind" x1="136.11" y1="145.33" x2="130.82" y2="151.34" opacity="0.75"/>
+    <line class="bind" x1="138.72" y1="146.29" x2="132.12" y2="153.80" opacity="0.75"/>
+    <line class="bind" x1="154.02" y1="160.75" x2="159.81" y2="159.20" opacity="0.58"/>
+    <line class="bind" x1="144.21" y1="163.54" x2="135.60" y2="166.16" opacity="0.58"/>
+      <title>edge: bind
+floor_real -&gt; floor_real
+weight: 2
+
+path:
+floor_real -&gt; floor_real</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="bind" d="M 168.92 124.39 Q 174.27 136.44 183.26 146.08" stroke-width="1.36" opacity="0.85"/>
+    <line class="bind" x1="175.12" y1="126.52" x2="168.45" y2="130.94" opacity="0.75"/>
+    <line class="bind" x1="177.39" y1="128.14" x2="169.05" y2="133.66" opacity="0.75"/>
+    <line class="bind" x1="188.16" y1="144.64" x2="193.91" y2="142.94" opacity="0.58"/>
+    <line class="bind" x1="178.27" y1="147.12" x2="169.46" y2="148.95" opacity="0.58"/>
+      <title>edge: bind
+ceil_real -&gt; ceil_real
+weight: 2
+
+path:
+ceil_real -&gt; ceil_real</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="bind" d="M 201.71 111.87 Q 200.72 126.14 210.88 136.21" stroke-width="1.28" opacity="0.85"/>
+    <line class="bind" x1="207.29" y1="115.33" x2="199.80" y2="118.15" opacity="0.75"/>
+    <line class="bind" x1="215.71" y1="137.27" x2="221.57" y2="138.56" opacity="0.58"/>
+      <title>edge: bind
+sin_real -&gt; sin_real
+weight: 1
+
+path:
+sin_real -&gt; sin_real</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="bind" d="M 242.40 115.46 Q 238.13 128.94 244.91 141.34" stroke-width="1.28" opacity="0.85"/>
+    <line class="bind" x1="246.88" y1="120.25" x2="238.92" y2="121.02" opacity="0.75"/>
+    <line class="bind" x1="249.80" y1="140.62" x2="255.74" y2="139.73" opacity="0.58"/>
+      <title>edge: bind
+cos_real -&gt; cos_real
+weight: 1
+
+path:
+cos_real -&gt; cos_real</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="bind" d="M 241.08 114.22 Q 235.21 127.91 243.80 140.08" stroke-width="1.28" opacity="0.85"/>
+    <line class="bind" x1="245.60" y1="118.97" x2="237.65" y2="119.81" opacity="0.75"/>
+    <line class="bind" x1="248.71" y1="139.41" x2="254.65" y2="138.61" opacity="0.58"/>
+      <title>edge: bind
+tan_real -&gt; tan_real
+weight: 1
+
+path:
+tan_real -&gt; tan_real</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="bind" d="M 258.20 107.05 Q 252.53 119.97 257.82 133.05" stroke-width="1.28" opacity="0.85"/>
+    <line class="bind" x1="262.13" y1="112.31" x2="254.13" y2="112.19" opacity="0.75"/>
+    <line class="bind" x1="262.76" y1="133.39" x2="268.74" y2="133.80" opacity="0.58"/>
+      <title>edge: bind
+log_real -&gt; log_real
+weight: 1
+
+path:
+log_real -&gt; log_real</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="bind" d="M 281.66 111.66 Q 276.03 123.86 277.11 137.25" stroke-width="1.28" opacity="0.85"/>
+    <line class="bind" x1="284.68" y1="117.48" x2="276.81" y2="116.08" opacity="0.75"/>
+    <line class="bind" x1="281.98" y1="138.14" x2="287.88" y2="139.21" opacity="0.58"/>
+      <title>edge: bind
+exp_real -&gt; exp_real
+weight: 1
+
+path:
+exp_real -&gt; exp_real</title>
+    </g>
+  </g>
+  <g id="terminals">
+    <g class="edge-wrap">
+    <path class="term" d="M 302.36 116.25 Q 293.52 143.40 292.32 171.92" stroke-width="1.65" opacity="0.90"/>
+      <title>edge: return
+read_all -&gt; read_all
+weight: 2
+
+path:
+read_all -&gt; read_all</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="term" d="M 314.85 118.31 Q 292.71 137.96 285.49 166.66" stroke-width="1.65" opacity="0.90"/>
+      <title>edge: return
+write_all -&gt; write_all
+weight: 2
+
+path:
+write_all -&gt; write_all</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="term" d="M 318.89 118.41 Q 300.51 140.22 288.33 166.02" stroke-width="1.65" opacity="0.90"/>
+      <title>edge: return
+append_all -&gt; append_all
+weight: 2
+
+path:
+append_all -&gt; append_all</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="term" d="M 330.96 128.23 Q 311.76 149.10 295.72 172.48" stroke-width="1.65" opacity="0.90"/>
+      <title>edge: return
+mkdir -&gt; mkdir
+weight: 2
+
+path:
+mkdir -&gt; mkdir</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="term" d="M 342.47 130.64 Q 321.38 151.73 317.26 181.28" stroke-width="1.65" opacity="0.90"/>
+      <title>edge: return
+mkdir_all -&gt; mkdir_all
+weight: 2
+
+path:
+mkdir_all -&gt; mkdir_all</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="term" d="M 349.55 127.65 Q 324.09 142.34 310.10 168.19" stroke-width="1.65" opacity="0.90"/>
+      <title>edge: return
+delete_file -&gt; delete_file
+weight: 2
+
+path:
+delete_file -&gt; delete_file</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="term" d="M 357.91 141.27 Q 332.38 154.89 314.74 177.83" stroke-width="1.65" opacity="0.90"/>
+      <title>edge: return
+delete_dir -&gt; delete_dir
+weight: 2
+
+path:
+delete_dir -&gt; delete_dir</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="term" d="M 378.07 145.74 Q 355.81 164.01 341.87 189.21" stroke-width="1.65" opacity="0.90"/>
+      <title>edge: return
+is_file -&gt; is_file
+weight: 2
+
+path:
+is_file -&gt; is_file</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="term" d="M 392.93 159.91 Q 366.69 173.28 351.69 198.62" stroke-width="1.65" opacity="0.90"/>
+      <title>edge: return
+is_dir -&gt; is_dir
+weight: 2
+
+path:
+is_dir -&gt; is_dir</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="term" d="M 394.36 165.60 Q 370.18 180.93 351.85 202.93" stroke-width="1.65" opacity="0.90"/>
+      <title>edge: return
+exists -&gt; exists
+weight: 2
+
+path:
+exists -&gt; exists</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="term" d="M 410.19 173.78 Q 381.75 178.30 357.02 193.07" stroke-width="1.65" opacity="0.90"/>
+      <title>edge: return
+size -&gt; size
+weight: 2
+
+path:
+size -&gt; size</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="term" d="M 408.42 176.74 Q 380.45 182.47 355.04 195.48" stroke-width="1.65" opacity="0.90"/>
+      <title>edge: return
+read_lines -&gt; read_lines
+weight: 2
+
+path:
+read_lines -&gt; read_lines</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="term" d="M 418.62 201.76 Q 389.92 202.01 362.97 211.89" stroke-width="1.65" opacity="0.90"/>
+      <title>edge: return
+parse_lines -&gt; parse_lines
+weight: 2
+
+path:
+parse_lines -&gt; parse_lines</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="term" d="M 431.61 212.73 Q 402.67 207.61 375.32 218.36" stroke-width="1.65" opacity="0.90"/>
+      <title>edge: return
+parse_csv_line -&gt; parse_csv_line
+weight: 2
+
+path:
+parse_csv_line -&gt; parse_csv_line</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="term" d="M 434.71 228.69 Q 404.93 227.92 380.56 245.06" stroke-width="1.65" opacity="0.90"/>
+      <title>edge: return
+parse_csv_line_sep -&gt; parse_csv_line_sep
+weight: 2
+
+path:
+parse_csv_line_sep -&gt; parse_csv_line_sep</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="term" d="M 432.38 238.12 Q 403.45 238.95 377.47 251.73" stroke-width="1.65" opacity="0.90"/>
+      <title>edge: return
+parse_int -&gt; parse_int
+weight: 2
+
+path:
+parse_int -&gt; parse_int</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="term" d="M 424.32 252.03 Q 397.13 241.20 368.15 245.35" stroke-width="1.65" opacity="0.90"/>
+      <title>edge: return
+parse_real -&gt; parse_real
+weight: 2
+
+path:
+parse_real -&gt; parse_real</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="term" d="M 436.97 275.92 Q 410.45 265.48 382.18 261.84" stroke-width="1.90" opacity="0.90"/>
+      <title>edge: return
+parse_bool -&gt; parse_bool
+weight: 4
+
+path:
+parse_bool -&gt; parse_bool</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="term" d="M 427.89 289.20 Q 399.84 283.69 371.39 286.44" stroke-width="1.65" opacity="0.90"/>
+      <title>edge: return
+try_int -&gt; try_int
+weight: 2
+
+path:
+try_int -&gt; try_int</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="term" d="M 420.73 296.15 Q 393.04 288.68 364.43 290.66" stroke-width="1.65" opacity="0.90"/>
+      <title>edge: return
+try_real -&gt; try_real
+weight: 2
+
+path:
+try_real -&gt; try_real</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="term" d="M 404.70 323.79 Q 384.16 303.42 357.07 293.28" stroke-width="1.65" opacity="0.90"/>
+      <title>edge: return
+try_bool -&gt; try_bool
+weight: 2
+
+path:
+try_bool -&gt; try_bool</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="term" d="M 421.86 315.09 Q 399.85 296.18 371.80 288.76" stroke-width="1.65" opacity="0.90"/>
+      <title>edge: return
+parse_int_hex -&gt; parse_int_hex
+weight: 2
+
+path:
+parse_int_hex -&gt; parse_int_hex</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="term" d="M 406.41 324.53 Q 381.61 308.61 352.14 308.59" stroke-width="1.65" opacity="0.90"/>
+      <title>edge: return
+try_int_hex -&gt; try_int_hex
+weight: 2
+
+path:
+try_int_hex -&gt; try_int_hex</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="term" d="M 392.91 346.42 Q 369.82 329.07 341.77 322.23" stroke-width="1.65" opacity="0.90"/>
+      <title>edge: return
+parse_int_radix -&gt; parse_int_radix
+weight: 2
+
+path:
+parse_int_radix -&gt; parse_int_radix</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="term" d="M 378.88 349.55 Q 360.64 327.82 339.17 309.27" stroke-width="1.65" opacity="0.90"/>
+      <title>edge: return
+try_int_radix -&gt; try_int_radix
+weight: 2
+
+path:
+try_int_radix -&gt; try_int_radix</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="term" d="M 392.52 357.12 Q 372.03 335.53 342.76 330.22" stroke-width="1.65" opacity="0.90"/>
+      <title>edge: return
+is_int -&gt; is_int
+weight: 2
+
+path:
+is_int -&gt; is_int</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="term" d="M 371.75 364.89 Q 358.91 338.95 336.45 320.69" stroke-width="1.65" opacity="0.90"/>
+      <title>edge: return
+is_real -&gt; is_real
+weight: 2
+
+path:
+is_real -&gt; is_real</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="term" d="M 344.24 387.04 Q 330.52 361.32 306.33 345.06" stroke-width="1.65" opacity="0.90"/>
+      <title>edge: return
+run -&gt; run
+weight: 2
+
+path:
+run -&gt; run</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="term" d="M 339.55 380.86 Q 329.13 354.48 315.05 329.87" stroke-width="1.65" opacity="0.90"/>
+      <title>edge: return
+run_capture -&gt; run_capture
+weight: 2
+
+path:
+run_capture -&gt; run_capture</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="term" d="M 326.81 398.55 Q 314.03 373.01 294.73 351.96" stroke-width="1.65" opacity="0.90"/>
+      <title>edge: return
+run_capture_err -&gt; run_capture_err
+weight: 2
+
+path:
+run_capture_err -&gt; run_capture_err</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="term" d="M 298.91 397.84 Q 302.41 368.69 290.35 341.92" stroke-width="1.65" opacity="0.90"/>
+      <title>edge: return
+run_with_input -&gt; run_with_input
+weight: 2
+
+path:
+run_with_input -&gt; run_with_input</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="term" d="M 299.53 400.99 Q 292.06 373.28 275.76 349.66" stroke-width="1.65" opacity="0.90"/>
+      <title>edge: return
+run_env -&gt; run_env
+weight: 2
+
+path:
+run_env -&gt; run_env</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="term" d="M 284.78 404.60 Q 290.45 376.00 281.98 348.10" stroke-width="1.65" opacity="0.90"/>
+      <title>edge: return
+run_timeout -&gt; run_timeout
+weight: 2
+
+path:
+run_timeout -&gt; run_timeout</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="term" d="M 255.97 408.79 Q 264.23 381.40 263.98 352.79" stroke-width="1.65" opacity="0.90"/>
+      <title>edge: return
+getenv -&gt; getenv
+weight: 2
+
+path:
+getenv -&gt; getenv</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="term" d="M 243.34 399.32 Q 255.96 373.23 256.24 344.25" stroke-width="1.65" opacity="0.90"/>
+      <title>edge: return
+has_env -&gt; has_env
+weight: 2
+
+path:
+has_env -&gt; has_env</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="term" d="M 237.07 403.81 Q 246.35 375.39 236.25 347.25" stroke-width="1.65" opacity="0.90"/>
+      <title>edge: return
+cwd -&gt; cwd
+weight: 2
+
+path:
+cwd -&gt; cwd</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="term" d="M 239.41 406.19 Q 252.57 380.37 253.51 351.40" stroke-width="1.65" opacity="0.90"/>
+      <title>edge: return
+db_open -&gt; db_open
+weight: 2
+
+path:
+db_open -&gt; db_open</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="term" d="M 212.20 393.42 Q 229.07 370.16 236.83 342.50" stroke-width="1.65" opacity="0.90"/>
+      <title>edge: return
+db_close -&gt; db_close
+weight: 2
+
+path:
+db_close -&gt; db_close</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="term" d="M 197.86 391.22 Q 212.42 365.86 212.63 336.62" stroke-width="1.65" opacity="0.90"/>
+      <title>edge: return
+db_exec -&gt; db_exec
+weight: 2
+
+path:
+db_exec -&gt; db_exec</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="term" d="M 193.40 391.92 Q 210.74 367.58 209.56 337.71" stroke-width="1.65" opacity="0.90"/>
+      <title>edge: return
+db_last_error -&gt; db_last_error
+weight: 2
+
+path:
+db_last_error -&gt; db_last_error</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="term" d="M 184.35 394.25 Q 200.30 369.87 203.01 340.85" stroke-width="1.65" opacity="0.90"/>
+      <title>edge: return
+db_query -&gt; db_query
+weight: 2
+
+path:
+db_query -&gt; db_query</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="term" d="M 149.88 378.22 Q 172.33 359.05 180.55 330.69" stroke-width="1.65" opacity="0.90"/>
+      <title>edge: return
+rows_next -&gt; rows_next
+weight: 2
+
+path:
+rows_next -&gt; rows_next</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="term" d="M 157.23 379.27 Q 178.35 358.90 186.00 330.57" stroke-width="1.65" opacity="0.90"/>
+      <title>edge: return
+rows_get_text -&gt; rows_get_text
+weight: 2
+
+path:
+rows_get_text -&gt; rows_get_text</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="term" d="M 143.16 372.29 Q 167.49 357.51 187.90 337.67" stroke-width="1.65" opacity="0.90"/>
+      <title>edge: return
+rows_get_int -&gt; rows_get_int
+weight: 2
+
+path:
+rows_get_int -&gt; rows_get_int</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="term" d="M 136.66 361.64 Q 165.31 353.70 183.90 330.51" stroke-width="1.65" opacity="0.90"/>
+      <title>edge: return
+rows_get_real -&gt; rows_get_real
+weight: 2
+
+path:
+rows_get_real -&gt; rows_get_real</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="term" d="M 120.39 340.25 Q 148.73 334.43 172.18 317.49" stroke-width="1.65" opacity="0.90"/>
+      <title>edge: return
+rows_close -&gt; rows_close
+weight: 2
+
+path:
+rows_close -&gt; rows_close</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="term" d="M 104.93 342.46 Q 128.75 327.01 149.56 307.70" stroke-width="1.65" opacity="0.90"/>
+      <title>edge: return
+db_prepare -&gt; db_prepare
+weight: 2
+
+path:
+db_prepare -&gt; db_prepare</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="term" d="M 109.31 335.97 Q 139.27 335.37 162.30 316.19" stroke-width="1.65" opacity="0.90"/>
+      <title>edge: return
+stmt_bind_text -&gt; stmt_bind_text
+weight: 2
+
+path:
+stmt_bind_text -&gt; stmt_bind_text</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="term" d="M 95.68 309.51 Q 125.04 304.97 146.27 284.19" stroke-width="1.65" opacity="0.90"/>
+      <title>edge: return
+stmt_bind_int -&gt; stmt_bind_int
+weight: 2
+
+path:
+stmt_bind_int -&gt; stmt_bind_int</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="term" d="M 82.65 290.63 Q 111.19 294.51 139.13 287.51" stroke-width="1.65" opacity="0.90"/>
+      <title>edge: return
+stmt_bind_real -&gt; stmt_bind_real
+weight: 2
+
+path:
+stmt_bind_real -&gt; stmt_bind_real</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="term" d="M 97.05 302.84 Q 124.69 295.28 148.51 279.34" stroke-width="1.65" opacity="0.90"/>
+      <title>edge: return
+stmt_step -&gt; stmt_step
+weight: 2
+
+path:
+stmt_step -&gt; stmt_step</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="term" d="M 90.38 275.50 Q 118.92 272.79 145.06 261.01" stroke-width="1.65" opacity="0.90"/>
+      <title>edge: return
+stmt_reset -&gt; stmt_reset
+weight: 2
+
+path:
+stmt_reset -&gt; stmt_reset</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="term" d="M 82.05 264.33 Q 110.88 264.52 137.60 253.66" stroke-width="1.65" opacity="0.90"/>
+      <title>edge: return
+stmt_finalize -&gt; stmt_finalize
+weight: 2
+
+path:
+stmt_finalize -&gt; stmt_finalize</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="term" d="M 83.56 259.77 Q 111.81 257.25 139.37 250.55" stroke-width="1.65" opacity="0.90"/>
+      <title>edge: return
+db_begin -&gt; db_begin
+weight: 2
+
+path:
+db_begin -&gt; db_begin</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="term" d="M 78.33 247.08 Q 105.54 255.36 133.86 257.88" stroke-width="1.65" opacity="0.90"/>
+      <title>edge: return
+db_commit -&gt; db_commit
+weight: 2
+
+path:
+db_commit -&gt; db_commit</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="term" d="M 80.60 232.28 Q 106.15 245.85 135.02 247.71" stroke-width="1.65" opacity="0.90"/>
+      <title>edge: return
+db_rollback -&gt; db_rollback
+weight: 2
+
+path:
+db_rollback -&gt; db_rollback</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="term" d="M 90.33 235.10 Q 118.73 241.46 146.90 234.17" stroke-width="1.65" opacity="0.90"/>
+      <title>edge: return
+db_scalar_int -&gt; db_scalar_int
+weight: 2
+
+path:
+db_scalar_int -&gt; db_scalar_int</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="term" d="M 82.06 204.89 Q 109.71 211.31 138.04 213.00" stroke-width="1.65" opacity="0.90"/>
+      <title>edge: return
+db_scalar_text -&gt; db_scalar_text
+weight: 2
+
+path:
+db_scalar_text -&gt; db_scalar_text</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="term" d="M 96.87 210.36 Q 120.23 227.40 148.49 233.49" stroke-width="1.65" opacity="0.90"/>
+      <title>edge: return
+sqrt_real -&gt; sqrt_real
+weight: 2
+
+path:
+sqrt_real -&gt; sqrt_real</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="term" d="M 97.02 191.72 Q 120.22 208.08 145.94 220.13" stroke-width="1.65" opacity="0.90"/>
+      <title>edge: return
+cbrt_real -&gt; cbrt_real
+weight: 2
+
+path:
+cbrt_real -&gt; cbrt_real</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="term" d="M 106.49 179.44 Q 130.95 195.27 159.98 197.84" stroke-width="1.65" opacity="0.90"/>
+      <title>edge: return
+pow_real -&gt; pow_real
+weight: 2
+
+path:
+pow_real -&gt; pow_real</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="term" d="M 120.13 156.34 Q 141.69 176.02 170.02 183.01" stroke-width="1.80" opacity="0.90"/>
+      <title>edge: return
+abs_real -&gt; abs_real
+weight: 3
+
+path:
+abs_real -&gt; abs_real</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="term" d="M 129.56 144.90 Q 146.29 167.81 166.35 187.87" stroke-width="1.80" opacity="0.90"/>
+      <title>edge: return
+floor_real -&gt; floor_real
+weight: 3
+
+path:
+floor_real -&gt; floor_real</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="term" d="M 168.92 124.39 Q 178.16 151.32 193.15 175.51" stroke-width="1.80" opacity="0.90"/>
+      <title>edge: return
+ceil_real -&gt; ceil_real
+weight: 3
+
+path:
+ceil_real -&gt; ceil_real</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="term" d="M 203.72 111.99 Q 211.81 139.74 230.35 161.90" stroke-width="1.80" opacity="0.90"/>
+      <title>edge: return
+round_real -&gt; round_real
+weight: 3
+
+path:
+round_real -&gt; round_real</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="term" d="M 201.71 111.87 Q 209.23 140.02 228.94 161.46" stroke-width="1.65" opacity="0.90"/>
+      <title>edge: return
+sin_real -&gt; sin_real
+weight: 2
+
+path:
+sin_real -&gt; sin_real</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="term" d="M 242.40 115.46 Q 242.71 144.50 255.76 170.43" stroke-width="1.65" opacity="0.90"/>
+      <title>edge: return
+cos_real -&gt; cos_real
+weight: 2
+
+path:
+cos_real -&gt; cos_real</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="term" d="M 241.08 114.22 Q 239.97 143.67 254.90 169.07" stroke-width="1.65" opacity="0.90"/>
+      <title>edge: return
+tan_real -&gt; tan_real
+weight: 2
+
+path:
+tan_real -&gt; tan_real</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="term" d="M 258.20 107.05 Q 247.39 133.98 249.38 162.93" stroke-width="1.65" opacity="0.90"/>
+      <title>edge: return
+log_real -&gt; log_real
+weight: 2
+
+path:
+log_real -&gt; log_real</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="term" d="M 281.66 111.66 Q 268.63 137.15 263.98 165.39" stroke-width="1.65" opacity="0.90"/>
+      <title>edge: return
+exp_real -&gt; exp_real
+weight: 2
+
+path:
+exp_real -&gt; exp_real</title>
+    </g>
+  </g>
+  <g id="nodes">
+    <g class="node-wrap">
+      <circle class="node-main" cx="302.36" cy="116.25" r="5.95" data-kind="rituale" data-ritual="read_all" data-line="26" data-col="1" data-depth="3" data-stmt="RITUALE" data-loops="0" data-calls="0"/>
+      <title>RITUALE read_all
+stmt: 1
+depth: 3
+loops: 0
+calls: 0
+source:
+RITUALE read_all(VERBUM path) REDDE VERBUM</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="294.17" cy="140.93" r="2.95" data-kind="bind" data-ritual="read_all" data-depth="3" data-stmt="EVOCA"/>
+      <title>stmt: EVOCA
+rituale: read_all
+depth: 3
+line: 0
+
+source:
+stmt: EVOCA
+rituale: read_all</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="292.32" cy="171.92" r="3.60" data-kind="term" data-ritual="read_all" data-line="27" data-col="3" data-depth="3" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: read_all
+depth: 3
+line: 27
+
+source:
+REDDE OBSECRO fs_read_all(path)</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-main" cx="314.85" cy="118.31" r="6.10" data-kind="rituale" data-ritual="write_all" data-line="30" data-col="1" data-depth="3" data-stmt="RITUALE" data-loops="0" data-calls="0"/>
+      <title>RITUALE write_all
+stmt: 2
+depth: 3
+loops: 0
+calls: 0
+source:
+RITUALE write_all(VERBUM path, VERBUM content) REDDE NIHIL</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="304.63" cy="142.22" r="2.95" data-kind="bind" data-ritual="write_all" data-line="31" data-col="3" data-depth="3" data-stmt="OBSECRO"/>
+      <title>stmt: OBSECRO
+rituale: write_all
+depth: 3
+line: 31
+
+source:
+OBSECRO fs_write_all(path, content)</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="285.49" cy="166.66" r="3.60" data-kind="term" data-ritual="write_all" data-line="32" data-col="3" data-depth="3" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: write_all
+depth: 3
+line: 32
+
+source:
+REDDE</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-main" cx="318.89" cy="118.41" r="6.10" data-kind="rituale" data-ritual="append_all" data-line="35" data-col="1" data-depth="3" data-stmt="RITUALE" data-loops="0" data-calls="0"/>
+      <title>RITUALE append_all
+stmt: 2
+depth: 3
+loops: 0
+calls: 0
+source:
+RITUALE append_all(VERBUM path, VERBUM content) REDDE NIHIL</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="308.08" cy="142.06" r="2.95" data-kind="bind" data-ritual="append_all" data-line="36" data-col="3" data-depth="3" data-stmt="OBSECRO"/>
+      <title>stmt: OBSECRO
+rituale: append_all
+depth: 3
+line: 36
+
+source:
+OBSECRO fs_append_all(path, content)</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="288.33" cy="166.02" r="3.60" data-kind="term" data-ritual="append_all" data-line="37" data-col="3" data-depth="3" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: append_all
+depth: 3
+line: 37
+
+source:
+REDDE</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-main" cx="330.96" cy="128.23" r="6.10" data-kind="rituale" data-ritual="mkdir" data-line="40" data-col="1" data-depth="3" data-stmt="RITUALE" data-loops="0" data-calls="0"/>
+      <title>RITUALE mkdir
+stmt: 2
+depth: 3
+loops: 0
+calls: 0
+source:
+RITUALE mkdir(VERBUM path) REDDE NIHIL</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="317.80" cy="150.66" r="2.95" data-kind="bind" data-ritual="mkdir" data-line="41" data-col="3" data-depth="3" data-stmt="OBSECRO"/>
+      <title>stmt: OBSECRO
+rituale: mkdir
+depth: 3
+line: 41
+
+source:
+OBSECRO fs_mkdir(path)</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="295.72" cy="172.48" r="3.60" data-kind="term" data-ritual="mkdir" data-line="42" data-col="3" data-depth="3" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: mkdir
+depth: 3
+line: 42
+
+source:
+REDDE</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-main" cx="342.47" cy="130.64" r="6.10" data-kind="rituale" data-ritual="mkdir_all" data-line="45" data-col="1" data-depth="3" data-stmt="RITUALE" data-loops="0" data-calls="0"/>
+      <title>RITUALE mkdir_all
+stmt: 2
+depth: 3
+loops: 0
+calls: 0
+source:
+RITUALE mkdir_all(VERBUM path) REDDE NIHIL</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="327.71" cy="152.04" r="2.95" data-kind="bind" data-ritual="mkdir_all" data-line="46" data-col="3" data-depth="3" data-stmt="OBSECRO"/>
+      <title>stmt: OBSECRO
+rituale: mkdir_all
+depth: 3
+line: 46
+
+source:
+OBSECRO fs_mkdir_all(path)</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="317.26" cy="181.28" r="3.60" data-kind="term" data-ritual="mkdir_all" data-line="47" data-col="3" data-depth="3" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: mkdir_all
+depth: 3
+line: 47
+
+source:
+REDDE</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-main" cx="349.55" cy="127.65" r="6.10" data-kind="rituale" data-ritual="delete_file" data-line="50" data-col="1" data-depth="3" data-stmt="RITUALE" data-loops="0" data-calls="0"/>
+      <title>RITUALE delete_file
+stmt: 2
+depth: 3
+loops: 0
+calls: 0
+source:
+RITUALE delete_file(VERBUM path) REDDE NIHIL</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="334.24" cy="148.66" r="2.95" data-kind="bind" data-ritual="delete_file" data-line="51" data-col="3" data-depth="3" data-stmt="OBSECRO"/>
+      <title>stmt: OBSECRO
+rituale: delete_file
+depth: 3
+line: 51
+
+source:
+OBSECRO fs_delete_file(path)</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="310.10" cy="168.19" r="3.60" data-kind="term" data-ritual="delete_file" data-line="52" data-col="3" data-depth="3" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: delete_file
+depth: 3
+line: 52
+
+source:
+REDDE</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-main" cx="357.91" cy="141.27" r="6.10" data-kind="rituale" data-ritual="delete_dir" data-line="55" data-col="1" data-depth="3" data-stmt="RITUALE" data-loops="0" data-calls="0"/>
+      <title>RITUALE delete_dir
+stmt: 2
+depth: 3
+loops: 0
+calls: 0
+source:
+RITUALE delete_dir(VERBUM path) REDDE NIHIL</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="340.64" cy="160.71" r="2.95" data-kind="bind" data-ritual="delete_dir" data-line="56" data-col="3" data-depth="3" data-stmt="OBSECRO"/>
+      <title>stmt: OBSECRO
+rituale: delete_dir
+depth: 3
+line: 56
+
+source:
+OBSECRO fs_delete_dir(path)</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="314.74" cy="177.83" r="3.60" data-kind="term" data-ritual="delete_dir" data-line="57" data-col="3" data-depth="3" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: delete_dir
+depth: 3
+line: 57
+
+source:
+REDDE</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-main" cx="378.07" cy="145.74" r="5.95" data-kind="rituale" data-ritual="is_file" data-line="60" data-col="1" data-depth="3" data-stmt="RITUALE" data-loops="0" data-calls="0"/>
+      <title>RITUALE is_file
+stmt: 1
+depth: 3
+loops: 0
+calls: 0
+source:
+RITUALE is_file(VERBUM path) REDDE VERUM</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="358.77" cy="163.16" r="2.95" data-kind="bind" data-ritual="is_file" data-depth="3" data-stmt="EVOCA"/>
+      <title>stmt: EVOCA
+rituale: is_file
+depth: 3
+line: 0
+
+source:
+stmt: EVOCA
+rituale: is_file</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="341.87" cy="189.21" r="3.60" data-kind="term" data-ritual="is_file" data-line="61" data-col="3" data-depth="3" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: is_file
+depth: 3
+line: 61
+
+source:
+REDDE OBSECRO fs_is_file(path)</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-main" cx="392.93" cy="159.91" r="5.95" data-kind="rituale" data-ritual="is_dir" data-line="64" data-col="1" data-depth="3" data-stmt="RITUALE" data-loops="0" data-calls="0"/>
+      <title>RITUALE is_dir
+stmt: 1
+depth: 3
+loops: 0
+calls: 0
+source:
+RITUALE is_dir(VERBUM path) REDDE VERUM</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="371.65" cy="174.84" r="2.95" data-kind="bind" data-ritual="is_dir" data-depth="3" data-stmt="EVOCA"/>
+      <title>stmt: EVOCA
+rituale: is_dir
+depth: 3
+line: 0
+
+source:
+stmt: EVOCA
+rituale: is_dir</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="351.69" cy="198.62" r="3.60" data-kind="term" data-ritual="is_dir" data-line="65" data-col="3" data-depth="3" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: is_dir
+depth: 3
+line: 65
+
+source:
+REDDE OBSECRO fs_is_dir(path)</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-main" cx="394.36" cy="165.60" r="5.95" data-kind="rituale" data-ritual="exists" data-line="68" data-col="1" data-depth="3" data-stmt="RITUALE" data-loops="0" data-calls="0"/>
+      <title>RITUALE exists
+stmt: 1
+depth: 3
+loops: 0
+calls: 0
+source:
+RITUALE exists(VERBUM path) REDDE VERUM</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="372.59" cy="179.82" r="2.95" data-kind="bind" data-ritual="exists" data-depth="3" data-stmt="EVOCA"/>
+      <title>stmt: EVOCA
+rituale: exists
+depth: 3
+line: 0
+
+source:
+stmt: EVOCA
+rituale: exists</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="351.85" cy="202.93" r="3.60" data-kind="term" data-ritual="exists" data-line="69" data-col="3" data-depth="3" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: exists
+depth: 3
+line: 69
+
+source:
+REDDE OBSECRO fs_exists(path)</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-main" cx="410.19" cy="173.78" r="5.95" data-kind="rituale" data-ritual="size" data-line="72" data-col="1" data-depth="3" data-stmt="RITUALE" data-loops="0" data-calls="0"/>
+      <title>RITUALE size
+stmt: 1
+depth: 3
+loops: 0
+calls: 0
+source:
+RITUALE size(VERBUM path) REDDE REX</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="387.25" cy="186.01" r="2.95" data-kind="bind" data-ritual="size" data-depth="3" data-stmt="EVOCA"/>
+      <title>stmt: EVOCA
+rituale: size
+depth: 3
+line: 0
+
+source:
+stmt: EVOCA
+rituale: size</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="357.02" cy="193.07" r="3.60" data-kind="term" data-ritual="size" data-line="73" data-col="3" data-depth="3" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: size
+depth: 3
+line: 73
+
+source:
+REDDE OBSECRO fs_size(path)</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-main" cx="408.42" cy="176.74" r="6.10" data-kind="rituale" data-ritual="read_lines" data-line="76" data-col="1" data-depth="3" data-stmt="RITUALE" data-loops="0" data-calls="2"/>
+      <title>RITUALE read_lines
+stmt: 2
+depth: 3
+loops: 0
+calls: 2
+source:
+RITUALE read_lines(VERBUM path) REDDE SPECULUM NIHIL</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="385.35" cy="188.73" r="2.95" data-kind="bind" data-ritual="read_lines" data-line="77" data-col="3" data-depth="3" data-stmt="EVOCA"/>
+      <title>stmt: EVOCA
+rituale: read_lines
+depth: 3
+line: 77
+
+source:
+EVOCA VERBUM content AD CONIURA read_all(path)</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="355.04" cy="195.48" r="3.60" data-kind="term" data-ritual="read_lines" data-line="78" data-col="3" data-depth="3" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: read_lines
+depth: 3
+line: 78
+
+source:
+REDDE CONIURA lines(content)</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-main" cx="418.62" cy="201.76" r="5.95" data-kind="rituale" data-ritual="parse_lines" data-line="81" data-col="1" data-depth="3" data-stmt="RITUALE" data-loops="0" data-calls="1"/>
+      <title>RITUALE parse_lines
+stmt: 1
+depth: 3
+loops: 0
+calls: 1
+source:
+RITUALE parse_lines(VERBUM s) REDDE SPECULUM NIHIL</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="362.97" cy="211.89" r="3.60" data-kind="term" data-ritual="parse_lines" data-line="82" data-col="3" data-depth="3" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: parse_lines
+depth: 3
+line: 82
+
+source:
+REDDE CONIURA lines(s)</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-main" cx="431.61" cy="212.73" r="5.95" data-kind="rituale" data-ritual="parse_csv_line" data-line="85" data-col="1" data-depth="3" data-stmt="RITUALE" data-loops="0" data-calls="0"/>
+      <title>RITUALE parse_csv_line
+stmt: 1
+depth: 3
+loops: 0
+calls: 0
+source:
+RITUALE parse_csv_line(VERBUM s) REDDE SPECULUM NIHIL</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="406.36" cy="218.95" r="2.95" data-kind="bind" data-ritual="parse_csv_line" data-depth="3" data-stmt="EVOCA"/>
+      <title>stmt: EVOCA
+rituale: parse_csv_line
+depth: 3
+line: 0
+
+source:
+stmt: EVOCA
+rituale: parse_csv_line</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="375.32" cy="218.36" r="3.60" data-kind="term" data-ritual="parse_csv_line" data-line="86" data-col="3" data-depth="3" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: parse_csv_line
+depth: 3
+line: 86
+
+source:
+REDDE OBSECRO parse_csv_line(s, 44)</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-main" cx="434.71" cy="228.69" r="5.95" data-kind="rituale" data-ritual="parse_csv_line_sep" data-line="89" data-col="1" data-depth="3" data-stmt="RITUALE" data-loops="0" data-calls="0"/>
+      <title>RITUALE parse_csv_line_sep
+stmt: 1
+depth: 3
+loops: 0
+calls: 0
+source:
+RITUALE parse_csv_line_sep(VERBUM s, MILES sep) REDDE SPECULUM NIHIL</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="409.01" cy="232.62" r="2.95" data-kind="bind" data-ritual="parse_csv_line_sep" data-depth="3" data-stmt="EVOCA"/>
+      <title>stmt: EVOCA
+rituale: parse_csv_line_sep
+depth: 3
+line: 0
+
+source:
+stmt: EVOCA
+rituale: parse_csv_line_sep</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="380.56" cy="245.06" r="3.60" data-kind="term" data-ritual="parse_csv_line_sep" data-line="90" data-col="3" data-depth="3" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: parse_csv_line_sep
+depth: 3
+line: 90
+
+source:
+REDDE OBSECRO parse_csv_line(s, sep)</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-main" cx="432.38" cy="238.12" r="5.95" data-kind="rituale" data-ritual="parse_int" data-line="93" data-col="1" data-depth="3" data-stmt="RITUALE" data-loops="0" data-calls="0"/>
+      <title>RITUALE parse_int
+stmt: 1
+depth: 3
+loops: 0
+calls: 0
+source:
+RITUALE parse_int(VERBUM s) REDDE REX</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="406.51" cy="240.74" r="2.95" data-kind="bind" data-ritual="parse_int" data-depth="3" data-stmt="EVOCA"/>
+      <title>stmt: EVOCA
+rituale: parse_int
+depth: 3
+line: 0
+
+source:
+stmt: EVOCA
+rituale: parse_int</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="377.47" cy="251.73" r="3.60" data-kind="term" data-ritual="parse_int" data-line="94" data-col="3" data-depth="3" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: parse_int
+depth: 3
+line: 94
+
+source:
+REDDE OBSECRO fmt_parse_int(s)</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-main" cx="424.32" cy="252.03" r="5.95" data-kind="rituale" data-ritual="parse_real" data-line="97" data-col="1" data-depth="3" data-stmt="RITUALE" data-loops="0" data-calls="0"/>
+      <title>RITUALE parse_real
+stmt: 1
+depth: 3
+loops: 0
+calls: 0
+source:
+RITUALE parse_real(VERBUM s) REDDE UMBRA</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="398.33" cy="252.64" r="2.95" data-kind="bind" data-ritual="parse_real" data-depth="3" data-stmt="EVOCA"/>
+      <title>stmt: EVOCA
+rituale: parse_real
+depth: 3
+line: 0
+
+source:
+stmt: EVOCA
+rituale: parse_real</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="368.15" cy="245.35" r="3.60" data-kind="term" data-ritual="parse_real" data-line="98" data-col="3" data-depth="3" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: parse_real
+depth: 3
+line: 98
+
+source:
+REDDE OBSECRO fmt_parse_real(s)</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-main" cx="436.97" cy="275.92" r="6.70" data-kind="rituale" data-ritual="parse_bool" data-line="101" data-col="1" data-depth="4" data-stmt="RITUALE" data-loops="0" data-calls="2"/>
+      <title>RITUALE parse_bool
+stmt: 6
+depth: 4
+loops: 0
+calls: 2
+source:
+RITUALE parse_bool(VERBUM s) REDDE VERUM</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="397.57" cy="295.73" r="5.80" data-kind="branch" data-ritual="parse_bool" data-line="102" data-col="3" data-depth="4" data-stmt="SI"/>
+      <title>stmt: SI
+rituale: parse_bool
+depth: 4
+line: 102
+
+source:
+SI CONIURA compare(s, "true") == 0</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="382.18" cy="261.84" r="4.40" data-kind="term" data-ritual="parse_bool" data-line="103" data-col="5" data-depth="4" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: parse_bool
+depth: 4
+line: 103
+
+source:
+REDDE VERUM</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-main" cx="427.89" cy="289.20" r="5.95" data-kind="rituale" data-ritual="try_int" data-line="112" data-col="1" data-depth="3" data-stmt="RITUALE" data-loops="0" data-calls="0"/>
+      <title>RITUALE try_int
+stmt: 1
+depth: 3
+loops: 0
+calls: 0
+source:
+RITUALE try_int(VERBUM s) REDDE SPECULUM NIHIL</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="402.36" cy="284.27" r="2.95" data-kind="bind" data-ritual="try_int" data-depth="3" data-stmt="EVOCA"/>
+      <title>stmt: EVOCA
+rituale: try_int
+depth: 3
+line: 0
+
+source:
+stmt: EVOCA
+rituale: try_int</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="371.39" cy="286.44" r="3.60" data-kind="term" data-ritual="try_int" data-line="113" data-col="3" data-depth="3" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: try_int
+depth: 3
+line: 113
+
+source:
+REDDE OBSECRO parse_try_int(s)</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-main" cx="420.73" cy="296.15" r="5.95" data-kind="rituale" data-ritual="try_real" data-line="116" data-col="1" data-depth="3" data-stmt="RITUALE" data-loops="0" data-calls="0"/>
+      <title>RITUALE try_real
+stmt: 1
+depth: 3
+loops: 0
+calls: 0
+source:
+RITUALE try_real(VERBUM s) REDDE SPECULUM NIHIL</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="395.47" cy="289.99" r="2.95" data-kind="bind" data-ritual="try_real" data-depth="3" data-stmt="EVOCA"/>
+      <title>stmt: EVOCA
+rituale: try_real
+depth: 3
+line: 0
+
+source:
+stmt: EVOCA
+rituale: try_real</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="364.43" cy="290.66" r="3.60" data-kind="term" data-ritual="try_real" data-line="117" data-col="3" data-depth="3" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: try_real
+depth: 3
+line: 117
+
+source:
+REDDE OBSECRO parse_try_real(s)</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-main" cx="404.70" cy="323.79" r="5.95" data-kind="rituale" data-ritual="try_bool" data-line="120" data-col="1" data-depth="3" data-stmt="RITUALE" data-loops="0" data-calls="0"/>
+      <title>RITUALE try_bool
+stmt: 1
+depth: 3
+loops: 0
+calls: 0
+source:
+RITUALE try_bool(VERBUM s) REDDE SPECULUM NIHIL</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="381.05" cy="313.01" r="2.95" data-kind="bind" data-ritual="try_bool" data-depth="3" data-stmt="EVOCA"/>
+      <title>stmt: EVOCA
+rituale: try_bool
+depth: 3
+line: 0
+
+source:
+stmt: EVOCA
+rituale: try_bool</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="357.07" cy="293.28" r="3.60" data-kind="term" data-ritual="try_bool" data-line="121" data-col="3" data-depth="3" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: try_bool
+depth: 3
+line: 121
+
+source:
+REDDE OBSECRO parse_try_bool(s)</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-main" cx="421.86" cy="315.09" r="5.95" data-kind="rituale" data-ritual="parse_int_hex" data-line="124" data-col="1" data-depth="3" data-stmt="RITUALE" data-loops="0" data-calls="0"/>
+      <title>RITUALE parse_int_hex
+stmt: 1
+depth: 3
+loops: 0
+calls: 0
+source:
+RITUALE parse_int_hex(VERBUM s) REDDE REX</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="397.37" cy="306.36" r="2.95" data-kind="bind" data-ritual="parse_int_hex" data-depth="3" data-stmt="EVOCA"/>
+      <title>stmt: EVOCA
+rituale: parse_int_hex
+depth: 3
+line: 0
+
+source:
+stmt: EVOCA
+rituale: parse_int_hex</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="371.80" cy="288.76" r="3.60" data-kind="term" data-ritual="parse_int_hex" data-line="125" data-col="3" data-depth="3" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: parse_int_hex
+depth: 3
+line: 125
+
+source:
+REDDE OBSECRO parse_int_hex(s)</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-main" cx="406.41" cy="324.53" r="5.95" data-kind="rituale" data-ritual="try_int_hex" data-line="128" data-col="1" data-depth="3" data-stmt="RITUALE" data-loops="0" data-calls="0"/>
+      <title>RITUALE try_int_hex
+stmt: 1
+depth: 3
+loops: 0
+calls: 0
+source:
+RITUALE try_int_hex(VERBUM s) REDDE SPECULUM NIHIL</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="382.75" cy="313.75" r="2.95" data-kind="bind" data-ritual="try_int_hex" data-depth="3" data-stmt="EVOCA"/>
+      <title>stmt: EVOCA
+rituale: try_int_hex
+depth: 3
+line: 0
+
+source:
+stmt: EVOCA
+rituale: try_int_hex</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="352.14" cy="308.59" r="3.60" data-kind="term" data-ritual="try_int_hex" data-line="129" data-col="3" data-depth="3" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: try_int_hex
+depth: 3
+line: 129
+
+source:
+REDDE OBSECRO parse_try_int_hex(s)</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-main" cx="392.91" cy="346.42" r="5.95" data-kind="rituale" data-ritual="parse_int_radix" data-line="132" data-col="1" data-depth="3" data-stmt="RITUALE" data-loops="0" data-calls="0"/>
+      <title>RITUALE parse_int_radix
+stmt: 1
+depth: 3
+loops: 0
+calls: 0
+source:
+RITUALE parse_int_radix(VERBUM s, REX radix) REDDE REX</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="371.21" cy="332.09" r="2.95" data-kind="bind" data-ritual="parse_int_radix" data-depth="3" data-stmt="EVOCA"/>
+      <title>stmt: EVOCA
+rituale: parse_int_radix
+depth: 3
+line: 0
+
+source:
+stmt: EVOCA
+rituale: parse_int_radix</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="341.77" cy="322.23" r="3.60" data-kind="term" data-ritual="parse_int_radix" data-line="133" data-col="3" data-depth="3" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: parse_int_radix
+depth: 3
+line: 133
+
+source:
+REDDE OBSECRO parse_int_radix(s, radix)</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-main" cx="378.88" cy="349.55" r="5.95" data-kind="rituale" data-ritual="try_int_radix" data-line="136" data-col="1" data-depth="3" data-stmt="RITUALE" data-loops="0" data-calls="0"/>
+      <title>RITUALE try_int_radix
+stmt: 1
+depth: 3
+loops: 0
+calls: 0
+source:
+RITUALE try_int_radix(VERBUM s, REX radix) REDDE SPECULUM NIHIL</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="358.19" cy="333.80" r="2.95" data-kind="bind" data-ritual="try_int_radix" data-depth="3" data-stmt="EVOCA"/>
+      <title>stmt: EVOCA
+rituale: try_int_radix
+depth: 3
+line: 0
+
+source:
+stmt: EVOCA
+rituale: try_int_radix</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="339.17" cy="309.27" r="3.60" data-kind="term" data-ritual="try_int_radix" data-line="137" data-col="3" data-depth="3" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: try_int_radix
+depth: 3
+line: 137
+
+source:
+REDDE OBSECRO parse_try_int_radix(s, radix)</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-main" cx="392.52" cy="357.12" r="5.95" data-kind="rituale" data-ritual="is_int" data-line="140" data-col="1" data-depth="3" data-stmt="RITUALE" data-loops="0" data-calls="0"/>
+      <title>RITUALE is_int
+stmt: 1
+depth: 3
+loops: 0
+calls: 0
+source:
+RITUALE is_int(VERBUM s) REDDE VERUM</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="371.62" cy="341.64" r="2.95" data-kind="bind" data-ritual="is_int" data-depth="3" data-stmt="EVOCA"/>
+      <title>stmt: EVOCA
+rituale: is_int
+depth: 3
+line: 0
+
+source:
+stmt: EVOCA
+rituale: is_int</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="342.76" cy="330.22" r="3.60" data-kind="term" data-ritual="is_int" data-line="141" data-col="3" data-depth="3" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: is_int
+depth: 3
+line: 141
+
+source:
+REDDE OBSECRO parse_is_int(s)</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-main" cx="371.75" cy="364.89" r="5.95" data-kind="rituale" data-ritual="is_real" data-line="144" data-col="1" data-depth="3" data-stmt="RITUALE" data-loops="0" data-calls="0"/>
+      <title>RITUALE is_real
+stmt: 1
+depth: 3
+loops: 0
+calls: 0
+source:
+RITUALE is_real(VERBUM s) REDDE VERUM</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="352.82" cy="347.08" r="2.95" data-kind="bind" data-ritual="is_real" data-depth="3" data-stmt="EVOCA"/>
+      <title>stmt: EVOCA
+rituale: is_real
+depth: 3
+line: 0
+
+source:
+stmt: EVOCA
+rituale: is_real</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="336.45" cy="320.69" r="3.60" data-kind="term" data-ritual="is_real" data-line="145" data-col="3" data-depth="3" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: is_real
+depth: 3
+line: 145
+
+source:
+REDDE OBSECRO parse_is_real(s)</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-main" cx="344.24" cy="387.04" r="5.95" data-kind="rituale" data-ritual="run" data-line="148" data-col="1" data-depth="3" data-stmt="RITUALE" data-loops="0" data-calls="0"/>
+      <title>RITUALE run
+stmt: 1
+depth: 3
+loops: 0
+calls: 0
+source:
+RITUALE run(VERBUM cmd) REDDE REX</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="329.72" cy="365.47" r="2.95" data-kind="bind" data-ritual="run" data-depth="3" data-stmt="EVOCA"/>
+      <title>stmt: EVOCA
+rituale: run
+depth: 3
+line: 0
+
+source:
+stmt: EVOCA
+rituale: run</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="306.33" cy="345.06" r="3.60" data-kind="term" data-ritual="run" data-line="149" data-col="3" data-depth="3" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: run
+depth: 3
+line: 149
+
+source:
+REDDE OBSECRO process_run(cmd)</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-main" cx="339.55" cy="380.86" r="5.95" data-kind="rituale" data-ritual="run_capture" data-line="152" data-col="1" data-depth="3" data-stmt="RITUALE" data-loops="0" data-calls="0"/>
+      <title>RITUALE run_capture
+stmt: 1
+depth: 3
+loops: 0
+calls: 0
+source:
+RITUALE run_capture(VERBUM cmd) REDDE VERBUM</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="325.09" cy="359.25" r="2.95" data-kind="bind" data-ritual="run_capture" data-depth="3" data-stmt="EVOCA"/>
+      <title>stmt: EVOCA
+rituale: run_capture
+depth: 3
+line: 0
+
+source:
+stmt: EVOCA
+rituale: run_capture</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="315.05" cy="329.87" r="3.60" data-kind="term" data-ritual="run_capture" data-line="153" data-col="3" data-depth="3" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: run_capture
+depth: 3
+line: 153
+
+source:
+REDDE OBSECRO process_run_capture(cmd)</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-main" cx="326.81" cy="398.55" r="6.10" data-kind="rituale" data-ritual="run_capture_err" data-line="156" data-col="1" data-depth="4" data-stmt="RITUALE" data-loops="0" data-calls="3"/>
+      <title>RITUALE run_capture_err
+stmt: 2
+depth: 4
+loops: 0
+calls: 3
+source:
+RITUALE run_capture_err(VERBUM cmd) REDDE VERBUM</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="315.24" cy="375.27" r="2.95" data-kind="bind" data-ritual="run_capture_err" data-line="157" data-col="3" data-depth="4" data-stmt="EVOCA"/>
+      <title>stmt: EVOCA
+rituale: run_capture_err
+depth: 4
+line: 157
+
+source:
+EVOCA VERBUM wrapped AD CONIURA concat(CONIURA concat("{ ", cmd), " ; } 2&gt;&amp;1 &gt;/dev/null")</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="294.73" cy="351.96" r="3.60" data-kind="term" data-ritual="run_capture_err" data-line="158" data-col="3" data-depth="4" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: run_capture_err
+depth: 4
+line: 158
+
+source:
+REDDE CONIURA run_capture(wrapped)</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-main" cx="298.91" cy="397.84" r="5.95" data-kind="rituale" data-ritual="run_with_input" data-line="161" data-col="1" data-depth="3" data-stmt="RITUALE" data-loops="0" data-calls="0"/>
+      <title>RITUALE run_with_input
+stmt: 1
+depth: 3
+loops: 0
+calls: 0
+source:
+RITUALE run_with_input(VERBUM cmd, VERBUM input) REDDE VERBUM</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="291.38" cy="372.96" r="2.95" data-kind="bind" data-ritual="run_with_input" data-depth="3" data-stmt="EVOCA"/>
+      <title>stmt: EVOCA
+rituale: run_with_input
+depth: 3
+line: 0
+
+source:
+stmt: EVOCA
+rituale: run_with_input</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="290.35" cy="341.92" r="3.60" data-kind="term" data-ritual="run_with_input" data-line="162" data-col="3" data-depth="3" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: run_with_input
+depth: 3
+line: 162
+
+source:
+REDDE OBSECRO process_run_with_input(cmd, input)</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-main" cx="299.53" cy="400.99" r="5.95" data-kind="rituale" data-ritual="run_env" data-line="165" data-col="1" data-depth="3" data-stmt="RITUALE" data-loops="0" data-calls="0"/>
+      <title>RITUALE run_env
+stmt: 1
+depth: 3
+loops: 0
+calls: 0
+source:
+RITUALE run_env(VERBUM cmd, SPECULUM NIHIL env_pairs) REDDE REX</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="292.05" cy="376.09" r="2.95" data-kind="bind" data-ritual="run_env" data-depth="3" data-stmt="EVOCA"/>
+      <title>stmt: EVOCA
+rituale: run_env
+depth: 3
+line: 0
+
+source:
+stmt: EVOCA
+rituale: run_env</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="275.76" cy="349.66" r="3.60" data-kind="term" data-ritual="run_env" data-line="166" data-col="3" data-depth="3" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: run_env
+depth: 3
+line: 166
+
+source:
+REDDE OBSECRO process_run_env(cmd, env_pairs)</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-main" cx="284.78" cy="404.60" r="5.95" data-kind="rituale" data-ritual="run_timeout" data-line="169" data-col="1" data-depth="3" data-stmt="RITUALE" data-loops="0" data-calls="0"/>
+      <title>RITUALE run_timeout
+stmt: 1
+depth: 3
+loops: 0
+calls: 0
+source:
+RITUALE run_timeout(VERBUM cmd, REX timeout_ms) REDDE REX</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="279.83" cy="379.07" r="2.95" data-kind="bind" data-ritual="run_timeout" data-depth="3" data-stmt="EVOCA"/>
+      <title>stmt: EVOCA
+rituale: run_timeout
+depth: 3
+line: 0
+
+source:
+stmt: EVOCA
+rituale: run_timeout</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="281.98" cy="348.10" r="3.60" data-kind="term" data-ritual="run_timeout" data-line="170" data-col="3" data-depth="3" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: run_timeout
+depth: 3
+line: 170
+
+source:
+REDDE OBSECRO process_run_timeout(cmd, timeout_ms)</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-main" cx="255.97" cy="408.79" r="5.95" data-kind="rituale" data-ritual="getenv" data-line="173" data-col="1" data-depth="3" data-stmt="RITUALE" data-loops="0" data-calls="0"/>
+      <title>RITUALE getenv
+stmt: 1
+depth: 3
+loops: 0
+calls: 0
+source:
+RITUALE getenv(VERBUM name) REDDE VERBUM</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="255.97" cy="382.79" r="2.95" data-kind="bind" data-ritual="getenv" data-depth="3" data-stmt="EVOCA"/>
+      <title>stmt: EVOCA
+rituale: getenv
+depth: 3
+line: 0
+
+source:
+stmt: EVOCA
+rituale: getenv</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="263.98" cy="352.79" r="3.60" data-kind="term" data-ritual="getenv" data-line="174" data-col="3" data-depth="3" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: getenv
+depth: 3
+line: 174
+
+source:
+REDDE OBSECRO env_get(name)</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-main" cx="243.34" cy="399.32" r="5.95" data-kind="rituale" data-ritual="has_env" data-line="177" data-col="1" data-depth="3" data-stmt="RITUALE" data-loops="0" data-calls="0"/>
+      <title>RITUALE has_env
+stmt: 1
+depth: 3
+loops: 0
+calls: 0
+source:
+RITUALE has_env(VERBUM name) REDDE VERUM</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="245.63" cy="373.43" r="2.95" data-kind="bind" data-ritual="has_env" data-depth="3" data-stmt="EVOCA"/>
+      <title>stmt: EVOCA
+rituale: has_env
+depth: 3
+line: 0
+
+source:
+stmt: EVOCA
+rituale: has_env</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="256.24" cy="344.25" r="3.60" data-kind="term" data-ritual="has_env" data-line="178" data-col="3" data-depth="3" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: has_env
+depth: 3
+line: 178
+
+source:
+REDDE OBSECRO env_has(name)</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-main" cx="237.07" cy="403.81" r="5.95" data-kind="rituale" data-ritual="cwd" data-line="181" data-col="1" data-depth="2" data-stmt="RITUALE" data-loops="0" data-calls="0"/>
+      <title>RITUALE cwd
+stmt: 1
+depth: 2
+loops: 0
+calls: 0
+source:
+RITUALE cwd() REDDE VERBUM</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="240.38" cy="378.02" r="2.95" data-kind="bind" data-ritual="cwd" data-depth="2" data-stmt="EVOCA"/>
+      <title>stmt: EVOCA
+rituale: cwd
+depth: 2
+line: 0
+
+source:
+stmt: EVOCA
+rituale: cwd</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="236.25" cy="347.25" r="3.60" data-kind="term" data-ritual="cwd" data-line="182" data-col="3" data-depth="2" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: cwd
+depth: 2
+line: 182
+
+source:
+REDDE OBSECRO env_cwd()</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-main" cx="239.41" cy="406.19" r="5.95" data-kind="rituale" data-ritual="db_open" data-line="185" data-col="1" data-depth="3" data-stmt="RITUALE" data-loops="0" data-calls="0"/>
+      <title>RITUALE db_open
+stmt: 1
+depth: 3
+loops: 0
+calls: 0
+source:
+RITUALE db_open(VERBUM path) REDDE SPECULUM NIHIL</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="242.27" cy="380.35" r="2.95" data-kind="bind" data-ritual="db_open" data-depth="3" data-stmt="EVOCA"/>
+      <title>stmt: EVOCA
+rituale: db_open
+depth: 3
+line: 0
+
+source:
+stmt: EVOCA
+rituale: db_open</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="253.51" cy="351.40" r="3.60" data-kind="term" data-ritual="db_open" data-line="186" data-col="3" data-depth="3" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: db_open
+depth: 3
+line: 186
+
+source:
+REDDE OBSECRO db_open(path)</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-main" cx="212.20" cy="393.42" r="6.10" data-kind="rituale" data-ritual="db_close" data-line="189" data-col="1" data-depth="3" data-stmt="RITUALE" data-loops="0" data-calls="0"/>
+      <title>RITUALE db_close
+stmt: 2
+depth: 3
+loops: 0
+calls: 0
+source:
+RITUALE db_close(SPECULUM NIHIL db) REDDE NIHIL</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="220.10" cy="368.65" r="2.95" data-kind="bind" data-ritual="db_close" data-line="190" data-col="3" data-depth="3" data-stmt="OBSECRO"/>
+      <title>stmt: OBSECRO
+rituale: db_close
+depth: 3
+line: 190
+
+source:
+OBSECRO db_close(db)</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="236.83" cy="342.50" r="3.60" data-kind="term" data-ritual="db_close" data-line="191" data-col="3" data-depth="3" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: db_close
+depth: 3
+line: 191
+
+source:
+REDDE</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-main" cx="197.86" cy="391.22" r="6.10" data-kind="rituale" data-ritual="db_exec" data-line="194" data-col="1" data-depth="3" data-stmt="RITUALE" data-loops="0" data-calls="0"/>
+      <title>RITUALE db_exec
+stmt: 2
+depth: 3
+loops: 0
+calls: 0
+source:
+RITUALE db_exec(SPECULUM NIHIL db, VERBUM sql) REDDE NIHIL</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="208.13" cy="367.34" r="2.95" data-kind="bind" data-ritual="db_exec" data-line="195" data-col="3" data-depth="3" data-stmt="OBSECRO"/>
+      <title>stmt: OBSECRO
+rituale: db_exec
+depth: 3
+line: 195
+
+source:
+OBSECRO db_exec(db, sql)</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="212.63" cy="336.62" r="3.60" data-kind="term" data-ritual="db_exec" data-line="196" data-col="3" data-depth="3" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: db_exec
+depth: 3
+line: 196
+
+source:
+REDDE</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-main" cx="193.40" cy="391.92" r="5.95" data-kind="rituale" data-ritual="db_last_error" data-line="199" data-col="1" data-depth="3" data-stmt="RITUALE" data-loops="0" data-calls="0"/>
+      <title>RITUALE db_last_error
+stmt: 1
+depth: 3
+loops: 0
+calls: 0
+source:
+RITUALE db_last_error(SPECULUM NIHIL db) REDDE VERBUM</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="204.28" cy="368.31" r="2.95" data-kind="bind" data-ritual="db_last_error" data-depth="3" data-stmt="EVOCA"/>
+      <title>stmt: EVOCA
+rituale: db_last_error
+depth: 3
+line: 0
+
+source:
+stmt: EVOCA
+rituale: db_last_error</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="209.56" cy="337.71" r="3.60" data-kind="term" data-ritual="db_last_error" data-line="200" data-col="3" data-depth="3" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: db_last_error
+depth: 3
+line: 200
+
+source:
+REDDE OBSECRO db_last_error(db)</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-main" cx="184.35" cy="394.25" r="5.95" data-kind="rituale" data-ritual="db_query" data-line="203" data-col="1" data-depth="3" data-stmt="RITUALE" data-loops="0" data-calls="0"/>
+      <title>RITUALE db_query
+stmt: 1
+depth: 3
+loops: 0
+calls: 0
+source:
+RITUALE db_query(SPECULUM NIHIL db, VERBUM sql) REDDE SPECULUM NIHIL</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="196.31" cy="371.17" r="2.95" data-kind="bind" data-ritual="db_query" data-depth="3" data-stmt="EVOCA"/>
+      <title>stmt: EVOCA
+rituale: db_query
+depth: 3
+line: 0
+
+source:
+stmt: EVOCA
+rituale: db_query</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="203.01" cy="340.85" r="3.60" data-kind="term" data-ritual="db_query" data-line="204" data-col="3" data-depth="3" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: db_query
+depth: 3
+line: 204
+
+source:
+REDDE OBSECRO db_query(db, sql)</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-main" cx="149.88" cy="378.22" r="5.95" data-kind="rituale" data-ritual="rows_next" data-line="207" data-col="1" data-depth="3" data-stmt="RITUALE" data-loops="0" data-calls="0"/>
+      <title>RITUALE rows_next
+stmt: 1
+depth: 3
+loops: 0
+calls: 0
+source:
+RITUALE rows_next(SPECULUM NIHIL rows) REDDE VERUM</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="166.92" cy="358.59" r="2.95" data-kind="bind" data-ritual="rows_next" data-depth="3" data-stmt="EVOCA"/>
+      <title>stmt: EVOCA
+rituale: rows_next
+depth: 3
+line: 0
+
+source:
+stmt: EVOCA
+rituale: rows_next</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="180.55" cy="330.69" r="3.60" data-kind="term" data-ritual="rows_next" data-line="208" data-col="3" data-depth="3" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: rows_next
+depth: 3
+line: 208
+
+source:
+REDDE OBSECRO rows_next(rows)</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-main" cx="157.23" cy="379.27" r="5.95" data-kind="rituale" data-ritual="rows_get_text" data-line="211" data-col="1" data-depth="3" data-stmt="RITUALE" data-loops="0" data-calls="0"/>
+      <title>RITUALE rows_get_text
+stmt: 1
+depth: 3
+loops: 0
+calls: 0
+source:
+RITUALE rows_get_text(SPECULUM NIHIL rows, REX col) REDDE VERBUM</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="173.49" cy="358.98" r="2.95" data-kind="bind" data-ritual="rows_get_text" data-depth="3" data-stmt="EVOCA"/>
+      <title>stmt: EVOCA
+rituale: rows_get_text
+depth: 3
+line: 0
+
+source:
+stmt: EVOCA
+rituale: rows_get_text</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="186.00" cy="330.57" r="3.60" data-kind="term" data-ritual="rows_get_text" data-line="212" data-col="3" data-depth="3" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: rows_get_text
+depth: 3
+line: 212
+
+source:
+REDDE OBSECRO rows_get_text(rows, col)</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-main" cx="143.16" cy="372.29" r="5.95" data-kind="rituale" data-ritual="rows_get_int" data-line="215" data-col="1" data-depth="3" data-stmt="RITUALE" data-loops="0" data-calls="0"/>
+      <title>RITUALE rows_get_int
+stmt: 1
+depth: 3
+loops: 0
+calls: 0
+source:
+RITUALE rows_get_int(SPECULUM NIHIL rows, REX col) REDDE REX</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="161.27" cy="353.63" r="2.95" data-kind="bind" data-ritual="rows_get_int" data-depth="3" data-stmt="EVOCA"/>
+      <title>stmt: EVOCA
+rituale: rows_get_int
+depth: 3
+line: 0
+
+source:
+stmt: EVOCA
+rituale: rows_get_int</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="187.90" cy="337.67" r="3.60" data-kind="term" data-ritual="rows_get_int" data-line="216" data-col="3" data-depth="3" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: rows_get_int
+depth: 3
+line: 216
+
+source:
+REDDE OBSECRO rows_get_int(rows, col)</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-main" cx="136.66" cy="361.64" r="5.95" data-kind="rituale" data-ritual="rows_get_real" data-line="219" data-col="1" data-depth="3" data-stmt="RITUALE" data-loops="0" data-calls="0"/>
+      <title>RITUALE rows_get_real
+stmt: 1
+depth: 3
+loops: 0
+calls: 0
+source:
+RITUALE rows_get_real(SPECULUM NIHIL rows, REX col) REDDE UMBRA</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="156.13" cy="344.40" r="2.95" data-kind="bind" data-ritual="rows_get_real" data-depth="3" data-stmt="EVOCA"/>
+      <title>stmt: EVOCA
+rituale: rows_get_real
+depth: 3
+line: 0
+
+source:
+stmt: EVOCA
+rituale: rows_get_real</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="183.90" cy="330.51" r="3.60" data-kind="term" data-ritual="rows_get_real" data-line="220" data-col="3" data-depth="3" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: rows_get_real
+depth: 3
+line: 220
+
+source:
+REDDE OBSECRO rows_get_real(rows, col)</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-main" cx="120.39" cy="340.25" r="6.10" data-kind="rituale" data-ritual="rows_close" data-line="223" data-col="1" data-depth="3" data-stmt="RITUALE" data-loops="0" data-calls="0"/>
+      <title>RITUALE rows_close
+stmt: 2
+depth: 3
+loops: 0
+calls: 0
+source:
+RITUALE rows_close(SPECULUM NIHIL rows) REDDE NIHIL</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="142.48" cy="326.53" r="2.95" data-kind="bind" data-ritual="rows_close" data-line="224" data-col="3" data-depth="3" data-stmt="OBSECRO"/>
+      <title>stmt: OBSECRO
+rituale: rows_close
+depth: 3
+line: 224
+
+source:
+OBSECRO rows_close(rows)</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="172.18" cy="317.49" r="3.60" data-kind="term" data-ritual="rows_close" data-line="225" data-col="3" data-depth="3" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: rows_close
+depth: 3
+line: 225
+
+source:
+REDDE</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-main" cx="104.93" cy="342.46" r="5.95" data-kind="rituale" data-ritual="db_prepare" data-line="228" data-col="1" data-depth="3" data-stmt="RITUALE" data-loops="0" data-calls="0"/>
+      <title>RITUALE db_prepare
+stmt: 1
+depth: 3
+loops: 0
+calls: 0
+source:
+RITUALE db_prepare(SPECULUM NIHIL db, VERBUM sql) REDDE SPECULUM NIHIL</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="127.50" cy="329.55" r="2.95" data-kind="bind" data-ritual="db_prepare" data-depth="3" data-stmt="EVOCA"/>
+      <title>stmt: EVOCA
+rituale: db_prepare
+depth: 3
+line: 0
+
+source:
+stmt: EVOCA
+rituale: db_prepare</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="149.56" cy="307.70" r="3.60" data-kind="term" data-ritual="db_prepare" data-line="229" data-col="3" data-depth="3" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: db_prepare
+depth: 3
+line: 229
+
+source:
+REDDE OBSECRO db_prepare(db, sql)</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-main" cx="109.31" cy="335.97" r="6.10" data-kind="rituale" data-ritual="stmt_bind_text" data-line="232" data-col="1" data-depth="3" data-stmt="RITUALE" data-loops="0" data-calls="0"/>
+      <title>RITUALE stmt_bind_text
+stmt: 2
+depth: 3
+loops: 0
+calls: 0
+source:
+RITUALE stmt_bind_text(SPECULUM NIHIL stmt, REX idx, VERBUM v) REDDE NIHIL</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="132.13" cy="323.53" r="2.95" data-kind="bind" data-ritual="stmt_bind_text" data-line="233" data-col="3" data-depth="3" data-stmt="OBSECRO"/>
+      <title>stmt: OBSECRO
+rituale: stmt_bind_text
+depth: 3
+line: 233
+
+source:
+OBSECRO stmt_bind_text(stmt, idx, v)</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="162.30" cy="316.19" r="3.60" data-kind="term" data-ritual="stmt_bind_text" data-line="234" data-col="3" data-depth="3" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: stmt_bind_text
+depth: 3
+line: 234
+
+source:
+REDDE</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-main" cx="95.68" cy="309.51" r="6.10" data-kind="rituale" data-ritual="stmt_bind_int" data-line="237" data-col="1" data-depth="3" data-stmt="RITUALE" data-loops="0" data-calls="0"/>
+      <title>RITUALE stmt_bind_int
+stmt: 2
+depth: 3
+loops: 0
+calls: 0
+source:
+RITUALE stmt_bind_int(SPECULUM NIHIL stmt, REX idx, REX v) REDDE NIHIL</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="120.34" cy="301.28" r="2.95" data-kind="bind" data-ritual="stmt_bind_int" data-line="238" data-col="3" data-depth="3" data-stmt="OBSECRO"/>
+      <title>stmt: OBSECRO
+rituale: stmt_bind_int
+depth: 3
+line: 238
+
+source:
+OBSECRO stmt_bind_int(stmt, idx, v)</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="146.27" cy="284.19" r="3.60" data-kind="term" data-ritual="stmt_bind_int" data-line="239" data-col="3" data-depth="3" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: stmt_bind_int
+depth: 3
+line: 239
+
+source:
+REDDE</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-main" cx="82.65" cy="290.63" r="6.10" data-kind="rituale" data-ritual="stmt_bind_real" data-line="242" data-col="1" data-depth="3" data-stmt="RITUALE" data-loops="0" data-calls="0"/>
+      <title>RITUALE stmt_bind_real
+stmt: 2
+depth: 3
+loops: 0
+calls: 0
+source:
+RITUALE stmt_bind_real(SPECULUM NIHIL stmt, REX idx, UMBRA v) REDDE NIHIL</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="108.14" cy="285.54" r="2.95" data-kind="bind" data-ritual="stmt_bind_real" data-line="243" data-col="3" data-depth="3" data-stmt="OBSECRO"/>
+      <title>stmt: OBSECRO
+rituale: stmt_bind_real
+depth: 3
+line: 243
+
+source:
+OBSECRO stmt_bind_real(stmt, idx, v)</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="139.13" cy="287.51" r="3.60" data-kind="term" data-ritual="stmt_bind_real" data-line="244" data-col="3" data-depth="3" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: stmt_bind_real
+depth: 3
+line: 244
+
+source:
+REDDE</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-main" cx="97.05" cy="302.84" r="5.95" data-kind="rituale" data-ritual="stmt_step" data-line="247" data-col="1" data-depth="3" data-stmt="RITUALE" data-loops="0" data-calls="0"/>
+      <title>RITUALE stmt_step
+stmt: 1
+depth: 3
+loops: 0
+calls: 0
+source:
+RITUALE stmt_step(SPECULUM NIHIL stmt) REDDE VERUM</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="121.99" cy="295.49" r="2.95" data-kind="bind" data-ritual="stmt_step" data-depth="3" data-stmt="EVOCA"/>
+      <title>stmt: EVOCA
+rituale: stmt_step
+depth: 3
+line: 0
+
+source:
+stmt: EVOCA
+rituale: stmt_step</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="148.51" cy="279.34" r="3.60" data-kind="term" data-ritual="stmt_step" data-line="248" data-col="3" data-depth="3" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: stmt_step
+depth: 3
+line: 248
+
+source:
+REDDE OBSECRO stmt_step(stmt)</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-main" cx="90.38" cy="275.50" r="6.10" data-kind="rituale" data-ritual="stmt_reset" data-line="251" data-col="1" data-depth="3" data-stmt="RITUALE" data-loops="0" data-calls="0"/>
+      <title>RITUALE stmt_reset
+stmt: 2
+depth: 3
+loops: 0
+calls: 0
+source:
+RITUALE stmt_reset(SPECULUM NIHIL stmt) REDDE NIHIL</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="116.20" cy="272.46" r="2.95" data-kind="bind" data-ritual="stmt_reset" data-line="252" data-col="3" data-depth="3" data-stmt="OBSECRO"/>
+      <title>stmt: OBSECRO
+rituale: stmt_reset
+depth: 3
+line: 252
+
+source:
+OBSECRO stmt_reset(stmt)</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="145.06" cy="261.01" r="3.60" data-kind="term" data-ritual="stmt_reset" data-line="253" data-col="3" data-depth="3" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: stmt_reset
+depth: 3
+line: 253
+
+source:
+REDDE</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-main" cx="82.05" cy="264.33" r="6.10" data-kind="rituale" data-ritual="stmt_finalize" data-line="256" data-col="1" data-depth="3" data-stmt="RITUALE" data-loops="0" data-calls="0"/>
+      <title>RITUALE stmt_finalize
+stmt: 2
+depth: 3
+loops: 0
+calls: 0
+source:
+RITUALE stmt_finalize(SPECULUM NIHIL stmt) REDDE NIHIL</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="108.02" cy="263.09" r="2.95" data-kind="bind" data-ritual="stmt_finalize" data-line="257" data-col="3" data-depth="3" data-stmt="OBSECRO"/>
+      <title>stmt: OBSECRO
+rituale: stmt_finalize
+depth: 3
+line: 257
+
+source:
+OBSECRO stmt_finalize(stmt)</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="137.60" cy="253.66" r="3.60" data-kind="term" data-ritual="stmt_finalize" data-line="258" data-col="3" data-depth="3" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: stmt_finalize
+depth: 3
+line: 258
+
+source:
+REDDE</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-main" cx="83.56" cy="259.77" r="6.10" data-kind="rituale" data-ritual="db_begin" data-line="261" data-col="1" data-depth="3" data-stmt="RITUALE" data-loops="0" data-calls="0"/>
+      <title>RITUALE db_begin
+stmt: 2
+depth: 3
+loops: 0
+calls: 0
+source:
+RITUALE db_begin(SPECULUM NIHIL db) REDDE NIHIL</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="109.55" cy="259.20" r="2.95" data-kind="bind" data-ritual="db_begin" data-line="262" data-col="3" data-depth="3" data-stmt="OBSECRO"/>
+      <title>stmt: OBSECRO
+rituale: db_begin
+depth: 3
+line: 262
+
+source:
+OBSECRO db_begin(db)</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="139.37" cy="250.55" r="3.60" data-kind="term" data-ritual="db_begin" data-line="263" data-col="3" data-depth="3" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: db_begin
+depth: 3
+line: 263
+
+source:
+REDDE</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-main" cx="78.33" cy="247.08" r="6.10" data-kind="rituale" data-ritual="db_commit" data-line="266" data-col="1" data-depth="3" data-stmt="RITUALE" data-loops="0" data-calls="0"/>
+      <title>RITUALE db_commit
+stmt: 2
+depth: 3
+loops: 0
+calls: 0
+source:
+RITUALE db_commit(SPECULUM NIHIL db) REDDE NIHIL</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="104.30" cy="248.38" r="2.95" data-kind="bind" data-ritual="db_commit" data-line="267" data-col="3" data-depth="3" data-stmt="OBSECRO"/>
+      <title>stmt: OBSECRO
+rituale: db_commit
+depth: 3
+line: 267
+
+source:
+OBSECRO db_commit(db)</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="133.86" cy="257.88" r="3.60" data-kind="term" data-ritual="db_commit" data-line="268" data-col="3" data-depth="3" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: db_commit
+depth: 3
+line: 268
+
+source:
+REDDE</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-main" cx="80.60" cy="232.28" r="6.10" data-kind="rituale" data-ritual="db_rollback" data-line="271" data-col="1" data-depth="3" data-stmt="RITUALE" data-loops="0" data-calls="0"/>
+      <title>RITUALE db_rollback
+stmt: 2
+depth: 3
+loops: 0
+calls: 0
+source:
+RITUALE db_rollback(SPECULUM NIHIL db) REDDE NIHIL</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="106.36" cy="235.77" r="2.95" data-kind="bind" data-ritual="db_rollback" data-line="272" data-col="3" data-depth="3" data-stmt="OBSECRO"/>
+      <title>stmt: OBSECRO
+rituale: db_rollback
+depth: 3
+line: 272
+
+source:
+OBSECRO db_rollback(db)</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="135.02" cy="247.71" r="3.60" data-kind="term" data-ritual="db_rollback" data-line="273" data-col="3" data-depth="3" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: db_rollback
+depth: 3
+line: 273
+
+source:
+REDDE</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-main" cx="90.33" cy="235.10" r="5.95" data-kind="rituale" data-ritual="db_scalar_int" data-line="276" data-col="1" data-depth="3" data-stmt="RITUALE" data-loops="0" data-calls="0"/>
+      <title>RITUALE db_scalar_int
+stmt: 1
+depth: 3
+loops: 0
+calls: 0
+source:
+RITUALE db_scalar_int(SPECULUM NIHIL db, VERBUM sql) REDDE REX</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="116.13" cy="238.35" r="2.95" data-kind="bind" data-ritual="db_scalar_int" data-depth="3" data-stmt="EVOCA"/>
+      <title>stmt: EVOCA
+rituale: db_scalar_int
+depth: 3
+line: 0
+
+source:
+stmt: EVOCA
+rituale: db_scalar_int</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="146.90" cy="234.17" r="3.60" data-kind="term" data-ritual="db_scalar_int" data-line="277" data-col="3" data-depth="3" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: db_scalar_int
+depth: 3
+line: 277
+
+source:
+REDDE OBSECRO db_scalar_int(db, sql)</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-main" cx="82.06" cy="204.89" r="5.95" data-kind="rituale" data-ritual="db_scalar_text" data-line="280" data-col="1" data-depth="3" data-stmt="RITUALE" data-loops="0" data-calls="0"/>
+      <title>RITUALE db_scalar_text
+stmt: 1
+depth: 3
+loops: 0
+calls: 0
+source:
+RITUALE db_scalar_text(SPECULUM NIHIL db, VERBUM sql) REDDE VERBUM</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="107.00" cy="212.22" r="2.95" data-kind="bind" data-ritual="db_scalar_text" data-depth="3" data-stmt="EVOCA"/>
+      <title>stmt: EVOCA
+rituale: db_scalar_text
+depth: 3
+line: 0
+
+source:
+stmt: EVOCA
+rituale: db_scalar_text</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="138.04" cy="213.00" r="3.60" data-kind="term" data-ritual="db_scalar_text" data-line="281" data-col="3" data-depth="3" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: db_scalar_text
+depth: 3
+line: 281
+
+source:
+REDDE OBSECRO db_scalar_text(db, sql)</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-main" cx="96.87" cy="210.36" r="5.95" data-kind="rituale" data-ritual="sqrt_real" data-line="284" data-col="1" data-depth="3" data-stmt="RITUALE" data-loops="0" data-calls="0"/>
+      <title>RITUALE sqrt_real
+stmt: 1
+depth: 3
+loops: 0
+calls: 0
+source:
+RITUALE sqrt_real(UMBRA x) REDDE UMBRA</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="121.86" cy="217.53" r="2.95" data-kind="bind" data-ritual="sqrt_real" data-depth="3" data-stmt="EVOCA"/>
+      <title>stmt: EVOCA
+rituale: sqrt_real
+depth: 3
+line: 0
+
+source:
+stmt: EVOCA
+rituale: sqrt_real</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="148.49" cy="233.49" r="3.60" data-kind="term" data-ritual="sqrt_real" data-line="285" data-col="3" data-depth="3" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: sqrt_real
+depth: 3
+line: 285
+
+source:
+REDDE OBSECRO math_sqrt(x)</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-main" cx="97.02" cy="191.72" r="5.95" data-kind="rituale" data-ritual="cbrt_real" data-line="288" data-col="1" data-depth="3" data-stmt="RITUALE" data-loops="0" data-calls="0"/>
+      <title>RITUALE cbrt_real
+stmt: 1
+depth: 3
+loops: 0
+calls: 0
+source:
+RITUALE cbrt_real(UMBRA x) REDDE UMBRA</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="121.12" cy="201.46" r="2.95" data-kind="bind" data-ritual="cbrt_real" data-depth="3" data-stmt="EVOCA"/>
+      <title>stmt: EVOCA
+rituale: cbrt_real
+depth: 3
+line: 0
+
+source:
+stmt: EVOCA
+rituale: cbrt_real</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="145.94" cy="220.13" r="3.60" data-kind="term" data-ritual="cbrt_real" data-line="289" data-col="3" data-depth="3" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: cbrt_real
+depth: 3
+line: 289
+
+source:
+REDDE OBSECRO math_cbrt(x)</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-main" cx="106.49" cy="179.44" r="5.95" data-kind="rituale" data-ritual="pow_real" data-line="292" data-col="1" data-depth="3" data-stmt="RITUALE" data-loops="0" data-calls="0"/>
+      <title>RITUALE pow_real
+stmt: 1
+depth: 3
+loops: 0
+calls: 0
+source:
+RITUALE pow_real(UMBRA base, UMBRA exp) REDDE UMBRA</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="129.63" cy="191.29" r="2.95" data-kind="bind" data-ritual="pow_real" data-depth="3" data-stmt="EVOCA"/>
+      <title>stmt: EVOCA
+rituale: pow_real
+depth: 3
+line: 0
+
+source:
+stmt: EVOCA
+rituale: pow_real</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="159.98" cy="197.84" r="3.60" data-kind="term" data-ritual="pow_real" data-line="293" data-col="3" data-depth="3" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: pow_real
+depth: 3
+line: 293
+
+source:
+REDDE OBSECRO math_pow(base, exp)</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-main" cx="120.13" cy="156.34" r="6.25" data-kind="rituale" data-ritual="abs_real" data-line="296" data-col="1" data-depth="5" data-stmt="RITUALE" data-loops="0" data-calls="0"/>
+      <title>RITUALE abs_real
+stmt: 3
+depth: 5
+loops: 0
+calls: 0
+source:
+RITUALE abs_real(UMBRA x) REDDE UMBRA</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="134.56" cy="196.69" r="4.80" data-kind="branch" data-ritual="abs_real" data-line="297" data-col="3" data-depth="5" data-stmt="SI"/>
+      <title>stmt: SI
+rituale: abs_real
+depth: 5
+line: 297
+
+source:
+SI x &lt; 0.0</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="170.02" cy="183.01" r="4.00" data-kind="term" data-ritual="abs_real" data-line="298" data-col="5" data-depth="5" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: abs_real
+depth: 5
+line: 298
+
+source:
+REDDE 0.0 - x</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-main" cx="129.56" cy="144.90" r="6.70" data-kind="rituale" data-ritual="floor_real" data-line="303" data-col="1" data-depth="7" data-stmt="RITUALE" data-loops="0" data-calls="2"/>
+      <title>RITUALE floor_real
+stmt: 6
+depth: 7
+loops: 0
+calls: 2
+source:
+RITUALE floor_real(UMBRA x) REDDE REX</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="173.19" cy="151.29" r="5.80" data-kind="branch" data-ritual="floor_real" data-line="305" data-col="3" data-depth="7" data-stmt="SI"/>
+      <title>stmt: SI
+rituale: floor_real
+depth: 7
+line: 305
+
+source:
+SI x &lt; 0.0</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="149.09" cy="162.06" r="3.10" data-kind="bind" data-ritual="floor_real" data-line="304" data-col="3" data-depth="7" data-stmt="EVOCA"/>
+      <title>stmt: EVOCA
+rituale: floor_real
+depth: 7
+line: 304
+
+source:
+EVOCA REX truncated AD cast GENUS(REX)(x)</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="166.35" cy="187.87" r="4.00" data-kind="term" data-ritual="floor_real" data-line="308" data-col="7" data-depth="7" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: floor_real
+depth: 7
+line: 308
+
+source:
+REDDE truncated - 1</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-main" cx="168.92" cy="124.39" r="6.70" data-kind="rituale" data-ritual="ceil_real" data-line="314" data-col="1" data-depth="7" data-stmt="RITUALE" data-loops="0" data-calls="2"/>
+      <title>RITUALE ceil_real
+stmt: 6
+depth: 7
+loops: 0
+calls: 2
+source:
+RITUALE ceil_real(UMBRA x) REDDE REX</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="209.35" cy="142.01" r="5.80" data-kind="branch" data-ritual="ceil_real" data-line="316" data-col="3" data-depth="7" data-stmt="SI"/>
+      <title>stmt: SI
+rituale: ceil_real
+depth: 7
+line: 316
+
+source:
+SI x &gt; 0.0</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="183.26" cy="146.08" r="3.10" data-kind="bind" data-ritual="ceil_real" data-line="315" data-col="3" data-depth="7" data-stmt="EVOCA"/>
+      <title>stmt: EVOCA
+rituale: ceil_real
+depth: 7
+line: 315
+
+source:
+EVOCA REX truncated AD cast GENUS(REX)(x)</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="193.15" cy="175.51" r="4.00" data-kind="term" data-ritual="ceil_real" data-line="319" data-col="7" data-depth="7" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: ceil_real
+depth: 7
+line: 319
+
+source:
+REDDE truncated + 1</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-main" cx="203.72" cy="111.99" r="6.25" data-kind="rituale" data-ritual="round_real" data-line="325" data-col="1" data-depth="6" data-stmt="RITUALE" data-loops="0" data-calls="2"/>
+      <title>RITUALE round_real
+stmt: 3
+depth: 6
+loops: 0
+calls: 2
+source:
+RITUALE round_real(UMBRA x) REDDE REX</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="193.27" cy="153.55" r="4.80" data-kind="branch" data-ritual="round_real" data-line="326" data-col="3" data-depth="6" data-stmt="SI"/>
+      <title>stmt: SI
+rituale: round_real
+depth: 6
+line: 326
+
+source:
+SI x &gt;= 0.0</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="230.35" cy="161.90" r="4.00" data-kind="term" data-ritual="round_real" data-line="327" data-col="5" data-depth="6" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: round_real
+depth: 6
+line: 327
+
+source:
+REDDE CONIURA floor_real(x + 0.5)</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-main" cx="201.71" cy="111.87" r="5.95" data-kind="rituale" data-ritual="sin_real" data-line="332" data-col="1" data-depth="3" data-stmt="RITUALE" data-loops="0" data-calls="0"/>
+      <title>RITUALE sin_real
+stmt: 1
+depth: 3
+loops: 0
+calls: 0
+source:
+RITUALE sin_real(UMBRA x) REDDE UMBRA</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="210.88" cy="136.21" r="2.95" data-kind="bind" data-ritual="sin_real" data-depth="3" data-stmt="EVOCA"/>
+      <title>stmt: EVOCA
+rituale: sin_real
+depth: 3
+line: 0
+
+source:
+stmt: EVOCA
+rituale: sin_real</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="228.94" cy="161.46" r="3.60" data-kind="term" data-ritual="sin_real" data-line="333" data-col="3" data-depth="3" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: sin_real
+depth: 3
+line: 333
+
+source:
+REDDE OBSECRO math_sin(x)</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-main" cx="242.40" cy="115.46" r="5.95" data-kind="rituale" data-ritual="cos_real" data-line="336" data-col="1" data-depth="3" data-stmt="RITUALE" data-loops="0" data-calls="0"/>
+      <title>RITUALE cos_real
+stmt: 1
+depth: 3
+loops: 0
+calls: 0
+source:
+RITUALE cos_real(UMBRA x) REDDE UMBRA</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="244.91" cy="141.34" r="2.95" data-kind="bind" data-ritual="cos_real" data-depth="3" data-stmt="EVOCA"/>
+      <title>stmt: EVOCA
+rituale: cos_real
+depth: 3
+line: 0
+
+source:
+stmt: EVOCA
+rituale: cos_real</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="255.76" cy="170.43" r="3.60" data-kind="term" data-ritual="cos_real" data-line="337" data-col="3" data-depth="3" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: cos_real
+depth: 3
+line: 337
+
+source:
+REDDE OBSECRO math_cos(x)</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-main" cx="241.08" cy="114.22" r="5.95" data-kind="rituale" data-ritual="tan_real" data-line="340" data-col="1" data-depth="3" data-stmt="RITUALE" data-loops="0" data-calls="0"/>
+      <title>RITUALE tan_real
+stmt: 1
+depth: 3
+loops: 0
+calls: 0
+source:
+RITUALE tan_real(UMBRA x) REDDE UMBRA</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="243.80" cy="140.08" r="2.95" data-kind="bind" data-ritual="tan_real" data-depth="3" data-stmt="EVOCA"/>
+      <title>stmt: EVOCA
+rituale: tan_real
+depth: 3
+line: 0
+
+source:
+stmt: EVOCA
+rituale: tan_real</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="254.90" cy="169.07" r="3.60" data-kind="term" data-ritual="tan_real" data-line="341" data-col="3" data-depth="3" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: tan_real
+depth: 3
+line: 341
+
+source:
+REDDE OBSECRO math_tan(x)</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-main" cx="258.20" cy="107.05" r="5.95" data-kind="rituale" data-ritual="log_real" data-line="344" data-col="1" data-depth="3" data-stmt="RITUALE" data-loops="0" data-calls="0"/>
+      <title>RITUALE log_real
+stmt: 1
+depth: 3
+loops: 0
+calls: 0
+source:
+RITUALE log_real(UMBRA x) REDDE UMBRA</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="257.82" cy="133.05" r="2.95" data-kind="bind" data-ritual="log_real" data-depth="3" data-stmt="EVOCA"/>
+      <title>stmt: EVOCA
+rituale: log_real
+depth: 3
+line: 0
+
+source:
+stmt: EVOCA
+rituale: log_real</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="249.38" cy="162.93" r="3.60" data-kind="term" data-ritual="log_real" data-line="345" data-col="3" data-depth="3" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: log_real
+depth: 3
+line: 345
+
+source:
+REDDE OBSECRO math_log(x)</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-main" cx="281.66" cy="111.66" r="5.95" data-kind="rituale" data-ritual="exp_real" data-line="348" data-col="1" data-depth="3" data-stmt="RITUALE" data-loops="0" data-calls="0"/>
+      <title>RITUALE exp_real
+stmt: 1
+depth: 3
+loops: 0
+calls: 0
+source:
+RITUALE exp_real(UMBRA x) REDDE UMBRA</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="277.11" cy="137.25" r="2.95" data-kind="bind" data-ritual="exp_real" data-depth="3" data-stmt="EVOCA"/>
+      <title>stmt: EVOCA
+rituale: exp_real
+depth: 3
+line: 0
+
+source:
+stmt: EVOCA
+rituale: exp_real</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="263.98" cy="165.39" r="3.60" data-kind="term" data-ritual="exp_real" data-line="349" data-col="3" data-depth="3" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: exp_real
+depth: 3
+line: 349
+
+source:
+REDDE OBSECRO math_exp(x)</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="240.35" cy="246.99" r="4.88" data-kind="bind" data-ritual="read_all" data-depth="3" data-stmt="EVOCA"/>
+      <title>stmt: EVOCA
+rituale: read_all
+depth: 3
+line: 0
+
+source:
+stmt: EVOCA
+rituale: read_all</title>
+    </g>
+  </g>
+  <g id="ornaments">
+    <circle class="orn" cx="453.97" cy="223.37" r="0.90"/>
+    <circle class="orn" cx="453.94" cy="303.91" r="1.90"/>
+    <circle class="orn" cx="397.06" cy="397.54" r="2.90"/>
+    <circle class="orn" cx="306.02" cy="451.12" r="0.90"/>
+    <circle class="orn" cx="246.24" cy="454.48" r="1.90"/>
+    <circle class="orn" cx="154.79" cy="432.59" r="2.90"/>
+    <circle class="orn" cx="84.91" cy="366.29" r="0.90"/>
+    <circle class="orn" cx="52.74" cy="214.38" r="1.90"/>
+    <circle class="orn" cx="79.86" cy="144.75" r="2.90"/>
+    <circle class="orn" cx="147.13" cy="89.97" r="0.90"/>
+    <circle class="orn" cx="185.22" cy="70.45" r="1.90"/>
+    <circle class="orn" cx="292.14" cy="58.88" r="2.90"/>
+    <circle class="orn" cx="352.45" cy="82.28" r="0.90"/>
+    <circle class="orn" cx="424.58" cy="149.48" r="1.90"/>
+  </g>
+  <g id="signature">
+    <text class="hash" x="256" y="496" text-anchor="middle">ba1d4ea5b7691b6b</text>
+    <text class="label" x="256" y="18" text-anchor="middle">network • sigillum v2.1 • 70 rituale(s) • 108 stmt • depth 7</text>
+  </g>
+</svg>

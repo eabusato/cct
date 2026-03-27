@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <defs>
+    <style><![CDATA[
+      .bg { fill: #f5f0e4; }
+      .base { stroke: #2a221c; stroke-width: 1.60; fill: none; opacity: 0.78; }
+      .primary { stroke: #241913; stroke-width: 2.80; fill: none; stroke-linecap: round; stroke-linejoin: round; }
+      .call { stroke: #5b2a22; stroke-width: 2.0; fill: none; stroke-linecap: round; opacity: 0.9; }
+      .branch { stroke: #6b342d; stroke-width: 1.6; fill: none; stroke-linecap: round; }
+      .loop { stroke: #2d5f5a; stroke-width: 1.6; fill: none; stroke-linecap: round; }
+      .bind { stroke: #73493d; stroke-width: 1.4; fill: none; stroke-linecap: round; }
+      .term { stroke: #201814; stroke-width: 1.7; fill: none; stroke-linecap: round; }
+      .node-main { fill: #fffaf1; stroke: #201814; stroke-width: 2.0; }
+      .node-entry { fill: #efe6d4; stroke: #201814; stroke-width: 2.4; }
+      .node-aux { fill: #f6efe0; stroke: #4f4339; stroke-width: 1.3; }
+      .node-loop { fill: #edf3f1; stroke: #2d5f5a; stroke-width: 1.4; }
+      .node-term { fill: #f3e7e3; stroke: #5a2a23; stroke-width: 1.4; }
+      .orn { stroke: #355d58; stroke-width: 1.0; fill: none; opacity: 0.55; }
+      .hash { fill: #1f1a17; font: 10px monospace; letter-spacing: 0.8px; }
+      .label { fill: #1f1a17; font: 8px monospace; opacity: 0.7; }
+    ]]></style>
+  </defs>
+  <rect class="bg" x="0" y="0" width="512" height="512"/>
+  <g id="foundation">
+    <circle class="base" cx="256" cy="256" r="226"/>
+    <ellipse class="base" cx="256" cy="256" rx="198" ry="187.27" opacity="0.32"/>
+  </g>
+  <g id="primary_path">
+    <path class="primary" d="M 204.96 99.83 Q 296.50 220.18 413.96 315.41" stroke-width="3.20" opacity="0.96"/>
+    <path class="primary" d="M 413.96 315.41 Q 335.35 345.04 277.83 406.29" stroke-width="2.60" opacity="0.96"/>
+    <path class="primary" d="M 277.83 406.29 Q 218.74 361.27 144.48 363.43" stroke-width="2.60" opacity="0.96"/>
+  </g>
+  <g id="call_links">
+    <path class="call" d="M 204.96 99.83 Q 198.17 263.34 277.83 406.29" stroke-width="3.00" opacity="0.90"/>
+    <path class="call" d="M 204.96 99.83 Q 127.91 220.89 144.48 363.43" stroke-width="3.00" opacity="0.90"/>
+  </g>
+  <g id="branches">
+    <path class="branch" d="M 413.96 315.41 Q 410.71 289.33 386.38 279.39" stroke-width="2.10" opacity="0.85"/>
+    <path class="branch" d="M 277.83 406.29 Q 296.13 391.34 296.48 367.71" stroke-width="1.70" opacity="0.85"/>
+    <path class="branch" d="M 204.96 99.83 Q 190.09 117.86 193.17 141.03" stroke-width="1.70" opacity="0.85"/>
+    <path class="branch" d="M 271.75 249.25 Q 340.30 287.82 413.96 315.41" stroke-width="2.10" opacity="0.85"/>
+    <path class="branch" d="M 271.75 249.25 Q 268.36 328.02 277.83 406.29" stroke-width="2.10" opacity="0.85"/>
+    <path class="branch" d="M 271.75 249.25 Q 201.41 298.87 144.48 363.43" stroke-width="1.70" opacity="0.85"/>
+    <path class="branch" d="M 271.75 249.25 Q 246.88 170.73 204.96 99.83" stroke-width="2.10" opacity="0.85"/>
+  </g>
+  <g id="loops">
+  </g>
+  <g id="bindings">
+    <path class="bind" d="M 413.96 315.41 Q 404.71 303.09 389.63 306.26" stroke-width="1.28" opacity="0.85"/>
+    <line class="bind" x1="407.69" y1="317.32" x2="410.50" y2="309.83" opacity="0.75"/>
+    <line class="bind" x1="394.50" y1="305.37" x2="400.40" y2="304.30" opacity="0.58"/>
+    <path class="bind" d="M 277.83 406.29 Q 280.88 392.71 274.09 380.56" stroke-width="1.60" opacity="0.85"/>
+    <line class="bind" x1="273.12" y1="401.72" x2="281.04" y2="400.57" opacity="0.75"/>
+    <line class="bind" x1="271.76" y1="399.29" x2="281.66" y2="397.85" opacity="0.75"/>
+    <line class="bind" x1="272.38" y1="396.57" x2="280.29" y2="395.42" opacity="0.75"/>
+    <line class="bind" x1="271.01" y1="394.14" x2="280.91" y2="392.70" opacity="0.75"/>
+    <line class="bind" x1="271.63" y1="391.42" x2="279.54" y2="390.27" opacity="0.75"/>
+    <line class="bind" x1="279.61" y1="381.16" x2="285.57" y2="381.82" opacity="0.58"/>
+    <line class="bind" x1="275.13" y1="386.01" x2="276.81" y2="394.85" opacity="0.58"/>
+    <line class="bind" x1="269.02" y1="382.81" x2="263.54" y2="385.25" opacity="0.58"/>
+    <line class="bind" x1="269.21" y1="377.92" x2="261.28" y2="373.65" opacity="0.58"/>
+    <line class="bind" x1="276.32" y1="375.47" x2="278.72" y2="369.98" opacity="0.58"/>
+    <path class="bind" d="M 144.48 363.43 Q 157.29 357.98 163.21 345.39" stroke-width="1.28" opacity="0.85"/>
+    <line class="bind" x1="145.45" y1="356.94" x2="151.00" y2="362.70" opacity="0.75"/>
+    <line class="bind" x1="168.14" y1="345.74" x2="174.13" y2="346.17" opacity="0.58"/>
+    <path class="bind" d="M 204.96 99.83 Q 204.87 113.53 213.04 124.54" stroke-width="1.80" opacity="0.85"/>
+    <line class="bind" x1="210.38" y1="103.53" x2="202.77" y2="106.01" opacity="0.75"/>
+    <line class="bind" x1="212.13" y1="105.69" x2="202.63" y2="108.80" opacity="0.75"/>
+    <line class="bind" x1="211.99" y1="108.47" x2="204.39" y2="110.96" opacity="0.75"/>
+    <line class="bind" x1="213.75" y1="110.63" x2="204.25" y2="113.74" opacity="0.75"/>
+    <line class="bind" x1="213.61" y1="113.41" x2="206.00" y2="115.90" opacity="0.75"/>
+    <line class="bind" x1="215.37" y1="115.57" x2="205.86" y2="118.68" opacity="0.75"/>
+    <line class="bind" x1="219.79" y1="125.30" x2="225.76" y2="125.97" opacity="0.58"/>
+    <line class="bind" x1="216.15" y1="130.59" x2="220.26" y2="138.59" opacity="0.58"/>
+    <line class="bind" x1="207.23" y1="128.08" x2="202.10" y2="131.20" opacity="0.58"/>
+    <line class="bind" x1="208.35" y1="119.62" x2="202.15" y2="113.09" opacity="0.58"/>
+    <line class="bind" x1="213.29" y1="117.75" x2="213.51" y2="111.75" opacity="0.58"/>
+  </g>
+  <g id="terminals">
+    <path class="term" d="M 413.96 315.41 Q 388.35 300.24 358.73 303.18" stroke-width="1.90" opacity="0.90"/>
+    <path class="term" d="M 277.83 406.29 Q 275.58 377.47 261.86 352.02" stroke-width="1.80" opacity="0.90"/>
+    <path class="term" d="M 204.96 99.83 Q 212.67 127.56 229.96 150.57" stroke-width="1.65" opacity="0.90"/>
+  </g>
+  <g id="nodes">
+    <circle class="node-main" cx="413.96" cy="315.41" r="7.00"/>
+    <circle class="node-aux" cx="386.38" cy="279.39" r="5.80"/>
+    <circle class="node-aux" cx="389.63" cy="306.26" r="2.95"/>
+    <circle class="node-term" cx="358.73" cy="303.18" r="4.60"/>
+    <circle class="node-main" cx="277.83" cy="406.29" r="7.15"/>
+    <circle class="node-aux" cx="296.48" cy="367.71" r="4.80"/>
+    <circle class="node-aux" cx="274.09" cy="380.56" r="3.55"/>
+    <circle class="node-term" cx="261.86" cy="352.02" r="4.00"/>
+    <circle class="node-main" cx="144.48" cy="363.43" r="6.10"/>
+    <circle class="node-aux" cx="163.21" cy="345.39" r="2.95"/>
+    <circle class="node-entry" cx="204.96" cy="99.83" r="12.80"/>
+    <circle class="node-aux" cx="193.17" cy="141.03" r="4.80"/>
+    <circle class="node-aux" cx="213.04" cy="124.54" r="4.80"/>
+    <circle class="node-term" cx="229.96" cy="150.57" r="3.60"/>
+    <circle class="node-aux" cx="271.75" cy="249.25" r="5.00"/>
+  </g>
+  <g id="ornaments">
+    <circle class="orn" cx="457.43" cy="237.05" r="0.90"/>
+    <circle class="orn" cx="430.04" cy="351.87" r="1.90"/>
+    <circle class="orn" cx="395.71" cy="408.40" r="2.90"/>
+    <circle class="orn" cx="332.50" cy="443.46" r="0.90"/>
+    <circle class="orn" cx="172.53" cy="445.08" r="1.90"/>
+    <circle class="orn" cx="153.57" cy="437.51" r="2.90"/>
+    <circle class="orn" cx="95.82" cy="382.23" r="0.90"/>
+    <circle class="orn" cx="53.70" cy="253.19" r="1.90"/>
+    <circle class="orn" cx="63.99" cy="203.09" r="2.90"/>
+    <circle class="orn" cx="155.24" cy="76.99" r="0.90"/>
+    <circle class="orn" cx="192.99" cy="59.68" r="1.90"/>
+    <circle class="orn" cx="260.48" cy="52.50" r="2.90"/>
+    <circle class="orn" cx="394.07" cy="101.53" r="0.90"/>
+    <circle class="orn" cx="437.03" cy="149.91" r="1.90"/>
+  </g>
+  <g id="signature">
+    <text class="hash" x="256" y="496" text-anchor="middle">c085a04c931336a7</text>
+    <text class="label" x="256" y="18" text-anchor="middle">network • sigillum v2.1 • 4 rituale(s) • 91 stmt • depth 6</text>
+  </g>
+</svg>

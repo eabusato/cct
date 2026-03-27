@@ -226,7 +226,7 @@ RITUALE instrument_buffer_drain() REDDE SPECULUM NIHIL
     CONIURA fluxus_push(spans, SPECULUM span)
     VINCIRE i AD i + 1
   FIN DUM
-  CONIURA instrument_buffer_clear()
+  OBSECRO instr_builtin_buffer_discard_closed()
   REDDE spans
 EXPLICIT RITUALE
 

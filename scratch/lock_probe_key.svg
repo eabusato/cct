@@ -1,0 +1,221 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512" role="img" aria-label="CCT local sigilo">
+  <desc>Deterministic semantic sigil for a single CCT module.</desc>
+  <defs>
+    <style><![CDATA[
+      .bg { fill: #f5f0e4; }
+      .base { stroke: #2a221c; stroke-width: 1.60; fill: none; opacity: 0.78; }
+      .primary { stroke: #241913; stroke-width: 2.80; fill: none; stroke-linecap: round; stroke-linejoin: round; }
+      .call { stroke: #5b2a22; stroke-width: 2.0; fill: none; stroke-linecap: round; opacity: 0.9; }
+      .branch { stroke: #6b342d; stroke-width: 1.6; fill: none; stroke-linecap: round; }
+      .loop { stroke: #2d5f5a; stroke-width: 1.6; fill: none; stroke-linecap: round; }
+      .bind { stroke: #73493d; stroke-width: 1.4; fill: none; stroke-linecap: round; }
+      .term { stroke: #201814; stroke-width: 1.7; fill: none; stroke-linecap: round; }
+      .node-main { fill: #fffaf1; stroke: #201814; stroke-width: 2.0; }
+      .node-entry { fill: #efe6d4; stroke: #201814; stroke-width: 2.4; }
+      .node-aux { fill: #f6efe0; stroke: #4f4339; stroke-width: 1.3; }
+      .node-loop { fill: #edf3f1; stroke: #2d5f5a; stroke-width: 1.4; }
+      .node-term { fill: #f3e7e3; stroke: #5a2a23; stroke-width: 1.4; }
+      .orn { stroke: #355d58; stroke-width: 1.0; fill: none; opacity: 0.55; }
+      .hash { fill: #1f1a17; font: 10px monospace; letter-spacing: 0.8px; }
+      .label { fill: #1f1a17; font: 8px monospace; opacity: 0.7; }
+      .node-wrap, .edge-wrap { cursor: help; }
+      .node-wrap:hover > circle { opacity: 0.96; }
+      .edge-wrap:hover > path, .edge-wrap:hover > line { opacity: 1.0; }
+    ]]></style>
+  </defs>
+  <rect class="bg" x="0" y="0" width="512" height="512"/>
+  <g id="foundation">
+    <circle class="base" cx="256" cy="256" r="226"/>
+  </g>
+  <g id="primary_path">
+    <g class="edge-wrap">
+    <path class="primary" d="M 422.46 227.91 Q 263.22 226.56 106.99 257.45" stroke-width="3.20" opacity="0.96"/>
+      <title>edge: primary
+main -&gt; make_key
+weight: 1
+
+path:
+main -&gt; make_key</title>
+    </g>
+  </g>
+  <g id="call_links">
+    <g class="edge-wrap">
+    <path class="call" d="M 422.46 227.91 Q 262.00 213.61 106.99 257.45" stroke-width="2.15" opacity="0.74" data-kind="call" data-from="main" data-to="make_key" data-weight="1" data-self-loop="false"/>
+      <title>edge: call
+main -&gt; make_key
+calls: 1
+
+path:
+main -&gt; make_key</title>
+    </g>
+  </g>
+  <g id="branches">
+    <g class="edge-wrap">
+    <path class="branch" d="M 422.46 227.91 Q 408.58 206.69 383.46 210.15" stroke-width="1.70" opacity="0.85"/>
+      <title>edge: branch
+main -&gt; main
+weight: 2
+
+path:
+main -&gt; main</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="branch" d="M 262.75 265.97 Q 345.75 260.12 422.46 227.91" stroke-width="2.10" opacity="0.85"/>
+      <title>edge: branch
+main -&gt; main
+weight: 5
+
+path:
+main -&gt; main</title>
+    </g>
+  </g>
+  <g id="loops">
+  </g>
+  <g id="bindings">
+    <g class="edge-wrap">
+    <path class="bind" d="M 106.99 257.45 Q 120.04 262.66 132.99 257.20" stroke-width="1.60" opacity="0.85"/>
+    <line class="bind" x1="112.15" y1="253.40" x2="112.23" y2="261.40" opacity="0.75"/>
+    <line class="bind" x1="114.74" y1="252.37" x2="114.84" y2="262.37" opacity="0.75"/>
+    <line class="bind" x1="117.35" y1="253.35" x2="117.43" y2="261.35" opacity="0.75"/>
+    <line class="bind" x1="119.94" y1="252.32" x2="120.04" y2="262.32" opacity="0.75"/>
+    <line class="bind" x1="122.55" y1="253.30" x2="122.63" y2="261.30" opacity="0.75"/>
+    <line class="bind" x1="138.48" y1="256.43" x2="144.43" y2="255.60" opacity="0.58"/>
+    <line class="bind" x1="133.97" y1="262.66" x2="135.56" y2="271.52" opacity="0.58"/>
+    <line class="bind" x1="129.53" y1="261.54" x2="125.80" y2="266.24" opacity="0.58"/>
+    <line class="bind" x1="129.54" y1="252.84" x2="123.96" y2="245.78" opacity="0.58"/>
+    <line class="bind" x1="133.52" y1="251.67" x2="134.10" y2="245.70" opacity="0.58"/>
+      <title>edge: bind
+make_key -&gt; make_key
+weight: 5
+
+path:
+make_key -&gt; make_key</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="bind" d="M 422.46 227.91 Q 408.22 221.63 396.83 232.23" stroke-width="1.28" opacity="0.85"/>
+    <line class="bind" x1="418.00" y1="232.72" x2="416.67" y2="224.83" opacity="0.75"/>
+    <line class="bind" x1="401.73" y1="231.56" x2="407.68" y2="230.75" opacity="0.58"/>
+      <title>edge: bind
+main -&gt; main
+weight: 1
+
+path:
+main -&gt; main</title>
+    </g>
+  </g>
+  <g id="terminals">
+    <g class="edge-wrap">
+    <path class="term" d="M 106.99 257.45 Q 134.19 267.46 163.06 264.90" stroke-width="1.65" opacity="0.90"/>
+      <title>edge: return
+make_key -&gt; make_key
+weight: 2
+
+path:
+make_key -&gt; make_key</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="term" d="M 422.46 227.91 Q 392.61 227.41 368.58 245.11" stroke-width="1.80" opacity="0.90"/>
+      <title>edge: return
+main -&gt; main
+weight: 3
+
+path:
+main -&gt; main</title>
+    </g>
+  </g>
+  <g id="nodes">
+    <g class="node-wrap">
+      <circle class="node-main" cx="106.99" cy="257.45" r="6.70" data-kind="rituale" data-ritual="make_key" data-line="12" data-col="1" data-depth="3" data-stmt="RITUALE" data-loops="0" data-calls="0"/>
+      <title>RITUALE make_key
+stmt: 6
+depth: 3
+loops: 0
+calls: 0
+source:
+RITUALE make_key() REDDE PgLockKey</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="132.99" cy="257.20" r="3.55" data-kind="bind" data-ritual="make_key" data-line="13" data-col="3" data-depth="3" data-stmt="EVOCA"/>
+      <title>stmt: EVOCA
+rituale: make_key
+depth: 3
+line: 13
+
+source:
+EVOCA PgLockKey key</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="163.06" cy="264.90" r="3.60" data-kind="term" data-ritual="make_key" data-line="18" data-col="3" data-depth="3" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: make_key
+depth: 3
+line: 18
+
+source:
+REDDE key</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-entry" cx="422.46" cy="227.91" r="8.40" data-kind="rituale" data-ritual="main" data-line="21" data-col="1" data-depth="5" data-stmt="RITUALE" data-loops="0" data-calls="2" data-entry="true"/>
+      <title>RITUALE main
+stmt: 4
+depth: 5
+loops: 0
+calls: 2
+source:
+RITUALE main() REDDE REX</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="383.46" cy="210.15" r="4.80" data-kind="branch" data-ritual="main" data-line="23" data-col="3" data-depth="5" data-stmt="SI"/>
+      <title>stmt: SI
+rituale: main
+depth: 5
+line: 23
+
+source:
+SI CONIURA compare(key.raw_name, "jobs:x") != 0</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="396.83" cy="232.23" r="2.95" data-kind="bind" data-ritual="main" data-line="22" data-col="3" data-depth="5" data-stmt="EVOCA"/>
+      <title>stmt: EVOCA
+rituale: main
+depth: 5
+line: 22
+
+source:
+EVOCA PgLockKey key AD CONIURA make_key()</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="368.58" cy="245.11" r="4.00" data-kind="term" data-ritual="main" data-line="24" data-col="5" data-depth="5" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: main
+depth: 5
+line: 24
+
+source:
+REDDE 1</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="262.75" cy="265.97" r="3.44" data-kind="bind" data-ritual="main" data-line="22" data-col="3" data-depth="5" data-stmt="EVOCA"/>
+      <title>stmt: EVOCA
+rituale: main
+depth: 5
+line: 22
+
+source:
+EVOCA PgLockKey key AD CONIURA make_key()</title>
+    </g>
+  </g>
+  <g id="ornaments">
+    <circle class="orn" cx="456.91" cy="293.71" r="0.90"/>
+    <circle class="orn" cx="344.24" cy="446.71" r="1.90"/>
+    <circle class="orn" cx="131.23" cy="421.14" r="2.90"/>
+    <circle class="orn" cx="54.93" cy="298.70" r="0.90"/>
+    <circle class="orn" cx="126.16" cy="95.70" r="1.90"/>
+    <circle class="orn" cx="320.67" cy="66.20" r="2.90"/>
+  </g>
+  <g id="signature">
+    <text class="hash" x="256" y="496" text-anchor="middle">72015f1fade7ecab</text>
+    <text class="label" x="256" y="18" text-anchor="middle">network • sigillum v2.1 • 2 rituale(s) • 10 stmt • depth 5</text>
+  </g>
+</svg>

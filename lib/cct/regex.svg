@@ -1,0 +1,1594 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512" role="img" aria-label="CCT local sigilo">
+  <desc>Deterministic semantic sigil for a single CCT module.</desc>
+  <defs>
+    <style><![CDATA[
+      .bg { fill: #f5f0e4; }
+      .base { stroke: #2a221c; stroke-width: 1.60; fill: none; opacity: 0.78; }
+      .primary { stroke: #241913; stroke-width: 2.80; fill: none; stroke-linecap: round; stroke-linejoin: round; }
+      .call { stroke: #5b2a22; stroke-width: 2.0; fill: none; stroke-linecap: round; opacity: 0.9; }
+      .branch { stroke: #6b342d; stroke-width: 1.6; fill: none; stroke-linecap: round; }
+      .loop { stroke: #2d5f5a; stroke-width: 1.6; fill: none; stroke-linecap: round; }
+      .bind { stroke: #73493d; stroke-width: 1.4; fill: none; stroke-linecap: round; }
+      .term { stroke: #201814; stroke-width: 1.7; fill: none; stroke-linecap: round; }
+      .node-main { fill: #fffaf1; stroke: #201814; stroke-width: 2.0; }
+      .node-entry { fill: #efe6d4; stroke: #201814; stroke-width: 2.4; }
+      .node-aux { fill: #f6efe0; stroke: #4f4339; stroke-width: 1.3; }
+      .node-loop { fill: #edf3f1; stroke: #2d5f5a; stroke-width: 1.4; }
+      .node-term { fill: #f3e7e3; stroke: #5a2a23; stroke-width: 1.4; }
+      .orn { stroke: #355d58; stroke-width: 1.0; fill: none; opacity: 0.55; }
+      .hash { fill: #1f1a17; font: 10px monospace; letter-spacing: 0.8px; }
+      .label { fill: #1f1a17; font: 8px monospace; opacity: 0.7; }
+      .node-wrap, .edge-wrap { cursor: help; }
+      .node-wrap:hover > circle { opacity: 0.96; }
+      .edge-wrap:hover > path, .edge-wrap:hover > line { opacity: 1.0; }
+    ]]></style>
+  </defs>
+  <rect class="bg" x="0" y="0" width="512" height="512"/>
+  <g id="foundation">
+    <circle class="base" cx="256" cy="256" r="226"/>
+    <ellipse class="base" cx="256" cy="256" rx="198" ry="186.91" opacity="0.32"/>
+  </g>
+  <g id="primary_path">
+    <g class="edge-wrap">
+    <path class="primary" d="M 296.38 113.36 Q 303.14 146.23 328.24 123.96" stroke-width="2.60" opacity="0.96"/>
+      <title>edge: primary
+regex_flag_case_insensitive -&gt; regex_flag_multiline
+weight: 1
+
+path:
+regex_flag_case_insensitive -&gt; regex_flag_multiline</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="primary" d="M 328.24 123.96 Q 327.54 150.09 344.58 130.27" stroke-width="2.60" opacity="0.96"/>
+      <title>edge: primary
+regex_flag_multiline -&gt; regex_flag_dotall
+weight: 1
+
+path:
+regex_flag_multiline -&gt; regex_flag_dotall</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="primary" d="M 344.58 130.27 Q 346.89 166.11 379.98 152.16" stroke-width="2.60" opacity="0.96"/>
+      <title>edge: primary
+regex_flag_dotall -&gt; regex_compile
+weight: 1
+
+path:
+regex_flag_dotall -&gt; regex_compile</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="primary" d="M 379.98 152.16 Q 378.72 188.95 414.00 178.41" stroke-width="2.60" opacity="0.96"/>
+      <title>edge: primary
+regex_compile -&gt; regex_compile_flags
+weight: 1
+
+path:
+regex_compile -&gt; regex_compile_flags</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="primary" d="M 414.00 178.41 Q 400.56 213.39 432.27 233.34" stroke-width="2.60" opacity="0.96"/>
+      <title>edge: primary
+regex_compile_flags -&gt; regex_match
+weight: 1
+
+path:
+regex_compile_flags -&gt; regex_match</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="primary" d="M 432.27 233.34 Q 405.85 262.44 426.84 295.67" stroke-width="2.60" opacity="0.96"/>
+      <title>edge: primary
+regex_match -&gt; regex_search
+weight: 1
+
+path:
+regex_match -&gt; regex_search</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="primary" d="M 426.84 295.67 Q 392.12 298.85 410.60 328.42" stroke-width="2.60" opacity="0.96"/>
+      <title>edge: primary
+regex_search -&gt; regex_find_all
+weight: 1
+
+path:
+regex_search -&gt; regex_find_all</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="primary" d="M 410.60 328.42 Q 381.00 325.48 395.37 351.52" stroke-width="2.60" opacity="0.96"/>
+      <title>edge: primary
+regex_find_all -&gt; regex_replace
+weight: 1
+
+path:
+regex_find_all -&gt; regex_replace</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="primary" d="M 395.37 351.52 Q 361.50 341.46 351.54 375.35" stroke-width="2.60" opacity="0.96"/>
+      <title>edge: primary
+regex_replace -&gt; regex_replace_all
+weight: 1
+
+path:
+regex_replace -&gt; regex_replace_all</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="primary" d="M 351.54 375.35 Q 322.38 367.80 336.83 394.23" stroke-width="2.60" opacity="0.96"/>
+      <title>edge: primary
+regex_replace_all -&gt; regex_search_text
+weight: 1
+
+path:
+regex_replace_all -&gt; regex_search_text</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="primary" d="M 336.83 394.23 Q 321.43 373.63 310.34 396.84" stroke-width="2.60" opacity="0.96"/>
+      <title>edge: primary
+regex_search_text -&gt; regex_split
+weight: 1
+
+path:
+regex_search_text -&gt; regex_split</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="primary" d="M 310.34 396.84 Q 281.60 376.07 265.86 407.84" stroke-width="2.60" opacity="0.96"/>
+      <title>edge: primary
+regex_split -&gt; regex_find_all_joined
+weight: 1
+
+path:
+regex_split -&gt; regex_find_all_joined</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="primary" d="M 265.86 407.84 Q 237.19 372.46 194.99 389.57" stroke-width="2.60" opacity="0.96"/>
+      <title>edge: primary
+regex_find_all_joined -&gt; regex_split_joined
+weight: 1
+
+path:
+regex_find_all_joined -&gt; regex_split_joined</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="primary" d="M 194.99 389.57 Q 177.07 363.21 150.01 380.06" stroke-width="2.60" opacity="0.96"/>
+      <title>edge: primary
+regex_split_joined -&gt; regex_free
+weight: 1
+
+path:
+regex_split_joined -&gt; regex_free</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="primary" d="M 150.01 380.06 Q 145.51 336.24 101.46 337.11" stroke-width="2.60" opacity="0.96"/>
+      <title>edge: primary
+regex_free -&gt; regex_is_match
+weight: 1
+
+path:
+regex_free -&gt; regex_is_match</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="primary" d="M 101.46 337.11 Q 106.73 288.53 70.35 255.91" stroke-width="2.60" opacity="0.96"/>
+      <title>edge: primary
+regex_is_match -&gt; regex_quick_search
+weight: 1
+
+path:
+regex_is_match -&gt; regex_quick_search</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="primary" d="M 70.35 255.91 Q 116.06 220.12 108.42 162.56" stroke-width="2.60" opacity="0.96"/>
+      <title>edge: primary
+regex_quick_search -&gt; regex_quick_search_text
+weight: 1
+
+path:
+regex_quick_search -&gt; regex_quick_search_text</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="primary" d="M 108.42 162.56 Q 142.65 173.22 156.46 140.13" stroke-width="2.60" opacity="0.96"/>
+      <title>edge: primary
+regex_quick_search_text -&gt; regex_is_email
+weight: 1
+
+path:
+regex_quick_search_text -&gt; regex_is_email</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="primary" d="M 156.46 140.13 Q 189.88 153.24 192.67 117.46" stroke-width="2.60" opacity="0.96"/>
+      <title>edge: primary
+regex_is_email -&gt; regex_is_url
+weight: 1
+
+path:
+regex_is_email -&gt; regex_is_url</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="primary" d="M 192.67 117.46 Q 205.56 139.33 216.59 116.46" stroke-width="2.60" opacity="0.96"/>
+      <title>edge: primary
+regex_is_url -&gt; regex_is_integer
+weight: 1
+
+path:
+regex_is_url -&gt; regex_is_integer</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="primary" d="M 216.59 116.46 Q 247.56 141.11 276.11 113.69" stroke-width="2.60" opacity="0.96"/>
+      <title>edge: primary
+regex_is_integer -&gt; regex_is_real
+weight: 1
+
+path:
+regex_is_integer -&gt; regex_is_real</title>
+    </g>
+  </g>
+  <g id="call_links">
+    <g class="edge-wrap">
+    <path class="call" d="M 379.98 152.16 Q 375.67 192.91 414.00 178.41" stroke-width="2.15" opacity="0.74" data-kind="call" data-from="regex_compile" data-to="regex_compile_flags" data-weight="1" data-self-loop="false"/>
+      <title>edge: call
+regex_compile -&gt; regex_compile_flags
+calls: 1
+
+path:
+regex_compile -&gt; regex_compile_flags</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="call" d="M 426.84 295.67 Q 360.55 325.51 336.83 394.23" stroke-width="2.15" opacity="0.74" data-kind="call" data-from="regex_search" data-to="regex_search_text" data-weight="1" data-self-loop="false"/>
+      <title>edge: call
+regex_search -&gt; regex_search_text
+calls: 1
+
+path:
+regex_search -&gt; regex_search_text</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="call" d="M 265.86 407.84 Q 351.83 392.92 410.60 328.42" stroke-width="2.15" opacity="0.74" data-kind="call" data-from="regex_find_all_joined" data-to="regex_find_all" data-weight="1" data-self-loop="false"/>
+      <title>edge: call
+regex_find_all_joined -&gt; regex_find_all
+calls: 1
+
+path:
+regex_find_all_joined -&gt; regex_find_all</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="call" d="M 194.99 389.57 Q 250.78 423.13 310.34 396.84" stroke-width="2.15" opacity="0.74" data-kind="call" data-from="regex_split_joined" data-to="regex_split" data-weight="1" data-self-loop="false"/>
+      <title>edge: call
+regex_split_joined -&gt; regex_split
+calls: 1
+
+path:
+regex_split_joined -&gt; regex_split</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="call" d="M 101.46 337.11 Q 259.97 273.63 379.98 152.16" stroke-width="2.15" opacity="0.74" data-kind="call" data-from="regex_is_match" data-to="regex_compile" data-weight="1" data-self-loop="false"/>
+      <title>edge: call
+regex_is_match -&gt; regex_compile
+calls: 1
+
+path:
+regex_is_match -&gt; regex_compile</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="call" d="M 101.46 337.11 Q 276.54 316.08 432.27 233.34" stroke-width="2.15" opacity="0.74" data-kind="call" data-from="regex_is_match" data-to="regex_match" data-weight="1" data-self-loop="false"/>
+      <title>edge: call
+regex_is_match -&gt; regex_match
+calls: 1
+
+path:
+regex_is_match -&gt; regex_match</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="call" d="M 101.46 337.11 Q 103.48 383.73 150.01 380.06" stroke-width="2.15" opacity="0.74" data-kind="call" data-from="regex_is_match" data-to="regex_free" data-weight="1" data-self-loop="false"/>
+      <title>edge: call
+regex_is_match -&gt; regex_free
+calls: 1
+
+path:
+regex_is_match -&gt; regex_free</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="call" d="M 70.35 255.91 Q 234.88 233.03 379.98 152.16" stroke-width="2.15" opacity="0.74" data-kind="call" data-from="regex_quick_search" data-to="regex_compile" data-weight="1" data-self-loop="false"/>
+      <title>edge: call
+regex_quick_search -&gt; regex_compile
+calls: 1
+
+path:
+regex_quick_search -&gt; regex_compile</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="call" d="M 70.35 255.91 Q 244.94 308.58 426.84 295.67" stroke-width="2.15" opacity="0.74" data-kind="call" data-from="regex_quick_search" data-to="regex_search" data-weight="1" data-self-loop="false"/>
+      <title>edge: call
+regex_quick_search -&gt; regex_search
+calls: 1
+
+path:
+regex_quick_search -&gt; regex_search</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="call" d="M 70.35 255.91 Q 80.87 336.79 150.01 380.06" stroke-width="2.15" opacity="0.74" data-kind="call" data-from="regex_quick_search" data-to="regex_free" data-weight="1" data-self-loop="false"/>
+      <title>edge: call
+regex_quick_search -&gt; regex_free
+calls: 1
+
+path:
+regex_quick_search -&gt; regex_free</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="call" d="M 108.42 162.56 Q 245.33 186.87 379.98 152.16" stroke-width="2.15" opacity="0.74" data-kind="call" data-from="regex_quick_search_text" data-to="regex_compile" data-weight="1" data-self-loop="false"/>
+      <title>edge: call
+regex_quick_search_text -&gt; regex_compile
+calls: 1
+
+path:
+regex_quick_search_text -&gt; regex_compile</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="call" d="M 108.42 162.56 Q 202.36 298.37 336.83 394.23" stroke-width="2.15" opacity="0.74" data-kind="call" data-from="regex_quick_search_text" data-to="regex_search_text" data-weight="1" data-self-loop="false"/>
+      <title>edge: call
+regex_quick_search_text -&gt; regex_search_text
+calls: 1
+
+path:
+regex_quick_search_text -&gt; regex_search_text</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="call" d="M 108.42 162.56 Q 100.51 276.80 150.01 380.06" stroke-width="2.15" opacity="0.74" data-kind="call" data-from="regex_quick_search_text" data-to="regex_free" data-weight="1" data-self-loop="false"/>
+      <title>edge: call
+regex_quick_search_text -&gt; regex_free
+calls: 1
+
+path:
+regex_quick_search_text -&gt; regex_free</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="call" d="M 156.46 140.13 Q 100.50 230.67 101.46 337.11" stroke-width="2.15" opacity="0.74" data-kind="call" data-from="regex_is_email" data-to="regex_is_match" data-weight="1" data-self-loop="false"/>
+      <title>edge: call
+regex_is_email -&gt; regex_is_match
+calls: 1
+
+path:
+regex_is_email -&gt; regex_is_match</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="call" d="M 192.67 117.46 Q 121.15 216.52 101.46 337.11" stroke-width="2.15" opacity="0.74" data-kind="call" data-from="regex_is_url" data-to="regex_is_match" data-weight="1" data-self-loop="false"/>
+      <title>edge: call
+regex_is_url -&gt; regex_is_match
+calls: 1
+
+path:
+regex_is_url -&gt; regex_is_match</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="call" d="M 216.59 116.46 Q 128.93 211.09 101.46 337.11" stroke-width="2.15" opacity="0.74" data-kind="call" data-from="regex_is_integer" data-to="regex_is_match" data-weight="1" data-self-loop="false"/>
+      <title>edge: call
+regex_is_integer -&gt; regex_is_match
+calls: 1
+
+path:
+regex_is_integer -&gt; regex_is_match</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="call" d="M 276.11 113.69 Q 166.82 208.23 101.46 337.11" stroke-width="2.15" opacity="0.74" data-kind="call" data-from="regex_is_real" data-to="regex_is_match" data-weight="1" data-self-loop="false"/>
+      <title>edge: call
+regex_is_real -&gt; regex_is_match
+calls: 1
+
+path:
+regex_is_real -&gt; regex_is_match</title>
+    </g>
+  </g>
+  <g id="branches">
+    <g class="edge-wrap">
+    <path class="branch" d="M 414.00 178.41 Q 394.60 162.29 371.55 172.51" stroke-width="1.70" opacity="0.85"/>
+      <title>edge: branch
+regex_compile_flags -&gt; regex_compile_flags
+weight: 2
+
+path:
+regex_compile_flags -&gt; regex_compile_flags</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="branch" d="M 426.84 295.67 Q 403.49 294.63 386.83 311.02" stroke-width="1.70" opacity="0.85"/>
+      <title>edge: branch
+regex_search -&gt; regex_search
+weight: 2
+
+path:
+regex_search -&gt; regex_search</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="branch" d="M 101.46 337.11 Q 119.64 322.56 121.74 299.36" stroke-width="1.70" opacity="0.85"/>
+      <title>edge: branch
+regex_is_match -&gt; regex_is_match
+weight: 2
+
+path:
+regex_is_match -&gt; regex_is_match</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="branch" d="M 70.35 255.91 Q 83.19 275.16 105.84 279.93" stroke-width="1.70" opacity="0.85"/>
+      <title>edge: branch
+regex_quick_search -&gt; regex_quick_search
+weight: 2
+
+path:
+regex_quick_search -&gt; regex_quick_search</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="branch" d="M 108.42 162.56 Q 130.03 168.60 151.25 161.27" stroke-width="1.70" opacity="0.85"/>
+      <title>edge: branch
+regex_quick_search_text -&gt; regex_quick_search_text
+weight: 2
+
+path:
+regex_quick_search_text -&gt; regex_quick_search_text</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="branch" d="M 243.19 248.87 Q 282.45 186.09 296.38 113.36" stroke-width="1.45" opacity="0.85"/>
+      <title>edge: branch
+regex_flag_case_insensitive -&gt; regex_flag_case_insensitive
+weight: 1
+
+path:
+regex_flag_case_insensitive -&gt; regex_flag_case_insensitive</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="branch" d="M 243.19 248.87 Q 319.20 211.27 379.98 152.16" stroke-width="1.70" opacity="0.85"/>
+      <title>edge: branch
+regex_flag_case_insensitive -&gt; regex_compile
+weight: 2
+
+path:
+regex_flag_case_insensitive -&gt; regex_compile</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="branch" d="M 243.19 248.87 Q 330.95 219.35 414.00 178.41" stroke-width="2.10" opacity="0.85"/>
+      <title>edge: branch
+regex_flag_case_insensitive -&gt; regex_compile_flags
+weight: 5
+
+path:
+regex_flag_case_insensitive -&gt; regex_compile_flags</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="branch" d="M 243.19 248.87 Q 332.21 283.28 426.84 295.67" stroke-width="2.10" opacity="0.85"/>
+      <title>edge: branch
+regex_flag_case_insensitive -&gt; regex_search
+weight: 6
+
+path:
+regex_flag_case_insensitive -&gt; regex_search</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="branch" d="M 243.19 248.87 Q 246.99 329.43 265.86 407.84" stroke-width="2.10" opacity="0.85"/>
+      <title>edge: branch
+regex_flag_case_insensitive -&gt; regex_find_all_joined
+weight: 4
+
+path:
+regex_flag_case_insensitive -&gt; regex_find_all_joined</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="branch" d="M 243.19 248.87 Q 211.38 316.58 194.99 389.57" stroke-width="2.10" opacity="0.85"/>
+      <title>edge: branch
+regex_flag_case_insensitive -&gt; regex_split_joined
+weight: 4
+
+path:
+regex_flag_case_insensitive -&gt; regex_split_joined</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="branch" d="M 243.19 248.87 Q 168.62 287.04 101.46 337.11" stroke-width="2.10" opacity="0.85"/>
+      <title>edge: branch
+regex_flag_case_insensitive -&gt; regex_is_match
+weight: 7
+
+path:
+regex_flag_case_insensitive -&gt; regex_is_match</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="branch" d="M 243.19 248.87 Q 156.49 245.59 70.35 255.91" stroke-width="2.10" opacity="0.85"/>
+      <title>edge: branch
+regex_flag_case_insensitive -&gt; regex_quick_search
+weight: 8
+
+path:
+regex_flag_case_insensitive -&gt; regex_quick_search</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="branch" d="M 243.19 248.87 Q 181.93 196.15 108.42 162.56" stroke-width="2.10" opacity="0.85"/>
+      <title>edge: branch
+regex_flag_case_insensitive -&gt; regex_quick_search_text
+weight: 7
+
+path:
+regex_flag_case_insensitive -&gt; regex_quick_search_text</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="branch" d="M 243.19 248.87 Q 204.81 190.53 156.46 140.13" stroke-width="1.70" opacity="0.85"/>
+      <title>edge: branch
+regex_flag_case_insensitive -&gt; regex_is_email
+weight: 2
+
+path:
+regex_flag_case_insensitive -&gt; regex_is_email</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="branch" d="M 243.19 248.87 Q 226.34 179.93 192.67 117.46" stroke-width="1.70" opacity="0.85"/>
+      <title>edge: branch
+regex_flag_case_insensitive -&gt; regex_is_url
+weight: 2
+
+path:
+regex_flag_case_insensitive -&gt; regex_is_url</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="branch" d="M 243.19 248.87 Q 235.86 181.47 216.59 116.46" stroke-width="1.70" opacity="0.85"/>
+      <title>edge: branch
+regex_flag_case_insensitive -&gt; regex_is_integer
+weight: 2
+
+path:
+regex_flag_case_insensitive -&gt; regex_is_integer</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="branch" d="M 243.19 248.87 Q 269.03 183.56 276.11 113.69" stroke-width="1.70" opacity="0.85"/>
+      <title>edge: branch
+regex_flag_case_insensitive -&gt; regex_is_real
+weight: 2
+
+path:
+regex_flag_case_insensitive -&gt; regex_is_real</title>
+    </g>
+  </g>
+  <g id="loops">
+  </g>
+  <g id="bindings">
+    <g class="edge-wrap">
+    <path class="bind" d="M 414.00 178.41 Q 398.67 176.69 390.66 189.87" stroke-width="1.68" opacity="0.85"/>
+    <line class="bind" x1="411.09" y1="184.29" x2="407.56" y2="177.11" opacity="0.75"/>
+    <line class="bind" x1="409.20" y1="186.33" x2="404.79" y2="177.36" opacity="0.75"/>
+    <line class="bind" x1="406.42" y1="186.58" x2="402.90" y2="179.40" opacity="0.75"/>
+    <line class="bind" x1="404.53" y1="188.62" x2="400.12" y2="179.65" opacity="0.75"/>
+    <line class="bind" x1="401.76" y1="188.87" x2="398.23" y2="181.69" opacity="0.75"/>
+    <line class="bind" x1="399.86" y1="190.92" x2="395.45" y2="181.94" opacity="0.75"/>
+    <line class="bind" x1="396.27" y1="190.85" x2="402.18" y2="191.88" opacity="0.58"/>
+    <line class="bind" x1="393.54" y1="194.79" x2="398.08" y2="202.56" opacity="0.58"/>
+    <line class="bind" x1="386.09" y1="193.28" x2="381.29" y2="196.88" opacity="0.58"/>
+    <line class="bind" x1="386.36" y1="186.12" x2="379.57" y2="180.21" opacity="0.58"/>
+    <line class="bind" x1="391.90" y1="184.30" x2="393.21" y2="178.45" opacity="0.58"/>
+      <title>edge: bind
+regex_compile_flags -&gt; regex_compile_flags
+weight: 6
+
+path:
+regex_compile_flags -&gt; regex_compile_flags</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="bind" d="M 432.27 233.34 Q 418.82 230.67 406.49 236.66" stroke-width="1.28" opacity="0.85"/>
+    <line class="bind" x1="427.63" y1="237.97" x2="426.61" y2="230.04" opacity="0.75"/>
+    <line class="bind" x1="411.32" y1="235.60" x2="417.18" y2="234.32" opacity="0.58"/>
+      <title>edge: bind
+regex_match -&gt; regex_match
+weight: 1
+
+path:
+regex_match -&gt; regex_match</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="bind" d="M 426.84 295.67 Q 415.16 288.51 401.52 289.79" stroke-width="1.28" opacity="0.85"/>
+    <line class="bind" x1="420.87" y1="298.39" x2="422.68" y2="290.60" opacity="0.75"/>
+    <line class="bind" x1="406.33" y1="288.62" x2="412.16" y2="287.21" opacity="0.58"/>
+      <title>edge: bind
+regex_search -&gt; regex_search
+weight: 1
+
+path:
+regex_search -&gt; regex_search</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="bind" d="M 410.60 328.42 Q 401.93 316.28 387.05 317.39" stroke-width="1.28" opacity="0.85"/>
+    <line class="bind" x1="404.19" y1="329.83" x2="407.58" y2="322.59" opacity="0.75"/>
+    <line class="bind" x1="391.93" y1="316.55" x2="397.84" y2="315.53" opacity="0.58"/>
+      <title>edge: bind
+regex_find_all -&gt; regex_find_all
+weight: 1
+
+path:
+regex_find_all -&gt; regex_find_all</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="bind" d="M 395.37 351.52 Q 387.54 339.94 373.92 336.82" stroke-width="1.28" opacity="0.85"/>
+    <line class="bind" x1="388.81" y1="351.88" x2="393.34" y2="345.28" opacity="0.75"/>
+    <line class="bind" x1="378.73" y1="335.67" x2="384.57" y2="334.28" opacity="0.58"/>
+      <title>edge: bind
+regex_replace -&gt; regex_replace
+weight: 1
+
+path:
+regex_replace -&gt; regex_replace</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="bind" d="M 351.54 375.35 Q 344.93 363.99 335.29 355.06" stroke-width="1.28" opacity="0.85"/>
+    <line class="bind" x1="345.17" y1="373.79" x2="351.41" y2="368.79" opacity="0.75"/>
+    <line class="bind" x1="340.24" y1="354.86" x2="346.23" y2="354.62" opacity="0.58"/>
+      <title>edge: bind
+regex_replace_all -&gt; regex_replace_all
+weight: 1
+
+path:
+regex_replace_all -&gt; regex_replace_all</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="bind" d="M 336.83 394.23 Q 332.76 381.55 323.71 371.78" stroke-width="1.28" opacity="0.85"/>
+    <line class="bind" x1="330.76" y1="391.76" x2="337.66" y2="387.72" opacity="0.75"/>
+    <line class="bind" x1="328.54" y1="370.69" x2="334.39" y2="369.35" opacity="0.58"/>
+      <title>edge: bind
+regex_search_text -&gt; regex_search_text
+weight: 1
+
+path:
+regex_search_text -&gt; regex_search_text</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="bind" d="M 310.34 396.84 Q 313.53 381.68 300.98 372.58" stroke-width="1.28" opacity="0.85"/>
+    <line class="bind" x1="304.74" y1="393.43" x2="312.20" y2="390.55" opacity="0.75"/>
+    <line class="bind" x1="305.93" y1="372.82" x2="311.92" y2="373.11" opacity="0.58"/>
+      <title>edge: bind
+regex_split -&gt; regex_split
+weight: 1
+
+path:
+regex_split -&gt; regex_split</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="bind" d="M 265.86 407.84 Q 273.95 394.29 264.17 381.90" stroke-width="1.36" opacity="0.85"/>
+    <line class="bind" x1="261.53" y1="402.91" x2="269.51" y2="402.39" opacity="0.75"/>
+    <line class="bind" x1="260.36" y1="400.38" x2="270.34" y2="399.73" opacity="0.75"/>
+    <line class="bind" x1="269.25" y1="382.35" x2="275.23" y2="382.88" opacity="0.58"/>
+    <line class="bind" x1="259.20" y1="383.03" x2="250.43" y2="385.04" opacity="0.58"/>
+      <title>edge: bind
+regex_find_all_joined -&gt; regex_find_all_joined
+weight: 2
+
+path:
+regex_find_all_joined -&gt; regex_find_all_joined</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="bind" d="M 194.99 389.57 Q 208.08 381.26 205.80 365.92" stroke-width="1.36" opacity="0.85"/>
+    <line class="bind" x1="193.52" y1="383.18" x2="200.79" y2="386.51" opacity="0.75"/>
+    <line class="bind" x1="193.69" y1="380.40" x2="202.78" y2="384.56" opacity="0.75"/>
+    <line class="bind" x1="210.79" y1="366.94" x2="216.67" y2="368.14" opacity="0.58"/>
+    <line class="bind" x1="200.90" y1="367.37" x2="192.27" y2="369.91" opacity="0.58"/>
+      <title>edge: bind
+regex_split_joined -&gt; regex_split_joined
+weight: 2
+
+path:
+regex_split_joined -&gt; regex_split_joined</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="bind" d="M 150.01 380.06 Q 161.95 373.17 166.89 360.29" stroke-width="1.28" opacity="0.85"/>
+    <line class="bind" x1="150.34" y1="373.51" x2="156.42" y2="378.71" opacity="0.75"/>
+    <line class="bind" x1="171.71" y1="359.13" x2="177.54" y2="357.72" opacity="0.58"/>
+      <title>edge: bind
+regex_free -&gt; regex_free
+weight: 1
+
+path:
+regex_free -&gt; regex_free</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="bind" d="M 101.46 337.11 Q 114.89 334.72 124.48 325.03" stroke-width="1.44" opacity="0.85"/>
+    <line class="bind" x1="104.20" y1="331.15" x2="107.92" y2="338.24" opacity="0.75"/>
+    <line class="bind" x1="106.04" y1="329.06" x2="110.69" y2="337.91" opacity="0.75"/>
+    <line class="bind" x1="108.81" y1="328.74" x2="112.53" y2="335.82" opacity="0.75"/>
+    <line class="bind" x1="129.64" y1="326.00" x2="135.54" y2="327.11" opacity="0.58"/>
+    <line class="bind" x1="121.96" y1="329.63" x2="117.64" y2="337.53" opacity="0.58"/>
+    <line class="bind" x1="122.00" y1="320.40" x2="119.18" y2="315.11" opacity="0.58"/>
+      <title>edge: bind
+regex_is_match -&gt; regex_is_match
+weight: 3
+
+path:
+regex_is_match -&gt; regex_is_match</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="bind" d="M 70.35 255.91 Q 83.35 259.67 96.35 255.92" stroke-width="1.44" opacity="0.85"/>
+    <line class="bind" x1="75.55" y1="251.91" x2="75.55" y2="259.91" opacity="0.75"/>
+    <line class="bind" x1="78.15" y1="250.92" x2="78.15" y2="260.92" opacity="0.75"/>
+    <line class="bind" x1="80.75" y1="251.92" x2="80.75" y2="259.92" opacity="0.75"/>
+    <line class="bind" x1="101.39" y1="257.39" x2="107.15" y2="259.06" opacity="0.58"/>
+    <line class="bind" x1="93.88" y1="260.56" x2="89.64" y2="268.49" opacity="0.58"/>
+    <line class="bind" x1="92.75" y1="252.10" x2="88.64" y2="247.73" opacity="0.58"/>
+      <title>edge: bind
+regex_quick_search -&gt; regex_quick_search
+weight: 3
+
+path:
+regex_quick_search -&gt; regex_quick_search</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="bind" d="M 108.42 162.56 Q 118.50 170.94 130.38 176.47" stroke-width="1.44" opacity="0.85"/>
+    <line class="bind" x1="114.95" y1="161.96" x2="110.67" y2="168.72" opacity="0.75"/>
+    <line class="bind" x1="117.68" y1="162.51" x2="112.33" y2="170.96" opacity="0.75"/>
+    <line class="bind" x1="119.34" y1="164.75" x2="115.06" y2="171.51" opacity="0.75"/>
+    <line class="bind" x1="135.56" y1="177.36" x2="141.47" y2="178.39" opacity="0.58"/>
+    <line class="bind" x1="128.18" y1="181.24" x2="124.41" y2="189.41" opacity="0.58"/>
+    <line class="bind" x1="128.32" y1="171.64" x2="125.97" y2="166.12" opacity="0.58"/>
+      <title>edge: bind
+regex_quick_search_text -&gt; regex_quick_search_text
+weight: 3
+
+path:
+regex_quick_search_text -&gt; regex_quick_search_text</title>
+    </g>
+  </g>
+  <g id="terminals">
+    <g class="edge-wrap">
+    <path class="term" d="M 296.38 113.36 Q 276.13 135.32 273.43 165.07" stroke-width="1.65" opacity="0.90"/>
+      <title>edge: return
+regex_flag_case_insensitive -&gt; regex_flag_case_insensitive
+weight: 2
+
+path:
+regex_flag_case_insensitive -&gt; regex_flag_case_insensitive</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="term" d="M 328.24 123.96 Q 312.61 148.31 308.38 176.93" stroke-width="1.65" opacity="0.90"/>
+      <title>edge: return
+regex_flag_multiline -&gt; regex_flag_multiline
+weight: 2
+
+path:
+regex_flag_multiline -&gt; regex_flag_multiline</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="term" d="M 344.58 130.27 Q 319.13 145.16 305.79 171.45" stroke-width="1.65" opacity="0.90"/>
+      <title>edge: return
+regex_flag_dotall -&gt; regex_flag_dotall
+weight: 2
+
+path:
+regex_flag_dotall -&gt; regex_flag_dotall</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="term" d="M 379.98 152.16 Q 353.53 163.17 331.92 181.98" stroke-width="1.65" opacity="0.90"/>
+      <title>edge: return
+regex_compile -&gt; regex_compile
+weight: 2
+
+path:
+regex_compile -&gt; regex_compile</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="term" d="M 414.00 178.41 Q 385.39 186.66 367.26 210.27" stroke-width="1.80" opacity="0.90"/>
+      <title>edge: return
+regex_compile_flags -&gt; regex_compile_flags
+weight: 3
+
+path:
+regex_compile_flags -&gt; regex_compile_flags</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="term" d="M 432.27 233.34 Q 404.07 227.58 375.71 232.55" stroke-width="1.65" opacity="0.90"/>
+      <title>edge: return
+regex_match -&gt; regex_match
+weight: 2
+
+path:
+regex_match -&gt; regex_match</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="term" d="M 426.84 295.67 Q 402.40 280.47 374.10 275.21" stroke-width="1.80" opacity="0.90"/>
+      <title>edge: return
+regex_search -&gt; regex_search
+weight: 3
+
+path:
+regex_search -&gt; regex_search</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="term" d="M 410.60 328.42 Q 391.49 305.96 363.28 297.42" stroke-width="1.65" opacity="0.90"/>
+      <title>edge: return
+regex_find_all -&gt; regex_find_all
+weight: 2
+
+path:
+regex_find_all -&gt; regex_find_all</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="term" d="M 395.37 351.52 Q 372.72 333.49 344.65 326.46" stroke-width="1.65" opacity="0.90"/>
+      <title>edge: return
+regex_replace -&gt; regex_replace
+weight: 2
+
+path:
+regex_replace -&gt; regex_replace</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="term" d="M 351.54 375.35 Q 339.70 349.50 322.79 326.64" stroke-width="1.65" opacity="0.90"/>
+      <title>edge: return
+regex_replace_all -&gt; regex_replace_all
+weight: 2
+
+path:
+regex_replace_all -&gt; regex_replace_all</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="term" d="M 336.83 394.23 Q 329.75 366.57 315.47 341.85" stroke-width="1.65" opacity="0.90"/>
+      <title>edge: return
+regex_search_text -&gt; regex_search_text
+weight: 2
+
+path:
+regex_search_text -&gt; regex_search_text</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="term" d="M 310.34 396.84 Q 304.76 367.55 282.72 347.47" stroke-width="1.65" opacity="0.90"/>
+      <title>edge: return
+regex_split -&gt; regex_split
+weight: 2
+
+path:
+regex_split -&gt; regex_split</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="term" d="M 265.86 407.84 Q 277.96 380.41 270.21 351.44" stroke-width="1.65" opacity="0.90"/>
+      <title>edge: return
+regex_find_all_joined -&gt; regex_find_all_joined
+weight: 2
+
+path:
+regex_find_all_joined -&gt; regex_find_all_joined</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="term" d="M 194.99 389.57 Q 218.22 370.87 225.54 341.96" stroke-width="1.65" opacity="0.90"/>
+      <title>edge: return
+regex_split_joined -&gt; regex_split_joined
+weight: 2
+
+path:
+regex_split_joined -&gt; regex_split_joined</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="term" d="M 150.01 380.06 Q 169.89 359.18 180.30 332.29" stroke-width="1.65" opacity="0.90"/>
+      <title>edge: return
+regex_free -&gt; regex_free
+weight: 2
+
+path:
+regex_free -&gt; regex_free</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="term" d="M 101.46 337.11 Q 129.83 332.47 154.76 318.17" stroke-width="1.80" opacity="0.90"/>
+      <title>edge: return
+regex_is_match -&gt; regex_is_match
+weight: 3
+
+path:
+regex_is_match -&gt; regex_is_match</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="term" d="M 70.35 255.91 Q 99.02 256.63 126.35 247.94" stroke-width="1.80" opacity="0.90"/>
+      <title>edge: return
+regex_quick_search -&gt; regex_quick_search
+weight: 3
+
+path:
+regex_quick_search -&gt; regex_quick_search</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="term" d="M 108.42 162.56 Q 128.19 182.97 151.45 199.28" stroke-width="1.80" opacity="0.90"/>
+      <title>edge: return
+regex_quick_search_text -&gt; regex_quick_search_text
+weight: 3
+
+path:
+regex_quick_search_text -&gt; regex_quick_search_text</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="term" d="M 156.46 140.13 Q 173.50 163.61 199.02 177.40" stroke-width="1.65" opacity="0.90"/>
+      <title>edge: return
+regex_is_email -&gt; regex_is_email
+weight: 2
+
+path:
+regex_is_email -&gt; regex_is_email</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="term" d="M 192.67 117.46 Q 192.26 147.07 208.68 171.72" stroke-width="1.65" opacity="0.90"/>
+      <title>edge: return
+regex_is_url -&gt; regex_is_url
+weight: 2
+
+path:
+regex_is_url -&gt; regex_is_url</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="term" d="M 216.59 116.46 Q 215.50 145.15 224.11 172.53" stroke-width="1.65" opacity="0.90"/>
+      <title>edge: return
+regex_is_integer -&gt; regex_is_integer
+weight: 2
+
+path:
+regex_is_integer -&gt; regex_is_integer</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="term" d="M 276.11 113.69 Q 261.73 138.97 260.36 168.02" stroke-width="1.65" opacity="0.90"/>
+      <title>edge: return
+regex_is_real -&gt; regex_is_real
+weight: 2
+
+path:
+regex_is_real -&gt; regex_is_real</title>
+    </g>
+  </g>
+  <g id="nodes">
+    <g class="node-wrap">
+      <circle class="node-main" cx="296.38" cy="113.36" r="5.95" data-kind="rituale" data-ritual="regex_flag_case_insensitive" data-line="17" data-col="1" data-depth="2" data-stmt="RITUALE" data-loops="0" data-calls="0"/>
+      <title>RITUALE regex_flag_case_insensitive
+stmt: 1
+depth: 2
+loops: 0
+calls: 0
+source:
+RITUALE regex_flag_case_insensitive() REDDE REX</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="273.43" cy="165.07" r="3.60" data-kind="term" data-ritual="regex_flag_case_insensitive" data-line="18" data-col="3" data-depth="2" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: regex_flag_case_insensitive
+depth: 2
+line: 18
+
+source:
+REDDE 1</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-main" cx="328.24" cy="123.96" r="5.95" data-kind="rituale" data-ritual="regex_flag_multiline" data-line="21" data-col="1" data-depth="2" data-stmt="RITUALE" data-loops="0" data-calls="0"/>
+      <title>RITUALE regex_flag_multiline
+stmt: 1
+depth: 2
+loops: 0
+calls: 0
+source:
+RITUALE regex_flag_multiline() REDDE REX</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="308.38" cy="176.93" r="3.60" data-kind="term" data-ritual="regex_flag_multiline" data-line="22" data-col="3" data-depth="2" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: regex_flag_multiline
+depth: 2
+line: 22
+
+source:
+REDDE 2</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-main" cx="344.58" cy="130.27" r="5.95" data-kind="rituale" data-ritual="regex_flag_dotall" data-line="25" data-col="1" data-depth="2" data-stmt="RITUALE" data-loops="0" data-calls="0"/>
+      <title>RITUALE regex_flag_dotall
+stmt: 1
+depth: 2
+loops: 0
+calls: 0
+source:
+RITUALE regex_flag_dotall() REDDE REX</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="305.79" cy="171.45" r="3.60" data-kind="term" data-ritual="regex_flag_dotall" data-line="26" data-col="3" data-depth="2" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: regex_flag_dotall
+depth: 2
+line: 26
+
+source:
+REDDE 4</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-main" cx="379.98" cy="152.16" r="5.95" data-kind="rituale" data-ritual="regex_compile" data-line="29" data-col="1" data-depth="3" data-stmt="RITUALE" data-loops="0" data-calls="1"/>
+      <title>RITUALE regex_compile
+stmt: 1
+depth: 3
+loops: 0
+calls: 1
+source:
+RITUALE regex_compile(VERBUM padrao) REDDE SPECULUM NIHIL</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="331.92" cy="181.98" r="3.60" data-kind="term" data-ritual="regex_compile" data-line="30" data-col="3" data-depth="3" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: regex_compile
+depth: 3
+line: 30
+
+source:
+REDDE CONIURA regex_compile_flags(padrao, 0)</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-main" cx="414.00" cy="178.41" r="6.85" data-kind="rituale" data-ritual="regex_compile_flags" data-line="33" data-col="1" data-depth="5" data-stmt="RITUALE" data-loops="0" data-calls="3"/>
+      <title>RITUALE regex_compile_flags
+stmt: 7
+depth: 5
+loops: 0
+calls: 3
+source:
+RITUALE regex_compile_flags(VERBUM padrao, REX flags) REDDE SPECULUM NIHIL</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="371.55" cy="172.51" r="4.80" data-kind="branch" data-ritual="regex_compile_flags" data-line="36" data-col="3" data-depth="5" data-stmt="SI"/>
+      <title>stmt: SI
+rituale: regex_compile_flags
+depth: 5
+line: 36
+
+source:
+SI CONIURA len(err) &gt; 0</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="390.66" cy="189.87" r="3.70" data-kind="bind" data-ritual="regex_compile_flags" data-line="34" data-col="3" data-depth="5" data-stmt="EVOCA"/>
+      <title>stmt: EVOCA
+rituale: regex_compile_flags
+depth: 5
+line: 34
+
+source:
+EVOCA SPECULUM NIHIL handle AD OBSECRO regex_builtin_compile(padrao, flags)</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="367.26" cy="210.27" r="4.00" data-kind="term" data-ritual="regex_compile_flags" data-line="37" data-col="5" data-depth="5" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: regex_compile_flags
+depth: 5
+line: 37
+
+source:
+REDDE CONIURA Err GENUS(Regex, VERBUM)(err)</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-main" cx="432.27" cy="233.34" r="5.95" data-kind="rituale" data-ritual="regex_match" data-line="44" data-col="1" data-depth="4" data-stmt="RITUALE" data-loops="0" data-calls="0"/>
+      <title>RITUALE regex_match
+stmt: 1
+depth: 4
+loops: 0
+calls: 0
+source:
+RITUALE regex_match(Regex r, VERBUM texto) REDDE VERUM</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="406.49" cy="236.66" r="2.95" data-kind="bind" data-ritual="regex_match" data-depth="4" data-stmt="EVOCA"/>
+      <title>stmt: EVOCA
+rituale: regex_match
+depth: 4
+line: 0
+
+source:
+stmt: EVOCA
+rituale: regex_match</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="375.71" cy="232.55" r="3.60" data-kind="term" data-ritual="regex_match" data-line="45" data-col="3" data-depth="4" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: regex_match
+depth: 4
+line: 45
+
+source:
+REDDE OBSECRO regex_builtin_match(r.handle, texto)</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-main" cx="426.84" cy="295.67" r="6.40" data-kind="rituale" data-ritual="regex_search" data-line="48" data-col="1" data-depth="4" data-stmt="RITUALE" data-loops="0" data-calls="4"/>
+      <title>RITUALE regex_search
+stmt: 4
+depth: 4
+loops: 0
+calls: 4
+source:
+RITUALE regex_search(Regex r, VERBUM texto) REDDE SPECULUM NIHIL</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="386.83" cy="311.02" r="4.80" data-kind="branch" data-ritual="regex_search" data-line="50" data-col="3" data-depth="4" data-stmt="SI"/>
+      <title>stmt: SI
+rituale: regex_search
+depth: 4
+line: 50
+
+source:
+SI CONIURA len(found) == 0</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="401.52" cy="289.79" r="2.95" data-kind="bind" data-ritual="regex_search" data-line="49" data-col="3" data-depth="4" data-stmt="EVOCA"/>
+      <title>stmt: EVOCA
+rituale: regex_search
+depth: 4
+line: 49
+
+source:
+EVOCA VERBUM found AD CONIURA regex_search_text(r, texto)</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="374.10" cy="275.21" r="4.00" data-kind="term" data-ritual="regex_search" data-line="51" data-col="5" data-depth="4" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: regex_search
+depth: 4
+line: 51
+
+source:
+REDDE CONIURA None GENUS(VERBUM)()</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-main" cx="410.60" cy="328.42" r="5.95" data-kind="rituale" data-ritual="regex_find_all" data-line="56" data-col="1" data-depth="4" data-stmt="RITUALE" data-loops="0" data-calls="0"/>
+      <title>RITUALE regex_find_all
+stmt: 1
+depth: 4
+loops: 0
+calls: 0
+source:
+RITUALE regex_find_all(Regex r, VERBUM texto) REDDE SPECULUM NIHIL</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="387.05" cy="317.39" r="2.95" data-kind="bind" data-ritual="regex_find_all" data-depth="4" data-stmt="EVOCA"/>
+      <title>stmt: EVOCA
+rituale: regex_find_all
+depth: 4
+line: 0
+
+source:
+stmt: EVOCA
+rituale: regex_find_all</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="363.28" cy="297.42" r="3.60" data-kind="term" data-ritual="regex_find_all" data-line="57" data-col="3" data-depth="4" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: regex_find_all
+depth: 4
+line: 57
+
+source:
+REDDE OBSECRO regex_builtin_find_all(r.handle, texto)</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-main" cx="395.37" cy="351.52" r="5.95" data-kind="rituale" data-ritual="regex_replace" data-line="60" data-col="1" data-depth="4" data-stmt="RITUALE" data-loops="0" data-calls="0"/>
+      <title>RITUALE regex_replace
+stmt: 1
+depth: 4
+loops: 0
+calls: 0
+source:
+RITUALE regex_replace(Regex r, VERBUM texto, VERBUM substituicao) REDDE VERBUM</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="373.92" cy="336.82" r="2.95" data-kind="bind" data-ritual="regex_replace" data-depth="4" data-stmt="EVOCA"/>
+      <title>stmt: EVOCA
+rituale: regex_replace
+depth: 4
+line: 0
+
+source:
+stmt: EVOCA
+rituale: regex_replace</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="344.65" cy="326.46" r="3.60" data-kind="term" data-ritual="regex_replace" data-line="61" data-col="3" data-depth="4" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: regex_replace
+depth: 4
+line: 61
+
+source:
+REDDE OBSECRO regex_builtin_replace(r.handle, texto, substituicao, 0)</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-main" cx="351.54" cy="375.35" r="5.95" data-kind="rituale" data-ritual="regex_replace_all" data-line="64" data-col="1" data-depth="4" data-stmt="RITUALE" data-loops="0" data-calls="0"/>
+      <title>RITUALE regex_replace_all
+stmt: 1
+depth: 4
+loops: 0
+calls: 0
+source:
+RITUALE regex_replace_all(Regex r, VERBUM texto, VERBUM substituicao) REDDE VERBUM</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="335.29" cy="355.06" r="2.95" data-kind="bind" data-ritual="regex_replace_all" data-depth="4" data-stmt="EVOCA"/>
+      <title>stmt: EVOCA
+rituale: regex_replace_all
+depth: 4
+line: 0
+
+source:
+stmt: EVOCA
+rituale: regex_replace_all</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="322.79" cy="326.64" r="3.60" data-kind="term" data-ritual="regex_replace_all" data-line="65" data-col="3" data-depth="4" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: regex_replace_all
+depth: 4
+line: 65
+
+source:
+REDDE OBSECRO regex_builtin_replace(r.handle, texto, substituicao, 1)</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-main" cx="336.83" cy="394.23" r="5.95" data-kind="rituale" data-ritual="regex_search_text" data-line="68" data-col="1" data-depth="4" data-stmt="RITUALE" data-loops="0" data-calls="0"/>
+      <title>RITUALE regex_search_text
+stmt: 1
+depth: 4
+loops: 0
+calls: 0
+source:
+RITUALE regex_search_text(Regex r, VERBUM texto) REDDE VERBUM</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="323.71" cy="371.78" r="2.95" data-kind="bind" data-ritual="regex_search_text" data-depth="4" data-stmt="EVOCA"/>
+      <title>stmt: EVOCA
+rituale: regex_search_text
+depth: 4
+line: 0
+
+source:
+stmt: EVOCA
+rituale: regex_search_text</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="315.47" cy="341.85" r="3.60" data-kind="term" data-ritual="regex_search_text" data-line="69" data-col="3" data-depth="4" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: regex_search_text
+depth: 4
+line: 69
+
+source:
+REDDE OBSECRO regex_builtin_search(r.handle, texto)</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-main" cx="310.34" cy="396.84" r="5.95" data-kind="rituale" data-ritual="regex_split" data-line="72" data-col="1" data-depth="4" data-stmt="RITUALE" data-loops="0" data-calls="0"/>
+      <title>RITUALE regex_split
+stmt: 1
+depth: 4
+loops: 0
+calls: 0
+source:
+RITUALE regex_split(Regex r, VERBUM texto) REDDE SPECULUM NIHIL</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="300.98" cy="372.58" r="2.95" data-kind="bind" data-ritual="regex_split" data-depth="4" data-stmt="EVOCA"/>
+      <title>stmt: EVOCA
+rituale: regex_split
+depth: 4
+line: 0
+
+source:
+stmt: EVOCA
+rituale: regex_split</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="282.72" cy="347.47" r="3.60" data-kind="term" data-ritual="regex_split" data-line="73" data-col="3" data-depth="4" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: regex_split
+depth: 4
+line: 73
+
+source:
+REDDE OBSECRO regex_builtin_split(r.handle, texto)</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-main" cx="265.86" cy="407.84" r="6.40" data-kind="rituale" data-ritual="regex_find_all_joined" data-line="76" data-col="1" data-depth="3" data-stmt="RITUALE" data-loops="0" data-calls="3"/>
+      <title>RITUALE regex_find_all_joined
+stmt: 4
+depth: 3
+loops: 0
+calls: 3
+source:
+RITUALE regex_find_all_joined(Regex r, VERBUM texto, VERBUM sep) REDDE VERBUM</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="264.17" cy="381.90" r="3.10" data-kind="bind" data-ritual="regex_find_all_joined" data-line="77" data-col="3" data-depth="3" data-stmt="EVOCA"/>
+      <title>stmt: EVOCA
+rituale: regex_find_all_joined
+depth: 3
+line: 77
+
+source:
+EVOCA SPECULUM NIHIL items AD CONIURA regex_find_all(r, texto)</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="270.21" cy="351.44" r="3.60" data-kind="term" data-ritual="regex_find_all_joined" data-line="80" data-col="3" data-depth="3" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: regex_find_all_joined
+depth: 3
+line: 80
+
+source:
+REDDE out</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-main" cx="194.99" cy="389.57" r="6.40" data-kind="rituale" data-ritual="regex_split_joined" data-line="83" data-col="1" data-depth="3" data-stmt="RITUALE" data-loops="0" data-calls="3"/>
+      <title>RITUALE regex_split_joined
+stmt: 4
+depth: 3
+loops: 0
+calls: 3
+source:
+RITUALE regex_split_joined(Regex r, VERBUM texto, VERBUM sep) REDDE VERBUM</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="205.80" cy="365.92" r="3.10" data-kind="bind" data-ritual="regex_split_joined" data-line="84" data-col="3" data-depth="3" data-stmt="EVOCA"/>
+      <title>stmt: EVOCA
+rituale: regex_split_joined
+depth: 3
+line: 84
+
+source:
+EVOCA SPECULUM NIHIL items AD CONIURA regex_split(r, texto)</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="225.54" cy="341.96" r="3.60" data-kind="term" data-ritual="regex_split_joined" data-line="87" data-col="3" data-depth="3" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: regex_split_joined
+depth: 3
+line: 87
+
+source:
+REDDE out</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-main" cx="150.01" cy="380.06" r="6.10" data-kind="rituale" data-ritual="regex_free" data-line="90" data-col="1" data-depth="4" data-stmt="RITUALE" data-loops="0" data-calls="0"/>
+      <title>RITUALE regex_free
+stmt: 2
+depth: 4
+loops: 0
+calls: 0
+source:
+RITUALE regex_free(Regex r) REDDE NIHIL</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="166.89" cy="360.29" r="2.95" data-kind="bind" data-ritual="regex_free" data-line="91" data-col="3" data-depth="4" data-stmt="OBSECRO"/>
+      <title>stmt: OBSECRO
+rituale: regex_free
+depth: 4
+line: 91
+
+source:
+OBSECRO regex_builtin_free(r.handle)</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="180.30" cy="332.29" r="3.60" data-kind="term" data-ritual="regex_free" data-line="92" data-col="3" data-depth="4" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: regex_free
+depth: 4
+line: 92
+
+source:
+REDDE</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-main" cx="101.46" cy="337.11" r="6.85" data-kind="rituale" data-ritual="regex_is_match" data-line="95" data-col="1" data-depth="4" data-stmt="RITUALE" data-loops="0" data-calls="5"/>
+      <title>RITUALE regex_is_match
+stmt: 7
+depth: 4
+loops: 0
+calls: 5
+source:
+RITUALE regex_is_match(VERBUM padrao, VERBUM texto) REDDE VERUM</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="121.74" cy="299.36" r="4.80" data-kind="branch" data-ritual="regex_is_match" data-line="97" data-col="3" data-depth="4" data-stmt="SI"/>
+      <title>stmt: SI
+rituale: regex_is_match
+depth: 4
+line: 97
+
+source:
+SI CONIURA result_is_err GENUS(Regex, VERBUM)(compiled)</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="124.48" cy="325.03" r="3.25" data-kind="bind" data-ritual="regex_is_match" data-line="96" data-col="3" data-depth="4" data-stmt="EVOCA"/>
+      <title>stmt: EVOCA
+rituale: regex_is_match
+depth: 4
+line: 96
+
+source:
+EVOCA SPECULUM NIHIL compiled AD CONIURA regex_compile(padrao)</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="154.76" cy="318.17" r="4.00" data-kind="term" data-ritual="regex_is_match" data-line="98" data-col="5" data-depth="4" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: regex_is_match
+depth: 4
+line: 98
+
+source:
+REDDE FALSUM</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-main" cx="70.35" cy="255.91" r="6.85" data-kind="rituale" data-ritual="regex_quick_search" data-line="106" data-col="1" data-depth="4" data-stmt="RITUALE" data-loops="0" data-calls="6"/>
+      <title>RITUALE regex_quick_search
+stmt: 7
+depth: 4
+loops: 0
+calls: 6
+source:
+RITUALE regex_quick_search(VERBUM padrao, VERBUM texto) REDDE SPECULUM NIHIL</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="105.84" cy="279.93" r="4.80" data-kind="branch" data-ritual="regex_quick_search" data-line="108" data-col="3" data-depth="4" data-stmt="SI"/>
+      <title>stmt: SI
+rituale: regex_quick_search
+depth: 4
+line: 108
+
+source:
+SI CONIURA result_is_err GENUS(Regex, VERBUM)(compiled)</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="96.35" cy="255.92" r="3.25" data-kind="bind" data-ritual="regex_quick_search" data-line="107" data-col="3" data-depth="4" data-stmt="EVOCA"/>
+      <title>stmt: EVOCA
+rituale: regex_quick_search
+depth: 4
+line: 107
+
+source:
+EVOCA SPECULUM NIHIL compiled AD CONIURA regex_compile(padrao)</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="126.35" cy="247.94" r="4.00" data-kind="term" data-ritual="regex_quick_search" data-line="109" data-col="5" data-depth="4" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: regex_quick_search
+depth: 4
+line: 109
+
+source:
+REDDE CONIURA None GENUS(VERBUM)()</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-main" cx="108.42" cy="162.56" r="6.85" data-kind="rituale" data-ritual="regex_quick_search_text" data-line="117" data-col="1" data-depth="4" data-stmt="RITUALE" data-loops="0" data-calls="5"/>
+      <title>RITUALE regex_quick_search_text
+stmt: 7
+depth: 4
+loops: 0
+calls: 5
+source:
+RITUALE regex_quick_search_text(VERBUM padrao, VERBUM texto) REDDE VERBUM</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="151.25" cy="161.27" r="4.80" data-kind="branch" data-ritual="regex_quick_search_text" data-line="119" data-col="3" data-depth="4" data-stmt="SI"/>
+      <title>stmt: SI
+rituale: regex_quick_search_text
+depth: 4
+line: 119
+
+source:
+SI CONIURA result_is_err GENUS(Regex, VERBUM)(compiled)</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="130.38" cy="176.47" r="3.25" data-kind="bind" data-ritual="regex_quick_search_text" data-line="118" data-col="3" data-depth="4" data-stmt="EVOCA"/>
+      <title>stmt: EVOCA
+rituale: regex_quick_search_text
+depth: 4
+line: 118
+
+source:
+EVOCA SPECULUM NIHIL compiled AD CONIURA regex_compile(padrao)</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="151.45" cy="199.28" r="4.00" data-kind="term" data-ritual="regex_quick_search_text" data-line="120" data-col="5" data-depth="4" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: regex_quick_search_text
+depth: 4
+line: 120
+
+source:
+REDDE ""</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-main" cx="156.46" cy="140.13" r="5.95" data-kind="rituale" data-ritual="regex_is_email" data-line="128" data-col="1" data-depth="3" data-stmt="RITUALE" data-loops="0" data-calls="1"/>
+      <title>RITUALE regex_is_email
+stmt: 1
+depth: 3
+loops: 0
+calls: 1
+source:
+RITUALE regex_is_email(VERBUM email) REDDE VERUM</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="199.02" cy="177.40" r="3.60" data-kind="term" data-ritual="regex_is_email" data-line="129" data-col="3" data-depth="3" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: regex_is_email
+depth: 3
+line: 129
+
+source:
+REDDE CONIURA regex_is_match("^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$", email)</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-main" cx="192.67" cy="117.46" r="5.95" data-kind="rituale" data-ritual="regex_is_url" data-line="132" data-col="1" data-depth="3" data-stmt="RITUALE" data-loops="0" data-calls="1"/>
+      <title>RITUALE regex_is_url
+stmt: 1
+depth: 3
+loops: 0
+calls: 1
+source:
+RITUALE regex_is_url(VERBUM url) REDDE VERUM</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="208.68" cy="171.72" r="3.60" data-kind="term" data-ritual="regex_is_url" data-line="133" data-col="3" data-depth="3" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: regex_is_url
+depth: 3
+line: 133
+
+source:
+REDDE CONIURA regex_is_match("^https?://[A-Za-z0-9.-]+(:[0-9]+)?(/.*)?$", url)</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-main" cx="216.59" cy="116.46" r="5.95" data-kind="rituale" data-ritual="regex_is_integer" data-line="136" data-col="1" data-depth="3" data-stmt="RITUALE" data-loops="0" data-calls="1"/>
+      <title>RITUALE regex_is_integer
+stmt: 1
+depth: 3
+loops: 0
+calls: 1
+source:
+RITUALE regex_is_integer(VERBUM texto) REDDE VERUM</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="224.11" cy="172.53" r="3.60" data-kind="term" data-ritual="regex_is_integer" data-line="137" data-col="3" data-depth="3" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: regex_is_integer
+depth: 3
+line: 137
+
+source:
+REDDE CONIURA regex_is_match("^-?[0-9]+$", texto)</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-main" cx="276.11" cy="113.69" r="5.95" data-kind="rituale" data-ritual="regex_is_real" data-line="140" data-col="1" data-depth="3" data-stmt="RITUALE" data-loops="0" data-calls="1"/>
+      <title>RITUALE regex_is_real
+stmt: 1
+depth: 3
+loops: 0
+calls: 1
+source:
+RITUALE regex_is_real(VERBUM texto) REDDE VERUM</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="260.36" cy="168.02" r="3.60" data-kind="term" data-ritual="regex_is_real" data-line="141" data-col="3" data-depth="3" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: regex_is_real
+depth: 3
+line: 141
+
+source:
+REDDE CONIURA regex_is_match("^-?[0-9]+(\\.[0-9]+)?$", texto)</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="243.19" cy="248.87" r="5.00" data-kind="bind" data-ritual="regex_flag_case_insensitive" data-depth="2" data-stmt="EVOCA"/>
+      <title>stmt: EVOCA
+rituale: regex_flag_case_insensitive
+depth: 2
+line: 0
+
+source:
+stmt: EVOCA
+rituale: regex_flag_case_insensitive</title>
+    </g>
+  </g>
+  <g id="ornaments">
+    <circle class="orn" cx="454.96" cy="246.04" r="0.90"/>
+    <circle class="orn" cx="441.15" cy="327.22" r="1.90"/>
+    <circle class="orn" cx="411.41" cy="398.12" r="2.90"/>
+    <circle class="orn" cx="294.61" cy="453.23" r="0.90"/>
+    <circle class="orn" cx="236.41" cy="454.48" r="1.90"/>
+    <circle class="orn" cx="136.89" cy="428.27" r="2.90"/>
+    <circle class="orn" cx="73.25" cy="359.32" r="0.90"/>
+    <circle class="orn" cx="50.03" cy="293.79" r="1.90"/>
+    <circle class="orn" cx="78.71" cy="163.75" r="2.90"/>
+    <circle class="orn" cx="110.95" cy="114.74" r="0.90"/>
+    <circle class="orn" cx="175.63" cy="71.41" r="1.90"/>
+    <circle class="orn" cx="258.33" cy="52.41" r="2.90"/>
+    <circle class="orn" cx="415.59" cy="116.66" r="0.90"/>
+    <circle class="orn" cx="424.94" cy="145.71" r="1.90"/>
+  </g>
+  <g id="signature">
+    <text class="hash" x="256" y="496" text-anchor="middle">55a32f42558e1144</text>
+    <text class="label" x="256" y="18" text-anchor="middle">network • sigillum v2.1 • 22 rituale(s) • 56 stmt • depth 5</text>
+  </g>
+</svg>

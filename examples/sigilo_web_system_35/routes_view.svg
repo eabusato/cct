@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0.00 0.00 1100.00 900.00" width="1100" height="900" role="img" aria-label="CCT route sigilo">
+  <desc>Deterministic route topology sigil for a CCT artifact.</desc>
+  <defs>
+    <style><![CDATA[
+      .bg { fill: #f6f2e7; }
+      .title { fill: #231a14; font: 600 20px monospace; }
+      .subtitle { fill: #5b5148; font: 11px monospace; }
+      .route-center { fill: #3b3027; stroke: #f6f2e7; stroke-width: 1.2; }
+      .group-link { fill: none; stroke: #8a7662; stroke-width: 1.05; opacity: 0.54; }
+      .cluster-orbit { fill: none; stroke: #c6b59f; stroke-width: 1.0; opacity: 0.90; }
+      .cluster-thread { fill: none; stroke: #d2c2ad; stroke-width: 0.9; opacity: 0.78; }
+      .cluster-label { fill: #2a221c; font: 600 11px monospace; opacity: 0.88; }
+      .cluster-summary { fill: #66584a; font: 9px monospace; opacity: 0.74; }
+      .route-link { fill: none; stroke: #7a6a59; stroke-width: 1.0; opacity: 0.68; }
+      .route-weave { fill: none; stroke: #8c7865; stroke-width: 0.95; opacity: 0.58; }
+      .route-shell { fill: rgba(255,252,246,0.72); stroke: #5a4b3f; stroke-width: 1.08; }
+      .route-mid { fill: none; stroke: #b7a690; stroke-width: 0.95; opacity: 0.78; }
+      .route-core { fill: #f7efe3; stroke: #57483b; stroke-width: 1.0; }
+      .route-arc { fill: none; stroke: #7a6957; stroke-width: 0.95; opacity: 0.88; stroke-linecap: round; }
+      .route-spoke { fill: none; stroke: #978573; stroke-width: 0.9; opacity: 0.82; stroke-linecap: round; }
+      .route-chord { fill: none; stroke: #51453b; stroke-width: 0.9; opacity: 0.74; stroke-linecap: round; }
+      .route-glyph { fill: none; stroke: #efe6d9; stroke-width: 1.05; stroke-linejoin: round; }
+      .sigil-orn { fill: none; stroke: #b7a690; stroke-width: 0.9; opacity: 0.66; }
+      .route-method-get { fill: #6b5a4b; }
+      .route-method-post { fill: #6b5a4b; }
+      .route-method-put { fill: #6b5a4b; }
+      .route-method-patch { fill: #6b5a4b; }
+      .route-method-delete { fill: #6b5a4b; }
+      .route-method-head { fill: #6b5a4b; }
+      .route-method-options { fill: #6b5a4b; }
+      .route-method-custom { fill: #6b5a4b; }
+      .route-method-seed { stroke: #f7efe2; stroke-width: 0.85; }
+      .hash { fill: #231a14; font: 10px monospace; }
+      .route-wrap { cursor: help; }
+      .route-wrap:hover > .route-shell, .route-wrap:hover > .route-mid, .route-wrap:hover > .route-core { stroke: #1f1712; opacity: 1; }
+      .route-wrap:hover > .route-link { stroke: #3c2f25; opacity: .92; }
+    ]]></style>
+  </defs>
+  <rect class="bg" x="0.00" y="0.00" width="1100.00" height="900.00"/>
+  <text class="title" x="30" y="36">sigilo routes</text>
+  <text class="subtitle" x="30" y="56">program=sigilo_web_system_35 routes=2 groups=1 web_hash=1a3c5955fa3b024b</text>
+  <g id="route_center">
+    <title>route center
+origin point for the route topology</title>
+    <circle class="route-center" cx="550.00" cy="482.00" r="4.8"/>
+  </g>
+  <g id="route_group_links">
+    <g class="route-group-wrap">
+      <title>center -&gt; group
+group=/
+routes=2</title>
+    <path class="group-link" d="M 550.00 482.00 Q 555.52 318.09 577.01 155.50"/>
+    </g>
+  </g>
+  <g id="route_cluster_route" class="route-cluster">
+    <title>route group
+group=/
+routes=2</title>
+    <circle class="cluster-orbit" cx="577.01" cy="155.50" r="84.26"/>
+    <text class="cluster-label" x="586.27" y="40.63" text-anchor="middle">/</text>
+    <text class="cluster-summary" x="586.27" y="53.63" text-anchor="middle">routes=2</text>
+    <g class="route-weave-wrap">
+      <title>group anchor
+group=/
+anchor=site.home</title>
+    <path class="route-link" d="M 577.01 155.50 Q 602.77 152.27 618.31 114.51"/>
+    </g>
+    <g class="route-weave-wrap">
+      <title>route hierarchy
+site.home -&gt; site.dashboard
+group=/</title>
+    <path class="route-weave" d="M 618.31 114.51 Q 627.80 156.17 614.61 181.41"/>
+    </g>
+    <g id="route_node_site_home" class="route-wrap" data-route-id="site.home" data-method="GET" data-path="/" data-handler="home_page" data-module="examples/sigilo_web_system_35/main.cct" data-group="/" data-middleware-chain="trace" data-source-origin="native" data-path-params="none" data-route-hash="10514c1adc88bf01">
+<circle class="route-shell" cx="618.31" cy="114.51" r="13.64"/><path class="route-mid" d="M 620.21 106.41 A 8.31 8.31 0 0 1 624.01 120.56"/><path class="route-arc" d="M 609.23 106.46 A 12.13 12.13 0 0 1 620.04 102.50"/><path class="route-spoke" d="M 623.92 113.16 Q 618.70 115.86 628.63 112.14"/><path class="route-spoke" d="M 618.63 119.10 Q 616.93 114.28 616.88 123.97"/><path class="route-spoke" d="M 616.13 111.02 Q 619.33 113.54 610.76 107.86"/><path class="route-chord" d="M 627.14 110.21 Q 619.38 114.44 613.78 122.41"/><circle class="route-core" cx="619.38" cy="114.44" r="4.49"/><path class="route-glyph" d="M 624.84 112.83 L 615.81 118.36 L 614.37 112.73 Z"/><circle class="route-method-seed" cx="621.05" cy="120.09" r="1.49"/><circle class="route-method-get" cx="619.38" cy="114.44" r="0"/>      <title>GET /
+handler=home_page
+module=examples/sigilo_web_system_35/main.cct
+middleware=trace
+route_id=site.home
+source=native
+route_hash=10514c1adc88bf01</title>
+    </g>
+    <g id="route_node_site_dashboard" class="route-wrap" data-route-id="site.dashboard" data-method="GET" data-path="/dashboard" data-handler="dashboard" data-module="examples/sigilo_web_system_35/main.cct" data-group="/" data-middleware-chain="auth,trace" data-source-origin="native" data-path-params="none" data-route-hash="4ae5c02da01c4683">
+<circle class="route-shell" cx="614.61" cy="181.41" r="15.11"/><path class="route-mid" d="M 624.56 182.64 A 10.02 10.02 0 0 1 609.22 189.86"/><path class="route-arc" d="M 604.87 172.87 A 12.96 12.96 0 0 1 614.35 168.46"/><path class="route-spoke" d="M 618.16 186.67 Q 613.26 182.35 620.95 191.41"/><path class="route-spoke" d="M 611.78 178.41 Q 615.86 180.34 607.67 172.64"/><path class="route-chord" d="M 619.60 191.80 Q 615.20 182.36 604.69 177.11"/><circle class="route-core" cx="615.20" cy="182.36" r="4.98"/><path class="route-glyph" d="M 618.97 187.25 L 609.60 180.95 L 614.38 176.64 Z"/><circle class="route-method-seed" cx="610.15" cy="186.25" r="1.72"/><circle class="route-method-get" cx="615.20" cy="182.36" r="0"/>      <title>GET /dashboard
+handler=dashboard
+module=examples/sigilo_web_system_35/main.cct
+middleware=auth,trace
+route_id=site.dashboard
+source=native
+route_hash=4ae5c02da01c4683</title>
+    </g>
+  </g>
+  <text class="hash" x="1070" y="876" text-anchor="end">1a3c5955fa3b024b</text>
+</svg>

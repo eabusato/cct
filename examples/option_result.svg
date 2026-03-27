@@ -1,0 +1,311 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512" role="img" aria-label="CCT local sigilo">
+  <desc>Deterministic semantic sigil for a single CCT module.</desc>
+  <defs>
+    <style><![CDATA[
+      .bg { fill: #f5f0e4; }
+      .base { stroke: #2a221c; stroke-width: 1.60; fill: none; opacity: 0.78; }
+      .primary { stroke: #241913; stroke-width: 2.80; fill: none; stroke-linecap: round; stroke-linejoin: round; }
+      .call { stroke: #5b2a22; stroke-width: 2.0; fill: none; stroke-linecap: round; opacity: 0.9; }
+      .branch { stroke: #6b342d; stroke-width: 1.6; fill: none; stroke-linecap: round; }
+      .loop { stroke: #2d5f5a; stroke-width: 1.6; fill: none; stroke-linecap: round; }
+      .bind { stroke: #73493d; stroke-width: 1.4; fill: none; stroke-linecap: round; }
+      .term { stroke: #201814; stroke-width: 1.7; fill: none; stroke-linecap: round; }
+      .node-main { fill: #fffaf1; stroke: #201814; stroke-width: 2.0; }
+      .node-entry { fill: #efe6d4; stroke: #201814; stroke-width: 2.4; }
+      .node-aux { fill: #f6efe0; stroke: #4f4339; stroke-width: 1.3; }
+      .node-loop { fill: #edf3f1; stroke: #2d5f5a; stroke-width: 1.4; }
+      .node-term { fill: #f3e7e3; stroke: #5a2a23; stroke-width: 1.4; }
+      .orn { stroke: #355d58; stroke-width: 1.0; fill: none; opacity: 0.55; }
+      .hash { fill: #1f1a17; font: 10px monospace; letter-spacing: 0.8px; }
+      .label { fill: #1f1a17; font: 8px monospace; opacity: 0.7; }
+      .node-wrap, .edge-wrap { cursor: help; }
+      .node-wrap:hover > circle { opacity: 0.96; }
+      .edge-wrap:hover > path, .edge-wrap:hover > line { opacity: 1.0; }
+    ]]></style>
+  </defs>
+  <rect class="bg" x="0" y="0" width="512" height="512"/>
+  <g id="foundation">
+    <circle class="base" cx="256" cy="256" r="226"/>
+    <ellipse class="base" cx="256" cy="256" rx="198" ry="187.28" opacity="0.32"/>
+  </g>
+  <g id="primary_path">
+    <g class="edge-wrap">
+    <path class="primary" d="M 269.35 107.34 Q 274.03 258.95 319.06 403.80" stroke-width="3.20" opacity="0.96"/>
+      <title>edge: primary
+main -&gt; buscar_usuario
+weight: 1
+
+path:
+main -&gt; buscar_usuario</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="primary" d="M 319.06 403.80 Q 236.24 368.62 146.54 375.67" stroke-width="2.60" opacity="0.96"/>
+      <title>edge: primary
+buscar_usuario -&gt; dividir
+weight: 1
+
+path:
+buscar_usuario -&gt; dividir</title>
+    </g>
+  </g>
+  <g id="call_links">
+    <g class="edge-wrap">
+    <path class="call" d="M 269.35 107.34 Q 258.25 261.59 319.06 403.80" stroke-width="2.50" opacity="0.80" data-kind="call" data-from="main" data-to="buscar_usuario" data-weight="2" data-self-loop="false"/>
+      <title>edge: call
+main -&gt; buscar_usuario
+calls: 2
+
+path:
+main -&gt; buscar_usuario</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="call" d="M 269.35 107.34 Q 172.71 225.38 146.54 375.67" stroke-width="2.50" opacity="0.80" data-kind="call" data-from="main" data-to="dividir" data-weight="2" data-self-loop="false"/>
+      <title>edge: call
+main -&gt; dividir
+calls: 2
+
+path:
+main -&gt; dividir</title>
+    </g>
+  </g>
+  <g id="branches">
+    <g class="edge-wrap">
+    <path class="branch" d="M 319.06 403.80 Q 329.51 383.23 326.62 360.34" stroke-width="1.95" opacity="0.85"/>
+      <title>edge: branch
+buscar_usuario -&gt; buscar_usuario
+weight: 3
+
+path:
+buscar_usuario -&gt; buscar_usuario</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="branch" d="M 146.54 375.67 Q 156.87 355.54 152.79 333.28" stroke-width="1.70" opacity="0.85"/>
+      <title>edge: branch
+dividir -&gt; dividir
+weight: 2
+
+path:
+dividir -&gt; dividir</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="branch" d="M 269.35 107.34 Q 267.33 133.34 289.95 146.34" stroke-width="1.95" opacity="0.85"/>
+      <title>edge: branch
+main -&gt; main
+weight: 3
+
+path:
+main -&gt; main</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="branch" d="M 264.15 253.32 Q 281.78 332.14 319.06 403.80" stroke-width="2.10" opacity="0.85"/>
+      <title>edge: branch
+main -&gt; buscar_usuario
+weight: 6
+
+path:
+main -&gt; buscar_usuario</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="branch" d="M 264.15 253.32 Q 196.15 305.66 146.54 375.67" stroke-width="2.10" opacity="0.85"/>
+      <title>edge: branch
+main -&gt; dividir
+weight: 4
+
+path:
+main -&gt; dividir</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="branch" d="M 264.15 253.32 Q 280.67 180.82 269.35 107.34" stroke-width="2.10" opacity="0.85"/>
+      <title>edge: branch
+main -&gt; main
+weight: 31
+
+path:
+main -&gt; main</title>
+    </g>
+  </g>
+  <g id="loops">
+  </g>
+  <g id="bindings">
+    <g class="edge-wrap">
+    <path class="bind" d="M 269.35 107.34 Q 259.30 119.49 267.03 133.23" stroke-width="1.80" opacity="0.85"/>
+    <line class="bind" x1="272.87" y1="112.87" x2="264.90" y2="112.16" opacity="0.75"/>
+    <line class="bind" x1="273.64" y1="115.55" x2="263.68" y2="114.66" opacity="0.75"/>
+    <line class="bind" x1="272.41" y1="118.05" x2="264.44" y2="117.34" opacity="0.75"/>
+    <line class="bind" x1="273.17" y1="120.73" x2="263.21" y2="119.84" opacity="0.75"/>
+    <line class="bind" x1="271.94" y1="123.23" x2="263.97" y2="122.52" opacity="0.75"/>
+    <line class="bind" x1="272.70" y1="125.91" x2="262.74" y2="125.02" opacity="0.75"/>
+    <line class="bind" x1="272.79" y1="134.92" x2="278.54" y2="136.60" opacity="0.58"/>
+    <line class="bind" x1="268.72" y1="138.99" x2="271.27" y2="147.62" opacity="0.58"/>
+    <line class="bind" x1="262.81" y1="137.50" x2="258.59" y2="141.77" opacity="0.58"/>
+    <line class="bind" x1="262.16" y1="129.73" x2="254.86" y2="124.47" opacity="0.58"/>
+    <line class="bind" x1="269.58" y1="127.80" x2="272.13" y2="122.37" opacity="0.58"/>
+      <title>edge: bind
+main -&gt; main
+weight: 8
+
+path:
+main -&gt; main</title>
+    </g>
+  </g>
+  <g id="terminals">
+    <g class="edge-wrap">
+    <path class="term" d="M 319.06 403.80 Q 306.76 378.18 289.73 355.43" stroke-width="1.90" opacity="0.90"/>
+      <title>edge: return
+buscar_usuario -&gt; buscar_usuario
+weight: 4
+
+path:
+buscar_usuario -&gt; buscar_usuario</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="term" d="M 146.54 375.67 Q 170.47 360.25 190.24 339.75" stroke-width="1.80" opacity="0.90"/>
+      <title>edge: return
+dividir -&gt; dividir
+weight: 3
+
+path:
+dividir -&gt; dividir</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="term" d="M 269.35 107.34 Q 253.20 132.59 256.38 162.40" stroke-width="1.65" opacity="0.90"/>
+      <title>edge: return
+main -&gt; main
+weight: 2
+
+path:
+main -&gt; main</title>
+    </g>
+  </g>
+  <g id="nodes">
+    <g class="node-wrap">
+      <circle class="node-main" cx="319.06" cy="403.80" r="6.55" data-kind="rituale" data-ritual="buscar_usuario" data-line="8" data-col="1" data-depth="5" data-stmt="RITUALE" data-loops="0" data-calls="3"/>
+      <title>RITUALE buscar_usuario
+stmt: 5
+depth: 5
+loops: 0
+calls: 3
+source:
+RITUALE buscar_usuario(REX id) REDDE SPECULUM NIHIL</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="326.62" cy="360.34" r="5.80" data-kind="branch" data-ritual="buscar_usuario" data-line="9" data-col="3" data-depth="5" data-stmt="SI"/>
+      <title>stmt: SI
+rituale: buscar_usuario
+depth: 5
+line: 9
+
+source:
+SI id == 1</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="289.73" cy="355.43" r="4.40" data-kind="term" data-ritual="buscar_usuario" data-line="10" data-col="5" data-depth="5" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: buscar_usuario
+depth: 5
+line: 10
+
+source:
+REDDE CONIURA Some GENUS(VERBUM)("Alice")</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-main" cx="146.54" cy="375.67" r="6.25" data-kind="rituale" data-ritual="dividir" data-line="18" data-col="1" data-depth="6" data-stmt="RITUALE" data-loops="0" data-calls="2"/>
+      <title>RITUALE dividir
+stmt: 3
+depth: 6
+loops: 0
+calls: 2
+source:
+RITUALE dividir(REX a, REX b) REDDE SPECULUM NIHIL</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="152.79" cy="333.28" r="4.80" data-kind="branch" data-ritual="dividir" data-line="19" data-col="3" data-depth="6" data-stmt="SI"/>
+      <title>stmt: SI
+rituale: dividir
+depth: 6
+line: 19
+
+source:
+SI b == 0</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="190.24" cy="339.75" r="4.00" data-kind="term" data-ritual="dividir" data-line="20" data-col="5" data-depth="6" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: dividir
+depth: 6
+line: 20
+
+source:
+REDDE CONIURA Err GENUS(REX, REX)(-1)</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-entry" cx="269.35" cy="107.34" r="11.70" data-kind="rituale" data-ritual="main" data-line="25" data-col="1" data-depth="6" data-stmt="RITUALE" data-loops="0" data-calls="27" data-entry="true"/>
+      <title>RITUALE main
+stmt: 26
+depth: 6
+loops: 0
+calls: 27
+source:
+RITUALE main() REDDE REX</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="289.95" cy="146.34" r="5.80" data-kind="branch" data-ritual="main" data-line="44" data-col="3" data-depth="6" data-stmt="SI"/>
+      <title>stmt: SI
+rituale: main
+depth: 6
+line: 44
+
+source:
+SI CONIURA result_is_ok GENUS(REX, REX)(res1)</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="267.03" cy="133.23" r="4.00" data-kind="bind" data-ritual="main" data-line="28" data-col="3" data-depth="6" data-stmt="EVOCA"/>
+      <title>stmt: EVOCA
+rituale: main
+depth: 6
+line: 28
+
+source:
+EVOCA SPECULUM NIHIL opt1 AD CONIURA buscar_usuario(1)</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="256.38" cy="162.40" r="3.60" data-kind="term" data-ritual="main" data-line="59" data-col="3" data-depth="6" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: main
+depth: 6
+line: 59
+
+source:
+REDDE 0</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="264.15" cy="253.32" r="5.00" data-kind="bind" data-ritual="main" data-line="28" data-col="3" data-depth="6" data-stmt="EVOCA"/>
+      <title>stmt: EVOCA
+rituale: main
+depth: 6
+line: 28
+
+source:
+EVOCA SPECULUM NIHIL opt1 AD CONIURA buscar_usuario(1)</title>
+    </g>
+  </g>
+  <g id="ornaments">
+    <circle class="orn" cx="451.30" cy="293.34" r="0.90"/>
+    <circle class="orn" cx="441.77" cy="347.38" r="1.90"/>
+    <circle class="orn" cx="343.67" cy="443.01" r="2.90"/>
+    <circle class="orn" cx="295.52" cy="463.05" r="0.90"/>
+    <circle class="orn" cx="141.02" cy="434.08" r="1.90"/>
+    <circle class="orn" cx="69.59" cy="325.22" r="2.90"/>
+    <circle class="orn" cx="54.17" cy="293.91" r="0.90"/>
+    <circle class="orn" cx="81.41" cy="143.88" r="1.90"/>
+    <circle class="orn" cx="130.46" cy="96.93" r="2.90"/>
+    <circle class="orn" cx="300.39" cy="52.51" r="0.90"/>
+    <circle class="orn" cx="322.78" cy="58.13" r="1.90"/>
+    <circle class="orn" cx="433.83" cy="168.23" r="2.90"/>
+  </g>
+  <g id="signature">
+    <text class="hash" x="256" y="496" text-anchor="middle">48d3cdf69b12ad43</text>
+    <text class="label" x="256" y="18" text-anchor="middle">network • sigillum v2.1 • 3 rituale(s) • 34 stmt • depth 6</text>
+  </g>
+</svg>

@@ -1,0 +1,452 @@
+format = cct.sigil.v1
+sigilo_scope = local
+visual_engine = sigillum_v2_1
+visual_style = network
+compiler_version = 0.19.0
+program_name = redis
+semantic_hash = e0aeaa2906794179
+layout_seed = e0aeaa2906794179:network
+module_mode = composed
+module_count = 8
+import_edge_count = 9
+entry_module = lib/cct/redis.cct
+cross_module_call_count = 202
+cross_module_type_ref_count = 0
+module_resolution_status = ok
+stdlib_module_count = 4
+stdlib_modules_used = verbum,fmt,parse,result
+verbum_module_used = true
+fmt_module_used = true
+series_module_used = false
+fluxus_module_used = false
+mem_module_used = false
+io_module_used = false
+fs_module_used = false
+path_module_used = false
+math_module_used = false
+random_module_used = false
+parse_module_used = true
+cmp_module_used = false
+alg_module_used = false
+option_module_used = false
+result_module_used = true
+map_module_used = false
+set_module_used = false
+collection_ops_module_used = false
+visibility_model = public_default_arcanum_internal
+public_symbol_count = 204
+internal_symbol_count = 0
+
+[metrics]
+ritual_count = 67
+entry_ritual_index = 0
+entry_ritual_name = redis_crlf
+total_statements = 453
+total_expressions = 1486
+max_nesting = 8
+avg_nesting = 3.018
+loops_total = 3
+conditionals_total = 70
+calls_total = 341
+obsecro_total = 0
+returns_total = 127
+anur_total = 0
+sigillum_decl_total = 11
+ordo_decl_total = 1
+generic_decl_count = 0
+generic_param_count = 0
+generic_rituale_count = 0
+generic_sigillum_count = 0
+generic_instantiation_count = 58
+generic_rituale_instantiation_count = 58
+generic_sigillum_instantiation_count = 0
+generic_instantiation_dedup_count = 16
+generic_constraint_count = 0
+generic_constrained_param_count = 0
+generic_constraint_violation_count = 0
+pactum_constraint_resolution_status = ok
+generic_monomorphization_status = ok
+pactum_decl_count = 0
+pactum_signature_count = 0
+sigillum_pactum_conformance_count = 0
+pactum_conformance_status = ok
+multi_ritual = true
+complexity_class = recursive
+
+[counts]
+evoca = 128
+vincire = 117
+si = 70
+aliter = 1
+dum = 3
+donec = 0
+repete = 0
+iterum = 0
+iterum_count = 0
+coniura = 341
+obsecro = 0
+redde = 127
+anur = 0
+field_access = 166
+index_access = 0
+series_type_use = 0
+speculum_type_use = 2
+sigillum_decl = 11
+sigillum_composite_field = 1
+ordo_decl = 1
+type_umbra = 0
+type_flamma = 0
+address_of = 25
+deref = 13
+alloc = 0
+free = 0
+dimitte = 0
+fluxus_ops_count = 0
+verbum_ops_count = 100
+fmt_ops_count = 9
+series_ops_count = 0
+mem_ops_count = 0
+io_ops_count = 0
+fs_ops_count = 0
+fluxus_init_count = 0
+fluxus_push_count = 0
+fluxus_pop_count = 0
+fluxus_instances_count = 0
+path_ops_count = 0
+math_ops_count = 0
+random_ops_count = 0
+parse_ops_count = 5
+cmp_ops_count = 0
+alg_ops_count = 0
+option_ops_count = 0
+result_ops_count = 58
+map_ops_count = 0
+set_ops_count = 0
+collection_ops_count = 0
+pactum_decl = 0
+pactum_signature = 0
+sigillum_pactum_conformance = 0
+generic_constraint = 0
+generic_constrained_param = 0
+generic_constraint_violation = 0
+tempta = 0
+cape = 0
+semper = 0
+iace = 0
+
+[topology]
+node_count = 220
+edge_count = 401
+primary_path_nodes = 67
+ritual_poles = 67
+aux_nodes = 153
+self_call_count = 1
+loop_presence = true
+conditional_presence = true
+call_presence = true
+density_ratio = 2.059
+field_access_presence = true
+index_access_presence = false
+memory_presence = false
+speculum_presence = true
+dynamic_indexable_memory_presence = false
+indirect_structural_flow_presence = true
+failure_construct_presence = false
+tempta_presence = false
+cape_presence = false
+semper_presence = false
+iace_presence = false
+failure_call_propagation_presence = false
+failure_call_propagation_count = 0
+iace_across_coniura_presence = false
+tempta_call_capture_presence = false
+failure_cleanup_presence = false
+failure_cleanup_memory_presence = false
+runtime_failure_bridge_presence = false
+phase7_subset_final = true
+phase7_discard_policy = manual_explicit(obsecro_libera,dimitte)
+phase8_subset_final = true
+phase8_failure_policy = fractum_simple_opaco(payload=verbum);tempta_cape_semper_subset
+phase8_runtime_fail_policy = partial_bridge_documented(integrated=null_pointer_checks_in_instrumented_failure_paths;others=direct_abort)
+phase10_subset_final = true
+phase10_final_status = consolidated
+phase10_typing_contract = genus_explicit_monomorphization+pactum_explicit_conformance+constraint_single_contract_rituale_only
+
+[analysis_summary]
+scope = local
+schema_phase = 13C2
+analysis_profile = analytical_v1
+complexity_class = recursive
+control_flow_pressure = 73
+failure_surface = none
+stdlib_surface = 4
+generic_surface = 58
+determinism_guarantee = stable
+
+[diff_fingerprint_context]
+scope_anchor = local
+hash_anchor = e0aeaa2906794179
+fingerprint_basis = structural_metrics+topology+hash_anchor
+serialization_profile = analytical_v1
+volatility = none
+module_anchor_count = 8
+entry_anchor = lib/cct/redis.cct
+
+[module_structural_summary]
+module_count = 8
+module_mode = composed
+import_edge_count = 9
+cross_module_call_count = 202
+cross_module_type_ref_count = 0
+ritual_count = 67
+public_symbol_count = 204
+internal_symbol_count = 0
+module_resolution_status = ok
+
+[compatibility_hints]
+schema_contract = cct.sigil.v1
+unknown_field_policy = warning_non_fatal
+deprecated_alias = sigilo_style->visual_engine
+consumer_mode_tolerant = ignore_unknown_additive_fields
+consumer_mode_strict = enforce_required_fields_and_hash_by_scope
+diff_policy = analytical_blocks_review_required_except_compatibility_hints
+deterministic_serialization = stable_section_order
+
+[layout]
+primary_axis_deg = -63.251
+canvas_center = 256.0,256.0
+containment_radius = 226.0
+style_influence = stroke/curvature/distribution/ornamentation
+
+[visual_grammar]
+style = network inscription / ritual seal (FASE 6A)
+style_selected = network
+foundation = minimal containment circle (+ optional light secondary ring)
+layers = foundation,primary_path,call_links,branches,loops,bindings,terminals,nodes,ornaments,signature
+macro_layout = ritual nodes + structural links + primary path
+rituale = primary node / pole in network
+coniura = dominant inter-ritual link (self-call => local loop)
+si = real bifurcation node + branch split
+aliter = alternate branch / compensatory reconnection
+dum = recurrence loop glyph (pre-test)
+donec = post_test loop glyph (loop + tail)
+repete = serial pulse chain / cadence marks
+series = indexed sequence pattern (metadata/hash influence, v2.1 visual modulation)
+speculum = pointer/reference construct (metadata/hash/topology influence, visual refinement deferred)
+address_of = reference acquisition mark (structural/hash influence)
+deref = bound access incision mark (structural/hash influence)
+memory_alloc_free = pete/libera/dimitte contribute memory-presence metrics/hash
+failure_propagation = TEMPTA/CAPE/IACE + CONIURA propagation tracked primarily via metadata/topology counts (FASE 8B)
+semper = guaranteed cleanup/finally block tracked in metadata/hash (FASE 8C; visual refinement deferred)
+failure_phase8_final = metadata reflects consolidated subset semantics through FASE 8D (IACE/TEMPTA/CAPE/SEMPER + propagation + partial runtime bridge)
+dynamic_indexable_memory = alloc/free + index_access + speculum/deref combination contributes topology metadata/hash (FASE 7C)
+field_access = bound branch tap / field rune mark (metadata/hash influence)
+indirect_structural_flow = field_access + speculum/deref combination contributes structural metadata/hash (FASE 7C)
+phase7_final = metadata reflects consolidated subset semantics through FASE 7D (no visual engine redesign)
+tempta_cape_iace = failure-control constructs contribute metadata/hash in FASE 8A (visual refinement deferred)
+sigillum = named vessel/struct declaration contributes topology metadata
+sigillum_composition = nested SIGILLUM field composition contributes structural metadata/hash
+ordo = ordinal taxonomy declaration contributes topology metadata
+evoca = emergence from binding node
+vincire = visible binding bars / lock marks
+obsecro = emissive rays (secondary)
+redde = convergent terminal path
+anur = terminal cut/notch
+hash_role = secondary modulation (jitter/curvature/thickness/signature)
+style_role = visual weighting/curvature/distribution without changing structural semantics
+
+[rituales]
+0 = redis_crlf | entry=false | stmt=2 | depth=4 | calls=3 | loops=0
+1 = redis_ok_unit | entry=false | stmt=1 | depth=3 | calls=1 | loops=0
+2 = redis_err_unit | entry=false | stmt=1 | depth=3 | calls=1 | loops=0
+3 = redis_value_make | entry=false | stmt=5 | depth=3 | calls=0 | loops=0
+4 = redis_value_null | entry=false | stmt=1 | depth=3 | calls=1 | loops=0
+5 = redis_value_string | entry=false | stmt=1 | depth=3 | calls=1 | loops=0
+6 = redis_value_int | entry=false | stmt=1 | depth=3 | calls=1 | loops=0
+7 = redis_value_error | entry=false | stmt=1 | depth=3 | calls=1 | loops=0
+8 = redis_value_array | entry=false | stmt=1 | depth=3 | calls=1 | loops=0
+9 = redis_maybe_text_none | entry=false | stmt=4 | depth=3 | calls=0 | loops=0
+10 = redis_maybe_text_some | entry=false | stmt=4 | depth=3 | calls=0 | loops=0
+11 = redis_maybe_message_none | entry=false | stmt=8 | depth=3 | calls=0 | loops=0
+12 = redis_maybe_message_some | entry=false | stmt=4 | depth=3 | calls=0 | loops=0
+13 = redis_raw_reply | entry=false | stmt=3 | depth=3 | calls=0 | loops=0
+14 = redis_text_list_empty | entry=false | stmt=4 | depth=3 | calls=0 | loops=0
+15 = redis_pair_list_empty | entry=false | stmt=4 | depth=3 | calls=0 | loops=0
+16 = redis_chunk_to_value | entry=false | stmt=1 | depth=4 | calls=1 | loops=0
+17 = redis_default_options | entry=false | stmt=8 | depth=3 | calls=0 | loops=0
+18 = redis_parse_dsn_fill | entry=false | stmt=27 | depth=8 | calls=22 | loops=0
+19 = redis_parse_dsn | entry=false | stmt=5 | depth=5 | calls=4 | loops=0
+20 = redis_is_open | entry=false | stmt=1 | depth=3 | calls=0 | loops=0
+21 = redis_last_error | entry=false | stmt=1 | depth=3 | calls=0 | loops=0
+22 = redis_argv_1 | entry=false | stmt=9 | depth=5 | calls=9 | loops=0
+23 = redis_argv_2 | entry=false | stmt=14 | depth=5 | calls=16 | loops=0
+24 = redis_argv_3 | entry=false | stmt=9 | depth=5 | calls=12 | loops=0
+25 = redis_argv_4 | entry=false | stmt=9 | depth=5 | calls=12 | loops=0
+26 = redis_find_crlf | entry=false | stmt=7 | depth=8 | calls=3 | loops=1
+27 = redis_parse_at | entry=false | stmt=60 | depth=7 | calls=15 | loops=1
+28 = redis_resp_parse | entry=false | stmt=2 | depth=3 | calls=2 | loops=0
+29 = redis_array_len | entry=false | stmt=3 | depth=4 | calls=0 | loops=0
+30 = redis_array_get | entry=false | stmt=13 | depth=7 | calls=5 | loops=1
+31 = redis_value_to_text | entry=false | stmt=5 | depth=6 | calls=1 | loops=0
+32 = redis_recv_raw_fill | entry=false | stmt=11 | depth=6 | calls=8 | loops=0
+33 = redis_send_wire_fill | entry=false | stmt=14 | depth=5 | calls=7 | loops=0
+34 = redis_simple_ok_wire | entry=false | stmt=5 | depth=5 | calls=4 | loops=0
+35 = redis_connect_with_options | entry=false | stmt=24 | depth=8 | calls=21 | loops=0
+36 = redis_connect | entry=false | stmt=5 | depth=5 | calls=4 | loops=0
+37 = redis_close | entry=false | stmt=4 | depth=7 | calls=1 | loops=0
+38 = redis_get | entry=false | stmt=8 | depth=5 | calls=10 | loops=0
+39 = redis_set | entry=false | stmt=1 | depth=4 | calls=2 | loops=0
+40 = redis_setex | entry=false | stmt=1 | depth=5 | calls=3 | loops=0
+41 = redis_del | entry=false | stmt=6 | depth=5 | calls=6 | loops=0
+42 = redis_exists | entry=false | stmt=6 | depth=5 | calls=6 | loops=0
+43 = redis_expire | entry=false | stmt=6 | depth=5 | calls=7 | loops=0
+44 = redis_ttl | entry=false | stmt=6 | depth=5 | calls=6 | loops=0
+45 = redis_incr | entry=false | stmt=6 | depth=5 | calls=6 | loops=0
+46 = redis_hset | entry=false | stmt=6 | depth=5 | calls=6 | loops=0
+47 = redis_hget | entry=false | stmt=8 | depth=5 | calls=10 | loops=0
+48 = redis_hdel | entry=false | stmt=6 | depth=5 | calls=6 | loops=0
+49 = redis_hgetall | entry=false | stmt=10 | depth=6 | calls=7 | loops=0
+50 = redis_lpush | entry=false | stmt=6 | depth=5 | calls=6 | loops=0
+51 = redis_rpush | entry=false | stmt=6 | depth=5 | calls=6 | loops=0
+52 = redis_lpop | entry=false | stmt=8 | depth=5 | calls=10 | loops=0
+53 = redis_rpop | entry=false | stmt=8 | depth=5 | calls=10 | loops=0
+54 = redis_llen | entry=false | stmt=6 | depth=5 | calls=6 | loops=0
+55 = redis_sadd | entry=false | stmt=6 | depth=5 | calls=6 | loops=0
+56 = redis_srem | entry=false | stmt=6 | depth=5 | calls=6 | loops=0
+57 = redis_smembers | entry=false | stmt=10 | depth=5 | calls=7 | loops=0
+58 = redis_publish | entry=false | stmt=6 | depth=5 | calls=6 | loops=0
+59 = redis_subscribe | entry=false | stmt=1 | depth=4 | calls=2 | loops=0
+60 = redis_psubscribe | entry=false | stmt=1 | depth=4 | calls=2 | loops=0
+61 = redis_unsubscribe | entry=false | stmt=1 | depth=4 | calls=2 | loops=0
+62 = redis_poll_message | entry=false | stmt=27 | depth=6 | calls=32 | loops=0
+63 = redis_text_list_len | entry=false | stmt=1 | depth=3 | calls=0 | loops=0
+64 = redis_text_list_get | entry=false | stmt=2 | depth=4 | calls=3 | loops=0
+65 = redis_pair_list_len | entry=false | stmt=1 | depth=3 | calls=0 | loops=0
+66 = redis_pair_list_get | entry=false | stmt=5 | depth=6 | calls=5 | loops=0
+
+[call_edges]
+redis_value_null -> redis_value_make : 1
+redis_value_string -> redis_value_make : 1
+redis_value_int -> redis_value_make : 1
+redis_value_error -> redis_value_make : 1
+redis_value_array -> redis_value_make : 1
+redis_chunk_to_value -> redis_value_make : 1
+redis_parse_dsn_fill -> redis_default_options : 1
+redis_parse_dsn -> redis_parse_dsn_fill : 1
+redis_argv_1 -> redis_crlf : 1
+redis_argv_2 -> redis_crlf : 1
+redis_argv_3 -> redis_argv_2 : 1
+redis_argv_3 -> redis_crlf : 1
+redis_argv_4 -> redis_argv_3 : 1
+redis_argv_4 -> redis_crlf : 1
+redis_parse_at -> redis_find_crlf : 1
+redis_parse_at -> redis_parse_at : 1
+redis_resp_parse -> redis_parse_at : 1
+redis_resp_parse -> redis_chunk_to_value : 1
+redis_array_get -> redis_value_null : 3
+redis_array_get -> redis_parse_at : 1
+redis_array_get -> redis_chunk_to_value : 1
+redis_recv_raw_fill -> redis_raw_reply : 2
+redis_send_wire_fill -> redis_recv_raw_fill : 1
+redis_send_wire_fill -> redis_resp_parse : 1
+redis_simple_ok_wire -> redis_send_wire_fill : 1
+redis_simple_ok_wire -> redis_err_unit : 1
+redis_simple_ok_wire -> redis_ok_unit : 1
+redis_connect_with_options -> redis_send_wire_fill : 2
+redis_connect_with_options -> redis_argv_2 : 2
+redis_connect -> redis_parse_dsn_fill : 1
+redis_connect -> redis_connect_with_options : 1
+redis_get -> redis_send_wire_fill : 1
+redis_get -> redis_argv_2 : 1
+redis_get -> redis_resp_parse : 1
+redis_get -> redis_maybe_text_none : 1
+redis_get -> redis_maybe_text_some : 1
+redis_get -> redis_value_to_text : 1
+redis_set -> redis_simple_ok_wire : 1
+redis_set -> redis_argv_3 : 1
+redis_setex -> redis_simple_ok_wire : 1
+redis_setex -> redis_argv_4 : 1
+redis_del -> redis_send_wire_fill : 1
+redis_del -> redis_argv_2 : 1
+redis_del -> redis_resp_parse : 1
+redis_exists -> redis_send_wire_fill : 1
+redis_exists -> redis_argv_2 : 1
+redis_exists -> redis_resp_parse : 1
+redis_expire -> redis_send_wire_fill : 1
+redis_expire -> redis_argv_3 : 1
+redis_expire -> redis_resp_parse : 1
+redis_ttl -> redis_send_wire_fill : 1
+redis_ttl -> redis_argv_2 : 1
+redis_ttl -> redis_resp_parse : 1
+redis_incr -> redis_send_wire_fill : 1
+redis_incr -> redis_argv_2 : 1
+redis_incr -> redis_resp_parse : 1
+redis_hset -> redis_send_wire_fill : 1
+redis_hset -> redis_argv_4 : 1
+redis_hset -> redis_resp_parse : 1
+redis_hget -> redis_send_wire_fill : 1
+redis_hget -> redis_argv_3 : 1
+redis_hget -> redis_resp_parse : 1
+redis_hget -> redis_maybe_text_none : 1
+redis_hget -> redis_maybe_text_some : 1
+redis_hget -> redis_value_to_text : 1
+redis_hdel -> redis_send_wire_fill : 1
+redis_hdel -> redis_argv_3 : 1
+redis_hdel -> redis_resp_parse : 1
+redis_hgetall -> redis_send_wire_fill : 1
+redis_hgetall -> redis_argv_2 : 1
+redis_hgetall -> redis_resp_parse : 1
+redis_hgetall -> redis_pair_list_empty : 1
+redis_lpush -> redis_send_wire_fill : 1
+redis_lpush -> redis_argv_3 : 1
+redis_lpush -> redis_resp_parse : 1
+redis_rpush -> redis_send_wire_fill : 1
+redis_rpush -> redis_argv_3 : 1
+redis_rpush -> redis_resp_parse : 1
+redis_lpop -> redis_send_wire_fill : 1
+redis_lpop -> redis_argv_2 : 1
+redis_lpop -> redis_resp_parse : 1
+redis_lpop -> redis_maybe_text_none : 1
+redis_lpop -> redis_maybe_text_some : 1
+redis_lpop -> redis_value_to_text : 1
+redis_rpop -> redis_send_wire_fill : 1
+redis_rpop -> redis_argv_2 : 1
+redis_rpop -> redis_resp_parse : 1
+redis_rpop -> redis_maybe_text_none : 1
+redis_rpop -> redis_maybe_text_some : 1
+redis_rpop -> redis_value_to_text : 1
+redis_llen -> redis_send_wire_fill : 1
+redis_llen -> redis_argv_2 : 1
+redis_llen -> redis_resp_parse : 1
+redis_sadd -> redis_send_wire_fill : 1
+redis_sadd -> redis_argv_3 : 1
+redis_sadd -> redis_resp_parse : 1
+redis_srem -> redis_send_wire_fill : 1
+redis_srem -> redis_argv_3 : 1
+redis_srem -> redis_resp_parse : 1
+redis_smembers -> redis_send_wire_fill : 1
+redis_smembers -> redis_argv_2 : 1
+redis_smembers -> redis_resp_parse : 1
+redis_smembers -> redis_text_list_empty : 1
+redis_publish -> redis_send_wire_fill : 1
+redis_publish -> redis_argv_3 : 1
+redis_publish -> redis_resp_parse : 1
+redis_subscribe -> redis_simple_ok_wire : 1
+redis_subscribe -> redis_argv_2 : 1
+redis_psubscribe -> redis_simple_ok_wire : 1
+redis_psubscribe -> redis_argv_2 : 1
+redis_unsubscribe -> redis_simple_ok_wire : 1
+redis_unsubscribe -> redis_argv_2 : 1
+redis_poll_message -> redis_recv_raw_fill : 1
+redis_poll_message -> redis_maybe_message_none : 3
+redis_poll_message -> redis_resp_parse : 1
+redis_poll_message -> redis_value_to_text : 6
+redis_poll_message -> redis_array_get : 6
+redis_poll_message -> redis_array_len : 2
+redis_poll_message -> redis_maybe_message_some : 2
+redis_text_list_get -> redis_value_array : 1
+redis_text_list_get -> redis_value_to_text : 1
+redis_text_list_get -> redis_array_get : 1
+redis_pair_list_get -> redis_value_array : 1
+redis_pair_list_get -> redis_value_to_text : 2
+redis_pair_list_get -> redis_array_get : 2

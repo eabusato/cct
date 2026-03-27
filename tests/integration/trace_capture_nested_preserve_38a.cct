@@ -1,0 +1,35 @@
+INCIPIT grimoire "trace_capture_nested_preserve_38a"
+
+ADVOCARE "cct/fluxus.cct"
+ADVOCARE "cct/fs.cct"
+ADVOCARE "cct/instrument.cct"
+ADVOCARE "cct/trace_capture.cct"
+ADVOCARE "cct/verbum.cct"
+
+RITUALE main() REDDE REX
+  EVOCA TraceCaptureSession session AD CONIURA trace_capture_start_in("tests/.tmp/trace_capture_nested_preserve_38a", "capture-nested", INSTR_MODE_FULL)
+  EVOCA REX req AD CONIURA instrument_http_span("POST", "/media/upload")
+  EVOCA REX db AD CONIURA instrument_db_span("insert", "media")
+  CONIURA instrument_span_end(db)
+  CONIURA instrument_span_end(req)
+
+  SI CONIURA trace_capture_stop(SPECULUM session) != 1
+    REDDE 1
+  FIN SI
+
+  EVOCA VERBUM snapshot_dir AD CONIURA concat(CONIURA trace_capture_dir(session), "/snapshot-001")
+  EVOCA VERBUM content AD CONIURA read_all(CONIURA concat(snapshot_dir, "/request-001-post-media-upload.ctrace"))
+
+  SI NON CONIURA contains(content, "\"name\":\"POST /media/upload\"")
+    REDDE 2
+  FIN SI
+  SI NON CONIURA contains(content, "\"name\":\"insert:media\"")
+    REDDE 3
+  FIN SI
+  SI NON CONIURA contains(content, "\"parent_id\":\"1\"")
+    REDDE 4
+  FIN SI
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

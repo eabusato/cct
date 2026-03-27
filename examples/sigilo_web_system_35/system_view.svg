@@ -1,0 +1,354 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512" role="img" aria-label="CCT local sigilo">
+  <desc>Deterministic semantic sigil for a single CCT module.</desc>
+  <defs>
+    <style><![CDATA[
+      .bg { fill: #f5f0e4; }
+      .base { stroke: #2a221c; stroke-width: 1.60; fill: none; opacity: 0.78; }
+      .primary { stroke: #241913; stroke-width: 2.80; fill: none; stroke-linecap: round; stroke-linejoin: round; }
+      .call { stroke: #5b2a22; stroke-width: 2.0; fill: none; stroke-linecap: round; opacity: 0.9; }
+      .branch { stroke: #6b342d; stroke-width: 1.6; fill: none; stroke-linecap: round; }
+      .loop { stroke: #2d5f5a; stroke-width: 1.6; fill: none; stroke-linecap: round; }
+      .bind { stroke: #73493d; stroke-width: 1.4; fill: none; stroke-linecap: round; }
+      .term { stroke: #201814; stroke-width: 1.7; fill: none; stroke-linecap: round; }
+      .node-main { fill: #fffaf1; stroke: #201814; stroke-width: 2.0; }
+      .node-entry { fill: #efe6d4; stroke: #201814; stroke-width: 2.4; }
+      .node-aux { fill: #f6efe0; stroke: #4f4339; stroke-width: 1.3; }
+      .node-loop { fill: #edf3f1; stroke: #2d5f5a; stroke-width: 1.4; }
+      .node-term { fill: #f3e7e3; stroke: #5a2a23; stroke-width: 1.4; }
+      .orn { stroke: #355d58; stroke-width: 1.0; fill: none; opacity: 0.55; }
+      .hash { fill: #1f1a17; font: 10px monospace; letter-spacing: 0.8px; }
+      .label { fill: #1f1a17; font: 8px monospace; opacity: 0.7; }
+      .node-wrap, .edge-wrap { cursor: help; }
+      .node-wrap:hover > circle { opacity: 0.96; }
+      .edge-wrap:hover > path, .edge-wrap:hover > line { opacity: 1.0; }
+    ]]></style>
+  </defs>
+  <rect class="bg" x="0" y="0" width="512" height="512"/>
+  <g id="foundation">
+    <circle class="base" cx="256" cy="256" r="226"/>
+    <ellipse class="base" cx="256" cy="256" rx="198" ry="183.57" opacity="0.32"/>
+  </g>
+  <g id="primary_path">
+    <g class="edge-wrap">
+    <path class="primary" d="M 424.00 221.23 Q 296.30 283.81 195.58 384.18" stroke-width="3.20" opacity="0.96"/>
+      <title>edge: primary
+main -&gt; home_page
+weight: 1
+
+path:
+main -&gt; home_page</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="primary" d="M 195.58 384.18 Q 197.46 261.02 156.07 145.01" stroke-width="2.60" opacity="0.96"/>
+      <title>edge: primary
+home_page -&gt; dashboard
+weight: 1
+
+path:
+home_page -&gt; dashboard</title>
+    </g>
+  </g>
+  <g id="call_links">
+    <g class="edge-wrap">
+    <path class="call" d="M 424.00 221.23 Q 289.92 274.85 195.58 384.18" stroke-width="2.15" opacity="0.74" data-kind="call" data-from="main" data-to="home_page" data-weight="1" data-self-loop="false"/>
+      <title>edge: call
+main -&gt; home_page
+calls: 1
+
+path:
+main -&gt; home_page</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="call" d="M 424.00 221.23 Q 299.31 150.51 156.07 145.01" stroke-width="2.15" opacity="0.74" data-kind="call" data-from="main" data-to="dashboard" data-weight="1" data-self-loop="false"/>
+      <title>edge: call
+main -&gt; dashboard
+calls: 1
+
+path:
+main -&gt; dashboard</title>
+    </g>
+  </g>
+  <g id="branches">
+    <g class="edge-wrap">
+    <path class="branch" d="M 265.46 257.18 Q 218.94 314.31 195.58 384.18" stroke-width="2.10" opacity="0.85"/>
+      <title>edge: branch
+main -&gt; home_page
+weight: 4
+
+path:
+main -&gt; home_page</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="branch" d="M 265.46 257.18 Q 220.00 192.08 156.07 145.01" stroke-width="1.95" opacity="0.85"/>
+      <title>edge: branch
+main -&gt; dashboard
+weight: 3
+
+path:
+main -&gt; dashboard</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="branch" d="M 265.46 257.18 Q 346.30 246.14 424.00 221.23" stroke-width="2.10" opacity="0.85"/>
+      <title>edge: branch
+main -&gt; main
+weight: 4
+
+path:
+main -&gt; main</title>
+    </g>
+  </g>
+  <g id="loops">
+  </g>
+  <g id="bindings">
+    <g class="edge-wrap">
+    <path class="bind" d="M 195.58 384.18 Q 203.50 373.54 206.66 360.67" stroke-width="1.44" opacity="0.85"/>
+    <line class="bind" x1="194.18" y1="377.77" x2="201.41" y2="381.19" opacity="0.75"/>
+    <line class="bind" x1="194.38" y1="375.00" x2="203.43" y2="379.26" opacity="0.75"/>
+    <line class="bind" x1="196.39" y1="373.07" x2="203.63" y2="376.48" opacity="0.75"/>
+    <line class="bind" x1="211.91" y1="360.51" x2="217.91" y2="360.32" opacity="0.58"/>
+    <line class="bind" x1="205.32" y1="365.74" x2="203.00" y2="374.44" opacity="0.58"/>
+    <line class="bind" x1="203.94" y1="356.18" x2="200.82" y2="351.05" opacity="0.58"/>
+      <title>edge: bind
+home_page -&gt; home_page
+weight: 3
+
+path:
+home_page -&gt; home_page</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="bind" d="M 156.07 145.01 Q 158.66 160.17 173.46 164.33" stroke-width="1.36" opacity="0.85"/>
+    <line class="bind" x1="162.52" y1="146.20" x2="156.57" y2="151.55" opacity="0.75"/>
+    <line class="bind" x1="165.00" y1="147.46" x2="157.57" y2="154.15" opacity="0.75"/>
+    <line class="bind" x1="178.56" y1="164.49" x2="184.56" y2="164.67" opacity="0.58"/>
+    <line class="bind" x1="168.37" y1="164.60" x2="159.38" y2="165.07" opacity="0.58"/>
+      <title>edge: bind
+dashboard -&gt; dashboard
+weight: 2
+
+path:
+dashboard -&gt; dashboard</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="bind" d="M 424.00 221.23 Q 410.84 221.80 398.53 226.50" stroke-width="1.36" opacity="0.85"/>
+    <line class="bind" x1="419.71" y1="226.20" x2="418.09" y2="218.37" opacity="0.75"/>
+    <line class="bind" x1="417.37" y1="227.71" x2="415.34" y2="217.92" opacity="0.75"/>
+    <line class="bind" x1="403.63" y1="226.50" x2="409.63" y2="226.50" opacity="0.58"/>
+    <line class="bind" x1="393.52" y1="227.42" x2="384.67" y2="229.05" opacity="0.58"/>
+      <title>edge: bind
+main -&gt; main
+weight: 2
+
+path:
+main -&gt; main</title>
+    </g>
+  </g>
+  <g id="terminals">
+    <g class="edge-wrap">
+    <path class="term" d="M 195.58 384.18 Q 207.36 358.22 212.22 330.12" stroke-width="1.65" opacity="0.90"/>
+      <title>edge: return
+home_page -&gt; home_page
+weight: 2
+
+path:
+home_page -&gt; home_page</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="term" d="M 195.58 384.18 Q 185.54 411.25 182.56 439.95" stroke-width="1.90" opacity="0.90"/>
+    <line class="term" x1="184.62" y1="449.58" x2="176.44" y2="447.67"/>
+    <line class="term" x1="182.19" y1="452.09" x2="177.51" y2="451.00" opacity="0.8"/>
+      <title>edge: term
+home_page -&gt; home_page
+weight: 4
+
+path:
+home_page -&gt; home_page</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="term" d="M 156.07 145.01 Q 164.17 173.63 187.59 191.98" stroke-width="1.65" opacity="0.90"/>
+      <title>edge: return
+dashboard -&gt; dashboard
+weight: 2
+
+path:
+dashboard -&gt; dashboard</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="term" d="M 156.07 145.01 Q 149.79 115.59 127.52 95.36" stroke-width="1.80" opacity="0.90"/>
+    <line class="term" x1="119.44" y1="89.74" x2="126.72" y2="85.55"/>
+    <line class="term" x1="119.50" y1="86.24" x2="123.66" y2="83.85" opacity="0.8"/>
+      <title>edge: term
+dashboard -&gt; dashboard
+weight: 3
+
+path:
+dashboard -&gt; dashboard</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="term" d="M 424.00 221.23 Q 395.57 219.88 367.54 224.75" stroke-width="1.65" opacity="0.90"/>
+      <title>edge: return
+main -&gt; main
+weight: 2
+
+path:
+main -&gt; main</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="term" d="M 424.00 221.23 Q 452.61 224.55 481.27 221.63" stroke-width="1.80" opacity="0.90"/>
+    <line class="term" x1="490.19" y1="217.50" x2="490.14" y2="225.89"/>
+    <line class="term" x1="493.18" y1="219.32" x2="493.15" y2="224.12" opacity="0.8"/>
+      <title>edge: term
+main -&gt; main
+weight: 3
+
+path:
+main -&gt; main</title>
+    </g>
+  </g>
+  <g id="nodes">
+    <g class="node-wrap">
+      <circle class="node-main" cx="195.58" cy="384.18" r="6.85" data-kind="rituale" data-ritual="home_page" data-line="9" data-col="1" data-depth="2" data-stmt="RITUALE" data-loops="0" data-calls="3"/>
+      <title>RITUALE home_page
+stmt: 7
+depth: 2
+loops: 0
+calls: 3
+source:
+RITUALE home_page() REDDE REX</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="206.66" cy="360.67" r="3.25" data-kind="bind" data-ritual="home_page" data-line="10" data-col="3" data-depth="2" data-stmt="EVOCA"/>
+      <title>stmt: EVOCA
+rituale: home_page
+depth: 2
+line: 10
+
+source:
+EVOCA REX sessio AD CONIURA auth_session_open()</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="212.22" cy="330.12" r="3.60" data-kind="term" data-ritual="home_page" data-line="16" data-col="3" data-depth="2" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: home_page
+depth: 2
+line: 16
+
+source:
+REDDE 1</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="182.56" cy="439.95" r="2.90" data-kind="term" data-ritual="home_page" data-line="13" data-col="3" data-depth="2" data-stmt="ANUR"/>
+      <title>stmt: ANUR
+rituale: home_page
+depth: 2
+line: 13
+
+source:
+ANUR sessio</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-main" cx="156.07" cy="145.01" r="6.55" data-kind="rituale" data-ritual="dashboard" data-line="20" data-col="1" data-depth="2" data-stmt="RITUALE" data-loops="0" data-calls="2"/>
+      <title>RITUALE dashboard
+stmt: 5
+depth: 2
+loops: 0
+calls: 2
+source:
+RITUALE dashboard() REDDE REX</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="173.46" cy="164.33" r="3.10" data-kind="bind" data-ritual="dashboard" data-line="21" data-col="3" data-depth="2" data-stmt="EVOCA"/>
+      <title>stmt: EVOCA
+rituale: dashboard
+depth: 2
+line: 21
+
+source:
+EVOCA REX usuario AD CONIURA profile_load()</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="187.59" cy="191.98" r="3.60" data-kind="term" data-ritual="dashboard" data-line="25" data-col="3" data-depth="2" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: dashboard
+depth: 2
+line: 25
+
+source:
+REDDE 2</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="127.52" cy="95.36" r="2.90" data-kind="term" data-ritual="dashboard" data-line="23" data-col="3" data-depth="2" data-stmt="ANUR"/>
+      <title>stmt: ANUR
+rituale: dashboard
+depth: 2
+line: 23
+
+source:
+ANUR usuario</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-entry" cx="424.00" cy="221.23" r="8.55" data-kind="rituale" data-ritual="main" data-line="28" data-col="1" data-depth="2" data-stmt="RITUALE" data-loops="0" data-calls="2" data-entry="true"/>
+      <title>RITUALE main
+stmt: 5
+depth: 2
+loops: 0
+calls: 2
+source:
+RITUALE main() REDDE REX</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="398.53" cy="226.50" r="3.10" data-kind="bind" data-ritual="main" data-line="29" data-col="3" data-depth="2" data-stmt="EVOCA"/>
+      <title>stmt: EVOCA
+rituale: main
+depth: 2
+line: 29
+
+source:
+EVOCA REX a AD CONIURA home_page()</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="367.54" cy="224.75" r="3.60" data-kind="term" data-ritual="main" data-line="33" data-col="3" data-depth="2" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: main
+depth: 2
+line: 33
+
+source:
+REDDE 0</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="481.27" cy="221.63" r="2.90" data-kind="term" data-ritual="main" data-line="31" data-col="3" data-depth="2" data-stmt="ANUR"/>
+      <title>stmt: ANUR
+rituale: main
+depth: 2
+line: 31
+
+source:
+ANUR a</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="265.46" cy="257.18" r="4.04" data-kind="bind" data-ritual="main" data-line="29" data-col="3" data-depth="2" data-stmt="EVOCA"/>
+      <title>stmt: EVOCA
+rituale: main
+depth: 2
+line: 29
+
+source:
+EVOCA REX a AD CONIURA home_page()</title>
+    </g>
+  </g>
+  <g id="ornaments">
+    <circle class="orn" cx="464.59" cy="235.85" r="0.90"/>
+    <circle class="orn" cx="422.32" cy="381.42" r="1.90"/>
+    <circle class="orn" cx="250.65" cy="463.62" r="2.90"/>
+    <circle class="orn" cx="138.22" cy="426.86" r="0.90"/>
+    <circle class="orn" cx="46.23" cy="250.67" r="1.90"/>
+    <circle class="orn" cx="98.67" cy="131.77" r="2.90"/>
+    <circle class="orn" cx="246.22" cy="51.80" r="0.90"/>
+    <circle class="orn" cx="398.92" cy="116.92" r="1.90"/>
+  </g>
+  <g id="signature">
+    <text class="hash" x="256" y="496" text-anchor="middle">c49a12f3f9e52f14</text>
+    <text class="label" x="256" y="18" text-anchor="middle">network • sigillum v2.1 • 3 rituale(s) • 17 stmt • depth 2</text>
+  </g>
+</svg>

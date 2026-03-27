@@ -1,0 +1,191 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="1200" viewBox="0 0 1200 1200" role="img" aria-label="CCT system sigilo">
+  <desc>Deterministic sigil-of-sigils for a CCT module closure.</desc>
+  <defs>
+    <style><![CDATA[
+      .bg { fill: #f7f1e5; }
+      .macro-ring { fill: none; stroke: #1f2937; stroke-width: 2.0; opacity: 0.32; }
+      .macro-import { stroke: #334155; stroke-width: 1.8; stroke-linecap: round; fill: none; opacity: 0.60; }
+      .macro-sem { stroke: #9a3412; stroke-width: 1.3; stroke-dasharray: 5 4; fill: none; opacity: 0.62; }
+      .module-frame { fill: none; stroke: #111827; stroke-width: 2.1; }
+      .module-entry-frame { fill: none; stroke: #0f766e; stroke-width: 3.0; }
+      .module-label { fill: #0f172a; font: 11px monospace; }
+      .module-hash { fill: #334155; font: 9px monospace; opacity: 0.8; }
+      .base { stroke: #1f1a17; stroke-width: 1.6; fill: none; opacity: 0.7; }
+      .primary { stroke: #111827; stroke-width: 2.4; fill: none; stroke-linecap: round; }
+      .call { stroke: #4b5563; stroke-width: 1.5; fill: none; stroke-linecap: round; opacity: 0.82; }
+      .branch { stroke: #6b7280; stroke-width: 1.2; fill: none; opacity: 0.8; }
+      .loop { stroke: #0f766e; stroke-width: 1.3; fill: none; opacity: 0.84; }
+      .bind { stroke: #6b7280; stroke-width: 1.05; fill: none; opacity: 0.84; }
+      .term { stroke: #7f1d1d; stroke-width: 1.45; fill: none; stroke-linecap: round; }
+      .node-main { fill: #f8fafc; stroke: #1f2937; stroke-width: 1.65; }
+      .node-entry { fill: #d1fae5; stroke: #0f766e; stroke-width: 1.95; }
+      .node-aux { fill: #f1f5f9; stroke: #475569; stroke-width: 1.15; }
+      .node-loop { fill: #ecfeff; stroke: #0f766e; stroke-width: 1.2; }
+      .node-term { fill: #fef2f2; stroke: #991b1b; stroke-width: 1.2; }
+      .orn { stroke: #64748b; stroke-width: 0.9; fill: none; opacity: 0.55; }
+      .hash { fill: #111827; font: 9px monospace; letter-spacing: 0.5px; }
+      .label { fill: #0f172a; font: 8px monospace; opacity: 0.68; }
+      .node-wrap, .edge-wrap, .system-node-wrap, .system-edge-wrap { cursor: help; }
+      .node-wrap:hover > circle, .system-node-wrap:hover > circle { opacity: 0.96; }
+      .edge-wrap:hover > path, .edge-wrap:hover > line, .system-edge-wrap:hover > line { opacity: 1.0; }
+    ]]></style>
+    <clipPath id="module_clip_000"><circle cx="256" cy="256" r="246"/></clipPath>
+    <clipPath id="module_clip_001"><circle cx="256" cy="256" r="246"/></clipPath>
+  </defs>
+  <rect class="bg" width="1200" height="1200"/>
+  <g id="macro_foundation">
+    <circle class="macro-ring" cx="600" cy="600" r="558"/>
+    <circle class="macro-ring" cx="600" cy="600" r="220.00" opacity="0.22"/>
+  </g>
+  <g id="imports" class="macro-import">
+    <g class="system-edge-wrap">
+    <line x1="600.000" y1="600.000" x2="600.000" y2="380.000" />
+      <title>edge
+main.cct -&gt; math.cct
+links: 1</title>
+    </g>
+  </g>
+  <g id="semantic_cross" class="macro-sem">
+    <g class="system-edge-wrap">
+    <line x1="600.000" y1="600.000" x2="600.000" y2="380.000" />
+      <title>edge
+main.cct -&gt; math.cct
+calls: 1</title>
+    </g>
+  </g>
+  <g id="module_sigils">
+    <g id="module_sigil_000" transform="translate(462.000 462.000) scale(0.53906250)">
+      <g clip-path="url(#module_clip_000)">
+  <g id="foundation">
+    <circle class="base" cx="256" cy="256" r="226"/>
+  </g>
+  <g id="primary_path">
+  </g>
+  <g id="call_links">
+  </g>
+  <g id="branches">
+  </g>
+  <g id="loops">
+  </g>
+  <g id="bindings">
+  </g>
+  <g id="terminals">
+    <g class="edge-wrap">
+    <path class="term" d="M 230.60 388.26 Q 237.47 360.28 233.30 331.76" stroke-width="1.65" opacity="0.90"/>
+      <title>edge: return
+main -&gt; main
+weight: 2
+
+path:
+main -&gt; main</title>
+    </g>
+  </g>
+  <g id="nodes">
+    <g class="node-wrap">
+      <circle class="node-entry" cx="230.60" cy="388.26" r="7.95" data-kind="rituale" data-ritual="main" data-line="5" data-col="1" data-depth="3" data-stmt="RITUALE" data-loops="0" data-calls="1" data-entry="true"/>
+      <title>RITUALE main
+stmt: 1
+depth: 3
+loops: 0
+calls: 1
+source:
+RITUALE main() REDDE REX</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="233.30" cy="331.76" r="3.60" data-kind="term" data-ritual="main" data-line="6" data-col="3" data-depth="3" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: main
+depth: 3
+line: 6
+
+source:
+REDDE CONIURA dobro(21)</title>
+    </g>
+  </g>
+  <g id="ornaments">
+    <circle class="orn" cx="455.02" cy="292.85" r="0.90"/>
+    <circle class="orn" cx="271.78" cy="466.09" r="1.90"/>
+    <circle class="orn" cx="55.79" cy="252.15" r="2.90"/>
+    <circle class="orn" cx="248.22" cy="52.21" r="0.90"/>
+  </g>
+      </g>
+    </g>
+    <g class="system-node-wrap">
+    <circle class="module-entry-frame" cx="600.000" cy="600.000" r="138.000"/>
+      <title>module
+/Users/eabusato/dev/cct/examples/project_modular_12f/src/main.cct
+rituals: 1
+imports: 1</title>
+    <text class="module-label" x="600.000" y="754.000" text-anchor="middle">main.cct</text>
+    <text class="module-hash" x="600.000" y="766.000" text-anchor="middle">991398d3546f8eab</text>
+    </g>
+    <g id="module_sigil_001" transform="translate(496.000 276.000) scale(0.40625000)">
+      <g clip-path="url(#module_clip_001)">
+  <g id="foundation">
+    <circle class="base" cx="256" cy="256" r="226"/>
+  </g>
+  <g id="primary_path">
+  </g>
+  <g id="call_links">
+  </g>
+  <g id="branches">
+  </g>
+  <g id="loops">
+  </g>
+  <g id="bindings">
+  </g>
+  <g id="terminals">
+    <g class="edge-wrap">
+    <path class="term" d="M 222.84 385.02 Q 241.29 362.05 244.53 332.77" stroke-width="1.65" opacity="0.90"/>
+      <title>edge: return
+dobro -&gt; dobro
+weight: 2
+
+path:
+dobro -&gt; dobro</title>
+    </g>
+  </g>
+  <g id="nodes">
+    <g class="node-wrap">
+      <circle class="node-main" cx="222.84" cy="385.02" r="5.95" data-kind="rituale" data-ritual="dobro" data-line="3" data-col="1" data-depth="3" data-stmt="RITUALE" data-loops="0" data-calls="0"/>
+      <title>RITUALE dobro
+stmt: 1
+depth: 3
+loops: 0
+calls: 0
+source:
+RITUALE dobro(REX v) REDDE REX</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="244.53" cy="332.77" r="3.60" data-kind="term" data-ritual="dobro" data-line="4" data-col="3" data-depth="3" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: dobro
+depth: 3
+line: 4
+
+source:
+REDDE v * 2</title>
+    </g>
+  </g>
+  <g id="ornaments">
+    <circle class="orn" cx="465.59" cy="261.24" r="0.90"/>
+    <circle class="orn" cx="248.24" cy="456.11" r="1.90"/>
+    <circle class="orn" cx="44.80" cy="259.16" r="2.90"/>
+    <circle class="orn" cx="296.48" cy="59.76" r="0.90"/>
+  </g>
+      </g>
+    </g>
+    <g class="system-node-wrap">
+    <circle class="module-frame" cx="600.000" cy="380.000" r="104.000"/>
+      <title>module
+/Users/eabusato/dev/cct/examples/project_modular_12f/lib/math.cct
+rituals: 1
+imports: 0</title>
+    <text class="module-label" x="600.000" y="500.000" text-anchor="middle">math.cct</text>
+    <text class="module-hash" x="600.000" y="512.000" text-anchor="middle">207b1da712d94305</text>
+    </g>
+  </g>
+  <text class="module-label" x="24" y="30" font-size="14">CCT system sigilo (sigil-of-sigils) • 8b8656e740936ac2</text>
+  <text class="module-hash" x="24" y="50" font-size="10">entry=/Users/eabusato/dev/cct/examples/project_modular_12f/src/main.cct • modules=2 • imports=1 • calls=1 • type_refs=0</text>
+  <text class="module-hash" x="24" y="66" font-size="10">zoom: inline vector sub-sigils per module</text>
+</svg>

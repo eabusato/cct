@@ -1,0 +1,349 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512" role="img" aria-label="CCT local sigilo">
+  <desc>Deterministic semantic sigil for a single CCT module.</desc>
+  <defs>
+    <style><![CDATA[
+      .bg { fill: #f5f0e4; }
+      .base { stroke: #2a221c; stroke-width: 1.60; fill: none; opacity: 0.78; }
+      .primary { stroke: #241913; stroke-width: 2.80; fill: none; stroke-linecap: round; stroke-linejoin: round; }
+      .call { stroke: #5b2a22; stroke-width: 2.0; fill: none; stroke-linecap: round; opacity: 0.9; }
+      .branch { stroke: #6b342d; stroke-width: 1.6; fill: none; stroke-linecap: round; }
+      .loop { stroke: #2d5f5a; stroke-width: 1.6; fill: none; stroke-linecap: round; }
+      .bind { stroke: #73493d; stroke-width: 1.4; fill: none; stroke-linecap: round; }
+      .term { stroke: #201814; stroke-width: 1.7; fill: none; stroke-linecap: round; }
+      .node-main { fill: #fffaf1; stroke: #201814; stroke-width: 2.0; }
+      .node-entry { fill: #efe6d4; stroke: #201814; stroke-width: 2.4; }
+      .node-aux { fill: #f6efe0; stroke: #4f4339; stroke-width: 1.3; }
+      .node-loop { fill: #edf3f1; stroke: #2d5f5a; stroke-width: 1.4; }
+      .node-term { fill: #f3e7e3; stroke: #5a2a23; stroke-width: 1.4; }
+      .orn { stroke: #355d58; stroke-width: 1.0; fill: none; opacity: 0.55; }
+      .hash { fill: #1f1a17; font: 10px monospace; letter-spacing: 0.8px; }
+      .label { fill: #1f1a17; font: 8px monospace; opacity: 0.7; }
+      .node-wrap, .edge-wrap { cursor: help; }
+      .node-wrap:hover > circle { opacity: 0.96; }
+      .edge-wrap:hover > path, .edge-wrap:hover > line { opacity: 1.0; }
+    ]]></style>
+  </defs>
+  <rect class="bg" x="0" y="0" width="512" height="512"/>
+  <g id="foundation">
+    <circle class="base" cx="256" cy="256" r="226"/>
+    <ellipse class="base" cx="256" cy="256" rx="198" ry="186.80" opacity="0.32"/>
+  </g>
+  <g id="primary_path">
+    <g class="edge-wrap">
+    <path class="primary" d="M 237.81 92.75 Q 313.44 212.56 417.54 308.68" stroke-width="3.20" opacity="0.96"/>
+      <title>edge: primary
+main -&gt; parse_nivel
+weight: 1
+
+path:
+main -&gt; parse_nivel</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="primary" d="M 417.54 308.68 Q 382.59 315.60 381.16 351.20" stroke-width="2.60" opacity="0.96"/>
+      <title>edge: primary
+parse_nivel -&gt; nivel_nome
+weight: 1
+
+path:
+parse_nivel -&gt; nivel_nome</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="primary" d="M 381.16 351.20 Q 282.99 355.98 199.76 408.23" stroke-width="2.60" opacity="0.96"/>
+      <title>edge: primary
+nivel_nome -&gt; parse_linha
+weight: 1
+
+path:
+nivel_nome -&gt; parse_linha</title>
+    </g>
+  </g>
+  <g id="call_links">
+    <g class="edge-wrap">
+    <path class="call" d="M 199.76 408.23 Q 320.91 385.28 417.54 308.68" stroke-width="2.15" opacity="0.74" data-kind="call" data-from="parse_linha" data-to="parse_nivel" data-weight="1" data-self-loop="false"/>
+      <title>edge: call
+parse_linha -&gt; parse_nivel
+calls: 1
+
+path:
+parse_linha -&gt; parse_nivel</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="call" d="M 237.81 92.75 Q 184.97 246.41 199.76 408.23" stroke-width="2.15" opacity="0.74" data-kind="call" data-from="main" data-to="parse_linha" data-weight="1" data-self-loop="false"/>
+      <title>edge: call
+main -&gt; parse_linha
+calls: 1
+
+path:
+main -&gt; parse_linha</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="call" d="M 237.81 92.75 Q 279.10 238.83 381.16 351.20" stroke-width="2.15" opacity="0.74" data-kind="call" data-from="main" data-to="nivel_nome" data-weight="1" data-self-loop="false"/>
+      <title>edge: call
+main -&gt; nivel_nome
+calls: 1
+
+path:
+main -&gt; nivel_nome</title>
+    </g>
+  </g>
+  <g id="branches">
+    <g class="edge-wrap">
+    <path class="branch" d="M 199.76 408.23 Q 204.19 384.63 190.07 365.21" stroke-width="1.95" opacity="0.85"/>
+      <title>edge: branch
+parse_linha -&gt; parse_linha
+weight: 3
+
+path:
+parse_linha -&gt; parse_linha</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="branch" d="M 237.81 92.75 Q 242.68 116.74 265.59 125.37" stroke-width="1.70" opacity="0.85"/>
+      <title>edge: branch
+main -&gt; main
+weight: 2
+
+path:
+main -&gt; main</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="branch" d="M 266.47 246.83 Q 221.04 322.55 199.76 408.23" stroke-width="2.10" opacity="0.85"/>
+      <title>edge: branch
+main -&gt; parse_linha
+weight: 10
+
+path:
+main -&gt; parse_linha</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="branch" d="M 266.47 246.83 Q 263.79 167.62 237.81 92.75" stroke-width="2.10" opacity="0.85"/>
+      <title>edge: branch
+main -&gt; main
+weight: 12
+
+path:
+main -&gt; main</title>
+    </g>
+  </g>
+  <g id="loops">
+    <g class="edge-wrap">
+    <path class="loop" d="M 237.81 92.75 Q 245.05 68.80 232.71 47.03" stroke-width="1.70" opacity="0.88"/>
+      <title>edge: loop
+main -&gt; main
+weight: 3
+
+path:
+main -&gt; main</title>
+    </g>
+  </g>
+  <g id="bindings">
+    <g class="edge-wrap">
+    <path class="bind" d="M 199.76 408.23 Q 208.50 397.61 208.77 383.85" stroke-width="1.52" opacity="0.85"/>
+    <line class="bind" x1="197.81" y1="401.97" x2="205.31" y2="404.74" opacity="0.75"/>
+    <line class="bind" x1="197.77" y1="399.19" x2="207.15" y2="402.65" opacity="0.75"/>
+    <line class="bind" x1="199.61" y1="397.09" x2="207.11" y2="399.87" opacity="0.75"/>
+    <line class="bind" x1="199.57" y1="394.31" x2="208.95" y2="397.77" opacity="0.75"/>
+    <line class="bind" x1="213.95" y1="385.35" x2="219.72" y2="387.02" opacity="0.58"/>
+    <line class="bind" x1="207.36" y1="389.06" x2="205.02" y2="397.75" opacity="0.58"/>
+    <line class="bind" x1="203.40" y1="383.25" x2="197.44" y2="382.59" opacity="0.58"/>
+    <line class="bind" x1="208.99" y1="378.45" x2="209.36" y2="369.46" opacity="0.58"/>
+      <title>edge: bind
+parse_linha -&gt; parse_linha
+weight: 4
+
+path:
+parse_linha -&gt; parse_linha</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="bind" d="M 237.81 92.75 Q 232.44 106.43 240.69 118.59" stroke-width="1.80" opacity="0.85"/>
+    <line class="bind" x1="242.36" y1="97.47" x2="234.41" y2="98.36" opacity="0.75"/>
+    <line class="bind" x1="243.64" y1="99.94" x2="233.70" y2="101.05" opacity="0.75"/>
+    <line class="bind" x1="242.94" y1="102.64" x2="234.99" y2="103.53" opacity="0.75"/>
+    <line class="bind" x1="244.22" y1="105.11" x2="234.28" y2="106.22" opacity="0.75"/>
+    <line class="bind" x1="243.51" y1="107.81" x2="235.56" y2="108.69" opacity="0.75"/>
+    <line class="bind" x1="244.79" y1="110.28" x2="234.86" y2="111.39" opacity="0.75"/>
+    <line class="bind" x1="247.43" y1="119.47" x2="253.38" y2="120.24" opacity="0.58"/>
+    <line class="bind" x1="241.18" y1="125.37" x2="241.84" y2="134.34" opacity="0.58"/>
+    <line class="bind" x1="234.40" y1="121.17" x2="228.85" y2="123.45" opacity="0.58"/>
+    <line class="bind" x1="236.15" y1="113.52" x2="230.14" y2="106.82" opacity="0.58"/>
+    <line class="bind" x1="244.21" y1="112.77" x2="247.32" y2="107.64" opacity="0.58"/>
+      <title>edge: bind
+main -&gt; main
+weight: 35
+
+path:
+main -&gt; main</title>
+    </g>
+  </g>
+  <g id="terminals">
+    <g class="edge-wrap">
+    <path class="term" d="M 199.76 408.23 Q 218.06 385.98 226.67 358.48" stroke-width="1.90" opacity="0.90"/>
+      <title>edge: return
+parse_linha -&gt; parse_linha
+weight: 4
+
+path:
+parse_linha -&gt; parse_linha</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="term" d="M 237.81 92.75 Q 229.09 120.77 236.06 149.29" stroke-width="1.65" opacity="0.90"/>
+      <title>edge: return
+main -&gt; main
+weight: 2
+
+path:
+main -&gt; main</title>
+    </g>
+  </g>
+  <g id="nodes">
+    <g class="node-wrap">
+      <circle class="node-main" cx="417.54" cy="308.68" r="5.95" data-kind="rituale" data-ritual="parse_nivel" data-line="30" data-col="1" data-depth="1" data-stmt="RITUALE" data-loops="0" data-calls="0"/>
+      <title>RITUALE parse_nivel
+stmt: 1
+depth: 1
+loops: 0
+calls: 0
+source:
+RITUALE parse_nivel(VERBUM tag) REDDE REX</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-main" cx="381.16" cy="351.20" r="5.95" data-kind="rituale" data-ritual="nivel_nome" data-line="50" data-col="1" data-depth="1" data-stmt="RITUALE" data-loops="0" data-calls="0"/>
+      <title>RITUALE nivel_nome
+stmt: 1
+depth: 1
+loops: 0
+calls: 0
+source:
+RITUALE nivel_nome(REX n) REDDE VERBUM</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-main" cx="199.76" cy="408.23" r="7.15" data-kind="rituale" data-ritual="parse_linha" data-line="68" data-col="1" data-depth="5" data-stmt="RITUALE" data-loops="0" data-calls="7"/>
+      <title>RITUALE parse_linha
+stmt: 9
+depth: 5
+loops: 0
+calls: 7
+source:
+RITUALE parse_linha(VERBUM linha) REDDE EntradaLog</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="190.07" cy="365.21" r="5.80" data-kind="branch" data-ritual="parse_linha" data-line="70" data-col="3" data-depth="5" data-stmt="SI"/>
+      <title>stmt: SI
+rituale: parse_linha
+depth: 5
+line: 70
+
+source:
+SI CONIURA len(tl) == 0</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="208.77" cy="383.85" r="3.40" data-kind="bind" data-ritual="parse_linha" data-line="69" data-col="3" data-depth="5" data-stmt="EVOCA"/>
+      <title>stmt: EVOCA
+rituale: parse_linha
+depth: 5
+line: 69
+
+source:
+EVOCA VERBUM tl AD CONIURA trim(linha)</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="226.67" cy="358.48" r="4.40" data-kind="term" data-ritual="parse_linha" data-line="71" data-col="5" data-depth="5" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: parse_linha
+depth: 5
+line: 71
+
+source:
+REDDE Invalida(linha)</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-entry" cx="237.81" cy="92.75" r="12.80" data-kind="rituale" data-ritual="main" data-line="82" data-col="1" data-depth="6" data-stmt="RITUALE" data-loops="3" data-calls="6" data-entry="true"/>
+      <title>RITUALE main
+stmt: 42
+depth: 6
+loops: 3
+calls: 6
+source:
+RITUALE main() REDDE NIHIL</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="265.59" cy="125.37" r="4.80" data-kind="branch" data-ritual="main" data-line="150" data-col="3" data-depth="6" data-stmt="SI"/>
+      <title>stmt: SI
+rituale: main
+depth: 6
+line: 150
+
+source:
+SI criticos &gt; 0</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-loop" cx="232.71" cy="47.03" r="3.90" data-kind="loop" data-ritual="main" data-line="101" data-col="3" data-depth="6" data-stmt="REPETE"/>
+      <title>stmt: REPETE
+rituale: main
+depth: 6
+line: 101
+
+source:
+REPETE k DE 0 AD 4</title>
+    </g>
+    <circle class="node-loop" cx="221.51" cy="49.13" r="1.25" opacity="0.9"/>
+    <circle class="node-loop" cx="227.11" cy="44.93" r="1.25" opacity="0.9"/>
+    <line class="loop" x1="221.51" y1="49.13" x2="227.11" y2="44.93" opacity="0.75"/>
+    <circle class="node-loop" cx="232.71" cy="49.13" r="1.25" opacity="0.9"/>
+    <line class="loop" x1="227.11" y1="44.93" x2="232.71" y2="49.13" opacity="0.75"/>
+    <circle class="node-loop" cx="238.31" cy="44.93" r="1.25" opacity="0.9"/>
+    <line class="loop" x1="232.71" y1="49.13" x2="238.31" y2="44.93" opacity="0.75"/>
+    <circle class="node-loop" cx="243.91" cy="49.13" r="1.25" opacity="0.9"/>
+    <line class="loop" x1="238.31" y1="44.93" x2="243.91" y2="49.13" opacity="0.75"/>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="240.69" cy="118.59" r="4.80" data-kind="bind" data-ritual="main" data-line="85" data-col="3" data-depth="6" data-stmt="EVOCA"/>
+      <title>stmt: EVOCA
+rituale: main
+depth: 6
+line: 85
+
+source:
+EVOCA SERIES VERBUM[12] linhas</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="236.06" cy="149.29" r="3.60" data-kind="term" data-ritual="main" data-line="155" data-col="3" data-depth="6" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: main
+depth: 6
+line: 155
+
+source:
+REDDE</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="266.47" cy="246.83" r="4.76" data-kind="bind" data-ritual="main" data-line="85" data-col="3" data-depth="6" data-stmt="EVOCA"/>
+      <title>stmt: EVOCA
+rituale: main
+depth: 6
+line: 85
+
+source:
+EVOCA SERIES VERBUM[12] linhas</title>
+    </g>
+  </g>
+  <g id="ornaments">
+    <circle class="orn" cx="459.97" cy="276.84" r="0.90"/>
+    <circle class="orn" cx="433.11" cy="367.15" r="1.90"/>
+    <circle class="orn" cx="353.89" cy="441.29" r="2.90"/>
+    <circle class="orn" cx="317.13" cy="445.03" r="0.90"/>
+    <circle class="orn" cx="175.41" cy="449.48" r="1.90"/>
+    <circle class="orn" cx="141.73" cy="433.09" r="2.90"/>
+    <circle class="orn" cx="62.51" cy="312.14" r="0.90"/>
+    <circle class="orn" cx="54.18" cy="222.64" r="1.90"/>
+    <circle class="orn" cx="64.97" cy="194.17" r="2.90"/>
+    <circle class="orn" cx="124.00" cy="91.44" r="0.90"/>
+    <circle class="orn" cx="211.39" cy="59.49" r="1.90"/>
+    <circle class="orn" cx="327.71" cy="63.27" r="2.90"/>
+    <circle class="orn" cx="404.11" cy="117.76" r="0.90"/>
+    <circle class="orn" cx="420.62" cy="130.24" r="1.90"/>
+  </g>
+  <g id="signature">
+    <text class="hash" x="256" y="496" text-anchor="middle">c43572dab44fc87c</text>
+    <text class="label" x="256" y="18" text-anchor="middle">network • sigillum v2.1 • 4 rituale(s) • 53 stmt • depth 6</text>
+  </g>
+</svg>

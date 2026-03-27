@@ -1,0 +1,1076 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512" role="img" aria-label="CCT local sigilo">
+  <desc>Deterministic semantic sigil for a single CCT module.</desc>
+  <defs>
+    <style><![CDATA[
+      .bg { fill: #f5f0e4; }
+      .base { stroke: #2a221c; stroke-width: 1.60; fill: none; opacity: 0.78; }
+      .primary { stroke: #241913; stroke-width: 2.80; fill: none; stroke-linecap: round; stroke-linejoin: round; }
+      .call { stroke: #5b2a22; stroke-width: 2.0; fill: none; stroke-linecap: round; opacity: 0.9; }
+      .branch { stroke: #6b342d; stroke-width: 1.6; fill: none; stroke-linecap: round; }
+      .loop { stroke: #2d5f5a; stroke-width: 1.6; fill: none; stroke-linecap: round; }
+      .bind { stroke: #73493d; stroke-width: 1.4; fill: none; stroke-linecap: round; }
+      .term { stroke: #201814; stroke-width: 1.7; fill: none; stroke-linecap: round; }
+      .node-main { fill: #fffaf1; stroke: #201814; stroke-width: 2.0; }
+      .node-entry { fill: #efe6d4; stroke: #201814; stroke-width: 2.4; }
+      .node-aux { fill: #f6efe0; stroke: #4f4339; stroke-width: 1.3; }
+      .node-loop { fill: #edf3f1; stroke: #2d5f5a; stroke-width: 1.4; }
+      .node-term { fill: #f3e7e3; stroke: #5a2a23; stroke-width: 1.4; }
+      .orn { stroke: #355d58; stroke-width: 1.0; fill: none; opacity: 0.55; }
+      .hash { fill: #1f1a17; font: 10px monospace; letter-spacing: 0.8px; }
+      .label { fill: #1f1a17; font: 8px monospace; opacity: 0.7; }
+      .node-wrap, .edge-wrap { cursor: help; }
+      .node-wrap:hover > circle { opacity: 0.96; }
+      .edge-wrap:hover > path, .edge-wrap:hover > line { opacity: 1.0; }
+    ]]></style>
+  </defs>
+  <rect class="bg" x="0" y="0" width="512" height="512"/>
+  <g id="foundation">
+    <circle class="base" cx="256" cy="256" r="226"/>
+    <ellipse class="base" cx="256" cy="256" rx="198" ry="185.72" opacity="0.32"/>
+  </g>
+  <g id="primary_path">
+    <g class="edge-wrap">
+    <path class="primary" d="M 287.84 109.38 Q 299.07 140.52 320.99 115.71" stroke-width="2.60" opacity="0.96"/>
+      <title>edge: primary
+gettext_error -&gt; gettext_catalog_new
+weight: 1
+
+path:
+gettext_error -&gt; gettext_catalog_new</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="primary" d="M 320.99 115.71 Q 364.48 169.03 432.23 181.07" stroke-width="2.60" opacity="0.96"/>
+      <title>edge: primary
+gettext_catalog_new -&gt; gettext_extract_quoted
+weight: 1
+
+path:
+gettext_catalog_new -&gt; gettext_extract_quoted</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="primary" d="M 432.23 181.07 Q 402.23 242.11 421.44 307.36" stroke-width="2.60" opacity="0.96"/>
+      <title>edge: primary
+gettext_extract_quoted -&gt; gettext_split_first_line
+weight: 1
+
+path:
+gettext_extract_quoted -&gt; gettext_split_first_line</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="primary" d="M 421.44 307.36 Q 370.90 331.08 369.39 386.89" stroke-width="2.60" opacity="0.96"/>
+      <title>edge: primary
+gettext_split_first_line -&gt; gettext_commit_entry
+weight: 1
+
+path:
+gettext_split_first_line -&gt; gettext_commit_entry</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="primary" d="M 369.39 386.89 Q 237.07 340.63 97.03 346.75" stroke-width="2.60" opacity="0.96"/>
+      <title>edge: primary
+gettext_commit_entry -&gt; gettext_load_catalog
+weight: 1
+
+path:
+gettext_commit_entry -&gt; gettext_load_catalog</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="primary" d="M 97.03 346.75 Q 131.33 254.52 121.50 156.60" stroke-width="2.60" opacity="0.96"/>
+      <title>edge: primary
+gettext_load_catalog -&gt; gettext_translate
+weight: 1
+
+path:
+gettext_load_catalog -&gt; gettext_translate</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="primary" d="M 121.50 156.60 Q 169.28 150.23 188.50 106.01" stroke-width="2.60" opacity="0.96"/>
+      <title>edge: primary
+gettext_translate -&gt; gettext_translate_plural
+weight: 1
+
+path:
+gettext_translate -&gt; gettext_translate_plural</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="primary" d="M 188.50 106.01 Q 217.93 131.86 242.75 101.56" stroke-width="2.60" opacity="0.96"/>
+      <title>edge: primary
+gettext_translate_plural -&gt; gettext_set_default_catalog
+weight: 1
+
+path:
+gettext_translate_plural -&gt; gettext_set_default_catalog</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="primary" d="M 242.75 101.56 Q 243.03 127.14 256.67 105.50" stroke-width="2.60" opacity="0.96"/>
+      <title>edge: primary
+gettext_set_default_catalog -&gt; t
+weight: 1
+
+path:
+gettext_set_default_catalog -&gt; t</title>
+    </g>
+  </g>
+  <g id="call_links">
+    <g class="edge-wrap">
+    <path class="call" d="M 97.03 346.75 Q 222.87 252.53 287.84 109.38" stroke-width="2.50" opacity="0.80" data-kind="call" data-from="gettext_load_catalog" data-to="gettext_error" data-weight="2" data-self-loop="false"/>
+      <title>edge: call
+gettext_load_catalog -&gt; gettext_error
+calls: 2
+
+path:
+gettext_load_catalog -&gt; gettext_error</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="call" d="M 97.03 346.75 Q 229.01 250.62 320.99 115.71" stroke-width="2.15" opacity="0.74" data-kind="call" data-from="gettext_load_catalog" data-to="gettext_catalog_new" data-weight="1" data-self-loop="false"/>
+      <title>edge: call
+gettext_load_catalog -&gt; gettext_catalog_new
+calls: 1
+
+path:
+gettext_load_catalog -&gt; gettext_catalog_new</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="call" d="M 97.03 346.75 Q 263.28 360.36 421.44 307.36" stroke-width="2.15" opacity="0.74" data-kind="call" data-from="gettext_load_catalog" data-to="gettext_split_first_line" data-weight="1" data-self-loop="false"/>
+      <title>edge: call
+gettext_load_catalog -&gt; gettext_split_first_line
+calls: 1
+
+path:
+gettext_load_catalog -&gt; gettext_split_first_line</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="call" d="M 97.03 346.75 Q 226.98 409.10 369.39 386.89" stroke-width="2.85" opacity="0.86" data-kind="call" data-from="gettext_load_catalog" data-to="gettext_commit_entry" data-weight="3" data-self-loop="false"/>
+      <title>edge: call
+gettext_load_catalog -&gt; gettext_commit_entry
+calls: 3
+
+path:
+gettext_load_catalog -&gt; gettext_commit_entry</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="call" d="M 97.03 346.75 Q 286.69 308.53 432.23 181.07" stroke-width="3.00" opacity="0.90" data-kind="call" data-from="gettext_load_catalog" data-to="gettext_extract_quoted" data-weight="6" data-self-loop="false"/>
+      <title>edge: call
+gettext_load_catalog -&gt; gettext_extract_quoted
+calls: 6
+
+path:
+gettext_load_catalog -&gt; gettext_extract_quoted</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="call" d="M 188.50 106.01 Q 133.25 102.50 121.50 156.60" stroke-width="2.50" opacity="0.80" data-kind="call" data-from="gettext_translate_plural" data-to="gettext_translate" data-weight="2" data-self-loop="false"/>
+      <title>edge: call
+gettext_translate_plural -&gt; gettext_translate
+calls: 2
+
+path:
+gettext_translate_plural -&gt; gettext_translate</title>
+    </g>
+  </g>
+  <g id="branches">
+    <g class="edge-wrap">
+    <path class="branch" d="M 432.23 181.07 Q 411.60 196.94 400.67 220.57" stroke-width="2.10" opacity="0.85"/>
+      <title>edge: branch
+gettext_extract_quoted -&gt; gettext_extract_quoted
+weight: 8
+
+path:
+gettext_extract_quoted -&gt; gettext_extract_quoted</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="branch" d="M 421.44 307.36 Q 397.17 301.10 380.42 319.75" stroke-width="1.70" opacity="0.85"/>
+      <title>edge: branch
+gettext_split_first_line -&gt; gettext_split_first_line
+weight: 2
+
+path:
+gettext_split_first_line -&gt; gettext_split_first_line</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="branch" d="M 369.39 386.89 Q 372.78 360.24 358.39 337.55" stroke-width="2.10" opacity="0.85"/>
+      <title>edge: branch
+gettext_commit_entry -&gt; gettext_commit_entry
+weight: 8
+
+path:
+gettext_commit_entry -&gt; gettext_commit_entry</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="branch" d="M 358.39 337.55 Q 336.87 362.77 331.90 395.55" stroke-width="1.95" opacity="0.85"/>
+      <title>edge: branch
+gettext_commit_entry -&gt; gettext_commit_entry
+weight: 3
+
+path:
+gettext_commit_entry -&gt; gettext_commit_entry</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="branch" d="M 331.90 395.55 Q 352.69 400.09 369.39 386.89" stroke-width="1.45" opacity="0.85"/>
+      <title>edge: branch
+gettext_commit_entry -&gt; gettext_commit_entry
+weight: 1
+
+path:
+gettext_commit_entry -&gt; gettext_commit_entry</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="branch" d="M 97.03 346.75 Q 124.47 329.78 132.90 298.64" stroke-width="2.10" opacity="0.85"/>
+      <title>edge: branch
+gettext_load_catalog -&gt; gettext_load_catalog
+weight: 15
+
+path:
+gettext_load_catalog -&gt; gettext_load_catalog</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="branch" d="M 132.90 298.64 Q 119.36 332.41 129.52 367.35" stroke-width="2.10" opacity="0.85"/>
+      <title>edge: branch
+gettext_load_catalog -&gt; gettext_load_catalog
+weight: 4
+
+path:
+gettext_load_catalog -&gt; gettext_load_catalog</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="branch" d="M 129.52 367.35 Q 119.63 347.04 97.03 346.75" stroke-width="1.45" opacity="0.85"/>
+      <title>edge: branch
+gettext_load_catalog -&gt; gettext_load_catalog
+weight: 1
+
+path:
+gettext_load_catalog -&gt; gettext_load_catalog</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="branch" d="M 121.50 156.60 Q 142.32 171.41 164.31 158.40" stroke-width="1.70" opacity="0.85"/>
+      <title>edge: branch
+gettext_translate -&gt; gettext_translate
+weight: 2
+
+path:
+gettext_translate -&gt; gettext_translate</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="branch" d="M 188.50 106.01 Q 178.92 127.61 182.41 150.97" stroke-width="2.10" opacity="0.85"/>
+      <title>edge: branch
+gettext_translate_plural -&gt; gettext_translate_plural
+weight: 4
+
+path:
+gettext_translate_plural -&gt; gettext_translate_plural</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="branch" d="M 242.75 101.56 Q 249.13 123.96 269.70 134.88" stroke-width="1.70" opacity="0.85"/>
+      <title>edge: branch
+gettext_set_default_catalog -&gt; gettext_set_default_catalog
+weight: 2
+
+path:
+gettext_set_default_catalog -&gt; gettext_set_default_catalog</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="branch" d="M 263.72 245.71 Q 285.82 179.32 287.84 109.38" stroke-width="1.45" opacity="0.85"/>
+      <title>edge: branch
+gettext_error -&gt; gettext_error
+weight: 1
+
+path:
+gettext_error -&gt; gettext_error</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="branch" d="M 263.72 245.71 Q 303.78 185.74 320.99 115.71" stroke-width="1.95" opacity="0.85"/>
+      <title>edge: branch
+gettext_error -&gt; gettext_catalog_new
+weight: 3
+
+path:
+gettext_error -&gt; gettext_catalog_new</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="branch" d="M 263.72 245.71 Q 352.66 225.60 432.23 181.07" stroke-width="2.10" opacity="0.85"/>
+      <title>edge: branch
+gettext_error -&gt; gettext_extract_quoted
+weight: 21
+
+path:
+gettext_error -&gt; gettext_extract_quoted</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="branch" d="M 263.72 245.71 Q 338.42 287.19 421.44 307.36" stroke-width="2.10" opacity="0.85"/>
+      <title>edge: branch
+gettext_error -&gt; gettext_split_first_line
+weight: 6
+
+path:
+gettext_error -&gt; gettext_split_first_line</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="branch" d="M 263.72 245.71 Q 309.99 321.22 369.39 386.89" stroke-width="2.10" opacity="0.85"/>
+      <title>edge: branch
+gettext_error -&gt; gettext_commit_entry
+weight: 19
+
+path:
+gettext_error -&gt; gettext_commit_entry</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="branch" d="M 263.72 245.71 Q 176.94 290.56 97.03 346.75" stroke-width="2.10" opacity="0.85"/>
+      <title>edge: branch
+gettext_error -&gt; gettext_load_catalog
+weight: 48
+
+path:
+gettext_error -&gt; gettext_load_catalog</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="branch" d="M 263.72 245.71 Q 197.32 193.64 121.50 156.60" stroke-width="2.10" opacity="0.85"/>
+      <title>edge: branch
+gettext_error -&gt; gettext_translate
+weight: 5
+
+path:
+gettext_error -&gt; gettext_translate</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="branch" d="M 263.72 245.71 Q 236.08 170.49 188.50 106.01" stroke-width="2.10" opacity="0.85"/>
+      <title>edge: branch
+gettext_error -&gt; gettext_translate_plural
+weight: 9
+
+path:
+gettext_error -&gt; gettext_translate_plural</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="branch" d="M 263.72 245.71 Q 265.82 171.81 242.75 101.56" stroke-width="1.70" opacity="0.85"/>
+      <title>edge: branch
+gettext_error -&gt; gettext_set_default_catalog
+weight: 2
+
+path:
+gettext_error -&gt; gettext_set_default_catalog</title>
+    </g>
+  </g>
+  <g id="loops">
+    <g class="edge-wrap">
+    <path class="loop" d="M 432.23 181.07 Q 446.88 193.04 465.27 197.45" stroke-width="1.70" opacity="0.88"/>
+      <title>edge: loop
+gettext_extract_quoted -&gt; gettext_extract_quoted
+weight: 3
+
+path:
+gettext_extract_quoted -&gt; gettext_extract_quoted</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="loop" d="M 469.59 197.45 C 503.86 174.19 507.99 197.36 491.48 185.77 C 474.96 197.36 479.09 174.19 462.03 198.95"/>
+      <title>edge: loop
+gettext_extract_quoted -&gt; gettext_extract_quoted
+weight: 3
+
+path:
+gettext_extract_quoted -&gt; gettext_extract_quoted</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="loop" d="M 97.03 346.75 Q 82.99 331.26 62.31 334.33" stroke-width="1.55" opacity="0.88"/>
+      <title>edge: loop
+gettext_load_catalog -&gt; gettext_load_catalog
+weight: 2
+
+path:
+gettext_load_catalog -&gt; gettext_load_catalog</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="loop" d="M 66.07 334.33 C 101.08 317.10 104.99 338.92 89.37 328.01 C 73.76 338.92 77.66 317.10 59.49 335.83"/>
+      <title>edge: loop
+gettext_load_catalog -&gt; gettext_load_catalog
+weight: 2
+
+path:
+gettext_load_catalog -&gt; gettext_load_catalog</title>
+    </g>
+  </g>
+  <g id="bindings">
+    <g class="edge-wrap">
+    <path class="bind" d="M 287.84 109.38 Q 280.01 120.98 282.32 134.79" stroke-width="1.36" opacity="0.85"/>
+    <line class="bind" x1="290.65" y1="115.31" x2="282.83" y2="113.61" opacity="0.75"/>
+    <line class="bind" x1="291.07" y1="118.06" x2="281.30" y2="115.94" opacity="0.75"/>
+    <line class="bind" x1="287.42" y1="134.59" x2="293.42" y2="134.36" opacity="0.58"/>
+    <line class="bind" x1="277.39" y1="133.51" x2="268.68" y2="131.25" opacity="0.58"/>
+      <title>edge: bind
+gettext_error -&gt; gettext_error
+weight: 2
+
+path:
+gettext_error -&gt; gettext_error</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="bind" d="M 320.99 115.71 Q 310.11 125.00 310.06 139.30" stroke-width="1.52" opacity="0.85"/>
+    <line class="bind" x1="322.43" y1="122.11" x2="315.17" y2="118.74" opacity="0.75"/>
+    <line class="bind" x1="322.24" y1="124.89" x2="313.17" y2="120.68" opacity="0.75"/>
+    <line class="bind" x1="320.24" y1="126.83" x2="312.98" y2="123.46" opacity="0.75"/>
+    <line class="bind" x1="320.06" y1="129.60" x2="310.98" y2="125.40" opacity="0.75"/>
+    <line class="bind" x1="315.44" y1="138.82" x2="321.41" y2="138.29" opacity="0.58"/>
+    <line class="bind" x1="308.95" y1="144.58" x2="307.11" y2="153.39" opacity="0.58"/>
+    <line class="bind" x1="304.77" y1="140.38" x2="298.89" y2="141.59" opacity="0.58"/>
+    <line class="bind" x1="308.73" y1="134.06" x2="306.53" y2="125.34" opacity="0.58"/>
+      <title>edge: bind
+gettext_catalog_new -&gt; gettext_catalog_new
+weight: 4
+
+path:
+gettext_catalog_new -&gt; gettext_catalog_new</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="bind" d="M 432.23 181.07 Q 419.79 185.04 408.30 191.25" stroke-width="1.80" opacity="0.85"/>
+    <line class="bind" x1="429.01" y1="186.79" x2="425.88" y2="179.43" opacity="0.75"/>
+    <line class="bind" x1="427.01" y1="188.73" x2="423.10" y2="179.52" opacity="0.75"/>
+    <line class="bind" x1="424.23" y1="188.82" x2="421.10" y2="181.46" opacity="0.75"/>
+    <line class="bind" x1="422.22" y1="190.76" x2="418.31" y2="181.56" opacity="0.75"/>
+    <line class="bind" x1="419.44" y1="190.86" x2="416.31" y2="183.50" opacity="0.75"/>
+    <line class="bind" x1="417.44" y1="192.80" x2="413.53" y2="183.59" opacity="0.75"/>
+    <line class="bind" x1="415.10" y1="191.04" x2="421.10" y2="190.85" opacity="0.58"/>
+    <line class="bind" x1="408.49" y1="198.04" x2="408.74" y2="207.04" opacity="0.58"/>
+    <line class="bind" x1="403.48" y1="196.04" x2="399.22" y2="200.26" opacity="0.58"/>
+    <line class="bind" x1="403.05" y1="186.93" x2="396.10" y2="181.22" opacity="0.58"/>
+    <line class="bind" x1="408.99" y1="184.48" x2="409.59" y2="178.51" opacity="0.58"/>
+      <title>edge: bind
+gettext_extract_quoted -&gt; gettext_extract_quoted
+weight: 17
+
+path:
+gettext_extract_quoted -&gt; gettext_extract_quoted</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="bind" d="M 421.44 307.36 Q 411.40 295.85 396.61 299.65" stroke-width="1.28" opacity="0.85"/>
+    <line class="bind" x1="415.29" y1="309.64" x2="417.66" y2="301.99" opacity="0.75"/>
+    <line class="bind" x1="401.38" y1="298.30" x2="407.15" y2="296.67" opacity="0.58"/>
+      <title>edge: bind
+gettext_split_first_line -&gt; gettext_split_first_line
+weight: 1
+
+path:
+gettext_split_first_line -&gt; gettext_split_first_line</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="bind" d="M 369.39 386.89 Q 363.98 374.38 352.36 367.24" stroke-width="1.60" opacity="0.85"/>
+    <line class="bind" x1="362.96" y1="385.58" x2="369.01" y2="380.35" opacity="0.75"/>
+    <line class="bind" x1="360.50" y1="384.27" x2="368.06" y2="377.73" opacity="0.75"/>
+    <line class="bind" x1="359.56" y1="381.65" x2="365.60" y2="376.41" opacity="0.75"/>
+    <line class="bind" x1="357.10" y1="380.34" x2="364.66" y2="373.79" opacity="0.75"/>
+    <line class="bind" x1="356.15" y1="377.72" x2="362.20" y2="372.48" opacity="0.75"/>
+    <line class="bind" x1="357.70" y1="368.78" x2="363.46" y2="370.44" opacity="0.58"/>
+    <line class="bind" x1="354.74" y1="372.26" x2="358.60" y2="380.39" opacity="0.58"/>
+    <line class="bind" x1="348.90" y1="371.58" x2="345.16" y2="376.27" opacity="0.58"/>
+    <line class="bind" x1="347.54" y1="364.50" x2="339.71" y2="360.06" opacity="0.58"/>
+    <line class="bind" x1="353.84" y1="361.89" x2="355.44" y2="356.11" opacity="0.58"/>
+      <title>edge: bind
+gettext_commit_entry -&gt; gettext_commit_entry
+weight: 5
+
+path:
+gettext_commit_entry -&gt; gettext_commit_entry</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="bind" d="M 97.03 346.75 Q 111.72 346.26 119.61 333.86" stroke-width="1.80" opacity="0.85"/>
+    <line class="bind" x1="99.56" y1="340.70" x2="103.53" y2="347.65" opacity="0.75"/>
+    <line class="bind" x1="101.33" y1="338.54" x2="106.28" y2="347.23" opacity="0.75"/>
+    <line class="bind" x1="104.08" y1="338.12" x2="108.05" y2="345.07" opacity="0.75"/>
+    <line class="bind" x1="105.84" y1="335.96" x2="110.80" y2="344.65" opacity="0.75"/>
+    <line class="bind" x1="108.60" y1="335.54" x2="112.56" y2="342.49" opacity="0.75"/>
+    <line class="bind" x1="110.36" y1="333.39" x2="115.32" y2="342.07" opacity="0.75"/>
+    <line class="bind" x1="126.18" y1="335.61" x2="131.98" y2="337.16" opacity="0.58"/>
+    <line class="bind" x1="123.43" y1="339.49" x2="128.48" y2="346.94" opacity="0.58"/>
+    <line class="bind" x1="113.77" y1="337.35" x2="108.62" y2="340.42" opacity="0.58"/>
+    <line class="bind" x1="115.16" y1="328.72" x2="109.27" y2="321.91" opacity="0.58"/>
+    <line class="bind" x1="123.00" y1="327.96" x2="125.99" y2="322.76" opacity="0.58"/>
+      <title>edge: bind
+gettext_load_catalog -&gt; gettext_load_catalog
+weight: 32
+
+path:
+gettext_load_catalog -&gt; gettext_load_catalog</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="bind" d="M 121.50 156.60 Q 126.65 171.51 142.41 172.06" stroke-width="1.28" opacity="0.85"/>
+    <line class="bind" x1="128.06" y1="156.48" x2="123.30" y2="162.91" opacity="0.75"/>
+    <line class="bind" x1="147.35" y1="172.27" x2="153.35" y2="172.53" opacity="0.58"/>
+      <title>edge: bind
+gettext_translate -&gt; gettext_translate
+weight: 1
+
+path:
+gettext_translate -&gt; gettext_translate</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="bind" d="M 188.50 106.01 Q 192.38 118.52 199.17 129.72" stroke-width="1.36" opacity="0.85"/>
+    <line class="bind" x1="194.28" y1="109.11" x2="186.98" y2="112.40" opacity="0.75"/>
+    <line class="bind" x1="196.26" y1="111.07" x2="187.14" y2="115.18" opacity="0.75"/>
+    <line class="bind" x1="204.21" y1="130.48" x2="210.15" y2="131.37" opacity="0.58"/>
+    <line class="bind" x1="194.08" y1="130.01" x2="185.09" y2="130.52" opacity="0.58"/>
+      <title>edge: bind
+gettext_translate_plural -&gt; gettext_translate_plural
+weight: 2
+
+path:
+gettext_translate_plural -&gt; gettext_translate_plural</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="bind" d="M 242.75 101.56 Q 239.75 114.87 244.97 127.47" stroke-width="1.36" opacity="0.85"/>
+    <line class="bind" x1="247.18" y1="106.40" x2="239.21" y2="107.09" opacity="0.75"/>
+    <line class="bind" x1="248.40" y1="108.91" x2="238.44" y2="109.76" opacity="0.75"/>
+    <line class="bind" x1="250.03" y1="126.84" x2="255.99" y2="126.11" opacity="0.58"/>
+    <line class="bind" x1="240.04" y1="126.18" x2="231.33" y2="123.89" opacity="0.58"/>
+      <title>edge: bind
+gettext_set_default_catalog -&gt; gettext_set_default_catalog
+weight: 2
+
+path:
+gettext_set_default_catalog -&gt; gettext_set_default_catalog</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="bind" d="M 256.67 105.50 Q 252.58 118.48 256.55 131.50" stroke-width="1.28" opacity="0.85"/>
+    <line class="bind" x1="260.64" y1="110.72" x2="252.64" y2="110.68" opacity="0.75"/>
+    <line class="bind" x1="261.49" y1="131.83" x2="267.48" y2="132.23" opacity="0.58"/>
+      <title>edge: bind
+t -&gt; t
+weight: 1
+
+path:
+t -&gt; t</title>
+    </g>
+  </g>
+  <g id="terminals">
+    <g class="edge-wrap">
+    <path class="term" d="M 287.84 109.38 Q 279.63 137.15 283.78 165.80" stroke-width="1.65" opacity="0.90"/>
+      <title>edge: return
+gettext_error -&gt; gettext_error
+weight: 2
+
+path:
+gettext_error -&gt; gettext_error</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="term" d="M 320.99 115.71 Q 306.18 140.79 304.71 169.88" stroke-width="1.65" opacity="0.90"/>
+      <title>edge: return
+gettext_catalog_new -&gt; gettext_catalog_new
+weight: 2
+
+path:
+gettext_catalog_new -&gt; gettext_catalog_new</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="term" d="M 432.23 181.07 Q 404.33 186.21 377.57 195.62" stroke-width="1.90" opacity="0.90"/>
+      <title>edge: return
+gettext_extract_quoted -&gt; gettext_extract_quoted
+weight: 4
+
+path:
+gettext_extract_quoted -&gt; gettext_extract_quoted</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="term" d="M 421.44 307.36 Q 399.75 287.09 370.33 283.11" stroke-width="1.80" opacity="0.90"/>
+      <title>edge: return
+gettext_split_first_line -&gt; gettext_split_first_line
+weight: 3
+
+path:
+gettext_split_first_line -&gt; gettext_split_first_line</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="term" d="M 369.39 386.89 Q 351.38 364.50 326.68 349.81" stroke-width="1.90" opacity="0.90"/>
+      <title>edge: return
+gettext_commit_entry -&gt; gettext_commit_entry
+weight: 4
+
+path:
+gettext_commit_entry -&gt; gettext_commit_entry</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="term" d="M 97.03 346.75 Q 126.22 343.65 149.63 325.94" stroke-width="1.90" opacity="0.90"/>
+      <title>edge: return
+gettext_load_catalog -&gt; gettext_load_catalog
+weight: 4
+
+path:
+gettext_load_catalog -&gt; gettext_load_catalog</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="term" d="M 121.50 156.60 Q 134.67 183.53 161.78 196.32" stroke-width="1.80" opacity="0.90"/>
+      <title>edge: return
+gettext_translate -&gt; gettext_translate
+weight: 3
+
+path:
+gettext_translate -&gt; gettext_translate</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="term" d="M 188.50 106.01 Q 201.45 131.29 218.77 153.80" stroke-width="1.90" opacity="0.90"/>
+      <title>edge: return
+gettext_translate_plural -&gt; gettext_translate_plural
+weight: 5
+
+path:
+gettext_translate_plural -&gt; gettext_translate_plural</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="term" d="M 242.75 101.56 Q 236.04 129.52 239.57 158.04" stroke-width="1.80" opacity="0.90"/>
+      <title>edge: return
+gettext_set_default_catalog -&gt; gettext_set_default_catalog
+weight: 3
+
+path:
+gettext_set_default_catalog -&gt; gettext_set_default_catalog</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="term" d="M 256.67 105.50 Q 247.56 132.75 248.42 161.47" stroke-width="1.65" opacity="0.90"/>
+      <title>edge: return
+t -&gt; t
+weight: 2
+
+path:
+t -&gt; t</title>
+    </g>
+  </g>
+  <g id="nodes">
+    <g class="node-wrap">
+      <circle class="node-main" cx="287.84" cy="109.38" r="6.25" data-kind="rituale" data-ritual="gettext_error" data-line="33" data-col="1" data-depth="3" data-stmt="RITUALE" data-loops="0" data-calls="0"/>
+      <title>RITUALE gettext_error
+stmt: 3
+depth: 3
+loops: 0
+calls: 0
+source:
+RITUALE gettext_error(VERBUM message) REDDE GettextError</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="282.32" cy="134.79" r="3.10" data-kind="bind" data-ritual="gettext_error" data-line="34" data-col="3" data-depth="3" data-stmt="EVOCA"/>
+      <title>stmt: EVOCA
+rituale: gettext_error
+depth: 3
+line: 34
+
+source:
+EVOCA GettextError err</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="283.78" cy="165.80" r="3.60" data-kind="term" data-ritual="gettext_error" data-line="36" data-col="3" data-depth="3" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: gettext_error
+depth: 3
+line: 36
+
+source:
+REDDE err</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-main" cx="320.99" cy="115.71" r="6.55" data-kind="rituale" data-ritual="gettext_catalog_new" data-line="39" data-col="1" data-depth="3" data-stmt="RITUALE" data-loops="0" data-calls="2"/>
+      <title>RITUALE gettext_catalog_new
+stmt: 5
+depth: 3
+loops: 0
+calls: 2
+source:
+RITUALE gettext_catalog_new(VERBUM locale) REDDE Catalog</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="310.06" cy="139.30" r="3.40" data-kind="bind" data-ritual="gettext_catalog_new" data-line="40" data-col="3" data-depth="3" data-stmt="EVOCA"/>
+      <title>stmt: EVOCA
+rituale: gettext_catalog_new
+depth: 3
+line: 40
+
+source:
+EVOCA Catalog cat</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="304.71" cy="169.88" r="3.60" data-kind="term" data-ritual="gettext_catalog_new" data-line="44" data-col="3" data-depth="3" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: gettext_catalog_new
+depth: 3
+line: 44
+
+source:
+REDDE cat</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-main" cx="432.23" cy="181.07" r="10.75" data-kind="rituale" data-ritual="gettext_extract_quoted" data-line="47" data-col="1" data-depth="10" data-stmt="RITUALE" data-loops="2" data-calls="11"/>
+      <title>RITUALE gettext_extract_quoted
+stmt: 33
+depth: 10
+loops: 2
+calls: 11
+source:
+RITUALE gettext_extract_quoted(VERBUM line, REX offset) REDDE VERBUM</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="400.67" cy="220.57" r="5.80" data-kind="branch" data-ritual="gettext_extract_quoted" data-line="53" data-col="3" data-depth="10" data-stmt="SI"/>
+      <title>stmt: SI
+rituale: gettext_extract_quoted
+depth: 10
+line: 53
+
+source:
+SI start &gt;= n</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-loop" cx="465.27" cy="197.45" r="5.40" data-kind="loop" data-ritual="gettext_extract_quoted" data-line="50" data-col="3" data-depth="10" data-stmt="DUM"/>
+      <title>stmt: DUM
+rituale: gettext_extract_quoted
+depth: 10
+line: 50
+
+source:
+DUM start &lt; n ET CONIURA char_at(line, start) != 34</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="408.30" cy="191.25" r="4.80" data-kind="bind" data-ritual="gettext_extract_quoted" data-line="48" data-col="3" data-depth="10" data-stmt="EVOCA"/>
+      <title>stmt: EVOCA
+rituale: gettext_extract_quoted
+depth: 10
+line: 48
+
+source:
+EVOCA REX n AD CONIURA len(line)</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="377.57" cy="195.62" r="4.40" data-kind="term" data-ritual="gettext_extract_quoted" data-line="54" data-col="5" data-depth="10" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: gettext_extract_quoted
+depth: 10
+line: 54
+
+source:
+REDDE ""</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-main" cx="421.44" cy="307.36" r="6.40" data-kind="rituale" data-ritual="gettext_split_first_line" data-line="94" data-col="1" data-depth="5" data-stmt="RITUALE" data-loops="0" data-calls="4"/>
+      <title>RITUALE gettext_split_first_line
+stmt: 4
+depth: 5
+loops: 0
+calls: 4
+source:
+RITUALE gettext_split_first_line(VERBUM content) REDDE GettextChunk</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="380.42" cy="319.75" r="4.80" data-kind="branch" data-ritual="gettext_split_first_line" data-line="96" data-col="3" data-depth="5" data-stmt="SI"/>
+      <title>stmt: SI
+rituale: gettext_split_first_line
+depth: 5
+line: 96
+
+source:
+SI idx == -1</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="396.61" cy="299.65" r="2.95" data-kind="bind" data-ritual="gettext_split_first_line" data-line="95" data-col="3" data-depth="5" data-stmt="EVOCA"/>
+      <title>stmt: EVOCA
+rituale: gettext_split_first_line
+depth: 5
+line: 95
+
+source:
+EVOCA REX idx AD CONIURA find(content, "\n")</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="370.33" cy="283.11" r="4.00" data-kind="term" data-ritual="gettext_split_first_line" data-line="97" data-col="5" data-depth="5" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: gettext_split_first_line
+depth: 5
+line: 97
+
+source:
+REDDE Chunk(content, "")</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-main" cx="369.39" cy="386.89" r="8.65" data-kind="rituale" data-ritual="gettext_commit_entry" data-line="102" data-col="1" data-depth="9" data-stmt="RITUALE" data-loops="0" data-calls="11"/>
+      <title>RITUALE gettext_commit_entry
+stmt: 19
+depth: 9
+loops: 0
+calls: 11
+source:
+RITUALE gettext_commit_entry(</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="358.39" cy="337.55" r="5.80" data-kind="branch" data-ritual="gettext_commit_entry" data-line="109" data-col="3" data-depth="9" data-stmt="SI"/>
+      <title>stmt: SI
+rituale: gettext_commit_entry
+depth: 9
+line: 109
+
+source:
+SI CONIURA len(msgid) == 0</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="331.90" cy="395.55" r="5.20" data-kind="branch" data-ritual="gettext_commit_entry" data-line="124" data-col="5" data-depth="9" data-stmt="ALITER"/>
+      <title>stmt: ALITER
+rituale: gettext_commit_entry
+depth: 9
+line: 124
+
+source:
+VINCIRE entry.singular AD msgid</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="352.36" cy="367.24" r="3.55" data-kind="bind" data-ritual="gettext_commit_entry" data-line="120" data-col="3" data-depth="9" data-stmt="EVOCA"/>
+      <title>stmt: EVOCA
+rituale: gettext_commit_entry
+depth: 9
+line: 120
+
+source:
+EVOCA PluralEntry entry</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="326.68" cy="349.81" r="4.40" data-kind="term" data-ritual="gettext_commit_entry" data-line="110" data-col="5" data-depth="9" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: gettext_commit_entry
+depth: 9
+line: 110
+
+source:
+REDDE</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-main" cx="97.03" cy="346.75" r="10.80" data-kind="rituale" data-ritual="gettext_load_catalog" data-line="142" data-col="1" data-depth="15" data-stmt="RITUALE" data-loops="1" data-calls="32"/>
+      <title>RITUALE gettext_load_catalog
+stmt: 61
+depth: 15
+loops: 1
+calls: 32
+source:
+RITUALE gettext_load_catalog(VERBUM caminho, VERBUM locale) REDDE SPECULUM NIHIL</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="132.90" cy="298.64" r="5.80" data-kind="branch" data-ritual="gettext_load_catalog" data-line="143" data-col="3" data-depth="15" data-stmt="SI"/>
+      <title>stmt: SI
+rituale: gettext_load_catalog
+depth: 15
+line: 143
+
+source:
+SI NON CONIURA exists(caminho)</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="129.52" cy="367.35" r="5.20" data-kind="branch" data-ritual="gettext_load_catalog" data-line="218" data-col="7" data-depth="15" data-stmt="ALITER"/>
+      <title>stmt: ALITER
+rituale: gettext_load_catalog
+depth: 15
+line: 218
+
+source:
+SI mode == 1</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-loop" cx="62.31" cy="334.33" r="4.70" data-kind="loop" data-ritual="gettext_load_catalog" data-line="159" data-col="3" data-depth="15" data-stmt="DUM"/>
+      <title>stmt: DUM
+rituale: gettext_load_catalog
+depth: 15
+line: 159
+
+source:
+DUM CONIURA len(cursor) != 0</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="119.61" cy="333.86" r="4.80" data-kind="bind" data-ritual="gettext_load_catalog" data-line="150" data-col="3" data-depth="15" data-stmt="EVOCA"/>
+      <title>stmt: EVOCA
+rituale: gettext_load_catalog
+depth: 15
+line: 150
+
+source:
+EVOCA VERBUM cursor AD CONIURA read_all(caminho)</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="149.63" cy="325.94" r="4.40" data-kind="term" data-ritual="gettext_load_catalog" data-line="144" data-col="5" data-depth="15" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: gettext_load_catalog
+depth: 15
+line: 144
+
+source:
+REDDE CONIURA Err GENUS(Catalog, GettextError)(CONIURA gettext_error("catalogo inexistente"))</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-main" cx="121.50" cy="156.60" r="6.40" data-kind="rituale" data-ritual="gettext_translate" data-line="240" data-col="1" data-depth="5" data-stmt="RITUALE" data-loops="0" data-calls="3"/>
+      <title>RITUALE gettext_translate
+stmt: 4
+depth: 5
+loops: 0
+calls: 3
+source:
+RITUALE gettext_translate(Catalog cat, VERBUM chave) REDDE VERBUM</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="164.31" cy="158.40" r="4.80" data-kind="branch" data-ritual="gettext_translate" data-line="242" data-col="3" data-depth="5" data-stmt="SI"/>
+      <title>stmt: SI
+rituale: gettext_translate
+depth: 5
+line: 242
+
+source:
+SI CONIURA option_is_some GENUS(VERBUM)(found)</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="142.41" cy="172.06" r="2.95" data-kind="bind" data-ritual="gettext_translate" data-line="241" data-col="3" data-depth="5" data-stmt="EVOCA"/>
+      <title>stmt: EVOCA
+rituale: gettext_translate
+depth: 5
+line: 241
+
+source:
+EVOCA SPECULUM NIHIL found AD CONIURA map_get GENUS(VERBUM, VERBUM)(cat.messages, chave)</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="161.78" cy="196.32" r="4.00" data-kind="term" data-ritual="gettext_translate" data-line="243" data-col="5" data-depth="5" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: gettext_translate
+depth: 5
+line: 243
+
+source:
+REDDE CONIURA option_unwrap GENUS(VERBUM)(found)</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-main" cx="188.50" cy="106.01" r="7.15" data-kind="rituale" data-ritual="gettext_translate_plural" data-line="248" data-col="1" data-depth="7" data-stmt="RITUALE" data-loops="0" data-calls="5"/>
+      <title>RITUALE gettext_translate_plural
+stmt: 9
+depth: 7
+loops: 0
+calls: 5
+source:
+RITUALE gettext_translate_plural(Catalog cat, VERBUM singular, VERBUM plural, REX n) REDDE VE...</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="182.41" cy="150.97" r="5.80" data-kind="branch" data-ritual="gettext_translate_plural" data-line="250" data-col="3" data-depth="7" data-stmt="SI"/>
+      <title>stmt: SI
+rituale: gettext_translate_plural
+depth: 7
+line: 250
+
+source:
+SI CONIURA option_is_some GENUS(PluralEntry)(found)</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="199.17" cy="129.72" r="3.10" data-kind="bind" data-ritual="gettext_translate_plural" data-line="249" data-col="3" data-depth="7" data-stmt="EVOCA"/>
+      <title>stmt: EVOCA
+rituale: gettext_translate_plural
+depth: 7
+line: 249
+
+source:
+EVOCA SPECULUM NIHIL found AD CONIURA map_get GENUS(VERBUM, PluralEntry)(cat.plurals, singular)</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="218.77" cy="153.80" r="4.60" data-kind="term" data-ritual="gettext_translate_plural" data-line="253" data-col="7" data-depth="7" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: gettext_translate_plural
+depth: 7
+line: 253
+
+source:
+REDDE entry.singular</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-main" cx="242.75" cy="101.56" r="6.40" data-kind="rituale" data-ritual="gettext_set_default_catalog" data-line="264" data-col="1" data-depth="4" data-stmt="RITUALE" data-loops="0" data-calls="0"/>
+      <title>RITUALE gettext_set_default_catalog
+stmt: 4
+depth: 4
+loops: 0
+calls: 0
+source:
+RITUALE gettext_set_default_catalog(Catalog cat) REDDE NIHIL</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="269.70" cy="134.88" r="4.80" data-kind="branch" data-ritual="gettext_set_default_catalog" data-line="266" data-col="3" data-depth="4" data-stmt="SI"/>
+      <title>stmt: SI
+rituale: gettext_set_default_catalog
+depth: 4
+line: 266
+
+source:
+SI configured</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="244.97" cy="127.47" r="3.10" data-kind="bind" data-ritual="gettext_set_default_catalog" data-line="265" data-col="3" data-depth="4" data-stmt="EVOCA"/>
+      <title>stmt: EVOCA
+rituale: gettext_set_default_catalog
+depth: 4
+line: 265
+
+source:
+EVOCA VERUM configured AD OBSECRO gettext_builtin_default_set(cat.messages, cat.plurals)</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="239.57" cy="158.04" r="4.00" data-kind="term" data-ritual="gettext_set_default_catalog" data-line="267" data-col="5" data-depth="4" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: gettext_set_default_catalog
+depth: 4
+line: 267
+
+source:
+REDDE</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-main" cx="256.67" cy="105.50" r="5.95" data-kind="rituale" data-ritual="t" data-line="272" data-col="1" data-depth="3" data-stmt="RITUALE" data-loops="0" data-calls="0"/>
+      <title>RITUALE t
+stmt: 1
+depth: 3
+loops: 0
+calls: 0
+source:
+RITUALE t(VERBUM chave) REDDE VERBUM</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="256.55" cy="131.50" r="2.95" data-kind="bind" data-ritual="t" data-depth="3" data-stmt="EVOCA"/>
+      <title>stmt: EVOCA
+rituale: t
+depth: 3
+line: 0
+
+source:
+stmt: EVOCA
+rituale: t</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="248.42" cy="161.47" r="3.60" data-kind="term" data-ritual="t" data-line="273" data-col="3" data-depth="3" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: t
+depth: 3
+line: 273
+
+source:
+REDDE OBSECRO gettext_builtin_default_translate(chave)</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="263.72" cy="245.71" r="5.00" data-kind="bind" data-ritual="gettext_error" data-line="34" data-col="3" data-depth="3" data-stmt="EVOCA"/>
+      <title>stmt: EVOCA
+rituale: gettext_error
+depth: 3
+line: 34
+
+source:
+EVOCA GettextError err</title>
+    </g>
+  </g>
+  <g id="ornaments">
+    <circle class="orn" cx="456.91" cy="239.75" r="0.90"/>
+    <circle class="orn" cx="439.44" cy="334.37" r="1.90"/>
+    <circle class="orn" cx="369.76" cy="430.33" r="2.90"/>
+    <circle class="orn" cx="307.79" cy="450.65" r="0.90"/>
+    <circle class="orn" cx="200.43" cy="454.37" r="1.90"/>
+    <circle class="orn" cx="137.58" cy="414.82" r="2.90"/>
+    <circle class="orn" cx="61.21" cy="330.76" r="0.90"/>
+    <circle class="orn" cx="55.85" cy="212.55" r="1.90"/>
+    <circle class="orn" cx="67.64" cy="192.99" r="2.90"/>
+    <circle class="orn" cx="132.70" cy="97.85" r="0.90"/>
+    <circle class="orn" cx="188.88" cy="63.03" r="1.90"/>
+    <circle class="orn" cx="265.58" cy="51.98" r="2.90"/>
+    <circle class="orn" cx="398.96" cy="109.98" r="0.90"/>
+    <circle class="orn" cx="427.69" cy="147.48" r="1.90"/>
+  </g>
+  <g id="signature">
+    <text class="hash" x="256" y="496" text-anchor="middle">1be1a5533081e0e3</text>
+    <text class="label" x="256" y="18" text-anchor="middle">network • sigillum v2.1 • 10 rituale(s) • 143 stmt • depth 15</text>
+  </g>
+</svg>

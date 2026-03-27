@@ -1,0 +1,535 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512" role="img" aria-label="CCT local sigilo">
+  <desc>Deterministic semantic sigil for a single CCT module.</desc>
+  <defs>
+    <style><![CDATA[
+      .bg { fill: #f5f0e4; }
+      .base { stroke: #2a221c; stroke-width: 1.60; fill: none; opacity: 0.78; }
+      .primary { stroke: #241913; stroke-width: 2.80; fill: none; stroke-linecap: round; stroke-linejoin: round; }
+      .call { stroke: #5b2a22; stroke-width: 2.0; fill: none; stroke-linecap: round; opacity: 0.9; }
+      .branch { stroke: #6b342d; stroke-width: 1.6; fill: none; stroke-linecap: round; }
+      .loop { stroke: #2d5f5a; stroke-width: 1.6; fill: none; stroke-linecap: round; }
+      .bind { stroke: #73493d; stroke-width: 1.4; fill: none; stroke-linecap: round; }
+      .term { stroke: #201814; stroke-width: 1.7; fill: none; stroke-linecap: round; }
+      .node-main { fill: #fffaf1; stroke: #201814; stroke-width: 2.0; }
+      .node-entry { fill: #efe6d4; stroke: #201814; stroke-width: 2.4; }
+      .node-aux { fill: #f6efe0; stroke: #4f4339; stroke-width: 1.3; }
+      .node-loop { fill: #edf3f1; stroke: #2d5f5a; stroke-width: 1.4; }
+      .node-term { fill: #f3e7e3; stroke: #5a2a23; stroke-width: 1.4; }
+      .orn { stroke: #355d58; stroke-width: 1.0; fill: none; opacity: 0.55; }
+      .hash { fill: #1f1a17; font: 10px monospace; letter-spacing: 0.8px; }
+      .label { fill: #1f1a17; font: 8px monospace; opacity: 0.7; }
+      .node-wrap, .edge-wrap { cursor: help; }
+      .node-wrap:hover > circle { opacity: 0.96; }
+      .edge-wrap:hover > path, .edge-wrap:hover > line { opacity: 1.0; }
+    ]]></style>
+  </defs>
+  <rect class="bg" x="0" y="0" width="512" height="512"/>
+  <g id="foundation">
+    <circle class="base" cx="256" cy="256" r="226"/>
+    <ellipse class="base" cx="256" cy="256" rx="198" ry="182.31" opacity="0.32"/>
+  </g>
+  <g id="primary_path">
+    <g class="edge-wrap">
+    <path class="primary" d="M 370.89 135.12 Q 374.68 205.06 428.59 249.77" stroke-width="3.20" opacity="0.96"/>
+      <title>edge: primary
+main -&gt; make_key
+weight: 1
+
+path:
+main -&gt; make_key</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="primary" d="M 428.59 249.77 Q 376.71 297.39 379.03 367.78" stroke-width="2.60" opacity="0.96"/>
+      <title>edge: primary
+make_key -&gt; make_handle
+weight: 1
+
+path:
+make_key -&gt; make_handle</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="primary" d="M 379.03 367.78 Q 318.31 357.04 276.34 402.22" stroke-width="2.60" opacity="0.96"/>
+      <title>edge: primary
+make_handle -&gt; make_attempt
+weight: 1
+
+path:
+make_handle -&gt; make_attempt</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="primary" d="M 276.34 402.22 Q 222.61 359.42 155.39 373.59" stroke-width="2.60" opacity="0.96"/>
+      <title>edge: primary
+make_attempt -&gt; bool_result
+weight: 1
+
+path:
+make_attempt -&gt; bool_result</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="primary" d="M 155.39 373.59 Q 153.01 264.66 100.59 169.15" stroke-width="2.60" opacity="0.96"/>
+      <title>edge: primary
+bool_result -&gt; try_like
+weight: 1
+
+path:
+bool_result -&gt; try_like</title>
+    </g>
+  </g>
+  <g id="call_links">
+    <g class="edge-wrap">
+    <path class="call" d="M 276.34 402.22 Q 337.00 412.79 379.03 367.78" stroke-width="2.15" opacity="0.74" data-kind="call" data-from="make_attempt" data-to="make_handle" data-weight="1" data-self-loop="false"/>
+      <title>edge: call
+make_attempt -&gt; make_handle
+calls: 1
+
+path:
+make_attempt -&gt; make_handle</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="call" d="M 100.59 169.15 Q 257.57 238.02 428.59 249.77" stroke-width="2.15" opacity="0.74" data-kind="call" data-from="try_like" data-to="make_key" data-weight="1" data-self-loop="false"/>
+      <title>edge: call
+try_like -&gt; make_key
+calls: 1
+
+path:
+try_like -&gt; make_key</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="call" d="M 100.59 169.15 Q 99.00 279.14 155.39 373.59" stroke-width="2.15" opacity="0.74" data-kind="call" data-from="try_like" data-to="bool_result" data-weight="1" data-self-loop="false"/>
+      <title>edge: call
+try_like -&gt; bool_result
+calls: 1
+
+path:
+try_like -&gt; bool_result</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="call" d="M 100.59 169.15 Q 160.52 306.76 276.34 402.22" stroke-width="2.50" opacity="0.80" data-kind="call" data-from="try_like" data-to="make_attempt" data-weight="2" data-self-loop="false"/>
+      <title>edge: call
+try_like -&gt; make_attempt
+calls: 2
+
+path:
+try_like -&gt; make_attempt</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="call" d="M 370.89 135.12 Q 232.01 122.48 100.59 169.15" stroke-width="2.15" opacity="0.74" data-kind="call" data-from="main" data-to="try_like" data-weight="1" data-self-loop="false"/>
+      <title>edge: call
+main -&gt; try_like
+calls: 1
+
+path:
+main -&gt; try_like</title>
+    </g>
+  </g>
+  <g id="branches">
+    <g class="edge-wrap">
+    <path class="branch" d="M 100.59 169.15 Q 99.07 194.89 121.18 208.15" stroke-width="1.95" opacity="0.85"/>
+      <title>edge: branch
+try_like -&gt; try_like
+weight: 3
+
+path:
+try_like -&gt; try_like</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="branch" d="M 370.89 135.12 Q 348.31 132.18 329.04 144.32" stroke-width="1.70" opacity="0.85"/>
+      <title>edge: branch
+main -&gt; main
+weight: 2
+
+path:
+main -&gt; main</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="branch" d="M 266.56 254.89 Q 265.35 328.96 276.34 402.22" stroke-width="1.70" opacity="0.85"/>
+      <title>edge: branch
+main -&gt; make_attempt
+weight: 2
+
+path:
+main -&gt; make_attempt</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="branch" d="M 266.56 254.89 Q 205.35 308.97 155.39 373.59" stroke-width="1.70" opacity="0.85"/>
+      <title>edge: branch
+main -&gt; bool_result
+weight: 2
+
+path:
+main -&gt; bool_result</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="branch" d="M 266.56 254.89 Q 187.66 204.13 100.59 169.15" stroke-width="2.10" opacity="0.85"/>
+      <title>edge: branch
+main -&gt; try_like
+weight: 13
+
+path:
+main -&gt; try_like</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="branch" d="M 266.56 254.89 Q 324.55 200.08 370.89 135.12" stroke-width="2.10" opacity="0.85"/>
+      <title>edge: branch
+main -&gt; main
+weight: 5
+
+path:
+main -&gt; main</title>
+    </g>
+  </g>
+  <g id="loops">
+  </g>
+  <g id="bindings">
+    <g class="edge-wrap">
+    <path class="bind" d="M 428.59 249.77 Q 415.41 244.90 402.61 250.71" stroke-width="1.60" opacity="0.85"/>
+    <line class="bind" x1="423.54" y1="253.95" x2="423.25" y2="245.96" opacity="0.75"/>
+    <line class="bind" x1="420.98" y1="255.05" x2="420.62" y2="245.05" opacity="0.75"/>
+    <line class="bind" x1="418.34" y1="254.14" x2="418.06" y2="246.15" opacity="0.75"/>
+    <line class="bind" x1="415.78" y1="255.23" x2="415.42" y2="245.24" opacity="0.75"/>
+    <line class="bind" x1="413.15" y1="254.33" x2="412.86" y2="246.33" opacity="0.75"/>
+    <line class="bind" x1="408.09" y1="251.60" x2="414.01" y2="252.56" opacity="0.58"/>
+    <line class="bind" x1="405.04" y1="255.70" x2="408.98" y2="263.79" opacity="0.58"/>
+    <line class="bind" x1="398.17" y1="254.04" x2="393.37" y2="257.63" opacity="0.58"/>
+    <line class="bind" x1="397.81" y1="247.93" x2="390.02" y2="243.42" opacity="0.58"/>
+    <line class="bind" x1="405.42" y1="245.92" x2="408.46" y2="240.75" opacity="0.58"/>
+      <title>edge: bind
+make_key -&gt; make_key
+weight: 5
+
+path:
+make_key -&gt; make_key</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="bind" d="M 379.03 367.78 Q 370.94 357.35 359.78 350.30" stroke-width="1.52" opacity="0.85"/>
+    <line class="bind" x1="372.49" y1="367.25" x2="377.87" y2="361.33" opacity="0.75"/>
+    <line class="bind" x1="369.89" y1="366.24" x2="376.62" y2="358.84" opacity="0.75"/>
+    <line class="bind" x1="368.64" y1="363.75" x2="374.02" y2="357.83" opacity="0.75"/>
+    <line class="bind" x1="366.04" y1="362.74" x2="372.77" y2="355.34" opacity="0.75"/>
+    <line class="bind" x1="365.06" y1="351.44" x2="370.93" y2="352.70" opacity="0.58"/>
+    <line class="bind" x1="360.41" y1="355.66" x2="361.46" y2="364.60" opacity="0.58"/>
+    <line class="bind" x1="354.46" y1="351.19" x2="348.54" y2="352.18" opacity="0.58"/>
+    <line class="bind" x1="359.01" y1="344.95" x2="357.73" y2="336.05" opacity="0.58"/>
+      <title>edge: bind
+make_handle -&gt; make_handle
+weight: 4
+
+path:
+make_handle -&gt; make_handle</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="bind" d="M 276.34 402.22 Q 282.53 388.23 272.76 376.46" stroke-width="1.44" opacity="0.85"/>
+    <line class="bind" x1="271.66" y1="397.62" x2="279.58" y2="396.52" opacity="0.75"/>
+    <line class="bind" x1="270.31" y1="395.18" x2="280.22" y2="393.80" opacity="0.75"/>
+    <line class="bind" x1="270.94" y1="392.47" x2="278.87" y2="391.37" opacity="0.75"/>
+    <line class="bind" x1="278.01" y1="376.39" x2="284.01" y2="376.30" opacity="0.58"/>
+    <line class="bind" x1="269.97" y1="380.92" x2="265.20" y2="388.54" opacity="0.58"/>
+    <line class="bind" x1="270.62" y1="371.67" x2="268.18" y2="366.19" opacity="0.58"/>
+      <title>edge: bind
+make_attempt -&gt; make_attempt
+weight: 3
+
+path:
+make_attempt -&gt; make_attempt</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="bind" d="M 100.59 169.15 Q 107.86 182.79 123.29 181.83" stroke-width="1.36" opacity="0.85"/>
+    <line class="bind" x1="107.08" y1="168.19" x2="103.18" y2="175.18" opacity="0.75"/>
+    <line class="bind" x1="109.84" y1="168.59" x2="104.96" y2="177.32" opacity="0.75"/>
+    <line class="bind" x1="128.17" y1="183.31" x2="133.91" y2="185.05" opacity="0.58"/>
+    <line class="bind" x1="118.20" y1="182.23" x2="109.23" y2="182.94" opacity="0.58"/>
+      <title>edge: bind
+try_like -&gt; try_like
+weight: 2
+
+path:
+try_like -&gt; try_like</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="bind" d="M 370.89 135.12 Q 359.97 142.67 352.98 153.97" stroke-width="1.28" opacity="0.85"/>
+    <line class="bind" x1="370.21" y1="141.65" x2="364.41" y2="136.13" opacity="0.75"/>
+    <line class="bind" x1="357.88" y1="153.23" x2="363.81" y2="152.34" opacity="0.58"/>
+      <title>edge: bind
+main -&gt; main
+weight: 1
+
+path:
+main -&gt; main</title>
+    </g>
+  </g>
+  <g id="terminals">
+    <g class="edge-wrap">
+    <path class="term" d="M 428.59 249.77 Q 401.14 240.47 372.34 243.79" stroke-width="1.65" opacity="0.90"/>
+      <title>edge: return
+make_key -&gt; make_key
+weight: 2
+
+path:
+make_key -&gt; make_key</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="term" d="M 379.03 367.78 Q 357.46 349.19 332.20 336.05" stroke-width="1.65" opacity="0.90"/>
+      <title>edge: return
+make_handle -&gt; make_handle
+weight: 2
+
+path:
+make_handle -&gt; make_handle</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="term" d="M 276.34 402.22 Q 285.50 373.97 276.55 345.65" stroke-width="1.65" opacity="0.90"/>
+      <title>edge: return
+make_attempt -&gt; make_attempt
+weight: 2
+
+path:
+make_attempt -&gt; make_attempt</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="term" d="M 155.39 373.59 Q 174.18 352.01 185.72 325.84" stroke-width="1.65" opacity="0.90"/>
+      <title>edge: return
+bool_result -&gt; bool_result
+weight: 2
+
+path:
+bool_result -&gt; bool_result</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="term" d="M 100.59 169.15 Q 123.62 188.05 153.38 189.48" stroke-width="1.90" opacity="0.90"/>
+      <title>edge: return
+try_like -&gt; try_like
+weight: 4
+
+path:
+try_like -&gt; try_like</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="term" d="M 370.89 135.12 Q 351.47 156.02 338.11 181.22" stroke-width="1.80" opacity="0.90"/>
+      <title>edge: return
+main -&gt; main
+weight: 3
+
+path:
+main -&gt; main</title>
+    </g>
+  </g>
+  <g id="nodes">
+    <g class="node-wrap">
+      <circle class="node-main" cx="428.59" cy="249.77" r="6.70" data-kind="rituale" data-ritual="make_key" data-line="28" data-col="1" data-depth="3" data-stmt="RITUALE" data-loops="0" data-calls="0"/>
+      <title>RITUALE make_key
+stmt: 6
+depth: 3
+loops: 0
+calls: 0
+source:
+RITUALE make_key() REDDE PgLockKey</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="402.61" cy="250.71" r="3.55" data-kind="bind" data-ritual="make_key" data-line="29" data-col="3" data-depth="3" data-stmt="EVOCA"/>
+      <title>stmt: EVOCA
+rituale: make_key
+depth: 3
+line: 29
+
+source:
+EVOCA PgLockKey key</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="372.34" cy="243.79" r="3.60" data-kind="term" data-ritual="make_key" data-line="34" data-col="3" data-depth="3" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: make_key
+depth: 3
+line: 34
+
+source:
+REDDE key</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-main" cx="379.03" cy="367.78" r="6.55" data-kind="rituale" data-ritual="make_handle" data-line="37" data-col="1" data-depth="3" data-stmt="RITUALE" data-loops="0" data-calls="0"/>
+      <title>RITUALE make_handle
+stmt: 5
+depth: 3
+loops: 0
+calls: 0
+source:
+RITUALE make_handle(PgLockKey key, VERUM acquired) REDDE PgLockHandle</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="359.78" cy="350.30" r="3.40" data-kind="bind" data-ritual="make_handle" data-line="38" data-col="3" data-depth="3" data-stmt="EVOCA"/>
+      <title>stmt: EVOCA
+rituale: make_handle
+depth: 3
+line: 38
+
+source:
+EVOCA PgLockHandle handle</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="332.20" cy="336.05" r="3.60" data-kind="term" data-ritual="make_handle" data-line="42" data-col="3" data-depth="3" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: make_handle
+depth: 3
+line: 42
+
+source:
+REDDE handle</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-main" cx="276.34" cy="402.22" r="6.40" data-kind="rituale" data-ritual="make_attempt" data-line="45" data-col="1" data-depth="3" data-stmt="RITUALE" data-loops="0" data-calls="1"/>
+      <title>RITUALE make_attempt
+stmt: 4
+depth: 3
+loops: 0
+calls: 1
+source:
+RITUALE make_attempt(PgLockKey key, VERUM acquired) REDDE PgLockAttempt</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="272.76" cy="376.46" r="3.25" data-kind="bind" data-ritual="make_attempt" data-line="46" data-col="3" data-depth="3" data-stmt="EVOCA"/>
+      <title>stmt: EVOCA
+rituale: make_attempt
+depth: 3
+line: 46
+
+source:
+EVOCA PgLockAttempt attempt</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="276.55" cy="345.65" r="3.60" data-kind="term" data-ritual="make_attempt" data-line="49" data-col="3" data-depth="3" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: make_attempt
+depth: 3
+line: 49
+
+source:
+REDDE attempt</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-main" cx="155.39" cy="373.59" r="5.95" data-kind="rituale" data-ritual="bool_result" data-line="52" data-col="1" data-depth="3" data-stmt="RITUALE" data-loops="0" data-calls="1"/>
+      <title>RITUALE bool_result
+stmt: 1
+depth: 3
+loops: 0
+calls: 1
+source:
+RITUALE bool_result() REDDE SPECULUM NIHIL</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="185.72" cy="325.84" r="3.60" data-kind="term" data-ritual="bool_result" data-line="53" data-col="3" data-depth="3" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: bool_result
+depth: 3
+line: 53
+
+source:
+REDDE CONIURA Ok GENUS(VERUM, VERBUM)(VERUM)</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-main" cx="100.59" cy="169.15" r="6.85" data-kind="rituale" data-ritual="try_like" data-line="56" data-col="1" data-depth="6" data-stmt="RITUALE" data-loops="0" data-calls="10"/>
+      <title>RITUALE try_like
+stmt: 7
+depth: 6
+loops: 0
+calls: 10
+source:
+RITUALE try_like() REDDE SPECULUM NIHIL</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="121.18" cy="208.15" r="5.80" data-kind="branch" data-ritual="try_like" data-line="59" data-col="3" data-depth="6" data-stmt="SI"/>
+      <title>stmt: SI
+rituale: try_like
+depth: 6
+line: 59
+
+source:
+SI CONIURA result_is_err GENUS(VERUM, VERBUM)(bool_res)</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="123.29" cy="181.83" r="3.10" data-kind="bind" data-ritual="try_like" data-line="57" data-col="3" data-depth="6" data-stmt="EVOCA"/>
+      <title>stmt: EVOCA
+rituale: try_like
+depth: 6
+line: 57
+
+source:
+EVOCA PgLockKey key AD CONIURA make_key()</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="153.38" cy="189.48" r="4.40" data-kind="term" data-ritual="try_like" data-line="60" data-col="5" data-depth="6" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: try_like
+depth: 6
+line: 60
+
+source:
+REDDE CONIURA Err GENUS(PgLockAttempt, VERBUM)(CONIURA result_unwrap_err GENUS(VERUM, VERBUM)...</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-entry" cx="370.89" cy="135.12" r="8.40" data-kind="rituale" data-ritual="main" data-line="68" data-col="1" data-depth="4" data-stmt="RITUALE" data-loops="0" data-calls="2" data-entry="true"/>
+      <title>RITUALE main
+stmt: 4
+depth: 4
+loops: 0
+calls: 2
+source:
+RITUALE main() REDDE REX</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="329.04" cy="144.32" r="4.80" data-kind="branch" data-ritual="main" data-line="70" data-col="3" data-depth="4" data-stmt="SI"/>
+      <title>stmt: SI
+rituale: main
+depth: 4
+line: 70
+
+source:
+SI NON CONIURA result_is_ok GENUS(PgLockAttempt, VERBUM)(res)</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="352.98" cy="153.97" r="2.95" data-kind="bind" data-ritual="main" data-line="69" data-col="3" data-depth="4" data-stmt="EVOCA"/>
+      <title>stmt: EVOCA
+rituale: main
+depth: 4
+line: 69
+
+source:
+EVOCA SPECULUM NIHIL res AD CONIURA try_like()</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="338.11" cy="181.22" r="4.00" data-kind="term" data-ritual="main" data-line="71" data-col="5" data-depth="4" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: main
+depth: 4
+line: 71
+
+source:
+REDDE 1</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="266.56" cy="254.89" r="4.88" data-kind="bind" data-ritual="main" data-line="69" data-col="3" data-depth="4" data-stmt="EVOCA"/>
+      <title>stmt: EVOCA
+rituale: main
+depth: 4
+line: 69
+
+source:
+EVOCA SPECULUM NIHIL res AD CONIURA try_like()</title>
+    </g>
+  </g>
+  <g id="ornaments">
+    <circle class="orn" cx="458.78" cy="252.51" r="0.90"/>
+    <circle class="orn" cx="440.17" cy="340.06" r="1.90"/>
+    <circle class="orn" cx="307.62" cy="459.25" r="2.90"/>
+    <circle class="orn" cx="229.78" cy="464.63" r="0.90"/>
+    <circle class="orn" cx="107.63" cy="395.13" r="1.90"/>
+    <circle class="orn" cx="55.20" cy="283.09" r="2.90"/>
+    <circle class="orn" cx="70.99" cy="168.78" r="0.90"/>
+    <circle class="orn" cx="166.95" cy="72.64" r="1.90"/>
+    <circle class="orn" cx="323.23" cy="58.84" r="2.90"/>
+    <circle class="orn" cx="440.14" cy="173.28" r="0.90"/>
+  </g>
+  <g id="signature">
+    <text class="hash" x="256" y="496" text-anchor="middle">f60334283fbd4b8a</text>
+    <text class="label" x="256" y="18" text-anchor="middle">network • sigillum v2.1 • 6 rituale(s) • 27 stmt • depth 6</text>
+  </g>
+</svg>

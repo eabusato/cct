@@ -50,3 +50,15 @@ open examples/sigilo_web_system_35/routes_view.system.svg
 open examples/sigilo_web_system_35/media_upload_pipeline_39_animated.svg
 open examples/sigilo_web_system_35/media_upload_pipeline_39_step.svg
 ```
+
+Live capture workflow:
+
+- keep your CCT web app running with `cct/instrument` enabled
+- open a capture window with `cct/trace_capture`
+- use the app manually through real endpoints
+- stop or snapshot the window
+- render one exported `.ctrace` back on top of `routes_view.system.sigil`
+
+Reference:
+
+- `docs/trace_capture.md`

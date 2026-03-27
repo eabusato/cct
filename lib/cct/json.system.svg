@@ -1,0 +1,2375 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="1200" viewBox="0 0 1200 1200" role="img" aria-label="CCT system sigilo">
+  <desc>Deterministic sigil-of-sigils for a CCT module closure.</desc>
+  <defs>
+    <style><![CDATA[
+      .bg { fill: #f7f1e5; }
+      .macro-ring { fill: none; stroke: #1f2937; stroke-width: 2.0; opacity: 0.32; }
+      .macro-import { stroke: #334155; stroke-width: 1.8; stroke-linecap: round; fill: none; opacity: 0.60; }
+      .macro-sem { stroke: #9a3412; stroke-width: 1.3; stroke-dasharray: 5 4; fill: none; opacity: 0.62; }
+      .module-frame { fill: none; stroke: #111827; stroke-width: 2.1; }
+      .module-entry-frame { fill: none; stroke: #0f766e; stroke-width: 3.0; }
+      .module-label { fill: #0f172a; font: 11px monospace; }
+      .module-hash { fill: #334155; font: 9px monospace; opacity: 0.8; }
+      .base { stroke: #1f1a17; stroke-width: 1.6; fill: none; opacity: 0.7; }
+      .primary { stroke: #111827; stroke-width: 2.4; fill: none; stroke-linecap: round; }
+      .call { stroke: #4b5563; stroke-width: 1.5; fill: none; stroke-linecap: round; opacity: 0.82; }
+      .branch { stroke: #6b7280; stroke-width: 1.2; fill: none; opacity: 0.8; }
+      .loop { stroke: #0f766e; stroke-width: 1.3; fill: none; opacity: 0.84; }
+      .bind { stroke: #6b7280; stroke-width: 1.05; fill: none; opacity: 0.84; }
+      .term { stroke: #7f1d1d; stroke-width: 1.45; fill: none; stroke-linecap: round; }
+      .node-main { fill: #f8fafc; stroke: #1f2937; stroke-width: 1.65; }
+      .node-entry { fill: #d1fae5; stroke: #0f766e; stroke-width: 1.95; }
+      .node-aux { fill: #f1f5f9; stroke: #475569; stroke-width: 1.15; }
+      .node-loop { fill: #ecfeff; stroke: #0f766e; stroke-width: 1.2; }
+      .node-term { fill: #fef2f2; stroke: #991b1b; stroke-width: 1.2; }
+      .orn { stroke: #64748b; stroke-width: 0.9; fill: none; opacity: 0.55; }
+      .hash { fill: #111827; font: 9px monospace; letter-spacing: 0.5px; }
+      .label { fill: #0f172a; font: 8px monospace; opacity: 0.68; }
+      .node-wrap, .edge-wrap, .system-node-wrap, .system-edge-wrap { cursor: help; }
+      .node-wrap:hover > circle, .system-node-wrap:hover > circle { opacity: 0.96; }
+      .edge-wrap:hover > path, .edge-wrap:hover > line, .system-edge-wrap:hover > line { opacity: 1.0; }
+    ]]></style>
+    <clipPath id="module_clip_000"><circle cx="256" cy="256" r="246"/></clipPath>
+    <clipPath id="module_clip_001"><circle cx="256" cy="256" r="246"/></clipPath>
+  </defs>
+  <rect class="bg" width="1200" height="1200"/>
+  <g id="macro_foundation">
+    <circle class="macro-ring" cx="600" cy="600" r="558"/>
+    <circle class="macro-ring" cx="600" cy="600" r="220.00" opacity="0.22"/>
+  </g>
+  <g id="imports" class="macro-import">
+    <g class="system-edge-wrap">
+    <line x1="600.000" y1="600.000" x2="600.000" y2="380.000" />
+      <title>edge
+json.cct -&gt; fluxus.cct
+links: 1</title>
+    </g>
+  </g>
+  <g id="semantic_cross" class="macro-sem">
+  </g>
+  <g id="module_sigils">
+    <g id="module_sigil_000" transform="translate(462.000 462.000) scale(0.53906250)">
+      <g clip-path="url(#module_clip_000)">
+  <g id="foundation">
+    <circle class="base" cx="256" cy="256" r="226"/>
+    <ellipse class="base" cx="256" cy="256" rx="198" ry="185.72" opacity="0.32"/>
+  </g>
+  <g id="primary_path">
+    <g class="edge-wrap">
+    <path class="primary" d="M 314.01 122.47 Q 337.52 164.82 385.93 166.63" stroke-width="2.60" opacity="0.96"/>
+      <title>edge: primary
+json_pair -&gt; json_null
+weight: 1
+
+path:
+json_pair -&gt; json_null</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="primary" d="M 385.93 166.63 Q 375.65 203.29 412.57 212.58" stroke-width="2.60" opacity="0.96"/>
+      <title>edge: primary
+json_null -&gt; json_bool
+weight: 1
+
+path:
+json_null -&gt; json_bool</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="primary" d="M 412.57 212.58 Q 388.84 242.99 422.47 261.89" stroke-width="2.60" opacity="0.96"/>
+      <title>edge: primary
+json_bool -&gt; json_num
+weight: 1
+
+path:
+json_bool -&gt; json_num</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="primary" d="M 422.47 261.89 Q 390.21 274.76 406.79 305.28" stroke-width="2.60" opacity="0.96"/>
+      <title>edge: primary
+json_num -&gt; json_str
+weight: 1
+
+path:
+json_num -&gt; json_str</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="primary" d="M 406.79 305.28 Q 370.56 304.91 377.77 340.43" stroke-width="2.60" opacity="0.96"/>
+      <title>edge: primary
+json_str -&gt; json_arr
+weight: 1
+
+path:
+json_str -&gt; json_arr</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="primary" d="M 377.77 340.43 Q 336.20 340.48 329.43 381.50" stroke-width="2.60" opacity="0.96"/>
+      <title>edge: primary
+json_arr -&gt; json_obj
+weight: 1
+
+path:
+json_arr -&gt; json_obj</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="primary" d="M 329.43 381.50 Q 299.21 353.92 268.95 381.45" stroke-width="2.60" opacity="0.96"/>
+      <title>edge: primary
+json_obj -&gt; json_kind
+weight: 1
+
+path:
+json_obj -&gt; json_kind</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="primary" d="M 268.95 381.45 Q 233.51 360.40 200.17 384.65" stroke-width="2.60" opacity="0.96"/>
+      <title>edge: primary
+json_kind -&gt; json_is_null
+weight: 1
+
+path:
+json_kind -&gt; json_is_null</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="primary" d="M 200.17 384.65 Q 175.67 338.72 124.02 345.13" stroke-width="2.60" opacity="0.96"/>
+      <title>edge: primary
+json_is_null -&gt; json_is_bool
+weight: 1
+
+path:
+json_is_null -&gt; json_is_bool</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="primary" d="M 124.02 345.13 Q 129.27 304.87 89.84 295.21" stroke-width="2.60" opacity="0.96"/>
+      <title>edge: primary
+json_is_bool -&gt; json_is_num
+weight: 1
+
+path:
+json_is_bool -&gt; json_is_num</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="primary" d="M 89.84 295.21 Q 118.51 251.81 98.77 203.69" stroke-width="2.60" opacity="0.96"/>
+      <title>edge: primary
+json_is_num -&gt; json_is_str
+weight: 1
+
+path:
+json_is_num -&gt; json_is_str</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="primary" d="M 98.77 203.69 Q 140.18 192.56 146.76 150.19" stroke-width="2.60" opacity="0.96"/>
+      <title>edge: primary
+json_is_str -&gt; json_is_arr
+weight: 1
+
+path:
+json_is_str -&gt; json_is_arr</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="primary" d="M 146.76 150.19 Q 199.38 159.07 233.59 118.13" stroke-width="2.60" opacity="0.96"/>
+      <title>edge: primary
+json_is_arr -&gt; json_is_obj
+weight: 1
+
+path:
+json_is_arr -&gt; json_is_obj</title>
+    </g>
+  </g>
+  <g id="call_links">
+    <g class="edge-wrap">
+    <path class="call" d="M 200.17 384.65 Q 236.15 417.32 268.95 381.45" stroke-width="2.15" opacity="0.74" data-kind="call" data-from="json_is_null" data-to="json_kind" data-weight="1" data-self-loop="false"/>
+      <title>edge: call
+json_is_null -&gt; json_kind
+calls: 1
+
+path:
+json_is_null -&gt; json_kind</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="call" d="M 124.02 345.13 Q 187.99 397.18 268.95 381.45" stroke-width="2.15" opacity="0.74" data-kind="call" data-from="json_is_bool" data-to="json_kind" data-weight="1" data-self-loop="false"/>
+      <title>edge: call
+json_is_bool -&gt; json_kind
+calls: 1
+
+path:
+json_is_bool -&gt; json_kind</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="call" d="M 89.84 295.21 Q 164.70 368.85 268.95 381.45" stroke-width="2.15" opacity="0.74" data-kind="call" data-from="json_is_num" data-to="json_kind" data-weight="1" data-self-loop="false"/>
+      <title>edge: call
+json_is_num -&gt; json_kind
+calls: 1
+
+path:
+json_is_num -&gt; json_kind</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="call" d="M 98.77 203.69 Q 159.52 315.87 268.95 381.45" stroke-width="2.15" opacity="0.74" data-kind="call" data-from="json_is_str" data-to="json_kind" data-weight="1" data-self-loop="false"/>
+      <title>edge: call
+json_is_str -&gt; json_kind
+calls: 1
+
+path:
+json_is_str -&gt; json_kind</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="call" d="M 146.76 150.19 Q 178.08 281.56 268.95 381.45" stroke-width="2.15" opacity="0.74" data-kind="call" data-from="json_is_arr" data-to="json_kind" data-weight="1" data-self-loop="false"/>
+      <title>edge: call
+json_is_arr -&gt; json_kind
+calls: 1
+
+path:
+json_is_arr -&gt; json_kind</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="call" d="M 233.59 118.13 Q 220.11 253.98 268.95 381.45" stroke-width="2.15" opacity="0.74" data-kind="call" data-from="json_is_obj" data-to="json_kind" data-weight="1" data-self-loop="false"/>
+      <title>edge: call
+json_is_obj -&gt; json_kind
+calls: 1
+
+path:
+json_is_obj -&gt; json_kind</title>
+    </g>
+  </g>
+  <g id="branches">
+    <g class="edge-wrap">
+    <path class="branch" d="M 246.56 255.70 Q 289.81 193.90 314.01 122.47" stroke-width="1.45" opacity="0.85"/>
+      <title>edge: branch
+json_pair -&gt; json_pair
+weight: 1
+
+path:
+json_pair -&gt; json_pair</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="branch" d="M 246.56 255.70 Q 212.36 316.21 200.17 384.65" stroke-width="1.70" opacity="0.85"/>
+      <title>edge: branch
+json_pair -&gt; json_is_null
+weight: 2
+
+path:
+json_pair -&gt; json_is_null</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="branch" d="M 246.56 255.70 Q 180.16 293.39 124.02 345.13" stroke-width="1.70" opacity="0.85"/>
+      <title>edge: branch
+json_pair -&gt; json_is_bool
+weight: 2
+
+path:
+json_pair -&gt; json_is_bool</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="branch" d="M 246.56 255.70 Q 166.39 268.28 89.84 295.21" stroke-width="1.70" opacity="0.85"/>
+      <title>edge: branch
+json_pair -&gt; json_is_num
+weight: 2
+
+path:
+json_pair -&gt; json_is_num</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="branch" d="M 246.56 255.70 Q 177.01 217.33 98.77 203.69" stroke-width="1.70" opacity="0.85"/>
+      <title>edge: branch
+json_pair -&gt; json_is_str
+weight: 2
+
+path:
+json_pair -&gt; json_is_str</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="branch" d="M 246.56 255.70 Q 201.05 198.79 146.76 150.19" stroke-width="1.70" opacity="0.85"/>
+      <title>edge: branch
+json_pair -&gt; json_is_arr
+weight: 2
+
+path:
+json_pair -&gt; json_is_arr</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="branch" d="M 246.56 255.70 Q 251.74 185.81 233.59 118.13" stroke-width="1.70" opacity="0.85"/>
+      <title>edge: branch
+json_pair -&gt; json_is_obj
+weight: 2
+
+path:
+json_pair -&gt; json_is_obj</title>
+    </g>
+  </g>
+  <g id="loops">
+  </g>
+  <g id="bindings">
+    <g class="edge-wrap">
+    <path class="bind" d="M 314.01 122.47 Q 303.63 132.13 303.65 146.31" stroke-width="1.44" opacity="0.85"/>
+    <line class="bind" x1="315.61" y1="128.83" x2="308.27" y2="125.64" opacity="0.75"/>
+    <line class="bind" x1="315.49" y1="131.61" x2="306.32" y2="127.63" opacity="0.75"/>
+    <line class="bind" x1="313.54" y1="133.60" x2="306.20" y2="130.41" opacity="0.75"/>
+    <line class="bind" x1="308.75" y1="145.07" x2="314.58" y2="143.64" opacity="0.58"/>
+    <line class="bind" x1="299.88" y1="149.96" x2="293.41" y2="156.22" opacity="0.58"/>
+    <line class="bind" x1="300.60" y1="142.04" x2="297.12" y2="137.15" opacity="0.58"/>
+      <title>edge: bind
+json_pair -&gt; json_pair
+weight: 3
+
+path:
+json_pair -&gt; json_pair</title>
+    </g>
+  </g>
+  <g id="terminals">
+    <g class="edge-wrap">
+    <path class="term" d="M 314.01 122.47 Q 300.09 147.98 299.03 177.02" stroke-width="1.65" opacity="0.90"/>
+      <title>edge: return
+json_pair -&gt; json_pair
+weight: 2
+
+path:
+json_pair -&gt; json_pair</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="term" d="M 385.93 166.63 Q 359.07 176.13 335.26 191.77" stroke-width="1.65" opacity="0.90"/>
+      <title>edge: return
+json_null -&gt; json_null
+weight: 2
+
+path:
+json_null -&gt; json_null</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="term" d="M 412.57 212.58 Q 383.93 211.62 356.47 219.83" stroke-width="1.65" opacity="0.90"/>
+      <title>edge: return
+json_bool -&gt; json_bool
+weight: 2
+
+path:
+json_bool -&gt; json_bool</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="term" d="M 422.47 261.89 Q 395.30 253.17 366.79 251.91" stroke-width="1.65" opacity="0.90"/>
+      <title>edge: return
+json_num -&gt; json_num
+weight: 2
+
+path:
+json_num -&gt; json_num</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="term" d="M 406.79 305.28 Q 382.44 290.71 356.05 280.28" stroke-width="1.65" opacity="0.90"/>
+      <title>edge: return
+json_str -&gt; json_str
+weight: 2
+
+path:
+json_str -&gt; json_str</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="term" d="M 377.77 340.43 Q 355.69 321.35 327.19 315.09" stroke-width="1.65" opacity="0.90"/>
+      <title>edge: return
+json_arr -&gt; json_arr
+weight: 2
+
+path:
+json_arr -&gt; json_arr</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="term" d="M 329.43 381.50 Q 323.63 353.32 308.06 329.13" stroke-width="1.65" opacity="0.90"/>
+      <title>edge: return
+json_obj -&gt; json_obj
+weight: 2
+
+path:
+json_obj -&gt; json_obj</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="term" d="M 200.17 384.65 Q 211.13 358.32 215.12 330.09" stroke-width="1.65" opacity="0.90"/>
+      <title>edge: return
+json_is_null -&gt; json_is_null
+weight: 2
+
+path:
+json_is_null -&gt; json_is_null</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="term" d="M 124.02 345.13 Q 150.34 334.58 174.90 320.42" stroke-width="1.65" opacity="0.90"/>
+      <title>edge: return
+json_is_bool -&gt; json_is_bool
+weight: 2
+
+path:
+json_is_bool -&gt; json_is_bool</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="term" d="M 89.84 295.21 Q 118.39 296.86 146.18 290.13" stroke-width="1.65" opacity="0.90"/>
+      <title>edge: return
+json_is_num -&gt; json_is_num
+weight: 2
+
+path:
+json_is_num -&gt; json_is_num</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="term" d="M 98.77 203.69 Q 125.10 217.00 154.43 213.78" stroke-width="1.65" opacity="0.90"/>
+      <title>edge: return
+json_is_str -&gt; json_is_str
+weight: 2
+
+path:
+json_is_str -&gt; json_is_str</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="term" d="M 146.76 150.19 Q 164.28 174.21 192.55 183.40" stroke-width="1.65" opacity="0.90"/>
+      <title>edge: return
+json_is_arr -&gt; json_is_arr
+weight: 2
+
+path:
+json_is_arr -&gt; json_is_arr</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="term" d="M 233.59 118.13 Q 237.45 146.56 250.47 172.12" stroke-width="1.65" opacity="0.90"/>
+      <title>edge: return
+json_is_obj -&gt; json_is_obj
+weight: 2
+
+path:
+json_is_obj -&gt; json_is_obj</title>
+    </g>
+  </g>
+  <g id="nodes">
+    <g class="node-wrap">
+      <circle class="node-main" cx="314.01" cy="122.47" r="6.40" data-kind="rituale" data-ritual="json_pair" data-line="23" data-col="1" data-depth="3" data-stmt="RITUALE" data-loops="0" data-calls="0"/>
+      <title>RITUALE json_pair
+stmt: 4
+depth: 3
+loops: 0
+calls: 0
+source:
+RITUALE json_pair(VERBUM chave, Json valor) REDDE JsonPair</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="303.65" cy="146.31" r="3.25" data-kind="bind" data-ritual="json_pair" data-line="24" data-col="3" data-depth="3" data-stmt="EVOCA"/>
+      <title>stmt: EVOCA
+rituale: json_pair
+depth: 3
+line: 24
+
+source:
+EVOCA JsonPair par</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="299.03" cy="177.02" r="3.60" data-kind="term" data-ritual="json_pair" data-line="27" data-col="3" data-depth="3" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: json_pair
+depth: 3
+line: 27
+
+source:
+REDDE par</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-main" cx="385.93" cy="166.63" r="5.95" data-kind="rituale" data-ritual="json_null" data-line="30" data-col="1" data-depth="2" data-stmt="RITUALE" data-loops="0" data-calls="0"/>
+      <title>RITUALE json_null
+stmt: 1
+depth: 2
+loops: 0
+calls: 0
+source:
+RITUALE json_null() REDDE Json</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="335.26" cy="191.77" r="3.60" data-kind="term" data-ritual="json_null" data-line="31" data-col="3" data-depth="2" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: json_null
+depth: 2
+line: 31
+
+source:
+REDDE JsonNull</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-main" cx="412.57" cy="212.58" r="5.95" data-kind="rituale" data-ritual="json_bool" data-line="34" data-col="1" data-depth="3" data-stmt="RITUALE" data-loops="0" data-calls="0"/>
+      <title>RITUALE json_bool
+stmt: 1
+depth: 3
+loops: 0
+calls: 0
+source:
+RITUALE json_bool(VERUM v) REDDE Json</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="356.47" cy="219.83" r="3.60" data-kind="term" data-ritual="json_bool" data-line="35" data-col="3" data-depth="3" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: json_bool
+depth: 3
+line: 35
+
+source:
+REDDE JsonBool(v)</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-main" cx="422.47" cy="261.89" r="5.95" data-kind="rituale" data-ritual="json_num" data-line="38" data-col="1" data-depth="3" data-stmt="RITUALE" data-loops="0" data-calls="0"/>
+      <title>RITUALE json_num
+stmt: 1
+depth: 3
+loops: 0
+calls: 0
+source:
+RITUALE json_num(UMBRA v) REDDE Json</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="366.79" cy="251.91" r="3.60" data-kind="term" data-ritual="json_num" data-line="39" data-col="3" data-depth="3" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: json_num
+depth: 3
+line: 39
+
+source:
+REDDE JsonNum(v)</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-main" cx="406.79" cy="305.28" r="5.95" data-kind="rituale" data-ritual="json_str" data-line="42" data-col="1" data-depth="3" data-stmt="RITUALE" data-loops="0" data-calls="0"/>
+      <title>RITUALE json_str
+stmt: 1
+depth: 3
+loops: 0
+calls: 0
+source:
+RITUALE json_str(VERBUM v) REDDE Json</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="356.05" cy="280.28" r="3.60" data-kind="term" data-ritual="json_str" data-line="43" data-col="3" data-depth="3" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: json_str
+depth: 3
+line: 43
+
+source:
+REDDE JsonStr(v)</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-main" cx="377.77" cy="340.43" r="5.95" data-kind="rituale" data-ritual="json_arr" data-line="46" data-col="1" data-depth="3" data-stmt="RITUALE" data-loops="0" data-calls="0"/>
+      <title>RITUALE json_arr
+stmt: 1
+depth: 3
+loops: 0
+calls: 0
+source:
+RITUALE json_arr() REDDE Json</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="327.19" cy="315.09" r="3.60" data-kind="term" data-ritual="json_arr" data-line="47" data-col="3" data-depth="3" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: json_arr
+depth: 3
+line: 47
+
+source:
+REDDE JsonArr(0)</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-main" cx="329.43" cy="381.50" r="5.95" data-kind="rituale" data-ritual="json_obj" data-line="50" data-col="1" data-depth="3" data-stmt="RITUALE" data-loops="0" data-calls="0"/>
+      <title>RITUALE json_obj
+stmt: 1
+depth: 3
+loops: 0
+calls: 0
+source:
+RITUALE json_obj() REDDE Json</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="308.06" cy="329.13" r="3.60" data-kind="term" data-ritual="json_obj" data-line="51" data-col="3" data-depth="3" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: json_obj
+depth: 3
+line: 51
+
+source:
+REDDE JsonObj(0)</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-main" cx="268.95" cy="381.45" r="5.95" data-kind="rituale" data-ritual="json_kind" data-line="54" data-col="1" data-depth="1" data-stmt="RITUALE" data-loops="0" data-calls="0"/>
+      <title>RITUALE json_kind
+stmt: 1
+depth: 1
+loops: 0
+calls: 0
+source:
+RITUALE json_kind(Json j) REDDE REX</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-main" cx="200.17" cy="384.65" r="5.95" data-kind="rituale" data-ritual="json_is_null" data-line="71" data-col="1" data-depth="4" data-stmt="RITUALE" data-loops="0" data-calls="1"/>
+      <title>RITUALE json_is_null
+stmt: 1
+depth: 4
+loops: 0
+calls: 1
+source:
+RITUALE json_is_null(Json j) REDDE VERUM</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="215.12" cy="330.09" r="3.60" data-kind="term" data-ritual="json_is_null" data-line="72" data-col="3" data-depth="4" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: json_is_null
+depth: 4
+line: 72
+
+source:
+REDDE CONIURA json_kind(j) == 0</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-main" cx="124.02" cy="345.13" r="5.95" data-kind="rituale" data-ritual="json_is_bool" data-line="75" data-col="1" data-depth="4" data-stmt="RITUALE" data-loops="0" data-calls="1"/>
+      <title>RITUALE json_is_bool
+stmt: 1
+depth: 4
+loops: 0
+calls: 1
+source:
+RITUALE json_is_bool(Json j) REDDE VERUM</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="174.90" cy="320.42" r="3.60" data-kind="term" data-ritual="json_is_bool" data-line="76" data-col="3" data-depth="4" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: json_is_bool
+depth: 4
+line: 76
+
+source:
+REDDE CONIURA json_kind(j) == 1</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-main" cx="89.84" cy="295.21" r="5.95" data-kind="rituale" data-ritual="json_is_num" data-line="79" data-col="1" data-depth="4" data-stmt="RITUALE" data-loops="0" data-calls="1"/>
+      <title>RITUALE json_is_num
+stmt: 1
+depth: 4
+loops: 0
+calls: 1
+source:
+RITUALE json_is_num(Json j) REDDE VERUM</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="146.18" cy="290.13" r="3.60" data-kind="term" data-ritual="json_is_num" data-line="80" data-col="3" data-depth="4" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: json_is_num
+depth: 4
+line: 80
+
+source:
+REDDE CONIURA json_kind(j) == 2</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-main" cx="98.77" cy="203.69" r="5.95" data-kind="rituale" data-ritual="json_is_str" data-line="83" data-col="1" data-depth="4" data-stmt="RITUALE" data-loops="0" data-calls="1"/>
+      <title>RITUALE json_is_str
+stmt: 1
+depth: 4
+loops: 0
+calls: 1
+source:
+RITUALE json_is_str(Json j) REDDE VERUM</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="154.43" cy="213.78" r="3.60" data-kind="term" data-ritual="json_is_str" data-line="84" data-col="3" data-depth="4" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: json_is_str
+depth: 4
+line: 84
+
+source:
+REDDE CONIURA json_kind(j) == 3</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-main" cx="146.76" cy="150.19" r="5.95" data-kind="rituale" data-ritual="json_is_arr" data-line="87" data-col="1" data-depth="4" data-stmt="RITUALE" data-loops="0" data-calls="1"/>
+      <title>RITUALE json_is_arr
+stmt: 1
+depth: 4
+loops: 0
+calls: 1
+source:
+RITUALE json_is_arr(Json j) REDDE VERUM</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="192.55" cy="183.40" r="3.60" data-kind="term" data-ritual="json_is_arr" data-line="88" data-col="3" data-depth="4" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: json_is_arr
+depth: 4
+line: 88
+
+source:
+REDDE CONIURA json_kind(j) == 4</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-main" cx="233.59" cy="118.13" r="5.95" data-kind="rituale" data-ritual="json_is_obj" data-line="91" data-col="1" data-depth="4" data-stmt="RITUALE" data-loops="0" data-calls="1"/>
+      <title>RITUALE json_is_obj
+stmt: 1
+depth: 4
+loops: 0
+calls: 1
+source:
+RITUALE json_is_obj(Json j) REDDE VERUM</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="250.47" cy="172.12" r="3.60" data-kind="term" data-ritual="json_is_obj" data-line="92" data-col="3" data-depth="4" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: json_is_obj
+depth: 4
+line: 92
+
+source:
+REDDE CONIURA json_kind(j) == 5</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="246.56" cy="255.70" r="3.92" data-kind="bind" data-ritual="json_pair" data-line="24" data-col="3" data-depth="3" data-stmt="EVOCA"/>
+      <title>stmt: EVOCA
+rituale: json_pair
+depth: 3
+line: 24
+
+source:
+EVOCA JsonPair par</title>
+    </g>
+  </g>
+  <g id="ornaments">
+    <circle class="orn" cx="454.84" cy="288.45" r="0.90"/>
+    <circle class="orn" cx="391.05" cy="418.24" r="1.90"/>
+    <circle class="orn" cx="237.27" cy="458.27" r="2.90"/>
+    <circle class="orn" cx="117.53" cy="408.22" r="0.90"/>
+    <circle class="orn" cx="48.35" cy="249.69" r="1.90"/>
+    <circle class="orn" cx="97.86" cy="131.13" r="2.90"/>
+    <circle class="orn" cx="236.98" cy="52.55" r="0.90"/>
+    <circle class="orn" cx="422.16" cy="140.48" r="1.90"/>
+  </g>
+      </g>
+    </g>
+    <g class="system-node-wrap">
+    <circle class="module-entry-frame" cx="600.000" cy="600.000" r="138.000"/>
+      <title>module
+/Users/eabusato/dev/cct/lib/cct/json.cct
+rituals: 14
+imports: 1</title>
+    <text class="module-label" x="600.000" y="754.000" text-anchor="middle">json.cct</text>
+    <text class="module-hash" x="600.000" y="766.000" text-anchor="middle">ce001808c2d48f5c</text>
+    </g>
+    <g id="module_sigil_001" transform="translate(496.000 276.000) scale(0.40625000)">
+      <g clip-path="url(#module_clip_001)">
+  <g id="foundation">
+    <circle class="base" cx="256" cy="256" r="226"/>
+    <ellipse class="base" cx="256" cy="256" rx="198" ry="183.51" opacity="0.32"/>
+  </g>
+  <g id="primary_path">
+    <g class="edge-wrap">
+    <path class="primary" d="M 291.06 106.30 Q 308.70 136.53 339.32 119.60" stroke-width="2.60" opacity="0.96"/>
+      <title>edge: primary
+fluxus_init -&gt; fluxus_free
+weight: 1
+
+path:
+fluxus_init -&gt; fluxus_free</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="primary" d="M 339.32 119.60 Q 338.13 146.68 354.72 125.23" stroke-width="2.60" opacity="0.96"/>
+      <title>edge: primary
+fluxus_free -&gt; fluxus_push
+weight: 1
+
+path:
+fluxus_free -&gt; fluxus_push</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="primary" d="M 354.72 125.23 Q 360.83 165.66 401.40 170.79" stroke-width="2.60" opacity="0.96"/>
+      <title>edge: primary
+fluxus_push -&gt; fluxus_pop
+weight: 1
+
+path:
+fluxus_push -&gt; fluxus_pop</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="primary" d="M 401.40 170.79 Q 389.33 193.71 415.14 191.47" stroke-width="2.60" opacity="0.96"/>
+      <title>edge: primary
+fluxus_pop -&gt; fluxus_len
+weight: 1
+
+path:
+fluxus_pop -&gt; fluxus_len</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="primary" d="M 415.14 191.47 Q 386.45 201.59 416.57 205.84" stroke-width="2.60" opacity="0.96"/>
+      <title>edge: primary
+fluxus_len -&gt; fluxus_get
+weight: 1
+
+path:
+fluxus_len -&gt; fluxus_get</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="primary" d="M 416.57 205.84 Q 396.02 229.86 424.04 244.52" stroke-width="2.60" opacity="0.96"/>
+      <title>edge: primary
+fluxus_get -&gt; fluxus_clear
+weight: 1
+
+path:
+fluxus_get -&gt; fluxus_clear</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="primary" d="M 424.04 244.52 Q 406.52 273.28 436.24 289.12" stroke-width="2.60" opacity="0.96"/>
+      <title>edge: primary
+fluxus_clear -&gt; fluxus_reserve
+weight: 1
+
+path:
+fluxus_clear -&gt; fluxus_reserve</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="primary" d="M 436.24 289.12 Q 406.27 287.62 409.62 317.44" stroke-width="2.60" opacity="0.96"/>
+      <title>edge: primary
+fluxus_reserve -&gt; fluxus_capacity
+weight: 1
+
+path:
+fluxus_reserve -&gt; fluxus_capacity</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="primary" d="M 409.62 317.44 Q 378.29 324.34 401.97 345.98" stroke-width="2.60" opacity="0.96"/>
+      <title>edge: primary
+fluxus_capacity -&gt; fluxus_peek
+weight: 1
+
+path:
+fluxus_capacity -&gt; fluxus_peek</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="primary" d="M 401.97 345.98 Q 380.22 333.96 397.93 351.39" stroke-width="2.60" opacity="0.96"/>
+      <title>edge: primary
+fluxus_peek -&gt; fluxus_set
+weight: 1
+
+path:
+fluxus_peek -&gt; fluxus_set</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="primary" d="M 397.93 351.39 Q 359.84 351.11 350.63 388.07" stroke-width="2.60" opacity="0.96"/>
+      <title>edge: primary
+fluxus_set -&gt; fluxus_remove
+weight: 1
+
+path:
+fluxus_set -&gt; fluxus_remove</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="primary" d="M 350.63 388.07 Q 333.97 362.11 324.41 391.44" stroke-width="2.60" opacity="0.96"/>
+      <title>edge: primary
+fluxus_remove -&gt; fluxus_insert
+weight: 1
+
+path:
+fluxus_remove -&gt; fluxus_insert</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="primary" d="M 324.41 391.44 Q 298.49 377.12 298.38 406.73" stroke-width="2.60" opacity="0.96"/>
+      <title>edge: primary
+fluxus_insert -&gt; fluxus_contains
+weight: 1
+
+path:
+fluxus_insert -&gt; fluxus_contains</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="primary" d="M 298.38 406.73 Q 266.45 383.99 237.30 410.20" stroke-width="2.60" opacity="0.96"/>
+      <title>edge: primary
+fluxus_contains -&gt; fluxus_is_empty
+weight: 1
+
+path:
+fluxus_contains -&gt; fluxus_is_empty</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="primary" d="M 237.30 410.20 Q 195.49 371.36 141.23 389.02" stroke-width="2.60" opacity="0.96"/>
+      <title>edge: primary
+fluxus_is_empty -&gt; fluxus_concat
+weight: 1
+
+path:
+fluxus_is_empty -&gt; fluxus_concat</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="primary" d="M 141.23 389.02 Q 124.07 318.25 64.02 277.04" stroke-width="2.60" opacity="0.96"/>
+      <title>edge: primary
+fluxus_concat -&gt; fluxus_slice
+weight: 1
+
+path:
+fluxus_concat -&gt; fluxus_slice</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="primary" d="M 64.02 277.04 Q 107.17 238.57 96.59 181.75" stroke-width="2.60" opacity="0.96"/>
+      <title>edge: primary
+fluxus_slice -&gt; fluxus_copy
+weight: 1
+
+path:
+fluxus_slice -&gt; fluxus_copy</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="primary" d="M 96.59 181.75 Q 140.43 175.69 143.74 131.55" stroke-width="2.60" opacity="0.96"/>
+      <title>edge: primary
+fluxus_copy -&gt; fluxus_reverse
+weight: 1
+
+path:
+fluxus_copy -&gt; fluxus_reverse</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="primary" d="M 143.74 131.55 Q 172.14 151.72 182.45 118.45" stroke-width="2.60" opacity="0.96"/>
+      <title>edge: primary
+fluxus_reverse -&gt; fluxus_sort_int
+weight: 1
+
+path:
+fluxus_reverse -&gt; fluxus_sort_int</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="primary" d="M 182.45 118.45 Q 210.06 136.30 220.95 105.28" stroke-width="2.60" opacity="0.96"/>
+      <title>edge: primary
+fluxus_sort_int -&gt; fluxus_sort_verbum
+weight: 1
+
+path:
+fluxus_sort_int -&gt; fluxus_sort_verbum</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="primary" d="M 220.95 105.28 Q 238.64 130.23 254.04 103.80" stroke-width="2.60" opacity="0.96"/>
+      <title>edge: primary
+fluxus_sort_verbum -&gt; fluxus_to_ptr
+weight: 1
+
+path:
+fluxus_sort_verbum -&gt; fluxus_to_ptr</title>
+    </g>
+  </g>
+  <g id="call_links">
+    <g class="edge-wrap">
+    <path class="call" d="M 237.30 410.20 Q 349.53 319.78 415.14 191.47" stroke-width="2.15" opacity="0.74" data-kind="call" data-from="fluxus_is_empty" data-to="fluxus_len" data-weight="1" data-self-loop="false"/>
+      <title>edge: call
+fluxus_is_empty -&gt; fluxus_len
+calls: 1
+
+path:
+fluxus_is_empty -&gt; fluxus_len</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="call" d="M 141.23 389.02 Q 243.40 262.11 291.06 106.30" stroke-width="2.15" opacity="0.74" data-kind="call" data-from="fluxus_concat" data-to="fluxus_init" data-weight="1" data-self-loop="false"/>
+      <title>edge: call
+fluxus_concat -&gt; fluxus_init
+calls: 1
+
+path:
+fluxus_concat -&gt; fluxus_init</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="call" d="M 141.23 389.02 Q 299.46 319.74 415.14 191.47" stroke-width="2.50" opacity="0.80" data-kind="call" data-from="fluxus_concat" data-to="fluxus_len" data-weight="2" data-self-loop="false"/>
+      <title>edge: call
+fluxus_concat -&gt; fluxus_len
+calls: 2
+
+path:
+fluxus_concat -&gt; fluxus_len</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="call" d="M 141.23 389.02 Q 299.72 328.72 416.57 205.84" stroke-width="2.50" opacity="0.80" data-kind="call" data-from="fluxus_concat" data-to="fluxus_get" data-weight="2" data-self-loop="false"/>
+      <title>edge: call
+fluxus_concat -&gt; fluxus_get
+calls: 2
+
+path:
+fluxus_concat -&gt; fluxus_get</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="call" d="M 141.23 389.02 Q 276.63 280.32 354.72 125.23" stroke-width="2.50" opacity="0.80" data-kind="call" data-from="fluxus_concat" data-to="fluxus_push" data-weight="2" data-self-loop="false"/>
+      <title>edge: call
+fluxus_concat -&gt; fluxus_push
+calls: 2
+
+path:
+fluxus_concat -&gt; fluxus_push</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="call" d="M 64.02 277.04 Q 246.90 264.28 415.14 191.47" stroke-width="2.15" opacity="0.74" data-kind="call" data-from="fluxus_slice" data-to="fluxus_len" data-weight="1" data-self-loop="false"/>
+      <title>edge: call
+fluxus_slice -&gt; fluxus_len
+calls: 1
+
+path:
+fluxus_slice -&gt; fluxus_len</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="call" d="M 64.02 277.04 Q 195.57 215.65 291.06 106.30" stroke-width="2.15" opacity="0.74" data-kind="call" data-from="fluxus_slice" data-to="fluxus_init" data-weight="1" data-self-loop="false"/>
+      <title>edge: call
+fluxus_slice -&gt; fluxus_init
+calls: 1
+
+path:
+fluxus_slice -&gt; fluxus_init</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="call" d="M 64.02 277.04 Q 245.73 268.34 416.57 205.84" stroke-width="2.15" opacity="0.74" data-kind="call" data-from="fluxus_slice" data-to="fluxus_get" data-weight="1" data-self-loop="false"/>
+      <title>edge: call
+fluxus_slice -&gt; fluxus_get
+calls: 1
+
+path:
+fluxus_slice -&gt; fluxus_get</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="call" d="M 64.02 277.04 Q 223.18 227.58 354.72 125.23" stroke-width="2.15" opacity="0.74" data-kind="call" data-from="fluxus_slice" data-to="fluxus_push" data-weight="1" data-self-loop="false"/>
+      <title>edge: call
+fluxus_slice -&gt; fluxus_push
+calls: 1
+
+path:
+fluxus_slice -&gt; fluxus_push</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="call" d="M 96.59 181.75 Q 206.37 176.37 291.06 106.30" stroke-width="2.15" opacity="0.74" data-kind="call" data-from="fluxus_copy" data-to="fluxus_init" data-weight="1" data-self-loop="false"/>
+      <title>edge: call
+fluxus_copy -&gt; fluxus_init
+calls: 1
+
+path:
+fluxus_copy -&gt; fluxus_init</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="call" d="M 96.59 181.75 Q 255.01 214.49 415.14 191.47" stroke-width="2.15" opacity="0.74" data-kind="call" data-from="fluxus_copy" data-to="fluxus_len" data-weight="1" data-self-loop="false"/>
+      <title>edge: call
+fluxus_copy -&gt; fluxus_len
+calls: 1
+
+path:
+fluxus_copy -&gt; fluxus_len</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="call" d="M 96.59 181.75 Q 254.31 223.88 416.57 205.84" stroke-width="2.15" opacity="0.74" data-kind="call" data-from="fluxus_copy" data-to="fluxus_get" data-weight="1" data-self-loop="false"/>
+      <title>edge: call
+fluxus_copy -&gt; fluxus_get
+calls: 1
+
+path:
+fluxus_copy -&gt; fluxus_get</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="call" d="M 96.59 181.75 Q 231.85 181.80 354.72 125.23" stroke-width="2.15" opacity="0.74" data-kind="call" data-from="fluxus_copy" data-to="fluxus_push" data-weight="1" data-self-loop="false"/>
+      <title>edge: call
+fluxus_copy -&gt; fluxus_push
+calls: 1
+
+path:
+fluxus_copy -&gt; fluxus_push</title>
+    </g>
+  </g>
+  <g id="branches">
+    <g class="edge-wrap">
+    <path class="branch" d="M 64.02 277.04 Q 84.63 268.22 96.70 249.32" stroke-width="1.70" opacity="0.85"/>
+      <title>edge: branch
+fluxus_slice -&gt; fluxus_slice
+weight: 2
+
+path:
+fluxus_slice -&gt; fluxus_slice</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="branch" d="M 269.93 250.04 Q 289.50 179.50 291.06 106.30" stroke-width="1.45" opacity="0.85"/>
+      <title>edge: branch
+fluxus_init -&gt; fluxus_init
+weight: 1
+
+path:
+fluxus_init -&gt; fluxus_init</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="branch" d="M 269.93 250.04 Q 241.05 327.56 237.30 410.20" stroke-width="1.70" opacity="0.85"/>
+      <title>edge: branch
+fluxus_init -&gt; fluxus_is_empty
+weight: 2
+
+path:
+fluxus_init -&gt; fluxus_is_empty</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="branch" d="M 269.93 250.04 Q 200.44 314.77 141.23 389.02" stroke-width="2.10" opacity="0.85"/>
+      <title>edge: branch
+fluxus_init -&gt; fluxus_concat
+weight: 10
+
+path:
+fluxus_init -&gt; fluxus_concat</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="branch" d="M 269.93 250.04 Q 166.02 256.23 64.02 277.04" stroke-width="2.10" opacity="0.85"/>
+      <title>edge: branch
+fluxus_init -&gt; fluxus_slice
+weight: 7
+
+path:
+fluxus_init -&gt; fluxus_slice</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="branch" d="M 269.93 250.04 Q 185.52 210.15 96.59 181.75" stroke-width="2.10" opacity="0.85"/>
+      <title>edge: branch
+fluxus_init -&gt; fluxus_copy
+weight: 6
+
+path:
+fluxus_init -&gt; fluxus_copy</title>
+    </g>
+  </g>
+  <g id="loops">
+    <g class="edge-wrap">
+    <path class="loop" d="M 141.23 389.02 Q 133.12 408.90 146.75 425.48" stroke-width="1.70" opacity="0.88"/>
+      <title>edge: loop
+fluxus_concat -&gt; fluxus_concat
+weight: 3
+
+path:
+fluxus_concat -&gt; fluxus_concat</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="loop" d="M 151.07 425.48 C 188.13 407.66 192.26 430.83 175.75 419.24 C 159.24 430.83 163.36 407.66 143.51 426.98"/>
+      <title>edge: loop
+fluxus_concat -&gt; fluxus_concat
+weight: 3
+
+path:
+fluxus_concat -&gt; fluxus_concat</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="loop" d="M 64.02 277.04 Q 53.72 261.07 37.11 251.82" stroke-width="1.55" opacity="0.88"/>
+      <title>edge: loop
+fluxus_slice -&gt; fluxus_slice
+weight: 2
+
+path:
+fluxus_slice -&gt; fluxus_slice</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="loop" d="M 40.87 251.82 C 76.05 235.02 79.95 256.84 64.33 245.93 C 48.72 256.84 52.62 235.02 34.29 253.32"/>
+      <title>edge: loop
+fluxus_slice -&gt; fluxus_slice
+weight: 2
+
+path:
+fluxus_slice -&gt; fluxus_slice</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="loop" d="M 96.59 181.75 Q 77.95 185.29 63.01 196.99" stroke-width="1.55" opacity="0.88"/>
+      <title>edge: loop
+fluxus_copy -&gt; fluxus_copy
+weight: 2
+
+path:
+fluxus_copy -&gt; fluxus_copy</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="loop" d="M 66.77 196.99 C 102.93 185.56 106.84 207.38 91.22 196.47 C 75.61 207.38 79.51 185.56 60.19 198.49"/>
+      <title>edge: loop
+fluxus_copy -&gt; fluxus_copy
+weight: 2
+
+path:
+fluxus_copy -&gt; fluxus_copy</title>
+    </g>
+  </g>
+  <g id="bindings">
+    <g class="edge-wrap">
+    <path class="bind" d="M 291.06 106.30 Q 284.10 118.03 285.13 131.62" stroke-width="1.28" opacity="0.85"/>
+    <line class="bind" x1="293.77" y1="112.28" x2="285.98" y2="110.46" opacity="0.75"/>
+    <line class="bind" x1="289.90" y1="132.93" x2="295.69" y2="134.53" opacity="0.58"/>
+      <title>edge: bind
+fluxus_init -&gt; fluxus_init
+weight: 1
+
+path:
+fluxus_init -&gt; fluxus_init</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="bind" d="M 339.32 119.60 Q 328.45 128.19 325.77 141.79" stroke-width="1.28" opacity="0.85"/>
+    <line class="bind" x1="340.03" y1="126.12" x2="333.20" y2="121.95" opacity="0.75"/>
+    <line class="bind" x1="330.69" y1="141.29" x2="336.66" y2="140.70" opacity="0.58"/>
+      <title>edge: bind
+fluxus_free -&gt; fluxus_free
+weight: 1
+
+path:
+fluxus_free -&gt; fluxus_free</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="bind" d="M 354.72 125.23 Q 344.02 133.45 339.05 145.99" stroke-width="1.28" opacity="0.85"/>
+    <line class="bind" x1="354.78" y1="131.79" x2="348.39" y2="126.97" opacity="0.75"/>
+    <line class="bind" x1="343.96" y1="146.61" x2="349.91" y2="147.37" opacity="0.58"/>
+      <title>edge: bind
+fluxus_push -&gt; fluxus_push
+weight: 1
+
+path:
+fluxus_push -&gt; fluxus_push</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="bind" d="M 401.40 170.79 Q 389.03 175.40 378.96 183.94" stroke-width="1.28" opacity="0.85"/>
+    <line class="bind" x1="398.93" y1="176.87" x2="394.89" y2="169.97" opacity="0.75"/>
+    <line class="bind" x1="383.73" y1="182.60" x2="389.51" y2="180.98" opacity="0.58"/>
+      <title>edge: bind
+fluxus_pop -&gt; fluxus_pop
+weight: 1
+
+path:
+fluxus_pop -&gt; fluxus_pop</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="bind" d="M 415.14 191.47 Q 401.59 192.66 391.04 201.24" stroke-width="1.28" opacity="0.85"/>
+    <line class="bind" x1="411.82" y1="197.13" x2="408.81" y2="189.71" opacity="0.75"/>
+    <line class="bind" x1="395.81" y1="202.57" x2="401.59" y2="204.19" opacity="0.58"/>
+      <title>edge: bind
+fluxus_len -&gt; fluxus_len
+weight: 1
+
+path:
+fluxus_len -&gt; fluxus_len</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="bind" d="M 416.57 205.84 Q 403.22 206.68 391.76 213.59" stroke-width="1.28" opacity="0.85"/>
+    <line class="bind" x1="412.80" y1="211.21" x2="410.42" y2="203.57" opacity="0.75"/>
+    <line class="bind" x1="396.59" y1="212.54" x2="402.45" y2="211.26" opacity="0.58"/>
+      <title>edge: bind
+fluxus_get -&gt; fluxus_get
+weight: 1
+
+path:
+fluxus_get -&gt; fluxus_get</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="bind" d="M 424.04 244.52 Q 410.92 243.26 398.10 246.29" stroke-width="1.28" opacity="0.85"/>
+    <line class="bind" x1="419.12" y1="248.86" x2="418.58" y2="240.88" opacity="0.75"/>
+    <line class="bind" x1="403.01" y1="245.69" x2="408.97" y2="244.96" opacity="0.58"/>
+      <title>edge: bind
+fluxus_clear -&gt; fluxus_clear
+weight: 1
+
+path:
+fluxus_clear -&gt; fluxus_clear</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="bind" d="M 436.24 289.12 Q 423.81 284.82 410.67 284.42" stroke-width="1.28" opacity="0.85"/>
+    <line class="bind" x1="430.40" y1="292.11" x2="431.85" y2="284.24" opacity="0.75"/>
+    <line class="bind" x1="415.56" y1="283.68" x2="421.49" y2="282.79" opacity="0.58"/>
+      <title>edge: bind
+fluxus_reserve -&gt; fluxus_reserve
+weight: 1
+
+path:
+fluxus_reserve -&gt; fluxus_reserve</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="bind" d="M 409.62 317.44 Q 398.78 309.53 385.48 307.78" stroke-width="1.28" opacity="0.85"/>
+    <line class="bind" x1="403.31" y1="319.22" x2="406.28" y2="311.79" opacity="0.75"/>
+    <line class="bind" x1="390.40" y1="308.29" x2="396.37" y2="308.90" opacity="0.58"/>
+      <title>edge: bind
+fluxus_capacity -&gt; fluxus_capacity
+weight: 1
+
+path:
+fluxus_capacity -&gt; fluxus_capacity</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="bind" d="M 401.97 345.98 Q 395.06 332.41 379.84 332.34" stroke-width="1.28" opacity="0.85"/>
+    <line class="bind" x1="395.44" y1="346.66" x2="399.64" y2="339.85" opacity="0.75"/>
+    <line class="bind" x1="384.60" y1="331.00" x2="390.38" y2="329.37" opacity="0.58"/>
+      <title>edge: bind
+fluxus_peek -&gt; fluxus_peek
+weight: 1
+
+path:
+fluxus_peek -&gt; fluxus_peek</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="bind" d="M 397.93 351.39 Q 391.51 337.65 376.35 336.89" stroke-width="1.28" opacity="0.85"/>
+    <line class="bind" x1="391.38" y1="351.81" x2="395.85" y2="345.17" opacity="0.75"/>
+    <line class="bind" x1="381.30" y1="336.90" x2="387.30" y2="336.91" opacity="0.58"/>
+      <title>edge: bind
+fluxus_set -&gt; fluxus_set
+weight: 1
+
+path:
+fluxus_set -&gt; fluxus_set</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="bind" d="M 350.63 388.07 Q 347.13 374.58 335.48 366.94" stroke-width="1.28" opacity="0.85"/>
+    <line class="bind" x1="344.35" y1="386.17" x2="350.85" y2="381.51" opacity="0.75"/>
+    <line class="bind" x1="340.43" y1="366.77" x2="346.43" y2="366.57" opacity="0.58"/>
+      <title>edge: bind
+fluxus_remove -&gt; fluxus_remove
+weight: 1
+
+path:
+fluxus_remove -&gt; fluxus_remove</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="bind" d="M 324.41 391.44 Q 325.86 376.14 312.69 368.23" stroke-width="1.28" opacity="0.85"/>
+    <line class="bind" x1="318.49" y1="388.60" x2="325.63" y2="384.99" opacity="0.75"/>
+    <line class="bind" x1="317.63" y1="368.35" x2="323.63" y2="368.49" opacity="0.58"/>
+      <title>edge: bind
+fluxus_insert -&gt; fluxus_insert
+weight: 1
+
+path:
+fluxus_insert -&gt; fluxus_insert</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="bind" d="M 298.38 406.73 Q 297.08 393.59 291.34 381.70" stroke-width="1.28" opacity="0.85"/>
+    <line class="bind" x1="293.12" y1="402.80" x2="300.82" y2="400.64" opacity="0.75"/>
+    <line class="bind" x1="296.20" y1="380.74" x2="302.08" y2="379.57" opacity="0.58"/>
+      <title>edge: bind
+fluxus_contains -&gt; fluxus_contains
+weight: 1
+
+path:
+fluxus_contains -&gt; fluxus_contains</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="bind" d="M 141.23 389.02 Q 155.77 384.40 158.21 369.33" stroke-width="1.80" opacity="0.85"/>
+    <line class="bind" x1="141.60" y1="382.47" x2="147.66" y2="387.70" opacity="0.75"/>
+    <line class="bind" x1="142.54" y1="379.85" x2="150.11" y2="386.38" opacity="0.75"/>
+    <line class="bind" x1="145.00" y1="378.53" x2="151.05" y2="383.76" opacity="0.75"/>
+    <line class="bind" x1="145.94" y1="375.91" x2="153.51" y2="382.44" opacity="0.75"/>
+    <line class="bind" x1="148.39" y1="374.60" x2="154.45" y2="379.82" opacity="0.75"/>
+    <line class="bind" x1="149.33" y1="371.97" x2="156.90" y2="378.51" opacity="0.75"/>
+    <line class="bind" x1="164.24" y1="370.55" x2="170.12" y2="371.74" opacity="0.58"/>
+    <line class="bind" x1="159.30" y1="375.39" x2="160.88" y2="384.25" opacity="0.58"/>
+    <line class="bind" x1="153.24" y1="372.96" x2="148.39" y2="376.49" opacity="0.58"/>
+    <line class="bind" x1="153.52" y1="365.36" x2="146.66" y2="359.53" opacity="0.58"/>
+    <line class="bind" x1="161.67" y1="364.24" x2="165.03" y2="359.28" opacity="0.58"/>
+      <title>edge: bind
+fluxus_concat -&gt; fluxus_concat
+weight: 9
+
+path:
+fluxus_concat -&gt; fluxus_concat</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="bind" d="M 64.02 277.04 Q 77.12 277.22 89.87 274.21" stroke-width="1.60" opacity="0.85"/>
+    <line class="bind" x1="68.75" y1="272.50" x2="69.63" y2="280.45" opacity="0.75"/>
+    <line class="bind" x1="71.23" y1="271.22" x2="72.32" y2="281.16" opacity="0.75"/>
+    <line class="bind" x1="73.92" y1="271.93" x2="74.80" y2="279.89" opacity="0.75"/>
+    <line class="bind" x1="76.40" y1="270.66" x2="77.49" y2="280.60" opacity="0.75"/>
+    <line class="bind" x1="79.09" y1="271.37" x2="79.96" y2="279.32" opacity="0.75"/>
+    <line class="bind" x1="95.31" y1="273.12" x2="101.19" y2="271.93" opacity="0.58"/>
+    <line class="bind" x1="90.83" y1="279.67" x2="92.40" y2="288.54" opacity="0.58"/>
+    <line class="bind" x1="85.75" y1="277.93" x2="81.29" y2="281.95" opacity="0.58"/>
+    <line class="bind" x1="86.50" y1="269.79" x2="81.05" y2="262.63" opacity="0.58"/>
+    <line class="bind" x1="92.05" y1="269.11" x2="94.41" y2="263.59" opacity="0.58"/>
+      <title>edge: bind
+fluxus_slice -&gt; fluxus_slice
+weight: 5
+
+path:
+fluxus_slice -&gt; fluxus_slice</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="bind" d="M 96.59 181.75 Q 107.75 188.58 120.16 192.72" stroke-width="1.60" opacity="0.85"/>
+    <line class="bind" x1="102.99" y1="180.31" x2="99.61" y2="187.57" opacity="0.75"/>
+    <line class="bind" x1="105.77" y1="180.51" x2="101.55" y2="189.57" opacity="0.75"/>
+    <line class="bind" x1="107.70" y1="182.51" x2="104.33" y2="189.76" opacity="0.75"/>
+    <line class="bind" x1="110.48" y1="182.70" x2="106.26" y2="191.77" opacity="0.75"/>
+    <line class="bind" x1="112.42" y1="184.71" x2="109.04" y2="191.96" opacity="0.75"/>
+    <line class="bind" x1="125.49" y1="194.26" x2="131.25" y2="195.93" opacity="0.58"/>
+    <line class="bind" x1="120.82" y1="198.23" x2="121.90" y2="207.17" opacity="0.58"/>
+    <line class="bind" x1="116.10" y1="196.52" x2="111.72" y2="200.62" opacity="0.58"/>
+    <line class="bind" x1="115.52" y1="189.67" x2="108.01" y2="184.72" opacity="0.58"/>
+    <line class="bind" x1="122.20" y1="187.56" x2="124.41" y2="181.99" opacity="0.58"/>
+      <title>edge: bind
+fluxus_copy -&gt; fluxus_copy
+weight: 5
+
+path:
+fluxus_copy -&gt; fluxus_copy</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="bind" d="M 143.74 131.55 Q 151.58 142.00 161.16 150.86" stroke-width="1.28" opacity="0.85"/>
+    <line class="bind" x1="150.20" y1="132.74" x2="144.26" y2="138.09" opacity="0.75"/>
+    <line class="bind" x1="165.93" y1="149.53" x2="171.70" y2="147.91" opacity="0.58"/>
+      <title>edge: bind
+fluxus_reverse -&gt; fluxus_reverse
+weight: 1
+
+path:
+fluxus_reverse -&gt; fluxus_reverse</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="bind" d="M 182.45 118.45 Q 183.07 132.87 194.71 141.38" stroke-width="1.28" opacity="0.85"/>
+    <line class="bind" x1="188.43" y1="121.15" x2="181.37" y2="124.93" opacity="0.75"/>
+    <line class="bind" x1="199.65" y1="141.17" x2="205.65" y2="140.91" opacity="0.58"/>
+      <title>edge: bind
+fluxus_sort_int -&gt; fluxus_sort_int
+weight: 1
+
+path:
+fluxus_sort_int -&gt; fluxus_sort_int</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="bind" d="M 220.95 105.28 Q 220.24 118.79 226.84 130.61" stroke-width="1.28" opacity="0.85"/>
+    <line class="bind" x1="226.02" y1="109.44" x2="218.23" y2="111.25" opacity="0.75"/>
+    <line class="bind" x1="231.68" y1="131.61" x2="237.56" y2="132.83" opacity="0.58"/>
+      <title>edge: bind
+fluxus_sort_verbum -&gt; fluxus_sort_verbum
+weight: 1
+
+path:
+fluxus_sort_verbum -&gt; fluxus_sort_verbum</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="bind" d="M 254.04 103.80 Q 247.91 116.88 254.37 129.80" stroke-width="1.28" opacity="0.85"/>
+    <line class="bind" x1="258.10" y1="108.95" x2="250.10" y2="109.05" opacity="0.75"/>
+    <line class="bind" x1="259.31" y1="130.10" x2="265.30" y2="130.48" opacity="0.58"/>
+      <title>edge: bind
+fluxus_to_ptr -&gt; fluxus_to_ptr
+weight: 1
+
+path:
+fluxus_to_ptr -&gt; fluxus_to_ptr</title>
+    </g>
+  </g>
+  <g id="terminals">
+    <g class="edge-wrap">
+    <path class="term" d="M 291.06 106.30 Q 283.49 134.03 286.08 162.65" stroke-width="1.65" opacity="0.90"/>
+      <title>edge: return
+fluxus_init -&gt; fluxus_init
+weight: 2
+
+path:
+fluxus_init -&gt; fluxus_init</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="term" d="M 339.32 119.60 Q 316.84 137.72 303.30 163.22" stroke-width="1.65" opacity="0.90"/>
+      <title>edge: return
+fluxus_free -&gt; fluxus_free
+weight: 2
+
+path:
+fluxus_free -&gt; fluxus_free</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="term" d="M 354.72 125.23 Q 337.02 147.77 327.36 174.75" stroke-width="1.65" opacity="0.90"/>
+      <title>edge: return
+fluxus_push -&gt; fluxus_push
+weight: 2
+
+path:
+fluxus_push -&gt; fluxus_push</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="term" d="M 401.40 170.79 Q 373.98 178.46 349.04 192.20" stroke-width="1.65" opacity="0.90"/>
+      <title>edge: return
+fluxus_pop -&gt; fluxus_pop
+weight: 2
+
+path:
+fluxus_pop -&gt; fluxus_pop</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="term" d="M 415.14 191.47 Q 386.48 193.45 360.23 205.10" stroke-width="1.65" opacity="0.90"/>
+      <title>edge: return
+fluxus_len -&gt; fluxus_len
+weight: 2
+
+path:
+fluxus_len -&gt; fluxus_len</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="term" d="M 416.57 205.84 Q 389.24 214.24 365.51 230.17" stroke-width="1.65" opacity="0.90"/>
+      <title>edge: return
+fluxus_get -&gt; fluxus_get
+weight: 2
+
+path:
+fluxus_get -&gt; fluxus_get</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="term" d="M 424.04 244.52 Q 396.06 239.30 367.62 240.36" stroke-width="1.65" opacity="0.90"/>
+      <title>edge: return
+fluxus_clear -&gt; fluxus_clear
+weight: 2
+
+path:
+fluxus_clear -&gt; fluxus_clear</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="term" d="M 436.24 289.12 Q 408.10 285.02 379.71 286.87" stroke-width="1.65" opacity="0.90"/>
+      <title>edge: return
+fluxus_reserve -&gt; fluxus_reserve
+weight: 2
+
+path:
+fluxus_reserve -&gt; fluxus_reserve</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="term" d="M 409.62 317.44 Q 383.16 306.56 354.65 304.07" stroke-width="1.65" opacity="0.90"/>
+      <title>edge: return
+fluxus_capacity -&gt; fluxus_capacity
+weight: 2
+
+path:
+fluxus_capacity -&gt; fluxus_capacity</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="term" d="M 401.97 345.98 Q 385.95 321.02 358.50 309.79" stroke-width="1.65" opacity="0.90"/>
+      <title>edge: return
+fluxus_peek -&gt; fluxus_peek
+weight: 2
+
+path:
+fluxus_peek -&gt; fluxus_peek</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="term" d="M 397.93 351.39 Q 376.30 331.14 346.99 326.79" stroke-width="1.65" opacity="0.90"/>
+      <title>edge: return
+fluxus_set -&gt; fluxus_set
+weight: 2
+
+path:
+fluxus_set -&gt; fluxus_set</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="term" d="M 350.63 388.07 Q 342.91 360.20 324.51 337.89" stroke-width="1.65" opacity="0.90"/>
+      <title>edge: return
+fluxus_remove -&gt; fluxus_remove
+weight: 2
+
+path:
+fluxus_remove -&gt; fluxus_remove</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="term" d="M 324.41 391.44 Q 315.75 362.99 292.02 345.06" stroke-width="1.65" opacity="0.90"/>
+      <title>edge: return
+fluxus_insert -&gt; fluxus_insert
+weight: 2
+
+path:
+fluxus_insert -&gt; fluxus_insert</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="term" d="M 298.38 406.73 Q 297.93 378.25 290.92 350.65" stroke-width="1.65" opacity="0.90"/>
+      <title>edge: return
+fluxus_contains -&gt; fluxus_contains
+weight: 2
+
+path:
+fluxus_contains -&gt; fluxus_contains</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="term" d="M 237.30 410.20 Q 241.01 381.83 236.10 353.64" stroke-width="1.65" opacity="0.90"/>
+      <title>edge: return
+fluxus_is_empty -&gt; fluxus_is_empty
+weight: 2
+
+path:
+fluxus_is_empty -&gt; fluxus_is_empty</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="term" d="M 141.23 389.02 Q 164.06 370.06 171.76 341.39" stroke-width="1.65" opacity="0.90"/>
+      <title>edge: return
+fluxus_concat -&gt; fluxus_concat
+weight: 2
+
+path:
+fluxus_concat -&gt; fluxus_concat</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="term" d="M 64.02 277.04 Q 92.21 280.57 120.56 278.89" stroke-width="1.65" opacity="0.90"/>
+      <title>edge: return
+fluxus_slice -&gt; fluxus_slice
+weight: 2
+
+path:
+fluxus_slice -&gt; fluxus_slice</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="term" d="M 96.59 181.75 Q 122.94 192.32 150.73 198.14" stroke-width="1.65" opacity="0.90"/>
+      <title>edge: return
+fluxus_copy -&gt; fluxus_copy
+weight: 2
+
+path:
+fluxus_copy -&gt; fluxus_copy</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="term" d="M 143.74 131.55 Q 164.07 151.34 187.19 167.78" stroke-width="1.65" opacity="0.90"/>
+      <title>edge: return
+fluxus_reverse -&gt; fluxus_reverse
+weight: 2
+
+path:
+fluxus_reverse -&gt; fluxus_reverse</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="term" d="M 182.45 118.45 Q 193.33 145.55 215.91 164.06" stroke-width="1.65" opacity="0.90"/>
+      <title>edge: return
+fluxus_sort_int -&gt; fluxus_sort_int
+weight: 2
+
+path:
+fluxus_sort_int -&gt; fluxus_sort_int</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="term" d="M 220.95 105.28 Q 226.76 133.37 241.42 158.01" stroke-width="1.65" opacity="0.90"/>
+      <title>edge: return
+fluxus_sort_verbum -&gt; fluxus_sort_verbum
+weight: 2
+
+path:
+fluxus_sort_verbum -&gt; fluxus_sort_verbum</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="term" d="M 254.04 103.80 Q 243.17 130.91 246.76 159.90" stroke-width="1.65" opacity="0.90"/>
+      <title>edge: return
+fluxus_to_ptr -&gt; fluxus_to_ptr
+weight: 2
+
+path:
+fluxus_to_ptr -&gt; fluxus_to_ptr</title>
+    </g>
+  </g>
+  <g id="nodes">
+    <g class="node-wrap">
+      <circle class="node-main" cx="291.06" cy="106.30" r="5.95" data-kind="rituale" data-ritual="fluxus_init" data-line="3" data-col="1" data-depth="3" data-stmt="RITUALE" data-loops="0" data-calls="0"/>
+      <title>RITUALE fluxus_init
+stmt: 1
+depth: 3
+loops: 0
+calls: 0
+source:
+RITUALE fluxus_init(REX elem_size) REDDE SPECULUM NIHIL</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="285.13" cy="131.62" r="2.95" data-kind="bind" data-ritual="fluxus_init" data-depth="3" data-stmt="EVOCA"/>
+      <title>stmt: EVOCA
+rituale: fluxus_init
+depth: 3
+line: 0
+
+source:
+stmt: EVOCA
+rituale: fluxus_init</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="286.08" cy="162.65" r="3.60" data-kind="term" data-ritual="fluxus_init" data-line="4" data-col="3" data-depth="3" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: fluxus_init
+depth: 3
+line: 4
+
+source:
+REDDE OBSECRO fluxus_init(elem_size)</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-main" cx="339.32" cy="119.60" r="6.10" data-kind="rituale" data-ritual="fluxus_free" data-line="7" data-col="1" data-depth="3" data-stmt="RITUALE" data-loops="0" data-calls="0"/>
+      <title>RITUALE fluxus_free
+stmt: 2
+depth: 3
+loops: 0
+calls: 0
+source:
+RITUALE fluxus_free(SPECULUM NIHIL flux) REDDE NIHIL</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="325.77" cy="141.79" r="2.95" data-kind="bind" data-ritual="fluxus_free" data-line="8" data-col="3" data-depth="3" data-stmt="OBSECRO"/>
+      <title>stmt: OBSECRO
+rituale: fluxus_free
+depth: 3
+line: 8
+
+source:
+OBSECRO fluxus_free(flux)</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="303.30" cy="163.22" r="3.60" data-kind="term" data-ritual="fluxus_free" data-line="9" data-col="3" data-depth="3" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: fluxus_free
+depth: 3
+line: 9
+
+source:
+REDDE</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-main" cx="354.72" cy="125.23" r="6.10" data-kind="rituale" data-ritual="fluxus_push" data-line="12" data-col="1" data-depth="3" data-stmt="RITUALE" data-loops="0" data-calls="0"/>
+      <title>RITUALE fluxus_push
+stmt: 2
+depth: 3
+loops: 0
+calls: 0
+source:
+RITUALE fluxus_push(SPECULUM NIHIL flux, SPECULUM NIHIL elem) REDDE NIHIL</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="339.05" cy="145.99" r="2.95" data-kind="bind" data-ritual="fluxus_push" data-line="13" data-col="3" data-depth="3" data-stmt="OBSECRO"/>
+      <title>stmt: OBSECRO
+rituale: fluxus_push
+depth: 3
+line: 13
+
+source:
+OBSECRO fluxus_push(flux, elem)</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="327.36" cy="174.75" r="3.60" data-kind="term" data-ritual="fluxus_push" data-line="14" data-col="3" data-depth="3" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: fluxus_push
+depth: 3
+line: 14
+
+source:
+REDDE</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-main" cx="401.40" cy="170.79" r="6.10" data-kind="rituale" data-ritual="fluxus_pop" data-line="17" data-col="1" data-depth="3" data-stmt="RITUALE" data-loops="0" data-calls="0"/>
+      <title>RITUALE fluxus_pop
+stmt: 2
+depth: 3
+loops: 0
+calls: 0
+source:
+RITUALE fluxus_pop(SPECULUM NIHIL flux, SPECULUM NIHIL out) REDDE NIHIL</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="378.96" cy="183.94" r="2.95" data-kind="bind" data-ritual="fluxus_pop" data-line="18" data-col="3" data-depth="3" data-stmt="OBSECRO"/>
+      <title>stmt: OBSECRO
+rituale: fluxus_pop
+depth: 3
+line: 18
+
+source:
+OBSECRO fluxus_pop(flux, out)</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="349.04" cy="192.20" r="3.60" data-kind="term" data-ritual="fluxus_pop" data-line="19" data-col="3" data-depth="3" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: fluxus_pop
+depth: 3
+line: 19
+
+source:
+REDDE</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-main" cx="415.14" cy="191.47" r="5.95" data-kind="rituale" data-ritual="fluxus_len" data-line="22" data-col="1" data-depth="3" data-stmt="RITUALE" data-loops="0" data-calls="0"/>
+      <title>RITUALE fluxus_len
+stmt: 1
+depth: 3
+loops: 0
+calls: 0
+source:
+RITUALE fluxus_len(SPECULUM NIHIL flux) REDDE REX</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="391.04" cy="201.24" r="2.95" data-kind="bind" data-ritual="fluxus_len" data-depth="3" data-stmt="EVOCA"/>
+      <title>stmt: EVOCA
+rituale: fluxus_len
+depth: 3
+line: 0
+
+source:
+stmt: EVOCA
+rituale: fluxus_len</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="360.23" cy="205.10" r="3.60" data-kind="term" data-ritual="fluxus_len" data-line="23" data-col="3" data-depth="3" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: fluxus_len
+depth: 3
+line: 23
+
+source:
+REDDE OBSECRO fluxus_len(flux)</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-main" cx="416.57" cy="205.84" r="5.95" data-kind="rituale" data-ritual="fluxus_get" data-line="26" data-col="1" data-depth="3" data-stmt="RITUALE" data-loops="0" data-calls="0"/>
+      <title>RITUALE fluxus_get
+stmt: 1
+depth: 3
+loops: 0
+calls: 0
+source:
+RITUALE fluxus_get(SPECULUM NIHIL flux, REX idx) REDDE SPECULUM NIHIL</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="391.76" cy="213.59" r="2.95" data-kind="bind" data-ritual="fluxus_get" data-depth="3" data-stmt="EVOCA"/>
+      <title>stmt: EVOCA
+rituale: fluxus_get
+depth: 3
+line: 0
+
+source:
+stmt: EVOCA
+rituale: fluxus_get</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="365.51" cy="230.17" r="3.60" data-kind="term" data-ritual="fluxus_get" data-line="27" data-col="3" data-depth="3" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: fluxus_get
+depth: 3
+line: 27
+
+source:
+REDDE OBSECRO fluxus_get(flux, idx)</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-main" cx="424.04" cy="244.52" r="6.10" data-kind="rituale" data-ritual="fluxus_clear" data-line="30" data-col="1" data-depth="3" data-stmt="RITUALE" data-loops="0" data-calls="0"/>
+      <title>RITUALE fluxus_clear
+stmt: 2
+depth: 3
+loops: 0
+calls: 0
+source:
+RITUALE fluxus_clear(SPECULUM NIHIL flux) REDDE NIHIL</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="398.10" cy="246.29" r="2.95" data-kind="bind" data-ritual="fluxus_clear" data-line="31" data-col="3" data-depth="3" data-stmt="OBSECRO"/>
+      <title>stmt: OBSECRO
+rituale: fluxus_clear
+depth: 3
+line: 31
+
+source:
+OBSECRO fluxus_clear(flux)</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="367.62" cy="240.36" r="3.60" data-kind="term" data-ritual="fluxus_clear" data-line="32" data-col="3" data-depth="3" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: fluxus_clear
+depth: 3
+line: 32
+
+source:
+REDDE</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-main" cx="436.24" cy="289.12" r="6.10" data-kind="rituale" data-ritual="fluxus_reserve" data-line="35" data-col="1" data-depth="3" data-stmt="RITUALE" data-loops="0" data-calls="0"/>
+      <title>RITUALE fluxus_reserve
+stmt: 2
+depth: 3
+loops: 0
+calls: 0
+source:
+RITUALE fluxus_reserve(SPECULUM NIHIL flux, REX cap) REDDE NIHIL</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="410.67" cy="284.42" r="2.95" data-kind="bind" data-ritual="fluxus_reserve" data-line="36" data-col="3" data-depth="3" data-stmt="OBSECRO"/>
+      <title>stmt: OBSECRO
+rituale: fluxus_reserve
+depth: 3
+line: 36
+
+source:
+OBSECRO fluxus_reserve(flux, cap)</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="379.71" cy="286.87" r="3.60" data-kind="term" data-ritual="fluxus_reserve" data-line="37" data-col="3" data-depth="3" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: fluxus_reserve
+depth: 3
+line: 37
+
+source:
+REDDE</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-main" cx="409.62" cy="317.44" r="5.95" data-kind="rituale" data-ritual="fluxus_capacity" data-line="40" data-col="1" data-depth="3" data-stmt="RITUALE" data-loops="0" data-calls="0"/>
+      <title>RITUALE fluxus_capacity
+stmt: 1
+depth: 3
+loops: 0
+calls: 0
+source:
+RITUALE fluxus_capacity(SPECULUM NIHIL flux) REDDE REX</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="385.48" cy="307.78" r="2.95" data-kind="bind" data-ritual="fluxus_capacity" data-depth="3" data-stmt="EVOCA"/>
+      <title>stmt: EVOCA
+rituale: fluxus_capacity
+depth: 3
+line: 0
+
+source:
+stmt: EVOCA
+rituale: fluxus_capacity</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="354.65" cy="304.07" r="3.60" data-kind="term" data-ritual="fluxus_capacity" data-line="41" data-col="3" data-depth="3" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: fluxus_capacity
+depth: 3
+line: 41
+
+source:
+REDDE OBSECRO fluxus_capacity(flux)</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-main" cx="401.97" cy="345.98" r="5.95" data-kind="rituale" data-ritual="fluxus_peek" data-line="44" data-col="1" data-depth="3" data-stmt="RITUALE" data-loops="0" data-calls="0"/>
+      <title>RITUALE fluxus_peek
+stmt: 1
+depth: 3
+loops: 0
+calls: 0
+source:
+RITUALE fluxus_peek(SPECULUM NIHIL flux) REDDE SPECULUM NIHIL</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="379.84" cy="332.34" r="2.95" data-kind="bind" data-ritual="fluxus_peek" data-depth="3" data-stmt="EVOCA"/>
+      <title>stmt: EVOCA
+rituale: fluxus_peek
+depth: 3
+line: 0
+
+source:
+stmt: EVOCA
+rituale: fluxus_peek</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="358.50" cy="309.79" r="3.60" data-kind="term" data-ritual="fluxus_peek" data-line="45" data-col="3" data-depth="3" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: fluxus_peek
+depth: 3
+line: 45
+
+source:
+REDDE OBSECRO fluxus_peek(flux)</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-main" cx="397.93" cy="351.39" r="6.10" data-kind="rituale" data-ritual="fluxus_set" data-line="48" data-col="1" data-depth="3" data-stmt="RITUALE" data-loops="0" data-calls="0"/>
+      <title>RITUALE fluxus_set
+stmt: 2
+depth: 3
+loops: 0
+calls: 0
+source:
+RITUALE fluxus_set(SPECULUM NIHIL flux, REX idx, SPECULUM NIHIL elem) REDDE NIHIL</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="376.35" cy="336.89" r="2.95" data-kind="bind" data-ritual="fluxus_set" data-line="49" data-col="3" data-depth="3" data-stmt="OBSECRO"/>
+      <title>stmt: OBSECRO
+rituale: fluxus_set
+depth: 3
+line: 49
+
+source:
+OBSECRO fluxus_set(flux, idx, elem)</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="346.99" cy="326.79" r="3.60" data-kind="term" data-ritual="fluxus_set" data-line="50" data-col="3" data-depth="3" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: fluxus_set
+depth: 3
+line: 50
+
+source:
+REDDE</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-main" cx="350.63" cy="388.07" r="6.10" data-kind="rituale" data-ritual="fluxus_remove" data-line="53" data-col="1" data-depth="3" data-stmt="RITUALE" data-loops="0" data-calls="0"/>
+      <title>RITUALE fluxus_remove
+stmt: 2
+depth: 3
+loops: 0
+calls: 0
+source:
+RITUALE fluxus_remove(SPECULUM NIHIL flux, REX idx) REDDE NIHIL</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="335.48" cy="366.94" r="2.95" data-kind="bind" data-ritual="fluxus_remove" data-line="54" data-col="3" data-depth="3" data-stmt="OBSECRO"/>
+      <title>stmt: OBSECRO
+rituale: fluxus_remove
+depth: 3
+line: 54
+
+source:
+OBSECRO fluxus_remove(flux, idx)</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="324.51" cy="337.89" r="3.60" data-kind="term" data-ritual="fluxus_remove" data-line="55" data-col="3" data-depth="3" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: fluxus_remove
+depth: 3
+line: 55
+
+source:
+REDDE</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-main" cx="324.41" cy="391.44" r="6.10" data-kind="rituale" data-ritual="fluxus_insert" data-line="58" data-col="1" data-depth="3" data-stmt="RITUALE" data-loops="0" data-calls="0"/>
+      <title>RITUALE fluxus_insert
+stmt: 2
+depth: 3
+loops: 0
+calls: 0
+source:
+RITUALE fluxus_insert(SPECULUM NIHIL flux, REX idx, SPECULUM NIHIL elem) REDDE NIHIL</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="312.69" cy="368.23" r="2.95" data-kind="bind" data-ritual="fluxus_insert" data-line="59" data-col="3" data-depth="3" data-stmt="OBSECRO"/>
+      <title>stmt: OBSECRO
+rituale: fluxus_insert
+depth: 3
+line: 59
+
+source:
+OBSECRO fluxus_insert(flux, idx, elem)</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="292.02" cy="345.06" r="3.60" data-kind="term" data-ritual="fluxus_insert" data-line="60" data-col="3" data-depth="3" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: fluxus_insert
+depth: 3
+line: 60
+
+source:
+REDDE</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-main" cx="298.38" cy="406.73" r="5.95" data-kind="rituale" data-ritual="fluxus_contains" data-line="63" data-col="1" data-depth="3" data-stmt="RITUALE" data-loops="0" data-calls="0"/>
+      <title>RITUALE fluxus_contains
+stmt: 1
+depth: 3
+loops: 0
+calls: 0
+source:
+RITUALE fluxus_contains(SPECULUM NIHIL flux, SPECULUM NIHIL elem) REDDE VERUM</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="291.34" cy="381.70" r="2.95" data-kind="bind" data-ritual="fluxus_contains" data-depth="3" data-stmt="EVOCA"/>
+      <title>stmt: EVOCA
+rituale: fluxus_contains
+depth: 3
+line: 0
+
+source:
+stmt: EVOCA
+rituale: fluxus_contains</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="290.92" cy="350.65" r="3.60" data-kind="term" data-ritual="fluxus_contains" data-line="64" data-col="3" data-depth="3" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: fluxus_contains
+depth: 3
+line: 64
+
+source:
+REDDE OBSECRO fluxus_contains(flux, elem)</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-main" cx="237.30" cy="410.20" r="5.95" data-kind="rituale" data-ritual="fluxus_is_empty" data-line="67" data-col="1" data-depth="4" data-stmt="RITUALE" data-loops="0" data-calls="1"/>
+      <title>RITUALE fluxus_is_empty
+stmt: 1
+depth: 4
+loops: 0
+calls: 1
+source:
+RITUALE fluxus_is_empty(SPECULUM NIHIL flux) REDDE VERUM</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="236.10" cy="353.64" r="3.60" data-kind="term" data-ritual="fluxus_is_empty" data-line="68" data-col="3" data-depth="4" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: fluxus_is_empty
+depth: 4
+line: 68
+
+source:
+REDDE CONIURA fluxus_len(flux) == 0</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-main" cx="141.23" cy="389.02" r="7.90" data-kind="rituale" data-ritual="fluxus_concat" data-line="71" data-col="1" data-depth="5" data-stmt="RITUALE" data-loops="2" data-calls="7"/>
+      <title>RITUALE fluxus_concat
+stmt: 14
+depth: 5
+loops: 2
+calls: 7
+source:
+RITUALE fluxus_concat GENUS(T)(SPECULUM NIHIL a, SPECULUM NIHIL b) REDDE SPECULUM NIHIL</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-loop" cx="146.75" cy="425.48" r="5.40" data-kind="loop" data-ritual="fluxus_concat" data-line="75" data-col="3" data-depth="5" data-stmt="DUM"/>
+      <title>stmt: DUM
+rituale: fluxus_concat
+depth: 5
+line: 75
+
+source:
+DUM i &lt; an</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="158.21" cy="369.33" r="4.15" data-kind="bind" data-ritual="fluxus_concat" data-line="72" data-col="3" data-depth="5" data-stmt="EVOCA"/>
+      <title>stmt: EVOCA
+rituale: fluxus_concat
+depth: 5
+line: 72
+
+source:
+EVOCA SPECULUM NIHIL out AD CONIURA fluxus_init(MENSURA(T))</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="171.76" cy="341.39" r="3.60" data-kind="term" data-ritual="fluxus_concat" data-line="87" data-col="3" data-depth="5" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: fluxus_concat
+depth: 5
+line: 87
+
+source:
+REDDE out</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-main" cx="64.02" cy="277.04" r="7.30" data-kind="rituale" data-ritual="fluxus_slice" data-line="90" data-col="1" data-depth="5" data-stmt="RITUALE" data-loops="1" data-calls="4"/>
+      <title>RITUALE fluxus_slice
+stmt: 10
+depth: 5
+loops: 1
+calls: 4
+source:
+RITUALE fluxus_slice GENUS(T)(SPECULUM NIHIL flux, REX inicio, REX fim) REDDE SPECULUM NIHIL</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="96.70" cy="249.32" r="4.80" data-kind="branch" data-ritual="fluxus_slice" data-line="92" data-col="3" data-depth="5" data-stmt="SI"/>
+      <title>stmt: SI
+rituale: fluxus_slice
+depth: 5
+line: 92
+
+source:
+SI inicio &lt; 0 VEL fim &lt; inicio VEL fim &gt; n</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-loop" cx="37.11" cy="251.82" r="4.70" data-kind="loop" data-ritual="fluxus_slice" data-line="97" data-col="3" data-depth="5" data-stmt="DUM"/>
+      <title>stmt: DUM
+rituale: fluxus_slice
+depth: 5
+line: 97
+
+source:
+DUM i &lt; fim</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="89.87" cy="274.21" r="3.55" data-kind="bind" data-ritual="fluxus_slice" data-line="91" data-col="3" data-depth="5" data-stmt="EVOCA"/>
+      <title>stmt: EVOCA
+rituale: fluxus_slice
+depth: 5
+line: 91
+
+source:
+EVOCA REX n AD CONIURA fluxus_len(flux)</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="120.56" cy="278.89" r="3.60" data-kind="term" data-ritual="fluxus_slice" data-line="102" data-col="3" data-depth="5" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: fluxus_slice
+depth: 5
+line: 102
+
+source:
+REDDE out</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-main" cx="96.59" cy="181.75" r="7.00" data-kind="rituale" data-ritual="fluxus_copy" data-line="105" data-col="1" data-depth="5" data-stmt="RITUALE" data-loops="1" data-calls="4"/>
+      <title>RITUALE fluxus_copy
+stmt: 8
+depth: 5
+loops: 1
+calls: 4
+source:
+RITUALE fluxus_copy GENUS(T)(SPECULUM NIHIL flux) REDDE SPECULUM NIHIL</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-loop" cx="63.01" cy="196.99" r="4.70" data-kind="loop" data-ritual="fluxus_copy" data-line="109" data-col="3" data-depth="5" data-stmt="DUM"/>
+      <title>stmt: DUM
+rituale: fluxus_copy
+depth: 5
+line: 109
+
+source:
+DUM i &lt; n</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="120.16" cy="192.72" r="3.55" data-kind="bind" data-ritual="fluxus_copy" data-line="106" data-col="3" data-depth="5" data-stmt="EVOCA"/>
+      <title>stmt: EVOCA
+rituale: fluxus_copy
+depth: 5
+line: 106
+
+source:
+EVOCA SPECULUM NIHIL out AD CONIURA fluxus_init(MENSURA(T))</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="150.73" cy="198.14" r="3.60" data-kind="term" data-ritual="fluxus_copy" data-line="114" data-col="3" data-depth="5" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: fluxus_copy
+depth: 5
+line: 114
+
+source:
+REDDE out</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-main" cx="143.74" cy="131.55" r="6.10" data-kind="rituale" data-ritual="fluxus_reverse" data-line="117" data-col="1" data-depth="3" data-stmt="RITUALE" data-loops="0" data-calls="0"/>
+      <title>RITUALE fluxus_reverse
+stmt: 2
+depth: 3
+loops: 0
+calls: 0
+source:
+RITUALE fluxus_reverse(SPECULUM NIHIL flux) REDDE NIHIL</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="161.16" cy="150.86" r="2.95" data-kind="bind" data-ritual="fluxus_reverse" data-line="118" data-col="3" data-depth="3" data-stmt="OBSECRO"/>
+      <title>stmt: OBSECRO
+rituale: fluxus_reverse
+depth: 3
+line: 118
+
+source:
+OBSECRO fluxus_reverse(flux)</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="187.19" cy="167.78" r="3.60" data-kind="term" data-ritual="fluxus_reverse" data-line="119" data-col="3" data-depth="3" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: fluxus_reverse
+depth: 3
+line: 119
+
+source:
+REDDE</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-main" cx="182.45" cy="118.45" r="6.10" data-kind="rituale" data-ritual="fluxus_sort_int" data-line="122" data-col="1" data-depth="3" data-stmt="RITUALE" data-loops="0" data-calls="0"/>
+      <title>RITUALE fluxus_sort_int
+stmt: 2
+depth: 3
+loops: 0
+calls: 0
+source:
+RITUALE fluxus_sort_int(SPECULUM NIHIL flux) REDDE NIHIL</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="194.71" cy="141.38" r="2.95" data-kind="bind" data-ritual="fluxus_sort_int" data-line="123" data-col="3" data-depth="3" data-stmt="OBSECRO"/>
+      <title>stmt: OBSECRO
+rituale: fluxus_sort_int
+depth: 3
+line: 123
+
+source:
+OBSECRO fluxus_sort_int(flux)</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="215.91" cy="164.06" r="3.60" data-kind="term" data-ritual="fluxus_sort_int" data-line="124" data-col="3" data-depth="3" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: fluxus_sort_int
+depth: 3
+line: 124
+
+source:
+REDDE</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-main" cx="220.95" cy="105.28" r="6.10" data-kind="rituale" data-ritual="fluxus_sort_verbum" data-line="127" data-col="1" data-depth="3" data-stmt="RITUALE" data-loops="0" data-calls="0"/>
+      <title>RITUALE fluxus_sort_verbum
+stmt: 2
+depth: 3
+loops: 0
+calls: 0
+source:
+RITUALE fluxus_sort_verbum(SPECULUM NIHIL flux) REDDE NIHIL</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="226.84" cy="130.61" r="2.95" data-kind="bind" data-ritual="fluxus_sort_verbum" data-line="128" data-col="3" data-depth="3" data-stmt="OBSECRO"/>
+      <title>stmt: OBSECRO
+rituale: fluxus_sort_verbum
+depth: 3
+line: 128
+
+source:
+OBSECRO fluxus_sort_verbum(flux)</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="241.42" cy="158.01" r="3.60" data-kind="term" data-ritual="fluxus_sort_verbum" data-line="129" data-col="3" data-depth="3" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: fluxus_sort_verbum
+depth: 3
+line: 129
+
+source:
+REDDE</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-main" cx="254.04" cy="103.80" r="5.95" data-kind="rituale" data-ritual="fluxus_to_ptr" data-line="132" data-col="1" data-depth="3" data-stmt="RITUALE" data-loops="0" data-calls="0"/>
+      <title>RITUALE fluxus_to_ptr
+stmt: 1
+depth: 3
+loops: 0
+calls: 0
+source:
+RITUALE fluxus_to_ptr(SPECULUM NIHIL flux) REDDE SPECULUM NIHIL</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="254.37" cy="129.80" r="2.95" data-kind="bind" data-ritual="fluxus_to_ptr" data-depth="3" data-stmt="EVOCA"/>
+      <title>stmt: EVOCA
+rituale: fluxus_to_ptr
+depth: 3
+line: 0
+
+source:
+stmt: EVOCA
+rituale: fluxus_to_ptr</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="246.76" cy="159.90" r="3.60" data-kind="term" data-ritual="fluxus_to_ptr" data-line="133" data-col="3" data-depth="3" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: fluxus_to_ptr
+depth: 3
+line: 133
+
+source:
+REDDE OBSECRO fluxus_to_ptr(flux)</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="269.93" cy="250.04" r="5.00" data-kind="bind" data-ritual="fluxus_init" data-depth="3" data-stmt="EVOCA"/>
+      <title>stmt: EVOCA
+rituale: fluxus_init
+depth: 3
+line: 0
+
+source:
+stmt: EVOCA
+rituale: fluxus_init</title>
+    </g>
+  </g>
+  <g id="ornaments">
+    <circle class="orn" cx="454.22" cy="271.71" r="0.90"/>
+    <circle class="orn" cx="454.75" cy="309.60" r="1.90"/>
+    <circle class="orn" cx="411.63" cy="383.19" r="2.90"/>
+    <circle class="orn" cx="274.18" cy="465.47" r="0.90"/>
+    <circle class="orn" cx="235.81" cy="457.14" r="1.90"/>
+    <circle class="orn" cx="129.38" cy="411.11" r="2.90"/>
+    <circle class="orn" cx="81.83" cy="354.50" r="0.90"/>
+    <circle class="orn" cx="56.86" cy="223.89" r="1.90"/>
+    <circle class="orn" cx="91.04" cy="134.77" r="2.90"/>
+    <circle class="orn" cx="119.89" cy="103.05" r="0.90"/>
+    <circle class="orn" cx="170.33" cy="65.34" r="1.90"/>
+    <circle class="orn" cx="308.63" cy="51.35" r="2.90"/>
+    <circle class="orn" cx="363.52" cy="78.46" r="0.90"/>
+    <circle class="orn" cx="456.05" cy="198.49" r="1.90"/>
+  </g>
+      </g>
+    </g>
+    <g class="system-node-wrap">
+    <circle class="module-frame" cx="600.000" cy="380.000" r="104.000"/>
+      <title>module
+/Users/eabusato/dev/cct/lib/cct/fluxus.cct
+rituals: 22
+imports: 0</title>
+    <text class="module-label" x="600.000" y="500.000" text-anchor="middle">fluxus.cct</text>
+    <text class="module-hash" x="600.000" y="512.000" text-anchor="middle">bdc18a455d0744f5</text>
+    </g>
+  </g>
+  <text class="module-label" x="24" y="30" font-size="14">CCT system sigilo (sigil-of-sigils) • 7e3162fdc91db261</text>
+  <text class="module-hash" x="24" y="50" font-size="10">entry=lib/cct/json.cct • modules=2 • imports=1 • calls=0 • type_refs=0</text>
+  <text class="module-hash" x="24" y="66" font-size="10">zoom: inline vector sub-sigils per module</text>
+</svg>
