@@ -1,5 +1,11 @@
 # CCT Examples (Baseline: FASE 39)
 
+<div align="center">
+  <img src="sigilo_creator_platform_39/creator_release_pipeline_39_animated.svg" alt="Creator Platform — Animated Trace on System Sigil" width="700"/>
+  <p><em>Animated execution trace overlaid on the creator-platform system sigil — open in a browser to watch it play</em></p>
+  <p><sub>Each span is colored by operational category (SQL, cache, storage, transcode, mail, auth…) and arrives at its node in temporal order. The timeline below the sigil shows relative span durations per depth layer.</sub></p>
+</div>
+
 Example programs showcasing Clavicula Turing language features and standard library usage.
 
 Status note:
@@ -160,61 +166,87 @@ Larger creator-platform Sigilo showcase with studio, auth, media, billing, moder
 
 ## Visual Gallery — SVG Artifacts
 
-Every time the compiler runs with sigilo mode active, it emits a `.svg` artifact alongside the binary. Open any of these directly in a browser with `file://` — no server, no extension, no JavaScript framework. The animated ones use pure CSS `@keyframes`; they just play.
+Every time the compiler runs with sigilo mode active, it emits a `.svg` alongside the binary. Open any of these directly in a browser with `file://` — no server, no extension, no JavaScript framework. The animated ones use pure CSS `@keyframes`; they just play.
 
 ---
 
-### Trace Visualization (FASE 39) — Animated
+### Trace Visualization — Animated (FASE 39)
 
 These are the richest artifacts in the repo. They overlay a real `.ctrace` execution trace onto the route sigil, coloring each span by operational category and animating the signal flow through the system.
 
-#### `sigilo_creator_platform_39/creator_release_pipeline_39_animated.svg`
+#### Creator Platform — Full System Trace (animated)
 
-The flagship animated trace. **1420×1344 px**, 2359 lines of SVG.
+A creator-platform publish pipeline — auth check, SQL lookups, cache hits, storage upload, transcode queue, email confirmation, task dispatch — playing out as a CSS animation over the full composed system sigil. Each span arrives at its node in temporal order: green for SQL, orange for cache, violet for storage, pink for transcode, blue for handlers. Below the sigil, a synchronized timeline lane shows the relative duration of every span at its depth. Open it, watch it once, then hover any node for the `data-category` tooltip. Slow spans glow with a drop-shadow.
 
-A creator-platform publish pipeline — auth check, SQL lookups, cache hits, storage upload, transcode queue, email confirmation, task dispatch — playing out as a CSS animation over the full composed system sigil. Each span arrives at its node in temporal order, color-coded: green for SQL, orange for cache, violet for storage, pink for transcode, blue for handlers. Below the sigil, a synchronized timeline lane shows the relative duration of every span at its depth.
-
-Open it, watch it once, then hover over any node — the `data-category` tooltip appears. Slow spans (> 2× the median for their depth) glow with a drop-shadow.
+<div align="center">
+  <img src="sigilo_creator_platform_39/creator_release_pipeline_39_animated.svg" alt="Creator Platform — Animated Trace on System Sigil" width="780"/>
+  <p><em>sigilo_creator_platform_39/creator_release_pipeline_39_animated.svg — 1420×1344 px · open in browser to watch the animation</em></p>
+</div>
 
 ```bash
 open examples/sigilo_creator_platform_39/creator_release_pipeline_39_animated.svg
 ```
 
-#### `sigilo_creator_platform_39/creator_release_pipeline_39_routes_animated.svg`
+#### Creator Platform — Routes-Only Trace (animated)
 
-The same creator-platform trace, projected onto the **routes-only view** — 960×720 px, much more compact. The system structure compresses into a constellation of route nodes; spans animate along the arcs between them. Useful for focusing on the routing topology rather than module internals.
+The same trace projected onto the routes-only view. The system structure compresses into a constellation of route nodes; spans animate along the arcs between them. Cleaner than the full system view — good for focusing on routing topology.
+
+<div align="center">
+  <img src="sigilo_creator_platform_39/creator_release_pipeline_39_routes_animated.svg" alt="Creator Platform — Animated Trace on Routes Sigil" width="700"/>
+  <p><em>sigilo_creator_platform_39/creator_release_pipeline_39_routes_animated.svg — 960×720 px</em></p>
+</div>
 
 ```bash
 open examples/sigilo_creator_platform_39/creator_release_pipeline_39_routes_animated.svg
 ```
 
-#### `sigilo_creator_platform_39/creator_release_pipeline_39_step.svg`
+#### Creator Platform — Step-by-Step Mode
 
-**Step-by-step mode.** Same 1420×1370 px canvas, but with an interactive scrubber rail at the bottom. Each dot on the rail corresponds to one span in execution order. Clicking a dot (or dragging the knob) advances the trace one span at a time — nodes light up as active, previously completed spans dim. The timeline lanes update in sync. Ideal for reading a trace from beginning to end without the animation racing past.
+Same canvas as the animated version, but with an interactive scrubber rail at the bottom. Each dot on the rail is one span in execution order. Click a dot or drag the knob to advance the trace one span at a time — nodes light up as active, completed spans dim, timeline lanes update in sync. Ideal when you want to read the trace carefully rather than watch it play.
+
+<div align="center">
+  <img src="sigilo_creator_platform_39/creator_release_pipeline_39_step.svg" alt="Creator Platform — Step Mode with Scrubber" width="780"/>
+  <p><em>sigilo_creator_platform_39/creator_release_pipeline_39_step.svg — scrubber rail at bottom · drag the knob</em></p>
+</div>
 
 ```bash
 open examples/sigilo_creator_platform_39/creator_release_pipeline_39_step.svg
 ```
 
-#### `sigilo_web_system_35/media_upload_pipeline_39_animated.svg`
+#### Web System — Media Upload Pipeline (animated)
 
-**Media upload pipeline**, animated on the `sigilo_web_system_35` composed system sigil — 1383×1401 px, 1458 lines. This is the earlier, smaller system (web server + upload + processing modules) so the span graph is less dense, making it easier to read each individual span category as it arrives. A good starting point if the creator-platform trace feels like a lot at once.
+The smaller `sigilo_web_system_35` system: web server + upload + processing modules. Less dense than the creator platform, making it easier to read each individual span category as it arrives. A good starting point before moving to the creator platform trace.
+
+<div align="center">
+  <img src="sigilo_web_system_35/media_upload_pipeline_39_animated.svg" alt="Web System — Animated Media Upload Trace" width="760"/>
+  <p><em>sigilo_web_system_35/media_upload_pipeline_39_animated.svg — 1383×1401 px</em></p>
+</div>
 
 ```bash
 open examples/sigilo_web_system_35/media_upload_pipeline_39_animated.svg
 ```
 
-#### `sigilo_web_system_35/media_upload_pipeline_39_routes_animated.svg`
+#### Web System — Routes-Only Trace (animated)
 
-Routes-only view of the media upload trace — 960×720 px. The upload flow collapses to a clean arc sequence: request → auth → upload → transcode → callback. Category colors on the arcs tell the whole story in one frame.
+The upload flow on the routes view: request → auth → upload → transcode → callback. Category colors on the arcs tell the whole story in one compact frame.
+
+<div align="center">
+  <img src="sigilo_web_system_35/media_upload_pipeline_39_routes_animated.svg" alt="Web System — Animated Media Upload on Routes View" width="700"/>
+  <p><em>sigilo_web_system_35/media_upload_pipeline_39_routes_animated.svg — 960×720 px</em></p>
+</div>
 
 ```bash
 open examples/sigilo_web_system_35/media_upload_pipeline_39_routes_animated.svg
 ```
 
-#### `sigilo_web_system_35/media_upload_pipeline_39_step.svg`
+#### Web System — Step Mode
 
-Step mode for the media upload pipeline — 1383×1427 px, scrubber included. Slower system than the creator platform, so stepping through it is a good way to understand how the step scrubber interacts with the timeline lanes.
+Step scrubber on the media upload pipeline. A slower system than the creator platform, so stepping through it is a good introduction to how the step UI feels before tackling the denser trace.
+
+<div align="center">
+  <img src="sigilo_web_system_35/media_upload_pipeline_39_step.svg" alt="Web System — Step Mode Trace" width="760"/>
+  <p><em>sigilo_web_system_35/media_upload_pipeline_39_step.svg — scrubber included</em></p>
+</div>
 
 ```bash
 open examples/sigilo_web_system_35/media_upload_pipeline_39_step.svg
@@ -226,26 +258,42 @@ open examples/sigilo_web_system_35/media_upload_pipeline_39_step.svg
 
 The static structural view — the topology of the program before any trace is overlaid.
 
-#### `sigilo_creator_platform_39/routes_view.svg`
+#### Creator Platform — Routes Sigil
 
-The bare route sigil for the creator platform — 1100×900 px. Ten module groups (studio, auth, media, billing, moderation, analytics, notifications, admin, webhooks, internal tasks) arranged as a constellation around the core. Each arc is a declared route; the density here is what makes the animated traces above look so complex. This is also the base canvas that the animated SVGs render on top of.
+The base canvas for all the animated traces above. Ten module groups (studio, auth, media, billing, moderation, analytics, notifications, admin, webhooks, internal tasks) arranged as a constellation around the core. Each arc is a declared route; the density here is what makes the animated traces look so complex.
+
+<div align="center">
+  <img src="sigilo_creator_platform_39/routes_view.svg" alt="Creator Platform Routes Sigil" width="700"/>
+  <p><em>sigilo_creator_platform_39/routes_view.svg — 1100×900 px · hover nodes and arcs in the browser</em></p>
+</div>
 
 ```bash
 open examples/sigilo_creator_platform_39/routes_view.svg
 ```
 
-#### `sigilo_web_system_35/routes_view.svg` and `sigilo_web_system_35/system_view.svg`
+#### Web System — Routes Sigil and System View
 
-The `sigilo_web_system_35` system has two complementary views. `routes_view.svg` (1100×900 px) shows the pure route topology. `system_view.svg` (512×512 px, 354 lines) is the composed `.system.sigil` — a multi-ring structure where each ring represents a module in the closure. The system view is denser and shows cross-module dependencies as arcs between rings.
+Two complementary views of the same system. The routes sigil (left) shows the pure route topology; the system view (right) is the composed multi-module sigil — a multi-ring structure where each ring is a module in the closure, with cross-module dependencies as arcs between rings.
+
+<div align="center">
+  <img src="sigilo_web_system_35/routes_view.svg" alt="Web System Routes Sigil" width="480"/>
+  <img src="sigilo_web_system_35/system_view.svg" alt="Web System Composed View" width="280"/>
+  <p><em>routes_view.svg (1100×900 px) and system_view.svg (512×512 px)</em></p>
+</div>
 
 ```bash
 open examples/sigilo_web_system_35/routes_view.svg
 open examples/sigilo_web_system_35/system_view.svg
 ```
 
-#### `sigilo_rotas_constelacao_35.svg`
+#### Constellation Routes — `sigilo_rotas_constelacao_35.svg`
 
-Standalone constellation-style routes showcase — 1208×1080 px, 508 lines. This is the largest pure-topology sigil in the repo. The layout algorithm places routes radially around a common core, producing a star-map appearance. No trace overlay; just the structure at rest. A good reference for what a real production-scale route set looks like in sigil form.
+The largest pure-topology sigil in the repo — 1208×1080 px, 508 lines. The layout algorithm places routes radially around a common core, producing a star-map appearance. No trace overlay; just the structure at rest. A good reference for what a production-scale route set looks like in sigil form.
+
+<div align="center">
+  <img src="sigilo_rotas_constelacao_35.svg" alt="Constellation Routes Sigil" width="720"/>
+  <p><em>sigilo_rotas_constelacao_35.svg — 1208×1080 px</em></p>
+</div>
 
 ```bash
 open examples/sigilo_rotas_constelacao_35.svg
@@ -257,71 +305,98 @@ open examples/sigilo_rotas_constelacao_35.svg
 
 #### `ars_magna_showcase.svg`
 
-Sigil emitted by the comprehensive language tour program — 512×512 px, **591 lines** (the most detailed standard sigil in the examples). `ars_magna_showcase.cct` exercises nearly every language surface: ORDO, SIGILLUM, SERIES, SPECULUM, exception handling, all control flow forms. The resulting sigil is correspondingly rich, with many distinct node types visible in the ring structure.
+591 lines — the most detailed standard sigil in the examples. `ars_magna_showcase.cct` exercises nearly every language surface: ORDO, SIGILLUM, SERIES, SPECULUM, exception handling, all control flow forms. The resulting sigil is correspondingly rich, with many distinct node types visible in the ring structure.
+
+<div align="center">
+  <img src="ars_magna_showcase.svg" alt="Ars Magna Showcase Sigil" width="500"/>
+  <p><em>ars_magna_showcase.svg — 512×512 px · 591 lines · comprehensive language tour</em></p>
+</div>
 
 ```bash
 open examples/ars_magna_showcase.svg
 ```
 
-#### `tmp_sig_11h_complete.svg` and module companions
+#### FASE 11H Stdlib Closure — `tmp_sig_11h_complete.svg`
 
-The FASE 11H stdlib closure sigil — 512×512 px, 280 lines — plus **seven individual module sigils**:
-- `tmp_sig_11h_complete.__mod_001.svg` through `__mod_007.svg`
+The composed sigil of the complete Bibliotheca Canonica as it stood at FASE 11H — plus **seven individual module sigils** (`__mod_001` through `__mod_007`). The `__mod_001` file alone is 1396 lines, the densest module sigil in the repo. Together they show the full stdlib decomposed module by module.
 
-The `__mod_001` file is by far the most detailed, at **1396 lines**. Each module sigil captures the internal structure of one stdlib module. Together they show how the complete Bibliotheca Canonica looks when decomposed module by module. The parent `tmp_sig_11h_complete.svg` is the composed view of all seven.
+<div align="center">
+  <img src="tmp_sig_11h_complete.svg" alt="FASE 11H Complete Stdlib Sigil" width="420"/>
+  <img src="tmp_sig_11h_complete.__mod_001.svg" alt="FASE 11H Module 001 Sigil" width="420"/>
+  <p><em>tmp_sig_11h_complete.svg (composed view) and __mod_001.svg (most detailed module, 1396 lines)</em></p>
+</div>
 
 ```bash
 open examples/tmp_sig_11h_complete.svg
-open examples/tmp_sig_11h_complete.__mod_001.svg  # most detailed
+open examples/tmp_sig_11h_complete.__mod_001.svg
 ```
 
-#### `fase13_omniversal_13m.svg` and `fase13_omniversal_13m_variant.svg`
+#### FASE 13M Omniversal — two variants
 
-Two variants of the FASE 13M "omniversal" sigil — both 512×512 px. These were the first sigils generated with the full multi-ring omniversal layout, which places the primary module at center and arranges dependencies as concentric outer rings. The variant uses a slightly different arc-routing algorithm; comparing them side by side is a good illustration of how sigil layout parameters affect the visual output.
+The first sigils generated with the full multi-ring omniversal layout. The variant uses a slightly different arc-routing algorithm; comparing them side by side illustrates how layout parameters affect the output.
+
+<div align="center">
+  <img src="fase13_omniversal_13m.svg" alt="FASE 13M Omniversal Sigil" width="340"/>
+  <img src="fase13_omniversal_13m_variant.svg" alt="FASE 13M Omniversal Variant Sigil" width="340"/>
+  <p><em>fase13_omniversal_13m.svg and _variant.svg — 512×512 px each</em></p>
+</div>
 
 ```bash
 open examples/fase13_omniversal_13m.svg
 open examples/fase13_omniversal_13m_variant.svg
 ```
 
-#### `analisador_log_18_19.svg`
+#### Log Analyzer — `analisador_log_18_19.svg`
 
-Sigil for the log-analyzer example — 512×512 px, **349 lines**. One of the richer single-module sigils: the log analyzer uses `cct/fs`, `cct/io`, `cct/verbum`, `cct/fmt`, and `cct/parse`, so the dependency arc structure is noticeably busier than simple examples.
+One of the richer single-module sigils: the log analyzer uses `cct/fs`, `cct/io`, `cct/verbum`, `cct/fmt`, and `cct/parse`, so the dependency arc structure is noticeably busier than a simple example. 349 lines.
 
-```bash
-open examples/analisador_log_18_19.svg
-```
+<div align="center">
+  <img src="analisador_log_18_19.svg" alt="Log Analyzer Sigil" width="460"/>
+  <p><em>analisador_log_18_19.svg — 512×512 px · 349 lines · multi-stdlib dependency arcs visible</em></p>
+</div>
 
 ---
 
 ### Application Sigils
 
-Smaller but instructive — each one is the structural fingerprint of a real example program.
+Each one is the structural fingerprint of a real example program. Smaller and more readable than the system sigils — good for understanding what a sigil looks like for a specific kind of program.
 
-| File | Size | What you see |
-|------|------|-------------|
-| `option_result.svg` | 512×512, 311 lines | Option/Result pattern — two distinct flow paths (Some vs None, Ok vs Err) visible as branching arcs |
-| `cadastro_sqlite_app/src/main.svg` | 512×512, 106 lines | SQLite registration app — clean three-node structure: config → db → main |
-| `phase30_data_app/src/main.svg` | 512×512, 125 lines | Phase 30 data app — slightly denser than cadastro; shows JSON + SQLite + HTTP in one sigil |
-| `config_sqlite_app_20f2.svg` | 512×512 | Config-driven SQLite app — INI + SQLite dependency arc clearly visible |
-| `http_simple_server_20f2.svg` | 512×512 | Single-request HTTP server — minimal arc structure, very readable as a first sigil |
-| `hello.svg` | 512×512, 109 lines | The simplest possible sigil. One module, one ritual, one node. A clean baseline for comparison. |
+#### Option/Result and Hello
 
-```bash
-open examples/option_result.svg
-open examples/hello.svg
-```
+<div align="center">
+  <img src="option_result.svg" alt="Option/Result Sigil" width="320"/>
+  <img src="hello.svg" alt="Hello World Sigil" width="320"/>
+  <p><em>option_result.svg (311 lines · branching Some/None, Ok/Err paths) and hello.svg (109 lines · the simplest possible sigil)</em></p>
+</div>
+
+#### SQLite App and Phase 30 Data App
+
+<div align="center">
+  <img src="cadastro_sqlite_app/src/main.svg" alt="Cadastro SQLite App Sigil" width="320"/>
+  <img src="phase30_data_app/src/main.svg" alt="Phase 30 Data App Sigil" width="320"/>
+  <p><em>cadastro_sqlite_app (106 lines · config → db → main) and phase30_data_app (125 lines · JSON + SQLite + HTTP)</em></p>
+</div>
+
+#### HTTP Server and Config+SQLite App
+
+<div align="center">
+  <img src="http_simple_server_20f2.svg" alt="HTTP Simple Server Sigil" width="320"/>
+  <img src="config_sqlite_app_20f2.svg" alt="Config+SQLite App Sigil" width="320"/>
+  <p><em>http_simple_server_20f2.svg (minimal arc · single-request server) and config_sqlite_app_20f2.svg (INI + SQLite arc)</em></p>
+</div>
 
 ---
 
 ### Test Suite Sigils
 
-The `cadastro_sqlite_app/tests/` directory contains sigils for the test files themselves:
-- `app_flow.test.svg` — end-to-end flow test topology
-- `db_smoke.test.svg` — database smoke test
-- `query_filters.test.svg` — query filter test
+The `cadastro_sqlite_app/tests/` directory contains sigils for the test files themselves — the sigilo system captures test modules as first-class artifacts, not just production code.
 
-These demonstrate that the sigilo system captures test modules as first-class artifacts, not just production code.
+<div align="center">
+  <img src="cadastro_sqlite_app/tests/app_flow.test.svg" alt="App Flow Test Sigil" width="280"/>
+  <img src="cadastro_sqlite_app/tests/db_smoke.test.svg" alt="DB Smoke Test Sigil" width="280"/>
+  <img src="cadastro_sqlite_app/tests/query_filters.test.svg" alt="Query Filters Test Sigil" width="280"/>
+  <p><em>app_flow.test · db_smoke.test · query_filters.test — test topology as sigils</em></p>
+</div>
 
 ---
 
