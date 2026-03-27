@@ -1686,7 +1686,12 @@ static double trace_render_path_length_hint(double x0, double y0, double x1, dou
     return dist > 24.0 ? dist : 24.0;
 }
 
+static const char *trace_render_anim_repeat_attr(const TraceRenderInput *input) {
+    return (input && input->animation_loop) ? " repeatCount=\"indefinite\"" : "";
+}
+
 static void trace_render_emit_motion_packet(FILE *out,
+                                            const TraceRenderInput *input,
                                             const char *class_buf,
                                             double radius,
                                             double delay,
@@ -1698,11 +1703,11 @@ static void trace_render_emit_motion_packet(FILE *out,
     if (!out || !class_buf) return;
     fprintf(out, "<circle class=\"trace-packet %s\" r=\"%.2f\">", class_buf, radius);
     fprintf(out,
-            "<animate attributeName=\"opacity\" values=\"0;1;1;0\" begin=\"%.2fs\" dur=\"%.2fs\" fill=\"freeze\"/>",
-            delay, duration);
+            "<animate attributeName=\"opacity\" values=\"0;1;1;0\" begin=\"%.2fs\" dur=\"%.2fs\" fill=\"freeze\"%s/>",
+            delay, duration, trace_render_anim_repeat_attr(input));
     fprintf(out,
-            "<animateMotion begin=\"%.2fs\" dur=\"%.2fs\" fill=\"freeze\" path=\"",
-            delay, duration);
+            "<animateMotion begin=\"%.2fs\" dur=\"%.2fs\" fill=\"freeze\"%s path=\"",
+            delay, duration, trace_render_anim_repeat_attr(input));
     trace_render_emit_curve_path(out, x0, y0, x1, y1);
     fprintf(out, "\"/></circle>\n");
 }
@@ -1773,6 +1778,11 @@ static void trace_render_emit_style(FILE *out, int animated) {
             ".trace-caption-wrap.dragging{cursor:grabbing}"
             ".trace-summary-wrap{cursor:grab}"
             ".trace-summary-wrap.dragging{cursor:grabbing}"
+            ".anim-control-wrap{cursor:pointer}"
+            ".anim-button{fill:rgba(255,250,242,0.96);stroke:#7b6b5c;stroke-width:.9}"
+            ".anim-button:hover{fill:#fffdf8;stroke:#3f6f9a}"
+            ".anim-button-text{fill:#2d241d;font:600 11px monospace}"
+            ".anim-button-subtitle{fill:#5a5046;font:10px monospace}"
             "]]></style>\n");
     fprintf(out, "<style><![CDATA[");
     trace_overlay_emit_css(out);
@@ -1936,6 +1946,40 @@ static void trace_render_emit_summary_labels(FILE *out,
     free(indices);
 }
 
+static void trace_render_emit_animation_controls(FILE *out,
+                                                 const TraceRenderInput *input,
+                                                 const trace_render_panel_t *panel,
+                                                 int backdrop_ready,
+                                                 const char *id_prefix) {
+    double x = 0.0;
+    double y = 0.0;
+    const char *prefix = id_prefix ? id_prefix : "trace";
+    if (!out || !input || !input->animated || input->mode == TRACE_RENDER_STEP || !panel) return;
+    x = panel->timeline_x + 8.0;
+    y = panel->timeline_y - 44.0;
+    if (trace_render_can_place_footer_boxes(panel)) {
+        x = panel->timeline_x + panel->timeline_w + 18.0;
+        y = panel->timeline_y + 86.0;
+    } else if (backdrop_ready) {
+        x = panel->panel_x + panel->panel_w - 116.0;
+        y = panel->panel_y + 18.0;
+    }
+    fprintf(out,
+            "<g id=\"%s-anim-controls\" class=\"anim-control-wrap\" data-anim-action=\"replay\" transform=\"translate(%.2f %.2f)\">",
+            prefix, x, y);
+    fprintf(out, "<rect class=\"anim-button\" x=\"0\" y=\"0\" width=\"96\" height=\"28\" rx=\"9\"/>");
+    fprintf(out, "<text class=\"anim-button-text\" x=\"16\" y=\"18\">replay</text>");
+    fprintf(out, "<title>restart trace animation from the beginning</title>");
+    fprintf(out, "</g>\n");
+    if (input->animation_loop) {
+        fprintf(out,
+                "<g id=\"%s-anim-status\" transform=\"translate(%.2f %.2f)\">",
+                prefix, x + 104.0, y);
+        fprintf(out, "<text class=\"anim-button-subtitle\" x=\"0\" y=\"18\">loop on</text>");
+        fprintf(out, "</g>\n");
+    }
+}
+
 static void trace_render_emit_timeline_internal(const TraceRenderTrace *trace,
                                                 const TraceRenderInput *input,
                                                 const trace_render_panel_t *panel,
@@ -2011,8 +2055,8 @@ static void trace_render_emit_timeline_internal(const TraceRenderTrace *trace,
             double delay = start_ratio * 5.0;
             double duration = (bar_w / content_w) * 5.0;
             if (duration < 0.2) duration = 0.2;
-            fprintf(out, " width=\"0\"><animate attributeName=\"width\" from=\"0\" to=\"%.2f\" begin=\"%.2fs\" dur=\"%.2fs\" fill=\"freeze\"/></rect>",
-                    bar_w, delay, duration);
+            fprintf(out, " width=\"0\"><animate attributeName=\"width\" from=\"0\" to=\"%.2f\" begin=\"%.2fs\" dur=\"%.2fs\" fill=\"freeze\"%s/></rect>",
+                    bar_w, delay, duration, trace_render_anim_repeat_attr(input));
         } else {
             fprintf(out, " width=\"%.2f\"/>", bar_w);
         }
@@ -2130,22 +2174,22 @@ static void trace_render_emit_links(FILE *out,
                 trace_render_emit_step_state_attrs(out, active_rank, active_class, pending_class);
                 fprintf(out, " data-step-role=\"link\"");
             }
-            fprintf(out, " d=\"");
-            trace_render_emit_curve_path(out, px, py, x, y);
-            fprintf(out, "\"");
-            if (input && input->animated && active) {
-                arrival = trace_render_anim_span_start(trace, &bounds, span);
-                delay = trace_render_anim_link_start(trace, &bounds, span);
-                duration = trace_render_anim_link_duration(delay, arrival);
-                fprintf(out, " style=\"stroke-dasharray:%.2f;stroke-dashoffset:%.2f\">", dash, dash);
-                fprintf(out,
-                        "<animate attributeName=\"stroke-dashoffset\" from=\"%.2f\" to=\"0\" begin=\"%.2fs\" dur=\"%.2fs\" fill=\"freeze\"/>",
-                        dash, delay, duration);
-                fprintf(out, "</path>\n");
-            } else {
-                fprintf(out, "/>\n");
-            }
-            if (input && input->animated && active) trace_render_emit_motion_packet(out, class_buf, 4.10, delay, duration, px, py, x, y);
+                fprintf(out, " d=\"");
+                trace_render_emit_curve_path(out, px, py, x, y);
+                fprintf(out, "\"");
+                if (input && input->animated && active) {
+                    arrival = trace_render_anim_span_start(trace, &bounds, span);
+                    delay = trace_render_anim_link_start(trace, &bounds, span);
+                    duration = trace_render_anim_link_duration(delay, arrival);
+                    fprintf(out, " style=\"stroke-dasharray:%.2f;stroke-dashoffset:%.2f\">", dash, dash);
+                    fprintf(out,
+                        "<animate attributeName=\"stroke-dashoffset\" from=\"%.2f\" to=\"0\" begin=\"%.2fs\" dur=\"%.2fs\" fill=\"freeze\"%s/>",
+                        dash, delay, duration, trace_render_anim_repeat_attr(input));
+                    fprintf(out, "</path>\n");
+                } else {
+                    fprintf(out, "/>\n");
+                }
+            if (input && input->animated && active) trace_render_emit_motion_packet(out, input, class_buf, 4.10, delay, duration, px, py, x, y);
         }
         if (span->route_id) {
             int route_idx = trace_render_route_index(hits, hit_count, span->route_id);
@@ -2180,13 +2224,13 @@ static void trace_render_emit_links(FILE *out,
                     delay = trace_render_anim_link_start(trace, &bounds, span);
                     fprintf(out, " style=\"stroke-dasharray:%.2f;stroke-dashoffset:%.2f\">", dash, dash);
                     fprintf(out,
-                            "<animate attributeName=\"stroke-dashoffset\" from=\"%.2f\" to=\"0\" begin=\"%.2fs\" dur=\"%.2fs\" fill=\"freeze\"/>",
-                            dash, delay, duration);
+                            "<animate attributeName=\"stroke-dashoffset\" from=\"%.2f\" to=\"0\" begin=\"%.2fs\" dur=\"%.2fs\" fill=\"freeze\"%s/>",
+                            dash, delay, duration, trace_render_anim_repeat_attr(input));
                     fprintf(out, "</path>\n");
                 } else {
                     fprintf(out, "/>\n");
                 }
-                if (input && input->animated) trace_render_emit_motion_packet(out, class_buf, 4.40, delay, duration, hits[route_idx].x, hits[route_idx].y, nodes[i].x, nodes[i].y);
+                if (input && input->animated) trace_render_emit_motion_packet(out, input, class_buf, 4.40, delay, duration, hits[route_idx].x, hits[route_idx].y, nodes[i].x, nodes[i].y);
             }
         }
     }
@@ -2256,8 +2300,8 @@ static void trace_render_emit_nodes(FILE *out,
             double delay = trace_render_anim_span_start(trace, &bounds, span);
             fprintf(out, " opacity=\"0.18\">");
             fprintf(out,
-                    "<animate attributeName=\"opacity\" from=\"0.18\" to=\"1\" begin=\"%.2fs\" dur=\"0.18s\" fill=\"freeze\"/>",
-                    delay);
+                    "<animate attributeName=\"opacity\" from=\"0.18\" to=\"1\" begin=\"%.2fs\" dur=\"0.18s\" fill=\"freeze\"%s/>",
+                    delay, trace_render_anim_repeat_attr(input));
             fprintf(out, "</circle>");
         } else if (input && input->animated) {
             fprintf(out, " opacity=\"0.18\"/>");
@@ -2364,13 +2408,20 @@ static int trace_render_panel(FILE *out,
 static void trace_render_emit_interaction_script(FILE *out,
                                                  int step_count,
                                                  int current_step,
-                                                 int enable_legend_drag) {
-    if (!out || (step_count <= 0 && !enable_legend_drag)) return;
+                                                 int enable_legend_drag,
+                                                 int enable_replay) {
+    if (!out || (step_count <= 0 && !enable_legend_drag && !enable_replay)) return;
     fprintf(out, "<script><![CDATA[\n");
     fprintf(out, "(function(){\n");
     fprintf(out, "var root=document.documentElement;\n");
     fprintf(out, "function q(sel){return Array.prototype.slice.call(root.querySelectorAll(sel));}\n");
     fprintf(out, "function toPoint(evt){var pt=root.createSVGPoint();pt.x=evt.clientX;pt.y=evt.clientY;return pt.matrixTransform(root.getScreenCTM().inverse());}\n");
+    if (enable_replay) {
+        fprintf(out, "function restartAnimations(){var restarted=false;\n");
+        fprintf(out, " try{if(typeof root.pauseAnimations==='function') root.pauseAnimations();if(typeof root.setCurrentTime==='function'){root.setCurrentTime(0);restarted=true;}if(typeof root.unpauseAnimations==='function') root.unpauseAnimations();}catch(_err){}\n");
+        fprintf(out, " if(!restarted){q('animate,animateMotion').forEach(function(el){var parent=el.parentNode;var next=el.nextSibling;var clone=el.cloneNode(true);if(!parent) return;parent.removeChild(el);if(next) parent.insertBefore(clone,next);else parent.appendChild(clone);});}}\n");
+        fprintf(out, " q('[data-anim-action=\"replay\"]').forEach(function(btn){btn.addEventListener('click',function(evt){restartAnimations();evt.preventDefault();});});\n");
+    }
     if (step_count > 0) {
         fprintf(out, "var knob=document.getElementById('step-knob');\n");
         fprintf(out, "var rail=document.getElementById('step-rail');\n");
@@ -2480,12 +2531,13 @@ int trace_render_single(TraceRenderInput *input, FILE *out) {
         fputs("</svg>\n", out);
         return -1;
     }
+    trace_render_emit_animation_controls(out, input, &panel, backdrop.ready, "trace");
     if (input->mode == TRACE_RENDER_STEP) {
         count = trace_render_sorted_indices(&input->trace_a, &indices, input);
         free(indices);
-        trace_render_emit_interaction_script(out, count, input->step_index, 1);
+        trace_render_emit_interaction_script(out, count, input->step_index, 1, 0);
     } else {
-        trace_render_emit_interaction_script(out, 0, 0, 1);
+        trace_render_emit_interaction_script(out, 0, 0, 1, input->animated);
     }
     if (!backdrop.ready) fprintf(out, "<text class=\"hash\" x=\"930\" y=\"704\" text-anchor=\"end\">%016llx</text>\n", (unsigned long long)hash);
     fputs("</svg>\n", out);
@@ -2539,6 +2591,14 @@ int trace_render_compare(TraceRenderInput *input, FILE *out) {
         return -1;
     }
     fprintf(out, "<text class=\"subtitle\" x=\"480\" y=\"26\" text-anchor=\"middle\">compare delta=%+lldms</text>\n", delta);
+    if (input->animated) {
+        fprintf(out, "<g id=\"compare-anim-controls\" class=\"anim-control-wrap\" data-anim-action=\"replay\" transform=\"translate(432 34)\">");
+        fprintf(out, "<rect class=\"anim-button\" x=\"0\" y=\"0\" width=\"96\" height=\"28\" rx=\"9\"/>");
+        fprintf(out, "<text class=\"anim-button-text\" x=\"16\" y=\"18\">replay</text>");
+        fprintf(out, "<title>restart both animated traces</title>");
+        fprintf(out, "</g>\n");
+    }
+    trace_render_emit_interaction_script(out, 0, 0, 1, input->animated);
     fputs("</svg>\n", out);
     return 0;
 }

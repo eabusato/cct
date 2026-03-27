@@ -605,6 +605,7 @@ static int cmd_sigilo_trace_render_svg(const char *trace_a_path,
                                        const char *output_path,
                                        bool strict,
                                        bool animated,
+                                       bool animation_loop,
                                        int step_index,
                                        bool hide_timeline,
                                        const char *filter_kind,
@@ -656,6 +657,7 @@ static int cmd_sigilo_trace_render_svg(const char *trace_a_path,
     input.sigil_path = sigil_path;
     input.step_index = step_index;
     input.animated = animated ? 1 : 0;
+    input.animation_loop = animation_loop ? 1 : 0;
     input.hide_timeline = hide_timeline ? 1 : 0;
     input.filter_kind = filter_kind;
     input.focus_route = focus_route;
@@ -684,6 +686,7 @@ static int cmd_sigilo_trace_tools(int argc, char **argv) {
     bool summary = false;
     bool show_attrs = false;
     bool animated = false;
+    bool animation_loop = false;
     bool hide_timeline = false;
     int max_depth = -1;
     int step_index = -1;
@@ -744,6 +747,10 @@ static int cmd_sigilo_trace_tools(int argc, char **argv) {
                 animated = true;
             } else if (strcmp(arg, "--static") == 0) {
                 animated = false;
+                animation_loop = false;
+            } else if (strcmp(arg, "--loop") == 0) {
+                animated = true;
+                animation_loop = true;
             } else if (strcmp(arg, "--step") == 0 && i + 1 < argc) {
                 step_index = atoi(argv[++i]);
             } else if (strcmp(arg, "--hide-timeline") == 0) {
@@ -773,7 +780,7 @@ static int cmd_sigilo_trace_tools(int argc, char **argv) {
             }
             sigil_path = resolved_sigil_path;
         }
-        int render_rc = cmd_sigilo_trace_render_svg(trace_a_path, NULL, sigil_path, output_path, strict, animated, step_index, hide_timeline, filter_kind, focus_route);
+        int render_rc = cmd_sigilo_trace_render_svg(trace_a_path, NULL, sigil_path, output_path, strict, animated, animation_loop, step_index, hide_timeline, filter_kind, focus_route);
         free(resolved_sigil_path);
         return render_rc;
     }
@@ -806,7 +813,8 @@ static int cmd_sigilo_trace_tools(int argc, char **argv) {
             else if ((strcmp(arg, "--out") == 0 || strcmp(arg, "--output") == 0) && i + 1 < argc) output_path = argv[++i];
             else if (strcmp(arg, "--strict") == 0) strict = true;
             else if (strcmp(arg, "--animated") == 0) animated = true;
-            else if (strcmp(arg, "--static") == 0) animated = false;
+            else if (strcmp(arg, "--static") == 0) { animated = false; animation_loop = false; }
+            else if (strcmp(arg, "--loop") == 0) { animated = true; animation_loop = true; }
             else if (strcmp(arg, "--hide-timeline") == 0) hide_timeline = true;
             else if (strcmp(arg, "--filter-kind") == 0 && i + 1 < argc) filter_kind = argv[++i];
             else if (strcmp(arg, "--focus-route") == 0 && i + 1 < argc) focus_route = argv[++i];
@@ -827,7 +835,7 @@ static int cmd_sigilo_trace_tools(int argc, char **argv) {
             }
             sigil_path = resolved_sigil_path;
         }
-        int compare_rc = cmd_sigilo_trace_render_svg(trace_a_path, trace_b_path, sigil_path, output_path, strict, animated, -1, hide_timeline, filter_kind, focus_route);
+        int compare_rc = cmd_sigilo_trace_render_svg(trace_a_path, trace_b_path, sigil_path, output_path, strict, animated, animation_loop, -1, hide_timeline, filter_kind, focus_route);
         free(resolved_sigil_path);
         return compare_rc;
     }
@@ -860,7 +868,8 @@ static int cmd_sigilo_trace_tools(int argc, char **argv) {
             else if ((strcmp(arg, "--output") == 0 || strcmp(arg, "--out") == 0) && i + 1 < argc) output_path = argv[++i];
             else if (strcmp(arg, "--format") == 0 && i + 1 < argc) format = argv[++i];
             else if (strcmp(arg, "--animated") == 0) animated = true;
-            else if (strcmp(arg, "--static") == 0) animated = false;
+            else if (strcmp(arg, "--static") == 0) { animated = false; animation_loop = false; }
+            else if (strcmp(arg, "--loop") == 0) { animated = true; animation_loop = true; }
             else if (strcmp(arg, "--hide-timeline") == 0) hide_timeline = true;
             else if (strcmp(arg, "--filter-kind") == 0 && i + 1 < argc) filter_kind = argv[++i];
             else if (strcmp(arg, "--focus-route") == 0 && i + 1 < argc) focus_route = argv[++i];
@@ -886,7 +895,7 @@ static int cmd_sigilo_trace_tools(int argc, char **argv) {
             }
             sigil_path = resolved_sigil_path;
         }
-        int export_rc = cmd_sigilo_trace_render_svg(trace_a_path, NULL, sigil_path, output_path, strict, animated, step_index, hide_timeline, filter_kind, focus_route);
+        int export_rc = cmd_sigilo_trace_render_svg(trace_a_path, NULL, sigil_path, output_path, strict, animated, animation_loop, step_index, hide_timeline, filter_kind, focus_route);
         free(resolved_sigil_path);
         return export_rc;
     }
@@ -1208,7 +1217,7 @@ static int cmd_sigilo_tools(int argc, char **argv) {
         fprintf(stderr, "  cct sigilo diff <left.sigil> <right.sigil> [--format text|structured] [--summary] [--strict] [--consumer-profile legacy-tolerant|current-default|strict-contract] [--explain]\n");
         fprintf(stderr, "  cct sigilo check <left.sigil> <right.sigil> [--format text|structured] [--summary] [--strict] [--consumer-profile legacy-tolerant|current-default|strict-contract] [--explain]\n");
         fprintf(stderr, "  cct sigilo trace view <artifact.ctrace> [--summary] [--strict] [--show-attrs] [--max-depth N]\n");
-        fprintf(stderr, "  cct sigilo trace render --trace <artifact.ctrace> [--sigil path.sigil] [--sigil-view routes|system|auto] [--animated|--static|--step N] [--output path.svg]\n");
+        fprintf(stderr, "  cct sigilo trace render --trace <artifact.ctrace> [--sigil path.sigil] [--sigil-view routes|system|auto] [--animated|--loop|--static|--step N] [--output path.svg]\n");
         fprintf(stderr, "  cct sigilo trace compare <trace_a.ctrace> <trace_b.ctrace> [--sigil path.sigil] [--sigil-view routes|system|auto] [--output path.svg]\n");
         fprintf(stderr, "  cct sigilo trace export <artifact.ctrace> [--sigil path.sigil] [--sigil-view routes|system|auto] [--format svg] [--output path.svg] [--strict]\n");
         fprintf(stderr, "  cct sigilo baseline check <artifact.sigil> [--baseline <path>] [--format text|structured] [--summary] [--strict] [--explain]\n");

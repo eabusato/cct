@@ -65,6 +65,7 @@ typedef struct {
     const char *sigil_path;
     int step_index;
     int animated;
+    int animation_loop;
     int hide_timeline;
     const char *filter_kind;
     const char *focus_route;
