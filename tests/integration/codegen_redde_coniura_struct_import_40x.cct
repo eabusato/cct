@@ -1,0 +1,35 @@
+INCIPIT grimoire "codegen_redde_coniura_struct_import_40x"
+
+ADVOCARE "cct/map.cct"
+ADVOCARE "cct/result.cct"
+ADVOCARE "cct/verbum.cct"
+
+SIGILLUM StructReturnPhase40
+  body: VERBUM
+  meta: SPECULUM NIHIL
+FIN SIGILLUM
+
+RITUALE struct_return_ok_40x(StructReturnPhase40 value) REDDE SPECULUM NIHIL
+  REDDE CONIURA Ok GENUS(StructReturnPhase40, VERBUM)(value)
+EXPLICIT RITUALE
+
+RITUALE helper_redde_coniura_struct_40x(VERBUM body) REDDE StructReturnPhase40
+  EVOCA StructReturnPhase40 value
+  VINCIRE value.body AD body
+  VINCIRE value.meta AD CONIURA map_init GENUS(VERBUM, VERBUM)()
+  CONIURA map_insert GENUS(VERBUM, VERBUM)(value.meta, "phase", "40x")
+  REDDE CONIURA result_unwrap GENUS(StructReturnPhase40, VERBUM)(CONIURA struct_return_ok_40x(value))
+EXPLICIT RITUALE
+
+RITUALE main() REDDE REX
+  EVOCA StructReturnPhase40 out AD CONIURA helper_redde_coniura_struct_40x("ok")
+  SI CONIURA compare(out.body, "ok") != 0
+    REDDE 1
+  FIN SI
+  SI CONIURA compare(CONIURA map_get_or_default GENUS(VERBUM, VERBUM)(out.meta, "phase", ""), "40x") != 0
+    REDDE 2
+  FIN SI
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

@@ -7,8 +7,6 @@
 
 INCIPIT grimoire "callback"
 
-ADVOCARE "cct/mem.cct"
-
 RITUALE callback_invoke0 GENUS(R)(SPECULUM NIHIL fn) REDDE R
   EVOCA SPECULUM NIHIL out AD OBSECRO callback_builtin_invoke0(fn)
   EVOCA SPECULUM R view
@@ -16,7 +14,7 @@ RITUALE callback_invoke0 GENUS(R)(SPECULUM NIHIL fn) REDDE R
   EVOCA R value AD *view
   EVOCA SPECULUM REX raw
   VINCIRE raw AD out
-  CONIURA free(raw)
+  OBSECRO libera(raw)
   REDDE value
 EXPLICIT RITUALE
 
@@ -27,7 +25,7 @@ RITUALE callback_invoke1 GENUS(A1, R)(SPECULUM NIHIL fn, A1 a1) REDDE R
   EVOCA R value AD *view
   EVOCA SPECULUM REX raw
   VINCIRE raw AD out
-  CONIURA free(raw)
+  OBSECRO libera(raw)
   REDDE value
 EXPLICIT RITUALE
 
@@ -38,7 +36,7 @@ RITUALE callback_invoke2 GENUS(A1, A2, R)(SPECULUM NIHIL fn, A1 a1, A2 a2) REDDE
   EVOCA R value AD *view
   EVOCA SPECULUM REX raw
   VINCIRE raw AD out
-  CONIURA free(raw)
+  OBSECRO libera(raw)
   REDDE value
 EXPLICIT RITUALE
 
@@ -49,7 +47,7 @@ RITUALE callback_invoke3 GENUS(A1, A2, A3, R)(SPECULUM NIHIL fn, A1 a1, A2 a2, A
   EVOCA R value AD *view
   EVOCA SPECULUM REX raw
   VINCIRE raw AD out
-  CONIURA free(raw)
+  OBSECRO libera(raw)
   REDDE value
 EXPLICIT RITUALE
 
@@ -60,7 +58,7 @@ RITUALE callback_invoke4 GENUS(A1, A2, A3, A4, R)(SPECULUM NIHIL fn, A1 a1, A2 a
   EVOCA R value AD *view
   EVOCA SPECULUM REX raw
   VINCIRE raw AD out
-  CONIURA free(raw)
+  OBSECRO libera(raw)
   REDDE value
 EXPLICIT RITUALE
 

@@ -1,0 +1,10 @@
+INCIPIT grimoire "callback_import_fs_40x"
+
+ADVOCARE "cct/callback.cct"
+ADVOCARE "cct/fs.cct"
+
+RITUALE main() REDDE REX
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

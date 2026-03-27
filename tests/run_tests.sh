@@ -12029,6 +12029,22 @@ if [ -x "$CCT_BIN" ] && cct_phase32_copy_compile_and_run "$CCT_BIN" "tests/integ
 else
     test_fail "cct/callback nao suportou pipeline tardio via FLUXUS"
 fi
+
+echo "Test 2038: cct/callback coexistente com cct/fs sem colisao global"
+BASE_2038="$CCT_TMP_DIR/callback/test_2038_import_fs"
+if [ -x "$CCT_BIN" ] && cct_phase32_copy_compile_and_run "$CCT_BIN" "tests/integration/callback_import_fs_40x.cct" "$BASE_2038" 0; then
+    test_pass "cct/callback coexistente com cct/fs sem colisao global"
+else
+    test_fail "cct/callback colidiu com cct/fs por simbolo global"
+fi
+
+echo "Test 2039: REDDE CONIURA suporta retorno estrutural importado"
+BASE_2039="$CCT_TMP_DIR/callback/test_2039_redde_struct"
+if [ -x "$CCT_BIN" ] && cct_phase32_copy_compile_and_run "$CCT_BIN" "tests/integration/codegen_redde_coniura_struct_import_40x.cct" "$BASE_2039" 0; then
+    test_pass "REDDE CONIURA suporta retorno estrutural importado"
+else
+    test_fail "REDDE CONIURA nao suportou retorno estrutural importado"
+fi
 fi
 
 echo "Test Results:"

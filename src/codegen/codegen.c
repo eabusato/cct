@@ -10573,6 +10573,28 @@ static bool cg_emit_stmt(FILE *out, cct_codegen_t *cg, const cct_ast_node_t *stm
             }
 
             if (stmt->as.redde.value->type == AST_CONIURA) {
+                const char *ret_c_struct = NULL;
+                if (cg->current_function_return_type &&
+                    cg_value_kind_from_ast_type(cg->current_function_return_type) == CCT_CODEGEN_VALUE_STRUCT) {
+                    ret_c_struct = cg_c_type_for_ast_type(cg, cg->current_function_return_type);
+                }
+                if (ret_c_struct) {
+                    cct_codegen_value_kind_t kind = CCT_CODEGEN_VALUE_UNKNOWN;
+                    char tmp_name[64];
+                    snprintf(tmp_name, sizeof(tmp_name), "__cct_failtmp_%u", cg->next_temp_id++);
+                    cg_emit_indent(out, indent);
+                    fprintf(out, "%s %s = ", ret_c_struct, tmp_name);
+                    if (!cg_emit_expr(out, cg, stmt->as.redde.value, &kind)) return false;
+                    if (kind != CCT_CODEGEN_VALUE_STRUCT) {
+                        cg_report_node(cg, stmt, "subset 8B return codegen requires struct-compatible CONIURA for struct return");
+                        return false;
+                    }
+                    fputs(";\n", out);
+                    if (!cg_emit_fail_propagation_check(out, cg, indent)) return false;
+                    cg_emit_indent(out, indent);
+                    fprintf(out, "return (%s);\n", tmp_name);
+                    return true;
+                }
                 cct_codegen_value_kind_t kind = CCT_CODEGEN_VALUE_UNKNOWN;
                 char tmp_name[64];
                 if (!cg_emit_coniura_expr_to_temp_with_failcheck(out, cg, stmt->as.redde.value, indent, tmp_name, sizeof(tmp_name), &kind)) {
