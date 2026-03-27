@@ -1,0 +1,29 @@
+INCIPIT grimoire "ctx_overwrite_remove_38b"
+
+ADVOCARE "cct/context_local.cct"
+ADVOCARE "cct/result.cct"
+
+RITUALE main() REDDE REX
+  EVOCA LocalContext ctx AD CONIURA local_context_new()
+  CONIURA local_context_open(SPECULUM ctx)
+
+  SI CONIURA result_is_err GENUS(REX, VERBUM)(CONIURA local_context_set(SPECULUM ctx, "request_id", "r1"))
+    REDDE 1
+  FIN SI
+  SI CONIURA result_is_err GENUS(REX, VERBUM)(CONIURA local_context_set(SPECULUM ctx, "request_id", "r2"))
+    REDDE 2
+  FIN SI
+
+  SI NON CONIURA local_context_value_is(ctx, "request_id", "r2")
+    REDDE 3
+  FIN SI
+
+  CONIURA local_context_remove(SPECULUM ctx, "request_id")
+  SI CONIURA local_context_has(ctx, "request_id")
+    REDDE 4
+  FIN SI
+
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

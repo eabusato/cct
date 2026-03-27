@@ -310,6 +310,7 @@ bool cct_cg_emit_generated_c_prelude(FILE *out, const cct_codegen_t *cg) {
     rt_cfg.emit_signal_helpers = cg->uses_signal;
     rt_cfg.emit_postgres_helpers = cg->uses_postgres;
     rt_cfg.emit_mail_helpers = cg->uses_mail;
+    rt_cfg.emit_instrument_helpers = cg->uses_instrument;
     if (!cct_runtime_emit_c_helpers(out, &rt_cfg)) return false;
     return true;
 }

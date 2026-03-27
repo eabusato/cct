@@ -1,0 +1,49 @@
+INCIPIT grimoire "instrument_trace_bridge_38a"
+
+ADVOCARE "cct/instrument.cct"
+ADVOCARE "cct/trace.cct"
+ADVOCARE "cct/verbum.cct"
+
+RITUALE main() REDDE REX
+  CONIURA instrument_buffer_clear()
+  CONIURA instrument_enable(INSTR_MODE_FULL)
+
+  EVOCA REX span_id AD CONIURA instrument_http_span("POST", "/tasks")
+  CONIURA instrument_span_attr(span_id, "http.status_code", "202")
+  CONIURA instrument_span_end(span_id)
+  CONIURA instrument_event(CONIURA instrument_category_string(SPAN_CATEGORY_TASK), "worker.dispatch")
+
+  EVOCA Trace trace AD CONIURA instrument_buffer_drain_trace("trace-38a")
+  SI CONIURA compare(trace.trace_id, "trace-38a") != 0
+    CONIURA trace_free(SPECULUM trace)
+    REDDE 1
+  FIN SI
+  SI CONIURA trace_span_count(trace) != 2
+    CONIURA trace_free(SPECULUM trace)
+    REDDE 2
+  FIN SI
+
+  EVOCA Span span0 AD CONIURA trace_get_span(trace, 0)
+  EVOCA Span span1 AD CONIURA trace_get_span(trace, 1)
+  SI CONIURA compare(span0.name, "POST /tasks") != 0
+    CONIURA trace_free(SPECULUM trace)
+    REDDE 3
+  FIN SI
+  SI CONIURA compare(span1.name, "worker.dispatch") != 0
+    CONIURA trace_free(SPECULUM trace)
+    REDDE 4
+  FIN SI
+  SI CONIURA find(span0.attributes_json, "\"http.status_code\":\"202\"") < 0
+    CONIURA trace_free(SPECULUM trace)
+    REDDE 5
+  FIN SI
+  SI CONIURA len(span1.parent_id) != 0
+    CONIURA trace_free(SPECULUM trace)
+    REDDE 6
+  FIN SI
+
+  CONIURA trace_free(SPECULUM trace)
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

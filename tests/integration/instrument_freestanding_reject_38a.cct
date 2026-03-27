@@ -1,0 +1,12 @@
+INCIPIT grimoire "instrument_freestanding_reject_38a"
+
+ADVOCARE "cct/instrument.cct"
+
+RITUALE main() REDDE REX
+  SI CONIURA compare(CONIURA instrument_category_string(SPAN_CATEGORY_DB), "db") == 0
+    REDDE 0
+  FIN SI
+  REDDE 1
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

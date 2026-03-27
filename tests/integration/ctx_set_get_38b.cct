@@ -1,0 +1,26 @@
+INCIPIT grimoire "ctx_set_get_38b"
+
+ADVOCARE "cct/context_local.cct"
+ADVOCARE "cct/result.cct"
+
+RITUALE main() REDDE REX
+  EVOCA LocalContext ctx AD CONIURA local_context_new()
+  CONIURA local_context_open(SPECULUM ctx)
+
+  SI CONIURA result_is_err GENUS(REX, VERBUM)(CONIURA local_context_set(SPECULUM ctx, "app_id", "minha_app"))
+    REDDE 1
+  FIN SI
+  SI NON CONIURA local_context_has(ctx, "app_id")
+    REDDE 2
+  FIN SI
+  SI NON CONIURA local_context_value_is(ctx, "app_id", "minha_app")
+    REDDE 3
+  FIN SI
+  SI CONIURA local_context_has(ctx, "nao_existe")
+    REDDE 4
+  FIN SI
+
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

@@ -1,0 +1,49 @@
+INCIPIT grimoire "instrument_nested_spans_38a"
+
+ADVOCARE "cct/fluxus.cct"
+ADVOCARE "cct/instrument.cct"
+ADVOCARE "cct/verbum.cct"
+
+RITUALE main() REDDE REX
+  CONIURA instrument_buffer_clear()
+  CONIURA instrument_enable(INSTR_MODE_FULL)
+
+  EVOCA REX parent_id AD CONIURA instrument_span_begin(CONIURA instrument_category_string(SPAN_CATEGORY_CALL), "request")
+  EVOCA REX child_id AD CONIURA instrument_cache_span("get", "session:42")
+  SI parent_id == CONIURA instrument_no_span() VEL child_id == CONIURA instrument_no_span()
+    REDDE 1
+  FIN SI
+
+  CONIURA instrument_span_end(child_id)
+  CONIURA instrument_span_end(parent_id)
+
+  EVOCA SPECULUM NIHIL spans AD CONIURA instrument_buffer_drain()
+  SI CONIURA fluxus_len(spans) != 2
+    REDDE 2
+  FIN SI
+
+  EVOCA SPECULUM InstrumentSpan parent AD CONIURA fluxus_get(spans, 0)
+  EVOCA SPECULUM InstrumentSpan child AD CONIURA fluxus_get(spans, 1)
+  SI (*parent).span_id != parent_id
+    REDDE 3
+  FIN SI
+  SI (*child).span_id != child_id
+    REDDE 4
+  FIN SI
+  SI (*parent).parent_id != 0
+    REDDE 5
+  FIN SI
+  SI (*child).parent_id != parent_id
+    REDDE 6
+  FIN SI
+  SI CONIURA compare((*child).category, CONIURA instrument_category_string(SPAN_CATEGORY_CACHE)) != 0
+    REDDE 7
+  FIN SI
+  SI CONIURA compare((*child).name, "get:session:42") != 0
+    REDDE 8
+  FIN SI
+
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

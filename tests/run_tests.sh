@@ -109,6 +109,26 @@ cct_requested_phase_block() {
     return 1
 }
 
+cct_requested_phase_exact() {
+    local phase="$1"
+    local phases_csv="$2"
+    local item=""
+    local old_ifs="$IFS"
+
+    [ -z "$phases_csv" ] && return 1
+
+    IFS=','
+    for item in $phases_csv; do
+        if [ "$item" = "$phase" ]; then
+            IFS="$old_ifs"
+            return 0
+        fi
+    done
+    IFS="$old_ifs"
+
+    return 1
+}
+
 cct_phase_block_enabled() {
     local phase="$1"
     local parent_phase=""
@@ -116,7 +136,7 @@ cct_phase_block_enabled() {
     case "$phase" in
         *[A-Z])
             parent_phase="${phase%[A-Z]}"
-            if cct_requested_phase_block "$parent_phase" "$CCT_TEST_PHASES_NORMALIZED"; then
+            if cct_requested_phase_exact "$parent_phase" "$CCT_TEST_PHASES_NORMALIZED"; then
                 return 0
             fi
             ;;
@@ -11280,6 +11300,128 @@ if [ "$RC_31_READY" -eq 0 ] && ! "$PHASE31_HOST_WRAPPER" --profile freestanding 
     test_pass "cct/mail_webhook rejeita perfil freestanding"
 else
     test_fail "cct/mail_webhook nao rejeitou perfil freestanding"
+fi
+fi
+
+if cct_phase_block_enabled "38A"; then
+echo ""
+echo "========================================"
+echo "FASE 38A: cct/instrument"
+echo "========================================"
+cct_phase31_prepare >/dev/null 2>&1
+mkdir -p "$CCT_TMP_DIR/phase38a"
+
+echo "Test 1978: cct/instrument mantem caminho desligado sem spans"
+BASE_1978="$CCT_TMP_DIR/phase38a/test_1978_disabled"
+if [ "$RC_31_READY" -eq 0 ] && cct_phase32_copy_compile_and_run "$PHASE31_HOST_WRAPPER" "tests/integration/instrument_disabled_noop_38a.cct" "$BASE_1978" 0; then
+    test_pass "cct/instrument mantem caminho desligado sem spans"
+else
+    test_fail "cct/instrument regrediu caminho desligado"
+fi
+
+echo "Test 1979: cct/instrument drena span simples com metadados"
+BASE_1979="$CCT_TMP_DIR/phase38a/test_1979_roundtrip"
+if [ "$RC_31_READY" -eq 0 ] && cct_phase32_copy_compile_and_run "$PHASE31_HOST_WRAPPER" "tests/integration/instrument_span_roundtrip_38a.cct" "$BASE_1979" 0; then
+    test_pass "cct/instrument drena span simples com metadados"
+else
+    test_fail "cct/instrument regrediu roundtrip de span"
+fi
+
+echo "Test 1980: cct/instrument persiste atributos canonicos"
+BASE_1980="$CCT_TMP_DIR/phase38a/test_1980_attrs"
+if [ "$RC_31_READY" -eq 0 ] && cct_phase32_copy_compile_and_run "$PHASE31_HOST_WRAPPER" "tests/integration/instrument_span_attr_38a.cct" "$BASE_1980" 0; then
+    test_pass "cct/instrument persiste atributos canonicos"
+else
+    test_fail "cct/instrument regrediu atributos"
+fi
+
+echo "Test 1981: cct/instrument preserva hierarquia pai e filho"
+BASE_1981="$CCT_TMP_DIR/phase38a/test_1981_nested"
+if [ "$RC_31_READY" -eq 0 ] && cct_phase32_copy_compile_and_run "$PHASE31_HOST_WRAPPER" "tests/integration/instrument_nested_spans_38a.cct" "$BASE_1981" 0; then
+    test_pass "cct/instrument preserva hierarquia pai e filho"
+else
+    test_fail "cct/instrument regrediu hierarquia de spans"
+fi
+
+echo "Test 1982: cct/instrument limpa buffer em memoria"
+BASE_1982="$CCT_TMP_DIR/phase38a/test_1982_clear"
+if [ "$RC_31_READY" -eq 0 ] && cct_phase32_copy_compile_and_run "$PHASE31_HOST_WRAPPER" "tests/integration/instrument_buffer_clear_38a.cct" "$BASE_1982" 0; then
+    test_pass "cct/instrument limpa buffer em memoria"
+else
+    test_fail "cct/instrument regrediu limpeza de buffer"
+fi
+
+echo "Test 1983: cct/instrument converte buffer em trace"
+BASE_1983="$CCT_TMP_DIR/phase38a/test_1983_trace"
+if [ "$RC_31_READY" -eq 0 ] && cct_phase32_copy_compile_and_run "$PHASE31_HOST_WRAPPER" "tests/integration/instrument_trace_bridge_38a.cct" "$BASE_1983" 0; then
+    test_pass "cct/instrument converte buffer em trace"
+else
+    test_fail "cct/instrument regrediu bridge para trace"
+fi
+
+echo "Test 1984: cct/instrument rejeita perfil freestanding"
+if [ "$RC_31_READY" -eq 0 ] && ! "$PHASE31_HOST_WRAPPER" --profile freestanding --check "tests/integration/instrument_freestanding_reject_38a.cct" >"$CCT_TMP_DIR/phase38a/test_1984.out" 2>&1 && \
+   rg -q "módulo '(cct/instrument|cct/fluxus|cct/trace|cct/verbum_builder)' não disponível em perfil freestanding" "$CCT_TMP_DIR/phase38a/test_1984.out"; then
+    test_pass "cct/instrument rejeita perfil freestanding"
+else
+    test_fail "cct/instrument nao rejeitou perfil freestanding"
+fi
+fi
+
+if cct_phase_block_enabled "38B"; then
+echo ""
+echo "========================================"
+echo "FASE 38B: cct/context_local"
+echo "========================================"
+cct_phase31_prepare >/dev/null 2>&1
+mkdir -p "$CCT_TMP_DIR/phase38b"
+
+echo "Test 1985: cct/context_local abre e fecha escopo"
+BASE_1985="$CCT_TMP_DIR/phase38b/test_1985_open_close"
+if [ "$RC_31_READY" -eq 0 ] && cct_phase32_copy_compile_and_run "$PHASE31_HOST_WRAPPER" "tests/integration/ctx_open_close_38b.cct" "$BASE_1985" 0; then
+    test_pass "cct/context_local abre e fecha escopo"
+else
+    test_fail "cct/context_local regrediu ciclo de vida"
+fi
+
+echo "Test 1986: cct/context_local seta e encontra chave livre"
+BASE_1986="$CCT_TMP_DIR/phase38b/test_1986_set_get"
+if [ "$RC_31_READY" -eq 0 ] && cct_phase32_copy_compile_and_run "$PHASE31_HOST_WRAPPER" "tests/integration/ctx_set_get_38b.cct" "$BASE_1986" 0; then
+    test_pass "cct/context_local seta e encontra chave livre"
+else
+    test_fail "cct/context_local regrediu leitura/escrita"
+fi
+
+echo "Test 1987: cct/context_local sobrescreve e remove chave"
+BASE_1987="$CCT_TMP_DIR/phase38b/test_1987_overwrite_remove"
+if [ "$RC_31_READY" -eq 0 ] && cct_phase32_copy_compile_and_run "$PHASE31_HOST_WRAPPER" "tests/integration/ctx_overwrite_remove_38b.cct" "$BASE_1987" 0; then
+    test_pass "cct/context_local sobrescreve e remove chave"
+else
+    test_fail "cct/context_local regrediu overwrite/remove"
+fi
+
+echo "Test 1988: cct/context_local fecha limpando contexto"
+BASE_1988="$CCT_TMP_DIR/phase38b/test_1988_close_clears"
+if [ "$RC_31_READY" -eq 0 ] && cct_phase32_copy_compile_and_run "$PHASE31_HOST_WRAPPER" "tests/integration/ctx_close_clears_38b.cct" "$BASE_1988" 0; then
+    test_pass "cct/context_local fecha limpando contexto"
+else
+    test_fail "cct/context_local regrediu limpeza no close"
+fi
+
+echo "Test 1989: cct/context_local preserva chaves canonicas"
+BASE_1989="$CCT_TMP_DIR/phase38b/test_1989_canonical"
+if [ "$RC_31_READY" -eq 0 ] && cct_phase32_copy_compile_and_run "$PHASE31_HOST_WRAPPER" "tests/integration/ctx_canonical_helpers_38b.cct" "$BASE_1989" 0; then
+    test_pass "cct/context_local preserva chaves canonicas"
+else
+    test_fail "cct/context_local regrediu chaves canonicas"
+fi
+
+echo "Test 1990: cct/context_local limpa entradas mantendo escopo aberto"
+BASE_1990="$CCT_TMP_DIR/phase38b/test_1990_clear"
+if [ "$RC_31_READY" -eq 0 ] && cct_phase32_copy_compile_and_run "$PHASE31_HOST_WRAPPER" "tests/integration/ctx_clear_38b.cct" "$BASE_1990" 0; then
+    test_pass "cct/context_local limpa entradas mantendo escopo aberto"
+else
+    test_fail "cct/context_local regrediu clear"
 fi
 fi
 

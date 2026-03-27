@@ -1,0 +1,52 @@
+INCIPIT grimoire "instrument_span_roundtrip_38a"
+
+ADVOCARE "cct/fluxus.cct"
+ADVOCARE "cct/instrument.cct"
+ADVOCARE "cct/verbum.cct"
+
+RITUALE main() REDDE REX
+  CONIURA instrument_buffer_clear()
+  CONIURA instrument_enable(INSTR_MODE_FULL)
+
+  EVOCA REX span_id AD CONIURA instrument_span_begin(CONIURA instrument_category_string(SPAN_CATEGORY_HTTP), "GET /health")
+  SI span_id == CONIURA instrument_no_span()
+    REDDE 1
+  FIN SI
+  CONIURA instrument_span_end(span_id)
+
+  SI CONIURA instrument_buffer_count() != 1
+    REDDE 2
+  FIN SI
+
+  EVOCA SPECULUM NIHIL spans AD CONIURA instrument_buffer_drain()
+  SI CONIURA fluxus_len(spans) != 1
+    REDDE 3
+  FIN SI
+  SI CONIURA instrument_buffer_count() != 0
+    REDDE 4
+  FIN SI
+
+  EVOCA SPECULUM InstrumentSpan span AD CONIURA fluxus_get(spans, 0)
+  SI (*span).span_id != span_id
+    REDDE 5
+  FIN SI
+  SI (*span).parent_id != 0
+    REDDE 6
+  FIN SI
+  SI CONIURA compare((*span).category, CONIURA instrument_category_string(SPAN_CATEGORY_HTTP)) != 0
+    REDDE 7
+  FIN SI
+  SI CONIURA compare((*span).name, "GET /health") != 0
+    REDDE 8
+  FIN SI
+  SI NON (*span).closed
+    REDDE 9
+  FIN SI
+  SI (*span).end_us < (*span).start_us
+    REDDE 10
+  FIN SI
+
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

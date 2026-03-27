@@ -1,0 +1,28 @@
+INCIPIT grimoire "ctx_close_clears_38b"
+
+ADVOCARE "cct/context_local.cct"
+ADVOCARE "cct/option.cct"
+
+RITUALE main() REDDE REX
+  EVOCA LocalContext ctx AD CONIURA local_context_new()
+  CONIURA local_context_open(SPECULUM ctx)
+  CONIURA local_context_set(SPECULUM ctx, "request_id", "req-38b")
+  CONIURA local_context_set(SPECULUM ctx, "user_id", "u-7")
+
+  CONIURA local_context_close(SPECULUM ctx)
+  SI CONIURA local_context_is_open(ctx)
+    REDDE 1
+  FIN SI
+
+  CONIURA local_context_open(SPECULUM ctx)
+  SI NON CONIURA option_is_none GENUS(VERBUM)(CONIURA local_context_get(ctx, "request_id"))
+    REDDE 2
+  FIN SI
+  SI NON CONIURA option_is_none GENUS(VERBUM)(CONIURA local_context_get(ctx, "user_id"))
+    REDDE 3
+  FIN SI
+
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

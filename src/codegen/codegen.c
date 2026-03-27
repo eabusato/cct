@@ -4169,6 +4169,172 @@ static bool cg_emit_obsecro_expr(FILE *out, cct_codegen_t *cg, const cct_ast_nod
         return true;
     }
 
+    if (strncmp(name, "instr_builtin_", 14) == 0) {
+        cg->uses_instrument = true;
+
+        if (strcmp(name, "instr_builtin_enable") == 0) {
+            cct_codegen_value_kind_t k = CCT_CODEGEN_VALUE_UNKNOWN;
+            if (argc != 1) {
+                cg_report_node(cg, expr, "OBSECRO instr_builtin_enable expects exactly one integer mode argument in FASE 38A");
+                return false;
+            }
+            fputs("cct_rt_instr_enable(", out);
+            if (!cg_emit_expr(out, cg, args->nodes[0], &k)) return false;
+            if (!(k == CCT_CODEGEN_VALUE_INT || k == CCT_CODEGEN_VALUE_BOOL)) {
+                cg_report_node(cg, args->nodes[0], "OBSECRO instr_builtin_enable requires integer mode argument in FASE 38A");
+                return false;
+            }
+            fputs(")", out);
+            if (out_kind) *out_kind = CCT_CODEGEN_VALUE_NIHIL;
+            return true;
+        }
+
+        if (strcmp(name, "instr_builtin_disable") == 0 ||
+            strcmp(name, "instr_builtin_is_enabled") == 0 ||
+            strcmp(name, "instr_builtin_mode") == 0 ||
+            strcmp(name, "instr_builtin_buffer_count") == 0 ||
+            strcmp(name, "instr_builtin_buffer_clear") == 0) {
+            if (argc != 0) {
+                cg_report_nodef(cg, expr, "OBSECRO %s expects no arguments in FASE 38A", name);
+                return false;
+            }
+            if (strcmp(name, "instr_builtin_disable") == 0) {
+                fputs("cct_rt_instr_disable()", out);
+                if (out_kind) *out_kind = CCT_CODEGEN_VALUE_NIHIL;
+            } else if (strcmp(name, "instr_builtin_is_enabled") == 0) {
+                fputs("cct_rt_instr_is_enabled()", out);
+                if (out_kind) *out_kind = CCT_CODEGEN_VALUE_INT;
+            } else if (strcmp(name, "instr_builtin_mode") == 0) {
+                fputs("cct_rt_instr_mode()", out);
+                if (out_kind) *out_kind = CCT_CODEGEN_VALUE_INT;
+            } else if (strcmp(name, "instr_builtin_buffer_count") == 0) {
+                fputs("cct_rt_instr_buffer_count()", out);
+                if (out_kind) *out_kind = CCT_CODEGEN_VALUE_INT;
+            } else {
+                fputs("cct_rt_instr_buffer_clear()", out);
+                if (out_kind) *out_kind = CCT_CODEGEN_VALUE_NIHIL;
+            }
+            return true;
+        }
+
+        if (strcmp(name, "instr_builtin_span_begin") == 0 ||
+            strcmp(name, "instr_builtin_event") == 0) {
+            cct_codegen_value_kind_t k0 = CCT_CODEGEN_VALUE_UNKNOWN;
+            cct_codegen_value_kind_t k1 = CCT_CODEGEN_VALUE_UNKNOWN;
+            if (argc != 2) {
+                cg_report_nodef(cg, expr, "OBSECRO %s expects exactly two VERBUM arguments in FASE 38A", name);
+                return false;
+            }
+            fputs(strcmp(name, "instr_builtin_span_begin") == 0 ? "cct_rt_instr_span_begin(" : "cct_rt_instr_event(", out);
+            if (!cg_emit_expr(out, cg, args->nodes[0], &k0)) return false;
+            if (k0 != CCT_CODEGEN_VALUE_STRING) {
+                cg_report_nodef(cg, args->nodes[0], "OBSECRO %s requires VERBUM as first argument in FASE 38A", name);
+                return false;
+            }
+            fputs(", ", out);
+            if (!cg_emit_expr(out, cg, args->nodes[1], &k1)) return false;
+            if (k1 != CCT_CODEGEN_VALUE_STRING) {
+                cg_report_nodef(cg, args->nodes[1], "OBSECRO %s requires VERBUM as second argument in FASE 38A", name);
+                return false;
+            }
+            fputs(")", out);
+            if (out_kind) {
+                *out_kind = (strcmp(name, "instr_builtin_span_begin") == 0)
+                    ? CCT_CODEGEN_VALUE_INT
+                    : CCT_CODEGEN_VALUE_NIHIL;
+            }
+            return true;
+        }
+
+        if (strcmp(name, "instr_builtin_span_end") == 0 ||
+            strcmp(name, "instr_builtin_buffer_span_id") == 0 ||
+            strcmp(name, "instr_builtin_buffer_parent_id") == 0 ||
+            strcmp(name, "instr_builtin_buffer_name") == 0 ||
+            strcmp(name, "instr_builtin_buffer_category") == 0 ||
+            strcmp(name, "instr_builtin_buffer_start_us") == 0 ||
+            strcmp(name, "instr_builtin_buffer_end_us") == 0 ||
+            strcmp(name, "instr_builtin_buffer_closed") == 0 ||
+            strcmp(name, "instr_builtin_buffer_attr_count") == 0) {
+            cct_codegen_value_kind_t k = CCT_CODEGEN_VALUE_UNKNOWN;
+            if (argc != 1) {
+                cg_report_nodef(cg, expr, "OBSECRO %s expects exactly one integer argument in FASE 38A", name);
+                return false;
+            }
+            if (strcmp(name, "instr_builtin_span_end") == 0) fputs("cct_rt_instr_span_end(", out);
+            else if (strcmp(name, "instr_builtin_buffer_span_id") == 0) fputs("cct_rt_instr_buffer_span_id(", out);
+            else if (strcmp(name, "instr_builtin_buffer_parent_id") == 0) fputs("cct_rt_instr_buffer_parent_id(", out);
+            else if (strcmp(name, "instr_builtin_buffer_name") == 0) fputs("cct_rt_instr_buffer_name(", out);
+            else if (strcmp(name, "instr_builtin_buffer_category") == 0) fputs("cct_rt_instr_buffer_category(", out);
+            else if (strcmp(name, "instr_builtin_buffer_start_us") == 0) fputs("cct_rt_instr_buffer_start_us(", out);
+            else if (strcmp(name, "instr_builtin_buffer_end_us") == 0) fputs("cct_rt_instr_buffer_end_us(", out);
+            else if (strcmp(name, "instr_builtin_buffer_closed") == 0) fputs("cct_rt_instr_buffer_closed(", out);
+            else fputs("cct_rt_instr_buffer_attr_count(", out);
+            if (!cg_emit_expr(out, cg, args->nodes[0], &k)) return false;
+            if (!(k == CCT_CODEGEN_VALUE_INT || k == CCT_CODEGEN_VALUE_BOOL)) {
+                cg_report_nodef(cg, args->nodes[0], "OBSECRO %s requires integer argument in FASE 38A", name);
+                return false;
+            }
+            fputs(")", out);
+            if (out_kind) {
+                if (strcmp(name, "instr_builtin_span_end") == 0) *out_kind = CCT_CODEGEN_VALUE_NIHIL;
+                else if (strcmp(name, "instr_builtin_buffer_name") == 0 ||
+                         strcmp(name, "instr_builtin_buffer_category") == 0) *out_kind = CCT_CODEGEN_VALUE_STRING;
+                else *out_kind = CCT_CODEGEN_VALUE_INT;
+            }
+            return true;
+        }
+
+        if (strcmp(name, "instr_builtin_span_attr") == 0) {
+            cct_codegen_value_kind_t kinds[3];
+            if (argc != 3) {
+                cg_report_node(cg, expr, "OBSECRO instr_builtin_span_attr expects exactly (span_id, key, value) in FASE 38A");
+                return false;
+            }
+            memset(kinds, 0, sizeof(kinds));
+            fputs("cct_rt_instr_span_attr(", out);
+            for (size_t i = 0; i < 3; i++) {
+                if (i > 0) fputs(", ", out);
+                if (!cg_emit_expr(out, cg, args->nodes[i], &kinds[i])) return false;
+            }
+            if (!(kinds[0] == CCT_CODEGEN_VALUE_INT || kinds[0] == CCT_CODEGEN_VALUE_BOOL) ||
+                kinds[1] != CCT_CODEGEN_VALUE_STRING ||
+                kinds[2] != CCT_CODEGEN_VALUE_STRING) {
+                cg_report_node(cg, expr, "OBSECRO instr_builtin_span_attr recebeu tipos invalidos em FASE 38A");
+                return false;
+            }
+            fputs(")", out);
+            if (out_kind) *out_kind = CCT_CODEGEN_VALUE_NIHIL;
+            return true;
+        }
+
+        if (strcmp(name, "instr_builtin_buffer_attr_key") == 0 ||
+            strcmp(name, "instr_builtin_buffer_attr_value") == 0) {
+            cct_codegen_value_kind_t k0 = CCT_CODEGEN_VALUE_UNKNOWN;
+            cct_codegen_value_kind_t k1 = CCT_CODEGEN_VALUE_UNKNOWN;
+            if (argc != 2) {
+                cg_report_nodef(cg, expr, "OBSECRO %s expects exactly two integer arguments in FASE 38A", name);
+                return false;
+            }
+            fputs(strcmp(name, "instr_builtin_buffer_attr_key") == 0
+                ? "cct_rt_instr_buffer_attr_key("
+                : "cct_rt_instr_buffer_attr_value(", out);
+            if (!cg_emit_expr(out, cg, args->nodes[0], &k0)) return false;
+            if (!(k0 == CCT_CODEGEN_VALUE_INT || k0 == CCT_CODEGEN_VALUE_BOOL)) {
+                cg_report_nodef(cg, args->nodes[0], "OBSECRO %s requires integer buffer index in FASE 38A", name);
+                return false;
+            }
+            fputs(", ", out);
+            if (!cg_emit_expr(out, cg, args->nodes[1], &k1)) return false;
+            if (!(k1 == CCT_CODEGEN_VALUE_INT || k1 == CCT_CODEGEN_VALUE_BOOL)) {
+                cg_report_nodef(cg, args->nodes[1], "OBSECRO %s requires integer attr index in FASE 38A", name);
+                return false;
+            }
+            fputs(")", out);
+            if (out_kind) *out_kind = CCT_CODEGEN_VALUE_STRING;
+            return true;
+        }
+    }
+
     if (strcmp(name, "pg_builtin_open") == 0) {
         if (argc != 1) {
             cg_report_node(cg, expr, "OBSECRO pg_builtin_open expects exactly one VERBUM conninfo argument in FASE 36A");
@@ -8769,8 +8935,104 @@ static bool cg_emit_scribe_stmt(FILE *out, cct_codegen_t *cg, const cct_ast_node
         return true;
     }
 
+    if (strncmp(obsecro_node->as.obsecro.name, "instr_builtin_", 14) == 0) {
+        const char *name = obsecro_node->as.obsecro.name;
+        cct_ast_node_list_t *args = obsecro_node->as.obsecro.arguments;
+        cg->uses_instrument = true;
+
+        if (strcmp(name, "instr_builtin_disable") == 0 ||
+            strcmp(name, "instr_builtin_buffer_clear") == 0) {
+            if (args && args->count != 0) {
+                cg_report_nodef(cg, obsecro_node, "OBSECRO %s expects no arguments in FASE 38A", name);
+                return false;
+            }
+            cg_emit_indent(out, indent);
+            fprintf(out, "%s();\n",
+                    strcmp(name, "instr_builtin_disable") == 0
+                        ? "cct_rt_instr_disable"
+                        : "cct_rt_instr_buffer_clear");
+            return true;
+        }
+
+        if (strcmp(name, "instr_builtin_enable") == 0 ||
+            strcmp(name, "instr_builtin_span_end") == 0) {
+            cct_codegen_value_kind_t kind = CCT_CODEGEN_VALUE_UNKNOWN;
+            if (!args || args->count != 1) {
+                cg_report_nodef(cg, obsecro_node, "OBSECRO %s expects exactly one integer argument in FASE 38A", name);
+                return false;
+            }
+            cg_emit_indent(out, indent);
+            fprintf(out, "%s(",
+                    strcmp(name, "instr_builtin_enable") == 0
+                        ? "cct_rt_instr_enable"
+                        : "cct_rt_instr_span_end");
+            if (!cg_emit_expr(out, cg, args->nodes[0], &kind)) return false;
+            if (!(kind == CCT_CODEGEN_VALUE_INT || kind == CCT_CODEGEN_VALUE_BOOL)) {
+                cg_report_nodef(cg, args->nodes[0], "OBSECRO %s requires integer argument in FASE 38A", name);
+                return false;
+            }
+            fputs(");\n", out);
+            return true;
+        }
+
+        if (strcmp(name, "instr_builtin_span_attr") == 0) {
+            cct_codegen_value_kind_t k0 = CCT_CODEGEN_VALUE_UNKNOWN;
+            cct_codegen_value_kind_t k1 = CCT_CODEGEN_VALUE_UNKNOWN;
+            cct_codegen_value_kind_t k2 = CCT_CODEGEN_VALUE_UNKNOWN;
+            if (!args || args->count != 3) {
+                cg_report_node(cg, obsecro_node, "OBSECRO instr_builtin_span_attr expects exactly (span_id, key, value) in FASE 38A");
+                return false;
+            }
+            cg_emit_indent(out, indent);
+            fputs("cct_rt_instr_span_attr(", out);
+            if (!cg_emit_expr(out, cg, args->nodes[0], &k0)) return false;
+            if (!(k0 == CCT_CODEGEN_VALUE_INT || k0 == CCT_CODEGEN_VALUE_BOOL)) {
+                cg_report_node(cg, args->nodes[0], "OBSECRO instr_builtin_span_attr requires integer span_id argument in FASE 38A");
+                return false;
+            }
+            fputs(", ", out);
+            if (!cg_emit_expr(out, cg, args->nodes[1], &k1)) return false;
+            if (k1 != CCT_CODEGEN_VALUE_STRING) {
+                cg_report_node(cg, args->nodes[1], "OBSECRO instr_builtin_span_attr requires VERBUM key argument in FASE 38A");
+                return false;
+            }
+            fputs(", ", out);
+            if (!cg_emit_expr(out, cg, args->nodes[2], &k2)) return false;
+            if (k2 != CCT_CODEGEN_VALUE_STRING) {
+                cg_report_node(cg, args->nodes[2], "OBSECRO instr_builtin_span_attr requires VERBUM value argument in FASE 38A");
+                return false;
+            }
+            fputs(");\n", out);
+            return true;
+        }
+
+        if (strcmp(name, "instr_builtin_event") == 0) {
+            cct_codegen_value_kind_t k0 = CCT_CODEGEN_VALUE_UNKNOWN;
+            cct_codegen_value_kind_t k1 = CCT_CODEGEN_VALUE_UNKNOWN;
+            if (!args || args->count != 2) {
+                cg_report_node(cg, obsecro_node, "OBSECRO instr_builtin_event expects exactly two VERBUM arguments in FASE 38A");
+                return false;
+            }
+            cg_emit_indent(out, indent);
+            fputs("cct_rt_instr_event(", out);
+            if (!cg_emit_expr(out, cg, args->nodes[0], &k0)) return false;
+            if (k0 != CCT_CODEGEN_VALUE_STRING) {
+                cg_report_node(cg, args->nodes[0], "OBSECRO instr_builtin_event requires VERBUM kind argument in FASE 38A");
+                return false;
+            }
+            fputs(", ", out);
+            if (!cg_emit_expr(out, cg, args->nodes[1], &k1)) return false;
+            if (k1 != CCT_CODEGEN_VALUE_STRING) {
+                cg_report_node(cg, args->nodes[1], "OBSECRO instr_builtin_event requires VERBUM name argument in FASE 38A");
+                return false;
+            }
+            fputs(");\n", out);
+            return true;
+        }
+    }
+
     if (strcmp(obsecro_node->as.obsecro.name, "scribe") != 0) {
-        cg_report_nodef(cg, obsecro_node, "OBSECRO %s codegen is not supported in current executable subset (supported stmt builtins: scribe, libera, mem_free, mem_copy, mem_set, mem_zero, kernel_halt, kernel_outb, kernel_memcpy, kernel_memset, fluxus_free, fluxus_push, fluxus_pop, fluxus_clear, fluxus_reserve, fluxus_set, fluxus_remove, fluxus_insert, fluxus_reverse, fluxus_sort_int, fluxus_sort_verbum, alg_sort_verbum, json_arr_handle_push, json_obj_handle_push, sock_connect, sock_bind, sock_listen, sock_close, sock_set_timeout_ms, db_exec, db_close, rows_close, stmt_bind_text, stmt_bind_int, stmt_bind_real, stmt_reset, stmt_finalize, db_begin, db_commit, db_rollback, map_free, map_insert, map_clear, map_reserve, map_merge, set_free, set_clear, set_reserve, io_print, io_println, io_print_int, io_print_real, io_print_char, io_eprint, io_eprintln, io_eprint_int, io_eprint_real, io_flush, io_flush_err, fs_write_all, fs_append_all, fs_mkdir, fs_mkdir_all, fs_delete_file, fs_delete_dir, fs_rename, fs_copy, fs_move, fs_chmod, fs_truncate, fs_symlink, random_seed, time_sleep_ms, bytes_set, bytes_free, option_free, result_free, regex_builtin_free, image_builtin_free, scan_free, builder_append, builder_append_char, builder_clear, builder_free, writer_indent, writer_dedent, writer_write, writer_writeln, writer_free)",
+        cg_report_nodef(cg, obsecro_node, "OBSECRO %s codegen is not supported in current executable subset (supported stmt builtins: scribe, libera, mem_free, mem_copy, mem_set, mem_zero, kernel_halt, kernel_outb, kernel_memcpy, kernel_memset, fluxus_free, fluxus_push, fluxus_pop, fluxus_clear, fluxus_reserve, fluxus_set, fluxus_remove, fluxus_insert, fluxus_reverse, fluxus_sort_int, fluxus_sort_verbum, alg_sort_verbum, json_arr_handle_push, json_obj_handle_push, sock_connect, sock_bind, sock_listen, sock_close, sock_set_timeout_ms, db_exec, db_close, rows_close, stmt_bind_text, stmt_bind_int, stmt_bind_real, stmt_reset, stmt_finalize, db_begin, db_commit, db_rollback, map_free, map_insert, map_clear, map_reserve, map_merge, set_free, set_clear, set_reserve, io_print, io_println, io_print_int, io_print_real, io_print_char, io_eprint, io_eprintln, io_eprint_int, io_eprint_real, io_flush, io_flush_err, fs_write_all, fs_append_all, fs_mkdir, fs_mkdir_all, fs_delete_file, fs_delete_dir, fs_rename, fs_copy, fs_move, fs_chmod, fs_truncate, fs_symlink, random_seed, time_sleep_ms, bytes_set, bytes_free, option_free, result_free, regex_builtin_free, image_builtin_free, scan_free, builder_append, builder_append_char, builder_clear, builder_free, writer_indent, writer_dedent, writer_write, writer_writeln, writer_free, instr_builtin_enable, instr_builtin_disable, instr_builtin_span_end, instr_builtin_span_attr, instr_builtin_event, instr_builtin_buffer_clear)",
                         obsecro_node->as.obsecro.name);
         return false;
     }
@@ -10498,6 +10760,10 @@ static bool cg_precollect_strings_from_expr(cct_codegen_t *cg, const cct_ast_nod
                 cg->uses_crypto = true;
             }
             if (expr->as.obsecro.name &&
+                strncmp(expr->as.obsecro.name, "instr_builtin_", 14) == 0) {
+                cg->uses_instrument = true;
+            }
+            if (expr->as.obsecro.name &&
                 (strcmp(expr->as.obsecro.name, "pg_builtin_open") == 0 ||
                  strcmp(expr->as.obsecro.name, "pg_builtin_close") == 0 ||
                  strcmp(expr->as.obsecro.name, "pg_builtin_is_open") == 0 ||
@@ -11219,6 +11485,7 @@ void cct_codegen_init(cct_codegen_t *cg, const char *filename) {
     cg->uses_signal = false;
     cg->uses_postgres = false;
     cg->uses_mail = false;
+    cg->uses_instrument = false;
 #ifdef _WIN32
     cg->host_cc = "gcc";
 #else

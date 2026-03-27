@@ -1,0 +1,24 @@
+INCIPIT grimoire "ctx_open_close_38b"
+
+ADVOCARE "cct/context_local.cct"
+
+RITUALE main() REDDE REX
+  EVOCA LocalContext ctx AD CONIURA local_context_new()
+  SI CONIURA local_context_is_open(ctx)
+    REDDE 1
+  FIN SI
+
+  CONIURA local_context_open(SPECULUM ctx)
+  SI NON CONIURA local_context_is_open(ctx)
+    REDDE 2
+  FIN SI
+
+  CONIURA local_context_close(SPECULUM ctx)
+  SI CONIURA local_context_is_open(ctx)
+    REDDE 3
+  FIN SI
+
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

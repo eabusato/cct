@@ -1,0 +1,28 @@
+INCIPIT grimoire "instrument_disabled_noop_38a"
+
+ADVOCARE "cct/instrument.cct"
+ADVOCARE "cct/verbum.cct"
+
+RITUALE main() REDDE REX
+  CONIURA instrument_disable()
+
+  SI CONIURA instrument_is_enabled()
+    REDDE 1
+  FIN SI
+  SI CONIURA instrument_mode() != INSTR_MODE_OFF
+    REDDE 2
+  FIN SI
+  SI CONIURA compare(CONIURA instrument_mode_string(CONIURA instrument_mode()), "off") != 0
+    REDDE 3
+  FIN SI
+  SI CONIURA instrument_span_begin(CONIURA instrument_category_string(SPAN_CATEGORY_CALL), "noop") != CONIURA instrument_no_span()
+    REDDE 4
+  FIN SI
+  SI CONIURA instrument_buffer_count() != 0
+    REDDE 5
+  FIN SI
+
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

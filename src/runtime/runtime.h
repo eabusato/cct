@@ -34,6 +34,7 @@ typedef struct {
     bool emit_signal_helpers;
     bool emit_postgres_helpers;
     bool emit_mail_helpers;
+    bool emit_instrument_helpers;
     bool emit_verbum_helpers;
     bool emit_fmt_helpers;
     bool emit_db_helpers;
@@ -55,5 +56,6 @@ bool cct_runtime_emit_image_ops_helpers(FILE *out);
 bool cct_runtime_emit_signal_helpers(FILE *out);
 bool cct_runtime_emit_postgres_helpers(FILE *out);
 bool cct_runtime_emit_mail_helpers(FILE *out);
+bool cct_runtime_emit_instrument_helpers(FILE *out);
 
 #endif /* CCT_RUNTIME_H */

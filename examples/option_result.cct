@@ -3,16 +3,15 @@ INCIPIT grimoire "option_result_showcase"
 ADVOCARE "cct/io.cct"
 ADVOCARE "cct/option.cct"
 ADVOCARE "cct/result.cct"
-ADVOCARE "cct/fmt.cct"
 
 RITUALE buscar_usuario(REX id) REDDE SPECULUM NIHIL
   SI id == 1
-    REDDE CONIURA Some GENUS(VERBUM)("Alice")
+    REDDE CONIURA Some GENUS(REX)(101)
   FIN SI
   SI id == 2
-    REDDE CONIURA Some GENUS(VERBUM)("Bob")
+    REDDE CONIURA Some GENUS(REX)(102)
   FIN SI
-  REDDE CONIURA None GENUS(VERBUM)()
+  REDDE CONIURA None GENUS(REX)()
 EXPLICIT RITUALE
 
 RITUALE dividir(REX a, REX b) REDDE SPECULUM NIHIL
@@ -23,36 +22,40 @@ RITUALE dividir(REX a, REX b) REDDE SPECULUM NIHIL
 EXPLICIT RITUALE
 
 RITUALE main() REDDE REX
-  OBSECRO println("== Option demo ==")
+  CONIURA println("== Option demo ==")
 
   EVOCA SPECULUM NIHIL opt1 AD CONIURA buscar_usuario(1)
-  EVOCA VERBUM nome1 AD CONIURA option_unwrap_or GENUS(VERBUM)(opt1, "unknown")
-  OBSECRO print("user 1: ")
-  OBSECRO println(nome1)
-  CONIURA option_free GENUS(VERBUM)(opt1)
+  EVOCA REX uid1 AD CONIURA option_unwrap_or GENUS(REX)(opt1, -1)
+  CONIURA print("user 1 id: ")
+  CONIURA print_int(uid1)
+  CONIURA println("")
+  CONIURA option_free GENUS(REX)(opt1)
 
   EVOCA SPECULUM NIHIL opt2 AD CONIURA buscar_usuario(999)
-  EVOCA VERBUM nome2 AD CONIURA option_unwrap_or GENUS(VERBUM)(opt2, "unknown")
-  OBSECRO print("user 999: ")
-  OBSECRO println(nome2)
-  CONIURA option_free GENUS(VERBUM)(opt2)
+  EVOCA REX uid2 AD CONIURA option_unwrap_or GENUS(REX)(opt2, -1)
+  CONIURA print("user 999 id: ")
+  CONIURA print_int(uid2)
+  CONIURA println("")
+  CONIURA option_free GENUS(REX)(opt2)
 
-  OBSECRO println("")
-  OBSECRO println("== Result demo ==")
+  CONIURA println("")
+  CONIURA println("== Result demo ==")
 
   EVOCA SPECULUM NIHIL res1 AD CONIURA dividir(10, 2)
   SI CONIURA result_is_ok GENUS(REX, REX)(res1)
     EVOCA REX v AD CONIURA result_unwrap GENUS(REX, REX)(res1)
-    OBSECRO print("10 / 2 = ")
-    OBSECRO println(CONIURA stringify_int(v))
+    CONIURA print("10 / 2 = ")
+    CONIURA print_int(v)
+    CONIURA println("")
   FIN SI
   CONIURA result_free GENUS(REX, REX)(res1)
 
   EVOCA SPECULUM NIHIL res2 AD CONIURA dividir(10, 0)
   SI CONIURA result_is_err GENUS(REX, REX)(res2)
     EVOCA REX e AD CONIURA result_unwrap_err GENUS(REX, REX)(res2)
-    OBSECRO print("10 / 0 -> error code ")
-    OBSECRO println(CONIURA stringify_int(e))
+    CONIURA print("10 / 0 -> error code ")
+    CONIURA print_int(e)
+    CONIURA println("")
   FIN SI
   CONIURA result_free GENUS(REX, REX)(res2)
 

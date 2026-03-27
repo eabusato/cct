@@ -1,0 +1,56 @@
+INCIPIT grimoire "instrument_span_attr_38a"
+
+ADVOCARE "cct/fluxus.cct"
+ADVOCARE "cct/instrument.cct"
+ADVOCARE "cct/verbum.cct"
+
+RITUALE main() REDDE REX
+  CONIURA instrument_buffer_clear()
+  CONIURA instrument_enable(INSTR_MODE_FULL)
+
+  EVOCA REX span_id AD CONIURA instrument_db_span("select", "users")
+  SI span_id == CONIURA instrument_no_span()
+    REDDE 1
+  FIN SI
+  CONIURA instrument_span_attr(span_id, "db.rows", "3")
+  CONIURA instrument_span_end(span_id)
+
+  EVOCA SPECULUM NIHIL spans AD CONIURA instrument_buffer_drain()
+  SI CONIURA fluxus_len(spans) != 1
+    REDDE 2
+  FIN SI
+
+  EVOCA SPECULUM InstrumentSpan span AD CONIURA fluxus_get(spans, 0)
+  SI CONIURA compare((*span).name, "select:users") != 0
+    REDDE 3
+  FIN SI
+  SI CONIURA fluxus_len((*span).attrs) != 3
+    REDDE 4
+  FIN SI
+
+  EVOCA SPECULUM SpanAttr attr0 AD CONIURA fluxus_get((*span).attrs, 0)
+  EVOCA SPECULUM SpanAttr attr1 AD CONIURA fluxus_get((*span).attrs, 1)
+  EVOCA SPECULUM SpanAttr attr2 AD CONIURA fluxus_get((*span).attrs, 2)
+  SI CONIURA compare((*attr0).key, "db.operation") != 0
+    REDDE 5
+  FIN SI
+  SI CONIURA compare((*attr0).value, "select") != 0
+    REDDE 6
+  FIN SI
+  SI CONIURA compare((*attr1).key, "db.target") != 0
+    REDDE 7
+  FIN SI
+  SI CONIURA compare((*attr1).value, "users") != 0
+    REDDE 8
+  FIN SI
+  SI CONIURA compare((*attr2).key, "db.rows") != 0
+    REDDE 9
+  FIN SI
+  SI CONIURA compare((*attr2).value, "3") != 0
+    REDDE 10
+  FIN SI
+
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

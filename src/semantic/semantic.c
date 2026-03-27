@@ -1418,7 +1418,7 @@ static cct_sem_type_t* sem_resolve_ast_type(cct_semantic_analyzer_t *sem, const 
  * ======================================================================== */
 
 static const cct_sem_builtin_spec_t* sem_find_builtin(cct_semantic_analyzer_t *sem, const char *name) {
-static cct_sem_builtin_spec_t specs[417];
+static cct_sem_builtin_spec_t specs[437];
     static bool initialized = false;
 
     if (!initialized) {
@@ -1840,6 +1840,26 @@ static cct_sem_builtin_spec_t specs[417];
         specs[414].name = "pg_builtin_poll_channel"; specs[414].min_args = 2; specs[414].variadic = false;
         specs[415].name = "pg_builtin_poll_payload"; specs[415].min_args = 1; specs[415].variadic = false;
         specs[416].name = "mail_builtin_smtp_send"; specs[416].min_args = 10; specs[416].variadic = false;
+        specs[417].name = "instr_builtin_enable"; specs[417].min_args = 1; specs[417].variadic = false;
+        specs[418].name = "instr_builtin_disable"; specs[418].min_args = 0; specs[418].variadic = false;
+        specs[419].name = "instr_builtin_is_enabled"; specs[419].min_args = 0; specs[419].variadic = false;
+        specs[420].name = "instr_builtin_mode"; specs[420].min_args = 0; specs[420].variadic = false;
+        specs[421].name = "instr_builtin_span_begin"; specs[421].min_args = 2; specs[421].variadic = false;
+        specs[422].name = "instr_builtin_span_end"; specs[422].min_args = 1; specs[422].variadic = false;
+        specs[423].name = "instr_builtin_span_attr"; specs[423].min_args = 3; specs[423].variadic = false;
+        specs[424].name = "instr_builtin_event"; specs[424].min_args = 2; specs[424].variadic = false;
+        specs[425].name = "instr_builtin_buffer_count"; specs[425].min_args = 0; specs[425].variadic = false;
+        specs[426].name = "instr_builtin_buffer_clear"; specs[426].min_args = 0; specs[426].variadic = false;
+        specs[427].name = "instr_builtin_buffer_span_id"; specs[427].min_args = 1; specs[427].variadic = false;
+        specs[428].name = "instr_builtin_buffer_parent_id"; specs[428].min_args = 1; specs[428].variadic = false;
+        specs[429].name = "instr_builtin_buffer_name"; specs[429].min_args = 1; specs[429].variadic = false;
+        specs[430].name = "instr_builtin_buffer_category"; specs[430].min_args = 1; specs[430].variadic = false;
+        specs[431].name = "instr_builtin_buffer_start_us"; specs[431].min_args = 1; specs[431].variadic = false;
+        specs[432].name = "instr_builtin_buffer_end_us"; specs[432].min_args = 1; specs[432].variadic = false;
+        specs[433].name = "instr_builtin_buffer_closed"; specs[433].min_args = 1; specs[433].variadic = false;
+        specs[434].name = "instr_builtin_buffer_attr_count"; specs[434].min_args = 1; specs[434].variadic = false;
+        specs[435].name = "instr_builtin_buffer_attr_key"; specs[435].min_args = 2; specs[435].variadic = false;
+        specs[436].name = "instr_builtin_buffer_attr_value"; specs[436].min_args = 2; specs[436].variadic = false;
         initialized = true;
     }
 
@@ -2260,6 +2280,26 @@ static cct_sem_builtin_spec_t specs[417];
     specs[414].return_type = &sem->type_verbum;
     specs[415].return_type = &sem->type_verbum;
     specs[416].return_type = &sem->type_verbum;
+    specs[417].return_type = &sem->type_nihil;
+    specs[418].return_type = &sem->type_nihil;
+    specs[419].return_type = &sem->type_rex;
+    specs[420].return_type = &sem->type_rex;
+    specs[421].return_type = &sem->type_rex;
+    specs[422].return_type = &sem->type_nihil;
+    specs[423].return_type = &sem->type_nihil;
+    specs[424].return_type = &sem->type_nihil;
+    specs[425].return_type = &sem->type_rex;
+    specs[426].return_type = &sem->type_nihil;
+    specs[427].return_type = &sem->type_rex;
+    specs[428].return_type = &sem->type_rex;
+    specs[429].return_type = &sem->type_verbum;
+    specs[430].return_type = &sem->type_verbum;
+    specs[431].return_type = &sem->type_rex;
+    specs[432].return_type = &sem->type_rex;
+    specs[433].return_type = &sem->type_rex;
+    specs[434].return_type = &sem->type_rex;
+    specs[435].return_type = &sem->type_verbum;
+    specs[436].return_type = &sem->type_verbum;
 
     for (size_t i = 0; i < sizeof(specs) / sizeof(specs[0]); i++) {
         if (!specs[i].name) continue;
@@ -2348,6 +2388,7 @@ static const char* sem_forbidden_module_for_obsecro_in_freestanding(const char *
     if (sem_str_has_prefix(name, "sock_") || sem_str_has_prefix(name, "socket_")) return "cct/socket";
     if (sem_str_has_prefix(name, "pg_builtin_")) return "cct/db_postgres";
     if (sem_str_has_prefix(name, "mail_builtin_")) return "cct/mail";
+    if (sem_str_has_prefix(name, "instr_builtin_")) return "cct/instrument";
 
     return NULL;
 }
@@ -3435,6 +3476,46 @@ static cct_sem_type_t* sem_analyze_builtin_obsecro(
             !(arg_type && (arg_type->kind == CCT_SEM_TYPE_VERUM || sem_is_error_type(arg_type)))) {
             sem_report_nodef(sem, expr->as.obsecro.arguments->nodes[i],
                              "OBSECRO mail_builtin_smtp_send expects VERUM argument at position %zu", i + 1);
+        }
+        if ((strcmp(name, "instr_builtin_enable") == 0 ||
+             strcmp(name, "instr_builtin_span_end") == 0 ||
+             strcmp(name, "instr_builtin_buffer_span_id") == 0 ||
+             strcmp(name, "instr_builtin_buffer_parent_id") == 0 ||
+             strcmp(name, "instr_builtin_buffer_name") == 0 ||
+             strcmp(name, "instr_builtin_buffer_category") == 0 ||
+             strcmp(name, "instr_builtin_buffer_start_us") == 0 ||
+             strcmp(name, "instr_builtin_buffer_end_us") == 0 ||
+             strcmp(name, "instr_builtin_buffer_closed") == 0 ||
+             strcmp(name, "instr_builtin_buffer_attr_count") == 0) &&
+            i == 0 &&
+            !(sem_is_integer_type(arg_type) || sem_is_error_type(arg_type))) {
+            sem_report_nodef(sem, expr->as.obsecro.arguments->nodes[i],
+                             "OBSECRO %s expects integer argument", name);
+        }
+        if ((strcmp(name, "instr_builtin_span_begin") == 0 ||
+             strcmp(name, "instr_builtin_event") == 0) &&
+            (i == 0 || i == 1) &&
+            !(arg_type && (arg_type->kind == CCT_SEM_TYPE_VERBUM || sem_is_error_type(arg_type)))) {
+            sem_report_nodef(sem, expr->as.obsecro.arguments->nodes[i],
+                             "OBSECRO %s expects VERBUM argument at position %zu", name, i + 1);
+        }
+        if ((strcmp(name, "instr_builtin_span_attr") == 0) &&
+            i == 0 &&
+            !(sem_is_integer_type(arg_type) || sem_is_error_type(arg_type))) {
+            sem_report_nodef(sem, expr->as.obsecro.arguments->nodes[i],
+                             "OBSECRO instr_builtin_span_attr expects integer span_id argument");
+        }
+        if ((strcmp(name, "instr_builtin_span_attr") == 0) &&
+            (i == 1 || i == 2) &&
+            !(arg_type && (arg_type->kind == CCT_SEM_TYPE_VERBUM || sem_is_error_type(arg_type)))) {
+            sem_report_nodef(sem, expr->as.obsecro.arguments->nodes[i],
+                             "OBSECRO instr_builtin_span_attr expects VERBUM argument at position %zu", i + 1);
+        }
+        if ((strcmp(name, "instr_builtin_buffer_attr_key") == 0 ||
+             strcmp(name, "instr_builtin_buffer_attr_value") == 0) &&
+            !(sem_is_integer_type(arg_type) || sem_is_error_type(arg_type))) {
+            sem_report_nodef(sem, expr->as.obsecro.arguments->nodes[i],
+                             "OBSECRO %s expects integer arguments", name);
         }
         if ((strcmp(name, "rows_get_text") == 0 ||
              strcmp(name, "rows_get_int") == 0 ||

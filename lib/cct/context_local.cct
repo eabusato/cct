@@ -1,0 +1,197 @@
+-- CCT — Clavicula Turing
+-- Standard Library Module: context_local
+--
+-- FASE 38B: local request/task context
+
+INCIPIT grimoire "context_local"
+
+ADVOCARE "cct/fluxus.cct"
+ADVOCARE "cct/option.cct"
+ADVOCARE "cct/result.cct"
+ADVOCARE "cct/verbum.cct"
+
+SIGILLUM ContextEntry
+  key: VERBUM
+  value: VERBUM
+FIN SIGILLUM
+
+SIGILLUM LocalContext
+  entries: SPECULUM NIHIL
+  is_open: VERUM
+FIN SIGILLUM
+
+RITUALE local_context_key_request_id() REDDE VERBUM
+  REDDE "request_id"
+EXPLICIT RITUALE
+
+RITUALE local_context_key_trace_id() REDDE VERBUM
+  REDDE "trace_id"
+EXPLICIT RITUALE
+
+RITUALE local_context_key_user_id() REDDE VERBUM
+  REDDE "user_id"
+EXPLICIT RITUALE
+
+RITUALE local_context_key_locale() REDDE VERBUM
+  REDDE "locale"
+EXPLICIT RITUALE
+
+RITUALE local_context_key_route_id() REDDE VERBUM
+  REDDE "route_id"
+EXPLICIT RITUALE
+
+RITUALE local_context_key_route_path() REDDE VERBUM
+  REDDE "route_path"
+EXPLICIT RITUALE
+
+RITUALE local_context_key_task_id() REDDE VERBUM
+  REDDE "task_id"
+EXPLICIT RITUALE
+
+RITUALE local_context_key_task_name() REDDE VERBUM
+  REDDE "task_name"
+EXPLICIT RITUALE
+
+RITUALE local_context_ok() REDDE SPECULUM NIHIL
+  REDDE CONIURA Ok GENUS(REX, VERBUM)(0)
+EXPLICIT RITUALE
+
+RITUALE local_context_err(VERBUM message) REDDE SPECULUM NIHIL
+  REDDE CONIURA Err GENUS(REX, VERBUM)(message)
+EXPLICIT RITUALE
+
+RITUALE local_context_entry_index(LocalContext ctx, VERBUM key) REDDE REX
+  EVOCA REX i AD 0
+  EVOCA REX n AD CONIURA fluxus_len(ctx.entries)
+  DUM i < n
+    EVOCA SPECULUM ContextEntry entry AD CONIURA fluxus_get(ctx.entries, i)
+    SI CONIURA compare((*entry).key, key) == 0
+      REDDE i
+    FIN SI
+    VINCIRE i AD i + 1
+  FIN DUM
+  REDDE -1
+EXPLICIT RITUALE
+
+RITUALE local_context_new() REDDE LocalContext
+  EVOCA LocalContext ctx
+  VINCIRE ctx.entries AD CONIURA fluxus_init(MENSURA(ContextEntry))
+  VINCIRE ctx.is_open AD FALSUM
+  REDDE ctx
+EXPLICIT RITUALE
+
+RITUALE local_context_open(SPECULUM LocalContext ctx) REDDE NIHIL
+  CONIURA fluxus_clear((*ctx).entries)
+  VINCIRE (*ctx).is_open AD VERUM
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE local_context_close(SPECULUM LocalContext ctx) REDDE NIHIL
+  CONIURA fluxus_clear((*ctx).entries)
+  VINCIRE (*ctx).is_open AD FALSUM
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE local_context_is_open(LocalContext ctx) REDDE VERUM
+  REDDE ctx.is_open
+EXPLICIT RITUALE
+
+RITUALE local_context_set(SPECULUM LocalContext ctx, VERBUM key, VERBUM value) REDDE SPECULUM NIHIL
+  SI NON (*ctx).is_open
+    REDDE CONIURA local_context_err("context_local: contexto nao esta aberto")
+  FIN SI
+
+  EVOCA REX idx AD CONIURA local_context_entry_index(*ctx, key)
+  SI idx >= 0
+    EVOCA SPECULUM ContextEntry entry AD CONIURA fluxus_get((*ctx).entries, idx)
+    VINCIRE (*entry).value AD value
+    REDDE CONIURA local_context_ok()
+  FIN SI
+
+  EVOCA ContextEntry entry
+  VINCIRE entry.key AD key
+  VINCIRE entry.value AD value
+  CONIURA fluxus_push((*ctx).entries, SPECULUM entry)
+  REDDE CONIURA local_context_ok()
+EXPLICIT RITUALE
+
+RITUALE local_context_get(LocalContext ctx, VERBUM key) REDDE SPECULUM NIHIL
+  SI NON ctx.is_open
+    REDDE CONIURA None GENUS(VERBUM)()
+  FIN SI
+
+  EVOCA REX idx AD CONIURA local_context_entry_index(ctx, key)
+  SI idx < 0
+    REDDE CONIURA None GENUS(VERBUM)()
+  FIN SI
+
+  EVOCA SPECULUM ContextEntry entry AD CONIURA fluxus_get(ctx.entries, idx)
+  REDDE CONIURA Some GENUS(VERBUM)((*entry).value)
+EXPLICIT RITUALE
+
+RITUALE local_context_has(LocalContext ctx, VERBUM key) REDDE VERUM
+  REDDE CONIURA option_is_some GENUS(VERBUM)(CONIURA local_context_get(ctx, key))
+EXPLICIT RITUALE
+
+RITUALE local_context_value_is(LocalContext ctx, VERBUM key, VERBUM expected) REDDE VERUM
+  SI NON ctx.is_open
+    REDDE FALSUM
+  FIN SI
+  EVOCA REX idx AD CONIURA local_context_entry_index(ctx, key)
+  SI idx < 0
+    REDDE FALSUM
+  FIN SI
+  EVOCA SPECULUM ContextEntry entry AD CONIURA fluxus_get(ctx.entries, idx)
+  REDDE CONIURA compare((*entry).value, expected) == 0
+EXPLICIT RITUALE
+
+RITUALE local_context_remove(SPECULUM LocalContext ctx, VERBUM key) REDDE SPECULUM NIHIL
+  SI NON (*ctx).is_open
+    REDDE CONIURA local_context_err("context_local: contexto nao esta aberto")
+  FIN SI
+
+  EVOCA REX idx AD CONIURA local_context_entry_index(*ctx, key)
+  SI idx >= 0
+    CONIURA fluxus_remove((*ctx).entries, idx)
+  FIN SI
+  REDDE CONIURA local_context_ok()
+EXPLICIT RITUALE
+
+RITUALE local_context_clear(SPECULUM LocalContext ctx) REDDE NIHIL
+  CONIURA fluxus_clear((*ctx).entries)
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE local_context_request_id(LocalContext ctx) REDDE SPECULUM NIHIL
+  REDDE CONIURA local_context_get(ctx, CONIURA local_context_key_request_id())
+EXPLICIT RITUALE
+
+RITUALE local_context_trace_id(LocalContext ctx) REDDE SPECULUM NIHIL
+  REDDE CONIURA local_context_get(ctx, CONIURA local_context_key_trace_id())
+EXPLICIT RITUALE
+
+RITUALE local_context_user_id(LocalContext ctx) REDDE SPECULUM NIHIL
+  REDDE CONIURA local_context_get(ctx, CONIURA local_context_key_user_id())
+EXPLICIT RITUALE
+
+RITUALE local_context_locale(LocalContext ctx) REDDE SPECULUM NIHIL
+  REDDE CONIURA local_context_get(ctx, CONIURA local_context_key_locale())
+EXPLICIT RITUALE
+
+RITUALE local_context_route_id(LocalContext ctx) REDDE SPECULUM NIHIL
+  REDDE CONIURA local_context_get(ctx, CONIURA local_context_key_route_id())
+EXPLICIT RITUALE
+
+RITUALE local_context_route_path(LocalContext ctx) REDDE SPECULUM NIHIL
+  REDDE CONIURA local_context_get(ctx, CONIURA local_context_key_route_path())
+EXPLICIT RITUALE
+
+RITUALE local_context_task_id(LocalContext ctx) REDDE SPECULUM NIHIL
+  REDDE CONIURA local_context_get(ctx, CONIURA local_context_key_task_id())
+EXPLICIT RITUALE
+
+RITUALE local_context_task_name(LocalContext ctx) REDDE SPECULUM NIHIL
+  REDDE CONIURA local_context_get(ctx, CONIURA local_context_key_task_name())
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

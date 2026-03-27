@@ -1,0 +1,323 @@
+-- CCT — Clavicula Turing
+-- Standard Library Module: instrument
+--
+-- FASE 38A: Runtime instrumentation baseline
+
+INCIPIT grimoire "instrument"
+
+ADVOCARE "cct/fmt.cct"
+ADVOCARE "cct/fluxus.cct"
+ADVOCARE "cct/trace.cct"
+ADVOCARE "cct/verbum.cct"
+ADVOCARE "cct/verbum_builder.cct"
+
+ORDO InstrumentMode
+  INSTR_MODE_OFF
+  INSTR_MODE_MINIMAL
+  INSTR_MODE_FULL
+FIN ORDO
+
+ORDO SpanCategory
+  SPAN_CATEGORY_CALL
+  SPAN_CATEGORY_DB
+  SPAN_CATEGORY_CACHE
+  SPAN_CATEGORY_MAIL
+  SPAN_CATEGORY_STORAGE
+  SPAN_CATEGORY_TASK
+  SPAN_CATEGORY_HTTP
+  SPAN_CATEGORY_CUSTOM
+FIN ORDO
+
+SIGILLUM SpanAttr
+  key: VERBUM
+  value: VERBUM
+FIN SIGILLUM
+
+SIGILLUM InstrumentSpan
+  span_id: REX
+  parent_id: REX
+  name: VERBUM
+  category: VERBUM
+  start_us: REX
+  end_us: REX
+  attrs: SPECULUM NIHIL
+  closed: VERUM
+FIN SIGILLUM
+
+SIGILLUM InstrumentBuffer
+  handle: SPECULUM NIHIL
+FIN SIGILLUM
+
+RITUALE instrument_max_spans() REDDE REX
+  REDDE 4096
+EXPLICIT RITUALE
+
+RITUALE instrument_no_span() REDDE REX
+  REDDE 0
+EXPLICIT RITUALE
+
+RITUALE instrument_mode_from_code(REX code) REDDE InstrumentMode
+  SI code == 1
+    REDDE INSTR_MODE_MINIMAL
+  FIN SI
+  SI code == 2
+    REDDE INSTR_MODE_FULL
+  FIN SI
+  REDDE INSTR_MODE_OFF
+EXPLICIT RITUALE
+
+RITUALE instrument_mode_to_code(InstrumentMode mode) REDDE REX
+  ELIGE mode
+    CASUS INSTR_MODE_MINIMAL:
+      REDDE 1
+    CASUS INSTR_MODE_FULL:
+      REDDE 2
+    ALIOQUIN:
+      REDDE 0
+  FIN ELIGE
+EXPLICIT RITUALE
+
+RITUALE instrument_category_string(SpanCategory cat) REDDE VERBUM
+  ELIGE cat
+    CASUS SPAN_CATEGORY_CALL:
+      REDDE "call"
+    CASUS SPAN_CATEGORY_DB:
+      REDDE "db"
+    CASUS SPAN_CATEGORY_CACHE:
+      REDDE "cache"
+    CASUS SPAN_CATEGORY_MAIL:
+      REDDE "mail"
+    CASUS SPAN_CATEGORY_STORAGE:
+      REDDE "storage"
+    CASUS SPAN_CATEGORY_TASK:
+      REDDE "task"
+    CASUS SPAN_CATEGORY_HTTP:
+      REDDE "http"
+    ALIOQUIN:
+      REDDE "custom"
+  FIN ELIGE
+EXPLICIT RITUALE
+
+RITUALE instrument_mode_string(InstrumentMode mode) REDDE VERBUM
+  ELIGE mode
+    CASUS INSTR_MODE_MINIMAL:
+      REDDE "minimal"
+    CASUS INSTR_MODE_FULL:
+      REDDE "full"
+    ALIOQUIN:
+      REDDE "off"
+  FIN ELIGE
+EXPLICIT RITUALE
+
+RITUALE instrument_enable(InstrumentMode mode) REDDE NIHIL
+  OBSECRO instr_builtin_enable(CONIURA instrument_mode_to_code(mode))
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE instrument_disable() REDDE NIHIL
+  OBSECRO instr_builtin_disable()
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE instrument_is_enabled() REDDE VERUM
+  REDDE OBSECRO instr_builtin_is_enabled() != 0
+EXPLICIT RITUALE
+
+RITUALE instrument_mode() REDDE InstrumentMode
+  REDDE CONIURA instrument_mode_from_code(OBSECRO instr_builtin_mode())
+EXPLICIT RITUALE
+
+RITUALE instrument_span_begin(VERBUM category, VERBUM name) REDDE REX
+  SI NON CONIURA instrument_is_enabled()
+    REDDE CONIURA instrument_no_span()
+  FIN SI
+  REDDE OBSECRO instr_builtin_span_begin(category, name)
+EXPLICIT RITUALE
+
+RITUALE instrument_span_end(REX span_id) REDDE NIHIL
+  SI span_id == CONIURA instrument_no_span()
+    REDDE
+  FIN SI
+  SI NON CONIURA instrument_is_enabled()
+    REDDE
+  FIN SI
+  OBSECRO instr_builtin_span_end(span_id)
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE instrument_span_attr(REX span_id, VERBUM key, VERBUM value) REDDE NIHIL
+  SI span_id == CONIURA instrument_no_span()
+    REDDE
+  FIN SI
+  SI NON CONIURA instrument_is_enabled()
+    REDDE
+  FIN SI
+  OBSECRO instr_builtin_span_attr(span_id, key, value)
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE instrument_event(VERBUM kind, VERBUM name) REDDE NIHIL
+  SI NON CONIURA instrument_is_enabled()
+    REDDE
+  FIN SI
+  OBSECRO instr_builtin_event(kind, name)
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE instrument_buffer_count() REDDE REX
+  REDDE OBSECRO instr_builtin_buffer_count()
+EXPLICIT RITUALE
+
+RITUALE instrument_buffer_clear() REDDE NIHIL
+  OBSECRO instr_builtin_buffer_clear()
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE instrument_span_free(SPECULUM InstrumentSpan span) REDDE NIHIL
+  CONIURA fluxus_free((*span).attrs)
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE instrument_spans_free(SPECULUM NIHIL spans) REDDE NIHIL
+  EVOCA REX i AD 0
+  EVOCA REX n AD CONIURA fluxus_len(spans)
+  DUM i < n
+    EVOCA SPECULUM InstrumentSpan span_ptr AD CONIURA fluxus_get(spans, i)
+    CONIURA instrument_span_free(span_ptr)
+    VINCIRE i AD i + 1
+  FIN DUM
+  CONIURA fluxus_free(spans)
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE instrument_buffer_get_attrs(REX index) REDDE SPECULUM NIHIL
+  EVOCA SPECULUM NIHIL attrs AD CONIURA fluxus_init(MENSURA(SpanAttr))
+  EVOCA REX i AD 0
+  EVOCA REX n AD OBSECRO instr_builtin_buffer_attr_count(index)
+  DUM i < n
+    EVOCA SpanAttr attr
+    VINCIRE attr.key AD OBSECRO instr_builtin_buffer_attr_key(index, i)
+    VINCIRE attr.value AD OBSECRO instr_builtin_buffer_attr_value(index, i)
+    CONIURA fluxus_push(attrs, SPECULUM attr)
+    VINCIRE i AD i + 1
+  FIN DUM
+  REDDE attrs
+EXPLICIT RITUALE
+
+RITUALE instrument_buffer_get_span(REX index) REDDE InstrumentSpan
+  EVOCA InstrumentSpan span
+  VINCIRE span.span_id AD OBSECRO instr_builtin_buffer_span_id(index)
+  VINCIRE span.parent_id AD OBSECRO instr_builtin_buffer_parent_id(index)
+  VINCIRE span.name AD OBSECRO instr_builtin_buffer_name(index)
+  VINCIRE span.category AD OBSECRO instr_builtin_buffer_category(index)
+  VINCIRE span.start_us AD OBSECRO instr_builtin_buffer_start_us(index)
+  VINCIRE span.end_us AD OBSECRO instr_builtin_buffer_end_us(index)
+  VINCIRE span.attrs AD CONIURA instrument_buffer_get_attrs(index)
+  VINCIRE span.closed AD OBSECRO instr_builtin_buffer_closed(index) != 0
+  REDDE span
+EXPLICIT RITUALE
+
+RITUALE instrument_buffer_drain() REDDE SPECULUM NIHIL
+  EVOCA SPECULUM NIHIL spans AD CONIURA fluxus_init(MENSURA(InstrumentSpan))
+  EVOCA REX i AD 0
+  EVOCA REX n AD CONIURA instrument_buffer_count()
+  DUM i < n
+    EVOCA InstrumentSpan span AD CONIURA instrument_buffer_get_span(i)
+    CONIURA fluxus_push(spans, SPECULUM span)
+    VINCIRE i AD i + 1
+  FIN DUM
+  CONIURA instrument_buffer_clear()
+  REDDE spans
+EXPLICIT RITUALE
+
+RITUALE instrument_attrs_json(SPECULUM NIHIL attrs) REDDE VERBUM
+  EVOCA SPECULUM NIHIL b AD CONIURA builder_init()
+  EVOCA REX i AD 0
+  EVOCA REX n AD CONIURA fluxus_len(attrs)
+  CONIURA builder_append(b, "{")
+  DUM i < n
+    EVOCA SPECULUM SpanAttr attr_ptr AD CONIURA fluxus_get(attrs, i)
+    SI i > 0
+      CONIURA builder_append(b, ",")
+    FIN SI
+    CONIURA builder_append(b, "\"")
+    CONIURA builder_append(b, CONIURA trace_json_escape((*attr_ptr).key))
+    CONIURA builder_append(b, "\":\"")
+    CONIURA builder_append(b, CONIURA trace_json_escape((*attr_ptr).value))
+    CONIURA builder_append(b, "\"")
+    VINCIRE i AD i + 1
+  FIN DUM
+  CONIURA builder_append(b, "}")
+  EVOCA VERBUM out AD CONIURA builder_to_verbum(b)
+  CONIURA builder_free(b)
+  REDDE out
+EXPLICIT RITUALE
+
+RITUALE instrument_trace_span_from_runtime(VERBUM trace_id, InstrumentSpan runtime_span) REDDE Span
+  EVOCA Span span
+  VINCIRE span.trace_id AD trace_id
+  VINCIRE span.span_id AD CONIURA stringify_int(runtime_span.span_id)
+  SI runtime_span.parent_id == 0
+    VINCIRE span.parent_id AD ""
+  ALITER
+    VINCIRE span.parent_id AD CONIURA stringify_int(runtime_span.parent_id)
+  FIN SI
+  VINCIRE span.name AD runtime_span.name
+  VINCIRE span.start_time_ms AD runtime_span.start_us / 1000
+  VINCIRE span.end_time_ms AD runtime_span.end_us / 1000
+  VINCIRE span.attributes_json AD CONIURA instrument_attrs_json(runtime_span.attrs)
+  REDDE span
+EXPLICIT RITUALE
+
+RITUALE instrument_buffer_drain_trace(VERBUM trace_id) REDDE Trace
+  EVOCA Trace trace AD CONIURA trace_new_with_id(trace_id)
+  EVOCA SPECULUM NIHIL spans AD CONIURA instrument_buffer_drain()
+  EVOCA REX i AD 0
+  EVOCA REX n AD CONIURA fluxus_len(spans)
+  DUM i < n
+    EVOCA SPECULUM InstrumentSpan runtime_span AD CONIURA fluxus_get(spans, i)
+    EVOCA Span trace_span AD CONIURA instrument_trace_span_from_runtime(trace_id, *runtime_span)
+    CONIURA fluxus_push(trace.spans, SPECULUM trace_span)
+    VINCIRE i AD i + 1
+  FIN DUM
+  CONIURA instrument_spans_free(spans)
+  REDDE trace
+EXPLICIT RITUALE
+
+RITUALE instrument_db_span(VERBUM operation, VERBUM target) REDDE REX
+  EVOCA VERBUM name AD operation
+  VINCIRE name AD CONIURA concat(name, ":")
+  VINCIRE name AD CONIURA concat(name, target)
+  EVOCA REX span_id AD CONIURA instrument_span_begin(CONIURA instrument_category_string(SPAN_CATEGORY_DB), name)
+  SI span_id != CONIURA instrument_no_span()
+    CONIURA instrument_span_attr(span_id, "db.operation", operation)
+    CONIURA instrument_span_attr(span_id, "db.target", target)
+  FIN SI
+  REDDE span_id
+EXPLICIT RITUALE
+
+RITUALE instrument_http_span(VERBUM method, VERBUM route) REDDE REX
+  EVOCA VERBUM name AD method
+  VINCIRE name AD CONIURA concat(name, " ")
+  VINCIRE name AD CONIURA concat(name, route)
+  EVOCA REX span_id AD CONIURA instrument_span_begin(CONIURA instrument_category_string(SPAN_CATEGORY_HTTP), name)
+  SI span_id != CONIURA instrument_no_span()
+    CONIURA instrument_span_attr(span_id, "http.method", method)
+    CONIURA instrument_span_attr(span_id, "http.route", route)
+  FIN SI
+  REDDE span_id
+EXPLICIT RITUALE
+
+RITUALE instrument_cache_span(VERBUM operation, VERBUM key) REDDE REX
+  EVOCA VERBUM name AD operation
+  VINCIRE name AD CONIURA concat(name, ":")
+  VINCIRE name AD CONIURA concat(name, key)
+  EVOCA REX span_id AD CONIURA instrument_span_begin(CONIURA instrument_category_string(SPAN_CATEGORY_CACHE), name)
+  SI span_id != CONIURA instrument_no_span()
+    CONIURA instrument_span_attr(span_id, "cache.operation", operation)
+    CONIURA instrument_span_attr(span_id, "cache.key", key)
+  FIN SI
+  REDDE span_id
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

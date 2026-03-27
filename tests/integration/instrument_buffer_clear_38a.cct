@@ -1,0 +1,31 @@
+INCIPIT grimoire "instrument_buffer_clear_38a"
+
+ADVOCARE "cct/fluxus.cct"
+ADVOCARE "cct/instrument.cct"
+
+RITUALE main() REDDE REX
+  CONIURA instrument_buffer_clear()
+  CONIURA instrument_enable(INSTR_MODE_MINIMAL)
+
+  EVOCA REX span_id AD CONIURA instrument_span_begin(CONIURA instrument_category_string(SPAN_CATEGORY_MAIL), "deliver")
+  CONIURA instrument_span_end(span_id)
+  CONIURA instrument_event(CONIURA instrument_category_string(SPAN_CATEGORY_TASK), "flush")
+
+  SI CONIURA instrument_buffer_count() != 2
+    REDDE 1
+  FIN SI
+
+  CONIURA instrument_buffer_clear()
+  SI CONIURA instrument_buffer_count() != 0
+    REDDE 2
+  FIN SI
+
+  EVOCA SPECULUM NIHIL spans AD CONIURA instrument_buffer_drain()
+  SI CONIURA fluxus_len(spans) != 0
+    REDDE 3
+  FIN SI
+
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

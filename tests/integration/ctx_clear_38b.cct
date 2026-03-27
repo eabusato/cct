@@ -1,0 +1,29 @@
+INCIPIT grimoire "ctx_clear_38b"
+
+ADVOCARE "cct/context_local.cct"
+
+RITUALE main() REDDE REX
+  EVOCA LocalContext ctx AD CONIURA local_context_new()
+  CONIURA local_context_open(SPECULUM ctx)
+  CONIURA local_context_set(SPECULUM ctx, "request_id", "req-clear")
+  CONIURA local_context_set(SPECULUM ctx, "task_id", "task-clear")
+
+  SI NON CONIURA local_context_has(ctx, "request_id")
+    REDDE 1
+  FIN SI
+  SI NON CONIURA local_context_has(ctx, "task_id")
+    REDDE 2
+  FIN SI
+
+  CONIURA local_context_clear(SPECULUM ctx)
+  SI CONIURA local_context_has(ctx, "request_id")
+    REDDE 3
+  FIN SI
+  SI CONIURA local_context_has(ctx, "task_id")
+    REDDE 4
+  FIN SI
+
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

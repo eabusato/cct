@@ -1,0 +1,45 @@
+INCIPIT grimoire "ctx_canonical_helpers_38b"
+
+ADVOCARE "cct/context_local.cct"
+RITUALE main() REDDE REX
+  EVOCA LocalContext ctx AD CONIURA local_context_new()
+  CONIURA local_context_open(SPECULUM ctx)
+
+  CONIURA local_context_set(SPECULUM ctx, CONIURA local_context_key_request_id(), "req-1")
+  CONIURA local_context_set(SPECULUM ctx, CONIURA local_context_key_trace_id(), "trace-1")
+  CONIURA local_context_set(SPECULUM ctx, CONIURA local_context_key_user_id(), "user-1")
+  CONIURA local_context_set(SPECULUM ctx, CONIURA local_context_key_locale(), "pt-BR")
+  CONIURA local_context_set(SPECULUM ctx, CONIURA local_context_key_route_id(), "route.show")
+  CONIURA local_context_set(SPECULUM ctx, CONIURA local_context_key_route_path(), "/users/:id")
+  CONIURA local_context_set(SPECULUM ctx, CONIURA local_context_key_task_id(), "task-1")
+  CONIURA local_context_set(SPECULUM ctx, CONIURA local_context_key_task_name(), "sync_users")
+
+  SI NON CONIURA local_context_value_is(ctx, CONIURA local_context_key_request_id(), "req-1")
+    REDDE 1
+  FIN SI
+  SI NON CONIURA local_context_value_is(ctx, CONIURA local_context_key_trace_id(), "trace-1")
+    REDDE 2
+  FIN SI
+  SI NON CONIURA local_context_value_is(ctx, CONIURA local_context_key_user_id(), "user-1")
+    REDDE 3
+  FIN SI
+  SI NON CONIURA local_context_value_is(ctx, CONIURA local_context_key_locale(), "pt-BR")
+    REDDE 4
+  FIN SI
+  SI NON CONIURA local_context_value_is(ctx, CONIURA local_context_key_route_id(), "route.show")
+    REDDE 5
+  FIN SI
+  SI NON CONIURA local_context_value_is(ctx, CONIURA local_context_key_route_path(), "/users/:id")
+    REDDE 6
+  FIN SI
+  SI NON CONIURA local_context_value_is(ctx, CONIURA local_context_key_task_id(), "task-1")
+    REDDE 7
+  FIN SI
+  SI NON CONIURA local_context_value_is(ctx, CONIURA local_context_key_task_name(), "sync_users")
+    REDDE 8
+  FIN SI
+
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

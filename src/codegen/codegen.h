@@ -50,6 +50,7 @@ typedef struct {
     bool uses_signal;               /* link signal bridge only when generated code needs it */
     bool uses_postgres;             /* link PostgreSQL bridge only when generated code needs it */
     bool uses_mail;                 /* link SMTP bridge only when generated code needs it */
+    bool uses_instrument;           /* link instrumentation bridge only when generated code needs it */
     cct_profile_t profile;          /* FASE 16A.2: compilation profile */
     const char *entry_rituale_name; /* FASE 16B.4: explicit freestanding entry ritual */
 
