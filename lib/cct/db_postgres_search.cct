@@ -2,6 +2,8 @@
 -- Standard Library Module: db_postgres_search
 --
 -- FASE 36B: PostgreSQL full-text search helpers
+--
+-- Copyright (c) Erick Andrade Busato. Todos os direitos reservados.
 
 INCIPIT grimoire "db_postgres_search"
 

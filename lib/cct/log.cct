@@ -2,6 +2,8 @@
 -- Standard Library Module: log
 --
 -- FASE 34A: Structured logging baseline
+--
+-- Copyright (c) Erick Andrade Busato. Todos os direitos reservados.
 
 INCIPIT grimoire "log"
 

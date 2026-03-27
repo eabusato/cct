@@ -2,6 +2,8 @@
 -- Standard Library Module: trace_capture
 --
 -- Live trace capture over runtime instrumentation
+--
+-- Copyright (c) Erick Andrade Busato. Todos os direitos reservados.
 
 INCIPIT grimoire "trace_capture"
 

@@ -2,6 +2,8 @@
 -- Standard Library Module: date
 --
 -- FASE 32D: Date and DateTime baseline
+--
+-- Copyright (c) Erick Andrade Busato. Todos os direitos reservados.
 
 INCIPIT grimoire "date"
 

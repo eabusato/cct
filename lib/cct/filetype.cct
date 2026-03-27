@@ -2,6 +2,8 @@
 -- Standard Library Module: filetype
 --
 -- FASE 32G: Magic-byte filetype detection baseline
+--
+-- Copyright (c) Erick Andrade Busato. Todos os direitos reservados.
 
 INCIPIT grimoire "filetype"
 

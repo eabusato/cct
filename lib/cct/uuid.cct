@@ -2,6 +2,8 @@
 -- Standard Library Module: uuid
 --
 -- FASE 33C: UUID v4/v7 source-backed baseline
+--
+-- Copyright (c) Erick Andrade Busato. Todos os direitos reservados.
 
 INCIPIT grimoire "uuid"
 

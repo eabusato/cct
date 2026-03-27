@@ -2,6 +2,8 @@
 -- Standard Library Module: db_postgres_lock
 --
 -- FASE 36D: PostgreSQL advisory lock helpers
+--
+-- Copyright (c) Erick Andrade Busato. Todos os direitos reservados.
 
 INCIPIT grimoire "db_postgres_lock"
 

@@ -2,6 +2,8 @@
 -- Standard Library Module: mail_spool
 --
 -- FASE 37B: Operational mail spool
+--
+-- Copyright (c) Erick Andrade Busato. Todos os direitos reservados.
 
 INCIPIT grimoire "mail_spool"
 

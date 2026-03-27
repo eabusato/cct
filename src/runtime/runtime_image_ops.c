@@ -1,3 +1,12 @@
+/*
+ * CCT — Clavicula Turing
+ * Image Operations Runtime Helper Emission
+ *
+ * FASE 32I: image operations host runtime bridge
+ *
+ * Copyright (c) Erick Andrade Busato. Todos os direitos reservados.
+ */
+
 #include "runtime.h"
 
 bool cct_runtime_emit_image_ops_helpers(FILE *out) {

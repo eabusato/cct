@@ -2,6 +2,8 @@
 -- Standard Library Module: slug
 --
 -- FASE 33D: URL slug normalization baseline
+--
+-- Copyright (c) Erick Andrade Busato. Todos os direitos reservados.
 
 INCIPIT grimoire "slug"
 

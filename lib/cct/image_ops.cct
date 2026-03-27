@@ -2,6 +2,8 @@
 -- Standard Library Module: image_ops
 --
 -- FASE 32I: Host image operations via ffmpeg/ffprobe
+--
+-- Copyright (c) Erick Andrade Busato. Todos os direitos reservados.
 
 INCIPIT grimoire "image_ops"
 

@@ -2,6 +2,8 @@
 -- Standard Library Module: fs_watch
 --
 -- FASE 34E: Filesystem watch baseline
+--
+-- Copyright (c) Erick Andrade Busato. Todos os direitos reservados.
 
 INCIPIT grimoire "fs_watch"
 

@@ -2,6 +2,8 @@
 -- Standard Library Module: form_codec
 --
 -- FASE 33F: application/x-www-form-urlencoded and query-string helpers
+--
+-- Copyright (c) Erick Andrade Busato. Todos os direitos reservados.
 
 INCIPIT grimoire "form_codec"
 

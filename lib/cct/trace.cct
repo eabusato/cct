@@ -2,6 +2,8 @@
 -- Standard Library Module: trace
 --
 -- FASE 34B: Trace baseline
+--
+-- Copyright (c) Erick Andrade Busato. Todos os direitos reservados.
 
 INCIPIT grimoire "trace"
 

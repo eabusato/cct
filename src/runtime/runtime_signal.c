@@ -1,3 +1,12 @@
+/*
+ * CCT — Clavicula Turing
+ * Signal Runtime Helper Emission
+ *
+ * FASE 34D: signal host runtime bridge
+ *
+ * Copyright (c) Erick Andrade Busato. Todos os direitos reservados.
+ */
+
 #include "runtime.h"
 
 bool cct_runtime_emit_signal_helpers(FILE *out) {

@@ -2,6 +2,8 @@
 -- Standard Library Module: mail
 --
 -- FASE 37A: Canonical mail composition and delivery
+--
+-- Copyright (c) Erick Andrade Busato. Todos os direitos reservados.
 
 INCIPIT grimoire "mail"
 

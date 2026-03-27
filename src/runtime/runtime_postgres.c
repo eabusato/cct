@@ -3,6 +3,8 @@
  * PostgreSQL runtime helper emission
  *
  * FASE 36A: cct/db_postgres host-runtime bridge
+ *
+ * Copyright (c) Erick Andrade Busato. Todos os direitos reservados.
  */
 
 #include "runtime.h"

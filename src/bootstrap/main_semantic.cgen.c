@@ -2,6 +2,7 @@
 /* Sections: includes, runtime helpers, string pool, type decls, prototypes, rituals, entry wrapper */
 /* backend = c_host */
 /* source = "src/bootstrap/main_semantic.cct" */
+/* Copyright (c) Erick Andrade Busato. Todos os direitos reservados. */
 
 /* ===== Includes ===== */
 #ifndef _DARWIN_C_SOURCE

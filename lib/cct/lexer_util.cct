@@ -2,6 +2,8 @@
 -- Standard Library Module: lexer_util
 --
 -- FASE 33B: Generic scanner utilities for parsers
+--
+-- Copyright (c) Erick Andrade Busato. Todos os direitos reservados.
 
 INCIPIT grimoire "lexer_util"
 

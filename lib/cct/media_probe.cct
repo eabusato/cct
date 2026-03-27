@@ -2,6 +2,8 @@
 -- Standard Library Module: media_probe
 --
 -- FASE 32H: Media metadata extraction via ffprobe
+--
+-- Copyright (c) Erick Andrade Busato. Todos os direitos reservados.
 
 INCIPIT grimoire "media_probe"
 

@@ -2,6 +2,8 @@
 -- Standard Library Module: metrics
 --
 -- FASE 34C: Metrics baseline
+--
+-- Copyright (c) Erick Andrade Busato. Todos os direitos reservados.
 
 INCIPIT grimoire "metrics"
 

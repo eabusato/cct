@@ -2,6 +2,8 @@
 -- Standard Library Module: context_local
 --
 -- FASE 38B: local request/task context
+--
+-- Copyright (c) Erick Andrade Busato. Todos os direitos reservados.
 
 INCIPIT grimoire "context_local"
 

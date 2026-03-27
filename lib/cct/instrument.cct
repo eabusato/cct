@@ -2,6 +2,8 @@
 -- Standard Library Module: instrument
 --
 -- FASE 38A: Runtime instrumentation baseline
+--
+-- Copyright (c) Erick Andrade Busato. Todos os direitos reservados.
 
 INCIPIT grimoire "instrument"
 

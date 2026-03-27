@@ -3,6 +3,8 @@
  * Runtime Regex Helper Emission
  *
  * FASE 32C: cct/regex host-runtime bridge
+ *
+ * Copyright (c) Erick Andrade Busato. Todos os direitos reservados.
  */
 
 #include "runtime.h"

@@ -2,6 +2,8 @@
 -- Standard Library Module: db_postgres
 --
 -- FASE 36A: PostgreSQL operational client
+--
+-- Copyright (c) Erick Andrade Busato. Todos os direitos reservados.
 
 INCIPIT grimoire "db_postgres"
 

@@ -2,6 +2,8 @@
 -- Standard Library Module: signal
 --
 -- FASE 34D: Signal baseline
+--
+-- Copyright (c) Erick Andrade Busato. Todos os direitos reservados.
 
 INCIPIT grimoire "signal"
 

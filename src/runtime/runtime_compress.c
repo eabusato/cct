@@ -3,6 +3,8 @@
  * Runtime Compression Helper Emission
  *
  * FASE 32F: cct/compress host-runtime bridge
+ *
+ * Copyright (c) Erick Andrade Busato. Todos os direitos reservados.
  */
 
 #include "runtime.h"

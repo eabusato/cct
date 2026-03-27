@@ -2,6 +2,8 @@
 -- Standard Library Module: text_lang
 --
 -- FASE 32J: Lightweight language detection heuristics
+--
+-- Copyright (c) Erick Andrade Busato. Todos os direitos reservados.
 
 INCIPIT grimoire "text_lang"
 

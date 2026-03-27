@@ -2,6 +2,8 @@
 -- Standard Library Module: mail_webhook
 --
 -- FASE 37C: Mail webhook parsing and MIME/header scanning
+--
+-- Copyright (c) Erick Andrade Busato. Todos os direitos reservados.
 
 INCIPIT grimoire "mail_webhook"
 

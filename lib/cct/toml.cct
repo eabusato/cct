@@ -2,6 +2,8 @@
 -- Standard Library Module: toml
 --
 -- FASE 32E: TOML parser/stringifier baseline
+--
+-- Copyright (c) Erick Andrade Busato. Todos os direitos reservados.
 
 INCIPIT grimoire "toml"
 

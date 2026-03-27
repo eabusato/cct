@@ -3,6 +3,8 @@
  * Runtime Filetype Helper Emission
  *
  * FASE 32G: cct/filetype host-runtime bridge
+ *
+ * Copyright (c) Erick Andrade Busato. Todos os direitos reservados.
  */
 
 #include "runtime.h"

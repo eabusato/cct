@@ -3,6 +3,8 @@
  * Runtime instrumentation helper emission
  *
  * FASE 38A: cct/instrument host-runtime bridge
+ *
+ * Copyright (c) Erick Andrade Busato. Todos os direitos reservados.
  */
 
 #include "runtime.h"

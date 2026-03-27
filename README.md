@@ -12,9 +12,9 @@ CCT is a compiled, ritual-themed programming language with deterministic sigil g
 </div>
 
 <div align="center">
-  <img src="examples/sigilo_creator_platform_39/creator_release_pipeline_39_step.svg" alt="CCT Trace Visualization — Creator Platform Step Mode" width="700"/>
-  <p><em>Step-by-step execution trace from the creator-platform example — open in a browser and drag the scrubber</em></p>
-  <p><sub>FASE 39: live trace correlation overlaid on the route sigil. Each span is color-coded by operational category (SQL, cache, storage, transcode, mail, auth…). Drag the knob at the bottom to advance one span at a time — nodes light up as active, completed spans dim, timeline lanes update in sync.</sub></p>
+  <img src="examples/sigilo_creator_platform_39/creator_release_pipeline_39_animated.svg" alt="CCT Trace Visualization — Creator Platform Animated Trace" width="700"/>
+  <p><em>Animated execution trace from the creator-platform example — open in a browser to watch it play</em></p>
+  <p><sub>FASE 39: live trace correlation overlaid on the route sigil. Each span is color-coded by operational category (SQL, cache, storage, transcode, mail, auth…) and arrives at its node in temporal order. The timeline below shows relative durations per depth layer. Slow spans glow; unresolved spans are never silently dropped.</sub></p>
 </div>
 
 ## Status

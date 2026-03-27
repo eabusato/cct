@@ -2,6 +2,8 @@
 -- Standard Library Module: compress
 --
 -- FASE 32F: gzip compression baseline
+--
+-- Copyright (c) Erick Andrade Busato. Todos os direitos reservados.
 
 INCIPIT grimoire "compress"
 

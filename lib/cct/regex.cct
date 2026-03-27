@@ -2,6 +2,8 @@
 -- Standard Library Module: regex
 --
 -- FASE 32C: Canonical regex baseline
+--
+-- Copyright (c) Erick Andrade Busato. Todos os direitos reservados.
 
 INCIPIT grimoire "regex"
 

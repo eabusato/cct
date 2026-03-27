@@ -2,6 +2,8 @@
 -- Standard Library Module: gettext
 --
 -- FASE 33E: PO catalog loading and translation helpers
+--
+-- Copyright (c) Erick Andrade Busato. Todos os direitos reservados.
 
 INCIPIT grimoire "gettext"
 
