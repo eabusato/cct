@@ -1,0 +1,45 @@
+INCIPIT grimoire "callback_invoke_fluxus_middleware_registry"
+
+ADVOCARE "cct/callback.cct"
+ADVOCARE "cct/fluxus.cct"
+
+SIGILLUM Context
+  total: REX
+FIN SIGILLUM
+
+SIGILLUM MiddlewareBinding
+  name: VERBUM
+  opaque_ref: SPECULUM NIHIL
+FIN SIGILLUM
+
+RITUALE terminal(Context ctx) REDDE REX
+  REDDE ctx.total
+EXPLICIT RITUALE
+
+RITUALE mw_add_one(Context ctx, SPECULUM NIHIL next) REDDE REX
+  REDDE CONIURA callback_invoke1 GENUS(Context, REX)(next, ctx) + 1
+EXPLICIT RITUALE
+
+RITUALE main() REDDE REX
+  EVOCA MiddlewareBinding binding
+  VINCIRE binding.name AD "mw_add_one"
+  VINCIRE binding.opaque_ref AD mw_add_one
+
+  EVOCA SPECULUM NIHIL pipeline AD CONIURA fluxus_init(MENSURA(MiddlewareBinding))
+  CONIURA fluxus_push(pipeline, SPECULUM binding)
+
+  EVOCA SPECULUM MiddlewareBinding first AD CONIURA fluxus_get(pipeline, 0)
+  EVOCA Context ctx
+  VINCIRE ctx.total AD 40
+  EVOCA SPECULUM NIHIL next_fn AD terminal
+
+  SI CONIURA callback_invoke2 GENUS(Context, SPECULUM NIHIL, REX)((*first).opaque_ref, ctx, next_fn) != 41
+    CONIURA fluxus_free(pipeline)
+    REDDE 50
+  FIN SI
+
+  CONIURA fluxus_free(pipeline)
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

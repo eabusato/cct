@@ -1,0 +1,47 @@
+INCIPIT grimoire "callback_invoke2_response_registry"
+
+ADVOCARE "cct/callback.cct"
+ADVOCARE "cct/verbum.cct"
+
+SIGILLUM Request
+  path: VERBUM
+  base_status: REX
+FIN SIGILLUM
+
+SIGILLUM Response
+  status: REX
+  body: VERBUM
+FIN SIGILLUM
+
+SIGILLUM RouteBinding
+  path: VERBUM
+  handler: SPECULUM NIHIL
+FIN SIGILLUM
+
+RITUALE handle_publish(Request req, REX extra_status) REDDE Response
+  EVOCA Response resp
+  VINCIRE resp.status AD req.base_status + extra_status
+  VINCIRE resp.body AD CONIURA concat("ok:", req.path)
+  REDDE resp
+EXPLICIT RITUALE
+
+RITUALE main() REDDE REX
+  EVOCA RouteBinding route
+  VINCIRE route.path AD "/publish"
+  VINCIRE route.handler AD handle_publish
+
+  EVOCA Request req
+  VINCIRE req.path AD "/publish"
+  VINCIRE req.base_status AD 200
+
+  EVOCA Response resp AD CONIURA callback_invoke2 GENUS(Request, REX, Response)(route.handler, req, 7)
+  SI resp.status != 207
+    REDDE 30
+  FIN SI
+  SI CONIURA compare(resp.body, "ok:/publish") != 0
+    REDDE 31
+  FIN SI
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

@@ -1,0 +1,92 @@
+-- CCT — Clavicula Turing
+-- Standard Library Module: callback
+--
+-- FASE 40X: Canonical ritual pointer invocation
+--
+-- Copyright (c) Erick Andrade Busato. Todos os direitos reservados.
+
+INCIPIT grimoire "callback"
+
+ADVOCARE "cct/mem.cct"
+
+RITUALE callback_invoke0 GENUS(R)(SPECULUM NIHIL fn) REDDE R
+  EVOCA SPECULUM NIHIL out AD OBSECRO callback_builtin_invoke0(fn)
+  EVOCA SPECULUM R view
+  VINCIRE view AD out
+  EVOCA R value AD *view
+  EVOCA SPECULUM REX raw
+  VINCIRE raw AD out
+  CONIURA free(raw)
+  REDDE value
+EXPLICIT RITUALE
+
+RITUALE callback_invoke1 GENUS(A1, R)(SPECULUM NIHIL fn, A1 a1) REDDE R
+  EVOCA SPECULUM NIHIL out AD OBSECRO callback_builtin_invoke1(fn, a1)
+  EVOCA SPECULUM R view
+  VINCIRE view AD out
+  EVOCA R value AD *view
+  EVOCA SPECULUM REX raw
+  VINCIRE raw AD out
+  CONIURA free(raw)
+  REDDE value
+EXPLICIT RITUALE
+
+RITUALE callback_invoke2 GENUS(A1, A2, R)(SPECULUM NIHIL fn, A1 a1, A2 a2) REDDE R
+  EVOCA SPECULUM NIHIL out AD OBSECRO callback_builtin_invoke2(fn, a1, a2)
+  EVOCA SPECULUM R view
+  VINCIRE view AD out
+  EVOCA R value AD *view
+  EVOCA SPECULUM REX raw
+  VINCIRE raw AD out
+  CONIURA free(raw)
+  REDDE value
+EXPLICIT RITUALE
+
+RITUALE callback_invoke3 GENUS(A1, A2, A3, R)(SPECULUM NIHIL fn, A1 a1, A2 a2, A3 a3) REDDE R
+  EVOCA SPECULUM NIHIL out AD OBSECRO callback_builtin_invoke3(fn, a1, a2, a3)
+  EVOCA SPECULUM R view
+  VINCIRE view AD out
+  EVOCA R value AD *view
+  EVOCA SPECULUM REX raw
+  VINCIRE raw AD out
+  CONIURA free(raw)
+  REDDE value
+EXPLICIT RITUALE
+
+RITUALE callback_invoke4 GENUS(A1, A2, A3, A4, R)(SPECULUM NIHIL fn, A1 a1, A2 a2, A3 a3, A4 a4) REDDE R
+  EVOCA SPECULUM NIHIL out AD OBSECRO callback_builtin_invoke4(fn, a1, a2, a3, a4)
+  EVOCA SPECULUM R view
+  VINCIRE view AD out
+  EVOCA R value AD *view
+  EVOCA SPECULUM REX raw
+  VINCIRE raw AD out
+  CONIURA free(raw)
+  REDDE value
+EXPLICIT RITUALE
+
+RITUALE callback_invoke0_void(SPECULUM NIHIL fn) REDDE NIHIL
+  OBSECRO callback_builtin_invoke0_void(fn)
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE callback_invoke1_void GENUS(A1)(SPECULUM NIHIL fn, A1 a1) REDDE NIHIL
+  OBSECRO callback_builtin_invoke1_void(fn, a1)
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE callback_invoke2_void GENUS(A1, A2)(SPECULUM NIHIL fn, A1 a1, A2 a2) REDDE NIHIL
+  OBSECRO callback_builtin_invoke2_void(fn, a1, a2)
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE callback_invoke3_void GENUS(A1, A2, A3)(SPECULUM NIHIL fn, A1 a1, A2 a2, A3 a3) REDDE NIHIL
+  OBSECRO callback_builtin_invoke3_void(fn, a1, a2, a3)
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE callback_invoke4_void GENUS(A1, A2, A3, A4)(SPECULUM NIHIL fn, A1 a1, A2 a2, A3 a3, A4 a4) REDDE NIHIL
+  OBSECRO callback_builtin_invoke4_void(fn, a1, a2, a3, a4)
+  REDDE
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

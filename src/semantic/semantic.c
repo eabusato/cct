@@ -493,6 +493,18 @@ static const char* sem_stdlib_import_hint(const char *name) {
         strcmp(name, "result_free") == 0) {
         return "add ADVOCARE \"cct/result.cct\" in the module header";
     }
+    if (strcmp(name, "callback_invoke0") == 0 ||
+        strcmp(name, "callback_invoke1") == 0 ||
+        strcmp(name, "callback_invoke2") == 0 ||
+        strcmp(name, "callback_invoke3") == 0 ||
+        strcmp(name, "callback_invoke4") == 0 ||
+        strcmp(name, "callback_invoke0_void") == 0 ||
+        strcmp(name, "callback_invoke1_void") == 0 ||
+        strcmp(name, "callback_invoke2_void") == 0 ||
+        strcmp(name, "callback_invoke3_void") == 0 ||
+        strcmp(name, "callback_invoke4_void") == 0) {
+        return "add ADVOCARE \"cct/callback.cct\" in the module header";
+    }
     if (strcmp(name, "map_init") == 0 ||
         strcmp(name, "map_free") == 0 ||
         strcmp(name, "map_insert") == 0 ||
@@ -1418,7 +1430,7 @@ static cct_sem_type_t* sem_resolve_ast_type(cct_semantic_analyzer_t *sem, const 
  * ======================================================================== */
 
 static const cct_sem_builtin_spec_t* sem_find_builtin(cct_semantic_analyzer_t *sem, const char *name) {
-static cct_sem_builtin_spec_t specs[467];
+static cct_sem_builtin_spec_t specs[477];
     static bool initialized = false;
 
     if (!initialized) {
@@ -1890,6 +1902,16 @@ static cct_sem_builtin_spec_t specs[467];
         specs[464].name = "obj_storage_builtin_head"; specs[464].min_args = 2; specs[464].variadic = false;
         specs[465].name = "obj_storage_builtin_delete"; specs[465].min_args = 2; specs[465].variadic = false;
         specs[466].name = "obj_storage_builtin_signed_url"; specs[466].min_args = 3; specs[466].variadic = false;
+        specs[467].name = "callback_builtin_invoke0"; specs[467].min_args = 1; specs[467].variadic = false;
+        specs[468].name = "callback_builtin_invoke1"; specs[468].min_args = 2; specs[468].variadic = false;
+        specs[469].name = "callback_builtin_invoke2"; specs[469].min_args = 3; specs[469].variadic = false;
+        specs[470].name = "callback_builtin_invoke3"; specs[470].min_args = 4; specs[470].variadic = false;
+        specs[471].name = "callback_builtin_invoke4"; specs[471].min_args = 5; specs[471].variadic = false;
+        specs[472].name = "callback_builtin_invoke0_void"; specs[472].min_args = 1; specs[472].variadic = false;
+        specs[473].name = "callback_builtin_invoke1_void"; specs[473].min_args = 2; specs[473].variadic = false;
+        specs[474].name = "callback_builtin_invoke2_void"; specs[474].min_args = 3; specs[474].variadic = false;
+        specs[475].name = "callback_builtin_invoke3_void"; specs[475].min_args = 4; specs[475].variadic = false;
+        specs[476].name = "callback_builtin_invoke4_void"; specs[476].min_args = 5; specs[476].variadic = false;
         initialized = true;
     }
 
@@ -2360,6 +2382,16 @@ static cct_sem_builtin_spec_t specs[467];
     specs[464].return_type = &sem->type_verum;
     specs[465].return_type = &sem->type_verum;
     specs[466].return_type = &sem->type_verbum;
+    specs[467].return_type = sem_make_pointer_type(sem, &sem->type_nihil);
+    specs[468].return_type = sem_make_pointer_type(sem, &sem->type_nihil);
+    specs[469].return_type = sem_make_pointer_type(sem, &sem->type_nihil);
+    specs[470].return_type = sem_make_pointer_type(sem, &sem->type_nihil);
+    specs[471].return_type = sem_make_pointer_type(sem, &sem->type_nihil);
+    specs[472].return_type = &sem->type_nihil;
+    specs[473].return_type = &sem->type_nihil;
+    specs[474].return_type = &sem->type_nihil;
+    specs[475].return_type = &sem->type_nihil;
+    specs[476].return_type = &sem->type_nihil;
 
     for (size_t i = 0; i < sizeof(specs) / sizeof(specs[0]); i++) {
         if (!specs[i].name) continue;
@@ -2768,7 +2800,7 @@ static cct_sem_type_t* sem_analyze_call_like_function(
                 cct_ast_type_t *ast_arg = type_args->types[i];
                 cct_sem_type_t *resolved = sem_resolve_ast_type(sem, ast_arg, call_node->line, call_node->column);
                 inst_type_args[i] = resolved;
-                if (ast_arg) {
+                if (ast_arg && !ast_arg->is_pointer) {
                     (void)sem_is_materializable_type_arg_10b(
                         sem, ast_arg, resolved, call_node->line, call_node->column
                     );
@@ -2915,6 +2947,12 @@ static cct_sem_type_t* sem_analyze_builtin_obsecro(
         }
         if (!arg_type) {
             arg_type = sem_analyze_expr(sem, arg_node);
+        }
+        if (strncmp(name, "callback_builtin_invoke", 23) == 0 &&
+            i == 0 &&
+            !(arg_type && (arg_type->kind == CCT_SEM_TYPE_POINTER || sem_is_error_type(arg_type)))) {
+            sem_report_nodef(sem, expr->as.obsecro.arguments->nodes[i],
+                             "OBSECRO %s expects callback pointer in first argument", name);
         }
         if (strcmp(name, "pete") == 0 && i == 0 && !sem_is_integer_type(arg_type)) {
             sem_report_nodef(sem, expr->as.obsecro.arguments->nodes[i],
@@ -4376,6 +4414,12 @@ static cct_sem_type_t* sem_analyze_expr_with_expected(
             return &sem->type_nihil;
 
         case AST_IDENTIFIER: {
+            if (expected && expected->kind == CCT_SEM_TYPE_POINTER && expr->as.identifier.name) {
+                cct_sem_symbol_t *sym = sem_lookup(sem, expr->as.identifier.name);
+                if (sym && sym->kind == CCT_SEM_SYMBOL_RITUALE) {
+                    return expected;
+                }
+            }
             cct_sem_type_t *id_type = sem_analyze_identifier_expr(sem, expr);
             const cct_ast_node_t *expected_ordo = sem_resolve_ordo_decl_from_type(sem, expected);
             if (expected_ordo && expected_ordo->as.ordo.has_payload && expr->as.identifier.name) {

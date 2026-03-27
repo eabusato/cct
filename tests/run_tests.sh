@@ -8524,7 +8524,7 @@ test_pass "public_docs_status_text_assertion_1723 desabilitado"
 fi
 
 fi
-if cct_phase_block_enabled "31" || cct_requested_phase_block "32" "$CCT_TEST_PHASES_NORMALIZED" || cct_requested_phase_block "33" "$CCT_TEST_PHASES_NORMALIZED"; then
+if cct_phase_block_enabled "31" || cct_requested_phase_block "32" "$CCT_TEST_PHASES_NORMALIZED" || cct_requested_phase_block "33" "$CCT_TEST_PHASES_NORMALIZED" || cct_requested_phase_block "CALLBACK" "$CCT_TEST_PHASES_NORMALIZED"; then
 echo ""
 echo "========================================"
 echo "FASE 31: Self-Hosted Compiler Promotion"
@@ -11985,6 +11985,49 @@ if [ "$RC_31_READY" -eq 0 ] && cct_phase32_copy_compile_and_run_env "$PHASE31_HO
     test_pass "cct/object_storage gera signed URL canonica no backend local"
 else
     test_fail "cct/object_storage nao gerou signed URL canonica no backend local"
+fi
+fi
+
+if cct_phase_block_enabled "CALLBACK"; then
+mkdir -p "$CCT_TMP_DIR/callback"
+echo "Test 2033: cct/callback invoca callback sem argumentos"
+BASE_2033="$CCT_TMP_DIR/callback/test_2033_invoke0"
+if [ -x "$CCT_BIN" ] && cct_phase32_copy_compile_and_run "$CCT_BIN" "tests/integration/callback_invoke0_basic.cct" "$BASE_2033" 0; then
+    test_pass "cct/callback invoca callback sem argumentos"
+else
+    test_fail "cct/callback nao invocou callback sem argumentos"
+fi
+
+echo "Test 2034: cct/callback invoca callback com SIGILLUM por valor"
+BASE_2034="$CCT_TMP_DIR/callback/test_2034_invoke1_struct"
+if [ -x "$CCT_BIN" ] && cct_phase32_copy_compile_and_run "$CCT_BIN" "tests/integration/callback_invoke1_struct.cct" "$BASE_2034" 0; then
+    test_pass "cct/callback invoca callback com SIGILLUM por valor"
+else
+    test_fail "cct/callback nao invocou callback com SIGILLUM por valor"
+fi
+
+echo "Test 2035: cct/callback despacha handler armazenado em registry"
+BASE_2035="$CCT_TMP_DIR/callback/test_2035_registry"
+if [ -x "$CCT_BIN" ] && cct_phase32_copy_compile_and_run "$CCT_BIN" "tests/integration/callback_invoke2_response_registry.cct" "$BASE_2035" 0; then
+    test_pass "cct/callback despacha handler armazenado em registry"
+else
+    test_fail "cct/callback nao despachou handler armazenado em registry"
+fi
+
+echo "Test 2036: cct/callback invoca callback void com mutacao"
+BASE_2036="$CCT_TMP_DIR/callback/test_2036_void"
+if [ -x "$CCT_BIN" ] && cct_phase32_copy_compile_and_run "$CCT_BIN" "tests/integration/callback_invoke1_void_mutation.cct" "$BASE_2036" 0; then
+    test_pass "cct/callback invoca callback void com mutacao"
+else
+    test_fail "cct/callback nao invocou callback void com mutacao"
+fi
+
+echo "Test 2037: cct/callback suporta pipeline tardio via FLUXUS"
+BASE_2037="$CCT_TMP_DIR/callback/test_2037_fluxus_pipeline"
+if [ -x "$CCT_BIN" ] && cct_phase32_copy_compile_and_run "$CCT_BIN" "tests/integration/callback_invoke_fluxus_middleware_registry.cct" "$BASE_2037" 0; then
+    test_pass "cct/callback suporta pipeline tardio via FLUXUS"
+else
+    test_fail "cct/callback nao suportou pipeline tardio via FLUXUS"
 fi
 fi
 

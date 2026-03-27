@@ -1435,6 +1435,41 @@ Current 12D.2 callback model:
 - runtime bridge currently supports word-sized callback payloads (canonical `REX`/`VERUM`/pointer-sized flows)
 - no closures in this subset (closure model remains for later phases)
 
+### 8.21.1 Canonical Callback Invocation Module (`cct/callback`)
+
+Import:
+
+```cct
+ADVOCARE "cct/callback.cct"
+```
+
+Available operations:
+- value-returning: `callback_invoke0..4 GENUS(...)`
+- void-returning: `callback_invoke0_void..4_void GENUS(...)`
+
+Public model:
+- named rituales can be stored in registries/pipelines as `SPECULUM NIHIL`
+- these pointers can later be invoked through `cct/callback`
+- generic ritual invokers accept named value arguments and pointer arguments
+- closures remain unsupported; callback state must be passed explicitly in arguments or registry data
+
+Canonical use:
+
+```cct
+SIGILLUM MiddlewareBinding
+  name: VERBUM
+  opaque_ref: SPECULUM NIHIL
+FIN SIGILLUM
+
+RITUALE next(Context ctx) REDDE Response
+  -- ...
+EXPLICIT RITUALE
+
+RITUALE middleware(Context ctx, SPECULUM NIHIL next_ref) REDDE Response
+  REDDE CONIURA callback_invoke1 GENUS(Context, Response)(next_ref, ctx)
+EXPLICIT RITUALE
+```
+
 ### 8.22 Canonical Showcase Usage Patterns (11G)
 
 Canonical showcase programs are part of the public stdlib contract:

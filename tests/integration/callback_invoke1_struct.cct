@@ -1,0 +1,23 @@
+INCIPIT grimoire "callback_invoke1_struct"
+
+ADVOCARE "cct/callback.cct"
+
+SIGILLUM Counter
+  value: REX
+FIN SIGILLUM
+
+RITUALE plus_five(Counter counter) REDDE REX
+  REDDE counter.value + 5
+EXPLICIT RITUALE
+
+RITUALE main() REDDE REX
+  EVOCA Counter counter
+  VINCIRE counter.value AD 7
+  EVOCA SPECULUM NIHIL fn AD plus_five
+  SI CONIURA callback_invoke1 GENUS(Counter, REX)(fn, counter) != 12
+    REDDE 20
+  FIN SI
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

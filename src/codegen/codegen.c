@@ -1893,6 +1893,7 @@ static const cct_ast_type_t* cg_expr_array_type(cct_codegen_t *cg, const cct_ast
 static const cct_ast_type_t* cg_expr_ast_type(cct_codegen_t *cg, const cct_ast_node_t *expr);
 static const char* cg_c_type_for_ast_type(cct_codegen_t *cg, const cct_ast_type_t *type);
 static const char* cg_c_type_for_return_kind(cct_codegen_value_kind_t kind);
+static void cg_emit_indent(FILE *out, int indent);
 
 static bool cg_emit_logical_chain(FILE *out,
                                   cct_codegen_t *cg,
@@ -2377,10 +2378,198 @@ static bool cg_emit_unary_expr(FILE *out, cct_codegen_t *cg, const cct_ast_node_
     return true;
 }
 
+static const char* cg_callback_expr_c_type(
+    cct_codegen_t *cg,
+    const cct_ast_node_t *expr,
+    cct_codegen_value_kind_t *kind_out
+) {
+    const cct_ast_type_t *ast_type = cg_expr_ast_type(cg, expr);
+    if (ast_type) {
+        if (kind_out) *kind_out = cg_value_kind_from_ast_type_codegen(cg, ast_type);
+        return cg_c_type_for_ast_type(cg, ast_type);
+    }
+
+    if (!expr) return NULL;
+
+    switch (expr->type) {
+        case AST_LITERAL_INT:
+            if (kind_out) *kind_out = CCT_CODEGEN_VALUE_INT;
+            return "long long";
+        case AST_LITERAL_BOOL:
+            if (kind_out) *kind_out = CCT_CODEGEN_VALUE_BOOL;
+            return "long long";
+        case AST_LITERAL_REAL:
+            if (kind_out) *kind_out = CCT_CODEGEN_VALUE_REAL;
+            return "double";
+        case AST_LITERAL_STRING:
+        case AST_MOLDE:
+            if (kind_out) *kind_out = CCT_CODEGEN_VALUE_STRING;
+            return "const char *";
+        case AST_CONIURA: {
+            cct_codegen_rituale_t *rit = NULL;
+            if (expr->as.coniura.type_args && expr->as.coniura.type_args->count > 0) {
+                rit = cg_materialize_generic_rituale_instance(
+                    cg, expr->as.coniura.name, expr->as.coniura.type_args, expr
+                );
+            } else {
+                rit = cg_find_rituale(cg, expr->as.coniura.name);
+            }
+            if (!rit || !rit->node || rit->node->type != AST_RITUALE) return NULL;
+            if (kind_out) *kind_out = rit->return_kind;
+            return cg_c_type_for_ast_type(cg, rit->node->as.rituale.return_type);
+        }
+        case AST_OBSECRO: {
+            if (strcmp(expr->as.obsecro.name, "callback_builtin_invoke0") == 0 ||
+                strcmp(expr->as.obsecro.name, "callback_builtin_invoke1") == 0 ||
+                strcmp(expr->as.obsecro.name, "callback_builtin_invoke2") == 0 ||
+                strcmp(expr->as.obsecro.name, "callback_builtin_invoke3") == 0 ||
+                strcmp(expr->as.obsecro.name, "callback_builtin_invoke4") == 0) {
+                if (kind_out) *kind_out = CCT_CODEGEN_VALUE_POINTER;
+                return "void *";
+            }
+            return NULL;
+        }
+        default:
+            return NULL;
+    }
+}
+
+static bool cg_emit_callback_invoke_expr(
+    FILE *out,
+    cct_codegen_t *cg,
+    const cct_ast_node_t *expr,
+    size_t expected_argc,
+    cct_codegen_value_kind_t *out_kind
+) {
+    cct_ast_node_list_t *args = expr->as.obsecro.arguments;
+    size_t argc = args ? args->count : 0;
+    const cct_ast_type_t *ret_type = cg->current_function_return_type;
+    const char *ret_c = NULL;
+    char *ret_slot_name = NULL;
+    char *ret_ptr_name = NULL;
+    cct_codegen_value_kind_t fn_kind = CCT_CODEGEN_VALUE_UNKNOWN;
+
+    if (argc != expected_argc + 1u) {
+        cg_report_nodef(cg, expr, "OBSECRO %s expects exactly %zu argument(s)", expr->as.obsecro.name, expected_argc + 1u);
+        return false;
+    }
+    if (!ret_type || cg_value_kind_from_ast_type_codegen(cg, ret_type) == CCT_CODEGEN_VALUE_NIHIL) {
+        cg_report_node(cg, expr, "callback invoke builtin requires non-NIHIL enclosing return type");
+        return false;
+    }
+    ret_c = cg_c_type_for_ast_type(cg, ret_type);
+    if (!ret_c) {
+        cg_report_node(cg, expr, "callback invoke return type is outside executable subset");
+        return false;
+    }
+
+    ret_slot_name = cg_strdup_printf("__cct_cb_ret_%u", cg->next_temp_id++);
+    ret_ptr_name = cg_strdup_printf("__cct_cb_out_%u", cg->next_temp_id++);
+
+    fputs("({ ", out);
+    fprintf(out, "%s %s = ((%s (*)(", ret_c, ret_slot_name, ret_c);
+    for (size_t i = 0; i < expected_argc; i++) {
+        cct_codegen_value_kind_t arg_kind = CCT_CODEGEN_VALUE_UNKNOWN;
+        const char *arg_c = cg_callback_expr_c_type(cg, args->nodes[i + 1u], &arg_kind);
+        if (!arg_c) {
+            cg_report_nodef(cg, args->nodes[i + 1u], "callback invoke argument %zu type is not resolvable for indirect call", i + 1u);
+            goto fail;
+        }
+        if (i > 0) fputs(", ", out);
+        fputs(arg_c, out);
+    }
+    fprintf(out, "))%s((void*)(", cct_cg_runtime_check_not_null_helper_name());
+    if (!cg_emit_expr(out, cg, args->nodes[0], &fn_kind)) goto fail;
+    if (fn_kind != CCT_CODEGEN_VALUE_POINTER) {
+        cg_report_node(cg, args->nodes[0], "callback invoke requires pointer callable in first argument");
+        goto fail;
+    }
+    fputs("), ", out);
+    cg_emit_c_escaped_string(out, "runtime-fail (bridged): null callback pointer");
+    fputs("))(", out);
+    for (size_t i = 0; i < expected_argc; i++) {
+        if (i > 0) fputs(", ", out);
+        if (!cg_emit_expr(out, cg, args->nodes[i + 1u], NULL)) goto fail;
+    }
+    fprintf(out, "); %s * %s = (%s *)%s((size_t)sizeof(%s)); *%s = %s; (void*)%s; })",
+            ret_c, ret_ptr_name, ret_c, cct_cg_runtime_alloc_helper_name(), ret_c, ret_ptr_name, ret_slot_name, ret_ptr_name);
+    if (out_kind) *out_kind = CCT_CODEGEN_VALUE_POINTER;
+
+    free(ret_slot_name);
+    free(ret_ptr_name);
+    return true;
+
+fail:
+    free(ret_slot_name);
+    free(ret_ptr_name);
+    return false;
+}
+
+static bool cg_emit_callback_invoke_stmt(
+    FILE *out,
+    cct_codegen_t *cg,
+    const cct_ast_node_t *obsecro_node,
+    int indent,
+    size_t expected_argc
+) {
+    cct_ast_node_list_t *args = obsecro_node->as.obsecro.arguments;
+    size_t argc = args ? args->count : 0;
+    cct_codegen_value_kind_t fn_kind = CCT_CODEGEN_VALUE_UNKNOWN;
+
+    if (argc != expected_argc + 1u) {
+        cg_report_nodef(cg, obsecro_node, "OBSECRO %s expects exactly %zu argument(s)", obsecro_node->as.obsecro.name, expected_argc + 1u);
+        return false;
+    }
+
+    cg_emit_indent(out, indent);
+    fputs("((void (*)(", out);
+    for (size_t i = 0; i < expected_argc; i++) {
+        cct_codegen_value_kind_t arg_kind = CCT_CODEGEN_VALUE_UNKNOWN;
+        const char *arg_c = cg_callback_expr_c_type(cg, args->nodes[i + 1u], &arg_kind);
+        if (!arg_c) {
+            cg_report_nodef(cg, args->nodes[i + 1u], "callback invoke argument %zu type is not resolvable for indirect call", i + 1u);
+            return false;
+        }
+        if (i > 0) fputs(", ", out);
+        fputs(arg_c, out);
+    }
+    fprintf(out, "))%s((void*)(", cct_cg_runtime_check_not_null_helper_name());
+    if (!cg_emit_expr(out, cg, args->nodes[0], &fn_kind)) return false;
+    if (fn_kind != CCT_CODEGEN_VALUE_POINTER) {
+        cg_report_node(cg, args->nodes[0], "callback invoke requires pointer callable in first argument");
+        return false;
+    }
+    fputs("), ", out);
+    cg_emit_c_escaped_string(out, "runtime-fail (bridged): null callback pointer");
+    fputs("))(", out);
+    for (size_t i = 0; i < expected_argc; i++) {
+        if (i > 0) fputs(", ", out);
+        if (!cg_emit_expr(out, cg, args->nodes[i + 1u], NULL)) return false;
+    }
+    fputs(");\n", out);
+    return true;
+}
+
 static bool cg_emit_obsecro_expr(FILE *out, cct_codegen_t *cg, const cct_ast_node_t *expr, cct_codegen_value_kind_t *out_kind) {
     const char *name = expr->as.obsecro.name;
     cct_ast_node_list_t *args = expr->as.obsecro.arguments;
     size_t argc = args ? args->count : 0;
+
+    if (strcmp(name, "callback_builtin_invoke0") == 0) {
+        return cg_emit_callback_invoke_expr(out, cg, expr, 0u, out_kind);
+    }
+    if (strcmp(name, "callback_builtin_invoke1") == 0) {
+        return cg_emit_callback_invoke_expr(out, cg, expr, 1u, out_kind);
+    }
+    if (strcmp(name, "callback_builtin_invoke2") == 0) {
+        return cg_emit_callback_invoke_expr(out, cg, expr, 2u, out_kind);
+    }
+    if (strcmp(name, "callback_builtin_invoke3") == 0) {
+        return cg_emit_callback_invoke_expr(out, cg, expr, 3u, out_kind);
+    }
+    if (strcmp(name, "callback_builtin_invoke4") == 0) {
+        return cg_emit_callback_invoke_expr(out, cg, expr, 4u, out_kind);
+    }
 
     if (strcmp(name, "verbum_len") == 0) {
         if (argc != 1) {
@@ -9153,6 +9342,22 @@ static bool cg_emit_scribe_stmt(FILE *out, cct_codegen_t *cg, const cct_ast_node
         return true;
     }
 
+    if (strcmp(obsecro_node->as.obsecro.name, "callback_builtin_invoke0_void") == 0) {
+        return cg_emit_callback_invoke_stmt(out, cg, obsecro_node, indent, 0u);
+    }
+    if (strcmp(obsecro_node->as.obsecro.name, "callback_builtin_invoke1_void") == 0) {
+        return cg_emit_callback_invoke_stmt(out, cg, obsecro_node, indent, 1u);
+    }
+    if (strcmp(obsecro_node->as.obsecro.name, "callback_builtin_invoke2_void") == 0) {
+        return cg_emit_callback_invoke_stmt(out, cg, obsecro_node, indent, 2u);
+    }
+    if (strcmp(obsecro_node->as.obsecro.name, "callback_builtin_invoke3_void") == 0) {
+        return cg_emit_callback_invoke_stmt(out, cg, obsecro_node, indent, 3u);
+    }
+    if (strcmp(obsecro_node->as.obsecro.name, "callback_builtin_invoke4_void") == 0) {
+        return cg_emit_callback_invoke_stmt(out, cg, obsecro_node, indent, 4u);
+    }
+
     if (strcmp(obsecro_node->as.obsecro.name, "regex_builtin_free") == 0) {
         cct_ast_node_list_t *args = obsecro_node->as.obsecro.arguments;
         if (!args || args->count != 1) {
@@ -9427,7 +9632,7 @@ static bool cg_emit_scribe_stmt(FILE *out, cct_codegen_t *cg, const cct_ast_node
     }
 
     if (strcmp(obsecro_node->as.obsecro.name, "scribe") != 0) {
-        cg_report_nodef(cg, obsecro_node, "OBSECRO %s codegen is not supported in current executable subset (supported stmt builtins: scribe, libera, mem_free, mem_copy, mem_set, mem_zero, kernel_halt, kernel_outb, kernel_memcpy, kernel_memset, fluxus_free, fluxus_push, fluxus_pop, fluxus_clear, fluxus_reserve, fluxus_set, fluxus_remove, fluxus_insert, fluxus_reverse, fluxus_sort_int, fluxus_sort_verbum, alg_sort_verbum, json_arr_handle_push, json_obj_handle_push, sock_connect, sock_bind, sock_listen, sock_close, sock_set_timeout_ms, db_exec, db_close, rows_close, stmt_bind_text, stmt_bind_int, stmt_bind_real, stmt_reset, stmt_finalize, db_begin, db_commit, db_rollback, map_free, map_insert, map_clear, map_reserve, map_merge, set_free, set_clear, set_reserve, io_print, io_println, io_print_int, io_print_real, io_print_char, io_eprint, io_eprintln, io_eprint_int, io_eprint_real, io_flush, io_flush_err, fs_write_all, fs_append_all, fs_mkdir, fs_mkdir_all, fs_delete_file, fs_delete_dir, fs_rename, fs_copy, fs_move, fs_chmod, fs_truncate, fs_symlink, random_seed, time_sleep_ms, bytes_set, bytes_free, option_free, result_free, regex_builtin_free, image_builtin_free, scan_free, builder_append, builder_append_char, builder_clear, builder_free, writer_indent, writer_dedent, writer_write, writer_writeln, writer_free, instr_builtin_enable, instr_builtin_disable, instr_builtin_span_end, instr_builtin_span_attr, instr_builtin_event, instr_builtin_buffer_clear, instr_builtin_buffer_discard_closed, zip_builtin_close, obj_storage_builtin_close)",
+        cg_report_nodef(cg, obsecro_node, "OBSECRO %s codegen is not supported in current executable subset (supported stmt builtins: scribe, libera, mem_free, mem_copy, mem_set, mem_zero, kernel_halt, kernel_outb, kernel_memcpy, kernel_memset, fluxus_free, fluxus_push, fluxus_pop, fluxus_clear, fluxus_reserve, fluxus_set, fluxus_remove, fluxus_insert, fluxus_reverse, fluxus_sort_int, fluxus_sort_verbum, alg_sort_verbum, json_arr_handle_push, json_obj_handle_push, sock_connect, sock_bind, sock_listen, sock_close, sock_set_timeout_ms, db_exec, db_close, rows_close, stmt_bind_text, stmt_bind_int, stmt_bind_real, stmt_reset, stmt_finalize, db_begin, db_commit, db_rollback, map_free, map_insert, map_clear, map_reserve, map_merge, set_free, set_clear, set_reserve, io_print, io_println, io_print_int, io_print_real, io_print_char, io_eprint, io_eprintln, io_eprint_int, io_eprint_real, io_flush, io_flush_err, fs_write_all, fs_append_all, fs_mkdir, fs_mkdir_all, fs_delete_file, fs_delete_dir, fs_rename, fs_copy, fs_move, fs_chmod, fs_truncate, fs_symlink, random_seed, time_sleep_ms, bytes_set, bytes_free, option_free, result_free, callback_builtin_invoke0_void, callback_builtin_invoke1_void, callback_builtin_invoke2_void, callback_builtin_invoke3_void, callback_builtin_invoke4_void, regex_builtin_free, image_builtin_free, scan_free, builder_append, builder_append_char, builder_clear, builder_free, writer_indent, writer_dedent, writer_write, writer_writeln, writer_free, instr_builtin_enable, instr_builtin_disable, instr_builtin_span_end, instr_builtin_span_attr, instr_builtin_event, instr_builtin_buffer_clear, instr_builtin_buffer_discard_closed, zip_builtin_close, obj_storage_builtin_close)",
                         obsecro_node->as.obsecro.name);
         return false;
     }

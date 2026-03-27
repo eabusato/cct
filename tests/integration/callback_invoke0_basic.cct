@@ -1,0 +1,17 @@
+INCIPIT grimoire "callback_invoke0_basic"
+
+ADVOCARE "cct/callback.cct"
+
+RITUALE answer() REDDE REX
+  REDDE 42
+EXPLICIT RITUALE
+
+RITUALE main() REDDE REX
+  EVOCA SPECULUM NIHIL fn AD answer
+  SI CONIURA callback_invoke0 GENUS(REX)(fn) != 42
+    REDDE 10
+  FIN SI
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

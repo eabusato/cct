@@ -1,0 +1,25 @@
+INCIPIT grimoire "callback_invoke1_void_mutation"
+
+ADVOCARE "cct/callback.cct"
+
+SIGILLUM Counter
+  value: REX
+FIN SIGILLUM
+
+RITUALE increment(SPECULUM Counter counter) REDDE NIHIL
+  VINCIRE (*counter).value AD (*counter).value + 1
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE main() REDDE REX
+  EVOCA Counter counter
+  VINCIRE counter.value AD 9
+  EVOCA SPECULUM NIHIL fn AD increment
+  CONIURA callback_invoke1_void GENUS(SPECULUM Counter)(fn, SPECULUM counter)
+  SI counter.value != 10
+    REDDE 40
+  FIN SI
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire
