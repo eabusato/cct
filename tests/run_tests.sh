@@ -11533,8 +11533,11 @@ fi
 echo "Test 1993A: sigilo trace render animado suporta loop opcional"
 SVG_1993A="$CCT_TMP_DIR/phase39a/test_1993a_animated_loop.svg"
 if [ "$TRACE39A_SIGIL_READY" -eq 0 ] && "$PHASE31_HOST_WRAPPER" sigilo trace render --loop --trace "tests/integration/sigilo_trace_nested_39a.ctrace" --sigil "$TRACE39A_SIGIL" --out "$SVG_1993A" >"$PHASE31_LOG_DIR/test_1993a.stdout.log" 2>"$PHASE31_LOG_DIR/test_1993a.stderr.log" && \
+   rg -q 'id="trace-loop-clock"' "$SVG_1993A" && \
    rg -q 'repeatCount="indefinite"' "$SVG_1993A" && \
-   rg -q '>loop on<' "$SVG_1993A"; then
+   rg -q 'begin="trace-loop-clock\.begin\+[0-9]+\.[0-9]{2}s"' "$SVG_1993A" && \
+   rg -q '>loop on<' "$SVG_1993A" && \
+   ! rg -q 'animateMotion[^>]*repeatCount="indefinite"' "$SVG_1993A"; then
     test_pass "sigilo trace render animado suporta loop opcional"
 else
     test_fail "sigilo trace render animado nao suportou loop opcional"
