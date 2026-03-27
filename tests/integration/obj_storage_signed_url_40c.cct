@@ -1,0 +1,47 @@
+INCIPIT grimoire "obj_storage_signed_url_40c"
+
+ADVOCARE "cct/env.cct"
+ADVOCARE "cct/object_storage.cct"
+ADVOCARE "cct/result.cct"
+ADVOCARE "cct/verbum.cct"
+
+RITUALE obj_client_from_env() REDDE SPECULUM NIHIL
+  EVOCA ObjectStorageOptions opts AD CONIURA object_storage_default_options(
+    CONIURA getenv("APP_OBJ_STORAGE_ENDPOINT"),
+    CONIURA getenv("APP_OBJ_STORAGE_BUCKET"),
+    CONIURA getenv("APP_OBJ_STORAGE_ACCESS_KEY"),
+    CONIURA getenv("APP_OBJ_STORAGE_SECRET_KEY")
+  )
+  VINCIRE opts.region AD CONIURA getenv("APP_OBJ_STORAGE_REGION")
+  REDDE CONIURA object_storage_open(opts)
+EXPLICIT RITUALE
+
+RITUALE main() REDDE REX
+  SI NON CONIURA has_env("APP_OBJ_STORAGE_ENDPOINT")
+    REDDE 0
+  FIN SI
+
+  EVOCA SPECULUM NIHIL opened AD CONIURA obj_client_from_env()
+  SI NON CONIURA result_is_ok GENUS(ObjectStorageClient, VERBUM)(opened)
+    REDDE 180
+  FIN SI
+  EVOCA ObjectStorageClient client AD CONIURA result_unwrap GENUS(ObjectStorageClient, VERBUM)(opened)
+  SI NON CONIURA result_is_ok GENUS(ObjectRef, VERBUM)(CONIURA object_storage_put_text(client, "phase40c/signed.txt", "signed", "text/plain"))
+    REDDE 181
+  FIN SI
+  EVOCA SPECULUM NIHIL signed_res AD CONIURA object_storage_signed_url(client, "phase40c/signed.txt", 120)
+  SI NON CONIURA result_is_ok GENUS(SignedUrl, VERBUM)(signed_res)
+    REDDE 182
+  FIN SI
+  EVOCA SignedUrl signed_url AD CONIURA result_unwrap GENUS(SignedUrl, VERBUM)(signed_res)
+  SI NON CONIURA contains(signed_url.url, "expires=")
+    REDDE 183
+  FIN SI
+  SI CONIURA len(signed_url.expires_at_iso) == 0
+    REDDE 184
+  FIN SI
+  CONIURA object_storage_close(SPECULUM client)
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

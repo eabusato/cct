@@ -35,6 +35,9 @@ typedef struct {
     bool emit_postgres_helpers;
     bool emit_mail_helpers;
     bool emit_instrument_helpers;
+    bool emit_media_store_helpers;
+    bool emit_archive_zip_helpers;
+    bool emit_object_storage_helpers;
     bool emit_verbum_helpers;
     bool emit_fmt_helpers;
     bool emit_db_helpers;
@@ -57,5 +60,8 @@ bool cct_runtime_emit_signal_helpers(FILE *out);
 bool cct_runtime_emit_postgres_helpers(FILE *out);
 bool cct_runtime_emit_mail_helpers(FILE *out);
 bool cct_runtime_emit_instrument_helpers(FILE *out);
+bool cct_runtime_emit_media_store_helpers(FILE *out);
+bool cct_runtime_emit_archive_zip_helpers(FILE *out);
+bool cct_runtime_emit_object_storage_helpers(FILE *out);
 
 #endif /* CCT_RUNTIME_H */

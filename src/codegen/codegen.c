@@ -486,8 +486,8 @@ static cct_codegen_local_kind_t cg_local_kind_from_ast_type(const cct_ast_type_t
     if (type->is_pointer) {
         const cct_ast_type_t *elem = type->element_type;
         if (!elem || elem->is_pointer || elem->is_array || !elem->name) return CCT_CODEGEN_LOCAL_UNSUPPORTED;
-        if (strcmp(elem->name, "VERBUM") == 0) {
-            return CCT_CODEGEN_LOCAL_UNSUPPORTED; /* keep outside subset for now */
+        if (strcmp(elem->name, "VERBUM") == 0 || strcmp(elem->name, "FRACTUM") == 0) {
+            return CCT_CODEGEN_LOCAL_UNSUPPORTED;
         }
         if (strcmp(elem->name, "REX") == 0 ||
             strcmp(elem->name, "DUX") == 0 ||
@@ -546,6 +546,13 @@ static cct_codegen_local_kind_t cg_local_kind_from_ast_type(const cct_ast_type_t
 
     /* Named types are handled later (SIGILLUM / ORDO) after registry exists. */
     return CCT_CODEGEN_LOCAL_STRUCT;
+}
+
+static bool cg_is_string_pointer_ast_type(const cct_ast_type_t *type) {
+    return type && type->is_pointer && type->element_type && type->element_type->name &&
+           !type->element_type->is_pointer && !type->element_type->is_array &&
+           (strcmp(type->element_type->name, "VERBUM") == 0 ||
+            strcmp(type->element_type->name, "FRACTUM") == 0);
 }
 
 static bool cg_is_entry_rituale_name(const char *name) {
@@ -4339,6 +4346,365 @@ static bool cg_emit_obsecro_expr(FILE *out, cct_codegen_t *cg, const cct_ast_nod
         }
     }
 
+    if (strncmp(name, "media_store_builtin_", 20) == 0) {
+        cg->uses_media_store = true;
+        cg->uses_crypto = true;
+        if (strcmp(name, "media_store_builtin_last_error") == 0) {
+            if (argc != 0) {
+                cg_report_node(cg, expr, "OBSECRO media_store_builtin_last_error expects no arguments in FASE 40A");
+                return false;
+            }
+            fputs("cct_rt_media_store_last_error()", out);
+            if (out_kind) *out_kind = CCT_CODEGEN_VALUE_STRING;
+            return true;
+        }
+        if (strcmp(name, "media_store_builtin_sha256_file") == 0) {
+            cct_codegen_value_kind_t k = CCT_CODEGEN_VALUE_UNKNOWN;
+            if (argc != 1) {
+                cg_report_node(cg, expr, "OBSECRO media_store_builtin_sha256_file expects exactly one VERBUM argument in FASE 40A");
+                return false;
+            }
+            fputs("cct_rt_media_store_sha256_file(", out);
+            if (!cg_emit_expr(out, cg, args->nodes[0], &k)) return false;
+            if (k != CCT_CODEGEN_VALUE_STRING) {
+                cg_report_node(cg, args->nodes[0], "OBSECRO media_store_builtin_sha256_file requires VERBUM path argument in FASE 40A");
+                return false;
+            }
+            fputs(")", out);
+            if (out_kind) *out_kind = CCT_CODEGEN_VALUE_STRING;
+            return true;
+        }
+    }
+
+    if (strncmp(name, "zip_builtin_", 12) == 0) {
+        cg->uses_archive_zip = true;
+        if (strcmp(name, "zip_builtin_last_error") == 0) {
+            if (argc != 0) {
+                cg_report_node(cg, expr, "OBSECRO zip_builtin_last_error expects no arguments in FASE 40B");
+                return false;
+            }
+            fputs("cct_rt_zip_last_error()", out);
+            if (out_kind) *out_kind = CCT_CODEGEN_VALUE_STRING;
+            return true;
+        }
+        if (strcmp(name, "zip_builtin_create") == 0 || strcmp(name, "zip_builtin_open") == 0) {
+            cct_codegen_value_kind_t k = CCT_CODEGEN_VALUE_UNKNOWN;
+            if (argc != 1) {
+                cg_report_nodef(cg, expr, "OBSECRO %s expects exactly one VERBUM path argument in FASE 40B", name);
+                return false;
+            }
+            fprintf(out, "((void*)%s(", strcmp(name, "zip_builtin_create") == 0 ? "cct_rt_zip_create" : "cct_rt_zip_open");
+            if (!cg_emit_expr(out, cg, args->nodes[0], &k)) return false;
+            if (k != CCT_CODEGEN_VALUE_STRING) {
+                cg_report_nodef(cg, args->nodes[0], "OBSECRO %s requires VERBUM path argument in FASE 40B", name);
+                return false;
+            }
+            fputs("))", out);
+            if (out_kind) *out_kind = CCT_CODEGEN_VALUE_POINTER;
+            return true;
+        }
+        if (strcmp(name, "zip_builtin_add_file") == 0 || strcmp(name, "zip_builtin_add_text") == 0) {
+            cct_codegen_value_kind_t k0 = CCT_CODEGEN_VALUE_UNKNOWN;
+            cct_codegen_value_kind_t k1 = CCT_CODEGEN_VALUE_UNKNOWN;
+            cct_codegen_value_kind_t k2 = CCT_CODEGEN_VALUE_UNKNOWN;
+            if (argc != 3) {
+                cg_report_nodef(cg, expr, "OBSECRO %s expects exactly three arguments in FASE 40B", name);
+                return false;
+            }
+            fprintf(out, "%s((void*)(", strcmp(name, "zip_builtin_add_file") == 0 ? "cct_rt_zip_add_file" : "cct_rt_zip_add_text");
+            if (!cg_emit_expr(out, cg, args->nodes[0], &k0)) return false;
+            if (k0 != CCT_CODEGEN_VALUE_POINTER) {
+                cg_report_nodef(cg, args->nodes[0], "OBSECRO %s requires archive pointer as first argument in FASE 40B", name);
+                return false;
+            }
+            fputs("), ", out);
+            if (!cg_emit_expr(out, cg, args->nodes[1], &k1)) return false;
+            if (k1 != CCT_CODEGEN_VALUE_STRING) {
+                cg_report_nodef(cg, args->nodes[1], "OBSECRO %s requires VERBUM as second argument in FASE 40B", name);
+                return false;
+            }
+            fputs(", ", out);
+            if (!cg_emit_expr(out, cg, args->nodes[2], &k2)) return false;
+            if (k2 != CCT_CODEGEN_VALUE_STRING) {
+                cg_report_nodef(cg, args->nodes[2], "OBSECRO %s requires VERBUM as third argument in FASE 40B", name);
+                return false;
+            }
+            fputs(")", out);
+            if (out_kind) *out_kind = CCT_CODEGEN_VALUE_BOOL;
+            return true;
+        }
+        if (strcmp(name, "zip_builtin_entry_count") == 0) {
+            cct_codegen_value_kind_t k = CCT_CODEGEN_VALUE_UNKNOWN;
+            if (argc != 1) {
+                cg_report_node(cg, expr, "OBSECRO zip_builtin_entry_count expects exactly one archive pointer in FASE 40B");
+                return false;
+            }
+            fputs("cct_rt_zip_entry_count((void*)(", out);
+            if (!cg_emit_expr(out, cg, args->nodes[0], &k)) return false;
+            if (k != CCT_CODEGEN_VALUE_POINTER) {
+                cg_report_node(cg, args->nodes[0], "OBSECRO zip_builtin_entry_count requires archive pointer in FASE 40B");
+                return false;
+            }
+            fputs("))", out);
+            if (out_kind) *out_kind = CCT_CODEGEN_VALUE_INT;
+            return true;
+        }
+        if (strcmp(name, "zip_builtin_entry_name") == 0 || strcmp(name, "zip_builtin_entry_size") == 0 || strcmp(name, "zip_builtin_entry_is_dir") == 0) {
+            cct_codegen_value_kind_t k0 = CCT_CODEGEN_VALUE_UNKNOWN;
+            cct_codegen_value_kind_t k1 = CCT_CODEGEN_VALUE_UNKNOWN;
+            if (argc != 2) {
+                cg_report_nodef(cg, expr, "OBSECRO %s expects exactly (archive, index) in FASE 40B", name);
+                return false;
+            }
+            if (strcmp(name, "zip_builtin_entry_name") == 0) fputs("cct_rt_zip_entry_name((void*)(", out);
+            else if (strcmp(name, "zip_builtin_entry_size") == 0) fputs("cct_rt_zip_entry_size((void*)(", out);
+            else fputs("cct_rt_zip_entry_is_dir((void*)(", out);
+            if (!cg_emit_expr(out, cg, args->nodes[0], &k0)) return false;
+            if (k0 != CCT_CODEGEN_VALUE_POINTER) {
+                cg_report_nodef(cg, args->nodes[0], "OBSECRO %s requires archive pointer in FASE 40B", name);
+                return false;
+            }
+            fputs("), (long long)(", out);
+            if (!cg_emit_expr(out, cg, args->nodes[1], &k1)) return false;
+            if (!(k1 == CCT_CODEGEN_VALUE_INT || k1 == CCT_CODEGEN_VALUE_BOOL)) {
+                cg_report_nodef(cg, args->nodes[1], "OBSECRO %s requires integer index in FASE 40B", name);
+                return false;
+            }
+            fputs("))", out);
+            if (out_kind) {
+                if (strcmp(name, "zip_builtin_entry_name") == 0) *out_kind = CCT_CODEGEN_VALUE_STRING;
+                else if (strcmp(name, "zip_builtin_entry_size") == 0) *out_kind = CCT_CODEGEN_VALUE_INT;
+                else *out_kind = CCT_CODEGEN_VALUE_BOOL;
+            }
+            return true;
+        }
+        if (strcmp(name, "zip_builtin_read_text") == 0) {
+            cct_codegen_value_kind_t k0 = CCT_CODEGEN_VALUE_UNKNOWN;
+            cct_codegen_value_kind_t k1 = CCT_CODEGEN_VALUE_UNKNOWN;
+            if (argc != 2) {
+                cg_report_node(cg, expr, "OBSECRO zip_builtin_read_text expects exactly (archive, entry_name) in FASE 40B");
+                return false;
+            }
+            fputs("cct_rt_zip_read_text((void*)(", out);
+            if (!cg_emit_expr(out, cg, args->nodes[0], &k0)) return false;
+            if (k0 != CCT_CODEGEN_VALUE_POINTER) {
+                cg_report_node(cg, args->nodes[0], "OBSECRO zip_builtin_read_text requires archive pointer in FASE 40B");
+                return false;
+            }
+            fputs("), ", out);
+            if (!cg_emit_expr(out, cg, args->nodes[1], &k1)) return false;
+            if (k1 != CCT_CODEGEN_VALUE_STRING) {
+                cg_report_node(cg, args->nodes[1], "OBSECRO zip_builtin_read_text requires VERBUM entry_name in FASE 40B");
+                return false;
+            }
+            fputs(")", out);
+            if (out_kind) *out_kind = CCT_CODEGEN_VALUE_STRING;
+            return true;
+        }
+        if (strcmp(name, "zip_builtin_extract_all") == 0 || strcmp(name, "zip_builtin_extract_entry") == 0) {
+            cct_codegen_value_kind_t kinds[4] = {0};
+            if ((strcmp(name, "zip_builtin_extract_all") == 0 && argc != 3) ||
+                (strcmp(name, "zip_builtin_extract_entry") == 0 && argc != 4)) {
+                cg_report_nodef(cg, expr, "OBSECRO %s recebeu quantidade invalida de argumentos em FASE 40B", name);
+                return false;
+            }
+            if (strcmp(name, "zip_builtin_extract_all") == 0) fputs("cct_rt_zip_extract_all((void*)(", out);
+            else fputs("cct_rt_zip_extract_entry((void*)(", out);
+            if (!cg_emit_expr(out, cg, args->nodes[0], &kinds[0])) return false;
+            if (kinds[0] != CCT_CODEGEN_VALUE_POINTER) {
+                cg_report_nodef(cg, args->nodes[0], "OBSECRO %s requires archive pointer in FASE 40B", name);
+                return false;
+            }
+            fputs(")", out);
+            if (strcmp(name, "zip_builtin_extract_all") == 0) {
+                fputs(", ", out);
+                if (!cg_emit_expr(out, cg, args->nodes[1], &kinds[1])) return false;
+                if (kinds[1] != CCT_CODEGEN_VALUE_STRING) {
+                    cg_report_node(cg, args->nodes[1], "OBSECRO zip_builtin_extract_all requires VERBUM output_dir in FASE 40B");
+                    return false;
+                }
+                fputs(", ", out);
+                if (!cg_emit_expr(out, cg, args->nodes[2], &kinds[2])) return false;
+                if (kinds[2] != CCT_CODEGEN_VALUE_BOOL) {
+                    cg_report_node(cg, args->nodes[2], "OBSECRO zip_builtin_extract_all requires VERUM overwrite in FASE 40B");
+                    return false;
+                }
+            } else {
+                fputs(", ", out);
+                if (!cg_emit_expr(out, cg, args->nodes[1], &kinds[1])) return false;
+                if (kinds[1] != CCT_CODEGEN_VALUE_STRING) {
+                    cg_report_node(cg, args->nodes[1], "OBSECRO zip_builtin_extract_entry requires VERBUM entry_name in FASE 40B");
+                    return false;
+                }
+                fputs(", ", out);
+                if (!cg_emit_expr(out, cg, args->nodes[2], &kinds[2])) return false;
+                if (kinds[2] != CCT_CODEGEN_VALUE_STRING) {
+                    cg_report_node(cg, args->nodes[2], "OBSECRO zip_builtin_extract_entry requires VERBUM output_dir in FASE 40B");
+                    return false;
+                }
+                fputs(", ", out);
+                if (!cg_emit_expr(out, cg, args->nodes[3], &kinds[3])) return false;
+                if (kinds[3] != CCT_CODEGEN_VALUE_BOOL) {
+                    cg_report_node(cg, args->nodes[3], "OBSECRO zip_builtin_extract_entry requires VERUM overwrite in FASE 40B");
+                    return false;
+                }
+            }
+            fputs(")", out);
+            if (out_kind) *out_kind = CCT_CODEGEN_VALUE_BOOL;
+            return true;
+        }
+    }
+
+    if (strncmp(name, "obj_storage_builtin_", 20) == 0) {
+        cg->uses_object_storage = true;
+        cg->uses_crypto = true;
+        if (strcmp(name, "obj_storage_builtin_last_error") == 0 ||
+            strcmp(name, "obj_storage_builtin_last_content_type") == 0 ||
+            strcmp(name, "obj_storage_builtin_last_etag") == 0 ||
+            strcmp(name, "obj_storage_builtin_last_signed_expires_at") == 0) {
+            if (argc != 0) {
+                cg_report_nodef(cg, expr, "OBSECRO %s expects no arguments in FASE 40C", name);
+                return false;
+            }
+            if (strcmp(name, "obj_storage_builtin_last_error") == 0) fputs("cct_rt_obj_last_error()", out);
+            else if (strcmp(name, "obj_storage_builtin_last_content_type") == 0) fputs("cct_rt_obj_last_content_type_value()", out);
+            else if (strcmp(name, "obj_storage_builtin_last_etag") == 0) fputs("cct_rt_obj_last_etag_value()", out);
+            else fputs("cct_rt_obj_last_signed_expires_at_value()", out);
+            if (out_kind) *out_kind = CCT_CODEGEN_VALUE_STRING;
+            return true;
+        }
+        if (strcmp(name, "obj_storage_builtin_last_size") == 0) {
+            if (argc != 0) {
+                cg_report_node(cg, expr, "OBSECRO obj_storage_builtin_last_size expects no arguments in FASE 40C");
+                return false;
+            }
+            fputs("cct_rt_obj_last_size()", out);
+            if (out_kind) *out_kind = CCT_CODEGEN_VALUE_INT;
+            return true;
+        }
+        if (strcmp(name, "obj_storage_builtin_open") == 0) {
+            cct_codegen_value_kind_t kinds[6];
+            if (argc != 6) {
+                cg_report_node(cg, expr, "OBSECRO obj_storage_builtin_open expects exactly 6 arguments in FASE 40C");
+                return false;
+            }
+            memset(kinds, 0, sizeof(kinds));
+            fputs("((void*)cct_rt_obj_open(", out);
+            for (size_t i = 0; i < 6; i++) {
+                if (i > 0) fputs(", ", out);
+                if (!cg_emit_expr(out, cg, args->nodes[i], &kinds[i])) return false;
+            }
+            if (kinds[0] != CCT_CODEGEN_VALUE_STRING || kinds[1] != CCT_CODEGEN_VALUE_STRING ||
+                kinds[2] != CCT_CODEGEN_VALUE_STRING || kinds[3] != CCT_CODEGEN_VALUE_STRING ||
+                kinds[4] != CCT_CODEGEN_VALUE_STRING || kinds[5] != CCT_CODEGEN_VALUE_BOOL) {
+                cg_report_node(cg, expr, "OBSECRO obj_storage_builtin_open recebeu tipos invalidos em FASE 40C");
+                return false;
+            }
+            fputs("))", out);
+            if (out_kind) *out_kind = CCT_CODEGEN_VALUE_POINTER;
+            return true;
+        }
+        if (strcmp(name, "obj_storage_builtin_put_file") == 0 || strcmp(name, "obj_storage_builtin_put_text") == 0) {
+            cct_codegen_value_kind_t kinds[4];
+            if (argc != 4) {
+                cg_report_nodef(cg, expr, "OBSECRO %s expects exactly 4 arguments in FASE 40C", name);
+                return false;
+            }
+            memset(kinds, 0, sizeof(kinds));
+            fprintf(out, "%s((void*)(", strcmp(name, "obj_storage_builtin_put_file") == 0 ? "cct_rt_obj_put_file" : "cct_rt_obj_put_text");
+            if (!cg_emit_expr(out, cg, args->nodes[0], &kinds[0])) return false;
+            if (kinds[0] != CCT_CODEGEN_VALUE_POINTER) {
+                cg_report_nodef(cg, args->nodes[0], "OBSECRO %s requires client pointer in FASE 40C", name);
+                return false;
+            }
+            fputs("), ", out);
+            for (size_t i = 1; i < 4; i++) {
+                if (!cg_emit_expr(out, cg, args->nodes[i], &kinds[i])) return false;
+                if (kinds[i] != CCT_CODEGEN_VALUE_STRING) {
+                    cg_report_nodef(cg, args->nodes[i], "OBSECRO %s requires VERBUM arguments after client in FASE 40C", name);
+                    return false;
+                }
+                if (i < 3) fputs(", ", out);
+            }
+            fputs(")", out);
+            if (out_kind) *out_kind = CCT_CODEGEN_VALUE_BOOL;
+            return true;
+        }
+        if (strcmp(name, "obj_storage_builtin_get_to_file") == 0 || strcmp(name, "obj_storage_builtin_exists") == 0 ||
+            strcmp(name, "obj_storage_builtin_head") == 0 || strcmp(name, "obj_storage_builtin_delete") == 0) {
+            cct_codegen_value_kind_t k0 = CCT_CODEGEN_VALUE_UNKNOWN;
+            cct_codegen_value_kind_t k1 = CCT_CODEGEN_VALUE_UNKNOWN;
+            if (argc != 2 && strcmp(name, "obj_storage_builtin_get_to_file") != 0) {
+                cg_report_nodef(cg, expr, "OBSECRO %s expects exactly 2 arguments in FASE 40C", name);
+                return false;
+            }
+            if (strcmp(name, "obj_storage_builtin_get_to_file") == 0 && argc != 3) {
+                cg_report_node(cg, expr, "OBSECRO obj_storage_builtin_get_to_file expects exactly 3 arguments in FASE 40C");
+                return false;
+            }
+            if (strcmp(name, "obj_storage_builtin_get_to_file") == 0) fputs("cct_rt_obj_get_to_file((void*)(", out);
+            else if (strcmp(name, "obj_storage_builtin_exists") == 0) fputs("cct_rt_obj_exists((void*)(", out);
+            else if (strcmp(name, "obj_storage_builtin_head") == 0) fputs("cct_rt_obj_head((void*)(", out);
+            else fputs("cct_rt_obj_delete((void*)(", out);
+            if (!cg_emit_expr(out, cg, args->nodes[0], &k0)) return false;
+            if (k0 != CCT_CODEGEN_VALUE_POINTER) {
+                cg_report_nodef(cg, args->nodes[0], "OBSECRO %s requires client pointer in FASE 40C", name);
+                return false;
+            }
+            fputs("), ", out);
+            if (!cg_emit_expr(out, cg, args->nodes[1], &k1)) return false;
+            if (k1 != CCT_CODEGEN_VALUE_STRING) {
+                cg_report_nodef(cg, args->nodes[1], "OBSECRO %s requires VERBUM key in FASE 40C", name);
+                return false;
+            }
+            if (strcmp(name, "obj_storage_builtin_get_to_file") == 0) {
+                cct_codegen_value_kind_t k2 = CCT_CODEGEN_VALUE_UNKNOWN;
+                fputs(", ", out);
+                if (!cg_emit_expr(out, cg, args->nodes[2], &k2)) return false;
+                if (k2 != CCT_CODEGEN_VALUE_STRING) {
+                    cg_report_node(cg, args->nodes[2], "OBSECRO obj_storage_builtin_get_to_file requires VERBUM dest_path in FASE 40C");
+                    return false;
+                }
+            }
+            fputs(")", out);
+            if (out_kind) {
+                if (strcmp(name, "obj_storage_builtin_exists") == 0) *out_kind = CCT_CODEGEN_VALUE_INT;
+                else *out_kind = CCT_CODEGEN_VALUE_BOOL;
+            }
+            return true;
+        }
+        if (strcmp(name, "obj_storage_builtin_signed_url") == 0) {
+            cct_codegen_value_kind_t k0 = CCT_CODEGEN_VALUE_UNKNOWN;
+            cct_codegen_value_kind_t k1 = CCT_CODEGEN_VALUE_UNKNOWN;
+            cct_codegen_value_kind_t k2 = CCT_CODEGEN_VALUE_UNKNOWN;
+            if (argc != 3) {
+                cg_report_node(cg, expr, "OBSECRO obj_storage_builtin_signed_url expects exactly 3 arguments in FASE 40C");
+                return false;
+            }
+            fputs("cct_rt_obj_signed_url((void*)(", out);
+            if (!cg_emit_expr(out, cg, args->nodes[0], &k0)) return false;
+            if (k0 != CCT_CODEGEN_VALUE_POINTER) {
+                cg_report_node(cg, args->nodes[0], "OBSECRO obj_storage_builtin_signed_url requires client pointer in FASE 40C");
+                return false;
+            }
+            fputs("), ", out);
+            if (!cg_emit_expr(out, cg, args->nodes[1], &k1)) return false;
+            if (k1 != CCT_CODEGEN_VALUE_STRING) {
+                cg_report_node(cg, args->nodes[1], "OBSECRO obj_storage_builtin_signed_url requires VERBUM key in FASE 40C");
+                return false;
+            }
+            fputs(", ", out);
+            if (!cg_emit_expr(out, cg, args->nodes[2], &k2)) return false;
+            if (!(k2 == CCT_CODEGEN_VALUE_INT || k2 == CCT_CODEGEN_VALUE_BOOL)) {
+                cg_report_node(cg, args->nodes[2], "OBSECRO obj_storage_builtin_signed_url requires integer ttl_seconds in FASE 40C");
+                return false;
+            }
+            fputs(")", out);
+            if (out_kind) *out_kind = CCT_CODEGEN_VALUE_STRING;
+            return true;
+        }
+    }
+
     if (strcmp(name, "pg_builtin_open") == 0) {
         if (argc != 1) {
             cg_report_node(cg, expr, "OBSECRO pg_builtin_open expects exactly one VERBUM conninfo argument in FASE 36A");
@@ -7930,6 +8296,28 @@ static bool cg_emit_scribe_stmt(FILE *out, cct_codegen_t *cg, const cct_ast_node
         return true;
     }
 
+    if (strcmp(obsecro_node->as.obsecro.name, "zip_builtin_close") == 0 ||
+        strcmp(obsecro_node->as.obsecro.name, "obj_storage_builtin_close") == 0) {
+        const char *name = obsecro_node->as.obsecro.name;
+        cct_ast_node_list_t *args = obsecro_node->as.obsecro.arguments;
+        cct_codegen_value_kind_t k = CCT_CODEGEN_VALUE_UNKNOWN;
+        if (!args || args->count != 1) {
+            cg_report_nodef(cg, obsecro_node, "OBSECRO %s requires exactly one pointer argument in FASE 40", name);
+            return false;
+        }
+        if (strcmp(name, "zip_builtin_close") == 0) cg->uses_archive_zip = true;
+        else { cg->uses_object_storage = true; cg->uses_crypto = true; }
+        cg_emit_indent(out, indent);
+        fprintf(out, "%s((void*)(", strcmp(name, "zip_builtin_close") == 0 ? "cct_rt_zip_close" : "cct_rt_obj_close");
+        if (!cg_emit_expr(out, cg, args->nodes[0], &k)) return false;
+        if (k != CCT_CODEGEN_VALUE_POINTER) {
+            cg_report_nodef(cg, args->nodes[0], "OBSECRO %s requires pointer argument in FASE 40", name);
+            return false;
+        }
+        fputs("));\n", out);
+        return true;
+    }
+
     if (strcmp(obsecro_node->as.obsecro.name, "pg_builtin_exec") == 0) {
         cct_ast_node_list_t *args = obsecro_node->as.obsecro.arguments;
         if (!args || args->count != 2) {
@@ -9039,7 +9427,7 @@ static bool cg_emit_scribe_stmt(FILE *out, cct_codegen_t *cg, const cct_ast_node
     }
 
     if (strcmp(obsecro_node->as.obsecro.name, "scribe") != 0) {
-        cg_report_nodef(cg, obsecro_node, "OBSECRO %s codegen is not supported in current executable subset (supported stmt builtins: scribe, libera, mem_free, mem_copy, mem_set, mem_zero, kernel_halt, kernel_outb, kernel_memcpy, kernel_memset, fluxus_free, fluxus_push, fluxus_pop, fluxus_clear, fluxus_reserve, fluxus_set, fluxus_remove, fluxus_insert, fluxus_reverse, fluxus_sort_int, fluxus_sort_verbum, alg_sort_verbum, json_arr_handle_push, json_obj_handle_push, sock_connect, sock_bind, sock_listen, sock_close, sock_set_timeout_ms, db_exec, db_close, rows_close, stmt_bind_text, stmt_bind_int, stmt_bind_real, stmt_reset, stmt_finalize, db_begin, db_commit, db_rollback, map_free, map_insert, map_clear, map_reserve, map_merge, set_free, set_clear, set_reserve, io_print, io_println, io_print_int, io_print_real, io_print_char, io_eprint, io_eprintln, io_eprint_int, io_eprint_real, io_flush, io_flush_err, fs_write_all, fs_append_all, fs_mkdir, fs_mkdir_all, fs_delete_file, fs_delete_dir, fs_rename, fs_copy, fs_move, fs_chmod, fs_truncate, fs_symlink, random_seed, time_sleep_ms, bytes_set, bytes_free, option_free, result_free, regex_builtin_free, image_builtin_free, scan_free, builder_append, builder_append_char, builder_clear, builder_free, writer_indent, writer_dedent, writer_write, writer_writeln, writer_free, instr_builtin_enable, instr_builtin_disable, instr_builtin_span_end, instr_builtin_span_attr, instr_builtin_event, instr_builtin_buffer_clear, instr_builtin_buffer_discard_closed)",
+        cg_report_nodef(cg, obsecro_node, "OBSECRO %s codegen is not supported in current executable subset (supported stmt builtins: scribe, libera, mem_free, mem_copy, mem_set, mem_zero, kernel_halt, kernel_outb, kernel_memcpy, kernel_memset, fluxus_free, fluxus_push, fluxus_pop, fluxus_clear, fluxus_reserve, fluxus_set, fluxus_remove, fluxus_insert, fluxus_reverse, fluxus_sort_int, fluxus_sort_verbum, alg_sort_verbum, json_arr_handle_push, json_obj_handle_push, sock_connect, sock_bind, sock_listen, sock_close, sock_set_timeout_ms, db_exec, db_close, rows_close, stmt_bind_text, stmt_bind_int, stmt_bind_real, stmt_reset, stmt_finalize, db_begin, db_commit, db_rollback, map_free, map_insert, map_clear, map_reserve, map_merge, set_free, set_clear, set_reserve, io_print, io_println, io_print_int, io_print_real, io_print_char, io_eprint, io_eprintln, io_eprint_int, io_eprint_real, io_flush, io_flush_err, fs_write_all, fs_append_all, fs_mkdir, fs_mkdir_all, fs_delete_file, fs_delete_dir, fs_rename, fs_copy, fs_move, fs_chmod, fs_truncate, fs_symlink, random_seed, time_sleep_ms, bytes_set, bytes_free, option_free, result_free, regex_builtin_free, image_builtin_free, scan_free, builder_append, builder_append_char, builder_clear, builder_free, writer_indent, writer_dedent, writer_write, writer_writeln, writer_free, instr_builtin_enable, instr_builtin_disable, instr_builtin_span_end, instr_builtin_span_attr, instr_builtin_event, instr_builtin_buffer_clear, instr_builtin_buffer_discard_closed, zip_builtin_close, obj_storage_builtin_close)",
                         obsecro_node->as.obsecro.name);
         return false;
     }
@@ -9718,6 +10106,11 @@ static bool cg_emit_stmt(FILE *out, cct_codegen_t *cg, const cct_ast_node_t *stm
             cct_codegen_local_kind_t kind = cg_local_kind_from_ast_type(stmt->as.evoca.var_type);
             const bool is_constans = stmt->as.evoca.is_constans;
             const char *const_prefix = is_constans ? "const " : "";
+            if (kind == CCT_CODEGEN_LOCAL_UNSUPPORTED &&
+                stmt->as.evoca.initializer &&
+                cg_is_string_pointer_ast_type(stmt->as.evoca.var_type)) {
+                kind = CCT_CODEGEN_LOCAL_POINTER;
+            }
             if (kind == CCT_CODEGEN_LOCAL_UNSUPPORTED) {
                 if (stmt->as.evoca.var_type && stmt->as.evoca.var_type->is_pointer) {
                     cg_report_node(cg, stmt, "SPECULUM pointee type is outside FASE 7A executable subset");
@@ -10771,6 +11164,20 @@ static bool cg_precollect_strings_from_expr(cct_codegen_t *cg, const cct_ast_nod
                 cg->uses_instrument = true;
             }
             if (expr->as.obsecro.name &&
+                strncmp(expr->as.obsecro.name, "media_store_builtin_", 20) == 0) {
+                cg->uses_media_store = true;
+                cg->uses_crypto = true;
+            }
+            if (expr->as.obsecro.name &&
+                strncmp(expr->as.obsecro.name, "zip_builtin_", 12) == 0) {
+                cg->uses_archive_zip = true;
+            }
+            if (expr->as.obsecro.name &&
+                strncmp(expr->as.obsecro.name, "obj_storage_builtin_", 20) == 0) {
+                cg->uses_object_storage = true;
+                cg->uses_crypto = true;
+            }
+            if (expr->as.obsecro.name &&
                 (strcmp(expr->as.obsecro.name, "pg_builtin_open") == 0 ||
                  strcmp(expr->as.obsecro.name, "pg_builtin_close") == 0 ||
                  strcmp(expr->as.obsecro.name, "pg_builtin_is_open") == 0 ||
@@ -10916,10 +11323,7 @@ static const char* cg_c_type_for_ast_type(cct_codegen_t *cg, const cct_ast_type_
         if (strcmp(elem_name, "NIHIL") == 0) {
             return "void *";
         }
-        const char *scalar = NULL;
-        if (strcmp(elem_name, "VERBUM") != 0) {
-            scalar = cg_c_scalar_type_for_name(elem_name);
-        }
+        const char *scalar = cg_c_scalar_type_for_name(elem_name);
         if (!scalar) {
             cct_ast_type_t tmp = *elem;
             tmp.name = (char*)elem_name;
@@ -11493,6 +11897,9 @@ void cct_codegen_init(cct_codegen_t *cg, const char *filename) {
     cg->uses_postgres = false;
     cg->uses_mail = false;
     cg->uses_instrument = false;
+    cg->uses_media_store = false;
+    cg->uses_archive_zip = false;
+    cg->uses_object_storage = false;
 #ifdef _WIN32
     cg->host_cc = "gcc";
 #else

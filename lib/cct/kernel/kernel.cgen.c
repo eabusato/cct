@@ -2,7 +2,6 @@
 /* Sections: includes, runtime helpers, string pool, type decls, prototypes, rituals, entry wrapper */
 /* backend = c_host */
 /* source = "lib/cct/kernel/kernel.cct" */
-/* Copyright (c) Erick Andrade Busato. Todos os direitos reservados. */
 
 /* ===== Includes (freestanding) ===== */
 #include <stdint.h>

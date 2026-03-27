@@ -125,6 +125,9 @@ SRCS = \
 	$(SRC_DIR)/runtime/runtime_postgres.c \
 	$(SRC_DIR)/runtime/runtime_mail.c \
 	$(SRC_DIR)/runtime/runtime_instrument.c \
+	$(SRC_DIR)/runtime/runtime_media_store.c \
+	$(SRC_DIR)/runtime/runtime_archive_zip.c \
+	$(SRC_DIR)/runtime/runtime_object_storage.c \
 	$(SRC_DIR)/runtime/runtime_math.c \
 	$(SRC_DIR)/module/module.c \
 	$(SRC_DIR)/sigilo/sigilo.c \

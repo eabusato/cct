@@ -1,0 +1,51 @@
+INCIPIT grimoire "zip_extract_all_40b"
+
+ADVOCARE "cct/archive_zip.cct"
+ADVOCARE "cct/fs.cct"
+ADVOCARE "cct/path.cct"
+ADVOCARE "cct/result.cct"
+ADVOCARE "cct/verbum.cct"
+
+RITUALE main() REDDE REX
+  SI OBSECRO args_argc() < 3
+    REDDE 100
+  FIN SI
+
+  EVOCA VERBUM zip_path AD OBSECRO args_arg(1)
+  EVOCA VERBUM out_dir AD OBSECRO args_arg(2)
+  EVOCA SPECULUM NIHIL created AD CONIURA zip_create(zip_path)
+  SI NON CONIURA result_is_ok GENUS(ZipArchive, VERBUM)(created)
+    REDDE 101
+  FIN SI
+  EVOCA ZipArchive archive AD CONIURA result_unwrap GENUS(ZipArchive, VERBUM)(created)
+  SI NON CONIURA result_is_ok GENUS(REX, VERBUM)(CONIURA zip_add_text(archive, "dir/a.txt", "A"))
+    REDDE 102
+  FIN SI
+  SI NON CONIURA result_is_ok GENUS(REX, VERBUM)(CONIURA zip_add_text(archive, "dir/b.txt", "B"))
+    REDDE 103
+  FIN SI
+  CONIURA zip_close(SPECULUM archive)
+
+  EVOCA SPECULUM NIHIL reopened AD CONIURA zip_open(zip_path)
+  SI NON CONIURA result_is_ok GENUS(ZipArchive, VERBUM)(reopened)
+    REDDE 104
+  FIN SI
+  EVOCA ZipArchive archive2 AD CONIURA result_unwrap GENUS(ZipArchive, VERBUM)(reopened)
+  EVOCA ZipExtractOptions options AD CONIURA zip_extract_options(out_dir, VERUM)
+  SI NON CONIURA result_is_ok GENUS(REX, VERBUM)(CONIURA zip_extract_all(archive2, options))
+    REDDE 105
+  FIN SI
+  SI NON CONIURA exists(CONIURA path_join(out_dir, "dir/a.txt"))
+    REDDE 106
+  FIN SI
+  SI NON CONIURA exists(CONIURA path_join(out_dir, "dir/b.txt"))
+    REDDE 107
+  FIN SI
+  SI CONIURA compare(CONIURA read_all(CONIURA path_join(out_dir, "dir/a.txt")), "A") != 0
+    REDDE 108
+  FIN SI
+  CONIURA zip_close(SPECULUM archive2)
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

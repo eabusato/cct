@@ -311,6 +311,9 @@ bool cct_cg_emit_generated_c_prelude(FILE *out, const cct_codegen_t *cg) {
     rt_cfg.emit_postgres_helpers = cg->uses_postgres;
     rt_cfg.emit_mail_helpers = cg->uses_mail;
     rt_cfg.emit_instrument_helpers = cg->uses_instrument;
+    rt_cfg.emit_media_store_helpers = cg->uses_media_store;
+    rt_cfg.emit_archive_zip_helpers = cg->uses_archive_zip;
+    rt_cfg.emit_object_storage_helpers = cg->uses_object_storage;
     if (!cct_runtime_emit_c_helpers(out, &rt_cfg)) return false;
     return true;
 }

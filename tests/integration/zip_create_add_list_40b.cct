@@ -1,0 +1,46 @@
+INCIPIT grimoire "zip_create_add_list_40b"
+
+ADVOCARE "cct/archive_zip.cct"
+ADVOCARE "cct/fluxus.cct"
+ADVOCARE "cct/result.cct"
+ADVOCARE "cct/verbum.cct"
+
+RITUALE main() REDDE REX
+  SI OBSECRO args_argc() < 2
+    REDDE 80
+  FIN SI
+
+  EVOCA VERBUM zip_path AD OBSECRO args_arg(1)
+  EVOCA SPECULUM NIHIL created AD CONIURA zip_create(zip_path)
+  SI NON CONIURA result_is_ok GENUS(ZipArchive, VERBUM)(created)
+    REDDE 81
+  FIN SI
+  EVOCA ZipArchive archive AD CONIURA result_unwrap GENUS(ZipArchive, VERBUM)(created)
+
+  SI NON CONIURA result_is_ok GENUS(REX, VERBUM)(CONIURA zip_add_text(archive, "meta/info.txt", "hello"))
+    REDDE 82
+  FIN SI
+  SI NON CONIURA result_is_ok GENUS(REX, VERBUM)(CONIURA zip_add_text(archive, "nested/data.json", "{\"ok\":true}"))
+    REDDE 83
+  FIN SI
+  CONIURA zip_close(SPECULUM archive)
+
+  EVOCA SPECULUM NIHIL reopened AD CONIURA zip_open(zip_path)
+  SI NON CONIURA result_is_ok GENUS(ZipArchive, VERBUM)(reopened)
+    REDDE 84
+  FIN SI
+  EVOCA ZipArchive archive2 AD CONIURA result_unwrap GENUS(ZipArchive, VERBUM)(reopened)
+  SI CONIURA zip_entry_count(archive2) != 2
+    REDDE 85
+  FIN SI
+  EVOCA SPECULUM NIHIL entries AD CONIURA zip_list(archive2)
+  EVOCA SPECULUM ZipEntry first AD CONIURA fluxus_get(entries, 0)
+  EVOCA SPECULUM ZipEntry second AD CONIURA fluxus_get(entries, 1)
+  SI NON (CONIURA compare((*first).name, "meta/info.txt") == 0 VEL CONIURA compare((*second).name, "meta/info.txt") == 0)
+    REDDE 86
+  FIN SI
+  CONIURA zip_close(SPECULUM archive2)
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

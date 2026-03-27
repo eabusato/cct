@@ -1,0 +1,66 @@
+INCIPIT grimoire "media_store_promote_copy_delete_40a"
+
+ADVOCARE "cct/fs.cct"
+ADVOCARE "cct/media_store.cct"
+ADVOCARE "cct/path.cct"
+ADVOCARE "cct/result.cct"
+ADVOCARE "cct/verbum.cct"
+
+RITUALE main() REDDE REX
+  SI OBSECRO args_argc() < 2
+    REDDE 30
+  FIN SI
+
+  EVOCA VERBUM root AD OBSECRO args_arg(1)
+  EVOCA VERBUM src AD CONIURA path_join(root, "promote_src.txt")
+  CONIURA mkdir_all(root)
+  CONIURA write_all(src, "promote-copy-delete")
+
+  EVOCA SPECULUM NIHIL opened AD CONIURA media_store_open(CONIURA media_store_default_options(root))
+  SI NON CONIURA result_is_ok GENUS(MediaStore, VERBUM)(opened)
+    REDDE 31
+  FIN SI
+  EVOCA MediaStore store AD CONIURA result_unwrap GENUS(MediaStore, VERBUM)(opened)
+  EVOCA SPECULUM NIHIL inserted AD CONIURA media_store_put_file(store, MEDIA_ZONE_TMP, src, "asset.txt")
+  SI NON CONIURA result_is_ok GENUS(MediaArtifact, VERBUM)(inserted)
+    REDDE 32
+  FIN SI
+
+  EVOCA MediaArtifact tmp_artifact AD CONIURA result_unwrap GENUS(MediaArtifact, VERBUM)(inserted)
+  EVOCA SPECULUM NIHIL promoted_res AD CONIURA media_store_promote(store, tmp_artifact, MEDIA_ZONE_PROCESSED)
+  SI NON CONIURA result_is_ok GENUS(MediaArtifact, VERBUM)(promoted_res)
+    REDDE 33
+  FIN SI
+
+  EVOCA MediaArtifact processed AD CONIURA result_unwrap GENUS(MediaArtifact, VERBUM)(promoted_res)
+  SI CONIURA media_store_exists(store, tmp_artifact)
+    REDDE 34
+  FIN SI
+  SI NON CONIURA media_store_exists(store, processed)
+    REDDE 35
+  FIN SI
+
+  EVOCA SPECULUM NIHIL copied_res AD CONIURA media_store_copy(store, processed, MEDIA_ZONE_PUBLIC)
+  SI NON CONIURA result_is_ok GENUS(MediaArtifact, VERBUM)(copied_res)
+    REDDE 36
+  FIN SI
+  EVOCA MediaArtifact copied AD CONIURA result_unwrap GENUS(MediaArtifact, VERBUM)(copied_res)
+  SI NON CONIURA media_store_exists(store, copied)
+    REDDE 37
+  FIN SI
+  SI CONIURA compare(copied.artifact_id, processed.artifact_id) == 0
+    REDDE 38
+  FIN SI
+
+  EVOCA SPECULUM NIHIL deleted AD CONIURA media_store_delete(store, copied)
+  SI NON CONIURA result_is_ok GENUS(REX, VERBUM)(deleted)
+    REDDE 39
+  FIN SI
+  SI CONIURA media_store_exists(store, copied)
+    REDDE 40
+  FIN SI
+
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

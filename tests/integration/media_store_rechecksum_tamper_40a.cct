@@ -1,0 +1,42 @@
+INCIPIT grimoire "media_store_rechecksum_tamper_40a"
+
+ADVOCARE "cct/fs.cct"
+ADVOCARE "cct/media_store.cct"
+ADVOCARE "cct/path.cct"
+ADVOCARE "cct/result.cct"
+ADVOCARE "cct/verbum.cct"
+
+RITUALE main() REDDE REX
+  SI OBSECRO args_argc() < 2
+    REDDE 60
+  FIN SI
+
+  EVOCA VERBUM root AD OBSECRO args_arg(1)
+  EVOCA VERBUM src AD CONIURA path_join(root, "tamper.txt")
+  CONIURA mkdir_all(root)
+  CONIURA write_all(src, "original-bytes")
+
+  EVOCA SPECULUM NIHIL opened AD CONIURA media_store_open(CONIURA media_store_default_options(root))
+  SI NON CONIURA result_is_ok GENUS(MediaStore, VERBUM)(opened)
+    REDDE 61
+  FIN SI
+  EVOCA MediaStore store AD CONIURA result_unwrap GENUS(MediaStore, VERBUM)(opened)
+  EVOCA SPECULUM NIHIL inserted AD CONIURA media_store_put_file(store, MEDIA_ZONE_QUARANTINE, src, "tamper.txt")
+  SI NON CONIURA result_is_ok GENUS(MediaArtifact, VERBUM)(inserted)
+    REDDE 62
+  FIN SI
+
+  EVOCA MediaArtifact artifact AD CONIURA result_unwrap GENUS(MediaArtifact, VERBUM)(inserted)
+  CONIURA write_all(CONIURA media_store_absolute_path(store, artifact), "mutated")
+  EVOCA SPECULUM NIHIL checksum_res AD CONIURA media_store_rechecksum(store, artifact)
+  SI NON CONIURA result_is_ok GENUS(VERBUM, VERBUM)(checksum_res)
+    REDDE 63
+  FIN SI
+  SI CONIURA compare(CONIURA result_unwrap GENUS(VERBUM, VERBUM)(checksum_res), artifact.checksum) == 0
+    REDDE 64
+  FIN SI
+
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

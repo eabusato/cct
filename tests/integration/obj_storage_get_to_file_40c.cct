@@ -1,0 +1,51 @@
+INCIPIT grimoire "obj_storage_get_to_file_40c"
+
+ADVOCARE "cct/env.cct"
+ADVOCARE "cct/fs.cct"
+ADVOCARE "cct/object_storage.cct"
+ADVOCARE "cct/path.cct"
+ADVOCARE "cct/result.cct"
+ADVOCARE "cct/verbum.cct"
+
+RITUALE obj_client_from_env() REDDE SPECULUM NIHIL
+  EVOCA ObjectStorageOptions opts AD CONIURA object_storage_default_options(
+    CONIURA getenv("APP_OBJ_STORAGE_ENDPOINT"),
+    CONIURA getenv("APP_OBJ_STORAGE_BUCKET"),
+    CONIURA getenv("APP_OBJ_STORAGE_ACCESS_KEY"),
+    CONIURA getenv("APP_OBJ_STORAGE_SECRET_KEY")
+  )
+  VINCIRE opts.region AD CONIURA getenv("APP_OBJ_STORAGE_REGION")
+  REDDE CONIURA object_storage_open(opts)
+EXPLICIT RITUALE
+
+RITUALE main() REDDE REX
+  SI NON CONIURA has_env("APP_OBJ_STORAGE_ENDPOINT")
+    REDDE 0
+  FIN SI
+  SI OBSECRO args_argc() < 2
+    REDDE 160
+  FIN SI
+
+  EVOCA VERBUM out_dir AD OBSECRO args_arg(1)
+  EVOCA VERBUM dest AD CONIURA path_join(out_dir, "downloaded.txt")
+  CONIURA mkdir_all(out_dir)
+
+  EVOCA SPECULUM NIHIL opened AD CONIURA obj_client_from_env()
+  SI NON CONIURA result_is_ok GENUS(ObjectStorageClient, VERBUM)(opened)
+    REDDE 161
+  FIN SI
+  EVOCA ObjectStorageClient client AD CONIURA result_unwrap GENUS(ObjectStorageClient, VERBUM)(opened)
+  SI NON CONIURA result_is_ok GENUS(ObjectRef, VERBUM)(CONIURA object_storage_put_text(client, "phase40c/get.txt", "download-me", "text/plain"))
+    REDDE 162
+  FIN SI
+  SI NON CONIURA result_is_ok GENUS(REX, VERBUM)(CONIURA object_storage_get_to_file(client, "phase40c/get.txt", dest))
+    REDDE 163
+  FIN SI
+  SI CONIURA compare(CONIURA read_all(dest), "download-me") != 0
+    REDDE 164
+  FIN SI
+  CONIURA object_storage_close(SPECULUM client)
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

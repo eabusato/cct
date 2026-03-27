@@ -3403,8 +3403,100 @@ The practical project contract through FASE 39 is:
 - integration tests that require a live backend (PostgreSQL, Redis, SMTP) skip gracefully when the corresponding environment variable is absent (`DATABASE_URL`, `REDIS_URL`, `SMTP_HOST`)
 - run `make test` to execute the full integration suite
 
+## 30. FASE 40 Addendum: Media Bridges and Packaging
+
+FASE 40 added three modules: a canonical local media store with lifecycle zones, a ZIP archive module, and an optional S3-compatible object storage bridge. All modules are host-only.
+
+### 30.1 `cct/media_store`
+
+Purpose: local media store with five canonical zones, UUID/hash naming, SHA-256 checksum, and atomic promotion between zones.
+
+Import:
+
+```cct
+ADVOCARE "cct/media_store.cct"
+```
+
+Zones: `MEDIA_ZONE_TMP`, `MEDIA_ZONE_QUARANTINE`, `MEDIA_ZONE_PROCESSED`, `MEDIA_ZONE_PUBLIC`, `MEDIA_ZONE_PRIVATE`.
+
+Naming policies: `MEDIA_NAMING_UUID`, `MEDIA_NAMING_HASH`, `MEDIA_NAMING_UUID_WITH_EXT` (default), `MEDIA_NAMING_HASH_WITH_EXT`.
+
+Public functions:
+- `media_store_default_options(VERBUM root_dir) REDDE MediaStoreOptions`
+- `media_store_open(MediaStoreOptions options) REDDE Result GENUS(MediaStore, VERBUM)`
+- `media_store_ensure_layout(MediaStore store) REDDE Result GENUS(NIHIL, VERBUM)` — creates 5 zone subdirectories
+- `media_store_put_file(MediaStore store, MediaZone zone, VERBUM source_path, VERBUM original_filename) REDDE Result GENUS(MediaArtifact, VERBUM)`
+- `media_store_promote(MediaStore store, MediaArtifact artifact, MediaZone destination) REDDE Result GENUS(MediaArtifact, VERBUM)` — atomic `rename(2)` when possible
+- `media_store_copy(MediaStore store, MediaArtifact artifact, MediaZone destination) REDDE Result GENUS(MediaArtifact, VERBUM)` — copy with new `artifact_id`
+- `media_store_delete(MediaStore store, MediaArtifact artifact) REDDE Result GENUS(NIHIL, VERBUM)` — path-validated; rejects traversal
+- `media_store_exists(MediaStore store, MediaArtifact artifact) REDDE VERUM`
+- `media_store_absolute_path(MediaStore store, MediaArtifact artifact) REDDE VERBUM`
+- `media_store_rechecksum(MediaStore store, MediaArtifact artifact) REDDE Result GENUS(VERBUM, VERBUM)`
+- `media_store_zone_name(MediaZone zone) REDDE VERBUM`
+
+`MediaArtifact` fields: `artifact_id`, `zone`, `relative_path`, `filename`, `content_type`, `size_bytes`, `checksum`, `created_at_iso`, `updated_at_iso`. Host-only.
+
+### 30.2 `cct/archive_zip`
+
+Purpose: ZIP archive creation, text/file entry writing, listing, reading, and safe extraction.
+
+Import:
+
+```cct
+ADVOCARE "cct/archive_zip.cct"
+```
+
+Public functions:
+- `zip_create(VERBUM archive_path) REDDE Result GENUS(ZipArchive, VERBUM)`
+- `zip_open(VERBUM archive_path) REDDE Result GENUS(ZipArchive, VERBUM)`
+- `zip_close(SPECULUM ZipArchive archive)`
+- `zip_add_file(ZipArchive archive, VERBUM source_path, VERBUM entry_name) REDDE Result GENUS(NIHIL, VERBUM)` — rejects `..` and absolute paths
+- `zip_add_text(ZipArchive archive, VERBUM entry_name, VERBUM content) REDDE Result GENUS(NIHIL, VERBUM)` — for JSON, SVG, HTML, CSV
+- `zip_list(ZipArchive archive) REDDE FLUXUS GENUS(ZipEntry)`
+- `zip_entry_count(ZipArchive archive) REDDE REX`
+- `zip_read_text(ZipArchive archive, VERBUM entry_name) REDDE Result GENUS(VERBUM, VERBUM)`
+- `zip_extract_all(ZipArchive archive, ZipExtractOptions options) REDDE Result GENUS(NIHIL, VERBUM)` — validates all entry paths
+- `zip_extract_entry(ZipArchive archive, VERBUM entry_name, ZipExtractOptions options) REDDE Result GENUS(NIHIL, VERBUM)`
+
+`ZipEntry` fields: `name`, `size_bytes`, `is_dir`. `ZipExtractOptions` fields: `output_dir`, `overwrite`. Path traversal is a hard `Err` at both write and extract time. Backed by libzip or miniz. Host-only.
+
+### 30.3 `cct/object_storage`
+
+Purpose: optional S3-compatible object storage bridge. Works with AWS S3, MinIO, Cloudflare R2, or any S3-compatible backend.
+
+Import:
+
+```cct
+ADVOCARE "cct/object_storage.cct"
+```
+
+Public functions:
+- `object_storage_default_options(VERBUM endpoint, VERBUM bucket, VERBUM access_key, VERBUM secret_key) REDDE ObjectStorageOptions`
+- `object_storage_open(ObjectStorageOptions options) REDDE Result GENUS(ObjectStorageClient, VERBUM)`
+- `object_storage_close(SPECULUM ObjectStorageClient client)`
+- `object_storage_put_file(ObjectStorageClient client, VERBUM key, VERBUM source_path, VERBUM content_type) REDDE Result GENUS(ObjectRef, VERBUM)`
+- `object_storage_put_text(ObjectStorageClient client, VERBUM key, VERBUM content, VERBUM content_type) REDDE Result GENUS(ObjectRef, VERBUM)`
+- `object_storage_get_to_file(ObjectStorageClient client, VERBUM key, VERBUM dest_path) REDDE Result GENUS(NIHIL, VERBUM)`
+- `object_storage_exists(ObjectStorageClient client, VERBUM key) REDDE Result GENUS(VERUM, VERBUM)` — distinguishes 404 from backend error
+- `object_storage_head(ObjectStorageClient client, VERBUM key) REDDE Result GENUS(ObjectRef, VERBUM)`
+- `object_storage_delete(ObjectStorageClient client, VERBUM key) REDDE Result GENUS(NIHIL, VERBUM)`
+- `object_storage_signed_url(ObjectStorageClient client, VERBUM key, REX ttl_seconds) REDDE Result GENUS(SignedUrl, VERBUM)`
+
+`ObjectRef` fields: `bucket`, `key`, `content_type`, `etag`, `size_bytes`. `SignedUrl` fields: `url`, `expires_at_iso`. Tests skip (exit 0) when `APP_OBJ_STORAGE_ENDPOINT` is absent. Optional for v1. Host-only.
+
+## 31. Current Operational Contract (FASE 40)
+
+The practical project contract through FASE 40 is:
+
+- host compiler remains production-valid and authoritative
+- bootstrap compiler stack is complete and validated through code generation and self-host convergence
+- the CCT standard library now additionally covers: local media store with lifecycle zones, ZIP packaging, and S3-compatible object storage
+- all FASE 32–40 modules are host-only; freestanding use is rejected at compile time
+- integration tests that require a live backend (PostgreSQL, Redis, SMTP, S3) skip gracefully when the corresponding environment variable is absent
+- run `make test` to execute the full integration suite
+
 ## 2. Specification Baseline Update
 
-**Specification baseline updated to FASE 39.**
+**Specification baseline updated to FASE 40.**
 
-This document now covers the complete language surface and standard library through FASE 39, superseding the FASE 30 baseline noted in the Status section above.
+This document now covers the complete language surface and standard library through FASE 40, superseding the FASE 30 baseline noted in the Status section above.

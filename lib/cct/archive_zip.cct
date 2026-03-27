@@ -1,0 +1,131 @@
+-- CCT — Clavicula Turing
+-- Standard Library Module: archive_zip
+--
+-- FASE 40B: Canonical ZIP archive bridge
+--
+-- Copyright (c) Erick Andrade Busato. Todos os direitos reservados.
+
+INCIPIT grimoire "archive_zip"
+
+ADVOCARE "cct/fluxus.cct"
+ADVOCARE "cct/result.cct"
+ADVOCARE "cct/verbum.cct"
+
+SIGILLUM ZipArchive
+  handle: SPECULUM NIHIL
+FIN SIGILLUM
+
+SIGILLUM ZipEntry
+  name: VERBUM
+  size_bytes: REX
+  is_dir: VERUM
+FIN SIGILLUM
+
+SIGILLUM ZipExtractOptions
+  output_dir: VERBUM
+  overwrite: VERUM
+FIN SIGILLUM
+
+RITUALE zip_last_error() REDDE VERBUM
+  REDDE OBSECRO zip_builtin_last_error()
+EXPLICIT RITUALE
+
+RITUALE zip_extract_options(VERBUM output_dir, VERUM overwrite) REDDE ZipExtractOptions
+  EVOCA ZipExtractOptions options
+  VINCIRE options.output_dir AD output_dir
+  VINCIRE options.overwrite AD overwrite
+  REDDE options
+EXPLICIT RITUALE
+
+RITUALE zip_create(VERBUM archive_path) REDDE SPECULUM NIHIL
+  EVOCA SPECULUM NIHIL handle AD OBSECRO zip_builtin_create(archive_path)
+  EVOCA VERBUM err AD CONIURA zip_last_error()
+  SI CONIURA len(err) > 0
+    REDDE CONIURA Err GENUS(ZipArchive, VERBUM)(err)
+  FIN SI
+  EVOCA ZipArchive archive
+  VINCIRE archive.handle AD handle
+  REDDE CONIURA Ok GENUS(ZipArchive, VERBUM)(archive)
+EXPLICIT RITUALE
+
+RITUALE zip_open(VERBUM archive_path) REDDE SPECULUM NIHIL
+  EVOCA SPECULUM NIHIL handle AD OBSECRO zip_builtin_open(archive_path)
+  EVOCA VERBUM err AD CONIURA zip_last_error()
+  SI CONIURA len(err) > 0
+    REDDE CONIURA Err GENUS(ZipArchive, VERBUM)(err)
+  FIN SI
+  EVOCA ZipArchive archive
+  VINCIRE archive.handle AD handle
+  REDDE CONIURA Ok GENUS(ZipArchive, VERBUM)(archive)
+EXPLICIT RITUALE
+
+RITUALE zip_close(SPECULUM ZipArchive archive)
+  OBSECRO zip_builtin_close((*archive).handle)
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE zip_add_file(ZipArchive archive, VERBUM source_path, VERBUM entry_name) REDDE SPECULUM NIHIL
+  EVOCA VERUM ok AD OBSECRO zip_builtin_add_file(archive.handle, source_path, entry_name)
+  EVOCA VERBUM err AD CONIURA zip_last_error()
+  SI NON ok VEL CONIURA len(err) > 0
+    REDDE CONIURA Err GENUS(REX, VERBUM)(err)
+  FIN SI
+  REDDE CONIURA Ok GENUS(REX, VERBUM)(0)
+EXPLICIT RITUALE
+
+RITUALE zip_add_text(ZipArchive archive, VERBUM entry_name, VERBUM content) REDDE SPECULUM NIHIL
+  EVOCA VERUM ok AD OBSECRO zip_builtin_add_text(archive.handle, entry_name, content)
+  EVOCA VERBUM err AD CONIURA zip_last_error()
+  SI NON ok VEL CONIURA len(err) > 0
+    REDDE CONIURA Err GENUS(REX, VERBUM)(err)
+  FIN SI
+  REDDE CONIURA Ok GENUS(REX, VERBUM)(0)
+EXPLICIT RITUALE
+
+RITUALE zip_entry_count(ZipArchive archive) REDDE REX
+  REDDE OBSECRO zip_builtin_entry_count(archive.handle)
+EXPLICIT RITUALE
+
+RITUALE zip_list(ZipArchive archive) REDDE SPECULUM NIHIL
+  EVOCA SPECULUM NIHIL out AD CONIURA fluxus_init(MENSURA(ZipEntry))
+  EVOCA REX i AD 0
+  EVOCA REX n AD CONIURA zip_entry_count(archive)
+  DUM i < n
+    EVOCA ZipEntry entry
+    VINCIRE entry.name AD OBSECRO zip_builtin_entry_name(archive.handle, i)
+    VINCIRE entry.size_bytes AD OBSECRO zip_builtin_entry_size(archive.handle, i)
+    VINCIRE entry.is_dir AD OBSECRO zip_builtin_entry_is_dir(archive.handle, i)
+    CONIURA fluxus_push(out, SPECULUM entry)
+    VINCIRE i AD i + 1
+  FIN DUM
+  REDDE out
+EXPLICIT RITUALE
+
+RITUALE zip_read_text(ZipArchive archive, VERBUM entry_name) REDDE SPECULUM NIHIL
+  EVOCA VERBUM content AD OBSECRO zip_builtin_read_text(archive.handle, entry_name)
+  EVOCA VERBUM err AD CONIURA zip_last_error()
+  SI CONIURA len(err) > 0
+    REDDE CONIURA Err GENUS(VERBUM, VERBUM)(err)
+  FIN SI
+  REDDE CONIURA Ok GENUS(VERBUM, VERBUM)(content)
+EXPLICIT RITUALE
+
+RITUALE zip_extract_all(ZipArchive archive, ZipExtractOptions options) REDDE SPECULUM NIHIL
+  EVOCA VERUM ok AD OBSECRO zip_builtin_extract_all(archive.handle, options.output_dir, options.overwrite)
+  EVOCA VERBUM err AD CONIURA zip_last_error()
+  SI NON ok VEL CONIURA len(err) > 0
+    REDDE CONIURA Err GENUS(REX, VERBUM)(err)
+  FIN SI
+  REDDE CONIURA Ok GENUS(REX, VERBUM)(0)
+EXPLICIT RITUALE
+
+RITUALE zip_extract_entry(ZipArchive archive, VERBUM entry_name, ZipExtractOptions options) REDDE SPECULUM NIHIL
+  EVOCA VERUM ok AD OBSECRO zip_builtin_extract_entry(archive.handle, entry_name, options.output_dir, options.overwrite)
+  EVOCA VERBUM err AD CONIURA zip_last_error()
+  SI NON ok VEL CONIURA len(err) > 0
+    REDDE CONIURA Err GENUS(REX, VERBUM)(err)
+  FIN SI
+  REDDE CONIURA Ok GENUS(REX, VERBUM)(0)
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

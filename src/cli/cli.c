@@ -153,7 +153,7 @@ void cct_cli_show_help(void) {
 void cct_cli_show_version(void) {
     printf("Clavicula Turing (CCT) v%s\n", CCT_VERSION_STRING);
     printf("Target: Linux x86_64\n");
-    printf("Build: FASE 14A - Release hardening stream (post-13/13M baseline)\n");
+    printf("Build: FASE 40 - Media Store, Object Storage, Archive ZIP\n");
     printf("\n");
     printf("Copyright (c) Erick Andrade Busato. Todos os direitos reservados.\n");
 }

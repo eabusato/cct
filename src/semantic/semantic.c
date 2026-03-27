@@ -1418,7 +1418,7 @@ static cct_sem_type_t* sem_resolve_ast_type(cct_semantic_analyzer_t *sem, const 
  * ======================================================================== */
 
 static const cct_sem_builtin_spec_t* sem_find_builtin(cct_semantic_analyzer_t *sem, const char *name) {
-static cct_sem_builtin_spec_t specs[438];
+static cct_sem_builtin_spec_t specs[467];
     static bool initialized = false;
 
     if (!initialized) {
@@ -1861,6 +1861,35 @@ static cct_sem_builtin_spec_t specs[438];
         specs[435].name = "instr_builtin_buffer_attr_key"; specs[435].min_args = 2; specs[435].variadic = false;
         specs[436].name = "instr_builtin_buffer_attr_value"; specs[436].min_args = 2; specs[436].variadic = false;
         specs[437].name = "instr_builtin_buffer_discard_closed"; specs[437].min_args = 0; specs[437].variadic = false;
+        specs[438].name = "media_store_builtin_sha256_file"; specs[438].min_args = 1; specs[438].variadic = false;
+        specs[439].name = "media_store_builtin_last_error"; specs[439].min_args = 0; specs[439].variadic = false;
+        specs[440].name = "zip_builtin_last_error"; specs[440].min_args = 0; specs[440].variadic = false;
+        specs[441].name = "zip_builtin_create"; specs[441].min_args = 1; specs[441].variadic = false;
+        specs[442].name = "zip_builtin_open"; specs[442].min_args = 1; specs[442].variadic = false;
+        specs[443].name = "zip_builtin_close"; specs[443].min_args = 1; specs[443].variadic = false;
+        specs[444].name = "zip_builtin_add_file"; specs[444].min_args = 3; specs[444].variadic = false;
+        specs[445].name = "zip_builtin_add_text"; specs[445].min_args = 3; specs[445].variadic = false;
+        specs[446].name = "zip_builtin_entry_count"; specs[446].min_args = 1; specs[446].variadic = false;
+        specs[447].name = "zip_builtin_entry_name"; specs[447].min_args = 2; specs[447].variadic = false;
+        specs[448].name = "zip_builtin_entry_size"; specs[448].min_args = 2; specs[448].variadic = false;
+        specs[449].name = "zip_builtin_entry_is_dir"; specs[449].min_args = 2; specs[449].variadic = false;
+        specs[450].name = "zip_builtin_read_text"; specs[450].min_args = 2; specs[450].variadic = false;
+        specs[451].name = "zip_builtin_extract_all"; specs[451].min_args = 3; specs[451].variadic = false;
+        specs[452].name = "zip_builtin_extract_entry"; specs[452].min_args = 4; specs[452].variadic = false;
+        specs[453].name = "obj_storage_builtin_last_error"; specs[453].min_args = 0; specs[453].variadic = false;
+        specs[454].name = "obj_storage_builtin_last_content_type"; specs[454].min_args = 0; specs[454].variadic = false;
+        specs[455].name = "obj_storage_builtin_last_etag"; specs[455].min_args = 0; specs[455].variadic = false;
+        specs[456].name = "obj_storage_builtin_last_size"; specs[456].min_args = 0; specs[456].variadic = false;
+        specs[457].name = "obj_storage_builtin_last_signed_expires_at"; specs[457].min_args = 0; specs[457].variadic = false;
+        specs[458].name = "obj_storage_builtin_open"; specs[458].min_args = 6; specs[458].variadic = false;
+        specs[459].name = "obj_storage_builtin_close"; specs[459].min_args = 1; specs[459].variadic = false;
+        specs[460].name = "obj_storage_builtin_put_file"; specs[460].min_args = 4; specs[460].variadic = false;
+        specs[461].name = "obj_storage_builtin_put_text"; specs[461].min_args = 4; specs[461].variadic = false;
+        specs[462].name = "obj_storage_builtin_get_to_file"; specs[462].min_args = 3; specs[462].variadic = false;
+        specs[463].name = "obj_storage_builtin_exists"; specs[463].min_args = 2; specs[463].variadic = false;
+        specs[464].name = "obj_storage_builtin_head"; specs[464].min_args = 2; specs[464].variadic = false;
+        specs[465].name = "obj_storage_builtin_delete"; specs[465].min_args = 2; specs[465].variadic = false;
+        specs[466].name = "obj_storage_builtin_signed_url"; specs[466].min_args = 3; specs[466].variadic = false;
         initialized = true;
     }
 
@@ -2302,6 +2331,35 @@ static cct_sem_builtin_spec_t specs[438];
     specs[435].return_type = &sem->type_verbum;
     specs[436].return_type = &sem->type_verbum;
     specs[437].return_type = &sem->type_nihil;
+    specs[438].return_type = &sem->type_verbum;
+    specs[439].return_type = &sem->type_verbum;
+    specs[440].return_type = &sem->type_verbum;
+    specs[441].return_type = sem_make_pointer_type(sem, &sem->type_nihil);
+    specs[442].return_type = sem_make_pointer_type(sem, &sem->type_nihil);
+    specs[443].return_type = &sem->type_nihil;
+    specs[444].return_type = &sem->type_verum;
+    specs[445].return_type = &sem->type_verum;
+    specs[446].return_type = &sem->type_rex;
+    specs[447].return_type = &sem->type_verbum;
+    specs[448].return_type = &sem->type_rex;
+    specs[449].return_type = &sem->type_verum;
+    specs[450].return_type = &sem->type_verbum;
+    specs[451].return_type = &sem->type_verum;
+    specs[452].return_type = &sem->type_verum;
+    specs[453].return_type = &sem->type_verbum;
+    specs[454].return_type = &sem->type_verbum;
+    specs[455].return_type = &sem->type_verbum;
+    specs[456].return_type = &sem->type_rex;
+    specs[457].return_type = &sem->type_verbum;
+    specs[458].return_type = sem_make_pointer_type(sem, &sem->type_nihil);
+    specs[459].return_type = &sem->type_nihil;
+    specs[460].return_type = &sem->type_verum;
+    specs[461].return_type = &sem->type_verum;
+    specs[462].return_type = &sem->type_verum;
+    specs[463].return_type = &sem->type_rex;
+    specs[464].return_type = &sem->type_verum;
+    specs[465].return_type = &sem->type_verum;
+    specs[466].return_type = &sem->type_verbum;
 
     for (size_t i = 0; i < sizeof(specs) / sizeof(specs[0]); i++) {
         if (!specs[i].name) continue;
@@ -2391,6 +2449,9 @@ static const char* sem_forbidden_module_for_obsecro_in_freestanding(const char *
     if (sem_str_has_prefix(name, "pg_builtin_")) return "cct/db_postgres";
     if (sem_str_has_prefix(name, "mail_builtin_")) return "cct/mail";
     if (sem_str_has_prefix(name, "instr_builtin_")) return "cct/instrument";
+    if (sem_str_has_prefix(name, "media_store_builtin_")) return "cct/media_store";
+    if (sem_str_has_prefix(name, "zip_builtin_")) return "cct/archive_zip";
+    if (sem_str_has_prefix(name, "obj_storage_builtin_")) return "cct/object_storage";
 
     return NULL;
 }

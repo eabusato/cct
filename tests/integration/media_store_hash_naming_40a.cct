@@ -1,0 +1,46 @@
+INCIPIT grimoire "media_store_hash_naming_40a"
+
+ADVOCARE "cct/crypto.cct"
+ADVOCARE "cct/fs.cct"
+ADVOCARE "cct/media_store.cct"
+ADVOCARE "cct/path.cct"
+ADVOCARE "cct/result.cct"
+ADVOCARE "cct/verbum.cct"
+
+RITUALE main() REDDE REX
+  SI OBSECRO args_argc() < 2
+    REDDE 50
+  FIN SI
+
+  EVOCA VERBUM root AD OBSECRO args_arg(1)
+  EVOCA VERBUM src AD CONIURA path_join(root, "hash_src.json")
+  EVOCA VERBUM payload AD "{\"phase\":40}"
+  CONIURA mkdir_all(root)
+  CONIURA write_all(src, payload)
+
+  EVOCA MediaStoreOptions opts AD CONIURA media_store_default_options(root)
+  VINCIRE opts.naming_policy AD MEDIA_NAMING_HASH_WITH_EXT
+  EVOCA SPECULUM NIHIL opened AD CONIURA media_store_open(opts)
+  SI NON CONIURA result_is_ok GENUS(MediaStore, VERBUM)(opened)
+    REDDE 51
+  FIN SI
+
+  EVOCA MediaStore store AD CONIURA result_unwrap GENUS(MediaStore, VERBUM)(opened)
+  EVOCA SPECULUM NIHIL inserted AD CONIURA media_store_put_file(store, MEDIA_ZONE_PRIVATE, src, "meta.json")
+  SI NON CONIURA result_is_ok GENUS(MediaArtifact, VERBUM)(inserted)
+    REDDE 52
+  FIN SI
+
+  EVOCA MediaArtifact artifact AD CONIURA result_unwrap GENUS(MediaArtifact, VERBUM)(inserted)
+  EVOCA VERBUM digest AD CONIURA sha256(payload)
+  SI CONIURA compare(artifact.filename, CONIURA concat(digest, ".json")) != 0
+    REDDE 53
+  FIN SI
+  SI NON CONIURA ends_with(artifact.relative_path, artifact.filename)
+    REDDE 54
+  FIN SI
+
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

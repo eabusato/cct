@@ -19,9 +19,9 @@ CCT is a compiled, ritual-themed programming language with deterministic sigil g
 
 ## Status
 
-**Current status: FASE 39 completed** (security/cryptography, advanced text and parsing, logging and runtime diagnostics, Sigilo Vivo foundations, operational database, transactional mail, runtime instrumentation, and trace visualization are now closed on the validated baseline).
+**Current status: FASE 40 completed** (security/cryptography, advanced text and parsing, logging and runtime diagnostics, Sigilo Vivo foundations, operational database, transactional mail, runtime instrumentation, trace visualization, and media bridges and packaging are now closed on the validated baseline).
 
-Implemented phases: **0 -> 39**, plus the interstitial **FASE 14T** closure.
+Implemented phases: **0 -> 40**, plus the interstitial **FASE 14T** closure.
 
 **Phase-reference convention:** phase labels found in file/module headers, local markers, or help text may refer to the phase in which that specific component was introduced or stabilized. They are historical markers and do not necessarily represent the current global project status shown above.
 
@@ -82,6 +82,7 @@ Highlights of the current baseline:
 - FASE 37 transactional mail: `cct/mail` (SMTP with PLAIN/LOGIN/STARTTLS/SMTPS, file/memory backends), `cct/mail_spool` (persistent queue with exponential-backoff retry), `cct/mail_webhook` (delivery/bounce/complaint normalization for Mailgun/SendGrid)
 - FASE 38 runtime instrumentation: `cct/instrument` (span emission by category: DB/CACHE/STORAGE/MAIL/TASK/HTTP; off-by-default, zero overhead when inactive), `cct/context_local` (request/task-scoped key-value store for `request_id`, `trace_id`, `user_id`, `locale`, `route_id`)
 - FASE 39 trace visualization: animated SVG renderer overlaying `.ctrace` onto route sigil (timeline, step-by-step, comparison mode), operational category overlay system with stable color palette and exportable CSS (`cct sigilo trace render`, `cct sigilo trace compare`)
+- FASE 40 media bridges and packaging: `cct/media_store` (local store with tmp/quarantine/processed/public/private zones, UUID/hash naming, SHA-256 checksum, atomic promotion via `rename(2)`), `cct/archive_zip` (ZIP creation, text/file entry writing, safe extraction, path-traversal rejection at API level), `cct/object_storage` (optional S3-compatible bridge: upload, download, delete, signed URL; works with AWS S3, MinIO, Cloudflare R2)
 
 ## Documentation
 
@@ -91,7 +92,7 @@ CCT documentation is organized by audience and purpose. Choose your reading path
 1. This README (you're reading it!)
 2. [Installation Guide](docs/install.md) - Setup and verification
 3. [Current Release Status Through FASE 31](docs/release/STATUS_0_31.md) - Compiler and bootstrap validated baseline at a glance
-4. [FASE 39 Release Notes](docs/release/FASE_39_RELEASE_NOTES.md) - Trace visualization closure summary
+4. [FASE 40 Release Notes](docs/release/FASE_40_RELEASE_NOTES.md) - Media bridges and packaging closure summary
 5. [Spec - Sections 1-3, 12](docs/spec.md) - Basic syntax and examples
 6. [Project Conventions](docs/project_conventions.md) - Code organization
 7. [Examples Catalog](examples/README.md) - Runnable examples including the FASE 20 app stack
@@ -123,6 +124,7 @@ CCT documentation is organized by audience and purpose. Choose your reading path
 2. [Roadmap](docs/roadmap.md) - Phase history and future plans
 3. [Release Status Through FASE 31](docs/release/STATUS_0_31.md) - Current cross-phase validation and release baseline
 4. [Release Documentation](docs/release/):
+   - [FASE 40 Release Notes](docs/release/FASE_40_RELEASE_NOTES.md) - Media bridges and packaging closure summary
    - [FASE 39 Release Notes](docs/release/FASE_39_RELEASE_NOTES.md) - Trace visualization closure summary
    - [FASE 38 Release Notes](docs/release/FASE_38_RELEASE_NOTES.md) - Runtime instrumentation closure summary
    - [FASE 37 Release Notes](docs/release/FASE_37_RELEASE_NOTES.md) - Transactional mail closure summary
@@ -171,7 +173,7 @@ Primary docs:
 - `docs/bibliotheca_canonica.md`
 - `docs/release/STATUS_0_31.md` — current cross-phase release status index
 - `docs/release/STATUS_0_30.md` — historical pre-promotion release status snapshot
-- `docs/release/` — phase release-note archive through FASE 39
+- `docs/release/` — phase release-note archive through FASE 40
 
 Tooling and guides:
 - `docs/install.md`
@@ -192,9 +194,10 @@ Project and phase dossiers:
 
 ## Release Documentation Packages
 
-The current project baseline is **FASE 39 completed**. Historical and bootstrap-era release packages remain available for traceability, migration references, and operational handoff.
+The current project baseline is **FASE 40 completed**. Historical and bootstrap-era release packages remain available for traceability, migration references, and operational handoff.
 
-**Current-phase release documentation (32-39):**
+**Current-phase release documentation (32-40):**
+- `docs/release/FASE_40_RELEASE_NOTES.md` — media bridges and packaging (`media_store`, `archive_zip`, `object_storage`)
 - `docs/release/FASE_39_RELEASE_NOTES.md` — trace visualization (animated SVG renderer, operational category overlays)
 - `docs/release/FASE_38_RELEASE_NOTES.md` — runtime instrumentation (`instrument`, `context_local`)
 - `docs/release/FASE_37_RELEASE_NOTES.md` — transactional mail (`mail`, `mail_spool`, `mail_webhook`)
@@ -236,7 +239,7 @@ The current project baseline is **FASE 39 completed**. Historical and bootstrap-
 - FASE 21-29 closed the bootstrap compiler stack through self-host convergence
 - FASE 30 closed the operational self-host platform baseline
 - FASE 31 closed promotion of the self-hosted compiler to the default path
-- FASE 32-39 closed the standard library expansion through security, text, observability, Sigilo Vivo, database, mail, instrumentation, and trace visualization
+- FASE 32-40 closed the standard library expansion through security, text, observability, Sigilo Vivo, database, mail, instrumentation, trace visualization, and media bridges/packaging
 - `make test-all-0-31` remains the authoritative whole-project validation path for the compiler and bootstrap layers
 - Zero silent-breaking-change policy remains active
 
@@ -325,6 +328,11 @@ See `docs/roadmap.md`, `docs/spec.md`, and `docs/release/STATUS_0_31.md` for com
 - Animated SVG renderer (`src/sigilo/trace_render.c`): renders `.ctrace` over route sigil; timeline per depth lane; CSS `@keyframes` animation; step-by-step mode; comparison mode with `data-delta-us`; unresolved spans in dedicated chamber
 - Operational category overlays (`src/sigilo/trace_overlay.c`): 11 categories (SQL/cache/storage/transcode/mail/i18n/task/HTTP/auth/error/unknown); stable color palette; heuristic name-prefix inference; `span-slow` marking (>2× median); exportable CSS and SVG legend
 - New CLI subcommands: `cct sigilo trace render`, `cct sigilo trace render --step N`, `cct sigilo trace compare`
+
+### FASE 40 (Media Bridges and Packaging)
+- `cct/media_store`: local media store with five canonical lifecycle zones (tmp/quarantine/processed/public/private); UUID v4 and SHA-256 hash naming policies; SHA-256 checksum on ingest; atomic promotion via `rename(2)`; path-traversal-safe delete
+- `cct/archive_zip`: ZIP creation, text/file entry writing, listing, reading, and safe extraction; `zip_add_text` for JSON/SVG/HTML without a temp file; `..` and absolute entry names rejected as hard `Err` at both write and extract time (ZIP slip prevention); backed by libzip or miniz
+- `cct/object_storage`: optional S3-compatible object storage bridge (AWS S3, MinIO, Cloudflare R2); put/get/delete/head/exists/signed-URL (AWS Signature V4); tests skip cleanly when `APP_OBJ_STORAGE_ENDPOINT` is absent; fully optional alongside local `media_store`
 
 ### FASE 31 (Compiler Modes and Entrypoints)
 

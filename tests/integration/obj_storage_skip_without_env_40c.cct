@@ -1,0 +1,12 @@
+INCIPIT grimoire "obj_storage_skip_without_env_40c"
+
+ADVOCARE "cct/env.cct"
+
+RITUALE main() REDDE REX
+  SI CONIURA has_env("APP_OBJ_STORAGE_ENDPOINT")
+    REDDE 0
+  FIN SI
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

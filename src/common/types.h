@@ -18,11 +18,11 @@
  * Project version
  */
 #define CCT_VERSION_MAJOR 0
-#define CCT_VERSION_MINOR 19
+#define CCT_VERSION_MINOR 40
 #define CCT_VERSION_PATCH 0
 #define CCT_VERSION_SUFFIX ""
 
-#define CCT_VERSION_STRING "0.19.0"
+#define CCT_VERSION_STRING "0.40.0"
 
 /*
  * Common type aliases

@@ -1,0 +1,25 @@
+INCIPIT grimoire "zip_reject_traversal_40b"
+
+ADVOCARE "cct/archive_zip.cct"
+ADVOCARE "cct/result.cct"
+
+RITUALE main() REDDE REX
+  SI OBSECRO args_argc() < 2
+    REDDE 120
+  FIN SI
+
+  EVOCA VERBUM zip_path AD OBSECRO args_arg(1)
+  EVOCA SPECULUM NIHIL created AD CONIURA zip_create(zip_path)
+  SI NON CONIURA result_is_ok GENUS(ZipArchive, VERBUM)(created)
+    REDDE 121
+  FIN SI
+  EVOCA ZipArchive archive AD CONIURA result_unwrap GENUS(ZipArchive, VERBUM)(created)
+  EVOCA SPECULUM NIHIL added AD CONIURA zip_add_text(archive, "../evil.txt", "x")
+  SI CONIURA result_is_ok GENUS(REX, VERBUM)(added)
+    REDDE 122
+  FIN SI
+  CONIURA zip_close(SPECULUM archive)
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

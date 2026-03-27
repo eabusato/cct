@@ -1,0 +1,44 @@
+INCIPIT grimoire "media_store_layout_open_40a"
+
+ADVOCARE "cct/fs.cct"
+ADVOCARE "cct/media_store.cct"
+ADVOCARE "cct/path.cct"
+ADVOCARE "cct/result.cct"
+
+RITUALE main() REDDE REX
+  SI OBSECRO args_argc() < 2
+    REDDE 10
+  FIN SI
+
+  EVOCA VERBUM root AD OBSECRO args_arg(1)
+  EVOCA SPECULUM NIHIL opened AD CONIURA media_store_open(CONIURA media_store_default_options(root))
+  SI NON CONIURA result_is_ok GENUS(MediaStore, VERBUM)(opened)
+    REDDE 11
+  FIN SI
+
+  EVOCA MediaStore store AD CONIURA result_unwrap GENUS(MediaStore, VERBUM)(opened)
+  EVOCA SPECULUM NIHIL ensured AD CONIURA media_store_ensure_layout(store)
+  SI NON CONIURA result_is_ok GENUS(REX, VERBUM)(ensured)
+    REDDE 12
+  FIN SI
+
+  SI NON CONIURA is_dir(CONIURA path_join(root, "tmp"))
+    REDDE 13
+  FIN SI
+  SI NON CONIURA is_dir(CONIURA path_join(root, "quarantine"))
+    REDDE 14
+  FIN SI
+  SI NON CONIURA is_dir(CONIURA path_join(root, "processed"))
+    REDDE 15
+  FIN SI
+  SI NON CONIURA is_dir(CONIURA path_join(root, "public"))
+    REDDE 16
+  FIN SI
+  SI NON CONIURA is_dir(CONIURA path_join(root, "private"))
+    REDDE 17
+  FIN SI
+
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

@@ -1,0 +1,16 @@
+INCIPIT grimoire "media_store_invalid_checksum_40a"
+
+ADVOCARE "cct/media_store.cct"
+ADVOCARE "cct/result.cct"
+
+RITUALE main() REDDE REX
+  EVOCA MediaStoreOptions opts AD CONIURA media_store_default_options("tests/.tmp/phase40a/invalid")
+  VINCIRE opts.checksum_algorithm AD "md5"
+  EVOCA SPECULUM NIHIL opened AD CONIURA media_store_open(opts)
+  SI CONIURA result_is_ok GENUS(MediaStore, VERBUM)(opened)
+    REDDE 70
+  FIN SI
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

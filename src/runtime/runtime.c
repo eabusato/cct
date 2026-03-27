@@ -33,6 +33,9 @@ void cct_runtime_codegen_config_defaults(cct_runtime_codegen_config_t *cfg) {
     cfg->emit_postgres_helpers = false;
     cfg->emit_mail_helpers = false;
     cfg->emit_instrument_helpers = false;
+    cfg->emit_media_store_helpers = false;
+    cfg->emit_archive_zip_helpers = false;
+    cfg->emit_object_storage_helpers = false;
     cfg->emit_verbum_helpers = true;
     cfg->emit_fmt_helpers = true;
     cfg->emit_db_helpers = false;
@@ -4900,6 +4903,15 @@ bool cct_runtime_emit_c_helpers(FILE *out, const cct_runtime_codegen_config_t *c
     }
     if (cfg->emit_instrument_helpers) {
         if (!cct_runtime_emit_instrument_helpers(out)) return false;
+    }
+    if (cfg->emit_media_store_helpers) {
+        if (!cct_runtime_emit_media_store_helpers(out)) return false;
+    }
+    if (cfg->emit_archive_zip_helpers) {
+        if (!cct_runtime_emit_archive_zip_helpers(out)) return false;
+    }
+    if (cfg->emit_object_storage_helpers) {
+        if (!cct_runtime_emit_object_storage_helpers(out)) return false;
     }
 
     fputs("/* ===== End CCT Runtime Helpers ===== */\n\n", out);

@@ -1,0 +1,54 @@
+INCIPIT grimoire "media_store_put_uuid_ext_40a"
+
+ADVOCARE "cct/crypto.cct"
+ADVOCARE "cct/fs.cct"
+ADVOCARE "cct/media_store.cct"
+ADVOCARE "cct/path.cct"
+ADVOCARE "cct/result.cct"
+ADVOCARE "cct/verbum.cct"
+
+RITUALE main() REDDE REX
+  SI OBSECRO args_argc() < 2
+    REDDE 20
+  FIN SI
+
+  EVOCA VERBUM root AD OBSECRO args_arg(1)
+  EVOCA VERBUM src AD CONIURA path_join(root, "input_note.txt")
+  CONIURA mkdir_all(root)
+  CONIURA write_all(src, "phase40a-media-store")
+
+  EVOCA SPECULUM NIHIL opened AD CONIURA media_store_open(CONIURA media_store_default_options(root))
+  SI NON CONIURA result_is_ok GENUS(MediaStore, VERBUM)(opened)
+    REDDE 21
+  FIN SI
+  EVOCA MediaStore store AD CONIURA result_unwrap GENUS(MediaStore, VERBUM)(opened)
+
+  EVOCA SPECULUM NIHIL inserted AD CONIURA media_store_put_file(store, MEDIA_ZONE_TMP, src, "note.TXT")
+  SI NON CONIURA result_is_ok GENUS(MediaArtifact, VERBUM)(inserted)
+    REDDE 22
+  FIN SI
+
+  EVOCA MediaArtifact artifact AD CONIURA result_unwrap GENUS(MediaArtifact, VERBUM)(inserted)
+  SI NON CONIURA starts_with(artifact.relative_path, "tmp/")
+    REDDE 23
+  FIN SI
+  SI NON CONIURA ends_with(artifact.filename, ".txt")
+    REDDE 24
+  FIN SI
+  SI CONIURA compare(artifact.content_type, "text/plain; charset=utf-8") != 0
+    REDDE 25
+  FIN SI
+  SI artifact.size_bytes != CONIURA len("phase40a-media-store")
+    REDDE 26
+  FIN SI
+  SI CONIURA compare(artifact.checksum, CONIURA sha256("phase40a-media-store")) != 0
+    REDDE 27
+  FIN SI
+  SI NON CONIURA media_store_exists(store, artifact)
+    REDDE 28
+  FIN SI
+
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

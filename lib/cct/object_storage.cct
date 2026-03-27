@@ -1,0 +1,155 @@
+-- CCT — Clavicula Turing
+-- Standard Library Module: object_storage
+--
+-- FASE 40C: Object storage contract
+--
+-- Copyright (c) Erick Andrade Busato. Todos os direitos reservados.
+
+INCIPIT grimoire "object_storage"
+
+ADVOCARE "cct/result.cct"
+ADVOCARE "cct/verbum.cct"
+
+SIGILLUM ObjectStorageOptions
+  endpoint: VERBUM
+  bucket: VERBUM
+  access_key: VERBUM
+  secret_key: VERBUM
+  region: VERBUM
+  use_tls: VERUM
+FIN SIGILLUM
+
+SIGILLUM ObjectRef
+  bucket: VERBUM
+  key: VERBUM
+  content_type: VERBUM
+  etag: VERBUM
+  size_bytes: REX
+FIN SIGILLUM
+
+SIGILLUM SignedUrl
+  url: VERBUM
+  expires_at_iso: VERBUM
+FIN SIGILLUM
+
+SIGILLUM ObjectStorageClient
+  handle: SPECULUM NIHIL
+  options: ObjectStorageOptions
+FIN SIGILLUM
+
+RITUALE object_storage_default_options(VERBUM endpoint, VERBUM bucket, VERBUM access_key, VERBUM secret_key) REDDE ObjectStorageOptions
+  EVOCA ObjectStorageOptions opts
+  VINCIRE opts.endpoint AD endpoint
+  VINCIRE opts.bucket AD bucket
+  VINCIRE opts.access_key AD access_key
+  VINCIRE opts.secret_key AD secret_key
+  VINCIRE opts.region AD "us-east-1"
+  VINCIRE opts.use_tls AD VERUM
+  REDDE opts
+EXPLICIT RITUALE
+
+RITUALE object_storage_last_error() REDDE VERBUM
+  REDDE OBSECRO obj_storage_builtin_last_error()
+EXPLICIT RITUALE
+
+RITUALE object_storage_last_ref(ObjectStorageOptions options, VERBUM key) REDDE ObjectRef
+  EVOCA ObjectRef ref
+  VINCIRE ref.bucket AD options.bucket
+  VINCIRE ref.key AD key
+  VINCIRE ref.content_type AD OBSECRO obj_storage_builtin_last_content_type()
+  VINCIRE ref.etag AD OBSECRO obj_storage_builtin_last_etag()
+  VINCIRE ref.size_bytes AD OBSECRO obj_storage_builtin_last_size()
+  REDDE ref
+EXPLICIT RITUALE
+
+RITUALE object_storage_open(ObjectStorageOptions options) REDDE SPECULUM NIHIL
+  EVOCA SPECULUM NIHIL handle AD OBSECRO obj_storage_builtin_open(
+    options.endpoint,
+    options.bucket,
+    options.access_key,
+    options.secret_key,
+    options.region,
+    options.use_tls
+  )
+  EVOCA VERBUM err AD CONIURA object_storage_last_error()
+  SI CONIURA len(err) > 0
+    REDDE CONIURA Err GENUS(ObjectStorageClient, VERBUM)(err)
+  FIN SI
+  EVOCA ObjectStorageClient client
+  VINCIRE client.handle AD handle
+  VINCIRE client.options AD options
+  REDDE CONIURA Ok GENUS(ObjectStorageClient, VERBUM)(client)
+EXPLICIT RITUALE
+
+RITUALE object_storage_close(SPECULUM ObjectStorageClient client)
+  OBSECRO obj_storage_builtin_close((*client).handle)
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE object_storage_put_file(ObjectStorageClient client, VERBUM key, VERBUM source_path, VERBUM content_type) REDDE SPECULUM NIHIL
+  EVOCA VERUM ok AD OBSECRO obj_storage_builtin_put_file(client.handle, key, source_path, content_type)
+  EVOCA VERBUM err AD CONIURA object_storage_last_error()
+  SI NON ok VEL CONIURA len(err) > 0
+    REDDE CONIURA Err GENUS(ObjectRef, VERBUM)(err)
+  FIN SI
+  REDDE CONIURA Ok GENUS(ObjectRef, VERBUM)(CONIURA object_storage_last_ref(client.options, key))
+EXPLICIT RITUALE
+
+RITUALE object_storage_put_text(ObjectStorageClient client, VERBUM key, VERBUM content, VERBUM content_type) REDDE SPECULUM NIHIL
+  EVOCA VERUM ok AD OBSECRO obj_storage_builtin_put_text(client.handle, key, content, content_type)
+  EVOCA VERBUM err AD CONIURA object_storage_last_error()
+  SI NON ok VEL CONIURA len(err) > 0
+    REDDE CONIURA Err GENUS(ObjectRef, VERBUM)(err)
+  FIN SI
+  REDDE CONIURA Ok GENUS(ObjectRef, VERBUM)(CONIURA object_storage_last_ref(client.options, key))
+EXPLICIT RITUALE
+
+RITUALE object_storage_get_to_file(ObjectStorageClient client, VERBUM key, VERBUM dest_path) REDDE SPECULUM NIHIL
+  EVOCA VERUM ok AD OBSECRO obj_storage_builtin_get_to_file(client.handle, key, dest_path)
+  EVOCA VERBUM err AD CONIURA object_storage_last_error()
+  SI NON ok VEL CONIURA len(err) > 0
+    REDDE CONIURA Err GENUS(REX, VERBUM)(err)
+  FIN SI
+  REDDE CONIURA Ok GENUS(REX, VERBUM)(0)
+EXPLICIT RITUALE
+
+RITUALE object_storage_exists(ObjectStorageClient client, VERBUM key) REDDE SPECULUM NIHIL
+  EVOCA REX state AD OBSECRO obj_storage_builtin_exists(client.handle, key)
+  EVOCA VERBUM err AD CONIURA object_storage_last_error()
+  SI state < 0 VEL CONIURA len(err) > 0
+    REDDE CONIURA Err GENUS(VERUM, VERBUM)(err)
+  FIN SI
+  REDDE CONIURA Ok GENUS(VERUM, VERBUM)(state == 1)
+EXPLICIT RITUALE
+
+RITUALE object_storage_head(ObjectStorageClient client, VERBUM key) REDDE SPECULUM NIHIL
+  EVOCA VERUM ok AD OBSECRO obj_storage_builtin_head(client.handle, key)
+  EVOCA VERBUM err AD CONIURA object_storage_last_error()
+  SI NON ok VEL CONIURA len(err) > 0
+    REDDE CONIURA Err GENUS(ObjectRef, VERBUM)(err)
+  FIN SI
+  REDDE CONIURA Ok GENUS(ObjectRef, VERBUM)(CONIURA object_storage_last_ref(client.options, key))
+EXPLICIT RITUALE
+
+RITUALE object_storage_delete(ObjectStorageClient client, VERBUM key) REDDE SPECULUM NIHIL
+  EVOCA VERUM ok AD OBSECRO obj_storage_builtin_delete(client.handle, key)
+  EVOCA VERBUM err AD CONIURA object_storage_last_error()
+  SI NON ok VEL CONIURA len(err) > 0
+    REDDE CONIURA Err GENUS(REX, VERBUM)(err)
+  FIN SI
+  REDDE CONIURA Ok GENUS(REX, VERBUM)(0)
+EXPLICIT RITUALE
+
+RITUALE object_storage_signed_url(ObjectStorageClient client, VERBUM key, REX ttl_seconds) REDDE SPECULUM NIHIL
+  EVOCA VERBUM url AD OBSECRO obj_storage_builtin_signed_url(client.handle, key, ttl_seconds)
+  EVOCA VERBUM err AD CONIURA object_storage_last_error()
+  SI CONIURA len(err) > 0
+    REDDE CONIURA Err GENUS(SignedUrl, VERBUM)(err)
+  FIN SI
+  EVOCA SignedUrl signed_ref
+  VINCIRE signed_ref.url AD url
+  VINCIRE signed_ref.expires_at_iso AD OBSECRO obj_storage_builtin_last_signed_expires_at()
+  REDDE CONIURA Ok GENUS(SignedUrl, VERBUM)(signed_ref)
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

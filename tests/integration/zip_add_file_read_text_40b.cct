@@ -1,0 +1,44 @@
+INCIPIT grimoire "zip_add_file_read_text_40b"
+
+ADVOCARE "cct/archive_zip.cct"
+ADVOCARE "cct/fs.cct"
+ADVOCARE "cct/path.cct"
+ADVOCARE "cct/result.cct"
+ADVOCARE "cct/verbum.cct"
+
+RITUALE main() REDDE REX
+  SI OBSECRO args_argc() < 3
+    REDDE 90
+  FIN SI
+
+  EVOCA VERBUM zip_path AD OBSECRO args_arg(1)
+  EVOCA VERBUM src_path AD OBSECRO args_arg(2)
+  CONIURA write_all(src_path, "zip-file-read-text")
+
+  EVOCA SPECULUM NIHIL created AD CONIURA zip_create(zip_path)
+  SI NON CONIURA result_is_ok GENUS(ZipArchive, VERBUM)(created)
+    REDDE 91
+  FIN SI
+  EVOCA ZipArchive archive AD CONIURA result_unwrap GENUS(ZipArchive, VERBUM)(created)
+  SI NON CONIURA result_is_ok GENUS(REX, VERBUM)(CONIURA zip_add_file(archive, src_path, "docs/readme.txt"))
+    REDDE 92
+  FIN SI
+  CONIURA zip_close(SPECULUM archive)
+
+  EVOCA SPECULUM NIHIL reopened AD CONIURA zip_open(zip_path)
+  SI NON CONIURA result_is_ok GENUS(ZipArchive, VERBUM)(reopened)
+    REDDE 93
+  FIN SI
+  EVOCA ZipArchive archive2 AD CONIURA result_unwrap GENUS(ZipArchive, VERBUM)(reopened)
+  EVOCA SPECULUM NIHIL text_res AD CONIURA zip_read_text(archive2, "docs/readme.txt")
+  SI NON CONIURA result_is_ok GENUS(VERBUM, VERBUM)(text_res)
+    REDDE 94
+  FIN SI
+  SI CONIURA compare(CONIURA result_unwrap GENUS(VERBUM, VERBUM)(text_res), "zip-file-read-text") != 0
+    REDDE 95
+  FIN SI
+  CONIURA zip_close(SPECULUM archive2)
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

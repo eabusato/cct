@@ -624,6 +624,33 @@ cct_phase32_copy_compile_and_run_env() {
     return 0
 }
 
+cct_phase32_copy_compile_and_run_env_args() {
+    local compiler_bin="$1"
+    local src="$2"
+    local out_base="$3"
+    local expected_rc="$4"
+    local env_count="$5"
+    shift 5
+
+    local env_args=()
+    local run_args=()
+    local i=0
+
+    while [ "$i" -lt "$env_count" ]; do
+        env_args+=("$1")
+        shift
+        i=$((i + 1))
+    done
+    run_args=("$@")
+
+    cp "$src" "$out_base.cct" || return 11
+    "$compiler_bin" "$out_base.cct" >"$out_base.compile.out" 2>"$out_base.compile.err" || return 12
+    env "${env_args[@]}" "$out_base" "${run_args[@]}" >"$out_base.run.out" 2>"$out_base.run.err"
+    local rc=$?
+    [ "$rc" -eq "$expected_rc" ] || return 13
+    return 0
+}
+
 resolve_doc_path() {
     local rel="$1"
     if [ -f "$rel" ]; then
@@ -11727,6 +11754,237 @@ if [ "$RC_31_READY" -eq 0 ] && "$PHASE31_HOST_WRAPPER" sigilo trace render --sta
     test_pass "sigilo trace preserva legenda coerente"
 else
     test_fail "sigilo trace nao preservou legenda coerente"
+fi
+fi
+
+if cct_phase_block_enabled "40A"; then
+echo ""
+echo "========================================"
+echo "FASE 40A: cct/media_store"
+echo "========================================"
+cct_phase31_prepare >/dev/null 2>&1
+mkdir -p "$CCT_TMP_DIR/phase40a"
+
+echo "Test 2015: cct/media_store abre e materializa layout canonico"
+BASE_2015="$CCT_TMP_DIR/phase40a/test_2015_layout"
+ROOT_2015="$CCT_TMP_DIR/phase40a/layout_root"
+rm -rf "$ROOT_2015"
+if [ "$RC_31_READY" -eq 0 ] && cct_phase32_copy_compile_and_run_args "$PHASE31_HOST_WRAPPER" "tests/integration/media_store_layout_open_40a.cct" "$BASE_2015" 0 "$ROOT_2015"; then
+    test_pass "cct/media_store abre e materializa layout canonico"
+else
+    test_fail "cct/media_store nao abriu ou nao materializou layout canonico"
+fi
+
+echo "Test 2016: cct/media_store faz ingestao UUID com extensao e metadata"
+BASE_2016="$CCT_TMP_DIR/phase40a/test_2016_put_uuid"
+ROOT_2016="$CCT_TMP_DIR/phase40a/put_uuid_root"
+rm -rf "$ROOT_2016"
+if [ "$RC_31_READY" -eq 0 ] && cct_phase32_copy_compile_and_run_args "$PHASE31_HOST_WRAPPER" "tests/integration/media_store_put_uuid_ext_40a.cct" "$BASE_2016" 0 "$ROOT_2016"; then
+    test_pass "cct/media_store faz ingestao UUID com extensao e metadata"
+else
+    test_fail "cct/media_store nao fez ingestao UUID com extensao e metadata"
+fi
+
+echo "Test 2017: cct/media_store promove copia e remove artefatos"
+BASE_2017="$CCT_TMP_DIR/phase40a/test_2017_lifecycle"
+ROOT_2017="$CCT_TMP_DIR/phase40a/lifecycle_root"
+rm -rf "$ROOT_2017"
+if [ "$RC_31_READY" -eq 0 ] && cct_phase32_copy_compile_and_run_args "$PHASE31_HOST_WRAPPER" "tests/integration/media_store_promote_copy_delete_40a.cct" "$BASE_2017" 0 "$ROOT_2017"; then
+    test_pass "cct/media_store promove copia e remove artefatos"
+else
+    test_fail "cct/media_store nao promoveu/copiou/removeu artefatos"
+fi
+
+echo "Test 2018: cct/media_store suporta naming por hash com extensao"
+BASE_2018="$CCT_TMP_DIR/phase40a/test_2018_hash_name"
+ROOT_2018="$CCT_TMP_DIR/phase40a/hash_root"
+rm -rf "$ROOT_2018"
+if [ "$RC_31_READY" -eq 0 ] && cct_phase32_copy_compile_and_run_args "$PHASE31_HOST_WRAPPER" "tests/integration/media_store_hash_naming_40a.cct" "$BASE_2018" 0 "$ROOT_2018"; then
+    test_pass "cct/media_store suporta naming por hash com extensao"
+else
+    test_fail "cct/media_store nao suportou naming por hash com extensao"
+fi
+
+echo "Test 2019: cct/media_store recalcula checksum apos adulteracao"
+BASE_2019="$CCT_TMP_DIR/phase40a/test_2019_rechecksum"
+ROOT_2019="$CCT_TMP_DIR/phase40a/rechecksum_root"
+rm -rf "$ROOT_2019"
+if [ "$RC_31_READY" -eq 0 ] && cct_phase32_copy_compile_and_run_args "$PHASE31_HOST_WRAPPER" "tests/integration/media_store_rechecksum_tamper_40a.cct" "$BASE_2019" 0 "$ROOT_2019"; then
+    test_pass "cct/media_store recalcula checksum apos adulteracao"
+else
+    test_fail "cct/media_store nao recalculou checksum apos adulteracao"
+fi
+
+echo "Test 2020: cct/media_store rejeita algoritmo de checksum invalido"
+BASE_2020="$CCT_TMP_DIR/phase40a/test_2020_invalid_checksum"
+if [ "$RC_31_READY" -eq 0 ] && cct_phase32_copy_compile_and_run "$PHASE31_HOST_WRAPPER" "tests/integration/media_store_invalid_checksum_40a.cct" "$BASE_2020" 0; then
+    test_pass "cct/media_store rejeita algoritmo de checksum invalido"
+else
+    test_fail "cct/media_store nao rejeitou algoritmo de checksum invalido"
+fi
+fi
+
+if cct_phase_block_enabled "40B"; then
+echo ""
+echo "========================================"
+echo "FASE 40B: cct/archive_zip"
+echo "========================================"
+cct_phase31_prepare >/dev/null 2>&1
+mkdir -p "$CCT_TMP_DIR/phase40b"
+
+echo "Test 2021: cct/archive_zip cria archive e lista entradas"
+BASE_2021="$CCT_TMP_DIR/phase40b/test_2021_create_list"
+ZIP_2021="$CCT_TMP_DIR/phase40b/create_list.zip"
+rm -f "$ZIP_2021"
+if [ "$RC_31_READY" -eq 0 ] && cct_phase32_copy_compile_and_run_args "$PHASE31_HOST_WRAPPER" "tests/integration/zip_create_add_list_40b.cct" "$BASE_2021" 0 "$ZIP_2021"; then
+    test_pass "cct/archive_zip cria archive e lista entradas"
+else
+    test_fail "cct/archive_zip nao criou archive ou nao listou entradas"
+fi
+
+echo "Test 2022: cct/archive_zip adiciona arquivo local e le texto"
+BASE_2022="$CCT_TMP_DIR/phase40b/test_2022_add_file"
+ZIP_2022="$CCT_TMP_DIR/phase40b/add_file.zip"
+SRC_2022="$CCT_TMP_DIR/phase40b/readme.txt"
+rm -f "$ZIP_2022" "$SRC_2022"
+if [ "$RC_31_READY" -eq 0 ] && cct_phase32_copy_compile_and_run_args "$PHASE31_HOST_WRAPPER" "tests/integration/zip_add_file_read_text_40b.cct" "$BASE_2022" 0 "$ZIP_2022" "$SRC_2022"; then
+    test_pass "cct/archive_zip adiciona arquivo local e le texto"
+else
+    test_fail "cct/archive_zip nao adicionou arquivo local ou nao leu texto"
+fi
+
+echo "Test 2023: cct/archive_zip extrai todas as entradas com seguranca"
+BASE_2023="$CCT_TMP_DIR/phase40b/test_2023_extract_all"
+ZIP_2023="$CCT_TMP_DIR/phase40b/extract_all.zip"
+OUT_2023="$CCT_TMP_DIR/phase40b/extract_all_out"
+rm -rf "$ZIP_2023" "$OUT_2023"
+if [ "$RC_31_READY" -eq 0 ] && cct_phase32_copy_compile_and_run_args "$PHASE31_HOST_WRAPPER" "tests/integration/zip_extract_all_40b.cct" "$BASE_2023" 0 "$ZIP_2023" "$OUT_2023"; then
+    test_pass "cct/archive_zip extrai todas as entradas com seguranca"
+else
+    test_fail "cct/archive_zip nao extraiu todas as entradas com seguranca"
+fi
+
+echo "Test 2024: cct/archive_zip extrai entry individual sem vazar extras"
+BASE_2024="$CCT_TMP_DIR/phase40b/test_2024_extract_entry"
+ZIP_2024="$CCT_TMP_DIR/phase40b/extract_entry.zip"
+OUT_2024="$CCT_TMP_DIR/phase40b/extract_entry_out"
+rm -rf "$ZIP_2024" "$OUT_2024"
+if [ "$RC_31_READY" -eq 0 ] && cct_phase32_copy_compile_and_run_args "$PHASE31_HOST_WRAPPER" "tests/integration/zip_extract_entry_40b.cct" "$BASE_2024" 0 "$ZIP_2024" "$OUT_2024"; then
+    test_pass "cct/archive_zip extrai entry individual sem vazar extras"
+else
+    test_fail "cct/archive_zip nao extraiu entry individual corretamente"
+fi
+
+echo "Test 2025: cct/archive_zip rejeita path traversal em entry_name"
+BASE_2025="$CCT_TMP_DIR/phase40b/test_2025_traversal"
+ZIP_2025="$CCT_TMP_DIR/phase40b/traversal.zip"
+rm -f "$ZIP_2025"
+if [ "$RC_31_READY" -eq 0 ] && cct_phase32_copy_compile_and_run_args "$PHASE31_HOST_WRAPPER" "tests/integration/zip_reject_traversal_40b.cct" "$BASE_2025" 0 "$ZIP_2025"; then
+    test_pass "cct/archive_zip rejeita path traversal em entry_name"
+else
+    test_fail "cct/archive_zip nao rejeitou path traversal em entry_name"
+fi
+
+echo "Test 2026: cct/archive_zip falha claramente em archive invalido"
+BASE_2026="$CCT_TMP_DIR/phase40b/test_2026_invalid_open"
+ZIP_2026="$CCT_TMP_DIR/phase40b/not_a_zip.zip"
+rm -f "$ZIP_2026"
+if [ "$RC_31_READY" -eq 0 ] && cct_phase32_copy_compile_and_run_args "$PHASE31_HOST_WRAPPER" "tests/integration/zip_open_invalid_40b.cct" "$BASE_2026" 0 "$ZIP_2026"; then
+    test_pass "cct/archive_zip falha claramente em archive invalido"
+else
+    test_fail "cct/archive_zip nao falhou claramente em archive invalido"
+fi
+fi
+
+if cct_phase_block_enabled "40C"; then
+echo ""
+echo "========================================"
+echo "FASE 40C: cct/object_storage"
+echo "========================================"
+cct_phase31_prepare >/dev/null 2>&1
+mkdir -p "$CCT_TMP_DIR/phase40c"
+OBJ40C_ENDPOINT="file://$CCT_TMP_DIR/phase40c/object_store_root"
+OBJ40C_BUCKET="phase40c-bucket"
+OBJ40C_ACCESS="phase40c-access"
+OBJ40C_SECRET="phase40c-secret"
+OBJ40C_REGION="sa-east-1"
+rm -rf "$CCT_TMP_DIR/phase40c/object_store_root"
+mkdir -p "$CCT_TMP_DIR/phase40c/object_store_root"
+
+echo "Test 2027: cct/object_storage pula graciosamente sem env configurado"
+BASE_2027="$CCT_TMP_DIR/phase40c/test_2027_skip"
+if [ "$RC_31_READY" -eq 0 ] && cct_phase32_copy_compile_and_run "$PHASE31_HOST_WRAPPER" "tests/integration/obj_storage_skip_without_env_40c.cct" "$BASE_2027" 0; then
+    test_pass "cct/object_storage pula graciosamente sem env configurado"
+else
+    test_fail "cct/object_storage nao pulou graciosamente sem env configurado"
+fi
+
+echo "Test 2028: cct/object_storage faz put e exists no backend local"
+BASE_2028="$CCT_TMP_DIR/phase40c/test_2028_put_exists"
+if [ "$RC_31_READY" -eq 0 ] && cct_phase32_copy_compile_and_run_env "$PHASE31_HOST_WRAPPER" "tests/integration/obj_storage_put_exists_40c.cct" "$BASE_2028" 0 \
+   APP_OBJ_STORAGE_ENDPOINT="$OBJ40C_ENDPOINT" \
+   APP_OBJ_STORAGE_BUCKET="$OBJ40C_BUCKET" \
+   APP_OBJ_STORAGE_ACCESS_KEY="$OBJ40C_ACCESS" \
+   APP_OBJ_STORAGE_SECRET_KEY="$OBJ40C_SECRET" \
+   APP_OBJ_STORAGE_REGION="$OBJ40C_REGION"; then
+    test_pass "cct/object_storage faz put e exists no backend local"
+else
+    test_fail "cct/object_storage nao fez put/exists no backend local"
+fi
+
+echo "Test 2029: cct/object_storage expõe metadata via head"
+BASE_2029="$CCT_TMP_DIR/phase40c/test_2029_head"
+if [ "$RC_31_READY" -eq 0 ] && cct_phase32_copy_compile_and_run_env "$PHASE31_HOST_WRAPPER" "tests/integration/obj_storage_head_40c.cct" "$BASE_2029" 0 \
+   APP_OBJ_STORAGE_ENDPOINT="$OBJ40C_ENDPOINT" \
+   APP_OBJ_STORAGE_BUCKET="$OBJ40C_BUCKET" \
+   APP_OBJ_STORAGE_ACCESS_KEY="$OBJ40C_ACCESS" \
+   APP_OBJ_STORAGE_SECRET_KEY="$OBJ40C_SECRET" \
+   APP_OBJ_STORAGE_REGION="$OBJ40C_REGION"; then
+    test_pass "cct/object_storage expõe metadata via head"
+else
+    test_fail "cct/object_storage nao expôs metadata via head"
+fi
+
+echo "Test 2030: cct/object_storage baixa objeto para arquivo local"
+BASE_2030="$CCT_TMP_DIR/phase40c/test_2030_get_to_file"
+OUT_2030="$CCT_TMP_DIR/phase40c/get_to_file_out"
+rm -rf "$OUT_2030"
+if [ "$RC_31_READY" -eq 0 ] && cct_phase32_copy_compile_and_run_env_args "$PHASE31_HOST_WRAPPER" "tests/integration/obj_storage_get_to_file_40c.cct" "$BASE_2030" 0 5 \
+   APP_OBJ_STORAGE_ENDPOINT="$OBJ40C_ENDPOINT" \
+   APP_OBJ_STORAGE_BUCKET="$OBJ40C_BUCKET" \
+   APP_OBJ_STORAGE_ACCESS_KEY="$OBJ40C_ACCESS" \
+   APP_OBJ_STORAGE_SECRET_KEY="$OBJ40C_SECRET" \
+   APP_OBJ_STORAGE_REGION="$OBJ40C_REGION" \
+   "$OUT_2030"; then
+    test_pass "cct/object_storage baixa objeto para arquivo local"
+else
+    test_fail "cct/object_storage nao baixou objeto para arquivo local"
+fi
+
+echo "Test 2031: cct/object_storage remove objeto e confirma ausencia"
+BASE_2031="$CCT_TMP_DIR/phase40c/test_2031_delete"
+if [ "$RC_31_READY" -eq 0 ] && cct_phase32_copy_compile_and_run_env "$PHASE31_HOST_WRAPPER" "tests/integration/obj_storage_delete_40c.cct" "$BASE_2031" 0 \
+   APP_OBJ_STORAGE_ENDPOINT="$OBJ40C_ENDPOINT" \
+   APP_OBJ_STORAGE_BUCKET="$OBJ40C_BUCKET" \
+   APP_OBJ_STORAGE_ACCESS_KEY="$OBJ40C_ACCESS" \
+   APP_OBJ_STORAGE_SECRET_KEY="$OBJ40C_SECRET" \
+   APP_OBJ_STORAGE_REGION="$OBJ40C_REGION"; then
+    test_pass "cct/object_storage remove objeto e confirma ausencia"
+else
+    test_fail "cct/object_storage nao removeu objeto ou nao confirmou ausencia"
+fi
+
+echo "Test 2032: cct/object_storage gera signed URL canonica no backend local"
+BASE_2032="$CCT_TMP_DIR/phase40c/test_2032_signed_url"
+if [ "$RC_31_READY" -eq 0 ] && cct_phase32_copy_compile_and_run_env "$PHASE31_HOST_WRAPPER" "tests/integration/obj_storage_signed_url_40c.cct" "$BASE_2032" 0 \
+   APP_OBJ_STORAGE_ENDPOINT="$OBJ40C_ENDPOINT" \
+   APP_OBJ_STORAGE_BUCKET="$OBJ40C_BUCKET" \
+   APP_OBJ_STORAGE_ACCESS_KEY="$OBJ40C_ACCESS" \
+   APP_OBJ_STORAGE_SECRET_KEY="$OBJ40C_SECRET" \
+   APP_OBJ_STORAGE_REGION="$OBJ40C_REGION"; then
+    test_pass "cct/object_storage gera signed URL canonica no backend local"
+else
+    test_fail "cct/object_storage nao gerou signed URL canonica no backend local"
 fi
 fi
 

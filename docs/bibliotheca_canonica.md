@@ -125,6 +125,7 @@ Delivered after foundation:
 - transactional mail layer (`37A` through `37C`): `cct/mail`, `cct/mail_spool`, `cct/mail_webhook`.
 - runtime instrumentation (`38A` through `38B`): `cct/instrument`, `cct/context_local`.
 - trace visualization (`39A` through `39B`): `cct sigilo trace render/compare` CLI, animated SVG renderer, operational category overlays (C-only CLI tools; not CCT library modules).
+- media bridges and packaging (`40A` through `40C`): `cct/media_store`, `cct/archive_zip`, `cct/object_storage`.
 
 Current phase closure references:
 - `docs/release/FASE_39_RELEASE_NOTES.md`
@@ -2539,5 +2540,134 @@ Module total: **4**
 
 **New functions in §64 (FASE 32–39)**: **220**
 
-**Total geral de funcoes inventariadas (FASE 39)**: **829**
+**Total geral de funcoes inventariadas (FASE 39 baseline)**: **829**
+
+---
+
+## 65. `cct/media_store` (FASE 40A)
+
+Local media store with lifecycle zones, UUID/hash naming, SHA-256 checksum, and atomic promotion.
+
+Import:
+
+```cct
+ADVOCARE "cct/media_store.cct"
+```
+
+Zones: `MEDIA_ZONE_TMP`, `MEDIA_ZONE_QUARANTINE`, `MEDIA_ZONE_PROCESSED`, `MEDIA_ZONE_PUBLIC`, `MEDIA_ZONE_PRIVATE`.
+
+Public API:
+- `media_store_default_options(VERBUM root_dir) -> MediaStoreOptions`
+- `media_store_open(MediaStoreOptions options) -> Result GENUS(MediaStore, VERBUM)`
+- `media_store_ensure_layout(MediaStore store) -> Result GENUS(NIHIL, VERBUM)`
+- `media_store_put_file(MediaStore store, MediaZone zone, VERBUM source_path, VERBUM original_filename) -> Result GENUS(MediaArtifact, VERBUM)`
+- `media_store_promote(MediaStore store, MediaArtifact artifact, MediaZone destination) -> Result GENUS(MediaArtifact, VERBUM)`
+- `media_store_copy(MediaStore store, MediaArtifact artifact, MediaZone destination) -> Result GENUS(MediaArtifact, VERBUM)`
+- `media_store_delete(MediaStore store, MediaArtifact artifact) -> Result GENUS(NIHIL, VERBUM)`
+- `media_store_exists(MediaStore store, MediaArtifact artifact) -> VERUM`
+- `media_store_absolute_path(MediaStore store, MediaArtifact artifact) -> VERBUM`
+- `media_store_rechecksum(MediaStore store, MediaArtifact artifact) -> Result GENUS(VERBUM, VERBUM)`
+- `media_store_zone_name(MediaZone zone) -> VERBUM`
+
+`MediaArtifact` fields: `artifact_id`, `zone`, `relative_path`, `filename`, `content_type`, `size_bytes`, `checksum`, `created_at_iso`, `updated_at_iso`. Host-only. Bridge: `src/runtime/runtime_media_store.c`.
+
+## 66. `cct/archive_zip` (FASE 40B)
+
+ZIP archive creation, text/file entry writing, listing, reading, and safe extraction.
+
+Import:
+
+```cct
+ADVOCARE "cct/archive_zip.cct"
+```
+
+Public API:
+- `zip_create(VERBUM archive_path) -> Result GENUS(ZipArchive, VERBUM)`
+- `zip_open(VERBUM archive_path) -> Result GENUS(ZipArchive, VERBUM)`
+- `zip_close(SPECULUM ZipArchive archive)`
+- `zip_add_file(ZipArchive archive, VERBUM source_path, VERBUM entry_name) -> Result GENUS(NIHIL, VERBUM)` — rejects `..` and absolute paths
+- `zip_add_text(ZipArchive archive, VERBUM entry_name, VERBUM content) -> Result GENUS(NIHIL, VERBUM)`
+- `zip_list(ZipArchive archive) -> FLUXUS GENUS(ZipEntry)`
+- `zip_entry_count(ZipArchive archive) -> REX`
+- `zip_read_text(ZipArchive archive, VERBUM entry_name) -> Result GENUS(VERBUM, VERBUM)`
+- `zip_extract_all(ZipArchive archive, ZipExtractOptions options) -> Result GENUS(NIHIL, VERBUM)`
+- `zip_extract_entry(ZipArchive archive, VERBUM entry_name, ZipExtractOptions options) -> Result GENUS(NIHIL, VERBUM)`
+
+Path traversal is a hard `Err`. Backed by libzip or miniz. Host-only. Bridge: `src/runtime/runtime_archive_zip.c`.
+
+## 67. `cct/object_storage` (FASE 40C)
+
+Optional S3-compatible object storage bridge. Works with AWS S3, MinIO, Cloudflare R2, or any S3-compatible backend.
+
+Import:
+
+```cct
+ADVOCARE "cct/object_storage.cct"
+```
+
+Public API:
+- `object_storage_default_options(VERBUM endpoint, VERBUM bucket, VERBUM access_key, VERBUM secret_key) -> ObjectStorageOptions`
+- `object_storage_open(ObjectStorageOptions options) -> Result GENUS(ObjectStorageClient, VERBUM)`
+- `object_storage_close(SPECULUM ObjectStorageClient client)`
+- `object_storage_put_file(ObjectStorageClient client, VERBUM key, VERBUM source_path, VERBUM content_type) -> Result GENUS(ObjectRef, VERBUM)`
+- `object_storage_put_text(ObjectStorageClient client, VERBUM key, VERBUM content, VERBUM content_type) -> Result GENUS(ObjectRef, VERBUM)`
+- `object_storage_get_to_file(ObjectStorageClient client, VERBUM key, VERBUM dest_path) -> Result GENUS(NIHIL, VERBUM)`
+- `object_storage_exists(ObjectStorageClient client, VERBUM key) -> Result GENUS(VERUM, VERBUM)` — distinguishes 404 from error
+- `object_storage_head(ObjectStorageClient client, VERBUM key) -> Result GENUS(ObjectRef, VERBUM)`
+- `object_storage_delete(ObjectStorageClient client, VERBUM key) -> Result GENUS(NIHIL, VERBUM)`
+- `object_storage_signed_url(ObjectStorageClient client, VERBUM key, REX ttl_seconds) -> Result GENUS(SignedUrl, VERBUM)`
+
+Tests skip (exit 0) when `APP_OBJ_STORAGE_ENDPOINT` is absent. Optional for v1. Host-only. Bridge: `src/runtime/runtime_object_storage.c`.
+
+## 68. Expanded Function Inventory (FASE 40)
+
+### `cct/media_store`
+
+- `media_store_default_options(VERBUM root_dir) -> MediaStoreOptions`
+- `media_store_open(MediaStoreOptions options) -> Result GENUS(MediaStore, VERBUM)`
+- `media_store_ensure_layout(MediaStore store) -> Result GENUS(NIHIL, VERBUM)`
+- `media_store_put_file(MediaStore store, MediaZone zone, VERBUM source_path, VERBUM original_filename) -> Result GENUS(MediaArtifact, VERBUM)`
+- `media_store_promote(MediaStore store, MediaArtifact artifact, MediaZone destination) -> Result GENUS(MediaArtifact, VERBUM)`
+- `media_store_copy(MediaStore store, MediaArtifact artifact, MediaZone destination) -> Result GENUS(MediaArtifact, VERBUM)`
+- `media_store_delete(MediaStore store, MediaArtifact artifact) -> Result GENUS(NIHIL, VERBUM)`
+- `media_store_exists(MediaStore store, MediaArtifact artifact) -> VERUM`
+- `media_store_absolute_path(MediaStore store, MediaArtifact artifact) -> VERBUM`
+- `media_store_rechecksum(MediaStore store, MediaArtifact artifact) -> Result GENUS(VERBUM, VERBUM)`
+- `media_store_zone_name(MediaZone zone) -> VERBUM`
+
+Module total: **11**
+
+### `cct/archive_zip`
+
+- `zip_create(VERBUM archive_path) -> Result GENUS(ZipArchive, VERBUM)`
+- `zip_open(VERBUM archive_path) -> Result GENUS(ZipArchive, VERBUM)`
+- `zip_close(SPECULUM ZipArchive archive) -> NIHIL`
+- `zip_add_file(ZipArchive archive, VERBUM source_path, VERBUM entry_name) -> Result GENUS(NIHIL, VERBUM)`
+- `zip_add_text(ZipArchive archive, VERBUM entry_name, VERBUM content) -> Result GENUS(NIHIL, VERBUM)`
+- `zip_list(ZipArchive archive) -> FLUXUS GENUS(ZipEntry)`
+- `zip_entry_count(ZipArchive archive) -> REX`
+- `zip_read_text(ZipArchive archive, VERBUM entry_name) -> Result GENUS(VERBUM, VERBUM)`
+- `zip_extract_all(ZipArchive archive, ZipExtractOptions options) -> Result GENUS(NIHIL, VERBUM)`
+- `zip_extract_entry(ZipArchive archive, VERBUM entry_name, ZipExtractOptions options) -> Result GENUS(NIHIL, VERBUM)`
+
+Module total: **10**
+
+### `cct/object_storage`
+
+- `object_storage_default_options(VERBUM endpoint, VERBUM bucket, VERBUM access_key, VERBUM secret_key) -> ObjectStorageOptions`
+- `object_storage_open(ObjectStorageOptions options) -> Result GENUS(ObjectStorageClient, VERBUM)`
+- `object_storage_close(SPECULUM ObjectStorageClient client) -> NIHIL`
+- `object_storage_put_file(ObjectStorageClient client, VERBUM key, VERBUM source_path, VERBUM content_type) -> Result GENUS(ObjectRef, VERBUM)`
+- `object_storage_put_text(ObjectStorageClient client, VERBUM key, VERBUM content, VERBUM content_type) -> Result GENUS(ObjectRef, VERBUM)`
+- `object_storage_get_to_file(ObjectStorageClient client, VERBUM key, VERBUM dest_path) -> Result GENUS(NIHIL, VERBUM)`
+- `object_storage_exists(ObjectStorageClient client, VERBUM key) -> Result GENUS(VERUM, VERBUM)`
+- `object_storage_head(ObjectStorageClient client, VERBUM key) -> Result GENUS(ObjectRef, VERBUM)`
+- `object_storage_delete(ObjectStorageClient client, VERBUM key) -> Result GENUS(NIHIL, VERBUM)`
+- `object_storage_signed_url(ObjectStorageClient client, VERBUM key, REX ttl_seconds) -> Result GENUS(SignedUrl, VERBUM)`
+
+Module total: **10**
+
+**New functions in §68 (FASE 40)**: **31**
+
+**Total geral de funcoes inventariadas (FASE 40)**: **860**
 <!-- END AUTO API INVENTORY 20F -->

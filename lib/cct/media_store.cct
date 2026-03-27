@@ -1,0 +1,348 @@
+-- CCT — Clavicula Turing
+-- Standard Library Module: media_store
+--
+-- FASE 40A: Canonical local media store
+--
+-- Copyright (c) Erick Andrade Busato. Todos os direitos reservados.
+
+INCIPIT grimoire "media_store"
+
+ADVOCARE "cct/date.cct"
+ADVOCARE "cct/filetype.cct"
+ADVOCARE "cct/fs.cct"
+ADVOCARE "cct/path.cct"
+ADVOCARE "cct/result.cct"
+ADVOCARE "cct/uuid.cct"
+ADVOCARE "cct/verbum.cct"
+
+ORDO MediaZone
+  MEDIA_ZONE_TMP
+  MEDIA_ZONE_QUARANTINE
+  MEDIA_ZONE_PROCESSED
+  MEDIA_ZONE_PUBLIC
+  MEDIA_ZONE_PRIVATE
+FIN ORDO
+
+ORDO MediaNamingPolicy
+  MEDIA_NAMING_UUID
+  MEDIA_NAMING_HASH
+  MEDIA_NAMING_UUID_WITH_EXT
+  MEDIA_NAMING_HASH_WITH_EXT
+FIN ORDO
+
+SIGILLUM MediaStoreOptions
+  root_dir: VERBUM
+  naming_policy: MediaNamingPolicy
+  checksum_algorithm: VERBUM
+FIN SIGILLUM
+
+SIGILLUM MediaArtifact
+  artifact_id: VERBUM
+  zone: MediaZone
+  relative_path: VERBUM
+  filename: VERBUM
+  content_type: VERBUM
+  size_bytes: REX
+  checksum: VERBUM
+  created_at_iso: VERBUM
+  updated_at_iso: VERBUM
+FIN SIGILLUM
+
+SIGILLUM MediaStore
+  options: MediaStoreOptions
+FIN SIGILLUM
+
+RITUALE media_store_default_options(VERBUM root_dir) REDDE MediaStoreOptions
+  EVOCA MediaStoreOptions opts
+  VINCIRE opts.root_dir AD CONIURA normalize(root_dir)
+  VINCIRE opts.naming_policy AD MEDIA_NAMING_UUID_WITH_EXT
+  VINCIRE opts.checksum_algorithm AD "sha256"
+  REDDE opts
+EXPLICIT RITUALE
+
+RITUALE media_store_ok_unit() REDDE SPECULUM NIHIL
+  REDDE CONIURA Ok GENUS(REX, VERBUM)(0)
+EXPLICIT RITUALE
+
+RITUALE media_store_err_unit(VERBUM message) REDDE SPECULUM NIHIL
+  REDDE CONIURA Err GENUS(REX, VERBUM)(message)
+EXPLICIT RITUALE
+
+RITUALE media_store_now_iso() REDDE VERBUM
+  REDDE CONIURA datetime_format(CONIURA datetime_now(), "%Y-%m-%dT%H:%M:%S%z")
+EXPLICIT RITUALE
+
+RITUALE media_store_zone_name(MediaZone zone) REDDE VERBUM
+  ELIGE zone
+    CASUS MEDIA_ZONE_TMP:
+      REDDE "tmp"
+    CASUS MEDIA_ZONE_QUARANTINE:
+      REDDE "quarantine"
+    CASUS MEDIA_ZONE_PROCESSED:
+      REDDE "processed"
+    CASUS MEDIA_ZONE_PUBLIC:
+      REDDE "public"
+    CASUS MEDIA_ZONE_PRIVATE:
+      REDDE "private"
+    ALIOQUIN:
+      REDDE "unknown"
+  FIN ELIGE
+EXPLICIT RITUALE
+
+RITUALE media_store_zone_dir(MediaStore store, MediaZone zone) REDDE VERBUM
+  REDDE CONIURA path_join(store.options.root_dir, CONIURA media_store_zone_name(zone))
+EXPLICIT RITUALE
+
+RITUALE media_store_absolute_path(MediaStore store, MediaArtifact artifact) REDDE VERBUM
+  REDDE CONIURA path_join(store.options.root_dir, artifact.relative_path)
+EXPLICIT RITUALE
+
+RITUALE media_store_supported_checksum(VERBUM algo) REDDE VERUM
+  REDDE CONIURA equals_ignore_case(CONIURA trim(algo), "sha256")
+EXPLICIT RITUALE
+
+RITUALE media_store_content_type_from_filetype(FileType ft) REDDE VERBUM
+  ELIGE ft
+    CASUS JPEG:
+      REDDE "image/jpeg"
+    CASUS PNG:
+      REDDE "image/png"
+    CASUS GIF:
+      REDDE "image/gif"
+    CASUS BMP:
+      REDDE "image/bmp"
+    CASUS WebP:
+      REDDE "image/webp"
+    CASUS MP4:
+      REDDE "video/mp4"
+    CASUS WebM:
+      REDDE "video/webm"
+    CASUS AVI:
+      REDDE "video/x-msvideo"
+    CASUS MP3:
+      REDDE "audio/mpeg"
+    CASUS OGG:
+      REDDE "audio/ogg"
+    CASUS WAV:
+      REDDE "audio/wav"
+    CASUS PDF:
+      REDDE "application/pdf"
+    CASUS ZIP:
+      REDDE "application/zip"
+    CASUS Text:
+      REDDE "text/plain; charset=utf-8"
+    ALIOQUIN:
+      REDDE "application/octet-stream"
+  FIN ELIGE
+EXPLICIT RITUALE
+
+RITUALE media_store_extension_for_name(VERBUM name) REDDE VERBUM
+  EVOCA VERBUM ext AD CONIURA path_ext(name)
+  SI CONIURA len(ext) == 0
+    REDDE ""
+  FIN SI
+  SI CONIURA starts_with(ext, ".")
+    REDDE CONIURA to_lower(ext)
+  FIN SI
+  REDDE CONIURA concat(".", CONIURA to_lower(ext))
+EXPLICIT RITUALE
+
+RITUALE media_store_is_safe_relative(VERBUM rel) REDDE VERUM
+  SI CONIURA len(rel) == 0
+    REDDE FALSUM
+  FIN SI
+  SI CONIURA is_absolute(rel)
+    REDDE FALSUM
+  FIN SI
+  SI CONIURA contains(rel, "..")
+    REDDE FALSUM
+  FIN SI
+  SI CONIURA starts_with(rel, "/")
+    REDDE FALSUM
+  FIN SI
+  REDDE VERUM
+EXPLICIT RITUALE
+
+RITUALE media_store_file_checksum(VERBUM path) REDDE SPECULUM NIHIL
+  EVOCA VERBUM digest AD OBSECRO media_store_builtin_sha256_file(path)
+  EVOCA VERBUM err AD OBSECRO media_store_builtin_last_error()
+  SI CONIURA len(err) > 0
+    REDDE CONIURA Err GENUS(VERBUM, VERBUM)(err)
+  FIN SI
+  SI CONIURA len(digest) == 0
+    REDDE CONIURA Err GENUS(VERBUM, VERBUM)("media_store: checksum vazio")
+  FIN SI
+  REDDE CONIURA Ok GENUS(VERBUM, VERBUM)(digest)
+EXPLICIT RITUALE
+
+RITUALE media_store_make_filename(MediaStore store, VERBUM artifact_id, VERBUM checksum, VERBUM original_filename) REDDE VERBUM
+  EVOCA VERBUM ext AD CONIURA media_store_extension_for_name(original_filename)
+  ELIGE store.options.naming_policy
+    CASUS MEDIA_NAMING_UUID:
+      REDDE artifact_id
+    CASUS MEDIA_NAMING_HASH:
+      REDDE checksum
+    CASUS MEDIA_NAMING_HASH_WITH_EXT:
+      SI CONIURA len(ext) == 0
+        REDDE checksum
+      FIN SI
+      REDDE CONIURA concat(checksum, ext)
+    ALIOQUIN:
+      SI CONIURA len(ext) == 0
+        REDDE artifact_id
+      FIN SI
+      REDDE CONIURA concat(artifact_id, ext)
+  FIN ELIGE
+EXPLICIT RITUALE
+
+RITUALE media_store_artifact(
+  VERBUM artifact_id,
+  MediaZone zone,
+  VERBUM filename,
+  VERBUM content_type,
+  REX size_bytes,
+  VERBUM checksum,
+  VERBUM created_at_iso,
+  VERBUM updated_at_iso
+) REDDE MediaArtifact
+  EVOCA MediaArtifact artifact
+  VINCIRE artifact.artifact_id AD artifact_id
+  VINCIRE artifact.zone AD zone
+  VINCIRE artifact.relative_path AD CONIURA concat(CONIURA media_store_zone_name(zone), CONIURA concat("/", filename))
+  VINCIRE artifact.filename AD filename
+  VINCIRE artifact.content_type AD content_type
+  VINCIRE artifact.size_bytes AD size_bytes
+  VINCIRE artifact.checksum AD checksum
+  VINCIRE artifact.created_at_iso AD created_at_iso
+  VINCIRE artifact.updated_at_iso AD updated_at_iso
+  REDDE artifact
+EXPLICIT RITUALE
+
+RITUALE media_store_open(MediaStoreOptions options) REDDE SPECULUM NIHIL
+  SI CONIURA len(CONIURA trim(options.root_dir)) == 0
+    REDDE CONIURA Err GENUS(MediaStore, VERBUM)("media_store: root_dir ausente")
+  FIN SI
+  SI NON CONIURA media_store_supported_checksum(options.checksum_algorithm)
+    REDDE CONIURA Err GENUS(MediaStore, VERBUM)("media_store: checksum_algorithm suportado atualmente apenas para sha256")
+  FIN SI
+  EVOCA MediaStore store
+  VINCIRE store.options AD options
+  VINCIRE store.options.root_dir AD CONIURA normalize(options.root_dir)
+  REDDE CONIURA Ok GENUS(MediaStore, VERBUM)(store)
+EXPLICIT RITUALE
+
+RITUALE media_store_ensure_layout(MediaStore store) REDDE SPECULUM NIHIL
+  SI CONIURA len(CONIURA trim(store.options.root_dir)) == 0
+    REDDE CONIURA media_store_err_unit("media_store: root_dir ausente")
+  FIN SI
+  CONIURA mkdir_all(store.options.root_dir)
+  CONIURA mkdir_all(CONIURA media_store_zone_dir(store, MEDIA_ZONE_TMP))
+  CONIURA mkdir_all(CONIURA media_store_zone_dir(store, MEDIA_ZONE_QUARANTINE))
+  CONIURA mkdir_all(CONIURA media_store_zone_dir(store, MEDIA_ZONE_PROCESSED))
+  CONIURA mkdir_all(CONIURA media_store_zone_dir(store, MEDIA_ZONE_PUBLIC))
+  CONIURA mkdir_all(CONIURA media_store_zone_dir(store, MEDIA_ZONE_PRIVATE))
+  REDDE CONIURA media_store_ok_unit()
+EXPLICIT RITUALE
+
+RITUALE media_store_put_file(MediaStore store, MediaZone zone, VERBUM source_path, VERBUM original_filename) REDDE SPECULUM NIHIL
+  EVOCA SPECULUM NIHIL layout_res AD CONIURA media_store_ensure_layout(store)
+  SI CONIURA result_is_err GENUS(REX, VERBUM)(layout_res)
+    REDDE CONIURA Err GENUS(MediaArtifact, VERBUM)(CONIURA result_unwrap_err GENUS(REX, VERBUM)(layout_res))
+  FIN SI
+  SI NON CONIURA is_file(source_path)
+    REDDE CONIURA Err GENUS(MediaArtifact, VERBUM)("media_store: source_path inexistente ou nao regular")
+  FIN SI
+
+  EVOCA SPECULUM NIHIL checksum_res AD CONIURA media_store_file_checksum(source_path)
+  SI CONIURA result_is_err GENUS(VERBUM, VERBUM)(checksum_res)
+    REDDE CONIURA Err GENUS(MediaArtifact, VERBUM)(CONIURA result_unwrap_err GENUS(VERBUM, VERBUM)(checksum_res))
+  FIN SI
+
+  EVOCA VERBUM checksum AD CONIURA result_unwrap GENUS(VERBUM, VERBUM)(checksum_res)
+  EVOCA VERBUM artifact_id AD CONIURA uuid_to_string(CONIURA uuid_v4())
+  EVOCA VERBUM final_name AD CONIURA media_store_make_filename(store, artifact_id, checksum, original_filename)
+  EVOCA VERBUM final_path AD CONIURA path_join(CONIURA media_store_zone_dir(store, zone), final_name)
+  EVOCA VERBUM now_iso AD CONIURA media_store_now_iso()
+  CONIURA copy(source_path, final_path)
+
+  EVOCA MediaArtifact artifact AD CONIURA media_store_artifact(
+    artifact_id,
+    zone,
+    final_name,
+    CONIURA media_store_content_type_from_filetype(CONIURA filetype_detect(source_path)),
+    CONIURA size(source_path),
+    checksum,
+    now_iso,
+    now_iso
+  )
+  REDDE CONIURA Ok GENUS(MediaArtifact, VERBUM)(artifact)
+EXPLICIT RITUALE
+
+RITUALE media_store_promote(MediaStore store, MediaArtifact artifact, MediaZone destination) REDDE SPECULUM NIHIL
+  SI NON CONIURA media_store_is_safe_relative(artifact.relative_path)
+    REDDE CONIURA Err GENUS(MediaArtifact, VERBUM)("media_store: artifact.relative_path invalido")
+  FIN SI
+  SI NON CONIURA media_store_exists(store, artifact)
+    REDDE CONIURA Err GENUS(MediaArtifact, VERBUM)("media_store: artefato inexistente")
+  FIN SI
+  EVOCA VERBUM source_path AD CONIURA media_store_absolute_path(store, artifact)
+  EVOCA VERBUM dest_path AD CONIURA path_join(CONIURA media_store_zone_dir(store, destination), artifact.filename)
+  CONIURA mkdir_all(CONIURA media_store_zone_dir(store, destination))
+  CONIURA move(source_path, dest_path)
+  VINCIRE artifact.zone AD destination
+  VINCIRE artifact.relative_path AD CONIURA concat(CONIURA media_store_zone_name(destination), CONIURA concat("/", artifact.filename))
+  VINCIRE artifact.updated_at_iso AD CONIURA media_store_now_iso()
+  REDDE CONIURA Ok GENUS(MediaArtifact, VERBUM)(artifact)
+EXPLICIT RITUALE
+
+RITUALE media_store_copy(MediaStore store, MediaArtifact artifact, MediaZone destination) REDDE SPECULUM NIHIL
+  SI NON CONIURA media_store_exists(store, artifact)
+    REDDE CONIURA Err GENUS(MediaArtifact, VERBUM)("media_store: artefato inexistente")
+  FIN SI
+  EVOCA VERBUM new_artifact_id AD CONIURA uuid_to_string(CONIURA uuid_v4())
+  EVOCA VERBUM new_filename AD CONIURA media_store_make_filename(store, new_artifact_id, artifact.checksum, artifact.filename)
+  EVOCA VERBUM source_path AD CONIURA media_store_absolute_path(store, artifact)
+  EVOCA VERBUM dest_path AD CONIURA path_join(CONIURA media_store_zone_dir(store, destination), new_filename)
+  EVOCA VERBUM now_iso AD CONIURA media_store_now_iso()
+  CONIURA mkdir_all(CONIURA media_store_zone_dir(store, destination))
+  CONIURA copy(source_path, dest_path)
+
+  EVOCA MediaArtifact copied AD CONIURA media_store_artifact(
+    new_artifact_id,
+    destination,
+    new_filename,
+    artifact.content_type,
+    artifact.size_bytes,
+    artifact.checksum,
+    now_iso,
+    now_iso
+  )
+  REDDE CONIURA Ok GENUS(MediaArtifact, VERBUM)(copied)
+EXPLICIT RITUALE
+
+RITUALE media_store_delete(MediaStore store, MediaArtifact artifact) REDDE SPECULUM NIHIL
+  SI NON CONIURA media_store_is_safe_relative(artifact.relative_path)
+    REDDE CONIURA media_store_err_unit("media_store: artifact.relative_path invalido")
+  FIN SI
+  EVOCA VERBUM absolute AD CONIURA media_store_absolute_path(store, artifact)
+  SI CONIURA exists(absolute)
+    CONIURA delete_file(absolute)
+  FIN SI
+  REDDE CONIURA media_store_ok_unit()
+EXPLICIT RITUALE
+
+RITUALE media_store_exists(MediaStore store, MediaArtifact artifact) REDDE VERUM
+  SI NON CONIURA media_store_is_safe_relative(artifact.relative_path)
+    REDDE FALSUM
+  FIN SI
+  REDDE CONIURA exists(CONIURA media_store_absolute_path(store, artifact))
+EXPLICIT RITUALE
+
+RITUALE media_store_rechecksum(MediaStore store, MediaArtifact artifact) REDDE SPECULUM NIHIL
+  SI NON CONIURA media_store_exists(store, artifact)
+    REDDE CONIURA Err GENUS(VERBUM, VERBUM)("media_store: artefato inexistente")
+  FIN SI
+  REDDE CONIURA media_store_file_checksum(CONIURA media_store_absolute_path(store, artifact))
+EXPLICIT RITUALE
+
+EXPLICIT grimoire
