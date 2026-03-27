@@ -1,4 +1,4 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="1200" viewBox="0 0 1200 1200" role="img" aria-label="CCT system sigilo">
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="1200" viewBox="0.00 0.00 1200.00 1200.00" role="img" aria-label="CCT system sigilo">
   <desc>Deterministic sigil-of-sigils for a CCT module closure.</desc>
   <defs>
     <style><![CDATA[
@@ -25,6 +25,19 @@
       .orn { stroke: #64748b; stroke-width: 0.9; fill: none; opacity: 0.55; }
       .hash { fill: #111827; font: 9px monospace; letter-spacing: 0.5px; }
       .label { fill: #0f172a; font: 8px monospace; opacity: 0.68; }
+      .web-shell { fill: rgba(255,252,246,0.80); stroke: #5a4b3f; stroke-width: 1.0; }
+      .web-chamber { fill: none; stroke: #8b7763; stroke-width: 1.2; opacity: 0.82; }
+      .web-thread { fill: none; stroke: #8d7a68; stroke-width: 0.95; opacity: 0.58; }
+      .web-group-arc { fill: none; stroke: #c5b59f; stroke-width: 0.95; opacity: 0.86; }
+      .web-link { fill: none; stroke: #7b6a59; stroke-width: 0.92; opacity: 0.62; }
+      .route-shell { fill: rgba(255,252,246,0.72); stroke: #5a4b3f; stroke-width: 0.95; }
+      .route-mid { fill: none; stroke: #b7a690; stroke-width: 0.82; opacity: 0.76; }
+      .route-arc { fill: none; stroke: #7a6957; stroke-width: 0.82; opacity: 0.82; stroke-linecap: round; }
+      .route-spoke { fill: none; stroke: #978573; stroke-width: 0.78; opacity: 0.76; stroke-linecap: round; }
+      .route-core { fill: #f7efe3; stroke: #57483b; stroke-width: 0.82; }
+      .route-chord { fill: none; stroke: #51453b; stroke-width: 0.76; opacity: 0.70; stroke-linecap: round; }
+      .route-glyph { fill: none; stroke: #efe6d9; stroke-width: 0.9; stroke-linejoin: round; }
+      .route-method-seed { fill: #6b5a4b; stroke: #f7efe2; stroke-width: 0.7; }
       .node-wrap, .edge-wrap, .system-node-wrap, .system-edge-wrap { cursor: help; }
       .node-wrap:hover > circle, .system-node-wrap:hover > circle { opacity: 0.96; }
       .edge-wrap:hover > path, .edge-wrap:hover > line, .system-edge-wrap:hover > line { opacity: 1.0; }
@@ -32,7 +45,7 @@
     <clipPath id="module_clip_000"><circle cx="256" cy="256" r="246"/></clipPath>
     <clipPath id="module_clip_001"><circle cx="256" cy="256" r="246"/></clipPath>
   </defs>
-  <rect class="bg" width="1200" height="1200"/>
+  <rect class="bg" x="0.00" y="0.00" width="1200.00" height="1200.00"/>
   <g id="macro_foundation">
     <circle class="macro-ring" cx="600" cy="600" r="558"/>
     <circle class="macro-ring" cx="600" cy="600" r="220.00" opacity="0.22"/>
@@ -113,7 +126,7 @@ REDDE CONIURA dobro(21)</title>
     <g class="system-node-wrap">
     <circle class="module-entry-frame" cx="600.000" cy="600.000" r="138.000"/>
       <title>module
-/Users/eabusato/dev/cct/examples/project_modular_12f/src/main.cct
+examples/project_modular_12f/src/main.cct
 rituals: 1
 imports: 1</title>
     <text class="module-label" x="600.000" y="754.000" text-anchor="middle">main.cct</text>
@@ -178,7 +191,7 @@ REDDE v * 2</title>
     <g class="system-node-wrap">
     <circle class="module-frame" cx="600.000" cy="380.000" r="104.000"/>
       <title>module
-/Users/eabusato/dev/cct/examples/project_modular_12f/lib/math.cct
+examples/project_modular_12f/lib/math.cct
 rituals: 1
 imports: 0</title>
     <text class="module-label" x="600.000" y="500.000" text-anchor="middle">math.cct</text>

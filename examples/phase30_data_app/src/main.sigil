@@ -1,7 +1,8 @@
 format = cct.sigil.v1
+sigilo_scope = local
 visual_engine = sigillum_v2_1
 visual_style = network
-compiler_version = 0.19.0
+compiler_version = 0.40.0
 program_name = phase30_data_app_main
 semantic_hash = ddb69e4f9c6b4a78
 layout_seed = ddb69e4f9c6b4a78:network
