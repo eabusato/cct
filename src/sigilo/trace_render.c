@@ -89,6 +89,8 @@ typedef struct {
 
 typedef struct {
     char *svg_prefix;
+    double min_x;
+    double min_y;
     double width;
     double height;
     int ready;
@@ -461,7 +463,11 @@ static const char *trace_render_sigil_entry(const cct_sigil_document_t *doc, con
     return NULL;
 }
 
-static bool trace_render_parse_viewbox(const char *svg, double *out_w, double *out_h) {
+static bool trace_render_parse_viewbox(const char *svg,
+                                       double *out_min_x,
+                                       double *out_min_y,
+                                       double *out_w,
+                                       double *out_h) {
     const char *root = NULL;
     const char *root_end = NULL;
     char *viewbox = NULL;
@@ -469,7 +475,7 @@ static bool trace_render_parse_viewbox(const char *svg, double *out_w, double *o
     double min_y = 0.0;
     double w = 0.0;
     double h = 0.0;
-    if (!svg || !out_w || !out_h) return false;
+    if (!svg || !out_min_x || !out_min_y || !out_w || !out_h) return false;
     root = strstr(svg, "<svg");
     if (!root) return false;
     root_end = strchr(root, '>');
@@ -481,6 +487,8 @@ static bool trace_render_parse_viewbox(const char *svg, double *out_w, double *o
         return false;
     }
     free(viewbox);
+    *out_min_x = min_x;
+    *out_min_y = min_y;
     *out_w = w;
     *out_h = h;
     return true;
@@ -640,7 +648,7 @@ static bool trace_render_load_svg_backdrop(const char *sigil_path,
     svg_text = trace_render_read_file(svg_path);
     free(svg_path);
     if (!svg_text) return false;
-    if (!trace_render_parse_viewbox(svg_text, &backdrop->width, &backdrop->height) ||
+    if (!trace_render_parse_viewbox(svg_text, &backdrop->min_x, &backdrop->min_y, &backdrop->width, &backdrop->height) ||
         !trace_render_capture_svg_prefix(svg_text, backdrop)) {
         free(svg_text);
         trace_render_svg_backdrop_dispose(backdrop);
@@ -1755,12 +1763,76 @@ static void trace_render_emit_style(FILE *out, int animated) {
             ".trace-caption-box{fill:rgba(255,250,242,0.92);stroke:#d6cabc;stroke-width:.9}"
             ".trace-caption-title{fill:#211812;font:600 14px monospace}"
             ".trace-caption-subtitle{fill:#5a5046;font:10px monospace}"
+            ".trace-summary-box{fill:rgba(255,250,242,0.94);stroke:#d6cabc;stroke-width:.9}"
+            ".trace-summary-title{fill:#211812;font:600 11px monospace}"
+            ".trace-summary-line{fill:#5a5046;font:10px monospace}"
             ".focus-ring{fill:none;stroke:#35648c;stroke-width:1.2;stroke-dasharray:4 2}"
+            ".trace-legend-wrap{cursor:grab}"
+            ".trace-legend-wrap.dragging{cursor:grabbing}"
+            ".trace-caption-wrap{cursor:grab}"
+            ".trace-caption-wrap.dragging{cursor:grabbing}"
+            ".trace-summary-wrap{cursor:grab}"
+            ".trace-summary-wrap.dragging{cursor:grabbing}"
             "]]></style>\n");
     fprintf(out, "<style><![CDATA[");
     trace_overlay_emit_css(out);
     fprintf(out, "]]></style>\n");
     (void)animated;
+}
+
+static int trace_render_should_list_summary_span(const TraceRenderSpan *span) {
+    if (!span || !span->name || span->name[0] == '\0') return 0;
+    if (span->route_id && span->route_id[0] != '\0') return 1;
+    if (span->depth <= 1 && span->category &&
+        (strcmp(span->category, "handler") == 0 || strcmp(span->category, "middleware") == 0)) return 1;
+    return 0;
+}
+
+static int trace_render_can_place_footer_boxes(const trace_render_panel_t *panel) {
+    double footer_x = 0.0;
+    double footer_w = 0.0;
+    if (!panel) return 0;
+    footer_x = panel->timeline_x + panel->timeline_w + 18.0;
+    footer_w = (panel->panel_x + panel->panel_w) - footer_x - 18.0;
+    return footer_w >= (352.0 + 14.0 + 338.0);
+}
+
+static void trace_render_emit_backdrop_root(FILE *out,
+                                            const trace_render_svg_backdrop_t *backdrop,
+                                            double canvas_height) {
+    const char *prefix = NULL;
+    const char *root = NULL;
+    const char *root_end = NULL;
+    const char *body = NULL;
+    double footer_y = 0.0;
+    double footer_h = 0.0;
+    if (!out || !backdrop || !backdrop->svg_prefix) return;
+    prefix = backdrop->svg_prefix;
+    root = strstr(prefix, "<svg");
+    if (!root) return;
+    root_end = strchr(root, '>');
+    if (!root_end) return;
+    body = root_end + 1;
+    fprintf(out, "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n");
+    fprintf(out,
+            "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"%.0f\" height=\"%.0f\" viewBox=\"%.2f %.2f %.2f %.2f\" role=\"img\" aria-label=\"CCT trace render\">\n",
+            backdrop->width,
+            canvas_height,
+            backdrop->min_x,
+            backdrop->min_y,
+            backdrop->width,
+            canvas_height);
+    footer_y = backdrop->min_y + backdrop->height;
+    footer_h = canvas_height - backdrop->height;
+    if (footer_h > 0.0) {
+        fprintf(out,
+                "<rect x=\"%.2f\" y=\"%.2f\" width=\"%.2f\" height=\"%.2f\" fill=\"#f6f0e6\"/>\n",
+                backdrop->min_x,
+                footer_y,
+                backdrop->width,
+                footer_h);
+    }
+    fprintf(out, "%s", body);
 }
 
 static void trace_render_emit_panel_frame(FILE *out, const trace_render_panel_t *panel, const char *title, const char *subtitle) {
@@ -1786,19 +1858,82 @@ static void trace_render_emit_panel_frame(FILE *out, const trace_render_panel_t 
             panel->cx - 21.0, panel->cy);
 }
 
-static void trace_render_emit_caption(FILE *out, const trace_render_panel_t *panel, const char *title, const char *subtitle) {
+static void trace_render_emit_caption(FILE *out,
+                                      const trace_render_panel_t *panel,
+                                      const char *title,
+                                      const char *subtitle) {
+    double x = 0.0;
+    double y = 0.0;
     if (!out || !panel) return;
+    x = panel->panel_x + 18.0;
+    y = panel->panel_y + 18.0;
+    if (trace_render_can_place_footer_boxes(panel)) {
+        x = panel->timeline_x + panel->timeline_w + 18.0 + 352.0 + 14.0;
+        y = panel->timeline_y + 8.0;
+    }
+    fprintf(out,
+            "<g id=\"trace-caption-wrap\" class=\"trace-caption-wrap\" data-draggable=\"overlay\" data-base-class=\"trace-caption-wrap\" data-x=\"%.2f\" data-y=\"%.2f\" transform=\"translate(%.2f %.2f)\">",
+            x, y, x, y);
     fprintf(out, "<g id=\"trace_caption\">");
-    fprintf(out, "<rect class=\"trace-caption-box\" x=\"%.2f\" y=\"%.2f\" width=\"338\" height=\"46\" rx=\"10\"/>",
-            panel->panel_x + 18.0, panel->panel_y + 18.0);
-    fprintf(out, "<text class=\"trace-caption-title\" x=\"%.2f\" y=\"%.2f\">",
-            panel->panel_x + 30.0, panel->panel_y + 36.0);
+    fprintf(out, "<rect class=\"trace-caption-box\" x=\"0\" y=\"0\" width=\"338\" height=\"46\" rx=\"10\"/>");
+    fprintf(out, "<text class=\"trace-caption-title\" x=\"12\" y=\"18\">");
     trace_render_svg_escape(out, title ? title : "trace");
     fprintf(out, "</text>");
-    fprintf(out, "<text class=\"trace-caption-subtitle\" x=\"%.2f\" y=\"%.2f\">",
-            panel->panel_x + 30.0, panel->panel_y + 50.0);
+    fprintf(out, "<text class=\"trace-caption-subtitle\" x=\"12\" y=\"32\">");
     trace_render_svg_escape(out, subtitle ? subtitle : "");
-    fprintf(out, "</text></g>\n");
+    fprintf(out, "</text></g></g>\n");
+}
+
+static void trace_render_emit_summary_labels(FILE *out,
+                                             const TraceRenderTrace *trace,
+                                             const TraceRenderInput *input,
+                                             const trace_render_panel_t *panel) {
+    int *indices = NULL;
+    int count = 0;
+    int emitted = 0;
+    int i = 0;
+    double box_h = 0.0;
+    double box_x = 0.0;
+    double box_y = 0.0;
+    if (!out || !trace || !panel) return;
+    count = trace_render_sorted_indices(trace, &indices, input);
+    if (count <= 0 || !indices) {
+        free(indices);
+        return;
+    }
+    for (i = 0; i < count; i++) {
+        const TraceRenderSpan *span = &trace->spans[indices[i]];
+        if (trace_render_should_list_summary_span(span)) emitted++;
+        if (emitted >= 4) break;
+    }
+    if (emitted == 0) {
+        free(indices);
+        return;
+    }
+    box_h = 24.0 + (double)emitted * 14.0;
+    box_x = panel->timeline_x + 8.0;
+    box_y = panel->timeline_y - box_h - 12.0;
+    if (trace_render_can_place_footer_boxes(panel)) {
+        box_x = panel->timeline_x + panel->timeline_w + 18.0;
+        box_y = panel->timeline_y + 8.0;
+    }
+    fprintf(out,
+            "<g id=\"trace-summary-wrap\" class=\"trace-summary-wrap\" data-draggable=\"overlay\" data-base-class=\"trace-summary-wrap\" data-x=\"%.2f\" data-y=\"%.2f\" transform=\"translate(%.2f %.2f)\">",
+            box_x, box_y, box_x, box_y);
+    fprintf(out, "<rect class=\"trace-summary-box\" x=\"0\" y=\"0\" width=\"352\" height=\"%.2f\" rx=\"10\"/>", box_h);
+    fprintf(out, "<text class=\"trace-summary-title\" x=\"12\" y=\"16\">trace spans</text>");
+    emitted = 0;
+    for (i = 0; i < count && emitted < 4; i++) {
+        const TraceRenderSpan *span = &trace->spans[indices[i]];
+        double line_y = 30.0 + (double)emitted * 14.0;
+        if (!trace_render_should_list_summary_span(span)) continue;
+        fprintf(out, "<text class=\"trace-summary-line\" x=\"12\" y=\"%.2f\">", line_y);
+        trace_render_svg_escape(out, span->name);
+        fprintf(out, " (%lldms)</text>", span->duration_us);
+        emitted++;
+    }
+    fprintf(out, "</g>\n");
+    free(indices);
 }
 
 static void trace_render_emit_timeline_internal(const TraceRenderTrace *trace,
@@ -2207,12 +2342,14 @@ static int trace_render_panel(FILE *out,
         fprintf(out, "</g>\n");
         trace_render_emit_route_hits(out, hits, hit_count, input);
     }
+    trace_render_emit_summary_labels(out, trace, input, panel);
     trace_render_emit_links(out, trace, input, hits, hit_count, nodes, active_limit);
     trace_render_emit_nodes(out, trace, input, nodes, active_limit);
     if (legend_count > 0) {
-        fprintf(out, "<g transform=\"translate(%.2f %.2f)\">",
-                panel->panel_x + panel->panel_w - 150.0,
-                backdrop.ready ? panel->panel_y + 78.0 : panel->panel_y + 72.0);
+        double legend_x = panel->panel_x + panel->panel_w - 150.0;
+        double legend_y = backdrop.ready ? panel->panel_y + 78.0 : panel->panel_y + 72.0;
+        fprintf(out, "<g class=\"trace-legend-wrap\" data-draggable=\"overlay\" data-base-class=\"trace-legend-wrap\" data-x=\"%.2f\" data-y=\"%.2f\" transform=\"translate(%.2f %.2f)\">",
+                legend_x, legend_y, legend_x, legend_y);
         trace_overlay_emit_legend(legend_cats, legend_count, out);
         fprintf(out, "</g>\n");
     }
@@ -2224,39 +2361,61 @@ static int trace_render_panel(FILE *out,
     return 0;
 }
 
-static void trace_render_emit_step_script(FILE *out, int step_count, int current_step) {
-    if (!out || step_count <= 0) return;
+static void trace_render_emit_interaction_script(FILE *out,
+                                                 int step_count,
+                                                 int current_step,
+                                                 int enable_legend_drag) {
+    if (!out || (step_count <= 0 && !enable_legend_drag)) return;
     fprintf(out, "<script><![CDATA[\n");
     fprintf(out, "(function(){\n");
     fprintf(out, "var root=document.documentElement;\n");
-    fprintf(out, "var knob=document.getElementById('step-knob');\n");
-    fprintf(out, "var rail=document.getElementById('step-rail');\n");
-    fprintf(out, "var label=document.getElementById('step-label');\n");
-    fprintf(out, "if(!root||!knob||!rail||!label) return;\n");
-    fprintf(out, "var maxStep=%d;\n", step_count - 1);
-    fprintf(out, "var current=%d;\n", current_step < 0 ? 0 : current_step);
-    fprintf(out, "var dragging=false;\n");
     fprintf(out, "function q(sel){return Array.prototype.slice.call(root.querySelectorAll(sel));}\n");
-    fprintf(out, "function railBounds(){return {x0:parseFloat(rail.getAttribute('data-x0')),x1:parseFloat(rail.getAttribute('data-x1')),y:parseFloat(rail.getAttribute('data-y'))};}\n");
     fprintf(out, "function toPoint(evt){var pt=root.createSVGPoint();pt.x=evt.clientX;pt.y=evt.clientY;return pt.matrixTransform(root.getScreenCTM().inverse());}\n");
-    fprintf(out, "function clampStep(v){if(v<0) return 0;if(v>maxStep) return maxStep;return v;}\n");
-    fprintf(out, "function applyState(step){\n");
-    fprintf(out, " current=clampStep(step);\n");
-    fprintf(out, " q('[data-step-role]').forEach(function(el){var rank=parseInt(el.getAttribute('data-step-rank')||'-1',10);var active=rank>=0&&rank<=current;el.setAttribute('class',active?el.getAttribute('data-step-active-class'):el.getAttribute('data-step-pending-class'));});\n");
-    fprintf(out, " q('[data-step-dot]').forEach(function(dot){var idx=parseInt(dot.getAttribute('data-step-dot')||'0',10);dot.setAttribute('class',idx===current?'step-dot active':'step-dot');});\n");
-    fprintf(out, " var b=railBounds(); var x=maxStep>0?b.x0+((current/maxStep)*(b.x1-b.x0)):b.x0; knob.setAttribute('cx',x); knob.setAttribute('cy',b.y); label.textContent='step '+(current+1)+'/%d';\n", step_count);
-    fprintf(out, "}\n");
-    fprintf(out, "function stepFromEvent(evt){var p=toPoint(evt);var b=railBounds();if(maxStep<=0) return 0;return clampStep(Math.round(((p.x-b.x0)/(b.x1-b.x0))*maxStep));}\n");
-    fprintf(out, "function startDrag(evt){dragging=true;knob.setAttribute('class','step-knob dragging');applyState(stepFromEvent(evt));evt.preventDefault();}\n");
-    fprintf(out, "function moveDrag(evt){if(!dragging) return;applyState(stepFromEvent(evt));evt.preventDefault();}\n");
-    fprintf(out, "function endDrag(){dragging=false;knob.setAttribute('class','step-knob');}\n");
-    fprintf(out, "rail.addEventListener('pointerdown',startDrag);\n");
-    fprintf(out, "knob.addEventListener('pointerdown',startDrag);\n");
-    fprintf(out, "root.addEventListener('pointermove',moveDrag);\n");
-    fprintf(out, "root.addEventListener('pointerup',endDrag);\n");
-    fprintf(out, "root.addEventListener('pointerleave',endDrag);\n");
-    fprintf(out, "q('[data-step-dot]').forEach(function(dot){dot.addEventListener('click',function(){applyState(parseInt(dot.getAttribute('data-step-dot')||'0',10));});});\n");
-    fprintf(out, "applyState(current);\n");
+    if (step_count > 0) {
+        fprintf(out, "var knob=document.getElementById('step-knob');\n");
+        fprintf(out, "var rail=document.getElementById('step-rail');\n");
+        fprintf(out, "var label=document.getElementById('step-label');\n");
+        fprintf(out, "var maxStep=%d;\n", step_count - 1);
+        fprintf(out, "var current=%d;\n", current_step < 0 ? 0 : current_step);
+        fprintf(out, "var draggingStep=false;\n");
+        fprintf(out, "function railBounds(){return {x0:parseFloat(rail.getAttribute('data-x0')),x1:parseFloat(rail.getAttribute('data-x1')),y:parseFloat(rail.getAttribute('data-y'))};}\n");
+        fprintf(out, "function clampStep(v){if(v<0) return 0;if(v>maxStep) return maxStep;return v;}\n");
+        fprintf(out, "function applyState(step){\n");
+        fprintf(out, " current=clampStep(step);\n");
+        fprintf(out, " q('[data-step-role]').forEach(function(el){var rank=parseInt(el.getAttribute('data-step-rank')||'-1',10);var active=rank>=0&&rank<=current;el.setAttribute('class',active?el.getAttribute('data-step-active-class'):el.getAttribute('data-step-pending-class'));});\n");
+        fprintf(out, " q('[data-step-dot]').forEach(function(dot){var idx=parseInt(dot.getAttribute('data-step-dot')||'0',10);dot.setAttribute('class',idx===current?'step-dot active':'step-dot');});\n");
+        fprintf(out, " var b=railBounds(); var x=maxStep>0?b.x0+((current/maxStep)*(b.x1-b.x0)):b.x0; knob.setAttribute('cx',x); knob.setAttribute('cy',b.y); label.textContent='step '+(current+1)+'/%d';\n", step_count);
+        fprintf(out, "}\n");
+        fprintf(out, "function stepFromEvent(evt){var p=toPoint(evt);var b=railBounds();if(maxStep<=0) return 0;return clampStep(Math.round(((p.x-b.x0)/(b.x1-b.x0))*maxStep));}\n");
+        fprintf(out, "function startStepDrag(evt){draggingStep=true;knob.setAttribute('class','step-knob dragging');applyState(stepFromEvent(evt));evt.preventDefault();}\n");
+        fprintf(out, "function moveStepDrag(evt){if(!draggingStep) return;applyState(stepFromEvent(evt));evt.preventDefault();}\n");
+        fprintf(out, "function endStepDrag(){draggingStep=false;if(knob) knob.setAttribute('class','step-knob');}\n");
+        fprintf(out, "if(root&&knob&&rail&&label){\n");
+        fprintf(out, " rail.addEventListener('pointerdown',startStepDrag);\n");
+        fprintf(out, " knob.addEventListener('pointerdown',startStepDrag);\n");
+        fprintf(out, " root.addEventListener('pointermove',moveStepDrag);\n");
+        fprintf(out, " root.addEventListener('pointerup',endStepDrag);\n");
+        fprintf(out, " root.addEventListener('pointerleave',endStepDrag);\n");
+        fprintf(out, " q('[data-step-dot]').forEach(function(dot){dot.addEventListener('click',function(){applyState(parseInt(dot.getAttribute('data-step-dot')||'0',10));});});\n");
+        fprintf(out, " applyState(current);\n");
+        fprintf(out, "}\n");
+    }
+    if (enable_legend_drag) {
+        fprintf(out, "q('[data-draggable=\"overlay\"]').forEach(function(box){\n");
+        fprintf(out, " var dragging=false, dx=0, dy=0;\n");
+        fprintf(out, " function boxX(){return parseFloat(box.getAttribute('data-x')||'0');}\n");
+        fprintf(out, " function boxY(){return parseFloat(box.getAttribute('data-y')||'0');}\n");
+        fprintf(out, " function baseClass(){return box.getAttribute('data-base-class')||'';}\n");
+        fprintf(out, " function setBox(x,y){box.setAttribute('data-x',x);box.setAttribute('data-y',y);box.setAttribute('transform','translate('+x+' '+y+')');}\n");
+        fprintf(out, " function startOverlayDrag(evt){var p=toPoint(evt);dragging=true;dx=p.x-boxX();dy=p.y-boxY();box.setAttribute('class',baseClass()+' dragging');evt.preventDefault();}\n");
+        fprintf(out, " function moveOverlayDrag(evt){if(!dragging) return;var p=toPoint(evt);setBox(p.x-dx,p.y-dy);evt.preventDefault();}\n");
+        fprintf(out, " function endOverlayDrag(){dragging=false;box.setAttribute('class',baseClass());}\n");
+        fprintf(out, " box.addEventListener('pointerdown',startOverlayDrag);\n");
+        fprintf(out, " root.addEventListener('pointermove',moveOverlayDrag);\n");
+        fprintf(out, " root.addEventListener('pointerup',endOverlayDrag);\n");
+        fprintf(out, " root.addEventListener('pointerleave',endOverlayDrag);\n");
+        fprintf(out, "});\n");
+    }
     fprintf(out, "})();\n");
     fprintf(out, "]]></script>\n");
 }
@@ -2265,6 +2424,7 @@ int trace_render_single(TraceRenderInput *input, FILE *out) {
     trace_render_panel_t panel;
     cct_sigil_document_t sigil_doc;
     trace_render_svg_backdrop_t backdrop;
+    double canvas_height = 720.0;
     char subtitle[256];
     char title[256];
     u64 hash = 0;
@@ -2278,12 +2438,18 @@ int trace_render_single(TraceRenderInput *input, FILE *out) {
         (void)trace_render_load_svg_backdrop(input->sigil_path, &sigil_doc, &backdrop);
     }
     if (backdrop.ready) {
-        trace_render_panel_defaults(&panel, 0.0, 0.0, backdrop.width, backdrop.height);
-        panel.timeline_x = 22.0;
+        double footer_top = 24.0;
+        double footer_bottom = 28.0;
+        canvas_height = backdrop.height + footer_top + (input->mode == TRACE_RENDER_STEP ? 118.0 : 92.0) + footer_bottom;
+        trace_render_panel_defaults(&panel, backdrop.min_x, backdrop.min_y, backdrop.width, canvas_height);
+        panel.cx = backdrop.min_x + backdrop.width * 0.5;
+        panel.cy = backdrop.min_y + backdrop.height * 0.36;
+        panel.core_r = backdrop.width * 0.075;
+        panel.timeline_x = backdrop.min_x + 22.0;
         panel.timeline_w = backdrop.width > 520.0 ? 440.0 : (backdrop.width - 44.0);
         if (panel.timeline_w < 300.0) panel.timeline_w = backdrop.width - 44.0;
         panel.timeline_h = input->mode == TRACE_RENDER_STEP ? 118.0 : 92.0;
-        panel.timeline_y = backdrop.height - panel.timeline_h - 22.0;
+        panel.timeline_y = backdrop.min_y + backdrop.height + footer_top;
     } else {
         trace_render_panel_defaults(&panel, 12.0, 12.0, 936.0, 696.0);
         if (input->mode == TRACE_RENDER_STEP && !input->hide_timeline) {
@@ -2299,7 +2465,7 @@ int trace_render_single(TraceRenderInput *input, FILE *out) {
              input->mode == TRACE_RENDER_STEP ? "step" : (input->animated ? "animated" : "static"),
              (unsigned long long)hash);
     if (backdrop.ready && backdrop.svg_prefix) {
-        fprintf(out, "%s", backdrop.svg_prefix);
+        trace_render_emit_backdrop_root(out, &backdrop, canvas_height);
     } else {
         fprintf(out, "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n");
         fprintf(out, "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 960 720\" width=\"960\" height=\"720\" role=\"img\" aria-label=\"CCT trace render\">\n");
@@ -2317,7 +2483,9 @@ int trace_render_single(TraceRenderInput *input, FILE *out) {
     if (input->mode == TRACE_RENDER_STEP) {
         count = trace_render_sorted_indices(&input->trace_a, &indices, input);
         free(indices);
-        if (count > 0) trace_render_emit_step_script(out, count, input->step_index);
+        trace_render_emit_interaction_script(out, count, input->step_index, 1);
+    } else {
+        trace_render_emit_interaction_script(out, 0, 0, 1);
     }
     if (!backdrop.ready) fprintf(out, "<text class=\"hash\" x=\"930\" y=\"704\" text-anchor=\"end\">%016llx</text>\n", (unsigned long long)hash);
     fputs("</svg>\n", out);

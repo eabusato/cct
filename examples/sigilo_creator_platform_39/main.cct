@@ -1,0 +1,32 @@
+INCIPIT grimoire "sigilo_creator_platform_39"
+
+ADVOCARE "modules/auth.cct"
+ADVOCARE "modules/billing.cct"
+ADVOCARE "modules/creators.cct"
+ADVOCARE "modules/media.cct"
+ADVOCARE "modules/moderation.cct"
+ADVOCARE "modules/notifications.cct"
+ADVOCARE "modules/analytics.cct"
+
+-- @route route_id=site.home method=GET path=/ handler=landing_page group=/ middleware=trace
+RITUALE landing_page() REDDE REX
+  EVOCA REX sessio AD CONIURA auth_session_resume()
+  EVOCA REX destaques AD CONIURA creator_featured_project()
+  EVOCA REX acervo AD CONIURA media_recent_gallery()
+  ANUR sessio
+  ANUR destaques
+  ANUR acervo
+  REDDE 1
+EXPLICIT RITUALE
+
+RITUALE main() REDDE REX
+  EVOCA REX a AD CONIURA landing_page()
+  EVOCA REX b AD CONIURA creator_dashboard()
+  EVOCA REX c AD CONIURA analytics_overview()
+  ANUR a
+  ANUR b
+  ANUR c
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

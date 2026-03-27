@@ -1,0 +1,30 @@
+INCIPIT grimoire "sigilo_creator_platform_39_media"
+
+-- @route route_id=studio.media_upload method=POST path=/studio/media/upload handler=media_upload group=/studio middleware=auth,trace
+RITUALE media_upload() REDDE REX
+  REDDE 41
+EXPLICIT RITUALE
+
+-- @route route_id=api.assets_show method=GET path=/api/assets/:id handler=asset_show group=/api middleware=trace
+RITUALE asset_show() REDDE REX
+  REDDE 42
+EXPLICIT RITUALE
+
+-- @route route_id=webhook.media_ready method=POST path=/webhooks/media-ready handler=webhook_media_ready group=/webhooks middleware=signature,trace
+RITUALE webhook_media_ready() REDDE REX
+  REDDE 43
+EXPLICIT RITUALE
+
+RITUALE media_recent_gallery() REDDE REX
+  REDDE 44
+EXPLICIT RITUALE
+
+RITUALE media_asset_latest() REDDE REX
+  REDDE 45
+EXPLICIT RITUALE
+
+RITUALE media_pack_release() REDDE REX
+  REDDE 46
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

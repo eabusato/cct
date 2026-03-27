@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0.00 0.00 1100.00 900.00" width="1100" height="900" role="img" aria-label="CCT route sigilo">
+  <desc>Deterministic route topology sigil for a CCT artifact.</desc>
+  <defs>
+    <style><![CDATA[
+      .bg { fill: #f6f2e7; }
+      .title { fill: #231a14; font: 600 20px monospace; }
+      .subtitle { fill: #5b5148; font: 11px monospace; }
+      .route-center { fill: #3b3027; stroke: #f6f2e7; stroke-width: 1.2; }
+      .group-link { fill: none; stroke: #8a7662; stroke-width: 1.05; opacity: 0.54; }
+      .cluster-orbit { fill: none; stroke: #c6b59f; stroke-width: 1.0; opacity: 0.90; }
+      .cluster-thread { fill: none; stroke: #d2c2ad; stroke-width: 0.9; opacity: 0.78; }
+      .cluster-label { fill: #2a221c; font: 600 11px monospace; opacity: 0.88; }
+      .cluster-summary { fill: #66584a; font: 9px monospace; opacity: 0.74; }
+      .route-link { fill: none; stroke: #7a6a59; stroke-width: 1.0; opacity: 0.68; }
+      .route-weave { fill: none; stroke: #8c7865; stroke-width: 0.95; opacity: 0.58; }
+      .route-shell { fill: rgba(255,252,246,0.72); stroke: #5a4b3f; stroke-width: 1.08; }
+      .route-mid { fill: none; stroke: #b7a690; stroke-width: 0.95; opacity: 0.78; }
+      .route-core { fill: #f7efe3; stroke: #57483b; stroke-width: 1.0; }
+      .route-arc { fill: none; stroke: #7a6957; stroke-width: 0.95; opacity: 0.88; stroke-linecap: round; }
+      .route-spoke { fill: none; stroke: #978573; stroke-width: 0.9; opacity: 0.82; stroke-linecap: round; }
+      .route-chord { fill: none; stroke: #51453b; stroke-width: 0.9; opacity: 0.74; stroke-linecap: round; }
+      .route-glyph { fill: none; stroke: #efe6d9; stroke-width: 1.05; stroke-linejoin: round; }
+      .sigil-orn { fill: none; stroke: #b7a690; stroke-width: 0.9; opacity: 0.66; }
+      .route-method-get { fill: #6b5a4b; }
+      .route-method-post { fill: #6b5a4b; }
+      .route-method-put { fill: #6b5a4b; }
+      .route-method-patch { fill: #6b5a4b; }
+      .route-method-delete { fill: #6b5a4b; }
+      .route-method-head { fill: #6b5a4b; }
+      .route-method-options { fill: #6b5a4b; }
+      .route-method-custom { fill: #6b5a4b; }
+      .route-method-seed { stroke: #f7efe2; stroke-width: 0.85; }
+      .hash { fill: #231a14; font: 10px monospace; }
+      .route-wrap { cursor: help; }
+      .route-wrap:hover > .route-shell, .route-wrap:hover > .route-mid, .route-wrap:hover > .route-core { stroke: #1f1712; opacity: 1; }
+      .route-wrap:hover > .route-link { stroke: #3c2f25; opacity: .92; }
+    ]]></style>
+  </defs>
+  <rect class="bg" x="0.00" y="0.00" width="1100.00" height="900.00"/>
+  <text class="title" x="30" y="36">sigilo routes</text>
+  <text class="subtitle" x="30" y="56">program=sigilo_creator_platform_39 routes=1 groups=1 web_hash=05e78b5ac64ab8df</text>
+  <g id="route_center">
+    <title>route center
+origin point for the route topology</title>
+    <circle class="route-center" cx="550.00" cy="482.00" r="4.8"/>
+  </g>
+  <g id="route_group_links">
+    <g class="route-group-wrap">
+      <title>center -&gt; group
+group=/
+routes=1</title>
+    <path class="group-link" d="M 550.00 482.00 Q 548.23 324.43 523.71 168.78"/>
+    </g>
+  </g>
+  <g id="route_cluster_route" class="route-cluster">
+    <title>route group
+group=/
+routes=1</title>
+    <circle class="cluster-orbit" cx="523.71" cy="168.78" r="74.75"/>
+    <text class="cluster-label" x="515.12" y="63.39" text-anchor="middle">/</text>
+    <text class="cluster-summary" x="515.12" y="76.39" text-anchor="middle">routes=1</text>
+    <g class="route-weave-wrap">
+      <title>group anchor
+group=/
+anchor=site.home</title>
+    <path class="route-link" d="M 523.71 168.78 Q 546.79 179.10 567.45 153.51"/>
+    </g>
+    <g id="route_node_site_home" class="route-wrap" data-route-id="site.home" data-method="GET" data-path="/" data-handler="landing_page" data-module="examples/sigilo_creator_platform_39/main.cct" data-group="/" data-middleware-chain="trace" data-source-origin="native" data-path-params="none" data-route-hash="796275eeab5a254d">
+<circle class="route-shell" cx="567.45" cy="153.51" r="16.12"/><path class="route-mid" d="M 571.70 144.96 A 9.54 9.54 0 0 1 573.31 161.04"/><path class="route-arc" d="M 558.32 141.48 A 15.09 15.09 0 0 1 575.00 140.44"/><path class="route-spoke" d="M 572.93 152.79 Q 567.46 155.15 579.15 153.44"/><path class="route-spoke" d="M 566.45 157.22 Q 565.92 152.90 563.13 165.03"/><path class="route-spoke" d="M 565.65 148.83 Q 568.83 152.62 561.03 143.46"/><path class="route-chord" d="M 578.30 151.48 Q 568.20 152.82 564.17 163.32"/><circle class="route-core" cx="568.20" cy="152.82" r="4.51"/><path class="route-glyph" d="M 573.89 152.44 L 564.23 156.35 L 564.48 149.04 Z"/><circle class="route-method-seed" cx="568.59" cy="158.71" r="1.14"/><circle class="route-method-get" cx="568.20" cy="152.82" r="0"/>      <title>GET /
+handler=landing_page
+module=examples/sigilo_creator_platform_39/main.cct
+middleware=trace
+route_id=site.home
+source=native
+route_hash=796275eeab5a254d</title>
+    </g>
+  </g>
+  <text class="hash" x="1070" y="876" text-anchor="end">05e78b5ac64ab8df</text>
+</svg>

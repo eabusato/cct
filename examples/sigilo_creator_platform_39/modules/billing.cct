@@ -1,0 +1,16 @@
+INCIPIT grimoire "sigilo_creator_platform_39_billing"
+
+-- @route route_id=studio.billing_portal method=GET path=/studio/billing handler=billing_portal group=/studio middleware=auth,trace
+RITUALE billing_portal() REDDE REX
+  REDDE 21
+EXPLICIT RITUALE
+
+RITUALE billing_quota_load() REDDE REX
+  REDDE 22
+EXPLICIT RITUALE
+
+RITUALE billing_plan_active() REDDE REX
+  REDDE 23
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

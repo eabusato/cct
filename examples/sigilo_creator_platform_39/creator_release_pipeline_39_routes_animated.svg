@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 720" width="960" height="720" role="img" aria-label="CCT trace render">
+<rect class="bg" x="0" y="0" width="960" height="720"/>
+<style><![CDATA[.bg{fill:#f6f0e6}.panel-bg{fill:#fbf8f2;stroke:#d4c9b9;stroke-width:1}.halo{fill:none;stroke:#dccfbf;stroke-width:1.1;opacity:.92}.halo-soft{fill:none;stroke:#ece2d5;stroke-width:.8;opacity:.78}.title{fill:#211812;font:600 18px monospace}.subtitle{fill:#5a5046;font:10px monospace}.hash{fill:#2a221c;font:10px monospace}.core{fill:#fffaf2;stroke:#786856;stroke-width:1.6}.core-mark{fill:none;stroke:#a39383;stroke-width:1.0;opacity:.95}.route-shell{fill:rgba(255,252,246,0.74);stroke:#5a4b3f;stroke-width:1.0}.route-mid{fill:none;stroke:#b9aa96;stroke-width:.9;opacity:.8}.route-arc{fill:none;stroke:#736252;stroke-width:.92;opacity:.86;stroke-linecap:round}.route-spoke{fill:none;stroke:#968471;stroke-width:.86;opacity:.8;stroke-linecap:round}.route-hit{fill:#5e4d3d}.span-link{fill:none;stroke:#776757;stroke-width:1.0;opacity:.72}.span-node{fill:#fbfaf6;stroke:#6c6256;stroke-width:1.0}.span-node-active{stroke:#3f6f9a;stroke-width:1.8}.span-node-pending{fill:#f2ede4;stroke:#b7a99a;opacity:.56}.span-node-hit{stroke:#5e4d3d;stroke-width:1.55}.span-core{fill:#efe5d6;stroke:#5e5143;stroke-width:1.1}.trace-orn{fill:none;stroke:#b9a895;stroke-width:.9;opacity:.62}.timeline-axis{fill:none;stroke:#8f8173;stroke-width:.8}.timeline-lane{fill:#f0e7da;stroke:#d5c8b5;stroke-width:.6}.timeline-row{fill:#f8f1e6;stroke:#dccfbe;stroke-width:.55}.timeline-bar{fill:#5f87af;opacity:.74}.timeline-bar-pending{fill:#d7ccbe;opacity:.52}.mapping-label{fill:#5a5046;font:10px monospace}.legend{fill:#40352c;font:10px monospace}.compare-divider{stroke:#d7cabb;stroke-width:1}.node-wrap,.edge-wrap,.timeline-entry{cursor:help}.timeline-entry:hover .timeline-bar,.timeline-entry:hover .timeline-bar-pending{opacity:.94;stroke:#2f261f;stroke-width:1.1}.node-wrap:hover .span-node,.node-wrap:hover .span-core{stroke:#2f261f;stroke-width:2.1}.route-flow{fill:none;stroke:#69584b;stroke-width:.95;opacity:.58}.step-marker{fill:#1e4f78}.step-rail{fill:none;stroke:#8f8173;stroke-width:1.2}.step-dot{fill:#efe4d4;stroke:#756657;stroke-width:1;cursor:pointer}.step-dot.active{fill:#1e4f78;stroke:#1e4f78}.step-knob{fill:#1e4f78;stroke:#fffaf2;stroke-width:1.2;cursor:grab}.step-knob.dragging{cursor:grabbing}.step-label{fill:#5a5046;font:10px monospace}.trace-caption-box{fill:rgba(255,250,242,0.92);stroke:#d6cabc;stroke-width:.9}.trace-caption-title{fill:#211812;font:600 14px monospace}.trace-caption-subtitle{fill:#5a5046;font:10px monospace}.focus-ring{fill:none;stroke:#35648c;stroke-width:1.2;stroke-dasharray:4 2}.trace-legend-wrap{cursor:grab}.trace-legend-wrap.dragging{cursor:grabbing}]]></style>
+<style><![CDATA[.legend-box{fill:#fffaf2;stroke:#d6cabc;stroke-width:.9}.legend-entry text{fill:#40352c;font:10px monospace}.legend-swatch{stroke-width:1}.slow{filter:drop-shadow(0 0 4px rgba(28,56,84,.18))}.error{stroke:#dc2626 !important;fill:#feecec !important}.pulse{filter:drop-shadow(0 0 3px rgba(28,56,84,.16))}.trace-packet{opacity:0;stroke:#fffaf2;stroke-width:1.1;filter:drop-shadow(0 0 3px rgba(28,56,84,.18))}.overlay-meta{font:10px monospace;fill:#5a5046}.cat-generic{stroke:#94a3b8}.timeline-bar.cat-generic{fill:#c4cfdb}.legend-swatch.cat-generic{fill:#eef2f6;stroke:#94a3b8}.trace-packet.cat-generic{fill:#94a3b8}.cat-handler{stroke:#4a90d9}.span-node.cat-handler,.span-core.cat-handler{stroke:#4a90d9;fill:#e9f3fd}.span-link.cat-handler,.route-flow.cat-handler{stroke:#4a90d9}.trace-packet.cat-handler{fill:#4a90d9}.timeline-bar.cat-handler,.legend-swatch.cat-handler{fill:#4a90d9;stroke:#4a90d9}.cat-middleware{stroke:#7bb3e8}.span-node.cat-middleware,.span-core.cat-middleware{stroke:#7bb3e8;fill:#edf7fd}.span-link.cat-middleware,.route-flow.cat-middleware{stroke:#7bb3e8}.trace-packet.cat-middleware{fill:#7bb3e8}.timeline-bar.cat-middleware,.legend-swatch.cat-middleware{fill:#7bb3e8;stroke:#7bb3e8}.span-link.cat-middleware,.route-flow.cat-middleware,.span-node.cat-middleware,.legend-swatch.cat-middleware{stroke-dasharray:4,2}.cat-sql{stroke:#2d9f5e}.span-node.cat-sql,.span-core.cat-sql{stroke:#2d9f5e;fill:#ebf8ef}.span-link.cat-sql,.route-flow.cat-sql{stroke:#2d9f5e}.trace-packet.cat-sql{fill:#2d9f5e}.timeline-bar.cat-sql,.legend-swatch.cat-sql{fill:#2d9f5e;stroke:#2d9f5e}.cat-sql{vector-effect:non-scaling-stroke}.cat-cache{stroke:#e07b39}.span-node.cat-cache,.span-core.cat-cache{stroke:#e07b39;fill:#fdf1e9}.span-link.cat-cache,.route-flow.cat-cache{stroke:#e07b39}.trace-packet.cat-cache{fill:#e07b39}.timeline-bar.cat-cache,.legend-swatch.cat-cache{fill:#e07b39;stroke:#e07b39}.cat-cache{vector-effect:non-scaling-stroke}.cat-storage{stroke:#8b5cf6}.span-node.cat-storage,.span-core.cat-storage{stroke:#8b5cf6;fill:#f2ebfe}.span-link.cat-storage,.route-flow.cat-storage{stroke:#8b5cf6}.trace-packet.cat-storage{fill:#8b5cf6}.timeline-bar.cat-storage,.legend-swatch.cat-storage{fill:#8b5cf6;stroke:#8b5cf6}.cat-transcode{stroke:#d946ef}.span-node.cat-transcode,.span-core.cat-transcode{stroke:#d946ef;fill:#fde9fe}.span-link.cat-transcode,.route-flow.cat-transcode{stroke:#d946ef}.trace-packet.cat-transcode{fill:#d946ef}.timeline-bar.cat-transcode,.legend-swatch.cat-transcode{fill:#d946ef;stroke:#d946ef}.span-link.cat-transcode,.route-flow.cat-transcode,.span-node.cat-transcode,.legend-swatch.cat-transcode{stroke-dasharray:6,2}.cat-email{stroke:#ca8a04}.span-node.cat-email,.span-core.cat-email{stroke:#ca8a04;fill:#fbf3db}.span-link.cat-email,.route-flow.cat-email{stroke:#ca8a04}.trace-packet.cat-email{fill:#ca8a04}.timeline-bar.cat-email,.legend-swatch.cat-email{fill:#ca8a04;stroke:#ca8a04}.cat-i18n{stroke:#06b6d4}.span-node.cat-i18n,.span-core.cat-i18n{stroke:#06b6d4;fill:#e4fbff}.span-link.cat-i18n,.route-flow.cat-i18n{stroke:#06b6d4}.trace-packet.cat-i18n{fill:#06b6d4}.timeline-bar.cat-i18n,.legend-swatch.cat-i18n{fill:#06b6d4;stroke:#06b6d4}.span-link.cat-i18n,.route-flow.cat-i18n,.span-node.cat-i18n,.legend-swatch.cat-i18n{stroke-dasharray:2,2}.cat-task{stroke:#6b7280}.span-node.cat-task,.span-core.cat-task{stroke:#6b7280;fill:#eef0f3}.span-link.cat-task,.route-flow.cat-task{stroke:#6b7280}.trace-packet.cat-task{fill:#6b7280}.timeline-bar.cat-task,.legend-swatch.cat-task{fill:#6b7280;stroke:#6b7280}.cat-error{stroke:#dc2626}.span-node.cat-error,.span-core.cat-error{stroke:#dc2626;fill:#feecec}.span-link.cat-error,.route-flow.cat-error{stroke:#dc2626}.trace-packet.cat-error{fill:#dc2626}.timeline-bar.cat-error,.legend-swatch.cat-error{fill:#dc2626;stroke:#dc2626}.cat-error{vector-effect:non-scaling-stroke}.cat-generic{stroke:#94a3b8}.span-node.cat-generic,.span-core.cat-generic{stroke:#94a3b8;fill:#eef2f6}.span-link.cat-generic,.route-flow.cat-generic{stroke:#94a3b8}.trace-packet.cat-generic{fill:#94a3b8}.timeline-bar.cat-generic,.legend-swatch.cat-generic{fill:#94a3b8;stroke:#94a3b8}]]></style>
+<rect class="panel-bg" x="12.00" y="12.00" width="936.00" height="696.00" rx="18"/>
+<circle class="halo-soft" cx="480.00" cy="262.56" r="262.08"/>
+<circle class="halo" cx="480.00" cy="262.56" r="205.92"/>
+<circle class="halo-soft" cx="480.00" cy="262.56" r="140.40"/>
+<text class="title" x="32.00" y="40.00">trace sigilo-creator-release-39</text>
+<text class="subtitle" x="32.00" y="57.00">spans=13 total=460ms mode=animated hash=f1325a3c51f0530c</text>
+<g><circle class="core" cx="480.00" cy="262.56" r="70.20"/><circle class="core-mark" cx="480.00" cy="262.56" r="54.20"/><path class="core-mark" d="M 480.00 238.56 L 501.00 262.56 L 480.00 286.56 L 459.00 262.56 Z"/></g>
+<g id="trace_ornaments">
+<circle class="trace-orn" cx="791.71" cy="262.56" r="2.28"/>
+<circle class="trace-orn" cx="761.79" cy="425.25" r="1.94"/>
+<circle class="trace-orn" cx="635.51" cy="531.92" r="2.35"/>
+<circle class="trace-orn" cx="480.00" cy="575.71" r="1.53"/>
+<circle class="trace-orn" cx="323.09" cy="534.33" r="3.19"/>
+<circle class="trace-orn" cx="198.40" cy="425.14" r="1.88"/>
+<circle class="trace-orn" cx="151.76" cy="262.56" r="2.33"/>
+<circle class="trace-orn" cx="201.71" cy="101.89" r="1.38"/>
+<circle class="trace-orn" cx="322.36" cy="-10.48" r="2.94"/>
+<circle class="trace-orn" cx="480.00" cy="-62.54" r="2.22"/>
+<circle class="trace-orn" cx="635.79" cy="-7.28" r="1.88"/>
+<circle class="trace-orn" cx="761.10" cy="100.27" r="2.46"/>
+</g>
+<g id="trace_links">
+<path class="span-link cat-middleware" data-category="middleware" data-subcategory="middleware" d="M 480.00 262.56 Q 585.37 201.45 690.75 191.42" style="stroke-dasharray:222.43;stroke-dashoffset:222.43"><animate attributeName="stroke-dashoffset" from="222.43" to="0" begin="0.00s" dur="0.24s" fill="freeze"/></path>
+<circle class="trace-packet span-link cat-middleware" r="4.10"><animate attributeName="opacity" values="0;1;1;0" begin="0.00s" dur="0.24s" fill="freeze"/><animateMotion begin="0.00s" dur="0.24s" fill="freeze" path="M 480.00 262.56 Q 585.37 201.45 690.75 191.42"/></circle>
+<path class="span-link cat-middleware" data-category="middleware" data-subcategory="middleware" d="M 480.00 262.56 Q 388.37 210.72 296.74 205.05" style="stroke-dasharray:192.07;stroke-dashoffset:192.07"><animate attributeName="stroke-dashoffset" from="192.07" to="0" begin="0.00s" dur="0.24s" fill="freeze"/></path>
+<circle class="trace-packet span-link cat-middleware" r="4.10"><animate attributeName="opacity" values="0;1;1;0" begin="0.00s" dur="0.24s" fill="freeze"/><animateMotion begin="0.00s" dur="0.24s" fill="freeze" path="M 480.00 262.56 Q 388.37 210.72 296.74 205.05"/></circle>
+<path class="span-link cat-handler" data-category="handler" data-subcategory="handler" d="M 480.00 262.56 Q 587.71 237.90 695.43 252.48" style="stroke-dasharray:215.66;stroke-dashoffset:215.66"><animate attributeName="stroke-dashoffset" from="215.66" to="0" begin="0.00s" dur="0.24s" fill="freeze"/></path>
+<circle class="trace-packet span-link cat-handler" r="4.10"><animate attributeName="opacity" values="0;1;1;0" begin="0.00s" dur="0.24s" fill="freeze"/><animateMotion begin="0.00s" dur="0.24s" fill="freeze" path="M 480.00 262.56 Q 587.71 237.90 695.43 252.48"/></circle>
+<path class="span-link cat-sql pulse" data-category="sql" data-subcategory="query" d="M 695.43 252.48 Q 747.25 239.73 799.08 255.96" style="stroke-dasharray:103.71;stroke-dashoffset:103.71"><animate attributeName="stroke-dashoffset" from="103.71" to="0" begin="0.02s" dur="0.24s" fill="freeze"/></path>
+<circle class="trace-packet span-link cat-sql pulse" r="4.10"><animate attributeName="opacity" values="0;1;1;0" begin="0.02s" dur="0.24s" fill="freeze"/><animateMotion begin="0.02s" dur="0.24s" fill="freeze" path="M 695.43 252.48 Q 747.25 239.73 799.08 255.96"/></circle>
+<path class="span-link cat-cache pulse" data-category="cache" data-subcategory="hit" d="M 695.43 252.48 Q 742.98 259.26 790.53 303.94" style="stroke-dasharray:108.14;stroke-dashoffset:108.14"><animate attributeName="stroke-dashoffset" from="108.14" to="0" begin="0.20s" dur="0.54s" fill="freeze"/></path>
+<circle class="trace-packet span-link cat-cache pulse" r="4.10"><animate attributeName="opacity" values="0;1;1;0" begin="0.20s" dur="0.54s" fill="freeze"/><animateMotion begin="0.20s" dur="0.54s" fill="freeze" path="M 695.43 252.48 Q 742.98 259.26 790.53 303.94"/></circle>
+<path class="span-link cat-storage" data-category="storage" data-subcategory="storage" d="M 695.43 252.48 Q 739.29 263.67 783.14 314.23" style="stroke-dasharray:107.27;stroke-dashoffset:107.27"><animate attributeName="stroke-dashoffset" from="107.27" to="0" begin="0.20s" dur="1.00s" fill="freeze"/></path>
+<circle class="trace-packet span-link cat-storage" r="4.10"><animate attributeName="opacity" values="0;1;1;0" begin="0.20s" dur="1.00s" fill="freeze"/><animateMotion begin="0.20s" dur="1.00s" fill="freeze" path="M 695.43 252.48 Q 739.29 263.67 783.14 314.23"/></circle>
+<path class="span-link cat-task" data-category="task" data-subcategory="task" d="M 695.43 252.48 Q 732.02 282.15 768.61 358.97" style="stroke-dasharray:129.21;stroke-dashoffset:129.21"><animate attributeName="stroke-dashoffset" from="129.21" to="0" begin="0.97s" dur="1.20s" fill="freeze"/></path>
+<circle class="trace-packet span-link cat-task" r="4.10"><animate attributeName="opacity" values="0;1;1;0" begin="0.97s" dur="1.20s" fill="freeze"/><animateMotion begin="0.97s" dur="1.20s" fill="freeze" path="M 695.43 252.48 Q 732.02 282.15 768.61 358.97"/></circle>
+<path class="span-link cat-sql pulse" data-category="sql" data-subcategory="query" d="M 695.43 252.48 Q 758.58 240.98 821.74 261.36" style="stroke-dasharray:126.63;stroke-dashoffset:126.63"><animate attributeName="stroke-dashoffset" from="126.63" to="0" begin="2.04s" dur="1.20s" fill="freeze"/></path>
+<circle class="trace-packet span-link cat-sql pulse" r="4.10"><animate attributeName="opacity" values="0;1;1;0" begin="2.04s" dur="1.20s" fill="freeze"/><animateMotion begin="2.04s" dur="1.20s" fill="freeze" path="M 695.43 252.48 Q 758.58 240.98 821.74 261.36"/></circle>
+<path class="span-link cat-task" data-category="task" data-subcategory="task" d="M 695.43 252.48 Q 712.84 302.03 730.25 404.84" style="stroke-dasharray:156.28;stroke-dashoffset:156.28"><animate attributeName="stroke-dashoffset" from="156.28" to="0" begin="2.82s" dur="1.20s" fill="freeze"/></path>
+<circle class="trace-packet span-link cat-task" r="4.10"><animate attributeName="opacity" values="0;1;1;0" begin="2.82s" dur="1.20s" fill="freeze"/><animateMotion begin="2.82s" dur="1.20s" fill="freeze" path="M 695.43 252.48 Q 712.84 302.03 730.25 404.84"/></circle>
+<path class="span-link cat-email" data-category="email" data-subcategory="send" d="M 695.43 252.48 Q 700.32 319.09 705.21 444.99" style="stroke-dasharray:192.76;stroke-dashoffset:192.76"><animate attributeName="stroke-dashoffset" from="192.76" to="0" begin="3.08s" dur="1.20s" fill="freeze"/></path>
+<circle class="trace-packet span-link cat-email" r="4.10"><animate attributeName="opacity" values="0;1;1;0" begin="3.08s" dur="1.20s" fill="freeze"/><animateMotion begin="3.08s" dur="1.20s" fill="freeze" path="M 695.43 252.48 Q 700.32 319.09 705.21 444.99"/></circle>
+<path class="span-link cat-task" data-category="task" data-subcategory="task" d="M 695.43 252.48 Q 697.35 310.74 699.28 423.50" style="stroke-dasharray:171.07;stroke-dashoffset:171.07"><animate attributeName="stroke-dashoffset" from="171.07" to="0" begin="3.34s" dur="1.20s" fill="freeze"/></path>
+<circle class="trace-packet span-link cat-task" r="4.10"><animate attributeName="opacity" values="0;1;1;0" begin="3.34s" dur="1.20s" fill="freeze"/><animateMotion begin="3.34s" dur="1.20s" fill="freeze" path="M 695.43 252.48 Q 697.35 310.74 699.28 423.50"/></circle>
+<path class="span-link cat-cache pulse" data-category="cache" data-subcategory="cache" d="M 695.43 252.48 Q 770.38 258.56 845.33 307.68" style="stroke-dasharray:159.74;stroke-dashoffset:159.74"><animate attributeName="stroke-dashoffset" from="159.74" to="0" begin="3.58s" dur="1.20s" fill="freeze"/></path>
+<circle class="trace-packet span-link cat-cache pulse" r="4.10"><animate attributeName="opacity" values="0;1;1;0" begin="3.58s" dur="1.20s" fill="freeze"/><animateMotion begin="3.58s" dur="1.20s" fill="freeze" path="M 695.43 252.48 Q 770.38 258.56 845.33 307.68"/></circle>
+</g>
+<g id="trace_nodes">
+<g id="span-p1" class="node-wrap" data-depth="0" data-category="handler" data-subcategory="handler" data-route-id="studio.project_publish"><circle class="span-core span-node-active cat-handler" data-category="handler" data-subcategory="handler" cx="480.00" cy="262.56" r="16.00" opacity="0.18"><animate attributeName="opacity" from="0.18" to="1" begin="0.00s" dur="0.18s" fill="freeze"/></circle><title>request.project_publish (460ms)
+route=studio.project_publish
+{&quot;route_id&quot;:&quot;studio.project_publish&quot;,&quot;http.method&quot;:&quot;POST&quot;,&quot;http.path&quot;:&quot;/studio/projects/aurora/publish&quot;,&quot;category&quot;:&quot;handler&quot;}</title></g>
+<g id="span-p2" class="node-wrap" data-depth="1" data-category="middleware" data-subcategory="middleware" data-module="examples/sigilo_creator_platform_39/modules/auth.cct"><circle class="span-node span-node-active cat-middleware" data-category="middleware" data-subcategory="middleware" cx="690.75" cy="191.42" r="13.44" opacity="0.18"><animate attributeName="opacity" from="0.18" to="1" begin="0.01s" dur="0.18s" fill="freeze"/></circle><title>middleware.auth (13ms)
+module=examples/sigilo_creator_platform_39/modules/auth.cct
+{&quot;middleware&quot;:&quot;auth&quot;,&quot;module&quot;:&quot;examples/sigilo_creator_platform_39/modules/auth.cct&quot;,&quot;handler&quot;:&quot;auth_login&quot;,&quot;category&quot;:&quot;middleware&quot;}</title></g>
+<g id="span-p3" class="node-wrap" data-depth="1" data-category="middleware" data-subcategory="middleware"><circle class="span-node span-node-active cat-middleware" data-category="middleware" data-subcategory="middleware" cx="296.74" cy="205.05" r="13.27" opacity="0.18"><animate attributeName="opacity" from="0.18" to="1" begin="0.15s" dur="0.18s" fill="freeze"/></circle><title>middleware.trace (4ms)
+{&quot;middleware&quot;:&quot;trace&quot;,&quot;category&quot;:&quot;middleware&quot;}</title></g>
+<g id="span-p4" class="node-wrap" data-depth="1" data-category="handler" data-subcategory="handler" data-route-id="studio.project_publish" data-module="examples/sigilo_creator_platform_39/modules/creators.cct"><circle class="span-node span-node-active cat-handler" data-category="handler" data-subcategory="handler" cx="695.43" cy="252.48" r="12.58" opacity="0.18"><animate attributeName="opacity" from="0.18" to="1" begin="0.20s" dur="0.18s" fill="freeze"/></circle><title>handler.project_publish (430ms)
+route=studio.project_publish
+module=examples/sigilo_creator_platform_39/modules/creators.cct
+{&quot;handler&quot;:&quot;project_publish&quot;,&quot;module&quot;:&quot;examples/sigilo_creator_platform_39/modules/creators.cct&quot;,&quot;route_id&quot;:&quot;studio.project_publish&quot;,&quot;category&quot;:&quot;handler&quot;}</title></g>
+<g id="span-p5" class="node-wrap" data-depth="2" data-category="sql" data-subcategory="query" data-module="examples/sigilo_creator_platform_39/modules/billing.cct"><circle class="span-node span-node-active cat-sql pulse" data-category="sql" data-subcategory="query" cx="799.08" cy="255.96" r="13.95" opacity="0.18"><animate attributeName="opacity" from="0.18" to="1" begin="0.26s" dur="0.18s" fill="freeze"/></circle><title>billing.quota_load (38ms)
+module=examples/sigilo_creator_platform_39/modules/billing.cct
+{&quot;module&quot;:&quot;examples/sigilo_creator_platform_39/modules/billing.cct&quot;,&quot;category&quot;:&quot;sql&quot;,&quot;query&quot;:&quot;billing.quota.load&quot;}</title></g>
+<g id="span-p6" class="node-wrap" data-depth="2" data-category="cache" data-subcategory="hit" data-module="examples/sigilo_creator_platform_39/modules/media.cct"><circle class="span-node span-node-active cat-cache pulse" data-category="cache" data-subcategory="hit" cx="790.53" cy="303.94" r="10.45" opacity="0.18"><animate attributeName="opacity" from="0.18" to="1" begin="0.74s" dur="0.18s" fill="freeze"/></circle><title>media.asset_latest (36ms)
+module=examples/sigilo_creator_platform_39/modules/media.cct
+{&quot;module&quot;:&quot;examples/sigilo_creator_platform_39/modules/media.cct&quot;,&quot;category&quot;:&quot;cache&quot;,&quot;cache.result&quot;:&quot;hit&quot;}</title></g>
+<g id="span-p7" class="node-wrap" data-depth="2" data-category="storage" data-subcategory="storage" data-module="examples/sigilo_creator_platform_39/modules/media.cct"><circle class="span-node span-node-active cat-storage" data-category="storage" data-subcategory="storage" cx="783.14" cy="314.23" r="12.66" opacity="0.18"><animate attributeName="opacity" from="0.18" to="1" begin="1.20s" dur="0.18s" fill="freeze"/></circle><title>storage.package_release (85ms)
+module=examples/sigilo_creator_platform_39/modules/media.cct
+{&quot;module&quot;:&quot;examples/sigilo_creator_platform_39/modules/media.cct&quot;,&quot;category&quot;:&quot;storage&quot;,&quot;path&quot;:&quot;releases/aurora-v17.tar&quot;}</title></g>
+<g id="span-p8" class="node-wrap" data-depth="2" data-category="task" data-subcategory="task" data-module="examples/sigilo_creator_platform_39/modules/moderation.cct"><circle class="span-node span-node-active cat-task" data-category="task" data-subcategory="task" cx="768.61" cy="358.97" r="12.79" opacity="0.18"><animate attributeName="opacity" from="0.18" to="1" begin="2.17s" dur="0.18s" fill="freeze"/></circle><title>moderation.release_scan (94ms)
+module=examples/sigilo_creator_platform_39/modules/moderation.cct
+{&quot;module&quot;:&quot;examples/sigilo_creator_platform_39/modules/moderation.cct&quot;,&quot;category&quot;:&quot;task&quot;,&quot;queue&quot;:&quot;release-scan&quot;}</title></g>
+<g id="span-p9" class="node-wrap" data-depth="2" data-category="sql" data-subcategory="query" data-module="examples/sigilo_creator_platform_39/modules/creators.cct"><circle class="span-node span-node-active cat-sql pulse" data-category="sql" data-subcategory="query" cx="821.74" cy="261.36" r="11.57" opacity="0.18"><animate attributeName="opacity" from="0.18" to="1" begin="3.24s" dur="0.18s" fill="freeze"/></circle><title>db.release_insert (68ms)
+module=examples/sigilo_creator_platform_39/modules/creators.cct
+{&quot;module&quot;:&quot;examples/sigilo_creator_platform_39/modules/creators.cct&quot;,&quot;category&quot;:&quot;sql&quot;,&quot;query&quot;:&quot;release.insert&quot;}</title></g>
+<g id="span-p10" class="node-wrap" data-depth="2" data-category="task" data-subcategory="task" data-module="examples/sigilo_creator_platform_39/modules/analytics.cct"><circle class="span-node span-node-active cat-task" data-category="task" data-subcategory="task" cx="730.25" cy="404.84" r="10.86" opacity="0.18"><animate attributeName="opacity" from="0.18" to="1" begin="4.02s" dur="0.18s" fill="freeze"/></circle><title>task.cdn_warmup (22ms)
+module=examples/sigilo_creator_platform_39/modules/analytics.cct
+{&quot;module&quot;:&quot;examples/sigilo_creator_platform_39/modules/analytics.cct&quot;,&quot;category&quot;:&quot;task&quot;,&quot;queue&quot;:&quot;cdn-warmup&quot;}</title></g>
+<g id="span-p11" class="node-wrap" data-depth="2" data-category="email" data-subcategory="send" data-module="examples/sigilo_creator_platform_39/modules/notifications.cct"><circle class="span-node span-node-active cat-email" data-category="email" data-subcategory="send" cx="705.21" cy="444.99" r="11.36" opacity="0.18"><animate attributeName="opacity" from="0.18" to="1" begin="4.28s" dur="0.18s" fill="freeze"/></circle><title>email.release_notice (22ms)
+module=examples/sigilo_creator_platform_39/modules/notifications.cct
+{&quot;module&quot;:&quot;examples/sigilo_creator_platform_39/modules/notifications.cct&quot;,&quot;category&quot;:&quot;email&quot;,&quot;template&quot;:&quot;creator-release-published&quot;}</title></g>
+<g id="span-p12" class="node-wrap" data-depth="2" data-category="task" data-subcategory="task" data-module="examples/sigilo_creator_platform_39/modules/analytics.cct"><circle class="span-node span-node-active cat-task" data-category="task" data-subcategory="task" cx="699.28" cy="423.50" r="12.86" opacity="0.18"><animate attributeName="opacity" from="0.18" to="1" begin="4.54s" dur="0.18s" fill="freeze"/></circle><title>analytics.publish_event (20ms)
+module=examples/sigilo_creator_platform_39/modules/analytics.cct
+{&quot;module&quot;:&quot;examples/sigilo_creator_platform_39/modules/analytics.cct&quot;,&quot;category&quot;:&quot;task&quot;,&quot;event&quot;:&quot;creator_release_published&quot;}</title></g>
+<g id="span-p13" class="node-wrap" data-depth="2" data-category="cache" data-subcategory="cache" data-module="examples/sigilo_creator_platform_39/modules/creators.cct"><circle class="span-node span-node-active cat-cache pulse" data-category="cache" data-subcategory="cache" cx="845.33" cy="307.68" r="11.82" opacity="0.18"><animate attributeName="opacity" from="0.18" to="1" begin="4.78s" dur="0.18s" fill="freeze"/></circle><title>cache.project_bust (6ms)
+module=examples/sigilo_creator_platform_39/modules/creators.cct
+{&quot;module&quot;:&quot;examples/sigilo_creator_platform_39/modules/creators.cct&quot;,&quot;category&quot;:&quot;cache&quot;,&quot;cache.key&quot;:&quot;project:aurora&quot;}</title></g>
+</g>
+<g class="trace-legend-wrap" data-draggable="legend" data-x="798.00" data-y="84.00" transform="translate(798.00 84.00)"><g id="legend"><rect class="legend-box" x="0" y="0" width="126" height="128.00" rx="10"/><text class="legend" x="10" y="13">legend</text><g class="legend-entry" data-category="handler"><rect class="legend-swatch cat-handler" x="9" y="17.00" width="12" height="8" rx="2"/><text x="28" y="24.00">Handler</text></g><g class="legend-entry" data-category="middleware"><rect class="legend-swatch cat-middleware" x="9" y="32.00" width="12" height="8" rx="2"/><text x="28" y="39.00">Middleware</text></g><g class="legend-entry" data-category="sql"><rect class="legend-swatch cat-sql" x="9" y="47.00" width="12" height="8" rx="2"/><text x="28" y="54.00">SQL</text></g><g class="legend-entry" data-category="cache"><rect class="legend-swatch cat-cache" x="9" y="62.00" width="12" height="8" rx="2"/><text x="28" y="69.00">Cache</text></g><g class="legend-entry" data-category="storage"><rect class="legend-swatch cat-storage" x="9" y="77.00" width="12" height="8" rx="2"/><text x="28" y="84.00">Storage</text></g><g class="legend-entry" data-category="task"><rect class="legend-swatch cat-task" x="9" y="92.00" width="12" height="8" rx="2"/><text x="28" y="99.00">Task</text></g><g class="legend-entry" data-category="email"><rect class="legend-swatch cat-email" x="9" y="107.00" width="12" height="8" rx="2"/><text x="28" y="114.00">Email</text></g></g></g>
+<g id="timeline">
+<rect class="timeline-lane" x="38.00" y="584.00" width="884.00" height="92.00" rx="12"/>
+<path class="timeline-axis" d="M 110.00 664.00 L 912.00 664.00"/>
+<text class="mapping-label" x="46.00" y="607.33">depth 0</text>
+<rect class="timeline-row" x="110.00" y="596.00" width="802.00" height="17.67" rx="7"/>
+<text class="mapping-label" x="46.00" y="632.00">depth 1</text>
+<rect class="timeline-row" x="110.00" y="620.67" width="802.00" height="17.67" rx="7"/>
+<text class="mapping-label" x="46.00" y="656.67">depth 2</text>
+<rect class="timeline-row" x="110.00" y="645.33" width="802.00" height="17.67" rx="7"/>
+<g id="timeline-span-p1" class="timeline-entry" data-category="handler" data-subcategory="handler"><rect class="timeline-bar cat-handler" data-category="handler" data-subcategory="handler" x="110.00" y="598.00" height="14.67" rx="5" width="0"><animate attributeName="width" from="0" to="802.00" begin="0.00s" dur="5.00s" fill="freeze"/></rect><title>request.project_publish
+depth=0
+start=8000us
+end=8460us
+duration=460us</title></g>
+<g id="timeline-span-p2" class="timeline-entry" data-category="middleware" data-subcategory="middleware"><rect class="timeline-bar cat-middleware" data-category="middleware" data-subcategory="middleware" x="111.74" y="622.67" height="14.67" rx="5" width="0"><animate attributeName="width" from="0" to="22.67" begin="0.01s" dur="0.20s" fill="freeze"/></rect><title>middleware.auth
+depth=1
+start=8001us
+end=8014us
+duration=13us</title></g>
+<g id="timeline-span-p3" class="timeline-entry" data-category="middleware" data-subcategory="middleware"><rect class="timeline-bar cat-middleware" data-category="middleware" data-subcategory="middleware" x="134.41" y="622.67" height="14.67" rx="5" width="0"><animate attributeName="width" from="0" to="6.97" begin="0.15s" dur="0.20s" fill="freeze"/></rect><title>middleware.trace
+depth=1
+start=8014us
+end=8018us
+duration=4us</title></g>
+<g id="timeline-span-p4" class="timeline-entry" data-category="handler" data-subcategory="handler"><rect class="timeline-bar cat-handler" data-category="handler" data-subcategory="handler" x="141.38" y="622.67" height="14.67" rx="5" width="0"><animate attributeName="width" from="0" to="749.70" begin="0.20s" dur="4.67s" fill="freeze"/></rect><title>handler.project_publish
+depth=1
+start=8018us
+end=8448us
+duration=430us</title></g>
+<g id="timeline-span-p5" class="timeline-entry" data-category="sql" data-subcategory="query"><rect class="timeline-bar cat-sql pulse" data-category="sql" data-subcategory="query" x="151.84" y="647.33" height="14.67" rx="5" width="0"><animate attributeName="width" from="0" to="66.25" begin="0.26s" dur="0.41s" fill="freeze"/></rect><title>billing.quota_load
+depth=2
+start=8024us
+end=8062us
+duration=38us</title></g>
+<g id="timeline-span-p6" class="timeline-entry" data-category="cache" data-subcategory="hit"><rect class="timeline-bar cat-cache pulse" data-category="cache" data-subcategory="hit" x="228.56" y="647.33" height="14.67" rx="5" width="0"><animate attributeName="width" from="0" to="62.77" begin="0.74s" dur="0.39s" fill="freeze"/></rect><title>media.asset_latest
+depth=2
+start=8068us
+end=8104us
+duration=36us</title></g>
+<g id="timeline-span-p7" class="timeline-entry" data-category="storage" data-subcategory="storage"><rect class="timeline-bar cat-storage" data-category="storage" data-subcategory="storage" x="301.78" y="647.33" height="14.67" rx="5" width="0"><animate attributeName="width" from="0" to="148.20" begin="1.20s" dur="0.92s" fill="freeze"/></rect><title>storage.package_release
+depth=2
+start=8110us
+end=8195us
+duration=85us</title></g>
+<g id="timeline-span-p8" class="timeline-entry" data-category="task" data-subcategory="task"><rect class="timeline-bar cat-task" data-category="task" data-subcategory="task" x="458.70" y="647.33" height="14.67" rx="5" width="0"><animate attributeName="width" from="0" to="163.89" begin="2.17s" dur="1.02s" fill="freeze"/></rect><title>moderation.release_scan
+depth=2
+start=8200us
+end=8294us
+duration=94us</title></g>
+<g id="timeline-span-p9" class="timeline-entry" data-category="sql" data-subcategory="query"><rect class="timeline-bar cat-sql pulse" data-category="sql" data-subcategory="query" x="629.56" y="647.33" height="14.67" rx="5" width="0"><animate attributeName="width" from="0" to="118.56" begin="3.24s" dur="0.74s" fill="freeze"/></rect><title>db.release_insert
+depth=2
+start=8298us
+end=8366us
+duration=68us</title></g>
+<g id="timeline-span-p10" class="timeline-entry" data-category="task" data-subcategory="task"><rect class="timeline-bar cat-task" data-category="task" data-subcategory="task" x="755.09" y="647.33" height="14.67" rx="5" width="0"><animate attributeName="width" from="0" to="38.36" begin="4.02s" dur="0.24s" fill="freeze"/></rect><title>task.cdn_warmup
+depth=2
+start=8370us
+end=8392us
+duration=22us</title></g>
+<g id="timeline-span-p11" class="timeline-entry" data-category="email" data-subcategory="send"><rect class="timeline-bar cat-email" data-category="email" data-subcategory="send" x="796.93" y="647.33" height="14.67" rx="5" width="0"><animate attributeName="width" from="0" to="38.36" begin="4.28s" dur="0.24s" fill="freeze"/></rect><title>email.release_notice
+depth=2
+start=8394us
+end=8416us
+duration=22us</title></g>
+<g id="timeline-span-p12" class="timeline-entry" data-category="task" data-subcategory="task"><rect class="timeline-bar cat-task" data-category="task" data-subcategory="task" x="838.77" y="647.33" height="14.67" rx="5" width="0"><animate attributeName="width" from="0" to="34.87" begin="4.54s" dur="0.22s" fill="freeze"/></rect><title>analytics.publish_event
+depth=2
+start=8418us
+end=8438us
+duration=20us</title></g>
+<g id="timeline-span-p13" class="timeline-entry" data-category="cache" data-subcategory="cache"><rect class="timeline-bar cat-cache pulse" data-category="cache" data-subcategory="cache" x="877.13" y="647.33" height="14.67" rx="5" width="0"><animate attributeName="width" from="0" to="10.46" begin="4.78s" dur="0.20s" fill="freeze"/></rect><title>cache.project_bust
+depth=2
+start=8440us
+end=8446us
+duration=6us</title></g>
+</g>
+<script><![CDATA[
+(function(){
+var root=document.documentElement;
+function q(sel){return Array.prototype.slice.call(root.querySelectorAll(sel));}
+function toPoint(evt){var pt=root.createSVGPoint();pt.x=evt.clientX;pt.y=evt.clientY;return pt.matrixTransform(root.getScreenCTM().inverse());}
+q('[data-draggable="legend"]').forEach(function(legend){
+ var draggingLegend=false, legendDx=0, legendDy=0;
+ function legendX(){return parseFloat(legend.getAttribute('data-x')||'0');}
+ function legendY(){return parseFloat(legend.getAttribute('data-y')||'0');}
+ function setLegend(x,y){legend.setAttribute('data-x',x);legend.setAttribute('data-y',y);legend.setAttribute('transform','translate('+x+' '+y+')');}
+ function startLegendDrag(evt){var p=toPoint(evt);draggingLegend=true;legendDx=p.x-legendX();legendDy=p.y-legendY();legend.setAttribute('class','trace-legend-wrap dragging');evt.preventDefault();}
+ function moveLegendDrag(evt){if(!draggingLegend) return;var p=toPoint(evt);setLegend(p.x-legendDx,p.y-legendDy);evt.preventDefault();}
+ function endLegendDrag(){draggingLegend=false;legend.setAttribute('class','trace-legend-wrap');}
+ legend.addEventListener('pointerdown',startLegendDrag);
+ root.addEventListener('pointermove',moveLegendDrag);
+ root.addEventListener('pointerup',endLegendDrag);
+ root.addEventListener('pointerleave',endLegendDrag);
+});
+})();
+]]></script>
+<text class="hash" x="930" y="704" text-anchor="end">f1325a3c51f0530c</text>
+</svg>

@@ -1,0 +1,21 @@
+INCIPIT grimoire "sigilo_creator_platform_39_auth"
+
+-- @route route_id=auth.login method=POST path=/auth/login handler=auth_login group=/auth middleware=trace
+RITUALE auth_login() REDDE REX
+  REDDE 11
+EXPLICIT RITUALE
+
+-- @route route_id=auth.logout method=POST path=/auth/logout handler=auth_logout group=/auth middleware=auth,trace
+RITUALE auth_logout() REDDE REX
+  REDDE 12
+EXPLICIT RITUALE
+
+RITUALE auth_session_resume() REDDE REX
+  REDDE 13
+EXPLICIT RITUALE
+
+RITUALE auth_permission_check() REDDE REX
+  REDDE 14
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

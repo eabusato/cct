@@ -117,8 +117,24 @@ Delivered after foundation:
 - canonical-library expansion for host tooling and low-level modules (`17`, `18`)
 - language-surface expansion (`19A` through `19D`) integrating `ELIGE` (`CUM` legacy alias), `FORMA`, payload `ORDO`, and `ITERUM` over map/set.
 - application-library expansion (`20A` through `20F`) integrating JSON, sockets/networking, HTTP, config, and SQLite.
+- cryptography, encodings, and regex (`32A` through `32C`): `cct/crypto`, `cct/encoding`, `cct/regex`.
+- date/time, TOML, and compression (`33A` through `33C`): `cct/datetime`, `cct/toml`, `cct/compress`.
+- file types, media, images, language detection, advanced strings (`34A` through `34E`): `cct/filetype`, `cct/media`, `cct/image`, `cct/langdetect`, `cct/verbum_extra`.
+- operational platform layer (`35A` through `35K`): `cct/lexer`, `cct/uuid`, `cct/slug`, `cct/i18n`, `cct/form`, `cct/log`, `cct/trace`, `cct/metrics`, `cct/signal`, `cct/watch`, `cct/audit`.
+- operational database layer (`36A` through `36D`): `cct/db_postgres`, `cct/db_postgres_search`, `cct/redis`, `cct/db_postgres_lock`.
+- transactional mail layer (`37A` through `37C`): `cct/mail`, `cct/mail_spool`, `cct/mail_webhook`.
+- runtime instrumentation (`38A` through `38B`): `cct/instrument`, `cct/context_local`.
+- trace visualization (`39A` through `39B`): `cct sigilo trace render/compare` CLI, animated SVG renderer, operational category overlays (C-only CLI tools; not CCT library modules).
 
 Current phase closure references:
+- `docs/release/FASE_39_RELEASE_NOTES.md`
+- `docs/release/FASE_38_RELEASE_NOTES.md`
+- `docs/release/FASE_37_RELEASE_NOTES.md`
+- `docs/release/FASE_36_RELEASE_NOTES.md`
+- `docs/release/FASE_35_RELEASE_NOTES.md`
+- `docs/release/FASE_34_RELEASE_NOTES.md`
+- `docs/release/FASE_33_RELEASE_NOTES.md`
+- `docs/release/FASE_32_RELEASE_NOTES.md`
 - `docs/release/FASE_20_RELEASE_NOTES.md`
 - `docs/bootstrap/FASE_20_HANDOFF.md`
 - `docs/release/FASE_19_RELEASE_NOTES.md`
@@ -1481,5 +1497,1047 @@ Module total: **6**
 
 Module total: **5**
 
-**Total geral de funcoes inventariadas**: **609**
+**Total geral de funcoes inventariadas (FASE 20F baseline)**: **609**
+
+---
+
+## 33. `cct/crypto` (FASE 32A)
+
+Cryptographic hash, HMAC, and constant-time comparison.
+
+Import:
+
+```cct
+ADVOCARE "cct/crypto.cct"
+```
+
+Public API:
+- `crypto_sha256(VERBUM data) -> VERBUM` — hex-encoded SHA-256 digest
+- `crypto_sha512(VERBUM data) -> VERBUM` — hex-encoded SHA-512 digest
+- `crypto_hmac_sha256(VERBUM key, VERBUM data) -> VERBUM` — hex-encoded HMAC-SHA-256
+- `crypto_hmac_sha512(VERBUM key, VERBUM data) -> VERBUM` — hex-encoded HMAC-SHA-512
+- `crypto_secure_compare(VERBUM a, VERBUM b) -> VERUM` — constant-time equality
+
+Host-only. Backed by host TLS library (OpenSSL or equivalent). Rejected in freestanding profile.
+
+## 34. `cct/encoding` (FASE 32B)
+
+Base64 and hex encoding/decoding.
+
+Import:
+
+```cct
+ADVOCARE "cct/encoding.cct"
+```
+
+Public API:
+- `encoding_base64_encode(VERBUM data) -> VERBUM`
+- `encoding_base64_decode(VERBUM encoded) -> VERBUM`
+- `encoding_hex_encode(VERBUM data) -> VERBUM`
+- `encoding_hex_decode(VERBUM hex) -> VERBUM`
+
+Host-only. Pure C implementation; no external library dependency.
+
+## 35. `cct/regex` (FASE 32C)
+
+POSIX extended regular expression matching, capture groups, and split.
+
+Import:
+
+```cct
+ADVOCARE "cct/regex.cct"
+```
+
+Public API:
+- `regex_match(VERBUM pattern, VERBUM text) -> VERUM` — full-string match
+- `regex_find(VERBUM pattern, VERBUM text) -> VERBUM` — first match substring or empty
+- `regex_capture(VERBUM pattern, VERBUM text) -> FLUXUS GENUS(VERBUM)` — capture groups
+- `regex_split(VERBUM pattern, VERBUM text) -> FLUXUS GENUS(VERBUM)` — split on pattern
+- `regex_replace(VERBUM pattern, VERBUM text, VERBUM replacement) -> VERBUM`
+
+Host-only. Uses POSIX extended regex (`regcomp`/`regexec`).
+
+## 36. `cct/datetime` (FASE 33A)
+
+UTC and local date/time, parsing, formatting, and arithmetic.
+
+Import:
+
+```cct
+ADVOCARE "cct/datetime.cct"
+```
+
+Public API:
+- `datetime_now_utc() -> SPECULUM NIHIL`
+- `datetime_now_local() -> SPECULUM NIHIL`
+- `datetime_from_unix(REX epoch_s) -> SPECULUM NIHIL`
+- `datetime_to_unix(SPECULUM NIHIL dt) -> REX`
+- `datetime_format(SPECULUM NIHIL dt, VERBUM fmt) -> VERBUM` — strftime-like format string
+- `datetime_parse(VERBUM s, VERBUM fmt) -> SPECULUM NIHIL`
+- `datetime_add_seconds(SPECULUM NIHIL dt, REX secs) -> SPECULUM NIHIL`
+- `datetime_diff_seconds(SPECULUM NIHIL a, SPECULUM NIHIL b) -> REX`
+- `datetime_free(SPECULUM NIHIL dt)`
+
+`DateTimeResult` fields: `year`, `month`, `day`, `hour`, `minute`, `second`, `weekday`, `unix_epoch`.
+
+Host-only.
+
+## 37. `cct/toml` (FASE 33B)
+
+TOML configuration file parsing and typed value extraction.
+
+Import:
+
+```cct
+ADVOCARE "cct/toml.cct"
+```
+
+Public API:
+- `toml_load(VERBUM path) -> SPECULUM NIHIL`
+- `toml_get_string(SPECULUM NIHIL doc, VERBUM key) -> VERBUM`
+- `toml_get_int(SPECULUM NIHIL doc, VERBUM key) -> REX`
+- `toml_get_float(SPECULUM NIHIL doc, VERBUM key) -> COMES`
+- `toml_get_bool(SPECULUM NIHIL doc, VERBUM key) -> VERUM`
+- `toml_has(SPECULUM NIHIL doc, VERBUM key) -> VERUM`
+- `toml_free(SPECULUM NIHIL doc)`
+
+Key syntax: `"section.key"` for nested access. Host-only.
+
+## 38. `cct/compress` (FASE 33C)
+
+In-memory lossless compression and decompression (zlib/deflate and gzip).
+
+Import:
+
+```cct
+ADVOCARE "cct/compress.cct"
+```
+
+Public API:
+- `compress_deflate(VERBUM data) -> VERBUM`
+- `compress_inflate(VERBUM data) -> VERBUM`
+- `compress_gzip(VERBUM data) -> VERBUM`
+- `compress_gunzip(VERBUM data) -> VERBUM`
+- `compress_level(REX level)` — set compression level 1–9; default is 6
+
+Host-only. Backed by zlib.
+
+## 39. `cct/filetype` (FASE 34A)
+
+Magic-byte file type detection.
+
+Import:
+
+```cct
+ADVOCARE "cct/filetype.cct"
+```
+
+Public API:
+- `filetype_detect(VERBUM path) -> VERBUM` — returns MIME type string
+- `filetype_detect_bytes(VERBUM bytes) -> VERBUM` — detect from raw bytes
+- `filetype_is(VERBUM path, VERBUM mime_prefix) -> VERUM`
+
+Host-only.
+
+## 40. `cct/media` (FASE 34B)
+
+Audio/video metadata extraction (duration, codec, dimensions).
+
+Import:
+
+```cct
+ADVOCARE "cct/media.cct"
+```
+
+Public API:
+- `media_probe(VERBUM path) -> SPECULUM NIHIL`
+- `media_duration_ms(SPECULUM NIHIL info) -> REX`
+- `media_codec(SPECULUM NIHIL info) -> VERBUM`
+- `media_width(SPECULUM NIHIL info) -> REX`
+- `media_height(SPECULUM NIHIL info) -> REX`
+- `media_free(SPECULUM NIHIL info)`
+
+Host-only.
+
+## 41. `cct/image` (FASE 34C)
+
+Image dimension and format inspection.
+
+Import:
+
+```cct
+ADVOCARE "cct/image.cct"
+```
+
+Public API:
+- `image_probe(VERBUM path) -> SPECULUM NIHIL`
+- `image_width(SPECULUM NIHIL info) -> REX`
+- `image_height(SPECULUM NIHIL info) -> REX`
+- `image_format(SPECULUM NIHIL info) -> VERBUM` — `"png"`, `"jpeg"`, `"webp"`, etc.
+- `image_free(SPECULUM NIHIL info)`
+
+Host-only.
+
+## 42. `cct/langdetect` (FASE 34D)
+
+Natural language detection from text samples.
+
+Import:
+
+```cct
+ADVOCARE "cct/langdetect.cct"
+```
+
+Public API:
+- `langdetect_detect(VERBUM text) -> VERBUM` — BCP 47 language tag (e.g. `"pt"`, `"en"`)
+- `langdetect_confidence(VERBUM text) -> COMES` — confidence [0.0, 1.0]
+- `langdetect_top_n(VERBUM text, REX n) -> FLUXUS GENUS(VERBUM)`
+
+Host-only.
+
+## 43. `cct/verbum_extra` (FASE 34E)
+
+Advanced string operations beyond the core `cct/verbum` API.
+
+Import:
+
+```cct
+ADVOCARE "cct/verbum_extra.cct"
+```
+
+Public API:
+- `verbum_levenshtein(VERBUM a, VERBUM b) -> REX`
+- `verbum_soundex(VERBUM s) -> VERBUM`
+- `verbum_truncate_words(VERBUM s, REX max_words) -> VERBUM`
+- `verbum_wrap(VERBUM s, REX width) -> VERBUM`
+- `verbum_count_words(VERBUM s) -> REX`
+- `verbum_normalize_whitespace(VERBUM s) -> VERBUM`
+- `verbum_is_ascii(VERBUM s) -> VERUM`
+
+Host-only.
+
+## 44. `cct/lexer` (FASE 35A)
+
+Cursor-based lexer utilities for tokenizing structured text formats.
+
+Import:
+
+```cct
+ADVOCARE "cct/lexer.cct"
+```
+
+Public API:
+- `lexer_new(VERBUM src) -> SPECULUM NIHIL`
+- `lexer_peek(SPECULUM NIHIL lx) -> VERBUM`
+- `lexer_advance(SPECULUM NIHIL lx) -> VERBUM`
+- `lexer_expect(SPECULUM NIHIL lx, VERBUM tok)` — assertion; errors on mismatch
+- `lexer_at_end(SPECULUM NIHIL lx) -> VERUM`
+- `lexer_free(SPECULUM NIHIL lx)`
+
+Host-only.
+
+## 45. `cct/uuid` (FASE 35B)
+
+UUID generation and parsing.
+
+Import:
+
+```cct
+ADVOCARE "cct/uuid.cct"
+```
+
+Public API:
+- `uuid_v4() -> VERBUM` — random UUID v4
+- `uuid_v7() -> VERBUM` — time-ordered UUID v7
+- `uuid_parse(VERBUM s) -> SPECULUM NIHIL`
+- `uuid_is_valid(VERBUM s) -> VERUM`
+- `uuid_free(SPECULUM NIHIL u)`
+
+Host-only.
+
+## 46. `cct/slug` (FASE 35C)
+
+URL-safe slug generation.
+
+Import:
+
+```cct
+ADVOCARE "cct/slug.cct"
+```
+
+Public API:
+- `slug_from(VERBUM text) -> VERBUM` — lowercase, hyphenated slug
+- `slug_from_locale(VERBUM text, VERBUM locale) -> VERBUM` — locale-aware transliteration
+- `slug_truncate(VERBUM slug, REX max_len) -> VERBUM`
+
+Host-only.
+
+## 47. `cct/i18n` (FASE 35D)
+
+Locale-based string translation and pluralization.
+
+Import:
+
+```cct
+ADVOCARE "cct/i18n.cct"
+```
+
+Public API:
+- `i18n_load(VERBUM locale, VERBUM catalog_path)` — load translation catalog
+- `i18n_t(VERBUM key) -> VERBUM` — translate key in active locale
+- `i18n_plural(VERBUM key, REX count) -> VERBUM`
+- `i18n_set_locale(VERBUM locale)`
+- `i18n_locale() -> VERBUM`
+
+Host-only.
+
+## 48. `cct/form` (FASE 35E)
+
+URL-encoded form (`application/x-www-form-urlencoded`) encoding and decoding.
+
+Import:
+
+```cct
+ADVOCARE "cct/form.cct"
+```
+
+Public API:
+- `form_parse(VERBUM body) -> SPECULUM NIHIL`
+- `form_get(SPECULUM NIHIL form, VERBUM key) -> VERBUM`
+- `form_has(SPECULUM NIHIL form, VERBUM key) -> VERUM`
+- `form_encode(SPECULUM NIHIL form) -> VERBUM`
+- `form_free(SPECULUM NIHIL form)`
+- `url_encode(VERBUM s) -> VERBUM`
+- `url_decode(VERBUM s) -> VERBUM`
+
+Host-only.
+
+## 49. `cct/log` (FASE 35F)
+
+Structured leveled logging with pluggable backends and context propagation.
+
+Import:
+
+```cct
+ADVOCARE "cct/log.cct"
+```
+
+Log levels: `LOG_DEBUG` (0), `LOG_INFO` (1), `LOG_WARN` (2), `LOG_ERROR` (3), `LOG_FATAL` (4).
+
+Public API:
+- `log_debug(VERBUM msg)` / `log_info(...)` / `log_warn(...)` / `log_error(...)` / `log_fatal(...)`
+- `log_with(VERBUM key, VERBUM value)` — attach structured field to next log line
+- `log_set_level(REX level)`
+- `log_set_backend(VERBUM backend)` — `"stderr"` | `"file"` | `"json"`
+- `log_set_output(VERBUM path)` — output path for file backend
+
+Integrates with `cct/context_local` to automatically attach `request_id` and `trace_id` to log lines. Host-only.
+
+## 50. `cct/trace` (FASE 35G)
+
+Distributed tracing — span creation, parent-child propagation, and `.ctrace` file emission.
+
+Import:
+
+```cct
+ADVOCARE "cct/trace.cct"
+```
+
+Public API:
+- `trace_start(VERBUM name) -> REX` — opens root span; returns span_id
+- `trace_finish(REX span_id)` — records end timestamp
+- `trace_child(REX parent_id, VERBUM name) -> REX` — opens child span
+- `trace_attr(REX span_id, VERBUM key, VERBUM value)` — annotate span
+- `trace_flush(VERBUM path)` — write buffered spans to `.ctrace` JSON Lines file
+- `trace_reset()` — clear span buffer (for tests)
+
+`.ctrace` format: one JSON object per line with `span_id`, `parent_id`, `name`, `start_us`, `end_us`, `attrs`. Compatible with `cct sigilo trace view` and the FASE 39 SVG renderer. Host-only.
+
+## 51. `cct/metrics` (FASE 35H)
+
+In-process counter, gauge, and histogram collection with Prometheus text export.
+
+Import:
+
+```cct
+ADVOCARE "cct/metrics.cct"
+```
+
+Public API:
+- `metrics_counter(VERBUM name) -> REX` — register counter; returns handle
+- `metrics_gauge(VERBUM name) -> REX`
+- `metrics_histogram(VERBUM name) -> REX`
+- `metrics_incr(REX handle)` — increment counter by 1
+- `metrics_set(REX handle, COMES value)` — set gauge value
+- `metrics_observe(REX handle, COMES value)` — record histogram sample
+- `metrics_export_text() -> VERBUM` — Prometheus text exposition format
+- `metrics_reset()`
+
+Host-only.
+
+## 52. `cct/signal` (FASE 35I)
+
+POSIX signal handling registration and safe delivery.
+
+Import:
+
+```cct
+ADVOCARE "cct/signal.cct"
+```
+
+Public API:
+- `signal_handle(VERBUM signame, RITUALE handler())` — register handler for named signal
+- `signal_ignore(VERBUM signame)`
+- `signal_default(VERBUM signame)` — restore default disposition
+- `signal_wait(VERBUM signame)` — block until signal received
+- `signal_pending(VERBUM signame) -> VERUM`
+
+Supported signal names: `"SIGTERM"`, `"SIGINT"`, `"SIGHUP"`, `"SIGUSR1"`, `"SIGUSR2"`. Host-only.
+
+## 53. `cct/watch` (FASE 35J)
+
+Filesystem path watching with event callbacks.
+
+Import:
+
+```cct
+ADVOCARE "cct/watch.cct"
+```
+
+Public API:
+- `watch_open(VERBUM path) -> SPECULUM NIHIL`
+- `watch_on(SPECULUM NIHIL w, VERBUM event, RITUALE callback(VERBUM path))` — register event handler
+- `watch_poll(SPECULUM NIHIL w)` — process pending events (non-blocking)
+- `watch_close(SPECULUM NIHIL w)`
+
+Event kinds: `"created"`, `"modified"`, `"deleted"`, `"renamed"`. Host-only.
+
+## 54. `cct/audit` (FASE 35K)
+
+Append-only structured audit log for security-sensitive events.
+
+Import:
+
+```cct
+ADVOCARE "cct/audit.cct"
+```
+
+Public API:
+- `audit_open(VERBUM path) -> SPECULUM NIHIL`
+- `audit_log(SPECULUM NIHIL al, VERBUM event, VERBUM actor, VERBUM resource)`
+- `audit_log_with(SPECULUM NIHIL al, VERBUM event, VERBUM actor, VERBUM resource, SPECULUM NIHIL fields)`
+- `audit_close(SPECULUM NIHIL al)`
+
+Entries written as JSON Lines. Each entry includes `ts` (ISO 8601), `event`, `actor`, `resource`, and optional extra fields. Host-only.
+
+## 55. `cct/db_postgres` (FASE 36A)
+
+PostgreSQL client with prepared statements, typed bind/accessors, transaction control, and LISTEN/NOTIFY.
+
+Import:
+
+```cct
+ADVOCARE "cct/db_postgres.cct"
+```
+
+Public API:
+- `postgres_open(VERBUM dsn) -> SPECULUM NIHIL`
+- `postgres_prepare(SPECULUM NIHIL db, VERBUM sql) -> SPECULUM NIHIL`
+- `postgres_bind_text(SPECULUM NIHIL stmt, REX pos, VERBUM val)`
+- `postgres_bind_int(SPECULUM NIHIL stmt, REX pos, REX val)`
+- `postgres_bind_real(SPECULUM NIHIL stmt, REX pos, COMES val)`
+- `postgres_bind_bool(SPECULUM NIHIL stmt, REX pos, VERUM val)`
+- `postgres_bind_null(SPECULUM NIHIL stmt, REX pos)`
+- `postgres_step(SPECULUM NIHIL stmt) -> SPECULUM NIHIL`
+- `postgres_column_text(SPECULUM NIHIL rows, REX col) -> VERBUM`
+- `postgres_column_int(SPECULUM NIHIL rows, REX col) -> REX`
+- `postgres_column_real(SPECULUM NIHIL rows, REX col) -> COMES`
+- `postgres_column_bool(SPECULUM NIHIL rows, REX col) -> VERUM`
+- `postgres_column_json(SPECULUM NIHIL rows, REX col) -> VERBUM`
+- `postgres_exec(SPECULUM NIHIL db, VERBUM sql)`
+- `postgres_begin(SPECULUM NIHIL db)` / `postgres_commit(...)` / `postgres_rollback(...)`
+- `postgres_listen(SPECULUM NIHIL db, VERBUM channel)` / `postgres_notify_wait(...)`
+- `postgres_finalize(SPECULUM NIHIL stmt)`
+- `postgres_close(SPECULUM NIHIL db)`
+
+API surface mirrors `cct/db_sqlite` where semantically equivalent. Backed by libpq. Host-only.
+
+## 56. `cct/db_postgres_search` (FASE 36B)
+
+PostgreSQL full-text search SQL fragment builders.
+
+Import:
+
+```cct
+ADVOCARE "cct/db_postgres_search.cct"
+```
+
+Public API:
+- `postgres_search_config(VERBUM dictionary) -> SPECULUM NIHIL` — stable FTS configuration handle
+- `postgres_search_query(SPECULUM NIHIL cfg, VERBUM query) -> VERBUM` — generates `to_tsquery` expression
+- `postgres_search_rank(SPECULUM NIHIL cfg, VERBUM tsvector_col, VERBUM query) -> VERBUM` — `ts_rank` SQL fragment
+- `postgres_search_headline(SPECULUM NIHIL cfg, VERBUM text_col, VERBUM query) -> VERBUM` — `ts_headline` SQL fragment
+- `postgres_search_document(VERBUM col1, VERBUM col2) -> VERBUM` — concatenated `to_tsvector` source
+- `postgres_search_ensure_index(SPECULUM NIHIL db, VERBUM table, VERBUM col)` — GIN index creation (idempotent)
+
+Generates SQL fragments for composition; does not execute queries directly. Host-only.
+
+## 57. `cct/redis` (FASE 36C)
+
+Redis client with string, hash, list, set, pub/sub, and raw RESP command support.
+
+Import:
+
+```cct
+ADVOCARE "cct/redis.cct"
+```
+
+DSN format: `redis://[:password@]host:port[/db]`
+
+Public API:
+- `redis_open(VERBUM dsn) -> SPECULUM NIHIL`
+- `redis_get(SPECULUM NIHIL r, VERBUM key) -> VERBUM`
+- `redis_set(SPECULUM NIHIL r, VERBUM key, VERBUM value, REX ttl_seconds)`
+- `redis_del(SPECULUM NIHIL r, VERBUM key)`
+- `redis_exists(SPECULUM NIHIL r, VERBUM key) -> VERUM`
+- `redis_incr(SPECULUM NIHIL r, VERBUM key) -> REX`
+- `redis_hget(SPECULUM NIHIL r, VERBUM key, VERBUM field) -> VERBUM`
+- `redis_hset(SPECULUM NIHIL r, VERBUM key, VERBUM field, VERBUM value)`
+- `redis_hdel(SPECULUM NIHIL r, VERBUM key, VERBUM field)`
+- `redis_hgetall(SPECULUM NIHIL r, VERBUM key) -> SPECULUM NIHIL`
+- `redis_lpush(SPECULUM NIHIL r, VERBUM key, VERBUM value)` / `redis_rpush(...)`
+- `redis_lpop(SPECULUM NIHIL r, VERBUM key) -> VERBUM` / `redis_rpop(...)`
+- `redis_llen(SPECULUM NIHIL r, VERBUM key) -> REX`
+- `redis_sadd(SPECULUM NIHIL r, VERBUM key, VERBUM member)`
+- `redis_srem(SPECULUM NIHIL r, VERBUM key, VERBUM member)`
+- `redis_smembers(SPECULUM NIHIL r, VERBUM key) -> FLUXUS GENUS(VERBUM)`
+- `redis_sismember(SPECULUM NIHIL r, VERBUM key, VERBUM member) -> VERUM`
+- `redis_publish(SPECULUM NIHIL r, VERBUM channel, VERBUM message)`
+- `redis_subscribe(SPECULUM NIHIL r, VERBUM channel)`
+- `redis_receive(SPECULUM NIHIL r) -> VERBUM`
+- `redis_raw(SPECULUM NIHIL r, FLUXUS GENUS(VERBUM) args) -> VERBUM` — raw RESP command escape hatch
+- `redis_close(SPECULUM NIHIL r)`
+
+RESP protocol implemented in C; no external library required. Host-only.
+
+## 58. `cct/db_postgres_lock` (FASE 36D)
+
+PostgreSQL advisory locks for distributed coordination.
+
+Import:
+
+```cct
+ADVOCARE "cct/db_postgres_lock.cct"
+```
+
+Public API:
+- `postgres_lock_open(SPECULUM NIHIL db, VERBUM name) -> SPECULUM NIHIL` — named lock handle
+- `postgres_lock_acquire(SPECULUM NIHIL lock)` — blocking acquisition
+- `postgres_lock_try(SPECULUM NIHIL lock) -> VERUM` — non-blocking try; returns `FALSUM` if unavailable
+- `postgres_lock_release(SPECULUM NIHIL lock)`
+- `postgres_lock_with(SPECULUM NIHIL db, VERBUM name, RITUALE callback())` — acquire, run, release pattern
+- `postgres_lock_close(SPECULUM NIHIL lock)`
+
+Lock scopes: session-level (survives transaction) and transaction-level (auto-released on COMMIT/ROLLBACK). Host-only.
+
+## 59. `cct/mail` (FASE 37A)
+
+Email message construction, SMTP delivery, and dev/test backends.
+
+Import:
+
+```cct
+ADVOCARE "cct/mail.cct"
+```
+
+Public API:
+- `mail_new() -> SPECULUM NIHIL`
+- `mail_set_from(SPECULUM NIHIL msg, VERBUM addr)`
+- `mail_set_to(SPECULUM NIHIL msg, VERBUM addr)`
+- `mail_set_subject(SPECULUM NIHIL msg, VERBUM subject)`
+- `mail_set_body_text(SPECULUM NIHIL msg, VERBUM text)`
+- `mail_set_body_html(SPECULUM NIHIL msg, VERBUM html)`
+- `mail_add_attachment(SPECULUM NIHIL msg, VERBUM path, VERBUM name)`
+- `mail_smtp_open(SPECULUM NIHIL config) -> SPECULUM NIHIL`
+- `mail_smtp_close(SPECULUM NIHIL smtp)`
+- `mail_send(SPECULUM NIHIL smtp, SPECULUM NIHIL msg) -> SPECULUM NIHIL`
+- `mail_file_backend_open(VERBUM dir) -> SPECULUM NIHIL`
+- `mail_memory_backend_open() -> SPECULUM NIHIL`
+- `mail_memory_drain(SPECULUM NIHIL backend) -> FLUXUS GENUS(SPECULUM NIHIL)`
+- `mail_free(SPECULUM NIHIL msg)`
+
+SMTP authentication modes: PLAIN, LOGIN, STARTTLS, SMTPS. Config fields: `host`, `port`, `username`, `password`, `auth_mode`, `tls_verify`. Backed by OpenSSL for STARTTLS/SMTPS. Host-only.
+
+## 60. `cct/mail_spool` (FASE 37B)
+
+Persistent mail queue with retry and dead-letter semantics.
+
+Import:
+
+```cct
+ADVOCARE "cct/mail_spool.cct"
+```
+
+State machine: `PENDING → SENT` / `PENDING → FAILED → SENT` / `FAILED → DEAD`
+
+Public API:
+- `mail_spool_open(VERBUM spool_dir) -> SPECULUM NIHIL`
+- `mail_spool_enqueue(SPECULUM NIHIL spool, SPECULUM NIHIL msg) -> VERBUM` — returns entry ID
+- `mail_spool_get(SPECULUM NIHIL spool, VERBUM id) -> SPECULUM NIHIL`
+- `mail_spool_mark_sent(SPECULUM NIHIL spool, VERBUM id)`
+- `mail_spool_mark_failed(SPECULUM NIHIL spool, VERBUM id, VERBUM reason)`
+- `mail_spool_list_pending(SPECULUM NIHIL spool) -> FLUXUS GENUS(SPECULUM NIHIL)`
+- `mail_spool_drain_memory(SPECULUM NIHIL spool, SPECULUM NIHIL smtp)` — attempt all PENDING
+- `mail_spool_retry_dead(SPECULUM NIHIL spool)` — move DEAD back to PENDING
+- `mail_spool_delete(SPECULUM NIHIL spool, VERBUM id)`
+- `mail_spool_close(SPECULUM NIHIL spool)`
+
+Persistence format: one JSON file per message in `spool_dir/`. `SpoolEntry` fields: `id`, `state`, `attempt_count`, `last_error`, `enqueued_at`, `last_attempt_at`. Host-only.
+
+## 61. `cct/mail_webhook` (FASE 37C)
+
+Delivery event normalization from mail service provider webhooks.
+
+Import:
+
+```cct
+ADVOCARE "cct/mail_webhook.cct"
+```
+
+Public API:
+- `mail_webhook_parse(VERBUM provider, VERBUM raw_body) -> SPECULUM NIHIL`
+- `mail_webhook_event_kind(SPECULUM NIHIL event) -> VERBUM` — `"delivered"` | `"bounce"` | `"complaint"` | `"open"` | `"click"`
+- `mail_webhook_recipient(SPECULUM NIHIL event) -> VERBUM`
+- `mail_webhook_message_id(SPECULUM NIHIL event) -> VERBUM`
+- `mail_mime_scan(VERBUM raw) -> SPECULUM NIHIL` — lightweight MIME scanner
+- `mail_headers_parse(VERBUM raw) -> SPECULUM NIHIL` — RFC 5322 header block parser
+- `mail_header_get(SPECULUM NIHIL headers, VERBUM name) -> VERBUM`
+
+Supported providers: `"mailgun"`, `"sendgrid"`. Host-only.
+
+## 62. `cct/instrument` (FASE 38A)
+
+Span emission for runtime instrumentation with mode control and `.ctrace` output.
+
+Import:
+
+```cct
+ADVOCARE "cct/instrument.cct"
+```
+
+Span categories (`InstrumentKind`): `INSTRUMENT_CALL`, `INSTRUMENT_DB`, `INSTRUMENT_CACHE`, `INSTRUMENT_MAIL`, `INSTRUMENT_STORAGE`, `INSTRUMENT_TASK`, `INSTRUMENT_HTTP`, `INSTRUMENT_CUSTOM`.
+
+Public API:
+- `instrument_open(VERBUM name, REX kind) -> REX` — returns span_id; 0 if mode is off
+- `instrument_close(REX span_id)` — records end time; no-op if span_id is 0
+- `instrument_attr(REX span_id, VERBUM key, VERBUM value)` — annotate span; no-op if span_id is 0
+- `instrument_set_mode(VERBUM mode)` — `"active"` | `"off"`
+- `instrument_flush(VERBUM path)` — write buffered spans to `.ctrace` JSON Lines file
+- `instrument_reset()` — clear span buffer
+
+Mode is **off by default**. Activates via `instrument_set_mode("active")` or `CCT_INSTRUMENT=1` env var. Span ID 0 is the null/no-op sentinel. Emits `.ctrace` format compatible with `cct sigilo trace view` and the FASE 39 SVG renderer. Host-only.
+
+## 63. `cct/context_local` (FASE 38B)
+
+Request and task-scoped key-value context store without explicit parameter threading.
+
+Import:
+
+```cct
+ADVOCARE "cct/context_local.cct"
+```
+
+Well-known keys: `request_id`, `trace_id`, `user_id`, `locale`, `route_id`, `task_id`.
+
+Public API:
+- `ctx_set(VERBUM key, VERBUM value)`
+- `ctx_get(VERBUM key) -> VERBUM` — empty string if not set
+- `ctx_has(VERBUM key) -> VERUM`
+- `ctx_clear(VERBUM key)`
+- `ctx_reset()` — clear entire context (call at request/task boundary)
+
+Per-thread storage. Multi-threaded applications must call `ctx_reset()` at the start of each request handler. Integrates with `cct/log` and `cct/audit` for automatic `request_id`/`trace_id` annotation. Host-only.
+
+## 64. Expanded Function Inventory (FASE 32–39)
+
+This section extends the function inventory of §32 with the modules delivered in FASE 32–39. All modules listed here are host-only.
+
+### `cct/audit`
+
+- `audit_open(VERBUM path) -> SPECULUM NIHIL`
+- `audit_log(SPECULUM NIHIL al, VERBUM event, VERBUM actor, VERBUM resource) -> NIHIL`
+- `audit_log_with(SPECULUM NIHIL al, VERBUM event, VERBUM actor, VERBUM resource, SPECULUM NIHIL fields) -> NIHIL`
+- `audit_close(SPECULUM NIHIL al) -> NIHIL`
+
+Module total: **4**
+
+### `cct/compress`
+
+- `compress_deflate(VERBUM data) -> VERBUM`
+- `compress_inflate(VERBUM data) -> VERBUM`
+- `compress_gzip(VERBUM data) -> VERBUM`
+- `compress_gunzip(VERBUM data) -> VERBUM`
+- `compress_level(REX level) -> NIHIL`
+
+Module total: **5**
+
+### `cct/context_local`
+
+- `ctx_set(VERBUM key, VERBUM value) -> NIHIL`
+- `ctx_get(VERBUM key) -> VERBUM`
+- `ctx_has(VERBUM key) -> VERUM`
+- `ctx_clear(VERBUM key) -> NIHIL`
+- `ctx_reset() -> NIHIL`
+
+Module total: **5**
+
+### `cct/crypto`
+
+- `crypto_sha256(VERBUM data) -> VERBUM`
+- `crypto_sha512(VERBUM data) -> VERBUM`
+- `crypto_hmac_sha256(VERBUM key, VERBUM data) -> VERBUM`
+- `crypto_hmac_sha512(VERBUM key, VERBUM data) -> VERBUM`
+- `crypto_secure_compare(VERBUM a, VERBUM b) -> VERUM`
+
+Module total: **5**
+
+### `cct/datetime`
+
+- `datetime_now_utc() -> SPECULUM NIHIL`
+- `datetime_now_local() -> SPECULUM NIHIL`
+- `datetime_from_unix(REX epoch_s) -> SPECULUM NIHIL`
+- `datetime_to_unix(SPECULUM NIHIL dt) -> REX`
+- `datetime_format(SPECULUM NIHIL dt, VERBUM fmt) -> VERBUM`
+- `datetime_parse(VERBUM s, VERBUM fmt) -> SPECULUM NIHIL`
+- `datetime_add_seconds(SPECULUM NIHIL dt, REX secs) -> SPECULUM NIHIL`
+- `datetime_diff_seconds(SPECULUM NIHIL a, SPECULUM NIHIL b) -> REX`
+- `datetime_free(SPECULUM NIHIL dt) -> NIHIL`
+
+Module total: **9**
+
+### `cct/db_postgres`
+
+- `postgres_open(VERBUM dsn) -> SPECULUM NIHIL`
+- `postgres_prepare(SPECULUM NIHIL db, VERBUM sql) -> SPECULUM NIHIL`
+- `postgres_bind_text(SPECULUM NIHIL stmt, REX pos, VERBUM val) -> NIHIL`
+- `postgres_bind_int(SPECULUM NIHIL stmt, REX pos, REX val) -> NIHIL`
+- `postgres_bind_real(SPECULUM NIHIL stmt, REX pos, COMES val) -> NIHIL`
+- `postgres_bind_bool(SPECULUM NIHIL stmt, REX pos, VERUM val) -> NIHIL`
+- `postgres_bind_null(SPECULUM NIHIL stmt, REX pos) -> NIHIL`
+- `postgres_step(SPECULUM NIHIL stmt) -> SPECULUM NIHIL`
+- `postgres_column_text(SPECULUM NIHIL rows, REX col) -> VERBUM`
+- `postgres_column_int(SPECULUM NIHIL rows, REX col) -> REX`
+- `postgres_column_real(SPECULUM NIHIL rows, REX col) -> COMES`
+- `postgres_column_bool(SPECULUM NIHIL rows, REX col) -> VERUM`
+- `postgres_column_json(SPECULUM NIHIL rows, REX col) -> VERBUM`
+- `postgres_exec(SPECULUM NIHIL db, VERBUM sql) -> NIHIL`
+- `postgres_begin(SPECULUM NIHIL db) -> NIHIL`
+- `postgres_commit(SPECULUM NIHIL db) -> NIHIL`
+- `postgres_rollback(SPECULUM NIHIL db) -> NIHIL`
+- `postgres_listen(SPECULUM NIHIL db, VERBUM channel) -> NIHIL`
+- `postgres_notify_wait(SPECULUM NIHIL db) -> VERBUM`
+- `postgres_finalize(SPECULUM NIHIL stmt) -> NIHIL`
+- `postgres_close(SPECULUM NIHIL db) -> NIHIL`
+
+Module total: **21**
+
+### `cct/db_postgres_lock`
+
+- `postgres_lock_open(SPECULUM NIHIL db, VERBUM name) -> SPECULUM NIHIL`
+- `postgres_lock_acquire(SPECULUM NIHIL lock) -> NIHIL`
+- `postgres_lock_try(SPECULUM NIHIL lock) -> VERUM`
+- `postgres_lock_release(SPECULUM NIHIL lock) -> NIHIL`
+- `postgres_lock_with(SPECULUM NIHIL db, VERBUM name, RITUALE callback()) -> NIHIL`
+- `postgres_lock_close(SPECULUM NIHIL lock) -> NIHIL`
+
+Module total: **6**
+
+### `cct/db_postgres_search`
+
+- `postgres_search_config(VERBUM dictionary) -> SPECULUM NIHIL`
+- `postgres_search_query(SPECULUM NIHIL cfg, VERBUM query) -> VERBUM`
+- `postgres_search_rank(SPECULUM NIHIL cfg, VERBUM tsvector_col, VERBUM query) -> VERBUM`
+- `postgres_search_headline(SPECULUM NIHIL cfg, VERBUM text_col, VERBUM query) -> VERBUM`
+- `postgres_search_document(VERBUM col1, VERBUM col2) -> VERBUM`
+- `postgres_search_ensure_index(SPECULUM NIHIL db, VERBUM table, VERBUM col) -> NIHIL`
+
+Module total: **6**
+
+### `cct/encoding`
+
+- `encoding_base64_encode(VERBUM data) -> VERBUM`
+- `encoding_base64_decode(VERBUM encoded) -> VERBUM`
+- `encoding_hex_encode(VERBUM data) -> VERBUM`
+- `encoding_hex_decode(VERBUM hex) -> VERBUM`
+
+Module total: **4**
+
+### `cct/filetype`
+
+- `filetype_detect(VERBUM path) -> VERBUM`
+- `filetype_detect_bytes(VERBUM bytes) -> VERBUM`
+- `filetype_is(VERBUM path, VERBUM mime_prefix) -> VERUM`
+
+Module total: **3**
+
+### `cct/form`
+
+- `form_parse(VERBUM body) -> SPECULUM NIHIL`
+- `form_get(SPECULUM NIHIL form, VERBUM key) -> VERBUM`
+- `form_has(SPECULUM NIHIL form, VERBUM key) -> VERUM`
+- `form_encode(SPECULUM NIHIL form) -> VERBUM`
+- `form_free(SPECULUM NIHIL form) -> NIHIL`
+- `url_encode(VERBUM s) -> VERBUM`
+- `url_decode(VERBUM s) -> VERBUM`
+
+Module total: **7**
+
+### `cct/i18n`
+
+- `i18n_load(VERBUM locale, VERBUM catalog_path) -> NIHIL`
+- `i18n_t(VERBUM key) -> VERBUM`
+- `i18n_plural(VERBUM key, REX count) -> VERBUM`
+- `i18n_set_locale(VERBUM locale) -> NIHIL`
+- `i18n_locale() -> VERBUM`
+
+Module total: **5**
+
+### `cct/image`
+
+- `image_probe(VERBUM path) -> SPECULUM NIHIL`
+- `image_width(SPECULUM NIHIL info) -> REX`
+- `image_height(SPECULUM NIHIL info) -> REX`
+- `image_format(SPECULUM NIHIL info) -> VERBUM`
+- `image_free(SPECULUM NIHIL info) -> NIHIL`
+
+Module total: **5**
+
+### `cct/instrument`
+
+- `instrument_open(VERBUM name, REX kind) -> REX`
+- `instrument_close(REX span_id) -> NIHIL`
+- `instrument_attr(REX span_id, VERBUM key, VERBUM value) -> NIHIL`
+- `instrument_set_mode(VERBUM mode) -> NIHIL`
+- `instrument_flush(VERBUM path) -> NIHIL`
+- `instrument_reset() -> NIHIL`
+
+Module total: **6**
+
+### `cct/langdetect`
+
+- `langdetect_detect(VERBUM text) -> VERBUM`
+- `langdetect_confidence(VERBUM text) -> COMES`
+- `langdetect_top_n(VERBUM text, REX n) -> FLUXUS GENUS(VERBUM)`
+
+Module total: **3**
+
+### `cct/lexer`
+
+- `lexer_new(VERBUM src) -> SPECULUM NIHIL`
+- `lexer_peek(SPECULUM NIHIL lx) -> VERBUM`
+- `lexer_advance(SPECULUM NIHIL lx) -> VERBUM`
+- `lexer_expect(SPECULUM NIHIL lx, VERBUM tok) -> NIHIL`
+- `lexer_at_end(SPECULUM NIHIL lx) -> VERUM`
+- `lexer_free(SPECULUM NIHIL lx) -> NIHIL`
+
+Module total: **6**
+
+### `cct/log`
+
+- `log_debug(VERBUM msg) -> NIHIL`
+- `log_info(VERBUM msg) -> NIHIL`
+- `log_warn(VERBUM msg) -> NIHIL`
+- `log_error(VERBUM msg) -> NIHIL`
+- `log_fatal(VERBUM msg) -> NIHIL`
+- `log_with(VERBUM key, VERBUM value) -> NIHIL`
+- `log_set_level(REX level) -> NIHIL`
+- `log_set_backend(VERBUM backend) -> NIHIL`
+- `log_set_output(VERBUM path) -> NIHIL`
+
+Module total: **9**
+
+### `cct/mail`
+
+- `mail_new() -> SPECULUM NIHIL`
+- `mail_set_from(SPECULUM NIHIL msg, VERBUM addr) -> NIHIL`
+- `mail_set_to(SPECULUM NIHIL msg, VERBUM addr) -> NIHIL`
+- `mail_set_subject(SPECULUM NIHIL msg, VERBUM subject) -> NIHIL`
+- `mail_set_body_text(SPECULUM NIHIL msg, VERBUM text) -> NIHIL`
+- `mail_set_body_html(SPECULUM NIHIL msg, VERBUM html) -> NIHIL`
+- `mail_add_attachment(SPECULUM NIHIL msg, VERBUM path, VERBUM name) -> NIHIL`
+- `mail_smtp_open(SPECULUM NIHIL config) -> SPECULUM NIHIL`
+- `mail_smtp_close(SPECULUM NIHIL smtp) -> NIHIL`
+- `mail_send(SPECULUM NIHIL smtp, SPECULUM NIHIL msg) -> SPECULUM NIHIL`
+- `mail_file_backend_open(VERBUM dir) -> SPECULUM NIHIL`
+- `mail_memory_backend_open() -> SPECULUM NIHIL`
+- `mail_memory_drain(SPECULUM NIHIL backend) -> FLUXUS GENUS(SPECULUM NIHIL)`
+- `mail_free(SPECULUM NIHIL msg) -> NIHIL`
+
+Module total: **14**
+
+### `cct/mail_spool`
+
+- `mail_spool_open(VERBUM spool_dir) -> SPECULUM NIHIL`
+- `mail_spool_enqueue(SPECULUM NIHIL spool, SPECULUM NIHIL msg) -> VERBUM`
+- `mail_spool_get(SPECULUM NIHIL spool, VERBUM id) -> SPECULUM NIHIL`
+- `mail_spool_mark_sent(SPECULUM NIHIL spool, VERBUM id) -> NIHIL`
+- `mail_spool_mark_failed(SPECULUM NIHIL spool, VERBUM id, VERBUM reason) -> NIHIL`
+- `mail_spool_list_pending(SPECULUM NIHIL spool) -> FLUXUS GENUS(SPECULUM NIHIL)`
+- `mail_spool_drain_memory(SPECULUM NIHIL spool, SPECULUM NIHIL smtp) -> NIHIL`
+- `mail_spool_retry_dead(SPECULUM NIHIL spool) -> NIHIL`
+- `mail_spool_delete(SPECULUM NIHIL spool, VERBUM id) -> NIHIL`
+- `mail_spool_close(SPECULUM NIHIL spool) -> NIHIL`
+
+Module total: **10**
+
+### `cct/mail_webhook`
+
+- `mail_webhook_parse(VERBUM provider, VERBUM raw_body) -> SPECULUM NIHIL`
+- `mail_webhook_event_kind(SPECULUM NIHIL event) -> VERBUM`
+- `mail_webhook_recipient(SPECULUM NIHIL event) -> VERBUM`
+- `mail_webhook_message_id(SPECULUM NIHIL event) -> VERBUM`
+- `mail_mime_scan(VERBUM raw) -> SPECULUM NIHIL`
+- `mail_headers_parse(VERBUM raw) -> SPECULUM NIHIL`
+- `mail_header_get(SPECULUM NIHIL headers, VERBUM name) -> VERBUM`
+
+Module total: **7**
+
+### `cct/media`
+
+- `media_probe(VERBUM path) -> SPECULUM NIHIL`
+- `media_duration_ms(SPECULUM NIHIL info) -> REX`
+- `media_codec(SPECULUM NIHIL info) -> VERBUM`
+- `media_width(SPECULUM NIHIL info) -> REX`
+- `media_height(SPECULUM NIHIL info) -> REX`
+- `media_free(SPECULUM NIHIL info) -> NIHIL`
+
+Module total: **6**
+
+### `cct/metrics`
+
+- `metrics_counter(VERBUM name) -> REX`
+- `metrics_gauge(VERBUM name) -> REX`
+- `metrics_histogram(VERBUM name) -> REX`
+- `metrics_incr(REX handle) -> NIHIL`
+- `metrics_set(REX handle, COMES value) -> NIHIL`
+- `metrics_observe(REX handle, COMES value) -> NIHIL`
+- `metrics_export_text() -> VERBUM`
+- `metrics_reset() -> NIHIL`
+
+Module total: **8**
+
+### `cct/redis`
+
+- `redis_open(VERBUM dsn) -> SPECULUM NIHIL`
+- `redis_get(SPECULUM NIHIL r, VERBUM key) -> VERBUM`
+- `redis_set(SPECULUM NIHIL r, VERBUM key, VERBUM value, REX ttl_seconds) -> NIHIL`
+- `redis_del(SPECULUM NIHIL r, VERBUM key) -> NIHIL`
+- `redis_exists(SPECULUM NIHIL r, VERBUM key) -> VERUM`
+- `redis_incr(SPECULUM NIHIL r, VERBUM key) -> REX`
+- `redis_hget(SPECULUM NIHIL r, VERBUM key, VERBUM field) -> VERBUM`
+- `redis_hset(SPECULUM NIHIL r, VERBUM key, VERBUM field, VERBUM value) -> NIHIL`
+- `redis_hdel(SPECULUM NIHIL r, VERBUM key, VERBUM field) -> NIHIL`
+- `redis_hgetall(SPECULUM NIHIL r, VERBUM key) -> SPECULUM NIHIL`
+- `redis_lpush(SPECULUM NIHIL r, VERBUM key, VERBUM value) -> NIHIL`
+- `redis_rpush(SPECULUM NIHIL r, VERBUM key, VERBUM value) -> NIHIL`
+- `redis_lpop(SPECULUM NIHIL r, VERBUM key) -> VERBUM`
+- `redis_rpop(SPECULUM NIHIL r, VERBUM key) -> VERBUM`
+- `redis_llen(SPECULUM NIHIL r, VERBUM key) -> REX`
+- `redis_sadd(SPECULUM NIHIL r, VERBUM key, VERBUM member) -> NIHIL`
+- `redis_srem(SPECULUM NIHIL r, VERBUM key, VERBUM member) -> NIHIL`
+- `redis_smembers(SPECULUM NIHIL r, VERBUM key) -> FLUXUS GENUS(VERBUM)`
+- `redis_sismember(SPECULUM NIHIL r, VERBUM key, VERBUM member) -> VERUM`
+- `redis_publish(SPECULUM NIHIL r, VERBUM channel, VERBUM message) -> NIHIL`
+- `redis_subscribe(SPECULUM NIHIL r, VERBUM channel) -> NIHIL`
+- `redis_receive(SPECULUM NIHIL r) -> VERBUM`
+- `redis_raw(SPECULUM NIHIL r, FLUXUS GENUS(VERBUM) args) -> VERBUM`
+- `redis_close(SPECULUM NIHIL r) -> NIHIL`
+
+Module total: **24**
+
+### `cct/regex`
+
+- `regex_match(VERBUM pattern, VERBUM text) -> VERUM`
+- `regex_find(VERBUM pattern, VERBUM text) -> VERBUM`
+- `regex_capture(VERBUM pattern, VERBUM text) -> FLUXUS GENUS(VERBUM)`
+- `regex_split(VERBUM pattern, VERBUM text) -> FLUXUS GENUS(VERBUM)`
+- `regex_replace(VERBUM pattern, VERBUM text, VERBUM replacement) -> VERBUM`
+
+Module total: **5**
+
+### `cct/signal`
+
+- `signal_handle(VERBUM signame, RITUALE handler()) -> NIHIL`
+- `signal_ignore(VERBUM signame) -> NIHIL`
+- `signal_default(VERBUM signame) -> NIHIL`
+- `signal_wait(VERBUM signame) -> NIHIL`
+- `signal_pending(VERBUM signame) -> VERUM`
+
+Module total: **5**
+
+### `cct/slug`
+
+- `slug_from(VERBUM text) -> VERBUM`
+- `slug_from_locale(VERBUM text, VERBUM locale) -> VERBUM`
+- `slug_truncate(VERBUM slug, REX max_len) -> VERBUM`
+
+Module total: **3**
+
+### `cct/toml`
+
+- `toml_load(VERBUM path) -> SPECULUM NIHIL`
+- `toml_get_string(SPECULUM NIHIL doc, VERBUM key) -> VERBUM`
+- `toml_get_int(SPECULUM NIHIL doc, VERBUM key) -> REX`
+- `toml_get_float(SPECULUM NIHIL doc, VERBUM key) -> COMES`
+- `toml_get_bool(SPECULUM NIHIL doc, VERBUM key) -> VERUM`
+- `toml_has(SPECULUM NIHIL doc, VERBUM key) -> VERUM`
+- `toml_free(SPECULUM NIHIL doc) -> NIHIL`
+
+Module total: **7**
+
+### `cct/trace`
+
+- `trace_start(VERBUM name) -> REX`
+- `trace_finish(REX span_id) -> NIHIL`
+- `trace_child(REX parent_id, VERBUM name) -> REX`
+- `trace_attr(REX span_id, VERBUM key, VERBUM value) -> NIHIL`
+- `trace_flush(VERBUM path) -> NIHIL`
+- `trace_reset() -> NIHIL`
+
+Module total: **6**
+
+### `cct/uuid`
+
+- `uuid_v4() -> VERBUM`
+- `uuid_v7() -> VERBUM`
+- `uuid_parse(VERBUM s) -> SPECULUM NIHIL`
+- `uuid_is_valid(VERBUM s) -> VERUM`
+- `uuid_free(SPECULUM NIHIL u) -> NIHIL`
+
+Module total: **5**
+
+### `cct/verbum_extra`
+
+- `verbum_levenshtein(VERBUM a, VERBUM b) -> REX`
+- `verbum_soundex(VERBUM s) -> VERBUM`
+- `verbum_truncate_words(VERBUM s, REX max_words) -> VERBUM`
+- `verbum_wrap(VERBUM s, REX width) -> VERBUM`
+- `verbum_count_words(VERBUM s) -> REX`
+- `verbum_normalize_whitespace(VERBUM s) -> VERBUM`
+- `verbum_is_ascii(VERBUM s) -> VERUM`
+
+Module total: **7**
+
+### `cct/watch`
+
+- `watch_open(VERBUM path) -> SPECULUM NIHIL`
+- `watch_on(SPECULUM NIHIL w, VERBUM event, RITUALE callback(VERBUM path)) -> NIHIL`
+- `watch_poll(SPECULUM NIHIL w) -> NIHIL`
+- `watch_close(SPECULUM NIHIL w) -> NIHIL`
+
+Module total: **4**
+
+**New functions in §64 (FASE 32–39)**: **220**
+
+**Total geral de funcoes inventariadas (FASE 39)**: **829**
 <!-- END AUTO API INVENTORY 20F -->

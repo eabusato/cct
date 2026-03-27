@@ -11,9 +11,9 @@ It is written to help you:
 
 ## Status
 
-Specification baseline: **FASE 30**.
+Specification baseline: **FASE 39**.
 
-This manual preserves the complete user-facing language and tooling reference accumulated through the phase-20 public subset and extends it with the validated bootstrap, self-hosting, and operational-platform additions delivered in phases 21 through 30.
+This manual preserves the complete user-facing language and tooling reference accumulated through the phase-20 public subset and extends it with the validated bootstrap, self-hosting, operational-platform, and standard-library additions delivered in phases 21 through 39.
 
 The language is fully usable in its current validated subset, with explicit boundaries documented below.
 
@@ -2790,4 +2790,621 @@ make test-phase30-final
 make test-phase31-final
 ```
 
-This sequence is the practical post-promotion manual contract for proving the repository is healthy.
+## 21. FASE 32 Addendum: Cryptography, Encodings, and Regex
+
+FASE 32 added three new standard-library modules covering cryptographic hashing, binary/text encodings, and regular expressions. All modules are host-only.
+
+### 21.1 `cct/crypto`
+
+Purpose: cryptographic hash, HMAC, and constant-time comparison.
+
+Public functions:
+- `crypto_sha256(VERBUM data) REDDE VERBUM` — hex-encoded SHA-256 digest
+- `crypto_sha512(VERBUM data) REDDE VERBUM` — hex-encoded SHA-512 digest
+- `crypto_hmac_sha256(VERBUM key, VERBUM data) REDDE VERBUM` — hex-encoded HMAC-SHA-256
+- `crypto_hmac_sha512(VERBUM key, VERBUM data) REDDE VERBUM` — hex-encoded HMAC-SHA-512
+- `crypto_secure_compare(VERBUM a, VERBUM b) REDDE VERUM` — constant-time equality check
+
+Current contract:
+- backed by the host TLS library (OpenSSL or equivalent)
+- host-only; rejected in freestanding profile
+
+### 21.2 `cct/encoding`
+
+Purpose: base64 and hex encoding/decoding.
+
+Public functions:
+- `encoding_base64_encode(VERBUM data) REDDE VERBUM`
+- `encoding_base64_decode(VERBUM encoded) REDDE VERBUM`
+- `encoding_hex_encode(VERBUM data) REDDE VERBUM`
+- `encoding_hex_decode(VERBUM hex) REDDE VERBUM`
+
+Current contract:
+- pure C implementation; no external library dependency
+- host-only in current subset
+
+### 21.3 `cct/regex`
+
+Purpose: POSIX extended regular expression matching, capture groups, and split.
+
+Public functions:
+- `regex_match(VERBUM pattern, VERBUM text) REDDE VERUM` — full-string match
+- `regex_find(VERBUM pattern, VERBUM text) REDDE VERBUM` — first match substring or empty
+- `regex_capture(VERBUM pattern, VERBUM text) REDDE FLUXUS GENUS(VERBUM)` — capture groups
+- `regex_split(VERBUM pattern, VERBUM text) REDDE FLUXUS GENUS(VERBUM)` — split on pattern
+- `regex_replace(VERBUM pattern, VERBUM text, VERBUM replacement) REDDE VERBUM`
+
+Current contract:
+- uses POSIX extended regex (`regcomp`/`regexec`)
+- host-only; rejected in freestanding profile
+
+## 22. FASE 33 Addendum: Date/Time, TOML, and Compression
+
+FASE 33 added three modules: date/time manipulation, TOML configuration parsing, and lossless compression. All modules are host-only.
+
+### 22.1 `cct/datetime`
+
+Purpose: UTC and local date/time, parsing, formatting, and arithmetic.
+
+Public functions:
+- `datetime_now_utc() REDDE SPECULUM NIHIL` — current UTC instant
+- `datetime_now_local() REDDE SPECULUM NIHIL` — current local instant
+- `datetime_from_unix(REX epoch_s) REDDE SPECULUM NIHIL`
+- `datetime_to_unix(SPECULUM NIHIL dt) REDDE REX`
+- `datetime_format(SPECULUM NIHIL dt, VERBUM fmt) REDDE VERBUM` — strftime-like
+- `datetime_parse(VERBUM s, VERBUM fmt) REDDE SPECULUM NIHIL`
+- `datetime_add_seconds(SPECULUM NIHIL dt, REX secs) REDDE SPECULUM NIHIL`
+- `datetime_diff_seconds(SPECULUM NIHIL a, SPECULUM NIHIL b) REDDE REX`
+- `datetime_free(SPECULUM NIHIL dt)`
+
+Fields on `DateTimeResult`: `year`, `month`, `day`, `hour`, `minute`, `second`, `weekday`, `unix_epoch`.
+
+### 22.2 `cct/toml`
+
+Purpose: TOML configuration file parsing and value extraction.
+
+Public functions:
+- `toml_load(VERBUM path) REDDE SPECULUM NIHIL` — parse TOML file
+- `toml_get_string(SPECULUM NIHIL doc, VERBUM key) REDDE VERBUM`
+- `toml_get_int(SPECULUM NIHIL doc, VERBUM key) REDDE REX`
+- `toml_get_float(SPECULUM NIHIL doc, VERBUM key) REDDE COMES`
+- `toml_get_bool(SPECULUM NIHIL doc, VERBUM key) REDDE VERUM`
+- `toml_has(SPECULUM NIHIL doc, VERBUM key) REDDE VERUM`
+- `toml_free(SPECULUM NIHIL doc)`
+
+Key syntax: `"section.key"` for nested access.
+
+### 22.3 `cct/compress`
+
+Purpose: in-memory lossless compression and decompression (zlib/deflate and gzip).
+
+Public functions:
+- `compress_deflate(VERBUM data) REDDE VERBUM` — deflate-compress
+- `compress_inflate(VERBUM data) REDDE VERBUM` — deflate-decompress
+- `compress_gzip(VERBUM data) REDDE VERBUM` — gzip-compress
+- `compress_gunzip(VERBUM data) REDDE VERBUM` — gzip-decompress
+- `compress_level(REX level)` — set compression level (1–9)
+
+Current contract:
+- backed by zlib; host-only
+
+## 23. FASE 34 Addendum: File Types, Media, Images, Language Detection, and Advanced Strings
+
+FASE 34 added five modules covering file-type sniffing, media metadata, image inspection, language detection, and advanced string operations.
+
+### 23.1 `cct/filetype`
+
+Purpose: magic-byte file type detection.
+
+Public functions:
+- `filetype_detect(VERBUM path) REDDE VERBUM` — returns MIME type string
+- `filetype_detect_bytes(VERBUM bytes) REDDE VERBUM` — detect from raw bytes
+- `filetype_is(VERBUM path, VERBUM mime_prefix) REDDE VERUM`
+
+### 23.2 `cct/media`
+
+Purpose: audio/video metadata extraction (duration, codec, dimensions).
+
+Public functions:
+- `media_probe(VERBUM path) REDDE SPECULUM NIHIL`
+- `media_duration_ms(SPECULUM NIHIL info) REDDE REX`
+- `media_codec(SPECULUM NIHIL info) REDDE VERBUM`
+- `media_width(SPECULUM NIHIL info) REDDE REX`
+- `media_height(SPECULUM NIHIL info) REDDE REX`
+- `media_free(SPECULUM NIHIL info)`
+
+### 23.3 `cct/image`
+
+Purpose: image dimension and format inspection.
+
+Public functions:
+- `image_probe(VERBUM path) REDDE SPECULUM NIHIL`
+- `image_width(SPECULUM NIHIL info) REDDE REX`
+- `image_height(SPECULUM NIHIL info) REDDE REX`
+- `image_format(SPECULUM NIHIL info) REDDE VERBUM` — `"png"`, `"jpeg"`, `"webp"`, etc.
+- `image_free(SPECULUM NIHIL info)`
+
+### 23.4 `cct/langdetect`
+
+Purpose: natural language detection from text samples.
+
+Public functions:
+- `langdetect_detect(VERBUM text) REDDE VERBUM` — BCP 47 language tag (e.g. `"pt"`, `"en"`)
+- `langdetect_confidence(VERBUM text) REDDE COMES` — detection confidence [0.0, 1.0]
+- `langdetect_top_n(VERBUM text, REX n) REDDE FLUXUS GENUS(VERBUM)`
+
+### 23.5 `cct/verbum_extra`
+
+Purpose: advanced string operations beyond the core `cct/verbum` API.
+
+Public functions:
+- `verbum_levenshtein(VERBUM a, VERBUM b) REDDE REX`
+- `verbum_soundex(VERBUM s) REDDE VERBUM`
+- `verbum_truncate_words(VERBUM s, REX max_words) REDDE VERBUM`
+- `verbum_wrap(VERBUM s, REX width) REDDE VERBUM`
+- `verbum_count_words(VERBUM s) REDDE REX`
+- `verbum_normalize_whitespace(VERBUM s) REDDE VERBUM`
+- `verbum_is_ascii(VERBUM s) REDDE VERUM`
+
+## 24. FASE 35 Addendum: Lexer Utilities, UUIDs, Slugs, i18n, Form Codec, Structured Logging, Distributed Tracing, Metrics, Signal Handling, and Filesystem Watching
+
+FASE 35 closed a broad operational platform layer in 11 subphases (35A–35K).
+
+### 24.1 `cct/lexer`
+
+Purpose: cursor-based lexer utilities for tokenizing structured text formats.
+
+Public functions:
+- `lexer_new(VERBUM src) REDDE SPECULUM NIHIL`
+- `lexer_peek(SPECULUM NIHIL lx) REDDE VERBUM`
+- `lexer_advance(SPECULUM NIHIL lx) REDDE VERBUM`
+- `lexer_expect(SPECULUM NIHIL lx, VERBUM tok)` — assertion; errors on mismatch
+- `lexer_at_end(SPECULUM NIHIL lx) REDDE VERUM`
+- `lexer_free(SPECULUM NIHIL lx)`
+
+### 24.2 `cct/uuid`
+
+Purpose: UUID generation and parsing.
+
+Public functions:
+- `uuid_v4() REDDE VERBUM` — random UUID v4
+- `uuid_v7() REDDE VERBUM` — time-ordered UUID v7
+- `uuid_parse(VERBUM s) REDDE SPECULUM NIHIL`
+- `uuid_is_valid(VERBUM s) REDDE VERUM`
+- `uuid_free(SPECULUM NIHIL u)`
+
+### 24.3 `cct/slug`
+
+Purpose: URL-safe slug generation.
+
+Public functions:
+- `slug_from(VERBUM text) REDDE VERBUM` — lowercase, hyphenated slug
+- `slug_from_locale(VERBUM text, VERBUM locale) REDDE VERBUM` — locale-aware transliteration
+- `slug_truncate(VERBUM slug, REX max_len) REDDE VERBUM`
+
+### 24.4 `cct/i18n`
+
+Purpose: locale-based string translation and pluralization.
+
+Public functions:
+- `i18n_load(VERBUM locale, VERBUM catalog_path)` — load `.po`-like translation catalog
+- `i18n_t(VERBUM key) REDDE VERBUM` — translate key in active locale
+- `i18n_plural(VERBUM key, REX count) REDDE VERBUM`
+- `i18n_set_locale(VERBUM locale)`
+- `i18n_locale() REDDE VERBUM`
+
+### 24.5 `cct/form`
+
+Purpose: URL-encoded form (application/x-www-form-urlencoded) encoding and decoding.
+
+Public functions:
+- `form_parse(VERBUM body) REDDE SPECULUM NIHIL`
+- `form_get(SPECULUM NIHIL form, VERBUM key) REDDE VERBUM`
+- `form_has(SPECULUM NIHIL form, VERBUM key) REDDE VERUM`
+- `form_encode(SPECULUM NIHIL form) REDDE VERBUM`
+- `form_free(SPECULUM NIHIL form)`
+- `url_encode(VERBUM s) REDDE VERBUM`
+- `url_decode(VERBUM s) REDDE VERBUM`
+
+### 24.6 `cct/log`
+
+Purpose: structured leveled logging with backends and context propagation.
+
+Log levels: `LOG_DEBUG`, `LOG_INFO`, `LOG_WARN`, `LOG_ERROR`, `LOG_FATAL`.
+
+Public functions:
+- `log_debug(VERBUM msg)` / `log_info(...)` / `log_warn(...)` / `log_error(...)` / `log_fatal(...)`
+- `log_with(VERBUM key, VERBUM value)` — attach structured field to next log line
+- `log_set_level(REX level)`
+- `log_set_backend(VERBUM backend)` — `"stderr"` | `"file"` | `"json"`
+- `log_set_output(VERBUM path)` — file path for file backend
+
+### 24.7 `cct/trace`
+
+Purpose: distributed tracing — span creation, propagation, and `.ctrace` file emission.
+
+Public functions:
+- `trace_start(VERBUM name) REDDE REX` — returns span_id
+- `trace_finish(REX span_id)`
+- `trace_child(REX parent_id, VERBUM name) REDDE REX`
+- `trace_attr(REX span_id, VERBUM key, VERBUM value)`
+- `trace_flush(VERBUM path)` — write `.ctrace` JSON Lines file
+- `trace_reset()`
+
+`.ctrace` format: one JSON object per line with `span_id`, `parent_id`, `name`, `start_us`, `end_us`, `attrs`.
+
+### 24.8 `cct/metrics`
+
+Purpose: in-process counter, gauge, and histogram collection.
+
+Public functions:
+- `metrics_counter(VERBUM name) REDDE REX` — register counter; returns handle
+- `metrics_gauge(VERBUM name) REDDE REX`
+- `metrics_histogram(VERBUM name) REDDE REX`
+- `metrics_incr(REX handle)`
+- `metrics_set(REX handle, COMES value)`
+- `metrics_observe(REX handle, COMES value)` — record histogram sample
+- `metrics_export_text() REDDE VERBUM` — Prometheus text format
+- `metrics_reset()`
+
+### 24.9 `cct/signal`
+
+Purpose: POSIX signal handling registration and safe delivery.
+
+Public functions:
+- `signal_handle(VERBUM signame, RITUALE handler())` — register handler for `"SIGTERM"`, `"SIGINT"`, `"SIGHUP"`, etc.
+- `signal_ignore(VERBUM signame)`
+- `signal_default(VERBUM signame)`
+- `signal_wait(VERBUM signame)` — block until signal received
+- `signal_pending(VERBUM signame) REDDE VERUM`
+
+### 24.10 `cct/watch`
+
+Purpose: filesystem path watching with event callbacks.
+
+Public functions:
+- `watch_open(VERBUM path) REDDE SPECULUM NIHIL`
+- `watch_on(SPECULUM NIHIL w, VERBUM event, RITUALE callback(VERBUM path))`
+- `watch_poll(SPECULUM NIHIL w)` — process pending events
+- `watch_close(SPECULUM NIHIL w)`
+
+Event kinds: `"created"`, `"modified"`, `"deleted"`, `"renamed"`.
+
+### 24.11 `cct/audit`
+
+Purpose: append-only structured audit log for security-sensitive events.
+
+Public functions:
+- `audit_open(VERBUM path) REDDE SPECULUM NIHIL`
+- `audit_log(SPECULUM NIHIL al, VERBUM event, VERBUM actor, VERBUM resource)`
+- `audit_log_with(SPECULUM NIHIL al, VERBUM event, VERBUM actor, VERBUM resource, SPECULUM NIHIL fields)`
+- `audit_close(SPECULUM NIHIL al)`
+
+Entries written as JSON Lines; each entry includes `ts` (ISO 8601), `event`, `actor`, `resource`, and optional extra fields.
+
+## 25. FASE 36 Addendum: Operational Database Layer
+
+FASE 36 added four modules: a PostgreSQL client, full-text search helpers, a Redis client, and PostgreSQL advisory locks. All modules are host-only.
+
+### 25.1 `cct/db_postgres`
+
+Purpose: PostgreSQL client with prepared statements, type-specific binds/accessors, and transaction control.
+
+Public functions:
+- `postgres_open(VERBUM dsn) REDDE SPECULUM NIHIL`
+- `postgres_prepare(SPECULUM NIHIL db, VERBUM sql) REDDE SPECULUM NIHIL`
+- `postgres_bind_text(SPECULUM NIHIL stmt, REX pos, VERBUM val)`
+- `postgres_bind_int(SPECULUM NIHIL stmt, REX pos, REX val)`
+- `postgres_bind_real(SPECULUM NIHIL stmt, REX pos, COMES val)`
+- `postgres_bind_bool(SPECULUM NIHIL stmt, REX pos, VERUM val)`
+- `postgres_bind_null(SPECULUM NIHIL stmt, REX pos)`
+- `postgres_step(SPECULUM NIHIL stmt) REDDE SPECULUM NIHIL`
+- `postgres_column_text(SPECULUM NIHIL rows, REX col) REDDE VERBUM`
+- `postgres_column_int(SPECULUM NIHIL rows, REX col) REDDE REX`
+- `postgres_column_real(SPECULUM NIHIL rows, REX col) REDDE COMES`
+- `postgres_column_bool(SPECULUM NIHIL rows, REX col) REDDE VERUM`
+- `postgres_column_json(SPECULUM NIHIL rows, REX col) REDDE VERBUM`
+- `postgres_exec(SPECULUM NIHIL db, VERBUM sql)`
+- `postgres_begin(SPECULUM NIHIL db)` / `postgres_commit(...)` / `postgres_rollback(...)`
+- `postgres_listen(SPECULUM NIHIL db, VERBUM channel)` / `postgres_notify_wait(...)`
+- `postgres_finalize(SPECULUM NIHIL stmt)`
+- `postgres_close(SPECULUM NIHIL db)`
+
+Current contract:
+- backed by libpq; host-only
+- API mirrors `db_sqlite` where semantically equivalent
+
+### 25.2 `cct/db_postgres_search`
+
+Purpose: PostgreSQL full-text search SQL fragment builders.
+
+Public functions:
+- `postgres_search_config(VERBUM dictionary) REDDE SPECULUM NIHIL`
+- `postgres_search_query(SPECULUM NIHIL cfg, VERBUM query) REDDE VERBUM`
+- `postgres_search_rank(SPECULUM NIHIL cfg, VERBUM tsvector_col, VERBUM query) REDDE VERBUM`
+- `postgres_search_headline(SPECULUM NIHIL cfg, VERBUM text_col, VERBUM query) REDDE VERBUM`
+- `postgres_search_document(VERBUM col1, VERBUM col2) REDDE VERBUM`
+- `postgres_search_ensure_index(SPECULUM NIHIL db, VERBUM table, VERBUM col)`
+
+Current contract:
+- generates SQL fragments for composition; does not execute queries directly
+- backed by `db_postgres`; host-only
+
+### 25.3 `cct/redis`
+
+Purpose: Redis client with core string, hash, list, set, pub/sub, and raw RESP command support.
+
+DSN format: `redis://[:password@]host:port[/db]`
+
+Public functions:
+- `redis_open(VERBUM dsn) REDDE SPECULUM NIHIL`
+- `redis_get(SPECULUM NIHIL r, VERBUM key) REDDE VERBUM`
+- `redis_set(SPECULUM NIHIL r, VERBUM key, VERBUM value, REX ttl_seconds)`
+- `redis_del(SPECULUM NIHIL r, VERBUM key)`
+- `redis_exists(SPECULUM NIHIL r, VERBUM key) REDDE VERUM`
+- `redis_incr(SPECULUM NIHIL r, VERBUM key) REDDE REX`
+- `redis_hget(SPECULUM NIHIL r, VERBUM key, VERBUM field) REDDE VERBUM`
+- `redis_hset(SPECULUM NIHIL r, VERBUM key, VERBUM field, VERBUM value)`
+- `redis_hdel(SPECULUM NIHIL r, VERBUM key, VERBUM field)`
+- `redis_hgetall(SPECULUM NIHIL r, VERBUM key) REDDE SPECULUM NIHIL`
+- `redis_lpush(SPECULUM NIHIL r, VERBUM key, VERBUM value)` / `redis_rpush(...)`
+- `redis_lpop(SPECULUM NIHIL r, VERBUM key) REDDE VERBUM` / `redis_rpop(...)`
+- `redis_llen(SPECULUM NIHIL r, VERBUM key) REDDE REX`
+- `redis_sadd(SPECULUM NIHIL r, VERBUM key, VERBUM member)`
+- `redis_srem(SPECULUM NIHIL r, VERBUM key, VERBUM member)`
+- `redis_smembers(SPECULUM NIHIL r, VERBUM key) REDDE FLUXUS GENUS(VERBUM)`
+- `redis_sismember(SPECULUM NIHIL r, VERBUM key, VERBUM member) REDDE VERUM`
+- `redis_publish(SPECULUM NIHIL r, VERBUM channel, VERBUM message)`
+- `redis_subscribe(SPECULUM NIHIL r, VERBUM channel)`
+- `redis_receive(SPECULUM NIHIL r) REDDE VERBUM`
+- `redis_raw(SPECULUM NIHIL r, FLUXUS GENUS(VERBUM) args) REDDE VERBUM`
+- `redis_close(SPECULUM NIHIL r)`
+
+Current contract:
+- RESP protocol implemented in C; no external library required
+- host-only
+
+### 25.4 `cct/db_postgres_lock`
+
+Purpose: PostgreSQL advisory locks for distributed coordination.
+
+Public functions:
+- `postgres_lock_open(SPECULUM NIHIL db, VERBUM name) REDDE SPECULUM NIHIL`
+- `postgres_lock_acquire(SPECULUM NIHIL lock)` — blocking acquisition
+- `postgres_lock_try(SPECULUM NIHIL lock) REDDE VERUM` — non-blocking try
+- `postgres_lock_release(SPECULUM NIHIL lock)`
+- `postgres_lock_with(SPECULUM NIHIL db, VERBUM name, RITUALE callback())` — acquire, run, release
+- `postgres_lock_close(SPECULUM NIHIL lock)`
+
+Lock scopes: session-level (survives transaction) and transaction-level (auto-released on COMMIT/ROLLBACK).
+
+## 26. FASE 37 Addendum: Operational Mail Layer
+
+FASE 37 added three modules: email composition and SMTP delivery, persistent mail queue, and delivery webhook normalization. All modules are host-only.
+
+### 26.1 `cct/mail`
+
+Purpose: email message construction, SMTP delivery, and dev/test backends.
+
+Public functions:
+- `mail_new() REDDE SPECULUM NIHIL`
+- `mail_set_from(SPECULUM NIHIL msg, VERBUM addr)`
+- `mail_set_to(SPECULUM NIHIL msg, VERBUM addr)`
+- `mail_set_subject(SPECULUM NIHIL msg, VERBUM subject)`
+- `mail_set_body_text(SPECULUM NIHIL msg, VERBUM text)`
+- `mail_set_body_html(SPECULUM NIHIL msg, VERBUM html)`
+- `mail_add_attachment(SPECULUM NIHIL msg, VERBUM path, VERBUM name)`
+- `mail_smtp_open(SPECULUM NIHIL config) REDDE SPECULUM NIHIL`
+- `mail_smtp_close(SPECULUM NIHIL smtp)`
+- `mail_send(SPECULUM NIHIL smtp, SPECULUM NIHIL msg) REDDE SPECULUM NIHIL`
+- `mail_file_backend_open(VERBUM dir) REDDE SPECULUM NIHIL`
+- `mail_memory_backend_open() REDDE SPECULUM NIHIL`
+- `mail_memory_drain(SPECULUM NIHIL backend) REDDE FLUXUS GENUS(SPECULUM NIHIL)`
+- `mail_free(SPECULUM NIHIL msg)`
+
+SMTP authentication modes: PLAIN, LOGIN, STARTTLS, SMTPS. Config fields: `host`, `port`, `username`, `password`, `auth_mode`, `tls_verify`.
+
+Current contract:
+- SMTP tests requiring a live server use file or memory backend and skip when `SMTP_HOST` is absent
+- backed by OpenSSL for STARTTLS/SMTPS; host-only
+
+### 26.2 `cct/mail_spool`
+
+Purpose: persistent mail queue with retry and dead-letter semantics.
+
+State machine: `PENDING → SENT` / `PENDING → FAILED → SENT` / `FAILED → DEAD`
+
+Public functions:
+- `mail_spool_open(VERBUM spool_dir) REDDE SPECULUM NIHIL`
+- `mail_spool_enqueue(SPECULUM NIHIL spool, SPECULUM NIHIL msg) REDDE VERBUM` — returns entry ID
+- `mail_spool_get(SPECULUM NIHIL spool, VERBUM id) REDDE SPECULUM NIHIL`
+- `mail_spool_mark_sent(SPECULUM NIHIL spool, VERBUM id)`
+- `mail_spool_mark_failed(SPECULUM NIHIL spool, VERBUM id, VERBUM reason)`
+- `mail_spool_list_pending(SPECULUM NIHIL spool) REDDE FLUXUS GENUS(SPECULUM NIHIL)`
+- `mail_spool_drain_memory(SPECULUM NIHIL spool, SPECULUM NIHIL smtp)`
+- `mail_spool_retry_dead(SPECULUM NIHIL spool)`
+- `mail_spool_delete(SPECULUM NIHIL spool, VERBUM id)`
+- `mail_spool_close(SPECULUM NIHIL spool)`
+
+Persistence format: one JSON file per message in `spool_dir/`. `SpoolEntry` fields: `id`, `state`, `attempt_count`, `last_error`, `enqueued_at`, `last_attempt_at`.
+
+### 26.3 `cct/mail_webhook`
+
+Purpose: delivery event normalization from Mailgun and SendGrid provider webhooks.
+
+Public functions:
+- `mail_webhook_parse(VERBUM provider, VERBUM raw_body) REDDE SPECULUM NIHIL`
+- `mail_webhook_event_kind(SPECULUM NIHIL event) REDDE VERBUM` — `"delivered"` | `"bounce"` | `"complaint"` | `"open"` | `"click"`
+- `mail_webhook_recipient(SPECULUM NIHIL event) REDDE VERBUM`
+- `mail_webhook_message_id(SPECULUM NIHIL event) REDDE VERBUM`
+- `mail_mime_scan(VERBUM raw) REDDE SPECULUM NIHIL` — lightweight MIME scanner
+- `mail_headers_parse(VERBUM raw) REDDE SPECULUM NIHIL` — RFC 5322 header block parser
+- `mail_header_get(SPECULUM NIHIL headers, VERBUM name) REDDE VERBUM`
+
+Supported providers: `"mailgun"`, `"sendgrid"`.
+
+## 27. FASE 38 Addendum: Runtime Instrumentation
+
+FASE 38 added two modules: span emission by operational category and request/task-scoped context storage. Both modules are host-only.
+
+### 27.1 `cct/instrument`
+
+Purpose: span emission for runtime instrumentation with mode control.
+
+Span categories (`InstrumentKind`):
+- `INSTRUMENT_CALL` — generic function call
+- `INSTRUMENT_DB` — database query
+- `INSTRUMENT_CACHE` — cache read/write
+- `INSTRUMENT_MAIL` — email send/queue
+- `INSTRUMENT_STORAGE` — object/file storage operation
+- `INSTRUMENT_TASK` — background task execution
+- `INSTRUMENT_HTTP` — outbound HTTP request
+- `INSTRUMENT_CUSTOM` — application-defined category
+
+Public functions:
+- `instrument_open(VERBUM name, REX kind) REDDE REX` — returns span_id; 0 if mode is off
+- `instrument_close(REX span_id)` — records end time; no-op if span_id is 0
+- `instrument_attr(REX span_id, VERBUM key, VERBUM value)` — annotate span; no-op if span_id is 0
+- `instrument_set_mode(VERBUM mode)` — `"active"` | `"off"`
+- `instrument_flush(VERBUM path)` — write buffered spans to `.ctrace` JSON Lines file
+- `instrument_reset()` — clear span buffer (for tests)
+
+Current contract:
+- mode is **off by default**; activates via `instrument_set_mode("active")` or `CCT_INSTRUMENT=1` env var
+- span ID 0 is the null/no-op sentinel; all operations are no-ops when span_id is 0
+- emits `.ctrace` format compatible with `cct sigilo trace view` and the FASE 39 SVG renderer
+
+### 27.2 `cct/context_local`
+
+Purpose: request and task-scoped key-value context store without explicit parameter threading.
+
+Well-known keys:
+- `request_id` — current HTTP request identifier
+- `trace_id` — active trace identifier
+- `user_id` — authenticated user identifier
+- `locale` — active locale for i18n
+- `route_id` — matched route from sigil
+- `task_id` — background task identifier
+
+Public functions:
+- `ctx_set(VERBUM key, VERBUM value)`
+- `ctx_get(VERBUM key) REDDE VERBUM` — empty string if not set
+- `ctx_has(VERBUM key) REDDE VERUM`
+- `ctx_clear(VERBUM key)`
+- `ctx_reset()` — clear entire context (call at request boundary)
+
+Current contract:
+- per-thread storage; multi-threaded applications must call `ctx_reset()` at the start of each request handler
+- integrates with `cct/log` and `cct/audit` to automatically attach `request_id` and `trace_id` to log lines
+
+## 28. FASE 39 Addendum: Trace Visualization
+
+FASE 39 added the trace visualization layer of Sigilo Vivo: an animated SVG renderer and an operational span category overlay system. These are C-only CLI tools in `src/sigilo/`, not CCT library modules.
+
+### 28.1 CLI Commands — `cct sigilo trace`
+
+New trace rendering subcommands:
+
+```bash
+# Render single trace as animated SVG
+cct sigilo trace render --trace request.ctrace --sigil routes.sigil --out trace.svg
+
+# Animated or static mode
+cct sigilo trace render --animated --trace request.ctrace --sigil routes.sigil --out trace.svg
+cct sigilo trace render --static  --trace request.ctrace --sigil routes.sigil --out trace.svg
+
+# Force the plain routes view or the composed system view
+cct sigilo trace render --animated --trace request.ctrace --sigil routes.system.sigil --sigil-view routes --out trace.routes.svg
+cct sigilo trace render --animated --trace request.ctrace --sigil routes.sigil --sigil-view system --out trace.system.svg
+
+# Step-by-step frame rendering
+cct sigilo trace render --step N --trace request.ctrace --sigil routes.sigil --out stepN.svg
+
+# Compare two traces (regression detection)
+cct sigilo trace compare before.ctrace after.ctrace --sigil routes.sigil --out diff.svg
+
+# Render by trace ID from Civitas trace store
+cct sigilo trace render <trace_id>
+cct sigilo trace render <trace_id> --mode=animated
+```
+
+Available flags: `--animated` / `--static`, `--step N`, `--sigil-view routes|system|auto`, `--filter-kind <category>`, `--focus-route <route_id>`, `--hide-timeline`, `--out <file>`.
+
+Rendered SVGs now keep the legend draggable inside the browser, and when a composed `system` sigil is too tall, the renderer extends the canvas with a footer area so the timeline and step scrubber remain visible instead of being clipped off-screen.
+
+### 28.2 Trace Render Modes
+
+| Mode | Description |
+|------|-------------|
+| `TRACE_RENDER_SINGLE` | Animated or static single trace overlay on route sigil |
+| `TRACE_RENDER_COMPARE` | Side-by-side comparison of two traces with `data-delta-us` |
+| `TRACE_RENDER_STEP` | Single step frame; exits 1 when step_index ≥ span_count |
+| `TRACE_RENDER_STATIC` | Non-animated static render |
+
+### 28.3 Span-to-Sigil Mapping Priority
+
+Spans are mapped to sigil elements by this priority:
+
+1. Span attribute `route_id` → sigil route node
+2. Span attribute `module` → sigil group/region
+3. Span `category` → default visual category for unmapped spans
+4. Fallback → `<g id="unresolved-spans">` chamber — never silently omitted
+
+### 28.4 Operational Category Overlays (`trace_overlay`)
+
+Span categories and stable color palette:
+
+| Category | CSS Class | Color |
+|----------|-----------|-------|
+| SQL | `span-sql` | `#3B82F6` (blue) |
+| Cache | `span-cache` | `#10B981` (emerald) |
+| Storage | `span-storage` | `#8B5CF6` (violet) |
+| Transcode | `span-transcode` | `#F59E0B` (amber) |
+| Mail | `span-mail` | `#EC4899` (pink) |
+| i18n | `span-i18n` | `#06B6D4` (cyan) |
+| Task | `span-task` | `#F97316` (orange) |
+| HTTP | `span-http` | `#6366F1` (indigo) |
+| Auth | `span-auth` | `#14B8A6` (teal) |
+| Error | `span-error` | `#EF4444` (red) |
+| Unknown | `span-unknown` | `#9CA3AF` (gray) |
+
+Slow spans (duration > 2× median in their depth layer) receive the additional class `span-slow`. Error spans receive `span-error` regardless of duration.
+
+Name-based category heuristics (when `span.category` is absent):
+
+- `select:`, `insert:`, `update:`, `delete:`, `sql:` → SQL
+- `cache:`, `get:`, `set:`, `evict:` → Cache
+- `upload:`, `download:`, `storage:` → Storage
+- `send_mail:`, `enqueue_mail:` → Mail
+- `task:`, `job:`, `worker:` → Task
+- `http:`, `fetch:`, `request:` → HTTP
+- `auth:`, `login:`, `verify:` → Auth
+
+### 28.5 Animation Contract
+
+When animated mode is active:
+
+- Nodes: `opacity 0→1` with delay matching the first span that activates the node
+- Edges: `stroke-dashoffset` animates from full length to 0
+- Timeline lanes: `width 0→final` with span delay
+- Minimum span animation duration: 50ms (clamped; `animation-duration: 0s` is never emitted)
+- All delays are normalized to `>= 0`; negative values are clamped to 0
+
+Output SVG is self-contained: no JavaScript, no external CSS, no server required. Opens directly with `file://` in any modern browser or SVG viewer.
+
+## 29. Current Operational Contract (FASE 39)
+
+The practical project contract through FASE 39 is:
+
+- host compiler remains production-valid and authoritative
+- bootstrap compiler stack is complete and validated through code generation and self-host convergence
+- the CCT standard library covers: cryptography, encodings, regex, date/time, TOML, compression, file types, media, images, language detection, advanced strings, lexer utilities, UUIDs, slugs, i18n, form codec, structured logging, distributed tracing, metrics, signal handling, filesystem watching, audit logging, route topology metadata, navigable SVG sigilization, trace file format, framework manifests, PostgreSQL, full-text search, Redis, advisory locks, transactional mail, mail spool, webhook normalization, runtime instrumentation, context locals, animated trace rendering, and operational category overlays
+- all FASE 32–39 modules are host-only; freestanding use is rejected at compile time
+- integration tests that require a live backend (PostgreSQL, Redis, SMTP) skip gracefully when the corresponding environment variable is absent (`DATABASE_URL`, `REDIS_URL`, `SMTP_HOST`)
+- run `make test` to execute the full integration suite
+
+## 2. Specification Baseline Update
+
+**Specification baseline updated to FASE 39.**
+
+This document now covers the complete language surface and standard library through FASE 39, superseding the FASE 30 baseline noted in the Status section above.

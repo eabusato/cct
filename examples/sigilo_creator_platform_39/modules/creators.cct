@@ -1,0 +1,54 @@
+INCIPIT grimoire "sigilo_creator_platform_39_creators"
+
+ADVOCARE "billing.cct"
+ADVOCARE "media.cct"
+ADVOCARE "moderation.cct"
+ADVOCARE "notifications.cct"
+ADVOCARE "analytics.cct"
+
+-- @route route_id=studio.dashboard method=GET path=/studio handler=creator_dashboard group=/studio middleware=auth,trace
+RITUALE creator_dashboard() REDDE REX
+  EVOCA REX featured AD CONIURA creator_featured_project()
+  EVOCA REX quota AD CONIURA billing_quota_load()
+  ANUR featured
+  ANUR quota
+  REDDE 31
+EXPLICIT RITUALE
+
+-- @route route_id=studio.project_show method=GET path=/studio/projects/:slug handler=project_show group=/studio middleware=auth,trace
+RITUALE project_show() REDDE REX
+  EVOCA REX latest AD CONIURA creator_project_latest()
+  EVOCA REX media AD CONIURA media_asset_latest()
+  ANUR latest
+  ANUR media
+  REDDE 32
+EXPLICIT RITUALE
+
+-- @route route_id=studio.project_publish method=POST path=/studio/projects/:slug/publish handler=project_publish group=/studio middleware=auth,trace
+RITUALE project_publish() REDDE REX
+  EVOCA REX plan AD CONIURA billing_plan_active()
+  EVOCA REX pack AD CONIURA media_pack_release()
+  EVOCA REX scan AD CONIURA moderation_release_scan()
+  EVOCA REX notify AD CONIURA notifications_release_notice()
+  EVOCA REX metric AD CONIURA analytics_publish_event()
+  ANUR plan
+  ANUR pack
+  ANUR scan
+  ANUR notify
+  ANUR metric
+  REDDE 33
+EXPLICIT RITUALE
+
+RITUALE creator_featured_project() REDDE REX
+  REDDE 34
+EXPLICIT RITUALE
+
+RITUALE creator_project_latest() REDDE REX
+  REDDE 35
+EXPLICIT RITUALE
+
+RITUALE creator_project_cache_bust() REDDE REX
+  REDDE 36
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

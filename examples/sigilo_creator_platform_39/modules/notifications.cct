@@ -1,0 +1,11 @@
+INCIPIT grimoire "sigilo_creator_platform_39_notifications"
+
+RITUALE notifications_release_notice() REDDE REX
+  REDDE 61
+EXPLICIT RITUALE
+
+RITUALE notifications_digest_schedule() REDDE REX
+  REDDE 62
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

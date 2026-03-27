@@ -11570,7 +11570,11 @@ TRACE39A_SYSTEM_SIGIL="${TRACE39A_SYSTEM_BASE}.system.sigil"
 SVG_2009="$CCT_TMP_DIR/phase39a/test_2009_system_overlay.svg"
 if [ "$RC_31_READY" -eq 0 ] && "$PHASE31_HOST_WRAPPER" --sigilo-only --sigilo-style routes --sigilo-out "$TRACE39A_SYSTEM_BASE" "examples/sigilo_web_system_35/main.cct" >"$PHASE31_LOG_DIR/test_2009_sigilo.stdout.log" 2>"$PHASE31_LOG_DIR/test_2009_sigilo.stderr.log" && \
    "$PHASE31_HOST_WRAPPER" sigilo trace render --animated --trace "examples/sigilo_web_system_35/media_upload_pipeline_39.ctrace" --sigil "$TRACE39A_SYSTEM_SIGIL" --out "$SVG_2009" >"$PHASE31_LOG_DIR/test_2009.stdout.log" 2>"$PHASE31_LOG_DIR/test_2009.stderr.log" && \
-   rg -q 'id="span-m1".*cx="273\.50".*cy="944\.91"' "$SVG_2009"; then
+   rg -q 'id="span-m1".*cx="273\.50".*cy="944\.91"' "$SVG_2009" && \
+   rg -q 'viewBox="-82\.39 -57\.03 1383\.09 1401\.03"' "$SVG_2009" && \
+   rg -q 'id="trace-caption-wrap"' "$SVG_2009" && \
+   rg -q 'id="trace-summary-wrap"' "$SVG_2009" && \
+   rg -q 'data-draggable="overlay"' "$SVG_2009"; then
     test_pass "sigilo trace ancora raiz na rota real do system svg"
 else
     test_fail "sigilo trace nao ancorou raiz na rota real do system svg"
@@ -11580,10 +11584,54 @@ echo "Test 2010: sigilo trace ancora middleware e handler nos modulos corretos"
 SVG_2010="$CCT_TMP_DIR/phase39a/test_2010_system_clusters.svg"
 if [ "$RC_31_READY" -eq 0 ] && "$PHASE31_HOST_WRAPPER" sigilo trace render --animated --trace "examples/sigilo_web_system_35/media_upload_pipeline_39.ctrace" --sigil "$TRACE39A_SYSTEM_SIGIL" --out "$SVG_2010" >"$PHASE31_LOG_DIR/test_2010.stdout.log" 2>"$PHASE31_LOG_DIR/test_2010.stderr.log" && \
    rg -q 'id="span-m2".*data-module="examples/sigilo_web_system_35/modules/auth\.cct".*cx="599\.[0-9]{2}".*cy="381\.[0-9]{2}"' "$SVG_2010" && \
-   rg -q 'id="span-m4".*data-module="examples/sigilo_web_system_35/modules/media\.cct".*cx="865\.[0-9]{2}".*cy="507\.[0-9]{2}"' "$SVG_2010"; then
+   rg -q 'id="span-m4".*data-module="examples/sigilo_web_system_35/modules/media\.cct".*cx="821\.[0-9]{2}".*cy="473\.[0-9]{2}"' "$SVG_2010"; then
     test_pass "sigilo trace ancora middleware e handler nos modulos corretos"
 else
     test_fail "sigilo trace nao ancorou middleware e handler nos modulos corretos"
+fi
+
+echo "Test 2011: sigilo trace permite forcar view routes a partir do system sigil"
+SVG_2011="$CCT_TMP_DIR/phase39a/test_2011_routes_view_override.svg"
+if [ "$RC_31_READY" -eq 0 ] && "$PHASE31_HOST_WRAPPER" sigilo trace render --animated --trace "examples/sigilo_web_system_35/media_upload_pipeline_39.ctrace" --sigil "$TRACE39A_SYSTEM_SIGIL" --sigil-view routes --out "$SVG_2011" >"$PHASE31_LOG_DIR/test_2011.stdout.log" 2>"$PHASE31_LOG_DIR/test_2011.stderr.log" && \
+   rg -q 'id="span-m1".*cx="480\.00".*cy="262\.56"' "$SVG_2011" && \
+   rg -q 'id="span-m2".*cx="692\.60".*cy="195\.37"' "$SVG_2011"; then
+    test_pass "sigilo trace permite forcar view routes a partir do system sigil"
+else
+    test_fail "sigilo trace nao permitiu forcar view routes a partir do system sigil"
+fi
+
+echo "Test 2012: sigilo trace permite forcar view system a partir do routes sigil"
+SVG_2012="$CCT_TMP_DIR/phase39a/test_2012_system_view_override.svg"
+if [ "$RC_31_READY" -eq 0 ] && "$PHASE31_HOST_WRAPPER" sigilo trace render --animated --trace "examples/sigilo_web_system_35/media_upload_pipeline_39.ctrace" --sigil "${TRACE39A_SYSTEM_BASE}.sigil" --sigil-view system --out "$SVG_2012" >"$PHASE31_LOG_DIR/test_2012.stdout.log" 2>"$PHASE31_LOG_DIR/test_2012.stderr.log" && \
+   rg -q 'id="span-m1".*cx="273\.50".*cy="944\.91"' "$SVG_2012"; then
+    test_pass "sigilo trace permite forcar view system a partir do routes sigil"
+else
+    test_fail "sigilo trace nao permitiu forcar view system a partir do routes sigil"
+fi
+
+echo "Test 2013: sigilo trace system step expande canvas e mantem scrubber visivel"
+SVG_2013="$CCT_TMP_DIR/phase39a/test_2013_system_step_ui.svg"
+if [ "$RC_31_READY" -eq 0 ] && "$PHASE31_HOST_WRAPPER" sigilo trace render --step 4 --trace "examples/sigilo_web_system_35/media_upload_pipeline_39.ctrace" --sigil "$TRACE39A_SYSTEM_SIGIL" --out "$SVG_2013" >"$PHASE31_LOG_DIR/test_2013.stdout.log" 2>"$PHASE31_LOG_DIR/test_2013.stderr.log" && \
+   rg -q 'viewBox="-82\.39 -57\.03 1383\.09 1427\.03"' "$SVG_2013" && \
+   rg -q 'id="step-scrubber"' "$SVG_2013" && \
+   rg -q 'startStepDrag' "$SVG_2013" && \
+   rg -q 'startOverlayDrag' "$SVG_2013" && \
+   rg -q 'request\.media_upload \(312ms\)' "$SVG_2013"; then
+    test_pass "sigilo trace system step expande canvas e mantem scrubber visivel"
+else
+    test_fail "sigilo trace system step nao expandiu canvas ou perdeu scrubber"
+fi
+
+echo "Test 2014: sigilo trace clampa spans dentro do canvas em system grande"
+SVG_2014="$CCT_TMP_DIR/phase39a/test_2014_creator_system_bounds.svg"
+if [ "$RC_31_READY" -eq 0 ] && "$PHASE31_HOST_WRAPPER" sigilo trace render --animated --trace "examples/sigilo_creator_platform_39/creator_release_pipeline_39.ctrace" --sigil "examples/sigilo_creator_platform_39/routes_view.system.sigil" --out "$SVG_2014" >"$PHASE31_LOG_DIR/test_2014.stdout.log" 2>"$PHASE31_LOG_DIR/test_2014.stderr.log" && \
+   rg -q 'viewBox="-95\.12 0\.00 1420\.39 1344\.00"' "$SVG_2014" && \
+   rg -q 'id="span-p8".*cx="1253\.27"' "$SVG_2014" && \
+   rg -q 'id="span-p9".*cx="1253\.27"' "$SVG_2014" && \
+   rg -q 'id="span-p12".*cx="1253\.27"' "$SVG_2014"; then
+    test_pass "sigilo trace clampa spans dentro do canvas em system grande"
+else
+    test_fail "sigilo trace nao clampou spans dentro do canvas em system grande"
 fi
 fi
 

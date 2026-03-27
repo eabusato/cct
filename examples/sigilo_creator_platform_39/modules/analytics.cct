@@ -1,0 +1,17 @@
+INCIPIT grimoire "sigilo_creator_platform_39_analytics"
+
+-- @route route_id=api.analytics_overview method=GET path=/api/analytics/overview handler=analytics_overview group=/api middleware=auth,trace
+RITUALE analytics_overview() REDDE REX
+  REDDE 71
+EXPLICIT RITUALE
+
+-- @route route_id=internal.tasks_rebuild method=POST path=/internal/tasks/rebuild handler=tasks_rebuild group=/internal middleware=signature,trace
+RITUALE tasks_rebuild() REDDE REX
+  REDDE 72
+EXPLICIT RITUALE
+
+RITUALE analytics_publish_event() REDDE REX
+  REDDE 73
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

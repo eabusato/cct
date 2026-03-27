@@ -1,0 +1,18 @@
+INCIPIT grimoire "sigilo_creator_platform_39_moderation"
+
+-- @route route_id=admin.review_queue method=GET path=/admin/review handler=review_queue group=/admin middleware=auth,staff,trace
+RITUALE review_queue() REDDE REX
+  EVOCA REX size AD CONIURA moderation_queue_size()
+  ANUR size
+  REDDE 51
+EXPLICIT RITUALE
+
+RITUALE moderation_release_scan() REDDE REX
+  REDDE 52
+EXPLICIT RITUALE
+
+RITUALE moderation_queue_size() REDDE REX
+  REDDE 53
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

@@ -107,6 +107,7 @@ cct lint lint_showcase_after_12e2.cct
 Stable modular Sigilo showcase with a composed system view and a realistic media upload trace.
 - route-composed system sigil already present
 - animated operational trace over the composed `.system.sigil`
+- explicit `--sigil-view routes` option to project the same trace on pure route view
 - interactive `--step` SVG with scrubber
 
 ```bash
@@ -120,6 +121,40 @@ Stable modular Sigilo showcase with a composed system view and a realistic media
   --trace examples/sigilo_web_system_35/media_upload_pipeline_39.ctrace \
   --sigil examples/sigilo_web_system_35/routes_view.system.sigil \
   --out examples/sigilo_web_system_35/media_upload_pipeline_39_animated.svg
+
+./cct sigilo trace render \
+  --animated \
+  --trace examples/sigilo_web_system_35/media_upload_pipeline_39.ctrace \
+  --sigil examples/sigilo_web_system_35/routes_view.system.sigil \
+  --sigil-view routes \
+  --out examples/sigilo_web_system_35/media_upload_pipeline_39_routes_animated.svg
+```
+
+### sigilo_creator_platform_39
+Larger creator-platform Sigilo showcase with studio, auth, media, billing, moderation, analytics, notifications, admin, webhooks, and internal task routes.
+- denser composed system sigil than `sigilo_web_system_35`
+- deeper publish trace crossing several modules
+- explicit route-only trace rendering via `--sigil-view routes`
+- animated and `--step` renders over the real composed `.system.sigil`
+
+```bash
+./cct --sigilo-only \
+  --sigilo-style routes \
+  --sigilo-out examples/sigilo_creator_platform_39/routes_view \
+  examples/sigilo_creator_platform_39/main.cct
+
+./cct sigilo trace render \
+  --animated \
+  --trace examples/sigilo_creator_platform_39/creator_release_pipeline_39.ctrace \
+  --sigil examples/sigilo_creator_platform_39/routes_view.system.sigil \
+  --out examples/sigilo_creator_platform_39/creator_release_pipeline_39_animated.svg
+
+./cct sigilo trace render \
+  --animated \
+  --trace examples/sigilo_creator_platform_39/creator_release_pipeline_39.ctrace \
+  --sigil examples/sigilo_creator_platform_39/routes_view.system.sigil \
+  --sigil-view routes \
+  --out examples/sigilo_creator_platform_39/creator_release_pipeline_39_routes_animated.svg
 ```
 
 ## Application Stack Examples (FASE 20)

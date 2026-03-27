@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 720" width="960" height="720" role="img" aria-label="CCT trace render">
+<rect class="bg" x="0" y="0" width="960" height="720"/>
+<style><![CDATA[.bg{fill:#f6f0e6}.panel-bg{fill:#fbf8f2;stroke:#d4c9b9;stroke-width:1}.halo{fill:none;stroke:#dccfbf;stroke-width:1.1;opacity:.92}.halo-soft{fill:none;stroke:#ece2d5;stroke-width:.8;opacity:.78}.title{fill:#211812;font:600 18px monospace}.subtitle{fill:#5a5046;font:10px monospace}.hash{fill:#2a221c;font:10px monospace}.core{fill:#fffaf2;stroke:#786856;stroke-width:1.6}.core-mark{fill:none;stroke:#a39383;stroke-width:1.0;opacity:.95}.route-shell{fill:rgba(255,252,246,0.74);stroke:#5a4b3f;stroke-width:1.0}.route-mid{fill:none;stroke:#b9aa96;stroke-width:.9;opacity:.8}.route-arc{fill:none;stroke:#736252;stroke-width:.92;opacity:.86;stroke-linecap:round}.route-spoke{fill:none;stroke:#968471;stroke-width:.86;opacity:.8;stroke-linecap:round}.route-hit{fill:#5e4d3d}.span-link{fill:none;stroke:#776757;stroke-width:1.0;opacity:.72}.span-node{fill:#fbfaf6;stroke:#6c6256;stroke-width:1.0}.span-node-active{stroke:#3f6f9a;stroke-width:1.8}.span-node-pending{fill:#f2ede4;stroke:#b7a99a;opacity:.56}.span-node-hit{stroke:#5e4d3d;stroke-width:1.55}.span-core{fill:#efe5d6;stroke:#5e5143;stroke-width:1.1}.trace-orn{fill:none;stroke:#b9a895;stroke-width:.9;opacity:.62}.timeline-axis{fill:none;stroke:#8f8173;stroke-width:.8}.timeline-lane{fill:#f0e7da;stroke:#d5c8b5;stroke-width:.6}.timeline-row{fill:#f8f1e6;stroke:#dccfbe;stroke-width:.55}.timeline-bar{fill:#5f87af;opacity:.74}.timeline-bar-pending{fill:#d7ccbe;opacity:.52}.mapping-label{fill:#5a5046;font:10px monospace}.legend{fill:#40352c;font:10px monospace}.compare-divider{stroke:#d7cabb;stroke-width:1}.node-wrap,.edge-wrap,.timeline-entry{cursor:help}.timeline-entry:hover .timeline-bar,.timeline-entry:hover .timeline-bar-pending{opacity:.94;stroke:#2f261f;stroke-width:1.1}.node-wrap:hover .span-node,.node-wrap:hover .span-core{stroke:#2f261f;stroke-width:2.1}.route-flow{fill:none;stroke:#69584b;stroke-width:.95;opacity:.58}.step-marker{fill:#1e4f78}.step-rail{fill:none;stroke:#8f8173;stroke-width:1.2}.step-dot{fill:#efe4d4;stroke:#756657;stroke-width:1;cursor:pointer}.step-dot.active{fill:#1e4f78;stroke:#1e4f78}.step-knob{fill:#1e4f78;stroke:#fffaf2;stroke-width:1.2;cursor:grab}.step-knob.dragging{cursor:grabbing}.step-label{fill:#5a5046;font:10px monospace}.trace-caption-box{fill:rgba(255,250,242,0.92);stroke:#d6cabc;stroke-width:.9}.trace-caption-title{fill:#211812;font:600 14px monospace}.trace-caption-subtitle{fill:#5a5046;font:10px monospace}.focus-ring{fill:none;stroke:#35648c;stroke-width:1.2;stroke-dasharray:4 2}]]></style>
+<style><![CDATA[.legend-box{fill:#fffaf2;stroke:#d6cabc;stroke-width:.9}.legend-entry text{fill:#40352c;font:10px monospace}.legend-swatch{stroke-width:1}.slow{filter:drop-shadow(0 0 4px rgba(28,56,84,.18))}.error{stroke:#dc2626 !important;fill:#feecec !important}.pulse{filter:drop-shadow(0 0 3px rgba(28,56,84,.16))}.trace-packet{opacity:0;stroke:#fffaf2;stroke-width:1.1;filter:drop-shadow(0 0 3px rgba(28,56,84,.18))}.overlay-meta{font:10px monospace;fill:#5a5046}.cat-generic{stroke:#94a3b8}.timeline-bar.cat-generic{fill:#c4cfdb}.legend-swatch.cat-generic{fill:#eef2f6;stroke:#94a3b8}.trace-packet.cat-generic{fill:#94a3b8}.cat-handler{stroke:#4a90d9}.span-node.cat-handler,.span-core.cat-handler{stroke:#4a90d9;fill:#e9f3fd}.span-link.cat-handler,.route-flow.cat-handler{stroke:#4a90d9}.trace-packet.cat-handler{fill:#4a90d9}.timeline-bar.cat-handler,.legend-swatch.cat-handler{fill:#4a90d9;stroke:#4a90d9}.cat-middleware{stroke:#7bb3e8}.span-node.cat-middleware,.span-core.cat-middleware{stroke:#7bb3e8;fill:#edf7fd}.span-link.cat-middleware,.route-flow.cat-middleware{stroke:#7bb3e8}.trace-packet.cat-middleware{fill:#7bb3e8}.timeline-bar.cat-middleware,.legend-swatch.cat-middleware{fill:#7bb3e8;stroke:#7bb3e8}.span-link.cat-middleware,.route-flow.cat-middleware,.span-node.cat-middleware,.legend-swatch.cat-middleware{stroke-dasharray:4,2}.cat-sql{stroke:#2d9f5e}.span-node.cat-sql,.span-core.cat-sql{stroke:#2d9f5e;fill:#ebf8ef}.span-link.cat-sql,.route-flow.cat-sql{stroke:#2d9f5e}.trace-packet.cat-sql{fill:#2d9f5e}.timeline-bar.cat-sql,.legend-swatch.cat-sql{fill:#2d9f5e;stroke:#2d9f5e}.cat-sql{vector-effect:non-scaling-stroke}.cat-cache{stroke:#e07b39}.span-node.cat-cache,.span-core.cat-cache{stroke:#e07b39;fill:#fdf1e9}.span-link.cat-cache,.route-flow.cat-cache{stroke:#e07b39}.trace-packet.cat-cache{fill:#e07b39}.timeline-bar.cat-cache,.legend-swatch.cat-cache{fill:#e07b39;stroke:#e07b39}.cat-cache{vector-effect:non-scaling-stroke}.cat-storage{stroke:#8b5cf6}.span-node.cat-storage,.span-core.cat-storage{stroke:#8b5cf6;fill:#f2ebfe}.span-link.cat-storage,.route-flow.cat-storage{stroke:#8b5cf6}.trace-packet.cat-storage{fill:#8b5cf6}.timeline-bar.cat-storage,.legend-swatch.cat-storage{fill:#8b5cf6;stroke:#8b5cf6}.cat-transcode{stroke:#d946ef}.span-node.cat-transcode,.span-core.cat-transcode{stroke:#d946ef;fill:#fde9fe}.span-link.cat-transcode,.route-flow.cat-transcode{stroke:#d946ef}.trace-packet.cat-transcode{fill:#d946ef}.timeline-bar.cat-transcode,.legend-swatch.cat-transcode{fill:#d946ef;stroke:#d946ef}.span-link.cat-transcode,.route-flow.cat-transcode,.span-node.cat-transcode,.legend-swatch.cat-transcode{stroke-dasharray:6,2}.cat-email{stroke:#ca8a04}.span-node.cat-email,.span-core.cat-email{stroke:#ca8a04;fill:#fbf3db}.span-link.cat-email,.route-flow.cat-email{stroke:#ca8a04}.trace-packet.cat-email{fill:#ca8a04}.timeline-bar.cat-email,.legend-swatch.cat-email{fill:#ca8a04;stroke:#ca8a04}.cat-i18n{stroke:#06b6d4}.span-node.cat-i18n,.span-core.cat-i18n{stroke:#06b6d4;fill:#e4fbff}.span-link.cat-i18n,.route-flow.cat-i18n{stroke:#06b6d4}.trace-packet.cat-i18n{fill:#06b6d4}.timeline-bar.cat-i18n,.legend-swatch.cat-i18n{fill:#06b6d4;stroke:#06b6d4}.span-link.cat-i18n,.route-flow.cat-i18n,.span-node.cat-i18n,.legend-swatch.cat-i18n{stroke-dasharray:2,2}.cat-task{stroke:#6b7280}.span-node.cat-task,.span-core.cat-task{stroke:#6b7280;fill:#eef0f3}.span-link.cat-task,.route-flow.cat-task{stroke:#6b7280}.trace-packet.cat-task{fill:#6b7280}.timeline-bar.cat-task,.legend-swatch.cat-task{fill:#6b7280;stroke:#6b7280}.cat-error{stroke:#dc2626}.span-node.cat-error,.span-core.cat-error{stroke:#dc2626;fill:#feecec}.span-link.cat-error,.route-flow.cat-error{stroke:#dc2626}.trace-packet.cat-error{fill:#dc2626}.timeline-bar.cat-error,.legend-swatch.cat-error{fill:#dc2626;stroke:#dc2626}.cat-error{vector-effect:non-scaling-stroke}.cat-generic{stroke:#94a3b8}.span-node.cat-generic,.span-core.cat-generic{stroke:#94a3b8;fill:#eef2f6}.span-link.cat-generic,.route-flow.cat-generic{stroke:#94a3b8}.trace-packet.cat-generic{fill:#94a3b8}.timeline-bar.cat-generic,.legend-swatch.cat-generic{fill:#94a3b8;stroke:#94a3b8}]]></style>
+<rect class="panel-bg" x="12.00" y="12.00" width="936.00" height="696.00" rx="18"/>
+<circle class="halo-soft" cx="480.00" cy="262.56" r="262.08"/>
+<circle class="halo" cx="480.00" cy="262.56" r="205.92"/>
+<circle class="halo-soft" cx="480.00" cy="262.56" r="140.40"/>
+<text class="title" x="32.00" y="40.00">trace sigilo-web-media-upload-39</text>
+<text class="subtitle" x="32.00" y="57.00">spans=10 total=312ms mode=animated hash=b88cf64cf840abf6</text>
+<g><circle class="core" cx="480.00" cy="262.56" r="70.20"/><circle class="core-mark" cx="480.00" cy="262.56" r="54.20"/><path class="core-mark" d="M 480.00 238.56 L 501.00 262.56 L 480.00 286.56 L 459.00 262.56 Z"/></g>
+<g id="trace_ornaments">
+<circle class="trace-orn" cx="791.51" cy="262.56" r="2.81"/>
+<circle class="trace-orn" cx="763.21" cy="426.07" r="1.40"/>
+<circle class="trace-orn" cx="639.83" cy="539.40" r="2.39"/>
+<circle class="trace-orn" cx="480.00" cy="575.43" r="2.25"/>
+<circle class="trace-orn" cx="319.41" cy="540.71" r="1.52"/>
+<circle class="trace-orn" cx="204.10" cy="421.85" r="2.14"/>
+<circle class="trace-orn" cx="153.43" cy="262.56" r="1.42"/>
+<circle class="trace-orn" cx="207.24" cy="105.08" r="2.69"/>
+<circle class="trace-orn" cx="318.83" cy="-16.60" r="2.95"/>
+<circle class="trace-orn" cx="480.00" cy="-61.11" r="2.74"/>
+<circle class="trace-orn" cx="637.77" cy="-10.71" r="2.80"/>
+<circle class="trace-orn" cx="763.27" cy="99.02" r="2.10"/>
+</g>
+<g id="trace_links">
+<path class="span-link cat-middleware" data-category="middleware" data-subcategory="middleware" d="M 480.00 262.56 Q 586.30 203.74 692.60 195.37" style="stroke-dasharray:222.96;stroke-dashoffset:222.96"><animate attributeName="stroke-dashoffset" from="222.96" to="0" begin="0.00s" dur="0.24s" fill="freeze"/></path>
+<circle class="trace-packet span-link cat-middleware" r="4.10"><animate attributeName="opacity" values="0;1;1;0" begin="0.00s" dur="0.24s" fill="freeze"/><animateMotion begin="0.00s" dur="0.24s" fill="freeze" path="M 480.00 262.56 Q 586.30 203.74 692.60 195.37"/></circle>
+<path class="span-link cat-middleware" data-category="middleware" data-subcategory="middleware" d="M 480.00 262.56 Q 387.93 212.78 295.85 208.54" style="stroke-dasharray:191.91;stroke-dashoffset:191.91"><animate attributeName="stroke-dashoffset" from="191.91" to="0" begin="0.00s" dur="0.24s" fill="freeze"/></path>
+<circle class="trace-packet span-link cat-middleware" r="4.10"><animate attributeName="opacity" values="0;1;1;0" begin="0.00s" dur="0.24s" fill="freeze"/><animateMotion begin="0.00s" dur="0.24s" fill="freeze" path="M 480.00 262.56 Q 387.93 212.78 295.85 208.54"/></circle>
+<path class="span-link cat-handler" data-category="handler" data-subcategory="handler" d="M 480.00 262.56 Q 587.60 237.02 695.21 251.00" style="stroke-dasharray:215.52;stroke-dashoffset:215.52"><animate attributeName="stroke-dashoffset" from="215.52" to="0" begin="0.00s" dur="0.29s" fill="freeze"/></path>
+<circle class="trace-packet span-link cat-handler" r="4.10"><animate attributeName="opacity" values="0;1;1;0" begin="0.00s" dur="0.29s" fill="freeze"/><animateMotion begin="0.00s" dur="0.29s" fill="freeze" path="M 480.00 262.56 Q 587.60 237.02 695.21 251.00"/></circle>
+<path class="span-link cat-storage" data-category="storage" data-subcategory="storage" d="M 695.21 251.00 Q 747.93 217.24 800.66 218.43" style="stroke-dasharray:110.37;stroke-dashoffset:110.37"><animate attributeName="stroke-dashoffset" from="110.37" to="0" begin="0.11s" dur="0.24s" fill="freeze"/></path>
+<circle class="trace-packet span-link cat-storage" r="4.10"><animate attributeName="opacity" values="0;1;1;0" begin="0.11s" dur="0.24s" fill="freeze"/><animateMotion begin="0.11s" dur="0.24s" fill="freeze" path="M 695.21 251.00 Q 747.93 217.24 800.66 218.43"/></circle>
+<path class="span-link cat-transcode" data-category="transcode" data-subcategory="transcode" d="M 695.21 251.00 Q 749.51 223.97 803.82 229.86" style="stroke-dasharray:110.65;stroke-dashoffset:110.65"><animate attributeName="stroke-dashoffset" from="110.65" to="0" begin="0.29s" dur="0.91s" fill="freeze"/></path>
+<circle class="trace-packet span-link cat-transcode" r="4.10"><animate attributeName="opacity" values="0;1;1;0" begin="0.29s" dur="0.91s" fill="freeze"/><animateMotion begin="0.29s" dur="0.91s" fill="freeze" path="M 695.21 251.00 Q 749.51 223.97 803.82 229.86"/></circle>
+<path class="span-link cat-sql pulse" data-category="sql" data-subcategory="query" d="M 695.21 251.00 Q 753.26 229.70 811.31 239.90" style="stroke-dasharray:116.63;stroke-dashoffset:116.63"><animate attributeName="stroke-dashoffset" from="116.63" to="0" begin="2.01s" dur="1.20s" fill="freeze"/></path>
+<circle class="trace-packet span-link cat-sql pulse" r="4.10"><animate attributeName="opacity" values="0;1;1;0" begin="2.01s" dur="1.20s" fill="freeze"/><animateMotion begin="2.01s" dur="1.20s" fill="freeze" path="M 695.21 251.00 Q 753.26 229.70 811.31 239.90"/></circle>
+<path class="span-link cat-task" data-category="task" data-subcategory="task" d="M 695.21 251.00 Q 754.94 236.78 814.68 252.40" style="stroke-dasharray:119.48;stroke-dashoffset:119.48"><animate attributeName="stroke-dashoffset" from="119.48" to="0" begin="2.84s" dur="1.20s" fill="freeze"/></path>
+<circle class="trace-packet span-link cat-task" r="4.10"><animate attributeName="opacity" values="0;1;1;0" begin="2.84s" dur="1.20s" fill="freeze"/><animateMotion begin="2.84s" dur="1.20s" fill="freeze" path="M 695.21 251.00 Q 754.94 236.78 814.68 252.40"/></circle>
+<path class="span-link cat-email" data-category="email" data-subcategory="send" d="M 695.21 251.00 Q 760.29 239.80 825.37 261.02" style="stroke-dasharray:130.55;stroke-dashoffset:130.55"><animate attributeName="stroke-dashoffset" from="130.55" to="0" begin="3.13s" dur="1.20s" fill="freeze"/></path>
+<circle class="trace-packet span-link cat-email" r="4.10"><animate attributeName="opacity" values="0;1;1;0" begin="3.13s" dur="1.20s" fill="freeze"/><animateMotion begin="3.13s" dur="1.20s" fill="freeze" path="M 695.21 251.00 Q 760.29 239.80 825.37 261.02"/></circle>
+<path class="span-link cat-cache pulse" data-category="cache" data-subcategory="cache" d="M 695.21 251.00 Q 762.34 243.74 829.47 271.28" style="stroke-dasharray:135.79;stroke-dashoffset:135.79"><animate attributeName="stroke-dashoffset" from="135.79" to="0" begin="3.38s" dur="1.20s" fill="freeze"/></path>
+<circle class="trace-packet span-link cat-cache pulse" r="4.10"><animate attributeName="opacity" values="0;1;1;0" begin="3.38s" dur="1.20s" fill="freeze"/><animateMotion begin="3.38s" dur="1.20s" fill="freeze" path="M 695.21 251.00 Q 762.34 243.74 829.47 271.28"/></circle>
+</g>
+<g id="trace_nodes">
+<g id="span-m1" class="node-wrap" data-depth="0" data-category="handler" data-subcategory="handler" data-route-id="media.upload"><circle class="span-core span-node-active cat-handler" data-category="handler" data-subcategory="handler" cx="480.00" cy="262.56" r="16.00" opacity="0.18"><animate attributeName="opacity" from="0.18" to="1" begin="0.00s" dur="0.18s" fill="freeze"/></circle><title>request.media_upload (312ms)
+route=media.upload
+{&quot;route_id&quot;:&quot;media.upload&quot;,&quot;http.method&quot;:&quot;POST&quot;,&quot;http.path&quot;:&quot;/media/upload&quot;,&quot;category&quot;:&quot;handler&quot;}</title></g>
+<g id="span-m2" class="node-wrap" data-depth="1" data-category="middleware" data-subcategory="middleware" data-module="examples/sigilo_web_system_35/modules/auth.cct"><circle class="span-node span-node-active cat-middleware" data-category="middleware" data-subcategory="middleware" cx="692.60" cy="195.37" r="12.41" opacity="0.18"><animate attributeName="opacity" from="0.18" to="1" begin="0.02s" dur="0.18s" fill="freeze"/></circle><title>middleware.auth (13ms)
+module=examples/sigilo_web_system_35/modules/auth.cct
+{&quot;middleware&quot;:&quot;auth&quot;,&quot;module&quot;:&quot;examples/sigilo_web_system_35/modules/auth.cct&quot;,&quot;handler&quot;:&quot;auth_login&quot;,&quot;category&quot;:&quot;middleware&quot;}</title></g>
+<g id="span-m3" class="node-wrap" data-depth="1" data-category="middleware" data-subcategory="middleware"><circle class="span-node span-node-active cat-middleware" data-category="middleware" data-subcategory="middleware" cx="295.85" cy="208.54" r="12.49" opacity="0.18"><animate attributeName="opacity" from="0.18" to="1" begin="0.22s" dur="0.18s" fill="freeze"/></circle><title>middleware.trace (4ms)
+{&quot;middleware&quot;:&quot;trace&quot;,&quot;category&quot;:&quot;middleware&quot;}</title></g>
+<g id="span-m4" class="node-wrap" data-depth="1" data-category="handler" data-subcategory="handler" data-route-id="media.upload" data-module="examples/sigilo_web_system_35/modules/media.cct"><circle class="span-node span-node-active cat-handler" data-category="handler" data-subcategory="handler" cx="695.21" cy="251.00" r="13.56" opacity="0.18"><animate attributeName="opacity" from="0.18" to="1" begin="0.29s" dur="0.18s" fill="freeze"/></circle><title>handler.media_upload (280ms)
+route=media.upload
+module=examples/sigilo_web_system_35/modules/media.cct
+{&quot;handler&quot;:&quot;media_upload&quot;,&quot;module&quot;:&quot;examples/sigilo_web_system_35/modules/media.cct&quot;,&quot;route_id&quot;:&quot;media.upload&quot;,&quot;category&quot;:&quot;handler&quot;}</title></g>
+<g id="span-m5" class="node-wrap" data-depth="2" data-category="storage" data-subcategory="storage" data-module="examples/sigilo_web_system_35/modules/media.cct"><circle class="span-node span-node-active cat-storage" data-category="storage" data-subcategory="storage" cx="800.66" cy="218.43" r="11.39" opacity="0.18"><animate attributeName="opacity" from="0.18" to="1" begin="0.35s" dur="0.18s" fill="freeze"/></circle><title>storage.write.original (50ms)
+module=examples/sigilo_web_system_35/modules/media.cct
+{&quot;path&quot;:&quot;uploads/raw/upl-7842.mp4&quot;,&quot;module&quot;:&quot;examples/sigilo_web_system_35/modules/media.cct&quot;,&quot;category&quot;:&quot;storage&quot;}</title></g>
+<g id="span-m6" class="node-wrap" data-depth="2" data-category="transcode" data-subcategory="transcode" data-module="examples/sigilo_web_system_35/modules/media.cct"><circle class="span-node span-node-active cat-transcode" data-category="transcode" data-subcategory="transcode" cx="803.82" cy="229.86" r="12.22" opacity="0.18"><animate attributeName="opacity" from="0.18" to="1" begin="1.20s" dur="0.18s" fill="freeze"/></circle><title>transcode.video_preview (123ms)
+module=examples/sigilo_web_system_35/modules/media.cct
+{&quot;preset&quot;:&quot;preview-720p&quot;,&quot;module&quot;:&quot;examples/sigilo_web_system_35/modules/media.cct&quot;,&quot;category&quot;:&quot;transcode&quot;}</title></g>
+<g id="span-m7" class="node-wrap" data-depth="2" data-category="sql" data-subcategory="query" data-module="examples/sigilo_web_system_35/modules/media.cct"><circle class="span-node span-node-active cat-sql pulse" data-category="sql" data-subcategory="query" cx="811.31" cy="239.90" r="10.61" opacity="0.18"><animate attributeName="opacity" from="0.18" to="1" begin="3.21s" dur="0.18s" fill="freeze"/></circle><title>db.query.media_insert (50ms)
+module=examples/sigilo_web_system_35/modules/media.cct
+{&quot;query&quot;:&quot;media.insert&quot;,&quot;module&quot;:&quot;examples/sigilo_web_system_35/modules/media.cct&quot;,&quot;category&quot;:&quot;sql&quot;}</title></g>
+<g id="span-m8" class="node-wrap" data-depth="2" data-category="task" data-subcategory="task" data-module="examples/sigilo_web_system_35/modules/media.cct"><circle class="span-node span-node-active cat-task" data-category="task" data-subcategory="task" cx="814.68" cy="252.40" r="12.77" opacity="0.18"><animate attributeName="opacity" from="0.18" to="1" begin="4.04s" dur="0.18s" fill="freeze"/></circle><title>task.enqueue.virus_scan (16ms)
+module=examples/sigilo_web_system_35/modules/media.cct
+{&quot;queue&quot;:&quot;virus-scan&quot;,&quot;module&quot;:&quot;examples/sigilo_web_system_35/modules/media.cct&quot;,&quot;category&quot;:&quot;task&quot;}</title></g>
+<g id="span-m9" class="node-wrap" data-depth="2" data-category="email" data-subcategory="send" data-module="examples/sigilo_web_system_35/modules/media.cct"><circle class="span-node span-node-active cat-email" data-category="email" data-subcategory="send" cx="825.37" cy="261.02" r="10.39" opacity="0.18"><animate attributeName="opacity" from="0.18" to="1" begin="4.33s" dur="0.18s" fill="freeze"/></circle><title>email.send.creator_notice (14ms)
+module=examples/sigilo_web_system_35/modules/media.cct
+{&quot;template&quot;:&quot;media-uploaded&quot;,&quot;module&quot;:&quot;examples/sigilo_web_system_35/modules/media.cct&quot;,&quot;category&quot;:&quot;email&quot;}</title></g>
+<g id="span-m10" class="node-wrap" data-depth="2" data-category="cache" data-subcategory="cache" data-module="examples/sigilo_web_system_35/modules/media.cct"><circle class="span-node span-node-active cat-cache pulse" data-category="cache" data-subcategory="cache" cx="829.47" cy="271.28" r="11.08" opacity="0.18"><animate attributeName="opacity" from="0.18" to="1" begin="4.58s" dur="0.18s" fill="freeze"/></circle><title>cache.invalidate.thumb (8ms)
+module=examples/sigilo_web_system_35/modules/media.cct
+{&quot;cache.key&quot;:&quot;thumb:upl-7842&quot;,&quot;module&quot;:&quot;examples/sigilo_web_system_35/modules/media.cct&quot;,&quot;category&quot;:&quot;cache&quot;}</title></g>
+</g>
+<g transform="translate(798.00 84.00)"><g id="legend"><rect class="legend-box" x="0" y="0" width="126" height="144.00" rx="10"/><text class="legend" x="10" y="13">legend</text><g class="legend-entry" data-category="handler"><rect class="legend-swatch cat-handler" x="9" y="17.00" width="12" height="8" rx="2"/><text x="28" y="24.00">Handler</text></g><g class="legend-entry" data-category="middleware"><rect class="legend-swatch cat-middleware" x="9" y="32.00" width="12" height="8" rx="2"/><text x="28" y="39.00">Middleware</text></g><g class="legend-entry" data-category="storage"><rect class="legend-swatch cat-storage" x="9" y="47.00" width="12" height="8" rx="2"/><text x="28" y="54.00">Storage</text></g><g class="legend-entry" data-category="transcode"><rect class="legend-swatch cat-transcode" x="9" y="62.00" width="12" height="8" rx="2"/><text x="28" y="69.00">Transcode</text></g><g class="legend-entry" data-category="sql"><rect class="legend-swatch cat-sql" x="9" y="77.00" width="12" height="8" rx="2"/><text x="28" y="84.00">SQL</text></g><g class="legend-entry" data-category="task"><rect class="legend-swatch cat-task" x="9" y="92.00" width="12" height="8" rx="2"/><text x="28" y="99.00">Task</text></g><g class="legend-entry" data-category="email"><rect class="legend-swatch cat-email" x="9" y="107.00" width="12" height="8" rx="2"/><text x="28" y="114.00">Email</text></g><g class="legend-entry" data-category="cache"><rect class="legend-swatch cat-cache" x="9" y="122.00" width="12" height="8" rx="2"/><text x="28" y="129.00">Cache</text></g></g></g>
+<g id="timeline">
+<rect class="timeline-lane" x="38.00" y="584.00" width="884.00" height="92.00" rx="12"/>
+<path class="timeline-axis" d="M 110.00 664.00 L 912.00 664.00"/>
+<text class="mapping-label" x="46.00" y="607.33">depth 0</text>
+<rect class="timeline-row" x="110.00" y="596.00" width="802.00" height="17.67" rx="7"/>
+<text class="mapping-label" x="46.00" y="632.00">depth 1</text>
+<rect class="timeline-row" x="110.00" y="620.67" width="802.00" height="17.67" rx="7"/>
+<text class="mapping-label" x="46.00" y="656.67">depth 2</text>
+<rect class="timeline-row" x="110.00" y="645.33" width="802.00" height="17.67" rx="7"/>
+<g id="timeline-span-m1" class="timeline-entry" data-category="handler" data-subcategory="handler"><rect class="timeline-bar cat-handler" data-category="handler" data-subcategory="handler" x="110.00" y="598.00" height="14.67" rx="5" width="0"><animate attributeName="width" from="0" to="802.00" begin="0.00s" dur="5.00s" fill="freeze"/></rect><title>request.media_upload
+depth=0
+start=4000us
+end=4312us
+duration=312us</title></g>
+<g id="timeline-span-m2" class="timeline-entry" data-category="middleware" data-subcategory="middleware"><rect class="timeline-bar cat-middleware" data-category="middleware" data-subcategory="middleware" x="112.57" y="622.67" height="14.67" rx="5" width="0"><animate attributeName="width" from="0" to="33.42" begin="0.02s" dur="0.21s" fill="freeze"/></rect><title>middleware.auth
+depth=1
+start=4001us
+end=4014us
+duration=13us</title></g>
+<g id="timeline-span-m3" class="timeline-entry" data-category="middleware" data-subcategory="middleware"><rect class="timeline-bar cat-middleware" data-category="middleware" data-subcategory="middleware" x="145.99" y="622.67" height="14.67" rx="5" width="0"><animate attributeName="width" from="0" to="10.28" begin="0.22s" dur="0.20s" fill="freeze"/></rect><title>middleware.trace
+depth=1
+start=4014us
+end=4018us
+duration=4us</title></g>
+<g id="timeline-span-m4" class="timeline-entry" data-category="handler" data-subcategory="handler"><rect class="timeline-bar cat-handler" data-category="handler" data-subcategory="handler" x="156.27" y="622.67" height="14.67" rx="5" width="0"><animate attributeName="width" from="0" to="719.74" begin="0.29s" dur="4.49s" fill="freeze"/></rect><title>handler.media_upload
+depth=1
+start=4018us
+end=4298us
+duration=280us</title></g>
+<g id="timeline-span-m5" class="timeline-entry" data-category="storage" data-subcategory="storage"><rect class="timeline-bar cat-storage" data-category="storage" data-subcategory="storage" x="166.55" y="647.33" height="14.67" rx="5" width="0"><animate attributeName="width" from="0" to="128.53" begin="0.35s" dur="0.80s" fill="freeze"/></rect><title>storage.write.original
+depth=2
+start=4022us
+end=4072us
+duration=50us</title></g>
+<g id="timeline-span-m6" class="timeline-entry" data-category="transcode" data-subcategory="transcode"><rect class="timeline-bar cat-transcode" data-category="transcode" data-subcategory="transcode" x="302.79" y="647.33" height="14.67" rx="5" width="0"><animate attributeName="width" from="0" to="316.17" begin="1.20s" dur="1.97s" fill="freeze"/></rect><title>transcode.video_preview
+depth=2
+start=4075us
+end=4198us
+duration=123us</title></g>
+<g id="timeline-span-m7" class="timeline-entry" data-category="sql" data-subcategory="query"><rect class="timeline-bar cat-sql pulse" data-category="sql" data-subcategory="query" x="624.10" y="647.33" height="14.67" rx="5" width="0"><animate attributeName="width" from="0" to="128.53" begin="3.21s" dur="0.80s" fill="freeze"/></rect><title>db.query.media_insert
+depth=2
+start=4200us
+end=4250us
+duration=50us</title></g>
+<g id="timeline-span-m8" class="timeline-entry" data-category="task" data-subcategory="task"><rect class="timeline-bar cat-task" data-category="task" data-subcategory="task" x="757.77" y="647.33" height="14.67" rx="5" width="0"><animate attributeName="width" from="0" to="41.13" begin="4.04s" dur="0.26s" fill="freeze"/></rect><title>task.enqueue.virus_scan
+depth=2
+start=4252us
+end=4268us
+duration=16us</title></g>
+<g id="timeline-span-m9" class="timeline-entry" data-category="email" data-subcategory="send"><rect class="timeline-bar cat-email" data-category="email" data-subcategory="send" x="804.04" y="647.33" height="14.67" rx="5" width="0"><animate attributeName="width" from="0" to="35.99" begin="4.33s" dur="0.22s" fill="freeze"/></rect><title>email.send.creator_notice
+depth=2
+start=4270us
+end=4284us
+duration=14us</title></g>
+<g id="timeline-span-m10" class="timeline-entry" data-category="cache" data-subcategory="cache"><rect class="timeline-bar cat-cache pulse" data-category="cache" data-subcategory="cache" x="845.17" y="647.33" height="14.67" rx="5" width="0"><animate attributeName="width" from="0" to="20.56" begin="4.58s" dur="0.20s" fill="freeze"/></rect><title>cache.invalidate.thumb
+depth=2
+start=4286us
+end=4294us
+duration=8us</title></g>
+</g>
+<text class="hash" x="930" y="704" text-anchor="end">b88cf64cf840abf6</text>
+</svg>

@@ -16,6 +16,7 @@ The model is:
 `cct/trace_capture` is not a screen recorder and not a synthetic animation engine.
 
 The SVG animation is derived from real runtime spans collected by `cct/instrument`, serialized as `.ctrace`, and then rendered by `cct sigilo trace render`.
+The same capture can be projected either on the composed system sigil or on the pure routes view with `--sigil-view routes`.
 
 ## Session API
 
@@ -122,6 +123,17 @@ Render one exported request:
   --trace captures/live-demo/manual-window/snapshot-001/request-001-get-posts.ctrace \
   --sigil examples/sigilo_web_system_35/routes_view.system.sigil \
   --out captures/live-demo/manual-window/request-001-get-posts.svg
+```
+
+Render the same capture on the plain routes view:
+
+```bash
+./cct sigilo trace render \
+  --animated \
+  --trace captures/live-demo/manual-window/snapshot-001/request-001-get-posts.ctrace \
+  --sigil examples/sigilo_web_system_35/routes_view.system.sigil \
+  --sigil-view routes \
+  --out captures/live-demo/manual-window/request-001-get-posts.routes.svg
 ```
 
 ## Practical Notes
