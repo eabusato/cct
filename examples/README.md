@@ -101,6 +101,27 @@ cct lint lint_showcase_before_12e2.cct
 cct lint lint_showcase_after_12e2.cct
 ```
 
+## Sigilo Examples
+
+### sigilo_web_system_35
+Stable modular Sigilo showcase with a composed system view and a realistic media upload trace.
+- route-composed system sigil already present
+- animated operational trace over the composed `.system.sigil`
+- interactive `--step` SVG with scrubber
+
+```bash
+./cct --sigilo-only \
+  --sigilo-style routes \
+  --sigilo-out examples/sigilo_web_system_35/routes_view \
+  examples/sigilo_web_system_35/main.cct
+
+./cct sigilo trace render \
+  --animated \
+  --trace examples/sigilo_web_system_35/media_upload_pipeline_39.ctrace \
+  --sigil examples/sigilo_web_system_35/routes_view.system.sigil \
+  --out examples/sigilo_web_system_35/media_upload_pipeline_39_animated.svg
+```
+
 ## Application Stack Examples (FASE 20)
 
 ### http_simple_server_20f2.cct
