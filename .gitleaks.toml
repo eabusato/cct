@@ -1,0 +1,31 @@
+title = "CCT repository gitleaks config"
+
+[extend]
+useDefault = true
+
+[allowlist]
+description = "Generated docs, build outputs, fixtures and known mock values"
+paths = [
+  '''(^|/)md_out/''',
+  '''(^|/)build/''',
+  '''(^|/)dist/''',
+  '''(^|/)out/''',
+  '''(^|/)tmp/''',
+  '''(^|/)coverage/''',
+  '''(^|/)\.venv/''',
+  '''(^|/)venv/''',
+  '''(^|/)node_modules/''',
+  '''(^|/)\.idea/''',
+]
+
+regexTarget = "line"
+regexes = [
+  '''abc123''',
+  '''TRACE_ID''',
+  '''CTX_KEY_TRACE_ID''',
+  '''mock''',
+  '''dummy''',
+  '''example''',
+  '''placeholder''',
+  '''test[-_ ]?key''',
+]

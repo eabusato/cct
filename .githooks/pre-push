@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+echo "🔎 [pre-push] Rodando scan de segredos no repositório git..."
+
+if ! gitleaks git . --config .gitleaks.toml --redact --verbose; then
+  echo "❌ Push bloqueado: possível segredo encontrado no repositório."
+  echo "   Revise os arquivos/commits e tente novamente."
+  exit 1
+fi
+
+echo "✅ [pre-push] Sem segredos detectados. Push liberado."
