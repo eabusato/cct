@@ -1430,7 +1430,7 @@ static cct_sem_type_t* sem_resolve_ast_type(cct_semantic_analyzer_t *sem, const 
  * ======================================================================== */
 
 static const cct_sem_builtin_spec_t* sem_find_builtin(cct_semantic_analyzer_t *sem, const char *name) {
-static cct_sem_builtin_spec_t specs[477];
+static cct_sem_builtin_spec_t specs[478];
     static bool initialized = false;
 
     if (!initialized) {
@@ -1912,6 +1912,7 @@ static cct_sem_builtin_spec_t specs[477];
         specs[474].name = "callback_builtin_invoke2_void"; specs[474].min_args = 3; specs[474].variadic = false;
         specs[475].name = "callback_builtin_invoke3_void"; specs[475].min_args = 4; specs[475].variadic = false;
         specs[476].name = "callback_builtin_invoke4_void"; specs[476].min_args = 5; specs[476].variadic = false;
+        specs[477].name = "result_unwrap_handle"; specs[477].min_args = 1; specs[477].variadic = false;
         initialized = true;
     }
 
@@ -2392,6 +2393,7 @@ static cct_sem_builtin_spec_t specs[477];
     specs[474].return_type = &sem->type_nihil;
     specs[475].return_type = &sem->type_nihil;
     specs[476].return_type = &sem->type_nihil;
+    specs[477].return_type = sem_make_pointer_type(sem, &sem->type_nihil);
 
     for (size_t i = 0; i < sizeof(specs) / sizeof(specs[0]); i++) {
         if (!specs[i].name) continue;
@@ -4144,7 +4146,8 @@ static cct_sem_type_t* sem_analyze_builtin_obsecro(
         if ((strcmp(name, "option_is_some") == 0 || strcmp(name, "option_is_none") == 0 ||
              strcmp(name, "option_unwrap_ptr") == 0 || strcmp(name, "option_free") == 0 ||
              strcmp(name, "result_is_ok") == 0 || strcmp(name, "result_is_err") == 0 ||
-             strcmp(name, "result_unwrap_ptr") == 0 || strcmp(name, "result_unwrap_err_ptr") == 0 ||
+             strcmp(name, "result_unwrap_ptr") == 0 || strcmp(name, "result_unwrap_handle") == 0 ||
+             strcmp(name, "result_unwrap_err_ptr") == 0 ||
              strcmp(name, "result_free") == 0) &&
             i == 0 &&
             !(arg_type && (arg_type->kind == CCT_SEM_TYPE_POINTER || sem_is_error_type(arg_type)))) {

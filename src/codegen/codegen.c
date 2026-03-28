@@ -7465,7 +7465,9 @@ static bool cg_emit_obsecro_expr(FILE *out, cct_codegen_t *cg, const cct_ast_nod
         return true;
     }
 
-    if (strcmp(name, "result_unwrap_ptr") == 0 || strcmp(name, "result_unwrap_err_ptr") == 0) {
+    if (strcmp(name, "result_unwrap_ptr") == 0 ||
+        strcmp(name, "result_unwrap_handle") == 0 ||
+        strcmp(name, "result_unwrap_err_ptr") == 0) {
         if (argc != 1) {
             cg_report_nodef(cg, expr, "OBSECRO %s expects exactly one pointer argument in FASE 12C", name);
             return false;
@@ -10318,7 +10320,15 @@ static bool cg_emit_stmt(FILE *out, cct_codegen_t *cg, const cct_ast_node_t *stm
             }
             if (kind == CCT_CODEGEN_LOCAL_UNSUPPORTED) {
                 if (stmt->as.evoca.var_type && stmt->as.evoca.var_type->is_pointer) {
-                    cg_report_node(cg, stmt, "SPECULUM pointee type is outside FASE 7A executable subset");
+                    const cct_ast_type_t *elem = stmt->as.evoca.var_type->element_type;
+                    cg_report_nodef(
+                        cg,
+                        stmt,
+                        "SPECULUM pointee type '%s' is outside FASE 7A executable subset (local '%s')",
+                        (elem && elem->name) ? elem->name : "(anonymous)"
+                        ,
+                        stmt->as.evoca.name ? stmt->as.evoca.name : "(anonymous)"
+                    );
                 } else {
                     cg_report_node(cg, stmt, "EVOCA type not supported by FASE 7A codegen");
                 }
@@ -10431,7 +10441,15 @@ static bool cg_emit_stmt(FILE *out, cct_codegen_t *cg, const cct_ast_node_t *stm
             if (kind == CCT_CODEGEN_LOCAL_POINTER) {
                 const char *c_ty = cg_c_type_for_ast_type(cg, stmt->as.evoca.var_type);
                 if (!c_ty) {
-                    cg_report_node(cg, stmt, "SPECULUM pointee type is outside FASE 7A executable subset");
+                    const cct_ast_type_t *elem = stmt->as.evoca.var_type ? stmt->as.evoca.var_type->element_type : NULL;
+                    cg_report_nodef(
+                        cg,
+                        stmt,
+                        "SPECULUM pointee type '%s' is outside FASE 7A executable subset (local '%s')",
+                        (elem && elem->name) ? elem->name : "(anonymous)"
+                        ,
+                        stmt->as.evoca.name ? stmt->as.evoca.name : "(anonymous)"
+                    );
                     return false;
                 }
                 fprintf(out, "%s %s%s = ", c_ty, is_constans ? "const " : "", stmt->as.evoca.name);

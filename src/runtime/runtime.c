@@ -911,6 +911,12 @@ bool cct_runtime_emit_c_helpers(FILE *out, const cct_runtime_codegen_config_t *c
         fputs("    return (void*)res->payload;\n", out);
         fputs("}\n\n", out);
 
+        fputs("static void *cct_rt_result_unwrap_handle(void *res_ptr) {\n", out);
+        fputs("    cct_rt_result_t *res = cct_rt_result_require(res_ptr);\n", out);
+        fputs("    if (!res->is_ok) cct_rt_fail(\"result_unwrap_handle on Err\");\n", out);
+        fputs("    return *(void**)res->payload;\n", out);
+        fputs("}\n\n", out);
+
         fputs("static void *cct_rt_result_unwrap_err_ptr(void *res_ptr) {\n", out);
         fputs("    cct_rt_result_t *res = cct_rt_result_require(res_ptr);\n", out);
         fputs("    if (res->is_ok) cct_rt_fail(\"result_unwrap_err on Ok\");\n", out);
