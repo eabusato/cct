@@ -12053,6 +12053,14 @@ if [ -x "$CCT_BIN" ] && cct_phase32_copy_compile_and_run "$CCT_BIN" "tests/integ
 else
     test_fail "result_unwrap_err nao suportou ORDO custom em Result tipado"
 fi
+
+echo "Test 2041: NIHIL literal funciona com SPECULUM em atribuicao e comparacao"
+BASE_2041="$CCT_TMP_DIR/callback/test_2041_pointer_nihil"
+if [ -x "$CCT_BIN" ] && cct_phase32_copy_compile_and_run "$CCT_BIN" "tests/integration/pointer_nihil_literal_40x.cct" "$BASE_2041" 0; then
+    test_pass "NIHIL literal funciona com SPECULUM em atribuicao e comparacao"
+else
+    test_fail "NIHIL literal nao funcionou com SPECULUM em atribuicao e comparacao"
+fi
 fi
 
 echo "Test Results:"

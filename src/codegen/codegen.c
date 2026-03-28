@@ -2239,8 +2239,11 @@ static bool cg_emit_binary_expr(FILE *out, cct_codegen_t *cg, const cct_ast_node
 
         bool lhs_ok = cct_cg_value_kind_is_numeric(lhs_kind);
         bool rhs_ok = cct_cg_value_kind_is_numeric(rhs_kind);
-        if (!lhs_ok || !rhs_ok) {
-            cg_report_node(cg, expr, "FASE 6B comparison codegen supports numeric operands");
+        bool pointer_ok = (op == TOKEN_EQ_EQ || op == TOKEN_BANG_EQ) &&
+                          lhs_kind == CCT_CODEGEN_VALUE_POINTER &&
+                          rhs_kind == CCT_CODEGEN_VALUE_POINTER;
+        if (!(lhs_ok && rhs_ok) && !pointer_ok) {
+            cg_report_node(cg, expr, "FASE 6B comparison codegen supports numeric operands and pointer equality");
             return false;
         }
         if (out_kind) *out_kind = CCT_CODEGEN_VALUE_BOOL;
@@ -7849,6 +7852,11 @@ static bool cg_emit_expr(FILE *out, cct_codegen_t *cg, const cct_ast_node_t *exp
             if (out_kind) *out_kind = CCT_CODEGEN_VALUE_STRING;
             return true;
         }
+
+        case AST_LITERAL_NIHIL:
+            fputs("NULL", out);
+            if (out_kind) *out_kind = CCT_CODEGEN_VALUE_POINTER;
+            return true;
 
         case AST_MOLDE:
             return cg_emit_molde_expr(out, cg, expr, out_kind);

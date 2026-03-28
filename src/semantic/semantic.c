@@ -1174,6 +1174,10 @@ static bool sem_types_compatible_assign(cct_semantic_analyzer_t *sem, cct_sem_ty
         return false;
     }
 
+    if (target->kind == CCT_SEM_TYPE_POINTER && value->kind == CCT_SEM_TYPE_NIHIL) {
+        return true;
+    }
+
     if (target->kind == CCT_SEM_TYPE_POINTER && value->kind == CCT_SEM_TYPE_POINTER) {
         /* FASE 7A pragmatic rule: SPECULUM NIHIL behaves as generic alloc/free pointer. */
         if (target->element && target->element->kind == CCT_SEM_TYPE_NIHIL) return true;
@@ -4780,6 +4784,11 @@ static cct_sem_type_t* sem_analyze_expr_with_expected(
                     if (!sem_require_concrete_type_for_operation(sem, expr->as.binary_op.left, left) ||
                         !sem_require_concrete_type_for_operation(sem, expr->as.binary_op.right, right)) {
                         return &sem->type_error;
+                    }
+                    if ((left->kind == CCT_SEM_TYPE_POINTER && right->kind == CCT_SEM_TYPE_NIHIL) ||
+                        (left->kind == CCT_SEM_TYPE_NIHIL && right->kind == CCT_SEM_TYPE_POINTER) ||
+                        (left->kind == CCT_SEM_TYPE_POINTER && right->kind == CCT_SEM_TYPE_POINTER)) {
+                        return &sem->type_verum;
                     }
                     if (!sem_type_equal(left, right) &&
                         !(sem_is_numeric_type(left) && sem_is_numeric_type(right)) &&
