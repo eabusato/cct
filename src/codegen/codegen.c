@@ -11575,6 +11575,12 @@ static const char* cg_c_type_for_ast_type(cct_codegen_t *cg, const cct_ast_type_
             tmp.generic_args = NULL;
             if (cg_is_known_sigillum_type(cg, &tmp)) {
                 scalar = elem_name; /* pointer to SIGILLUM in FASE 10B subset */
+            } else if (cg_is_known_ordo_type(cg, &tmp)) {
+                if (cg_is_payload_ordo_type(cg, &tmp)) {
+                    scalar = cg_strdup_printf("cct_%s", elem_name);
+                } else {
+                    scalar = "long long";
+                }
             } else if (cg_is_payload_ordo_type(cg, &tmp)) {
                 scalar = cg_strdup_printf("cct_%s", elem_name);
             }

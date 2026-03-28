@@ -1,0 +1,29 @@
+INCIPIT grimoire "result_unwrap_err_ordo_custom_40x"
+
+ADVOCARE "cct/result.cct"
+
+ORDO FormParseError40x
+  Fpe40xNilBody,
+  Fpe40xMissingBoundary
+FIN ORDO
+
+SIGILLUM FormData40x
+  raw_fields: SPECULUM NIHIL
+  multi_fields: SPECULUM NIHIL
+  files: SPECULUM NIHIL
+  content_type: VERBUM
+FIN SIGILLUM
+
+RITUALE main() REDDE REX
+  EVOCA SPECULUM NIHIL res AD CONIURA Err GENUS(FormData40x, FormParseError40x)(Fpe40xMissingBoundary)
+  EVOCA FormParseError40x err AD CONIURA result_unwrap_err GENUS(FormData40x, FormParseError40x)(res)
+
+  ELIGE err
+    CASUS Fpe40xMissingBoundary:
+      REDDE 0
+    ALIOQUIN:
+      REDDE 2
+  FIN ELIGE
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

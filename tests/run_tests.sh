@@ -12045,6 +12045,14 @@ if [ -x "$CCT_BIN" ] && cct_phase32_copy_compile_and_run "$CCT_BIN" "tests/integ
 else
     test_fail "REDDE CONIURA nao suportou retorno estrutural importado"
 fi
+
+echo "Test 2040: result_unwrap_err suporta ORDO custom em Result tipado"
+BASE_2040="$CCT_TMP_DIR/callback/test_2040_result_unwrap_err_ordo"
+if [ -x "$CCT_BIN" ] && cct_phase32_copy_compile_and_run "$CCT_BIN" "tests/integration/result_unwrap_err_ordo_custom_40x.cct" "$BASE_2040" 0; then
+    test_pass "result_unwrap_err suporta ORDO custom em Result tipado"
+else
+    test_fail "result_unwrap_err nao suportou ORDO custom em Result tipado"
+fi
 fi
 
 echo "Test Results:"
