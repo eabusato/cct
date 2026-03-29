@@ -73,6 +73,22 @@ RITUALE stmt_step(SPECULUM NIHIL stmt) REDDE VERUM
   REDDE OBSECRO stmt_step(stmt)
 EXPLICIT RITUALE
 
+RITUALE stmt_has_row(SPECULUM NIHIL stmt) REDDE VERUM
+  REDDE OBSECRO stmt_has_row(stmt)
+EXPLICIT RITUALE
+
+RITUALE stmt_get_text(SPECULUM NIHIL stmt, REX col) REDDE VERBUM
+  REDDE OBSECRO stmt_get_text(stmt, col)
+EXPLICIT RITUALE
+
+RITUALE stmt_get_int(SPECULUM NIHIL stmt, REX col) REDDE REX
+  REDDE OBSECRO stmt_get_int(stmt, col)
+EXPLICIT RITUALE
+
+RITUALE stmt_get_real(SPECULUM NIHIL stmt, REX col) REDDE UMBRA
+  REDDE OBSECRO stmt_get_real(stmt, col)
+EXPLICIT RITUALE
+
 RITUALE stmt_reset(SPECULUM NIHIL stmt) REDDE NIHIL
   OBSECRO stmt_reset(stmt)
   REDDE

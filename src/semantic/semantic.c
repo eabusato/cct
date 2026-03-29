@@ -1434,7 +1434,7 @@ static cct_sem_type_t* sem_resolve_ast_type(cct_semantic_analyzer_t *sem, const 
  * ======================================================================== */
 
 static const cct_sem_builtin_spec_t* sem_find_builtin(cct_semantic_analyzer_t *sem, const char *name) {
-static cct_sem_builtin_spec_t specs[478];
+static cct_sem_builtin_spec_t specs[482];
     static bool initialized = false;
 
     if (!initialized) {
@@ -1917,6 +1917,10 @@ static cct_sem_builtin_spec_t specs[478];
         specs[475].name = "callback_builtin_invoke3_void"; specs[475].min_args = 4; specs[475].variadic = false;
         specs[476].name = "callback_builtin_invoke4_void"; specs[476].min_args = 5; specs[476].variadic = false;
         specs[477].name = "result_unwrap_handle"; specs[477].min_args = 1; specs[477].variadic = false;
+        specs[478].name = "stmt_has_row"; specs[478].min_args = 1; specs[478].variadic = false;
+        specs[479].name = "stmt_get_text"; specs[479].min_args = 2; specs[479].variadic = false;
+        specs[480].name = "stmt_get_int"; specs[480].min_args = 2; specs[480].variadic = false;
+        specs[481].name = "stmt_get_real"; specs[481].min_args = 2; specs[481].variadic = false;
         initialized = true;
     }
 
@@ -2398,6 +2402,10 @@ static cct_sem_builtin_spec_t specs[478];
     specs[475].return_type = &sem->type_nihil;
     specs[476].return_type = &sem->type_nihil;
     specs[477].return_type = sem_make_pointer_type(sem, &sem->type_nihil);
+    specs[478].return_type = &sem->type_verum;
+    specs[479].return_type = &sem->type_verbum;
+    specs[480].return_type = &sem->type_rex;
+    specs[481].return_type = &sem->type_umbra;
 
     for (size_t i = 0; i < sizeof(specs) / sizeof(specs[0]); i++) {
         if (!specs[i].name) continue;
@@ -3490,6 +3498,10 @@ static cct_sem_type_t* sem_analyze_builtin_obsecro(
              strcmp(name, "stmt_bind_int") == 0 ||
              strcmp(name, "stmt_bind_real") == 0 ||
              strcmp(name, "stmt_step") == 0 ||
+             strcmp(name, "stmt_has_row") == 0 ||
+             strcmp(name, "stmt_get_text") == 0 ||
+             strcmp(name, "stmt_get_int") == 0 ||
+             strcmp(name, "stmt_get_real") == 0 ||
              strcmp(name, "stmt_reset") == 0 ||
              strcmp(name, "stmt_finalize") == 0 ||
              strcmp(name, "db_begin") == 0 ||
@@ -3512,6 +3524,8 @@ static cct_sem_type_t* sem_analyze_builtin_obsecro(
                                         ? "OBSECRO %s expects rows pointer as first argument"
                                         : ((strcmp(name, "stmt_bind_text") == 0 || strcmp(name, "stmt_bind_int") == 0 ||
                                             strcmp(name, "stmt_bind_real") == 0 || strcmp(name, "stmt_step") == 0 ||
+                                            strcmp(name, "stmt_has_row") == 0 || strcmp(name, "stmt_get_text") == 0 ||
+                                            strcmp(name, "stmt_get_int") == 0 || strcmp(name, "stmt_get_real") == 0 ||
                                             strcmp(name, "stmt_reset") == 0 || strcmp(name, "stmt_finalize") == 0)
                                                ? "OBSECRO %s expects stmt pointer as first argument"
                                                : "OBSECRO %s expects socket pointer as first argument")),
@@ -3626,7 +3640,10 @@ static cct_sem_type_t* sem_analyze_builtin_obsecro(
         }
         if ((strcmp(name, "rows_get_text") == 0 ||
              strcmp(name, "rows_get_int") == 0 ||
-             strcmp(name, "rows_get_real") == 0) &&
+             strcmp(name, "rows_get_real") == 0 ||
+             strcmp(name, "stmt_get_text") == 0 ||
+             strcmp(name, "stmt_get_int") == 0 ||
+             strcmp(name, "stmt_get_real") == 0) &&
             i == 1 &&
             !(sem_is_integer_type(arg_type) || sem_is_error_type(arg_type))) {
             sem_report_nodef(sem, expr->as.obsecro.arguments->nodes[i],

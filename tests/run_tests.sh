@@ -12063,6 +12063,49 @@ else
 fi
 fi
 
+if cct_phase_block_enabled "SQLITE_PREPARED_SELECT"; then
+mkdir -p "$CCT_TMP_DIR/sqlite_prepared_select"
+echo "Test 2042: db_sqlite permite SELECT parametrizado com stmt_get_*"
+BASE_2042="$CCT_TMP_DIR/sqlite_prepared_select/test_2042_single"
+if [ -x "$CCT_BIN" ] && cct_phase32_copy_compile_and_run "$CCT_BIN" "tests/integration/db_stmt_select_single_40x.cct" "$BASE_2042" 0; then
+    test_pass "db_sqlite permite SELECT parametrizado com stmt_get_*"
+else
+    test_fail "db_sqlite nao executou SELECT parametrizado simples via stmt"
+fi
+
+echo "Test 2043: db_sqlite itera SELECT parametrizado com stmt_has_row"
+BASE_2043="$CCT_TMP_DIR/sqlite_prepared_select/test_2043_loop"
+if [ -x "$CCT_BIN" ] && cct_phase32_copy_compile_and_run "$CCT_BIN" "tests/integration/db_stmt_select_loop_40x.cct" "$BASE_2043" 0; then
+    test_pass "db_sqlite itera SELECT parametrizado com stmt_has_row"
+else
+    test_fail "db_sqlite nao iterou SELECT parametrizado com stmt_has_row"
+fi
+
+echo "Test 2044: db_sqlite distingue SELECT vazio em statement preparado"
+BASE_2044="$CCT_TMP_DIR/sqlite_prepared_select/test_2044_empty"
+if [ -x "$CCT_BIN" ] && cct_phase32_copy_compile_and_run "$CCT_BIN" "tests/integration/db_stmt_select_empty_40x.cct" "$BASE_2044" 0; then
+    test_pass "db_sqlite distingue SELECT vazio em statement preparado"
+else
+    test_fail "db_sqlite nao distinguiu SELECT vazio em statement preparado"
+fi
+
+echo "Test 2045: db_sqlite reutiliza statement preparado para multiplas leituras"
+BASE_2045="$CCT_TMP_DIR/sqlite_prepared_select/test_2045_reuse"
+if [ -x "$CCT_BIN" ] && cct_phase32_copy_compile_and_run "$CCT_BIN" "tests/integration/db_stmt_select_reuse_40x.cct" "$BASE_2045" 0; then
+    test_pass "db_sqlite reutiliza statement preparado para multiplas leituras"
+else
+    test_fail "db_sqlite nao reutilizou statement preparado para multiplas leituras"
+fi
+
+echo "Test 2046: db_sqlite cobre query_count e query_exists via statement preparado"
+BASE_2046="$CCT_TMP_DIR/sqlite_prepared_select/test_2046_count_exists"
+if [ -x "$CCT_BIN" ] && cct_phase32_copy_compile_and_run "$CCT_BIN" "tests/integration/db_stmt_select_count_exists_40x.cct" "$BASE_2046" 0; then
+    test_pass "db_sqlite cobre query_count e query_exists via statement preparado"
+else
+    test_fail "db_sqlite nao cobriu query_count e query_exists via statement preparado"
+fi
+fi
+
 echo "Test Results:"
 echo -e "  ${GREEN}Passed:${NC} $TESTS_PASSED" >&3
 echo -e "  ${RED}Failed:${NC} $TESTS_FAILED" >&3

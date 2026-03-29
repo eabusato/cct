@@ -1,0 +1,43 @@
+INCIPIT grimoire "db_stmt_select_count_exists_40x"
+
+ADVOCARE "cct/db_sqlite.cct"
+
+RITUALE main() REDDE REX
+  EVOCA SPECULUM NIHIL db AD CONIURA db_open(":memory:")
+  CONIURA db_exec(db, "CREATE TABLE pages(id INTEGER, slug TEXT, locale TEXT);")
+  CONIURA db_exec(db, "INSERT INTO pages(id, slug, locale) VALUES(1, 'home', 'pt-BR');")
+  CONIURA db_exec(db, "INSERT INTO pages(id, slug, locale) VALUES(2, 'home', 'en-US');")
+  CONIURA db_exec(db, "INSERT INTO pages(id, slug, locale) VALUES(3, 'about', 'pt-BR');")
+
+  EVOCA SPECULUM NIHIL count_stmt AD CONIURA db_prepare(db, "SELECT COUNT(*) FROM pages WHERE slug = ?1;")
+  CONIURA stmt_bind_text(count_stmt, 1, "home")
+  SI NON CONIURA stmt_step(count_stmt)
+    REDDE 1
+  FIN SI
+  SI NON CONIURA stmt_has_row(count_stmt)
+    REDDE 2
+  FIN SI
+  SI CONIURA stmt_get_int(count_stmt, 0) != 2
+    REDDE 3
+  FIN SI
+
+  EVOCA SPECULUM NIHIL exists_stmt AD CONIURA db_prepare(db, "SELECT 1 FROM pages WHERE slug = ?1 AND locale = ?2 LIMIT 1;")
+  CONIURA stmt_bind_text(exists_stmt, 1, "about")
+  CONIURA stmt_bind_text(exists_stmt, 2, "pt-BR")
+  SI NON CONIURA stmt_step(exists_stmt)
+    REDDE 4
+  FIN SI
+  SI NON CONIURA stmt_has_row(exists_stmt)
+    REDDE 5
+  FIN SI
+  SI CONIURA stmt_get_int(exists_stmt, 0) != 1
+    REDDE 6
+  FIN SI
+
+  CONIURA stmt_finalize(count_stmt)
+  CONIURA stmt_finalize(exists_stmt)
+  CONIURA db_close(db)
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

@@ -1,0 +1,28 @@
+INCIPIT grimoire "db_stmt_select_empty_40x"
+
+ADVOCARE "cct/db_sqlite.cct"
+
+RITUALE main() REDDE REX
+  EVOCA SPECULUM NIHIL db AD CONIURA db_open(":memory:")
+  CONIURA db_exec(db, "CREATE TABLE items(id INTEGER, nome TEXT);")
+  CONIURA db_exec(db, "INSERT INTO items(id, nome) VALUES(1, 'alpha');")
+
+  EVOCA SPECULUM NIHIL stmt AD CONIURA db_prepare(db, "SELECT id, nome FROM items WHERE id = ?1;")
+  CONIURA stmt_bind_int(stmt, 1, 999)
+
+  SI NON CONIURA stmt_step(stmt)
+    REDDE 1
+  FIN SI
+  SI CONIURA stmt_has_row(stmt)
+    REDDE 2
+  FIN SI
+  SI CONIURA stmt_get_int(stmt, 0) != 0
+    REDDE 3
+  FIN SI
+
+  CONIURA stmt_finalize(stmt)
+  CONIURA db_close(db)
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

@@ -4603,6 +4603,7 @@ bool cct_runtime_emit_c_helpers(FILE *out, const cct_runtime_codegen_config_t *c
         fputs("typedef struct {\n", out);
         fputs("    cct_rt_db_t *owner;\n", out);
         fputs("    sqlite3_stmt *stmt;\n", out);
+        fputs("    int has_row;\n", out);
         fputs("} cct_rt_stmt_t;\n\n", out);
 
         fputs("static char *cct_rt_db_dup_cstr(const char *s) {\n", out);
@@ -4763,6 +4764,7 @@ bool cct_runtime_emit_c_helpers(FILE *out, const cct_runtime_codegen_config_t *c
         fputs("    cct_rt_stmt_t *stmt = (cct_rt_stmt_t*)cct_rt_alloc_or_fail(sizeof(cct_rt_stmt_t));\n", out);
         fputs("    stmt->owner = db;\n", out);
         fputs("    stmt->stmt = NULL;\n", out);
+        fputs("    stmt->has_row = 0;\n", out);
         fputs("    if (!db->db) {\n", out);
         fputs("        cct_rt_db_set_last_error(db, \"db nao aberto\");\n", out);
         fputs("        return (void*)stmt;\n", out);
@@ -4822,15 +4824,53 @@ bool cct_runtime_emit_c_helpers(FILE *out, const cct_runtime_codegen_config_t *c
         fputs("    cct_rt_stmt_t *stmt = cct_rt_stmt_require(stmt_ptr, \"stmt_step recebeu stmt nulo\");\n", out);
         fputs("    if (!stmt->stmt) {\n", out);
         fputs("        if (stmt->owner) cct_rt_db_set_last_error(stmt->owner, \"stmt nao preparado\");\n", out);
+        fputs("        stmt->has_row = 0;\n", out);
         fputs("        return 0LL;\n", out);
         fputs("    }\n", out);
         fputs("    int rc = sqlite3_step(stmt->stmt);\n", out);
-        fputs("    if (rc == SQLITE_ROW || rc == SQLITE_DONE) {\n", out);
+        fputs("    if (rc == SQLITE_ROW) {\n", out);
+        fputs("        stmt->has_row = 1;\n", out);
         fputs("        if (stmt->owner) cct_rt_db_clear_last_error(stmt->owner);\n", out);
         fputs("        return 1LL;\n", out);
         fputs("    }\n", out);
+        fputs("    if (rc == SQLITE_DONE) {\n", out);
+        fputs("        stmt->has_row = 0;\n", out);
+        fputs("        if (stmt->owner) cct_rt_db_clear_last_error(stmt->owner);\n", out);
+        fputs("        return 1LL;\n", out);
+        fputs("    }\n", out);
+        fputs("    stmt->has_row = 0;\n", out);
         fputs("    if (stmt->owner) cct_rt_db_set_last_error(stmt->owner, sqlite3_errmsg(stmt->owner->db));\n", out);
         fputs("    return 0LL;\n", out);
+        fputs("}\n\n", out);
+
+        fputs("static int cct_rt_stmt_has_col(cct_rt_stmt_t *stmt, long long col) {\n", out);
+        fputs("    if (!stmt || !stmt->stmt || !stmt->has_row) return 0;\n", out);
+        fputs("    if (col < 0) return 0;\n", out);
+        fputs("    return col < (long long)sqlite3_column_count(stmt->stmt);\n", out);
+        fputs("}\n\n", out);
+
+        fputs("static long long cct_rt_stmt_has_row(void *stmt_ptr) {\n", out);
+        fputs("    cct_rt_stmt_t *stmt = cct_rt_stmt_require(stmt_ptr, \"stmt_has_row recebeu stmt nulo\");\n", out);
+        fputs("    return stmt->has_row ? 1LL : 0LL;\n", out);
+        fputs("}\n\n", out);
+
+        fputs("static char *cct_rt_stmt_get_text(void *stmt_ptr, long long col) {\n", out);
+        fputs("    cct_rt_stmt_t *stmt = cct_rt_stmt_require(stmt_ptr, \"stmt_get_text recebeu stmt nulo\");\n", out);
+        fputs("    if (!cct_rt_stmt_has_col(stmt, col)) return cct_rt_db_dup_cstr(\"\");\n", out);
+        fputs("    const unsigned char *text = sqlite3_column_text(stmt->stmt, (int)col);\n", out);
+        fputs("    return cct_rt_db_dup_cstr(text ? (const char*)text : \"\");\n", out);
+        fputs("}\n\n", out);
+
+        fputs("static long long cct_rt_stmt_get_int(void *stmt_ptr, long long col) {\n", out);
+        fputs("    cct_rt_stmt_t *stmt = cct_rt_stmt_require(stmt_ptr, \"stmt_get_int recebeu stmt nulo\");\n", out);
+        fputs("    if (!cct_rt_stmt_has_col(stmt, col)) return 0LL;\n", out);
+        fputs("    return (long long)sqlite3_column_int64(stmt->stmt, (int)col);\n", out);
+        fputs("}\n\n", out);
+
+        fputs("static double cct_rt_stmt_get_real(void *stmt_ptr, long long col) {\n", out);
+        fputs("    cct_rt_stmt_t *stmt = cct_rt_stmt_require(stmt_ptr, \"stmt_get_real recebeu stmt nulo\");\n", out);
+        fputs("    if (!cct_rt_stmt_has_col(stmt, col)) return 0.0;\n", out);
+        fputs("    return sqlite3_column_double(stmt->stmt, (int)col);\n", out);
         fputs("}\n\n", out);
 
         fputs("static void cct_rt_stmt_reset(void *stmt_ptr) {\n", out);
@@ -4838,6 +4878,7 @@ bool cct_runtime_emit_c_helpers(FILE *out, const cct_runtime_codegen_config_t *c
         fputs("    if (!stmt->stmt) return;\n", out);
         fputs("    (void)sqlite3_reset(stmt->stmt);\n", out);
         fputs("    (void)sqlite3_clear_bindings(stmt->stmt);\n", out);
+        fputs("    stmt->has_row = 0;\n", out);
         fputs("    if (stmt->owner) cct_rt_db_clear_last_error(stmt->owner);\n", out);
         fputs("}\n\n", out);
 
@@ -4848,6 +4889,7 @@ bool cct_runtime_emit_c_helpers(FILE *out, const cct_runtime_codegen_config_t *c
         fputs("        (void)sqlite3_finalize(stmt->stmt);\n", out);
         fputs("        stmt->stmt = NULL;\n", out);
         fputs("    }\n", out);
+        fputs("    stmt->has_row = 0;\n", out);
         fputs("    cct_rt_free_ptr(stmt);\n", out);
         fputs("}\n\n", out);
 
