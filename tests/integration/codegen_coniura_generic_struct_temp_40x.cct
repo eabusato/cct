@@ -1,0 +1,28 @@
+INCIPIT grimoire "codegen_coniura_generic_struct_temp_40x"
+
+ADVOCARE "cct/result.cct"
+ADVOCARE "cct/verbum.cct"
+
+SIGILLUM Payload
+  name: VERBUM
+FIN SIGILLUM
+
+RITUALE payload_ok() REDDE SPECULUM NIHIL
+  EVOCA Payload value
+  VINCIRE value.name AD "codex"
+  REDDE CONIURA Ok GENUS(Payload, VERBUM)(value)
+EXPLICIT RITUALE
+
+RITUALE payload_len(Payload value) REDDE REX
+  REDDE CONIURA len(value.name)
+EXPLICIT RITUALE
+
+RITUALE main() REDDE REX
+  EVOCA SPECULUM NIHIL res AD CONIURA payload_ok()
+  SI CONIURA result_is_err GENUS(Payload, VERBUM)(res)
+    REDDE 1
+  FIN SI
+  REDDE CONIURA payload_len(CONIURA result_unwrap GENUS(Payload, VERBUM)(res))
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

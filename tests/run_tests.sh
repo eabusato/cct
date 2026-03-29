@@ -12061,6 +12061,22 @@ if [ -x "$CCT_BIN" ] && cct_phase32_copy_compile_and_run "$CCT_BIN" "tests/integ
 else
     test_fail "NIHIL literal nao funcionou com SPECULUM em atribuicao e comparacao"
 fi
+
+echo "Test 2047: CONIURA generica com struct retorna e propaga em temp de codegen"
+BASE_2047="$CCT_TMP_DIR/callback/test_2047_coniura_generic_struct_temp"
+if [ -x "$CCT_BIN" ] && cct_phase32_copy_compile_and_run "$CCT_BIN" "tests/integration/codegen_coniura_generic_struct_temp_40x.cct" "$BASE_2047" 5; then
+    test_pass "CONIURA generica com struct propaga em temp de codegen"
+else
+    test_fail "CONIURA generica com struct nao propagou em temp de codegen"
+fi
+
+echo "Test 2048: codegen ordena SIGILLUM por dependencia de valor"
+BASE_2048="$CCT_TMP_DIR/callback/test_2048_sigillum_dependency_order"
+if [ -x "$CCT_BIN" ] && cct_phase32_copy_compile_and_run "$CCT_BIN" "tests/integration/codegen_sigillum_dependency_order_40x.cct" "$BASE_2048" 0; then
+    test_pass "codegen ordena SIGILLUM por dependencia de valor"
+else
+    test_fail "codegen nao ordenou SIGILLUM por dependencia de valor"
+fi
 fi
 
 if cct_phase_block_enabled "SQLITE_PREPARED_SELECT"; then

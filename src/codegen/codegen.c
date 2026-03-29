@@ -58,6 +58,7 @@ struct cct_codegen_rituale {
 typedef struct cct_codegen_sigillum {
     const cct_ast_node_t *node; /* AST_SIGILLUM */
     char *name;
+    int emit_state;
     struct cct_codegen_sigillum *next;
 } cct_codegen_sigillum_t;
 
@@ -2009,6 +2010,20 @@ static const cct_ast_type_t* cg_expr_array_type(cct_codegen_t *cg, const cct_ast
 static const cct_ast_type_t* cg_expr_ast_type(cct_codegen_t *cg, const cct_ast_node_t *expr) {
     if (!expr) return NULL;
     switch (expr->type) {
+        case AST_CONIURA: {
+            cct_codegen_rituale_t *rit = NULL;
+            if (expr->as.coniura.type_args && expr->as.coniura.type_args->count > 0) {
+                rit = cg_materialize_generic_rituale_instance(
+                    cg, expr->as.coniura.name, expr->as.coniura.type_args, expr
+                );
+            } else {
+                rit = cg_find_rituale(cg, expr->as.coniura.name);
+            }
+            if (rit && rit->node && rit->node->type == AST_RITUALE) {
+                return rit->node->as.rituale.return_type;
+            }
+            return NULL;
+        }
         case AST_IDENTIFIER: {
             cct_codegen_local_t *l = cg_find_local(cg, expr->as.identifier.name);
             return l ? l->ast_type : NULL;
@@ -8167,6 +8182,12 @@ static bool cg_emit_coniura_expr_to_temp_with_failcheck(
 
     const char *c_ty = cg_c_type_for_return_kind(kind);
     if (!c_ty && kind == CCT_CODEGEN_VALUE_STRUCT) {
+        const cct_ast_type_t *expr_type = cg_expr_ast_type(cg, expr);
+        if (expr_type) {
+            c_ty = cg_c_type_for_ast_type(cg, expr_type);
+        }
+    }
+    if (!c_ty && kind == CCT_CODEGEN_VALUE_STRUCT) {
         cct_codegen_rituale_t *rit = cg_find_rituale(cg, expr->as.coniura.name);
         if (rit && rit->node && rit->node->as.rituale.return_type) {
             c_ty = cg_c_type_for_ast_type(cg, rit->node->as.rituale.return_type);
@@ -11821,37 +11842,112 @@ static bool cg_emit_sigillum_decls(FILE *out, cct_codegen_t *cg) {
     for (cct_codegen_sigillum_t *s = cg->sigilla; s; s = s->next) {
         if (!s->node || s->node->type != AST_SIGILLUM) continue;
         fprintf(out, "typedef struct %s %s;\n", s->name, s->name);
+        s->emit_state = 0;
     }
     if (cg->sigilla) fputc('\n', out);
 
     for (cct_codegen_sigillum_t *s = cg->sigilla; s; s = s->next) {
         if (!s->node || s->node->type != AST_SIGILLUM) continue;
-        fprintf(out, "struct %s {\n", s->name);
-        cct_ast_field_list_t *fields = s->node->as.sigillum.fields;
-        if (fields) {
-            for (size_t i = 0; i < fields->count; i++) {
-                cct_ast_field_t *f = fields->fields[i];
-                if (!f || !f->type) continue;
-                if (f->type->is_array) {
-                    const char *elem_c = cg_c_type_for_ast_type(cg, f->type->element_type);
-                    if (!elem_c || f->type->array_size == 0) {
-                        cg_report_nodef(cg, s->node, "SIGILLUM '%s' field '%s' uses unsupported SERIES type in FASE 6B codegen",
-                                        s->name, f->name ? f->name : "(field)");
+        if (s->emit_state == 2) continue;
+        if (s->emit_state == 1) {
+            cg_report_nodef(cg, s->node, "SIGILLUM '%s' has cyclic by-value dependency in codegen", s->name);
+            return false;
+        }
+
+        cct_codegen_sigillum_t *stack[256];
+        size_t stack_len = 0;
+        stack[stack_len++] = s;
+
+        while (stack_len > 0) {
+            cct_codegen_sigillum_t *cur = stack[stack_len - 1];
+            if (cur->emit_state == 2) {
+                stack_len--;
+                continue;
+            }
+            if (cur->emit_state == 0) cur->emit_state = 1;
+
+            bool pushed_dep = false;
+            cct_ast_field_list_t *fields = cur->node->as.sigillum.fields;
+            if (fields) {
+                for (size_t i = 0; i < fields->count; i++) {
+                    cct_ast_field_t *f = fields->fields[i];
+                    if (!f || !f->type) continue;
+                    const cct_ast_type_t *dep_type = f->type;
+                    if (dep_type->is_pointer) continue;
+                    if (dep_type->is_array) dep_type = dep_type->element_type;
+                    if (!dep_type || dep_type->is_pointer || dep_type->is_array || !dep_type->name) continue;
+
+                    const char *dep_name = dep_type->name;
+                    if (dep_type->generic_args && dep_type->generic_args->count > 0) {
+                        dep_name = cg_materialize_generic_sigillum_name(cg, dep_type, NULL);
+                        if (!dep_name) {
+                            cg_report_nodef(cg, cur->node,
+                                            "SIGILLUM '%s' field '%s' generic dependency could not be materialized",
+                                            cur->name, f->name ? f->name : "(field)");
+                            return false;
+                        }
+                    }
+
+                    cct_ast_type_t dep_lookup = *dep_type;
+                    dep_lookup.name = (char*)dep_name;
+                    dep_lookup.generic_args = NULL;
+                    if (!cg_is_known_sigillum_type(cg, &dep_lookup)) continue;
+
+                    cct_codegen_sigillum_t *dep = cg_find_sigillum(cg, dep_name);
+                    if (!dep || dep == cur) {
+                        cg_report_nodef(cg, cur->node,
+                                        "SIGILLUM '%s' has unsupported self/cyclic by-value dependency via field '%s'",
+                                        cur->name, f->name ? f->name : "(field)");
                         return false;
                     }
-                    fprintf(out, "    %s %s[%u];\n", elem_c, f->name, f->type->array_size);
-                    continue;
+                    if (dep->emit_state == 1) {
+                        cg_report_nodef(cg, cur->node,
+                                        "SIGILLUM '%s' has cyclic by-value dependency via field '%s'",
+                                        cur->name, f->name ? f->name : "(field)");
+                        return false;
+                    }
+                    if (dep->emit_state == 0) {
+                        if (stack_len >= (sizeof(stack) / sizeof(stack[0]))) {
+                            cg_report_node(cg, cur->node, "internal codegen error: SIGILLUM dependency stack exhausted");
+                            return false;
+                        }
+                        stack[stack_len++] = dep;
+                        pushed_dep = true;
+                        break;
+                    }
                 }
-                const char *c_ty = cg_c_type_for_ast_type(cg, f->type);
-                if (!c_ty) {
-                    cg_report_nodef(cg, s->node, "SIGILLUM '%s' field '%s' type is not executable in FASE 6B codegen",
-                                    s->name, f->name ? f->name : "(field)");
-                    return false;
-                }
-                fprintf(out, "    %s %s;\n", c_ty, f->name);
             }
+            if (pushed_dep) continue;
+
+            fprintf(out, "struct %s {\n", cur->name);
+            cct_ast_field_list_t *emit_fields = cur->node->as.sigillum.fields;
+            if (emit_fields) {
+                for (size_t i = 0; i < emit_fields->count; i++) {
+                    cct_ast_field_t *f = emit_fields->fields[i];
+                    if (!f || !f->type) continue;
+                    if (f->type->is_array) {
+                        const char *elem_c = cg_c_type_for_ast_type(cg, f->type->element_type);
+                        if (!elem_c || f->type->array_size == 0) {
+                            cg_report_nodef(cg, cur->node, "SIGILLUM '%s' field '%s' uses unsupported SERIES type in FASE 6B codegen",
+                                            cur->name, f->name ? f->name : "(field)");
+                            return false;
+                        }
+                        fprintf(out, "    %s %s[%u];\n", elem_c, f->name, f->type->array_size);
+                        continue;
+                    }
+                    const char *c_ty = cg_c_type_for_ast_type(cg, f->type);
+                    if (!c_ty) {
+                        cg_report_nodef(cg, cur->node, "SIGILLUM '%s' field '%s' type is not executable in FASE 6B codegen",
+                                        cur->name, f->name ? f->name : "(field)");
+                        return false;
+                    }
+                    fprintf(out, "    %s %s;\n", c_ty, f->name);
+                }
+            }
+            fprintf(out, "};\n\n");
+            cur->emit_state = 2;
+            stack_len--;
         }
-        fprintf(out, "};\n\n");
     }
     return true;
 }
