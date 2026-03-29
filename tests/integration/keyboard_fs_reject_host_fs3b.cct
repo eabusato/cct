@@ -1,0 +1,10 @@
+INCIPIT grimoire "keyboard_fs_reject_host_fs3b"
+
+ADVOCARE "cct/keyboard_fs"
+
+RITUALE main() REDDE NIHIL
+  CONIURA keyboard_fs_flush()
+  REDDE
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

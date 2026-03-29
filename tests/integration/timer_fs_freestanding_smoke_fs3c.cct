@@ -1,0 +1,21 @@
+INCIPIT grimoire "timer_fs_freestanding_smoke_fs3c"
+
+ADVOCARE "cct/timer_fs"
+
+RITUALE main() REDDE NIHIL
+  EVOCA REX now_ms AD CONIURA timer_fs_uptime_ms()
+  EVOCA REX now_ticks AD CONIURA timer_fs_ticks()
+  EVOCA REX now_sec AD CONIURA timer_fs_uptime_sec()
+  EVOCA REX deadline AD CONIURA timer_fs_deadline_ms(50)
+  EVOCA REX elapsed AD CONIURA timer_fs_elapsed_ms(now_ms)
+  EVOCA VERUM expired AD CONIURA timer_fs_deadline_expired(deadline)
+  CONIURA timer_fs_format_uptime()
+  CONIURA timer_fs_format_uptime_ms()
+  CONIURA timer_fs_sleep_ms(10)
+  SI now_ticks < 0 ET now_sec < 0 ET elapsed < 0 ET expired
+    REDDE
+  FIN SI
+  REDDE
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

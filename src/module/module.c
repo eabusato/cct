@@ -407,6 +407,70 @@ static bool mod_is_cct_fluxus_fs_import(const char *raw_import) {
            strcmp(canonical, "cct/fluxus_fs/fluxus_fs") == 0;
 }
 
+static bool mod_is_cct_irq_fs_import(const char *raw_import) {
+    if (!raw_import) return false;
+    size_t len = strlen(raw_import);
+    if (len >= 4 && strcmp(raw_import + len - 4, ".cct") == 0) {
+        len -= 4;
+    }
+    if (len == 0 || len >= 128) return false;
+
+    char canonical[128];
+    memcpy(canonical, raw_import, len);
+    canonical[len] = '\0';
+
+    return strcmp(canonical, "cct/irq_fs") == 0 ||
+           strcmp(canonical, "cct/irq_fs/irq_fs") == 0;
+}
+
+static bool mod_is_cct_keyboard_fs_import(const char *raw_import) {
+    if (!raw_import) return false;
+    size_t len = strlen(raw_import);
+    if (len >= 4 && strcmp(raw_import + len - 4, ".cct") == 0) {
+        len -= 4;
+    }
+    if (len == 0 || len >= 128) return false;
+
+    char canonical[128];
+    memcpy(canonical, raw_import, len);
+    canonical[len] = '\0';
+
+    return strcmp(canonical, "cct/keyboard_fs") == 0 ||
+           strcmp(canonical, "cct/keyboard_fs/keyboard_fs") == 0;
+}
+
+static bool mod_is_cct_timer_fs_import(const char *raw_import) {
+    if (!raw_import) return false;
+    size_t len = strlen(raw_import);
+    if (len >= 4 && strcmp(raw_import + len - 4, ".cct") == 0) {
+        len -= 4;
+    }
+    if (len == 0 || len >= 128) return false;
+
+    char canonical[128];
+    memcpy(canonical, raw_import, len);
+    canonical[len] = '\0';
+
+    return strcmp(canonical, "cct/timer_fs") == 0 ||
+           strcmp(canonical, "cct/timer_fs/timer_fs") == 0;
+}
+
+static bool mod_is_cct_shell_fs_import(const char *raw_import) {
+    if (!raw_import) return false;
+    size_t len = strlen(raw_import);
+    if (len >= 4 && strcmp(raw_import + len - 4, ".cct") == 0) {
+        len -= 4;
+    }
+    if (len == 0 || len >= 128) return false;
+
+    char canonical[128];
+    memcpy(canonical, raw_import, len);
+    canonical[len] = '\0';
+
+    return strcmp(canonical, "cct/shell_fs") == 0 ||
+           strcmp(canonical, "cct/shell_fs/shell_fs") == 0;
+}
+
 static bool mod_is_freestanding_forbidden_import(const char *raw_import, char *out_name, size_t out_name_size) {
     if (!raw_import) return false;
     size_t len = strlen(raw_import);
@@ -992,6 +1056,38 @@ static ssize_t mod_load_recursive(cct_module_ctx_t *ctx,
                 mod_report(ctx, CCT_ERROR_SEMANTIC,
                            module_path, decl->line, decl->column,
                            "cct/fluxus_fs disponível apenas em perfil freestanding");
+                mod_ctx_pop_active(ctx);
+                return -1;
+            }
+
+            if (ctx->profile != CCT_PROFILE_FREESTANDING && mod_is_cct_irq_fs_import(raw_import)) {
+                mod_report(ctx, CCT_ERROR_SEMANTIC,
+                           module_path, decl->line, decl->column,
+                           "cct/irq_fs disponível apenas em perfil freestanding");
+                mod_ctx_pop_active(ctx);
+                return -1;
+            }
+
+            if (ctx->profile != CCT_PROFILE_FREESTANDING && mod_is_cct_keyboard_fs_import(raw_import)) {
+                mod_report(ctx, CCT_ERROR_SEMANTIC,
+                           module_path, decl->line, decl->column,
+                           "cct/keyboard_fs disponível apenas em perfil freestanding");
+                mod_ctx_pop_active(ctx);
+                return -1;
+            }
+
+            if (ctx->profile != CCT_PROFILE_FREESTANDING && mod_is_cct_timer_fs_import(raw_import)) {
+                mod_report(ctx, CCT_ERROR_SEMANTIC,
+                           module_path, decl->line, decl->column,
+                           "cct/timer_fs disponível apenas em perfil freestanding");
+                mod_ctx_pop_active(ctx);
+                return -1;
+            }
+
+            if (ctx->profile != CCT_PROFILE_FREESTANDING && mod_is_cct_shell_fs_import(raw_import)) {
+                mod_report(ctx, CCT_ERROR_SEMANTIC,
+                           module_path, decl->line, decl->column,
+                           "cct/shell_fs disponível apenas em perfil freestanding");
                 mod_ctx_pop_active(ctx);
                 return -1;
             }

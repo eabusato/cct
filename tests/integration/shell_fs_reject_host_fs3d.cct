@@ -1,0 +1,10 @@
+INCIPIT grimoire "shell_fs_reject_host_fs3d"
+
+ADVOCARE "cct/shell_fs"
+
+RITUALE main() REDDE NIHIL
+  CONIURA shell_fs_banner()
+  REDDE
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

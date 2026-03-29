@@ -35,17 +35,19 @@ It has two goals:
 
 ## Parallel Freestanding Track
 
-- Freestanding FS-1A through FS-2C are now closed on top of the existing `--profile freestanding` foundation.
-- Current freestanding gate closed: `G-FS2`, with a booted QEMU screen proving that heap-backed `SIGILLUM`, `VERBUM`, and `fluxus_fs` data execute in bare metal.
+- Freestanding FS-1A through FS-3D are now closed on top of the existing `--profile freestanding` foundation.
+- Current freestanding gate closed: `G-FS3`, with a booted QEMU interaction proving that a local shell written in CCT accepts PS/2 keyboard commands on bare metal.
 - Canonical freestanding consumer: `../grub-hello/`.
-- Primary validation path: `CCT_TEST_PHASES=FS1A,FS1B,FS1C,FS2A,FS2B,FS2C bash tests/run_tests.sh`.
+- Primary validation path: `CCT_TEST_PHASES=FS1A,FS1B,FS1C,FS2A,FS2B,FS2C,FS3A,FS3B,FS3C,FS3D bash tests/run_tests.sh`.
 - Current freestanding references:
   - `docs/freestanding/README.md`
   - `docs/freestanding/FS1_RUNTIME_MANUAL.md`
   - `docs/freestanding/FS2_RUNTIME_MANUAL.md`
+  - `docs/freestanding/FS3_RUNTIME_MANUAL.md`
   - `docs/freestanding/GRUB_HELLO_INTEGRATION.md`
   - `docs/release/FREESTND_FS1_RELEASE_NOTES.md`
   - `docs/release/FREESTND_FS2_RELEASE_NOTES.md`
+  - `docs/release/FREESTND_FS3_RELEASE_NOTES.md`
 
 ## Completed Phases (0 → 19D4)
 

@@ -1,0 +1,23 @@
+INCIPIT grimoire "keyboard_fs_freestanding_smoke_fs3b"
+
+ADVOCARE "cct/keyboard_fs"
+
+RITUALE main() REDDE NIHIL
+  EVOCA REX buffered AD CONIURA keyboard_fs_available()
+  EVOCA REX polled AD CONIURA keyboard_fs_poll()
+  EVOCA VERUM ok AD CONIURA keyboard_fs_self_test()
+  CONIURA keyboard_fs_flush()
+  SI buffered < 0
+    REDDE
+  FIN SI
+  SI polled < -1
+    REDDE
+  FIN SI
+  SI ok
+    REDDE
+  FIN SI
+  CONIURA keyboard_fs_read_line(16)
+  REDDE
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

@@ -1,0 +1,228 @@
+-- CCT — Clavicula Turing
+-- Standard Library Module: shell_fs
+--
+-- FASE FS-3D: Local shell for freestanding targets
+--
+-- Copyright (c) Erick Andrade Busato. Todos os direitos reservados.
+
+INCIPIT grimoire "shell_fs"
+
+ADVOCARE "cct/console"
+ADVOCARE "cct/keyboard_fs"
+ADVOCARE "cct/timer_fs"
+ADVOCARE "cct/irq_fs"
+ADVOCARE "cct/mem_fs"
+ADVOCARE "cct/verbum_fs"
+ADVOCARE "cct/fluxus_fs"
+
+ARCANUM RITUALE shell_trim_left(REX idx, VERBUM text) REDDE REX
+  DUM idx < CONIURA verbum_fs_len(text)
+    EVOCA REX ch AD CONIURA verbum_fs_char_at(text, idx)
+    SI ch != 32 ET ch != 9
+      REDDE idx
+    FIN SI
+    VINCIRE idx AD idx + 1
+  FIN DUM
+  REDDE idx
+EXPLICIT RITUALE
+
+ARCANUM RITUALE shell_trim_right(REX idx, VERBUM text) REDDE REX
+  DUM idx >= 0
+    EVOCA REX ch AD CONIURA verbum_fs_char_at(text, idx)
+    SI ch != 32 ET ch != 9
+      REDDE idx
+    FIN SI
+    VINCIRE idx AD idx - 1
+  FIN DUM
+  REDDE idx
+EXPLICIT RITUALE
+
+RITUALE shell_trim(VERBUM text) REDDE VERBUM
+  EVOCA REX left AD CONIURA shell_trim_left(0, text)
+  EVOCA REX right AD CONIURA shell_trim_right(CONIURA verbum_fs_len(text) - 1, text)
+  SI right < left
+    REDDE ""
+  FIN SI
+  REDDE CONIURA verbum_fs_substring(text, left, right + 1)
+EXPLICIT RITUALE
+
+RITUALE shell_first_token(VERBUM line) REDDE VERBUM
+  EVOCA VERBUM clean AD CONIURA shell_trim(line)
+  EVOCA REX i AD 0
+  DUM i < CONIURA verbum_fs_len(clean)
+    SI CONIURA verbum_fs_char_at(clean, i) == 32
+      REDDE CONIURA verbum_fs_substring(clean, 0, i)
+    FIN SI
+    VINCIRE i AD i + 1
+  FIN DUM
+  REDDE clean
+EXPLICIT RITUALE
+
+RITUALE shell_rest_args(VERBUM line) REDDE VERBUM
+  EVOCA VERBUM clean AD CONIURA shell_trim(line)
+  EVOCA REX i AD 0
+  DUM i < CONIURA verbum_fs_len(clean)
+    SI CONIURA verbum_fs_char_at(clean, i) == 32
+      REDDE CONIURA shell_trim(CONIURA verbum_fs_substring(clean, i + 1, CONIURA verbum_fs_len(clean)))
+    FIN SI
+    VINCIRE i AD i + 1
+  FIN DUM
+  REDDE ""
+EXPLICIT RITUALE
+
+ARCANUM RITUALE shell_hist_ptr(SPECULUM NIHIL history, REX idx) REDDE SPECULUM VERBUM
+  REDDE CONIURA fluxus_fs_get(history, idx)
+EXPLICIT RITUALE
+
+ARCANUM RITUALE shell_hist_add(SPECULUM NIHIL history, VERBUM line) REDDE NIHIL
+  EVOCA VERBUM copy AD CONIURA verbum_fs_dup(line)
+  SI CONIURA fluxus_fs_len(history) >= 8
+    CONIURA fluxus_fs_remove_first(history)
+  FIN SI
+  CONIURA fluxus_fs_push(history, SPECULUM copy)
+  REDDE
+EXPLICIT RITUALE
+
+ARCANUM RITUALE cmd_help() REDDE NIHIL
+  CONIURA console_write_line("help status uptime mem clear reboot echo hist")
+  REDDE
+EXPLICIT RITUALE
+
+ARCANUM RITUALE cmd_status() REDDE NIHIL
+  EVOCA VERBUM irq AD "off"
+  SI CONIURA irq_fs_interrupts_enabled()
+    VINCIRE irq AD "on"
+  FIN SI
+  CONIURA console_write("interrupts: ")
+  CONIURA console_write_line(irq)
+  CONIURA console_write("keyboard buffered: ")
+  CONIURA console_write_line(CONIURA verbum_fs_from_int(CONIURA keyboard_fs_available()))
+  REDDE
+EXPLICIT RITUALE
+
+ARCANUM RITUALE cmd_uptime() REDDE NIHIL
+  CONIURA console_write("uptime: ")
+  CONIURA console_write_line(CONIURA timer_fs_format_uptime())
+  CONIURA console_write("uptime-ms: ")
+  CONIURA console_write_line(CONIURA timer_fs_format_uptime_ms())
+  REDDE
+EXPLICIT RITUALE
+
+ARCANUM RITUALE cmd_mem() REDDE NIHIL
+  EVOCA HeapStats stats AD CONIURA mem_fs_stats()
+  CONIURA console_write("base: ")
+  CONIURA console_write_line(CONIURA verbum_fs_from_hex(stats.base_addr))
+  CONIURA console_write("allocated: ")
+  CONIURA console_write_line(CONIURA verbum_fs_from_int(stats.allocated_bytes))
+  CONIURA console_write("available: ")
+  CONIURA console_write_line(CONIURA verbum_fs_from_int(stats.available_bytes))
+  REDDE
+EXPLICIT RITUALE
+
+ARCANUM RITUALE cmd_echo(VERBUM args) REDDE NIHIL
+  CONIURA console_write_line(args)
+  REDDE
+EXPLICIT RITUALE
+
+ARCANUM RITUALE cmd_hist(SPECULUM NIHIL history) REDDE NIHIL
+  SI CONIURA fluxus_fs_len(history) == 0
+    CONIURA console_write_line("history empty")
+    REDDE
+  FIN SI
+  REPETE i DE 0 AD CONIURA fluxus_fs_len(history) - 1
+    EVOCA SPECULUM VERBUM item AD CONIURA shell_hist_ptr(history, i)
+    CONIURA console_write(CONIURA verbum_fs_from_int(i))
+    CONIURA console_write(": ")
+    CONIURA console_write_line(*item)
+  FIN REPETE
+  REDDE
+EXPLICIT RITUALE
+
+ARCANUM RITUALE cmd_unknown(VERBUM cmd) REDDE NIHIL
+  CONIURA console_write("unknown: ")
+  CONIURA console_write_line(cmd)
+  REDDE
+EXPLICIT RITUALE
+
+ARCANUM RITUALE shell_fs_dispatch(SPECULUM NIHIL history, VERBUM line) REDDE NIHIL
+  EVOCA VERBUM cmd AD CONIURA shell_first_token(line)
+  EVOCA VERBUM args AD CONIURA shell_rest_args(line)
+
+  SI CONIURA verbum_fs_len(cmd) == 0
+    REDDE
+  FIN SI
+
+  SI CONIURA verbum_fs_equals(cmd, "help")
+    CONIURA cmd_help()
+  ALITER
+    SI CONIURA verbum_fs_equals(cmd, "status")
+      CONIURA cmd_status()
+    ALITER
+      SI CONIURA verbum_fs_equals(cmd, "uptime")
+        CONIURA cmd_uptime()
+      ALITER
+        SI CONIURA verbum_fs_equals(cmd, "mem")
+          CONIURA cmd_mem()
+        ALITER
+          SI CONIURA verbum_fs_equals(cmd, "clear")
+            CONIURA console_clear()
+            CONIURA shell_fs_banner()
+          ALITER
+            SI CONIURA verbum_fs_equals(cmd, "echo")
+              CONIURA cmd_echo(args)
+            ALITER
+              SI CONIURA verbum_fs_equals(cmd, "hist")
+                CONIURA cmd_hist(history)
+              ALITER
+                SI CONIURA verbum_fs_equals(cmd, "reboot")
+                  CONIURA irq_fs_reboot()
+                ALITER
+                  CONIURA cmd_unknown(cmd)
+                FIN SI
+              FIN SI
+            FIN SI
+          FIN SI
+        FIN SI
+      FIN SI
+    FIN SI
+  FIN SI
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE shell_fs_prompt() REDDE NIHIL
+  CONIURA console_write("cct> ")
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE shell_fs_banner() REDDE NIHIL
+  CONIURA console_set_color(COR_VERDE_CLARO, COR_PRETO)
+  CONIURA console_write_line("CCT FREESTANDING SHELL")
+  CONIURA console_set_color(COR_CIANO_CLARO, COR_PRETO)
+  CONIURA console_write_line("Type 'help' for commands.")
+  CONIURA console_set_color(COR_BRANCO, COR_PRETO)
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE shell_fs_init() REDDE NIHIL
+  CONIURA keyboard_fs_flush()
+  CONIURA irq_fs_enable()
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE shell_fs_run() REDDE NIHIL
+  EVOCA SPECULUM NIHIL history AD CONIURA fluxus_fs_new(8)
+  DUM VERUM
+    EVOCA VERBUM line
+    CONIURA shell_fs_prompt()
+    VINCIRE line AD CONIURA keyboard_fs_read_line(70)
+    VINCIRE line AD CONIURA shell_trim(line)
+    SI CONIURA verbum_fs_len(line) == 0
+      RECEDE
+    FIN SI
+    CONIURA shell_hist_add(history, line)
+    CONIURA shell_fs_dispatch(history, line)
+  FIN DUM
+  REDDE
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

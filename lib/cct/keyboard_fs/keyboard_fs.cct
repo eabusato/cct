@@ -1,0 +1,75 @@
+-- CCT — Clavicula Turing
+-- Standard Library Module: keyboard_fs
+--
+-- FASE FS-3B: PS/2 keyboard bridge for freestanding targets
+--
+-- Copyright (c) Erick Andrade Busato. Todos os direitos reservados.
+
+INCIPIT grimoire "keyboard_fs"
+
+ADVOCARE "cct/console"
+ADVOCARE "cct/verbum_fs"
+
+RITUALE keyboard_fs_getc() REDDE REX
+  REDDE OBSECRO cct_svc_keyboard_getc()
+EXPLICIT RITUALE
+
+RITUALE keyboard_fs_poll() REDDE REX
+  REDDE OBSECRO cct_svc_keyboard_poll()
+EXPLICIT RITUALE
+
+RITUALE keyboard_fs_available() REDDE REX
+  REDDE OBSECRO cct_svc_keyboard_available()
+EXPLICIT RITUALE
+
+RITUALE keyboard_fs_flush() REDDE NIHIL
+  OBSECRO cct_svc_keyboard_flush()
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE keyboard_fs_self_test() REDDE VERUM
+  REDDE OBSECRO cct_svc_keyboard_self_test()
+EXPLICIT RITUALE
+
+RITUALE keyboard_fs_line_to_verbum(SPECULUM NIHIL builder) REDDE VERBUM
+  REDDE CONIURA verbum_fs_builder_build(builder)
+EXPLICIT RITUALE
+
+RITUALE keyboard_fs_read_line(REX max_len) REDDE VERBUM
+  EVOCA SPECULUM NIHIL builder AD OBSECRO cct_svc_builder_new_raw()
+  EVOCA REX ch AD 0
+
+  SI max_len <= 0
+    REDDE ""
+  FIN SI
+
+  DUM VERUM
+    VINCIRE ch AD CONIURA keyboard_fs_getc()
+
+    SI ch == 10 VEL ch == 13
+      CONIURA console_putc(10)
+      REDDE CONIURA keyboard_fs_line_to_verbum(builder)
+    FIN SI
+
+    SI ch == 8
+      SI CONIURA verbum_fs_builder_len(builder) > 0
+        OBSECRO cct_svc_builder_backspace(builder)
+        CONIURA console_putc(8)
+        CONIURA console_putc(32)
+        CONIURA console_putc(8)
+      FIN SI
+      RECEDE
+    FIN SI
+
+    SI ch >= 32 ET ch <= 126
+      SI CONIURA verbum_fs_builder_len(builder) < max_len
+        CONIURA verbum_fs_builder_append_char(builder, ch)
+        CONIURA console_putc(ch)
+      FIN SI
+    FIN SI
+  FIN DUM
+
+  REDDE ""
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

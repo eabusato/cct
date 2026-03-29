@@ -1,0 +1,80 @@
+-- CCT — Clavicula Turing
+-- Standard Library Module: timer_fs
+--
+-- FASE FS-3C: PIT timer bridge for freestanding targets
+--
+-- Copyright (c) Erick Andrade Busato. Todos os direitos reservados.
+
+INCIPIT grimoire "timer_fs"
+
+ADVOCARE "cct/verbum_fs"
+
+RITUALE timer_fs_uptime_ms() REDDE REX
+  REDDE OBSECRO cct_svc_timer_ms()
+EXPLICIT RITUALE
+
+RITUALE timer_fs_ticks() REDDE REX
+  REDDE OBSECRO cct_svc_timer_ticks()
+EXPLICIT RITUALE
+
+RITUALE timer_fs_sleep_ms(REX ms) REDDE NIHIL
+  OBSECRO cct_svc_timer_sleep(ms)
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE timer_fs_uptime_sec() REDDE REX
+  EVOCA REX ms AD CONIURA timer_fs_uptime_ms()
+  EVOCA REX sec AD 0
+  DUM ms >= 1000
+    VINCIRE ms AD ms - 1000
+    VINCIRE sec AD sec + 1
+  FIN DUM
+  REDDE sec
+EXPLICIT RITUALE
+
+RITUALE timer_fs_deadline_ms(REX delta_ms) REDDE REX
+  REDDE CONIURA timer_fs_uptime_ms() + delta_ms
+EXPLICIT RITUALE
+
+RITUALE timer_fs_elapsed_ms(REX started_ms) REDDE REX
+  REDDE CONIURA timer_fs_uptime_ms() - started_ms
+EXPLICIT RITUALE
+
+RITUALE timer_fs_deadline_expired(REX deadline_ms) REDDE VERUM
+  REDDE CONIURA timer_fs_uptime_ms() >= deadline_ms
+EXPLICIT RITUALE
+
+RITUALE timer_fs_format_uptime_ms() REDDE VERBUM
+  EVOCA SPECULUM NIHIL b AD CONIURA verbum_fs_builder_new()
+  CONIURA verbum_fs_builder_append_int(b, CONIURA timer_fs_uptime_ms())
+  CONIURA verbum_fs_builder_append(b, " ms")
+  REDDE CONIURA verbum_fs_builder_build(b)
+EXPLICIT RITUALE
+
+RITUALE timer_fs_format_uptime() REDDE VERBUM
+  EVOCA REX total_sec AD CONIURA timer_fs_uptime_sec()
+  EVOCA REX hours AD 0
+  EVOCA REX mins AD 0
+  EVOCA REX secs AD total_sec
+  EVOCA SPECULUM NIHIL b AD CONIURA verbum_fs_builder_new()
+
+  DUM secs >= 3600
+    VINCIRE secs AD secs - 3600
+    VINCIRE hours AD hours + 1
+  FIN DUM
+
+  DUM secs >= 60
+    VINCIRE secs AD secs - 60
+    VINCIRE mins AD mins + 1
+  FIN DUM
+
+  CONIURA verbum_fs_builder_append_int(b, hours)
+  CONIURA verbum_fs_builder_append(b, "h ")
+  CONIURA verbum_fs_builder_append_int(b, mins)
+  CONIURA verbum_fs_builder_append(b, "m ")
+  CONIURA verbum_fs_builder_append_int(b, secs)
+  CONIURA verbum_fs_builder_append(b, "s")
+  REDDE CONIURA verbum_fs_builder_build(b)
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

@@ -1,0 +1,10 @@
+INCIPIT grimoire "irq_fs_reject_host_fs3a"
+
+ADVOCARE "cct/irq_fs"
+
+RITUALE main() REDDE NIHIL
+  CONIURA irq_fs_enable()
+  REDDE
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

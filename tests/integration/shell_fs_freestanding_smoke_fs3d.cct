@@ -1,0 +1,15 @@
+INCIPIT grimoire "shell_fs_freestanding_smoke_fs3d"
+
+ADVOCARE "cct/shell_fs"
+
+RITUALE main() REDDE NIHIL
+  CONIURA shell_trim("  echo ok  ")
+  CONIURA shell_first_token("echo ok")
+  CONIURA shell_rest_args("echo ok")
+  CONIURA shell_fs_banner()
+  CONIURA shell_fs_prompt()
+  CONIURA shell_fs_init()
+  REDDE
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

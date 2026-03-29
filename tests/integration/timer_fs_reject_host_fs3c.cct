@@ -1,0 +1,10 @@
+INCIPIT grimoire "timer_fs_reject_host_fs3c"
+
+ADVOCARE "cct/timer_fs"
+
+RITUALE main() REDDE NIHIL
+  CONIURA timer_fs_sleep_ms(1)
+  REDDE
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

@@ -1,0 +1,65 @@
+-- CCT — Clavicula Turing
+-- Standard Library Module: irq_fs
+--
+-- FASE FS-3A: IRQ/PIC bridge for freestanding targets
+--
+-- Copyright (c) Erick Andrade Busato. Todos os direitos reservados.
+
+INCIPIT grimoire "irq_fs"
+
+ADVOCARE "cct/console"
+ADVOCARE "cct/kernel"
+
+RITUALE irq_fs_enable() REDDE NIHIL
+  OBSECRO cct_svc_irq_enable()
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE irq_fs_disable() REDDE NIHIL
+  OBSECRO cct_svc_irq_disable()
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE irq_fs_interrupts_enabled() REDDE VERUM
+  REDDE OBSECRO cct_svc_irq_flags() != 0
+EXPLICIT RITUALE
+
+RITUALE irq_fs_mask(REX num) REDDE NIHIL
+  OBSECRO cct_svc_irq_mask(num)
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE irq_fs_unmask(REX num) REDDE NIHIL
+  OBSECRO cct_svc_irq_unmask(num)
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE irq_fs_register(REX num, SPECULUM NIHIL handler_ref) REDDE NIHIL
+  OBSECRO cct_svc_irq_register(num, handler_ref)
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE irq_fs_unregister(REX num) REDDE NIHIL
+  OBSECRO cct_svc_irq_unregister(num)
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE irq_fs_panic(VERBUM mensagem) REDDE NIHIL
+  CONIURA irq_fs_disable()
+  CONIURA console_set_color(COR_BRANCO, COR_VERMELHO)
+  CONIURA console_clear()
+  CONIURA console_write_line("!!! CCT KERNEL PANIC !!!")
+  CONIURA console_write("message: ")
+  CONIURA console_write_line(mensagem)
+  CONIURA console_write_line("System halted.")
+  OBSECRO kernel_halt()
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE irq_fs_reboot() REDDE NIHIL
+  CONIURA irq_fs_disable()
+  OBSECRO cct_svc_reboot()
+  REDDE
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

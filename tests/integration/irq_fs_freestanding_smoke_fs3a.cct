@@ -1,0 +1,23 @@
+INCIPIT grimoire "irq_fs_freestanding_smoke_fs3a"
+
+ADVOCARE "cct/irq_fs"
+
+RITUALE sample_irq() REDDE NIHIL
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE main() REDDE NIHIL
+  CONIURA irq_fs_disable()
+  CONIURA irq_fs_mask(1)
+  CONIURA irq_fs_unmask(1)
+  CONIURA irq_fs_register(1, sample_irq)
+  CONIURA irq_fs_unregister(1)
+  SI CONIURA irq_fs_interrupts_enabled()
+    CONIURA irq_fs_disable()
+  FIN SI
+  CONIURA irq_fs_enable()
+  CONIURA irq_fs_disable()
+  REDDE
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

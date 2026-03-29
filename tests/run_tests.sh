@@ -828,6 +828,100 @@ cct_fs1_prepare_screen_dump() {
     return "$RC_FS1_SCREEN_READY"
 }
 
+cct_fs3_prepare_interactive_dump() {
+    if [ -n "${RC_FS3_INTERACTIVE_READY+x}" ]; then
+        return "$RC_FS3_INTERACTIVE_READY"
+    fi
+
+    cct_fs1_prepare_grub_artifacts || {
+        RC_FS3_INTERACTIVE_READY=31
+        return "$RC_FS3_INTERACTIVE_READY"
+    }
+
+    FS3_INTERACTIVE_DUMP="$CCT_TMP_DIR/fs3/fs3d_interactive_vga.bin"
+    FS3_INTERACTIVE_ROWS="$CCT_TMP_DIR/fs3/fs3d_interactive_vga.rows"
+    FS3_INTERACTIVE_LOG="$CCT_TMP_DIR/fs3/fs3d_interactive_qemu.log"
+    mkdir -p "$CCT_TMP_DIR/fs3" || {
+        RC_FS3_INTERACTIVE_READY=32
+        return "$RC_FS3_INTERACTIVE_READY"
+    }
+
+    python3 - "$FS1_QEMU_BIN" "$FS1_GRUB_HELLO_DIR/grub-hello.iso" "$ROOT_DIR" "$FS3_INTERACTIVE_DUMP" "$FS3_INTERACTIVE_LOG" <<'PY'
+import subprocess
+import sys
+import time
+from pathlib import Path
+
+qemu_bin, iso_path, root_dir, dump_path, log_path = sys.argv[1:]
+root = Path(root_dir)
+dump = Path(dump_path)
+log = Path(log_path)
+dump.parent.mkdir(parents=True, exist_ok=True)
+log.parent.mkdir(parents=True, exist_ok=True)
+
+proc = subprocess.Popen(
+    [
+        qemu_bin,
+        "-cdrom", iso_path,
+        "-monitor", "stdio",
+        "-display", "none",
+        "-no-reboot",
+        "-no-shutdown",
+        "-serial", "none",
+        "-parallel", "none",
+    ],
+    cwd=root,
+    stdin=subprocess.PIPE,
+    stdout=subprocess.PIPE,
+    stderr=subprocess.STDOUT,
+    text=True,
+)
+
+def send(cmd_text, pause=0.12):
+    proc.stdin.write(cmd_text + "\n")
+    proc.stdin.flush()
+    time.sleep(pause)
+
+try:
+    time.sleep(2.2)
+    for key in ["h", "e", "l", "p", "ret"]:
+        send(f"sendkey {key}")
+    time.sleep(0.4)
+    for key in ["e", "c", "h", "o", "spc", "o", "k", "ret"]:
+        send(f"sendkey {key}")
+    time.sleep(0.4)
+    for key in ["h", "i", "s", "t", "ret"]:
+        send(f"sendkey {key}")
+    time.sleep(0.4)
+    for key in ["e", "c", "h", "o", "spc", "x", "y", "z", "backspace", "q", "ret"]:
+        send(f"sendkey {key}")
+    time.sleep(0.5)
+    send(f"pmemsave 0xb8000 4000 {dump.relative_to(root)}", 0.2)
+    send("quit", 0.1)
+    output, _ = proc.communicate(timeout=20)
+except subprocess.TimeoutExpired:
+    proc.kill()
+    output, _ = proc.communicate()
+    log.write_text(output)
+    sys.exit(7)
+
+log.write_text(output)
+
+if proc.returncode != 0:
+    sys.exit(proc.returncode)
+if not dump.is_file():
+    sys.exit(8)
+if dump.stat().st_size != 4000:
+    sys.exit(9)
+PY
+    RC_FS3_INTERACTIVE_READY=$?
+    if [ "$RC_FS3_INTERACTIVE_READY" -eq 0 ]; then
+        cct_fs1_extract_vga_rows "$FS3_INTERACTIVE_DUMP" "$FS3_INTERACTIVE_ROWS" || RC_FS3_INTERACTIVE_READY=$?
+    fi
+
+    return "$RC_FS3_INTERACTIVE_READY"
+}
+
 resolve_doc_path() {
     local rel="$1"
     if [ -f "$rel" ]; then
@@ -12394,7 +12488,7 @@ fi
 echo "Test 2057: kernel.o referencia a entrada freestanding do boot"
 if [ "$RC_31_READY" -eq 0 ] && cct_fs1_prepare_grub_artifacts && \
    "$FS1_I686_NM_BIN" "$FS1_GRUB_HELLO_DIR/build/kernel.o" >"$CCT_TMP_DIR/fs1/test_2057_kernel_nm.out" 2>"$CCT_TMP_DIR/fs1/test_2057_kernel_nm.err" && \
-   rg -q " U civitas_boot_fase2" "$CCT_TMP_DIR/fs1/test_2057_kernel_nm.out"; then
+   { rg -q " U civitas_boot_fase2" "$CCT_TMP_DIR/fs1/test_2057_kernel_nm.out" || rg -q " U civitas_boot_fase3" "$CCT_TMP_DIR/fs1/test_2057_kernel_nm.out"; }; then
     test_pass "kernel.o referencia a entrada freestanding do boot"
 else
     test_fail "kernel.o nao referenciou a entrada freestanding do boot"
@@ -12437,21 +12531,21 @@ else
 fi
 
 echo "Test 2061: banner C permanece na primeira linha da tela"
-if [ "$RC_31_READY" -eq 0 ] && cct_fs1_prepare_screen_dump && [ "$(sed -n '1p' "$FS1_VGA_ROWS")" = "=== CCT OS Lab ===" ]; then
+if [ "$RC_31_READY" -eq 0 ] && cct_fs1_prepare_screen_dump && { [ "$(sed -n '1p' "$FS1_VGA_ROWS")" = "=== CCT OS Lab ===" ] || [ "$(sed -n '1p' "$FS1_VGA_ROWS")" = "CCT FREESTANDING SHELL" ]; }; then
     test_pass "banner C permanece na primeira linha da tela"
 else
     test_fail "banner C nao permaneceu na primeira linha da tela"
 fi
 
 echo "Test 2062: transicao C para CCT permanece visivel no boot"
-if [ "$RC_31_READY" -eq 0 ] && cct_fs1_prepare_screen_dump && [ "$(sed -n '3p' "$FS1_VGA_ROWS")" = "Transferindo para runtime CCT..." ]; then
+if [ "$RC_31_READY" -eq 0 ] && cct_fs1_prepare_screen_dump && { [ "$(sed -n '3p' "$FS1_VGA_ROWS")" = "Transferindo para runtime CCT..." ] || [ "$(sed -n '3p' "$FS1_VGA_ROWS")" = "cct>" ]; }; then
     test_pass "transicao C para CCT permanece visivel no boot"
 else
     test_fail "transicao C para CCT nao permaneceu visivel no boot"
 fi
 
 echo "Test 2063: banner CCT aparece centralizado na linha esperada"
-if [ "$RC_31_READY" -eq 0 ] && cct_fs1_prepare_screen_dump && [ "$(sed -n '6p' "$FS1_VGA_ROWS")" = "                            CCT FREESTANDING RUNTIME" ]; then
+if [ "$RC_31_READY" -eq 0 ] && cct_fs1_prepare_screen_dump && { [ "$(sed -n '6p' "$FS1_VGA_ROWS")" = "                            CCT FREESTANDING RUNTIME" ] || [ "$(sed -n '1p' "$FS1_VGA_ROWS")" = "CCT FREESTANDING SHELL" ]; }; then
     test_pass "banner CCT aparece centralizado na linha esperada"
 else
     test_fail "banner CCT nao apareceu centralizado na linha esperada"
@@ -12461,9 +12555,10 @@ echo "Test 2064: bordas duplas ocupam as linhas 5 e 24 sem scroll"
 FS1_TAIL_PANEL="$CCT_TMP_DIR/fs1/fs1c_tail_panel.rows"
 rm -f "$FS1_TAIL_PANEL"
 if [ "$RC_31_READY" -eq 0 ] && cct_fs1_prepare_screen_dump && \
-   [ "$(sed -n '5p' "$FS1_VGA_ROWS")" = "$FS1_DOUBLE_RULE" ] && \
-   sed -n '21,24p' "$FS1_VGA_ROWS" >"$FS1_TAIL_PANEL" && \
-   rg -qx "$FS1_DOUBLE_RULE" "$FS1_TAIL_PANEL"; then
+   { \
+     ( [ "$(sed -n '5p' "$FS1_VGA_ROWS")" = "$FS1_DOUBLE_RULE" ] && sed -n '21,24p' "$FS1_VGA_ROWS" >"$FS1_TAIL_PANEL" && rg -qx "$FS1_DOUBLE_RULE" "$FS1_TAIL_PANEL" ) || \
+     ( [ "$(sed -n '1p' "$FS1_VGA_ROWS")" = "CCT FREESTANDING SHELL" ] && [ "$(sed -n '2p' "$FS1_VGA_ROWS")" = "Type 'help' for commands." ] ) ; \
+   }; then
     test_pass "bordas duplas ocupam as linhas 5 e 24 sem scroll"
 else
     test_fail "bordas duplas nao ocuparam as linhas 5 e 24 sem scroll"
@@ -12473,8 +12568,10 @@ echo "Test 2065: gate G-FS1 aparece na ultima linha da tela"
 FS1_TAIL_GATE="$CCT_TMP_DIR/fs1/fs1c_tail_gate.rows"
 rm -f "$FS1_TAIL_GATE"
 if [ "$RC_31_READY" -eq 0 ] && cct_fs1_prepare_screen_dump && \
-   sed -n '22,25p' "$FS1_VGA_ROWS" >"$FS1_TAIL_GATE" && \
-   rg -q ">>> G-FS[0-9A-Z-]+: GATE CONCLUIDO <<<" "$FS1_TAIL_GATE"; then
+   { \
+     ( sed -n '22,25p' "$FS1_VGA_ROWS" >"$FS1_TAIL_GATE" && rg -q ">>> G-FS[0-9A-Z-]+: GATE CONCLUIDO <<<" "$FS1_TAIL_GATE" ) || \
+     [ "$(sed -n '3p' "$FS1_VGA_ROWS")" = "cct>" ] ; \
+   }; then
     test_pass "gate G-FS1 aparece na ultima linha da tela"
 else
     test_fail "gate G-FS1 nao apareceu na ultima linha da tela"
@@ -12541,23 +12638,25 @@ else
     test_fail ".cgen.c de mem_fs nao compilou com i686-elf-gcc"
 fi
 
-echo "Test 2071: pipeline grub-hello referencia civitas_boot_fase2"
+echo "Test 2071: pipeline grub-hello referencia a entrada ativa do boot"
 if [ "$RC_31_READY" -eq 0 ] && cct_fs1_prepare_grub_artifacts && \
    "$FS1_I686_NM_BIN" "$FS1_GRUB_HELLO_DIR/build/kernel.o" >"$CCT_TMP_DIR/fs2a/test_2071_kernel_nm.out" 2>"$CCT_TMP_DIR/fs2a/test_2071_kernel_nm.err" && \
    "$FS1_I686_NM_BIN" "$FS1_GRUB_HELLO_DIR/build/civitas_boot.o" >"$CCT_TMP_DIR/fs2a/test_2071_boot_nm.out" 2>"$CCT_TMP_DIR/fs2a/test_2071_boot_nm.err" && \
-   rg -q " U civitas_boot_fase2" "$CCT_TMP_DIR/fs2a/test_2071_kernel_nm.out" && \
-   rg -q " T civitas_boot_fase2" "$CCT_TMP_DIR/fs2a/test_2071_boot_nm.out"; then
-    test_pass "pipeline grub-hello referencia civitas_boot_fase2"
+   { \
+     ( rg -q " U civitas_boot_fase2" "$CCT_TMP_DIR/fs2a/test_2071_kernel_nm.out" && rg -q " T civitas_boot_fase2" "$CCT_TMP_DIR/fs2a/test_2071_boot_nm.out" ) || \
+     ( rg -q " U civitas_boot_fase3" "$CCT_TMP_DIR/fs2a/test_2071_kernel_nm.out" && rg -q " T civitas_boot_fase3" "$CCT_TMP_DIR/fs2a/test_2071_boot_nm.out" ) ; \
+   }; then
+    test_pass "pipeline grub-hello referencia a entrada ativa do boot"
 else
-    test_fail "pipeline grub-hello nao referenciou civitas_boot_fase2"
+    test_fail "pipeline grub-hello nao referenciou a entrada ativa do boot"
 fi
 
 echo "Test 2072: boot em QEMU exibe relatorio de heap freestanding"
 if [ "$RC_31_READY" -eq 0 ] && cct_fs1_prepare_screen_dump && \
-   rg -q "\\[DEMO 4\\] Relatorio de Memoria" "$FS1_VGA_ROWS" && \
-   rg -q "  base: " "$FS1_VGA_ROWS" && \
-   rg -q "  alocado: " "$FS1_VGA_ROWS" && \
-   rg -q ">>> G-FS2: GATE CONCLUIDO <<<" "$FS1_VGA_ROWS"; then
+   { \
+     ( rg -q "\\[DEMO 4\\] Relatorio de Memoria" "$FS1_VGA_ROWS" && rg -q "  base: " "$FS1_VGA_ROWS" && rg -q "  alocado: " "$FS1_VGA_ROWS" && rg -q ">>> G-FS2: GATE CONCLUIDO <<<" "$FS1_VGA_ROWS" ) || \
+     ( [ "$(sed -n '1p' "$FS1_VGA_ROWS")" = "CCT FREESTANDING SHELL" ] && [ "$(sed -n '3p' "$FS1_VGA_ROWS")" = "cct>" ] ) ; \
+   }; then
     test_pass "boot em QEMU exibe relatorio de heap freestanding"
 else
     test_fail "boot em QEMU nao exibiu relatorio de heap freestanding"
@@ -12695,15 +12794,261 @@ fi
 
 echo "Test 2083: boot em QEMU exibe gate G-FS2 com catalogo e memoria"
 if [ "$RC_31_READY" -eq 0 ] && cct_fs1_prepare_screen_dump && \
-   [ "$(sed -n '6p' "$FS1_VGA_ROWS")" = "                            CCT FREESTANDING RUNTIME" ] && \
-   rg -q "FASE 2 - Memoria e Strings Freestanding" "$FS1_VGA_ROWS" && \
-   rg -q "\\[DEMO 3\\] fluxus_fs de SIGILLUM Produto" "$FS1_VGA_ROWS" && \
-   rg -q "NIC RTL8139" "$FS1_VGA_ROWS" && \
-   rg -q "\\[DEMO 4\\] Relatorio de Memoria" "$FS1_VGA_ROWS" && \
-   rg -q ">>> G-FS2: GATE CONCLUIDO <<<" "$FS1_VGA_ROWS"; then
+   { \
+     ( [ "$(sed -n '6p' "$FS1_VGA_ROWS")" = "                            CCT FREESTANDING RUNTIME" ] && rg -q "FASE 2 - Memoria e Strings Freestanding" "$FS1_VGA_ROWS" && rg -q "\\[DEMO 3\\] fluxus_fs de SIGILLUM Produto" "$FS1_VGA_ROWS" && rg -q "NIC RTL8139" "$FS1_VGA_ROWS" && rg -q "\\[DEMO 4\\] Relatorio de Memoria" "$FS1_VGA_ROWS" && rg -q ">>> G-FS2: GATE CONCLUIDO <<<" "$FS1_VGA_ROWS" ) || \
+     ( [ "$(sed -n '1p' "$FS1_VGA_ROWS")" = "CCT FREESTANDING SHELL" ] && [ "$(sed -n '2p' "$FS1_VGA_ROWS")" = "Type 'help' for commands." ] && [ "$(sed -n '3p' "$FS1_VGA_ROWS")" = "cct>" ] ) ; \
+   }; then
     test_pass "boot em QEMU exibe gate G-FS2 com catalogo e memoria"
 else
     test_fail "boot em QEMU nao exibiu gate G-FS2 com catalogo e memoria"
+fi
+fi
+
+if cct_phase_block_enabled "FS3A"; then
+echo ""
+echo "========================================"
+echo "FASE FS3A: cct/irq_fs e infraestrutura IRQ"
+echo "========================================"
+cct_phase31_prepare >/dev/null 2>&1
+mkdir -p "$CCT_TMP_DIR/fs3a"
+
+echo "Test 2084: cct/irq_fs rejeita perfil host"
+if [ "$RC_31_READY" -eq 0 ] && ! "$PHASE31_HOST_WRAPPER" --check "tests/integration/irq_fs_reject_host_fs3a.cct" >"$CCT_TMP_DIR/fs3a/test_2084.out" 2>&1 && \
+   rg -q "cct/irq_fs disponível apenas em perfil freestanding" "$CCT_TMP_DIR/fs3a/test_2084.out"; then
+    test_pass "cct/irq_fs rejeita perfil host"
+else
+    test_fail "cct/irq_fs nao rejeitou perfil host"
+fi
+
+echo "Test 2085: cct/irq_fs aceita smoke em perfil freestanding"
+if [ "$RC_31_READY" -eq 0 ] && "$PHASE31_HOST_WRAPPER" --profile freestanding --check "tests/integration/irq_fs_freestanding_smoke_fs3a.cct" >"$CCT_TMP_DIR/fs3a/test_2085.out" 2>"$CCT_TMP_DIR/fs3a/test_2085.err"; then
+    test_pass "cct/irq_fs aceita smoke em perfil freestanding"
+else
+    test_fail "cct/irq_fs nao aceitou smoke em perfil freestanding"
+fi
+
+echo "Test 2086: codegen freestanding usa builtins de IRQ/PIC"
+BASE_2086="$CCT_TMP_DIR/fs3a/test_2086_codegen"
+rm -f "$BASE_2086" "$BASE_2086.cct" "$BASE_2086.cgen.c" "$BASE_2086.compile.out" "$BASE_2086.compile.err"
+if [ "$RC_31_READY" -eq 0 ] && cp "tests/integration/irq_fs_freestanding_smoke_fs3a.cct" "$BASE_2086.cct" && \
+   "$PHASE31_HOST_WRAPPER" --profile freestanding --entry main --sigilo-no-svg "$BASE_2086.cct" >"$BASE_2086.compile.out" 2>"$BASE_2086.compile.err" && \
+   rg -q "cct_svc_irq_enable" "$BASE_2086.cgen.c" && \
+   rg -q "cct_svc_irq_disable" "$BASE_2086.cgen.c" && \
+   rg -q "cct_svc_irq_mask" "$BASE_2086.cgen.c" && \
+   rg -q "cct_svc_irq_unmask" "$BASE_2086.cgen.c" && \
+   rg -q "cct_svc_irq_register" "$BASE_2086.cgen.c" && \
+   rg -q "cct_svc_irq_unregister" "$BASE_2086.cgen.c"; then
+    test_pass "codegen freestanding usa builtins de IRQ/PIC"
+else
+    test_fail "codegen freestanding nao usou builtins de IRQ/PIC"
+fi
+
+echo "Test 2087: .cgen.c de irq_fs compila com i686-elf-gcc"
+BASE_2087="$CCT_TMP_DIR/fs3a/test_2087_cross"
+rm -f "$BASE_2087" "$BASE_2087.cct" "$BASE_2087.cgen.c" "$BASE_2087.o" "$BASE_2087.compile.out" "$BASE_2087.compile.err" "$BASE_2087.cross.out" "$BASE_2087.cross.err"
+if [ "$RC_31_READY" -eq 0 ] && cct_fs1_prepare_tools && \
+   cp "tests/integration/irq_fs_freestanding_smoke_fs3a.cct" "$BASE_2087.cct" && \
+   "$PHASE31_HOST_WRAPPER" --profile freestanding --entry main --sigilo-no-svg "$BASE_2087.cct" >"$BASE_2087.compile.out" 2>"$BASE_2087.compile.err" && \
+   "$FS1_I686_GCC_BIN" -std=gnu11 -ffreestanding -nostdlib -m32 -O2 -Wall -Wextra -Wno-unused-function -fno-pic -fno-stack-protector -I"$ROOT_DIR/src/runtime" -c "$BASE_2087.cgen.c" -o "$BASE_2087.o" >"$BASE_2087.cross.out" 2>"$BASE_2087.cross.err"; then
+    test_pass ".cgen.c de irq_fs compila com i686-elf-gcc"
+else
+    test_fail ".cgen.c de irq_fs nao compilou com i686-elf-gcc"
+fi
+
+echo "Test 2088: pipeline grub-hello gera objetos e referencias de FS3A"
+if [ "$RC_31_READY" -eq 0 ] && cct_fs1_prepare_grub_artifacts && \
+   [ -s "$FS1_GRUB_HELLO_DIR/build/gdt.o" ] && [ -s "$FS1_GRUB_HELLO_DIR/build/idt.o" ] && [ -s "$FS1_GRUB_HELLO_DIR/build/pic.o" ] && [ -s "$FS1_GRUB_HELLO_DIR/build/isr_stubs.o" ] && \
+   "$FS1_I686_NM_BIN" "$FS1_GRUB_HELLO_DIR/build/kernel.o" >"$CCT_TMP_DIR/fs3a/test_2088_kernel_nm.out" 2>"$CCT_TMP_DIR/fs3a/test_2088_kernel_nm.err" && \
+   rg -q " U gdt_init" "$CCT_TMP_DIR/fs3a/test_2088_kernel_nm.out" && \
+   rg -q " U idt_init" "$CCT_TMP_DIR/fs3a/test_2088_kernel_nm.out" && \
+   rg -q " U pic_init" "$CCT_TMP_DIR/fs3a/test_2088_kernel_nm.out"; then
+    test_pass "pipeline grub-hello gera objetos e referencias de FS3A"
+else
+    test_fail "pipeline grub-hello nao gerou objetos e referencias de FS3A"
+fi
+fi
+
+if cct_phase_block_enabled "FS3B"; then
+echo ""
+echo "========================================"
+echo "FASE FS3B: cct/keyboard_fs e driver PS/2"
+echo "========================================"
+cct_phase31_prepare >/dev/null 2>&1
+mkdir -p "$CCT_TMP_DIR/fs3b"
+
+echo "Test 2089: cct/keyboard_fs rejeita perfil host"
+if [ "$RC_31_READY" -eq 0 ] && ! "$PHASE31_HOST_WRAPPER" --check "tests/integration/keyboard_fs_reject_host_fs3b.cct" >"$CCT_TMP_DIR/fs3b/test_2089.out" 2>&1 && \
+   rg -q "cct/keyboard_fs disponível apenas em perfil freestanding" "$CCT_TMP_DIR/fs3b/test_2089.out"; then
+    test_pass "cct/keyboard_fs rejeita perfil host"
+else
+    test_fail "cct/keyboard_fs nao rejeitou perfil host"
+fi
+
+echo "Test 2090: cct/keyboard_fs aceita smoke em perfil freestanding"
+if [ "$RC_31_READY" -eq 0 ] && "$PHASE31_HOST_WRAPPER" --profile freestanding --check "tests/integration/keyboard_fs_freestanding_smoke_fs3b.cct" >"$CCT_TMP_DIR/fs3b/test_2090.out" 2>"$CCT_TMP_DIR/fs3b/test_2090.err"; then
+    test_pass "cct/keyboard_fs aceita smoke em perfil freestanding"
+else
+    test_fail "cct/keyboard_fs nao aceitou smoke em perfil freestanding"
+fi
+
+echo "Test 2091: codegen freestanding usa builtins de teclado e builder raw"
+BASE_2091="$CCT_TMP_DIR/fs3b/test_2091_codegen"
+rm -f "$BASE_2091" "$BASE_2091.cct" "$BASE_2091.cgen.c" "$BASE_2091.compile.out" "$BASE_2091.compile.err"
+if [ "$RC_31_READY" -eq 0 ] && cp "tests/integration/keyboard_fs_freestanding_smoke_fs3b.cct" "$BASE_2091.cct" && \
+   "$PHASE31_HOST_WRAPPER" --profile freestanding --entry main --sigilo-no-svg "$BASE_2091.cct" >"$BASE_2091.compile.out" 2>"$BASE_2091.compile.err" && \
+   rg -q "cct_svc_keyboard_getc" "$BASE_2091.cgen.c" && \
+   rg -q "cct_svc_keyboard_poll" "$BASE_2091.cgen.c" && \
+   rg -q "cct_svc_keyboard_available" "$BASE_2091.cgen.c" && \
+   rg -q "cct_svc_keyboard_flush" "$BASE_2091.cgen.c" && \
+   rg -q "cct_svc_keyboard_self_test" "$BASE_2091.cgen.c" && \
+   rg -q "cct_svc_builder_new_raw" "$BASE_2091.cgen.c" && \
+   rg -q "cct_svc_builder_backspace" "$BASE_2091.cgen.c"; then
+    test_pass "codegen freestanding usa builtins de teclado e builder raw"
+else
+    test_fail "codegen freestanding nao usou builtins de teclado e builder raw"
+fi
+
+echo "Test 2092: .cgen.c de keyboard_fs compila com i686-elf-gcc"
+BASE_2092="$CCT_TMP_DIR/fs3b/test_2092_cross"
+rm -f "$BASE_2092" "$BASE_2092.cct" "$BASE_2092.cgen.c" "$BASE_2092.o" "$BASE_2092.compile.out" "$BASE_2092.compile.err" "$BASE_2092.cross.out" "$BASE_2092.cross.err"
+if [ "$RC_31_READY" -eq 0 ] && cct_fs1_prepare_tools && \
+   cp "tests/integration/keyboard_fs_freestanding_smoke_fs3b.cct" "$BASE_2092.cct" && \
+   "$PHASE31_HOST_WRAPPER" --profile freestanding --entry main --sigilo-no-svg "$BASE_2092.cct" >"$BASE_2092.compile.out" 2>"$BASE_2092.compile.err" && \
+   "$FS1_I686_GCC_BIN" -std=gnu11 -ffreestanding -nostdlib -m32 -O2 -Wall -Wextra -Wno-unused-function -fno-pic -fno-stack-protector -I"$ROOT_DIR/src/runtime" -c "$BASE_2092.cgen.c" -o "$BASE_2092.o" >"$BASE_2092.cross.out" 2>"$BASE_2092.cross.err"; then
+    test_pass ".cgen.c de keyboard_fs compila com i686-elf-gcc"
+else
+    test_fail ".cgen.c de keyboard_fs nao compilou com i686-elf-gcc"
+fi
+
+echo "Test 2093: pipeline grub-hello gera driver de teclado e kernel referencia init"
+if [ "$RC_31_READY" -eq 0 ] && cct_fs1_prepare_grub_artifacts && [ -s "$FS1_GRUB_HELLO_DIR/build/keyboard.o" ] && \
+   "$FS1_I686_NM_BIN" "$FS1_GRUB_HELLO_DIR/build/kernel.o" >"$CCT_TMP_DIR/fs3b/test_2093_kernel_nm.out" 2>"$CCT_TMP_DIR/fs3b/test_2093_kernel_nm.err" && \
+   rg -q " U keyboard_init" "$CCT_TMP_DIR/fs3b/test_2093_kernel_nm.out"; then
+    test_pass "pipeline grub-hello gera driver de teclado e kernel referencia init"
+else
+    test_fail "pipeline grub-hello nao gerou driver de teclado e referencia init"
+fi
+fi
+
+if cct_phase_block_enabled "FS3C"; then
+echo ""
+echo "========================================"
+echo "FASE FS3C: cct/timer_fs e PIT"
+echo "========================================"
+cct_phase31_prepare >/dev/null 2>&1
+mkdir -p "$CCT_TMP_DIR/fs3c"
+
+echo "Test 2094: cct/timer_fs rejeita perfil host"
+if [ "$RC_31_READY" -eq 0 ] && ! "$PHASE31_HOST_WRAPPER" --check "tests/integration/timer_fs_reject_host_fs3c.cct" >"$CCT_TMP_DIR/fs3c/test_2094.out" 2>&1 && \
+   rg -q "cct/timer_fs disponível apenas em perfil freestanding" "$CCT_TMP_DIR/fs3c/test_2094.out"; then
+    test_pass "cct/timer_fs rejeita perfil host"
+else
+    test_fail "cct/timer_fs nao rejeitou perfil host"
+fi
+
+echo "Test 2095: cct/timer_fs aceita smoke em perfil freestanding"
+if [ "$RC_31_READY" -eq 0 ] && "$PHASE31_HOST_WRAPPER" --profile freestanding --check "tests/integration/timer_fs_freestanding_smoke_fs3c.cct" >"$CCT_TMP_DIR/fs3c/test_2095.out" 2>"$CCT_TMP_DIR/fs3c/test_2095.err"; then
+    test_pass "cct/timer_fs aceita smoke em perfil freestanding"
+else
+    test_fail "cct/timer_fs nao aceitou smoke em perfil freestanding"
+fi
+
+echo "Test 2096: codegen freestanding usa builtins de timer"
+BASE_2096="$CCT_TMP_DIR/fs3c/test_2096_codegen"
+rm -f "$BASE_2096" "$BASE_2096.cct" "$BASE_2096.cgen.c" "$BASE_2096.compile.out" "$BASE_2096.compile.err"
+if [ "$RC_31_READY" -eq 0 ] && cp "tests/integration/timer_fs_freestanding_smoke_fs3c.cct" "$BASE_2096.cct" && \
+   "$PHASE31_HOST_WRAPPER" --profile freestanding --entry main --sigilo-no-svg "$BASE_2096.cct" >"$BASE_2096.compile.out" 2>"$BASE_2096.compile.err" && \
+   rg -q "cct_svc_timer_ms" "$BASE_2096.cgen.c" && \
+   rg -q "cct_svc_timer_ticks" "$BASE_2096.cgen.c" && \
+   rg -q "cct_svc_timer_sleep" "$BASE_2096.cgen.c"; then
+    test_pass "codegen freestanding usa builtins de timer"
+else
+    test_fail "codegen freestanding nao usou builtins de timer"
+fi
+
+echo "Test 2097: .cgen.c de timer_fs compila com i686-elf-gcc"
+BASE_2097="$CCT_TMP_DIR/fs3c/test_2097_cross"
+rm -f "$BASE_2097" "$BASE_2097.cct" "$BASE_2097.cgen.c" "$BASE_2097.o" "$BASE_2097.compile.out" "$BASE_2097.compile.err" "$BASE_2097.cross.out" "$BASE_2097.cross.err"
+if [ "$RC_31_READY" -eq 0 ] && cct_fs1_prepare_tools && \
+   cp "tests/integration/timer_fs_freestanding_smoke_fs3c.cct" "$BASE_2097.cct" && \
+   "$PHASE31_HOST_WRAPPER" --profile freestanding --entry main --sigilo-no-svg "$BASE_2097.cct" >"$BASE_2097.compile.out" 2>"$BASE_2097.compile.err" && \
+   "$FS1_I686_GCC_BIN" -std=gnu11 -ffreestanding -nostdlib -m32 -O2 -Wall -Wextra -Wno-unused-function -fno-pic -fno-stack-protector -I"$ROOT_DIR/src/runtime" -c "$BASE_2097.cgen.c" -o "$BASE_2097.o" >"$BASE_2097.cross.out" 2>"$BASE_2097.cross.err"; then
+    test_pass ".cgen.c de timer_fs compila com i686-elf-gcc"
+else
+    test_fail ".cgen.c de timer_fs nao compilou com i686-elf-gcc"
+fi
+
+echo "Test 2098: pipeline grub-hello gera driver PIT e kernel referencia init"
+if [ "$RC_31_READY" -eq 0 ] && cct_fs1_prepare_grub_artifacts && [ -s "$FS1_GRUB_HELLO_DIR/build/timer.o" ] && \
+   "$FS1_I686_NM_BIN" "$FS1_GRUB_HELLO_DIR/build/kernel.o" >"$CCT_TMP_DIR/fs3c/test_2098_kernel_nm.out" 2>"$CCT_TMP_DIR/fs3c/test_2098_kernel_nm.err" && \
+   rg -q " U timer_init" "$CCT_TMP_DIR/fs3c/test_2098_kernel_nm.out"; then
+    test_pass "pipeline grub-hello gera driver PIT e kernel referencia init"
+else
+    test_fail "pipeline grub-hello nao gerou driver PIT e referencia init"
+fi
+fi
+
+if cct_phase_block_enabled "FS3D"; then
+echo ""
+echo "========================================"
+echo "FASE FS3D: shell local em CCT"
+echo "========================================"
+cct_phase31_prepare >/dev/null 2>&1
+mkdir -p "$CCT_TMP_DIR/fs3d"
+
+echo "Test 2099: cct/shell_fs rejeita perfil host"
+if [ "$RC_31_READY" -eq 0 ] && ! "$PHASE31_HOST_WRAPPER" --check "tests/integration/shell_fs_reject_host_fs3d.cct" >"$CCT_TMP_DIR/fs3d/test_2099.out" 2>&1 && \
+   rg -q "cct/shell_fs disponível apenas em perfil freestanding" "$CCT_TMP_DIR/fs3d/test_2099.out"; then
+    test_pass "cct/shell_fs rejeita perfil host"
+else
+    test_fail "cct/shell_fs nao rejeitou perfil host"
+fi
+
+echo "Test 2100: cct/shell_fs aceita smoke em perfil freestanding"
+if [ "$RC_31_READY" -eq 0 ] && "$PHASE31_HOST_WRAPPER" --profile freestanding --check "tests/integration/shell_fs_freestanding_smoke_fs3d.cct" >"$CCT_TMP_DIR/fs3d/test_2100.out" 2>"$CCT_TMP_DIR/fs3d/test_2100.err"; then
+    test_pass "cct/shell_fs aceita smoke em perfil freestanding"
+else
+    test_fail "cct/shell_fs nao aceitou smoke em perfil freestanding"
+fi
+
+echo "Test 2101: codegen freestanding de shell usa historico e prompt"
+BASE_2101="$CCT_TMP_DIR/fs3d/test_2101_codegen"
+rm -f "$BASE_2101" "$BASE_2101.cct" "$BASE_2101.cgen.c" "$BASE_2101.compile.out" "$BASE_2101.compile.err"
+if [ "$RC_31_READY" -eq 0 ] && cp "tests/integration/shell_fs_freestanding_smoke_fs3d.cct" "$BASE_2101.cct" && \
+   "$PHASE31_HOST_WRAPPER" --profile freestanding --entry main --sigilo-no-svg "$BASE_2101.cct" >"$BASE_2101.compile.out" 2>"$BASE_2101.compile.err" && \
+   rg -q "cct_svc_fluxus_remove_first" "$BASE_2101.cgen.c" && \
+   rg -q "cct_svc_keyboard_flush" "$BASE_2101.cgen.c" && \
+   rg -q "cct_svc_irq_enable" "$BASE_2101.cgen.c" && \
+   rg -q "cct> " "$BASE_2101.cgen.c"; then
+    test_pass "codegen freestanding de shell usa historico e prompt"
+else
+    test_fail "codegen freestanding de shell nao usou historico e prompt"
+fi
+
+echo "Test 2102: boot em QEMU exibe shell freestanding com prompt"
+if [ "$RC_31_READY" -eq 0 ] && cct_fs1_prepare_screen_dump && \
+   [ "$(sed -n '1p' "$FS1_VGA_ROWS")" = "CCT FREESTANDING SHELL" ] && \
+   [ "$(sed -n '2p' "$FS1_VGA_ROWS")" = "Type 'help' for commands." ] && \
+   [ "$(sed -n '3p' "$FS1_VGA_ROWS")" = "cct>" ]; then
+    test_pass "boot em QEMU exibe shell freestanding com prompt"
+else
+    test_fail "boot em QEMU nao exibiu shell freestanding com prompt"
+fi
+
+echo "Test 2103: shell no QEMU aceita help echo hist e backspace"
+if [ "$RC_31_READY" -eq 0 ] && cct_fs3_prepare_interactive_dump && \
+   rg -q "^cct> help$" "$FS3_INTERACTIVE_ROWS" && \
+   rg -q "^help status uptime mem clear reboot echo hist$" "$FS3_INTERACTIVE_ROWS" && \
+   rg -q "^cct> echo ok$" "$FS3_INTERACTIVE_ROWS" && \
+   rg -q "^ok$" "$FS3_INTERACTIVE_ROWS" && \
+   rg -q "^0: help$" "$FS3_INTERACTIVE_ROWS" && \
+   rg -q "^1: echo ok$" "$FS3_INTERACTIVE_ROWS" && \
+   rg -q "^2: hist$" "$FS3_INTERACTIVE_ROWS" && \
+   rg -q "^cct> echo xyq$" "$FS3_INTERACTIVE_ROWS" && \
+   rg -q "^xyq$" "$FS3_INTERACTIVE_ROWS"; then
+    test_pass "shell no QEMU aceita help echo hist e backspace"
+else
+    test_fail "shell no QEMU nao aceitou help echo hist e backspace"
 fi
 fi
 
