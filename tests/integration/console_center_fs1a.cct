@@ -1,0 +1,12 @@
+INCIPIT grimoire "console_center_fs1a"
+
+ADVOCARE "cct/console"
+
+RITUALE main() REDDE NIHIL
+  CONIURA console_init()
+  CONIURA console_set_color(COR_AMARELO, COR_PRETO)
+  CONIURA console_write_centered("CENTER")
+  REDDE
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

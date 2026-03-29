@@ -8,10 +8,10 @@ semantic_hash = 422bb7dd5efc7567
 layout_seed = 422bb7dd5efc7567:network
 module_mode = composed
 module_count = 57
-import_edge_count = 256
+import_edge_count = 257
 entry_module = src/bootstrap/main_compiler.cct
-cross_module_call_count = 4074
-cross_module_type_ref_count = 820
+cross_module_call_count = 4093
+cross_module_type_ref_count = 826
 module_resolution_status = ok
 stdlib_module_count = 5
 stdlib_modules_used = verbum,fmt,fluxus,fs,path
@@ -34,7 +34,7 @@ map_module_used = false
 set_module_used = false
 collection_ops_module_used = false
 visibility_model = public_default_arcanum_internal
-public_symbol_count = 785
+public_symbol_count = 788
 internal_symbol_count = 0
 
 [metrics]
@@ -195,11 +195,11 @@ entry_anchor = src/bootstrap/main_compiler.cct
 [module_structural_summary]
 module_count = 57
 module_mode = composed
-import_edge_count = 256
-cross_module_call_count = 4074
-cross_module_type_ref_count = 820
+import_edge_count = 257
+cross_module_call_count = 4093
+cross_module_type_ref_count = 826
 ritual_count = 21
-public_symbol_count = 785
+public_symbol_count = 788
 internal_symbol_count = 0
 module_resolution_status = ok
 

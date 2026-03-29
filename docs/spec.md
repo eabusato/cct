@@ -145,18 +145,24 @@ Profile contract:
 
 Freestanding module policy:
 - `cct/kernel` is supported only in freestanding.
+- `cct/console`, `cct/mem_fs`, `cct/verbum_fs`, and `cct/fluxus_fs` are supported only in freestanding.
 - `cct/io`, `cct/fs`, and dynamic runtime-heavy host modules remain blocked in freestanding.
 - `cct/socket`, `cct/net`, `cct/http`, `cct/config`, and `cct/db_sqlite` are host-only in the current subset.
 - `cct/kernel` must be rejected in host profile.
+- `cct/console`, `cct/mem_fs`, `cct/verbum_fs`, and `cct/fluxus_fs` must be rejected in host profile.
 
 Supported freestanding surface (summary):
 - scalar arithmetic and control flow subset used by the bridge;
 - bitwise operators and static data forms validated in FASE 16;
-- kernel service lowering via `cct/kernel` wrappers.
+- kernel service lowering via `cct/kernel` wrappers;
+- VGA text console via `cct/console`;
+- bump-allocator heap plus byte-copy helpers via `cct/mem_fs`;
+- heap-backed dynamic strings via `cct/verbum_fs`;
+- heap-backed dynamic arrays via `cct/fluxus_fs`.
 
 Restricted/prohibited freestanding surface (summary):
 - host I/O/filesystem modules (`cct/io`, `cct/fs`);
-- heap/dynamic structures outside validated subset;
+- heap/dynamic structures outside the validated FS-2 subset;
 - dynamic `GENUS/PACTUM` paths;
 - unsupported soft-float target paths (`COMES`/`MILES` keep warning-only diagnostics where applicable).
 

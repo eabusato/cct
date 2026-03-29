@@ -1,0 +1,17 @@
+INCIPIT grimoire "mem_fs_realloc_fs2a"
+
+ADVOCARE "cct/mem_fs"
+
+RITUALE main() REDDE NIHIL
+  EVOCA SPECULUM NIHIL ptr AD CONIURA mem_fs_alloc(8)
+  EVOCA SPECULUM NIHIL grown AD CONIURA mem_fs_realloc(ptr, 8, 32)
+  EVOCA REX diff AD CONIURA mem_fs_compare(grown, ptr, 8)
+  SI diff == 123456
+    CONIURA mem_fs_free(grown)
+    REDDE
+  FIN SI
+  CONIURA mem_fs_free(grown)
+  REDDE
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

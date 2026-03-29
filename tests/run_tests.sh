@@ -651,6 +651,183 @@ cct_phase32_copy_compile_and_run_env_args() {
     return 0
 }
 
+cct_fs1_prepare_tools() {
+    if [ -n "${RC_FS1_TOOLS_READY+x}" ]; then
+        return "$RC_FS1_TOOLS_READY"
+    fi
+
+    FS1_GRUB_HELLO_DIR="$ROOT_DIR/../grub-hello"
+    FS1_I686_GCC_BIN="$(command -v i686-elf-gcc || true)"
+    FS1_I686_NM_BIN="$(command -v i686-elf-nm || true)"
+    FS1_GRUB_FILE_BIN="$(command -v i686-elf-grub-file || command -v grub-file || true)"
+    FS1_QEMU_BIN="$(command -v qemu-system-i386 || true)"
+
+    if [ -d "$FS1_GRUB_HELLO_DIR" ] &&
+       [ -n "$FS1_I686_GCC_BIN" ] &&
+       [ -n "$FS1_I686_NM_BIN" ] &&
+       [ -n "$FS1_GRUB_FILE_BIN" ] &&
+       [ -n "$FS1_QEMU_BIN" ]; then
+        RC_FS1_TOOLS_READY=0
+    else
+        RC_FS1_TOOLS_READY=1
+    fi
+
+    return "$RC_FS1_TOOLS_READY"
+}
+
+cct_fs1_build_grub_hello() {
+    local log_file="$1"
+
+    cct_fs1_prepare_tools || return 11
+    mkdir -p "$(dirname "$log_file")" || return 12
+
+    (
+        cd "$FS1_GRUB_HELLO_DIR" &&
+        make clean &&
+        make iso
+    ) >"$log_file" 2>&1 || return 13
+
+    return 0
+}
+
+cct_fs1_prepare_grub_artifacts() {
+    if [ -n "${RC_FS1_GRUB_READY+x}" ]; then
+        return "$RC_FS1_GRUB_READY"
+    fi
+
+    cct_fs1_prepare_tools || {
+        RC_FS1_GRUB_READY=11
+        return "$RC_FS1_GRUB_READY"
+    }
+
+    if [ -s "$FS1_GRUB_HELLO_DIR/grub-hello.iso" ] &&
+       [ -s "$FS1_GRUB_HELLO_DIR/isodir/boot/kernel.bin" ] &&
+       [ -s "$FS1_GRUB_HELLO_DIR/build/kernel.o" ] &&
+       [ -s "$FS1_GRUB_HELLO_DIR/build/civitas_boot.o" ] &&
+       [ -s "$FS1_GRUB_HELLO_DIR/build/cct_freestanding_rt.o" ]; then
+        RC_FS1_GRUB_READY=0
+        return 0
+    fi
+
+    mkdir -p "$CCT_TMP_DIR/fs1" || {
+        RC_FS1_GRUB_READY=14
+        return "$RC_FS1_GRUB_READY"
+    }
+
+    cct_fs1_build_grub_hello "$CCT_TMP_DIR/fs1/grub_hello_build.log"
+    RC_FS1_GRUB_READY=$?
+    return "$RC_FS1_GRUB_READY"
+}
+
+cct_fs1_capture_vga_screen() {
+    local dump_path="$1"
+    local log_path="$2"
+
+    cct_fs1_prepare_grub_artifacts || return 21
+
+    python3 - "$FS1_QEMU_BIN" "$FS1_GRUB_HELLO_DIR/grub-hello.iso" "$ROOT_DIR" "$dump_path" "$log_path" <<'PY'
+import os
+import subprocess
+import sys
+import time
+from pathlib import Path
+
+qemu_bin, iso_path, root_dir, dump_path, log_path = sys.argv[1:]
+root = Path(root_dir)
+dump = Path(dump_path)
+log = Path(log_path)
+
+dump.parent.mkdir(parents=True, exist_ok=True)
+log.parent.mkdir(parents=True, exist_ok=True)
+
+rel_dump = os.path.relpath(dump, root)
+cmd = [
+    qemu_bin,
+    "-cdrom", iso_path,
+    "-monitor", "stdio",
+    "-display", "none",
+    "-no-reboot",
+    "-no-shutdown",
+    "-serial", "none",
+    "-parallel", "none",
+]
+
+proc = subprocess.Popen(
+    cmd,
+    cwd=root,
+    stdin=subprocess.PIPE,
+    stdout=subprocess.PIPE,
+    stderr=subprocess.STDOUT,
+    text=True,
+)
+
+try:
+    time.sleep(2.5)
+    proc.stdin.write(f"pmemsave 0xb8000 4000 {rel_dump}\nquit\n")
+    proc.stdin.flush()
+    output, _ = proc.communicate(timeout=15)
+except subprocess.TimeoutExpired:
+    proc.kill()
+    output, _ = proc.communicate()
+    log.write_text(output)
+    sys.exit(7)
+
+log.write_text(output)
+
+if proc.returncode != 0:
+    sys.exit(proc.returncode)
+if not dump.is_file():
+    sys.exit(8)
+if dump.stat().st_size != 4000:
+    sys.exit(9)
+PY
+}
+
+cct_fs1_extract_vga_rows() {
+    local dump_path="$1"
+    local rows_path="$2"
+
+    python3 - "$dump_path" "$rows_path" <<'PY'
+import sys
+from pathlib import Path
+
+dump = Path(sys.argv[1])
+rows_out = Path(sys.argv[2])
+data = dump.read_bytes()
+
+if len(data) != 4000:
+    raise SystemExit(5)
+
+rows = []
+for row in range(25):
+    chars = []
+    for col in range(80):
+        ch = data[(row * 80 + col) * 2]
+        chars.append(chr(ch) if 32 <= ch < 127 else " ")
+    rows.append("".join(chars).rstrip())
+
+rows_out.write_text("\n".join(rows) + "\n")
+PY
+}
+
+cct_fs1_prepare_screen_dump() {
+    if [ -n "${RC_FS1_SCREEN_READY+x}" ]; then
+        return "$RC_FS1_SCREEN_READY"
+    fi
+
+    FS1_VGA_DUMP="$CCT_TMP_DIR/fs1/fs1c_vga.bin"
+    FS1_VGA_ROWS="$CCT_TMP_DIR/fs1/fs1c_vga.rows"
+    FS1_QEMU_LOG="$CCT_TMP_DIR/fs1/fs1c_qemu.log"
+
+    cct_fs1_capture_vga_screen "$FS1_VGA_DUMP" "$FS1_QEMU_LOG"
+    RC_FS1_SCREEN_READY=$?
+    if [ "$RC_FS1_SCREEN_READY" -eq 0 ]; then
+        cct_fs1_extract_vga_rows "$FS1_VGA_DUMP" "$FS1_VGA_ROWS" || RC_FS1_SCREEN_READY=$?
+    fi
+
+    return "$RC_FS1_SCREEN_READY"
+}
+
 resolve_doc_path() {
     local rel="$1"
     if [ -f "$rel" ]; then
@@ -12119,6 +12296,414 @@ if [ -x "$CCT_BIN" ] && cct_phase32_copy_compile_and_run "$CCT_BIN" "tests/integ
     test_pass "db_sqlite cobre query_count e query_exists via statement preparado"
 else
     test_fail "db_sqlite nao cobriu query_count e query_exists via statement preparado"
+fi
+fi
+
+if cct_phase_block_enabled "FS1A"; then
+echo ""
+echo "========================================"
+echo "FASE FS1A: cct/console freestanding"
+echo "========================================"
+cct_phase31_prepare >/dev/null 2>&1
+mkdir -p "$CCT_TMP_DIR/fs1a"
+
+echo "Test 2049: cct/console rejeita perfil host"
+if [ "$RC_31_READY" -eq 0 ] && ! "$PHASE31_HOST_WRAPPER" --check "tests/integration/console_reject_host_fs1a.cct" >"$CCT_TMP_DIR/fs1a/test_2049.out" 2>&1 && \
+   rg -q "cct/console disponível apenas em perfil freestanding" "$CCT_TMP_DIR/fs1a/test_2049.out"; then
+    test_pass "cct/console rejeita perfil host"
+else
+    test_fail "cct/console nao rejeitou perfil host"
+fi
+
+echo "Test 2050: cct/console aceita smoke em perfil freestanding"
+if [ "$RC_31_READY" -eq 0 ] && "$PHASE31_HOST_WRAPPER" --profile freestanding --check "tests/integration/console_freestanding_smoke_fs1a.cct" >"$CCT_TMP_DIR/fs1a/test_2050.out" 2>"$CCT_TMP_DIR/fs1a/test_2050.err"; then
+    test_pass "cct/console aceita smoke em perfil freestanding"
+else
+    test_fail "cct/console nao aceitou smoke em perfil freestanding"
+fi
+
+echo "Test 2051: codegen freestanding chama cct_svc_console_putc"
+BASE_2051="$CCT_TMP_DIR/fs1a/test_2051_smoke"
+rm -f "$BASE_2051" "$BASE_2051.cct" "$BASE_2051.cgen.c" "$BASE_2051.compile.out" "$BASE_2051.compile.err"
+if [ "$RC_31_READY" -eq 0 ] && cp "tests/integration/console_freestanding_smoke_fs1a.cct" "$BASE_2051.cct" && \
+   "$PHASE31_HOST_WRAPPER" --profile freestanding --sigilo-no-svg "$BASE_2051.cct" >"$BASE_2051.compile.out" 2>"$BASE_2051.compile.err" && \
+   rg -q "cct_svc_console_putc" "$BASE_2051.cgen.c"; then
+    test_pass "codegen freestanding chama cct_svc_console_putc"
+else
+    test_fail "codegen freestanding nao chamou cct_svc_console_putc"
+fi
+
+echo "Test 2052: codegen freestanding chama cct_svc_console_write_centered"
+BASE_2052="$CCT_TMP_DIR/fs1a/test_2052_center"
+rm -f "$BASE_2052" "$BASE_2052.cct" "$BASE_2052.cgen.c" "$BASE_2052.compile.out" "$BASE_2052.compile.err"
+if [ "$RC_31_READY" -eq 0 ] && cp "tests/integration/console_center_fs1a.cct" "$BASE_2052.cct" && \
+   "$PHASE31_HOST_WRAPPER" --profile freestanding --sigilo-no-svg "$BASE_2052.cct" >"$BASE_2052.compile.out" 2>"$BASE_2052.compile.err" && \
+   rg -q "cct_svc_console_write_centered" "$BASE_2052.cgen.c"; then
+    test_pass "codegen freestanding chama cct_svc_console_write_centered"
+else
+    test_fail "codegen freestanding nao chamou cct_svc_console_write_centered"
+fi
+
+echo "Test 2053: codegen freestanding expõe leitura de cursor"
+BASE_2053="$CCT_TMP_DIR/fs1a/test_2053_cursor"
+rm -f "$BASE_2053" "$BASE_2053.cct" "$BASE_2053.cgen.c" "$BASE_2053.compile.out" "$BASE_2053.compile.err"
+if [ "$RC_31_READY" -eq 0 ] && cp "tests/integration/console_cursor_state_fs1a.cct" "$BASE_2053.cct" && \
+   "$PHASE31_HOST_WRAPPER" --profile freestanding --sigilo-no-svg "$BASE_2053.cct" >"$BASE_2053.compile.out" 2>"$BASE_2053.compile.err" && \
+   rg -q "cct_svc_console_get_row" "$BASE_2053.cgen.c" && \
+   rg -q "cct_svc_console_get_col" "$BASE_2053.cgen.c"; then
+    test_pass "codegen freestanding expõe leitura de cursor"
+else
+    test_fail "codegen freestanding nao expôs leitura de cursor"
+fi
+
+echo "Test 2054: .cgen.c freestanding compila com i686-elf-gcc"
+BASE_2054="$CCT_TMP_DIR/fs1a/test_2054_clear"
+rm -f "$BASE_2054" "$BASE_2054.cct" "$BASE_2054.cgen.c" "$BASE_2054.o" "$BASE_2054.compile.out" "$BASE_2054.compile.err" "$BASE_2054.cross.out" "$BASE_2054.cross.err"
+if [ "$RC_31_READY" -eq 0 ] && cct_fs1_prepare_tools && \
+   cp "tests/integration/console_clear_fs1a.cct" "$BASE_2054.cct" && \
+   "$PHASE31_HOST_WRAPPER" --profile freestanding --sigilo-no-svg "$BASE_2054.cct" >"$BASE_2054.compile.out" 2>"$BASE_2054.compile.err" && \
+   "$FS1_I686_GCC_BIN" -std=gnu11 -ffreestanding -nostdlib -m32 -O2 -Wall -Wextra -Wno-unused-function -fno-pic -fno-stack-protector -I"$ROOT_DIR/src/runtime" -c "$BASE_2054.cgen.c" -o "$BASE_2054.o" >"$BASE_2054.cross.out" 2>"$BASE_2054.cross.err"; then
+    test_pass ".cgen.c freestanding compila com i686-elf-gcc"
+else
+    test_fail ".cgen.c freestanding nao compilou com i686-elf-gcc"
+fi
+fi
+
+if cct_phase_block_enabled "FS1B"; then
+echo ""
+echo "========================================"
+echo "FASE FS1B: pipeline integrado grub-hello"
+echo "========================================"
+cct_phase31_prepare >/dev/null 2>&1
+mkdir -p "$CCT_TMP_DIR/fs1"
+
+echo "Test 2055: make iso gera build/civitas_boot.cgen.c"
+if [ "$RC_31_READY" -eq 0 ] && cct_fs1_prepare_grub_artifacts && [ -s "$FS1_GRUB_HELLO_DIR/build/civitas_boot.cgen.c" ]; then
+    test_pass "make iso gera build/civitas_boot.cgen.c"
+else
+    test_fail "make iso nao gerou build/civitas_boot.cgen.c"
+fi
+
+echo "Test 2056: pipeline gera objetos civitas_boot.o e cct_freestanding_rt.o"
+if [ "$RC_31_READY" -eq 0 ] && cct_fs1_prepare_grub_artifacts && [ -s "$FS1_GRUB_HELLO_DIR/build/civitas_boot.o" ] && [ -s "$FS1_GRUB_HELLO_DIR/build/cct_freestanding_rt.o" ]; then
+    test_pass "pipeline gera objetos civitas_boot.o e cct_freestanding_rt.o"
+else
+    test_fail "pipeline nao gerou objetos civitas_boot.o e cct_freestanding_rt.o"
+fi
+
+echo "Test 2057: kernel.o referencia a entrada freestanding do boot"
+if [ "$RC_31_READY" -eq 0 ] && cct_fs1_prepare_grub_artifacts && \
+   "$FS1_I686_NM_BIN" "$FS1_GRUB_HELLO_DIR/build/kernel.o" >"$CCT_TMP_DIR/fs1/test_2057_kernel_nm.out" 2>"$CCT_TMP_DIR/fs1/test_2057_kernel_nm.err" && \
+   rg -q " U civitas_boot_fase2" "$CCT_TMP_DIR/fs1/test_2057_kernel_nm.out"; then
+    test_pass "kernel.o referencia a entrada freestanding do boot"
+else
+    test_fail "kernel.o nao referenciou a entrada freestanding do boot"
+fi
+
+echo "Test 2058: kernel.bin e reconhecido como multiboot"
+if [ "$RC_31_READY" -eq 0 ] && cct_fs1_prepare_grub_artifacts && \
+   "$FS1_GRUB_FILE_BIN" --is-x86-multiboot "$FS1_GRUB_HELLO_DIR/isodir/boot/kernel.bin" >"$CCT_TMP_DIR/fs1/test_2058.out" 2>"$CCT_TMP_DIR/fs1/test_2058.err"; then
+    test_pass "kernel.bin e reconhecido como multiboot"
+else
+    test_fail "kernel.bin nao foi reconhecido como multiboot"
+fi
+
+echo "Test 2059: civitas_boot.o exporta rituais C freestanding"
+if [ "$RC_31_READY" -eq 0 ] && cct_fs1_prepare_grub_artifacts && \
+   "$FS1_I686_NM_BIN" "$FS1_GRUB_HELLO_DIR/build/civitas_boot.o" >"$CCT_TMP_DIR/fs1/test_2059_nm.out" 2>"$CCT_TMP_DIR/fs1/test_2059_nm.err" && \
+   rg -q " T civitas_boot_banner" "$CCT_TMP_DIR/fs1/test_2059_nm.out" && \
+   rg -q " T civitas_status_info" "$CCT_TMP_DIR/fs1/test_2059_nm.out" && \
+   [ -s "$FS1_GRUB_HELLO_DIR/grub-hello.iso" ]; then
+    test_pass "civitas_boot.o exporta rituais C freestanding"
+else
+    test_fail "civitas_boot.o nao exportou os rituais C freestanding"
+fi
+fi
+
+if cct_phase_block_enabled "FS1C"; then
+echo ""
+echo "========================================"
+echo "FASE FS1C: primeiro ritual CCT na tela"
+echo "========================================"
+cct_phase31_prepare >/dev/null 2>&1
+mkdir -p "$CCT_TMP_DIR/fs1"
+FS1_DOUBLE_RULE="$(printf '%*s' 80 '' | tr ' ' '=')"
+
+echo "Test 2060: QEMU gera dump VGA do boot freestanding"
+if [ "$RC_31_READY" -eq 0 ] && cct_fs1_prepare_screen_dump && [ -s "$FS1_VGA_DUMP" ] && [ -s "$FS1_VGA_ROWS" ]; then
+    test_pass "QEMU gera dump VGA do boot freestanding"
+else
+    test_fail "QEMU nao gerou dump VGA do boot freestanding"
+fi
+
+echo "Test 2061: banner C permanece na primeira linha da tela"
+if [ "$RC_31_READY" -eq 0 ] && cct_fs1_prepare_screen_dump && [ "$(sed -n '1p' "$FS1_VGA_ROWS")" = "=== CCT OS Lab ===" ]; then
+    test_pass "banner C permanece na primeira linha da tela"
+else
+    test_fail "banner C nao permaneceu na primeira linha da tela"
+fi
+
+echo "Test 2062: transicao C para CCT permanece visivel no boot"
+if [ "$RC_31_READY" -eq 0 ] && cct_fs1_prepare_screen_dump && [ "$(sed -n '3p' "$FS1_VGA_ROWS")" = "Transferindo para runtime CCT..." ]; then
+    test_pass "transicao C para CCT permanece visivel no boot"
+else
+    test_fail "transicao C para CCT nao permaneceu visivel no boot"
+fi
+
+echo "Test 2063: banner CCT aparece centralizado na linha esperada"
+if [ "$RC_31_READY" -eq 0 ] && cct_fs1_prepare_screen_dump && [ "$(sed -n '6p' "$FS1_VGA_ROWS")" = "                            CCT FREESTANDING RUNTIME" ]; then
+    test_pass "banner CCT aparece centralizado na linha esperada"
+else
+    test_fail "banner CCT nao apareceu centralizado na linha esperada"
+fi
+
+echo "Test 2064: bordas duplas ocupam as linhas 5 e 24 sem scroll"
+FS1_TAIL_PANEL="$CCT_TMP_DIR/fs1/fs1c_tail_panel.rows"
+rm -f "$FS1_TAIL_PANEL"
+if [ "$RC_31_READY" -eq 0 ] && cct_fs1_prepare_screen_dump && \
+   [ "$(sed -n '5p' "$FS1_VGA_ROWS")" = "$FS1_DOUBLE_RULE" ] && \
+   sed -n '21,24p' "$FS1_VGA_ROWS" >"$FS1_TAIL_PANEL" && \
+   rg -qx "$FS1_DOUBLE_RULE" "$FS1_TAIL_PANEL"; then
+    test_pass "bordas duplas ocupam as linhas 5 e 24 sem scroll"
+else
+    test_fail "bordas duplas nao ocuparam as linhas 5 e 24 sem scroll"
+fi
+
+echo "Test 2065: gate G-FS1 aparece na ultima linha da tela"
+FS1_TAIL_GATE="$CCT_TMP_DIR/fs1/fs1c_tail_gate.rows"
+rm -f "$FS1_TAIL_GATE"
+if [ "$RC_31_READY" -eq 0 ] && cct_fs1_prepare_screen_dump && \
+   sed -n '22,25p' "$FS1_VGA_ROWS" >"$FS1_TAIL_GATE" && \
+   rg -q ">>> G-FS[0-9A-Z-]+: GATE CONCLUIDO <<<" "$FS1_TAIL_GATE"; then
+    test_pass "gate G-FS1 aparece na ultima linha da tela"
+else
+    test_fail "gate G-FS1 nao apareceu na ultima linha da tela"
+fi
+fi
+
+if cct_phase_block_enabled "FS2A"; then
+echo ""
+echo "========================================"
+echo "FASE FS2A: cct/mem_fs freestanding"
+echo "========================================"
+cct_phase31_prepare >/dev/null 2>&1
+mkdir -p "$CCT_TMP_DIR/fs2a"
+
+echo "Test 2066: cct/mem_fs rejeita perfil host"
+if [ "$RC_31_READY" -eq 0 ] && ! "$PHASE31_HOST_WRAPPER" --check "tests/integration/mem_fs_reject_host_fs2a.cct" >"$CCT_TMP_DIR/fs2a/test_2066.out" 2>&1 && \
+   rg -q "cct/mem_fs disponível apenas em perfil freestanding" "$CCT_TMP_DIR/fs2a/test_2066.out"; then
+    test_pass "cct/mem_fs rejeita perfil host"
+else
+    test_fail "cct/mem_fs nao rejeitou perfil host"
+fi
+
+echo "Test 2067: cct/mem_fs aceita smoke em perfil freestanding"
+if [ "$RC_31_READY" -eq 0 ] && "$PHASE31_HOST_WRAPPER" --profile freestanding --check "tests/integration/mem_fs_freestanding_smoke_fs2a.cct" >"$CCT_TMP_DIR/fs2a/test_2067.out" 2>"$CCT_TMP_DIR/fs2a/test_2067.err"; then
+    test_pass "cct/mem_fs aceita smoke em perfil freestanding"
+else
+    test_fail "cct/mem_fs nao aceitou smoke em perfil freestanding"
+fi
+
+echo "Test 2068: codegen freestanding usa cct_svc_alloc e estatisticas de heap"
+BASE_2068="$CCT_TMP_DIR/fs2a/test_2068_smoke"
+rm -f "$BASE_2068" "$BASE_2068.cct" "$BASE_2068.cgen.c" "$BASE_2068.compile.out" "$BASE_2068.compile.err"
+if [ "$RC_31_READY" -eq 0 ] && cp "tests/integration/mem_fs_freestanding_smoke_fs2a.cct" "$BASE_2068.cct" && \
+   "$PHASE31_HOST_WRAPPER" --profile freestanding --sigilo-no-svg "$BASE_2068.cct" >"$BASE_2068.compile.out" 2>"$BASE_2068.compile.err" && \
+   rg -q "cct_svc_alloc" "$BASE_2068.cgen.c" && \
+   rg -q "cct_svc_heap_available" "$BASE_2068.cgen.c" && \
+   rg -q "cct_svc_heap_alloc_count" "$BASE_2068.cgen.c"; then
+    test_pass "codegen freestanding usa cct_svc_alloc e estatisticas de heap"
+else
+    test_fail "codegen freestanding nao usou cct_svc_alloc e estatisticas de heap"
+fi
+
+echo "Test 2069: codegen freestanding usa cct_svc_realloc e cct_svc_byte_at"
+BASE_2069="$CCT_TMP_DIR/fs2a/test_2069_realloc"
+rm -f "$BASE_2069" "$BASE_2069.cct" "$BASE_2069.cgen.c" "$BASE_2069.compile.out" "$BASE_2069.compile.err"
+if [ "$RC_31_READY" -eq 0 ] && cp "tests/integration/mem_fs_realloc_fs2a.cct" "$BASE_2069.cct" && \
+   "$PHASE31_HOST_WRAPPER" --profile freestanding --sigilo-no-svg "$BASE_2069.cct" >"$BASE_2069.compile.out" 2>"$BASE_2069.compile.err" && \
+   rg -q "cct_svc_realloc" "$BASE_2069.cgen.c" && \
+   rg -q "cct_svc_byte_at" "$BASE_2069.cgen.c"; then
+    test_pass "codegen freestanding usa cct_svc_realloc e cct_svc_byte_at"
+else
+    test_fail "codegen freestanding nao usou cct_svc_realloc e cct_svc_byte_at"
+fi
+
+echo "Test 2070: .cgen.c de mem_fs compila com i686-elf-gcc"
+BASE_2070="$CCT_TMP_DIR/fs2a/test_2070_cross"
+rm -f "$BASE_2070" "$BASE_2070.cct" "$BASE_2070.cgen.c" "$BASE_2070.o" "$BASE_2070.compile.out" "$BASE_2070.compile.err" "$BASE_2070.cross.out" "$BASE_2070.cross.err"
+if [ "$RC_31_READY" -eq 0 ] && cct_fs1_prepare_tools && \
+   cp "tests/integration/mem_fs_freestanding_smoke_fs2a.cct" "$BASE_2070.cct" && \
+   "$PHASE31_HOST_WRAPPER" --profile freestanding --sigilo-no-svg "$BASE_2070.cct" >"$BASE_2070.compile.out" 2>"$BASE_2070.compile.err" && \
+   "$FS1_I686_GCC_BIN" -std=gnu11 -ffreestanding -nostdlib -m32 -O2 -Wall -Wextra -Wno-unused-function -fno-pic -fno-stack-protector -I"$ROOT_DIR/src/runtime" -c "$BASE_2070.cgen.c" -o "$BASE_2070.o" >"$BASE_2070.cross.out" 2>"$BASE_2070.cross.err"; then
+    test_pass ".cgen.c de mem_fs compila com i686-elf-gcc"
+else
+    test_fail ".cgen.c de mem_fs nao compilou com i686-elf-gcc"
+fi
+
+echo "Test 2071: pipeline grub-hello referencia civitas_boot_fase2"
+if [ "$RC_31_READY" -eq 0 ] && cct_fs1_prepare_grub_artifacts && \
+   "$FS1_I686_NM_BIN" "$FS1_GRUB_HELLO_DIR/build/kernel.o" >"$CCT_TMP_DIR/fs2a/test_2071_kernel_nm.out" 2>"$CCT_TMP_DIR/fs2a/test_2071_kernel_nm.err" && \
+   "$FS1_I686_NM_BIN" "$FS1_GRUB_HELLO_DIR/build/civitas_boot.o" >"$CCT_TMP_DIR/fs2a/test_2071_boot_nm.out" 2>"$CCT_TMP_DIR/fs2a/test_2071_boot_nm.err" && \
+   rg -q " U civitas_boot_fase2" "$CCT_TMP_DIR/fs2a/test_2071_kernel_nm.out" && \
+   rg -q " T civitas_boot_fase2" "$CCT_TMP_DIR/fs2a/test_2071_boot_nm.out"; then
+    test_pass "pipeline grub-hello referencia civitas_boot_fase2"
+else
+    test_fail "pipeline grub-hello nao referenciou civitas_boot_fase2"
+fi
+
+echo "Test 2072: boot em QEMU exibe relatorio de heap freestanding"
+if [ "$RC_31_READY" -eq 0 ] && cct_fs1_prepare_screen_dump && \
+   rg -q "\\[DEMO 4\\] Relatorio de Memoria" "$FS1_VGA_ROWS" && \
+   rg -q "  base: " "$FS1_VGA_ROWS" && \
+   rg -q "  alocado: " "$FS1_VGA_ROWS" && \
+   rg -q ">>> G-FS2: GATE CONCLUIDO <<<" "$FS1_VGA_ROWS"; then
+    test_pass "boot em QEMU exibe relatorio de heap freestanding"
+else
+    test_fail "boot em QEMU nao exibiu relatorio de heap freestanding"
+fi
+fi
+
+if cct_phase_block_enabled "FS2B"; then
+echo ""
+echo "========================================"
+echo "FASE FS2B: cct/verbum_fs freestanding"
+echo "========================================"
+cct_phase31_prepare >/dev/null 2>&1
+mkdir -p "$CCT_TMP_DIR/fs2b"
+
+echo "Test 2073: cct/verbum_fs rejeita perfil host"
+if [ "$RC_31_READY" -eq 0 ] && ! "$PHASE31_HOST_WRAPPER" --check "tests/integration/verbum_fs_reject_host_fs2b.cct" >"$CCT_TMP_DIR/fs2b/test_2073.out" 2>&1 && \
+   rg -q "cct/verbum_fs disponível apenas em perfil freestanding" "$CCT_TMP_DIR/fs2b/test_2073.out"; then
+    test_pass "cct/verbum_fs rejeita perfil host"
+else
+    test_fail "cct/verbum_fs nao rejeitou perfil host"
+fi
+
+echo "Test 2074: cct/verbum_fs aceita smoke em perfil freestanding"
+if [ "$RC_31_READY" -eq 0 ] && "$PHASE31_HOST_WRAPPER" --profile freestanding --check "tests/integration/verbum_fs_freestanding_smoke_fs2b.cct" >"$CCT_TMP_DIR/fs2b/test_2074.out" 2>"$CCT_TMP_DIR/fs2b/test_2074.err"; then
+    test_pass "cct/verbum_fs aceita smoke em perfil freestanding"
+else
+    test_fail "cct/verbum_fs nao aceitou smoke em perfil freestanding"
+fi
+
+echo "Test 2075: codegen freestanding usa SVCs de VERBUM dinamico"
+BASE_2075="$CCT_TMP_DIR/fs2b/test_2075_smoke"
+rm -f "$BASE_2075" "$BASE_2075.cct" "$BASE_2075.cgen.c" "$BASE_2075.compile.out" "$BASE_2075.compile.err"
+if [ "$RC_31_READY" -eq 0 ] && cp "tests/integration/verbum_fs_freestanding_smoke_fs2b.cct" "$BASE_2075.cct" && \
+   "$PHASE31_HOST_WRAPPER" --profile freestanding --sigilo-no-svg "$BASE_2075.cct" >"$BASE_2075.compile.out" 2>"$BASE_2075.compile.err" && \
+   rg -q "cct_svc_verbum_len" "$BASE_2075.cgen.c" && \
+   rg -q "cct_svc_verbum_copy_slice" "$BASE_2075.cgen.c" && \
+   rg -q "cct_svc_builder_build" "$BASE_2075.cgen.c"; then
+    test_pass "codegen freestanding usa SVCs de VERBUM dinamico"
+else
+    test_fail "codegen freestanding nao usou SVCs de VERBUM dinamico"
+fi
+
+echo "Test 2076: codegen freestanding usa builder de VERBUM"
+BASE_2076="$CCT_TMP_DIR/fs2b/test_2076_builder"
+rm -f "$BASE_2076" "$BASE_2076.cct" "$BASE_2076.cgen.c" "$BASE_2076.compile.out" "$BASE_2076.compile.err"
+if [ "$RC_31_READY" -eq 0 ] && cp "tests/integration/verbum_fs_builder_fs2b.cct" "$BASE_2076.cct" && \
+   "$PHASE31_HOST_WRAPPER" --profile freestanding --sigilo-no-svg "$BASE_2076.cct" >"$BASE_2076.compile.out" 2>"$BASE_2076.compile.err" && \
+   rg -q "cct_svc_builder_new" "$BASE_2076.cgen.c" && \
+   rg -q "cct_svc_builder_append" "$BASE_2076.cgen.c" && \
+   rg -q "cct_svc_builder_append_char" "$BASE_2076.cgen.c" && \
+   rg -q "cct_svc_builder_len" "$BASE_2076.cgen.c" && \
+   rg -q "cct_svc_builder_clear" "$BASE_2076.cgen.c"; then
+    test_pass "codegen freestanding usa builder de VERBUM"
+else
+    test_fail "codegen freestanding nao usou builder de VERBUM"
+fi
+
+echo "Test 2077: .cgen.c de verbum_fs compila com i686-elf-gcc"
+BASE_2077="$CCT_TMP_DIR/fs2b/test_2077_cross"
+rm -f "$BASE_2077" "$BASE_2077.cct" "$BASE_2077.cgen.c" "$BASE_2077.o" "$BASE_2077.compile.out" "$BASE_2077.compile.err" "$BASE_2077.cross.out" "$BASE_2077.cross.err"
+if [ "$RC_31_READY" -eq 0 ] && cct_fs1_prepare_tools && \
+   cp "tests/integration/verbum_fs_builder_fs2b.cct" "$BASE_2077.cct" && \
+   "$PHASE31_HOST_WRAPPER" --profile freestanding --sigilo-no-svg "$BASE_2077.cct" >"$BASE_2077.compile.out" 2>"$BASE_2077.compile.err" && \
+   "$FS1_I686_GCC_BIN" -std=gnu11 -ffreestanding -nostdlib -m32 -O2 -Wall -Wextra -Wno-unused-function -fno-pic -fno-stack-protector -I"$ROOT_DIR/src/runtime" -c "$BASE_2077.cgen.c" -o "$BASE_2077.o" >"$BASE_2077.cross.out" 2>"$BASE_2077.cross.err"; then
+    test_pass ".cgen.c de verbum_fs compila com i686-elf-gcc"
+else
+    test_fail ".cgen.c de verbum_fs nao compilou com i686-elf-gcc"
+fi
+fi
+
+if cct_phase_block_enabled "FS2C"; then
+echo ""
+echo "========================================"
+echo "FASE FS2C: cct/fluxus_fs freestanding"
+echo "========================================"
+cct_phase31_prepare >/dev/null 2>&1
+mkdir -p "$CCT_TMP_DIR/fs2c"
+
+echo "Test 2078: cct/fluxus_fs rejeita perfil host"
+if [ "$RC_31_READY" -eq 0 ] && ! "$PHASE31_HOST_WRAPPER" --check "tests/integration/fluxus_fs_reject_host_fs2c.cct" >"$CCT_TMP_DIR/fs2c/test_2078.out" 2>&1 && \
+   rg -q "cct/fluxus_fs disponível apenas em perfil freestanding" "$CCT_TMP_DIR/fs2c/test_2078.out"; then
+    test_pass "cct/fluxus_fs rejeita perfil host"
+else
+    test_fail "cct/fluxus_fs nao rejeitou perfil host"
+fi
+
+echo "Test 2079: cct/fluxus_fs aceita smoke em perfil freestanding"
+if [ "$RC_31_READY" -eq 0 ] && "$PHASE31_HOST_WRAPPER" --profile freestanding --check "tests/integration/fluxus_fs_freestanding_smoke_fs2c.cct" >"$CCT_TMP_DIR/fs2c/test_2079.out" 2>"$CCT_TMP_DIR/fs2c/test_2079.err"; then
+    test_pass "cct/fluxus_fs aceita smoke em perfil freestanding"
+else
+    test_fail "cct/fluxus_fs nao aceitou smoke em perfil freestanding"
+fi
+
+echo "Test 2080: codegen freestanding usa SVCs principais de fluxus_fs"
+BASE_2080="$CCT_TMP_DIR/fs2c/test_2080_smoke"
+rm -f "$BASE_2080" "$BASE_2080.cct" "$BASE_2080.cgen.c" "$BASE_2080.compile.out" "$BASE_2080.compile.err"
+if [ "$RC_31_READY" -eq 0 ] && cp "tests/integration/fluxus_fs_freestanding_smoke_fs2c.cct" "$BASE_2080.cct" && \
+   "$PHASE31_HOST_WRAPPER" --profile freestanding --sigilo-no-svg "$BASE_2080.cct" >"$BASE_2080.compile.out" 2>"$BASE_2080.compile.err" && \
+   rg -q "cct_svc_fluxus_new" "$BASE_2080.cgen.c" && \
+   rg -q "cct_svc_fluxus_reserve" "$BASE_2080.cgen.c" && \
+   rg -q "cct_svc_fluxus_get" "$BASE_2080.cgen.c" && \
+   rg -q "cct_svc_fluxus_set" "$BASE_2080.cgen.c" && \
+   rg -q "cct_svc_fluxus_cap" "$BASE_2080.cgen.c"; then
+    test_pass "codegen freestanding usa SVCs principais de fluxus_fs"
+else
+    test_fail "codegen freestanding nao usou SVCs principais de fluxus_fs"
+fi
+
+echo "Test 2081: codegen freestanding cobre crescimento e remocao de fluxus_fs"
+BASE_2081="$CCT_TMP_DIR/fs2c/test_2081_growth"
+rm -f "$BASE_2081" "$BASE_2081.cct" "$BASE_2081.cgen.c" "$BASE_2081.compile.out" "$BASE_2081.compile.err"
+if [ "$RC_31_READY" -eq 0 ] && cp "tests/integration/fluxus_fs_growth_fs2c.cct" "$BASE_2081.cct" && \
+   "$PHASE31_HOST_WRAPPER" --profile freestanding --sigilo-no-svg "$BASE_2081.cct" >"$BASE_2081.compile.out" 2>"$BASE_2081.compile.err" && \
+   rg -q "cct_svc_fluxus_push" "$BASE_2081.cgen.c" && \
+   rg -q "cct_svc_fluxus_pop" "$BASE_2081.cgen.c" && \
+   rg -q "cct_svc_fluxus_clear" "$BASE_2081.cgen.c" && \
+   rg -q "cct_svc_fluxus_peek" "$BASE_2081.cgen.c" && \
+   rg -q "cct_svc_fluxus_free" "$BASE_2081.cgen.c"; then
+    test_pass "codegen freestanding cobre crescimento e remocao de fluxus_fs"
+else
+    test_fail "codegen freestanding nao cobriu crescimento e remocao de fluxus_fs"
+fi
+
+echo "Test 2082: .cgen.c de fluxus_fs compila com i686-elf-gcc"
+BASE_2082="$CCT_TMP_DIR/fs2c/test_2082_cross"
+rm -f "$BASE_2082" "$BASE_2082.cct" "$BASE_2082.cgen.c" "$BASE_2082.o" "$BASE_2082.compile.out" "$BASE_2082.compile.err" "$BASE_2082.cross.out" "$BASE_2082.cross.err"
+if [ "$RC_31_READY" -eq 0 ] && cct_fs1_prepare_tools && \
+   cp "tests/integration/fluxus_fs_growth_fs2c.cct" "$BASE_2082.cct" && \
+   "$PHASE31_HOST_WRAPPER" --profile freestanding --sigilo-no-svg "$BASE_2082.cct" >"$BASE_2082.compile.out" 2>"$BASE_2082.compile.err" && \
+   "$FS1_I686_GCC_BIN" -std=gnu11 -ffreestanding -nostdlib -m32 -O2 -Wall -Wextra -Wno-unused-function -fno-pic -fno-stack-protector -I"$ROOT_DIR/src/runtime" -c "$BASE_2082.cgen.c" -o "$BASE_2082.o" >"$BASE_2082.cross.out" 2>"$BASE_2082.cross.err"; then
+    test_pass ".cgen.c de fluxus_fs compila com i686-elf-gcc"
+else
+    test_fail ".cgen.c de fluxus_fs nao compilou com i686-elf-gcc"
+fi
+
+echo "Test 2083: boot em QEMU exibe gate G-FS2 com catalogo e memoria"
+if [ "$RC_31_READY" -eq 0 ] && cct_fs1_prepare_screen_dump && \
+   [ "$(sed -n '6p' "$FS1_VGA_ROWS")" = "                            CCT FREESTANDING RUNTIME" ] && \
+   rg -q "FASE 2 - Memoria e Strings Freestanding" "$FS1_VGA_ROWS" && \
+   rg -q "\\[DEMO 3\\] fluxus_fs de SIGILLUM Produto" "$FS1_VGA_ROWS" && \
+   rg -q "NIC RTL8139" "$FS1_VGA_ROWS" && \
+   rg -q "\\[DEMO 4\\] Relatorio de Memoria" "$FS1_VGA_ROWS" && \
+   rg -q ">>> G-FS2: GATE CONCLUIDO <<<" "$FS1_VGA_ROWS"; then
+    test_pass "boot em QEMU exibe gate G-FS2 com catalogo e memoria"
+else
+    test_fail "boot em QEMU nao exibiu gate G-FS2 com catalogo e memoria"
 fi
 fi
 

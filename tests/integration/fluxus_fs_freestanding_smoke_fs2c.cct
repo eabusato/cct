@@ -1,0 +1,33 @@
+INCIPIT grimoire "fluxus_fs_freestanding_smoke_fs2c"
+
+ADVOCARE "cct/fluxus_fs"
+
+SIGILLUM Pair
+  left: REX
+  right: REX
+FIN SIGILLUM
+
+RITUALE main() REDDE NIHIL
+  EVOCA SPECULUM NIHIL flux AD CONIURA fluxus_fs_new(MENSURA(Pair))
+  EVOCA Pair pair
+  EVOCA SPECULUM Pair got AD NIHIL
+
+  CONIURA fluxus_fs_reserve(flux, 16)
+
+  VINCIRE pair.left AD 10
+  VINCIRE pair.right AD 20
+  CONIURA fluxus_fs_push(flux, SPECULUM pair)
+
+  VINCIRE pair.left AD 11
+  VINCIRE pair.right AD 22
+  CONIURA fluxus_fs_push(flux, SPECULUM pair)
+
+  VINCIRE got AD CONIURA fluxus_fs_get(flux, 1)
+
+  SI CONIURA fluxus_fs_len(flux) == 2 ET CONIURA fluxus_fs_cap(flux) >= 16 ET (*got).left == 11
+    CONIURA fluxus_fs_set(flux, 0, SPECULUM pair)
+  FIN SI
+  REDDE
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

@@ -1,0 +1,18 @@
+INCIPIT grimoire "console_cursor_state_fs1a"
+
+ADVOCARE "cct/console"
+
+RITUALE main() REDDE REX
+  CONIURA console_init()
+  CONIURA console_set_cursor(4, 12)
+  EVOCA REX linha AD CONIURA console_get_linha()
+  EVOCA REX coluna AD CONIURA console_get_coluna()
+
+  SI linha == 4 ET coluna == 12
+    REDDE 0
+  FIN SI
+
+  REDDE 1
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

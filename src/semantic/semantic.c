@@ -1434,7 +1434,7 @@ static cct_sem_type_t* sem_resolve_ast_type(cct_semantic_analyzer_t *sem, const 
  * ======================================================================== */
 
 static const cct_sem_builtin_spec_t* sem_find_builtin(cct_semantic_analyzer_t *sem, const char *name) {
-static cct_sem_builtin_spec_t specs[482];
+static cct_sem_builtin_spec_t specs[522];
     static bool initialized = false;
 
     if (!initialized) {
@@ -1921,6 +1921,46 @@ static cct_sem_builtin_spec_t specs[482];
         specs[479].name = "stmt_get_text"; specs[479].min_args = 2; specs[479].variadic = false;
         specs[480].name = "stmt_get_int"; specs[480].min_args = 2; specs[480].variadic = false;
         specs[481].name = "stmt_get_real"; specs[481].min_args = 2; specs[481].variadic = false;
+        specs[482].name = "console_init"; specs[482].min_args = 0; specs[482].variadic = false;
+        specs[483].name = "console_clear"; specs[483].min_args = 0; specs[483].variadic = false;
+        specs[484].name = "console_putc"; specs[484].min_args = 1; specs[484].variadic = false;
+        specs[485].name = "console_write"; specs[485].min_args = 1; specs[485].variadic = false;
+        specs[486].name = "console_write_centered"; specs[486].min_args = 1; specs[486].variadic = false;
+        specs[487].name = "console_set_color"; specs[487].min_args = 2; specs[487].variadic = false;
+        specs[488].name = "console_set_cursor"; specs[488].min_args = 2; specs[488].variadic = false;
+        specs[489].name = "console_get_linha"; specs[489].min_args = 0; specs[489].variadic = false;
+        specs[490].name = "console_get_coluna"; specs[490].min_args = 0; specs[490].variadic = false;
+        specs[491].name = "cct_svc_alloc"; specs[491].min_args = 1; specs[491].variadic = false;
+        specs[492].name = "cct_svc_realloc"; specs[492].min_args = 3; specs[492].variadic = false;
+        specs[493].name = "cct_svc_free"; specs[493].min_args = 1; specs[493].variadic = false;
+        specs[494].name = "cct_svc_memcpy"; specs[494].min_args = 3; specs[494].variadic = false;
+        specs[495].name = "cct_svc_memset"; specs[495].min_args = 3; specs[495].variadic = false;
+        specs[496].name = "cct_svc_heap_available"; specs[496].min_args = 0; specs[496].variadic = false;
+        specs[497].name = "cct_svc_heap_allocated"; specs[497].min_args = 0; specs[497].variadic = false;
+        specs[498].name = "cct_svc_heap_total"; specs[498].min_args = 0; specs[498].variadic = false;
+        specs[499].name = "cct_svc_heap_base_addr"; specs[499].min_args = 0; specs[499].variadic = false;
+        specs[500].name = "cct_svc_heap_alloc_count"; specs[500].min_args = 0; specs[500].variadic = false;
+        specs[501].name = "cct_svc_byte_at"; specs[501].min_args = 2; specs[501].variadic = false;
+        specs[502].name = "cct_svc_verbum_byte"; specs[502].min_args = 2; specs[502].variadic = false;
+        specs[503].name = "cct_svc_verbum_len"; specs[503].min_args = 1; specs[503].variadic = false;
+        specs[504].name = "cct_svc_verbum_copy_slice"; specs[504].min_args = 3; specs[504].variadic = false;
+        specs[505].name = "cct_svc_builder_new"; specs[505].min_args = 0; specs[505].variadic = false;
+        specs[506].name = "cct_svc_builder_append"; specs[506].min_args = 2; specs[506].variadic = false;
+        specs[507].name = "cct_svc_builder_append_char"; specs[507].min_args = 2; specs[507].variadic = false;
+        specs[508].name = "cct_svc_builder_build"; specs[508].min_args = 1; specs[508].variadic = false;
+        specs[509].name = "cct_svc_builder_clear"; specs[509].min_args = 1; specs[509].variadic = false;
+        specs[510].name = "cct_svc_builder_len"; specs[510].min_args = 1; specs[510].variadic = false;
+        specs[511].name = "cct_svc_fluxus_new"; specs[511].min_args = 1; specs[511].variadic = false;
+        specs[512].name = "cct_svc_fluxus_push"; specs[512].min_args = 2; specs[512].variadic = false;
+        specs[513].name = "cct_svc_fluxus_pop"; specs[513].min_args = 2; specs[513].variadic = false;
+        specs[514].name = "cct_svc_fluxus_get"; specs[514].min_args = 2; specs[514].variadic = false;
+        specs[515].name = "cct_svc_fluxus_set"; specs[515].min_args = 3; specs[515].variadic = false;
+        specs[516].name = "cct_svc_fluxus_clear"; specs[516].min_args = 1; specs[516].variadic = false;
+        specs[517].name = "cct_svc_fluxus_reserve"; specs[517].min_args = 2; specs[517].variadic = false;
+        specs[518].name = "cct_svc_fluxus_free"; specs[518].min_args = 1; specs[518].variadic = false;
+        specs[519].name = "cct_svc_fluxus_len"; specs[519].min_args = 1; specs[519].variadic = false;
+        specs[520].name = "cct_svc_fluxus_cap"; specs[520].min_args = 1; specs[520].variadic = false;
+        specs[521].name = "cct_svc_fluxus_peek"; specs[521].min_args = 1; specs[521].variadic = false;
         initialized = true;
     }
 
@@ -2406,6 +2446,46 @@ static cct_sem_builtin_spec_t specs[482];
     specs[479].return_type = &sem->type_verbum;
     specs[480].return_type = &sem->type_rex;
     specs[481].return_type = &sem->type_umbra;
+    specs[482].return_type = &sem->type_nihil;
+    specs[483].return_type = &sem->type_nihil;
+    specs[484].return_type = &sem->type_nihil;
+    specs[485].return_type = &sem->type_nihil;
+    specs[486].return_type = &sem->type_nihil;
+    specs[487].return_type = &sem->type_nihil;
+    specs[488].return_type = &sem->type_nihil;
+    specs[489].return_type = &sem->type_rex;
+    specs[490].return_type = &sem->type_rex;
+    specs[491].return_type = sem_make_pointer_type(sem, &sem->type_nihil);
+    specs[492].return_type = sem_make_pointer_type(sem, &sem->type_nihil);
+    specs[493].return_type = &sem->type_nihil;
+    specs[494].return_type = &sem->type_nihil;
+    specs[495].return_type = &sem->type_nihil;
+    specs[496].return_type = &sem->type_rex;
+    specs[497].return_type = &sem->type_rex;
+    specs[498].return_type = &sem->type_rex;
+    specs[499].return_type = &sem->type_rex;
+    specs[500].return_type = &sem->type_rex;
+    specs[501].return_type = &sem->type_rex;
+    specs[502].return_type = &sem->type_rex;
+    specs[503].return_type = &sem->type_rex;
+    specs[504].return_type = &sem->type_verbum;
+    specs[505].return_type = sem_make_pointer_type(sem, &sem->type_nihil);
+    specs[506].return_type = &sem->type_nihil;
+    specs[507].return_type = &sem->type_nihil;
+    specs[508].return_type = &sem->type_verbum;
+    specs[509].return_type = &sem->type_nihil;
+    specs[510].return_type = &sem->type_rex;
+    specs[511].return_type = sem_make_pointer_type(sem, &sem->type_nihil);
+    specs[512].return_type = &sem->type_nihil;
+    specs[513].return_type = &sem->type_nihil;
+    specs[514].return_type = sem_make_pointer_type(sem, &sem->type_nihil);
+    specs[515].return_type = &sem->type_nihil;
+    specs[516].return_type = &sem->type_nihil;
+    specs[517].return_type = &sem->type_nihil;
+    specs[518].return_type = &sem->type_nihil;
+    specs[519].return_type = &sem->type_rex;
+    specs[520].return_type = &sem->type_rex;
+    specs[521].return_type = sem_make_pointer_type(sem, &sem->type_nihil);
 
     for (size_t i = 0; i < sizeof(specs) / sizeof(specs[0]); i++) {
         if (!specs[i].name) continue;
@@ -2468,6 +2548,23 @@ static bool sem_is_kernel_obsecro(const char *name) {
            strcmp(name, "kernel_inb") == 0 ||
            strcmp(name, "kernel_memcpy") == 0 ||
            strcmp(name, "kernel_memset") == 0;
+}
+
+static bool sem_is_console_obsecro(const char *name) {
+    if (!name) return false;
+    return strcmp(name, "console_init") == 0 ||
+           strcmp(name, "console_clear") == 0 ||
+           strcmp(name, "console_putc") == 0 ||
+           strcmp(name, "console_write") == 0 ||
+           strcmp(name, "console_write_centered") == 0 ||
+           strcmp(name, "console_set_color") == 0 ||
+           strcmp(name, "console_set_cursor") == 0 ||
+           strcmp(name, "console_get_linha") == 0 ||
+           strcmp(name, "console_get_coluna") == 0;
+}
+
+static bool sem_is_freestanding_svc_obsecro(const char *name) {
+    return name && sem_str_has_prefix(name, "cct_svc_");
 }
 
 static const char* sem_forbidden_module_for_obsecro_in_freestanding(const char *name) {
@@ -2609,7 +2706,7 @@ static bool sem_extract_iter_collection_from_obsecro(
         if (kind_out) *kind_out = CCT_SEM_ITER_COLLECTION_SET;
         return true;
     }
-    if (strcmp(name, "fluxus_init") == 0) {
+    if (strcmp(name, "fluxus_init") == 0 || strcmp(name, "cct_svc_fluxus_new") == 0) {
         if (kind_out) *kind_out = CCT_SEM_ITER_COLLECTION_FLUXUS;
         return true;
     }
@@ -2893,6 +2990,26 @@ static cct_sem_type_t* sem_analyze_builtin_obsecro(
             }
         }
         sem_report_node(sem, expr, "cct/kernel disponível apenas em perfil freestanding");
+        return &sem->type_error;
+    }
+
+    if (!sem_profile_is_freestanding(sem) && sem_is_console_obsecro(name)) {
+        if (expr->as.obsecro.arguments) {
+            for (size_t i = 0; i < expr->as.obsecro.arguments->count; i++) {
+                (void)sem_analyze_expr(sem, expr->as.obsecro.arguments->nodes[i]);
+            }
+        }
+        sem_report_node(sem, expr, "cct/console disponível apenas em perfil freestanding");
+        return &sem->type_error;
+    }
+
+    if (!sem_profile_is_freestanding(sem) && sem_is_freestanding_svc_obsecro(name)) {
+        if (expr->as.obsecro.arguments) {
+            for (size_t i = 0; i < expr->as.obsecro.arguments->count; i++) {
+                (void)sem_analyze_expr(sem, expr->as.obsecro.arguments->nodes[i]);
+            }
+        }
+        sem_report_node(sem, expr, "serviços cct_svc_* disponíveis apenas em perfil freestanding");
         return &sem->type_error;
     }
 
@@ -3426,6 +3543,143 @@ static cct_sem_type_t* sem_analyze_builtin_obsecro(
             !(sem_is_integer_type(arg_type) || sem_is_error_type(arg_type))) {
             sem_report_nodef(sem, expr->as.obsecro.arguments->nodes[i],
                              "OBSECRO kernel_memset expects integer byte value as second argument");
+        }
+        if ((strcmp(name, "console_putc") == 0 ||
+             strcmp(name, "console_set_cursor") == 0) &&
+            !(sem_is_integer_type(arg_type) || sem_is_error_type(arg_type))) {
+            sem_report_nodef(sem, expr->as.obsecro.arguments->nodes[i],
+                             "OBSECRO %s expects integer argument", name);
+        }
+        if (strcmp(name, "console_set_color") == 0 &&
+            !(sem_is_integer_type(arg_type) ||
+              (arg_type && arg_type->kind == CCT_SEM_TYPE_NAMED) ||
+              sem_is_error_type(arg_type))) {
+            sem_report_nodef(sem, expr->as.obsecro.arguments->nodes[i],
+                             "OBSECRO console_set_color expects color enum/integer argument");
+        }
+        if ((strcmp(name, "console_write") == 0 ||
+             strcmp(name, "console_write_centered") == 0) &&
+            !(arg_type && (arg_type->kind == CCT_SEM_TYPE_VERBUM || sem_is_error_type(arg_type)))) {
+            sem_report_nodef(sem, expr->as.obsecro.arguments->nodes[i],
+                             "OBSECRO %s expects VERBUM argument", name);
+        }
+        if (strcmp(name, "cct_svc_alloc") == 0 &&
+            !(sem_is_integer_type(arg_type) || sem_is_error_type(arg_type))) {
+            sem_report_nodef(sem, expr->as.obsecro.arguments->nodes[i],
+                             "OBSECRO cct_svc_alloc expects integer size argument");
+        }
+        if (strcmp(name, "cct_svc_realloc") == 0) {
+            if (i == 0 &&
+                !(arg_type && (arg_type->kind == CCT_SEM_TYPE_POINTER || sem_is_error_type(arg_type)))) {
+                sem_report_nodef(sem, expr->as.obsecro.arguments->nodes[i],
+                                 "OBSECRO cct_svc_realloc expects pointer as first argument");
+            }
+            if ((i == 1 || i == 2) &&
+                !(sem_is_integer_type(arg_type) || sem_is_error_type(arg_type))) {
+                sem_report_nodef(sem, expr->as.obsecro.arguments->nodes[i],
+                                 "OBSECRO cct_svc_realloc expects integer size arguments");
+            }
+        }
+        if ((strcmp(name, "cct_svc_free") == 0 || strcmp(name, "cct_svc_memcpy") == 0 ||
+             strcmp(name, "cct_svc_memset") == 0 || strcmp(name, "cct_svc_byte_at") == 0) &&
+            i == 0 &&
+            !(arg_type && (arg_type->kind == CCT_SEM_TYPE_POINTER || sem_is_error_type(arg_type)))) {
+            sem_report_nodef(sem, expr->as.obsecro.arguments->nodes[i],
+                             "OBSECRO %s expects pointer argument", name);
+        }
+        if ((strcmp(name, "cct_svc_memcpy") == 0) &&
+            i == 1 &&
+            !(arg_type && (arg_type->kind == CCT_SEM_TYPE_POINTER || sem_is_error_type(arg_type)))) {
+            sem_report_nodef(sem, expr->as.obsecro.arguments->nodes[i],
+                             "OBSECRO cct_svc_memcpy expects pointer source argument");
+        }
+        if ((strcmp(name, "cct_svc_memcpy") == 0 || strcmp(name, "cct_svc_memset") == 0 ||
+             strcmp(name, "cct_svc_byte_at") == 0) &&
+            ((strcmp(name, "cct_svc_byte_at") == 0) ? i == 1 : i == 2) &&
+            !(sem_is_integer_type(arg_type) || sem_is_error_type(arg_type))) {
+            sem_report_nodef(sem, expr->as.obsecro.arguments->nodes[i],
+                             "OBSECRO %s expects integer argument", name);
+        }
+        if (strcmp(name, "cct_svc_memset") == 0 &&
+            i == 1 &&
+            !(sem_is_integer_type(arg_type) || sem_is_error_type(arg_type))) {
+            sem_report_nodef(sem, expr->as.obsecro.arguments->nodes[i],
+                             "OBSECRO cct_svc_memset expects integer byte value");
+        }
+        if ((strcmp(name, "cct_svc_verbum_byte") == 0 || strcmp(name, "cct_svc_verbum_copy_slice") == 0) &&
+            i == 0 &&
+            !(arg_type && (arg_type->kind == CCT_SEM_TYPE_VERBUM || sem_is_error_type(arg_type)))) {
+            sem_report_nodef(sem, expr->as.obsecro.arguments->nodes[i],
+                             "OBSECRO %s expects VERBUM argument", name);
+        }
+        if ((strcmp(name, "cct_svc_verbum_len") == 0) &&
+            i == 0 &&
+            !(arg_type && (arg_type->kind == CCT_SEM_TYPE_VERBUM || sem_is_error_type(arg_type)))) {
+            sem_report_nodef(sem, expr->as.obsecro.arguments->nodes[i],
+                             "OBSECRO cct_svc_verbum_len expects VERBUM argument");
+        }
+        if ((strcmp(name, "cct_svc_verbum_byte") == 0 || strcmp(name, "cct_svc_verbum_copy_slice") == 0) &&
+            i > 0 &&
+            !(sem_is_integer_type(arg_type) || sem_is_error_type(arg_type))) {
+            sem_report_nodef(sem, expr->as.obsecro.arguments->nodes[i],
+                             "OBSECRO %s expects integer index/length argument", name);
+        }
+        if ((strcmp(name, "cct_svc_builder_append") == 0 ||
+             strcmp(name, "cct_svc_builder_append_char") == 0 ||
+             strcmp(name, "cct_svc_builder_build") == 0 ||
+             strcmp(name, "cct_svc_builder_clear") == 0 ||
+             strcmp(name, "cct_svc_builder_len") == 0) &&
+            i == 0 &&
+            !(arg_type && (arg_type->kind == CCT_SEM_TYPE_POINTER || sem_is_error_type(arg_type)))) {
+            sem_report_nodef(sem, expr->as.obsecro.arguments->nodes[i],
+                             "OBSECRO %s expects builder pointer as first argument", name);
+        }
+        if (strcmp(name, "cct_svc_builder_append") == 0 &&
+            i == 1 &&
+            !(arg_type && (arg_type->kind == CCT_SEM_TYPE_VERBUM || sem_is_error_type(arg_type)))) {
+            sem_report_nodef(sem, expr->as.obsecro.arguments->nodes[i],
+                             "OBSECRO cct_svc_builder_append expects VERBUM payload");
+        }
+        if (strcmp(name, "cct_svc_builder_append_char") == 0 &&
+            i == 1 &&
+            !(sem_is_integer_type(arg_type) || sem_is_error_type(arg_type))) {
+            sem_report_nodef(sem, expr->as.obsecro.arguments->nodes[i],
+                             "OBSECRO cct_svc_builder_append_char expects integer byte");
+        }
+        if (strcmp(name, "cct_svc_fluxus_new") == 0 &&
+            i == 0 &&
+            !(sem_is_integer_type(arg_type) || sem_is_error_type(arg_type))) {
+            sem_report_nodef(sem, expr->as.obsecro.arguments->nodes[i],
+                             "OBSECRO cct_svc_fluxus_new expects integer element size");
+        }
+        if ((strcmp(name, "cct_svc_fluxus_push") == 0 || strcmp(name, "cct_svc_fluxus_pop") == 0 ||
+             strcmp(name, "cct_svc_fluxus_get") == 0 || strcmp(name, "cct_svc_fluxus_set") == 0 ||
+             strcmp(name, "cct_svc_fluxus_clear") == 0 || strcmp(name, "cct_svc_fluxus_reserve") == 0 ||
+             strcmp(name, "cct_svc_fluxus_free") == 0 || strcmp(name, "cct_svc_fluxus_len") == 0 ||
+             strcmp(name, "cct_svc_fluxus_cap") == 0 || strcmp(name, "cct_svc_fluxus_peek") == 0) &&
+            i == 0 &&
+            !(arg_type && (arg_type->kind == CCT_SEM_TYPE_POINTER || sem_is_error_type(arg_type)))) {
+            sem_report_nodef(sem, expr->as.obsecro.arguments->nodes[i],
+                             "OBSECRO %s expects fluxus pointer as first argument", name);
+        }
+        if ((strcmp(name, "cct_svc_fluxus_push") == 0 || strcmp(name, "cct_svc_fluxus_pop") == 0) &&
+            i == 1 &&
+            !(arg_type && (arg_type->kind == CCT_SEM_TYPE_POINTER || sem_is_error_type(arg_type)))) {
+            sem_report_nodef(sem, expr->as.obsecro.arguments->nodes[i],
+                             "OBSECRO %s expects pointer payload as second argument", name);
+        }
+        if ((strcmp(name, "cct_svc_fluxus_get") == 0 || strcmp(name, "cct_svc_fluxus_reserve") == 0 ||
+             strcmp(name, "cct_svc_fluxus_set") == 0) &&
+            i == 1 &&
+            !(sem_is_integer_type(arg_type) || sem_is_error_type(arg_type))) {
+            sem_report_nodef(sem, expr->as.obsecro.arguments->nodes[i],
+                             "OBSECRO %s expects integer argument", name);
+        }
+        if (strcmp(name, "cct_svc_fluxus_set") == 0 &&
+            i == 2 &&
+            !(arg_type && (arg_type->kind == CCT_SEM_TYPE_POINTER || sem_is_error_type(arg_type)))) {
+            sem_report_nodef(sem, expr->as.obsecro.arguments->nodes[i],
+                             "OBSECRO cct_svc_fluxus_set expects pointer payload as third argument");
         }
         if ((strcmp(name, "json_arr_handle_new") == 0 ||
              strcmp(name, "json_obj_handle_new") == 0) &&

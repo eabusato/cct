@@ -1,0 +1,78 @@
+-- CCT — Clavicula Turing
+-- Standard Library Module: console
+--
+-- FASE FS-1A: VGA console for freestanding targets
+--
+-- Copyright (c) Erick Andrade Busato. Todos os direitos reservados.
+
+INCIPIT grimoire "console"
+
+ORDO ConsoleColor
+  COR_PRETO
+  COR_AZUL
+  COR_VERDE
+  COR_CIANO
+  COR_VERMELHO
+  COR_MAGENTA
+  COR_MARROM
+  COR_CINZA_CLARO
+  COR_CINZA_ESCURO
+  COR_AZUL_CLARO
+  COR_VERDE_CLARO
+  COR_CIANO_CLARO
+  COR_VERMELHO_CLARO
+  COR_ROSA
+  COR_AMARELO
+  COR_BRANCO
+FIN ORDO
+
+RITUALE console_init() REDDE NIHIL
+  OBSECRO console_init()
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE console_clear() REDDE NIHIL
+  OBSECRO console_clear()
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE console_putc(REX c) REDDE NIHIL
+  OBSECRO console_putc(c)
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE console_write(VERBUM texto) REDDE NIHIL
+  OBSECRO console_write(texto)
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE console_write_line(VERBUM texto) REDDE NIHIL
+  OBSECRO console_write(texto)
+  OBSECRO console_putc(10)
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE console_write_centered(VERBUM texto) REDDE NIHIL
+  OBSECRO console_write_centered(texto)
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE console_set_color(ConsoleColor fg, ConsoleColor bg) REDDE NIHIL
+  OBSECRO console_set_color(fg, bg)
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE console_set_cursor(REX linha, REX col) REDDE NIHIL
+  OBSECRO console_set_cursor(linha, col)
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE console_get_linha() REDDE REX
+  REDDE OBSECRO console_get_linha()
+EXPLICIT RITUALE
+
+RITUALE console_get_coluna() REDDE REX
+  REDDE OBSECRO console_get_coluna()
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

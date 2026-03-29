@@ -9,6 +9,11 @@
 
 #include "cct_freestanding_rt.h"
 
+volatile int32_t cct_vga_row = 0;
+volatile int32_t cct_vga_col = 0;
+volatile uint8_t cct_vga_attr = 0x07u;
+cct_bump_heap_t cct_fs_heap = {0};
+
 void cct_fs_memcpy(void *dst, const void *src, size_t n) {
     if (!dst || !src) cct_fs_halt();
     uint8_t *d = (uint8_t*)dst;

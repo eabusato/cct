@@ -33,6 +33,20 @@ It has two goals:
 - **Validation model:** legacy, rebased legacy, bootstrap, self-host, and operational platform suites are first-class gates
 - **Typing model:** advanced typing subset plus bootstrap generic semantics and materialization are closed on the validated baseline
 
+## Parallel Freestanding Track
+
+- Freestanding FS-1A through FS-2C are now closed on top of the existing `--profile freestanding` foundation.
+- Current freestanding gate closed: `G-FS2`, with a booted QEMU screen proving that heap-backed `SIGILLUM`, `VERBUM`, and `fluxus_fs` data execute in bare metal.
+- Canonical freestanding consumer: `../grub-hello/`.
+- Primary validation path: `CCT_TEST_PHASES=FS1A,FS1B,FS1C,FS2A,FS2B,FS2C bash tests/run_tests.sh`.
+- Current freestanding references:
+  - `docs/freestanding/README.md`
+  - `docs/freestanding/FS1_RUNTIME_MANUAL.md`
+  - `docs/freestanding/FS2_RUNTIME_MANUAL.md`
+  - `docs/freestanding/GRUB_HELLO_INTEGRATION.md`
+  - `docs/release/FREESTND_FS1_RELEASE_NOTES.md`
+  - `docs/release/FREESTND_FS2_RELEASE_NOTES.md`
+
 ## Completed Phases (0 → 19D4)
 
 ### FASE 0 — Foundation ✅

@@ -1,0 +1,25 @@
+INCIPIT grimoire "verbum_fs_freestanding_smoke_fs2b"
+
+ADVOCARE "cct/verbum_fs"
+
+RITUALE main() REDDE NIHIL
+  EVOCA VERBUM base AD "cct-fs"
+  EVOCA VERBUM joined AD CONIURA verbum_fs_concat(base, "-ok")
+  EVOCA VERBUM sub AD CONIURA verbum_fs_substring(joined, 0, 3)
+  EVOCA REX found AD CONIURA verbum_fs_find(joined, "fs")
+  EVOCA VERBUM dec AD CONIURA verbum_fs_from_int(42)
+  EVOCA VERBUM hex AD CONIURA verbum_fs_from_hex(255)
+  EVOCA VERBUM u AD CONIURA verbum_fs_from_uint(77)
+  SI CONIURA verbum_fs_len(sub) < 0
+    REDDE
+  FIN SI
+  SI CONIURA verbum_fs_starts_with(joined, "cct") ET CONIURA verbum_fs_ends_with(joined, "ok") ET CONIURA verbum_fs_contains(joined, "fs") ET found >= 0
+    EVOCA VERBUM sink AD CONIURA verbum_fs_concat(dec, CONIURA verbum_fs_concat(hex, u))
+    SI CONIURA verbum_fs_len(sink) < 0
+      REDDE
+    FIN SI
+  FIN SI
+  REDDE
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

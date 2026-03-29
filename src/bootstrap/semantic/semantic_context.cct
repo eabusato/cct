@@ -312,6 +312,10 @@ RITUALE semantic_type_compatible_assign(SPECULUM SemanticContext ctx, REX target
   EVOCA SPECULUM SemanticType target AD CONIURA semantic_type_at(ctx, target_id)
   EVOCA SPECULUM SemanticType value AD CONIURA semantic_type_at(ctx, value_id)
 
+  SI (*target).kind == SEM_TYPE_POINTER ET (*value).kind == SEM_TYPE_NIHIL
+    REDDE VERUM
+  FIN SI
+
   SI (*target).kind == SEM_TYPE_POINTER ET (*value).kind == SEM_TYPE_POINTER
     EVOCA SPECULUM SemanticType target_elem AD CONIURA semantic_type_at(ctx, (*target).element_type_id)
     EVOCA SPECULUM SemanticType value_elem AD CONIURA semantic_type_at(ctx, (*value).element_type_id)

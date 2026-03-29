@@ -1,0 +1,70 @@
+-- CCT — Clavicula Turing
+-- Standard Library Module: fluxus_fs
+--
+-- FASE FS-2C: Freestanding dynamic array
+--
+-- Copyright (c) Erick Andrade Busato. Todos os direitos reservados.
+
+INCIPIT grimoire "fluxus_fs"
+
+ADVOCARE "cct/mem_fs"
+
+RITUALE fluxus_fs_new(REX elem_size) REDDE SPECULUM NIHIL
+  REDDE OBSECRO cct_svc_fluxus_new(elem_size)
+EXPLICIT RITUALE
+
+RITUALE fluxus_fs_free(SPECULUM NIHIL flux) REDDE NIHIL
+  OBSECRO cct_svc_fluxus_free(flux)
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE fluxus_fs_push(SPECULUM NIHIL flux, SPECULUM NIHIL elem) REDDE NIHIL
+  OBSECRO cct_svc_fluxus_push(flux, elem)
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE fluxus_fs_pop(SPECULUM NIHIL flux, SPECULUM NIHIL out) REDDE NIHIL
+  OBSECRO cct_svc_fluxus_pop(flux, out)
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE fluxus_fs_len(SPECULUM NIHIL flux) REDDE REX
+  REDDE OBSECRO cct_svc_fluxus_len(flux)
+EXPLICIT RITUALE
+
+RITUALE fluxus_fs_get(SPECULUM NIHIL flux, REX idx) REDDE SPECULUM NIHIL
+  REDDE OBSECRO cct_svc_fluxus_get(flux, idx)
+EXPLICIT RITUALE
+
+RITUALE fluxus_fs_set(SPECULUM NIHIL flux, REX idx, SPECULUM NIHIL elem) REDDE NIHIL
+  OBSECRO cct_svc_fluxus_set(flux, idx, elem)
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE fluxus_fs_clear(SPECULUM NIHIL flux) REDDE NIHIL
+  OBSECRO cct_svc_fluxus_clear(flux)
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE fluxus_fs_reserve(SPECULUM NIHIL flux, REX cap) REDDE NIHIL
+  OBSECRO cct_svc_fluxus_reserve(flux, cap)
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE fluxus_fs_cap(SPECULUM NIHIL flux) REDDE REX
+  REDDE OBSECRO cct_svc_fluxus_cap(flux)
+EXPLICIT RITUALE
+
+RITUALE fluxus_fs_is_empty(SPECULUM NIHIL flux) REDDE VERUM
+  REDDE CONIURA fluxus_fs_len(flux) == 0
+EXPLICIT RITUALE
+
+RITUALE fluxus_fs_peek(SPECULUM NIHIL flux) REDDE SPECULUM NIHIL
+  REDDE OBSECRO cct_svc_fluxus_peek(flux)
+EXPLICIT RITUALE
+
+RITUALE fluxus_fs_remove_first(SPECULUM NIHIL flux) REDDE SPECULUM NIHIL
+  REDDE OBSECRO cct_svc_fluxus_remove_first(flux)
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

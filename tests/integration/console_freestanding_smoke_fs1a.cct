@@ -1,0 +1,14 @@
+INCIPIT grimoire "console_freestanding_smoke_fs1a"
+
+ADVOCARE "cct/console"
+
+RITUALE main() REDDE NIHIL
+  CONIURA console_init()
+  CONIURA console_set_color(COR_VERDE_CLARO, COR_PRETO)
+  CONIURA console_write("CCT")
+  CONIURA console_putc(10)
+  CONIURA console_write_line("ONLINE")
+  REDDE
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

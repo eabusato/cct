@@ -315,6 +315,12 @@ should_dispatch_compile_to_host() {
   if grep -Eq 'ADVOCARE[[:space:]]+"cct/log\.cct"' "$input"; then
     return 0
   fi
+  if grep -Eq 'ADVOCARE[[:space:]]+"cct/instrument\.cct"' "$input"; then
+    return 0
+  fi
+  if grep -Eq 'ADVOCARE[[:space:]]+"cct/trace_capture\.cct"' "$input"; then
+    return 0
+  fi
   if grep -Eq 'ADVOCARE[[:space:]]+"cct/trace\.cct"' "$input"; then
     return 0
   fi
@@ -330,10 +336,10 @@ should_dispatch_compile_to_host() {
   if grep -Eq 'ADVOCARE[[:space:]]+"cct/audit\.cct"' "$input"; then
     return 0
   fi
-  if grep -Eq 'ADVOCARE[[:space:]]+"cct/signal\.cct"' "$input"; then
+  if grep -Eq 'ADVOCARE[[:space:]]+"cct/callback\.cct"' "$input"; then
     return 0
   fi
-  if grep -Eq 'ADVOCARE[[:space:]]+"cct/fs_watch\.cct"' "$input"; then
+  if grep -Eq 'ADVOCARE[[:space:]]+"cct/db_sqlite\.cct"' "$input"; then
     return 0
   fi
   return 1

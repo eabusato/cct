@@ -8377,11 +8377,11 @@ imports: 0</title>
       <g clip-path="url(#module_clip_008)">
   <g id="foundation">
     <circle class="base" cx="256" cy="256" r="226"/>
-    <ellipse class="base" cx="256" cy="256" rx="198" ry="185.01" opacity="0.32"/>
+    <ellipse class="base" cx="256" cy="256" rx="198" ry="182.91" opacity="0.32"/>
   </g>
   <g id="primary_path">
     <g class="edge-wrap">
-    <path class="primary" d="M 297.84 135.03 Q 305.07 163.54 326.69 143.60" stroke-width="2.60" opacity="0.96"/>
+    <path class="primary" d="M 290.58 135.57 Q 305.65 166.54 331.41 143.68" stroke-width="2.60" opacity="0.96"/>
       <title>edge: primary
 db_open -&gt; db_close
 weight: 1
@@ -8390,7 +8390,7 @@ path:
 db_open -&gt; db_close</title>
     </g>
     <g class="edge-wrap">
-    <path class="primary" d="M 326.69 143.60 Q 335.42 181.85 372.10 167.93" stroke-width="2.60" opacity="0.96"/>
+    <path class="primary" d="M 331.41 143.68 Q 333.92 174.79 359.92 157.51" stroke-width="2.60" opacity="0.96"/>
       <title>edge: primary
 db_close -&gt; db_exec
 weight: 1
@@ -8399,7 +8399,7 @@ path:
 db_close -&gt; db_exec</title>
     </g>
     <g class="edge-wrap">
-    <path class="primary" d="M 372.10 167.93 Q 368.39 201.56 402.22 200.56" stroke-width="2.60" opacity="0.96"/>
+    <path class="primary" d="M 359.92 157.51 Q 350.76 193.99 388.34 195.38" stroke-width="2.60" opacity="0.96"/>
       <title>edge: primary
 db_exec -&gt; db_last_error
 weight: 1
@@ -8408,7 +8408,7 @@ path:
 db_exec -&gt; db_last_error</title>
     </g>
     <g class="edge-wrap">
-    <path class="primary" d="M 402.22 200.56 Q 378.52 219.26 408.54 222.43" stroke-width="2.60" opacity="0.96"/>
+    <path class="primary" d="M 388.34 195.38 Q 374.03 216.43 399.40 214.28" stroke-width="2.60" opacity="0.96"/>
       <title>edge: primary
 db_last_error -&gt; db_query
 weight: 1
@@ -8417,7 +8417,7 @@ path:
 db_last_error -&gt; db_query</title>
     </g>
     <g class="edge-wrap">
-    <path class="primary" d="M 408.54 222.43 Q 389.17 250.03 415.51 271.08" stroke-width="2.60" opacity="0.96"/>
+    <path class="primary" d="M 399.40 214.28 Q 382.64 240.45 413.69 241.56" stroke-width="2.60" opacity="0.96"/>
       <title>edge: primary
 db_query -&gt; rows_next
 weight: 1
@@ -8426,7 +8426,7 @@ path:
 db_query -&gt; rows_next</title>
     </g>
     <g class="edge-wrap">
-    <path class="primary" d="M 415.51 271.08 Q 383.15 276.96 387.52 309.56" stroke-width="2.60" opacity="0.96"/>
+    <path class="primary" d="M 413.69 241.56 Q 387.31 259.45 404.52 286.28" stroke-width="2.60" opacity="0.96"/>
       <title>edge: primary
 rows_next -&gt; rows_get_text
 weight: 1
@@ -8435,7 +8435,7 @@ path:
 rows_next -&gt; rows_get_text</title>
     </g>
     <g class="edge-wrap">
-    <path class="primary" d="M 387.52 309.56 Q 360.01 310.89 376.46 332.97" stroke-width="2.60" opacity="0.96"/>
+    <path class="primary" d="M 404.52 286.28 Q 377.85 280.84 390.01 305.19" stroke-width="2.60" opacity="0.96"/>
       <title>edge: primary
 rows_get_text -&gt; rows_get_int
 weight: 1
@@ -8444,7 +8444,7 @@ path:
 rows_get_text -&gt; rows_get_int</title>
     </g>
     <g class="edge-wrap">
-    <path class="primary" d="M 376.46 332.97 Q 345.65 325.19 341.31 356.68" stroke-width="2.60" opacity="0.96"/>
+    <path class="primary" d="M 390.01 305.19 Q 359.85 310.05 377.35 335.08" stroke-width="2.60" opacity="0.96"/>
       <title>edge: primary
 rows_get_int -&gt; rows_get_real
 weight: 1
@@ -8453,7 +8453,7 @@ path:
 rows_get_int -&gt; rows_get_real</title>
     </g>
     <g class="edge-wrap">
-    <path class="primary" d="M 341.31 356.68 Q 307.23 344.59 302.01 380.37" stroke-width="2.60" opacity="0.96"/>
+    <path class="primary" d="M 377.35 335.08 Q 349.93 329.92 357.30 356.83" stroke-width="2.60" opacity="0.96"/>
       <title>edge: primary
 rows_get_real -&gt; rows_close
 weight: 1
@@ -8462,7 +8462,7 @@ path:
 rows_get_real -&gt; rows_close</title>
     </g>
     <g class="edge-wrap">
-    <path class="primary" d="M 302.01 380.37 Q 284.64 351.89 265.73 379.38" stroke-width="2.60" opacity="0.96"/>
+    <path class="primary" d="M 357.30 356.83 Q 335.37 336.94 327.57 365.50" stroke-width="2.60" opacity="0.96"/>
       <title>edge: primary
 rows_close -&gt; db_prepare
 weight: 1
@@ -8471,7 +8471,7 @@ path:
 rows_close -&gt; db_prepare</title>
     </g>
     <g class="edge-wrap">
-    <path class="primary" d="M 265.73 379.38 Q 237.18 355.53 208.85 379.64" stroke-width="2.60" opacity="0.96"/>
+    <path class="primary" d="M 327.57 365.50 Q 297.69 344.92 286.65 379.48" stroke-width="2.60" opacity="0.96"/>
       <title>edge: primary
 db_prepare -&gt; stmt_bind_text
 weight: 1
@@ -8480,7 +8480,7 @@ path:
 db_prepare -&gt; stmt_bind_text</title>
     </g>
     <g class="edge-wrap">
-    <path class="primary" d="M 208.85 379.64 Q 201.04 346.39 173.67 366.83" stroke-width="2.60" opacity="0.96"/>
+    <path class="primary" d="M 286.65 379.48 Q 263.12 358.16 241.71 381.60" stroke-width="2.60" opacity="0.96"/>
       <title>edge: primary
 stmt_bind_text -&gt; stmt_bind_int
 weight: 1
@@ -8489,7 +8489,7 @@ path:
 stmt_bind_text -&gt; stmt_bind_int</title>
     </g>
     <g class="edge-wrap">
-    <path class="primary" d="M 173.67 366.83 Q 173.13 330.48 139.18 343.47" stroke-width="2.60" opacity="0.96"/>
+    <path class="primary" d="M 241.71 381.60 Q 238.87 350.34 217.23 373.08" stroke-width="2.60" opacity="0.96"/>
       <title>edge: primary
 stmt_bind_int -&gt; stmt_bind_real
 weight: 1
@@ -8498,7 +8498,7 @@ path:
 stmt_bind_int -&gt; stmt_bind_real</title>
     </g>
     <g class="edge-wrap">
-    <path class="primary" d="M 139.18 343.47 Q 149.12 312.81 117.31 307.58" stroke-width="2.60" opacity="0.96"/>
+    <path class="primary" d="M 217.23 373.08 Q 205.10 347.09 191.32 372.25" stroke-width="2.60" opacity="0.96"/>
       <title>edge: primary
 stmt_bind_real -&gt; stmt_step
 weight: 1
@@ -8507,16 +8507,52 @@ path:
 stmt_bind_real -&gt; stmt_step</title>
     </g>
     <g class="edge-wrap">
-    <path class="primary" d="M 117.31 307.58 Q 135.33 284.03 108.35 271.72" stroke-width="2.60" opacity="0.96"/>
+    <path class="primary" d="M 191.32 372.25 Q 186.83 341.28 159.59 356.69" stroke-width="2.60" opacity="0.96"/>
       <title>edge: primary
-stmt_step -&gt; stmt_reset
+stmt_step -&gt; stmt_has_row
 weight: 1
 
 path:
-stmt_step -&gt; stmt_reset</title>
+stmt_step -&gt; stmt_has_row</title>
     </g>
     <g class="edge-wrap">
-    <path class="primary" d="M 108.35 271.72 Q 133.24 250.50 104.36 235.13" stroke-width="2.60" opacity="0.96"/>
+    <path class="primary" d="M 159.59 356.69 Q 169.56 323.99 135.66 328.41" stroke-width="2.60" opacity="0.96"/>
+      <title>edge: primary
+stmt_has_row -&gt; stmt_get_text
+weight: 1
+
+path:
+stmt_has_row -&gt; stmt_get_text</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="primary" d="M 135.66 328.41 Q 148.78 298.83 116.43 297.81" stroke-width="2.60" opacity="0.96"/>
+      <title>edge: primary
+stmt_get_text -&gt; stmt_get_int
+weight: 1
+
+path:
+stmt_get_text -&gt; stmt_get_int</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="primary" d="M 116.43 297.81 Q 139.75 274.42 110.09 259.90" stroke-width="2.60" opacity="0.96"/>
+      <title>edge: primary
+stmt_get_int -&gt; stmt_get_real
+weight: 1
+
+path:
+stmt_get_int -&gt; stmt_get_real</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="primary" d="M 110.09 259.90 Q 132.82 248.10 110.89 234.87" stroke-width="2.60" opacity="0.96"/>
+      <title>edge: primary
+stmt_get_real -&gt; stmt_reset
+weight: 1
+
+path:
+stmt_get_real -&gt; stmt_reset</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="primary" d="M 110.89 234.87 Q 136.55 225.95 116.94 207.14" stroke-width="2.60" opacity="0.96"/>
       <title>edge: primary
 stmt_reset -&gt; stmt_finalize
 weight: 1
@@ -8525,7 +8561,7 @@ path:
 stmt_reset -&gt; stmt_finalize</title>
     </g>
     <g class="edge-wrap">
-    <path class="primary" d="M 104.36 235.13 Q 138.79 231.75 123.16 200.89" stroke-width="2.60" opacity="0.96"/>
+    <path class="primary" d="M 116.94 207.14 Q 148.27 205.15 129.74 179.80" stroke-width="2.60" opacity="0.96"/>
       <title>edge: primary
 stmt_finalize -&gt; db_begin
 weight: 1
@@ -8534,7 +8570,7 @@ path:
 stmt_finalize -&gt; db_begin</title>
     </g>
     <g class="edge-wrap">
-    <path class="primary" d="M 123.16 200.89 Q 155.87 202.39 143.39 172.12" stroke-width="2.60" opacity="0.96"/>
+    <path class="primary" d="M 129.74 179.80 Q 160.26 187.96 163.53 156.55" stroke-width="2.60" opacity="0.96"/>
       <title>edge: primary
 db_begin -&gt; db_commit
 weight: 1
@@ -8543,7 +8579,7 @@ path:
 db_begin -&gt; db_commit</title>
     </g>
     <g class="edge-wrap">
-    <path class="primary" d="M 143.39 172.12 Q 182.34 177.72 191.07 139.35" stroke-width="2.60" opacity="0.96"/>
+    <path class="primary" d="M 163.53 156.55 Q 185.11 172.83 189.13 146.10" stroke-width="2.60" opacity="0.96"/>
       <title>edge: primary
 db_commit -&gt; db_rollback
 weight: 1
@@ -8552,7 +8588,7 @@ path:
 db_commit -&gt; db_rollback</title>
     </g>
     <g class="edge-wrap">
-    <path class="primary" d="M 191.07 139.35 Q 208.60 161.81 204.92 133.56" stroke-width="2.60" opacity="0.96"/>
+    <path class="primary" d="M 189.13 146.10 Q 217.82 157.71 223.52 127.30" stroke-width="2.60" opacity="0.96"/>
       <title>edge: primary
 db_rollback -&gt; db_scalar_int
 weight: 1
@@ -8561,7 +8597,7 @@ path:
 db_rollback -&gt; db_scalar_int</title>
     </g>
     <g class="edge-wrap">
-    <path class="primary" d="M 204.92 133.56 Q 228.48 156.26 248.60 130.46" stroke-width="2.60" opacity="0.96"/>
+    <path class="primary" d="M 223.52 127.30 Q 246.94 149.69 268.89 125.85" stroke-width="2.60" opacity="0.96"/>
       <title>edge: primary
 db_scalar_int -&gt; db_scalar_text
 weight: 1
@@ -8578,9 +8614,9 @@ db_scalar_int -&gt; db_scalar_text</title>
   </g>
   <g id="bindings">
     <g class="edge-wrap">
-    <path class="bind" d="M 297.84 135.03 Q 285.61 144.55 289.34 159.60" stroke-width="1.28" opacity="0.85"/>
-    <line class="bind" x1="299.92" y1="141.25" x2="292.36" y2="138.63" opacity="0.75"/>
-    <line class="bind" x1="294.14" y1="160.83" x2="299.95" y2="162.32" opacity="0.58"/>
+    <path class="bind" d="M 290.58 135.57 Q 284.58 147.37 283.40 160.56" stroke-width="1.28" opacity="0.85"/>
+    <line class="bind" x1="292.99" y1="141.67" x2="285.30" y2="139.46" opacity="0.75"/>
+    <line class="bind" x1="288.34" y1="160.19" x2="294.32" y2="159.74" opacity="0.58"/>
       <title>edge: bind
 db_open -&gt; db_open
 weight: 1
@@ -8589,9 +8625,9 @@ path:
 db_open -&gt; db_open</title>
     </g>
     <g class="edge-wrap">
-    <path class="bind" d="M 326.69 143.60 Q 315.44 151.89 312.85 165.61" stroke-width="1.28" opacity="0.85"/>
-    <line class="bind" x1="327.30" y1="150.13" x2="320.53" y2="145.87" opacity="0.75"/>
-    <line class="bind" x1="317.60" y1="164.21" x2="323.35" y2="162.52" opacity="0.58"/>
+    <path class="bind" d="M 331.41 143.68 Q 320.73 152.16 316.92 165.26" stroke-width="1.28" opacity="0.85"/>
+    <line class="bind" x1="331.83" y1="150.22" x2="325.19" y2="145.76" opacity="0.75"/>
+    <line class="bind" x1="321.87" y1="165.11" x2="327.86" y2="164.94" opacity="0.58"/>
       <title>edge: bind
 db_close -&gt; db_close
 weight: 1
@@ -8600,9 +8636,9 @@ path:
 db_close -&gt; db_close</title>
     </g>
     <g class="edge-wrap">
-    <path class="bind" d="M 372.10 167.93 Q 359.77 173.18 351.39 183.64" stroke-width="1.28" opacity="0.85"/>
-    <line class="bind" x1="370.38" y1="174.26" x2="365.54" y2="167.88" opacity="0.75"/>
-    <line class="bind" x1="356.20" y1="184.82" x2="362.02" y2="186.25" opacity="0.58"/>
+    <path class="bind" d="M 359.92 157.51 Q 348.53 164.39 341.05 175.40" stroke-width="1.28" opacity="0.85"/>
+    <line class="bind" x1="358.89" y1="163.99" x2="353.39" y2="158.19" opacity="0.75"/>
+    <line class="bind" x1="345.99" y1="175.57" x2="351.99" y2="175.78" opacity="0.58"/>
       <title>edge: bind
 db_exec -&gt; db_exec
 weight: 1
@@ -8611,9 +8647,9 @@ path:
 db_exec -&gt; db_exec</title>
     </g>
     <g class="edge-wrap">
-    <path class="bind" d="M 402.22 200.56 Q 389.24 203.01 377.91 209.78" stroke-width="1.28" opacity="0.85"/>
-    <line class="bind" x1="398.77" y1="206.15" x2="395.94" y2="198.67" opacity="0.75"/>
-    <line class="bind" x1="382.85" y1="209.54" x2="388.84" y2="209.24" opacity="0.58"/>
+    <path class="bind" d="M 388.34 195.38 Q 373.49 194.18 364.70 206.21" stroke-width="1.28" opacity="0.85"/>
+    <line class="bind" x1="385.28" y1="201.18" x2="381.95" y2="193.91" opacity="0.75"/>
+    <line class="bind" x1="369.44" y1="207.63" x2="375.19" y2="209.35" opacity="0.58"/>
       <title>edge: bind
 db_last_error -&gt; db_last_error
 weight: 1
@@ -8622,9 +8658,9 @@ path:
 db_last_error -&gt; db_last_error</title>
     </g>
     <g class="edge-wrap">
-    <path class="bind" d="M 408.54 222.43 Q 394.31 218.28 383.14 228.02" stroke-width="1.28" opacity="0.85"/>
-    <line class="bind" x1="404.32" y1="227.45" x2="402.60" y2="219.64" opacity="0.75"/>
-    <line class="bind" x1="387.94" y1="229.25" x2="393.75" y2="230.75" opacity="0.58"/>
+    <path class="bind" d="M 399.40 214.28 Q 385.01 211.37 374.43 221.54" stroke-width="1.28" opacity="0.85"/>
+    <line class="bind" x1="395.52" y1="219.57" x2="393.29" y2="211.89" opacity="0.75"/>
+    <line class="bind" x1="379.31" y1="220.73" x2="385.23" y2="219.75" opacity="0.58"/>
       <title>edge: bind
 db_query -&gt; db_query
 weight: 1
@@ -8633,9 +8669,9 @@ path:
 db_query -&gt; db_query</title>
     </g>
     <g class="edge-wrap">
-    <path class="bind" d="M 415.51 271.08 Q 402.88 266.57 389.63 268.64" stroke-width="1.28" opacity="0.85"/>
-    <line class="bind" x1="409.96" y1="274.58" x2="410.71" y2="266.61" opacity="0.75"/>
-    <line class="bind" x1="394.58" y1="268.65" x2="400.58" y2="268.67" opacity="0.58"/>
+    <path class="bind" d="M 413.69 241.56 Q 400.00 234.64 387.80 243.93" stroke-width="1.28" opacity="0.85"/>
+    <line class="bind" x1="408.88" y1="246.02" x2="408.15" y2="238.05" opacity="0.75"/>
+    <line class="bind" x1="392.72" y1="244.51" x2="398.68" y2="245.20" opacity="0.58"/>
       <title>edge: bind
 rows_next -&gt; rows_next
 weight: 1
@@ -8644,9 +8680,9 @@ path:
 rows_next -&gt; rows_next</title>
     </g>
     <g class="edge-wrap">
-    <path class="bind" d="M 387.52 309.56 Q 377.29 300.21 363.44 299.75" stroke-width="1.28" opacity="0.85"/>
-    <line class="bind" x1="381.19" y1="311.30" x2="384.21" y2="303.89" opacity="0.75"/>
-    <line class="bind" x1="368.21" y1="298.42" x2="373.99" y2="296.81" opacity="0.58"/>
+    <path class="bind" d="M 404.52 286.28 Q 392.60 279.62 379.04 281.09" stroke-width="1.28" opacity="0.85"/>
+    <line class="bind" x1="398.62" y1="289.16" x2="400.22" y2="281.32" opacity="0.75"/>
+    <line class="bind" x1="383.82" y1="279.81" x2="389.62" y2="278.26" opacity="0.58"/>
       <title>edge: bind
 rows_get_text -&gt; rows_get_text
 weight: 1
@@ -8655,9 +8691,9 @@ path:
 rows_get_text -&gt; rows_get_text</title>
     </g>
     <g class="edge-wrap">
-    <path class="bind" d="M 376.46 332.97 Q 369.30 320.03 354.55 318.97" stroke-width="1.28" opacity="0.85"/>
-    <line class="bind" x1="369.92" y1="333.54" x2="374.23" y2="326.80" opacity="0.75"/>
-    <line class="bind" x1="359.43" y1="319.80" x2="365.35" y2="320.80" opacity="0.58"/>
+    <path class="bind" d="M 390.01 305.19 Q 379.34 296.51 365.60 296.23" stroke-width="1.28" opacity="0.85"/>
+    <line class="bind" x1="383.75" y1="307.15" x2="386.50" y2="299.64" opacity="0.75"/>
+    <line class="bind" x1="370.55" y1="296.27" x2="376.55" y2="296.31" opacity="0.58"/>
       <title>edge: bind
 rows_get_int -&gt; rows_get_int
 weight: 1
@@ -8666,9 +8702,9 @@ path:
 rows_get_int -&gt; rows_get_int</title>
     </g>
     <g class="edge-wrap">
-    <path class="bind" d="M 341.31 356.68 Q 333.72 346.07 324.50 336.84" stroke-width="1.28" opacity="0.85"/>
-    <line class="bind" x1="334.90" y1="355.29" x2="341.00" y2="350.12" opacity="0.75"/>
-    <line class="bind" x1="329.42" y1="337.46" x2="335.37" y2="338.20" opacity="0.58"/>
+    <path class="bind" d="M 377.35 335.08 Q 367.85 325.84 355.56 320.89" stroke-width="1.28" opacity="0.85"/>
+    <line class="bind" x1="370.80" y1="335.59" x2="375.17" y2="328.89" opacity="0.75"/>
+    <line class="bind" x1="360.51" y1="320.96" x2="366.51" y2="321.06" opacity="0.58"/>
       <title>edge: bind
 rows_get_real -&gt; rows_get_real
 weight: 1
@@ -8677,9 +8713,9 @@ path:
 rows_get_real -&gt; rows_get_real</title>
     </g>
     <g class="edge-wrap">
-    <path class="bind" d="M 302.01 380.37 Q 302.84 366.21 292.99 355.99" stroke-width="1.28" opacity="0.85"/>
-    <line class="bind" x1="296.46" y1="376.89" x2="303.96" y2="374.11" opacity="0.75"/>
-    <line class="bind" x1="297.94" y1="356.01" x2="303.94" y2="356.03" opacity="0.58"/>
+    <path class="bind" d="M 357.30 356.83 Q 351.76 343.96 338.87 338.49" stroke-width="1.28" opacity="0.85"/>
+    <line class="bind" x1="350.79" y1="356.00" x2="356.43" y2="350.33" opacity="0.75"/>
+    <line class="bind" x1="343.75" y1="337.66" x2="349.66" y2="336.65" opacity="0.58"/>
       <title>edge: bind
 rows_close -&gt; rows_close
 weight: 1
@@ -8688,9 +8724,9 @@ path:
 rows_close -&gt; rows_close</title>
     </g>
     <g class="edge-wrap">
-    <path class="bind" d="M 265.73 379.38 Q 273.21 365.75 263.69 353.46" stroke-width="1.28" opacity="0.85"/>
-    <line class="bind" x1="261.34" y1="374.51" x2="269.31" y2="373.88" opacity="0.75"/>
-    <line class="bind" x1="268.64" y1="353.36" x2="274.64" y2="353.24" opacity="0.58"/>
+    <path class="bind" d="M 327.57 365.50 Q 324.54 351.95 313.34 343.73" stroke-width="1.28" opacity="0.85"/>
+    <line class="bind" x1="321.37" y1="363.33" x2="328.07" y2="358.96" opacity="0.75"/>
+    <line class="bind" x1="318.22" y1="342.90" x2="324.14" y2="341.90" opacity="0.58"/>
       <title>edge: bind
 db_prepare -&gt; db_prepare
 weight: 1
@@ -8699,9 +8735,9 @@ path:
 db_prepare -&gt; db_prepare</title>
     </g>
     <g class="edge-wrap">
-    <path class="bind" d="M 208.85 379.64 Q 215.34 368.20 218.12 355.35" stroke-width="1.28" opacity="0.85"/>
-    <line class="bind" x1="206.97" y1="373.36" x2="214.44" y2="376.21" opacity="0.75"/>
-    <line class="bind" x1="223.05" y1="355.76" x2="229.03" y2="356.26" opacity="0.58"/>
+    <path class="bind" d="M 286.65 379.48 Q 287.94 365.76 280.39 354.24" stroke-width="1.28" opacity="0.85"/>
+    <line class="bind" x1="281.51" y1="375.39" x2="289.28" y2="373.47" opacity="0.75"/>
+    <line class="bind" x1="285.33" y1="354.15" x2="291.33" y2="354.03" opacity="0.58"/>
       <title>edge: bind
 stmt_bind_text -&gt; stmt_bind_text
 weight: 1
@@ -8710,9 +8746,9 @@ path:
 stmt_bind_text -&gt; stmt_bind_text</title>
     </g>
     <g class="edge-wrap">
-    <path class="bind" d="M 173.67 366.83 Q 184.50 358.68 189.17 345.96" stroke-width="1.28" opacity="0.85"/>
-    <line class="bind" x1="173.56" y1="360.27" x2="179.98" y2="365.04" opacity="0.75"/>
-    <line class="bind" x1="193.98" y1="347.14" x2="199.81" y2="348.58" opacity="0.58"/>
+    <path class="bind" d="M 241.71 381.60 Q 245.43 368.94 244.65 355.77" stroke-width="1.28" opacity="0.85"/>
+    <line class="bind" x1="238.33" y1="375.98" x2="246.28" y2="376.89" opacity="0.75"/>
+    <line class="bind" x1="249.51" y1="356.74" x2="255.39" y2="357.92" opacity="0.58"/>
       <title>edge: bind
 stmt_bind_int -&gt; stmt_bind_int
 weight: 1
@@ -8721,9 +8757,9 @@ path:
 stmt_bind_int -&gt; stmt_bind_int</title>
     </g>
     <g class="edge-wrap">
-    <path class="bind" d="M 139.18 343.47 Q 150.79 337.29 159.99 327.88" stroke-width="1.28" opacity="0.85"/>
-    <line class="bind" x1="140.95" y1="337.15" x2="145.74" y2="343.55" opacity="0.75"/>
-    <line class="bind" x1="164.82" y1="328.97" x2="170.68" y2="330.28" opacity="0.58"/>
+    <path class="bind" d="M 217.23 373.08 Q 226.54 362.47 225.41 348.40" stroke-width="1.28" opacity="0.85"/>
+    <line class="bind" x1="215.07" y1="366.88" x2="222.67" y2="369.40" opacity="0.75"/>
+    <line class="bind" x1="230.16" y1="347.03" x2="235.93" y2="345.37" opacity="0.58"/>
       <title>edge: bind
 stmt_bind_real -&gt; stmt_bind_real
 weight: 1
@@ -8732,9 +8768,9 @@ path:
 stmt_bind_real -&gt; stmt_bind_real</title>
     </g>
     <g class="edge-wrap">
-    <path class="bind" d="M 117.31 307.58 Q 132.14 310.15 141.68 298.52" stroke-width="1.28" opacity="0.85"/>
-    <line class="bind" x1="120.79" y1="302.02" x2="123.58" y2="309.52" opacity="0.75"/>
-    <line class="bind" x1="146.56" y1="299.37" x2="152.47" y2="300.41" opacity="0.58"/>
+    <path class="bind" d="M 191.32 372.25 Q 202.77 363.74 203.96 349.53" stroke-width="1.28" opacity="0.85"/>
+    <line class="bind" x1="190.36" y1="365.76" x2="197.35" y2="369.65" opacity="0.75"/>
+    <line class="bind" x1="208.90" y1="349.93" x2="214.88" y2="350.42" opacity="0.58"/>
       <title>edge: bind
 stmt_step -&gt; stmt_step
 weight: 1
@@ -8743,9 +8779,53 @@ path:
 stmt_step -&gt; stmt_step</title>
     </g>
     <g class="edge-wrap">
-    <path class="bind" d="M 108.35 271.72 Q 121.71 274.46 134.20 268.97" stroke-width="1.28" opacity="0.85"/>
-    <line class="bind" x1="113.09" y1="267.19" x2="113.94" y2="275.15" opacity="0.75"/>
-    <line class="bind" x1="139.12" y1="269.55" x2="145.07" y2="270.26" opacity="0.58"/>
+    <path class="bind" d="M 159.59 356.69 Q 171.80 350.38 177.57 337.91" stroke-width="1.28" opacity="0.85"/>
+    <line class="bind" x1="160.30" y1="350.17" x2="166.08" y2="355.70" opacity="0.75"/>
+    <line class="bind" x1="182.50" y1="337.39" x2="188.46" y2="336.76" opacity="0.58"/>
+      <title>edge: bind
+stmt_has_row -&gt; stmt_has_row
+weight: 1
+
+path:
+stmt_has_row -&gt; stmt_has_row</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="bind" d="M 135.66 328.41 Q 149.02 325.41 157.94 315.01" stroke-width="1.28" opacity="0.85"/>
+    <line class="bind" x1="138.05" y1="322.30" x2="142.18" y2="329.16" opacity="0.75"/>
+    <line class="bind" x1="162.73" y1="313.76" x2="168.53" y2="312.25" opacity="0.58"/>
+      <title>edge: bind
+stmt_get_text -&gt; stmt_get_text
+weight: 1
+
+path:
+stmt_get_text -&gt; stmt_get_text</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="bind" d="M 116.43 297.81 Q 129.70 296.80 141.34 290.35" stroke-width="1.28" opacity="0.85"/>
+    <line class="bind" x1="120.27" y1="292.48" x2="122.56" y2="300.15" opacity="0.75"/>
+    <line class="bind" x1="146.29" y1="290.47" x2="152.29" y2="290.63" opacity="0.58"/>
+      <title>edge: bind
+stmt_get_int -&gt; stmt_get_int
+weight: 1
+
+path:
+stmt_get_int -&gt; stmt_get_int</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="bind" d="M 110.09 259.90 Q 123.15 261.90 136.08 259.21" stroke-width="1.28" opacity="0.85"/>
+    <line class="bind" x1="115.18" y1="255.76" x2="115.39" y2="263.76" opacity="0.75"/>
+    <line class="bind" x1="141.01" y1="259.57" x2="147.00" y2="260.01" opacity="0.58"/>
+      <title>edge: bind
+stmt_get_real -&gt; stmt_get_real
+weight: 1
+
+path:
+stmt_get_real -&gt; stmt_get_real</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="bind" d="M 110.89 234.87 Q 123.02 241.79 136.62 238.62" stroke-width="1.28" opacity="0.85"/>
+    <line class="bind" x1="116.61" y1="231.66" x2="115.46" y2="239.58" opacity="0.75"/>
+    <line class="bind" x1="141.55" y1="238.24" x2="147.53" y2="237.79" opacity="0.58"/>
       <title>edge: bind
 stmt_reset -&gt; stmt_reset
 weight: 1
@@ -8754,9 +8834,9 @@ path:
 stmt_reset -&gt; stmt_reset</title>
     </g>
     <g class="edge-wrap">
-    <path class="bind" d="M 104.36 235.13 Q 116.10 245.24 130.12 238.68" stroke-width="1.28" opacity="0.85"/>
-    <line class="bind" x1="110.06" y1="231.88" x2="108.97" y2="239.80" opacity="0.75"/>
-    <line class="bind" x1="134.96" y1="237.65" x2="140.83" y2="236.40" opacity="0.58"/>
+    <path class="bind" d="M 116.94 207.14 Q 127.38 216.64 141.47 215.76" stroke-width="1.28" opacity="0.85"/>
+    <line class="bind" x1="123.17" y1="205.09" x2="120.52" y2="212.64" opacity="0.75"/>
+    <line class="bind" x1="146.34" y1="214.90" x2="152.25" y2="213.86" opacity="0.58"/>
       <title>edge: bind
 stmt_finalize -&gt; stmt_finalize
 weight: 1
@@ -8765,9 +8845,9 @@ path:
 stmt_finalize -&gt; stmt_finalize</title>
     </g>
     <g class="edge-wrap">
-    <path class="bind" d="M 123.16 200.89 Q 133.20 210.61 147.17 210.86" stroke-width="1.28" opacity="0.85"/>
-    <line class="bind" x1="129.49" y1="199.19" x2="126.43" y2="206.58" opacity="0.75"/>
-    <line class="bind" x1="151.98" y1="209.69" x2="157.82" y2="208.27" opacity="0.58"/>
+    <path class="bind" d="M 129.74 179.80 Q 138.46 190.52 152.00 193.24" stroke-width="1.28" opacity="0.85"/>
+    <line class="bind" x1="136.26" y1="179.07" x2="132.13" y2="185.92" opacity="0.75"/>
+    <line class="bind" x1="156.81" y1="192.06" x2="162.64" y2="190.63" opacity="0.58"/>
       <title>edge: bind
 db_begin -&gt; db_begin
 weight: 1
@@ -8776,9 +8856,9 @@ path:
 db_begin -&gt; db_begin</title>
     </g>
     <g class="edge-wrap">
-    <path class="bind" d="M 143.39 172.12 Q 150.86 183.86 164.24 187.65" stroke-width="1.28" opacity="0.85"/>
-    <line class="bind" x1="149.95" y1="172.02" x2="145.17" y2="178.43" opacity="0.75"/>
-    <line class="bind" x1="169.06" y1="188.80" x2="174.89" y2="190.19" opacity="0.58"/>
+    <path class="bind" d="M 163.53 156.55 Q 170.92 167.43 181.24 175.59" stroke-width="1.28" opacity="0.85"/>
+    <line class="bind" x1="170.00" y1="157.63" x2="164.14" y2="163.08" opacity="0.75"/>
+    <line class="bind" x1="186.15" y1="176.15" x2="192.11" y2="176.83" opacity="0.58"/>
       <title>edge: bind
 db_commit -&gt; db_commit
 weight: 1
@@ -8787,9 +8867,9 @@ path:
 db_commit -&gt; db_commit</title>
     </g>
     <g class="edge-wrap">
-    <path class="bind" d="M 191.07 139.35 Q 195.09 151.99 203.72 162.07" stroke-width="1.28" opacity="0.85"/>
-    <line class="bind" x1="197.09" y1="141.95" x2="190.10" y2="145.84" opacity="0.75"/>
-    <line class="bind" x1="208.66" y1="161.91" x2="214.66" y2="161.72" opacity="0.58"/>
+    <path class="bind" d="M 189.13 146.10 Q 192.75 159.12 202.65 168.31" stroke-width="1.28" opacity="0.85"/>
+    <line class="bind" x1="195.25" y1="148.46" x2="188.42" y2="152.62" opacity="0.75"/>
+    <line class="bind" x1="207.49" y1="169.37" x2="213.35" y2="170.64" opacity="0.58"/>
       <title>edge: bind
 db_rollback -&gt; db_rollback
 weight: 1
@@ -8798,9 +8878,9 @@ path:
 db_rollback -&gt; db_rollback</title>
     </g>
     <g class="edge-wrap">
-    <path class="bind" d="M 204.92 133.56 Q 204.02 148.02 214.93 157.55" stroke-width="1.28" opacity="0.85"/>
-    <line class="bind" x1="210.61" y1="136.82" x2="203.23" y2="139.90" opacity="0.75"/>
-    <line class="bind" x1="219.73" y1="156.36" x2="225.56" y2="154.92" opacity="0.58"/>
+    <path class="bind" d="M 223.52 127.30 Q 219.25 141.78 229.88 152.51" stroke-width="1.28" opacity="0.85"/>
+    <line class="bind" x1="228.67" y1="131.36" x2="220.91" y2="133.32" opacity="0.75"/>
+    <line class="bind" x1="234.73" y1="153.51" x2="240.60" y2="154.73" opacity="0.58"/>
       <title>edge: bind
 db_scalar_int -&gt; db_scalar_int
 weight: 1
@@ -8809,9 +8889,9 @@ path:
 db_scalar_int -&gt; db_scalar_int</title>
     </g>
     <g class="edge-wrap">
-    <path class="bind" d="M 248.60 130.46 Q 246.43 143.61 250.13 156.41" stroke-width="1.28" opacity="0.85"/>
-    <line class="bind" x1="252.90" y1="135.41" x2="244.91" y2="135.88" opacity="0.75"/>
-    <line class="bind" x1="254.98" y1="155.46" x2="260.87" y2="154.30" opacity="0.58"/>
+    <path class="bind" d="M 268.89 125.85 Q 260.57 138.09 266.33 151.73" stroke-width="1.28" opacity="0.85"/>
+    <line class="bind" x1="272.36" y1="131.42" x2="264.40" y2="130.63" opacity="0.75"/>
+    <line class="bind" x1="271.18" y1="152.70" x2="277.06" y2="153.89" opacity="0.58"/>
       <title>edge: bind
 db_scalar_text -&gt; db_scalar_text
 weight: 1
@@ -8822,7 +8902,7 @@ db_scalar_text -&gt; db_scalar_text</title>
   </g>
   <g id="terminals">
     <g class="edge-wrap">
-    <path class="term" d="M 297.84 135.03 Q 283.19 161.00 287.10 190.57" stroke-width="1.65" opacity="0.90"/>
+    <path class="term" d="M 290.58 135.57 Q 283.22 163.10 282.81 191.60" stroke-width="1.65" opacity="0.90"/>
       <title>edge: return
 db_open -&gt; db_open
 weight: 2
@@ -8831,7 +8911,7 @@ path:
 db_open -&gt; db_open</title>
     </g>
     <g class="edge-wrap">
-    <path class="term" d="M 326.69 143.60 Q 309.59 166.94 303.65 195.26" stroke-width="1.65" opacity="0.90"/>
+    <path class="term" d="M 331.41 143.68 Q 314.49 166.92 306.84 194.63" stroke-width="1.65" opacity="0.90"/>
       <title>edge: return
 db_close -&gt; db_close
 weight: 2
@@ -8840,7 +8920,7 @@ path:
 db_close -&gt; db_close</title>
     </g>
     <g class="edge-wrap">
-    <path class="term" d="M 372.10 167.93 Q 349.18 185.03 332.32 208.14" stroke-width="1.65" opacity="0.90"/>
+    <path class="term" d="M 359.92 157.51 Q 334.62 170.74 313.77 190.23" stroke-width="1.65" opacity="0.90"/>
       <title>edge: return
 db_exec -&gt; db_exec
 weight: 2
@@ -8849,7 +8929,7 @@ path:
 db_exec -&gt; db_exec</title>
     </g>
     <g class="edge-wrap">
-    <path class="term" d="M 402.22 200.56 Q 373.89 203.51 347.02 212.94" stroke-width="1.65" opacity="0.90"/>
+    <path class="term" d="M 388.34 195.38 Q 360.07 203.72 340.76 225.98" stroke-width="1.65" opacity="0.90"/>
       <title>edge: return
 db_last_error -&gt; db_last_error
 weight: 2
@@ -8858,7 +8938,7 @@ path:
 db_last_error -&gt; db_last_error</title>
     </g>
     <g class="edge-wrap">
-    <path class="term" d="M 408.54 222.43 Q 379.73 216.46 352.13 226.65" stroke-width="1.65" opacity="0.90"/>
+    <path class="term" d="M 399.40 214.28 Q 370.41 218.83 347.86 237.61" stroke-width="1.65" opacity="0.90"/>
       <title>edge: return
 db_query -&gt; db_query
 weight: 2
@@ -8867,7 +8947,7 @@ path:
 db_query -&gt; db_query</title>
     </g>
     <g class="edge-wrap">
-    <path class="term" d="M 415.51 271.08 Q 389.02 260.28 360.52 257.85" stroke-width="1.65" opacity="0.90"/>
+    <path class="term" d="M 413.69 241.56 Q 384.06 239.21 358.66 254.64" stroke-width="1.65" opacity="0.90"/>
       <title>edge: return
 rows_next -&gt; rows_next
 weight: 2
@@ -8876,7 +8956,7 @@ path:
 rows_next -&gt; rows_next</title>
     </g>
     <g class="edge-wrap">
-    <path class="term" d="M 387.52 309.56 Q 366.02 290.28 338.67 281.03" stroke-width="1.65" opacity="0.90"/>
+    <path class="term" d="M 404.52 286.28 Q 376.58 279.47 348.05 282.93" stroke-width="1.65" opacity="0.90"/>
       <title>edge: return
 rows_get_text -&gt; rows_get_text
 weight: 2
@@ -8885,7 +8965,7 @@ path:
 rows_get_text -&gt; rows_get_text</title>
     </g>
     <g class="edge-wrap">
-    <path class="term" d="M 376.46 332.97 Q 354.04 313.93 324.96 309.56" stroke-width="1.65" opacity="0.90"/>
+    <path class="term" d="M 390.01 305.19 Q 367.69 286.96 340.19 278.38" stroke-width="1.65" opacity="0.90"/>
       <title>edge: return
 rows_get_int -&gt; rows_get_int
 weight: 2
@@ -8894,7 +8974,7 @@ path:
 rows_get_int -&gt; rows_get_int</title>
     </g>
     <g class="edge-wrap">
-    <path class="term" d="M 341.31 356.68 Q 328.01 331.63 311.21 308.78" stroke-width="1.65" opacity="0.90"/>
+    <path class="term" d="M 377.35 335.08 Q 358.41 313.77 334.80 297.80" stroke-width="1.65" opacity="0.90"/>
       <title>edge: return
 rows_get_real -&gt; rows_get_real
 weight: 2
@@ -8903,7 +8983,7 @@ path:
 rows_get_real -&gt; rows_get_real</title>
     </g>
     <g class="edge-wrap">
-    <path class="term" d="M 302.01 380.37 Q 302.59 351.32 290.08 325.08" stroke-width="1.65" opacity="0.90"/>
+    <path class="term" d="M 357.30 356.83 Q 338.35 334.93 311.96 322.99" stroke-width="1.65" opacity="0.90"/>
       <title>edge: return
 rows_close -&gt; rows_close
 weight: 2
@@ -8912,7 +8992,7 @@ path:
 rows_close -&gt; rows_close</title>
     </g>
     <g class="edge-wrap">
-    <path class="term" d="M 265.73 379.38 Q 268.84 349.70 253.35 324.18" stroke-width="1.65" opacity="0.90"/>
+    <path class="term" d="M 327.57 365.50 Q 313.31 340.37 290.23 323.00" stroke-width="1.65" opacity="0.90"/>
       <title>edge: return
 db_prepare -&gt; db_prepare
 weight: 2
@@ -8921,7 +9001,7 @@ path:
 db_prepare -&gt; db_prepare</title>
     </g>
     <g class="edge-wrap">
-    <path class="term" d="M 208.85 379.64 Q 218.00 352.71 221.33 324.47" stroke-width="1.65" opacity="0.90"/>
+    <path class="term" d="M 286.65 379.48 Q 281.17 351.18 265.39 327.05" stroke-width="1.65" opacity="0.90"/>
       <title>edge: return
 stmt_bind_text -&gt; stmt_bind_text
 weight: 2
@@ -8930,7 +9010,7 @@ path:
 stmt_bind_text -&gt; stmt_bind_text</title>
     </g>
     <g class="edge-wrap">
-    <path class="term" d="M 173.67 366.83 Q 191.40 344.27 200.64 317.10" stroke-width="1.65" opacity="0.90"/>
+    <path class="term" d="M 241.71 381.60 Q 252.01 355.06 255.99 326.87" stroke-width="1.65" opacity="0.90"/>
       <title>edge: return
 stmt_bind_int -&gt; stmt_bind_int
 weight: 2
@@ -8939,7 +9019,7 @@ path:
 stmt_bind_int -&gt; stmt_bind_int</title>
     </g>
     <g class="edge-wrap">
-    <path class="term" d="M 139.18 343.47 Q 161.33 325.62 179.21 303.50" stroke-width="1.65" opacity="0.90"/>
+    <path class="term" d="M 217.23 373.08 Q 235.65 350.65 242.43 322.43" stroke-width="1.65" opacity="0.90"/>
       <title>edge: return
 stmt_bind_real -&gt; stmt_bind_real
 weight: 2
@@ -8948,7 +9028,7 @@ path:
 stmt_bind_real -&gt; stmt_bind_real</title>
     </g>
     <g class="edge-wrap">
-    <path class="term" d="M 117.31 307.58 Q 146.77 309.95 172.59 295.56" stroke-width="1.65" opacity="0.90"/>
+    <path class="term" d="M 191.32 372.25 Q 213.90 353.88 225.54 327.20" stroke-width="1.65" opacity="0.90"/>
       <title>edge: return
 stmt_step -&gt; stmt_step
 weight: 2
@@ -8957,7 +9037,43 @@ path:
 stmt_step -&gt; stmt_step</title>
     </g>
     <g class="edge-wrap">
-    <path class="term" d="M 108.35 271.72 Q 136.43 277.87 164.88 273.75" stroke-width="1.65" opacity="0.90"/>
+    <path class="term" d="M 159.59 356.69 Q 180.50 336.88 192.54 310.71" stroke-width="1.65" opacity="0.90"/>
+      <title>edge: return
+stmt_has_row -&gt; stmt_has_row
+weight: 2
+
+path:
+stmt_has_row -&gt; stmt_has_row</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="term" d="M 135.66 328.41 Q 160.95 314.67 179.52 292.68" stroke-width="1.65" opacity="0.90"/>
+      <title>edge: return
+stmt_get_text -&gt; stmt_get_text
+weight: 2
+
+path:
+stmt_get_text -&gt; stmt_get_text</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="term" d="M 116.43 297.81 Q 143.72 289.43 167.78 274.07" stroke-width="1.65" opacity="0.90"/>
+      <title>edge: return
+stmt_get_int -&gt; stmt_get_int
+weight: 2
+
+path:
+stmt_get_int -&gt; stmt_get_int</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="term" d="M 110.09 259.90 Q 138.53 258.45 165.85 250.41" stroke-width="1.65" opacity="0.90"/>
+      <title>edge: return
+stmt_get_real -&gt; stmt_get_real
+weight: 2
+
+path:
+stmt_get_real -&gt; stmt_get_real</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="term" d="M 110.89 234.87 Q 136.29 248.72 165.15 250.86" stroke-width="1.65" opacity="0.90"/>
       <title>edge: return
 stmt_reset -&gt; stmt_reset
 weight: 2
@@ -8966,7 +9082,7 @@ path:
 stmt_reset -&gt; stmt_reset</title>
     </g>
     <g class="edge-wrap">
-    <path class="term" d="M 104.36 235.13 Q 132.70 244.40 160.93 234.84" stroke-width="1.65" opacity="0.90"/>
+    <path class="term" d="M 116.94 207.14 Q 139.03 225.96 167.12 233.25" stroke-width="1.65" opacity="0.90"/>
       <title>edge: return
 stmt_finalize -&gt; stmt_finalize
 weight: 2
@@ -8975,7 +9091,7 @@ path:
 stmt_finalize -&gt; stmt_finalize</title>
     </g>
     <g class="edge-wrap">
-    <path class="term" d="M 123.16 200.89 Q 144.37 220.58 171.82 229.74" stroke-width="1.65" opacity="0.90"/>
+    <path class="term" d="M 129.74 179.80 Q 153.57 196.07 181.82 201.89" stroke-width="1.65" opacity="0.90"/>
       <title>edge: return
 db_begin -&gt; db_begin
 weight: 2
@@ -8984,7 +9100,7 @@ path:
 db_begin -&gt; db_begin</title>
     </g>
     <g class="edge-wrap">
-    <path class="term" d="M 143.39 172.12 Q 165.39 190.87 193.08 199.16" stroke-width="1.65" opacity="0.90"/>
+    <path class="term" d="M 163.53 156.55 Q 183.64 176.66 207.52 192.11" stroke-width="1.65" opacity="0.90"/>
       <title>edge: return
 db_commit -&gt; db_commit
 weight: 2
@@ -8993,7 +9109,7 @@ path:
 db_commit -&gt; db_commit</title>
     </g>
     <g class="edge-wrap">
-    <path class="term" d="M 191.07 139.35 Q 205.29 164.07 225.30 184.39" stroke-width="1.65" opacity="0.90"/>
+    <path class="term" d="M 189.13 146.10 Q 203.49 170.92 225.08 189.78" stroke-width="1.65" opacity="0.90"/>
       <title>edge: return
 db_rollback -&gt; db_rollback
 weight: 2
@@ -9002,7 +9118,7 @@ path:
 db_rollback -&gt; db_rollback</title>
     </g>
     <g class="edge-wrap">
-    <path class="term" d="M 204.92 133.56 Q 204.85 162.79 219.10 188.32" stroke-width="1.65" opacity="0.90"/>
+    <path class="term" d="M 223.52 127.30 Q 217.86 156.34 229.47 183.55" stroke-width="1.65" opacity="0.90"/>
       <title>edge: return
 db_scalar_int -&gt; db_scalar_int
 weight: 2
@@ -9011,7 +9127,7 @@ path:
 db_scalar_int -&gt; db_scalar_int</title>
     </g>
     <g class="edge-wrap">
-    <path class="term" d="M 248.60 130.46 Q 250.38 158.96 259.88 185.89" stroke-width="1.65" opacity="0.90"/>
+    <path class="term" d="M 268.89 125.85 Q 262.05 154.46 271.33 182.37" stroke-width="1.65" opacity="0.90"/>
       <title>edge: return
 db_scalar_text -&gt; db_scalar_text
 weight: 2
@@ -9022,7 +9138,7 @@ db_scalar_text -&gt; db_scalar_text</title>
   </g>
   <g id="nodes">
     <g class="node-wrap">
-      <circle class="node-main" cx="297.84" cy="135.03" r="5.95" data-kind="rituale" data-ritual="db_open" data-line="10" data-col="1" data-depth="3" data-stmt="RITUALE" data-loops="0" data-calls="0"/>
+      <circle class="node-main" cx="290.58" cy="135.57" r="5.95" data-kind="rituale" data-ritual="db_open" data-line="10" data-col="1" data-depth="3" data-stmt="RITUALE" data-loops="0" data-calls="0"/>
       <title>RITUALE db_open
 stmt: 1
 depth: 3
@@ -9032,7 +9148,7 @@ source:
 RITUALE db_open(VERBUM path) REDDE SPECULUM NIHIL</title>
     </g>
     <g class="node-wrap">
-      <circle class="node-aux" cx="289.34" cy="159.60" r="2.95" data-kind="bind" data-ritual="db_open" data-depth="3" data-stmt="EVOCA"/>
+      <circle class="node-aux" cx="283.40" cy="160.56" r="2.95" data-kind="bind" data-ritual="db_open" data-depth="3" data-stmt="EVOCA"/>
       <title>stmt: EVOCA
 rituale: db_open
 depth: 3
@@ -9043,7 +9159,7 @@ stmt: EVOCA
 rituale: db_open</title>
     </g>
     <g class="node-wrap">
-      <circle class="node-term" cx="287.10" cy="190.57" r="3.60" data-kind="term" data-ritual="db_open" data-line="11" data-col="3" data-depth="3" data-stmt="REDDE"/>
+      <circle class="node-term" cx="282.81" cy="191.60" r="3.60" data-kind="term" data-ritual="db_open" data-line="11" data-col="3" data-depth="3" data-stmt="REDDE"/>
       <title>stmt: REDDE
 rituale: db_open
 depth: 3
@@ -9053,7 +9169,7 @@ source:
 REDDE OBSECRO db_open(path)</title>
     </g>
     <g class="node-wrap">
-      <circle class="node-main" cx="326.69" cy="143.60" r="6.10" data-kind="rituale" data-ritual="db_close" data-line="14" data-col="1" data-depth="3" data-stmt="RITUALE" data-loops="0" data-calls="0"/>
+      <circle class="node-main" cx="331.41" cy="143.68" r="6.10" data-kind="rituale" data-ritual="db_close" data-line="14" data-col="1" data-depth="3" data-stmt="RITUALE" data-loops="0" data-calls="0"/>
       <title>RITUALE db_close
 stmt: 2
 depth: 3
@@ -9063,7 +9179,7 @@ source:
 RITUALE db_close(SPECULUM NIHIL db) REDDE NIHIL</title>
     </g>
     <g class="node-wrap">
-      <circle class="node-aux" cx="312.85" cy="165.61" r="2.95" data-kind="bind" data-ritual="db_close" data-line="15" data-col="3" data-depth="3" data-stmt="OBSECRO"/>
+      <circle class="node-aux" cx="316.92" cy="165.26" r="2.95" data-kind="bind" data-ritual="db_close" data-line="15" data-col="3" data-depth="3" data-stmt="OBSECRO"/>
       <title>stmt: OBSECRO
 rituale: db_close
 depth: 3
@@ -9073,7 +9189,7 @@ source:
 OBSECRO db_close(db)</title>
     </g>
     <g class="node-wrap">
-      <circle class="node-term" cx="303.65" cy="195.26" r="3.60" data-kind="term" data-ritual="db_close" data-line="16" data-col="3" data-depth="3" data-stmt="REDDE"/>
+      <circle class="node-term" cx="306.84" cy="194.63" r="3.60" data-kind="term" data-ritual="db_close" data-line="16" data-col="3" data-depth="3" data-stmt="REDDE"/>
       <title>stmt: REDDE
 rituale: db_close
 depth: 3
@@ -9083,7 +9199,7 @@ source:
 REDDE</title>
     </g>
     <g class="node-wrap">
-      <circle class="node-main" cx="372.10" cy="167.93" r="6.10" data-kind="rituale" data-ritual="db_exec" data-line="19" data-col="1" data-depth="3" data-stmt="RITUALE" data-loops="0" data-calls="0"/>
+      <circle class="node-main" cx="359.92" cy="157.51" r="6.10" data-kind="rituale" data-ritual="db_exec" data-line="19" data-col="1" data-depth="3" data-stmt="RITUALE" data-loops="0" data-calls="0"/>
       <title>RITUALE db_exec
 stmt: 2
 depth: 3
@@ -9093,7 +9209,7 @@ source:
 RITUALE db_exec(SPECULUM NIHIL db, VERBUM sql) REDDE NIHIL</title>
     </g>
     <g class="node-wrap">
-      <circle class="node-aux" cx="351.39" cy="183.64" r="2.95" data-kind="bind" data-ritual="db_exec" data-line="20" data-col="3" data-depth="3" data-stmt="OBSECRO"/>
+      <circle class="node-aux" cx="341.05" cy="175.40" r="2.95" data-kind="bind" data-ritual="db_exec" data-line="20" data-col="3" data-depth="3" data-stmt="OBSECRO"/>
       <title>stmt: OBSECRO
 rituale: db_exec
 depth: 3
@@ -9103,7 +9219,7 @@ source:
 OBSECRO db_exec(db, sql)</title>
     </g>
     <g class="node-wrap">
-      <circle class="node-term" cx="332.32" cy="208.14" r="3.60" data-kind="term" data-ritual="db_exec" data-line="21" data-col="3" data-depth="3" data-stmt="REDDE"/>
+      <circle class="node-term" cx="313.77" cy="190.23" r="3.60" data-kind="term" data-ritual="db_exec" data-line="21" data-col="3" data-depth="3" data-stmt="REDDE"/>
       <title>stmt: REDDE
 rituale: db_exec
 depth: 3
@@ -9113,7 +9229,7 @@ source:
 REDDE</title>
     </g>
     <g class="node-wrap">
-      <circle class="node-main" cx="402.22" cy="200.56" r="5.95" data-kind="rituale" data-ritual="db_last_error" data-line="24" data-col="1" data-depth="3" data-stmt="RITUALE" data-loops="0" data-calls="0"/>
+      <circle class="node-main" cx="388.34" cy="195.38" r="5.95" data-kind="rituale" data-ritual="db_last_error" data-line="24" data-col="1" data-depth="3" data-stmt="RITUALE" data-loops="0" data-calls="0"/>
       <title>RITUALE db_last_error
 stmt: 1
 depth: 3
@@ -9123,7 +9239,7 @@ source:
 RITUALE db_last_error(SPECULUM NIHIL db) REDDE VERBUM</title>
     </g>
     <g class="node-wrap">
-      <circle class="node-aux" cx="377.91" cy="209.78" r="2.95" data-kind="bind" data-ritual="db_last_error" data-depth="3" data-stmt="EVOCA"/>
+      <circle class="node-aux" cx="364.70" cy="206.21" r="2.95" data-kind="bind" data-ritual="db_last_error" data-depth="3" data-stmt="EVOCA"/>
       <title>stmt: EVOCA
 rituale: db_last_error
 depth: 3
@@ -9134,7 +9250,7 @@ stmt: EVOCA
 rituale: db_last_error</title>
     </g>
     <g class="node-wrap">
-      <circle class="node-term" cx="347.02" cy="212.94" r="3.60" data-kind="term" data-ritual="db_last_error" data-line="25" data-col="3" data-depth="3" data-stmt="REDDE"/>
+      <circle class="node-term" cx="340.76" cy="225.98" r="3.60" data-kind="term" data-ritual="db_last_error" data-line="25" data-col="3" data-depth="3" data-stmt="REDDE"/>
       <title>stmt: REDDE
 rituale: db_last_error
 depth: 3
@@ -9144,7 +9260,7 @@ source:
 REDDE OBSECRO db_last_error(db)</title>
     </g>
     <g class="node-wrap">
-      <circle class="node-main" cx="408.54" cy="222.43" r="5.95" data-kind="rituale" data-ritual="db_query" data-line="28" data-col="1" data-depth="3" data-stmt="RITUALE" data-loops="0" data-calls="0"/>
+      <circle class="node-main" cx="399.40" cy="214.28" r="5.95" data-kind="rituale" data-ritual="db_query" data-line="28" data-col="1" data-depth="3" data-stmt="RITUALE" data-loops="0" data-calls="0"/>
       <title>RITUALE db_query
 stmt: 1
 depth: 3
@@ -9154,7 +9270,7 @@ source:
 RITUALE db_query(SPECULUM NIHIL db, VERBUM sql) REDDE SPECULUM NIHIL</title>
     </g>
     <g class="node-wrap">
-      <circle class="node-aux" cx="383.14" cy="228.02" r="2.95" data-kind="bind" data-ritual="db_query" data-depth="3" data-stmt="EVOCA"/>
+      <circle class="node-aux" cx="374.43" cy="221.54" r="2.95" data-kind="bind" data-ritual="db_query" data-depth="3" data-stmt="EVOCA"/>
       <title>stmt: EVOCA
 rituale: db_query
 depth: 3
@@ -9165,7 +9281,7 @@ stmt: EVOCA
 rituale: db_query</title>
     </g>
     <g class="node-wrap">
-      <circle class="node-term" cx="352.13" cy="226.65" r="3.60" data-kind="term" data-ritual="db_query" data-line="29" data-col="3" data-depth="3" data-stmt="REDDE"/>
+      <circle class="node-term" cx="347.86" cy="237.61" r="3.60" data-kind="term" data-ritual="db_query" data-line="29" data-col="3" data-depth="3" data-stmt="REDDE"/>
       <title>stmt: REDDE
 rituale: db_query
 depth: 3
@@ -9175,7 +9291,7 @@ source:
 REDDE OBSECRO db_query(db, sql)</title>
     </g>
     <g class="node-wrap">
-      <circle class="node-main" cx="415.51" cy="271.08" r="5.95" data-kind="rituale" data-ritual="rows_next" data-line="32" data-col="1" data-depth="3" data-stmt="RITUALE" data-loops="0" data-calls="0"/>
+      <circle class="node-main" cx="413.69" cy="241.56" r="5.95" data-kind="rituale" data-ritual="rows_next" data-line="32" data-col="1" data-depth="3" data-stmt="RITUALE" data-loops="0" data-calls="0"/>
       <title>RITUALE rows_next
 stmt: 1
 depth: 3
@@ -9185,7 +9301,7 @@ source:
 RITUALE rows_next(SPECULUM NIHIL rows) REDDE VERUM</title>
     </g>
     <g class="node-wrap">
-      <circle class="node-aux" cx="389.63" cy="268.64" r="2.95" data-kind="bind" data-ritual="rows_next" data-depth="3" data-stmt="EVOCA"/>
+      <circle class="node-aux" cx="387.80" cy="243.93" r="2.95" data-kind="bind" data-ritual="rows_next" data-depth="3" data-stmt="EVOCA"/>
       <title>stmt: EVOCA
 rituale: rows_next
 depth: 3
@@ -9196,7 +9312,7 @@ stmt: EVOCA
 rituale: rows_next</title>
     </g>
     <g class="node-wrap">
-      <circle class="node-term" cx="360.52" cy="257.85" r="3.60" data-kind="term" data-ritual="rows_next" data-line="33" data-col="3" data-depth="3" data-stmt="REDDE"/>
+      <circle class="node-term" cx="358.66" cy="254.64" r="3.60" data-kind="term" data-ritual="rows_next" data-line="33" data-col="3" data-depth="3" data-stmt="REDDE"/>
       <title>stmt: REDDE
 rituale: rows_next
 depth: 3
@@ -9206,7 +9322,7 @@ source:
 REDDE OBSECRO rows_next(rows)</title>
     </g>
     <g class="node-wrap">
-      <circle class="node-main" cx="387.52" cy="309.56" r="5.95" data-kind="rituale" data-ritual="rows_get_text" data-line="36" data-col="1" data-depth="3" data-stmt="RITUALE" data-loops="0" data-calls="0"/>
+      <circle class="node-main" cx="404.52" cy="286.28" r="5.95" data-kind="rituale" data-ritual="rows_get_text" data-line="36" data-col="1" data-depth="3" data-stmt="RITUALE" data-loops="0" data-calls="0"/>
       <title>RITUALE rows_get_text
 stmt: 1
 depth: 3
@@ -9216,7 +9332,7 @@ source:
 RITUALE rows_get_text(SPECULUM NIHIL rows, REX col) REDDE VERBUM</title>
     </g>
     <g class="node-wrap">
-      <circle class="node-aux" cx="363.44" cy="299.75" r="2.95" data-kind="bind" data-ritual="rows_get_text" data-depth="3" data-stmt="EVOCA"/>
+      <circle class="node-aux" cx="379.04" cy="281.09" r="2.95" data-kind="bind" data-ritual="rows_get_text" data-depth="3" data-stmt="EVOCA"/>
       <title>stmt: EVOCA
 rituale: rows_get_text
 depth: 3
@@ -9227,7 +9343,7 @@ stmt: EVOCA
 rituale: rows_get_text</title>
     </g>
     <g class="node-wrap">
-      <circle class="node-term" cx="338.67" cy="281.03" r="3.60" data-kind="term" data-ritual="rows_get_text" data-line="37" data-col="3" data-depth="3" data-stmt="REDDE"/>
+      <circle class="node-term" cx="348.05" cy="282.93" r="3.60" data-kind="term" data-ritual="rows_get_text" data-line="37" data-col="3" data-depth="3" data-stmt="REDDE"/>
       <title>stmt: REDDE
 rituale: rows_get_text
 depth: 3
@@ -9237,7 +9353,7 @@ source:
 REDDE OBSECRO rows_get_text(rows, col)</title>
     </g>
     <g class="node-wrap">
-      <circle class="node-main" cx="376.46" cy="332.97" r="5.95" data-kind="rituale" data-ritual="rows_get_int" data-line="40" data-col="1" data-depth="3" data-stmt="RITUALE" data-loops="0" data-calls="0"/>
+      <circle class="node-main" cx="390.01" cy="305.19" r="5.95" data-kind="rituale" data-ritual="rows_get_int" data-line="40" data-col="1" data-depth="3" data-stmt="RITUALE" data-loops="0" data-calls="0"/>
       <title>RITUALE rows_get_int
 stmt: 1
 depth: 3
@@ -9247,7 +9363,7 @@ source:
 RITUALE rows_get_int(SPECULUM NIHIL rows, REX col) REDDE REX</title>
     </g>
     <g class="node-wrap">
-      <circle class="node-aux" cx="354.55" cy="318.97" r="2.95" data-kind="bind" data-ritual="rows_get_int" data-depth="3" data-stmt="EVOCA"/>
+      <circle class="node-aux" cx="365.60" cy="296.23" r="2.95" data-kind="bind" data-ritual="rows_get_int" data-depth="3" data-stmt="EVOCA"/>
       <title>stmt: EVOCA
 rituale: rows_get_int
 depth: 3
@@ -9258,7 +9374,7 @@ stmt: EVOCA
 rituale: rows_get_int</title>
     </g>
     <g class="node-wrap">
-      <circle class="node-term" cx="324.96" cy="309.56" r="3.60" data-kind="term" data-ritual="rows_get_int" data-line="41" data-col="3" data-depth="3" data-stmt="REDDE"/>
+      <circle class="node-term" cx="340.19" cy="278.38" r="3.60" data-kind="term" data-ritual="rows_get_int" data-line="41" data-col="3" data-depth="3" data-stmt="REDDE"/>
       <title>stmt: REDDE
 rituale: rows_get_int
 depth: 3
@@ -9268,7 +9384,7 @@ source:
 REDDE OBSECRO rows_get_int(rows, col)</title>
     </g>
     <g class="node-wrap">
-      <circle class="node-main" cx="341.31" cy="356.68" r="5.95" data-kind="rituale" data-ritual="rows_get_real" data-line="44" data-col="1" data-depth="3" data-stmt="RITUALE" data-loops="0" data-calls="0"/>
+      <circle class="node-main" cx="377.35" cy="335.08" r="5.95" data-kind="rituale" data-ritual="rows_get_real" data-line="44" data-col="1" data-depth="3" data-stmt="RITUALE" data-loops="0" data-calls="0"/>
       <title>RITUALE rows_get_real
 stmt: 1
 depth: 3
@@ -9278,7 +9394,7 @@ source:
 RITUALE rows_get_real(SPECULUM NIHIL rows, REX col) REDDE UMBRA</title>
     </g>
     <g class="node-wrap">
-      <circle class="node-aux" cx="324.50" cy="336.84" r="2.95" data-kind="bind" data-ritual="rows_get_real" data-depth="3" data-stmt="EVOCA"/>
+      <circle class="node-aux" cx="355.56" cy="320.89" r="2.95" data-kind="bind" data-ritual="rows_get_real" data-depth="3" data-stmt="EVOCA"/>
       <title>stmt: EVOCA
 rituale: rows_get_real
 depth: 3
@@ -9289,7 +9405,7 @@ stmt: EVOCA
 rituale: rows_get_real</title>
     </g>
     <g class="node-wrap">
-      <circle class="node-term" cx="311.21" cy="308.78" r="3.60" data-kind="term" data-ritual="rows_get_real" data-line="45" data-col="3" data-depth="3" data-stmt="REDDE"/>
+      <circle class="node-term" cx="334.80" cy="297.80" r="3.60" data-kind="term" data-ritual="rows_get_real" data-line="45" data-col="3" data-depth="3" data-stmt="REDDE"/>
       <title>stmt: REDDE
 rituale: rows_get_real
 depth: 3
@@ -9299,7 +9415,7 @@ source:
 REDDE OBSECRO rows_get_real(rows, col)</title>
     </g>
     <g class="node-wrap">
-      <circle class="node-main" cx="302.01" cy="380.37" r="6.10" data-kind="rituale" data-ritual="rows_close" data-line="48" data-col="1" data-depth="3" data-stmt="RITUALE" data-loops="0" data-calls="0"/>
+      <circle class="node-main" cx="357.30" cy="356.83" r="6.10" data-kind="rituale" data-ritual="rows_close" data-line="48" data-col="1" data-depth="3" data-stmt="RITUALE" data-loops="0" data-calls="0"/>
       <title>RITUALE rows_close
 stmt: 2
 depth: 3
@@ -9309,7 +9425,7 @@ source:
 RITUALE rows_close(SPECULUM NIHIL rows) REDDE NIHIL</title>
     </g>
     <g class="node-wrap">
-      <circle class="node-aux" cx="292.99" cy="355.99" r="2.95" data-kind="bind" data-ritual="rows_close" data-line="49" data-col="3" data-depth="3" data-stmt="OBSECRO"/>
+      <circle class="node-aux" cx="338.87" cy="338.49" r="2.95" data-kind="bind" data-ritual="rows_close" data-line="49" data-col="3" data-depth="3" data-stmt="OBSECRO"/>
       <title>stmt: OBSECRO
 rituale: rows_close
 depth: 3
@@ -9319,7 +9435,7 @@ source:
 OBSECRO rows_close(rows)</title>
     </g>
     <g class="node-wrap">
-      <circle class="node-term" cx="290.08" cy="325.08" r="3.60" data-kind="term" data-ritual="rows_close" data-line="50" data-col="3" data-depth="3" data-stmt="REDDE"/>
+      <circle class="node-term" cx="311.96" cy="322.99" r="3.60" data-kind="term" data-ritual="rows_close" data-line="50" data-col="3" data-depth="3" data-stmt="REDDE"/>
       <title>stmt: REDDE
 rituale: rows_close
 depth: 3
@@ -9329,7 +9445,7 @@ source:
 REDDE</title>
     </g>
     <g class="node-wrap">
-      <circle class="node-main" cx="265.73" cy="379.38" r="5.95" data-kind="rituale" data-ritual="db_prepare" data-line="53" data-col="1" data-depth="3" data-stmt="RITUALE" data-loops="0" data-calls="0"/>
+      <circle class="node-main" cx="327.57" cy="365.50" r="5.95" data-kind="rituale" data-ritual="db_prepare" data-line="53" data-col="1" data-depth="3" data-stmt="RITUALE" data-loops="0" data-calls="0"/>
       <title>RITUALE db_prepare
 stmt: 1
 depth: 3
@@ -9339,7 +9455,7 @@ source:
 RITUALE db_prepare(SPECULUM NIHIL db, VERBUM sql) REDDE SPECULUM NIHIL</title>
     </g>
     <g class="node-wrap">
-      <circle class="node-aux" cx="263.69" cy="353.46" r="2.95" data-kind="bind" data-ritual="db_prepare" data-depth="3" data-stmt="EVOCA"/>
+      <circle class="node-aux" cx="313.34" cy="343.73" r="2.95" data-kind="bind" data-ritual="db_prepare" data-depth="3" data-stmt="EVOCA"/>
       <title>stmt: EVOCA
 rituale: db_prepare
 depth: 3
@@ -9350,7 +9466,7 @@ stmt: EVOCA
 rituale: db_prepare</title>
     </g>
     <g class="node-wrap">
-      <circle class="node-term" cx="253.35" cy="324.18" r="3.60" data-kind="term" data-ritual="db_prepare" data-line="54" data-col="3" data-depth="3" data-stmt="REDDE"/>
+      <circle class="node-term" cx="290.23" cy="323.00" r="3.60" data-kind="term" data-ritual="db_prepare" data-line="54" data-col="3" data-depth="3" data-stmt="REDDE"/>
       <title>stmt: REDDE
 rituale: db_prepare
 depth: 3
@@ -9360,7 +9476,7 @@ source:
 REDDE OBSECRO db_prepare(db, sql)</title>
     </g>
     <g class="node-wrap">
-      <circle class="node-main" cx="208.85" cy="379.64" r="6.10" data-kind="rituale" data-ritual="stmt_bind_text" data-line="57" data-col="1" data-depth="3" data-stmt="RITUALE" data-loops="0" data-calls="0"/>
+      <circle class="node-main" cx="286.65" cy="379.48" r="6.10" data-kind="rituale" data-ritual="stmt_bind_text" data-line="57" data-col="1" data-depth="3" data-stmt="RITUALE" data-loops="0" data-calls="0"/>
       <title>RITUALE stmt_bind_text
 stmt: 2
 depth: 3
@@ -9370,7 +9486,7 @@ source:
 RITUALE stmt_bind_text(SPECULUM NIHIL stmt, REX idx, VERBUM v) REDDE NIHIL</title>
     </g>
     <g class="node-wrap">
-      <circle class="node-aux" cx="218.12" cy="355.35" r="2.95" data-kind="bind" data-ritual="stmt_bind_text" data-line="58" data-col="3" data-depth="3" data-stmt="OBSECRO"/>
+      <circle class="node-aux" cx="280.39" cy="354.24" r="2.95" data-kind="bind" data-ritual="stmt_bind_text" data-line="58" data-col="3" data-depth="3" data-stmt="OBSECRO"/>
       <title>stmt: OBSECRO
 rituale: stmt_bind_text
 depth: 3
@@ -9380,7 +9496,7 @@ source:
 OBSECRO stmt_bind_text(stmt, idx, v)</title>
     </g>
     <g class="node-wrap">
-      <circle class="node-term" cx="221.33" cy="324.47" r="3.60" data-kind="term" data-ritual="stmt_bind_text" data-line="59" data-col="3" data-depth="3" data-stmt="REDDE"/>
+      <circle class="node-term" cx="265.39" cy="327.05" r="3.60" data-kind="term" data-ritual="stmt_bind_text" data-line="59" data-col="3" data-depth="3" data-stmt="REDDE"/>
       <title>stmt: REDDE
 rituale: stmt_bind_text
 depth: 3
@@ -9390,7 +9506,7 @@ source:
 REDDE</title>
     </g>
     <g class="node-wrap">
-      <circle class="node-main" cx="173.67" cy="366.83" r="6.10" data-kind="rituale" data-ritual="stmt_bind_int" data-line="62" data-col="1" data-depth="3" data-stmt="RITUALE" data-loops="0" data-calls="0"/>
+      <circle class="node-main" cx="241.71" cy="381.60" r="6.10" data-kind="rituale" data-ritual="stmt_bind_int" data-line="62" data-col="1" data-depth="3" data-stmt="RITUALE" data-loops="0" data-calls="0"/>
       <title>RITUALE stmt_bind_int
 stmt: 2
 depth: 3
@@ -9400,7 +9516,7 @@ source:
 RITUALE stmt_bind_int(SPECULUM NIHIL stmt, REX idx, REX v) REDDE NIHIL</title>
     </g>
     <g class="node-wrap">
-      <circle class="node-aux" cx="189.17" cy="345.96" r="2.95" data-kind="bind" data-ritual="stmt_bind_int" data-line="63" data-col="3" data-depth="3" data-stmt="OBSECRO"/>
+      <circle class="node-aux" cx="244.65" cy="355.77" r="2.95" data-kind="bind" data-ritual="stmt_bind_int" data-line="63" data-col="3" data-depth="3" data-stmt="OBSECRO"/>
       <title>stmt: OBSECRO
 rituale: stmt_bind_int
 depth: 3
@@ -9410,7 +9526,7 @@ source:
 OBSECRO stmt_bind_int(stmt, idx, v)</title>
     </g>
     <g class="node-wrap">
-      <circle class="node-term" cx="200.64" cy="317.10" r="3.60" data-kind="term" data-ritual="stmt_bind_int" data-line="64" data-col="3" data-depth="3" data-stmt="REDDE"/>
+      <circle class="node-term" cx="255.99" cy="326.87" r="3.60" data-kind="term" data-ritual="stmt_bind_int" data-line="64" data-col="3" data-depth="3" data-stmt="REDDE"/>
       <title>stmt: REDDE
 rituale: stmt_bind_int
 depth: 3
@@ -9420,7 +9536,7 @@ source:
 REDDE</title>
     </g>
     <g class="node-wrap">
-      <circle class="node-main" cx="139.18" cy="343.47" r="6.10" data-kind="rituale" data-ritual="stmt_bind_real" data-line="67" data-col="1" data-depth="3" data-stmt="RITUALE" data-loops="0" data-calls="0"/>
+      <circle class="node-main" cx="217.23" cy="373.08" r="6.10" data-kind="rituale" data-ritual="stmt_bind_real" data-line="67" data-col="1" data-depth="3" data-stmt="RITUALE" data-loops="0" data-calls="0"/>
       <title>RITUALE stmt_bind_real
 stmt: 2
 depth: 3
@@ -9430,7 +9546,7 @@ source:
 RITUALE stmt_bind_real(SPECULUM NIHIL stmt, REX idx, UMBRA v) REDDE NIHIL</title>
     </g>
     <g class="node-wrap">
-      <circle class="node-aux" cx="159.99" cy="327.88" r="2.95" data-kind="bind" data-ritual="stmt_bind_real" data-line="68" data-col="3" data-depth="3" data-stmt="OBSECRO"/>
+      <circle class="node-aux" cx="225.41" cy="348.40" r="2.95" data-kind="bind" data-ritual="stmt_bind_real" data-line="68" data-col="3" data-depth="3" data-stmt="OBSECRO"/>
       <title>stmt: OBSECRO
 rituale: stmt_bind_real
 depth: 3
@@ -9440,7 +9556,7 @@ source:
 OBSECRO stmt_bind_real(stmt, idx, v)</title>
     </g>
     <g class="node-wrap">
-      <circle class="node-term" cx="179.21" cy="303.50" r="3.60" data-kind="term" data-ritual="stmt_bind_real" data-line="69" data-col="3" data-depth="3" data-stmt="REDDE"/>
+      <circle class="node-term" cx="242.43" cy="322.43" r="3.60" data-kind="term" data-ritual="stmt_bind_real" data-line="69" data-col="3" data-depth="3" data-stmt="REDDE"/>
       <title>stmt: REDDE
 rituale: stmt_bind_real
 depth: 3
@@ -9450,7 +9566,7 @@ source:
 REDDE</title>
     </g>
     <g class="node-wrap">
-      <circle class="node-main" cx="117.31" cy="307.58" r="5.95" data-kind="rituale" data-ritual="stmt_step" data-line="72" data-col="1" data-depth="3" data-stmt="RITUALE" data-loops="0" data-calls="0"/>
+      <circle class="node-main" cx="191.32" cy="372.25" r="5.95" data-kind="rituale" data-ritual="stmt_step" data-line="72" data-col="1" data-depth="3" data-stmt="RITUALE" data-loops="0" data-calls="0"/>
       <title>RITUALE stmt_step
 stmt: 1
 depth: 3
@@ -9460,7 +9576,7 @@ source:
 RITUALE stmt_step(SPECULUM NIHIL stmt) REDDE VERUM</title>
     </g>
     <g class="node-wrap">
-      <circle class="node-aux" cx="141.68" cy="298.52" r="2.95" data-kind="bind" data-ritual="stmt_step" data-depth="3" data-stmt="EVOCA"/>
+      <circle class="node-aux" cx="203.96" cy="349.53" r="2.95" data-kind="bind" data-ritual="stmt_step" data-depth="3" data-stmt="EVOCA"/>
       <title>stmt: EVOCA
 rituale: stmt_step
 depth: 3
@@ -9471,7 +9587,7 @@ stmt: EVOCA
 rituale: stmt_step</title>
     </g>
     <g class="node-wrap">
-      <circle class="node-term" cx="172.59" cy="295.56" r="3.60" data-kind="term" data-ritual="stmt_step" data-line="73" data-col="3" data-depth="3" data-stmt="REDDE"/>
+      <circle class="node-term" cx="225.54" cy="327.20" r="3.60" data-kind="term" data-ritual="stmt_step" data-line="73" data-col="3" data-depth="3" data-stmt="REDDE"/>
       <title>stmt: REDDE
 rituale: stmt_step
 depth: 3
@@ -9481,7 +9597,131 @@ source:
 REDDE OBSECRO stmt_step(stmt)</title>
     </g>
     <g class="node-wrap">
-      <circle class="node-main" cx="108.35" cy="271.72" r="6.10" data-kind="rituale" data-ritual="stmt_reset" data-line="76" data-col="1" data-depth="3" data-stmt="RITUALE" data-loops="0" data-calls="0"/>
+      <circle class="node-main" cx="159.59" cy="356.69" r="5.95" data-kind="rituale" data-ritual="stmt_has_row" data-line="76" data-col="1" data-depth="3" data-stmt="RITUALE" data-loops="0" data-calls="0"/>
+      <title>RITUALE stmt_has_row
+stmt: 1
+depth: 3
+loops: 0
+calls: 0
+source:
+RITUALE stmt_has_row(SPECULUM NIHIL stmt) REDDE VERUM</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="177.57" cy="337.91" r="2.95" data-kind="bind" data-ritual="stmt_has_row" data-depth="3" data-stmt="EVOCA"/>
+      <title>stmt: EVOCA
+rituale: stmt_has_row
+depth: 3
+line: 0
+
+source:
+stmt: EVOCA
+rituale: stmt_has_row</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="192.54" cy="310.71" r="3.60" data-kind="term" data-ritual="stmt_has_row" data-line="77" data-col="3" data-depth="3" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: stmt_has_row
+depth: 3
+line: 77
+
+source:
+REDDE OBSECRO stmt_has_row(stmt)</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-main" cx="135.66" cy="328.41" r="5.95" data-kind="rituale" data-ritual="stmt_get_text" data-line="80" data-col="1" data-depth="3" data-stmt="RITUALE" data-loops="0" data-calls="0"/>
+      <title>RITUALE stmt_get_text
+stmt: 1
+depth: 3
+loops: 0
+calls: 0
+source:
+RITUALE stmt_get_text(SPECULUM NIHIL stmt, REX col) REDDE VERBUM</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="157.94" cy="315.01" r="2.95" data-kind="bind" data-ritual="stmt_get_text" data-depth="3" data-stmt="EVOCA"/>
+      <title>stmt: EVOCA
+rituale: stmt_get_text
+depth: 3
+line: 0
+
+source:
+stmt: EVOCA
+rituale: stmt_get_text</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="179.52" cy="292.68" r="3.60" data-kind="term" data-ritual="stmt_get_text" data-line="81" data-col="3" data-depth="3" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: stmt_get_text
+depth: 3
+line: 81
+
+source:
+REDDE OBSECRO stmt_get_text(stmt, col)</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-main" cx="116.43" cy="297.81" r="5.95" data-kind="rituale" data-ritual="stmt_get_int" data-line="84" data-col="1" data-depth="3" data-stmt="RITUALE" data-loops="0" data-calls="0"/>
+      <title>RITUALE stmt_get_int
+stmt: 1
+depth: 3
+loops: 0
+calls: 0
+source:
+RITUALE stmt_get_int(SPECULUM NIHIL stmt, REX col) REDDE REX</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="141.34" cy="290.35" r="2.95" data-kind="bind" data-ritual="stmt_get_int" data-depth="3" data-stmt="EVOCA"/>
+      <title>stmt: EVOCA
+rituale: stmt_get_int
+depth: 3
+line: 0
+
+source:
+stmt: EVOCA
+rituale: stmt_get_int</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="167.78" cy="274.07" r="3.60" data-kind="term" data-ritual="stmt_get_int" data-line="85" data-col="3" data-depth="3" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: stmt_get_int
+depth: 3
+line: 85
+
+source:
+REDDE OBSECRO stmt_get_int(stmt, col)</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-main" cx="110.09" cy="259.90" r="5.95" data-kind="rituale" data-ritual="stmt_get_real" data-line="88" data-col="1" data-depth="3" data-stmt="RITUALE" data-loops="0" data-calls="0"/>
+      <title>RITUALE stmt_get_real
+stmt: 1
+depth: 3
+loops: 0
+calls: 0
+source:
+RITUALE stmt_get_real(SPECULUM NIHIL stmt, REX col) REDDE UMBRA</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-aux" cx="136.08" cy="259.21" r="2.95" data-kind="bind" data-ritual="stmt_get_real" data-depth="3" data-stmt="EVOCA"/>
+      <title>stmt: EVOCA
+rituale: stmt_get_real
+depth: 3
+line: 0
+
+source:
+stmt: EVOCA
+rituale: stmt_get_real</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="165.85" cy="250.41" r="3.60" data-kind="term" data-ritual="stmt_get_real" data-line="89" data-col="3" data-depth="3" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: stmt_get_real
+depth: 3
+line: 89
+
+source:
+REDDE OBSECRO stmt_get_real(stmt, col)</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-main" cx="110.89" cy="234.87" r="6.10" data-kind="rituale" data-ritual="stmt_reset" data-line="92" data-col="1" data-depth="3" data-stmt="RITUALE" data-loops="0" data-calls="0"/>
       <title>RITUALE stmt_reset
 stmt: 2
 depth: 3
@@ -9491,27 +9731,27 @@ source:
 RITUALE stmt_reset(SPECULUM NIHIL stmt) REDDE NIHIL</title>
     </g>
     <g class="node-wrap">
-      <circle class="node-aux" cx="134.20" cy="268.97" r="2.95" data-kind="bind" data-ritual="stmt_reset" data-line="77" data-col="3" data-depth="3" data-stmt="OBSECRO"/>
+      <circle class="node-aux" cx="136.62" cy="238.62" r="2.95" data-kind="bind" data-ritual="stmt_reset" data-line="93" data-col="3" data-depth="3" data-stmt="OBSECRO"/>
       <title>stmt: OBSECRO
 rituale: stmt_reset
 depth: 3
-line: 77
+line: 93
 
 source:
 OBSECRO stmt_reset(stmt)</title>
     </g>
     <g class="node-wrap">
-      <circle class="node-term" cx="164.88" cy="273.75" r="3.60" data-kind="term" data-ritual="stmt_reset" data-line="78" data-col="3" data-depth="3" data-stmt="REDDE"/>
+      <circle class="node-term" cx="165.15" cy="250.86" r="3.60" data-kind="term" data-ritual="stmt_reset" data-line="94" data-col="3" data-depth="3" data-stmt="REDDE"/>
       <title>stmt: REDDE
 rituale: stmt_reset
 depth: 3
-line: 78
+line: 94
 
 source:
 REDDE</title>
     </g>
     <g class="node-wrap">
-      <circle class="node-main" cx="104.36" cy="235.13" r="6.10" data-kind="rituale" data-ritual="stmt_finalize" data-line="81" data-col="1" data-depth="3" data-stmt="RITUALE" data-loops="0" data-calls="0"/>
+      <circle class="node-main" cx="116.94" cy="207.14" r="6.10" data-kind="rituale" data-ritual="stmt_finalize" data-line="97" data-col="1" data-depth="3" data-stmt="RITUALE" data-loops="0" data-calls="0"/>
       <title>RITUALE stmt_finalize
 stmt: 2
 depth: 3
@@ -9521,27 +9761,27 @@ source:
 RITUALE stmt_finalize(SPECULUM NIHIL stmt) REDDE NIHIL</title>
     </g>
     <g class="node-wrap">
-      <circle class="node-aux" cx="130.12" cy="238.68" r="2.95" data-kind="bind" data-ritual="stmt_finalize" data-line="82" data-col="3" data-depth="3" data-stmt="OBSECRO"/>
+      <circle class="node-aux" cx="141.47" cy="215.76" r="2.95" data-kind="bind" data-ritual="stmt_finalize" data-line="98" data-col="3" data-depth="3" data-stmt="OBSECRO"/>
       <title>stmt: OBSECRO
 rituale: stmt_finalize
 depth: 3
-line: 82
+line: 98
 
 source:
 OBSECRO stmt_finalize(stmt)</title>
     </g>
     <g class="node-wrap">
-      <circle class="node-term" cx="160.93" cy="234.84" r="3.60" data-kind="term" data-ritual="stmt_finalize" data-line="83" data-col="3" data-depth="3" data-stmt="REDDE"/>
+      <circle class="node-term" cx="167.12" cy="233.25" r="3.60" data-kind="term" data-ritual="stmt_finalize" data-line="99" data-col="3" data-depth="3" data-stmt="REDDE"/>
       <title>stmt: REDDE
 rituale: stmt_finalize
 depth: 3
-line: 83
+line: 99
 
 source:
 REDDE</title>
     </g>
     <g class="node-wrap">
-      <circle class="node-main" cx="123.16" cy="200.89" r="6.10" data-kind="rituale" data-ritual="db_begin" data-line="86" data-col="1" data-depth="3" data-stmt="RITUALE" data-loops="0" data-calls="0"/>
+      <circle class="node-main" cx="129.74" cy="179.80" r="6.10" data-kind="rituale" data-ritual="db_begin" data-line="102" data-col="1" data-depth="3" data-stmt="RITUALE" data-loops="0" data-calls="0"/>
       <title>RITUALE db_begin
 stmt: 2
 depth: 3
@@ -9551,27 +9791,27 @@ source:
 RITUALE db_begin(SPECULUM NIHIL db) REDDE NIHIL</title>
     </g>
     <g class="node-wrap">
-      <circle class="node-aux" cx="147.17" cy="210.86" r="2.95" data-kind="bind" data-ritual="db_begin" data-line="87" data-col="3" data-depth="3" data-stmt="OBSECRO"/>
+      <circle class="node-aux" cx="152.00" cy="193.24" r="2.95" data-kind="bind" data-ritual="db_begin" data-line="103" data-col="3" data-depth="3" data-stmt="OBSECRO"/>
       <title>stmt: OBSECRO
 rituale: db_begin
 depth: 3
-line: 87
+line: 103
 
 source:
 OBSECRO db_begin(db)</title>
     </g>
     <g class="node-wrap">
-      <circle class="node-term" cx="171.82" cy="229.74" r="3.60" data-kind="term" data-ritual="db_begin" data-line="88" data-col="3" data-depth="3" data-stmt="REDDE"/>
+      <circle class="node-term" cx="181.82" cy="201.89" r="3.60" data-kind="term" data-ritual="db_begin" data-line="104" data-col="3" data-depth="3" data-stmt="REDDE"/>
       <title>stmt: REDDE
 rituale: db_begin
 depth: 3
-line: 88
+line: 104
 
 source:
 REDDE</title>
     </g>
     <g class="node-wrap">
-      <circle class="node-main" cx="143.39" cy="172.12" r="6.10" data-kind="rituale" data-ritual="db_commit" data-line="91" data-col="1" data-depth="3" data-stmt="RITUALE" data-loops="0" data-calls="0"/>
+      <circle class="node-main" cx="163.53" cy="156.55" r="6.10" data-kind="rituale" data-ritual="db_commit" data-line="107" data-col="1" data-depth="3" data-stmt="RITUALE" data-loops="0" data-calls="0"/>
       <title>RITUALE db_commit
 stmt: 2
 depth: 3
@@ -9581,27 +9821,27 @@ source:
 RITUALE db_commit(SPECULUM NIHIL db) REDDE NIHIL</title>
     </g>
     <g class="node-wrap">
-      <circle class="node-aux" cx="164.24" cy="187.65" r="2.95" data-kind="bind" data-ritual="db_commit" data-line="92" data-col="3" data-depth="3" data-stmt="OBSECRO"/>
+      <circle class="node-aux" cx="181.24" cy="175.59" r="2.95" data-kind="bind" data-ritual="db_commit" data-line="108" data-col="3" data-depth="3" data-stmt="OBSECRO"/>
       <title>stmt: OBSECRO
 rituale: db_commit
 depth: 3
-line: 92
+line: 108
 
 source:
 OBSECRO db_commit(db)</title>
     </g>
     <g class="node-wrap">
-      <circle class="node-term" cx="193.08" cy="199.16" r="3.60" data-kind="term" data-ritual="db_commit" data-line="93" data-col="3" data-depth="3" data-stmt="REDDE"/>
+      <circle class="node-term" cx="207.52" cy="192.11" r="3.60" data-kind="term" data-ritual="db_commit" data-line="109" data-col="3" data-depth="3" data-stmt="REDDE"/>
       <title>stmt: REDDE
 rituale: db_commit
 depth: 3
-line: 93
+line: 109
 
 source:
 REDDE</title>
     </g>
     <g class="node-wrap">
-      <circle class="node-main" cx="191.07" cy="139.35" r="6.10" data-kind="rituale" data-ritual="db_rollback" data-line="96" data-col="1" data-depth="3" data-stmt="RITUALE" data-loops="0" data-calls="0"/>
+      <circle class="node-main" cx="189.13" cy="146.10" r="6.10" data-kind="rituale" data-ritual="db_rollback" data-line="112" data-col="1" data-depth="3" data-stmt="RITUALE" data-loops="0" data-calls="0"/>
       <title>RITUALE db_rollback
 stmt: 2
 depth: 3
@@ -9611,27 +9851,27 @@ source:
 RITUALE db_rollback(SPECULUM NIHIL db) REDDE NIHIL</title>
     </g>
     <g class="node-wrap">
-      <circle class="node-aux" cx="203.72" cy="162.07" r="2.95" data-kind="bind" data-ritual="db_rollback" data-line="97" data-col="3" data-depth="3" data-stmt="OBSECRO"/>
+      <circle class="node-aux" cx="202.65" cy="168.31" r="2.95" data-kind="bind" data-ritual="db_rollback" data-line="113" data-col="3" data-depth="3" data-stmt="OBSECRO"/>
       <title>stmt: OBSECRO
 rituale: db_rollback
 depth: 3
-line: 97
+line: 113
 
 source:
 OBSECRO db_rollback(db)</title>
     </g>
     <g class="node-wrap">
-      <circle class="node-term" cx="225.30" cy="184.39" r="3.60" data-kind="term" data-ritual="db_rollback" data-line="98" data-col="3" data-depth="3" data-stmt="REDDE"/>
+      <circle class="node-term" cx="225.08" cy="189.78" r="3.60" data-kind="term" data-ritual="db_rollback" data-line="114" data-col="3" data-depth="3" data-stmt="REDDE"/>
       <title>stmt: REDDE
 rituale: db_rollback
 depth: 3
-line: 98
+line: 114
 
 source:
 REDDE</title>
     </g>
     <g class="node-wrap">
-      <circle class="node-main" cx="204.92" cy="133.56" r="5.95" data-kind="rituale" data-ritual="db_scalar_int" data-line="101" data-col="1" data-depth="3" data-stmt="RITUALE" data-loops="0" data-calls="0"/>
+      <circle class="node-main" cx="223.52" cy="127.30" r="5.95" data-kind="rituale" data-ritual="db_scalar_int" data-line="117" data-col="1" data-depth="3" data-stmt="RITUALE" data-loops="0" data-calls="0"/>
       <title>RITUALE db_scalar_int
 stmt: 1
 depth: 3
@@ -9641,7 +9881,7 @@ source:
 RITUALE db_scalar_int(SPECULUM NIHIL db, VERBUM sql) REDDE REX</title>
     </g>
     <g class="node-wrap">
-      <circle class="node-aux" cx="214.93" cy="157.55" r="2.95" data-kind="bind" data-ritual="db_scalar_int" data-depth="3" data-stmt="EVOCA"/>
+      <circle class="node-aux" cx="229.88" cy="152.51" r="2.95" data-kind="bind" data-ritual="db_scalar_int" data-depth="3" data-stmt="EVOCA"/>
       <title>stmt: EVOCA
 rituale: db_scalar_int
 depth: 3
@@ -9652,17 +9892,17 @@ stmt: EVOCA
 rituale: db_scalar_int</title>
     </g>
     <g class="node-wrap">
-      <circle class="node-term" cx="219.10" cy="188.32" r="3.60" data-kind="term" data-ritual="db_scalar_int" data-line="102" data-col="3" data-depth="3" data-stmt="REDDE"/>
+      <circle class="node-term" cx="229.47" cy="183.55" r="3.60" data-kind="term" data-ritual="db_scalar_int" data-line="118" data-col="3" data-depth="3" data-stmt="REDDE"/>
       <title>stmt: REDDE
 rituale: db_scalar_int
 depth: 3
-line: 102
+line: 118
 
 source:
 REDDE OBSECRO db_scalar_int(db, sql)</title>
     </g>
     <g class="node-wrap">
-      <circle class="node-main" cx="248.60" cy="130.46" r="5.95" data-kind="rituale" data-ritual="db_scalar_text" data-line="105" data-col="1" data-depth="3" data-stmt="RITUALE" data-loops="0" data-calls="0"/>
+      <circle class="node-main" cx="268.89" cy="125.85" r="5.95" data-kind="rituale" data-ritual="db_scalar_text" data-line="121" data-col="1" data-depth="3" data-stmt="RITUALE" data-loops="0" data-calls="0"/>
       <title>RITUALE db_scalar_text
 stmt: 1
 depth: 3
@@ -9672,7 +9912,7 @@ source:
 RITUALE db_scalar_text(SPECULUM NIHIL db, VERBUM sql) REDDE VERBUM</title>
     </g>
     <g class="node-wrap">
-      <circle class="node-aux" cx="250.13" cy="156.41" r="2.95" data-kind="bind" data-ritual="db_scalar_text" data-depth="3" data-stmt="EVOCA"/>
+      <circle class="node-aux" cx="266.33" cy="151.73" r="2.95" data-kind="bind" data-ritual="db_scalar_text" data-depth="3" data-stmt="EVOCA"/>
       <title>stmt: EVOCA
 rituale: db_scalar_text
 depth: 3
@@ -9683,29 +9923,30 @@ stmt: EVOCA
 rituale: db_scalar_text</title>
     </g>
     <g class="node-wrap">
-      <circle class="node-term" cx="259.88" cy="185.89" r="3.60" data-kind="term" data-ritual="db_scalar_text" data-line="106" data-col="3" data-depth="3" data-stmt="REDDE"/>
+      <circle class="node-term" cx="271.33" cy="182.37" r="3.60" data-kind="term" data-ritual="db_scalar_text" data-line="122" data-col="3" data-depth="3" data-stmt="REDDE"/>
       <title>stmt: REDDE
 rituale: db_scalar_text
 depth: 3
-line: 106
+line: 122
 
 source:
 REDDE OBSECRO db_scalar_text(db, sql)</title>
     </g>
   </g>
   <g id="ornaments">
-    <circle class="orn" cx="461.21" cy="255.58" r="0.90"/>
-    <circle class="orn" cx="438.04" cy="350.90" r="1.90"/>
-    <circle class="orn" cx="384.63" cy="424.10" r="2.90"/>
-    <circle class="orn" cx="213.19" cy="450.31" r="0.90"/>
-    <circle class="orn" cx="132.72" cy="411.78" r="1.90"/>
-    <circle class="orn" cx="91.35" cy="377.05" r="2.90"/>
-    <circle class="orn" cx="49.91" cy="234.02" r="0.90"/>
-    <circle class="orn" cx="68.56" cy="174.23" r="1.90"/>
-    <circle class="orn" cx="190.28" cy="62.83" r="2.90"/>
-    <circle class="orn" cx="260.44" cy="57.56" r="0.90"/>
-    <circle class="orn" cx="360.40" cy="77.99" r="1.90"/>
-    <circle class="orn" cx="436.54" cy="154.01" r="2.90"/>
+    <circle class="orn" cx="457.21" cy="259.15" r="0.90"/>
+    <circle class="orn" cx="452.84" cy="334.27" r="1.90"/>
+    <circle class="orn" cx="396.46" cy="400.57" r="2.90"/>
+    <circle class="orn" cx="259.06" cy="454.69" r="0.90"/>
+    <circle class="orn" cx="221.39" cy="451.88" r="1.90"/>
+    <circle class="orn" cx="121.46" cy="401.36" r="2.90"/>
+    <circle class="orn" cx="53.64" cy="264.66" r="0.90"/>
+    <circle class="orn" cx="68.47" cy="162.64" r="1.90"/>
+    <circle class="orn" cx="113.31" cy="100.82" r="2.90"/>
+    <circle class="orn" cx="163.30" cy="78.49" r="0.90"/>
+    <circle class="orn" cx="255.94" cy="46.53" r="1.90"/>
+    <circle class="orn" cx="411.44" cy="112.06" r="2.90"/>
+    <circle class="orn" cx="428.24" cy="139.74" r="0.90"/>
   </g>
       </g>
     </g>
@@ -9713,10 +9954,10 @@ REDDE OBSECRO db_scalar_text(db, sql)</title>
     <circle class="module-frame" cx="600.000" cy="990.000" r="94.000"/>
       <title>module
 lib/cct/db_sqlite.cct
-rituals: 22
+rituals: 26
 imports: 0</title>
     <text class="module-label" x="600.000" y="1100.000" text-anchor="middle">db_sqlite.cct</text>
-    <text class="module-hash" x="600.000" y="1112.000" text-anchor="middle">b00357ad183ee854</text>
+    <text class="module-hash" x="600.000" y="1112.000" text-anchor="middle">ef8c66ab47ed1df1</text>
     </g>
     <g id="module_sigil_009" transform="translate(168.250 701.000) scale(0.36718750)">
       <g clip-path="url(#module_clip_009)">
@@ -13198,7 +13439,7 @@ imports: 1</title>
     <text class="module-hash" x="115.026" y="992.000" text-anchor="middle">790273b45a960d77</text>
     </g>
   </g>
-  <text class="module-label" x="24" y="30" font-size="14">CCT system sigilo (sigil-of-sigils) • cfeb0dd1970a8c01</text>
+  <text class="module-label" x="24" y="30" font-size="14">CCT system sigilo (sigil-of-sigils) • a061252aeffaa1aa</text>
   <text class="module-hash" x="24" y="50" font-size="10">entry=/Users/eabusato/dev/cct/examples/phase30_data_app/tests/smoke.test.cct • modules=12 • imports=17 • calls=59 • type_refs=0</text>
   <text class="module-hash" x="24" y="66" font-size="10">zoom: inline vector sub-sigils per module</text>
 </svg>

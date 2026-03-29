@@ -1,0 +1,14 @@
+INCIPIT grimoire "console_clear_fs1a"
+
+ADVOCARE "cct/console"
+
+RITUALE main() REDDE NIHIL
+  CONIURA console_init()
+  CONIURA console_set_color(COR_BRANCO, COR_AZUL)
+  CONIURA console_write("before clear")
+  CONIURA console_clear()
+  CONIURA console_write_line("after clear")
+  REDDE
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

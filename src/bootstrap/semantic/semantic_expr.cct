@@ -937,9 +937,17 @@ RITUALE semantic_analyze_expr(SPECULUM SemanticContext ctx, SPECULUM AstNode exp
       REDDE (*ctx).type_rex
     FIN SI
 
-    SI (*expr).operator_kind == TK_LESS VEL (*expr).operator_kind == TK_LESS_EQ VEL (*expr).operator_kind == TK_GREATER VEL (*expr).operator_kind == TK_GREATER_EQ VEL (*expr).operator_kind == TK_EQ_EQ VEL (*expr).operator_kind == TK_BANG_EQ
+    SI (*expr).operator_kind == TK_EQ_EQ VEL (*expr).operator_kind == TK_BANG_EQ
       SI NON CONIURA semantic_type_compatible_assign(ctx, left_type_id, right_type_id) ET NON CONIURA semantic_type_compatible_assign(ctx, right_type_id, left_type_id)
         CONIURA semantic_report_error(ctx, (*expr).line, (*expr).column, "comparison requires compatible operands")
+        REDDE (*ctx).type_error
+      FIN SI
+      REDDE (*ctx).type_verum
+    FIN SI
+
+    SI (*expr).operator_kind == TK_LESS VEL (*expr).operator_kind == TK_LESS_EQ VEL (*expr).operator_kind == TK_GREATER VEL (*expr).operator_kind == TK_GREATER_EQ
+      SI NON CONIURA semantic_type_is_numeric(ctx, left_type_id) VEL NON CONIURA semantic_type_is_numeric(ctx, right_type_id)
+        CONIURA semantic_report_error(ctx, (*expr).line, (*expr).column, "ordered comparison requires numeric operands")
         REDDE (*ctx).type_error
       FIN SI
       REDDE (*ctx).type_verum

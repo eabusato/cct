@@ -1,11 +1,11 @@
 format = cct.sigil.v1
 sigilo_scope = system
 visual_style = network
-system_hash = 9bdb09adda9d5fb7
+system_hash = 06ef53d7c9e3cf64
 module_count = 40
 entry_module = src/bootstrap/main_semantic.cct
 import_edges = 154
-cross_module_calls = 1816
+cross_module_calls = 1819
 cross_module_type_refs = 560
 exported_symbol_count = 500
 internal_symbol_count = 0
@@ -48,13 +48,13 @@ schema_phase = 13C2
 analysis_profile = analytical_v1
 system_topology_class = mesh_dense
 module_density = 3.850000
-cross_module_flow = 2376
+cross_module_flow = 2379
 generic_surface = 3
 determinism_guarantee = stable
 
 [diff_fingerprint_context]
 scope_anchor = system
-hash_anchor = 9bdb09adda9d5fb7
+hash_anchor = 06ef53d7c9e3cf64
 fingerprint_basis = module_map+import_edges+system_hash_anchor
 serialization_profile = analytical_v1
 volatility = none
@@ -64,7 +64,7 @@ entry_anchor = src/bootstrap/main_semantic.cct
 [module_structural_summary]
 module_count = 40
 import_edges = 154
-cross_module_calls = 1816
+cross_module_calls = 1819
 cross_module_type_refs = 560
 module_resolution_status = ok
 exported_symbol_count = 500
@@ -149,7 +149,7 @@ deterministic_serialization = stable_section_order
 23 = /Users/eabusato/dev/cct/src/bootstrap/lexer/lexer_state.cct | a8cb81c8cf1fa5a7
 24 = /Users/eabusato/dev/cct/src/bootstrap/lexer/token.cct | b5041202ade43cbc
 25 = /Users/eabusato/dev/cct/src/bootstrap/parser/parser_state.cct | 9a2a690efd72d0a8
-26 = /Users/eabusato/dev/cct/src/bootstrap/semantic/semantic_context.cct | 590efb4822453869
+26 = /Users/eabusato/dev/cct/src/bootstrap/semantic/semantic_context.cct | 4555b53a28ab195e
 27 = /Users/eabusato/dev/cct/src/bootstrap/semantic/semantic_kind.cct | 74c7ae24f14856fc
 28 = /Users/eabusato/dev/cct/src/bootstrap/semantic/semantic_scope.cct | ac02b557d141d1a2
 29 = /Users/eabusato/dev/cct/src/bootstrap/semantic/semantic_symbol.cct | 306b38dec30400b6
@@ -162,7 +162,7 @@ deterministic_serialization = stable_section_order
 36 = /Users/eabusato/dev/cct/src/bootstrap/semantic/semantic_register.cct | 13eaa276e1cf8e98
 37 = /Users/eabusato/dev/cct/src/bootstrap/semantic/semantic_stmt.cct | 74902070bdaea067
 38 = /Users/eabusato/dev/cct/src/bootstrap/semantic/semantic_block.cct | 8ef1181ecb3b90ef
-39 = /Users/eabusato/dev/cct/src/bootstrap/semantic/semantic_expr.cct | 02d0781422f80957
+39 = /Users/eabusato/dev/cct/src/bootstrap/semantic/semantic_expr.cct | 4fd8ca75c12da1d8
 
 [import_edges]
 0 = /Users/eabusato/dev/cct/src/bootstrap/main_semantic.cct -> /Users/eabusato/dev/cct/lib/cct/args.cct

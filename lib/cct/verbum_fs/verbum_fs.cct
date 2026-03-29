@@ -1,0 +1,197 @@
+-- CCT — Clavicula Turing
+-- Standard Library Module: verbum_fs
+--
+-- FASE FS-2B: Freestanding string operations
+--
+-- Copyright (c) Erick Andrade Busato. Todos os direitos reservados.
+
+INCIPIT grimoire "verbum_fs"
+
+ADVOCARE "cct/mem_fs"
+
+RITUALE verbum_fs_len(VERBUM s) REDDE REX
+  REDDE OBSECRO cct_svc_verbum_len(s)
+EXPLICIT RITUALE
+
+RITUALE verbum_fs_char_at(VERBUM s, REX i) REDDE REX
+  REDDE OBSECRO cct_svc_verbum_byte(s, i)
+EXPLICIT RITUALE
+
+RITUALE verbum_fs_compare(VERBUM a, VERBUM b) REDDE REX
+  EVOCA REX i AD 0
+  DUM VERUM
+    EVOCA REX ca AD CONIURA verbum_fs_char_at(a, i)
+    EVOCA REX cb AD CONIURA verbum_fs_char_at(b, i)
+    SI ca != cb
+      REDDE ca - cb
+    FIN SI
+    SI ca == 0
+      REDDE 0
+    FIN SI
+    VINCIRE i AD i + 1
+  FIN DUM
+  REDDE 0
+EXPLICIT RITUALE
+
+RITUALE verbum_fs_equals(VERBUM a, VERBUM b) REDDE VERUM
+  REDDE CONIURA verbum_fs_compare(a, b) == 0
+EXPLICIT RITUALE
+
+RITUALE verbum_fs_substring(VERBUM s, REX inicio, REX fim) REDDE VERBUM
+  EVOCA REX slen AD CONIURA verbum_fs_len(s)
+  SI inicio < 0
+    VINCIRE inicio AD 0
+  FIN SI
+  SI fim < inicio
+    VINCIRE fim AD inicio
+  FIN SI
+  SI fim > slen
+    VINCIRE fim AD slen
+  FIN SI
+  REDDE OBSECRO cct_svc_verbum_copy_slice(s, inicio, fim - inicio)
+EXPLICIT RITUALE
+
+RITUALE verbum_fs_dup(VERBUM s) REDDE VERBUM
+  REDDE CONIURA verbum_fs_substring(s, 0, CONIURA verbum_fs_len(s))
+EXPLICIT RITUALE
+
+RITUALE verbum_fs_builder_new() REDDE SPECULUM NIHIL
+  REDDE OBSECRO cct_svc_builder_new()
+EXPLICIT RITUALE
+
+RITUALE verbum_fs_builder_append(SPECULUM NIHIL b, VERBUM s) REDDE NIHIL
+  OBSECRO cct_svc_builder_append(b, s)
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE verbum_fs_builder_append_char(SPECULUM NIHIL b, REX c) REDDE NIHIL
+  OBSECRO cct_svc_builder_append_char(b, c)
+  REDDE
+EXPLICIT RITUALE
+
+ARCANUM RITUALE verbum_fs_append_uint_digits(SPECULUM NIHIL b, REX n) REDDE NIHIL
+  SI n >= 10
+    CONIURA verbum_fs_append_uint_digits(b, n / 10)
+  FIN SI
+  CONIURA verbum_fs_builder_append_char(b, 48 + (n % 10))
+  REDDE
+EXPLICIT RITUALE
+
+ARCANUM RITUALE verbum_fs_append_hex_digits(SPECULUM NIHIL b, REX n) REDDE NIHIL
+  SI n >= 16
+    CONIURA verbum_fs_append_hex_digits(b, n / 16)
+  FIN SI
+  EVOCA REX digit AD n % 16
+  SI digit < 10
+    CONIURA verbum_fs_builder_append_char(b, 48 + digit)
+  ALITER
+    CONIURA verbum_fs_builder_append_char(b, 87 + digit)
+  FIN SI
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE verbum_fs_from_uint(REX n) REDDE VERBUM
+  EVOCA SPECULUM NIHIL b AD CONIURA verbum_fs_builder_new()
+  SI n == 0
+    CONIURA verbum_fs_builder_append_char(b, 48)
+  ALITER
+    CONIURA verbum_fs_append_uint_digits(b, n)
+  FIN SI
+  REDDE OBSECRO cct_svc_builder_build(b)
+EXPLICIT RITUALE
+
+RITUALE verbum_fs_from_int(REX n) REDDE VERBUM
+  EVOCA SPECULUM NIHIL b AD CONIURA verbum_fs_builder_new()
+  SI n < 0
+    CONIURA verbum_fs_builder_append_char(b, 45)
+    VINCIRE n AD 0 - n
+  FIN SI
+  SI n == 0
+    CONIURA verbum_fs_builder_append_char(b, 48)
+  ALITER
+    CONIURA verbum_fs_append_uint_digits(b, n)
+  FIN SI
+  REDDE OBSECRO cct_svc_builder_build(b)
+EXPLICIT RITUALE
+
+RITUALE verbum_fs_from_hex(REX n) REDDE VERBUM
+  EVOCA SPECULUM NIHIL b AD CONIURA verbum_fs_builder_new()
+  CONIURA verbum_fs_builder_append(b, "0x")
+  SI n < 0
+    VINCIRE n AD 0 - n
+  FIN SI
+  SI n == 0
+    CONIURA verbum_fs_builder_append_char(b, 48)
+  ALITER
+    CONIURA verbum_fs_append_hex_digits(b, n)
+  FIN SI
+  REDDE OBSECRO cct_svc_builder_build(b)
+EXPLICIT RITUALE
+
+RITUALE verbum_fs_concat(VERBUM a, VERBUM b) REDDE VERBUM
+  EVOCA SPECULUM NIHIL builder AD CONIURA verbum_fs_builder_new()
+  CONIURA verbum_fs_builder_append(builder, a)
+  CONIURA verbum_fs_builder_append(builder, b)
+  REDDE OBSECRO cct_svc_builder_build(builder)
+EXPLICIT RITUALE
+
+RITUALE verbum_fs_find(VERBUM s, VERBUM sub) REDDE REX
+  EVOCA REX slen AD CONIURA verbum_fs_len(s)
+  EVOCA REX sublen AD CONIURA verbum_fs_len(sub)
+  SI sublen == 0
+    REDDE 0
+  FIN SI
+  SI sublen > slen
+    REDDE -1
+  FIN SI
+  EVOCA REX i AD 0
+  DUM i + sublen <= slen
+    SI CONIURA verbum_fs_compare(CONIURA verbum_fs_substring(s, i, i + sublen), sub) == 0
+      REDDE i
+    FIN SI
+    VINCIRE i AD i + 1
+  FIN DUM
+  REDDE -1
+EXPLICIT RITUALE
+
+RITUALE verbum_fs_starts_with(VERBUM s, VERBUM prefix) REDDE VERUM
+  EVOCA REX plen AD CONIURA verbum_fs_len(prefix)
+  EVOCA REX slen AD CONIURA verbum_fs_len(s)
+  SI plen > slen
+    REDDE FALSUM
+  FIN SI
+  REDDE CONIURA verbum_fs_compare(CONIURA verbum_fs_substring(s, 0, plen), prefix) == 0
+EXPLICIT RITUALE
+
+RITUALE verbum_fs_ends_with(VERBUM s, VERBUM suffix) REDDE VERUM
+  EVOCA REX slen AD CONIURA verbum_fs_len(s)
+  EVOCA REX tlen AD CONIURA verbum_fs_len(suffix)
+  SI tlen > slen
+    REDDE FALSUM
+  FIN SI
+  REDDE CONIURA verbum_fs_compare(CONIURA verbum_fs_substring(s, slen - tlen, slen), suffix) == 0
+EXPLICIT RITUALE
+
+RITUALE verbum_fs_contains(VERBUM s, VERBUM sub) REDDE VERUM
+  REDDE CONIURA verbum_fs_find(s, sub) >= 0
+EXPLICIT RITUALE
+
+RITUALE verbum_fs_builder_append_int(SPECULUM NIHIL b, REX n) REDDE NIHIL
+  CONIURA verbum_fs_builder_append(b, CONIURA verbum_fs_from_int(n))
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE verbum_fs_builder_build(SPECULUM NIHIL b) REDDE VERBUM
+  REDDE OBSECRO cct_svc_builder_build(b)
+EXPLICIT RITUALE
+
+RITUALE verbum_fs_builder_len(SPECULUM NIHIL b) REDDE REX
+  REDDE OBSECRO cct_svc_builder_len(b)
+EXPLICIT RITUALE
+
+RITUALE verbum_fs_builder_clear(SPECULUM NIHIL b) REDDE NIHIL
+  OBSECRO cct_svc_builder_clear(b)
+  REDDE
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

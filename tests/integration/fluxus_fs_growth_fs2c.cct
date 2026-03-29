@@ -1,0 +1,27 @@
+INCIPIT grimoire "fluxus_fs_growth_fs2c"
+
+ADVOCARE "cct/fluxus_fs"
+
+RITUALE main() REDDE NIHIL
+  EVOCA SPECULUM NIHIL flux AD CONIURA fluxus_fs_new(8)
+  EVOCA REX out AD 0
+  EVOCA REX tail AD 77
+
+  REPETE i DE 0 AD 11
+    CONIURA fluxus_fs_push(flux, SPECULUM i)
+  FIN REPETE
+
+  CONIURA fluxus_fs_pop(flux, SPECULUM out)
+  CONIURA fluxus_fs_clear(flux)
+
+  SI CONIURA fluxus_fs_is_empty(flux)
+    CONIURA fluxus_fs_push(flux, SPECULUM tail)
+    EVOCA SPECULUM REX peek AD CONIURA fluxus_fs_peek(flux)
+    SI *peek == 77
+      CONIURA fluxus_fs_free(flux)
+    FIN SI
+  FIN SI
+  REDDE
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

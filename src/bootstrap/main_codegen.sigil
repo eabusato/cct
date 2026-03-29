@@ -2,16 +2,16 @@ format = cct.sigil.v1
 sigilo_scope = local
 visual_engine = sigillum_v2_1
 visual_style = network
-compiler_version = 0.19.0
+compiler_version = 0.40.0
 program_name = main_codegen
 semantic_hash = 3c4264b0eb610b69
 layout_seed = 3c4264b0eb610b69:network
 module_mode = composed
 module_count = 42
-import_edge_count = 171
+import_edge_count = 172
 entry_module = src/bootstrap/main_codegen.cct
-cross_module_call_count = 3010
-cross_module_type_ref_count = 530
+cross_module_call_count = 3026
+cross_module_type_ref_count = 536
 module_resolution_status = ok
 stdlib_module_count = 3
 stdlib_modules_used = verbum,fmt,fs
@@ -34,7 +34,7 @@ map_module_used = false
 set_module_used = false
 collection_ops_module_used = false
 visibility_model = public_default_arcanum_internal
-public_symbol_count = 623
+public_symbol_count = 626
 internal_symbol_count = 0
 
 [metrics]
@@ -195,11 +195,11 @@ entry_anchor = src/bootstrap/main_codegen.cct
 [module_structural_summary]
 module_count = 42
 module_mode = composed
-import_edge_count = 171
-cross_module_call_count = 3010
-cross_module_type_ref_count = 530
+import_edge_count = 172
+cross_module_call_count = 3026
+cross_module_type_ref_count = 536
 ritual_count = 1
-public_symbol_count = 623
+public_symbol_count = 626
 internal_symbol_count = 0
 module_resolution_status = ok
 

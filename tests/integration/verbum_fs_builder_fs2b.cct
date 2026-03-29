@@ -1,0 +1,17 @@
+INCIPIT grimoire "verbum_fs_builder_fs2b"
+
+ADVOCARE "cct/verbum_fs"
+
+RITUALE main() REDDE NIHIL
+  EVOCA SPECULUM NIHIL b AD CONIURA verbum_fs_builder_new()
+  CONIURA verbum_fs_builder_append(b, "heap=")
+  CONIURA verbum_fs_builder_append_int(b, 2)
+  CONIURA verbum_fs_builder_append_char(b, 33)
+  EVOCA VERBUM out AD CONIURA verbum_fs_builder_build(b)
+  SI CONIURA verbum_fs_builder_len(b) >= 0 ET CONIURA verbum_fs_len(out) >= 0
+    CONIURA verbum_fs_builder_clear(b)
+  FIN SI
+  REDDE
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

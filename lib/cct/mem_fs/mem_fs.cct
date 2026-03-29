@@ -1,0 +1,85 @@
+-- CCT — Clavicula Turing
+-- Standard Library Module: mem_fs
+--
+-- FASE FS-2A: Freestanding bump allocator
+--
+-- Copyright (c) Erick Andrade Busato. Todos os direitos reservados.
+
+INCIPIT grimoire "mem_fs"
+
+SIGILLUM HeapStats
+  base_addr: REX
+  total_bytes: REX
+  allocated_bytes: REX
+  available_bytes: REX
+  alloc_count: REX
+FIN SIGILLUM
+
+RITUALE mem_fs_alloc(REX n) REDDE SPECULUM NIHIL
+  REDDE OBSECRO cct_svc_alloc(n)
+EXPLICIT RITUALE
+
+RITUALE mem_fs_alloc_zero(REX n) REDDE SPECULUM NIHIL
+  EVOCA SPECULUM NIHIL ptr AD CONIURA mem_fs_alloc(n)
+  SI n > 0
+    OBSECRO cct_svc_memset(ptr, 0, n)
+  FIN SI
+  REDDE ptr
+EXPLICIT RITUALE
+
+RITUALE mem_fs_realloc(SPECULUM NIHIL ptr, REX old_size, REX new_size) REDDE SPECULUM NIHIL
+  REDDE OBSECRO cct_svc_realloc(ptr, old_size, new_size)
+EXPLICIT RITUALE
+
+RITUALE mem_fs_free(SPECULUM NIHIL ptr) REDDE NIHIL
+  OBSECRO cct_svc_free(ptr)
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE mem_fs_copy(SPECULUM NIHIL dst, SPECULUM NIHIL src, REX n) REDDE NIHIL
+  OBSECRO cct_svc_memcpy(dst, src, n)
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE mem_fs_set(SPECULUM NIHIL ptr, REX valor, REX n) REDDE NIHIL
+  OBSECRO cct_svc_memset(ptr, valor, n)
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE mem_fs_zero(SPECULUM NIHIL ptr, REX n) REDDE NIHIL
+  OBSECRO cct_svc_memset(ptr, 0, n)
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE mem_fs_compare(SPECULUM NIHIL a, SPECULUM NIHIL b, REX n) REDDE REX
+  EVOCA REX i AD 0
+  DUM i < n
+    EVOCA REX ba AD OBSECRO cct_svc_byte_at(a, i)
+    EVOCA REX bb AD OBSECRO cct_svc_byte_at(b, i)
+    SI ba != bb
+      REDDE ba - bb
+    FIN SI
+    VINCIRE i AD i + 1
+  FIN DUM
+  REDDE 0
+EXPLICIT RITUALE
+
+RITUALE mem_fs_available() REDDE REX
+  REDDE OBSECRO cct_svc_heap_available()
+EXPLICIT RITUALE
+
+RITUALE mem_fs_allocated() REDDE REX
+  REDDE OBSECRO cct_svc_heap_allocated()
+EXPLICIT RITUALE
+
+RITUALE mem_fs_stats() REDDE HeapStats
+  EVOCA HeapStats stats
+  VINCIRE stats.base_addr AD OBSECRO cct_svc_heap_base_addr()
+  VINCIRE stats.total_bytes AD OBSECRO cct_svc_heap_total()
+  VINCIRE stats.allocated_bytes AD OBSECRO cct_svc_heap_allocated()
+  VINCIRE stats.available_bytes AD OBSECRO cct_svc_heap_available()
+  VINCIRE stats.alloc_count AD OBSECRO cct_svc_heap_alloc_count()
+  REDDE stats
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

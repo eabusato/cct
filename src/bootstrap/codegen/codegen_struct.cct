@@ -7,6 +7,7 @@
 
 INCIPIT grimoire "codegen_struct"
 
+ADVOCARE "cct/fluxus.cct"
 ADVOCARE "cct/verbum.cct"
 ADVOCARE "../parser/ast.cct"
 ADVOCARE "codegen.cct"
@@ -123,6 +124,77 @@ RITUALE codegen_emit_sigillum_definition(SPECULUM CodegenContext ctx, SPECULUM A
   REDDE
 EXPLICIT RITUALE
 
+RITUALE codegen_struct_type_needs_prior_sigillum(VERBUM identity) REDDE VERUM
+  SI CONIURA starts_with(identity, "SPECULUM(")
+    REDDE FALSUM
+  FIN SI
+  SI CONIURA starts_with(identity, "SERIES(")
+    REDDE FALSUM
+  FIN SI
+  REDDE VERUM
+EXPLICIT RITUALE
+
+RITUALE codegen_find_program_sigillum_decl_index(SPECULUM AstProgram program, VERBUM source_name) REDDE REX
+  EVOCA REX i AD 0
+  EVOCA REX n AD CONIURA ast_node_list_len((*program).declarations)
+  DUM i < n
+    EVOCA SPECULUM AstNode decl AD CONIURA ast_node_list_get((*program).declarations, i)
+    SI (*decl).kind == AST_SIGILLUM ET CONIURA ast_node_list_len((*decl).type_params) == 0 ET CONIURA compare((*decl).name, source_name) == 0
+      REDDE i
+    FIN SI
+    VINCIRE i AD i + 1
+  FIN DUM
+  REDDE -1
+EXPLICIT RITUALE
+
+RITUALE codegen_emit_sigillum_definition_ordered(SPECULUM CodegenContext ctx, SPECULUM AstProgram program, VERBUM source_name, SPECULUM NIHIL emit_states) REDDE NIHIL
+  EVOCA REX sigillum_idx AD CONIURA codegen_find_sigillum_index(ctx, source_name)
+  SI sigillum_idx < 0
+    REDDE
+  FIN SI
+
+  EVOCA SPECULUM REX state_slot AD CONIURA fluxus_get(emit_states, sigillum_idx)
+  SI (*state_slot) == 2
+    REDDE
+  FIN SI
+  SI (*state_slot) == 1
+    CONIURA codegen_report_error(ctx, 0, 0, "cyclic SIGILLUM dependency in bootstrap codegen")
+    REDDE
+  FIN SI
+
+  EVOCA REX in_progress AD 1
+  CONIURA fluxus_set(emit_states, sigillum_idx, SPECULUM in_progress)
+
+  EVOCA SPECULUM CodegenSigillum sigillum AD CONIURA codegen_context_sigillum_at(ctx, sigillum_idx)
+  EVOCA REX field_i AD 0
+  EVOCA REX field_n AD CONIURA fluxus_len((*sigillum).fields)
+  DUM field_i < field_n
+    EVOCA SPECULUM CodegenSigillumField field AD CONIURA codegen_context_sigillum_field_at(sigillum, field_i)
+    SI CONIURA codegen_struct_type_needs_prior_sigillum((*field).type_name)
+      SI CONIURA codegen_find_sigillum_index(ctx, (*field).type_name) >= 0 ET CONIURA compare((*field).type_name, source_name) != 0
+        CONIURA codegen_emit_sigillum_definition_ordered(ctx, program, (*field).type_name, emit_states)
+      FIN SI
+    FIN SI
+    VINCIRE field_i AD field_i + 1
+  FIN DUM
+
+  EVOCA REX generic_inst_idx AD CONIURA codegen_find_generic_sigillum_instance_index(ctx, source_name)
+  SI generic_inst_idx >= 0
+    CONIURA codegen_emit_generic_sigillum_instance_definition(ctx, CONIURA codegen_context_generic_sigillum_instance_at(ctx, generic_inst_idx))
+    CONIURA codegen_emit_blank_line(ctx)
+  ALITER
+    EVOCA REX decl_idx AD CONIURA codegen_find_program_sigillum_decl_index(program, source_name)
+    SI decl_idx >= 0
+      CONIURA codegen_emit_sigillum_definition(ctx, CONIURA ast_node_list_get((*program).declarations, decl_idx))
+      CONIURA codegen_emit_blank_line(ctx)
+    FIN SI
+  FIN SI
+
+  EVOCA REX done AD 2
+  CONIURA fluxus_set(emit_states, sigillum_idx, SPECULUM done)
+  REDDE
+EXPLICIT RITUALE
+
 RITUALE codegen_emit_generic_sigillum_instance_definition(SPECULUM CodegenContext ctx, SPECULUM CodegenGenericSigillumInstance inst) REDDE NIHIL
   CONIURA codegen_generic_bind_template_args(ctx, (*inst).template_decl, (*inst).type_args)
   CONIURA codegen_emit(ctx, "struct ")
@@ -154,34 +226,22 @@ EXPLICIT RITUALE
 
 RITUALE codegen_emit_sigillum_definitions(SPECULUM CodegenContext ctx, SPECULUM AstProgram program) REDDE NIHIL
   EVOCA REX i AD 0
-  EVOCA REX n AD CONIURA ast_node_list_len((*program).declarations)
-  EVOCA VERUM emitted_any AD FALSUM
+  EVOCA REX n AD CONIURA codegen_registered_sigillum_count(ctx)
+  EVOCA SPECULUM NIHIL emit_states AD CONIURA fluxus_init(MENSURA(REX))
   DUM i < n
-    EVOCA SPECULUM AstNode decl AD CONIURA ast_node_list_get((*program).declarations, i)
-    SI (*decl).kind == AST_SIGILLUM ET CONIURA ast_node_list_len((*decl).type_params) == 0
-      CONIURA codegen_emit_sigillum_definition(ctx, decl)
-      CONIURA codegen_emit_blank_line(ctx)
-      VINCIRE emitted_any AD VERUM
-    FIN SI
+    EVOCA REX pending AD 0
+    CONIURA fluxus_push(emit_states, SPECULUM pending)
     VINCIRE i AD i + 1
   FIN DUM
-  SI emitted_any
-    EVOCA REX inst_i AD 0
-    EVOCA REX inst_n AD CONIURA codegen_registered_generic_sigillum_instance_count(ctx)
-    DUM inst_i < inst_n
-      CONIURA codegen_emit_generic_sigillum_instance_definition(ctx, CONIURA codegen_context_generic_sigillum_instance_at(ctx, inst_i))
-      CONIURA codegen_emit_blank_line(ctx)
-      VINCIRE inst_i AD inst_i + 1
-    FIN DUM
-    REDDE
-  FIN SI
-  EVOCA REX inst_i AD 0
-  EVOCA REX inst_n AD CONIURA codegen_registered_generic_sigillum_instance_count(ctx)
-  DUM inst_i < inst_n
-    CONIURA codegen_emit_generic_sigillum_instance_definition(ctx, CONIURA codegen_context_generic_sigillum_instance_at(ctx, inst_i))
-    CONIURA codegen_emit_blank_line(ctx)
-    VINCIRE inst_i AD inst_i + 1
+
+  VINCIRE i AD 0
+  DUM i < n
+    EVOCA SPECULUM CodegenSigillum sigillum AD CONIURA codegen_context_sigillum_at(ctx, i)
+    CONIURA codegen_emit_sigillum_definition_ordered(ctx, program, (*sigillum).source_name, emit_states)
+    VINCIRE i AD i + 1
   FIN DUM
+
+  CONIURA fluxus_free(emit_states)
   REDDE
 EXPLICIT RITUALE
 

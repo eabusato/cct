@@ -34,7 +34,7 @@ map_module_used = false
 set_module_used = false
 collection_ops_module_used = false
 visibility_model = public_default_arcanum_internal
-public_symbol_count = 182
+public_symbol_count = 186
 internal_symbol_count = 0
 
 [metrics]
@@ -199,7 +199,7 @@ import_edge_count = 17
 cross_module_call_count = 59
 cross_module_type_ref_count = 0
 ritual_count = 1
-public_symbol_count = 182
+public_symbol_count = 186
 internal_symbol_count = 0
 module_resolution_status = ok
 

@@ -806,6 +806,52 @@ static char* cg_make_freestanding_entry_c_name(cct_codegen_t *cg, const char *en
 }
 
 static const char* cg_c_type_for_ast_type(cct_codegen_t *cg, const cct_ast_type_t *type);
+static const char* cg_c_type_for_return_kind(cct_codegen_value_kind_t kind);
+static const char* cg_c_type_for_local_kind(cct_codegen_local_kind_t kind);
+
+static bool cg_emit_freestanding_abi_wrappers(FILE *out, cct_codegen_t *cg) {
+    if (!out || !cg || cg->profile != CCT_PROFILE_FREESTANDING) return true;
+
+    fputs("/* ===== Freestanding ABI Wrappers ===== */\n", out);
+    for (cct_codegen_rituale_t *r = cg->rituales; r; r = r->next) {
+        if (strcmp(r->name, "main") == 0) continue;
+        const char *ret_c = r->returns_nihil ? "void" : cg_c_type_for_return_kind(r->return_kind);
+        cct_ast_param_list_t *params = r->node->as.rituale.params;
+        if (!r->returns_nihil && r->node->as.rituale.return_type) {
+            const char *ast_ret = cg_c_type_for_ast_type(cg, r->node->as.rituale.return_type);
+            if (ast_ret) ret_c = ast_ret;
+        }
+        if (!ret_c) {
+            cg_report_node(cg, r->node, "unsupported ritual return type in freestanding ABI wrapper");
+            return false;
+        }
+
+        fprintf(out, "__attribute__((used)) %s %s(", ret_c, r->name);
+        for (size_t i = 0; i < r->param_count; i++) {
+            const char *c_ty = cg_c_type_for_ast_type(cg, params->params[i]->type);
+            if (!c_ty) c_ty = cg_c_type_for_local_kind(r->param_kinds[i]);
+            if (!c_ty) {
+                cg_report_nodef(cg, r->node, "unsupported parameter type for ritual '%s' in freestanding ABI wrapper", r->name);
+                return false;
+            }
+            if (i > 0) fputs(", ", out);
+            fprintf(out, "%s %s", c_ty, params->params[i]->name);
+        }
+        fputs(") {\n", out);
+        fputs("    ", out);
+        if (!r->returns_nihil) {
+            fputs("return ", out);
+        }
+        fprintf(out, "%s(", r->c_name);
+        for (size_t i = 0; i < r->param_count; i++) {
+            if (i > 0) fputs(", ", out);
+            fputs(params->params[i]->name, out);
+        }
+        fputs(");\n", out);
+        fputs("}\n\n", out);
+    }
+    return true;
+}
 
 static bool cg_validate_rituale_signature_f6b(cct_codegen_t *cg, const cct_ast_node_t *rituale) {
     if (!rituale || rituale->type != AST_RITUALE) {
@@ -6034,6 +6080,92 @@ static bool cg_emit_obsecro_expr(FILE *out, cct_codegen_t *cg, const cct_ast_nod
         return true;
     }
 
+    if (strcmp(name, "cct_svc_alloc") == 0) {
+        if (argc != 1) {
+            cg_report_node(cg, expr, "OBSECRO cct_svc_alloc expects exactly one size argument in FS-2A");
+            return false;
+        }
+        cct_codegen_value_kind_t k = CCT_CODEGEN_VALUE_UNKNOWN;
+        fputs("((void*)cct_svc_alloc(", out);
+        if (!cg_emit_expr(out, cg, args->nodes[0], &k)) return false;
+        if (!(k == CCT_CODEGEN_VALUE_INT || k == CCT_CODEGEN_VALUE_BOOL)) {
+            cg_report_node(cg, args->nodes[0], "OBSECRO cct_svc_alloc requires integer size argument in FS-2A");
+            return false;
+        }
+        fputs("))", out);
+        if (out_kind) *out_kind = CCT_CODEGEN_VALUE_POINTER;
+        return true;
+    }
+
+    if (strcmp(name, "cct_svc_realloc") == 0) {
+        if (argc != 3) {
+            cg_report_node(cg, expr, "OBSECRO cct_svc_realloc expects exactly (ptr, old_size, new_size) in FS-2A");
+            return false;
+        }
+        cct_codegen_value_kind_t kptr = CCT_CODEGEN_VALUE_UNKNOWN;
+        cct_codegen_value_kind_t kold = CCT_CODEGEN_VALUE_UNKNOWN;
+        cct_codegen_value_kind_t knew = CCT_CODEGEN_VALUE_UNKNOWN;
+        fputs("((void*)cct_svc_realloc((void*)(", out);
+        if (!cg_emit_expr(out, cg, args->nodes[0], &kptr)) return false;
+        if (kptr != CCT_CODEGEN_VALUE_POINTER) {
+            cg_report_node(cg, args->nodes[0], "OBSECRO cct_svc_realloc requires pointer first argument in FS-2A");
+            return false;
+        }
+        fputs("), ", out);
+        if (!cg_emit_expr(out, cg, args->nodes[1], &kold)) return false;
+        if (!(kold == CCT_CODEGEN_VALUE_INT || kold == CCT_CODEGEN_VALUE_BOOL)) {
+            cg_report_node(cg, args->nodes[1], "OBSECRO cct_svc_realloc requires integer old_size in FS-2A");
+            return false;
+        }
+        fputs(", ", out);
+        if (!cg_emit_expr(out, cg, args->nodes[2], &knew)) return false;
+        if (!(knew == CCT_CODEGEN_VALUE_INT || knew == CCT_CODEGEN_VALUE_BOOL)) {
+            cg_report_node(cg, args->nodes[2], "OBSECRO cct_svc_realloc requires integer new_size in FS-2A");
+            return false;
+        }
+        fputs("))", out);
+        if (out_kind) *out_kind = CCT_CODEGEN_VALUE_POINTER;
+        return true;
+    }
+
+    if (strcmp(name, "cct_svc_heap_available") == 0 ||
+        strcmp(name, "cct_svc_heap_allocated") == 0 ||
+        strcmp(name, "cct_svc_heap_total") == 0 ||
+        strcmp(name, "cct_svc_heap_base_addr") == 0 ||
+        strcmp(name, "cct_svc_heap_alloc_count") == 0) {
+        if (argc != 0) {
+            cg_report_nodef(cg, expr, "OBSECRO %s expects no arguments in FS-2A", name);
+            return false;
+        }
+        fprintf(out, "%s()", name);
+        if (out_kind) *out_kind = CCT_CODEGEN_VALUE_INT;
+        return true;
+    }
+
+    if (strcmp(name, "cct_svc_byte_at") == 0) {
+        if (argc != 2) {
+            cg_report_node(cg, expr, "OBSECRO cct_svc_byte_at expects exactly (ptr, idx) in FS-2A");
+            return false;
+        }
+        cct_codegen_value_kind_t kptr = CCT_CODEGEN_VALUE_UNKNOWN;
+        cct_codegen_value_kind_t kidx = CCT_CODEGEN_VALUE_UNKNOWN;
+        fputs("cct_svc_byte_at((const void*)(", out);
+        if (!cg_emit_expr(out, cg, args->nodes[0], &kptr)) return false;
+        if (kptr != CCT_CODEGEN_VALUE_POINTER) {
+            cg_report_node(cg, args->nodes[0], "OBSECRO cct_svc_byte_at requires pointer first argument in FS-2A");
+            return false;
+        }
+        fputs("), ", out);
+        if (!cg_emit_expr(out, cg, args->nodes[1], &kidx)) return false;
+        if (!(kidx == CCT_CODEGEN_VALUE_INT || kidx == CCT_CODEGEN_VALUE_BOOL)) {
+            cg_report_node(cg, args->nodes[1], "OBSECRO cct_svc_byte_at requires integer index in FS-2A");
+            return false;
+        }
+        fputs(")", out);
+        if (out_kind) *out_kind = CCT_CODEGEN_VALUE_INT;
+        return true;
+    }
+
     if (strcmp(name, "mem_alloc") == 0) {
         if (argc != 1) {
             cg_report_node(cg, expr, "OBSECRO mem_alloc expects exactly one size argument in FASE 11D.1");
@@ -6126,6 +6258,192 @@ static bool cg_emit_obsecro_expr(FILE *out, cct_codegen_t *cg, const cct_ast_nod
         }
         fputs(")", out);
         if (out_kind) *out_kind = CCT_CODEGEN_VALUE_INT;
+        return true;
+    }
+
+    if (strcmp(name, "console_get_linha") == 0 || strcmp(name, "console_get_coluna") == 0) {
+        if (argc != 0) {
+            cg_report_nodef(cg, expr, "OBSECRO %s expects no arguments in FS-1A", name);
+            return false;
+        }
+        fputs(strcmp(name, "console_get_linha") == 0 ? "cct_svc_console_get_row()" : "cct_svc_console_get_col()", out);
+        if (out_kind) *out_kind = CCT_CODEGEN_VALUE_INT;
+        return true;
+    }
+
+    if (strcmp(name, "cct_svc_verbum_byte") == 0) {
+        if (argc != 2) {
+            cg_report_node(cg, expr, "OBSECRO cct_svc_verbum_byte expects exactly (s, idx) in FS-2B");
+            return false;
+        }
+        cct_codegen_value_kind_t ks = CCT_CODEGEN_VALUE_UNKNOWN;
+        cct_codegen_value_kind_t ki = CCT_CODEGEN_VALUE_UNKNOWN;
+        fputs("cct_svc_verbum_byte(", out);
+        if (!cg_emit_expr(out, cg, args->nodes[0], &ks)) return false;
+        if (ks != CCT_CODEGEN_VALUE_STRING) {
+            cg_report_node(cg, args->nodes[0], "OBSECRO cct_svc_verbum_byte requires VERBUM first argument in FS-2B");
+            return false;
+        }
+        fputs(", ", out);
+        if (!cg_emit_expr(out, cg, args->nodes[1], &ki)) return false;
+        if (!(ki == CCT_CODEGEN_VALUE_INT || ki == CCT_CODEGEN_VALUE_BOOL)) {
+            cg_report_node(cg, args->nodes[1], "OBSECRO cct_svc_verbum_byte requires integer index in FS-2B");
+            return false;
+        }
+        fputs(")", out);
+        if (out_kind) *out_kind = CCT_CODEGEN_VALUE_INT;
+        return true;
+    }
+
+    if (strcmp(name, "cct_svc_verbum_len") == 0) {
+        if (argc != 1) {
+            cg_report_node(cg, expr, "OBSECRO cct_svc_verbum_len expects exactly one VERBUM argument in FS-2B");
+            return false;
+        }
+        cct_codegen_value_kind_t ks = CCT_CODEGEN_VALUE_UNKNOWN;
+        fputs("cct_svc_verbum_len(", out);
+        if (!cg_emit_expr(out, cg, args->nodes[0], &ks)) return false;
+        if (ks != CCT_CODEGEN_VALUE_STRING) {
+            cg_report_node(cg, args->nodes[0], "OBSECRO cct_svc_verbum_len requires VERBUM argument in FS-2B");
+            return false;
+        }
+        fputs(")", out);
+        if (out_kind) *out_kind = CCT_CODEGEN_VALUE_INT;
+        return true;
+    }
+
+    if (strcmp(name, "cct_svc_verbum_copy_slice") == 0) {
+        if (argc != 3) {
+            cg_report_node(cg, expr, "OBSECRO cct_svc_verbum_copy_slice expects exactly (s, offset, len) in FS-2B");
+            return false;
+        }
+        cct_codegen_value_kind_t ks = CCT_CODEGEN_VALUE_UNKNOWN;
+        cct_codegen_value_kind_t ko = CCT_CODEGEN_VALUE_UNKNOWN;
+        cct_codegen_value_kind_t kn = CCT_CODEGEN_VALUE_UNKNOWN;
+        fputs("cct_svc_verbum_copy_slice(", out);
+        if (!cg_emit_expr(out, cg, args->nodes[0], &ks)) return false;
+        if (ks != CCT_CODEGEN_VALUE_STRING) {
+            cg_report_node(cg, args->nodes[0], "OBSECRO cct_svc_verbum_copy_slice requires VERBUM first argument in FS-2B");
+            return false;
+        }
+        fputs(", ", out);
+        if (!cg_emit_expr(out, cg, args->nodes[1], &ko)) return false;
+        if (!(ko == CCT_CODEGEN_VALUE_INT || ko == CCT_CODEGEN_VALUE_BOOL)) {
+            cg_report_node(cg, args->nodes[1], "OBSECRO cct_svc_verbum_copy_slice requires integer offset in FS-2B");
+            return false;
+        }
+        fputs(", ", out);
+        if (!cg_emit_expr(out, cg, args->nodes[2], &kn)) return false;
+        if (!(kn == CCT_CODEGEN_VALUE_INT || kn == CCT_CODEGEN_VALUE_BOOL)) {
+            cg_report_node(cg, args->nodes[2], "OBSECRO cct_svc_verbum_copy_slice requires integer length in FS-2B");
+            return false;
+        }
+        fputs(")", out);
+        if (out_kind) *out_kind = CCT_CODEGEN_VALUE_STRING;
+        return true;
+    }
+
+    if (strcmp(name, "cct_svc_builder_new") == 0) {
+        if (argc != 0) {
+            cg_report_node(cg, expr, "OBSECRO cct_svc_builder_new expects no arguments in FS-2B");
+            return false;
+        }
+        fputs("((void*)cct_svc_builder_new())", out);
+        if (out_kind) *out_kind = CCT_CODEGEN_VALUE_POINTER;
+        return true;
+    }
+
+    if (strcmp(name, "cct_svc_builder_build") == 0 || strcmp(name, "cct_svc_builder_len") == 0) {
+        if (argc != 1) {
+            cg_report_nodef(cg, expr, "OBSECRO %s expects exactly one builder pointer argument in FS-2B", name);
+            return false;
+        }
+        cct_codegen_value_kind_t kb = CCT_CODEGEN_VALUE_UNKNOWN;
+        fprintf(out, "%s((void*)(", name);
+        if (!cg_emit_expr(out, cg, args->nodes[0], &kb)) return false;
+        if (kb != CCT_CODEGEN_VALUE_POINTER) {
+            cg_report_nodef(cg, args->nodes[0], "OBSECRO %s requires builder pointer argument in FS-2B", name);
+            return false;
+        }
+        fputs("))", out);
+        if (out_kind) {
+            *out_kind = strcmp(name, "cct_svc_builder_len") == 0 ? CCT_CODEGEN_VALUE_INT : CCT_CODEGEN_VALUE_STRING;
+        }
+        return true;
+    }
+
+    if (strcmp(name, "cct_svc_fluxus_new") == 0) {
+        if (argc != 1) {
+            cg_report_node(cg, expr, "OBSECRO cct_svc_fluxus_new expects exactly one element-size argument in FS-2C");
+            return false;
+        }
+        cct_codegen_value_kind_t k = CCT_CODEGEN_VALUE_UNKNOWN;
+        fputs("((void*)cct_svc_fluxus_new(", out);
+        if (!cg_emit_expr(out, cg, args->nodes[0], &k)) return false;
+        if (!(k == CCT_CODEGEN_VALUE_INT || k == CCT_CODEGEN_VALUE_BOOL)) {
+            cg_report_node(cg, args->nodes[0], "OBSECRO cct_svc_fluxus_new requires integer element-size argument in FS-2C");
+            return false;
+        }
+        fputs("))", out);
+        if (out_kind) *out_kind = CCT_CODEGEN_VALUE_POINTER;
+        return true;
+    }
+
+    if (strcmp(name, "cct_svc_fluxus_get") == 0) {
+        if (argc != 2) {
+            cg_report_node(cg, expr, "OBSECRO cct_svc_fluxus_get expects exactly (flux, idx) in FS-2C");
+            return false;
+        }
+        cct_codegen_value_kind_t kf = CCT_CODEGEN_VALUE_UNKNOWN;
+        cct_codegen_value_kind_t ki = CCT_CODEGEN_VALUE_UNKNOWN;
+        fputs("((void*)cct_svc_fluxus_get((cct_fluxus_fs_t*)(", out);
+        if (!cg_emit_expr(out, cg, args->nodes[0], &kf)) return false;
+        if (kf != CCT_CODEGEN_VALUE_POINTER) {
+            cg_report_node(cg, args->nodes[0], "OBSECRO cct_svc_fluxus_get requires flux pointer in FS-2C");
+            return false;
+        }
+        fputs("), ", out);
+        if (!cg_emit_expr(out, cg, args->nodes[1], &ki)) return false;
+        if (!(ki == CCT_CODEGEN_VALUE_INT || ki == CCT_CODEGEN_VALUE_BOOL)) {
+            cg_report_node(cg, args->nodes[1], "OBSECRO cct_svc_fluxus_get requires integer index in FS-2C");
+            return false;
+        }
+        fputs("))", out);
+        if (out_kind) *out_kind = CCT_CODEGEN_VALUE_POINTER;
+        return true;
+    }
+
+    if (strcmp(name, "cct_svc_fluxus_len") == 0 || strcmp(name, "cct_svc_fluxus_cap") == 0) {
+        if (argc != 1) {
+            cg_report_nodef(cg, expr, "OBSECRO %s expects exactly one fluxus pointer argument in FS-2C", name);
+            return false;
+        }
+        cct_codegen_value_kind_t kf = CCT_CODEGEN_VALUE_UNKNOWN;
+        fprintf(out, "%s((cct_fluxus_fs_t*)(", name);
+        if (!cg_emit_expr(out, cg, args->nodes[0], &kf)) return false;
+        if (kf != CCT_CODEGEN_VALUE_POINTER) {
+            cg_report_nodef(cg, args->nodes[0], "OBSECRO %s requires fluxus pointer argument in FS-2C", name);
+            return false;
+        }
+        fputs("))", out);
+        if (out_kind) *out_kind = CCT_CODEGEN_VALUE_INT;
+        return true;
+    }
+
+    if (strcmp(name, "cct_svc_fluxus_peek") == 0) {
+        if (argc != 1) {
+            cg_report_node(cg, expr, "OBSECRO cct_svc_fluxus_peek expects exactly one fluxus pointer argument in FS-2C");
+            return false;
+        }
+        cct_codegen_value_kind_t kf = CCT_CODEGEN_VALUE_UNKNOWN;
+        fputs("((void*)cct_svc_fluxus_peek((cct_fluxus_fs_t*)(", out);
+        if (!cg_emit_expr(out, cg, args->nodes[0], &kf)) return false;
+        if (kf != CCT_CODEGEN_VALUE_POINTER) {
+            cg_report_node(cg, args->nodes[0], "OBSECRO cct_svc_fluxus_peek requires fluxus pointer argument in FS-2C");
+            return false;
+        }
+        fputs(")))", out);
+        if (out_kind) *out_kind = CCT_CODEGEN_VALUE_POINTER;
         return true;
     }
 
@@ -7623,6 +7941,10 @@ static bool cg_emit_obsecro_expr(FILE *out, cct_codegen_t *cg, const cct_ast_nod
         strcmp(name, "mem_set") == 0 || strcmp(name, "mem_zero") == 0 ||
         strcmp(name, "kernel_halt") == 0 || strcmp(name, "kernel_outb") == 0 ||
         strcmp(name, "kernel_memcpy") == 0 || strcmp(name, "kernel_memset") == 0 ||
+        strcmp(name, "console_init") == 0 || strcmp(name, "console_clear") == 0 ||
+        strcmp(name, "console_putc") == 0 || strcmp(name, "console_write") == 0 ||
+        strcmp(name, "console_write_centered") == 0 || strcmp(name, "console_set_color") == 0 ||
+        strcmp(name, "console_set_cursor") == 0 ||
         strcmp(name, "fluxus_free") == 0 || strcmp(name, "fluxus_push") == 0 ||
         strcmp(name, "fluxus_pop") == 0 || strcmp(name, "fluxus_clear") == 0 ||
         strcmp(name, "fluxus_reserve") == 0 || strcmp(name, "fluxus_set") == 0 ||
@@ -8434,6 +8756,329 @@ static bool cg_emit_scribe_stmt(FILE *out, cct_codegen_t *cg, const cct_ast_node
             return false;
         }
         fputs(");\n", out);
+        return true;
+    }
+
+    if (strcmp(obsecro_node->as.obsecro.name, "console_init") == 0) {
+        cct_ast_node_list_t *args = obsecro_node->as.obsecro.arguments;
+        if (args && args->count != 0) {
+            cg_report_node(cg, obsecro_node, "OBSECRO console_init requires no arguments in FS-1A");
+            return false;
+        }
+        cg_emit_indent(out, indent);
+        fputs("cct_svc_console_init();\n", out);
+        return true;
+    }
+
+    if (strcmp(obsecro_node->as.obsecro.name, "console_clear") == 0) {
+        cct_ast_node_list_t *args = obsecro_node->as.obsecro.arguments;
+        if (args && args->count != 0) {
+            cg_report_node(cg, obsecro_node, "OBSECRO console_clear requires no arguments in FS-1A");
+            return false;
+        }
+        cg_emit_indent(out, indent);
+        fputs("cct_svc_console_clear();\n", out);
+        return true;
+    }
+
+    if (strcmp(obsecro_node->as.obsecro.name, "console_putc") == 0) {
+        cct_ast_node_list_t *args = obsecro_node->as.obsecro.arguments;
+        cct_codegen_value_kind_t k0 = CCT_CODEGEN_VALUE_UNKNOWN;
+        if (!args || args->count != 1) {
+            cg_report_node(cg, obsecro_node, "OBSECRO console_putc requires exactly one integer argument in FS-1A");
+            return false;
+        }
+        cg_emit_indent(out, indent);
+        fputs("cct_svc_console_putc(", out);
+        if (!cg_emit_expr(out, cg, args->nodes[0], &k0)) return false;
+        if (!(k0 == CCT_CODEGEN_VALUE_INT || k0 == CCT_CODEGEN_VALUE_BOOL)) {
+            cg_report_node(cg, args->nodes[0], "OBSECRO console_putc requires integer byte argument in FS-1A");
+            return false;
+        }
+        fputs(");\n", out);
+        return true;
+    }
+
+    if (strcmp(obsecro_node->as.obsecro.name, "console_write") == 0 ||
+        strcmp(obsecro_node->as.obsecro.name, "console_write_centered") == 0) {
+        cct_ast_node_list_t *args = obsecro_node->as.obsecro.arguments;
+        cct_codegen_value_kind_t k0 = CCT_CODEGEN_VALUE_UNKNOWN;
+        if (!args || args->count != 1) {
+            cg_report_nodef(cg, obsecro_node, "OBSECRO %s requires exactly one VERBUM argument in FS-1A", obsecro_node->as.obsecro.name);
+            return false;
+        }
+        cg_emit_indent(out, indent);
+        fputs(strcmp(obsecro_node->as.obsecro.name, "console_write") == 0
+                  ? "cct_svc_console_write("
+                  : "cct_svc_console_write_centered(",
+              out);
+        if (!cg_emit_expr(out, cg, args->nodes[0], &k0)) return false;
+        if (k0 != CCT_CODEGEN_VALUE_STRING) {
+            cg_report_nodef(cg, args->nodes[0], "OBSECRO %s requires VERBUM argument in FS-1A", obsecro_node->as.obsecro.name);
+            return false;
+        }
+        fputs(");\n", out);
+        return true;
+    }
+
+    if (strcmp(obsecro_node->as.obsecro.name, "console_set_color") == 0) {
+        cct_ast_node_list_t *args = obsecro_node->as.obsecro.arguments;
+        cct_codegen_value_kind_t k0 = CCT_CODEGEN_VALUE_UNKNOWN;
+        cct_codegen_value_kind_t k1 = CCT_CODEGEN_VALUE_UNKNOWN;
+        if (!args || args->count != 2) {
+            cg_report_node(cg, obsecro_node, "OBSECRO console_set_color requires exactly (fg, bg) in FS-1A");
+            return false;
+        }
+        cg_emit_indent(out, indent);
+        fputs("cct_svc_console_set_attr(((", out);
+        if (!cg_emit_expr(out, cg, args->nodes[1], &k1)) return false;
+        if (!(k1 == CCT_CODEGEN_VALUE_INT || k1 == CCT_CODEGEN_VALUE_BOOL)) {
+            cg_report_node(cg, args->nodes[1], "OBSECRO console_set_color requires integer background in FS-1A");
+            return false;
+        }
+        fputs(") & 0x0FLL) << 4 | ((", out);
+        if (!cg_emit_expr(out, cg, args->nodes[0], &k0)) return false;
+        if (!(k0 == CCT_CODEGEN_VALUE_INT || k0 == CCT_CODEGEN_VALUE_BOOL)) {
+            cg_report_node(cg, args->nodes[0], "OBSECRO console_set_color requires integer foreground in FS-1A");
+            return false;
+        }
+        fputs(") & 0x0FLL));\n", out);
+        return true;
+    }
+
+    if (strcmp(obsecro_node->as.obsecro.name, "console_set_cursor") == 0) {
+        cct_ast_node_list_t *args = obsecro_node->as.obsecro.arguments;
+        cct_codegen_value_kind_t k0 = CCT_CODEGEN_VALUE_UNKNOWN;
+        cct_codegen_value_kind_t k1 = CCT_CODEGEN_VALUE_UNKNOWN;
+        if (!args || args->count != 2) {
+            cg_report_node(cg, obsecro_node, "OBSECRO console_set_cursor requires exactly (linha, coluna) in FS-1A");
+            return false;
+        }
+        cg_emit_indent(out, indent);
+        fputs("cct_svc_console_set_cursor(", out);
+        if (!cg_emit_expr(out, cg, args->nodes[0], &k0)) return false;
+        if (!(k0 == CCT_CODEGEN_VALUE_INT || k0 == CCT_CODEGEN_VALUE_BOOL)) {
+            cg_report_node(cg, args->nodes[0], "OBSECRO console_set_cursor requires integer row in FS-1A");
+            return false;
+        }
+        fputs(", ", out);
+        if (!cg_emit_expr(out, cg, args->nodes[1], &k1)) return false;
+        if (!(k1 == CCT_CODEGEN_VALUE_INT || k1 == CCT_CODEGEN_VALUE_BOOL)) {
+            cg_report_node(cg, args->nodes[1], "OBSECRO console_set_cursor requires integer column in FS-1A");
+            return false;
+        }
+        fputs(");\n", out);
+        return true;
+    }
+
+    if (strcmp(obsecro_node->as.obsecro.name, "cct_svc_free") == 0) {
+        cct_ast_node_list_t *args = obsecro_node->as.obsecro.arguments;
+        cct_codegen_value_kind_t k0 = CCT_CODEGEN_VALUE_UNKNOWN;
+        if (!args || args->count != 1) {
+            cg_report_node(cg, obsecro_node, "OBSECRO cct_svc_free requires exactly one pointer argument in FS-2A");
+            return false;
+        }
+        cg_emit_indent(out, indent);
+        fputs("cct_svc_free((void*)(", out);
+        if (!cg_emit_expr(out, cg, args->nodes[0], &k0)) return false;
+        if (k0 != CCT_CODEGEN_VALUE_POINTER) {
+            cg_report_node(cg, args->nodes[0], "OBSECRO cct_svc_free requires pointer argument in FS-2A");
+            return false;
+        }
+        fputs("));\n", out);
+        return true;
+    }
+
+    if (strcmp(obsecro_node->as.obsecro.name, "cct_svc_memcpy") == 0 ||
+        strcmp(obsecro_node->as.obsecro.name, "cct_svc_memset") == 0) {
+        const char *name = obsecro_node->as.obsecro.name;
+        cct_ast_node_list_t *args = obsecro_node->as.obsecro.arguments;
+        cct_codegen_value_kind_t k0 = CCT_CODEGEN_VALUE_UNKNOWN;
+        cct_codegen_value_kind_t k1 = CCT_CODEGEN_VALUE_UNKNOWN;
+        cct_codegen_value_kind_t k2 = CCT_CODEGEN_VALUE_UNKNOWN;
+        if (!args || args->count != 3) {
+            cg_report_nodef(cg, obsecro_node, "OBSECRO %s requires exactly three arguments in FS-2A", name);
+            return false;
+        }
+        cg_emit_indent(out, indent);
+        fprintf(out, "%s(", name);
+        if (!cg_emit_expr(out, cg, args->nodes[0], &k0)) return false;
+        if (k0 != CCT_CODEGEN_VALUE_POINTER) {
+            cg_report_nodef(cg, args->nodes[0], "OBSECRO %s requires pointer destination in FS-2A", name);
+            return false;
+        }
+        fputs(", ", out);
+        if (!cg_emit_expr(out, cg, args->nodes[1], &k1)) return false;
+        if (strcmp(name, "cct_svc_memcpy") == 0) {
+            if (k1 != CCT_CODEGEN_VALUE_POINTER) {
+                cg_report_node(cg, args->nodes[1], "OBSECRO cct_svc_memcpy requires pointer source in FS-2A");
+                return false;
+            }
+        } else if (!(k1 == CCT_CODEGEN_VALUE_INT || k1 == CCT_CODEGEN_VALUE_BOOL)) {
+            cg_report_node(cg, args->nodes[1], "OBSECRO cct_svc_memset requires integer byte value in FS-2A");
+            return false;
+        }
+        fputs(", ", out);
+        if (!cg_emit_expr(out, cg, args->nodes[2], &k2)) return false;
+        if (!(k2 == CCT_CODEGEN_VALUE_INT || k2 == CCT_CODEGEN_VALUE_BOOL)) {
+            cg_report_nodef(cg, args->nodes[2], "OBSECRO %s requires integer size in FS-2A", name);
+            return false;
+        }
+        fputs(");\n", out);
+        return true;
+    }
+
+    if (strcmp(obsecro_node->as.obsecro.name, "cct_svc_builder_append") == 0 ||
+        strcmp(obsecro_node->as.obsecro.name, "cct_svc_builder_append_char") == 0) {
+        const char *name = obsecro_node->as.obsecro.name;
+        cct_ast_node_list_t *args = obsecro_node->as.obsecro.arguments;
+        cct_codegen_value_kind_t k0 = CCT_CODEGEN_VALUE_UNKNOWN;
+        cct_codegen_value_kind_t k1 = CCT_CODEGEN_VALUE_UNKNOWN;
+        if (!args || args->count != 2) {
+            cg_report_nodef(cg, obsecro_node, "OBSECRO %s requires exactly two arguments in FS-2B", name);
+            return false;
+        }
+        cg_emit_indent(out, indent);
+        fprintf(out, "%s((cct_verbum_builder_t*)(", name);
+        if (!cg_emit_expr(out, cg, args->nodes[0], &k0)) return false;
+        if (k0 != CCT_CODEGEN_VALUE_POINTER) {
+            cg_report_nodef(cg, args->nodes[0], "OBSECRO %s requires builder pointer in FS-2B", name);
+            return false;
+        }
+        fputs("), ", out);
+        if (!cg_emit_expr(out, cg, args->nodes[1], &k1)) return false;
+        if (strcmp(name, "cct_svc_builder_append") == 0) {
+            if (k1 != CCT_CODEGEN_VALUE_STRING) {
+                cg_report_node(cg, args->nodes[1], "OBSECRO cct_svc_builder_append requires VERBUM payload in FS-2B");
+                return false;
+            }
+        } else if (!(k1 == CCT_CODEGEN_VALUE_INT || k1 == CCT_CODEGEN_VALUE_BOOL)) {
+            cg_report_node(cg, args->nodes[1], "OBSECRO cct_svc_builder_append_char requires integer byte in FS-2B");
+            return false;
+        }
+        fputs(");\n", out);
+        return true;
+    }
+
+    if (strcmp(obsecro_node->as.obsecro.name, "cct_svc_builder_clear") == 0) {
+        cct_ast_node_list_t *args = obsecro_node->as.obsecro.arguments;
+        cct_codegen_value_kind_t k0 = CCT_CODEGEN_VALUE_UNKNOWN;
+        if (!args || args->count != 1) {
+            cg_report_node(cg, obsecro_node, "OBSECRO cct_svc_builder_clear requires exactly one builder pointer in FS-2B");
+            return false;
+        }
+        cg_emit_indent(out, indent);
+        fputs("cct_svc_builder_clear((cct_verbum_builder_t*)(", out);
+        if (!cg_emit_expr(out, cg, args->nodes[0], &k0)) return false;
+        if (k0 != CCT_CODEGEN_VALUE_POINTER) {
+            cg_report_node(cg, args->nodes[0], "OBSECRO cct_svc_builder_clear requires builder pointer in FS-2B");
+            return false;
+        }
+        fputs("));\n", out);
+        return true;
+    }
+
+    if (strcmp(obsecro_node->as.obsecro.name, "cct_svc_fluxus_free") == 0 ||
+        strcmp(obsecro_node->as.obsecro.name, "cct_svc_fluxus_clear") == 0) {
+        const char *name = obsecro_node->as.obsecro.name;
+        cct_ast_node_list_t *args = obsecro_node->as.obsecro.arguments;
+        cct_codegen_value_kind_t k0 = CCT_CODEGEN_VALUE_UNKNOWN;
+        if (!args || args->count != 1) {
+            cg_report_nodef(cg, obsecro_node, "OBSECRO %s requires exactly one fluxus pointer in FS-2C", name);
+            return false;
+        }
+        cg_emit_indent(out, indent);
+        fprintf(out, "%s((cct_fluxus_fs_t*)(", name);
+        if (!cg_emit_expr(out, cg, args->nodes[0], &k0)) return false;
+        if (k0 != CCT_CODEGEN_VALUE_POINTER) {
+            cg_report_nodef(cg, args->nodes[0], "OBSECRO %s requires fluxus pointer in FS-2C", name);
+            return false;
+        }
+        fputs("));\n", out);
+        return true;
+    }
+
+    if (strcmp(obsecro_node->as.obsecro.name, "cct_svc_fluxus_push") == 0 ||
+        strcmp(obsecro_node->as.obsecro.name, "cct_svc_fluxus_pop") == 0) {
+        const char *name = obsecro_node->as.obsecro.name;
+        cct_ast_node_list_t *args = obsecro_node->as.obsecro.arguments;
+        cct_codegen_value_kind_t k0 = CCT_CODEGEN_VALUE_UNKNOWN;
+        cct_codegen_value_kind_t k1 = CCT_CODEGEN_VALUE_UNKNOWN;
+        if (!args || args->count != 2) {
+            cg_report_nodef(cg, obsecro_node, "OBSECRO %s requires exactly (flux, ptr) in FS-2C", name);
+            return false;
+        }
+        cg_emit_indent(out, indent);
+        fprintf(out, "%s((cct_fluxus_fs_t*)(", name);
+        if (!cg_emit_expr(out, cg, args->nodes[0], &k0)) return false;
+        if (k0 != CCT_CODEGEN_VALUE_POINTER) {
+            cg_report_nodef(cg, args->nodes[0], "OBSECRO %s requires fluxus pointer in FS-2C", name);
+            return false;
+        }
+        fputs("), (void*)(", out);
+        if (!cg_emit_expr(out, cg, args->nodes[1], &k1)) return false;
+        if (k1 != CCT_CODEGEN_VALUE_POINTER) {
+            cg_report_nodef(cg, args->nodes[1], "OBSECRO %s requires payload pointer in FS-2C", name);
+            return false;
+        }
+        fputs("));\n", out);
+        return true;
+    }
+
+    if (strcmp(obsecro_node->as.obsecro.name, "cct_svc_fluxus_reserve") == 0) {
+        cct_ast_node_list_t *args = obsecro_node->as.obsecro.arguments;
+        cct_codegen_value_kind_t k0 = CCT_CODEGEN_VALUE_UNKNOWN;
+        cct_codegen_value_kind_t k1 = CCT_CODEGEN_VALUE_UNKNOWN;
+        if (!args || args->count != 2) {
+            cg_report_node(cg, obsecro_node, "OBSECRO cct_svc_fluxus_reserve requires exactly (flux, cap) in FS-2C");
+            return false;
+        }
+        cg_emit_indent(out, indent);
+        fputs("cct_svc_fluxus_reserve((cct_fluxus_fs_t*)(", out);
+        if (!cg_emit_expr(out, cg, args->nodes[0], &k0)) return false;
+        if (k0 != CCT_CODEGEN_VALUE_POINTER) {
+            cg_report_node(cg, args->nodes[0], "OBSECRO cct_svc_fluxus_reserve requires fluxus pointer in FS-2C");
+            return false;
+        }
+        fputs("), ", out);
+        if (!cg_emit_expr(out, cg, args->nodes[1], &k1)) return false;
+        if (!(k1 == CCT_CODEGEN_VALUE_INT || k1 == CCT_CODEGEN_VALUE_BOOL)) {
+            cg_report_node(cg, args->nodes[1], "OBSECRO cct_svc_fluxus_reserve requires integer capacity in FS-2C");
+            return false;
+        }
+        fputs(");\n", out);
+        return true;
+    }
+
+    if (strcmp(obsecro_node->as.obsecro.name, "cct_svc_fluxus_set") == 0) {
+        cct_ast_node_list_t *args = obsecro_node->as.obsecro.arguments;
+        cct_codegen_value_kind_t k0 = CCT_CODEGEN_VALUE_UNKNOWN;
+        cct_codegen_value_kind_t k1 = CCT_CODEGEN_VALUE_UNKNOWN;
+        cct_codegen_value_kind_t k2 = CCT_CODEGEN_VALUE_UNKNOWN;
+        if (!args || args->count != 3) {
+            cg_report_node(cg, obsecro_node, "OBSECRO cct_svc_fluxus_set requires exactly (flux, idx, ptr) in FS-2C");
+            return false;
+        }
+        cg_emit_indent(out, indent);
+        fputs("cct_svc_fluxus_set((cct_fluxus_fs_t*)(", out);
+        if (!cg_emit_expr(out, cg, args->nodes[0], &k0)) return false;
+        if (k0 != CCT_CODEGEN_VALUE_POINTER) {
+            cg_report_node(cg, args->nodes[0], "OBSECRO cct_svc_fluxus_set requires fluxus pointer in FS-2C");
+            return false;
+        }
+        fputs("), ", out);
+        if (!cg_emit_expr(out, cg, args->nodes[1], &k1)) return false;
+        if (!(k1 == CCT_CODEGEN_VALUE_INT || k1 == CCT_CODEGEN_VALUE_BOOL)) {
+            cg_report_node(cg, args->nodes[1], "OBSECRO cct_svc_fluxus_set requires integer index in FS-2C");
+            return false;
+        }
+        fputs(", (void*)(", out);
+        if (!cg_emit_expr(out, cg, args->nodes[2], &k2)) return false;
+        if (k2 != CCT_CODEGEN_VALUE_POINTER) {
+            cg_report_node(cg, args->nodes[2], "OBSECRO cct_svc_fluxus_set requires payload pointer in FS-2C");
+            return false;
+        }
+        fputs("));\n", out);
         return true;
     }
 
@@ -9756,7 +10401,7 @@ static bool cg_emit_scribe_stmt(FILE *out, cct_codegen_t *cg, const cct_ast_node
     }
 
     if (strcmp(obsecro_node->as.obsecro.name, "scribe") != 0) {
-        cg_report_nodef(cg, obsecro_node, "OBSECRO %s codegen is not supported in current executable subset (supported stmt builtins: scribe, libera, mem_free, mem_copy, mem_set, mem_zero, kernel_halt, kernel_outb, kernel_memcpy, kernel_memset, fluxus_free, fluxus_push, fluxus_pop, fluxus_clear, fluxus_reserve, fluxus_set, fluxus_remove, fluxus_insert, fluxus_reverse, fluxus_sort_int, fluxus_sort_verbum, alg_sort_verbum, json_arr_handle_push, json_obj_handle_push, sock_connect, sock_bind, sock_listen, sock_close, sock_set_timeout_ms, db_exec, db_close, rows_close, stmt_bind_text, stmt_bind_int, stmt_bind_real, stmt_has_row, stmt_get_text, stmt_get_int, stmt_get_real, stmt_reset, stmt_finalize, db_begin, db_commit, db_rollback, map_free, map_insert, map_clear, map_reserve, map_merge, set_free, set_clear, set_reserve, io_print, io_println, io_print_int, io_print_real, io_print_char, io_eprint, io_eprintln, io_eprint_int, io_eprint_real, io_flush, io_flush_err, fs_write_all, fs_append_all, fs_mkdir, fs_mkdir_all, fs_delete_file, fs_delete_dir, fs_rename, fs_copy, fs_move, fs_chmod, fs_truncate, fs_symlink, random_seed, time_sleep_ms, bytes_set, bytes_free, option_free, result_free, callback_builtin_invoke0_void, callback_builtin_invoke1_void, callback_builtin_invoke2_void, callback_builtin_invoke3_void, callback_builtin_invoke4_void, regex_builtin_free, image_builtin_free, scan_free, builder_append, builder_append_char, builder_clear, builder_free, writer_indent, writer_dedent, writer_write, writer_writeln, writer_free, instr_builtin_enable, instr_builtin_disable, instr_builtin_span_end, instr_builtin_span_attr, instr_builtin_event, instr_builtin_buffer_clear, instr_builtin_buffer_discard_closed, zip_builtin_close, obj_storage_builtin_close)",
+        cg_report_nodef(cg, obsecro_node, "OBSECRO %s codegen is not supported in current executable subset (supported stmt builtins: scribe, libera, mem_free, mem_copy, mem_set, mem_zero, kernel_halt, kernel_outb, kernel_memcpy, kernel_memset, console_init, console_clear, console_putc, console_write, console_write_centered, console_set_color, console_set_cursor, cct_svc_free, cct_svc_memcpy, cct_svc_memset, cct_svc_builder_append, cct_svc_builder_append_char, cct_svc_builder_clear, cct_svc_fluxus_push, cct_svc_fluxus_pop, cct_svc_fluxus_set, cct_svc_fluxus_clear, cct_svc_fluxus_reserve, cct_svc_fluxus_free, fluxus_free, fluxus_push, fluxus_pop, fluxus_clear, fluxus_reserve, fluxus_set, fluxus_remove, fluxus_insert, fluxus_reverse, fluxus_sort_int, fluxus_sort_verbum, alg_sort_verbum, json_arr_handle_push, json_obj_handle_push, sock_connect, sock_bind, sock_listen, sock_close, sock_set_timeout_ms, db_exec, db_close, rows_close, stmt_bind_text, stmt_bind_int, stmt_bind_real, stmt_has_row, stmt_get_text, stmt_get_int, stmt_get_real, stmt_reset, stmt_finalize, db_begin, db_commit, db_rollback, map_free, map_insert, map_clear, map_reserve, map_merge, set_free, set_clear, set_reserve, io_print, io_println, io_print_int, io_print_real, io_print_char, io_eprint, io_eprintln, io_eprint_int, io_eprint_real, io_flush, io_flush_err, fs_write_all, fs_append_all, fs_mkdir, fs_mkdir_all, fs_delete_file, fs_delete_dir, fs_rename, fs_copy, fs_move, fs_chmod, fs_truncate, fs_symlink, random_seed, time_sleep_ms, bytes_set, bytes_free, option_free, result_free, callback_builtin_invoke0_void, callback_builtin_invoke1_void, callback_builtin_invoke2_void, callback_builtin_invoke3_void, callback_builtin_invoke4_void, regex_builtin_free, image_builtin_free, scan_free, builder_append, builder_append_char, builder_clear, builder_free, writer_indent, writer_dedent, writer_write, writer_writeln, writer_free, instr_builtin_enable, instr_builtin_disable, instr_builtin_span_end, instr_builtin_span_attr, instr_builtin_event, instr_builtin_buffer_clear, instr_builtin_buffer_discard_closed, zip_builtin_close, obj_storage_builtin_close)",
                         obsecro_node->as.obsecro.name);
         return false;
     }
@@ -10415,7 +11060,7 @@ static void cg_emit_failure_terminal_after_uncaught(FILE *out, cct_codegen_t *cg
     } else {
         const char *ret_c = cg_c_type_for_ast_type(cg, cg->current_function_return_type);
         if (cg->current_function_return_type &&
-            cg_value_kind_from_ast_type(cg->current_function_return_type) == CCT_CODEGEN_VALUE_STRUCT &&
+            cg_value_kind_from_ast_type_codegen(cg, cg->current_function_return_type) == CCT_CODEGEN_VALUE_STRUCT &&
             ret_c) {
             fprintf(out, "return (%s){0};\n", ret_c);
             return;
@@ -10715,7 +11360,7 @@ static bool cg_emit_stmt(FILE *out, cct_codegen_t *cg, const cct_ast_node_t *stm
             if (stmt->as.redde.value->type == AST_CONIURA) {
                 const char *ret_c_struct = NULL;
                 if (cg->current_function_return_type &&
-                    cg_value_kind_from_ast_type(cg->current_function_return_type) == CCT_CODEGEN_VALUE_STRUCT) {
+                    cg_value_kind_from_ast_type_codegen(cg, cg->current_function_return_type) == CCT_CODEGEN_VALUE_STRUCT) {
                     ret_c_struct = cg_c_type_for_ast_type(cg, cg->current_function_return_type);
                 }
                 if (ret_c_struct) {
@@ -12155,6 +12800,8 @@ static bool cg_emit_generated_c(cct_codegen_t *cg, const cct_ast_program_t *prog
     for (cct_codegen_rituale_t *r = cg->rituales; r; r = r->next) {
         if (!cg_emit_rituale_function(out, cg, r)) return false;
     }
+
+    if (!cg_emit_freestanding_abi_wrappers(out, cg)) return false;
 
     if (cg_has_explicit_freestanding_entry(cg)) {
         fputs("/* ===== Freestanding Entry (no host wrapper) ===== */\n", out);

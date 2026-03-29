@@ -1,0 +1,10 @@
+INCIPIT grimoire "console_reject_host_fs1a"
+
+ADVOCARE "cct/console"
+
+RITUALE main() REDDE NIHIL
+  CONIURA console_init()
+  REDDE
+EXPLICIT RITUALE
+
+EXPLICIT grimoire
