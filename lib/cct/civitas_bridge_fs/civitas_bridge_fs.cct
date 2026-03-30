@@ -46,10 +46,12 @@ EXPLICIT RITUALE
 RITUALE civitas_fs_build_request() REDDE WebRequestFs
   EVOCA WebRequestFs req
   EVOCA REX n_req AD CONIURA http_server_fs_req_count()
-  EVOCA REX body_len AD OBSECRO cct_svc_civitas_req_body_len()
-  EVOCA SPECULUM NIHIL body_buf AD CONIURA mem_fs_alloc_zero(body_len + 1)
+  EVOCA REX body_len AD 0
+  EVOCA SPECULUM NIHIL body_buf AD NIHIL
 
   OBSECRO cct_svc_civitas_build_request(n_req)
+  VINCIRE body_len AD OBSECRO cct_svc_civitas_req_body_len()
+  VINCIRE body_buf AD CONIURA mem_fs_alloc_zero(body_len + 1)
   SI body_len > 0
     OBSECRO cct_svc_civitas_req_body(body_buf, body_len)
   FIN SI

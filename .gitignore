@@ -144,3 +144,4 @@ examples/**/dist/
 teste_bootstrap
 teste_bootstrap.c
 teste_bootstrap.cct
+/grub-hello-mural/
