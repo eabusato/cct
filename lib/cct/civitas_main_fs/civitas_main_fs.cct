@@ -1,0 +1,103 @@
+-- CCT — Clavicula Turing
+-- Standard Library Module: civitas_main_fs
+--
+-- FASE FS-6D/FS-6E: Freestanding Civitas appliance main loop
+--
+-- Copyright (c) Erick Andrade Busato. Todos os direitos reservados.
+
+INCIPIT grimoire "civitas_main_fs"
+
+ADVOCARE "cct/asset_fs"
+ADVOCARE "cct/civitas_app_fs"
+ADVOCARE "cct/civitas_bridge_fs"
+ADVOCARE "cct/console"
+ADVOCARE "cct/dhcp_fs"
+ADVOCARE "cct/http_parser_fs"
+ADVOCARE "cct/http_router_fs"
+ADVOCARE "cct/http_server_fs"
+ADVOCARE "cct/irq_fs"
+ADVOCARE "cct/mem_fs"
+ADVOCARE "cct/net_fs"
+ADVOCARE "cct/net_proto_fs"
+ADVOCARE "cct/pci_fs"
+ADVOCARE "cct/store_fs"
+ADVOCARE "cct/timer_fs"
+
+ARCANUM RITUALE civitas_main_print_banner() REDDE NIHIL
+  CONIURA console_set_cursor(0, 0)
+  CONIURA console_set_color(COR_VERDE_CLARO, COR_PRETO)
+  CONIURA console_write_line("=== FS-6: Civitas Appliance ===")
+  CONIURA console_set_color(COR_BRANCO, COR_PRETO)
+  CONIURA console_write("[NET] ip=")
+  CONIURA console_write(CONIURA dhcp_fs_ip())
+  CONIURA console_write(" gw=")
+  CONIURA console_write(CONIURA dhcp_fs_gateway())
+  CONIURA console_write(" mask=")
+  CONIURA console_write_line(CONIURA dhcp_fs_mask())
+  SI CONIURA dhcp_fs_using_fallback()
+    CONIURA console_write_line("[NET] DHCP fallback active")
+  ALITER
+    CONIURA console_write_line("[NET] DHCP lease acquired")
+  FIN SI
+  CONIURA console_write_line("[ASSET] asset store mounted")
+  CONIURA console_write_line("[HTTP] listen :80 keep-alive:on")
+  REDDE
+EXPLICIT RITUALE
+
+ARCANUM RITUALE civitas_main_dispatch_one() REDDE NIHIL
+  EVOCA WebRequestFs req
+  EVOCA WebResponseFs res
+  EVOCA REX handler_id AD 0
+  EVOCA SPECULUM NIHIL req_buf AD CONIURA mem_fs_alloc_zero(8192)
+  EVOCA REX req_len AD 0
+
+  SI CONIURA http_server_fs_read() == FALSUM
+    REDDE
+  FIN SI
+  VINCIRE req_len AD CONIURA http_server_fs_get_request(req_buf, 8191)
+  SI CONIURA http_parser_fs_parse(req_buf, req_len) == FALSUM
+    CONIURA civitas_fs_reply_text(400, "bad request")
+    REDDE
+  FIN SI
+
+  VINCIRE req AD CONIURA civitas_fs_build_request()
+  VINCIRE handler_id AD CONIURA http_router_fs_dispatch(req.method, req.path)
+  VINCIRE res AD CONIURA civitas_app_fs_dispatch(handler_id, req)
+  CONIURA civitas_fs_send_response(res)
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE civitas_main_boot(REX rtl8139_iobase) REDDE NIHIL
+  CONIURA store_fs_init()
+  SI CONIURA net_fs_init(rtl8139_iobase) == FALSUM
+    CONIURA console_write_line("[ERRO] NIC init falhou")
+    REDDE
+  FIN SI
+  CONIURA net_proto_fs_init()
+  CONIURA dhcp_fs_acquire(3000)
+  CONIURA asset_fs_mount()
+  CONIURA http_server_fs_init(80)
+  CONIURA http_server_fs_set_keepalive(VERUM)
+  CONIURA civitas_app_fs_register_routes()
+  CONIURA civitas_main_print_banner()
+
+  DUM VERUM
+    SI CONIURA http_server_fs_accept(0)
+      DUM CONIURA http_server_fs_is_connected()
+        CONIURA civitas_main_dispatch_one()
+        SI CONIURA http_server_fs_should_close()
+          CONIURA http_server_fs_close()
+          FRANGE
+        FIN SI
+        SI CONIURA http_server_fs_pending_len() > 0
+          CONIURA http_server_fs_next_request()
+        FIN SI
+      FIN DUM
+      CONIURA http_server_fs_close()
+    FIN SI
+  FIN DUM
+
+  REDDE
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

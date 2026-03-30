@@ -1,0 +1,7 @@
+INCIPIT grimoire "store_static_tmpl_fs_reject_host_fs6b"
+
+ADVOCARE "cct/store_fs"
+ADVOCARE "cct/static_fs"
+ADVOCARE "cct/tmpl_fs"
+
+EXPLICIT grimoire

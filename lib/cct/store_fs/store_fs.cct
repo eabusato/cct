@@ -1,0 +1,66 @@
+-- CCT — Clavicula Turing
+-- Standard Library Module: store_fs
+--
+-- FASE FS-6B: Freestanding key-value store bridge
+--
+-- Copyright (c) Erick Andrade Busato. Todos os direitos reservados.
+
+INCIPIT grimoire "store_fs"
+
+ADVOCARE "cct/mem_fs"
+ADVOCARE "cct/verbum_fs"
+
+ARCANUM RITUALE store_fs_bytes_to_verbum(SPECULUM NIHIL ptr, REX n) REDDE VERBUM
+  EVOCA SPECULUM NIHIL b AD CONIURA verbum_fs_builder_new()
+  EVOCA REX i AD 0
+  DUM i < n
+    EVOCA REX ch AD OBSECRO cct_svc_byte_at(ptr, i)
+    SI ch == 0
+      REDDE CONIURA verbum_fs_builder_build(b)
+    FIN SI
+    CONIURA verbum_fs_builder_append_char(b, ch)
+    VINCIRE i AD i + 1
+  FIN DUM
+  REDDE CONIURA verbum_fs_builder_build(b)
+EXPLICIT RITUALE
+
+RITUALE store_fs_init() REDDE NIHIL
+  OBSECRO cct_svc_kv_init()
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE store_fs_set(VERBUM chave, VERBUM valor) REDDE NIHIL
+  OBSECRO cct_svc_kv_set(chave, valor)
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE store_fs_get(VERBUM chave) REDDE VERBUM
+  EVOCA SPECULUM NIHIL buf AD CONIURA mem_fs_alloc_zero(256)
+  OBSECRO cct_svc_kv_get(chave, buf, 255)
+  REDDE CONIURA store_fs_bytes_to_verbum(buf, 255)
+EXPLICIT RITUALE
+
+RITUALE store_fs_set_int(VERBUM chave, REX valor) REDDE NIHIL
+  OBSECRO cct_svc_kv_set_int(chave, valor)
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE store_fs_get_int(VERBUM chave, REX padrao) REDDE REX
+  REDDE OBSECRO cct_svc_kv_get_int(chave, padrao)
+EXPLICIT RITUALE
+
+RITUALE store_fs_increment(VERBUM chave) REDDE NIHIL
+  OBSECRO cct_svc_kv_increment(chave)
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE store_fs_del(VERBUM chave) REDDE NIHIL
+  OBSECRO cct_svc_kv_del(chave)
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE store_fs_count() REDDE REX
+  REDDE OBSECRO cct_svc_kv_count()
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

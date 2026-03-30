@@ -23,7 +23,7 @@ GUEST_IP = bytes([10, 0, 2, 15])
 BROADCAST_MAC = b"\xff" * 6
 
 
-def checksum(data: bytes) -> int:
+def checksum(data):
     if len(data) & 1:
         data += b"\x00"
     total = 0
@@ -34,11 +34,11 @@ def checksum(data: bytes) -> int:
     return (~total) & 0xFFFF
 
 
-def ethernet_frame(dst_mac: bytes, src_mac: bytes, eth_type: int, payload: bytes) -> bytes:
+def ethernet_frame(dst_mac, src_mac, eth_type, payload):
     return dst_mac + src_mac + struct.pack("!H", eth_type) + payload
 
 
-def arp_request(src_mac: bytes, src_ip: bytes, target_ip: bytes) -> bytes:
+def arp_request(src_mac, src_ip, target_ip):
     payload = struct.pack(
         "!HHBBH6s4s6s4s",
         1,
@@ -54,7 +54,7 @@ def arp_request(src_mac: bytes, src_ip: bytes, target_ip: bytes) -> bytes:
     return ethernet_frame(BROADCAST_MAC, src_mac, ETH_TYPE_ARP, payload)
 
 
-def ipv4_packet(src_ip: bytes, dst_ip: bytes, protocol: int, payload: bytes, ident: int) -> bytes:
+def ipv4_packet(src_ip, dst_ip, protocol, payload, ident):
     version_ihl = 0x45
     total_len = 20 + len(payload)
     header = struct.pack(
@@ -74,7 +74,7 @@ def ipv4_packet(src_ip: bytes, dst_ip: bytes, protocol: int, payload: bytes, ide
     return header + payload
 
 
-def tcp_segment(src_ip: bytes, dst_ip: bytes, src_port: int, dst_port: int, seq: int, ack: int, flags: int, payload: bytes) -> bytes:
+def tcp_segment(src_ip, dst_ip, src_port, dst_port, seq, ack, flags, payload):
     data_offset = 5 << 4
     header = struct.pack(
         "!HHLLBBHHH",
@@ -96,7 +96,7 @@ def tcp_segment(src_ip: bytes, dst_ip: bytes, src_port: int, dst_port: int, seq:
     return header + payload
 
 
-def parse_ethernet(frame: bytes):
+def parse_ethernet(frame):
     if len(frame) < 14:
         return None
     return {
@@ -106,7 +106,7 @@ def parse_ethernet(frame: bytes):
     }
 
 
-def parse_arp(payload: bytes):
+def parse_arp(payload):
     if len(payload) < 28:
         return None
     vals = struct.unpack("!HHBBH6s4s6s4s", payload[:28])
@@ -118,7 +118,7 @@ def parse_arp(payload: bytes):
     }
 
 
-def parse_ipv4(payload: bytes):
+def parse_ipv4(payload):
     if len(payload) < 20:
         return None
     ihl = (payload[0] & 0x0F) * 4
@@ -137,7 +137,7 @@ def parse_ipv4(payload: bytes):
     }
 
 
-def parse_tcp(payload: bytes):
+def parse_tcp(payload):
     if len(payload) < 20:
         return None
     src_port, dst_port, seq, ack, data_offset, flags, _window, _csum, _urgent = struct.unpack("!HHLLBBHHH", payload[:20])
@@ -154,7 +154,7 @@ def parse_tcp(payload: bytes):
     }
 
 
-def ipv4_checksum_ok(packet: bytes) -> bool:
+def ipv4_checksum_ok(packet):
     if len(packet) < 20:
         return False
     ihl = (packet[0] & 0x0F) * 4
@@ -163,12 +163,12 @@ def ipv4_checksum_ok(packet: bytes) -> bool:
     return checksum(packet[:ihl]) == 0
 
 
-def tcp_checksum_ok(src_ip: bytes, dst_ip: bytes, segment: bytes) -> bool:
+def tcp_checksum_ok(src_ip, dst_ip, segment):
     pseudo = struct.pack("!4s4sBBH", src_ip, dst_ip, 0, IP_PROTO_TCP, len(segment))
     return checksum(pseudo + segment) == 0
 
 
-class Fs5GateProbe:
+class Fs6GateProbe:
     def __init__(self, args):
         self.args = args
         self.log_dir = Path(args.log_dir)
@@ -180,7 +180,7 @@ class Fs5GateProbe:
         self.guest_mac = None
 
     def launch_qemu(self):
-        qemu_log = self.log_dir / "qemu_fs5_gate.log"
+        qemu_log = self.log_dir / "qemu_fs6_gate.log"
         qemu_out = qemu_log.open("w", encoding="utf-8")
         cmd = [
             self.args.qemu_bin,
@@ -197,7 +197,12 @@ class Fs5GateProbe:
             "-monitor",
             "none",
             "-netdev",
-            f"socket,id=net0,udp={self.args.peer_host}:{self.args.peer_port},localaddr={self.args.peer_host}:{self.args.qemu_port}",
+            "socket,id=net0,udp=%s:%d,localaddr=%s:%d" % (
+                self.args.peer_host,
+                self.args.peer_port,
+                self.args.peer_host,
+                self.args.qemu_port,
+            ),
             "-device",
             "rtl8139,netdev=net0",
         ]
@@ -216,12 +221,12 @@ class Fs5GateProbe:
 
     def ensure_alive(self):
         if self.qemu_proc is not None and self.qemu_proc.poll() is not None:
-            raise RuntimeError(f"QEMU exited early with status {self.qemu_proc.returncode}")
+            raise RuntimeError("QEMU exited early with status %d" % self.qemu_proc.returncode)
 
-    def send_frame(self, frame: bytes):
+    def send_frame(self, frame):
         self.sock.sendto(frame, (self.args.peer_host, self.args.qemu_port))
 
-    def recv_frame(self, timeout: float):
+    def recv_frame(self, timeout):
         deadline = time.time() + timeout
         while time.time() < deadline:
             self.ensure_alive()
@@ -250,12 +255,12 @@ class Fs5GateProbe:
                     return
         raise RuntimeError("did not receive ARP reply from guest")
 
-    def send_tcp(self, src_port: int, seq: int, ack: int, flags: int, payload: bytes, ident: int):
+    def send_tcp(self, src_port, seq, ack, flags, payload, ident):
         segment = tcp_segment(HOST_IP, GUEST_IP, src_port, 80, seq, ack, flags, payload)
         frame = ethernet_frame(self.guest_mac, HOST_MAC, ETH_TYPE_IP, ipv4_packet(HOST_IP, GUEST_IP, IP_PROTO_TCP, segment, ident))
         self.send_frame(frame)
 
-    def read_http_response(self, src_port: int, client_seq: int, guest_seq: int, expected_fragments):
+    def collect_http(self, src_port, client_seq, guest_seq, expected_fragments):
         data = bytearray()
         deadline = time.time() + self.args.timeout
         while time.time() < deadline:
@@ -278,128 +283,118 @@ class Fs5GateProbe:
             if tcp["payload"] and tcp["seq"] == guest_seq:
                 data.extend(tcp["payload"])
                 guest_seq += len(tcp["payload"])
-                self.send_tcp(src_port, client_seq, guest_seq, TCP_ACK, b"", 0x3100)
+                self.send_tcp(src_port, client_seq, guest_seq, TCP_ACK, b"", 0x4100)
             if (tcp["flags"] & TCP_FIN) != 0 and tcp["seq"] == guest_seq:
                 guest_seq += 1
-                self.send_tcp(src_port, client_seq, guest_seq, TCP_ACK, b"", 0x3101)
+                self.send_tcp(src_port, client_seq, guest_seq, TCP_ACK, b"", 0x4101)
                 break
-            text = data.decode("utf-8", errors="replace")
-            if all(fragment in text for fragment in expected_fragments):
-                return text
         text = data.decode("utf-8", errors="replace")
         if all(fragment in text for fragment in expected_fragments):
             return text
-        raise RuntimeError(f"did not receive expected HTTP response fragments: {expected_fragments!r}")
+        preview = text[:400]
+        raise RuntimeError("did not receive expected HTTP response fragments: %r preview=%r" % (expected_fragments, preview))
 
-    def http_request(self, src_port: int, request_text: str, expected_fragments):
-        client_seq = 0x10203040 + src_port
-        guest_seq = None
+    def http_exchange(self, src_port, request_text, expected_fragments):
+        client_seq = 0x20304050 + src_port
         syn_seq = client_seq
-        next_syn_at = 0.0
-
+        guest_seq = None
         deadline = time.time() + self.args.timeout
-        while time.time() < deadline:
-            now = time.time()
-            if now >= next_syn_at:
-                self.send_tcp(src_port, syn_seq, 0, TCP_SYN, b"", 0x3001)
-                next_syn_at = now + 0.5
-            rx = self.recv_frame(0.25)
-            if rx is None:
-                continue
-            eth = parse_ethernet(rx)
-            if not eth or eth["type"] != ETH_TYPE_IP:
-                continue
-            ip = parse_ipv4(eth["payload"])
-            if not ip or ip["protocol"] != IP_PROTO_TCP or ip["src_ip"] != GUEST_IP or ip["dst_ip"] != HOST_IP:
-                continue
-            if not ipv4_checksum_ok(eth["payload"][:ip["total_len"]]):
-                continue
-            if not tcp_checksum_ok(ip["src_ip"], ip["dst_ip"], ip["payload"]):
-                continue
-            tcp = parse_tcp(ip["payload"])
-            if not tcp or tcp["src_port"] != 80 or tcp["dst_port"] != src_port:
-                continue
-            if (tcp["flags"] & (TCP_SYN | TCP_ACK)) == (TCP_SYN | TCP_ACK) and tcp["ack"] == (syn_seq + 1):
-                guest_seq = tcp["seq"] + 1
-                client_seq = syn_seq + 1
-                self.send_tcp(src_port, client_seq, guest_seq, TCP_ACK, b"", 0x3002)
-                payload = request_text.encode("utf-8")
-                self.send_tcp(src_port, client_seq, guest_seq, TCP_PSH | TCP_ACK, payload, 0x3003)
-                client_seq += len(payload)
-                break
-        if guest_seq is None:
-            raise RuntimeError("did not receive TCP SYN-ACK from guest")
 
-        text = self.read_http_response(src_port, client_seq, guest_seq, expected_fragments)
-        time.sleep(0.2)
-        return text
+        while time.time() < deadline:
+            self.send_tcp(src_port, syn_seq, 0, TCP_SYN, b"", 0x4001)
+            step_deadline = time.time() + 0.5
+            while time.time() < step_deadline:
+                rx = self.recv_frame(0.25)
+                if rx is None:
+                    continue
+                eth = parse_ethernet(rx)
+                if not eth or eth["type"] != ETH_TYPE_IP:
+                    continue
+                ip = parse_ipv4(eth["payload"])
+                if not ip or ip["protocol"] != IP_PROTO_TCP or ip["src_ip"] != GUEST_IP or ip["dst_ip"] != HOST_IP:
+                    continue
+                if not ipv4_checksum_ok(eth["payload"][:ip["total_len"]]):
+                    continue
+                if not tcp_checksum_ok(ip["src_ip"], ip["dst_ip"], ip["payload"]):
+                    continue
+                tcp = parse_tcp(ip["payload"])
+                if not tcp or tcp["src_port"] != 80 or tcp["dst_port"] != src_port:
+                    continue
+                if (tcp["flags"] & (TCP_SYN | TCP_ACK)) == (TCP_SYN | TCP_ACK) and tcp["ack"] == (syn_seq + 1):
+                    guest_seq = tcp["seq"] + 1
+                    client_seq = syn_seq + 1
+                    self.send_tcp(src_port, client_seq, guest_seq, TCP_ACK, b"", 0x4002)
+                    payload = request_text.encode("utf-8")
+                    self.send_tcp(src_port, client_seq, guest_seq, TCP_PSH | TCP_ACK, payload, 0x4003)
+                    client_seq += len(payload)
+                    text = self.collect_http(src_port, client_seq, guest_seq, expected_fragments)
+                    time.sleep(0.35)
+                    return text
+        raise RuntimeError("did not receive TCP SYN-ACK from guest")
+
+    def http_exchange_retry(self, src_port, request_text, expected_fragments, attempts=3):
+        last_error = None
+        for attempt in range(attempts):
+            try:
+                return self.http_exchange(src_port + attempt, request_text, expected_fragments)
+            except RuntimeError as exc:
+                last_error = exc
+                time.sleep(0.35)
+        raise last_error
 
     def run(self):
         self.launch_qemu()
         self.resolve_guest_mac()
 
-        index_text = self.http_request(
-            41080,
+        index_text = self.http_exchange_retry(
+            42080,
             "GET / HTTP/1.1\r\nHost: 10.0.2.15\r\nConnection: close\r\n\r\n",
-            ["HTTP/1.1 200 OK", "X-CCT-Phase: FS5", "Civitas Freestanding HTTP Server"],
+            ["HTTP/1.1 200 OK", "Civitas Freestanding Appliance"],
         )
-        if "HTML generated by CCT running bare-metal." not in index_text:
-            raise RuntimeError("GET / body missing CCT HTML marker")
+        if "System" not in index_text or "IP" not in index_text:
+            raise RuntimeError("GET / body missing FS6 home markers")
 
-        status_text = self.http_request(
-            41081,
-            "GET /status HTTP/1.1\r\nHost: 10.0.2.15\r\nConnection: close\r\n\r\n",
-            ["HTTP/1.1 200 OK", "\"service\":\"civitas-fs5\"", "\"ip\":\"10.0.2.15\""],
+        css_text = self.http_exchange_retry(
+            42081,
+            "GET /static/site.css HTTP/1.1\r\nHost: 10.0.2.15\r\nConnection: close\r\n\r\n",
+            ["HTTP/1.1 200 OK", ".card{"],
         )
-        if "\"requests\":" not in status_text:
-            raise RuntimeError("GET /status missing requests field")
+        if "font-family" not in css_text:
+            raise RuntimeError("GET /static/site.css missing asset-store CSS payload")
 
-        api_text = self.http_request(
-            41082,
+        pipeline_text = self.http_exchange_retry(
+            42082,
+            "GET /status HTTP/1.1\r\nHost: 10.0.2.15\r\nConnection: keep-alive\r\n\r\n"
             "GET /api/info HTTP/1.1\r\nHost: 10.0.2.15\r\nConnection: close\r\n\r\n",
-            ["HTTP/1.1 200 OK", "\"router\":\"prefix\"", "\"phase\":\"FS5\""],
+            ["HTTP/1.1 200 OK", "\"service\":\"civitas-fs6\"", "DHCP Fallback"],
         )
-        if "\"module\":\"http_router_fs\"" not in api_text:
-            raise RuntimeError("GET /api/info missing module field")
-
-        echo_text = self.http_request(
-            41083,
-            "POST /echo HTTP/1.1\r\nHost: 10.0.2.15\r\nContent-Type: text/plain\r\nContent-Length: 9\r\nConnection: close\r\n\r\nbaremetal",
-            ["HTTP/1.1 200 OK", "echo-ok"],
-        )
-        if "path=/echo" not in echo_text and "method=POST" not in echo_text:
-            raise RuntimeError("POST /echo missing route metadata")
-
-        missing_text = self.http_request(
-            41084,
-            "GET /missing HTTP/1.1\r\nHost: 10.0.2.15\r\nConnection: close\r\n\r\n",
-            ["HTTP/1.1 404 Not Found", "404 Not Found", "Path: /missing"],
-        )
-        if "</html>" not in missing_text:
-            raise RuntimeError("GET /missing missing HTML body")
+        if pipeline_text.count("HTTP/1.1 200 OK") < 2:
+            raise RuntimeError("keep-alive pipeline did not return two HTTP 200 responses")
+        if "\"keepalive\":true" not in pipeline_text:
+            raise RuntimeError("pipeline JSON missing keepalive=true")
 
 
 def parse_args(argv):
-    parser = argparse.ArgumentParser(description="Probe the freestanding FS-5 gate over a socket-backed RTL8139 peer.")
+    parser = argparse.ArgumentParser(description="Probe the freestanding FS-6 gate over a socket-backed RTL8139 peer.")
     parser.add_argument("--qemu-bin", required=True)
     parser.add_argument("--iso", required=True)
     parser.add_argument("--peer-host", default="127.0.0.1")
-    parser.add_argument("--peer-port", type=int, default=19056)
-    parser.add_argument("--qemu-port", type=int, default=19055)
-    parser.add_argument("--boot-delay", type=float, default=9.0)
-    parser.add_argument("--timeout", type=float, default=12.0)
-    parser.add_argument("--log-dir", default="tests/.tmp/fs5_gate_probe")
+    parser.add_argument("--peer-port", type=int, default=19066)
+    parser.add_argument("--qemu-port", type=int, default=19065)
+    parser.add_argument("--boot-delay", type=float, default=25.0)
+    parser.add_argument("--timeout", type=float, default=14.0)
+    parser.add_argument("--log-dir", default="tests/.tmp/fs6_gate_probe")
     return parser.parse_args(argv)
 
 
 def main(argv=None):
     args = parse_args(argv or sys.argv[1:])
-    probe = Fs5GateProbe(args)
+    probe = Fs6GateProbe(args)
     try:
         probe.run()
         return 0
     except Exception as exc:
-        print(f"[ERROR] {exc}", file=sys.stderr)
+        print("[ERROR] %s" % exc, file=sys.stderr)
         return 1
     finally:
         probe.close()

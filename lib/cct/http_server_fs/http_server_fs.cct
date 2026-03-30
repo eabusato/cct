@@ -54,4 +54,38 @@ RITUALE http_server_fs_req_len() REDDE REX
   REDDE OBSECRO cct_svc_http_server_req_len()
 EXPLICIT RITUALE
 
+RITUALE http_server_fs_conn_requests() REDDE REX
+  REDDE OBSECRO cct_svc_http_server_conn_requests()
+EXPLICIT RITUALE
+
+RITUALE http_server_fs_keepalive() REDDE VERUM
+  REDDE OBSECRO cct_svc_http_server_keepalive_enabled() != 0
+EXPLICIT RITUALE
+
+RITUALE http_server_fs_set_keepalive(VERUM enabled) REDDE NIHIL
+  SI enabled
+    OBSECRO cct_svc_http_server_set_keepalive(1)
+  ALITER
+    OBSECRO cct_svc_http_server_set_keepalive(0)
+  FIN SI
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE http_server_fs_pending_len() REDDE REX
+  REDDE OBSECRO cct_svc_http_server_pending_len()
+EXPLICIT RITUALE
+
+RITUALE http_server_fs_next_request() REDDE NIHIL
+  OBSECRO cct_svc_http_server_consume(CONIURA http_server_fs_req_len())
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE http_server_fs_is_connected() REDDE VERUM
+  REDDE OBSECRO cct_svc_tcp_state() == 3
+EXPLICIT RITUALE
+
+RITUALE http_server_fs_should_close() REDDE VERUM
+  REDDE CONIURA http_server_fs_keepalive() == FALSUM
+EXPLICIT RITUALE
+
 EXPLICIT grimoire

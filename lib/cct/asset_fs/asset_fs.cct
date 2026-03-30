@@ -1,0 +1,58 @@
+-- CCT — Clavicula Turing
+-- Standard Library Module: asset_fs
+--
+-- FASE FS-6E: Asset store bridge for freestanding targets
+--
+-- Copyright (c) Erick Andrade Busato. Todos os direitos reservados.
+
+INCIPIT grimoire "asset_fs"
+
+ADVOCARE "cct/mem_fs"
+ADVOCARE "cct/verbum_fs"
+
+ARCANUM RITUALE asset_fs_bytes_to_verbum(SPECULUM NIHIL ptr, REX n) REDDE VERBUM
+  EVOCA SPECULUM NIHIL b AD CONIURA verbum_fs_builder_new()
+  EVOCA REX i AD 0
+  DUM i < n
+    CONIURA verbum_fs_builder_append_char(b, OBSECRO cct_svc_byte_at(ptr, i))
+    VINCIRE i AD i + 1
+  FIN DUM
+  REDDE CONIURA verbum_fs_builder_build(b)
+EXPLICIT RITUALE
+
+RITUALE asset_fs_mount() REDDE VERUM
+  REDDE OBSECRO cct_svc_asset_mount() != 0
+EXPLICIT RITUALE
+
+RITUALE asset_fs_exists(VERBUM path) REDDE VERUM
+  REDDE OBSECRO cct_svc_asset_exists(path) != 0
+EXPLICIT RITUALE
+
+RITUALE asset_fs_len(VERBUM path) REDDE REX
+  REDDE OBSECRO cct_svc_asset_len(path)
+EXPLICIT RITUALE
+
+RITUALE asset_fs_content_type(VERBUM path) REDDE VERBUM
+  REDDE OBSECRO cct_svc_asset_content_type(path)
+EXPLICIT RITUALE
+
+RITUALE asset_fs_read(VERBUM path, SPECULUM NIHIL dst, REX max_len) REDDE REX
+  REDDE OBSECRO cct_svc_asset_read(path, dst, max_len)
+EXPLICIT RITUALE
+
+RITUALE asset_fs_fill(VERBUM path, SPECULUM NIHIL dst, REX max_len) REDDE NIHIL
+  OBSECRO cct_svc_asset_read(path, dst, max_len)
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE asset_fs_read_text(VERBUM path) REDDE VERBUM
+  EVOCA REX n AD CONIURA asset_fs_len(path)
+  SI n <= 0
+    REDDE ""
+  FIN SI
+  EVOCA SPECULUM NIHIL buf AD CONIURA mem_fs_alloc_zero(n + 1)
+  OBSECRO cct_svc_asset_read(path, buf, n)
+  REDDE CONIURA asset_fs_bytes_to_verbum(buf, n)
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

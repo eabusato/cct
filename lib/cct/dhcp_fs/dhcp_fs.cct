@@ -1,0 +1,59 @@
+-- CCT — Clavicula Turing
+-- Standard Library Module: dhcp_fs
+--
+-- FASE FS-6E: DHCP lease bridge for freestanding targets
+--
+-- Copyright (c) Erick Andrade Busato. Todos os direitos reservados.
+
+INCIPIT grimoire "dhcp_fs"
+
+ADVOCARE "cct/mem_fs"
+ADVOCARE "cct/verbum_fs"
+
+ARCANUM RITUALE dhcp_fs_octet_text(SPECULUM NIHIL ptr, REX idx) REDDE VERBUM
+  REDDE CONIURA verbum_fs_from_int(OBSECRO cct_svc_byte_at(ptr, idx))
+EXPLICIT RITUALE
+
+ARCANUM RITUALE dhcp_fs_ip_text_from_ptr(SPECULUM NIHIL ptr) REDDE VERBUM
+  EVOCA SPECULUM NIHIL b AD CONIURA verbum_fs_builder_new()
+  CONIURA verbum_fs_builder_append(b, CONIURA dhcp_fs_octet_text(ptr, 0))
+  CONIURA verbum_fs_builder_append(b, ".")
+  CONIURA verbum_fs_builder_append(b, CONIURA dhcp_fs_octet_text(ptr, 1))
+  CONIURA verbum_fs_builder_append(b, ".")
+  CONIURA verbum_fs_builder_append(b, CONIURA dhcp_fs_octet_text(ptr, 2))
+  CONIURA verbum_fs_builder_append(b, ".")
+  CONIURA verbum_fs_builder_append(b, CONIURA dhcp_fs_octet_text(ptr, 3))
+  REDDE CONIURA verbum_fs_builder_build(b)
+EXPLICIT RITUALE
+
+RITUALE dhcp_fs_acquire(REX timeout_ms) REDDE VERUM
+  REDDE OBSECRO cct_svc_dhcp_acquire(timeout_ms) != 0
+EXPLICIT RITUALE
+
+RITUALE dhcp_fs_ip() REDDE VERBUM
+  EVOCA SPECULUM NIHIL tmp AD CONIURA mem_fs_alloc_zero(4)
+  OBSECRO cct_svc_dhcp_lease_ip(tmp)
+  REDDE CONIURA dhcp_fs_ip_text_from_ptr(tmp)
+EXPLICIT RITUALE
+
+RITUALE dhcp_fs_gateway() REDDE VERBUM
+  EVOCA SPECULUM NIHIL tmp AD CONIURA mem_fs_alloc_zero(4)
+  OBSECRO cct_svc_dhcp_lease_gw(tmp)
+  REDDE CONIURA dhcp_fs_ip_text_from_ptr(tmp)
+EXPLICIT RITUALE
+
+RITUALE dhcp_fs_mask() REDDE VERBUM
+  EVOCA SPECULUM NIHIL tmp AD CONIURA mem_fs_alloc_zero(4)
+  OBSECRO cct_svc_dhcp_lease_mask(tmp)
+  REDDE CONIURA dhcp_fs_ip_text_from_ptr(tmp)
+EXPLICIT RITUALE
+
+RITUALE dhcp_fs_lease_time() REDDE REX
+  REDDE OBSECRO cct_svc_dhcp_lease_time()
+EXPLICIT RITUALE
+
+RITUALE dhcp_fs_using_fallback() REDDE VERUM
+  REDDE OBSECRO cct_svc_dhcp_using_fallback() != 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

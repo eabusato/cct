@@ -1,0 +1,169 @@
+-- CCT — Clavicula Turing
+-- Standard Library Module: civitas_bridge_fs
+--
+-- FASE FS-6A: Civitas bridge for freestanding targets
+--
+-- Copyright (c) Erick Andrade Busato. Todos os direitos reservados.
+
+INCIPIT grimoire "civitas_bridge_fs"
+
+ADVOCARE "cct/http_parser_fs"
+ADVOCARE "cct/http_server_fs"
+ADVOCARE "cct/mem_fs"
+ADVOCARE "cct/verbum_fs"
+
+SIGILLUM WebRequestFs
+  method: VERBUM
+  path: VERBUM
+  query: VERBUM
+  raw_target: VERBUM
+  version: VERBUM
+  host: VERBUM
+  client_ip: VERBUM
+  scheme: VERBUM
+  request_id: VERBUM
+  body: VERBUM
+  body_len: REX
+FIN SIGILLUM
+
+SIGILLUM WebResponseFs
+  status: REX
+  content_type: VERBUM
+  body: VERBUM
+  already_sent: VERUM
+FIN SIGILLUM
+
+ARCANUM RITUALE civitas_fs_bytes_to_verbum(SPECULUM NIHIL ptr, REX n) REDDE VERBUM
+  EVOCA SPECULUM NIHIL b AD CONIURA verbum_fs_builder_new()
+  EVOCA REX i AD 0
+  DUM i < n
+    CONIURA verbum_fs_builder_append_char(b, OBSECRO cct_svc_byte_at(ptr, i))
+    VINCIRE i AD i + 1
+  FIN DUM
+  REDDE CONIURA verbum_fs_builder_build(b)
+EXPLICIT RITUALE
+
+RITUALE civitas_fs_build_request() REDDE WebRequestFs
+  EVOCA WebRequestFs req
+  EVOCA REX n_req AD CONIURA http_server_fs_req_count()
+  EVOCA REX body_len AD OBSECRO cct_svc_civitas_req_body_len()
+  EVOCA SPECULUM NIHIL body_buf AD CONIURA mem_fs_alloc_zero(body_len + 1)
+
+  OBSECRO cct_svc_civitas_build_request(n_req)
+  SI body_len > 0
+    OBSECRO cct_svc_civitas_req_body(body_buf, body_len)
+  FIN SI
+
+  VINCIRE req.method AD CONIURA http_parser_fs_method()
+  VINCIRE req.path AD CONIURA http_parser_fs_path()
+  VINCIRE req.query AD CONIURA http_parser_fs_query()
+  VINCIRE req.version AD CONIURA http_parser_fs_version()
+  VINCIRE req.host AD CONIURA http_parser_fs_header("Host")
+  VINCIRE req.body_len AD body_len
+  VINCIRE req.body AD CONIURA civitas_fs_bytes_to_verbum(body_buf, body_len)
+  VINCIRE req.client_ip AD "10.0.2.2"
+  VINCIRE req.scheme AD "http"
+  VINCIRE req.request_id AD CONIURA verbum_fs_from_int(n_req)
+  SI CONIURA verbum_fs_len(req.query) > 0
+    VINCIRE req.raw_target AD CONIURA verbum_fs_concat(CONIURA verbum_fs_concat(req.path, "?"), req.query)
+  ALITER
+    VINCIRE req.raw_target AD req.path
+  FIN SI
+  REDDE req
+EXPLICIT RITUALE
+
+RITUALE civitas_fs_req_header(VERBUM nome) REDDE VERBUM
+  REDDE CONIURA http_parser_fs_header(nome)
+EXPLICIT RITUALE
+
+RITUALE civitas_fs_html(REX status, VERBUM body) REDDE WebResponseFs
+  EVOCA WebResponseFs res
+  OBSECRO cct_svc_civitas_res_html(status, body)
+  VINCIRE res.status AD status
+  VINCIRE res.content_type AD "text/html; charset=utf-8"
+  VINCIRE res.body AD body
+  VINCIRE res.already_sent AD FALSUM
+  REDDE res
+EXPLICIT RITUALE
+
+RITUALE civitas_fs_json(REX status, VERBUM json) REDDE WebResponseFs
+  EVOCA WebResponseFs res
+  OBSECRO cct_svc_civitas_res_json(status, json)
+  VINCIRE res.status AD status
+  VINCIRE res.content_type AD "application/json"
+  VINCIRE res.body AD json
+  VINCIRE res.already_sent AD FALSUM
+  REDDE res
+EXPLICIT RITUALE
+
+RITUALE civitas_fs_text(REX status, VERBUM texto) REDDE WebResponseFs
+  EVOCA WebResponseFs res
+  OBSECRO cct_svc_civitas_res_text(status, texto)
+  VINCIRE res.status AD status
+  VINCIRE res.content_type AD "text/plain; charset=utf-8"
+  VINCIRE res.body AD texto
+  VINCIRE res.already_sent AD FALSUM
+  REDDE res
+EXPLICIT RITUALE
+
+RITUALE civitas_fs_redirect(VERBUM url) REDDE WebResponseFs
+  EVOCA WebResponseFs res
+  OBSECRO cct_svc_civitas_res_redirect(url)
+  VINCIRE res.status AD 302
+  VINCIRE res.content_type AD "text/plain; charset=utf-8"
+  VINCIRE res.body AD ""
+  VINCIRE res.already_sent AD FALSUM
+  REDDE res
+EXPLICIT RITUALE
+
+RITUALE civitas_fs_not_found() REDDE WebResponseFs
+  EVOCA WebResponseFs res
+  OBSECRO cct_svc_civitas_res_not_found()
+  VINCIRE res.status AD 404
+  VINCIRE res.content_type AD "text/html; charset=utf-8"
+  VINCIRE res.body AD ""
+  VINCIRE res.already_sent AD FALSUM
+  REDDE res
+EXPLICIT RITUALE
+
+RITUALE civitas_fs_error(VERBUM msg) REDDE WebResponseFs
+  EVOCA WebResponseFs res
+  OBSECRO cct_svc_civitas_res_error(msg)
+  VINCIRE res.status AD 500
+  VINCIRE res.content_type AD "text/html; charset=utf-8"
+  VINCIRE res.body AD msg
+  VINCIRE res.already_sent AD FALSUM
+  REDDE res
+EXPLICIT RITUALE
+
+RITUALE civitas_fs_set_header(VERBUM nome, VERBUM valor) REDDE NIHIL
+  OBSECRO cct_svc_civitas_res_set_header(nome, valor)
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE civitas_fs_send_response(WebResponseFs res) REDDE NIHIL
+  SI res.already_sent == FALSUM
+    OBSECRO cct_svc_civitas_res_send()
+  FIN SI
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE civitas_fs_reply_html(REX status, VERBUM html) REDDE NIHIL
+  OBSECRO cct_svc_civitas_res_html(status, html)
+  OBSECRO cct_svc_civitas_res_send()
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE civitas_fs_reply_json(REX status, VERBUM json) REDDE NIHIL
+  OBSECRO cct_svc_civitas_res_json(status, json)
+  OBSECRO cct_svc_civitas_res_send()
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE civitas_fs_reply_text(REX status, VERBUM texto) REDDE NIHIL
+  OBSECRO cct_svc_civitas_res_text(status, texto)
+  OBSECRO cct_svc_civitas_res_send()
+  REDDE
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

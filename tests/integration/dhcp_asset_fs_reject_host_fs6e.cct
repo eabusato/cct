@@ -1,0 +1,6 @@
+INCIPIT grimoire "dhcp_asset_fs_reject_host_fs6e"
+
+ADVOCARE "cct/dhcp_fs"
+ADVOCARE "cct/asset_fs"
+
+EXPLICIT grimoire

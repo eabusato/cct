@@ -1,0 +1,25 @@
+INCIPIT grimoire "dhcp_asset_fs_freestanding_smoke_fs6e"
+
+ADVOCARE "cct/asset_fs"
+ADVOCARE "cct/dhcp_fs"
+ADVOCARE "cct/http_server_fs"
+
+RITUALE main() REDDE NIHIL
+  CONIURA dhcp_fs_acquire(3000)
+  CONIURA dhcp_fs_ip()
+  CONIURA dhcp_fs_gateway()
+  CONIURA dhcp_fs_mask()
+  CONIURA dhcp_fs_lease_time()
+  CONIURA dhcp_fs_using_fallback()
+  CONIURA asset_fs_mount()
+  CONIURA asset_fs_exists("/static/site.css")
+  CONIURA asset_fs_len("/static/site.css")
+  CONIURA asset_fs_content_type("/static/site.css")
+  CONIURA http_server_fs_set_keepalive(VERUM)
+  CONIURA http_server_fs_keepalive()
+  CONIURA http_server_fs_conn_requests()
+  CONIURA http_server_fs_pending_len()
+  REDDE
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

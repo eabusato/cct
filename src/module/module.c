@@ -599,6 +599,134 @@ static bool mod_is_cct_http_router_fs_import(const char *raw_import) {
            strcmp(canonical, "cct/http_router_fs/http_router_fs") == 0;
 }
 
+static bool mod_is_cct_civitas_bridge_fs_import(const char *raw_import) {
+    if (!raw_import) return false;
+    size_t len = strlen(raw_import);
+    if (len >= 4 && strcmp(raw_import + len - 4, ".cct") == 0) {
+        len -= 4;
+    }
+    if (len == 0 || len >= 128) return false;
+
+    char canonical[128];
+    memcpy(canonical, raw_import, len);
+    canonical[len] = '\0';
+
+    return strcmp(canonical, "cct/civitas_bridge_fs") == 0 ||
+           strcmp(canonical, "cct/civitas_bridge_fs/civitas_bridge_fs") == 0;
+}
+
+static bool mod_is_cct_store_fs_import(const char *raw_import) {
+    if (!raw_import) return false;
+    size_t len = strlen(raw_import);
+    if (len >= 4 && strcmp(raw_import + len - 4, ".cct") == 0) {
+        len -= 4;
+    }
+    if (len == 0 || len >= 128) return false;
+
+    char canonical[128];
+    memcpy(canonical, raw_import, len);
+    canonical[len] = '\0';
+
+    return strcmp(canonical, "cct/store_fs") == 0 ||
+           strcmp(canonical, "cct/store_fs/store_fs") == 0;
+}
+
+static bool mod_is_cct_static_fs_import(const char *raw_import) {
+    if (!raw_import) return false;
+    size_t len = strlen(raw_import);
+    if (len >= 4 && strcmp(raw_import + len - 4, ".cct") == 0) {
+        len -= 4;
+    }
+    if (len == 0 || len >= 128) return false;
+
+    char canonical[128];
+    memcpy(canonical, raw_import, len);
+    canonical[len] = '\0';
+
+    return strcmp(canonical, "cct/static_fs") == 0 ||
+           strcmp(canonical, "cct/static_fs/static_fs") == 0;
+}
+
+static bool mod_is_cct_tmpl_fs_import(const char *raw_import) {
+    if (!raw_import) return false;
+    size_t len = strlen(raw_import);
+    if (len >= 4 && strcmp(raw_import + len - 4, ".cct") == 0) {
+        len -= 4;
+    }
+    if (len == 0 || len >= 128) return false;
+
+    char canonical[128];
+    memcpy(canonical, raw_import, len);
+    canonical[len] = '\0';
+
+    return strcmp(canonical, "cct/tmpl_fs") == 0 ||
+           strcmp(canonical, "cct/tmpl_fs/tmpl_fs") == 0;
+}
+
+static bool mod_is_cct_civitas_app_fs_import(const char *raw_import) {
+    if (!raw_import) return false;
+    size_t len = strlen(raw_import);
+    if (len >= 4 && strcmp(raw_import + len - 4, ".cct") == 0) {
+        len -= 4;
+    }
+    if (len == 0 || len >= 128) return false;
+
+    char canonical[128];
+    memcpy(canonical, raw_import, len);
+    canonical[len] = '\0';
+
+    return strcmp(canonical, "cct/civitas_app_fs") == 0 ||
+           strcmp(canonical, "cct/civitas_app_fs/civitas_app_fs") == 0;
+}
+
+static bool mod_is_cct_civitas_main_fs_import(const char *raw_import) {
+    if (!raw_import) return false;
+    size_t len = strlen(raw_import);
+    if (len >= 4 && strcmp(raw_import + len - 4, ".cct") == 0) {
+        len -= 4;
+    }
+    if (len == 0 || len >= 128) return false;
+
+    char canonical[128];
+    memcpy(canonical, raw_import, len);
+    canonical[len] = '\0';
+
+    return strcmp(canonical, "cct/civitas_main_fs") == 0 ||
+           strcmp(canonical, "cct/civitas_main_fs/civitas_main_fs") == 0;
+}
+
+static bool mod_is_cct_dhcp_fs_import(const char *raw_import) {
+    if (!raw_import) return false;
+    size_t len = strlen(raw_import);
+    if (len >= 4 && strcmp(raw_import + len - 4, ".cct") == 0) {
+        len -= 4;
+    }
+    if (len == 0 || len >= 128) return false;
+
+    char canonical[128];
+    memcpy(canonical, raw_import, len);
+    canonical[len] = '\0';
+
+    return strcmp(canonical, "cct/dhcp_fs") == 0 ||
+           strcmp(canonical, "cct/dhcp_fs/dhcp_fs") == 0;
+}
+
+static bool mod_is_cct_asset_fs_import(const char *raw_import) {
+    if (!raw_import) return false;
+    size_t len = strlen(raw_import);
+    if (len >= 4 && strcmp(raw_import + len - 4, ".cct") == 0) {
+        len -= 4;
+    }
+    if (len == 0 || len >= 128) return false;
+
+    char canonical[128];
+    memcpy(canonical, raw_import, len);
+    canonical[len] = '\0';
+
+    return strcmp(canonical, "cct/asset_fs") == 0 ||
+           strcmp(canonical, "cct/asset_fs/asset_fs") == 0;
+}
+
 static bool mod_is_freestanding_forbidden_import(const char *raw_import, char *out_name, size_t out_name_size) {
     if (!raw_import) return false;
     size_t len = strlen(raw_import);
@@ -1280,6 +1408,70 @@ static ssize_t mod_load_recursive(cct_module_ctx_t *ctx,
                 mod_report(ctx, CCT_ERROR_SEMANTIC,
                            module_path, decl->line, decl->column,
                            "cct/http_router_fs disponível apenas em perfil freestanding");
+                mod_ctx_pop_active(ctx);
+                return -1;
+            }
+
+            if (ctx->profile != CCT_PROFILE_FREESTANDING && mod_is_cct_civitas_bridge_fs_import(raw_import)) {
+                mod_report(ctx, CCT_ERROR_SEMANTIC,
+                           module_path, decl->line, decl->column,
+                           "cct/civitas_bridge_fs disponível apenas em perfil freestanding");
+                mod_ctx_pop_active(ctx);
+                return -1;
+            }
+
+            if (ctx->profile != CCT_PROFILE_FREESTANDING && mod_is_cct_store_fs_import(raw_import)) {
+                mod_report(ctx, CCT_ERROR_SEMANTIC,
+                           module_path, decl->line, decl->column,
+                           "cct/store_fs disponível apenas em perfil freestanding");
+                mod_ctx_pop_active(ctx);
+                return -1;
+            }
+
+            if (ctx->profile != CCT_PROFILE_FREESTANDING && mod_is_cct_static_fs_import(raw_import)) {
+                mod_report(ctx, CCT_ERROR_SEMANTIC,
+                           module_path, decl->line, decl->column,
+                           "cct/static_fs disponível apenas em perfil freestanding");
+                mod_ctx_pop_active(ctx);
+                return -1;
+            }
+
+            if (ctx->profile != CCT_PROFILE_FREESTANDING && mod_is_cct_tmpl_fs_import(raw_import)) {
+                mod_report(ctx, CCT_ERROR_SEMANTIC,
+                           module_path, decl->line, decl->column,
+                           "cct/tmpl_fs disponível apenas em perfil freestanding");
+                mod_ctx_pop_active(ctx);
+                return -1;
+            }
+
+            if (ctx->profile != CCT_PROFILE_FREESTANDING && mod_is_cct_civitas_app_fs_import(raw_import)) {
+                mod_report(ctx, CCT_ERROR_SEMANTIC,
+                           module_path, decl->line, decl->column,
+                           "cct/civitas_app_fs disponível apenas em perfil freestanding");
+                mod_ctx_pop_active(ctx);
+                return -1;
+            }
+
+            if (ctx->profile != CCT_PROFILE_FREESTANDING && mod_is_cct_civitas_main_fs_import(raw_import)) {
+                mod_report(ctx, CCT_ERROR_SEMANTIC,
+                           module_path, decl->line, decl->column,
+                           "cct/civitas_main_fs disponível apenas em perfil freestanding");
+                mod_ctx_pop_active(ctx);
+                return -1;
+            }
+
+            if (ctx->profile != CCT_PROFILE_FREESTANDING && mod_is_cct_dhcp_fs_import(raw_import)) {
+                mod_report(ctx, CCT_ERROR_SEMANTIC,
+                           module_path, decl->line, decl->column,
+                           "cct/dhcp_fs disponível apenas em perfil freestanding");
+                mod_ctx_pop_active(ctx);
+                return -1;
+            }
+
+            if (ctx->profile != CCT_PROFILE_FREESTANDING && mod_is_cct_asset_fs_import(raw_import)) {
+                mod_report(ctx, CCT_ERROR_SEMANTIC,
+                           module_path, decl->line, decl->column,
+                           "cct/asset_fs disponível apenas em perfil freestanding");
                 mod_ctx_pop_active(ctx);
                 return -1;
             }

@@ -1,0 +1,10 @@
+INCIPIT grimoire "civitas_main_fs_freestanding_smoke_fs6d"
+
+ADVOCARE "cct/civitas_main_fs"
+
+RITUALE main() REDDE NIHIL
+  CONIURA civitas_main_boot(0)
+  REDDE
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

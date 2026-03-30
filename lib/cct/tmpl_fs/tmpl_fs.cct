@@ -1,0 +1,55 @@
+-- CCT — Clavicula Turing
+-- Standard Library Module: tmpl_fs
+--
+-- FASE FS-6B: Freestanding template renderer
+--
+-- Copyright (c) Erick Andrade Busato. Todos os direitos reservados.
+
+INCIPIT grimoire "tmpl_fs"
+
+ADVOCARE "cct/asset_fs"
+ADVOCARE "cct/static_fs"
+ADVOCARE "cct/verbum_fs"
+
+ARCANUM RITUALE tmpl_fs_replace_once(VERBUM origem, VERBUM alvo, VERBUM valor) REDDE VERBUM
+  EVOCA REX pos AD CONIURA verbum_fs_find(origem, alvo)
+  SI pos < 0
+    REDDE origem
+  FIN SI
+  EVOCA VERBUM antes AD CONIURA verbum_fs_substring(origem, 0, pos)
+  EVOCA VERBUM depois AD CONIURA verbum_fs_substring(origem, pos + CONIURA verbum_fs_len(alvo), CONIURA verbum_fs_len(origem))
+  REDDE CONIURA verbum_fs_concat(CONIURA verbum_fs_concat(antes, valor), depois)
+EXPLICIT RITUALE
+
+ARCANUM RITUALE tmpl_fs_replace_all(VERBUM origem, VERBUM alvo, VERBUM valor) REDDE VERBUM
+  EVOCA VERBUM atual AD origem
+  DUM CONIURA verbum_fs_find(atual, alvo) >= 0
+    VINCIRE atual AD CONIURA tmpl_fs_replace_once(atual, alvo, valor)
+  FIN DUM
+  REDDE atual
+EXPLICIT RITUALE
+
+RITUALE tmpl_fs_render(VERBUM layout, VERBUM titulo, VERBUM corpo, VERBUM css) REDDE VERBUM
+  EVOCA VERBUM html AD CONIURA tmpl_fs_replace_all(layout, "{{TITLE}}", titulo)
+  VINCIRE html AD CONIURA tmpl_fs_replace_all(html, "{{BODY}}", corpo)
+  VINCIRE html AD CONIURA tmpl_fs_replace_all(html, "{{CSS}}", css)
+  REDDE html
+EXPLICIT RITUALE
+
+RITUALE tmpl_fs_render_page(VERBUM titulo, VERBUM corpo) REDDE VERBUM
+  EVOCA VERBUM layout AD ""
+  EVOCA VERBUM css AD ""
+  SI CONIURA asset_fs_exists("/templates/layout.html")
+    VINCIRE layout AD CONIURA asset_fs_read_text("/templates/layout.html")
+  ALITER
+    VINCIRE layout AD CONIURA static_fs_read("/layout.html")
+  FIN SI
+  SI CONIURA asset_fs_exists("/static/site.css")
+    VINCIRE css AD CONIURA asset_fs_read_text("/static/site.css")
+  ALITER
+    VINCIRE css AD CONIURA static_fs_read("/static/style.css")
+  FIN SI
+  REDDE CONIURA tmpl_fs_render(layout, titulo, corpo, css)
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

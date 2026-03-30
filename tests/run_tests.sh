@@ -188,6 +188,29 @@ cct_phase_block_enabled() {
     return 1
 }
 
+cct_fs_screen_is_fs4() {
+    [ "$(sed -n '1p' "$FS1_VGA_ROWS")" = "=== FS-4: Rede Minima ===" ] && \
+        rg -q "\\[OK\\] TCP listen :80" "$FS1_VGA_ROWS"
+}
+
+cct_fs_screen_is_fs5() {
+    [ "$(sed -n '1p' "$FS1_VGA_ROWS")" = "=== FS-5: HTTP Freestanding ===" ] && \
+        rg -q "\\[OK\\] HTTP listen :80" "$FS1_VGA_ROWS"
+}
+
+cct_fs_screen_is_fs6() {
+    [ "$(sed -n '1p' "$FS1_VGA_ROWS")" = "=== FS-6: Civitas Appliance ===" ] && \
+        rg -q "\\[HTTP\\] listen :80 keep-alive:on" "$FS1_VGA_ROWS"
+}
+
+cct_fs_screen_is_network_phase() {
+    cct_fs_screen_is_fs4 || cct_fs_screen_is_fs5 || cct_fs_screen_is_fs6
+}
+
+cct_fs_screen_is_http_phase() {
+    cct_fs_screen_is_fs5 || cct_fs_screen_is_fs6
+}
+
 normalize_c_tokens_to_ids_21d3() {
     local tokens_file="$1"
     local out_file="$2"
@@ -704,6 +727,14 @@ cct_any_fs5_block_enabled() {
     cct_phase_block_enabled "FS5D"
 }
 
+cct_any_fs6_block_enabled() {
+    cct_phase_block_enabled "FS6A" || \
+    cct_phase_block_enabled "FS6B" || \
+    cct_phase_block_enabled "FS6C" || \
+    cct_phase_block_enabled "FS6D" || \
+    cct_phase_block_enabled "FS6E"
+}
+
 cct_fs1_prepare_grub_artifacts() {
     if [ -n "${RC_FS1_GRUB_READY+x}" ]; then
         return "$RC_FS1_GRUB_READY"
@@ -726,7 +757,10 @@ cct_fs1_prepare_grub_artifacts() {
        { ! cct_phase_block_enabled "FS5A" || [ -s "$FS1_GRUB_HELLO_DIR/build/http_server.o" ]; } &&
        { ! cct_phase_block_enabled "FS5B" || [ -s "$FS1_GRUB_HELLO_DIR/build/http_parser.o" ]; } &&
        { ! cct_phase_block_enabled "FS5C" || [ -s "$FS1_GRUB_HELLO_DIR/build/http_response.o" ]; } &&
-       { ! cct_phase_block_enabled "FS5D" || [ -s "$FS1_GRUB_HELLO_DIR/build/http_router.o" ]; }; then
+       { ! cct_phase_block_enabled "FS5D" || [ -s "$FS1_GRUB_HELLO_DIR/build/http_router.o" ]; } &&
+       { ! cct_phase_block_enabled "FS6A" || [ -s "$FS1_GRUB_HELLO_DIR/build/civitas_bridge.o" ]; } &&
+       { ! cct_phase_block_enabled "FS6B" || { [ -s "$FS1_GRUB_HELLO_DIR/build/kv_store.o" ] && [ -s "$FS1_GRUB_HELLO_DIR/build/static_data.o" ]; }; } &&
+       { ! cct_phase_block_enabled "FS6E" || { [ -s "$FS1_GRUB_HELLO_DIR/build/asset_store.o" ] && [ -s "$FS1_GRUB_HELLO_DIR/build/net/dhcp.o" ] && [ -s "$FS1_GRUB_HELLO_DIR/build/net/udp.o" ] && [ -s "$FS1_GRUB_HELLO_DIR/build/assets.tar" ]; }; }; then
         RC_FS1_GRUB_READY=0
         return 0
     fi
@@ -745,9 +779,17 @@ cct_fs1_capture_vga_screen() {
     local dump_path="$1"
     local log_path="$2"
     local qemu_delay="2.5"
+    local active_boot_cgen=""
 
     cct_fs1_prepare_grub_artifacts || return 21
-    if cct_any_fs4_block_enabled || cct_any_fs5_block_enabled; then
+    active_boot_cgen="$FS1_GRUB_HELLO_DIR/build/civitas_boot.cgen.c"
+    if [ -s "$active_boot_cgen" ] && rg -q "=== FS-6: Civitas Appliance ===" "$active_boot_cgen"; then
+        qemu_delay="25.0"
+    elif cct_any_fs6_block_enabled; then
+        qemu_delay="25.0"
+    elif [ -s "$active_boot_cgen" ] && { rg -q "=== FS-5: HTTP Freestanding ===" "$active_boot_cgen" || rg -q "=== FS-4: Rede Minima ===" "$active_boot_cgen"; }; then
+        qemu_delay="8.0"
+    elif cct_any_fs4_block_enabled || cct_any_fs5_block_enabled; then
         qemu_delay="8.0"
     fi
 
@@ -1208,8 +1250,7 @@ if [ "$RC_31_READY" -eq 0 ] && cct_fs1_prepare_screen_dump && \
      ( [ "$(sed -n '1p' "$FS1_VGA_ROWS")" = "=== FS-4: Rede Minima ===" ] && \
        rg -q "\\[OK\\] ARP/IP/ICMP prontos" "$FS1_VGA_ROWS" && \
        rg -q "\\[OK\\] TCP listen :80" "$FS1_VGA_ROWS" ) || \
-     ( [ "$(sed -n '1p' "$FS1_VGA_ROWS")" = "=== FS-5: HTTP Freestanding ===" ] && \
-       rg -q "\\[OK\\] HTTP listen :80" "$FS1_VGA_ROWS" ); \
+     cct_fs_screen_is_http_phase; \
    }; then
     test_pass "boot em QEMU exibe tela de rede FS4"
 else
@@ -1449,19 +1490,318 @@ if [ "$RC_31_READY" -eq 0 ] && cct_fs1_prepare_grub_artifacts && cct_fs1_prepare
    [ -s "$FS1_GRUB_HELLO_DIR/build/http_router.o" ] && \
    "$FS1_I686_NM_BIN" "$FS1_GRUB_HELLO_DIR/build/http_router.o" >"$CCT_TMP_DIR/fs5d/test_2143_http_router_nm.out" 2>"$CCT_TMP_DIR/fs5d/test_2143_http_router_nm.err" && \
    rg -q " T cct_svc_http_router_dispatch" "$CCT_TMP_DIR/fs5d/test_2143_http_router_nm.out" && \
-   [ "$(sed -n '1p' "$FS1_VGA_ROWS")" = "=== FS-5: HTTP Freestanding ===" ] && \
-   rg -q "\\[OK\\] HTTP listen :80" "$FS1_VGA_ROWS"; then
+   cct_fs_screen_is_http_phase; then
     test_pass "pipeline grub-hello integra http_router e tela FS5"
 else
     test_fail "pipeline grub-hello nao integrou http_router e tela FS5"
 fi
 
 echo "Test 2144: gate G-FS5 responde HTTP real em QEMU"
-if [ "$RC_31_READY" -eq 0 ] && cct_fs1_prepare_grub_artifacts && \
-   python3 tests/support/freestanding_fs5_gate_probe.py --qemu-bin "$FS1_QEMU_BIN" --iso "$FS1_GRUB_HELLO_DIR/grub-hello.iso" --log-dir "$CCT_TMP_DIR/fs5d/gate_probe" >"$CCT_TMP_DIR/fs5d/test_2144.out" 2>"$CCT_TMP_DIR/fs5d/test_2144.err"; then
+if [ "$RC_31_READY" -eq 0 ] && cct_fs1_prepare_grub_artifacts && cct_fs1_prepare_screen_dump && \
+   { \
+     ( cct_fs_screen_is_fs6 && \
+       python3 tests/support/freestanding_fs6_gate_probe.py --qemu-bin "$FS1_QEMU_BIN" --iso "$FS1_GRUB_HELLO_DIR/grub-hello.iso" --log-dir "$CCT_TMP_DIR/fs5d/gate_probe" >"$CCT_TMP_DIR/fs5d/test_2144.out" 2>"$CCT_TMP_DIR/fs5d/test_2144.err" ) || \
+     ( ! cct_fs_screen_is_fs6 && \
+       python3 tests/support/freestanding_fs5_gate_probe.py --qemu-bin "$FS1_QEMU_BIN" --iso "$FS1_GRUB_HELLO_DIR/grub-hello.iso" --log-dir "$CCT_TMP_DIR/fs5d/gate_probe" >"$CCT_TMP_DIR/fs5d/test_2144.out" 2>"$CCT_TMP_DIR/fs5d/test_2144.err" ); \
+   }; then
     test_pass "gate G-FS5 responde HTTP real em QEMU"
 else
     test_fail "gate G-FS5 nao respondeu HTTP real em QEMU"
+fi
+fi
+
+if cct_phase_block_enabled "FS6A"; then
+echo ""
+echo "========================================"
+echo "FASE FS6A: cct/civitas_bridge_fs"
+echo "========================================"
+cct_phase31_prepare >/dev/null 2>&1
+mkdir -p "$CCT_TMP_DIR/fs6a"
+
+echo "Test 2145: cct/civitas_bridge_fs rejeita perfil host"
+if [ "$RC_31_READY" -eq 0 ] && ! "$PHASE31_HOST_WRAPPER" --check "tests/integration/civitas_bridge_fs_reject_host_fs6a.cct" >"$CCT_TMP_DIR/fs6a/test_2145.out" 2>&1 && \
+   rg -q "cct/civitas_bridge_fs disponível apenas em perfil freestanding" "$CCT_TMP_DIR/fs6a/test_2145.out"; then
+    test_pass "cct/civitas_bridge_fs rejeita perfil host"
+else
+    test_fail "cct/civitas_bridge_fs nao rejeitou perfil host"
+fi
+
+echo "Test 2146: cct/civitas_bridge_fs aceita smoke em perfil freestanding"
+if [ "$RC_31_READY" -eq 0 ] && "$PHASE31_HOST_WRAPPER" --profile freestanding --check "tests/integration/civitas_bridge_fs_freestanding_smoke_fs6a.cct" >"$CCT_TMP_DIR/fs6a/test_2146.out" 2>"$CCT_TMP_DIR/fs6a/test_2146.err"; then
+    test_pass "cct/civitas_bridge_fs aceita smoke em perfil freestanding"
+else
+    test_fail "cct/civitas_bridge_fs nao aceitou smoke em perfil freestanding"
+fi
+
+echo "Test 2147: codegen freestanding usa builtins do bridge Civitas"
+BASE_2147="$CCT_TMP_DIR/fs6a/test_2147_codegen"
+rm -f "$BASE_2147" "$BASE_2147.cct" "$BASE_2147.cgen.c" "$BASE_2147.compile.out" "$BASE_2147.compile.err"
+if [ "$RC_31_READY" -eq 0 ] && cp "tests/integration/civitas_bridge_fs_freestanding_smoke_fs6a.cct" "$BASE_2147.cct" && \
+   "$PHASE31_HOST_WRAPPER" --profile freestanding --entry main --sigilo-no-svg "$BASE_2147.cct" >"$BASE_2147.compile.out" 2>"$BASE_2147.compile.err" && \
+   rg -q "cct_svc_civitas_res_text" "$BASE_2147.cgen.c" && \
+   rg -q "cct_svc_civitas_res_send" "$BASE_2147.cgen.c"; then
+    test_pass "codegen freestanding usa builtins do bridge Civitas"
+else
+    test_fail "codegen freestanding nao usou builtins do bridge Civitas"
+fi
+
+echo "Test 2148: .cgen.c de civitas_bridge_fs compila com i686-elf-gcc"
+BASE_2148="$CCT_TMP_DIR/fs6a/test_2148_cross"
+rm -f "$BASE_2148" "$BASE_2148.cct" "$BASE_2148.cgen.c" "$BASE_2148.o" "$BASE_2148.compile.out" "$BASE_2148.compile.err" "$BASE_2148.cross.out" "$BASE_2148.cross.err"
+if [ "$RC_31_READY" -eq 0 ] && cct_fs1_prepare_tools && \
+   cp "tests/integration/civitas_bridge_fs_freestanding_smoke_fs6a.cct" "$BASE_2148.cct" && \
+   "$PHASE31_HOST_WRAPPER" --profile freestanding --entry main --sigilo-no-svg "$BASE_2148.cct" >"$BASE_2148.compile.out" 2>"$BASE_2148.compile.err" && \
+   "$FS1_I686_GCC_BIN" -std=gnu11 -ffreestanding -nostdlib -m32 -O2 -Wall -Wextra -Wno-unused-function -fno-pic -fno-stack-protector -I"$ROOT_DIR/src/runtime" -c "$BASE_2148.cgen.c" -o "$BASE_2148.o" >"$BASE_2148.cross.out" 2>"$BASE_2148.cross.err"; then
+    test_pass ".cgen.c de civitas_bridge_fs compila com i686-elf-gcc"
+else
+    test_fail ".cgen.c de civitas_bridge_fs nao compilou com i686-elf-gcc"
+fi
+
+echo "Test 2149: pipeline grub-hello integra civitas_bridge"
+if [ "$RC_31_READY" -eq 0 ] && cct_fs1_prepare_grub_artifacts && \
+   [ -s "$FS1_GRUB_HELLO_DIR/build/civitas_bridge.o" ] && \
+   "$FS1_I686_NM_BIN" "$FS1_GRUB_HELLO_DIR/build/civitas_bridge.o" >"$CCT_TMP_DIR/fs6a/test_2149_bridge_nm.out" 2>"$CCT_TMP_DIR/fs6a/test_2149_bridge_nm.err" && \
+   rg -q " T cct_svc_civitas_res_send" "$CCT_TMP_DIR/fs6a/test_2149_bridge_nm.out" && \
+   rg -q " T cct_svc_civitas_build_request" "$CCT_TMP_DIR/fs6a/test_2149_bridge_nm.out"; then
+    test_pass "pipeline grub-hello integra civitas_bridge"
+else
+    test_fail "pipeline grub-hello nao integrou civitas_bridge"
+fi
+fi
+
+if cct_phase_block_enabled "FS6B"; then
+echo ""
+echo "========================================"
+echo "FASE FS6B: cct/store_fs, cct/static_fs, cct/tmpl_fs"
+echo "========================================"
+cct_phase31_prepare >/dev/null 2>&1
+mkdir -p "$CCT_TMP_DIR/fs6b"
+
+echo "Test 2150: modulos FS6B rejeitam perfil host"
+if [ "$RC_31_READY" -eq 0 ] && ! "$PHASE31_HOST_WRAPPER" --check "tests/integration/store_static_tmpl_fs_reject_host_fs6b.cct" >"$CCT_TMP_DIR/fs6b/test_2150.out" 2>&1 && \
+   rg -q "cct/store_fs disponível apenas em perfil freestanding" "$CCT_TMP_DIR/fs6b/test_2150.out"; then
+    test_pass "modulos FS6B rejeitam perfil host"
+else
+    test_fail "modulos FS6B nao rejeitaram perfil host"
+fi
+
+echo "Test 2151: modulos FS6B aceitam smoke em perfil freestanding"
+if [ "$RC_31_READY" -eq 0 ] && "$PHASE31_HOST_WRAPPER" --profile freestanding --check "tests/integration/store_static_tmpl_fs_freestanding_smoke_fs6b.cct" >"$CCT_TMP_DIR/fs6b/test_2151.out" 2>"$CCT_TMP_DIR/fs6b/test_2151.err"; then
+    test_pass "modulos FS6B aceitam smoke em perfil freestanding"
+else
+    test_fail "modulos FS6B nao aceitaram smoke em perfil freestanding"
+fi
+
+echo "Test 2152: codegen freestanding usa builtins de store/static"
+BASE_2152="$CCT_TMP_DIR/fs6b/test_2152_codegen"
+rm -f "$BASE_2152" "$BASE_2152.cct" "$BASE_2152.cgen.c" "$BASE_2152.compile.out" "$BASE_2152.compile.err"
+if [ "$RC_31_READY" -eq 0 ] && cp "tests/integration/store_static_tmpl_fs_freestanding_smoke_fs6b.cct" "$BASE_2152.cct" && \
+   "$PHASE31_HOST_WRAPPER" --profile freestanding --entry main --sigilo-no-svg "$BASE_2152.cct" >"$BASE_2152.compile.out" 2>"$BASE_2152.compile.err" && \
+   rg -q "cct_svc_kv_set_int" "$BASE_2152.cgen.c" && \
+   rg -q "cct_svc_static_data" "$BASE_2152.cgen.c"; then
+    test_pass "codegen freestanding usa builtins de store/static"
+else
+    test_fail "codegen freestanding nao usou builtins de store/static"
+fi
+
+echo "Test 2153: .cgen.c de FS6B compila com i686-elf-gcc"
+BASE_2153="$CCT_TMP_DIR/fs6b/test_2153_cross"
+rm -f "$BASE_2153" "$BASE_2153.cct" "$BASE_2153.cgen.c" "$BASE_2153.o" "$BASE_2153.compile.out" "$BASE_2153.compile.err" "$BASE_2153.cross.out" "$BASE_2153.cross.err"
+if [ "$RC_31_READY" -eq 0 ] && cct_fs1_prepare_tools && \
+   cp "tests/integration/store_static_tmpl_fs_freestanding_smoke_fs6b.cct" "$BASE_2153.cct" && \
+   "$PHASE31_HOST_WRAPPER" --profile freestanding --entry main --sigilo-no-svg "$BASE_2153.cct" >"$BASE_2153.compile.out" 2>"$BASE_2153.compile.err" && \
+   "$FS1_I686_GCC_BIN" -std=gnu11 -ffreestanding -nostdlib -m32 -O2 -Wall -Wextra -Wno-unused-function -fno-pic -fno-stack-protector -I"$ROOT_DIR/src/runtime" -c "$BASE_2153.cgen.c" -o "$BASE_2153.o" >"$BASE_2153.cross.out" 2>"$BASE_2153.cross.err"; then
+    test_pass ".cgen.c de FS6B compila com i686-elf-gcc"
+else
+    test_fail ".cgen.c de FS6B nao compilou com i686-elf-gcc"
+fi
+
+echo "Test 2154: pipeline grub-hello integra KV store e static data"
+if [ "$RC_31_READY" -eq 0 ] && cct_fs1_prepare_grub_artifacts && \
+   [ -s "$FS1_GRUB_HELLO_DIR/build/kv_store.o" ] && \
+   [ -s "$FS1_GRUB_HELLO_DIR/build/static_data.o" ] && \
+   "$FS1_I686_NM_BIN" "$FS1_GRUB_HELLO_DIR/build/kv_store.o" >"$CCT_TMP_DIR/fs6b/test_2154_kv_nm.out" 2>"$CCT_TMP_DIR/fs6b/test_2154_kv_nm.err" && \
+   "$FS1_I686_NM_BIN" "$FS1_GRUB_HELLO_DIR/build/static_data.o" >"$CCT_TMP_DIR/fs6b/test_2154_static_nm.out" 2>"$CCT_TMP_DIR/fs6b/test_2154_static_nm.err" && \
+   rg -q " T cct_svc_kv_set_int" "$CCT_TMP_DIR/fs6b/test_2154_kv_nm.out" && \
+   rg -q " T cct_svc_static_data" "$CCT_TMP_DIR/fs6b/test_2154_static_nm.out"; then
+    test_pass "pipeline grub-hello integra KV store e static data"
+else
+    test_fail "pipeline grub-hello nao integrou KV store e static data"
+fi
+fi
+
+if cct_phase_block_enabled "FS6C"; then
+echo ""
+echo "========================================"
+echo "FASE FS6C: cct/civitas_app_fs"
+echo "========================================"
+cct_phase31_prepare >/dev/null 2>&1
+mkdir -p "$CCT_TMP_DIR/fs6c"
+
+echo "Test 2155: cct/civitas_app_fs rejeita perfil host"
+if [ "$RC_31_READY" -eq 0 ] && ! "$PHASE31_HOST_WRAPPER" --check "tests/integration/civitas_app_fs_reject_host_fs6c.cct" >"$CCT_TMP_DIR/fs6c/test_2155.out" 2>&1 && \
+   rg -q "cct/civitas_app_fs disponível apenas em perfil freestanding" "$CCT_TMP_DIR/fs6c/test_2155.out"; then
+    test_pass "cct/civitas_app_fs rejeita perfil host"
+else
+    test_fail "cct/civitas_app_fs nao rejeitou perfil host"
+fi
+
+echo "Test 2156: cct/civitas_app_fs aceita smoke em perfil freestanding"
+if [ "$RC_31_READY" -eq 0 ] && "$PHASE31_HOST_WRAPPER" --profile freestanding --check "tests/integration/civitas_app_fs_freestanding_smoke_fs6c.cct" >"$CCT_TMP_DIR/fs6c/test_2156.out" 2>"$CCT_TMP_DIR/fs6c/test_2156.err"; then
+    test_pass "cct/civitas_app_fs aceita smoke em perfil freestanding"
+else
+    test_fail "cct/civitas_app_fs nao aceitou smoke em perfil freestanding"
+fi
+
+echo "Test 2157: codegen freestanding usa builtins do app Civitas"
+BASE_2157="$CCT_TMP_DIR/fs6c/test_2157_codegen"
+rm -f "$BASE_2157" "$BASE_2157.cct" "$BASE_2157.cgen.c" "$BASE_2157.compile.out" "$BASE_2157.compile.err"
+if [ "$RC_31_READY" -eq 0 ] && cp "tests/integration/civitas_app_fs_freestanding_smoke_fs6c.cct" "$BASE_2157.cct" && \
+   "$PHASE31_HOST_WRAPPER" --profile freestanding --entry main --sigilo-no-svg "$BASE_2157.cct" >"$BASE_2157.compile.out" 2>"$BASE_2157.compile.err" && \
+   rg -q "cct_svc_http_router_add" "$BASE_2157.cgen.c" && \
+   rg -q "cct_svc_kv_increment" "$BASE_2157.cgen.c" && \
+   rg -q "cct_svc_http_res_build" "$BASE_2157.cgen.c"; then
+    test_pass "codegen freestanding usa builtins do app Civitas"
+else
+    test_fail "codegen freestanding nao usou builtins do app Civitas"
+fi
+
+echo "Test 2158: .cgen.c de civitas_app_fs compila com i686-elf-gcc"
+BASE_2158="$CCT_TMP_DIR/fs6c/test_2158_cross"
+rm -f "$BASE_2158" "$BASE_2158.cct" "$BASE_2158.cgen.c" "$BASE_2158.o" "$BASE_2158.compile.out" "$BASE_2158.compile.err" "$BASE_2158.cross.out" "$BASE_2158.cross.err"
+if [ "$RC_31_READY" -eq 0 ] && cct_fs1_prepare_tools && \
+   cp "tests/integration/civitas_app_fs_freestanding_smoke_fs6c.cct" "$BASE_2158.cct" && \
+   "$PHASE31_HOST_WRAPPER" --profile freestanding --entry main --sigilo-no-svg "$BASE_2158.cct" >"$BASE_2158.compile.out" 2>"$BASE_2158.compile.err" && \
+   "$FS1_I686_GCC_BIN" -std=gnu11 -ffreestanding -nostdlib -m32 -O2 -Wall -Wextra -Wno-unused-function -fno-pic -fno-stack-protector -I"$ROOT_DIR/src/runtime" -c "$BASE_2158.cgen.c" -o "$BASE_2158.o" >"$BASE_2158.cross.out" 2>"$BASE_2158.cross.err"; then
+    test_pass ".cgen.c de civitas_app_fs compila com i686-elf-gcc"
+else
+    test_fail ".cgen.c de civitas_app_fs nao compilou com i686-elf-gcc"
+fi
+
+echo "Test 2159: artefato gerado inclui rotas FS6C do appliance"
+if [ "$RC_31_READY" -eq 0 ] && cct_fs1_prepare_grub_artifacts && \
+   rg -q "/api/info" "$FS1_GRUB_HELLO_DIR/build/civitas_boot.cgen.c" && \
+   rg -q "/static" "$FS1_GRUB_HELLO_DIR/build/civitas_boot.cgen.c" && \
+   rg -q "civitas-fs6" "$FS1_GRUB_HELLO_DIR/build/civitas_boot.cgen.c"; then
+    test_pass "artefato gerado inclui rotas FS6C do appliance"
+else
+    test_fail "artefato gerado nao incluiu rotas FS6C do appliance"
+fi
+fi
+
+if cct_phase_block_enabled "FS6D"; then
+echo ""
+echo "========================================"
+echo "FASE FS6D: cct/civitas_main_fs"
+echo "========================================"
+cct_phase31_prepare >/dev/null 2>&1
+mkdir -p "$CCT_TMP_DIR/fs6d"
+
+echo "Test 2160: cct/civitas_main_fs rejeita perfil host"
+if [ "$RC_31_READY" -eq 0 ] && ! "$PHASE31_HOST_WRAPPER" --check "tests/integration/civitas_main_fs_reject_host_fs6d.cct" >"$CCT_TMP_DIR/fs6d/test_2160.out" 2>&1 && \
+   rg -q "cct/civitas_main_fs disponível apenas em perfil freestanding" "$CCT_TMP_DIR/fs6d/test_2160.out"; then
+    test_pass "cct/civitas_main_fs rejeita perfil host"
+else
+    test_fail "cct/civitas_main_fs nao rejeitou perfil host"
+fi
+
+echo "Test 2161: cct/civitas_main_fs aceita smoke em perfil freestanding"
+if [ "$RC_31_READY" -eq 0 ] && "$PHASE31_HOST_WRAPPER" --profile freestanding --check "tests/integration/civitas_main_fs_freestanding_smoke_fs6d.cct" >"$CCT_TMP_DIR/fs6d/test_2161.out" 2>"$CCT_TMP_DIR/fs6d/test_2161.err"; then
+    test_pass "cct/civitas_main_fs aceita smoke em perfil freestanding"
+else
+    test_fail "cct/civitas_main_fs nao aceitou smoke em perfil freestanding"
+fi
+
+echo "Test 2162: codegen freestanding usa boot hooks do appliance FS6"
+BASE_2162="$CCT_TMP_DIR/fs6d/test_2162_codegen"
+rm -f "$BASE_2162" "$BASE_2162.cct" "$BASE_2162.cgen.c" "$BASE_2162.compile.out" "$BASE_2162.compile.err"
+if [ "$RC_31_READY" -eq 0 ] && cp "tests/integration/civitas_main_fs_freestanding_smoke_fs6d.cct" "$BASE_2162.cct" && \
+   "$PHASE31_HOST_WRAPPER" --profile freestanding --entry main --sigilo-no-svg "$BASE_2162.cct" >"$BASE_2162.compile.out" 2>"$BASE_2162.compile.err" && \
+   rg -q "cct_svc_http_server_set_keepalive" "$BASE_2162.cgen.c" && \
+   rg -q "cct_svc_dhcp_acquire" "$BASE_2162.cgen.c" && \
+   rg -q "cct_svc_asset_mount" "$BASE_2162.cgen.c"; then
+    test_pass "codegen freestanding usa boot hooks do appliance FS6"
+else
+    test_fail "codegen freestanding nao usou boot hooks do appliance FS6"
+fi
+
+echo "Test 2163: .cgen.c de civitas_main_fs compila com i686-elf-gcc"
+BASE_2163="$CCT_TMP_DIR/fs6d/test_2163_cross"
+rm -f "$BASE_2163" "$BASE_2163.cct" "$BASE_2163.cgen.c" "$BASE_2163.o" "$BASE_2163.compile.out" "$BASE_2163.compile.err" "$BASE_2163.cross.out" "$BASE_2163.cross.err"
+if [ "$RC_31_READY" -eq 0 ] && cct_fs1_prepare_tools && \
+   cp "tests/integration/civitas_main_fs_freestanding_smoke_fs6d.cct" "$BASE_2163.cct" && \
+   "$PHASE31_HOST_WRAPPER" --profile freestanding --entry main --sigilo-no-svg "$BASE_2163.cct" >"$BASE_2163.compile.out" 2>"$BASE_2163.compile.err" && \
+   "$FS1_I686_GCC_BIN" -std=gnu11 -ffreestanding -nostdlib -m32 -O2 -Wall -Wextra -Wno-unused-function -fno-pic -fno-stack-protector -I"$ROOT_DIR/src/runtime" -c "$BASE_2163.cgen.c" -o "$BASE_2163.o" >"$BASE_2163.cross.out" 2>"$BASE_2163.cross.err"; then
+    test_pass ".cgen.c de civitas_main_fs compila com i686-elf-gcc"
+else
+    test_fail ".cgen.c de civitas_main_fs nao compilou com i686-elf-gcc"
+fi
+
+echo "Test 2164: artefato gerado inclui banner FS6 do appliance"
+if [ "$RC_31_READY" -eq 0 ] && cct_fs1_prepare_grub_artifacts && \
+   rg -q "=== FS-6: Civitas Appliance ===" "$FS1_GRUB_HELLO_DIR/build/civitas_boot.cgen.c" && \
+   rg -q "\\[HTTP\\] listen :80 keep-alive:on" "$FS1_GRUB_HELLO_DIR/build/civitas_boot.cgen.c"; then
+    test_pass "artefato gerado inclui banner FS6 do appliance"
+else
+    test_fail "artefato gerado nao incluiu banner FS6 do appliance"
+fi
+fi
+
+if cct_phase_block_enabled "FS6E"; then
+echo ""
+echo "========================================"
+echo "FASE FS6E: DHCP, asset store e keep-alive"
+echo "========================================"
+cct_phase31_prepare >/dev/null 2>&1
+mkdir -p "$CCT_TMP_DIR/fs6e"
+
+echo "Test 2165: modulos FS6E rejeitam perfil host"
+if [ "$RC_31_READY" -eq 0 ] && ! "$PHASE31_HOST_WRAPPER" --check "tests/integration/dhcp_asset_fs_reject_host_fs6e.cct" >"$CCT_TMP_DIR/fs6e/test_2165.out" 2>&1 && \
+   { rg -q "cct/dhcp_fs disponível apenas em perfil freestanding" "$CCT_TMP_DIR/fs6e/test_2165.out" || rg -q "cct/asset_fs disponível apenas em perfil freestanding" "$CCT_TMP_DIR/fs6e/test_2165.out"; }; then
+    test_pass "modulos FS6E rejeitam perfil host"
+else
+    test_fail "modulos FS6E nao rejeitaram perfil host"
+fi
+
+echo "Test 2166: modulos FS6E aceitam smoke em perfil freestanding"
+if [ "$RC_31_READY" -eq 0 ] && "$PHASE31_HOST_WRAPPER" --profile freestanding --check "tests/integration/dhcp_asset_fs_freestanding_smoke_fs6e.cct" >"$CCT_TMP_DIR/fs6e/test_2166.out" 2>"$CCT_TMP_DIR/fs6e/test_2166.err"; then
+    test_pass "modulos FS6E aceitam smoke em perfil freestanding"
+else
+    test_fail "modulos FS6E nao aceitaram smoke em perfil freestanding"
+fi
+
+echo "Test 2167: codegen freestanding usa builtins de DHCP, assets e keep-alive"
+BASE_2167="$CCT_TMP_DIR/fs6e/test_2167_codegen"
+rm -f "$BASE_2167" "$BASE_2167.cct" "$BASE_2167.cgen.c" "$BASE_2167.compile.out" "$BASE_2167.compile.err"
+if [ "$RC_31_READY" -eq 0 ] && cp "tests/integration/dhcp_asset_fs_freestanding_smoke_fs6e.cct" "$BASE_2167.cct" && \
+   "$PHASE31_HOST_WRAPPER" --profile freestanding --entry main --sigilo-no-svg "$BASE_2167.cct" >"$BASE_2167.compile.out" 2>"$BASE_2167.compile.err" && \
+   rg -q "cct_svc_dhcp_acquire" "$BASE_2167.cgen.c" && \
+   rg -q "cct_svc_asset_mount" "$BASE_2167.cgen.c" && \
+   rg -q "cct_svc_http_server_set_keepalive" "$BASE_2167.cgen.c" && \
+   rg -q "cct_svc_http_server_pending_len" "$BASE_2167.cgen.c"; then
+    test_pass "codegen freestanding usa builtins de DHCP, assets e keep-alive"
+else
+    test_fail "codegen freestanding nao usou builtins de DHCP, assets e keep-alive"
+fi
+
+echo "Test 2168: pipeline grub-hello integra udp, dhcp e assets tar"
+if [ "$RC_31_READY" -eq 0 ] && cct_fs1_prepare_grub_artifacts && \
+   [ -s "$FS1_GRUB_HELLO_DIR/build/net/udp.o" ] && \
+   [ -s "$FS1_GRUB_HELLO_DIR/build/net/dhcp.o" ] && \
+   [ -s "$FS1_GRUB_HELLO_DIR/build/assets.tar" ] && \
+   "$FS1_I686_NM_BIN" "$FS1_GRUB_HELLO_DIR/build/net/dhcp.o" >"$CCT_TMP_DIR/fs6e/test_2168_dhcp_nm.out" 2>"$CCT_TMP_DIR/fs6e/test_2168_dhcp_nm.err" && \
+   rg -q " T cct_svc_dhcp_acquire" "$CCT_TMP_DIR/fs6e/test_2168_dhcp_nm.out"; then
+    test_pass "pipeline grub-hello integra udp, dhcp e assets tar"
+else
+    test_fail "pipeline grub-hello nao integrou udp, dhcp e assets tar"
+fi
+
+echo "Test 2169: gate G-FS6E responde HTTP estavel com keep-alive e assets"
+if [ "$RC_31_READY" -eq 0 ] && cct_fs1_prepare_grub_artifacts && \
+   python3 tests/support/freestanding_fs6_gate_probe.py --qemu-bin "$FS1_QEMU_BIN" --iso "$FS1_GRUB_HELLO_DIR/grub-hello.iso" --log-dir "$CCT_TMP_DIR/fs6e/gate_probe" >"$CCT_TMP_DIR/fs6e/test_2169.out" 2>"$CCT_TMP_DIR/fs6e/test_2169.err"; then
+    test_pass "gate G-FS6E responde HTTP estavel com keep-alive e assets"
+else
+    test_fail "gate G-FS6E nao respondeu HTTP estavel com keep-alive e assets"
 fi
 fi
 
@@ -13012,7 +13352,7 @@ fi
 echo "Test 2057: kernel.o referencia a entrada freestanding do boot"
 if [ "$RC_31_READY" -eq 0 ] && cct_fs1_prepare_grub_artifacts && \
    "$FS1_I686_NM_BIN" "$FS1_GRUB_HELLO_DIR/build/kernel.o" >"$CCT_TMP_DIR/fs1/test_2057_kernel_nm.out" 2>"$CCT_TMP_DIR/fs1/test_2057_kernel_nm.err" && \
-   { rg -q " U civitas_boot_fase2" "$CCT_TMP_DIR/fs1/test_2057_kernel_nm.out" || rg -q " U civitas_boot_fase3" "$CCT_TMP_DIR/fs1/test_2057_kernel_nm.out" || rg -q " U civitas_boot_fase4" "$CCT_TMP_DIR/fs1/test_2057_kernel_nm.out" || rg -q " U civitas_boot_fase5" "$CCT_TMP_DIR/fs1/test_2057_kernel_nm.out"; }; then
+   { rg -q " U civitas_boot_fase2" "$CCT_TMP_DIR/fs1/test_2057_kernel_nm.out" || rg -q " U civitas_boot_fase3" "$CCT_TMP_DIR/fs1/test_2057_kernel_nm.out" || rg -q " U civitas_boot_fase4" "$CCT_TMP_DIR/fs1/test_2057_kernel_nm.out" || rg -q " U civitas_boot_fase5" "$CCT_TMP_DIR/fs1/test_2057_kernel_nm.out" || rg -q " U civitas_boot_fase6" "$CCT_TMP_DIR/fs1/test_2057_kernel_nm.out"; }; then
     test_pass "kernel.o referencia a entrada freestanding do boot"
 else
     test_fail "kernel.o nao referenciou a entrada freestanding do boot"
@@ -13055,21 +13395,21 @@ else
 fi
 
 echo "Test 2061: banner C permanece na primeira linha da tela"
-if [ "$RC_31_READY" -eq 0 ] && cct_fs1_prepare_screen_dump && { [ "$(sed -n '1p' "$FS1_VGA_ROWS")" = "=== CCT OS Lab ===" ] || [ "$(sed -n '1p' "$FS1_VGA_ROWS")" = "CCT FREESTANDING SHELL" ] || [ "$(sed -n '1p' "$FS1_VGA_ROWS")" = "=== FS-4: Rede Minima ===" ] || [ "$(sed -n '1p' "$FS1_VGA_ROWS")" = "=== FS-5: HTTP Freestanding ===" ]; }; then
+if [ "$RC_31_READY" -eq 0 ] && cct_fs1_prepare_screen_dump && { [ "$(sed -n '1p' "$FS1_VGA_ROWS")" = "=== CCT OS Lab ===" ] || [ "$(sed -n '1p' "$FS1_VGA_ROWS")" = "CCT FREESTANDING SHELL" ] || [ "$(sed -n '1p' "$FS1_VGA_ROWS")" = "=== FS-4: Rede Minima ===" ] || [ "$(sed -n '1p' "$FS1_VGA_ROWS")" = "=== FS-5: HTTP Freestanding ===" ] || [ "$(sed -n '1p' "$FS1_VGA_ROWS")" = "=== FS-6: Civitas Appliance ===" ]; }; then
     test_pass "banner C permanece na primeira linha da tela"
 else
     test_fail "banner C nao permaneceu na primeira linha da tela"
 fi
 
 echo "Test 2062: transicao C para CCT permanece visivel no boot"
-if [ "$RC_31_READY" -eq 0 ] && cct_fs1_prepare_screen_dump && { [ "$(sed -n '3p' "$FS1_VGA_ROWS")" = "Transferindo para runtime CCT..." ] || [ "$(sed -n '3p' "$FS1_VGA_ROWS")" = "cct>" ] || [ "$(sed -n '1p' "$FS1_VGA_ROWS")" = "=== FS-4: Rede Minima ===" ] || [ "$(sed -n '1p' "$FS1_VGA_ROWS")" = "=== FS-5: HTTP Freestanding ===" ]; }; then
+if [ "$RC_31_READY" -eq 0 ] && cct_fs1_prepare_screen_dump && { [ "$(sed -n '3p' "$FS1_VGA_ROWS")" = "Transferindo para runtime CCT..." ] || [ "$(sed -n '3p' "$FS1_VGA_ROWS")" = "cct>" ] || [ "$(sed -n '1p' "$FS1_VGA_ROWS")" = "=== FS-4: Rede Minima ===" ] || [ "$(sed -n '1p' "$FS1_VGA_ROWS")" = "=== FS-5: HTTP Freestanding ===" ] || [ "$(sed -n '1p' "$FS1_VGA_ROWS")" = "=== FS-6: Civitas Appliance ===" ]; }; then
     test_pass "transicao C para CCT permanece visivel no boot"
 else
     test_fail "transicao C para CCT nao permaneceu visivel no boot"
 fi
 
 echo "Test 2063: banner CCT aparece centralizado na linha esperada"
-if [ "$RC_31_READY" -eq 0 ] && cct_fs1_prepare_screen_dump && { [ "$(sed -n '6p' "$FS1_VGA_ROWS")" = "                            CCT FREESTANDING RUNTIME" ] || [ "$(sed -n '1p' "$FS1_VGA_ROWS")" = "CCT FREESTANDING SHELL" ] || [ "$(sed -n '1p' "$FS1_VGA_ROWS")" = "=== FS-4: Rede Minima ===" ] || [ "$(sed -n '1p' "$FS1_VGA_ROWS")" = "=== FS-5: HTTP Freestanding ===" ]; }; then
+if [ "$RC_31_READY" -eq 0 ] && cct_fs1_prepare_screen_dump && { [ "$(sed -n '6p' "$FS1_VGA_ROWS")" = "                            CCT FREESTANDING RUNTIME" ] || [ "$(sed -n '1p' "$FS1_VGA_ROWS")" = "CCT FREESTANDING SHELL" ] || [ "$(sed -n '1p' "$FS1_VGA_ROWS")" = "=== FS-4: Rede Minima ===" ] || [ "$(sed -n '1p' "$FS1_VGA_ROWS")" = "=== FS-5: HTTP Freestanding ===" ] || [ "$(sed -n '1p' "$FS1_VGA_ROWS")" = "=== FS-6: Civitas Appliance ===" ]; }; then
     test_pass "banner CCT aparece centralizado na linha esperada"
 else
     test_fail "banner CCT nao apareceu centralizado na linha esperada"
@@ -13082,8 +13422,7 @@ if [ "$RC_31_READY" -eq 0 ] && cct_fs1_prepare_screen_dump && \
    { \
      ( [ "$(sed -n '5p' "$FS1_VGA_ROWS")" = "$FS1_DOUBLE_RULE" ] && sed -n '21,24p' "$FS1_VGA_ROWS" >"$FS1_TAIL_PANEL" && rg -qx "$FS1_DOUBLE_RULE" "$FS1_TAIL_PANEL" ) || \
      ( [ "$(sed -n '1p' "$FS1_VGA_ROWS")" = "CCT FREESTANDING SHELL" ] && [ "$(sed -n '2p' "$FS1_VGA_ROWS")" = "Type 'help' for commands." ] ) || \
-     ( [ "$(sed -n '1p' "$FS1_VGA_ROWS")" = "=== FS-4: Rede Minima ===" ] && rg -q "\\[OK\\] TCP listen :80" "$FS1_VGA_ROWS" ) || \
-     ( [ "$(sed -n '1p' "$FS1_VGA_ROWS")" = "=== FS-5: HTTP Freestanding ===" ] && rg -q "\\[OK\\] HTTP listen :80" "$FS1_VGA_ROWS" ) ; \
+     cct_fs_screen_is_network_phase ; \
    }; then
     test_pass "bordas duplas ocupam as linhas 5 e 24 sem scroll"
 else
@@ -13098,7 +13437,8 @@ if [ "$RC_31_READY" -eq 0 ] && cct_fs1_prepare_screen_dump && \
      ( sed -n '22,25p' "$FS1_VGA_ROWS" >"$FS1_TAIL_GATE" && rg -q ">>> G-FS[0-9A-Z-]+: GATE CONCLUIDO <<<" "$FS1_TAIL_GATE" ) || \
      [ "$(sed -n '3p' "$FS1_VGA_ROWS")" = "cct>" ] || \
      [ "$(sed -n '1p' "$FS1_VGA_ROWS")" = "=== FS-4: Rede Minima ===" ] || \
-     [ "$(sed -n '1p' "$FS1_VGA_ROWS")" = "=== FS-5: HTTP Freestanding ===" ] ; \
+     [ "$(sed -n '1p' "$FS1_VGA_ROWS")" = "=== FS-5: HTTP Freestanding ===" ] || \
+     [ "$(sed -n '1p' "$FS1_VGA_ROWS")" = "=== FS-6: Civitas Appliance ===" ] ; \
    }; then
     test_pass "gate G-FS1 aparece na ultima linha da tela"
 else
@@ -13174,7 +13514,8 @@ if [ "$RC_31_READY" -eq 0 ] && cct_fs1_prepare_grub_artifacts && \
      ( rg -q " U civitas_boot_fase2" "$CCT_TMP_DIR/fs2a/test_2071_kernel_nm.out" && rg -q " T civitas_boot_fase2" "$CCT_TMP_DIR/fs2a/test_2071_boot_nm.out" ) || \
      ( rg -q " U civitas_boot_fase3" "$CCT_TMP_DIR/fs2a/test_2071_kernel_nm.out" && rg -q " T civitas_boot_fase3" "$CCT_TMP_DIR/fs2a/test_2071_boot_nm.out" ) || \
      ( rg -q " U civitas_boot_fase4" "$CCT_TMP_DIR/fs2a/test_2071_kernel_nm.out" && rg -q " T civitas_boot_fase4" "$CCT_TMP_DIR/fs2a/test_2071_boot_nm.out" ) || \
-     ( rg -q " U civitas_boot_fase5" "$CCT_TMP_DIR/fs2a/test_2071_kernel_nm.out" && rg -q " T civitas_boot_fase5" "$CCT_TMP_DIR/fs2a/test_2071_boot_nm.out" ) ; \
+     ( rg -q " U civitas_boot_fase5" "$CCT_TMP_DIR/fs2a/test_2071_kernel_nm.out" && rg -q " T civitas_boot_fase5" "$CCT_TMP_DIR/fs2a/test_2071_boot_nm.out" ) || \
+     ( rg -q " U civitas_boot_fase6" "$CCT_TMP_DIR/fs2a/test_2071_kernel_nm.out" && rg -q " T civitas_boot_fase6" "$CCT_TMP_DIR/fs2a/test_2071_boot_nm.out" ) ; \
    }; then
     test_pass "pipeline grub-hello referencia a entrada ativa do boot"
 else
@@ -13187,7 +13528,7 @@ if [ "$RC_31_READY" -eq 0 ] && cct_fs1_prepare_screen_dump && \
      ( rg -q "\\[DEMO 4\\] Relatorio de Memoria" "$FS1_VGA_ROWS" && rg -q "  base: " "$FS1_VGA_ROWS" && rg -q "  alocado: " "$FS1_VGA_ROWS" && rg -q ">>> G-FS2: GATE CONCLUIDO <<<" "$FS1_VGA_ROWS" ) || \
      ( [ "$(sed -n '1p' "$FS1_VGA_ROWS")" = "CCT FREESTANDING SHELL" ] && [ "$(sed -n '3p' "$FS1_VGA_ROWS")" = "cct>" ] ) || \
      ( [ "$(sed -n '1p' "$FS1_VGA_ROWS")" = "=== FS-4: Rede Minima ===" ] && rg -q "IP: 10.0.2.15" "$FS1_VGA_ROWS" ) || \
-     ( [ "$(sed -n '1p' "$FS1_VGA_ROWS")" = "=== FS-5: HTTP Freestanding ===" ] && rg -q "\\[OK\\] HTTP listen :80" "$FS1_VGA_ROWS" ) ; \
+     cct_fs_screen_is_http_phase ; \
    }; then
     test_pass "boot em QEMU exibe relatorio de heap freestanding"
 else
@@ -13330,7 +13671,7 @@ if [ "$RC_31_READY" -eq 0 ] && cct_fs1_prepare_screen_dump && \
      ( [ "$(sed -n '6p' "$FS1_VGA_ROWS")" = "                            CCT FREESTANDING RUNTIME" ] && rg -q "FASE 2 - Memoria e Strings Freestanding" "$FS1_VGA_ROWS" && rg -q "\\[DEMO 3\\] fluxus_fs de SIGILLUM Produto" "$FS1_VGA_ROWS" && rg -q "NIC RTL8139" "$FS1_VGA_ROWS" && rg -q "\\[DEMO 4\\] Relatorio de Memoria" "$FS1_VGA_ROWS" && rg -q ">>> G-FS2: GATE CONCLUIDO <<<" "$FS1_VGA_ROWS" ) || \
      ( [ "$(sed -n '1p' "$FS1_VGA_ROWS")" = "CCT FREESTANDING SHELL" ] && [ "$(sed -n '2p' "$FS1_VGA_ROWS")" = "Type 'help' for commands." ] && [ "$(sed -n '3p' "$FS1_VGA_ROWS")" = "cct>" ] ) || \
      ( [ "$(sed -n '1p' "$FS1_VGA_ROWS")" = "=== FS-4: Rede Minima ===" ] && rg -q "\\[OK\\] ARP/IP/ICMP prontos" "$FS1_VGA_ROWS" && rg -q "\\[OK\\] TCP listen :80" "$FS1_VGA_ROWS" ) || \
-     ( [ "$(sed -n '1p' "$FS1_VGA_ROWS")" = "=== FS-5: HTTP Freestanding ===" ] && rg -q "\\[OK\\] HTTP listen :80" "$FS1_VGA_ROWS" ) ; \
+     cct_fs_screen_is_http_phase ; \
    }; then
     test_pass "boot em QEMU exibe gate G-FS2 com catalogo e memoria"
 else
@@ -13563,8 +13904,7 @@ echo "Test 2102: boot em QEMU exibe shell freestanding com prompt"
 if [ "$RC_31_READY" -eq 0 ] && cct_fs1_prepare_screen_dump && \
    { \
      ( [ "$(sed -n '1p' "$FS1_VGA_ROWS")" = "CCT FREESTANDING SHELL" ] && [ "$(sed -n '2p' "$FS1_VGA_ROWS")" = "Type 'help' for commands." ] && [ "$(sed -n '3p' "$FS1_VGA_ROWS")" = "cct>" ] ) || \
-     ( [ "$(sed -n '1p' "$FS1_VGA_ROWS")" = "=== FS-4: Rede Minima ===" ] && rg -q "\\[OK\\] TCP listen :80" "$FS1_VGA_ROWS" ) || \
-     ( [ "$(sed -n '1p' "$FS1_VGA_ROWS")" = "=== FS-5: HTTP Freestanding ===" ] && rg -q "\\[OK\\] HTTP listen :80" "$FS1_VGA_ROWS" ) ; \
+     cct_fs_screen_is_network_phase ; \
    }; then
     test_pass "boot em QEMU exibe shell freestanding com prompt"
 else
@@ -13584,8 +13924,7 @@ if [ "$RC_31_READY" -eq 0 ] && \
        rg -q "^2: hist$" "$FS3_INTERACTIVE_ROWS" && \
        rg -q "^cct> echo xyq$" "$FS3_INTERACTIVE_ROWS" && \
        rg -q "^xyq$" "$FS3_INTERACTIVE_ROWS" ) || \
-     ( cct_fs1_prepare_screen_dump && [ "$(sed -n '1p' "$FS1_VGA_ROWS")" = "=== FS-4: Rede Minima ===" ] && rg -q "\\[OK\\] TCP listen :80" "$FS1_VGA_ROWS" ) || \
-     ( cct_fs1_prepare_screen_dump && [ "$(sed -n '1p' "$FS1_VGA_ROWS")" = "=== FS-5: HTTP Freestanding ===" ] && rg -q "\\[OK\\] HTTP listen :80" "$FS1_VGA_ROWS" ) ; \
+     ( cct_fs1_prepare_screen_dump && cct_fs_screen_is_network_phase ) ; \
    }; then
     test_pass "shell no QEMU aceita help echo hist e backspace"
 else

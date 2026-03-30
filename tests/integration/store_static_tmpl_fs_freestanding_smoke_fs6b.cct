@@ -1,0 +1,18 @@
+INCIPIT grimoire "store_static_tmpl_fs_freestanding_smoke_fs6b"
+
+ADVOCARE "cct/store_fs"
+ADVOCARE "cct/static_fs"
+ADVOCARE "cct/tmpl_fs"
+
+RITUALE main() REDDE NIHIL
+  CONIURA store_fs_init()
+  CONIURA store_fs_set_int("req.total", 1)
+  CONIURA store_fs_increment("req.total")
+  CONIURA store_fs_get_int("req.total", 0)
+  CONIURA static_fs_find("/layout.html")
+  CONIURA static_fs_read("/layout.html")
+  CONIURA tmpl_fs_render_page("Smoke", "<p>ok</p>")
+  REDDE
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

@@ -1,0 +1,214 @@
+-- CCT — Clavicula Turing
+-- Standard Library Module: civitas_app_fs
+--
+-- FASE FS-6C: Bare-metal Civitas handlers
+--
+-- Copyright (c) Erick Andrade Busato. Todos os direitos reservados.
+
+INCIPIT grimoire "civitas_app_fs"
+
+ADVOCARE "cct/asset_fs"
+ADVOCARE "cct/civitas_bridge_fs"
+ADVOCARE "cct/dhcp_fs"
+ADVOCARE "cct/http_parser_fs"
+ADVOCARE "cct/http_router_fs"
+ADVOCARE "cct/http_server_fs"
+ADVOCARE "cct/mem_fs"
+ADVOCARE "cct/static_fs"
+ADVOCARE "cct/store_fs"
+ADVOCARE "cct/timer_fs"
+ADVOCARE "cct/tmpl_fs"
+ADVOCARE "cct/verbum_fs"
+
+ARCANUM RITUALE civitas_card(VERBUM titulo, VERBUM corpo) REDDE VERBUM
+  EVOCA SPECULUM NIHIL b AD CONIURA verbum_fs_builder_new()
+  CONIURA verbum_fs_builder_append(b, "<div class='card'><h2>")
+  CONIURA verbum_fs_builder_append(b, titulo)
+  CONIURA verbum_fs_builder_append(b, "</h2>")
+  CONIURA verbum_fs_builder_append(b, corpo)
+  CONIURA verbum_fs_builder_append(b, "</div>")
+  REDDE CONIURA verbum_fs_builder_build(b)
+EXPLICIT RITUALE
+
+ARCANUM RITUALE civitas_stat_row(VERBUM label, VERBUM valor) REDDE VERBUM
+  EVOCA SPECULUM NIHIL b AD CONIURA verbum_fs_builder_new()
+  CONIURA verbum_fs_builder_append(b, "<div class='stat'><span class='label'>")
+  CONIURA verbum_fs_builder_append(b, label)
+  CONIURA verbum_fs_builder_append(b, "</span><span class='value'>")
+  CONIURA verbum_fs_builder_append(b, valor)
+  CONIURA verbum_fs_builder_append(b, "</span></div>")
+  REDDE CONIURA verbum_fs_builder_build(b)
+EXPLICIT RITUALE
+
+RITUALE handler_home(WebRequestFs req) REDDE WebResponseFs
+  EVOCA HeapStats stats AD CONIURA mem_fs_stats()
+  EVOCA REX total AD CONIURA store_fs_get_int("req.total", 0)
+  EVOCA SPECULUM NIHIL b AD CONIURA verbum_fs_builder_new()
+  CONIURA store_fs_increment("req.total")
+  CONIURA store_fs_increment("req.get")
+  CONIURA verbum_fs_builder_append(b, CONIURA civitas_stat_row("System", "ONLINE"))
+  CONIURA verbum_fs_builder_append(b, CONIURA civitas_stat_row("IP", CONIURA dhcp_fs_ip()))
+  CONIURA verbum_fs_builder_append(b, CONIURA civitas_stat_row("Uptime", CONIURA timer_fs_format_uptime()))
+  CONIURA verbum_fs_builder_append(b, CONIURA civitas_stat_row("Requests", CONIURA verbum_fs_from_int(total + 1)))
+  CONIURA verbum_fs_builder_append(b, CONIURA civitas_stat_row("Heap Used", CONIURA verbum_fs_from_int(stats.allocated_bytes)))
+  REDDE CONIURA civitas_fs_html(200, CONIURA tmpl_fs_render_page("Home", CONIURA civitas_card("Civitas FS", CONIURA verbum_fs_builder_build(b))))
+EXPLICIT RITUALE
+
+RITUALE handler_status(WebRequestFs req) REDDE WebResponseFs
+  EVOCA HeapStats stats AD CONIURA mem_fs_stats()
+  EVOCA SPECULUM NIHIL b AD CONIURA verbum_fs_builder_new()
+  EVOCA VERBUM keepalive_text AD "off"
+  EVOCA VERBUM fallback_text AD "off"
+  CONIURA store_fs_increment("req.total")
+  CONIURA store_fs_increment("req.get")
+  CONIURA verbum_fs_builder_append(b, CONIURA civitas_stat_row("IP", CONIURA dhcp_fs_ip()))
+  CONIURA verbum_fs_builder_append(b, CONIURA civitas_stat_row("Gateway", CONIURA dhcp_fs_gateway()))
+  CONIURA verbum_fs_builder_append(b, CONIURA civitas_stat_row("Mask", CONIURA dhcp_fs_mask()))
+  CONIURA verbum_fs_builder_append(b, CONIURA civitas_stat_row("Conn Requests", CONIURA verbum_fs_from_int(CONIURA http_server_fs_conn_requests())))
+  SI CONIURA http_server_fs_keepalive()
+    VINCIRE keepalive_text AD "on"
+  FIN SI
+  SI CONIURA dhcp_fs_using_fallback()
+    VINCIRE fallback_text AD "on"
+  FIN SI
+  CONIURA verbum_fs_builder_append(b, CONIURA civitas_stat_row("Keepalive", keepalive_text))
+  CONIURA verbum_fs_builder_append(b, CONIURA civitas_stat_row("DHCP Fallback", fallback_text))
+  CONIURA verbum_fs_builder_append(b, CONIURA civitas_stat_row("Heap Total", CONIURA verbum_fs_from_int(stats.total_bytes)))
+  REDDE CONIURA civitas_fs_html(200, CONIURA tmpl_fs_render_page("Status", CONIURA civitas_card("Runtime", CONIURA verbum_fs_builder_build(b))))
+EXPLICIT RITUALE
+
+RITUALE handler_api_info(WebRequestFs req) REDDE WebResponseFs
+  EVOCA SPECULUM NIHIL b AD CONIURA verbum_fs_builder_new()
+  CONIURA store_fs_increment("req.total")
+  CONIURA store_fs_increment("req.get")
+  CONIURA civitas_fs_set_header("Access-Control-Allow-Origin", "*")
+  CONIURA verbum_fs_builder_append(b, "{\"service\":\"civitas-fs6\",\"ip\":\"")
+  CONIURA verbum_fs_builder_append(b, CONIURA dhcp_fs_ip())
+  CONIURA verbum_fs_builder_append(b, "\",\"uptime_ms\":")
+  CONIURA verbum_fs_builder_append_int(b, CONIURA timer_fs_uptime_ms())
+  CONIURA verbum_fs_builder_append(b, ",\"requests\":")
+  CONIURA verbum_fs_builder_append_int(b, CONIURA store_fs_get_int("req.total", 0))
+  CONIURA verbum_fs_builder_append(b, ",\"keepalive\":")
+  SI CONIURA http_server_fs_conn_requests() > 1
+    CONIURA verbum_fs_builder_append(b, "true")
+  ALITER
+    SI CONIURA http_server_fs_keepalive()
+      CONIURA verbum_fs_builder_append(b, "true")
+    ALITER
+      CONIURA verbum_fs_builder_append(b, "false")
+    FIN SI
+  FIN SI
+  CONIURA verbum_fs_builder_append(b, ",\"fallback\":")
+  SI CONIURA dhcp_fs_using_fallback()
+    CONIURA verbum_fs_builder_append(b, "true")
+  ALITER
+    CONIURA verbum_fs_builder_append(b, "false")
+  FIN SI
+  CONIURA verbum_fs_builder_append(b, "}")
+  REDDE CONIURA civitas_fs_json(200, CONIURA verbum_fs_builder_build(b))
+EXPLICIT RITUALE
+
+RITUALE handler_api_mem(WebRequestFs req) REDDE WebResponseFs
+  EVOCA HeapStats stats AD CONIURA mem_fs_stats()
+  EVOCA SPECULUM NIHIL b AD CONIURA verbum_fs_builder_new()
+  CONIURA store_fs_increment("req.total")
+  CONIURA store_fs_increment("req.get")
+  CONIURA civitas_fs_set_header("Access-Control-Allow-Origin", "*")
+  CONIURA verbum_fs_builder_append(b, "{\"total\":")
+  CONIURA verbum_fs_builder_append_int(b, stats.total_bytes)
+  CONIURA verbum_fs_builder_append(b, ",\"used\":")
+  CONIURA verbum_fs_builder_append_int(b, stats.allocated_bytes)
+  CONIURA verbum_fs_builder_append(b, ",\"available\":")
+  CONIURA verbum_fs_builder_append_int(b, stats.available_bytes)
+  CONIURA verbum_fs_builder_append(b, "}")
+  REDDE CONIURA civitas_fs_json(200, CONIURA verbum_fs_builder_build(b))
+EXPLICIT RITUALE
+
+RITUALE handler_api_echo(WebRequestFs req) REDDE WebResponseFs
+  CONIURA store_fs_increment("req.total")
+  CONIURA store_fs_increment("req.post")
+  SI req.body_len <= 0
+    REDDE CONIURA civitas_fs_text(400, "Body vazio.")
+  FIN SI
+  REDDE CONIURA civitas_fs_text(200, req.body)
+EXPLICIT RITUALE
+
+RITUALE handler_static_file(WebRequestFs req) REDDE WebResponseFs
+  EVOCA WebResponseFs res
+  SI CONIURA asset_fs_exists(req.path)
+    EVOCA REX n AD CONIURA asset_fs_len(req.path)
+    EVOCA SPECULUM NIHIL data AD CONIURA mem_fs_alloc_zero(n + 1)
+    CONIURA asset_fs_fill(req.path, data, n)
+    OBSECRO cct_svc_http_res_build(200, CONIURA asset_fs_content_type(req.path), data, n)
+    OBSECRO cct_svc_http_res_send()
+    VINCIRE res.status AD 200
+    VINCIRE res.content_type AD CONIURA asset_fs_content_type(req.path)
+    VINCIRE res.body AD ""
+    VINCIRE res.already_sent AD VERUM
+    REDDE res
+  FIN SI
+  SI CONIURA static_fs_serve(req.path)
+    VINCIRE res.status AD 200
+    VINCIRE res.content_type AD ""
+    VINCIRE res.body AD ""
+    VINCIRE res.already_sent AD VERUM
+    REDDE res
+  FIN SI
+  CONIURA store_fs_increment("req.404")
+  REDDE CONIURA civitas_fs_not_found()
+EXPLICIT RITUALE
+
+RITUALE handler_about(WebRequestFs req) REDDE WebResponseFs
+  CONIURA store_fs_increment("req.total")
+  CONIURA store_fs_increment("req.get")
+  REDDE CONIURA civitas_fs_html(200, CONIURA tmpl_fs_render_page("About",
+    "<div class='card'><h2>About</h2><p>Civitas freestanding appliance powered by CCT.</p></div>"))
+EXPLICIT RITUALE
+
+RITUALE handler_not_found_app(WebRequestFs req) REDDE WebResponseFs
+  CONIURA store_fs_increment("req.total")
+  CONIURA store_fs_increment("req.404")
+  REDDE CONIURA civitas_fs_html(404, CONIURA tmpl_fs_render_page("404",
+    "<div class='card'><h2>404 Not Found</h2><p>Requested path was not found.</p></div>"))
+EXPLICIT RITUALE
+
+RITUALE civitas_app_fs_register_routes() REDDE NIHIL
+  CONIURA http_router_fs_init()
+  CONIURA http_router_fs_add("GET", "/", CONIURA http_router_fs_exact(), 1)
+  CONIURA http_router_fs_add("GET", "/status", CONIURA http_router_fs_exact(), 2)
+  CONIURA http_router_fs_add("GET", "/api/info", CONIURA http_router_fs_exact(), 3)
+  CONIURA http_router_fs_add("GET", "/api/mem", CONIURA http_router_fs_exact(), 4)
+  CONIURA http_router_fs_add("POST", "/api/echo", CONIURA http_router_fs_exact(), 5)
+  CONIURA http_router_fs_add("GET", "/static", CONIURA http_router_fs_prefix(), 6)
+  CONIURA http_router_fs_add("GET", "/favicon.ico", CONIURA http_router_fs_exact(), 6)
+  CONIURA http_router_fs_add("GET", "/about", CONIURA http_router_fs_exact(), 7)
+  CONIURA http_router_fs_set_404(8)
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE civitas_app_fs_dispatch(REX handler_id, WebRequestFs req) REDDE WebResponseFs
+  SI handler_id == 1
+    REDDE CONIURA handler_home(req)
+  FIN SI
+  SI handler_id == 2
+    REDDE CONIURA handler_status(req)
+  FIN SI
+  SI handler_id == 3
+    REDDE CONIURA handler_api_info(req)
+  FIN SI
+  SI handler_id == 4
+    REDDE CONIURA handler_api_mem(req)
+  FIN SI
+  SI handler_id == 5
+    REDDE CONIURA handler_api_echo(req)
+  FIN SI
+  SI handler_id == 6
+    REDDE CONIURA handler_static_file(req)
+  FIN SI
+  SI handler_id == 7
+    REDDE CONIURA handler_about(req)
+  FIN SI
+  REDDE CONIURA handler_not_found_app(req)
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

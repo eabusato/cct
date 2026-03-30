@@ -1,0 +1,16 @@
+INCIPIT grimoire "civitas_app_fs_freestanding_smoke_fs6c"
+
+ADVOCARE "cct/civitas_app_fs"
+ADVOCARE "cct/civitas_bridge_fs"
+
+RITUALE main() REDDE NIHIL
+  EVOCA WebRequestFs req
+  CONIURA civitas_app_fs_register_routes()
+  CONIURA civitas_app_fs_dispatch(1, req)
+  CONIURA civitas_app_fs_dispatch(2, req)
+  CONIURA civitas_app_fs_dispatch(3, req)
+  CONIURA civitas_app_fs_dispatch(8, req)
+  REDDE
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

@@ -1,0 +1,66 @@
+-- CCT — Clavicula Turing
+-- Standard Library Module: static_fs
+--
+-- FASE FS-6B: Freestanding ROM/static file bridge
+--
+-- Copyright (c) Erick Andrade Busato. Todos os direitos reservados.
+
+INCIPIT grimoire "static_fs"
+
+ADVOCARE "cct/mem_fs"
+ADVOCARE "cct/verbum_fs"
+
+ARCANUM RITUALE static_fs_bytes_to_verbum(SPECULUM NIHIL ptr, REX n) REDDE VERBUM
+  EVOCA SPECULUM NIHIL b AD CONIURA verbum_fs_builder_new()
+  EVOCA REX i AD 0
+  DUM i < n
+    CONIURA verbum_fs_builder_append_char(b, OBSECRO cct_svc_byte_at(ptr, i))
+    VINCIRE i AD i + 1
+  FIN DUM
+  REDDE CONIURA verbum_fs_builder_build(b)
+EXPLICIT RITUALE
+
+RITUALE static_fs_count() REDDE REX
+  REDDE OBSECRO cct_svc_static_count()
+EXPLICIT RITUALE
+
+RITUALE static_fs_find(VERBUM path) REDDE REX
+  REDDE OBSECRO cct_svc_static_find(path)
+EXPLICIT RITUALE
+
+RITUALE static_fs_content_type(REX idx) REDDE VERBUM
+  EVOCA SPECULUM NIHIL buf AD CONIURA mem_fs_alloc_zero(64)
+  OBSECRO cct_svc_static_ctype(idx, buf, 63)
+  REDDE CONIURA static_fs_bytes_to_verbum(buf, 63)
+EXPLICIT RITUALE
+
+RITUALE static_fs_len(REX idx) REDDE REX
+  REDDE OBSECRO cct_svc_static_len(idx)
+EXPLICIT RITUALE
+
+RITUALE static_fs_read(VERBUM path) REDDE VERBUM
+  EVOCA REX idx AD CONIURA static_fs_find(path)
+  SI idx < 0
+    REDDE ""
+  FIN SI
+  EVOCA REX n AD CONIURA static_fs_len(idx)
+  EVOCA SPECULUM NIHIL buf AD CONIURA mem_fs_alloc_zero(n + 1)
+  OBSECRO cct_svc_static_data(idx, buf, n)
+  REDDE CONIURA static_fs_bytes_to_verbum(buf, n)
+EXPLICIT RITUALE
+
+RITUALE static_fs_serve(VERBUM path) REDDE VERUM
+  EVOCA REX idx AD CONIURA static_fs_find(path)
+  SI idx < 0
+    REDDE FALSUM
+  FIN SI
+  EVOCA REX n AD CONIURA static_fs_len(idx)
+  EVOCA SPECULUM NIHIL data AD CONIURA mem_fs_alloc_zero(n + 1)
+  EVOCA VERBUM ct AD CONIURA static_fs_content_type(idx)
+  OBSECRO cct_svc_static_data(idx, data, n)
+  OBSECRO cct_svc_http_res_build(200, ct, data, n)
+  OBSECRO cct_svc_http_res_send()
+  REDDE VERUM
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

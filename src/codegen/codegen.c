@@ -6525,6 +6525,121 @@ static bool cg_emit_obsecro_expr(FILE *out, cct_codegen_t *cg, const cct_ast_nod
         return true;
     }
 
+    if (strcmp(name, "cct_svc_civitas_req_body_len") == 0 ||
+        strcmp(name, "cct_svc_kv_count") == 0 ||
+        strcmp(name, "cct_svc_static_count") == 0 ||
+        strcmp(name, "cct_svc_http_server_conn_requests") == 0 ||
+        strcmp(name, "cct_svc_http_server_keepalive_enabled") == 0 ||
+        strcmp(name, "cct_svc_http_server_pending_len") == 0 ||
+        strcmp(name, "cct_svc_dhcp_lease_time") == 0 ||
+        strcmp(name, "cct_svc_dhcp_using_fallback") == 0 ||
+        strcmp(name, "cct_svc_asset_mount") == 0) {
+        if (argc != 0) {
+            cg_report_nodef(cg, expr, "OBSECRO %s expects no arguments in FS-6", name);
+            return false;
+        }
+        fprintf(out, "%s()", name);
+        if (out_kind) *out_kind = CCT_CODEGEN_VALUE_INT;
+        return true;
+    }
+
+    if (strcmp(name, "cct_svc_static_find") == 0 ||
+        strcmp(name, "cct_svc_asset_exists") == 0 ||
+        strcmp(name, "cct_svc_asset_len") == 0 ||
+        strcmp(name, "cct_svc_asset_content_type") == 0) {
+        if (argc != 1) {
+            cg_report_nodef(cg, expr, "OBSECRO %s expects exactly one VERBUM argument in FS-6", name);
+            return false;
+        }
+        cct_codegen_value_kind_t k0 = CCT_CODEGEN_VALUE_UNKNOWN;
+        fprintf(out, "%s(", name);
+        if (!cg_emit_expr(out, cg, args->nodes[0], &k0)) return false;
+        if (k0 != CCT_CODEGEN_VALUE_STRING) {
+            cg_report_nodef(cg, args->nodes[0], "OBSECRO %s requires VERBUM argument in FS-6", name);
+            return false;
+        }
+        fputs(")", out);
+        if (out_kind) {
+            *out_kind = strcmp(name, "cct_svc_asset_content_type") == 0
+                            ? CCT_CODEGEN_VALUE_STRING
+                            : CCT_CODEGEN_VALUE_INT;
+        }
+        return true;
+    }
+
+    if (strcmp(name, "cct_svc_static_len") == 0 ||
+        strcmp(name, "cct_svc_dhcp_acquire") == 0) {
+        if (argc != 1) {
+            cg_report_nodef(cg, expr, "OBSECRO %s expects exactly one integer argument in FS-6", name);
+            return false;
+        }
+        cct_codegen_value_kind_t k0 = CCT_CODEGEN_VALUE_UNKNOWN;
+        fprintf(out, "%s(", name);
+        if (!cg_emit_expr(out, cg, args->nodes[0], &k0)) return false;
+        if (!(k0 == CCT_CODEGEN_VALUE_INT || k0 == CCT_CODEGEN_VALUE_BOOL)) {
+            cg_report_nodef(cg, args->nodes[0], "OBSECRO %s requires integer argument in FS-6", name);
+            return false;
+        }
+        fputs(")", out);
+        if (out_kind) *out_kind = CCT_CODEGEN_VALUE_INT;
+        return true;
+    }
+
+    if (strcmp(name, "cct_svc_kv_get_int") == 0) {
+        if (argc != 2) {
+            cg_report_node(cg, expr, "OBSECRO cct_svc_kv_get_int expects exactly (key, fallback) in FS-6B");
+            return false;
+        }
+        cct_codegen_value_kind_t k0 = CCT_CODEGEN_VALUE_UNKNOWN;
+        cct_codegen_value_kind_t k1 = CCT_CODEGEN_VALUE_UNKNOWN;
+        fputs("cct_svc_kv_get_int(", out);
+        if (!cg_emit_expr(out, cg, args->nodes[0], &k0)) return false;
+        if (k0 != CCT_CODEGEN_VALUE_STRING) {
+            cg_report_node(cg, args->nodes[0], "OBSECRO cct_svc_kv_get_int requires VERBUM key in FS-6B");
+            return false;
+        }
+        fputs(", ", out);
+        if (!cg_emit_expr(out, cg, args->nodes[1], &k1)) return false;
+        if (!(k1 == CCT_CODEGEN_VALUE_INT || k1 == CCT_CODEGEN_VALUE_BOOL)) {
+            cg_report_node(cg, args->nodes[1], "OBSECRO cct_svc_kv_get_int requires integer fallback in FS-6B");
+            return false;
+        }
+        fputs(")", out);
+        if (out_kind) *out_kind = CCT_CODEGEN_VALUE_INT;
+        return true;
+    }
+
+    if (strcmp(name, "cct_svc_asset_read") == 0) {
+        if (argc != 3) {
+            cg_report_node(cg, expr, "OBSECRO cct_svc_asset_read expects exactly (path, dst_ptr, max_len) in FS-6E");
+            return false;
+        }
+        cct_codegen_value_kind_t k0 = CCT_CODEGEN_VALUE_UNKNOWN;
+        cct_codegen_value_kind_t k1 = CCT_CODEGEN_VALUE_UNKNOWN;
+        cct_codegen_value_kind_t k2 = CCT_CODEGEN_VALUE_UNKNOWN;
+        fputs("cct_svc_asset_read(", out);
+        if (!cg_emit_expr(out, cg, args->nodes[0], &k0)) return false;
+        if (k0 != CCT_CODEGEN_VALUE_STRING) {
+            cg_report_node(cg, args->nodes[0], "OBSECRO cct_svc_asset_read requires VERBUM path in FS-6E");
+            return false;
+        }
+        fputs(", ", out);
+        if (!cg_emit_expr(out, cg, args->nodes[1], &k1)) return false;
+        if (k1 != CCT_CODEGEN_VALUE_POINTER) {
+            cg_report_node(cg, args->nodes[1], "OBSECRO cct_svc_asset_read requires pointer destination in FS-6E");
+            return false;
+        }
+        fputs(", ", out);
+        if (!cg_emit_expr(out, cg, args->nodes[2], &k2)) return false;
+        if (!(k2 == CCT_CODEGEN_VALUE_INT || k2 == CCT_CODEGEN_VALUE_BOOL)) {
+            cg_report_node(cg, args->nodes[2], "OBSECRO cct_svc_asset_read requires integer max_len in FS-6E");
+            return false;
+        }
+        fputs(")", out);
+        if (out_kind) *out_kind = CCT_CODEGEN_VALUE_INT;
+        return true;
+    }
+
     if (strcmp(name, "console_get_linha") == 0 || strcmp(name, "console_get_coluna") == 0) {
         if (argc != 0) {
             cg_report_nodef(cg, expr, "OBSECRO %s expects no arguments in FS-1A", name);
@@ -9420,7 +9535,10 @@ static bool cg_emit_scribe_stmt(FILE *out, cct_codegen_t *cg, const cct_ast_node
         strcmp(obsecro_node->as.obsecro.name, "cct_svc_tcp_close") == 0 ||
         strcmp(obsecro_node->as.obsecro.name, "cct_svc_http_server_close") == 0 ||
         strcmp(obsecro_node->as.obsecro.name, "cct_svc_http_res_send") == 0 ||
-        strcmp(obsecro_node->as.obsecro.name, "cct_svc_http_router_init") == 0) {
+        strcmp(obsecro_node->as.obsecro.name, "cct_svc_http_router_init") == 0 ||
+        strcmp(obsecro_node->as.obsecro.name, "cct_svc_civitas_res_not_found") == 0 ||
+        strcmp(obsecro_node->as.obsecro.name, "cct_svc_civitas_res_send") == 0 ||
+        strcmp(obsecro_node->as.obsecro.name, "cct_svc_kv_init") == 0) {
         cct_ast_node_list_t *args = obsecro_node->as.obsecro.arguments;
         if (args && args->count != 0) {
             cg_report_nodef(cg, obsecro_node, "OBSECRO %s expects no arguments in FS-3", obsecro_node->as.obsecro.name);
@@ -9439,7 +9557,10 @@ static bool cg_emit_scribe_stmt(FILE *out, cct_codegen_t *cg, const cct_ast_node
         strcmp(obsecro_node->as.obsecro.name, "cct_svc_tcp_init") == 0 ||
         strcmp(obsecro_node->as.obsecro.name, "cct_svc_http_server_init") == 0 ||
         strcmp(obsecro_node->as.obsecro.name, "cct_svc_http_res_begin") == 0 ||
-        strcmp(obsecro_node->as.obsecro.name, "cct_svc_http_router_set_404") == 0) {
+        strcmp(obsecro_node->as.obsecro.name, "cct_svc_http_router_set_404") == 0 ||
+        strcmp(obsecro_node->as.obsecro.name, "cct_svc_civitas_build_request") == 0 ||
+        strcmp(obsecro_node->as.obsecro.name, "cct_svc_http_server_set_keepalive") == 0 ||
+        strcmp(obsecro_node->as.obsecro.name, "cct_svc_http_server_consume") == 0) {
         cct_ast_node_list_t *args = obsecro_node->as.obsecro.arguments;
         cct_codegen_value_kind_t k0 = CCT_CODEGEN_VALUE_UNKNOWN;
         if (!args || args->count != 1) {
@@ -9520,6 +9641,216 @@ static bool cg_emit_scribe_stmt(FILE *out, cct_codegen_t *cg, const cct_ast_node
         if (!cg_emit_expr(out, cg, args->nodes[1], &k1)) return false;
         if (!(k1 == CCT_CODEGEN_VALUE_INT || k1 == CCT_CODEGEN_VALUE_BOOL)) {
             cg_report_node(cg, args->nodes[1], "OBSECRO cct_svc_http_server_send requires integer len in FS-5A");
+            return false;
+        }
+        fputs(");\n", out);
+        return true;
+    }
+
+    if (strcmp(obsecro_node->as.obsecro.name, "cct_svc_civitas_req_method") == 0 ||
+        strcmp(obsecro_node->as.obsecro.name, "cct_svc_civitas_req_path") == 0 ||
+        strcmp(obsecro_node->as.obsecro.name, "cct_svc_civitas_req_query") == 0 ||
+        strcmp(obsecro_node->as.obsecro.name, "cct_svc_civitas_req_host") == 0 ||
+        strcmp(obsecro_node->as.obsecro.name, "cct_svc_civitas_req_body") == 0 ||
+        strcmp(obsecro_node->as.obsecro.name, "cct_svc_civitas_req_id") == 0) {
+        cct_ast_node_list_t *args = obsecro_node->as.obsecro.arguments;
+        cct_codegen_value_kind_t k0 = CCT_CODEGEN_VALUE_UNKNOWN;
+        cct_codegen_value_kind_t k1 = CCT_CODEGEN_VALUE_UNKNOWN;
+        if (!args || args->count != 2) {
+            cg_report_nodef(cg, obsecro_node, "OBSECRO %s expects exactly (dst_ptr, len) in FS-6A", obsecro_node->as.obsecro.name);
+            return false;
+        }
+        cg_emit_indent(out, indent);
+        fprintf(out, "%s(", obsecro_node->as.obsecro.name);
+        if (!cg_emit_expr(out, cg, args->nodes[0], &k0)) return false;
+        if (k0 != CCT_CODEGEN_VALUE_POINTER) {
+            cg_report_nodef(cg, args->nodes[0], "OBSECRO %s requires pointer destination in FS-6A", obsecro_node->as.obsecro.name);
+            return false;
+        }
+        fputs(", ", out);
+        if (!cg_emit_expr(out, cg, args->nodes[1], &k1)) return false;
+        if (!(k1 == CCT_CODEGEN_VALUE_INT || k1 == CCT_CODEGEN_VALUE_BOOL)) {
+            cg_report_nodef(cg, args->nodes[1], "OBSECRO %s requires integer len in FS-6A", obsecro_node->as.obsecro.name);
+            return false;
+        }
+        fputs(");\n", out);
+        return true;
+    }
+
+    if (strcmp(obsecro_node->as.obsecro.name, "cct_svc_civitas_req_header") == 0 ||
+        strcmp(obsecro_node->as.obsecro.name, "cct_svc_kv_get") == 0) {
+        cct_ast_node_list_t *args = obsecro_node->as.obsecro.arguments;
+        cct_codegen_value_kind_t k0 = CCT_CODEGEN_VALUE_UNKNOWN;
+        cct_codegen_value_kind_t k1 = CCT_CODEGEN_VALUE_UNKNOWN;
+        cct_codegen_value_kind_t k2 = CCT_CODEGEN_VALUE_UNKNOWN;
+        if (!args || args->count != 3) {
+            cg_report_nodef(cg, obsecro_node, "OBSECRO %s expects exactly three arguments in FS-6", obsecro_node->as.obsecro.name);
+            return false;
+        }
+        cg_emit_indent(out, indent);
+        fprintf(out, "%s(", obsecro_node->as.obsecro.name);
+        if (!cg_emit_expr(out, cg, args->nodes[0], &k0)) return false;
+        if (k0 != CCT_CODEGEN_VALUE_STRING) {
+            cg_report_nodef(cg, args->nodes[0], "OBSECRO %s requires VERBUM first argument in FS-6", obsecro_node->as.obsecro.name);
+            return false;
+        }
+        fputs(", ", out);
+        if (!cg_emit_expr(out, cg, args->nodes[1], &k1)) return false;
+        if (k1 != CCT_CODEGEN_VALUE_POINTER) {
+            cg_report_nodef(cg, args->nodes[1], "OBSECRO %s requires pointer destination in FS-6", obsecro_node->as.obsecro.name);
+            return false;
+        }
+        fputs(", ", out);
+        if (!cg_emit_expr(out, cg, args->nodes[2], &k2)) return false;
+        if (!(k2 == CCT_CODEGEN_VALUE_INT || k2 == CCT_CODEGEN_VALUE_BOOL)) {
+            cg_report_nodef(cg, args->nodes[2], "OBSECRO %s requires integer len in FS-6", obsecro_node->as.obsecro.name);
+            return false;
+        }
+        fputs(");\n", out);
+        return true;
+    }
+
+    if (strcmp(obsecro_node->as.obsecro.name, "cct_svc_static_path") == 0 ||
+        strcmp(obsecro_node->as.obsecro.name, "cct_svc_static_ctype") == 0 ||
+        strcmp(obsecro_node->as.obsecro.name, "cct_svc_static_data") == 0 ||
+        strcmp(obsecro_node->as.obsecro.name, "cct_svc_asset_read") == 0) {
+        cct_ast_node_list_t *args = obsecro_node->as.obsecro.arguments;
+        cct_codegen_value_kind_t k0 = CCT_CODEGEN_VALUE_UNKNOWN;
+        cct_codegen_value_kind_t k1 = CCT_CODEGEN_VALUE_UNKNOWN;
+        cct_codegen_value_kind_t k2 = CCT_CODEGEN_VALUE_UNKNOWN;
+        if (!args || args->count != 3) {
+            cg_report_nodef(cg, obsecro_node, "OBSECRO %s expects exactly (%s, dst_ptr, len) in FS-6",
+                            obsecro_node->as.obsecro.name,
+                            strcmp(obsecro_node->as.obsecro.name, "cct_svc_asset_read") == 0 ? "path" : "idx");
+            return false;
+        }
+        cg_emit_indent(out, indent);
+        fprintf(out, "%s(", obsecro_node->as.obsecro.name);
+        if (!cg_emit_expr(out, cg, args->nodes[0], &k0)) return false;
+        if (strcmp(obsecro_node->as.obsecro.name, "cct_svc_asset_read") == 0) {
+            if (k0 != CCT_CODEGEN_VALUE_STRING) {
+                cg_report_node(cg, args->nodes[0], "OBSECRO cct_svc_asset_read requires VERBUM path in FS-6E");
+                return false;
+            }
+        } else if (!(k0 == CCT_CODEGEN_VALUE_INT || k0 == CCT_CODEGEN_VALUE_BOOL)) {
+            cg_report_nodef(cg, args->nodes[0], "OBSECRO %s requires integer idx in FS-6B", obsecro_node->as.obsecro.name);
+            return false;
+        }
+        fputs(", ", out);
+        if (!cg_emit_expr(out, cg, args->nodes[1], &k1)) return false;
+        if (k1 != CCT_CODEGEN_VALUE_POINTER) {
+            cg_report_nodef(cg, args->nodes[1], "OBSECRO %s requires pointer destination in FS-6B", obsecro_node->as.obsecro.name);
+            return false;
+        }
+        fputs(", ", out);
+        if (!cg_emit_expr(out, cg, args->nodes[2], &k2)) return false;
+        if (!(k2 == CCT_CODEGEN_VALUE_INT || k2 == CCT_CODEGEN_VALUE_BOOL)) {
+            cg_report_nodef(cg, args->nodes[2], "OBSECRO %s requires integer len in FS-6B", obsecro_node->as.obsecro.name);
+            return false;
+        }
+        fputs(");\n", out);
+        return true;
+    }
+
+    if (strcmp(obsecro_node->as.obsecro.name, "cct_svc_dhcp_lease_ip") == 0 ||
+        strcmp(obsecro_node->as.obsecro.name, "cct_svc_dhcp_lease_gw") == 0 ||
+        strcmp(obsecro_node->as.obsecro.name, "cct_svc_dhcp_lease_mask") == 0) {
+        cct_ast_node_list_t *args = obsecro_node->as.obsecro.arguments;
+        cct_codegen_value_kind_t k0 = CCT_CODEGEN_VALUE_UNKNOWN;
+        if (!args || args->count != 1) {
+            cg_report_nodef(cg, obsecro_node, "OBSECRO %s expects exactly one destination pointer in FS-6E", obsecro_node->as.obsecro.name);
+            return false;
+        }
+        cg_emit_indent(out, indent);
+        fprintf(out, "%s(", obsecro_node->as.obsecro.name);
+        if (!cg_emit_expr(out, cg, args->nodes[0], &k0)) return false;
+        if (k0 != CCT_CODEGEN_VALUE_POINTER) {
+            cg_report_nodef(cg, args->nodes[0], "OBSECRO %s requires pointer destination in FS-6E", obsecro_node->as.obsecro.name);
+            return false;
+        }
+        fputs(");\n", out);
+        return true;
+    }
+
+    if (strcmp(obsecro_node->as.obsecro.name, "cct_svc_civitas_res_redirect") == 0 ||
+        strcmp(obsecro_node->as.obsecro.name, "cct_svc_civitas_res_error") == 0 ||
+        strcmp(obsecro_node->as.obsecro.name, "cct_svc_kv_del") == 0 ||
+        strcmp(obsecro_node->as.obsecro.name, "cct_svc_kv_increment") == 0) {
+        cct_ast_node_list_t *args = obsecro_node->as.obsecro.arguments;
+        cct_codegen_value_kind_t k0 = CCT_CODEGEN_VALUE_UNKNOWN;
+        if (!args || args->count != 1) {
+            cg_report_nodef(cg, obsecro_node, "OBSECRO %s expects exactly one VERBUM argument in FS-6", obsecro_node->as.obsecro.name);
+            return false;
+        }
+        cg_emit_indent(out, indent);
+        fprintf(out, "%s(", obsecro_node->as.obsecro.name);
+        if (!cg_emit_expr(out, cg, args->nodes[0], &k0)) return false;
+        if (k0 != CCT_CODEGEN_VALUE_STRING) {
+            cg_report_nodef(cg, args->nodes[0], "OBSECRO %s requires VERBUM argument in FS-6", obsecro_node->as.obsecro.name);
+            return false;
+        }
+        fputs(");\n", out);
+        return true;
+    }
+
+    if (strcmp(obsecro_node->as.obsecro.name, "cct_svc_civitas_res_set_header") == 0 ||
+        strcmp(obsecro_node->as.obsecro.name, "cct_svc_kv_set") == 0) {
+        cct_ast_node_list_t *args = obsecro_node->as.obsecro.arguments;
+        cct_codegen_value_kind_t k0 = CCT_CODEGEN_VALUE_UNKNOWN;
+        cct_codegen_value_kind_t k1 = CCT_CODEGEN_VALUE_UNKNOWN;
+        if (!args || args->count != 2) {
+            cg_report_nodef(cg, obsecro_node, "OBSECRO %s expects exactly two VERBUM arguments in FS-6", obsecro_node->as.obsecro.name);
+            return false;
+        }
+        cg_emit_indent(out, indent);
+        fprintf(out, "%s(", obsecro_node->as.obsecro.name);
+        if (!cg_emit_expr(out, cg, args->nodes[0], &k0)) return false;
+        if (k0 != CCT_CODEGEN_VALUE_STRING) {
+            cg_report_nodef(cg, args->nodes[0], "OBSECRO %s requires VERBUM first argument in FS-6", obsecro_node->as.obsecro.name);
+            return false;
+        }
+        fputs(", ", out);
+        if (!cg_emit_expr(out, cg, args->nodes[1], &k1)) return false;
+        if (k1 != CCT_CODEGEN_VALUE_STRING) {
+            cg_report_nodef(cg, args->nodes[1], "OBSECRO %s requires VERBUM second argument in FS-6", obsecro_node->as.obsecro.name);
+            return false;
+        }
+        fputs(");\n", out);
+        return true;
+    }
+
+    if (strcmp(obsecro_node->as.obsecro.name, "cct_svc_civitas_res_html") == 0 ||
+        strcmp(obsecro_node->as.obsecro.name, "cct_svc_civitas_res_json") == 0 ||
+        strcmp(obsecro_node->as.obsecro.name, "cct_svc_civitas_res_text") == 0 ||
+        strcmp(obsecro_node->as.obsecro.name, "cct_svc_kv_set_int") == 0) {
+        cct_ast_node_list_t *args = obsecro_node->as.obsecro.arguments;
+        cct_codegen_value_kind_t k0 = CCT_CODEGEN_VALUE_UNKNOWN;
+        cct_codegen_value_kind_t k1 = CCT_CODEGEN_VALUE_UNKNOWN;
+        if (!args || args->count != 2) {
+            cg_report_nodef(cg, obsecro_node, "OBSECRO %s expects exactly two arguments in FS-6", obsecro_node->as.obsecro.name);
+            return false;
+        }
+        cg_emit_indent(out, indent);
+        fprintf(out, "%s(", obsecro_node->as.obsecro.name);
+        if (!cg_emit_expr(out, cg, args->nodes[0], &k0)) return false;
+        if (strcmp(obsecro_node->as.obsecro.name, "cct_svc_kv_set_int") == 0) {
+            if (k0 != CCT_CODEGEN_VALUE_STRING) {
+                cg_report_node(cg, args->nodes[0], "OBSECRO cct_svc_kv_set_int requires VERBUM key in FS-6B");
+                return false;
+            }
+        } else if (!(k0 == CCT_CODEGEN_VALUE_INT || k0 == CCT_CODEGEN_VALUE_BOOL)) {
+            cg_report_nodef(cg, args->nodes[0], "OBSECRO %s requires integer status in FS-6A", obsecro_node->as.obsecro.name);
+            return false;
+        }
+        fputs(", ", out);
+        if (!cg_emit_expr(out, cg, args->nodes[1], &k1)) return false;
+        if (strcmp(obsecro_node->as.obsecro.name, "cct_svc_kv_set_int") == 0) {
+            if (!(k1 == CCT_CODEGEN_VALUE_INT || k1 == CCT_CODEGEN_VALUE_BOOL)) {
+                cg_report_node(cg, args->nodes[1], "OBSECRO cct_svc_kv_set_int requires integer value in FS-6B");
+                return false;
+            }
+        } else if (k1 != CCT_CODEGEN_VALUE_STRING) {
+            cg_report_nodef(cg, args->nodes[1], "OBSECRO %s requires VERBUM body in FS-6A", obsecro_node->as.obsecro.name);
             return false;
         }
         fputs(");\n", out);

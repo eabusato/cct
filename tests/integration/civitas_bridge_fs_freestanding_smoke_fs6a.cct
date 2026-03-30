@@ -1,0 +1,13 @@
+INCIPIT grimoire "civitas_bridge_fs_freestanding_smoke_fs6a"
+
+ADVOCARE "cct/civitas_bridge_fs"
+
+RITUALE main() REDDE NIHIL
+  EVOCA WebResponseFs res
+  CONIURA civitas_fs_req_header("Host")
+  VINCIRE res AD CONIURA civitas_fs_text(200, "ok")
+  CONIURA civitas_fs_send_response(res)
+  REDDE
+EXPLICIT RITUALE
+
+EXPLICIT grimoire
