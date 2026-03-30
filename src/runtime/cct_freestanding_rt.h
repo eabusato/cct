@@ -70,6 +70,54 @@ static inline long long cct_svc_inb(long long porta) {
     return (long long)r;
 }
 
+static inline void cct_svc_outw(long long porta, long long dado) {
+    uint16_t p = (uint16_t)(porta & 0xFFFFLL);
+    uint16_t d = (uint16_t)(dado & 0xFFFFLL);
+#if defined(__i386__) || defined(__x86_64__)
+    __asm__ volatile("out{w %0, %1 | %1, %0}" : : "a"(d), "Nd"(p) : "memory");
+    __asm__ volatile("clc" : : : "cc");
+#else
+    (void)p;
+    (void)d;
+#endif
+}
+
+static inline long long cct_svc_inw(long long porta) {
+    uint16_t r = 0;
+    uint16_t p = (uint16_t)(porta & 0xFFFFLL);
+#if defined(__i386__) || defined(__x86_64__)
+    __asm__ volatile("in{w %1, %0 | %0, %1}" : "=a"(r) : "Nd"(p) : "memory");
+    __asm__ volatile("clc" : : : "cc");
+#else
+    (void)p;
+#endif
+    return (long long)(uint16_t)r;
+}
+
+static inline void cct_svc_outl(long long porta, long long dado) {
+    uint16_t p = (uint16_t)(porta & 0xFFFFLL);
+    uint32_t d = (uint32_t)(dado & 0xFFFFFFFFLL);
+#if defined(__i386__) || defined(__x86_64__)
+    __asm__ volatile("out{l %0, %1 | %1, %0}" : : "a"(d), "Nd"(p) : "memory");
+    __asm__ volatile("clc" : : : "cc");
+#else
+    (void)p;
+    (void)d;
+#endif
+}
+
+static inline long long cct_svc_inl(long long porta) {
+    uint32_t r = 0;
+    uint16_t p = (uint16_t)(porta & 0xFFFFLL);
+#if defined(__i386__) || defined(__x86_64__)
+    __asm__ volatile("in{l %1, %0 | %0, %1}" : "=a"(r) : "Nd"(p) : "memory");
+    __asm__ volatile("clc" : : : "cc");
+#else
+    (void)p;
+#endif
+    return (long long)(int32_t)r;
+}
+
 static inline void cct_svc_memcpy(void *dst, const void *src, long long n) {
     if (!dst || !src || n < 0) cct_svc_halt();
     cct_fs_memcpy(dst, src, (size_t)n);
@@ -571,6 +619,65 @@ extern long long keyboard_self_test(void);
 extern long long timer_uptime_ms(void);
 extern long long timer_ticks_count(void);
 extern void timer_sleep_ms(long long ms);
+extern void cct_svc_pci_init(void);
+extern long long cct_svc_pci_count(void);
+extern long long cct_svc_pci_vendor(long long idx);
+extern long long cct_svc_pci_device_id(long long idx);
+extern long long cct_svc_pci_class(long long idx);
+extern long long cct_svc_pci_bar0(long long idx);
+extern long long cct_svc_pci_irq(long long idx);
+extern long long cct_svc_pci_find(long long vendor_id, long long device_id);
+extern void cct_svc_pci_enable_busmaster(long long idx);
+extern long long cct_svc_net_init(long long iobase);
+extern void cct_svc_net_send(const void *data, long long len);
+extern long long cct_svc_net_recv(void *buf, long long max_len);
+extern void cct_svc_net_mac(void *mac_buf);
+extern void cct_svc_net_poll(void);
+extern void cct_svc_net_dispatch_init(void);
+extern void cct_svc_tcp_init(long long port);
+extern long long cct_svc_tcp_accept(void);
+extern long long cct_svc_tcp_recv(void *buf, long long max_len);
+extern void cct_svc_tcp_send(const void *data, long long len);
+extern void cct_svc_tcp_close(void);
+extern long long cct_svc_tcp_state(void);
+extern void cct_svc_http_server_init(long long port);
+extern long long cct_svc_http_server_accept(long long timeout_ms);
+extern long long cct_svc_http_server_read(long long hdr_timeout_ms, long long body_timeout_ms);
+extern void cct_svc_http_server_send(const void *data, long long len);
+extern void cct_svc_http_server_close(void);
+extern long long cct_svc_http_server_req_len(void);
+extern void cct_svc_http_server_req_copy(void *dst, long long max_len);
+extern long long cct_svc_http_server_req_count(void);
+extern long long cct_svc_http_parse(const void *buf, long long len);
+extern void cct_svc_http_req_method(void *dst, long long max_len);
+extern void cct_svc_http_req_path(void *dst, long long max_len);
+extern void cct_svc_http_req_query(void *dst, long long max_len);
+extern void cct_svc_http_req_version(void *dst, long long max_len);
+extern const char *cct_svc_http_req_method_ptr(void);
+extern const char *cct_svc_http_req_path_ptr(void);
+extern const char *cct_svc_http_req_query_ptr(void);
+extern const char *cct_svc_http_req_version_ptr(void);
+extern long long cct_svc_http_req_method_is(const char *method);
+extern long long cct_svc_http_req_path_is(const char *path);
+extern long long cct_svc_http_req_path_starts(const char *prefix);
+extern long long cct_svc_http_req_header_count(void);
+extern void cct_svc_http_req_header_name(long long idx, void *dst, long long max_len);
+extern void cct_svc_http_req_header_value(long long idx, void *dst, long long max_len);
+extern const char *cct_svc_http_req_header_name_ptr(long long idx);
+extern const char *cct_svc_http_req_header_value_ptr(long long idx);
+extern long long cct_svc_http_req_body_len(void);
+extern void cct_svc_http_req_body_copy(void *dst, long long max_len);
+extern long long cct_svc_http_req_find_header(const char *name);
+extern void cct_svc_http_res_begin(long long status_code);
+extern void cct_svc_http_res_header(const char *name, const char *value);
+extern void cct_svc_http_res_finish(const char *content_type, const void *body, long long body_len);
+extern void cct_svc_http_res_build(long long status_code, const char *content_type, const void *body, long long body_len);
+extern void cct_svc_http_res_send(void);
+extern long long cct_svc_http_res_len(void);
+extern void cct_svc_http_router_init(void);
+extern void cct_svc_http_router_add(const char *method, const char *path, long long match_type, long long handler_id);
+extern long long cct_svc_http_router_dispatch(const char *method, const char *path);
+extern void cct_svc_http_router_set_404(long long handler_id);
 
 static inline void cct_svc_irq_enable(void) {
 #if defined(__i386__) || defined(__x86_64__)

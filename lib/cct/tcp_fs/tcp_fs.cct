@@ -1,0 +1,53 @@
+-- CCT — Clavicula Turing
+-- Standard Library Module: tcp_fs
+--
+-- FASE FS-4D: Minimal TCP bridge for freestanding targets
+--
+-- Copyright (c) Erick Andrade Busato. Todos os direitos reservados.
+
+INCIPIT grimoire "tcp_fs"
+
+ADVOCARE "cct/net_fs"
+ADVOCARE "cct/verbum_fs"
+
+RITUALE tcp_fs_listen(REX porta) REDDE NIHIL
+  OBSECRO cct_svc_tcp_init(porta)
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE tcp_fs_accept() REDDE VERUM
+  REDDE OBSECRO cct_svc_tcp_accept() != 0
+EXPLICIT RITUALE
+
+RITUALE tcp_fs_recv(SPECULUM NIHIL buf, REX max_len) REDDE REX
+  REDDE OBSECRO cct_svc_tcp_recv(buf, max_len)
+EXPLICIT RITUALE
+
+RITUALE tcp_fs_send(SPECULUM NIHIL data, REX len) REDDE NIHIL
+  OBSECRO cct_svc_tcp_send(data, len)
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE tcp_fs_send_str(VERBUM texto) REDDE NIHIL
+  OBSECRO cct_svc_tcp_send(texto, CONIURA verbum_fs_len(texto))
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE tcp_fs_close() REDDE NIHIL
+  OBSECRO cct_svc_tcp_close()
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE tcp_fs_state() REDDE REX
+  REDDE OBSECRO cct_svc_tcp_state()
+EXPLICIT RITUALE
+
+RITUALE tcp_fs_is_connected() REDDE VERUM
+  REDDE CONIURA tcp_fs_state() == 3
+EXPLICIT RITUALE
+
+RITUALE tcp_fs_peer_closed() REDDE VERUM
+  REDDE CONIURA tcp_fs_state() == 4
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

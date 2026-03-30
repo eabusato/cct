@@ -1,0 +1,13 @@
+INCIPIT grimoire "pci_fs_freestanding_smoke_fs4a"
+
+ADVOCARE "cct/pci_fs"
+
+RITUALE main() REDDE REX
+  EVOCA PciInfo info AD CONIURA pci_fs_get(0)
+  EVOCA REX rtl_idx AD CONIURA pci_fs_find(4332, 33081)
+  CONIURA pci_fs_init()
+  CONIURA pci_fs_enable_busmaster(rtl_idx)
+  REDDE info.vendor_id + info.device_id + info.class_code + info.irq + info.index + CONIURA pci_fs_rtl8139_bar0()
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

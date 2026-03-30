@@ -1,0 +1,15 @@
+INCIPIT grimoire "http_router_fs_freestanding_smoke_fs5d"
+
+ADVOCARE "cct/http_router_fs"
+
+RITUALE main() REDDE NIHIL
+  CONIURA http_router_fs_init()
+  CONIURA http_router_fs_add("GET", "/", CONIURA http_router_fs_exact(), 1)
+  CONIURA http_router_fs_add("GET", "/api", CONIURA http_router_fs_prefix(), 2)
+  CONIURA http_router_fs_set_404(3)
+  CONIURA http_router_fs_dispatch("GET", "/")
+  CONIURA http_router_fs_dispatch("GET", "/api/info")
+  REDDE
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

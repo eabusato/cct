@@ -1434,7 +1434,7 @@ static cct_sem_type_t* sem_resolve_ast_type(cct_semantic_analyzer_t *sem, const 
  * ======================================================================== */
 
 static const cct_sem_builtin_spec_t* sem_find_builtin(cct_semantic_analyzer_t *sem, const char *name) {
-static cct_sem_builtin_spec_t specs[541];
+static cct_sem_builtin_spec_t specs[604];
     static bool initialized = false;
 
     if (!initialized) {
@@ -1980,6 +1980,69 @@ static cct_sem_builtin_spec_t specs[541];
         specs[538].name = "cct_svc_timer_ticks"; specs[538].min_args = 0; specs[538].variadic = false;
         specs[539].name = "cct_svc_timer_sleep"; specs[539].min_args = 1; specs[539].variadic = false;
         specs[540].name = "cct_svc_fluxus_remove_first"; specs[540].min_args = 1; specs[540].variadic = false;
+        specs[541].name = "cct_svc_outw"; specs[541].min_args = 2; specs[541].variadic = false;
+        specs[542].name = "cct_svc_inw"; specs[542].min_args = 1; specs[542].variadic = false;
+        specs[543].name = "cct_svc_outl"; specs[543].min_args = 2; specs[543].variadic = false;
+        specs[544].name = "cct_svc_inl"; specs[544].min_args = 1; specs[544].variadic = false;
+        specs[545].name = "cct_svc_pci_init"; specs[545].min_args = 0; specs[545].variadic = false;
+        specs[546].name = "cct_svc_pci_count"; specs[546].min_args = 0; specs[546].variadic = false;
+        specs[547].name = "cct_svc_pci_vendor"; specs[547].min_args = 1; specs[547].variadic = false;
+        specs[548].name = "cct_svc_pci_device_id"; specs[548].min_args = 1; specs[548].variadic = false;
+        specs[549].name = "cct_svc_pci_class"; specs[549].min_args = 1; specs[549].variadic = false;
+        specs[550].name = "cct_svc_pci_bar0"; specs[550].min_args = 1; specs[550].variadic = false;
+        specs[551].name = "cct_svc_pci_irq"; specs[551].min_args = 1; specs[551].variadic = false;
+        specs[552].name = "cct_svc_pci_find"; specs[552].min_args = 2; specs[552].variadic = false;
+        specs[553].name = "cct_svc_pci_enable_busmaster"; specs[553].min_args = 1; specs[553].variadic = false;
+        specs[554].name = "cct_svc_net_init"; specs[554].min_args = 1; specs[554].variadic = false;
+        specs[555].name = "cct_svc_net_send"; specs[555].min_args = 2; specs[555].variadic = false;
+        specs[556].name = "cct_svc_net_recv"; specs[556].min_args = 2; specs[556].variadic = false;
+        specs[557].name = "cct_svc_net_mac"; specs[557].min_args = 1; specs[557].variadic = false;
+        specs[558].name = "cct_svc_net_poll"; specs[558].min_args = 0; specs[558].variadic = false;
+        specs[559].name = "cct_svc_net_dispatch_init"; specs[559].min_args = 0; specs[559].variadic = false;
+        specs[560].name = "cct_svc_tcp_init"; specs[560].min_args = 1; specs[560].variadic = false;
+        specs[561].name = "cct_svc_tcp_accept"; specs[561].min_args = 0; specs[561].variadic = false;
+        specs[562].name = "cct_svc_tcp_recv"; specs[562].min_args = 2; specs[562].variadic = false;
+        specs[563].name = "cct_svc_tcp_send"; specs[563].min_args = 2; specs[563].variadic = false;
+        specs[564].name = "cct_svc_tcp_close"; specs[564].min_args = 0; specs[564].variadic = false;
+        specs[565].name = "cct_svc_tcp_state"; specs[565].min_args = 0; specs[565].variadic = false;
+        specs[566].name = "cct_svc_http_server_init"; specs[566].min_args = 1; specs[566].variadic = false;
+        specs[567].name = "cct_svc_http_server_accept"; specs[567].min_args = 1; specs[567].variadic = false;
+        specs[568].name = "cct_svc_http_server_read"; specs[568].min_args = 2; specs[568].variadic = false;
+        specs[569].name = "cct_svc_http_server_send"; specs[569].min_args = 2; specs[569].variadic = false;
+        specs[570].name = "cct_svc_http_server_close"; specs[570].min_args = 0; specs[570].variadic = false;
+        specs[571].name = "cct_svc_http_server_req_len"; specs[571].min_args = 0; specs[571].variadic = false;
+        specs[572].name = "cct_svc_http_server_req_copy"; specs[572].min_args = 2; specs[572].variadic = false;
+        specs[573].name = "cct_svc_http_server_req_count"; specs[573].min_args = 0; specs[573].variadic = false;
+        specs[574].name = "cct_svc_http_parse"; specs[574].min_args = 2; specs[574].variadic = false;
+        specs[575].name = "cct_svc_http_req_method"; specs[575].min_args = 2; specs[575].variadic = false;
+        specs[576].name = "cct_svc_http_req_path"; specs[576].min_args = 2; specs[576].variadic = false;
+        specs[577].name = "cct_svc_http_req_query"; specs[577].min_args = 2; specs[577].variadic = false;
+        specs[578].name = "cct_svc_http_req_version"; specs[578].min_args = 2; specs[578].variadic = false;
+        specs[579].name = "cct_svc_http_req_method_ptr"; specs[579].min_args = 0; specs[579].variadic = false;
+        specs[580].name = "cct_svc_http_req_path_ptr"; specs[580].min_args = 0; specs[580].variadic = false;
+        specs[581].name = "cct_svc_http_req_query_ptr"; specs[581].min_args = 0; specs[581].variadic = false;
+        specs[582].name = "cct_svc_http_req_version_ptr"; specs[582].min_args = 0; specs[582].variadic = false;
+        specs[583].name = "cct_svc_http_req_method_is"; specs[583].min_args = 1; specs[583].variadic = false;
+        specs[584].name = "cct_svc_http_req_path_is"; specs[584].min_args = 1; specs[584].variadic = false;
+        specs[585].name = "cct_svc_http_req_path_starts"; specs[585].min_args = 1; specs[585].variadic = false;
+        specs[586].name = "cct_svc_http_req_header_count"; specs[586].min_args = 0; specs[586].variadic = false;
+        specs[587].name = "cct_svc_http_req_header_name"; specs[587].min_args = 3; specs[587].variadic = false;
+        specs[588].name = "cct_svc_http_req_header_value"; specs[588].min_args = 3; specs[588].variadic = false;
+        specs[589].name = "cct_svc_http_req_header_name_ptr"; specs[589].min_args = 1; specs[589].variadic = false;
+        specs[590].name = "cct_svc_http_req_header_value_ptr"; specs[590].min_args = 1; specs[590].variadic = false;
+        specs[591].name = "cct_svc_http_req_body_len"; specs[591].min_args = 0; specs[591].variadic = false;
+        specs[592].name = "cct_svc_http_req_body_copy"; specs[592].min_args = 2; specs[592].variadic = false;
+        specs[593].name = "cct_svc_http_req_find_header"; specs[593].min_args = 1; specs[593].variadic = false;
+        specs[594].name = "cct_svc_http_res_begin"; specs[594].min_args = 1; specs[594].variadic = false;
+        specs[595].name = "cct_svc_http_res_header"; specs[595].min_args = 2; specs[595].variadic = false;
+        specs[596].name = "cct_svc_http_res_finish"; specs[596].min_args = 3; specs[596].variadic = false;
+        specs[597].name = "cct_svc_http_res_build"; specs[597].min_args = 4; specs[597].variadic = false;
+        specs[598].name = "cct_svc_http_res_send"; specs[598].min_args = 0; specs[598].variadic = false;
+        specs[599].name = "cct_svc_http_res_len"; specs[599].min_args = 0; specs[599].variadic = false;
+        specs[600].name = "cct_svc_http_router_init"; specs[600].min_args = 0; specs[600].variadic = false;
+        specs[601].name = "cct_svc_http_router_add"; specs[601].min_args = 4; specs[601].variadic = false;
+        specs[602].name = "cct_svc_http_router_dispatch"; specs[602].min_args = 2; specs[602].variadic = false;
+        specs[603].name = "cct_svc_http_router_set_404"; specs[603].min_args = 1; specs[603].variadic = false;
         initialized = true;
     }
 
@@ -2524,6 +2587,69 @@ static cct_sem_builtin_spec_t specs[541];
     specs[538].return_type = &sem->type_rex;
     specs[539].return_type = &sem->type_nihil;
     specs[540].return_type = sem_make_pointer_type(sem, &sem->type_nihil);
+    specs[541].return_type = &sem->type_nihil;
+    specs[542].return_type = &sem->type_rex;
+    specs[543].return_type = &sem->type_nihil;
+    specs[544].return_type = &sem->type_rex;
+    specs[545].return_type = &sem->type_nihil;
+    specs[546].return_type = &sem->type_rex;
+    specs[547].return_type = &sem->type_rex;
+    specs[548].return_type = &sem->type_rex;
+    specs[549].return_type = &sem->type_rex;
+    specs[550].return_type = &sem->type_rex;
+    specs[551].return_type = &sem->type_rex;
+    specs[552].return_type = &sem->type_rex;
+    specs[553].return_type = &sem->type_nihil;
+    specs[554].return_type = &sem->type_rex;
+    specs[555].return_type = &sem->type_nihil;
+    specs[556].return_type = &sem->type_rex;
+    specs[557].return_type = &sem->type_nihil;
+    specs[558].return_type = &sem->type_nihil;
+    specs[559].return_type = &sem->type_nihil;
+    specs[560].return_type = &sem->type_nihil;
+    specs[561].return_type = &sem->type_rex;
+    specs[562].return_type = &sem->type_rex;
+    specs[563].return_type = &sem->type_nihil;
+    specs[564].return_type = &sem->type_nihil;
+    specs[565].return_type = &sem->type_rex;
+    specs[566].return_type = &sem->type_nihil;
+    specs[567].return_type = &sem->type_rex;
+    specs[568].return_type = &sem->type_rex;
+    specs[569].return_type = &sem->type_nihil;
+    specs[570].return_type = &sem->type_nihil;
+    specs[571].return_type = &sem->type_rex;
+    specs[572].return_type = &sem->type_nihil;
+    specs[573].return_type = &sem->type_rex;
+    specs[574].return_type = &sem->type_rex;
+    specs[575].return_type = &sem->type_nihil;
+    specs[576].return_type = &sem->type_nihil;
+    specs[577].return_type = &sem->type_nihil;
+    specs[578].return_type = &sem->type_nihil;
+    specs[579].return_type = &sem->type_verbum;
+    specs[580].return_type = &sem->type_verbum;
+    specs[581].return_type = &sem->type_verbum;
+    specs[582].return_type = &sem->type_verbum;
+    specs[583].return_type = &sem->type_rex;
+    specs[584].return_type = &sem->type_rex;
+    specs[585].return_type = &sem->type_rex;
+    specs[586].return_type = &sem->type_rex;
+    specs[587].return_type = &sem->type_nihil;
+    specs[588].return_type = &sem->type_nihil;
+    specs[589].return_type = &sem->type_verbum;
+    specs[590].return_type = &sem->type_verbum;
+    specs[591].return_type = &sem->type_rex;
+    specs[592].return_type = &sem->type_nihil;
+    specs[593].return_type = &sem->type_rex;
+    specs[594].return_type = &sem->type_nihil;
+    specs[595].return_type = &sem->type_nihil;
+    specs[596].return_type = &sem->type_nihil;
+    specs[597].return_type = &sem->type_nihil;
+    specs[598].return_type = &sem->type_nihil;
+    specs[599].return_type = &sem->type_rex;
+    specs[600].return_type = &sem->type_nihil;
+    specs[601].return_type = &sem->type_nihil;
+    specs[602].return_type = &sem->type_rex;
+    specs[603].return_type = &sem->type_nihil;
 
     for (size_t i = 0; i < sizeof(specs) / sizeof(specs[0]); i++) {
         if (!specs[i].name) continue;
@@ -3561,6 +3687,21 @@ static cct_sem_type_t* sem_analyze_builtin_obsecro(
             sem_report_nodef(sem, expr->as.obsecro.arguments->nodes[i],
                              "OBSECRO kernel_outb expects integer argument");
         }
+        if ((strcmp(name, "cct_svc_outw") == 0 ||
+             strcmp(name, "cct_svc_inw") == 0 ||
+             strcmp(name, "cct_svc_outl") == 0 ||
+             strcmp(name, "cct_svc_inl") == 0 ||
+             strcmp(name, "cct_svc_pci_vendor") == 0 ||
+             strcmp(name, "cct_svc_pci_device_id") == 0 ||
+             strcmp(name, "cct_svc_pci_class") == 0 ||
+             strcmp(name, "cct_svc_pci_bar0") == 0 ||
+             strcmp(name, "cct_svc_pci_irq") == 0 ||
+             strcmp(name, "cct_svc_pci_find") == 0 ||
+             strcmp(name, "cct_svc_pci_enable_busmaster") == 0) &&
+            !(sem_is_integer_type(arg_type) || sem_is_error_type(arg_type))) {
+            sem_report_nodef(sem, expr->as.obsecro.arguments->nodes[i],
+                             "OBSECRO %s expects integer argument in FS-4A", name);
+        }
         if (strcmp(name, "kernel_memcpy") == 0 && (i == 0 || i == 1) &&
             !(arg_type && (arg_type->kind == CCT_SEM_TYPE_POINTER || sem_is_error_type(arg_type)))) {
             sem_report_nodef(sem, expr->as.obsecro.arguments->nodes[i],
@@ -3723,7 +3864,9 @@ static cct_sem_type_t* sem_analyze_builtin_obsecro(
         if ((strcmp(name, "cct_svc_irq_mask") == 0 ||
              strcmp(name, "cct_svc_irq_unmask") == 0 ||
              strcmp(name, "cct_svc_irq_unregister") == 0 ||
-             strcmp(name, "cct_svc_timer_sleep") == 0) &&
+             strcmp(name, "cct_svc_timer_sleep") == 0 ||
+             strcmp(name, "cct_svc_net_init") == 0 ||
+             strcmp(name, "cct_svc_tcp_init") == 0) &&
             i == 0 &&
             !(sem_is_integer_type(arg_type) || sem_is_error_type(arg_type))) {
             sem_report_nodef(sem, expr->as.obsecro.arguments->nodes[i],
@@ -3746,6 +3889,167 @@ static cct_sem_type_t* sem_analyze_builtin_obsecro(
             !(arg_type && (arg_type->kind == CCT_SEM_TYPE_POINTER || sem_is_error_type(arg_type)))) {
             sem_report_nodef(sem, expr->as.obsecro.arguments->nodes[i],
                              "OBSECRO cct_svc_builder_backspace expects builder pointer");
+        }
+        if ((strcmp(name, "cct_svc_net_mac") == 0 ||
+             strcmp(name, "cct_svc_net_recv") == 0 ||
+             strcmp(name, "cct_svc_tcp_recv") == 0) &&
+            i == 0 &&
+            !(arg_type && (arg_type->kind == CCT_SEM_TYPE_POINTER || sem_is_error_type(arg_type)))) {
+            sem_report_nodef(sem, expr->as.obsecro.arguments->nodes[i],
+                             "OBSECRO %s expects pointer argument", name);
+        }
+        if ((strcmp(name, "cct_svc_net_send") == 0 ||
+             strcmp(name, "cct_svc_tcp_send") == 0) &&
+            i == 0 &&
+            !(arg_type && ((arg_type->kind == CCT_SEM_TYPE_POINTER) ||
+                           (arg_type->kind == CCT_SEM_TYPE_VERBUM) ||
+                           sem_is_error_type(arg_type)))) {
+            sem_report_nodef(sem, expr->as.obsecro.arguments->nodes[i],
+                             "OBSECRO %s expects pointer or VERBUM payload", name);
+        }
+        if ((strcmp(name, "cct_svc_net_send") == 0 ||
+             strcmp(name, "cct_svc_net_recv") == 0 ||
+             strcmp(name, "cct_svc_tcp_recv") == 0 ||
+             strcmp(name, "cct_svc_tcp_send") == 0) &&
+            i == 1 &&
+            !(sem_is_integer_type(arg_type) || sem_is_error_type(arg_type))) {
+            sem_report_nodef(sem, expr->as.obsecro.arguments->nodes[i],
+                             "OBSECRO %s expects integer length argument", name);
+        }
+        if ((strcmp(name, "cct_svc_http_server_init") == 0 ||
+             strcmp(name, "cct_svc_http_server_accept") == 0 ||
+             strcmp(name, "cct_svc_http_server_read") == 0 ||
+             strcmp(name, "cct_svc_http_server_req_len") == 0 ||
+             strcmp(name, "cct_svc_http_server_req_count") == 0 ||
+             strcmp(name, "cct_svc_http_parse") == 0 ||
+             strcmp(name, "cct_svc_http_req_method") == 0 ||
+             strcmp(name, "cct_svc_http_req_path") == 0 ||
+             strcmp(name, "cct_svc_http_req_query") == 0 ||
+             strcmp(name, "cct_svc_http_req_version") == 0 ||
+             strcmp(name, "cct_svc_http_req_method_ptr") == 0 ||
+             strcmp(name, "cct_svc_http_req_path_ptr") == 0 ||
+             strcmp(name, "cct_svc_http_req_query_ptr") == 0 ||
+             strcmp(name, "cct_svc_http_req_version_ptr") == 0 ||
+             strcmp(name, "cct_svc_http_req_method_is") == 0 ||
+             strcmp(name, "cct_svc_http_req_path_is") == 0 ||
+             strcmp(name, "cct_svc_http_req_path_starts") == 0 ||
+             strcmp(name, "cct_svc_http_req_header_count") == 0 ||
+             strcmp(name, "cct_svc_http_req_header_name") == 0 ||
+             strcmp(name, "cct_svc_http_req_header_value") == 0 ||
+             strcmp(name, "cct_svc_http_req_header_name_ptr") == 0 ||
+             strcmp(name, "cct_svc_http_req_header_value_ptr") == 0 ||
+             strcmp(name, "cct_svc_http_req_body_len") == 0 ||
+             strcmp(name, "cct_svc_http_req_body_copy") == 0 ||
+             strcmp(name, "cct_svc_http_req_find_header") == 0 ||
+             strcmp(name, "cct_svc_http_res_begin") == 0 ||
+             strcmp(name, "cct_svc_http_res_header") == 0 ||
+             strcmp(name, "cct_svc_http_res_finish") == 0 ||
+             strcmp(name, "cct_svc_http_res_build") == 0 ||
+             strcmp(name, "cct_svc_http_res_send") == 0 ||
+             strcmp(name, "cct_svc_http_res_len") == 0 ||
+             strcmp(name, "cct_svc_http_router_init") == 0 ||
+             strcmp(name, "cct_svc_http_router_add") == 0 ||
+             strcmp(name, "cct_svc_http_router_dispatch") == 0 ||
+             strcmp(name, "cct_svc_http_router_set_404") == 0) &&
+            sem_profile_is_freestanding(sem)) {
+            if ((strcmp(name, "cct_svc_http_server_init") == 0 ||
+                 strcmp(name, "cct_svc_http_server_accept") == 0 ||
+                 strcmp(name, "cct_svc_http_server_read") == 0 ||
+                 strcmp(name, "cct_svc_http_server_req_len") == 0 ||
+                 strcmp(name, "cct_svc_http_server_req_count") == 0 ||
+                 strcmp(name, "cct_svc_http_req_header_count") == 0 ||
+                 strcmp(name, "cct_svc_http_req_body_len") == 0 ||
+                 strcmp(name, "cct_svc_http_res_begin") == 0 ||
+                 strcmp(name, "cct_svc_http_res_len") == 0 ||
+                 strcmp(name, "cct_svc_http_router_set_404") == 0) &&
+                !(sem_is_integer_type(arg_type) || sem_is_error_type(arg_type))) {
+                sem_report_nodef(sem, expr->as.obsecro.arguments->nodes[i],
+                                 "OBSECRO %s expects integer argument in FS-5", name);
+            }
+            if ((strcmp(name, "cct_svc_http_server_send") == 0 ||
+                 strcmp(name, "cct_svc_http_res_finish") == 0 ||
+                 strcmp(name, "cct_svc_http_res_build") == 0) &&
+                ((strcmp(name, "cct_svc_http_server_send") == 0 && i == 0) ||
+                 (strcmp(name, "cct_svc_http_res_finish") == 0 && i == 1) ||
+                 (strcmp(name, "cct_svc_http_res_build") == 0 && i == 2)) &&
+                !(arg_type && ((arg_type->kind == CCT_SEM_TYPE_POINTER) ||
+                               (arg_type->kind == CCT_SEM_TYPE_VERBUM) ||
+                               sem_is_error_type(arg_type)))) {
+                sem_report_nodef(sem, expr->as.obsecro.arguments->nodes[i],
+                                 "OBSECRO %s expects pointer or VERBUM payload in FS-5", name);
+            }
+            if ((strcmp(name, "cct_svc_http_server_req_copy") == 0 ||
+                 strcmp(name, "cct_svc_http_req_body_copy") == 0 ||
+                 strcmp(name, "cct_svc_http_req_method") == 0 ||
+                 strcmp(name, "cct_svc_http_req_path") == 0 ||
+                 strcmp(name, "cct_svc_http_req_query") == 0 ||
+                 strcmp(name, "cct_svc_http_req_version") == 0) &&
+                i == 0 &&
+                !(arg_type && (arg_type->kind == CCT_SEM_TYPE_POINTER || sem_is_error_type(arg_type)))) {
+                sem_report_nodef(sem, expr->as.obsecro.arguments->nodes[i],
+                                 "OBSECRO %s expects pointer destination in FS-5", name);
+            }
+            if ((strcmp(name, "cct_svc_http_req_header_name") == 0 ||
+                 strcmp(name, "cct_svc_http_req_header_value") == 0) &&
+                i == 1 &&
+                !(arg_type && (arg_type->kind == CCT_SEM_TYPE_POINTER || sem_is_error_type(arg_type)))) {
+                sem_report_nodef(sem, expr->as.obsecro.arguments->nodes[i],
+                                 "OBSECRO %s expects pointer destination in FS-5", name);
+            }
+            if ((strcmp(name, "cct_svc_http_server_send") == 0 ||
+                 strcmp(name, "cct_svc_http_server_req_copy") == 0 ||
+                 strcmp(name, "cct_svc_http_req_body_copy") == 0 ||
+                 strcmp(name, "cct_svc_http_req_method") == 0 ||
+                 strcmp(name, "cct_svc_http_req_path") == 0 ||
+                 strcmp(name, "cct_svc_http_req_query") == 0 ||
+                 strcmp(name, "cct_svc_http_req_version") == 0 ||
+                 strcmp(name, "cct_svc_http_req_header_name") == 0 ||
+                 strcmp(name, "cct_svc_http_req_header_value") == 0 ||
+                 strcmp(name, "cct_svc_http_req_header_name_ptr") == 0 ||
+                 strcmp(name, "cct_svc_http_req_header_value_ptr") == 0 ||
+                 strcmp(name, "cct_svc_http_res_finish") == 0 ||
+                 strcmp(name, "cct_svc_http_res_build") == 0 ||
+                 strcmp(name, "cct_svc_http_router_add") == 0) &&
+                ((strcmp(name, "cct_svc_http_server_send") == 0 && i == 1) ||
+                 (strcmp(name, "cct_svc_http_server_req_copy") == 0 && i == 1) ||
+                 (strcmp(name, "cct_svc_http_req_body_copy") == 0 && i == 1) ||
+                 ((strcmp(name, "cct_svc_http_req_method") == 0 ||
+                   strcmp(name, "cct_svc_http_req_path") == 0 ||
+                   strcmp(name, "cct_svc_http_req_query") == 0 ||
+                   strcmp(name, "cct_svc_http_req_version") == 0) && i == 1) ||
+                 ((strcmp(name, "cct_svc_http_req_header_name") == 0 ||
+                   strcmp(name, "cct_svc_http_req_header_value") == 0) && (i == 0 || i == 2)) ||
+                 ((strcmp(name, "cct_svc_http_req_header_name_ptr") == 0 ||
+                   strcmp(name, "cct_svc_http_req_header_value_ptr") == 0) && i == 0) ||
+                 (strcmp(name, "cct_svc_http_res_finish") == 0 && i == 2) ||
+                 (strcmp(name, "cct_svc_http_res_build") == 0 && (i == 0 || i == 3)) ||
+                 (strcmp(name, "cct_svc_http_router_add") == 0 && (i == 2 || i == 3))) &&
+                !(sem_is_integer_type(arg_type) || sem_is_error_type(arg_type))) {
+                sem_report_nodef(sem, expr->as.obsecro.arguments->nodes[i],
+                                 "OBSECRO %s expects integer argument in FS-5", name);
+            }
+            if ((strcmp(name, "cct_svc_http_req_method_is") == 0 ||
+                 strcmp(name, "cct_svc_http_req_path_is") == 0 ||
+                 strcmp(name, "cct_svc_http_req_path_starts") == 0 ||
+                 strcmp(name, "cct_svc_http_req_find_header") == 0 ||
+                 strcmp(name, "cct_svc_http_res_header") == 0 ||
+                 strcmp(name, "cct_svc_http_router_dispatch") == 0 ||
+                 strcmp(name, "cct_svc_http_router_add") == 0 ||
+                 strcmp(name, "cct_svc_http_res_finish") == 0 ||
+                 strcmp(name, "cct_svc_http_res_build") == 0) &&
+                ((strcmp(name, "cct_svc_http_req_method_is") == 0 && i == 0) ||
+                 (strcmp(name, "cct_svc_http_req_path_is") == 0 && i == 0) ||
+                 (strcmp(name, "cct_svc_http_req_path_starts") == 0 && i == 0) ||
+                 (strcmp(name, "cct_svc_http_req_find_header") == 0 && i == 0) ||
+                 (strcmp(name, "cct_svc_http_res_header") == 0 && (i == 0 || i == 1)) ||
+                 (strcmp(name, "cct_svc_http_router_dispatch") == 0 && (i == 0 || i == 1)) ||
+                 (strcmp(name, "cct_svc_http_router_add") == 0 && (i == 0 || i == 1)) ||
+                 (strcmp(name, "cct_svc_http_res_finish") == 0 && i == 0) ||
+                 (strcmp(name, "cct_svc_http_res_build") == 0 && i == 1)) &&
+                !(arg_type && (arg_type->kind == CCT_SEM_TYPE_VERBUM || sem_is_error_type(arg_type)))) {
+                sem_report_nodef(sem, expr->as.obsecro.arguments->nodes[i],
+                                 "OBSECRO %s expects VERBUM argument in FS-5", name);
+            }
         }
         if ((strcmp(name, "json_arr_handle_new") == 0 ||
              strcmp(name, "json_obj_handle_new") == 0) &&

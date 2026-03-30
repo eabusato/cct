@@ -1,0 +1,10 @@
+INCIPIT grimoire "tcp_fs_reject_host_fs4d"
+
+ADVOCARE "cct/tcp_fs"
+
+RITUALE main() REDDE NIHIL
+  CONIURA tcp_fs_listen(80)
+  REDDE
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

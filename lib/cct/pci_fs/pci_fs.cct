@@ -1,0 +1,103 @@
+-- CCT — Clavicula Turing
+-- Standard Library Module: pci_fs
+--
+-- FASE FS-4A: PCI enumeration for freestanding targets
+--
+-- Copyright (c) Erick Andrade Busato. Todos os direitos reservados.
+
+INCIPIT grimoire "pci_fs"
+
+ADVOCARE "cct/console"
+ADVOCARE "cct/verbum_fs"
+
+SIGILLUM PciInfo
+  vendor_id: REX
+  device_id: REX
+  class_code: REX
+  bar0: REX
+  irq: REX
+  index: REX
+FIN SIGILLUM
+
+RITUALE pci_fs_init() REDDE NIHIL
+  OBSECRO cct_svc_pci_init()
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE pci_fs_count() REDDE REX
+  REDDE OBSECRO cct_svc_pci_count()
+EXPLICIT RITUALE
+
+RITUALE pci_fs_get(REX idx) REDDE PciInfo
+  EVOCA PciInfo info
+  VINCIRE info.vendor_id AD OBSECRO cct_svc_pci_vendor(idx)
+  VINCIRE info.device_id AD OBSECRO cct_svc_pci_device_id(idx)
+  VINCIRE info.class_code AD OBSECRO cct_svc_pci_class(idx)
+  VINCIRE info.bar0 AD OBSECRO cct_svc_pci_bar0(idx)
+  VINCIRE info.irq AD OBSECRO cct_svc_pci_irq(idx)
+  VINCIRE info.index AD idx
+  REDDE info
+EXPLICIT RITUALE
+
+RITUALE pci_fs_find(REX vendor_id, REX device_id) REDDE REX
+  REDDE OBSECRO cct_svc_pci_find(vendor_id, device_id)
+EXPLICIT RITUALE
+
+RITUALE pci_fs_enable_busmaster(REX idx) REDDE NIHIL
+  OBSECRO cct_svc_pci_enable_busmaster(idx)
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE pci_fs_has_rtl8139() REDDE VERUM
+  REDDE CONIURA pci_fs_find(4332, 33081) >= 0
+EXPLICIT RITUALE
+
+RITUALE pci_fs_rtl8139_index() REDDE REX
+  REDDE CONIURA pci_fs_find(4332, 33081)
+EXPLICIT RITUALE
+
+RITUALE pci_fs_rtl8139_bar0() REDDE REX
+  EVOCA REX idx AD CONIURA pci_fs_rtl8139_index()
+  SI idx < 0
+    REDDE 0
+  FIN SI
+  CONIURA pci_fs_enable_busmaster(idx)
+  REDDE OBSECRO cct_svc_pci_bar0(idx)
+EXPLICIT RITUALE
+
+RITUALE pci_fs_rtl8139_irq() REDDE REX
+  EVOCA REX idx AD CONIURA pci_fs_rtl8139_index()
+  SI idx < 0
+    REDDE -1
+  FIN SI
+  REDDE OBSECRO cct_svc_pci_irq(idx)
+EXPLICIT RITUALE
+
+ARCANUM RITUALE pci_fs_write_hex(REX value) REDDE NIHIL
+  CONIURA console_write(CONIURA verbum_fs_from_hex(value))
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE pci_fs_print_table() REDDE NIHIL
+  EVOCA REX total AD CONIURA pci_fs_count()
+  EVOCA REX idx AD 0
+
+  CONIURA console_write_line("PCI devices:")
+  DUM idx < total
+    EVOCA PciInfo info AD CONIURA pci_fs_get(idx)
+    CONIURA pci_fs_write_hex(info.vendor_id)
+    CONIURA console_write(":")
+    CONIURA pci_fs_write_hex(info.device_id)
+    CONIURA console_write(":")
+    CONIURA pci_fs_write_hex(info.class_code)
+    CONIURA console_write(" BAR0=")
+    CONIURA pci_fs_write_hex(info.bar0)
+    CONIURA console_write(" IRQ=")
+    CONIURA console_write(CONIURA verbum_fs_from_int(info.irq))
+    CONIURA console_putc(10)
+    VINCIRE idx AD idx + 1
+  FIN DUM
+  REDDE
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

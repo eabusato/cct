@@ -1,0 +1,10 @@
+INCIPIT grimoire "net_fs_reject_host_fs4b"
+
+ADVOCARE "cct/net_fs"
+
+RITUALE main() REDDE NIHIL
+  CONIURA net_fs_poll()
+  REDDE
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

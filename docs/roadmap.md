@@ -35,19 +35,23 @@ It has two goals:
 
 ## Parallel Freestanding Track
 
-- Freestanding FS-1A through FS-3D are now closed on top of the existing `--profile freestanding` foundation.
-- Current freestanding gate closed: `G-FS3`, with a booted QEMU interaction proving that a local shell written in CCT accepts PS/2 keyboard commands on bare metal.
+- Freestanding FS-1A through FS-5D are now closed on top of the existing `--profile freestanding` foundation.
+- Current freestanding gate closed: `G-FS5`, with a booted QEMU image proving PCI discovery, RTL8139 bring-up, bare-metal HTTP serving, and CCT-generated HTML/JSON responses.
 - Canonical freestanding consumer: `../grub-hello/`.
-- Primary validation path: `CCT_TEST_PHASES=FS1A,FS1B,FS1C,FS2A,FS2B,FS2C,FS3A,FS3B,FS3C,FS3D bash tests/run_tests.sh`.
+- Primary validation path: `CCT_TEST_PHASES=FS1A,FS1B,FS1C,FS2A,FS2B,FS2C,FS3A,FS3B,FS3C,FS3D,FS4A,FS4B,FS4C,FS4D,FS5A,FS5B,FS5C,FS5D bash tests/run_tests.sh`.
 - Current freestanding references:
   - `docs/freestanding/README.md`
   - `docs/freestanding/FS1_RUNTIME_MANUAL.md`
   - `docs/freestanding/FS2_RUNTIME_MANUAL.md`
   - `docs/freestanding/FS3_RUNTIME_MANUAL.md`
+  - `docs/freestanding/FS4_RUNTIME_MANUAL.md`
+  - `docs/freestanding/FS5_RUNTIME_MANUAL.md`
   - `docs/freestanding/GRUB_HELLO_INTEGRATION.md`
   - `docs/release/FREESTND_FS1_RELEASE_NOTES.md`
   - `docs/release/FREESTND_FS2_RELEASE_NOTES.md`
   - `docs/release/FREESTND_FS3_RELEASE_NOTES.md`
+  - `docs/release/FREESTND_FS4_RELEASE_NOTES.md`
+  - `docs/release/FREESTND_FS5_RELEASE_NOTES.md`
 
 ## Completed Phases (0 → 19D4)
 

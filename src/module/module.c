@@ -471,6 +471,134 @@ static bool mod_is_cct_shell_fs_import(const char *raw_import) {
            strcmp(canonical, "cct/shell_fs/shell_fs") == 0;
 }
 
+static bool mod_is_cct_pci_fs_import(const char *raw_import) {
+    if (!raw_import) return false;
+    size_t len = strlen(raw_import);
+    if (len >= 4 && strcmp(raw_import + len - 4, ".cct") == 0) {
+        len -= 4;
+    }
+    if (len == 0 || len >= 128) return false;
+
+    char canonical[128];
+    memcpy(canonical, raw_import, len);
+    canonical[len] = '\0';
+
+    return strcmp(canonical, "cct/pci_fs") == 0 ||
+           strcmp(canonical, "cct/pci_fs/pci_fs") == 0;
+}
+
+static bool mod_is_cct_net_fs_import(const char *raw_import) {
+    if (!raw_import) return false;
+    size_t len = strlen(raw_import);
+    if (len >= 4 && strcmp(raw_import + len - 4, ".cct") == 0) {
+        len -= 4;
+    }
+    if (len == 0 || len >= 128) return false;
+
+    char canonical[128];
+    memcpy(canonical, raw_import, len);
+    canonical[len] = '\0';
+
+    return strcmp(canonical, "cct/net_fs") == 0 ||
+           strcmp(canonical, "cct/net_fs/net_fs") == 0;
+}
+
+static bool mod_is_cct_net_proto_fs_import(const char *raw_import) {
+    if (!raw_import) return false;
+    size_t len = strlen(raw_import);
+    if (len >= 4 && strcmp(raw_import + len - 4, ".cct") == 0) {
+        len -= 4;
+    }
+    if (len == 0 || len >= 128) return false;
+
+    char canonical[128];
+    memcpy(canonical, raw_import, len);
+    canonical[len] = '\0';
+
+    return strcmp(canonical, "cct/net_proto_fs") == 0 ||
+           strcmp(canonical, "cct/net_proto_fs/net_proto_fs") == 0;
+}
+
+static bool mod_is_cct_tcp_fs_import(const char *raw_import) {
+    if (!raw_import) return false;
+    size_t len = strlen(raw_import);
+    if (len >= 4 && strcmp(raw_import + len - 4, ".cct") == 0) {
+        len -= 4;
+    }
+    if (len == 0 || len >= 128) return false;
+
+    char canonical[128];
+    memcpy(canonical, raw_import, len);
+    canonical[len] = '\0';
+
+    return strcmp(canonical, "cct/tcp_fs") == 0 ||
+           strcmp(canonical, "cct/tcp_fs/tcp_fs") == 0;
+}
+
+static bool mod_is_cct_http_server_fs_import(const char *raw_import) {
+    if (!raw_import) return false;
+    size_t len = strlen(raw_import);
+    if (len >= 4 && strcmp(raw_import + len - 4, ".cct") == 0) {
+        len -= 4;
+    }
+    if (len == 0 || len >= 128) return false;
+
+    char canonical[128];
+    memcpy(canonical, raw_import, len);
+    canonical[len] = '\0';
+
+    return strcmp(canonical, "cct/http_server_fs") == 0 ||
+           strcmp(canonical, "cct/http_server_fs/http_server_fs") == 0;
+}
+
+static bool mod_is_cct_http_parser_fs_import(const char *raw_import) {
+    if (!raw_import) return false;
+    size_t len = strlen(raw_import);
+    if (len >= 4 && strcmp(raw_import + len - 4, ".cct") == 0) {
+        len -= 4;
+    }
+    if (len == 0 || len >= 128) return false;
+
+    char canonical[128];
+    memcpy(canonical, raw_import, len);
+    canonical[len] = '\0';
+
+    return strcmp(canonical, "cct/http_parser_fs") == 0 ||
+           strcmp(canonical, "cct/http_parser_fs/http_parser_fs") == 0;
+}
+
+static bool mod_is_cct_http_response_fs_import(const char *raw_import) {
+    if (!raw_import) return false;
+    size_t len = strlen(raw_import);
+    if (len >= 4 && strcmp(raw_import + len - 4, ".cct") == 0) {
+        len -= 4;
+    }
+    if (len == 0 || len >= 128) return false;
+
+    char canonical[128];
+    memcpy(canonical, raw_import, len);
+    canonical[len] = '\0';
+
+    return strcmp(canonical, "cct/http_response_fs") == 0 ||
+           strcmp(canonical, "cct/http_response_fs/http_response_fs") == 0;
+}
+
+static bool mod_is_cct_http_router_fs_import(const char *raw_import) {
+    if (!raw_import) return false;
+    size_t len = strlen(raw_import);
+    if (len >= 4 && strcmp(raw_import + len - 4, ".cct") == 0) {
+        len -= 4;
+    }
+    if (len == 0 || len >= 128) return false;
+
+    char canonical[128];
+    memcpy(canonical, raw_import, len);
+    canonical[len] = '\0';
+
+    return strcmp(canonical, "cct/http_router_fs") == 0 ||
+           strcmp(canonical, "cct/http_router_fs/http_router_fs") == 0;
+}
+
 static bool mod_is_freestanding_forbidden_import(const char *raw_import, char *out_name, size_t out_name_size) {
     if (!raw_import) return false;
     size_t len = strlen(raw_import);
@@ -1088,6 +1216,70 @@ static ssize_t mod_load_recursive(cct_module_ctx_t *ctx,
                 mod_report(ctx, CCT_ERROR_SEMANTIC,
                            module_path, decl->line, decl->column,
                            "cct/shell_fs disponível apenas em perfil freestanding");
+                mod_ctx_pop_active(ctx);
+                return -1;
+            }
+
+            if (ctx->profile != CCT_PROFILE_FREESTANDING && mod_is_cct_pci_fs_import(raw_import)) {
+                mod_report(ctx, CCT_ERROR_SEMANTIC,
+                           module_path, decl->line, decl->column,
+                           "cct/pci_fs disponível apenas em perfil freestanding");
+                mod_ctx_pop_active(ctx);
+                return -1;
+            }
+
+            if (ctx->profile != CCT_PROFILE_FREESTANDING && mod_is_cct_net_fs_import(raw_import)) {
+                mod_report(ctx, CCT_ERROR_SEMANTIC,
+                           module_path, decl->line, decl->column,
+                           "cct/net_fs disponível apenas em perfil freestanding");
+                mod_ctx_pop_active(ctx);
+                return -1;
+            }
+
+            if (ctx->profile != CCT_PROFILE_FREESTANDING && mod_is_cct_net_proto_fs_import(raw_import)) {
+                mod_report(ctx, CCT_ERROR_SEMANTIC,
+                           module_path, decl->line, decl->column,
+                           "cct/net_proto_fs disponível apenas em perfil freestanding");
+                mod_ctx_pop_active(ctx);
+                return -1;
+            }
+
+            if (ctx->profile != CCT_PROFILE_FREESTANDING && mod_is_cct_tcp_fs_import(raw_import)) {
+                mod_report(ctx, CCT_ERROR_SEMANTIC,
+                           module_path, decl->line, decl->column,
+                           "cct/tcp_fs disponível apenas em perfil freestanding");
+                mod_ctx_pop_active(ctx);
+                return -1;
+            }
+
+            if (ctx->profile != CCT_PROFILE_FREESTANDING && mod_is_cct_http_server_fs_import(raw_import)) {
+                mod_report(ctx, CCT_ERROR_SEMANTIC,
+                           module_path, decl->line, decl->column,
+                           "cct/http_server_fs disponível apenas em perfil freestanding");
+                mod_ctx_pop_active(ctx);
+                return -1;
+            }
+
+            if (ctx->profile != CCT_PROFILE_FREESTANDING && mod_is_cct_http_parser_fs_import(raw_import)) {
+                mod_report(ctx, CCT_ERROR_SEMANTIC,
+                           module_path, decl->line, decl->column,
+                           "cct/http_parser_fs disponível apenas em perfil freestanding");
+                mod_ctx_pop_active(ctx);
+                return -1;
+            }
+
+            if (ctx->profile != CCT_PROFILE_FREESTANDING && mod_is_cct_http_response_fs_import(raw_import)) {
+                mod_report(ctx, CCT_ERROR_SEMANTIC,
+                           module_path, decl->line, decl->column,
+                           "cct/http_response_fs disponível apenas em perfil freestanding");
+                mod_ctx_pop_active(ctx);
+                return -1;
+            }
+
+            if (ctx->profile != CCT_PROFILE_FREESTANDING && mod_is_cct_http_router_fs_import(raw_import)) {
+                mod_report(ctx, CCT_ERROR_SEMANTIC,
+                           module_path, decl->line, decl->column,
+                           "cct/http_router_fs disponível apenas em perfil freestanding");
                 mod_ctx_pop_active(ctx);
                 return -1;
             }

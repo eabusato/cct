@@ -1,0 +1,57 @@
+-- CCT — Clavicula Turing
+-- Standard Library Module: http_server_fs
+--
+-- FASE FS-5A: HTTP server connection loop for freestanding targets
+--
+-- Copyright (c) Erick Andrade Busato. Todos os direitos reservados.
+
+INCIPIT grimoire "http_server_fs"
+
+ADVOCARE "cct/verbum_fs"
+
+RITUALE http_server_fs_init(REX porta) REDDE NIHIL
+  OBSECRO cct_svc_http_server_init(porta)
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE http_server_fs_accept(REX timeout_ms) REDDE VERUM
+  REDDE OBSECRO cct_svc_http_server_accept(timeout_ms) != 0
+EXPLICIT RITUALE
+
+RITUALE http_server_fs_read() REDDE VERUM
+  REDDE OBSECRO cct_svc_http_server_read(5000, 10000) == 0
+EXPLICIT RITUALE
+
+RITUALE http_server_fs_send(SPECULUM NIHIL data, REX len) REDDE NIHIL
+  OBSECRO cct_svc_http_server_send(data, len)
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE http_server_fs_send_str(VERBUM texto) REDDE NIHIL
+  OBSECRO cct_svc_http_server_send(texto, CONIURA verbum_fs_len(texto))
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE http_server_fs_close() REDDE NIHIL
+  OBSECRO cct_svc_http_server_close()
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE http_server_fs_get_request(SPECULUM NIHIL buf, REX max_len) REDDE REX
+  EVOCA REX n AD OBSECRO cct_svc_http_server_req_len()
+  SI n > max_len
+    VINCIRE n AD max_len
+  FIN SI
+  OBSECRO cct_svc_http_server_req_copy(buf, n)
+  REDDE n
+EXPLICIT RITUALE
+
+RITUALE http_server_fs_req_count() REDDE REX
+  REDDE OBSECRO cct_svc_http_server_req_count()
+EXPLICIT RITUALE
+
+RITUALE http_server_fs_req_len() REDDE REX
+  REDDE OBSECRO cct_svc_http_server_req_len()
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

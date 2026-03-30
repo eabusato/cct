@@ -1,0 +1,93 @@
+-- CCT — Clavicula Turing
+-- Standard Library Module: http_parser_fs
+--
+-- FASE FS-5B: HTTP/1.1 parser bridge for freestanding targets
+--
+-- Copyright (c) Erick Andrade Busato. Todos os direitos reservados.
+
+INCIPIT grimoire "http_parser_fs"
+
+ADVOCARE "cct/console"
+ADVOCARE "cct/mem_fs"
+ADVOCARE "cct/verbum_fs"
+
+RITUALE http_parser_fs_parse(SPECULUM NIHIL buf, REX len) REDDE VERUM
+  REDDE OBSECRO cct_svc_http_parse(buf, len) != 0
+EXPLICIT RITUALE
+
+RITUALE http_parser_fs_method() REDDE VERBUM
+  REDDE OBSECRO cct_svc_http_req_method_ptr()
+EXPLICIT RITUALE
+
+RITUALE http_parser_fs_path() REDDE VERBUM
+  REDDE OBSECRO cct_svc_http_req_path_ptr()
+EXPLICIT RITUALE
+
+RITUALE http_parser_fs_query() REDDE VERBUM
+  REDDE OBSECRO cct_svc_http_req_query_ptr()
+EXPLICIT RITUALE
+
+RITUALE http_parser_fs_version() REDDE VERBUM
+  REDDE OBSECRO cct_svc_http_req_version_ptr()
+EXPLICIT RITUALE
+
+RITUALE http_parser_fs_header_count() REDDE REX
+  REDDE OBSECRO cct_svc_http_req_header_count()
+EXPLICIT RITUALE
+
+RITUALE http_parser_fs_header_name(REX idx) REDDE VERBUM
+  REDDE OBSECRO cct_svc_http_req_header_name_ptr(idx)
+EXPLICIT RITUALE
+
+RITUALE http_parser_fs_header(VERBUM nome) REDDE VERBUM
+  EVOCA REX idx AD OBSECRO cct_svc_http_req_find_header(nome)
+  SI idx < 0
+    REDDE ""
+  FIN SI
+  REDDE OBSECRO cct_svc_http_req_header_value_ptr(idx)
+EXPLICIT RITUALE
+
+RITUALE http_parser_fs_body_len() REDDE REX
+  REDDE OBSECRO cct_svc_http_req_body_len()
+EXPLICIT RITUALE
+
+RITUALE http_parser_fs_body(SPECULUM NIHIL buf, REX max_len) REDDE REX
+  EVOCA REX n AD CONIURA http_parser_fs_body_len()
+  SI n > max_len
+    VINCIRE n AD max_len
+  FIN SI
+  OBSECRO cct_svc_http_req_body_copy(buf, n)
+  REDDE n
+EXPLICIT RITUALE
+
+RITUALE http_parser_fs_is_method(VERBUM metodo) REDDE VERUM
+  REDDE OBSECRO cct_svc_http_req_method_is(metodo) != 0
+EXPLICIT RITUALE
+
+RITUALE http_parser_fs_path_is(VERBUM path) REDDE VERUM
+  REDDE OBSECRO cct_svc_http_req_path_is(path) != 0
+EXPLICIT RITUALE
+
+RITUALE http_parser_fs_path_starts(VERBUM prefixo) REDDE VERUM
+  REDDE OBSECRO cct_svc_http_req_path_starts(prefixo) != 0
+EXPLICIT RITUALE
+
+RITUALE http_parser_fs_dump() REDDE NIHIL
+  CONIURA console_write("  Method : ")
+  CONIURA console_write_line(CONIURA http_parser_fs_method())
+  CONIURA console_write("  Path   : ")
+  CONIURA console_write_line(CONIURA http_parser_fs_path())
+  SI CONIURA verbum_fs_len(CONIURA http_parser_fs_query()) > 0
+    CONIURA console_write("  Query  : ")
+    CONIURA console_write_line(CONIURA http_parser_fs_query())
+  FIN SI
+  CONIURA console_write("  Version: ")
+  CONIURA console_write_line(CONIURA http_parser_fs_version())
+  CONIURA console_write("  Headers: ")
+  CONIURA console_write_line(CONIURA verbum_fs_from_int(CONIURA http_parser_fs_header_count()))
+  CONIURA console_write("  Body   : ")
+  CONIURA console_write_line(CONIURA verbum_fs_from_int(CONIURA http_parser_fs_body_len()))
+  REDDE
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

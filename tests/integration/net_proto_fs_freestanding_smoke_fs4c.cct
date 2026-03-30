@@ -1,0 +1,12 @@
+INCIPIT grimoire "net_proto_fs_freestanding_smoke_fs4c"
+
+ADVOCARE "cct/net_proto_fs"
+
+RITUALE main() REDDE NIHIL
+  CONIURA net_proto_fs_ip_text()
+  CONIURA net_proto_fs_print_ip()
+  CONIURA net_proto_fs_init()
+  REDDE
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

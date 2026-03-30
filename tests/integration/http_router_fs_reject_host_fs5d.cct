@@ -1,0 +1,10 @@
+INCIPIT grimoire "http_router_fs_reject_host_fs5d"
+
+ADVOCARE "cct/http_router_fs"
+
+RITUALE main() REDDE NIHIL
+  CONIURA http_router_fs_init()
+  REDDE
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

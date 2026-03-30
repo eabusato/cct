@@ -1,0 +1,37 @@
+-- CCT — Clavicula Turing
+-- Standard Library Module: http_router_fs
+--
+-- FASE FS-5D: HTTP router bridge for freestanding targets
+--
+-- Copyright (c) Erick Andrade Busato. Todos os direitos reservados.
+
+INCIPIT grimoire "http_router_fs"
+
+RITUALE http_router_fs_init() REDDE NIHIL
+  OBSECRO cct_svc_http_router_init()
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE http_router_fs_add(VERBUM metodo, VERBUM path, REX tipo, REX handler_id) REDDE NIHIL
+  OBSECRO cct_svc_http_router_add(metodo, path, tipo, handler_id)
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE http_router_fs_set_404(REX handler_id) REDDE NIHIL
+  OBSECRO cct_svc_http_router_set_404(handler_id)
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE http_router_fs_dispatch(VERBUM metodo, VERBUM path) REDDE REX
+  REDDE OBSECRO cct_svc_http_router_dispatch(metodo, path)
+EXPLICIT RITUALE
+
+RITUALE http_router_fs_exact() REDDE REX
+  REDDE 0
+EXPLICIT RITUALE
+
+RITUALE http_router_fs_prefix() REDDE REX
+  REDDE 1
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

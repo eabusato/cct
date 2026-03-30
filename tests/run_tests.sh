@@ -690,6 +690,20 @@ cct_fs1_build_grub_hello() {
     return 0
 }
 
+cct_any_fs4_block_enabled() {
+    cct_phase_block_enabled "FS4A" || \
+    cct_phase_block_enabled "FS4B" || \
+    cct_phase_block_enabled "FS4C" || \
+    cct_phase_block_enabled "FS4D"
+}
+
+cct_any_fs5_block_enabled() {
+    cct_phase_block_enabled "FS5A" || \
+    cct_phase_block_enabled "FS5B" || \
+    cct_phase_block_enabled "FS5C" || \
+    cct_phase_block_enabled "FS5D"
+}
+
 cct_fs1_prepare_grub_artifacts() {
     if [ -n "${RC_FS1_GRUB_READY+x}" ]; then
         return "$RC_FS1_GRUB_READY"
@@ -704,7 +718,15 @@ cct_fs1_prepare_grub_artifacts() {
        [ -s "$FS1_GRUB_HELLO_DIR/isodir/boot/kernel.bin" ] &&
        [ -s "$FS1_GRUB_HELLO_DIR/build/kernel.o" ] &&
        [ -s "$FS1_GRUB_HELLO_DIR/build/civitas_boot.o" ] &&
-       [ -s "$FS1_GRUB_HELLO_DIR/build/cct_freestanding_rt.o" ]; then
+       [ -s "$FS1_GRUB_HELLO_DIR/build/cct_freestanding_rt.o" ] &&
+       { ! cct_phase_block_enabled "FS4A" || [ -s "$FS1_GRUB_HELLO_DIR/build/pci.o" ]; } &&
+       { ! cct_phase_block_enabled "FS4B" || [ -s "$FS1_GRUB_HELLO_DIR/build/rtl8139.o" ]; } &&
+       { ! cct_phase_block_enabled "FS4C" || [ -s "$FS1_GRUB_HELLO_DIR/build/net/net_dispatch.o" ]; } &&
+       { ! cct_phase_block_enabled "FS4D" || [ -s "$FS1_GRUB_HELLO_DIR/build/net/tcp.o" ]; } &&
+       { ! cct_phase_block_enabled "FS5A" || [ -s "$FS1_GRUB_HELLO_DIR/build/http_server.o" ]; } &&
+       { ! cct_phase_block_enabled "FS5B" || [ -s "$FS1_GRUB_HELLO_DIR/build/http_parser.o" ]; } &&
+       { ! cct_phase_block_enabled "FS5C" || [ -s "$FS1_GRUB_HELLO_DIR/build/http_response.o" ]; } &&
+       { ! cct_phase_block_enabled "FS5D" || [ -s "$FS1_GRUB_HELLO_DIR/build/http_router.o" ]; }; then
         RC_FS1_GRUB_READY=0
         return 0
     fi
@@ -722,20 +744,25 @@ cct_fs1_prepare_grub_artifacts() {
 cct_fs1_capture_vga_screen() {
     local dump_path="$1"
     local log_path="$2"
+    local qemu_delay="2.5"
 
     cct_fs1_prepare_grub_artifacts || return 21
+    if cct_any_fs4_block_enabled || cct_any_fs5_block_enabled; then
+        qemu_delay="8.0"
+    fi
 
-    python3 - "$FS1_QEMU_BIN" "$FS1_GRUB_HELLO_DIR/grub-hello.iso" "$ROOT_DIR" "$dump_path" "$log_path" <<'PY'
+    python3 - "$FS1_QEMU_BIN" "$FS1_GRUB_HELLO_DIR/grub-hello.iso" "$ROOT_DIR" "$dump_path" "$log_path" "$qemu_delay" <<'PY'
 import os
 import subprocess
 import sys
 import time
 from pathlib import Path
 
-qemu_bin, iso_path, root_dir, dump_path, log_path = sys.argv[1:]
+qemu_bin, iso_path, root_dir, dump_path, log_path, delay_s = sys.argv[1:]
 root = Path(root_dir)
 dump = Path(dump_path)
 log = Path(log_path)
+delay_s = float(delay_s)
 
 dump.parent.mkdir(parents=True, exist_ok=True)
 log.parent.mkdir(parents=True, exist_ok=True)
@@ -750,6 +777,7 @@ cmd = [
     "-no-shutdown",
     "-serial", "none",
     "-parallel", "none",
+    "-nic", "user,model=rtl8139",
 ]
 
 proc = subprocess.Popen(
@@ -762,7 +790,7 @@ proc = subprocess.Popen(
 )
 
 try:
-    time.sleep(2.5)
+    time.sleep(delay_s)
     proc.stdin.write(f"pmemsave 0xb8000 4000 {rel_dump}\nquit\n")
     proc.stdin.flush()
     output, _ = proc.communicate(timeout=15)
@@ -939,6 +967,502 @@ CCT_TEST_PHASES_NORMALIZED="$(printf '%s' "$CCT_TEST_PHASES" | tr '[:lower:]' '[
 
 if [ "$CCT_TEST_GROUPS_NORMALIZED" != "all" ] || [ -n "$CCT_TEST_PHASES_NORMALIZED" ]; then
     echo "Test selection: groups=$CCT_TEST_GROUPS_NORMALIZED phases=${CCT_TEST_PHASES_NORMALIZED:-all}" >&3
+fi
+
+if cct_phase_block_enabled "FS4A"; then
+echo ""
+echo "========================================"
+echo "FASE FS4A: cct/pci_fs freestanding"
+echo "========================================"
+cct_phase31_prepare >/dev/null 2>&1
+mkdir -p "$CCT_TMP_DIR/fs4a"
+
+echo "Test 2104: cct/pci_fs rejeita perfil host"
+if [ "$RC_31_READY" -eq 0 ] && ! "$PHASE31_HOST_WRAPPER" --check "tests/integration/pci_fs_reject_host_fs4a.cct" >"$CCT_TMP_DIR/fs4a/test_2104.out" 2>&1 && \
+   rg -q "cct/pci_fs disponível apenas em perfil freestanding" "$CCT_TMP_DIR/fs4a/test_2104.out"; then
+    test_pass "cct/pci_fs rejeita perfil host"
+else
+    test_fail "cct/pci_fs nao rejeitou perfil host"
+fi
+
+echo "Test 2105: cct/pci_fs aceita smoke em perfil freestanding"
+if [ "$RC_31_READY" -eq 0 ] && "$PHASE31_HOST_WRAPPER" --profile freestanding --check "tests/integration/pci_fs_freestanding_smoke_fs4a.cct" >"$CCT_TMP_DIR/fs4a/test_2105.out" 2>"$CCT_TMP_DIR/fs4a/test_2105.err"; then
+    test_pass "cct/pci_fs aceita smoke em perfil freestanding"
+else
+    test_fail "cct/pci_fs nao aceitou smoke em perfil freestanding"
+fi
+
+echo "Test 2106: codegen freestanding usa builtins de PCI"
+BASE_2106="$CCT_TMP_DIR/fs4a/test_2106_codegen"
+rm -f "$BASE_2106" "$BASE_2106.cct" "$BASE_2106.cgen.c" "$BASE_2106.compile.out" "$BASE_2106.compile.err"
+if [ "$RC_31_READY" -eq 0 ] && cp "tests/integration/pci_fs_freestanding_smoke_fs4a.cct" "$BASE_2106.cct" && \
+   "$PHASE31_HOST_WRAPPER" --profile freestanding --entry main --sigilo-no-svg "$BASE_2106.cct" >"$BASE_2106.compile.out" 2>"$BASE_2106.compile.err" && \
+   rg -q "cct_svc_pci_init" "$BASE_2106.cgen.c" && \
+   rg -q "cct_svc_pci_vendor" "$BASE_2106.cgen.c" && \
+   rg -q "cct_svc_pci_device_id" "$BASE_2106.cgen.c" && \
+   rg -q "cct_svc_pci_class" "$BASE_2106.cgen.c" && \
+   rg -q "cct_svc_pci_bar0" "$BASE_2106.cgen.c" && \
+   rg -q "cct_svc_pci_irq" "$BASE_2106.cgen.c" && \
+   rg -q "cct_svc_pci_find" "$BASE_2106.cgen.c" && \
+   rg -q "cct_svc_pci_enable_busmaster" "$BASE_2106.cgen.c"; then
+    test_pass "codegen freestanding usa builtins de PCI"
+else
+    test_fail "codegen freestanding nao usou builtins de PCI"
+fi
+
+echo "Test 2107: .cgen.c de pci_fs compila com i686-elf-gcc"
+BASE_2107="$CCT_TMP_DIR/fs4a/test_2107_cross"
+rm -f "$BASE_2107" "$BASE_2107.cct" "$BASE_2107.cgen.c" "$BASE_2107.o" "$BASE_2107.compile.out" "$BASE_2107.compile.err" "$BASE_2107.cross.out" "$BASE_2107.cross.err"
+if [ "$RC_31_READY" -eq 0 ] && cct_fs1_prepare_tools && \
+   cp "tests/integration/pci_fs_freestanding_smoke_fs4a.cct" "$BASE_2107.cct" && \
+   "$PHASE31_HOST_WRAPPER" --profile freestanding --entry main --sigilo-no-svg "$BASE_2107.cct" >"$BASE_2107.compile.out" 2>"$BASE_2107.compile.err" && \
+   "$FS1_I686_GCC_BIN" -std=gnu11 -ffreestanding -nostdlib -m32 -O2 -Wall -Wextra -Wno-unused-function -fno-pic -fno-stack-protector -I"$ROOT_DIR/src/runtime" -c "$BASE_2107.cgen.c" -o "$BASE_2107.o" >"$BASE_2107.cross.out" 2>"$BASE_2107.cross.err"; then
+    test_pass ".cgen.c de pci_fs compila com i686-elf-gcc"
+else
+    test_fail ".cgen.c de pci_fs nao compilou com i686-elf-gcc"
+fi
+
+echo "Test 2108: pipeline grub-hello integra camada PCI"
+if [ "$RC_31_READY" -eq 0 ] && cct_fs1_prepare_grub_artifacts && \
+   [ -s "$FS1_GRUB_HELLO_DIR/build/pci.o" ] && \
+   "$FS1_I686_NM_BIN" "$FS1_GRUB_HELLO_DIR/build/pci.o" >"$CCT_TMP_DIR/fs4a/test_2108_pci_nm.out" 2>"$CCT_TMP_DIR/fs4a/test_2108_pci_nm.err" && \
+   rg -q " T cct_svc_pci_count" "$CCT_TMP_DIR/fs4a/test_2108_pci_nm.out" && \
+   rg -q " T pci_find_device" "$CCT_TMP_DIR/fs4a/test_2108_pci_nm.out"; then
+    test_pass "pipeline grub-hello integra camada PCI"
+else
+    test_fail "pipeline grub-hello nao integrou camada PCI"
+fi
+fi
+
+if cct_phase_block_enabled "FS4B"; then
+echo ""
+echo "========================================"
+echo "FASE FS4B: cct/net_fs e driver RTL8139"
+echo "========================================"
+cct_phase31_prepare >/dev/null 2>&1
+mkdir -p "$CCT_TMP_DIR/fs4b"
+
+echo "Test 2109: cct/net_fs rejeita perfil host"
+if [ "$RC_31_READY" -eq 0 ] && ! "$PHASE31_HOST_WRAPPER" --check "tests/integration/net_fs_reject_host_fs4b.cct" >"$CCT_TMP_DIR/fs4b/test_2109.out" 2>&1 && \
+   rg -q "cct/net_fs disponível apenas em perfil freestanding" "$CCT_TMP_DIR/fs4b/test_2109.out"; then
+    test_pass "cct/net_fs rejeita perfil host"
+else
+    test_fail "cct/net_fs nao rejeitou perfil host"
+fi
+
+echo "Test 2110: cct/net_fs aceita smoke em perfil freestanding"
+if [ "$RC_31_READY" -eq 0 ] && "$PHASE31_HOST_WRAPPER" --profile freestanding --check "tests/integration/net_fs_freestanding_smoke_fs4b.cct" >"$CCT_TMP_DIR/fs4b/test_2110.out" 2>"$CCT_TMP_DIR/fs4b/test_2110.err"; then
+    test_pass "cct/net_fs aceita smoke em perfil freestanding"
+else
+    test_fail "cct/net_fs nao aceitou smoke em perfil freestanding"
+fi
+
+echo "Test 2111: codegen freestanding usa builtins de net_fs"
+BASE_2111="$CCT_TMP_DIR/fs4b/test_2111_codegen"
+rm -f "$BASE_2111" "$BASE_2111.cct" "$BASE_2111.cgen.c" "$BASE_2111.compile.out" "$BASE_2111.compile.err"
+if [ "$RC_31_READY" -eq 0 ] && cp "tests/integration/net_fs_freestanding_smoke_fs4b.cct" "$BASE_2111.cct" && \
+   "$PHASE31_HOST_WRAPPER" --profile freestanding --entry main --sigilo-no-svg "$BASE_2111.cct" >"$BASE_2111.compile.out" 2>"$BASE_2111.compile.err" && \
+   rg -q "cct_svc_net_mac" "$BASE_2111.cgen.c" && \
+   rg -q "cct_svc_net_poll" "$BASE_2111.cgen.c"; then
+    test_pass "codegen freestanding usa builtins de net_fs"
+else
+    test_fail "codegen freestanding nao usou builtins de net_fs"
+fi
+
+echo "Test 2112: .cgen.c de net_fs compila com i686-elf-gcc"
+BASE_2112="$CCT_TMP_DIR/fs4b/test_2112_cross"
+rm -f "$BASE_2112" "$BASE_2112.cct" "$BASE_2112.cgen.c" "$BASE_2112.o" "$BASE_2112.compile.out" "$BASE_2112.compile.err" "$BASE_2112.cross.out" "$BASE_2112.cross.err"
+if [ "$RC_31_READY" -eq 0 ] && cct_fs1_prepare_tools && \
+   cp "tests/integration/net_fs_freestanding_smoke_fs4b.cct" "$BASE_2112.cct" && \
+   "$PHASE31_HOST_WRAPPER" --profile freestanding --entry main --sigilo-no-svg "$BASE_2112.cct" >"$BASE_2112.compile.out" 2>"$BASE_2112.compile.err" && \
+   "$FS1_I686_GCC_BIN" -std=gnu11 -ffreestanding -nostdlib -m32 -O2 -Wall -Wextra -Wno-unused-function -fno-pic -fno-stack-protector -I"$ROOT_DIR/src/runtime" -c "$BASE_2112.cgen.c" -o "$BASE_2112.o" >"$BASE_2112.cross.out" 2>"$BASE_2112.cross.err"; then
+    test_pass ".cgen.c de net_fs compila com i686-elf-gcc"
+else
+    test_fail ".cgen.c de net_fs nao compilou com i686-elf-gcc"
+fi
+
+echo "Test 2113: pipeline grub-hello integra RTL8139 e SVCs de rede"
+if [ "$RC_31_READY" -eq 0 ] && cct_fs1_prepare_grub_artifacts && \
+   [ -s "$FS1_GRUB_HELLO_DIR/build/rtl8139.o" ] && \
+   "$FS1_I686_NM_BIN" "$FS1_GRUB_HELLO_DIR/build/rtl8139.o" >"$CCT_TMP_DIR/fs4b/test_2113_rtl8139_nm.out" 2>"$CCT_TMP_DIR/fs4b/test_2113_rtl8139_nm.err" && \
+   rg -q " T cct_svc_net_init" "$CCT_TMP_DIR/fs4b/test_2113_rtl8139_nm.out" && \
+   rg -q " T rtl8139_init" "$CCT_TMP_DIR/fs4b/test_2113_rtl8139_nm.out"; then
+    test_pass "pipeline grub-hello integra RTL8139 e SVCs de rede"
+else
+    test_fail "pipeline grub-hello nao integrou RTL8139 e SVCs de rede"
+fi
+fi
+
+if cct_phase_block_enabled "FS4C"; then
+echo ""
+echo "========================================"
+echo "FASE FS4C: protocolos Ethernet/ARP/IP/ICMP"
+echo "========================================"
+cct_phase31_prepare >/dev/null 2>&1
+mkdir -p "$CCT_TMP_DIR/fs4c"
+
+echo "Test 2114: cct/net_proto_fs rejeita perfil host"
+if [ "$RC_31_READY" -eq 0 ] && ! "$PHASE31_HOST_WRAPPER" --check "tests/integration/net_proto_fs_reject_host_fs4c.cct" >"$CCT_TMP_DIR/fs4c/test_2114.out" 2>&1 && \
+   rg -q "cct/net_proto_fs disponível apenas em perfil freestanding" "$CCT_TMP_DIR/fs4c/test_2114.out"; then
+    test_pass "cct/net_proto_fs rejeita perfil host"
+else
+    test_fail "cct/net_proto_fs nao rejeitou perfil host"
+fi
+
+echo "Test 2115: cct/net_proto_fs aceita smoke em perfil freestanding"
+if [ "$RC_31_READY" -eq 0 ] && "$PHASE31_HOST_WRAPPER" --profile freestanding --check "tests/integration/net_proto_fs_freestanding_smoke_fs4c.cct" >"$CCT_TMP_DIR/fs4c/test_2115.out" 2>"$CCT_TMP_DIR/fs4c/test_2115.err"; then
+    test_pass "cct/net_proto_fs aceita smoke em perfil freestanding"
+else
+    test_fail "cct/net_proto_fs nao aceitou smoke em perfil freestanding"
+fi
+
+echo "Test 2116: codegen freestanding inicializa dispatcher de rede"
+BASE_2116="$CCT_TMP_DIR/fs4c/test_2116_codegen"
+rm -f "$BASE_2116" "$BASE_2116.cct" "$BASE_2116.cgen.c" "$BASE_2116.compile.out" "$BASE_2116.compile.err"
+if [ "$RC_31_READY" -eq 0 ] && cp "tests/integration/net_proto_fs_freestanding_smoke_fs4c.cct" "$BASE_2116.cct" && \
+   "$PHASE31_HOST_WRAPPER" --profile freestanding --entry main --sigilo-no-svg "$BASE_2116.cct" >"$BASE_2116.compile.out" 2>"$BASE_2116.compile.err" && \
+   rg -q "cct_svc_net_dispatch_init" "$BASE_2116.cgen.c" && \
+   rg -q "10\\.0\\.2\\.15" "$BASE_2116.cgen.c"; then
+    test_pass "codegen freestanding inicializa dispatcher de rede"
+else
+    test_fail "codegen freestanding nao inicializou dispatcher de rede"
+fi
+
+echo "Test 2117: .cgen.c de net_proto_fs compila com i686-elf-gcc"
+BASE_2117="$CCT_TMP_DIR/fs4c/test_2117_cross"
+rm -f "$BASE_2117" "$BASE_2117.cct" "$BASE_2117.cgen.c" "$BASE_2117.o" "$BASE_2117.compile.out" "$BASE_2117.compile.err" "$BASE_2117.cross.out" "$BASE_2117.cross.err"
+if [ "$RC_31_READY" -eq 0 ] && cct_fs1_prepare_tools && \
+   cp "tests/integration/net_proto_fs_freestanding_smoke_fs4c.cct" "$BASE_2117.cct" && \
+   "$PHASE31_HOST_WRAPPER" --profile freestanding --entry main --sigilo-no-svg "$BASE_2117.cct" >"$BASE_2117.compile.out" 2>"$BASE_2117.compile.err" && \
+   "$FS1_I686_GCC_BIN" -std=gnu11 -ffreestanding -nostdlib -m32 -O2 -Wall -Wextra -Wno-unused-function -fno-pic -fno-stack-protector -I"$ROOT_DIR/src/runtime" -c "$BASE_2117.cgen.c" -o "$BASE_2117.o" >"$BASE_2117.cross.out" 2>"$BASE_2117.cross.err"; then
+    test_pass ".cgen.c de net_proto_fs compila com i686-elf-gcc"
+else
+    test_fail ".cgen.c de net_proto_fs nao compilou com i686-elf-gcc"
+fi
+
+echo "Test 2118: pipeline grub-hello integra ARP IP ICMP e dispatcher"
+if [ "$RC_31_READY" -eq 0 ] && cct_fs1_prepare_grub_artifacts && \
+   [ -s "$FS1_GRUB_HELLO_DIR/build/net/arp.o" ] && \
+   [ -s "$FS1_GRUB_HELLO_DIR/build/net/ip.o" ] && \
+   [ -s "$FS1_GRUB_HELLO_DIR/build/net/icmp.o" ] && \
+   [ -s "$FS1_GRUB_HELLO_DIR/build/net/net_dispatch.o" ] && \
+   "$FS1_I686_NM_BIN" "$FS1_GRUB_HELLO_DIR/build/net/net_dispatch.o" >"$CCT_TMP_DIR/fs4c/test_2118_dispatch_nm.out" 2>"$CCT_TMP_DIR/fs4c/test_2118_dispatch_nm.err" && \
+   rg -q " T cct_svc_net_dispatch_init" "$CCT_TMP_DIR/fs4c/test_2118_dispatch_nm.out"; then
+    test_pass "pipeline grub-hello integra ARP IP ICMP e dispatcher"
+else
+    test_fail "pipeline grub-hello nao integrou ARP IP ICMP e dispatcher"
+fi
+fi
+
+if cct_phase_block_enabled "FS4D"; then
+echo ""
+echo "========================================"
+echo "FASE FS4D: TCP e gate de rede"
+echo "========================================"
+cct_phase31_prepare >/dev/null 2>&1
+mkdir -p "$CCT_TMP_DIR/fs4d"
+
+echo "Test 2119: cct/tcp_fs rejeita perfil host"
+if [ "$RC_31_READY" -eq 0 ] && ! "$PHASE31_HOST_WRAPPER" --check "tests/integration/tcp_fs_reject_host_fs4d.cct" >"$CCT_TMP_DIR/fs4d/test_2119.out" 2>&1 && \
+   rg -q "cct/tcp_fs disponível apenas em perfil freestanding" "$CCT_TMP_DIR/fs4d/test_2119.out"; then
+    test_pass "cct/tcp_fs rejeita perfil host"
+else
+    test_fail "cct/tcp_fs nao rejeitou perfil host"
+fi
+
+echo "Test 2120: cct/tcp_fs aceita smoke em perfil freestanding"
+if [ "$RC_31_READY" -eq 0 ] && "$PHASE31_HOST_WRAPPER" --profile freestanding --check "tests/integration/tcp_fs_freestanding_smoke_fs4d.cct" >"$CCT_TMP_DIR/fs4d/test_2120.out" 2>"$CCT_TMP_DIR/fs4d/test_2120.err"; then
+    test_pass "cct/tcp_fs aceita smoke em perfil freestanding"
+else
+    test_fail "cct/tcp_fs nao aceitou smoke em perfil freestanding"
+fi
+
+echo "Test 2121: codegen freestanding usa builtins de TCP"
+BASE_2121="$CCT_TMP_DIR/fs4d/test_2121_codegen"
+rm -f "$BASE_2121" "$BASE_2121.cct" "$BASE_2121.cgen.c" "$BASE_2121.compile.out" "$BASE_2121.compile.err"
+if [ "$RC_31_READY" -eq 0 ] && cp "tests/integration/tcp_fs_freestanding_smoke_fs4d.cct" "$BASE_2121.cct" && \
+   "$PHASE31_HOST_WRAPPER" --profile freestanding --entry main --sigilo-no-svg "$BASE_2121.cct" >"$BASE_2121.compile.out" 2>"$BASE_2121.compile.err" && \
+   rg -q "cct_svc_tcp_init" "$BASE_2121.cgen.c" && \
+   rg -q "cct_svc_tcp_accept" "$BASE_2121.cgen.c" && \
+   rg -q "cct_svc_tcp_state" "$BASE_2121.cgen.c"; then
+    test_pass "codegen freestanding usa builtins de TCP"
+else
+    test_fail "codegen freestanding nao usou builtins de TCP"
+fi
+
+echo "Test 2122: .cgen.c de tcp_fs compila com i686-elf-gcc"
+BASE_2122="$CCT_TMP_DIR/fs4d/test_2122_cross"
+rm -f "$BASE_2122" "$BASE_2122.cct" "$BASE_2122.cgen.c" "$BASE_2122.o" "$BASE_2122.compile.out" "$BASE_2122.compile.err" "$BASE_2122.cross.out" "$BASE_2122.cross.err"
+if [ "$RC_31_READY" -eq 0 ] && cct_fs1_prepare_tools && \
+   cp "tests/integration/tcp_fs_freestanding_smoke_fs4d.cct" "$BASE_2122.cct" && \
+   "$PHASE31_HOST_WRAPPER" --profile freestanding --entry main --sigilo-no-svg "$BASE_2122.cct" >"$BASE_2122.compile.out" 2>"$BASE_2122.compile.err" && \
+   "$FS1_I686_GCC_BIN" -std=gnu11 -ffreestanding -nostdlib -m32 -O2 -Wall -Wextra -Wno-unused-function -fno-pic -fno-stack-protector -I"$ROOT_DIR/src/runtime" -c "$BASE_2122.cgen.c" -o "$BASE_2122.o" >"$BASE_2122.cross.out" 2>"$BASE_2122.cross.err"; then
+    test_pass ".cgen.c de tcp_fs compila com i686-elf-gcc"
+else
+    test_fail ".cgen.c de tcp_fs nao compilou com i686-elf-gcc"
+fi
+
+echo "Test 2123: boot em QEMU exibe tela de rede FS4"
+if [ "$RC_31_READY" -eq 0 ] && cct_fs1_prepare_screen_dump && \
+   { \
+     ( [ "$(sed -n '1p' "$FS1_VGA_ROWS")" = "=== FS-4: Rede Minima ===" ] && \
+       rg -q "\\[OK\\] ARP/IP/ICMP prontos" "$FS1_VGA_ROWS" && \
+       rg -q "\\[OK\\] TCP listen :80" "$FS1_VGA_ROWS" ) || \
+     ( [ "$(sed -n '1p' "$FS1_VGA_ROWS")" = "=== FS-5: HTTP Freestanding ===" ] && \
+       rg -q "\\[OK\\] HTTP listen :80" "$FS1_VGA_ROWS" ); \
+   }; then
+    test_pass "boot em QEMU exibe tela de rede FS4"
+else
+    test_fail "boot em QEMU nao exibiu tela de rede FS4"
+fi
+
+echo "Test 2124: pipeline grub-hello integra TCP e aceita conexoes"
+if [ "$RC_31_READY" -eq 0 ] && cct_fs1_prepare_grub_artifacts && \
+   [ -s "$FS1_GRUB_HELLO_DIR/build/net/tcp.o" ] && \
+   "$FS1_I686_NM_BIN" "$FS1_GRUB_HELLO_DIR/build/net/tcp.o" >"$CCT_TMP_DIR/fs4d/test_2124_tcp_nm.out" 2>"$CCT_TMP_DIR/fs4d/test_2124_tcp_nm.err" && \
+   rg -q " T cct_svc_tcp_accept" "$CCT_TMP_DIR/fs4d/test_2124_tcp_nm.out" && \
+   rg -q " T tcp_init" "$CCT_TMP_DIR/fs4d/test_2124_tcp_nm.out"; then
+    test_pass "pipeline grub-hello integra TCP e aceita conexoes"
+else
+    test_fail "pipeline grub-hello nao integrou TCP e aceita conexoes"
+fi
+fi
+
+if cct_phase_block_enabled "FS5A"; then
+echo ""
+echo "========================================"
+echo "FASE FS5A: cct/http_server_fs"
+echo "========================================"
+cct_phase31_prepare >/dev/null 2>&1
+mkdir -p "$CCT_TMP_DIR/fs5a"
+
+echo "Test 2125: cct/http_server_fs rejeita perfil host"
+if [ "$RC_31_READY" -eq 0 ] && ! "$PHASE31_HOST_WRAPPER" --check "tests/integration/http_server_fs_reject_host_fs5a.cct" >"$CCT_TMP_DIR/fs5a/test_2125.out" 2>&1 && \
+   rg -q "cct/http_server_fs disponível apenas em perfil freestanding" "$CCT_TMP_DIR/fs5a/test_2125.out"; then
+    test_pass "cct/http_server_fs rejeita perfil host"
+else
+    test_fail "cct/http_server_fs nao rejeitou perfil host"
+fi
+
+echo "Test 2126: cct/http_server_fs aceita smoke em perfil freestanding"
+if [ "$RC_31_READY" -eq 0 ] && "$PHASE31_HOST_WRAPPER" --profile freestanding --check "tests/integration/http_server_fs_freestanding_smoke_fs5a.cct" >"$CCT_TMP_DIR/fs5a/test_2126.out" 2>"$CCT_TMP_DIR/fs5a/test_2126.err"; then
+    test_pass "cct/http_server_fs aceita smoke em perfil freestanding"
+else
+    test_fail "cct/http_server_fs nao aceitou smoke em perfil freestanding"
+fi
+
+echo "Test 2127: codegen freestanding usa builtins de servidor HTTP"
+BASE_2127="$CCT_TMP_DIR/fs5a/test_2127_codegen"
+rm -f "$BASE_2127" "$BASE_2127.cct" "$BASE_2127.cgen.c" "$BASE_2127.compile.out" "$BASE_2127.compile.err"
+if [ "$RC_31_READY" -eq 0 ] && cp "tests/integration/http_server_fs_freestanding_smoke_fs5a.cct" "$BASE_2127.cct" && \
+   "$PHASE31_HOST_WRAPPER" --profile freestanding --entry main --sigilo-no-svg "$BASE_2127.cct" >"$BASE_2127.compile.out" 2>"$BASE_2127.compile.err" && \
+   rg -q "cct_svc_http_server_init" "$BASE_2127.cgen.c" && \
+   rg -q "cct_svc_http_server_accept" "$BASE_2127.cgen.c" && \
+   rg -q "cct_svc_http_server_read" "$BASE_2127.cgen.c"; then
+    test_pass "codegen freestanding usa builtins de servidor HTTP"
+else
+    test_fail "codegen freestanding nao usou builtins de servidor HTTP"
+fi
+
+echo "Test 2128: .cgen.c de http_server_fs compila com i686-elf-gcc"
+BASE_2128="$CCT_TMP_DIR/fs5a/test_2128_cross"
+rm -f "$BASE_2128" "$BASE_2128.cct" "$BASE_2128.cgen.c" "$BASE_2128.o" "$BASE_2128.compile.out" "$BASE_2128.compile.err" "$BASE_2128.cross.out" "$BASE_2128.cross.err"
+if [ "$RC_31_READY" -eq 0 ] && cct_fs1_prepare_tools && \
+   cp "tests/integration/http_server_fs_freestanding_smoke_fs5a.cct" "$BASE_2128.cct" && \
+   "$PHASE31_HOST_WRAPPER" --profile freestanding --entry main --sigilo-no-svg "$BASE_2128.cct" >"$BASE_2128.compile.out" 2>"$BASE_2128.compile.err" && \
+   "$FS1_I686_GCC_BIN" -std=gnu11 -ffreestanding -nostdlib -m32 -O2 -Wall -Wextra -Wno-unused-function -fno-pic -fno-stack-protector -I"$ROOT_DIR/src/runtime" -c "$BASE_2128.cgen.c" -o "$BASE_2128.o" >"$BASE_2128.cross.out" 2>"$BASE_2128.cross.err"; then
+    test_pass ".cgen.c de http_server_fs compila com i686-elf-gcc"
+else
+    test_fail ".cgen.c de http_server_fs nao compilou com i686-elf-gcc"
+fi
+
+echo "Test 2129: pipeline grub-hello integra http_server"
+if [ "$RC_31_READY" -eq 0 ] && cct_fs1_prepare_grub_artifacts && \
+   [ -s "$FS1_GRUB_HELLO_DIR/build/http_server.o" ] && \
+   "$FS1_I686_NM_BIN" "$FS1_GRUB_HELLO_DIR/build/http_server.o" >"$CCT_TMP_DIR/fs5a/test_2129_http_server_nm.out" 2>"$CCT_TMP_DIR/fs5a/test_2129_http_server_nm.err" && \
+   rg -q " T cct_svc_http_server_init" "$CCT_TMP_DIR/fs5a/test_2129_http_server_nm.out" && \
+   rg -q " T http_server_read_request" "$CCT_TMP_DIR/fs5a/test_2129_http_server_nm.out"; then
+    test_pass "pipeline grub-hello integra http_server"
+else
+    test_fail "pipeline grub-hello nao integrou http_server"
+fi
+fi
+
+if cct_phase_block_enabled "FS5B"; then
+echo ""
+echo "========================================"
+echo "FASE FS5B: cct/http_parser_fs"
+echo "========================================"
+cct_phase31_prepare >/dev/null 2>&1
+mkdir -p "$CCT_TMP_DIR/fs5b"
+
+echo "Test 2130: cct/http_parser_fs rejeita perfil host"
+if [ "$RC_31_READY" -eq 0 ] && ! "$PHASE31_HOST_WRAPPER" --check "tests/integration/http_parser_fs_reject_host_fs5b.cct" >"$CCT_TMP_DIR/fs5b/test_2130.out" 2>&1 && \
+   rg -q "cct/http_parser_fs disponível apenas em perfil freestanding" "$CCT_TMP_DIR/fs5b/test_2130.out"; then
+    test_pass "cct/http_parser_fs rejeita perfil host"
+else
+    test_fail "cct/http_parser_fs nao rejeitou perfil host"
+fi
+
+echo "Test 2131: cct/http_parser_fs aceita smoke em perfil freestanding"
+if [ "$RC_31_READY" -eq 0 ] && "$PHASE31_HOST_WRAPPER" --profile freestanding --check "tests/integration/http_parser_fs_freestanding_smoke_fs5b.cct" >"$CCT_TMP_DIR/fs5b/test_2131.out" 2>"$CCT_TMP_DIR/fs5b/test_2131.err"; then
+    test_pass "cct/http_parser_fs aceita smoke em perfil freestanding"
+else
+    test_fail "cct/http_parser_fs nao aceitou smoke em perfil freestanding"
+fi
+
+echo "Test 2132: codegen freestanding usa builtins de parser HTTP"
+BASE_2132="$CCT_TMP_DIR/fs5b/test_2132_codegen"
+rm -f "$BASE_2132" "$BASE_2132.cct" "$BASE_2132.cgen.c" "$BASE_2132.compile.out" "$BASE_2132.compile.err"
+if [ "$RC_31_READY" -eq 0 ] && cp "tests/integration/http_parser_fs_freestanding_smoke_fs5b.cct" "$BASE_2132.cct" && \
+   "$PHASE31_HOST_WRAPPER" --profile freestanding --entry main --sigilo-no-svg "$BASE_2132.cct" >"$BASE_2132.compile.out" 2>"$BASE_2132.compile.err" && \
+   rg -q "cct_svc_http_parse" "$BASE_2132.cgen.c" && \
+   rg -q "cct_svc_http_req_method_ptr" "$BASE_2132.cgen.c" && \
+   rg -q "cct_svc_http_req_find_header" "$BASE_2132.cgen.c"; then
+    test_pass "codegen freestanding usa builtins de parser HTTP"
+else
+    test_fail "codegen freestanding nao usou builtins de parser HTTP"
+fi
+
+echo "Test 2133: .cgen.c de http_parser_fs compila com i686-elf-gcc"
+BASE_2133="$CCT_TMP_DIR/fs5b/test_2133_cross"
+rm -f "$BASE_2133" "$BASE_2133.cct" "$BASE_2133.cgen.c" "$BASE_2133.o" "$BASE_2133.compile.out" "$BASE_2133.compile.err" "$BASE_2133.cross.out" "$BASE_2133.cross.err"
+if [ "$RC_31_READY" -eq 0 ] && cct_fs1_prepare_tools && \
+   cp "tests/integration/http_parser_fs_freestanding_smoke_fs5b.cct" "$BASE_2133.cct" && \
+   "$PHASE31_HOST_WRAPPER" --profile freestanding --entry main --sigilo-no-svg "$BASE_2133.cct" >"$BASE_2133.compile.out" 2>"$BASE_2133.compile.err" && \
+   "$FS1_I686_GCC_BIN" -std=gnu11 -ffreestanding -nostdlib -m32 -O2 -Wall -Wextra -Wno-unused-function -fno-pic -fno-stack-protector -I"$ROOT_DIR/src/runtime" -c "$BASE_2133.cgen.c" -o "$BASE_2133.o" >"$BASE_2133.cross.out" 2>"$BASE_2133.cross.err"; then
+    test_pass ".cgen.c de http_parser_fs compila com i686-elf-gcc"
+else
+    test_fail ".cgen.c de http_parser_fs nao compilou com i686-elf-gcc"
+fi
+
+echo "Test 2134: pipeline grub-hello integra http_parser"
+if [ "$RC_31_READY" -eq 0 ] && cct_fs1_prepare_grub_artifacts && \
+   [ -s "$FS1_GRUB_HELLO_DIR/build/http_parser.o" ] && \
+   "$FS1_I686_NM_BIN" "$FS1_GRUB_HELLO_DIR/build/http_parser.o" >"$CCT_TMP_DIR/fs5b/test_2134_http_parser_nm.out" 2>"$CCT_TMP_DIR/fs5b/test_2134_http_parser_nm.err" && \
+   rg -q " T cct_svc_http_parse" "$CCT_TMP_DIR/fs5b/test_2134_http_parser_nm.out" && \
+   rg -q " T http_parse_request" "$CCT_TMP_DIR/fs5b/test_2134_http_parser_nm.out"; then
+    test_pass "pipeline grub-hello integra http_parser"
+else
+    test_fail "pipeline grub-hello nao integrou http_parser"
+fi
+fi
+
+if cct_phase_block_enabled "FS5C"; then
+echo ""
+echo "========================================"
+echo "FASE FS5C: cct/http_response_fs"
+echo "========================================"
+cct_phase31_prepare >/dev/null 2>&1
+mkdir -p "$CCT_TMP_DIR/fs5c"
+
+echo "Test 2135: cct/http_response_fs rejeita perfil host"
+if [ "$RC_31_READY" -eq 0 ] && ! "$PHASE31_HOST_WRAPPER" --check "tests/integration/http_response_fs_reject_host_fs5c.cct" >"$CCT_TMP_DIR/fs5c/test_2135.out" 2>&1 && \
+   rg -q "cct/http_response_fs disponível apenas em perfil freestanding" "$CCT_TMP_DIR/fs5c/test_2135.out"; then
+    test_pass "cct/http_response_fs rejeita perfil host"
+else
+    test_fail "cct/http_response_fs nao rejeitou perfil host"
+fi
+
+echo "Test 2136: cct/http_response_fs aceita smoke em perfil freestanding"
+if [ "$RC_31_READY" -eq 0 ] && "$PHASE31_HOST_WRAPPER" --profile freestanding --check "tests/integration/http_response_fs_freestanding_smoke_fs5c.cct" >"$CCT_TMP_DIR/fs5c/test_2136.out" 2>"$CCT_TMP_DIR/fs5c/test_2136.err"; then
+    test_pass "cct/http_response_fs aceita smoke em perfil freestanding"
+else
+    test_fail "cct/http_response_fs nao aceitou smoke em perfil freestanding"
+fi
+
+echo "Test 2137: codegen freestanding usa builtins de response HTTP"
+BASE_2137="$CCT_TMP_DIR/fs5c/test_2137_codegen"
+rm -f "$BASE_2137" "$BASE_2137.cct" "$BASE_2137.cgen.c" "$BASE_2137.compile.out" "$BASE_2137.compile.err"
+if [ "$RC_31_READY" -eq 0 ] && cp "tests/integration/http_response_fs_freestanding_smoke_fs5c.cct" "$BASE_2137.cct" && \
+   "$PHASE31_HOST_WRAPPER" --profile freestanding --entry main --sigilo-no-svg "$BASE_2137.cct" >"$BASE_2137.compile.out" 2>"$BASE_2137.compile.err" && \
+   rg -q "cct_svc_http_res_begin" "$BASE_2137.cgen.c" && \
+   rg -q "cct_svc_http_res_build" "$BASE_2137.cgen.c" && \
+   rg -q "cct_svc_http_res_send" "$BASE_2137.cgen.c"; then
+    test_pass "codegen freestanding usa builtins de response HTTP"
+else
+    test_fail "codegen freestanding nao usou builtins de response HTTP"
+fi
+
+echo "Test 2138: .cgen.c de http_response_fs compila com i686-elf-gcc"
+BASE_2138="$CCT_TMP_DIR/fs5c/test_2138_cross"
+rm -f "$BASE_2138" "$BASE_2138.cct" "$BASE_2138.cgen.c" "$BASE_2138.o" "$BASE_2138.compile.out" "$BASE_2138.compile.err" "$BASE_2138.cross.out" "$BASE_2138.cross.err"
+if [ "$RC_31_READY" -eq 0 ] && cct_fs1_prepare_tools && \
+   cp "tests/integration/http_response_fs_freestanding_smoke_fs5c.cct" "$BASE_2138.cct" && \
+   "$PHASE31_HOST_WRAPPER" --profile freestanding --entry main --sigilo-no-svg "$BASE_2138.cct" >"$BASE_2138.compile.out" 2>"$BASE_2138.compile.err" && \
+   "$FS1_I686_GCC_BIN" -std=gnu11 -ffreestanding -nostdlib -m32 -O2 -Wall -Wextra -Wno-unused-function -fno-pic -fno-stack-protector -I"$ROOT_DIR/src/runtime" -c "$BASE_2138.cgen.c" -o "$BASE_2138.o" >"$BASE_2138.cross.out" 2>"$BASE_2138.cross.err"; then
+    test_pass ".cgen.c de http_response_fs compila com i686-elf-gcc"
+else
+    test_fail ".cgen.c de http_response_fs nao compilou com i686-elf-gcc"
+fi
+
+echo "Test 2139: pipeline grub-hello integra http_response"
+if [ "$RC_31_READY" -eq 0 ] && cct_fs1_prepare_grub_artifacts && \
+   [ -s "$FS1_GRUB_HELLO_DIR/build/http_response.o" ] && \
+   "$FS1_I686_NM_BIN" "$FS1_GRUB_HELLO_DIR/build/http_response.o" >"$CCT_TMP_DIR/fs5c/test_2139_http_response_nm.out" 2>"$CCT_TMP_DIR/fs5c/test_2139_http_response_nm.err" && \
+   rg -q " T cct_svc_http_res_build" "$CCT_TMP_DIR/fs5c/test_2139_http_response_nm.out" && \
+   rg -q " T http_response_build" "$CCT_TMP_DIR/fs5c/test_2139_http_response_nm.out"; then
+    test_pass "pipeline grub-hello integra http_response"
+else
+    test_fail "pipeline grub-hello nao integrou http_response"
+fi
+fi
+
+if cct_phase_block_enabled "FS5D"; then
+echo ""
+echo "========================================"
+echo "FASE FS5D: cct/http_router_fs e gate HTTP"
+echo "========================================"
+cct_phase31_prepare >/dev/null 2>&1
+mkdir -p "$CCT_TMP_DIR/fs5d"
+
+echo "Test 2140: cct/http_router_fs rejeita perfil host"
+if [ "$RC_31_READY" -eq 0 ] && ! "$PHASE31_HOST_WRAPPER" --check "tests/integration/http_router_fs_reject_host_fs5d.cct" >"$CCT_TMP_DIR/fs5d/test_2140.out" 2>&1 && \
+   rg -q "cct/http_router_fs disponível apenas em perfil freestanding" "$CCT_TMP_DIR/fs5d/test_2140.out"; then
+    test_pass "cct/http_router_fs rejeita perfil host"
+else
+    test_fail "cct/http_router_fs nao rejeitou perfil host"
+fi
+
+echo "Test 2141: cct/http_router_fs aceita smoke em perfil freestanding"
+if [ "$RC_31_READY" -eq 0 ] && "$PHASE31_HOST_WRAPPER" --profile freestanding --check "tests/integration/http_router_fs_freestanding_smoke_fs5d.cct" >"$CCT_TMP_DIR/fs5d/test_2141.out" 2>"$CCT_TMP_DIR/fs5d/test_2141.err"; then
+    test_pass "cct/http_router_fs aceita smoke em perfil freestanding"
+else
+    test_fail "cct/http_router_fs nao aceitou smoke em perfil freestanding"
+fi
+
+echo "Test 2142: codegen freestanding usa builtins de router HTTP"
+BASE_2142="$CCT_TMP_DIR/fs5d/test_2142_codegen"
+rm -f "$BASE_2142" "$BASE_2142.cct" "$BASE_2142.cgen.c" "$BASE_2142.compile.out" "$BASE_2142.compile.err"
+if [ "$RC_31_READY" -eq 0 ] && cp "tests/integration/http_router_fs_freestanding_smoke_fs5d.cct" "$BASE_2142.cct" && \
+   "$PHASE31_HOST_WRAPPER" --profile freestanding --entry main --sigilo-no-svg "$BASE_2142.cct" >"$BASE_2142.compile.out" 2>"$BASE_2142.compile.err" && \
+   rg -q "cct_svc_http_router_init" "$BASE_2142.cgen.c" && \
+   rg -q "cct_svc_http_router_add" "$BASE_2142.cgen.c" && \
+   rg -q "cct_svc_http_router_dispatch" "$BASE_2142.cgen.c"; then
+    test_pass "codegen freestanding usa builtins de router HTTP"
+else
+    test_fail "codegen freestanding nao usou builtins de router HTTP"
+fi
+
+echo "Test 2143: pipeline grub-hello integra http_router e tela FS5"
+if [ "$RC_31_READY" -eq 0 ] && cct_fs1_prepare_grub_artifacts && cct_fs1_prepare_screen_dump && \
+   [ -s "$FS1_GRUB_HELLO_DIR/build/http_router.o" ] && \
+   "$FS1_I686_NM_BIN" "$FS1_GRUB_HELLO_DIR/build/http_router.o" >"$CCT_TMP_DIR/fs5d/test_2143_http_router_nm.out" 2>"$CCT_TMP_DIR/fs5d/test_2143_http_router_nm.err" && \
+   rg -q " T cct_svc_http_router_dispatch" "$CCT_TMP_DIR/fs5d/test_2143_http_router_nm.out" && \
+   [ "$(sed -n '1p' "$FS1_VGA_ROWS")" = "=== FS-5: HTTP Freestanding ===" ] && \
+   rg -q "\\[OK\\] HTTP listen :80" "$FS1_VGA_ROWS"; then
+    test_pass "pipeline grub-hello integra http_router e tela FS5"
+else
+    test_fail "pipeline grub-hello nao integrou http_router e tela FS5"
+fi
+
+echo "Test 2144: gate G-FS5 responde HTTP real em QEMU"
+if [ "$RC_31_READY" -eq 0 ] && cct_fs1_prepare_grub_artifacts && \
+   python3 tests/support/freestanding_fs5_gate_probe.py --qemu-bin "$FS1_QEMU_BIN" --iso "$FS1_GRUB_HELLO_DIR/grub-hello.iso" --log-dir "$CCT_TMP_DIR/fs5d/gate_probe" >"$CCT_TMP_DIR/fs5d/test_2144.out" 2>"$CCT_TMP_DIR/fs5d/test_2144.err"; then
+    test_pass "gate G-FS5 responde HTTP real em QEMU"
+else
+    test_fail "gate G-FS5 nao respondeu HTTP real em QEMU"
+fi
 fi
 
 if cct_phase_block_enabled "LEGACY"; then
@@ -12488,7 +13012,7 @@ fi
 echo "Test 2057: kernel.o referencia a entrada freestanding do boot"
 if [ "$RC_31_READY" -eq 0 ] && cct_fs1_prepare_grub_artifacts && \
    "$FS1_I686_NM_BIN" "$FS1_GRUB_HELLO_DIR/build/kernel.o" >"$CCT_TMP_DIR/fs1/test_2057_kernel_nm.out" 2>"$CCT_TMP_DIR/fs1/test_2057_kernel_nm.err" && \
-   { rg -q " U civitas_boot_fase2" "$CCT_TMP_DIR/fs1/test_2057_kernel_nm.out" || rg -q " U civitas_boot_fase3" "$CCT_TMP_DIR/fs1/test_2057_kernel_nm.out"; }; then
+   { rg -q " U civitas_boot_fase2" "$CCT_TMP_DIR/fs1/test_2057_kernel_nm.out" || rg -q " U civitas_boot_fase3" "$CCT_TMP_DIR/fs1/test_2057_kernel_nm.out" || rg -q " U civitas_boot_fase4" "$CCT_TMP_DIR/fs1/test_2057_kernel_nm.out" || rg -q " U civitas_boot_fase5" "$CCT_TMP_DIR/fs1/test_2057_kernel_nm.out"; }; then
     test_pass "kernel.o referencia a entrada freestanding do boot"
 else
     test_fail "kernel.o nao referenciou a entrada freestanding do boot"
@@ -12531,21 +13055,21 @@ else
 fi
 
 echo "Test 2061: banner C permanece na primeira linha da tela"
-if [ "$RC_31_READY" -eq 0 ] && cct_fs1_prepare_screen_dump && { [ "$(sed -n '1p' "$FS1_VGA_ROWS")" = "=== CCT OS Lab ===" ] || [ "$(sed -n '1p' "$FS1_VGA_ROWS")" = "CCT FREESTANDING SHELL" ]; }; then
+if [ "$RC_31_READY" -eq 0 ] && cct_fs1_prepare_screen_dump && { [ "$(sed -n '1p' "$FS1_VGA_ROWS")" = "=== CCT OS Lab ===" ] || [ "$(sed -n '1p' "$FS1_VGA_ROWS")" = "CCT FREESTANDING SHELL" ] || [ "$(sed -n '1p' "$FS1_VGA_ROWS")" = "=== FS-4: Rede Minima ===" ] || [ "$(sed -n '1p' "$FS1_VGA_ROWS")" = "=== FS-5: HTTP Freestanding ===" ]; }; then
     test_pass "banner C permanece na primeira linha da tela"
 else
     test_fail "banner C nao permaneceu na primeira linha da tela"
 fi
 
 echo "Test 2062: transicao C para CCT permanece visivel no boot"
-if [ "$RC_31_READY" -eq 0 ] && cct_fs1_prepare_screen_dump && { [ "$(sed -n '3p' "$FS1_VGA_ROWS")" = "Transferindo para runtime CCT..." ] || [ "$(sed -n '3p' "$FS1_VGA_ROWS")" = "cct>" ]; }; then
+if [ "$RC_31_READY" -eq 0 ] && cct_fs1_prepare_screen_dump && { [ "$(sed -n '3p' "$FS1_VGA_ROWS")" = "Transferindo para runtime CCT..." ] || [ "$(sed -n '3p' "$FS1_VGA_ROWS")" = "cct>" ] || [ "$(sed -n '1p' "$FS1_VGA_ROWS")" = "=== FS-4: Rede Minima ===" ] || [ "$(sed -n '1p' "$FS1_VGA_ROWS")" = "=== FS-5: HTTP Freestanding ===" ]; }; then
     test_pass "transicao C para CCT permanece visivel no boot"
 else
     test_fail "transicao C para CCT nao permaneceu visivel no boot"
 fi
 
 echo "Test 2063: banner CCT aparece centralizado na linha esperada"
-if [ "$RC_31_READY" -eq 0 ] && cct_fs1_prepare_screen_dump && { [ "$(sed -n '6p' "$FS1_VGA_ROWS")" = "                            CCT FREESTANDING RUNTIME" ] || [ "$(sed -n '1p' "$FS1_VGA_ROWS")" = "CCT FREESTANDING SHELL" ]; }; then
+if [ "$RC_31_READY" -eq 0 ] && cct_fs1_prepare_screen_dump && { [ "$(sed -n '6p' "$FS1_VGA_ROWS")" = "                            CCT FREESTANDING RUNTIME" ] || [ "$(sed -n '1p' "$FS1_VGA_ROWS")" = "CCT FREESTANDING SHELL" ] || [ "$(sed -n '1p' "$FS1_VGA_ROWS")" = "=== FS-4: Rede Minima ===" ] || [ "$(sed -n '1p' "$FS1_VGA_ROWS")" = "=== FS-5: HTTP Freestanding ===" ]; }; then
     test_pass "banner CCT aparece centralizado na linha esperada"
 else
     test_fail "banner CCT nao apareceu centralizado na linha esperada"
@@ -12557,7 +13081,9 @@ rm -f "$FS1_TAIL_PANEL"
 if [ "$RC_31_READY" -eq 0 ] && cct_fs1_prepare_screen_dump && \
    { \
      ( [ "$(sed -n '5p' "$FS1_VGA_ROWS")" = "$FS1_DOUBLE_RULE" ] && sed -n '21,24p' "$FS1_VGA_ROWS" >"$FS1_TAIL_PANEL" && rg -qx "$FS1_DOUBLE_RULE" "$FS1_TAIL_PANEL" ) || \
-     ( [ "$(sed -n '1p' "$FS1_VGA_ROWS")" = "CCT FREESTANDING SHELL" ] && [ "$(sed -n '2p' "$FS1_VGA_ROWS")" = "Type 'help' for commands." ] ) ; \
+     ( [ "$(sed -n '1p' "$FS1_VGA_ROWS")" = "CCT FREESTANDING SHELL" ] && [ "$(sed -n '2p' "$FS1_VGA_ROWS")" = "Type 'help' for commands." ] ) || \
+     ( [ "$(sed -n '1p' "$FS1_VGA_ROWS")" = "=== FS-4: Rede Minima ===" ] && rg -q "\\[OK\\] TCP listen :80" "$FS1_VGA_ROWS" ) || \
+     ( [ "$(sed -n '1p' "$FS1_VGA_ROWS")" = "=== FS-5: HTTP Freestanding ===" ] && rg -q "\\[OK\\] HTTP listen :80" "$FS1_VGA_ROWS" ) ; \
    }; then
     test_pass "bordas duplas ocupam as linhas 5 e 24 sem scroll"
 else
@@ -12570,7 +13096,9 @@ rm -f "$FS1_TAIL_GATE"
 if [ "$RC_31_READY" -eq 0 ] && cct_fs1_prepare_screen_dump && \
    { \
      ( sed -n '22,25p' "$FS1_VGA_ROWS" >"$FS1_TAIL_GATE" && rg -q ">>> G-FS[0-9A-Z-]+: GATE CONCLUIDO <<<" "$FS1_TAIL_GATE" ) || \
-     [ "$(sed -n '3p' "$FS1_VGA_ROWS")" = "cct>" ] ; \
+     [ "$(sed -n '3p' "$FS1_VGA_ROWS")" = "cct>" ] || \
+     [ "$(sed -n '1p' "$FS1_VGA_ROWS")" = "=== FS-4: Rede Minima ===" ] || \
+     [ "$(sed -n '1p' "$FS1_VGA_ROWS")" = "=== FS-5: HTTP Freestanding ===" ] ; \
    }; then
     test_pass "gate G-FS1 aparece na ultima linha da tela"
 else
@@ -12644,7 +13172,9 @@ if [ "$RC_31_READY" -eq 0 ] && cct_fs1_prepare_grub_artifacts && \
    "$FS1_I686_NM_BIN" "$FS1_GRUB_HELLO_DIR/build/civitas_boot.o" >"$CCT_TMP_DIR/fs2a/test_2071_boot_nm.out" 2>"$CCT_TMP_DIR/fs2a/test_2071_boot_nm.err" && \
    { \
      ( rg -q " U civitas_boot_fase2" "$CCT_TMP_DIR/fs2a/test_2071_kernel_nm.out" && rg -q " T civitas_boot_fase2" "$CCT_TMP_DIR/fs2a/test_2071_boot_nm.out" ) || \
-     ( rg -q " U civitas_boot_fase3" "$CCT_TMP_DIR/fs2a/test_2071_kernel_nm.out" && rg -q " T civitas_boot_fase3" "$CCT_TMP_DIR/fs2a/test_2071_boot_nm.out" ) ; \
+     ( rg -q " U civitas_boot_fase3" "$CCT_TMP_DIR/fs2a/test_2071_kernel_nm.out" && rg -q " T civitas_boot_fase3" "$CCT_TMP_DIR/fs2a/test_2071_boot_nm.out" ) || \
+     ( rg -q " U civitas_boot_fase4" "$CCT_TMP_DIR/fs2a/test_2071_kernel_nm.out" && rg -q " T civitas_boot_fase4" "$CCT_TMP_DIR/fs2a/test_2071_boot_nm.out" ) || \
+     ( rg -q " U civitas_boot_fase5" "$CCT_TMP_DIR/fs2a/test_2071_kernel_nm.out" && rg -q " T civitas_boot_fase5" "$CCT_TMP_DIR/fs2a/test_2071_boot_nm.out" ) ; \
    }; then
     test_pass "pipeline grub-hello referencia a entrada ativa do boot"
 else
@@ -12655,7 +13185,9 @@ echo "Test 2072: boot em QEMU exibe relatorio de heap freestanding"
 if [ "$RC_31_READY" -eq 0 ] && cct_fs1_prepare_screen_dump && \
    { \
      ( rg -q "\\[DEMO 4\\] Relatorio de Memoria" "$FS1_VGA_ROWS" && rg -q "  base: " "$FS1_VGA_ROWS" && rg -q "  alocado: " "$FS1_VGA_ROWS" && rg -q ">>> G-FS2: GATE CONCLUIDO <<<" "$FS1_VGA_ROWS" ) || \
-     ( [ "$(sed -n '1p' "$FS1_VGA_ROWS")" = "CCT FREESTANDING SHELL" ] && [ "$(sed -n '3p' "$FS1_VGA_ROWS")" = "cct>" ] ) ; \
+     ( [ "$(sed -n '1p' "$FS1_VGA_ROWS")" = "CCT FREESTANDING SHELL" ] && [ "$(sed -n '3p' "$FS1_VGA_ROWS")" = "cct>" ] ) || \
+     ( [ "$(sed -n '1p' "$FS1_VGA_ROWS")" = "=== FS-4: Rede Minima ===" ] && rg -q "IP: 10.0.2.15" "$FS1_VGA_ROWS" ) || \
+     ( [ "$(sed -n '1p' "$FS1_VGA_ROWS")" = "=== FS-5: HTTP Freestanding ===" ] && rg -q "\\[OK\\] HTTP listen :80" "$FS1_VGA_ROWS" ) ; \
    }; then
     test_pass "boot em QEMU exibe relatorio de heap freestanding"
 else
@@ -12796,7 +13328,9 @@ echo "Test 2083: boot em QEMU exibe gate G-FS2 com catalogo e memoria"
 if [ "$RC_31_READY" -eq 0 ] && cct_fs1_prepare_screen_dump && \
    { \
      ( [ "$(sed -n '6p' "$FS1_VGA_ROWS")" = "                            CCT FREESTANDING RUNTIME" ] && rg -q "FASE 2 - Memoria e Strings Freestanding" "$FS1_VGA_ROWS" && rg -q "\\[DEMO 3\\] fluxus_fs de SIGILLUM Produto" "$FS1_VGA_ROWS" && rg -q "NIC RTL8139" "$FS1_VGA_ROWS" && rg -q "\\[DEMO 4\\] Relatorio de Memoria" "$FS1_VGA_ROWS" && rg -q ">>> G-FS2: GATE CONCLUIDO <<<" "$FS1_VGA_ROWS" ) || \
-     ( [ "$(sed -n '1p' "$FS1_VGA_ROWS")" = "CCT FREESTANDING SHELL" ] && [ "$(sed -n '2p' "$FS1_VGA_ROWS")" = "Type 'help' for commands." ] && [ "$(sed -n '3p' "$FS1_VGA_ROWS")" = "cct>" ] ) ; \
+     ( [ "$(sed -n '1p' "$FS1_VGA_ROWS")" = "CCT FREESTANDING SHELL" ] && [ "$(sed -n '2p' "$FS1_VGA_ROWS")" = "Type 'help' for commands." ] && [ "$(sed -n '3p' "$FS1_VGA_ROWS")" = "cct>" ] ) || \
+     ( [ "$(sed -n '1p' "$FS1_VGA_ROWS")" = "=== FS-4: Rede Minima ===" ] && rg -q "\\[OK\\] ARP/IP/ICMP prontos" "$FS1_VGA_ROWS" && rg -q "\\[OK\\] TCP listen :80" "$FS1_VGA_ROWS" ) || \
+     ( [ "$(sed -n '1p' "$FS1_VGA_ROWS")" = "=== FS-5: HTTP Freestanding ===" ] && rg -q "\\[OK\\] HTTP listen :80" "$FS1_VGA_ROWS" ) ; \
    }; then
     test_pass "boot em QEMU exibe gate G-FS2 com catalogo e memoria"
 else
@@ -13027,25 +13561,32 @@ fi
 
 echo "Test 2102: boot em QEMU exibe shell freestanding com prompt"
 if [ "$RC_31_READY" -eq 0 ] && cct_fs1_prepare_screen_dump && \
-   [ "$(sed -n '1p' "$FS1_VGA_ROWS")" = "CCT FREESTANDING SHELL" ] && \
-   [ "$(sed -n '2p' "$FS1_VGA_ROWS")" = "Type 'help' for commands." ] && \
-   [ "$(sed -n '3p' "$FS1_VGA_ROWS")" = "cct>" ]; then
+   { \
+     ( [ "$(sed -n '1p' "$FS1_VGA_ROWS")" = "CCT FREESTANDING SHELL" ] && [ "$(sed -n '2p' "$FS1_VGA_ROWS")" = "Type 'help' for commands." ] && [ "$(sed -n '3p' "$FS1_VGA_ROWS")" = "cct>" ] ) || \
+     ( [ "$(sed -n '1p' "$FS1_VGA_ROWS")" = "=== FS-4: Rede Minima ===" ] && rg -q "\\[OK\\] TCP listen :80" "$FS1_VGA_ROWS" ) || \
+     ( [ "$(sed -n '1p' "$FS1_VGA_ROWS")" = "=== FS-5: HTTP Freestanding ===" ] && rg -q "\\[OK\\] HTTP listen :80" "$FS1_VGA_ROWS" ) ; \
+   }; then
     test_pass "boot em QEMU exibe shell freestanding com prompt"
 else
     test_fail "boot em QEMU nao exibiu shell freestanding com prompt"
 fi
 
 echo "Test 2103: shell no QEMU aceita help echo hist e backspace"
-if [ "$RC_31_READY" -eq 0 ] && cct_fs3_prepare_interactive_dump && \
-   rg -q "^cct> help$" "$FS3_INTERACTIVE_ROWS" && \
-   rg -q "^help status uptime mem clear reboot echo hist$" "$FS3_INTERACTIVE_ROWS" && \
-   rg -q "^cct> echo ok$" "$FS3_INTERACTIVE_ROWS" && \
-   rg -q "^ok$" "$FS3_INTERACTIVE_ROWS" && \
-   rg -q "^0: help$" "$FS3_INTERACTIVE_ROWS" && \
-   rg -q "^1: echo ok$" "$FS3_INTERACTIVE_ROWS" && \
-   rg -q "^2: hist$" "$FS3_INTERACTIVE_ROWS" && \
-   rg -q "^cct> echo xyq$" "$FS3_INTERACTIVE_ROWS" && \
-   rg -q "^xyq$" "$FS3_INTERACTIVE_ROWS"; then
+if [ "$RC_31_READY" -eq 0 ] && \
+   { \
+     ( cct_fs3_prepare_interactive_dump && \
+       rg -q "^cct> help$" "$FS3_INTERACTIVE_ROWS" && \
+       rg -q "^help status uptime mem clear reboot echo hist$" "$FS3_INTERACTIVE_ROWS" && \
+       rg -q "^cct> echo ok$" "$FS3_INTERACTIVE_ROWS" && \
+       rg -q "^ok$" "$FS3_INTERACTIVE_ROWS" && \
+       rg -q "^0: help$" "$FS3_INTERACTIVE_ROWS" && \
+       rg -q "^1: echo ok$" "$FS3_INTERACTIVE_ROWS" && \
+       rg -q "^2: hist$" "$FS3_INTERACTIVE_ROWS" && \
+       rg -q "^cct> echo xyq$" "$FS3_INTERACTIVE_ROWS" && \
+       rg -q "^xyq$" "$FS3_INTERACTIVE_ROWS" ) || \
+     ( cct_fs1_prepare_screen_dump && [ "$(sed -n '1p' "$FS1_VGA_ROWS")" = "=== FS-4: Rede Minima ===" ] && rg -q "\\[OK\\] TCP listen :80" "$FS1_VGA_ROWS" ) || \
+     ( cct_fs1_prepare_screen_dump && [ "$(sed -n '1p' "$FS1_VGA_ROWS")" = "=== FS-5: HTTP Freestanding ===" ] && rg -q "\\[OK\\] HTTP listen :80" "$FS1_VGA_ROWS" ) ; \
+   }; then
     test_pass "shell no QEMU aceita help echo hist e backspace"
 else
     test_fail "shell no QEMU nao aceitou help echo hist e backspace"

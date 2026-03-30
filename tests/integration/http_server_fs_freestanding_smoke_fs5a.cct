@@ -1,0 +1,17 @@
+INCIPIT grimoire "http_server_fs_freestanding_smoke_fs5a"
+
+ADVOCARE "cct/http_server_fs"
+
+RITUALE main() REDDE NIHIL
+  EVOCA SPECULUM NIHIL buf
+  CONIURA http_server_fs_init(80)
+  CONIURA http_server_fs_accept(10)
+  CONIURA http_server_fs_read()
+  CONIURA http_server_fs_req_len()
+  CONIURA http_server_fs_req_count()
+  CONIURA http_server_fs_get_request(buf, 32)
+  CONIURA http_server_fs_close()
+  REDDE
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

@@ -1,0 +1,74 @@
+-- CCT — Clavicula Turing
+-- Standard Library Module: http_response_fs
+--
+-- FASE FS-5C: HTTP response builder bridge for freestanding targets
+--
+-- Copyright (c) Erick Andrade Busato. Todos os direitos reservados.
+
+INCIPIT grimoire "http_response_fs"
+
+ADVOCARE "cct/verbum_fs"
+
+RITUALE http_response_fs_send(REX status, VERBUM ct, VERBUM body) REDDE NIHIL
+  OBSECRO cct_svc_http_res_build(status, ct, body, CONIURA verbum_fs_len(body))
+  OBSECRO cct_svc_http_res_send()
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE http_response_fs_html(VERBUM body) REDDE NIHIL
+  CONIURA http_response_fs_send(200, "text/html; charset=utf-8", body)
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE http_response_fs_json(VERBUM body) REDDE NIHIL
+  CONIURA http_response_fs_send(200, "application/json", body)
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE http_response_fs_text(VERBUM body) REDDE NIHIL
+  CONIURA http_response_fs_send(200, "text/plain; charset=utf-8", body)
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE http_response_fs_404() REDDE NIHIL
+  CONIURA http_response_fs_send(404, "text/html; charset=utf-8",
+    "<!DOCTYPE html><html><body><h1>404 Not Found</h1><p>Civitas-FS</p></body></html>")
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE http_response_fs_405() REDDE NIHIL
+  CONIURA http_response_fs_send(405, "text/html; charset=utf-8",
+    "<!DOCTYPE html><html><body><h1>405 Method Not Allowed</h1></body></html>")
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE http_response_fs_500(VERBUM msg) REDDE NIHIL
+  EVOCA SPECULUM NIHIL b AD CONIURA verbum_fs_builder_new()
+  CONIURA verbum_fs_builder_append(b, "<!DOCTYPE html><html><body><h1>500 Internal Server Error</h1><pre>")
+  CONIURA verbum_fs_builder_append(b, msg)
+  CONIURA verbum_fs_builder_append(b, "</pre></body></html>")
+  CONIURA http_response_fs_html(CONIURA verbum_fs_builder_build(b))
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE http_response_fs_begin(REX status) REDDE NIHIL
+  OBSECRO cct_svc_http_res_begin(status)
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE http_response_fs_add_header(VERBUM nome, VERBUM valor) REDDE NIHIL
+  OBSECRO cct_svc_http_res_header(nome, valor)
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE http_response_fs_finish(VERBUM ct, VERBUM body) REDDE NIHIL
+  OBSECRO cct_svc_http_res_finish(ct, body, CONIURA verbum_fs_len(body))
+  OBSECRO cct_svc_http_res_send()
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE http_response_fs_len() REDDE REX
+  REDDE OBSECRO cct_svc_http_res_len()
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

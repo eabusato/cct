@@ -1,0 +1,12 @@
+INCIPIT grimoire "net_fs_freestanding_smoke_fs4b"
+
+ADVOCARE "cct/net_fs"
+
+RITUALE main() REDDE NIHIL
+  CONIURA net_fs_is_ready()
+  CONIURA net_fs_mac()
+  CONIURA net_fs_poll()
+  REDDE
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

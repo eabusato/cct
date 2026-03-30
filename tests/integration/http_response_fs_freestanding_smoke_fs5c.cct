@@ -1,0 +1,19 @@
+INCIPIT grimoire "http_response_fs_freestanding_smoke_fs5c"
+
+ADVOCARE "cct/http_response_fs"
+
+RITUALE main() REDDE NIHIL
+  CONIURA http_response_fs_begin(200)
+  CONIURA http_response_fs_add_header("X-Test", "FS5C")
+  CONIURA http_response_fs_finish("text/plain; charset=utf-8", "ok")
+  CONIURA http_response_fs_len()
+  CONIURA http_response_fs_html("<h1>ok</h1>")
+  CONIURA http_response_fs_json("{\"ok\":true}")
+  CONIURA http_response_fs_text("plain")
+  CONIURA http_response_fs_404()
+  CONIURA http_response_fs_405()
+  CONIURA http_response_fs_500("fail")
+  REDDE
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

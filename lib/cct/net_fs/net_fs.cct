@@ -1,0 +1,82 @@
+-- CCT — Clavicula Turing
+-- Standard Library Module: net_fs
+--
+-- FASE FS-4B: RTL8139 bridge for freestanding targets
+--
+-- Copyright (c) Erick Andrade Busato. Todos os direitos reservados.
+
+INCIPIT grimoire "net_fs"
+
+ADVOCARE "cct/console"
+ADVOCARE "cct/mem_fs"
+ADVOCARE "cct/verbum_fs"
+
+SIGILLUM NetMac
+  b0: REX
+  b1: REX
+  b2: REX
+  b3: REX
+  b4: REX
+  b5: REX
+FIN SIGILLUM
+
+RITUALE net_fs_init(REX iobase) REDDE VERUM
+  REDDE OBSECRO cct_svc_net_init(iobase) == 0
+EXPLICIT RITUALE
+
+RITUALE net_fs_mac() REDDE NetMac
+  EVOCA SPECULUM NIHIL buf AD CONIURA mem_fs_alloc(6)
+  EVOCA NetMac mac
+  OBSECRO cct_svc_net_mac(buf)
+  VINCIRE mac.b0 AD OBSECRO cct_svc_byte_at(buf, 0)
+  VINCIRE mac.b1 AD OBSECRO cct_svc_byte_at(buf, 1)
+  VINCIRE mac.b2 AD OBSECRO cct_svc_byte_at(buf, 2)
+  VINCIRE mac.b3 AD OBSECRO cct_svc_byte_at(buf, 3)
+  VINCIRE mac.b4 AD OBSECRO cct_svc_byte_at(buf, 4)
+  VINCIRE mac.b5 AD OBSECRO cct_svc_byte_at(buf, 5)
+  REDDE mac
+EXPLICIT RITUALE
+
+RITUALE net_fs_is_ready() REDDE VERUM
+  EVOCA NetMac mac AD CONIURA net_fs_mac()
+  REDDE mac.b0 + mac.b1 + mac.b2 + mac.b3 + mac.b4 + mac.b5 > 0
+EXPLICIT RITUALE
+
+RITUALE net_fs_send(SPECULUM NIHIL data, REX len) REDDE NIHIL
+  OBSECRO cct_svc_net_send(data, len)
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE net_fs_recv(SPECULUM NIHIL buf, REX max_len) REDDE REX
+  REDDE OBSECRO cct_svc_net_recv(buf, max_len)
+EXPLICIT RITUALE
+
+RITUALE net_fs_poll() REDDE NIHIL
+  OBSECRO cct_svc_net_poll()
+  REDDE
+EXPLICIT RITUALE
+
+ARCANUM RITUALE net_fs_write_mac_part(REX value) REDDE NIHIL
+  CONIURA console_write(CONIURA verbum_fs_from_hex(value))
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE net_fs_print_mac() REDDE NIHIL
+  EVOCA NetMac mac AD CONIURA net_fs_mac()
+  CONIURA console_write("MAC: ")
+  CONIURA net_fs_write_mac_part(mac.b0)
+  CONIURA console_write(":")
+  CONIURA net_fs_write_mac_part(mac.b1)
+  CONIURA console_write(":")
+  CONIURA net_fs_write_mac_part(mac.b2)
+  CONIURA console_write(":")
+  CONIURA net_fs_write_mac_part(mac.b3)
+  CONIURA console_write(":")
+  CONIURA net_fs_write_mac_part(mac.b4)
+  CONIURA console_write(":")
+  CONIURA net_fs_write_mac_part(mac.b5)
+  CONIURA console_putc(10)
+  REDDE
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

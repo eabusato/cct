@@ -1,0 +1,30 @@
+-- CCT — Clavicula Turing
+-- Standard Library Module: net_proto_fs
+--
+-- FASE FS-4C: ARP + IP + ICMP bridge for freestanding targets
+--
+-- Copyright (c) Erick Andrade Busato. Todos os direitos reservados.
+
+INCIPIT grimoire "net_proto_fs"
+
+ADVOCARE "cct/console"
+ADVOCARE "cct/verbum_fs"
+
+RITUALE net_proto_fs_init() REDDE NIHIL
+  OBSECRO cct_svc_net_dispatch_init()
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE net_proto_fs_ip_text() REDDE VERBUM
+  REDDE "10.0.2.15"
+EXPLICIT RITUALE
+
+RITUALE net_proto_fs_print_ip() REDDE NIHIL
+  CONIURA console_write("IP: ")
+  CONIURA console_write_line(CONIURA net_proto_fs_ip_text())
+  CONIURA console_write_line("Gateway: 10.0.2.2")
+  CONIURA console_write_line("Mask: 255.255.255.0")
+  REDDE
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

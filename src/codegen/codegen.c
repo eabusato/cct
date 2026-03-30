@@ -6261,6 +6261,270 @@ static bool cg_emit_obsecro_expr(FILE *out, cct_codegen_t *cg, const cct_ast_nod
         return true;
     }
 
+    if (strcmp(name, "cct_svc_inw") == 0 || strcmp(name, "cct_svc_inl") == 0) {
+        if (argc != 1) {
+            cg_report_nodef(cg, expr, "OBSECRO %s expects exactly one integer port argument in FS-4A", name);
+            return false;
+        }
+        cct_codegen_value_kind_t k = CCT_CODEGEN_VALUE_UNKNOWN;
+        fprintf(out, "%s(", name);
+        if (!cg_emit_expr(out, cg, args->nodes[0], &k)) return false;
+        if (!(k == CCT_CODEGEN_VALUE_INT || k == CCT_CODEGEN_VALUE_BOOL)) {
+            cg_report_nodef(cg, args->nodes[0], "OBSECRO %s requires integer port argument in FS-4A", name);
+            return false;
+        }
+        fputs(")", out);
+        if (out_kind) *out_kind = CCT_CODEGEN_VALUE_INT;
+        return true;
+    }
+
+    if (strcmp(name, "cct_svc_pci_count") == 0) {
+        if (argc != 0) {
+            cg_report_node(cg, expr, "OBSECRO cct_svc_pci_count expects no arguments in FS-4A");
+            return false;
+        }
+        fputs("cct_svc_pci_count()", out);
+        if (out_kind) *out_kind = CCT_CODEGEN_VALUE_INT;
+        return true;
+    }
+
+    if (strcmp(name, "cct_svc_pci_vendor") == 0 ||
+        strcmp(name, "cct_svc_pci_device_id") == 0 ||
+        strcmp(name, "cct_svc_pci_class") == 0 ||
+        strcmp(name, "cct_svc_pci_bar0") == 0 ||
+        strcmp(name, "cct_svc_pci_irq") == 0) {
+        if (argc != 1) {
+            cg_report_nodef(cg, expr, "OBSECRO %s expects exactly one device index in FS-4A", name);
+            return false;
+        }
+        cct_codegen_value_kind_t k = CCT_CODEGEN_VALUE_UNKNOWN;
+        fprintf(out, "%s(", name);
+        if (!cg_emit_expr(out, cg, args->nodes[0], &k)) return false;
+        if (!(k == CCT_CODEGEN_VALUE_INT || k == CCT_CODEGEN_VALUE_BOOL)) {
+            cg_report_nodef(cg, args->nodes[0], "OBSECRO %s requires integer device index in FS-4A", name);
+            return false;
+        }
+        fputs(")", out);
+        if (out_kind) *out_kind = CCT_CODEGEN_VALUE_INT;
+        return true;
+    }
+
+    if (strcmp(name, "cct_svc_pci_find") == 0) {
+        if (argc != 2) {
+            cg_report_node(cg, expr, "OBSECRO cct_svc_pci_find expects exactly (vendor_id, device_id) in FS-4A");
+            return false;
+        }
+        cct_codegen_value_kind_t k0 = CCT_CODEGEN_VALUE_UNKNOWN;
+        cct_codegen_value_kind_t k1 = CCT_CODEGEN_VALUE_UNKNOWN;
+        fputs("cct_svc_pci_find(", out);
+        if (!cg_emit_expr(out, cg, args->nodes[0], &k0)) return false;
+        if (!(k0 == CCT_CODEGEN_VALUE_INT || k0 == CCT_CODEGEN_VALUE_BOOL)) {
+            cg_report_node(cg, args->nodes[0], "OBSECRO cct_svc_pci_find requires integer vendor_id in FS-4A");
+            return false;
+        }
+        fputs(", ", out);
+        if (!cg_emit_expr(out, cg, args->nodes[1], &k1)) return false;
+        if (!(k1 == CCT_CODEGEN_VALUE_INT || k1 == CCT_CODEGEN_VALUE_BOOL)) {
+            cg_report_node(cg, args->nodes[1], "OBSECRO cct_svc_pci_find requires integer device_id in FS-4A");
+            return false;
+        }
+        fputs(")", out);
+        if (out_kind) *out_kind = CCT_CODEGEN_VALUE_INT;
+        return true;
+    }
+
+    if (strcmp(name, "cct_svc_net_init") == 0) {
+        if (argc != 1) {
+            cg_report_node(cg, expr, "OBSECRO cct_svc_net_init expects exactly one iobase argument in FS-4B");
+            return false;
+        }
+        cct_codegen_value_kind_t k = CCT_CODEGEN_VALUE_UNKNOWN;
+        fputs("cct_svc_net_init(", out);
+        if (!cg_emit_expr(out, cg, args->nodes[0], &k)) return false;
+        if (!(k == CCT_CODEGEN_VALUE_INT || k == CCT_CODEGEN_VALUE_BOOL)) {
+            cg_report_node(cg, args->nodes[0], "OBSECRO cct_svc_net_init requires integer iobase in FS-4B");
+            return false;
+        }
+        fputs(")", out);
+        if (out_kind) *out_kind = CCT_CODEGEN_VALUE_INT;
+        return true;
+    }
+
+    if (strcmp(name, "cct_svc_tcp_accept") == 0 || strcmp(name, "cct_svc_tcp_state") == 0) {
+        if (argc != 0) {
+            cg_report_nodef(cg, expr, "OBSECRO %s expects no arguments in FS-4D", name);
+            return false;
+        }
+        fprintf(out, "%s()", name);
+        if (out_kind) *out_kind = CCT_CODEGEN_VALUE_INT;
+        return true;
+    }
+
+    if (strcmp(name, "cct_svc_net_recv") == 0 || strcmp(name, "cct_svc_tcp_recv") == 0) {
+        if (argc != 2) {
+            cg_report_nodef(cg, expr, "OBSECRO %s expects exactly (buf_ptr, max_len) in FS-4", name);
+            return false;
+        }
+        cct_codegen_value_kind_t k0 = CCT_CODEGEN_VALUE_UNKNOWN;
+        cct_codegen_value_kind_t k1 = CCT_CODEGEN_VALUE_UNKNOWN;
+        fprintf(out, "%s(", name);
+        if (!cg_emit_expr(out, cg, args->nodes[0], &k0)) return false;
+        if (k0 != CCT_CODEGEN_VALUE_POINTER) {
+            cg_report_nodef(cg, args->nodes[0], "OBSECRO %s requires pointer buffer in FS-4", name);
+            return false;
+        }
+        fputs(", ", out);
+        if (!cg_emit_expr(out, cg, args->nodes[1], &k1)) return false;
+        if (!(k1 == CCT_CODEGEN_VALUE_INT || k1 == CCT_CODEGEN_VALUE_BOOL)) {
+            cg_report_nodef(cg, args->nodes[1], "OBSECRO %s requires integer max_len in FS-4", name);
+            return false;
+        }
+        fputs(")", out);
+        if (out_kind) *out_kind = CCT_CODEGEN_VALUE_INT;
+        return true;
+    }
+
+    if (strcmp(name, "cct_svc_http_server_accept") == 0 ||
+        strcmp(name, "cct_svc_http_server_read") == 0) {
+        const char *phase_name = strcmp(name, "cct_svc_http_server_accept") == 0 ? "FS-5A" : "FS-5A";
+        const size_t expected_argc = strcmp(name, "cct_svc_http_server_accept") == 0 ? 1u : 2u;
+        if (argc != expected_argc) {
+            cg_report_nodef(cg, expr,
+                            "OBSECRO %s expects %s in %s",
+                            name,
+                            expected_argc == 1 ? "exactly one integer timeout argument"
+                                               : "exactly (header_timeout_ms, body_timeout_ms)",
+                            phase_name);
+            return false;
+        }
+        fprintf(out, "%s(", name);
+        for (size_t i = 0; i < args->count; i++) {
+            cct_codegen_value_kind_t k = CCT_CODEGEN_VALUE_UNKNOWN;
+            if (i > 0) fputs(", ", out);
+            if (!cg_emit_expr(out, cg, args->nodes[i], &k)) return false;
+            if (!(k == CCT_CODEGEN_VALUE_INT || k == CCT_CODEGEN_VALUE_BOOL)) {
+                cg_report_nodef(cg, args->nodes[i], "OBSECRO %s requires integer timeout argument in FS-5A", name);
+                return false;
+            }
+        }
+        fputs(")", out);
+        if (out_kind) *out_kind = CCT_CODEGEN_VALUE_INT;
+        return true;
+    }
+
+    if (strcmp(name, "cct_svc_http_server_req_len") == 0 ||
+        strcmp(name, "cct_svc_http_server_req_count") == 0 ||
+        strcmp(name, "cct_svc_http_req_header_count") == 0 ||
+        strcmp(name, "cct_svc_http_req_body_len") == 0 ||
+        strcmp(name, "cct_svc_http_res_len") == 0) {
+        if (argc != 0) {
+            cg_report_nodef(cg, expr, "OBSECRO %s expects no arguments in FS-5", name);
+            return false;
+        }
+        fprintf(out, "%s()", name);
+        if (out_kind) *out_kind = CCT_CODEGEN_VALUE_INT;
+        return true;
+    }
+
+    if (strcmp(name, "cct_svc_http_parse") == 0) {
+        if (argc != 2) {
+            cg_report_node(cg, expr, "OBSECRO cct_svc_http_parse expects exactly (buf_ptr, len) in FS-5B");
+            return false;
+        }
+        cct_codegen_value_kind_t k0 = CCT_CODEGEN_VALUE_UNKNOWN;
+        cct_codegen_value_kind_t k1 = CCT_CODEGEN_VALUE_UNKNOWN;
+        fputs("cct_svc_http_parse(", out);
+        if (!cg_emit_expr(out, cg, args->nodes[0], &k0)) return false;
+        if (k0 != CCT_CODEGEN_VALUE_POINTER) {
+            cg_report_node(cg, args->nodes[0], "OBSECRO cct_svc_http_parse requires pointer buffer in FS-5B");
+            return false;
+        }
+        fputs(", ", out);
+        if (!cg_emit_expr(out, cg, args->nodes[1], &k1)) return false;
+        if (!(k1 == CCT_CODEGEN_VALUE_INT || k1 == CCT_CODEGEN_VALUE_BOOL)) {
+            cg_report_node(cg, args->nodes[1], "OBSECRO cct_svc_http_parse requires integer len in FS-5B");
+            return false;
+        }
+        fputs(")", out);
+        if (out_kind) *out_kind = CCT_CODEGEN_VALUE_INT;
+        return true;
+    }
+
+    if (strcmp(name, "cct_svc_http_req_method_ptr") == 0 ||
+        strcmp(name, "cct_svc_http_req_path_ptr") == 0 ||
+        strcmp(name, "cct_svc_http_req_query_ptr") == 0 ||
+        strcmp(name, "cct_svc_http_req_version_ptr") == 0) {
+        if (argc != 0) {
+            cg_report_nodef(cg, expr, "OBSECRO %s expects no arguments in FS-5B", name);
+            return false;
+        }
+        fprintf(out, "%s()", name);
+        if (out_kind) *out_kind = CCT_CODEGEN_VALUE_STRING;
+        return true;
+    }
+
+    if (strcmp(name, "cct_svc_http_req_method_is") == 0 ||
+        strcmp(name, "cct_svc_http_req_path_is") == 0 ||
+        strcmp(name, "cct_svc_http_req_path_starts") == 0 ||
+        strcmp(name, "cct_svc_http_req_find_header") == 0) {
+        if (argc != 1) {
+            cg_report_nodef(cg, expr, "OBSECRO %s expects exactly one VERBUM argument in FS-5B", name);
+            return false;
+        }
+        cct_codegen_value_kind_t k0 = CCT_CODEGEN_VALUE_UNKNOWN;
+        fprintf(out, "%s(", name);
+        if (!cg_emit_expr(out, cg, args->nodes[0], &k0)) return false;
+        if (k0 != CCT_CODEGEN_VALUE_STRING) {
+            cg_report_nodef(cg, args->nodes[0], "OBSECRO %s requires VERBUM argument in FS-5B", name);
+            return false;
+        }
+        fputs(")", out);
+        if (out_kind) *out_kind = CCT_CODEGEN_VALUE_INT;
+        return true;
+    }
+
+    if (strcmp(name, "cct_svc_http_req_header_name_ptr") == 0 ||
+        strcmp(name, "cct_svc_http_req_header_value_ptr") == 0) {
+        if (argc != 1) {
+            cg_report_nodef(cg, expr, "OBSECRO %s expects exactly one header index in FS-5B", name);
+            return false;
+        }
+        cct_codegen_value_kind_t k0 = CCT_CODEGEN_VALUE_UNKNOWN;
+        fprintf(out, "%s(", name);
+        if (!cg_emit_expr(out, cg, args->nodes[0], &k0)) return false;
+        if (!(k0 == CCT_CODEGEN_VALUE_INT || k0 == CCT_CODEGEN_VALUE_BOOL)) {
+            cg_report_nodef(cg, args->nodes[0], "OBSECRO %s requires integer header index in FS-5B", name);
+            return false;
+        }
+        fputs(")", out);
+        if (out_kind) *out_kind = CCT_CODEGEN_VALUE_STRING;
+        return true;
+    }
+
+    if (strcmp(name, "cct_svc_http_router_dispatch") == 0) {
+        if (argc != 2) {
+            cg_report_node(cg, expr, "OBSECRO cct_svc_http_router_dispatch expects exactly (method, path) in FS-5D");
+            return false;
+        }
+        cct_codegen_value_kind_t k0 = CCT_CODEGEN_VALUE_UNKNOWN;
+        cct_codegen_value_kind_t k1 = CCT_CODEGEN_VALUE_UNKNOWN;
+        fputs("cct_svc_http_router_dispatch(", out);
+        if (!cg_emit_expr(out, cg, args->nodes[0], &k0)) return false;
+        if (k0 != CCT_CODEGEN_VALUE_STRING) {
+            cg_report_node(cg, args->nodes[0], "OBSECRO cct_svc_http_router_dispatch requires VERBUM method in FS-5D");
+            return false;
+        }
+        fputs(", ", out);
+        if (!cg_emit_expr(out, cg, args->nodes[1], &k1)) return false;
+        if (k1 != CCT_CODEGEN_VALUE_STRING) {
+            cg_report_node(cg, args->nodes[1], "OBSECRO cct_svc_http_router_dispatch requires VERBUM path in FS-5D");
+            return false;
+        }
+        fputs(")", out);
+        if (out_kind) *out_kind = CCT_CODEGEN_VALUE_INT;
+        return true;
+    }
+
     if (strcmp(name, "console_get_linha") == 0 || strcmp(name, "console_get_coluna") == 0) {
         if (argc != 0) {
             cg_report_nodef(cg, expr, "OBSECRO %s expects no arguments in FS-1A", name);
@@ -8747,6 +9011,32 @@ static bool cg_emit_scribe_stmt(FILE *out, cct_codegen_t *cg, const cct_ast_node
         return true;
     }
 
+    if (strcmp(obsecro_node->as.obsecro.name, "cct_svc_outw") == 0 ||
+        strcmp(obsecro_node->as.obsecro.name, "cct_svc_outl") == 0) {
+        cct_ast_node_list_t *args = obsecro_node->as.obsecro.arguments;
+        cct_codegen_value_kind_t k0 = CCT_CODEGEN_VALUE_UNKNOWN;
+        cct_codegen_value_kind_t k1 = CCT_CODEGEN_VALUE_UNKNOWN;
+        if (!args || args->count != 2) {
+            cg_report_nodef(cg, obsecro_node, "OBSECRO %s requires exactly (porta, valor) in FS-4A", obsecro_node->as.obsecro.name);
+            return false;
+        }
+        cg_emit_indent(out, indent);
+        fprintf(out, "%s(", obsecro_node->as.obsecro.name);
+        if (!cg_emit_expr(out, cg, args->nodes[0], &k0)) return false;
+        if (!(k0 == CCT_CODEGEN_VALUE_INT || k0 == CCT_CODEGEN_VALUE_BOOL)) {
+            cg_report_nodef(cg, args->nodes[0], "OBSECRO %s requires integer port argument in FS-4A", obsecro_node->as.obsecro.name);
+            return false;
+        }
+        fputs(", ", out);
+        if (!cg_emit_expr(out, cg, args->nodes[1], &k1)) return false;
+        if (!(k1 == CCT_CODEGEN_VALUE_INT || k1 == CCT_CODEGEN_VALUE_BOOL)) {
+            cg_report_nodef(cg, args->nodes[1], "OBSECRO %s requires integer value argument in FS-4A", obsecro_node->as.obsecro.name);
+            return false;
+        }
+        fputs(");\n", out);
+        return true;
+    }
+
     if (strcmp(obsecro_node->as.obsecro.name, "kernel_memcpy") == 0) {
         cct_ast_node_list_t *args = obsecro_node->as.obsecro.arguments;
         if (!args || args->count != 3) {
@@ -9123,7 +9413,14 @@ static bool cg_emit_scribe_stmt(FILE *out, cct_codegen_t *cg, const cct_ast_node
     if (strcmp(obsecro_node->as.obsecro.name, "cct_svc_irq_enable") == 0 ||
         strcmp(obsecro_node->as.obsecro.name, "cct_svc_irq_disable") == 0 ||
         strcmp(obsecro_node->as.obsecro.name, "cct_svc_reboot") == 0 ||
-        strcmp(obsecro_node->as.obsecro.name, "cct_svc_keyboard_flush") == 0) {
+        strcmp(obsecro_node->as.obsecro.name, "cct_svc_keyboard_flush") == 0 ||
+        strcmp(obsecro_node->as.obsecro.name, "cct_svc_pci_init") == 0 ||
+        strcmp(obsecro_node->as.obsecro.name, "cct_svc_net_poll") == 0 ||
+        strcmp(obsecro_node->as.obsecro.name, "cct_svc_net_dispatch_init") == 0 ||
+        strcmp(obsecro_node->as.obsecro.name, "cct_svc_tcp_close") == 0 ||
+        strcmp(obsecro_node->as.obsecro.name, "cct_svc_http_server_close") == 0 ||
+        strcmp(obsecro_node->as.obsecro.name, "cct_svc_http_res_send") == 0 ||
+        strcmp(obsecro_node->as.obsecro.name, "cct_svc_http_router_init") == 0) {
         cct_ast_node_list_t *args = obsecro_node->as.obsecro.arguments;
         if (args && args->count != 0) {
             cg_report_nodef(cg, obsecro_node, "OBSECRO %s expects no arguments in FS-3", obsecro_node->as.obsecro.name);
@@ -9137,7 +9434,12 @@ static bool cg_emit_scribe_stmt(FILE *out, cct_codegen_t *cg, const cct_ast_node
     if (strcmp(obsecro_node->as.obsecro.name, "cct_svc_irq_mask") == 0 ||
         strcmp(obsecro_node->as.obsecro.name, "cct_svc_irq_unmask") == 0 ||
         strcmp(obsecro_node->as.obsecro.name, "cct_svc_irq_unregister") == 0 ||
-        strcmp(obsecro_node->as.obsecro.name, "cct_svc_timer_sleep") == 0) {
+        strcmp(obsecro_node->as.obsecro.name, "cct_svc_timer_sleep") == 0 ||
+        strcmp(obsecro_node->as.obsecro.name, "cct_svc_pci_enable_busmaster") == 0 ||
+        strcmp(obsecro_node->as.obsecro.name, "cct_svc_tcp_init") == 0 ||
+        strcmp(obsecro_node->as.obsecro.name, "cct_svc_http_server_init") == 0 ||
+        strcmp(obsecro_node->as.obsecro.name, "cct_svc_http_res_begin") == 0 ||
+        strcmp(obsecro_node->as.obsecro.name, "cct_svc_http_router_set_404") == 0) {
         cct_ast_node_list_t *args = obsecro_node->as.obsecro.arguments;
         cct_codegen_value_kind_t k0 = CCT_CODEGEN_VALUE_UNKNOWN;
         if (!args || args->count != 1) {
@@ -9149,6 +9451,273 @@ static bool cg_emit_scribe_stmt(FILE *out, cct_codegen_t *cg, const cct_ast_node
         if (!cg_emit_expr(out, cg, args->nodes[0], &k0)) return false;
         if (!(k0 == CCT_CODEGEN_VALUE_INT || k0 == CCT_CODEGEN_VALUE_BOOL)) {
             cg_report_nodef(cg, args->nodes[0], "OBSECRO %s requires integer argument in FS-3", obsecro_node->as.obsecro.name);
+            return false;
+        }
+        fputs(");\n", out);
+        return true;
+    }
+
+    if (strcmp(obsecro_node->as.obsecro.name, "cct_svc_net_mac") == 0) {
+        cct_ast_node_list_t *args = obsecro_node->as.obsecro.arguments;
+        cct_codegen_value_kind_t k0 = CCT_CODEGEN_VALUE_UNKNOWN;
+        if (!args || args->count != 1) {
+            cg_report_node(cg, obsecro_node, "OBSECRO cct_svc_net_mac expects exactly (buf_ptr) in FS-4B");
+            return false;
+        }
+        cg_emit_indent(out, indent);
+        fputs("cct_svc_net_mac(", out);
+        if (!cg_emit_expr(out, cg, args->nodes[0], &k0)) return false;
+        if (k0 != CCT_CODEGEN_VALUE_POINTER) {
+            cg_report_node(cg, args->nodes[0], "OBSECRO cct_svc_net_mac requires pointer buffer in FS-4B");
+            return false;
+        }
+        fputs(");\n", out);
+        return true;
+    }
+
+    if (strcmp(obsecro_node->as.obsecro.name, "cct_svc_net_send") == 0 ||
+        strcmp(obsecro_node->as.obsecro.name, "cct_svc_tcp_send") == 0) {
+        cct_ast_node_list_t *args = obsecro_node->as.obsecro.arguments;
+        cct_codegen_value_kind_t k0 = CCT_CODEGEN_VALUE_UNKNOWN;
+        cct_codegen_value_kind_t k1 = CCT_CODEGEN_VALUE_UNKNOWN;
+        if (!args || args->count != 2) {
+            cg_report_nodef(cg, obsecro_node, "OBSECRO %s expects exactly (data, len) in FS-4", obsecro_node->as.obsecro.name);
+            return false;
+        }
+        cg_emit_indent(out, indent);
+        fprintf(out, "%s(", obsecro_node->as.obsecro.name);
+        if (!cg_emit_expr(out, cg, args->nodes[0], &k0)) return false;
+        if (!(k0 == CCT_CODEGEN_VALUE_POINTER || k0 == CCT_CODEGEN_VALUE_STRING)) {
+            cg_report_nodef(cg, args->nodes[0], "OBSECRO %s requires pointer or VERBUM payload in FS-4", obsecro_node->as.obsecro.name);
+            return false;
+        }
+        fputs(", ", out);
+        if (!cg_emit_expr(out, cg, args->nodes[1], &k1)) return false;
+        if (!(k1 == CCT_CODEGEN_VALUE_INT || k1 == CCT_CODEGEN_VALUE_BOOL)) {
+            cg_report_nodef(cg, args->nodes[1], "OBSECRO %s requires integer len in FS-4", obsecro_node->as.obsecro.name);
+            return false;
+        }
+        fputs(");\n", out);
+        return true;
+    }
+
+    if (strcmp(obsecro_node->as.obsecro.name, "cct_svc_http_server_send") == 0) {
+        cct_ast_node_list_t *args = obsecro_node->as.obsecro.arguments;
+        cct_codegen_value_kind_t k0 = CCT_CODEGEN_VALUE_UNKNOWN;
+        cct_codegen_value_kind_t k1 = CCT_CODEGEN_VALUE_UNKNOWN;
+        if (!args || args->count != 2) {
+            cg_report_node(cg, obsecro_node, "OBSECRO cct_svc_http_server_send expects exactly (data, len) in FS-5A");
+            return false;
+        }
+        cg_emit_indent(out, indent);
+        fputs("cct_svc_http_server_send(", out);
+        if (!cg_emit_expr(out, cg, args->nodes[0], &k0)) return false;
+        if (!(k0 == CCT_CODEGEN_VALUE_POINTER || k0 == CCT_CODEGEN_VALUE_STRING)) {
+            cg_report_node(cg, args->nodes[0], "OBSECRO cct_svc_http_server_send requires pointer or VERBUM payload in FS-5A");
+            return false;
+        }
+        fputs(", ", out);
+        if (!cg_emit_expr(out, cg, args->nodes[1], &k1)) return false;
+        if (!(k1 == CCT_CODEGEN_VALUE_INT || k1 == CCT_CODEGEN_VALUE_BOOL)) {
+            cg_report_node(cg, args->nodes[1], "OBSECRO cct_svc_http_server_send requires integer len in FS-5A");
+            return false;
+        }
+        fputs(");\n", out);
+        return true;
+    }
+
+    if (strcmp(obsecro_node->as.obsecro.name, "cct_svc_http_server_req_copy") == 0 ||
+        strcmp(obsecro_node->as.obsecro.name, "cct_svc_http_req_method") == 0 ||
+        strcmp(obsecro_node->as.obsecro.name, "cct_svc_http_req_path") == 0 ||
+        strcmp(obsecro_node->as.obsecro.name, "cct_svc_http_req_query") == 0 ||
+        strcmp(obsecro_node->as.obsecro.name, "cct_svc_http_req_version") == 0 ||
+        strcmp(obsecro_node->as.obsecro.name, "cct_svc_http_req_body_copy") == 0) {
+        cct_ast_node_list_t *args = obsecro_node->as.obsecro.arguments;
+        cct_codegen_value_kind_t k0 = CCT_CODEGEN_VALUE_UNKNOWN;
+        cct_codegen_value_kind_t k1 = CCT_CODEGEN_VALUE_UNKNOWN;
+        if (!args || args->count != 2) {
+            cg_report_nodef(cg, obsecro_node, "OBSECRO %s expects exactly (dst_ptr, len) in FS-5", obsecro_node->as.obsecro.name);
+            return false;
+        }
+        cg_emit_indent(out, indent);
+        fprintf(out, "%s(", obsecro_node->as.obsecro.name);
+        if (!cg_emit_expr(out, cg, args->nodes[0], &k0)) return false;
+        if (k0 != CCT_CODEGEN_VALUE_POINTER) {
+            cg_report_nodef(cg, args->nodes[0], "OBSECRO %s requires pointer destination in FS-5", obsecro_node->as.obsecro.name);
+            return false;
+        }
+        fputs(", ", out);
+        if (!cg_emit_expr(out, cg, args->nodes[1], &k1)) return false;
+        if (!(k1 == CCT_CODEGEN_VALUE_INT || k1 == CCT_CODEGEN_VALUE_BOOL)) {
+            cg_report_nodef(cg, args->nodes[1], "OBSECRO %s requires integer len in FS-5", obsecro_node->as.obsecro.name);
+            return false;
+        }
+        fputs(");\n", out);
+        return true;
+    }
+
+    if (strcmp(obsecro_node->as.obsecro.name, "cct_svc_http_req_header_name") == 0 ||
+        strcmp(obsecro_node->as.obsecro.name, "cct_svc_http_req_header_value") == 0) {
+        cct_ast_node_list_t *args = obsecro_node->as.obsecro.arguments;
+        cct_codegen_value_kind_t k0 = CCT_CODEGEN_VALUE_UNKNOWN;
+        cct_codegen_value_kind_t k1 = CCT_CODEGEN_VALUE_UNKNOWN;
+        cct_codegen_value_kind_t k2 = CCT_CODEGEN_VALUE_UNKNOWN;
+        if (!args || args->count != 3) {
+            cg_report_nodef(cg, obsecro_node, "OBSECRO %s expects exactly (idx, dst_ptr, len) in FS-5B", obsecro_node->as.obsecro.name);
+            return false;
+        }
+        cg_emit_indent(out, indent);
+        fprintf(out, "%s(", obsecro_node->as.obsecro.name);
+        if (!cg_emit_expr(out, cg, args->nodes[0], &k0)) return false;
+        if (!(k0 == CCT_CODEGEN_VALUE_INT || k0 == CCT_CODEGEN_VALUE_BOOL)) {
+            cg_report_nodef(cg, args->nodes[0], "OBSECRO %s requires integer header index in FS-5B", obsecro_node->as.obsecro.name);
+            return false;
+        }
+        fputs(", ", out);
+        if (!cg_emit_expr(out, cg, args->nodes[1], &k1)) return false;
+        if (k1 != CCT_CODEGEN_VALUE_POINTER) {
+            cg_report_nodef(cg, args->nodes[1], "OBSECRO %s requires pointer destination in FS-5B", obsecro_node->as.obsecro.name);
+            return false;
+        }
+        fputs(", ", out);
+        if (!cg_emit_expr(out, cg, args->nodes[2], &k2)) return false;
+        if (!(k2 == CCT_CODEGEN_VALUE_INT || k2 == CCT_CODEGEN_VALUE_BOOL)) {
+            cg_report_nodef(cg, args->nodes[2], "OBSECRO %s requires integer len in FS-5B", obsecro_node->as.obsecro.name);
+            return false;
+        }
+        fputs(");\n", out);
+        return true;
+    }
+
+    if (strcmp(obsecro_node->as.obsecro.name, "cct_svc_http_res_header") == 0) {
+        cct_ast_node_list_t *args = obsecro_node->as.obsecro.arguments;
+        cct_codegen_value_kind_t k0 = CCT_CODEGEN_VALUE_UNKNOWN;
+        cct_codegen_value_kind_t k1 = CCT_CODEGEN_VALUE_UNKNOWN;
+        if (!args || args->count != 2) {
+            cg_report_node(cg, obsecro_node, "OBSECRO cct_svc_http_res_header expects exactly (name, value) in FS-5C");
+            return false;
+        }
+        cg_emit_indent(out, indent);
+        fputs("cct_svc_http_res_header(", out);
+        if (!cg_emit_expr(out, cg, args->nodes[0], &k0)) return false;
+        if (k0 != CCT_CODEGEN_VALUE_STRING) {
+            cg_report_node(cg, args->nodes[0], "OBSECRO cct_svc_http_res_header requires VERBUM name in FS-5C");
+            return false;
+        }
+        fputs(", ", out);
+        if (!cg_emit_expr(out, cg, args->nodes[1], &k1)) return false;
+        if (k1 != CCT_CODEGEN_VALUE_STRING) {
+            cg_report_node(cg, args->nodes[1], "OBSECRO cct_svc_http_res_header requires VERBUM value in FS-5C");
+            return false;
+        }
+        fputs(");\n", out);
+        return true;
+    }
+
+    if (strcmp(obsecro_node->as.obsecro.name, "cct_svc_http_res_finish") == 0) {
+        cct_ast_node_list_t *args = obsecro_node->as.obsecro.arguments;
+        cct_codegen_value_kind_t k0 = CCT_CODEGEN_VALUE_UNKNOWN;
+        cct_codegen_value_kind_t k1 = CCT_CODEGEN_VALUE_UNKNOWN;
+        cct_codegen_value_kind_t k2 = CCT_CODEGEN_VALUE_UNKNOWN;
+        if (!args || args->count != 3) {
+            cg_report_node(cg, obsecro_node, "OBSECRO cct_svc_http_res_finish expects exactly (content_type, body, len) in FS-5C");
+            return false;
+        }
+        cg_emit_indent(out, indent);
+        fputs("cct_svc_http_res_finish(", out);
+        if (!cg_emit_expr(out, cg, args->nodes[0], &k0)) return false;
+        if (k0 != CCT_CODEGEN_VALUE_STRING) {
+            cg_report_node(cg, args->nodes[0], "OBSECRO cct_svc_http_res_finish requires VERBUM content_type in FS-5C");
+            return false;
+        }
+        fputs(", ", out);
+        if (!cg_emit_expr(out, cg, args->nodes[1], &k1)) return false;
+        if (!(k1 == CCT_CODEGEN_VALUE_POINTER || k1 == CCT_CODEGEN_VALUE_STRING)) {
+            cg_report_node(cg, args->nodes[1], "OBSECRO cct_svc_http_res_finish requires pointer or VERBUM body in FS-5C");
+            return false;
+        }
+        fputs(", ", out);
+        if (!cg_emit_expr(out, cg, args->nodes[2], &k2)) return false;
+        if (!(k2 == CCT_CODEGEN_VALUE_INT || k2 == CCT_CODEGEN_VALUE_BOOL)) {
+            cg_report_node(cg, args->nodes[2], "OBSECRO cct_svc_http_res_finish requires integer body_len in FS-5C");
+            return false;
+        }
+        fputs(");\n", out);
+        return true;
+    }
+
+    if (strcmp(obsecro_node->as.obsecro.name, "cct_svc_http_res_build") == 0) {
+        cct_ast_node_list_t *args = obsecro_node->as.obsecro.arguments;
+        cct_codegen_value_kind_t k0 = CCT_CODEGEN_VALUE_UNKNOWN;
+        cct_codegen_value_kind_t k1 = CCT_CODEGEN_VALUE_UNKNOWN;
+        cct_codegen_value_kind_t k2 = CCT_CODEGEN_VALUE_UNKNOWN;
+        cct_codegen_value_kind_t k3 = CCT_CODEGEN_VALUE_UNKNOWN;
+        if (!args || args->count != 4) {
+            cg_report_node(cg, obsecro_node, "OBSECRO cct_svc_http_res_build expects exactly (status, content_type, body, len) in FS-5C");
+            return false;
+        }
+        cg_emit_indent(out, indent);
+        fputs("cct_svc_http_res_build(", out);
+        if (!cg_emit_expr(out, cg, args->nodes[0], &k0)) return false;
+        if (!(k0 == CCT_CODEGEN_VALUE_INT || k0 == CCT_CODEGEN_VALUE_BOOL)) {
+            cg_report_node(cg, args->nodes[0], "OBSECRO cct_svc_http_res_build requires integer status in FS-5C");
+            return false;
+        }
+        fputs(", ", out);
+        if (!cg_emit_expr(out, cg, args->nodes[1], &k1)) return false;
+        if (k1 != CCT_CODEGEN_VALUE_STRING) {
+            cg_report_node(cg, args->nodes[1], "OBSECRO cct_svc_http_res_build requires VERBUM content_type in FS-5C");
+            return false;
+        }
+        fputs(", ", out);
+        if (!cg_emit_expr(out, cg, args->nodes[2], &k2)) return false;
+        if (!(k2 == CCT_CODEGEN_VALUE_POINTER || k2 == CCT_CODEGEN_VALUE_STRING)) {
+            cg_report_node(cg, args->nodes[2], "OBSECRO cct_svc_http_res_build requires pointer or VERBUM body in FS-5C");
+            return false;
+        }
+        fputs(", ", out);
+        if (!cg_emit_expr(out, cg, args->nodes[3], &k3)) return false;
+        if (!(k3 == CCT_CODEGEN_VALUE_INT || k3 == CCT_CODEGEN_VALUE_BOOL)) {
+            cg_report_node(cg, args->nodes[3], "OBSECRO cct_svc_http_res_build requires integer body_len in FS-5C");
+            return false;
+        }
+        fputs(");\n", out);
+        return true;
+    }
+
+    if (strcmp(obsecro_node->as.obsecro.name, "cct_svc_http_router_add") == 0) {
+        cct_ast_node_list_t *args = obsecro_node->as.obsecro.arguments;
+        cct_codegen_value_kind_t k0 = CCT_CODEGEN_VALUE_UNKNOWN;
+        cct_codegen_value_kind_t k1 = CCT_CODEGEN_VALUE_UNKNOWN;
+        cct_codegen_value_kind_t k2 = CCT_CODEGEN_VALUE_UNKNOWN;
+        cct_codegen_value_kind_t k3 = CCT_CODEGEN_VALUE_UNKNOWN;
+        if (!args || args->count != 4) {
+            cg_report_node(cg, obsecro_node, "OBSECRO cct_svc_http_router_add expects exactly (method, path, match_type, handler_id) in FS-5D");
+            return false;
+        }
+        cg_emit_indent(out, indent);
+        fputs("cct_svc_http_router_add(", out);
+        if (!cg_emit_expr(out, cg, args->nodes[0], &k0)) return false;
+        if (k0 != CCT_CODEGEN_VALUE_STRING) {
+            cg_report_node(cg, args->nodes[0], "OBSECRO cct_svc_http_router_add requires VERBUM method in FS-5D");
+            return false;
+        }
+        fputs(", ", out);
+        if (!cg_emit_expr(out, cg, args->nodes[1], &k1)) return false;
+        if (k1 != CCT_CODEGEN_VALUE_STRING) {
+            cg_report_node(cg, args->nodes[1], "OBSECRO cct_svc_http_router_add requires VERBUM path in FS-5D");
+            return false;
+        }
+        fputs(", ", out);
+        if (!cg_emit_expr(out, cg, args->nodes[2], &k2)) return false;
+        if (!(k2 == CCT_CODEGEN_VALUE_INT || k2 == CCT_CODEGEN_VALUE_BOOL)) {
+            cg_report_node(cg, args->nodes[2], "OBSECRO cct_svc_http_router_add requires integer match_type in FS-5D");
+            return false;
+        }
+        fputs(", ", out);
+        if (!cg_emit_expr(out, cg, args->nodes[3], &k3)) return false;
+        if (!(k3 == CCT_CODEGEN_VALUE_INT || k3 == CCT_CODEGEN_VALUE_BOOL)) {
+            cg_report_node(cg, args->nodes[3], "OBSECRO cct_svc_http_router_add requires integer handler_id in FS-5D");
             return false;
         }
         fputs(");\n", out);
@@ -10531,8 +11100,8 @@ static bool cg_emit_scribe_stmt(FILE *out, cct_codegen_t *cg, const cct_ast_node
     }
 
     if (strcmp(obsecro_node->as.obsecro.name, "scribe") != 0) {
-        cg_report_nodef(cg, obsecro_node, "OBSECRO %s codegen is not supported in current executable subset (supported stmt builtins: scribe, libera, mem_free, mem_copy, mem_set, mem_zero, kernel_halt, kernel_outb, kernel_memcpy, kernel_memset, console_init, console_clear, console_putc, console_write, console_write_centered, console_set_color, console_set_cursor, cct_svc_free, cct_svc_memcpy, cct_svc_memset, cct_svc_builder_append, cct_svc_builder_append_char, cct_svc_builder_clear, cct_svc_builder_backspace, cct_svc_fluxus_push, cct_svc_fluxus_pop, cct_svc_fluxus_set, cct_svc_fluxus_clear, cct_svc_fluxus_reserve, cct_svc_fluxus_free, cct_svc_irq_enable, cct_svc_irq_disable, cct_svc_irq_mask, cct_svc_irq_unmask, cct_svc_irq_register, cct_svc_irq_unregister, cct_svc_reboot, cct_svc_keyboard_flush, cct_svc_timer_sleep, fluxus_free, fluxus_push, fluxus_pop, fluxus_clear, fluxus_reserve, fluxus_set, fluxus_remove, fluxus_insert, fluxus_reverse, fluxus_sort_int, fluxus_sort_verbum, alg_sort_verbum, json_arr_handle_push, json_obj_handle_push, sock_connect, sock_bind, sock_listen, sock_close, sock_set_timeout_ms, db_exec, db_close, rows_close, stmt_bind_text, stmt_bind_int, stmt_bind_real, stmt_has_row, stmt_get_text, stmt_get_int, stmt_get_real, stmt_reset, stmt_finalize, db_begin, db_commit, db_rollback, map_free, map_insert, map_clear, map_reserve, map_merge, set_free, set_clear, set_reserve, io_print, io_println, io_print_int, io_print_real, io_print_char, io_eprint, io_eprintln, io_eprint_int, io_eprint_real, io_flush, io_flush_err, fs_write_all, fs_append_all, fs_mkdir, fs_mkdir_all, fs_delete_file, fs_delete_dir, fs_rename, fs_copy, fs_move, fs_chmod, fs_truncate, fs_symlink, random_seed, time_sleep_ms, bytes_set, bytes_free, option_free, result_free, callback_builtin_invoke0_void, callback_builtin_invoke1_void, callback_builtin_invoke2_void, callback_builtin_invoke3_void, callback_builtin_invoke4_void, regex_builtin_free, image_builtin_free, scan_free, builder_append, builder_append_char, builder_clear, builder_free, writer_indent, writer_dedent, writer_write, writer_writeln, writer_free, instr_builtin_enable, instr_builtin_disable, instr_builtin_span_end, instr_builtin_span_attr, instr_builtin_event, instr_builtin_buffer_clear, instr_builtin_buffer_discard_closed, zip_builtin_close, obj_storage_builtin_close)",
-                        obsecro_node->as.obsecro.name);
+        cg_report_nodef(cg, obsecro_node, "OBSECRO %s codegen is not supported in current executable subset (supported stmt builtins: scribe, libera, mem_free, mem_copy, mem_set, mem_zero, kernel_halt, kernel_outb, kernel_memcpy, kernel_memset, console_init, console_clear, console_putc, console_write, console_write_centered, console_set_color, console_set_cursor, cct_svc_free, cct_svc_memcpy, cct_svc_memset, cct_svc_builder_append, cct_svc_builder_append_char, cct_svc_builder_clear, cct_svc_builder_backspace, cct_svc_fluxus_push, cct_svc_fluxus_pop, cct_svc_fluxus_set, cct_svc_fluxus_clear, cct_svc_fluxus_reserve, cct_svc_fluxus_free, cct_svc_irq_enable, cct_svc_irq_disable, cct_svc_irq_mask, cct_svc_irq_unmask, cct_svc_irq_register, cct_svc_irq_unregister, cct_svc_reboot, cct_svc_keyboard_flush, cct_svc_timer_sleep, cct_svc_outw, cct_svc_outl, cct_svc_pci_init, cct_svc_pci_enable_busmaster, cct_svc_net_send, cct_svc_net_mac, cct_svc_net_poll, cct_svc_net_dispatch_init, cct_svc_tcp_init, cct_svc_tcp_send, cct_svc_tcp_close, cct_svc_http_server_init, cct_svc_http_server_send, cct_svc_http_server_close, cct_svc_http_server_req_copy, cct_svc_http_req_method, cct_svc_http_req_path, cct_svc_http_req_query, cct_svc_http_req_version, cct_svc_http_req_header_name, cct_svc_http_req_header_value, cct_svc_http_req_body_copy, cct_svc_http_res_begin, cct_svc_http_res_header, cct_svc_http_res_finish, cct_svc_http_res_build, cct_svc_http_res_send, cct_svc_http_router_init, cct_svc_http_router_add, cct_svc_http_router_set_404, fluxus_free, fluxus_push, fluxus_pop, fluxus_clear, fluxus_reserve, fluxus_set, fluxus_remove, fluxus_insert, fluxus_reverse, fluxus_sort_int, fluxus_sort_verbum, alg_sort_verbum, json_arr_handle_push, json_obj_handle_push, sock_connect, sock_bind, sock_listen, sock_close, sock_set_timeout_ms, db_exec, db_close, rows_close, stmt_bind_text, stmt_bind_int, stmt_bind_real, stmt_has_row, stmt_get_text, stmt_get_int, stmt_get_real, stmt_reset, stmt_finalize, db_begin, db_commit, db_rollback, map_free, map_insert, map_clear, map_reserve, map_merge, set_free, set_clear, set_reserve, io_print, io_println, io_print_int, io_print_real, io_print_char, io_eprint, io_eprintln, io_eprint_int, io_eprint_real, io_flush, io_flush_err, fs_write_all, fs_append_all, fs_mkdir, fs_mkdir_all, fs_delete_file, fs_delete_dir, fs_rename, fs_copy, fs_move, fs_chmod, fs_truncate, fs_symlink, random_seed, time_sleep_ms, bytes_set, bytes_free, option_free, result_free, callback_builtin_invoke0_void, callback_builtin_invoke1_void, callback_builtin_invoke2_void, callback_builtin_invoke3_void, callback_builtin_invoke4_void, regex_builtin_free, image_builtin_free, scan_free, builder_append, builder_append_char, builder_clear, builder_free, writer_indent, writer_dedent, writer_write, writer_writeln, writer_free, instr_builtin_enable, instr_builtin_disable, instr_builtin_span_end, instr_builtin_span_attr, instr_builtin_event, instr_builtin_buffer_clear, instr_builtin_buffer_discard_closed, zip_builtin_close, obj_storage_builtin_close)",
+        obsecro_node->as.obsecro.name);
         return false;
     }
 

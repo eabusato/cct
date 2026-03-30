@@ -1,0 +1,10 @@
+INCIPIT grimoire "http_response_fs_reject_host_fs5c"
+
+ADVOCARE "cct/http_response_fs"
+
+RITUALE main() REDDE NIHIL
+  CONIURA http_response_fs_text("host")
+  REDDE
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

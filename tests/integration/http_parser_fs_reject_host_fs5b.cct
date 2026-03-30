@@ -1,0 +1,11 @@
+INCIPIT grimoire "http_parser_fs_reject_host_fs5b"
+
+ADVOCARE "cct/http_parser_fs"
+
+RITUALE main() REDDE NIHIL
+  EVOCA SPECULUM NIHIL buf
+  CONIURA http_parser_fs_parse(buf, 0)
+  REDDE
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

@@ -1,0 +1,24 @@
+INCIPIT grimoire "http_parser_fs_freestanding_smoke_fs5b"
+
+ADVOCARE "cct/http_parser_fs"
+
+RITUALE main() REDDE NIHIL
+  EVOCA SPECULUM NIHIL req_buf
+  EVOCA SPECULUM NIHIL body_buf
+  CONIURA http_parser_fs_parse(req_buf, 0)
+  CONIURA http_parser_fs_method()
+  CONIURA http_parser_fs_path()
+  CONIURA http_parser_fs_query()
+  CONIURA http_parser_fs_version()
+  CONIURA http_parser_fs_header_count()
+  CONIURA http_parser_fs_header_name(0)
+  CONIURA http_parser_fs_header("Host")
+  CONIURA http_parser_fs_body_len()
+  CONIURA http_parser_fs_body(body_buf, 64)
+  CONIURA http_parser_fs_is_method("GET")
+  CONIURA http_parser_fs_path_is("/")
+  CONIURA http_parser_fs_path_starts("/api")
+  REDDE
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

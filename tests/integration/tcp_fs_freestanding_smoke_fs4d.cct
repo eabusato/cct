@@ -1,0 +1,18 @@
+INCIPIT grimoire "tcp_fs_freestanding_smoke_fs4d"
+
+ADVOCARE "cct/tcp_fs"
+
+RITUALE noop() REDDE NIHIL
+  REDDE
+EXPLICIT RITUALE
+
+RITUALE main() REDDE NIHIL
+  CONIURA tcp_fs_listen(80)
+  CONIURA tcp_fs_accept()
+  CONIURA tcp_fs_is_connected()
+  CONIURA tcp_fs_peer_closed()
+  CONIURA tcp_fs_state()
+  REDDE
+EXPLICIT RITUALE
+
+EXPLICIT grimoire
