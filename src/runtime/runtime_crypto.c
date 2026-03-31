@@ -31,8 +31,45 @@ bool cct_runtime_emit_crypto_helpers(FILE *out) {
     fputs("    return hex;\n", out);
     fputs("}\n\n", out);
 
+    fputs("static char *cct_rt_crypto_base64_encode(const unsigned char *bytes, size_t len) {\n", out);
+    fputs("    static const char table[] = \"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/\";\n", out);
+    fputs("    size_t out_len = ((len + 2U) / 3U) * 4U;\n", out);
+    fputs("    char *out_s = (char*)cct_rt_alloc_or_fail(out_len + 1U);\n", out);
+    fputs("    size_t i = 0U;\n", out);
+    fputs("    size_t j = 0U;\n", out);
+    fputs("    while (i < len) {\n", out);
+    fputs("        size_t remain = len - i;\n", out);
+    fputs("        unsigned int octet_a = i < len ? bytes[i++] : 0U;\n", out);
+    fputs("        unsigned int octet_b = i < len ? bytes[i++] : 0U;\n", out);
+    fputs("        unsigned int octet_c = i < len ? bytes[i++] : 0U;\n", out);
+    fputs("        unsigned int triple = (octet_a << 16) | (octet_b << 8) | octet_c;\n", out);
+    fputs("        out_s[j++] = table[(triple >> 18) & 0x3FU];\n", out);
+    fputs("        out_s[j++] = table[(triple >> 12) & 0x3FU];\n", out);
+    fputs("        out_s[j++] = remain > 1U ? table[(triple >> 6) & 0x3FU] : '=';\n", out);
+    fputs("        out_s[j++] = remain > 2U ? table[triple & 0x3FU] : '=';\n", out);
+    fputs("    }\n", out);
+    fputs("    out_s[out_len] = '\\0';\n", out);
+    fputs("    return out_s;\n", out);
+    fputs("}\n\n", out);
+
     fputs("static cct_rt_bytes_t *cct_rt_crypto_require_bytes(void *ptr, const char *ctx) {\n", out);
     fputs("    return cct_rt_bytes_require(ptr, ctx ? ctx : \"crypto bytes buffer invalido\");\n", out);
+    fputs("}\n\n", out);
+
+    fputs("static char *cct_rt_crypto_sha1_text(const char *text) {\n", out);
+    fputs("    const unsigned char *data = (const unsigned char*)((text) ? text : \"\");\n", out);
+    fputs("    unsigned char digest[20];\n", out);
+    fputs("    if (!SHA1(data, strlen((const char*)data), digest)) cct_rt_fail(\"crypto sha1 failed\");\n", out);
+    fputs("    return cct_rt_crypto_hex_encode(digest, sizeof(digest));\n", out);
+    fputs("}\n\n", out);
+
+    fputs("static char *cct_rt_crypto_sha1_bytes(void *ptr, long long length) {\n", out);
+    fputs("    if (length < 0) cct_rt_fail(\"crypto sha1_bytes expects length >= 0\");\n", out);
+    fputs("    cct_rt_bytes_t *bytes = cct_rt_crypto_require_bytes(ptr, \"crypto sha1_bytes recebeu buffer nulo\");\n", out);
+    fputs("    if (length > bytes->len) cct_rt_fail(\"crypto sha1_bytes length exceeds buffer size\");\n", out);
+    fputs("    unsigned char digest[20];\n", out);
+    fputs("    if (!SHA1(bytes->data ? bytes->data : (const unsigned char*)\"\", (size_t)length, digest)) cct_rt_fail(\"crypto sha1_bytes failed\");\n", out);
+    fputs("    return cct_rt_crypto_hex_encode(digest, sizeof(digest));\n", out);
     fputs("}\n\n", out);
 
     fputs("static char *cct_rt_crypto_sha256_text(const char *text) {\n", out);
@@ -124,6 +161,25 @@ bool cct_runtime_emit_crypto_helpers(FILE *out) {
     fputs("        diff |= (unsigned int)(va ^ vb);\n", out);
     fputs("    }\n", out);
     fputs("    return diff == 0U ? 1LL : 0LL;\n", out);
+    fputs("}\n\n", out);
+
+    fputs("static char *cct_rt_crypto_ws_accept_key(const char *client_key) {\n", out);
+    fputs("    static const char ws_guid[] = \"258EAFA5-E914-47DA-95CA-C5AB0DC85B11\";\n", out);
+    fputs("    const char *key_s = client_key ? client_key : \"\";\n", out);
+    fputs("    size_t key_len = strlen(key_s);\n", out);
+    fputs("    size_t guid_len = sizeof(ws_guid) - 1U;\n", out);
+    fputs("    size_t joined_len = key_len + guid_len;\n", out);
+    fputs("    char *joined = (char*)cct_rt_alloc_or_fail(joined_len + 1U);\n", out);
+    fputs("    unsigned char digest[20];\n", out);
+    fputs("    memcpy(joined, key_s, key_len);\n", out);
+    fputs("    memcpy(joined + key_len, ws_guid, guid_len);\n", out);
+    fputs("    joined[joined_len] = '\\0';\n", out);
+    fputs("    if (!SHA1((const unsigned char*)joined, joined_len, digest)) {\n", out);
+    fputs("        cct_rt_free_ptr(joined);\n", out);
+    fputs("        cct_rt_fail(\"crypto ws_accept_key failed\");\n", out);
+    fputs("    }\n", out);
+    fputs("    cct_rt_free_ptr(joined);\n", out);
+    fputs("    return cct_rt_crypto_base64_encode(digest, sizeof(digest));\n", out);
     fputs("}\n\n", out);
 
     return true;

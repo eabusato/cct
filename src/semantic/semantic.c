@@ -1434,7 +1434,7 @@ static cct_sem_type_t* sem_resolve_ast_type(cct_semantic_analyzer_t *sem, const 
  * ======================================================================== */
 
 static const cct_sem_builtin_spec_t* sem_find_builtin(cct_semantic_analyzer_t *sem, const char *name) {
-static cct_sem_builtin_spec_t specs[651];
+static cct_sem_builtin_spec_t specs[654];
     static bool initialized = false;
 
     if (!initialized) {
@@ -2090,6 +2090,9 @@ static cct_sem_builtin_spec_t specs[651];
         specs[648].name = "cct_svc_asset_len"; specs[648].min_args = 1; specs[648].variadic = false;
         specs[649].name = "cct_svc_asset_read"; specs[649].min_args = 3; specs[649].variadic = false;
         specs[650].name = "cct_svc_asset_content_type"; specs[650].min_args = 1; specs[650].variadic = false;
+        specs[651].name = "crypto_sha1_text"; specs[651].min_args = 1; specs[651].variadic = false;
+        specs[652].name = "crypto_sha1_bytes"; specs[652].min_args = 2; specs[652].variadic = false;
+        specs[653].name = "crypto_ws_accept_key"; specs[653].min_args = 1; specs[653].variadic = false;
         initialized = true;
     }
 
@@ -2744,6 +2747,9 @@ static cct_sem_builtin_spec_t specs[651];
     specs[648].return_type = &sem->type_rex;
     specs[649].return_type = &sem->type_rex;
     specs[650].return_type = &sem->type_verbum;
+    specs[651].return_type = &sem->type_verbum;
+    specs[652].return_type = &sem->type_verbum;
+    specs[653].return_type = &sem->type_verbum;
 
     for (size_t i = 0; i < sizeof(specs) / sizeof(specs[0]); i++) {
         if (!specs[i].name) continue;
@@ -4476,18 +4482,22 @@ static cct_sem_type_t* sem_analyze_builtin_obsecro(
              strcmp(name, "process_run_with_input") == 0 || strcmp(name, "process_run_env") == 0 ||
              strcmp(name, "process_run_timeout") == 0 ||
              strcmp(name, "hash_crc32") == 0 || strcmp(name, "hash_murmur3") == 0 ||
-             strcmp(name, "crypto_sha256_text") == 0 || strcmp(name, "crypto_sha512_text") == 0) &&
+             strcmp(name, "crypto_sha1_text") == 0 ||
+             strcmp(name, "crypto_sha256_text") == 0 || strcmp(name, "crypto_sha512_text") == 0 ||
+             strcmp(name, "crypto_ws_accept_key") == 0) &&
             i == 0 &&
             !(arg_type && (arg_type->kind == CCT_SEM_TYPE_VERBUM || sem_is_error_type(arg_type)))) {
             sem_report_nodef(sem, expr->as.obsecro.arguments->nodes[i],
                              "OBSECRO %s expects VERBUM argument", name);
         }
-        if ((strcmp(name, "crypto_sha256_bytes") == 0 || strcmp(name, "crypto_sha512_bytes") == 0) && i == 0 &&
+        if ((strcmp(name, "crypto_sha1_bytes") == 0 ||
+             strcmp(name, "crypto_sha256_bytes") == 0 || strcmp(name, "crypto_sha512_bytes") == 0) && i == 0 &&
             !(arg_type && (arg_type->kind == CCT_SEM_TYPE_POINTER || sem_is_error_type(arg_type)))) {
             sem_report_nodef(sem, expr->as.obsecro.arguments->nodes[i],
                              "OBSECRO %s expects bytes pointer as first argument", name);
         }
-        if ((strcmp(name, "crypto_sha256_bytes") == 0 || strcmp(name, "crypto_sha512_bytes") == 0) && i == 1 &&
+        if ((strcmp(name, "crypto_sha1_bytes") == 0 ||
+             strcmp(name, "crypto_sha256_bytes") == 0 || strcmp(name, "crypto_sha512_bytes") == 0) && i == 1 &&
             !(sem_is_integer_type(arg_type) || sem_is_error_type(arg_type))) {
             sem_report_nodef(sem, expr->as.obsecro.arguments->nodes[i],
                              "OBSECRO %s expects integer length as second argument", name);

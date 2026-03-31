@@ -200,6 +200,8 @@ static const char* mod_stdlib_import_hint_for_symbol(const char *name) {
     }
     if (strcmp(name, "sha256") == 0 ||
         strcmp(name, "sha256_bytes") == 0 ||
+        strcmp(name, "sha1") == 0 ||
+        strcmp(name, "sha1_bytes") == 0 ||
         strcmp(name, "sha512") == 0 ||
         strcmp(name, "sha512_bytes") == 0 ||
         strcmp(name, "hmac_sha256") == 0 ||
@@ -207,6 +209,7 @@ static const char* mod_stdlib_import_hint_for_symbol(const char *name) {
         strcmp(name, "pbkdf2_sha256") == 0 ||
         strcmp(name, "csprng_bytes") == 0 ||
         strcmp(name, "constant_time_compare") == 0 ||
+        strcmp(name, "ws_accept_key") == 0 ||
         strcmp(name, "bytes_to_hex") == 0) {
         return "add ADVOCARE \"cct/crypto.cct\" in the module header";
     }

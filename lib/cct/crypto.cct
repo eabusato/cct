@@ -19,6 +19,14 @@ RITUALE sha256_bytes(SPECULUM NIHIL buffer, REX tamanho) REDDE VERBUM
   REDDE OBSECRO crypto_sha256_bytes(buffer, tamanho)
 EXPLICIT RITUALE
 
+RITUALE sha1(VERBUM texto) REDDE VERBUM
+  REDDE OBSECRO crypto_sha1_text(texto)
+EXPLICIT RITUALE
+
+RITUALE sha1_bytes(SPECULUM NIHIL buffer, REX tamanho) REDDE VERBUM
+  REDDE OBSECRO crypto_sha1_bytes(buffer, tamanho)
+EXPLICIT RITUALE
+
 RITUALE sha512(VERBUM texto) REDDE VERBUM
   REDDE OBSECRO crypto_sha512_text(texto)
 EXPLICIT RITUALE
@@ -45,6 +53,10 @@ EXPLICIT RITUALE
 
 RITUALE constant_time_compare(VERBUM a, VERBUM b) REDDE VERUM
   REDDE OBSECRO crypto_constant_time_compare(a, b)
+EXPLICIT RITUALE
+
+RITUALE ws_accept_key(VERBUM client_key) REDDE VERBUM
+  REDDE OBSECRO crypto_ws_accept_key(client_key)
 EXPLICIT RITUALE
 
 RITUALE bytes_to_hex(SPECULUM NIHIL bytes) REDDE VERBUM

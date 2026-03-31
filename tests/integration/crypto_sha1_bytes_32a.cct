@@ -1,0 +1,16 @@
+INCIPIT grimoire "crypto_sha1_bytes_32a"
+
+ADVOCARE "cct/bytes.cct"
+ADVOCARE "cct/crypto.cct"
+
+RITUALE main() REDDE REX
+  EVOCA SPECULUM NIHIL b AD CONIURA bytes_new(3)
+  CONIURA bytes_set(b, 0, 97)
+  CONIURA bytes_set(b, 1, 98)
+  CONIURA bytes_set(b, 2, 99)
+  OBSECRO scribe(CONIURA sha1_bytes(b, 3), "\n")
+  CONIURA bytes_free(b)
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

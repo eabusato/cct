@@ -1,0 +1,16 @@
+INCIPIT grimoire "crypto_ws_accept_key_32a"
+
+ADVOCARE "cct/crypto.cct"
+ADVOCARE "cct/verbum.cct"
+
+RITUALE main() REDDE REX
+  EVOCA VERBUM accept AD CONIURA ws_accept_key("dGhlIHNhbXBsZSBub25jZQ==")
+  OBSECRO scribe(accept, "\n")
+  SI CONIURA compare(accept, "s3pPLMBiTxaQ9kYGzzhZRbK+xOo=") == 0
+    OBSECRO scribe("ok\n")
+    REDDE 0
+  FIN SI
+  REDDE 1
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

@@ -3341,6 +3341,49 @@ static bool cg_emit_obsecro_expr(FILE *out, cct_codegen_t *cg, const cct_ast_nod
         return true;
     }
 
+    if (strcmp(name, "crypto_sha1_text") == 0) {
+        if (argc != 1) {
+            cg_report_node(cg, expr, "OBSECRO crypto_sha1_text expects exactly one VERBUM argument in FASE 32A");
+            return false;
+        }
+        cct_codegen_value_kind_t k = CCT_CODEGEN_VALUE_UNKNOWN;
+        cg->uses_crypto = true;
+        fputs("cct_rt_crypto_sha1_text(", out);
+        if (!cg_emit_expr(out, cg, args->nodes[0], &k)) return false;
+        if (k != CCT_CODEGEN_VALUE_STRING) {
+            cg_report_node(cg, args->nodes[0], "OBSECRO crypto_sha1_text requires VERBUM argument in FASE 32A");
+            return false;
+        }
+        fputs(")", out);
+        if (out_kind) *out_kind = CCT_CODEGEN_VALUE_STRING;
+        return true;
+    }
+
+    if (strcmp(name, "crypto_sha1_bytes") == 0) {
+        if (argc != 2) {
+            cg_report_node(cg, expr, "OBSECRO crypto_sha1_bytes expects exactly (bytes, len) in FASE 32A");
+            return false;
+        }
+        cct_codegen_value_kind_t k0 = CCT_CODEGEN_VALUE_UNKNOWN;
+        cct_codegen_value_kind_t k1 = CCT_CODEGEN_VALUE_UNKNOWN;
+        cg->uses_crypto = true;
+        fputs("cct_rt_crypto_sha1_bytes((void*)(", out);
+        if (!cg_emit_expr(out, cg, args->nodes[0], &k0)) return false;
+        if (k0 != CCT_CODEGEN_VALUE_POINTER) {
+            cg_report_node(cg, args->nodes[0], "OBSECRO crypto_sha1_bytes requires bytes pointer as first argument in FASE 32A");
+            return false;
+        }
+        fputs("), ", out);
+        if (!cg_emit_expr(out, cg, args->nodes[1], &k1)) return false;
+        if (!(k1 == CCT_CODEGEN_VALUE_INT || k1 == CCT_CODEGEN_VALUE_BOOL)) {
+            cg_report_node(cg, args->nodes[1], "OBSECRO crypto_sha1_bytes requires integer len as second argument in FASE 32A");
+            return false;
+        }
+        fputs(")", out);
+        if (out_kind) *out_kind = CCT_CODEGEN_VALUE_STRING;
+        return true;
+    }
+
     if (strcmp(name, "crypto_sha256_text") == 0) {
         if (argc != 1) {
             cg_report_node(cg, expr, "OBSECRO crypto_sha256_text expects exactly one VERBUM argument in FASE 32A");
@@ -3531,6 +3574,24 @@ static bool cg_emit_obsecro_expr(FILE *out, cct_codegen_t *cg, const cct_ast_nod
         }
         fputs(")", out);
         if (out_kind) *out_kind = CCT_CODEGEN_VALUE_BOOL;
+        return true;
+    }
+
+    if (strcmp(name, "crypto_ws_accept_key") == 0) {
+        if (argc != 1) {
+            cg_report_node(cg, expr, "OBSECRO crypto_ws_accept_key expects exactly one VERBUM client_key argument in FASE 32A");
+            return false;
+        }
+        cct_codegen_value_kind_t k = CCT_CODEGEN_VALUE_UNKNOWN;
+        cg->uses_crypto = true;
+        fputs("cct_rt_crypto_ws_accept_key(", out);
+        if (!cg_emit_expr(out, cg, args->nodes[0], &k)) return false;
+        if (k != CCT_CODEGEN_VALUE_STRING) {
+            cg_report_node(cg, args->nodes[0], "OBSECRO crypto_ws_accept_key requires VERBUM client_key argument in FASE 32A");
+            return false;
+        }
+        fputs(")", out);
+        if (out_kind) *out_kind = CCT_CODEGEN_VALUE_STRING;
         return true;
     }
 
@@ -13089,7 +13150,9 @@ static bool cg_precollect_strings_from_expr(cct_codegen_t *cg, const cct_ast_nod
             return true;
         case AST_OBSECRO:
             if (expr->as.obsecro.name &&
-                (strcmp(expr->as.obsecro.name, "crypto_sha256_text") == 0 ||
+                (strcmp(expr->as.obsecro.name, "crypto_sha1_text") == 0 ||
+                 strcmp(expr->as.obsecro.name, "crypto_sha1_bytes") == 0 ||
+                 strcmp(expr->as.obsecro.name, "crypto_sha256_text") == 0 ||
                  strcmp(expr->as.obsecro.name, "crypto_sha256_bytes") == 0 ||
                  strcmp(expr->as.obsecro.name, "crypto_sha512_text") == 0 ||
                  strcmp(expr->as.obsecro.name, "crypto_sha512_bytes") == 0 ||
@@ -13097,7 +13160,8 @@ static bool cg_precollect_strings_from_expr(cct_codegen_t *cg, const cct_ast_nod
                  strcmp(expr->as.obsecro.name, "crypto_hmac_sha512") == 0 ||
                  strcmp(expr->as.obsecro.name, "crypto_pbkdf2_sha256") == 0 ||
                  strcmp(expr->as.obsecro.name, "crypto_csprng_bytes") == 0 ||
-                 strcmp(expr->as.obsecro.name, "crypto_constant_time_compare") == 0)) {
+                 strcmp(expr->as.obsecro.name, "crypto_constant_time_compare") == 0 ||
+                 strcmp(expr->as.obsecro.name, "crypto_ws_accept_key") == 0)) {
                 cg->uses_crypto = true;
             }
             if (expr->as.obsecro.name &&

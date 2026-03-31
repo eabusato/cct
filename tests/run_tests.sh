@@ -10060,6 +10060,33 @@ else
     test_fail "cct/crypto csprng_bytes/constant_time_compare regrediram"
 fi
 
+# Test 1760A: SHA-1 text hash
+echo "Test 1760A: cct/crypto sha1 sobre VERBUM"
+BASE_1760A="$CCT_TMP_DIR/phase32a/test_1760a_sha1_text"
+if [ "$RC_31_READY" -eq 0 ] && cct_phase32_copy_compile_and_run "$PHASE31_HOST_WRAPPER" "tests/integration/crypto_sha1_text_32a.cct" "$BASE_1760A" 0 && grep -q '^a9993e364706816aba3e25717850c26c9cd0d89d$' "$BASE_1760A.run.out"; then
+    test_pass "cct/crypto sha1 sobre VERBUM"
+else
+    test_fail "cct/crypto sha1 sobre VERBUM regrediu"
+fi
+
+# Test 1760B: SHA-1 bytes hash
+echo "Test 1760B: cct/crypto sha1_bytes sobre buffer canonico"
+BASE_1760B="$CCT_TMP_DIR/phase32a/test_1760b_sha1_bytes"
+if [ "$RC_31_READY" -eq 0 ] && cct_phase32_copy_compile_and_run "$PHASE31_HOST_WRAPPER" "tests/integration/crypto_sha1_bytes_32a.cct" "$BASE_1760B" 0 && grep -q '^a9993e364706816aba3e25717850c26c9cd0d89d$' "$BASE_1760B.run.out"; then
+    test_pass "cct/crypto sha1_bytes sobre buffer canonico"
+else
+    test_fail "cct/crypto sha1_bytes regrediu"
+fi
+
+# Test 1760C: RFC 6455 WebSocket accept key
+echo "Test 1760C: cct/crypto ws_accept_key produz vetor RFC 6455"
+BASE_1760C="$CCT_TMP_DIR/phase32a/test_1760c_ws_accept_key"
+if [ "$RC_31_READY" -eq 0 ] && cct_phase32_copy_compile_and_run "$PHASE31_HOST_WRAPPER" "tests/integration/crypto_ws_accept_key_32a.cct" "$BASE_1760C" 0 && grep -q '^s3pPLMBiTxaQ9kYGzzhZRbK+xOo=$' "$BASE_1760C.run.out" && grep -q '^ok$' "$BASE_1760C.run.out"; then
+    test_pass "cct/crypto ws_accept_key produz vetor RFC 6455"
+else
+    test_fail "cct/crypto ws_accept_key nao produziu o vetor RFC 6455"
+fi
+
 # Test 1761: freestanding rejection
 echo "Test 1761: cct/crypto e rejeitado em freestanding"
 if [ "$RC_31_READY" -eq 0 ] && ! "$PHASE31_HOST_WRAPPER" --profile freestanding --check "tests/integration/crypto_freestanding_reject_32a.cct" >"$CCT_TMP_DIR/phase32a/test_1761.out" 2>&1 && grep -q "módulo 'cct/crypto' não disponível em perfil freestanding" "$CCT_TMP_DIR/phase32a/test_1761.out"; then
