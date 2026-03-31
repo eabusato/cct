@@ -129,6 +129,26 @@ RITUALE instrument_mode() REDDE InstrumentMode
   REDDE CONIURA instrument_mode_from_code(OBSECRO instr_builtin_mode())
 EXPLICIT RITUALE
 
+RITUALE mem_instr_alloc_count() REDDE REX
+  REDDE OBSECRO instr_builtin_mem_alloc_count()
+EXPLICIT RITUALE
+
+RITUALE mem_instr_alloc_bytes() REDDE REX
+  REDDE OBSECRO instr_builtin_mem_alloc_bytes()
+EXPLICIT RITUALE
+
+RITUALE mem_instr_free_count() REDDE REX
+  REDDE OBSECRO instr_builtin_mem_free_count()
+EXPLICIT RITUALE
+
+RITUALE mem_instr_live_count() REDDE REX
+  REDDE OBSECRO instr_builtin_mem_live_count()
+EXPLICIT RITUALE
+
+RITUALE mem_instr_live_bytes() REDDE REX
+  REDDE OBSECRO instr_builtin_mem_live_bytes()
+EXPLICIT RITUALE
+
 RITUALE instrument_span_begin(VERBUM category, VERBUM name) REDDE REX
   SI NON CONIURA instrument_is_enabled()
     REDDE CONIURA instrument_no_span()

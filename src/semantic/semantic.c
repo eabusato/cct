@@ -1434,7 +1434,7 @@ static cct_sem_type_t* sem_resolve_ast_type(cct_semantic_analyzer_t *sem, const 
  * ======================================================================== */
 
 static const cct_sem_builtin_spec_t* sem_find_builtin(cct_semantic_analyzer_t *sem, const char *name) {
-static cct_sem_builtin_spec_t specs[654];
+static cct_sem_builtin_spec_t specs[659];
     static bool initialized = false;
 
     if (!initialized) {
@@ -2093,6 +2093,11 @@ static cct_sem_builtin_spec_t specs[654];
         specs[651].name = "crypto_sha1_text"; specs[651].min_args = 1; specs[651].variadic = false;
         specs[652].name = "crypto_sha1_bytes"; specs[652].min_args = 2; specs[652].variadic = false;
         specs[653].name = "crypto_ws_accept_key"; specs[653].min_args = 1; specs[653].variadic = false;
+        specs[654].name = "instr_builtin_mem_alloc_count"; specs[654].min_args = 0; specs[654].variadic = false;
+        specs[655].name = "instr_builtin_mem_alloc_bytes"; specs[655].min_args = 0; specs[655].variadic = false;
+        specs[656].name = "instr_builtin_mem_free_count"; specs[656].min_args = 0; specs[656].variadic = false;
+        specs[657].name = "instr_builtin_mem_live_count"; specs[657].min_args = 0; specs[657].variadic = false;
+        specs[658].name = "instr_builtin_mem_live_bytes"; specs[658].min_args = 0; specs[658].variadic = false;
         initialized = true;
     }
 
@@ -2750,6 +2755,11 @@ static cct_sem_builtin_spec_t specs[654];
     specs[651].return_type = &sem->type_verbum;
     specs[652].return_type = &sem->type_verbum;
     specs[653].return_type = &sem->type_verbum;
+    specs[654].return_type = &sem->type_rex;
+    specs[655].return_type = &sem->type_rex;
+    specs[656].return_type = &sem->type_rex;
+    specs[657].return_type = &sem->type_rex;
+    specs[658].return_type = &sem->type_rex;
 
     for (size_t i = 0; i < sizeof(specs) / sizeof(specs[0]); i++) {
         if (!specs[i].name) continue;

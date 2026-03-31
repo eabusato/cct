@@ -144,9 +144,172 @@ bool cct_runtime_emit_c_helpers(FILE *out, const cct_runtime_codegen_config_t *c
     if (cfg->emit_memory_helpers) {
         fputs("static union { long double ld; void *ptr; unsigned char bytes[4096]; } cct_rt_null_sentinel;\n\n", out);
 
+        fputs("typedef struct cct_rt_mem_record {\n", out);
+        fputs("    void *ptr;\n", out);
+        fputs("    size_t size;\n", out);
+        fputs("    struct cct_rt_mem_record *next;\n", out);
+        fputs("} cct_rt_mem_record_t;\n\n", out);
+        fputs("#define CCT_RT_MEM_BUCKET_COUNT 16384U\n\n", out);
+
+        fputs("static unsigned long long cct_rt_mem_alloc_count = 0ULL;\n", out);
+        fputs("static unsigned long long cct_rt_mem_alloc_bytes = 0ULL;\n", out);
+        fputs("static unsigned long long cct_rt_mem_free_count = 0ULL;\n", out);
+        fputs("static unsigned long long cct_rt_mem_live_count = 0ULL;\n", out);
+        fputs("static unsigned long long cct_rt_mem_live_bytes = 0ULL;\n\n", out);
+        fputs("static cct_rt_mem_record_t *cct_rt_mem_records[CCT_RT_MEM_BUCKET_COUNT];\n\n", out);
+
+        fputs("static void *cct_rt_mem_sys_malloc(size_t n) {\n", out);
+        fputs("    return malloc(n);\n", out);
+        fputs("}\n\n", out);
+
+        fputs("static void *cct_rt_mem_sys_calloc(size_t count, size_t size) {\n", out);
+        fputs("    return calloc(count, size);\n", out);
+        fputs("}\n\n", out);
+
+        fputs("static void *cct_rt_mem_sys_realloc(void *p, size_t n) {\n", out);
+        fputs("    return realloc(p, n);\n", out);
+        fputs("}\n\n", out);
+
+        fputs("static void cct_rt_mem_sys_free(void *p) {\n", out);
+        fputs("    free(p);\n", out);
+        fputs("}\n\n", out);
+
+        fputs("static size_t cct_rt_mem_record_bucket(void *p) {\n", out);
+        fputs("    size_t raw = (size_t)p;\n", out);
+        fputs("    raw >>= 4U;\n", out);
+        fputs("    raw ^= raw >> 9U;\n", out);
+        fputs("    return raw & (CCT_RT_MEM_BUCKET_COUNT - 1U);\n", out);
+        fputs("}\n\n", out);
+
+        fputs("static cct_rt_mem_record_t *cct_rt_mem_record_find(void *p, cct_rt_mem_record_t ***slot_out) {\n", out);
+        fputs("    size_t bucket = cct_rt_mem_record_bucket(p);\n", out);
+        fputs("    cct_rt_mem_record_t **slot = &cct_rt_mem_records[bucket];\n", out);
+        fputs("    while (*slot) {\n", out);
+        fputs("        if ((*slot)->ptr == p) {\n", out);
+        fputs("            if (slot_out) *slot_out = slot;\n", out);
+        fputs("            return *slot;\n", out);
+        fputs("        }\n", out);
+        fputs("        slot = &(*slot)->next;\n", out);
+        fputs("    }\n", out);
+        fputs("    if (slot_out) *slot_out = NULL;\n", out);
+        fputs("    return NULL;\n", out);
+        fputs("}\n\n", out);
+
+        fputs("static int cct_rt_mem_record_add(void *p, size_t n) {\n", out);
+        fputs("    cct_rt_mem_record_t *rec = NULL;\n", out);
+        fputs("    if (!p) return 0;\n", out);
+        fputs("    rec = (cct_rt_mem_record_t*)cct_rt_mem_sys_malloc(sizeof(cct_rt_mem_record_t));\n", out);
+        fputs("    if (!rec) return 0;\n", out);
+        fputs("    rec->ptr = p;\n", out);
+        fputs("    rec->size = n;\n", out);
+        fputs("    size_t bucket = cct_rt_mem_record_bucket(p);\n", out);
+        fputs("    rec->next = cct_rt_mem_records[bucket];\n", out);
+        fputs("    cct_rt_mem_records[bucket] = rec;\n", out);
+        fputs("    return 1;\n", out);
+        fputs("}\n\n", out);
+
+        fputs("static void cct_rt_mem_record_remove(cct_rt_mem_record_t *rec, cct_rt_mem_record_t **slot) {\n", out);
+        fputs("    if (!rec) return;\n", out);
+        fputs("    if (slot) *slot = rec->next;\n", out);
+        fputs("    cct_rt_mem_sys_free(rec);\n", out);
+        fputs("}\n\n", out);
+
+        fputs("static void *cct_rt_mem_track_alloc(size_t n) {\n", out);
+        fputs("    size_t req = n == 0U ? 1U : n;\n", out);
+        fputs("    void *ptr = cct_rt_mem_sys_malloc(req);\n", out);
+        fputs("    if (!ptr) return NULL;\n", out);
+        fputs("    if (!cct_rt_mem_record_add(ptr, req)) {\n", out);
+        fputs("        cct_rt_mem_sys_free(ptr);\n", out);
+        fputs("        return NULL;\n", out);
+        fputs("    }\n", out);
+        fputs("    cct_rt_mem_alloc_count += 1ULL;\n", out);
+        fputs("    cct_rt_mem_alloc_bytes += (unsigned long long)req;\n", out);
+        fputs("    cct_rt_mem_live_count += 1ULL;\n", out);
+        fputs("    cct_rt_mem_live_bytes += (unsigned long long)req;\n", out);
+        fputs("    return ptr;\n", out);
+        fputs("}\n\n", out);
+
+        fputs("static void *cct_rt_mem_track_calloc(size_t count, size_t size) {\n", out);
+        fputs("    if (size != 0U && count > (((size_t)-1) / size)) cct_rt_fail(\"calloc size overflow\");\n", out);
+        fputs("    size_t req = count * size;\n", out);
+        fputs("    size_t actual = req == 0U ? 1U : req;\n", out);
+        fputs("    void *ptr = cct_rt_mem_sys_calloc(1U, actual);\n", out);
+        fputs("    if (!ptr) return NULL;\n", out);
+        fputs("    if (!cct_rt_mem_record_add(ptr, actual)) {\n", out);
+        fputs("        cct_rt_mem_sys_free(ptr);\n", out);
+        fputs("        return NULL;\n", out);
+        fputs("    }\n", out);
+        fputs("    cct_rt_mem_alloc_count += 1ULL;\n", out);
+        fputs("    cct_rt_mem_alloc_bytes += (unsigned long long)actual;\n", out);
+        fputs("    cct_rt_mem_live_count += 1ULL;\n", out);
+        fputs("    cct_rt_mem_live_bytes += (unsigned long long)actual;\n", out);
+        fputs("    return ptr;\n", out);
+        fputs("}\n\n", out);
+
+        fputs("static void *cct_rt_mem_track_realloc(void *p, size_t n) {\n", out);
+        fputs("    size_t req = n == 0U ? 1U : n;\n", out);
+        fputs("    if (!p) return cct_rt_mem_track_alloc(req);\n", out);
+        fputs("    cct_rt_mem_record_t **slot = NULL;\n", out);
+        fputs("    cct_rt_mem_record_t *rec = cct_rt_mem_record_find(p, &slot);\n", out);
+        fputs("    void *next = cct_rt_mem_sys_realloc(p, req);\n", out);
+        fputs("    if (!next) return NULL;\n", out);
+        fputs("    if (!rec) return next;\n", out);
+        fputs("    size_t old_size = rec->size;\n", out);
+        fputs("    if (next != p && slot) {\n", out);
+        fputs("        *slot = rec->next;\n", out);
+        fputs("        size_t bucket = cct_rt_mem_record_bucket(next);\n", out);
+        fputs("        rec->next = cct_rt_mem_records[bucket];\n", out);
+        fputs("        cct_rt_mem_records[bucket] = rec;\n", out);
+        fputs("    }\n", out);
+        fputs("    rec->ptr = next;\n", out);
+        fputs("    rec->size = req;\n", out);
+        fputs("    cct_rt_mem_alloc_count += 1ULL;\n", out);
+        fputs("    cct_rt_mem_alloc_bytes += (unsigned long long)req;\n", out);
+        fputs("    cct_rt_mem_free_count += 1ULL;\n", out);
+        fputs("    cct_rt_mem_live_bytes -= (unsigned long long)old_size;\n", out);
+        fputs("    cct_rt_mem_live_bytes += (unsigned long long)req;\n", out);
+        fputs("    return next;\n", out);
+        fputs("}\n\n", out);
+
+        fputs("static void cct_rt_mem_track_free(void *p) {\n", out);
+        fputs("    if (!p) return;\n", out);
+        fputs("    cct_rt_mem_record_t **slot = NULL;\n", out);
+        fputs("    cct_rt_mem_record_t *rec = cct_rt_mem_record_find(p, &slot);\n", out);
+        fputs("    if (!rec) {\n", out);
+        fputs("        cct_rt_mem_sys_free(p);\n", out);
+        fputs("        return;\n", out);
+        fputs("    }\n", out);
+        fputs("    size_t old_size = rec->size;\n", out);
+        fputs("    cct_rt_mem_free_count += 1ULL;\n", out);
+        fputs("    cct_rt_mem_live_count -= 1ULL;\n", out);
+        fputs("    cct_rt_mem_live_bytes -= (unsigned long long)old_size;\n", out);
+        fputs("    cct_rt_mem_record_remove(rec, slot);\n", out);
+        fputs("    cct_rt_mem_sys_free(p);\n", out);
+        fputs("}\n\n", out);
+
+        fputs("static long long cct_rt_mem_instr_alloc_count(void) {\n", out);
+        fputs("    return (long long)cct_rt_mem_alloc_count;\n", out);
+        fputs("}\n\n", out);
+
+        fputs("static long long cct_rt_mem_instr_alloc_bytes(void) {\n", out);
+        fputs("    return (long long)cct_rt_mem_alloc_bytes;\n", out);
+        fputs("}\n\n", out);
+
+        fputs("static long long cct_rt_mem_instr_free_count(void) {\n", out);
+        fputs("    return (long long)cct_rt_mem_free_count;\n", out);
+        fputs("}\n\n", out);
+
+        fputs("static long long cct_rt_mem_instr_live_count(void) {\n", out);
+        fputs("    return (long long)cct_rt_mem_live_count;\n", out);
+        fputs("}\n\n", out);
+
+        fputs("static long long cct_rt_mem_instr_live_bytes(void) {\n", out);
+        fputs("    return (long long)cct_rt_mem_live_bytes;\n", out);
+        fputs("}\n\n", out);
+
         fputs("static void *cct_rt_alloc_or_fail(size_t n) {\n", out);
         fputs("    if (n == 0) n = 1;\n", out);
-        fputs("    void *p = malloc(n);\n", out);
+        fputs("    void *p = cct_rt_mem_track_alloc(n);\n", out);
         fputs("    if (!p) cct_rt_fail(\"allocation failed\");\n", out);
         fputs("    return p;\n", out);
         fputs("}\n\n", out);
@@ -156,7 +319,7 @@ bool cct_runtime_emit_c_helpers(FILE *out, const cct_runtime_codegen_config_t *c
         fputs("}\n\n", out);
 
         fputs("static void cct_rt_free_ptr(void *p) {\n", out);
-        fputs("    free(p);\n", out);
+        fputs("    cct_rt_mem_track_free(p);\n", out);
         fputs("}\n\n", out);
 
         fputs("static void *cct_rt_mem_alloc(long long n) {\n", out);
@@ -170,7 +333,7 @@ bool cct_runtime_emit_c_helpers(FILE *out, const cct_runtime_codegen_config_t *c
 
         fputs("static void *cct_rt_mem_realloc(void *p, long long n) {\n", out);
         fputs("    if (n <= 0) cct_rt_fail(\"mem realloc size must be > 0\");\n", out);
-        fputs("    void *out_p = realloc(p, (size_t)n);\n", out);
+        fputs("    void *out_p = cct_rt_mem_track_realloc(p, (size_t)n);\n", out);
         fputs("    if (!out_p) cct_rt_fail(\"mem realloc failed\");\n", out);
         fputs("    return out_p;\n", out);
         fputs("}\n\n", out);
@@ -197,6 +360,11 @@ bool cct_runtime_emit_c_helpers(FILE *out, const cct_runtime_codegen_config_t *c
         fputs("    if (cmp > 0) return 1LL;\n", out);
         fputs("    return 0LL;\n", out);
         fputs("}\n\n", out);
+
+        fputs("#define malloc(n) cct_rt_mem_track_alloc((n))\n", out);
+        fputs("#define calloc(count, size) cct_rt_mem_track_calloc((count), (size))\n", out);
+        fputs("#define realloc(p, n) cct_rt_mem_track_realloc((p), (n))\n", out);
+        fputs("#define free(p) cct_rt_mem_track_free((p))\n\n", out);
 
         fputs("typedef struct {\n", out);
         fputs("    unsigned char *data;\n", out);
@@ -3720,15 +3888,34 @@ bool cct_runtime_emit_c_helpers(FILE *out, const cct_runtime_codegen_config_t *c
 
         fputs("static char *cct_rt_path_resolve(const char *p) {\n", out);
         fputs("    const char *src = (p && *p) ? p : \".\";\n", out);
+        fputs("    char *resolved = NULL;\n", out);
         fputs("#ifdef _WIN32\n", out);
-        fputs("    char *resolved = _fullpath(NULL, src, 0);\n", out);
+        fputs("    resolved = _fullpath(NULL, src, 0);\n", out);
         fputs("    if (resolved) {\n", out);
         fputs("        for (char *q = resolved; *q; ++q) if (*q == '\\\\') *q = '/';\n", out);
-        fputs("        return resolved;\n", out);
+        fputs("        size_t resolved_len = strlen(resolved);\n", out);
+        fputs("        char *copy = (char*)malloc(resolved_len + 1U);\n", out);
+        fputs("        if (!copy) {\n", out);
+        fputs("            cct_rt_mem_sys_free(resolved);\n", out);
+        fputs("            cct_rt_fail(\"path resolve allocation failed\");\n", out);
+        fputs("        }\n", out);
+        fputs("        memcpy(copy, resolved, resolved_len + 1U);\n", out);
+        fputs("        cct_rt_mem_sys_free(resolved);\n", out);
+        fputs("        return copy;\n", out);
         fputs("    }\n", out);
         fputs("#else\n", out);
-        fputs("    char *resolved = realpath(src, NULL);\n", out);
-        fputs("    if (resolved) return resolved;\n", out);
+        fputs("    resolved = realpath(src, NULL);\n", out);
+        fputs("    if (resolved) {\n", out);
+        fputs("        size_t resolved_len = strlen(resolved);\n", out);
+        fputs("        char *copy = (char*)malloc(resolved_len + 1U);\n", out);
+        fputs("        if (!copy) {\n", out);
+        fputs("            cct_rt_mem_sys_free(resolved);\n", out);
+        fputs("            cct_rt_fail(\"path resolve allocation failed\");\n", out);
+        fputs("        }\n", out);
+        fputs("        memcpy(copy, resolved, resolved_len + 1U);\n", out);
+        fputs("        cct_rt_mem_sys_free(resolved);\n", out);
+        fputs("        return copy;\n", out);
+        fputs("    }\n", out);
         fputs("#endif\n", out);
         fputs("    char *norm = cct_rt_path_normalize(src);\n", out);
         fputs("    if (cct_rt_path_is_absolute(norm)) return norm;\n", out);
@@ -3738,7 +3925,7 @@ bool cct_runtime_emit_c_helpers(FILE *out, const cct_runtime_codegen_config_t *c
         fputs("        cct_rt_fail(\"path resolve cwd falhou\");\n", out);
         fputs("    }\n", out);
         fputs("    char *joined = cct_rt_path_join(cwd, norm);\n", out);
-        fputs("    free(cwd);\n", out);
+        fputs("    cct_rt_mem_sys_free(cwd);\n", out);
         fputs("    free(norm);\n", out);
         fputs("    return joined;\n", out);
         fputs("}\n\n", out);

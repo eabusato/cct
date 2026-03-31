@@ -1,0 +1,60 @@
+INCIPIT grimoire "instrument_mem_counters_38a"
+
+ADVOCARE "cct/instrument.cct"
+
+RITUALE main() REDDE REX
+  EVOCA REX alloc_count_0 AD CONIURA mem_instr_alloc_count()
+  EVOCA REX alloc_bytes_0 AD CONIURA mem_instr_alloc_bytes()
+  EVOCA REX free_count_0 AD CONIURA mem_instr_free_count()
+  EVOCA REX live_count_0 AD CONIURA mem_instr_live_count()
+  EVOCA REX live_bytes_0 AD CONIURA mem_instr_live_bytes()
+
+  EVOCA SPECULUM NIHIL ptr AD OBSECRO mem_alloc(16)
+  SI CONIURA mem_instr_alloc_count() != alloc_count_0 + 1
+    REDDE 1
+  FIN SI
+  SI CONIURA mem_instr_alloc_bytes() != alloc_bytes_0 + 16
+    REDDE 2
+  FIN SI
+  SI CONIURA mem_instr_free_count() != free_count_0
+    REDDE 3
+  FIN SI
+  SI CONIURA mem_instr_live_count() != live_count_0 + 1
+    REDDE 4
+  FIN SI
+  SI CONIURA mem_instr_live_bytes() != live_bytes_0 + 16
+    REDDE 5
+  FIN SI
+
+  VINCIRE ptr AD OBSECRO mem_realloc(ptr, 40)
+  SI CONIURA mem_instr_alloc_count() != alloc_count_0 + 2
+    REDDE 6
+  FIN SI
+  SI CONIURA mem_instr_alloc_bytes() != alloc_bytes_0 + 56
+    REDDE 7
+  FIN SI
+  SI CONIURA mem_instr_free_count() != free_count_0 + 1
+    REDDE 8
+  FIN SI
+  SI CONIURA mem_instr_live_count() != live_count_0 + 1
+    REDDE 9
+  FIN SI
+  SI CONIURA mem_instr_live_bytes() != live_bytes_0 + 40
+    REDDE 10
+  FIN SI
+
+  OBSECRO mem_free(ptr)
+  SI CONIURA mem_instr_free_count() != free_count_0 + 2
+    REDDE 11
+  FIN SI
+  SI CONIURA mem_instr_live_count() != live_count_0
+    REDDE 12
+  FIN SI
+  SI CONIURA mem_instr_live_bytes() != live_bytes_0
+    REDDE 13
+  FIN SI
+
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

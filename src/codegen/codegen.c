@@ -4513,6 +4513,11 @@ static bool cg_emit_obsecro_expr(FILE *out, cct_codegen_t *cg, const cct_ast_nod
         if (strcmp(name, "instr_builtin_disable") == 0 ||
             strcmp(name, "instr_builtin_is_enabled") == 0 ||
             strcmp(name, "instr_builtin_mode") == 0 ||
+            strcmp(name, "instr_builtin_mem_alloc_count") == 0 ||
+            strcmp(name, "instr_builtin_mem_alloc_bytes") == 0 ||
+            strcmp(name, "instr_builtin_mem_free_count") == 0 ||
+            strcmp(name, "instr_builtin_mem_live_count") == 0 ||
+            strcmp(name, "instr_builtin_mem_live_bytes") == 0 ||
             strcmp(name, "instr_builtin_buffer_count") == 0 ||
             strcmp(name, "instr_builtin_buffer_clear") == 0 ||
             strcmp(name, "instr_builtin_buffer_discard_closed") == 0) {
@@ -4528,6 +4533,21 @@ static bool cg_emit_obsecro_expr(FILE *out, cct_codegen_t *cg, const cct_ast_nod
                 if (out_kind) *out_kind = CCT_CODEGEN_VALUE_INT;
             } else if (strcmp(name, "instr_builtin_mode") == 0) {
                 fputs("cct_rt_instr_mode()", out);
+                if (out_kind) *out_kind = CCT_CODEGEN_VALUE_INT;
+            } else if (strcmp(name, "instr_builtin_mem_alloc_count") == 0) {
+                fputs("cct_rt_instr_mem_alloc_count()", out);
+                if (out_kind) *out_kind = CCT_CODEGEN_VALUE_INT;
+            } else if (strcmp(name, "instr_builtin_mem_alloc_bytes") == 0) {
+                fputs("cct_rt_instr_mem_alloc_bytes()", out);
+                if (out_kind) *out_kind = CCT_CODEGEN_VALUE_INT;
+            } else if (strcmp(name, "instr_builtin_mem_free_count") == 0) {
+                fputs("cct_rt_instr_mem_free_count()", out);
+                if (out_kind) *out_kind = CCT_CODEGEN_VALUE_INT;
+            } else if (strcmp(name, "instr_builtin_mem_live_count") == 0) {
+                fputs("cct_rt_instr_mem_live_count()", out);
+                if (out_kind) *out_kind = CCT_CODEGEN_VALUE_INT;
+            } else if (strcmp(name, "instr_builtin_mem_live_bytes") == 0) {
+                fputs("cct_rt_instr_mem_live_bytes()", out);
                 if (out_kind) *out_kind = CCT_CODEGEN_VALUE_INT;
             } else if (strcmp(name, "instr_builtin_buffer_count") == 0) {
                 fputs("cct_rt_instr_buffer_count()", out);

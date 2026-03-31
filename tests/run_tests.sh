@@ -12556,6 +12556,14 @@ else
     test_fail "cct/instrument nao rejeitou perfil freestanding"
 fi
 
+echo "Test 1985: cct/instrument expõe contadores de memoria do runtime"
+BASE_1985="$CCT_TMP_DIR/phase38a/test_1985_mem_counters"
+if [ "$RC_31_READY" -eq 0 ] && cct_phase32_copy_compile_and_run "$PHASE31_HOST_WRAPPER" "tests/integration/instrument_mem_counters_38a.cct" "$BASE_1985" 0; then
+    test_pass "cct/instrument expõe contadores de memoria do runtime"
+else
+    test_fail "cct/instrument nao expôs contadores de memoria do runtime"
+fi
+
 echo "Test 2003: cct/trace_capture grava request unica ao parar captura"
 BASE_2003="$CCT_TMP_DIR/phase38a/test_2003_single_stop"
 if [ "$RC_31_READY" -eq 0 ] && cct_phase32_copy_compile_and_run "$PHASE31_HOST_WRAPPER" "tests/integration/trace_capture_single_stop_38a.cct" "$BASE_2003" 0; then
