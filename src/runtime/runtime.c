@@ -46,6 +46,12 @@ bool cct_runtime_emit_c_helpers(FILE *out, const cct_runtime_codegen_config_t *c
 
     fputs("/* ===== CCT Runtime Helpers (FASE 8D / final phase-8 failure-control + memory runtime layer) ===== */\n", out);
 
+    fputs("static long long cct_rt_signal_check_shutdown(void);\n", out);
+    if (!cfg->emit_signal_helpers) {
+        fputs("static long long cct_rt_signal_check_shutdown(void) { return 0LL; }\n", out);
+    }
+    fputs("\n", out);
+
     if (cfg->emit_fail_helper) {
         fputs("static void cct_rt_fail(const char *msg) {\n", out);
         fputs("    fprintf(stderr, \"cct runtime: %s\\n\", (msg && *msg) ? msg : \"failure\");\n", out);
@@ -4253,7 +4259,9 @@ bool cct_runtime_emit_c_helpers(FILE *out, const cct_runtime_codegen_config_t *c
         fputs("    fclose(fp);\n", out);
         fputs("    int status = 0;\n", out);
         fputs("    while (waitpid(pid, &status, 0) < 0) {\n", out);
-        fputs("        if (errno == EINTR) continue;\n", out);
+        fputs("        if (errno == EINTR) {\n", out);
+        fputs("            continue;\n", out);
+        fputs("        }\n", out);
         fputs("        cct_rt_fail(\"process run_with_input waitpid falhou\");\n", out);
         fputs("    }\n", out);
         fputs("    return captured;\n", out);
@@ -4652,12 +4660,35 @@ bool cct_runtime_emit_c_helpers(FILE *out, const cct_runtime_codegen_config_t *c
     fputs("    cct_rt_socket_t *sock = cct_rt_socket_require(sock_ptr, \"sock_accept recebeu socket nulo\");\n", out);
     fputs("    cct_rt_socket_check_open(sock, \"sock_accept recebeu socket fechado\");\n", out);
     fputs("    for (;;) {\n", out);
+    fputs("        fd_set rfds;\n", out);
+    fputs("        struct timeval tv;\n", out);
+    fputs("        int ready = 0;\n", out);
+    fputs("        FD_ZERO(&rfds);\n", out);
+    fputs("        FD_SET(sock->fd, &rfds);\n", out);
+    fputs("        tv.tv_sec = 0;\n", out);
+    fputs("        tv.tv_usec = 200000;\n", out);
+    fputs("        ready = select(sock->fd + 1, &rfds, NULL, NULL, &tv);\n", out);
+    fputs("        if (ready == 0) {\n", out);
+    fputs("            if (cct_rt_signal_check_shutdown()) cct_rt_fail(\"server stopping\");\n", out);
+    fputs("            continue;\n", out);
+    fputs("        }\n", out);
+    fputs("        if (ready < 0) {\n", out);
+    fputs("            if (errno == EINTR) {\n", out);
+    fputs("                if (cct_rt_signal_check_shutdown()) cct_rt_fail(\"server stopping\");\n", out);
+    fputs("                continue;\n", out);
+    fputs("            }\n", out);
+    fputs("            cct_rt_socket_set_last_error(\"sock_accept falhou\");\n", out);
+    fputs("            cct_rt_fail(\"sock_accept falhou\");\n", out);
+    fputs("        }\n", out);
     fputs("        int fd = accept(sock->fd, NULL, NULL);\n", out);
     fputs("        if (fd >= 0) {\n", out);
     fputs("            cct_rt_socket_clear_last_error();\n", out);
     fputs("            return (void*)cct_rt_socket_alloc(fd, sock->kind, sock->domain);\n", out);
     fputs("        }\n", out);
-    fputs("        if (errno == EINTR) continue;\n", out);
+    fputs("        if (errno == EINTR) {\n", out);
+    fputs("            if (cct_rt_signal_check_shutdown()) cct_rt_fail(\"server stopping\");\n", out);
+    fputs("            continue;\n", out);
+    fputs("        }\n", out);
     fputs("        cct_rt_socket_set_last_error(\"sock_accept falhou\");\n", out);
     fputs("        cct_rt_fail(\"sock_accept falhou\");\n", out);
     fputs("    }\n", out);

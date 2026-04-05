@@ -42,9 +42,14 @@ bool cct_runtime_emit_signal_helpers(FILE *out) {
 
     fputs("static long long cct_rt_signal_install(void) {\n", out);
     fputs("    if (cct_rt_signal_installed) return 1LL;\n", out);
-    fputs("    if (signal(SIGTERM, cct_rt_signal_handler) == SIG_ERR) return 0LL;\n", out);
-    fputs("    if (signal(SIGINT, cct_rt_signal_handler) == SIG_ERR) return 0LL;\n", out);
-    fputs("    if (signal(SIGHUP, cct_rt_signal_handler) == SIG_ERR) return 0LL;\n", out);
+    fputs("    struct sigaction sa;\n", out);
+    fputs("    memset(&sa, 0, sizeof(sa));\n", out);
+    fputs("    sa.sa_handler = cct_rt_signal_handler;\n", out);
+    fputs("    sigemptyset(&sa.sa_mask);\n", out);
+    fputs("    sa.sa_flags = 0;\n", out);
+    fputs("    if (sigaction(SIGTERM, &sa, NULL) != 0) return 0LL;\n", out);
+    fputs("    if (sigaction(SIGINT, &sa, NULL) != 0) return 0LL;\n", out);
+    fputs("    if (sigaction(SIGHUP, &sa, NULL) != 0) return 0LL;\n", out);
     fputs("    cct_rt_signal_installed = 1;\n", out);
     fputs("    return 1LL;\n", out);
     fputs("}\n\n", out);
