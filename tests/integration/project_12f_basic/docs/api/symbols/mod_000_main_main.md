@@ -1,7 +1,7 @@
 # main
 
 - Kind: `rituale`
-- Module: `/home/admin/dev/cct/tests/integration/project_12f_basic/src/main.cct`
+- Module: `/home/arconte/dev/cct/tests/integration/project_12f_basic/src/main.cct`
 - Visibility: `public`
 
 ## Signature

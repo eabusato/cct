@@ -1,9 +1,9 @@
 # verbum_ascii_only
 
 - Kind: `rituale`
-- Module: `/home/admin/dev/cct/lib/cct/verbum.cct`
+- Module: `/home/arconte/dev/cct/lib/cct/verbum.cct`
 - Visibility: `public`
-- Generated: 2026-04-12 12:03:54
+- Generated: 2026-04-12 02:49:18
 
 ## Signature
 

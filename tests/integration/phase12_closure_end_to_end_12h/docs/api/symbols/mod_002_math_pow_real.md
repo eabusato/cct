@@ -1,7 +1,7 @@
 # pow_real
 
 - Kind: `rituale`
-- Module: `/home/admin/dev/cct/lib/cct/math.cct`
+- Module: `/home/arconte/dev/cct/lib/cct/math.cct`
 - Visibility: `public`
 
 ## Signature

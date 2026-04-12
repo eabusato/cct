@@ -1,8 +1,8 @@
 # Module mod_000_main
 
-- Path: `/home/admin/dev/cct/tests/integration/docgen_visibility_12g/src/main.cct`
+- Path: `/home/arconte/dev/cct/tests/integration/docgen_visibility_12g/src/main.cct`
 - Origin: user module
-- Generated: 2026-04-12 12:03:54
+- Generated: 2026-04-12 02:49:18
 
 ## Symbols
 

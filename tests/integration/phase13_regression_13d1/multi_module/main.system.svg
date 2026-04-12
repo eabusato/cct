@@ -198,7 +198,7 @@ imports: 0</title>
     <text class="module-hash" x="600.000" y="512.000" text-anchor="middle">96e2678531f73ad5</text>
     </g>
   </g>
-  <text class="module-label" x="24" y="30" font-size="14">CCT system sigilo (sigil-of-sigils) • 488ed5fa99ff304a</text>
-  <text class="module-hash" x="24" y="50" font-size="10">entry=tests/integration/phase13_regression_13d1/multi_module/main.cct • modules=2 • imports=1 • calls=1 • type_refs=0</text>
+  <text class="module-label" x="24" y="30" font-size="14">CCT system sigilo (sigil-of-sigils) • 68b26e153fa3f1f6</text>
+  <text class="module-hash" x="24" y="50" font-size="10">entry=/home/arconte/dev/cct/tests/integration/phase13_regression_13d1/multi_module/main.cct • modules=2 • imports=1 • calls=1 • type_refs=0</text>
   <text class="module-hash" x="24" y="66" font-size="10">zoom: inline vector sub-sigils per module</text>
 </svg>

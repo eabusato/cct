@@ -1,7 +1,7 @@
 # seed
 
 - Kind: `rituale`
-- Module: `/home/admin/dev/cct/lib/cct/random.cct`
+- Module: `/home/arconte/dev/cct/lib/cct/random.cct`
 - Visibility: `public`
 
 ## Signature

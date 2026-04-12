@@ -1,9 +1,9 @@
 # char_to_lower
 
 - Kind: `rituale`
-- Module: `/home/admin/dev/cct/lib/cct/char.cct`
+- Module: `/home/arconte/dev/cct/lib/cct/char.cct`
 - Visibility: `public`
-- Generated: 2026-04-12 12:03:54
+- Generated: 2026-04-12 02:49:18
 
 ## Signature
 

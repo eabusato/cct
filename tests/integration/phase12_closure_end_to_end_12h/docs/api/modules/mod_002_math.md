@@ -1,6 +1,6 @@
 # Module mod_002_math
 
-- Path: `/home/admin/dev/cct/lib/cct/math.cct`
+- Path: `/home/arconte/dev/cct/lib/cct/math.cct`
 - Origin: stdlib (cct/...)
 
 ## Symbols

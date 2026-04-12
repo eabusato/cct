@@ -1,9 +1,9 @@
 format = cct.sigil.v1
 sigilo_scope = system
 visual_style = network
-system_hash = 488ed5fa99ff304a
+system_hash = 68b26e153fa3f1f6
 module_count = 2
-entry_module = tests/integration/phase13_regression_13d1/multi_module/main.cct
+entry_module = /home/arconte/dev/cct/tests/integration/phase13_regression_13d1/multi_module/main.cct
 import_edges = 1
 cross_module_calls = 1
 cross_module_type_refs = 0
@@ -54,12 +54,12 @@ determinism_guarantee = stable
 
 [diff_fingerprint_context]
 scope_anchor = system
-hash_anchor = 488ed5fa99ff304a
+hash_anchor = 68b26e153fa3f1f6
 fingerprint_basis = module_map+import_edges+system_hash_anchor
 serialization_profile = analytical_v1
 volatility = none
 module_anchor_count = 2
-entry_anchor = tests/integration/phase13_regression_13d1/multi_module/main.cct
+entry_anchor = /home/arconte/dev/cct/tests/integration/phase13_regression_13d1/multi_module/main.cct
 
 [module_structural_summary]
 module_count = 2
@@ -81,12 +81,12 @@ diff_policy = analytical_blocks_review_required_except_compatibility_hints
 deterministic_serialization = stable_section_order
 
 [modules]
-0 = /home/admin/dev/cct/tests/integration/phase13_regression_13d1/multi_module/main.cct
-1 = /home/admin/dev/cct/tests/integration/phase13_regression_13d1/multi_module/modules/util.cct
+0 = /home/arconte/dev/cct/tests/integration/phase13_regression_13d1/multi_module/main.cct
+1 = /home/arconte/dev/cct/tests/integration/phase13_regression_13d1/multi_module/modules/util.cct
 
 [module_sigils]
-0 = /home/admin/dev/cct/tests/integration/phase13_regression_13d1/multi_module/main.cct | 87b2aefd6534dad6
-1 = /home/admin/dev/cct/tests/integration/phase13_regression_13d1/multi_module/modules/util.cct | 96e2678531f73ad5
+0 = /home/arconte/dev/cct/tests/integration/phase13_regression_13d1/multi_module/main.cct | 87b2aefd6534dad6
+1 = /home/arconte/dev/cct/tests/integration/phase13_regression_13d1/multi_module/modules/util.cct | 96e2678531f73ad5
 
 [import_edges]
-0 = /home/admin/dev/cct/tests/integration/phase13_regression_13d1/multi_module/main.cct -> /home/admin/dev/cct/tests/integration/phase13_regression_13d1/multi_module/modules/util.cct
+0 = /home/arconte/dev/cct/tests/integration/phase13_regression_13d1/multi_module/main.cct -> /home/arconte/dev/cct/tests/integration/phase13_regression_13d1/multi_module/modules/util.cct

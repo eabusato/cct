@@ -1,6 +1,6 @@
 # Module mod_003_random
 
-- Path: `/home/admin/dev/cct/lib/cct/random.cct`
+- Path: `/home/arconte/dev/cct/lib/cct/random.cct`
 - Origin: stdlib (cct/...)
 
 ## Symbols
