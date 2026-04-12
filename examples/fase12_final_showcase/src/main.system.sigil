@@ -1,9 +1,9 @@
 format = cct.sigil.v1
 sigilo_scope = system
 visual_style = network
-system_hash = 282205218416659c
+system_hash = 4f9450c4336c475e
 module_count = 4
-entry_module = /home/arconte/dev/cct/examples/fase12_final_showcase/src/main.cct
+entry_module = /home/admin/dev/cct/examples/fase12_final_showcase/src/main.cct
 import_edges = 4
 cross_module_calls = 10
 cross_module_type_refs = 0
@@ -54,12 +54,12 @@ determinism_guarantee = stable
 
 [diff_fingerprint_context]
 scope_anchor = system
-hash_anchor = 282205218416659c
+hash_anchor = 4f9450c4336c475e
 fingerprint_basis = module_map+import_edges+system_hash_anchor
 serialization_profile = analytical_v1
 volatility = none
 module_anchor_count = 4
-entry_anchor = /home/arconte/dev/cct/examples/fase12_final_showcase/src/main.cct
+entry_anchor = /home/admin/dev/cct/examples/fase12_final_showcase/src/main.cct
 
 [module_structural_summary]
 module_count = 4
@@ -81,19 +81,19 @@ diff_policy = analytical_blocks_review_required_except_compatibility_hints
 deterministic_serialization = stable_section_order
 
 [modules]
-0 = /home/arconte/dev/cct/examples/fase12_final_showcase/src/main.cct
-1 = /home/arconte/dev/cct/examples/fase12_final_showcase/lib/data.cct
-2 = /home/arconte/dev/cct/lib/cct/math.cct
-3 = /home/arconte/dev/cct/lib/cct/io.cct
+0 = /home/admin/dev/cct/examples/fase12_final_showcase/src/main.cct
+1 = /home/admin/dev/cct/examples/fase12_final_showcase/lib/data.cct
+2 = /home/admin/dev/cct/lib/cct/math.cct
+3 = /home/admin/dev/cct/lib/cct/io.cct
 
 [module_sigils]
-0 = /home/arconte/dev/cct/examples/fase12_final_showcase/src/main.cct | c693d889547ba56f
-1 = /home/arconte/dev/cct/examples/fase12_final_showcase/lib/data.cct | ce0c4e72fef4d219
-2 = /home/arconte/dev/cct/lib/cct/math.cct | 8dc333acad94b547
-3 = /home/arconte/dev/cct/lib/cct/io.cct | 9699b47a9890d1fb
+0 = /home/admin/dev/cct/examples/fase12_final_showcase/src/main.cct | c693d889547ba56f
+1 = /home/admin/dev/cct/examples/fase12_final_showcase/lib/data.cct | ce0c4e72fef4d219
+2 = /home/admin/dev/cct/lib/cct/math.cct | 8dc333acad94b547
+3 = /home/admin/dev/cct/lib/cct/io.cct | 9699b47a9890d1fb
 
 [import_edges]
-0 = /home/arconte/dev/cct/examples/fase12_final_showcase/src/main.cct -> /home/arconte/dev/cct/examples/fase12_final_showcase/lib/data.cct
-1 = /home/arconte/dev/cct/examples/fase12_final_showcase/src/main.cct -> /home/arconte/dev/cct/lib/cct/io.cct
-2 = /home/arconte/dev/cct/examples/fase12_final_showcase/src/main.cct -> /home/arconte/dev/cct/lib/cct/math.cct
-3 = /home/arconte/dev/cct/examples/fase12_final_showcase/lib/data.cct -> /home/arconte/dev/cct/lib/cct/math.cct
+0 = /home/admin/dev/cct/examples/fase12_final_showcase/src/main.cct -> /home/admin/dev/cct/examples/fase12_final_showcase/lib/data.cct
+1 = /home/admin/dev/cct/examples/fase12_final_showcase/src/main.cct -> /home/admin/dev/cct/lib/cct/io.cct
+2 = /home/admin/dev/cct/examples/fase12_final_showcase/src/main.cct -> /home/admin/dev/cct/lib/cct/math.cct
+3 = /home/admin/dev/cct/examples/fase12_final_showcase/lib/data.cct -> /home/admin/dev/cct/lib/cct/math.cct

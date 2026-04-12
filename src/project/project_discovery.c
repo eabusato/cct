@@ -17,9 +17,23 @@
 #include <sys/stat.h>
 #include <unistd.h>
 
+static bool pd_copy_string(char *out, size_t out_size, const char *value) {
+    size_t value_len;
+
+    if (!out || out_size == 0 || !value) return false;
+
+    value_len = strlen(value);
+    if (value_len >= out_size) return false;
+
+    memcpy(out, value, value_len + 1);
+    return true;
+}
+
 static void pd_set_error(char *out, size_t out_size, const char *message) {
     if (!out || out_size == 0) return;
-    snprintf(out, out_size, "%s", message ? message : "unknown project discovery error");
+    if (!pd_copy_string(out, out_size, message ? message : "unknown project discovery error")) {
+        out[out_size - 1] = '\0';
+    }
 }
 
 bool cct_project_join_path(const char *left, const char *right, char *out, size_t out_size) {
@@ -106,7 +120,10 @@ static bool pd_manifest_get_value(const char *manifest_path,
             }
         }
 
-        snprintf(out, out_size, "%s", rhs);
+        if (!pd_copy_string(out, out_size, rhs)) {
+            fclose(f);
+            return false;
+        }
         found = true;
         break;
     }
@@ -129,8 +146,7 @@ static bool pd_resolve_dir(const char *input, char *out, size_t out_size) {
     }
 
     if (!cct_project_path_is_dir(input)) return false;
-    snprintf(out, out_size, "%s", input);
-    return true;
+    return pd_copy_string(out, out_size, input);
 }
 
 static bool pd_find_project_root_from(const char *start_dir, char *out_root, size_t out_size) {
@@ -149,8 +165,7 @@ static bool pd_find_project_root_from(const char *start_dir, char *out_root, siz
         if (!cct_project_join_path(cursor, "src/main.cct", src_main, sizeof(src_main))) return false;
 
         if (pd_path_is_file(manifest) || pd_path_is_file(src_main)) {
-            snprintf(out_root, out_size, "%s", cursor);
-            return true;
+            return pd_copy_string(out_root, out_size, cursor);
         }
 
         if (strcmp(cursor, "/") == 0) {
@@ -174,7 +189,7 @@ static void pd_basename(const char *path, char *out, size_t out_size) {
     const char *last = strrchr(path, '/');
     const char *base = last ? last + 1 : path;
     if (base[0] == '\0') base = "cct_project";
-    snprintf(out, out_size, "%s", base);
+    pd_copy_string(out, out_size, base);
 }
 
 bool cct_project_discover(const char *cwd,

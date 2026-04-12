@@ -370,7 +370,11 @@ EXPLICIT RITUALE
 
 RITUALE parse_unary(SPECULUM ParserState parser) REDDE SPECULUM AstNode
   SI CONIURA parser_match(parser, TK_MINUS) VEL CONIURA parser_match(parser, TK_PLUS) VEL CONIURA parser_match(parser, TK_NON) VEL CONIURA parser_match(parser, TK_STAR) VEL CONIURA parser_match(parser, TK_SPECULUM)
-    EVOCA SPECULUM AstNode expr AD CONIURA ast_make_unary((*parser).previous.kind, CONIURA parse_unary(parser), (*parser).previous.line, (*parser).previous.column)
+    EVOCA TokenKind op AD (*parser).previous.kind
+    EVOCA REX line AD (*parser).previous.line
+    EVOCA REX column AD (*parser).previous.column
+    EVOCA SPECULUM AstNode operand AD CONIURA parse_unary(parser)
+    EVOCA SPECULUM AstNode expr AD CONIURA ast_make_unary(op, operand, line, column)
     REDDE CONIURA parse_postfix_suffixes(parser, expr)
   FIN SI
   REDDE CONIURA parse_postfix(parser)

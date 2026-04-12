@@ -6,7 +6,7 @@
 /* ===== Includes (freestanding) ===== */
 #include <stdint.h>
 #include <stddef.h>
-#include "/home/arconte/dev/cct/src/runtime/cct_freestanding_rt.h"
+#include "/home/admin/dev/cct/src/runtime/cct_freestanding_rt.h"
 
 /* ===== Freestanding Runtime Adapters (FASE 16B.1) ===== */
 static inline void cct_rt_fail(const char *msg) {

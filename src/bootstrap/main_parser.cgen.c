@@ -7676,7 +7676,23 @@ static AstNode * cct_fn_parse_power(ParserState * parser) {
 static AstNode * cct_fn_parse_unary(ParserState * parser) {
     if ((cct_fn_parser_match(parser, 74) || cct_fn_parser_match(parser, 73) || cct_fn_parser_match(parser, 44) || cct_fn_parser_match(parser, 75) || cct_fn_parser_match(parser, 61)))
     {
-        AstNode * expr = cct_fn_ast_make_unary((((*((ParserState*)cct_rt_check_not_null((void*)(parser), "runtime-fail (bridged): null pointer dereference")))).previous).kind, cct_fn_parse_unary(parser), (((*((ParserState*)cct_rt_check_not_null((void*)(parser), "runtime-fail (bridged): null pointer dereference")))).previous).line, (((*((ParserState*)cct_rt_check_not_null((void*)(parser), "runtime-fail (bridged): null pointer dereference")))).previous).column);
+        long long op = (((*((ParserState*)cct_rt_check_not_null((void*)(parser), "runtime-fail (bridged): null pointer dereference")))).previous).kind;
+        if (cct_rt_fractum_is_active()) {
+            return 0;
+        }
+        long long line = (((*((ParserState*)cct_rt_check_not_null((void*)(parser), "runtime-fail (bridged): null pointer dereference")))).previous).line;
+        if (cct_rt_fractum_is_active()) {
+            return 0;
+        }
+        long long column = (((*((ParserState*)cct_rt_check_not_null((void*)(parser), "runtime-fail (bridged): null pointer dereference")))).previous).column;
+        if (cct_rt_fractum_is_active()) {
+            return 0;
+        }
+        AstNode * operand = cct_fn_parse_unary(parser);
+        if (cct_rt_fractum_is_active()) {
+            return 0;
+        }
+        AstNode * expr = cct_fn_ast_make_unary(op, operand, line, column);
         if (cct_rt_fractum_is_active()) {
             return 0;
         }

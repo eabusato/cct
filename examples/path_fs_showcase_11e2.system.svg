@@ -4260,7 +4260,7 @@ imports: 0</title>
     <text class="module-hash" x="409.474" y="842.000" text-anchor="middle">9699b47a9890d1fb</text>
     </g>
   </g>
-  <text class="module-label" x="24" y="30" font-size="14">CCT system sigilo (sigil-of-sigils) • 2c60c9dbc4e92226</text>
+  <text class="module-label" x="24" y="30" font-size="14">CCT system sigilo (sigil-of-sigils) • 06565d8711e63ede</text>
   <text class="module-hash" x="24" y="50" font-size="10">entry=examples/path_fs_showcase_11e2.cct • modules=4 • imports=3 • calls=12 • type_refs=0</text>
   <text class="module-hash" x="24" y="66" font-size="10">zoom: inline vector sub-sigils per module</text>
 </svg>

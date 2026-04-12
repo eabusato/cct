@@ -1,7 +1,7 @@
 # random_choice_int
 
 - Kind: `rituale`
-- Module: `/home/arconte/dev/cct/lib/cct/random.cct`
+- Module: `/home/admin/dev/cct/lib/cct/random.cct`
 - Visibility: `public`
 
 ## Signature

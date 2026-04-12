@@ -1,0 +1,22 @@
+INCIPIT grimoire "bootstrap_probe_ctx_copy"
+
+SIGILLUM Ctx
+  had_error: VERUM
+  error_message: VERBUM
+FIN SIGILLUM
+
+RITUALE had_error(SPECULUM Ctx ctx) REDDE VERUM
+  EVOCA Ctx local AD *ctx
+  REDDE local.had_error
+EXPLICIT RITUALE
+
+RITUALE error_message(SPECULUM Ctx ctx) REDDE VERBUM
+  EVOCA Ctx local AD *ctx
+  REDDE local.error_message
+EXPLICIT RITUALE
+
+RITUALE main() REDDE REX
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

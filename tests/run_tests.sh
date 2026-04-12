@@ -21,6 +21,12 @@ TEST_RUN_LOG="$CCT_TMP_DIR/run_tests.latest.log"
 exec 3>&1 4>&2
 exec >>"$TEST_RUN_LOG" 2>&1
 
+if ! command -v rg >/dev/null 2>&1; then
+    rg() {
+        grep -E "$@"
+    }
+fi
+
 # Colors for output
 RED='\033[0;31m'
 GREEN='\033[0;32m'

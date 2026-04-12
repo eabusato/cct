@@ -1,9 +1,9 @@
 # is_alnum
 
 - Kind: `rituale`
-- Module: `/home/arconte/dev/cct/lib/cct/char.cct`
+- Module: `/home/admin/dev/cct/lib/cct/char.cct`
 - Visibility: `public`
-- Generated: 2026-04-12 02:49:18
+- Generated: 2026-04-12 12:03:54
 
 ## Signature
 

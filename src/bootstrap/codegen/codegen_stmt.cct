@@ -432,6 +432,10 @@ RITUALE codegen_emit_tempta_stmt(SPECULUM CodegenContext ctx, SPECULUM AstNode s
   EVOCA VERBUM prev_try_name AD CONIURA codegen_next_temp_name(ctx)
   EVOCA VERBUM prev_err_name AD CONIURA codegen_next_temp_name(ctx)
 
+  CONIURA codegen_emit_line(ctx, "#if defined(__GNUC__) && !defined(__clang__)")
+  CONIURA codegen_emit_line(ctx, "#pragma GCC diagnostic push")
+  CONIURA codegen_emit_line(ctx, "#pragma GCC diagnostic ignored \"-Wclobbered\"")
+  CONIURA codegen_emit_line(ctx, "#endif")
   CONIURA codegen_emit_line(ctx, "do")
   CONIURA codegen_emit_block_open(ctx)
   CONIURA codegen_emit(ctx, "jmp_buf ")
@@ -485,6 +489,9 @@ RITUALE codegen_emit_tempta_stmt(SPECULUM CodegenContext ctx, SPECULUM AstNode s
 
   CONIURA codegen_emit_block_close(ctx)
   CONIURA codegen_emit_line(ctx, "while (0);")
+  CONIURA codegen_emit_line(ctx, "#if defined(__GNUC__) && !defined(__clang__)")
+  CONIURA codegen_emit_line(ctx, "#pragma GCC diagnostic pop")
+  CONIURA codegen_emit_line(ctx, "#endif")
   DIMITTE cape_identity
   REDDE
 EXPLICIT RITUALE

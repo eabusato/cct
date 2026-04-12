@@ -5003,232 +5003,237 @@ static void cct_rt_regex_free(void *handle) {
 
 /* ===== String Pool ===== */
 /* CCT string pool (FASE 4A/4B/4C) */
-static const char cct_str_1016[] = "{}";
-static const char cct_str_1015[] = "unsupported expression node in bootstrap codegen";
-static const char cct_str_1014[] = "(&";
-static const char cct_str_1013[] = "payload ORDO constructor requires call syntax in bootstrap codegen";
-static const char cct_str_1012[] = "((void*)0)";
-static const char cct_str_1011[] = "((long long)sizeof(";
-static const char cct_str_1010[] = "unsupported unary operator in bootstrap codegen";
-static const char cct_str_1009[] = "unsupported binary operator in bootstrap codegen";
-static const char cct_str_1008[] = "), (double)(";
-static const char cct_str_1007[] = "(pow((double)(";
-static const char cct_str_1006[] = "cct_rt_";
-static const char cct_str_1005[] = "fs_mkdir_all";
-static const char cct_str_1004[] = "fs_exists";
-static const char cct_str_1003[] = "fs_write_all";
-static const char cct_str_1002[] = "fs_read_all";
-static const char cct_str_1001[] = "set_";
-static const char cct_str_1000[] = "map_";
-static const char cct_str_999[] = "result_";
-static const char cct_str_998[] = "option_";
-static const char cct_str_997[] = "gettext_builtin_";
-static const char cct_str_996[] = "bytes_get";
-static const char cct_str_995[] = "verbum_char_at";
-static const char cct_str_994[] = "cct_rt_time_now_ms()";
-static const char cct_str_993[] = "time_now_ms";
-static const char cct_str_992[] = ")))";
-static const char cct_str_991[] = "((void*)malloc((size_t)(";
-static const char cct_str_990[] = "pete";
-static const char cct_str_989[] = "OBSECRO target must be builtin identifier";
-static const char cct_str_988[] = " })";
-static const char cct_str_987[] = " }";
-static const char cct_str_986[] = " = { ";
-static const char cct_str_985[] = ", .__payload.";
-static const char cct_str_984[] = "){ .__tag = ";
-static const char cct_str_983[] = "ORDO payload constructor arity mismatch in bootstrap codegen";
-static const char cct_str_982[] = ")(";
-static const char cct_str_981[] = "(( ";
-static const char cct_str_980[] = "cast requires exactly one source expression (bootstrap subset)";
-static const char cct_str_979[] = "cast requires exactly one target type in GENUS(T) (bootstrap subset)";
-static const char cct_str_978[] = "bootstrap codegen only supports rituale identifier calls";
-static const char cct_str_977[] = "unsupported lvalue in bootstrap codegen";
-static const char cct_str_976[] = "(*";
-static const char cct_str_975[] = "unknown SIGILLUM field in bootstrap codegen";
-static const char cct_str_974[] = "field access requires known local SIGILLUM type";
-static const char cct_str_973[] = "field access requires known local SIGILLUM type (left call)";
-static const char cct_str_972[] = "field access requires known local SIGILLUM type (left field)";
-static const char cct_str_971[] = "field access requires known local SIGILLUM type (left identifier)";
-static const char cct_str_970[] = "field access requires known local SIGILLUM type (left unary)";
-static const char cct_str_969[] = "ambiguous ORDO variant in bootstrap codegen";
-static const char cct_str_968[] = "cct_rt_molde_end(__cct_molde_ctx); })";
-static const char cct_str_967[] = "); ";
-static const char cct_str_966[] = "cct_rt_molde_str(__cct_molde_ctx, ";
-static const char cct_str_965[] = "({ cct_rt_molde_ctx_t *__cct_molde_ctx = cct_rt_molde_begin(); ";
-static const char cct_str_964[] = "FORMA interpolation type outside bootstrap codegen subset";
-static const char cct_str_963[] = "cct_rt_molde_verum(__cct_molde_ctx, (long long)(";
-static const char cct_str_962[] = "FORMA bool formatting with spec is unsupported in bootstrap codegen";
-static const char cct_str_961[] = "cct_rt_molde_umbra(__cct_molde_ctx, (double)(";
-static const char cct_str_960[] = "cct_rt_molde_umbra_fmt(__cct_molde_ctx, (double)(";
-static const char cct_str_959[] = "cct_rt_molde_rex(__cct_molde_ctx, (long long)(";
-static const char cct_str_958[] = "cct_rt_molde_rex_fmt(__cct_molde_ctx, (long long)(";
-static const char cct_str_957[] = "cct_rt_molde_dux_fmt(__cct_molde_ctx, (unsigned long long)(";
-static const char cct_str_956[] = "cct_rt_molde_str(__cct_molde_ctx, (const char*)(";
-static const char cct_str_955[] = "), ";
-static const char cct_str_954[] = "cct_rt_molde_str_fmt(__cct_molde_ctx, (const char*)(";
-static const char cct_str_953[] = "||";
-static const char cct_str_952[] = "&&";
-static const char cct_str_951[] = ">=";
-static const char cct_str_950[] = "<=";
-static const char cct_str_949[] = "!=";
-static const char cct_str_948[] = "==";
-static const char cct_str_947[] = "%";
-static const char cct_str_946[] = "/";
-static const char cct_str_945[] = "&";
-static const char cct_str_944[] = "!";
-static const char cct_str_943[] = "+";
-static const char cct_str_942[] = ".";
-static const char cct_str_941[] = ".__payload.";
-static const char cct_str_940[] = "ELIGE payload binding arity mismatch in bootstrap codegen";
-static const char cct_str_939[] = "unknown ORDO variant in ELIGE payload lowering";
-static const char cct_str_938[] = "ORDO without variants in ELIGE lowering";
-static const char cct_str_937[] = "missing ORDO declaration metadata in ELIGE lowering";
-static const char cct_str_936[] = "unknown ORDO subject in ELIGE lowering";
-static const char cct_str_935[] = "OR-cases with payload bindings are unsupported in bootstrap codegen";
-static const char cct_str_934[] = "case ";
-static const char cct_str_933[] = ") == 0";
-static const char cct_str_932[] = " || ";
-static const char cct_str_931[] = "unsupported statement node in bootstrap codegen";
-static const char cct_str_930[] = "default:";
-static const char cct_str_929[] = "break;";
-static const char cct_str_928[] = ".__tag";
-static const char cct_str_927[] = "switch (";
-static const char cct_str_926[] = "ELIGE subject type outside bootstrap codegen subset";
-static const char cct_str_925[] = "else if (";
-static const char cct_str_924[] = "RECEDE outside loop context";
-static const char cct_str_923[] = "goto ";
-static const char cct_str_922[] = "FRANGE outside loop context";
-static const char cct_str_921[] = " += ";
-static const char cct_str_920[] = ")); ";
-static const char cct_str_919[] = " >= ";
-static const char cct_str_918[] = ") : (";
-static const char cct_str_917[] = " <= ";
-static const char cct_str_916[] = " > 0) ? (";
-static const char cct_str_915[] = "; ((";
-static const char cct_str_914[] = " == 0) exit(1);";
-static const char cct_str_913[] = "1";
-static const char cct_str_912[] = "if (0) goto ";
-static const char cct_str_911[] = "while (";
-static const char cct_str_910[] = "if (";
-static const char cct_str_909[] = "exit((int)(";
-static const char cct_str_908[] = "exit(0);";
-static const char cct_str_907[] = "empty return in non-NIHIL rituale is unsupported";
-static const char cct_str_906[] = "return ";
-static const char cct_str_905[] = "return with value in NIHIL rituale is unsupported";
-static const char cct_str_904[] = "free((void*)(";
-static const char cct_str_903[] = "OBSECRO libera requires one argument in bootstrap codegen";
-static const char cct_str_902[] = "bootstrap codegen only supports OBSECRO libera as statement builtin";
-static const char cct_str_901[] = "libera";
-static const char cct_str_900[] = "OBSECRO scribe argument outside bootstrap codegen subset";
-static const char cct_str_899[] = "cct_rt_scribe_bool((long long)(";
-static const char cct_str_898[] = "cct_rt_scribe_real((double)(";
-static const char cct_str_897[] = "));";
-static const char cct_str_896[] = "cct_rt_scribe_int((long long)(";
-static const char cct_str_895[] = "cct_rt_scribe_str(";
-static const char cct_str_894[] = "OBSECRO scribe requires at least one argument in bootstrap codegen";
-static const char cct_str_893[] = "bootstrap codegen only supports OBSECRO scribe as statement builtin";
-static const char cct_str_892[] = "scribe";
-static const char cct_str_891[] = "while (0);";
-static const char cct_str_890[] = "(void)";
-static const char cct_str_889[] = " = (char*)cct_boot_error_value;";
-static const char cct_str_888[] = "else";
-static const char cct_str_887[] = "cct_boot_error_value = ";
-static const char cct_str_886[] = "cct_boot_try_top = ";
-static const char cct_str_885[] = ") == 0)";
-static const char cct_str_884[] = "if (setjmp(";
-static const char cct_str_883[] = "cct_boot_try_top = &";
-static const char cct_str_882[] = " = cct_boot_error_value;";
-static const char cct_str_881[] = "const char* ";
-static const char cct_str_880[] = " = cct_boot_try_top;";
-static const char cct_str_879[] = "jmp_buf* ";
-static const char cct_str_878[] = "jmp_buf ";
-static const char cct_str_877[] = "do";
-static const char cct_str_876[] = "TEMPTA/CAPE type outside bootstrap failure subset";
-static const char cct_str_875[] = "cct_boot_throw(";
-static const char cct_str_874[] = "cct_rt_set_iter_end(";
-static const char cct_str_873[] = "cct_rt_map_iter_end(";
-static const char cct_str_872[] = ": ;";
-static const char cct_str_871[] = "while (cct_rt_set_iter_next(";
-static const char cct_str_870[] = " = cct_rt_set_iter_begin(";
-static const char cct_str_869[] = "))";
-static const char cct_str_868[] = ", &";
-static const char cct_str_867[] = "while (cct_rt_map_iter_next(";
-static const char cct_str_866[] = " = cct_rt_map_iter_begin(";
-static const char cct_str_865[] = " = cct_rt_fluxus_get(";
-static const char cct_str_864[] = " = cct_rt_fluxus_len(";
-static const char cct_str_863[] = "long long ";
-static const char cct_str_862[] = "];";
-static const char cct_str_861[] = "++)";
-static const char cct_str_860[] = "; ";
-static const char cct_str_859[] = " < ";
-static const char cct_str_858[] = " = 0; ";
-static const char cct_str_857[] = "for (long long ";
-static const char cct_str_856[] = "ITERUM requires FLUXUS or SERIES (and now map/set) in bootstrap codegen";
-static const char cct_str_855[] = ");";
-static const char cct_str_854[] = "*)";
-static const char cct_str_853[] = " = *((";
-static const char cct_str_852[] = "ITERUM binding pointer cast type unavailable in bootstrap codegen";
-static const char cct_str_851[] = " = 0;";
-static const char cct_str_850[] = " = 0.0f;";
-static const char cct_str_849[] = " = 0.0;";
-static const char cct_str_848[] = " = NULL;";
-static const char cct_str_847[] = "ITERUM binding type is unsupported in bootstrap codegen";
-static const char cct_str_846[] = "map_values";
-static const char cct_str_845[] = "map_keys";
-static const char cct_str_844[] = "set_copy";
-static const char cct_str_843[] = "set_init";
-static const char cct_str_842[] = "map_copy";
-static const char cct_str_841[] = "map_init";
-static const char cct_str_840[] = "SPECULUM(NIHIL)";
-static const char cct_str_839[] = "void *";
-static const char cct_str_838[] = "const char *";
-static const char cct_str_837[] = "cyclic SIGILLUM dependency in bootstrap codegen";
-static const char cct_str_836[] = "struct ";
-static const char cct_str_835[] = "unsupported complex type in bootstrap type mapping";
-static const char cct_str_834[] = "*";
-static const char cct_str_833[] = "unsupported type in bootstrap type mapping";
-static const char cct_str_832[] = "} __payload;";
-static const char cct_str_831[] = "struct";
-static const char cct_str_830[] = "union";
-static const char cct_str_829[] = "int __tag;";
-static const char cct_str_828[] = "typedef struct ";
-static const char cct_str_827[] = "};";
-static const char cct_str_826[] = "enum";
-static const char cct_str_825[] = "} ";
-static const char cct_str_824[] = ",";
-static const char cct_str_823[] = " = ";
-static const char cct_str_822[] = "typedef enum ";
-static const char cct_str_821[] = "cct_boot_tag_";
-static const char cct_str_820[] = "cct_boot_ord_";
-static const char cct_str_819[] = "generic rituale arity mismatch in bootstrap codegen";
-static const char cct_str_818[] = "GENUS(...) applied to non-generic rituale in bootstrap codegen";
-static const char cct_str_817[] = "generic SIGILLUM arity mismatch in bootstrap codegen";
-static const char cct_str_816[] = "GENUS(...) applied to non-generic SIGILLUM in bootstrap codegen";
-static const char cct_str_815[] = "cast";
-static const char cct_str_814[] = "cct_boot_sig_";
-static const char cct_str_813[] = "GENUS(...) applied to builtin type in bootstrap codegen";
-static const char cct_str_812[] = ">";
-static const char cct_str_811[] = "<";
-static const char cct_str_810[] = "__";
-static const char cct_str_809[] = ")[";
-static const char cct_str_808[] = "SERIES(";
-static const char cct_str_807[] = "SPECULUM(";
-static const char cct_str_806[] = "declaration outside bootstrap codegen subset in 27B";
-static const char cct_str_805[] = "(";
-static const char cct_str_804[] = " ";
-static const char cct_str_803[] = "{";
-static const char cct_str_802[] = "void";
-static const char cct_str_801[] = "char*";
-static const char cct_str_800[] = "float";
-static const char cct_str_799[] = "double";
-static const char cct_str_798[] = "char";
-static const char cct_str_797[] = "int";
-static const char cct_str_796[] = "unsigned long long";
-static const char cct_str_795[] = "long long";
-static const char cct_str_794[] = "_";
-static const char cct_str_793[] = "cct_boot_rit_";
-static const char cct_str_792[] = "__cct_label_";
-static const char cct_str_791[] = "__cct_tmp_";
+static const char cct_str_1021[] = "{}";
+static const char cct_str_1020[] = "unsupported expression node in bootstrap codegen";
+static const char cct_str_1019[] = "(&";
+static const char cct_str_1018[] = "payload ORDO constructor requires call syntax in bootstrap codegen";
+static const char cct_str_1017[] = "((void*)0)";
+static const char cct_str_1016[] = "((long long)sizeof(";
+static const char cct_str_1015[] = "unsupported unary operator in bootstrap codegen";
+static const char cct_str_1014[] = "unsupported binary operator in bootstrap codegen";
+static const char cct_str_1013[] = "), (double)(";
+static const char cct_str_1012[] = "(pow((double)(";
+static const char cct_str_1011[] = "cct_rt_";
+static const char cct_str_1010[] = "fs_mkdir_all";
+static const char cct_str_1009[] = "fs_exists";
+static const char cct_str_1008[] = "fs_write_all";
+static const char cct_str_1007[] = "fs_read_all";
+static const char cct_str_1006[] = "set_";
+static const char cct_str_1005[] = "map_";
+static const char cct_str_1004[] = "result_";
+static const char cct_str_1003[] = "option_";
+static const char cct_str_1002[] = "gettext_builtin_";
+static const char cct_str_1001[] = "bytes_get";
+static const char cct_str_1000[] = "verbum_char_at";
+static const char cct_str_999[] = "cct_rt_time_now_ms()";
+static const char cct_str_998[] = "time_now_ms";
+static const char cct_str_997[] = ")))";
+static const char cct_str_996[] = "((void*)malloc((size_t)(";
+static const char cct_str_995[] = "pete";
+static const char cct_str_994[] = "OBSECRO target must be builtin identifier";
+static const char cct_str_993[] = " })";
+static const char cct_str_992[] = " }";
+static const char cct_str_991[] = " = { ";
+static const char cct_str_990[] = ", .__payload.";
+static const char cct_str_989[] = "){ .__tag = ";
+static const char cct_str_988[] = "ORDO payload constructor arity mismatch in bootstrap codegen";
+static const char cct_str_987[] = ")(";
+static const char cct_str_986[] = "(( ";
+static const char cct_str_985[] = "cast requires exactly one source expression (bootstrap subset)";
+static const char cct_str_984[] = "cast requires exactly one target type in GENUS(T) (bootstrap subset)";
+static const char cct_str_983[] = "bootstrap codegen only supports rituale identifier calls";
+static const char cct_str_982[] = "unsupported lvalue in bootstrap codegen";
+static const char cct_str_981[] = "(*";
+static const char cct_str_980[] = "unknown SIGILLUM field in bootstrap codegen";
+static const char cct_str_979[] = "field access requires known local SIGILLUM type";
+static const char cct_str_978[] = "field access requires known local SIGILLUM type (left call)";
+static const char cct_str_977[] = "field access requires known local SIGILLUM type (left field)";
+static const char cct_str_976[] = "field access requires known local SIGILLUM type (left identifier)";
+static const char cct_str_975[] = "field access requires known local SIGILLUM type (left unary)";
+static const char cct_str_974[] = "ambiguous ORDO variant in bootstrap codegen";
+static const char cct_str_973[] = "cct_rt_molde_end(__cct_molde_ctx); })";
+static const char cct_str_972[] = "); ";
+static const char cct_str_971[] = "cct_rt_molde_str(__cct_molde_ctx, ";
+static const char cct_str_970[] = "({ cct_rt_molde_ctx_t *__cct_molde_ctx = cct_rt_molde_begin(); ";
+static const char cct_str_969[] = "FORMA interpolation type outside bootstrap codegen subset";
+static const char cct_str_968[] = "cct_rt_molde_verum(__cct_molde_ctx, (long long)(";
+static const char cct_str_967[] = "FORMA bool formatting with spec is unsupported in bootstrap codegen";
+static const char cct_str_966[] = "cct_rt_molde_umbra(__cct_molde_ctx, (double)(";
+static const char cct_str_965[] = "cct_rt_molde_umbra_fmt(__cct_molde_ctx, (double)(";
+static const char cct_str_964[] = "cct_rt_molde_rex(__cct_molde_ctx, (long long)(";
+static const char cct_str_963[] = "cct_rt_molde_rex_fmt(__cct_molde_ctx, (long long)(";
+static const char cct_str_962[] = "cct_rt_molde_dux_fmt(__cct_molde_ctx, (unsigned long long)(";
+static const char cct_str_961[] = "cct_rt_molde_str(__cct_molde_ctx, (const char*)(";
+static const char cct_str_960[] = "), ";
+static const char cct_str_959[] = "cct_rt_molde_str_fmt(__cct_molde_ctx, (const char*)(";
+static const char cct_str_958[] = "||";
+static const char cct_str_957[] = "&&";
+static const char cct_str_956[] = ">=";
+static const char cct_str_955[] = "<=";
+static const char cct_str_954[] = "!=";
+static const char cct_str_953[] = "==";
+static const char cct_str_952[] = "%";
+static const char cct_str_951[] = "/";
+static const char cct_str_950[] = "&";
+static const char cct_str_949[] = "!";
+static const char cct_str_948[] = "+";
+static const char cct_str_947[] = ".";
+static const char cct_str_946[] = ".__payload.";
+static const char cct_str_945[] = "ELIGE payload binding arity mismatch in bootstrap codegen";
+static const char cct_str_944[] = "unknown ORDO variant in ELIGE payload lowering";
+static const char cct_str_943[] = "ORDO without variants in ELIGE lowering";
+static const char cct_str_942[] = "missing ORDO declaration metadata in ELIGE lowering";
+static const char cct_str_941[] = "unknown ORDO subject in ELIGE lowering";
+static const char cct_str_940[] = "OR-cases with payload bindings are unsupported in bootstrap codegen";
+static const char cct_str_939[] = "case ";
+static const char cct_str_938[] = ") == 0";
+static const char cct_str_937[] = " || ";
+static const char cct_str_936[] = "unsupported statement node in bootstrap codegen";
+static const char cct_str_935[] = "default:";
+static const char cct_str_934[] = "break;";
+static const char cct_str_933[] = ".__tag";
+static const char cct_str_932[] = "switch (";
+static const char cct_str_931[] = "ELIGE subject type outside bootstrap codegen subset";
+static const char cct_str_930[] = "else if (";
+static const char cct_str_929[] = "RECEDE outside loop context";
+static const char cct_str_928[] = "goto ";
+static const char cct_str_927[] = "FRANGE outside loop context";
+static const char cct_str_926[] = " += ";
+static const char cct_str_925[] = ")); ";
+static const char cct_str_924[] = " >= ";
+static const char cct_str_923[] = ") : (";
+static const char cct_str_922[] = " <= ";
+static const char cct_str_921[] = " > 0) ? (";
+static const char cct_str_920[] = "; ((";
+static const char cct_str_919[] = " == 0) exit(1);";
+static const char cct_str_918[] = "1";
+static const char cct_str_917[] = "if (0) goto ";
+static const char cct_str_916[] = "while (";
+static const char cct_str_915[] = "if (";
+static const char cct_str_914[] = "exit((int)(";
+static const char cct_str_913[] = "exit(0);";
+static const char cct_str_912[] = "empty return in non-NIHIL rituale is unsupported";
+static const char cct_str_911[] = "return ";
+static const char cct_str_910[] = "return with value in NIHIL rituale is unsupported";
+static const char cct_str_909[] = "free((void*)(";
+static const char cct_str_908[] = "OBSECRO libera requires one argument in bootstrap codegen";
+static const char cct_str_907[] = "bootstrap codegen only supports OBSECRO libera as statement builtin";
+static const char cct_str_906[] = "libera";
+static const char cct_str_905[] = "OBSECRO scribe argument outside bootstrap codegen subset";
+static const char cct_str_904[] = "cct_rt_scribe_bool((long long)(";
+static const char cct_str_903[] = "cct_rt_scribe_real((double)(";
+static const char cct_str_902[] = "));";
+static const char cct_str_901[] = "cct_rt_scribe_int((long long)(";
+static const char cct_str_900[] = "cct_rt_scribe_str(";
+static const char cct_str_899[] = "OBSECRO scribe requires at least one argument in bootstrap codegen";
+static const char cct_str_898[] = "bootstrap codegen only supports OBSECRO scribe as statement builtin";
+static const char cct_str_897[] = "scribe";
+static const char cct_str_896[] = "while (0);";
+static const char cct_str_895[] = "(void)";
+static const char cct_str_894[] = " = (char*)cct_boot_error_value;";
+static const char cct_str_893[] = "else";
+static const char cct_str_892[] = "cct_boot_error_value = ";
+static const char cct_str_891[] = "cct_boot_try_top = ";
+static const char cct_str_890[] = ") == 0)";
+static const char cct_str_889[] = "if (setjmp(";
+static const char cct_str_888[] = "cct_boot_try_top = &";
+static const char cct_str_887[] = " = cct_boot_error_value;";
+static const char cct_str_886[] = "const char* ";
+static const char cct_str_885[] = " = cct_boot_try_top;";
+static const char cct_str_884[] = "jmp_buf* ";
+static const char cct_str_883[] = "jmp_buf ";
+static const char cct_str_882[] = "do";
+static const char cct_str_881[] = "TEMPTA/CAPE type outside bootstrap failure subset";
+static const char cct_str_880[] = "cct_boot_throw(";
+static const char cct_str_879[] = "cct_rt_set_iter_end(";
+static const char cct_str_878[] = "cct_rt_map_iter_end(";
+static const char cct_str_877[] = ": ;";
+static const char cct_str_876[] = "while (cct_rt_set_iter_next(";
+static const char cct_str_875[] = " = cct_rt_set_iter_begin(";
+static const char cct_str_874[] = "))";
+static const char cct_str_873[] = ", &";
+static const char cct_str_872[] = "while (cct_rt_map_iter_next(";
+static const char cct_str_871[] = " = cct_rt_map_iter_begin(";
+static const char cct_str_870[] = " = cct_rt_fluxus_get(";
+static const char cct_str_869[] = " = cct_rt_fluxus_len(";
+static const char cct_str_868[] = "long long ";
+static const char cct_str_867[] = "];";
+static const char cct_str_866[] = "++)";
+static const char cct_str_865[] = "; ";
+static const char cct_str_864[] = " < ";
+static const char cct_str_863[] = " = 0; ";
+static const char cct_str_862[] = "for (long long ";
+static const char cct_str_861[] = "ITERUM requires FLUXUS or SERIES (and now map/set) in bootstrap codegen";
+static const char cct_str_860[] = ");";
+static const char cct_str_859[] = "*)";
+static const char cct_str_858[] = " = *((";
+static const char cct_str_857[] = "ITERUM binding pointer cast type unavailable in bootstrap codegen";
+static const char cct_str_856[] = " = 0;";
+static const char cct_str_855[] = " = 0.0f;";
+static const char cct_str_854[] = " = 0.0;";
+static const char cct_str_853[] = " = NULL;";
+static const char cct_str_852[] = "ITERUM binding type is unsupported in bootstrap codegen";
+static const char cct_str_851[] = "map_values";
+static const char cct_str_850[] = "map_keys";
+static const char cct_str_849[] = "set_copy";
+static const char cct_str_848[] = "set_init";
+static const char cct_str_847[] = "map_copy";
+static const char cct_str_846[] = "map_init";
+static const char cct_str_845[] = "SPECULUM(NIHIL)";
+static const char cct_str_844[] = "void *";
+static const char cct_str_843[] = "const char *";
+static const char cct_str_842[] = "cyclic SIGILLUM dependency in bootstrap codegen";
+static const char cct_str_841[] = "struct ";
+static const char cct_str_840[] = "unsupported complex type in bootstrap type mapping";
+static const char cct_str_839[] = "*";
+static const char cct_str_838[] = "unsupported type in bootstrap type mapping";
+static const char cct_str_837[] = "} __payload;";
+static const char cct_str_836[] = "struct";
+static const char cct_str_835[] = "union";
+static const char cct_str_834[] = "int __tag;";
+static const char cct_str_833[] = "typedef struct ";
+static const char cct_str_832[] = "};";
+static const char cct_str_831[] = "enum";
+static const char cct_str_830[] = "} ";
+static const char cct_str_829[] = ",";
+static const char cct_str_828[] = " = ";
+static const char cct_str_827[] = "typedef enum ";
+static const char cct_str_826[] = "cct_boot_tag_";
+static const char cct_str_825[] = "cct_boot_ord_";
+static const char cct_str_824[] = "generic rituale arity mismatch in bootstrap codegen";
+static const char cct_str_823[] = "GENUS(...) applied to non-generic rituale in bootstrap codegen";
+static const char cct_str_822[] = "generic SIGILLUM arity mismatch in bootstrap codegen";
+static const char cct_str_821[] = "GENUS(...) applied to non-generic SIGILLUM in bootstrap codegen";
+static const char cct_str_820[] = "cast";
+static const char cct_str_819[] = "cct_boot_sig_";
+static const char cct_str_818[] = "GENUS(...) applied to builtin type in bootstrap codegen";
+static const char cct_str_817[] = ">";
+static const char cct_str_816[] = "<";
+static const char cct_str_815[] = "__";
+static const char cct_str_814[] = ")[";
+static const char cct_str_813[] = "SERIES(";
+static const char cct_str_812[] = "SPECULUM(";
+static const char cct_str_811[] = "declaration outside bootstrap codegen subset in 27B";
+static const char cct_str_810[] = "(";
+static const char cct_str_809[] = " ";
+static const char cct_str_808[] = "{";
+static const char cct_str_807[] = "void";
+static const char cct_str_806[] = "char*";
+static const char cct_str_805[] = "float";
+static const char cct_str_804[] = "double";
+static const char cct_str_803[] = "char";
+static const char cct_str_802[] = "int";
+static const char cct_str_801[] = "unsigned long long";
+static const char cct_str_800[] = "long long";
+static const char cct_str_799[] = "_";
+static const char cct_str_798[] = "cct_boot_rit_";
+static const char cct_str_797[] = "__cct_label_";
+static const char cct_str_796[] = "__cct_tmp_";
+static const char cct_str_795[] = "#pragma GCC diagnostic pop";
+static const char cct_str_794[] = "#endif";
+static const char cct_str_793[] = "#pragma GCC diagnostic ignored \"-Wclobbered\"";
+static const char cct_str_792[] = "#pragma GCC diagnostic push";
+static const char cct_str_791[] = "#if defined(__GNUC__) && !defined(__clang__)";
 static const char cct_str_790[] = "/* generated by cct bootstrap codegen */";
 static const char cct_str_789[] = "return (int)";
 static const char cct_str_788[] = "();";
@@ -7162,7 +7167,7 @@ static const char * cct_fn_codegen_forma_template_text(AstNode * expr) {
         }
         else
         {
-            cct_fn_builder_append(b, cct_str_1016);
+            cct_fn_builder_append(b, cct_str_1021);
             if (cct_rt_fractum_is_active()) {
                 return 0;
             }
@@ -7261,7 +7266,7 @@ static long long cct_fn_codegen_emit_expr(CodegenContext * ctx, AstNode * expr) 
         {
             return 0;
         }
-        cct_fn_codegen_emit(ctx, cct_str_1011);
+        cct_fn_codegen_emit(ctx, cct_str_1016);
         if (cct_rt_fractum_is_active()) {
             return 0;
         }
@@ -7269,7 +7274,7 @@ static long long cct_fn_codegen_emit_expr(CodegenContext * ctx, AstNode * expr) 
         if (cct_rt_fractum_is_active()) {
             return 0;
         }
-        cct_fn_codegen_emit(ctx, cct_str_869);
+        cct_fn_codegen_emit(ctx, cct_str_874);
         if (cct_rt_fractum_is_active()) {
             return 0;
         }
@@ -7287,7 +7292,7 @@ static long long cct_fn_codegen_emit_expr(CodegenContext * ctx, AstNode * expr) 
     {
         if (((*((AstNode*)cct_rt_check_not_null((void*)(expr), "runtime-fail (bridged): null pointer dereference")))).bool_value)
         {
-            cct_fn_codegen_emit(ctx, cct_str_913);
+            cct_fn_codegen_emit(ctx, cct_str_918);
             if (cct_rt_fractum_is_active()) {
                 return 0;
             }
@@ -7311,7 +7316,7 @@ static long long cct_fn_codegen_emit_expr(CodegenContext * ctx, AstNode * expr) 
     }
     if ((((*((AstNode*)cct_rt_check_not_null((void*)(expr), "runtime-fail (bridged): null pointer dereference")))).kind == 31 ? 1 : 0))
     {
-        cct_fn_codegen_emit(ctx, cct_str_1012);
+        cct_fn_codegen_emit(ctx, cct_str_1017);
         if (cct_rt_fractum_is_active()) {
             return 0;
         }
@@ -7338,7 +7343,7 @@ static long long cct_fn_codegen_emit_expr(CodegenContext * ctx, AstNode * expr) 
             }
             if ((item_matches > 1 ? 1 : 0))
             {
-                cct_fn_codegen_report_error(ctx, ((*((AstNode*)cct_rt_check_not_null((void*)(expr), "runtime-fail (bridged): null pointer dereference")))).line, ((*((AstNode*)cct_rt_check_not_null((void*)(expr), "runtime-fail (bridged): null pointer dereference")))).column, cct_str_969);
+                cct_fn_codegen_report_error(ctx, ((*((AstNode*)cct_rt_check_not_null((void*)(expr), "runtime-fail (bridged): null pointer dereference")))).line, ((*((AstNode*)cct_rt_check_not_null((void*)(expr), "runtime-fail (bridged): null pointer dereference")))).column, cct_str_974);
                 if (cct_rt_fractum_is_active()) {
                     return 0;
                 }
@@ -7354,13 +7359,13 @@ static long long cct_fn_codegen_emit_expr(CodegenContext * ctx, AstNode * expr) 
                 {
                     if ((cct_fn_codegen_lookup_ordo_item_payload_arity(ctx, ((*((AstNode*)cct_rt_check_not_null((void*)(expr), "runtime-fail (bridged): null pointer dereference")))).name) > 0 ? 1 : 0))
                     {
-                        cct_fn_codegen_report_error(ctx, ((*((AstNode*)cct_rt_check_not_null((void*)(expr), "runtime-fail (bridged): null pointer dereference")))).line, ((*((AstNode*)cct_rt_check_not_null((void*)(expr), "runtime-fail (bridged): null pointer dereference")))).column, cct_str_1013);
+                        cct_fn_codegen_report_error(ctx, ((*((AstNode*)cct_rt_check_not_null((void*)(expr), "runtime-fail (bridged): null pointer dereference")))).line, ((*((AstNode*)cct_rt_check_not_null((void*)(expr), "runtime-fail (bridged): null pointer dereference")))).column, cct_str_1018);
                         if (cct_rt_fractum_is_active()) {
                             return 0;
                         }
                         return 0;
                     }
-                    cct_fn_codegen_emit(ctx, cct_str_981);
+                    cct_fn_codegen_emit(ctx, cct_str_986);
                     if (cct_rt_fractum_is_active()) {
                         return 0;
                     }
@@ -7368,7 +7373,7 @@ static long long cct_fn_codegen_emit_expr(CodegenContext * ctx, AstNode * expr) 
                     if (cct_rt_fractum_is_active()) {
                         return 0;
                     }
-                    cct_fn_codegen_emit(ctx, cct_str_984);
+                    cct_fn_codegen_emit(ctx, cct_str_989);
                     if (cct_rt_fractum_is_active()) {
                         return 0;
                     }
@@ -7376,7 +7381,7 @@ static long long cct_fn_codegen_emit_expr(CodegenContext * ctx, AstNode * expr) 
                     if (cct_rt_fractum_is_active()) {
                         return 0;
                     }
-                    cct_fn_codegen_emit(ctx, cct_str_988);
+                    cct_fn_codegen_emit(ctx, cct_str_993);
                     if (cct_rt_fractum_is_active()) {
                         return 0;
                     }
@@ -7407,7 +7412,7 @@ static long long cct_fn_codegen_emit_expr(CodegenContext * ctx, AstNode * expr) 
         }
         if ((cct_fn_compare(op_text, cct_str_9) == 0 ? 1 : 0))
         {
-            cct_fn_codegen_report_error(ctx, ((*((AstNode*)cct_rt_check_not_null((void*)(expr), "runtime-fail (bridged): null pointer dereference")))).line, ((*((AstNode*)cct_rt_check_not_null((void*)(expr), "runtime-fail (bridged): null pointer dereference")))).column, cct_str_1010);
+            cct_fn_codegen_report_error(ctx, ((*((AstNode*)cct_rt_check_not_null((void*)(expr), "runtime-fail (bridged): null pointer dereference")))).line, ((*((AstNode*)cct_rt_check_not_null((void*)(expr), "runtime-fail (bridged): null pointer dereference")))).column, cct_str_1015);
             if (cct_rt_fractum_is_active()) {
                 return 0;
             }
@@ -7415,7 +7420,7 @@ static long long cct_fn_codegen_emit_expr(CodegenContext * ctx, AstNode * expr) 
         }
         if ((((*((AstNode*)cct_rt_check_not_null((void*)(expr), "runtime-fail (bridged): null pointer dereference")))).operator_kind == 75 ? 1 : 0))
         {
-            cct_fn_codegen_emit(ctx, cct_str_976);
+            cct_fn_codegen_emit(ctx, cct_str_981);
             if (cct_rt_fractum_is_active()) {
                 return 0;
             }
@@ -7432,7 +7437,7 @@ static long long cct_fn_codegen_emit_expr(CodegenContext * ctx, AstNode * expr) 
         {
             if ((((*((AstNode*)cct_rt_check_not_null((void*)(expr), "runtime-fail (bridged): null pointer dereference")))).operator_kind == 61 ? 1 : 0))
             {
-                cct_fn_codegen_emit(ctx, cct_str_1014);
+                cct_fn_codegen_emit(ctx, cct_str_1019);
                 if (cct_rt_fractum_is_active()) {
                     return 0;
                 }
@@ -7447,7 +7452,7 @@ static long long cct_fn_codegen_emit_expr(CodegenContext * ctx, AstNode * expr) 
             }
             else
             {
-                cct_fn_codegen_emit(ctx, cct_str_805);
+                cct_fn_codegen_emit(ctx, cct_str_810);
                 if (cct_rt_fractum_is_active()) {
                     return 0;
                 }
@@ -7475,7 +7480,7 @@ static long long cct_fn_codegen_emit_expr(CodegenContext * ctx, AstNode * expr) 
             if (cct_rt_fractum_is_active()) {
                 return 0;
             }
-            cct_fn_codegen_emit(ctx, cct_str_1007);
+            cct_fn_codegen_emit(ctx, cct_str_1012);
             if (cct_rt_fractum_is_active()) {
                 return 0;
             }
@@ -7483,7 +7488,7 @@ static long long cct_fn_codegen_emit_expr(CodegenContext * ctx, AstNode * expr) 
             if (cct_rt_fractum_is_active()) {
                 return 0;
             }
-            cct_fn_codegen_emit(ctx, cct_str_1008);
+            cct_fn_codegen_emit(ctx, cct_str_1013);
             if (cct_rt_fractum_is_active()) {
                 return 0;
             }
@@ -7491,7 +7496,7 @@ static long long cct_fn_codegen_emit_expr(CodegenContext * ctx, AstNode * expr) 
             if (cct_rt_fractum_is_active()) {
                 return 0;
             }
-            cct_fn_codegen_emit(ctx, cct_str_992);
+            cct_fn_codegen_emit(ctx, cct_str_997);
             if (cct_rt_fractum_is_active()) {
                 return 0;
             }
@@ -7503,13 +7508,13 @@ static long long cct_fn_codegen_emit_expr(CodegenContext * ctx, AstNode * expr) 
         }
         if ((cct_fn_compare(op_text, cct_str_9) == 0 ? 1 : 0))
         {
-            cct_fn_codegen_report_error(ctx, ((*((AstNode*)cct_rt_check_not_null((void*)(expr), "runtime-fail (bridged): null pointer dereference")))).line, ((*((AstNode*)cct_rt_check_not_null((void*)(expr), "runtime-fail (bridged): null pointer dereference")))).column, cct_str_1009);
+            cct_fn_codegen_report_error(ctx, ((*((AstNode*)cct_rt_check_not_null((void*)(expr), "runtime-fail (bridged): null pointer dereference")))).line, ((*((AstNode*)cct_rt_check_not_null((void*)(expr), "runtime-fail (bridged): null pointer dereference")))).column, cct_str_1014);
             if (cct_rt_fractum_is_active()) {
                 return 0;
             }
             return 0;
         }
-        cct_fn_codegen_emit(ctx, cct_str_805);
+        cct_fn_codegen_emit(ctx, cct_str_810);
         if (cct_rt_fractum_is_active()) {
             return 0;
         }
@@ -7517,7 +7522,7 @@ static long long cct_fn_codegen_emit_expr(CodegenContext * ctx, AstNode * expr) 
         if (cct_rt_fractum_is_active()) {
             return 0;
         }
-        cct_fn_codegen_emit(ctx, cct_str_804);
+        cct_fn_codegen_emit(ctx, cct_str_809);
         if (cct_rt_fractum_is_active()) {
             return 0;
         }
@@ -7525,7 +7530,7 @@ static long long cct_fn_codegen_emit_expr(CodegenContext * ctx, AstNode * expr) 
         if (cct_rt_fractum_is_active()) {
             return 0;
         }
-        cct_fn_codegen_emit(ctx, cct_str_804);
+        cct_fn_codegen_emit(ctx, cct_str_809);
         if (cct_rt_fractum_is_active()) {
             return 0;
         }
@@ -7563,7 +7568,7 @@ static long long cct_fn_codegen_emit_expr(CodegenContext * ctx, AstNode * expr) 
         }
         return 0;
     }
-    cct_fn_codegen_report_error(ctx, ((*((AstNode*)cct_rt_check_not_null((void*)(expr), "runtime-fail (bridged): null pointer dereference")))).line, ((*((AstNode*)cct_rt_check_not_null((void*)(expr), "runtime-fail (bridged): null pointer dereference")))).column, cct_str_1015);
+    cct_fn_codegen_report_error(ctx, ((*((AstNode*)cct_rt_check_not_null((void*)(expr), "runtime-fail (bridged): null pointer dereference")))).line, ((*((AstNode*)cct_rt_check_not_null((void*)(expr), "runtime-fail (bridged): null pointer dereference")))).column, cct_str_1020);
     if (cct_rt_fractum_is_active()) {
         return 0;
     }
@@ -7580,7 +7585,7 @@ static long long cct_fn_codegen_emit_condition_expr(CodegenContext * ctx, AstNod
             if (cct_rt_fractum_is_active()) {
                 return 0;
             }
-            cct_fn_codegen_emit(ctx, cct_str_1007);
+            cct_fn_codegen_emit(ctx, cct_str_1012);
             if (cct_rt_fractum_is_active()) {
                 return 0;
             }
@@ -7588,7 +7593,7 @@ static long long cct_fn_codegen_emit_condition_expr(CodegenContext * ctx, AstNod
             if (cct_rt_fractum_is_active()) {
                 return 0;
             }
-            cct_fn_codegen_emit(ctx, cct_str_1008);
+            cct_fn_codegen_emit(ctx, cct_str_1013);
             if (cct_rt_fractum_is_active()) {
                 return 0;
             }
@@ -7596,7 +7601,7 @@ static long long cct_fn_codegen_emit_condition_expr(CodegenContext * ctx, AstNod
             if (cct_rt_fractum_is_active()) {
                 return 0;
             }
-            cct_fn_codegen_emit(ctx, cct_str_992);
+            cct_fn_codegen_emit(ctx, cct_str_997);
             if (cct_rt_fractum_is_active()) {
                 return 0;
             }
@@ -7608,7 +7613,7 @@ static long long cct_fn_codegen_emit_condition_expr(CodegenContext * ctx, AstNod
         }
         if ((cct_fn_compare(op_text, cct_str_9) == 0 ? 1 : 0))
         {
-            cct_fn_codegen_report_error(ctx, ((*((AstNode*)cct_rt_check_not_null((void*)(expr), "runtime-fail (bridged): null pointer dereference")))).line, ((*((AstNode*)cct_rt_check_not_null((void*)(expr), "runtime-fail (bridged): null pointer dereference")))).column, cct_str_1009);
+            cct_fn_codegen_report_error(ctx, ((*((AstNode*)cct_rt_check_not_null((void*)(expr), "runtime-fail (bridged): null pointer dereference")))).line, ((*((AstNode*)cct_rt_check_not_null((void*)(expr), "runtime-fail (bridged): null pointer dereference")))).column, cct_str_1014);
             if (cct_rt_fractum_is_active()) {
                 return 0;
             }
@@ -7618,7 +7623,7 @@ static long long cct_fn_codegen_emit_condition_expr(CodegenContext * ctx, AstNod
         if (cct_rt_fractum_is_active()) {
             return 0;
         }
-        cct_fn_codegen_emit(ctx, cct_str_804);
+        cct_fn_codegen_emit(ctx, cct_str_809);
         if (cct_rt_fractum_is_active()) {
             return 0;
         }
@@ -7626,7 +7631,7 @@ static long long cct_fn_codegen_emit_condition_expr(CodegenContext * ctx, AstNod
         if (cct_rt_fractum_is_active()) {
             return 0;
         }
-        cct_fn_codegen_emit(ctx, cct_str_804);
+        cct_fn_codegen_emit(ctx, cct_str_809);
         if (cct_rt_fractum_is_active()) {
             return 0;
         }
@@ -7644,7 +7649,7 @@ static long long cct_fn_codegen_emit_condition_expr(CodegenContext * ctx, AstNod
         }
         if ((cct_fn_compare(op_text, cct_str_9) == 0 ? 1 : 0))
         {
-            cct_fn_codegen_report_error(ctx, ((*((AstNode*)cct_rt_check_not_null((void*)(expr), "runtime-fail (bridged): null pointer dereference")))).line, ((*((AstNode*)cct_rt_check_not_null((void*)(expr), "runtime-fail (bridged): null pointer dereference")))).column, cct_str_1010);
+            cct_fn_codegen_report_error(ctx, ((*((AstNode*)cct_rt_check_not_null((void*)(expr), "runtime-fail (bridged): null pointer dereference")))).line, ((*((AstNode*)cct_rt_check_not_null((void*)(expr), "runtime-fail (bridged): null pointer dereference")))).column, cct_str_1015);
             if (cct_rt_fractum_is_active()) {
                 return 0;
             }
@@ -7671,39 +7676,7 @@ static long long cct_fn_codegen_emit_condition_expr(CodegenContext * ctx, AstNod
 static long long cct_fn_codegen_emit_obsecro_call_expr(CodegenContext * ctx, AstNode * expr) {
     if ((((*((AstNode*)cct_rt_check_not_null((void*)(((*((AstNode*)cct_rt_check_not_null((void*)(expr), "runtime-fail (bridged): null pointer dereference")))).callee), "runtime-fail (bridged): null pointer dereference")))).kind != 32 ? 1 : 0))
     {
-        cct_fn_codegen_report_error(ctx, ((*((AstNode*)cct_rt_check_not_null((void*)(expr), "runtime-fail (bridged): null pointer dereference")))).line, ((*((AstNode*)cct_rt_check_not_null((void*)(expr), "runtime-fail (bridged): null pointer dereference")))).column, cct_str_989);
-        if (cct_rt_fractum_is_active()) {
-            return 0;
-        }
-        return 0;
-    }
-    if ((cct_fn_compare(((*((AstNode*)cct_rt_check_not_null((void*)(((*((AstNode*)cct_rt_check_not_null((void*)(expr), "runtime-fail (bridged): null pointer dereference")))).callee), "runtime-fail (bridged): null pointer dereference")))).name, cct_str_990) == 0 ? 1 : 0))
-    {
-        cct_fn_codegen_require_stdlib(ctx);
-        if (cct_rt_fractum_is_active()) {
-            return 0;
-        }
-        cct_fn_codegen_emit(ctx, cct_str_991);
-        if (cct_rt_fractum_is_active()) {
-            return 0;
-        }
-        cct_fn_codegen_emit_expr(ctx, cct_fn_ast_node_list_get(((*((AstNode*)cct_rt_check_not_null((void*)(expr), "runtime-fail (bridged): null pointer dereference")))).arguments, 0));
-        if (cct_rt_fractum_is_active()) {
-            return 0;
-        }
-        cct_fn_codegen_emit(ctx, cct_str_992);
-        if (cct_rt_fractum_is_active()) {
-            return 0;
-        }
-        return 0;
-    }
-    if ((cct_fn_compare(((*((AstNode*)cct_rt_check_not_null((void*)(((*((AstNode*)cct_rt_check_not_null((void*)(expr), "runtime-fail (bridged): null pointer dereference")))).callee), "runtime-fail (bridged): null pointer dereference")))).name, cct_str_993) == 0 ? 1 : 0))
-    {
-        cct_fn_codegen_require_time_runtime(ctx);
-        if (cct_rt_fractum_is_active()) {
-            return 0;
-        }
-        cct_fn_codegen_emit(ctx, cct_str_994);
+        cct_fn_codegen_report_error(ctx, ((*((AstNode*)cct_rt_check_not_null((void*)(expr), "runtime-fail (bridged): null pointer dereference")))).line, ((*((AstNode*)cct_rt_check_not_null((void*)(expr), "runtime-fail (bridged): null pointer dereference")))).column, cct_str_994);
         if (cct_rt_fractum_is_active()) {
             return 0;
         }
@@ -7715,19 +7688,51 @@ static long long cct_fn_codegen_emit_obsecro_call_expr(CodegenContext * ctx, Ast
         if (cct_rt_fractum_is_active()) {
             return 0;
         }
+        cct_fn_codegen_emit(ctx, cct_str_996);
+        if (cct_rt_fractum_is_active()) {
+            return 0;
+        }
+        cct_fn_codegen_emit_expr(ctx, cct_fn_ast_node_list_get(((*((AstNode*)cct_rt_check_not_null((void*)(expr), "runtime-fail (bridged): null pointer dereference")))).arguments, 0));
+        if (cct_rt_fractum_is_active()) {
+            return 0;
+        }
+        cct_fn_codegen_emit(ctx, cct_str_997);
+        if (cct_rt_fractum_is_active()) {
+            return 0;
+        }
+        return 0;
+    }
+    if ((cct_fn_compare(((*((AstNode*)cct_rt_check_not_null((void*)(((*((AstNode*)cct_rt_check_not_null((void*)(expr), "runtime-fail (bridged): null pointer dereference")))).callee), "runtime-fail (bridged): null pointer dereference")))).name, cct_str_998) == 0 ? 1 : 0))
+    {
+        cct_fn_codegen_require_time_runtime(ctx);
+        if (cct_rt_fractum_is_active()) {
+            return 0;
+        }
+        cct_fn_codegen_emit(ctx, cct_str_999);
+        if (cct_rt_fractum_is_active()) {
+            return 0;
+        }
+        return 0;
+    }
+    if ((cct_fn_compare(((*((AstNode*)cct_rt_check_not_null((void*)(((*((AstNode*)cct_rt_check_not_null((void*)(expr), "runtime-fail (bridged): null pointer dereference")))).callee), "runtime-fail (bridged): null pointer dereference")))).name, cct_str_1000) == 0 ? 1 : 0))
+    {
+        cct_fn_codegen_require_stdlib(ctx);
+        if (cct_rt_fractum_is_active()) {
+            return 0;
+        }
         cct_fn_codegen_require_stdio(ctx);
         if (cct_rt_fractum_is_active()) {
             return 0;
         }
     }
-    if ((cct_fn_compare(((*((AstNode*)cct_rt_check_not_null((void*)(((*((AstNode*)cct_rt_check_not_null((void*)(expr), "runtime-fail (bridged): null pointer dereference")))).callee), "runtime-fail (bridged): null pointer dereference")))).name, cct_str_996) == 0 ? 1 : 0))
+    if ((cct_fn_compare(((*((AstNode*)cct_rt_check_not_null((void*)(((*((AstNode*)cct_rt_check_not_null((void*)(expr), "runtime-fail (bridged): null pointer dereference")))).callee), "runtime-fail (bridged): null pointer dereference")))).name, cct_str_1001) == 0 ? 1 : 0))
     {
         cct_fn_codegen_require_stdlib(ctx);
         if (cct_rt_fractum_is_active()) {
             return 0;
         }
     }
-    if (cct_fn_starts_with(((*((AstNode*)cct_rt_check_not_null((void*)(((*((AstNode*)cct_rt_check_not_null((void*)(expr), "runtime-fail (bridged): null pointer dereference")))).callee), "runtime-fail (bridged): null pointer dereference")))).name, cct_str_997))
+    if (cct_fn_starts_with(((*((AstNode*)cct_rt_check_not_null((void*)(((*((AstNode*)cct_rt_check_not_null((void*)(expr), "runtime-fail (bridged): null pointer dereference")))).callee), "runtime-fail (bridged): null pointer dereference")))).name, cct_str_1002))
     {
         cct_fn_codegen_require_stdlib(ctx);
         if (cct_rt_fractum_is_active()) {
@@ -7738,42 +7743,42 @@ static long long cct_fn_codegen_emit_obsecro_call_expr(CodegenContext * ctx, Ast
             return 0;
         }
     }
-    if ((cct_fn_starts_with(((*((AstNode*)cct_rt_check_not_null((void*)(((*((AstNode*)cct_rt_check_not_null((void*)(expr), "runtime-fail (bridged): null pointer dereference")))).callee), "runtime-fail (bridged): null pointer dereference")))).name, cct_str_998) || cct_fn_starts_with(((*((AstNode*)cct_rt_check_not_null((void*)(((*((AstNode*)cct_rt_check_not_null((void*)(expr), "runtime-fail (bridged): null pointer dereference")))).callee), "runtime-fail (bridged): null pointer dereference")))).name, cct_str_999) || cct_fn_starts_with(((*((AstNode*)cct_rt_check_not_null((void*)(((*((AstNode*)cct_rt_check_not_null((void*)(expr), "runtime-fail (bridged): null pointer dereference")))).callee), "runtime-fail (bridged): null pointer dereference")))).name, cct_str_1000) || cct_fn_starts_with(((*((AstNode*)cct_rt_check_not_null((void*)(((*((AstNode*)cct_rt_check_not_null((void*)(expr), "runtime-fail (bridged): null pointer dereference")))).callee), "runtime-fail (bridged): null pointer dereference")))).name, cct_str_1001)))
+    if ((cct_fn_starts_with(((*((AstNode*)cct_rt_check_not_null((void*)(((*((AstNode*)cct_rt_check_not_null((void*)(expr), "runtime-fail (bridged): null pointer dereference")))).callee), "runtime-fail (bridged): null pointer dereference")))).name, cct_str_1003) || cct_fn_starts_with(((*((AstNode*)cct_rt_check_not_null((void*)(((*((AstNode*)cct_rt_check_not_null((void*)(expr), "runtime-fail (bridged): null pointer dereference")))).callee), "runtime-fail (bridged): null pointer dereference")))).name, cct_str_1004) || cct_fn_starts_with(((*((AstNode*)cct_rt_check_not_null((void*)(((*((AstNode*)cct_rt_check_not_null((void*)(expr), "runtime-fail (bridged): null pointer dereference")))).callee), "runtime-fail (bridged): null pointer dereference")))).name, cct_str_1005) || cct_fn_starts_with(((*((AstNode*)cct_rt_check_not_null((void*)(((*((AstNode*)cct_rt_check_not_null((void*)(expr), "runtime-fail (bridged): null pointer dereference")))).callee), "runtime-fail (bridged): null pointer dereference")))).name, cct_str_1006)))
     {
         cct_fn_codegen_require_stdlib(ctx);
         if (cct_rt_fractum_is_active()) {
             return 0;
         }
     }
-    if ((cct_fn_compare(((*((AstNode*)cct_rt_check_not_null((void*)(((*((AstNode*)cct_rt_check_not_null((void*)(expr), "runtime-fail (bridged): null pointer dereference")))).callee), "runtime-fail (bridged): null pointer dereference")))).name, cct_str_1002) == 0 ? 1 : 0))
+    if ((cct_fn_compare(((*((AstNode*)cct_rt_check_not_null((void*)(((*((AstNode*)cct_rt_check_not_null((void*)(expr), "runtime-fail (bridged): null pointer dereference")))).callee), "runtime-fail (bridged): null pointer dereference")))).name, cct_str_1007) == 0 ? 1 : 0))
     {
         cct_fn_codegen_require_fs_runtime(ctx);
         if (cct_rt_fractum_is_active()) {
             return 0;
         }
     }
-    if ((cct_fn_compare(((*((AstNode*)cct_rt_check_not_null((void*)(((*((AstNode*)cct_rt_check_not_null((void*)(expr), "runtime-fail (bridged): null pointer dereference")))).callee), "runtime-fail (bridged): null pointer dereference")))).name, cct_str_1003) == 0 ? 1 : 0))
+    if ((cct_fn_compare(((*((AstNode*)cct_rt_check_not_null((void*)(((*((AstNode*)cct_rt_check_not_null((void*)(expr), "runtime-fail (bridged): null pointer dereference")))).callee), "runtime-fail (bridged): null pointer dereference")))).name, cct_str_1008) == 0 ? 1 : 0))
     {
         cct_fn_codegen_require_fs_runtime(ctx);
         if (cct_rt_fractum_is_active()) {
             return 0;
         }
     }
-    if ((cct_fn_compare(((*((AstNode*)cct_rt_check_not_null((void*)(((*((AstNode*)cct_rt_check_not_null((void*)(expr), "runtime-fail (bridged): null pointer dereference")))).callee), "runtime-fail (bridged): null pointer dereference")))).name, cct_str_1004) == 0 ? 1 : 0))
+    if ((cct_fn_compare(((*((AstNode*)cct_rt_check_not_null((void*)(((*((AstNode*)cct_rt_check_not_null((void*)(expr), "runtime-fail (bridged): null pointer dereference")))).callee), "runtime-fail (bridged): null pointer dereference")))).name, cct_str_1009) == 0 ? 1 : 0))
     {
         cct_fn_codegen_require_fs_runtime(ctx);
         if (cct_rt_fractum_is_active()) {
             return 0;
         }
     }
-    if ((cct_fn_compare(((*((AstNode*)cct_rt_check_not_null((void*)(((*((AstNode*)cct_rt_check_not_null((void*)(expr), "runtime-fail (bridged): null pointer dereference")))).callee), "runtime-fail (bridged): null pointer dereference")))).name, cct_str_1005) == 0 ? 1 : 0))
+    if ((cct_fn_compare(((*((AstNode*)cct_rt_check_not_null((void*)(((*((AstNode*)cct_rt_check_not_null((void*)(expr), "runtime-fail (bridged): null pointer dereference")))).callee), "runtime-fail (bridged): null pointer dereference")))).name, cct_str_1010) == 0 ? 1 : 0))
     {
         cct_fn_codegen_require_fs_runtime(ctx);
         if (cct_rt_fractum_is_active()) {
             return 0;
         }
     }
-    cct_fn_codegen_emit(ctx, cct_str_1006);
+    cct_fn_codegen_emit(ctx, cct_str_1011);
     if (cct_rt_fractum_is_active()) {
         return 0;
     }
@@ -7781,7 +7786,7 @@ static long long cct_fn_codegen_emit_obsecro_call_expr(CodegenContext * ctx, Ast
     if (cct_rt_fractum_is_active()) {
         return 0;
     }
-    cct_fn_codegen_emit(ctx, cct_str_805);
+    cct_fn_codegen_emit(ctx, cct_str_810);
     if (cct_rt_fractum_is_active()) {
         return 0;
     }
@@ -7827,17 +7832,17 @@ static long long cct_fn_codegen_emit_obsecro_call_expr(CodegenContext * ctx, Ast
 static long long cct_fn_codegen_emit_call_expr(CodegenContext * ctx, AstNode * expr) {
     if ((((*((AstNode*)cct_rt_check_not_null((void*)(((*((AstNode*)cct_rt_check_not_null((void*)(expr), "runtime-fail (bridged): null pointer dereference")))).callee), "runtime-fail (bridged): null pointer dereference")))).kind != 32 ? 1 : 0))
     {
-        cct_fn_codegen_report_error(ctx, ((*((AstNode*)cct_rt_check_not_null((void*)(expr), "runtime-fail (bridged): null pointer dereference")))).line, ((*((AstNode*)cct_rt_check_not_null((void*)(expr), "runtime-fail (bridged): null pointer dereference")))).column, cct_str_978);
+        cct_fn_codegen_report_error(ctx, ((*((AstNode*)cct_rt_check_not_null((void*)(expr), "runtime-fail (bridged): null pointer dereference")))).line, ((*((AstNode*)cct_rt_check_not_null((void*)(expr), "runtime-fail (bridged): null pointer dereference")))).column, cct_str_983);
         if (cct_rt_fractum_is_active()) {
             return 0;
         }
         return 0;
     }
-    if ((cct_fn_compare(((*((AstNode*)cct_rt_check_not_null((void*)(((*((AstNode*)cct_rt_check_not_null((void*)(expr), "runtime-fail (bridged): null pointer dereference")))).callee), "runtime-fail (bridged): null pointer dereference")))).name, cct_str_815) == 0 ? 1 : 0))
+    if ((cct_fn_compare(((*((AstNode*)cct_rt_check_not_null((void*)(((*((AstNode*)cct_rt_check_not_null((void*)(expr), "runtime-fail (bridged): null pointer dereference")))).callee), "runtime-fail (bridged): null pointer dereference")))).name, cct_str_820) == 0 ? 1 : 0))
     {
         if ((cct_fn_ast_node_list_len(((*((AstNode*)cct_rt_check_not_null((void*)(((*((AstNode*)cct_rt_check_not_null((void*)(expr), "runtime-fail (bridged): null pointer dereference")))).callee), "runtime-fail (bridged): null pointer dereference")))).generic_args) != 1 ? 1 : 0))
         {
-            cct_fn_codegen_report_error(ctx, ((*((AstNode*)cct_rt_check_not_null((void*)(expr), "runtime-fail (bridged): null pointer dereference")))).line, ((*((AstNode*)cct_rt_check_not_null((void*)(expr), "runtime-fail (bridged): null pointer dereference")))).column, cct_str_979);
+            cct_fn_codegen_report_error(ctx, ((*((AstNode*)cct_rt_check_not_null((void*)(expr), "runtime-fail (bridged): null pointer dereference")))).line, ((*((AstNode*)cct_rt_check_not_null((void*)(expr), "runtime-fail (bridged): null pointer dereference")))).column, cct_str_984);
             if (cct_rt_fractum_is_active()) {
                 return 0;
             }
@@ -7845,7 +7850,7 @@ static long long cct_fn_codegen_emit_call_expr(CodegenContext * ctx, AstNode * e
         }
         if ((cct_fn_ast_node_list_len(((*((AstNode*)cct_rt_check_not_null((void*)(expr), "runtime-fail (bridged): null pointer dereference")))).arguments) != 1 ? 1 : 0))
         {
-            cct_fn_codegen_report_error(ctx, ((*((AstNode*)cct_rt_check_not_null((void*)(expr), "runtime-fail (bridged): null pointer dereference")))).line, ((*((AstNode*)cct_rt_check_not_null((void*)(expr), "runtime-fail (bridged): null pointer dereference")))).column, cct_str_980);
+            cct_fn_codegen_report_error(ctx, ((*((AstNode*)cct_rt_check_not_null((void*)(expr), "runtime-fail (bridged): null pointer dereference")))).line, ((*((AstNode*)cct_rt_check_not_null((void*)(expr), "runtime-fail (bridged): null pointer dereference")))).column, cct_str_985);
             if (cct_rt_fractum_is_active()) {
                 return 0;
             }
@@ -7863,7 +7868,7 @@ static long long cct_fn_codegen_emit_call_expr(CodegenContext * ctx, AstNode * e
         {
             return 0;
         }
-        cct_fn_codegen_emit(ctx, cct_str_981);
+        cct_fn_codegen_emit(ctx, cct_str_986);
         if (cct_rt_fractum_is_active()) {
             return 0;
         }
@@ -7871,7 +7876,7 @@ static long long cct_fn_codegen_emit_call_expr(CodegenContext * ctx, AstNode * e
         if (cct_rt_fractum_is_active()) {
             return 0;
         }
-        cct_fn_codegen_emit(ctx, cct_str_982);
+        cct_fn_codegen_emit(ctx, cct_str_987);
         if (cct_rt_fractum_is_active()) {
             return 0;
         }
@@ -7879,7 +7884,7 @@ static long long cct_fn_codegen_emit_call_expr(CodegenContext * ctx, AstNode * e
         if (cct_rt_fractum_is_active()) {
             return 0;
         }
-        cct_fn_codegen_emit(ctx, cct_str_869);
+        cct_fn_codegen_emit(ctx, cct_str_874);
         if (cct_rt_fractum_is_active()) {
             return 0;
         }
@@ -7891,7 +7896,7 @@ static long long cct_fn_codegen_emit_call_expr(CodegenContext * ctx, AstNode * e
     }
     if ((item_matches > 1 ? 1 : 0))
     {
-        cct_fn_codegen_report_error(ctx, ((*((AstNode*)cct_rt_check_not_null((void*)(expr), "runtime-fail (bridged): null pointer dereference")))).line, ((*((AstNode*)cct_rt_check_not_null((void*)(expr), "runtime-fail (bridged): null pointer dereference")))).column, cct_str_969);
+        cct_fn_codegen_report_error(ctx, ((*((AstNode*)cct_rt_check_not_null((void*)(expr), "runtime-fail (bridged): null pointer dereference")))).line, ((*((AstNode*)cct_rt_check_not_null((void*)(expr), "runtime-fail (bridged): null pointer dereference")))).column, cct_str_974);
         if (cct_rt_fractum_is_active()) {
             return 0;
         }
@@ -7915,13 +7920,13 @@ static long long cct_fn_codegen_emit_call_expr(CodegenContext * ctx, AstNode * e
             }
             if ((expected_arity != actual_arity ? 1 : 0))
             {
-                cct_fn_codegen_report_error(ctx, ((*((AstNode*)cct_rt_check_not_null((void*)(expr), "runtime-fail (bridged): null pointer dereference")))).line, ((*((AstNode*)cct_rt_check_not_null((void*)(expr), "runtime-fail (bridged): null pointer dereference")))).column, cct_str_983);
+                cct_fn_codegen_report_error(ctx, ((*((AstNode*)cct_rt_check_not_null((void*)(expr), "runtime-fail (bridged): null pointer dereference")))).line, ((*((AstNode*)cct_rt_check_not_null((void*)(expr), "runtime-fail (bridged): null pointer dereference")))).column, cct_str_988);
                 if (cct_rt_fractum_is_active()) {
                     return 0;
                 }
                 return 0;
             }
-            cct_fn_codegen_emit(ctx, cct_str_981);
+            cct_fn_codegen_emit(ctx, cct_str_986);
             if (cct_rt_fractum_is_active()) {
                 return 0;
             }
@@ -7929,7 +7934,7 @@ static long long cct_fn_codegen_emit_call_expr(CodegenContext * ctx, AstNode * e
             if (cct_rt_fractum_is_active()) {
                 return 0;
             }
-            cct_fn_codegen_emit(ctx, cct_str_984);
+            cct_fn_codegen_emit(ctx, cct_str_989);
             if (cct_rt_fractum_is_active()) {
                 return 0;
             }
@@ -7939,7 +7944,7 @@ static long long cct_fn_codegen_emit_call_expr(CodegenContext * ctx, AstNode * e
             }
             if ((expected_arity > 0 ? 1 : 0))
             {
-                cct_fn_codegen_emit(ctx, cct_str_985);
+                cct_fn_codegen_emit(ctx, cct_str_990);
                 if (cct_rt_fractum_is_active()) {
                     return 0;
                 }
@@ -7947,7 +7952,7 @@ static long long cct_fn_codegen_emit_call_expr(CodegenContext * ctx, AstNode * e
                 if (cct_rt_fractum_is_active()) {
                     return 0;
                 }
-                cct_fn_codegen_emit(ctx, cct_str_986);
+                cct_fn_codegen_emit(ctx, cct_str_991);
                 if (cct_rt_fractum_is_active()) {
                     return 0;
                 }
@@ -7974,12 +7979,12 @@ static long long cct_fn_codegen_emit_call_expr(CodegenContext * ctx, AstNode * e
                     }
                 }
                 __cct_loop_brk_3:;
-                cct_fn_codegen_emit(ctx, cct_str_987);
+                cct_fn_codegen_emit(ctx, cct_str_992);
                 if (cct_rt_fractum_is_active()) {
                     return 0;
                 }
             }
-            cct_fn_codegen_emit(ctx, cct_str_988);
+            cct_fn_codegen_emit(ctx, cct_str_993);
             if (cct_rt_fractum_is_active()) {
                 return 0;
             }
@@ -8008,7 +8013,7 @@ static long long cct_fn_codegen_emit_call_expr(CodegenContext * ctx, AstNode * e
             return 0;
         }
     }
-    cct_fn_codegen_emit(ctx, cct_str_805);
+    cct_fn_codegen_emit(ctx, cct_str_810);
     if (cct_rt_fractum_is_active()) {
         return 0;
     }
@@ -8073,7 +8078,7 @@ static long long cct_fn_codegen_emit_lvalue(CodegenContext * ctx, AstNode * expr
             }
             if ((item_matches > 1 ? 1 : 0))
             {
-                cct_fn_codegen_report_error(ctx, ((*((AstNode*)cct_rt_check_not_null((void*)(expr), "runtime-fail (bridged): null pointer dereference")))).line, ((*((AstNode*)cct_rt_check_not_null((void*)(expr), "runtime-fail (bridged): null pointer dereference")))).column, cct_str_969);
+                cct_fn_codegen_report_error(ctx, ((*((AstNode*)cct_rt_check_not_null((void*)(expr), "runtime-fail (bridged): null pointer dereference")))).line, ((*((AstNode*)cct_rt_check_not_null((void*)(expr), "runtime-fail (bridged): null pointer dereference")))).column, cct_str_974);
                 if (cct_rt_fractum_is_active()) {
                     return 0;
                 }
@@ -8108,7 +8113,7 @@ static long long cct_fn_codegen_emit_lvalue(CodegenContext * ctx, AstNode * expr
         }
         if ((cct_fn_compare(cct_fn_codegen_lookup_sigillum_field_type(ctx, object_type_name, ((*((AstNode*)cct_rt_check_not_null((void*)(expr), "runtime-fail (bridged): null pointer dereference")))).name), cct_str_9) == 0 ? 1 : 0))
         {
-            cct_fn_codegen_report_error(ctx, ((*((AstNode*)cct_rt_check_not_null((void*)(expr), "runtime-fail (bridged): null pointer dereference")))).line, ((*((AstNode*)cct_rt_check_not_null((void*)(expr), "runtime-fail (bridged): null pointer dereference")))).column, cct_str_975);
+            cct_fn_codegen_report_error(ctx, ((*((AstNode*)cct_rt_check_not_null((void*)(expr), "runtime-fail (bridged): null pointer dereference")))).line, ((*((AstNode*)cct_rt_check_not_null((void*)(expr), "runtime-fail (bridged): null pointer dereference")))).column, cct_str_980);
             if (cct_rt_fractum_is_active()) {
                 return 0;
             }
@@ -8118,7 +8123,7 @@ static long long cct_fn_codegen_emit_lvalue(CodegenContext * ctx, AstNode * expr
         if (cct_rt_fractum_is_active()) {
             return 0;
         }
-        cct_fn_codegen_emit(ctx, cct_str_942);
+        cct_fn_codegen_emit(ctx, cct_str_947);
         if (cct_rt_fractum_is_active()) {
             return 0;
         }
@@ -8150,7 +8155,7 @@ static long long cct_fn_codegen_emit_lvalue(CodegenContext * ctx, AstNode * expr
     }
     if (((((*((AstNode*)cct_rt_check_not_null((void*)(expr), "runtime-fail (bridged): null pointer dereference")))).kind == 34 ? 1 : 0) && (((*((AstNode*)cct_rt_check_not_null((void*)(expr), "runtime-fail (bridged): null pointer dereference")))).operator_kind == 75 ? 1 : 0)))
     {
-        cct_fn_codegen_emit(ctx, cct_str_976);
+        cct_fn_codegen_emit(ctx, cct_str_981);
         if (cct_rt_fractum_is_active()) {
             return 0;
         }
@@ -8164,7 +8169,7 @@ static long long cct_fn_codegen_emit_lvalue(CodegenContext * ctx, AstNode * expr
         }
         return 0;
     }
-    cct_fn_codegen_report_error(ctx, ((*((AstNode*)cct_rt_check_not_null((void*)(expr), "runtime-fail (bridged): null pointer dereference")))).line, ((*((AstNode*)cct_rt_check_not_null((void*)(expr), "runtime-fail (bridged): null pointer dereference")))).column, cct_str_977);
+    cct_fn_codegen_report_error(ctx, ((*((AstNode*)cct_rt_check_not_null((void*)(expr), "runtime-fail (bridged): null pointer dereference")))).line, ((*((AstNode*)cct_rt_check_not_null((void*)(expr), "runtime-fail (bridged): null pointer dereference")))).column, cct_str_982);
     if (cct_rt_fractum_is_active()) {
         return 0;
     }
@@ -8217,7 +8222,7 @@ static const char * cct_fn_codegen_expr_type_name(CodegenContext * ctx, AstNode 
         }
         if ((item_matches > 1 ? 1 : 0))
         {
-            cct_fn_codegen_report_error(ctx, ((*((AstNode*)cct_rt_check_not_null((void*)(expr), "runtime-fail (bridged): null pointer dereference")))).line, ((*((AstNode*)cct_rt_check_not_null((void*)(expr), "runtime-fail (bridged): null pointer dereference")))).column, cct_str_969);
+            cct_fn_codegen_report_error(ctx, ((*((AstNode*)cct_rt_check_not_null((void*)(expr), "runtime-fail (bridged): null pointer dereference")))).line, ((*((AstNode*)cct_rt_check_not_null((void*)(expr), "runtime-fail (bridged): null pointer dereference")))).column, cct_str_974);
             if (cct_rt_fractum_is_active()) {
                 return 0;
             }
@@ -8235,7 +8240,7 @@ static const char * cct_fn_codegen_expr_type_name(CodegenContext * ctx, AstNode 
     }
     if (((((*((AstNode*)cct_rt_check_not_null((void*)(expr), "runtime-fail (bridged): null pointer dereference")))).kind == 35 ? 1 : 0) && (((*((AstNode*)cct_rt_check_not_null((void*)(((*((AstNode*)cct_rt_check_not_null((void*)(expr), "runtime-fail (bridged): null pointer dereference")))).callee), "runtime-fail (bridged): null pointer dereference")))).kind == 32 ? 1 : 0)))
     {
-        if ((cct_fn_compare(((*((AstNode*)cct_rt_check_not_null((void*)(((*((AstNode*)cct_rt_check_not_null((void*)(expr), "runtime-fail (bridged): null pointer dereference")))).callee), "runtime-fail (bridged): null pointer dereference")))).name, cct_str_815) == 0 ? 1 : 0))
+        if ((cct_fn_compare(((*((AstNode*)cct_rt_check_not_null((void*)(((*((AstNode*)cct_rt_check_not_null((void*)(expr), "runtime-fail (bridged): null pointer dereference")))).callee), "runtime-fail (bridged): null pointer dereference")))).name, cct_str_820) == 0 ? 1 : 0))
         {
             if ((cct_fn_ast_node_list_len(((*((AstNode*)cct_rt_check_not_null((void*)(((*((AstNode*)cct_rt_check_not_null((void*)(expr), "runtime-fail (bridged): null pointer dereference")))).callee), "runtime-fail (bridged): null pointer dereference")))).generic_args) == 1 ? 1 : 0))
             {
@@ -8281,7 +8286,7 @@ static const char * cct_fn_codegen_expr_type_name(CodegenContext * ctx, AstNode 
         {
             if ((((*((AstNode*)cct_rt_check_not_null((void*)(((*((AstNode*)cct_rt_check_not_null((void*)(expr), "runtime-fail (bridged): null pointer dereference")))).left), "runtime-fail (bridged): null pointer dereference")))).kind == 34 ? 1 : 0))
             {
-                cct_fn_codegen_report_error(ctx, ((*((AstNode*)cct_rt_check_not_null((void*)(expr), "runtime-fail (bridged): null pointer dereference")))).line, ((*((AstNode*)cct_rt_check_not_null((void*)(expr), "runtime-fail (bridged): null pointer dereference")))).column, cct_str_970);
+                cct_fn_codegen_report_error(ctx, ((*((AstNode*)cct_rt_check_not_null((void*)(expr), "runtime-fail (bridged): null pointer dereference")))).line, ((*((AstNode*)cct_rt_check_not_null((void*)(expr), "runtime-fail (bridged): null pointer dereference")))).column, cct_str_975);
                 if (cct_rt_fractum_is_active()) {
                     return 0;
                 }
@@ -8290,7 +8295,7 @@ static const char * cct_fn_codegen_expr_type_name(CodegenContext * ctx, AstNode 
             {
                 if ((((*((AstNode*)cct_rt_check_not_null((void*)(((*((AstNode*)cct_rt_check_not_null((void*)(expr), "runtime-fail (bridged): null pointer dereference")))).left), "runtime-fail (bridged): null pointer dereference")))).kind == 32 ? 1 : 0))
                 {
-                    cct_fn_codegen_report_error(ctx, ((*((AstNode*)cct_rt_check_not_null((void*)(expr), "runtime-fail (bridged): null pointer dereference")))).line, ((*((AstNode*)cct_rt_check_not_null((void*)(expr), "runtime-fail (bridged): null pointer dereference")))).column, cct_str_971);
+                    cct_fn_codegen_report_error(ctx, ((*((AstNode*)cct_rt_check_not_null((void*)(expr), "runtime-fail (bridged): null pointer dereference")))).line, ((*((AstNode*)cct_rt_check_not_null((void*)(expr), "runtime-fail (bridged): null pointer dereference")))).column, cct_str_976);
                     if (cct_rt_fractum_is_active()) {
                         return 0;
                     }
@@ -8299,7 +8304,7 @@ static const char * cct_fn_codegen_expr_type_name(CodegenContext * ctx, AstNode 
                 {
                     if ((((*((AstNode*)cct_rt_check_not_null((void*)(((*((AstNode*)cct_rt_check_not_null((void*)(expr), "runtime-fail (bridged): null pointer dereference")))).left), "runtime-fail (bridged): null pointer dereference")))).kind == 37 ? 1 : 0))
                     {
-                        cct_fn_codegen_report_error(ctx, ((*((AstNode*)cct_rt_check_not_null((void*)(expr), "runtime-fail (bridged): null pointer dereference")))).line, ((*((AstNode*)cct_rt_check_not_null((void*)(expr), "runtime-fail (bridged): null pointer dereference")))).column, cct_str_972);
+                        cct_fn_codegen_report_error(ctx, ((*((AstNode*)cct_rt_check_not_null((void*)(expr), "runtime-fail (bridged): null pointer dereference")))).line, ((*((AstNode*)cct_rt_check_not_null((void*)(expr), "runtime-fail (bridged): null pointer dereference")))).column, cct_str_977);
                         if (cct_rt_fractum_is_active()) {
                             return 0;
                         }
@@ -8308,14 +8313,14 @@ static const char * cct_fn_codegen_expr_type_name(CodegenContext * ctx, AstNode 
                     {
                         if ((((*((AstNode*)cct_rt_check_not_null((void*)(((*((AstNode*)cct_rt_check_not_null((void*)(expr), "runtime-fail (bridged): null pointer dereference")))).left), "runtime-fail (bridged): null pointer dereference")))).kind == 35 ? 1 : 0))
                         {
-                            cct_fn_codegen_report_error(ctx, ((*((AstNode*)cct_rt_check_not_null((void*)(expr), "runtime-fail (bridged): null pointer dereference")))).line, ((*((AstNode*)cct_rt_check_not_null((void*)(expr), "runtime-fail (bridged): null pointer dereference")))).column, cct_str_973);
+                            cct_fn_codegen_report_error(ctx, ((*((AstNode*)cct_rt_check_not_null((void*)(expr), "runtime-fail (bridged): null pointer dereference")))).line, ((*((AstNode*)cct_rt_check_not_null((void*)(expr), "runtime-fail (bridged): null pointer dereference")))).column, cct_str_978);
                             if (cct_rt_fractum_is_active()) {
                                 return 0;
                             }
                         }
                         else
                         {
-                            cct_fn_codegen_report_error(ctx, ((*((AstNode*)cct_rt_check_not_null((void*)(expr), "runtime-fail (bridged): null pointer dereference")))).line, ((*((AstNode*)cct_rt_check_not_null((void*)(expr), "runtime-fail (bridged): null pointer dereference")))).column, cct_str_974);
+                            cct_fn_codegen_report_error(ctx, ((*((AstNode*)cct_rt_check_not_null((void*)(expr), "runtime-fail (bridged): null pointer dereference")))).line, ((*((AstNode*)cct_rt_check_not_null((void*)(expr), "runtime-fail (bridged): null pointer dereference")))).column, cct_str_979);
                             if (cct_rt_fractum_is_active()) {
                                 return 0;
                             }
@@ -8331,7 +8336,7 @@ static const char * cct_fn_codegen_expr_type_name(CodegenContext * ctx, AstNode 
         }
         if ((cct_fn_compare(field_type_name, cct_str_9) == 0 ? 1 : 0))
         {
-            cct_fn_codegen_report_error(ctx, ((*((AstNode*)cct_rt_check_not_null((void*)(expr), "runtime-fail (bridged): null pointer dereference")))).line, ((*((AstNode*)cct_rt_check_not_null((void*)(expr), "runtime-fail (bridged): null pointer dereference")))).column, cct_str_975);
+            cct_fn_codegen_report_error(ctx, ((*((AstNode*)cct_rt_check_not_null((void*)(expr), "runtime-fail (bridged): null pointer dereference")))).line, ((*((AstNode*)cct_rt_check_not_null((void*)(expr), "runtime-fail (bridged): null pointer dereference")))).column, cct_str_980);
             if (cct_rt_fractum_is_active()) {
                 return 0;
             }
@@ -8351,7 +8356,7 @@ static const char * cct_fn_codegen_expr_type_name(CodegenContext * ctx, AstNode 
             {
                 return (cct_str_9);
             }
-            const char * __cct_failtmp_8 = cct_fn_concat(cct_fn_concat(cct_str_807, target_type_name), cct_str_18);
+            const char * __cct_failtmp_8 = cct_fn_concat(cct_fn_concat(cct_str_812, target_type_name), cct_str_18);
             if (cct_rt_fractum_is_active()) {
                 return 0;
             }
@@ -8408,7 +8413,7 @@ static long long cct_fn_codegen_emit_forma_expr(CodegenContext * ctx, AstNode * 
     if (cct_rt_fractum_is_active()) {
         return 0;
     }
-    cct_fn_codegen_emit(ctx, cct_str_965);
+    cct_fn_codegen_emit(ctx, cct_str_970);
     if (cct_rt_fractum_is_active()) {
         return 0;
     }
@@ -8432,7 +8437,7 @@ static long long cct_fn_codegen_emit_forma_expr(CodegenContext * ctx, AstNode * 
             if (cct_rt_fractum_is_active()) {
                 return 0;
             }
-            cct_fn_codegen_emit(ctx, cct_str_966);
+            cct_fn_codegen_emit(ctx, cct_str_971);
             if (cct_rt_fractum_is_active()) {
                 return 0;
             }
@@ -8440,7 +8445,7 @@ static long long cct_fn_codegen_emit_forma_expr(CodegenContext * ctx, AstNode * 
             if (cct_rt_fractum_is_active()) {
                 return 0;
             }
-            cct_fn_codegen_emit(ctx, cct_str_967);
+            cct_fn_codegen_emit(ctx, cct_str_972);
             if (cct_rt_fractum_is_active()) {
                 return 0;
             }
@@ -8451,7 +8456,7 @@ static long long cct_fn_codegen_emit_forma_expr(CodegenContext * ctx, AstNode * 
             if (cct_rt_fractum_is_active()) {
                 return 0;
             }
-            cct_fn_codegen_emit(ctx, cct_str_860);
+            cct_fn_codegen_emit(ctx, cct_str_865);
             if (cct_rt_fractum_is_active()) {
                 return 0;
             }
@@ -8462,7 +8467,7 @@ static long long cct_fn_codegen_emit_forma_expr(CodegenContext * ctx, AstNode * 
         }
     }
     __cct_loop_brk_11:;
-    cct_fn_codegen_emit(ctx, cct_str_968);
+    cct_fn_codegen_emit(ctx, cct_str_973);
     if (cct_rt_fractum_is_active()) {
         return 0;
     }
@@ -8491,7 +8496,7 @@ static long long cct_fn_codegen_forma_emit_argument(CodegenContext * ctx, AstNod
             if (cct_rt_fractum_is_active()) {
                 return 0;
             }
-            cct_fn_codegen_emit(ctx, cct_str_954);
+            cct_fn_codegen_emit(ctx, cct_str_959);
             if (cct_rt_fractum_is_active()) {
                 return 0;
             }
@@ -8499,7 +8504,7 @@ static long long cct_fn_codegen_forma_emit_argument(CodegenContext * ctx, AstNod
             if (cct_rt_fractum_is_active()) {
                 return 0;
             }
-            cct_fn_codegen_emit(ctx, cct_str_955);
+            cct_fn_codegen_emit(ctx, cct_str_960);
             if (cct_rt_fractum_is_active()) {
                 return 0;
             }
@@ -8514,7 +8519,7 @@ static long long cct_fn_codegen_forma_emit_argument(CodegenContext * ctx, AstNod
         }
         else
         {
-            cct_fn_codegen_emit(ctx, cct_str_956);
+            cct_fn_codegen_emit(ctx, cct_str_961);
             if (cct_rt_fractum_is_active()) {
                 return 0;
             }
@@ -8522,7 +8527,7 @@ static long long cct_fn_codegen_forma_emit_argument(CodegenContext * ctx, AstNod
             if (cct_rt_fractum_is_active()) {
                 return 0;
             }
-            cct_fn_codegen_emit(ctx, cct_str_869);
+            cct_fn_codegen_emit(ctx, cct_str_874);
             if (cct_rt_fractum_is_active()) {
                 return 0;
             }
@@ -8547,14 +8552,14 @@ static long long cct_fn_codegen_forma_emit_argument(CodegenContext * ctx, AstNod
             }
             if (((conv == 117 ? 1 : 0) || (conv == 120 ? 1 : 0) || (conv == 88 ? 1 : 0)))
             {
-                cct_fn_codegen_emit(ctx, cct_str_957);
+                cct_fn_codegen_emit(ctx, cct_str_962);
                 if (cct_rt_fractum_is_active()) {
                     return 0;
                 }
             }
             else
             {
-                cct_fn_codegen_emit(ctx, cct_str_958);
+                cct_fn_codegen_emit(ctx, cct_str_963);
                 if (cct_rt_fractum_is_active()) {
                     return 0;
                 }
@@ -8563,7 +8568,7 @@ static long long cct_fn_codegen_forma_emit_argument(CodegenContext * ctx, AstNod
             if (cct_rt_fractum_is_active()) {
                 return 0;
             }
-            cct_fn_codegen_emit(ctx, cct_str_955);
+            cct_fn_codegen_emit(ctx, cct_str_960);
             if (cct_rt_fractum_is_active()) {
                 return 0;
             }
@@ -8578,7 +8583,7 @@ static long long cct_fn_codegen_forma_emit_argument(CodegenContext * ctx, AstNod
         }
         else
         {
-            cct_fn_codegen_emit(ctx, cct_str_959);
+            cct_fn_codegen_emit(ctx, cct_str_964);
             if (cct_rt_fractum_is_active()) {
                 return 0;
             }
@@ -8586,7 +8591,7 @@ static long long cct_fn_codegen_forma_emit_argument(CodegenContext * ctx, AstNod
             if (cct_rt_fractum_is_active()) {
                 return 0;
             }
-            cct_fn_codegen_emit(ctx, cct_str_869);
+            cct_fn_codegen_emit(ctx, cct_str_874);
             if (cct_rt_fractum_is_active()) {
                 return 0;
             }
@@ -8601,7 +8606,7 @@ static long long cct_fn_codegen_forma_emit_argument(CodegenContext * ctx, AstNod
             if (cct_rt_fractum_is_active()) {
                 return 0;
             }
-            cct_fn_codegen_emit(ctx, cct_str_960);
+            cct_fn_codegen_emit(ctx, cct_str_965);
             if (cct_rt_fractum_is_active()) {
                 return 0;
             }
@@ -8609,7 +8614,7 @@ static long long cct_fn_codegen_forma_emit_argument(CodegenContext * ctx, AstNod
             if (cct_rt_fractum_is_active()) {
                 return 0;
             }
-            cct_fn_codegen_emit(ctx, cct_str_955);
+            cct_fn_codegen_emit(ctx, cct_str_960);
             if (cct_rt_fractum_is_active()) {
                 return 0;
             }
@@ -8624,7 +8629,7 @@ static long long cct_fn_codegen_forma_emit_argument(CodegenContext * ctx, AstNod
         }
         else
         {
-            cct_fn_codegen_emit(ctx, cct_str_961);
+            cct_fn_codegen_emit(ctx, cct_str_966);
             if (cct_rt_fractum_is_active()) {
                 return 0;
             }
@@ -8632,7 +8637,7 @@ static long long cct_fn_codegen_forma_emit_argument(CodegenContext * ctx, AstNod
             if (cct_rt_fractum_is_active()) {
                 return 0;
             }
-            cct_fn_codegen_emit(ctx, cct_str_869);
+            cct_fn_codegen_emit(ctx, cct_str_874);
             if (cct_rt_fractum_is_active()) {
                 return 0;
             }
@@ -8643,13 +8648,13 @@ static long long cct_fn_codegen_forma_emit_argument(CodegenContext * ctx, AstNod
     {
         if (has_fmt)
         {
-            cct_fn_codegen_report_error(ctx, ((*((AstNode*)cct_rt_check_not_null((void*)(part), "runtime-fail (bridged): null pointer dereference")))).line, ((*((AstNode*)cct_rt_check_not_null((void*)(part), "runtime-fail (bridged): null pointer dereference")))).column, cct_str_962);
+            cct_fn_codegen_report_error(ctx, ((*((AstNode*)cct_rt_check_not_null((void*)(part), "runtime-fail (bridged): null pointer dereference")))).line, ((*((AstNode*)cct_rt_check_not_null((void*)(part), "runtime-fail (bridged): null pointer dereference")))).column, cct_str_967);
             if (cct_rt_fractum_is_active()) {
                 return 0;
             }
             return 0;
         }
-        cct_fn_codegen_emit(ctx, cct_str_963);
+        cct_fn_codegen_emit(ctx, cct_str_968);
         if (cct_rt_fractum_is_active()) {
             return 0;
         }
@@ -8657,13 +8662,13 @@ static long long cct_fn_codegen_forma_emit_argument(CodegenContext * ctx, AstNod
         if (cct_rt_fractum_is_active()) {
             return 0;
         }
-        cct_fn_codegen_emit(ctx, cct_str_869);
+        cct_fn_codegen_emit(ctx, cct_str_874);
         if (cct_rt_fractum_is_active()) {
             return 0;
         }
         return 0;
     }
-    cct_fn_codegen_report_error(ctx, ((*((AstNode*)cct_rt_check_not_null((void*)(part), "runtime-fail (bridged): null pointer dereference")))).line, ((*((AstNode*)cct_rt_check_not_null((void*)(part), "runtime-fail (bridged): null pointer dereference")))).column, cct_str_964);
+    cct_fn_codegen_report_error(ctx, ((*((AstNode*)cct_rt_check_not_null((void*)(part), "runtime-fail (bridged): null pointer dereference")))).line, ((*((AstNode*)cct_rt_check_not_null((void*)(part), "runtime-fail (bridged): null pointer dereference")))).column, cct_str_969);
     if (cct_rt_fractum_is_active()) {
         return 0;
     }
@@ -8674,7 +8679,7 @@ static long long cct_fn_codegen_forma_emit_argument(CodegenContext * ctx, AstNod
 static const char * cct_fn_codegen_binary_op_text(long long kind) {
     if ((kind == 73 ? 1 : 0))
     {
-        return (cct_str_943);
+        return (cct_str_948);
     }
     if ((kind == 74 ? 1 : 0))
     {
@@ -8682,54 +8687,54 @@ static const char * cct_fn_codegen_binary_op_text(long long kind) {
     }
     if ((kind == 75 ? 1 : 0))
     {
-        return (cct_str_834);
+        return (cct_str_839);
     }
     if ((kind == 77 ? 1 : 0))
     {
-        return (cct_str_946);
+        return (cct_str_951);
     }
     if ((kind == 79 ? 1 : 0))
     {
-        return (cct_str_947);
+        return (cct_str_952);
     }
     if ((kind == 81 ? 1 : 0))
     {
-        return (cct_str_948);
+        return (cct_str_953);
     }
     if ((kind == 82 ? 1 : 0))
     {
-        return (cct_str_949);
+        return (cct_str_954);
     }
     if ((kind == 83 ? 1 : 0))
     {
-        return (cct_str_811);
+        return (cct_str_816);
     }
     if ((kind == 84 ? 1 : 0))
     {
-        return (cct_str_950);
+        return (cct_str_955);
     }
     if ((kind == 85 ? 1 : 0))
     {
-        return (cct_str_812);
+        return (cct_str_817);
     }
     if ((kind == 86 ? 1 : 0))
     {
-        return (cct_str_951);
+        return (cct_str_956);
     }
     if ((kind == 42 ? 1 : 0))
     {
-        return (cct_str_952);
+        return (cct_str_957);
     }
     if ((kind == 43 ? 1 : 0))
     {
-        return (cct_str_953);
+        return (cct_str_958);
     }
     return (cct_str_9);
     return 0;
 }
 
 static const char * cct_fn_codegen_pointer_element_identity(const char * pointer_identity) {
-    if ((!cct_fn_starts_with(pointer_identity, cct_str_807)))
+    if ((!cct_fn_starts_with(pointer_identity, cct_str_812)))
     {
         return (cct_str_9);
     }
@@ -8756,7 +8761,7 @@ static const char * cct_fn_codegen_pointer_element_identity(const char * pointer
 static const char * cct_fn_codegen_unary_op_text(long long kind) {
     if ((kind == 73 ? 1 : 0))
     {
-        return (cct_str_943);
+        return (cct_str_948);
     }
     if ((kind == 74 ? 1 : 0))
     {
@@ -8764,15 +8769,15 @@ static const char * cct_fn_codegen_unary_op_text(long long kind) {
     }
     if ((kind == 44 ? 1 : 0))
     {
-        return (cct_str_944);
+        return (cct_str_949);
     }
     if ((kind == 75 ? 1 : 0))
     {
-        return (cct_str_834);
+        return (cct_str_839);
     }
     if ((kind == 61 ? 1 : 0))
     {
-        return (cct_str_945);
+        return (cct_str_950);
     }
     return (cct_str_9);
     return 0;
@@ -8801,7 +8806,7 @@ static long long cct_fn_codegen_elige_emit_payload_bindings(CodegenContext * ctx
     }
     if ((cct_fn_codegen_elige_case_literals_len(case_node) != 1 ? 1 : 0))
     {
-        cct_fn_codegen_report_error(ctx, ((*((AstNode*)cct_rt_check_not_null((void*)(case_node), "runtime-fail (bridged): null pointer dereference")))).line, ((*((AstNode*)cct_rt_check_not_null((void*)(case_node), "runtime-fail (bridged): null pointer dereference")))).column, cct_str_935);
+        cct_fn_codegen_report_error(ctx, ((*((AstNode*)cct_rt_check_not_null((void*)(case_node), "runtime-fail (bridged): null pointer dereference")))).line, ((*((AstNode*)cct_rt_check_not_null((void*)(case_node), "runtime-fail (bridged): null pointer dereference")))).column, cct_str_940);
         if (cct_rt_fractum_is_active()) {
             return 0;
         }
@@ -8817,7 +8822,7 @@ static long long cct_fn_codegen_elige_emit_payload_bindings(CodegenContext * ctx
     }
     if ((ordo_idx < 0 ? 1 : 0))
     {
-        cct_fn_codegen_report_error(ctx, ((*((AstNode*)cct_rt_check_not_null((void*)(case_node), "runtime-fail (bridged): null pointer dereference")))).line, ((*((AstNode*)cct_rt_check_not_null((void*)(case_node), "runtime-fail (bridged): null pointer dereference")))).column, cct_str_936);
+        cct_fn_codegen_report_error(ctx, ((*((AstNode*)cct_rt_check_not_null((void*)(case_node), "runtime-fail (bridged): null pointer dereference")))).line, ((*((AstNode*)cct_rt_check_not_null((void*)(case_node), "runtime-fail (bridged): null pointer dereference")))).column, cct_str_941);
         if (cct_rt_fractum_is_active()) {
             return 0;
         }
@@ -8829,7 +8834,7 @@ static long long cct_fn_codegen_elige_emit_payload_bindings(CodegenContext * ctx
     }
     if ((!((*((CodegenOrdo*)cct_rt_check_not_null((void*)(ordo), "runtime-fail (bridged): null pointer dereference")))).has_decl_node))
     {
-        cct_fn_codegen_report_error(ctx, ((*((AstNode*)cct_rt_check_not_null((void*)(case_node), "runtime-fail (bridged): null pointer dereference")))).line, ((*((AstNode*)cct_rt_check_not_null((void*)(case_node), "runtime-fail (bridged): null pointer dereference")))).column, cct_str_937);
+        cct_fn_codegen_report_error(ctx, ((*((AstNode*)cct_rt_check_not_null((void*)(case_node), "runtime-fail (bridged): null pointer dereference")))).line, ((*((AstNode*)cct_rt_check_not_null((void*)(case_node), "runtime-fail (bridged): null pointer dereference")))).column, cct_str_942);
         if (cct_rt_fractum_is_active()) {
             return 0;
         }
@@ -8841,7 +8846,7 @@ static long long cct_fn_codegen_elige_emit_payload_bindings(CodegenContext * ctx
     }
     if ((item_n <= 0 ? 1 : 0))
     {
-        cct_fn_codegen_report_error(ctx, ((*((AstNode*)cct_rt_check_not_null((void*)(case_node), "runtime-fail (bridged): null pointer dereference")))).line, ((*((AstNode*)cct_rt_check_not_null((void*)(case_node), "runtime-fail (bridged): null pointer dereference")))).column, cct_str_938);
+        cct_fn_codegen_report_error(ctx, ((*((AstNode*)cct_rt_check_not_null((void*)(case_node), "runtime-fail (bridged): null pointer dereference")))).line, ((*((AstNode*)cct_rt_check_not_null((void*)(case_node), "runtime-fail (bridged): null pointer dereference")))).column, cct_str_943);
         if (cct_rt_fractum_is_active()) {
             return 0;
         }
@@ -8891,7 +8896,7 @@ static long long cct_fn_codegen_elige_emit_payload_bindings(CodegenContext * ctx
     __cct_loop_brk_13:;
     if ((!found_item))
     {
-        cct_fn_codegen_report_error(ctx, ((*((AstNode*)cct_rt_check_not_null((void*)(case_node), "runtime-fail (bridged): null pointer dereference")))).line, ((*((AstNode*)cct_rt_check_not_null((void*)(case_node), "runtime-fail (bridged): null pointer dereference")))).column, cct_str_939);
+        cct_fn_codegen_report_error(ctx, ((*((AstNode*)cct_rt_check_not_null((void*)(case_node), "runtime-fail (bridged): null pointer dereference")))).line, ((*((AstNode*)cct_rt_check_not_null((void*)(case_node), "runtime-fail (bridged): null pointer dereference")))).column, cct_str_944);
         if (cct_rt_fractum_is_active()) {
             return 0;
         }
@@ -8899,7 +8904,7 @@ static long long cct_fn_codegen_elige_emit_payload_bindings(CodegenContext * ctx
     }
     if ((cct_fn_ast_node_list_len(((*((AstNode*)cct_rt_check_not_null((void*)(item_node), "runtime-fail (bridged): null pointer dereference")))).fields) != bind_n ? 1 : 0))
     {
-        cct_fn_codegen_report_error(ctx, ((*((AstNode*)cct_rt_check_not_null((void*)(case_node), "runtime-fail (bridged): null pointer dereference")))).line, ((*((AstNode*)cct_rt_check_not_null((void*)(case_node), "runtime-fail (bridged): null pointer dereference")))).column, cct_str_940);
+        cct_fn_codegen_report_error(ctx, ((*((AstNode*)cct_rt_check_not_null((void*)(case_node), "runtime-fail (bridged): null pointer dereference")))).line, ((*((AstNode*)cct_rt_check_not_null((void*)(case_node), "runtime-fail (bridged): null pointer dereference")))).column, cct_str_945);
         if (cct_rt_fractum_is_active()) {
             return 0;
         }
@@ -8939,7 +8944,7 @@ static long long cct_fn_codegen_elige_emit_payload_bindings(CodegenContext * ctx
         if (cct_rt_fractum_is_active()) {
             return 0;
         }
-        cct_fn_codegen_emit(ctx, cct_str_804);
+        cct_fn_codegen_emit(ctx, cct_str_809);
         if (cct_rt_fractum_is_active()) {
             return 0;
         }
@@ -8947,7 +8952,7 @@ static long long cct_fn_codegen_elige_emit_payload_bindings(CodegenContext * ctx
         if (cct_rt_fractum_is_active()) {
             return 0;
         }
-        cct_fn_codegen_emit(ctx, cct_str_823);
+        cct_fn_codegen_emit(ctx, cct_str_828);
         if (cct_rt_fractum_is_active()) {
             return 0;
         }
@@ -8955,7 +8960,7 @@ static long long cct_fn_codegen_elige_emit_payload_bindings(CodegenContext * ctx
         if (cct_rt_fractum_is_active()) {
             return 0;
         }
-        cct_fn_codegen_emit(ctx, cct_str_941);
+        cct_fn_codegen_emit(ctx, cct_str_946);
         if (cct_rt_fractum_is_active()) {
             return 0;
         }
@@ -8963,7 +8968,7 @@ static long long cct_fn_codegen_elige_emit_payload_bindings(CodegenContext * ctx
         if (cct_rt_fractum_is_active()) {
             return 0;
         }
-        cct_fn_codegen_emit(ctx, cct_str_942);
+        cct_fn_codegen_emit(ctx, cct_str_947);
         if (cct_rt_fractum_is_active()) {
             return 0;
         }
@@ -9027,7 +9032,7 @@ static long long cct_fn_codegen_elige_emit_simple_ordo_case_labels(CodegenContex
         if (cct_rt_fractum_is_active()) {
             return 0;
         }
-        cct_fn_codegen_emit(ctx, cct_str_934);
+        cct_fn_codegen_emit(ctx, cct_str_939);
         if (cct_rt_fractum_is_active()) {
             return 0;
         }
@@ -9060,7 +9065,7 @@ static long long cct_fn_codegen_elige_emit_scalar_case_labels(CodegenContext * c
     }
     while ((i < n ? 1 : 0))
     {
-        cct_fn_codegen_emit(ctx, cct_str_934);
+        cct_fn_codegen_emit(ctx, cct_str_939);
         if (cct_rt_fractum_is_active()) {
             return 0;
         }
@@ -9099,7 +9104,7 @@ static long long cct_fn_codegen_elige_emit_string_condition(CodegenContext * ctx
     {
         if ((i > 0 ? 1 : 0))
         {
-            cct_fn_codegen_emit(ctx, cct_str_932);
+            cct_fn_codegen_emit(ctx, cct_str_937);
             if (cct_rt_fractum_is_active()) {
                 return 0;
             }
@@ -9120,7 +9125,7 @@ static long long cct_fn_codegen_elige_emit_string_condition(CodegenContext * ctx
         if (cct_rt_fractum_is_active()) {
             return 0;
         }
-        cct_fn_codegen_emit(ctx, cct_str_933);
+        cct_fn_codegen_emit(ctx, cct_str_938);
         if (cct_rt_fractum_is_active()) {
             return 0;
         }
@@ -9147,7 +9152,7 @@ static long long cct_fn_codegen_elige_emit_subject_temp(CodegenContext * ctx, co
     if (cct_rt_fractum_is_active()) {
         return 0;
     }
-    cct_fn_codegen_emit(ctx, cct_str_804);
+    cct_fn_codegen_emit(ctx, cct_str_809);
     if (cct_rt_fractum_is_active()) {
         return 0;
     }
@@ -9155,7 +9160,7 @@ static long long cct_fn_codegen_elige_emit_subject_temp(CodegenContext * ctx, co
     if (cct_rt_fractum_is_active()) {
         return 0;
     }
-    cct_fn_codegen_emit(ctx, cct_str_823);
+    cct_fn_codegen_emit(ctx, cct_str_828);
     if (cct_rt_fractum_is_active()) {
         return 0;
     }
@@ -9183,7 +9188,7 @@ static const char * cct_fn_codegen_elige_subject_type_name(CodegenContext * ctx,
 static long long cct_fn_codegen_emit_stmt(CodegenContext * ctx, AstNode * stmt) {
     if ((((*((AstNode*)cct_rt_check_not_null((void*)(stmt), "runtime-fail (bridged): null pointer dereference")))).kind == 24 ? 1 : 0))
     {
-        if (((((*((AstNode*)cct_rt_check_not_null((void*)(((*((AstNode*)cct_rt_check_not_null((void*)(stmt), "runtime-fail (bridged): null pointer dereference")))).left), "runtime-fail (bridged): null pointer dereference")))).kind == 36 ? 1 : 0) && (((*((AstNode*)cct_rt_check_not_null((void*)(((*((AstNode*)cct_rt_check_not_null((void*)(((*((AstNode*)cct_rt_check_not_null((void*)(stmt), "runtime-fail (bridged): null pointer dereference")))).left), "runtime-fail (bridged): null pointer dereference")))).callee), "runtime-fail (bridged): null pointer dereference")))).kind == 32 ? 1 : 0) && (cct_fn_compare(((*((AstNode*)cct_rt_check_not_null((void*)(((*((AstNode*)cct_rt_check_not_null((void*)(((*((AstNode*)cct_rt_check_not_null((void*)(stmt), "runtime-fail (bridged): null pointer dereference")))).left), "runtime-fail (bridged): null pointer dereference")))).callee), "runtime-fail (bridged): null pointer dereference")))).name, cct_str_892) == 0 ? 1 : 0)))
+        if (((((*((AstNode*)cct_rt_check_not_null((void*)(((*((AstNode*)cct_rt_check_not_null((void*)(stmt), "runtime-fail (bridged): null pointer dereference")))).left), "runtime-fail (bridged): null pointer dereference")))).kind == 36 ? 1 : 0) && (((*((AstNode*)cct_rt_check_not_null((void*)(((*((AstNode*)cct_rt_check_not_null((void*)(((*((AstNode*)cct_rt_check_not_null((void*)(stmt), "runtime-fail (bridged): null pointer dereference")))).left), "runtime-fail (bridged): null pointer dereference")))).callee), "runtime-fail (bridged): null pointer dereference")))).kind == 32 ? 1 : 0) && (cct_fn_compare(((*((AstNode*)cct_rt_check_not_null((void*)(((*((AstNode*)cct_rt_check_not_null((void*)(((*((AstNode*)cct_rt_check_not_null((void*)(stmt), "runtime-fail (bridged): null pointer dereference")))).left), "runtime-fail (bridged): null pointer dereference")))).callee), "runtime-fail (bridged): null pointer dereference")))).name, cct_str_897) == 0 ? 1 : 0)))
         {
             cct_fn_codegen_emit_obsecro_scribe_stmt(ctx, ((*((AstNode*)cct_rt_check_not_null((void*)(stmt), "runtime-fail (bridged): null pointer dereference")))).left);
             if (cct_rt_fractum_is_active()) {
@@ -9191,7 +9196,7 @@ static long long cct_fn_codegen_emit_stmt(CodegenContext * ctx, AstNode * stmt) 
             }
             return 0;
         }
-        if (((((*((AstNode*)cct_rt_check_not_null((void*)(((*((AstNode*)cct_rt_check_not_null((void*)(stmt), "runtime-fail (bridged): null pointer dereference")))).left), "runtime-fail (bridged): null pointer dereference")))).kind == 36 ? 1 : 0) && (((*((AstNode*)cct_rt_check_not_null((void*)(((*((AstNode*)cct_rt_check_not_null((void*)(((*((AstNode*)cct_rt_check_not_null((void*)(stmt), "runtime-fail (bridged): null pointer dereference")))).left), "runtime-fail (bridged): null pointer dereference")))).callee), "runtime-fail (bridged): null pointer dereference")))).kind == 32 ? 1 : 0) && (cct_fn_compare(((*((AstNode*)cct_rt_check_not_null((void*)(((*((AstNode*)cct_rt_check_not_null((void*)(((*((AstNode*)cct_rt_check_not_null((void*)(stmt), "runtime-fail (bridged): null pointer dereference")))).left), "runtime-fail (bridged): null pointer dereference")))).callee), "runtime-fail (bridged): null pointer dereference")))).name, cct_str_901) == 0 ? 1 : 0)))
+        if (((((*((AstNode*)cct_rt_check_not_null((void*)(((*((AstNode*)cct_rt_check_not_null((void*)(stmt), "runtime-fail (bridged): null pointer dereference")))).left), "runtime-fail (bridged): null pointer dereference")))).kind == 36 ? 1 : 0) && (((*((AstNode*)cct_rt_check_not_null((void*)(((*((AstNode*)cct_rt_check_not_null((void*)(((*((AstNode*)cct_rt_check_not_null((void*)(stmt), "runtime-fail (bridged): null pointer dereference")))).left), "runtime-fail (bridged): null pointer dereference")))).callee), "runtime-fail (bridged): null pointer dereference")))).kind == 32 ? 1 : 0) && (cct_fn_compare(((*((AstNode*)cct_rt_check_not_null((void*)(((*((AstNode*)cct_rt_check_not_null((void*)(((*((AstNode*)cct_rt_check_not_null((void*)(stmt), "runtime-fail (bridged): null pointer dereference")))).left), "runtime-fail (bridged): null pointer dereference")))).callee), "runtime-fail (bridged): null pointer dereference")))).name, cct_str_906) == 0 ? 1 : 0)))
         {
             cct_fn_codegen_emit_obsecro_libera_stmt(ctx, ((*((AstNode*)cct_rt_check_not_null((void*)(stmt), "runtime-fail (bridged): null pointer dereference")))).left);
             if (cct_rt_fractum_is_active()) {
@@ -9310,7 +9315,7 @@ static long long cct_fn_codegen_emit_stmt(CodegenContext * ctx, AstNode * stmt) 
             if (cct_rt_fractum_is_active()) {
                 return 0;
             }
-            cct_fn_codegen_emit(ctx, cct_str_804);
+            cct_fn_codegen_emit(ctx, cct_str_809);
             if (cct_rt_fractum_is_active()) {
                 return 0;
             }
@@ -9336,7 +9341,7 @@ static long long cct_fn_codegen_emit_stmt(CodegenContext * ctx, AstNode * stmt) 
             if (cct_rt_fractum_is_active()) {
                 return 0;
             }
-            cct_fn_codegen_emit(ctx, cct_str_804);
+            cct_fn_codegen_emit(ctx, cct_str_809);
             if (cct_rt_fractum_is_active()) {
                 return 0;
             }
@@ -9347,7 +9352,7 @@ static long long cct_fn_codegen_emit_stmt(CodegenContext * ctx, AstNode * stmt) 
         }
         if (((*((AstNode*)cct_rt_check_not_null((void*)(stmt), "runtime-fail (bridged): null pointer dereference")))).has_right)
         {
-            cct_fn_codegen_emit(ctx, cct_str_823);
+            cct_fn_codegen_emit(ctx, cct_str_828);
             if (cct_rt_fractum_is_active()) {
                 return 0;
             }
@@ -9368,7 +9373,7 @@ static long long cct_fn_codegen_emit_stmt(CodegenContext * ctx, AstNode * stmt) 
         if (cct_rt_fractum_is_active()) {
             return 0;
         }
-        cct_fn_codegen_emit(ctx, cct_str_823);
+        cct_fn_codegen_emit(ctx, cct_str_828);
         if (cct_rt_fractum_is_active()) {
             return 0;
         }
@@ -9386,13 +9391,13 @@ static long long cct_fn_codegen_emit_stmt(CodegenContext * ctx, AstNode * stmt) 
     {
         if ((cct_fn_compare(((*((CodegenContext*)cct_rt_check_not_null((void*)(ctx), "runtime-fail (bridged): null pointer dereference")))).current_return_type, cct_str_13) == 0 ? 1 : 0))
         {
-            cct_fn_codegen_report_error(ctx, ((*((AstNode*)cct_rt_check_not_null((void*)(stmt), "runtime-fail (bridged): null pointer dereference")))).line, ((*((AstNode*)cct_rt_check_not_null((void*)(stmt), "runtime-fail (bridged): null pointer dereference")))).column, cct_str_905);
+            cct_fn_codegen_report_error(ctx, ((*((AstNode*)cct_rt_check_not_null((void*)(stmt), "runtime-fail (bridged): null pointer dereference")))).line, ((*((AstNode*)cct_rt_check_not_null((void*)(stmt), "runtime-fail (bridged): null pointer dereference")))).column, cct_str_910);
             if (cct_rt_fractum_is_active()) {
                 return 0;
             }
             return 0;
         }
-        cct_fn_codegen_emit(ctx, cct_str_906);
+        cct_fn_codegen_emit(ctx, cct_str_911);
         if (cct_rt_fractum_is_active()) {
             return 0;
         }
@@ -9410,7 +9415,7 @@ static long long cct_fn_codegen_emit_stmt(CodegenContext * ctx, AstNode * stmt) 
     {
         if ((cct_fn_compare(((*((CodegenContext*)cct_rt_check_not_null((void*)(ctx), "runtime-fail (bridged): null pointer dereference")))).current_return_type, cct_str_13) != 0 ? 1 : 0))
         {
-            cct_fn_codegen_report_error(ctx, ((*((AstNode*)cct_rt_check_not_null((void*)(stmt), "runtime-fail (bridged): null pointer dereference")))).line, ((*((AstNode*)cct_rt_check_not_null((void*)(stmt), "runtime-fail (bridged): null pointer dereference")))).column, cct_str_907);
+            cct_fn_codegen_report_error(ctx, ((*((AstNode*)cct_rt_check_not_null((void*)(stmt), "runtime-fail (bridged): null pointer dereference")))).line, ((*((AstNode*)cct_rt_check_not_null((void*)(stmt), "runtime-fail (bridged): null pointer dereference")))).column, cct_str_912);
             if (cct_rt_fractum_is_active()) {
                 return 0;
             }
@@ -9426,13 +9431,13 @@ static long long cct_fn_codegen_emit_stmt(CodegenContext * ctx, AstNode * stmt) 
     {
         if ((!((*((AstNode*)cct_rt_check_not_null((void*)(stmt), "runtime-fail (bridged): null pointer dereference")))).has_left))
         {
-            cct_fn_codegen_emit_line(ctx, cct_str_908);
+            cct_fn_codegen_emit_line(ctx, cct_str_913);
             if (cct_rt_fractum_is_active()) {
                 return 0;
             }
             return 0;
         }
-        cct_fn_codegen_emit(ctx, cct_str_909);
+        cct_fn_codegen_emit(ctx, cct_str_914);
         if (cct_rt_fractum_is_active()) {
             return 0;
         }
@@ -9440,7 +9445,7 @@ static long long cct_fn_codegen_emit_stmt(CodegenContext * ctx, AstNode * stmt) 
         if (cct_rt_fractum_is_active()) {
             return 0;
         }
-        cct_fn_codegen_emit_line(ctx, cct_str_897);
+        cct_fn_codegen_emit_line(ctx, cct_str_902);
         if (cct_rt_fractum_is_active()) {
             return 0;
         }
@@ -9448,7 +9453,7 @@ static long long cct_fn_codegen_emit_stmt(CodegenContext * ctx, AstNode * stmt) 
     }
     if ((((*((AstNode*)cct_rt_check_not_null((void*)(stmt), "runtime-fail (bridged): null pointer dereference")))).kind == 23 ? 1 : 0))
     {
-        cct_fn_codegen_emit(ctx, cct_str_904);
+        cct_fn_codegen_emit(ctx, cct_str_909);
         if (cct_rt_fractum_is_active()) {
             return 0;
         }
@@ -9456,7 +9461,7 @@ static long long cct_fn_codegen_emit_stmt(CodegenContext * ctx, AstNode * stmt) 
         if (cct_rt_fractum_is_active()) {
             return 0;
         }
-        cct_fn_codegen_emit_line(ctx, cct_str_897);
+        cct_fn_codegen_emit_line(ctx, cct_str_902);
         if (cct_rt_fractum_is_active()) {
             return 0;
         }
@@ -9464,7 +9469,7 @@ static long long cct_fn_codegen_emit_stmt(CodegenContext * ctx, AstNode * stmt) 
     }
     if ((((*((AstNode*)cct_rt_check_not_null((void*)(stmt), "runtime-fail (bridged): null pointer dereference")))).kind == 12 ? 1 : 0))
     {
-        cct_fn_codegen_emit(ctx, cct_str_910);
+        cct_fn_codegen_emit(ctx, cct_str_915);
         if (cct_rt_fractum_is_active()) {
             return 0;
         }
@@ -9482,7 +9487,7 @@ static long long cct_fn_codegen_emit_stmt(CodegenContext * ctx, AstNode * stmt) 
         }
         if (((*((AstNode*)cct_rt_check_not_null((void*)(stmt), "runtime-fail (bridged): null pointer dereference")))).has_else_branch)
         {
-            cct_fn_codegen_emit_line(ctx, cct_str_888);
+            cct_fn_codegen_emit_line(ctx, cct_str_893);
             if (cct_rt_fractum_is_active()) {
                 return 0;
             }
@@ -9507,7 +9512,7 @@ static long long cct_fn_codegen_emit_stmt(CodegenContext * ctx, AstNode * stmt) 
         if (cct_rt_fractum_is_active()) {
             return 0;
         }
-        cct_fn_codegen_emit(ctx, cct_str_911);
+        cct_fn_codegen_emit(ctx, cct_str_916);
         if (cct_rt_fractum_is_active()) {
             return 0;
         }
@@ -9527,7 +9532,7 @@ static long long cct_fn_codegen_emit_stmt(CodegenContext * ctx, AstNode * stmt) 
         if (cct_rt_fractum_is_active()) {
             return 0;
         }
-        cct_fn_codegen_emit(ctx, cct_str_912);
+        cct_fn_codegen_emit(ctx, cct_str_917);
         if (cct_rt_fractum_is_active()) {
             return 0;
         }
@@ -9543,7 +9548,7 @@ static long long cct_fn_codegen_emit_stmt(CodegenContext * ctx, AstNode * stmt) 
         if (cct_rt_fractum_is_active()) {
             return 0;
         }
-        cct_fn_codegen_emit_line(ctx, cct_str_872);
+        cct_fn_codegen_emit_line(ctx, cct_str_877);
         if (cct_rt_fractum_is_active()) {
             return 0;
         }
@@ -9555,7 +9560,7 @@ static long long cct_fn_codegen_emit_stmt(CodegenContext * ctx, AstNode * stmt) 
         if (cct_rt_fractum_is_active()) {
             return 0;
         }
-        cct_fn_codegen_emit(ctx, cct_str_912);
+        cct_fn_codegen_emit(ctx, cct_str_917);
         if (cct_rt_fractum_is_active()) {
             return 0;
         }
@@ -9571,7 +9576,7 @@ static long long cct_fn_codegen_emit_stmt(CodegenContext * ctx, AstNode * stmt) 
         if (cct_rt_fractum_is_active()) {
             return 0;
         }
-        cct_fn_codegen_emit_line(ctx, cct_str_872);
+        cct_fn_codegen_emit_line(ctx, cct_str_877);
         if (cct_rt_fractum_is_active()) {
             return 0;
         }
@@ -9595,7 +9600,7 @@ static long long cct_fn_codegen_emit_stmt(CodegenContext * ctx, AstNode * stmt) 
         if (cct_rt_fractum_is_active()) {
             return 0;
         }
-        cct_fn_codegen_emit_line(ctx, cct_str_877);
+        cct_fn_codegen_emit_line(ctx, cct_str_882);
         if (cct_rt_fractum_is_active()) {
             return 0;
         }
@@ -9611,7 +9616,7 @@ static long long cct_fn_codegen_emit_stmt(CodegenContext * ctx, AstNode * stmt) 
         if (cct_rt_fractum_is_active()) {
             return 0;
         }
-        cct_fn_codegen_emit_line(ctx, cct_str_872);
+        cct_fn_codegen_emit_line(ctx, cct_str_877);
         if (cct_rt_fractum_is_active()) {
             return 0;
         }
@@ -9623,7 +9628,7 @@ static long long cct_fn_codegen_emit_stmt(CodegenContext * ctx, AstNode * stmt) 
         if (cct_rt_fractum_is_active()) {
             return 0;
         }
-        cct_fn_codegen_emit(ctx, cct_str_911);
+        cct_fn_codegen_emit(ctx, cct_str_916);
         if (cct_rt_fractum_is_active()) {
             return 0;
         }
@@ -9636,12 +9641,12 @@ static long long cct_fn_codegen_emit_stmt(CodegenContext * ctx, AstNode * stmt) 
         }
         else
         {
-            cct_fn_codegen_emit(ctx, cct_str_913);
+            cct_fn_codegen_emit(ctx, cct_str_918);
             if (cct_rt_fractum_is_active()) {
                 return 0;
             }
         }
-        cct_fn_codegen_emit_line(ctx, cct_str_855);
+        cct_fn_codegen_emit_line(ctx, cct_str_860);
         if (cct_rt_fractum_is_active()) {
             return 0;
         }
@@ -9649,7 +9654,7 @@ static long long cct_fn_codegen_emit_stmt(CodegenContext * ctx, AstNode * stmt) 
         if (cct_rt_fractum_is_active()) {
             return 0;
         }
-        cct_fn_codegen_emit_line(ctx, cct_str_872);
+        cct_fn_codegen_emit_line(ctx, cct_str_877);
         if (cct_rt_fractum_is_active()) {
             return 0;
         }
@@ -9693,7 +9698,7 @@ static long long cct_fn_codegen_emit_stmt(CodegenContext * ctx, AstNode * stmt) 
         if (cct_rt_fractum_is_active()) {
             return 0;
         }
-        cct_fn_codegen_emit(ctx, cct_str_863);
+        cct_fn_codegen_emit(ctx, cct_str_868);
         if (cct_rt_fractum_is_active()) {
             return 0;
         }
@@ -9701,7 +9706,7 @@ static long long cct_fn_codegen_emit_stmt(CodegenContext * ctx, AstNode * stmt) 
         if (cct_rt_fractum_is_active()) {
             return 0;
         }
-        cct_fn_codegen_emit(ctx, cct_str_823);
+        cct_fn_codegen_emit(ctx, cct_str_828);
         if (cct_rt_fractum_is_active()) {
             return 0;
         }
@@ -9713,7 +9718,7 @@ static long long cct_fn_codegen_emit_stmt(CodegenContext * ctx, AstNode * stmt) 
         if (cct_rt_fractum_is_active()) {
             return 0;
         }
-        cct_fn_codegen_emit(ctx, cct_str_863);
+        cct_fn_codegen_emit(ctx, cct_str_868);
         if (cct_rt_fractum_is_active()) {
             return 0;
         }
@@ -9721,7 +9726,7 @@ static long long cct_fn_codegen_emit_stmt(CodegenContext * ctx, AstNode * stmt) 
         if (cct_rt_fractum_is_active()) {
             return 0;
         }
-        cct_fn_codegen_emit(ctx, cct_str_823);
+        cct_fn_codegen_emit(ctx, cct_str_828);
         if (cct_rt_fractum_is_active()) {
             return 0;
         }
@@ -9733,7 +9738,7 @@ static long long cct_fn_codegen_emit_stmt(CodegenContext * ctx, AstNode * stmt) 
         if (cct_rt_fractum_is_active()) {
             return 0;
         }
-        cct_fn_codegen_emit(ctx, cct_str_863);
+        cct_fn_codegen_emit(ctx, cct_str_868);
         if (cct_rt_fractum_is_active()) {
             return 0;
         }
@@ -9741,7 +9746,7 @@ static long long cct_fn_codegen_emit_stmt(CodegenContext * ctx, AstNode * stmt) 
         if (cct_rt_fractum_is_active()) {
             return 0;
         }
-        cct_fn_codegen_emit(ctx, cct_str_823);
+        cct_fn_codegen_emit(ctx, cct_str_828);
         if (cct_rt_fractum_is_active()) {
             return 0;
         }
@@ -9754,44 +9759,12 @@ static long long cct_fn_codegen_emit_stmt(CodegenContext * ctx, AstNode * stmt) 
         }
         else
         {
-            cct_fn_codegen_emit(ctx, cct_str_913);
+            cct_fn_codegen_emit(ctx, cct_str_918);
             if (cct_rt_fractum_is_active()) {
                 return 0;
             }
         }
         cct_fn_codegen_emit_line(ctx, cct_str_774);
-        if (cct_rt_fractum_is_active()) {
-            return 0;
-        }
-        cct_fn_codegen_emit(ctx, cct_str_910);
-        if (cct_rt_fractum_is_active()) {
-            return 0;
-        }
-        cct_fn_codegen_emit(ctx, step_name);
-        if (cct_rt_fractum_is_active()) {
-            return 0;
-        }
-        cct_fn_codegen_emit_line(ctx, cct_str_914);
-        if (cct_rt_fractum_is_active()) {
-            return 0;
-        }
-        cct_fn_codegen_flow_push_loop(ctx, break_label, continue_label);
-        if (cct_rt_fractum_is_active()) {
-            return 0;
-        }
-        cct_fn_codegen_emit(ctx, cct_str_857);
-        if (cct_rt_fractum_is_active()) {
-            return 0;
-        }
-        cct_fn_codegen_emit(ctx, ((*((AstNode*)cct_rt_check_not_null((void*)(stmt), "runtime-fail (bridged): null pointer dereference")))).name);
-        if (cct_rt_fractum_is_active()) {
-            return 0;
-        }
-        cct_fn_codegen_emit(ctx, cct_str_823);
-        if (cct_rt_fractum_is_active()) {
-            return 0;
-        }
-        cct_fn_codegen_emit(ctx, start_name);
         if (cct_rt_fractum_is_active()) {
             return 0;
         }
@@ -9803,7 +9776,15 @@ static long long cct_fn_codegen_emit_stmt(CodegenContext * ctx, AstNode * stmt) 
         if (cct_rt_fractum_is_active()) {
             return 0;
         }
-        cct_fn_codegen_emit(ctx, cct_str_916);
+        cct_fn_codegen_emit_line(ctx, cct_str_919);
+        if (cct_rt_fractum_is_active()) {
+            return 0;
+        }
+        cct_fn_codegen_flow_push_loop(ctx, break_label, continue_label);
+        if (cct_rt_fractum_is_active()) {
+            return 0;
+        }
+        cct_fn_codegen_emit(ctx, cct_str_862);
         if (cct_rt_fractum_is_active()) {
             return 0;
         }
@@ -9811,27 +9792,11 @@ static long long cct_fn_codegen_emit_stmt(CodegenContext * ctx, AstNode * stmt) 
         if (cct_rt_fractum_is_active()) {
             return 0;
         }
-        cct_fn_codegen_emit(ctx, cct_str_917);
+        cct_fn_codegen_emit(ctx, cct_str_828);
         if (cct_rt_fractum_is_active()) {
             return 0;
         }
-        cct_fn_codegen_emit(ctx, end_name);
-        if (cct_rt_fractum_is_active()) {
-            return 0;
-        }
-        cct_fn_codegen_emit(ctx, cct_str_918);
-        if (cct_rt_fractum_is_active()) {
-            return 0;
-        }
-        cct_fn_codegen_emit(ctx, ((*((AstNode*)cct_rt_check_not_null((void*)(stmt), "runtime-fail (bridged): null pointer dereference")))).name);
-        if (cct_rt_fractum_is_active()) {
-            return 0;
-        }
-        cct_fn_codegen_emit(ctx, cct_str_919);
-        if (cct_rt_fractum_is_active()) {
-            return 0;
-        }
-        cct_fn_codegen_emit(ctx, end_name);
+        cct_fn_codegen_emit(ctx, start_name);
         if (cct_rt_fractum_is_active()) {
             return 0;
         }
@@ -9839,11 +9804,51 @@ static long long cct_fn_codegen_emit_stmt(CodegenContext * ctx, AstNode * stmt) 
         if (cct_rt_fractum_is_active()) {
             return 0;
         }
-        cct_fn_codegen_emit(ctx, ((*((AstNode*)cct_rt_check_not_null((void*)(stmt), "runtime-fail (bridged): null pointer dereference")))).name);
+        cct_fn_codegen_emit(ctx, step_name);
         if (cct_rt_fractum_is_active()) {
             return 0;
         }
         cct_fn_codegen_emit(ctx, cct_str_921);
+        if (cct_rt_fractum_is_active()) {
+            return 0;
+        }
+        cct_fn_codegen_emit(ctx, ((*((AstNode*)cct_rt_check_not_null((void*)(stmt), "runtime-fail (bridged): null pointer dereference")))).name);
+        if (cct_rt_fractum_is_active()) {
+            return 0;
+        }
+        cct_fn_codegen_emit(ctx, cct_str_922);
+        if (cct_rt_fractum_is_active()) {
+            return 0;
+        }
+        cct_fn_codegen_emit(ctx, end_name);
+        if (cct_rt_fractum_is_active()) {
+            return 0;
+        }
+        cct_fn_codegen_emit(ctx, cct_str_923);
+        if (cct_rt_fractum_is_active()) {
+            return 0;
+        }
+        cct_fn_codegen_emit(ctx, ((*((AstNode*)cct_rt_check_not_null((void*)(stmt), "runtime-fail (bridged): null pointer dereference")))).name);
+        if (cct_rt_fractum_is_active()) {
+            return 0;
+        }
+        cct_fn_codegen_emit(ctx, cct_str_924);
+        if (cct_rt_fractum_is_active()) {
+            return 0;
+        }
+        cct_fn_codegen_emit(ctx, end_name);
+        if (cct_rt_fractum_is_active()) {
+            return 0;
+        }
+        cct_fn_codegen_emit(ctx, cct_str_925);
+        if (cct_rt_fractum_is_active()) {
+            return 0;
+        }
+        cct_fn_codegen_emit(ctx, ((*((AstNode*)cct_rt_check_not_null((void*)(stmt), "runtime-fail (bridged): null pointer dereference")))).name);
+        if (cct_rt_fractum_is_active()) {
+            return 0;
+        }
+        cct_fn_codegen_emit(ctx, cct_str_926);
         if (cct_rt_fractum_is_active()) {
             return 0;
         }
@@ -9867,7 +9872,7 @@ static long long cct_fn_codegen_emit_stmt(CodegenContext * ctx, AstNode * stmt) 
         if (cct_rt_fractum_is_active()) {
             return 0;
         }
-        cct_fn_codegen_emit_line(ctx, cct_str_872);
+        cct_fn_codegen_emit_line(ctx, cct_str_877);
         if (cct_rt_fractum_is_active()) {
             return 0;
         }
@@ -9883,7 +9888,7 @@ static long long cct_fn_codegen_emit_stmt(CodegenContext * ctx, AstNode * stmt) 
         if (cct_rt_fractum_is_active()) {
             return 0;
         }
-        cct_fn_codegen_emit_line(ctx, cct_str_872);
+        cct_fn_codegen_emit_line(ctx, cct_str_877);
         if (cct_rt_fractum_is_active()) {
             return 0;
         }
@@ -9913,13 +9918,13 @@ static long long cct_fn_codegen_emit_stmt(CodegenContext * ctx, AstNode * stmt) 
         }
         if ((cct_fn_compare(break_label, cct_str_9) == 0 ? 1 : 0))
         {
-            cct_fn_codegen_report_error(ctx, ((*((AstNode*)cct_rt_check_not_null((void*)(stmt), "runtime-fail (bridged): null pointer dereference")))).line, ((*((AstNode*)cct_rt_check_not_null((void*)(stmt), "runtime-fail (bridged): null pointer dereference")))).column, cct_str_922);
+            cct_fn_codegen_report_error(ctx, ((*((AstNode*)cct_rt_check_not_null((void*)(stmt), "runtime-fail (bridged): null pointer dereference")))).line, ((*((AstNode*)cct_rt_check_not_null((void*)(stmt), "runtime-fail (bridged): null pointer dereference")))).column, cct_str_927);
             if (cct_rt_fractum_is_active()) {
                 return 0;
             }
             return 0;
         }
-        cct_fn_codegen_emit(ctx, cct_str_923);
+        cct_fn_codegen_emit(ctx, cct_str_928);
         if (cct_rt_fractum_is_active()) {
             return 0;
         }
@@ -9941,13 +9946,13 @@ static long long cct_fn_codegen_emit_stmt(CodegenContext * ctx, AstNode * stmt) 
         }
         if ((cct_fn_compare(continue_label, cct_str_9) == 0 ? 1 : 0))
         {
-            cct_fn_codegen_report_error(ctx, ((*((AstNode*)cct_rt_check_not_null((void*)(stmt), "runtime-fail (bridged): null pointer dereference")))).line, ((*((AstNode*)cct_rt_check_not_null((void*)(stmt), "runtime-fail (bridged): null pointer dereference")))).column, cct_str_924);
+            cct_fn_codegen_report_error(ctx, ((*((AstNode*)cct_rt_check_not_null((void*)(stmt), "runtime-fail (bridged): null pointer dereference")))).line, ((*((AstNode*)cct_rt_check_not_null((void*)(stmt), "runtime-fail (bridged): null pointer dereference")))).column, cct_str_929);
             if (cct_rt_fractum_is_active()) {
                 return 0;
             }
             return 0;
         }
-        cct_fn_codegen_emit(ctx, cct_str_923);
+        cct_fn_codegen_emit(ctx, cct_str_928);
         if (cct_rt_fractum_is_active()) {
             return 0;
         }
@@ -10001,14 +10006,14 @@ static long long cct_fn_codegen_emit_stmt(CodegenContext * ctx, AstNode * stmt) 
                 }
                 if ((case_idx == 0 ? 1 : 0))
                 {
-                    cct_fn_codegen_emit(ctx, cct_str_910);
+                    cct_fn_codegen_emit(ctx, cct_str_915);
                     if (cct_rt_fractum_is_active()) {
                         return 0;
                     }
                 }
                 else
                 {
-                    cct_fn_codegen_emit(ctx, cct_str_925);
+                    cct_fn_codegen_emit(ctx, cct_str_930);
                     if (cct_rt_fractum_is_active()) {
                         return 0;
                     }
@@ -10033,7 +10038,7 @@ static long long cct_fn_codegen_emit_stmt(CodegenContext * ctx, AstNode * stmt) 
             __cct_loop_brk_25:;
             if (((*((AstNode*)cct_rt_check_not_null((void*)(stmt), "runtime-fail (bridged): null pointer dereference")))).has_else_branch)
             {
-                cct_fn_codegen_emit_line(ctx, cct_str_888);
+                cct_fn_codegen_emit_line(ctx, cct_str_893);
                 if (cct_rt_fractum_is_active()) {
                     return 0;
                 }
@@ -10046,7 +10051,7 @@ static long long cct_fn_codegen_emit_stmt(CodegenContext * ctx, AstNode * stmt) 
         }
         if ((!cct_fn_codegen_stmt_is_switch_subject(ctx, subject_type_name)))
         {
-            cct_fn_codegen_report_error(ctx, ((*((AstNode*)cct_rt_check_not_null((void*)(stmt), "runtime-fail (bridged): null pointer dereference")))).line, ((*((AstNode*)cct_rt_check_not_null((void*)(stmt), "runtime-fail (bridged): null pointer dereference")))).column, cct_str_926);
+            cct_fn_codegen_report_error(ctx, ((*((AstNode*)cct_rt_check_not_null((void*)(stmt), "runtime-fail (bridged): null pointer dereference")))).line, ((*((AstNode*)cct_rt_check_not_null((void*)(stmt), "runtime-fail (bridged): null pointer dereference")))).column, cct_str_931);
             if (cct_rt_fractum_is_active()) {
                 return 0;
             }
@@ -10071,7 +10076,7 @@ static long long cct_fn_codegen_emit_stmt(CodegenContext * ctx, AstNode * stmt) 
                 return 0;
             }
         }
-        cct_fn_codegen_emit(ctx, cct_str_927);
+        cct_fn_codegen_emit(ctx, cct_str_932);
         if (cct_rt_fractum_is_active()) {
             return 0;
         }
@@ -10081,7 +10086,7 @@ static long long cct_fn_codegen_emit_stmt(CodegenContext * ctx, AstNode * stmt) 
             if (cct_rt_fractum_is_active()) {
                 return 0;
             }
-            cct_fn_codegen_emit(ctx, cct_str_928);
+            cct_fn_codegen_emit(ctx, cct_str_933);
             if (cct_rt_fractum_is_active()) {
                 return 0;
             }
@@ -10145,7 +10150,7 @@ static long long cct_fn_codegen_emit_stmt(CodegenContext * ctx, AstNode * stmt) 
                     if (cct_rt_fractum_is_active()) {
                         return 0;
                     }
-                    cct_fn_codegen_emit_line(ctx, cct_str_929);
+                    cct_fn_codegen_emit_line(ctx, cct_str_934);
                     if (cct_rt_fractum_is_active()) {
                         return 0;
                     }
@@ -10165,7 +10170,7 @@ static long long cct_fn_codegen_emit_stmt(CodegenContext * ctx, AstNode * stmt) 
                 if (cct_rt_fractum_is_active()) {
                     return 0;
                 }
-                cct_fn_codegen_emit_line(ctx, cct_str_929);
+                cct_fn_codegen_emit_line(ctx, cct_str_934);
                 if (cct_rt_fractum_is_active()) {
                     return 0;
                 }
@@ -10178,7 +10183,7 @@ static long long cct_fn_codegen_emit_stmt(CodegenContext * ctx, AstNode * stmt) 
         __cct_loop_brk_27:;
         if (((*((AstNode*)cct_rt_check_not_null((void*)(stmt), "runtime-fail (bridged): null pointer dereference")))).has_else_branch)
         {
-            cct_fn_codegen_emit_line(ctx, cct_str_930);
+            cct_fn_codegen_emit_line(ctx, cct_str_935);
             if (cct_rt_fractum_is_active()) {
                 return 0;
             }
@@ -10186,7 +10191,7 @@ static long long cct_fn_codegen_emit_stmt(CodegenContext * ctx, AstNode * stmt) 
             if (cct_rt_fractum_is_active()) {
                 return 0;
             }
-            cct_fn_codegen_emit_line(ctx, cct_str_929);
+            cct_fn_codegen_emit_line(ctx, cct_str_934);
             if (cct_rt_fractum_is_active()) {
                 return 0;
             }
@@ -10213,7 +10218,7 @@ static long long cct_fn_codegen_emit_stmt(CodegenContext * ctx, AstNode * stmt) 
         }
         return 0;
     }
-    cct_fn_codegen_report_error(ctx, ((*((AstNode*)cct_rt_check_not_null((void*)(stmt), "runtime-fail (bridged): null pointer dereference")))).line, ((*((AstNode*)cct_rt_check_not_null((void*)(stmt), "runtime-fail (bridged): null pointer dereference")))).column, cct_str_931);
+    cct_fn_codegen_report_error(ctx, ((*((AstNode*)cct_rt_check_not_null((void*)(stmt), "runtime-fail (bridged): null pointer dereference")))).line, ((*((AstNode*)cct_rt_check_not_null((void*)(stmt), "runtime-fail (bridged): null pointer dereference")))).column, cct_str_936);
     if (cct_rt_fractum_is_active()) {
         return 0;
     }
@@ -10222,9 +10227,9 @@ static long long cct_fn_codegen_emit_stmt(CodegenContext * ctx, AstNode * stmt) 
 }
 
 static long long cct_fn_codegen_emit_obsecro_libera_stmt(CodegenContext * ctx, AstNode * expr) {
-    if (((((*((AstNode*)cct_rt_check_not_null((void*)(((*((AstNode*)cct_rt_check_not_null((void*)(expr), "runtime-fail (bridged): null pointer dereference")))).callee), "runtime-fail (bridged): null pointer dereference")))).kind != 32 ? 1 : 0) || (cct_fn_compare(((*((AstNode*)cct_rt_check_not_null((void*)(((*((AstNode*)cct_rt_check_not_null((void*)(expr), "runtime-fail (bridged): null pointer dereference")))).callee), "runtime-fail (bridged): null pointer dereference")))).name, cct_str_901) != 0 ? 1 : 0)))
+    if (((((*((AstNode*)cct_rt_check_not_null((void*)(((*((AstNode*)cct_rt_check_not_null((void*)(expr), "runtime-fail (bridged): null pointer dereference")))).callee), "runtime-fail (bridged): null pointer dereference")))).kind != 32 ? 1 : 0) || (cct_fn_compare(((*((AstNode*)cct_rt_check_not_null((void*)(((*((AstNode*)cct_rt_check_not_null((void*)(expr), "runtime-fail (bridged): null pointer dereference")))).callee), "runtime-fail (bridged): null pointer dereference")))).name, cct_str_906) != 0 ? 1 : 0)))
     {
-        cct_fn_codegen_report_error(ctx, ((*((AstNode*)cct_rt_check_not_null((void*)(expr), "runtime-fail (bridged): null pointer dereference")))).line, ((*((AstNode*)cct_rt_check_not_null((void*)(expr), "runtime-fail (bridged): null pointer dereference")))).column, cct_str_902);
+        cct_fn_codegen_report_error(ctx, ((*((AstNode*)cct_rt_check_not_null((void*)(expr), "runtime-fail (bridged): null pointer dereference")))).line, ((*((AstNode*)cct_rt_check_not_null((void*)(expr), "runtime-fail (bridged): null pointer dereference")))).column, cct_str_907);
         if (cct_rt_fractum_is_active()) {
             return 0;
         }
@@ -10232,7 +10237,7 @@ static long long cct_fn_codegen_emit_obsecro_libera_stmt(CodegenContext * ctx, A
     }
     if ((cct_fn_ast_node_list_len(((*((AstNode*)cct_rt_check_not_null((void*)(expr), "runtime-fail (bridged): null pointer dereference")))).arguments) != 1 ? 1 : 0))
     {
-        cct_fn_codegen_report_error(ctx, ((*((AstNode*)cct_rt_check_not_null((void*)(expr), "runtime-fail (bridged): null pointer dereference")))).line, ((*((AstNode*)cct_rt_check_not_null((void*)(expr), "runtime-fail (bridged): null pointer dereference")))).column, cct_str_903);
+        cct_fn_codegen_report_error(ctx, ((*((AstNode*)cct_rt_check_not_null((void*)(expr), "runtime-fail (bridged): null pointer dereference")))).line, ((*((AstNode*)cct_rt_check_not_null((void*)(expr), "runtime-fail (bridged): null pointer dereference")))).column, cct_str_908);
         if (cct_rt_fractum_is_active()) {
             return 0;
         }
@@ -10242,7 +10247,7 @@ static long long cct_fn_codegen_emit_obsecro_libera_stmt(CodegenContext * ctx, A
     if (cct_rt_fractum_is_active()) {
         return 0;
     }
-    cct_fn_codegen_emit(ctx, cct_str_904);
+    cct_fn_codegen_emit(ctx, cct_str_909);
     if (cct_rt_fractum_is_active()) {
         return 0;
     }
@@ -10250,7 +10255,7 @@ static long long cct_fn_codegen_emit_obsecro_libera_stmt(CodegenContext * ctx, A
     if (cct_rt_fractum_is_active()) {
         return 0;
     }
-    cct_fn_codegen_emit_line(ctx, cct_str_897);
+    cct_fn_codegen_emit_line(ctx, cct_str_902);
     if (cct_rt_fractum_is_active()) {
         return 0;
     }
@@ -10259,9 +10264,9 @@ static long long cct_fn_codegen_emit_obsecro_libera_stmt(CodegenContext * ctx, A
 }
 
 static long long cct_fn_codegen_emit_obsecro_scribe_stmt(CodegenContext * ctx, AstNode * expr) {
-    if (((((*((AstNode*)cct_rt_check_not_null((void*)(((*((AstNode*)cct_rt_check_not_null((void*)(expr), "runtime-fail (bridged): null pointer dereference")))).callee), "runtime-fail (bridged): null pointer dereference")))).kind != 32 ? 1 : 0) || (cct_fn_compare(((*((AstNode*)cct_rt_check_not_null((void*)(((*((AstNode*)cct_rt_check_not_null((void*)(expr), "runtime-fail (bridged): null pointer dereference")))).callee), "runtime-fail (bridged): null pointer dereference")))).name, cct_str_892) != 0 ? 1 : 0)))
+    if (((((*((AstNode*)cct_rt_check_not_null((void*)(((*((AstNode*)cct_rt_check_not_null((void*)(expr), "runtime-fail (bridged): null pointer dereference")))).callee), "runtime-fail (bridged): null pointer dereference")))).kind != 32 ? 1 : 0) || (cct_fn_compare(((*((AstNode*)cct_rt_check_not_null((void*)(((*((AstNode*)cct_rt_check_not_null((void*)(expr), "runtime-fail (bridged): null pointer dereference")))).callee), "runtime-fail (bridged): null pointer dereference")))).name, cct_str_897) != 0 ? 1 : 0)))
     {
-        cct_fn_codegen_report_error(ctx, ((*((AstNode*)cct_rt_check_not_null((void*)(expr), "runtime-fail (bridged): null pointer dereference")))).line, ((*((AstNode*)cct_rt_check_not_null((void*)(expr), "runtime-fail (bridged): null pointer dereference")))).column, cct_str_893);
+        cct_fn_codegen_report_error(ctx, ((*((AstNode*)cct_rt_check_not_null((void*)(expr), "runtime-fail (bridged): null pointer dereference")))).line, ((*((AstNode*)cct_rt_check_not_null((void*)(expr), "runtime-fail (bridged): null pointer dereference")))).column, cct_str_898);
         if (cct_rt_fractum_is_active()) {
             return 0;
         }
@@ -10273,7 +10278,7 @@ static long long cct_fn_codegen_emit_obsecro_scribe_stmt(CodegenContext * ctx, A
     }
     if ((n < 1 ? 1 : 0))
     {
-        cct_fn_codegen_report_error(ctx, ((*((AstNode*)cct_rt_check_not_null((void*)(expr), "runtime-fail (bridged): null pointer dereference")))).line, ((*((AstNode*)cct_rt_check_not_null((void*)(expr), "runtime-fail (bridged): null pointer dereference")))).column, cct_str_894);
+        cct_fn_codegen_report_error(ctx, ((*((AstNode*)cct_rt_check_not_null((void*)(expr), "runtime-fail (bridged): null pointer dereference")))).line, ((*((AstNode*)cct_rt_check_not_null((void*)(expr), "runtime-fail (bridged): null pointer dereference")))).column, cct_str_899);
         if (cct_rt_fractum_is_active()) {
             return 0;
         }
@@ -10299,7 +10304,7 @@ static long long cct_fn_codegen_emit_obsecro_scribe_stmt(CodegenContext * ctx, A
         }
         if (((cct_fn_compare(type_name, cct_str_176) == 0 ? 1 : 0) || (cct_fn_compare(type_name, cct_str_160) == 0 ? 1 : 0)))
         {
-            cct_fn_codegen_emit(ctx, cct_str_895);
+            cct_fn_codegen_emit(ctx, cct_str_900);
             if (cct_rt_fractum_is_active()) {
                 return 0;
             }
@@ -10307,7 +10312,7 @@ static long long cct_fn_codegen_emit_obsecro_scribe_stmt(CodegenContext * ctx, A
             if (cct_rt_fractum_is_active()) {
                 return 0;
             }
-            cct_fn_codegen_emit_line(ctx, cct_str_855);
+            cct_fn_codegen_emit_line(ctx, cct_str_860);
             if (cct_rt_fractum_is_active()) {
                 return 0;
             }
@@ -10316,7 +10321,7 @@ static long long cct_fn_codegen_emit_obsecro_scribe_stmt(CodegenContext * ctx, A
         {
             if (((cct_fn_compare(type_name, cct_str_170) == 0 ? 1 : 0) || (cct_fn_compare(type_name, cct_str_171) == 0 ? 1 : 0) || (cct_fn_compare(type_name, cct_str_172) == 0 ? 1 : 0) || (cct_fn_compare(type_name, cct_str_173) == 0 ? 1 : 0) || ((cct_fn_compare(cct_fn_codegen_lookup_ordo_c_name(ctx, type_name), cct_str_9) != 0 ? 1 : 0) && (!cct_fn_codegen_ordo_has_payload(ctx, type_name)))))
             {
-                cct_fn_codegen_emit(ctx, cct_str_896);
+                cct_fn_codegen_emit(ctx, cct_str_901);
                 if (cct_rt_fractum_is_active()) {
                     return 0;
                 }
@@ -10324,7 +10329,7 @@ static long long cct_fn_codegen_emit_obsecro_scribe_stmt(CodegenContext * ctx, A
                 if (cct_rt_fractum_is_active()) {
                     return 0;
                 }
-                cct_fn_codegen_emit_line(ctx, cct_str_897);
+                cct_fn_codegen_emit_line(ctx, cct_str_902);
                 if (cct_rt_fractum_is_active()) {
                     return 0;
                 }
@@ -10333,7 +10338,7 @@ static long long cct_fn_codegen_emit_obsecro_scribe_stmt(CodegenContext * ctx, A
             {
                 if (((cct_fn_compare(type_name, cct_str_174) == 0 ? 1 : 0) || (cct_fn_compare(type_name, cct_str_175) == 0 ? 1 : 0)))
                 {
-                    cct_fn_codegen_emit(ctx, cct_str_898);
+                    cct_fn_codegen_emit(ctx, cct_str_903);
                     if (cct_rt_fractum_is_active()) {
                         return 0;
                     }
@@ -10341,7 +10346,7 @@ static long long cct_fn_codegen_emit_obsecro_scribe_stmt(CodegenContext * ctx, A
                     if (cct_rt_fractum_is_active()) {
                         return 0;
                     }
-                    cct_fn_codegen_emit_line(ctx, cct_str_897);
+                    cct_fn_codegen_emit_line(ctx, cct_str_902);
                     if (cct_rt_fractum_is_active()) {
                         return 0;
                     }
@@ -10350,7 +10355,7 @@ static long long cct_fn_codegen_emit_obsecro_scribe_stmt(CodegenContext * ctx, A
                 {
                     if ((cct_fn_compare(type_name, cct_str_11) == 0 ? 1 : 0))
                     {
-                        cct_fn_codegen_emit(ctx, cct_str_899);
+                        cct_fn_codegen_emit(ctx, cct_str_904);
                         if (cct_rt_fractum_is_active()) {
                             return 0;
                         }
@@ -10358,14 +10363,14 @@ static long long cct_fn_codegen_emit_obsecro_scribe_stmt(CodegenContext * ctx, A
                         if (cct_rt_fractum_is_active()) {
                             return 0;
                         }
-                        cct_fn_codegen_emit_line(ctx, cct_str_897);
+                        cct_fn_codegen_emit_line(ctx, cct_str_902);
                         if (cct_rt_fractum_is_active()) {
                             return 0;
                         }
                     }
                     else
                     {
-                        cct_fn_codegen_report_error(ctx, ((*((AstNode*)cct_rt_check_not_null((void*)(arg), "runtime-fail (bridged): null pointer dereference")))).line, ((*((AstNode*)cct_rt_check_not_null((void*)(arg), "runtime-fail (bridged): null pointer dereference")))).column, cct_str_900);
+                        cct_fn_codegen_report_error(ctx, ((*((AstNode*)cct_rt_check_not_null((void*)(arg), "runtime-fail (bridged): null pointer dereference")))).line, ((*((AstNode*)cct_rt_check_not_null((void*)(arg), "runtime-fail (bridged): null pointer dereference")))).column, cct_str_905);
                         if (cct_rt_fractum_is_active()) {
                             return 0;
                         }
@@ -10395,7 +10400,7 @@ static long long cct_fn_codegen_emit_tempta_stmt(CodegenContext * ctx, AstNode *
     }
     if ((!cct_fn_codegen_failure_supported_cape_type(cape_identity)))
     {
-        cct_fn_codegen_report_error(ctx, ((*((AstNode*)cct_rt_check_not_null((void*)(stmt), "runtime-fail (bridged): null pointer dereference")))).line, ((*((AstNode*)cct_rt_check_not_null((void*)(stmt), "runtime-fail (bridged): null pointer dereference")))).column, cct_str_876);
+        cct_fn_codegen_report_error(ctx, ((*((AstNode*)cct_rt_check_not_null((void*)(stmt), "runtime-fail (bridged): null pointer dereference")))).line, ((*((AstNode*)cct_rt_check_not_null((void*)(stmt), "runtime-fail (bridged): null pointer dereference")))).column, cct_str_881);
         if (cct_rt_fractum_is_active()) {
             return 0;
         }
@@ -10419,47 +10424,27 @@ static long long cct_fn_codegen_emit_tempta_stmt(CodegenContext * ctx, AstNode *
     if (cct_rt_fractum_is_active()) {
         return 0;
     }
-    cct_fn_codegen_emit_line(ctx, cct_str_877);
+    cct_fn_codegen_emit_line(ctx, cct_str_791);
     if (cct_rt_fractum_is_active()) {
         return 0;
     }
-    cct_fn_codegen_emit_block_open(ctx);
+    cct_fn_codegen_emit_line(ctx, cct_str_792);
     if (cct_rt_fractum_is_active()) {
         return 0;
     }
-    cct_fn_codegen_emit(ctx, cct_str_878);
+    cct_fn_codegen_emit_line(ctx, cct_str_793);
     if (cct_rt_fractum_is_active()) {
         return 0;
     }
-    cct_fn_codegen_emit(ctx, jmp_name);
-    if (cct_rt_fractum_is_active()) {
-        return 0;
-    }
-    cct_fn_codegen_emit_line(ctx, cct_str_774);
-    if (cct_rt_fractum_is_active()) {
-        return 0;
-    }
-    cct_fn_codegen_emit(ctx, cct_str_879);
-    if (cct_rt_fractum_is_active()) {
-        return 0;
-    }
-    cct_fn_codegen_emit(ctx, prev_try_name);
-    if (cct_rt_fractum_is_active()) {
-        return 0;
-    }
-    cct_fn_codegen_emit_line(ctx, cct_str_880);
-    if (cct_rt_fractum_is_active()) {
-        return 0;
-    }
-    cct_fn_codegen_emit(ctx, cct_str_881);
-    if (cct_rt_fractum_is_active()) {
-        return 0;
-    }
-    cct_fn_codegen_emit(ctx, prev_err_name);
+    cct_fn_codegen_emit_line(ctx, cct_str_794);
     if (cct_rt_fractum_is_active()) {
         return 0;
     }
     cct_fn_codegen_emit_line(ctx, cct_str_882);
+    if (cct_rt_fractum_is_active()) {
+        return 0;
+    }
+    cct_fn_codegen_emit_block_open(ctx);
     if (cct_rt_fractum_is_active()) {
         return 0;
     }
@@ -10479,11 +10464,47 @@ static long long cct_fn_codegen_emit_tempta_stmt(CodegenContext * ctx, AstNode *
     if (cct_rt_fractum_is_active()) {
         return 0;
     }
-    cct_fn_codegen_emit(ctx, jmp_name);
+    cct_fn_codegen_emit(ctx, prev_try_name);
     if (cct_rt_fractum_is_active()) {
         return 0;
     }
     cct_fn_codegen_emit_line(ctx, cct_str_885);
+    if (cct_rt_fractum_is_active()) {
+        return 0;
+    }
+    cct_fn_codegen_emit(ctx, cct_str_886);
+    if (cct_rt_fractum_is_active()) {
+        return 0;
+    }
+    cct_fn_codegen_emit(ctx, prev_err_name);
+    if (cct_rt_fractum_is_active()) {
+        return 0;
+    }
+    cct_fn_codegen_emit_line(ctx, cct_str_887);
+    if (cct_rt_fractum_is_active()) {
+        return 0;
+    }
+    cct_fn_codegen_emit(ctx, cct_str_888);
+    if (cct_rt_fractum_is_active()) {
+        return 0;
+    }
+    cct_fn_codegen_emit(ctx, jmp_name);
+    if (cct_rt_fractum_is_active()) {
+        return 0;
+    }
+    cct_fn_codegen_emit_line(ctx, cct_str_774);
+    if (cct_rt_fractum_is_active()) {
+        return 0;
+    }
+    cct_fn_codegen_emit(ctx, cct_str_889);
+    if (cct_rt_fractum_is_active()) {
+        return 0;
+    }
+    cct_fn_codegen_emit(ctx, jmp_name);
+    if (cct_rt_fractum_is_active()) {
+        return 0;
+    }
+    cct_fn_codegen_emit_line(ctx, cct_str_890);
     if (cct_rt_fractum_is_active()) {
         return 0;
     }
@@ -10495,7 +10516,7 @@ static long long cct_fn_codegen_emit_tempta_stmt(CodegenContext * ctx, AstNode *
     if (cct_rt_fractum_is_active()) {
         return 0;
     }
-    cct_fn_codegen_emit(ctx, cct_str_886);
+    cct_fn_codegen_emit(ctx, cct_str_891);
     if (cct_rt_fractum_is_active()) {
         return 0;
     }
@@ -10507,7 +10528,7 @@ static long long cct_fn_codegen_emit_tempta_stmt(CodegenContext * ctx, AstNode *
     if (cct_rt_fractum_is_active()) {
         return 0;
     }
-    cct_fn_codegen_emit(ctx, cct_str_887);
+    cct_fn_codegen_emit(ctx, cct_str_892);
     if (cct_rt_fractum_is_active()) {
         return 0;
     }
@@ -10523,7 +10544,7 @@ static long long cct_fn_codegen_emit_tempta_stmt(CodegenContext * ctx, AstNode *
     if (cct_rt_fractum_is_active()) {
         return 0;
     }
-    cct_fn_codegen_emit_line(ctx, cct_str_888);
+    cct_fn_codegen_emit_line(ctx, cct_str_893);
     if (cct_rt_fractum_is_active()) {
         return 0;
     }
@@ -10531,7 +10552,7 @@ static long long cct_fn_codegen_emit_tempta_stmt(CodegenContext * ctx, AstNode *
     if (cct_rt_fractum_is_active()) {
         return 0;
     }
-    cct_fn_codegen_emit(ctx, cct_str_886);
+    cct_fn_codegen_emit(ctx, cct_str_891);
     if (cct_rt_fractum_is_active()) {
         return 0;
     }
@@ -10555,7 +10576,7 @@ static long long cct_fn_codegen_emit_tempta_stmt(CodegenContext * ctx, AstNode *
     if (cct_rt_fractum_is_active()) {
         return 0;
     }
-    cct_fn_codegen_emit(ctx, cct_str_804);
+    cct_fn_codegen_emit(ctx, cct_str_809);
     if (cct_rt_fractum_is_active()) {
         return 0;
     }
@@ -10563,11 +10584,11 @@ static long long cct_fn_codegen_emit_tempta_stmt(CodegenContext * ctx, AstNode *
     if (cct_rt_fractum_is_active()) {
         return 0;
     }
-    cct_fn_codegen_emit_line(ctx, cct_str_889);
+    cct_fn_codegen_emit_line(ctx, cct_str_894);
     if (cct_rt_fractum_is_active()) {
         return 0;
     }
-    cct_fn_codegen_emit(ctx, cct_str_890);
+    cct_fn_codegen_emit(ctx, cct_str_895);
     if (cct_rt_fractum_is_active()) {
         return 0;
     }
@@ -10587,7 +10608,7 @@ static long long cct_fn_codegen_emit_tempta_stmt(CodegenContext * ctx, AstNode *
     if (cct_rt_fractum_is_active()) {
         return 0;
     }
-    cct_fn_codegen_emit(ctx, cct_str_887);
+    cct_fn_codegen_emit(ctx, cct_str_892);
     if (cct_rt_fractum_is_active()) {
         return 0;
     }
@@ -10614,7 +10635,19 @@ static long long cct_fn_codegen_emit_tempta_stmt(CodegenContext * ctx, AstNode *
     if (cct_rt_fractum_is_active()) {
         return 0;
     }
-    cct_fn_codegen_emit_line(ctx, cct_str_891);
+    cct_fn_codegen_emit_line(ctx, cct_str_896);
+    if (cct_rt_fractum_is_active()) {
+        return 0;
+    }
+    cct_fn_codegen_emit_line(ctx, cct_str_791);
+    if (cct_rt_fractum_is_active()) {
+        return 0;
+    }
+    cct_fn_codegen_emit_line(ctx, cct_str_795);
+    if (cct_rt_fractum_is_active()) {
+        return 0;
+    }
+    cct_fn_codegen_emit_line(ctx, cct_str_794);
     if (cct_rt_fractum_is_active()) {
         return 0;
     }
@@ -10629,7 +10662,7 @@ static long long cct_fn_codegen_emit_iace_stmt(CodegenContext * ctx, AstNode * s
     if (cct_rt_fractum_is_active()) {
         return 0;
     }
-    cct_fn_codegen_emit(ctx, cct_str_875);
+    cct_fn_codegen_emit(ctx, cct_str_880);
     if (cct_rt_fractum_is_active()) {
         return 0;
     }
@@ -10637,7 +10670,7 @@ static long long cct_fn_codegen_emit_iace_stmt(CodegenContext * ctx, AstNode * s
     if (cct_rt_fractum_is_active()) {
         return 0;
     }
-    cct_fn_codegen_emit_line(ctx, cct_str_855);
+    cct_fn_codegen_emit_line(ctx, cct_str_860);
     if (cct_rt_fractum_is_active()) {
         return 0;
     }
@@ -10744,7 +10777,7 @@ static long long cct_fn_codegen_emit_iterum_stmt(CodegenContext * ctx, AstNode *
             if (cct_rt_fractum_is_active()) {
                 return 0;
             }
-            if (cct_fn_starts_with(collection_identity, cct_str_808))
+            if (cct_fn_starts_with(collection_identity, cct_str_813))
             {
                 iter_kind = 2;
                 if (cct_rt_fractum_is_active()) {
@@ -10761,7 +10794,7 @@ static long long cct_fn_codegen_emit_iterum_stmt(CodegenContext * ctx, AstNode *
             }
             else
             {
-                if ((cct_fn_compare(collection_identity, cct_str_840) == 0 ? 1 : 0))
+                if ((cct_fn_compare(collection_identity, cct_str_845) == 0 ? 1 : 0))
                 {
                     iter_kind = 1;
                     if (cct_rt_fractum_is_active()) {
@@ -10775,7 +10808,7 @@ static long long cct_fn_codegen_emit_iterum_stmt(CodegenContext * ctx, AstNode *
             }
         }
     }
-    if (((iter_kind == 0 ? 1 : 0) && (cct_fn_compare(cct_fn_codegen_expr_type_name(ctx, ((*((AstNode*)cct_rt_check_not_null((void*)(stmt), "runtime-fail (bridged): null pointer dereference")))).left), cct_str_840) == 0 ? 1 : 0)))
+    if (((iter_kind == 0 ? 1 : 0) && (cct_fn_compare(cct_fn_codegen_expr_type_name(ctx, ((*((AstNode*)cct_rt_check_not_null((void*)(stmt), "runtime-fail (bridged): null pointer dereference")))).left), cct_str_845) == 0 ? 1 : 0)))
     {
         iter_kind = 1;
         if (cct_rt_fractum_is_active()) {
@@ -10792,13 +10825,13 @@ static long long cct_fn_codegen_emit_iterum_stmt(CodegenContext * ctx, AstNode *
         if (cct_rt_fractum_is_active()) {
             return 0;
         }
-        if ((((cct_fn_compare(callee_name, cct_str_845) == 0 ? 1 : 0) || (cct_fn_compare(callee_name, cct_str_846) == 0 ? 1 : 0)) && (cct_fn_ast_node_list_len(((*((AstNode*)cct_rt_check_not_null((void*)(((*((AstNode*)cct_rt_check_not_null((void*)(((*((AstNode*)cct_rt_check_not_null((void*)(stmt), "runtime-fail (bridged): null pointer dereference")))).left), "runtime-fail (bridged): null pointer dereference")))).callee), "runtime-fail (bridged): null pointer dereference")))).generic_args) == 2 ? 1 : 0)))
+        if ((((cct_fn_compare(callee_name, cct_str_850) == 0 ? 1 : 0) || (cct_fn_compare(callee_name, cct_str_851) == 0 ? 1 : 0)) && (cct_fn_ast_node_list_len(((*((AstNode*)cct_rt_check_not_null((void*)(((*((AstNode*)cct_rt_check_not_null((void*)(((*((AstNode*)cct_rt_check_not_null((void*)(stmt), "runtime-fail (bridged): null pointer dereference")))).left), "runtime-fail (bridged): null pointer dereference")))).callee), "runtime-fail (bridged): null pointer dereference")))).generic_args) == 2 ? 1 : 0)))
         {
             long long idx = 0;
             if (cct_rt_fractum_is_active()) {
                 return 0;
             }
-            if ((cct_fn_compare(callee_name, cct_str_846) == 0 ? 1 : 0))
+            if ((cct_fn_compare(callee_name, cct_str_851) == 0 ? 1 : 0))
             {
                 idx = 1;
                 if (cct_rt_fractum_is_active()) {
@@ -10825,7 +10858,7 @@ static long long cct_fn_codegen_emit_iterum_stmt(CodegenContext * ctx, AstNode *
     }
     if ((iter_kind == 0 ? 1 : 0))
     {
-        cct_fn_codegen_report_error(ctx, ((*((AstNode*)cct_rt_check_not_null((void*)(stmt), "runtime-fail (bridged): null pointer dereference")))).line, ((*((AstNode*)cct_rt_check_not_null((void*)(stmt), "runtime-fail (bridged): null pointer dereference")))).column, cct_str_856);
+        cct_fn_codegen_report_error(ctx, ((*((AstNode*)cct_rt_check_not_null((void*)(stmt), "runtime-fail (bridged): null pointer dereference")))).line, ((*((AstNode*)cct_rt_check_not_null((void*)(stmt), "runtime-fail (bridged): null pointer dereference")))).column, cct_str_861);
         if (cct_rt_fractum_is_active()) {
             return 0;
         }
@@ -10904,7 +10937,7 @@ static long long cct_fn_codegen_emit_iterum_stmt(CodegenContext * ctx, AstNode *
         if (cct_rt_fractum_is_active()) {
             return 0;
         }
-        cct_fn_codegen_emit(ctx, cct_str_857);
+        cct_fn_codegen_emit(ctx, cct_str_862);
         if (cct_rt_fractum_is_active()) {
             return 0;
         }
@@ -10912,7 +10945,7 @@ static long long cct_fn_codegen_emit_iterum_stmt(CodegenContext * ctx, AstNode *
         if (cct_rt_fractum_is_active()) {
             return 0;
         }
-        cct_fn_codegen_emit(ctx, cct_str_858);
+        cct_fn_codegen_emit(ctx, cct_str_863);
         if (cct_rt_fractum_is_active()) {
             return 0;
         }
@@ -10920,7 +10953,7 @@ static long long cct_fn_codegen_emit_iterum_stmt(CodegenContext * ctx, AstNode *
         if (cct_rt_fractum_is_active()) {
             return 0;
         }
-        cct_fn_codegen_emit(ctx, cct_str_859);
+        cct_fn_codegen_emit(ctx, cct_str_864);
         if (cct_rt_fractum_is_active()) {
             return 0;
         }
@@ -10928,7 +10961,7 @@ static long long cct_fn_codegen_emit_iterum_stmt(CodegenContext * ctx, AstNode *
         if (cct_rt_fractum_is_active()) {
             return 0;
         }
-        cct_fn_codegen_emit(ctx, cct_str_860);
+        cct_fn_codegen_emit(ctx, cct_str_865);
         if (cct_rt_fractum_is_active()) {
             return 0;
         }
@@ -10936,7 +10969,7 @@ static long long cct_fn_codegen_emit_iterum_stmt(CodegenContext * ctx, AstNode *
         if (cct_rt_fractum_is_active()) {
             return 0;
         }
-        cct_fn_codegen_emit_line(ctx, cct_str_861);
+        cct_fn_codegen_emit_line(ctx, cct_str_866);
         if (cct_rt_fractum_is_active()) {
             return 0;
         }
@@ -10948,7 +10981,7 @@ static long long cct_fn_codegen_emit_iterum_stmt(CodegenContext * ctx, AstNode *
         if (cct_rt_fractum_is_active()) {
             return 0;
         }
-        cct_fn_codegen_emit(ctx, cct_str_823);
+        cct_fn_codegen_emit(ctx, cct_str_828);
         if (cct_rt_fractum_is_active()) {
             return 0;
         }
@@ -10964,14 +10997,14 @@ static long long cct_fn_codegen_emit_iterum_stmt(CodegenContext * ctx, AstNode *
         if (cct_rt_fractum_is_active()) {
             return 0;
         }
-        cct_fn_codegen_emit_line(ctx, cct_str_862);
+        cct_fn_codegen_emit_line(ctx, cct_str_867);
         if (cct_rt_fractum_is_active()) {
             return 0;
         }
     }
     if ((iter_kind == 1 ? 1 : 0))
     {
-        cct_fn_codegen_emit(ctx, cct_str_839);
+        cct_fn_codegen_emit(ctx, cct_str_844);
         if (cct_rt_fractum_is_active()) {
             return 0;
         }
@@ -10979,7 +11012,7 @@ static long long cct_fn_codegen_emit_iterum_stmt(CodegenContext * ctx, AstNode *
         if (cct_rt_fractum_is_active()) {
             return 0;
         }
-        cct_fn_codegen_emit(ctx, cct_str_823);
+        cct_fn_codegen_emit(ctx, cct_str_828);
         if (cct_rt_fractum_is_active()) {
             return 0;
         }
@@ -10991,7 +11024,7 @@ static long long cct_fn_codegen_emit_iterum_stmt(CodegenContext * ctx, AstNode *
         if (cct_rt_fractum_is_active()) {
             return 0;
         }
-        cct_fn_codegen_emit(ctx, cct_str_863);
+        cct_fn_codegen_emit(ctx, cct_str_868);
         if (cct_rt_fractum_is_active()) {
             return 0;
         }
@@ -10999,7 +11032,7 @@ static long long cct_fn_codegen_emit_iterum_stmt(CodegenContext * ctx, AstNode *
         if (cct_rt_fractum_is_active()) {
             return 0;
         }
-        cct_fn_codegen_emit(ctx, cct_str_864);
+        cct_fn_codegen_emit(ctx, cct_str_869);
         if (cct_rt_fractum_is_active()) {
             return 0;
         }
@@ -11007,19 +11040,11 @@ static long long cct_fn_codegen_emit_iterum_stmt(CodegenContext * ctx, AstNode *
         if (cct_rt_fractum_is_active()) {
             return 0;
         }
-        cct_fn_codegen_emit_line(ctx, cct_str_855);
+        cct_fn_codegen_emit_line(ctx, cct_str_860);
         if (cct_rt_fractum_is_active()) {
             return 0;
         }
-        cct_fn_codegen_emit(ctx, cct_str_857);
-        if (cct_rt_fractum_is_active()) {
-            return 0;
-        }
-        cct_fn_codegen_emit(ctx, idx_name);
-        if (cct_rt_fractum_is_active()) {
-            return 0;
-        }
-        cct_fn_codegen_emit(ctx, cct_str_858);
+        cct_fn_codegen_emit(ctx, cct_str_862);
         if (cct_rt_fractum_is_active()) {
             return 0;
         }
@@ -11027,7 +11052,15 @@ static long long cct_fn_codegen_emit_iterum_stmt(CodegenContext * ctx, AstNode *
         if (cct_rt_fractum_is_active()) {
             return 0;
         }
-        cct_fn_codegen_emit(ctx, cct_str_859);
+        cct_fn_codegen_emit(ctx, cct_str_863);
+        if (cct_rt_fractum_is_active()) {
+            return 0;
+        }
+        cct_fn_codegen_emit(ctx, idx_name);
+        if (cct_rt_fractum_is_active()) {
+            return 0;
+        }
+        cct_fn_codegen_emit(ctx, cct_str_864);
         if (cct_rt_fractum_is_active()) {
             return 0;
         }
@@ -11035,7 +11068,7 @@ static long long cct_fn_codegen_emit_iterum_stmt(CodegenContext * ctx, AstNode *
         if (cct_rt_fractum_is_active()) {
             return 0;
         }
-        cct_fn_codegen_emit(ctx, cct_str_860);
+        cct_fn_codegen_emit(ctx, cct_str_865);
         if (cct_rt_fractum_is_active()) {
             return 0;
         }
@@ -11043,7 +11076,7 @@ static long long cct_fn_codegen_emit_iterum_stmt(CodegenContext * ctx, AstNode *
         if (cct_rt_fractum_is_active()) {
             return 0;
         }
-        cct_fn_codegen_emit_line(ctx, cct_str_861);
+        cct_fn_codegen_emit_line(ctx, cct_str_866);
         if (cct_rt_fractum_is_active()) {
             return 0;
         }
@@ -11051,7 +11084,7 @@ static long long cct_fn_codegen_emit_iterum_stmt(CodegenContext * ctx, AstNode *
         if (cct_rt_fractum_is_active()) {
             return 0;
         }
-        cct_fn_codegen_emit(ctx, cct_str_839);
+        cct_fn_codegen_emit(ctx, cct_str_844);
         if (cct_rt_fractum_is_active()) {
             return 0;
         }
@@ -11059,7 +11092,7 @@ static long long cct_fn_codegen_emit_iterum_stmt(CodegenContext * ctx, AstNode *
         if (cct_rt_fractum_is_active()) {
             return 0;
         }
-        cct_fn_codegen_emit(ctx, cct_str_865);
+        cct_fn_codegen_emit(ctx, cct_str_870);
         if (cct_rt_fractum_is_active()) {
             return 0;
         }
@@ -11075,7 +11108,7 @@ static long long cct_fn_codegen_emit_iterum_stmt(CodegenContext * ctx, AstNode *
         if (cct_rt_fractum_is_active()) {
             return 0;
         }
-        cct_fn_codegen_emit_line(ctx, cct_str_855);
+        cct_fn_codegen_emit_line(ctx, cct_str_860);
         if (cct_rt_fractum_is_active()) {
             return 0;
         }
@@ -11090,7 +11123,7 @@ static long long cct_fn_codegen_emit_iterum_stmt(CodegenContext * ctx, AstNode *
         if (cct_rt_fractum_is_active()) {
             return 0;
         }
-        cct_fn_codegen_emit(ctx, cct_str_839);
+        cct_fn_codegen_emit(ctx, cct_str_844);
         if (cct_rt_fractum_is_active()) {
             return 0;
         }
@@ -11098,7 +11131,7 @@ static long long cct_fn_codegen_emit_iterum_stmt(CodegenContext * ctx, AstNode *
         if (cct_rt_fractum_is_active()) {
             return 0;
         }
-        cct_fn_codegen_emit(ctx, cct_str_823);
+        cct_fn_codegen_emit(ctx, cct_str_828);
         if (cct_rt_fractum_is_active()) {
             return 0;
         }
@@ -11110,7 +11143,7 @@ static long long cct_fn_codegen_emit_iterum_stmt(CodegenContext * ctx, AstNode *
         if (cct_rt_fractum_is_active()) {
             return 0;
         }
-        cct_fn_codegen_emit(ctx, cct_str_839);
+        cct_fn_codegen_emit(ctx, cct_str_844);
         if (cct_rt_fractum_is_active()) {
             return 0;
         }
@@ -11118,7 +11151,7 @@ static long long cct_fn_codegen_emit_iterum_stmt(CodegenContext * ctx, AstNode *
         if (cct_rt_fractum_is_active()) {
             return 0;
         }
-        cct_fn_codegen_emit(ctx, cct_str_866);
+        cct_fn_codegen_emit(ctx, cct_str_871);
         if (cct_rt_fractum_is_active()) {
             return 0;
         }
@@ -11126,11 +11159,11 @@ static long long cct_fn_codegen_emit_iterum_stmt(CodegenContext * ctx, AstNode *
         if (cct_rt_fractum_is_active()) {
             return 0;
         }
-        cct_fn_codegen_emit_line(ctx, cct_str_855);
+        cct_fn_codegen_emit_line(ctx, cct_str_860);
         if (cct_rt_fractum_is_active()) {
             return 0;
         }
-        cct_fn_codegen_emit(ctx, cct_str_839);
+        cct_fn_codegen_emit(ctx, cct_str_844);
         if (cct_rt_fractum_is_active()) {
             return 0;
         }
@@ -11138,11 +11171,11 @@ static long long cct_fn_codegen_emit_iterum_stmt(CodegenContext * ctx, AstNode *
         if (cct_rt_fractum_is_active()) {
             return 0;
         }
-        cct_fn_codegen_emit_line(ctx, cct_str_848);
+        cct_fn_codegen_emit_line(ctx, cct_str_853);
         if (cct_rt_fractum_is_active()) {
             return 0;
         }
-        cct_fn_codegen_emit(ctx, cct_str_839);
+        cct_fn_codegen_emit(ctx, cct_str_844);
         if (cct_rt_fractum_is_active()) {
             return 0;
         }
@@ -11150,11 +11183,11 @@ static long long cct_fn_codegen_emit_iterum_stmt(CodegenContext * ctx, AstNode *
         if (cct_rt_fractum_is_active()) {
             return 0;
         }
-        cct_fn_codegen_emit_line(ctx, cct_str_848);
+        cct_fn_codegen_emit_line(ctx, cct_str_853);
         if (cct_rt_fractum_is_active()) {
             return 0;
         }
-        cct_fn_codegen_emit(ctx, cct_str_867);
+        cct_fn_codegen_emit(ctx, cct_str_872);
         if (cct_rt_fractum_is_active()) {
             return 0;
         }
@@ -11162,7 +11195,7 @@ static long long cct_fn_codegen_emit_iterum_stmt(CodegenContext * ctx, AstNode *
         if (cct_rt_fractum_is_active()) {
             return 0;
         }
-        cct_fn_codegen_emit(ctx, cct_str_868);
+        cct_fn_codegen_emit(ctx, cct_str_873);
         if (cct_rt_fractum_is_active()) {
             return 0;
         }
@@ -11170,7 +11203,7 @@ static long long cct_fn_codegen_emit_iterum_stmt(CodegenContext * ctx, AstNode *
         if (cct_rt_fractum_is_active()) {
             return 0;
         }
-        cct_fn_codegen_emit(ctx, cct_str_868);
+        cct_fn_codegen_emit(ctx, cct_str_873);
         if (cct_rt_fractum_is_active()) {
             return 0;
         }
@@ -11178,7 +11211,7 @@ static long long cct_fn_codegen_emit_iterum_stmt(CodegenContext * ctx, AstNode *
         if (cct_rt_fractum_is_active()) {
             return 0;
         }
-        cct_fn_codegen_emit_line(ctx, cct_str_869);
+        cct_fn_codegen_emit_line(ctx, cct_str_874);
         if (cct_rt_fractum_is_active()) {
             return 0;
         }
@@ -11201,7 +11234,7 @@ static long long cct_fn_codegen_emit_iterum_stmt(CodegenContext * ctx, AstNode *
         if (cct_rt_fractum_is_active()) {
             return 0;
         }
-        cct_fn_codegen_emit(ctx, cct_str_839);
+        cct_fn_codegen_emit(ctx, cct_str_844);
         if (cct_rt_fractum_is_active()) {
             return 0;
         }
@@ -11209,7 +11242,7 @@ static long long cct_fn_codegen_emit_iterum_stmt(CodegenContext * ctx, AstNode *
         if (cct_rt_fractum_is_active()) {
             return 0;
         }
-        cct_fn_codegen_emit(ctx, cct_str_823);
+        cct_fn_codegen_emit(ctx, cct_str_828);
         if (cct_rt_fractum_is_active()) {
             return 0;
         }
@@ -11221,7 +11254,7 @@ static long long cct_fn_codegen_emit_iterum_stmt(CodegenContext * ctx, AstNode *
         if (cct_rt_fractum_is_active()) {
             return 0;
         }
-        cct_fn_codegen_emit(ctx, cct_str_839);
+        cct_fn_codegen_emit(ctx, cct_str_844);
         if (cct_rt_fractum_is_active()) {
             return 0;
         }
@@ -11229,7 +11262,7 @@ static long long cct_fn_codegen_emit_iterum_stmt(CodegenContext * ctx, AstNode *
         if (cct_rt_fractum_is_active()) {
             return 0;
         }
-        cct_fn_codegen_emit(ctx, cct_str_870);
+        cct_fn_codegen_emit(ctx, cct_str_875);
         if (cct_rt_fractum_is_active()) {
             return 0;
         }
@@ -11237,11 +11270,11 @@ static long long cct_fn_codegen_emit_iterum_stmt(CodegenContext * ctx, AstNode *
         if (cct_rt_fractum_is_active()) {
             return 0;
         }
-        cct_fn_codegen_emit_line(ctx, cct_str_855);
+        cct_fn_codegen_emit_line(ctx, cct_str_860);
         if (cct_rt_fractum_is_active()) {
             return 0;
         }
-        cct_fn_codegen_emit(ctx, cct_str_839);
+        cct_fn_codegen_emit(ctx, cct_str_844);
         if (cct_rt_fractum_is_active()) {
             return 0;
         }
@@ -11249,11 +11282,11 @@ static long long cct_fn_codegen_emit_iterum_stmt(CodegenContext * ctx, AstNode *
         if (cct_rt_fractum_is_active()) {
             return 0;
         }
-        cct_fn_codegen_emit_line(ctx, cct_str_848);
+        cct_fn_codegen_emit_line(ctx, cct_str_853);
         if (cct_rt_fractum_is_active()) {
             return 0;
         }
-        cct_fn_codegen_emit(ctx, cct_str_871);
+        cct_fn_codegen_emit(ctx, cct_str_876);
         if (cct_rt_fractum_is_active()) {
             return 0;
         }
@@ -11261,7 +11294,7 @@ static long long cct_fn_codegen_emit_iterum_stmt(CodegenContext * ctx, AstNode *
         if (cct_rt_fractum_is_active()) {
             return 0;
         }
-        cct_fn_codegen_emit(ctx, cct_str_868);
+        cct_fn_codegen_emit(ctx, cct_str_873);
         if (cct_rt_fractum_is_active()) {
             return 0;
         }
@@ -11269,7 +11302,7 @@ static long long cct_fn_codegen_emit_iterum_stmt(CodegenContext * ctx, AstNode *
         if (cct_rt_fractum_is_active()) {
             return 0;
         }
-        cct_fn_codegen_emit_line(ctx, cct_str_869);
+        cct_fn_codegen_emit_line(ctx, cct_str_874);
         if (cct_rt_fractum_is_active()) {
             return 0;
         }
@@ -11290,7 +11323,7 @@ static long long cct_fn_codegen_emit_iterum_stmt(CodegenContext * ctx, AstNode *
     if (cct_rt_fractum_is_active()) {
         return 0;
     }
-    cct_fn_codegen_emit_line(ctx, cct_str_872);
+    cct_fn_codegen_emit_line(ctx, cct_str_877);
     if (cct_rt_fractum_is_active()) {
         return 0;
     }
@@ -11300,7 +11333,7 @@ static long long cct_fn_codegen_emit_iterum_stmt(CodegenContext * ctx, AstNode *
     }
     if ((iter_kind == 3 ? 1 : 0))
     {
-        cct_fn_codegen_emit(ctx, cct_str_873);
+        cct_fn_codegen_emit(ctx, cct_str_878);
         if (cct_rt_fractum_is_active()) {
             return 0;
         }
@@ -11308,14 +11341,14 @@ static long long cct_fn_codegen_emit_iterum_stmt(CodegenContext * ctx, AstNode *
         if (cct_rt_fractum_is_active()) {
             return 0;
         }
-        cct_fn_codegen_emit_line(ctx, cct_str_855);
+        cct_fn_codegen_emit_line(ctx, cct_str_860);
         if (cct_rt_fractum_is_active()) {
             return 0;
         }
     }
     if ((iter_kind == 4 ? 1 : 0))
     {
-        cct_fn_codegen_emit(ctx, cct_str_874);
+        cct_fn_codegen_emit(ctx, cct_str_879);
         if (cct_rt_fractum_is_active()) {
             return 0;
         }
@@ -11323,7 +11356,7 @@ static long long cct_fn_codegen_emit_iterum_stmt(CodegenContext * ctx, AstNode *
         if (cct_rt_fractum_is_active()) {
             return 0;
         }
-        cct_fn_codegen_emit_line(ctx, cct_str_855);
+        cct_fn_codegen_emit_line(ctx, cct_str_860);
         if (cct_rt_fractum_is_active()) {
             return 0;
         }
@@ -11336,7 +11369,7 @@ static long long cct_fn_codegen_emit_iterum_stmt(CodegenContext * ctx, AstNode *
     if (cct_rt_fractum_is_active()) {
         return 0;
     }
-    cct_fn_codegen_emit_line(ctx, cct_str_872);
+    cct_fn_codegen_emit_line(ctx, cct_str_877);
     if (cct_rt_fractum_is_active()) {
         return 0;
     }
@@ -11359,7 +11392,7 @@ static long long cct_fn_codegen_emit_iterum_assign_from_ptr(CodegenContext * ctx
     }
     if ((cct_fn_compare(c_type, cct_str_9) == 0 ? 1 : 0))
     {
-        cct_fn_codegen_report_error(ctx, 0, 0, cct_str_852);
+        cct_fn_codegen_report_error(ctx, 0, 0, cct_str_857);
         if (cct_rt_fractum_is_active()) {
             return 0;
         }
@@ -11369,7 +11402,7 @@ static long long cct_fn_codegen_emit_iterum_assign_from_ptr(CodegenContext * ctx
     if (cct_rt_fractum_is_active()) {
         return 0;
     }
-    cct_fn_codegen_emit(ctx, cct_str_853);
+    cct_fn_codegen_emit(ctx, cct_str_858);
     if (cct_rt_fractum_is_active()) {
         return 0;
     }
@@ -11377,7 +11410,7 @@ static long long cct_fn_codegen_emit_iterum_assign_from_ptr(CodegenContext * ctx
     if (cct_rt_fractum_is_active()) {
         return 0;
     }
-    cct_fn_codegen_emit(ctx, cct_str_854);
+    cct_fn_codegen_emit(ctx, cct_str_859);
     if (cct_rt_fractum_is_active()) {
         return 0;
     }
@@ -11385,7 +11418,7 @@ static long long cct_fn_codegen_emit_iterum_assign_from_ptr(CodegenContext * ctx
     if (cct_rt_fractum_is_active()) {
         return 0;
     }
-    cct_fn_codegen_emit_line(ctx, cct_str_855);
+    cct_fn_codegen_emit_line(ctx, cct_str_860);
     if (cct_rt_fractum_is_active()) {
         return 0;
     }
@@ -11400,7 +11433,7 @@ static long long cct_fn_codegen_emit_iterum_binding_decl(CodegenContext * ctx, c
     }
     if ((cct_fn_compare(c_type, cct_str_9) == 0 ? 1 : 0))
     {
-        cct_fn_codegen_report_error(ctx, 0, 0, cct_str_847);
+        cct_fn_codegen_report_error(ctx, 0, 0, cct_str_852);
         if (cct_rt_fractum_is_active()) {
             return 0;
         }
@@ -11410,7 +11443,7 @@ static long long cct_fn_codegen_emit_iterum_binding_decl(CodegenContext * ctx, c
     if (cct_rt_fractum_is_active()) {
         return 0;
     }
-    cct_fn_codegen_emit(ctx, cct_str_804);
+    cct_fn_codegen_emit(ctx, cct_str_809);
     if (cct_rt_fractum_is_active()) {
         return 0;
     }
@@ -11418,9 +11451,9 @@ static long long cct_fn_codegen_emit_iterum_binding_decl(CodegenContext * ctx, c
     if (cct_rt_fractum_is_active()) {
         return 0;
     }
-    if (((cct_fn_compare(identity, cct_str_176) == 0 ? 1 : 0) || cct_fn_starts_with(identity, cct_str_807)))
+    if (((cct_fn_compare(identity, cct_str_176) == 0 ? 1 : 0) || cct_fn_starts_with(identity, cct_str_812)))
     {
-        cct_fn_codegen_emit_line(ctx, cct_str_848);
+        cct_fn_codegen_emit_line(ctx, cct_str_853);
         if (cct_rt_fractum_is_active()) {
             return 0;
         }
@@ -11429,7 +11462,7 @@ static long long cct_fn_codegen_emit_iterum_binding_decl(CodegenContext * ctx, c
     {
         if ((cct_fn_compare(identity, cct_str_174) == 0 ? 1 : 0))
         {
-            cct_fn_codegen_emit_line(ctx, cct_str_849);
+            cct_fn_codegen_emit_line(ctx, cct_str_854);
             if (cct_rt_fractum_is_active()) {
                 return 0;
             }
@@ -11438,14 +11471,14 @@ static long long cct_fn_codegen_emit_iterum_binding_decl(CodegenContext * ctx, c
         {
             if ((cct_fn_compare(identity, cct_str_175) == 0 ? 1 : 0))
             {
-                cct_fn_codegen_emit_line(ctx, cct_str_850);
+                cct_fn_codegen_emit_line(ctx, cct_str_855);
                 if (cct_rt_fractum_is_active()) {
                     return 0;
                 }
             }
             else
             {
-                cct_fn_codegen_emit_line(ctx, cct_str_851);
+                cct_fn_codegen_emit_line(ctx, cct_str_856);
                 if (cct_rt_fractum_is_active()) {
                     return 0;
                 }
@@ -11489,7 +11522,7 @@ static long long cct_fn_codegen_capture_iter_local_info(CodegenContext * ctx, As
     }
     if ((iter_kind == 0 ? 1 : 0))
     {
-        if ((cct_fn_compare(local_identity, cct_str_840) == 0 ? 1 : 0))
+        if ((cct_fn_compare(local_identity, cct_str_845) == 0 ? 1 : 0))
         {
             iter_kind = 1;
             if (cct_rt_fractum_is_active()) {
@@ -11507,7 +11540,7 @@ static long long cct_fn_codegen_capture_iter_local_info(CodegenContext * ctx, As
         if (cct_rt_fractum_is_active()) {
             return 0;
         }
-        if (((cct_fn_compare(callee_name, cct_str_841) == 0 ? 1 : 0) || (cct_fn_compare(callee_name, cct_str_842) == 0 ? 1 : 0)))
+        if (((cct_fn_compare(callee_name, cct_str_846) == 0 ? 1 : 0) || (cct_fn_compare(callee_name, cct_str_847) == 0 ? 1 : 0)))
         {
             if ((cct_fn_ast_node_list_len(((*((AstNode*)cct_rt_check_not_null((void*)(((*((AstNode*)cct_rt_check_not_null((void*)(((*((AstNode*)cct_rt_check_not_null((void*)(stmt), "runtime-fail (bridged): null pointer dereference")))).right), "runtime-fail (bridged): null pointer dereference")))).callee), "runtime-fail (bridged): null pointer dereference")))).generic_args) == 2 ? 1 : 0))
             {
@@ -11533,7 +11566,7 @@ static long long cct_fn_codegen_capture_iter_local_info(CodegenContext * ctx, As
                 }
             }
         }
-        if (((cct_fn_compare(callee_name, cct_str_843) == 0 ? 1 : 0) || (cct_fn_compare(callee_name, cct_str_844) == 0 ? 1 : 0)))
+        if (((cct_fn_compare(callee_name, cct_str_848) == 0 ? 1 : 0) || (cct_fn_compare(callee_name, cct_str_849) == 0 ? 1 : 0)))
         {
             if ((cct_fn_ast_node_list_len(((*((AstNode*)cct_rt_check_not_null((void*)(((*((AstNode*)cct_rt_check_not_null((void*)(((*((AstNode*)cct_rt_check_not_null((void*)(stmt), "runtime-fail (bridged): null pointer dereference")))).right), "runtime-fail (bridged): null pointer dereference")))).callee), "runtime-fail (bridged): null pointer dereference")))).generic_args) == 1 ? 1 : 0))
             {
@@ -11555,13 +11588,13 @@ static long long cct_fn_codegen_capture_iter_local_info(CodegenContext * ctx, As
                 }
             }
         }
-        if ((((cct_fn_compare(callee_name, cct_str_845) == 0 ? 1 : 0) || (cct_fn_compare(callee_name, cct_str_846) == 0 ? 1 : 0)) && (cct_fn_ast_node_list_len(((*((AstNode*)cct_rt_check_not_null((void*)(((*((AstNode*)cct_rt_check_not_null((void*)(((*((AstNode*)cct_rt_check_not_null((void*)(stmt), "runtime-fail (bridged): null pointer dereference")))).right), "runtime-fail (bridged): null pointer dereference")))).callee), "runtime-fail (bridged): null pointer dereference")))).generic_args) == 2 ? 1 : 0)))
+        if ((((cct_fn_compare(callee_name, cct_str_850) == 0 ? 1 : 0) || (cct_fn_compare(callee_name, cct_str_851) == 0 ? 1 : 0)) && (cct_fn_ast_node_list_len(((*((AstNode*)cct_rt_check_not_null((void*)(((*((AstNode*)cct_rt_check_not_null((void*)(((*((AstNode*)cct_rt_check_not_null((void*)(stmt), "runtime-fail (bridged): null pointer dereference")))).right), "runtime-fail (bridged): null pointer dereference")))).callee), "runtime-fail (bridged): null pointer dereference")))).generic_args) == 2 ? 1 : 0)))
         {
             long long idx = 0;
             if (cct_rt_fractum_is_active()) {
                 return 0;
             }
-            if ((cct_fn_compare(callee_name, cct_str_846) == 0 ? 1 : 0))
+            if ((cct_fn_compare(callee_name, cct_str_851) == 0 ? 1 : 0))
             {
                 idx = 1;
                 if (cct_rt_fractum_is_active()) {
@@ -11600,21 +11633,21 @@ static long long cct_fn_codegen_capture_iter_local_info(CodegenContext * ctx, As
 static const char * cct_fn_codegen_iter_identity_to_c_type(CodegenContext * ctx, const char * identity) {
     if (((cct_fn_compare(identity, cct_str_170) == 0 ? 1 : 0) || (cct_fn_compare(identity, cct_str_171) == 0 ? 1 : 0) || (cct_fn_compare(identity, cct_str_172) == 0 ? 1 : 0) || (cct_fn_compare(identity, cct_str_173) == 0 ? 1 : 0) || (cct_fn_compare(identity, cct_str_11) == 0 ? 1 : 0)))
     {
-        return (cct_str_795);
+        return (cct_str_800);
     }
     if ((cct_fn_compare(identity, cct_str_174) == 0 ? 1 : 0))
     {
-        return (cct_str_799);
+        return (cct_str_804);
     }
     if ((cct_fn_compare(identity, cct_str_175) == 0 ? 1 : 0))
     {
-        return (cct_str_800);
+        return (cct_str_805);
     }
     if ((cct_fn_compare(identity, cct_str_176) == 0 ? 1 : 0))
     {
-        return (cct_str_838);
+        return (cct_str_843);
     }
-    if (cct_fn_starts_with(identity, cct_str_807))
+    if (cct_fn_starts_with(identity, cct_str_812))
     {
         const char *elem_identity = cct_fn_codegen_pointer_element_identity(identity);
         if (cct_rt_fractum_is_active()) {
@@ -11624,7 +11657,7 @@ static const char * cct_fn_codegen_iter_identity_to_c_type(CodegenContext * ctx,
         {
             cct_rt_free_ptr((void*)(elem_identity));
             elem_identity = NULL;
-            return (cct_str_839);
+            return (cct_str_844);
         }
         const char *elem_c = cct_fn_codegen_iter_identity_to_c_type(ctx, elem_identity);
         if (cct_rt_fractum_is_active()) {
@@ -11636,7 +11669,7 @@ static const char * cct_fn_codegen_iter_identity_to_c_type(CodegenContext * ctx,
         {
             return (cct_str_9);
         }
-        const char * __cct_failtmp_39 = cct_fn_concat(elem_c, cct_str_834);
+        const char * __cct_failtmp_39 = cct_fn_concat(elem_c, cct_str_839);
         if (cct_rt_fractum_is_active()) {
             return 0;
         }
@@ -11663,7 +11696,7 @@ static const char * cct_fn_codegen_iter_identity_to_c_type(CodegenContext * ctx,
 }
 
 static const char * cct_fn_codegen_series_identity_element(const char * identity) {
-    if ((!cct_fn_starts_with(identity, cct_str_808)))
+    if ((!cct_fn_starts_with(identity, cct_str_813)))
     {
         return (cct_str_9);
     }
@@ -11696,7 +11729,7 @@ static const char * cct_fn_codegen_series_identity_element(const char * identity
 }
 
 static long long cct_fn_codegen_series_identity_size(const char * identity) {
-    if ((!cct_fn_starts_with(identity, cct_str_808)))
+    if ((!cct_fn_starts_with(identity, cct_str_813)))
     {
         return ((-1));
     }
@@ -11807,7 +11840,7 @@ static long long cct_fn_codegen_emit_generic_sigillum_instance_definition(Codege
     if (cct_rt_fractum_is_active()) {
         return 0;
     }
-    cct_fn_codegen_emit(ctx, cct_str_836);
+    cct_fn_codegen_emit(ctx, cct_str_841);
     if (cct_rt_fractum_is_active()) {
         return 0;
     }
@@ -11853,7 +11886,7 @@ static long long cct_fn_codegen_emit_generic_sigillum_instance_definition(Codege
         if (cct_rt_fractum_is_active()) {
             return 0;
         }
-        cct_fn_codegen_emit(ctx, cct_str_804);
+        cct_fn_codegen_emit(ctx, cct_str_809);
         if (cct_rt_fractum_is_active()) {
             return 0;
         }
@@ -11875,7 +11908,7 @@ static long long cct_fn_codegen_emit_generic_sigillum_instance_definition(Codege
     if (cct_rt_fractum_is_active()) {
         return 0;
     }
-    cct_fn_codegen_emit_line(ctx, cct_str_827);
+    cct_fn_codegen_emit_line(ctx, cct_str_832);
     if (cct_rt_fractum_is_active()) {
         return 0;
     }
@@ -11906,7 +11939,7 @@ static long long cct_fn_codegen_emit_sigillum_definition_ordered(CodegenContext 
     }
     if (((*((long long*)cct_rt_check_not_null((void*)(state_slot), "runtime-fail (bridged): null pointer dereference"))) == 1 ? 1 : 0))
     {
-        cct_fn_codegen_report_error(ctx, 0, 0, cct_str_837);
+        cct_fn_codegen_report_error(ctx, 0, 0, cct_str_842);
         if (cct_rt_fractum_is_active()) {
             return 0;
         }
@@ -12029,11 +12062,11 @@ static long long cct_fn_codegen_find_program_sigillum_decl_index(AstProgram * pr
 }
 
 static long long cct_fn_codegen_struct_type_needs_prior_sigillum(const char * identity) {
-    if (cct_fn_starts_with(identity, cct_str_807))
+    if (cct_fn_starts_with(identity, cct_str_812))
     {
         return (0);
     }
-    if (cct_fn_starts_with(identity, cct_str_808))
+    if (cct_fn_starts_with(identity, cct_str_813))
     {
         return (0);
     }
@@ -12046,7 +12079,7 @@ static long long cct_fn_codegen_emit_sigillum_definition(CodegenContext * ctx, A
     if (cct_rt_fractum_is_active()) {
         return 0;
     }
-    cct_fn_codegen_emit(ctx, cct_str_836);
+    cct_fn_codegen_emit(ctx, cct_str_841);
     if (cct_rt_fractum_is_active()) {
         return 0;
     }
@@ -12088,7 +12121,7 @@ static long long cct_fn_codegen_emit_sigillum_definition(CodegenContext * ctx, A
         if (cct_rt_fractum_is_active()) {
             return 0;
         }
-        cct_fn_codegen_emit(ctx, cct_str_804);
+        cct_fn_codegen_emit(ctx, cct_str_809);
         if (cct_rt_fractum_is_active()) {
             return 0;
         }
@@ -12110,7 +12143,7 @@ static long long cct_fn_codegen_emit_sigillum_definition(CodegenContext * ctx, A
     if (cct_rt_fractum_is_active()) {
         return 0;
     }
-    cct_fn_codegen_emit_line(ctx, cct_str_827);
+    cct_fn_codegen_emit_line(ctx, cct_str_832);
     if (cct_rt_fractum_is_active()) {
         return 0;
     }
@@ -12133,7 +12166,7 @@ static long long cct_fn_codegen_emit_sigillum_forward_decls(CodegenContext * ctx
         if (cct_rt_fractum_is_active()) {
             return 0;
         }
-        cct_fn_codegen_emit(ctx, cct_str_828);
+        cct_fn_codegen_emit(ctx, cct_str_833);
         if (cct_rt_fractum_is_active()) {
             return 0;
         }
@@ -12141,7 +12174,7 @@ static long long cct_fn_codegen_emit_sigillum_forward_decls(CodegenContext * ctx
         if (cct_rt_fractum_is_active()) {
             return 0;
         }
-        cct_fn_codegen_emit(ctx, cct_str_804);
+        cct_fn_codegen_emit(ctx, cct_str_809);
         if (cct_rt_fractum_is_active()) {
             return 0;
         }
@@ -12312,7 +12345,7 @@ static long long cct_fn_codegen_register_sigillum_decl(CodegenContext * ctx, Ast
 }
 
 static const char * cct_fn_codegen_make_sigillum_c_name(const char * source_name) {
-    const char * __cct_failtmp_54 = cct_fn_concat(cct_str_814, source_name);
+    const char * __cct_failtmp_54 = cct_fn_concat(cct_str_819, source_name);
     if (cct_rt_fractum_is_active()) {
         return 0;
     }
@@ -12381,7 +12414,7 @@ static const char * cct_fn_codegen_type_text(CodegenContext * ctx, AstNode * typ
         {
             return (cct_str_9);
         }
-        const char * __cct_failtmp_58 = cct_fn_concat(base, cct_str_834);
+        const char * __cct_failtmp_58 = cct_fn_concat(base, cct_str_839);
         if (cct_rt_fractum_is_active()) {
             return 0;
         }
@@ -12479,7 +12512,7 @@ static const char * cct_fn_codegen_type_text(CodegenContext * ctx, AstNode * typ
         }
         return (__cct_failtmp_63);
     }
-    cct_fn_codegen_report_error(ctx, ((*((AstNode*)cct_rt_check_not_null((void*)(type_expr), "runtime-fail (bridged): null pointer dereference")))).line, ((*((AstNode*)cct_rt_check_not_null((void*)(type_expr), "runtime-fail (bridged): null pointer dereference")))).column, cct_str_835);
+    cct_fn_codegen_report_error(ctx, ((*((AstNode*)cct_rt_check_not_null((void*)(type_expr), "runtime-fail (bridged): null pointer dereference")))).line, ((*((AstNode*)cct_rt_check_not_null((void*)(type_expr), "runtime-fail (bridged): null pointer dereference")))).column, cct_str_840);
     if (cct_rt_fractum_is_active()) {
         return 0;
     }
@@ -12528,7 +12561,7 @@ static const char * cct_fn_codegen_named_c_type_name(CodegenContext * ctx, const
     {
         return (ordo_name);
     }
-    cct_fn_codegen_report_error(ctx, line, column, cct_str_833);
+    cct_fn_codegen_report_error(ctx, line, column, cct_str_838);
     if (cct_rt_fractum_is_active()) {
         return 0;
     }
@@ -12539,43 +12572,43 @@ static const char * cct_fn_codegen_named_c_type_name(CodegenContext * ctx, const
 static const char * cct_fn_codegen_basic_c_type_name(CodegenContext * ctx, const char * type_name, long long line, long long column) {
     if ((cct_fn_compare(type_name, cct_str_170) == 0 ? 1 : 0))
     {
-        return (cct_str_795);
+        return (cct_str_800);
     }
     if ((cct_fn_compare(type_name, cct_str_171) == 0 ? 1 : 0))
     {
-        return (cct_str_796);
+        return (cct_str_801);
     }
     if ((cct_fn_compare(type_name, cct_str_172) == 0 ? 1 : 0))
     {
-        return (cct_str_797);
+        return (cct_str_802);
     }
     if ((cct_fn_compare(type_name, cct_str_173) == 0 ? 1 : 0))
     {
-        return (cct_str_798);
+        return (cct_str_803);
     }
     if ((cct_fn_compare(type_name, cct_str_174) == 0 ? 1 : 0))
     {
-        return (cct_str_799);
+        return (cct_str_804);
     }
     if ((cct_fn_compare(type_name, cct_str_175) == 0 ? 1 : 0))
     {
-        return (cct_str_800);
+        return (cct_str_805);
     }
     if ((cct_fn_compare(type_name, cct_str_11) == 0 ? 1 : 0))
     {
-        return (cct_str_797);
+        return (cct_str_802);
     }
     if ((cct_fn_compare(type_name, cct_str_176) == 0 ? 1 : 0))
     {
-        return (cct_str_801);
+        return (cct_str_806);
     }
     if ((cct_fn_compare(type_name, cct_str_160) == 0 ? 1 : 0))
     {
-        return (cct_str_801);
+        return (cct_str_806);
     }
     if ((cct_fn_compare(type_name, cct_str_13) == 0 ? 1 : 0))
     {
-        return (cct_str_802);
+        return (cct_str_807);
     }
     return (cct_str_9);
     return 0;
@@ -12653,7 +12686,7 @@ static long long cct_fn_codegen_emit_ordo_payload_definition(CodegenContext * ct
     if (cct_rt_fractum_is_active()) {
         return 0;
     }
-    cct_fn_codegen_emit_line(ctx, cct_str_826);
+    cct_fn_codegen_emit_line(ctx, cct_str_831);
     if (cct_rt_fractum_is_active()) {
         return 0;
     }
@@ -12681,7 +12714,7 @@ static long long cct_fn_codegen_emit_ordo_payload_definition(CodegenContext * ct
         }
         if (((*((AstNode*)cct_rt_check_not_null((void*)(item), "runtime-fail (bridged): null pointer dereference")))).has_right)
         {
-            cct_fn_codegen_emit(ctx, cct_str_823);
+            cct_fn_codegen_emit(ctx, cct_str_828);
             if (cct_rt_fractum_is_active()) {
                 return 0;
             }
@@ -12692,7 +12725,7 @@ static long long cct_fn_codegen_emit_ordo_payload_definition(CodegenContext * ct
         }
         if (((i + 1) < n ? 1 : 0))
         {
-            cct_fn_codegen_emit_line(ctx, cct_str_824);
+            cct_fn_codegen_emit_line(ctx, cct_str_829);
             if (cct_rt_fractum_is_active()) {
                 return 0;
             }
@@ -12714,7 +12747,7 @@ static long long cct_fn_codegen_emit_ordo_payload_definition(CodegenContext * ct
     if (cct_rt_fractum_is_active()) {
         return 0;
     }
-    cct_fn_codegen_emit_line(ctx, cct_str_827);
+    cct_fn_codegen_emit_line(ctx, cct_str_832);
     if (cct_rt_fractum_is_active()) {
         return 0;
     }
@@ -12722,7 +12755,7 @@ static long long cct_fn_codegen_emit_ordo_payload_definition(CodegenContext * ct
     if (cct_rt_fractum_is_active()) {
         return 0;
     }
-    cct_fn_codegen_emit(ctx, cct_str_828);
+    cct_fn_codegen_emit(ctx, cct_str_833);
     if (cct_rt_fractum_is_active()) {
         return 0;
     }
@@ -12738,11 +12771,11 @@ static long long cct_fn_codegen_emit_ordo_payload_definition(CodegenContext * ct
     if (cct_rt_fractum_is_active()) {
         return 0;
     }
-    cct_fn_codegen_emit_line(ctx, cct_str_829);
+    cct_fn_codegen_emit_line(ctx, cct_str_834);
     if (cct_rt_fractum_is_active()) {
         return 0;
     }
-    cct_fn_codegen_emit_line(ctx, cct_str_830);
+    cct_fn_codegen_emit_line(ctx, cct_str_835);
     if (cct_rt_fractum_is_active()) {
         return 0;
     }
@@ -12762,7 +12795,7 @@ static long long cct_fn_codegen_emit_ordo_payload_definition(CodegenContext * ct
         }
         if ((cct_fn_codegen_ordo_item_payload_arity(item) > 0 ? 1 : 0))
         {
-            cct_fn_codegen_emit_line(ctx, cct_str_831);
+            cct_fn_codegen_emit_line(ctx, cct_str_836);
             if (cct_rt_fractum_is_active()) {
                 return 0;
             }
@@ -12796,7 +12829,7 @@ static long long cct_fn_codegen_emit_ordo_payload_definition(CodegenContext * ct
                 if (cct_rt_fractum_is_active()) {
                     return 0;
                 }
-                cct_fn_codegen_emit(ctx, cct_str_804);
+                cct_fn_codegen_emit(ctx, cct_str_809);
                 if (cct_rt_fractum_is_active()) {
                     return 0;
                 }
@@ -12818,7 +12851,7 @@ static long long cct_fn_codegen_emit_ordo_payload_definition(CodegenContext * ct
             if (cct_rt_fractum_is_active()) {
                 return 0;
             }
-            cct_fn_codegen_emit(ctx, cct_str_825);
+            cct_fn_codegen_emit(ctx, cct_str_830);
             if (cct_rt_fractum_is_active()) {
                 return 0;
             }
@@ -12841,7 +12874,7 @@ static long long cct_fn_codegen_emit_ordo_payload_definition(CodegenContext * ct
     if (cct_rt_fractum_is_active()) {
         return 0;
     }
-    cct_fn_codegen_emit_line(ctx, cct_str_832);
+    cct_fn_codegen_emit_line(ctx, cct_str_837);
     if (cct_rt_fractum_is_active()) {
         return 0;
     }
@@ -12849,7 +12882,7 @@ static long long cct_fn_codegen_emit_ordo_payload_definition(CodegenContext * ct
     if (cct_rt_fractum_is_active()) {
         return 0;
     }
-    cct_fn_codegen_emit(ctx, cct_str_825);
+    cct_fn_codegen_emit(ctx, cct_str_830);
     if (cct_rt_fractum_is_active()) {
         return 0;
     }
@@ -12870,7 +12903,7 @@ static long long cct_fn_codegen_emit_ordo_simple_definition(CodegenContext * ctx
     if (cct_rt_fractum_is_active()) {
         return 0;
     }
-    cct_fn_codegen_emit(ctx, cct_str_822);
+    cct_fn_codegen_emit(ctx, cct_str_827);
     if (cct_rt_fractum_is_active()) {
         return 0;
     }
@@ -12906,7 +12939,7 @@ static long long cct_fn_codegen_emit_ordo_simple_definition(CodegenContext * ctx
         }
         if (((*((AstNode*)cct_rt_check_not_null((void*)(item), "runtime-fail (bridged): null pointer dereference")))).has_right)
         {
-            cct_fn_codegen_emit(ctx, cct_str_823);
+            cct_fn_codegen_emit(ctx, cct_str_828);
             if (cct_rt_fractum_is_active()) {
                 return 0;
             }
@@ -12917,7 +12950,7 @@ static long long cct_fn_codegen_emit_ordo_simple_definition(CodegenContext * ctx
         }
         if (((i + 1) < n ? 1 : 0))
         {
-            cct_fn_codegen_emit_line(ctx, cct_str_824);
+            cct_fn_codegen_emit_line(ctx, cct_str_829);
             if (cct_rt_fractum_is_active()) {
                 return 0;
             }
@@ -12939,7 +12972,7 @@ static long long cct_fn_codegen_emit_ordo_simple_definition(CodegenContext * ctx
     if (cct_rt_fractum_is_active()) {
         return 0;
     }
-    cct_fn_codegen_emit(ctx, cct_str_825);
+    cct_fn_codegen_emit(ctx, cct_str_830);
     if (cct_rt_fractum_is_active()) {
         return 0;
     }
@@ -13088,7 +13121,7 @@ static long long cct_fn_codegen_ordo_item_payload_arity(AstNode * item) {
 }
 
 static const char * cct_fn_codegen_make_ordo_item_c_name(const char * ordo_name, const char * item_name) {
-    const char * __cct_failtmp_75 = cct_fn_concat(cct_fn_codegen_make_ordo_c_name(ordo_name), cct_fn_concat(cct_str_810, item_name));
+    const char * __cct_failtmp_75 = cct_fn_concat(cct_fn_codegen_make_ordo_c_name(ordo_name), cct_fn_concat(cct_str_815, item_name));
     if (cct_rt_fractum_is_active()) {
         return 0;
     }
@@ -13097,7 +13130,7 @@ static const char * cct_fn_codegen_make_ordo_item_c_name(const char * ordo_name,
 }
 
 static const char * cct_fn_codegen_make_ordo_tag_c_name(const char * ordo_name, const char * item_name) {
-    const char * __cct_failtmp_76 = cct_fn_concat(cct_fn_concat(cct_str_821, ordo_name), cct_fn_concat(cct_str_810, item_name));
+    const char * __cct_failtmp_76 = cct_fn_concat(cct_fn_concat(cct_str_826, ordo_name), cct_fn_concat(cct_str_815, item_name));
     if (cct_rt_fractum_is_active()) {
         return 0;
     }
@@ -13106,7 +13139,7 @@ static const char * cct_fn_codegen_make_ordo_tag_c_name(const char * ordo_name, 
 }
 
 static const char * cct_fn_codegen_make_ordo_c_name(const char * source_name) {
-    const char * __cct_failtmp_77 = cct_fn_concat(cct_str_820, source_name);
+    const char * __cct_failtmp_77 = cct_fn_concat(cct_str_825, source_name);
     if (cct_rt_fractum_is_active()) {
         return 0;
     }
@@ -13121,7 +13154,7 @@ static const char * cct_fn_codegen_generic_ensure_rituale_instance(CodegenContex
     }
     if ((templ_idx < 0 ? 1 : 0))
     {
-        cct_fn_codegen_report_error(ctx, ((*((AstNode*)cct_rt_check_not_null((void*)(at), "runtime-fail (bridged): null pointer dereference")))).line, ((*((AstNode*)cct_rt_check_not_null((void*)(at), "runtime-fail (bridged): null pointer dereference")))).column, cct_str_818);
+        cct_fn_codegen_report_error(ctx, ((*((AstNode*)cct_rt_check_not_null((void*)(at), "runtime-fail (bridged): null pointer dereference")))).line, ((*((AstNode*)cct_rt_check_not_null((void*)(at), "runtime-fail (bridged): null pointer dereference")))).column, cct_str_823);
         if (cct_rt_fractum_is_active()) {
             return 0;
         }
@@ -13141,7 +13174,7 @@ static const char * cct_fn_codegen_generic_ensure_rituale_instance(CodegenContex
     }
     if ((expected != actual ? 1 : 0))
     {
-        cct_fn_codegen_report_error(ctx, ((*((AstNode*)cct_rt_check_not_null((void*)(at), "runtime-fail (bridged): null pointer dereference")))).line, ((*((AstNode*)cct_rt_check_not_null((void*)(at), "runtime-fail (bridged): null pointer dereference")))).column, cct_str_819);
+        cct_fn_codegen_report_error(ctx, ((*((AstNode*)cct_rt_check_not_null((void*)(at), "runtime-fail (bridged): null pointer dereference")))).line, ((*((AstNode*)cct_rt_check_not_null((void*)(at), "runtime-fail (bridged): null pointer dereference")))).column, cct_str_824);
         if (cct_rt_fractum_is_active()) {
             return 0;
         }
@@ -13263,7 +13296,7 @@ static const char * cct_fn_codegen_generic_ensure_sigillum_instance(CodegenConte
     }
     if ((templ_idx < 0 ? 1 : 0))
     {
-        cct_fn_codegen_report_error(ctx, ((*((AstNode*)cct_rt_check_not_null((void*)(at), "runtime-fail (bridged): null pointer dereference")))).line, ((*((AstNode*)cct_rt_check_not_null((void*)(at), "runtime-fail (bridged): null pointer dereference")))).column, cct_str_816);
+        cct_fn_codegen_report_error(ctx, ((*((AstNode*)cct_rt_check_not_null((void*)(at), "runtime-fail (bridged): null pointer dereference")))).line, ((*((AstNode*)cct_rt_check_not_null((void*)(at), "runtime-fail (bridged): null pointer dereference")))).column, cct_str_821);
         if (cct_rt_fractum_is_active()) {
             return 0;
         }
@@ -13283,7 +13316,7 @@ static const char * cct_fn_codegen_generic_ensure_sigillum_instance(CodegenConte
     }
     if ((expected != actual ? 1 : 0))
     {
-        cct_fn_codegen_report_error(ctx, ((*((AstNode*)cct_rt_check_not_null((void*)(at), "runtime-fail (bridged): null pointer dereference")))).line, ((*((AstNode*)cct_rt_check_not_null((void*)(at), "runtime-fail (bridged): null pointer dereference")))).column, cct_str_817);
+        cct_fn_codegen_report_error(ctx, ((*((AstNode*)cct_rt_check_not_null((void*)(at), "runtime-fail (bridged): null pointer dereference")))).line, ((*((AstNode*)cct_rt_check_not_null((void*)(at), "runtime-fail (bridged): null pointer dereference")))).column, cct_str_822);
         if (cct_rt_fractum_is_active()) {
             return 0;
         }
@@ -13823,7 +13856,7 @@ static long long cct_fn_codegen_generic_scan_expr_use(CodegenContext * ctx, AstN
         __cct_loop_brk_90:;
         if (((((*((AstNode*)cct_rt_check_not_null((void*)(((*((AstNode*)cct_rt_check_not_null((void*)(expr), "runtime-fail (bridged): null pointer dereference")))).callee), "runtime-fail (bridged): null pointer dereference")))).kind == 32 ? 1 : 0) && (cct_fn_ast_node_list_len(((*((AstNode*)cct_rt_check_not_null((void*)(((*((AstNode*)cct_rt_check_not_null((void*)(expr), "runtime-fail (bridged): null pointer dereference")))).callee), "runtime-fail (bridged): null pointer dereference")))).generic_args) > 0 ? 1 : 0)))
         {
-            if ((cct_fn_compare(((*((AstNode*)cct_rt_check_not_null((void*)(((*((AstNode*)cct_rt_check_not_null((void*)(expr), "runtime-fail (bridged): null pointer dereference")))).callee), "runtime-fail (bridged): null pointer dereference")))).name, cct_str_815) == 0 ? 1 : 0))
+            if ((cct_fn_compare(((*((AstNode*)cct_rt_check_not_null((void*)(((*((AstNode*)cct_rt_check_not_null((void*)(expr), "runtime-fail (bridged): null pointer dereference")))).callee), "runtime-fail (bridged): null pointer dereference")))).name, cct_str_820) == 0 ? 1 : 0))
             {
                 return 0;
             }
@@ -13946,7 +13979,7 @@ static const char * cct_fn_codegen_generic_make_rituale_c_name(CodegenContext * 
     if (cct_rt_fractum_is_active()) {
         return 0;
     }
-    const char *out = cct_fn_concat(cct_fn_concat(cct_str_793, source_name), cct_fn_concat(cct_str_810, suffix));
+    const char *out = cct_fn_concat(cct_fn_concat(cct_str_798, source_name), cct_fn_concat(cct_str_815, suffix));
     if (cct_rt_fractum_is_active()) {
         return 0;
     }
@@ -13961,7 +13994,7 @@ static const char * cct_fn_codegen_generic_make_sigillum_c_name(CodegenContext *
     if (cct_rt_fractum_is_active()) {
         return 0;
     }
-    const char *out = cct_fn_concat(cct_fn_concat(cct_str_814, source_name), cct_fn_concat(cct_str_810, suffix));
+    const char *out = cct_fn_concat(cct_fn_concat(cct_str_819, source_name), cct_fn_concat(cct_str_815, suffix));
     if (cct_rt_fractum_is_active()) {
         return 0;
     }
@@ -13974,7 +14007,7 @@ static const char * cct_fn_codegen_generic_make_sigillum_c_name(CodegenContext *
 static const char * cct_fn_codegen_generic_type_identity_named(CodegenContext * ctx, const char * type_name, void * type_args, long long line, long long column) {
     if (cct_fn_codegen_generic_is_builtin_type_name(type_name))
     {
-        cct_fn_codegen_report_error(ctx, line, column, cct_str_813);
+        cct_fn_codegen_report_error(ctx, line, column, cct_str_818);
         if (cct_rt_fractum_is_active()) {
             return 0;
         }
@@ -13999,7 +14032,7 @@ static const char * cct_fn_codegen_generic_type_identity_named(CodegenContext * 
 }
 
 static const char * cct_fn_codegen_generic_instance_key(const char * source_name, const char * suffix) {
-    const char *left = cct_fn_concat(source_name, cct_str_811);
+    const char *left = cct_fn_concat(source_name, cct_str_816);
     if (cct_rt_fractum_is_active()) {
         return 0;
     }
@@ -14007,7 +14040,7 @@ static const char * cct_fn_codegen_generic_instance_key(const char * source_name
     if (cct_rt_fractum_is_active()) {
         return 0;
     }
-    const char *out = cct_fn_concat(right, cct_str_812);
+    const char *out = cct_fn_concat(right, cct_str_817);
     if (cct_rt_fractum_is_active()) {
         return 0;
     }
@@ -14048,7 +14081,7 @@ static const char * cct_fn_codegen_generic_type_arg_suffix(CodegenContext * ctx,
         }
         if ((i > 0 ? 1 : 0))
         {
-            cct_fn_builder_append(b, cct_str_810);
+            cct_fn_builder_append(b, cct_str_815);
             if (cct_rt_fractum_is_active()) {
                 return 0;
             }
@@ -14201,7 +14234,7 @@ static const char * cct_fn_codegen_generic_type_identity(CodegenContext * ctx, A
                 }
             }
         }
-        const char *out_ptr = cct_fn_concat(cct_str_807, elem_identity);
+        const char *out_ptr = cct_fn_concat(cct_str_812, elem_identity);
         if (cct_rt_fractum_is_active()) {
             return 0;
         }
@@ -14265,11 +14298,11 @@ static const char * cct_fn_codegen_generic_type_identity(CodegenContext * ctx, A
                 }
             }
         }
-        const char *prefix = cct_fn_concat(cct_str_808, elem_identity);
+        const char *prefix = cct_fn_concat(cct_str_813, elem_identity);
         if (cct_rt_fractum_is_active()) {
             return 0;
         }
-        const char *middle = cct_fn_concat(prefix, cct_str_809);
+        const char *middle = cct_fn_concat(prefix, cct_str_814);
         if (cct_rt_fractum_is_active()) {
             return 0;
         }
@@ -14368,7 +14401,43 @@ static long long cct_fn_codegen_emit_program(CodegenContext * ctx, AstProgram * 
     if (cct_rt_fractum_is_active()) {
         return 0;
     }
+    cct_fn_codegen_emit_line(ctx, cct_str_791);
+    if (cct_rt_fractum_is_active()) {
+        return 0;
+    }
+    cct_fn_codegen_emit_line(ctx, cct_str_792);
+    if (cct_rt_fractum_is_active()) {
+        return 0;
+    }
+    cct_fn_codegen_emit_line(ctx, cct_str_793);
+    if (cct_rt_fractum_is_active()) {
+        return 0;
+    }
+    cct_fn_codegen_emit_line(ctx, cct_str_794);
+    if (cct_rt_fractum_is_active()) {
+        return 0;
+    }
+    cct_fn_codegen_emit_blank_line(ctx);
+    if (cct_rt_fractum_is_active()) {
+        return 0;
+    }
     cct_fn_codegen_emit_program_body(ctx, program);
+    if (cct_rt_fractum_is_active()) {
+        return 0;
+    }
+    cct_fn_codegen_emit_blank_line(ctx);
+    if (cct_rt_fractum_is_active()) {
+        return 0;
+    }
+    cct_fn_codegen_emit_line(ctx, cct_str_791);
+    if (cct_rt_fractum_is_active()) {
+        return 0;
+    }
+    cct_fn_codegen_emit_line(ctx, cct_str_795);
+    if (cct_rt_fractum_is_active()) {
+        return 0;
+    }
+    cct_fn_codegen_emit_line(ctx, cct_str_794);
     if (cct_rt_fractum_is_active()) {
         return 0;
     }
@@ -14428,7 +14497,7 @@ static long long cct_fn_codegen_emit_program_body(CodegenContext * ctx, AstProgr
         }
         if (((((*((AstNode*)cct_rt_check_not_null((void*)(decl), "runtime-fail (bridged): null pointer dereference")))).kind != 3 ? 1 : 0) && (((*((AstNode*)cct_rt_check_not_null((void*)(decl), "runtime-fail (bridged): null pointer dereference")))).kind != 1 ? 1 : 0) && (((*((AstNode*)cct_rt_check_not_null((void*)(decl), "runtime-fail (bridged): null pointer dereference")))).kind != 4 ? 1 : 0) && (((*((AstNode*)cct_rt_check_not_null((void*)(decl), "runtime-fail (bridged): null pointer dereference")))).kind != 5 ? 1 : 0)))
         {
-            cct_fn_codegen_report_error(ctx, ((*((AstNode*)cct_rt_check_not_null((void*)(decl), "runtime-fail (bridged): null pointer dereference")))).line, ((*((AstNode*)cct_rt_check_not_null((void*)(decl), "runtime-fail (bridged): null pointer dereference")))).column, cct_str_806);
+            cct_fn_codegen_report_error(ctx, ((*((AstNode*)cct_rt_check_not_null((void*)(decl), "runtime-fail (bridged): null pointer dereference")))).line, ((*((AstNode*)cct_rt_check_not_null((void*)(decl), "runtime-fail (bridged): null pointer dereference")))).column, cct_str_811);
             if (cct_rt_fractum_is_active()) {
                 return 0;
             }
@@ -14724,7 +14793,7 @@ static long long cct_fn_codegen_emit_rituale_prototype(CodegenContext * ctx, Ast
 }
 
 static long long cct_fn_codegen_emit_rituale_signature_instance(CodegenContext * ctx, AstNode * rituale_decl, const char * c_name) {
-    const char *return_text = cct_str_802;
+    const char *return_text = cct_str_807;
     if (cct_rt_fractum_is_active()) {
         return 0;
     }
@@ -14747,7 +14816,7 @@ static long long cct_fn_codegen_emit_rituale_signature_instance(CodegenContext *
     if (cct_rt_fractum_is_active()) {
         return 0;
     }
-    cct_fn_codegen_emit(ctx, cct_str_804);
+    cct_fn_codegen_emit(ctx, cct_str_809);
     if (cct_rt_fractum_is_active()) {
         return 0;
     }
@@ -14755,7 +14824,7 @@ static long long cct_fn_codegen_emit_rituale_signature_instance(CodegenContext *
     if (cct_rt_fractum_is_active()) {
         return 0;
     }
-    cct_fn_codegen_emit(ctx, cct_str_805);
+    cct_fn_codegen_emit(ctx, cct_str_810);
     if (cct_rt_fractum_is_active()) {
         return 0;
     }
@@ -14771,7 +14840,7 @@ static long long cct_fn_codegen_emit_rituale_signature_instance(CodegenContext *
 }
 
 static long long cct_fn_codegen_emit_rituale_signature(CodegenContext * ctx, AstNode * rituale_decl) {
-    const char *return_text = cct_str_802;
+    const char *return_text = cct_str_807;
     if (cct_rt_fractum_is_active()) {
         return 0;
     }
@@ -14794,7 +14863,7 @@ static long long cct_fn_codegen_emit_rituale_signature(CodegenContext * ctx, Ast
     if (cct_rt_fractum_is_active()) {
         return 0;
     }
-    cct_fn_codegen_emit(ctx, cct_str_804);
+    cct_fn_codegen_emit(ctx, cct_str_809);
     if (cct_rt_fractum_is_active()) {
         return 0;
     }
@@ -14802,7 +14871,7 @@ static long long cct_fn_codegen_emit_rituale_signature(CodegenContext * ctx, Ast
     if (cct_rt_fractum_is_active()) {
         return 0;
     }
-    cct_fn_codegen_emit(ctx, cct_str_805);
+    cct_fn_codegen_emit(ctx, cct_str_810);
     if (cct_rt_fractum_is_active()) {
         return 0;
     }
@@ -14828,7 +14897,7 @@ static long long cct_fn_codegen_emit_param_list(CodegenContext * ctx, AstNode * 
     }
     if ((n == 0 ? 1 : 0))
     {
-        cct_fn_codegen_emit(ctx, cct_str_802);
+        cct_fn_codegen_emit(ctx, cct_str_807);
         if (cct_rt_fractum_is_active()) {
             return 0;
         }
@@ -14859,7 +14928,7 @@ static long long cct_fn_codegen_emit_param_list(CodegenContext * ctx, AstNode * 
         if (cct_rt_fractum_is_active()) {
             return 0;
         }
-        cct_fn_codegen_emit(ctx, cct_str_804);
+        cct_fn_codegen_emit(ctx, cct_str_809);
         if (cct_rt_fractum_is_active()) {
             return 0;
         }
@@ -14899,7 +14968,7 @@ static long long cct_fn_codegen_emit_block_close(CodegenContext * ctx) {
 }
 
 static long long cct_fn_codegen_emit_block_open(CodegenContext * ctx) {
-    cct_fn_codegen_emit_line(ctx, cct_str_803);
+    cct_fn_codegen_emit_line(ctx, cct_str_808);
     if (cct_rt_fractum_is_active()) {
         return 0;
     }
@@ -14970,39 +15039,39 @@ static long long cct_fn_codegen_emit(CodegenContext * ctx, const char * text) {
 static const char * cct_fn_codegen_basic_c_type(const char * type_name) {
     if ((cct_fn_compare(type_name, cct_str_170) == 0 ? 1 : 0))
     {
-        return (cct_str_795);
+        return (cct_str_800);
     }
     if ((cct_fn_compare(type_name, cct_str_171) == 0 ? 1 : 0))
     {
-        return (cct_str_796);
+        return (cct_str_801);
     }
     if ((cct_fn_compare(type_name, cct_str_172) == 0 ? 1 : 0))
     {
-        return (cct_str_797);
+        return (cct_str_802);
     }
     if ((cct_fn_compare(type_name, cct_str_173) == 0 ? 1 : 0))
     {
-        return (cct_str_798);
+        return (cct_str_803);
     }
     if ((cct_fn_compare(type_name, cct_str_174) == 0 ? 1 : 0))
     {
-        return (cct_str_799);
+        return (cct_str_804);
     }
     if ((cct_fn_compare(type_name, cct_str_175) == 0 ? 1 : 0))
     {
-        return (cct_str_800);
+        return (cct_str_805);
     }
     if ((cct_fn_compare(type_name, cct_str_11) == 0 ? 1 : 0))
     {
-        return (cct_str_797);
+        return (cct_str_802);
     }
     if ((cct_fn_compare(type_name, cct_str_176) == 0 ? 1 : 0))
     {
-        return (cct_str_801);
+        return (cct_str_806);
     }
     if ((cct_fn_compare(type_name, cct_str_13) == 0 ? 1 : 0))
     {
-        return (cct_str_802);
+        return (cct_str_807);
     }
     return (cct_str_9);
     return 0;
@@ -15200,11 +15269,11 @@ static const char * cct_fn_codegen_rituale_c_name(CodegenContext * ctx, const ch
 }
 
 static const char * cct_fn_codegen_make_rituale_c_name(CodegenContext * ctx, const char * rituale_name) {
-    const char *prefix = cct_fn_concat(cct_str_793, rituale_name);
+    const char *prefix = cct_fn_concat(cct_str_798, rituale_name);
     if (cct_rt_fractum_is_active()) {
         return 0;
     }
-    const char *suffix = cct_fn_codegen_make_counter_name(cct_str_794, cct_fn_codegen_registered_rituale_count(ctx));
+    const char *suffix = cct_fn_codegen_make_counter_name(cct_str_799, cct_fn_codegen_registered_rituale_count(ctx));
     if (cct_rt_fractum_is_active()) {
         return 0;
     }
@@ -15225,7 +15294,7 @@ static const char * cct_fn_codegen_next_label_name(CodegenContext * ctx) {
     if (cct_rt_fractum_is_active()) {
         return 0;
     }
-    const char * __cct_failtmp_119 = cct_fn_codegen_make_counter_name(cct_str_792, id);
+    const char * __cct_failtmp_119 = cct_fn_codegen_make_counter_name(cct_str_797, id);
     if (cct_rt_fractum_is_active()) {
         return 0;
     }
@@ -15242,7 +15311,7 @@ static const char * cct_fn_codegen_next_temp_name(CodegenContext * ctx) {
     if (cct_rt_fractum_is_active()) {
         return 0;
     }
-    const char * __cct_failtmp_120 = cct_fn_codegen_make_counter_name(cct_str_791, id);
+    const char * __cct_failtmp_120 = cct_fn_codegen_make_counter_name(cct_str_796, id);
     if (cct_rt_fractum_is_active()) {
         return 0;
     }
@@ -15312,6 +15381,26 @@ static const char * cct_fn_codegen_generate_translation_unit_with_context(Codege
     if (cct_rt_fractum_is_active()) {
         return 0;
     }
+    cct_fn_codegen_emit_line(ctx, cct_str_791);
+    if (cct_rt_fractum_is_active()) {
+        return 0;
+    }
+    cct_fn_codegen_emit_line(ctx, cct_str_792);
+    if (cct_rt_fractum_is_active()) {
+        return 0;
+    }
+    cct_fn_codegen_emit_line(ctx, cct_str_793);
+    if (cct_rt_fractum_is_active()) {
+        return 0;
+    }
+    cct_fn_codegen_emit_line(ctx, cct_str_794);
+    if (cct_rt_fractum_is_active()) {
+        return 0;
+    }
+    cct_fn_codegen_emit_blank_line(ctx);
+    if (cct_rt_fractum_is_active()) {
+        return 0;
+    }
     cct_fn_codegen_runtime_emit_includes(ctx);
     if (cct_rt_fractum_is_active()) {
         return 0;
@@ -15363,6 +15452,22 @@ static const char * cct_fn_codegen_generate_translation_unit_with_context(Codege
         return 0;
     }
     cct_fn_codegen_runtime_emit_host_main(ctx, program);
+    if (cct_rt_fractum_is_active()) {
+        return 0;
+    }
+    cct_fn_codegen_emit_blank_line(ctx);
+    if (cct_rt_fractum_is_active()) {
+        return 0;
+    }
+    cct_fn_codegen_emit_line(ctx, cct_str_791);
+    if (cct_rt_fractum_is_active()) {
+        return 0;
+    }
+    cct_fn_codegen_emit_line(ctx, cct_str_795);
+    if (cct_rt_fractum_is_active()) {
+        return 0;
+    }
+    cct_fn_codegen_emit_line(ctx, cct_str_794);
     if (cct_rt_fractum_is_active()) {
         return 0;
     }
@@ -23157,7 +23262,23 @@ static AstNode * cct_fn_parse_power(ParserState * parser) {
 static AstNode * cct_fn_parse_unary(ParserState * parser) {
     if ((cct_fn_parser_match(parser, 74) || cct_fn_parser_match(parser, 73) || cct_fn_parser_match(parser, 44) || cct_fn_parser_match(parser, 75) || cct_fn_parser_match(parser, 61)))
     {
-        AstNode * expr = cct_fn_ast_make_unary((((*((ParserState*)cct_rt_check_not_null((void*)(parser), "runtime-fail (bridged): null pointer dereference")))).previous).kind, cct_fn_parse_unary(parser), (((*((ParserState*)cct_rt_check_not_null((void*)(parser), "runtime-fail (bridged): null pointer dereference")))).previous).line, (((*((ParserState*)cct_rt_check_not_null((void*)(parser), "runtime-fail (bridged): null pointer dereference")))).previous).column);
+        long long op = (((*((ParserState*)cct_rt_check_not_null((void*)(parser), "runtime-fail (bridged): null pointer dereference")))).previous).kind;
+        if (cct_rt_fractum_is_active()) {
+            return 0;
+        }
+        long long line = (((*((ParserState*)cct_rt_check_not_null((void*)(parser), "runtime-fail (bridged): null pointer dereference")))).previous).line;
+        if (cct_rt_fractum_is_active()) {
+            return 0;
+        }
+        long long column = (((*((ParserState*)cct_rt_check_not_null((void*)(parser), "runtime-fail (bridged): null pointer dereference")))).previous).column;
+        if (cct_rt_fractum_is_active()) {
+            return 0;
+        }
+        AstNode * operand = cct_fn_parse_unary(parser);
+        if (cct_rt_fractum_is_active()) {
+            return 0;
+        }
+        AstNode * expr = cct_fn_ast_make_unary(op, operand, line, column);
         if (cct_rt_fractum_is_active()) {
             return 0;
         }

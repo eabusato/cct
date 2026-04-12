@@ -1,0 +1,20 @@
+INCIPIT grimoire "bootstrap_probe_ctx_field"
+
+SIGILLUM Ctx
+  had_error: VERUM
+  error_message: VERBUM
+FIN SIGILLUM
+
+RITUALE had_error(SPECULUM Ctx ctx) REDDE VERUM
+  REDDE (*ctx).had_error
+EXPLICIT RITUALE
+
+RITUALE error_message(SPECULUM Ctx ctx) REDDE VERBUM
+  REDDE (*ctx).error_message
+EXPLICIT RITUALE
+
+RITUALE main() REDDE REX
+  REDDE 0
+EXPLICIT RITUALE
+
+EXPLICIT grimoire

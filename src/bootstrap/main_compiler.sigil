@@ -4,14 +4,14 @@ visual_engine = sigillum_v2_1
 visual_style = network
 compiler_version = 0.40.0
 program_name = main_compiler
-semantic_hash = 422bb7dd5efc7567
-layout_seed = 422bb7dd5efc7567:network
+semantic_hash = f2fe6fb292b39cf1
+layout_seed = f2fe6fb292b39cf1:network
 module_mode = composed
 module_count = 57
 import_edge_count = 257
 entry_module = src/bootstrap/main_compiler.cct
-cross_module_call_count = 4093
-cross_module_type_ref_count = 826
+cross_module_call_count = 4120
+cross_module_type_ref_count = 834
 module_resolution_status = ok
 stdlib_module_count = 5
 stdlib_modules_used = verbum,fmt,fluxus,fs,path
@@ -34,22 +34,22 @@ map_module_used = false
 set_module_used = false
 collection_ops_module_used = false
 visibility_model = public_default_arcanum_internal
-public_symbol_count = 788
+public_symbol_count = 796
 internal_symbol_count = 0
 
 [metrics]
-ritual_count = 21
-entry_ritual_index = 20
+ritual_count = 29
+entry_ritual_index = 28
 entry_ritual_name = main
-total_statements = 237
-total_expressions = 789
+total_statements = 251
+total_expressions = 811
 max_nesting = 15
-avg_nesting = 3.486
+avg_nesting = 3.390
 loops_total = 1
 conditionals_total = 52
-calls_total = 168
+calls_total = 176
 obsecro_total = 4
-returns_total = 62
+returns_total = 70
 anur_total = 0
 sigillum_decl_total = 1
 ordo_decl_total = 0
@@ -74,7 +74,7 @@ multi_ritual = true
 complexity_class = looped
 
 [counts]
-evoca = 26
+evoca = 32
 vincire = 27
 si = 52
 aliter = 5
@@ -83,9 +83,9 @@ donec = 0
 repete = 0
 iterum = 0
 iterum_count = 0
-coniura = 168
+coniura = 176
 obsecro = 4
-redde = 62
+redde = 70
 anur = 0
 field_access = 44
 index_access = 0
@@ -135,16 +135,16 @@ semper = 0
 iace = 0
 
 [topology]
-node_count = 72
-edge_count = 114
-primary_path_nodes = 21
-ritual_poles = 21
-aux_nodes = 51
+node_count = 88
+edge_count = 138
+primary_path_nodes = 29
+ritual_poles = 29
+aux_nodes = 59
 self_call_count = 0
 loop_presence = true
 conditional_presence = true
 call_presence = true
-density_ratio = 3.292
+density_ratio = 2.852
 field_access_presence = true
 index_access_presence = false
 memory_presence = true
@@ -185,7 +185,7 @@ determinism_guarantee = stable
 
 [diff_fingerprint_context]
 scope_anchor = local
-hash_anchor = 422bb7dd5efc7567
+hash_anchor = f2fe6fb292b39cf1
 fingerprint_basis = structural_metrics+topology+hash_anchor
 serialization_profile = analytical_v1
 volatility = none
@@ -196,10 +196,10 @@ entry_anchor = src/bootstrap/main_compiler.cct
 module_count = 57
 module_mode = composed
 import_edge_count = 257
-cross_module_call_count = 4093
-cross_module_type_ref_count = 826
-ritual_count = 21
-public_symbol_count = 788
+cross_module_call_count = 4120
+cross_module_type_ref_count = 834
+ritual_count = 29
+public_symbol_count = 796
 internal_symbol_count = 0
 module_resolution_status = ok
 
@@ -213,7 +213,7 @@ diff_policy = analytical_blocks_review_required_except_compatibility_hints
 deterministic_serialization = stable_section_order
 
 [layout]
-primary_axis_deg = 11.864
+primary_axis_deg = 8.962
 canvas_center = 256.0,256.0
 containment_radius = 226.0
 style_influence = stroke/curvature/distribution/ornamentation
@@ -259,24 +259,32 @@ style_role = visual weighting/curvature/distribution without changing structural
 0 = compiler_context_new | entry=false | stmt=9 | depth=4 | calls=4 | loops=0
 1 = compiler_context_set_error | entry=false | stmt=6 | depth=4 | calls=1 | loops=0
 2 = compiler_context_free | entry=false | stmt=8 | depth=6 | calls=1 | loops=0
-3 = compiler_has_loaded_path | entry=false | stmt=5 | depth=5 | calls=3 | loops=0
-4 = compiler_mark_loaded_path | entry=false | stmt=3 | depth=5 | calls=2 | loops=0
-5 = compiler_resolve_import_path | entry=false | stmt=12 | depth=5 | calls=11 | loops=0
-6 = compiler_is_prelude_import | entry=false | stmt=27 | depth=5 | calls=25 | loops=0
-7 = compiler_is_source_backed_cct_import | entry=false | stmt=35 | depth=6 | calls=29 | loops=0
-8 = compiler_read_all | entry=false | stmt=1 | depth=3 | calls=0 | loops=0
-9 = compiler_write_all | entry=false | stmt=2 | depth=3 | calls=0 | loops=0
-10 = compiler_exists | entry=false | stmt=1 | depth=3 | calls=0 | loops=0
-11 = compiler_mkdir_all | entry=false | stmt=2 | depth=3 | calls=0 | loops=0
-12 = compiler_set_import_error | entry=false | stmt=6 | depth=3 | calls=4 | loops=0
-13 = compiler_set_unsupported_cct_import_error | entry=false | stmt=4 | depth=3 | calls=2 | loops=0
-14 = compiler_program_shell_free | entry=false | stmt=5 | depth=6 | calls=2 | loops=0
-15 = compiler_transfer_program_declarations | entry=false | stmt=21 | depth=15 | calls=14 | loops=1
-16 = compiler_load_program_into | entry=false | stmt=18 | depth=9 | calls=13 | loops=0
-17 = compiler_parse_composite_program | entry=false | stmt=6 | depth=4 | calls=5 | loops=0
-18 = compiler_emit_semantic_error | entry=false | stmt=8 | depth=6 | calls=8 | loops=0
-19 = compiler_emit_codegen_error | entry=false | stmt=8 | depth=6 | calls=8 | loops=0
-20 = main | entry=true | stmt=50 | depth=7 | calls=36 | loops=0
+3 = compiler_context_had_error | entry=false | stmt=1 | depth=4 | calls=0 | loops=0
+4 = compiler_context_error_message | entry=false | stmt=1 | depth=4 | calls=0 | loops=0
+5 = compiler_has_loaded_path | entry=false | stmt=5 | depth=5 | calls=3 | loops=0
+6 = compiler_mark_loaded_path | entry=false | stmt=3 | depth=5 | calls=2 | loops=0
+7 = compiler_resolve_import_path | entry=false | stmt=12 | depth=5 | calls=11 | loops=0
+8 = compiler_is_prelude_import | entry=false | stmt=27 | depth=5 | calls=25 | loops=0
+9 = compiler_is_source_backed_cct_import | entry=false | stmt=35 | depth=6 | calls=29 | loops=0
+10 = compiler_read_all | entry=false | stmt=1 | depth=3 | calls=0 | loops=0
+11 = compiler_write_all | entry=false | stmt=2 | depth=3 | calls=0 | loops=0
+12 = compiler_exists | entry=false | stmt=1 | depth=3 | calls=0 | loops=0
+13 = compiler_mkdir_all | entry=false | stmt=2 | depth=3 | calls=0 | loops=0
+14 = compiler_set_import_error | entry=false | stmt=6 | depth=3 | calls=4 | loops=0
+15 = compiler_set_unsupported_cct_import_error | entry=false | stmt=4 | depth=3 | calls=2 | loops=0
+16 = compiler_program_shell_free | entry=false | stmt=5 | depth=6 | calls=2 | loops=0
+17 = compiler_transfer_program_declarations | entry=false | stmt=21 | depth=15 | calls=14 | loops=1
+18 = compiler_load_program_into | entry=false | stmt=18 | depth=9 | calls=13 | loops=0
+19 = compiler_parse_composite_program | entry=false | stmt=6 | depth=4 | calls=5 | loops=0
+20 = semantic_error_message | entry=false | stmt=1 | depth=4 | calls=0 | loops=0
+21 = semantic_error_line | entry=false | stmt=1 | depth=4 | calls=0 | loops=0
+22 = semantic_error_column | entry=false | stmt=1 | depth=4 | calls=0 | loops=0
+23 = codegen_error_message | entry=false | stmt=1 | depth=4 | calls=0 | loops=0
+24 = codegen_error_line | entry=false | stmt=1 | depth=4 | calls=0 | loops=0
+25 = codegen_error_column | entry=false | stmt=1 | depth=4 | calls=0 | loops=0
+26 = compiler_emit_semantic_error | entry=false | stmt=11 | depth=4 | calls=11 | loops=0
+27 = compiler_emit_codegen_error | entry=false | stmt=11 | depth=4 | calls=11 | loops=0
+28 = main | entry=true | stmt=50 | depth=6 | calls=38 | loops=0
 
 [call_edges]
 compiler_set_import_error -> compiler_context_set_error : 1
@@ -296,8 +304,16 @@ compiler_load_program_into -> compiler_read_all : 1
 compiler_load_program_into -> compiler_transfer_program_declarations : 1
 compiler_load_program_into -> compiler_program_shell_free : 1
 compiler_parse_composite_program -> compiler_load_program_into : 2
+compiler_emit_semantic_error -> semantic_error_message : 1
+compiler_emit_semantic_error -> semantic_error_line : 1
+compiler_emit_semantic_error -> semantic_error_column : 1
+compiler_emit_codegen_error -> codegen_error_message : 1
+compiler_emit_codegen_error -> codegen_error_line : 1
+compiler_emit_codegen_error -> codegen_error_column : 1
 main -> compiler_context_new : 1
 main -> compiler_parse_composite_program : 1
+main -> compiler_context_had_error : 1
+main -> compiler_context_error_message : 1
 main -> compiler_context_free : 4
 main -> compiler_emit_semantic_error : 1
 main -> compiler_emit_codegen_error : 1

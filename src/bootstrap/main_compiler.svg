@@ -27,11 +27,11 @@
   <rect class="bg" x="0" y="0" width="512" height="512"/>
   <g id="foundation">
     <circle class="base" cx="256" cy="256" r="226"/>
-    <ellipse class="base" cx="256" cy="256" rx="198" ry="183.95" opacity="0.32"/>
+    <ellipse class="base" cx="256" cy="256" rx="198" ry="186.54" opacity="0.32"/>
   </g>
   <g id="primary_path">
     <g class="edge-wrap">
-    <path class="primary" d="M 258.03 106.63 Q 305.09 141.79 362.32 128.54" stroke-width="3.20" opacity="0.96"/>
+    <path class="primary" d="M 228.00 103.24 Q 271.09 135.38 321.99 118.06" stroke-width="3.20" opacity="0.96"/>
       <title>edge: primary
 main -&gt; compiler_context_new
 weight: 1
@@ -40,7 +40,7 @@ path:
 main -&gt; compiler_context_new</title>
     </g>
     <g class="edge-wrap">
-    <path class="primary" d="M 362.32 128.54 Q 350.38 151.11 368.33 132.95" stroke-width="2.60" opacity="0.96"/>
+    <path class="primary" d="M 321.99 118.06 Q 325.40 149.90 348.11 127.32" stroke-width="2.60" opacity="0.96"/>
       <title>edge: primary
 compiler_context_new -&gt; compiler_context_set_error
 weight: 1
@@ -49,7 +49,7 @@ path:
 compiler_context_new -&gt; compiler_context_set_error</title>
     </g>
     <g class="edge-wrap">
-    <path class="primary" d="M 368.33 132.95 Q 368.32 169.86 404.14 160.98" stroke-width="2.60" opacity="0.96"/>
+    <path class="primary" d="M 348.11 127.32 Q 354.07 158.24 383.41 146.79" stroke-width="2.60" opacity="0.96"/>
       <title>edge: primary
 compiler_context_set_error -&gt; compiler_context_free
 weight: 1
@@ -58,16 +58,34 @@ path:
 compiler_context_set_error -&gt; compiler_context_free</title>
     </g>
     <g class="edge-wrap">
-    <path class="primary" d="M 404.14 160.98 Q 385.54 184.91 415.50 180.31" stroke-width="2.60" opacity="0.96"/>
+    <path class="primary" d="M 383.41 146.79 Q 376.48 118.29 376.33 147.62" stroke-width="2.60" opacity="0.96"/>
       <title>edge: primary
-compiler_context_free -&gt; compiler_has_loaded_path
+compiler_context_free -&gt; compiler_context_had_error
 weight: 1
 
 path:
-compiler_context_free -&gt; compiler_has_loaded_path</title>
+compiler_context_free -&gt; compiler_context_had_error</title>
     </g>
     <g class="edge-wrap">
-    <path class="primary" d="M 415.50 180.31 Q 395.55 192.37 418.61 188.95" stroke-width="2.60" opacity="0.96"/>
+    <path class="primary" d="M 376.33 147.62 Q 366.20 176.24 394.84 166.17" stroke-width="2.60" opacity="0.96"/>
+      <title>edge: primary
+compiler_context_had_error -&gt; compiler_context_error_message
+weight: 1
+
+path:
+compiler_context_had_error -&gt; compiler_context_error_message</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="primary" d="M 394.84 166.17 Q 386.73 190.67 411.73 184.28" stroke-width="2.60" opacity="0.96"/>
+      <title>edge: primary
+compiler_context_error_message -&gt; compiler_has_loaded_path
+weight: 1
+
+path:
+compiler_context_error_message -&gt; compiler_has_loaded_path</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="primary" d="M 411.73 184.28 Q 408.28 207.37 417.60 185.97" stroke-width="2.60" opacity="0.96"/>
       <title>edge: primary
 compiler_has_loaded_path -&gt; compiler_mark_loaded_path
 weight: 1
@@ -76,7 +94,7 @@ path:
 compiler_has_loaded_path -&gt; compiler_mark_loaded_path</title>
     </g>
     <g class="edge-wrap">
-    <path class="primary" d="M 418.61 188.95 Q 410.06 225.17 444.77 238.59" stroke-width="2.60" opacity="0.96"/>
+    <path class="primary" d="M 417.60 185.97 Q 406.27 217.92 439.76 223.17" stroke-width="2.60" opacity="0.96"/>
       <title>edge: primary
 compiler_mark_loaded_path -&gt; compiler_resolve_import_path
 weight: 1
@@ -85,7 +103,7 @@ path:
 compiler_mark_loaded_path -&gt; compiler_resolve_import_path</title>
     </g>
     <g class="edge-wrap">
-    <path class="primary" d="M 444.77 238.59 Q 417.82 274.32 444.15 310.51" stroke-width="2.60" opacity="0.96"/>
+    <path class="primary" d="M 439.76 223.17 Q 411.08 267.67 431.17 316.65" stroke-width="2.60" opacity="0.96"/>
       <title>edge: primary
 compiler_resolve_import_path -&gt; compiler_is_prelude_import
 weight: 1
@@ -94,7 +112,7 @@ path:
 compiler_resolve_import_path -&gt; compiler_is_prelude_import</title>
     </g>
     <g class="edge-wrap">
-    <path class="primary" d="M 444.15 310.51 Q 370.77 335.27 326.65 398.90" stroke-width="2.60" opacity="0.96"/>
+    <path class="primary" d="M 431.17 316.65 Q 368.03 341.21 334.75 400.22" stroke-width="2.60" opacity="0.96"/>
       <title>edge: primary
 compiler_is_prelude_import -&gt; compiler_is_source_backed_cct_import
 weight: 1
@@ -103,7 +121,7 @@ path:
 compiler_is_prelude_import -&gt; compiler_is_source_backed_cct_import</title>
     </g>
     <g class="edge-wrap">
-    <path class="primary" d="M 326.65 398.90 Q 268.22 375.95 211.82 403.54" stroke-width="2.60" opacity="0.96"/>
+    <path class="primary" d="M 334.75 400.22 Q 298.26 376.96 265.99 405.80" stroke-width="2.60" opacity="0.96"/>
       <title>edge: primary
 compiler_is_source_backed_cct_import -&gt; compiler_read_all
 weight: 1
@@ -112,7 +130,7 @@ path:
 compiler_is_source_backed_cct_import -&gt; compiler_read_all</title>
     </g>
     <g class="edge-wrap">
-    <path class="primary" d="M 211.82 403.54 Q 222.74 376.43 196.49 389.28" stroke-width="2.60" opacity="0.96"/>
+    <path class="primary" d="M 265.99 405.80 Q 265.76 383.00 254.84 403.02" stroke-width="2.60" opacity="0.96"/>
       <title>edge: primary
 compiler_read_all -&gt; compiler_write_all
 weight: 1
@@ -121,7 +139,7 @@ path:
 compiler_read_all -&gt; compiler_write_all</title>
     </g>
     <g class="edge-wrap">
-    <path class="primary" d="M 196.49 389.28 Q 175.54 406.90 200.09 394.78" stroke-width="2.60" opacity="0.96"/>
+    <path class="primary" d="M 254.84 403.02 Q 246.10 373.81 242.43 404.08" stroke-width="2.60" opacity="0.96"/>
       <title>edge: primary
 compiler_write_all -&gt; compiler_exists
 weight: 1
@@ -130,7 +148,7 @@ path:
 compiler_write_all -&gt; compiler_exists</title>
     </g>
     <g class="edge-wrap">
-    <path class="primary" d="M 200.09 394.78 Q 178.05 380.10 196.65 398.94" stroke-width="2.60" opacity="0.96"/>
+    <path class="primary" d="M 242.43 404.08 Q 264.05 410.53 244.09 400.02" stroke-width="2.60" opacity="0.96"/>
       <title>edge: primary
 compiler_exists -&gt; compiler_mkdir_all
 weight: 1
@@ -139,7 +157,7 @@ path:
 compiler_exists -&gt; compiler_mkdir_all</title>
     </g>
     <g class="edge-wrap">
-    <path class="primary" d="M 196.65 398.94 Q 193.89 364.44 163.21 380.46" stroke-width="2.60" opacity="0.96"/>
+    <path class="primary" d="M 244.09 400.02 Q 226.84 374.11 205.91 397.15" stroke-width="2.60" opacity="0.96"/>
       <title>edge: primary
 compiler_mkdir_all -&gt; compiler_set_import_error
 weight: 1
@@ -148,7 +166,7 @@ path:
 compiler_mkdir_all -&gt; compiler_set_import_error</title>
     </g>
     <g class="edge-wrap">
-    <path class="primary" d="M 163.21 380.46 Q 162.36 348.46 137.87 369.07" stroke-width="2.60" opacity="0.96"/>
+    <path class="primary" d="M 205.91 397.15 Q 215.68 376.65 197.96 390.85" stroke-width="2.60" opacity="0.96"/>
       <title>edge: primary
 compiler_set_import_error -&gt; compiler_set_unsupported_cct_import_error
 weight: 1
@@ -157,7 +175,7 @@ path:
 compiler_set_import_error -&gt; compiler_set_unsupported_cct_import_error</title>
     </g>
     <g class="edge-wrap">
-    <path class="primary" d="M 137.87 369.07 Q 142.55 340.01 118.71 357.28" stroke-width="2.60" opacity="0.96"/>
+    <path class="primary" d="M 197.96 390.85 Q 180.33 370.45 176.21 397.09" stroke-width="2.60" opacity="0.96"/>
       <title>edge: primary
 compiler_set_unsupported_cct_import_error -&gt; compiler_program_shell_free
 weight: 1
@@ -166,7 +184,7 @@ path:
 compiler_set_unsupported_cct_import_error -&gt; compiler_program_shell_free</title>
     </g>
     <g class="edge-wrap">
-    <path class="primary" d="M 118.71 357.28 Q 112.07 319.07 73.29 319.11" stroke-width="2.60" opacity="0.96"/>
+    <path class="primary" d="M 176.21 397.09 Q 154.83 354.05 106.78 353.08" stroke-width="2.60" opacity="0.96"/>
       <title>edge: primary
 compiler_program_shell_free -&gt; compiler_transfer_program_declarations
 weight: 1
@@ -175,7 +193,7 @@ path:
 compiler_program_shell_free -&gt; compiler_transfer_program_declarations</title>
     </g>
     <g class="edge-wrap">
-    <path class="primary" d="M 73.29 319.11 Q 95.80 273.94 64.54 234.32" stroke-width="2.60" opacity="0.96"/>
+    <path class="primary" d="M 106.78 353.08 Q 107.65 312.19 69.17 298.31" stroke-width="2.60" opacity="0.96"/>
       <title>edge: primary
 compiler_transfer_program_declarations -&gt; compiler_load_program_into
 weight: 1
@@ -184,7 +202,7 @@ path:
 compiler_transfer_program_declarations -&gt; compiler_load_program_into</title>
     </g>
     <g class="edge-wrap">
-    <path class="primary" d="M 64.54 234.32 Q 97.80 221.82 93.08 186.60" stroke-width="2.60" opacity="0.96"/>
+    <path class="primary" d="M 69.17 298.31 Q 94.36 274.89 64.24 258.29" stroke-width="2.60" opacity="0.96"/>
       <title>edge: primary
 compiler_load_program_into -&gt; compiler_parse_composite_program
 weight: 1
@@ -193,16 +211,70 @@ path:
 compiler_load_program_into -&gt; compiler_parse_composite_program</title>
     </g>
     <g class="edge-wrap">
-    <path class="primary" d="M 93.08 186.60 Q 120.83 183.72 99.69 165.52" stroke-width="2.60" opacity="0.96"/>
+    <path class="primary" d="M 64.24 258.29 Q 82.12 282.87 80.58 252.51" stroke-width="2.60" opacity="0.96"/>
       <title>edge: primary
-compiler_parse_composite_program -&gt; compiler_emit_semantic_error
+compiler_parse_composite_program -&gt; semantic_error_message
 weight: 1
 
 path:
-compiler_parse_composite_program -&gt; compiler_emit_semantic_error</title>
+compiler_parse_composite_program -&gt; semantic_error_message</title>
     </g>
     <g class="edge-wrap">
-    <path class="primary" d="M 99.69 165.52 Q 133.77 167.82 138.27 133.96" stroke-width="2.60" opacity="0.96"/>
+    <path class="primary" d="M 80.58 252.51 Q 105.70 242.20 79.95 233.59" stroke-width="2.60" opacity="0.96"/>
+      <title>edge: primary
+semantic_error_message -&gt; semantic_error_line
+weight: 1
+
+path:
+semantic_error_message -&gt; semantic_error_line</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="primary" d="M 79.95 233.59 Q 101.11 215.84 74.49 223.23" stroke-width="2.60" opacity="0.96"/>
+      <title>edge: primary
+semantic_error_line -&gt; semantic_error_column
+weight: 1
+
+path:
+semantic_error_line -&gt; semantic_error_column</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="primary" d="M 74.49 223.23 Q 83.72 246.26 93.94 223.66" stroke-width="2.60" opacity="0.96"/>
+      <title>edge: primary
+semantic_error_column -&gt; codegen_error_message
+weight: 1
+
+path:
+semantic_error_column -&gt; codegen_error_message</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="primary" d="M 93.94 223.66 Q 123.97 212.59 95.50 197.97" stroke-width="2.60" opacity="0.96"/>
+      <title>edge: primary
+codegen_error_message -&gt; codegen_error_line
+weight: 1
+
+path:
+codegen_error_message -&gt; codegen_error_line</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="primary" d="M 95.50 197.97 Q 84.31 176.01 84.80 200.65" stroke-width="2.60" opacity="0.96"/>
+      <title>edge: primary
+codegen_error_line -&gt; codegen_error_column
+weight: 1
+
+path:
+codegen_error_line -&gt; codegen_error_column</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="primary" d="M 84.80 200.65 Q 113.18 189.80 90.98 169.05" stroke-width="2.60" opacity="0.96"/>
+      <title>edge: primary
+codegen_error_column -&gt; compiler_emit_semantic_error
+weight: 1
+
+path:
+codegen_error_column -&gt; compiler_emit_semantic_error</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="primary" d="M 90.98 169.05 Q 121.74 174.74 121.49 143.46" stroke-width="2.60" opacity="0.96"/>
       <title>edge: primary
 compiler_emit_semantic_error -&gt; compiler_emit_codegen_error
 weight: 1
@@ -213,7 +285,7 @@ compiler_emit_semantic_error -&gt; compiler_emit_codegen_error</title>
   </g>
   <g id="call_links">
     <g class="edge-wrap">
-    <path class="call" d="M 163.21 380.46 Q 291.93 278.38 368.33 132.95" stroke-width="2.15" opacity="0.74" data-kind="call" data-from="compiler_set_import_error" data-to="compiler_context_set_error" data-weight="1" data-self-loop="false"/>
+    <path class="call" d="M 205.91 397.15 Q 305.74 277.38 348.11 127.32" stroke-width="2.15" opacity="0.74" data-kind="call" data-from="compiler_set_import_error" data-to="compiler_context_set_error" data-weight="1" data-self-loop="false"/>
       <title>edge: call
 compiler_set_import_error -&gt; compiler_context_set_error
 calls: 1
@@ -222,7 +294,7 @@ path:
 compiler_set_import_error -&gt; compiler_context_set_error</title>
     </g>
     <g class="edge-wrap">
-    <path class="call" d="M 137.87 369.07 Q 272.80 270.24 368.33 132.95" stroke-width="2.15" opacity="0.74" data-kind="call" data-from="compiler_set_unsupported_cct_import_error" data-to="compiler_context_set_error" data-weight="1" data-self-loop="false"/>
+    <path class="call" d="M 197.96 390.85 Q 297.48 273.01 348.11 127.32" stroke-width="2.15" opacity="0.74" data-kind="call" data-from="compiler_set_unsupported_cct_import_error" data-to="compiler_context_set_error" data-weight="1" data-self-loop="false"/>
       <title>edge: call
 compiler_set_unsupported_cct_import_error -&gt; compiler_context_set_error
 calls: 1
@@ -231,7 +303,7 @@ path:
 compiler_set_unsupported_cct_import_error -&gt; compiler_context_set_error</title>
     </g>
     <g class="edge-wrap">
-    <path class="call" d="M 73.29 319.11 Q 259.37 342.65 444.15 310.51" stroke-width="2.15" opacity="0.74" data-kind="call" data-from="compiler_transfer_program_declarations" data-to="compiler_is_prelude_import" data-weight="1" data-self-loop="false"/>
+    <path class="call" d="M 106.78 353.08 Q 272.34 364.82 431.17 316.65" stroke-width="2.15" opacity="0.74" data-kind="call" data-from="compiler_transfer_program_declarations" data-to="compiler_is_prelude_import" data-weight="1" data-self-loop="false"/>
       <title>edge: call
 compiler_transfer_program_declarations -&gt; compiler_is_prelude_import
 calls: 1
@@ -240,7 +312,7 @@ path:
 compiler_transfer_program_declarations -&gt; compiler_is_prelude_import</title>
     </g>
     <g class="edge-wrap">
-    <path class="call" d="M 73.29 319.11 Q 191.18 386.92 326.65 398.90" stroke-width="2.15" opacity="0.74" data-kind="call" data-from="compiler_transfer_program_declarations" data-to="compiler_is_source_backed_cct_import" data-weight="1" data-self-loop="false"/>
+    <path class="call" d="M 106.78 353.08 Q 214.52 406.88 334.75 400.22" stroke-width="2.15" opacity="0.74" data-kind="call" data-from="compiler_transfer_program_declarations" data-to="compiler_is_source_backed_cct_import" data-weight="1" data-self-loop="false"/>
       <title>edge: call
 compiler_transfer_program_declarations -&gt; compiler_is_source_backed_cct_import
 calls: 1
@@ -249,7 +321,7 @@ path:
 compiler_transfer_program_declarations -&gt; compiler_is_source_backed_cct_import</title>
     </g>
     <g class="edge-wrap">
-    <path class="call" d="M 73.29 319.11 Q 86.96 368.16 137.87 369.07" stroke-width="2.15" opacity="0.74" data-kind="call" data-from="compiler_transfer_program_declarations" data-to="compiler_set_unsupported_cct_import_error" data-weight="1" data-self-loop="false"/>
+    <path class="call" d="M 106.78 353.08 Q 141.04 399.33 197.96 390.85" stroke-width="2.15" opacity="0.74" data-kind="call" data-from="compiler_transfer_program_declarations" data-to="compiler_set_unsupported_cct_import_error" data-weight="1" data-self-loop="false"/>
       <title>edge: call
 compiler_transfer_program_declarations -&gt; compiler_set_unsupported_cct_import_error
 calls: 1
@@ -258,7 +330,7 @@ path:
 compiler_transfer_program_declarations -&gt; compiler_set_unsupported_cct_import_error</title>
     </g>
     <g class="edge-wrap">
-    <path class="call" d="M 73.29 319.11 Q 265.06 306.65 444.77 238.59" stroke-width="2.15" opacity="0.74" data-kind="call" data-from="compiler_transfer_program_declarations" data-to="compiler_resolve_import_path" data-weight="1" data-self-loop="false"/>
+    <path class="call" d="M 106.78 353.08 Q 283.46 314.25 439.76 223.17" stroke-width="2.15" opacity="0.74" data-kind="call" data-from="compiler_transfer_program_declarations" data-to="compiler_resolve_import_path" data-weight="1" data-self-loop="false"/>
       <title>edge: call
 compiler_transfer_program_declarations -&gt; compiler_resolve_import_path
 calls: 1
@@ -267,7 +339,7 @@ path:
 compiler_transfer_program_declarations -&gt; compiler_resolve_import_path</title>
     </g>
     <g class="edge-wrap">
-    <path class="call" d="M 73.29 319.11 Q 122.07 381.45 200.09 394.78" stroke-width="2.15" opacity="0.74" data-kind="call" data-from="compiler_transfer_program_declarations" data-to="compiler_exists" data-weight="1" data-self-loop="false"/>
+    <path class="call" d="M 106.78 353.08 Q 164.42 405.68 242.43 404.08" stroke-width="2.15" opacity="0.74" data-kind="call" data-from="compiler_transfer_program_declarations" data-to="compiler_exists" data-weight="1" data-self-loop="false"/>
       <title>edge: call
 compiler_transfer_program_declarations -&gt; compiler_exists
 calls: 1
@@ -276,7 +348,7 @@ path:
 compiler_transfer_program_declarations -&gt; compiler_exists</title>
     </g>
     <g class="edge-wrap">
-    <path class="call" d="M 73.29 319.11 Q 100.77 273.43 64.54 234.32" stroke-width="2.15" opacity="0.74" data-kind="call" data-from="compiler_transfer_program_declarations" data-to="compiler_load_program_into" data-weight="1" data-self-loop="false"/>
+    <path class="call" d="M 106.78 353.08 Q 111.77 309.36 69.17 298.31" stroke-width="2.15" opacity="0.74" data-kind="call" data-from="compiler_transfer_program_declarations" data-to="compiler_load_program_into" data-weight="1" data-self-loop="false"/>
       <title>edge: call
 compiler_transfer_program_declarations -&gt; compiler_load_program_into
 calls: 1
@@ -285,7 +357,7 @@ path:
 compiler_transfer_program_declarations -&gt; compiler_load_program_into</title>
     </g>
     <g class="edge-wrap">
-    <path class="call" d="M 73.29 319.11 Q 102.79 372.45 163.21 380.46" stroke-width="2.15" opacity="0.74" data-kind="call" data-from="compiler_transfer_program_declarations" data-to="compiler_set_import_error" data-weight="1" data-self-loop="false"/>
+    <path class="call" d="M 106.78 353.08 Q 145.21 400.17 205.91 397.15" stroke-width="2.15" opacity="0.74" data-kind="call" data-from="compiler_transfer_program_declarations" data-to="compiler_set_import_error" data-weight="1" data-self-loop="false"/>
       <title>edge: call
 compiler_transfer_program_declarations -&gt; compiler_set_import_error
 calls: 1
@@ -294,7 +366,7 @@ path:
 compiler_transfer_program_declarations -&gt; compiler_set_import_error</title>
     </g>
     <g class="edge-wrap">
-    <path class="call" d="M 64.54 234.32 Q 245.22 241.09 415.50 180.31" stroke-width="2.15" opacity="0.74" data-kind="call" data-from="compiler_load_program_into" data-to="compiler_has_loaded_path" data-weight="1" data-self-loop="false"/>
+    <path class="call" d="M 69.17 298.31 Q 250.80 272.39 411.73 184.28" stroke-width="2.15" opacity="0.74" data-kind="call" data-from="compiler_load_program_into" data-to="compiler_has_loaded_path" data-weight="1" data-self-loop="false"/>
       <title>edge: call
 compiler_load_program_into -&gt; compiler_has_loaded_path
 calls: 1
@@ -303,7 +375,7 @@ path:
 compiler_load_program_into -&gt; compiler_has_loaded_path</title>
     </g>
     <g class="edge-wrap">
-    <path class="call" d="M 64.54 234.32 Q 245.01 238.47 418.61 188.95" stroke-width="2.15" opacity="0.74" data-kind="call" data-from="compiler_load_program_into" data-to="compiler_mark_loaded_path" data-weight="1" data-self-loop="false"/>
+    <path class="call" d="M 69.17 298.31 Q 254.12 275.44 417.60 185.97" stroke-width="2.15" opacity="0.74" data-kind="call" data-from="compiler_load_program_into" data-to="compiler_mark_loaded_path" data-weight="1" data-self-loop="false"/>
       <title>edge: call
 compiler_load_program_into -&gt; compiler_mark_loaded_path
 calls: 1
@@ -312,7 +384,7 @@ path:
 compiler_load_program_into -&gt; compiler_mark_loaded_path</title>
     </g>
     <g class="edge-wrap">
-    <path class="call" d="M 64.54 234.32 Q 107.71 335.33 200.09 394.78" stroke-width="2.15" opacity="0.74" data-kind="call" data-from="compiler_load_program_into" data-to="compiler_exists" data-weight="1" data-self-loop="false"/>
+    <path class="call" d="M 69.17 298.31 Q 138.93 378.82 242.43 404.08" stroke-width="2.15" opacity="0.74" data-kind="call" data-from="compiler_load_program_into" data-to="compiler_exists" data-weight="1" data-self-loop="false"/>
       <title>edge: call
 compiler_load_program_into -&gt; compiler_exists
 calls: 1
@@ -321,7 +393,7 @@ path:
 compiler_load_program_into -&gt; compiler_exists</title>
     </g>
     <g class="edge-wrap">
-    <path class="call" d="M 64.54 234.32 Q 227.14 215.73 368.33 132.95" stroke-width="2.15" opacity="0.74" data-kind="call" data-from="compiler_load_program_into" data-to="compiler_context_set_error" data-weight="1" data-self-loop="false"/>
+    <path class="call" d="M 69.17 298.31 Q 225.11 239.68 348.11 127.32" stroke-width="2.15" opacity="0.74" data-kind="call" data-from="compiler_load_program_into" data-to="compiler_context_set_error" data-weight="1" data-self-loop="false"/>
       <title>edge: call
 compiler_load_program_into -&gt; compiler_context_set_error
 calls: 1
@@ -330,7 +402,7 @@ path:
 compiler_load_program_into -&gt; compiler_context_set_error</title>
     </g>
     <g class="edge-wrap">
-    <path class="call" d="M 64.54 234.32 Q 117.80 336.67 211.82 403.54" stroke-width="2.15" opacity="0.74" data-kind="call" data-from="compiler_load_program_into" data-to="compiler_read_all" data-weight="1" data-self-loop="false"/>
+    <path class="call" d="M 69.17 298.31 Q 151.49 381.52 265.99 405.80" stroke-width="2.15" opacity="0.74" data-kind="call" data-from="compiler_load_program_into" data-to="compiler_read_all" data-weight="1" data-self-loop="false"/>
       <title>edge: call
 compiler_load_program_into -&gt; compiler_read_all
 calls: 1
@@ -339,7 +411,7 @@ path:
 compiler_load_program_into -&gt; compiler_read_all</title>
     </g>
     <g class="edge-wrap">
-    <path class="call" d="M 64.54 234.32 Q 39.00 279.80 73.29 319.11" stroke-width="2.15" opacity="0.74" data-kind="call" data-from="compiler_load_program_into" data-to="compiler_transfer_program_declarations" data-weight="1" data-self-loop="false"/>
+    <path class="call" d="M 69.17 298.31 Q 62.03 343.51 106.78 353.08" stroke-width="2.15" opacity="0.74" data-kind="call" data-from="compiler_load_program_into" data-to="compiler_transfer_program_declarations" data-weight="1" data-self-loop="false"/>
       <title>edge: call
 compiler_load_program_into -&gt; compiler_transfer_program_declarations
 calls: 1
@@ -348,7 +420,7 @@ path:
 compiler_load_program_into -&gt; compiler_transfer_program_declarations</title>
     </g>
     <g class="edge-wrap">
-    <path class="call" d="M 64.54 234.32 Q 66.54 306.85 118.71 357.28" stroke-width="2.15" opacity="0.74" data-kind="call" data-from="compiler_load_program_into" data-to="compiler_program_shell_free" data-weight="1" data-self-loop="false"/>
+    <path class="call" d="M 69.17 298.31 Q 101.76 370.38 176.21 397.09" stroke-width="2.15" opacity="0.74" data-kind="call" data-from="compiler_load_program_into" data-to="compiler_program_shell_free" data-weight="1" data-self-loop="false"/>
       <title>edge: call
 compiler_load_program_into -&gt; compiler_program_shell_free
 calls: 1
@@ -357,7 +429,7 @@ path:
 compiler_load_program_into -&gt; compiler_program_shell_free</title>
     </g>
     <g class="edge-wrap">
-    <path class="call" d="M 93.08 186.60 Q 48.15 192.13 64.54 234.32" stroke-width="2.50" opacity="0.80" data-kind="call" data-from="compiler_parse_composite_program" data-to="compiler_load_program_into" data-weight="2" data-self-loop="false"/>
+    <path class="call" d="M 64.24 258.29 Q 30.34 282.78 69.17 298.31" stroke-width="2.50" opacity="0.80" data-kind="call" data-from="compiler_parse_composite_program" data-to="compiler_load_program_into" data-weight="2" data-self-loop="false"/>
       <title>edge: call
 compiler_parse_composite_program -&gt; compiler_load_program_into
 calls: 2
@@ -366,7 +438,61 @@ path:
 compiler_parse_composite_program -&gt; compiler_load_program_into</title>
     </g>
     <g class="edge-wrap">
-    <path class="call" d="M 258.03 106.63 Q 304.06 146.68 362.32 128.54" stroke-width="2.15" opacity="0.74" data-kind="call" data-from="main" data-to="compiler_context_new" data-weight="1" data-self-loop="false"/>
+    <path class="call" d="M 90.98 169.05 Q 51.63 206.53 80.58 252.51" stroke-width="2.15" opacity="0.74" data-kind="call" data-from="compiler_emit_semantic_error" data-to="semantic_error_message" data-weight="1" data-self-loop="false"/>
+      <title>edge: call
+compiler_emit_semantic_error -&gt; semantic_error_message
+calls: 1
+
+path:
+compiler_emit_semantic_error -&gt; semantic_error_message</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="call" d="M 90.98 169.05 Q 58.63 196.74 79.95 233.59" stroke-width="2.15" opacity="0.74" data-kind="call" data-from="compiler_emit_semantic_error" data-to="semantic_error_line" data-weight="1" data-self-loop="false"/>
+      <title>edge: call
+compiler_emit_semantic_error -&gt; semantic_error_line
+calls: 1
+
+path:
+compiler_emit_semantic_error -&gt; semantic_error_line</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="call" d="M 90.98 169.05 Q 55.93 187.99 74.49 223.23" stroke-width="2.15" opacity="0.74" data-kind="call" data-from="compiler_emit_semantic_error" data-to="semantic_error_column" data-weight="1" data-self-loop="false"/>
+      <title>edge: call
+compiler_emit_semantic_error -&gt; semantic_error_column
+calls: 1
+
+path:
+compiler_emit_semantic_error -&gt; semantic_error_column</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="call" d="M 121.49 143.46 Q 76.24 172.75 93.94 223.66" stroke-width="2.15" opacity="0.74" data-kind="call" data-from="compiler_emit_codegen_error" data-to="codegen_error_message" data-weight="1" data-self-loop="false"/>
+      <title>edge: call
+compiler_emit_codegen_error -&gt; codegen_error_message
+calls: 1
+
+path:
+compiler_emit_codegen_error -&gt; codegen_error_message</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="call" d="M 121.49 143.46 Q 82.13 158.15 95.50 197.97" stroke-width="2.15" opacity="0.74" data-kind="call" data-from="compiler_emit_codegen_error" data-to="codegen_error_line" data-weight="1" data-self-loop="false"/>
+      <title>edge: call
+compiler_emit_codegen_error -&gt; codegen_error_line
+calls: 1
+
+path:
+compiler_emit_codegen_error -&gt; codegen_error_line</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="call" d="M 121.49 143.46 Q 77.55 155.64 84.80 200.65" stroke-width="2.15" opacity="0.74" data-kind="call" data-from="compiler_emit_codegen_error" data-to="codegen_error_column" data-weight="1" data-self-loop="false"/>
+      <title>edge: call
+compiler_emit_codegen_error -&gt; codegen_error_column
+calls: 1
+
+path:
+compiler_emit_codegen_error -&gt; codegen_error_column</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="call" d="M 228.00 103.24 Q 270.31 140.32 321.99 118.06" stroke-width="2.15" opacity="0.74" data-kind="call" data-from="main" data-to="compiler_context_new" data-weight="1" data-self-loop="false"/>
       <title>edge: call
 main -&gt; compiler_context_new
 calls: 1
@@ -375,7 +501,7 @@ path:
 main -&gt; compiler_context_new</title>
     </g>
     <g class="edge-wrap">
-    <path class="call" d="M 258.03 106.63 Q 163.40 121.55 93.08 186.60" stroke-width="2.15" opacity="0.74" data-kind="call" data-from="main" data-to="compiler_parse_composite_program" data-weight="1" data-self-loop="false"/>
+    <path class="call" d="M 228.00 103.24 Q 127.04 160.61 64.24 258.29" stroke-width="2.15" opacity="0.74" data-kind="call" data-from="main" data-to="compiler_parse_composite_program" data-weight="1" data-self-loop="false"/>
       <title>edge: call
 main -&gt; compiler_parse_composite_program
 calls: 1
@@ -384,7 +510,25 @@ path:
 main -&gt; compiler_parse_composite_program</title>
     </g>
     <g class="edge-wrap">
-    <path class="call" d="M 258.03 106.63 Q 313.66 180.66 404.14 160.98" stroke-width="3.00" opacity="0.90" data-kind="call" data-from="main" data-to="compiler_context_free" data-weight="4" data-self-loop="false"/>
+    <path class="call" d="M 228.00 103.24 Q 292.36 158.19 376.33 147.62" stroke-width="2.15" opacity="0.74" data-kind="call" data-from="main" data-to="compiler_context_had_error" data-weight="1" data-self-loop="false"/>
+      <title>edge: call
+main -&gt; compiler_context_had_error
+calls: 1
+
+path:
+main -&gt; compiler_context_had_error</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="call" d="M 228.00 103.24 Q 300.44 163.80 394.84 166.17" stroke-width="2.15" opacity="0.74" data-kind="call" data-from="main" data-to="compiler_context_error_message" data-weight="1" data-self-loop="false"/>
+      <title>edge: call
+main -&gt; compiler_context_error_message
+calls: 1
+
+path:
+main -&gt; compiler_context_error_message</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="call" d="M 228.00 103.24 Q 292.52 172.04 383.41 146.79" stroke-width="3.00" opacity="0.90" data-kind="call" data-from="main" data-to="compiler_context_free" data-weight="4" data-self-loop="false"/>
       <title>edge: call
 main -&gt; compiler_context_free
 calls: 4
@@ -393,7 +537,7 @@ path:
 main -&gt; compiler_context_free</title>
     </g>
     <g class="edge-wrap">
-    <path class="call" d="M 258.03 106.63 Q 168.30 107.69 99.69 165.52" stroke-width="2.15" opacity="0.74" data-kind="call" data-from="main" data-to="compiler_emit_semantic_error" data-weight="1" data-self-loop="false"/>
+    <path class="call" d="M 228.00 103.24 Q 145.44 106.89 90.98 169.05" stroke-width="2.15" opacity="0.74" data-kind="call" data-from="main" data-to="compiler_emit_semantic_error" data-weight="1" data-self-loop="false"/>
       <title>edge: call
 main -&gt; compiler_emit_semantic_error
 calls: 1
@@ -402,7 +546,7 @@ path:
 main -&gt; compiler_emit_semantic_error</title>
     </g>
     <g class="edge-wrap">
-    <path class="call" d="M 258.03 106.63 Q 191.13 89.54 138.27 133.96" stroke-width="2.15" opacity="0.74" data-kind="call" data-from="main" data-to="compiler_emit_codegen_error" data-weight="1" data-self-loop="false"/>
+    <path class="call" d="M 228.00 103.24 Q 164.82 97.07 121.49 143.46" stroke-width="2.15" opacity="0.74" data-kind="call" data-from="main" data-to="compiler_emit_codegen_error" data-weight="1" data-self-loop="false"/>
       <title>edge: call
 main -&gt; compiler_emit_codegen_error
 calls: 1
@@ -411,7 +555,7 @@ path:
 main -&gt; compiler_emit_codegen_error</title>
     </g>
     <g class="edge-wrap">
-    <path class="call" d="M 258.03 106.63 Q 199.26 246.89 196.65 398.94" stroke-width="2.15" opacity="0.74" data-kind="call" data-from="main" data-to="compiler_mkdir_all" data-weight="1" data-self-loop="false"/>
+    <path class="call" d="M 228.00 103.24 Q 208.80 253.10 244.09 400.02" stroke-width="2.15" opacity="0.74" data-kind="call" data-from="main" data-to="compiler_mkdir_all" data-weight="1" data-self-loop="false"/>
       <title>edge: call
 main -&gt; compiler_mkdir_all
 calls: 1
@@ -420,7 +564,7 @@ path:
 main -&gt; compiler_mkdir_all</title>
     </g>
     <g class="edge-wrap">
-    <path class="call" d="M 258.03 106.63 Q 198.89 241.78 196.49 389.28" stroke-width="2.15" opacity="0.74" data-kind="call" data-from="main" data-to="compiler_write_all" data-weight="1" data-self-loop="false"/>
+    <path class="call" d="M 228.00 103.24 Q 211.92 255.77 254.84 403.02" stroke-width="2.15" opacity="0.74" data-kind="call" data-from="main" data-to="compiler_write_all" data-weight="1" data-self-loop="false"/>
       <title>edge: call
 main -&gt; compiler_write_all
 calls: 1
@@ -431,7 +575,7 @@ main -&gt; compiler_write_all</title>
   </g>
   <g id="branches">
     <g class="edge-wrap">
-    <path class="branch" d="M 368.33 132.95 Q 345.03 127.72 326.67 142.99" stroke-width="1.70" opacity="0.85"/>
+    <path class="branch" d="M 348.11 127.32 Q 335.45 148.42 346.96 170.16" stroke-width="1.70" opacity="0.85"/>
       <title>edge: branch
 compiler_context_set_error -&gt; compiler_context_set_error
 weight: 2
@@ -440,7 +584,7 @@ path:
 compiler_context_set_error -&gt; compiler_context_set_error</title>
     </g>
     <g class="edge-wrap">
-    <path class="branch" d="M 404.14 160.98 Q 386.67 177.80 384.69 201.96" stroke-width="2.10" opacity="0.85"/>
+    <path class="branch" d="M 383.41 146.79 Q 359.91 143.20 338.56 153.63" stroke-width="2.10" opacity="0.85"/>
       <title>edge: branch
 compiler_context_free -&gt; compiler_context_free
 weight: 4
@@ -449,7 +593,7 @@ path:
 compiler_context_free -&gt; compiler_context_free</title>
     </g>
     <g class="edge-wrap">
-    <path class="branch" d="M 444.77 238.59 Q 419.84 242.58 410.13 265.89" stroke-width="1.95" opacity="0.85"/>
+    <path class="branch" d="M 439.76 223.17 Q 423.84 204.17 399.12 206.05" stroke-width="1.95" opacity="0.85"/>
       <title>edge: branch
 compiler_resolve_import_path -&gt; compiler_resolve_import_path
 weight: 3
@@ -458,7 +602,7 @@ path:
 compiler_resolve_import_path -&gt; compiler_resolve_import_path</title>
     </g>
     <g class="edge-wrap">
-    <path class="branch" d="M 444.15 310.51 Q 413.93 306.14 386.08 318.68" stroke-width="2.10" opacity="0.85"/>
+    <path class="branch" d="M 431.17 316.65 Q 414.73 291.33 388.47 276.46" stroke-width="2.10" opacity="0.85"/>
       <title>edge: branch
 compiler_is_prelude_import -&gt; compiler_is_prelude_import
 weight: 14
@@ -467,7 +611,7 @@ path:
 compiler_is_prelude_import -&gt; compiler_is_prelude_import</title>
     </g>
     <g class="edge-wrap">
-    <path class="branch" d="M 326.65 398.90 Q 306.77 373.00 278.77 356.20" stroke-width="2.10" opacity="0.85"/>
+    <path class="branch" d="M 334.75 400.22 Q 343.11 366.95 327.30 336.50" stroke-width="2.10" opacity="0.85"/>
       <title>edge: branch
 compiler_is_source_backed_cct_import -&gt; compiler_is_source_backed_cct_import
 weight: 18
@@ -476,7 +620,7 @@ path:
 compiler_is_source_backed_cct_import -&gt; compiler_is_source_backed_cct_import</title>
     </g>
     <g class="edge-wrap">
-    <path class="branch" d="M 118.71 357.28 Q 140.65 369.14 161.53 355.52" stroke-width="1.70" opacity="0.85"/>
+    <path class="branch" d="M 176.21 397.09 Q 181.82 375.15 172.79 354.38" stroke-width="1.70" opacity="0.85"/>
       <title>edge: branch
 compiler_program_shell_free -&gt; compiler_program_shell_free
 weight: 2
@@ -485,7 +629,7 @@ path:
 compiler_program_shell_free -&gt; compiler_program_shell_free</title>
     </g>
     <g class="edge-wrap">
-    <path class="branch" d="M 73.29 319.11 Q 94.36 336.40 120.35 328.25" stroke-width="2.10" opacity="0.85"/>
+    <path class="branch" d="M 106.78 353.08 Q 123.43 334.65 128.48 310.33" stroke-width="2.10" opacity="0.85"/>
       <title>edge: branch
 compiler_transfer_program_declarations -&gt; compiler_transfer_program_declarations
 weight: 6
@@ -494,7 +638,7 @@ path:
 compiler_transfer_program_declarations -&gt; compiler_transfer_program_declarations</title>
     </g>
     <g class="edge-wrap">
-    <path class="branch" d="M 120.35 328.25 Q 109.54 296.16 79.21 281.10" stroke-width="2.10" opacity="0.85"/>
+    <path class="branch" d="M 128.48 310.33 Q 128.07 342.29 140.41 371.77" stroke-width="2.10" opacity="0.85"/>
       <title>edge: branch
 compiler_transfer_program_declarations -&gt; compiler_transfer_program_declarations
 weight: 5
@@ -503,7 +647,7 @@ path:
 compiler_transfer_program_declarations -&gt; compiler_transfer_program_declarations</title>
     </g>
     <g class="edge-wrap">
-    <path class="branch" d="M 79.21 281.10 Q 63.45 298.12 73.29 319.11" stroke-width="1.45" opacity="0.85"/>
+    <path class="branch" d="M 140.41 371.77 Q 126.75 356.74 106.78 353.08" stroke-width="1.45" opacity="0.85"/>
       <title>edge: branch
 compiler_transfer_program_declarations -&gt; compiler_transfer_program_declarations
 weight: 1
@@ -512,7 +656,7 @@ path:
 compiler_transfer_program_declarations -&gt; compiler_transfer_program_declarations</title>
     </g>
     <g class="edge-wrap">
-    <path class="branch" d="M 64.54 234.32 Q 90.79 234.53 108.48 215.14" stroke-width="2.10" opacity="0.85"/>
+    <path class="branch" d="M 69.17 298.31 Q 94.19 290.04 104.35 265.73" stroke-width="2.10" opacity="0.85"/>
       <title>edge: branch
 compiler_load_program_into -&gt; compiler_load_program_into
 weight: 6
@@ -521,7 +665,7 @@ path:
 compiler_load_program_into -&gt; compiler_load_program_into</title>
     </g>
     <g class="edge-wrap">
-    <path class="branch" d="M 108.48 215.14 Q 84.15 237.53 78.60 270.13" stroke-width="1.70" opacity="0.85"/>
+    <path class="branch" d="M 104.35 265.73 Q 88.51 294.85 94.24 327.49" stroke-width="1.70" opacity="0.85"/>
       <title>edge: branch
 compiler_load_program_into -&gt; compiler_load_program_into
 weight: 2
@@ -530,7 +674,7 @@ path:
 compiler_load_program_into -&gt; compiler_load_program_into</title>
     </g>
     <g class="edge-wrap">
-    <path class="branch" d="M 78.60 270.13 Q 81.52 248.32 64.54 234.32" stroke-width="1.45" opacity="0.85"/>
+    <path class="branch" d="M 94.24 327.49 Q 90.00 305.78 69.17 298.31" stroke-width="1.45" opacity="0.85"/>
       <title>edge: branch
 compiler_load_program_into -&gt; compiler_load_program_into
 weight: 1
@@ -539,7 +683,7 @@ path:
 compiler_load_program_into -&gt; compiler_load_program_into</title>
     </g>
     <g class="edge-wrap">
-    <path class="branch" d="M 258.03 106.63 Q 236.39 121.64 233.47 147.80" stroke-width="2.10" opacity="0.85"/>
+    <path class="branch" d="M 228.00 103.24 Q 233.54 130.01 259.09 139.73" stroke-width="2.10" opacity="0.85"/>
       <title>edge: branch
 main -&gt; main
 weight: 6
@@ -548,7 +692,7 @@ path:
 main -&gt; main</title>
     </g>
     <g class="edge-wrap">
-    <path class="branch" d="M 249.95 249.58 Q 312.53 195.00 362.32 128.54" stroke-width="2.10" opacity="0.85"/>
+    <path class="branch" d="M 250.31 246.48 Q 294.04 186.68 321.99 118.06" stroke-width="2.10" opacity="0.85"/>
       <title>edge: branch
 main -&gt; compiler_context_new
 weight: 5
@@ -557,7 +701,7 @@ path:
 main -&gt; compiler_context_new</title>
     </g>
     <g class="edge-wrap">
-    <path class="branch" d="M 249.95 249.58 Q 317.70 199.95 368.33 132.95" stroke-width="1.95" opacity="0.85"/>
+    <path class="branch" d="M 250.31 246.48 Q 306.14 192.59 348.11 127.32" stroke-width="1.95" opacity="0.85"/>
       <title>edge: branch
 main -&gt; compiler_context_set_error
 weight: 3
@@ -566,7 +710,7 @@ path:
 main -&gt; compiler_context_set_error</title>
     </g>
     <g class="edge-wrap">
-    <path class="branch" d="M 249.95 249.58 Q 334.01 217.41 404.14 160.98" stroke-width="2.10" opacity="0.85"/>
+    <path class="branch" d="M 250.31 246.48 Q 324.55 206.91 383.41 146.79" stroke-width="2.10" opacity="0.85"/>
       <title>edge: branch
 main -&gt; compiler_context_free
 weight: 5
@@ -575,7 +719,7 @@ path:
 main -&gt; compiler_context_free</title>
     </g>
     <g class="edge-wrap">
-    <path class="branch" d="M 249.95 249.58 Q 335.39 221.32 415.50 180.31" stroke-width="2.10" opacity="0.85"/>
+    <path class="branch" d="M 250.31 246.48 Q 335.66 227.43 411.73 184.28" stroke-width="2.10" opacity="0.85"/>
       <title>edge: branch
 main -&gt; compiler_has_loaded_path
 weight: 4
@@ -584,7 +728,7 @@ path:
 main -&gt; compiler_has_loaded_path</title>
     </g>
     <g class="edge-wrap">
-    <path class="branch" d="M 249.95 249.58 Q 337.40 227.96 418.61 188.95" stroke-width="1.95" opacity="0.85"/>
+    <path class="branch" d="M 250.31 246.48 Q 336.05 222.02 417.60 185.97" stroke-width="1.95" opacity="0.85"/>
       <title>edge: branch
 main -&gt; compiler_mark_loaded_path
 weight: 3
@@ -593,7 +737,7 @@ path:
 main -&gt; compiler_mark_loaded_path</title>
     </g>
     <g class="edge-wrap">
-    <path class="branch" d="M 249.95 249.58 Q 348.03 256.05 444.77 238.59" stroke-width="2.10" opacity="0.85"/>
+    <path class="branch" d="M 250.31 246.48 Q 346.70 248.38 439.76 223.17" stroke-width="2.10" opacity="0.85"/>
       <title>edge: branch
 main -&gt; compiler_resolve_import_path
 weight: 14
@@ -602,7 +746,7 @@ path:
 main -&gt; compiler_resolve_import_path</title>
     </g>
     <g class="edge-wrap">
-    <path class="branch" d="M 249.95 249.58 Q 344.38 288.53 444.15 310.51" stroke-width="2.10" opacity="0.85"/>
+    <path class="branch" d="M 250.31 246.48 Q 337.87 288.95 431.17 316.65" stroke-width="2.10" opacity="0.85"/>
       <title>edge: branch
 main -&gt; compiler_is_prelude_import
 weight: 39
@@ -611,7 +755,7 @@ path:
 main -&gt; compiler_is_prelude_import</title>
     </g>
     <g class="edge-wrap">
-    <path class="branch" d="M 249.95 249.58 Q 281.19 327.90 326.65 398.90" stroke-width="2.10" opacity="0.85"/>
+    <path class="branch" d="M 250.31 246.48 Q 287.19 326.28 334.75 400.22" stroke-width="2.10" opacity="0.85"/>
       <title>edge: branch
 main -&gt; compiler_is_source_backed_cct_import
 weight: 47
@@ -620,7 +764,7 @@ path:
 main -&gt; compiler_is_source_backed_cct_import</title>
     </g>
     <g class="edge-wrap">
-    <path class="branch" d="M 249.95 249.58 Q 199.72 310.47 163.21 380.46" stroke-width="2.10" opacity="0.85"/>
+    <path class="branch" d="M 250.31 246.48 Q 221.01 319.72 205.91 397.15" stroke-width="2.10" opacity="0.85"/>
       <title>edge: branch
 main -&gt; compiler_set_import_error
 weight: 5
@@ -629,7 +773,7 @@ path:
 main -&gt; compiler_set_import_error</title>
     </g>
     <g class="edge-wrap">
-    <path class="branch" d="M 249.95 249.58 Q 188.76 304.49 137.87 369.07" stroke-width="1.95" opacity="0.85"/>
+    <path class="branch" d="M 250.31 246.48 Q 217.46 316.24 197.96 390.85" stroke-width="1.95" opacity="0.85"/>
       <title>edge: branch
 main -&gt; compiler_set_unsupported_cct_import_error
 weight: 3
@@ -638,7 +782,7 @@ path:
 main -&gt; compiler_set_unsupported_cct_import_error</title>
     </g>
     <g class="edge-wrap">
-    <path class="branch" d="M 249.95 249.58 Q 176.02 293.30 118.71 357.28" stroke-width="2.10" opacity="0.85"/>
+    <path class="branch" d="M 250.31 246.48 Q 205.15 317.80 176.21 397.09" stroke-width="2.10" opacity="0.85"/>
       <title>edge: branch
 main -&gt; compiler_program_shell_free
 weight: 4
@@ -647,7 +791,7 @@ path:
 main -&gt; compiler_program_shell_free</title>
     </g>
     <g class="edge-wrap">
-    <path class="branch" d="M 249.95 249.58 Q 158.83 277.25 73.29 319.11" stroke-width="2.10" opacity="0.85"/>
+    <path class="branch" d="M 250.31 246.48 Q 174.31 294.08 106.78 353.08" stroke-width="2.10" opacity="0.85"/>
       <title>edge: branch
 main -&gt; compiler_transfer_program_declarations
 weight: 21
@@ -656,7 +800,7 @@ path:
 main -&gt; compiler_transfer_program_declarations</title>
     </g>
     <g class="edge-wrap">
-    <path class="branch" d="M 249.95 249.58 Q 157.88 234.29 64.54 234.32" stroke-width="2.10" opacity="0.85"/>
+    <path class="branch" d="M 250.31 246.48 Q 157.38 264.15 69.17 298.31" stroke-width="2.10" opacity="0.85"/>
       <title>edge: branch
 main -&gt; compiler_load_program_into
 weight: 19
@@ -665,7 +809,7 @@ path:
 main -&gt; compiler_load_program_into</title>
     </g>
     <g class="edge-wrap">
-    <path class="branch" d="M 249.95 249.58 Q 174.07 211.72 93.08 186.60" stroke-width="2.10" opacity="0.85"/>
+    <path class="branch" d="M 250.31 246.48 Q 156.85 245.65 64.24 258.29" stroke-width="2.10" opacity="0.85"/>
       <title>edge: branch
 main -&gt; compiler_parse_composite_program
 weight: 6
@@ -674,28 +818,28 @@ path:
 main -&gt; compiler_parse_composite_program</title>
     </g>
     <g class="edge-wrap">
-    <path class="branch" d="M 249.95 249.58 Q 179.35 199.45 99.69 165.52" stroke-width="2.10" opacity="0.85"/>
+    <path class="branch" d="M 250.31 246.48 Q 175.65 197.47 90.98 169.05" stroke-width="2.10" opacity="0.85"/>
       <title>edge: branch
 main -&gt; compiler_emit_semantic_error
-weight: 9
+weight: 12
 
 path:
 main -&gt; compiler_emit_semantic_error</title>
     </g>
     <g class="edge-wrap">
-    <path class="branch" d="M 249.95 249.58 Q 201.69 184.44 138.27 133.96" stroke-width="2.10" opacity="0.85"/>
+    <path class="branch" d="M 250.31 246.48 Q 190.32 189.43 121.49 143.46" stroke-width="2.10" opacity="0.85"/>
       <title>edge: branch
 main -&gt; compiler_emit_codegen_error
-weight: 9
+weight: 12
 
 path:
 main -&gt; compiler_emit_codegen_error</title>
     </g>
     <g class="edge-wrap">
-    <path class="branch" d="M 249.95 249.58 Q 264.86 178.72 258.03 106.63" stroke-width="2.10" opacity="0.85"/>
+    <path class="branch" d="M 250.31 246.48 Q 252.14 172.84 228.00 103.24" stroke-width="2.10" opacity="0.85"/>
       <title>edge: branch
 main -&gt; main
-weight: 43
+weight: 45
 
 path:
 main -&gt; main</title>
@@ -703,7 +847,7 @@ main -&gt; main</title>
   </g>
   <g id="loops">
     <g class="edge-wrap">
-    <path class="loop" d="M 73.29 319.11 Q 56.33 332.24 59.75 353.41" stroke-width="1.55" opacity="0.88"/>
+    <path class="loop" d="M 106.78 353.08 Q 90.36 343.58 71.40 342.70" stroke-width="1.55" opacity="0.88"/>
       <title>edge: loop
 compiler_transfer_program_declarations -&gt; compiler_transfer_program_declarations
 weight: 2
@@ -712,7 +856,7 @@ path:
 compiler_transfer_program_declarations -&gt; compiler_transfer_program_declarations</title>
     </g>
     <g class="edge-wrap">
-    <path class="loop" d="M 63.51 353.41 C 98.29 349.44 102.19 371.26 86.58 360.35 C 70.96 371.26 74.86 349.44 56.93 354.91"/>
+    <path class="loop" d="M 75.16 342.70 C 110.09 338.34 113.99 360.17 98.38 349.25 C 82.76 360.17 86.66 338.34 68.58 344.20"/>
       <title>edge: loop
 compiler_transfer_program_declarations -&gt; compiler_transfer_program_declarations
 weight: 2
@@ -723,18 +867,18 @@ compiler_transfer_program_declarations -&gt; compiler_transfer_program_declarati
   </g>
   <g id="bindings">
     <g class="edge-wrap">
-    <path class="bind" d="M 362.32 128.54 Q 349.72 134.96 345.66 148.51" stroke-width="1.76" opacity="0.85"/>
-    <line class="bind" x1="362.06" y1="135.10" x2="355.91" y2="129.97" opacity="0.75"/>
-    <line class="bind" x1="361.16" y1="137.73" x2="353.48" y2="131.33" opacity="0.75"/>
-    <line class="bind" x1="358.73" y1="139.09" x2="352.58" y2="133.97" opacity="0.75"/>
-    <line class="bind" x1="357.83" y1="141.73" x2="350.15" y2="135.32" opacity="0.75"/>
-    <line class="bind" x1="355.40" y1="143.08" x2="349.25" y2="137.96" opacity="0.75"/>
-    <line class="bind" x1="354.50" y1="145.72" x2="346.82" y2="139.31" opacity="0.75"/>
-    <line class="bind" x1="351.47" y1="147.76" x2="357.42" y2="147.00" opacity="0.58"/>
-    <line class="bind" x1="348.21" y1="153.78" x2="352.12" y2="161.88" opacity="0.58"/>
-    <line class="bind" x1="340.64" y1="151.50" x2="335.49" y2="154.58" opacity="0.58"/>
-    <line class="bind" x1="341.26" y1="144.66" x2="334.48" y2="138.73" opacity="0.58"/>
-    <line class="bind" x1="348.69" y1="143.50" x2="351.80" y2="138.37" opacity="0.58"/>
+    <path class="bind" d="M 321.99 118.06 Q 311.98 127.69 310.77 141.51" stroke-width="1.76" opacity="0.85"/>
+    <line class="bind" x1="323.35" y1="124.48" x2="316.13" y2="121.02" opacity="0.75"/>
+    <line class="bind" x1="323.13" y1="127.25" x2="314.11" y2="122.94" opacity="0.75"/>
+    <line class="bind" x1="321.11" y1="129.17" x2="313.89" y2="125.71" opacity="0.75"/>
+    <line class="bind" x1="320.89" y1="131.94" x2="311.87" y2="127.63" opacity="0.75"/>
+    <line class="bind" x1="318.86" y1="133.86" x2="311.65" y2="130.41" opacity="0.75"/>
+    <line class="bind" x1="318.64" y1="136.64" x2="309.62" y2="132.32" opacity="0.75"/>
+    <line class="bind" x1="316.62" y1="141.41" x2="322.61" y2="141.31" opacity="0.58"/>
+    <line class="bind" x1="312.93" y1="146.95" x2="316.27" y2="155.31" opacity="0.58"/>
+    <line class="bind" x1="307.14" y1="146.11" x2="303.42" y2="150.82" opacity="0.58"/>
+    <line class="bind" x1="305.69" y1="138.61" x2="297.87" y2="134.14" opacity="0.58"/>
+    <line class="bind" x1="311.73" y1="135.74" x2="312.72" y2="129.83" opacity="0.58"/>
       <title>edge: bind
 compiler_context_new -&gt; compiler_context_new
 weight: 7
@@ -743,13 +887,13 @@ path:
 compiler_context_new -&gt; compiler_context_new</title>
     </g>
     <g class="edge-wrap">
-    <path class="bind" d="M 368.33 132.95 Q 355.47 138.81 350.80 152.16" stroke-width="1.44" opacity="0.85"/>
-    <line class="bind" x1="367.78" y1="139.49" x2="361.87" y2="134.10" opacity="0.75"/>
-    <line class="bind" x1="366.77" y1="142.09" x2="359.38" y2="135.34" opacity="0.75"/>
-    <line class="bind" x1="364.27" y1="143.33" x2="358.37" y2="137.94" opacity="0.75"/>
-    <line class="bind" x1="355.98" y1="153.02" x2="361.90" y2="154.01" opacity="0.58"/>
-    <line class="bind" x1="347.30" y1="156.07" x2="341.30" y2="162.78" opacity="0.58"/>
-    <line class="bind" x1="348.92" y1="147.26" x2="346.76" y2="141.66" opacity="0.58"/>
+    <path class="bind" d="M 348.11 127.32 Q 334.78 133.77 332.97 148.46" stroke-width="1.44" opacity="0.85"/>
+    <line class="bind" x1="348.33" y1="133.88" x2="341.83" y2="129.22" opacity="0.75"/>
+    <line class="bind" x1="347.63" y1="136.58" x2="339.50" y2="130.75" opacity="0.75"/>
+    <line class="bind" x1="345.30" y1="138.11" x2="338.80" y2="133.45" opacity="0.75"/>
+    <line class="bind" x1="338.03" y1="147.05" x2="343.80" y2="145.43" opacity="0.58"/>
+    <line class="bind" x1="330.36" y1="153.02" x2="325.88" y2="160.82" opacity="0.58"/>
+    <line class="bind" x1="329.45" y1="144.57" x2="325.42" y2="140.12" opacity="0.58"/>
       <title>edge: bind
 compiler_context_set_error -&gt; compiler_context_set_error
 weight: 3
@@ -758,13 +902,13 @@ path:
 compiler_context_set_error -&gt; compiler_context_set_error</title>
     </g>
     <g class="edge-wrap">
-    <path class="bind" d="M 415.50 180.31 Q 403.12 184.55 392.01 191.46" stroke-width="1.44" opacity="0.85"/>
-    <line class="bind" x1="412.51" y1="186.15" x2="409.08" y2="178.93" opacity="0.75"/>
-    <line class="bind" x1="410.59" y1="188.17" x2="406.31" y2="179.14" opacity="0.75"/>
-    <line class="bind" x1="407.82" y1="188.38" x2="404.39" y2="181.16" opacity="0.75"/>
-    <line class="bind" x1="397.20" y1="190.69" x2="403.14" y2="189.80" opacity="0.58"/>
-    <line class="bind" x1="389.04" y1="195.79" x2="383.94" y2="203.21" opacity="0.58"/>
-    <line class="bind" x1="388.50" y1="187.55" x2="384.49" y2="183.09" opacity="0.58"/>
+    <path class="bind" d="M 411.73 184.28 Q 398.95 187.60 388.11 195.16" stroke-width="1.44" opacity="0.85"/>
+    <line class="bind" x1="408.68" y1="190.09" x2="405.33" y2="182.83" opacity="0.75"/>
+    <line class="bind" x1="406.74" y1="192.09" x2="402.55" y2="183.00" opacity="0.75"/>
+    <line class="bind" x1="403.96" y1="192.27" x2="400.61" y2="185.00" opacity="0.75"/>
+    <line class="bind" x1="393.13" y1="196.70" x2="398.87" y2="198.45" opacity="0.58"/>
+    <line class="bind" x1="384.28" y1="198.75" x2="377.72" y2="204.91" opacity="0.58"/>
+    <line class="bind" x1="385.20" y1="190.79" x2="381.87" y2="185.80" opacity="0.58"/>
       <title>edge: bind
 compiler_has_loaded_path -&gt; compiler_has_loaded_path
 weight: 3
@@ -773,11 +917,11 @@ path:
 compiler_has_loaded_path -&gt; compiler_has_loaded_path</title>
     </g>
     <g class="edge-wrap">
-    <path class="bind" d="M 418.61 188.95 Q 405.53 191.35 394.57 198.86" stroke-width="1.36" opacity="0.85"/>
-    <line class="bind" x1="415.32" y1="194.63" x2="412.27" y2="187.23" opacity="0.75"/>
-    <line class="bind" x1="413.30" y1="196.55" x2="409.49" y2="187.30" opacity="0.75"/>
-    <line class="bind" x1="399.61" y1="199.64" x2="405.54" y2="200.56" opacity="0.58"/>
-    <line class="bind" x1="389.63" y1="197.59" x2="380.92" y2="195.34" opacity="0.58"/>
+    <path class="bind" d="M 417.60 185.97 Q 402.36 183.50 393.74 196.31" stroke-width="1.36" opacity="0.85"/>
+    <line class="bind" x1="414.42" y1="191.70" x2="411.24" y2="184.36" opacity="0.75"/>
+    <line class="bind" x1="412.43" y1="193.66" x2="408.45" y2="184.48" opacity="0.75"/>
+    <line class="bind" x1="398.84" y1="196.25" x2="404.84" y2="196.19" opacity="0.58"/>
+    <line class="bind" x1="388.79" y1="195.09" x2="380.05" y2="192.95" opacity="0.58"/>
       <title>edge: bind
 compiler_mark_loaded_path -&gt; compiler_mark_loaded_path
 weight: 2
@@ -786,18 +930,18 @@ path:
 compiler_mark_loaded_path -&gt; compiler_mark_loaded_path</title>
     </g>
     <g class="edge-wrap">
-    <path class="bind" d="M 444.77 238.59 Q 431.15 232.51 418.88 240.98" stroke-width="1.76" opacity="0.85"/>
-    <line class="bind" x1="439.96" y1="243.05" x2="439.22" y2="235.08" opacity="0.75"/>
-    <line class="bind" x1="437.46" y1="244.28" x2="436.54" y2="234.33" opacity="0.75"/>
-    <line class="bind" x1="434.78" y1="243.53" x2="434.05" y2="235.56" opacity="0.75"/>
-    <line class="bind" x1="432.28" y1="244.76" x2="431.36" y2="234.80" opacity="0.75"/>
-    <line class="bind" x1="429.60" y1="244.01" x2="428.87" y2="236.04" opacity="0.75"/>
-    <line class="bind" x1="427.11" y1="245.24" x2="426.19" y2="235.28" opacity="0.75"/>
-    <line class="bind" x1="424.73" y1="240.85" x2="430.73" y2="240.72" opacity="0.58"/>
-    <line class="bind" x1="421.41" y1="246.25" x2="425.30" y2="254.37" opacity="0.58"/>
-    <line class="bind" x1="414.22" y1="244.51" x2="409.44" y2="248.14" opacity="0.58"/>
-    <line class="bind" x1="415.23" y1="236.41" x2="409.62" y2="229.37" opacity="0.58"/>
-    <line class="bind" x1="421.61" y1="235.81" x2="424.42" y2="230.50" opacity="0.58"/>
+    <path class="bind" d="M 439.76 223.17 Q 425.85 219.22 414.17 227.75" stroke-width="1.76" opacity="0.85"/>
+    <line class="bind" x1="435.34" y1="228.03" x2="433.94" y2="220.15" opacity="0.75"/>
+    <line class="bind" x1="432.96" y1="229.47" x2="431.20" y2="219.62" opacity="0.75"/>
+    <line class="bind" x1="430.23" y1="228.94" x2="428.82" y2="221.07" opacity="0.75"/>
+    <line class="bind" x1="427.84" y1="230.38" x2="426.08" y2="220.54" opacity="0.75"/>
+    <line class="bind" x1="425.11" y1="229.85" x2="423.70" y2="221.98" opacity="0.75"/>
+    <line class="bind" x1="422.72" y1="231.30" x2="420.96" y2="221.45" opacity="0.75"/>
+    <line class="bind" x1="419.79" y1="226.14" x2="425.56" y2="224.50" opacity="0.58"/>
+    <line class="bind" x1="415.57" y1="233.42" x2="417.74" y2="242.16" opacity="0.58"/>
+    <line class="bind" x1="410.07" y1="231.92" x2="405.86" y2="236.20" opacity="0.58"/>
+    <line class="bind" x1="409.38" y1="224.38" x2="402.02" y2="219.20" opacity="0.58"/>
+    <line class="bind" x1="414.74" y1="221.92" x2="415.33" y2="215.95" opacity="0.58"/>
       <title>edge: bind
 compiler_resolve_import_path -&gt; compiler_resolve_import_path
 weight: 7
@@ -806,9 +950,9 @@ path:
 compiler_resolve_import_path -&gt; compiler_resolve_import_path</title>
     </g>
     <g class="edge-wrap">
-    <path class="bind" d="M 211.82 403.54 Q 219.81 392.36 219.28 378.63" stroke-width="1.28" opacity="0.85"/>
-    <line class="bind" x1="209.48" y1="397.41" x2="217.14" y2="399.70" opacity="0.75"/>
-    <line class="bind" x1="224.02" y1="380.04" x2="229.78" y2="381.74" opacity="0.58"/>
+    <path class="bind" d="M 265.99 405.80 Q 267.08 392.70 264.26 379.86" stroke-width="1.28" opacity="0.85"/>
+    <line class="bind" x1="261.66" y1="400.88" x2="269.64" y2="400.35" opacity="0.75"/>
+    <line class="bind" x1="269.08" y1="378.71" x2="274.91" y2="377.31" opacity="0.58"/>
       <title>edge: bind
 compiler_read_all -&gt; compiler_read_all
 weight: 1
@@ -817,9 +961,9 @@ path:
 compiler_read_all -&gt; compiler_read_all</title>
     </g>
     <g class="edge-wrap">
-    <path class="bind" d="M 196.49 389.28 Q 205.85 379.22 207.09 365.54" stroke-width="1.28" opacity="0.85"/>
-    <line class="bind" x1="194.96" y1="382.90" x2="202.27" y2="386.16" opacity="0.75"/>
-    <line class="bind" x1="211.89" y1="366.78" x2="217.70" y2="368.28" opacity="0.58"/>
+    <path class="bind" d="M 254.84 403.02 Q 260.21 390.06 255.05 377.02" stroke-width="1.28" opacity="0.85"/>
+    <line class="bind" x1="250.88" y1="397.79" x2="258.88" y2="397.85" opacity="0.75"/>
+    <line class="bind" x1="259.87" y1="378.15" x2="265.71" y2="379.51" opacity="0.58"/>
       <title>edge: bind
 compiler_write_all -&gt; compiler_write_all
 weight: 1
@@ -828,9 +972,9 @@ path:
 compiler_write_all -&gt; compiler_write_all</title>
     </g>
     <g class="edge-wrap">
-    <path class="bind" d="M 200.09 394.78 Q 209.59 384.59 209.80 370.66" stroke-width="1.28" opacity="0.85"/>
-    <line class="bind" x1="198.32" y1="388.46" x2="205.74" y2="391.45" opacity="0.75"/>
-    <line class="bind" x1="214.61" y1="369.49" x2="220.44" y2="368.07" opacity="0.58"/>
+    <path class="bind" d="M 242.43 404.08 Q 252.21 391.92 244.80 378.19" stroke-width="1.28" opacity="0.85"/>
+    <line class="bind" x1="238.92" y1="398.53" x2="246.89" y2="399.26" opacity="0.75"/>
+    <line class="bind" x1="249.71" y1="378.86" x2="255.65" y2="379.68" opacity="0.58"/>
       <title>edge: bind
 compiler_exists -&gt; compiler_exists
 weight: 1
@@ -839,9 +983,9 @@ path:
 compiler_exists -&gt; compiler_exists</title>
     </g>
     <g class="edge-wrap">
-    <path class="bind" d="M 196.65 398.94 Q 209.29 390.11 206.62 374.93" stroke-width="1.28" opacity="0.85"/>
-    <line class="bind" x1="194.95" y1="392.60" x2="202.34" y2="395.67" opacity="0.75"/>
-    <line class="bind" x1="211.37" y1="376.35" x2="217.11" y2="378.07" opacity="0.58"/>
+    <path class="bind" d="M 244.09 400.02 Q 251.39 387.58 246.23 374.11" stroke-width="1.28" opacity="0.85"/>
+    <line class="bind" x1="240.53" y1="394.51" x2="248.50" y2="395.17" opacity="0.75"/>
+    <line class="bind" x1="251.18" y1="374.23" x2="257.18" y2="374.37" opacity="0.58"/>
       <title>edge: bind
 compiler_mkdir_all -&gt; compiler_mkdir_all
 weight: 1
@@ -850,13 +994,13 @@ path:
 compiler_mkdir_all -&gt; compiler_mkdir_all</title>
     </g>
     <g class="edge-wrap">
-    <path class="bind" d="M 163.21 380.46 Q 176.94 374.48 178.75 359.61" stroke-width="1.44" opacity="0.85"/>
-    <line class="bind" x1="163.11" y1="373.90" x2="169.53" y2="378.68" opacity="0.75"/>
-    <line class="bind" x1="163.87" y1="371.22" x2="171.88" y2="377.19" opacity="0.75"/>
-    <line class="bind" x1="166.22" y1="369.73" x2="172.64" y2="374.51" opacity="0.75"/>
-    <line class="bind" x1="184.00" y1="359.63" x2="190.00" y2="359.64" opacity="0.58"/>
-    <line class="bind" x1="177.34" y1="364.67" x2="174.91" y2="373.33" opacity="0.58"/>
-    <line class="bind" x1="176.79" y1="354.75" x2="174.54" y2="349.18" opacity="0.58"/>
+    <path class="bind" d="M 205.91 397.15 Q 214.94 386.56 214.61 372.65" stroke-width="1.44" opacity="0.85"/>
+    <line class="bind" x1="203.88" y1="390.91" x2="211.42" y2="393.59" opacity="0.75"/>
+    <line class="bind" x1="203.81" y1="388.13" x2="213.23" y2="391.47" opacity="0.75"/>
+    <line class="bind" x1="205.62" y1="386.01" x2="213.16" y2="388.69" opacity="0.75"/>
+    <line class="bind" x1="219.78" y1="373.52" x2="225.70" y2="374.52" opacity="0.58"/>
+    <line class="bind" x1="211.48" y1="376.87" x2="206.13" y2="384.10" opacity="0.58"/>
+    <line class="bind" x1="213.30" y1="367.56" x2="211.80" y2="361.75" opacity="0.58"/>
       <title>edge: bind
 compiler_set_import_error -&gt; compiler_set_import_error
 weight: 3
@@ -865,9 +1009,9 @@ path:
 compiler_set_import_error -&gt; compiler_set_import_error</title>
     </g>
     <g class="edge-wrap">
-    <path class="bind" d="M 137.87 369.07 Q 149.84 362.77 156.66 351.09" stroke-width="1.28" opacity="0.85"/>
-    <line class="bind" x1="138.86" y1="362.59" x2="144.40" y2="368.36" opacity="0.75"/>
-    <line class="bind" x1="161.60" y1="350.84" x2="167.59" y2="350.53" opacity="0.58"/>
+    <path class="bind" d="M 197.96 390.85 Q 206.49 380.37 208.24 366.97" stroke-width="1.28" opacity="0.85"/>
+    <line class="bind" x1="196.34" y1="384.49" x2="203.69" y2="387.66" opacity="0.75"/>
+    <line class="bind" x1="213.17" y1="367.34" x2="219.16" y2="367.79" opacity="0.58"/>
       <title>edge: bind
 compiler_set_unsupported_cct_import_error -&gt; compiler_set_unsupported_cct_import_error
 weight: 1
@@ -876,17 +1020,17 @@ path:
 compiler_set_unsupported_cct_import_error -&gt; compiler_set_unsupported_cct_import_error</title>
     </g>
     <g class="edge-wrap">
-    <path class="bind" d="M 73.29 319.11 Q 88.18 322.39 97.87 310.62" stroke-width="1.60" opacity="0.85"/>
-    <line class="bind" x1="76.90" y1="313.63" x2="79.51" y2="321.20" opacity="0.75"/>
-    <line class="bind" x1="79.03" y1="311.84" x2="82.30" y2="321.29" opacity="0.75"/>
-    <line class="bind" x1="81.82" y1="311.94" x2="84.43" y2="319.50" opacity="0.75"/>
-    <line class="bind" x1="83.95" y1="310.14" x2="87.21" y2="319.59" opacity="0.75"/>
-    <line class="bind" x1="86.73" y1="310.24" x2="89.34" y2="317.80" opacity="0.75"/>
-    <line class="bind" x1="103.28" y1="309.40" x2="109.13" y2="308.07" opacity="0.58"/>
-    <line class="bind" x1="100.67" y1="315.41" x2="105.22" y2="323.18" opacity="0.58"/>
-    <line class="bind" x1="93.49" y1="314.04" x2="88.76" y2="317.73" opacity="0.58"/>
-    <line class="bind" x1="93.04" y1="307.89" x2="85.20" y2="303.46" opacity="0.58"/>
-    <line class="bind" x1="98.00" y1="305.08" x2="98.13" y2="299.08" opacity="0.58"/>
+    <path class="bind" d="M 106.78 353.08 Q 118.50 347.25 128.58 338.90" stroke-width="1.60" opacity="0.85"/>
+    <line class="bind" x1="108.96" y1="346.89" x2="113.32" y2="353.60" opacity="0.75"/>
+    <line class="bind" x1="110.60" y1="344.64" x2="116.05" y2="353.02" opacity="0.75"/>
+    <line class="bind" x1="113.32" y1="344.06" x2="117.68" y2="350.76" opacity="0.75"/>
+    <line class="bind" x1="114.95" y1="341.80" x2="120.41" y2="350.18" opacity="0.75"/>
+    <line class="bind" x1="117.68" y1="341.22" x2="122.04" y2="347.93" opacity="0.75"/>
+    <line class="bind" x1="133.96" y1="337.56" x2="139.79" y2="336.11" opacity="0.58"/>
+    <line class="bind" x1="131.48" y1="343.64" x2="136.18" y2="351.31" opacity="0.58"/>
+    <line class="bind" x1="123.57" y1="341.31" x2="118.17" y2="343.90" opacity="0.58"/>
+    <line class="bind" x1="123.40" y1="336.91" x2="115.00" y2="333.68" opacity="0.58"/>
+    <line class="bind" x1="128.92" y1="333.36" x2="129.28" y2="327.38" opacity="0.58"/>
       <title>edge: bind
 compiler_transfer_program_declarations -&gt; compiler_transfer_program_declarations
 weight: 5
@@ -895,11 +1039,11 @@ path:
 compiler_transfer_program_declarations -&gt; compiler_transfer_program_declarations</title>
     </g>
     <g class="edge-wrap">
-    <path class="bind" d="M 64.54 234.32 Q 76.82 241.44 90.38 237.24" stroke-width="1.36" opacity="0.85"/>
-    <line class="bind" x1="70.16" y1="230.93" x2="69.26" y2="238.88" opacity="0.75"/>
-    <line class="bind" x1="72.85" y1="230.23" x2="71.73" y2="240.16" opacity="0.75"/>
-    <line class="bind" x1="95.45" y1="236.77" x2="101.43" y2="236.21" opacity="0.58"/>
-    <line class="bind" x1="85.43" y1="235.98" x2="76.71" y2="233.76" opacity="0.58"/>
+    <path class="bind" d="M 69.17 298.31 Q 83.16 301.22 94.53 292.56" stroke-width="1.36" opacity="0.85"/>
+    <line class="bind" x1="73.36" y1="293.26" x2="75.13" y2="301.06" opacity="0.75"/>
+    <line class="bind" x1="75.68" y1="291.71" x2="77.89" y2="301.46" opacity="0.75"/>
+    <line class="bind" x1="99.53" y1="291.54" x2="105.41" y2="290.33" opacity="0.58"/>
+    <line class="bind" x1="89.46" y1="293.09" x2="80.51" y2="294.01" opacity="0.58"/>
       <title>edge: bind
 compiler_load_program_into -&gt; compiler_load_program_into
 weight: 2
@@ -908,11 +1052,11 @@ path:
 compiler_load_program_into -&gt; compiler_load_program_into</title>
     </g>
     <g class="edge-wrap">
-    <path class="bind" d="M 93.08 186.60 Q 102.61 197.40 117.00 196.79" stroke-width="1.36" opacity="0.85"/>
-    <line class="bind" x1="99.43" y1="184.96" x2="96.29" y2="192.32" opacity="0.75"/>
-    <line class="bind" x1="102.21" y1="185.06" x2="98.29" y2="194.26" opacity="0.75"/>
-    <line class="bind" x1="121.90" y1="198.21" x2="127.66" y2="199.88" opacity="0.58"/>
-    <line class="bind" x1="111.93" y1="197.38" x2="102.99" y2="198.40" opacity="0.58"/>
+    <path class="bind" d="M 64.24 258.29 Q 77.29 262.53 90.24 257.98" stroke-width="1.36" opacity="0.85"/>
+    <line class="bind" x1="69.39" y1="254.23" x2="69.49" y2="262.23" opacity="0.75"/>
+    <line class="bind" x1="71.98" y1="253.20" x2="72.10" y2="263.20" opacity="0.75"/>
+    <line class="bind" x1="95.22" y1="256.85" x2="101.07" y2="255.53" opacity="0.58"/>
+    <line class="bind" x1="85.14" y1="258.06" x2="76.14" y2="258.20" opacity="0.58"/>
       <title>edge: bind
 compiler_parse_composite_program -&gt; compiler_parse_composite_program
 weight: 2
@@ -921,56 +1065,58 @@ path:
 compiler_parse_composite_program -&gt; compiler_parse_composite_program</title>
     </g>
     <g class="edge-wrap">
-    <path class="bind" d="M 99.69 165.52 Q 108.35 176.49 122.19 178.54" stroke-width="1.60" opacity="0.85"/>
-    <line class="bind" x1="106.19" y1="164.66" x2="102.18" y2="171.59" opacity="0.75"/>
-    <line class="bind" x1="108.94" y1="165.10" x2="103.93" y2="173.75" opacity="0.75"/>
-    <line class="bind" x1="110.69" y1="167.27" x2="106.68" y2="174.19" opacity="0.75"/>
-    <line class="bind" x1="113.44" y1="167.70" x2="108.43" y2="176.36" opacity="0.75"/>
-    <line class="bind" x1="115.19" y1="169.87" x2="111.18" y2="176.80" opacity="0.75"/>
-    <line class="bind" x1="127.67" y1="179.41" x2="133.59" y2="180.35" opacity="0.58"/>
-    <line class="bind" x1="122.50" y1="184.08" x2="123.00" y2="193.07" opacity="0.58"/>
-    <line class="bind" x1="118.06" y1="182.25" x2="113.60" y2="186.27" opacity="0.58"/>
-    <line class="bind" x1="117.47" y1="175.62" x2="109.81" y2="170.89" opacity="0.58"/>
-    <line class="bind" x1="124.73" y1="173.61" x2="127.47" y2="168.27" opacity="0.58"/>
+    <path class="bind" d="M 90.98 169.05 Q 99.78 180.23 113.98 181.17" stroke-width="1.80" opacity="0.85"/>
+    <line class="bind" x1="97.44" y1="167.94" x2="93.71" y2="175.02" opacity="0.75"/>
+    <line class="bind" x1="100.21" y1="168.27" x2="95.55" y2="177.11" opacity="0.75"/>
+    <line class="bind" x1="102.04" y1="170.36" x2="98.31" y2="177.44" opacity="0.75"/>
+    <line class="bind" x1="104.81" y1="170.69" x2="100.15" y2="179.54" opacity="0.75"/>
+    <line class="bind" x1="106.64" y1="172.79" x2="102.91" y2="179.86" opacity="0.75"/>
+    <line class="bind" x1="109.41" y1="173.11" x2="104.75" y2="181.96" opacity="0.75"/>
+    <line class="bind" x1="119.93" y1="181.92" x2="125.88" y2="182.68" opacity="0.58"/>
+    <line class="bind" x1="117.39" y1="186.11" x2="122.50" y2="193.52" opacity="0.58"/>
+    <line class="bind" x1="109.95" y1="185.62" x2="105.91" y2="190.06" opacity="0.58"/>
+    <line class="bind" x1="109.26" y1="177.47" x2="102.19" y2="171.90" opacity="0.58"/>
+    <line class="bind" x1="115.12" y1="175.28" x2="116.26" y2="169.39" opacity="0.58"/>
       <title>edge: bind
 compiler_emit_semantic_error -&gt; compiler_emit_semantic_error
-weight: 5
+weight: 8
 
 path:
 compiler_emit_semantic_error -&gt; compiler_emit_semantic_error</title>
     </g>
     <g class="edge-wrap">
-    <path class="bind" d="M 138.27 133.96 Q 144.20 146.30 156.32 152.67" stroke-width="1.60" opacity="0.85"/>
-    <line class="bind" x1="144.75" y1="134.93" x2="139.00" y2="140.48" opacity="0.75"/>
-    <line class="bind" x1="147.28" y1="136.10" x2="140.08" y2="143.05" opacity="0.75"/>
-    <line class="bind" x1="148.36" y1="138.67" x2="142.61" y2="144.22" opacity="0.75"/>
-    <line class="bind" x1="150.89" y1="139.84" x2="143.69" y2="146.79" opacity="0.75"/>
-    <line class="bind" x1="151.97" y1="142.41" x2="146.22" y2="147.96" opacity="0.75"/>
-    <line class="bind" x1="161.85" y1="152.26" x2="167.84" y2="151.82" opacity="0.58"/>
-    <line class="bind" x1="158.68" y1="157.69" x2="162.51" y2="165.84" opacity="0.58"/>
-    <line class="bind" x1="152.04" y1="156.21" x2="147.42" y2="160.04" opacity="0.58"/>
-    <line class="bind" x1="152.07" y1="149.09" x2="145.20" y2="143.29" opacity="0.58"/>
-    <line class="bind" x1="157.31" y1="147.21" x2="158.39" y2="141.31" opacity="0.58"/>
+    <path class="bind" d="M 121.49 143.46 Q 126.61 157.60 141.43 160.14" stroke-width="1.80" opacity="0.85"/>
+    <line class="bind" x1="128.04" y1="143.73" x2="122.91" y2="149.87" opacity="0.75"/>
+    <line class="bind" x1="130.68" y1="144.63" x2="124.26" y2="152.30" opacity="0.75"/>
+    <line class="bind" x1="132.03" y1="147.07" x2="126.90" y2="153.20" opacity="0.75"/>
+    <line class="bind" x1="134.67" y1="147.97" x2="128.25" y2="155.64" opacity="0.75"/>
+    <line class="bind" x1="136.02" y1="150.40" x2="130.88" y2="156.54" opacity="0.75"/>
+    <line class="bind" x1="138.65" y1="151.30" x2="132.24" y2="158.97" opacity="0.75"/>
+    <line class="bind" x1="147.36" y1="159.25" x2="153.29" y2="158.35" opacity="0.58"/>
+    <line class="bind" x1="142.82" y1="165.98" x2="144.91" y2="174.73" opacity="0.58"/>
+    <line class="bind" x1="137.04" y1="164.24" x2="132.65" y2="168.33" opacity="0.58"/>
+    <line class="bind" x1="136.35" y1="156.94" x2="128.74" y2="152.14" opacity="0.58"/>
+    <line class="bind" x1="141.99" y1="154.17" x2="142.56" y2="148.20" opacity="0.58"/>
       <title>edge: bind
 compiler_emit_codegen_error -&gt; compiler_emit_codegen_error
-weight: 5
+weight: 8
 
 path:
 compiler_emit_codegen_error -&gt; compiler_emit_codegen_error</title>
     </g>
     <g class="edge-wrap">
-    <path class="bind" d="M 258.03 106.63 Q 251.96 119.55 257.67 132.63" stroke-width="1.80" opacity="0.85"/>
-    <line class="bind" x1="261.96" y1="111.89" x2="253.96" y2="111.78" opacity="0.75"/>
-    <line class="bind" x1="262.92" y1="114.50" x2="252.92" y2="114.36" opacity="0.75"/>
-    <line class="bind" x1="261.88" y1="117.08" x2="253.89" y2="116.98" opacity="0.75"/>
-    <line class="bind" x1="262.85" y1="119.70" x2="252.85" y2="119.56" opacity="0.75"/>
-    <line class="bind" x1="261.81" y1="122.28" x2="253.81" y2="122.18" opacity="0.75"/>
-    <line class="bind" x1="262.78" y1="124.90" x2="252.78" y2="124.76" opacity="0.75"/>
-    <line class="bind" x1="263.59" y1="133.63" x2="269.51" y2="134.63" opacity="0.58"/>
-    <line class="bind" x1="259.21" y1="138.43" x2="261.51" y2="147.13" opacity="0.58"/>
-    <line class="bind" x1="253.24" y1="136.67" x2="248.81" y2="140.72" opacity="0.58"/>
-    <line class="bind" x1="253.20" y1="128.63" x2="246.48" y2="122.64" opacity="0.58"/>
-    <line class="bind" x1="259.38" y1="126.88" x2="261.08" y2="121.12" opacity="0.58"/>
+    <path class="bind" d="M 228.00 103.24 Q 222.34 117.49 232.69 128.81" stroke-width="1.80" opacity="0.85"/>
+    <line class="bind" x1="232.87" y1="107.63" x2="225.00" y2="109.07" opacity="0.75"/>
+    <line class="bind" x1="234.33" y1="110.01" x2="224.49" y2="111.81" opacity="0.75"/>
+    <line class="bind" x1="233.81" y1="112.75" x2="225.94" y2="114.19" opacity="0.75"/>
+    <line class="bind" x1="235.26" y1="115.12" x2="225.43" y2="116.93" opacity="0.75"/>
+    <line class="bind" x1="234.75" y1="117.86" x2="226.88" y2="119.30" opacity="0.75"/>
+    <line class="bind" x1="236.20" y1="120.24" x2="226.36" y2="122.04" opacity="0.75"/>
+    <line class="bind" x1="238.47" y1="127.20" x2="244.25" y2="125.58" opacity="0.58"/>
+    <line class="bind" x1="234.49" y1="134.53" x2="237.19" y2="143.12" opacity="0.58"/>
+    <line class="bind" x1="228.47" y1="133.08" x2="224.25" y2="137.35" opacity="0.58"/>
+    <line class="bind" x1="228.44" y1="124.57" x2="222.07" y2="118.22" opacity="0.58"/>
+    <line class="bind" x1="236.00" y1="123.81" x2="239.32" y2="118.81" opacity="0.58"/>
       <title>edge: bind
 main -&gt; main
 weight: 8
@@ -981,7 +1127,7 @@ main -&gt; main</title>
   </g>
   <g id="terminals">
     <g class="edge-wrap">
-    <path class="term" d="M 362.32 128.54 Q 336.92 142.61 320.30 166.42" stroke-width="1.65" opacity="0.90"/>
+    <path class="term" d="M 321.99 118.06 Q 301.41 138.34 290.60 165.12" stroke-width="1.65" opacity="0.90"/>
       <title>edge: return
 compiler_context_new -&gt; compiler_context_new
 weight: 2
@@ -990,7 +1136,7 @@ path:
 compiler_context_new -&gt; compiler_context_new</title>
     </g>
     <g class="edge-wrap">
-    <path class="term" d="M 368.33 132.95 Q 346.99 152.64 336.48 179.71" stroke-width="1.80" opacity="0.90"/>
+    <path class="term" d="M 348.11 127.32 Q 322.71 142.17 309.01 168.20" stroke-width="1.80" opacity="0.90"/>
       <title>edge: return
 compiler_context_set_error -&gt; compiler_context_set_error
 weight: 3
@@ -999,7 +1145,7 @@ path:
 compiler_context_set_error -&gt; compiler_context_set_error</title>
     </g>
     <g class="edge-wrap">
-    <path class="term" d="M 404.14 160.98 Q 376.51 168.57 352.69 184.48" stroke-width="1.65" opacity="0.90"/>
+    <path class="term" d="M 383.41 146.79 Q 362.42 166.01 346.09 189.31" stroke-width="1.65" opacity="0.90"/>
       <title>edge: return
 compiler_context_free -&gt; compiler_context_free
 weight: 2
@@ -1008,7 +1154,25 @@ path:
 compiler_context_free -&gt; compiler_context_free</title>
     </g>
     <g class="edge-wrap">
-    <path class="term" d="M 415.50 180.31 Q 387.75 186.34 361.48 197.09" stroke-width="1.65" opacity="0.90"/>
+    <path class="term" d="M 376.33 147.62 Q 350.78 160.31 329.36 179.15" stroke-width="1.65" opacity="0.90"/>
+      <title>edge: return
+compiler_context_had_error -&gt; compiler_context_had_error
+weight: 2
+
+path:
+compiler_context_had_error -&gt; compiler_context_had_error</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="term" d="M 394.84 166.17 Q 368.02 175.56 343.48 189.87" stroke-width="1.65" opacity="0.90"/>
+      <title>edge: return
+compiler_context_error_message -&gt; compiler_context_error_message
+weight: 2
+
+path:
+compiler_context_error_message -&gt; compiler_context_error_message</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="term" d="M 411.73 184.28 Q 386.16 196.83 364.21 214.97" stroke-width="1.65" opacity="0.90"/>
       <title>edge: return
 compiler_has_loaded_path -&gt; compiler_has_loaded_path
 weight: 2
@@ -1017,7 +1181,7 @@ path:
 compiler_has_loaded_path -&gt; compiler_has_loaded_path</title>
     </g>
     <g class="edge-wrap">
-    <path class="term" d="M 418.61 188.95 Q 390.27 192.28 363.78 202.90" stroke-width="1.65" opacity="0.90"/>
+    <path class="term" d="M 417.60 185.97 Q 387.86 184.44 363.03 200.89" stroke-width="1.65" opacity="0.90"/>
       <title>edge: return
 compiler_mark_loaded_path -&gt; compiler_mark_loaded_path
 weight: 2
@@ -1026,7 +1190,7 @@ path:
 compiler_mark_loaded_path -&gt; compiler_mark_loaded_path</title>
     </g>
     <g class="edge-wrap">
-    <path class="term" d="M 444.77 238.59 Q 416.93 228.89 388.27 235.77" stroke-width="1.90" opacity="0.90"/>
+    <path class="term" d="M 439.76 223.17 Q 410.60 225.07 386.04 240.90" stroke-width="1.90" opacity="0.90"/>
       <title>edge: return
 compiler_resolve_import_path -&gt; compiler_resolve_import_path
 weight: 4
@@ -1035,7 +1199,7 @@ path:
 compiler_resolve_import_path -&gt; compiler_resolve_import_path</title>
     </g>
     <g class="edge-wrap">
-    <path class="term" d="M 444.15 310.51 Q 420.23 294.74 392.59 287.24" stroke-width="1.90" opacity="0.90"/>
+    <path class="term" d="M 431.17 316.65 Q 404.01 308.15 375.63 305.88" stroke-width="1.90" opacity="0.90"/>
       <title>edge: return
 compiler_is_prelude_import -&gt; compiler_is_prelude_import
 weight: 15
@@ -1044,7 +1208,7 @@ path:
 compiler_is_prelude_import -&gt; compiler_is_prelude_import</title>
     </g>
     <g class="edge-wrap">
-    <path class="term" d="M 326.65 398.90 Q 319.82 371.37 309.00 345.16" stroke-width="1.90" opacity="0.90"/>
+    <path class="term" d="M 334.75 400.22 Q 324.36 372.68 300.89 354.90" stroke-width="1.90" opacity="0.90"/>
       <title>edge: return
 compiler_is_source_backed_cct_import -&gt; compiler_is_source_backed_cct_import
 weight: 19
@@ -1053,7 +1217,7 @@ path:
 compiler_is_source_backed_cct_import -&gt; compiler_is_source_backed_cct_import</title>
     </g>
     <g class="edge-wrap">
-    <path class="term" d="M 211.82 403.54 Q 228.63 380.15 235.55 352.19" stroke-width="1.65" opacity="0.90"/>
+    <path class="term" d="M 265.99 405.80 Q 263.03 377.52 254.28 350.46" stroke-width="1.65" opacity="0.90"/>
       <title>edge: return
 compiler_read_all -&gt; compiler_read_all
 weight: 2
@@ -1062,7 +1226,7 @@ path:
 compiler_read_all -&gt; compiler_read_all</title>
     </g>
     <g class="edge-wrap">
-    <path class="term" d="M 196.49 389.28 Q 209.49 363.58 212.02 334.88" stroke-width="1.65" opacity="0.90"/>
+    <path class="term" d="M 254.84 403.02 Q 265.26 375.99 263.28 347.08" stroke-width="1.65" opacity="0.90"/>
       <title>edge: return
 compiler_write_all -&gt; compiler_write_all
 weight: 2
@@ -1071,7 +1235,7 @@ path:
 compiler_write_all -&gt; compiler_write_all</title>
     </g>
     <g class="edge-wrap">
-    <path class="term" d="M 200.09 394.78 Q 219.46 373.31 228.43 345.82" stroke-width="1.65" opacity="0.90"/>
+    <path class="term" d="M 242.43 404.08 Q 250.62 375.34 239.57 347.58" stroke-width="1.65" opacity="0.90"/>
       <title>edge: return
 compiler_exists -&gt; compiler_exists
 weight: 2
@@ -1080,7 +1244,7 @@ path:
 compiler_exists -&gt; compiler_exists</title>
     </g>
     <g class="edge-wrap">
-    <path class="term" d="M 196.65 398.94 Q 212.68 373.86 210.74 344.15" stroke-width="1.65" opacity="0.90"/>
+    <path class="term" d="M 244.09 400.02 Q 257.45 374.06 256.68 344.87" stroke-width="1.65" opacity="0.90"/>
       <title>edge: return
 compiler_mkdir_all -&gt; compiler_mkdir_all
 weight: 2
@@ -1089,7 +1253,7 @@ path:
 compiler_mkdir_all -&gt; compiler_mkdir_all</title>
     </g>
     <g class="edge-wrap">
-    <path class="term" d="M 163.21 380.46 Q 189.13 366.34 203.10 340.34" stroke-width="1.65" opacity="0.90"/>
+    <path class="term" d="M 205.91 397.15 Q 224.33 374.87 232.18 347.05" stroke-width="1.65" opacity="0.90"/>
       <title>edge: return
 compiler_set_import_error -&gt; compiler_set_import_error
 weight: 2
@@ -1098,7 +1262,7 @@ path:
 compiler_set_import_error -&gt; compiler_set_import_error</title>
     </g>
     <g class="edge-wrap">
-    <path class="term" d="M 137.87 369.07 Q 163.62 356.44 183.86 336.13" stroke-width="1.65" opacity="0.90"/>
+    <path class="term" d="M 197.96 390.85 Q 209.88 364.78 212.75 336.25" stroke-width="1.65" opacity="0.90"/>
       <title>edge: return
 compiler_set_unsupported_cct_import_error -&gt; compiler_set_unsupported_cct_import_error
 weight: 2
@@ -1107,7 +1271,7 @@ path:
 compiler_set_unsupported_cct_import_error -&gt; compiler_set_unsupported_cct_import_error</title>
     </g>
     <g class="edge-wrap">
-    <path class="term" d="M 118.71 357.28 Q 145.01 343.67 159.03 317.60" stroke-width="1.65" opacity="0.90"/>
+    <path class="term" d="M 176.21 397.09 Q 196.12 376.73 210.74 352.29" stroke-width="1.65" opacity="0.90"/>
       <title>edge: return
 compiler_program_shell_free -&gt; compiler_program_shell_free
 weight: 2
@@ -1116,7 +1280,7 @@ path:
 compiler_program_shell_free -&gt; compiler_program_shell_free</title>
     </g>
     <g class="edge-wrap">
-    <path class="term" d="M 73.29 319.11 Q 102.54 314.15 123.61 293.27" stroke-width="1.80" opacity="0.90"/>
+    <path class="term" d="M 106.78 353.08 Q 133.49 343.43 158.09 329.25" stroke-width="1.80" opacity="0.90"/>
       <title>edge: return
 compiler_transfer_program_declarations -&gt; compiler_transfer_program_declarations
 weight: 3
@@ -1125,7 +1289,7 @@ path:
 compiler_transfer_program_declarations -&gt; compiler_transfer_program_declarations</title>
     </g>
     <g class="edge-wrap">
-    <path class="term" d="M 64.54 234.32 Q 90.23 247.92 119.28 248.57" stroke-width="1.90" opacity="0.90"/>
+    <path class="term" d="M 69.17 298.31 Q 97.93 302.93 125.56 293.74" stroke-width="1.90" opacity="0.90"/>
       <title>edge: return
 compiler_load_program_into -&gt; compiler_load_program_into
 weight: 5
@@ -1134,7 +1298,7 @@ path:
 compiler_load_program_into -&gt; compiler_load_program_into</title>
     </g>
     <g class="edge-wrap">
-    <path class="term" d="M 93.08 186.60 Q 118.55 200.85 147.73 201.19" stroke-width="1.65" opacity="0.90"/>
+    <path class="term" d="M 64.24 258.29 Q 93.02 259.28 120.14 249.62" stroke-width="1.65" opacity="0.90"/>
       <title>edge: return
 compiler_parse_composite_program -&gt; compiler_parse_composite_program
 weight: 2
@@ -1143,7 +1307,61 @@ path:
 compiler_parse_composite_program -&gt; compiler_parse_composite_program</title>
     </g>
     <g class="edge-wrap">
-    <path class="term" d="M 99.69 165.52 Q 118.11 187.84 144.14 200.50" stroke-width="1.65" opacity="0.90"/>
+    <path class="term" d="M 80.58 252.51 Q 108.13 259.28 136.41 261.63" stroke-width="1.65" opacity="0.90"/>
+      <title>edge: return
+semantic_error_message -&gt; semantic_error_message
+weight: 2
+
+path:
+semantic_error_message -&gt; semantic_error_message</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="term" d="M 79.95 233.59 Q 108.38 243.02 136.51 232.73" stroke-width="1.65" opacity="0.90"/>
+      <title>edge: return
+semantic_error_line -&gt; semantic_error_line
+weight: 2
+
+path:
+semantic_error_line -&gt; semantic_error_line</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="term" d="M 74.49 223.23 Q 100.17 235.65 128.18 241.05" stroke-width="1.65" opacity="0.90"/>
+      <title>edge: return
+semantic_error_column -&gt; semantic_error_column
+weight: 2
+
+path:
+semantic_error_column -&gt; semantic_error_column</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="term" d="M 93.94 223.66 Q 119.07 237.44 147.29 242.46" stroke-width="1.65" opacity="0.90"/>
+      <title>edge: return
+codegen_error_message -&gt; codegen_error_message
+weight: 2
+
+path:
+codegen_error_message -&gt; codegen_error_message</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="term" d="M 95.50 197.97 Q 117.60 216.66 145.44 224.54" stroke-width="1.65" opacity="0.90"/>
+      <title>edge: return
+codegen_error_line -&gt; codegen_error_line
+weight: 2
+
+path:
+codegen_error_line -&gt; codegen_error_line</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="term" d="M 84.80 200.65 Q 106.33 221.03 135.63 225.49" stroke-width="1.65" opacity="0.90"/>
+      <title>edge: return
+codegen_error_column -&gt; codegen_error_column
+weight: 2
+
+path:
+codegen_error_column -&gt; codegen_error_column</title>
+    </g>
+    <g class="edge-wrap">
+    <path class="term" d="M 90.98 169.05 Q 109.90 191.14 136.79 202.23" stroke-width="1.65" opacity="0.90"/>
       <title>edge: return
 compiler_emit_semantic_error -&gt; compiler_emit_semantic_error
 weight: 2
@@ -1152,7 +1370,7 @@ path:
 compiler_emit_semantic_error -&gt; compiler_emit_semantic_error</title>
     </g>
     <g class="edge-wrap">
-    <path class="term" d="M 138.27 133.96 Q 150.54 159.99 171.39 179.82" stroke-width="1.65" opacity="0.90"/>
+    <path class="term" d="M 121.49 143.46 Q 134.03 170.21 159.30 185.53" stroke-width="1.65" opacity="0.90"/>
       <title>edge: return
 compiler_emit_codegen_error -&gt; compiler_emit_codegen_error
 weight: 2
@@ -1161,7 +1379,7 @@ path:
 compiler_emit_codegen_error -&gt; compiler_emit_codegen_error</title>
     </g>
     <g class="edge-wrap">
-    <path class="term" d="M 258.03 106.63 Q 254.81 135.56 265.27 162.73" stroke-width="1.90" opacity="0.90"/>
+    <path class="term" d="M 228.00 103.24 Q 219.98 131.86 230.23 159.76" stroke-width="1.90" opacity="0.90"/>
       <title>edge: return
 main -&gt; main
 weight: 6
@@ -1172,7 +1390,7 @@ main -&gt; main</title>
   </g>
   <g id="nodes">
     <g class="node-wrap">
-      <circle class="node-main" cx="362.32" cy="128.54" r="7.15" data-kind="rituale" data-ritual="compiler_context_new" data-line="33" data-col="1" data-depth="4" data-stmt="RITUALE" data-loops="0" data-calls="4"/>
+      <circle class="node-main" cx="321.99" cy="118.06" r="7.15" data-kind="rituale" data-ritual="compiler_context_new" data-line="33" data-col="1" data-depth="4" data-stmt="RITUALE" data-loops="0" data-calls="4"/>
       <title>RITUALE compiler_context_new
 stmt: 9
 depth: 4
@@ -1182,7 +1400,7 @@ source:
 RITUALE compiler_context_new(VERBUM root_filename) REDDE SPECULUM CompilerContext</title>
     </g>
     <g class="node-wrap">
-      <circle class="node-aux" cx="345.66" cy="148.51" r="3.85" data-kind="bind" data-ritual="compiler_context_new" data-line="34" data-col="3" data-depth="4" data-stmt="EVOCA"/>
+      <circle class="node-aux" cx="310.77" cy="141.51" r="3.85" data-kind="bind" data-ritual="compiler_context_new" data-line="34" data-col="3" data-depth="4" data-stmt="EVOCA"/>
       <title>stmt: EVOCA
 rituale: compiler_context_new
 depth: 4
@@ -1192,7 +1410,7 @@ source:
 EVOCA SPECULUM NIHIL raw AD CONIURA ast_heap_alloc(MENSURA(CompilerContext))</title>
     </g>
     <g class="node-wrap">
-      <circle class="node-term" cx="320.30" cy="166.42" r="3.60" data-kind="term" data-ritual="compiler_context_new" data-line="43" data-col="3" data-depth="4" data-stmt="REDDE"/>
+      <circle class="node-term" cx="290.60" cy="165.12" r="3.60" data-kind="term" data-ritual="compiler_context_new" data-line="43" data-col="3" data-depth="4" data-stmt="REDDE"/>
       <title>stmt: REDDE
 rituale: compiler_context_new
 depth: 4
@@ -1202,7 +1420,7 @@ source:
 REDDE ctx</title>
     </g>
     <g class="node-wrap">
-      <circle class="node-main" cx="368.33" cy="132.95" r="6.70" data-kind="rituale" data-ritual="compiler_context_set_error" data-line="46" data-col="1" data-depth="4" data-stmt="RITUALE" data-loops="0" data-calls="1"/>
+      <circle class="node-main" cx="348.11" cy="127.32" r="6.70" data-kind="rituale" data-ritual="compiler_context_set_error" data-line="46" data-col="1" data-depth="4" data-stmt="RITUALE" data-loops="0" data-calls="1"/>
       <title>RITUALE compiler_context_set_error
 stmt: 6
 depth: 4
@@ -1212,7 +1430,7 @@ source:
 RITUALE compiler_context_set_error(SPECULUM CompilerContext ctx, VERBUM msg) REDDE NIHIL</title>
     </g>
     <g class="node-wrap">
-      <circle class="node-aux" cx="326.67" cy="142.99" r="4.80" data-kind="branch" data-ritual="compiler_context_set_error" data-line="47" data-col="3" data-depth="4" data-stmt="SI"/>
+      <circle class="node-aux" cx="346.96" cy="170.16" r="4.80" data-kind="branch" data-ritual="compiler_context_set_error" data-line="47" data-col="3" data-depth="4" data-stmt="SI"/>
       <title>stmt: SI
 rituale: compiler_context_set_error
 depth: 4
@@ -1222,7 +1440,7 @@ source:
 SI (*ctx).had_error</title>
     </g>
     <g class="node-wrap">
-      <circle class="node-aux" cx="350.80" cy="152.16" r="3.25" data-kind="bind" data-ritual="compiler_context_set_error" data-line="50" data-col="3" data-depth="4" data-stmt="VINCIRE"/>
+      <circle class="node-aux" cx="332.97" cy="148.46" r="3.25" data-kind="bind" data-ritual="compiler_context_set_error" data-line="50" data-col="3" data-depth="4" data-stmt="VINCIRE"/>
       <title>stmt: VINCIRE
 rituale: compiler_context_set_error
 depth: 4
@@ -1232,7 +1450,7 @@ source:
 VINCIRE (*ctx).had_error AD VERUM</title>
     </g>
     <g class="node-wrap">
-      <circle class="node-term" cx="336.48" cy="179.71" r="4.00" data-kind="term" data-ritual="compiler_context_set_error" data-line="48" data-col="5" data-depth="4" data-stmt="REDDE"/>
+      <circle class="node-term" cx="309.01" cy="168.20" r="4.00" data-kind="term" data-ritual="compiler_context_set_error" data-line="48" data-col="5" data-depth="4" data-stmt="REDDE"/>
       <title>stmt: REDDE
 rituale: compiler_context_set_error
 depth: 4
@@ -1242,7 +1460,7 @@ source:
 REDDE</title>
     </g>
     <g class="node-wrap">
-      <circle class="node-main" cx="404.14" cy="160.98" r="7.00" data-kind="rituale" data-ritual="compiler_context_free" data-line="56" data-col="1" data-depth="6" data-stmt="RITUALE" data-loops="0" data-calls="1"/>
+      <circle class="node-main" cx="383.41" cy="146.79" r="7.00" data-kind="rituale" data-ritual="compiler_context_free" data-line="56" data-col="1" data-depth="6" data-stmt="RITUALE" data-loops="0" data-calls="1"/>
       <title>RITUALE compiler_context_free
 stmt: 8
 depth: 6
@@ -1252,7 +1470,7 @@ source:
 RITUALE compiler_context_free(SPECULUM CompilerContext ctx) REDDE NIHIL</title>
     </g>
     <g class="node-wrap">
-      <circle class="node-aux" cx="384.69" cy="201.96" r="5.80" data-kind="branch" data-ritual="compiler_context_free" data-line="57" data-col="3" data-depth="6" data-stmt="SI"/>
+      <circle class="node-aux" cx="338.56" cy="153.63" r="5.80" data-kind="branch" data-ritual="compiler_context_free" data-line="57" data-col="3" data-depth="6" data-stmt="SI"/>
       <title>stmt: SI
 rituale: compiler_context_free
 depth: 6
@@ -1262,7 +1480,7 @@ source:
 SI (*ctx).owns_root_filename</title>
     </g>
     <g class="node-wrap">
-      <circle class="node-term" cx="352.69" cy="184.48" r="3.60" data-kind="term" data-ritual="compiler_context_free" data-line="67" data-col="3" data-depth="6" data-stmt="REDDE"/>
+      <circle class="node-term" cx="346.09" cy="189.31" r="3.60" data-kind="term" data-ritual="compiler_context_free" data-line="67" data-col="3" data-depth="6" data-stmt="REDDE"/>
       <title>stmt: REDDE
 rituale: compiler_context_free
 depth: 6
@@ -1272,7 +1490,47 @@ source:
 REDDE</title>
     </g>
     <g class="node-wrap">
-      <circle class="node-main" cx="415.50" cy="180.31" r="6.55" data-kind="rituale" data-ritual="compiler_has_loaded_path" data-line="70" data-col="1" data-depth="5" data-stmt="RITUALE" data-loops="0" data-calls="3"/>
+      <circle class="node-main" cx="376.33" cy="147.62" r="5.95" data-kind="rituale" data-ritual="compiler_context_had_error" data-line="70" data-col="1" data-depth="4" data-stmt="RITUALE" data-loops="0" data-calls="0"/>
+      <title>RITUALE compiler_context_had_error
+stmt: 1
+depth: 4
+loops: 0
+calls: 0
+source:
+RITUALE compiler_context_had_error(SPECULUM CompilerContext ctx) REDDE VERUM</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="329.36" cy="179.15" r="3.60" data-kind="term" data-ritual="compiler_context_had_error" data-line="71" data-col="3" data-depth="4" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: compiler_context_had_error
+depth: 4
+line: 71
+
+source:
+REDDE (*ctx).had_error</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-main" cx="394.84" cy="166.17" r="5.95" data-kind="rituale" data-ritual="compiler_context_error_message" data-line="74" data-col="1" data-depth="4" data-stmt="RITUALE" data-loops="0" data-calls="0"/>
+      <title>RITUALE compiler_context_error_message
+stmt: 1
+depth: 4
+loops: 0
+calls: 0
+source:
+RITUALE compiler_context_error_message(SPECULUM CompilerContext ctx) REDDE VERBUM</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="343.48" cy="189.87" r="3.60" data-kind="term" data-ritual="compiler_context_error_message" data-line="75" data-col="3" data-depth="4" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: compiler_context_error_message
+depth: 4
+line: 75
+
+source:
+REDDE (*ctx).error_message</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-main" cx="411.73" cy="184.28" r="6.55" data-kind="rituale" data-ritual="compiler_has_loaded_path" data-line="78" data-col="1" data-depth="5" data-stmt="RITUALE" data-loops="0" data-calls="3"/>
       <title>RITUALE compiler_has_loaded_path
 stmt: 5
 depth: 5
@@ -1282,27 +1540,27 @@ source:
 RITUALE compiler_has_loaded_path(SPECULUM CompilerContext ctx, VERBUM path_value) REDDE VERUM</title>
     </g>
     <g class="node-wrap">
-      <circle class="node-aux" cx="392.01" cy="191.46" r="3.25" data-kind="bind" data-ritual="compiler_has_loaded_path" data-line="71" data-col="3" data-depth="5" data-stmt="EVOCA"/>
+      <circle class="node-aux" cx="388.11" cy="195.16" r="3.25" data-kind="bind" data-ritual="compiler_has_loaded_path" data-line="79" data-col="3" data-depth="5" data-stmt="EVOCA"/>
       <title>stmt: EVOCA
 rituale: compiler_has_loaded_path
 depth: 5
-line: 71
+line: 79
 
 source:
 EVOCA VERBUM needle AD CONIURA concat("\n", path_value)</title>
     </g>
     <g class="node-wrap">
-      <circle class="node-term" cx="361.48" cy="197.09" r="3.60" data-kind="term" data-ritual="compiler_has_loaded_path" data-line="75" data-col="3" data-depth="5" data-stmt="REDDE"/>
+      <circle class="node-term" cx="364.21" cy="214.97" r="3.60" data-kind="term" data-ritual="compiler_has_loaded_path" data-line="83" data-col="3" data-depth="5" data-stmt="REDDE"/>
       <title>stmt: REDDE
 rituale: compiler_has_loaded_path
 depth: 5
-line: 75
+line: 83
 
 source:
 REDDE found</title>
     </g>
     <g class="node-wrap">
-      <circle class="node-main" cx="418.61" cy="188.95" r="6.25" data-kind="rituale" data-ritual="compiler_mark_loaded_path" data-line="78" data-col="1" data-depth="5" data-stmt="RITUALE" data-loops="0" data-calls="2"/>
+      <circle class="node-main" cx="417.60" cy="185.97" r="6.25" data-kind="rituale" data-ritual="compiler_mark_loaded_path" data-line="86" data-col="1" data-depth="5" data-stmt="RITUALE" data-loops="0" data-calls="2"/>
       <title>RITUALE compiler_mark_loaded_path
 stmt: 3
 depth: 5
@@ -1312,27 +1570,27 @@ source:
 RITUALE compiler_mark_loaded_path(SPECULUM CompilerContext ctx, VERBUM path_value) REDDE NIHIL</title>
     </g>
     <g class="node-wrap">
-      <circle class="node-aux" cx="394.57" cy="198.86" r="3.10" data-kind="bind" data-ritual="compiler_mark_loaded_path" data-line="79" data-col="3" data-depth="5" data-stmt="VINCIRE"/>
+      <circle class="node-aux" cx="393.74" cy="196.31" r="3.10" data-kind="bind" data-ritual="compiler_mark_loaded_path" data-line="87" data-col="3" data-depth="5" data-stmt="VINCIRE"/>
       <title>stmt: VINCIRE
 rituale: compiler_mark_loaded_path
 depth: 5
-line: 79
+line: 87
 
 source:
 VINCIRE (*ctx).loaded_index AD CONIURA concat((*ctx).loaded_index, path_value)</title>
     </g>
     <g class="node-wrap">
-      <circle class="node-term" cx="363.78" cy="202.90" r="3.60" data-kind="term" data-ritual="compiler_mark_loaded_path" data-line="81" data-col="3" data-depth="5" data-stmt="REDDE"/>
+      <circle class="node-term" cx="363.03" cy="200.89" r="3.60" data-kind="term" data-ritual="compiler_mark_loaded_path" data-line="89" data-col="3" data-depth="5" data-stmt="REDDE"/>
       <title>stmt: REDDE
 rituale: compiler_mark_loaded_path
 depth: 5
-line: 81
+line: 89
 
 source:
 REDDE</title>
     </g>
     <g class="node-wrap">
-      <circle class="node-main" cx="444.77" cy="238.59" r="7.60" data-kind="rituale" data-ritual="compiler_resolve_import_path" data-line="84" data-col="1" data-depth="5" data-stmt="RITUALE" data-loops="0" data-calls="11"/>
+      <circle class="node-main" cx="439.76" cy="223.17" r="7.60" data-kind="rituale" data-ritual="compiler_resolve_import_path" data-line="92" data-col="1" data-depth="5" data-stmt="RITUALE" data-loops="0" data-calls="11"/>
       <title>RITUALE compiler_resolve_import_path
 stmt: 12
 depth: 5
@@ -1342,37 +1600,37 @@ source:
 RITUALE compiler_resolve_import_path(VERBUM current_file, VERBUM import_path) REDDE VERBUM</title>
     </g>
     <g class="node-wrap">
-      <circle class="node-aux" cx="410.13" cy="265.89" r="5.80" data-kind="branch" data-ritual="compiler_resolve_import_path" data-line="86" data-col="3" data-depth="5" data-stmt="SI"/>
+      <circle class="node-aux" cx="399.12" cy="206.05" r="5.80" data-kind="branch" data-ritual="compiler_resolve_import_path" data-line="94" data-col="3" data-depth="5" data-stmt="SI"/>
       <title>stmt: SI
 rituale: compiler_resolve_import_path
 depth: 5
-line: 86
+line: 94
 
 source:
 SI CONIURA is_absolute(import_path)</title>
     </g>
     <g class="node-wrap">
-      <circle class="node-aux" cx="418.88" cy="240.98" r="3.85" data-kind="bind" data-ritual="compiler_resolve_import_path" data-line="85" data-col="3" data-depth="5" data-stmt="EVOCA"/>
+      <circle class="node-aux" cx="414.17" cy="227.75" r="3.85" data-kind="bind" data-ritual="compiler_resolve_import_path" data-line="93" data-col="3" data-depth="5" data-stmt="EVOCA"/>
       <title>stmt: EVOCA
 rituale: compiler_resolve_import_path
 depth: 5
-line: 85
+line: 93
 
 source:
 EVOCA VERBUM combined AD ""</title>
     </g>
     <g class="node-wrap">
-      <circle class="node-term" cx="388.27" cy="235.77" r="4.40" data-kind="term" data-ritual="compiler_resolve_import_path" data-line="88" data-col="5" data-depth="5" data-stmt="REDDE"/>
+      <circle class="node-term" cx="386.04" cy="240.90" r="4.40" data-kind="term" data-ritual="compiler_resolve_import_path" data-line="96" data-col="5" data-depth="5" data-stmt="REDDE"/>
       <title>stmt: REDDE
 rituale: compiler_resolve_import_path
 depth: 5
-line: 88
+line: 96
 
 source:
 REDDE CONIURA resolve(combined)</title>
     </g>
     <g class="node-wrap">
-      <circle class="node-main" cx="444.15" cy="310.51" r="9.85" data-kind="rituale" data-ritual="compiler_is_prelude_import" data-line="103" data-col="1" data-depth="5" data-stmt="RITUALE" data-loops="0" data-calls="25"/>
+      <circle class="node-main" cx="431.17" cy="316.65" r="9.85" data-kind="rituale" data-ritual="compiler_is_prelude_import" data-line="111" data-col="1" data-depth="5" data-stmt="RITUALE" data-loops="0" data-calls="25"/>
       <title>RITUALE compiler_is_prelude_import
 stmt: 27
 depth: 5
@@ -1382,27 +1640,27 @@ source:
 RITUALE compiler_is_prelude_import(VERBUM import_path) REDDE VERUM</title>
     </g>
     <g class="node-wrap">
-      <circle class="node-aux" cx="386.08" cy="318.68" r="5.80" data-kind="branch" data-ritual="compiler_is_prelude_import" data-line="104" data-col="3" data-depth="5" data-stmt="SI"/>
+      <circle class="node-aux" cx="388.47" cy="276.46" r="5.80" data-kind="branch" data-ritual="compiler_is_prelude_import" data-line="112" data-col="3" data-depth="5" data-stmt="SI"/>
       <title>stmt: SI
 rituale: compiler_is_prelude_import
 depth: 5
-line: 104
+line: 112
 
 source:
 SI CONIURA compare(import_path, "cct/args.cct") == 0 VEL CONIURA compare(import_path, "cct/io...</title>
     </g>
     <g class="node-wrap">
-      <circle class="node-term" cx="392.59" cy="287.24" r="4.60" data-kind="term" data-ritual="compiler_is_prelude_import" data-line="105" data-col="5" data-depth="5" data-stmt="REDDE"/>
+      <circle class="node-term" cx="375.63" cy="305.88" r="4.60" data-kind="term" data-ritual="compiler_is_prelude_import" data-line="113" data-col="5" data-depth="5" data-stmt="REDDE"/>
       <title>stmt: REDDE
 rituale: compiler_is_prelude_import
 depth: 5
-line: 105
+line: 113
 
 source:
 REDDE VERUM</title>
     </g>
     <g class="node-wrap">
-      <circle class="node-main" cx="326.65" cy="398.90" r="10.80" data-kind="rituale" data-ritual="compiler_is_source_backed_cct_import" data-line="146" data-col="1" data-depth="6" data-stmt="RITUALE" data-loops="0" data-calls="29"/>
+      <circle class="node-main" cx="334.75" cy="400.22" r="10.80" data-kind="rituale" data-ritual="compiler_is_source_backed_cct_import" data-line="154" data-col="1" data-depth="6" data-stmt="RITUALE" data-loops="0" data-calls="29"/>
       <title>RITUALE compiler_is_source_backed_cct_import
 stmt: 35
 depth: 6
@@ -1412,27 +1670,27 @@ source:
 RITUALE compiler_is_source_backed_cct_import(VERBUM import_path) REDDE VERUM</title>
     </g>
     <g class="node-wrap">
-      <circle class="node-aux" cx="278.77" cy="356.20" r="5.80" data-kind="branch" data-ritual="compiler_is_source_backed_cct_import" data-line="147" data-col="3" data-depth="6" data-stmt="SI"/>
+      <circle class="node-aux" cx="327.30" cy="336.50" r="5.80" data-kind="branch" data-ritual="compiler_is_source_backed_cct_import" data-line="155" data-col="3" data-depth="6" data-stmt="SI"/>
       <title>stmt: SI
 rituale: compiler_is_source_backed_cct_import
 depth: 6
-line: 147
+line: 155
 
 source:
 SI CONIURA compare(import_path, "cct/csv.cct") == 0</title>
     </g>
     <g class="node-wrap">
-      <circle class="node-term" cx="309.00" cy="345.16" r="4.60" data-kind="term" data-ritual="compiler_is_source_backed_cct_import" data-line="148" data-col="5" data-depth="6" data-stmt="REDDE"/>
+      <circle class="node-term" cx="300.89" cy="354.90" r="4.60" data-kind="term" data-ritual="compiler_is_source_backed_cct_import" data-line="156" data-col="5" data-depth="6" data-stmt="REDDE"/>
       <title>stmt: REDDE
 rituale: compiler_is_source_backed_cct_import
 depth: 6
-line: 148
+line: 156
 
 source:
 REDDE VERUM</title>
     </g>
     <g class="node-wrap">
-      <circle class="node-main" cx="211.82" cy="403.54" r="5.95" data-kind="rituale" data-ritual="compiler_read_all" data-line="201" data-col="1" data-depth="3" data-stmt="RITUALE" data-loops="0" data-calls="0"/>
+      <circle class="node-main" cx="265.99" cy="405.80" r="5.95" data-kind="rituale" data-ritual="compiler_read_all" data-line="209" data-col="1" data-depth="3" data-stmt="RITUALE" data-loops="0" data-calls="0"/>
       <title>RITUALE compiler_read_all
 stmt: 1
 depth: 3
@@ -1442,7 +1700,7 @@ source:
 RITUALE compiler_read_all(VERBUM path_value) REDDE VERBUM</title>
     </g>
     <g class="node-wrap">
-      <circle class="node-aux" cx="219.28" cy="378.63" r="2.95" data-kind="bind" data-ritual="compiler_read_all" data-depth="3" data-stmt="EVOCA"/>
+      <circle class="node-aux" cx="264.26" cy="379.86" r="2.95" data-kind="bind" data-ritual="compiler_read_all" data-depth="3" data-stmt="EVOCA"/>
       <title>stmt: EVOCA
 rituale: compiler_read_all
 depth: 3
@@ -1453,17 +1711,17 @@ stmt: EVOCA
 rituale: compiler_read_all</title>
     </g>
     <g class="node-wrap">
-      <circle class="node-term" cx="235.55" cy="352.19" r="3.60" data-kind="term" data-ritual="compiler_read_all" data-line="202" data-col="3" data-depth="3" data-stmt="REDDE"/>
+      <circle class="node-term" cx="254.28" cy="350.46" r="3.60" data-kind="term" data-ritual="compiler_read_all" data-line="210" data-col="3" data-depth="3" data-stmt="REDDE"/>
       <title>stmt: REDDE
 rituale: compiler_read_all
 depth: 3
-line: 202
+line: 210
 
 source:
 REDDE OBSECRO fs_read_all(path_value)</title>
     </g>
     <g class="node-wrap">
-      <circle class="node-main" cx="196.49" cy="389.28" r="6.10" data-kind="rituale" data-ritual="compiler_write_all" data-line="205" data-col="1" data-depth="3" data-stmt="RITUALE" data-loops="0" data-calls="0"/>
+      <circle class="node-main" cx="254.84" cy="403.02" r="6.10" data-kind="rituale" data-ritual="compiler_write_all" data-line="213" data-col="1" data-depth="3" data-stmt="RITUALE" data-loops="0" data-calls="0"/>
       <title>RITUALE compiler_write_all
 stmt: 2
 depth: 3
@@ -1473,27 +1731,27 @@ source:
 RITUALE compiler_write_all(VERBUM path_value, VERBUM content) REDDE NIHIL</title>
     </g>
     <g class="node-wrap">
-      <circle class="node-aux" cx="207.09" cy="365.54" r="2.95" data-kind="bind" data-ritual="compiler_write_all" data-line="206" data-col="3" data-depth="3" data-stmt="OBSECRO"/>
+      <circle class="node-aux" cx="255.05" cy="377.02" r="2.95" data-kind="bind" data-ritual="compiler_write_all" data-line="214" data-col="3" data-depth="3" data-stmt="OBSECRO"/>
       <title>stmt: OBSECRO
 rituale: compiler_write_all
 depth: 3
-line: 206
+line: 214
 
 source:
 OBSECRO fs_write_all(path_value, content)</title>
     </g>
     <g class="node-wrap">
-      <circle class="node-term" cx="212.02" cy="334.88" r="3.60" data-kind="term" data-ritual="compiler_write_all" data-line="207" data-col="3" data-depth="3" data-stmt="REDDE"/>
+      <circle class="node-term" cx="263.28" cy="347.08" r="3.60" data-kind="term" data-ritual="compiler_write_all" data-line="215" data-col="3" data-depth="3" data-stmt="REDDE"/>
       <title>stmt: REDDE
 rituale: compiler_write_all
 depth: 3
-line: 207
+line: 215
 
 source:
 REDDE</title>
     </g>
     <g class="node-wrap">
-      <circle class="node-main" cx="200.09" cy="394.78" r="5.95" data-kind="rituale" data-ritual="compiler_exists" data-line="210" data-col="1" data-depth="3" data-stmt="RITUALE" data-loops="0" data-calls="0"/>
+      <circle class="node-main" cx="242.43" cy="404.08" r="5.95" data-kind="rituale" data-ritual="compiler_exists" data-line="218" data-col="1" data-depth="3" data-stmt="RITUALE" data-loops="0" data-calls="0"/>
       <title>RITUALE compiler_exists
 stmt: 1
 depth: 3
@@ -1503,7 +1761,7 @@ source:
 RITUALE compiler_exists(VERBUM path_value) REDDE VERUM</title>
     </g>
     <g class="node-wrap">
-      <circle class="node-aux" cx="209.80" cy="370.66" r="2.95" data-kind="bind" data-ritual="compiler_exists" data-depth="3" data-stmt="EVOCA"/>
+      <circle class="node-aux" cx="244.80" cy="378.19" r="2.95" data-kind="bind" data-ritual="compiler_exists" data-depth="3" data-stmt="EVOCA"/>
       <title>stmt: EVOCA
 rituale: compiler_exists
 depth: 3
@@ -1514,17 +1772,17 @@ stmt: EVOCA
 rituale: compiler_exists</title>
     </g>
     <g class="node-wrap">
-      <circle class="node-term" cx="228.43" cy="345.82" r="3.60" data-kind="term" data-ritual="compiler_exists" data-line="211" data-col="3" data-depth="3" data-stmt="REDDE"/>
+      <circle class="node-term" cx="239.57" cy="347.58" r="3.60" data-kind="term" data-ritual="compiler_exists" data-line="219" data-col="3" data-depth="3" data-stmt="REDDE"/>
       <title>stmt: REDDE
 rituale: compiler_exists
 depth: 3
-line: 211
+line: 219
 
 source:
 REDDE OBSECRO fs_exists(path_value)</title>
     </g>
     <g class="node-wrap">
-      <circle class="node-main" cx="196.65" cy="398.94" r="6.10" data-kind="rituale" data-ritual="compiler_mkdir_all" data-line="214" data-col="1" data-depth="3" data-stmt="RITUALE" data-loops="0" data-calls="0"/>
+      <circle class="node-main" cx="244.09" cy="400.02" r="6.10" data-kind="rituale" data-ritual="compiler_mkdir_all" data-line="222" data-col="1" data-depth="3" data-stmt="RITUALE" data-loops="0" data-calls="0"/>
       <title>RITUALE compiler_mkdir_all
 stmt: 2
 depth: 3
@@ -1534,27 +1792,27 @@ source:
 RITUALE compiler_mkdir_all(VERBUM path_value) REDDE NIHIL</title>
     </g>
     <g class="node-wrap">
-      <circle class="node-aux" cx="206.62" cy="374.93" r="2.95" data-kind="bind" data-ritual="compiler_mkdir_all" data-line="215" data-col="3" data-depth="3" data-stmt="OBSECRO"/>
+      <circle class="node-aux" cx="246.23" cy="374.11" r="2.95" data-kind="bind" data-ritual="compiler_mkdir_all" data-line="223" data-col="3" data-depth="3" data-stmt="OBSECRO"/>
       <title>stmt: OBSECRO
 rituale: compiler_mkdir_all
 depth: 3
-line: 215
+line: 223
 
 source:
 OBSECRO fs_mkdir_all(path_value)</title>
     </g>
     <g class="node-wrap">
-      <circle class="node-term" cx="210.74" cy="344.15" r="3.60" data-kind="term" data-ritual="compiler_mkdir_all" data-line="216" data-col="3" data-depth="3" data-stmt="REDDE"/>
+      <circle class="node-term" cx="256.68" cy="344.87" r="3.60" data-kind="term" data-ritual="compiler_mkdir_all" data-line="224" data-col="3" data-depth="3" data-stmt="REDDE"/>
       <title>stmt: REDDE
 rituale: compiler_mkdir_all
 depth: 3
-line: 216
+line: 224
 
 source:
 REDDE</title>
     </g>
     <g class="node-wrap">
-      <circle class="node-main" cx="163.21" cy="380.46" r="6.70" data-kind="rituale" data-ritual="compiler_set_import_error" data-line="219" data-col="1" data-depth="3" data-stmt="RITUALE" data-loops="0" data-calls="4"/>
+      <circle class="node-main" cx="205.91" cy="397.15" r="6.70" data-kind="rituale" data-ritual="compiler_set_import_error" data-line="227" data-col="1" data-depth="3" data-stmt="RITUALE" data-loops="0" data-calls="4"/>
       <title>RITUALE compiler_set_import_error
 stmt: 6
 depth: 3
@@ -1564,27 +1822,27 @@ source:
 RITUALE compiler_set_import_error(SPECULUM CompilerContext ctx, VERBUM owner_file, VERBUM imp...</title>
     </g>
     <g class="node-wrap">
-      <circle class="node-aux" cx="178.75" cy="359.61" r="3.25" data-kind="bind" data-ritual="compiler_set_import_error" data-line="220" data-col="3" data-depth="3" data-stmt="EVOCA"/>
+      <circle class="node-aux" cx="214.61" cy="372.65" r="3.25" data-kind="bind" data-ritual="compiler_set_import_error" data-line="228" data-col="3" data-depth="3" data-stmt="EVOCA"/>
       <title>stmt: EVOCA
 rituale: compiler_set_import_error
 depth: 3
-line: 220
+line: 228
 
 source:
 EVOCA VERBUM msg AD CONIURA concat("Import not found: ", import_path)</title>
     </g>
     <g class="node-wrap">
-      <circle class="node-term" cx="203.10" cy="340.34" r="3.60" data-kind="term" data-ritual="compiler_set_import_error" data-line="225" data-col="3" data-depth="3" data-stmt="REDDE"/>
+      <circle class="node-term" cx="232.18" cy="347.05" r="3.60" data-kind="term" data-ritual="compiler_set_import_error" data-line="233" data-col="3" data-depth="3" data-stmt="REDDE"/>
       <title>stmt: REDDE
 rituale: compiler_set_import_error
 depth: 3
-line: 225
+line: 233
 
 source:
 REDDE</title>
     </g>
     <g class="node-wrap">
-      <circle class="node-main" cx="137.87" cy="369.07" r="6.40" data-kind="rituale" data-ritual="compiler_set_unsupported_cct_import_error" data-line="228" data-col="1" data-depth="3" data-stmt="RITUALE" data-loops="0" data-calls="2"/>
+      <circle class="node-main" cx="197.96" cy="390.85" r="6.40" data-kind="rituale" data-ritual="compiler_set_unsupported_cct_import_error" data-line="236" data-col="1" data-depth="3" data-stmt="RITUALE" data-loops="0" data-calls="2"/>
       <title>RITUALE compiler_set_unsupported_cct_import_error
 stmt: 4
 depth: 3
@@ -1594,27 +1852,27 @@ source:
 RITUALE compiler_set_unsupported_cct_import_error(SPECULUM CompilerContext ctx, VERBUM import...</title>
     </g>
     <g class="node-wrap">
-      <circle class="node-aux" cx="156.66" cy="351.09" r="2.95" data-kind="bind" data-ritual="compiler_set_unsupported_cct_import_error" data-line="229" data-col="3" data-depth="3" data-stmt="EVOCA"/>
+      <circle class="node-aux" cx="208.24" cy="366.97" r="2.95" data-kind="bind" data-ritual="compiler_set_unsupported_cct_import_error" data-line="237" data-col="3" data-depth="3" data-stmt="EVOCA"/>
       <title>stmt: EVOCA
 rituale: compiler_set_unsupported_cct_import_error
 depth: 3
-line: 229
+line: 237
 
 source:
 EVOCA VERBUM msg AD CONIURA concat("Self-hosted compiler does not operationally expose module...</title>
     </g>
     <g class="node-wrap">
-      <circle class="node-term" cx="183.86" cy="336.13" r="3.60" data-kind="term" data-ritual="compiler_set_unsupported_cct_import_error" data-line="232" data-col="3" data-depth="3" data-stmt="REDDE"/>
+      <circle class="node-term" cx="212.75" cy="336.25" r="3.60" data-kind="term" data-ritual="compiler_set_unsupported_cct_import_error" data-line="240" data-col="3" data-depth="3" data-stmt="REDDE"/>
       <title>stmt: REDDE
 rituale: compiler_set_unsupported_cct_import_error
 depth: 3
-line: 232
+line: 240
 
 source:
 REDDE</title>
     </g>
     <g class="node-wrap">
-      <circle class="node-main" cx="118.71" cy="357.28" r="6.55" data-kind="rituale" data-ritual="compiler_program_shell_free" data-line="235" data-col="1" data-depth="6" data-stmt="RITUALE" data-loops="0" data-calls="2"/>
+      <circle class="node-main" cx="176.21" cy="397.09" r="6.55" data-kind="rituale" data-ritual="compiler_program_shell_free" data-line="243" data-col="1" data-depth="6" data-stmt="RITUALE" data-loops="0" data-calls="2"/>
       <title>RITUALE compiler_program_shell_free
 stmt: 5
 depth: 6
@@ -1624,27 +1882,27 @@ source:
 RITUALE compiler_program_shell_free(SPECULUM AstProgram program) REDDE NIHIL</title>
     </g>
     <g class="node-wrap">
-      <circle class="node-aux" cx="161.53" cy="355.52" r="4.80" data-kind="branch" data-ritual="compiler_program_shell_free" data-line="236" data-col="3" data-depth="6" data-stmt="SI"/>
+      <circle class="node-aux" cx="172.79" cy="354.38" r="4.80" data-kind="branch" data-ritual="compiler_program_shell_free" data-line="244" data-col="3" data-depth="6" data-stmt="SI"/>
       <title>stmt: SI
 rituale: compiler_program_shell_free
 depth: 6
-line: 236
+line: 244
 
 source:
 SI (*program).owns_name</title>
     </g>
     <g class="node-wrap">
-      <circle class="node-term" cx="159.03" cy="317.60" r="3.60" data-kind="term" data-ritual="compiler_program_shell_free" data-line="241" data-col="3" data-depth="6" data-stmt="REDDE"/>
+      <circle class="node-term" cx="210.74" cy="352.29" r="3.60" data-kind="term" data-ritual="compiler_program_shell_free" data-line="249" data-col="3" data-depth="6" data-stmt="REDDE"/>
       <title>stmt: REDDE
 rituale: compiler_program_shell_free
 depth: 6
-line: 241
+line: 249
 
 source:
 REDDE</title>
     </g>
     <g class="node-wrap">
-      <circle class="node-main" cx="73.29" cy="319.11" r="8.95" data-kind="rituale" data-ritual="compiler_transfer_program_declarations" data-line="244" data-col="1" data-depth="15" data-stmt="RITUALE" data-loops="1" data-calls="14"/>
+      <circle class="node-main" cx="106.78" cy="353.08" r="8.95" data-kind="rituale" data-ritual="compiler_transfer_program_declarations" data-line="252" data-col="1" data-depth="15" data-stmt="RITUALE" data-loops="1" data-calls="14"/>
       <title>RITUALE compiler_transfer_program_declarations
 stmt: 21
 depth: 15
@@ -1654,57 +1912,57 @@ source:
 RITUALE compiler_transfer_program_declarations(SPECULUM CompilerContext ctx, SPECULUM AstProg...</title>
     </g>
     <g class="node-wrap">
-      <circle class="node-aux" cx="120.35" cy="328.25" r="5.80" data-kind="branch" data-ritual="compiler_transfer_program_declarations" data-line="249" data-col="5" data-depth="15" data-stmt="SI"/>
+      <circle class="node-aux" cx="128.48" cy="310.33" r="5.80" data-kind="branch" data-ritual="compiler_transfer_program_declarations" data-line="257" data-col="5" data-depth="15" data-stmt="SI"/>
       <title>stmt: SI
 rituale: compiler_transfer_program_declarations
 depth: 15
-line: 249
+line: 257
 
 source:
 SI (*decl).kind == AST_IMPORT</title>
     </g>
     <g class="node-wrap">
-      <circle class="node-aux" cx="79.21" cy="281.10" r="5.20" data-kind="branch" data-ritual="compiler_transfer_program_declarations" data-line="250" data-col="7" data-depth="15" data-stmt="ALITER"/>
+      <circle class="node-aux" cx="140.41" cy="371.77" r="5.20" data-kind="branch" data-ritual="compiler_transfer_program_declarations" data-line="258" data-col="7" data-depth="15" data-stmt="ALITER"/>
       <title>stmt: ALITER
 rituale: compiler_transfer_program_declarations
 depth: 15
-line: 250
+line: 258
 
 source:
 SI CONIURA compiler_is_prelude_import((*decl).value_text)</title>
     </g>
     <g class="node-wrap">
-      <circle class="node-loop" cx="59.75" cy="353.41" r="4.70" data-kind="loop" data-ritual="compiler_transfer_program_declarations" data-line="247" data-col="3" data-depth="15" data-stmt="DUM"/>
+      <circle class="node-loop" cx="71.40" cy="342.70" r="4.70" data-kind="loop" data-ritual="compiler_transfer_program_declarations" data-line="255" data-col="3" data-depth="15" data-stmt="DUM"/>
       <title>stmt: DUM
 rituale: compiler_transfer_program_declarations
 depth: 15
-line: 247
+line: 255
 
 source:
 DUM i &lt; n</title>
     </g>
     <g class="node-wrap">
-      <circle class="node-aux" cx="97.87" cy="310.62" r="3.55" data-kind="bind" data-ritual="compiler_transfer_program_declarations" data-line="245" data-col="3" data-depth="15" data-stmt="EVOCA"/>
+      <circle class="node-aux" cx="128.58" cy="338.90" r="3.55" data-kind="bind" data-ritual="compiler_transfer_program_declarations" data-line="253" data-col="3" data-depth="15" data-stmt="EVOCA"/>
       <title>stmt: EVOCA
 rituale: compiler_transfer_program_declarations
 depth: 15
-line: 245
+line: 253
 
 source:
 EVOCA REX i AD 0</title>
     </g>
     <g class="node-wrap">
-      <circle class="node-term" cx="123.61" cy="293.27" r="4.00" data-kind="term" data-ritual="compiler_transfer_program_declarations" data-line="271" data-col="7" data-depth="15" data-stmt="REDDE"/>
+      <circle class="node-term" cx="158.09" cy="329.25" r="4.00" data-kind="term" data-ritual="compiler_transfer_program_declarations" data-line="279" data-col="7" data-depth="15" data-stmt="REDDE"/>
       <title>stmt: REDDE
 rituale: compiler_transfer_program_declarations
 depth: 15
-line: 271
+line: 279
 
 source:
 REDDE</title>
     </g>
     <g class="node-wrap">
-      <circle class="node-main" cx="64.54" cy="234.32" r="8.50" data-kind="rituale" data-ritual="compiler_load_program_into" data-line="278" data-col="1" data-depth="9" data-stmt="RITUALE" data-loops="0" data-calls="13"/>
+      <circle class="node-main" cx="69.17" cy="298.31" r="8.50" data-kind="rituale" data-ritual="compiler_load_program_into" data-line="286" data-col="1" data-depth="9" data-stmt="RITUALE" data-loops="0" data-calls="13"/>
       <title>RITUALE compiler_load_program_into
 stmt: 18
 depth: 9
@@ -1714,47 +1972,47 @@ source:
 RITUALE compiler_load_program_into(SPECULUM CompilerContext ctx, SPECULUM AstProgram composit...</title>
     </g>
     <g class="node-wrap">
-      <circle class="node-aux" cx="108.48" cy="215.14" r="5.80" data-kind="branch" data-ritual="compiler_load_program_into" data-line="279" data-col="3" data-depth="9" data-stmt="SI"/>
+      <circle class="node-aux" cx="104.35" cy="265.73" r="5.80" data-kind="branch" data-ritual="compiler_load_program_into" data-line="287" data-col="3" data-depth="9" data-stmt="SI"/>
       <title>stmt: SI
 rituale: compiler_load_program_into
 depth: 9
-line: 279
+line: 287
 
 source:
 SI (*ctx).had_error</title>
     </g>
     <g class="node-wrap">
-      <circle class="node-aux" cx="78.60" cy="270.13" r="4.20" data-kind="branch" data-ritual="compiler_load_program_into" data-line="301" data-col="7" data-depth="9" data-stmt="ALITER"/>
+      <circle class="node-aux" cx="94.24" cy="327.49" r="4.20" data-kind="branch" data-ritual="compiler_load_program_into" data-line="309" data-col="7" data-depth="9" data-stmt="ALITER"/>
       <title>stmt: ALITER
 rituale: compiler_load_program_into
 depth: 9
-line: 301
+line: 309
 
 source:
 CONIURA ast_program_set_name(composite, CONIURA path_basename(filename))</title>
     </g>
     <g class="node-wrap">
-      <circle class="node-aux" cx="90.38" cy="237.24" r="3.10" data-kind="bind" data-ritual="compiler_load_program_into" data-line="293" data-col="3" data-depth="9" data-stmt="EVOCA"/>
+      <circle class="node-aux" cx="94.53" cy="292.56" r="3.10" data-kind="bind" data-ritual="compiler_load_program_into" data-line="301" data-col="3" data-depth="9" data-stmt="EVOCA"/>
       <title>stmt: EVOCA
 rituale: compiler_load_program_into
 depth: 9
-line: 293
+line: 301
 
 source:
 EVOCA VERBUM source AD CONIURA compiler_read_all(filename)</title>
     </g>
     <g class="node-wrap">
-      <circle class="node-term" cx="119.28" cy="248.57" r="4.60" data-kind="term" data-ritual="compiler_load_program_into" data-line="280" data-col="5" data-depth="9" data-stmt="REDDE"/>
+      <circle class="node-term" cx="125.56" cy="293.74" r="4.60" data-kind="term" data-ritual="compiler_load_program_into" data-line="288" data-col="5" data-depth="9" data-stmt="REDDE"/>
       <title>stmt: REDDE
 rituale: compiler_load_program_into
 depth: 9
-line: 280
+line: 288
 
 source:
 REDDE</title>
     </g>
     <g class="node-wrap">
-      <circle class="node-main" cx="93.08" cy="186.60" r="6.70" data-kind="rituale" data-ritual="compiler_parse_composite_program" data-line="310" data-col="1" data-depth="4" data-stmt="RITUALE" data-loops="0" data-calls="5"/>
+      <circle class="node-main" cx="64.24" cy="258.29" r="6.70" data-kind="rituale" data-ritual="compiler_parse_composite_program" data-line="318" data-col="1" data-depth="4" data-stmt="RITUALE" data-loops="0" data-calls="5"/>
       <title>RITUALE compiler_parse_composite_program
 stmt: 6
 depth: 4
@@ -1764,154 +2022,274 @@ source:
 RITUALE compiler_parse_composite_program(SPECULUM CompilerContext ctx, VERBUM root_filename) ...</title>
     </g>
     <g class="node-wrap">
-      <circle class="node-aux" cx="117.00" cy="196.79" r="3.10" data-kind="bind" data-ritual="compiler_parse_composite_program" data-line="311" data-col="3" data-depth="4" data-stmt="EVOCA"/>
+      <circle class="node-aux" cx="90.24" cy="257.98" r="3.10" data-kind="bind" data-ritual="compiler_parse_composite_program" data-line="319" data-col="3" data-depth="4" data-stmt="EVOCA"/>
       <title>stmt: EVOCA
 rituale: compiler_parse_composite_program
 depth: 4
-line: 311
+line: 319
 
 source:
 EVOCA SPECULUM AstProgram program AD CONIURA ast_program_new()</title>
     </g>
     <g class="node-wrap">
-      <circle class="node-term" cx="147.73" cy="201.19" r="3.60" data-kind="term" data-ritual="compiler_parse_composite_program" data-line="316" data-col="3" data-depth="4" data-stmt="REDDE"/>
+      <circle class="node-term" cx="120.14" cy="249.62" r="3.60" data-kind="term" data-ritual="compiler_parse_composite_program" data-line="324" data-col="3" data-depth="4" data-stmt="REDDE"/>
       <title>stmt: REDDE
 rituale: compiler_parse_composite_program
 depth: 4
-line: 316
+line: 324
 
 source:
 REDDE program</title>
     </g>
     <g class="node-wrap">
-      <circle class="node-main" cx="99.69" cy="165.52" r="7.00" data-kind="rituale" data-ritual="compiler_emit_semantic_error" data-line="319" data-col="1" data-depth="6" data-stmt="RITUALE" data-loops="0" data-calls="8"/>
-      <title>RITUALE compiler_emit_semantic_error
-stmt: 8
-depth: 6
+      <circle class="node-main" cx="80.58" cy="252.51" r="5.95" data-kind="rituale" data-ritual="semantic_error_message" data-line="327" data-col="1" data-depth="4" data-stmt="RITUALE" data-loops="0" data-calls="0"/>
+      <title>RITUALE semantic_error_message
+stmt: 1
+depth: 4
 loops: 0
-calls: 8
+calls: 0
+source:
+RITUALE semantic_error_message(SPECULUM SemanticContext ctx) REDDE VERBUM</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="136.41" cy="261.63" r="3.60" data-kind="term" data-ritual="semantic_error_message" data-line="328" data-col="3" data-depth="4" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: semantic_error_message
+depth: 4
+line: 328
+
+source:
+REDDE (*ctx).last_error_message</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-main" cx="79.95" cy="233.59" r="5.95" data-kind="rituale" data-ritual="semantic_error_line" data-line="331" data-col="1" data-depth="4" data-stmt="RITUALE" data-loops="0" data-calls="0"/>
+      <title>RITUALE semantic_error_line
+stmt: 1
+depth: 4
+loops: 0
+calls: 0
+source:
+RITUALE semantic_error_line(SPECULUM SemanticContext ctx) REDDE REX</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="136.51" cy="232.73" r="3.60" data-kind="term" data-ritual="semantic_error_line" data-line="332" data-col="3" data-depth="4" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: semantic_error_line
+depth: 4
+line: 332
+
+source:
+REDDE (*ctx).last_error_line</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-main" cx="74.49" cy="223.23" r="5.95" data-kind="rituale" data-ritual="semantic_error_column" data-line="335" data-col="1" data-depth="4" data-stmt="RITUALE" data-loops="0" data-calls="0"/>
+      <title>RITUALE semantic_error_column
+stmt: 1
+depth: 4
+loops: 0
+calls: 0
+source:
+RITUALE semantic_error_column(SPECULUM SemanticContext ctx) REDDE REX</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="128.18" cy="241.05" r="3.60" data-kind="term" data-ritual="semantic_error_column" data-line="336" data-col="3" data-depth="4" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: semantic_error_column
+depth: 4
+line: 336
+
+source:
+REDDE (*ctx).last_error_column</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-main" cx="93.94" cy="223.66" r="5.95" data-kind="rituale" data-ritual="codegen_error_message" data-line="339" data-col="1" data-depth="4" data-stmt="RITUALE" data-loops="0" data-calls="0"/>
+      <title>RITUALE codegen_error_message
+stmt: 1
+depth: 4
+loops: 0
+calls: 0
+source:
+RITUALE codegen_error_message(SPECULUM CodegenContext ctx) REDDE VERBUM</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="147.29" cy="242.46" r="3.60" data-kind="term" data-ritual="codegen_error_message" data-line="340" data-col="3" data-depth="4" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: codegen_error_message
+depth: 4
+line: 340
+
+source:
+REDDE (*ctx).last_error_message</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-main" cx="95.50" cy="197.97" r="5.95" data-kind="rituale" data-ritual="codegen_error_line" data-line="343" data-col="1" data-depth="4" data-stmt="RITUALE" data-loops="0" data-calls="0"/>
+      <title>RITUALE codegen_error_line
+stmt: 1
+depth: 4
+loops: 0
+calls: 0
+source:
+RITUALE codegen_error_line(SPECULUM CodegenContext ctx) REDDE REX</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="145.44" cy="224.54" r="3.60" data-kind="term" data-ritual="codegen_error_line" data-line="344" data-col="3" data-depth="4" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: codegen_error_line
+depth: 4
+line: 344
+
+source:
+REDDE (*ctx).last_error_line</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-main" cx="84.80" cy="200.65" r="5.95" data-kind="rituale" data-ritual="codegen_error_column" data-line="347" data-col="1" data-depth="4" data-stmt="RITUALE" data-loops="0" data-calls="0"/>
+      <title>RITUALE codegen_error_column
+stmt: 1
+depth: 4
+loops: 0
+calls: 0
+source:
+RITUALE codegen_error_column(SPECULUM CodegenContext ctx) REDDE REX</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-term" cx="135.63" cy="225.49" r="3.60" data-kind="term" data-ritual="codegen_error_column" data-line="348" data-col="3" data-depth="4" data-stmt="REDDE"/>
+      <title>stmt: REDDE
+rituale: codegen_error_column
+depth: 4
+line: 348
+
+source:
+REDDE (*ctx).last_error_column</title>
+    </g>
+    <g class="node-wrap">
+      <circle class="node-main" cx="90.98" cy="169.05" r="7.45" data-kind="rituale" data-ritual="compiler_emit_semantic_error" data-line="351" data-col="1" data-depth="4" data-stmt="RITUALE" data-loops="0" data-calls="11"/>
+      <title>RITUALE compiler_emit_semantic_error
+stmt: 11
+depth: 4
+loops: 0
+calls: 11
 source:
 RITUALE compiler_emit_semantic_error(SPECULUM SemanticContext ctx) REDDE NIHIL</title>
     </g>
     <g class="node-wrap">
-      <circle class="node-aux" cx="122.19" cy="178.54" r="3.55" data-kind="bind" data-ritual="compiler_emit_semantic_error" data-line="320" data-col="3" data-depth="6" data-stmt="EVOCA"/>
+      <circle class="node-aux" cx="113.98" cy="181.17" r="4.00" data-kind="bind" data-ritual="compiler_emit_semantic_error" data-line="352" data-col="3" data-depth="4" data-stmt="EVOCA"/>
       <title>stmt: EVOCA
 rituale: compiler_emit_semantic_error
-depth: 6
-line: 320
+depth: 4
+line: 352
 
 source:
-EVOCA VERBUM msg AD CONIURA concat("semantic error: ", (*ctx).last_error_message)</title>
+EVOCA VERBUM detail AD CONIURA semantic_error_message(ctx)</title>
     </g>
     <g class="node-wrap">
-      <circle class="node-term" cx="144.14" cy="200.50" r="3.60" data-kind="term" data-ritual="compiler_emit_semantic_error" data-line="327" data-col="3" data-depth="6" data-stmt="REDDE"/>
+      <circle class="node-term" cx="136.79" cy="202.23" r="3.60" data-kind="term" data-ritual="compiler_emit_semantic_error" data-line="362" data-col="3" data-depth="4" data-stmt="REDDE"/>
       <title>stmt: REDDE
 rituale: compiler_emit_semantic_error
-depth: 6
-line: 327
+depth: 4
+line: 362
 
 source:
 REDDE</title>
     </g>
     <g class="node-wrap">
-      <circle class="node-main" cx="138.27" cy="133.96" r="7.00" data-kind="rituale" data-ritual="compiler_emit_codegen_error" data-line="330" data-col="1" data-depth="6" data-stmt="RITUALE" data-loops="0" data-calls="8"/>
+      <circle class="node-main" cx="121.49" cy="143.46" r="7.45" data-kind="rituale" data-ritual="compiler_emit_codegen_error" data-line="365" data-col="1" data-depth="4" data-stmt="RITUALE" data-loops="0" data-calls="11"/>
       <title>RITUALE compiler_emit_codegen_error
-stmt: 8
-depth: 6
+stmt: 11
+depth: 4
 loops: 0
-calls: 8
+calls: 11
 source:
 RITUALE compiler_emit_codegen_error(SPECULUM CodegenContext ctx) REDDE NIHIL</title>
     </g>
     <g class="node-wrap">
-      <circle class="node-aux" cx="156.32" cy="152.67" r="3.55" data-kind="bind" data-ritual="compiler_emit_codegen_error" data-line="331" data-col="3" data-depth="6" data-stmt="EVOCA"/>
+      <circle class="node-aux" cx="141.43" cy="160.14" r="4.00" data-kind="bind" data-ritual="compiler_emit_codegen_error" data-line="366" data-col="3" data-depth="4" data-stmt="EVOCA"/>
       <title>stmt: EVOCA
 rituale: compiler_emit_codegen_error
-depth: 6
-line: 331
+depth: 4
+line: 366
 
 source:
-EVOCA VERBUM msg AD CONIURA concat("codegen error: ", (*ctx).last_error_message)</title>
+EVOCA VERBUM detail AD CONIURA codegen_error_message(ctx)</title>
     </g>
     <g class="node-wrap">
-      <circle class="node-term" cx="171.39" cy="179.82" r="3.60" data-kind="term" data-ritual="compiler_emit_codegen_error" data-line="338" data-col="3" data-depth="6" data-stmt="REDDE"/>
+      <circle class="node-term" cx="159.30" cy="185.53" r="3.60" data-kind="term" data-ritual="compiler_emit_codegen_error" data-line="376" data-col="3" data-depth="4" data-stmt="REDDE"/>
       <title>stmt: REDDE
 rituale: compiler_emit_codegen_error
-depth: 6
-line: 338
+depth: 4
+line: 376
 
 source:
 REDDE</title>
     </g>
     <g class="node-wrap">
-      <circle class="node-entry" cx="258.03" cy="106.63" r="12.80" data-kind="rituale" data-ritual="main" data-line="341" data-col="1" data-depth="7" data-stmt="RITUALE" data-loops="0" data-calls="36" data-entry="true"/>
+      <circle class="node-entry" cx="228.00" cy="103.24" r="12.80" data-kind="rituale" data-ritual="main" data-line="379" data-col="1" data-depth="6" data-stmt="RITUALE" data-loops="0" data-calls="38" data-entry="true"/>
       <title>RITUALE main
 stmt: 50
-depth: 7
+depth: 6
 loops: 0
-calls: 36
+calls: 38
 source:
 RITUALE main() REDDE REX</title>
     </g>
     <g class="node-wrap">
-      <circle class="node-aux" cx="233.47" cy="147.80" r="5.80" data-kind="branch" data-ritual="main" data-line="342" data-col="3" data-depth="7" data-stmt="SI"/>
+      <circle class="node-aux" cx="259.09" cy="139.73" r="5.80" data-kind="branch" data-ritual="main" data-line="380" data-col="3" data-depth="6" data-stmt="SI"/>
       <title>stmt: SI
 rituale: main
-depth: 7
-line: 342
+depth: 6
+line: 380
 
 source:
 SI CONIURA argc() &lt; 3</title>
     </g>
     <g class="node-wrap">
-      <circle class="node-aux" cx="257.67" cy="132.63" r="4.00" data-kind="bind" data-ritual="main" data-line="347" data-col="3" data-depth="7" data-stmt="EVOCA"/>
+      <circle class="node-aux" cx="232.69" cy="128.81" r="4.00" data-kind="bind" data-ritual="main" data-line="385" data-col="3" data-depth="6" data-stmt="EVOCA"/>
       <title>stmt: EVOCA
 rituale: main
-depth: 7
-line: 347
+depth: 6
+line: 385
 
 source:
 EVOCA VERBUM input_file AD CONIURA resolve(CONIURA normalize(CONIURA arg(1)))</title>
     </g>
     <g class="node-wrap">
-      <circle class="node-term" cx="265.27" cy="162.73" r="4.60" data-kind="term" data-ritual="main" data-line="344" data-col="5" data-depth="7" data-stmt="REDDE"/>
+      <circle class="node-term" cx="230.23" cy="159.76" r="4.60" data-kind="term" data-ritual="main" data-line="382" data-col="5" data-depth="6" data-stmt="REDDE"/>
       <title>stmt: REDDE
 rituale: main
-depth: 7
-line: 344
+depth: 6
+line: 382
 
 source:
 REDDE 64</title>
     </g>
     <g class="node-wrap">
-      <circle class="node-aux" cx="249.95" cy="249.58" r="5.00" data-kind="bind" data-ritual="main" data-line="347" data-col="3" data-depth="7" data-stmt="EVOCA"/>
+      <circle class="node-aux" cx="250.31" cy="246.48" r="5.00" data-kind="bind" data-ritual="main" data-line="385" data-col="3" data-depth="6" data-stmt="EVOCA"/>
       <title>stmt: EVOCA
 rituale: main
-depth: 7
-line: 347
+depth: 6
+line: 385
 
 source:
 EVOCA VERBUM input_file AD CONIURA resolve(CONIURA normalize(CONIURA arg(1)))</title>
     </g>
   </g>
   <g id="ornaments">
-    <circle class="orn" cx="459.78" cy="219.11" r="0.90"/>
-    <circle class="orn" cx="448.19" cy="322.59" r="1.90"/>
-    <circle class="orn" cx="414.13" cy="391.17" r="2.90"/>
-    <circle class="orn" cx="299.94" cy="457.62" r="0.90"/>
-    <circle class="orn" cx="227.86" cy="462.07" r="1.90"/>
-    <circle class="orn" cx="129.83" cy="421.15" r="2.90"/>
-    <circle class="orn" cx="84.22" cy="369.93" r="0.90"/>
-    <circle class="orn" cx="50.31" cy="283.48" r="1.90"/>
-    <circle class="orn" cx="68.79" cy="179.08" r="2.90"/>
-    <circle class="orn" cx="108.53" cy="123.38" r="0.90"/>
-    <circle class="orn" cx="224.19" cy="55.12" r="1.90"/>
-    <circle class="orn" cx="292.08" cy="49.46" r="2.90"/>
-    <circle class="orn" cx="402.57" cy="105.03" r="0.90"/>
-    <circle class="orn" cx="443.78" cy="175.42" r="1.90"/>
+    <circle class="orn" cx="454.61" cy="245.88" r="0.90"/>
+    <circle class="orn" cx="429.08" cy="363.66" r="1.90"/>
+    <circle class="orn" cx="353.63" cy="429.15" r="2.90"/>
+    <circle class="orn" cx="287.58" cy="463.78" r="0.90"/>
+    <circle class="orn" cx="217.95" cy="457.19" r="1.90"/>
+    <circle class="orn" cx="142.89" cy="433.65" r="2.90"/>
+    <circle class="orn" cx="62.89" cy="334.98" r="0.90"/>
+    <circle class="orn" cx="49.49" cy="234.46" r="1.90"/>
+    <circle class="orn" cx="64.07" cy="191.64" r="2.90"/>
+    <circle class="orn" cx="104.35" cy="117.43" r="0.90"/>
+    <circle class="orn" cx="170.98" cy="66.32" r="1.90"/>
+    <circle class="orn" cx="293.31" cy="58.77" r="2.90"/>
+    <circle class="orn" cx="346.73" cy="78.76" r="0.90"/>
+    <circle class="orn" cx="449.26" cy="199.84" r="1.90"/>
   </g>
   <g id="signature">
-    <text class="hash" x="256" y="496" text-anchor="middle">422bb7dd5efc7567</text>
-    <text class="label" x="256" y="18" text-anchor="middle">network • sigillum v2.1 • 21 rituale(s) • 237 stmt • depth 15</text>
+    <text class="hash" x="256" y="496" text-anchor="middle">f2fe6fb292b39cf1</text>
+    <text class="label" x="256" y="18" text-anchor="middle">network • sigillum v2.1 • 29 rituale(s) • 251 stmt • depth 15</text>
   </g>
 </svg>

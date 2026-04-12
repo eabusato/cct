@@ -1,9 +1,9 @@
 format = cct.sigil.v1
 sigilo_scope = system
 visual_style = network
-system_hash = fffed748bec3cbf2
+system_hash = 9129c3ffc79d2540
 module_count = 4
-entry_module = /home/arconte/dev/cct/tests/integration/phase12_closure_end_to_end_12h/src/main.cct
+entry_module = /home/admin/dev/cct/tests/integration/phase12_closure_end_to_end_12h/src/main.cct
 import_edges = 3
 cross_module_calls = 2
 cross_module_type_refs = 0
@@ -54,12 +54,12 @@ determinism_guarantee = stable
 
 [diff_fingerprint_context]
 scope_anchor = system
-hash_anchor = fffed748bec3cbf2
+hash_anchor = 9129c3ffc79d2540
 fingerprint_basis = module_map+import_edges+system_hash_anchor
 serialization_profile = analytical_v1
 volatility = none
 module_anchor_count = 4
-entry_anchor = /home/arconte/dev/cct/tests/integration/phase12_closure_end_to_end_12h/src/main.cct
+entry_anchor = /home/admin/dev/cct/tests/integration/phase12_closure_end_to_end_12h/src/main.cct
 
 [module_structural_summary]
 module_count = 4
@@ -81,18 +81,18 @@ diff_policy = analytical_blocks_review_required_except_compatibility_hints
 deterministic_serialization = stable_section_order
 
 [modules]
-0 = /home/arconte/dev/cct/tests/integration/phase12_closure_end_to_end_12h/src/main.cct
-1 = /home/arconte/dev/cct/tests/integration/phase12_closure_end_to_end_12h/lib/core.cct
-2 = /home/arconte/dev/cct/lib/cct/math.cct
-3 = /home/arconte/dev/cct/lib/cct/random.cct
+0 = /home/admin/dev/cct/tests/integration/phase12_closure_end_to_end_12h/src/main.cct
+1 = /home/admin/dev/cct/tests/integration/phase12_closure_end_to_end_12h/lib/core.cct
+2 = /home/admin/dev/cct/lib/cct/math.cct
+3 = /home/admin/dev/cct/lib/cct/random.cct
 
 [module_sigils]
-0 = /home/arconte/dev/cct/tests/integration/phase12_closure_end_to_end_12h/src/main.cct | 1760d12fe430c25e
-1 = /home/arconte/dev/cct/tests/integration/phase12_closure_end_to_end_12h/lib/core.cct | 6135e381b6a7441e
-2 = /home/arconte/dev/cct/lib/cct/math.cct | 8dc333acad94b547
-3 = /home/arconte/dev/cct/lib/cct/random.cct | 8f73af1f7af9c9b1
+0 = /home/admin/dev/cct/tests/integration/phase12_closure_end_to_end_12h/src/main.cct | 1760d12fe430c25e
+1 = /home/admin/dev/cct/tests/integration/phase12_closure_end_to_end_12h/lib/core.cct | 6135e381b6a7441e
+2 = /home/admin/dev/cct/lib/cct/math.cct | 8dc333acad94b547
+3 = /home/admin/dev/cct/lib/cct/random.cct | 8f73af1f7af9c9b1
 
 [import_edges]
-0 = /home/arconte/dev/cct/tests/integration/phase12_closure_end_to_end_12h/src/main.cct -> /home/arconte/dev/cct/tests/integration/phase12_closure_end_to_end_12h/lib/core.cct
-1 = /home/arconte/dev/cct/tests/integration/phase12_closure_end_to_end_12h/src/main.cct -> /home/arconte/dev/cct/lib/cct/math.cct
-2 = /home/arconte/dev/cct/tests/integration/phase12_closure_end_to_end_12h/src/main.cct -> /home/arconte/dev/cct/lib/cct/random.cct
+0 = /home/admin/dev/cct/tests/integration/phase12_closure_end_to_end_12h/src/main.cct -> /home/admin/dev/cct/tests/integration/phase12_closure_end_to_end_12h/lib/core.cct
+1 = /home/admin/dev/cct/tests/integration/phase12_closure_end_to_end_12h/src/main.cct -> /home/admin/dev/cct/lib/cct/math.cct
+2 = /home/admin/dev/cct/tests/integration/phase12_closure_end_to_end_12h/src/main.cct -> /home/admin/dev/cct/lib/cct/random.cct

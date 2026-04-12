@@ -1,7 +1,7 @@
 format = cct.sigil.v1
 sigilo_scope = system
 visual_style = network
-system_hash = d7e42fe58921b2e1
+system_hash = 08c84c3658bc6e67
 module_count = 8
 entry_module = examples/parse_cmp_showcase_11f2.cct
 import_edges = 9
@@ -54,7 +54,7 @@ determinism_guarantee = stable
 
 [diff_fingerprint_context]
 scope_anchor = system
-hash_anchor = d7e42fe58921b2e1
+hash_anchor = 08c84c3658bc6e67
 fingerprint_basis = module_map+import_edges+system_hash_anchor
 serialization_profile = analytical_v1
 volatility = none
@@ -81,32 +81,32 @@ diff_policy = analytical_blocks_review_required_except_compatibility_hints
 deterministic_serialization = stable_section_order
 
 [modules]
-0 = /home/arconte/dev/cct/examples/parse_cmp_showcase_11f2.cct
-1 = /home/arconte/dev/cct/lib/cct/parse.cct
-2 = /home/arconte/dev/cct/lib/cct/verbum.cct
-3 = /home/arconte/dev/cct/lib/cct/char.cct
-4 = /home/arconte/dev/cct/lib/cct/option.cct
-5 = /home/arconte/dev/cct/lib/cct/cmp.cct
-6 = /home/arconte/dev/cct/lib/cct/alg.cct
-7 = /home/arconte/dev/cct/lib/cct/io.cct
+0 = /home/admin/dev/cct/examples/parse_cmp_showcase_11f2.cct
+1 = /home/admin/dev/cct/lib/cct/parse.cct
+2 = /home/admin/dev/cct/lib/cct/verbum.cct
+3 = /home/admin/dev/cct/lib/cct/char.cct
+4 = /home/admin/dev/cct/lib/cct/option.cct
+5 = /home/admin/dev/cct/lib/cct/cmp.cct
+6 = /home/admin/dev/cct/lib/cct/alg.cct
+7 = /home/admin/dev/cct/lib/cct/io.cct
 
 [module_sigils]
-0 = /home/arconte/dev/cct/examples/parse_cmp_showcase_11f2.cct | 817749d7e0c6a3d9
-1 = /home/arconte/dev/cct/lib/cct/parse.cct | bc6cf225c231e3a0
-2 = /home/arconte/dev/cct/lib/cct/verbum.cct | 963d74e1a8a9f741
-3 = /home/arconte/dev/cct/lib/cct/char.cct | a20627ed62c71ce1
-4 = /home/arconte/dev/cct/lib/cct/option.cct | 67ec7c62091c64c5
-5 = /home/arconte/dev/cct/lib/cct/cmp.cct | cab87baabd988303
-6 = /home/arconte/dev/cct/lib/cct/alg.cct | 8484465cb7e2a000
-7 = /home/arconte/dev/cct/lib/cct/io.cct | 9699b47a9890d1fb
+0 = /home/admin/dev/cct/examples/parse_cmp_showcase_11f2.cct | 817749d7e0c6a3d9
+1 = /home/admin/dev/cct/lib/cct/parse.cct | bc6cf225c231e3a0
+2 = /home/admin/dev/cct/lib/cct/verbum.cct | 963d74e1a8a9f741
+3 = /home/admin/dev/cct/lib/cct/char.cct | a20627ed62c71ce1
+4 = /home/admin/dev/cct/lib/cct/option.cct | 67ec7c62091c64c5
+5 = /home/admin/dev/cct/lib/cct/cmp.cct | cab87baabd988303
+6 = /home/admin/dev/cct/lib/cct/alg.cct | 8484465cb7e2a000
+7 = /home/admin/dev/cct/lib/cct/io.cct | 9699b47a9890d1fb
 
 [import_edges]
-0 = /home/arconte/dev/cct/examples/parse_cmp_showcase_11f2.cct -> /home/arconte/dev/cct/lib/cct/parse.cct
-1 = /home/arconte/dev/cct/examples/parse_cmp_showcase_11f2.cct -> /home/arconte/dev/cct/lib/cct/cmp.cct
-2 = /home/arconte/dev/cct/examples/parse_cmp_showcase_11f2.cct -> /home/arconte/dev/cct/lib/cct/alg.cct
-3 = /home/arconte/dev/cct/examples/parse_cmp_showcase_11f2.cct -> /home/arconte/dev/cct/lib/cct/io.cct
-4 = /home/arconte/dev/cct/lib/cct/parse.cct -> /home/arconte/dev/cct/lib/cct/verbum.cct
-5 = /home/arconte/dev/cct/lib/cct/parse.cct -> /home/arconte/dev/cct/lib/cct/option.cct
-6 = /home/arconte/dev/cct/lib/cct/verbum.cct -> /home/arconte/dev/cct/lib/cct/char.cct
-7 = /home/arconte/dev/cct/lib/cct/cmp.cct -> /home/arconte/dev/cct/lib/cct/verbum.cct
-8 = /home/arconte/dev/cct/lib/cct/alg.cct -> /home/arconte/dev/cct/lib/cct/verbum.cct
+0 = /home/admin/dev/cct/examples/parse_cmp_showcase_11f2.cct -> /home/admin/dev/cct/lib/cct/parse.cct
+1 = /home/admin/dev/cct/examples/parse_cmp_showcase_11f2.cct -> /home/admin/dev/cct/lib/cct/cmp.cct
+2 = /home/admin/dev/cct/examples/parse_cmp_showcase_11f2.cct -> /home/admin/dev/cct/lib/cct/alg.cct
+3 = /home/admin/dev/cct/examples/parse_cmp_showcase_11f2.cct -> /home/admin/dev/cct/lib/cct/io.cct
+4 = /home/admin/dev/cct/lib/cct/parse.cct -> /home/admin/dev/cct/lib/cct/verbum.cct
+5 = /home/admin/dev/cct/lib/cct/parse.cct -> /home/admin/dev/cct/lib/cct/option.cct
+6 = /home/admin/dev/cct/lib/cct/verbum.cct -> /home/admin/dev/cct/lib/cct/char.cct
+7 = /home/admin/dev/cct/lib/cct/cmp.cct -> /home/admin/dev/cct/lib/cct/verbum.cct
+8 = /home/admin/dev/cct/lib/cct/alg.cct -> /home/admin/dev/cct/lib/cct/verbum.cct

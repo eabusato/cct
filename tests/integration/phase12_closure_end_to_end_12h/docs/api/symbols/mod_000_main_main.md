@@ -1,7 +1,7 @@
 # main
 
 - Kind: `rituale`
-- Module: `/home/arconte/dev/cct/tests/integration/phase12_closure_end_to_end_12h/src/main.cct`
+- Module: `/home/admin/dev/cct/tests/integration/phase12_closure_end_to_end_12h/src/main.cct`
 - Visibility: `public`
 
 ## Signature

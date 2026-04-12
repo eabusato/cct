@@ -918,7 +918,7 @@ RITUALE semantic_analyze_expr(SPECULUM SemanticContext ctx, SPECULUM AstNode exp
       FIN SI
       REDDE (*ctx).type_verum
     FIN SI
-    CONIURA semantic_report_error(ctx, (*expr).line, (*expr).column, "unsupported unary operator")
+    CONIURA semantic_report_error(ctx, (*expr).line, (*expr).column, CONIURA concat("unsupported unary operator: ", CONIURA token_kind_to_string((*expr).operator_kind)))
     REDDE (*ctx).type_error
   FIN SI
 

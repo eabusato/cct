@@ -1,6 +1,6 @@
 # Module mod_001_util
 
-- Path: `/home/arconte/dev/cct/tests/integration/project_12f_basic/lib/util.cct`
+- Path: `/home/admin/dev/cct/tests/integration/project_12f_basic/lib/util.cct`
 - Origin: user module
 
 ## Symbols

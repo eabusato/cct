@@ -1,9 +1,9 @@
 # valor_publico
 
 - Kind: `rituale`
-- Module: `/home/arconte/dev/cct/tests/integration/docgen_visibility_12g/lib/vis.cct`
+- Module: `/home/admin/dev/cct/tests/integration/docgen_visibility_12g/lib/vis.cct`
 - Visibility: `public`
-- Generated: 2026-04-12 02:49:18
+- Generated: 2026-04-12 12:03:54
 
 ## Signature
 

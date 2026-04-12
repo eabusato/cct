@@ -1,8 +1,8 @@
 # Module mod_002_verbum
 
-- Path: `/home/arconte/dev/cct/lib/cct/verbum.cct`
+- Path: `/home/admin/dev/cct/lib/cct/verbum.cct`
 - Origin: stdlib (cct/...)
-- Generated: 2026-04-12 02:49:18
+- Generated: 2026-04-12 12:03:54
 
 ## Symbols
 

@@ -1,7 +1,7 @@
 format = cct.sigil.v1
 sigilo_scope = system
 visual_style = network
-system_hash = 8a7adfc0d4a4fc52
+system_hash = 6adf0c8385d7c76c
 module_count = 8
 entry_module = examples/collection_ops_12d2.cct
 import_edges = 7
@@ -54,7 +54,7 @@ determinism_guarantee = stable
 
 [diff_fingerprint_context]
 scope_anchor = system
-hash_anchor = 8a7adfc0d4a4fc52
+hash_anchor = 6adf0c8385d7c76c
 fingerprint_basis = module_map+import_edges+system_hash_anchor
 serialization_profile = analytical_v1
 volatility = none
@@ -81,30 +81,30 @@ diff_policy = analytical_blocks_review_required_except_compatibility_hints
 deterministic_serialization = stable_section_order
 
 [modules]
-0 = /home/arconte/dev/cct/examples/collection_ops_12d2.cct
-1 = /home/arconte/dev/cct/lib/cct/io.cct
-2 = /home/arconte/dev/cct/lib/cct/fmt.cct
-3 = /home/arconte/dev/cct/lib/cct/verbum.cct
-4 = /home/arconte/dev/cct/lib/cct/char.cct
-5 = /home/arconte/dev/cct/lib/cct/fluxus.cct
-6 = /home/arconte/dev/cct/lib/cct/collection_ops.cct
-7 = /home/arconte/dev/cct/lib/cct/mem.cct
+0 = /home/admin/dev/cct/examples/collection_ops_12d2.cct
+1 = /home/admin/dev/cct/lib/cct/io.cct
+2 = /home/admin/dev/cct/lib/cct/fmt.cct
+3 = /home/admin/dev/cct/lib/cct/verbum.cct
+4 = /home/admin/dev/cct/lib/cct/char.cct
+5 = /home/admin/dev/cct/lib/cct/fluxus.cct
+6 = /home/admin/dev/cct/lib/cct/collection_ops.cct
+7 = /home/admin/dev/cct/lib/cct/mem.cct
 
 [module_sigils]
-0 = /home/arconte/dev/cct/examples/collection_ops_12d2.cct | ed4a1a98c6551ae4
-1 = /home/arconte/dev/cct/lib/cct/io.cct | 9699b47a9890d1fb
-2 = /home/arconte/dev/cct/lib/cct/fmt.cct | 790273b45a960d77
-3 = /home/arconte/dev/cct/lib/cct/verbum.cct | 963d74e1a8a9f741
-4 = /home/arconte/dev/cct/lib/cct/char.cct | a20627ed62c71ce1
-5 = /home/arconte/dev/cct/lib/cct/fluxus.cct | bdc18a455d0744f5
-6 = /home/arconte/dev/cct/lib/cct/collection_ops.cct | ead246d886a0e4ec
-7 = /home/arconte/dev/cct/lib/cct/mem.cct | c240a6dc89b309d8
+0 = /home/admin/dev/cct/examples/collection_ops_12d2.cct | ed4a1a98c6551ae4
+1 = /home/admin/dev/cct/lib/cct/io.cct | 9699b47a9890d1fb
+2 = /home/admin/dev/cct/lib/cct/fmt.cct | 790273b45a960d77
+3 = /home/admin/dev/cct/lib/cct/verbum.cct | 963d74e1a8a9f741
+4 = /home/admin/dev/cct/lib/cct/char.cct | a20627ed62c71ce1
+5 = /home/admin/dev/cct/lib/cct/fluxus.cct | bdc18a455d0744f5
+6 = /home/admin/dev/cct/lib/cct/collection_ops.cct | ead246d886a0e4ec
+7 = /home/admin/dev/cct/lib/cct/mem.cct | c240a6dc89b309d8
 
 [import_edges]
-0 = /home/arconte/dev/cct/examples/collection_ops_12d2.cct -> /home/arconte/dev/cct/lib/cct/io.cct
-1 = /home/arconte/dev/cct/examples/collection_ops_12d2.cct -> /home/arconte/dev/cct/lib/cct/fmt.cct
-2 = /home/arconte/dev/cct/examples/collection_ops_12d2.cct -> /home/arconte/dev/cct/lib/cct/fluxus.cct
-3 = /home/arconte/dev/cct/examples/collection_ops_12d2.cct -> /home/arconte/dev/cct/lib/cct/collection_ops.cct
-4 = /home/arconte/dev/cct/lib/cct/fmt.cct -> /home/arconte/dev/cct/lib/cct/verbum.cct
-5 = /home/arconte/dev/cct/lib/cct/verbum.cct -> /home/arconte/dev/cct/lib/cct/char.cct
-6 = /home/arconte/dev/cct/lib/cct/collection_ops.cct -> /home/arconte/dev/cct/lib/cct/mem.cct
+0 = /home/admin/dev/cct/examples/collection_ops_12d2.cct -> /home/admin/dev/cct/lib/cct/io.cct
+1 = /home/admin/dev/cct/examples/collection_ops_12d2.cct -> /home/admin/dev/cct/lib/cct/fmt.cct
+2 = /home/admin/dev/cct/examples/collection_ops_12d2.cct -> /home/admin/dev/cct/lib/cct/fluxus.cct
+3 = /home/admin/dev/cct/examples/collection_ops_12d2.cct -> /home/admin/dev/cct/lib/cct/collection_ops.cct
+4 = /home/admin/dev/cct/lib/cct/fmt.cct -> /home/admin/dev/cct/lib/cct/verbum.cct
+5 = /home/admin/dev/cct/lib/cct/verbum.cct -> /home/admin/dev/cct/lib/cct/char.cct
+6 = /home/admin/dev/cct/lib/cct/collection_ops.cct -> /home/admin/dev/cct/lib/cct/mem.cct

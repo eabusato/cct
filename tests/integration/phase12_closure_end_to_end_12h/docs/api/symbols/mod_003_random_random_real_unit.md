@@ -1,7 +1,7 @@
 # random_real_unit
 
 - Kind: `rituale`
-- Module: `/home/arconte/dev/cct/lib/cct/random.cct`
+- Module: `/home/admin/dev/cct/lib/cct/random.cct`
 - Visibility: `public`
 
 ## Signature

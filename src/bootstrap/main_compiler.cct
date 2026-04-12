@@ -67,6 +67,14 @@ RITUALE compiler_context_free(SPECULUM CompilerContext ctx) REDDE NIHIL
   REDDE
 EXPLICIT RITUALE
 
+RITUALE compiler_context_had_error(SPECULUM CompilerContext ctx) REDDE VERUM
+  REDDE (*ctx).had_error
+EXPLICIT RITUALE
+
+RITUALE compiler_context_error_message(SPECULUM CompilerContext ctx) REDDE VERBUM
+  REDDE (*ctx).error_message
+EXPLICIT RITUALE
+
 RITUALE compiler_has_loaded_path(SPECULUM CompilerContext ctx, VERBUM path_value) REDDE VERUM
   EVOCA VERBUM needle AD CONIURA concat("\n", path_value)
   VINCIRE needle AD CONIURA concat(needle, "\n")
@@ -316,23 +324,53 @@ RITUALE compiler_parse_composite_program(SPECULUM CompilerContext ctx, VERBUM ro
   REDDE program
 EXPLICIT RITUALE
 
+RITUALE semantic_error_message(SPECULUM SemanticContext ctx) REDDE VERBUM
+  REDDE (*ctx).last_error_message
+EXPLICIT RITUALE
+
+RITUALE semantic_error_line(SPECULUM SemanticContext ctx) REDDE REX
+  REDDE (*ctx).last_error_line
+EXPLICIT RITUALE
+
+RITUALE semantic_error_column(SPECULUM SemanticContext ctx) REDDE REX
+  REDDE (*ctx).last_error_column
+EXPLICIT RITUALE
+
+RITUALE codegen_error_message(SPECULUM CodegenContext ctx) REDDE VERBUM
+  REDDE (*ctx).last_error_message
+EXPLICIT RITUALE
+
+RITUALE codegen_error_line(SPECULUM CodegenContext ctx) REDDE REX
+  REDDE (*ctx).last_error_line
+EXPLICIT RITUALE
+
+RITUALE codegen_error_column(SPECULUM CodegenContext ctx) REDDE REX
+  REDDE (*ctx).last_error_column
+EXPLICIT RITUALE
+
 RITUALE compiler_emit_semantic_error(SPECULUM SemanticContext ctx) REDDE NIHIL
-  EVOCA VERBUM msg AD CONIURA concat("semantic error: ", (*ctx).last_error_message)
+  EVOCA VERBUM detail AD CONIURA semantic_error_message(ctx)
+  EVOCA REX line AD CONIURA semantic_error_line(ctx)
+  EVOCA REX column AD CONIURA semantic_error_column(ctx)
+  EVOCA VERBUM msg AD CONIURA concat("semantic error: ", detail)
   VINCIRE msg AD CONIURA concat(msg, " @")
-  VINCIRE msg AD CONIURA concat(msg, CONIURA stringify_int((*ctx).last_error_line))
+  VINCIRE msg AD CONIURA concat(msg, CONIURA stringify_int(line))
   VINCIRE msg AD CONIURA concat(msg, ":")
-  VINCIRE msg AD CONIURA concat(msg, CONIURA stringify_int((*ctx).last_error_column))
+  VINCIRE msg AD CONIURA concat(msg, CONIURA stringify_int(column))
   CONIURA eprintln(msg)
   DIMITTE msg
   REDDE
 EXPLICIT RITUALE
 
 RITUALE compiler_emit_codegen_error(SPECULUM CodegenContext ctx) REDDE NIHIL
-  EVOCA VERBUM msg AD CONIURA concat("codegen error: ", (*ctx).last_error_message)
+  EVOCA VERBUM detail AD CONIURA codegen_error_message(ctx)
+  EVOCA REX line AD CONIURA codegen_error_line(ctx)
+  EVOCA REX column AD CONIURA codegen_error_column(ctx)
+  EVOCA VERBUM msg AD CONIURA concat("codegen error: ", detail)
   VINCIRE msg AD CONIURA concat(msg, " @")
-  VINCIRE msg AD CONIURA concat(msg, CONIURA stringify_int((*ctx).last_error_line))
+  VINCIRE msg AD CONIURA concat(msg, CONIURA stringify_int(line))
   VINCIRE msg AD CONIURA concat(msg, ":")
-  VINCIRE msg AD CONIURA concat(msg, CONIURA stringify_int((*ctx).last_error_column))
+  VINCIRE msg AD CONIURA concat(msg, CONIURA stringify_int(column))
   CONIURA eprintln(msg)
   DIMITTE msg
   REDDE
@@ -349,8 +387,8 @@ RITUALE main() REDDE REX
   EVOCA SPECULUM CompilerContext compiler_ctx AD CONIURA compiler_context_new(input_file)
   EVOCA SPECULUM AstProgram program AD CONIURA compiler_parse_composite_program(compiler_ctx, input_file)
 
-  SI (*compiler_ctx).had_error
-    CONIURA eprintln((*compiler_ctx).error_message)
+  SI CONIURA compiler_context_had_error(compiler_ctx)
+    CONIURA eprintln(CONIURA compiler_context_error_message(compiler_ctx))
     CONIURA ast_program_free(program)
     CONIURA compiler_context_free(compiler_ctx)
     DIMITTE input_file

@@ -5010,7 +5010,7 @@ static const char cct_str_569[] = "logical operator requires VERUM operands";
 static const char cct_str_568[] = "ordered comparison requires numeric operands";
 static const char cct_str_567[] = "comparison requires compatible operands";
 static const char cct_str_566[] = "binary operator requires numeric operands";
-static const char cct_str_565[] = "unsupported unary operator";
+static const char cct_str_565[] = "unsupported unary operator: ";
 static const char cct_str_564[] = "logical NON requires VERUM operand";
 static const char cct_str_563[] = "unary operator requires numeric operand";
 static const char cct_str_562[] = "FORMA interpolation type outside bootstrap subset";
@@ -6529,7 +6529,7 @@ static long long cct_fn_semantic_analyze_expr(SemanticContext * ctx, AstNode * e
             }
             return (((*((SemanticContext*)cct_rt_check_not_null((void*)(ctx), "runtime-fail (bridged): null pointer dereference")))).type_verum);
         }
-        cct_fn_semantic_report_error(ctx, ((*((AstNode*)cct_rt_check_not_null((void*)(expr), "runtime-fail (bridged): null pointer dereference")))).line, ((*((AstNode*)cct_rt_check_not_null((void*)(expr), "runtime-fail (bridged): null pointer dereference")))).column, cct_str_565);
+        cct_fn_semantic_report_error(ctx, ((*((AstNode*)cct_rt_check_not_null((void*)(expr), "runtime-fail (bridged): null pointer dereference")))).line, ((*((AstNode*)cct_rt_check_not_null((void*)(expr), "runtime-fail (bridged): null pointer dereference")))).column, cct_fn_concat(cct_str_565, cct_fn_token_kind_to_string(((*((AstNode*)cct_rt_check_not_null((void*)(expr), "runtime-fail (bridged): null pointer dereference")))).operator_kind)));
         if (cct_rt_fractum_is_active()) {
             return 0;
         }
@@ -14850,7 +14850,23 @@ static AstNode * cct_fn_parse_power(ParserState * parser) {
 static AstNode * cct_fn_parse_unary(ParserState * parser) {
     if ((cct_fn_parser_match(parser, 74) || cct_fn_parser_match(parser, 73) || cct_fn_parser_match(parser, 44) || cct_fn_parser_match(parser, 75) || cct_fn_parser_match(parser, 61)))
     {
-        AstNode * expr = cct_fn_ast_make_unary((((*((ParserState*)cct_rt_check_not_null((void*)(parser), "runtime-fail (bridged): null pointer dereference")))).previous).kind, cct_fn_parse_unary(parser), (((*((ParserState*)cct_rt_check_not_null((void*)(parser), "runtime-fail (bridged): null pointer dereference")))).previous).line, (((*((ParserState*)cct_rt_check_not_null((void*)(parser), "runtime-fail (bridged): null pointer dereference")))).previous).column);
+        long long op = (((*((ParserState*)cct_rt_check_not_null((void*)(parser), "runtime-fail (bridged): null pointer dereference")))).previous).kind;
+        if (cct_rt_fractum_is_active()) {
+            return 0;
+        }
+        long long line = (((*((ParserState*)cct_rt_check_not_null((void*)(parser), "runtime-fail (bridged): null pointer dereference")))).previous).line;
+        if (cct_rt_fractum_is_active()) {
+            return 0;
+        }
+        long long column = (((*((ParserState*)cct_rt_check_not_null((void*)(parser), "runtime-fail (bridged): null pointer dereference")))).previous).column;
+        if (cct_rt_fractum_is_active()) {
+            return 0;
+        }
+        AstNode * operand = cct_fn_parse_unary(parser);
+        if (cct_rt_fractum_is_active()) {
+            return 0;
+        }
+        AstNode * expr = cct_fn_ast_make_unary(op, operand, line, column);
         if (cct_rt_fractum_is_active()) {
             return 0;
         }
