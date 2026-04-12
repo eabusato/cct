@@ -11,11 +11,16 @@ It is written to help you:
 
 ## Status
 
-Specification baseline: **FASE 39**.
+Specification baseline: **FASE 40**.
 
-This manual preserves the complete user-facing language and tooling reference accumulated through the phase-20 public subset and extends it with the validated bootstrap, self-hosting, operational-platform, and standard-library additions delivered in phases 21 through 39.
+This manual preserves the complete user-facing language and tooling reference accumulated through the phase-20 public subset and extends it with the validated bootstrap, self-hosting, operational-platform, and standard-library additions delivered in phases 21 through 40.
 
 The language is fully usable in its current validated subset, with explicit boundaries documented below.
+
+Current project note:
+- validated baseline: FASE 40
+- platform validation: working and tested on Linux
+- release focus: prepare public release `v0.40`
 
 ## 1. Compiler Command Reference
 
@@ -2756,7 +2761,7 @@ Current contract:
 - intentionally small operational ORM-lite layer
 - complements `cct/db_sqlite` rather than replacing explicit SQL usage
 
-## 19. Current Operational Contract (FASE 30)
+## 19. Historical Operational Contract (FASE 30)
 
 The practical project contract through FASE 30 is:
 - host compiler remains production-valid and authoritative
@@ -2764,11 +2769,11 @@ The practical project contract through FASE 30 is:
 - self-hosted project workflows are real repository-supported workflows
 - full-project release confidence requires the aggregated validation path, not a narrow per-phase subset
 
-That is the baseline from which future post-bootstrap platform work must proceed.
+That was the baseline from which later post-bootstrap platform work proceeded.
 
 ## 20. FASE 31 Addendum: Compiler Entrypoints and Modes
 
-This addendum extends the manual from the FASE 30 baseline to the promoted compiler model closed in FASE 31.
+This addendum records the transition from the FASE 30 baseline to the promoted compiler model closed in FASE 31.
 
 ### 20.1 Practical Entrypoints
 
@@ -3433,9 +3438,9 @@ When animated mode is active:
 
 Output SVG is self-contained: no JavaScript, no external CSS, no server required. Opens directly with `file://` in any modern browser or SVG viewer.
 
-## 29. Current Operational Contract (FASE 39)
+## 29. Historical Operational Contract (FASE 39)
 
-The practical project contract through FASE 39 is:
+The practical project contract through FASE 39 was:
 
 - host compiler remains production-valid and authoritative
 - bootstrap compiler stack is complete and validated through code generation and self-host convergence
@@ -3540,4 +3545,4 @@ The practical project contract through FASE 40 is:
 
 **Specification baseline updated to FASE 40.**
 
-This document now covers the complete language surface and standard library through FASE 40, superseding the FASE 30 baseline noted in the Status section above.
+This document now covers the complete language surface and standard library through FASE 40, superseding the earlier FASE 30 and FASE 39 operational baselines recorded above.

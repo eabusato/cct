@@ -10,6 +10,7 @@ This is deliberate. The project carries:
 - bootstrap validation
 - self-host validation
 - operational self-host validation
+- release-facing validation for the FASE 40 baseline
 
 ## Runners
 
@@ -50,6 +51,11 @@ Purpose:
 - runs self-host phases
 - runs operational phase-30 gates
 
+Repository status note:
+- the validated public baseline is now FASE 40
+- `make test-all-0-31` is the most useful aggregated public gate in the current repository state
+- Linux is part of the tested baseline
+
 ## Recommended Commands
 
 ```bash
@@ -65,13 +71,13 @@ A platform-wide green baseline means:
 - rebased legacy is green
 - bootstrap is green
 - self-host is green
-- operational phase-30 is green
+- operational validation remains green
 
 That is the practical definition of a healthy repository state.
 
-## Post-FASE-31 Validation Model
+## Current Validation Model
 
-FASE 31 changes the meaning of the main validation entrypoints.
+The repository still uses the post-FASE-31 validation structure, but it now serves a project baseline closed through FASE 40.
 
 ### Default Product Validation
 
@@ -108,6 +114,10 @@ Practical usage:
 - `make test-all-0-30`: authoritative whole-project gate through the FASE 30 closure
 - `make test-all-0-31`: extended aggregated gate including compiler-promotion validation
 
+For the current repository state:
+- `make test-all-0-31` is the preferred aggregated release-facing gate
+- phase-30/31 names remain historically accurate, even though the project baseline is now FASE 40
+
 ### Phase Gates
 
 ```bash
@@ -137,6 +147,8 @@ make test-all-0-31
 make test-phase30-final
 make test-phase31-final
 ```
+
+For the current documentation and release posture, this sequence is the practical pre-release validation path for `v0.40`.
 
 ### Debugging Host vs Self-Host Parity
 

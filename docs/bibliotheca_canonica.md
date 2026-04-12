@@ -92,7 +92,7 @@ Avoid synonym sprawl and decorative ambiguity.
 | Runtime helper | Generated C support internals | emitted helper symbols in `.cgen.c` |
 | Bibliotheca Canonica | Importable standard modules | `ADVOCARE "cct/..."` |
 
-## 11. Current Status (Post-19D4)
+## 11. Current Status (FASE 40 Baseline)
 
 Delivered in 11A:
 - canonical reserved namespace contract (`cct/...`)
@@ -128,6 +128,7 @@ Delivered after foundation:
 - media bridges and packaging (`40A` through `40C`): `cct/media_store`, `cct/archive_zip`, `cct/object_storage`.
 
 Current phase closure references:
+- `docs/release/FASE_40_RELEASE_NOTES.md`
 - `docs/release/FASE_39_RELEASE_NOTES.md`
 - `docs/release/FASE_38_RELEASE_NOTES.md`
 - `docs/release/FASE_37_RELEASE_NOTES.md`
@@ -140,6 +141,11 @@ Current phase closure references:
 - `docs/bootstrap/FASE_20_HANDOFF.md`
 - `docs/release/FASE_19_RELEASE_NOTES.md`
 - `docs/bootstrap/FASE_19_HANDOFF.md`
+
+Operational note:
+- Bibliotheca Canonica now reflects the complete public standard-library surface delivered through FASE 40.
+- Host-only modules added in FASE 32 through FASE 40 remain part of the validated Linux baseline.
+- The immediate publication target for this repository state is release `v0.40`.
 
 ## 11A. `cct/db_sqlite` (FASE 20E)
 
@@ -2540,7 +2546,7 @@ Module total: **4**
 
 **New functions in §64 (FASE 32–39)**: **220**
 
-**Total geral de funcoes inventariadas (FASE 39 baseline)**: **829**
+**Total geral de funcoes inventariadas (historical FASE 39 baseline)**: **829**
 
 ---
 

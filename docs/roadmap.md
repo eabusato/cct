@@ -4,7 +4,7 @@ This roadmap is the authoritative phase-by-phase plan for CCT.
 
 It has two goals:
 - record what is already complete and stable
-- define the next phases with clear scope boundaries and completion gates
+- preserve the historical phase plan and the current release-facing execution context
 
 ## Planning Principles
 
@@ -16,9 +16,9 @@ It has two goals:
 
 ## Current Project Snapshot
 
-- Current completed phase: FASE 31
-- Current completed subphase: FASE 31E
-- Current phase context: the self-hosted compiler is now promoted to the operational default compiler path
+- Current completed phase: FASE 40
+- Current completed subphase: FASE 40C
+- Current phase context: the repository is on the validated post-bootstrap platform baseline, with the self-hosted compiler promoted and operational platform layers closed through media bridges and packaging
 - Phase-21 delivery status: bootstrap foundations and lexer implemented and closed
 - Phase-22 and 23 delivery status: bootstrap parser, AST, advanced syntax surface, and modular parsing implemented and closed
 - Phase-24 and 25 delivery status: bootstrap semantic core, generic semantics, constraints, and deduplicated instantiation implemented and closed
@@ -26,12 +26,24 @@ It has two goals:
 - Phase-29 delivery status: stage0/stage1/stage2 self-host convergence and identity validation implemented and closed
 - Phase-30 delivery status: self-hosted workflows, mature application libraries, packaging, and final operational handoff implemented and closed
 - Phase-31 delivery status: self-hosted compiler promoted to default, CLI parity, workflow integration, promotion/demotion infrastructure, and parity validation matrix implemented and closed
+- Phase-32 delivery status: security, cryptography, encodings, and media foundations implemented and closed
+- Phase-33 delivery status: advanced text, parsing, date/time, TOML, and compression modules implemented and closed
+- Phase-34 delivery status: file/media inspection, image operations, language detection, and advanced string/runtime diagnostics implemented and closed
+- Phase-35 delivery status: Sigilo Vivo foundations and operational platform utilities implemented and closed
+- Phase-36 delivery status: PostgreSQL, search, Redis, and advisory-lock operational database layer implemented and closed
+- Phase-37 delivery status: transactional mail layer implemented and closed
+- Phase-38 delivery status: runtime instrumentation and context-local operational telemetry implemented and closed
+- Phase-39 delivery status: animated trace visualization and operational span overlays implemented and closed
+- Phase-40 delivery status: media store, ZIP archive support, and S3-compatible object storage bridges implemented and closed
 - Current whole-project regression gate: `make test-all-0-31`
+- Current public-release target: `v0.40`
+- Current platform validation note: Linux-tested baseline
 - **Compiler maturity:** host compiler plus validated bootstrap/self-host compiler stack
 - **Backend strategy:** generated C plus host C compiler remains the official backend for both host and bootstrap paths
 - **Sigilo model:** dual-level modular model remains stable and continues to be part of the release contract
 - **Validation model:** legacy, rebased legacy, bootstrap, self-host, and operational platform suites are first-class gates
 - **Typing model:** advanced typing subset plus bootstrap generic semantics and materialization are closed on the validated baseline
+- **Operational maturity:** post-bootstrap platform expansion is closed through FASE 40
 
 ## Parallel Freestanding Track
 
@@ -498,9 +510,29 @@ Quality gate achieved:
 
 ## Phase Status Matrix
 
-- **Completed:** FASE 0 to FASE 31, plus FASE 14T
-- **Current operational baseline:** promoted self-hosted compiler as default, aggregated validation through phase 31
-- **Next work category:** post-bootstrap platform maturity (diagnostics, performance, stdlib expansion)
+- **Completed:** FASE 0 to FASE 40, plus FASE 14T
+- **Current operational baseline:** promoted self-hosted compiler as default, validated platform expansion through FASE 40
+- **Next work category:** release packaging, publication, and stabilization for `v0.40`
+
+## Post-Bootstrap Platform Expansion (Executed)
+
+### FASE 32 → FASE 40 ✅
+
+Delivered after compiler promotion:
+- FASE 32: `cct/crypto`, `cct/encoding`, `cct/regex`
+- FASE 33: `cct/datetime`, `cct/toml`, `cct/compress`
+- FASE 34: `cct/filetype`, `cct/media`, `cct/image`, `cct/langdetect`, advanced string/runtime utilities
+- FASE 35: Sigilo Vivo foundations plus `cct/lexer`, `cct/uuid`, `cct/slug`, `cct/i18n`, `cct/form`, `cct/log`, `cct/trace`, `cct/metrics`, `cct/signal`, `cct/watch`, `cct/audit`
+- FASE 36: `cct/db_postgres`, `cct/db_postgres_search`, `cct/redis`, `cct/db_postgres_lock`
+- FASE 37: `cct/mail`, `cct/mail_spool`, `cct/mail_webhook`
+- FASE 38: `cct/instrument`, `cct/context_local`
+- FASE 39: Sigilo Vivo trace rendering and comparison tooling
+- FASE 40: `cct/media_store`, `cct/archive_zip`, `cct/object_storage`
+
+Operational consequence:
+- the roadmap is no longer centered on bootstrap completion
+- the validated repository baseline is now the full FASE 40 platform
+- the immediate next project move is publishing release `v0.40`
 ## Bootstrap Delivery Record (Historical Plan, Now Executed)
 
 ### FASE 14T — Sigilo SVG Instrumentation Interstitial (Completed)
@@ -863,21 +895,22 @@ Every phase must pass these gates before closure:
 - docs updated (`README`, `spec`, `architecture`, roadmap)
 - no silent API contract breaks in stable public entry points
 
-## Immediate Next Step
+## Immediate Release Step
 
-The bootstrap roadmap (phases 21-31) is complete. The self-hosted compiler is now the operational default.
+The bootstrap roadmap (phases 21-31) is complete, and the post-bootstrap platform roadmap through FASE 40 is also complete.
 
 Immediate engineering focus:
 - keep `make test-all-0-31` green
 - maintain parity validation (`make test-bootstrap-parity`)
 - preserve host/bootstrap/self-host behavioral convergence
-- grow the post-bootstrap platform without regressing the validated operational baseline
+- preserve the validated FASE 40 operational baseline
+- prepare and publish release `v0.40`
 
-Post-31 priorities:
-- diagnostics quality (error messages, source highlighting, suggestions)
-- performance optimization (reduce 2-3x overhead vs host)
-- stdlib parity (export pending modules: config, json, db_sqlite, http)
-- developer experience (LSP, formatter, linter via selfhost)
+Release-side priorities:
+- keep Linux-tested workflows green
+- verify release packaging and install paths
+- align public docs with the FASE 40 baseline
+- publish the FASE 40 release package and notes
 
 Historical traceability note: closure artifacts from the host-era and bootstrap-era phases are preserved under `docs/release/` and `docs/bootstrap/`.
 
@@ -895,7 +928,10 @@ Closed outcomes:
 
 The roadmap after FASE 31 should be read as platform maturation, not bootstrap enablement.
 
+For the current repository state, that maturation track is already closed through FASE 40.
+
 Immediate forward frontier:
 - preserve host/self-host behavioral convergence
-- continue moving practical workflows from host delegation to fully self-hosted implementations where justified
-- improve diagnostics, performance, and stdlib parity without breaking the promoted operational model
+- preserve the fully closed FASE 40 platform baseline
+- ship release `v0.40`
+- continue self-host/tooling parity work only when it does not disrupt the validated release baseline

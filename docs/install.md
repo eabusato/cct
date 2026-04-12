@@ -2,7 +2,7 @@
 
 ## Scope
 
-This guide defines the supported installation and validation paths for the current CCT toolchain, including the historical host-compiler installation flow and the post-bootstrap validation targets available through FASE 30.
+This guide defines the supported installation and validation paths for the current CCT toolchain, including the historical host-compiler installation flow, the promoted self-hosted wrapper model, and the validated release-facing baseline through FASE 40.
 
 ## Prerequisites
 
@@ -12,9 +12,14 @@ This guide defines the supported installation and validation paths for the curre
 
 Platform note:
 - Linux and macOS are the supported validation targets for the current toolchain.
+- The current repository baseline is working and tested on Linux.
 - Native Windows usage is not fully addressed and should be treated as experimental.
 - Known Windows issues remain in shell/process behavior, path semantics, packaging, and some runtime-backed workflows.
 - If you need a stable installation path, use Linux, macOS, or WSL2 rather than native Windows.
+
+Current release note:
+- validated baseline: FASE 40
+- immediate publication target: `v0.40`
 
 ## 1. Build
 
@@ -127,15 +132,17 @@ Additional repository-level validation targets now exist beyond the historical b
 make test-legacy-full
 make test-legacy-rebased
 make test-all-0-30
+make test-all-0-31
 make test-bootstrap
 make test-bootstrap-selfhost
 make test-phase30-final
+make test-phase31-final
 ```
 
 For publication or release validation, use:
 
 ```bash
-make test-all-0-30
+make test-all-0-31
 ```
 
 ## 10. Multi-Stage Self-Host Build Targets
@@ -149,7 +156,7 @@ make bootstrap-stage2
 make bootstrap-stage-identity
 ```
 
-These targets are part of the supported operational toolchain as of FASE 29 and FASE 30.
+These targets remain part of the supported operational toolchain after bootstrap closure and compiler promotion.
 
 ## 11. FASE 31 First-Run Verification
 
@@ -165,6 +172,8 @@ Current repository baseline:
 - `./cct` is the default user-facing compiler entrypoint
 - `./cct-host` is the explicit host fallback
 - `./cct-selfhost` is the explicit self-hosted entrypoint
+- the repository baseline is validated through FASE 40
+- Linux is part of the tested baseline
 
 If you want to force the default wrapper mode explicitly after install:
 
@@ -201,3 +210,5 @@ make test-all-0-31
 make test-phase30-final
 make test-phase31-final
 ```
+
+For the current release baseline, interpret this sequence as the minimum public-release validation path before publishing `v0.40`.

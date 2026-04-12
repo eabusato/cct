@@ -17,15 +17,40 @@ CCT is a compiled, ritual-themed programming language with deterministic sigil g
   <p><sub>FASE 39: live trace correlation overlaid on the route sigil. Each span is color-coded by operational category (SQL, cache, storage, transcode, mail, auth…) and arrives at its node in temporal order. The timeline below shows relative durations per depth layer. Slow spans glow; unresolved spans are never silently dropped.</sub></p>
 </div>
 
+## At a Glance
+
+- Current baseline: **FASE 40 completed**
+- Validation status: **working and tested on Linux**
+- Compiler status: host and self-hosted flows operational
+- Current release target: **prepare `v0.40`**
+
+Quick navigation:
+- [Status](#status)
+- [Build](#build)
+- [Quick Examples](#quick-examples)
+- [CLI](#cli)
+- [Documentation](#documentation)
+- [Release Documentation Packages](#release-documentation-packages)
+- [What Is Implemented](#what-is-implemented)
+
 ## Status
 
 **Current status: FASE 40 completed** (security/cryptography, advanced text and parsing, logging and runtime diagnostics, Sigilo Vivo foundations, operational database, transactional mail, runtime instrumentation, trace visualization, and media bridges and packaging are now closed on the validated baseline).
 
-**Platform validation note:** the current implementation has not yet been validated on Linux. Development to date have been built on macOS. Previous release v0.19 includes Linux binaries.
+**Platform validation note:** the current implementation is validated on Linux and remains operational on macOS. Linux is now part of the tested baseline for the current repository state.
+
+**Release readiness note:** the repository baseline is functionally closed through FASE 40. The next project step is generating the public **`v0.40` release** from this validated state.
 
 Implemented phases: **0 -> 40**, plus the interstitial **FASE 14T** closure.
 
 **Phase-reference convention:** phase labels found in file/module headers, local markers, or help text may refer to the phase in which that specific component was introduced or stabilized. They are historical markers and do not necessarily represent the current global project status shown above.
+
+Recommended reading order for the current baseline:
+1. [Build](#build)
+2. [Quick Examples](#quick-examples)
+3. [CLI](#cli)
+4. [Documentation](#documentation)
+5. [FASE 40 Release Notes](docs/release/FASE_40_RELEASE_NOTES.md)
 
 Highlights of the current baseline:
 - Real end-to-end compiler pipeline (`.cct -> parse/semantic -> codegen -> .cgen.c -> host C compiler -> binary`)
@@ -85,6 +110,20 @@ Highlights of the current baseline:
 - FASE 38 runtime instrumentation: `cct/instrument` (span emission by category: DB/CACHE/STORAGE/MAIL/TASK/HTTP; off-by-default, zero overhead when inactive), `cct/context_local` (request/task-scoped key-value store for `request_id`, `trace_id`, `user_id`, `locale`, `route_id`)
 - FASE 39 trace visualization: animated SVG renderer overlaying `.ctrace` onto route sigil (timeline, step-by-step, comparison mode), operational category overlay system with stable color palette and exportable CSS (`cct sigilo trace render`, `cct sigilo trace compare`)
 - FASE 40 media bridges and packaging: `cct/media_store` (local store with tmp/quarantine/processed/public/private zones, UUID/hash naming, SHA-256 checksum, atomic promotion via `rename(2)`), `cct/archive_zip` (ZIP creation, text/file entry writing, safe extraction, path-traversal rejection at API level), `cct/object_storage` (optional S3-compatible bridge: upload, download, delete, signed URL; works with AWS S3, MinIO, Cloudflare R2)
+
+## Release Focus
+
+The repository is no longer in a feature-planning phase for this milestone. The practical focus is:
+
+1. Preserve the validated FASE 40 baseline.
+2. Keep Linux-tested workflows green.
+3. Generate and publish the **`v0.40`** release package and notes.
+
+Use these files first when preparing the release:
+- [docs/release/FASE_40_RELEASE_NOTES.md](docs/release/FASE_40_RELEASE_NOTES.md)
+- [docs/testing.md](docs/testing.md)
+- [docs/install.md](docs/install.md)
+- [docs/release/STATUS_0_31.md](docs/release/STATUS_0_31.md)
 
 ## Documentation
 
