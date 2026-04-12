@@ -1,7 +1,7 @@
 format = cct.sigil.v1
 sigilo_scope = system
 visual_style = network
-system_hash = 863606917dd6081e
+system_hash = 2c60c9dbc4e92226
 module_count = 4
 entry_module = examples/path_fs_showcase_11e2.cct
 import_edges = 3
@@ -54,7 +54,7 @@ determinism_guarantee = stable
 
 [diff_fingerprint_context]
 scope_anchor = system
-hash_anchor = 863606917dd6081e
+hash_anchor = 2c60c9dbc4e92226
 fingerprint_basis = module_map+import_edges+system_hash_anchor
 serialization_profile = analytical_v1
 volatility = none
@@ -81,18 +81,18 @@ diff_policy = analytical_blocks_review_required_except_compatibility_hints
 deterministic_serialization = stable_section_order
 
 [modules]
-0 = /Users/eabusato/dev/cct/examples/path_fs_showcase_11e2.cct
-1 = /Users/eabusato/dev/cct/lib/cct/path.cct
-2 = /Users/eabusato/dev/cct/lib/cct/fs.cct
-3 = /Users/eabusato/dev/cct/lib/cct/io.cct
+0 = /home/arconte/dev/cct/examples/path_fs_showcase_11e2.cct
+1 = /home/arconte/dev/cct/lib/cct/path.cct
+2 = /home/arconte/dev/cct/lib/cct/fs.cct
+3 = /home/arconte/dev/cct/lib/cct/io.cct
 
 [module_sigils]
-0 = /Users/eabusato/dev/cct/examples/path_fs_showcase_11e2.cct | 34b36080b1e78f24
-1 = /Users/eabusato/dev/cct/lib/cct/path.cct | 6fa9b1aa3bda854f
-2 = /Users/eabusato/dev/cct/lib/cct/fs.cct | 3e45228e77c0f971
-3 = /Users/eabusato/dev/cct/lib/cct/io.cct | 9699b47a9890d1fb
+0 = /home/arconte/dev/cct/examples/path_fs_showcase_11e2.cct | 34b36080b1e78f24
+1 = /home/arconte/dev/cct/lib/cct/path.cct | 6fa9b1aa3bda854f
+2 = /home/arconte/dev/cct/lib/cct/fs.cct | 3e45228e77c0f971
+3 = /home/arconte/dev/cct/lib/cct/io.cct | 9699b47a9890d1fb
 
 [import_edges]
-0 = /Users/eabusato/dev/cct/examples/path_fs_showcase_11e2.cct -> /Users/eabusato/dev/cct/lib/cct/path.cct
-1 = /Users/eabusato/dev/cct/examples/path_fs_showcase_11e2.cct -> /Users/eabusato/dev/cct/lib/cct/fs.cct
-2 = /Users/eabusato/dev/cct/examples/path_fs_showcase_11e2.cct -> /Users/eabusato/dev/cct/lib/cct/io.cct
+0 = /home/arconte/dev/cct/examples/path_fs_showcase_11e2.cct -> /home/arconte/dev/cct/lib/cct/path.cct
+1 = /home/arconte/dev/cct/examples/path_fs_showcase_11e2.cct -> /home/arconte/dev/cct/lib/cct/fs.cct
+2 = /home/arconte/dev/cct/examples/path_fs_showcase_11e2.cct -> /home/arconte/dev/cct/lib/cct/io.cct

@@ -6,7 +6,7 @@
 /* ===== Includes (freestanding) ===== */
 #include <stdint.h>
 #include <stddef.h>
-#include "/Users/eabusato/dev/cct/src/runtime/cct_freestanding_rt.h"
+#include "/home/arconte/dev/cct/src/runtime/cct_freestanding_rt.h"
 
 /* ===== Freestanding Runtime Adapters (FASE 16B.1) ===== */
 static inline void cct_rt_fail(const char *msg) {
@@ -181,6 +181,27 @@ long long cct_fn_kernel_kernel_halt() {
     cct_svc_halt();
     return 0;
     return 0;
+}
+
+/* ===== Freestanding ABI Wrappers ===== */
+__attribute__((used)) void kernel_memset(long long * dst, long long valor, long long n) {
+    cct_fn_kernel_memset(dst, valor, n);
+}
+
+__attribute__((used)) void kernel_memcpy(long long * dst, long long * src, long long n) {
+    cct_fn_kernel_memcpy(dst, src, n);
+}
+
+__attribute__((used)) long long kernel_inb(long long porta) {
+    return cct_fn_kernel_inb(porta);
+}
+
+__attribute__((used)) void kernel_outb(long long porta, long long valor) {
+    cct_fn_kernel_outb(porta, valor);
+}
+
+__attribute__((used)) void kernel_halt() {
+    cct_fn_kernel_kernel_halt();
 }
 
 /* ===== Freestanding Entry (no host wrapper) ===== */

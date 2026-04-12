@@ -1,5 +1,5 @@
 phase=30B
-compiler=/Users/eabusato/dev/cct/out/bootstrap/phase29/stage2/cct_stage2
+compiler=/home/arconte/dev/cct/out/bootstrap/phase29/stage2/cct_stage2
 module.verbum=SUPPORTED:prelude+support
 module.fmt=SUPPORTED:prelude+support
 module.fs=SUPPORTED:prelude+support

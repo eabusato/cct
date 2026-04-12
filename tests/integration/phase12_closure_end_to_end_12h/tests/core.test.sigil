@@ -2,14 +2,14 @@ format = cct.sigil.v1
 sigilo_scope = local
 visual_engine = sigillum_v2_1
 visual_style = network
-compiler_version = 0.19.0
+compiler_version = 0.40.0
 program_name = phase12_closure_end_to_end_12h_test
 semantic_hash = 3b869b338cadb19b
 layout_seed = 3b869b338cadb19b:network
 module_mode = single
 module_count = 1
 import_edge_count = 0
-entry_module = /Users/eabusato/dev/cct/tests/integration/phase12_closure_end_to_end_12h/tests/core.test.cct
+entry_module = /home/arconte/dev/cct/tests/integration/phase12_closure_end_to_end_12h/tests/core.test.cct
 cross_module_call_count = 0
 cross_module_type_ref_count = 0
 module_resolution_status = ok
@@ -190,7 +190,7 @@ fingerprint_basis = structural_metrics+topology+hash_anchor
 serialization_profile = analytical_v1
 volatility = none
 module_anchor_count = 1
-entry_anchor = /Users/eabusato/dev/cct/tests/integration/phase12_closure_end_to_end_12h/tests/core.test.cct
+entry_anchor = /home/arconte/dev/cct/tests/integration/phase12_closure_end_to_end_12h/tests/core.test.cct
 
 [module_structural_summary]
 module_count = 1

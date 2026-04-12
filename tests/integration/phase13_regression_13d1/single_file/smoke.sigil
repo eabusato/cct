@@ -2,14 +2,14 @@ format = cct.sigil.v1
 sigilo_scope = local
 visual_engine = sigillum_v2_1
 visual_style = network
-compiler_version = 0.19.0
+compiler_version = 0.40.0
 program_name = phase13d1_single_smoke
 semantic_hash = eec62b4957f15c6e
 layout_seed = eec62b4957f15c6e:network
 module_mode = single
 module_count = 1
 import_edge_count = 0
-entry_module = tests/integration/phase13_regression_13d1/single_file/smoke.cct
+entry_module = /home/arconte/dev/cct/tests/integration/phase13_regression_13d1/single_file/smoke.cct
 cross_module_call_count = 0
 cross_module_type_ref_count = 0
 module_resolution_status = ok
@@ -190,7 +190,7 @@ fingerprint_basis = structural_metrics+topology+hash_anchor
 serialization_profile = analytical_v1
 volatility = none
 module_anchor_count = 1
-entry_anchor = tests/integration/phase13_regression_13d1/single_file/smoke.cct
+entry_anchor = /home/arconte/dev/cct/tests/integration/phase13_regression_13d1/single_file/smoke.cct
 
 [module_structural_summary]
 module_count = 1

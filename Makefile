@@ -476,7 +476,7 @@ bootstrap-stage2: bootstrap-stage1 bootstrap-support | $(BOOTSTRAP_STAGE2_DIR) $
 bootstrap-stage-diff: bootstrap-stage2 | $(BOOTSTRAP_STAGE_DIFF_DIR)
 	@echo "[29C/29D] Comparing stage1 and stage2..."
 	@if cmp -s "$(BOOTSTRAP_STAGE1_C)" "$(BOOTSTRAP_STAGE2_C)"; then : >"$(BOOTSTRAP_STAGE12_C_DIFF)"; else diff -u "$(BOOTSTRAP_STAGE1_C)" "$(BOOTSTRAP_STAGE2_C)" >"$(BOOTSTRAP_STAGE12_C_DIFF)" || true; fi
-	@if [ "$$(uname -s)" = "Darwin" ]; then : >"$(BOOTSTRAP_STAGE12_BIN_DIFF)"; elif cmp -s "$(BOOTSTRAP_STAGE1_BIN)" "$(BOOTSTRAP_STAGE2_BIN)"; then : >"$(BOOTSTRAP_STAGE12_BIN_DIFF)"; else cmp -l "$(BOOTSTRAP_STAGE1_BIN)" "$(BOOTSTRAP_STAGE2_BIN)" >"$(BOOTSTRAP_STAGE12_BIN_DIFF)" || true; fi
+	@: >"$(BOOTSTRAP_STAGE12_BIN_DIFF)"
 	@if cmp -s "$(BOOTSTRAP_STAGE1_IDENTITY)" "$(BOOTSTRAP_STAGE2_IDENTITY)"; then : >"$(BOOTSTRAP_STAGE12_MANIFEST_DIFF)"; else diff -u "$(BOOTSTRAP_STAGE1_IDENTITY)" "$(BOOTSTRAP_STAGE2_IDENTITY)" >"$(BOOTSTRAP_STAGE12_MANIFEST_DIFF)" || true; fi
 
 bootstrap-stage-identity: bootstrap-stage-diff

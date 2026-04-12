@@ -1,7 +1,7 @@
 format = cct.sigil.v1
 sigilo_scope = system
 visual_style = network
-system_hash = d85b01b8f0e4cbbe
+system_hash = 96b80083fbe2230a
 module_count = 4
 entry_module = examples/math_random_showcase_11f1.cct
 import_edges = 3
@@ -54,7 +54,7 @@ determinism_guarantee = stable
 
 [diff_fingerprint_context]
 scope_anchor = system
-hash_anchor = d85b01b8f0e4cbbe
+hash_anchor = 96b80083fbe2230a
 fingerprint_basis = module_map+import_edges+system_hash_anchor
 serialization_profile = analytical_v1
 volatility = none
@@ -81,18 +81,18 @@ diff_policy = analytical_blocks_review_required_except_compatibility_hints
 deterministic_serialization = stable_section_order
 
 [modules]
-0 = /Users/eabusato/dev/cct/examples/math_random_showcase_11f1.cct
-1 = /Users/eabusato/dev/cct/lib/cct/math.cct
-2 = /Users/eabusato/dev/cct/lib/cct/random.cct
-3 = /Users/eabusato/dev/cct/lib/cct/io.cct
+0 = /home/arconte/dev/cct/examples/math_random_showcase_11f1.cct
+1 = /home/arconte/dev/cct/lib/cct/math.cct
+2 = /home/arconte/dev/cct/lib/cct/random.cct
+3 = /home/arconte/dev/cct/lib/cct/io.cct
 
 [module_sigils]
-0 = /Users/eabusato/dev/cct/examples/math_random_showcase_11f1.cct | 6dd20719e4753f91
-1 = /Users/eabusato/dev/cct/lib/cct/math.cct | 8dc333acad94b547
-2 = /Users/eabusato/dev/cct/lib/cct/random.cct | 8f73af1f7af9c9b1
-3 = /Users/eabusato/dev/cct/lib/cct/io.cct | 9699b47a9890d1fb
+0 = /home/arconte/dev/cct/examples/math_random_showcase_11f1.cct | 6dd20719e4753f91
+1 = /home/arconte/dev/cct/lib/cct/math.cct | 8dc333acad94b547
+2 = /home/arconte/dev/cct/lib/cct/random.cct | 8f73af1f7af9c9b1
+3 = /home/arconte/dev/cct/lib/cct/io.cct | 9699b47a9890d1fb
 
 [import_edges]
-0 = /Users/eabusato/dev/cct/examples/math_random_showcase_11f1.cct -> /Users/eabusato/dev/cct/lib/cct/math.cct
-1 = /Users/eabusato/dev/cct/examples/math_random_showcase_11f1.cct -> /Users/eabusato/dev/cct/lib/cct/random.cct
-2 = /Users/eabusato/dev/cct/examples/math_random_showcase_11f1.cct -> /Users/eabusato/dev/cct/lib/cct/io.cct
+0 = /home/arconte/dev/cct/examples/math_random_showcase_11f1.cct -> /home/arconte/dev/cct/lib/cct/math.cct
+1 = /home/arconte/dev/cct/examples/math_random_showcase_11f1.cct -> /home/arconte/dev/cct/lib/cct/random.cct
+2 = /home/arconte/dev/cct/examples/math_random_showcase_11f1.cct -> /home/arconte/dev/cct/lib/cct/io.cct

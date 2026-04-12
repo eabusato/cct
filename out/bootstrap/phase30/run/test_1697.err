@@ -1,2 +1,2 @@
 bootstrap-selfhost-build: missing SRC=<file.cct>
-make: *** [bootstrap-selfhost-build] Error 2
+make[1]: *** [Makefile:561: bootstrap-selfhost-build] Error 2

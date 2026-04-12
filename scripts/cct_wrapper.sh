@@ -250,7 +250,7 @@ compile_via_selfhost() {
   crypto_ldflags_value="$(crypto_ldflags)"
   zlib_cflags_value="$(zlib_cflags)"
   zlib_ldflags_value="$(zlib_ldflags)"
-  "$cc_bin" -O2 $crypto_cflags_value $zlib_cflags_value -o "$output" "$c_file" "$PHASE30_SUPPORT" "$ROOT_DIR/src/runtime/fs_runtime.c" -lsqlite3 $crypto_ldflags_value $zlib_ldflags_value || {
+  "$cc_bin" -O2 $crypto_cflags_value $zlib_cflags_value -o "$output" "$c_file" "$PHASE30_SUPPORT" "$ROOT_DIR/src/runtime/fs_runtime.c" -lsqlite3 -lm $crypto_ldflags_value $zlib_ldflags_value || {
     echo "error: C compilation failed" >&2
     exit 1
   }

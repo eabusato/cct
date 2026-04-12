@@ -101,6 +101,9 @@ static inline long long cct_euclid_mod_ll(long long a, long long b) {
 
 /* ===== Runtime Helpers ===== */
 /* ===== CCT Runtime Helpers (FASE 8D / final phase-8 failure-control + memory runtime layer) ===== */
+static long long cct_rt_signal_check_shutdown(void);
+static long long cct_rt_signal_check_shutdown(void) { return 0LL; }
+
 static void cct_rt_fail(const char *msg) {
     fprintf(stderr, "cct runtime: %s\n", (msg && *msg) ? msg : "failure");
     exit(1);
@@ -194,9 +197,174 @@ static void cct_rt_scribe_real(double v) {
 
 static union { long double ld; void *ptr; unsigned char bytes[4096]; } cct_rt_null_sentinel;
 
+typedef struct cct_rt_mem_record {
+    void *ptr;
+    size_t size;
+    struct cct_rt_mem_record *next;
+} cct_rt_mem_record_t;
+
+#define CCT_RT_MEM_BUCKET_COUNT 16384U
+
+static unsigned long long cct_rt_mem_alloc_count = 0ULL;
+static unsigned long long cct_rt_mem_alloc_bytes = 0ULL;
+static unsigned long long cct_rt_mem_free_count = 0ULL;
+static unsigned long long cct_rt_mem_live_count = 0ULL;
+static unsigned long long cct_rt_mem_live_bytes = 0ULL;
+
+static cct_rt_mem_record_t *cct_rt_mem_records[CCT_RT_MEM_BUCKET_COUNT];
+
+static void *cct_rt_mem_sys_malloc(size_t n) {
+    return malloc(n);
+}
+
+static void *cct_rt_mem_sys_calloc(size_t count, size_t size) {
+    return calloc(count, size);
+}
+
+static void *cct_rt_mem_sys_realloc(void *p, size_t n) {
+    return realloc(p, n);
+}
+
+static void cct_rt_mem_sys_free(void *p) {
+    free(p);
+}
+
+static size_t cct_rt_mem_record_bucket(void *p) {
+    size_t raw = (size_t)p;
+    raw >>= 4U;
+    raw ^= raw >> 9U;
+    return raw & (CCT_RT_MEM_BUCKET_COUNT - 1U);
+}
+
+static cct_rt_mem_record_t *cct_rt_mem_record_find(void *p, cct_rt_mem_record_t ***slot_out) {
+    size_t bucket = cct_rt_mem_record_bucket(p);
+    cct_rt_mem_record_t **slot = &cct_rt_mem_records[bucket];
+    while (*slot) {
+        if ((*slot)->ptr == p) {
+            if (slot_out) *slot_out = slot;
+            return *slot;
+        }
+        slot = &(*slot)->next;
+    }
+    if (slot_out) *slot_out = NULL;
+    return NULL;
+}
+
+static int cct_rt_mem_record_add(void *p, size_t n) {
+    cct_rt_mem_record_t *rec = NULL;
+    if (!p) return 0;
+    rec = (cct_rt_mem_record_t*)cct_rt_mem_sys_malloc(sizeof(cct_rt_mem_record_t));
+    if (!rec) return 0;
+    rec->ptr = p;
+    rec->size = n;
+    size_t bucket = cct_rt_mem_record_bucket(p);
+    rec->next = cct_rt_mem_records[bucket];
+    cct_rt_mem_records[bucket] = rec;
+    return 1;
+}
+
+static void cct_rt_mem_record_remove(cct_rt_mem_record_t *rec, cct_rt_mem_record_t **slot) {
+    if (!rec) return;
+    if (slot) *slot = rec->next;
+    cct_rt_mem_sys_free(rec);
+}
+
+static void *cct_rt_mem_track_alloc(size_t n) {
+    size_t req = n == 0U ? 1U : n;
+    void *ptr = cct_rt_mem_sys_malloc(req);
+    if (!ptr) return NULL;
+    if (!cct_rt_mem_record_add(ptr, req)) {
+        cct_rt_mem_sys_free(ptr);
+        return NULL;
+    }
+    cct_rt_mem_alloc_count += 1ULL;
+    cct_rt_mem_alloc_bytes += (unsigned long long)req;
+    cct_rt_mem_live_count += 1ULL;
+    cct_rt_mem_live_bytes += (unsigned long long)req;
+    return ptr;
+}
+
+static void *cct_rt_mem_track_calloc(size_t count, size_t size) {
+    if (size != 0U && count > (((size_t)-1) / size)) cct_rt_fail("calloc size overflow");
+    size_t req = count * size;
+    size_t actual = req == 0U ? 1U : req;
+    void *ptr = cct_rt_mem_sys_calloc(1U, actual);
+    if (!ptr) return NULL;
+    if (!cct_rt_mem_record_add(ptr, actual)) {
+        cct_rt_mem_sys_free(ptr);
+        return NULL;
+    }
+    cct_rt_mem_alloc_count += 1ULL;
+    cct_rt_mem_alloc_bytes += (unsigned long long)actual;
+    cct_rt_mem_live_count += 1ULL;
+    cct_rt_mem_live_bytes += (unsigned long long)actual;
+    return ptr;
+}
+
+static void *cct_rt_mem_track_realloc(void *p, size_t n) {
+    size_t req = n == 0U ? 1U : n;
+    if (!p) return cct_rt_mem_track_alloc(req);
+    cct_rt_mem_record_t **slot = NULL;
+    cct_rt_mem_record_t *rec = cct_rt_mem_record_find(p, &slot);
+    void *next = cct_rt_mem_sys_realloc(p, req);
+    if (!next) return NULL;
+    if (!rec) return next;
+    size_t old_size = rec->size;
+    if (next != p && slot) {
+        *slot = rec->next;
+        size_t bucket = cct_rt_mem_record_bucket(next);
+        rec->next = cct_rt_mem_records[bucket];
+        cct_rt_mem_records[bucket] = rec;
+    }
+    rec->ptr = next;
+    rec->size = req;
+    cct_rt_mem_alloc_count += 1ULL;
+    cct_rt_mem_alloc_bytes += (unsigned long long)req;
+    cct_rt_mem_free_count += 1ULL;
+    cct_rt_mem_live_bytes -= (unsigned long long)old_size;
+    cct_rt_mem_live_bytes += (unsigned long long)req;
+    return next;
+}
+
+static void cct_rt_mem_track_free(void *p) {
+    if (!p) return;
+    cct_rt_mem_record_t **slot = NULL;
+    cct_rt_mem_record_t *rec = cct_rt_mem_record_find(p, &slot);
+    if (!rec) {
+        cct_rt_mem_sys_free(p);
+        return;
+    }
+    size_t old_size = rec->size;
+    cct_rt_mem_free_count += 1ULL;
+    cct_rt_mem_live_count -= 1ULL;
+    cct_rt_mem_live_bytes -= (unsigned long long)old_size;
+    cct_rt_mem_record_remove(rec, slot);
+    cct_rt_mem_sys_free(p);
+}
+
+static long long cct_rt_mem_instr_alloc_count(void) {
+    return (long long)cct_rt_mem_alloc_count;
+}
+
+static long long cct_rt_mem_instr_alloc_bytes(void) {
+    return (long long)cct_rt_mem_alloc_bytes;
+}
+
+static long long cct_rt_mem_instr_free_count(void) {
+    return (long long)cct_rt_mem_free_count;
+}
+
+static long long cct_rt_mem_instr_live_count(void) {
+    return (long long)cct_rt_mem_live_count;
+}
+
+static long long cct_rt_mem_instr_live_bytes(void) {
+    return (long long)cct_rt_mem_live_bytes;
+}
+
 static void *cct_rt_alloc_or_fail(size_t n) {
     if (n == 0) n = 1;
-    void *p = malloc(n);
+    void *p = cct_rt_mem_track_alloc(n);
     if (!p) cct_rt_fail("allocation failed");
     return p;
 }
@@ -206,7 +374,7 @@ static void *cct_rt_alloc_bytes(size_t n) {
 }
 
 static void cct_rt_free_ptr(void *p) {
-    free(p);
+    cct_rt_mem_track_free(p);
 }
 
 static void *cct_rt_mem_alloc(long long n) {
@@ -220,7 +388,7 @@ static void cct_rt_mem_free(void *p) {
 
 static void *cct_rt_mem_realloc(void *p, long long n) {
     if (n <= 0) cct_rt_fail("mem realloc size must be > 0");
-    void *out_p = realloc(p, (size_t)n);
+    void *out_p = cct_rt_mem_track_realloc(p, (size_t)n);
     if (!out_p) cct_rt_fail("mem realloc failed");
     return out_p;
 }
@@ -247,6 +415,11 @@ static long long cct_rt_mem_compare(const void *a, const void *b, long long n) {
     if (cmp > 0) return 1LL;
     return 0LL;
 }
+
+#define malloc(n) cct_rt_mem_track_alloc((n))
+#define calloc(count, size) cct_rt_mem_track_calloc((count), (size))
+#define realloc(p, n) cct_rt_mem_track_realloc((p), (n))
+#define free(p) cct_rt_mem_track_free((p))
 
 typedef struct {
     unsigned char *data;
@@ -3756,15 +3929,34 @@ static void *cct_rt_path_split(const char *p) {
 
 static char *cct_rt_path_resolve(const char *p) {
     const char *src = (p && *p) ? p : ".";
+    char *resolved = NULL;
 #ifdef _WIN32
-    char *resolved = _fullpath(NULL, src, 0);
+    resolved = _fullpath(NULL, src, 0);
     if (resolved) {
         for (char *q = resolved; *q; ++q) if (*q == '\\') *q = '/';
-        return resolved;
+        size_t resolved_len = strlen(resolved);
+        char *copy = (char*)malloc(resolved_len + 1U);
+        if (!copy) {
+            cct_rt_mem_sys_free(resolved);
+            cct_rt_fail("path resolve allocation failed");
+        }
+        memcpy(copy, resolved, resolved_len + 1U);
+        cct_rt_mem_sys_free(resolved);
+        return copy;
     }
 #else
-    char *resolved = realpath(src, NULL);
-    if (resolved) return resolved;
+    resolved = realpath(src, NULL);
+    if (resolved) {
+        size_t resolved_len = strlen(resolved);
+        char *copy = (char*)malloc(resolved_len + 1U);
+        if (!copy) {
+            cct_rt_mem_sys_free(resolved);
+            cct_rt_fail("path resolve allocation failed");
+        }
+        memcpy(copy, resolved, resolved_len + 1U);
+        cct_rt_mem_sys_free(resolved);
+        return copy;
+    }
 #endif
     char *norm = cct_rt_path_normalize(src);
     if (cct_rt_path_is_absolute(norm)) return norm;
@@ -3774,7 +3966,7 @@ static char *cct_rt_path_resolve(const char *p) {
         cct_rt_fail("path resolve cwd falhou");
     }
     char *joined = cct_rt_path_join(cwd, norm);
-    free(cwd);
+    cct_rt_mem_sys_free(cwd);
     free(norm);
     return joined;
 }
@@ -4096,7 +4288,9 @@ static char *cct_rt_process_run_with_input(const char *cmd, const char *input) {
     fclose(fp);
     int status = 0;
     while (waitpid(pid, &status, 0) < 0) {
-        if (errno == EINTR) continue;
+        if (errno == EINTR) {
+            continue;
+        }
         cct_rt_fail("process run_with_input waitpid falhou");
     }
     return captured;
@@ -4494,12 +4688,35 @@ static void *cct_rt_sock_accept(void *sock_ptr) {
     cct_rt_socket_t *sock = cct_rt_socket_require(sock_ptr, "sock_accept recebeu socket nulo");
     cct_rt_socket_check_open(sock, "sock_accept recebeu socket fechado");
     for (;;) {
+        fd_set rfds;
+        struct timeval tv;
+        int ready = 0;
+        FD_ZERO(&rfds);
+        FD_SET(sock->fd, &rfds);
+        tv.tv_sec = 0;
+        tv.tv_usec = 200000;
+        ready = select(sock->fd + 1, &rfds, NULL, NULL, &tv);
+        if (ready == 0) {
+            if (cct_rt_signal_check_shutdown()) cct_rt_fail("server stopping");
+            continue;
+        }
+        if (ready < 0) {
+            if (errno == EINTR) {
+                if (cct_rt_signal_check_shutdown()) cct_rt_fail("server stopping");
+                continue;
+            }
+            cct_rt_socket_set_last_error("sock_accept falhou");
+            cct_rt_fail("sock_accept falhou");
+        }
         int fd = accept(sock->fd, NULL, NULL);
         if (fd >= 0) {
             cct_rt_socket_clear_last_error();
             return (void*)cct_rt_socket_alloc(fd, sock->kind, sock->domain);
         }
-        if (errno == EINTR) continue;
+        if (errno == EINTR) {
+            if (cct_rt_signal_check_shutdown()) cct_rt_fail("server stopping");
+            continue;
+        }
         cct_rt_socket_set_last_error("sock_accept falhou");
         cct_rt_fail("sock_accept falhou");
     }

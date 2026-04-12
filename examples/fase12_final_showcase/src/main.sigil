@@ -2,14 +2,14 @@ format = cct.sigil.v1
 sigilo_scope = local
 visual_engine = sigillum_v2_1
 visual_style = network
-compiler_version = 0.19.0
+compiler_version = 0.40.0
 program_name = fase12_final_showcase_main
 semantic_hash = c693d889547ba56f
 layout_seed = c693d889547ba56f:network
 module_mode = composed
 module_count = 4
 import_edge_count = 4
-entry_module = /Users/eabusato/dev/cct/examples/fase12_final_showcase/src/main.cct
+entry_module = /home/arconte/dev/cct/examples/fase12_final_showcase/src/main.cct
 cross_module_call_count = 10
 cross_module_type_ref_count = 0
 module_resolution_status = ok
@@ -190,7 +190,7 @@ fingerprint_basis = structural_metrics+topology+hash_anchor
 serialization_profile = analytical_v1
 volatility = none
 module_anchor_count = 4
-entry_anchor = /Users/eabusato/dev/cct/examples/fase12_final_showcase/src/main.cct
+entry_anchor = /home/arconte/dev/cct/examples/fase12_final_showcase/src/main.cct
 
 [module_structural_summary]
 module_count = 4

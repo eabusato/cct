@@ -639,7 +639,7 @@ static bool sg_source_load(sg_source_buffer_t *src, const char *path) {
     return true;
 }
 
-static const char* SG_MAYBE_UNUSED sg_source_get_line(
+SG_MAYBE_UNUSED static const char* sg_source_get_line(
     const sg_source_buffer_t *src,
     u32 line,
     size_t *len_out
@@ -657,7 +657,7 @@ static const char* SG_MAYBE_UNUSED sg_source_get_line(
     return src->text + start;
 }
 
-static char* SG_MAYBE_UNUSED sg_source_extract_span(
+SG_MAYBE_UNUSED static char* sg_source_extract_span(
     const sg_source_buffer_t *src,
     u32 line_start,
     u32 line_end

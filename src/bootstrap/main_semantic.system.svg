@@ -45106,7 +45106,7 @@ imports: 11</title>
     <text class="module-hash" x="204.020" y="316.020" text-anchor="middle">4fd8ca75c12da1d8</text>
     </g>
   </g>
-  <text class="module-label" x="24" y="30" font-size="14">CCT system sigilo (sigil-of-sigils) • 06ef53d7c9e3cf64</text>
+  <text class="module-label" x="24" y="30" font-size="14">CCT system sigilo (sigil-of-sigils) • 77cc8542d8a15dca</text>
   <text class="module-hash" x="24" y="50" font-size="10">entry=src/bootstrap/main_semantic.cct • modules=40 • imports=154 • calls=1819 • type_refs=560</text>
   <text class="module-hash" x="24" y="66" font-size="10">zoom: inline vector sub-sigils per module</text>
 </svg>

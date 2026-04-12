@@ -2,14 +2,14 @@ format = cct.sigil.v1
 sigilo_scope = local
 visual_engine = sigillum_v2_1
 visual_style = network
-compiler_version = 0.19.0
+compiler_version = 0.40.0
 program_name = project_12f_incremental_main
 semantic_hash = 5b4cb1776b341eef
 layout_seed = 5b4cb1776b341eef:network
 module_mode = composed
 module_count = 2
 import_edge_count = 1
-entry_module = /Users/eabusato/dev/cct/tests/integration/project_12f_incremental/src/main.cct
+entry_module = /home/arconte/dev/cct/tests/integration/project_12f_incremental/src/main.cct
 cross_module_call_count = 1
 cross_module_type_ref_count = 0
 module_resolution_status = ok
@@ -190,7 +190,7 @@ fingerprint_basis = structural_metrics+topology+hash_anchor
 serialization_profile = analytical_v1
 volatility = none
 module_anchor_count = 2
-entry_anchor = /Users/eabusato/dev/cct/tests/integration/project_12f_incremental/src/main.cct
+entry_anchor = /home/arconte/dev/cct/tests/integration/project_12f_incremental/src/main.cct
 
 [module_structural_summary]
 module_count = 2

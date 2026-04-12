@@ -1,9 +1,9 @@
 format = cct.sigil.v1
 sigilo_scope = system
 visual_style = network
-system_hash = 2003fc88c61322ee
+system_hash = fd4413fb3d30f548
 module_count = 2
-entry_module = /Users/eabusato/dev/cct/tests/integration/project_12f_incremental/src/main.cct
+entry_module = /home/arconte/dev/cct/tests/integration/project_12f_incremental/src/main.cct
 import_edges = 1
 cross_module_calls = 1
 cross_module_type_refs = 0
@@ -54,12 +54,12 @@ determinism_guarantee = stable
 
 [diff_fingerprint_context]
 scope_anchor = system
-hash_anchor = 2003fc88c61322ee
+hash_anchor = fd4413fb3d30f548
 fingerprint_basis = module_map+import_edges+system_hash_anchor
 serialization_profile = analytical_v1
 volatility = none
 module_anchor_count = 2
-entry_anchor = /Users/eabusato/dev/cct/tests/integration/project_12f_incremental/src/main.cct
+entry_anchor = /home/arconte/dev/cct/tests/integration/project_12f_incremental/src/main.cct
 
 [module_structural_summary]
 module_count = 2
@@ -81,12 +81,12 @@ diff_policy = analytical_blocks_review_required_except_compatibility_hints
 deterministic_serialization = stable_section_order
 
 [modules]
-0 = /Users/eabusato/dev/cct/tests/integration/project_12f_incremental/src/main.cct
-1 = /Users/eabusato/dev/cct/tests/integration/project_12f_incremental/lib/mod.cct
+0 = /home/arconte/dev/cct/tests/integration/project_12f_incremental/src/main.cct
+1 = /home/arconte/dev/cct/tests/integration/project_12f_incremental/lib/mod.cct
 
 [module_sigils]
-0 = /Users/eabusato/dev/cct/tests/integration/project_12f_incremental/src/main.cct | 5b4cb1776b341eef
-1 = /Users/eabusato/dev/cct/tests/integration/project_12f_incremental/lib/mod.cct | 43baf549c426bba8
+0 = /home/arconte/dev/cct/tests/integration/project_12f_incremental/src/main.cct | 5b4cb1776b341eef
+1 = /home/arconte/dev/cct/tests/integration/project_12f_incremental/lib/mod.cct | 43baf549c426bba8
 
 [import_edges]
-0 = /Users/eabusato/dev/cct/tests/integration/project_12f_incremental/src/main.cct -> /Users/eabusato/dev/cct/tests/integration/project_12f_incremental/lib/mod.cct
+0 = /home/arconte/dev/cct/tests/integration/project_12f_incremental/src/main.cct -> /home/arconte/dev/cct/tests/integration/project_12f_incremental/lib/mod.cct

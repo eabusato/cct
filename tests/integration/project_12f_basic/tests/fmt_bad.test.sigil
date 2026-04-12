@@ -2,14 +2,14 @@ format = cct.sigil.v1
 sigilo_scope = local
 visual_engine = sigillum_v2_1
 visual_style = network
-compiler_version = 0.19.0
+compiler_version = 0.40.0
 program_name = project_12f_fmt_bad_test
 semantic_hash = 1f77beca99360051
 layout_seed = 1f77beca99360051:network
 module_mode = single
 module_count = 1
 import_edge_count = 0
-entry_module = /Users/eabusato/dev/cct/tests/integration/project_12f_basic/tests/fmt_bad.test.cct
+entry_module = /home/arconte/dev/cct/tests/integration/project_12f_basic/tests/fmt_bad.test.cct
 cross_module_call_count = 0
 cross_module_type_ref_count = 0
 module_resolution_status = ok
@@ -190,7 +190,7 @@ fingerprint_basis = structural_metrics+topology+hash_anchor
 serialization_profile = analytical_v1
 volatility = none
 module_anchor_count = 1
-entry_anchor = /Users/eabusato/dev/cct/tests/integration/project_12f_basic/tests/fmt_bad.test.cct
+entry_anchor = /home/arconte/dev/cct/tests/integration/project_12f_basic/tests/fmt_bad.test.cct
 
 [module_structural_summary]
 module_count = 1

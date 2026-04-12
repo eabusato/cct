@@ -9,7 +9,7 @@ layout_seed = b27fb97a76a998cf:network
 module_mode = composed
 module_count = 12
 import_edge_count = 17
-entry_module = /Users/eabusato/dev/cct/examples/phase30_data_app/tests/smoke.test.cct
+entry_module = /home/arconte/dev/cct/examples/phase30_data_app/tests/smoke.test.cct
 cross_module_call_count = 59
 cross_module_type_ref_count = 0
 module_resolution_status = ok
@@ -190,7 +190,7 @@ fingerprint_basis = structural_metrics+topology+hash_anchor
 serialization_profile = analytical_v1
 volatility = none
 module_anchor_count = 12
-entry_anchor = /Users/eabusato/dev/cct/examples/phase30_data_app/tests/smoke.test.cct
+entry_anchor = /home/arconte/dev/cct/examples/phase30_data_app/tests/smoke.test.cct
 
 [module_structural_summary]
 module_count = 12

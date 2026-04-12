@@ -1,0 +1,13 @@
+# replace_all
+
+- Kind: `rituale`
+- Module: `/home/arconte/dev/cct/lib/cct/verbum.cct`
+- Visibility: `public`
+- Generated: 2026-04-12 02:49:18
+
+## Signature
+
+```cct
+RITUALE replace_all(VERBUM s, VERBUM de, VERBUM para) REDDE VERBUM
+```
+

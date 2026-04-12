@@ -9,7 +9,7 @@ layout_seed = f2508a4bd9d0c4bb:network
 module_mode = single
 module_count = 1
 import_edge_count = 0
-entry_module = /Users/eabusato/dev/cct/examples/project_minimal_12f/src/main.cct
+entry_module = /home/arconte/dev/cct/examples/project_minimal_12f/src/main.cct
 cross_module_call_count = 0
 cross_module_type_ref_count = 0
 module_resolution_status = ok
@@ -190,7 +190,7 @@ fingerprint_basis = structural_metrics+topology+hash_anchor
 serialization_profile = analytical_v1
 volatility = none
 module_anchor_count = 1
-entry_anchor = /Users/eabusato/dev/cct/examples/project_minimal_12f/src/main.cct
+entry_anchor = /home/arconte/dev/cct/examples/project_minimal_12f/src/main.cct
 
 [module_structural_summary]
 module_count = 1
