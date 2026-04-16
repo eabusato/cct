@@ -1,4 +1,0 @@
-tool=semantic
-producer=/home/admin/dev/cct/out/bootstrap/phase29/stage2/cct_stage2
-generated_c=/home/admin/dev/cct/out/bootstrap/phase30/tools/cct_semantic_bootstrap.c
-binary=/home/admin/dev/cct/out/bootstrap/phase30/tools/cct_semantic_bootstrap

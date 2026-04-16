@@ -1,3 +1,0 @@
-generated_c_size=1712098
-binary_size=302688
-generated_c_sha256=e8abc0e155b6644a1be6c261f5c66a39dc1ad6eb462b26e915d20d61e2188d44

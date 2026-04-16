@@ -1,8 +1,0 @@
-INCIPIT grimoire "p"
-RITUALE identitas GENUS(T)(T valor) REDDE T
-  REDDE valor
-EXPLICIT RITUALE
-RITUALE main() REDDE REX
-  REDDE identitas GENUS(REX)(7)
-EXPLICIT RITUALE
-EXPLICIT grimoire

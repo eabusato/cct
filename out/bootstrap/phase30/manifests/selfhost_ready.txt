@@ -1,5 +1,0 @@
-phase=30A
-compiler=/home/admin/dev/cct/out/bootstrap/phase29/stage2/cct_stage2
-support=/home/admin/dev/cct/out/bootstrap/phase29/support/selfhost_support.o
-wrapper=/home/admin/dev/cct/out/bootstrap/phase30/bin/cct_selfhost
-identity_diff=/home/admin/dev/cct/out/bootstrap/phase29/diff/stage1_vs_stage2.identity.diff
